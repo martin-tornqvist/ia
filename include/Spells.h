@@ -180,7 +180,7 @@ public:
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
-  int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 5;}
+  int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 6;}
 };
 
 class SpellDetectTraps: public Spell {
@@ -195,7 +195,7 @@ public:
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
-  int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 5;}
+  int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 4;}
 };
 
 class SpellDetectMonsters: public Spell {
@@ -210,7 +210,7 @@ public:
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
-  int getMaxSpiCost_()          const override {return PLAYER_START_SPI;}
+  int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 6;}
 };
 
 class SpellOpening: public Spell {

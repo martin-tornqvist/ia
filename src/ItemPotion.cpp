@@ -269,13 +269,13 @@ void PotionOfInsight::quaff_(Actor* const actor) {
     const string itemNameBefore =
       eng.itemDataHandler->getItemRef(*item, itemRef_a, true);
 
+    item->identify(true);
+
     const string itemNameAfter =
       eng.itemDataHandler->getItemRef(*item, itemRef_a, true);
 
     eng.log->addMsg("I gain intuitions about " + itemNameBefore + "...");
     eng.log->addMsg("It is identified as " + itemNameAfter + "!");
-
-    item->identify(true);
   }
 }
 

@@ -20,6 +20,7 @@
 #include "MapParsing.h"
 #include "LineCalc.h"
 #include "SdlWrapper.h"
+#include "PlayerBonuses.h"
 
 Spell* SpellHandler::getRandomSpellForMonster() {
   vector<SpellId> candidates;
@@ -83,12 +84,39 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
       }
     }
 
+    if(caster == eng.player) {
+      bool isWarlock      = false;
+      bool isBloodSorc    = false;
+      bool isSeer         = false;
+
+      for(TraitId id : eng.playerBonHandler->traitsPicked_) {
+        switch(id) {
+          case traitWarlock:        isWarlock     = true; break;
+          case traitBloodSorcerer:  isBloodSorc   = true; break;
+          case traitSeer:           isSeer        = true; break;
+          default: {} break;
+        }
+      }
+
+      if(isBloodSorc) costMax--;
+
+      switch(getId()) {
+        case spell_darkbolt:       {if(isWarlock)  costMax--;}    break;
+        case spell_azathothsWrath: {if(isWarlock)  costMax--;}    break;
+        case spell_mayhem:         {if(isWarlock)  costMax--;}    break;
+        case spell_detectMonsters: {if(isSeer)     costMax--;}    break;
+        case spell_detectItems:    {if(isSeer)     costMax -= 3;} break;
+        case spell_detectTraps:    {if(isSeer)     costMax -= 3;} break;
+        default: {} break;
+      }
+    }
+
     PropHandler& propHlr = caster->getPropHandler();
 
     vector<PropId> props;
     propHlr.getAllActivePropIds(props);
 
-    if(propHlr.allowSee() == false)   {costMax -= 1;}
+    if(propHlr.allowSee() == false) costMax--;
 
     if(find(props.begin(), props.end(), propBlessed) != props.end()) {
       costMax -= 1;
@@ -177,15 +205,26 @@ SpellCastRetData SpellDarkbolt::cast_(
     vector<Pos> {target->pos}, clrMagenta);
 
   const string msgCmn = " struck by a blast!";
+  bool isCharged = false;
   if(caster == eng.player) {
     eng.log->addMsg(target->getNameThe() + " is" + msgCmn, clrMsgGood);
+
+    vector<PropId> props;
+    eng.player->getPropHandler().getAllActivePropIds(props);
+    isCharged =
+      find(props.begin(), props.end(), propWarlockCharged) != props.end();
+
   } else {
     eng.log->addMsg("I am" + msgCmn, clrMsgBad);
   }
 
   target->getPropHandler().tryApplyProp(
     new PropParalyzed(eng, propTurnsSpecified, 2));
-  target->hit(eng.dice.range(3, 10), dmgType_physical, true);
+
+  Range dmgRange(3, 10);
+  const int DMG = isCharged ? dmgRange.upper : eng.dice.range(dmgRange);
+
+  target->hit(DMG, dmgType_physical, true);
 
   Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos, NULL,
           SndVol::low, AlertsMonsters::yes);
@@ -204,7 +243,7 @@ bool SpellDarkbolt::isGoodForMonsterToCastNow(
 //------------------------------------------------------------ AZATHOTHS WRATH
 SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
 
-  DiceParam spellDmg(1, 8, 0);
+  Range dmgRange(1, 8);
 
   const string msgEnd = "struck by a roaring blast!";
 
@@ -215,6 +254,11 @@ SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
     if(targets.empty()) {
       return SpellCastRetData(false);
     } else {
+      vector<PropId> props;
+      eng.player->getPropHandler().getAllActivePropIds(props);
+      const bool IS_CHARGED =
+        find(props.begin(), props.end(), propWarlockCharged) != props.end();
+
       vector<Pos> actorPositions; actorPositions.resize(0);
       for(Actor * a : targets) {actorPositions.push_back(a->pos);}
 
@@ -225,7 +269,11 @@ SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
         eng.log->addMsg(actor->getNameThe() + " is " + msgEnd, clrMsgGood);
         actor->getPropHandler().tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecified, 2));
-        actor->hit(eng.dice(spellDmg), dmgType_physical, false);
+
+        const int DMG = IS_CHARGED ? dmgRange.upper : eng.dice.range(dmgRange);
+
+        actor->hit(DMG, dmgType_physical, false);
+
         Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos, NULL,
                 SndVol::high, AlertsMonsters::yes);
         eng.sndEmitter->emitSnd(snd);
@@ -238,7 +286,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
       vector<Pos> {eng.player->pos}, clrRedLgt);
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecified, 1));
-    eng.player->hit(eng.dice(spellDmg), dmgType_physical, false);
+    eng.player->hit(eng.dice.range(dmgRange), dmgType_physical, false);
     Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
             SndVol::high, AlertsMonsters::yes);
     eng.sndEmitter->emitSnd(snd);
@@ -453,14 +501,27 @@ SpellCastRetData SpellDetectTraps::cast_(
 SpellCastRetData SpellDetectMonsters::cast_(Actor* const caster, Engine& eng) {
   (void)caster;
 
-  eng.log->addMsg("I detect monsters.");
+  bool isSeer           = eng.playerBonHandler->hasTrait(traitSeer);
+  const int MULTIPLIER  = 6 * (isSeer ? 3 : 1);
+
+  const int MAX_DIST    = FOV_STD_RADI_INT * 2;
+
+  const Pos playerPos   = eng.player->pos;
+
+  bool didDetect        = false;
+
   for(Actor * actor : eng.gameTime->actors_) {
     if(actor != eng.player) {
-      dynamic_cast<Monster*>(actor)->playerBecomeAwareOfMe(4);
+      if(eng.basicUtils->chebyshevDist(playerPos, actor->pos) <= MAX_DIST) {
+        dynamic_cast<Monster*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
+        didDetect = true;
+      }
     }
   }
 
-  return SpellCastRetData(true);
+  if(didDetect) {eng.log->addMsg("I detect monsters.");}
+
+  return SpellCastRetData(didDetect);
 }
 
 //------------------------------------------------------------ OPENING

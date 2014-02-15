@@ -204,15 +204,13 @@ void PlayerBonHandler::getTraitDescr(
 
     case traitWarlock: {
       strRef  = "-1 Spirit cost for damage dealing spells, casting any spell ";
-      strRef += "can make you \"Charged\" for one turn, causing attack spells ";
-      strRef += "to do maximum damage";
-      strRef += "[UNIMPLEMENTED]";
+      strRef += "has a chance to make you \"Charged\" for one turn, causing ";
+      strRef += "attack spells to do maximum damage";
     } break;
 
     case traitBloodSorcerer: {
       strRef  = "-1 Spirit cost for all spells, casting a spell drains 2 ";
       strRef += "Hit points";
-      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitSpiritCannibal: {
@@ -223,10 +221,8 @@ void PlayerBonHandler::getTraitDescr(
     } break;
 
     case traitSeer: {
-      strRef  = "The spell \"Clairvoyance\" has double duration, and ";
-      strRef += "detection spells have increased range - spirit costs for ";
-      strRef += "these spells are reduced";
-      strRef += "[UNIMPLEMENTED]";
+      strRef  = "Detection spells have decreased Spirit costs, and ";
+      strRef += "the spell \"Detect Monsters\" has tripple duration";
     } break;
 
     case traitTough: {
@@ -399,7 +395,6 @@ void PlayerBonHandler::getTraitPrereqs(const TraitId id,
     } break;
 
     case traitBloodSorcerer: {
-      traitsRef.push_back(traitMythologist);
       traitsRef.push_back(traitTough);
       bgRef = bgOccultist;
     } break;
@@ -411,7 +406,6 @@ void PlayerBonHandler::getTraitPrereqs(const TraitId id,
     } break;
 
     case traitSeer: {
-      traitsRef.push_back(traitMythologist);
       traitsRef.push_back(traitObservant);
       bgRef = bgOccultist;
     } break;

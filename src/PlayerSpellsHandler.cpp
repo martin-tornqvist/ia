@@ -62,7 +62,24 @@ void PlayerSpellsHandler::run() {
             }
           }
 
-          spell->cast(eng.player, true, eng);
+          bool isBloodSorc  = false;
+          bool isWarlock    = false;
+          for(TraitId id : eng.playerBonHandler->traitsPicked_) {
+            if(id == traitBloodSorcerer)  isBloodSorc = true;
+            if(id == traitWarlock)        isWarlock   = true;
+          }
+
+          if(isBloodSorc) {
+            eng.log->addMsg("My life force fuels the spell.", clrMsgBad);
+            eng.player->hit(2, dmgType_pure, false);
+          }
+          if(eng.player->deadState == actorDeadState_alive) {
+            spell->cast(eng.player, true, eng);
+            if(isWarlock && eng.dice.oneIn(3)) {
+              eng.player->getPropHandler().tryApplyProp(
+                new PropWarlockCharged(eng, propTurnsStd));
+            }
+          }
           return;
         } break;
 

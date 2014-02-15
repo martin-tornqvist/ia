@@ -433,6 +433,23 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentBad;
   addPropData(d);
 
+  d.id = propWarlockCharged;
+  d.stdRndTurns = Range(1, 1);
+  d.name = "Charged";
+  d.nameShort = "Charged";
+  d.msg[propMsgOnStartPlayer] = "I am burning with power!";
+  d.msg[propMsgOnStartMonster] = "";
+  d.msg[propMsgOnEndPlayer] = "";
+  d.msg[propMsgOnEndMonster] = "";
+  d.msg[propMsgOnMorePlayer] = "";
+  d.msg[propMsgOnMoreMonster] = "";
+  d.isMakingMonsterAware = false;
+  d.allowDisplayTurns = false;
+  d.allowApplyMoreWhileActive = true;
+  d.updatePlayerVisualWhenStartOrEnd = false;
+  d.alignment = propAlignmentGood;
+  addPropData(d);
+
   d.id = propInfected;
   d.stdRndTurns = Range(400, 700);
   d.name = "Infected";
@@ -686,6 +703,9 @@ Prop* PropHandler::makePropFromId(const PropId id, PropTurns turnsInit,
 
     case propNailed:
       return new PropNailed(eng, turnsInit, NR_TURNS);
+
+    case propWarlockCharged:
+      return new PropWarlockCharged(eng, turnsInit, NR_TURNS);
 
     case propBlind:
       return new PropBlind(eng, turnsInit, NR_TURNS);

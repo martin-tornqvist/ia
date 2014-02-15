@@ -60,6 +60,7 @@ enum PropId {
   propAiming,
   propNailed,
   propFlared,
+  propWarlockCharged,
 
   endOfPropIds
 };
@@ -531,6 +532,15 @@ public:
   ~PropFlared() override {}
 
   void onNewTurn() override;
+};
+
+class PropWarlockCharged: public Prop {
+public:
+  PropWarlockCharged(Engine& engine, PropTurns turnsInit, int turns = -1) :
+    Prop(propWarlockCharged, engine, turnsInit, turns) {}
+  ~PropWarlockCharged() override {}
+
+  PropTurnMode getTurnMode() const override {return propTurnModeActor;}
 };
 
 class PropConfused: public Prop {

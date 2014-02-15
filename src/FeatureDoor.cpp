@@ -540,6 +540,8 @@ void Door::tryOpen(Actor* actorTrying) {
 }
 
 bool Door::open() {
-  isOpen_ = true;
+  isOpen_   = true;
+  isSecret_ = false;
+  isStuck_  = false;
   return true;
 }

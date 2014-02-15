@@ -189,6 +189,8 @@ public:
     rolls(other.rolls), sides(other.sides), plus(other.plus) {
   }
 
+  inline int getHighest() const {return (rolls * sides) + plus;}
+
   int rolls, sides, plus;
 };
 
