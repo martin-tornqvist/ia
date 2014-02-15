@@ -312,8 +312,8 @@ void Renderer::drawMarker(const vector<Pos>& trail,
 }
 
 void Renderer::drawBlastAnimAtField(const Pos& center, const int RADIUS,
-    bool forbiddenCells[MAP_W][MAP_H], const SDL_Color& colorInner,
-    const SDL_Color& colorOuter) {
+                                    bool forbiddenCells[MAP_W][MAP_H], const SDL_Color& colorInner,
+                                    const SDL_Color& colorOuter) {
   trace << "Renderer::drawBlastAnimAtField()..." << endl;
 
   drawMapAndInterface();
@@ -867,7 +867,7 @@ void Renderer::drawMap() {
             curDrw->glyph = actor->getGlyph();
 
             curDrw->lifebarLength = getLifebarLength(*actor);
-
+            curDrw->isLivingActorSeenHere = true;
             curDrw->isFadeEffectAllowed = false;
 
             if(monster->leader == eng.player) {
