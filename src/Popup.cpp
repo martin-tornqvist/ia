@@ -78,6 +78,8 @@ int Popup::showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
                        const vector<string>& choices,
                        const string& title, const SfxId sfx) const {
 
+  if(eng.config->isBotPlaying) {return 0;}
+
   vector<string> lines;
   TextFormatting::lineToLines(msg, TEXT_W, lines);
   const int TITLE_H         = title.empty() ? 0 : 1;
