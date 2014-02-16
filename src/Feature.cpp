@@ -167,7 +167,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
         eng.log->addMsg("I am off-balance.");
 
         actorTrying.getPropHandler().tryApplyProp(
-          new PropParalyzed(eng, propTurnsSpecified, 2));
+          new PropParalyzed(eng, propTurnsSpecific, 2));
       }
 
     } else {

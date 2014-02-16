@@ -120,9 +120,9 @@ void PotionOfFortitude::quaff_(Actor* const actor) {
 
   PropRFear*      const rFear   = new PropRFear(eng, propTurnsStd);
   PropRConfusion* const rConf   = new PropRConfusion(
-    eng, propTurnsSpecified, rFear->turnsLeft_);
+    eng, propTurnsSpecific, rFear->turnsLeft_);
   PropRSleep*     const rSleep  = new PropRSleep(
-    eng, propTurnsSpecified, rFear->turnsLeft_);
+    eng, propTurnsSpecific, rFear->turnsLeft_);
 
   propHandler.tryApplyProp(rFear);
   propHandler.tryApplyProp(rConf);

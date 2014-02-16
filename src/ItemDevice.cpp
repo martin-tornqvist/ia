@@ -92,7 +92,7 @@ void Device::runBadEffect() {
       "I am hit with a jolt of electricity from the " + name +
       ".", clrMsgBad, true);
     eng.player->getPropHandler().tryApplyProp(
-      new PropParalyzed(eng, propTurnsSpecified, 2));
+      new PropParalyzed(eng, propTurnsSpecific, 2));
     eng.player->hit(eng.dice.range(1, 2), dmgType_electric, false);
   } else {
     eng.log->addMsg("The " + name + " hums ominously.");

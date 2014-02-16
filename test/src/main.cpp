@@ -382,6 +382,41 @@ TEST_FIXTURE(BasicFixture, Explosions) {
     CHECK(eng.map->cells[X0 - r][Y0 - r].featureStatic->getId() == wallId);
   }
 
+  //Check damage to actors
+  Actor* a1 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
+  Explosion::runExplosionAt(Pos(X0, Y0), eng);
+  CHECK_EQUAL(actorDeadState_mangled, a1->deadState);
+
+  //Check that corpses can be destroyed, and do not block living actors
+  const int NR_CORPSES = 3;
+  Actor* corpses[NR_CORPSES];
+  for(int i = 0; i < NR_CORPSES; i++) {
+    corpses[i] = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
+    corpses[i]->deadState = actorDeadState_corpse;
+  }
+  a1 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
+  Explosion::runExplosionAt(Pos(X0, Y0), eng);
+  for(int i = 0; i < NR_CORPSES; i++) {
+    CHECK_EQUAL(actorDeadState_mangled, corpses[i]->deadState);
+  }
+  CHECK_EQUAL(actorDeadState_mangled, a1->deadState);
+
+  //Check explosion applying Burning to living and dead actors
+  a1        = eng.actorFactory->spawnActor(actor_rat, Pos(X0 - 1, Y0));
+  Actor* a2 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
+  for(int i = 0; i < NR_CORPSES; i++) {
+    corpses[i] = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
+    corpses[i]->deadState = actorDeadState_corpse;
+  }
+  Explosion::runExplosionAt(Pos(X0, Y0), eng, 0, endOfSfxId, false,
+                            new PropBurning(eng, propTurnsStd));
+  CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
+  CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
+  for(int i = 0; i < NR_CORPSES; i++) {
+    PropHandler& propHlr = corpses[i]->getPropHandler();
+    CHECK(propHlr.getProp(propBurning, PropSrc::applied) != NULL);
+  }
+
   //Check that the explosion can handle the map edge (e.g. that it does not
   //destroy the edge wall, or go outside the map - possibly causing a crash)
 
@@ -515,7 +550,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   //Applied properties
   PropHandler& propHlr = eng.player->getPropHandler();
   propHlr.tryApplyProp(new PropDiseased(eng, propTurnsIndefinite));
-  propHlr.tryApplyProp(new PropRSleep(eng, propTurnsSpecified, 3));
+  propHlr.tryApplyProp(new PropRSleep(eng, propTurnsSpecific, 3));
   propHlr.tryApplyProp(new PropBlessed(eng, propTurnsStd));
 
   eng.saveHandler->save();

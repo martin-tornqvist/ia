@@ -219,7 +219,7 @@ SpellCastRetData SpellDarkbolt::cast_(
   }
 
   target->getPropHandler().tryApplyProp(
-    new PropParalyzed(eng, propTurnsSpecified, 2));
+    new PropParalyzed(eng, propTurnsSpecific, 2));
 
   Range dmgRange(3, 10);
   const int DMG = isCharged ? dmgRange.upper : eng.dice.range(dmgRange);
@@ -268,7 +268,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
       for(Actor * actor : targets) {
         eng.log->addMsg(actor->getNameThe() + " is " + msgEnd, clrMsgGood);
         actor->getPropHandler().tryApplyProp(
-          new PropParalyzed(eng, propTurnsSpecified, 2));
+          new PropParalyzed(eng, propTurnsSpecific, 2));
 
         const int DMG = IS_CHARGED ? dmgRange.upper : eng.dice.range(dmgRange);
 
@@ -285,7 +285,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
     eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos> {eng.player->pos}, clrRedLgt);
     eng.player->getPropHandler().tryApplyProp(
-      new PropParalyzed(eng, propTurnsSpecified, 1));
+      new PropParalyzed(eng, propTurnsSpecific, 1));
     eng.player->hit(eng.dice.range(dmgRange), dmgType_physical, false);
     Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
             SndVol::high, AlertsMonsters::yes);
@@ -691,7 +691,7 @@ SpellCastRetData SpellEnfeeble::cast_(
 
       for(Actor * actor : targets) {
         PropHandler& propHlr = actor->getPropHandler();
-        Prop* const prop = propHlr.makePropFromId(propId, propTurnsStd);
+        Prop* const prop = propHlr.makeProp(propId, propTurnsStd);
         propHlr.tryApplyProp(prop);
       }
       return SpellCastRetData(true);
@@ -701,7 +701,7 @@ SpellCastRetData SpellEnfeeble::cast_(
       vector<Pos>(1, eng.player->pos), clrMagenta);
 
     PropHandler& propHandler = eng.player->getPropHandler();
-    Prop* const prop = propHandler.makePropFromId(
+    Prop* const prop = propHandler.makeProp(
                          propId, propTurnsStd);
     propHandler.tryApplyProp(prop);
 
@@ -736,7 +736,7 @@ SpellCastRetData SpellDisease::cast_(
   } else {
     eng.log->addMsg("A disease is starting to afflict my body!", clrMsgBad);
     eng.player->getPropHandler().tryApplyProp(
-      new PropDiseased(eng, propTurnsSpecified, 50));
+      new PropDiseased(eng, propTurnsSpecific, 50));
     return SpellCastRetData(false);
   }
 }
@@ -845,7 +845,7 @@ SpellCastRetData SpellMiGoHypnosis::cast_(
 
   if(eng.dice.coinToss()) {
     eng.player->getPropHandler().tryApplyProp(
-      new PropFainted(eng, propTurnsSpecified, eng.dice.range(2, 10)));
+      new PropFainted(eng, propTurnsSpecific, eng.dice.range(2, 10)));
   } else {
     eng.log->addMsg("I feel dizzy.");
   }

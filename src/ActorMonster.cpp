@@ -341,7 +341,7 @@ bool Monster::tryAttack(Actor& defender) {
                     data_->rangedCooldownTurns;
                   PropDisabledRanged* status =
                     new PropDisabledRanged(
-                    eng, propTurnsSpecified, NR_TURNS_DISABLED_RANGED);
+                    eng, propTurnsSpecific, NR_TURNS_DISABLED_RANGED);
                   propHandler_->tryApplyProp(status);
                   eng.attack->ranged(*this, *attack.weapon, defender.pos);
                   return true;

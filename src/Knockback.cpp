@@ -64,7 +64,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
               }
             }
             defender.getPropHandler().tryApplyProp(
-              new PropParalyzed(eng, propTurnsSpecified, 1), false, false);
+              new PropParalyzed(eng, propTurnsSpecific, 1), false, false);
           }
 
           defender.pos = newPos;

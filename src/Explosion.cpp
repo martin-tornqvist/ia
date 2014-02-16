@@ -117,8 +117,24 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
   const int DMG_SIDES = 6;
   const int DMG_PLUS  = 10;
 
-  Actor* actorArray[MAP_W][MAP_H];
-  eng.basicUtils->makeActorArray(actorArray);
+  Actor* livingActors[MAP_W][MAP_H];
+  vector<Actor*> corpses[MAP_W][MAP_H];
+
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      livingActors[x][y] = NULL;
+      corpses[x][y].resize(0);
+    }
+  }
+
+  for(Actor * actor : eng.gameTime->actors_) {
+    const Pos& pos = actor->pos;
+    if(actor->deadState == actorDeadState_alive) {
+      livingActors[pos.x][pos.y] = actor;
+    } else if(actor->deadState == actorDeadState_corpse) {
+      corpses[pos.x][pos.y].push_back(actor);
+    }
+  }
 
   const int NR_OUTER = posLists.size();
   for(int curRadi = 0; curRadi < NR_OUTER; curRadi++) {
@@ -126,22 +142,26 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
 
     for(const Pos & pos : inner) {
 
-      Actor* actor = actorArray[pos.x][pos.y];
+      Actor* livingActor          = livingActors[pos.x][pos.y];
+      vector<Actor*> corpsesHere  = corpses[pos.x][pos.y];
 
       if(SHOULD_DO_EXPLOSION_DMG) {
         //Damage environment
         if(curRadi <= 1) {eng.map->switchToDestroyedFeatAt(pos);}
         const int DMG = eng.dice(DMG_ROLLS - curRadi, DMG_SIDES) + DMG_PLUS;
 
-        //Damage actor
-        if(actor != NULL) {
-          if(actor->deadState == actorDeadState_alive) {
-            if(actor == eng.player) {
-              eng.log->addMsg("I am hit by an explosion!", clrMsgBad);
-            }
-            actor->hit(DMG, dmgType_physical, true);
+        //Damage living actor
+        if(livingActor != NULL) {
+          if(livingActor == eng.player) {
+            eng.log->addMsg("I am hit by an explosion!", clrMsgBad);
           }
+          livingActor->hit(DMG, dmgType_physical, true);
         }
+        //Damage dead actors
+        for(Actor * corpse : corpsesHere) {
+          corpse->hit(DMG, dmgType_physical, true);
+        }
+
         if(eng.dice.fraction(6, 10)) {
           eng.featureFactory->spawnFeatureAt(
             feature_smoke, pos, new SmokeSpawnData(eng.dice.range(2, 4)));
@@ -149,14 +169,21 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
       }
 
       //Apply property
-      if(prop != NULL && actor != NULL) {
-        if(actor->deadState == actorDeadState_alive) {
-          PropHandler& propHlr = actor->getPropHandler();
-          Prop* propCpy =
-            propHlr.makePropFromId(prop->getId(), propTurnsSpecified,
-                                   prop->turnsLeft_);
+      if(prop != NULL) {
+        if(livingActor != NULL) {
+          PropHandler& propHlr = livingActor->getPropHandler();
+          Prop* propCpy = propHlr.makeProp(prop->getId(), propTurnsSpecific,
+                                           prop->turnsLeft_);
           propHlr.tryApplyProp(propCpy);
-
+        }
+        //If property is burning, also apply it to corpses
+        if(prop->getId() == propBurning) {
+          for(Actor * corpse : corpsesHere) {
+            PropHandler& propHlr = corpse->getPropHandler();
+            Prop* propCpy = propHlr.makeProp(prop->getId(), propTurnsSpecific,
+                                             prop->turnsLeft_);
+            propHlr.tryApplyProp(propCpy);
+          }
         }
       }
     }

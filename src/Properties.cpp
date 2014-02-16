@@ -689,13 +689,13 @@ PropHandler::PropHandler(Actor* owningActor, Engine& engine) :
 
   for(unsigned int i = 0; i < endOfPropIds; i++) {
     if(d.intrProps[i]) {
-      Prop* const prop = makePropFromId(PropId(i), propTurnsIndefinite);
+      Prop* const prop = makeProp(PropId(i), propTurnsIndefinite);
       tryApplyProp(prop, true, true, true, true);
     }
   }
 }
 
-Prop* PropHandler::makePropFromId(const PropId id, PropTurns turnsInit,
+Prop* PropHandler::makeProp(const PropId id, PropTurns turnsInit,
                                   const int NR_TURNS) const {
   switch(id) {
     case propWound:
@@ -1028,8 +1028,8 @@ void PropHandler::tryApplyPropFromWpn(
 
   if(propAppliedFromWpn != NULL) {
     //Make a copy of the weapon effect
-    Prop* const prop = makePropFromId(
-                         propAppliedFromWpn->getId(), propTurnsSpecified,
+    Prop* const prop = makeProp(
+                         propAppliedFromWpn->getId(), propTurnsSpecific,
                          propAppliedFromWpn->turnsLeft_);
     tryApplyProp(prop);
   }

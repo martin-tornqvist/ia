@@ -40,7 +40,7 @@ void Bot::act() {
 
   //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)
   if(eng.dice.oneIn(7)) {
-    propHandler.tryApplyProp(new PropRFear(eng, propTurnsSpecified, 4), true);
+    propHandler.tryApplyProp(new PropRFear(eng, propTurnsSpecific, 4), true);
   }
 
   //Occasionally teleport (to avoid getting stuck)
@@ -68,7 +68,7 @@ void Bot::act() {
       propCandidates.at(eng.dice.range(0, propCandidates.size() - 1));
 
     Prop* const prop =
-      propHandler.makePropFromId(propId, propTurnsSpecified, 5);
+      propHandler.makeProp(propId, propTurnsSpecific, 5);
 
     propHandler.tryApplyProp(prop, true);
   }

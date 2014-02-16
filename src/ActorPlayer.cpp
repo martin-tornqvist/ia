@@ -163,8 +163,8 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
     lines.erase(lines.begin());
     const int NR_TURNS = toInt(lines.front());
     lines.erase(lines.begin());
-    Prop* const prop = propHandler_->makePropFromId(
-                         id, propTurnsSpecified, NR_TURNS);
+    Prop* const prop = propHandler_->makeProp(
+                         id, propTurnsSpecific, NR_TURNS);
     propHandler_->tryApplyProp(prop, true, true, true, true);
   }
 
@@ -653,7 +653,7 @@ void Player::testPhobias() {
         insanityPhobias[insanityPhobia_dog]) {
         eng.log->addMsg("I am plagued by my canine phobia!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecified, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
         return;
       }
       if(
@@ -661,7 +661,7 @@ void Player::testPhobias() {
         insanityPhobias[insanityPhobia_rat]) {
         eng.log->addMsg("I am plagued by my rat phobia!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecified, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
         return;
       }
       if(
@@ -669,7 +669,7 @@ void Player::testPhobias() {
         insanityPhobias[insanityPhobia_undead]) {
         eng.log->addMsg("I am plagued by my phobia of the dead!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecified, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
         return;
       }
       if(
@@ -677,7 +677,7 @@ void Player::testPhobias() {
         insanityPhobias[insanityPhobia_spider]) {
         eng.log->addMsg("I am plagued by my spider phobia!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecified, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
         return;
       }
     }
@@ -687,7 +687,7 @@ void Player::testPhobias() {
       if(isStandingInOpenSpace()) {
         eng.log->addMsg("I am plagued by my phobia of open places!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecified, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
         return;
       }
     }
@@ -696,7 +696,7 @@ void Player::testPhobias() {
       if(isStandingInCrampedSpace()) {
         eng.log->addMsg("I am plagued by my phobia of closed places!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecified, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
         return;
       }
     }

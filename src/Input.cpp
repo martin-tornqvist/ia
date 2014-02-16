@@ -151,7 +151,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
           }
         }
 
-        PropAiming* const aiming = new PropAiming(eng, propTurnsSpecified, 1);
+        PropAiming* const aiming = new PropAiming(eng, propTurnsSpecific, 1);
         aiming->nrTurnsAiming += nrTurnsAimingOld;
         propHlr.tryApplyProp(aiming);
       }

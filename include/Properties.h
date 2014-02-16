@@ -68,7 +68,7 @@ enum PropId {
 enum PropTurnMode {propTurnModeStandard, propTurnModeActor};
 
 enum PropTurns {
-  propTurnsSpecified, propTurnsIndefinite, propTurnsStd
+  propTurnsSpecific, propTurnsIndefinite, propTurnsStd
 };
 
 enum PropMsgType {
@@ -183,7 +183,7 @@ public:
 
   void getPropsInterfaceLine(vector<StrAndClr>& line) const;
 
-  Prop* makePropFromId(const PropId id, PropTurns turnsInit,
+  Prop* makeProp(const PropId id, PropTurns turnsInit,
                        const int NR_TURNS = -1) const;
 
   bool tryResistDmg(const DmgTypes dmgType,

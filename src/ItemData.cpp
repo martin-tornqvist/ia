@@ -770,7 +770,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_greenSpider]);
-  d->propAppliedOnMelee = new PropBlind(eng, propTurnsSpecified, 4);
+  d->propAppliedOnMelee = new PropBlind(eng, propTurnsSpecific, 4);
   dataList[d->id] = d;
 
   d = new ItemData(item_whiteSpiderBite);
@@ -778,7 +778,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_whiteSpider]);
-  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecified, 3);
+  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecific, 3);
   dataList[d->id] = d;
 
   d = new ItemData(item_redSpiderBite);
@@ -875,7 +875,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_ghost]);
-  d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecified, 4);
+  d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecific, 4);
   d->meleeDmgType = dmgType_spirit;
   dataList[d->id] = d;
 
@@ -883,7 +883,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "slices me with a sickle");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_phantasm]);
-  d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecified, 4);
+  d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecific, 4);
   d->meleeDmgType = dmgType_spirit;
   dataList[d->id] = d;
 
@@ -891,7 +891,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_wraith]);
-  d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecified, 4);
+  d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecific, 4);
   d->meleeDmgType = dmgType_spirit;
   dataList[d->id] = d;
 
@@ -908,7 +908,7 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileGlyph = '/';
   d->rangedAttackMessages = ItemAttackMessages("", "fires an electric gun");
   d->rangedDmgType = dmgType_electric;
-  d->propAppliedOnRanged = new PropParalyzed(eng, propTurnsSpecified, 2);
+  d->propAppliedOnRanged = new PropParalyzed(eng, propTurnsSpecific, 2);
   d->rangedSndMsg = "I hear a bolt of electricity.";
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_miGo]);
   d->rangedSndVol = SndVol::high;
@@ -917,7 +917,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_polypTentacle);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "grips me with a tentacle");
-  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecified, 1);
+  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecific, 1);
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_flyingPolyp]);
   dataList[d->id] = d;
 
