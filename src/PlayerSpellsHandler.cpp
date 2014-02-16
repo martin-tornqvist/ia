@@ -12,19 +12,19 @@
 #include "Query.h"
 
 PlayerSpellsHandler::~PlayerSpellsHandler() {
-  for(Spell * spell : knownSpells) {delete spell;}
+  for(Spell * spell : knownSpells_) {delete spell;}
 }
 
-void PlayerSpellsHandler::run() {
-  if(knownSpells.empty()) {
+void PlayerSpellsHandler::playerSelectSpellToCast() {
+  if(knownSpells_.empty()) {
     eng.log->addMsg("I do not know any spells to invoke.");
   } else {
-
-    sort(knownSpells.begin(), knownSpells.end(), [](Spell * s1, Spell * s2) {
+    sort(knownSpells_.begin(), knownSpells_.end(),
+    [](Spell * s1, Spell * s2) {
       return s1->getName() < s2->getName();
     });
 
-    MenuBrowser browser(knownSpells.size(), 0);
+    MenuBrowser browser(knownSpells_.size(), 0);
 
     eng.renderer->drawMapAndInterface();
 
@@ -45,41 +45,7 @@ void PlayerSpellsHandler::run() {
         } break;
 
         case menuAction_selected: {
-          eng.log->clearLog();
-          eng.renderer->drawMapAndInterface();
-
-          Spell* spell = knownSpells.at(browser.getPos().y);
-
-          const Range spiCost = spell->getSpiCost(false, eng.player, eng);
-          if(spiCost.upper >= eng.player->getSpi()) {
-            eng.log->addMsg("Cast spell and risk depleting your spirit (y/n)?",
-                            clrWhiteHigh);
-            eng.renderer->drawMapAndInterface();
-            if(eng.query->yesOrNo() == YesNoAnswer::no) {
-              eng.log->clearLog();
-              eng.renderer->drawMapAndInterface();
-              return;
-            }
-          }
-
-          bool isBloodSorc  = false;
-          bool isWarlock    = false;
-          for(TraitId id : eng.playerBonHandler->traitsPicked_) {
-            if(id == traitBloodSorcerer)  isBloodSorc = true;
-            if(id == traitWarlock)        isWarlock   = true;
-          }
-
-          if(isBloodSorc) {
-            eng.log->addMsg("My life force fuels the spell.", clrMsgBad);
-            eng.player->hit(2, dmgType_pure, false);
-          }
-          if(eng.player->deadState == actorDeadState_alive) {
-            spell->cast(eng.player, true, eng);
-            if(isWarlock && eng.dice.oneIn(3)) {
-              eng.player->getPropHandler().tryApplyProp(
-                new PropWarlockCharged(eng, propTurnsStd));
-            }
-          }
+          tryCast(knownSpells_.at(browser.getPos().y));
           return;
         } break;
 
@@ -89,8 +55,56 @@ void PlayerSpellsHandler::run() {
   }
 }
 
+void PlayerSpellsHandler::tryCastPrevSpell() {
+  if(prevSpellCast_ == NULL) {
+    playerSelectSpellToCast();
+  } else {
+    tryCast(prevSpellCast_);
+  }
+}
+
+void PlayerSpellsHandler::tryCast(const Spell* const spell) {
+  if(eng.player->getPropHandler().allowRead(true)) {
+    eng.log->clearLog();
+    eng.renderer->drawMapAndInterface();
+
+    const Range spiCost = spell->getSpiCost(false, eng.player, eng);
+    if(spiCost.upper >= eng.player->getSpi()) {
+      eng.log->addMsg(
+        "Cast spell and risk depleting your spirit (y/n)?",
+        clrWhiteHigh);
+      eng.renderer->drawMapAndInterface();
+      if(eng.query->yesOrNo() == YesNoAnswer::no) {
+        eng.log->clearLog();
+        eng.renderer->drawMapAndInterface();
+        return;
+      }
+    }
+
+    bool isBloodSorc  = false;
+    bool isWarlock    = false;
+    for(TraitId id : eng.playerBonHandler->traitsPicked_) {
+      if(id == traitBloodSorcerer)  isBloodSorc = true;
+      if(id == traitWarlock)        isWarlock   = true;
+    }
+
+    if(isBloodSorc) {
+      eng.log->addMsg("My life force fuels the spell.", clrMsgBad);
+      eng.player->hit(2, dmgType_pure, false);
+    }
+    if(eng.player->deadState == actorDeadState_alive) {
+      spell->cast(eng.player, true, eng);
+      prevSpellCast_ = spell;
+      if(isWarlock && eng.dice.oneIn(3)) {
+        eng.player->getPropHandler().tryApplyProp(
+          new PropWarlockCharged(eng, propTurnsStd));
+      }
+    }
+  }
+}
+
 void PlayerSpellsHandler::draw(MenuBrowser& browser) {
-  const int NR_SPELLS = knownSpells.size();
+  const int NR_SPELLS = knownSpells_.size();
   string endLetter = "a";
   endLetter[0] += char(NR_SPELLS - 1);
 
@@ -107,7 +121,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     const char CURRENT_KEY = 'a' + i;
     const SDL_Color clr =
       browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLgt;
-    Spell* const spell = knownSpells.at(i);
+    Spell* const spell = knownSpells_.at(i);
     const string name = spell->getName();
     string str = "a";
     str[0] = CURRENT_KEY;
@@ -147,8 +161,8 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 }
 
 void PlayerSpellsHandler::addSaveLines(vector<string>& lines) const {
-  lines.push_back(toString(knownSpells.size()));
-  for(Spell * s : knownSpells) {lines.push_back(toString(s->getId()));}
+  lines.push_back(toString(knownSpells_.size()));
+  for(Spell * s : knownSpells_) {lines.push_back(toString(s->getId()));}
 }
 
 void PlayerSpellsHandler::setParamsFromSaveLines(vector<string>& lines) {
@@ -158,12 +172,12 @@ void PlayerSpellsHandler::setParamsFromSaveLines(vector<string>& lines) {
   for(int i = 0; i < NR_SPELLS; i++) {
     const int ID = toInt(lines.front());
     lines.erase(lines.begin());
-    knownSpells.push_back(eng.spellHandler->getSpellFromId(SpellId(ID)));
+    knownSpells_.push_back(eng.spellHandler->getSpellFromId(SpellId(ID)));
   }
 }
 
 bool PlayerSpellsHandler::isSpellLearned(const SpellId id) {
-  for(Spell * s : knownSpells) {if(s->getId() == id) {return true;}}
+  for(Spell * s : knownSpells_) {if(s->getId() == id) {return true;}}
   return false;
 }
 
@@ -173,7 +187,7 @@ void PlayerSpellsHandler::learnSpellIfNotKnown(const SpellId id) {
 
 void PlayerSpellsHandler::learnSpellIfNotKnown(Spell* const spell) {
   bool isAlreadyLearned = false;
-  for(Spell * spellCmpr : knownSpells) {
+  for(Spell * spellCmpr : knownSpells_) {
     if(spellCmpr->getId() == spell->getId()) {
       isAlreadyLearned = true;
       break;
@@ -182,6 +196,6 @@ void PlayerSpellsHandler::learnSpellIfNotKnown(Spell* const spell) {
   if(isAlreadyLearned) {
     delete spell;
   } else {
-    knownSpells.push_back(spell);
+    knownSpells_.push_back(spell);
   }
 }

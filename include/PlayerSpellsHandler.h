@@ -18,15 +18,19 @@ class Spell;
 
 class PlayerSpellsHandler {
 public:
-  PlayerSpellsHandler(Engine& engine) : eng(engine) {}
+  PlayerSpellsHandler(Engine& engine) : prevSpellCast_(NULL), eng(engine) {
+    knownSpells_.resize(0);
+  }
   ~PlayerSpellsHandler();
 
-  void run();
+  void playerSelectSpellToCast();
 
-  inline unsigned int getNrSpells() const {return knownSpells.size();}
+  void tryCastPrevSpell();
+
+  inline unsigned int getNrSpells() const {return knownSpells_.size();}
 
   inline Spell* getSpellAt(const unsigned int ELEMENT) const {
-    return knownSpells.at(ELEMENT);
+    return knownSpells_.at(ELEMENT);
   }
 
   void learnSpellIfNotKnown(Spell* const spell);
@@ -40,7 +44,10 @@ public:
 private:
   void draw(MenuBrowser& browser);
 
-  vector<Spell*> knownSpells;
+  void tryCast(const Spell* const spell);
+
+  vector<Spell*>  knownSpells_;
+  const Spell*    prevSpellCast_;
 
   Engine& eng;
 };

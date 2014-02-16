@@ -71,7 +71,7 @@ public:
   Spell() {}
   virtual ~Spell() {}
   SpellCastRetData cast(Actor* const caster, const bool IS_INTRINSIC,
-                        Engine& eng);
+                        Engine& eng) const;
   virtual bool isGoodForMonsterToCastNow(
     Monster* const monster, Engine& eng) {
     (void)monster;
@@ -86,7 +86,7 @@ public:
   Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
                    Engine& eng) const;
 
-  int getShockValueIntrCast() {
+  int getShockValueIntrCast() const {
     const IntrSpellShock shockType = getShockTypeIntrCast();
 
     switch(shockType) {
@@ -99,7 +99,7 @@ public:
 
   virtual IntrSpellShock getShockTypeIntrCast() const = 0;
 protected:
-  virtual SpellCastRetData cast_(Actor* const caster, Engine& eng) = 0;
+  virtual SpellCastRetData cast_(Actor* const caster, Engine& eng) const = 0;
 
   virtual int getMaxSpiCost_() const = 0;
 };
@@ -117,7 +117,7 @@ public:
     return intrSpellShockMild;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI - 2;}
 };
 
@@ -134,7 +134,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 
@@ -149,7 +149,7 @@ public:
     return intrSpellShockSevere;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 11;}
 };
 
@@ -164,7 +164,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 4;}
 };
 
@@ -179,7 +179,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 6;}
 };
 
@@ -194,7 +194,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 4;}
 };
 
@@ -209,7 +209,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 6;}
 };
 
@@ -224,7 +224,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 9;}
 };
 
@@ -239,7 +239,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 
@@ -254,7 +254,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI - 2;}
 };
 
@@ -269,7 +269,7 @@ public:
     return intrSpellShockMild;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI - 1;}
 };
 
@@ -286,7 +286,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 11;}
 };
 
@@ -303,7 +303,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 
@@ -320,7 +320,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 
@@ -337,7 +337,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 
   PropId getPropId(Engine& eng) const;
@@ -356,7 +356,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 
@@ -373,7 +373,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 
@@ -390,7 +390,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 
@@ -407,7 +407,7 @@ public:
     return intrSpellShockDisturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) override;
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 

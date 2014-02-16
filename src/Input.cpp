@@ -430,13 +430,20 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     clearEvents();
     return;
   }
-  //----------------------------------- POWERS - MEMORIZED
+  //----------------------------------- RE-CAST PREVIOUS MEMORIZED SPELL
   else if(d.key_ == 'x') {
     eng.log->clearLog();
     if(eng.player->deadState == actorDeadState_alive) {
-      if(eng.player->getPropHandler().allowRead(true)) {
-        eng.playerSpellsHandler->run();
-      }
+      eng.playerSpellsHandler->tryCastPrevSpell();
+    }
+    clearEvents();
+    return;
+  }
+  //----------------------------------- MEMORIZED SPELLS
+  else if(d.key_ == 'X') {
+    eng.log->clearLog();
+    if(eng.player->deadState == actorDeadState_alive) {
+      eng.playerSpellsHandler->playerSelectSpellToCast();
     }
     clearEvents();
     return;

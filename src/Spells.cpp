@@ -134,7 +134,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
 }
 
 SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
-                             Engine& eng) {
+                             Engine& eng) const {
   trace << "Spell::cast()..." << endl;
   if(caster->getPropHandler().allowCastSpells(true)) {
     if(caster == eng.player) {
@@ -173,7 +173,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
 
 //------------------------------------------------------------ DARKBOLT
 SpellCastRetData SpellDarkbolt::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
 
   Actor* target = NULL;
 
@@ -240,7 +240,8 @@ bool SpellDarkbolt::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH
-SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster, Engine& eng) {
+SpellCastRetData SpellAzathothsWrath::cast_(
+  Actor* const caster, Engine& eng) const {
 
   Range dmgRange(1, 8);
 
@@ -302,7 +303,7 @@ bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ MAYHEM
 SpellCastRetData SpellMayhem::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
   (void)caster;
 
   eng.log->addMsg("Destruction rages around me!");
@@ -372,7 +373,7 @@ SpellCastRetData SpellMayhem::cast_(
 
 //------------------------------------------------------------ PESTILENCE
 SpellCastRetData SpellPestilence::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
   (void)caster;
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
@@ -417,7 +418,7 @@ SpellCastRetData SpellPestilence::cast_(
 
 //------------------------------------------------------------ DETECT ITEMS
 SpellCastRetData SpellDetectItems::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
   (void)caster;
 
   const int RADI    = FOV_STD_RADI_INT + 3;
@@ -460,7 +461,7 @@ SpellCastRetData SpellDetectItems::cast_(
 
 //------------------------------------------------------------ DETECT TRAPS
 SpellCastRetData SpellDetectTraps::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
 
   (void)caster;
 
@@ -497,7 +498,8 @@ SpellCastRetData SpellDetectTraps::cast_(
 }
 
 //------------------------------------------------------------ DETECT MONSTERS
-SpellCastRetData SpellDetectMonsters::cast_(Actor* const caster, Engine& eng) {
+SpellCastRetData SpellDetectMonsters::cast_(
+  Actor* const caster, Engine& eng) const {
   (void)caster;
 
   bool isSeer           = eng.playerBonHandler->hasTrait(traitSeer);
@@ -525,7 +527,7 @@ SpellCastRetData SpellDetectMonsters::cast_(Actor* const caster, Engine& eng) {
 
 //------------------------------------------------------------ OPENING
 SpellCastRetData SpellOpening::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
 
   (void)caster;
 
@@ -555,7 +557,7 @@ SpellCastRetData SpellOpening::cast_(
 
 //------------------------------------------------------------ SACRIFICE LIFE
 SpellCastRetData SpellSacrificeLife::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
   (void)caster;
 
   //Convert every 2 HP to 1 SPI
@@ -573,7 +575,7 @@ SpellCastRetData SpellSacrificeLife::cast_(
 
 //------------------------------------------------------------ SACRIFICE SPIRIT
 SpellCastRetData SpellSacrificeSpirit::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
   (void)caster;
 
   //Convert every SPI to HP
@@ -591,7 +593,7 @@ SpellCastRetData SpellSacrificeSpirit::cast_(
 
 //------------------------------------------------------------ ROGUE HIDE
 SpellCastRetData SpellCloudMinds::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
 
   (void)caster;
   eng.log->addMsg("I vanish from the minds of my enemies.");
@@ -607,7 +609,7 @@ SpellCastRetData SpellCloudMinds::cast_(
 
 //------------------------------------------------------------ BLESS
 SpellCastRetData SpellBless::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
 
   caster->getPropHandler().tryApplyProp(
     new PropBlessed(eng, propTurnsStd));
@@ -626,7 +628,7 @@ bool SpellBless::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ TELEPORT
 SpellCastRetData SpellTeleport::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
 
   if(caster != eng.player) {
     if(eng.player->isSeeingActor(*caster, NULL)) {
@@ -650,7 +652,7 @@ bool SpellTeleport::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ KNOCKBACK
 SpellCastRetData SpellKnockBack::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
   if(caster == eng.player) {
 
   } else {
@@ -669,7 +671,7 @@ bool SpellKnockBack::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ ENFEEBLE
 SpellCastRetData SpellEnfeeble::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
 
   const PropId propId = getPropId(eng);
 
@@ -729,7 +731,7 @@ PropId SpellEnfeeble::getPropId(Engine& eng) const {
 
 //------------------------------------------------------------ DISEASE
 SpellCastRetData SpellDisease::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
   if(caster == eng.player) {
     return SpellCastRetData(true);
   } else {
@@ -749,7 +751,7 @@ bool SpellDisease::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ SUMMON RANDOM
 SpellCastRetData SpellSummonRandom::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
 
   Pos summonPos(caster->pos);
 
@@ -824,7 +826,7 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ HEAL SELF
 SpellCastRetData SpellHealSelf::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
   (void)eng;
   return SpellCastRetData(caster->restoreHp(999, true));
 }
@@ -837,7 +839,7 @@ bool SpellHealSelf::isGoodForMonsterToCastNow(
 
 //------------------------------------------------------------ MI-GO HYPNOSIS
 SpellCastRetData SpellMiGoHypnosis::cast_(
-  Actor* const caster, Engine& eng) {
+  Actor* const caster, Engine& eng) const {
 
   (void)caster;
   eng.log->addMsg("There is a sharp droning in my head!");
