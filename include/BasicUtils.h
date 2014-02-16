@@ -8,8 +8,6 @@
 #include "Actor.h"
 #include "MersenneTwister.h"
 
-using namespace std;
-
 class Engine;
 
 enum TimeType {
@@ -130,18 +128,16 @@ public:
 
   Pos getClosestPos(const Pos& c, const vector<Pos>& positions) const;
 
-  Actor* getClosestActor(const Pos& c, const vector<Actor*>& actors) const;
+  Actor* getRandomClosestActor(const Pos& c,
+                               const vector<Actor*>& actors) const;
 
   inline int chebyshevDist(const int X0, const int Y0,
                            const int X1, const int Y1) const {
-    if(X0 == X1 && Y0 == Y1) {
-      return 0;
-    }
-    return max(abs(X1 - X0), abs(Y1 - Y0));
+    return max(std::abs(X1 - X0), std::abs(Y1 - Y0));
   }
 
   inline int chebyshevDist(const Pos& c1, const Pos& c2) const {
-    return chebyshevDist(c1.x, c1.y, c2.x, c2.y);
+    return max(std::abs(c2.x - c1.x), std::abs(c2.y - c1.y));
   }
 
   TimeData getCurrentTime() const;
@@ -164,9 +160,7 @@ public:
   //it will instead seed with current time. So seeding it manually is
   //not necessary for normal gameplay purposes - only if seed should be
   //controlled for testing purposes, or recreating a certain level, etc.
-  void seed(const unsigned long val) {
-    mtRand_ = MTRand(val);
-  }
+  void seed(const unsigned long val) {mtRand_ = MTRand(val);}
 
   bool coinToss() {
     return roll(1, 2) == 2;

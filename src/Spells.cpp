@@ -177,13 +177,12 @@ SpellCastRetData SpellDarkbolt::cast_(
 
   Actor* target = NULL;
 
-  vector<Actor*> targetCandidates;
-  caster->getSpottedEnemies(targetCandidates);
-  if(targetCandidates.empty()) {
+  vector<Actor*> spottedActors;
+  caster->getSpottedEnemies(spottedActors);
+  if(spottedActors.empty()) {
     return SpellCastRetData(false);
   } else {
-    const int ELEMENT = eng.dice.range(0, targetCandidates.size() - 1);
-    target = targetCandidates.at(ELEMENT);
+    target = eng.basicUtils->getRandomClosestActor(caster->pos, spottedActors);
   }
 
   vector<Pos> line;

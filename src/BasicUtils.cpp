@@ -67,21 +67,36 @@ Pos BasicUtils::getClosestPos(
 }
 
 
-Actor* BasicUtils::getClosestActor(const Pos& c,
-                                   const vector<Actor*>& actors) const {
-  if(actors.size() == 0) return NULL;
+Actor* BasicUtils::getRandomClosestActor(
+  const Pos& c, const vector<Actor*>& actors) const {
 
+  if(actors.empty()) return NULL;
+
+  //Find distance to nearest actor(s)
   int distToNearest = INT_MAX;
-  int closestElement = 0;
-  for(unsigned int i = 0; i < actors.size(); i++) {
-    const int CUR_DIST = eng.basicUtils->chebyshevDist(c, actors.at(i)->pos);
+  for(Actor * actor : actors) {
+    const int CUR_DIST = chebyshevDist(c, actor->pos);
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
-      closestElement = i;
     }
   }
 
-  return actors.at(closestElement);
+  assert(distToNearest > 0);
+  assert(distToNearest != INT_MAX);
+
+  //Store all actors with distance equal to the nearest distance
+  vector<Actor*> closestActors;
+  for(Actor * actor : actors) {
+    if(chebyshevDist(c, actor->pos) == distToNearest) {
+      closestActors.push_back(actor);
+    }
+  }
+
+  assert(closestActors.empty() == false);
+
+  const int ELEMENT = eng.dice.range(0, closestActors.size() - 1);
+
+  return closestActors.at(ELEMENT);
 }
 
 bool BasicUtils::isPosAdj(

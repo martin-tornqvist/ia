@@ -66,7 +66,7 @@ void Monster::onActorTurn() {
 
   vector<Actor*> SpottedEnemies;
   getSpottedEnemies(SpottedEnemies);
-  target = eng.basicUtils->getClosestActor(pos, SpottedEnemies);
+  target = eng.basicUtils->getRandomClosestActor(pos, SpottedEnemies);
 
   if(spellCoolDownCurrent != 0) {
     spellCoolDownCurrent--;
