@@ -124,11 +124,11 @@ string TimeData::getTimeStr(const TimeType lowest,
   string minuteStr  = (minute_  < 10 ? "0" : "") + toString(minute_);
   string secondStr  = (second_  < 10 ? "0" : "") + toString(second_);
 
-  if(lowest >= time_month)  ret += (ADD_SEPARATORS ? "-" : "") + monthStr;
-  if(lowest >= time_day)    ret += (ADD_SEPARATORS ? "-" : "") + dayStr;
-  if(lowest >= time_hour)   ret += (ADD_SEPARATORS ? " " : "") + hourStr;
-  if(lowest >= time_minute) ret += (ADD_SEPARATORS ? ":" : "") + minuteStr;
-  if(lowest >= time_second) ret += (ADD_SEPARATORS ? ":" : "") + secondStr;
+  if(lowest >= time_month)  ret += (ADD_SEPARATORS ? "-" : "-") + monthStr;
+  if(lowest >= time_day)    ret += (ADD_SEPARATORS ? "-" : "-") + dayStr;
+  if(lowest >= time_hour)   ret += (ADD_SEPARATORS ? " " : "_") + hourStr;
+  if(lowest >= time_minute) ret += (ADD_SEPARATORS ? ":" : "-") + minuteStr;
+  if(lowest >= time_second) ret += (ADD_SEPARATORS ? ":" : "-") + secondStr;
 
   return ret;
 }

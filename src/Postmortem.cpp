@@ -134,7 +134,7 @@ void Postmortem::makeInfoLines() {
   postmortemLines.push_back(StrAndClr(" ", clrInfo));
 
   postmortemLines.push_back(StrAndClr(" The last messages:", clrHeading));
-  int historyElement = max(0, int(eng.log->history.size()) - 10);
+  int historyElement = max(0, int(eng.log->history.size()) - 20);
   for(unsigned int i = historyElement; i < eng.log->history.size(); i++) {
     string row = "";
     for(unsigned int ii = 0; ii < eng.log->history.at(i).size(); ii++) {
@@ -176,8 +176,13 @@ void Postmortem::makeInfoLines() {
           currentRow.push_back('*');
         } else {
           if(eng.renderer->renderArray[x][y].glyph ==
-              eng.featureDataHandler->getData(feature_stoneWall)->glyph) {
+              eng.featureDataHandler->getData(feature_stoneWall)->glyph
+             || eng.renderer->renderArray[x][y].glyph ==
+              eng.featureDataHandler->getData(feature_rubbleHigh)->glyph) {
             currentRow.push_back('#');
+          } else if(eng.renderer->renderArray[x][y].glyph ==
+              eng.featureDataHandler->getData(feature_statue)->glyph) {
+            currentRow.push_back('M');
           } else {
             currentRow.push_back(eng.renderer->renderArray[x][y].glyph);
           }
