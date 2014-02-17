@@ -66,7 +66,6 @@ Pos BasicUtils::getClosestPos(
   return positions.at(closestElement);
 }
 
-
 Actor* BasicUtils::getRandomClosestActor(
   const Pos& c, const vector<Actor*>& actors) const {
 
@@ -81,7 +80,6 @@ Actor* BasicUtils::getRandomClosestActor(
     }
   }
 
-  assert(distToNearest > 0);
   assert(distToNearest != INT_MAX);
 
   //Store all actors with distance equal to the nearest distance
