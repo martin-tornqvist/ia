@@ -3,6 +3,8 @@
 
 #include "DebugMode.h"
 
+#include <SDL.h>
+
 //-------------------------------------------------------------------
 // OPTIONS
 //-------------------------------------------------------------------
@@ -24,8 +26,6 @@
 #define trace if (1) ; else cerr
 #define traceVerbose if (1) ; else cerr
 #endif
-
-#include "BasicUtils.h"
 
 class PlayerVisualMemory;
 class Renderer;
@@ -55,7 +55,6 @@ class Art;
 class Marker;
 class Thrower;
 class Reload;
-class BasicUtils;
 class Gore;
 class Manual;
 class LineCalc;
@@ -147,8 +146,6 @@ public:
   Marker* marker;
   Thrower* thrower;
   Reload* reload;
-  BasicUtils* basicUtils;
-  Dice dice;
   Gore* gore;
   Manual* manual;
   LineCalc* lineCalc;

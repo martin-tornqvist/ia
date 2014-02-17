@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "Fov.h"
 #include "PlayerBonuses.h"
+#include "Utils.h"
 
 void LitDynamite::newTurn() {
   turnsLeftToExplosion_--;
@@ -30,7 +31,7 @@ LitFlare::LitFlare(FeatureId id, Pos pos, Engine& engine,
 
 void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
   bool myLight[MAP_W][MAP_H];
-  eng.basicUtils->resetArray(myLight, false);
+  Utils::resetArray(myLight, false);
   const int RADI = FOV_STD_RADI_INT; //getLightRadius();
   Pos x0y0(max(0, pos_.x - RADI), max(0, pos_.y - RADI));
   Pos x1y1(min(MAP_W - 1, pos_.x + RADI),

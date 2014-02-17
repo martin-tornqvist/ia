@@ -11,6 +11,7 @@
 #include "Query.h"
 #include "SaveHandler.h"
 #include "Popup.h"
+#include "Utils.h"
 
 //---------------------------------------------------------- FEATURE
 Feature::Feature(FeatureId id, Pos pos, Engine& engine,
@@ -157,13 +158,13 @@ void FeatureStatic::bash(Actor& actorTrying) {
       eng.log->addMsg(
         "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
 
-      if(eng.dice.oneIn(4)) {
+      if(Rnd::oneIn(4)) {
         eng.log->addMsg("I sprain myself.", clrMsgBad);
-        const int SPRAIN_DMG = eng.dice.range(1, 5);
+        const int SPRAIN_DMG = Rnd::range(1, 5);
         actorTrying.hit(SPRAIN_DMG, dmgType_pure, false);
       }
 
-      if(eng.dice.oneIn(4)) {
+      if(Rnd::oneIn(4)) {
         eng.log->addMsg("I am off-balance.");
 
         actorTrying.getPropHandler().tryApplyProp(
@@ -196,7 +197,7 @@ void FeatureStatic::bash_(Actor& actorTrying) {
 
 void FeatureStatic::setGoreIfPossible() {
   if(data_->canHaveGore) {
-    const int ROLL_GLYPH = eng.dice(1, 4);
+    const int ROLL_GLYPH = Rnd::dice(1, 4);
     switch(ROLL_GLYPH) {
       case 1: {goreGlyph_ = ',';} break;
       case 2: {goreGlyph_ = '`';} break;
@@ -204,7 +205,7 @@ void FeatureStatic::setGoreIfPossible() {
       case 4: {goreGlyph_ = ';';} break;
     }
 
-    const int ROLL_TILE = eng.dice(1, 8);
+    const int ROLL_TILE = Rnd::dice(1, 8);
     switch(ROLL_TILE) {
       case 1: {goreTile_ = tile_gore1;} break;
       case 2: {goreTile_ = tile_gore2;} break;

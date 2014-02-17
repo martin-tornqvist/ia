@@ -17,6 +17,7 @@
 #include "Attack.h"
 #include "LineCalc.h"
 #include "PlayerBonuses.h"
+#include "Utils.h"
 
 void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   const int DYNAMITE_FUSE = eng.player->dynamiteFuseTurns;
@@ -129,7 +130,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
     curPos.set(path.at(i));
 
-    Actor* const actorHere = eng.basicUtils->getActorAtPos(curPos);
+    Actor* const actorHere = Utils::getActorAtPos(curPos, eng);
     if(actorHere != NULL) {
       if(
         curPos == targetCell ||
@@ -207,7 +208,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     }
   }
 
-  if(eng.dice.percentile() < chanceToDestroyItem) {
+  if(Rnd::percentile() < chanceToDestroyItem) {
     delete &itemThrown;
   } else {
     const int DROP_ELEMENT = blockedInElement == -1 ?

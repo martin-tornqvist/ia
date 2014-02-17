@@ -40,7 +40,7 @@ void HighScore::gameOver(const bool IS_VICTORY) {
   vector<HighScoreEntry> entries = getEntriesSorted();
 
   HighScoreEntry currentPlayer(
-    eng.basicUtils->getCurrentTime().getTimeStr(time_minute, true),
+    Utils::getCurrentTime().getTimeStr(time_minute, true),
     eng.player->getNameA(),
     eng.dungeonMaster->getXp(),
     eng.dungeonMaster->getCLvl(),

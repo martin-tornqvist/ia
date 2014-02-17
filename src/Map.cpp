@@ -9,6 +9,7 @@
 #include "Renderer.h"
 #include "MapGen.h"
 #include "Item.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -49,7 +50,7 @@ Map::~Map() {
 
 //TODO This should probably go in a virtual method in Feature instead
 void Map::switchToDestroyedFeatAt(const Pos pos) {
-  if(eng.basicUtils->isPosInsideMap(pos)) {
+  if(Utils::isPosInsideMap(pos)) {
 
     const FeatureId OLD_FEATURE_ID =
       eng.map->cells[pos.x][pos.y].featureStatic->getId();
@@ -60,7 +61,7 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
     const int SIZE = convertionCandidates.size();
     if(SIZE > 0) {
       const FeatureId NEW_ID =
-        convertionCandidates.at(eng.dice(1, SIZE) - 1);
+        convertionCandidates.at(Rnd::dice(1, SIZE) - 1);
 
       eng.featureFactory->spawnFeatureAt(NEW_ID, pos);
 
@@ -83,7 +84,7 @@ void Map::switchToDestroyedFeatAt(const Pos pos) {
       }
 
       if(NEW_ID == feature_rubbleLow && NEW_ID != OLD_FEATURE_ID) {
-        if(eng.dice.percentile() < 50) {
+        if(Rnd::percentile() < 50) {
           eng.itemFactory->spawnItemOnMap(item_rock, pos);
         }
       }

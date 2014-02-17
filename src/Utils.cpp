@@ -1,4 +1,4 @@
-#include "BasicUtils.h"
+#include "Utils.h"
 
 #include <algorithm>
 #include <assert.h>
@@ -8,10 +8,92 @@
 #include "Converters.h"
 #include "GameTime.h"
 
-//------------------------------------------------------ BASIC UTILS
-void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
-                                       bool a[MAP_W][MAP_H],
-                                       vector<Pos>& vectorRef) {
+namespace Rnd {
+
+namespace {
+
+MTRand mtRand;
+
+int roll(const int ROLLS, const int SIDES) {
+  if(SIDES <= 0) {return 0;}
+  if(SIDES == 1) {return ROLLS * SIDES;}
+
+  int result = 0;
+  for(int i = 0; i < ROLLS; i++) {
+    result += mtRand.randInt(SIDES - 1) + 1;
+  }
+  return result;
+}
+
+} //Namespace
+
+void seed(const unsigned long val) {mtRand = MTRand(val);}
+
+int dice(const int ROLLS, const int SIDES) {return roll(ROLLS, SIDES);}
+
+int dice(const DiceParam& p) {return roll(p.rolls, p.sides);}
+
+bool coinToss() {return roll(1, 2) == 2;}
+
+bool fraction(const int NUMERATOR, const int DENOMINATOR) {
+  return roll(1, DENOMINATOR) <= NUMERATOR;
+}
+
+bool oneIn(const int N) {return fraction(1, N);}
+
+int range(const int MIN, const int MAX) {
+  return MIN + roll(1, MAX - MIN + 1) - 1;
+}
+
+int range(const Range& valueRange) {
+  return range(valueRange.lower, valueRange.upper);
+}
+
+int percentile() {return roll(1, 100);}
+
+} //Rnd
+
+namespace Utils {
+
+bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2) {
+  return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
+}
+
+void resetArray(int a[MAP_W][MAP_H]) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      a[x][y] = 0;
+    }
+  }
+}
+
+void resetArray(Actor* a[MAP_W][MAP_H]) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      a[x][y] = NULL;
+    }
+  }
+}
+
+void resetArray(bool a[MAP_W][MAP_H], const bool value) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      a[x][y] = value;
+    }
+  }
+}
+
+void reverseBoolArray(bool array[MAP_W][MAP_H]) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      array[x][y] = !array[x][y];
+    }
+  }
+}
+
+void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
+                           bool a[MAP_W][MAP_H],
+                           vector<Pos>& vectorRef) {
   vectorRef.resize(0);
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -22,8 +104,7 @@ void BasicUtils::makeVectorFromBoolMap(const bool VALUE_TO_STORE,
   }
 }
 
-void BasicUtils::getActorPositions(const vector<Actor*>& actors,
-                                   vector<Pos>& vectorRef) {
+void getActorPositions(const vector<Actor*>& actors, vector<Pos>& vectorRef) {
   vectorRef.resize(0);
   const unsigned int NR_ACTORS = actors.size();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
@@ -32,7 +113,7 @@ void BasicUtils::getActorPositions(const vector<Actor*>& actors,
 }
 
 
-Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
+Actor* getActorAtPos(const Pos& pos, Engine& eng) {
   for(Actor * actor : eng.gameTime->actors_) {
     if(actor->pos == pos && actor->deadState == actorDeadState_alive) {
       return actor;
@@ -41,7 +122,7 @@ Actor* BasicUtils::getActorAtPos(const Pos& pos) const {
   return NULL;
 }
 
-void BasicUtils::makeActorArray(Actor* a[MAP_W][MAP_H]) {
+void makeActorArray(Actor* a[MAP_W][MAP_H], Engine& eng) {
   resetArray(a);
 
   for(Actor * actor : eng.gameTime->actors_) {
@@ -50,13 +131,58 @@ void BasicUtils::makeActorArray(Actor* a[MAP_W][MAP_H]) {
   }
 }
 
-Pos BasicUtils::getClosestPos(
-  const Pos& c, const vector<Pos>& positions) const {
+bool isPosInsideMap(const Pos& pos) {
+  return pos.x >= 0 && pos.y >= 0 && pos.x < MAP_W && pos.y < MAP_H;
+}
+
+bool isPosInside(const Pos& pos, const Rect& area) {
+  return
+    pos.x >= area.x0y0.x &&
+    pos.x <= area.x1y1.x &&
+    pos.y >= area.x0y0.y &&
+    pos.y <= area.x1y1.y;
+}
+
+bool isAreaInsideOther(const Rect& inner, const Rect& outer,
+                       const bool COUNT_EQUAL_AS_INSIDE) {
+  if(COUNT_EQUAL_AS_INSIDE) {
+    return
+      inner.x0y0.x >= outer.x0y0.x &&
+      inner.x1y1.x <= outer.x1y1.x &&
+      inner.x0y0.y >= outer.x0y0.y &&
+      inner.x1y1.y <= outer.x1y1.y;
+  } else {
+    return
+      inner.x0y0.x > outer.x0y0.x &&
+      inner.x1y1.x < outer.x1y1.x &&
+      inner.x0y0.y > outer.x0y0.y &&
+      inner.x1y1.y < outer.x1y1.y;
+  }
+}
+
+bool isAreaInsideMap(const Rect& area) {
+  if(
+    area.x0y0.x < 0 || area.x0y0.y < 0 ||
+    area.x1y1.x >= MAP_W || area.x1y1.y >= MAP_H) {
+    return false;
+  }
+  return true;
+}
+
+int chebyshevDist(const int X0, const int Y0, const int X1, const int Y1) {
+  return max(std::abs(X1 - X0), std::abs(Y1 - Y0));
+}
+
+int chebyshevDist(const Pos& c1, const Pos& c2) {
+  return max(std::abs(c2.x - c1.x), std::abs(c2.y - c1.y));
+}
+
+Pos getClosestPos(const Pos& c, const vector<Pos>& positions) {
   int distToNearest = INT_MAX;
   int closestElement = 0;
   const int NR_POSITIONS = positions.size();
   for(int i = 0; i < NR_POSITIONS; i++) {
-    const int CUR_DIST = eng.basicUtils->chebyshevDist(c, positions.at(i));
+    const int CUR_DIST = chebyshevDist(c, positions.at(i));
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
       closestElement = i;
@@ -66,9 +192,7 @@ Pos BasicUtils::getClosestPos(
   return positions.at(closestElement);
 }
 
-Actor* BasicUtils::getRandomClosestActor(
-  const Pos& c, const vector<Actor*>& actors) const {
-
+Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {
   if(actors.empty()) return NULL;
 
   //Find distance to nearest actor(s)
@@ -92,14 +216,13 @@ Actor* BasicUtils::getRandomClosestActor(
 
   assert(closestActors.empty() == false);
 
-  const int ELEMENT = eng.dice.range(0, closestActors.size() - 1);
+  const int ELEMENT = Rnd::range(0, closestActors.size() - 1);
 
   return closestActors.at(ELEMENT);
 }
 
-bool BasicUtils::isPosAdj(
-  const Pos& pos1, const Pos& pos2,
-  const bool COUNT_SAME_CELL_AS_NEIGHBOUR) const {
+bool isPosAdj(const Pos& pos1, const Pos& pos2,
+              const bool COUNT_SAME_CELL_AS_NEIGHBOUR) {
 
   if(pos1.x == pos2.x && pos1.y == pos2.y) {
     return COUNT_SAME_CELL_AS_NEIGHBOUR;
@@ -119,12 +242,14 @@ bool BasicUtils::isPosAdj(
   return true;
 }
 
-TimeData BasicUtils::getCurrentTime() const {
+TimeData getCurrentTime() {
   time_t t = time(0);
   struct tm* now = localtime(&t);
   return TimeData(now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
                   now->tm_hour, now->tm_min, now->tm_sec);
 }
+
+} //Utils
 
 //------------------------------------------------------ TIME DATA
 string TimeData::getTimeStr(const TimeType lowest,

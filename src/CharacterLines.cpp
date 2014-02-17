@@ -34,7 +34,7 @@ void drawLocationInfo(Engine& eng) {
         const Room* const room = rooms.at(i);
         const Pos& x0y0 = room->getX0Y0();
         const Pos& x1y1 = room->getX1Y1();
-        if(eng.basicUtils->isPosInside(playerPos, Rect(x0y0, x1y1))) {
+        if(Utils::isPosInside(playerPos, Rect(x0y0, x1y1))) {
           const string& roomDescr = room->roomDescr;
           if(roomDescr.empty() == false) {
             str += room->roomDescr + " ";

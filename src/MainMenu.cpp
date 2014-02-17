@@ -17,6 +17,7 @@
 #include "DungeonClimb.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -33,12 +34,12 @@ void MainMenu::draw(const MenuBrowser& browser) const {
 //  trace << "MainMenu: Drawing random background letters" << endl;
 //  const int NR_X_CELLS = eng.config->screenPixelW / eng.config->cellW;
 //  const int NR_Y_CELLS = eng.config->screenPixelH / eng.config->cellH;
-//  const int BG_BRIGHTNESS = eng.dice.range(14, 17);
+//  const int BG_BRIGHTNESS = Rnd::range(14, 17);
 //  for(int y = 0; y < NR_Y_CELLS; y++) {
 //    for(int x = 0; x < NR_X_CELLS; x++) {
 //      char cha = ' ';
-//      if(eng.dice.coinToss()) {
-//        cha = 'a' + eng.dice.range(0, 25);
+//      if(Rnd::coinToss()) {
+//        cha = 'a' + Rnd::range(0, 25);
 //      }
 //      SDL_Color bgClr = clrBlack;
 //      bgClr.r = BG_BRIGHTNESS / 2;
@@ -67,7 +68,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
       for(const char & glyph : row) {
         if(glyph != ' ') {
           SDL_Color clr = clrGreenLgt;
-          clr.g += eng.dice.range(-50, 100);
+          clr.g += Rnd::range(-50, 100);
           clr.g = max(0, min(254, int(clr.g)));
           eng.renderer->drawGlyph(glyph, panel_screen, pos, clr);
         }
@@ -301,5 +302,5 @@ string MainMenu::getHplQuote() const {
   quotes.push_back("It lumbered slobberingly into sight and gropingly squeezed its gelatinous green immensity through the black doorway into the tainted outside air of that poison city of madness.");
   quotes.push_back("The Thing cannot be described - there is no language for such abysms of shrieking and immemorial lunacy, such eldritch contradictions of all matter, force, and cosmic order.");
   quotes.push_back("I could tell I was at the gateway of a region half-bewitched through the piling-up of unbroken time-accumulations; a region where old, strange things have had a chance to grow and linger because they have never been stirred up.");
-  return "\"" + quotes.at(eng.dice.range(0, quotes.size() - 1)) + "\"";
+  return "\"" + quotes.at(Rnd::range(0, quotes.size() - 1)) + "\"";
 }

@@ -12,6 +12,7 @@
 #include "MapParsing.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -128,7 +129,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
     //Ethereal target missed?
     if(find(defProps.begin(), defProps.end(), propEthereal) != defProps.end()) {
-      isEtherealDefenderMissed = eng.dice.fraction(2, 3);
+      isEtherealDefenderMissed = Rnd::fraction(2, 3);
     }
 
     //--------------------------------------- DETERMINE DAMAGE
@@ -156,7 +157,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       dmg = max(0, dmgRoll + dmgPlus);
     } else if(attackResult >= successSmall) {
       //Normal hit
-      dmgRoll = eng.dice(dmgRolls, dmgSides);
+      dmgRoll = Rnd::dice(dmgRolls, dmgSides);
       dmg = max(0, dmgRoll + dmgPlus);
     }
   }
@@ -172,7 +173,7 @@ RangedAttackData::RangedAttackData(
   verbPlayerAttacks = wpn_.getData().rangedAttackMessages.player;
   verbOtherAttacks  = wpn_.getData().rangedAttackMessages.other;
 
-  Actor* const actorAimedAt = eng.basicUtils->getActorAtPos(aimPos_);
+  Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_, eng);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
@@ -188,7 +189,7 @@ RangedAttackData::RangedAttackData(
     intendedAimLevel = intendedAimLevel_;
   }
 
-  curDefender = eng.basicUtils->getActorAtPos(curPos_);
+  curDefender = Utils::getActorAtPos(curPos_, eng);
 
   if(curDefender != NULL) {
     trace << "RangedAttackData: Defender found" << endl;
@@ -197,7 +198,7 @@ RangedAttackData::RangedAttackData(
     const int WPN_MOD           = wpn_.getData().rangedHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(curDefender->pos);
-    const int DIST_TO_TGT       = eng.basicUtils->chebyshevDist(
+    const int DIST_TO_TGT       = Utils::chebyshevDist(
                                     attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
     const ActorSpeed defSpeed = curDefender->getData().speed;
@@ -236,7 +237,7 @@ RangedAttackData::RangedAttackData(
       curDefender->getPropHandler().getAllActivePropIds(props);
 
       if(find(props.begin(), props.end(), propEthereal) != props.end()) {
-        isEtherealDefenderMissed = eng.dice.fraction(2, 3);
+        isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
 
       bool playerAimX3 = false;
@@ -253,7 +254,7 @@ RangedAttackData::RangedAttackData(
       dmgPlus   = wpn_.getData().rangedDmg.plus;
 
       dmgRoll   = playerAimX3 ? dmgRolls * dmgSides :
-                  eng.dice(dmgRolls, dmgSides);
+                  Rnd::dice(dmgRolls, dmgSides);
       dmg       = dmgRoll + dmgPlus;
     }
   }
@@ -266,7 +267,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
   AttackData(attacker_, item_, engine), hitChanceTot(0),
   intendedAimLevel(actorSize_none), curDefenderSize(actorSize_none) {
 
-  Actor* const actorAimedAt = eng.basicUtils->getActorAtPos(aimPos_);
+  Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_, eng);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
@@ -282,7 +283,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     intendedAimLevel = intendedAimLevel_;
   }
 
-  curDefender = eng.basicUtils->getActorAtPos(curPos_);
+  curDefender = Utils::getActorAtPos(curPos_, eng);
 
   if(curDefender != NULL) {
     trace << "MissileAttackData: Defender found" << endl;
@@ -291,7 +292,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     const int WPN_MOD           = item_.getData().missileHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(curDefender->pos);
-    const int DIST_TO_TGT       = eng.basicUtils->chebyshevDist(
+    const int DIST_TO_TGT       = Utils::chebyshevDist(
                                     attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
     const ActorSpeed defSpeed = curDefender->getData().speed;
@@ -338,7 +339,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
       dmgPlus   = item_.getData().missileDmg.plus;
 
       dmgRoll   = playerAimX3 ? dmgRolls * dmgSides :
-                  eng.dice(dmgRolls, dmgSides);
+                  Rnd::dice(dmgRolls, dmgSides);
       dmg       = dmgRoll + dmgPlus;
     }
   }

@@ -168,12 +168,10 @@ public:
   Region();
   ~Region();
 
-  Rect getRandomPossForRoom(Engine& eng) const;
-  Rect getRegionPoss() const {
-    return Rect(x0y0_, x1y1_);
-  }
+  Rect getRandomPossForRoom() const;
+  Rect getRegionPoss() const {return Rect(x0y0_, x1y1_);}
 
-  bool isRegionNeighbour(const Region& other, Engine& engine);
+  bool isRegionNeighbour(const Region& other);
 
   inline Pos getCenterPos() const {return (x1y1_ + x0y0_) / 2;}
   inline Pos getX0Y0()      const {return x0y0_;}

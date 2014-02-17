@@ -9,6 +9,7 @@
 using namespace std;
 
 class Engine;
+class MenuBrowser;
 
 //This class is responsible for letting the player create a character
 //(bg, traits and name), and also for picking traits when gaining levels

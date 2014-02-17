@@ -11,6 +11,7 @@
 #include "Inventory.h"
 #include "PlayerSpellsHandler.h"
 #include "Renderer.h"
+#include "Utils.h"
 
 const string Scroll::getRealTypeName() {
   switch(data_->spellCastFromScroll) {
@@ -176,7 +177,7 @@ ScrollNameHandler::ScrollNameHandler(Engine& engine) :
 
 void ScrollNameHandler::setFalseScrollName(ItemData& d) {
   const int NR_ELEMENTS = falseNames_.size();
-  const int ELEMENT     = eng.dice.range(0, NR_ELEMENTS - 1);
+  const int ELEMENT     = Rnd::range(0, NR_ELEMENTS - 1);
 
   const string& TITLE = "\"" + falseNames_.at(ELEMENT) + "\"";
 

@@ -1,6 +1,8 @@
 #include "AutoDescribeActor.h"
 
 #include "Engine.h"
+#include "ActorData.h"
+#include "Actor.h"
 
 void AutoDescribeActor::addAutoDescriptionLines(
   Actor* const actor, string& line) const {

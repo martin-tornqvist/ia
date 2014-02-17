@@ -59,12 +59,12 @@ void Player::spawnStartItems() {
     insanityObsessions[i] = false;
   }
 
-  int NR_CARTRIDGES        = eng.dice.range(1, 2);
-  int NR_DYNAMITE          = eng.dice.range(2, 3);
-  int NR_MOLOTOV           = eng.dice.range(2, 3);
-  int NR_THROWING_KNIVES   = eng.dice.range(7, 12);
+  int NR_CARTRIDGES        = Rnd::range(1, 2);
+  int NR_DYNAMITE          = Rnd::range(2, 3);
+  int NR_MOLOTOV           = Rnd::range(2, 3);
+  int NR_THROWING_KNIVES   = Rnd::range(7, 12);
 
-  const int WEAPON_CHOICE = eng.dice.range(1, 5);
+  const int WEAPON_CHOICE = Rnd::range(1, 5);
   ItemId weaponId = item_dagger;
   switch(WEAPON_CHOICE) {
     case 1:   weaponId = item_dagger;   break;
@@ -360,11 +360,11 @@ void Player::incrInsanity() {
     //When long term sanity decreases something happens (mostly bad)
     //(Reroll until something actually happens)
     while(true) {
-      const int ROLL = eng.dice.range(1, 8);
+      const int ROLL = Rnd::range(1, 8);
       switch(ROLL) {
         case 1: {
           if(playerSeeShockingMonster) {
-            if(eng.dice.coinToss()) {
+            if(Rnd::coinToss()) {
               msg += "I let out a terrified shriek.";
             } else {
               msg += "I scream in terror.";
@@ -381,7 +381,7 @@ void Player::incrInsanity() {
           msg += "I find myself babbling incoherently.";
           eng.popup->showMsg(msg, true, "Babbling!", sfxInsanityRising);
           const string playerName = getNameThe();
-          for(int i = eng.dice.range(3, 5); i > 0; i--) {
+          for(int i = Rnd::range(3, 5); i > 0; i--) {
             const string phrase = Cultist::getCultistPhrase(eng);
             eng.log->addMsg(playerName + ": " + phrase);
           }
@@ -423,10 +423,10 @@ void Player::incrInsanity() {
                 }
               }
               if(phobiasActive < 2) {
-                if(eng.dice.coinToss()) {
+                if(Rnd::coinToss()) {
                   if(SpottedEnemies.empty() == false) {
                     const int MONSTER_ROLL =
-                      eng.dice.range(0, SpottedEnemies.size() - 1);
+                      Rnd::range(0, SpottedEnemies.size() - 1);
                     const ActorData& monsterData =
                       SpottedEnemies.at(MONSTER_ROLL)->getData();
                     if(
@@ -471,7 +471,7 @@ void Player::incrInsanity() {
                     }
                   }
                 } else {
-                  if(eng.dice.coinToss()) {
+                  if(Rnd::coinToss()) {
                     if(isStandingInOpenSpace()) {
                       if(insanityPhobias[insanityPhobia_openPlace] == false) {
                         msg += "I am afflicted by Agoraphobia. ";
@@ -519,7 +519,7 @@ void Player::incrInsanity() {
             }
             if(obsessionsActive == 0) {
               const InsanityObsessionId obsession =
-                (InsanityObsessionId)(eng.dice.range(
+                (InsanityObsessionId)(Rnd::range(
                                         0, endOfInsanityObsessions - 1));
               switch(obsession) {
                 case insanityObsession_masochism: {
@@ -560,7 +560,7 @@ void Player::incrInsanity() {
             const int NR_SHADOWS_UPPER =
               getConstrInRange(2, (eng.map->getDlvl() + 1) / 2, 6);
             const int NR_SHADOWS =
-              eng.dice.range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
+              Rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 
             eng.actorFactory->summonMonsters(
               pos, vector<ActorId>(NR_SHADOWS, actor_shadow), true);
@@ -597,7 +597,7 @@ void Player::setTempShockFromFeatures() {
     const int Y = pos.y + dy;
     for(int dx = -1; dx <= 1; dx++) {
       const int X = pos.x + dx;
-      if(eng.basicUtils->isPosInsideMap(Pos(X, Y))) {
+      if(Utils::isPosInsideMap(Pos(X, Y))) {
         const Feature* const f =
           eng.map->cells[pos.x + dx][pos.y + dy].featureStatic;
         shockTemp_ += f->getShockWhenAdjacent();
@@ -643,7 +643,7 @@ void Player::testPhobias() {
   vector<Actor*> SpottedEnemies;
   getSpottedEnemies(SpottedEnemies);
 
-  const int ROLL = eng.dice.percentile();
+  const int ROLL = Rnd::percentile();
   //Phobia vs creature type?
   if(ROLL < 10) {
     for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
@@ -653,7 +653,7 @@ void Player::testPhobias() {
         insanityPhobias[insanityPhobia_dog]) {
         eng.log->addMsg("I am plagued by my canine phobia!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
       if(
@@ -661,7 +661,7 @@ void Player::testPhobias() {
         insanityPhobias[insanityPhobia_rat]) {
         eng.log->addMsg("I am plagued by my rat phobia!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
       if(
@@ -669,7 +669,7 @@ void Player::testPhobias() {
         insanityPhobias[insanityPhobia_undead]) {
         eng.log->addMsg("I am plagued by my phobia of the dead!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
       if(
@@ -677,7 +677,7 @@ void Player::testPhobias() {
         insanityPhobias[insanityPhobia_spider]) {
         eng.log->addMsg("I am plagued by my spider phobia!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
     }
@@ -687,7 +687,7 @@ void Player::testPhobias() {
       if(isStandingInOpenSpace()) {
         eng.log->addMsg("I am plagued by my phobia of open places!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
     }
@@ -696,7 +696,7 @@ void Player::testPhobias() {
       if(isStandingInCrampedSpace()) {
         eng.log->addMsg("I am plagued by my phobia of closed places!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, eng.dice(1, 6)));
+          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
     }
@@ -885,8 +885,8 @@ void Player::onStandardTurn() {
   const int TURN = eng.gameTime->getTurn();
   const int LOSE_N_TURN = 14;
   if((TURN / LOSE_N_TURN) * LOSE_N_TURN == TURN && TURN > 1) {
-    if(eng.dice.oneIn(750)) {
-      if(eng.dice.coinToss()) {
+    if(Rnd::oneIn(750)) {
+      if(Rnd::coinToss()) {
         eng.popup->showMsg("I have a bad feeling about this...", true);
       } else {
         eng.popup->showMsg("A chill runs down my spine...", true);
@@ -1084,7 +1084,7 @@ void Player::moveDir(Dir dir) {
 
     if(dir != dirCenter) {
       //Attack?
-      Actor* const actorAtDest = eng.basicUtils->getActorAtPos(dest);
+      Actor* const actorAtDest = Utils::getActorAtPos(dest, eng);
       if(actorAtDest != NULL) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
@@ -1194,7 +1194,7 @@ void Player::moveDir(Dir dir) {
 
 void Player::autoMelee() {
   if(target != NULL) {
-    if(eng.basicUtils->isPosAdj(pos, target->pos, false)) {
+    if(Utils::isPosAdj(pos, target->pos, false)) {
       if(isSeeingActor(*target, NULL)) {
         moveDir(DirConverter().getDir(target->pos - pos));
         return;
@@ -1206,7 +1206,7 @@ void Player::autoMelee() {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
-        Actor* const actor = eng.basicUtils->getActorAtPos(pos + Pos(dx, dy));
+        Actor* const actor = Utils::getActorAtPos(pos + Pos(dx, dy), eng);
         if(actor != NULL) {
           if(isSeeingActor(*actor, NULL)) {
             target = actor;
@@ -1264,7 +1264,7 @@ void Player::addLight_(
 
   if(isUsingLightGivingItem) {
     bool myLight[MAP_W][MAP_H];
-    eng.basicUtils->resetArray(myLight, false);
+    Utils::resetArray(myLight, false);
     const int RADI = FOV_STD_RADI_INT; //LitFlare::getLightRadius();
     Pos x0y0(max(0, pos.x - RADI), max(0, pos.y - RADI));
     Pos x1y1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
@@ -1335,7 +1335,7 @@ void Player::FOVhack() {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
             const Pos adj(x + dx, y + dy);
-            if(eng.basicUtils->isPosInsideMap(adj)) {
+            if(Utils::isPosInsideMap(adj)) {
               const Cell& adjCell = eng.map->cells[adj.x][adj.y];
               if(
                 adjCell.isSeenByPlayer &&

@@ -1,7 +1,7 @@
 #include "Art.h"
 
 #include "Engine.h"
-
+#include "Utils.h"
 
 Pos Art::getColumnAndRowGlyph(const char glyph) {
   switch(glyph) {

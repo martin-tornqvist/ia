@@ -19,6 +19,7 @@
 #include "PopulateMonsters.h"
 #include "Map.h"
 #include "FeatureFactory.h"
+#include "Utils.h"
 
 //---------------------------------------------------------ITEM CONTAINE
 ItemContainerFeature::ItemContainerFeature() {items_.resize(0);}
@@ -49,10 +50,8 @@ void ItemContainerFeature::setRandomItemsForFeature(
           pair<FeatureId, int> featuresFoundIn =
             curData->featuresCanBeFoundIn.at(ii);
           if(featuresFoundIn.first == featureId) {
-            if(engine.dice.percentile() < featuresFoundIn.second) {
-              if(
-                engine.dice.percentile() <
-                curData->chanceToIncludeInSpawnList) {
+            if(Rnd::percentile() < featuresFoundIn.second) {
+              if(Rnd::percentile() < curData->chanceToIncludeInSpawnList) {
                 itemCandidates.push_back(ItemId(i));
                 break;
               }
@@ -65,7 +64,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
       if(NR_CANDIDATES > 0) {
         for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; i++) {
           const unsigned int ELEMENT =
-            engine.dice.range(0, NR_CANDIDATES - 1);
+            Rnd::range(0, NR_CANDIDATES - 1);
           Item* item =
             engine.itemFactory->spawnItem(itemCandidates.at(ELEMENT));
           engine.itemFactory->setItemRandomizedProperties(item);
@@ -101,22 +100,22 @@ void ItemContainerFeature::destroySingleFragile(Engine& engine) {
 //--------------------------------------------------------- TOMB
 Tomb::Tomb(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false),
-  isTraitKnown_(false), pushLidOneInN_(engine.dice.range(6, 14)),
+  isTraitKnown_(false), pushLidOneInN_(Rnd::range(6, 14)),
   appearance_(TombAppearance::common), trait_(TombTrait::endOfTombTraits) {
 
   //Contained items
   PlayerBonHandler* const bonHlr = eng.playerBonHandler;
-  const int NR_ITEMS_MIN = eng.dice.oneIn(3) ? 0 : 1;
+  const int NR_ITEMS_MIN = Rnd::oneIn(3) ? 0 : 1;
   const int NR_ITEMS_MAX =
     NR_ITEMS_MIN + (bonHlr->hasTrait(traitTreasureHunter) ? 1 : 0);
 
   itemContainer_.setRandomItemsForFeature(
-    feature_tomb, eng.dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
+    feature_tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
   //Appearance
-  if(engine.dice.oneIn(5)) {
+  if(Rnd::oneIn(5)) {
     const TombAppearance lastAppearance = TombAppearance::endOfTombAppearance;
-    appearance_ = TombAppearance(engine.dice.range(0, int(lastAppearance) - 1));
+    appearance_ = TombAppearance(Rnd::range(0, int(lastAppearance) - 1));
   } else {
     for(Item * item : itemContainer_.items_) {
       const ItemValue itemValue = item->getData().itemValue;
@@ -132,7 +131,7 @@ Tomb::Tomb(FeatureId id, Pos pos, Engine& engine) :
   const bool IS_CONTAINING_ITEMS = itemContainer_.items_.empty() == false;
 
   if(IS_CONTAINING_ITEMS) {
-    const int RND = engine.dice.percentile();
+    const int RND = Rnd::percentile();
     if(RND < 15) {
       trait_ = TombTrait::forebodingCarvedSigns;
     } else if(RND < 45) {
@@ -189,7 +188,7 @@ void Tomb::bump(Actor& actorBumping) {
 
         trace << "Tomb: Bonus to roll: " << BON << endl;
 
-        const int ROLL_TOT = eng.dice.range(1, pushLidOneInN_) + BON;
+        const int ROLL_TOT = Rnd::range(1, pushLidOneInN_) + BON;
 
         trace << "Tomb: Roll + bonus = " << ROLL_TOT << endl;
 
@@ -217,9 +216,9 @@ void Tomb::trySprainPlayer() {
   const PlayerBonHandler* const bonHlr = eng.playerBonHandler;
   const int SPRAIN_ONE_IN_N = bonHlr->hasTrait(traitRugged) ? 6 :
                               bonHlr->hasTrait(traitTough)  ? 5 : 4;
-  if(eng.dice.oneIn(SPRAIN_ONE_IN_N)) {
+  if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     eng.log->addMsg("I sprain myself.", clrMsgBad);
-    eng.player->hit(eng.dice.range(1, 5), dmgType_pure, false);
+    eng.player->hit(Rnd::range(1, 5), dmgType_pure, false);
   }
 }
 
@@ -257,7 +256,7 @@ void Tomb::examine() {
       const int FIND_ONE_IN_N = bonHlr.hasTrait(traitPerceptive) ? 2 :
                                 (bonHlr.hasTrait(traitObservant) ? 3 : 6);
 
-      isTraitKnown_ = eng.dice.oneIn(FIND_ONE_IN_N);
+      isTraitKnown_ = Rnd::oneIn(FIND_ONE_IN_N);
     }
 
     if(isTraitKnown_) {
@@ -309,9 +308,9 @@ void Tomb::examine() {
 
 //  eng.log->addMsg("I strike at the lid with a Sledgehammer.");
 //  const int BREAK_N_IN_10 = IS_WEAK ? 1 : 8;
-//  if(eng.dice.fraction(BREAK_N_IN_10, 10)) {
+//  if(Rnd::fraction(BREAK_N_IN_10, 10)) {
 //    eng.log->addMsg("The lid cracks open!");
-//    if(IS_BLESSED == false && (IS_CURSED || eng.dice.oneIn(3))) {
+//    if(IS_BLESSED == false && (IS_CURSED || Rnd::oneIn(3))) {
 //      itemContainer_.destroySingleFragile(eng);
 //    }
 //    open();
@@ -325,7 +324,7 @@ void Tomb::examine() {
 //void Tomb::disarm() {
 
 //case tombAction_carveCurseWard: {
-//    if(IS_CURSED == false && (IS_BLESSED || eng.dice.fraction(4, 5))) {
+//    if(IS_CURSED == false && (IS_BLESSED || Rnd::fraction(4, 5))) {
 //      eng.log->addMsg("The curse is cleared.");
 //    } else {
 //      eng.log->addMsg("I make a mistake, the curse is doubled!");
@@ -364,11 +363,11 @@ void Tomb::triggerTrap(Actor& actor) {
     } break;
 
     case TombTrait::stench: {
-      if(eng.dice.coinToss()) {
+      if(Rnd::coinToss()) {
         eng.log->addMsg("Fumes burst out from the tomb!");
         Prop* prop = NULL;
         SDL_Color fumeClr = clrMagenta;
-        const int RND = eng.dice.percentile();
+        const int RND = Rnd::percentile();
         if(RND < 20) {
           prop = new PropPoisoned(eng, propTurnsStd);
           fumeClr = clrGreenLgt;
@@ -400,7 +399,7 @@ void Tomb::triggerTrap(Actor& actor) {
   }
 
   if(actorCandidates.empty() == false) {
-    const unsigned int ELEM = eng.dice.range(0, actorCandidates.size() - 1);
+    const unsigned int ELEM = Rnd::range(0, actorCandidates.size() - 1);
     const ActorId actorIdToSpawn = actorCandidates.at(ELEM);
     Actor* const monster = eng.actorFactory->spawnActor(actorIdToSpawn, pos_);
     dynamic_cast<Monster*>(monster)->becomeAware();
@@ -411,19 +410,19 @@ void Tomb::triggerTrap(Actor& actor) {
 Chest::Chest(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false),
   isLocked_(false), isTrapped_(false), isTrapStatusKnown_(false),
-  material(ChestMtrl(engine.dice.range(0, endOfChestMaterial - 1))) {
+  material(ChestMtrl(Rnd::range(0, endOfChestMaterial - 1))) {
 
   PlayerBonHandler* const bonHlr = eng.playerBonHandler;
   const bool IS_TREASURE_HUNTER =
     bonHlr->hasTrait(traitTreasureHunter);
-  const int NR_ITEMS_MIN = eng.dice.oneIn(10) ? 0 : 1;
+  const int NR_ITEMS_MIN = Rnd::oneIn(10) ? 0 : 1;
   const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 3 : 2;
   itemContainer_.setRandomItemsForFeature(
-    feature_chest, eng.dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
+    feature_chest, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 
   if(itemContainer_.items_.empty() == false) {
-    isLocked_   = eng.dice.fraction(6, 10);
-    isTrapped_  = eng.dice.fraction(6, 10);
+    isLocked_   = Rnd::fraction(6, 10);
+    isTrapped_  = Rnd::fraction(6, 10);
   }
 }
 
@@ -442,9 +441,9 @@ void Chest::trySprainPlayer() {
   const PlayerBonHandler* const bonHlr = eng.playerBonHandler;
   const int SPRAIN_ONE_IN_N = bonHlr->hasTrait(traitRugged) ? 6 :
                               bonHlr->hasTrait(traitTough)  ? 5 : 4;
-  if(eng.dice.oneIn(SPRAIN_ONE_IN_N)) {
+  if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     eng.log->addMsg("I sprain myself.", clrMsgBad);
-    eng.player->hit(eng.dice.range(1, 5), dmgType_pure, false);
+    eng.player->hit(Rnd::range(1, 5), dmgType_pure, false);
   }
 }
 
@@ -495,7 +494,7 @@ void Chest::bash(Actor& actorTrying) {
       const bool IS_BLESSED =
         find(props.begin(), props.end(), propBlessed) != props.end();
 
-      if(IS_BLESSED == false && (IS_CURSED || eng.dice.oneIn(3))) {
+      if(IS_BLESSED == false && (IS_CURSED || Rnd::oneIn(3))) {
         itemContainer_.destroySingleFragile(eng);
       }
 
@@ -505,7 +504,7 @@ void Chest::bash(Actor& actorTrying) {
 
       const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
 
-      if(eng.dice.oneIn(OPEN_ONE_IN_N)) {
+      if(Rnd::oneIn(OPEN_ONE_IN_N)) {
         eng.log->addMsg("I kick the lid open!");
         open();
       } else {
@@ -528,7 +527,7 @@ void Chest::bash(Actor& actorTrying) {
 //      } else {
 //        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 //
-//        if(eng.dice.percentile() < CHANCE_TO_DMG_WPN) {
+//        if(Rnd::percentile() < CHANCE_TO_DMG_WPN) {
 //          const string wpnName = eng.itemDataHandler->getItemRef(
 //                                   *item, itemRef_plain, true);
 //
@@ -549,7 +548,7 @@ void Chest::bash(Actor& actorTrying) {
 //          eng.log->addMsg("It seems futile.");
 //        } else {
 //          const int CHANCE_TO_OPEN = 40;
-//          if(eng.dice.percentile() < CHANCE_TO_OPEN) {
+//          if(Rnd::percentile() < CHANCE_TO_OPEN) {
 //            eng.log->addMsg("I force the lock open!");
 //            open();
 //          } else {
@@ -579,7 +578,7 @@ void Chest::examine() {
     const int FIND_ONE_IN_N = bonHlr->hasTrait(traitPerceptive) ? 3 :
                               (bonHlr->hasTrait(traitObservant) ? 4 : 7);
 
-    if(isTrapped_ && (isTrapStatusKnown_ || (eng.dice.oneIn(FIND_ONE_IN_N)))) {
+    if(isTrapped_ && (isTrapStatusKnown_ || (Rnd::oneIn(FIND_ONE_IN_N)))) {
       eng.log->addMsg("There appears to be a hidden trap mechanism!");
       isTrapStatusKnown_ = true;
     } else {
@@ -595,14 +594,14 @@ void Chest::disarm() {
     eng.log->addMsg("I attempt to disarm the trap.");
 
     const int TRIGGER_ONE_IN_N = 5;
-    if(eng.dice.oneIn(TRIGGER_ONE_IN_N)) {
+    if(Rnd::oneIn(TRIGGER_ONE_IN_N)) {
       eng.log->addMsg("I set off the trap!");
       triggerTrap(*eng.player);
     } else {
 
       const int DISARM_ONE_IN_N = 2;
 
-      if(eng.dice.oneIn(DISARM_ONE_IN_N)) {
+      if(Rnd::oneIn(DISARM_ONE_IN_N)) {
         eng.log->addMsg("I successfully disarm it!");
         isTrapped_ = false;
       } else {
@@ -635,7 +634,7 @@ void Chest::triggerTrap(Actor& actor) {
     const int EXPLODE_ONE_IN_N = 7;
     if(
       eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS &&
-      eng.dice.oneIn(EXPLODE_ONE_IN_N)) {
+      Rnd::oneIn(EXPLODE_ONE_IN_N)) {
       eng.log->addMsg("The trap explodes!");
       Explosion::runExplosionAt(pos_, eng, 0, sfxExplosion, true);
       if(eng.player->deadState == actorDeadState_alive) {
@@ -645,7 +644,7 @@ void Chest::triggerTrap(Actor& actor) {
       eng.log->addMsg("Fumes burst out from the chest!");
       Prop* prop = NULL;
       SDL_Color fumeClr = clrMagenta;
-      const int RND = eng.dice.percentile();
+      const int RND = Rnd::percentile();
       if(RND < 20) {
         prop = new PropPoisoned(eng, propTurnsStd);
         fumeClr = clrGreenLgt;
@@ -667,12 +666,12 @@ Fountain::Fountain(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), fountainType_(FountainType::tepid),
   fountainMaterial_(FountainMaterial::stone) {
 
-  if(engine.dice.oneIn(4)) {fountainMaterial_ = FountainMaterial::gold;}
+  if(Rnd::oneIn(4)) {fountainMaterial_ = FountainMaterial::gold;}
 
   switch(fountainMaterial_) {
     case FountainMaterial::stone: {
       const int NR_TYPES = int(FountainType::endOfFountainTypes);
-      fountainType_ = FountainType(engine.dice.range(1, NR_TYPES - 1));
+      fountainType_ = FountainType(Rnd::range(1, NR_TYPES - 1));
     } break;
 
     case FountainMaterial::gold: {
@@ -680,7 +679,7 @@ Fountain::Fountain(FeatureId id, Pos pos, Engine& engine) :
         FountainType::bless, FountainType::refreshing, FountainType::spirit,
         FountainType::vitality
       };
-      const int ELEMENT = engine.dice.range(0, typeCandidates.size() - 1);
+      const int ELEMENT = Rnd::range(0, typeCandidates.size() - 1);
       fountainType_ = typeCandidates.at(ELEMENT);
     } break;
   }
@@ -764,7 +763,7 @@ void Fountain::bump(Actor& actorBumping) {
         case FountainType::endOfFountainTypes: {} break;
       }
 
-      if(eng.dice.oneIn(5)) {
+      if(Rnd::oneIn(5)) {
         eng.log->addMsg("The fountain dries out.");
         fountainType_ = FountainType::dry;
       }
@@ -782,10 +781,10 @@ Cabinet::Cabinet(FeatureId id, Pos pos, Engine& engine) :
   const bool IS_TREASURE_HUNTER =
     bonHlr->hasTrait(traitTreasureHunter);
   const int IS_EMPTY_N_IN_10 = 5;
-  const int NR_ITEMS_MIN = eng.dice.fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
+  const int NR_ITEMS_MIN = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 2 : 1;
   itemContainer_.setRandomItemsForFeature(
-    feature_cabinet, eng.dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
+    feature_cabinet, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
 
 void Cabinet::bump(Actor& actorBumping) {
@@ -823,10 +822,10 @@ Cocoon::Cocoon(FeatureId id, Pos pos, Engine& engine) :
   const bool IS_TREASURE_HUNTER =
     bonHlr->hasTrait(traitTreasureHunter);
   const int IS_EMPTY_N_IN_10 = 6;
-  const int NR_ITEMS_MIN = eng.dice.fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
+  const int NR_ITEMS_MIN = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
   itemContainer_.setRandomItemsForFeature(
-    feature_cocoon, eng.dice.range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
+    feature_cocoon, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
 }
 
 void Cocoon::bump(Actor& actorBumping) {
@@ -842,7 +841,7 @@ void Cocoon::bump(Actor& actorBumping) {
 void Cocoon::triggerTrap(Actor& actor) {
   (void)actor;
 
-  const int RND = eng.dice.percentile();
+  const int RND = Rnd::percentile();
 
   if(RND < 15) {
     eng.log->addMsg("There is a half-dissolved human body inside!");
@@ -862,8 +861,8 @@ void Cocoon::triggerTrap(Actor& actor) {
     if(NR_CANDIDATES > 0) {
       trace << "Cocoon: Spawn candidates found, attempting to place" << endl;
       eng.log->addMsg("There are spiders inside!");
-      const int NR_SPIDERS = eng.dice.range(2, 5);
-      const int ELEMENT = eng.dice.range(0, NR_CANDIDATES - 1);
+      const int NR_SPIDERS = Rnd::range(2, 5);
+      const int ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
       const ActorId actorIdToSummon = spawnCandidates.at(ELEMENT);
       eng.actorFactory->summonMonsters(
         pos_, vector<ActorId>(NR_SPIDERS, actorIdToSummon), true);

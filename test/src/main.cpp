@@ -1,7 +1,7 @@
 #include "UnitTest++.h"
 
 #include "engine.h"
-#include "BasicUtils.h"
+#include "Utils.h"
 #include "Renderer.h"
 #include "Map.h"
 #include "ActorPlayer.h"
@@ -75,7 +75,7 @@ TEST(ConstrainValInRange) {
 
 TEST(CalculateDistances) {
   Engine eng;
-  BasicUtils utils(eng);
+  Utils utils(eng);
   CHECK_EQUAL(utils.chebyshevDist(Pos(1, 2), Pos(2, 3)), 1);
   CHECK_EQUAL(utils.chebyshevDist(Pos(1, 2), Pos(2, 4)), 2);
   CHECK_EQUAL(utils.chebyshevDist(Pos(1, 2), Pos(1, 2)), 0);
@@ -298,7 +298,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
 TEST_FIXTURE(BasicFixture, Fov) {
   bool blockers[MAP_W][MAP_H];
 
-  eng.basicUtils->resetArray(blockers, false); //Nothing blocking sight
+  Utils::resetArray(blockers, false); //Nothing blocking sight
 
   const int X = MAP_W_HALF;
   const int Y = MAP_H_HALF;
@@ -805,7 +805,7 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
   bool in[MAP_W][MAP_H];
   bool out[MAP_W][MAP_H];
 
-  eng.basicUtils->resetArray(in, false); //Make sure all values are 0
+  Utils::resetArray(in, false); //Make sure all values are 0
 
   in[20][10] = true;
 

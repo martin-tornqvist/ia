@@ -18,6 +18,7 @@
 #include "Audio.h"
 #include "MapParsing.h"
 #include "Renderer.h"
+#include "Utils.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
   lines.push_back(toString(turn_));
@@ -59,7 +60,7 @@ void GameTime::eraseActorInElement(const unsigned int i) {
 
 void GameTime::insertActorInLoop(Actor* actor) {
   //Sanity check actor inserted
-  assert(eng.basicUtils->isPosInsideMap(actor->pos));
+  assert(Utils::isPosInsideMap(actor->pos));
   actors_.push_back(actor);
 }
 
@@ -124,7 +125,7 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
           actorWhoCanActThisTurnFound =
             (currentTurnType == turnType_slow ||
              currentTurnType == turnType_normal_2)
-            && eng.dice.fraction(2, 3);
+            && Rnd::fraction(2, 3);
         } break;
 
         case actorSpeed_slow: {
@@ -303,6 +304,6 @@ Actor* GameTime::getCurrentActor() {
   Actor* const actor = actors_.at(currentActorVectorPos_);
 
   //Sanity check actor retrieved
-  assert(eng.basicUtils->isPosInsideMap(actor->pos));
+  assert(Utils::isPosInsideMap(actor->pos));
   return actor;
 }

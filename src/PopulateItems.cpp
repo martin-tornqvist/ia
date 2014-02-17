@@ -6,18 +6,19 @@
 #include "ItemFactory.h"
 #include "PlayerBonuses.h"
 #include "MapParsing.h"
+#include "Utils.h"
 
 void PopulateItems::spawnItems() {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksItems(eng), blockers);
   vector<Pos> freeCells;
-  eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
+  Utils::makeVectorFromBoolMap(false, blockers, freeCells);
 
   const int CELLS_PER_SPAWN = 135;
 
   int nrOfSpawns = freeCells.size() / CELLS_PER_SPAWN;
   nrOfSpawns = max(1, nrOfSpawns);
-  nrOfSpawns += eng.dice(1, (nrOfSpawns / 2) + 2) - 1;
+  nrOfSpawns += Rnd::dice(1, (nrOfSpawns / 2) + 2) - 1;
 
   if(eng.playerBonHandler->hasTrait(traitTreasureHunter)) {
     nrOfSpawns = (nrOfSpawns * 3) / 2;
@@ -33,7 +34,7 @@ void PopulateItems::spawnItems() {
     if(freeCells.size() > 0) {
 
       //Roll the dice for random element
-      n = eng.dice(1, freeCells.size()) - 1;
+      n = Rnd::dice(1, freeCells.size()) - 1;
       const Pos pos(freeCells.at(n));
 
       //Get type to spawn
@@ -60,7 +61,7 @@ void PopulateItems::buildCandidateList() {
       eng.map->getDlvl() >= dataList[i]->spawnStandardMinDLVL &&
       eng.map->getDlvl() <= dataList[i]->spawnStandardMaxDLVL &&
       dataList[i]->isIntrinsic == false) {
-      if(eng.dice.percentile() < dataList[i]->chanceToIncludeInSpawnList) {
+      if(Rnd::percentile() < dataList[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(static_cast<ItemId>(i));
       }
     }
@@ -69,5 +70,5 @@ void PopulateItems::buildCandidateList() {
 
 ItemId PopulateItems::getFromCandidateList() {
   const int NUMBER_CANDIDATES = int(candidates.size());
-  return candidates.at(eng.dice(1, NUMBER_CANDIDATES) - 1);
+  return candidates.at(Rnd::dice(1, NUMBER_CANDIDATES) - 1);
 }

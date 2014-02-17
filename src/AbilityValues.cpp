@@ -5,7 +5,7 @@
 #include "Engine.h"
 #include "ActorPlayer.h"
 #include "PlayerBonuses.h"
-#include "BasicUtils.h"
+#include "Utils.h"
 #include "Properties.h"
 
 int AbilityValues::getVal(const AbilityId ability,
@@ -75,7 +75,7 @@ int AbilityValues::getVal(const AbilityId ability,
 }
 
 AbilityRollResult AbilityRoll::roll(const int TOTAL_SKILL_VALUE) const {
-  const int ROLL = eng.dice.percentile();
+  const int ROLL = Rnd::percentile();
 
   const int successCriticalLimit  = int(ceil(float(TOTAL_SKILL_VALUE) / 20.0));
   const int successBigLimit       = int(ceil(float(TOTAL_SKILL_VALUE) / 5.0));

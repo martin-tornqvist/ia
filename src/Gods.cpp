@@ -1,10 +1,11 @@
 #include "Gods.h"
 
 #include "Engine.h"
+#include "Utils.h"
 
 void Gods::setRandomGod() {
   const int NR_GODS = int(godList.size());
-  currentGodElem_ = eng.dice.range(0, NR_GODS - 1);
+  currentGodElem_ = Rnd::range(0, NR_GODS - 1);
 }
 
 void Gods::setNoGod() {

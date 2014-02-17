@@ -27,7 +27,7 @@ public:
           MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, engine),
                           blockers, mapParseWriteOnlyTrue);
 
-          PathFind::run(monster.pos, leader->pos, blockers, path, engine);
+          PathFind::run(monster.pos, leader->pos, blockers, path);
           return;
         }
       }

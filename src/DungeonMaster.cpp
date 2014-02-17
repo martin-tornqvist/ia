@@ -171,6 +171,6 @@ void DungeonMaster::onMonsterSpotted(Actor& actor) {
 }
 
 void DungeonMaster::setTimeStartedToNow() {
-  timeStarted = eng.basicUtils->getCurrentTime();
+  timeStarted = Utils::getCurrentTime();
 }
 

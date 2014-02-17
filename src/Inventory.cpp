@@ -236,7 +236,7 @@ void Inventory::dropAllNonIntrinsic(
   for(unsigned int i = 0; i < slots_.size(); i++) {
     item = slots_.at(i).item;
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine.dice.percentile() <
+      if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
           CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete slots_.at(i).item;
       } else {
@@ -252,7 +252,7 @@ void Inventory::dropAllNonIntrinsic(
   while(i < general_.size()) {
     item = general_.at(i);
     if(item != NULL) {
-      if(ROLL_FOR_DESTRUCTION && engine.dice.percentile() <
+      if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
           CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete general_.at(i);
       } else {
@@ -671,7 +671,7 @@ void Inventory::sortGeneralInventory(Engine& engine) {
     bool isAddedToBuffer = false;
     for(unsigned int iBuffer = 0;  iBuffer < sortBuffer.size(); iBuffer++) {
       const SDL_Color clrCurrentGroup = sortBuffer.at(iBuffer).at(0)->getInterfaceClr();
-      if(engine.basicUtils->isClrEq(general_.at(iGeneral)->getInterfaceClr(), clrCurrentGroup)) {
+      if(Utils::isClrEq(general_.at(iGeneral)->getInterfaceClr(), clrCurrentGroup)) {
         sortBuffer.at(iBuffer).push_back(general_.at(iGeneral));
         isAddedToBuffer = true;
         break;

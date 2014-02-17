@@ -11,7 +11,7 @@ public:
       if(monster.awareOfPlayerCounter_ > 0) {
 
         bool blockers[MAP_W][MAP_H];
-        engine.basicUtils->resetArray(blockers, false);
+        Utils::resetArray(blockers, false);
 
         vector<PropId> props;
         monster.getPropHandler().getAllActivePropIds(props);
@@ -44,7 +44,7 @@ public:
         MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, engine),
                         blockers, mapParseWriteOnlyTrue);
 
-        PathFind::run(monster.pos, engine.player->pos, blockers, path, engine);
+        PathFind::run(monster.pos, engine.player->pos, blockers, path);
       } else {
         path.resize(0);
       }

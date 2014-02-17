@@ -10,6 +10,7 @@
 #include "ItemFactory.h"
 #include "PlayerBonuses.h"
 #include "Query.h"
+#include "Utils.h"
 
 PlayerSpellsHandler::~PlayerSpellsHandler() {
   for(Spell * spell : knownSpells_) {delete spell;}
@@ -95,7 +96,7 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
     if(eng.player->deadState == actorDeadState_alive) {
       spell->cast(eng.player, true, eng);
       prevSpellCast_ = spell;
-      if(isWarlock && eng.dice.oneIn(3)) {
+      if(isWarlock && Rnd::oneIn(3)) {
         eng.player->getPropHandler().tryApplyProp(
           new PropWarlockCharged(eng, propTurnsStd));
       }

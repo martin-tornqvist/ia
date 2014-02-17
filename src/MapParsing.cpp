@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "GameTime.h"
+#include "Utils.h"
 
 //------------------------------------------------------------ CELL PREDICATES
 namespace CellPred {
@@ -63,7 +64,7 @@ bool LivingActorsAdjToPos::check(const Actor& a) const {
   if(a.deadState != actorDeadState_alive) {
     return false;
   }
-  return eng.basicUtils->isPosAdj(pos_, a.pos, true);
+  return Utils::isPosAdj(pos_, a.pos, true);
 }
 
 bool BlocksItems::check(const Cell& c)  const {
@@ -201,7 +202,7 @@ void parse(const CellPred::CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
   }
 
   if(predicate.isCheckingMobFeatures()) {
-    for(FeatureMob* mob : eng.gameTime->featureMobs_) {
+    for(FeatureMob * mob : eng.gameTime->featureMobs_) {
       const Pos& p = mob->getPos();
       const bool IS_MATCH = predicate.check(*mob);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
@@ -212,7 +213,7 @@ void parse(const CellPred::CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
   }
 
   if(predicate.isCheckingActors()) {
-    for(Actor* actor : eng.gameTime->actors_) {
+    for(Actor * actor : eng.gameTime->actors_) {
       const Pos& p = actor->pos;
       const bool IS_MATCH = predicate.check(*actor);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
@@ -272,8 +273,8 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
 
 //------------------------------------------------------------ FUNCT OBJECT
 bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
-  const int chebDist1 = eng.basicUtils->chebyshevDist(c_.x, c_.y, c1.x, c1.y);
-  const int chebDist2 = eng.basicUtils->chebyshevDist(c_.x, c_.y, c2.x, c2.y);
+  const int chebDist1 = Utils::chebyshevDist(c_.x, c_.y, c1.x, c1.y);
+  const int chebDist2 = Utils::chebyshevDist(c_.x, c_.y, c2.x, c2.y);
   return chebDist1 < chebDist2;
 }
 
@@ -281,10 +282,9 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 namespace FloodFill {
 
 void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
-         int values[MAP_W][MAP_H], int travelLimit, const Pos& target,
-         Engine& eng) {
+         int values[MAP_W][MAP_H], int travelLimit, const Pos& target) {
 
-  eng.basicUtils->resetArray(values);
+  Utils::resetArray(values);
 
   vector<Pos> positions;
   positions.resize(0);
@@ -311,7 +311,7 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
           const Pos newPos(curX + dx, curY + dy);
           if(
             blockers[newPos.x][newPos.y] == false &&
-            eng.basicUtils->isPosInside(newPos, bounds) &&
+            Utils::isPosInside(newPos, bounds) &&
             values[newPos.x][newPos.y] == 0) {
             currentValue = values[curX][curY];
 
@@ -367,13 +367,14 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
 
 //------------------------------------------------------------ PATHFINDER
 namespace PathFind {
+
 void run(const Pos& origin, const Pos& target, bool blockers[MAP_W][MAP_H],
-         vector<Pos>& vectorRef, Engine& eng) {
+         vector<Pos>& vectorRef) {
 
   vectorRef.resize(0);
 
   int vals[MAP_W][MAP_H];
-  FloodFill::run(origin, blockers, vals, 1000, target, eng);
+  FloodFill::run(origin, blockers, vals, 1000, target);
 
   bool pathExists = vals[target.x][target.y] != 0;
 

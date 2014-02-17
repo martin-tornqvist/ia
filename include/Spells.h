@@ -339,8 +339,6 @@ public:
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
-
-  PropId getPropId(Engine& eng) const;
 };
 
 class SpellDisease: public Spell {

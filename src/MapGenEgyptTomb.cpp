@@ -7,6 +7,7 @@
 #include "ActorMonster.h"
 #include "Map.h"
 #include "FeatureWall.h"
+#include "Utils.h"
 
 bool MapGenEgyptTomb::run_() {
   eng.map->resetMap();
@@ -24,7 +25,7 @@ bool MapGenEgyptTomb::run_() {
     }
   }
 
-  if(eng.dice.coinToss()) {
+  if(Rnd::coinToss()) {
     eng.featureFactory->spawnFeatureAt(feature_stairs, Pos(4, 2), NULL);
   } else {
     eng.featureFactory->spawnFeatureAt(feature_stairs, Pos(4, 19), NULL);

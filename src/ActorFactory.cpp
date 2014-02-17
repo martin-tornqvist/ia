@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Renderer.h"
 #include "MapParsing.h"
+#include "Utils.h"
 
 Actor* ActorFactory::makeActorFromId(const ActorId id) const {
   assert(id >= 1 && id < endOfActorIds);
@@ -115,7 +116,7 @@ void ActorFactory::summonMonsters(
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
   vector<Pos> freeCells;
-  eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
+  Utils::makeVectorFromBoolMap(false, blockers, freeCells);
   sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(origin, eng));
 
   const int NR_FREE_CELLS   = freeCells.size();

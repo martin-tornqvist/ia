@@ -19,6 +19,7 @@
 #include "Sound.h"
 #include "ActorFactory.h"
 #include "Renderer.h"
+#include "Utils.h"
 
 //------------------------------------------------------------- TRAP
 Trap::Trap(FeatureId id, Pos pos, Engine& engine, TrapSpawnData* spawnData) :
@@ -29,7 +30,7 @@ Trap::Trap(FeatureId id, Pos pos, Engine& engine, TrapSpawnData* spawnData) :
   assert(mimicFeature_ != NULL);
 
   if(spawnData->trapType_ == trap_any) {
-    setSpecificTrapFromId(TrapId(eng.dice.range(0, endOfTraps - 1)));
+    setSpecificTrapFromId(TrapId(Rnd::range(0, endOfTraps - 1)));
   } else {
     setSpecificTrapFromId(spawnData->trapType_);
   }
@@ -170,13 +171,13 @@ void Trap::disarm() {
   constrInRange(1, disarmNumerator, DISARM_DENOMINATOR - 1);
 
   const bool IS_DISARMED =
-    eng.dice.fraction(disarmNumerator, DISARM_DENOMINATOR);
+    Rnd::fraction(disarmNumerator, DISARM_DENOMINATOR);
   if(IS_DISARMED) {
     eng.log->addMsg("I disarm a trap.");
   } else {
     eng.log->addMsg("I fail to disarm a trap.");
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
-    if(eng.dice.oneIn(TRIGGER_ONE_IN_N)) {
+    if(Rnd::oneIn(TRIGGER_ONE_IN_N)) {
       triggerTrap(*eng.player);
     }
   }
@@ -294,7 +295,7 @@ MaterialType Trap::getMaterialType() const {
 TrapDart::TrapDart(Pos pos, Engine& engine) :
   SpecificTrapBase(pos, trap_dart, engine), isPoisoned(false) {
   isPoisoned =
-    eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && eng.dice.coinToss();
+    eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
 }
 
 void TrapDart::trigger(
@@ -324,7 +325,7 @@ void TrapDart::trigger(
   } else {
     //Trap misses?
     const int CHANCE_TO_HIT = 75;
-    if(eng.dice.percentile() > CHANCE_TO_HIT) {
+    if(Rnd::percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
           eng.log->addMsg("A dart barely misses me!", clrMsgGood);
@@ -350,7 +351,7 @@ void TrapDart::trigger(
         eng.log->addMsg(actorName + " is hit by a dart!", clrMsgGood);
       }
 
-      const int DMG = eng.dice(1, 8);
+      const int DMG = Rnd::dice(1, 8);
       actor.hit(DMG, dmgType_physical, true);
       if(actor.deadState == actorDeadState_alive && isPoisoned) {
         if(IS_PLAYER) {
@@ -367,7 +368,7 @@ void TrapDart::trigger(
 TrapSpear::TrapSpear(Pos pos, Engine& engine) :
   SpecificTrapBase(pos, trap_spear, engine), isPoisoned(false) {
   isPoisoned =
-    eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && eng.dice.coinToss();
+    eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
 }
 
 void TrapSpear::trigger(
@@ -398,7 +399,7 @@ void TrapSpear::trigger(
   } else {
     //Trap misses?
     const int CHANCE_TO_HIT = 75;
-    if(eng.dice.percentile() > CHANCE_TO_HIT) {
+    if(Rnd::percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
           eng.log->addMsg("A spear barely misses me!", clrMsgGood);
@@ -428,7 +429,7 @@ void TrapSpear::trigger(
         }
       }
 
-      const int DMG = eng.dice(2, 6);
+      const int DMG = Rnd::dice(2, 6);
       actor.hit(DMG, dmgType_physical, true);
       if(actor.deadState == actorDeadState_alive && isPoisoned) {
         if(IS_PLAYER) {
@@ -661,7 +662,7 @@ void TrapSummonMonster::trigger(
   if(NR_ELEMENTS == 0) {
     trace << "TrapSummonMonster: No eligible candidates found" << endl;
   } else {
-    const int ELEMENT = eng.dice.range(0, NR_ELEMENTS - 1);
+    const int ELEMENT = Rnd::range(0, NR_ELEMENTS - 1);
     const ActorId actorIdToSummon = summonCandidates.at(ELEMENT);
     trace << "TrapSummonMonster: Actor id: " << actorIdToSummon << endl;
 
@@ -785,7 +786,7 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
 
     //TODO reimplement something affecting chance of success?
 
-    if(eng.dice.oneIn(4)) {
+    if(Rnd::oneIn(4)) {
       trace << "TrapSpiderWeb: Actor succeeded to break free" << endl;
 
       isHoldingActor = false;
@@ -798,7 +799,7 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
         }
       }
 
-      if(eng.dice.oneIn(2)) {
+      if(Rnd::oneIn(2)) {
         trace << "TrapSpiderWeb: Web is destroyed" << endl;
 
         if(

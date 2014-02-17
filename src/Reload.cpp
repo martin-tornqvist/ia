@@ -110,7 +110,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
 
   if(&actorReloading == eng.player) {
     isSwiftReload = eng.playerBonHandler->hasTrait(traitExpertMarksman) &&
-                    eng.dice.coinToss();
+                    Rnd::coinToss();
   }
 
   const int wpnAmmoCapacity = wpn->ammoCapacity;
@@ -143,7 +143,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
           const int CHANCE_TO_FUMBLE =
             (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
 
-          if(eng.dice.percentile() < CHANCE_TO_FUMBLE) {
+          if(Rnd::percentile() < CHANCE_TO_FUMBLE) {
             isSwiftReload = false;
             result = reloadResult_fumble;
             printMsgAndPlaySfx(actorReloading, NULL, item,

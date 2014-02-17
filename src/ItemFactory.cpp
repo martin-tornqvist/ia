@@ -11,6 +11,7 @@
 #include "ItemDrop.h"
 #include "ItemDevice.h"
 #include "ItemMedicalBag.h"
+#include "Utils.h"
 
 Item* ItemFactory::spawnItem(const ItemId itemId, const int NR_ITEMS) {
   Item* item = NULL;
@@ -173,7 +174,7 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
   if(d.isRangedWeapon && d.rangedHasInfiniteAmmo == false) {
     Weapon* const weapon = dynamic_cast<Weapon*>(item);
     if(weapon->ammoCapacity == 1) {
-      weapon->nrAmmoLoaded = eng.dice.coinToss() ? 1 : 0;
+      weapon->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
     } else {
       if(d.isMachineGun) {
         const int CAP = weapon->ammoCapacity;
@@ -181,17 +182,17 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
         const int CAP_SCALED = CAP / NR_MG_PROJECTILES;
         const int MIN_SCALED = MIN / NR_MG_PROJECTILES;
         weapon->nrAmmoLoaded =
-          eng.dice.range(MIN_SCALED, CAP_SCALED) *
+          Rnd::range(MIN_SCALED, CAP_SCALED) *
           NR_MG_PROJECTILES;
       } else {
         weapon->nrAmmoLoaded =
-          eng.dice.range(weapon->ammoCapacity / 4, weapon->ammoCapacity);
+          Rnd::range(weapon->ammoCapacity / 4, weapon->ammoCapacity);
       }
     }
   }
 
   if(d.isStackable) {
-    item->nrItems = eng.dice(1, d.maxStackSizeAtSpawn);
+    item->nrItems = Rnd::dice(1, d.maxStackSizeAtSpawn);
   }
 }
 
@@ -223,7 +224,7 @@ Item* ItemFactory::spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
   }
 
   if(itemCandidates.size() > 0) {
-    const unsigned int ELEMENT = eng.dice(1, itemCandidates.size()) - 1;
+    const unsigned int ELEMENT = Rnd::dice(1, itemCandidates.size()) - 1;
     return spawnItem(itemCandidates.at(ELEMENT));
   }
 

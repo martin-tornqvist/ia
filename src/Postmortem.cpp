@@ -152,7 +152,7 @@ void Postmortem::makeInfoLines() {
     for(int x = 0; x < MAP_W; x++) {
       for(int dx = -1; dx <= 1; dx++) {
         for(int dy = -1; dy <= 1; dy++) {
-          if(eng.basicUtils->isPosInsideMap(Pos(x + dx, y + dy))) {
+          if(Utils::isPosInsideMap(Pos(x + dx, y + dy))) {
             const FeatureStatic* const f =
               eng.map->cells[x + dx][y + dy].featureStatic;
             if(f->isVisionPassable()) {

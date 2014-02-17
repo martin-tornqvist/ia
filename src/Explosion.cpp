@@ -10,6 +10,7 @@
 #include "SdlWrapper.h"
 #include "LineCalc.h"
 #include "ActorPlayer.h"
+#include "Utils.h"
 
 namespace {
 
@@ -66,7 +67,7 @@ void getPositionsReached(const Rect& area, const Pos& origin,
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
     for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
       const Pos pos(x, y);
-      const int DIST = eng.basicUtils->chebyshevDist(pos, origin);
+      const int DIST = Utils::chebyshevDist(pos, origin);
       bool isReached = true;
       if(DIST > 1) {
         eng.lineCalc->calcNewLine(origin, pos, true, 999, false, line);
@@ -148,7 +149,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
       if(SHOULD_DO_EXPLOSION_DMG) {
         //Damage environment
         if(curRadi <= 1) {eng.map->switchToDestroyedFeatAt(pos);}
-        const int DMG = eng.dice(DMG_ROLLS - curRadi, DMG_SIDES) + DMG_PLUS;
+        const int DMG = Rnd::dice(DMG_ROLLS - curRadi, DMG_SIDES) + DMG_PLUS;
 
         //Damage living actor
         if(livingActor != NULL) {
@@ -162,9 +163,9 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
           corpse->hit(DMG, dmgType_physical, true);
         }
 
-        if(eng.dice.fraction(6, 10)) {
+        if(Rnd::fraction(6, 10)) {
           eng.featureFactory->spawnFeatureAt(
-            feature_smoke, pos, new SmokeSpawnData(eng.dice.range(2, 4)));
+            feature_smoke, pos, new SmokeSpawnData(Rnd::range(2, 4)));
         }
       }
 
@@ -215,7 +216,7 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
     for(const Pos & pos : inner) {
       if(blockers[pos.x][pos.y] == false) {
         eng.featureFactory->spawnFeatureAt(
-          feature_smoke, pos, new SmokeSpawnData(eng.dice.range(17, 22)));
+          feature_smoke, pos, new SmokeSpawnData(Rnd::range(17, 22)));
       }
     }
   }

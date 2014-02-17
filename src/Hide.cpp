@@ -8,12 +8,13 @@
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
 #include "Log.h"
+#include "Utils.h"
 
 void Hide::playerTryHide() {
 
   bool isHideSucceed = true;
 
-  if(eng.dice.oneIn(3)) {
+  if(Rnd::oneIn(3)) {
     isHideSucceed = false;
   } else {
     vector<Actor*> actors; actors.resize(0);
@@ -26,8 +27,8 @@ void Hide::playerTryHide() {
     const Pos& playerPos = eng.player->pos;
     sort(actors.begin(), actors.end(),
     [this, playerPos](const Actor * a1, const Actor * a2) {
-      const int A1_DIST = eng.basicUtils->chebyshevDist(a1->pos, playerPos);
-      const int A2_DIST = eng.basicUtils->chebyshevDist(a2->pos, playerPos);
+      const int A1_DIST = Utils::chebyshevDist(a1->pos, playerPos);
+      const int A2_DIST = Utils::chebyshevDist(a2->pos, playerPos);
       return A1_DIST < A2_DIST;
     });
     actors.resize(min(int(actors.size()), 3));

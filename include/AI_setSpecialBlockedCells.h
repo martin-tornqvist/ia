@@ -9,7 +9,7 @@ public:
     (void)monster;
     (void)a;
     (void)eng;
-//    eng.basicUtils->resetArray(a, false);
+//    Utils::resetArray(a, false);
   }
 private:
 };

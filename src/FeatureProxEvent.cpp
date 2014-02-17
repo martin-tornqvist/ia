@@ -8,10 +8,11 @@
 #include "ActorFactory.h"
 #include "Log.h"
 #include "Renderer.h"
+#include "Utils.h"
 
 //-------------------------------------------PROX EVENT
 void ProxEvent::newTurn() {
-  if(eng.basicUtils->isPosAdj(pos_, eng.player->pos, true)) {
+  if(Utils::isPosAdj(pos_, eng.player->pos, true)) {
     playerIsNear();
   }
 }
@@ -49,7 +50,7 @@ void ProxEventWallCrumble::playerIsNear() {
     while(done == false) {
       for(int i = 0; i < NR_WALL_CELLS; i++) {
         const Pos pos = wallCells_.at(i);
-        if(eng.basicUtils->isPosInside(
+        if(Utils::isPosInside(
               pos, Rect(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2)))) {
           eng.map->switchToDestroyedFeatAt(wallCells_.at(i));
         }
@@ -58,7 +59,7 @@ void ProxEventWallCrumble::playerIsNear() {
       bool isOpeningMade = true;
       for(int i = 0; i < NR_WALL_CELLS; i++) {
         const Pos pos = wallCells_.at(i);
-        if(eng.basicUtils->isPosAdj(eng.player->pos, pos, true)) {
+        if(Utils::isPosAdj(eng.player->pos, pos, true)) {
           FeatureStatic* const f = eng.map->cells[pos.x][pos.y].featureStatic;
           if(f->canMoveCmn() == false) {
             isOpeningMade = false;
@@ -75,7 +76,7 @@ void ProxEventWallCrumble::playerIsNear() {
     //Spawn things
     int nrMonsterLimitExceptAdjToEntry = 9999;
     ActorId monsterType = actor_zombie;
-    const int RND = eng.dice.range(1, 5);
+    const int RND = Rnd::range(1, 5);
     switch(RND) {
       case 1: {
         monsterType = actor_zombie;
@@ -112,14 +113,14 @@ void ProxEventWallCrumble::playerIsNear() {
       eng.featureFactory->spawnFeatureAt(
         feature_stoneFloor, pos);
 
-      if(eng.dice.range(1, 100) < 20) {
+      if(Rnd::range(1, 100) < 20) {
         eng.gore->makeGore(pos);
         eng.gore->makeBlood(pos);
       }
 
       if(
         nrMonstersSpawned < nrMonsterLimitExceptAdjToEntry ||
-        eng.basicUtils->isPosAdj(pos, pos_, false)) {
+        Utils::isPosAdj(pos, pos_, false)) {
         Actor* const actor = eng.actorFactory->spawnActor(monsterType, pos);
         Monster* const monster = dynamic_cast<Monster*>(actor);
         monster->awareOfPlayerCounter_ =

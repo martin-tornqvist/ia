@@ -20,7 +20,7 @@ public:
 
           while(spellCandidates.empty() == false) {
             const unsigned int ELEMENT =
-              engine.dice.range(0, spellCandidates.size() - 1);
+              Rnd::range(0, spellCandidates.size() - 1);
 
             Spell* const spell = spellCandidates.at(ELEMENT);
 
@@ -39,7 +39,7 @@ public:
               const int MAX_HP  = monsterActing->getHpMax(true);
 
               // Cast spell with a certain chance if HP is low.
-              if(CUR_HP < MAX_HP / 3 && engine.dice.percentile() <= 5) {
+              if(CUR_HP < MAX_HP / 3 && Rnd::percentile() <= 5) {
                 if(engine.player->isSeeingActor(*monsterActing, NULL)) {
                   engine.log->addMsg(
                     monsterActing->getNameThe() + " looks desperate.");

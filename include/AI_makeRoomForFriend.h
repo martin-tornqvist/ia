@@ -5,6 +5,7 @@
 
 #include "MapParsing.h"
 #include "LineCalc.h"
+#include "Utils.h"
 
 class AI_makeRoomForFriend {
 public:
@@ -127,9 +128,9 @@ private:
           const int NEW_X = OLD_X + x;
           const int NEW_Y = OLD_Y + y;
           const int DIST_CUR =
-            eng.basicUtils->chebyshevDist(OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
+            Utils::chebyshevDist(OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
           const int DIST_NEW =
-            eng.basicUtils->chebyshevDist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
+            Utils::chebyshevDist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
 
           if(DIST_NEW <= DIST_CUR) {
             if(blockers[NEW_X][NEW_Y] == false) {
@@ -153,7 +154,7 @@ private:
     bool visionBlockers[MAP_W][MAP_H], Engine& engine) {
 
     //If the pal is next to me
-    if(engine.basicUtils->isPosAdj(self.pos, other.pos, false)) {
+    if(Utils::isPosAdj(self.pos, other.pos, false)) {
       //If pal does not see player
       if(other.isSeeingActor(*engine.player, visionBlockers) == false) {
         return true;

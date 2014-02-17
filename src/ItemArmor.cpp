@@ -2,9 +2,10 @@
 
 #include "Engine.h"
 #include "Log.h"
+#include "Utils.h"
 
 Armor::Armor(ItemData* const itemData, Engine& engine) :
-  Item(itemData, engine), dur_(engine.dice.range(80, 100)) {}
+  Item(itemData, engine), dur_(Rnd::range(80, 100)) {}
 
 string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
 
@@ -30,7 +31,7 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
   const int AP_BEFORE = getAbsorptionPoints();
 
   const double DDF_BASE     = data_->armorData.dmgToDurabilityFactor;
-  const double RND_FRACTION = double(eng.dice.percentile()) / 100.0;
+  const double RND_FRACTION = double(Rnd::percentile()) / 100.0;
   const double DDF_ADJUST   = 3.0;
 
   const double DMG_BEFORE_DB = double(DMG_BEFORE);

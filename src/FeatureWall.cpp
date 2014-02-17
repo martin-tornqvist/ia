@@ -5,6 +5,7 @@
 #include "Engine.h"
 
 #include "Map.h"
+#include "Utils.h"
 
 Wall::Wall(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), wallType(wall_common), isMossGrown(false) {
@@ -82,7 +83,7 @@ TileId Wall::getTopWallTile() const {
 }
 
 void Wall::setRandomNormalWall() {
-  const int RND = eng.dice.range(1, 6);
+  const int RND = Rnd::range(1, 6);
   switch(RND) {
     case 1:   wallType = wall_alt1;     break;
     default:  wallType = wall_common;   break;
@@ -90,7 +91,7 @@ void Wall::setRandomNormalWall() {
 }
 
 void Wall::setRandomIsMossGrown() {
-  isMossGrown = eng.dice.oneIn(40);
+  isMossGrown = Rnd::oneIn(40);
 }
 
 

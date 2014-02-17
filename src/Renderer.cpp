@@ -18,6 +18,7 @@
 #include "FeatureWall.h"
 #include "FeatureDoor.h"
 #include "Inventory.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -280,7 +281,7 @@ void Renderer::drawMarker(const vector<Pos>& trail,
       SDL_Color clr = clrGreenLgt;
 
       if(EFFECTIVE_RANGE != -1) {
-        const int CHEB_DIST = eng.basicUtils->chebyshevDist(trail.at(0), pos);
+        const int CHEB_DIST = Utils::chebyshevDist(trail.at(0), pos);
         if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
       if(eng.config->isTilesMode) {
@@ -297,7 +298,7 @@ void Renderer::drawMarker(const vector<Pos>& trail,
 
   if(trail.size() > 2) {
     if(EFFECTIVE_RANGE != -1) {
-      const int CHEB_DIST = eng.basicUtils->chebyshevDist(trail.at(0), headPos);
+      const int CHEB_DIST = Utils::chebyshevDist(trail.at(0), headPos);
       if(CHEB_DIST > EFFECTIVE_RANGE) {
         clr = clrYellow;
       }
@@ -772,7 +773,7 @@ void Renderer::drawMap() {
           const SDL_Color& featureClr   = f->getClr();
           const SDL_Color& featureClrBg = f->getClrBg();
           curDrw->clr = f->hasBlood() ? clrRedLgt : featureClr;
-          if(eng.basicUtils->isClrEq(featureClrBg, clrBlack) == false) {
+          if(Utils::isClrEq(featureClrBg, clrBlack) == false) {
             curDrw->clrBg = featureClrBg;
           }
         } else {
@@ -897,7 +898,7 @@ void Renderer::drawMap() {
       if(eng.map->cells[x][y].isSeenByPlayer) {
         if(tmpDrw.isFadeEffectAllowed) {
           const int DIST_FROM_PLAYER =
-            eng.basicUtils->chebyshevDist(eng.player->pos, Pos(x, y));
+            Utils::chebyshevDist(eng.player->pos, Pos(x, y));
           if(DIST_FROM_PLAYER > 1) {
             const double DIST_FADE_DIV =
               min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));

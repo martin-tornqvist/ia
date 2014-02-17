@@ -20,6 +20,7 @@
 #include "LineCalc.h"
 #include "Blood.h"
 #include "ActorFactory.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -1354,7 +1355,7 @@ Prop::Prop(PropId id, Engine& engine, PropTurns turnsInit, int turns) :
   data_(&(engine.propDataHandler->dataList[id])) {
 
   if(turnsInit == propTurnsStd) {
-    turnsLeft_ = eng.dice.range(data_->stdRndTurns);
+    turnsLeft_ = Rnd::range(data_->stdRndTurns);
   }
   if(turnsInit == propTurnsIndefinite) {
     turnsLeft_ = -1;
@@ -1374,7 +1375,7 @@ void PropCursed::onStart() {
 }
 
 void PropInfected::onNewTurn() {
-  if(eng.dice.oneIn(250)) {
+  if(Rnd::oneIn(250)) {
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(eng, propTurnsStd));
     bool blockers[MAP_W][MAP_H];
@@ -1508,13 +1509,13 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
       }
     }
 
-    owningActor_->hit(eng.dice(1, 3), dmgType_physical, false);
+    owningActor_->hit(Rnd::dice(1, 3), dmgType_physical, false);
 
     if(owningActor_->deadState == actorDeadState_alive) {
 
       //TODO reimplement something affecting chance of success?
 
-      if(eng.dice.oneIn(4)) {
+      if(Rnd::oneIn(4)) {
         nrSpikes_--;
         if(nrSpikes_ > 0) {
           if(owningActor_ == eng.player) {
@@ -1546,7 +1547,7 @@ bool PropConfused::allowAttackMelee(
   (void)ALLOW_MESSAGE_WHEN_FALSE;
 
   if(owningActor_ != eng.player) {
-    return eng.dice.coinToss();
+    return Rnd::coinToss();
   }
   return true;
 }
@@ -1558,7 +1559,7 @@ bool PropConfused::allowAttackRanged(
 
 
   if(owningActor_ != eng.player) {
-    return eng.dice.coinToss();
+    return Rnd::coinToss();
   }
   return true;
 }
@@ -1570,11 +1571,11 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
     MapParse::parse(CellPred::BlocksActor(*owningActor_, true, eng),
                     blockers);
 
-    if(eng.dice.oneIn(8)) {
+    if(Rnd::oneIn(8)) {
       int triesLeft = 100;
       while(triesLeft != 0) {
         //-1 to 1 for x and y
-        const Pos delta(eng.dice.range(-1, 1), eng.dice.range(-1, 1));
+        const Pos delta(Rnd::range(-1, 1), Rnd::range(-1, 1));
         if(delta.x != 0 || delta.y != 0) {
           const Pos c = actorPos + delta;
           if(blockers[c.x][c.y] == false) {
@@ -1662,7 +1663,7 @@ void PropBurning::onNewTurn() {
   if(owningActor_ == eng.player) {
     eng.log->addMsg("AAAARGH IT BURNS!!!", clrRedLgt);
   }
-  owningActor_->hit(eng.dice(1, 2), dmgType_fire, false);
+  owningActor_->hit(Rnd::dice(1, 2), dmgType_fire, false);
 }
 
 bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {

@@ -16,6 +16,7 @@
 #include "Attack.h"
 #include "GameTime.h"
 #include "Renderer.h"
+#include "Utils.h"
 
 Entity::Entity(FeatureMob* feature_) :
   feature(dynamic_cast<Feature*>(feature_)),
@@ -104,7 +105,7 @@ void Look::descrBriefFeatureStatic(const Feature& feature) const {
 }
 
 void Look::printExtraActorDescription(const Pos& pos) const {
-  Actor* actor = eng.basicUtils->getActorAtPos(pos);
+  Actor* actor = Utils::getActorAtPos(pos, eng);
   if(actor != NULL) {
     if(actor != eng.player) {
       //Add written description.
@@ -141,7 +142,7 @@ Entity Look::getEntityToDescribe(const Pos pos) {
 
   //TODO this method is a little wonky
 
-  Actor* actor = eng.basicUtils->getActorAtPos(pos);
+  Actor* actor = Utils::getActorAtPos(pos, eng);
 
   //If there is a living actor there, describe the actor.
   if(actor != NULL && actor != eng.player) {

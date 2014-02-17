@@ -7,6 +7,7 @@
 #include "CommonTypes.h"
 #include "LineCalc.h"
 #include "Map.h"
+#include "Utils.h"
 
 void Fov::checkOneCellOfMany(
   const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
@@ -58,12 +59,12 @@ bool Fov::checkCell(const bool obstructions[MAP_W][MAP_H],
                     const Pos& origin,
                     const bool IS_AFFECTED_BY_DARKNESS) {
 
-  if(eng.basicUtils->isPosInsideMap(cellToCheck) == false) {
+  if(Utils::isPosInsideMap(cellToCheck) == false) {
     return false;
   }
 
   if(
-    eng.basicUtils->chebyshevDist(origin, cellToCheck) >
+    Utils::chebyshevDist(origin, cellToCheck) >
     FOV_STD_RADI_INT) {
     return false;
   }

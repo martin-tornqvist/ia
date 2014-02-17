@@ -19,6 +19,7 @@
 #include "Gods.h"
 #include "MapParsing.h"
 #include "LineCalc.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -26,7 +27,7 @@ string Cultist::getCultistPhrase(Engine& engine) {
   vector<string> phraseCandidates;
 
   const God* const god = engine.gods->getCurrentGod();
-  if(god != NULL && engine.dice.coinToss()) {
+  if(god != NULL && Rnd::coinToss()) {
     const string name = god->getName();
     const string descr = god->getDescr();
     phraseCandidates.push_back(name + " save us!");
@@ -70,7 +71,7 @@ string Cultist::getCultistPhrase(Engine& engine) {
   }
 
   return phraseCandidates.at(
-           engine.dice.range(0, phraseCandidates.size() - 1));
+           Rnd::range(0, phraseCandidates.size() - 1));
 }
 
 void Cultist::spawnStartItems() {
@@ -82,12 +83,12 @@ void Cultist::spawnStartItems() {
   const int MG = SAWN_SHOTGUN + (DLVL < 3 ? 0 : 2);
 
   const int TOT = MG;
-  const int RND = DLVL == 0 ? PISTOL : eng.dice.range(1, TOT);
+  const int RND = DLVL == 0 ? PISTOL : Rnd::range(1, TOT);
 
   if(RND <= PISTOL) {
     inv_->putItemInSlot(
       slot_wielded, eng.itemFactory->spawnItem(item_pistol), true);
-    if(eng.dice.percentile() < 40) {
+    if(Rnd::percentile() < 40) {
       inv_->putItemInGeneral(
         eng.itemFactory->spawnItem(item_pistolClip));
     }
@@ -95,25 +96,25 @@ void Cultist::spawnStartItems() {
     inv_->putItemInSlot(
       slot_wielded, eng.itemFactory->spawnItem(item_pumpShotgun), true);
     Item* item = eng.itemFactory->spawnItem(item_shotgunShell);
-    item->nrItems = eng.dice.range(5, 9);
+    item->nrItems = Rnd::range(5, 9);
     inv_->putItemInGeneral(item);
   } else if(RND <= SAWN_SHOTGUN) {
     inv_->putItemInSlot(
       slot_wielded, eng.itemFactory->spawnItem(item_sawedOff), true);
     Item* item = eng.itemFactory->spawnItem(item_shotgunShell);
-    item->nrItems = eng.dice.range(6, 12);
+    item->nrItems = Rnd::range(6, 12);
     inv_->putItemInGeneral(item);
   } else {
     inv_->putItemInSlot(
       slot_wielded, eng.itemFactory->spawnItem(item_machineGun), true);
   }
 
-  if(eng.dice.percentile() < 33) {
+  if(Rnd::percentile() < 33) {
     inv_->putItemInGeneral(
       eng.itemFactory->spawnRandomScrollOrPotion(true, true));
   }
 
-  if(eng.dice.percentile() < 8) {
+  if(Rnd::percentile() < 8) {
     spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   }
 }
@@ -125,12 +126,12 @@ void CultistTeslaCannon::spawnStartItems() {
   inv_->putItemInGeneral(
     eng.itemFactory->spawnItem(item_teslaCanister));
 
-  if(eng.dice.percentile() < 33) {
+  if(Rnd::percentile() < 33) {
     inv_->putItemInGeneral(
       eng.itemFactory->spawnRandomScrollOrPotion(true, true));
   }
 
-  if(eng.dice.percentile() < 10) {
+  if(Rnd::percentile() < 10) {
     spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   }
 }
@@ -139,7 +140,7 @@ void CultistSpikeGun::spawnStartItems() {
   inv_->putItemInSlot(
     slot_wielded, eng.itemFactory->spawnItem(item_spikeGun), true);
   Item* item = eng.itemFactory->spawnItem(item_ironSpike);
-  item->nrItems = 8 + eng.dice(1, 8);
+  item->nrItems = 8 + Rnd::dice(1, 8);
   inv_->putItemInGeneral(item);
 }
 
@@ -156,7 +157,7 @@ void CultistPriest::spawnStartItems() {
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
 
-  if(eng.dice.percentile() < 33) {
+  if(Rnd::percentile() < 33) {
     spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   }
 }
@@ -208,10 +209,10 @@ bool Vortex::onActorTurn_() {
       trace << "Vortex: pullCooldown: " << pullCooldown << endl;
       trace << "Vortex: Is player aware" << endl;
       const Pos& playerPos = eng.player->pos;
-      if(eng.basicUtils->isPosAdj(pos, playerPos, true) == false) {
+      if(Utils::isPosAdj(pos, playerPos, true) == false) {
 
         const int CHANCE_TO_KNOCK = 25;
-        if(eng.dice.percentile() < CHANCE_TO_KNOCK) {
+        if(Rnd::percentile() < CHANCE_TO_KNOCK) {
           trace << "Vortex: Passed random chance to pull" << endl;
 
           const Pos playerDelta = playerPos - pos;
@@ -286,8 +287,8 @@ bool Ghost::onActorTurn_() {
   if(deadState == actorDeadState_alive) {
     if(awareOfPlayerCounter_ > 0) {
 
-      if(eng.basicUtils->isPosAdj(pos, eng.player->pos, false)) {
-        if(eng.dice.percentile() < 30) {
+      if(Utils::isPosAdj(pos, eng.player->pos, false)) {
+        if(Rnd::percentile() < 30) {
 
           bool blockers[MAP_W][MAP_H];
           MapParse::parse(CellPred::BlocksVision(eng), blockers);
@@ -339,7 +340,7 @@ void MiGo::spawnStartItems() {
   spellsKnown.push_back(new SpellMiGoHypnosis);
   spellsKnown.push_back(new SpellHealSelf);
 
-  if(eng.dice.coinToss()) {
+  if(Rnd::coinToss()) {
     spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   }
 }
@@ -350,7 +351,7 @@ void FlyingPolyp::spawnStartItems() {
 
 void Rat::spawnStartItems() {
   Item* item = NULL;
-  if(eng.dice.percentile() < 15) {
+  if(Rnd::percentile() < 15) {
     item = eng.itemFactory->spawnItem(item_ratBiteDiseased);
   } else {
     item = eng.itemFactory->spawnItem(item_ratBite);
@@ -378,7 +379,7 @@ void Mummy::spawnStartItems() {
 
   spellsKnown.push_back(eng.spellHandler->getSpellFromId(spell_disease));
 
-  for(int i = eng.dice.range(1, 2); i > 0; i--) {
+  for(int i = Rnd::range(1, 2); i > 0; i--) {
     spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   }
 }
@@ -413,7 +414,7 @@ bool Khephren::onActorTurn_() {
           }
 
           vector<Pos> freeCells;
-          eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
+          Utils::makeVectorFromBoolMap(false, blockers, freeCells);
 
           sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
 
@@ -561,9 +562,9 @@ const SDL_Color& ColourOutOfSpace::getClr() {
 }
 
 void ColourOutOfSpace::onStandardTurn() {
-  currentColor.r = eng.dice.range(40, 255);
-  currentColor.g = eng.dice.range(40, 255);
-  currentColor.b = eng.dice.range(40, 255);
+  currentColor.r = Rnd::range(40, 255);
+  currentColor.g = Rnd::range(40, 255);
+  currentColor.b = Rnd::range(40, 255);
 
   restoreHp(1, false);
 
@@ -610,7 +611,7 @@ void Wolf::spawnStartItems() {
 bool WormMass::onActorTurn_() {
   if(deadState == actorDeadState_alive) {
     if(awareOfPlayerCounter_ > 0) {
-      if(eng.dice.percentile() < chanceToSpawnNew) {
+      if(Rnd::percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksActor(*this, true, eng), blockers);
@@ -645,7 +646,7 @@ void WormMass::spawnStartItems() {
 bool GiantLocust::onActorTurn_() {
   if(deadState == actorDeadState_alive) {
     if(awareOfPlayerCounter_ > 0) {
-      if(eng.dice.percentile() < chanceToSpawnNew) {
+      if(Rnd::percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksActor(*this, true, eng), blockers);
@@ -688,7 +689,7 @@ void LordOfShadows::spawnStartItems() {
 bool LordOfSpiders::onActorTurn_() {
   if(awareOfPlayerCounter_ > 0) {
 
-    if(eng.dice.coinToss()) {
+    if(Rnd::coinToss()) {
 
       const Pos playerPos = eng.player->pos;
 
@@ -699,7 +700,7 @@ bool LordOfSpiders::onActorTurn_() {
       for(int dy = -1; dy <= 1; dy++) {
         for(int dx = -1; dx <= 1; dx++) {
 
-          if(eng.dice.percentile() < 75) {
+          if(Rnd::percentile() < 75) {
 
             const Pos c(playerPos + Pos(dx, dy));
             const FeatureStatic* const mimicFeature =
@@ -774,7 +775,7 @@ bool MajorClaphamLee::onActorTurn_() {
           const int NR_OF_EXTRA_SPAWNS = 4;
 
           for(int i = 0; i < NR_OF_EXTRA_SPAWNS; i++) {
-            const int ZOMBIE_TYPE = eng.dice.range(1, 3);
+            const int ZOMBIE_TYPE = Rnd::range(1, 3);
             ActorId id = actor_zombie;
             switch(ZOMBIE_TYPE) {
               case 1: id = actor_zombie;        break;
@@ -802,7 +803,7 @@ bool Zombie::tryResurrect() {
     if(hasResurrected == false) {
       deadTurnCounter += 1;
       if(deadTurnCounter > 5) {
-        if(pos != eng.player->pos && eng.dice.percentile() < 7) {
+        if(pos != eng.player->pos && Rnd::percentile() < 7) {
           deadState = actorDeadState_alive;
           hp_ = (getHpMax(true) * 3) / 4;
           glyph_ = data_->glyph;
@@ -837,7 +838,7 @@ void Zombie::die_() {
 
 void ZombieClaw::spawnStartItems() {
   Item* item = NULL;
-  if(eng.dice.percentile() < 20) {
+  if(Rnd::percentile() < 20) {
     item = eng.itemFactory->spawnItem(item_zombieClawDiseased);
   } else {
     item = eng.itemFactory->spawnItem(item_zombieClaw);

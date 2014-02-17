@@ -51,7 +51,7 @@ bool Actor::isSpottingHiddenActor(Actor& other) {
   const int SNEAK_BASE = other.getData().abilityVals.getVal(
                            ability_stealth, true, other);
 
-  const int  DIST     = eng.basicUtils->chebyshevDist(pos, otherPos);
+  const int  DIST     = Utils::chebyshevDist(pos, otherPos);
   const int  DIST_BON = getConstrInRange(0, (DIST - 1) * 10, 60);
   const int  LGT_DIV  = eng.map->cells[otherPos.x][otherPos.y].isLight ? 2 : 1;
   const int  SKILL =
@@ -173,8 +173,8 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksActor(*this, true, eng), blockers);
   vector<Pos> freeCells;
-  eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCells);
-  const Pos CELL = freeCells.at(eng.dice(1, freeCells.size()) - 1);
+  Utils::makeVectorFromBoolMap(false, blockers, freeCells);
+  const Pos CELL = freeCells.at(Rnd::dice(1, freeCells.size()) - 1);
 
   if(this == eng.player) {
     eng.player->updateFov();

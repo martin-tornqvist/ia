@@ -21,6 +21,7 @@
 #include "LineCalc.h"
 #include "SdlWrapper.h"
 #include "PlayerBonuses.h"
+#include "Utils.h"
 
 Spell* SpellHandler::getRandomSpellForMonster() {
   vector<SpellId> candidates;
@@ -31,7 +32,7 @@ Spell* SpellHandler::getRandomSpellForMonster() {
     }
     delete spell;
   }
-  const int ELEMENT = eng.dice.range(0, candidates.size() - 1);
+  const int ELEMENT = Rnd::range(0, candidates.size() - 1);
   return getSpellFromId(candidates.at(ELEMENT));
 }
 
@@ -156,7 +157,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
 
     if(IS_INTRINSIC) {
       const Range cost = getSpiCost(false, caster, eng);
-      caster->hitSpi(eng.dice.range(cost));
+      caster->hitSpi(Rnd::range(cost));
     }
     SpellCastRetData ret(false);
     if(caster->deadState == actorDeadState_alive) {
@@ -182,7 +183,7 @@ SpellCastRetData SpellDarkbolt::cast_(
   if(spottedActors.empty()) {
     return SpellCastRetData(false);
   } else {
-    target = eng.basicUtils->getRandomClosestActor(caster->pos, spottedActors);
+    target = Utils::getRandomClosestActor(caster->pos, spottedActors);
   }
 
   vector<Pos> line;
@@ -221,7 +222,7 @@ SpellCastRetData SpellDarkbolt::cast_(
     new PropParalyzed(eng, propTurnsSpecific, 2));
 
   Range dmgRange(3, 10);
-  const int DMG = isCharged ? dmgRange.upper : eng.dice.range(dmgRange);
+  const int DMG = isCharged ? dmgRange.upper : Rnd::range(dmgRange);
 
   target->hit(DMG, dmgType_physical, true);
 
@@ -270,7 +271,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
         actor->getPropHandler().tryApplyProp(
           new PropParalyzed(eng, propTurnsSpecific, 2));
 
-        const int DMG = IS_CHARGED ? dmgRange.upper : eng.dice.range(dmgRange);
+        const int DMG = IS_CHARGED ? dmgRange.upper : Rnd::range(dmgRange);
 
         actor->hit(DMG, dmgType_physical, false);
 
@@ -286,7 +287,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
       vector<Pos> {eng.player->pos}, clrRedLgt);
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecific, 1));
-    eng.player->hit(eng.dice.range(dmgRange), dmgType_physical, false);
+    eng.player->hit(Rnd::range(dmgRange), dmgType_physical, false);
     Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
             SndVol::high, AlertsMonsters::yes);
     eng.sndEmitter->emitSnd(snd);
@@ -334,7 +335,7 @@ SpellCastRetData SpellMayhem::cast_(
         }
         if(isAdjToWalkableCell) {
           const int CHANCE_TO_DESTROY = 10;
-          if(eng.dice.percentile() < CHANCE_TO_DESTROY) {
+          if(Rnd::percentile() < CHANCE_TO_DESTROY) {
             eng.map->switchToDestroyedFeatAt(c);
           }
         }
@@ -348,7 +349,7 @@ SpellCastRetData SpellMayhem::cast_(
         eng.map->cells[x][y].featureStatic;
       if(f->canHaveBlood()) {
         const int CHANCE_FOR_BLOOD = 10;
-        if(eng.dice.percentile() < CHANCE_FOR_BLOOD) {
+        if(Rnd::percentile() < CHANCE_FOR_BLOOD) {
           f->setHasBlood(true);
         }
       }
@@ -385,7 +386,6 @@ SpellCastRetData SpellPestilence::cast_(
   const int y1 = min(MAP_H - 1, eng.player->pos.y + RADI);
 
   ActorId monsterId = endOfActorIds;
-  Dice& dice = eng.dice;
 
   vector<Pos> positions;
 
@@ -402,11 +402,11 @@ SpellCastRetData SpellPestilence::cast_(
 
   for(Pos & pos : positions) {
     monsterId = actor_rat;
-    if(dice(1, 3) == 1) {
-      if(dice.coinToss()) {
+    if(Rnd::range(1, 3) == 1) {
+      if(Rnd::coinToss()) {
         monsterId = actor_greenSpider;
       } else {
-        monsterId = dice.coinToss() ? actor_whiteSpider : actor_redSpider;
+        monsterId = Rnd::coinToss() ? actor_whiteSpider : actor_redSpider;
       }
     }
     eng.actorFactory->spawnActor(monsterId, pos);
@@ -513,7 +513,7 @@ SpellCastRetData SpellDetectMonsters::cast_(
 
   for(Actor * actor : eng.gameTime->actors_) {
     if(actor != eng.player) {
-      if(eng.basicUtils->chebyshevDist(playerPos, actor->pos) <= MAX_DIST) {
+      if(Utils::chebyshevDist(playerPos, actor->pos) <= MAX_DIST) {
         dynamic_cast<Monster*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
         didDetect = true;
       }
@@ -647,7 +647,7 @@ bool SpellTeleport::isGoodForMonsterToCastNow(
   MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->isSeeingActor(*(eng.player), blockers) &&
          monster->getHp() <= (monster->getHpMax(true) / 2) &&
-         eng.dice.coinToss();
+         Rnd::coinToss();
 }
 
 //------------------------------------------------------------ KNOCKBACK
@@ -673,7 +673,16 @@ bool SpellKnockBack::isGoodForMonsterToCastNow(
 SpellCastRetData SpellEnfeeble::cast_(
   Actor* const caster, Engine& eng) const {
 
-  const PropId propId = getPropId(eng);
+  PropId propId = endOfPropIds;
+
+  const int RND = Rnd::range(1, 5);
+  switch(RND) {
+    case 1: {propId = propConfused;}
+    case 2: {propId = propParalysed;}
+    case 3: {propId = propSlowed;}
+    case 4: {propId = propBlind;}
+    case 5: {propId = propTerrified;}
+  }
 
   if(caster == eng.player) {
     vector<Actor*> targets;
@@ -717,18 +726,6 @@ bool SpellEnfeeble::isGoodForMonsterToCastNow(
   return monster->isSeeingActor(*(eng.player), blockers);
 }
 
-PropId SpellEnfeeble::getPropId(Engine& eng) const {
-  const int RND = eng.dice.range(1, 5);
-  switch(RND) {
-    case 1: {return propConfused;}
-    case 2: {return propParalysed;}
-    case 3: {return propSlowed;}
-    case 4: {return propBlind;}
-    case 5: {return propTerrified;}
-  }
-  return endOfPropIds;
-}
-
 //------------------------------------------------------------ DISEASE
 SpellCastRetData SpellDisease::cast_(
   Actor* const caster, Engine& eng) const {
@@ -746,7 +743,7 @@ bool SpellDisease::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), blockers);
-  return eng.dice.coinToss() && monster->isSeeingActor(*eng.player, blockers);
+  return Rnd::coinToss() && monster->isSeeingActor(*eng.player, blockers);
 }
 
 //------------------------------------------------------------ SUMMON RANDOM
@@ -783,7 +780,7 @@ SpellCastRetData SpellSummonRandom::cast_(
 
   if(freePositionsSeenByPlayer.empty()) {
     vector<Pos> freeCellsVector;
-    eng.basicUtils->makeVectorFromBoolMap(false, blockers, freeCellsVector);
+    Utils::makeVectorFromBoolMap(false, blockers, freeCellsVector);
     if(freeCellsVector.empty() == false) {
       sort(freeCellsVector.begin(), freeCellsVector.end(),
            IsCloserToOrigin(caster->pos, eng));
@@ -791,7 +788,7 @@ SpellCastRetData SpellSummonRandom::cast_(
     }
   } else {
     const int ELEMENT =
-      eng.dice.range(0, freePositionsSeenByPlayer.size() - 1);
+      Rnd::range(0, freePositionsSeenByPlayer.size() - 1);
     summonPos = freePositionsSeenByPlayer.at(ELEMENT);
   }
 
@@ -804,7 +801,7 @@ SpellCastRetData SpellSummonRandom::cast_(
       }
     }
   }
-  const int ELEMENT = eng.dice.range(1, summonCandidates.size() - 1);
+  const int ELEMENT = Rnd::range(1, summonCandidates.size() - 1);
   const ActorId id = summonCandidates.at(ELEMENT);
   Actor* const actor = eng.actorFactory->spawnActor(id, summonPos);
   Monster* monster = dynamic_cast<Monster*>(actor);
@@ -821,7 +818,7 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->isSeeingActor(*(eng.player), blockers) ||
-         (eng.dice.oneIn(20));
+         (Rnd::oneIn(20));
 }
 
 //------------------------------------------------------------ HEAL SELF
@@ -844,9 +841,9 @@ SpellCastRetData SpellMiGoHypnosis::cast_(
   (void)caster;
   eng.log->addMsg("There is a sharp droning in my head!");
 
-  if(eng.dice.coinToss()) {
+  if(Rnd::coinToss()) {
     eng.player->getPropHandler().tryApplyProp(
-      new PropFainted(eng, propTurnsSpecific, eng.dice.range(2, 10)));
+      new PropFainted(eng, propTurnsSpecific, Rnd::range(2, 10)));
   } else {
     eng.log->addMsg("I feel dizzy.");
   }
@@ -860,5 +857,5 @@ bool SpellMiGoHypnosis::isGoodForMonsterToCastNow(
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), blockers);
   return monster->isSeeingActor(*(eng.player), blockers) &&
-         eng.dice.oneIn(4);
+         Rnd::oneIn(4);
 }

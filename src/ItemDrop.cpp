@@ -9,6 +9,7 @@
 #include "Inventory.h"
 #include "ItemFactory.h"
 #include "MapParsing.h"
+#include "Utils.h"
 
 #include <algorithm>
 
@@ -83,7 +84,7 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
     }
   }
   vector<Pos> freeCells;
-  eng.basicUtils->makeVectorFromBoolMap(true, freeCellArray, freeCells);
+  Utils::makeVectorFromBoolMap(true, freeCellArray, freeCells);
 
   //Sort the vector according to distance to origin
   IsCloserToOrigin isCloserToOrigin(intendedPos, eng);

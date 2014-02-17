@@ -9,6 +9,7 @@
 #include "ActorMonster.h"
 #include "GameTime.h"
 #include "MapParsing.h"
+#include "Utils.h"
 
 bool SndEmitter::isSoundHeardAtRange(const int RANGE,
                                      const Snd& snd) const {
@@ -28,7 +29,7 @@ void SndEmitter::emitSnd(Snd snd) {
   }
   int floodFill[MAP_W][MAP_H];
   const Pos& origin = snd.getOrigin();
-  FloodFill::run(origin, blockers, floodFill, 999, Pos(-1, -1), eng);
+  FloodFill::run(origin, blockers, floodFill, 999, Pos(-1, -1));
   floodFill[origin.x][origin.y] = 0;
 
   for(Actor * actor : eng.gameTime->actors_) {

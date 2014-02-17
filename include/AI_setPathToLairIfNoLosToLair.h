@@ -23,7 +23,7 @@ public:
       MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, eng),
                       blockers, mapParseWriteOnlyTrue);
 
-      PathFind::run(monster.pos, lairCell, blockers, path, eng);
+      PathFind::run(monster.pos, lairCell, blockers, path);
       return;
     }
 

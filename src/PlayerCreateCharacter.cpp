@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "MenuInputHandler.h"
 #include "TextFormatting.h"
+#include "Utils.h"
 
 void PlayerCreateCharacter::createCharacter() const {
   pickBg();
@@ -15,7 +16,7 @@ void PlayerCreateCharacter::createCharacter() const {
 
 void PlayerCreateCharacter::pickBg() const {
   if(eng.config->isBotPlaying) {
-    eng.playerBonHandler->pickBg(Bg(eng.dice.range(0, endOfBgs - 1)));
+    eng.playerBonHandler->pickBg(Bg(Rnd::range(0, endOfBgs - 1)));
   } else {
     vector<Bg> bgs;
     eng.playerBonHandler->getPickableBgs(bgs);

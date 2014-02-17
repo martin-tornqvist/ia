@@ -9,6 +9,7 @@
 #include "Inventory.h"
 #include "Map.h"
 #include "Audio.h"
+#include "Utils.h"
 
 //---------------------------------------------------- BASE CLASS
 Device::Device(ItemData* const itemData, Engine& engine) :
@@ -56,11 +57,11 @@ void Device::printToggleMessage() {
 }
 
 int Device::getRandomNrTurnsToNextGoodEffect() const {
-  return eng.dice.range(6, 9);
+  return Rnd::range(6, 9);
 }
 
 int Device::getRandomNrTurnsToNextBadEffect() const {
-  return eng.dice.range(12, 16);
+  return Rnd::range(12, 16);
 }
 
 void Device::newTurnInInventory() {
@@ -83,7 +84,7 @@ void Device::runBadEffect() {
   const string name =
     eng.itemDataHandler->getItemRef(*this, itemRef_plain, true);
 
-  const int RND = eng.dice.percentile();
+  const int RND = Rnd::percentile();
   if(RND < 2) {
     eng.log->addMsg("The " + name + " breaks!");
     eng.player->getInv().removetemInGeneralWithPointer(this, false);
@@ -93,7 +94,7 @@ void Device::runBadEffect() {
       ".", clrMsgBad, true);
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecific, 2));
-    eng.player->hit(eng.dice.range(1, 2), dmgType_electric, false);
+    eng.player->hit(Rnd::range(1, 2), dmgType_electric, false);
   } else {
     eng.log->addMsg("The " + name + " hums ominously.");
   }
@@ -123,13 +124,13 @@ string DeviceSentry::getSpecificActivateMessage() {
 }
 
 void DeviceSentry::runGoodEffect() {
-  const int DMG = eng.dice(1, 6) + 2;
+  const int DMG = Rnd::dice(1, 6) + 2;
 
   vector<Actor*> targetCandidates;
   eng.player->getSpottedEnemies(targetCandidates);
   const unsigned int NR_CANDIDATES = targetCandidates.size();
   if(NR_CANDIDATES > 0) {
-    const int ELEMENT = eng.dice.range(0, NR_CANDIDATES - 1);
+    const int ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
     Actor* const actor = targetCandidates.at(ELEMENT);
     const Pos& pos = actor->pos;
     eng.log->addMsg(actor->getNameThe() + " is hit by a bolt of lightning!",
@@ -150,7 +151,7 @@ void DeviceRepeller::runGoodEffect() {
   for(Actor* actor : eng.gameTime->actors_) {
     if(actor != eng.player) {
       const Pos& otherPos = actor->pos;
-      if(eng.basicUtils->isPosAdj(playerPos, otherPos, false)) {
+      if(Utils::isPosAdj(playerPos, otherPos, false)) {
         eng.knockBack->tryKnockBack(*actor, playerPos, false, true);
       }
     }
@@ -158,7 +159,7 @@ void DeviceRepeller::runGoodEffect() {
 }
 
 int DeviceRepeller::getRandomNrTurnsToNextGoodEffect() const {
-  return eng.dice.range(2, 4);
+  return Rnd::range(2, 4);
 }
 
 //---------------------------------------------------- REJUVENATOR
@@ -224,7 +225,7 @@ void DeviceElectricLantern::runBadEffect() {
     bool isVisionUpdateNeeded = false;
     bool isItemDestroyed = false;
 
-    const int RND = eng.dice.percentile();
+    const int RND = Rnd::percentile();
     if(RND < 6) {
       eng.log->addMsg("My Electric Lantern breaks!");
       eng.player->getInv().removetemInGeneralWithPointer(this, false);
@@ -232,7 +233,7 @@ void DeviceElectricLantern::runBadEffect() {
       isItemDestroyed = true;
     } else if(RND < 20) {
       eng.log->addMsg("My Electric Lantern malfunctions.");
-      malfunctCooldown_ = eng.dice.range(3, 4);
+      malfunctCooldown_ = Rnd::range(3, 4);
       isVisionUpdateNeeded = true;
     } else if(RND < 50) {
       eng.log->addMsg("My Electric Lantern flickers.");

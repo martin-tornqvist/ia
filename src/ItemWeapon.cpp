@@ -2,6 +2,7 @@
 #include "Engine.h"
 
 #include "Explosion.h"
+#include "Utils.h"
 
 Weapon::Weapon(ItemData* const itemData, ItemData* const ammoData,
                Engine& engine) :
@@ -17,7 +18,7 @@ void Weapon::setRandomMeleePlus() {
   meleeDmgPlus = 0;
 
   int chance = 45;
-  while(eng.dice.percentile() < chance && meleeDmgPlus < 3) {
+  while(Rnd::percentile() < chance && meleeDmgPlus < 3) {
     meleeDmgPlus++;
     chance -= 5;
   }

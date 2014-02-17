@@ -14,6 +14,7 @@
 #include "PlayerBonuses.h"
 #include "Renderer.h"
 #include "MapParsing.h"
+#include "Utils.h"
 
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(FeatureId id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
@@ -22,7 +23,7 @@ Door::Door(FeatureId id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
 
   isOpenedAndClosedExternally_ = false;
 
-  const int ROLL = eng.dice.percentile();
+  const int ROLL = Rnd::percentile();
   const DoorSpawnState doorState =
     ROLL < 5 ? doorSpawnState_secretAndStuck :
     ROLL < 40 ? doorSpawnState_secret :
@@ -253,7 +254,7 @@ void Door::bash_(Actor& actorTrying) {
     }
     const bool IS_DOOR_SMASHED =
       (material_ == doorMaterial_metal || IS_BASHER_WEAK) ? false :
-      eng.dice.percentile() < skillValueBash;
+      Rnd::percentile() < skillValueBash;
 
     if(
       IS_PLAYER && isSecret_ == false &&
@@ -399,7 +400,7 @@ void Door::tryClose(Actor* actorTrying) {
         }
       }
     } else {
-      if(eng.dice.percentile() < 50) {
+      if(Rnd::percentile() < 50) {
         isOpen_ = false;
         if(IS_PLAYER) {
           Snd snd("", sfxDoorClose, IgnoreMsgIfOriginSeen::yes, pos_,
@@ -484,7 +485,7 @@ void Door::tryOpen(Actor* actorTrying) {
         }
       }
     } else {
-      if(eng.dice.percentile() < 50) {
+      if(Rnd::percentile() < 50) {
         trace << "Door: Tryer is blind, but open succeeded anyway" << endl;
         isOpen_ = true;
         if(IS_PLAYER) {

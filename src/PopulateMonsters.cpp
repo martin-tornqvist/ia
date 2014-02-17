@@ -11,6 +11,7 @@
 #include "FeatureFactory.h"
 #include "MapGen.h"
 #include "MapParsing.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -47,7 +48,7 @@ void PopulateMonsters::spawnGroupOfRandomAt(
 
   if(idCandidates.empty() == false) {
     const ActorId id =
-      idCandidates.at(eng.dice.range(0, idCandidates.size() - 1));
+      idCandidates.at(Rnd::range(0, idCandidates.size() - 1));
 
     spawnGroupAt(id, sortedFreeCellsVector, blockers,
                  IS_ROAMING_ALLOWED);
@@ -85,13 +86,13 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   if(freeCellsVector.empty() == false) {
 
     const Pos& origin =
-      freeCellsVector.at(eng.dice.range(0, freeCellsVector.size() - 1));
+      freeCellsVector.at(Rnd::range(0, freeCellsVector.size() - 1));
 
     makeSortedFreeCellsVector(origin, blockers, freeCellsVector);
 
     if(freeCellsVector.empty() == false) {
       const Pos& pos =
-        freeCellsVector.at(eng.dice.range(0, freeCellsVector.size() - 1));
+        freeCellsVector.at(Rnd::range(0, freeCellsVector.size() - 1));
 
       if(eng.map->cells[pos.x][pos.y].isExplored) {
         spawnGroupOfRandomAt(freeCellsVector, blockers,
@@ -103,7 +104,7 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
 }
 
 void PopulateMonsters::populateCaveLevel() const {
-  const int NR_GROUPS_ALLOWED = eng.dice.range(6, 7);
+  const int NR_GROUPS_ALLOWED = Rnd::range(6, 7);
 
   bool blockers[MAP_W][MAP_H];
 
@@ -132,7 +133,7 @@ void PopulateMonsters::populateCaveLevel() const {
         }
       }
     }
-    const int ELEMENT = eng.dice.range(0, originCandidates.size() - 1);
+    const int ELEMENT = Rnd::range(0, originCandidates.size() - 1);
     const Pos origin = originCandidates.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
@@ -144,7 +145,7 @@ void PopulateMonsters::populateCaveLevel() const {
 }
 
 void PopulateMonsters::populateIntroLevel() {
-  const int NR_GROUPS_ALLOWED = 2; //eng.dice.range(2, 3);
+  const int NR_GROUPS_ALLOWED = 2; //Rnd::range(2, 3);
 
   bool blockers[MAP_W][MAP_H];
 
@@ -172,7 +173,7 @@ void PopulateMonsters::populateIntroLevel() {
         }
       }
     }
-    const int ELEMENT = eng.dice.range(0, originCandidates.size() - 1);
+    const int ELEMENT = Rnd::range(0, originCandidates.size() - 1);
     const Pos origin = originCandidates.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
@@ -186,7 +187,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(
   RoomThemeId themeMap[MAP_W][MAP_H],
   const vector<Room*>& rooms) const {
 
-  const int NR_GROUPS_ALLOWED = eng.dice.range(5, 9);
+  const int NR_GROUPS_ALLOWED = Rnd::range(5, 9);
   int nrGroupsSpawned = 0;
 
   bool blockers[MAP_W][MAP_H];
@@ -243,7 +244,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(
         //Spawn monsters in room
         if(originCandidates.empty() == false) {
           const int ELEMENT =
-            eng.dice.range(0, originCandidates.size() - 1);
+            Rnd::range(0, originCandidates.size() - 1);
           const Pos& origin = originCandidates.at(ELEMENT);
           vector<Pos> sortedFreeCellsVector;
           makeSortedFreeCellsVector(
@@ -283,7 +284,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel(
         }
       }
     }
-    const int ELEMENT = eng.dice.range(0, originCandidates.size() - 1);
+    const int ELEMENT = Rnd::range(0, originCandidates.size() - 1);
     const Pos origin = originCandidates.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
@@ -329,7 +330,7 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(
     trace << "at room theme (" + toString(roomTheme) + ")" << endl;
     return false;
   } else {
-    const int ELEMENT = eng.dice.range(0, idCandidates.size() - 1);
+    const int ELEMENT = Rnd::range(0, idCandidates.size() - 1);
     const ActorId id = idCandidates.at(ELEMENT);
     spawnGroupAt(id, sortedFreeCellsVector, blockers,
                  IS_ROAMING_ALLOWED);
@@ -347,10 +348,10 @@ void PopulateMonsters::spawnGroupAt(
   int maxNrInGroup = 1;
 
   switch(d.groupSize) {
-    case monsterGroupSizeFew:    maxNrInGroup = eng.dice.range(1, 2);    break;
-    case monsterGroupSizeGroup:  maxNrInGroup = eng.dice.range(3, 4);    break;
-    case monsterGroupSizeHorde:  maxNrInGroup = eng.dice.range(6, 7);    break;
-    case monsterGroupSizeSwarm:  maxNrInGroup = eng.dice.range(10, 12);  break;
+    case monsterGroupSizeFew:    maxNrInGroup = Rnd::range(1, 2);    break;
+    case monsterGroupSizeGroup:  maxNrInGroup = Rnd::range(3, 4);    break;
+    case monsterGroupSizeHorde:  maxNrInGroup = Rnd::range(6, 7);    break;
+    case monsterGroupSizeSwarm:  maxNrInGroup = Rnd::range(10, 12);  break;
     default: {} break;
   }
 
@@ -404,9 +405,9 @@ int PopulateMonsters::getRandomOutOfDepth() const {
 
   if(DLVL == 0) {return 0;}
 
-  if(eng.dice.oneIn(40) && DLVL > 1)  {return 5;}
+  if(Rnd::oneIn(40) && DLVL > 1)  {return 5;}
 
-  if(eng.dice.oneIn(5))               {return 3;}
+  if(Rnd::oneIn(5))               {return 3;}
 
   return 0;
 }

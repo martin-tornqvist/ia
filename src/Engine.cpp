@@ -126,7 +126,6 @@ void Engine::cleanupAudio() {
 void Engine::initGame() {
   trace << "Engine::initGame()..." << endl;
   // ------- INITIALIZATIONS WHERE ORDER MAY BE IMPORTANT -------
-  basicUtils = new BasicUtils(*this);
   lineCalc = new LineCalc(*this);
   propDataHandler = new PropDataHandler(*this);
   actorDataHandler = new ActorDataHandler(*this);
@@ -228,7 +227,6 @@ void Engine::cleanupGame() {
   delete art;
   delete thrower;
   delete reload;
-  delete basicUtils;
   delete gore;
   delete manual;
   delete lineCalc;

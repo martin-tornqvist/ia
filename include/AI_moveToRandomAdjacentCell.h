@@ -40,7 +40,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
     const Pos targetCell(monsterPos + dirConv.getOffset(lastDirTravelled));
     if(
       blockers[targetCell.x][targetCell.y] == false &&
-      engine.basicUtils->isPosInside(targetCell, areaAllowed)) {
+      Utils::isPosInside(targetCell, areaAllowed)) {
       return lastDirTravelled;
     }
   }
@@ -55,7 +55,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
         const Pos targetCell(monsterPos + offset);
         if(
           blockers[targetCell.x][targetCell.y] == false &&
-          engine.basicUtils->isPosInside(targetCell, areaAllowed)) {
+          Utils::isPosInside(targetCell, areaAllowed)) {
           dirCandidates.push_back(dirConv.getDir(offset));
         }
       }
@@ -66,7 +66,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
   if(NR_ELEMENTS == 0) {
     return dirCenter;
   } else {
-    return dirCandidates.at(engine.dice.range(0, NR_ELEMENTS - 1));
+    return dirCandidates.at(Rnd::range(0, NR_ELEMENTS - 1));
   }
 }
 

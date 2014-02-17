@@ -162,15 +162,14 @@ public:
 namespace FloodFill {
 
 void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
-         int values[MAP_W][MAP_H], int travelLimit, const Pos& target,
-         Engine& eng);
+         int values[MAP_W][MAP_H], int travelLimit, const Pos& target);
 
 } //FloodFill
 
 namespace PathFind {
 
 void run(const Pos& origin, const Pos& target, bool blockers[MAP_W][MAP_H],
-         vector<Pos>& vectorRef, Engine& eng);
+         vector<Pos>& vectorRef);
 
 } //PathFind
 

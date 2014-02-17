@@ -16,6 +16,7 @@
 #include "FeatureWall.h"
 #include "MapParsing.h"
 #include "Renderer.h"
+#include "Utils.h"
 
 #ifdef DEMO_MODE
 #include "SdlWrapper.h"
@@ -43,8 +44,8 @@ bool MapGenBsp::run_() {
     }
   }
 
-  const int SPL_X1 = MAP_W / 3 + eng.dice.range(-1, 1);
-  const int SPL_X2 = 2 * (MAP_W / 3) + eng.dice.range(-1, 1);
+  const int SPL_X1 = MAP_W / 3 + Rnd::range(-1, 1);
+  const int SPL_X2 = 2 * (MAP_W / 3) + Rnd::range(-1, 1);
   const int SPL_Y1 = MAP_H / 3;
   const int SPL_Y2 = 2 * (MAP_H / 3);
 
@@ -88,12 +89,12 @@ bool MapGenBsp::run_() {
   const int DLVL = eng.map->getDlvl();
   const int CHANCE_FOR_CAVE_AREA =
     (DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
-  if(eng.dice.percentile() < CHANCE_FOR_CAVE_AREA) {
-    const bool IS_TWO_CAVES = eng.dice.percentile() < CHANCE_FOR_CAVE_AREA / 3;
+  if(Rnd::percentile() < CHANCE_FOR_CAVE_AREA) {
+    const bool IS_TWO_CAVES = Rnd::percentile() < CHANCE_FOR_CAVE_AREA / 3;
     for(int nrCaves = IS_TWO_CAVES ? 2 : 1; nrCaves > 0; nrCaves--) {
       int nrTriesToMark = 1000;
       while(nrTriesToMark > 0) {
-        Pos c(eng.dice.range(0, 2), eng.dice.range(0, 2));
+        Pos c(Rnd::range(0, 2), Rnd::range(0, 2));
         if(regions[c.x][c.y] == NULL && regionsToBuildCave[c.x][c.y] == false) {
           regionsToBuildCave[c.x][c.y] = true;
           nrTriesToMark = 0;
@@ -124,12 +125,12 @@ bool MapGenBsp::run_() {
         eng.sdlWrapper->sleep(2000);
 #endif // DEMO_MODE
 
-        const Rect roomPoss = region->getRandomPossForRoom(eng);
+        const Rect roomPoss = region->getRandomPossForRoom();
 
         eng.map->rooms.push_back(buildRoom(roomPoss));
         regions[x][y]->mainRoom = eng.map->rooms.back();
 
-        if(eng.dice.oneIn(3)) {reshapeRoom(*(regions[x][y]->mainRoom));}
+        if(Rnd::oneIn(3)) {reshapeRoom(*(regions[x][y]->mainRoom));}
       }
     }
   }
@@ -149,7 +150,7 @@ bool MapGenBsp::run_() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       if(globalDoorPosCandidates[x][y] == true) {
-        if(eng.dice.percentile() < CHANCE_TP_OLACE_DOOR) {
+        if(Rnd::percentile() < CHANCE_TP_OLACE_DOOR) {
           placeDoorAtPosIfSuitable(Pos(x, y));
         }
       }
@@ -233,7 +234,7 @@ void MapGenBsp::deleteAndRemoveRoomFromList(Room* const room) {
 //      }
 //    }
 //  }
-//  Door* const doorToLink = doorCandidates.at(eng.dice.range(0, doorCandidates.size() - 1));
+//  Door* const doorToLink = doorCandidates.at(Rnd::range(0, doorCandidates.size() - 1));
 //
 //  trace << "MapGenBsp: Making floodfill and keeping only positions with lower value than the door" << endl;
 //  bool blockers[MAP_W][MAP_H];
@@ -261,7 +262,7 @@ void MapGenBsp::deleteAndRemoveRoomFromList(Room* const room) {
 //  }
 //
 //  if(leverPosCandidates.size() > 0) {
-//    const int ELEMENT = eng.dice.range(0, leverPosCandidates.size() - 1);
+//    const int ELEMENT = Rnd::range(0, leverPosCandidates.size() - 1);
 //    const Pos leverPos(leverPosCandidates.at(ELEMENT));
 //    spawnLeverAdaptAndLinkDoor(leverPos, *doorToLink);
 //  } else {
@@ -315,7 +316,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
                     featureId == feature_caveFloor;
                   if(
                     IS_FLOOR &&
-                    eng.basicUtils->isPosInside(
+                    Utils::isPosInside(
                       Pos(x + dx, y + dy), region->getRegionPoss()) == false) {
                     blockers[x][y] = true;
                   }
@@ -331,7 +332,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
         const int FLOOD_FILL_TRAVEL_LIMIT = 20;
 
         FloodFill::run(origin, blockers, floodFillResult,
-                       FLOOD_FILL_TRAVEL_LIMIT, Pos(-1, -1), eng);
+                       FLOOD_FILL_TRAVEL_LIMIT, Pos(-1, -1));
 
         for(int y = 1; y < MAP_H - 1; y++) {
           for(int x = 1; x < MAP_W - 1; x++) {
@@ -367,8 +368,8 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
 
         const int CHANCE_TO_MAKE_CHASM = 25;
 
-        if(eng.dice.percentile() < CHANCE_TO_MAKE_CHASM) {
-          eng.basicUtils->resetArray(blockers, false);
+        if(Rnd::percentile() < CHANCE_TO_MAKE_CHASM) {
+          Utils::resetArray(blockers, false);
 
           for(int y = 1; y < MAP_H - 1; y++) {
             for(int x = 1; x < MAP_W - 1; x++) {
@@ -384,7 +385,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
           }
 
           FloodFill::run(origin, blockers, floodFillResult,
-                         FLOOD_FILL_TRAVEL_LIMIT / 2, Pos(-1, -1), eng);
+                         FLOOD_FILL_TRAVEL_LIMIT / 2, Pos(-1, -1));
 
           for(int y = 1; y < MAP_H - 1; y++) {
             for(int x = 1; x < MAP_W - 1; x++) {
@@ -414,7 +415,7 @@ void MapGenBsp::buildMergedRegionsAndRooms(
   Region* regions[3][3], const int SPL_X1, const int SPL_X2,
   const int SPL_Y1, const int SPL_Y2) {
 
-  const int NR_OF_MERGED_REGIONS_TO_ATTEMPT = eng.dice.range(0, 2);
+  const int NR_OF_MERGED_REGIONS_TO_ATTEMPT = Rnd::range(0, 2);
 
   for(
     int attemptCount = 0;
@@ -432,7 +433,7 @@ void MapGenBsp::buildMergedRegionsAndRooms(
         return;
       }
 
-      regionIndex1 = Pos(eng.dice.range(0, 2), eng.dice.range(0, 1));
+      regionIndex1 = Pos(Rnd::range(0, 2), Rnd::range(0, 1));
       regionIndex2 = Pos(regionIndex1 + Pos(0, 1));
       isGoodRegionsFound =
         regions[regionIndex1.x][regionIndex1.y] == NULL &&
@@ -484,10 +485,10 @@ void MapGenBsp::buildMergedRegionsAndRooms(
     regions[regionIndex1.x][regionIndex1.y] = region1;
     regions[regionIndex2.x][regionIndex2.y] = region2;
 
-    const int OFFSET_X0 = eng.dice.range(1, 4);
-    const int OFFSET_Y0 = eng.dice.range(1, 4);
-    const int OFFSET_X1 = eng.dice.range(1, 4);
-    const int OFFSET_Y1 = eng.dice.range(1, 4);
+    const int OFFSET_X0 = Rnd::range(1, 4);
+    const int OFFSET_Y0 = Rnd::range(1, 4);
+    const int OFFSET_X1 = Rnd::range(1, 4);
+    const int OFFSET_Y1 = Rnd::range(1, 4);
     Rect roomPoss(area1.x0y0 + Pos(OFFSET_X0, OFFSET_Y0),
                   area2.x1y1 - Pos(OFFSET_X1, OFFSET_Y1));
     Room* const room = buildRoom(roomPoss);
@@ -498,7 +499,7 @@ void MapGenBsp::buildMergedRegionsAndRooms(
     region1->regionsConnectedTo[regionIndex2.x][regionIndex2.y] = true;
     region2->regionsConnectedTo[regionIndex1.x][regionIndex1.y] = true;
 
-    if(eng.dice.oneIn(3)) {reshapeRoom(*room);}
+    if(Rnd::oneIn(3)) {reshapeRoom(*room);}
   }
 }
 
@@ -520,7 +521,7 @@ void MapGenBsp::buildRoomsInRooms() {
 
     const bool IS_ROOM_BIG = ROOM_WI > 16 || ROOM_HE > 8;
 
-    if(IS_ROOM_BIG || eng.dice.percentile() < 30) {
+    if(IS_ROOM_BIG || Rnd::percentile() < 30) {
       const int MAX_DIM_W = min(16, ROOM_WI);
       const int MAX_DIM_H = min(16, ROOM_HE);
 
@@ -532,11 +533,11 @@ void MapGenBsp::buildRoomsInRooms() {
           nrRoomsCount++) {
           for(int tryCount = 0; tryCount < NR_OF_TRIES; tryCount++) {
 
-            const int W = eng.dice.range(MIN_DIM_W, MAX_DIM_W);
-            const int H = eng.dice.range(MIN_DIM_H, MAX_DIM_H);
+            const int W = Rnd::range(MIN_DIM_W, MAX_DIM_W);
+            const int H = Rnd::range(MIN_DIM_H, MAX_DIM_H);
 
-            const int X0 = eng.dice.range(roomX0Y0.x - 1, roomX1Y1.x - W + 2);
-            const int Y0 = eng.dice.range(roomX0Y0.y - 1, roomX1Y1.y - H + 2);
+            const int X0 = Rnd::range(roomX0Y0.x - 1, roomX1Y1.x - W + 2);
+            const int Y0 = Rnd::range(roomX0Y0.y - 1, roomX1Y1.y - H + 2);
             const int X1 = X0 + W - 1;
             const int Y1 = Y0 + H - 1;
 
@@ -545,7 +546,7 @@ void MapGenBsp::buildRoomsInRooms() {
             for(int y = Y0 - 1; y <= Y1 + 1; y++) {
               for(int x = X0 - 1; x <= X1 + 1; x++) {
                 if(
-                  eng.basicUtils->isPosInside(
+                  Utils::isPosInside(
                     Pos(x, y), Rect(roomX0Y0 - Pos(1, 1),
                                     roomX1Y1 + Pos(1, 1)))) {
                   if(
@@ -598,23 +599,23 @@ void MapGenBsp::buildRoomsInRooms() {
                   }
                 }
               }
-              if(eng.dice.coinToss() || doorCandidates.size() <= 2) {
+              if(Rnd::coinToss() || doorCandidates.size() <= 2) {
                 const int DOOR_POS_ELEMENT =
-                  eng.dice.range(0, doorCandidates.size() - 1);
+                  Rnd::range(0, doorCandidates.size() - 1);
                 const Pos doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
                 eng.featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
                 globalDoorPosCandidates[doorPos.x][doorPos.y] = true;
               } else {
                 vector<Pos> positionsWithDoor;
-                const int NR_TRIES = eng.dice.range(1, 10);
+                const int NR_TRIES = Rnd::range(1, 10);
                 for(int j = 0; j < NR_TRIES; j++) {
                   const int DOOR_POS_ELEMENT =
-                    eng.dice.range(0, doorCandidates.size() - 1);
+                    Rnd::range(0, doorCandidates.size() - 1);
                   const Pos doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
 
                   bool positionOk = true;
                   for(unsigned int n = 0; n < positionsWithDoor.size(); n++) {
-                    if(eng.basicUtils->isPosAdj(
+                    if(Utils::isPosAdj(
                           doorPos, positionsWithDoor.at(n), false)) {
                       positionOk = false;
                     }
@@ -657,7 +658,7 @@ void MapGenBsp::postProcessFillDeadEnds() {
 
   //Floodfill from origin, then sort the positions for flood value
   int floodFill[MAP_W][MAP_H];
-  FloodFill::run(origin, blockers, floodFill, 99999, Pos(-1, -1), eng);
+  FloodFill::run(origin, blockers, floodFill, 99999, Pos(-1, -1));
   vector<PosAndVal> floodFillVector;
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
@@ -687,12 +688,12 @@ void MapGenBsp::postProcessFillDeadEnds() {
 //  const Pos origin(1,1);
 //  for(int y = 1; y < MAP_H - 1; y++) {
 //    for(int x = 1; x < MAP_W - 1; x++) {
-//      if(eng.basicUtils->pointDist(origin.x, origin.y, x, y) < 20) {
+//      if(Utils::pointDist(origin.x, origin.y, x, y) < 20) {
 //        eng.featureFactory->spawnFeatureAt(feature_deepWater, Pos(x,y));
 //        for(int yRegion = 0; yRegion < 3; yRegion++) {
 //          for(int xRegion = 0; xRegion < 3; xRegion++) {
 //            Region* region = regions[xRegion][yRegion];
-//            if(eng.basicUtils->isPosInside(Pos(x,y), region->getX0Y0(), region->getX1Y1())) {
+//            if(Utils::isPosInside(Pos(x,y), region->getX0Y0(), region->getX1Y1())) {
 //              region->mapArea.isSpecialRoomAllowed = false;
 //            }
 //          }
@@ -706,14 +707,14 @@ void MapGenBsp::postProcessFillDeadEnds() {
 //void MapGenBsp::makeRiver(Region* regions[3][3]) {
 //  (void)regions;
 //
-//  const int W = eng.dice.range(4, 12);
+//  const int W = Rnd::range(4, 12);
 //  const int START_X_OFFSET_MAX = 5;
-//  const int X_POS_START = MAP_W/2 + eng.dice.range(-START_X_OFFSET_MAX, START_X_OFFSET_MAX);
+//  const int X_POS_START = MAP_W/2 + Rnd::range(-START_X_OFFSET_MAX, START_X_OFFSET_MAX);
 //
 //  Pos leftPos(X_POS_START, 0);
-//  while(eng.basicUtils->isPosInsideMap(leftPos) && eng.basicUtils->isPosInsideMap(leftPos + Pos(W,0))) {
+//  while(Utils::isPosInsideMap(leftPos) && Utils::isPosInsideMap(leftPos + Pos(W,0))) {
 //    coverAreaWithFeature(Rect(leftPos, leftPos + Pos(W, 0)), feature_deepWater);
-//    leftPos += Pos(eng.dice.range(-1,1), 1);
+//    leftPos += Pos(Rnd::range(-1,1), 1);
 //  }
 //}
 
@@ -737,7 +738,7 @@ Pos MapGenBsp::placeStairs() {
   getAllowedStairCells(allowedCells);
 
   vector<Pos> allowedCellsList;
-  eng.basicUtils->makeVectorFromBoolMap(true, allowedCells, allowedCellsList);
+  Utils::makeVectorFromBoolMap(true, allowedCells, allowedCellsList);
 
   const int NR_OK_CELLS = allowedCellsList.size();
 
@@ -755,8 +756,7 @@ Pos MapGenBsp::placeStairs() {
   sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
 
   trace << "MapGenBsp: Picking random cell from furthest half" << endl;
-  const int ELEMENT =
-    eng.dice.range(NR_OK_CELLS / 2, NR_OK_CELLS - 1);
+  const int ELEMENT = Rnd::range(NR_OK_CELLS / 2, NR_OK_CELLS - 1);
   const Pos stairsPos(allowedCellsList.at(ELEMENT));
 
   trace << "MapGenBsp: Spawning stairs at chosen cell" << endl;
@@ -775,7 +775,7 @@ void MapGenBsp::movePlayerToNearestAllowedPos() {
   getAllowedStairCells(allowedCells);
 
   vector<Pos> allowedCellsList;
-  eng.basicUtils->makeVectorFromBoolMap(true, allowedCells, allowedCellsList);
+  Utils::makeVectorFromBoolMap(true, allowedCells, allowedCellsList);
 
   assert(allowedCellsList.empty() == false);
 
@@ -806,7 +806,7 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
   }
 
   vector<Pos> path;
-  PathFind::run(eng.player->pos, stairsPos, blockers, path, eng);
+  PathFind::run(eng.player->pos, stairsPos, blockers, path);
 
   assert(path.empty() == false);
 
@@ -841,7 +841,7 @@ void MapGenBsp::decorate() {
         }
 
         //Randomly convert walls to rubble
-        if(eng.dice.percentile() < 10) {
+        if(Rnd::percentile() < 10) {
           eng.featureFactory->spawnFeatureAt(feature_rubbleHigh, Pos(x, y));
 #ifdef DEMO_MODE
           eng.renderer->drawMapAndInterface();
@@ -877,7 +877,7 @@ void MapGenBsp::decorate() {
     for(int x = 1; x < MAP_W - 1; x++) {
       if(eng.map->cells[x][y].featureStatic->getId() == feature_stoneFloor) {
         //Randomly convert stone floor to low rubble
-        if(eng.dice.percentile() == 1) {
+        if(Rnd::percentile() == 1) {
           eng.featureFactory->spawnFeatureAt(feature_rubbleLow, Pos(x, y));
 #ifdef DEMO_MODE
           eng.renderer->drawMapAndInterface();
@@ -900,13 +900,13 @@ void MapGenBsp::connectRegions(Region* regions[3][3]) {
   while(isAllConnected == false) {
     isAllConnected = isAllRoomsConnected();
 
-    Pos c1(eng.dice.range(0, 2), eng.dice.range(0, 2));
+    Pos c1(Rnd::range(0, 2), Rnd::range(0, 2));
     Region* r1 = regions[c1.x][c1.y];
 
     Pos delta(0, 0);
     bool isDeltaOk = false;
     while(isDeltaOk == false) {
-      delta.set(eng.dice.range(-1, 1), eng.dice.range(-1, 1));
+      delta.set(Rnd::range(-1, 1), Rnd::range(-1, 1));
       Pos c2(c1 + delta);
       const bool IS_INSIDE_BOUNDS =
         c2.x >= 0 && c2.y >= 0 && c2.x <= 2 && c2.y <= 2;
@@ -958,7 +958,7 @@ bool MapGenBsp::isAllRoomsConnected() {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
   int floodFill[MAP_W][MAP_H];
-  FloodFill::run(c, blockers, floodFill, 99999, Pos(-1, -1), eng);
+  FloodFill::run(c, blockers, floodFill, 99999, Pos(-1, -1));
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
       if(eng.map->cells[x][y].featureStatic->getId() == feature_stoneFloor) {
@@ -990,7 +990,7 @@ void MapGenBsp::placeDoorAtPosIfSuitable(const Pos pos) {
   for(int dx = -2; dx <= 2; dx++) {
     for(int dy = -2; dy <= 2; dy++) {
       if(dx != 0 || dy != 0) {
-        if(eng.basicUtils->isPosInsideMap(pos + Pos(dx, dy))) {
+        if(Utils::isPosInsideMap(pos + Pos(dx, dy))) {
           const FeatureStatic* const f =
             eng.map->cells[pos.x + dx][pos.y + dy].featureStatic;
           if(f->getId() == feature_door) {
@@ -1053,7 +1053,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
 
 //void MapGenBsp::findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorRef) {
 //  bool PossToAdd[MAP_W][MAP_H];
-//  eng.basicUtils->resetArray(PossToAdd, false);
+//  Utils::resetArray(PossToAdd, false);
 //
 //  Pos c;
 //
@@ -1136,45 +1136,43 @@ void MapGenBsp::reshapeRoom(const Room& room) {
   if(ROOM_W >= 4 && ROOM_H >= 4) {
 
     vector<RoomReshapeType> reshapesToPerform;
-    if(eng.dice.fraction(3, 4)) {
+    if(Rnd::fraction(3, 4)) {
       reshapesToPerform.push_back(roomReshape_trimCorners);
     }
-    if(eng.dice.fraction(3, 4)) {
+    if(Rnd::fraction(3, 4)) {
       reshapesToPerform.push_back(roomReshape_pillarsRandom);
     }
 
     for(RoomReshapeType reshapeType : reshapesToPerform) {
       switch(reshapeType) {
         case roomReshape_trimCorners: {
-          const int W_DIV =
-            3 + (eng.dice.coinToss() ? eng.dice.range(0, 1) : 0);
-          const int H_DIV =
-            3 + (eng.dice.coinToss() ? eng.dice.range(0, 1) : 0);
+          const int W_DIV = 3 + (Rnd::coinToss() ? Rnd::range(0, 1) : 0);
+          const int H_DIV = 3 + (Rnd::coinToss() ? Rnd::range(0, 1) : 0);
 
           const int W = max(1, ROOM_W / W_DIV);
           const int H = max(1, ROOM_H / H_DIV);
 
           const bool TRIM_ALL = false;
 
-          if(TRIM_ALL || eng.dice.coinToss()) {
+          if(TRIM_ALL || Rnd::coinToss()) {
             const Pos upLeft(room.getX0() + W - 1, room.getY0() + H - 1);
             Rect rect(room.getX0Y0(), upLeft);
             MapGenBsp::coverAreaWithFeature(rect, feature_stoneWall);
           }
 
-          if(TRIM_ALL || eng.dice.coinToss()) {
+          if(TRIM_ALL || Rnd::coinToss()) {
             const Pos upRight(room.getX1() - W + 1, room.getY0() + H - 1);
             Rect rect(Pos(room.getX0() + ROOM_W - 1, room.getY0()), upRight);
             MapGenBsp::coverAreaWithFeature(rect, feature_stoneWall);
           }
 
-          if(TRIM_ALL || eng.dice.coinToss()) {
+          if(TRIM_ALL || Rnd::coinToss()) {
             const Pos downLeft(room.getX0() + W - 1, room.getY1() - H + 1);
             Rect rect(Pos(room.getX0(), room.getY0() + ROOM_H - 1), downLeft);
             MapGenBsp::coverAreaWithFeature(rect, feature_stoneWall);
           }
 
-          if(TRIM_ALL || eng.dice.coinToss()) {
+          if(TRIM_ALL || Rnd::coinToss()) {
             const Pos downRight(room.getX1() - W + 1, room.getY1() - H + 1);
             Rect rect(room.getX1Y1(), downRight);
             MapGenBsp::coverAreaWithFeature(rect, feature_stoneWall);
@@ -1185,7 +1183,7 @@ void MapGenBsp::reshapeRoom(const Room& room) {
         case roomReshape_pillarsRandom: {
           for(int x = room.getX0() + 1; x <= room.getX1() - 1; x++) {
             for(int y = room.getY0() + 1; y <= room.getY1() - 1; y++) {
-              Pos c(x + eng.dice(1, 3) - 2, y + eng.dice(1, 3) - 2);
+              Pos c(x + Rnd::dice(1, 3) - 2, y + Rnd::dice(1, 3) - 2);
               bool isNextToWall = false;
               for(int dx = -1; dx <= 1; dx++) {
                 for(int dy = -1; dy <= 1; dy++) {
@@ -1197,7 +1195,7 @@ void MapGenBsp::reshapeRoom(const Room& room) {
                 }
               }
               if(isNextToWall == false) {
-                if(eng.dice.oneIn(5)) {
+                if(Rnd::oneIn(5)) {
                   eng.featureFactory->spawnFeatureAt(feature_stoneWall, c);
                 }
               }
@@ -1221,7 +1219,7 @@ int MapGenBsp::getNrStepsInDirUntilWallFound(
   int stepsTaken = 0;
   bool done = false;
   while(done == false) {
-    if(eng.basicUtils->isPosInsideMap(c) == false) {
+    if(Utils::isPosInsideMap(c) == false) {
       return -1;
     }
     if(eng.map->cells[c.x][c.y].featureStatic->getId() == feature_stoneWall) {
@@ -1266,7 +1264,7 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
 
       const int CHANCE_TO_BUILD_AUX_ROOMS = 40;
 
-      if(eng.dice.range(1, 100) < CHANCE_TO_BUILD_AUX_ROOMS) {
+      if(Rnd::range(1, 100) < CHANCE_TO_BUILD_AUX_ROOMS) {
         const Region* const region = regions[regionX][regionY];
         const Room* const mainRoom = region->mainRoom;
 
@@ -1275,19 +1273,18 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
           bool cellsWithFloor[MAP_W][MAP_H];
           MapParse::parse(CellPred::BlocksMoveCmn(false, eng), cellsWithFloor);
 
-          eng.basicUtils->reverseBoolArray(cellsWithFloor);
+          Utils::reverseBoolArray(cellsWithFloor);
 
           int connectX, connectY, auxRoomW, auxRoomH, auxRoomX, auxRoomY;
 
           //Right
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
             connectX = mainRoom->getX1() + 1;
-            connectY = eng.dice.range(
-                         mainRoom->getY0() + 1, mainRoom->getY1() - 1);
-            auxRoomW = eng.dice.range(3, 7);
-            auxRoomH = eng.dice.range(3, 7);
+            connectY = Rnd::range(mainRoom->getY0() + 1, mainRoom->getY1() - 1);
+            auxRoomW = Rnd::range(3, 7);
+            auxRoomH = Rnd::range(3, 7);
             auxRoomX = connectX + 1;
-            auxRoomY = eng.dice.range(connectY - auxRoomH + 1, connectY);
+            auxRoomY = Rnd::range(connectY - auxRoomH + 1, connectY);
             if(cellsWithFloor[connectX - 1][connectY]) {
               Pos c(connectX, connectY);
               if(
@@ -1301,12 +1298,11 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
 
           //Up
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
-            connectX = eng.dice.range(
-                         mainRoom->getX0() + 1, mainRoom->getX1() - 1);
+            connectX = Rnd::range(mainRoom->getX0() + 1, mainRoom->getX1() - 1);
             connectY = mainRoom->getY0() - 1;
-            auxRoomW = eng.dice.range(3, 7);
-            auxRoomH = eng.dice.range(3, 7);
-            auxRoomX = eng.dice.range(connectX - auxRoomW + 1, connectX);
+            auxRoomW = Rnd::range(3, 7);
+            auxRoomH = Rnd::range(3, 7);
+            auxRoomX = Rnd::range(connectX - auxRoomW + 1, connectX);
             auxRoomY = connectY - auxRoomH;
             if(cellsWithFloor[connectX][connectY + 1]) {
               Pos c(connectX, connectY);
@@ -1322,12 +1318,11 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
           //Left
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
             connectX = mainRoom->getX0() - 1;
-            connectY = eng.dice.range(
-                         mainRoom->getY0() + 1, mainRoom->getY1() - 1);
-            auxRoomW = eng.dice.range(3, 7);
-            auxRoomH = eng.dice.range(3, 7);
+            connectY = Rnd::range(mainRoom->getY0() + 1, mainRoom->getY1() - 1);
+            auxRoomW = Rnd::range(3, 7);
+            auxRoomH = Rnd::range(3, 7);
             auxRoomX = connectX - auxRoomW;
-            auxRoomY = eng.dice.range(connectY - auxRoomH + 1, connectY);
+            auxRoomY = Rnd::range(connectY - auxRoomH + 1, connectY);
             if(cellsWithFloor[connectX + 1][connectY]) {
               Pos c(connectX, connectY);
               if(
@@ -1341,12 +1336,11 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
 
           //Down
           for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
-            connectX = eng.dice.range(
-                         mainRoom->getX0() + 1, mainRoom->getX1() - 1);
+            connectX = Rnd::range(mainRoom->getX0() + 1, mainRoom->getX1() - 1);
             connectY = mainRoom->getY1() + 1;
-            auxRoomW = eng.dice.range(3, 7);
-            auxRoomH = eng.dice.range(3, 7);
-            auxRoomX = eng.dice.range(connectX - auxRoomW + 1, connectX);
+            auxRoomW = Rnd::range(3, 7);
+            auxRoomH = Rnd::range(3, 7);
+            auxRoomX = Rnd::range(connectX - auxRoomW + 1, connectX);
             auxRoomY = connectY + 1;
             if(cellsWithFloor[connectX][connectY - 1]) {
               Pos c(connectX, connectY);
@@ -1381,7 +1375,7 @@ bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
   auxAreaWithWalls.x1y1.set(auxArea.x1y1 + Pos(1, 1));
   if(
     isAreaFree(auxAreaWithWalls, blockers) &&
-    eng.basicUtils->isAreaInsideMap(auxAreaWithWalls)) {
+    Utils::isAreaInsideMap(auxAreaWithWalls)) {
     Room* room = buildRoom(auxArea);
     eng.map->rooms.push_back(room);
     for(int y = auxArea.x0y0.y; y <= auxArea.x1y1.y; y++) {
@@ -1392,7 +1386,7 @@ bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
 
     const int CHANCE_FOR_CRUMLE_ROOM = 20;
 
-    if(eng.dice.range(1, 100) < CHANCE_FOR_CRUMLE_ROOM) {
+    if(Rnd::range(1, 100) < CHANCE_FOR_CRUMLE_ROOM) {
       makeCrumbleRoom(auxAreaWithWalls, doorPos);
       //If we're making a "crumble room" we don't want to keep it
       //for applying a theme and such
@@ -1470,12 +1464,12 @@ int Region::getNrOfConnections() {
   return nRconnections;
 }
 
-bool Region::isRegionNeighbour(const Region& other, Engine& engine) {
+bool Region::isRegionNeighbour(const Region& other) {
   for(int x = x0y0_.x; x <= x1y1_.x; x++) {
     for(int y = x0y0_.y; y <= x1y1_.y; y++) {
       for(int xx = other.x0y0_.x; xx <= other.x1y1_.x; xx++) {
         for(int yy = other.x0y0_.y; yy <= other.x1y1_.y; yy++) {
-          if(engine.basicUtils->isPosAdj(
+          if(Utils::isPosAdj(
                 Pos(x, y), Pos(xx, yy), false)) {
             return true;
           }
@@ -1486,22 +1480,21 @@ bool Region::isRegionNeighbour(const Region& other, Engine& engine) {
   return false;
 }
 
-Rect Region::getRandomPossForRoom(Engine& eng) const {
-  const bool TINY_ALLOWED_HOR = eng.dice.coinToss();
+Rect Region::getRandomPossForRoom() const {
+  const bool TINY_ALLOWED_HOR = Rnd::coinToss();
 
   const Pos minDim(TINY_ALLOWED_HOR ? 2 : 4, TINY_ALLOWED_HOR ? 4 : 2);
   const Pos maxDim = x1y1_ - x0y0_ - Pos(2, 2);
 
-  const int H = eng.dice.range(minDim.y, maxDim.y);
+  const int H = Rnd::range(minDim.y, maxDim.y);
   const bool ALLOW_BIG_W = H > (maxDim.y * 5) / 6;
-  const int W = eng.dice.range(
-                  minDim.x, ALLOW_BIG_W ? maxDim.x :
-                  minDim.x + (maxDim.x - minDim.x) / 5);
+  const int W = Rnd::range(minDim.x, ALLOW_BIG_W ? maxDim.x :
+                           (minDim.x + ((maxDim.x - minDim.x) / 5)));
 
   const Pos dim(W, H);
 
-  const int X0 = x0y0_.x + 1 + eng.dice.range(0, maxDim.x - dim.x);
-  const int Y0 = x0y0_.y + 1 + eng.dice.range(0, maxDim.y - dim.y);
+  const int X0 = x0y0_.x + 1 + Rnd::range(0, maxDim.x - dim.x);
+  const int Y0 = x0y0_.y + 1 + Rnd::range(0, maxDim.y - dim.y);
   const int X1 = X0 + dim.x - 1;
   const int Y1 = Y0 + dim.y - 1;
 

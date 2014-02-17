@@ -6,47 +6,45 @@
 #include "Renderer.h"
 #include "GameTime.h"
 #include "PlayerBonuses.h"
+#include "Utils.h"
 
 void Dynamite::setPlayerExplosive() const {
   eng.player->dynamiteFuseTurns = 6;
 
-  const bool IS_SWIFT_LIGHT =
-    eng.playerBonHandler->hasTrait(traitDemolitionExpert) &&
-    eng.dice.coinToss();
-  const string swiftStr = IS_SWIFT_LIGHT ? "swiftly " : "";
+  const bool IS_SWIFT =
+    eng.playerBonHandler->hasTrait(traitDemolitionExpert) && Rnd::coinToss();
+  const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   eng.player->clr_ = clrYellow;
   eng.log->addMsg("I " + swiftStr + "light a dynamite stick.");
   eng.renderer->drawMapAndInterface();
-  eng.gameTime->actorDidAct(IS_SWIFT_LIGHT);
+  eng.gameTime->actorDidAct(IS_SWIFT);
 }
 
 void Molotov::setPlayerExplosive() const {
   eng.player->molotovFuseTurns = 12;
 
-  const bool IS_SWIFT_LIGHT =
-    eng.playerBonHandler->hasTrait(traitDemolitionExpert) &&
-    eng.dice.coinToss();
-  const string swiftStr = IS_SWIFT_LIGHT ? "swiftly " : "";
+  const bool IS_SWIFT =
+    eng.playerBonHandler->hasTrait(traitDemolitionExpert) && Rnd::coinToss();
+  const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   eng.player->clr_ = clrYellow;
   eng.log->addMsg("I " + swiftStr + "light a Molotov Cocktail.");
   eng.renderer->drawMapAndInterface();
-  eng.gameTime->actorDidAct(IS_SWIFT_LIGHT);
+  eng.gameTime->actorDidAct(IS_SWIFT);
 }
 
 void Flare::setPlayerExplosive() const {
   eng.player->flareFuseTurns = 200;
 
-  const bool IS_SWIFT_LIGHT =
-    eng.playerBonHandler->hasTrait(traitDemolitionExpert) &&
-    eng.dice.coinToss();
-  const string swiftStr = IS_SWIFT_LIGHT ? "swiftly " : "";
+  const bool IS_SWIFT =
+    eng.playerBonHandler->hasTrait(traitDemolitionExpert) && Rnd::coinToss();
+  const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   eng.player->clr_ = clrYellow;
   eng.log->addMsg("I " + swiftStr + "light a Flare.");
   eng.gameTime->updateLightMap();
   eng.player->updateFov();
   eng.renderer->drawMapAndInterface();
-  eng.gameTime->actorDidAct(IS_SWIFT_LIGHT);
+  eng.gameTime->actorDidAct(IS_SWIFT);
 }

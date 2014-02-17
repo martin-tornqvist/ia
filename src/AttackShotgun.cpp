@@ -12,6 +12,7 @@
 #include "Postmortem.h"
 #include "MapParsing.h"
 #include "LineCalc.h"
+#include "Utils.h"
 
 void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
@@ -26,7 +27,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   MapParse::parse(CellPred::BlocksProjectiles(eng), featureBlockers);
 
   Actor* actorArray[MAP_W][MAP_H];
-  eng.basicUtils->makeActorArray(actorArray);
+  Utils::makeActorArray(actorArray, eng);
 
   const Pos origin = attacker.pos;
   vector<Pos> path;
@@ -70,7 +71,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         data = new RangedAttackData(
           attacker, wpn, aimPos, curPos, eng, intendedAimLevel);
         const bool IS_WITHIN_RANGE_LMT =
-          eng.basicUtils->chebyshevDist(origin, curPos) <=
+          Utils::chebyshevDist(origin, curPos) <=
           wpn.effectiveRangeLimit;
         if(
           IS_WITHIN_RANGE_LMT &&

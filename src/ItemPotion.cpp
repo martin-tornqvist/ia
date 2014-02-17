@@ -15,6 +15,7 @@
 #include "DungeonClimb.h"
 #include "MapParsing.h"
 #include "PlayerVisualMemory.h"
+#include "Utils.h"
 
 void PotionOfHealing::quaff_(Actor* const actor) {
   actor->getPropHandler().endAppliedPropsByMagicHealing();
@@ -23,7 +24,7 @@ void PotionOfHealing::quaff_(Actor* const actor) {
 
   //Attempt to heal the actor. If no hp was healed (already at full hp),
   //boost the hp instead.
-  if(actor->restoreHp(999, true) == false) {
+  if(actor->restoreHp(INT_MAX, true) == false) {
     actor->changeMaxHp(1, true);
   }
 
@@ -40,7 +41,7 @@ void PotionOfHealing::collide_(const Pos& pos, Actor* const actor) {
 void PotionOfSpirit::quaff_(Actor* const actor) {
   //Attempt to restore spirit. If no hp was healed (already at full hp),
   //boost the hp instead.
-  if(actor->restoreSpi(eng.dice(2, 6) + 12, true) == false) {
+  if(actor->restoreSpi(INT_MAX, true) == false) {
     actor->changeMaxSpi(1, true);
   }
 
@@ -262,7 +263,7 @@ void PotionOfInsight::quaff_(Actor* const actor) {
 
   const unsigned int NR_ELEMENTS = identifyCandidates.size();
   if(NR_ELEMENTS > 0) {
-    const int ELEMENT = eng.dice.range(0, NR_ELEMENTS - 1);
+    const int ELEMENT = Rnd::range(0, NR_ELEMENTS - 1);
 
     Item* const item = identifyCandidates.at(ELEMENT);
 
@@ -325,7 +326,7 @@ void PotionOfDescent::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionNameHandler::setClrAndFalseName(ItemData* d) {
-  const int ELEMENT = eng.dice.range(0, potionLooks_.size() - 1);
+  const int ELEMENT = Rnd::range(0, potionLooks_.size() - 1);
 
   PotionLook& look = potionLooks_.at(ELEMENT);
 

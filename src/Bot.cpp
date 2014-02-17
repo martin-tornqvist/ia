@@ -20,6 +20,7 @@
 #include "FeatureFactory.h"
 #include "ActorMonster.h"
 #include "MapParsing.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -32,30 +33,30 @@ void Bot::act() {
   // TESTS
   //=======================================================================
   for(Actor* actor : eng.gameTime->actors_) {
-    assert(eng.basicUtils->isPosInsideMap(actor->pos));
+    assert(Utils::isPosInsideMap(actor->pos));
   }
   //=======================================================================
 
   PropHandler& propHandler = eng.player->getPropHandler();
 
   //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)
-  if(eng.dice.oneIn(7)) {
+  if(Rnd::oneIn(7)) {
     propHandler.tryApplyProp(new PropRFear(eng, propTurnsSpecific, 4), true);
   }
 
   //Occasionally teleport (to avoid getting stuck)
-  if(eng.dice.oneIn(200)) {
+  if(Rnd::oneIn(200)) {
     eng.player->teleport(false);
   }
 
   //Occasionally send a TAB command to attack nearby monsters
-  if(eng.dice.coinToss()) {
+  if(Rnd::coinToss()) {
     eng.input->handleKeyPress(KeyboardReadReturnData(SDLK_TAB));
     return;
   }
 
   //Occasionally apply a random property to exercise the prop code
-  if(eng.dice.oneIn(10)) {
+  if(Rnd::oneIn(10)) {
     vector<PropId> propCandidates;
     propCandidates.resize(0);
     for(unsigned int i = 0; i < endOfPropIds; i++) {
@@ -65,7 +66,7 @@ void Bot::act() {
       }
     }
     PropId propId =
-      propCandidates.at(eng.dice.range(0, propCandidates.size() - 1));
+      propCandidates.at(Rnd::range(0, propCandidates.size() - 1));
 
     Prop* const prop =
       propHandler.makeProp(propId, propTurnsSpecific, 5);
@@ -124,7 +125,7 @@ void Bot::act() {
 bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   Pos playerCell(eng.player->pos);
 
-  assert(eng.basicUtils->isPosAdj(playerCell, cellToGoTo, true));
+  assert(Utils::isPosAdj(playerCell, cellToGoTo, true));
 
   //Get relative positions
   const int xRel =
@@ -147,8 +148,8 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
   if(xRel ==  1 && yRel ==  1) {key = '3';}
 
   //Occasionally randomize movement
-  if(eng.dice.oneIn(3)) {
-    key = '0' + eng.dice.range(1, 9);
+  if(Rnd::oneIn(3)) {
+    key = '0' + Rnd::range(1, 9);
   }
 
 //  assert(key >= '1' && key <= '9');
@@ -165,7 +166,7 @@ void Bot::findPathToStairs() {
   MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
   vector<Pos> bla;
-  eng.basicUtils->makeVectorFromBoolMap(false, blockers, bla);
+  Utils::makeVectorFromBoolMap(false, blockers, bla);
 
   Pos stairPos(-1, -1);
 
@@ -182,7 +183,7 @@ void Bot::findPathToStairs() {
   }
   assert(stairPos != Pos(-1, -1));
 
-  PathFind::run(eng.player->pos, stairPos, blockers, currentPath_, eng);
+  PathFind::run(eng.player->pos, stairPos, blockers, currentPath_);
 //  assert(currentPath_.size() > 0);
 }
 

@@ -10,6 +10,7 @@
 #include "Query.h"
 #include "Renderer.h"
 #include "MapParsing.h"
+#include "Utils.h"
 
 void Bash::playerBash() const {
   trace << "Bash::playerBash()" << endl;
@@ -21,7 +22,7 @@ void Bash::playerBash() const {
   eng.log->clearLog();
 
   if(bashPos != eng.player->pos) {
-    Actor* actor = eng.basicUtils->getActorAtPos(bashPos);
+    Actor* actor = Utils::getActorAtPos(bashPos, eng);
 
     if(actor == NULL) {
       trace << "Bash: No actor at bash pos, ";

@@ -14,6 +14,7 @@
 #include "Map.h"
 #include "ItemFactory.h"
 #include "LineCalc.h"
+#include "Utils.h"
 
 void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
                       Item* itemThrown) {
@@ -63,7 +64,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
         eng.log->clearLog();
         eng.renderer->drawMapAndInterface();
 
-        Actor* const actor = eng.basicUtils->getActorAtPos(pos_);
+        Actor* const actor = Utils::getActorAtPos(pos_, eng);
         if(actor != NULL) {eng.player->target = actor;}
 
         Item* const item = eng.player->getInv().getItemInSlot(slot_wielded);
@@ -91,7 +92,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
         eng.log->addMsg("I should throw this somewhere else.");
       } else {
         eng.renderer->drawMapAndInterface();
-        Actor* const actor = eng.basicUtils->getActorAtPos(pos_);
+        Actor* const actor = Utils::getActorAtPos(pos_, eng);
         if(actor != NULL) {eng.player->target = actor;}
         eng.thrower->throwItem(*eng.player, pos_, *itemThrown);
         data.didThrowMissile = true;
@@ -172,16 +173,15 @@ MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
 void Marker::setPosToClosestEnemyIfVisible() {
   vector<Actor*> SpottedEnemies;
   eng.player->getSpottedEnemies(SpottedEnemies);
-  vector<Pos> SpottedEnemiesPositions;
+  vector<Pos> spottedEnemiesPositions;
 
-  eng.basicUtils->getActorPositions(SpottedEnemies, SpottedEnemiesPositions);
+  Utils::getActorPositions(SpottedEnemies, spottedEnemiesPositions);
 
   //If player sees enemies, suggest one for targeting
-  if(SpottedEnemiesPositions.empty() == false) {
-    pos_ = eng.basicUtils->getClosestPos(eng.player->pos,
-                                         SpottedEnemiesPositions);
+  if(spottedEnemiesPositions.empty() == false) {
+    pos_ = Utils::getClosestPos(eng.player->pos, spottedEnemiesPositions);
 
-    eng.player->target = eng.basicUtils->getActorAtPos(pos_);
+    eng.player->target = Utils::getActorAtPos(pos_, eng);
   }
 }
 
@@ -209,7 +209,7 @@ void Marker::move(const int DX, const int DY, const MarkerTask markerTask,
                   const Item* itemThrown) {
   bool isMoved = false;
   const Pos newPos = pos_ + Pos(DX, DY);
-  if(eng.basicUtils->isPosInsideMap(newPos)) {
+  if(Utils::isPosInsideMap(newPos)) {
     pos_ = newPos;
     isMoved = true;
   }

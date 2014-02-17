@@ -7,6 +7,7 @@
 #include "Engine.h"
 #include "Map.h"
 #include "Renderer.h"
+#include "Utils.h"
 
 Audio::Audio(Engine& engine) :
   curChannel(0), timeAtLastAmb(-1), eng(engine) {
@@ -148,16 +149,16 @@ void Audio::playFromDir(const SfxId sfx, const Dir dir,
 }
 
 void Audio::tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
-  if(eng.dice.oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
+  if(Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
     const int TIME_NOW = time(0);
     const int TIME_REQ_BETWEEN_AMB_SFX = 35;
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;
-      const int VOL_PERCENT = eng.dice.oneIn(5) ?
-                              eng.dice.range(51, 100) :
-                              eng.dice.range(1, 50);
+      const int VOL_PERCENT = Rnd::oneIn(5) ?
+                              Rnd::range(51, 100) :
+                              Rnd::range(1, 50);
       play(getAmbSfxSuitableForDlvl(), VOL_PERCENT);
     }
   }
@@ -221,7 +222,7 @@ SfxId Audio::getAmbSfxSuitableForDlvl() const {
     return endOfSfxId;
   }
 
-  const int ELEMENT = eng.dice.range(0, sfxCandidates.size() - 1);
+  const int ELEMENT = Rnd::range(0, sfxCandidates.size() - 1);
   return sfxCandidates.at(ELEMENT);
 }
 

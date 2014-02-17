@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "FeatureWall.h"
 #include "MapParsing.h"
+#include "Utils.h"
 
 bool MapGenTrapezohedronLvl::run_() {
   eng.map->resetMap();
@@ -38,7 +39,7 @@ bool MapGenTrapezohedronLvl::run_() {
       }
     }
   }
-  const int ELEMENT = eng.dice.range(0, spawnCandidates.size() - 1);
+  const int ELEMENT = Rnd::range(0, spawnCandidates.size() - 1);
   eng.itemFactory->spawnItemOnMap(
     item_trapezohedron, spawnCandidates.at(ELEMENT));
 

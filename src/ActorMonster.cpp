@@ -53,7 +53,7 @@ Monster::~Monster() {
 }
 
 void Monster::onActorTurn() {
-  assert(eng.basicUtils->isPosInsideMap(pos));
+  assert(Utils::isPosInsideMap(pos));
 
   waiting_ = !waiting_;
 
@@ -66,7 +66,7 @@ void Monster::onActorTurn() {
 
   vector<Actor*> spottedEnemies;
   getSpottedEnemies(spottedEnemies);
-  target = eng.basicUtils->getRandomClosestActor(pos, spottedEnemies);
+  target = Utils::getRandomClosestActor(pos, spottedEnemies);
 
   if(spellCoolDownCurrent != 0) {
     spellCoolDownCurrent--;
@@ -76,7 +76,7 @@ void Monster::onActorTurn() {
     isRoamingAllowed_ = true;
     if(leader == NULL) {
       if(deadState == actorDeadState_alive) {
-        if(eng.dice.percentile() < 7) {
+        if(Rnd::percentile() < 7) {
           speakPhrase();
         }
       }
@@ -133,7 +133,7 @@ void Monster::onActorTurn() {
 
   if(target != NULL) {
     const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
-    if(eng.dice.percentile() < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
+    if(Rnd::percentile() < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
       if(AI_castRandomSpellIfAware::action(this, eng)) {
         return;
       }
@@ -154,7 +154,7 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(eng.dice.percentile() < data_->erraticMovement) {
+  if(Rnd::percentile() < data_->erraticMovement) {
     if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
       return;
     }
@@ -219,7 +219,7 @@ void Monster::hit_(int& dmg, const bool ALLOW_WOUNDS) {
 
 void Monster::moveDir(Dir dir) {
   assert(dir != endOfDirs);
-  assert(eng.basicUtils->isPosInsideMap(pos));
+  assert(Utils::isPosInsideMap(pos));
 
   getPropHandler().changeMoveDir(pos, dir);
 
@@ -241,7 +241,7 @@ void Monster::moveDir(Dir dir) {
 
   const Pos targetCell(pos + DirConverter().getOffset(dir));
 
-  assert(eng.basicUtils->isPosInsideMap(targetCell));
+  assert(Utils::isPosInsideMap(targetCell));
 
   if(dir != dirCenter) {
     pos = targetCell;
@@ -280,7 +280,7 @@ void Monster::becomeAware() {
   if(deadState == actorDeadState_alive) {
     const int PLAYER_AWARENESS_BEFORE = awareOfPlayerCounter_;
     awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
-    if(PLAYER_AWARENESS_BEFORE <= 0 && eng.dice.coinToss()) {
+    if(PLAYER_AWARENESS_BEFORE <= 0 && Rnd::coinToss()) {
       speakPhrase();
     }
   }
@@ -289,7 +289,7 @@ void Monster::becomeAware() {
 void Monster::playerBecomeAwareOfMe(const int DURATION_FACTOR) {
   const int LOWER         = 4 * DURATION_FACTOR;
   const int UPPER         = 6 * DURATION_FACTOR;
-  const int ROLL          = eng.dice.range(LOWER, UPPER);
+  const int ROLL          = Rnd::range(LOWER, UPPER);
   playerAwareOfMeCounter_ = max(playerAwareOfMeCounter_, ROLL);
 }
 
@@ -319,7 +319,7 @@ bool Monster::tryAttack(Actor& defender) {
                 //Check if friend is in the way
                 //(with a small chance to ignore this)
                 bool isBlockedByFriend = false;
-                if(eng.dice.fraction(4, 5)) {
+                if(Rnd::fraction(4, 5)) {
                   vector<Pos> line;
                   eng.lineCalc->calcNewLine(
                     pos, defender.pos, true, 9999, false, line);
@@ -327,7 +327,7 @@ bool Monster::tryAttack(Actor& defender) {
                     const Pos& curPos = line.at(i);
                     if(curPos != pos && curPos != defender.pos) {
                       Actor* const actorHere =
-                        eng.basicUtils->getActorAtPos(curPos);
+                        Utils::getActorAtPos(curPos, eng);
                       if(actorHere != NULL) {
                         isBlockedByFriend = true;
                         break;
@@ -362,7 +362,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
   if(propHandler_->allowAttack(false)) {
     opport.isMelee =
-      eng.basicUtils->isPosAdj(pos, defender.pos, false);
+      Utils::isPosAdj(pos, defender.pos, false);
 
     Weapon* weapon = NULL;
     const unsigned nrOfIntrinsics = inv_->getIntrinsicsSize();
