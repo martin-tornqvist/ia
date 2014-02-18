@@ -258,15 +258,13 @@ int Player::getShockResistance(const ShockSrc shockSrc) const {
     res += 20;
   }
   if(eng.playerBonHandler->hasTrait(traitCourageous)) {
-    res += 30;
+    res += 20;
   }
 
   const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
 
   switch(shockSrc) {
-    case shockSrc_castIntrSpell: {
-      if(bonHlr.getBg() == bgOccultist) {res += 50;}
-    } break;
+    case shockSrc_castIntrSpell: {} break;
 
     case shockSrc_useStrangeItem: {
       if(bonHlr.getBg() == bgOccultist) {res += 50;}
