@@ -126,7 +126,7 @@ void Engine::initGame() {
   scrollNameHandler = new ScrollNameHandler(*this);
   potionNameHandler = new PotionNameHandler(*this);
   itemDataHandler = new ItemDataHandler(*this);
-  abilityRoll = new AbilityRoll(*this);
+  abilityRoll = new AbilityRoll();
   itemFactory = new ItemFactory(*this);
   inventoryHandler = new InventoryHandler(*this);
   playerBonHandler = new PlayerBonHandler(*this);

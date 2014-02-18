@@ -206,7 +206,7 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
   }
 }
 
-void Player::hit_(const int DMG, const bool ALLOW_WOUNDS) {
+void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
   interruptActions();
 
   //Hit aborts first aid
@@ -216,7 +216,7 @@ void Player::hit_(const int DMG, const bool ALLOW_WOUNDS) {
   }
 
   if(insanityObsessions[insanityObsession_masochism]) {
-    if(DMG > 1) {
+    if(dmg > 1) {
       shock_ = max(0.0, shock_ - 5.0);
     }
   } else {
@@ -224,7 +224,7 @@ void Player::hit_(const int DMG, const bool ALLOW_WOUNDS) {
   }
 
   if(ALLOW_WOUNDS && Config::isBotPlaying == false) {
-    if(DMG >= 5) {
+    if(dmg >= 5) {
       Prop* const prop = new PropWound(eng, propTurnsIndefinite);
       propHandler_->tryApplyProp(prop);
     }

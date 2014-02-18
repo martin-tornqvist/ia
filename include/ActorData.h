@@ -142,7 +142,7 @@ public:
 
 class ActorDataHandler {
 public:
-  ActorDataHandler(Engine& engine) : eng(engine) {
+  ActorDataHandler(Engine& engine) {
     for(unsigned int i = 0; i < endOfActorIds; i++) {
       dataList[i].abilityVals.eng = &engine;
     }
@@ -158,8 +158,6 @@ public:
 private:
   void initDataList();
   void addData(ActorData& d);
-
-  Engine& eng;
 };
 
 #endif

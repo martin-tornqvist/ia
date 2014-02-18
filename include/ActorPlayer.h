@@ -110,9 +110,8 @@ private:
   friend class Log;
 
   void incrInsanity();
-//  void tryIdentifyItems();
   void testPhobias();
-  void hit_(const int DMG, const bool ALLOW_WOUNDS);
+  void hit_(int& dmg, const bool ALLOW_WOUNDS) override;
   void FOVhack();
   void interruptActions();
   bool isStandingInOpenSpace() const;
