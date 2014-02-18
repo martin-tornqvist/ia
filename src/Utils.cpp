@@ -7,6 +7,7 @@
 
 #include "Converters.h"
 #include "GameTime.h"
+#include "MersenneTwister.h"
 
 namespace Rnd {
 

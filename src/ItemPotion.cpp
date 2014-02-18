@@ -1,5 +1,7 @@
 #include "ItemPotion.h"
 
+#include <climits>
+
 #include "Engine.h"
 #include "Properties.h"
 #include "ActorPlayer.h"

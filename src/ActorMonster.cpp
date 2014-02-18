@@ -14,6 +14,7 @@
 #include "Inventory.h"
 #include "FeatureTrap.h"
 #include "Properties.h"
+#include "Renderer.h"
 
 #include "AI_setSpecialBlockedCells.h"
 #include "AI_handleClosedBlockingDoor.h"
@@ -76,7 +77,7 @@ void Monster::onActorTurn() {
     isRoamingAllowed_ = true;
     if(leader == NULL) {
       if(deadState == actorDeadState_alive) {
-        if(Rnd::percentile() < 7) {
+        if(Rnd::oneIn(14)) {
           speakPhrase();
         }
       }
@@ -259,7 +260,7 @@ void Monster::moveDir(Dir dir) {
 void Monster::hearSound(const Snd& snd) {
   if(deadState == actorDeadState_alive) {
     if(snd.isAlertingMonsters()) {
-      becomeAware();
+      becomeAware(false);
     }
   }
 }
@@ -276,12 +277,19 @@ void Monster::speakPhrase() {
                               SndVol::low, AlertsMonsters::yes));
 }
 
-void Monster::becomeAware() {
+void Monster::becomeAware(const bool IS_FROM_SEEING) {
   if(deadState == actorDeadState_alive) {
-    const int PLAYER_AWARENESS_BEFORE = awareOfPlayerCounter_;
+    const int AWARENESS_CNT_BEFORE = awareOfPlayerCounter_;
     awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
-    if(PLAYER_AWARENESS_BEFORE <= 0 && Rnd::coinToss()) {
-      speakPhrase();
+    if(AWARENESS_CNT_BEFORE <= 0) {
+      if(IS_FROM_SEEING && eng.player->isSeeingActor(*this, NULL)) {
+        eng.player->updateFov();
+        eng.renderer->drawMapAndInterface(true);
+        eng.log->addMsg(getNameThe() + " sees me!");
+      }
+      if(Rnd::coinToss()) {
+        speakPhrase();
+      }
     }
   }
 }

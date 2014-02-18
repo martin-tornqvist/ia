@@ -402,7 +402,7 @@ void Tomb::triggerTrap(Actor& actor) {
     const unsigned int ELEM = Rnd::range(0, actorCandidates.size() - 1);
     const ActorId actorIdToSpawn = actorCandidates.at(ELEM);
     Actor* const monster = eng.actorFactory->spawnActor(actorIdToSpawn, pos_);
-    dynamic_cast<Monster*>(monster)->becomeAware();
+    dynamic_cast<Monster*>(monster)->becomeAware(false);
   }
 }
 

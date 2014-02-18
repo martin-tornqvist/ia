@@ -5,7 +5,6 @@
 
 #include "ActorPlayer.h"
 #include "Log.h"
-#include "Renderer.h"
 
 class AI_look_becomePlayerAware {
 public:
@@ -18,19 +17,14 @@ public:
       monster.getSpottedEnemies(spottedEnemies);
 
       if(spottedEnemies.empty() == false && WAS_AWARE_BEFORE) {
-        monster.becomeAware();
+        monster.becomeAware(false);
         return false;
       }
 
       for(Actor * actor : spottedEnemies) {
         if(actor == engine.player) {
           if(monster.isSpottingHiddenActor(*actor)) {
-            if(engine.player->isSeeingActor(monster, NULL)) {
-              engine.player->updateFov();
-              engine.renderer->drawMapAndInterface(true);
-              engine.log->addMsg(monster.getNameThe() + " sees me!");
-            }
-            monster.becomeAware();
+            monster.becomeAware(true);
             if(WAS_AWARE_BEFORE) {
               return false;
             } else {
@@ -39,7 +33,7 @@ public:
             }
           }
         } else {
-          monster.becomeAware();
+          monster.becomeAware(false);
           if(WAS_AWARE_BEFORE) {
             return false;
           } else {

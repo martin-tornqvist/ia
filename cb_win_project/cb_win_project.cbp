@@ -47,8 +47,8 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
-					<Add directory="../test/UnitTest++/src" />
 					<Add directory="../test/include/stubs" />
+					<Add directory="../test/UnitTest++/src" />
 					<Add directory="../include/releaseModeIncl" />
 					<Add directory="../include" />
 				</Compiler>
@@ -70,8 +70,8 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add directory="../include" />
 					<Add directory="../include/releaseModeIncl" />
+					<Add directory="../include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />

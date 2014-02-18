@@ -1,6 +1,9 @@
 #include "UnitTest++.h"
 
-#include "engine.h"
+#include <SDL.h>
+
+#include "Config.h"
+#include "Engine.h"
 #include "Utils.h"
 #include "Renderer.h"
 #include "Map.h"
@@ -43,10 +46,9 @@ struct BasicFixture {
 };
 
 TEST(RollDice) {
-  Dice dice;
-  int val = dice.range(100, 200);
+  int val = Rnd::range(100, 200);
   CHECK(val >= 100 && val <= 200);
-  val = dice.range(-1, 1);
+  val = Rnd::range(-1, 1);
   CHECK(val >= -1 && val <= 1);
 }
 
@@ -74,12 +76,10 @@ TEST(ConstrainValInRange) {
 }
 
 TEST(CalculateDistances) {
-  Engine eng;
-  Utils utils(eng);
-  CHECK_EQUAL(utils.chebyshevDist(Pos(1, 2), Pos(2, 3)), 1);
-  CHECK_EQUAL(utils.chebyshevDist(Pos(1, 2), Pos(2, 4)), 2);
-  CHECK_EQUAL(utils.chebyshevDist(Pos(1, 2), Pos(1, 2)), 0);
-  CHECK_EQUAL(utils.chebyshevDist(Pos(10, 3), Pos(1, 4)), 9);
+  CHECK_EQUAL(Utils::chebyshevDist(Pos(1, 2), Pos(2, 3)), 1);
+  CHECK_EQUAL(Utils::chebyshevDist(Pos(1, 2), Pos(2, 4)), 2);
+  CHECK_EQUAL(Utils::chebyshevDist(Pos(1, 2), Pos(1, 2)), 0);
+  CHECK_EQUAL(Utils::chebyshevDist(Pos(10, 3), Pos(1, 4)), 9);
 }
 
 TEST(Directions) {
@@ -849,9 +849,13 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
   CHECK_EQUAL(false, out[25][10]);
 }
 
+#ifdef _WIN32
+#undef main
+#endif
 int main() {
   trace << "Running all tests" << endl;
   UnitTest::RunAllTests();
+  return 0;
 }
 
 

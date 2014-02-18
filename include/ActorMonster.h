@@ -57,7 +57,7 @@ public:
 
   void hearSound(const Snd& snd);
 
-  void becomeAware();
+  void becomeAware(const bool IS_FROM_SEEING);
 
   void playerBecomeAwareOfMe(const int DURATION_FACTOR = 1);
 

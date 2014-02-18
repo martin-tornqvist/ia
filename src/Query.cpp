@@ -6,6 +6,7 @@
 #include "Config.h"
 #include "Input.h"
 #include "Renderer.h"
+#include "Converters.h"
 
 using namespace std;
 

@@ -1,7 +1,6 @@
 #include "Popup.h"
 
 #include "Engine.h"
-
 #include "Config.h"
 #include "Renderer.h"
 #include "TextFormatting.h"
