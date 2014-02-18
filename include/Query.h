@@ -5,9 +5,7 @@
 
 class Engine;
 
-enum class YesNoAnswer {
-  yes, no, special
-};
+enum class YesNoAnswer {yes, no, special};
 
 class Query {
 public:
@@ -25,8 +23,6 @@ public:
              const bool CANCEL_RETURNS_DEFAULT) const;
 
 private:
-//  int readKeys() const;
-
   Engine& eng;
 };
 

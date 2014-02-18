@@ -1,5 +1,7 @@
 #include "MenuBrowser.h"
 
+using namespace std;
+
 void MenuBrowser::setY(const int Y) {
   const int NR_ITEMS_THIS_X = pos_.x == 0 ? nrItemsA_ : nrItemsB_;
   pos_.y =  min(NR_ITEMS_THIS_X - 1, max(0, Y));

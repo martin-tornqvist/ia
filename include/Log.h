@@ -9,8 +9,6 @@
 #include "Converters.h"
 #include "CommonTypes.h"
 
-using namespace std;
-
 class Engine;
 
 class Log {
@@ -18,7 +16,7 @@ public:
   Log(Engine& engine) :
     eng(engine) {clearLog();}
 
-  void addMsg(const string& text, const SDL_Color& clr = clrWhite,
+  void addMsg(const std::string& text, const SDL_Color& clr = clrWhite,
               const bool INTERRUPT_PLAYER_ACTIONS = false,
               const bool ADD_MORE_PROMPT_AFTER_MSG = false);
 
@@ -28,8 +26,8 @@ public:
 
   void clearLog();
 
-  void addLineToHistory(const string& lineToAdd) {
-    vector<Msg> historyLine;
+  void addLineToHistory(const std::string& lineToAdd) {
+    std::vector<Msg> historyLine;
     historyLine.push_back(Msg(lineToAdd, clrWhite, 0));
     history.push_back(historyLine);
   }
@@ -37,17 +35,17 @@ public:
 private:
   class Msg {
   public:
-    Msg(const string& text, const SDL_Color& clr, const int X_POS) :
+    Msg(const std::string& text, const SDL_Color& clr, const int X_POS) :
       clr_(clr), xPos_(X_POS), str_(text), repeatsStr_(""),
       nr_(1) {}
 
     Msg() : Msg("", clrWhite, 0) {}
 
-    inline void getStrWithRepeats(string& strRef) const {
+    inline void getStrWithRepeats(std::string& strRef) const {
       strRef = str_ + (nr_ > 1 ? repeatsStr_ : "");
     }
 
-    inline void getStrRaw(string& strRef) const {strRef = str_;}
+    inline void getStrRaw(std::string& strRef) const {strRef = str_;}
 
     void incrRepeat() {
       nr_++;
@@ -58,8 +56,8 @@ private:
     int xPos_;
 
   private:
-    string str_;
-    string repeatsStr_;
+    std::string str_;
+    std::string repeatsStr_;
     int nr_;
   };
 
@@ -67,7 +65,7 @@ private:
     if(msg == NULL) {
       return 0;
     } else {
-      string str = "";
+      std::string str = "";
       msg->getStrWithRepeats(str);
       return msg->xPos_ + str.size() + 1;
     }
@@ -78,14 +76,14 @@ private:
   void drawHistoryInterface(const int TOP_LINE_NR, const int BTM_LINE_NR) const;
 
   //Used by normal log and history viewer
-  void drawLine(const vector<Msg>& lineToDraw, const int Y_POS) const;
+  void drawLine(const std::vector<Msg>& lineToDraw, const int Y_POS) const;
 
-  vector<Msg> lines[2];
+  std::vector<Msg> lines[2];
 
   const Engine& eng;
 
   friend class Postmortem;
-  vector< vector<Msg> > history;
+  std::vector< std::vector<Msg> > history;
 };
 
 #endif

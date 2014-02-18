@@ -15,9 +15,9 @@ public:
 private:
   void draw(const MenuBrowser& browser) const;
 
-  string getHplQuote() const;
+  std::string getHplQuote() const;
 
-  string quote;
+  std::string quote;
 
   Engine& eng;
 };

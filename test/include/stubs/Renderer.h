@@ -1,7 +1,10 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <vector>
+
 #include "Panel.h"
+#include "CommonData.h"
 
 class Engine;
 class Projectile;
@@ -26,10 +29,10 @@ public:
                  const SDL_Color&, const bool = true,
                  const SDL_Color& = clrBlack) {}
 
-  void drawText(const string&, const PanelId, const Pos&, const SDL_Color&,
+  void drawText(const std::string&, const PanelId, const Pos&, const SDL_Color&,
                 const SDL_Color& = clrBlack) {}
 
-  int drawTextCentered(const string&, const PanelId, const Pos&,
+  int drawTextCentered(const std::string&, const PanelId, const Pos&,
                        const SDL_Color&, const SDL_Color& = clrBlack,
                        const bool = true) {return 0;}
 
@@ -47,24 +50,24 @@ public:
 
   void drawLineVer(const Pos&, const int, const SDL_Color&) {}
 
-  void drawMarker(const vector<Pos>&, const int = -1) {}
+  void drawMarker(const std::vector<Pos>&, const int = -1) {}
 
   void drawBlastAnimAtField(
     const Pos&, const int, bool [MAP_W][MAP_H],
     const SDL_Color&, const SDL_Color&) {}
 
-  void drawBlastAnimAtPositions(const vector<Pos>&,
-                                     const SDL_Color&) {}
+  void drawBlastAnimAtPositions(const std::vector<Pos>&,
+                                const SDL_Color&) {}
 
   void drawBlastAnimAtPositionsWithPlayerVision(
-    const vector<Pos>&, const SDL_Color&) {}
+    const std::vector<Pos>&, const SDL_Color&) {}
 
   void drawMainMenuLogo(const int) {}
 
   CellRenderData renderArray[MAP_W][MAP_H];
   CellRenderData renderArrayNoActors[MAP_W][MAP_H];
 
-  void drawProjectiles(vector<Projectile*>&) {}
+  void drawProjectiles(std::vector<Projectile*>&) {}
 
   void drawPopupBox(const Rect&, const PanelId = panel_screen,
                     const SDL_Color& = clrGray) {}

@@ -67,15 +67,16 @@ public:
   void drawLineVer(const Pos& pixelPos, const int H,
                    const SDL_Color& clr) const;
 
-  void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE = -1);
+  void drawMarker(const std::vector<Pos>& trail,
+                  const int EFFECTIVE_RANGE = -1);
 
   void drawBlastAnimAtField(
     const Pos& center, const int RADIUS,
     bool forbiddenCells[MAP_W][MAP_H],
     const SDL_Color& colorInner, const SDL_Color& colorOuter);
 
-  void drawBlastAnimAtPositions(const vector<Pos>& positions,
-                                     const SDL_Color& color);
+  void drawBlastAnimAtPositions(const std::vector<Pos>& positions,
+                                const SDL_Color& color);
 
   void drawBlastAnimAtPositionsWithPlayerVision(
     const vector<Pos>& positions, const SDL_Color& clr);

@@ -6,21 +6,19 @@
 
 #include "AudioIds.h"
 
-using namespace std;
-
 class Engine;
 
 class Popup {
 public:
   Popup(Engine& engine) : eng(engine) {}
 
-  void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
-               const string& title = "",
+  void showMsg(const std::string& msg, const bool DRAW_MAP_AND_INTERFACE,
+               const std::string& title = "",
                const SfxId sfx = endOfSfxId) const;
 
   int showMenuMsg(
-    const string& msg, const bool DRAW_MAP_AND_INTERFACE,
-    const vector<string>& choices, const string& title = "",
+    const std::string& msg, const bool DRAW_MAP_AND_INTERFACE,
+    const std::vector<std::string>& choices, const std::string& title = "",
     const SfxId sfx = endOfSfxId) const;
 
 private:
@@ -28,9 +26,10 @@ private:
                               const int WIDTH_OVERRIDE = -1) const;
 
   void menuMsgDrawingHelper(
-    const vector<string>& lines, const vector<string>& choices,
-    const bool DRAW_MAP_AND_INTERFACE, const unsigned int currentChoice,
-    const int TEXT_H_TOT, const string title = "") const;
+    const std::vector<std::string>& lines,
+    const std::vector<std::string>& choices, const bool DRAW_MAP_AND_INTERFACE,
+    const unsigned int currentChoice, const int TEXT_H_TOT,
+    const std::string title = "") const;
 
   Engine& eng;
 };

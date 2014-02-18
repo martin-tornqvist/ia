@@ -6,8 +6,6 @@
 #include "Feature.h"
 #include "ActorData.h"
 
-using namespace std;
-
 class Engine;
 
 enum TurnType {

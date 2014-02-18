@@ -6,8 +6,6 @@
 
 #include "MenuBrowser.h"
 
-using namespace std;
-
 class Engine;
 
 enum MenuAction {

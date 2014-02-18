@@ -8,8 +8,6 @@
 
 class Engine;
 
-using namespace std;
-
 class Audio {
 public:
   Audio(Engine& engine);
@@ -31,7 +29,7 @@ public:
 private:
   SfxId getAmbSfxSuitableForDlvl() const;
 
-  void loadAudioFile(const SfxId sfx, const string& filename);
+  void loadAudioFile(const SfxId sfx, const std::string& filename);
 
   void freeAssets();
 

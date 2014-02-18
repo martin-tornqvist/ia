@@ -6,8 +6,6 @@
 #include "Colors.h"
 #include "Art.h"
 
-using namespace std;
-
 enum FontType {font_interface, font_big};
 
 enum DmgTypes {
@@ -63,7 +61,7 @@ struct CellRenderData {
 struct StrAndClr {
   StrAndClr() : str(""), clr(clrBlack) {}
 
-  StrAndClr(const string& text, const SDL_Color& color) :
+  StrAndClr(const std::string& text, const SDL_Color& color) :
     str(text), clr(color) {
   }
 
@@ -73,7 +71,7 @@ struct StrAndClr {
     return *this;
   }
 
-  string str;
+  std::string str;
   SDL_Color clr;
 };
 
@@ -207,20 +205,21 @@ struct ItemName {
 public:
   ItemName() : name(""), name_plural(""), name_a("") {}
 
-  ItemName(const string& NAME, const string& NAME_PL, const string& NAME_A) :
+  ItemName(const std::string& NAME, const std::string& NAME_PL,
+           const std::string& NAME_A) :
     name(NAME), name_plural(NAME_PL), name_a(NAME_A) {}
 
-  string name, name_plural, name_a;
+  std::string name, name_plural, name_a;
 };
 
 struct ItemAttackMessages {
 public:
   ItemAttackMessages() : player(""), other("") {}
 
-  ItemAttackMessages(const string& PLAYER, const string& OTHER) :
+  ItemAttackMessages(const std::string& PLAYER, const std::string& OTHER) :
     player(PLAYER), other(OTHER) {}
 
-  string player, other;
+  std::string player, other;
 };
 
 enum SpawnRate {

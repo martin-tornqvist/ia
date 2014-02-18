@@ -3,11 +3,11 @@
 #include <iostream>
 
 #include "Engine.h"
+#include "Config.h"
 #include "Input.h"
 #include "Renderer.h"
 
 using namespace std;
-
 
 void Query::waitForKeyPress() const {
   if(eng.config->isBotPlaying == false) {

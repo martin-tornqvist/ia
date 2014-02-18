@@ -4,10 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "CommonData.h"
-
-using namespace std;
-
 class Engine;
 class MenuBrowser;
 
@@ -16,7 +12,7 @@ public:
   Config(Engine& engine);
   ~Config() {}
 
-  string        fontBig;
+  std::string   fontBig;
 
   bool          isFullscreen;
 
@@ -50,14 +46,14 @@ private:
 
   void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS);
 
-  void readFile(vector<string>& lines);
-  void setAllVariablesFromLines(vector<string>& lines);
-  void writeLinesToFile(vector<string>& lines);
+  void readFile(std::vector<std::string>& lines);
+  void setAllVariablesFromLines(std::vector<std::string>& lines);
+  void writeLinesToFile(std::vector<std::string>& lines);
   void setDefaultVariables();
-  void collectLinesFromVariables(vector<string>& lines);
+  void collectLinesFromVariables(std::vector<std::string>& lines);
   void parseFontNameAndSetCellDims();
 
-  vector<string> fontImageNames;
+  std::vector<std::string> fontImageNames;
 
   Engine& eng;
 };

@@ -1,6 +1,8 @@
 #include "Popup.h"
 
 #include "Engine.h"
+
+#include "Config.h"
 #include "Renderer.h"
 #include "TextFormatting.h"
 #include "Log.h"
@@ -9,6 +11,8 @@
 #include "MenuBrowser.h"
 #include "MenuInputHandler.h"
 #include "Audio.h"
+
+using namespace std;
 
 const int TEXT_W = 39;
 const int TEXT_X0 = MAP_W_HALF - ((TEXT_W) / 2);

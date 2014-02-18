@@ -15,15 +15,14 @@
 #include "Input.h"
 #include "Audio.h"
 #include "TextFormatting.h"
+#include "Utils.h"
 
 using namespace std;
 
 const int OPT_Y0 = 2;
 
 Config::Config(Engine& engine) :
-  fontBig(""),
-  isBotPlaying(false),
-  eng(engine) {
+  fontBig(""), isBotPlaying(false), eng(engine) {
 
   fontImageNames.resize(0);
   fontImageNames.push_back("images/8x12_DOS.png");

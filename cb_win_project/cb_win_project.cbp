@@ -142,7 +142,6 @@
 		<Unit filename="../include/AudioIds.h" />
 		<Unit filename="../include/AutoDescribeActor.h" />
 		<Unit filename="../include/Bash.h" />
-		<Unit filename="../include/BasicUtils.h" />
 		<Unit filename="../include/Blood.h" />
 		<Unit filename="../include/Bot.h" />
 		<Unit filename="../include/CharacterDescr.h" />
@@ -235,6 +234,7 @@
 		<Unit filename="../include/Spells.h" />
 		<Unit filename="../include/TextFormatting.h" />
 		<Unit filename="../include/Thrower.h" />
+		<Unit filename="../include/Utils.h" />
 		<Unit filename="../src/AbilityValues.cpp" />
 		<Unit filename="../src/Actor.cpp" />
 		<Unit filename="../src/ActorData.cpp" />
@@ -253,7 +253,6 @@
 		</Unit>
 		<Unit filename="../src/AutoDescribeActor.cpp" />
 		<Unit filename="../src/Bash.cpp" />
-		<Unit filename="../src/BasicUtils.cpp" />
 		<Unit filename="../src/Blood.cpp" />
 		<Unit filename="../src/Bot.cpp" />
 		<Unit filename="../src/CharacterDescr.cpp" />
@@ -351,6 +350,7 @@
 		<Unit filename="../src/Spells.cpp" />
 		<Unit filename="../src/TextFormatting.cpp" />
 		<Unit filename="../src/Thrower.cpp" />
+		<Unit filename="../src/Utils.cpp" />
 		<Unit filename="../src/main.cpp">
 			<Option target="Debug" />
 			<Option target="Release" />
