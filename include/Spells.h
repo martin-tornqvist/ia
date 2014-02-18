@@ -52,11 +52,9 @@ class Spell;
 
 class SpellHandler {
 public:
-  SpellHandler(Engine& engine) : eng(engine) {}
+  SpellHandler() {}
   Spell* getRandomSpellForMonster();
   Spell* getSpellFromId(const SpellId spellId) const;
-private:
-  Engine& eng;
 };
 
 struct SpellCastRetData {

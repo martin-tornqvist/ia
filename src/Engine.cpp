@@ -120,8 +120,8 @@ void Engine::cleanupAudio() {
 void Engine::initGame() {
   trace << "Engine::initGame()..." << endl;
   // ------- INITIALIZATIONS WHERE ORDER MAY BE IMPORTANT -------
-  lineCalc = new LineCalc(*this);
-  propDataHandler = new PropDataHandler(*this);
+  lineCalc = new LineCalc();
+  propDataHandler = new PropDataHandler();
   actorDataHandler = new ActorDataHandler(*this);
   scrollNameHandler = new ScrollNameHandler(*this);
   potionNameHandler = new PotionNameHandler(*this);
@@ -138,7 +138,7 @@ void Engine::initGame() {
                 actorDataHandler->dataList[actor_player]);
   actorFactory = new ActorFactory(*this);
   gameTime = new GameTime(*this);
-  featureDataHandler = new FeatureDataHandler(*this);
+  featureDataHandler = new FeatureDataHandler();
   featureFactory = new FeatureFactory(*this);
   map = new Map(*this);
 
@@ -150,7 +150,7 @@ void Engine::initGame() {
   dungeonMaster = new DungeonMaster(*this);
   input = new Input(*this);
   dungeonClimb = new DungeonClimb(*this);
-  mapTemplateHandler = new MapTemplateHandler(*this);
+  mapTemplateHandler = new MapTemplateHandler();
   itemDrop = new ItemDrop(*this);
   itemPickup = new ItemPickup(*this);
   attack = new Attack(*this);
@@ -170,8 +170,8 @@ void Engine::initGame() {
   bash = new Bash(*this);
   close = new Close(*this);
   look = new Look(*this);
-  autoDescribeActor = new AutoDescribeActor(*this);
-  spellHandler = new SpellHandler(*this);
+  autoDescribeActor = new AutoDescribeActor();
+  spellHandler = new SpellHandler();
   postmortem = new Postmortem(*this);
   highScore = new HighScore(*this);
   popup = new Popup(*this);
@@ -183,7 +183,7 @@ void Engine::initGame() {
   examine = new Examine(*this);
   characterDescr = new CharacterDescr(*this);
   debugModeStatPrinter = new DebugModeStatPrinter(*this);
-  gods = new Gods(*this);
+  gods = new Gods();
   credits = new Credits(*this);
   hide = new Hide(*this);
 

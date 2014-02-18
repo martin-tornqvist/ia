@@ -168,7 +168,7 @@ struct FeatureData {
 
 class FeatureDataHandler {
 public:
-  FeatureDataHandler(Engine& engine) : eng(engine) {initDataList();}
+  FeatureDataHandler() {initDataList();}
 
   ~FeatureDataHandler() {}
 
@@ -184,8 +184,6 @@ private:
   FeatureData dataList[endOfFeatureId];
 
   void resetData(FeatureData& d);
-
-  Engine& eng;
 };
 
 #endif

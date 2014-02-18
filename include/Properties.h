@@ -121,14 +121,13 @@ struct PropData {
 
 class PropDataHandler {
 public:
-  PropDataHandler(Engine& engine) : eng(engine) {initDataList();}
+  PropDataHandler() {initDataList();}
 
   PropData dataList[endOfPropIds];
 
 private:
   void initDataList();
   void addPropData(PropData& d);
-  Engine& eng;
 };
 
 class Prop;

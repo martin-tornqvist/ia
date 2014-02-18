@@ -18,7 +18,7 @@ class Actor;
 
 class AutoDescribeActor {
 public:
-  AutoDescribeActor(Engine& engine) : eng(engine) {}
+  AutoDescribeActor() {}
   ~AutoDescribeActor() {}
 
   void addAutoDescriptionLines(Actor* const actor, string& line) const;
@@ -28,8 +28,6 @@ private:
   string getDwellingLevelStr(const ActorData& def) const;
   string getNrOfKillsStr(const ActorData& def) const;
   string getSpeedStr(const ActorData& def) const;
-
-  Engine& eng;
 };
 
 #endif
