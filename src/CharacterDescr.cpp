@@ -72,28 +72,6 @@ void CharacterDescr::makeLines() {
                     punchStr, clrText));
   lines.push_back(StrAndClr(" ", clrText));
 
-  lines.push_back(StrAndClr("Shock resistances", clrHeading));
-  vector<string> shockResTitles;
-  int lenOfLongestShockResTitle = 0;
-  for(int i = 0; i < endOfShockSrc; i++) {
-    string shockResTitle = "";
-    getShockResSrcTitle(ShockSrc(i), shockResTitle);
-    shockResTitles.push_back(shockResTitle);
-    const int CUR_LEN = shockResTitle.size();
-    if(CUR_LEN > lenOfLongestShockResTitle) {
-      lenOfLongestShockResTitle = CUR_LEN;
-    }
-  }
-  for(int i = 0; i < endOfShockSrc; i++) {
-    string& curTitle = shockResTitles.at(i);
-    curTitle.resize(lenOfLongestShockResTitle, ' ');
-    const int SHOCK_RESISTANCE = eng.player->getShockResistance(ShockSrc(i));
-    string str = offset + curTitle + " : " + toString(SHOCK_RESISTANCE) + "%";
-    lines.push_back(StrAndClr(str, clrText));
-  }
-  lines.push_back(StrAndClr(" ", clrText));
-
-
   lines.push_back(StrAndClr("Mental conditions", clrHeading));
   const int NR_LINES_BEFORE_MENTAL = lines.size();
   if(eng.player->insanityPhobias[insanityPhobia_closedPlace])

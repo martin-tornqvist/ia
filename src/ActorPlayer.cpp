@@ -264,22 +264,16 @@ int Player::getShockResistance(const ShockSrc shockSrc) const {
   const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
 
   switch(shockSrc) {
-    case shockSrc_time: {
-      if(bonHlr.hasTrait(traitSelfPossessed)) {res += 50;}
-    } break;
-
     case shockSrc_castIntrSpell: {
-      if(bonHlr.hasTrait(traitMythologist))   {res += 50;}
-    } break;
-
-    case shockSrc_seeMonster: {
-      if(bonHlr.hasTrait(traitMythologist))   {res += 50;}
+      if(bonHlr.getBg() == bgOccultist) {res += 50;}
     } break;
 
     case shockSrc_useStrangeItem: {
-      if(bonHlr.hasTrait(traitMythologist))   {res += 50;}
+      if(bonHlr.getBg() == bgOccultist) {res += 50;}
     } break;
 
+    case shockSrc_seeMonster:
+    case shockSrc_time:
     case shockSrc_misc:
     case endOfShockSrc: {} break;
   }
@@ -835,11 +829,11 @@ void Player::onStandardTurn() {
     }
   }
 
-  vector<Actor*> SpottedEnemies;
-  getSpottedEnemies(SpottedEnemies);
+  vector<Actor*> spottedEnemies;
+  getSpottedEnemies(spottedEnemies);
   double shockFromMonstersCurPlayerTurn = 0.0;
   const bool IS_ROGUE = eng.playerBonHandler->getBg() == bgRogue;
-  for(Actor * actor : SpottedEnemies) {
+  for(Actor * actor : spottedEnemies) {
     eng.dungeonMaster->onMonsterSpotted(*actor);
 
     Monster* monster = dynamic_cast<Monster*>(actor);
@@ -847,36 +841,34 @@ void Player::onStandardTurn() {
     monster->playerBecomeAwareOfMe();
 
     //Rogues takes no shock from unaware monsters
-    if(IS_ROGUE && monster->awareOfPlayerCounter_ <= 0) {
-      continue;
-    }
-
-    const ActorData& data = monster->getData();
-    if(data.monsterShockLevel != monsterShockLevel_none) {
-      switch(data.monsterShockLevel) {
-        case monsterShockLevel_unsettling: {
-          monster->shockCausedCurrent_ += 0.10;
-          monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.05, 1.0);
-        } break;
-        case monsterShockLevel_scary: {
-          monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.15, 1.0);
-        } break;
-        case monsterShockLevel_terrifying: {
-          monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.5, 2.0);
-        } break;
-        case monsterShockLevel_mindShattering: {
-          monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.75, 3.0);
-        } break;
-        default: {} break;
-      }
-      if(shockFromMonstersCurPlayerTurn < 3.0) {
-        incrShock(int(floor(monster->shockCausedCurrent_)),
-                  shockSrc_seeMonster);
-        shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent_;
+    if(IS_ROGUE == false) {
+      const ActorData& data = monster->getData();
+      if(data.monsterShockLevel != monsterShockLevel_none) {
+        switch(data.monsterShockLevel) {
+          case monsterShockLevel_unsettling: {
+            monster->shockCausedCurrent_ += 0.10;
+            monster->shockCausedCurrent_ =
+              min(monster->shockCausedCurrent_ + 0.05, 1.0);
+          } break;
+          case monsterShockLevel_scary: {
+            monster->shockCausedCurrent_ =
+              min(monster->shockCausedCurrent_ + 0.15, 1.0);
+          } break;
+          case monsterShockLevel_terrifying: {
+            monster->shockCausedCurrent_ =
+              min(monster->shockCausedCurrent_ + 0.5, 2.0);
+          } break;
+          case monsterShockLevel_mindShattering: {
+            monster->shockCausedCurrent_ =
+              min(monster->shockCausedCurrent_ + 0.75, 3.0);
+          } break;
+          default: {} break;
+        }
+        if(shockFromMonstersCurPlayerTurn < 3.0) {
+          incrShock(int(floor(monster->shockCausedCurrent_)),
+                    shockSrc_seeMonster);
+          shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent_;
+        }
       }
     }
   }
