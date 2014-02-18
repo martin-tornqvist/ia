@@ -39,7 +39,7 @@ Input::Input(Engine& engine) : eng(engine)  {
 void Input::setKeyRepeatDelays() {
   trace << "Input::setKeyRepeatDelays()..." << endl;
   SDL_EnableKeyRepeat(
-    eng.config->keyRepeatDelay, eng.config->keyRepeatInterval);
+    Config::keyRepeatDelay, Config::keyRepeatInterval);
   trace << "Input::setKeyRepeatDelays() [DONE]" << endl;
 }
 
@@ -243,7 +243,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
             wpn->getData().rangedHasInfiniteAmmo
           ) {
             eng.marker->run(markerTask_aimRangedWeapon, NULL);
-          } else if(eng.config->useRangedWpnAutoReload) {
+          } else if(Config::useRangedWpnAutoReload) {
             eng.reload->reloadWieldedWpn(*(eng.player));
           } else {
             eng.log->addMsg("There is no ammo loaded.");
@@ -470,7 +470,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
 
       if(CHOICE == 0) {
         //---------------------------- Options
-        eng.config->runOptionsMenu();
+        Config::runOptionsMenu(eng);
         eng.renderer->drawMapAndInterface();
       } else if(CHOICE == 1) {
         //---------------------------- Manual
@@ -641,7 +641,7 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
               case SDLK_RETURN:
               case SDLK_KP_ENTER: {
                 if(IS_ALT_HELD) {
-                  eng.config->toggleFullscreen();
+                  Config::toggleFullscreen(eng);
                   clearEvents();
                   continue;
                 } else {

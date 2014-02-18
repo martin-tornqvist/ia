@@ -78,7 +78,7 @@
 using namespace std;
 
 void Engine::sleep(const Uint32 DURATION) const {
-  if(config->isBotPlaying == false) {
+  if(Config::isBotPlaying == false) {
     sdlWrapper->sleep(DURATION);
   }
 }
@@ -93,14 +93,8 @@ void Engine::cleanupSdl() {
 
 void Engine::initConfig() {
   trace << "Engine::initConfig()..." << endl;
-  config = new Config(*this);
+  Config::init();
   trace << "Engine::initConfig() [DONE]" << endl;
-}
-
-void Engine::cleanupConfig() {
-  trace << "Engine::cleanupConfig()..." << endl;
-  delete config;
-  trace << "Engine::cleanupConfig() [DONE]" << endl;
 }
 
 void Engine::initRenderer() {

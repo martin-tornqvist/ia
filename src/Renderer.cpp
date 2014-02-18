@@ -22,9 +22,8 @@
 
 using namespace std;
 
-Renderer::Renderer(Engine& engine) : eng(engine), screenSurface_(NULL),
-  mainMenuLogoSurface_(NULL) {
-
+Renderer::Renderer(Engine& engine) :
+  screenSurface_(NULL), mainMenuLogoSurface_(NULL), eng(engine) {
   initAndClearPrev();
 }
 
@@ -56,13 +55,13 @@ void Renderer::initAndClearPrev() {
   const string title = "IA " + gameVersionStr;
   SDL_WM_SetCaption(title.data(), NULL);
 
-  const int W = eng.config->screenPixelW;
-  const int H = eng.config->screenPixelH;
-  if(eng.config->isFullscreen) {
+  const int W = Config::screenPixelW;
+  const int H = Config::screenPixelH;
+  if(Config::isFullscreen) {
     screenSurface_ =
       SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
   }
-  if(eng.config->isFullscreen == false || screenSurface_ == NULL) {
+  if(Config::isFullscreen == false || screenSurface_ == NULL) {
     screenSurface_ =
       SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
   }
@@ -74,7 +73,7 @@ void Renderer::initAndClearPrev() {
 
   loadFont();
 
-  if(eng.config->isTilesMode) {
+  if(Config::isTilesMode) {
     loadTiles();
     loadMainMenuLogo();
   }
@@ -85,7 +84,7 @@ void Renderer::initAndClearPrev() {
 void Renderer::loadFont() {
   trace << "Renderer::loadFont()..." << endl;
 
-  SDL_Surface* fontSurfaceTmp = IMG_Load(eng.config->fontBig.data());
+  SDL_Surface* fontSurfaceTmp = IMG_Load(Config::fontBig.data());
 //    IMG_LoadPNG_RW(SDL_RWFromFile(, "r"));
 
 //  fontSurface_ = SDL_DisplayFormatAlpha(fontSurfaceTmp);
@@ -139,8 +138,8 @@ void Renderer::putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
 
   SDL_LockSurface(screenSurface_);
 
-  const int CELL_W = eng.config->cellW;
-  const int CELL_H = eng.config->cellH;
+  const int CELL_W = Config::cellW;
+  const int CELL_H = Config::cellH;
 
   const Pos sheetPoss = eng.art->getTilePoss(tile);
   const int SHEET_X0  = sheetPoss.x * CELL_W;
@@ -173,8 +172,8 @@ void Renderer::putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
 
   SDL_LockSurface(screenSurface_);
 
-  const int CELL_W = eng.config->cellW;
-  const int CELL_H = eng.config->cellH;
+  const int CELL_W = Config::cellW;
+  const int CELL_H = Config::cellH;
 
   const int SCALE = 1;
 
@@ -266,8 +265,8 @@ void Renderer::applySurface(const Pos& pixelPos, SDL_Surface* const src,
 }
 
 void Renderer::drawMainMenuLogo(const int Y_POS) {
-  const Pos pos((eng.config->screenPixelW - mainMenuLogoSurface_->w) / 2,
-                eng.config->cellH * Y_POS);
+  const Pos pos((Config::screenPixelW - mainMenuLogoSurface_->w) / 2,
+                Config::cellH * Y_POS);
   applySurface(pos, mainMenuLogoSurface_);
 }
 
@@ -284,7 +283,7 @@ void Renderer::drawMarker(const vector<Pos>& trail,
         const int CHEB_DIST = Utils::chebyshevDist(trail.at(0), pos);
         if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
-      if(eng.config->isTilesMode) {
+      if(Config::isTilesMode) {
         drawTile(tile_aimMarkerTrail, panel_map, pos, clr, clrBlack);
       } else {
         drawGlyph('*', panel_map, pos, clr, true, clrBlack);
@@ -305,7 +304,7 @@ void Renderer::drawMarker(const vector<Pos>& trail,
     }
   }
 
-  if(eng.config->isTilesMode) {
+  if(Config::isTilesMode) {
     drawTile(tile_aimMarkerHead, panel_map, headPos, clr, clrBlack);
   } else {
     drawGlyph('X', panel_map, headPos, clr, true, clrBlack);
@@ -338,7 +337,7 @@ void Renderer::drawBlastAnimAtField(const Pos& center, const int RADIUS,
                               pos.y == center.y - RADIUS ||
                               pos.y == center.y + RADIUS;
         const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
-        if(eng.config->isTilesMode) {
+        if(Config::isTilesMode) {
           drawTile(tile_blast1, panel_map, pos, color, clrBlack);
         } else {
           drawGlyph('*', panel_map, pos, color, true, clrBlack);
@@ -348,7 +347,7 @@ void Renderer::drawBlastAnimAtField(const Pos& center, const int RADIUS,
     }
   }
   updateScreen();
-  if(isAnyBlastRendered) {eng.sleep(eng.config->delayExplosion / 2);}
+  if(isAnyBlastRendered) {eng.sleep(Config::delayExplosion / 2);}
 
   for(
     pos.y = max(1, center.y - RADIUS);
@@ -364,7 +363,7 @@ void Renderer::drawBlastAnimAtField(const Pos& center, const int RADIUS,
                               pos.y == center.y - RADIUS ||
                               pos.y == center.y + RADIUS;
         const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
-        if(eng.config->isTilesMode) {
+        if(Config::isTilesMode) {
           drawTile(tile_blast2, panel_map, pos, color, clrBlack);
         } else {
           drawGlyph('*', panel_map, pos, color, true, clrBlack);
@@ -373,7 +372,7 @@ void Renderer::drawBlastAnimAtField(const Pos& center, const int RADIUS,
     }
   }
   updateScreen();
-  if(isAnyBlastRendered) {eng.sleep(eng.config->delayExplosion / 2);}
+  if(isAnyBlastRendered) {eng.sleep(Config::delayExplosion / 2);}
   drawMapAndInterface();
 
   trace << "Renderer::drawBlastAnimAtField() [DONE]" << endl;
@@ -387,25 +386,25 @@ void Renderer::drawBlastAnimAtPositions(
 
   for(unsigned int i = 0; i < positions.size(); i++) {
     const Pos& pos = positions.at(i);
-    if(eng.config->isTilesMode) {
+    if(Config::isTilesMode) {
       drawTile(tile_blast1, panel_map, pos, color, clrBlack);
     } else {
       drawGlyph('*', panel_map, pos, color, true, clrBlack);
     }
   }
   updateScreen();
-  eng.sleep(eng.config->delayExplosion / 2);
+  eng.sleep(Config::delayExplosion / 2);
 
   for(unsigned int i = 0; i < positions.size(); i++) {
     const Pos& pos = positions.at(i);
-    if(eng.config->isTilesMode) {
+    if(Config::isTilesMode) {
       drawTile(tile_blast2, panel_map, pos, color, clrBlack);
     } else {
       drawGlyph('*', panel_map, pos, color, true, clrBlack);
     }
   }
   updateScreen();
-  eng.sleep(eng.config->delayExplosion / 2);
+  eng.sleep(Config::delayExplosion / 2);
   drawMapAndInterface();
 
   trace << "Renderer::drawBlastAnimAtPositions() [DONE]" << endl;
@@ -428,7 +427,7 @@ void Renderer::drawBlastAnimAtPositionsWithPlayerVision(
 void Renderer::drawTile(const TileId tile, const PanelId panel, const Pos& pos,
                         const SDL_Color& clr, const SDL_Color& bgClr) {
   const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
-  const Pos cellDims(eng.config->cellW, eng.config->cellH);
+  const Pos cellDims(Config::cellW, Config::cellH);
   drawRectangleSolid(pixelPos, cellDims, bgClr);
   putPixelsOnScreenForTile(tile, pixelPos, clr);
 }
@@ -437,7 +436,7 @@ void Renderer::drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
                                 const SDL_Color& clr, const bool DRAW_BG_CLR,
                                 const SDL_Color& bgClr) {
   if(DRAW_BG_CLR) {
-    const Pos cellDims(eng.config->cellW, eng.config->cellH);
+    const Pos cellDims(Config::cellW, Config::cellH);
     drawRectangleSolid(pixelPos, cellDims, bgClr);
   }
 
@@ -446,7 +445,7 @@ void Renderer::drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
 
 Pos Renderer::getPixelPosForCellInPanel(
   const PanelId panel, const Pos& pos) const {
-  const Pos cellDims(eng.config->cellW, eng.config->cellH);
+  const Pos cellDims(Config::cellW, Config::cellH);
 
   switch(panel) {
     case panel_screen: {
@@ -454,7 +453,7 @@ Pos Renderer::getPixelPosForCellInPanel(
     } break;
 
     case panel_map: {
-      return (pos * cellDims) + Pos(0, eng.config->mapPixelOffsetH);
+      return (pos * cellDims) + Pos(0, Config::mapPixelOffsetH);
     } break;
 
     case panel_log: {
@@ -462,7 +461,7 @@ Pos Renderer::getPixelPosForCellInPanel(
     } break;
 
     case panel_char: {
-      return (pos * cellDims) + Pos(0, eng.config->charLinesPixelOffsetH);
+      return (pos * cellDims) + Pos(0, Config::charLinesPixelOffsetH);
     } break;
   }
   return Pos();
@@ -480,16 +479,16 @@ void Renderer::drawText(const string& str, const PanelId panel,
                         const SDL_Color& bgClr) {
   Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
 
-  if(pixelPos.y < 0 || pixelPos.y >= eng.config->screenPixelH) {
+  if(pixelPos.y < 0 || pixelPos.y >= Config::screenPixelH) {
     return;
   }
 
-  const Pos cellDims(eng.config->cellW, eng.config->cellH);
+  const Pos cellDims(Config::cellW, Config::cellH);
   const int LEN = str.size();
   drawRectangleSolid(pixelPos, Pos(cellDims.x * LEN, cellDims.y), bgClr);
 
   for(int i = 0; i < LEN; i++) {
-    if(pixelPos.x < 0 || pixelPos.x >= eng.config->screenPixelW) {
+    if(pixelPos.x < 0 || pixelPos.x >= Config::screenPixelW) {
       return;
     }
     drawGlyphAtPixel(str.at(i), pixelPos, clr, false);
@@ -505,7 +504,7 @@ int Renderer::drawTextCentered(const string& str, const PanelId panel,
   const int LEN_HALF    = LEN / 2;
   const int X_POS_LEFT  = pos.x - LEN_HALF;
 
-  const Pos cellDims(eng.config->cellW, eng.config->cellH);
+  const Pos cellDims(Config::cellW, Config::cellH);
 
   Pos pixelPos = getPixelPosForCellInPanel(panel, Pos(X_POS_LEFT, pos.y));
 
@@ -524,7 +523,7 @@ int Renderer::drawTextCentered(const string& str, const PanelId panel,
                bgClr.r, bgClr.g, bgClr.b));
 
   for(int i = 0; i < LEN; i++) {
-    if(pixelPos.x < 0 || pixelPos.x >= eng.config->screenPixelW) {
+    if(pixelPos.x < 0 || pixelPos.x >= Config::screenPixelW) {
       return X_POS_LEFT;
     }
     drawGlyphAtPixel(str.at(i), pixelPos, clr, false);
@@ -534,22 +533,21 @@ int Renderer::drawTextCentered(const string& str, const PanelId panel,
 }
 
 void Renderer::coverPanel(const PanelId panel) {
-  const Config& conf = *eng.config;
-  const int SCREEN_PIXEL_W = conf.screenPixelW;
+  const int SCREEN_PIXEL_W = Config::screenPixelW;
 
   switch(panel) {
     case panel_char: {
       const Pos pixelPos = getPixelPosForCellInPanel(panel, Pos(0, 0));
-      coverAreaPixel(pixelPos, Pos(SCREEN_PIXEL_W, conf.charLinesPixelH));
+      coverAreaPixel(pixelPos, Pos(SCREEN_PIXEL_W, Config::charLinesPixelH));
     } break;
 
     case panel_log: {
-      coverAreaPixel(Pos(0, 0), Pos(SCREEN_PIXEL_W, conf.logPixelH));
+      coverAreaPixel(Pos(0, 0), Pos(SCREEN_PIXEL_W, Config::logPixelH));
     } break;
 
     case panel_map: {
       const Pos pixelPos = getPixelPosForCellInPanel(panel, Pos(0, 0));
-      coverAreaPixel(pixelPos, Pos(SCREEN_PIXEL_W, conf.mapPixelH));
+      coverAreaPixel(pixelPos, Pos(SCREEN_PIXEL_W, Config::mapPixelH));
     } break;
 
     case panel_screen: {clearScreen();} break;
@@ -558,7 +556,7 @@ void Renderer::coverPanel(const PanelId panel) {
 
 void Renderer::coverArea(const PanelId panel, const Pos& pos, const Pos& dims) {
   const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
-  const Pos cellDims(eng.config->cellW, eng.config->cellH);
+  const Pos cellDims(Config::cellW, Config::cellH);
   coverAreaPixel(pixelPos, dims * cellDims);
 }
 
@@ -567,7 +565,7 @@ void Renderer::coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims) {
 }
 
 void Renderer::coverCellInMap(const Pos& pos) {
-  const Pos cellDims(eng.config->cellW, eng.config->cellH);
+  const Pos cellDims(Config::cellW, Config::cellH);
   Pos pixelPos = getPixelPosForCellInPanel(panel_map, pos);
   coverAreaPixel(pixelPos, cellDims);
 }
@@ -594,11 +592,11 @@ void Renderer::drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
 }
 
 void Renderer::coverGlyphAtPixel(const Pos& pixelPos) {
-  coverAreaPixel(pixelPos, Pos(eng.config->cellW, eng.config->cellH));
+  coverAreaPixel(pixelPos, Pos(Config::cellW, Config::cellH));
 }
 
 void Renderer::coverTileAtPixel(const Pos& pixelPos) {
-  coverAreaPixel(pixelPos, Pos(eng.config->cellW, eng.config->cellH));
+  coverAreaPixel(pixelPos, Pos(Config::cellW, Config::cellH));
 }
 
 void Renderer::drawProjectiles(vector<Projectile*>& projectiles) {
@@ -608,7 +606,7 @@ void Renderer::drawProjectiles(vector<Projectile*>& projectiles) {
     Projectile* const p = projectiles.at(i);
     if(p->isDoneRendering == false && p->isVisibleToPlayer) {
       coverCellInMap(p->pos);
-      if(eng.config->isTilesMode) {
+      if(Config::isTilesMode) {
         if(p->tile != tile_empty) {
           drawTile(p->tile, panel_map, p->pos, p->clr);
         }
@@ -625,7 +623,7 @@ void Renderer::drawProjectiles(vector<Projectile*>& projectiles) {
 
 void Renderer::drawPopupBox(const Rect& border, const PanelId panel,
                             const SDL_Color& clr) {
-  const bool IS_TILES = eng.config->isTilesMode;
+  const bool IS_TILES = Config::isTilesMode;
 
   //Vertical bars
   const int Y0_VERT = border.x0y0.y + 1;
@@ -698,14 +696,14 @@ int Renderer::getLifebarLength(const Actor& actor) const {
   const int ACTOR_HP_MAX = actor.getHpMax(true);
   if(ACTOR_HP < ACTOR_HP_MAX) {
     int HP_PERCENT = (ACTOR_HP * 100) / ACTOR_HP_MAX;
-    return ((eng.config->cellW - 2) * HP_PERCENT) / 100;
+    return ((Config::cellW - 2) * HP_PERCENT) / 100;
   }
   return -1;
 }
 
 void Renderer::drawLifeBar(const Pos& pos, const int LENGTH) {
   if(LENGTH >= 0) {
-    const Pos cellDims(eng.config->cellW,  eng.config->cellH);
+    const Pos cellDims(Config::cellW,  Config::cellH);
     const int W_GREEN   = LENGTH;
     const int W_BAR_TOT = cellDims.x - 2;
     const int W_RED     = W_BAR_TOT - W_GREEN;
@@ -748,7 +746,7 @@ void Renderer::drawMap() {
   CellRenderData* curDrw = NULL;
   CellRenderData tmpDrw;
 
-  const bool IS_TILES = eng.config->isTilesMode;
+  const bool IS_TILES = Config::isTilesMode;
 
   //---------------- INSERT STATIC FEATURES AND BLOOD INTO ARRAY
   for(int y = 0; y < MAP_H; y++) {
@@ -975,7 +973,7 @@ void Renderer::drawMap() {
                   const Wall* const wall = dynamic_cast<const Wall*>(f);
                   tmpDrw.tile = wall->getFrontWallTile();
                 } else if(isHiddenDoor) {
-                  tmpDrw.tile = eng.config->isTilesWallSymbolFullSquare ?
+                  tmpDrw.tile = Config::isTilesWallSymbolFullSquare ?
                                 tile_wallTop :
                                 tile_wallFront;
                 }

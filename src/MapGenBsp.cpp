@@ -52,11 +52,11 @@ bool MapGenBsp::run_() {
 #ifdef DEMO_MODE
   eng.renderer->drawMapAndInterface();
   eng.sdlWrapper->sleep(1000);
-  const int P_W = eng.config->cellW;
-  const int P_H = eng.config->cellH;
-  const int P_M_O = eng.config->mainscreenOffsetY;
-  const int P_S_W = eng.config->screenPixelW;
-  const int P_C_O = eng.config->characterLinesOffsetY;
+  const int P_W = Config::cellW;
+  const int P_H = Config::cellH;
+  const int P_M_O = Config::mainscreenOffsetY;
+  const int P_S_W = Config::screenPixelW;
+  const int P_C_O = Config::characterLinesOffsetY;
   const int P_M_H = P_C_O - P_M_O;
   eng.renderer->drawLineHor(Pos(0, SPL_Y1 * P_H + P_M_O), P_S_W, clrRedLgt);
   eng.renderer->updateScreen();
@@ -452,9 +452,9 @@ void MapGenBsp::buildMergedRegionsAndRooms(
       regionIndex2.y == 1 ? SPL_Y2 - 1 : MAP_H - 1;
 
 #ifdef DEMO_MODE
-    const int P_W = eng.config->cellW;
-    const int P_H = eng.config->cellH;
-    const int P_O = eng.config->mainscreenOffsetY;
+    const int P_W = Config::cellW;
+    const int P_H = Config::cellH;
+    const int P_O = Config::mainscreenOffsetY;
     Pos dims((MERGED_X1 - MERGED_X0) * P_W, (MERGED_Y1 - MERGED_Y0) * P_H);
     eng.renderer->drawRectangleSolid(
       Pos(MERGED_X0 * P_W, P_O + MERGED_Y0 * P_H), dims,

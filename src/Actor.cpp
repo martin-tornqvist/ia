@@ -415,7 +415,7 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
     return false;
   }
 
-  if(this != eng.player || eng.config->isBotPlaying == false) {
+  if(this != eng.player || Config::isBotPlaying == false) {
     hp_ -= dmg;
   }
 
@@ -435,7 +435,7 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
 }
 
 bool Actor::hitSpi(const int DMG) {
-  if(this != eng.player || eng.config->isBotPlaying == false) {
+  if(this != eng.player || Config::isBotPlaying == false) {
     spi_ = max(0, spi_ - DMG);
   }
   if(getSpi() <= 0) {

@@ -71,7 +71,6 @@ class Bash;
 class Close;
 class Look;
 class AutoDescribeActor;
-class Config;
 class AbilityRoll;
 class PlayerBonHandler;
 class SpellHandler;
@@ -108,7 +107,6 @@ public:
   void initSdl();
   void cleanupSdl();
   void initConfig();
-  void cleanupConfig();
   void initRenderer();
   void cleanupRenderer();
   void initGame();
@@ -162,7 +160,6 @@ public:
   Close* close;
   Look* look;
   AutoDescribeActor* autoDescribeActor;
-  Config* config;
   AbilityRoll* abilityRoll;
   PlayerBonHandler* playerBonHandler;
   SpellHandler* spellHandler;

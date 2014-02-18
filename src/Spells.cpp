@@ -192,13 +192,13 @@ SpellCastRetData SpellDarkbolt::cast_(
   const int LINE_SIZE = line.size();
   for(int i = 1; i < LINE_SIZE; i++) {
     const Pos& pos = line.at(i);
-    if(eng.config->isTilesMode) {
+    if(Config::isTilesMode) {
       eng.renderer->drawTile(tile_blast1, panel_map, pos, clrMagenta);
     } else {
       eng.renderer->drawGlyph('*', panel_map, pos, clrMagenta);
     }
     eng.renderer->updateScreen();
-    eng.sdlWrapper->sleep(eng.config->delayProjectileDraw);
+    eng.sdlWrapper->sleep(Config::delayProjectileDraw);
   }
 
   eng.renderer->drawBlastAnimAtPositions(

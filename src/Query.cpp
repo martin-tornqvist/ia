@@ -11,13 +11,13 @@
 using namespace std;
 
 void Query::waitForKeyPress() const {
-  if(eng.config->isBotPlaying == false) {
+  if(Config::isBotPlaying == false) {
     eng.input->readKeysUntilFound();
   }
 }
 
 YesNoAnswer Query::yesOrNo(char keyForSpecialEvent) const {
-  if(eng.config->isBotPlaying) {
+  if(Config::isBotPlaying) {
     return YesNoAnswer::yes;
   }
 
@@ -89,7 +89,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
 }
 
 void Query::waitForEscOrSpace() const {
-  if(eng.config->isBotPlaying == false) {
+  if(Config::isBotPlaying == false) {
     KeyboardReadReturnData d = eng.input->readKeysUntilFound();
     while(d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE) {
       d = eng.input->readKeysUntilFound();

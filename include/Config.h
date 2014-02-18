@@ -2,60 +2,37 @@
 #define CONFIG_H
 
 #include <string>
-#include <vector>
 
 class Engine;
-class MenuBrowser;
 
-class Config {
-public:
-  Config(Engine& engine);
-  ~Config() {}
+namespace Config {
 
-  std::string   fontBig;
+extern std::string  fontBig;
+extern bool         isFullscreen;
+extern bool         isTilesWallSymbolFullSquare, isAsciiWallSymbolFullSquare;
+extern bool         useRangedWpnMeleeePrompt;
+extern bool         useRangedWpnAutoReload;
+extern bool         isIntroLevelSkipped;
+extern int          mapPixelH;
+extern int          logPixelH;
+extern int          mapPixelOffsetH;
+extern int          charLinesPixelH;
+extern int          charLinesPixelOffsetH;
+extern int          screenPixelW, screenPixelH;
+extern int          keyRepeatDelay, keyRepeatInterval;
+extern int          delayProjectileDraw;
+extern int          delayShotgun;
+extern int          delayExplosion;
+extern bool         isBotPlaying;
+extern bool         isAudioEnabled;
+extern bool         isTilesMode;
+extern int          cellW, cellH;
 
-  bool          isFullscreen;
+void init();
+void runOptionsMenu(Engine& eng);
+void setCellDimDependentVariables();
+void toggleFullscreen(Engine& eng);
 
-  bool          isTilesWallSymbolFullSquare, isAsciiWallSymbolFullSquare;
-  bool          useRangedWpnMeleeePrompt;
-  bool          useRangedWpnAutoReload;
-  bool          isIntroLevelSkipped;
-  int           mapPixelH;
-  int           logPixelH;
-  int           mapPixelOffsetH;
-  int           charLinesPixelH;
-  int           charLinesPixelOffsetH;
-  int           screenPixelW, screenPixelH;
-  int           keyRepeatDelay, keyRepeatInterval;
-  int           delayProjectileDraw;
-  int           delayShotgun;
-  int           delayExplosion;
-  bool          isBotPlaying;
-  bool          isAudioEnabled;
-  bool          isTilesMode;
-  int           cellW, cellH;
-
-  void runOptionsMenu();
-
-  void setCellDimDependentVariables();
-  void toggleFullscreen();
-
-private:
-  void playerSetsOption(const MenuBrowser* const browser,
-                        const int OPTION_VALUES_X_POS);
-
-  void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS);
-
-  void readFile(std::vector<std::string>& lines);
-  void setAllVariablesFromLines(std::vector<std::string>& lines);
-  void writeLinesToFile(std::vector<std::string>& lines);
-  void setDefaultVariables();
-  void collectLinesFromVariables(std::vector<std::string>& lines);
-  void parseFontNameAndSetCellDims();
-
-  std::vector<std::string> fontImageNames;
-
-  Engine& eng;
-};
+} //Config
 
 #endif

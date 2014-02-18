@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
       eng.quitToMainMenu_ = false;
 
       if(gameEntryType == gameEntry_new) {
-        if(eng.config->isBotPlaying) {
+        if(Config::isBotPlaying) {
           eng.playerBonHandler->setAllTraitsToPicked();
           eng.bot->init();
         }
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
 
         eng.gameTime->insertActorInLoop(eng.player);
 
-        if(eng.config->isIntroLevelSkipped == false) {
+        if(Config::isIntroLevelSkipped == false) {
           //If intro level is used, build forest.
           eng.renderer->coverPanel(panel_screen);
           eng.renderer->updateScreen();
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
       eng.renderer->drawMapAndInterface();
 
       if(gameEntryType == gameEntry_new) {
-        if(eng.config->isIntroLevelSkipped == 0) {
+        if(Config::isIntroLevelSkipped == 0) {
           string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
           introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";
           introMessage += "\"Cult of Starry Wisdom\". ";
@@ -132,7 +132,6 @@ int main(int argc, char* argv[]) {
   }
   eng.cleanupAudio();
   eng.cleanupRenderer();
-  eng.cleanupConfig();
   eng.cleanupSdl();
 
   trace << "main() [DONE]" << endl;

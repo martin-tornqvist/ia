@@ -19,72 +19,72 @@
 
 using namespace std;
 
+namespace Config {
+
+namespace {
+
 const int OPT_Y0 = 2;
 
-Config::Config(Engine& engine) :
-  fontBig(""), isBotPlaying(false), eng(engine) {
+vector<string> fontImageNames;
 
-  fontImageNames.resize(0);
-  fontImageNames.push_back("images/8x12_DOS.png");
-  fontImageNames.push_back("images/11x19.png");
-  fontImageNames.push_back("images/11x22.png");
-  fontImageNames.push_back("images/12x24.png");
-  fontImageNames.push_back("images/16x24_v1.png");
-  fontImageNames.push_back("images/16x24_v2.png");
-  fontImageNames.push_back("images/16x24_v3.png");
-  fontImageNames.push_back("images/16x24_DOS.png");
-  fontImageNames.push_back("images/16x24_typewriter.png");
+void parseFontNameAndSetCellDims() {
+  trace << "Config::parseFontNameAndSetCellDims()..." << endl;
+  string fontName = fontBig;
 
-  setDefaultVariables();
-
-  vector<string> lines;
-  readFile(lines);
-  if(lines.empty()) {
-    collectLinesFromVariables(lines);
-  } else {
-    setAllVariablesFromLines(lines);
+  char ch = 'a';
+  while(ch < '0' || ch > '9') {
+    fontName.erase(fontName.begin());
+    ch = fontName.at(0);
   }
-  setCellDimDependentVariables();
+
+  string wStr = "";
+  while(ch != 'x') {
+    fontName.erase(fontName.begin());
+    wStr += ch;
+    ch = fontName.at(0);
+  }
+
+  fontName.erase(fontName.begin());
+  ch = fontName.at(0);
+
+  string hStr = "";
+  while(ch != '_' && ch != '.') {
+    fontName.erase(fontName.begin());
+    hStr += ch;
+    ch = fontName.at(0);
+  }
+
+  trace << "Config: Parsed font image name, found dims: ";
+  trace << wStr << "x" << hStr << endl;
+
+  cellW = toInt(wStr);
+  cellH = toInt(hStr);
+  trace << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 
-void Config::runOptionsMenu() {
-  MenuBrowser browser(15, 0);
-  vector<string> lines;
-
-  const int OPTION_VALUES_X_POS = 40;
-
-  draw(&browser, OPTION_VALUES_X_POS);
-
-  while(true) {
-    const MenuAction action = eng.menuInputHandler->getAction(browser);
-    switch(action) {
-      case menuAction_browsed: {
-        draw(&browser, OPTION_VALUES_X_POS);
-      } break;
-
-      case menuAction_esc:
-      case menuAction_space: {
-        //Since ASCII mode wall symbol may have changed,
-        //we need to redefine the feature data list
-        eng.featureDataHandler->initDataList();
-        return;
-      } break;
-
-      case menuAction_selected: {
-        draw(&browser, OPTION_VALUES_X_POS);
-        playerSetsOption(&browser, OPTION_VALUES_X_POS);
-        collectLinesFromVariables(lines);
-        writeLinesToFile(lines);
-        draw(&browser, OPTION_VALUES_X_POS);
-      } break;
-
-      default: {} break;
-    }
-  }
+void setDefaultVariables() {
+  trace << "Config::setDefaultVariables()..." << endl;
+  isAudioEnabled = true;
+  isTilesMode = true;
+  fontBig = "images/16x24_v1.png";
+  parseFontNameAndSetCellDims();
+  isFullscreen = false;
+  isTilesWallSymbolFullSquare = false;
+  isAsciiWallSymbolFullSquare = true;
+  isIntroLevelSkipped = false;
+  useRangedWpnMeleeePrompt = true;
+  useRangedWpnAutoReload = false;
+  keyRepeatDelay = 130;
+  keyRepeatInterval = 60;
+  delayProjectileDraw = 50;
+  delayShotgun = 120;
+  delayExplosion = 350;
+  trace << "Config::setDefaultVariables() [DONE]" << endl;
 }
 
-void Config::playerSetsOption(const MenuBrowser* const browser,
-                              const int OPTION_VALUES_X_POS) {
+void playerSetsOption(const MenuBrowser* const browser,
+                      const int OPTION_VALUES_X_POS,
+                      Engine& eng) {
   switch(browser->getPos().y) {
     case 0: {
       isAudioEnabled = !isAudioEnabled;
@@ -200,8 +200,9 @@ void Config::playerSetsOption(const MenuBrowser* const browser,
   }
 }
 
-void Config::draw(const MenuBrowser* const browser,
-                  const int OPTION_VALUES_X_POS) {
+void draw(const MenuBrowser* const browser,
+          const int OPTION_VALUES_X_POS,
+          Engine& eng) {
 
   const SDL_Color clrActive     = clrNosfTealLgt;
   const SDL_Color clrInactive   = clrNosfTealDrk;
@@ -417,108 +418,19 @@ void Config::draw(const MenuBrowser* const browser,
   eng.renderer->updateScreen();
 }
 
-void Config::setCellDimDependentVariables() {
-  mapPixelH             = cellH * MAP_H;
-  mapPixelOffsetH       = cellH * MAP_OFFSET_H;
-  logPixelH             = cellH * LOG_H;
-  charLinesPixelH       = cellH * CHAR_LINES_H;
-  charLinesPixelOffsetH = cellH * CHAR_LINES_OFFSET_H;
-  screenPixelW          = cellW * SCREEN_W;
-  screenPixelH          = cellH * SCREEN_H;
-}
-
-void Config::parseFontNameAndSetCellDims() {
-  trace << "Config::parseFontNameAndSetCellDims()..." << endl;
-  string fontName = fontBig;
-
-  char ch = 'a';
-  while(ch < '0' || ch > '9') {
-    fontName.erase(fontName.begin());
-    ch = fontName.at(0);
+void readFile(vector<string>& lines) {
+  ifstream file;
+  file.open("config");
+  if(file.is_open()) {
+    string line;
+    while(getline(file, line)) {
+      lines.push_back(line);
+    }
+    file.close();
   }
-
-  string wStr = "";
-  while(ch != 'x') {
-    fontName.erase(fontName.begin());
-    wStr += ch;
-    ch = fontName.at(0);
-  }
-
-  fontName.erase(fontName.begin());
-  ch = fontName.at(0);
-
-  string hStr = "";
-  while(ch != '_' && ch != '.') {
-    fontName.erase(fontName.begin());
-    hStr += ch;
-    ch = fontName.at(0);
-  }
-
-  trace << "Config: Parsed font image name, found dims: ";
-  trace << wStr << "x" << hStr << endl;
-
-  cellW = toInt(wStr);
-  cellH = toInt(hStr);
-  trace << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
 }
 
-void Config::setDefaultVariables() {
-  trace << "Config::setDefaultVariables()..." << endl;
-  isAudioEnabled = true;
-  isTilesMode = true;
-  fontBig = "images/16x24_v1.png";
-  parseFontNameAndSetCellDims();
-  isFullscreen = false;
-  isTilesWallSymbolFullSquare = false;
-  isAsciiWallSymbolFullSquare = true;
-  isIntroLevelSkipped = false;
-  useRangedWpnMeleeePrompt = true;
-  useRangedWpnAutoReload = false;
-  keyRepeatDelay = 130;
-  keyRepeatInterval = 60;
-  delayProjectileDraw = 50;
-  delayShotgun = 120;
-  delayExplosion = 350;
-  trace << "Config::setDefaultVariables() [DONE]" << endl;
-}
-
-void Config::collectLinesFromVariables(vector<string>& lines) {
-  trace << "Config::collectLinesFromVariables()..." << endl;
-  lines.resize(0);
-  lines.push_back(isAudioEnabled == false ? "0" : "1");
-  lines.push_back(isTilesMode == false ? "0" : "1");
-  lines.push_back(fontBig);
-  lines.push_back(isFullscreen == false ? "0" : "1");
-  lines.push_back(isTilesWallSymbolFullSquare == false ? "0" : "1");
-  lines.push_back(isAsciiWallSymbolFullSquare == false ? "0" : "1");
-  lines.push_back(isIntroLevelSkipped == false ? "0" : "1");
-  lines.push_back(useRangedWpnMeleeePrompt == false ? "0" : "1");
-  lines.push_back(useRangedWpnAutoReload == false ? "0" : "1");
-  lines.push_back(toString(keyRepeatDelay));
-  lines.push_back(toString(keyRepeatInterval));
-  lines.push_back(toString(delayProjectileDraw));
-  lines.push_back(toString(delayShotgun));
-  lines.push_back(toString(delayExplosion));
-  trace << "Config::collectLinesFromVariables() [DONE]" << endl;
-}
-
-void Config::toggleFullscreen() {
-  SDL_Surface* screenCpy = SDL_DisplayFormat(eng.renderer->screenSurface_);
-
-  isFullscreen = !isFullscreen;
-  parseFontNameAndSetCellDims();
-  setCellDimDependentVariables();
-  eng.renderer->initAndClearPrev();
-
-  eng.renderer->applySurface(Pos(0, 0), screenCpy, NULL);
-  eng.renderer->updateScreen();
-
-  vector<string> lines;
-  collectLinesFromVariables(lines);
-  writeLinesToFile(lines);
-}
-
-void Config::setAllVariablesFromLines(vector<string>& lines) {
+void setAllVariablesFromLines(vector<string>& lines) {
   trace << "Config::setAllVariablesFromLines()..." << endl;
 
   string curLine = lines.front();
@@ -588,7 +500,7 @@ void Config::setAllVariablesFromLines(vector<string>& lines) {
   trace << "Config::setAllVariablesFromLines() [DONE]" << endl;
 }
 
-void Config::writeLinesToFile(vector<string>& lines) {
+void writeLinesToFile(vector<string>& lines) {
   ofstream file;
   file.open("config", ios::trunc);
 
@@ -602,16 +514,143 @@ void Config::writeLinesToFile(vector<string>& lines) {
   file.close();
 }
 
-void Config::readFile(vector<string>& lines) {
-  ifstream file;
-  file.open("config");
-  if(file.is_open()) {
-    string line;
-    while(getline(file, line)) {
-      lines.push_back(line);
+void collectLinesFromVariables(vector<string>& lines) {
+  trace << "Config::collectLinesFromVariables()..." << endl;
+  lines.resize(0);
+  lines.push_back(isAudioEnabled == false ? "0" : "1");
+  lines.push_back(isTilesMode == false ? "0" : "1");
+  lines.push_back(fontBig);
+  lines.push_back(isFullscreen == false ? "0" : "1");
+  lines.push_back(isTilesWallSymbolFullSquare == false ? "0" : "1");
+  lines.push_back(isAsciiWallSymbolFullSquare == false ? "0" : "1");
+  lines.push_back(isIntroLevelSkipped == false ? "0" : "1");
+  lines.push_back(useRangedWpnMeleeePrompt == false ? "0" : "1");
+  lines.push_back(useRangedWpnAutoReload == false ? "0" : "1");
+  lines.push_back(toString(keyRepeatDelay));
+  lines.push_back(toString(keyRepeatInterval));
+  lines.push_back(toString(delayProjectileDraw));
+  lines.push_back(toString(delayShotgun));
+  lines.push_back(toString(delayExplosion));
+  trace << "Config::collectLinesFromVariables() [DONE]" << endl;
+}
+
+} //Namespace
+
+string  fontBig = "";
+bool    isFullscreen = false;
+bool    isTilesWallSymbolFullSquare = false;
+bool    isAsciiWallSymbolFullSquare = false;
+bool    useRangedWpnMeleeePrompt = false;
+bool    useRangedWpnAutoReload = false;
+bool    isIntroLevelSkipped = false;
+int     mapPixelH = -1;
+int     logPixelH = -1;
+int     mapPixelOffsetH = -1;
+int     charLinesPixelH = -1;
+int     charLinesPixelOffsetH = -1;
+int     screenPixelW = -1;
+int     screenPixelH = -1;
+int     keyRepeatDelay = -1;
+int     keyRepeatInterval = -1;
+int     delayProjectileDraw = -1;
+int     delayShotgun = -1;
+int     delayExplosion = -1;
+bool    isBotPlaying = false;
+bool    isAudioEnabled = false;
+bool    isTilesMode = false;
+int     cellW = -1;
+int     cellH = -1;
+
+void init() {
+  fontBig = "";
+  isBotPlaying = false;
+
+  fontImageNames.resize(0);
+  fontImageNames.push_back("images/8x12_DOS.png");
+  fontImageNames.push_back("images/11x19.png");
+  fontImageNames.push_back("images/11x22.png");
+  fontImageNames.push_back("images/12x24.png");
+  fontImageNames.push_back("images/16x24_v1.png");
+  fontImageNames.push_back("images/16x24_v2.png");
+  fontImageNames.push_back("images/16x24_v3.png");
+  fontImageNames.push_back("images/16x24_DOS.png");
+  fontImageNames.push_back("images/16x24_typewriter.png");
+
+  setDefaultVariables();
+
+  vector<string> lines;
+  readFile(lines);
+  if(lines.empty()) {
+    collectLinesFromVariables(lines);
+  } else {
+    setAllVariablesFromLines(lines);
+  }
+  setCellDimDependentVariables();
+}
+
+void runOptionsMenu(Engine& eng) {
+  MenuBrowser browser(15, 0);
+  vector<string> lines;
+
+  const int OPTION_VALUES_X_POS = 40;
+
+  draw(&browser, OPTION_VALUES_X_POS, eng);
+
+  while(true) {
+    const MenuAction action = eng.menuInputHandler->getAction(browser);
+    switch(action) {
+      case menuAction_browsed: {
+        draw(&browser, OPTION_VALUES_X_POS, eng);
+      } break;
+
+      case menuAction_esc:
+      case menuAction_space: {
+        //Since ASCII mode wall symbol may have changed,
+        //we need to redefine the feature data list
+        eng.featureDataHandler->initDataList();
+        return;
+      } break;
+
+      case menuAction_selected: {
+        draw(&browser, OPTION_VALUES_X_POS, eng);
+        playerSetsOption(&browser, OPTION_VALUES_X_POS, eng);
+        collectLinesFromVariables(lines);
+        writeLinesToFile(lines);
+        draw(&browser, OPTION_VALUES_X_POS, eng);
+      } break;
+
+      default: {} break;
     }
-    file.close();
   }
 }
+
+void setCellDimDependentVariables() {
+  mapPixelH             = cellH * MAP_H;
+  mapPixelOffsetH       = cellH * MAP_OFFSET_H;
+  logPixelH             = cellH * LOG_H;
+  charLinesPixelH       = cellH * CHAR_LINES_H;
+  charLinesPixelOffsetH = cellH * CHAR_LINES_OFFSET_H;
+  screenPixelW          = cellW * SCREEN_W;
+  screenPixelH          = cellH * SCREEN_H;
+}
+
+void toggleFullscreen(Engine& eng) {
+  SDL_Surface* screenCpy = SDL_DisplayFormat(eng.renderer->screenSurface_);
+
+  isFullscreen = !isFullscreen;
+  parseFontNameAndSetCellDims();
+  setCellDimDependentVariables();
+  eng.renderer->initAndClearPrev();
+
+  eng.renderer->applySurface(Pos(0, 0), screenCpy, NULL);
+  eng.renderer->updateScreen();
+
+  vector<string> lines;
+  collectLinesFromVariables(lines);
+  writeLinesToFile(lines);
+}
+
+} //Config
+
 
 

@@ -32,8 +32,8 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
 //  trace << "MainMenu: Drawing random background letters" << endl;
-//  const int NR_X_CELLS = eng.config->screenPixelW / eng.config->cellW;
-//  const int NR_Y_CELLS = eng.config->screenPixelH / eng.config->cellH;
+//  const int NR_X_CELLS = Config::screenPixelW / Config::cellW;
+//  const int NR_Y_CELLS = Config::screenPixelH / Config::cellH;
 //  const int BG_BRIGHTNESS = Rnd::range(14, 17);
 //  for(int y = 0; y < NR_Y_CELLS; y++) {
 //    for(int x = 0; x < NR_X_CELLS; x++) {
@@ -49,13 +49,13 @@ void MainMenu::draw(const MenuBrowser& browser) const {
 //    }
 //  }
 
-  if(eng.config->isTilesMode) {
+  if(Config::isTilesMode) {
     trace << "MainMenu: Calling drawMainMenuLogo()" << endl;
     eng.renderer->drawMainMenuLogo(0);
     pos.y += 10;
   } else {
     vector<string> logo;
-    if(eng.config->isTilesMode == false) {
+    if(Config::isTilesMode == false) {
       logo.push_back("        ___  __                __  __                  ");
       logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
       logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
@@ -226,7 +226,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
           draw(browser);
         }
         if(browser.isPosAtKey('d')) {
-          eng.config->runOptionsMenu();
+          Config::runOptionsMenu(eng);
           draw(browser);
         }
         if(browser.isPosAtKey('e')) {
@@ -244,7 +244,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
         if(IS_DEBUG_MODE) {
           if(browser.isPosAtKey('h')) {
             proceed = true;
-            eng.config->isBotPlaying = true;
+            Config::isBotPlaying = true;
           }
         }
       } break;

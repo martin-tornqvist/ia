@@ -72,11 +72,12 @@ public:
   void drawPopupBox(const Rect&, const PanelId = panel_screen,
                     const SDL_Color& = clrGray) {}
 
+  SDL_Surface* screenSurface_;
+  SDL_Surface* mainMenuLogoSurface_;
+
   void applySurface(const Pos&, SDL_Surface* const, SDL_Rect* = NULL) {}
 
-  void drawMap() {}
-
-  SDL_Surface* screenSurface_;
+  void drawMap();
 };
 
 #endif

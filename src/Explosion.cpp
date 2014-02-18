@@ -22,7 +22,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
   const SDL_Color& clrInner = SHOULD_OVERRIDE_CLR ? clrOverride : clrYellow;
   const SDL_Color& clrOuter = SHOULD_OVERRIDE_CLR ? clrOverride : clrRedLgt;
 
-  const bool IS_TILES     = eng.config->isTilesMode;
+  const bool IS_TILES     = Config::isTilesMode;
   const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
 
   bool isAnyCellSeenByPlayer = false;
@@ -50,7 +50,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
     }
     if(isAnyCellSeenByPlayer) {
       eng.renderer->updateScreen();
-      eng.sdlWrapper->sleep(eng.config->delayExplosion / NR_ANIM_STEPS);
+      eng.sdlWrapper->sleep(Config::delayExplosion / NR_ANIM_STEPS);
     }
   }
 }

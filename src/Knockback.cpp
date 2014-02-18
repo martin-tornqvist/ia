@@ -17,7 +17,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                              const bool IS_MSG_ALLOWED) {
   const bool DEFENDER_IS_MONSTER = &defender != eng.player;
 
-  if(DEFENDER_IS_MONSTER || eng.config->isBotPlaying == false) {
+  if(DEFENDER_IS_MONSTER || Config::isBotPlaying == false) {
     if(defender.getData().actorSize <= actorSize_giant) {
 
       vector<PropId> props;
@@ -71,7 +71,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           eng.renderer->drawMapAndInterface();
 
-          eng.sleep(eng.config->delayProjectileDraw);
+          eng.sleep(Config::delayProjectileDraw);
 
           if(CELL_IS_BOTTOMLESS) {
             if(DEFENDER_IS_MONSTER && PLAYER_SEE_DEFENDER) {

@@ -135,7 +135,7 @@ void drawInfoLines(Engine& eng) {
       "Unarmed", panel_char, pos, clrGenMed);
   } else {
     const SDL_Color itemClr = itemWielded->getClr();
-    if(eng.config->isTilesMode) {
+    if(Config::isTilesMode) {
       eng.renderer->drawTile(
         itemWielded->getTile(), panel_char, pos, itemClr);
     } else {
@@ -193,7 +193,7 @@ void drawInfoLines(Engine& eng) {
     eng.renderer->drawText("No missile weapon", panel_char, pos, clrGenMed);
   } else {
     const SDL_Color itemClr = itemMissiles->getClr();
-    if(eng.config->isTilesMode) {
+    if(Config::isTilesMode) {
       eng.renderer->drawTile(
         itemMissiles->getTile(), panel_char, pos, itemClr);
     } else {

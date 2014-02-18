@@ -15,7 +15,7 @@ void PlayerCreateCharacter::createCharacter() const {
 }
 
 void PlayerCreateCharacter::pickBg() const {
-  if(eng.config->isBotPlaying) {
+  if(Config::isBotPlaying) {
     eng.playerBonHandler->pickBg(Bg(Rnd::range(0, endOfBgs - 1)));
   } else {
     vector<Bg> bgs;
@@ -107,7 +107,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
 void PlayerCreateCharacter::pickNewTrait(
   const bool IS_CHARACTER_CREATION)  const {
 
-  if(eng.config->isBotPlaying == false) {
+  if(Config::isBotPlaying == false) {
     vector<TraitId> pickableTraits;
     eng.playerBonHandler->getPickableTraits(pickableTraits);
 
@@ -302,7 +302,7 @@ void PlayerEnterName::run() const {
   draw(name);
   bool isDone = false;
   while(isDone == false) {
-    if(eng.config->isBotPlaying) {
+    if(Config::isBotPlaying) {
       name = "AZATHOTH";
       isDone = true;
     } else {

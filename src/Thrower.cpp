@@ -49,7 +49,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
       if(eng.map->cells[path[i].x][path[i].y].isSeenByPlayer) {
         eng.renderer->drawGlyph(glyph, panel_map, path[i], clr);
         eng.renderer->updateScreen();
-        eng.sleep(eng.config->delayProjectileDraw);
+        eng.sleep(Config::delayProjectileDraw);
       }
     }
   }
@@ -147,7 +147,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
             eng.renderer->drawGlyph('*', panel_map,
                                     curPos, clrRedLgt);
             eng.renderer->updateScreen();
-            eng.sleep(eng.config->delayProjectileDraw * 4);
+            eng.sleep(Config::delayProjectileDraw * 4);
           }
           const SDL_Color hitMessageClr =
             actorHere == eng.player ? clrMsgBad : clrMsgGood;
@@ -180,7 +180,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
       eng.renderer->drawGlyph(glyph, panel_map, curPos, clr);
       eng.renderer->updateScreen();
-      eng.sleep(eng.config->delayProjectileDraw);
+      eng.sleep(Config::delayProjectileDraw);
     }
 
     const Feature* featureHere =

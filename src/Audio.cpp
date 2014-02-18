@@ -26,7 +26,7 @@ Audio::~Audio() {
 void Audio::initAndClearPrev() {
   freeAssets();
 
-  if(eng.config->isAudioEnabled) {
+  if(Config::isAudioEnabled) {
     //Monster sounds
     loadAudioFile(sfxDogSnarl,                "sfx_dogSnarl.ogg");
     loadAudioFile(sfxWolfHowl,                "sfx_wolfHowl.ogg");
@@ -101,9 +101,9 @@ int Audio::play(const SfxId sfx, const int VOL_PERCENT_TOT,
                 const int VOL_PERCENT_L) {
   int ret = -1;
   if(
-    eng.config->isAudioEnabled &&
+    Config::isAudioEnabled &&
     sfx != endOfSfxId && sfx != startOfAmbSfx && sfx != endOfAmbSfx &&
-    eng.config->isBotPlaying == false) {
+    Config::isBotPlaying == false) {
 
     const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
     const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;

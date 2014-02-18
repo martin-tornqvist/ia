@@ -40,7 +40,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const ActorSize aimLevel =
     projectiles.at(0)->attackData->intendedAimLevel;
 
-  const int DELAY = eng.config->delayProjectileDraw / (IS_MACHINE_GUN ? 2 : 1);
+  const int DELAY = Config::delayProjectileDraw / (IS_MACHINE_GUN ? 2 : 1);
 
   printRangedInitiateMessages(*projectiles.at(0)->attackData);
 
@@ -152,7 +152,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
             if(curProj->attackData->attackResult >= successSmall) {
               //RENDER ACTOR HIT
               if(curProj->isVisibleToPlayer) {
-                if(eng.config->isTilesMode) {
+                if(Config::isTilesMode) {
                   curProj->setTile(tile_blast1, clrRedLgt);
                   eng.renderer->drawProjectiles(projectiles);
                   eng.sleep(DELAY / 2);
@@ -231,7 +231,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
           //RENDER FEATURE HIT
           if(curProj->isVisibleToPlayer) {
-            if(eng.config->isTilesMode) {
+            if(Config::isTilesMode) {
               curProj->setTile(tile_blast1, clrYellow);
               eng.renderer->drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
@@ -263,7 +263,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
           //RENDER GROUND HITS
           if(curProj->isVisibleToPlayer) {
-            if(eng.config->isTilesMode) {
+            if(Config::isTilesMode) {
               curProj->setTile(tile_blast1, clrYellow);
               eng.renderer->drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
@@ -280,7 +280,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         //RENDER FLYING PROJECTILES
         if(curProj->isObstructed == false && curProj->isVisibleToPlayer) {
-          if(eng.config->isTilesMode) {
+          if(Config::isTilesMode) {
             curProj->setTile(projectileTile, projectileColor);
             eng.renderer->drawProjectiles(projectiles);
           } else {

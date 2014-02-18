@@ -223,7 +223,7 @@ void Player::hit_(const int DMG, const bool ALLOW_WOUNDS) {
     incrShock(1, shockSrc_misc);
   }
 
-  if(ALLOW_WOUNDS && eng.config->isBotPlaying == false) {
+  if(ALLOW_WOUNDS && Config::isBotPlaying == false) {
     if(DMG >= 5) {
       Prop* const prop = new PropWound(eng, propTurnsIndefinite);
       propHandler_->tryApplyProp(prop);
@@ -323,7 +323,7 @@ void Player::incrInsanity() {
 
   const int INS_INCR = 6;
 
-  if(eng.config->isBotPlaying == false) {
+  if(Config::isBotPlaying == false) {
     insanity_ += INS_INCR;
   }
 
@@ -765,7 +765,7 @@ void Player::onActorTurn() {
     eng.inventoryHandler->browserPosToSetAfterDrop = 0;
   }
 
-  if(eng.config->isBotPlaying) {
+  if(Config::isBotPlaying) {
     eng.bot->act();
   } else {
     eng.input->clearEvents();
@@ -1082,7 +1082,7 @@ void Player::moveDir(Dir dir) {
           if(item != NULL) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getData().isMeleeWeapon) {
-              if(eng.config->useRangedWpnMeleeePrompt &&
+              if(Config::useRangedWpnMeleeePrompt &&
                   isSeeingActor(*actorAtDest, NULL)) {
                 if(weapon->getData().isRangedWeapon) {
                   const string wpnName =

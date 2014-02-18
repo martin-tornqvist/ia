@@ -91,13 +91,15 @@ public:
   void drawPopupBox(const Rect& area, const PanelId panel = panel_screen,
                     const SDL_Color& clr = clrGray);
 
-private:
-  friend class Postmortem;
-  friend class Input;
-  friend class Config;
+  SDL_Surface* screenSurface_;
+  SDL_Surface* mainMenuLogoSurface_;
+
   void applySurface(const Pos& pixelPos, SDL_Surface* const src,
                     SDL_Rect* clip = NULL);
 
+  void drawMap();
+
+private:
   void drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
                         const SDL_Color& clr, const bool DRAW_BG_CLR = true,
                         const SDL_Color& bgClr = clrBlack);
@@ -133,12 +135,7 @@ private:
 
   void freeAssets();
 
-  void drawMap();
-
   Engine& eng;
-
-  SDL_Surface* screenSurface_;
-  SDL_Surface* mainMenuLogoSurface_;
 };
 
 #endif
