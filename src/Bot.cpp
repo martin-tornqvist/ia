@@ -51,7 +51,7 @@ void Bot::act() {
 
   //Occasionally send a TAB command to attack nearby monsters
   if(Rnd::coinToss()) {
-    eng.input->handleKeyPress(KeyboardReadReturnData(SDLK_TAB));
+    Input::handleKeyPress(KeyboardReadReturnData(SDLK_TAB), eng);
     return;
   }
 
@@ -154,7 +154,7 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
 
 //  assert(key >= '1' && key <= '9');
 
-  eng.input->handleKeyPress(KeyboardReadReturnData(key));
+  Input::handleKeyPress(KeyboardReadReturnData(key), eng);
 
   return playerCell == cellToGoTo;
 }

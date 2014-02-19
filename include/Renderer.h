@@ -12,131 +12,79 @@
 #include "Config.h"
 #include "Art.h"
 
-class Engine;
 struct Projectile;
 
-class Renderer {
-public:
-  Renderer(Engine& engine);
+namespace Renderer {
 
-  ~Renderer();
+extern CellRenderData renderArray_[MAP_W][MAP_H];
+extern CellRenderData renderArrayNoActors_[MAP_W][MAP_H];
+extern SDL_Surface*   screenSurface_;
+extern SDL_Surface*   mainMenuLogoSurface_;
 
-  void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN = true);
+void init(Engine& engine);
+void cleanup();
 
-  inline void updateScreen() {SDL_Flip(screenSurface_);}
+void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN = true);
 
-  inline void clearScreen() {
-    SDL_FillRect(screenSurface_, NULL,
-                 SDL_MapRGB(screenSurface_->format, 0, 0, 0));
-  }
+void updateScreen();
 
-  void initAndClearPrev();
+void clearScreen();
 
-  void drawTile(const TileId tile, const PanelId panel, const Pos& pos,
-                const SDL_Color& clr,
-                const SDL_Color& bgClr = clrBlack);
+void drawTile(const TileId tile, const PanelId panel, const Pos& pos,
+              const SDL_Color& clr, const SDL_Color& bgClr = clrBlack);
 
-  void drawGlyph(const char GLYPH, const PanelId panel, const Pos& pos,
-                 const SDL_Color& clr,
-                 const bool DRAW_BG_CLR = true,
-                 const SDL_Color& bgClr = clrBlack);
+void drawGlyph(const char GLYPH, const PanelId panel, const Pos& pos,
+               const SDL_Color& clr, const bool DRAW_BG_CLR = true,
+               const SDL_Color& bgClr = clrBlack);
 
-  void drawText(const string& str, const PanelId panel,
-                const Pos& pos, const SDL_Color& clr,
-                const SDL_Color& bgClr = clrBlack);
+void drawText(const string& str, const PanelId panel, const Pos& pos,
+              const SDL_Color& clr, const SDL_Color& bgClr = clrBlack);
 
-  int drawTextCentered(const string& str, const PanelId panel,
-                       const Pos& pos, const SDL_Color& clr,
-                       const SDL_Color& bgClr = clrBlack,
-                       const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
+int drawTextCentered(const string& str, const PanelId panel, const Pos& pos,
+                     const SDL_Color& clr, const SDL_Color& bgClr = clrBlack,
+                     const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
-  void coverCellInMap(const Pos& pos);
+void coverCellInMap(const Pos& pos);
 
-  void coverPanel(const PanelId panel);
+void coverPanel(const PanelId panel);
 
-  void coverArea(const PanelId panel, const Pos& pos, const Pos& dims);
+void coverArea(const PanelId panel, const Pos& pos, const Pos& dims);
 
-  void coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims);
+void coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims);
 
-  void drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
-                          const SDL_Color& clr) const;
+void drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
+                        const SDL_Color& clr);
 
-  void drawLineHor(const Pos& pixelPos, const int W,
-                   const SDL_Color& clr) const;
+void drawLineHor(const Pos& pixelPos, const int W, const SDL_Color& clr);
 
-  void drawLineVer(const Pos& pixelPos, const int H,
-                   const SDL_Color& clr) const;
+void drawLineVer(const Pos& pixelPos, const int H, const SDL_Color& clr);
 
-  void drawMarker(const std::vector<Pos>& trail,
-                  const int EFFECTIVE_RANGE = -1);
+void drawMarker(const std::vector<Pos>& trail, const int EFFECTIVE_RANGE = -1);
 
-  void drawBlastAnimAtField(
-    const Pos& center, const int RADIUS,
-    bool forbiddenCells[MAP_W][MAP_H],
-    const SDL_Color& colorInner, const SDL_Color& colorOuter);
+void drawBlastAnimAtField(const Pos& center, const int RADIUS,
+                          bool forbiddenCells[MAP_W][MAP_H],
+                          const SDL_Color& colorInner,
+                          const SDL_Color& colorOuter);
 
-  void drawBlastAnimAtPositions(const std::vector<Pos>& positions,
-                                const SDL_Color& color);
+void drawBlastAnimAtPositions(const std::vector<Pos>& positions,
+                              const SDL_Color& color);
 
-  void drawBlastAnimAtPositionsWithPlayerVision(
-    const vector<Pos>& positions, const SDL_Color& clr);
+void drawBlastAnimAtPositionsWithPlayerVision(const vector<Pos>& positions,
+    const SDL_Color& clr);
 
-  void drawMainMenuLogo(const int Y_POS);
+void drawMainMenuLogo(const int Y_POS);
 
-  CellRenderData renderArray[MAP_W][MAP_H];
-  CellRenderData renderArrayNoActors[MAP_W][MAP_H];
+void drawProjectiles(vector<Projectile*>& projectiles);
 
-  void drawProjectiles(vector<Projectile*>& projectiles);
+void drawPopupBox(const Rect& area, const PanelId panel = panel_screen,
+                  const SDL_Color& clr = clrGray);
 
-  void drawPopupBox(const Rect& area, const PanelId panel = panel_screen,
-                    const SDL_Color& clr = clrGray);
+void applySurface(const Pos& pixelPos, SDL_Surface* const src,
+                  SDL_Rect* clip = NULL);
 
-  SDL_Surface* screenSurface_;
-  SDL_Surface* mainMenuLogoSurface_;
+void drawMap();
 
-  void applySurface(const Pos& pixelPos, SDL_Surface* const src,
-                    SDL_Rect* clip = NULL);
-
-  void drawMap();
-
-private:
-  void drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
-                        const SDL_Color& clr, const bool DRAW_BG_CLR = true,
-                        const SDL_Color& bgClr = clrBlack);
-
-  void coverGlyphAtPixel(const Pos& pixelPos);
-  void coverTileAtPixel(const Pos& pixelPos);
-
-  Pos getPixelPosForCellInPanel(const PanelId panel, const Pos& pos) const;
-
-  int getLifebarLength(const Actor& actor) const;
-  void drawLifeBar(const Pos& pos, const int LENGTH);
-
-  void drawExclMarkAt(const Pos& pixelPos) const;
-  void drawPlayerShockExclMarks() const;
-
-  void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
-                                const SDL_Color& clr);
-
-  void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
-                                 const SDL_Color& clr);
-
-  Uint32 getPixel(SDL_Surface* const surface,
-                  const int PIXEL_X, const int PIXEL_Y);
-  void putPixel(SDL_Surface* const surface,
-                const int PIXEL_X, const int PIXEL_Y, Uint32 pixel);
-
-  bool tilePixelData_[400][400];
-  bool fontPixelData_[400][400];
-
-  void loadFont();
-  void loadTiles();
-  void loadMainMenuLogo();
-
-  void freeAssets();
-
-  Engine& eng;
-};
+} //Render
 
 #endif
 

@@ -72,7 +72,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
         } else {
           eng.log->addMsg("I" + swiftStr + " load " + ammoName + ".");
         }
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
       } else {
         if(eng.player->isSeeingActor(actorReloading, NULL)) {
           eng.log->addMsg(actorName + swiftStr + " reloads.");

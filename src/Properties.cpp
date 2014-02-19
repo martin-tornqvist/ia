@@ -997,7 +997,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
     if(prop->shouldUpdatePlayerVisualWhenStartOrEnd()) {
       prop->owningActor_->updateColor();
       eng.player->updateFov();
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
   }
 
@@ -1062,7 +1062,7 @@ bool PropHandler::endAppliedProp(
     if(IS_VISUAL_UPDATE_NEEDED) {
       prop->owningActor_->updateColor();
       eng.player->updateFov();
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
 
     if(owningActor_ == eng.player) {
@@ -1716,7 +1716,7 @@ void PropParalyzed::onStart() {
       }
       eng.gameTime->updateLightMap();
       player->updateFov();
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
     if(MOLOTOV_FUSE > 0) {
       player->molotovFuseTurns = -1;

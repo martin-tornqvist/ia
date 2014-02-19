@@ -28,7 +28,6 @@
 #endif
 
 class PlayerVisualMemory;
-class Renderer;
 class ItemDataHandler;
 class Map;
 class Log;
@@ -38,7 +37,6 @@ class MapPatterns;
 class SndEmitter;
 class FeatureDataHandler;
 class DungeonMaster;
-class Input;
 class DungeonClimb;
 class ActorFactory;
 class MapTemplateHandler;
@@ -106,9 +104,6 @@ public:
 
   void initSdl();
   void cleanupSdl();
-  void initConfig();
-  void initRenderer();
-  void cleanupRenderer();
   void initGame();
   void cleanupGame();
   void initAudio();
@@ -117,7 +112,6 @@ public:
   void sleep(const Uint32 DURATION) const;
 
   PlayerVisualMemory* playerVisualMemory;
-  Renderer* renderer;
   ItemDataHandler* itemDataHandler;
   Map* map;
   Log* log;
@@ -127,7 +121,6 @@ public:
   SndEmitter* sndEmitter;
   FeatureDataHandler* featureDataHandler;
   DungeonMaster* dungeonMaster;
-  Input* input;
   DungeonClimb* dungeonClimb;
   ActorFactory* actorFactory;
   MapTemplateHandler* mapTemplateHandler;

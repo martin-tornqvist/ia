@@ -12,22 +12,22 @@ const int X_POS_WEIGHT = 62;
 namespace {
 
 void drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y,
-              const SDL_Color& clr, Engine& eng) {
+              const SDL_Color& clr) {
 
   const int X_DOTS = X_PREV + W_PREV;
   const int W_DOTS = X_NEW - X_DOTS;
   const string dots(W_DOTS, '.');
   SDL_Color realColorDots = clr;
   realColorDots.r /= 3; realColorDots.g /= 3; realColorDots.b /= 3;
-  eng.renderer->drawText(dots, panel_screen, Pos(X_DOTS, Y), realColorDots);
+  Renderer::drawText(dots, panel_screen, Pos(X_DOTS, Y), realColorDots);
 }
 
-void drawItemSymbol(const Item& item, const Pos& pos, Engine& eng) {
+void drawItemSymbol(const Item& item, const Pos& pos) {
   const SDL_Color itemClr = item.getClr();
-  if(Config::isTilesMode) {
-    eng.renderer->drawTile(item.getTile(), panel_screen, pos, itemClr);
+  if(Config::isTilesMode()) {
+    Renderer::drawTile(item.getTile(), panel_screen, pos, itemClr);
   } else {
-    eng.renderer->drawGlyph(item.getGlyph(), panel_screen, pos, itemClr);
+    Renderer::drawGlyph(item.getGlyph(), panel_screen, pos, itemClr);
   }
 }
 
@@ -41,11 +41,11 @@ void drawBrowseSlots(const MenuBrowser& browser,
   Pos pos(0, 0);
 
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
-  eng.renderer->coverArea(panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 2));
+  Renderer::coverArea(panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 2));
 
   string str =
     "Select slot to equip/unequip. | shift+select to drop | space/esc to exit";
-  eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
+  Renderer::drawText(str, panel_screen, pos, clrWhiteHigh);
 
   const int X_POS_ITEM_NAME = 15;
 
@@ -58,16 +58,16 @@ void drawBrowseSlots(const MenuBrowser& browser,
     InventorySlot* const slot = invSlotButtons.at(i).inventorySlot;
     str += slot->interfaceName;
     pos.x = 0;
-    eng.renderer->drawText(
+    Renderer::drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x = X_POS_ITEM_NAME;
     Item* const item = slot->item;
     if(item == NULL) {
       pos.x += 2;
-      eng.renderer->drawText(
+      Renderer::drawText(
         "<empty>", panel_screen, pos, IS_CUR_POS ? clrWhite : clrRedLgt);
     } else {
-      drawItemSymbol(*item, pos, eng);
+      drawItemSymbol(*item, pos);
       pos.x += 2;
 
       const SDL_Color itemInterfClr =
@@ -85,9 +85,9 @@ void drawBrowseSlots(const MenuBrowser& browser,
 
       str = eng.itemDataHandler->getItemInterfaceRef(
               *item, false, attackMode);
-      eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
-      drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr, eng);
-      eng.renderer->drawText(
+      Renderer::drawText(str, panel_screen, pos, itemInterfClr);
+      drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
+      Renderer::drawText(
         item->getWeightLabel(), panel_screen, Pos(X_POS_WEIGHT, pos.y),
         clrGray);
     }
@@ -100,10 +100,10 @@ void drawBrowseSlots(const MenuBrowser& browser,
   pos.x = 0;
   pos.y += 1;
   const bool IS_CUR_POS = browser.getPos().y == int(invSlotButtons.size());
-  eng.renderer->drawText(str, panel_screen, pos,
+  Renderer::drawText(str, panel_screen, pos,
                          IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }
 
 void drawBrowseInventory(const MenuBrowser& browser,
@@ -112,7 +112,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
 
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
 
-  eng.renderer->coverArea(panel_screen, Pos(0, 0), Pos(MAP_W, NR_ITEMS + 1));
+  Renderer::coverArea(panel_screen, Pos(0, 0), Pos(MAP_W, NR_ITEMS + 1));
 
   string str = NR_ITEMS > 0 ?
                "Browsing backpack. | shift+select to drop" :
@@ -120,7 +120,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
   str += " | space/esc to exit";
 
   Pos pos(0, 0);
-  eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
+  Renderer::drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
   Inventory& inv = eng.player->getInv();
@@ -135,22 +135,22 @@ void drawBrowseInventory(const MenuBrowser& browser,
     str = "x) ";
     str.at(0) = 'a' + i;
     pos.x = 0;
-    eng.renderer->drawText(
+    Renderer::drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x += 3;
 
-    drawItemSymbol(*item, pos, eng);
+    drawItemSymbol(*item, pos);
     pos.x += 2;
 
     str = eng.itemDataHandler->getItemInterfaceRef(*item, false);
-    eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
-    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr, eng);
-    eng.renderer->drawText(
+    Renderer::drawText(str, panel_screen, pos, itemInterfClr);
+    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
+    Renderer::drawText(
       item->getWeightLabel(), panel_screen, Pos(X_POS_WEIGHT, pos.y), clrGray);
     pos.y++;
   }
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }
 
 void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
@@ -159,7 +159,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
   Pos pos(0, 0);
 
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
-  eng.renderer->coverArea(
+  Renderer::coverArea(
     panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
   const bool IS_ANY_ITEM_AVAILABLE = genInvIndexes.empty() == false;
@@ -187,7 +187,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
     str += " | shift+select to drop";
   }
   str += cancelInfoStr;
-  eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
+  Renderer::drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
   Inventory& inv = eng.player->getInv();
@@ -197,13 +197,13 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
     str = "x) ";
     str.at(0) = 'a' + i;
     pos.x = 0;
-    eng.renderer->drawText(
+    Renderer::drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x += 3;
 
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
-    drawItemSymbol(*item, pos, eng);
+    drawItemSymbol(*item, pos);
     pos.x += 2;
 
     const SDL_Color itemInterfClr = IS_CUR_POS ?
@@ -221,23 +221,23 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
     }
 
     str = eng.itemDataHandler->getItemInterfaceRef(*item, false, attackMode);
-    eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
-    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr, eng);
-    eng.renderer->drawText(
+    Renderer::drawText(str, panel_screen, pos, itemInterfClr);
+    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
+    Renderer::drawText(
       item->getWeightLabel(), panel_screen, Pos(X_POS_WEIGHT, pos.y), clrGray);
     pos.y++;
   }
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }
 
 void drawUse(const MenuBrowser& browser,
              const vector<unsigned int>& genInvIndexes, Engine& eng) {
   Pos pos(0, 0);
 
-//  eng.renderer->clearScreen();
+//  Renderer::clearScreen();
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
-  eng.renderer->coverArea(
+  Renderer::coverArea(
     panel_screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
   const bool IS_ANY_ITEM_AVAILABLE = genInvIndexes.empty() == false;
@@ -246,7 +246,7 @@ void drawUse(const MenuBrowser& browser,
     "I carry no item to use.";
   str += cancelInfoStr;
 
-  eng.renderer->drawText(str, panel_screen, pos, clrWhiteHigh);
+  Renderer::drawText(str, panel_screen, pos, clrWhiteHigh);
   pos.y++;
 
   Inventory& inv = eng.player->getInv();
@@ -271,18 +271,18 @@ void drawUse(const MenuBrowser& browser,
     }
     if(isNewLabel) {
       pos.x = 0;
-      eng.renderer->drawText(label, panel_screen, pos, clrYellow);
+      Renderer::drawText(label, panel_screen, pos, clrYellow);
     }
 
     pos.x = 10;
     str = "x) ";
     str.at(0) = 'a' + i;
-    eng.renderer->drawText(
+    Renderer::drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x += 3;
 
     //Draw item symbol
-    drawItemSymbol(*item, pos, eng);
+    drawItemSymbol(*item, pos);
     pos.x += 2;
 
     str = eng.itemDataHandler->getItemRef(*item, itemRef_plain, false);
@@ -290,14 +290,14 @@ void drawUse(const MenuBrowser& browser,
       str += " (" + toString(item->nrItems) + ")";
     }
 
-    eng.renderer->drawText(str, panel_screen, pos, itemInterfClr);
-    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr, eng);
-    eng.renderer->drawText(
+    Renderer::drawText(str, panel_screen, pos, itemInterfClr);
+    drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
+    Renderer::drawText(
       item->getWeightLabel(), panel_screen, Pos(X_POS_WEIGHT, pos.y), clrGray);
     pos.y++;
   }
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }
 
 } //RenderInventory

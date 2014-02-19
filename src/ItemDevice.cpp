@@ -135,7 +135,7 @@ void DeviceSentry::runGoodEffect() {
     const Pos& pos = actor->pos;
     eng.log->addMsg(actor->getNameThe() + " is hit by a bolt of lightning!",
                     clrMsgGood, true);
-    eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
+    Renderer::drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos>(1, pos), clrYellow);
     actor->hit(DMG, dmgType_electric, false);
   }
@@ -199,7 +199,7 @@ void DeviceElectricLantern::newTurnInInventory_() {
     if(malfunctCooldown_ <= 0) {
       eng.gameTime->updateLightMap();
       eng.player->updateFov();
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
   }
 }
@@ -213,7 +213,7 @@ void DeviceElectricLantern::toggle_() {
   eng.audio->play(sfxElectricLantern);
   eng.gameTime->updateLightMap();
   eng.player->updateFov();
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 bool DeviceElectricLantern::isGivingLight() const {
@@ -244,7 +244,7 @@ void DeviceElectricLantern::runBadEffect() {
     if(isVisionUpdateNeeded) {
       eng.gameTime->updateLightMap();
       eng.player->updateFov();
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
     if(isItemDestroyed) {
       delete this;

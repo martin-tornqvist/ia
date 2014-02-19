@@ -14,7 +14,7 @@ void Examine::playerExamine() const {
   //with some potentially horrible results
   if(eng.player->getPropHandler().allowSee()) {
     eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
 
     Pos examinePos = eng.player->pos + eng.query->dir();
 
@@ -26,5 +26,5 @@ void Examine::playerExamine() const {
   } else {
     eng.log->addMsg("Not while blind.");
   }
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }

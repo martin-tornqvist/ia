@@ -178,7 +178,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
 
   if(this == eng.player) {
     eng.player->updateFov();
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     eng.playerVisualMemory->updateVisualMemory();
   }
 
@@ -186,7 +186,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
 
   if(this == eng.player) {
     eng.player->updateFov();
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     eng.playerVisualMemory->updateVisualMemory();
     eng.log->addMsg("I suddenly find myself in a different location!");
     propHandler_->tryApplyProp(new PropConfused(eng, propTurnsSpecific, 8));
@@ -245,7 +245,7 @@ bool Actor::restoreHp(const int HP_RESTORED,
           eng.log->addMsg(data_->name_the + " looks healthier.");
         }
       }
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
   }
 
@@ -289,7 +289,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED,
           eng.log->addMsg(data_->name_the + " looks more spirited.");
         }
       }
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
   }
 
@@ -415,7 +415,7 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
     return false;
   }
 
-  if(this != eng.player || Config::isBotPlaying == false) {
+  if(this != eng.player || Config::isBotPlaying() == false) {
     hp_ -= dmg;
   }
 
@@ -435,7 +435,7 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
 }
 
 bool Actor::hitSpi(const int DMG) {
-  if(this != eng.player || Config::isBotPlaying == false) {
+  if(this != eng.player || Config::isBotPlaying() == false) {
     spi_ = max(0, spi_ - DMG);
   }
   if(getSpi() <= 0) {
@@ -554,7 +554,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     eng.dungeonMaster->onMonsterKilled(*this);
   }
 
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 void Actor::addLight(bool light[MAP_W][MAP_H]) const {

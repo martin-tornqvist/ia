@@ -70,7 +70,6 @@ private:
 
   friend class SaveHandler;
   friend class Bot;
-  friend class Renderer;
   int dlvl_;
 };
 

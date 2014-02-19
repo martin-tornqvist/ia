@@ -31,7 +31,7 @@ void Credits::readFile() {
 }
 
 void Credits::run() {
-  eng.renderer->clearScreen();
+  Renderer::clearScreen();
 
   string str;
 
@@ -39,27 +39,27 @@ void Credits::run() {
 
   const int X_LABEL = 3;
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
 
-  eng.renderer->drawText(" Displaying credits.txt ", panel_screen,
+  Renderer::drawText(" Displaying credits.txt ", panel_screen,
                          Pos(X_LABEL, 0), clrGray);
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
                          clrGray);
 
-  eng.renderer->drawText(" space/esc to exit ", panel_screen,
+  Renderer::drawText(" space/esc to exit ", panel_screen,
                          Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
   for(string & line : lines) {
-    eng.renderer->drawText(line, panel_screen, Pos(0, yPos++), clrWhite);
+    Renderer::drawText(line, panel_screen, Pos(0, yPos++), clrWhite);
   }
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 
   //Read keys
   while(true) {
-    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
     if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       break;
     }

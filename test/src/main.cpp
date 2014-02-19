@@ -1,5 +1,7 @@
 #include "UnitTest++.h"
 
+#include <climits>
+
 #include <SDL.h>
 
 #include "Config.h"
@@ -28,9 +30,7 @@
 
 struct BasicFixture {
   BasicFixture() {
-    eng.initConfig();
-    eng.initRenderer();
-    eng.initAudio();
+    Config::init();
     eng.initGame();
     eng.gameTime->insertActorInLoop(eng.player);
     eng.player->pos = Pos(1, 1);
@@ -38,9 +38,6 @@ struct BasicFixture {
   }
   ~BasicFixture() {
     eng.cleanupGame();
-    eng.cleanupAudio();
-    eng.cleanupRenderer();
-    eng.cleanupConfig();
   }
   Engine eng;
 };

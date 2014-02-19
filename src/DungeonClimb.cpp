@@ -66,7 +66,7 @@ void DungeonClimb::travelDown(const int levels) {
   eng.player->target = NULL;
   eng.player->updateFov();
   eng.player->updateColor();
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   eng.audio->tryPlayAmb(2);
   trace << "DungeonClimb::travelDown() [DONE]" << endl;
 }
@@ -89,7 +89,7 @@ void DungeonClimb::tryUseDownStairs() {
     } else {
       eng.log->addMsg("I descend the stairs.");
     }
-//    eng.renderer->updateScreen();
+//    Renderer::updateScreen();
     travelDown();
 
     if(eng.player->insanityPhobias[insanityPhobia_deepPlaces]) {
@@ -104,7 +104,7 @@ void DungeonClimb::tryUseDownStairs() {
     } else {
       eng.log->addMsg("I see no stairs leading downwards here.");
     }
-//    eng.renderer->updateScreen();
+//    Renderer::updateScreen();
   }
   trace << "DungeonClimb::tryUseDownStairs() [DONE]" << endl;
 }

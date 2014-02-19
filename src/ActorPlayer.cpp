@@ -223,14 +223,14 @@ void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
     incrShock(1, shockSrc_misc);
   }
 
-  if(ALLOW_WOUNDS && Config::isBotPlaying == false) {
+  if(ALLOW_WOUNDS && Config::isBotPlaying() == false) {
     if(dmg >= 5) {
       Prop* const prop = new PropWound(eng, propTurnsIndefinite);
       propHandler_->tryApplyProp(prop);
     }
   }
 
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 int Player::getCarryWeightLimit() const {
@@ -323,14 +323,14 @@ void Player::incrInsanity() {
 
   const int INS_INCR = 6;
 
-  if(Config::isBotPlaying == false) {
+  if(Config::isBotPlaying() == false) {
     insanity_ += INS_INCR;
   }
 
   restoreShock(70, false);
 
   updateColor();
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   if(getInsanity() >= 100) {
     msg += "My mind can no longer withstand what it has grasped.";
@@ -723,7 +723,7 @@ void Player::onActorTurn() {
   shockTemp_ = 0.0;
   setTempShockFromFeatures();
 
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   resetPermShockTakenCurTurn();
 
@@ -765,11 +765,11 @@ void Player::onActorTurn() {
     eng.inventoryHandler->browserPosToSetAfterDrop = 0;
   }
 
-  if(Config::isBotPlaying) {
+  if(Config::isBotPlaying()) {
     eng.bot->act();
   } else {
-    eng.input->clearEvents();
-    eng.input->handleMapModeInputUntilFound();
+    Input::clearEvents();
+    Input::handleMapModeInputUntilFound(eng);
   }
 }
 
@@ -882,7 +882,7 @@ void Player::onStandardTurn() {
         eng.popup->showMsg("A chill runs down my spine...", true);
       }
       incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     } else {
       if(eng.map->getDlvl() != 0) {
         incrShock(1, shockSrc_time);
@@ -922,7 +922,7 @@ void Player::onStandardTurn() {
               if(isSpottingHiddenActor(monster)) {
                 monster.isStealth = false;
                 updateFov();
-                eng.renderer->drawMapAndInterface();
+                Renderer::drawMapAndInterface();
                 eng.log->addMsg("I spot " + monster.getNameA() + "!",
                                 clrMsgImportant, true, true);
               }
@@ -1004,7 +1004,7 @@ void Player::onStandardTurn() {
 }
 
 void Player::interruptActions() {
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   eng.inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
   eng.inventoryHandler->browserPosToSetAfterDrop = 0;
@@ -1012,7 +1012,7 @@ void Player::interruptActions() {
   //Abort searching
   if(waitTurnsLeft > 0) {
     eng.log->addMsg("I stop waiting.", clrWhite);
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
   }
   waitTurnsLeft = -1;
 
@@ -1027,7 +1027,7 @@ void Player::explosiveThrown() {
   molotovFuseTurns = -1;
   flareFuseTurns = -1;
   updateColor();
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
@@ -1082,7 +1082,7 @@ void Player::moveDir(Dir dir) {
           if(item != NULL) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getData().isMeleeWeapon) {
-              if(Config::useRangedWpnMeleeePrompt &&
+              if(Config::isRangedWpnMeleeePrompt() &&
                   isSeeingActor(*actorAtDest, NULL)) {
                 if(weapon->getData().isRangedWeapon) {
                   const string wpnName =
@@ -1090,10 +1090,10 @@ void Player::moveDir(Dir dir) {
                   eng.log->addMsg(
                     "Attack " + actorAtDest->getNameThe() +
                     " with " + wpnName + "? (y/n)", clrWhiteHigh);
-                  eng.renderer->drawMapAndInterface();
+                  Renderer::drawMapAndInterface();
                   if(eng.query->yesOrNo() == YesNoAnswer::no) {
                     eng.log->clearLog();
-                    eng.renderer->drawMapAndInterface();
+                    Renderer::drawMapAndInterface();
                     return;
                   }
                 }
@@ -1135,7 +1135,7 @@ void Player::moveDir(Dir dir) {
         // Encumbered?
         if(inv_->getTotalItemWeight() >= getCarryWeightLimit()) {
           eng.log->addMsg("I am too encumbered to move!");
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
           return;
         }
 

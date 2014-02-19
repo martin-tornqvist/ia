@@ -27,7 +27,7 @@ void PlayerSpellsHandler::playerSelectSpellToCast() {
 
     MenuBrowser browser(knownSpells_.size(), 0);
 
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
 
     draw(browser);
 
@@ -41,7 +41,7 @@ void PlayerSpellsHandler::playerSelectSpellToCast() {
         case menuAction_esc:
         case menuAction_space: {
           eng.log->clearLog();
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
           return;
         } break;
 
@@ -67,17 +67,17 @@ void PlayerSpellsHandler::tryCastPrevSpell() {
 void PlayerSpellsHandler::tryCast(const Spell* const spell) {
   if(eng.player->getPropHandler().allowRead(true)) {
     eng.log->clearLog();
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
 
     const Range spiCost = spell->getSpiCost(false, eng.player, eng);
     if(spiCost.upper >= eng.player->getSpi()) {
       eng.log->addMsg(
         "Cast spell and risk depleting your spirit (y/n)?",
         clrWhiteHigh);
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
       if(eng.query->yesOrNo() == YesNoAnswer::no) {
         eng.log->clearLog();
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
         return;
       }
     }
@@ -109,12 +109,12 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
   string endLetter = "a";
   endLetter[0] += char(NR_SPELLS - 1);
 
-  eng.renderer->coverArea(panel_screen, Pos(0, 0), Pos(MAP_W, NR_SPELLS + 1));
+  Renderer::coverArea(panel_screen, Pos(0, 0), Pos(MAP_W, NR_SPELLS + 1));
 
   const string label =
     "Choose a power to evoke [a-" + endLetter + "]" +
     " | Space/esc to exit";
-  eng.renderer->drawText(label, panel_screen, Pos(0, 0), clrWhiteHigh);
+  Renderer::drawText(label, panel_screen, Pos(0, 0), clrWhiteHigh);
 
   int y = 1;
 
@@ -128,14 +128,14 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     str[0] = CURRENT_KEY;
     str += ") " + name;
 
-    eng.renderer->drawText(str, panel_screen, Pos(0, y), clr);
+    Renderer::drawText(str, panel_screen, Pos(0, y), clr);
 
     string fillStr = "";
     const unsigned int FILL_SIZE = 28 - str.size();
     for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
     SDL_Color fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
-    eng.renderer->drawText(fillStr, panel_screen, Pos(str.size(), y), fillClr);
+    Renderer::drawText(fillStr, panel_screen, Pos(str.size(), y), fillClr);
 
     int x = 28;
     str = "SPI:";
@@ -143,7 +143,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     const string lowerStr = toString(spiCost.lower);
     const string upperStr = toString(spiCost.upper);
     str += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
-    eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
+    Renderer::drawText(str, panel_screen, Pos(x, y), clrWhite);
 
     x += 10;
     str = "SHOCK: ";
@@ -153,12 +153,12 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
       case intrSpellShockDisturbing:  str += "Disturbing"; break;
       case intrSpellShockSevere:      str += "Severe";     break;
     }
-    eng.renderer->drawText(str, panel_screen, Pos(x, y), clrWhite);
+    Renderer::drawText(str, panel_screen, Pos(x, y), clrWhite);
 
     y++;
   }
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }
 
 void PlayerSpellsHandler::addSaveLines(vector<string>& lines) const {

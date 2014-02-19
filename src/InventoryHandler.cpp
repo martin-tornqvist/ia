@@ -116,7 +116,7 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsShowAll() {
 
 void InventoryHandler::runSlotsScreen() {
   screenToOpenAfterDrop = endOfInventoryScreens;
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   Inventory& inv                  = eng.player->getInv();
   vector<InventorySlot>& invSlots = inv.getSlots();
@@ -160,7 +160,7 @@ void InventoryHandler::runSlotsScreen() {
           InventorySlot& slot = invSlots.at(charIndex - 'a');
           if(slot.item == NULL) {
             if(runEquipScreen(&slot)) {
-              eng.renderer->drawMapAndInterface();
+              Renderer::drawMapAndInterface();
               return;
             } else {
               RenderInventory::drawBrowseSlots(
@@ -181,7 +181,7 @@ void InventoryHandler::runSlotsScreen() {
               eng.log->addMsg(
                 "I take off my " + itemName + ".", clrWhite, true, true);
               item->onTakeOff();
-              eng.renderer->drawMapAndInterface();
+              Renderer::drawMapAndInterface();
               eng.gameTime->actorDidAct();
               return;
             } else {
@@ -198,7 +198,7 @@ void InventoryHandler::runSlotsScreen() {
 
       case menuAction_esc:
       case menuAction_space: {
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
         return;
       } break;
     }
@@ -207,7 +207,7 @@ void InventoryHandler::runSlotsScreen() {
 
 bool InventoryHandler::runUseScreen() {
   screenToOpenAfterDrop = endOfInventoryScreens;
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   eng.player->getInv().sortGeneralInventory(eng);
 
@@ -230,7 +230,7 @@ bool InventoryHandler::runUseScreen() {
       case menuAction_selected: {
         const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
         activateDefault(INV_ELEM);
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
         return true;
       } break;
 
@@ -248,7 +248,7 @@ bool InventoryHandler::runUseScreen() {
 
       case menuAction_esc:
       case menuAction_space: {
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
         return false;
       } break;
     }
@@ -264,12 +264,12 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
   eng.log->clearLog();
   if(data.isStackable && item->nrItems > 1) {
     trace << "InventoryHandler: item is stackable and more than one" << endl;
-    eng.renderer->drawMapAndInterface(false);
+    Renderer::drawMapAndInterface(false);
     const string nrStr = "1-" + toString(item->nrItems);
     const string dropStr = "Drop how many (" + nrStr + ")?:      " +
                            "| enter to drop" + cancelInfoStr;
-    eng.renderer->drawText(dropStr, panel_screen, Pos(0, 0), clrWhiteHigh);
-    eng.renderer->updateScreen();
+    Renderer::drawText(dropStr, panel_screen, Pos(0, 0), clrWhiteHigh);
+    Renderer::updateScreen();
     const Pos nrQueryPos(20 + nrStr.size(), 0);
     const int NR_TO_DROP = eng.query->number(nrQueryPos, clrWhiteHigh, 0, 3,
                            item->nrItems, false);
@@ -292,7 +292,7 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
 bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   screenToOpenAfterDrop = endOfInventoryScreens;
   equipSlotToOpenAfterDrop = slotToEquip;
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   eng.player->getInv().sortGeneralInventory(eng);
 
@@ -346,7 +346,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
 
 void InventoryHandler::runBrowseInventory() {
   screenToOpenAfterDrop = endOfInventoryScreens;
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   eng.player->getInv().sortGeneralInventory(eng);
 

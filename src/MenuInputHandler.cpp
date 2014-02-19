@@ -5,7 +5,7 @@
 
 MenuAction MenuInputHandler::getAction(MenuBrowser& browser) {
   while(true) {
-    KeyboardReadReturnData d = eng.input->readKeysUntilFound();
+    KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
 
     if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
       browser.navigate(dirRight);

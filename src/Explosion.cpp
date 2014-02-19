@@ -17,12 +17,12 @@ namespace {
 void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
           const bool SHOULD_OVERRIDE_CLR, const SDL_Color& clrOverride,
           Engine& eng) {
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   const SDL_Color& clrInner = SHOULD_OVERRIDE_CLR ? clrOverride : clrYellow;
   const SDL_Color& clrOuter = SHOULD_OVERRIDE_CLR ? clrOverride : clrRedLgt;
 
-  const bool IS_TILES     = Config::isTilesMode;
+  const bool IS_TILES     = Config::isTilesMode();
   const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
 
   bool isAnyCellSeenByPlayer = false;
@@ -41,16 +41,16 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
           blockers[pos.x][pos.y] == false) {
           isAnyCellSeenByPlayer = true;
           if(IS_TILES) {
-            eng.renderer->drawTile(tile, panel_map, pos, clr, clrBlack);
+            Renderer::drawTile(tile, panel_map, pos, clr, clrBlack);
           } else {
-            eng.renderer->drawGlyph('*', panel_map, pos, clr, true, clrBlack);
+            Renderer::drawGlyph('*', panel_map, pos, clr, true, clrBlack);
           }
         }
       }
     }
     if(isAnyCellSeenByPlayer) {
-      eng.renderer->updateScreen();
-      eng.sdlWrapper->sleep(Config::delayExplosion / NR_ANIM_STEPS);
+      Renderer::updateScreen();
+      eng.sdlWrapper->sleep(Config::getDelayExplosion() / NR_ANIM_STEPS);
     }
   }
 }
@@ -191,7 +191,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
   }
 
   eng.player->updateFov();
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   if(prop != NULL) {delete prop;}
 }
@@ -222,7 +222,7 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   }
 
   eng.player->updateFov();
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 } //Explosion

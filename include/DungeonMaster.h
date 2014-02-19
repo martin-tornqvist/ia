@@ -41,10 +41,9 @@ public:
 
   int getXpToNextLvl() const;
 
-private:
-  friend class Input;
   void playerGainXp(int XP_GAINED);
 
+private:
   void playerGainLvl();
 
   void initXpArray();

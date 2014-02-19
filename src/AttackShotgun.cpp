@@ -78,15 +78,15 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           data->attackResult >= successSmall &&
           data->isEtherealDefenderMissed == false) {
           if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-            eng.renderer->drawMapAndInterface(false);
-            eng.renderer->coverCellInMap(curPos);
-            if(Config::isTilesMode) {
-              eng.renderer->drawTile(tile_blast2, panel_map, curPos, clrRedLgt);
+            Renderer::drawMapAndInterface(false);
+            Renderer::coverCellInMap(curPos);
+            if(Config::isTilesMode()) {
+              Renderer::drawTile(tile_blast2, panel_map, curPos, clrRedLgt);
             } else {
-              eng.renderer->drawGlyph('*', panel_map, curPos, clrRedLgt);
+              Renderer::drawGlyph('*', panel_map, curPos, clrRedLgt);
             }
-            eng.renderer->updateScreen();
-            eng.sleep(Config::delayShotgun);
+            Renderer::updateScreen();
+            eng.sleep(Config::getDelayShotgun());
           }
 
           //Messages
@@ -98,7 +98,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
           nrActorsHit++;
 
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
 
           //Special shotgun behavior:
           //If current defender was killed, and player aimed at humanoid level,
@@ -126,16 +126,16 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
       eng.sndEmitter->emitSnd(snd);
 
       if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-        eng.renderer->drawMapAndInterface(false);
-        eng.renderer->coverCellInMap(curPos);
-        if(Config::isTilesMode) {
-          eng.renderer->drawTile(tile_blast2, panel_map, curPos, clrYellow);
+        Renderer::drawMapAndInterface(false);
+        Renderer::coverCellInMap(curPos);
+        if(Config::isTilesMode()) {
+          Renderer::drawTile(tile_blast2, panel_map, curPos, clrYellow);
         } else {
-          eng.renderer->drawGlyph('*', panel_map, curPos, clrYellow);
+          Renderer::drawGlyph('*', panel_map, curPos, clrYellow);
         }
-        eng.renderer->updateScreen();
-        eng.sleep(Config::delayShotgun);
-        eng.renderer->drawMapAndInterface();
+        Renderer::updateScreen();
+        eng.sleep(Config::getDelayShotgun());
+        Renderer::drawMapAndInterface();
       }
       break;
     }
@@ -147,16 +147,16 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
       eng.sndEmitter->emitSnd(snd);
 
       if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-        eng.renderer->drawMapAndInterface(false);
-        eng.renderer->coverCellInMap(curPos);
-        if(Config::isTilesMode) {
-          eng.renderer->drawTile(tile_blast2, panel_map, curPos, clrYellow);
+        Renderer::drawMapAndInterface(false);
+        Renderer::coverCellInMap(curPos);
+        if(Config::isTilesMode()) {
+          Renderer::drawTile(tile_blast2, panel_map, curPos, clrYellow);
         } else {
-          eng.renderer->drawGlyph('*', panel_map, curPos, clrYellow);
+          Renderer::drawGlyph('*', panel_map, curPos, clrYellow);
         }
-        eng.renderer->updateScreen();
-        eng.sleep(Config::delayShotgun);
-        eng.renderer->drawMapAndInterface();
+        Renderer::updateScreen();
+        eng.sleep(Config::getDelayShotgun());
+        Renderer::drawMapAndInterface();
       }
       break;
     }

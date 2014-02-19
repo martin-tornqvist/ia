@@ -18,7 +18,7 @@
 
 void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
                       Item* itemThrown) {
-  const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
+  const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
 
   if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
     if(d.isShiftHeld_) {
@@ -62,7 +62,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
       if(pos_ != eng.player->pos) {
 
         eng.log->clearLog();
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
 
         Actor* const actor = Utils::getActorAtPos(pos_, eng);
         if(actor != NULL) {eng.player->target = actor;}
@@ -91,7 +91,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
       if(pos_ == eng.player->pos) {
         eng.log->addMsg("I should throw this somewhere else.");
       } else {
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
         Actor* const actor = Utils::getActorAtPos(pos_, eng);
         if(actor != NULL) {eng.player->target = actor;}
         eng.thrower->throwItem(*eng.player, pos_, *itemThrown);
@@ -104,7 +104,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
   // ------------------------------------------------------- THROW EXPLOSIVE
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'e') {
     if(markerTask == markerTask_aimLitExplosive) {
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
       eng.thrower->playerThrowLitExplosive(pos_);
       done();
     }
@@ -115,7 +115,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
 }
 
 void Marker::draw(const MarkerTask markerTask) const {
-  eng.renderer->drawMapAndInterface(false);
+  Renderer::drawMapAndInterface(false);
 
   vector<Pos> trail;
 
@@ -131,8 +131,8 @@ void Marker::draw(const MarkerTask markerTask) const {
     effectiveRange = weapon->effectiveRangeLimit;
   }
 
-  eng.renderer->drawMarker(trail, effectiveRange);
-  eng.renderer->updateScreen();
+  Renderer::drawMarker(trail, effectiveRange);
+  Renderer::updateScreen();
 }
 
 MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
@@ -227,13 +227,13 @@ void Marker::move(const int DX, const int DY, const MarkerTask markerTask,
 }
 
 void Marker::done() {
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   isDone_ = true;
 }
 
 void Marker::cancel() {
   eng.log->clearLog();
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   isDone_ = true;
 }
 

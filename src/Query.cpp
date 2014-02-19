@@ -11,24 +11,24 @@
 using namespace std;
 
 void Query::waitForKeyPress() const {
-  if(Config::isBotPlaying == false) {
-    eng.input->readKeysUntilFound();
+  if(Config::isBotPlaying() == false) {
+    Input::readKeysUntilFound(eng);
   }
 }
 
 YesNoAnswer Query::yesOrNo(char keyForSpecialEvent) const {
-  if(Config::isBotPlaying) {
+  if(Config::isBotPlaying()) {
     return YesNoAnswer::yes;
   }
 
-  KeyboardReadReturnData d = eng.input->readKeysUntilFound();
+  KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
   while(
     d.key_    != 'y'          &&
     d.key_    != 'n'          &&
     d.sdlKey_ != SDLK_ESCAPE  &&
     d.sdlKey_ != SDLK_SPACE   &&
     (d.key_ != keyForSpecialEvent || keyForSpecialEvent == -1)) {
-    d = eng.input->readKeysUntilFound();
+    d = Input::readKeysUntilFound(eng);
   }
   if(d.key_ == keyForSpecialEvent && keyForSpecialEvent != -1) {
     return YesNoAnswer::special;
@@ -43,17 +43,17 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
                   const int MAX_NR_DIGITS, const int DEFAULT,
                   const bool CANCEL_RETURNS_DEFAULT) const {
   int retNum = max(MIN, DEFAULT);
-  eng.renderer->coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+  Renderer::coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
   const string str = (retNum == 0 ? "" : toString(retNum)) + "_";
-  eng.renderer->drawText(str, panel_screen, pos, clr);
-  eng.renderer->updateScreen();
+  Renderer::drawText(str, panel_screen, pos, clr);
+  Renderer::updateScreen();
 
   while(true) {
     KeyboardReadReturnData d;
     while((d.key_ < '0' || d.key_ > '9') && d.sdlKey_ != SDLK_RETURN &&
           d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE &&
           d.sdlKey_ != SDLK_BACKSPACE) {
-      d = eng.input->readKeysUntilFound();
+      d = Input::readKeysUntilFound(eng);
     }
 
     if(d.sdlKey_ == SDLK_RETURN) {
@@ -69,36 +69,36 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
 
     if(d.sdlKey_ == SDLK_BACKSPACE) {
       retNum = retNum / 10;
-      eng.renderer->coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
-      eng.renderer->drawText((retNum == 0 ? "" : toString(retNum)) + "_",
+      Renderer::coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+      Renderer::drawText((retNum == 0 ? "" : toString(retNum)) + "_",
                              panel_screen, pos, clr);
-      eng.renderer->updateScreen();
+      Renderer::updateScreen();
       continue;
     }
 
     if(CUR_NUM_DIGITS < MAX_NR_DIGITS) {
       int curDigit = d.key_ - '0';
       retNum = max(MIN, retNum * 10 + curDigit);
-      eng.renderer->coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
-      eng.renderer->drawText((retNum == 0 ? "" : toString(retNum)) + "_",
+      Renderer::coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+      Renderer::drawText((retNum == 0 ? "" : toString(retNum)) + "_",
                              panel_screen, pos, clr);
-      eng.renderer->updateScreen();
+      Renderer::updateScreen();
     }
   }
   return -1;
 }
 
 void Query::waitForEscOrSpace() const {
-  if(Config::isBotPlaying == false) {
-    KeyboardReadReturnData d = eng.input->readKeysUntilFound();
+  if(Config::isBotPlaying() == false) {
+    KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
     while(d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE) {
-      d = eng.input->readKeysUntilFound();
+      d = Input::readKeysUntilFound(eng);
     }
   }
 }
 
 Pos Query::dir() const {
-  KeyboardReadReturnData d = eng.input->readKeysUntilFound();
+  KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
 
   while(d.sdlKey_ != SDLK_RIGHT && d.sdlKey_ != SDLK_UP &&
         d.sdlKey_ != SDLK_LEFT && d.sdlKey_ != SDLK_DOWN &&
@@ -106,7 +106,7 @@ Pos Query::dir() const {
         d.sdlKey_ != SDLK_PAGEUP && d.sdlKey_ != SDLK_HOME &&
         d.sdlKey_ != SDLK_END && d.sdlKey_ != SDLK_PAGEDOWN &&
         (d.key_ < '1' || d.key_ > '9' || d.key_ == '5')) {
-    d = eng.input->readKeysUntilFound();
+    d = Input::readKeysUntilFound(eng);
   }
 
   if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {

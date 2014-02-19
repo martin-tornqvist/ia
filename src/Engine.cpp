@@ -65,7 +65,6 @@
 #include "Postmortem.h"
 #include "Query.h"
 #include "Reload.h"
-#include "Renderer.h"
 #include "RoomTheme.h"
 #include "SaveHandler.h"
 #include "Sound.h"
@@ -78,7 +77,7 @@
 using namespace std;
 
 void Engine::sleep(const Uint32 DURATION) const {
-  if(Config::isBotPlaying == false) {
+  if(Config::isBotPlaying() == false) {
     sdlWrapper->sleep(DURATION);
   }
 }
@@ -89,24 +88,6 @@ void Engine::initSdl() {
 
 void Engine::cleanupSdl() {
   delete sdlWrapper;
-}
-
-void Engine::initConfig() {
-  trace << "Engine::initConfig()..." << endl;
-  Config::init();
-  trace << "Engine::initConfig() [DONE]" << endl;
-}
-
-void Engine::initRenderer() {
-  trace << "Engine::initRenderer()..." << endl;
-  renderer = new Renderer(*this);
-  trace << "Engine::initRenderer() [DONE]" << endl;
-}
-
-void Engine::cleanupRenderer() {
-  trace << "Engine::cleanupRenderer()..." << endl;
-  delete renderer;
-  trace << "Engine::cleanupRenderer() [DONE]" << endl;
 }
 
 void Engine::initAudio() {
@@ -148,7 +129,6 @@ void Engine::initGame() {
   fov = new Fov(*this);
   sndEmitter = new SndEmitter(*this);
   dungeonMaster = new DungeonMaster(*this);
-  input = new Input(*this);
   dungeonClimb = new DungeonClimb(*this);
   mapTemplateHandler = new MapTemplateHandler();
   itemDrop = new ItemDrop(*this);
@@ -204,7 +184,6 @@ void Engine::cleanupGame() {
   delete sndEmitter;
   delete featureDataHandler;
   delete dungeonMaster;
-  delete input;
   delete dungeonClimb;
   delete actorFactory;
   delete mapTemplateHandler;

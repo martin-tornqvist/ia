@@ -9,8 +9,8 @@ class Engine;
 
 struct KeyboardReadReturnData {
 public:
-  KeyboardReadReturnData() : key_(-1), sdlKey_(SDLK_LAST), isShiftHeld_(false),
-    isCtrlHeld_(false) {}
+  KeyboardReadReturnData() :
+    key_(-1), sdlKey_(SDLK_LAST), isShiftHeld_(false), isCtrlHeld_(false) {}
 
   KeyboardReadReturnData(char key, SDLKey sdlKey, bool isShiftHeld,
                          bool isCtrlHeld) :
@@ -28,25 +28,21 @@ public:
   bool isShiftHeld_, isCtrlHeld_;
 };
 
-class Input {
-public:
-  Input(Engine& engine);
+namespace Input {
 
-  void handleMapModeInputUntilFound();
+void init();
+void cleanup();
 
-  KeyboardReadReturnData readKeysUntilFound();
+void handleMapModeInputUntilFound(Engine& eng);
 
-  void clearEvents();
+KeyboardReadReturnData readKeysUntilFound(Engine& eng);
 
-  void setKeyRepeatDelays();
+void clearEvents();
 
-private:
-  friend class Bot;
-  void handleKeyPress(const KeyboardReadReturnData& d);
-  void queryQuit();
-  SDL_Event event_;
-  int* dungeonLevel_;
-  Engine& eng;
-};
+void setKeyRepeatDelays();
+
+void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng);
+
+} //Input
 
 #endif

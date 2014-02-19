@@ -27,13 +27,13 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   Pos pos(MAP_W_HALF, 3);
 
   trace << "MainMenu: Calling clearWindow()" << endl;
-  eng.renderer->clearScreen();
+  Renderer::clearScreen();
 
-  eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
 //  trace << "MainMenu: Drawing random background letters" << endl;
-//  const int NR_X_CELLS = Config::screenPixelW / Config::cellW;
-//  const int NR_Y_CELLS = Config::screenPixelH / Config::cellH;
+//  const int NR_X_CELLS = Config::screenPixelW / Config::getCellW();
+//  const int NR_Y_CELLS = Config::screenPixelH / Config::getCellH();
 //  const int BG_BRIGHTNESS = Rnd::range(14, 17);
 //  for(int y = 0; y < NR_Y_CELLS; y++) {
 //    for(int x = 0; x < NR_X_CELLS; x++) {
@@ -45,17 +45,17 @@ void MainMenu::draw(const MenuBrowser& browser) const {
 //      bgClr.r = BG_BRIGHTNESS / 2;
 //      bgClr.g = BG_BRIGHTNESS / 2;
 //      bgClr.b = BG_BRIGHTNESS;
-//      eng.renderer->drawGlyph(cha, panel_screen, Pos(x, y), bgClr);
+//      Renderer::drawGlyph(cha, panel_screen, Pos(x, y), bgClr);
 //    }
 //  }
 
-  if(Config::isTilesMode) {
+  if(Config::isTilesMode()) {
     trace << "MainMenu: Calling drawMainMenuLogo()" << endl;
-    eng.renderer->drawMainMenuLogo(0);
+    Renderer::drawMainMenuLogo(0);
     pos.y += 10;
   } else {
     vector<string> logo;
-    if(Config::isTilesMode == false) {
+    if(Config::isTilesMode() == false) {
       logo.push_back("        ___  __                __  __                  ");
       logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
       logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
@@ -70,7 +70,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
           SDL_Color clr = clrGreenLgt;
           clr.g += Rnd::range(-50, 100);
           clr.g = max(0, min(254, int(clr.g)));
-          eng.renderer->drawGlyph(glyph, panel_screen, pos, clr);
+          Renderer::drawGlyph(glyph, panel_screen, pos, clr);
         }
         pos.x++;
       }
@@ -80,7 +80,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   }
 
   if(IS_DEBUG_MODE) {
-    eng.renderer->drawText(
+    Renderer::drawText(
       "## DEBUG MODE ##", panel_screen, Pos(1, 1), clrYellow);
   }
 
@@ -94,7 +94,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   TextFormatting::lineToLines(quote, 28, quoteLines);
   Pos quotePos(15, pos.y - 1);
   for(string & quoteLine : quoteLines) {
-    eng.renderer->drawTextCentered(quoteLine, panel_screen, quotePos, quoteClr);
+    Renderer::drawTextCentered(quoteLine, panel_screen, quotePos, quoteClr);
     quotePos.y++;
   }
 
@@ -108,50 +108,50 @@ void MainMenu::draw(const MenuBrowser& browser) const {
 
   const int BOX_Y0 = pos.y - 1;
 
-  eng.renderer->drawTextCentered(
+  Renderer::drawTextCentered(
     "New journey", panel_screen, pos,
     browser.isPosAtKey('a') ? clrActive : clrInactive,
     browser.isPosAtKey('a') ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
-  eng.renderer->drawTextCentered(
+  Renderer::drawTextCentered(
     "Resurrect", panel_screen, pos,
     browser.isPosAtKey('b') ? clrActive : clrInactive,
     browser.isPosAtKey('b') ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
-  eng.renderer->drawTextCentered(
+  Renderer::drawTextCentered(
     "Manual", panel_screen, pos,
     browser.isPosAtKey('c') ? clrActive : clrInactive,
     browser.isPosAtKey('c') ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
-  eng.renderer->drawTextCentered(
+  Renderer::drawTextCentered(
     "Options", panel_screen, pos,
     browser.isPosAtKey('d') ? clrActive : clrInactive,
     browser.isPosAtKey('d') ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
-  eng.renderer->drawTextCentered(
+  Renderer::drawTextCentered(
     "Credits", panel_screen, pos,
     browser.isPosAtKey('e') ? clrActive : clrInactive,
     browser.isPosAtKey('e') ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
-  eng.renderer->drawTextCentered(
+  Renderer::drawTextCentered(
     "High scores", panel_screen, pos,
     browser.isPosAtKey('f') ? clrActive : clrInactive,
     browser.isPosAtKey('f') ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
-  eng.renderer->drawTextCentered(
+  Renderer::drawTextCentered(
     "Escape to reality", panel_screen, pos,
     browser.isPosAtKey('g') ? clrActive : clrInactive,
     browser.isPosAtKey('g') ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   if(IS_DEBUG_MODE) {
-    eng.renderer->drawTextCentered(
+    Renderer::drawTextCentered(
       "DEBUG: RUN BOT", panel_screen, pos,
       browser.isPosAtKey('h') ? clrActive : clrInactive,
       browser.isPosAtKey('h') ? clrActiveBg : clrInactiveBg);
@@ -162,14 +162,14 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   const int BOX_W_HALF  = 10;
   const int BOX_X0      = pos.x - BOX_W_HALF;
   const int BOX_X1      = pos.x + BOX_W_HALF;
-  eng.renderer->drawPopupBox(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
+  Renderer::drawPopupBox(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
                              panel_screen);
 
-  eng.renderer->drawTextCentered(
+  Renderer::drawTextCentered(
     gameVersionStr + " 2013-11-26 (c) 2011-2014 Martin Tornqvist",
     panel_screen, Pos(MAP_W_HALF, SCREEN_H - 1), clrWhite);
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 
   trace << "MainMenu::draw() [DONE]" << endl;
 }
@@ -216,7 +216,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
             return gameEntry_load;
           } else {
             eng.popup->showMsg("Starting a new character instead.", false,
-                                   "No save available");
+                               "No save available");
             proceed = true;
             return gameEntry_new;
           }
@@ -243,8 +243,8 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
         }
         if(IS_DEBUG_MODE) {
           if(browser.isPosAtKey('h')) {
+            Config::setBotPlaying();
             proceed = true;
-            Config::isBotPlaying = true;
           }
         }
       } break;

@@ -26,7 +26,7 @@ Audio::~Audio() {
 void Audio::initAndClearPrev() {
   freeAssets();
 
-  if(Config::isAudioEnabled) {
+  if(Config::isAudioEnabled()) {
     //Monster sounds
     loadAudioFile(sfxDogSnarl,                "sfx_dogSnarl.ogg");
     loadAudioFile(sfxWolfHowl,                "sfx_wolfHowl.ogg");
@@ -83,10 +83,10 @@ void Audio::initAndClearPrev() {
 void Audio::loadAudioFile(const SfxId sfx, const string& filename) {
   const string fileRelPath = "audio/" + filename;
 
-  eng.renderer->clearScreen();
-  eng.renderer->drawText("Loading " + fileRelPath + "...", panel_screen,
-                          Pos(1, 1), clrWhite);
-  eng.renderer->updateScreen();
+  Renderer::clearScreen();
+  Renderer::drawText("Loading " + fileRelPath + "...", panel_screen,
+                         Pos(1, 1), clrWhite);
+  Renderer::updateScreen();
 
   audioChunks[sfx] = Mix_LoadWAV((fileRelPath).data());
 
@@ -101,9 +101,9 @@ int Audio::play(const SfxId sfx, const int VOL_PERCENT_TOT,
                 const int VOL_PERCENT_L) {
   int ret = -1;
   if(
-    Config::isAudioEnabled &&
+    Config::isAudioEnabled() &&
     sfx != endOfSfxId && sfx != startOfAmbSfx && sfx != endOfAmbSfx &&
-    Config::isBotPlaying == false) {
+    Config::isBotPlaying() == false) {
 
     const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
     const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;

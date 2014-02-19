@@ -59,36 +59,36 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
                                       const int TOP_ELEMENT) const {
   trace << "HighScore::renderHighScoreScreen()..." << endl;
 
-  eng.renderer->clearScreen();
+  Renderer::clearScreen();
 
   const int X_LABEL = 3;
 
   const string decorationLine(MAP_W, '-');
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
 
-  eng.renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ",
+  Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
                          panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
                          clrGray);
 
-  eng.renderer->drawText(" Displaying High Scores ", panel_screen,
+  Renderer::drawText(" Displaying High Scores ", panel_screen,
                          Pos(X_LABEL, 0), clrGray);
 
   int yPos = 1;
 
-  eng.renderer->drawText(
+  Renderer::drawText(
     "Ended",    panel_screen, Pos(X_POS_DATE,     yPos), clrGray);
-  eng.renderer->drawText(
+  Renderer::drawText(
     "Name",     panel_screen, Pos(X_POS_NAME,     yPos), clrGray);
-  eng.renderer->drawText(
+  Renderer::drawText(
     "Score",    panel_screen, Pos(X_POS_SCORE,    yPos), clrGray);
-  eng.renderer->drawText(
+  Renderer::drawText(
     "Level",    panel_screen, Pos(X_POS_LVL,      yPos), clrGray);
-  eng.renderer->drawText(
+  Renderer::drawText(
     "Depth",    panel_screen, Pos(X_POS_DLVL,     yPos), clrGray);
-  eng.renderer->drawText(
+  Renderer::drawText(
     "Insanity", panel_screen, Pos(X_POS_INSANITY, yPos), clrGray);
 
   yPos++;
@@ -107,22 +107,22 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
     const string ins          = toString(entries.at(i).getInsanity());
 
     const SDL_Color& clr = clrNosfTeal;
-    eng.renderer->drawText(
+    Renderer::drawText(
       dateAndTime, panel_screen, Pos(X_POS_DATE,      yPos), clr);
-    eng.renderer->drawText(
+    Renderer::drawText(
       name,        panel_screen, Pos(X_POS_NAME,      yPos), clr);
-    eng.renderer->drawText(
+    Renderer::drawText(
       score,       panel_screen, Pos(X_POS_SCORE,     yPos), clr);
-    eng.renderer->drawText(
+    Renderer::drawText(
       lvl,         panel_screen, Pos(X_POS_LVL,       yPos), clr);
-    eng.renderer->drawText(
+    Renderer::drawText(
       dlvl,        panel_screen, Pos(X_POS_DLVL,      yPos), clr);
-    eng.renderer->drawText(
+    Renderer::drawText(
       ins + "%",   panel_screen, Pos(X_POS_INSANITY,  yPos), clr);
     yPos++;
   }
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 
   trace << "HighScore::renderHighScoreScreen() [DONE]" << endl;
 }
@@ -149,7 +149,7 @@ void HighScore::runHighScoreScreen() {
   while(true) {
     renderHighScoreScreen(entries, topNr);
 
-    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topNr += LINE_JUMP;

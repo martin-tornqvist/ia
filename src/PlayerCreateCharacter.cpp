@@ -15,7 +15,7 @@ void PlayerCreateCharacter::createCharacter() const {
 }
 
 void PlayerCreateCharacter::pickBg() const {
-  if(Config::isBotPlaying) {
+  if(Config::isBotPlaying()) {
     eng.playerBonHandler->pickBg(Bg(Rnd::range(0, endOfBgs - 1)));
   } else {
     vector<Bg> bgs;
@@ -45,10 +45,10 @@ void PlayerCreateCharacter::pickBg() const {
 
 void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
                                        const MenuBrowser& browser) const {
-  eng.renderer->clearScreen();
-  eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+  Renderer::clearScreen();
+  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-  eng.renderer->drawTextCentered("Choose your background", panel_screen,
+  Renderer::drawTextCentered("Choose your background", panel_screen,
                                  Pos(MAP_W_HALF, 0), clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
@@ -74,7 +74,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
     const bool IS_MARKED = bg == markedBg;
     const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
     const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
-    eng.renderer->drawTextCentered(name, panel_screen, Pos(MAP_W_HALF, y),
+    Renderer::drawTextCentered(name, panel_screen, Pos(MAP_W_HALF, y),
                                    drwClr, drwClrBg);
     y++;
   }
@@ -83,7 +83,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
   const int BGS_BOX_W_HALF = 6;
   Rect boxRect(Pos(MAP_W_HALF - BGS_BOX_W_HALF, Y0_BGS - 1),
                Pos(MAP_W_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
-  eng.renderer->drawPopupBox(boxRect);
+  Renderer::drawPopupBox(boxRect);
 
   //------------------------------------------------------------- DESCRIPTION
   const int MARGIN_W_DESCR  = 12;
@@ -96,18 +96,18 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
     vector<string> formattedLines;
     TextFormatting::lineToLines(rawLine, MAX_W_DESCR, formattedLines);
     for(string & line : formattedLines) {
-      eng.renderer->drawText(line, panel_screen, Pos(X0_DESCR, y), clrWhite);
+      Renderer::drawText(line, panel_screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
 //    y++;
   }
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }
 
 void PlayerCreateCharacter::pickNewTrait(
   const bool IS_CHARACTER_CREATION)  const {
 
-  if(Config::isBotPlaying == false) {
+  if(Config::isBotPlaying() == false) {
     vector<TraitId> pickableTraits;
     eng.playerBonHandler->getPickableTraits(pickableTraits);
 
@@ -147,7 +147,7 @@ void PlayerCreateCharacter::pickNewTrait(
             eng.playerBonHandler->pickTrait(
               pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));
             if(IS_CHARACTER_CREATION == false) {
-              eng.renderer->drawMapAndInterface();
+              Renderer::drawMapAndInterface();
             }
             return;
           } break;
@@ -163,8 +163,8 @@ void PlayerCreateCharacter::drawPickTrait(
   const vector<TraitId>& traits1, const vector<TraitId>& traits2,
   const MenuBrowser& browser, const bool IS_CHARACTER_CREATION) const {
 
-  eng.renderer->clearScreen();
-  eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+  Renderer::clearScreen();
+  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   const int NR_TRAITS_1 = traits1.size();
   const int NR_TRAITS_2 = traits2.size();
@@ -186,7 +186,7 @@ void PlayerCreateCharacter::drawPickTrait(
                  "Which additional trait do you start with?" :
                  "You have reached a new level! Which trait do you gain?";
 
-  eng.renderer->drawTextCentered(title, panel_screen, Pos(MAP_W_HALF, 0),
+  Renderer::drawTextCentered(title, panel_screen, Pos(MAP_W_HALF, 0),
                                  clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
@@ -206,7 +206,7 @@ void PlayerCreateCharacter::drawPickTrait(
     const bool IS_MARKED = browserPos.x == 0 && browserPos.y == int(i);
     const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
     const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
-    eng.renderer->drawText(
+    Renderer::drawText(
       name, panel_screen, Pos(X_COL_ONE, y), drwClr, drwClrBg);
     y++;
   }
@@ -218,7 +218,7 @@ void PlayerCreateCharacter::drawPickTrait(
     const bool IS_MARKED = browserPos.x == 1 && browserPos.y == int(i);
     const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
     const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
-    eng.renderer->drawText(
+    Renderer::drawText(
       name, panel_screen, Pos(X_COL_TWO, y), drwClr, drwClrBg);
     y++;
   }
@@ -227,7 +227,7 @@ void PlayerCreateCharacter::drawPickTrait(
   Rect boxRect(
     Pos(MARGIN_W - 2, Y0_TRAITS - 1),
     Pos(X_COL_TWO_RIGHT + 2, Y0_TRAITS + traits1.size()));
-  eng.renderer->drawPopupBox(boxRect);
+  Renderer::drawPopupBox(boxRect);
 
   //------------------------------------------------------------- DESCRIPTION
   const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_1 + 1;
@@ -243,7 +243,7 @@ void PlayerCreateCharacter::drawPickTrait(
   TextFormatting::lineToLines(
     "Effect(s): " + descr, MAX_W_DESCR, descrLines);
   for(const string & str : descrLines) {
-    eng.renderer->drawText(str, panel_screen, Pos(X0_DESCR, y), clrWhite);
+    Renderer::drawText(str, panel_screen, Pos(X0_DESCR, y), clrWhite);
     y++;
   }
 
@@ -254,7 +254,7 @@ void PlayerCreateCharacter::drawPickTrait(
   Bg bgPrereq = endOfBgs;
   eng.playerBonHandler->getTraitPrereqs(markedTrait, traitPrereqs, bgPrereq);
   if(traitPrereqs.empty() == false || bgPrereq != endOfBgs) {
-    eng.renderer->drawText("This trait had the following prerequisite(s):",
+    Renderer::drawText("This trait had the following prerequisite(s):",
                            panel_screen, Pos(X0_DESCR, y), clrWhite);
     y++;
 
@@ -273,7 +273,7 @@ void PlayerCreateCharacter::drawPickTrait(
     vector<string> prereqLines;
     TextFormatting::lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
     for(const string & str : prereqLines) {
-      eng.renderer->drawText(str, panel_screen, Pos(X0_DESCR, y), clrWhite);
+      Renderer::drawText(str, panel_screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
   }
@@ -288,13 +288,13 @@ void PlayerCreateCharacter::drawPickTrait(
     vector<string> pickedLines;
     TextFormatting::lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
     for(const string & str : pickedLines) {
-      eng.renderer->drawText(
+      Renderer::drawText(
         str, panel_screen, Pos(1, y), clrWhite);
       y++;
     }
   }
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }
 
 void PlayerEnterName::run() const {
@@ -302,7 +302,7 @@ void PlayerEnterName::run() const {
   draw(name);
   bool isDone = false;
   while(isDone == false) {
-    if(Config::isBotPlaying) {
+    if(Config::isBotPlaying()) {
       name = "AZATHOTH";
       isDone = true;
     } else {
@@ -314,10 +314,10 @@ void PlayerEnterName::run() const {
 }
 
 void PlayerEnterName::draw(const string& currentString) const {
-  eng.renderer->clearScreen();
-  eng.renderer->drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+  Renderer::clearScreen();
+  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-  eng.renderer->drawTextCentered("What is your name?", panel_screen,
+  Renderer::drawTextCentered("What is your name?", panel_screen,
                                  Pos(MAP_W_HALF, 0), clrWhite);
   const int Y_NAME = 2;
   const string NAME_STR =
@@ -325,15 +325,15 @@ void PlayerEnterName::draw(const string& currentString) const {
     currentString;
   const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
-  eng.renderer->drawText(NAME_STR, panel_screen, Pos(NAME_X0, Y_NAME),
+  Renderer::drawText(NAME_STR, panel_screen, Pos(NAME_X0, Y_NAME),
                          clrNosfTealLgt);
   Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
-  eng.renderer->drawPopupBox(boxRect);
-  eng.renderer->updateScreen();
+  Renderer::drawPopupBox(boxRect);
+  Renderer::updateScreen();
 }
 
 void PlayerEnterName::readKeys(string& currentString, bool& isDone) const {
-  const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
+  const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
 
   if(d.sdlKey_ == SDLK_RETURN) {
     isDone = true;

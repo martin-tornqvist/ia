@@ -190,15 +190,15 @@ void CharacterDescr::drawInterface() {
 
   const int X_LABEL = 3;
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
 
-  eng.renderer->drawText(" Displaying character description ", panel_screen,
+  Renderer::drawText(" Displaying character description ", panel_screen,
                          Pos(X_LABEL, 0), clrWhite);
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
                          clrGray);
 
-  eng.renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ",
+  Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
                          panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
 }
 
@@ -213,16 +213,16 @@ void CharacterDescr::run() {
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
   while(true) {
-    eng.renderer->clearScreen();
+    Renderer::clearScreen();
     drawInterface();
     int yPos = 1;
     for(int i = topNr; i <= btmNr; i++) {
-      eng.renderer->drawText(
+      Renderer::drawText(
         lines.at(i).str , panel_screen, Pos(0, yPos++), lines.at(i).clr);
     }
-    eng.renderer->updateScreen();
+    Renderer::updateScreen();
 
-    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topNr += LINE_JUMP;
@@ -238,5 +238,5 @@ void CharacterDescr::run() {
     }
     btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
   }
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }

@@ -488,7 +488,7 @@ void Inventory::swapWieldedAndPrepared(
   slot1->item = item2;
   slot2->item = item1;
 
-  engine.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   engine.gameTime->actorDidAct(IS_FREE_TURN);
 }

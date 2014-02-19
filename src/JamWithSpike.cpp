@@ -16,18 +16,18 @@ void JamWithSpike::playerJam() const {
 
   if(eng.player->getInv().hasItemInGeneral(item_ironSpike) == false) {
     eng.log->addMsg("I have no spikes to jam with.", clrWhite);
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     return;
   }
 
   eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   const Pos jamPos(eng.player->pos + eng.query->dir());
   eng.log->clearLog();
 
   playerJamFeature(eng.map->cells[jamPos.x][jamPos.y].featureStatic);
 
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 void JamWithSpike::playerJamFeature(Feature* const feature) const {

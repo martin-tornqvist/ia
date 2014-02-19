@@ -47,15 +47,15 @@ void Manual::drawManualInterface() {
 
   const int X_LABEL = 3;
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
 
-  eng.renderer->drawText(" Displaying manual ", panel_screen, Pos(X_LABEL, 0),
+  Renderer::drawText(" Displaying manual ", panel_screen, Pos(X_LABEL, 0),
                          clrGray);
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
                          clrGray);
 
-  eng.renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ",
+  Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
                          panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 
@@ -68,16 +68,16 @@ void Manual::run() {
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
   while(true) {
-    eng.renderer->clearScreen();
+    Renderer::clearScreen();
     drawManualInterface();
     int yPos = 1;
     for(int i = topNr; i <= btmNr; i++) {
-      eng.renderer->drawText(lines.at(i), panel_screen, Pos(0, yPos++),
+      Renderer::drawText(lines.at(i), panel_screen, Pos(0, yPos++),
                              clrWhite);
     }
-    eng.renderer->updateScreen();
+    Renderer::updateScreen();
 
-    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topNr += LINE_JUMP;

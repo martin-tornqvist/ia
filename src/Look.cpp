@@ -121,17 +121,17 @@ void Look::printExtraActorDescription(const Pos& pos) const {
 
       const unsigned int NR_OF_LINES = formattedText.size();
 
-      eng.renderer->drawMapAndInterface(false);
+      Renderer::drawMapAndInterface(false);
       eng.marker->draw(markerTask_look);
-      eng.renderer->coverArea(panel_screen, Pos(0, 1), Pos(1, NR_OF_LINES));
+      Renderer::coverArea(panel_screen, Pos(0, 1), Pos(1, NR_OF_LINES));
 
       int y = 1;
       for(string & s : formattedText) {
-        eng.renderer->drawText(s, panel_screen, Pos(0, y), clrWhiteHigh);
+        Renderer::drawText(s, panel_screen, Pos(0, y), clrWhiteHigh);
         y++;
       }
 
-      eng.renderer->updateScreen();
+      Renderer::updateScreen();
 
       eng.query->waitForKeyPress();
     }

@@ -432,7 +432,7 @@ bool Khephren::onActorTurn_() {
               monster->leader = this;
               freeCells.erase(freeCells.begin());
             }
-            eng.renderer->drawMapAndInterface();
+            Renderer::drawMapAndInterface();
             hasSummonedLocusts = true;
             eng.gameTime->actorDidAct();
             return true;
@@ -504,7 +504,7 @@ bool KeziahMason::onActorTurn_() {
               Actor* const actor =
                 eng.actorFactory->spawnActor(actor_brownJenkin, c);
               Monster* jenkin = dynamic_cast<Monster*>(actor);
-              eng.renderer->drawMapAndInterface();
+              Renderer::drawMapAndInterface();
               hasSummonedJenkin = true;
               jenkin->awareOfPlayerCounter_ = 999;
               jenkin->leader = this;
@@ -785,7 +785,7 @@ bool MajorClaphamLee::onActorTurn_() {
             monsterIds.push_back(id);
           }
           eng.actorFactory->summonMonsters(pos, monsterIds, true, this);
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
           hasSummonedTombLegions = true;
           eng.player->incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
           eng.gameTime->actorDidAct();

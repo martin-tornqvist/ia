@@ -236,7 +236,7 @@ bool Tomb::open() {
     if(IS_SEEN)eng.log->addMsg("There is nothing of value inside.");
   }
   if(IS_SEEN) {isContentKnown_ = isTraitKnown_ = true;}
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   return true;
 }
 
@@ -466,7 +466,7 @@ bool Chest::open() {
     isTrapStatusKnown_  = true;
   }
   isLocked_ = false;
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   return true;
 }
 
@@ -810,7 +810,7 @@ bool Cabinet::open() {
     if(IS_SEEN) eng.log->addMsg("There is nothing of value inside.");
   }
   if(IS_SEEN) isContentKnown_ = true;
-  eng.renderer->drawMapAndInterface(true);
+  Renderer::drawMapAndInterface(true);
   return true;
 }
 
@@ -881,7 +881,7 @@ bool Cocoon::open() {
     if(IS_SEEN) eng.log->addMsg("There is nothing of value inside.");
   }
   if(IS_SEEN) isContentKnown_ = true;
-  eng.renderer->drawMapAndInterface(true);
+  Renderer::drawMapAndInterface(true);
 
   return true;
 }

@@ -239,7 +239,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   }
 
   if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
 
     if(PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
       const string name = specificTrap_->getTitle();

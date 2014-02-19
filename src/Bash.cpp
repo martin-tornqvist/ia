@@ -17,7 +17,7 @@ void Bash::playerBash() const {
 
   eng.log->clearLog();
   eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   Pos bashPos(eng.player->pos + eng.query->dir());
   eng.log->clearLog();
 

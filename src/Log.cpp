@@ -27,14 +27,14 @@ void Log::drawLine(const vector<Msg>& lineToDraw, const int Y_POS) const {
   for(const Msg & msg : lineToDraw) {
     string str = "";
     msg.getStrWithRepeats(str);
-    eng.renderer->drawText(str, panel_log, Pos(msg.xPos_, Y_POS), msg.clr_);
+    Renderer::drawText(str, panel_log, Pos(msg.xPos_, Y_POS), msg.clr_);
   }
 }
 
 void Log::drawLog(const bool SHOULD_UPDATE_SCREEN) const {
-  eng.renderer->coverArea(panel_log, Pos(0, 0), Pos(MAP_W, 2));
+  Renderer::coverArea(panel_log, Pos(0, 0), Pos(MAP_W, 2));
   for(int i = 0; i < 2; i++) drawLine(lines[i], i);
-  if(SHOULD_UPDATE_SCREEN) eng.renderer->updateScreen();
+  if(SHOULD_UPDATE_SCREEN) Renderer::updateScreen();
 }
 
 void Log::promptAndClearLog() {
@@ -54,10 +54,10 @@ void Log::promptAndClearLog() {
     }
   }
 
-  eng.renderer->drawText(
+  Renderer::drawText(
     moreStr, panel_log, Pos(xPos, lineNr), clrBlack, clrGray);
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
   eng.query->waitForKeyPress();
   clearLog();
 }
@@ -123,15 +123,15 @@ void Log::displayHistory() {
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
   while(true) {
-    eng.renderer->clearScreen();
+    Renderer::clearScreen();
     drawHistoryInterface(topNr, btmNr);
     int yPos = 1;
     for(int i = topNr; i <= btmNr; i++) {
       drawLine(history.at(i), yPos++);
     }
-    eng.renderer->updateScreen();
+    Renderer::updateScreen();
 
-    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topNr += LINE_JUMP;
       if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
@@ -147,31 +147,31 @@ void Log::displayHistory() {
     btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
   }
 
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 void Log::drawHistoryInterface(const int TOP_LINE_NR,
                                const int BTM_LINE_NR) const {
   const string decorationLine(MAP_W, '-');
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
 
   const int X_LABEL = 3;
 
   if(history.empty()) {
-    eng.renderer->drawText(" No message history ", panel_screen,
+    Renderer::drawText(" No message history ", panel_screen,
                            Pos(X_LABEL, 0), clrGray);
   } else {
-    eng.renderer->drawText(
+    Renderer::drawText(
       " Displaying messages " + toString(TOP_LINE_NR + 1) + "-" +
       toString(BTM_LINE_NR + 1) + " of " +
       toString(history.size()) + " ", panel_screen, Pos(X_LABEL, 0), clrGray);
   }
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
                          clrGray);
 
-  eng.renderer->drawText(" 2/8, down/up to navigate | space/esc to exit ",
+  Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
                          panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 

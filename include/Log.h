@@ -80,7 +80,7 @@ private:
 
   std::vector<Msg> lines[2];
 
-  const Engine& eng;
+  Engine& eng;
 
   friend class Postmortem;
   std::vector< std::vector<Msg> > history;

@@ -45,11 +45,11 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     const char glyph = eng.itemDataHandler->dataList[item_dynamite]->glyph;
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(unsigned int i = 1; i < path.size() - 1; i++) {
-      eng.renderer->drawMapAndInterface(false);
+      Renderer::drawMapAndInterface(false);
       if(eng.map->cells[path[i].x][path[i].y].isSeenByPlayer) {
-        eng.renderer->drawGlyph(glyph, panel_map, path[i], clr);
-        eng.renderer->updateScreen();
-        eng.sleep(Config::delayProjectileDraw);
+        Renderer::drawGlyph(glyph, panel_map, path[i], clr);
+        Renderer::updateScreen();
+        eng.sleep(Config::getDelayProjectileDraw());
       }
     }
   }
@@ -73,7 +73,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     }
     eng.gameTime->updateLightMap();
     eng.player->updateFov();
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
   } else {
     eng.log->addMsg("I throw a lit Molotov Cocktail.");
     const int EXPL_RADI_CHANGE =
@@ -113,7 +113,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
         actorThrowing.getNameThe() + " throws " + itemName_a + ".");
     }
   }
-  eng.renderer->drawMapAndInterface(true);
+  Renderer::drawMapAndInterface(true);
 
   int blockedInElement = -1;
   bool isActorHit = false;
@@ -126,7 +126,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   Pos curPos(-1, -1);
 
   for(unsigned int i = 1; i < path.size(); i++) {
-    eng.renderer->drawMapAndInterface(false);
+    Renderer::drawMapAndInterface(false);
 
     curPos.set(path.at(i));
 
@@ -144,10 +144,10 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           data->attackResult >= successSmall &&
           data->isEtherealDefenderMissed == false) {
           if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-            eng.renderer->drawGlyph('*', panel_map,
+            Renderer::drawGlyph('*', panel_map,
                                     curPos, clrRedLgt);
-            eng.renderer->updateScreen();
-            eng.sleep(Config::delayProjectileDraw * 4);
+            Renderer::updateScreen();
+            eng.sleep(Config::getDelayProjectileDraw() * 4);
           }
           const SDL_Color hitMessageClr =
             actorHere == eng.player ? clrMsgBad : clrMsgGood;
@@ -178,9 +178,9 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     }
 
     if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-      eng.renderer->drawGlyph(glyph, panel_map, curPos, clr);
-      eng.renderer->updateScreen();
-      eng.sleep(Config::delayProjectileDraw);
+      Renderer::drawGlyph(glyph, panel_map, curPos, clr);
+      Renderer::updateScreen();
+      eng.sleep(Config::getDelayProjectileDraw());
     }
 
     const Feature* featureHere =
@@ -232,6 +232,6 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   }
 
   delete data;
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   eng.gameTime->actorDidAct();
 }

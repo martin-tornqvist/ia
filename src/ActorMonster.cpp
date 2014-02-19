@@ -284,7 +284,7 @@ void Monster::becomeAware(const bool IS_FROM_SEEING) {
     if(AWARENESS_CNT_BEFORE <= 0) {
       if(IS_FROM_SEEING && eng.player->isSeeingActor(*this, NULL)) {
         eng.player->updateFov();
-        eng.renderer->drawMapAndInterface(true);
+        Renderer::drawMapAndInterface(true);
         eng.log->addMsg(getNameThe() + " sees me!");
       }
       if(Rnd::coinToss()) {

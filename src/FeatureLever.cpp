@@ -35,7 +35,7 @@ void FeatureLever::pull() {
     doorLinkedTo_->isStuck_ = false;
   }
   eng.player->updateFov();
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   trace << "FeatureLever::pull() [DONE]" << endl;
 }
 

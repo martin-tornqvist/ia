@@ -75,7 +75,7 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
 
   if(currentActor == eng.player) {
     eng.player->updateFov();
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     eng.playerVisualMemory->updateVisualMemory();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);

@@ -188,20 +188,20 @@ SpellCastRetData SpellDarkbolt::cast_(
 
   vector<Pos> line;
   eng.lineCalc->calcNewLine(caster->pos, target->pos, true, 999, false, line);
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   const int LINE_SIZE = line.size();
   for(int i = 1; i < LINE_SIZE; i++) {
     const Pos& pos = line.at(i);
-    if(Config::isTilesMode) {
-      eng.renderer->drawTile(tile_blast1, panel_map, pos, clrMagenta);
+    if(Config::isTilesMode()) {
+      Renderer::drawTile(tile_blast1, panel_map, pos, clrMagenta);
     } else {
-      eng.renderer->drawGlyph('*', panel_map, pos, clrMagenta);
+      Renderer::drawGlyph('*', panel_map, pos, clrMagenta);
     }
-    eng.renderer->updateScreen();
-    eng.sdlWrapper->sleep(Config::delayProjectileDraw);
+    Renderer::updateScreen();
+    eng.sdlWrapper->sleep(Config::getDelayProjectileDraw());
   }
 
-  eng.renderer->drawBlastAnimAtPositions(
+  Renderer::drawBlastAnimAtPositions(
     vector<Pos> {target->pos}, clrMagenta);
 
   const string msgCmn = " struck by a blast!";
@@ -263,7 +263,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
       vector<Pos> actorPositions; actorPositions.resize(0);
       for(Actor * a : targets) {actorPositions.push_back(a->pos);}
 
-      eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
+      Renderer::drawBlastAnimAtPositionsWithPlayerVision(
         actorPositions, clrRedLgt);
 
       for(Actor * actor : targets) {
@@ -283,7 +283,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     }
   } else {
     eng.log->addMsg("I am " + msgEnd, clrMsgBad);
-    eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
+    Renderer::drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos> {eng.player->pos}, clrRedLgt);
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecific, 1));
@@ -397,7 +397,7 @@ SpellCastRetData SpellPestilence::cast_(
     }
   }
 
-  eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
+  Renderer::drawBlastAnimAtPositionsWithPlayerVision(
     positions, clrMagenta);
 
   for(Pos & pos : positions) {
@@ -442,11 +442,11 @@ SpellCastRetData SpellDetectItems::cast_(
     }
   }
   if(itemsRevealedPositions.empty() == false) {
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     eng.player->updateFov();
-    eng.renderer->drawBlastAnimAtPositions(
+    Renderer::drawBlastAnimAtPositions(
       itemsRevealedPositions, clrWhite);
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
 
     if(itemsRevealedPositions.size() == 1) {
       eng.log->addMsg("An item is revealed to me.");
@@ -481,11 +481,11 @@ SpellCastRetData SpellDetectTraps::cast_(
   }
 
   if(trapsRevealedPositions.empty() == false) {
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     eng.player->updateFov();
-    eng.renderer->drawBlastAnimAtPositions(
+    Renderer::drawBlastAnimAtPositions(
       trapsRevealedPositions, clrWhite);
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     if(trapsRevealedPositions.size() == 1) {
       eng.log->addMsg("A hidden trap is revealed to me.");
     }
@@ -544,11 +544,11 @@ SpellCastRetData SpellOpening::cast_(
   }
 
   if(featuresOpenedPositions.empty() == false) {
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     eng.player->updateFov();
-    eng.renderer->drawBlastAnimAtPositions(
+    Renderer::drawBlastAnimAtPositions(
       featuresOpenedPositions, clrWhite);
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     return SpellCastRetData(true);
   } else {
     return SpellCastRetData(false);
@@ -696,7 +696,7 @@ SpellCastRetData SpellEnfeeble::cast_(
 
       for(Actor * a : targets) {actorPositions.push_back(a->pos);}
 
-      eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
+      Renderer::drawBlastAnimAtPositionsWithPlayerVision(
         actorPositions, clrMagenta);
 
       for(Actor * actor : targets) {
@@ -707,7 +707,7 @@ SpellCastRetData SpellEnfeeble::cast_(
       return SpellCastRetData(true);
     }
   } else {
-    eng.renderer->drawBlastAnimAtPositionsWithPlayerVision(
+    Renderer::drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos>(1, eng.player->pos), clrMagenta);
 
     PropHandler& propHandler = eng.player->getPropHandler();

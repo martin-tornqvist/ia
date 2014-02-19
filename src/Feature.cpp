@@ -181,7 +181,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
   eng.gameTime->actorDidAct();
 
   eng.player->updateFov();
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 void FeatureStatic::bash_(Actor& actorTrying) {
@@ -258,7 +258,7 @@ void Stairs::bump(Actor& actorBumping) {
       eng.quitToMainMenu_ = true;
     } else {
       eng.log->clearLog();
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
   }
 }

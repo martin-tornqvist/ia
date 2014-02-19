@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include <memory>
+
 #include "Engine.h"
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
@@ -32,37 +34,45 @@
 #include "Hide.h"
 #include "Popup.h"
 
-Input::Input(Engine& engine) : eng(engine)  {
-  setKeyRepeatDelays();
-}
+using namespace std;
 
-void Input::setKeyRepeatDelays() {
-  trace << "Input::setKeyRepeatDelays()..." << endl;
-  SDL_EnableKeyRepeat(
-    Config::keyRepeatDelay, Config::keyRepeatInterval);
-  trace << "Input::setKeyRepeatDelays() [DONE]" << endl;
-}
+namespace Input {
 
-void Input::handleMapModeInputUntilFound() {
-  const KeyboardReadReturnData& d = readKeysUntilFound();
-  if(eng.quitToMainMenu_ == false) {
-    handleKeyPress(d);
-  }
-}
+//---------------------------------------------------------------- LOCAL
+namespace {
 
-void Input::queryQuit() {
+SDL_Event* event_ = NULL;
+
+void queryQuit(Engine& eng) {
   const vector<string> quitChoices = vector<string> {"yes", "no"};
   const int QUIT_CHOICE = eng.popup->showMenuMsg(
                             "Save and highscore are not kept.",
                             false, quitChoices, "Quit the current game?");
   if(QUIT_CHOICE == 0) {
     eng.quitToMainMenu_ = true;
-    eng.renderer->clearScreen();
-    eng.renderer->updateScreen();
+    Renderer::clearScreen();
+    Renderer::updateScreen();
   }
 }
 
-void Input::handleKeyPress(const KeyboardReadReturnData& d) {
+} //Namespace
+
+//---------------------------------------------------------------- GLOBAL
+void init() {
+  if(event_ == NULL) {
+    event_ = new SDL_Event;
+  }
+  setKeyRepeatDelays();
+}
+
+void cleanup() {
+  if(event_ != NULL) {
+    delete event_;
+    event_ = NULL;
+  }
+}
+
+void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
   //----------------------------------- MOVEMENT
   if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
     if(eng.player->deadState == actorDeadState_alive) {
@@ -183,7 +193,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     eng.log->clearLog();
     if(eng.player->deadState == actorDeadState_alive) {
       eng.bash->playerBash();
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
     clearEvents();
     return;
@@ -243,7 +253,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
             wpn->getData().rangedHasInfiniteAmmo
           ) {
             eng.marker->run(markerTask_aimRangedWeapon, NULL);
-          } else if(Config::useRangedWpnAutoReload) {
+          } else if(Config::isRangedWpnAutoReload()) {
             eng.reload->reloadWieldedWpn(*(eng.player));
           } else {
             eng.log->addMsg("There is no ammo loaded.");
@@ -372,7 +382,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng.gameTime->actorDidAct();
       } else {
         eng.log->addMsg("Not while an enemy is near.");
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
       }
     }
     clearEvents();
@@ -471,14 +481,14 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
       if(CHOICE == 0) {
         //---------------------------- Options
         Config::runOptionsMenu(eng);
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
       } else if(CHOICE == 1) {
         //---------------------------- Manual
         eng.manual->run();
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
       } else if(CHOICE == 2) {
         //---------------------------- Quit
-        queryQuit();
+        queryQuit(eng);
       }
     } else {
       eng.quitToMainMenu_ = true;
@@ -487,7 +497,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
     return;
   } else if(d.key_ == 'Q' && IS_DEBUG_MODE) {
     //----------------------------------- MENU
-    queryQuit();
+    queryQuit(eng);
     clearEvents();
     return;
   }
@@ -522,7 +532,7 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
         eng.isCheatVisionEnabled_ = true;
       }
       eng.player->updateFov();
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
     clearEvents();
   }
@@ -590,30 +600,51 @@ void Input::handleKeyPress(const KeyboardReadReturnData& d) {
   }
 }
 
-void Input::clearEvents() {
-  while(SDL_PollEvent(&event_)) {}
+void setKeyRepeatDelays() {
+  trace << "Input::setKeyRepeatDelays()..." << endl;
+  const int DELAY     = Config::getKeyRepeatDelay();
+  const int INTERVAL  = Config::getKeyRepeatInterval();
+  SDL_EnableKeyRepeat(DELAY, INTERVAL);
+  trace << "Input::setKeyRepeatDelays() [DONE]" << endl;
 }
 
-KeyboardReadReturnData Input::readKeysUntilFound() {
+void handleMapModeInputUntilFound(Engine& eng) {
+  if(event_ != NULL) {
+    const KeyboardReadReturnData& d = readKeysUntilFound(eng);
+    if(eng.quitToMainMenu_ == false) {
+      handleKeyPress(d, eng);
+    }
+  }
+}
+
+void clearEvents() {
+  if(event_ != NULL) {while(SDL_PollEvent(event_)) {}}
+}
+
+KeyboardReadReturnData readKeysUntilFound(Engine& eng) {
+  if(event_ == NULL) {
+    return KeyboardReadReturnData();
+  }
+
   while(true) {
 
     eng.sleep(1);
 
-    while(SDL_PollEvent(&event_)) {
-      if(event_.type == SDL_QUIT) {
+    while(SDL_PollEvent(event_)) {
+      if(event_->type == SDL_QUIT) {
         return KeyboardReadReturnData(SDLK_ESCAPE);
-      } else if(event_.type == SDL_KEYDOWN) {
+      } else if(event_->type == SDL_KEYDOWN) {
         // ASCII char entered?
         // Decimal unicode:
         // '!' = 33
         // '~' = 126
-        const Uint16 UNICODE = event_.key.keysym.unicode;
+        const Uint16 UNICODE = event_->key.keysym.unicode;
         if(UNICODE >= 33 && UNICODE < 126) {
           clearEvents();
           return KeyboardReadReturnData(char(UNICODE));
         } else {
           // Other key pressed? (escape, return, space, etc)
-          const SDLKey sdlKey = event_.key.keysym.sym;
+          const SDLKey sdlKey = event_->key.keysym.sym;
 
           // Don't register shift, control or alt as actual key events
           if(
@@ -673,3 +704,6 @@ KeyboardReadReturnData Input::readKeysUntilFound() {
     }
   }
 }
+
+} //Input
+

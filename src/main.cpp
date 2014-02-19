@@ -21,6 +21,7 @@
 #include "DebugModeStatPrinter.h"
 #include "Audio.h"
 #include "Bot.h"
+#include "Input.h"
 
 #ifdef _WIN32
 #undef main
@@ -33,8 +34,9 @@ int main(int argc, char* argv[]) {
 
   Engine eng;
   eng.initSdl();
-  eng.initConfig();
-  eng.initRenderer();
+  Config::init();
+  Input::init();
+  Renderer::init(eng);
   eng.initAudio();
 
   bool quitGame = false;
@@ -49,7 +51,7 @@ int main(int argc, char* argv[]) {
       eng.quitToMainMenu_ = false;
 
       if(gameEntryType == gameEntry_new) {
-        if(Config::isBotPlaying) {
+        if(Config::isBotPlaying()) {
           eng.playerBonHandler->setAllTraitsToPicked();
           eng.bot->init();
         }
@@ -58,10 +60,10 @@ int main(int argc, char* argv[]) {
 
         eng.gameTime->insertActorInLoop(eng.player);
 
-        if(Config::isIntroLevelSkipped == false) {
+        if(Config::isIntroLevelSkipped() == false) {
           //If intro level is used, build forest.
-          eng.renderer->coverPanel(panel_screen);
-          eng.renderer->updateScreen();
+          Renderer::coverPanel(panel_screen);
+          Renderer::updateScreen();
           MapGenIntroForest(eng).run();
         } else {
           //Else build first dungeon level
@@ -75,10 +77,10 @@ int main(int argc, char* argv[]) {
       eng.audio->fadeOutChannel(introMusChannel);
 
       eng.player->updateFov();
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
 
       if(gameEntryType == gameEntry_new) {
-        if(Config::isIntroLevelSkipped == 0) {
+        if(Config::isIntroLevelSkipped() == 0) {
           string introMessage = "I stand on a cobbled forest path, ahead lies a shunned and decrepit old church building. ";
           introMessage += "From years of investigation and discreet inquiries, I know this to be the access point to the abhorred ";
           introMessage += "\"Cult of Starry Wisdom\". ";
@@ -119,7 +121,7 @@ int main(int argc, char* argv[]) {
           eng.log->addMsg(
             "=== I AM DEAD === (press any key to view postmortem information)",
             clrMsgBad);
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
           eng.log->clearLog();
           eng.query->waitForKeyPress();
           eng.highScore->gameOver(false);
@@ -131,7 +133,8 @@ int main(int argc, char* argv[]) {
     eng.cleanupGame();
   }
   eng.cleanupAudio();
-  eng.cleanupRenderer();
+  Renderer::cleanup();
+  Input::cleanup();
   eng.cleanupSdl();
 
   trace << "main() [DONE]" << endl;

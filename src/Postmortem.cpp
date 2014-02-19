@@ -163,7 +163,7 @@ void Postmortem::makeInfoLines() {
       }
     }
   }
-  eng.renderer->drawMap(); //To set the glyph array
+  Renderer::drawMap(); //To set the glyph array
   for(int y = 0; y < MAP_H; y++) {
     string currentRow = "";
     for(int x = 0; x < MAP_W; x++) {
@@ -171,20 +171,20 @@ void Postmortem::makeInfoLines() {
         currentRow.push_back('@');
       } else {
         if(
-          eng.renderer->renderArray[x][y].glyph == ' ' &&
+          Renderer::renderArray_[x][y].glyph == ' ' &&
           (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1)) {
           currentRow.push_back('*');
         } else {
-          if(eng.renderer->renderArray[x][y].glyph ==
+          if(Renderer::renderArray_[x][y].glyph ==
               eng.featureDataHandler->getData(feature_stoneWall)->glyph
-             || eng.renderer->renderArray[x][y].glyph ==
+              || Renderer::renderArray_[x][y].glyph ==
               eng.featureDataHandler->getData(feature_rubbleHigh)->glyph) {
             currentRow.push_back('#');
-          } else if(eng.renderer->renderArray[x][y].glyph ==
-              eng.featureDataHandler->getData(feature_statue)->glyph) {
+          } else if(Renderer::renderArray_[x][y].glyph ==
+                    eng.featureDataHandler->getData(feature_statue)->glyph) {
             currentRow.push_back('M');
           } else {
-            currentRow.push_back(eng.renderer->renderArray[x][y].glyph);
+            currentRow.push_back(Renderer::renderArray_[x][y].glyph);
           }
         }
       }
@@ -197,21 +197,21 @@ void Postmortem::makeInfoLines() {
 }
 
 void Postmortem::renderInfo(const int TOP_ELEMENT) {
-  eng.renderer->clearScreen();
+  Renderer::clearScreen();
 
   const string decorationLine(MAP_W, '-');
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
 
   const int X_LABEL = 3;
 
-  eng.renderer->drawText(" Displaying postmortem information ", panel_screen,
-                         Pos(X_LABEL, 0), clrGray);
+  Renderer::drawText(" Displaying postmortem information ", panel_screen,
+                     Pos(X_LABEL, 0), clrGray);
 
-  eng.renderer->drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
-                         clrGray);
+  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+                     clrGray);
 
-  eng.renderer->drawText(" 2/8, down/up to navigate | space/esc to exit  ",
-                         panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+  Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit  ",
+                     panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   const int NR_LINES_TOT = int(postmortemLines.size());
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
@@ -221,12 +221,12 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
     int i = TOP_ELEMENT;
     i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++) {
-    eng.renderer->drawText(
+    Renderer::drawText(
       postmortemLines.at(i).str, panel_screen, Pos(0, yPos++),
       postmortemLines.at(i).clr);
   }
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }
 
 void Postmortem::runInfo() {
@@ -239,7 +239,7 @@ void Postmortem::runInfo() {
   while(true) {
     renderInfo(topNr);
 
-    const KeyboardReadReturnData& d = eng.input->readKeysUntilFound();
+    const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
 
     if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
       topNr += LINE_JUMP;
@@ -343,49 +343,49 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
 
   file.close();
 
-  eng.renderer->coverPanel(panel_screen);
+  Renderer::coverPanel(panel_screen);
 
   Pos pos(1, 1);
 
   for(unsigned int i = 0; i < art.size(); i++) {
-    eng.renderer->drawText(art.at(i), panel_screen, pos, clrWhiteHigh);
+    Renderer::drawText(art.at(i), panel_screen, pos, clrWhiteHigh);
     pos.y += 1;
   }
 
   pos.set(45, 18);
   const string NAME_STR = eng.player->getData().name_a;
-  eng.renderer->drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
+  Renderer::drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;
 //  const string LVL_STR = "LVL " + toString(eng.dungeonMaster->getLevel());
-//  eng.renderer->drawTextCentered(LVL_STR, panel_screen, pos, clrWhiteHigh);
+//  Renderer::drawTextCentered(LVL_STR, panel_screen, pos, clrWhiteHigh);
 
   //Draw command labels
   pos.set(55, 14);
-  eng.renderer->drawText(
+  Renderer::drawText(
     "a) Information", panel_screen, pos,
     browser.isPosAtKey('a') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng.renderer->drawText(
+  Renderer::drawText(
     "b) View the High Score", panel_screen, pos,
     browser.isPosAtKey('b') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng.renderer->drawText(
+  Renderer::drawText(
     "c) View messages", panel_screen, pos,
     browser.isPosAtKey('c') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng.renderer->drawText(
+  Renderer::drawText(
     "d) Return to main menu", panel_screen, pos,
     browser.isPosAtKey('d') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng.renderer->drawText(
+  Renderer::drawText(
     "e) Quit the game", panel_screen, pos,
     browser.isPosAtKey('e') ? clrWhite : clrRedLgt);
   pos.y += 1;
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }

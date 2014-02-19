@@ -17,7 +17,7 @@ void playerDisarm(Engine& eng) {
   //with some potentially horrible results
   if(eng.player->getPropHandler().allowSee()) {
     eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
 
     const Pos disarmPos(eng.player->pos + eng.query->dir());
 
@@ -25,11 +25,11 @@ void playerDisarm(Engine& eng) {
     if(disarmPos != eng.player->pos) {
       eng.map->cells[disarmPos.x][disarmPos.y].featureStatic->disarm();
     }
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
   } else {
     eng.log->addMsg("Not while blind.");
   }
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 } //Disarm

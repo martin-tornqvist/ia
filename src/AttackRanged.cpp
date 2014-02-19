@@ -40,7 +40,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const ActorSize aimLevel =
     projectiles.at(0)->attackData->intendedAimLevel;
 
-  const int DELAY = Config::delayProjectileDraw / (IS_MACHINE_GUN ? 2 : 1);
+  const int DELAY = Config::getDelayProjectileDraw() / (IS_MACHINE_GUN ? 2 : 1);
 
   printRangedInitiateMessages(*projectiles.at(0)->attackData);
 
@@ -152,23 +152,23 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
             if(curProj->attackData->attackResult >= successSmall) {
               //RENDER ACTOR HIT
               if(curProj->isVisibleToPlayer) {
-                if(Config::isTilesMode) {
+                if(Config::isTilesMode()) {
                   curProj->setTile(tile_blast1, clrRedLgt);
-                  eng.renderer->drawProjectiles(projectiles);
+                  Renderer::drawProjectiles(projectiles);
                   eng.sleep(DELAY / 2);
                   curProj->setTile(tile_blast2, clrRedLgt);
-                  eng.renderer->drawProjectiles(projectiles);
+                  Renderer::drawProjectiles(projectiles);
                   eng.sleep(DELAY / 2);
                 } else {
                   curProj->setGlyph('*', clrRedLgt);
-                  eng.renderer->drawProjectiles(projectiles);
+                  Renderer::drawProjectiles(projectiles);
                   eng.sleep(DELAY);
                 }
 
                 //MESSAGES FOR ACTOR HIT
                 printProjectileAtActorMessages(*curProj->attackData, true);
                 //Need to draw again here to show log message
-                eng.renderer->drawProjectiles(projectiles);
+                Renderer::drawProjectiles(projectiles);
               }
 
               curProj->isDoneRendering = true;
@@ -231,16 +231,16 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
           //RENDER FEATURE HIT
           if(curProj->isVisibleToPlayer) {
-            if(Config::isTilesMode) {
+            if(Config::isTilesMode()) {
               curProj->setTile(tile_blast1, clrYellow);
-              eng.renderer->drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
               curProj->setTile(tile_blast2, clrYellow);
-              eng.renderer->drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              eng.renderer->drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles);
               eng.sleep(DELAY);
             }
           }
@@ -263,16 +263,16 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
           //RENDER GROUND HITS
           if(curProj->isVisibleToPlayer) {
-            if(Config::isTilesMode) {
+            if(Config::isTilesMode()) {
               curProj->setTile(tile_blast1, clrYellow);
-              eng.renderer->drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
               curProj->setTile(tile_blast2, clrYellow);
-              eng.renderer->drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles);
               eng.sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              eng.renderer->drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles);
               eng.sleep(DELAY);
             }
           }
@@ -280,12 +280,12 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         //RENDER FLYING PROJECTILES
         if(curProj->isObstructed == false && curProj->isVisibleToPlayer) {
-          if(Config::isTilesMode) {
+          if(Config::isTilesMode()) {
             curProj->setTile(projectileTile, projectileColor);
-            eng.renderer->drawProjectiles(projectiles);
+            Renderer::drawProjectiles(projectiles);
           } else {
             curProj->setGlyph(projectileGlyph, projectileColor);
-            eng.renderer->drawProjectiles(projectiles);
+            Renderer::drawProjectiles(projectiles);
           }
         }
       }
@@ -331,7 +331,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     delete projectiles.at(i);
   }
 
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
@@ -372,7 +372,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     }
   }
 
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   if(didAttack) {eng.gameTime->actorDidAct();}
 

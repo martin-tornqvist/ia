@@ -26,8 +26,8 @@
 bool MapGenBsp::run_() {
   trace << "MapGenBsp::run_()..." << endl;
 
-  eng.renderer->clearScreen();
-  eng.renderer->updateScreen();
+  Renderer::clearScreen();
+  Renderer::updateScreen();
 
   eng.map->resetMap();
 
@@ -50,27 +50,27 @@ bool MapGenBsp::run_() {
   const int SPL_Y2 = 2 * (MAP_H / 3);
 
 #ifdef DEMO_MODE
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   eng.sdlWrapper->sleep(1000);
-  const int P_W = Config::cellW;
-  const int P_H = Config::cellH;
+  const int P_W = Config::getCellW();
+  const int P_H = Config::getCellH();
   const int P_M_O = Config::mainscreenOffsetY;
-  const int P_S_W = Config::screenPixelW;
+  const int P_S_W = Config::getScreenPixelW();
   const int P_C_O = Config::characterLinesOffsetY;
   const int P_M_H = P_C_O - P_M_O;
-  eng.renderer->drawLineHor(Pos(0, SPL_Y1 * P_H + P_M_O), P_S_W, clrRedLgt);
-  eng.renderer->updateScreen();
+  Renderer::drawLineHor(Pos(0, SPL_Y1 * P_H + P_M_O), P_S_W, clrRedLgt);
+  Renderer::updateScreen();
   eng.sdlWrapper->sleep(2000);
-  eng.renderer->drawLineHor(Pos(0, SPL_Y2 * P_H + P_M_O), P_S_W, clrRedLgt);
-  eng.renderer->updateScreen();
+  Renderer::drawLineHor(Pos(0, SPL_Y2 * P_H + P_M_O), P_S_W, clrRedLgt);
+  Renderer::updateScreen();
   eng.sdlWrapper->sleep(2000);
-  eng.renderer->drawLineVer(Pos(SPL_X1 * P_W, P_M_O), P_M_H, clrRedLgt);
-  eng.renderer->updateScreen();
+  Renderer::drawLineVer(Pos(SPL_X1 * P_W, P_M_O), P_M_H, clrRedLgt);
+  Renderer::updateScreen();
   eng.sdlWrapper->sleep(2000);
-  eng.renderer->drawLineVer(Pos(SPL_X2 * P_W, P_M_O), P_M_H, clrRedLgt);
-  eng.renderer->updateScreen();
+  Renderer::drawLineVer(Pos(SPL_X2 * P_W, P_M_O), P_M_H, clrRedLgt);
+  Renderer::updateScreen();
   eng.sdlWrapper->sleep(2000);
-  eng.renderer->drawMapAndInterface(true);
+  Renderer::drawMapAndInterface(true);
   eng.sdlWrapper->sleep(2000);
 #endif // DEMO_MODE
 
@@ -119,9 +119,9 @@ bool MapGenBsp::run_() {
 
 #ifdef DEMO_MODE
         const Pos dims((X1 - X0) * P_W, (Y1 - Y0) * P_H);
-        eng.renderer->drawRectangleSolid(
+        Renderer::drawRectangleSolid(
           Pos(X0 * P_W, P_M_O + Y0 * P_H), dims, clrGreenLgt);
-        eng.renderer->updateScreen();
+        Renderer::updateScreen();
         eng.sdlWrapper->sleep(2000);
 #endif // DEMO_MODE
 
@@ -165,7 +165,7 @@ bool MapGenBsp::run_() {
   trace << "MapGenBsp: Calling RoomThemeMaker::run()" << endl;
   eng.roomThemeMaker->run();
 #ifdef DEMO_MODE
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   eng.sdlWrapper->sleep(3000);
 #endif // DEMO_MODE
 
@@ -192,7 +192,7 @@ bool MapGenBsp::run_() {
   }
 
 #ifdef DEMO_MODE
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   eng.sdlWrapper->sleep(5000);
 
   for(int y = 0; y < MAP_H; y++) {
@@ -341,7 +341,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
 
               eng.featureFactory->spawnFeatureAt(feature_caveFloor, c);
 #ifdef DEMO_MODE
-              eng.renderer->drawMapAndInterface();
+              Renderer::drawMapAndInterface();
               eng.sdlWrapper->sleep(5);
 #endif // DEMO_MODE
 
@@ -356,7 +356,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
                     wall->wallType = wall_cave;
                     wall->setRandomIsMossGrown();
 #ifdef DEMO_MODE
-                    eng.renderer->drawMapAndInterface();
+                    Renderer::drawMapAndInterface();
                     eng.sdlWrapper->sleep(5);
 #endif // DEMO_MODE
                   }
@@ -395,7 +395,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
                 (c == origin || floodFillResult[x][y] > 0)) {
                 eng.featureFactory->spawnFeatureAt(feature_chasm, c);
 #ifdef DEMO_MODE
-                eng.renderer->drawMapAndInterface();
+                Renderer::drawMapAndInterface();
                 eng.sdlWrapper->sleep(5);
 #endif // DEMO_MODE
               }
@@ -452,14 +452,14 @@ void MapGenBsp::buildMergedRegionsAndRooms(
       regionIndex2.y == 1 ? SPL_Y2 - 1 : MAP_H - 1;
 
 #ifdef DEMO_MODE
-    const int P_W = Config::cellW;
-    const int P_H = Config::cellH;
+    const int P_W = Config::getCellW();
+    const int P_H = Config::getCellH();
     const int P_O = Config::mainscreenOffsetY;
     Pos dims((MERGED_X1 - MERGED_X0) * P_W, (MERGED_Y1 - MERGED_Y0) * P_H);
-    eng.renderer->drawRectangleSolid(
+    Renderer::drawRectangleSolid(
       Pos(MERGED_X0 * P_W, P_O + MERGED_Y0 * P_H), dims,
       clrBlueLgt);
-    eng.renderer->updateScreen();
+    Renderer::updateScreen();
     eng.sdlWrapper->sleep(500);
 #endif // DEMO_MODE
 
@@ -628,7 +628,7 @@ void MapGenBsp::buildRoomsInRooms() {
                 }
               }
 #ifdef DEMO_MODE
-              eng.renderer->drawMapAndInterface();
+              Renderer::drawMapAndInterface();
               eng.sdlWrapper->sleep(2000);
 #endif // DEMO_MODE
               tryCount = 99999;
@@ -844,7 +844,7 @@ void MapGenBsp::decorate() {
         if(Rnd::percentile() < 10) {
           eng.featureFactory->spawnFeatureAt(feature_rubbleHigh, Pos(x, y));
 #ifdef DEMO_MODE
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
           eng.sdlWrapper->sleep(1);
 #endif // DEMO_MODE
           continue;
@@ -855,7 +855,7 @@ void MapGenBsp::decorate() {
         Wall* const wall = dynamic_cast<Wall*>(f);
         wall->setRandomIsMossGrown();
 #ifdef DEMO_MODE
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
         eng.sdlWrapper->sleep(1);
 #endif // DEMO_MODE
 
@@ -865,7 +865,7 @@ void MapGenBsp::decorate() {
         } else {
           wall->setRandomNormalWall();
 #ifdef DEMO_MODE
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
           eng.sdlWrapper->sleep(1);
 #endif // DEMO_MODE
         }
@@ -880,7 +880,7 @@ void MapGenBsp::decorate() {
         if(Rnd::percentile() == 1) {
           eng.featureFactory->spawnFeatureAt(feature_rubbleLow, Pos(x, y));
 #ifdef DEMO_MODE
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
           eng.sdlWrapper->sleep(1);
 #endif // DEMO_MODE
           continue;
@@ -930,7 +930,7 @@ void MapGenBsp::connectRegions(Region* regions[3][3]) {
         *(r1->mainRoom), *(r2->mainRoom), regionDir, globalDoorPosCandidates);
 
 #ifdef DEMO_MODE
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
       eng.sdlWrapper->sleep(1000);
 #endif // DEMO_MODE
 
@@ -1034,7 +1034,7 @@ void MapGenBsp::placeDoorAtPosIfSuitable(const Pos pos) {
     eng.featureFactory->spawnFeatureAt(
       feature_door, pos, new DoorSpawnData(mimicFeatData));
 #ifdef DEMO_MODE
-    eng.renderer->drawMapAndInterface();
+    Renderer::drawMapAndInterface();
     eng.sdlWrapper->sleep(1000);
 #endif // DEMO_MODE
   }
@@ -1118,7 +1118,7 @@ void MapGenBsp::coverAreaWithFeature(
       eng.featureFactory->spawnFeatureAt(feature, Pos(x, y), NULL);
 
 #ifdef DEMO_MODE
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
       eng.sdlWrapper->sleep(1);
 #endif // DEMO_MODE
     }
@@ -1208,7 +1208,7 @@ void MapGenBsp::reshapeRoom(const Room& room) {
   }
 
 #ifdef DEMO_MODE
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   eng.sdlWrapper->sleep(2000);
 #endif // DEMO_MODE
 }
@@ -1357,7 +1357,7 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
     }
   }
 #ifdef DEMO_MODE
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   eng.sdlWrapper->sleep(2000);
 #endif // DEMO_MODE
 
@@ -1395,7 +1395,7 @@ bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
     } else {
       eng.featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
 #ifdef DEMO_MODE
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
       eng.sdlWrapper->sleep(1000);
 #endif // DEMO_MODE
       globalDoorPosCandidates[doorPos.x][doorPos.y] = true;

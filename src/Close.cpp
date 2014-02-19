@@ -14,7 +14,7 @@
 void Close::playerClose() const {
   eng.log->clearLog();
   eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
   Pos closePos(eng.player->pos + eng.query->dir());
   eng.log->clearLog();
 
@@ -22,7 +22,7 @@ void Close::playerClose() const {
     playerCloseFeature(eng.map->cells[closePos.x][closePos.y].featureStatic);
   }
 
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 }
 
 void Close::playerCloseFeature(Feature* const feature) const {

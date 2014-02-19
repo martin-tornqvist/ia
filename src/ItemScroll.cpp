@@ -63,7 +63,7 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
 
     if(IS_SILENT_IDENTIFY == false) {
       eng.log->addMsg("It was " + data_->name.name_a + ".");
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
 
     data_->isIdentified = true;
@@ -85,7 +85,7 @@ void Scroll::tryLearn() {
 }
 
 bool Scroll::read() {
-  eng.renderer->drawMapAndInterface();
+  Renderer::drawMapAndInterface();
 
   if(eng.player->getPropHandler().allowSee() == false) {
     eng.log->addMsg("I cannot read while blind.");

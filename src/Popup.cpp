@@ -28,8 +28,8 @@ int Popup::printBoxAndGetTitleYPos(const int TEXT_H_TOT,
   const int X1          = X0 + BOX_W - 1;
   const int Y1          = Y0 + BOX_H - 1;
 
-  eng.renderer->coverArea(panel_map, Pos(X0, Y0), Pos(BOX_W, BOX_H));
-  eng.renderer->drawPopupBox(Rect(X0, Y0, X1, Y1), panel_map);
+  Renderer::coverArea(panel_map, Pos(X0, Y0), Pos(BOX_W, BOX_H));
+  Renderer::drawPopupBox(Rect(X0, Y0, X1, Y1), panel_map);
 
   return Y0 + 1;
 }
@@ -37,7 +37,7 @@ int Popup::printBoxAndGetTitleYPos(const int TEXT_H_TOT,
 void Popup::showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
                     const string& title, const SfxId sfx) const {
 
-  if(DRAW_MAP_AND_INTERFACE) {eng.renderer->drawMapAndInterface(false);}
+  if(DRAW_MAP_AND_INTERFACE) {Renderer::drawMapAndInterface(false);}
 
   vector<string> lines;
   TextFormatting::lineToLines(msg, TEXT_W, lines);
@@ -48,7 +48,7 @@ void Popup::showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   if(sfx != endOfSfxId) {eng.audio->play(sfx);}
 
   if(title.empty() == false) {
-    eng.renderer->drawTextCentered(
+    Renderer::drawTextCentered(
       title, panel_map, Pos(MAP_W_HALF, y),
       /*clrNosfTealLgt*/ clrWhite, clrBlack, true);
   }
@@ -58,30 +58,30 @@ void Popup::showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   for(string & line : lines) {
     y++;
     if(SHOW_MSG_CENTERED) {
-      eng.renderer->drawTextCentered(line, panel_map, Pos(MAP_W_HALF, y),
+      Renderer::drawTextCentered(line, panel_map, Pos(MAP_W_HALF, y),
                                      clrWhite, clrBlack, true);
     } else {
-      eng.renderer->drawText(line, panel_map, Pos(TEXT_X0, y), clrWhite);
+      Renderer::drawText(line, panel_map, Pos(TEXT_X0, y), clrWhite);
     }
     eng.log->addLineToHistory(line);
   }
   y += 2;
 
-  eng.renderer->drawTextCentered("space/esc to close", panel_map,
+  Renderer::drawTextCentered("space/esc to close", panel_map,
                                  Pos(MAP_W_HALF, y), clrNosfTeal);
 
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 
   eng.query->waitForEscOrSpace();
 
-  if(DRAW_MAP_AND_INTERFACE) {eng.renderer->drawMapAndInterface();}
+  if(DRAW_MAP_AND_INTERFACE) {Renderer::drawMapAndInterface();}
 }
 
 int Popup::showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
                        const vector<string>& choices,
                        const string& title, const SfxId sfx) const {
 
-  if(Config::isBotPlaying) {return 0;}
+  if(Config::isBotPlaying()) {return 0;}
 
   vector<string> lines;
   TextFormatting::lineToLines(msg, TEXT_W, lines);
@@ -113,7 +113,7 @@ int Popup::showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
       case menuAction_esc:
       case menuAction_space: {
         if(DRAW_MAP_AND_INTERFACE) {
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
         }
         return NR_CHOICES - 1;
       } break;
@@ -122,7 +122,7 @@ int Popup::showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
       case menuAction_selected: {
         if(DRAW_MAP_AND_INTERFACE) {
-          eng.renderer->drawMapAndInterface();
+          Renderer::drawMapAndInterface();
         }
         return browser.getPos().y;
       } break;
@@ -136,7 +136,7 @@ void Popup::menuMsgDrawingHelper(
   const int TEXT_H_TOT, const string title) const {
 
   if(DRAW_MAP_AND_INTERFACE) {
-    eng.renderer->drawMapAndInterface(false);
+    Renderer::drawMapAndInterface(false);
   }
 
   //If no message lines, set width to widest menu option or title with
@@ -152,7 +152,7 @@ void Popup::menuMsgDrawingHelper(
   int y = printBoxAndGetTitleYPos(TEXT_H_TOT, textWidthOverride);
 
   if(title.empty() == false) {
-    eng.renderer->drawTextCentered(title, panel_map, Pos(MAP_W_HALF, y),
+    Renderer::drawTextCentered(title, panel_map, Pos(MAP_W_HALF, y),
                                    clrCyanLgt, clrBlack, true);
   }
 
@@ -161,10 +161,10 @@ void Popup::menuMsgDrawingHelper(
   for(const string & line : lines) {
     y++;
     if(SHOW_MSG_CENTERED) {
-      eng.renderer->drawTextCentered(line, panel_map, Pos(MAP_W_HALF, y),
+      Renderer::drawTextCentered(line, panel_map, Pos(MAP_W_HALF, y),
                                      clrWhite, clrBlack, true);
     } else {
-      eng.renderer->drawText(line, panel_map, Pos(TEXT_X0, y), clrWhite);
+      Renderer::drawText(line, panel_map, Pos(TEXT_X0, y), clrWhite);
     }
     eng.log->addLineToHistory(line);
   }
@@ -172,11 +172,11 @@ void Popup::menuMsgDrawingHelper(
 
   for(size_t i = 0; i < choices.size(); i++) {
     SDL_Color clr = i == currentChoice ? clrNosfTealLgt : clrNosfTealDrk;
-    eng.renderer->drawTextCentered(
+    Renderer::drawTextCentered(
       choices.at(i), panel_map, Pos(MAP_W_HALF, y),
       clr, clrBlack, true);
     y++;
   }
-  eng.renderer->updateScreen();
+  Renderer::updateScreen();
 }
 

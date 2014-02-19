@@ -186,10 +186,10 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
   if(isSecret_) {
     isSecret_ = false;
     if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
       if(ALLOW_MESSAGE) {
         eng.log->addMsg("A secret is revealed.");
-        eng.renderer->drawMapAndInterface();
+        Renderer::drawMapAndInterface();
       }
     }
   }
@@ -333,7 +333,7 @@ void Door::tryClose(Actor* actorTrying) {
     if(IS_PLAYER) {
       eng.log->addMsg(
         "This door refuses to be closed, perhaps it is handled elsewhere?");
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
     return;
   }
@@ -452,7 +452,7 @@ void Door::tryOpen(Actor* actorTrying) {
     if(IS_PLAYER) {
       eng.log->addMsg(
         "I see no way to open this door, perhaps it is opened elsewhere?");
-      eng.renderer->drawMapAndInterface();
+      Renderer::drawMapAndInterface();
     }
     return;
   }

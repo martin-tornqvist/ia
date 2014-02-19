@@ -301,11 +301,11 @@ void PotionOfClairvoyance::quaff_(Actor* const actor) {
       }
     }
 
-    eng.renderer->drawMapAndInterface(false);
+    Renderer::drawMapAndInterface(false);
     eng.playerVisualMemory->updateVisualMemory();
     eng.player->updateFov();
 
-    eng.renderer->drawBlastAnimAtPositions(animPositions, clrWhite);
+    Renderer::drawBlastAnimAtPositions(animPositions, clrWhite);
   }
   identify(false);
 }
@@ -406,7 +406,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
 
     if(PLAYER_SEE_CELL) {
       // TODO Use standard animation
-      eng.renderer->drawGlyph('*', panel_map, pos, data_->clr);
+      Renderer::drawGlyph('*', panel_map, pos, data_->clr);
 
       if(actor != NULL) {
         if(actor->deadState == actorDeadState_alive) {
