@@ -14,10 +14,10 @@ namespace Audio {
 //---------------------------------------------------------------- LOCAL
 namespace {
 
+vector<Mix_Chunk*> audioChunks;
+
 int curChannel    = 0;
 int timeAtLastAmb = -1;
-
-vector<Mix_Chunk*> audioChunks;
 
 SfxId getAmbSfxSuitableForDlvl(Engine& eng) {
   vector<SfxId> sfxCandidates;
@@ -91,7 +91,7 @@ void loadAudioFile(const SfxId sfx, const string& filename) {
 
   audioChunks.at(int(sfx)) = Mix_LoadWAV((fileRelPath).data());
 
-  if(audioChunks.at(int(sfx))) {
+  if(audioChunks.at(int(sfx)) == NULL) {
     trace << "[WARNING] Problem loading audio file with name " + filename;
     trace << ", in Audio::loadAudio()" << endl;
     trace << "SDL_mixer: " << Mix_GetError() << endl;
@@ -166,6 +166,9 @@ void init() {
 void cleanup() {
   for(Mix_Chunk * chunk : audioChunks) {Mix_FreeChunk(chunk);}
   audioChunks.resize(0);
+
+  curChannel    = 0;
+  timeAtLastAmb = -1;
 }
 
 int play(const SfxId sfx, const int VOL_PERCENT_TOT,
