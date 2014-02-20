@@ -549,6 +549,15 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   propHlr.tryApplyProp(new PropDiseased(eng, propTurnsIndefinite));
   propHlr.tryApplyProp(new PropRSleep(eng, propTurnsSpecific, 3));
   propHlr.tryApplyProp(new PropBlessed(eng, propTurnsStd));
+  propHlr.tryApplyProp(new PropWound(eng, propTurnsStd));
+  Prop* prop      = propHlr.getProp(propWound, PropSrc::applied);
+  PropWound* wnd  = dynamic_cast<PropWound*>(prop);
+  CHECK(wnd != NULL);
+  CHECK_EQUAL(1, wnd->getNrWounds());
+  wnd->onMore();
+  CHECK_EQUAL(2, wnd->getNrWounds());
+  wnd->onMore();
+  CHECK_EQUAL(3, wnd->getNrWounds());
 
   eng.saveHandler->save();
   CHECK(eng.saveHandler->isSaveAvailable());
@@ -616,6 +625,11 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   prop = propHlr.getProp(propBlessed, PropSrc::applied);
   CHECK(prop != NULL);
   CHECK(prop->turnsLeft_ > 0);
+  prop = propHlr.getProp(propWound, PropSrc::applied);
+  PropWound* wnd = dynamic_cast<PropWound*>(prop);
+  CHECK(wnd != NULL);
+  CHECK(wnd->turnsLeft_ == -1);
+  CHECK_EQUAL(3, wnd->getNrWounds());
 
   //Properties from worn item
   prop = propHlr.getProp(propRAcid, PropSrc::inv);

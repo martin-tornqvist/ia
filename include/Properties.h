@@ -183,7 +183,7 @@ public:
   void getPropsInterfaceLine(vector<StrAndClr>& line) const;
 
   Prop* makeProp(const PropId id, PropTurns turnsInit,
-                       const int NR_TURNS = -1) const;
+                 const int NR_TURNS = -1) const;
 
   bool tryResistDmg(const DmgTypes dmgType,
                     const bool ALLOW_MSG_WHEN_TRUE) const;
@@ -203,6 +203,13 @@ public:
   Prop(PropId id, Engine& engine, PropTurns turnsInit, int turns);
 
   virtual ~Prop() {}
+
+  virtual void addSaveLines(vector<string>& lines) const {
+    (void)lines;
+  }
+  virtual void setParamsFromSaveLines(vector<string>& lines) {
+    (void)lines;
+  }
 
   PropId getId() {return id_;}
 
@@ -295,6 +302,14 @@ public:
     Prop(propWound, engine, turnsInit, turns), nrWounds_(1) {}
 
   ~PropWound() override {}
+
+  void addSaveLines(vector<string>& lines) const override {
+    lines.push_back(toString(nrWounds_));
+  }
+  void setParamsFromSaveLines(vector<string>& lines) override {
+    nrWounds_ = toInt(lines.front());
+    lines.erase(lines.begin());
+  }
 
   string getNameShort() const override {
     return "Wound(" + toString(nrWounds_) + ")";

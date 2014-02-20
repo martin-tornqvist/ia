@@ -129,6 +129,7 @@ void Player::addSaveLines(vector<string>& lines) const {
   for(Prop * prop : propHandler_->appliedProps_) {
     lines.push_back(toString(prop->getId()));
     lines.push_back(toString(prop->turnsLeft_));
+    prop->addSaveLines(lines);
   }
 
   lines.push_back(toString(insanity_));
@@ -166,6 +167,7 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
     Prop* const prop = propHandler_->makeProp(
                          id, propTurnsSpecific, NR_TURNS);
     propHandler_->tryApplyProp(prop, true, true, true, true);
+    prop->setParamsFromSaveLines(lines);
   }
 
   insanity_ = toInt(lines.front());

@@ -577,6 +577,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propWound;
+  d.stdRndTurns = Range(-1, -1);
   d.name = "Wound";
   d.msg[propMsgOnStartPlayer] = "I am wounded!";
   d.msg[propMsgOnMorePlayer] = "I am more wounded!";
