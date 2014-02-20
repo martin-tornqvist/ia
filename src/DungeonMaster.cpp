@@ -20,12 +20,13 @@ void DungeonMaster::initXpArray() {
 
 int DungeonMaster::getMonsterTotXpWorth(const ActorData& d) const {
   //K regulates player XP rate, higher -> more XP per monster
-  const double K          = 1.2;
+  const double K          = 0.6;
   const double HP         = d.hp;
   const double SPEED      = d.speed;
   const double SHOCK      = d.monsterShockLevel;
   const double UNIQUE_MOD = d.isUnique ? 2.0 : 1.0;
-  return K * HP * (1.0 + (SPEED / 3.0)) * (1.0 + (SHOCK / 6.0)) * UNIQUE_MOD;
+  return
+    ceil(K * HP * (1.0 + (SPEED / 3.0)) * (1.0 + (SHOCK / 6.0)) * UNIQUE_MOD);
 }
 
 void DungeonMaster::playerGainLvl() {
@@ -34,16 +35,11 @@ void DungeonMaster::playerGainLvl() {
   eng.log->addMsg(
     "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
 
-  if(clvl % 2 != 0) {
-    eng.playerCreateCharacter->pickNewTrait(false);
-  }
+  eng.playerCreateCharacter->pickNewTrait(false);
 
   eng.player->restoreHp(999, false);
   eng.player->changeMaxHp(2, true);
-
-  if(clvl % 2 == 0) {
-    eng.player->changeMaxSpi(1, true);
-  }
+  eng.player->changeMaxSpi(1, true);
 }
 
 void DungeonMaster::playerGainXp(const int XP_GAINED) {
@@ -127,8 +123,8 @@ void DungeonMaster::winGame() {
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
     for(unsigned int ii = 0; ii <= i; ii++) {
       Renderer::drawTextCentered(winMessageLines.at(ii), panel_screen,
-                                     Pos(MAP_W_HALF, Y0 + ii),
-                                     clrMsgBad, clrBlack, true);
+                                 Pos(MAP_W_HALF, Y0 + ii),
+                                 clrMsgBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
         const string CMD_LABEL =
           "Space/Esc to record high-score and return to main menu";

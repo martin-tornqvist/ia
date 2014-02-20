@@ -26,7 +26,7 @@ const int SCREEN_H            = CHAR_LINES_OFFSET_H + CHAR_LINES_H;
 const int PLAYER_START_X      = 10;
 const int PLAYER_START_Y      = MAP_H_HALF;
 
-const int PLAYER_MAX_CLVL = 30;
+const int PLAYER_MAX_CLVL = 9;
 
 const int FIRST_CAVERN_LEVEL            = 20;
 const int LAST_CAVERN_LEVEL             = 29;
