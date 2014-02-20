@@ -29,11 +29,11 @@ public:
   void setFullAmmo() {ammo = data_->ammoContainedInClip;}
 
   void addSaveLines_(vector<string>& lines) {
-    lines.push_back(toString(data_->ammoContainedInClip));
+    lines.push_back(toString(ammo));
   }
 
   void setParamsFromSaveLines_(vector<string>& lines) {
-    data_->ammoContainedInClip = toInt(lines.front());
+    ammo = toInt(lines.front());
     lines.erase(lines.begin());
   }
 

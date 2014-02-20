@@ -27,6 +27,7 @@
 #include "PlayerSpellsHandler.h"
 #include "PlayerBonuses.h"
 #include "Explosion.h"
+#include "ItemAmmo.h"
 
 struct BasicFixture {
   BasicFixture() {
@@ -527,6 +528,18 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   inv.moveItemToGeneral(inv.getSlot(slot_armorBody));
   item = eng.itemFactory->spawnItem(item_armorAsbestosSuit);
   inv.putItemInSlot(slot_armorBody, item);
+  item = eng.itemFactory->spawnItem(item_pistolClip);
+  dynamic_cast<ItemAmmoClip*>(item)->ammo = 1;
+  inv.putItemInGeneral(item);
+  item = eng.itemFactory->spawnItem(item_pistolClip);
+  dynamic_cast<ItemAmmoClip*>(item)->ammo = 2;
+  inv.putItemInGeneral(item);
+  item = eng.itemFactory->spawnItem(item_pistolClip);
+  dynamic_cast<ItemAmmoClip*>(item)->ammo = 3;
+  inv.putItemInGeneral(item);
+  item = eng.itemFactory->spawnItem(item_pistolClip);
+  dynamic_cast<ItemAmmoClip*>(item)->ammo = 3;
+  inv.putItemInGeneral(item);
 
   //Player
   ActorData& def = eng.player->getData();
@@ -590,6 +603,23 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(item_teslaCannon, inv.getItemInSlot(slot_wielded)->getData().id);
   CHECK_EQUAL(item_armorAsbestosSuit,
               inv.getItemInSlot(slot_armorBody)->getData().id);
+  vector<Item*> genInv = inv.getGeneral();
+  int nrClipWith1 = 0;
+  int nrClipWith2 = 0;
+  int nrClipWith3 = 0;
+  for(Item * item : genInv) {
+    if(item->getData().id == item_pistolClip) {
+      switch(dynamic_cast<ItemAmmoClip*>(item)->ammo) {
+        case 1: nrClipWith1++; break;
+        case 2: nrClipWith2++; break;
+        case 3: nrClipWith3++; break;
+        default: {} break;
+      }
+    }
+  }
+  CHECK_EQUAL(1, nrClipWith1);
+  CHECK_EQUAL(1, nrClipWith2);
+  CHECK_EQUAL(2, nrClipWith3);
 
   //Player
   ActorData& def = eng.player->getData();

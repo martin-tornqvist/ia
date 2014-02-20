@@ -291,7 +291,6 @@
 		<Unit filename="../src/InventoryHandler.cpp" />
 		<Unit filename="../src/InventoryIndexes.cpp" />
 		<Unit filename="../src/Item.cpp" />
-		<Unit filename="../src/ItemAmmo.cpp" />
 		<Unit filename="../src/ItemArmor.cpp" />
 		<Unit filename="../src/ItemArtifact.cpp" />
 		<Unit filename="../src/ItemData.cpp" />
