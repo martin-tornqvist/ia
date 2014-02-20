@@ -13,6 +13,7 @@
 #include "MapParsing.h"
 #include "LineCalc.h"
 #include "Utils.h"
+#include "SdlWrapper.h"
 
 void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
@@ -86,7 +87,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
               Renderer::drawGlyph('*', panel_map, curPos, clrRedLgt);
             }
             Renderer::updateScreen();
-            eng.sleep(Config::getDelayShotgun());
+            SdlWrapper::sleep(Config::getDelayShotgun());
           }
 
           //Messages
@@ -121,7 +122,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     //Wall hit?
     if(featureBlockers[curPos.x][curPos.y]) {
-      Snd snd("I hear a ricochet.", sfxRicochet, IgnoreMsgIfOriginSeen::yes,
+      Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
               curPos, NULL, SndVol::low, AlertsMonsters::yes);
       eng.sndEmitter->emitSnd(snd);
 
@@ -134,7 +135,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           Renderer::drawGlyph('*', panel_map, curPos, clrYellow);
         }
         Renderer::updateScreen();
-        eng.sleep(Config::getDelayShotgun());
+        SdlWrapper::sleep(Config::getDelayShotgun());
         Renderer::drawMapAndInterface();
       }
       break;
@@ -142,7 +143,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     //Floor hit?
     if(intendedAimLevel == actorSize_floor && curPos == aimPos) {
-      Snd snd("I hear a ricochet.", sfxRicochet, IgnoreMsgIfOriginSeen::yes,
+      Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
               curPos, NULL, SndVol::low, AlertsMonsters::yes);
       eng.sndEmitter->emitSnd(snd);
 
@@ -155,7 +156,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           Renderer::drawGlyph('*', panel_map, curPos, clrYellow);
         }
         Renderer::updateScreen();
-        eng.sleep(Config::getDelayShotgun());
+        SdlWrapper::sleep(Config::getDelayShotgun());
         Renderer::drawMapAndInterface();
       }
       break;

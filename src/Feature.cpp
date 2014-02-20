@@ -190,7 +190,7 @@ void FeatureStatic::bash_(Actor& actorTrying) {
   const AlertsMonsters alertsMonsters = &actorTrying == eng.player ?
                                         AlertsMonsters::yes :
                                         AlertsMonsters::no;
-  Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
+  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
           &actorTrying, SndVol::low, alertsMonsters);
   eng.sndEmitter->emitSnd(snd);
 }

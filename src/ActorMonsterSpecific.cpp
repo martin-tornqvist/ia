@@ -254,7 +254,7 @@ bool Vortex::onActorTurn_() {
 
 void DustVortex::die_() {
   Explosion::runExplosionAt(
-    pos, eng, 0, endOfSfxId, false, new PropBlind(eng, propTurnsStd), true,
+    pos, eng, 0, SfxId::endOfSfxId, false, new PropBlind(eng, propTurnsStd), true,
     clrGray);
 }
 
@@ -265,7 +265,7 @@ void DustVortex::spawnStartItems() {
 
 void FireVortex::die_() {
   Explosion::runExplosionAt(
-    pos, eng, 0, endOfSfxId, false, new PropBurning(eng, propTurnsStd), true,
+    pos, eng, 0, SfxId::endOfSfxId, false, new PropBurning(eng, propTurnsStd), true,
     clrRedLgt);
 }
 

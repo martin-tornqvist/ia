@@ -72,31 +72,8 @@
 #include "Properties.h"
 #include "Thrower.h"
 #include "MenuInputHandler.h"
-#include "SdlWrapper.h"
 
 using namespace std;
-
-void Engine::sleep(const Uint32 DURATION) const {
-  if(Config::isBotPlaying() == false) {
-    sdlWrapper->sleep(DURATION);
-  }
-}
-
-void Engine::initSdl() {
-  sdlWrapper = new SdlWrapper;
-}
-
-void Engine::cleanupSdl() {
-  delete sdlWrapper;
-}
-
-void Engine::initAudio() {
-  audio = new Audio(*this);
-}
-
-void Engine::cleanupAudio() {
-  delete audio;
-}
 
 void Engine::initGame() {
   trace << "Engine::initGame()..." << endl;

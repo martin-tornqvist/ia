@@ -18,6 +18,7 @@
 #include "LineCalc.h"
 #include "PlayerBonuses.h"
 #include "Utils.h"
+#include "SdlWrapper.h"
 
 void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   const int DYNAMITE_FUSE = eng.player->dynamiteFuseTurns;
@@ -49,7 +50,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
       if(eng.map->cells[path[i].x][path[i].y].isSeenByPlayer) {
         Renderer::drawGlyph(glyph, panel_map, path[i], clr);
         Renderer::updateScreen();
-        eng.sleep(Config::getDelayProjectileDraw());
+        SdlWrapper::sleep(Config::getDelayProjectileDraw());
       }
     }
   }
@@ -80,7 +81,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
       eng.playerBonHandler->hasTrait(traitDemolitionExpert) ? 1 : 0;
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
       Explosion::runExplosionAt(path.back(), eng, EXPL_RADI_CHANGE,
-                                sfxExplosionMolotov, false,
+                                SfxId::explosionMolotov, false,
                                 new PropBurning(eng, propTurnsStd));
     }
   }
@@ -147,7 +148,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
             Renderer::drawGlyph('*', panel_map,
                                     curPos, clrRedLgt);
             Renderer::updateScreen();
-            eng.sleep(Config::getDelayProjectileDraw() * 4);
+            SdlWrapper::sleep(Config::getDelayProjectileDraw() * 4);
           }
           const SDL_Color hitMessageClr =
             actorHere == eng.player ? clrMsgBad : clrMsgGood;
@@ -180,7 +181,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
       Renderer::drawGlyph(glyph, panel_map, curPos, clr);
       Renderer::updateScreen();
-      eng.sleep(Config::getDelayProjectileDraw());
+      SdlWrapper::sleep(Config::getDelayProjectileDraw());
     }
 
     const Feature* featureHere =

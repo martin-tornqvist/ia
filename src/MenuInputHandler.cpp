@@ -8,16 +8,16 @@ MenuAction MenuInputHandler::getAction(MenuBrowser& browser) {
     KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
 
     if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
-      browser.navigate(dirRight);
+      browser.navigate(Dir::right);
       return menuAction_browsed;
     } else if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
-      browser.navigate(dirLeft);
+      browser.navigate(Dir::left);
       return menuAction_browsed;
     } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
-      browser.navigate(dirUp);
+      browser.navigate(Dir::up);
       return menuAction_browsed;
     } else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
-      browser.navigate(dirDown);
+      browser.navigate(Dir::down);
       return menuAction_browsed;
     } else if(d.sdlKey_ == SDLK_RETURN) {
       d.key_ = browser.enter();

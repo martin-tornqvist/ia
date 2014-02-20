@@ -47,8 +47,8 @@ void ActorData::reset() {
   description = "";
   aggroTextMonsterSeen = "";
   aggroTextMonsterHidden = "";
-  aggroSfxMonsterSeen = endOfSfxId;
-  aggroSfxMonsterHidden = endOfSfxId;
+  aggroSfxMonsterSeen = SfxId::endOfSfxId;
+  aggroSfxMonsterHidden = SfxId::endOfSfxId;
 }
 
 void ActorDataHandler::addSaveLines(vector<string>& lines) const {
@@ -124,8 +124,8 @@ void ActorDataHandler::initDataList() {
   d.description = "This rotting thing appears to have been brought back to life through some abominable process. It has grown sharp claws to attack with.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
-  d.aggroSfxMonsterSeen = sfxZombieGrowl;
-  d.aggroSfxMonsterHidden = sfxZombieGrowl;
+  d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
+  d.aggroSfxMonsterHidden = SfxId::zombieGrowl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
@@ -165,8 +165,8 @@ void ActorDataHandler::initDataList() {
   d.description = "This rotting thing appears to have been brought back to life through some abominable process. It is wielding a rusty axe.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
-  d.aggroSfxMonsterSeen = sfxZombieGrowl;
-  d.aggroSfxMonsterHidden = sfxZombieGrowl;
+  d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
+  d.aggroSfxMonsterHidden = SfxId::zombieGrowl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isUndead = true;
@@ -723,8 +723,8 @@ void ActorDataHandler::initDataList() {
   d.description = "This extremely aggressive canine seems to be part corporeal and part fire. It breathes searing flames.";
   d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a snarl.";
-  d.aggroSfxMonsterSeen = sfxDogSnarl;
-  d.aggroSfxMonsterHidden = sfxDogSnarl;
+  d.aggroSfxMonsterSeen = SfxId::dogSnarl;
+  d.aggroSfxMonsterHidden = SfxId::dogSnarl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isCanine = true;
@@ -765,8 +765,8 @@ void ActorDataHandler::initDataList() {
   d.description = "This extremely aggressive canine seems to be part corporeal and part living ice. It breathes frost.";
   d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a snarl.";
-  d.aggroSfxMonsterSeen = sfxDogSnarl;
-  d.aggroSfxMonsterHidden = sfxDogSnarl;
+  d.aggroSfxMonsterSeen = SfxId::dogSnarl;
+  d.aggroSfxMonsterHidden = SfxId::dogSnarl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.isCanine = true;
@@ -806,8 +806,8 @@ void ActorDataHandler::initDataList() {
   d.description = "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It was worshiped by the Sumerians and Hittites in 6000 BC, along with Gozer.";
   d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a snarl.";
-  d.aggroSfxMonsterSeen = sfxDogSnarl;
-  d.aggroSfxMonsterHidden = sfxDogSnarl;
+  d.aggroSfxMonsterSeen = SfxId::dogSnarl;
+  d.aggroSfxMonsterHidden = SfxId::dogSnarl;
   d.erraticMovement = actorErratic_never;
   d.monsterShockLevel = monsterShockLevel_mindShattering;
   d.isCanine = true;
@@ -1045,8 +1045,8 @@ void ActorDataHandler::initDataList() {
   d.description = "A large wolf with eyes full of cunning.";
   d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a chilling howl.";
-  d.aggroSfxMonsterSeen = sfxDogSnarl;
-  d.aggroSfxMonsterHidden = sfxWolfHowl;
+  d.aggroSfxMonsterSeen = SfxId::dogSnarl;
+  d.aggroSfxMonsterHidden = SfxId::wolfHowl;
   d.erraticMovement = actorErratic_somewhat;
   d.isCanine = true;
   d.canBeSummoned = true;
@@ -1082,8 +1082,8 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "An unknown species, perhaps stemming from some hidden bowels of the earth. It is about as tall as a full-grown human.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
-  d.aggroSfxMonsterSeen = sfxFlappingWings;
-  d.aggroSfxMonsterHidden = sfxFlappingWings;
+  d.aggroSfxMonsterSeen = SfxId::flappingWings;
+  d.aggroSfxMonsterHidden = SfxId::flappingWings;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = monsterShockLevel_unsettling;
   d.canBeSummoned = true;
@@ -1121,8 +1121,8 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed human beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
-  d.aggroSfxMonsterSeen = sfxFlappingWings;
-  d.aggroSfxMonsterHidden = sfxFlappingWings;
+  d.aggroSfxMonsterSeen = SfxId::flappingWings;
+  d.aggroSfxMonsterHidden = SfxId::flappingWings;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_scary;
   d.canBeSummoned = true;
@@ -1314,8 +1314,8 @@ void ActorDataHandler::initDataList() {
   d.description = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome humanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a chilling howl.";
-  d.aggroSfxMonsterSeen = sfxGhoulGrowl;
-  d.aggroSfxMonsterHidden = sfxWolfHowl;
+  d.aggroSfxMonsterSeen = SfxId::ghoulGrowl;
+  d.aggroSfxMonsterHidden = SfxId::wolfHowl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = monsterShockLevel_terrifying;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1704,8 +1704,8 @@ void ActorDataHandler::initDataList() {
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
-  d.aggroSfxMonsterSeen = sfxOozeGurgle;
-  d.aggroSfxMonsterHidden = sfxOozeGurgle;
+  d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
+  d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_somewhat;
@@ -1753,8 +1753,8 @@ void ActorDataHandler::initDataList() {
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
-  d.aggroSfxMonsterSeen = sfxOozeGurgle;
-  d.aggroSfxMonsterHidden = sfxOozeGurgle;
+  d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
+  d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
   d.canBleed = false;
   d.canBeSummoned = true;
   d.monsterShockLevel = monsterShockLevel_scary;
@@ -1801,8 +1801,8 @@ void ActorDataHandler::initDataList() {
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
-  d.aggroSfxMonsterSeen = sfxOozeGurgle;
-  d.aggroSfxMonsterHidden = sfxOozeGurgle;
+  d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
+  d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_somewhat;
@@ -1849,8 +1849,8 @@ void ActorDataHandler::initDataList() {
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
-  d.aggroSfxMonsterSeen = sfxOozeGurgle;
-  d.aggroSfxMonsterHidden = sfxOozeGurgle;
+  d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
+  d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_somewhat;
@@ -1937,8 +1937,8 @@ void ActorDataHandler::initDataList() {
   d.description = "[DESCRIPTION MISSING]";
   d.aggroTextMonsterSeen = "";
   d.aggroTextMonsterHidden = "";
-  d.aggroSfxMonsterSeen = endOfSfxId;
-  d.aggroSfxMonsterHidden = endOfSfxId;
+  d.aggroSfxMonsterSeen = SfxId::endOfSfxId;
+  d.aggroSfxMonsterHidden = SfxId::endOfSfxId;
   d.canBleed = true;
   d.canBeSummoned = false;
   d.monsterShockLevel = monsterShockLevel_mindShattering;
@@ -1979,8 +1979,8 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.description = "It resembles an enormous black ropy worm, like a legless dragon seen in a nightmare. A great gaping maw filled with jagged, irregular teeth gapes open hungrily as it flies in search of prey. Hunting horrors haunt the dark places of the universe, from which they are called up at the whim of their lord Nyarlathotep.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
-  d.aggroSfxMonsterSeen = sfxFlappingWings;
-  d.aggroSfxMonsterHidden = sfxFlappingWings;
+  d.aggroSfxMonsterSeen = SfxId::flappingWings;
+  d.aggroSfxMonsterHidden = SfxId::flappingWings;
   d.canBleed = true;
   d.canBeSummoned = false;
   d.monsterShockLevel = monsterShockLevel_mindShattering;

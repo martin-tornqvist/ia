@@ -22,6 +22,7 @@
 #include "Audio.h"
 #include "Bot.h"
 #include "Input.h"
+#include "SdlWrapper.h"
 
 #ifdef _WIN32
 #undef main
@@ -33,11 +34,11 @@ int main(int argc, char* argv[]) {
   (void)argv;
 
   Engine eng;
-  eng.initSdl();
+  SdlWrapper::init();
   Config::init();
   Input::init();
   Renderer::init(eng);
-  eng.initAudio();
+  Audio::init();
 
   bool quitGame = false;
   while(quitGame == false) {
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
         trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
-      eng.audio->fadeOutChannel(introMusChannel);
+      Audio::fadeOutChannel(introMusChannel);
 
       eng.player->updateFov();
       Renderer::drawMapAndInterface();
@@ -111,7 +112,7 @@ int main(int argc, char* argv[]) {
             actor->onActorTurn();
           } else {
             if(actor == eng.player) {
-              eng.sleep(DELAY_PLAYER_UNABLE_TO_ACT);
+              SdlWrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
             }
             eng.gameTime->actorDidAct();
           }
@@ -132,10 +133,10 @@ int main(int argc, char* argv[]) {
     }
     eng.cleanupGame();
   }
-  eng.cleanupAudio();
+  Audio::cleanup();
   Renderer::cleanup();
   Input::cleanup();
-  eng.cleanupSdl();
+  SdlWrapper::cleanup();
 
   trace << "main() [DONE]" << endl;
 

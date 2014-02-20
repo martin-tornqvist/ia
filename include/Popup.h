@@ -14,12 +14,12 @@ public:
 
   void showMsg(const std::string& msg, const bool DRAW_MAP_AND_INTERFACE,
                const std::string& title = "",
-               const SfxId sfx = endOfSfxId) const;
+               const SfxId sfx = SfxId::endOfSfxId) const;
 
   int showMenuMsg(
     const std::string& msg, const bool DRAW_MAP_AND_INTERFACE,
     const std::vector<std::string>& choices, const std::string& title = "",
-    const SfxId sfx = endOfSfxId) const;
+    const SfxId sfx = SfxId::endOfSfxId) const;
 
 private:
   int printBoxAndGetTitleYPos(const int TEXT_H_TOT,

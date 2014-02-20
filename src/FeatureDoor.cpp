@@ -270,7 +270,7 @@ void Door::bash_(Actor& actorTrying) {
       isSecret_ = false;
       isOpen_ = true;
       if(IS_PLAYER) {
-        Snd snd("", sfxDoorBreak, IgnoreMsgIfOriginSeen::yes, pos_,
+        Snd snd("", SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_,
                 &actorTrying, SndVol::low, AlertsMonsters::yes);
         eng.sndEmitter->emitSnd(snd);
         if(actorTrying.getPropHandler().allowSee() == false) {
@@ -289,13 +289,13 @@ void Door::bash_(Actor& actorTrying) {
           eng.log->addMsg("A door crashes open!");
         }
         Snd snd("I hear a door crashing open!",
-                sfxDoorBreak, IgnoreMsgIfOriginSeen::yes, pos_, &actorTrying,
+                SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, &actorTrying,
                 SndVol::high, AlertsMonsters::no);
         eng.sndEmitter->emitSnd(snd);
       }
     } else {
       if(IS_PLAYER) {
-        const SfxId sfx = isSecret_ ? endOfSfxId : sfxDoorBang;
+        const SfxId sfx = isSecret_ ? SfxId::endOfSfxId : SfxId::doorBang;
         Snd snd("", sfx, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
                 &actorTrying, SndVol::low, AlertsMonsters::yes);
         eng.sndEmitter->emitSnd(snd);
@@ -303,7 +303,7 @@ void Door::bash_(Actor& actorTrying) {
         //Emitting the sound from the actor instead of the door, because the
         //sound message should be received even if the door is seen
         Snd snd("I hear a loud banging on a door.",
-                sfxDoorBang, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
+                SfxId::doorBang, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
                 &actorTrying, SndVol::low, AlertsMonsters::no);
         eng.sndEmitter->emitSnd(snd);
         if(eng.player->isSeeingActor(actorTrying, NULL)) {
@@ -386,13 +386,13 @@ void Door::tryClose(Actor* actorTrying) {
     if(TRYER_IS_BLIND == false) {
       isOpen_ = false;
       if(IS_PLAYER) {
-        Snd snd("", sfxDoorClose, IgnoreMsgIfOriginSeen::yes, pos_,
+        Snd snd("", SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_,
                 actorTrying, SndVol::low, AlertsMonsters::yes);
         eng.sndEmitter->emitSnd(snd);
         eng.log->addMsg("I close the door.");
       } else {
         Snd snd("I hear a door closing.",
-                sfxDoorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
+                SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
                 SndVol::low, AlertsMonsters::no);
         eng.sndEmitter->emitSnd(snd);
         if(PLAYER_SEE_TRYER) {
@@ -403,13 +403,13 @@ void Door::tryClose(Actor* actorTrying) {
       if(Rnd::percentile() < 50) {
         isOpen_ = false;
         if(IS_PLAYER) {
-          Snd snd("", sfxDoorClose, IgnoreMsgIfOriginSeen::yes, pos_,
+          Snd snd("", SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMonsters::yes);
           eng.sndEmitter->emitSnd(snd);
           eng.log->addMsg("I fumble with a door and succeed to close it.");
         } else {
           Snd snd("I hear a door closing.",
-                  sfxDoorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
+                  SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
                   SndVol::low, AlertsMonsters::no);
           eng.sndEmitter->emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
@@ -470,12 +470,12 @@ void Door::tryOpen(Actor* actorTrying) {
       trace << "Door: Tryer can see, opening" << endl;
       isOpen_ = true;
       if(IS_PLAYER) {
-        Snd snd("", sfxDoorOpen, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
+        Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
                 SndVol::low, AlertsMonsters::yes);
         eng.sndEmitter->emitSnd(snd);
         eng.log->addMsg("I open the door.");
       } else {
-        Snd snd("I hear a door open.", sfxDoorOpen, IgnoreMsgIfOriginSeen::yes,
+        Snd snd("I hear a door open.", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes,
                 pos_, actorTrying, SndVol::low, AlertsMonsters::no);
         eng.sndEmitter->emitSnd(snd);
         if(PLAYER_SEE_TRYER) {
@@ -489,12 +489,12 @@ void Door::tryOpen(Actor* actorTrying) {
         trace << "Door: Tryer is blind, but open succeeded anyway" << endl;
         isOpen_ = true;
         if(IS_PLAYER) {
-          Snd snd("", sfxDoorOpen, IgnoreMsgIfOriginSeen::yes, pos_,
+          Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMonsters::yes);
           eng.sndEmitter->emitSnd(snd);
           eng.log->addMsg("I fumble with a door and succeed to open it.");
         } else {
-          Snd snd("I hear something open a door clumsily.", sfxDoorOpen,
+          Snd snd("I hear something open a door clumsily.", SfxId::doorOpen,
                   IgnoreMsgIfOriginSeen::yes, pos_, actorTrying, SndVol::low,
                   AlertsMonsters::no);
           eng.sndEmitter->emitSnd(snd);
@@ -508,14 +508,14 @@ void Door::tryOpen(Actor* actorTrying) {
       } else {
         trace << "Door: Tryer is blind, and open failed" << endl;
         if(IS_PLAYER) {
-          Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos_,
+          Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMonsters::yes);
           eng.sndEmitter->emitSnd(snd);
           eng.log->addMsg("I fumble blindly with a door and fail to open it.");
         } else {
           //Emitting the sound from the actor instead of the door, because the
           //sound message should be received even if the door is seen
-          Snd snd("I hear something attempting to open a door.", endOfSfxId,
+          Snd snd("I hear something attempting to open a door.", SfxId::endOfSfxId,
                   IgnoreMsgIfOriginSeen::yes, actorTrying->pos, actorTrying,
                   SndVol::low, AlertsMonsters::no);
           eng.sndEmitter->emitSnd(snd);

@@ -11,6 +11,7 @@
 #include "GameTime.h"
 #include "Renderer.h"
 #include "MapParsing.h"
+#include "SdlWrapper.h"
 
 void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                              const bool IS_SPIKE_GUN,
@@ -71,7 +72,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           Renderer::drawMapAndInterface();
 
-          eng.sleep(Config::getDelayProjectileDraw());
+          SdlWrapper::sleep(Config::getDelayProjectileDraw());
 
           if(CELL_IS_BOTTOMLESS) {
             if(DEFENDER_IS_MONSTER && PLAYER_SEE_DEFENDER) {

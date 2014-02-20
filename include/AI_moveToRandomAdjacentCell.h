@@ -36,7 +36,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
   //First, try the same direction as last travelled
   const Dir lastDirTravelled = monster.lastDirTravelled_;
   DirConverter dirConv;
-  if(lastDirTravelled != dirCenter) {
+  if(lastDirTravelled != Dir::center) {
     const Pos targetCell(monsterPos + dirConv.getOffset(lastDirTravelled));
     if(
       blockers[targetCell.x][targetCell.y] == false &&
@@ -64,7 +64,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
 
   const int NR_ELEMENTS = dirCandidates.size();
   if(NR_ELEMENTS == 0) {
-    return dirCenter;
+    return Dir::center;
   } else {
     return dirCandidates.at(Rnd::range(0, NR_ELEMENTS - 1));
   }
@@ -81,7 +81,7 @@ static bool action(Monster& monster, Engine& engine) {
       monster.awareOfPlayerCounter_ > 0) {
 
       const Dir dir = getDirToRndAdjFreeCell(monster, engine);
-      if(dir != dirCenter) {
+      if(dir != Dir::center) {
         monster.moveDir(dir);
         return true;
       }

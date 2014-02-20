@@ -8,40 +8,21 @@
 
 class Engine;
 
-//dfslkgndflgn //TODO make namespace and use init()/cleanup() like Renderer
+namespace Audio {
 
-class Audio {
-public:
-  Audio(Engine& engine);
-  ~Audio();
+void init();
+void cleanup();
 
-  void initAndClearPrev();
+//Returns channel playing on
+int play(const SfxId sfx, const int VOL_PERCENT_TOT = 100,
+         const int VOL_PERCENT_L = 50);
 
-  //Returns channel playing on
-  int play(const SfxId sfx, const int VOL_PERCENT_TOT = 100,
-           const int VOL_PERCENT_L = 50);
+void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT);
 
-  void playFromDir(const SfxId sfx, const Dir dir,
-                         const int DISTANCE_PERCENT);
+void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY, Engine& eng);
 
-  void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY);
+void fadeOutChannel(const int CHANNEL_NR);
 
-  void fadeOutChannel(const int CHANNEL_NR);
-
-private:
-  SfxId getAmbSfxSuitableForDlvl() const;
-
-  void loadAudioFile(const SfxId sfx, const std::string& filename);
-
-  void freeAssets();
-
-  int curChannel;
-
-  Mix_Chunk* audioChunks[endOfSfxId];
-
-  int timeAtLastAmb;
-
-  Engine& eng;
-};
+}
 
 #endif

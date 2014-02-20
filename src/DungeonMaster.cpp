@@ -8,6 +8,7 @@
 #include "ActorPlayer.h"
 #include "CharacterLines.h"
 #include "Log.h"
+#include "SdlWrapper.h"
 
 void DungeonMaster::initXpArray() {
   xpForLvl[0] = 0;
@@ -122,7 +123,7 @@ void DungeonMaster::winGame() {
   const int Y0 = 2;
   const unsigned int NR_OF_WIN_MESSAGE_LINES = winMessageLines.size();
   const int DELAY_BETWEEN_LINES = 40;
-  eng.sleep(DELAY_BETWEEN_LINES);
+  SdlWrapper::sleep(DELAY_BETWEEN_LINES);
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
     for(unsigned int ii = 0; ii <= i; ii++) {
       Renderer::drawTextCentered(winMessageLines.at(ii), panel_screen,
@@ -138,7 +139,7 @@ void DungeonMaster::winGame() {
       }
     }
     Renderer::updateScreen();
-    eng.sleep(DELAY_BETWEEN_LINES);
+    SdlWrapper::sleep(DELAY_BETWEEN_LINES);
   }
 
   eng.query->waitForEscOrSpace();

@@ -62,7 +62,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
       const string swiftStr = IS_SWIFT_RELOAD ? " swiftly" : "";
       if(IS_PLAYER) {
 
-        eng.audio->play(wpn->getData().reloadSfx);
+        Audio::play(wpn->getData().reloadSfx);
 
         if(isClip) {
           const string wpnName =

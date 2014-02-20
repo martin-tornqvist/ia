@@ -379,7 +379,7 @@ void Tomb::triggerTrap(Actor& actor) {
           prop->turnsLeft_ *= 2;
         }
         Explosion::runExplosionAt(
-          pos_, eng, 0, endOfSfxId, false, prop, true, fumeClr);
+          pos_, eng, 0, SfxId::endOfSfxId, false, prop, true, fumeClr);
       } else {
         for(int i = 1; i < endOfActorIds; i++) {
           const ActorData& d = eng.actorDataHandler->dataList[i];
@@ -636,7 +636,7 @@ void Chest::triggerTrap(Actor& actor) {
       eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS &&
       Rnd::oneIn(EXPLODE_ONE_IN_N)) {
       eng.log->addMsg("The trap explodes!");
-      Explosion::runExplosionAt(pos_, eng, 0, sfxExplosion, true);
+      Explosion::runExplosionAt(pos_, eng, 0, SfxId::explosion, true);
       if(eng.player->deadState == actorDeadState_alive) {
         eng.featureFactory->spawnFeatureAt(feature_rubbleLow, pos_);
       }
@@ -656,7 +656,7 @@ void Chest::triggerTrap(Actor& actor) {
         prop->turnsLeft_ *= 2;
       }
       Explosion::runExplosionAt(
-        pos_, eng, 0, endOfSfxId, false, prop, true, fumeClr);
+        pos_, eng, 0, SfxId::endOfSfxId, false, prop, true, fumeClr);
     }
   }
 }

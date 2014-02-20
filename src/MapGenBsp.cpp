@@ -51,7 +51,7 @@ bool MapGenBsp::run_() {
 
 #ifdef DEMO_MODE
   Renderer::drawMapAndInterface();
-  eng.sdlWrapper->sleep(1000);
+  SdlWrapper::sleep(1000);
   const int P_W = Config::getCellW();
   const int P_H = Config::getCellH();
   const int P_M_O = Config::mainscreenOffsetY;
@@ -60,18 +60,18 @@ bool MapGenBsp::run_() {
   const int P_M_H = P_C_O - P_M_O;
   Renderer::drawLineHor(Pos(0, SPL_Y1 * P_H + P_M_O), P_S_W, clrRedLgt);
   Renderer::updateScreen();
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
   Renderer::drawLineHor(Pos(0, SPL_Y2 * P_H + P_M_O), P_S_W, clrRedLgt);
   Renderer::updateScreen();
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
   Renderer::drawLineVer(Pos(SPL_X1 * P_W, P_M_O), P_M_H, clrRedLgt);
   Renderer::updateScreen();
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
   Renderer::drawLineVer(Pos(SPL_X2 * P_W, P_M_O), P_M_H, clrRedLgt);
   Renderer::updateScreen();
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
   Renderer::drawMapAndInterface(true);
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 
   Region* regions[3][3];
@@ -122,7 +122,7 @@ bool MapGenBsp::run_() {
         Renderer::drawRectangleSolid(
           Pos(X0 * P_W, P_M_O + Y0 * P_H), dims, clrGreenLgt);
         Renderer::updateScreen();
-        eng.sdlWrapper->sleep(2000);
+        SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 
         const Rect roomPoss = region->getRandomPossForRoom();
@@ -157,7 +157,7 @@ bool MapGenBsp::run_() {
     }
   }
 #ifdef DEMO_MODE
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 
   movePlayerToNearestAllowedPos();
@@ -166,7 +166,7 @@ bool MapGenBsp::run_() {
   eng.roomThemeMaker->run();
 #ifdef DEMO_MODE
   Renderer::drawMapAndInterface();
-  eng.sdlWrapper->sleep(3000);
+  SdlWrapper::sleep(3000);
 #endif // DEMO_MODE
 
   movePlayerToNearestAllowedPos();
@@ -193,7 +193,7 @@ bool MapGenBsp::run_() {
 
 #ifdef DEMO_MODE
   Renderer::drawMapAndInterface();
-  eng.sdlWrapper->sleep(5000);
+  SdlWrapper::sleep(5000);
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -342,7 +342,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
               eng.featureFactory->spawnFeatureAt(feature_caveFloor, c);
 #ifdef DEMO_MODE
               Renderer::drawMapAndInterface();
-              eng.sdlWrapper->sleep(5);
+              SdlWrapper::sleep(5);
 #endif // DEMO_MODE
 
               for(int dy = -1; dy <= 1; dy++) {
@@ -357,7 +357,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
                     wall->setRandomIsMossGrown();
 #ifdef DEMO_MODE
                     Renderer::drawMapAndInterface();
-                    eng.sdlWrapper->sleep(5);
+                    SdlWrapper::sleep(5);
 #endif // DEMO_MODE
                   }
                 }
@@ -396,7 +396,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
                 eng.featureFactory->spawnFeatureAt(feature_chasm, c);
 #ifdef DEMO_MODE
                 Renderer::drawMapAndInterface();
-                eng.sdlWrapper->sleep(5);
+                SdlWrapper::sleep(5);
 #endif // DEMO_MODE
               }
             }
@@ -406,7 +406,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
     }
   }
 #ifdef DEMO_MODE
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
   trace << "MapGenBsp::buildCaves()[DONE]" << endl;
 }
@@ -460,7 +460,7 @@ void MapGenBsp::buildMergedRegionsAndRooms(
       Pos(MERGED_X0 * P_W, P_O + MERGED_Y0 * P_H), dims,
       clrBlueLgt);
     Renderer::updateScreen();
-    eng.sdlWrapper->sleep(500);
+    SdlWrapper::sleep(500);
 #endif // DEMO_MODE
 
     const int AREA_2_X0 =
@@ -629,7 +629,7 @@ void MapGenBsp::buildRoomsInRooms() {
               }
 #ifdef DEMO_MODE
               Renderer::drawMapAndInterface();
-              eng.sdlWrapper->sleep(2000);
+              SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
               tryCount = 99999;
             }
@@ -845,7 +845,7 @@ void MapGenBsp::decorate() {
           eng.featureFactory->spawnFeatureAt(feature_rubbleHigh, Pos(x, y));
 #ifdef DEMO_MODE
           Renderer::drawMapAndInterface();
-          eng.sdlWrapper->sleep(1);
+          SdlWrapper::sleep(1);
 #endif // DEMO_MODE
           continue;
         }
@@ -856,7 +856,7 @@ void MapGenBsp::decorate() {
         wall->setRandomIsMossGrown();
 #ifdef DEMO_MODE
         Renderer::drawMapAndInterface();
-        eng.sdlWrapper->sleep(1);
+        SdlWrapper::sleep(1);
 #endif // DEMO_MODE
 
         //Convert walls with no adjacent stone floor to cave walls
@@ -866,7 +866,7 @@ void MapGenBsp::decorate() {
           wall->setRandomNormalWall();
 #ifdef DEMO_MODE
           Renderer::drawMapAndInterface();
-          eng.sdlWrapper->sleep(1);
+          SdlWrapper::sleep(1);
 #endif // DEMO_MODE
         }
       }
@@ -881,7 +881,7 @@ void MapGenBsp::decorate() {
           eng.featureFactory->spawnFeatureAt(feature_rubbleLow, Pos(x, y));
 #ifdef DEMO_MODE
           Renderer::drawMapAndInterface();
-          eng.sdlWrapper->sleep(1);
+          SdlWrapper::sleep(1);
 #endif // DEMO_MODE
           continue;
         }
@@ -889,7 +889,7 @@ void MapGenBsp::decorate() {
     }
   }
 #ifdef DEMO_MODE
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 }
 
@@ -921,17 +921,17 @@ void MapGenBsp::connectRegions(Region* regions[3][3]) {
     Region* const r2 = regions[c2.x][c2.y];
 
     if(r1->regionsConnectedTo[c2.x][c2.y] == false) {
-      const Dir regionDir = c2.x > c1.x ? dirRight :
-                            c2.x < c1.x ? dirLeft :
-                            c2.y > c1.y ? dirDown :
-                            dirUp;
+      const Dir regionDir = c2.x > c1.x ? Dir::right :
+                            c2.x < c1.x ? Dir::left :
+                            c2.y > c1.y ? Dir::down :
+                            Dir::up;
 
       MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
         *(r1->mainRoom), *(r2->mainRoom), regionDir, globalDoorPosCandidates);
 
 #ifdef DEMO_MODE
       Renderer::drawMapAndInterface();
-      eng.sdlWrapper->sleep(1000);
+      SdlWrapper::sleep(1000);
 #endif // DEMO_MODE
 
       r1->regionsConnectedTo[c2.x][c2.y] = true;
@@ -1035,7 +1035,7 @@ void MapGenBsp::placeDoorAtPosIfSuitable(const Pos pos) {
       feature_door, pos, new DoorSpawnData(mimicFeatData));
 #ifdef DEMO_MODE
     Renderer::drawMapAndInterface();
-    eng.sdlWrapper->sleep(1000);
+    SdlWrapper::sleep(1000);
 #endif // DEMO_MODE
   }
 }
@@ -1119,13 +1119,13 @@ void MapGenBsp::coverAreaWithFeature(
 
 #ifdef DEMO_MODE
       Renderer::drawMapAndInterface();
-      eng.sdlWrapper->sleep(1);
+      SdlWrapper::sleep(1);
 #endif // DEMO_MODE
     }
   }
 
 #ifdef DEMO_MODE
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 }
 
@@ -1209,7 +1209,7 @@ void MapGenBsp::reshapeRoom(const Room& room) {
 
 #ifdef DEMO_MODE
   Renderer::drawMapAndInterface();
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 }
 
@@ -1226,10 +1226,10 @@ int MapGenBsp::getNrStepsInDirUntilWallFound(
       return stepsTaken;
     }
     c +=
-      dir == dirRight ? Pos(1, 0) :
-      dir == dirUp    ? Pos(0, -1) :
-      dir == dirLeft  ? Pos(-1, 0) :
-      dir == dirDown  ? Pos(0, 1) :
+      dir == Dir::right ? Pos(1, 0) :
+      dir == Dir::up    ? Pos(0, -1) :
+      dir == Dir::left  ? Pos(-1, 0) :
+      dir == Dir::down  ? Pos(0, 1) :
       Pos(0, 0);
     stepsTaken++;
   }
@@ -1358,7 +1358,7 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
   }
 #ifdef DEMO_MODE
   Renderer::drawMapAndInterface();
-  eng.sdlWrapper->sleep(2000);
+  SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 
   trace << "MapGenBsp::buildAuxRooms() [DONE]" << endl;
@@ -1396,7 +1396,7 @@ bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
       eng.featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
 #ifdef DEMO_MODE
       Renderer::drawMapAndInterface();
-      eng.sdlWrapper->sleep(1000);
+      SdlWrapper::sleep(1000);
 #endif // DEMO_MODE
       globalDoorPosCandidates[doorPos.x][doorPos.y] = true;
     }

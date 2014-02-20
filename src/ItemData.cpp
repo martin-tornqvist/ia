@@ -63,12 +63,12 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->rangedSndVol = SndVol::low;
       d->rangedMakesRicochetSound = false;
       d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
-      d->landOnHardSurfaceSfx = endOfSfxId;
-      d->rangedAttackSfx = endOfSfxId;
-      d->meleeHitSmallSfx = endOfSfxId;
-      d->meleeHitMediumSfx = endOfSfxId;
-      d->meleeHitHardSfx = endOfSfxId;
-      d->reloadSfx = endOfSfxId;
+      d->landOnHardSurfaceSfx = SfxId::endOfSfxId;
+      d->rangedAttackSfx = SfxId::endOfSfxId;
+      d->meleeHitSmallSfx = SfxId::endOfSfxId;
+      d->meleeHitMediumSfx = SfxId::endOfSfxId;
+      d->meleeHitHardSfx = SfxId::endOfSfxId;
+      d->reloadSfx = SfxId::endOfSfxId;
       d->propAppliedOnRanged = NULL;
       d->isExplosive = false;
       d->armorData = ArmorData();
@@ -84,9 +84,9 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->clr = clrWhite;
       d->primaryAttackMode = primaryAttackMode_melee;
       d->isMeleeWeapon = true;
-      d->meleeHitSmallSfx = sfxHitSmall;
-      d->meleeHitMediumSfx = sfxHitMedium;
-      d->meleeHitHardSfx = sfxHitHard;
+      d->meleeHitSmallSfx = SfxId::hitSmall;
+      d->meleeHitMediumSfx = SfxId::hitMedium;
+      d->meleeHitHardSfx = SfxId::hitHard;
     } break;
 
     case itemData_meleeWpnIntr: {
@@ -94,9 +94,9 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isIntrinsic = true;
       d->spawnStandardMinDLVL = -1;
       d->spawnStandardMaxDLVL = -1;
-      d->meleeHitSmallSfx = sfxHitSmall;
-      d->meleeHitMediumSfx = sfxHitMedium;
-      d->meleeHitHardSfx = sfxHitHard;
+      d->meleeHitSmallSfx = SfxId::hitSmall;
+      d->meleeHitMediumSfx = SfxId::hitMedium;
+      d->meleeHitHardSfx = SfxId::hitHard;
     } break;
 
     case itemData_rangedWpn: {
@@ -112,9 +112,9 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->rangedMissileGlyph = '/';
       d->rangedMissileClr = clrWhite;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
-      d->meleeHitSmallSfx = sfxHitSmall;
-      d->meleeHitMediumSfx = sfxHitMedium;
-      d->meleeHitHardSfx = sfxHitHard;
+      d->meleeHitSmallSfx = SfxId::hitSmall;
+      d->meleeHitMediumSfx = SfxId::hitMedium;
+      d->meleeHitHardSfx = SfxId::hitHard;
       d->rangedSndVol = SndVol::high;
     } break;
 
@@ -208,7 +208,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->spawnStandardMinDLVL = 4;
       d->spawnStandardMaxDLVL = 999;
       d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
-      d->landOnHardSurfaceSfx = sfxMetalClank;
+      d->landOnHardSurfaceSfx = SfxId::metalClank;
     } break;
 
     case itemData_armor: {
@@ -273,9 +273,9 @@ void ItemDataHandler::initDataList() {
   d->rangedAmmoTypeUsed = item_shotgunShell;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSndMsg = "I hear a shotgun blast.";
-  d->rangedAttackSfx = sfxShotgunSawedOffFire;
+  d->rangedAttackSfx = SfxId::shotgunSawedOffFire;
   d->rangedMakesRicochetSound = true;
-  d->reloadSfx = sfxShotgunReload;
+  d->reloadSfx = SfxId::shotgunReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -292,9 +292,9 @@ void ItemDataHandler::initDataList() {
   d->rangedAmmoTypeUsed = item_shotgunShell;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSndMsg = "I hear a shotgun blast.";
-  d->rangedAttackSfx = sfxShotgunPumpFire;
+  d->rangedAttackSfx = SfxId::shotgunPumpFire ;
   d->rangedMakesRicochetSound = true;
-  d->reloadSfx = sfxShotgunReload;
+  d->reloadSfx = SfxId::shotgunReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -352,9 +352,9 @@ void ItemDataHandler::initDataList() {
   d->rangedAmmoTypeUsed = item_drumOfBullets;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
   d->rangedSndMsg = "I hear the burst of a machine gun.";
-  d->rangedAttackSfx = sfxMachineGunFire;
+  d->rangedAttackSfx = SfxId::machineGunFire;
   d->rangedMakesRicochetSound = true;
-  d->reloadSfx = sfxMachineGunReload;
+  d->reloadSfx = SfxId::machineGunReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -379,9 +379,9 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a pistol");
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a pistol");
   d->rangedSndMsg = "I hear a pistol being fired.";
-  d->rangedAttackSfx = sfxPistolFire;
+  d->rangedAttackSfx = SfxId::pistolFire;
   d->rangedMakesRicochetSound = true;
-  d->reloadSfx = sfxPistolReload;
+  d->reloadSfx = SfxId::pistolReload;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -513,7 +513,7 @@ void ItemDataHandler::initDataList() {
   d->missileDmg = DiceParam(2, 4);
   d->maxStackSizeAtSpawn = 8;
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
-  d->landOnHardSurfaceSfx = sfxMetalClank;
+  d->landOnHardSurfaceSfx = SfxId::metalClank;
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
@@ -543,8 +543,8 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Dagger");
   d->meleeDmg = pair<int, int>(1, 4);
   d->meleeHitChanceMod = 20;
-  d->meleeHitMediumSfx = sfxHitSharp;
-  d->meleeHitHardSfx = sfxHitSharp;
+  d->meleeHitMediumSfx = SfxId::hitSharp;
+  d->meleeHitHardSfx = SfxId::hitSharp;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
@@ -562,8 +562,8 @@ void ItemDataHandler::initDataList() {
   d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 10);
   d->isMissileWeapon = false;
-  d->meleeHitMediumSfx = sfxHitSharp;
-  d->meleeHitHardSfx = sfxHitSharp;
+  d->meleeHitMediumSfx = SfxId::hitSharp;
+  d->meleeHitHardSfx = SfxId::hitSharp;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -602,8 +602,8 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Machete");
   d->meleeDmg = pair<int, int>(2, 5);
   d->meleeHitChanceMod = 0;
-  d->meleeHitSmallSfx = sfxHitSharp;
-  d->meleeHitMediumSfx = sfxHitSharp;
+  d->meleeHitSmallSfx = SfxId::hitSharp;
+  d->meleeHitMediumSfx = SfxId::hitSharp;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
@@ -616,9 +616,9 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an axe");
   d->meleeDmg = pair<int, int>(2, 6);
   d->meleeHitChanceMod = -5;
-  d->meleeHitSmallSfx = sfxHitSmall;
-  d->meleeHitMediumSfx = sfxHitMedium;
-  d->meleeHitHardSfx = sfxHitHard;
+  d->meleeHitSmallSfx = SfxId::hitSmall;
+  d->meleeHitMediumSfx = SfxId::hitMedium;
+  d->meleeHitHardSfx = SfxId::hitHard;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
   addFeatureFoundIn(d, feature_cocoon);
@@ -633,8 +633,8 @@ void ItemDataHandler::initDataList() {
   d->meleeDmg = pair<int, int>(3, 4);
   d->meleeHitChanceMod = -5;
   d->meleeCausesKnockBack = true;
-  d->meleeHitSmallSfx = sfxHitSharp;
-  d->meleeHitMediumSfx = sfxHitSharp;
+  d->meleeHitSmallSfx = SfxId::hitSharp;
+  d->meleeHitMediumSfx = SfxId::hitSharp;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
@@ -664,7 +664,7 @@ void ItemDataHandler::initDataList() {
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
-  d->landOnHardSurfaceSfx = sfxMetalClank;
+  d->landOnHardSurfaceSfx = SfxId::metalClank;
   d->primaryAttackMode = primaryAttackMode_missile;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -709,9 +709,9 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(item_zombieAxe);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "chops me with a rusty axe");
-  d->meleeHitSmallSfx = sfxHitSmall;
-  d->meleeHitMediumSfx = sfxHitMedium;
-  d->meleeHitHardSfx = sfxHitHard;
+  d->meleeHitSmallSfx = SfxId::hitSmall;
+  d->meleeHitMediumSfx = SfxId::hitMedium;
+  d->meleeHitHardSfx = SfxId::hitHard;
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_zombieAxe]);
   dataList[d->id] = d;
 

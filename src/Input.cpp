@@ -78,11 +78,11 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
     if(eng.player->deadState == actorDeadState_alive) {
       eng.log->clearLog();
       if(d.isShiftHeld_) {
-        eng.player->moveDir(dirUpRight);
+        eng.player->moveDir(Dir::upRight);
       } else if(d.isCtrlHeld_) {
-        eng.player->moveDir(dirDownRight);
+        eng.player->moveDir(Dir::downRight);
       } else {
-        eng.player->moveDir(dirRight);
+        eng.player->moveDir(Dir::right);
       }
     }
     clearEvents();
@@ -90,7 +90,7 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
   } else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
     if(eng.player->deadState == actorDeadState_alive) {
       eng.log->clearLog();
-      eng.player->moveDir(dirDown);
+      eng.player->moveDir(Dir::down);
     }
     clearEvents();
     return;
@@ -98,11 +98,11 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
     if(eng.player->deadState == actorDeadState_alive) {
       eng.log->clearLog();
       if(d.isShiftHeld_) {
-        eng.player->moveDir(dirUpLeft);
+        eng.player->moveDir(Dir::upLeft);
       } else if(d.isCtrlHeld_) {
-        eng.player->moveDir(dirDownLeft);
+        eng.player->moveDir(Dir::downLeft);
       } else {
-        eng.player->moveDir(dirLeft);
+        eng.player->moveDir(Dir::left);
       }
     }
     clearEvents();
@@ -110,35 +110,35 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
   } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
     if(eng.player->deadState == actorDeadState_alive) {
       eng.log->clearLog();
-      eng.player->moveDir(dirUp);
+      eng.player->moveDir(Dir::up);
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
     if(eng.player->deadState == actorDeadState_alive) {
       eng.log->clearLog();
-      eng.player->moveDir(dirUpRight);
+      eng.player->moveDir(Dir::upRight);
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3') {
     if(eng.player->deadState == actorDeadState_alive) {
       eng.log->clearLog();
-      eng.player->moveDir(dirDownRight);
+      eng.player->moveDir(Dir::downRight);
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_END || d.key_ == '1') {
     if(eng.player->deadState == actorDeadState_alive) {
       eng.log->clearLog();
-      eng.player->moveDir(dirDownLeft);
+      eng.player->moveDir(Dir::downLeft);
     }
     clearEvents();
     return;
   } else if(d.sdlKey_ == SDLK_HOME || d.key_ == '7') {
     if(eng.player->deadState == actorDeadState_alive) {
       eng.log->clearLog();
-      eng.player->moveDir(dirUpLeft);
+      eng.player->moveDir(Dir::upLeft);
     }
     clearEvents();
     return;
@@ -165,7 +165,7 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
         aiming->nrTurnsAiming += nrTurnsAimingOld;
         propHlr.tryApplyProp(aiming);
       }
-      eng.player->moveDir(dirCenter);
+      eng.player->moveDir(Dir::center);
     }
     clearEvents();
     return;
@@ -628,7 +628,7 @@ KeyboardReadReturnData readKeysUntilFound(Engine& eng) {
 
   while(true) {
 
-    eng.sleep(1);
+    SdlWrapper::sleep(1);
 
     while(SDL_PollEvent(event_)) {
       if(event_->type == SDL_QUIT) {

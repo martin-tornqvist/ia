@@ -168,7 +168,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     }
     eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
 #ifdef DEMO_MODE
-    eng.sdlWrapper->sleep(50);
+    SdlWrapper::sleep(50);
 #endif // DEMO_MODE
     if(doorPosCandidates != NULL) {
       doorPosCandidates[c.x][c.y] = true;
@@ -180,7 +180,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     while(floorInR1Grid[cTemp.x][cTemp.y] == false) {
       eng.featureFactory->spawnFeatureAt(feature_stoneFloor, cTemp, NULL);
 #ifdef DEMO_MODE
-      eng.sdlWrapper->sleep(50);
+      SdlWrapper::sleep(50);
 #endif // DEMO_MODE
       cTemp -= roomDeltaSigns;
     }
@@ -195,7 +195,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     while(c.x != c2.x && c.y != c2.y && floorInR2Grid[c.x][c.y] == false) {
       eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
 #ifdef DEMO_MODE
-      eng.sdlWrapper->sleep(50);
+      SdlWrapper::sleep(50);
 #endif // DEMO_MODE
       c += deltaCurSign - roomDeltaSigns;
     }
@@ -204,7 +204,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     while(c != c2 && floorInR2Grid[c.x][c.y] == false) {
       eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
 #ifdef DEMO_MODE
-      eng.sdlWrapper->sleep(50);
+      SdlWrapper::sleep(50);
 #endif // DEMO_MODE
       c += roomDeltaSigns;
     }

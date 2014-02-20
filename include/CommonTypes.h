@@ -227,16 +227,16 @@ enum SpawnRate {
   spawnRare, spawnCommon, spawnVeryCommon
 };
 
-enum Dir {
-  dirDownLeft   = 1,
-  dirDown       = 2,
-  dirDownRight  = 3,
-  dirLeft       = 4,
-  dirCenter     = 5,
-  dirRight      = 6,
-  dirUpLeft     = 7,
-  dirUp         = 8,
-  dirUpRight    = 9,
+enum class Dir {
+  downLeft   = 1,
+  down       = 2,
+  downRight  = 3,
+  left       = 4,
+  center     = 5,
+  right      = 6,
+  upLeft     = 7,
+  up         = 8,
+  upRight    = 9,
   endOfDirs
 };
 

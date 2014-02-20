@@ -20,6 +20,7 @@
 #include "Inventory.h"
 #include "Utils.h"
 #include "CommonData.h"
+#include "SdlWrapper.h"
 
 using namespace std;
 
@@ -138,36 +139,38 @@ void loadTiles() {
 
 void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
                               const SDL_Color& clr) {
-  const int CLR_TO = SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b);
+  if(isInited()) {
+    const int CLR_TO = SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b);
 
-  SDL_LockSurface(screenSurface_);
+    SDL_LockSurface(screenSurface_);
 
-  const int CELL_W = Config::getCellW();
-  const int CELL_H = Config::getCellH();
+    const int CELL_W = Config::getCellW();
+    const int CELL_H = Config::getCellH();
 
-  const Pos sheetPoss = eng->art->getTilePoss(tile);
-  const int SHEET_X0  = sheetPoss.x * CELL_W;
-  const int SHEET_Y0  = sheetPoss.y * CELL_H;
-  const int SHEET_X1  = SHEET_X0 + CELL_W - 1;
-  const int SHEET_Y1  = SHEET_Y0 + CELL_H - 1;
-  const int SCREEN_X0 = pixelPos.x;
-  const int SCREEN_Y0 = pixelPos.y;
+    const Pos sheetPoss = eng->art->getTilePoss(tile);
+    const int SHEET_X0  = sheetPoss.x * CELL_W;
+    const int SHEET_Y0  = sheetPoss.y * CELL_H;
+    const int SHEET_X1  = SHEET_X0 + CELL_W - 1;
+    const int SHEET_Y1  = SHEET_Y0 + CELL_H - 1;
+    const int SCREEN_X0 = pixelPos.x;
+    const int SCREEN_Y0 = pixelPos.y;
 
-  int screenX = SCREEN_X0;
-  int screenY = SCREEN_Y0;
+    int screenX = SCREEN_X0;
+    int screenY = SCREEN_Y0;
 
-  for(int sheetY = SHEET_Y0; sheetY <= SHEET_Y1; sheetY++) {
-    screenX = SCREEN_X0;
-    for(int sheetX = SHEET_X0; sheetX <= SHEET_X1; sheetX++) {
-      if(tilePixelData_[sheetX][sheetY]) {
-        putPixel(screenSurface_, screenX, screenY, CLR_TO);
+    for(int sheetY = SHEET_Y0; sheetY <= SHEET_Y1; sheetY++) {
+      screenX = SCREEN_X0;
+      for(int sheetX = SHEET_X0; sheetX <= SHEET_X1; sheetX++) {
+        if(tilePixelData_[sheetX][sheetY]) {
+          putPixel(screenSurface_, screenX, screenY, CLR_TO);
+        }
+        screenX++;
       }
-      screenX++;
+      screenY++;
     }
-    screenY++;
-  }
 
-  SDL_UnlockSurface(screenSurface_);
+    SDL_UnlockSurface(screenSurface_);
+  }
 }
 
 void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
@@ -462,7 +465,7 @@ void drawBlastAnimAtField(const Pos& center, const int RADIUS,
       }
     }
     updateScreen();
-    if(isAnyBlastRendered) {eng->sleep(Config::getDelayExplosion() / 2);}
+    if(isAnyBlastRendered) {SdlWrapper::sleep(Config::getDelayExplosion() / 2);}
 
     for(
       pos.y = max(1, center.y - RADIUS);
@@ -487,7 +490,7 @@ void drawBlastAnimAtField(const Pos& center, const int RADIUS,
       }
     }
     updateScreen();
-    if(isAnyBlastRendered) {eng->sleep(Config::getDelayExplosion() / 2);}
+    if(isAnyBlastRendered) {SdlWrapper::sleep(Config::getDelayExplosion() / 2);}
     drawMapAndInterface();
   }
   trace << "Renderer::drawBlastAnimAtField() [DONE]" << endl;
@@ -508,7 +511,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
       }
     }
     updateScreen();
-    eng->sleep(Config::getDelayExplosion() / 2);
+    SdlWrapper::sleep(Config::getDelayExplosion() / 2);
 
     for(unsigned int i = 0; i < positions.size(); i++) {
       const Pos& pos = positions.at(i);
@@ -519,7 +522,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
       }
     }
     updateScreen();
-    eng->sleep(Config::getDelayExplosion() / 2);
+    SdlWrapper::sleep(Config::getDelayExplosion() / 2);
     drawMapAndInterface();
   }
   trace << "Renderer::drawBlastAnimAtPositions() [DONE]" << endl;

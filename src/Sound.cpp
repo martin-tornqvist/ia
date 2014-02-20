@@ -53,7 +53,7 @@ void SndEmitter::emitSnd(Snd snd) {
 
         if(snd.getMsg().empty() == false) {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
-          if(dirToOrigin != endOfDirs) {
+          if(dirToOrigin != Dir::endOfDirs) {
             string dirStr;
             DirConverter().getCompassDirName(dirToOrigin, dirStr);
             snd.addString("(" + dirStr + ")");
@@ -81,7 +81,7 @@ Dir SndEmitter::getPlayerToOriginDir(
   int floodFill[MAP_W][MAP_H]) const {
 
   const Pos& playerPos = eng.player->pos;
-  Dir sourceDir = endOfDirs;
+  Dir sourceDir = Dir::endOfDirs;
 
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {

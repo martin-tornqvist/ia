@@ -437,7 +437,7 @@ void Potion::quaff(Actor* const actor) {
   if(actor == eng.player) {
     data_->isTried = true;
 
-    eng.audio->play(sfxPotionQuaff);
+    Audio::play(SfxId::potionQuaff);
 
     if(data_->isIdentified) {
       eng.log->addMsg("I drink " + data_->name.name_a + "...");

@@ -25,10 +25,10 @@ void MapPatterns::setPositionsInArea(
   for(unsigned int i = 0; i < positionCandidates.size(); i++) {
     const Pos pos = positionCandidates.at(i);
 
-    const int BLOCKERS_RIGHT = getWalkBlockersInDir(dirRight, pos);
-    const int BLOCKERS_DOWN  = getWalkBlockersInDir(dirDown, pos);
-    const int BLOCKERS_LEFT  = getWalkBlockersInDir(dirLeft, pos);
-    const int BLOCKERS_UP    = getWalkBlockersInDir(dirUp, pos);
+    const int BLOCKERS_RIGHT = getWalkBlockersInDir(Dir::right, pos);
+    const int BLOCKERS_DOWN  = getWalkBlockersInDir(Dir::down, pos);
+    const int BLOCKERS_LEFT  = getWalkBlockersInDir(Dir::left, pos);
+    const int BLOCKERS_UP    = getWalkBlockersInDir(Dir::up, pos);
 
     const bool IS_ALL_BLOCKERS_ZERO = BLOCKERS_RIGHT == 0 &&
                                       BLOCKERS_DOWN == 0 &&
@@ -74,7 +74,7 @@ int MapPatterns::getWalkBlockersInDir(
 
   int nrBlockers = 0;
   switch(dir) {
-    case dirRight: {
+    case Dir::right: {
       for(int dy = -1; dy <= 1; dy++) {
         const FeatureStatic* const f =
           eng.map->cells[pos.x + 1][pos.y + dy].featureStatic;
@@ -84,7 +84,7 @@ int MapPatterns::getWalkBlockersInDir(
       }
     } break;
 
-    case dirDown: {
+    case Dir::down: {
       for(int dx = -1; dx <= 1; dx++) {
         const FeatureStatic* const f =
           eng.map->cells[pos.x + dx][pos.y + 1].featureStatic;
@@ -94,7 +94,7 @@ int MapPatterns::getWalkBlockersInDir(
       }
     } break;
 
-    case dirLeft: {
+    case Dir::left: {
       for(int dy = -1; dy <= 1; dy++) {
         const FeatureStatic* const f =
           eng.map->cells[pos.x - 1][pos.y + dy].featureStatic;
@@ -104,7 +104,7 @@ int MapPatterns::getWalkBlockersInDir(
       }
     } break;
 
-    case dirUp: {
+    case Dir::up: {
       for(int dx = -1; dx <= 1; dx++) {
         const FeatureStatic* const f =
           eng.map->cells[pos.x + dx][pos.y - 1].featureStatic;
@@ -114,12 +114,12 @@ int MapPatterns::getWalkBlockersInDir(
       }
     } break;
 
-    case dirDownLeft:
-    case dirDownRight:
-    case dirUpLeft:
-    case dirUpRight:
-    case dirCenter:
-    case endOfDirs: {} break;
+    case Dir::downLeft:
+    case Dir::downRight:
+    case Dir::upLeft:
+    case Dir::upRight:
+    case Dir::center:
+    case Dir::endOfDirs: {} break;
   }
   return nrBlockers;
 }

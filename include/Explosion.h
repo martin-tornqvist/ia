@@ -17,7 +17,7 @@ void runExplosionAt(
   const Pos& origin,
   Engine& eng,
   const int RADI_CHANGE               = 0,
-  const SfxId sfx                     = sfxExplosion,
+  const SfxId sfx                     = SfxId::explosion,
   const bool SHOULD_DO_EXPLOSION_DMG  = true,
   Prop* const prop                    = NULL,
   const bool SHOULD_OVERRIDE_CLR      = false,

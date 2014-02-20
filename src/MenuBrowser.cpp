@@ -34,7 +34,7 @@ bool MenuBrowser::isPosAtKey(const char KEY) const {
 
 void MenuBrowser::navigate(const Dir dir) {
   switch(dir) {
-    case dirUp: {
+    case Dir::up: {
       pos_.y--;
       if(pos_.y < 0) {
         if(pos_.x == 0) {
@@ -45,7 +45,7 @@ void MenuBrowser::navigate(const Dir dir) {
       }
     } break;
 
-    case dirDown: {
+    case Dir::down: {
       pos_.y++;
       if(pos_.x == 0) {
         if(pos_.y > btmLeft_.y) {
@@ -58,8 +58,8 @@ void MenuBrowser::navigate(const Dir dir) {
       }
     } break;
 
-    case dirLeft:
-    case dirRight: {
+    case Dir::left:
+    case Dir::right: {
       pos_.x = pos_.x == 0 ? 1 : 0;
 
       pos_.x = min(pos_.x, upRight_.x);
@@ -71,12 +71,12 @@ void MenuBrowser::navigate(const Dir dir) {
       }
     } break;
 
-    case dirUpRight:
-    case dirUpLeft:
-    case dirDownLeft:
-    case dirDownRight:
-    case dirCenter:
-    case endOfDirs: {} break;
+    case Dir::upRight:
+    case Dir::upLeft:
+    case Dir::downLeft:
+    case Dir::downRight:
+    case Dir::center:
+    case Dir::endOfDirs: {} break;
   }
 }
 

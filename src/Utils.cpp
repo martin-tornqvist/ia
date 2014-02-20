@@ -291,41 +291,41 @@ Dir DirConverter::getDir(const Pos& offset) const {
   assert(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
 
   if(offset.y == -1) {
-    return offset.x == -1 ? dirUpLeft :
-           offset.x == 0 ? dirUp :
-           offset.x == 1 ? dirUpRight :
-           endOfDirs;
+    return offset.x == -1 ? Dir::upLeft :
+           offset.x == 0 ? Dir::up :
+           offset.x == 1 ? Dir::upRight :
+           Dir::endOfDirs;
   }
 
   if(offset.y == 0) {
-    return offset.x == -1 ? dirLeft :
-           offset.x == 0 ? dirCenter :
-           offset.x == 1 ? dirRight :
-           endOfDirs;
+    return offset.x == -1 ? Dir::left :
+           offset.x == 0 ? Dir::center :
+           offset.x == 1 ? Dir::right :
+           Dir::endOfDirs;
   }
   if(offset.y == 1) {
-    return offset.x == -1 ? dirDownLeft :
-           offset.x == 0 ? dirDown :
-           offset.x == 1 ? dirDownRight :
-           endOfDirs;
+    return offset.x == -1 ? Dir::downLeft :
+           offset.x == 0 ? Dir::down :
+           offset.x == 1 ? Dir::downRight :
+           Dir::endOfDirs;
   }
-  return endOfDirs;
+  return Dir::endOfDirs;
 }
 
 Pos DirConverter::getOffset(const Dir dir) const {
-  assert(dir != endOfDirs);
+  assert(dir != Dir::endOfDirs);
 
   switch(dir) {
-    case dirDownLeft:   return Pos(-1, 1);
-    case dirDown:       return Pos(0, 1);
-    case dirDownRight:  return Pos(1, 1);
-    case dirLeft:       return Pos(-1, 0);
-    case dirCenter:     return Pos(0, 0);
-    case dirRight:      return Pos(1, 0);
-    case dirUpLeft:     return Pos(-1, -1);
-    case dirUp:         return Pos(0, -1);
-    case dirUpRight:    return Pos(1, -1);
-    case endOfDirs:     return Pos(0, 0);
+    case Dir::downLeft:   return Pos(-1, 1);
+    case Dir::down:       return Pos(0, 1);
+    case Dir::downRight:  return Pos(1, 1);
+    case Dir::left:       return Pos(-1, 0);
+    case Dir::center:     return Pos(0, 0);
+    case Dir::right:      return Pos(1, 0);
+    case Dir::upLeft:     return Pos(-1, -1);
+    case Dir::up:         return Pos(0, -1);
+    case Dir::upRight:    return Pos(1, -1);
+    case Dir::endOfDirs:     return Pos(0, 0);
   }
   return Pos(0, 0);
 }

@@ -405,7 +405,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
     corpses[i] = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = actorDeadState_corpse;
   }
-  Explosion::runExplosionAt(Pos(X0, Y0), eng, 0, endOfSfxId, false,
+  Explosion::runExplosionAt(Pos(X0, Y0), eng, 0, SfxId::endOfSfxId, false,
                             new PropBurning(eng, propTurnsStd));
   CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
   CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
@@ -481,10 +481,10 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     //Move the monster into the trap, and back again
     monster->awareOfPlayerCounter_ = INT_MAX; // > 0 req. for triggering trap
     monster->pos = posL;
-    monster->moveDir(dirRight);
+    monster->moveDir(Dir::right);
     CHECK(monster->pos == posR);
-    monster->moveDir(dirLeft);
-    monster->moveDir(dirLeft);
+    monster->moveDir(Dir::left);
+    monster->moveDir(Dir::left);
 
     //Check conditions
     if(monster->pos == posR) {
@@ -649,7 +649,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Room room2(roomArea2);
 
   MapGenUtilCorridorBuilder(eng).buildZCorridorBetweenRooms(
-    room1, room2, dirRight);
+    room1, room2, Dir::right);
 }
 
 //TODO This would benefit a lot from modifying the map through some

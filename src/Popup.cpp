@@ -45,7 +45,7 @@ void Popup::showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   int y = printBoxAndGetTitleYPos(TEXT_H_TOT);
 
-  if(sfx != endOfSfxId) {eng.audio->play(sfx);}
+  if(sfx != SfxId::endOfSfxId) {Audio::play(sfx);}
 
   if(title.empty() == false) {
     Renderer::drawTextCentered(
@@ -94,7 +94,7 @@ int Popup::showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   MenuBrowser browser(NR_CHOICES, 0);
 
-  if(sfx != endOfSfxId) {eng.audio->play(sfx);}
+  if(sfx != SfxId::endOfSfxId) {Audio::play(sfx);}
 
   menuMsgDrawingHelper(
     lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,

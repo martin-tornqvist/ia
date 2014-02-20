@@ -468,7 +468,7 @@ void TrapGasConfusion::trigger(
   }
 
   Explosion::runExplosionAt(
-    pos_, eng, 0, endOfSfxId, false, new PropConfused(eng, propTurnsStd), true,
+    pos_, eng, 0, SfxId::endOfSfxId, false, new PropConfused(eng, propTurnsStd), true,
     getClr());
   traceVerbose << "TrapGasConfusion::trigger() [DONE]" << endl;
 }
@@ -498,7 +498,7 @@ void TrapGasParalyzation::trigger(
   }
 
   Explosion::runExplosionAt(
-    pos_, eng, 0, endOfSfxId, false, new PropParalyzed(eng, propTurnsStd),
+    pos_, eng, 0, SfxId::endOfSfxId, false, new PropParalyzed(eng, propTurnsStd),
     true, getClr());
   traceVerbose << "TrapGasParalyzation::trigger() [DONE]" << endl;
 }
@@ -528,7 +528,7 @@ void TrapGasFear::trigger(Actor& actor,
   }
 
   Explosion::runExplosionAt(
-    pos_, eng, 0, endOfSfxId, false, new PropTerrified(eng, propTurnsStd),
+    pos_, eng, 0, SfxId::endOfSfxId, false, new PropTerrified(eng, propTurnsStd),
     true, getClr());
   traceVerbose << "TrapGasFear::trigger() [DONE]" << endl;
 }
@@ -718,7 +718,7 @@ void TrapAlarm::trigger(
     (IS_PLAYER || CAN_PLAYER_SEE_ACTOR) ?
     IgnoreMsgIfOriginSeen::no : IgnoreMsgIfOriginSeen::yes;
 
-  Snd snd("I hear an alarm sounding!", endOfSfxId, msgIgnore, pos_, &actor,
+  Snd snd("I hear an alarm sounding!", SfxId::endOfSfxId, msgIgnore, pos_, &actor,
           SndVol::high, AlertsMonsters::yes);
   eng.sndEmitter->emitSnd(snd);
   traceVerbose << "TrapAlarm::trigger() [DONE]" << endl;
@@ -816,7 +816,7 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
         eng.log->addMsg(actorName + " struggles to break free.");
       }
     }
-    return dirCenter;
+    return Dir::center;
   } else {
     trace << "TrapSpiderWeb: Not holding actor" << endl;
   }

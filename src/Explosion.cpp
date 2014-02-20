@@ -11,6 +11,7 @@
 #include "LineCalc.h"
 #include "ActorPlayer.h"
 #include "Utils.h"
+#include "SdlWrapper.h"
 
 namespace {
 
@@ -50,7 +51,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
     }
     if(isAnyCellSeenByPlayer) {
       Renderer::updateScreen();
-      eng.sdlWrapper->sleep(Config::getDelayExplosion() / NR_ANIM_STEPS);
+      SdlWrapper::sleep(Config::getDelayExplosion() / NR_ANIM_STEPS);
     }
   }
 }
@@ -208,7 +209,7 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   getPositionsReached(area, origin, blockers, eng, posLists);
 
   //TODO Sound message?
-  Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, origin, NULL,
+  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, origin, NULL,
           SndVol::low, AlertsMonsters::yes);
   eng.sndEmitter->emitSnd(snd);
 

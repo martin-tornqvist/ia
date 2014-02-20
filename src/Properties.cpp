@@ -1498,7 +1498,7 @@ void PropWound::onMore() {
 void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
   (void)actorPos;
 
-  if(dir != dirCenter) {
+  if(dir != Dir::center) {
 
     if(owningActor_ == eng.player) {
       eng.log->addMsg("I struggle to tear out the spike!", clrMsgBad);
@@ -1530,7 +1530,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
       }
     }
 
-    dir = dirCenter;
+    dir = Dir::center;
   }
 }
 
@@ -1565,7 +1565,7 @@ bool PropConfused::allowAttackRanged(
 }
 
 void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
-  if(dir != dirCenter) {
+  if(dir != Dir::center) {
 
     bool blockers[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksActor(*owningActor_, true, eng),
@@ -1723,7 +1723,7 @@ void PropParalyzed::onStart() {
       player->updateColor();
       eng.log->addMsg("The lit Molotov Cocktail falls from my hands!");
       Explosion::runExplosionAt(
-        player->pos, eng, 0, sfxExplosionMolotov, false,
+        player->pos, eng, 0, SfxId::explosionMolotov, false,
         new PropBurning(eng, propTurnsStd));
     }
   }

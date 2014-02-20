@@ -39,7 +39,7 @@ void ItemPickup::tryPick() {
       Item* const carriedMissile = playerInv.getItemInSlot(slot_missiles);
       if(carriedMissile != NULL) {
         if(item->getData().id == carriedMissile->getData().id) {
-          eng.audio->play(sfxPickup);
+          Audio::play(SfxId::pickup);
 
           eng.log->addMsg("I add " + ITEM_NAME + " to my missile stack.");
           carriedMissile->nrItems += item->nrItems;
@@ -55,7 +55,7 @@ void ItemPickup::tryPick() {
       eng.log->clearLog();
       eng.log->addMsg("I cannot carry more.");
     } else {
-      eng.audio->play(sfxPickup);
+      Audio::play(SfxId::pickup);
 
       eng.log->clearLog();
       eng.log->addMsg("I pick up " + ITEM_NAME + ".");
@@ -104,10 +104,10 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
         eng.log->addMsg("I unload " + WEAPON_REF_A);
 
         if(isInvFull(playerInv, *spawnedAmmo) == false) {
-          eng.audio->play(sfxPickup);
+          Audio::play(SfxId::pickup);
           playerInv.putItemInGeneral(spawnedAmmo);
         } else {
-          eng.audio->play(sfxPickup);
+          Audio::play(SfxId::pickup);
           eng.itemDrop->dropItemOnMap(eng.player->pos, *spawnedAmmo);
           string str =  "I have no room to keep the unloaded ammunition.";
           eng.log->addMsg(str);

@@ -16,6 +16,7 @@
 #include "Log.h"
 #include "Audio.h"
 #include "LineCalc.h"
+#include "SdlWrapper.h"
 
 using namespace std;
 
@@ -155,14 +156,14 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
                 if(Config::isTilesMode()) {
                   curProj->setTile(tile_blast1, clrRedLgt);
                   Renderer::drawProjectiles(projectiles);
-                  eng.sleep(DELAY / 2);
+                  SdlWrapper::sleep(DELAY / 2);
                   curProj->setTile(tile_blast2, clrRedLgt);
                   Renderer::drawProjectiles(projectiles);
-                  eng.sleep(DELAY / 2);
+                  SdlWrapper::sleep(DELAY / 2);
                 } else {
                   curProj->setGlyph('*', clrRedLgt);
                   Renderer::drawProjectiles(projectiles);
-                  eng.sleep(DELAY);
+                  SdlWrapper::sleep(DELAY);
                 }
 
                 //MESSAGES FOR ACTOR HIT
@@ -223,7 +224,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           curProj->isObstructed = true;
 
           if(wpn.getData().rangedMakesRicochetSound) {
-            Snd snd("I hear a ricochet.", sfxRicochet,
+            Snd snd("I hear a ricochet.", SfxId::ricochet,
                     IgnoreMsgIfOriginSeen::yes, curProj->pos, NULL,
                     SndVol::low, AlertsMonsters::yes);
             eng.sndEmitter->emitSnd(snd);
@@ -234,14 +235,14 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
             if(Config::isTilesMode()) {
               curProj->setTile(tile_blast1, clrYellow);
               Renderer::drawProjectiles(projectiles);
-              eng.sleep(DELAY / 2);
+              SdlWrapper::sleep(DELAY / 2);
               curProj->setTile(tile_blast2, clrYellow);
               Renderer::drawProjectiles(projectiles);
-              eng.sleep(DELAY / 2);
+              SdlWrapper::sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
               Renderer::drawProjectiles(projectiles);
-              eng.sleep(DELAY);
+              SdlWrapper::sleep(DELAY);
             }
           }
         }
@@ -255,7 +256,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           curProj->obstructedInElement = projectilePathElement;
 
           if(wpn.getData().rangedMakesRicochetSound) {
-            Snd snd("I hear a ricochet.", sfxRicochet,
+            Snd snd("I hear a ricochet.", SfxId::ricochet,
                     IgnoreMsgIfOriginSeen::yes, curProj->pos, NULL,
                     SndVol::low, AlertsMonsters::yes);
             eng.sndEmitter->emitSnd(snd);
@@ -266,14 +267,14 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
             if(Config::isTilesMode()) {
               curProj->setTile(tile_blast1, clrYellow);
               Renderer::drawProjectiles(projectiles);
-              eng.sleep(DELAY / 2);
+              SdlWrapper::sleep(DELAY / 2);
               curProj->setTile(tile_blast2, clrYellow);
               Renderer::drawProjectiles(projectiles);
-              eng.sleep(DELAY / 2);
+              SdlWrapper::sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
               Renderer::drawProjectiles(projectiles);
-              eng.sleep(DELAY);
+              SdlWrapper::sleep(DELAY);
             }
           }
         }
@@ -296,7 +297,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       const Pos& p = projectiles.at(nn)->pos;
       if(eng.map->cells[p.x][p.y].isSeenByPlayer &&
           projectiles.at(nn)->isObstructed == false) {
-        eng.sleep(DELAY);
+        SdlWrapper::sleep(DELAY);
         nn = 99999;
       }
     }

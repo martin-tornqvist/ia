@@ -114,7 +114,7 @@ void playerSetsOption(const MenuBrowser* const browser,
   switch(browser->getPos().y) {
     case 0: {
       isAudioEnabled_ = !isAudioEnabled_;
-      eng.audio->initAndClearPrev();
+      Audio::init();
     } break;
 
     case 1: {

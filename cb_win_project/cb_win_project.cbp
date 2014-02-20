@@ -341,6 +341,7 @@
 		<Unit filename="../src/Renderer.cpp" />
 		<Unit filename="../src/RoomTheme.cpp" />
 		<Unit filename="../src/SaveHandler.cpp" />
+		<Unit filename="../src/SdlWrapper.cpp" />
 		<Unit filename="../src/Sound.cpp" />
 		<Unit filename="../src/Spells.cpp" />
 		<Unit filename="../src/TextFormatting.cpp" />

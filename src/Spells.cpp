@@ -198,7 +198,7 @@ SpellCastRetData SpellDarkbolt::cast_(
       Renderer::drawGlyph('*', panel_map, pos, clrMagenta);
     }
     Renderer::updateScreen();
-    eng.sdlWrapper->sleep(Config::getDelayProjectileDraw());
+    SdlWrapper::sleep(Config::getDelayProjectileDraw());
   }
 
   Renderer::drawBlastAnimAtPositions(
@@ -226,7 +226,7 @@ SpellCastRetData SpellDarkbolt::cast_(
 
   target->hit(DMG, dmgType_physical, true);
 
-  Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos, NULL,
+  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos, NULL,
           SndVol::low, AlertsMonsters::yes);
   eng.sndEmitter->emitSnd(snd);
 
@@ -275,7 +275,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
 
         actor->hit(DMG, dmgType_physical, false);
 
-        Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos, NULL,
+        Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos, NULL,
                 SndVol::high, AlertsMonsters::yes);
         eng.sndEmitter->emitSnd(snd);
       }
@@ -288,7 +288,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecific, 1));
     eng.player->hit(Rnd::range(dmgRange), dmgType_physical, false);
-    Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
+    Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
             SndVol::high, AlertsMonsters::yes);
     eng.sndEmitter->emitSnd(snd);
   }
@@ -365,8 +365,8 @@ SpellCastRetData SpellMayhem::cast_(
     }
   }
 
-  Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
-          SndVol::high, AlertsMonsters::yes);
+  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos,
+          NULL, SndVol::high, AlertsMonsters::yes);
   eng.sndEmitter->emitSnd(snd);
 
   return SpellCastRetData(true);

@@ -37,7 +37,7 @@ Monster::Monster(Engine& engine) :
   awareOfPlayerCounter_(0),
   playerAwareOfMeCounter_(0),
   messageMonsterInViewPrinted(false),
-  lastDirTravelled_(dirCenter),
+  lastDirTravelled_(Dir::center),
   spellCoolDownCurrent(0),
   isRoamingAllowed_(true),
   isStealth(false),
@@ -219,17 +219,17 @@ void Monster::hit_(int& dmg, const bool ALLOW_WOUNDS) {
 }
 
 void Monster::moveDir(Dir dir) {
-  assert(dir != endOfDirs);
+  assert(dir != Dir::endOfDirs);
   assert(Utils::isPosInsideMap(pos));
 
   getPropHandler().changeMoveDir(pos, dir);
 
   //Trap affects leaving?
-  if(dir != dirCenter) {
+  if(dir != Dir::center) {
     Feature* f = eng.map->cells[pos.x][pos.y].featureStatic;
     if(f->getId() == feature_trap) {
       dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
-      if(dir == dirCenter) {
+      if(dir == Dir::center) {
         traceVerbose << "Monster: Move prevented by trap" << endl;
         eng.gameTime->actorDidAct();
         return;
@@ -244,7 +244,7 @@ void Monster::moveDir(Dir dir) {
 
   assert(Utils::isPosInsideMap(targetCell));
 
-  if(dir != dirCenter) {
+  if(dir != Dir::center) {
     pos = targetCell;
 
     //Bump features in target cell (i.e. to trigger traps)

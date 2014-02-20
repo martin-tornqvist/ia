@@ -1,45 +1,45 @@
 #ifndef AUDIO_IDS_H
 #define AUDIO_IDS_H
 
-enum SfxId {
+enum class SfxId {
   //Monster sounds
-  sfxDogSnarl,
-  sfxWolfHowl,
-  sfxZombieGrowl,
-  sfxGhoulGrowl,
-  sfxOozeGurgle,
-  sfxFlappingWings,
+  dogSnarl,
+  wolfHowl,
+  zombieGrowl,
+  ghoulGrowl,
+  oozeGurgle,
+  flappingWings,
 
   //Weapon and attack sounds
-  sfxHitSmall,
-  sfxHitMedium,
-  sfxHitHard,
-  sfxHitSharp,
-  sfxPistolFire,
-  sfxPistolReload,
-  sfxShotgunSawedOffFire,
-  sfxShotgunPumpFire,
-  sfxShotgunReload,
-  sfxMachineGunFire,
-  sfxMachineGunReload,
+  hitSmall,
+  hitMedium,
+  hitHard,
+  hitSharp,
+  pistolFire,
+  pistolReload,
+  shotgunSawedOffFire,
+  shotgunPumpFire,
+  shotgunReload,
+  machineGunFire,
+  machineGunReload,
 
   //Environment sounds
-  sfxMetalClank,
-  sfxRicochet,
-  sfxExplosion,
-  sfxExplosionMolotov,
-  sfxDoorOpen,
-  sfxDoorClose,
-  sfxDoorBang,
-  sfxDoorBreak,
+  metalClank,
+  ricochet,
+  explosion,
+  explosionMolotov,
+  doorOpen,
+  doorClose,
+  doorBang,
+  doorBreak,
 
   //User interface sounds
-  sfxBackpack,
-  sfxPickup,
-  sfxElectricLantern,
-  sfxPotionQuaff,
-  sfxInsanityRising,
-  sfxGlop,
+  backpack,
+  pickup,
+  electricLantern,
+  potionQuaff,
+  insanityRising,
+  glop,
 
   //Ambient sounds
   startOfAmbSfx,

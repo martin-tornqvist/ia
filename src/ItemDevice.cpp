@@ -210,7 +210,7 @@ void DeviceElectricLantern::printToggleMessage() {
 }
 
 void DeviceElectricLantern::toggle_() {
-  eng.audio->play(sfxElectricLantern);
+  Audio::play(SfxId::electricLantern);
   eng.gameTime->updateLightMap();
   eng.player->updateFov();
   Renderer::drawMapAndInterface();

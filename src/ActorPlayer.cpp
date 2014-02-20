@@ -336,7 +336,7 @@ void Player::incrInsanity() {
     msg += "My mind can no longer withstand what it has grasped.";
     msg += " I am hopelessly lost.";
     eng.popup->showMsg(msg, true, "Complete insanity!",
-                       sfxInsanityRising);
+                       SfxId::insanityRising);
     die(true, false, false);
   } else {
     bool playerSeeShockingMonster = false;
@@ -361,8 +361,8 @@ void Player::incrInsanity() {
             } else {
               msg += "I scream in terror.";
             }
-            eng.popup->showMsg(msg, true, "Screaming!", sfxInsanityRising);
-            Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
+            eng.popup->showMsg(msg, true, "Screaming!", SfxId::insanityRising);
+            Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
                     SndVol::high, AlertsMonsters::yes);
             eng.sndEmitter->emitSnd(snd);
             return;
@@ -371,13 +371,13 @@ void Player::incrInsanity() {
 
         case 2: {
           msg += "I find myself babbling incoherently.";
-          eng.popup->showMsg(msg, true, "Babbling!", sfxInsanityRising);
+          eng.popup->showMsg(msg, true, "Babbling!", SfxId::insanityRising);
           const string playerName = getNameThe();
           for(int i = Rnd::range(3, 5); i > 0; i--) {
             const string phrase = Cultist::getCultistPhrase(eng);
             eng.log->addMsg(playerName + ": " + phrase);
           }
-          Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
+          Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMonsters::yes);
           eng.sndEmitter->emitSnd(snd);
           return;
@@ -386,15 +386,15 @@ void Player::incrInsanity() {
         case 3: {
           msg += "I struggle to not fall into a stupor.";
           eng.popup->showMsg(msg, true, "Fainting!",
-                             sfxInsanityRising);
+                             SfxId::insanityRising);
           propHandler_->tryApplyProp(new PropFainted(eng, propTurnsStd));
           return;
         } break;
 
         case 4: {
           msg += "I laugh nervously.";
-          eng.popup->showMsg(msg, true, "HAHAHA!", sfxInsanityRising);
-          Snd snd("", endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
+          eng.popup->showMsg(msg, true, "HAHAHA!", SfxId::insanityRising);
+          Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMonsters::yes);
           eng.sndEmitter->emitSnd(snd);
           return;
@@ -427,7 +427,7 @@ void Player::incrInsanity() {
                       msg += "I am afflicted by Murophobia. ";
                       msg += "Rats suddenly seem terrifying.";
                       eng.popup->showMsg(
-                        msg, true, "Murophobia!", sfxInsanityRising);
+                        msg, true, "Murophobia!", SfxId::insanityRising);
                       insanityPhobias[insanityPhobia_rat] = true;
                       return;
                     }
@@ -438,7 +438,7 @@ void Player::incrInsanity() {
                       msg += "Spiders suddenly seem terrifying.";
                       eng.popup->showMsg(
                         msg, true, "Arachnophobia!",
-                        sfxInsanityRising);
+                        SfxId::insanityRising);
                       insanityPhobias[insanityPhobia_spider] = true;
                       return;
                     }
@@ -448,7 +448,7 @@ void Player::incrInsanity() {
                       msg += "I am afflicted by Cynophobia. ";
                       msg += "Dogs suddenly seem terrifying.";
                       eng.popup->showMsg(
-                        msg, true, "Cynophobia!", sfxInsanityRising);
+                        msg, true, "Cynophobia!", SfxId::insanityRising);
                       insanityPhobias[insanityPhobia_dog] = true;
                       return;
                     }
@@ -469,7 +469,7 @@ void Player::incrInsanity() {
                         msg += "I am afflicted by Agoraphobia. ";
                         msg += "Open places suddenly seem terrifying.";
                         eng.popup->showMsg(
-                          msg, true, "Agoraphobia!", sfxInsanityRising);
+                          msg, true, "Agoraphobia!", SfxId::insanityRising);
                         insanityPhobias[insanityPhobia_openPlace] = true;
                         return;
                       }
@@ -479,7 +479,7 @@ void Player::incrInsanity() {
                         msg += "I am afflicted by Claustrophobia. ";
                         msg += "Confined places suddenly seem terrifying.";
                         eng.popup->showMsg(
-                          msg, true, "Claustrophobia!", sfxInsanityRising);
+                          msg, true, "Claustrophobia!", SfxId::insanityRising);
                         insanityPhobias[insanityPhobia_closedPlace] = true;
                         return;
                       }
@@ -521,7 +521,7 @@ void Player::incrInsanity() {
                   msg += "longer find complete peace (shock cannot go below ";
                   msg += toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng.popup->showMsg(
-                    msg, true, "Masochistic obsession!", sfxInsanityRising);
+                    msg, true, "Masochistic obsession!", SfxId::insanityRising);
                   insanityObsessions[insanityObsession_masochism] = true;
                   return;
                 } break;
@@ -532,7 +532,7 @@ void Player::incrInsanity() {
                   msg += "longer find complete peace (shock cannot go below ";
                   msg += toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng.popup->showMsg(
-                    msg, true, "Sadistic obsession!", sfxInsanityRising);
+                    msg, true, "Sadistic obsession!", SfxId::insanityRising);
                   insanityObsessions[insanityObsession_sadism] = true;
                   return;
                 } break;
@@ -546,7 +546,7 @@ void Player::incrInsanity() {
           if(insanity_ > 8) {
             msg += "The shadows are closing in on me!";
             eng.popup->showMsg(
-              msg, true, "Haunted by shadows!", sfxInsanityRising);
+              msg, true, "Haunted by shadows!", SfxId::insanityRising);
 
             const int NR_SHADOWS_LOWER = 1;
             const int NR_SHADOWS_UPPER =
@@ -565,7 +565,7 @@ void Player::incrInsanity() {
           msg += "I find myself in a peculiar detached daze, ";
           msg += "a tranced state of mind. I struggle to recall ";
           msg += "where I am, or what I'm doing.";
-          eng.popup->showMsg(msg, true, "Confusion!", sfxInsanityRising);
+          eng.popup->showMsg(msg, true, "Confusion!", SfxId::insanityRising);
 
           propHandler_->tryApplyProp(new PropConfused(eng, propTurnsStd));
 
@@ -801,7 +801,7 @@ void Player::onStandardTurn() {
     eng.log->addMsg("The Molotov Cocktail explodes in my hands!");
     molotovFuseTurns = -1;
     updateColor();
-    Explosion::runExplosionAt(pos, eng, 0, sfxExplosionMolotov, false,
+    Explosion::runExplosionAt(pos, eng, 0, SfxId::explosionMolotov, false,
                               new PropBurning(eng, propTurnsStd));
   }
 
@@ -1043,7 +1043,7 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   //Play audio after message to ensure synch between audio and animation
   //If origin is hidden, we only play the sound if there is a message
   if(HAS_SND_MSG || IS_ORIGIN_SEEN_BY_PLAYER) {
-    eng.audio->playFromDir(sfx, dirToOrigin, PERCENT_AUDIBLE_DISTANCE);
+    Audio::play(sfx, dirToOrigin, PERCENT_AUDIBLE_DISTANCE);
   }
 
   if(HAS_SND_MSG) {
@@ -1060,7 +1060,7 @@ void Player::moveDir(Dir dir) {
     propHandler_->changeMoveDir(pos, dir);
 
     //Trap affects leaving?
-    if(dir != dirCenter) {
+    if(dir != Dir::center) {
       Feature* f = eng.map->cells[pos.x][pos.y].featureStatic;
       if(f->getId() == feature_trap) {
         trace << "Player: Standing on trap, check if affects move" << endl;
@@ -1072,7 +1072,7 @@ void Player::moveDir(Dir dir) {
 
     const Pos dest(pos + DirConverter().getOffset(dir));
 
-    if(dir != dirCenter) {
+    if(dir != Dir::center) {
       //Attack?
       Actor* const actorAtDest = Utils::getActorAtPos(dest, eng);
       if(actorAtDest != NULL) {

@@ -74,7 +74,6 @@ class PlayerBonHandler;
 class SpellHandler;
 class Postmortem;
 class HighScore;
-class Audio;
 class Popup;
 class SaveHandler;
 class SpecialRoomHandler;
@@ -90,7 +89,6 @@ class DebugModeStatPrinter;
 class Gods;
 class Credits;
 class PropDataHandler;
-class SdlWrapper;
 class Hide;
 
 class Player;
@@ -106,10 +104,6 @@ public:
   void cleanupSdl();
   void initGame();
   void cleanupGame();
-  void initAudio();
-  void cleanupAudio();
-
-  void sleep(const Uint32 DURATION) const;
 
   PlayerVisualMemory* playerVisualMemory;
   ItemDataHandler* itemDataHandler;
@@ -158,7 +152,6 @@ public:
   SpellHandler* spellHandler;
   Postmortem* postmortem;
   HighScore* highScore;
-  Audio* audio;
   Popup* popup;
   SaveHandler* saveHandler;
   JamWithSpike* jamWithSpike;
@@ -173,7 +166,6 @@ public:
   Gods* gods;
   Credits* credits;
   PropDataHandler* propDataHandler;
-  SdlWrapper* sdlWrapper;
   Hide* hide;
 
   Player* player;

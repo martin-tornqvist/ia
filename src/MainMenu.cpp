@@ -181,7 +181,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
 
   MenuBrowser browser(IS_DEBUG_MODE ? 8 : 7, 0);
 
-  introMusChannel = eng.audio->play(musCthulhiana_Madness);
+  introMusChannel = Audio::play(SfxId::musCthulhiana_Madness);
 
   draw(browser);
 
