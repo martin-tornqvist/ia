@@ -120,11 +120,11 @@ int main(int argc, char* argv[]) {
           //Player is dead, run postmortem, then return to main menu
           dynamic_cast<Player*>(eng.player)->waitTurnsLeft = -1;
           eng.log->addMsg(
-            "=== I AM DEAD === (press any key to view postmortem information)",
+            "=== I AM DEAD === (press space/esc to view postmortem information)",
             clrMsgBad);
           Renderer::drawMapAndInterface();
           eng.log->clearLog();
-          eng.query->waitForKeyPress();
+          eng.query->waitForEscOrSpace();
           eng.highScore->gameOver(false);
           eng.postmortem->run(&quitGame);
           eng.quitToMainMenu_ = true;
