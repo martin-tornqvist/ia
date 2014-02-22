@@ -180,7 +180,7 @@ void Zuul::place_() {
   if(eng.actorDataHandler->dataList[actor_zuul].nrLeftAllowedToSpawn > 0) {
     //Note: Do not call die() here, that would have side effects, such as
     //player getting XP.
-    deadState = ActorDeadState::mangled;
+    deadState = ActorDeadState::destroyed;
     vector<Monster*> monsters;
     eng.actorFactory->summonMonsters(
       pos, vector<ActorId> {actor_cultistPriest}, false, NULL, &monsters);
@@ -830,7 +830,7 @@ bool Zombie::tryResurrect() {
 void Zombie::die_() {
   //If resurrected once and has corpse, blow up the corpse
   if(hasResurrected && deadState == ActorDeadState::corpse) {
-    deadState = ActorDeadState::mangled;
+    deadState = ActorDeadState::destroyed;
     eng.gore->makeBlood(pos);
     eng.gore->makeGore(pos);
   }

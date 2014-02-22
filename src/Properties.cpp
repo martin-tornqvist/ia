@@ -1403,7 +1403,7 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
     const string& name2 = eng.actorDataHandler->dataList[actor_zuul].name_the;
     eng.log->addMsg(name1 + " was possessed by " + name2 + "!");
   }
-  owningActor_->deadState = ActorDeadState::mangled;
+  owningActor_->deadState = ActorDeadState::destroyed;
   const Pos& pos = owningActor_->pos;
   eng.gore->makeGore(pos);
   eng.gore->makeBlood(pos);

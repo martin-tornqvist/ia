@@ -48,7 +48,7 @@ public:
   void changeMaxHp(const int CHANGE, const bool ALLOW_MESSAGES);
   void changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES);
 
-  void die(const bool IS_MANGLED, const bool ALLOW_GORE,
+  void die(const bool IS_DESTROYED, const bool ALLOW_GORE,
            const bool ALLOW_DROP_ITEMS);
 
   virtual void onActorTurn() {}

@@ -383,7 +383,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //Check damage to actors
   Actor* a1 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), eng);
-  CHECK_EQUAL(ActorDeadState::mangled, a1->deadState);
+  CHECK_EQUAL(ActorDeadState::destroyed, a1->deadState);
 
   //Check that corpses can be destroyed, and do not block living actors
   const int NR_CORPSES = 3;
@@ -395,9 +395,9 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   a1 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), eng);
   for(int i = 0; i < NR_CORPSES; i++) {
-    CHECK_EQUAL(ActorDeadState::mangled, corpses[i]->deadState);
+    CHECK_EQUAL(ActorDeadState::destroyed, corpses[i]->deadState);
   }
-  CHECK_EQUAL(ActorDeadState::mangled, a1->deadState);
+  CHECK_EQUAL(ActorDeadState::destroyed, a1->deadState);
 
   //Check explosion applying Burning to living and dead actors
   a1        = eng.actorFactory->spawnActor(actor_rat, Pos(X0 - 1, Y0));

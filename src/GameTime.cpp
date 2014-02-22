@@ -207,8 +207,8 @@ void GameTime::runStandardTurnEvents() {
       actor->onStandardTurn();
     }
 
-    //Delete dead, mangled actors
-    if(actor->deadState == ActorDeadState::mangled) {
+    //Delete destroyed actors
+    if(actor->deadState == ActorDeadState::destroyed) {
       //Do not delete player if player died, just exit the function
       if(actor == eng.player) {return;}
 

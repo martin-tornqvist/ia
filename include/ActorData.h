@@ -124,6 +124,7 @@ public:
   bool isRat, isCanine, isSpider, isUndead, isGhost;
   bool canBeSummoned;
   bool canBleed;
+  bool canLeaveCorpse;
   vector<RoomThemeId> nativeRooms;
   string description;
   string aggroTextMonsterSeen;

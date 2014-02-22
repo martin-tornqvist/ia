@@ -43,6 +43,7 @@ void ActorData::reset() {
   isRat = isCanine = isSpider = isUndead = isGhost = false;
   canBeSummoned = false;
   canBleed = true;
+  canLeaveCorpse = true;
   nativeRooms.resize(0);
   description = "";
   aggroTextMonsterSeen = "";
@@ -651,6 +652,8 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.actorSize = actorSize_humanoid;
   d.isSpider = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.description = "A faint shadow of a huge spider, lurking in my periphery.";
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -855,6 +858,8 @@ void ActorDataHandler::initDataList() {
   d.isUndead = true;
   d.isGhost = true;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.deathMessageOverride = "The Ghost is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_crypt);
@@ -895,6 +900,8 @@ void ActorDataHandler::initDataList() {
   d.isUndead = true;
   d.isGhost = true;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.deathMessageOverride = "The Phantasm is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_crypt);
@@ -936,6 +943,8 @@ void ActorDataHandler::initDataList() {
   d.isUndead = true;
   d.isGhost = true;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.deathMessageOverride = "The Wraith is put to rest.";
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_crypt);
@@ -1353,8 +1362,9 @@ void ActorDataHandler::initDataList() {
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = false;
   d.canOpenDoors = false;
-  d.canBleed = false;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.deathMessageOverride = "The shadow fades.";
   d.nrTurnsAwarePlayer = 25;
   d.description = "A living shadow";
@@ -1581,8 +1591,9 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.description = "A spinning force of destruction. It seems to move with some manner of purpose.";
   d.aggroTextMonsterHidden = "I hear a howling wind.";
-  d.canBleed = false;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1621,8 +1632,9 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.description = "A spinning force of fire and destruction. It seems to move with some manner of purpose.";
   d.aggroTextMonsterHidden = "I hear a howling wind.";
-  d.canBleed = false;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1661,8 +1673,9 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.description = "A spinning force of ice and destruction. It seems to move with some manner of purpose.";
   d.aggroTextMonsterHidden = "I hear a howling wind.";
-  d.canBleed = false;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1706,8 +1719,9 @@ void ActorDataHandler::initDataList() {
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
   d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
-  d.canBleed = false;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1755,8 +1769,9 @@ void ActorDataHandler::initDataList() {
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
   d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
-  d.canBleed = false;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1803,8 +1818,9 @@ void ActorDataHandler::initDataList() {
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
   d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
-  d.canBleed = false;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1851,8 +1867,9 @@ void ActorDataHandler::initDataList() {
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
   d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
-  d.canBleed = false;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1895,8 +1912,9 @@ void ActorDataHandler::initDataList() {
   d.description = "A very peculiar floating speck of strange and shifting colours. It is hard to tell what colour it is exactly.";
   d.isAutoDescriptionAllowed = false;
   d.deathMessageOverride = "The Colour disintegrates.";
-  d.canBleed = false;
   d.canBeSummoned = true;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_plain);

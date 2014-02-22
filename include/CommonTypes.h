@@ -240,7 +240,7 @@ enum class Dir {
   endOfDirs
 };
 
-enum class ActorDeadState {alive, corpse, mangled};
+enum class ActorDeadState {alive, corpse, destroyed};
 
 enum EntityType {
   entityActor,

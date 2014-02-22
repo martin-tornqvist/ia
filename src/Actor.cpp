@@ -371,7 +371,7 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
         }
       }
 
-      deadState = ActorDeadState::mangled;
+      deadState = ActorDeadState::destroyed;
       glyph_ = ' ';
       if(isHumanoid()) {eng.gore->makeGore(pos);}
     }
@@ -426,13 +426,16 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
     hp_ -= dmg;
   }
 
-  const bool IS_ON_BOTTOMLESS =
-    eng.map->cells[pos.x][pos.y].featureStatic->isBottomless();
-  const bool IS_MANGLED =
-    IS_ON_BOTTOMLESS == true ? true :
-    (dmg > ((getHpMax(true) * 5) / 4) ? true : false);
   if(getHp() <= 0) {
-    die(IS_MANGLED, IS_ON_BOTTOMLESS == false, IS_ON_BOTTOMLESS == false);
+    const bool IS_ON_BOTTOMLESS =
+      eng.map->cells[pos.x][pos.y].featureStatic->isBottomless();
+    const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((getHpMax(true) * 5) / 4);
+    const bool IS_DESTROYED =
+      data_->canLeaveCorpse == false  ||
+      IS_ON_BOTTOMLESS                ||
+      IS_DMG_ENOUGH_TO_DESTROY;
+
+    die(IS_DESTROYED, IS_ON_BOTTOMLESS == false, IS_ON_BOTTOMLESS == false);
     traceVerbose << "Actor::hit() [DONE]" << endl;
     return true;
   } else {
@@ -460,7 +463,7 @@ bool Actor::hitSpi(const int DMG) {
   return false;
 }
 
-void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
+void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
                 const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
   for(Actor * actor : eng.gameTime->actors_) {
@@ -498,11 +501,9 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     }
   }
 
-  //If mangled because of damage, or if a monster died on a visible trap,
-  //gib the corpse.
   deadState =
-    (IS_MANGLED || (diedOnVisibleTrap && this != eng.player)) ?
-    ActorDeadState::mangled : ActorDeadState::corpse;
+    (IS_DESTROYED || (diedOnVisibleTrap && this != eng.player)) ?
+    ActorDeadState::destroyed : ActorDeadState::corpse;
 
   if(this != eng.player) {
     if(isHumanoid() == true) {
@@ -519,7 +520,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
     eng.itemDrop->dropAllCharactersItems(this, true);
   }
 
-  if(IS_MANGLED) {
+  if(IS_DESTROYED) {
     glyph_ = ' ';
     tile_ = tile_empty;
     if(isHumanoid() == true) {
