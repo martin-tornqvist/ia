@@ -54,12 +54,8 @@ enum MonsterGroupSize {
   monsterGroupSizeSwarm
 };
 
-enum ActorSpeed {
-  actorSpeed_sluggish = 0,
-  actorSpeed_slow     = 1,
-  actorSpeed_normal   = 2,
-  actorSpeed_fast     = 3,
-  actorSpeed_fastest  = 4
+enum class ActorSpeed {
+  sluggish, slow, normal, fast, fastest, endOfActorSpeed
 };
 
 enum ActorErraticFreq {
@@ -76,12 +72,8 @@ enum ActorSize {
   actorSize_giant
 };
 
-enum MonsterShockLevel {
-  monsterShockLevel_none            = 0,
-  monsterShockLevel_unsettling      = 1,
-  monsterShockLevel_scary           = 2,
-  monsterShockLevel_terrifying      = 3,
-  monsterShockLevel_mindShattering  = 4
+enum class MonsterShockLevel {
+  none, unsettling, scary, terrifying, mindShattering, endOfMonsterShockLevel,
 };
 
 enum AiBehaviorId {

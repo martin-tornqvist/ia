@@ -346,7 +346,7 @@ void Player::incrInsanity() {
     getSpottedEnemies(SpottedEnemies);
     for(Actor * actor : SpottedEnemies) {
       const ActorData& def = actor->getData();
-      if(def.monsterShockLevel != monsterShockLevel_none) {
+      if(def.monsterShockLevel != MonsterShockLevel::none) {
         playerSeeShockingMonster = true;
       }
     }
@@ -843,22 +843,22 @@ void Player::onStandardTurn() {
     //Rogues takes no shock from unaware monsters
     if(IS_ROGUE == false) {
       const ActorData& data = monster->getData();
-      if(data.monsterShockLevel != monsterShockLevel_none) {
+      if(data.monsterShockLevel != MonsterShockLevel::none) {
         switch(data.monsterShockLevel) {
-          case monsterShockLevel_unsettling: {
+          case MonsterShockLevel::unsettling: {
             monster->shockCausedCurrent_ += 0.10;
             monster->shockCausedCurrent_ =
               min(monster->shockCausedCurrent_ + 0.05, 1.0);
           } break;
-          case monsterShockLevel_scary: {
+          case MonsterShockLevel::scary: {
             monster->shockCausedCurrent_ =
               min(monster->shockCausedCurrent_ + 0.15, 1.0);
           } break;
-          case monsterShockLevel_terrifying: {
+          case MonsterShockLevel::terrifying: {
             monster->shockCausedCurrent_ =
               min(monster->shockCausedCurrent_ + 0.5, 2.0);
           } break;
-          case monsterShockLevel_mindShattering: {
+          case MonsterShockLevel::mindShattering: {
             monster->shockCausedCurrent_ =
               min(monster->shockCausedCurrent_ + 0.75, 3.0);
           } break;

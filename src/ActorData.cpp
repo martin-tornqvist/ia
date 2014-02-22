@@ -20,7 +20,7 @@ void ActorData::reset() {
   groupSize = monsterGroupSize_alone;
   hp = dmgMelee = dmgRanged = 1;
   spi = 12;
-  speed = actorSpeed_normal;
+  speed = ActorSpeed::normal;
   for(int i = 0; i < endOfPropIds; i++) {intrProps[i] = false;}
   rangedCooldownTurns = spellCooldownTurns = 0;
   abilityVals.reset();
@@ -39,7 +39,7 @@ void ActorData::reset() {
   isAutoSpawnAllowed = true;
   spellCastMessage = "[SPELL MESSAGE HERE]";
   erraticMovement = actorErratic_rare;
-  monsterShockLevel = monsterShockLevel_none;
+  monsterShockLevel = MonsterShockLevel::none;
   isRat = isCanine = isSpider = isUndead = isGhost = false;
   canBeSummoned = false;
   canBleed = true;
@@ -85,7 +85,7 @@ void ActorDataHandler::initDataList() {
   d.id = actor_player;
   d.hp = 16;
   d.spi = PLAYER_START_SPI;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.glyph = '@';
   d.color = clrWhiteHigh;
   d.tile = tile_playerFirearm;
@@ -105,7 +105,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
   d.color = clrBrown;
@@ -127,7 +127,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
   d.aggroSfxMonsterHidden = SfxId::zombieGrowl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.isUndead = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
@@ -145,7 +145,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
   d.color = clrGray;
@@ -168,7 +168,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
   d.aggroSfxMonsterHidden = SfxId::zombieGrowl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.isUndead = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
@@ -186,7 +186,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 20;
   d.glyph = 'Z';
   d.color = clrWhiteHigh;
@@ -207,7 +207,7 @@ void ActorDataHandler::initDataList() {
   d.description = "This lumbering giant corpse seems to be artificially bloated somehow. It is constantly oozing putrid liquid that it can spit to attack with.";
   d.aggroTextMonsterHidden = "I hear heavy footsteps.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.isUndead = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
@@ -225,7 +225,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
   d.color = clrCyanLgt;
@@ -243,7 +243,7 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 999;
   d.description = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer during the Great War. Shortly after his plane was shot down, his body was stolen. Now he roams these halls as a resurrected warrior in service of the cult, commanding a squad of undead.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 1;
@@ -263,7 +263,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
   d.color = clrCyan;
@@ -282,7 +282,7 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 999;
   d.description = "Alan Halsey was the dean of the Miskatonic University in New England. Somehow he must have gotten into the hands of the Cult, who turned him into the hellish zombie warrior I now see before me.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 0;
@@ -302,7 +302,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
   d.glyph = 'P';
@@ -339,7 +339,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
   d.glyph = 'P';
@@ -376,7 +376,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
   d.glyph = 'P';
@@ -412,7 +412,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 2;
   d.glyph = 'P';
@@ -435,7 +435,7 @@ void ActorDataHandler::initDataList() {
   d.aggroTextMonsterHidden = "I hear a repulsive croaking voice.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_ritual);
   addData(d);
@@ -451,7 +451,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
   d.color = clrMagenta;
@@ -471,7 +471,7 @@ void ActorDataHandler::initDataList() {
   d.aggroTextMonsterHidden = "I hear a loathsome titter.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.isRat = true;
   addData(d);
   d.reset();
@@ -502,7 +502,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 2;
   d.glyph = 'P';
@@ -538,7 +538,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
   d.color = clrGreenLgt;
@@ -570,7 +570,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
   d.color = clrWhiteHigh;
@@ -602,7 +602,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
   d.color = clrRedLgt;
@@ -634,7 +634,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
   d.color = clrGray;
@@ -668,7 +668,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fast;
+  d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'S';
   d.color = clrMagenta;
@@ -686,7 +686,7 @@ void ActorDataHandler::initDataList() {
   d.description = "Leng spiders are huge, purplish arachnids, with pustulent bloated bodies and long, bristly legs. Native to the Dreamlands, the spiders of Leng are intelligent, dangerous, and gigantic.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_spider);
   addData(d);
@@ -702,7 +702,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fast;
+  d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
   d.color = clrRed;
@@ -726,7 +726,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::dogSnarl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -744,7 +744,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fast;
+  d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
   d.color = clrBlueLgt;
@@ -768,7 +768,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::dogSnarl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -786,7 +786,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fast;
+  d.speed = ActorSpeed::fast;
   d.glyph = 'D';
   d.color = clrGray;
   d.tile = tile_hound;
@@ -809,7 +809,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::dogSnarl;
   d.erraticMovement = actorErratic_never;
-  d.monsterShockLevel = monsterShockLevel_mindShattering;
+  d.monsterShockLevel = MonsterShockLevel::mindShattering;
   d.isCanine = true;
   d.canBeSummoned = false;
   d.isUnique = true;
@@ -831,7 +831,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
   d.color = clrGray;
@@ -849,9 +849,9 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "A restless spirit?";
+  d.description = "A restless spirit.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
   d.isGhost = true;
   d.canBeSummoned = true;
@@ -871,7 +871,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fast;
+  d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
   d.color = clrWhite;
@@ -891,7 +891,7 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 7;
   d.description = "It exists between the land of the dead and the living. It resembles a grim reaper, including the cloak, scythe, and skeletal appearance.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
   d.isGhost = true;
   d.canBeSummoned = true;
@@ -911,7 +911,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fast;
+  d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 4;
   d.glyph = 'G';
@@ -932,7 +932,7 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "A powerful spirit.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
   d.isGhost = true;
   d.canBeSummoned = true;
@@ -952,7 +952,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = false;
-  d.speed = actorSpeed_sluggish;
+  d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
   d.color = clrGray;
@@ -988,7 +988,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = false;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
   d.color = clrBrown;
@@ -1006,7 +1006,7 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "At first sight, a Rat-thing can easily be mistaken for a large, dark rat. On closer examination, however, their human hands and evil caricatures of human heads reveal their unnatural nature. Rat-things are said to be created from dead cultists by foul witchcraft. Thus, they are found where the witch who created them had her lair.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.isRat = true;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
@@ -1026,7 +1026,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fast;
+  d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'd';
   d.color = clrGray;
@@ -1064,7 +1064,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fastest;
+  d.speed = ActorSpeed::fastest;
   d.glyph = 'B';
   d.color = clrGray;
   d.tile = tile_bat;
@@ -1085,7 +1085,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterSeen = SfxId::flappingWings;
   d.aggroSfxMonsterHidden = SfxId::flappingWings;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
 //  d.nativeRooms.push_back(roomTheme_chasm);
@@ -1102,7 +1102,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fastest;
+  d.speed = ActorSpeed::fastest;
   d.glyph = 'B';
   d.color = clrBrownDrk;
   d.tile = tile_byakhee;
@@ -1124,7 +1124,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterSeen = SfxId::flappingWings;
   d.aggroSfxMonsterHidden = SfxId::flappingWings;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(roomTheme_plain);
 //  d.nativeRooms.push_back(roomTheme_chasm);
@@ -1141,7 +1141,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fastest;
+  d.speed = ActorSpeed::fastest;
   d.glyph = 'I';
   d.color = clrGreenLgt;
   d.tile = tile_mantis;
@@ -1159,7 +1159,7 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.description = "A huge predatory insect.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(roomTheme_plain);
   addData(d);
@@ -1175,7 +1175,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fast;
+  d.speed = ActorSpeed::fast;
   d.glyph = 'I';
   d.color = clrBrown;
   d.tile = tile_locust;
@@ -1193,7 +1193,7 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 12;
   d.description = "A huge swarming insect. They breed rapidly.";
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = monsterShockLevel_none;
+  d.monsterShockLevel = MonsterShockLevel::none;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(roomTheme_plain);
   addData(d);
@@ -1209,7 +1209,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = false;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_fast;
+  d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
@@ -1232,7 +1232,7 @@ void ActorDataHandler::initDataList() {
   d.aggroTextMonsterSeen = d.name_the + " speaks at me in a droning voice.";
   d.aggroTextMonsterHidden = "I hear a droning voice.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_plain);
 //  d.nativeRooms.push_back(roomTheme_chasm);
   addData(d);
@@ -1250,7 +1250,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
   d.color = clrMagenta;
@@ -1279,7 +1279,7 @@ void ActorDataHandler::initDataList() {
   d.aggroTextMonsterSeen = d.name_the + " makes shrill whistling noises.";
   d.aggroTextMonsterHidden = "I hear a shrill whistling.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.nativeRooms.push_back(roomTheme_plain);
   addData(d);
   d.reset();
@@ -1294,7 +1294,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'M';
   d.color = clrGreen;
@@ -1317,7 +1317,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterSeen = SfxId::ghoulGrowl;
   d.aggroSfxMonsterHidden = SfxId::wolfHowl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_monster);
   addData(d);
@@ -1333,7 +1333,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = false;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'M';
   d.color = clrGray;
@@ -1360,7 +1360,7 @@ void ActorDataHandler::initDataList() {
   d.description = "A living shadow";
   d.isAutoDescriptionAllowed = false;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_monster);
   d.nativeRooms.push_back(roomTheme_plain);
   addData(d);
@@ -1376,7 +1376,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
   d.glyph = 'P';
@@ -1395,7 +1395,7 @@ void ActorDataHandler::initDataList() {
   d.description = "A mummified human being, possibly dating back millennia.";
   d.spellCastMessage = "The mummy casts a spell.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1412,7 +1412,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
   d.isUnique = true;
@@ -1434,7 +1434,7 @@ void ActorDataHandler::initDataList() {
   d.description = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here is beyond my guess. His name means \"Rise, Ra!\"";
   d.spellCastMessage = "Khephren casts a spell.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1451,7 +1451,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
   d.isUnique = true;
@@ -1472,7 +1472,7 @@ void ActorDataHandler::initDataList() {
   d.description = "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she came to dwell here is beyond my guess. Her name is found in the histories of Herodotus and writings of Manetho. According to the writings of the former, she took the throne by inviting her brothers murderers to a banquet. Then killed them by flooding the sealed room with the Nile.";
   d.spellCastMessage = "Nitokris casts a spell.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_terrifying;
+  d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(roomTheme_plain);
@@ -1489,7 +1489,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = true;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 15;
   d.glyph = 'F';
   d.color = clrWhite;
@@ -1509,7 +1509,7 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 20;
   d.description = "Deep ones are misbegotten creatures of the deep. A deep one appears as an abominable crossbreed of a human and amphibian. Its fins are merged with twisted arms and legs; its bent back is crowned with a long, spiny frill. They can breathe both air and water. In the timeless depths of the sea, the deep one's alien, arrogant lives are coldly beautiful, unbelievably cruel, and effectively immortal. Deep ones may be worshipped by humans with whom they regularly interbreed.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
   addData(d);
@@ -1525,7 +1525,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = false;
-  d.speed = actorSpeed_slow;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'w';
   d.color = clrWhite;
@@ -1559,7 +1559,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = false;
-  d.speed = actorSpeed_normal;
+  d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
   d.color = clrGray;
@@ -1584,7 +1584,7 @@ void ActorDataHandler::initDataList() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
   addData(d);
   d.reset();
@@ -1599,7 +1599,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = false;
-  d.speed = actorSpeed_normal ;
+  d.speed = ActorSpeed::normal ;
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
   d.color = clrRed;
@@ -1624,7 +1624,7 @@ void ActorDataHandler::initDataList() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
   addData(d);
   d.reset();
@@ -1639,7 +1639,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = false;
-  d.speed = actorSpeed_normal ;
+  d.speed = ActorSpeed::normal ;
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
   d.color = clrBlueLgt;
@@ -1664,7 +1664,7 @@ void ActorDataHandler::initDataList() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
   addData(d);
   d.reset();
@@ -1679,7 +1679,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_sluggish;
+  d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
   d.color = clrGray;
@@ -1709,7 +1709,7 @@ void ActorDataHandler::initDataList() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_unsettling;
+  d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
@@ -1727,7 +1727,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_sluggish;
+  d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
   d.color = clrWhiteHigh;
@@ -1757,7 +1757,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
   d.canBleed = false;
   d.canBeSummoned = true;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
@@ -1776,7 +1776,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_sluggish;
+  d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
   d.color = clrGreen;
@@ -1806,7 +1806,7 @@ void ActorDataHandler::initDataList() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
@@ -1824,7 +1824,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_sluggish;
+  d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
   d.color = clrGreenLgt;
@@ -1854,7 +1854,7 @@ void ActorDataHandler::initDataList() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
@@ -1872,7 +1872,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = true;
-  d.speed = actorSpeed_sluggish;
+  d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'O';
   d.color = clrGreenLgt;
@@ -1898,7 +1898,7 @@ void ActorDataHandler::initDataList() {
   d.canBleed = false;
   d.canBeSummoned = true;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = monsterShockLevel_scary;
+  d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(roomTheme_plain);
   d.nativeRooms.push_back(roomTheme_flooded);
   d.nativeRooms.push_back(roomTheme_muddy);
@@ -1915,7 +1915,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = false;
-  d.speed = actorSpeed_sluggish;
+  d.speed = ActorSpeed::sluggish;
   d.glyph = 'W';
   d.color = clrBrownDrk;
   d.tile = tile_chthonian;
@@ -1941,7 +1941,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterHidden = SfxId::endOfSfxId;
   d.canBleed = true;
   d.canBeSummoned = false;
-  d.monsterShockLevel = monsterShockLevel_mindShattering;
+  d.monsterShockLevel = MonsterShockLevel::mindShattering;
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(roomTheme_plain);
   addData(d);
@@ -1957,7 +1957,7 @@ void ActorDataHandler::initDataList() {
   d.ai[aiMovesTowardTargetWhenVision] = true;
   d.ai[aiMovesTowardLair] = false;
   d.ai[aiMovesTowardLeader] = false;
-  d.speed = actorSpeed_fastest;
+  d.speed = ActorSpeed::fastest;
   d.rangedCooldownTurns = 0;
   d.glyph = 'W';
   d.color = clrGray;
@@ -1983,7 +1983,7 @@ void ActorDataHandler::initDataList() {
   d.aggroSfxMonsterHidden = SfxId::flappingWings;
   d.canBleed = true;
   d.canBeSummoned = false;
-  d.monsterShockLevel = monsterShockLevel_mindShattering;
+  d.monsterShockLevel = MonsterShockLevel::mindShattering;
   d.erraticMovement = actorErratic_somewhat;
   addData(d);
   d.reset();

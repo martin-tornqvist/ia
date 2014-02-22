@@ -118,35 +118,37 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
         find(props.begin(), props.end(), propSlowed) != props.end();
       const ActorSpeed defSpeed = currentActor->getData().speed;
       const ActorSpeed realSpeed =
-        IS_SLOWED == false || defSpeed == actorSpeed_sluggish ?
-        defSpeed : ActorSpeed(defSpeed - 1);
+        IS_SLOWED == false || defSpeed == ActorSpeed::sluggish ?
+        defSpeed : ActorSpeed(int(defSpeed) - 1);
       switch(realSpeed) {
-        case actorSpeed_sluggish: {
+        case ActorSpeed::sluggish: {
           actorWhoCanActThisTurnFound =
             (currentTurnType == turnType_slow ||
              currentTurnType == turnType_normal_2)
             && Rnd::fraction(2, 3);
         } break;
 
-        case actorSpeed_slow: {
+        case ActorSpeed::slow: {
           actorWhoCanActThisTurnFound =
             currentTurnType == turnType_slow ||
             currentTurnType == turnType_normal_2;
         } break;
 
-        case actorSpeed_normal: {
+        case ActorSpeed::normal: {
           actorWhoCanActThisTurnFound =
             currentTurnType != turnType_fast &&
             currentTurnType != turnType_fastest;
         } break;
 
-        case actorSpeed_fast: {
+        case ActorSpeed::fast: {
           actorWhoCanActThisTurnFound = currentTurnType != turnType_fastest;
         } break;
 
-        case actorSpeed_fastest: {
+        case ActorSpeed::fastest: {
           actorWhoCanActThisTurnFound = true;
         } break;
+
+        case ActorSpeed::endOfActorSpeed: {} break;
       }
     }
   }

@@ -22,11 +22,16 @@ int DungeonMaster::getMonsterTotXpWorth(const ActorData& d) const {
   //K regulates player XP rate, higher -> more XP per monster
   const double K          = 0.6;
   const double HP         = d.hp;
-  const double SPEED      = d.speed;
-  const double SHOCK      = d.monsterShockLevel;
-  const double UNIQUE_MOD = d.isUnique ? 2.0 : 1.0;
-  return
-    ceil(K * HP * (1.0 + (SPEED / 3.0)) * (1.0 + (SHOCK / 6.0)) * UNIQUE_MOD);
+  const double SPEED      = double(d.speed);
+  const double SPEED_MAX  = double(ActorSpeed::endOfActorSpeed);
+  const double SHOCK      = double(d.monsterShockLevel);
+  const double SHOCK_MAX  = double(MonsterShockLevel::endOfMonsterShockLevel);
+
+  const double SPEED_FACTOR   = (1.0 + ((SPEED / SPEED_MAX) * 0.50));
+  const double SHOCK_FACTOR   = (1.0 + ((SHOCK / SHOCK_MAX) * 0.75));
+  const double UNIQUE_FACTOR  = d.isUnique ? 2.0 : 1.0;
+
+  return ceil(K * HP * SPEED_FACTOR * SHOCK_FACTOR * UNIQUE_FACTOR);
 }
 
 void DungeonMaster::playerGainLvl() {

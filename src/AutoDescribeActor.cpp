@@ -18,7 +18,7 @@ void AutoDescribeActor::addAutoDescriptionLines(
     line += " They tend to dwell " + getNormalGroupSizeStr(def) + ",";
     line += " and usually stay at depths beneath level " +
             getDwellingLevelStr(def) + ".";
-    line += " They move " + getSpeedStr(def) + ". ";
+    line += " They appear to move " + getSpeedStr(def) + ". ";
   }
 }
 
@@ -27,19 +27,20 @@ string AutoDescribeActor::getNormalGroupSizeStr(const ActorData& def) const {
 
   return
     s == monsterGroupSize_alone ? "alone" :
-    s == monsterGroupSizeFew ? "in groups of a few" :
-    s == monsterGroupSizeGroup ? "in groups" :
-    s == monsterGroupSizeHorde ? "in hordes" :
+    s == monsterGroupSizeFew    ? "in small groups" :
+    s == monsterGroupSizeGroup  ? "in groups" :
+    s == monsterGroupSizeHorde  ? "in hordes" :
     "in swarms";
 }
 
 string AutoDescribeActor::getSpeedStr(const ActorData& def) const {
   switch(def.speed) {
-    case actorSpeed_sluggish:   {return "at sluggish speed";} break;
-    case actorSpeed_slow:       {return "slowly";}            break;
-    case actorSpeed_normal:     {return "at normal speed";}   break;
-    case actorSpeed_fast:       {return "fast";}              break;
-    case actorSpeed_fastest:    {return "very fast";}       break;
+    case ActorSpeed::sluggish:   {return "at sluggishly";}
+    case ActorSpeed::slow:       {return "slowly";}
+    case ActorSpeed::normal:     {return "at normal speed";}
+    case ActorSpeed::fast:       {return "fast";}
+    case ActorSpeed::fastest:    {return "very fast";}
+    case ActorSpeed::endOfActorSpeed: {} break;
   }
   return "";
 }

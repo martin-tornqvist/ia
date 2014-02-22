@@ -203,10 +203,10 @@ RangedAttackData::RangedAttackData(
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
     const ActorSpeed defSpeed = curDefender->getData().speed;
     const int SPEED_MOD =
-      defSpeed == actorSpeed_sluggish ?  20 :
-      defSpeed == actorSpeed_slow     ?  10 :
-      defSpeed == actorSpeed_normal   ?   0 :
-      defSpeed == actorSpeed_fast     ? -10 : -30;
+      defSpeed == ActorSpeed::sluggish ?  20 :
+      defSpeed == ActorSpeed::slow     ?  10 :
+      defSpeed == ActorSpeed::normal   ?   0 :
+      defSpeed == ActorSpeed::fast     ? -10 : -30;
     curDefenderSize             = curDefender->getData().actorSize;
     const int SIZE_MOD          = curDefenderSize == actorSize_floor ? -10 : 0;
 
@@ -297,10 +297,10 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
     const ActorSpeed defSpeed = curDefender->getData().speed;
     const int SPEED_MOD =
-      defSpeed == actorSpeed_sluggish ?  20 :
-      defSpeed == actorSpeed_slow     ?  10 :
-      defSpeed == actorSpeed_normal   ?   0 :
-      defSpeed == actorSpeed_fast     ? -15 : -35;
+      defSpeed == ActorSpeed::sluggish ?  20 :
+      defSpeed == ActorSpeed::slow     ?  10 :
+      defSpeed == ActorSpeed::normal   ?   0 :
+      defSpeed == ActorSpeed::fast     ? -15 : -35;
     curDefenderSize             = curDefender->getData().actorSize;
     const int SIZE_MOD          = curDefenderSize == actorSize_floor ? -15 : 0;
 
