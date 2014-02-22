@@ -1403,7 +1403,7 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
     const string& name2 = eng.actorDataHandler->dataList[actor_zuul].name_the;
     eng.log->addMsg(name1 + " was possessed by " + name2 + "!");
   }
-  owningActor_->deadState = actorDeadState_mangled;
+  owningActor_->deadState = ActorDeadState::mangled;
   const Pos& pos = owningActor_->pos;
   eng.gore->makeGore(pos);
   eng.gore->makeBlood(pos);
@@ -1512,7 +1512,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
     owningActor_->hit(Rnd::dice(1, 3), dmgType_physical, false);
 
-    if(owningActor_->deadState == actorDeadState_alive) {
+    if(owningActor_->deadState == ActorDeadState::alive) {
 
       //TODO reimplement something affecting chance of success?
 

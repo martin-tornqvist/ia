@@ -23,7 +23,7 @@ using namespace std;
 
 Actor::Actor(Engine& engine) :
   pos(),
-  deadState(actorDeadState_alive),
+  deadState(ActorDeadState::alive),
   eng(engine),
   clr_(clrBlack),
   glyph_(' '),
@@ -67,7 +67,7 @@ int Actor::getHpMax(const bool WITH_MODIFIERS) const {
 bool Actor::isSeeingActor(
   const Actor& other, const bool visionBlockingCells[MAP_W][MAP_H]) const {
 
-  if(other.deadState == actorDeadState_alive) {
+  if(other.deadState == ActorDeadState::alive) {
     if(this == &other) {
       return true;
     }
@@ -117,7 +117,7 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
   }
 
   for(Actor * actor : eng.gameTime->actors_) {
-    if(actor != this && actor->deadState == actorDeadState_alive) {
+    if(actor != this && actor->deadState == ActorDeadState::alive) {
 
       if(IS_SELF_PLAYER) {
         if(dynamic_cast<Monster*>(actor)->leader != this) {
@@ -152,7 +152,7 @@ void Actor::place(const Pos& pos_, ActorData& data) {
   data_           = &data;
   inv_      = new Inventory(data_->isHumanoid);
   propHandler_    = new PropHandler(this, eng);
-  deadState       = actorDeadState_alive;
+  deadState       = ActorDeadState::alive;
   clr_            = data_->color;
   glyph_          = data_->glyph;
   tile_           = data_->tile;
@@ -194,7 +194,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
 }
 
 void Actor::updateColor() {
-  if(deadState != actorDeadState_alive) {
+  if(deadState != ActorDeadState::alive) {
     clr_ = clrRed;
     return;
   }
@@ -359,6 +359,26 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
     return false;
   }
 
+  //Damage to corpses
+  //Note: corpse is automatically destroyed if damage is high enough,
+  //otherwise it is destroyed with a random chance
+  if(deadState != ActorDeadState::alive) {
+    if(Rnd::oneIn(4) || dmg >= ((getHpMax(true) * 2) / 3)) {
+
+      if(this != eng.player) {
+        if(eng.map->cells[pos.x][pos.y].isSeenByPlayer) {
+          eng.log->addMsg("A body of " + getNameA() + " is destroyed.");
+        }
+      }
+
+      deadState = ActorDeadState::mangled;
+      glyph_ = ' ';
+      if(isHumanoid()) {eng.gore->makeGore(pos);}
+    }
+    traceVerbose << "Actor::hit() [DONE]" << endl;
+    return false;
+  }
+
   hit_(dmg, ALLOW_WOUNDS);
   traceVerbose << "Actor: Damage after hit_(): " << dmg << endl;
 
@@ -369,7 +389,7 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
   }
 
   //Property resists?
-  const bool ALLOW_DMG_RES_MSG = deadState == actorDeadState_alive;
+  const bool ALLOW_DMG_RES_MSG = deadState == ActorDeadState::alive;
   if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {
     return false;
   }
@@ -401,19 +421,6 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
   }
 
   propHandler_->onHit();
-
-  //Damage to corpses
-  if(deadState != actorDeadState_alive) {
-    if(dmg >= getHpMax(true) / 2) {
-      deadState = actorDeadState_mangled;
-      glyph_ = ' ';
-      if(isHumanoid()) {
-        eng.gore->makeGore(pos);
-      }
-    }
-    traceVerbose << "Actor::hit() [DONE]" << endl;
-    return false;
-  }
 
   if(this != eng.player || Config::isBotPlaying() == false) {
     hp_ -= dmg;
@@ -495,7 +502,7 @@ void Actor::die(const bool IS_MANGLED, const bool ALLOW_GORE,
   //gib the corpse.
   deadState =
     (IS_MANGLED || (diedOnVisibleTrap && this != eng.player)) ?
-    actorDeadState_mangled : actorDeadState_corpse;
+    ActorDeadState::mangled : ActorDeadState::corpse;
 
   if(this != eng.player) {
     if(isHumanoid() == true) {

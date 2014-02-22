@@ -6,7 +6,7 @@
 class AI_stepPath {
 public:
   static bool action(Monster& monster, vector<Pos>& path) {
-    if(monster.deadState == actorDeadState_alive) {
+    if(monster.deadState == ActorDeadState::alive) {
       if(path.empty() == false) {
         const Pos delta = path.back() - monster.pos;
         monster.moveDir(DirConverter().getDir(delta));

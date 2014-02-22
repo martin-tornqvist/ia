@@ -409,7 +409,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
       Renderer::drawGlyph('*', panel_map, pos, data_->clr);
 
       if(actor != NULL) {
-        if(actor->deadState == actorDeadState_alive) {
+        if(actor->deadState == ActorDeadState::alive) {
           eng.log->addMsg(
             "The potion shatters on " +
             actor->getNameThe() + ".");
@@ -421,10 +421,10 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
     }
     //If the blow from the bottle didn't kill the actor, apply what's inside
     if(actor != NULL) {
-      if(actor->deadState == actorDeadState_alive) {
+      if(actor->deadState == ActorDeadState::alive) {
         collide_(pos, actor);
         if(
-          actor->deadState == actorDeadState_alive &&
+          actor->deadState == ActorDeadState::alive &&
           data_->isIdentified == false && PLAYER_SEE_CELL) {
           eng.log->addMsg("It had no apparent effect...");
         }
@@ -450,7 +450,7 @@ void Potion::quaff(Actor* const actor) {
 
   quaff_(actor);
 
-  if(eng.player->deadState == actorDeadState_alive) {
+  if(eng.player->deadState == ActorDeadState::alive) {
     eng.gameTime->actorDidAct();
   }
 }

@@ -117,9 +117,9 @@ void getActorPositions(const vector<Actor*>& actors, vector<Pos>& vectorRef) {
 }
 
 
-Actor* getActorAtPos(const Pos& pos, Engine& eng) {
+Actor* getActorAtPos(const Pos& pos, Engine& eng, ActorDeadState deadState) {
   for(Actor * actor : eng.gameTime->actors_) {
-    if(actor->pos == pos && actor->deadState == actorDeadState_alive) {
+    if(actor->pos == pos && actor->deadState == deadState) {
       return actor;
     }
   }

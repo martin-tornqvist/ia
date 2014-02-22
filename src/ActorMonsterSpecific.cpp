@@ -180,7 +180,7 @@ void Zuul::place_() {
   if(eng.actorDataHandler->dataList[actor_zuul].nrLeftAllowedToSpawn > 0) {
     //Note: Do not call die() here, that would have side effects, such as
     //player getting XP.
-    deadState = actorDeadState_mangled;
+    deadState = ActorDeadState::mangled;
     vector<Monster*> monsters;
     eng.actorFactory->summonMonsters(
       pos, vector<ActorId> {actor_cultistPriest}, false, NULL, &monsters);
@@ -284,7 +284,7 @@ void FrostVortex::spawnStartItems() {
 }
 
 bool Ghost::onActorTurn_() {
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
 
       if(Utils::isPosAdj(pos, eng.player->pos, false)) {
@@ -395,7 +395,7 @@ void MummyUnique::spawnStartItems() {
 }
 
 bool Khephren::onActorTurn_() {
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
       if(hasSummonedLocusts == false) {
 
@@ -480,7 +480,7 @@ void HuntingHorror::spawnStartItems() {
 }
 
 bool KeziahMason::onActorTurn_() {
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
       if(hasSummonedJenkin == false) {
 
@@ -609,7 +609,7 @@ void Wolf::spawnStartItems() {
 }
 
 bool WormMass::onActorTurn_() {
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
       if(Rnd::percentile() < chanceToSpawnNew) {
 
@@ -644,7 +644,7 @@ void WormMass::spawnStartItems() {
 }
 
 bool GiantLocust::onActorTurn_() {
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
       if(Rnd::percentile() < chanceToSpawnNew) {
 
@@ -758,7 +758,7 @@ bool MajorClaphamLee::onActorTurn_() {
     return true;
   }
 
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
       if(hasSummonedTombLegions == false) {
 
@@ -799,12 +799,12 @@ bool MajorClaphamLee::onActorTurn_() {
 }
 
 bool Zombie::tryResurrect() {
-  if(deadState == actorDeadState_corpse) {
+  if(deadState == ActorDeadState::corpse) {
     if(hasResurrected == false) {
       deadTurnCounter += 1;
       if(deadTurnCounter > 5) {
         if(pos != eng.player->pos && Rnd::percentile() < 7) {
-          deadState = actorDeadState_alive;
+          deadState = ActorDeadState::alive;
           hp_ = (getHpMax(true) * 3) / 4;
           glyph_ = data_->glyph;
           tile_ = data_->tile;
@@ -829,8 +829,8 @@ bool Zombie::tryResurrect() {
 
 void Zombie::die_() {
   //If resurrected once and has corpse, blow up the corpse
-  if(hasResurrected && deadState == actorDeadState_corpse) {
-    deadState = actorDeadState_mangled;
+  if(hasResurrected && deadState == ActorDeadState::corpse) {
+    deadState = ActorDeadState::mangled;
     eng.gore->makeBlood(pos);
     eng.gore->makeGore(pos);
   }

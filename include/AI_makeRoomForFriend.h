@@ -10,7 +10,7 @@
 class AI_makeRoomForFriend {
 public:
   static bool action(Monster& monster, Engine& engine) {
-    if(monster.deadState == actorDeadState_alive) {
+    if(monster.deadState == ActorDeadState::alive) {
 
       bool visionBlockers[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksVision(engine), visionBlockers);
@@ -20,7 +20,7 @@ public:
         //Loop through all actors
         for(Actor * actor : engine.gameTime->actors_) {
           if(actor != engine.player && actor != &monster) {
-            if(actor->deadState == actorDeadState_alive) {
+            if(actor->deadState == ActorDeadState::alive) {
               Monster* otherMonster = dynamic_cast<Monster*>(actor);
 
               bool isOtherAdjWithoutVision =

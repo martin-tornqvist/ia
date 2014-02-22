@@ -160,7 +160,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
       caster->hitSpi(Rnd::range(cost));
     }
     SpellCastRetData ret(false);
-    if(caster->deadState == actorDeadState_alive) {
+    if(caster->deadState == ActorDeadState::alive) {
       ret = cast_(caster, eng);
     }
 

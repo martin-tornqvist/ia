@@ -360,7 +360,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     if(wpn.nrAmmoLoaded >= nrOfProjectiles || WPN_HAS_INF_AMMO) {
       projectileFire(attacker, wpn, aimPos);
 
-      if(eng.player->deadState == actorDeadState_alive) {
+      if(eng.player->deadState == ActorDeadState::alive) {
 
         didAttack = true;
 

@@ -698,7 +698,7 @@ void Player::testPhobias() {
 }
 
 void Player::updateColor() {
-  if(deadState != actorDeadState_alive) {
+  if(deadState != ActorDeadState::alive) {
     clr_ = clrRed;
     return;
   }
@@ -729,7 +729,7 @@ void Player::onActorTurn() {
 
   resetPermShockTakenCurTurn();
 
-  if(deadState != actorDeadState_alive) {
+  if(deadState != ActorDeadState::alive) {
     return;
   }
 
@@ -895,7 +895,7 @@ void Player::onStandardTurn() {
   //Take sanity hit from high shock?
   if(getShockTotal() >= 100) {
     incrInsanity();
-    if(deadState == actorDeadState_alive) {
+    if(deadState == ActorDeadState::alive) {
       eng.gameTime->actorDidAct();
     }
     return;
@@ -903,7 +903,7 @@ void Player::onStandardTurn() {
 
   for(Actor * actor : eng.gameTime->actors_) {
     if(actor != this) {
-      if(actor->deadState == actorDeadState_alive) {
+      if(actor->deadState == ActorDeadState::alive) {
 
         Monster& monster = *dynamic_cast<Monster*>(actor);
         const bool IS_MONSTER_SEEN = isSeeingActor(*actor, NULL);
@@ -1057,7 +1057,7 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
 }
 
 void Player::moveDir(Dir dir) {
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
 
     propHandler_->changeMoveDir(pos, dir);
 

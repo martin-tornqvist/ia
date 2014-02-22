@@ -8,7 +8,7 @@
 class AI_moveTowardsTargetSimple {
 public:
   static bool action(Monster& monster, Engine& engine) {
-    if(monster.deadState == actorDeadState_alive) {
+    if(monster.deadState == ActorDeadState::alive) {
       if(monster.target != NULL) {
         if(
           monster.awareOfPlayerCounter_ > 0 ||

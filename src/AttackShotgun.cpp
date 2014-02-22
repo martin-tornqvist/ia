@@ -106,7 +106,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           //or at floor level but beyond the current position, the shot will
           //continue one cell.
           const bool IS_TARGET_KILLED =
-            data->curDefender->deadState != actorDeadState_alive;
+            data->curDefender->deadState != ActorDeadState::alive;
           if(IS_TARGET_KILLED && monsterKilledInElement == -1) {
             monsterKilledInElement = i;
           }

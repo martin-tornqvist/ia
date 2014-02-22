@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
 
       //========== M A I N   L O O P ==========
       while(eng.quitToMainMenu_ == false) {
-        if(eng.player->deadState == actorDeadState_alive) {
+        if(eng.player->deadState == ActorDeadState::alive) {
 
           Actor* const actor = eng.gameTime->getCurrentActor();
 

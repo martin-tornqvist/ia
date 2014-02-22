@@ -8,7 +8,7 @@ public:
   static void learn(Monster& monster, vector<Pos>& path, const Pos& lairCell,
                     Engine& eng) {
 
-    if(monster.deadState == actorDeadState_alive) {
+    if(monster.deadState == ActorDeadState::alive) {
 
       bool blockers[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksVision(eng), blockers);

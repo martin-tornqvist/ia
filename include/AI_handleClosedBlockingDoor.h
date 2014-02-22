@@ -17,7 +17,7 @@
 class AI_handleClosedBlockingDoor {
 public:
   static bool action(Monster& monster, vector<Pos> path, Engine& engine) {
-    if(monster.deadState == actorDeadState_alive && path.empty() == false) {
+    if(monster.deadState == ActorDeadState::alive && path.empty() == false) {
       const Pos& p = path.back();
       Feature* const f =
         engine.map->cells[p.x][p.y].featureStatic;

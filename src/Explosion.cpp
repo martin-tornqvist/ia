@@ -131,9 +131,9 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
 
   for(Actor * actor : eng.gameTime->actors_) {
     const Pos& pos = actor->pos;
-    if(actor->deadState == actorDeadState_alive) {
+    if(actor->deadState == ActorDeadState::alive) {
       livingActors[pos.x][pos.y] = actor;
-    } else if(actor->deadState == actorDeadState_corpse) {
+    } else if(actor->deadState == ActorDeadState::corpse) {
       corpses[pos.x][pos.y].push_back(actor);
     }
   }

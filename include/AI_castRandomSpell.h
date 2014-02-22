@@ -6,7 +6,7 @@
 class AI_castRandomSpellIfAware {
 public:
   static bool action(Monster* monsterActing, Engine& engine) {
-    if(monsterActing->deadState == actorDeadState_alive) {
+    if(monsterActing->deadState == ActorDeadState::alive) {
       if(
         monsterActing->awareOfPlayerCounter_ > 0 &&
         monsterActing->spellCoolDownCurrent == 0) {

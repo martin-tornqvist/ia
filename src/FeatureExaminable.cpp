@@ -453,7 +453,7 @@ bool Chest::open() {
   if(IS_SEEN) eng.log->addMsg("The chest opens.");
   triggerTrap(*eng.player);
 
-  if(eng.player->deadState == actorDeadState_alive) {
+  if(eng.player->deadState == ActorDeadState::alive) {
     if(itemContainer_.items_.empty()) {
       if(IS_SEEN) eng.log->addMsg("There is nothing of value inside.");
     } else {
@@ -637,7 +637,7 @@ void Chest::triggerTrap(Actor& actor) {
       Rnd::oneIn(EXPLODE_ONE_IN_N)) {
       eng.log->addMsg("The trap explodes!");
       Explosion::runExplosionAt(pos_, eng, 0, SfxId::explosion, true);
-      if(eng.player->deadState == actorDeadState_alive) {
+      if(eng.player->deadState == ActorDeadState::alive) {
         eng.featureFactory->spawnFeatureAt(feature_rubbleLow, pos_);
       }
     } else {

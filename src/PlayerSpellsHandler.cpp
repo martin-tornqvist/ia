@@ -93,7 +93,7 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
       eng.log->addMsg("My life force fuels the spell.", clrMsgBad);
       eng.player->hit(2, dmgType_pure, false);
     }
-    if(eng.player->deadState == actorDeadState_alive) {
+    if(eng.player->deadState == ActorDeadState::alive) {
       spell->cast(eng.player, true, eng);
       prevSpellCast_ = spell;
       if(isWarlock && Rnd::oneIn(3)) {

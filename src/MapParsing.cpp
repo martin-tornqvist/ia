@@ -32,7 +32,7 @@ bool BlocksMoveCmn::check(const FeatureMob& f) const {
 }
 
 bool BlocksMoveCmn::check(const Actor& a) const {
-  return a.deadState == actorDeadState_alive;
+  return a.deadState == ActorDeadState::alive;
 }
 
 BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking, Engine& engine) :
@@ -49,7 +49,7 @@ bool BlocksActor::check(const FeatureMob& f) const {
 }
 
 bool BlocksActor::check(const Actor& a) const {
-  return a.deadState == actorDeadState_alive;
+  return a.deadState == ActorDeadState::alive;
 }
 
 bool BlocksProjectiles::check(const Cell& c)  const {
@@ -61,7 +61,7 @@ bool BlocksProjectiles::check(const FeatureMob& f)  const {
 }
 
 bool LivingActorsAdjToPos::check(const Actor& a) const {
-  if(a.deadState != actorDeadState_alive) {
+  if(a.deadState != ActorDeadState::alive) {
     return false;
   }
   return Utils::isPosAdj(pos_, a.pos, true);

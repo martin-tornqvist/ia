@@ -7,10 +7,10 @@ class AI_setPathToLeaderIfNoLosToleader {
 public:
   static void learn(Monster& monster, vector<Pos>& path, Engine& engine) {
 
-    if(monster.deadState == actorDeadState_alive) {
+    if(monster.deadState == ActorDeadState::alive) {
       Actor* leader = monster.leader;
       if(leader != NULL) {
-        if(leader->deadState == actorDeadState_alive) {
+        if(leader->deadState == ActorDeadState::alive) {
           bool blockers[MAP_W][MAP_H];
           MapParse::parse(CellPred::BlocksVision(engine), blockers);
 

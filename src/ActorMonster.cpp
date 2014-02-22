@@ -76,13 +76,13 @@ void Monster::onActorTurn() {
   if(awareOfPlayerCounter_ > 0) {
     isRoamingAllowed_ = true;
     if(leader == NULL) {
-      if(deadState == actorDeadState_alive) {
+      if(deadState == ActorDeadState::alive) {
         if(Rnd::oneIn(14)) {
           speakPhrase();
         }
       }
     } else {
-      if(leader->deadState == actorDeadState_alive) {
+      if(leader->deadState == ActorDeadState::alive) {
         if(leader != eng.player) {
           dynamic_cast<Monster*>(leader)->awareOfPlayerCounter_ =
             leader->getData().nrTurnsAwarePlayer;
@@ -258,7 +258,7 @@ void Monster::moveDir(Dir dir) {
 }
 
 void Monster::hearSound(const Snd& snd) {
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
     if(snd.isAlertingMonsters()) {
       becomeAware(false);
     }
@@ -278,7 +278,7 @@ void Monster::speakPhrase() {
 }
 
 void Monster::becomeAware(const bool IS_FROM_SEEING) {
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
     const int AWARENESS_CNT_BEFORE = awareOfPlayerCounter_;
     awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
     if(AWARENESS_CNT_BEFORE <= 0) {
@@ -302,7 +302,7 @@ void Monster::playerBecomeAwareOfMe(const int DURATION_FACTOR) {
 }
 
 bool Monster::tryAttack(Actor& defender) {
-  if(deadState == actorDeadState_alive) {
+  if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0 || leader == eng.player) {
 
       bool blockers[MAP_W][MAP_H];

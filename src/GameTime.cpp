@@ -186,7 +186,7 @@ void GameTime::runStandardTurnEvents() {
       actor->hit(1, dmgType_light, false);
     }
 
-    if(actor->deadState == actorDeadState_alive) {
+    if(actor->deadState == ActorDeadState::alive) {
       //Regen Spi
       if(actor == eng.player) {
         if(eng.playerBonHandler->hasTrait(traitPotentSpirit)) {
@@ -208,7 +208,7 @@ void GameTime::runStandardTurnEvents() {
     }
 
     //Delete dead, mangled actors
-    if(actor->deadState == actorDeadState_mangled) {
+    if(actor->deadState == ActorDeadState::mangled) {
       //Do not delete player if player died, just exit the function
       if(actor == eng.player) {return;}
 

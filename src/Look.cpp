@@ -146,7 +146,7 @@ Entity Look::getEntityToDescribe(const Pos pos) {
 
   //If there is a living actor there, describe the actor.
   if(actor != NULL && actor != eng.player) {
-    if(actor->deadState == actorDeadState_alive) {
+    if(actor->deadState == ActorDeadState::alive) {
       if(eng.player->isSeeingActor(*actor, NULL)) {
         return Entity(actor);
       }

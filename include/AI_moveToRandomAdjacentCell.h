@@ -75,7 +75,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
 namespace AI_moveToRandomAdjacentCell {
 
 static bool action(Monster& monster, Engine& engine) {
-  if(monster.deadState == actorDeadState_alive) {
+  if(monster.deadState == ActorDeadState::alive) {
     if(
       monster.isRoamingAllowed_ == true ||
       monster.awareOfPlayerCounter_ > 0) {

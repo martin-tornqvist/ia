@@ -97,7 +97,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
             featureMobs.at(featureMobIndex)->bump(defender);
           }
 
-          if(defender.deadState != actorDeadState_alive) {
+          if(defender.deadState != ActorDeadState::alive) {
             return;
           }
 
@@ -105,7 +105,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
             eng.map->cells[defender.pos.x][defender.pos.y].featureStatic;
           f->bump(defender);
 
-          if(defender.deadState != actorDeadState_alive) {
+          if(defender.deadState != ActorDeadState::alive) {
             return;
           }
         } else {

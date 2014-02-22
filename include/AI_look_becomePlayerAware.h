@@ -9,7 +9,7 @@
 class AI_look_becomePlayerAware {
 public:
   static bool action(Monster& monster, Engine& engine) {
-    if(monster.deadState == actorDeadState_alive) {
+    if(monster.deadState == ActorDeadState::alive) {
 
       const bool WAS_AWARE_BEFORE = monster.awareOfPlayerCounter_ > 0;
 

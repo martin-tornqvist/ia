@@ -822,7 +822,7 @@ void drawMap() {
       xPos = actor->pos.x;
       yPos = actor->pos.y;
       if(
-        actor->deadState == actorDeadState_corpse &&
+        actor->deadState == ActorDeadState::corpse &&
         actor->getData().glyph != ' ' &&
         actor->getData().tile != tile_empty &&
         eng->map->cells[xPos][yPos].isSeenByPlayer) {
@@ -878,7 +878,7 @@ void drawMap() {
         xPos = actor->pos.x;
         yPos = actor->pos.y;
 
-        if(actor->deadState == actorDeadState_alive) {
+        if(actor->deadState == ActorDeadState::alive) {
 
           curDrw = &renderArray_[xPos][yPos];
 

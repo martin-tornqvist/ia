@@ -73,7 +73,8 @@ void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
                            bool a[MAP_W][MAP_H],
                            vector<Pos>& vectorRef);
 
-Actor* getActorAtPos(const Pos& pos, Engine& eng);
+Actor* getActorAtPos(const Pos& pos, Engine& eng,
+                     ActorDeadState deadState = ActorDeadState::alive);
 
 void getActorPositions(const vector<Actor*>& actors,
                        vector<Pos>& vectorRef);

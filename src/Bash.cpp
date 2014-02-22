@@ -22,14 +22,10 @@ void Bash::playerBash() const {
   eng.log->clearLog();
 
   if(bashPos != eng.player->pos) {
-    Actor* actor = Utils::getActorAtPos(bashPos, eng);
-
-    if(actor == NULL) {
-      trace << "Bash: No actor at bash pos, ";
-      trace << "attempting to bash feature instead" << endl;
-      Cell& cell = eng.map->cells[bashPos.x][bashPos.y];
-      cell.featureStatic->bash(*eng.player);
-    }  else {
+    //Bash living actor?
+    Actor* livingActor =
+      Utils::getActorAtPos(bashPos, eng, ActorDeadState::alive);
+    if(livingActor != NULL) {
       trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
       if(eng.player->getPropHandler().allowAttackMelee(true)) {
         trace << "Bash: Player is allowed to do melee attack" << endl;
@@ -37,9 +33,35 @@ void Bash::playerBash() const {
         MapParse::parse(CellPred::BlocksVision(eng), blockers);
 
         trace << "Bash: Player can see actor" << endl;
-        eng.player->kick(*actor);
-        return;
+        eng.player->kick(*livingActor);
       }
+      return;
     }
+
+    //Bash corpse?
+    Actor* corpse =
+      Utils::getActorAtPos(bashPos, eng, ActorDeadState::corpse);
+    if(corpse != NULL) {
+      const bool IS_SEEING_CORPSE =
+        eng.map->cells[bashPos.x][bashPos.y].isSeenByPlayer;
+
+      const string actorNameA = corpse->getNameA();
+
+      const string name =
+        IS_SEEING_CORPSE ? ("a body of " + actorNameA) : "a corpse";
+
+      eng.log->addMsg("I bash " + name + ".");
+
+      pair<int, int> kickDmg =
+        eng.itemDataHandler->dataList[item_playerKick]->meleeDmg;
+      corpse->hit(kickDmg.first * kickDmg.second, dmgType_physical, false);
+      return;
+    }
+
+    //Bash feature
+    trace << "Bash: No actor at bash pos, ";
+    trace << "attempting to bash feature instead" << endl;
+    Cell& cell = eng.map->cells[bashPos.x][bashPos.y];
+    cell.featureStatic->bash(*eng.player);
   }
 }
