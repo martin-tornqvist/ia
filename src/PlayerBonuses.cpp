@@ -98,7 +98,7 @@ void PlayerBonHandler::getBgDescr(
 
     case bgRogue: {
       linesRef.push_back("Has an arcane ability to cloud the minds of ");
-      linesRef.push_back("enemies causing them to forget their pursuit ");
+      linesRef.push_back("enemies, causing them to forget their pursuit ");
       linesRef.push_back("(press [x])");
       linesRef.push_back(" ");
       //TODO This should be a trait

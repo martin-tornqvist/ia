@@ -454,7 +454,7 @@ void ActorDataHandler::initDataList() {
   d.speed = actorSpeed_normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
-  d.color = clrBrownDrk;
+  d.color = clrMagenta;
   d.tile = tile_ratThing;
   d.hp = 10;
   d.dmgMelee = 4;
@@ -1213,7 +1213,7 @@ void ActorDataHandler::initDataList() {
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
-  d.color = clrMagenta;
+  d.color = clrBrownDrk;
   d.tile = tile_migo;
   d.hp = 6;
   d.spi = 20;
@@ -1684,7 +1684,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'o';
   d.color = clrGray;
   d.tile = tile_ooze;
-  d.hp = 8;
+  d.hp = 9;
   d.spi = 12;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
@@ -1732,7 +1732,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'o';
   d.color = clrWhiteHigh;
   d.tile = tile_ooze;
-  d.hp = 6;
+  d.hp = 8;
   d.spi = 12;
   d.dmgMelee = 3;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
@@ -1781,7 +1781,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'o';
   d.color = clrGreen;
   d.tile = tile_ooze;
-  d.hp = 10;
+  d.hp = 14;
   d.spi = 12;
   d.dmgMelee = 5;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
@@ -1829,7 +1829,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'o';
   d.color = clrGreenLgt;
   d.tile = tile_ooze;
-  d.hp = 10;
+  d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 7;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
