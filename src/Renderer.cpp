@@ -676,8 +676,10 @@ void drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
   }
 }
 
-void drawProjectiles(vector<Projectile*>& projectiles) {
-  drawMapAndInterface(false);
+void drawProjectiles(vector<Projectile*>& projectiles,
+                     const bool SHOULD_DRAW_MAP_BEFORE) {
+
+  if(SHOULD_DRAW_MAP_BEFORE) {drawMapAndInterface(false);}
 
   for(Projectile * p : projectiles) {
     if(p->isDoneRendering == false && p->isVisibleToPlayer) {

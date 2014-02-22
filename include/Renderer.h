@@ -74,7 +74,8 @@ void drawBlastAnimAtPositionsWithPlayerVision(const vector<Pos>& positions,
 
 void drawMainMenuLogo(const int Y_POS);
 
-void drawProjectiles(vector<Projectile*>& projectiles);
+void drawProjectiles(vector<Projectile*>& projectiles,
+                     const bool SHOULD_DRAW_MAP_BEFORE);
 
 void drawPopupBox(const Rect& area, const PanelId panel = panel_screen,
                   const SDL_Color& clr = clrGray);

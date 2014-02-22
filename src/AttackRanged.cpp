@@ -88,8 +88,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     }
   }
 
-  //TODO Reimplement projectile trail functionality
-//  const bool LEAVE_TRAIL = weapon->getData().rangedMissileLeavesTrail;
+  const bool LEAVE_TRAIL = wpn.getData().rangedMissileLeavesTrail;
 
   const unsigned int SIZE_OF_PATH_PLUS_ONE =
     projectilePath.size() + (NR_PROJECTILES - 1) *
@@ -155,21 +154,21 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
               if(curProj->isVisibleToPlayer) {
                 if(Config::isTilesMode()) {
                   curProj->setTile(tile_blast1, clrRedLgt);
-                  Renderer::drawProjectiles(projectiles);
+                  Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
                   SdlWrapper::sleep(DELAY / 2);
                   curProj->setTile(tile_blast2, clrRedLgt);
-                  Renderer::drawProjectiles(projectiles);
+                  Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
                   SdlWrapper::sleep(DELAY / 2);
                 } else {
                   curProj->setGlyph('*', clrRedLgt);
-                  Renderer::drawProjectiles(projectiles);
+                  Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
                   SdlWrapper::sleep(DELAY);
                 }
 
                 //MESSAGES FOR ACTOR HIT
                 printProjectileAtActorMessages(*curProj->attackData, true);
                 //Need to draw again here to show log message
-                Renderer::drawProjectiles(projectiles);
+                Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               }
 
               curProj->isDoneRendering = true;
@@ -234,14 +233,14 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           if(curProj->isVisibleToPlayer) {
             if(Config::isTilesMode()) {
               curProj->setTile(tile_blast1, clrYellow);
-              Renderer::drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY / 2);
               curProj->setTile(tile_blast2, clrYellow);
-              Renderer::drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              Renderer::drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY);
             }
           }
@@ -266,14 +265,14 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           if(curProj->isVisibleToPlayer) {
             if(Config::isTilesMode()) {
               curProj->setTile(tile_blast1, clrYellow);
-              Renderer::drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY / 2);
               curProj->setTile(tile_blast2, clrYellow);
-              Renderer::drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              Renderer::drawProjectiles(projectiles);
+              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY);
             }
           }
@@ -283,10 +282,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         if(curProj->isObstructed == false && curProj->isVisibleToPlayer) {
           if(Config::isTilesMode()) {
             curProj->setTile(projectileTile, projectileColor);
-            Renderer::drawProjectiles(projectiles);
+            Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
           } else {
             curProj->setGlyph(projectileGlyph, projectileColor);
-            Renderer::drawProjectiles(projectiles);
+            Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
           }
         }
       }
