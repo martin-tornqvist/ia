@@ -68,9 +68,14 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
           const string wpnName =
             eng.itemDataHandler->getItemRef(*wpn, itemRef_plain, true);
           eng.log->addMsg(
-            "I" + swiftStr + " reload the " + wpnName + ".");
+            "I" + swiftStr + " reload the " + wpnName +
+              " (" + toString(wpn->nrAmmoLoaded) + "/" +
+              toString(wpn->ammoCapacity) + ").");
         } else {
-          eng.log->addMsg("I" + swiftStr + " load " + ammoName + ".");
+          eng.log->addMsg(
+            "I" + swiftStr + " load " + ammoName +
+              " (" + toString(wpn->nrAmmoLoaded) + "/" +
+              toString(wpn->ammoCapacity) + ").");
         }
         Renderer::drawMapAndInterface();
       } else {
