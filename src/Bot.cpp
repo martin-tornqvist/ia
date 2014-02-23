@@ -32,10 +32,17 @@ void Bot::act() {
   //=======================================================================
   // TESTS
   //=======================================================================
-  for(Actor* actor : eng.gameTime->actors_) {
+  for(Actor * actor : eng.gameTime->actors_) {
     assert(Utils::isPosInsideMap(actor->pos));
   }
   //=======================================================================
+
+  //Check if we are finished with the current run, if so, go back to DLVL 1
+  if(eng.map->getDlvl() >= LAST_CAVERN_LEVEL) {
+    trace << "Bot: Starting new run on first dungeon level" << endl;
+    eng.map->dlvl_ = 1;
+    return;
+  }
 
   PropHandler& propHandler = eng.player->getPropHandler();
 
@@ -72,20 +79,6 @@ void Bot::act() {
       propHandler.makeProp(propId, propTurnsSpecific, 5);
 
     propHandler.tryApplyProp(prop, true);
-  }
-
-  //If we are on the stairs,
-  //check if we are finished with the current run or finished with all runs,
-  //otherwise descend the stairs
-  const Pos& pos = eng.player->pos;
-  const FeatureStatic* const featureHere =
-    eng.map->cells[pos.x][pos.y].featureStatic;
-  if(featureHere->getId() == feature_stairs) {
-    if(eng.map->getDlvl() >= LAST_CAVERN_LEVEL) {
-      trace << "Bot: Starting new run on first dungeon level" << endl;
-      eng.map->dlvl_ = 0;
-    }
-    return;
   }
 
   //Handle blocking door
@@ -152,8 +145,6 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
     key = '0' + Rnd::range(1, 9);
   }
 
-//  assert(key >= '1' && key <= '9');
-
   Input::handleKeyPress(KeyboardReadReturnData(key), eng);
 
   return playerCell == cellToGoTo;
@@ -184,6 +175,5 @@ void Bot::findPathToStairs() {
   assert(stairPos != Pos(-1, -1));
 
   PathFind::run(eng.player->pos, stairPos, blockers, currentPath_);
-//  assert(currentPath_.size() > 0);
 }
 
