@@ -248,7 +248,6 @@ public:
   Prop* propAppliedOnRanged;
   vector<RoomThemeId> nativeRooms;
   vector< pair<FeatureId, int> > featuresCanBeFoundIn;
-private:
 };
 
 using namespace std;

@@ -463,6 +463,7 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileGlyph = '/';
   d->rangedMissileClr = clrGray;
   d->spawnStandardMinDLVL = 4;
+  d->rangedSndVol = SndVol::low;
   addFeatureFoundIn(d, feature_chest, 50);
   addFeatureFoundIn(d, feature_cabinet, 50);
   addFeatureFoundIn(d, feature_cocoon, 50);
