@@ -246,7 +246,7 @@ int Player::getCarryWeightLimit() const {
     find(props.begin(), props.end(), propWeakened) != props.end();
 
   const int CARRY_WEIGHT_MOD =
-    IS_TOUGH * 10 + IS_STRONG_BACKED * 30 - IS_WEAKENED * 15;
+    (IS_TOUGH * 10) + (IS_STRONG_BACKED * 30) - (IS_WEAKENED * 15);
 
   return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
 }

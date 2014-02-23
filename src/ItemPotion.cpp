@@ -280,6 +280,8 @@ void PotionOfInsight::quaff_(Actor* const actor) {
 
     eng.log->addMsg("I gain intuitions about " + itemNameBefore + "...");
     eng.log->addMsg("It is identified as " + itemNameAfter + "!");
+
+    identify(false);
   }
 }
 
