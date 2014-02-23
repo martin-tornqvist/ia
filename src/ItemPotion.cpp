@@ -19,33 +19,34 @@
 #include "PlayerVisualMemory.h"
 #include "Utils.h"
 
-void PotionOfHealing::quaff_(Actor* const actor) {
+void PotionOfHealth::quaff_(Actor* const actor) {
   actor->getPropHandler().endAppliedPropsByMagicHealing();
 
-  //TODO What about wounds?
+  //HP is always restored at least up to maximum HP, but can go beyond
+  const int HP          = actor->getHp();
+  const int HP_MAX      = actor->getHpMax(true);
+  const int HP_RESTORED = max(20, HP_MAX - HP);
 
-  //Attempt to heal the actor. If no hp was healed (already at full hp),
-  //boost the hp instead.
-  if(actor->restoreHp(INT_MAX, true) == false) {
-    actor->changeMaxHp(1, true);
-  }
+  actor->restoreHp(HP_RESTORED, true, true);
 
   if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }
 }
 
-void PotionOfHealing::collide_(const Pos& pos, Actor* const actor) {
+void PotionOfHealth::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
   if(actor != NULL) {quaff_(actor);}
 }
 
 void PotionOfSpirit::quaff_(Actor* const actor) {
-  //Attempt to restore spirit. If no hp was healed (already at full hp),
-  //boost the hp instead.
-  if(actor->restoreSpi(INT_MAX, true) == false) {
-    actor->changeMaxSpi(1, true);
-  }
+
+  //SPI is always restored at least up to maximum SPI, but can go beyond
+  const int SPI           = actor->getSpi();
+  const int SPI_MAX       = actor->getSpiMax();
+  const int SPI_RESTORED  = max(10, SPI_MAX - SPI);
+
+  actor->restoreSpi(SPI_RESTORED, true, true);
 
   if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);

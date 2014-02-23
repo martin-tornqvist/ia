@@ -1148,7 +1148,7 @@ void ItemDataHandler::initDataList() {
   d->spellCastFromScroll = spell_detectMonsters;
   dataList[d->id] = d;
 
-  d = new ItemData(item_potionOfHealing);
+  d = new ItemData(item_potionOfHealth);
   resetData(d, itemData_potion);
   dataList[d->id] = d;
 

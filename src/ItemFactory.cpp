@@ -125,7 +125,7 @@ Item* ItemFactory::spawnItem(const ItemId itemId, const int NR_ITEMS) {
     case item_scrollOfSacrificeLife:    item = new Scroll(d, eng); break;
     case item_scrollOfSacrificeSpirit:  item = new Scroll(d, eng); break;
 
-    case item_potionOfHealing:          item = new PotionOfHealing(d, eng); break;
+    case item_potionOfHealth:           item = new PotionOfHealth(d, eng); break;
     case item_potionOfSpirit:           item = new PotionOfSpirit(d, eng); break;
     case item_potionOfBlindness:        item = new PotionOfBlindness(d, eng); break;
     case item_potionOfFrenzy:           item = new PotionOfFrenzy(d, eng); break;
