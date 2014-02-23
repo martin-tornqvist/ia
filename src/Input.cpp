@@ -247,16 +247,18 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
         if(item == NULL) {
           eng.log->addMsg("I am not wielding a weapon.");
         } else {
-          Weapon* wpn = dynamic_cast<Weapon*>(item);
-          if(
-            wpn->nrAmmoLoaded >= 1 ||
-            wpn->getData().rangedHasInfiniteAmmo
-          ) {
-            eng.marker->run(markerTask_aimRangedWeapon, NULL);
-          } else if(Config::isRangedWpnAutoReload()) {
-            eng.reload->reloadWieldedWpn(*(eng.player));
+          const ItemData& itemData = item->getData();
+          if(itemData.isRangedWeapon == false) {
+            eng.log->addMsg("I am not wielding a firearm.");
           } else {
-            eng.log->addMsg("There is no ammo loaded.");
+            Weapon* wpn = dynamic_cast<Weapon*>(item);
+            if(wpn->nrAmmoLoaded >= 1 || itemData.rangedHasInfiniteAmmo) {
+              eng.marker->run(markerTask_aimRangedWeapon, NULL);
+            } else if(Config::isRangedWpnAutoReload()) {
+              eng.reload->reloadWieldedWpn(*(eng.player));
+            } else {
+              eng.log->addMsg("There is no ammo loaded.");
+            }
           }
         }
       }

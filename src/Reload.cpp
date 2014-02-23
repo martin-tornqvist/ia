@@ -42,7 +42,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
 
     case reloadResult_wpnNotUsingAmmo: {
       if(IS_PLAYER) {
-        eng.log->addMsg("Weapon does not use ammo.");
+        eng.log->addMsg("This weapon does not use ammo.");
       }
     } break;
 
