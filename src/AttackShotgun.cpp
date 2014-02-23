@@ -47,7 +47,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     const SfxId sfx = wpn.getData().rangedAttackSfx;
     Snd snd(sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos, &attacker,
             vol, AlertsMonsters::yes);
-    eng.sndEmitter->emitSnd(snd);
+    SndEmit::emitSnd(snd, eng);
   }
 
   for(unsigned int i = 1; i < path.size(); i++) {
@@ -124,7 +124,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     if(featureBlockers[curPos.x][curPos.y]) {
       Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
               curPos, NULL, SndVol::low, AlertsMonsters::yes);
-      eng.sndEmitter->emitSnd(snd);
+      SndEmit::emitSnd(snd, eng);
 
       if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
         Renderer::drawMapAndInterface(false);
@@ -145,7 +145,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     if(intendedAimLevel == actorSize_floor && curPos == aimPos) {
       Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
               curPos, NULL, SndVol::low, AlertsMonsters::yes);
-      eng.sndEmitter->emitSnd(snd);
+      SndEmit::emitSnd(snd, eng);
 
       if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
         Renderer::drawMapAndInterface(false);

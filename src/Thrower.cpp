@@ -226,7 +226,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
                 itemThrownData.landOnHardSurfaceSfx,
                 IgnoreMsgIfOriginSeen::yes, dropPos, NULL, SndVol::low,
                 alertsMonsters);
-        eng.sndEmitter->emitSnd(snd);
+        SndEmit::emitSnd(snd, eng);
       }
     }
     eng.itemDrop->dropItemOnMap(dropPos, itemThrown);

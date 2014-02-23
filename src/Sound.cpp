@@ -11,14 +11,23 @@
 #include "MapParsing.h"
 #include "Utils.h"
 
-bool SndEmitter::isSoundHeardAtRange(const int RANGE,
-                                     const Snd& snd) const {
-  return snd.isLoud() ?
-         (RANGE <= SND_DIST_LOUD) :
-         (RANGE <= SND_DIST_NORMAL);
+namespace SndEmit {
+
+//------------------------------------------------------------------------LOCAL
+namespace {
+
+int nrSndMsgPrintedCurTurn_;
+
+bool isSndHeardAtRange(const int RANGE, const Snd& snd) {
+  return snd.isLoud() ? (RANGE <= SND_DIST_LOUD) : (RANGE <= SND_DIST_NORMAL);
 }
 
-void SndEmitter::emitSnd(Snd snd) {
+} //namespace
+
+//-----------------------------------------------------------------------GLOBAL
+void resetNrSoundMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
+
+void emitSnd(Snd snd, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
   FeatureStatic* f = NULL;
   for(int y = 0; y < MAP_H; y++) {
@@ -38,27 +47,26 @@ void SndEmitter::emitSnd(Snd snd) {
     const bool IS_ORIGIN_SEEN_BY_PLAYER =
       eng.map->cells[origin.x][origin.y].isSeenByPlayer;
 
-    if(isSoundHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd)) {
+    if(isSndHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd)) {
       if(actor == eng.player) {
 
         //Various conditions may clear the sound message
         if(
-          nrSoundMsgPrintedCurTurn_ >= 1 ||
+          nrSndMsgPrintedCurTurn_ >= 1 ||
           (IS_ORIGIN_SEEN_BY_PLAYER && snd.isMsgIgnoredIfOriginSeen())) {
           snd.clearMsg();
         }
 
-        const Dir dirToOrigin =
-          getPlayerToOriginDir(FLOOD_VALUE_AT_ACTOR, origin, floodFill);
+        const Pos& playerPos = eng.player->pos;
 
         if(snd.getMsg().empty() == false) {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
-          if(dirToOrigin != Dir::endOfDirs) {
+          if(playerPos != origin) {
             string dirStr;
-            DirUtils::getCompassDirName(dirToOrigin, dirStr);
+            DirUtils::getCompassDirName(playerPos, origin, dirStr);
             snd.addString("(" + dirStr + ")");
           }
-          nrSoundMsgPrintedCurTurn_++;
+          nrSndMsgPrintedCurTurn_++;
         }
 
         const int SND_MAX_DISTANCE =
@@ -66,8 +74,10 @@ void SndEmitter::emitSnd(Snd snd) {
         const int PERCENT_DISTANCE =
           (FLOOD_VALUE_AT_ACTOR * 100) / SND_MAX_DISTANCE;
 
-        eng.player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER,
-                              dirToOrigin, PERCENT_DISTANCE);
+        const Pos offset = (origin - playerPos).getSigns();
+        const Dir dirToOrigin = DirUtils::getDir(offset);
+        eng.player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER, dirToOrigin,
+                              PERCENT_DISTANCE);
       } else {
         Monster* const monster = dynamic_cast<Monster*>(actor);
         monster->hearSound(snd);
@@ -76,38 +86,4 @@ void SndEmitter::emitSnd(Snd snd) {
   }
 }
 
-Dir SndEmitter::getPlayerToOriginDir(
-  const int FLOOD_VALUE_AT_PLAYER, const Pos& origin,
-  int floodFill[MAP_W][MAP_H]) const {
-
-  const Pos& playerPos = eng.player->pos;
-  Dir sourceDir = Dir::endOfDirs;
-
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
-
-      const Pos offset(dx, dy);
-      const Pos checkedPos = playerPos + offset;
-
-      //If player is next to origin, simply return the direction checked in.
-      if(checkedPos == origin) {
-        return DirUtils::getDir(offset);
-      } else {
-        //Origin is further away
-        const int currentValue = floodFill[checkedPos.x][checkedPos.y];
-        //If current value is less than players,
-        //this is the direction of the sound.
-        if(currentValue < FLOOD_VALUE_AT_PLAYER && currentValue != 0) {
-          sourceDir = DirUtils::getDir(offset);
-          //If cardinal direction, stop search
-          //(To give priority to cardinal directions)
-          if(dx == 0 || dy == 0) {
-            return sourceDir;
-          }
-        }
-      }
-    }
-  }
-  return sourceDir;
 }
-

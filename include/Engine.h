@@ -34,7 +34,6 @@ class Log;
 class Phrases;
 class Fov;
 class MapPatterns;
-class SndEmitter;
 class FeatureDataHandler;
 class DungeonMaster;
 class DungeonClimb;
@@ -112,7 +111,6 @@ public:
   Phrases* phrases;
   Fov* fov;
   MapPatterns* mapPatterns;
-  SndEmitter* sndEmitter;
   FeatureDataHandler* featureDataHandler;
   DungeonMaster* dungeonMaster;
   DungeonClimb* dungeonClimb;

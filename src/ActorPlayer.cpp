@@ -366,7 +366,7 @@ void Player::incrInsanity() {
             eng.popup->showMsg(msg, true, "Screaming!", SfxId::insanityRising);
             Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
                     SndVol::high, AlertsMonsters::yes);
-            eng.sndEmitter->emitSnd(snd);
+            SndEmit::emitSnd(snd, eng);
             return;
           }
         } break;
@@ -381,7 +381,7 @@ void Player::incrInsanity() {
           }
           Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMonsters::yes);
-          eng.sndEmitter->emitSnd(snd);
+          SndEmit::emitSnd(snd, eng);
           return;
         } break;
 
@@ -398,7 +398,7 @@ void Player::incrInsanity() {
           eng.popup->showMsg(msg, true, "HAHAHA!", SfxId::insanityRising);
           Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMonsters::yes);
-          eng.sndEmitter->emitSnd(snd);
+          SndEmit::emitSnd(snd, eng);
           return;
         } break;
 

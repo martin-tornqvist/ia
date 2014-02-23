@@ -254,7 +254,7 @@ void GameTime::runStandardTurnEvents() {
     }
   }
 
-  eng.sndEmitter->resetNrSoundMsgPrintedCurTurn();
+  SndEmit::resetNrSoundMsgPrintedCurTurn();
 
   Audio::tryPlayAmb(250, eng);
 

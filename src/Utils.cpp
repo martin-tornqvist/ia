@@ -305,21 +305,21 @@ Dir getDir(const Pos& offset) {
 
   if(offset.y == -1) {
     return offset.x == -1 ? Dir::upLeft :
-           offset.x == 0 ? Dir::up :
-           offset.x == 1 ? Dir::upRight :
+           offset.x ==  0 ? Dir::up :
+           offset.x ==  1 ? Dir::upRight :
            Dir::endOfDirs;
   }
 
   if(offset.y == 0) {
     return offset.x == -1 ? Dir::left :
-           offset.x == 0 ? Dir::center :
-           offset.x == 1 ? Dir::right :
+           offset.x ==  0 ? Dir::center :
+           offset.x ==  1 ? Dir::right :
            Dir::endOfDirs;
   }
   if(offset.y == 1) {
     return offset.x == -1 ? Dir::downLeft :
-           offset.x == 0 ? Dir::down :
-           offset.x == 1 ? Dir::downRight :
+           offset.x ==  0 ? Dir::down :
+           offset.x ==  1 ? Dir::downRight :
            Dir::endOfDirs;
   }
   return Dir::endOfDirs;

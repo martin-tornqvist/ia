@@ -47,7 +47,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
         itemData.isIntrinsic == false) {
         Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes,
                 data.curDefender->pos, NULL, SndVol::low, AlertsMonsters::yes);
-        eng.sndEmitter->emitSnd(snd);
+        SndEmit::emitSnd(snd, eng);
       }
     }
   }

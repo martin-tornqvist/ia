@@ -720,7 +720,7 @@ void TrapAlarm::trigger(
 
   Snd snd("I hear an alarm sounding!", SfxId::endOfSfxId, msgIgnore, pos_, &actor,
           SndVol::high, AlertsMonsters::yes);
-  eng.sndEmitter->emitSnd(snd);
+  SndEmit::emitSnd(snd, eng);
   traceVerbose << "TrapAlarm::trigger() [DONE]" << endl;
 }
 

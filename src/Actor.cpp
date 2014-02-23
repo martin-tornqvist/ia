@@ -508,7 +508,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
         "I hear agonised screaming.", SfxId::endOfSfxId,
         IgnoreMsgIfOriginSeen::yes, pos, this, SndVol::low,
         AlertsMonsters::no);
-      eng.sndEmitter->emitSnd(snd);
+      SndEmit::emitSnd(snd, eng);
     }
     dynamic_cast<Monster*>(this)->leader = NULL;
   }

@@ -62,27 +62,13 @@ private:
   AlertsMonsters isAlertingMonsters_;
 };
 
-class SndEmitter {
-public:
-  SndEmitter(Engine& engine) : eng(engine) {}
+namespace SndEmit {
 
-  void emitSnd(Snd snd);
+void emitSnd(Snd snd, Engine& eng);
 
-  void resetNrSoundMsgPrintedCurTurn() {
-    nrSoundMsgPrintedCurTurn_ = 0;
-  }
+void resetNrSoundMsgPrintedCurTurn();
 
-private:
-  int nrSoundMsgPrintedCurTurn_;
-
-  Dir getPlayerToOriginDir(
-    const int FLOOD_VALUE_AT_PLAYER,
-    const Pos& origin, int floodFill[MAP_W][MAP_H]) const;
-
-  bool isSoundHeardAtRange(const int RANGE, const Snd& snd) const;
-
-  Engine& eng;
-};
+} //SndEmit
 
 #endif
 

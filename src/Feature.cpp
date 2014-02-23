@@ -192,7 +192,7 @@ void FeatureStatic::bash_(Actor& actorTrying) {
                                         AlertsMonsters::no;
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
           &actorTrying, SndVol::low, alertsMonsters);
-  eng.sndEmitter->emitSnd(snd);
+  SndEmit::emitSnd(snd, eng);
 }
 
 void FeatureStatic::setGoreIfPossible() {

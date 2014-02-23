@@ -15,6 +15,7 @@
 #include "FeatureTrap.h"
 #include "Properties.h"
 #include "Renderer.h"
+#include "Sound.h"
 
 #include "AI_setSpecialBlockedCells.h"
 #include "AI_handleClosedBlockingDoor.h"
@@ -273,8 +274,10 @@ void Monster::speakPhrase() {
   const SfxId sfx = IS_SEEN_BY_PLAYER ?
                     getAggroSfxMonsterSeen() :
                     getAggroSfxMonsterHidden();
-  eng.sndEmitter->emitSnd(Snd(msg, sfx, IgnoreMsgIfOriginSeen::no, pos, this,
-                              SndVol::low, AlertsMonsters::yes));
+
+  Snd snd(msg, sfx, IgnoreMsgIfOriginSeen::no, pos, this,
+          SndVol::low, AlertsMonsters::yes);
+  SndEmit::emitSnd(snd, eng);
 }
 
 void Monster::becomeAware(const bool IS_FROM_SEEING) {

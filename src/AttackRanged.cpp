@@ -112,7 +112,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           const SndVol vol = wpn.getData().rangedSndVol;
           Snd snd(sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos,
                   &attacker, vol, AlertsMonsters::yes);
-          eng.sndEmitter->emitSnd(snd);
+          SndEmit::emitSnd(snd, eng);
         }
       }
 
@@ -226,7 +226,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
             Snd snd("I hear a ricochet.", SfxId::ricochet,
                     IgnoreMsgIfOriginSeen::yes, curProj->pos, NULL,
                     SndVol::low, AlertsMonsters::yes);
-            eng.sndEmitter->emitSnd(snd);
+            SndEmit::emitSnd(snd, eng);
           }
 
           //RENDER FEATURE HIT
@@ -258,7 +258,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
             Snd snd("I hear a ricochet.", SfxId::ricochet,
                     IgnoreMsgIfOriginSeen::yes, curProj->pos, NULL,
                     SndVol::low, AlertsMonsters::yes);
-            eng.sndEmitter->emitSnd(snd);
+            SndEmit::emitSnd(snd, eng);
           }
 
           //RENDER GROUND HITS

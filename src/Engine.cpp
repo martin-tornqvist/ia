@@ -104,7 +104,6 @@ void Engine::initGame() {
   marker = new Marker(*this);
   log = new Log(*this);
   fov = new Fov(*this);
-  sndEmitter = new SndEmitter(*this);
   dungeonMaster = new DungeonMaster(*this);
   dungeonClimb = new DungeonClimb(*this);
   mapTemplateHandler = new MapTemplateHandler();
@@ -158,7 +157,6 @@ void Engine::cleanupGame() {
   delete log;
   delete fov;
   delete mapPatterns;
-  delete sndEmitter;
   delete featureDataHandler;
   delete dungeonMaster;
   delete dungeonClimb;

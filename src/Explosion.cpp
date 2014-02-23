@@ -110,7 +110,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
 
   Snd snd("I hear an explosion!", sfx, IgnoreMsgIfOriginSeen::yes, origin,
           NULL, vol, AlertsMonsters::yes);
-  eng.sndEmitter->emitSnd(snd);
+  SndEmit::emitSnd(snd, eng);
 
   draw(posLists, blockers, SHOULD_OVERRIDE_CLR, clrOverride, eng);
 
@@ -211,7 +211,7 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
   //TODO Sound message?
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, origin, NULL,
           SndVol::low, AlertsMonsters::yes);
-  eng.sndEmitter->emitSnd(snd);
+  SndEmit::emitSnd(snd, eng);
 
   for(const vector<Pos>& inner : posLists) {
     for(const Pos & pos : inner) {

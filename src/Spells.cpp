@@ -228,7 +228,7 @@ SpellCastRetData SpellDarkbolt::cast_(
 
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos, NULL,
           SndVol::low, AlertsMonsters::yes);
-  eng.sndEmitter->emitSnd(snd);
+  SndEmit::emitSnd(snd, eng);
 
   return SpellCastRetData(true);
 }
@@ -277,7 +277,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
 
         Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos, NULL,
                 SndVol::high, AlertsMonsters::yes);
-        eng.sndEmitter->emitSnd(snd);
+        SndEmit::emitSnd(snd, eng);
       }
       return SpellCastRetData(true);
     }
@@ -290,7 +290,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     eng.player->hit(Rnd::range(dmgRange), dmgType_physical, false);
     Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
             SndVol::high, AlertsMonsters::yes);
-    eng.sndEmitter->emitSnd(snd);
+    SndEmit::emitSnd(snd, eng);
   }
   return SpellCastRetData(false);
 }
@@ -367,7 +367,7 @@ SpellCastRetData SpellMayhem::cast_(
 
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos,
           NULL, SndVol::high, AlertsMonsters::yes);
-  eng.sndEmitter->emitSnd(snd);
+  SndEmit::emitSnd(snd, eng);
 
   return SpellCastRetData(true);
 }
