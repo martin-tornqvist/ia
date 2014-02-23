@@ -55,6 +55,7 @@ void Bash::playerBash() const {
       pair<int, int> kickDmg =
         eng.itemDataHandler->dataList[item_playerKick]->meleeDmg;
       corpse->hit(kickDmg.first * kickDmg.second, dmgType_physical, false);
+      eng.gameTime->actorDidAct();
       return;
     }
 
