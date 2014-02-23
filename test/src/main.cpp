@@ -81,60 +81,59 @@ TEST(CalculateDistances) {
 }
 
 TEST(Directions) {
-  DirConverter dirConv;
   const int X0 = 20;
   const int Y0 = 20;
   const Pos fromPos(X0, Y0);
   string str = "";
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 1, Y0), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0), str);
   CHECK_EQUAL("E", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 1, Y0 + 1), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 + 1), str);
   CHECK_EQUAL("SE", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0    , Y0 + 1), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0    , Y0 + 1), str);
   CHECK_EQUAL("S", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 - 1, Y0 + 1), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 - 1, Y0 + 1), str);
   CHECK_EQUAL("SW", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 - 1, Y0), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 - 1, Y0), str);
   CHECK_EQUAL("W", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 - 1, Y0 - 1), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 - 1, Y0 - 1), str);
   CHECK_EQUAL("NW", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0    , Y0 - 1), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0    , Y0 - 1), str);
   CHECK_EQUAL("N", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 1, Y0 - 1), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 - 1), str);
   CHECK_EQUAL("NE", str);
 
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 3, Y0 + 1), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 3, Y0 + 1), str);
   CHECK_EQUAL("E", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 2, Y0 + 3), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 2, Y0 + 3), str);
   CHECK_EQUAL("SE", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 1, Y0 + 3), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 + 3), str);
   CHECK_EQUAL("S", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 - 3, Y0 + 2), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 - 3, Y0 + 2), str);
   CHECK_EQUAL("SW", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 - 3, Y0 + 1), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 - 3, Y0 + 1), str);
   CHECK_EQUAL("W", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 - 3, Y0 - 2), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 - 3, Y0 - 2), str);
   CHECK_EQUAL("NW", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 1, Y0 - 3), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 1, Y0 - 3), str);
   CHECK_EQUAL("N", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 3, Y0 - 2), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 3, Y0 - 2), str);
   CHECK_EQUAL("NE", str);
 
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 10000, Y0), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 10000, Y0), str);
   CHECK_EQUAL("E", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 10000, Y0 + 10000), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 10000, Y0 + 10000), str);
   CHECK_EQUAL("SE", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0        , Y0 + 10000), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0        , Y0 + 10000), str);
   CHECK_EQUAL("S", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 - 10000, Y0 + 10000), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 - 10000, Y0 + 10000), str);
   CHECK_EQUAL("SW", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 - 10000, Y0), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 - 10000, Y0), str);
   CHECK_EQUAL("W", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 - 10000, Y0 - 10000), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 - 10000, Y0 - 10000), str);
   CHECK_EQUAL("NW", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0        , Y0 - 10000), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0        , Y0 - 10000), str);
   CHECK_EQUAL("N", str);
-  dirConv.getCompassDirName(fromPos, Pos(X0 + 10000, Y0 - 10000), str);
+  DirUtils::getCompassDirName(fromPos, Pos(X0 + 10000, Y0 - 10000), str);
   CHECK_EQUAL("NE", str);
 }
 

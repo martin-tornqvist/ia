@@ -11,7 +11,7 @@
 
 namespace Rnd {
 
-//---------------------------------------------------------------- LOCAL
+//------------------------------------------------------------------------LOCAL
 namespace {
 
 MTRand mtRand;
@@ -29,7 +29,7 @@ int roll(const int ROLLS, const int SIDES) {
 
 } //Namespace
 
-//---------------------------------------------------------------- GLOBAL
+//---------------------------------------------------------------------- GLOBAL
 void seed(const unsigned long val) {mtRand = MTRand(val);}
 
 int dice(const int ROLLS, const int SIDES) {return roll(ROLLS, SIDES);}
@@ -58,7 +58,7 @@ int percentile() {return roll(1, 100);}
 
 namespace Utils {
 
-//---------------------------------------------------------------- GLOBAL
+//---------------------------------------------------------------------- GLOBAL
 bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2) {
   return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
 }
@@ -275,19 +275,32 @@ string TimeData::getTimeStr(const TimeType lowest,
   return ret;
 }
 
-DirConverter::DirConverter() {
-  compassDirNames[0][0] = "NW";
-  compassDirNames[0][1] = "W";
-  compassDirNames[0][2] = "SW";
-  compassDirNames[1][0] = "N";
-  compassDirNames[1][1] = "";
-  compassDirNames[1][2] = "S";
-  compassDirNames[2][0] = "NE";
-  compassDirNames[2][1] = "E";
-  compassDirNames[2][2] = "SE";
-}
+namespace DirUtils {
 
-Dir DirConverter::getDir(const Pos& offset) const {
+//------------------------------------------------------------------------LOCAL
+namespace {
+
+const string compassDirNames[3][3] = {
+  {"NW", "N", "NE"},
+  { "W",  "",  "E",},
+  {"SW", "S", "SE"}
+};
+
+const double PI_DB            = 3.14159265;
+const double ANGLE_45_DB      = 2 * PI_DB / 8;
+const double ANGLE_45_HALF_DB = ANGLE_45_DB / 2.0;
+
+double edge[4] = {
+  ANGLE_45_HALF_DB + (ANGLE_45_DB * 0),
+  ANGLE_45_HALF_DB + (ANGLE_45_DB * 1),
+  ANGLE_45_HALF_DB + (ANGLE_45_DB * 2),
+  ANGLE_45_HALF_DB + (ANGLE_45_DB * 3)
+};
+
+} //namespace
+
+//---------------------------------------------------------------------- GLOBAL
+Dir getDir(const Pos& offset) {
   assert(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
 
   if(offset.y == -1) {
@@ -312,7 +325,7 @@ Dir DirConverter::getDir(const Pos& offset) const {
   return Dir::endOfDirs;
 }
 
-Pos DirConverter::getOffset(const Dir dir) const {
+Pos getOffset(const Dir dir) {
   assert(dir != Dir::endOfDirs);
 
   switch(dir) {
@@ -325,24 +338,14 @@ Pos DirConverter::getOffset(const Dir dir) const {
     case Dir::upLeft:     return Pos(-1, -1);
     case Dir::up:         return Pos(0, -1);
     case Dir::upRight:    return Pos(1, -1);
-    case Dir::endOfDirs:     return Pos(0, 0);
+    case Dir::endOfDirs:  return Pos(0, 0);
   }
   return Pos(0, 0);
 }
 
-void DirConverter::getCompassDirName(
-  const Pos& fromPos, const Pos& toPos, string& strRef) const {
+void getCompassDirName(const Pos& fromPos, const Pos& toPos, string& strRef) {
 
   strRef = "";
-
-  const double PI_DB        = 3.14159265;
-  const double ANGLE_45_DB  = 2 * PI_DB / 8;
-
-  double edge[4];
-
-  for(int i = 0; i < 4; i++) {
-    edge[i] = (ANGLE_45_DB / 2) + (ANGLE_45_DB * i);
-  }
 
   const Pos offset(toPos - fromPos);
   const double ANGLE_DB = atan2(-offset.y, offset.x);
@@ -366,16 +369,14 @@ void DirConverter::getCompassDirName(
   }
 }
 
-void DirConverter::getCompassDirName(
-  const Dir dir, string& strRef) const {
+void getCompassDirName(const Dir dir, string& strRef) {
 
   const Pos& offset = getOffset(dir);
   strRef = compassDirNames[offset.x + 1][offset.y + 1];
 }
 
-void DirConverter::getCompassDirName(
-  const Pos& offset, string& strRef) const {
-
+void getCompassDirName(const Pos& offset, string& strRef) {
   strRef = compassDirNames[offset.x + 1][offset.y + 1];
 }
 
+} //DirUtils

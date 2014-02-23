@@ -81,7 +81,7 @@ public:
 
                     if(isGoodCandidateFound) {
                       const Pos offset = candidates.at(ii) - monster.pos;
-                      monster.moveDir(DirConverter().getDir(offset));
+                      monster.moveDir(DirUtils::getDir(offset));
                       return true;
                     }
                   }

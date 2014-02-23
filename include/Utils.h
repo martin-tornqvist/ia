@@ -105,25 +105,18 @@ TimeData getCurrentTime();
 
 } //Utils
 
-class DirConverter {
-public:
-  DirConverter();
+namespace DirUtils {
 
-  ~DirConverter() {}
+Dir getDir(const Pos& offset);
 
-  Dir getDir(const Pos& offset) const;
+Pos getOffset(const Dir dir);
 
-  Pos getOffset(const Dir dir) const;
+void getCompassDirName(const Pos& fromPos, const Pos& toPos, string& strRef);
 
-  void getCompassDirName(
-    const Pos& fromPos, const Pos& toPos, string& strRef) const;
+void getCompassDirName(const Dir dir, string& strRef);
 
-  void getCompassDirName(const Dir dir, string& strRef) const;
+void getCompassDirName(const Pos& offset, string& strRef);
 
-  void getCompassDirName(const Pos& offset, string& strRef) const;
-
-private:
-  string compassDirNames[3][3];
-};
+} //DirUtils
 
 #endif

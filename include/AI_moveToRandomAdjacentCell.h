@@ -35,9 +35,8 @@ Dir getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
 
   //First, try the same direction as last travelled
   const Dir lastDirTravelled = monster.lastDirTravelled_;
-  DirConverter dirConv;
   if(lastDirTravelled != Dir::center) {
-    const Pos targetCell(monsterPos + dirConv.getOffset(lastDirTravelled));
+    const Pos targetCell(monsterPos + DirUtils::getOffset(lastDirTravelled));
     if(
       blockers[targetCell.x][targetCell.y] == false &&
       Utils::isPosInside(targetCell, areaAllowed)) {
@@ -56,7 +55,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster, Engine& engine) {
         if(
           blockers[targetCell.x][targetCell.y] == false &&
           Utils::isPosInside(targetCell, areaAllowed)) {
-          dirCandidates.push_back(dirConv.getDir(offset));
+          dirCandidates.push_back(DirUtils::getDir(offset));
         }
       }
     }

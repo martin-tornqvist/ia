@@ -1580,7 +1580,7 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
         if(delta.x != 0 || delta.y != 0) {
           const Pos c = actorPos + delta;
           if(blockers[c.x][c.y] == false) {
-            dir = DirConverter().getDir(delta);
+            dir = DirUtils::getDir(delta);
           }
         }
         triesLeft--;
@@ -1620,7 +1620,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
         return;
       }
     }
-    dir = DirConverter().getDir(line.at(1) - actorPos);
+    dir = DirUtils::getDir(line.at(1) - actorPos);
   }
 }
 

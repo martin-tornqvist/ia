@@ -55,7 +55,7 @@ void SndEmitter::emitSnd(Snd snd) {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
           if(dirToOrigin != Dir::endOfDirs) {
             string dirStr;
-            DirConverter().getCompassDirName(dirToOrigin, dirStr);
+            DirUtils::getCompassDirName(dirToOrigin, dirStr);
             snd.addString("(" + dirStr + ")");
           }
           nrSoundMsgPrintedCurTurn_++;
@@ -91,14 +91,14 @@ Dir SndEmitter::getPlayerToOriginDir(
 
       //If player is next to origin, simply return the direction checked in.
       if(checkedPos == origin) {
-        return DirConverter().getDir(offset);
+        return DirUtils::getDir(offset);
       } else {
         //Origin is further away
         const int currentValue = floodFill[checkedPos.x][checkedPos.y];
         //If current value is less than players,
         //this is the direction of the sound.
         if(currentValue < FLOOD_VALUE_AT_PLAYER && currentValue != 0) {
-          sourceDir = DirConverter().getDir(offset);
+          sourceDir = DirUtils::getDir(offset);
           //If cardinal direction, stop search
           //(To give priority to cardinal directions)
           if(dx == 0 || dy == 0) {

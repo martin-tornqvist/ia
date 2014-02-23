@@ -240,7 +240,7 @@ void Monster::moveDir(Dir dir) {
   // Movement direction is stored for AI purposes
   lastDirTravelled_ = dir;
 
-  const Pos targetCell(pos + DirConverter().getOffset(dir));
+  const Pos targetCell(pos + DirUtils::getOffset(dir));
 
   assert(Utils::isPosInsideMap(targetCell));
 

@@ -22,7 +22,7 @@ public:
                           blockers);
           const Pos newPos(monster.pos + offset);
           if(blockers[newPos.x][newPos.y] == false) {
-            monster.moveDir(DirConverter().getDir(offset));
+            monster.moveDir(DirUtils::getDir(offset));
             return true;
           } else {
             return false;
