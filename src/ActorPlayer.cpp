@@ -1101,7 +1101,6 @@ void Player::moveDir(Dir dir) {
                   }
                 }
               }
-              hasMeleeWeapon = true;
               eng.attack->melee(*this, *weapon, *actorAtDest);
               target = actorAtDest;
               return;

@@ -670,18 +670,17 @@ bool SpellKnockBack::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ ENFEEBLE
-SpellCastRetData SpellEnfeeble::cast_(
-  Actor* const caster, Engine& eng) const {
+SpellCastRetData SpellEnfeeble::cast_(Actor* const caster, Engine& eng) const {
 
   PropId propId = endOfPropIds;
 
   const int RND = Rnd::range(1, 5);
   switch(RND) {
-    case 1: {propId = propConfused;}
-    case 2: {propId = propParalysed;}
-    case 3: {propId = propSlowed;}
-    case 4: {propId = propBlind;}
-    case 5: {propId = propTerrified;}
+    case 1: {propId = propConfused;}  break;
+    case 2: {propId = propParalysed;} break;
+    case 3: {propId = propSlowed;}    break;
+    case 4: {propId = propBlind;}     break;
+    case 5: {propId = propTerrified;} break;
   }
 
   if(caster == eng.player) {

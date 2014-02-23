@@ -88,11 +88,10 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
   currentActor->getPropHandler().tick(propTurnModeActor, NULL);
 
   if(IS_FREE_TURN == false) {
-    TurnType currentTurnType = TurnType(currentTurnTypePos_);
 
     bool actorWhoCanActThisTurnFound = false;
     while(actorWhoCanActThisTurnFound == false) {
-      currentTurnType = (TurnType)(currentTurnTypePos_);
+      TurnType currentTurnType = (TurnType)(currentTurnTypePos_);
 
       currentActorVectorPos_++;
 
@@ -262,6 +261,7 @@ void GameTime::runStandardTurnEvents() {
 }
 
 bool GameTime::isSpiRegenThisTurn(const int REGEN_N_TURNS) {
+  assert(REGEN_N_TURNS != 0);
   return turn_ == (turn_ / REGEN_N_TURNS) * REGEN_N_TURNS;
 }
 

@@ -149,7 +149,7 @@ Item* ItemFactory::spawnItem(const ItemId itemId, const int NR_ITEMS) {
     case item_medicalBag:               item = new MedicalBag(d, eng); break;
 
     case item_empty:
-    case endOfItemIds: {} break;
+    case endOfItemIds: return NULL;
   }
 
   if(item->getData().isStackable == false && NR_ITEMS != 1) {

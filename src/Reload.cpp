@@ -125,7 +125,6 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
                        reloadResult_wpnNotUsingAmmo, false);
   } else {
     const ItemId ammoType = wpn->getData().rangedAmmoTypeUsed;
-    bool isClip = wpn->clip;
     Item* item = NULL;
 
     if(wpn->nrAmmoLoaded < wpnAmmoCapacity) {
@@ -155,7 +154,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
                                reloadResult_fumble, false);
           } else {
             result = reloadResult_success;
-            isClip = item->getData().isAmmoClip;
+            bool isClip = item->getData().isAmmoClip;
 
             //If ammo comes in clips
             if(isClip) {

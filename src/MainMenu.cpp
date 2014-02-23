@@ -185,8 +185,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
 
   draw(browser);
 
-  bool proceed = false;
-  while(proceed == false) {
+  while(true) {
     const MenuAction action = eng.menuInputHandler->getAction(browser);
 
     switch(action) {
@@ -195,29 +194,24 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
       } break;
 
       case menuAction_esc: {
-        proceed = true;
         quit    = true;
+        return gameEntry_new;
       } break;
 
       case menuAction_space:
       case menuAction_selectedWithShift: {} break;
 
       case menuAction_selected: {
-        if(browser.isPosAtKey('a')) {
-          proceed = true;
-          return gameEntry_new;
-        }
+        if(browser.isPosAtKey('a')) {return gameEntry_new;}
         if(browser.isPosAtKey('b')) {
           if(eng.saveHandler->isSaveAvailable()) {
             eng.saveHandler->load();
             eng.gameTime->insertActorInLoop(dynamic_cast<Actor*>(eng.player));
             eng.dungeonClimb->travelDown();
-            proceed = true;
             return gameEntry_load;
           } else {
             eng.popup->showMsg("Starting a new character instead.", false,
                                "No save available");
-            proceed = true;
             return gameEntry_new;
           }
         }
@@ -238,13 +232,13 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
           draw(browser);
         }
         if(browser.isPosAtKey('g')) {
-          proceed = true;
           quit    = true;
+          return gameEntry_new;
         }
         if(IS_DEBUG_MODE) {
           if(browser.isPosAtKey('h')) {
             Config::setBotPlaying();
-            proceed = true;
+            return gameEntry_new;
           }
         }
       } break;
