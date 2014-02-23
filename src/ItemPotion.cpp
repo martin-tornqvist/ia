@@ -325,11 +325,6 @@ void PotionOfDescent::quaff_(Actor* const actor) {
   identify(false);
 }
 
-void PotionOfDescent::collide_(const Pos& pos, Actor* const actor) {
-  (void)pos;
-  if(actor != NULL) {quaff_(actor);}
-}
-
 void PotionNameHandler::setClrAndFalseName(ItemData* d) {
   const int ELEMENT = Rnd::range(0, potionLooks_.size() - 1);
 

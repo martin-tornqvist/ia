@@ -218,7 +218,10 @@ public:
   ~PotionOfDescent() {}
   void quaff_(Actor* const actor);
 private:
-  void collide_(const Pos& pos, Actor* const actor);
+  void collide_(const Pos& pos, Actor* const actor) {
+    (void)pos;
+    (void)actor;
+  }
   const string getRealTypeName() {return "Descent";}
 };
 
