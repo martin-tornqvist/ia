@@ -226,10 +226,7 @@ bool Actor::restoreHp(const int HP_RESTORED,
 
   //If hp is below limit, and restored hp will NOT push it
   //over the limit - restored hp is added to current.
-  if(
-    IS_ALLOWED_ABOVE_MAX ||
-    getHp() <= DIF_FROM_MAX) {
-
+  if(IS_ALLOWED_ABOVE_MAX || getHp() <= DIF_FROM_MAX) {
     hp_ += HP_RESTORED;
     isHpGained = true;
   }

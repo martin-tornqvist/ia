@@ -82,6 +82,8 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
       }
     }
 
+    eng.log->addMsg("I cast " + spell->getName() + "!");
+
     bool isBloodSorc  = false;
     bool isWarlock    = false;
     for(TraitId id : eng.playerBonHandler->traitsPicked_) {
