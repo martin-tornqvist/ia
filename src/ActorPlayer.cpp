@@ -935,11 +935,12 @@ void Player::onStandardTurn() {
     }
   }
 
+  const int DECR_ABOVE_MAX_N_TURNS = 7;
   if(getHp() > getHpMax(true)) {
-    hp_--;
+    if(eng.gameTime->getTurn() % DECR_ABOVE_MAX_N_TURNS == 0) {hp_--;}
   }
   if(getSpi() > getSpiMax()) {
-    spi_--;
+    if(eng.gameTime->getTurn() % DECR_ABOVE_MAX_N_TURNS == 0) {spi_--;}
   }
 
   vector<PropId> props;
