@@ -7,12 +7,9 @@ class Engine;
 
 class PopulateTraps {
 public:
-  PopulateTraps(Engine& engine) : eng(engine) {
-  }
+  PopulateTraps(Engine& engine) : eng(engine) {}
 
-  void populateRoomAndCorridorLevel(
-    RoomThemeId themeMap[MAP_W][MAP_H],
-    const vector<Room*>& rooms) const;
+  void populateRoomAndCorridorLevel() const;
 
 private:
   Engine& eng;

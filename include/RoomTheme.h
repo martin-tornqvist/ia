@@ -34,10 +34,10 @@ public:
 
   void run();
 
-private:
-  //This array supports placing items, monsters and traps
+  //This array is a support for placing items, monsters and traps
   RoomThemeId themeMap[MAP_W][MAP_H];
 
+private:
   void applyThemeToRoom(Room& room);
 
   int placeThemeFeatures(Room& room);

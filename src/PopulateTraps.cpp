@@ -8,16 +8,13 @@
 #include "MapParsing.h"
 #include "Utils.h"
 
-void PopulateTraps::populateRoomAndCorridorLevel(
-  RoomThemeId themeMap[MAP_W][MAP_H],
-  const vector<Room*>& rooms) const {
+void PopulateTraps::populateRoomAndCorridorLevel() const {
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
   //Put traps in non-plain rooms
-  for(unsigned int i = 0; i < rooms.size(); i++) {
-    Room* const room = rooms.at(i);
+  for(Room * const room : eng.map->rooms) {
     const RoomThemeId theme = room->roomTheme;
 
     if(theme != roomTheme_plain) {
@@ -89,7 +86,9 @@ void PopulateTraps::populateRoomAndCorridorLevel(
     vector<Pos> trapPositionCandidates;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
-        if(blockers[x][y] == false && themeMap[x][y] == roomTheme_plain) {
+        if(
+          blockers[x][y] == false &&
+          eng.roomThemeMaker->themeMap[x][y] == roomTheme_plain) {
           trapPositionCandidates.push_back(Pos(x, y));
         }
       }

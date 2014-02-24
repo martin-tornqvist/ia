@@ -22,17 +22,10 @@ void RoomThemeMaker::run() {
 
   vector<Room*>& rooms = eng.map->rooms;
 
-  for(unsigned int i = 0; i < rooms.size(); i++) {
-    applyThemeToRoom(*(rooms.at(i)));
-    makeRoomDarkWithChance(*(rooms.at(i)));
+  for(Room * const room : rooms) {
+    applyThemeToRoom(*room);
+    makeRoomDarkWithChance(*room);
   }
-
-  trace << "RoomThemeMaker: Calling PopulateMonsters::populateRoomAndCorridorLevel()" << endl;
-  trace << "DLVL: " << eng.map->getDlvl() << endl;
-  eng.populateMonsters->populateRoomAndCorridorLevel(themeMap, rooms);
-
-  trace << "RoomThemeMaker: Calling PopulateTraps::populateRoomAndCorridorLevel()" << endl;
-  eng.populateTraps->populateRoomAndCorridorLevel(themeMap, rooms);
 
   trace << "RoomThemeMaker::run() [DONE]" << endl;
 }

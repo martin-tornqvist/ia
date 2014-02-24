@@ -17,6 +17,8 @@
 #include "MapParsing.h"
 #include "Renderer.h"
 #include "Utils.h"
+#include "PopulateMonsters.h"
+#include "PopulateTraps.h"
 
 #ifdef DEMO_MODE
 #include "SdlWrapper.h"
@@ -160,8 +162,6 @@ bool MapGenBsp::run_() {
   SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 
-  movePlayerToNearestAllowedPos();
-
   trace << "MapGenBsp: Calling RoomThemeMaker::run()" << endl;
   eng.roomThemeMaker->run();
 #ifdef DEMO_MODE
@@ -170,6 +170,9 @@ bool MapGenBsp::run_() {
 #endif // DEMO_MODE
 
   movePlayerToNearestAllowedPos();
+
+  eng.populateMonsters->populateRoomAndCorridorLevel();
+  eng.populateTraps->populateRoomAndCorridorLevel();
 
   const Pos stairsPos = placeStairs();
   if(stairsPos.x == -1) {return false;}
