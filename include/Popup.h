@@ -29,7 +29,7 @@ private:
     const std::vector<std::string>& lines,
     const std::vector<std::string>& choices, const bool DRAW_MAP_AND_INTERFACE,
     const unsigned int currentChoice, const int TEXT_H_TOT,
-    const std::string title = "") const;
+    const std::string& title = "") const;
 
   Engine& eng;
 };

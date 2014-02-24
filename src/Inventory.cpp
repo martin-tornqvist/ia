@@ -228,7 +228,7 @@ int Inventory::getElementToStackItem(Item* item) const {
 }
 
 void Inventory::dropAllNonIntrinsic(
-  const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine) {
+  const Pos& pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine) {
 
   Item* item;
 

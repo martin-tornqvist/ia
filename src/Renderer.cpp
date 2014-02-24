@@ -425,7 +425,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
   }
 }
 
-void drawBlastAnimAtField(const Pos& center, const int RADIUS,
+void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                           bool forbiddenCells[MAP_W][MAP_H],
                           const SDL_Color& colorInner,
                           const SDL_Color& colorOuter) {
@@ -438,18 +438,18 @@ void drawBlastAnimAtField(const Pos& center, const int RADIUS,
     Pos pos;
 
     for(
-      pos.y = max(1, center.y - RADIUS);
-      pos.y <= min(MAP_H - 2, center.y + RADIUS);
+      pos.y = max(1, centerPos.y - RADIUS);
+      pos.y <= min(MAP_H - 2, centerPos.y + RADIUS);
       pos.y++) {
       for(
-        pos.x = max(1, center.x - RADIUS);
-        pos.x <= min(MAP_W - 2, center.x + RADIUS);
+        pos.x = max(1, centerPos.x - RADIUS);
+        pos.x <= min(MAP_W - 2, centerPos.x + RADIUS);
         pos.x++) {
         if(forbiddenCells[pos.x][pos.y] == false) {
-          const bool IS_OUTER = pos.x == center.x - RADIUS ||
-                                pos.x == center.x + RADIUS ||
-                                pos.y == center.y - RADIUS ||
-                                pos.y == center.y + RADIUS;
+          const bool IS_OUTER = pos.x == centerPos.x - RADIUS ||
+                                pos.x == centerPos.x + RADIUS ||
+                                pos.y == centerPos.y - RADIUS ||
+                                pos.y == centerPos.y + RADIUS;
           const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
           if(Config::isTilesMode()) {
             drawTile(tile_blast1, panel_map, pos, color, clrBlack);
@@ -464,18 +464,18 @@ void drawBlastAnimAtField(const Pos& center, const int RADIUS,
     if(isAnyBlastRendered) {SdlWrapper::sleep(Config::getDelayExplosion() / 2);}
 
     for(
-      pos.y = max(1, center.y - RADIUS);
-      pos.y <= min(MAP_H - 2, center.y + RADIUS);
+      pos.y = max(1, centerPos.y - RADIUS);
+      pos.y <= min(MAP_H - 2, centerPos.y + RADIUS);
       pos.y++) {
       for(
-        pos.x = max(1, center.x - RADIUS);
-        pos.x <= min(MAP_W - 2, center.x + RADIUS);
+        pos.x = max(1, centerPos.x - RADIUS);
+        pos.x <= min(MAP_W - 2, centerPos.x + RADIUS);
         pos.x++) {
         if(forbiddenCells[pos.x][pos.y] == false) {
-          const bool IS_OUTER = pos.x == center.x - RADIUS ||
-                                pos.x == center.x + RADIUS ||
-                                pos.y == center.y - RADIUS ||
-                                pos.y == center.y + RADIUS;
+          const bool IS_OUTER = pos.x == centerPos.x - RADIUS ||
+                                pos.x == centerPos.x + RADIUS ||
+                                pos.y == centerPos.y - RADIUS ||
+                                pos.y == centerPos.y + RADIUS;
           const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
           if(Config::isTilesMode()) {
             drawTile(tile_blast2, panel_map, pos, color, clrBlack);

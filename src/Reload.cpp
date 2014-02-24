@@ -20,11 +20,6 @@
 void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
                                 Item* const ammo, const ReloadResult result,
                                 const bool IS_SWIFT_RELOAD) {
-  const string actorName    = actorReloading.getNameThe();
-  const string ammoCapacity = wpn == NULL ? "" : toString(wpn->ammoCapacity);
-  const string ammoCurrent  = wpn == NULL ? "" : toString(wpn->nrAmmoLoaded);
-  const bool IS_PLAYER      = &actorReloading == eng.player;
-
   string ammoName = "";
   bool isClip = false;
 
@@ -32,6 +27,9 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
     ammoName = eng.itemDataHandler->getItemRef(*ammo, itemRef_a);
     isClip = ammo->getData().isAmmoClip;
   }
+
+  const bool IS_PLAYER    = &actorReloading == eng.player;
+  const string actorName  = actorReloading.getNameThe();
 
   switch(result) {
     case reloadResult_notCarryingWpn: {
@@ -69,13 +67,13 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
             eng.itemDataHandler->getItemRef(*wpn, itemRef_plain, true);
           eng.log->addMsg(
             "I" + swiftStr + " reload the " + wpnName +
-              " (" + toString(wpn->nrAmmoLoaded) + "/" +
-              toString(wpn->ammoCapacity) + ").");
+            " (" + toString(wpn->nrAmmoLoaded) + "/" +
+            toString(wpn->ammoCapacity) + ").");
         } else {
           eng.log->addMsg(
             "I" + swiftStr + " load " + ammoName +
-              " (" + toString(wpn->nrAmmoLoaded) + "/" +
-              toString(wpn->ammoCapacity) + ").");
+            " (" + toString(wpn->nrAmmoLoaded) + "/" +
+            toString(wpn->ammoCapacity) + ").");
         }
         Renderer::drawMapAndInterface();
       } else {

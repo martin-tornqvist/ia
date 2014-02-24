@@ -49,7 +49,7 @@ Map::~Map() {
 }
 
 //TODO This should probably go in a virtual method in Feature instead
-void Map::switchToDestroyedFeatAt(const Pos pos) {
+void Map::switchToDestroyedFeatAt(const Pos& pos) {
   if(Utils::isPosInsideMap(pos)) {
 
     const FeatureId OLD_FEATURE_ID =

@@ -81,8 +81,10 @@ MapTemplate* MapTemplateHandler::getTemplate(MapTemplateId templateId) {
 }
 
 
-MapTemplate MapTemplateHandler::stringToTemplate(const string str, const vector<CharToIdTranslation>& translations,
-    const MapTemplateId templateId) {
+MapTemplate MapTemplateHandler::stringToTemplate(
+  const string& str, const vector<CharToIdTranslation>& translations,
+  const MapTemplateId templateId) {
+
   MapTemplate             result(templateId);
   unsigned int            strPos = 0;
   const unsigned int      strSize = str.size();

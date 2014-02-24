@@ -976,7 +976,8 @@ bool MapGenBsp::isAllRoomsConnected() {
 
 
 bool MapGenBsp::isRegionFoundInCardinalDir(
-  const Pos pos, bool region[MAP_W][MAP_H]) const {
+  const Pos& pos, bool region[MAP_W][MAP_H]) const {
+
   for(int dy = -1; dy <= 1; dy++) {
     for(int dx = -1; dx <= 1; dx++) {
       if(dx == 0 || dy == 0) {
@@ -989,7 +990,7 @@ bool MapGenBsp::isRegionFoundInCardinalDir(
   return false;
 }
 
-void MapGenBsp::placeDoorAtPosIfSuitable(const Pos pos) {
+void MapGenBsp::placeDoorAtPosIfSuitable(const Pos& pos) {
   for(int dx = -2; dx <= 2; dx++) {
     for(int dy = -2; dy <= 2; dy++) {
       if(dx != 0 || dy != 0) {
@@ -1370,7 +1371,7 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
 bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
                                 const int W, const int H,
                                 bool blockers[MAP_W][MAP_H],
-                                const Pos doorPos) {
+                                const Pos& doorPos) {
   Rect auxArea, auxAreaWithWalls;
   auxArea.x0y0.set(X0, Y0);
   auxArea.x1y1.set(X0 + W - 1, Y0 + H - 1);
@@ -1409,8 +1410,8 @@ bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
   return false;
 }
 
-void MapGenBsp::makeCrumbleRoom(const Rect roomAreaIncludingWalls,
-                                const Pos proxEventPos) {
+void MapGenBsp::makeCrumbleRoom(const Rect& roomAreaIncludingWalls,
+                                const Pos& proxEventPos) {
   vector<Pos> wallCells;
   vector<Pos> innerCells;
 

@@ -56,7 +56,7 @@ public:
   ~Inventory();
 
   void dropAllNonIntrinsic(
-    const Pos pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine);
+    const Pos& pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine);
 
   bool hasItemInSlot(SlotId slotName) const;
 

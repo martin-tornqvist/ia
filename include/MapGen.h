@@ -67,8 +67,8 @@ public:
 protected:
   virtual bool run_() = 0;
 
-  void buildFromTemplate(const Pos pos, MapTemplate* t);
-  void buildFromTemplate(const Pos pos, MapTemplateId templateId);
+  void buildFromTemplate(const Pos& pos, MapTemplate* t);
+  void buildFromTemplate(const Pos& pos, MapTemplateId templateId);
 
   FeatureId backup[MAP_W][MAP_H];
   void backupMap();
@@ -77,11 +77,11 @@ protected:
   void makePathByRandomWalk(
     int originX, int originY, int len, FeatureId featureToMake,
     const bool TUNNEL_THROUGH_ANY_FEATURE, const bool ONLY_STRAIGHT = true,
-    const Pos x0y0Lim = Pos(1, 1),
-    const Pos x1y1Lim = Pos(MAP_W - 2, MAP_H - 2));
+    const Pos& x0y0Lim = Pos(1, 1),
+    const Pos& x1y1Lim = Pos(MAP_W - 2, MAP_H - 2));
 
   void makeStraightPathByPathfinder(
-    const Pos origin, const Pos target, FeatureId feature, const bool SMOOTH,
+    const Pos& origin, const Pos& target, FeatureId feature, const bool SMOOTH,
     const bool TUNNEL_THROUGH_ANY_FEATURE);
 
   Engine& eng;
@@ -106,14 +106,14 @@ private:
   bool roomCells[MAP_W][MAP_H]; //Used for help building the map
   bool regionsToBuildCave[3][3];
 
-  void makeCrumbleRoom(const Rect roomAreaIncludingWalls,
-                       const Pos proxEventPos);
+  void makeCrumbleRoom(const Rect& roomAreaIncludingWalls,
+                       const Pos& proxEventPos);
 
   void connectRegions(Region* regions[3][3]);
   void buildAuxRooms(Region* regions[3][3]);
   bool tryPlaceAuxRoom(
     const int X0, const int Y0, const int W, const int H,
-    bool blockers[MAP_W][MAP_H], const Pos doorPos);
+    bool blockers[MAP_W][MAP_H], const Pos& doorPos);
 
   void buildMergedRegionsAndRooms(
     Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2,
@@ -121,7 +121,7 @@ private:
 
   void buildCaves(Region* regions[3][3]);
 
-  void placeDoorAtPosIfSuitable(const Pos pos);
+  void placeDoorAtPosIfSuitable(const Pos& pos);
 
   void reshapeRoom(const Room& room);
 
@@ -134,7 +134,7 @@ private:
 //  void findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorRef);
 
   bool isRegionFoundInCardinalDir(
-    const Pos pos, bool region[MAP_W][MAP_H]) const;
+    const Pos& pos, bool region[MAP_W][MAP_H]) const;
 
   bool isAreaFree(
     const Rect& area, bool blockingCells[MAP_W][MAP_H]);

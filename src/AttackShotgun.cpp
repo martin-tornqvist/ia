@@ -42,7 +42,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   const bool IS_ATTACKER_PLAYER = &attacker == eng.player;
   string sndMsg = wpn.getData().rangedSndMsg;
   if(sndMsg.empty() == false) {
-    sndMsg = IS_ATTACKER_PLAYER ? "" : sndMsg;
+    if(IS_ATTACKER_PLAYER) {sndMsg = "";}
     const SndVol vol = wpn.getData().rangedSndVol;
     const SfxId sfx = wpn.getData().rangedAttackSfx;
     Snd snd(sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos, &attacker,

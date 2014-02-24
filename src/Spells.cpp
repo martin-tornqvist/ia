@@ -385,8 +385,6 @@ SpellCastRetData SpellPestilence::cast_(
   const int x1 = min(MAP_W - 1, eng.player->pos.x + RADI);
   const int y1 = min(MAP_H - 1, eng.player->pos.y + RADI);
 
-  ActorId monsterId = endOfActorIds;
-
   vector<Pos> positions;
 
   for(int x = x0; x <= x1; x++) {
@@ -401,7 +399,7 @@ SpellCastRetData SpellPestilence::cast_(
     positions, clrMagenta);
 
   for(Pos & pos : positions) {
-    monsterId = actor_rat;
+    ActorId monsterId = actor_rat;
     if(Rnd::range(1, 3) == 1) {
       if(Rnd::coinToss()) {
         monsterId = actor_greenSpider;

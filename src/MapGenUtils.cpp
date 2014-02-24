@@ -233,7 +233,7 @@ void MapGen::restoreMap() {
 }
 
 void MapGen::makeStraightPathByPathfinder(
-  const Pos origin, const Pos target, FeatureId feature, const bool SMOOTH,
+  const Pos& origin, const Pos& target, FeatureId feature, const bool SMOOTH,
   const bool TUNNEL_THROUGH_ANY_FEATURE) {
 
   bool blockers[MAP_W][MAP_H];
@@ -257,7 +257,7 @@ void MapGen::makeStraightPathByPathfinder(
 void MapGen::makePathByRandomWalk(
   int originX, int originY, int len, FeatureId featureToMake,
   const bool TUNNEL_THROUGH_ANY_FEATURE, const bool ONLY_STRAIGHT,
-  const Pos x0y0Lim, const Pos x1y1Lim) {
+  const Pos& x0y0Lim, const Pos& x1y1Lim) {
 
   int dx = 0;
   int dy = 0;
@@ -295,7 +295,7 @@ void MapGen::makePathByRandomWalk(
   }
 }
 
-void MapGen::buildFromTemplate(const Pos pos, MapTemplate* t) {
+void MapGen::buildFromTemplate(const Pos& pos, MapTemplate* t) {
   for(int dy = 0; dy < t->h; dy++) {
     for(int dx = 0; dx < t->w; dx++) {
       const FeatureId featureId = t->featureVector[dy][dx];
@@ -306,7 +306,7 @@ void MapGen::buildFromTemplate(const Pos pos, MapTemplate* t) {
   }
 }
 
-void MapGen::buildFromTemplate(const Pos pos, MapTemplateId templateId) {
+void MapGen::buildFromTemplate(const Pos& pos, MapTemplateId templateId) {
   MapTemplate* t = eng.mapTemplateHandler->getTemplate(templateId);
   buildFromTemplate(pos, t);
 }

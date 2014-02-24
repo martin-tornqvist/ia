@@ -51,12 +51,14 @@ private:
     FeatureId featureId_;
   };
 
-  void addTranslationToVector(vector<CharToIdTranslation>& vec, const char cha, const FeatureId featureId) {
+  void addTranslationToVector(vector<CharToIdTranslation>& vec,
+                              const char cha, const FeatureId featureId) {
     CharToIdTranslation t(cha, featureId);
     vec.push_back(t);
   }
 
-  FeatureId translate(const char cha, const vector<CharToIdTranslation>& translations) {
+  FeatureId translate(const char cha,
+                      const vector<CharToIdTranslation>& translations) {
     for(unsigned int i = 0; i < translations.size(); i++) {
       if(cha == translations.at(i).cha) {
         return translations.at(i).featureId_;
@@ -66,7 +68,8 @@ private:
     return feature_empty;
   }
 
-  MapTemplate stringToTemplate(const string str, const vector<CharToIdTranslation>& translations,
+  MapTemplate stringToTemplate(const string& str,
+                               const vector<CharToIdTranslation>& translations,
                                const MapTemplateId templateId);
 
   vector<MapTemplate> templates_;

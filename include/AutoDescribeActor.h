@@ -26,7 +26,6 @@ public:
 private:
   string getNormalGroupSizeStr(const ActorData& def) const;
   string getDwellingLevelStr(const ActorData& def) const;
-  string getNrOfKillsStr(const ActorData& def) const;
   string getSpeedStr(const ActorData& def) const;
 };
 

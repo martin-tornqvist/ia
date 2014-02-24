@@ -50,7 +50,7 @@ public:
 
   void resetMap();
 
-  void switchToDestroyedFeatAt(const Pos pos);
+  void switchToDestroyedFeatAt(const Pos& pos);
 
   void addSaveLines(vector<string>& lines) const {
     lines.push_back(toString(dlvl_));

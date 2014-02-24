@@ -22,7 +22,7 @@
 
 using namespace std;
 
-Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos pos,
+Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos& pos,
                                         FeatureSpawnData* spawnData) {
   const FeatureData* const data = eng.featureDataHandler->getData(id);
 

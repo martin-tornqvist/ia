@@ -379,7 +379,6 @@ void run(const Pos& origin, const Pos& target, bool blockers[MAP_W][MAP_H],
   bool pathExists = vals[target.x][target.y] != 0;
 
   if(pathExists == true) {
-    vector<Pos> positions;
     Pos c;
 
     int curX = target.x;

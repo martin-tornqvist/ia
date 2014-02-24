@@ -316,16 +316,15 @@ void Player::restoreShock(const int amountRestored,
   shock_ = max(
              (isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION_DB : 0.0),
              shock_ - amountRestored);
-  shockTemp_ = IS_TEMP_SHOCK_RESTORED ? 0 : shockTemp_;
+  if(IS_TEMP_SHOCK_RESTORED) {shockTemp_ = 0;}
 }
 
 void Player::incrInsanity() {
   trace << "Player: Increasing insanity" << endl;
   string msg = getInsanity() < 100 ? "Insanity draws nearer... " : "";
 
-  const int INS_INCR = 6;
-
   if(Config::isBotPlaying() == false) {
+    const int INS_INCR = 6;
     insanity_ += INS_INCR;
   }
 

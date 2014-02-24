@@ -95,7 +95,7 @@ public:
 
   //Note: Position parameter should NOT be a reference here, because the
   //calling object (e.g. a spider web) might get destroyed.
-  Feature* spawnFeatureAt(const FeatureId id, const Pos pos,
+  Feature* spawnFeatureAt(const FeatureId id, const Pos& pos,
                           FeatureSpawnData* spawnData = NULL);
 
 private:

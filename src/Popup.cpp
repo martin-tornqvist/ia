@@ -59,7 +59,7 @@ void Popup::showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
     y++;
     if(SHOW_MSG_CENTERED) {
       Renderer::drawTextCentered(line, panel_map, Pos(MAP_W_HALF, y),
-                                     clrWhite, clrBlack, true);
+                                 clrWhite, clrBlack, true);
     } else {
       Renderer::drawText(line, panel_map, Pos(TEXT_X0, y), clrWhite);
     }
@@ -68,7 +68,7 @@ void Popup::showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   y += 2;
 
   Renderer::drawTextCentered("space/esc to close", panel_map,
-                                 Pos(MAP_W_HALF, y), clrNosfTeal);
+                             Pos(MAP_W_HALF, y), clrNosfTeal);
 
   Renderer::updateScreen();
 
@@ -133,7 +133,7 @@ int Popup::showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 void Popup::menuMsgDrawingHelper(
   const vector<string>& lines, const vector<string>& choices,
   const bool DRAW_MAP_AND_INTERFACE, const unsigned int currentChoice,
-  const int TEXT_H_TOT, const string title) const {
+  const int TEXT_H_TOT, const string& title) const {
 
   if(DRAW_MAP_AND_INTERFACE) {
     Renderer::drawMapAndInterface(false);
@@ -153,7 +153,7 @@ void Popup::menuMsgDrawingHelper(
 
   if(title.empty() == false) {
     Renderer::drawTextCentered(title, panel_map, Pos(MAP_W_HALF, y),
-                                   clrCyanLgt, clrBlack, true);
+                               clrCyanLgt, clrBlack, true);
   }
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
@@ -162,7 +162,7 @@ void Popup::menuMsgDrawingHelper(
     y++;
     if(SHOW_MSG_CENTERED) {
       Renderer::drawTextCentered(line, panel_map, Pos(MAP_W_HALF, y),
-                                     clrWhite, clrBlack, true);
+                                 clrWhite, clrBlack, true);
     } else {
       Renderer::drawText(line, panel_map, Pos(TEXT_X0, y), clrWhite);
     }

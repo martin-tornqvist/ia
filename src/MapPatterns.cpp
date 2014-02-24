@@ -22,20 +22,16 @@ void MapPatterns::setPositionsInArea(
   nextToWalls.resize(0);
   awayFromWalls.resize(0);
 
-  for(unsigned int i = 0; i < positionCandidates.size(); i++) {
-    const Pos pos = positionCandidates.at(i);
+  for(Pos & pos : positionCandidates) {
+    const int NR_BLK_R = getWalkBlockersInDir(Dir::right, pos);
+    const int NR_BLK_D = getWalkBlockersInDir(Dir::down, pos);
+    const int NR_BLK_L = getWalkBlockersInDir(Dir::left, pos);
+    const int NR_BLK_U = getWalkBlockersInDir(Dir::up, pos);
 
-    const int BLOCKERS_RIGHT = getWalkBlockersInDir(Dir::right, pos);
-    const int BLOCKERS_DOWN  = getWalkBlockersInDir(Dir::down, pos);
-    const int BLOCKERS_LEFT  = getWalkBlockersInDir(Dir::left, pos);
-    const int BLOCKERS_UP    = getWalkBlockersInDir(Dir::up, pos);
+    const bool IS_ZERO_BLK_ALL_DIR =
+      NR_BLK_R == 0 && NR_BLK_D == 0 && NR_BLK_L == 0 && NR_BLK_U == 0;
 
-    const bool IS_ALL_BLOCKERS_ZERO = BLOCKERS_RIGHT == 0 &&
-                                      BLOCKERS_DOWN == 0 &&
-                                      BLOCKERS_LEFT == 0 &&
-                                      BLOCKERS_UP == 0;
-
-    if(IS_ALL_BLOCKERS_ZERO) {
+    if(IS_ZERO_BLK_ALL_DIR) {
       awayFromWalls.push_back(pos);
       continue;
     }
@@ -56,10 +52,10 @@ void MapPatterns::setPositionsInArea(
     }
 
     if(
-      (BLOCKERS_RIGHT == 3 && BLOCKERS_UP == 1 && BLOCKERS_DOWN == 1 && BLOCKERS_LEFT == 0) ||
-      (BLOCKERS_RIGHT == 1 && BLOCKERS_UP == 3 && BLOCKERS_DOWN == 0 && BLOCKERS_LEFT == 1) ||
-      (BLOCKERS_RIGHT == 1 && BLOCKERS_UP == 0 && BLOCKERS_DOWN == 3 && BLOCKERS_LEFT == 1) ||
-      (BLOCKERS_RIGHT == 0 && BLOCKERS_UP == 1 && BLOCKERS_DOWN == 1 && BLOCKERS_LEFT == 3)) {
+      (NR_BLK_R == 3 && NR_BLK_U == 1 && NR_BLK_D == 1 && NR_BLK_L == 0) ||
+      (NR_BLK_R == 1 && NR_BLK_U == 3 && NR_BLK_D == 0 && NR_BLK_L == 1) ||
+      (NR_BLK_R == 1 && NR_BLK_U == 0 && NR_BLK_D == 3 && NR_BLK_L == 1) ||
+      (NR_BLK_R == 0 && NR_BLK_U == 1 && NR_BLK_D == 1 && NR_BLK_L == 3)) {
       nextToWalls.push_back(pos);
       continue;
     }
@@ -69,9 +65,7 @@ void MapPatterns::setPositionsInArea(
   trace << "MapPatterns::setPositionsInArea() [DONE]" << endl;
 }
 
-int MapPatterns::getWalkBlockersInDir(
-  const Dir dir, const Pos pos) {
-
+int MapPatterns::getWalkBlockersInDir(const Dir dir, const Pos& pos) {
   int nrBlockers = 0;
   switch(dir) {
     case Dir::right: {

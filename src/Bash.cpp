@@ -39,13 +39,13 @@ void Bash::playerBash() const {
     }
 
     //Bash corpse?
-    Actor* corpse =
+    Actor* deadActor =
       Utils::getActorAtPos(bashPos, eng, ActorDeadState::corpse);
-    if(corpse != NULL) {
+    if(deadActor != NULL) {
       const bool IS_SEEING_CORPSE =
         eng.map->cells[bashPos.x][bashPos.y].isSeenByPlayer;
 
-      const string actorNameA = corpse->getNameA();
+      const string actorNameA = deadActor->getNameA();
 
       const string name =
         IS_SEEING_CORPSE ? ("a body of " + actorNameA) : "a corpse";
@@ -54,7 +54,7 @@ void Bash::playerBash() const {
 
       pair<int, int> kickDmg =
         eng.itemDataHandler->dataList[item_playerKick]->meleeDmg;
-      corpse->hit(kickDmg.first * kickDmg.second, dmgType_physical, false);
+      deadActor->hit(kickDmg.first * kickDmg.second, dmgType_physical, false);
       eng.gameTime->actorDidAct();
       return;
     }
