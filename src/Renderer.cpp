@@ -227,10 +227,6 @@ void drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
   putPixelsOnScreenForGlyph(GLYPH, pixelPos, clr);
 }
 
-void coverCellAtPixel(const Pos& pixelPos) {
-  coverAreaPixel(pixelPos, Pos(Config::getCellW(), Config::getCellH()));
-}
-
 Pos getPixelPosForCellInPanel(const PanelId panel, const Pos& pos) {
   const Pos cellDims(Config::getCellW(), Config::getCellH());
 
