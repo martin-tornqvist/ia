@@ -35,24 +35,28 @@ int DungeonMaster::getMonsterTotXpWorth(const ActorData& d) const {
 }
 
 void DungeonMaster::playerGainLvl() {
-  clvl++;
+  if(eng.player->deadState == ActorDeadState::alive) {
+    clvl++;
 
-  eng.log->addMsg(
-    "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
+    eng.log->addMsg(
+      "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
 
-  eng.playerCreateCharacter->pickNewTrait(false);
+    eng.playerCreateCharacter->pickNewTrait(false);
 
-  eng.player->restoreHp(999, false);
-  eng.player->changeMaxHp(2, true);
-  eng.player->changeMaxSpi(1, true);
+    eng.player->restoreHp(999, false);
+    eng.player->changeMaxHp(2, true);
+    eng.player->changeMaxSpi(1, true);
+  }
 }
 
 void DungeonMaster::playerGainXp(const int XP_GAINED) {
-  for(int i = 0; i < XP_GAINED; i++) {
-    xp++;
-    if(clvl < PLAYER_MAX_CLVL) {
-      if(xp >= xpForLvl[clvl + 1]) {
-        playerGainLvl();
+  if(eng.player->deadState == ActorDeadState::alive) {
+    for(int i = 0; i < XP_GAINED; i++) {
+      xp++;
+      if(clvl < PLAYER_MAX_CLVL) {
+        if(xp >= xpForLvl[clvl + 1]) {
+          playerGainLvl();
+        }
       }
     }
   }
