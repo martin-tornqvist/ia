@@ -708,18 +708,17 @@ void TrapAlarm::trigger(
   traceVerbose << "TrapAlarm::trigger() ..." << endl;
   (void)dodgeResult;
 
-  const bool IS_PLAYER            = &actor == eng.player;
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
-  const string actorName          = actor.getNameThe();
+  IgnoreMsgIfOriginSeen msgIgnoreRule;
 
-  eng.log->addMsg("An alarm sounds!");
+  if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
+    eng.log->addMsg("An alarm sounds!");
+    msgIgnoreRule = IgnoreMsgIfOriginSeen::yes;
+  } else {
+    msgIgnoreRule = IgnoreMsgIfOriginSeen::no;
+  }
 
-  const IgnoreMsgIfOriginSeen msgIgnore =
-    (IS_PLAYER || CAN_PLAYER_SEE_ACTOR) ?
-    IgnoreMsgIfOriginSeen::no : IgnoreMsgIfOriginSeen::yes;
-
-  Snd snd("I hear an alarm sounding!", SfxId::endOfSfxId, msgIgnore, pos_, &actor,
-          SndVol::high, AlertsMonsters::yes);
+  Snd snd("I hear an alarm sounding!", SfxId::endOfSfxId, msgIgnoreRule, pos_,
+          &actor, SndVol::high, AlertsMonsters::yes);
   SndEmit::emitSnd(snd, eng);
   traceVerbose << "TrapAlarm::trigger() [DONE]" << endl;
 }

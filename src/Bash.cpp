@@ -48,7 +48,7 @@ void Bash::playerBash() const {
       const string actorNameA = deadActor->getNameA();
 
       const string name =
-        IS_SEEING_CORPSE ? ("a body of " + actorNameA) : "a corpse";
+        IS_SEEING_CORPSE ? ("the body of " + actorNameA) : "a corpse";
 
       eng.log->addMsg("I bash " + name + ".");
 

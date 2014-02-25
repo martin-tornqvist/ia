@@ -360,11 +360,11 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
   //Note: corpse is automatically destroyed if damage is high enough,
   //otherwise it is destroyed with a random chance
   if(deadState != ActorDeadState::alive) {
-    if(Rnd::oneIn(4) || dmg >= ((getHpMax(true) * 2) / 3)) {
+    if(Rnd::oneIn(3) || dmg >= ((getHpMax(true) * 2) / 3)) {
 
       if(this != eng.player) {
         if(eng.map->cells[pos.x][pos.y].isSeenByPlayer) {
-          eng.log->addMsg("A body of " + getNameA() + " is destroyed.");
+          eng.log->addMsg("The body of " + getNameA() + " is destroyed.");
         }
       }
 
