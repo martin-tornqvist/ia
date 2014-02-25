@@ -1,14 +1,18 @@
 #include "PopulateTraps.h"
 
+#include <algorithm>
+
 #include "Engine.h"
 #include "Map.h"
 #include "MapGen.h"
-#include "FeatureTrap.h"
 #include "FeatureFactory.h"
 #include "MapParsing.h"
 #include "Utils.h"
 
+using namespace std;
+
 void PopulateTraps::populateRoomAndCorridorLevel() const {
+  trace << "PopulateTraps::populateRoomAndCorridorLevel()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
@@ -22,59 +26,66 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
       int chanceForTrappedRoom = 0;
 
       switch(theme) {
-        case roomTheme_human:    chanceForTrappedRoom = 25;  break;
-        case roomTheme_ritual:   chanceForTrappedRoom = 25;  break;
-        case roomTheme_spider:   chanceForTrappedRoom = 75;  break;
-        case roomTheme_crypt:    chanceForTrappedRoom = 75;  break;
-        case roomTheme_monster:  chanceForTrappedRoom = 25;  break;
-        case roomTheme_plain:                                break;
-//        case roomTheme_dungeon:                              break;
-        case roomTheme_flooded:                              break;
-        case roomTheme_muddy:                                break;
-//        case roomTheme_chasm:                                break;
-        case endOfRoomThemes:                                break;
+        case roomTheme_human:   chanceForTrappedRoom = 25;  break;
+        case roomTheme_ritual:  chanceForTrappedRoom = 25;  break;
+        case roomTheme_spider:  chanceForTrappedRoom = 75;  break;
+        case roomTheme_crypt:   chanceForTrappedRoom = 75;  break;
+        case roomTheme_monster: chanceForTrappedRoom = 25;  break;
+        case roomTheme_plain:                               break;
+        case roomTheme_flooded:                             break;
+        case roomTheme_muddy:                               break;
+        case endOfRoomThemes:                               break;
       }
 
       if(Rnd::range(1, 100) < chanceForTrappedRoom) {
+        trace << "PopulateTraps: Trapping non-plain room" << endl;
 
-        vector<Pos> trapPositionCandidates;
+        vector<Pos> trapPosCandidates;
 
         const Pos& x0y0 = room->getX0Y0();
         const Pos& x1y1 = room->getX1Y1();
         for(int y = x0y0.y; y <= x1y1.y; y++) {
           for(int x = x0y0.x; x <= x1y1.x; x++) {
-            if(blockers[x][y] == false) {
-              if(eng.map->cells[x][y].featureStatic->canHaveStaticFeature()) {
-                trapPositionCandidates.push_back(Pos(x, y));
-              }
+            if(
+              blockers[x][y] == false &&
+              eng.map->cells[x][y].featureStatic->canHaveStaticFeature()) {
+              trapPosCandidates.push_back(Pos(x, y));
             }
           }
         }
 
-        const int NR_POS_CAND =
-          int(trapPositionCandidates.size());
-        if(NR_POS_CAND > 0) {
-          const int MIN_NR_TRAPS =
-            min(NR_POS_CAND / 4, theme == roomTheme_spider ? 4 : 1);
-          const int MAX_NR_TRAPS =
-            min(NR_POS_CAND / 2, theme == roomTheme_spider ? 8 : 2);
-          const int NR_TRAPS = Rnd::range(MIN_NR_TRAPS, MAX_NR_TRAPS);
-          for(int i_trap = 0; i_trap < NR_TRAPS; i_trap++) {
-            const unsigned int CANDIDATE_ELEMENT =
-              Rnd::range(0, trapPositionCandidates.size() - 1);
-            const Pos& pos = trapPositionCandidates.at(CANDIDATE_ELEMENT);
-            const TrapId trapType =
-              theme == roomTheme_spider ? trap_spiderWeb : trap_any;
-            FeatureStatic* const f =
-              eng.map->cells[pos.x][pos.y].featureStatic;
-            const FeatureData* const dataAtTrap =
-              eng.featureDataHandler->getData(f->getId());
-            eng.featureFactory->spawnFeatureAt(
-              feature_trap, pos, new TrapSpawnData(dataAtTrap, trapType));
-            trapPositionCandidates.erase(
-              trapPositionCandidates.begin() + CANDIDATE_ELEMENT);
-            blockers[pos.x][pos.y] = true;
+        int nrPosCand = int(trapPosCandidates.size());
+        const bool IS_SPIDER_ROOM = theme == roomTheme_spider;
+        const int NR_BASE_TRAPS = min(nrPosCand / 2, IS_SPIDER_ROOM ? 3 : 1);
+        for(int i = 0; i < NR_BASE_TRAPS; i++) {
+          if(nrPosCand == 0) {break;}
+
+          const TrapId trapType = IS_SPIDER_ROOM ?
+                                  trap_spiderWeb :
+                                  TrapId(Rnd::range(0, int(endOfTraps) - 1));
+
+          const int ELEMENT = Rnd::range(0, trapPosCandidates.size() - 1);
+          const Pos& pos = trapPosCandidates.at(ELEMENT);
+
+          trace << "PopulateTraps: Placing base trap" << endl;
+          spawnTrapAt(trapType, pos);
+          blockers[pos.x][pos.y] = true;
+          trapPosCandidates.erase(trapPosCandidates.begin() + ELEMENT);
+          nrPosCand--;
+
+          //Spawn up to N traps in nearest cells (not necessarily adjacent)
+          IsCloserToOrigin sorter(pos, eng);
+          sort(trapPosCandidates.begin(), trapPosCandidates.end(), sorter);
+          const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
+          trace << "PopulateTraps: Placing adjacent traps" << endl;
+          for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
+            const Pos& adjPos = trapPosCandidates.front();
+            spawnTrapAt(trapType, adjPos);
+            blockers[adjPos.x][adjPos.y] = true;
+            trapPosCandidates.erase(trapPosCandidates.begin());
+            nrPosCand--;
           }
+          trace << "PopulateTraps: Placing adjacent traps [DONE]" << endl;
         }
       }
     }
@@ -83,32 +94,56 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
   const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS =
     min(85, 30 + (eng.map->getDlvl() * 5));
   if(Rnd::percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
-    vector<Pos> trapPositionCandidates;
+    trace << "PopulateTraps: Trapping plain room" << endl;
+
+    vector<Pos> trapPosCandidates;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
           blockers[x][y] == false &&
           eng.roomThemeMaker->themeMap[x][y] == roomTheme_plain) {
-          trapPositionCandidates.push_back(Pos(x, y));
+          trapPosCandidates.push_back(Pos(x, y));
         }
       }
     }
-    const int NR_POS_CAND = int(trapPositionCandidates.size());
-    if(NR_POS_CAND > 0) {
-      const int NR_TRAPS = min(NR_POS_CAND, Rnd::range(5, 9));
-      for(int i_trap = 0; i_trap < NR_TRAPS; i_trap++) {
-        const unsigned int CANDIDATE_ELEMENT =
-          Rnd::range(0, trapPositionCandidates.size() - 1);
-        const Pos& pos = trapPositionCandidates.at(CANDIDATE_ELEMENT);
-        FeatureStatic* const f =
-          eng.map->cells[pos.x][pos.y].featureStatic;
-        const FeatureData* const dataAtTrap =
-          eng.featureDataHandler->getData(f->getId());
-        eng.featureFactory->spawnFeatureAt(
-          feature_trap, pos, new TrapSpawnData(dataAtTrap, trap_any));
-        trapPositionCandidates.erase(
-          trapPositionCandidates.begin() + CANDIDATE_ELEMENT);
+
+    int nrPosCand = int(trapPosCandidates.size());
+    const int NR_BASE_TRAPS = min(nrPosCand / 2, Rnd::range(1, 3));
+    for(int i = 0; i < NR_BASE_TRAPS; i++) {
+      if(nrPosCand == 0) {break;}
+
+      const TrapId trapType = TrapId(Rnd::range(0, int(endOfTraps) - 1));
+
+      const int ELEMENT = Rnd::range(0, trapPosCandidates.size() - 1);
+      const Pos& pos = trapPosCandidates.at(ELEMENT);
+
+      trace << "PopulateTraps: Placing base trap" << endl;
+      spawnTrapAt(trapType, pos);
+      blockers[pos.x][pos.y] = true;
+      trapPosCandidates.erase(trapPosCandidates.begin() + ELEMENT);
+      nrPosCand--;
+
+      //Spawn up to N traps in nearest cells (not necessarily adjacent)
+      IsCloserToOrigin sorter(pos, eng);
+      sort(trapPosCandidates.begin(), trapPosCandidates.end(), sorter);
+      const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
+      trace << "PopulateTraps: Placing adjacent traps..." << endl;
+      for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
+        const Pos& adjPos = trapPosCandidates.front();
+        spawnTrapAt(trapType, adjPos);
+        blockers[adjPos.x][adjPos.y] = true;
+        trapPosCandidates.erase(trapPosCandidates.begin());
+        nrPosCand--;
       }
+      trace << "PopulateTraps: Placing adjacent traps [DONE]" << endl;
     }
   }
+  trace << "PopulateTraps::populateRoomAndCorridorLevel() [DONE]" << endl;
+}
+
+void PopulateTraps::spawnTrapAt(const TrapId id, const Pos& pos) const {
+  FeatureStatic* const f = eng.map->cells[pos.x][pos.y].featureStatic;
+  const FeatureData* const d = eng.featureDataHandler->getData(f->getId());
+  eng.featureFactory->spawnFeatureAt(
+    feature_trap, pos, new TrapSpawnData(d, id));
 }

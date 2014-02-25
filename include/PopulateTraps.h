@@ -2,6 +2,7 @@
 #define POPULATE_TRAPS_H
 
 #include "RoomTheme.h"
+#include "FeatureTrap.h"
 
 class Engine;
 
@@ -12,6 +13,8 @@ public:
   void populateRoomAndCorridorLevel() const;
 
 private:
+  void spawnTrapAt(const TrapId id, const Pos& pos) const;
+
   Engine& eng;
 };
 

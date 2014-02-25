@@ -622,30 +622,24 @@ void TrapSummonMonster::trigger(
   const bool IS_PLAYER = &actor == eng.player;
   traceVerbose << "TrapSummonMonster: Is player: " << IS_PLAYER << endl;
 
+  if(IS_PLAYER == false) {
+    traceVerbose << "TrapSummonMonster: Not triggered by player" << endl;
+    traceVerbose << "TrapSummonMonster::trigger() [DONE]" << endl;
+    return;
+  }
+
   const bool CAN_SEE = actor.getPropHandler().allowSee();
   traceVerbose << "TrapSummonMonster: Actor can see: " << CAN_SEE << endl;
-
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
-  traceVerbose << "TrapSummonMonster: Player see actor: ";
-  traceVerbose << CAN_PLAYER_SEE_ACTOR << endl;
 
   const string actorName = actor.getNameThe();
   traceVerbose << "TrapSummonMonster: Actor name: " << actorName << endl;
 
-  if(IS_PLAYER) {
-    eng.player->incrShock(5, shockSrc_misc);
-    eng.player->updateFov();
-    if(CAN_SEE) {
-      eng.log->addMsg("A curious shape on the floor starts to glow!");
-    } else {
-      eng.log->addMsg("I feel a peculiar energy around me!");
-    }
+  eng.player->incrShock(5, shockSrc_misc);
+  eng.player->updateFov();
+  if(CAN_SEE) {
+    eng.log->addMsg("A curious shape on the floor starts to glow!");
   } else {
-    if(CAN_PLAYER_SEE_ACTOR) {
-      eng.log->addMsg(
-        "A curious shape on the floor starts go glow under "
-        + actorName + ".");
-    }
+    eng.log->addMsg("I feel a peculiar energy around me!");
   }
 
   trace << "TrapSummonMonster: Finding summon candidates" << endl;
