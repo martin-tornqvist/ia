@@ -178,7 +178,7 @@ Pos Art::getColumnAndRowTile(const TileId tile) {
     case tile_lockpick: return Pos(17, 4); break;
     case tile_huntingHorror: return Pos(4, 5); break;
     case tile_spiderLeng: return Pos(10, 5); break;
-    case tile_chthonian: return Pos(11, 5); break;
+    case tile_chthonian: return Pos(0, 5); break;
     case tile_migo: return Pos(12, 5); break;
     case tile_floor: return Pos(1, 6); break;
     case tile_aimMarkerHead: return Pos(2, 6); break;

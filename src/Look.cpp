@@ -123,7 +123,7 @@ void Look::printExtraActorDescription(const Pos& pos) const {
 
       Renderer::drawMapAndInterface(false);
       eng.marker->draw(markerTask_look);
-      Renderer::coverArea(panel_screen, Pos(0, 1), Pos(1, NR_OF_LINES));
+      Renderer::coverArea(panel_screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
 
       int y = 1;
       for(string & s : formattedText) {

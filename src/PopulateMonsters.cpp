@@ -383,11 +383,9 @@ void PopulateMonsters::makeSortedFreeCellsVector(
 int PopulateMonsters::getRandomOutOfDepth() const {
   const int DLVL = eng.map->getDlvl();
 
-  if(DLVL == 0) {return 0;}
-
+  if(DLVL == 0)                   {return 0;}
   if(Rnd::oneIn(40) && DLVL > 1)  {return 5;}
-
-  if(Rnd::oneIn(5))               {return 3;}
+  if(Rnd::oneIn(5))               {return 2;}
 
   return 0;
 }

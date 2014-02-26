@@ -1264,11 +1264,11 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'E';
   d.color = clrMagenta;
   d.tile = tile_polyp;
-  d.hp = 6;
+  d.hp = 12;
   d.spi = 20;
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 60);
-  d.abilityVals.setVal(ability_stealth, 90);
+  d.abilityVals.setVal(ability_stealth, 85);
 //  d.intrProps[propEthereal] = true; //Does not match well with stealth
   d.intrProps[propRPhys] = true;
   d.intrProps[propRConfusion] = true;
@@ -1278,13 +1278,13 @@ void ActorDataHandler::initDataList() {
   d.intrProps[propRFire] = true;
   d.intrProps[propRPoison] = true;
   d.intrProps[propRSleep] = true;
-  d.spawnMinDLVL = 4;
+  d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSizeFew;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = false;
   d.canOpenDoors = false;
-  d.nrTurnsAwarePlayer = 7;
-  d.description = "[DESCRIPTION MISSING]";
+  d.nrTurnsAwarePlayer = 6;
+  d.description = "Flying polyps are a horrible elder race of half polypous, utterly alien entities. They are only partly material and have the power of aerial motion, despite the absence of wings. Their senses does not include sight, but what senses they have can penetrate all material obstructions. They are invulnerable to normal means of damage, though they can be destroyed by certain forms of electrical energy.";
   d.aggroTextMonsterSeen = d.name_the + " makes shrill whistling noises.";
   d.aggroTextMonsterHidden = "I hear a shrill whistling.";
   d.erraticMovement = actorErratic_somewhat;
@@ -1940,7 +1940,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 200;
   d.spi = 40;
   d.dmgMelee = 10;
-  d.abilityVals.setVal(ability_accuracyMelee, 60);
+  d.abilityVals.setVal(ability_accuracyMelee, 45);
   d.intrProps[propBurrowing] = true;
   d.intrProps[propRFear] = true;
   d.spawnMinDLVL = 12;
@@ -1952,7 +1952,7 @@ void ActorDataHandler::initDataList() {
   d.isAutoDescriptionAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
-  d.description = "[DESCRIPTION MISSING]";
+  d.description = "It resembles an immense squid, with reaching, groping tentacles, and a pulpy, elongated sack of a body. Chthonians are powerful burrowers, and live for more than a thousand years.";
   d.aggroTextMonsterSeen = "";
   d.aggroTextMonsterHidden = "";
   d.aggroSfxMonsterSeen = SfxId::endOfSfxId;

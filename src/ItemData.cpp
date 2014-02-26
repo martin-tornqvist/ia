@@ -1015,6 +1015,14 @@ void ItemDataHandler::initDataList() {
     *d, eng.actorDataHandler->dataList[actor_colourOutOfSpace]);
   dataList[d->id] = d;
 
+  d = new ItemData(item_chthonianBite);
+  resetData(d, itemData_meleeWpnIntr);
+  d->meleeAttackMessages = ItemAttackMessages("", "strikes me with a tentacle");
+  d->meleeCausesKnockBack = true;
+  setDmgFromMonsterData(
+    *d, eng.actorDataHandler->dataList[actor_chthonian]);
+  dataList[d->id] = d;
+
   d = new ItemData(item_huntingHorrorBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");

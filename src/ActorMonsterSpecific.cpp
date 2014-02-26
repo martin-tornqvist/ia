@@ -470,8 +470,8 @@ void GiantMantis::spawnStartItems() {
 }
 
 void Chthonian::spawnStartItems() {
-//  inv_->putItemInIntrinsics(
-//    eng.itemFactory->spawnItem(item_huntingHorrorBite));
+  inv_->putItemInIntrinsics(
+    eng.itemFactory->spawnItem(item_chthonianBite));
 }
 
 void HuntingHorror::spawnStartItems() {
