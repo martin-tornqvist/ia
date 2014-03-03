@@ -118,8 +118,7 @@ void PlayerBonHandler::getBgDescr(
     } break;
 
     case bgSoldier: {
-      linesRef.push_back("Physical damage taken reduced by 1 (+1 ARM)");
-      linesRef.push_back("[UNIMPLEMENTED]");
+      linesRef.push_back("Maintains armor twice as long before it breaks");
       linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back(" ");

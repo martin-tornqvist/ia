@@ -1,8 +1,11 @@
 #include "ItemArmor.h"
 
+#include <cassert>
+
 #include "Engine.h"
 #include "Log.h"
 #include "Utils.h"
+#include "PlayerBonuses.h"
 
 Armor::Armor(ItemData* const itemData, Engine& engine) :
   Item(itemData, engine), dur_(Rnd::range(80, 100)) {}
@@ -11,7 +14,7 @@ string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
 
   const int AP = getAbsorptionPoints();
 
-  if(AP <= 0) {return "";} //Should not happen
+  if(AP <= 0) {assert(false && "Armor AP less than 1"); return "";}
 
   const string absorptionPointsStr = toString(AP);
 
@@ -24,18 +27,22 @@ string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
 
 int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
   trace << "Armor::takeDurabilityHitAndGetReducedDamage()..." << endl;
+
   //Absorption points (AP) = damage soaked up instead of hitting the player
   //DDF = Damage (to) Durability Factor
   //(how much damage the durability takes per attack damage point)
 
   const int AP_BEFORE = getAbsorptionPoints();
 
-  const double DDF_BASE     = data_->armorData.dmgToDurabilityFactor;
-  const double RND_FRACTION = double(Rnd::percentile()) / 100.0;
-  const double DDF_ADJUST   = 3.0;
+  const double DDF_BASE         = data_->armorData.dmgToDurabilityFactor;
+  //TODO Add check for if wearer is player
+  const double DDF_SOLDIER_MOD  = eng.playerBonHandler->getBg() == bgSoldier ?
+                                  0.5 : 1.0;
+  const double DDF_K            = 1.5;
 
   const double DMG_BEFORE_DB = double(DMG_BEFORE);
-  dur_ -= int(DMG_BEFORE_DB * DDF_BASE * RND_FRACTION * DDF_ADJUST);
+
+  dur_ -= int(DMG_BEFORE_DB * DDF_BASE * DDF_SOLDIER_MOD * DDF_K);
 
   dur_ = max(0, dur_);
 
