@@ -315,13 +315,7 @@ public:
     return "Wound(" + toString(nrWounds_) + ")";
   }
 
-  int getAbilityMod(const AbilityId ability) const override {
-    if(ability == ability_accuracyMelee)  return nrWounds_ * -10;
-    if(ability == ability_accuracyRanged) return nrWounds_ * -5;
-    if(ability == ability_dodgeAttack)    return nrWounds_ * -10;
-    if(ability == ability_dodgeTrap)      return nrWounds_ * -10;
-    return 0;
-  }
+  int getAbilityMod(const AbilityId ability) const override;
 
   void getMsg(const PropMsgType msgType, string& msgRef) const override;
 
@@ -377,9 +371,7 @@ public:
 
   ~PropDiseased() override {}
 
-  int getChangedMaxHp(const int HP_MAX) const override {
-    return HP_MAX / 2;
-  }
+  int getChangedMaxHp(const int HP_MAX) const override;
 
   bool tryResistOtherProp(const PropId id) const override;
 

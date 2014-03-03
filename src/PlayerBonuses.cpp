@@ -42,7 +42,7 @@ void PlayerBonHandler::getTraitTitle(
     case traitCourageous:           strRef = "Courageous";              break;
     case traitWarlock:              strRef = "Warlock";                 break;
     case traitBloodSorcerer:        strRef = "Blood Sorcerer";          break;
-    case traitSpiritCannibal:       strRef = "Spirit Cannibal";         break;
+//    case traitSpiritCannibal:       strRef = "Spirit Cannibal";         break;
     case traitSeer:                 strRef = "Seer";                    break;
     case traitDexterous:            strRef = "Dexterous";               break;
     case traitLithe:                strRef = "Lithe";                   break;
@@ -68,7 +68,7 @@ void PlayerBonHandler::getTraitTitle(
     case traitStrongBacked:         strRef = "Strong-backed";           break;
     case traitTough:                strRef = "Tough";                   break;
     case traitRugged:               strRef = "Rugged";                  break;
-    case traitBreachExpert:         strRef = "Breach Expert";           break;
+//    case traitBreachExpert:         strRef = "Breach Expert";           break;
     case traitTreasureHunter:       strRef = "Treasure Hunter";         break;
     case traitDemolitionExpert:     strRef = "Demolition Expert";       break;
     case endOfTraits: break;
@@ -202,12 +202,12 @@ void PlayerBonHandler::getTraitDescr(
       strRef += "Hit points";
     } break;
 
-    case traitSpiritCannibal: {
-      strRef  = "For every life you take, you gain 1 Spirit Point by ";
-      strRef += "absorbing a part of that creatures spirit (does not work ";
-      strRef += "on insignificant creatures like a small spider or a rat)";
-      strRef += "[UNIMPLEMENTED]";
-    } break;
+//    case traitSpiritCannibal: {
+//      strRef  = "For every life you take, you gain 1 Spirit Point by ";
+//      strRef += "absorbing a part of that creatures spirit (does not work ";
+//      strRef += "on insignificant creatures like a small spider or a rat)";
+//      strRef += "[UNIMPLEMENTED]";
+//    } break;
 
     case traitSeer: {
       strRef  = "Detection spells have decreased Spirit costs, and ";
@@ -230,12 +230,12 @@ void PlayerBonHandler::getTraitDescr(
       strRef  = "+30% carry weight limit";
     } break;
 
-    case traitBreachExpert: {
-      strRef  = "Increased chance of success when bashing doors, breaking ";
-      strRef += "a door is a free turn, any creature adjacent to the door ";
-      strRef += "on the opposite side is damaged and stunned";
-      strRef += "[UNIMPLEMENTED]";
-    } break;
+//    case traitBreachExpert: {
+//      strRef  = "Increased chance of success when bashing doors, breaking ";
+//      strRef += "a door is a free turn, any creature adjacent to the door ";
+//      strRef += "on the opposite side is damaged and stunned";
+//      strRef += "[UNIMPLEMENTED]";
+//    } break;
 
     case traitDexterous: {
       strRef  = "+20% chance to dodge melee attacks, better chances to evade ";
@@ -283,7 +283,6 @@ void PlayerBonHandler::getTraitDescr(
     case traitSurvivalist: {
       strRef  = "Increased Hit Point regeneration rate, negative effects ";
       strRef += "from wounds and disease reduced by 50%";
-      strRef += "[UNIMPLEMENTED]";
     } break;
 
     case traitSelfAware: {
@@ -379,10 +378,10 @@ void PlayerBonHandler::getTraitPrereqs(const TraitId id,
       bgRef = bgOccultist;
     } break;
 
-    case traitSpiritCannibal: {
-      traitsRef.push_back(traitMightySpirit);
-      bgRef = bgOccultist;
-    } break;
+//    case traitSpiritCannibal: {
+//      traitsRef.push_back(traitMightySpirit);
+//      bgRef = bgOccultist;
+//    } break;
 
     case traitSeer: {
       traitsRef.push_back(traitObservant);
@@ -400,10 +399,10 @@ void PlayerBonHandler::getTraitPrereqs(const TraitId id,
       traitsRef.push_back(traitTough);
     } break;
 
-    case traitBreachExpert: {
-      traitsRef.push_back(traitTough);
-      bgRef = bgSoldier;
-    } break;
+//    case traitBreachExpert: {
+//      traitsRef.push_back(traitTough);
+//      bgRef = bgSoldier;
+//    } break;
 
     case traitDexterous: {
     } break;

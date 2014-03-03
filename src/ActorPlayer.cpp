@@ -955,9 +955,14 @@ void Player::onStandardTurn() {
         nrWounds = dynamic_cast<PropWound*>(propWnd)->getNrWounds();
       }
 
-      const bool IS_RAPID_REC = bonHlr.hasTrait(traitRapidRecoverer);
+      const bool IS_RAPID_REC     = bonHlr.hasTrait(traitRapidRecoverer);
+      const bool IS_SURVIVALIST   = bonHlr.hasTrait(traitSurvivalist);
 
-      const int REGEN_N_TURN = (IS_RAPID_REC ? 6 : 10) + (nrWounds * 5);
+      //Survivalist trait halves the penalty form wounds
+      const int WOUND_TURNS_DIV  = IS_SURVIVALIST ? 2 : 1;
+
+      const int REGEN_N_TURN = (IS_SURVIVALIST ? 4 : (IS_RAPID_REC ? 7 : 10))
+                               + ((nrWounds * 5) / WOUND_TURNS_DIV);
 
       if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
         if(getHp() < getHpMax(true)) {

@@ -698,7 +698,7 @@ PropHandler::PropHandler(Actor* owningActor, Engine& engine) :
 }
 
 Prop* PropHandler::makeProp(const PropId id, PropTurns turnsInit,
-                                  const int NR_TURNS) const {
+                            const int NR_TURNS) const {
   switch(id) {
     case propWound:
       return new PropWound(eng, turnsInit, NR_TURNS);
@@ -1385,6 +1385,17 @@ void PropInfected::onNewTurn() {
   }
 }
 
+int PropDiseased::getChangedMaxHp(const int HP_MAX) const {
+  if(
+    owningActor_ == eng.player &&
+    eng.playerBonHandler->hasTrait(traitSurvivalist)) {
+    //Survavlist halves HP lost - i.e. you only lose 25% instead of 50%
+    return (HP_MAX * 3) / 4;
+  } else {
+    return HP_MAX / 2;
+  }
+}
+
 void PropDiseased::onStart() {
   //Actor::getHpMax() will now return a decreased value
   //cap current HP to the new, lower, maximum
@@ -1443,6 +1454,19 @@ bool PropTerrified::allowAttackRanged(
 
   (void)ALLOW_MESSAGE_WHEN_FALSE;
   return true;
+}
+
+int PropWound::getAbilityMod(const AbilityId ability) const {
+  const bool IS_SURVIVALIST = owningActor_ == eng.player &&
+                              eng.playerBonHandler->hasTrait(traitSurvivalist);
+
+  const int DIV = IS_SURVIVALIST ? 2 : 1;
+
+  if(ability == ability_accuracyMelee)  return (nrWounds_ * -10)  / DIV;
+  if(ability == ability_accuracyRanged) return (nrWounds_ * -5)   / DIV;
+  if(ability == ability_dodgeAttack)    return (nrWounds_ * -10)  / DIV;
+  if(ability == ability_dodgeTrap)      return (nrWounds_ * -10)  / DIV;
+  return 0;
 }
 
 void PropWound::getMsg(const PropMsgType msgType, string& msgRef) const {
