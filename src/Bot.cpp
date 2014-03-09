@@ -51,6 +51,16 @@ void Bot::act() {
     propHandler.tryApplyProp(new PropRFear(eng, propTurnsSpecific, 4), true);
   }
 
+  //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
+  if(Rnd::oneIn(10)) {
+    const int ELEMENT = Rnd::range(0, eng.gameTime->actors_.size() - 1);
+    Actor* const actor = eng.gameTime->actors_.at(ELEMENT);
+    if(actor != eng.player) {
+      actor->getPropHandler().tryApplyProp(
+        new PropBurning(eng, propTurnsStd), true);
+    }
+  }
+
   //Occasionally teleport (to avoid getting stuck)
   if(Rnd::oneIn(200)) {
     eng.player->teleport(false);

@@ -101,7 +101,8 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
           blockers[x][y] == false &&
-          eng.roomThemeMaker->themeMap[x][y] == roomTheme_plain) {
+          eng.roomThemeMaker->themeMap[x][y] == roomTheme_plain &&
+          eng.map->cells[x][y].featureStatic->canHaveStaticFeature()) {
           trapPosCandidates.push_back(Pos(x, y));
         }
       }

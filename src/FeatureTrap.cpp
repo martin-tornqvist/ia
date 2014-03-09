@@ -30,6 +30,9 @@ Trap::Trap(FeatureId id, Pos pos, Engine& engine, TrapSpawnData* spawnData) :
   assert(spawnData->trapType_ != endOfTraps);
   assert(mimicFeature_ != NULL);
 
+  assert(
+    engine.map->cells[pos.x][pos.y].featureStatic->canHaveStaticFeature());
+
   if(spawnData->trapType_ == trap_any) {
     setSpecificTrapFromId(TrapId(Rnd::range(0, endOfTraps - 1)));
   } else {
