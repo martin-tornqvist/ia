@@ -9,25 +9,77 @@
 #include "Query.h"
 #include "Map.h"
 #include "FeatureTrap.h"
+#include "Utils.h"
+#include "Inventory.h"
 
 namespace Disarm {
 
 void playerDisarm(Engine& eng) {
   //TODO It would probably be more fun if examine were allowed while blind,
   //with some potentially horrible results
-  if(eng.player->getPropHandler().allowSee()) {
-    eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+
+  //Abort if blind
+  if(eng.player->getPropHandler().allowSee() == false) {
+    eng.log->addMsg("Not while blind.");
     Renderer::drawMapAndInterface();
+    return;
+  }
 
-    const Pos disarmPos(eng.player->pos + eng.query->dir());
+  //Abort if held by spider web
+  const Pos playerPos = eng.player->pos;
+  const FeatureStatic* const featureAtPlayer =
+    eng.map->cells[playerPos.x][playerPos.y].featureStatic;
+  if(featureAtPlayer->getId() == feature_trap) {
+    const Trap* const trap = dynamic_cast<const Trap*>(featureAtPlayer);
+    if(trap->getTrapType() == trap_spiderWeb) {
+      const TrapSpiderWeb* const web =
+        dynamic_cast<const TrapSpiderWeb*>(trap->getSpecificTrap());
+      if(web->isHolding()) {
+        eng.log->addMsg("Not while entangled in a spider web.");
+        Renderer::drawMapAndInterface();
+        return;
+      }
+    }
+  }
 
-    eng.log->clearLog();
-    if(disarmPos != eng.player->pos) {
-      eng.map->cells[disarmPos.x][disarmPos.y].featureStatic->disarm();
+  //Abort if encumbered
+  const Inventory& inv = eng.player->getInv();
+  if(inv.getTotalItemWeight() >= eng.player->getCarryWeightLimit()) {
+    eng.log->addMsg("Not while encumbered.");
+    Renderer::drawMapAndInterface();
+    return;
+  }
+
+  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+  Renderer::drawMapAndInterface();
+
+  const Pos pos(eng.player->pos + eng.query->dir());
+
+  //Abort if cell is unseen
+  if(eng.map->cells[pos.x][pos.y].isSeenByPlayer == false) {
+    eng.log->addMsg("I cannot see there.");
+    Renderer::drawMapAndInterface();
+    return;
+  }
+
+  eng.log->clearLog();
+
+  Actor* actorOnTrap = Utils::getActorAtPos(pos, eng);
+
+  //Abort if trap blocked by monster
+  if(actorOnTrap != NULL) {
+    if(eng.player->isSeeingActor(*actorOnTrap, NULL)) {
+      eng.log->addMsg("It's blocked.");
+    } else {
+      eng.log->addMsg("Something is blocking it.");
     }
     Renderer::drawMapAndInterface();
-  } else {
-    eng.log->addMsg("Not while blind.");
+    return;
+  }
+
+  eng.log->clearLog();
+  if(pos != eng.player->pos) {
+    eng.map->cells[pos.x][pos.y].featureStatic->disarm();
   }
   Renderer::drawMapAndInterface();
 }

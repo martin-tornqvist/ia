@@ -20,7 +20,7 @@ void DungeonMaster::initXpArray() {
 
 int DungeonMaster::getMonsterTotXpWorth(const ActorData& d) const {
   //K regulates player XP rate, higher -> more XP per monster
-  const double K          = 0.6;
+  const double K          = 0.5;
   const double HP         = d.hp;
   const double SPEED      = double(d.speed);
   const double SPEED_MAX  = double(ActorSpeed::endOfActorSpeed);

@@ -147,7 +147,8 @@ void FeatureStatic::examine() {
 }
 
 void FeatureStatic::disarm() {
-  eng.log->addMsg("I find nothing there to disarm.");
+  eng.log->addMsg(msgDisarmNoTrap);
+  Renderer::drawMapAndInterface();
 }
 
 void FeatureStatic::bash(Actor& actorTrying) {

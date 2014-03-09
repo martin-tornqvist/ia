@@ -32,7 +32,7 @@ public:
   ~Trap();
 
   void  bump(Actor& actorBumping) override;
-  SDL_Color getClr()                          const override;
+  SDL_Color getClr()                            const override;
   char getGlyph()                               const override;
   TileId getTile()                              const override;
   string getDescr(const bool DEFINITE_ARTICLE)  const override;
@@ -90,10 +90,19 @@ protected:
   virtual void trigger(
     Actor& actor, const AbilityRollResult dodgeResult) = 0;
   virtual string getTitle()     const = 0;
-  virtual SDL_Color getClr()  const = 0;
+  virtual SDL_Color getClr()    const = 0;
   virtual char getGlyph()       const = 0;
   virtual TileId getTile()      const = 0;
   virtual bool isMagical()      const = 0;
+  virtual bool isDisarmable()   const = 0;
+  virtual string getDisarmMsg() const {
+    return isMagical() ? "I dispel a magic trap." : "I disarm a trap.";
+  }
+  virtual string getDisarmFailMsg() const {
+    return isMagical() ?
+           "I fail to dispel a magic trap." :
+           "I fail to disarm a trap.";
+  }
 
   Pos pos_;
   TrapId trapType_;
@@ -105,11 +114,13 @@ private:
   friend class Trap;
   TrapDart(Pos pos, Engine& engine);
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrWhiteHigh;}
-  string      getTitle()    const override {return "Dart trap";}
-  char        getGlyph()    const override {return '^';}
-  TileId      getTile()     const override {return tile_trapGeneral;}
-  bool        isMagical()   const override {return false;}
+  SDL_Color   getClr()        const override {return clrWhiteHigh;}
+  string      getTitle()      const override {return "Dart trap";}
+  TileId      getTile()       const override {return tile_trapGeneral;}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return false;}
+  bool        isDisarmable()  const override {return true;}
+
   bool        isPoisoned;
 };
 
@@ -118,11 +129,13 @@ private:
   friend class Trap;
   TrapSpear(Pos pos, Engine& engine);
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrWhiteHigh;}
-  string      getTitle()    const override {return "Spear trap";}
-  char        getGlyph()    const override {return '^';}
-  TileId      getTile()     const override {return tile_trapGeneral;}
-  bool        isMagical()   const override {return false;}
+  SDL_Color   getClr()        const override {return clrWhiteHigh;}
+  string      getTitle()      const override {return "Spear trap";}
+  TileId      getTile()       const override {return tile_trapGeneral;}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return false;}
+  bool        isDisarmable()  const override {return true;}
+
   bool isPoisoned;
 };
 
@@ -132,11 +145,12 @@ private:
   TrapGasConfusion(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_gasConfusion, engine) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrMagenta;}
-  string      getTitle()    const override {return "Gas trap";}
-  char        getGlyph()    const override {return '^';}
-  bool        isMagical()   const override {return false;}
-  TileId      getTile()     const override {return tile_trapGeneral;}
+  SDL_Color   getClr()        const override {return clrMagenta;}
+  string      getTitle()      const override {return "Gas trap";}
+  TileId      getTile()       const override {return tile_trapGeneral;}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return false;}
+  bool        isDisarmable()  const override {return true;}
 };
 
 class TrapGasParalyzation: public SpecificTrapBase {
@@ -146,11 +160,12 @@ private:
     SpecificTrapBase(pos, trap_gasParalyze, engine) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrMagenta;}
-  string      getTitle()    const override {return "Gas trap";}
-  char        getGlyph()    const override {return '^';}
-  bool        isMagical()   const override {return false;}
-  TileId      getTile()     const override {return tile_trapGeneral;}
+  SDL_Color   getClr()        const override {return clrMagenta;}
+  string      getTitle()      const override {return "Gas trap";}
+  TileId      getTile()       const override {return tile_trapGeneral;}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return false;}
+  bool        isDisarmable()  const override {return true;}
 };
 
 class TrapGasFear: public SpecificTrapBase {
@@ -159,11 +174,12 @@ private:
   TrapGasFear(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_gasFear, engine) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrMagenta;}
-  string      getTitle()    const override {return "Gas trap";}
-  char        getGlyph()    const override {return '^';}
-  bool        isMagical()   const override {return false;}
-  TileId      getTile()     const override {return tile_trapGeneral;}
+  SDL_Color   getClr()        const override {return clrMagenta;}
+  string      getTitle()      const override {return "Gas trap";}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return false;}
+  TileId      getTile()       const override {return tile_trapGeneral;}
+  bool        isDisarmable()  const override {return true;}
 };
 
 class TrapBlindingFlash: public SpecificTrapBase {
@@ -172,11 +188,12 @@ private:
   TrapBlindingFlash(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_blinding, engine) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrYellow;}
-  string      getTitle()    const override {return "Blinding trap";}
-  char        getGlyph()    const override {return '^';}
-  bool        isMagical()   const override {return false;}
-  TileId      getTile()     const override {return tile_trapGeneral;}
+  SDL_Color   getClr()        const override {return clrYellow;}
+  string      getTitle()      const override {return "Blinding trap";}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return false;}
+  TileId      getTile()       const override {return tile_trapGeneral;}
+  bool        isDisarmable()  const override {return true;}
 };
 
 class TrapTeleport: public SpecificTrapBase {
@@ -186,11 +203,12 @@ private:
     SpecificTrapBase(pos, trap_teleport, engine) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrCyan;}
-  string      getTitle()    const override {return "Teleporter trap";}
-  char        getGlyph()    const override {return '^';}
-  bool        isMagical()   const override {return true;}
-  TileId      getTile()     const override {return tile_elderSign;}
+  SDL_Color   getClr()        const override {return clrCyan;}
+  string      getTitle()      const override {return "Teleporter trap";}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return true;}
+  TileId      getTile()       const override {return tile_elderSign;}
+  bool        isDisarmable()  const override {return true;}
 };
 
 class TrapSummonMonster: public SpecificTrapBase {
@@ -200,11 +218,12 @@ private:
     SpecificTrapBase(pos, trap_summonMonster, engine) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrBrownDrk;}
-  string      getTitle()    const override {return "Monster summoning trap";}
-  char        getGlyph()    const override {return '^';}
-  bool        isMagical()   const override {return true;}
-  TileId      getTile()     const override {return tile_elderSign;}
+  SDL_Color   getClr()        const override {return clrBrownDrk;}
+  string      getTitle()      const override {return "Monster summoning trap";}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return true;}
+  TileId      getTile()       const override {return tile_elderSign;}
+  bool        isDisarmable()  const override {return true;}
 };
 
 class TrapSmoke: public SpecificTrapBase {
@@ -213,11 +232,12 @@ private:
   TrapSmoke(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_smoke, engine) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrGray;}
-  string      getTitle()    const override {return "Smoke trap";}
-  char        getGlyph()    const override {return '^';}
-  bool        isMagical()   const override {return false;}
-  TileId      getTile()     const override { return tile_trapGeneral;}
+  SDL_Color   getClr()        const override {return clrGray;}
+  string      getTitle()      const override {return "Smoke trap";}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return false;}
+  TileId      getTile()       const override { return tile_trapGeneral;}
+  bool        isDisarmable()  const override {return true;}
 };
 
 class TrapAlarm: public SpecificTrapBase {
@@ -226,11 +246,12 @@ private:
   TrapAlarm(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_alarm, engine) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrBrown;}
-  string      getTitle()    const override {return "Alarm trap";}
-  char        getGlyph()    const override {return '^';}
-  bool        isMagical()   const override {return false;}
-  TileId      getTile()     const override { return tile_trapGeneral;}
+  SDL_Color   getClr()        const override {return clrBrown;}
+  string      getTitle()      const override {return "Alarm trap";}
+  char        getGlyph()      const override {return '^';}
+  bool        isMagical()     const override {return false;}
+  TileId      getTile()       const override { return tile_trapGeneral;}
+  bool        isDisarmable()  const override {return true;}
 };
 
 
@@ -245,11 +266,18 @@ private:
   TrapSpiderWeb(Pos pos, Engine& engine) :
     SpecificTrapBase(pos, trap_spiderWeb, engine), isHoldingActor(false) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()    const override {return clrWhiteHigh;}
-  string      getTitle()    const override {return "Spider web";}
-  char        getGlyph()    const override {return '*';}
-  bool        isMagical()   const override {return false;}
-  TileId      getTile()     const override {return tile_spiderWeb;}
+  SDL_Color   getClr()        const override {return clrWhiteHigh;}
+  string      getTitle()      const override {return "Spider web";}
+  char        getGlyph()      const override {return '*';}
+  bool        isMagical()     const override {return false;}
+  TileId      getTile()       const override {return tile_spiderWeb;}
+  bool        isDisarmable()  const override {return true;}
+  string      getDisarmMsg()  const override {
+    return "I tear down a spider web.";
+  }
+  string      getDisarmFailMsg() const override {
+    return "I fail to tear down a spider web.";
+  }
 
   bool isHoldingActor;
 };

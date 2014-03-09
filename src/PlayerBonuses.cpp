@@ -88,6 +88,8 @@ void PlayerBonHandler::getBgDescr(
       linesRef.push_back("-50% shock taken from using and identifying ");
       linesRef.push_back("strange items (e.g. potions)");
       linesRef.push_back(" ");
+      linesRef.push_back("Can dispel magic traps");
+      linesRef.push_back(" ");
       linesRef.push_back("-2 Hit Points");
       linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");

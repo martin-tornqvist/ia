@@ -152,7 +152,7 @@ void ActorDataHandler::initDataList() {
   d.color = clrGray;
   d.tile = tile_zombieArmed;
   d.hp = 10;
-  d.dmgMelee = 9;
+  d.dmgMelee = 8;
   d.abilityVals.setVal(ability_accuracyMelee, 35);
   d.abilityVals.setVal(ability_accuracyRanged, 0);
   d.spawnMinDLVL = 2;

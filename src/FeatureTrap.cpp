@@ -20,6 +20,7 @@
 #include "ActorFactory.h"
 #include "Renderer.h"
 #include "Utils.h"
+#include "PlayerBonuses.h"
 
 //------------------------------------------------------------- TRAP
 Trap::Trap(FeatureId id, Pos pos, Engine& engine, TrapSpawnData* spawnData) :
@@ -153,9 +154,22 @@ void Trap::bump(Actor& actorBumping) {
 }
 
 void Trap::disarm() {
+  //Abort if trap is hidden
+  if(isHidden()) {
+    eng.log->addMsg(msgDisarmNoTrap);
+    Renderer::drawMapAndInterface();
+    return;
+  }
+
+  const bool IS_OCCULTIST   = eng.playerBonHandler->getBg() == bgOccultist;
+
+  if(isMagical() && IS_OCCULTIST == false) {
+    eng.log->addMsg("I do not know how to dispel magic traps.");
+    return;
+  }
+
   vector<PropId> props;
   eng.player->getPropHandler().getAllActivePropIds(props);
-
 
   const bool IS_BLESSED =
     find(props.begin(), props.end(), propBlessed) != props.end();
@@ -173,9 +187,15 @@ void Trap::disarm() {
   const bool IS_DISARMED =
     Rnd::fraction(disarmNumerator, DISARM_DENOMINATOR);
   if(IS_DISARMED) {
-    eng.log->addMsg("I disarm a trap.");
+    eng.log->addMsg(specificTrap_->getDisarmMsg());
   } else {
-    eng.log->addMsg("I fail to disarm a trap.");
+    eng.log->addMsg(specificTrap_->getDisarmFailMsg());
+
+    if(getTrapType() == trap_spiderWeb) {
+      eng.player->pos = pos_;
+    }
+
+    Renderer::drawMapAndInterface();
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
     if(Rnd::oneIn(TRIGGER_ONE_IN_N)) {
       triggerTrap(*eng.player);

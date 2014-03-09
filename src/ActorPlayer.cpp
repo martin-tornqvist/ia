@@ -1043,7 +1043,7 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   const SfxId sfx = snd.getSfx();
 
   const string& msg = snd.getMsg();
-  const bool HAS_SND_MSG = msg.empty() == false;
+  const bool HAS_SND_MSG = msg.empty() == false && msg != " ";
 
   if(HAS_SND_MSG) {eng.log->addMsg(msg, clrWhite);}
 

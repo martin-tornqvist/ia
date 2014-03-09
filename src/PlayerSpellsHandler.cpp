@@ -71,9 +71,8 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
 
     const Range spiCost = spell->getSpiCost(false, eng.player, eng);
     if(spiCost.upper >= eng.player->getSpi()) {
-      eng.log->addMsg(
-        "Cast spell and risk depleting your spirit (y/n)?",
-        clrWhiteHigh);
+      eng.log->addMsg("Cast spell and risk depleting your spirit (y/n)?",
+                      clrWhiteHigh);
       Renderer::drawMapAndInterface();
       if(eng.query->yesOrNo() == YesNoAnswer::no) {
         eng.log->clearLog();
@@ -82,8 +81,6 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
       }
     }
 
-    eng.log->addMsg("I cast " + spell->getName() + "!");
-
     bool isBloodSorc  = false;
     bool isWarlock    = false;
     for(TraitId id : eng.playerBonHandler->traitsPicked_) {
@@ -91,14 +88,25 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
       if(id == traitWarlock)        isWarlock   = true;
     }
 
+    const int BLOOD_SORC_HP_DRAINED = 2;
     if(isBloodSorc) {
-      eng.log->addMsg("My life force fuels the spell.", clrMsgBad);
-      eng.player->hit(2, dmgType_pure, false);
+      if(eng.player->getHp() <= BLOOD_SORC_HP_DRAINED) {
+        eng.log->addMsg("I do not have enough life force to cast this spell.");
+        Renderer::drawMapAndInterface();
+        return;
+      }
+    }
+
+    eng.log->addMsg("I cast " + spell->getName() + "!");
+
+    if(isBloodSorc) {
+//      eng.log->addMsg("My life force fuels the spell.", clrMsgBad);
+      eng.player->hit(BLOOD_SORC_HP_DRAINED, dmgType_pure, false);
     }
     if(eng.player->deadState == ActorDeadState::alive) {
       spell->cast(eng.player, true, eng);
       prevSpellCast_ = spell;
-      if(isWarlock && Rnd::oneIn(3)) {
+      if(isWarlock && Rnd::oneIn(2)) {
         eng.player->getPropHandler().tryApplyProp(
           new PropWarlockCharged(eng, propTurnsStd));
       }

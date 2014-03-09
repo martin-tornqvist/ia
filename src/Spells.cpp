@@ -221,7 +221,7 @@ SpellCastRetData SpellDarkbolt::cast_(
   target->getPropHandler().tryApplyProp(
     new PropParalyzed(eng, propTurnsSpecific, 2));
 
-  Range dmgRange(3, 10);
+  Range dmgRange(4, 10);
   const int DMG = isCharged ? dmgRange.upper : Rnd::range(dmgRange);
 
   target->hit(DMG, dmgType_physical, true);
@@ -244,7 +244,7 @@ bool SpellDarkbolt::isGoodForMonsterToCastNow(
 SpellCastRetData SpellAzathothsWrath::cast_(
   Actor* const caster, Engine& eng) const {
 
-  Range dmgRange(1, 8);
+  Range dmgRange(2, 8);
 
   const string msgEnd = "struck by a roaring blast!";
 

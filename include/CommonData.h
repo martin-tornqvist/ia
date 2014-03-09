@@ -5,7 +5,7 @@
 
 const unsigned int PLAYER_NAME_MAX_LENGTH = 12;
 
-const std::string gameVersionStr = "v16.0 BETA";
+const std::string gameVersionStr = "v16.0 Prerelease 1";
 
 const std::string tilesImgName         = "images/gfx_16x24.png";
 const std::string mainMenuLogoImgName  = "images/main_menu_logo.png";
@@ -62,6 +62,7 @@ const int NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES    = 2;
 
 const int CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP = 50;
 
-const std::string cancelInfoStr = " | space/esc to cancel";
+const std::string cancelInfoStr   = " | space/esc to cancel";
+const std::string msgDisarmNoTrap = "I find nothing there to disarm.";
 
 #endif

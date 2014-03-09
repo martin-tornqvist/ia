@@ -49,7 +49,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
   Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   Renderer::drawTextCentered("Choose your background", panel_screen,
-                                 Pos(MAP_W_HALF, 0), clrWhite, clrBlack, true);
+                             Pos(MAP_W_HALF, 0), clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
@@ -75,7 +75,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
     const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
     const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
     Renderer::drawTextCentered(name, panel_screen, Pos(MAP_W_HALF, y),
-                                   drwClr, drwClrBg);
+                               drwClr, drwClrBg);
     y++;
   }
   y++;
@@ -187,7 +187,7 @@ void PlayerCreateCharacter::drawPickTrait(
                  "You have reached a new level! Which trait do you gain?";
 
   Renderer::drawTextCentered(title, panel_screen, Pos(MAP_W_HALF, 0),
-                                 clrWhite, clrBlack, true);
+                             clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
@@ -255,7 +255,7 @@ void PlayerCreateCharacter::drawPickTrait(
   eng.playerBonHandler->getTraitPrereqs(markedTrait, traitPrereqs, bgPrereq);
   if(traitPrereqs.empty() == false || bgPrereq != endOfBgs) {
     Renderer::drawText("This trait had the following prerequisite(s):",
-                           panel_screen, Pos(X0_DESCR, y), clrWhite);
+                       panel_screen, Pos(X0_DESCR, y), clrWhite);
     y++;
 
     string prereqStr = "";
@@ -318,7 +318,7 @@ void PlayerEnterName::draw(const string& currentString) const {
   Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   Renderer::drawTextCentered("What is your name?", panel_screen,
-                                 Pos(MAP_W_HALF, 0), clrWhite);
+                             Pos(MAP_W_HALF, 0), clrWhite);
   const int Y_NAME = 2;
   const string NAME_STR =
     currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
@@ -326,7 +326,7 @@ void PlayerEnterName::draw(const string& currentString) const {
   const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
   Renderer::drawText(NAME_STR, panel_screen, Pos(NAME_X0, Y_NAME),
-                         clrNosfTealLgt);
+                     clrNosfTealLgt);
   Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
   Renderer::drawPopupBox(boxRect);
   Renderer::updateScreen();
