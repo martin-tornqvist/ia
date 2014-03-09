@@ -164,6 +164,15 @@ void Trap::disarm() {
     return;
   }
 
+  //Spider webs are automatically destroyed if wielding machete
+  bool isAutoSucceed = false;
+  if(getTrapType() == trap_spiderWeb) {
+    Item* item = eng.player->getInv().getItemInSlot(slot_wielded);
+    if(item != NULL) {
+      isAutoSucceed = item->getData().id == item_machete;
+    }
+  }
+
   const bool IS_OCCULTIST   = eng.playerBonHandler->getBg() == bgOccultist;
 
   if(isMagical() && IS_OCCULTIST == false) {
@@ -188,7 +197,7 @@ void Trap::disarm() {
   constrInRange(1, disarmNumerator, DISARM_DENOMINATOR - 1);
 
   const bool IS_DISARMED =
-    Rnd::fraction(disarmNumerator, DISARM_DENOMINATOR);
+    Rnd::fraction(disarmNumerator, DISARM_DENOMINATOR) || isAutoSucceed;
   if(IS_DISARMED) {
     eng.log->addMsg(specificTrap_->getDisarmMsg());
   } else {
