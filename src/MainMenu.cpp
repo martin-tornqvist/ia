@@ -166,7 +166,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
                              panel_screen);
 
   Renderer::drawTextCentered(
-    gameVersionStr + " 2013-11-26 (c) 2011-2014 Martin Tornqvist",
+    gameVersionStr + " - " + __DATE__ + " (c) 2011-2014 Martin Tornqvist",
     panel_screen, Pos(MAP_W_HALF, SCREEN_H - 1), clrWhite);
 
   Renderer::updateScreen();
