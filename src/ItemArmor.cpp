@@ -36,13 +36,13 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
 
   const double DDF_BASE         = data_->armorData.dmgToDurabilityFactor;
   //TODO Add check for if wearer is player
-  const double DDF_SOLDIER_MOD  = eng.playerBonHandler->getBg() == bgSoldier ?
+  const double DDF_WAR_VET_MOD  = eng.playerBonHandler->getBg() == bgWarVet ?
                                   0.5 : 1.0;
   const double DDF_K            = 1.5;
 
   const double DMG_BEFORE_DB = double(DMG_BEFORE);
 
-  dur_ -= int(DMG_BEFORE_DB * DDF_BASE * DDF_SOLDIER_MOD * DDF_K);
+  dur_ -= int(DMG_BEFORE_DB * DDF_BASE * DDF_WAR_VET_MOD * DDF_K);
 
   dur_ = max(0, dur_);
 

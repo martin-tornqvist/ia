@@ -22,9 +22,9 @@ PlayerBonHandler::PlayerBonHandler(Engine& engine) :
 void PlayerBonHandler::getBgTitle(const Bg id, string& strRef) const {
   strRef = "[BG TITLE MISSING]";
   switch(id) {
-    case bgOccultist: strRef = "Occultist"; break;
-    case bgRogue:     strRef = "Rogue";     break;
-    case bgSoldier:   strRef = "Soldier";   break;
+    case bgOccultist: strRef = "Occultist";   break;
+    case bgRogue:     strRef = "Rogue";       break;
+    case bgWarVet:    strRef = "War Veteran"; break;
     case endOfBgs: {} break;
   }
 }
@@ -117,7 +117,7 @@ void PlayerBonHandler::getBgDescr(
       getTraitDescr(traitStealthy, s);            linesRef.push_back(s);
     } break;
 
-    case bgSoldier: {
+    case bgWarVet: {
       linesRef.push_back("Maintains armor twice as long before it breaks");
       linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");
@@ -345,7 +345,7 @@ void PlayerBonHandler::getTraitPrereqs(const TraitId id,
 
     case traitMasterMarksman: {
       traitsRef.push_back(traitExpertMarksman);
-      bgRef = bgSoldier;
+      bgRef = bgWarVet;
     } break;
 
     case traitSteadyAimer: {
@@ -354,7 +354,7 @@ void PlayerBonHandler::getTraitPrereqs(const TraitId id,
 
     case traitSharpShooter: {
       traitsRef.push_back(traitSteadyAimer);
-      bgRef = bgSoldier;
+      bgRef = bgWarVet;
     } break;
 
     case traitDemolitionExpert: {
@@ -365,7 +365,7 @@ void PlayerBonHandler::getTraitPrereqs(const TraitId id,
 
     case traitCourageous: {
       traitsRef.push_back(traitCoolHeaded);
-      bgRef = bgSoldier;
+      bgRef = bgWarVet;
     } break;
 
     case traitWarlock: {
@@ -401,7 +401,7 @@ void PlayerBonHandler::getTraitPrereqs(const TraitId id,
 
 //    case traitBreachExpert: {
 //      traitsRef.push_back(traitTough);
-//      bgRef = bgSoldier;
+//      bgRef = bgWarVet;
 //    } break;
 
     case traitDexterous: {
@@ -589,7 +589,7 @@ void PlayerBonHandler::pickBg(const Bg bg) {
       pickTrait(traitStealthy);
     } break;
 
-    case bgSoldier: {
+    case bgWarVet: {
       pickTrait(traitAdeptMeleeFighter);
       pickTrait(traitAdeptMarksman);
       pickTrait(traitTough);

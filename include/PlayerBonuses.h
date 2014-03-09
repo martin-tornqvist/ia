@@ -54,7 +54,7 @@ enum TraitId {
 };
 
 enum Bg {
-  bgOccultist, bgRogue, bgSoldier, endOfBgs
+  bgOccultist, bgRogue, bgWarVet, endOfBgs
 };
 
 class PlayerBonHandler {

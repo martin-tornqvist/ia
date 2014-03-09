@@ -80,7 +80,7 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
   }
   y++;
 
-  const int BGS_BOX_W_HALF = 6;
+  const int BGS_BOX_W_HALF = 7;
   Rect boxRect(Pos(MAP_W_HALF - BGS_BOX_W_HALF, Y0_BGS - 1),
                Pos(MAP_W_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
   Renderer::drawPopupBox(boxRect);
