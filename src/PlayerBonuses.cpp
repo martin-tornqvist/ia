@@ -246,7 +246,7 @@ void PlayerBonHandler::getTraitDescr(
 
     case traitLithe: {
       strRef  = "+20% chance to dodge melee attacks, better chances to evade ";
-      strRef += "traps, every fifth move is a free action";
+      strRef += "traps, every fourth move is a free action";
     } break;
 
     case traitMobile: {
