@@ -1,6 +1,7 @@
 #include "Log.h"
 
 #include <algorithm>
+#include <assert.h>
 
 #include "Input.h"
 #include "Engine.h"
@@ -65,6 +66,9 @@ void Log::promptAndClearLog() {
 void Log::addMsg(const string& text, const SDL_Color& clr,
                  const bool INTERRUPT_PLAYER_ACTIONS,
                  const bool ADD_MORE_PROMPT_AFTER_MSG) {
+
+  assert(text.empty() == false);
+  assert(text.at(0) != ' ');
 
   int curLineNr = lines[1].empty() ? 0 : 1;
 
@@ -160,7 +164,7 @@ void Log::drawHistoryInterface(const int TOP_LINE_NR,
 
   if(history.empty()) {
     Renderer::drawText(" No message history ", panel_screen,
-                           Pos(X_LABEL, 0), clrGray);
+                       Pos(X_LABEL, 0), clrGray);
   } else {
     Renderer::drawText(
       " Displaying messages " + toString(TOP_LINE_NR + 1) + "-" +
@@ -169,9 +173,9 @@ void Log::drawHistoryInterface(const int TOP_LINE_NR,
   }
 
   Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
-                         clrGray);
+                     clrGray);
 
   Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
-                         panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+                     panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 

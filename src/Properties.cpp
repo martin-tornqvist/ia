@@ -1069,7 +1069,7 @@ bool PropHandler::endAppliedProp(
     if(owningActor_ == eng.player) {
       string msg = "";
       prop->getMsg(propMsgOnEndPlayer, msg);
-      eng.log->addMsg(msg, clrWhite);
+      if(msg.empty() == false) {eng.log->addMsg(msg, clrWhite);}
     } else {
       if(eng.player->isSeeingActor(*owningActor_, visionBlockers)) {
         string msg = "";
