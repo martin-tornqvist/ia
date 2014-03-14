@@ -163,17 +163,13 @@ void CultistPriest::spawnStartItems() {
 }
 
 void FireHound::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_fireHoundBreath));
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_fireHoundBite));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_fireHoundBreath));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_fireHoundBite));
 }
 
 void FrostHound::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_frostHoundBreath));
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_frostHoundBite));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_frostHoundBreath));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_frostHoundBite));
 }
 
 void Zuul::place_() {
@@ -195,54 +191,55 @@ void Zuul::place_() {
 }
 
 void Zuul::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_zuulBite));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_zuulBite));
 }
 
 bool Vortex::onActorTurn_() {
-  if(pullCooldown > 0) {
-    pullCooldown--;
-  }
+  if(deadState == ActorDeadState::alive) {
+    if(pullCooldown > 0) {
+      pullCooldown--;
+    }
 
-  if(pullCooldown <= 0) {
-    if(awareOfPlayerCounter_ > 0) {
-      trace << "Vortex: pullCooldown: " << pullCooldown << endl;
-      trace << "Vortex: Is player aware" << endl;
-      const Pos& playerPos = eng.player->pos;
-      if(Utils::isPosAdj(pos, playerPos, true) == false) {
+    if(pullCooldown <= 0) {
+      if(awareOfPlayerCounter_ > 0) {
+        trace << "Vortex: pullCooldown: " << pullCooldown << endl;
+        trace << "Vortex: Is player aware" << endl;
+        const Pos& playerPos = eng.player->pos;
+        if(Utils::isPosAdj(pos, playerPos, true) == false) {
 
-        const int CHANCE_TO_KNOCK = 25;
-        if(Rnd::percentile() < CHANCE_TO_KNOCK) {
-          trace << "Vortex: Passed random chance to pull" << endl;
+          const int CHANCE_TO_KNOCK = 25;
+          if(Rnd::percentile() < CHANCE_TO_KNOCK) {
+            trace << "Vortex: Passed random chance to pull" << endl;
 
-          const Pos playerDelta = playerPos - pos;
-          Pos knockBackFromPos = playerPos;
-          if(playerDelta.x > 1)   {knockBackFromPos.x++;}
-          if(playerDelta.x < -1)  {knockBackFromPos.x--;}
-          if(playerDelta.y > 1)   {knockBackFromPos.y++;}
-          if(playerDelta.y < -1)  {knockBackFromPos.y--;}
+            const Pos playerDelta = playerPos - pos;
+            Pos knockBackFromPos = playerPos;
+            if(playerDelta.x > 1)   {knockBackFromPos.x++;}
+            if(playerDelta.x < -1)  {knockBackFromPos.x--;}
+            if(playerDelta.y > 1)   {knockBackFromPos.y++;}
+            if(playerDelta.y < -1)  {knockBackFromPos.y--;}
 
-          if(knockBackFromPos != playerPos) {
-            trace << "Vortex: Good pos found to knockback player from (";
-            trace << knockBackFromPos.x << ",";
-            trace << knockBackFromPos.y << ")" << endl;
-            trace << "Vortex: Player position: ";
-            trace << playerPos.x << "," << playerPos.y << ")" << endl;
-            bool visionBlockers[MAP_W][MAP_H];
-            MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
-            if(isSeeingActor(*(eng.player), visionBlockers)) {
-              trace << "Vortex: I am seeing the player" << endl;
-              if(eng.player->isSeeingActor(*this, NULL)) {
-                eng.log->addMsg("The Vortex attempts to pull me in!");
-              } else {
-                eng.log->addMsg("A powerful wind is pulling me!");
+            if(knockBackFromPos != playerPos) {
+              trace << "Vortex: Good pos found to knockback player from (";
+              trace << knockBackFromPos.x << ",";
+              trace << knockBackFromPos.y << ")" << endl;
+              trace << "Vortex: Player position: ";
+              trace << playerPos.x << "," << playerPos.y << ")" << endl;
+              bool visionBlockers[MAP_W][MAP_H];
+              MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+              if(isSeeingActor(*(eng.player), visionBlockers)) {
+                trace << "Vortex: I am seeing the player" << endl;
+                if(eng.player->isSeeingActor(*this, NULL)) {
+                  eng.log->addMsg("The Vortex attempts to pull me in!");
+                } else {
+                  eng.log->addMsg("A powerful wind is pulling me!");
+                }
+                trace << "Vortex: Attempt pull (knockback)" << endl;
+                eng.knockBack->tryKnockBack(
+                  *(eng.player), knockBackFromPos, false, false);
+                pullCooldown = 5;
+                eng.gameTime->actorDidAct();
+                return true;
               }
-              trace << "Vortex: Attempt pull (knockback)" << endl;
-              eng.knockBack->tryKnockBack(
-                *(eng.player), knockBackFromPos, false, false);
-              pullCooldown = 5;
-              eng.gameTime->actorDidAct();
-              return true;
             }
           }
         }
@@ -254,24 +251,22 @@ bool Vortex::onActorTurn_() {
 
 void DustVortex::die_() {
   Explosion::runExplosionAt(
-    pos, eng, 0, SfxId::endOfSfxId, false, new PropBlind(eng, propTurnsStd), true,
-    clrGray);
+    pos, eng, 0, SfxId::endOfSfxId, false,
+    new PropBlind(eng, propTurnsStd), true, clrGray);
 }
 
 void DustVortex::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_dustVortexEngulf));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_dustVortexEngulf));
 }
 
 void FireVortex::die_() {
-  Explosion::runExplosionAt(
-    pos, eng, 0, SfxId::endOfSfxId, false, new PropBurning(eng, propTurnsStd), true,
-    clrRedLgt);
+  Explosion::runExplosionAt(pos, eng, 0, SfxId::endOfSfxId, false,
+                            new PropBurning(eng, propTurnsStd), true,
+                            clrRedLgt);
 }
 
 void FireVortex::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_fireVortexEngulf));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_fireVortexEngulf));
 }
 
 void FrostVortex::die_() {
@@ -279,8 +274,7 @@ void FrostVortex::die_() {
 }
 
 void FrostVortex::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_frostVortexEngulf));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_frostVortexEngulf));
 }
 
 bool Ghost::onActorTurn_() {
@@ -296,9 +290,9 @@ bool Ghost::onActorTurn_() {
             eng.player->isSeeingActor(*this, blockers);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
           eng.log->addMsg(refer + " reaches for me... ");
-          const AbilityRollResult rollResult = eng.abilityRoll->roll(
-                                                 eng.player->getData().abilityVals.getVal(
-                                                     ability_dodgeAttack, true, *this));
+          const AbilityRollResult rollResult =
+            eng.abilityRoll->roll(eng.player->getData().abilityVals.getVal(
+                                    ability_dodgeAttack, true, *this));
           const bool PLAYER_DODGES = rollResult >= successSmall;
           if(PLAYER_DODGES) {
             eng.log->addMsg("I dodge!", clrMsgGood);
@@ -316,18 +310,15 @@ bool Ghost::onActorTurn_() {
 }
 
 void Ghost::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_ghostClaw));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_ghostClaw));
 }
 
 void Phantasm::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_phantasmSickle));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_phantasmSickle));
 }
 
 void Wraith::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_wraithClaw));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_wraithClaw));
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
 }
@@ -360,18 +351,15 @@ void Rat::spawnStartItems() {
 }
 
 void RatThing::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_ratThingBite));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_ratThingBite));
 }
 
 void Shadow::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_shadowClaw));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_shadowClaw));
 }
 
 void Ghoul::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_ghoulClaw));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_ghoulClaw));
 }
 
 void Mummy::spawnStartItems() {
@@ -448,8 +436,8 @@ bool Khephren::onActorTurn_() {
 
 
 void DeepOne::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_deepOneJavelinAttack));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(
+                              item_deepOneJavelinAttack));
   inv_->putItemInIntrinsics(
     eng.itemFactory->spawnItem(item_deepOneSpearAttack));
 }
@@ -687,37 +675,39 @@ void LordOfShadows::spawnStartItems() {
 }
 
 bool LordOfSpiders::onActorTurn_() {
-  if(awareOfPlayerCounter_ > 0) {
+  if(deadState == ActorDeadState::alive) {
+    if(awareOfPlayerCounter_ > 0) {
 
-    if(Rnd::coinToss()) {
+      if(Rnd::coinToss()) {
 
-      const Pos playerPos = eng.player->pos;
+        const Pos playerPos = eng.player->pos;
 
-      if(eng.player->isSeeingActor(*this, NULL)) {
-        eng.log->addMsg(data_->spellCastMessage);
-      }
+        if(eng.player->isSeeingActor(*this, NULL)) {
+          eng.log->addMsg(data_->spellCastMessage);
+        }
 
-      for(int dy = -1; dy <= 1; dy++) {
-        for(int dx = -1; dx <= 1; dx++) {
+        for(int dy = -1; dy <= 1; dy++) {
+          for(int dx = -1; dx <= 1; dx++) {
 
-          if(Rnd::percentile() < 75) {
+            if(Rnd::percentile() < 75) {
 
-            const Pos c(playerPos + Pos(dx, dy));
-            const FeatureStatic* const mimicFeature =
-              eng.map->cells[c.x][c.y].featureStatic;
+              const Pos c(playerPos + Pos(dx, dy));
+              const FeatureStatic* const mimicFeature =
+                eng.map->cells[c.x][c.y].featureStatic;
 
-            if(mimicFeature->canHaveStaticFeature()) {
+              if(mimicFeature->canHaveStaticFeature()) {
 
-              const FeatureData* const mimicData =
-                eng.featureDataHandler->getData(
-                  mimicFeature->getId());
+                const FeatureData* const mimicData =
+                  eng.featureDataHandler->getData(
+                    mimicFeature->getId());
 
-              Feature* const f =
-                eng.featureFactory->spawnFeatureAt(
-                  feature_trap, c,
-                  new TrapSpawnData(mimicData, trap_spiderWeb));
+                Feature* const f =
+                  eng.featureFactory->spawnFeatureAt(
+                    feature_trap, c,
+                    new TrapSpawnData(mimicData, trap_spiderWeb));
 
-              dynamic_cast<Trap*>(f)->reveal(false);
+                dynamic_cast<Trap*>(f)->reveal(false);
+              }
             }
           }
         }
@@ -732,7 +722,6 @@ void LordOfSpiders::spawnStartItems() {
 }
 
 bool LordOfSpirits::onActorTurn_() {
-
   return false;
 }
 
@@ -741,7 +730,6 @@ void LordOfSpirits::spawnStartItems() {
 }
 
 bool LordOfPestilence::onActorTurn_() {
-
   return false;
 }
 
