@@ -174,19 +174,14 @@ void FrostHound::spawnStartItems() {
 
 void Zuul::place_() {
   if(eng.actorDataHandler->dataList[actor_zuul].nrLeftAllowedToSpawn > 0) {
-    //Note: Do not call die() here, that would have side effects, such as
-    //player getting XP.
+    //Note: Do not call die() here, that would have side effects such as
+    //player getting XP. Instead, simply set the dead state to destroyed.
     deadState = ActorDeadState::destroyed;
-    vector<Monster*> monsters;
-    eng.actorFactory->summonMonsters(
-      pos, vector<ActorId> {actor_cultistPriest}, false, NULL, &monsters);
-    if(monsters.empty() == false) {
-      Monster* const monster = monsters.at(0);
-      PropHandler& propHandler = monster->getPropHandler();
-      propHandler.tryApplyProp(
-        new PropPossessedByZuul(eng, propTurnsIndefinite), true);
-      monster->restoreHp(999, false);
-    }
+    Actor* actor = eng.actorFactory->spawnActor(actor_cultistPriest, pos);
+    PropHandler& propHandler = actor->getPropHandler();
+    propHandler.tryApplyProp(
+      new PropPossessedByZuul(eng, propTurnsIndefinite), true);
+    actor->restoreHp(999, false);
   }
 }
 

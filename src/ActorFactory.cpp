@@ -103,15 +103,13 @@ void ActorFactory::deleteAllMonsters() const {
   eng.player->target = NULL;
 }
 
-void ActorFactory::summonMonsters(
-  const Pos& origin, const vector<ActorId>& monsterIds,
-  const bool MAKE_MONSTERS_AWARE,
-  Actor* const actorToSetAsLeader,
-  vector<Monster*>* monstersRet) const {
+void ActorFactory::summonMonsters(const Pos& origin,
+                                  const vector<ActorId>& monsterIds,
+                                  const bool MAKE_MONSTERS_AWARE,
+                                  Actor* const actorToSetAsLeader,
+                                  vector<Monster*>* monstersRet) const {
 
-  if(monstersRet != NULL) {
-    monstersRet->resize(0);
-  }
+  if(monstersRet != NULL) {monstersRet->resize(0);}
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);

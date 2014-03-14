@@ -793,7 +793,7 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'D';
   d.color = clrGray;
   d.tile = tile_hound;
-  d.hp = 55;
+  d.hp = 65;
   d.spi = 40;
   d.dmgMelee = 8;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
