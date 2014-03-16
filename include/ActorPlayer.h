@@ -6,8 +6,6 @@
 #include "Actor.h"
 #include "CommonData.h"
 
-const int MIN_SHOCK_WHEN_OBSESSION = 35;
-
 enum InsanityPhobiaId {
   insanityPhobia_rat,
   insanityPhobia_spider,
@@ -71,9 +69,7 @@ public:
   inline double getPermShockTakenCurTurn() const {
     return permShockTakenCurTurn_;
   }
-  void resetPermShockTakenCurTurn() {
-    permShockTakenCurTurn_ = 0.0;
-  }
+  void resetPermShockTakenCurTurn() {permShockTakenCurTurn_ = 0.0;}
 
   void setTempShockFromFeatures();
 
@@ -104,21 +100,23 @@ public:
 
   void addLight_(bool light[MAP_W][MAP_H]) const;
 
-private:
-  friend class DungeonMaster;
-  friend class GameTime;
-  friend class Log;
-
-  void incrInsanity();
-  void testPhobias();
-  void hit_(int& dmg, const bool ALLOW_WOUNDS) override;
-  void FOVhack();
-  void interruptActions();
-  bool isStandingInOpenSpace() const;
-  bool isStandingInCrampedSpace() const;
-
   int insanity_;
   double shock_, shockTemp_, permShockTakenCurTurn_;
+
+  void interruptActions();
+
+private:
+  void incrInsanity();
+
+  void testPhobias();
+
+  void hit_(int& dmg, const bool ALLOW_WOUNDS) override;
+
+  void FOVhack();
+
+  bool isStandingInOpenSpace() const;
+
+  bool isStandingInCrampedSpace() const;
 
   int nrMovesUntilFreeAction_;
 

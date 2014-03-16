@@ -34,6 +34,8 @@
 #include "MapParsing.h"
 #include "Properties.h"
 
+const int MIN_SHOCK_WHEN_OBSESSION = 35;
+
 Player::Player(Engine& engine) :
   Actor(engine),
   activeMedicalBag(NULL),

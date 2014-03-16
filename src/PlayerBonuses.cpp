@@ -121,6 +121,8 @@ void PlayerBonHandler::getBgDescr(
     case bgWarVet: {
       linesRef.push_back("Maintains armor twice as long before it breaks");
       linesRef.push_back(" ");
+      linesRef.push_back("Starts with 10% insanity");
+      linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back(" ");
       getTraitTitle(traitAdeptMarksman, s);       linesRef.push_back("* " + s);
@@ -594,6 +596,7 @@ void PlayerBonHandler::pickBg(const Bg bg) {
       pickTrait(traitAdeptMeleeFighter);
       pickTrait(traitAdeptMarksman);
       pickTrait(traitTough);
+      eng.player->insanity_ += 10;
     } break;
 
     case endOfBgs: {} break;
