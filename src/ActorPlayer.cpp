@@ -821,7 +821,7 @@ void Player::onStandardTurn() {
   }
 
   //If obsessions are active, raise shock to a minimum level
-  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
+  for(int i = 0; i < endOfInsanityObsessions; i++) {
     if(insanityObsessions[i]) {
       shock_ = max(double(MIN_SHOCK_WHEN_OBSESSION), shock_);
       break;
@@ -831,7 +831,6 @@ void Player::onStandardTurn() {
   vector<Actor*> spottedEnemies;
   getSpottedEnemies(spottedEnemies);
   double shockFromMonstersCurPlayerTurn = 0.0;
-  const bool IS_ROGUE = eng.playerBonHandler->getBg() == bgRogue;
   for(Actor * actor : spottedEnemies) {
     eng.dungeonMaster->onMonsterSpotted(*actor);
 
@@ -839,43 +838,41 @@ void Player::onStandardTurn() {
 
     monster->playerBecomeAwareOfMe();
 
-    //Rogues takes no shock from unaware monsters
-    if(IS_ROGUE == false) {
-      const ActorData& data = monster->getData();
-      if(data.monsterShockLevel != MonsterShockLevel::none) {
-        switch(data.monsterShockLevel) {
-          case MonsterShockLevel::unsettling: {
-            monster->shockCausedCurrent_ += 0.10;
-            monster->shockCausedCurrent_ =
-              min(monster->shockCausedCurrent_ + 0.05, 1.0);
-          } break;
-          case MonsterShockLevel::scary: {
-            monster->shockCausedCurrent_ =
-              min(monster->shockCausedCurrent_ + 0.15, 1.0);
-          } break;
-          case MonsterShockLevel::terrifying: {
-            monster->shockCausedCurrent_ =
-              min(monster->shockCausedCurrent_ + 0.5, 2.0);
-          } break;
-          case MonsterShockLevel::mindShattering: {
-            monster->shockCausedCurrent_ =
-              min(monster->shockCausedCurrent_ + 0.75, 3.0);
-          } break;
-          default: {} break;
-        }
-        if(shockFromMonstersCurPlayerTurn < 3.0) {
-          incrShock(int(floor(monster->shockCausedCurrent_)),
-                    shockSrc_seeMonster);
-          shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent_;
-        }
+    const ActorData& data = monster->getData();
+    if(data.monsterShockLevel != MonsterShockLevel::none) {
+      switch(data.monsterShockLevel) {
+        case MonsterShockLevel::unsettling: {
+          monster->shockCausedCurrent_ += 0.10;
+          monster->shockCausedCurrent_ =
+            min(monster->shockCausedCurrent_ + 0.05, 1.0);
+        } break;
+        case MonsterShockLevel::scary: {
+          monster->shockCausedCurrent_ =
+            min(monster->shockCausedCurrent_ + 0.15, 1.0);
+        } break;
+        case MonsterShockLevel::terrifying: {
+          monster->shockCausedCurrent_ =
+            min(monster->shockCausedCurrent_ + 0.5, 2.0);
+        } break;
+        case MonsterShockLevel::mindShattering: {
+          monster->shockCausedCurrent_ =
+            min(monster->shockCausedCurrent_ + 0.75, 3.0);
+        } break;
+        default: {} break;
+      }
+      if(shockFromMonstersCurPlayerTurn < 3.0) {
+        incrShock(int(floor(monster->shockCausedCurrent_)),
+                  shockSrc_seeMonster);
+        shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent_;
       }
     }
   }
 
   //Some shock is taken every Xth turn
+  int loseNTurns = 12;
+  if(eng.playerBonHandler->getBg() == bgRogue) loseNTurns *= 2;
   const int TURN = eng.gameTime->getTurn();
-  const int LOSE_N_TURN = 14;
-  if((TURN / LOSE_N_TURN) * LOSE_N_TURN == TURN && TURN > 1) {
+  if(TURN % loseNTurns == 0 && TURN > 1) {
     if(Rnd::oneIn(750)) {
       if(Rnd::coinToss()) {
         eng.popup->showMsg("I have a bad feeling about this...", true);

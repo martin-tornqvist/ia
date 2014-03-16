@@ -107,8 +107,7 @@ void PlayerBonHandler::getBgDescr(
       linesRef.push_back("+25% hit chance with ranged attacks vs unaware ");
       linesRef.push_back("targets");
       linesRef.push_back(" ");
-      linesRef.push_back("Takes no shock from seeing monsters while they ");
-      linesRef.push_back("are unaware");
+      linesRef.push_back("-50% shock recieved passively over time");
       linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back(" ");
