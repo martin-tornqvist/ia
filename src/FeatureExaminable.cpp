@@ -379,7 +379,8 @@ void Tomb::triggerTrap(Actor& actor) {
           prop->turnsLeft_ *= 2;
         }
         Explosion::runExplosionAt(
-          pos_, eng, 0, SfxId::endOfSfxId, false, prop, true, fumeClr);
+          pos_, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+          prop, &fumeClr);
       } else {
         for(int i = 1; i < endOfActorIds; i++) {
           const ActorData& d = eng.actorDataHandler->dataList[i];
@@ -636,7 +637,8 @@ void Chest::triggerTrap(Actor& actor) {
       eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS &&
       Rnd::oneIn(EXPLODE_ONE_IN_N)) {
       eng.log->addMsg("The trap explodes!");
-      Explosion::runExplosionAt(pos_, eng, 0, SfxId::explosion, true);
+      Explosion::runExplosionAt(pos_, eng, ExplType::expl, ExplSrc::misc, 0,
+                                SfxId::explosion);
       if(eng.player->deadState == ActorDeadState::alive) {
         eng.featureFactory->spawnFeatureAt(feature_rubbleLow, pos_);
       }
@@ -655,8 +657,8 @@ void Chest::triggerTrap(Actor& actor) {
         prop = new PropParalyzed(eng, propTurnsStd);
         prop->turnsLeft_ *= 2;
       }
-      Explosion::runExplosionAt(
-        pos_, eng, 0, SfxId::endOfSfxId, false, prop, true, fumeClr);
+      Explosion::runExplosionAt(pos_, eng, ExplType::applyProp, ExplSrc::misc,
+                                0, SfxId::endOfSfxId, prop, &fumeClr);
     }
   }
 }

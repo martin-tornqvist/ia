@@ -80,9 +80,10 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     const int EXPL_RADI_CHANGE =
       eng.playerBonHandler->hasTrait(traitDemolitionExpert) ? 1 : 0;
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      Explosion::runExplosionAt(path.back(), eng, EXPL_RADI_CHANGE,
-                                SfxId::explosionMolotov, false,
-                                new PropBurning(eng, propTurnsStd));
+      Explosion::runExplosionAt(
+        path.back(), eng, ExplType::applyProp,
+        ExplSrc::playerUseMoltvIntended, EXPL_RADI_CHANGE,
+        SfxId::explosionMolotov, new PropBurning(eng, propTurnsStd));
     }
   }
 
@@ -146,7 +147,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           data->isEtherealDefenderMissed == false) {
           if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
             Renderer::drawGlyph('*', panel_map,
-                                    curPos, clrRedLgt);
+                                curPos, clrRedLgt);
             Renderer::updateScreen();
             SdlWrapper::sleep(Config::getDelayProjectileDraw() * 4);
           }

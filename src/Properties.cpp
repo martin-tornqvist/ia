@@ -1750,8 +1750,8 @@ void PropParalyzed::onStart() {
       player->updateColor();
       eng.log->addMsg("The lit Molotov Cocktail falls from my hands!");
       Explosion::runExplosionAt(
-        player->pos, eng, 0, SfxId::explosionMolotov, false,
-        new PropBurning(eng, propTurnsStd));
+        player->pos, eng, ExplType::applyProp, ExplSrc::misc, 0,
+        SfxId::explosionMolotov, new PropBurning(eng, propTurnsStd));
     }
   }
 }

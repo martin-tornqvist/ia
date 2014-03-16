@@ -791,7 +791,7 @@ void Player::onStandardTurn() {
   }
   if(dynamiteFuseTurns == 0) {
     eng.log->addMsg("The dynamite explodes in my hands!");
-    Explosion::runExplosionAt(pos, eng);
+    Explosion::runExplosionAt(pos, eng, ExplType::expl);
     updateColor();
     dynamiteFuseTurns = -1;
   }
@@ -804,8 +804,9 @@ void Player::onStandardTurn() {
     eng.log->addMsg("The Molotov Cocktail explodes in my hands!");
     molotovFuseTurns = -1;
     updateColor();
-    Explosion::runExplosionAt(pos, eng, 0, SfxId::explosionMolotov, false,
-                              new PropBurning(eng, propTurnsStd));
+    Explosion::runExplosionAt(
+      pos, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::explosionMolotov,
+      new PropBurning(eng, propTurnsStd));
   }
 
   //Flare

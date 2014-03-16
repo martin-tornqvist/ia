@@ -12,16 +12,16 @@
 #include "ActorPlayer.h"
 #include "Utils.h"
 #include "SdlWrapper.h"
+#include "PlayerBonuses.h"
 
 namespace {
 
 void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
-          const bool SHOULD_OVERRIDE_CLR, const SDL_Color& clrOverride,
-          Engine& eng) {
+          const SDL_Color* const clrOverride, Engine& eng) {
   Renderer::drawMapAndInterface();
 
-  const SDL_Color& clrInner = SHOULD_OVERRIDE_CLR ? clrOverride : clrYellow;
-  const SDL_Color& clrOuter = SHOULD_OVERRIDE_CLR ? clrOverride : clrRedLgt;
+  const SDL_Color& clrInner = clrOverride == NULL ? clrYellow : *clrOverride;
+  const SDL_Color& clrOuter = clrOverride == NULL ? clrRedLgt : *clrOverride;
 
   const bool IS_TILES     = Config::isTilesMode();
   const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
@@ -92,10 +92,10 @@ void getPositionsReached(const Rect& area, const Pos& origin,
 
 namespace Explosion {
 
-void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
-                    const SfxId sfx, const bool SHOULD_DO_EXPLOSION_DMG,
-                    Prop* const prop, const bool SHOULD_OVERRIDE_CLR,
-                    const SDL_Color& clrOverride) {
+void runExplosionAt(const Pos& origin, Engine& eng, const ExplType explType,
+                    const ExplSrc explSrc, const int RADI_CHANGE,
+                    const SfxId sfx, Prop* const prop,
+                    const SDL_Color* const clrOverride) {
   Rect area;
   const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
   getArea(origin, RADI, area);
@@ -106,13 +106,13 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
   vector< vector<Pos> > posLists;
   getPositionsReached(area, origin, blockers, eng, posLists);
 
-  SndVol vol = SHOULD_DO_EXPLOSION_DMG ? SndVol::high : SndVol::low;
+  SndVol vol = explType == ExplType::expl ? SndVol::high : SndVol::low;
 
   Snd snd("I hear an explosion!", sfx, IgnoreMsgIfOriginSeen::yes, origin,
           NULL, vol, AlertsMonsters::yes);
   SndEmit::emitSnd(snd, eng);
 
-  draw(posLists, blockers, SHOULD_OVERRIDE_CLR, clrOverride, eng);
+  draw(posLists, blockers, clrOverride, eng);
 
   //Do damage, apply effect
   const int DMG_ROLLS = 5;
@@ -138,6 +138,8 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
     }
   }
 
+  const bool IS_DEM_EXP = eng.playerBonHandler->hasTrait(traitDemolitionExpert);
+
   const int NR_OUTER = posLists.size();
   for(int curRadi = 0; curRadi < NR_OUTER; curRadi++) {
     const vector<Pos>& inner = posLists.at(curRadi);
@@ -147,7 +149,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
       Actor* livingActor          = livingActors[pos.x][pos.y];
       vector<Actor*> corpsesHere  = corpses[pos.x][pos.y];
 
-      if(SHOULD_DO_EXPLOSION_DMG) {
+      if(explType == ExplType::expl) {
         //Damage environment
         if(curRadi <= 1) {eng.map->switchToDestroyedFeatAt(pos);}
         const int DMG = Rnd::dice(DMG_ROLLS - curRadi, DMG_SIDES) + DMG_PLUS;
@@ -172,7 +174,10 @@ void runExplosionAt(const Pos& origin, Engine& eng, const int RADI_CHANGE,
 
       //Apply property
       if(prop != NULL) {
-        if(livingActor != NULL) {
+        if(
+          livingActor != NULL &&
+          (livingActor != eng.player || IS_DEM_EXP == false ||
+           explSrc != ExplSrc::playerUseMoltvIntended)) {
           PropHandler& propHlr = livingActor->getPropHandler();
           Prop* propCpy = propHlr.makeProp(prop->getId(), propTurnsSpecific,
                                            prop->turnsLeft_);

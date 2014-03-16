@@ -10,18 +10,16 @@
 void LitDynamite::newTurn() {
   turnsLeftToExplosion_--;
   if(turnsLeftToExplosion_ <= 0) {
-    const int EXPL_RADI_CHANGE =
+    const int D_R =
       eng.playerBonHandler->hasTrait(traitDemolitionExpert) ? 1 : 0;
-    Explosion::runExplosionAt(pos_, eng, EXPL_RADI_CHANGE);
+    Explosion::runExplosionAt(pos_, eng, ExplType::expl, ExplSrc::misc, D_R);
     eng.gameTime->eraseFeatureMob(this, true);
   }
 }
 
 void LitFlare::newTurn() {
   life_--;
-  if(life_ <= 0) {
-    eng.gameTime->eraseFeatureMob(this, true);
-  }
+  if(life_ <= 0) {eng.gameTime->eraseFeatureMob(this, true);}
 }
 
 LitFlare::LitFlare(FeatureId id, Pos pos, Engine& engine,

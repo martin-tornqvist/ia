@@ -499,9 +499,11 @@ void TrapGasConfusion::trigger(
     }
   }
 
+  SDL_Color clr = getClr();
+
   Explosion::runExplosionAt(
-    pos_, eng, 0, SfxId::endOfSfxId, false, new PropConfused(eng, propTurnsStd), true,
-    getClr());
+    pos_, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    new PropConfused(eng, propTurnsStd), &clr);
   traceVerbose << "TrapGasConfusion::trigger() [DONE]" << endl;
 }
 
@@ -529,9 +531,10 @@ void TrapGasParalyzation::trigger(
     }
   }
 
+  SDL_Color clr = getClr();
   Explosion::runExplosionAt(
-    pos_, eng, 0, SfxId::endOfSfxId, false, new PropParalyzed(eng, propTurnsStd),
-    true, getClr());
+    pos_, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    new PropParalyzed(eng, propTurnsStd), &clr) ;
   traceVerbose << "TrapGasParalyzation::trigger() [DONE]" << endl;
 }
 
@@ -559,9 +562,10 @@ void TrapGasFear::trigger(Actor& actor,
     }
   }
 
+  SDL_Color clr = getClr();
   Explosion::runExplosionAt(
-    pos_, eng, 0, SfxId::endOfSfxId, false, new PropTerrified(eng, propTurnsStd),
-    true, getClr());
+    pos_, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    new PropTerrified(eng, propTurnsStd), &clr);
   traceVerbose << "TrapGasFear::trigger() [DONE]" << endl;
 }
 

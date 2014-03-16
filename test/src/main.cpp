@@ -354,7 +354,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
 
   //Check wall destruction
   for(int i = 0; i < 2; i++) {
-    Explosion::runExplosionAt(Pos(X0, Y0), eng);
+    Explosion::runExplosionAt(Pos(X0, Y0), eng, ExplType::expl);
 
     //Cells around the center, at a distance of 1, should be destroyed
     int r = 1;
@@ -381,7 +381,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
 
   //Check damage to actors
   Actor* a1 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
-  Explosion::runExplosionAt(Pos(X0, Y0), eng);
+  Explosion::runExplosionAt(Pos(X0, Y0), eng, ExplType::expl);
   CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
 
   //Check that corpses can be destroyed, and do not block living actors
@@ -392,7 +392,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
     corpses[i]->deadState = ActorDeadState::corpse;
   }
   a1 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
-  Explosion::runExplosionAt(Pos(X0, Y0), eng);
+  Explosion::runExplosionAt(Pos(X0, Y0), eng, ExplType::expl);
   for(int i = 0; i < NR_CORPSES; i++) {
     CHECK_EQUAL(int(ActorDeadState::destroyed), int(corpses[i]->deadState));
   }
@@ -405,7 +405,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
     corpses[i] = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
-  Explosion::runExplosionAt(Pos(X0, Y0), eng, 0, SfxId::endOfSfxId, false,
+  Explosion::runExplosionAt(Pos(X0, Y0), eng, ExplType::applyProp,
+                            ExplSrc::misc, 0, SfxId::endOfSfxId,
                             new PropBurning(eng, propTurnsStd));
   CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
   CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
@@ -421,7 +422,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   int x = 1;
   int y = 1;
   eng.featureFactory->spawnFeatureAt(floorId, Pos(x, y));
-  Explosion::runExplosionAt(Pos(x, y), eng);
+  Explosion::runExplosionAt(Pos(x, y), eng, ExplType::expl);
   CHECK(eng.map->cells[x + 1][y    ].featureStatic->getId() != wallId);
   CHECK(eng.map->cells[x    ][y + 1].featureStatic->getId() != wallId);
   CHECK(eng.map->cells[x - 1][y    ].featureStatic->getId() == wallId);
@@ -431,7 +432,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   x = MAP_W - 2;
   y = MAP_H - 2;
   eng.featureFactory->spawnFeatureAt(floorId, Pos(x, y));
-  Explosion::runExplosionAt(Pos(x, y), eng);
+  Explosion::runExplosionAt(Pos(x, y), eng, ExplType::expl);
   CHECK(eng.map->cells[x - 1][y    ].featureStatic->getId() != wallId);
   CHECK(eng.map->cells[x    ][y - 1].featureStatic->getId() != wallId);
   CHECK(eng.map->cells[x + 1][y    ].featureStatic->getId() == wallId);
