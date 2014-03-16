@@ -123,7 +123,7 @@ private:
 };
 
 enum class FountainType {
-  dry, //This must be kept as first position!
+  dry, //This must be at first position!
   tepid,
   refreshing,
   bless,
@@ -133,6 +133,14 @@ enum class FountainType {
   disease,
   poison,
   frenzy,
+  paralyze,
+  blind,
+  faint,
+  rFire,
+  rCold,
+  rElec,
+  rFear,
+  rConfusion,
   endOfFountainTypes
 };
 

@@ -102,7 +102,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       for(PropId propId : defProps) {
         if(
           isDefenderAware == false ||
-          propId == propParalysed  ||
+          propId == propParalyzed  ||
           propId == propNailed     ||
           propId == propFainted) {
           isBigBon = true;

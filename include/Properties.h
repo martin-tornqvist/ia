@@ -30,7 +30,7 @@ enum PropId {
   propFainted,
   propBurning,
   propPoisoned,
-  propParalysed,
+  propParalyzed,
   propTerrified,
   propConfused,
   propStunned,
@@ -660,7 +660,7 @@ public:
 class PropParalyzed: public Prop {
 public:
   PropParalyzed(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propParalysed, engine, turnsInit, turns) {}
+    Prop(propParalyzed, engine, turnsInit, turns) {}
 
   ~PropParalyzed() override {}
 

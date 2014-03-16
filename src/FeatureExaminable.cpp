@@ -372,7 +372,7 @@ void Tomb::triggerTrap(Actor& actor) {
           prop = new PropPoisoned(eng, propTurnsStd);
           fumeClr = clrGreenLgt;
         } else if(RND < 40) {
-          prop = new PropDiseased(eng, propTurnsStd);
+          prop = new PropDiseased(eng, propTurnsSpecific, 50);
           fumeClr = clrGreen;
         } else {
           prop = new PropParalyzed(eng, propTurnsStd);
@@ -677,7 +677,8 @@ Fountain::Fountain(FeatureId id, Pos pos, Engine& engine) :
     case FountainMaterial::gold: {
       vector<FountainType> typeCandidates {
         FountainType::bless, FountainType::refreshing, FountainType::spirit,
-        FountainType::vitality
+        FountainType::vitality, FountainType::rFire, FountainType::rCold,
+        FountainType::rElec, FountainType::rFear, FountainType::rConfusion
       };
       const int ELEMENT = Rnd::range(0, typeCandidates.size() - 1);
       fountainType_ = typeCandidates.at(ELEMENT);
@@ -711,7 +712,7 @@ void Fountain::bump(Actor& actorBumping) {
     } else {
       PropHandler& propHlr = eng.player->getPropHandler();
 
-      eng.log->addMsg("I drink from the fountain.");
+      eng.log->addMsg("I drink from the fountain...");
 
       switch(fountainType_) {
         case FountainType::dry: {} break;
@@ -728,13 +729,11 @@ void Fountain::bump(Actor& actorBumping) {
         } break;
 
         case FountainType::bless: {
-          propHlr.tryApplyProp(
-            new PropBlessed(eng, propTurnsStd));
+          propHlr.tryApplyProp(new PropBlessed(eng, propTurnsStd));
         } break;
 
         case FountainType::curse: {
-          propHlr.tryApplyProp(
-            new PropCursed(eng, propTurnsStd));
+          propHlr.tryApplyProp(new PropCursed(eng, propTurnsStd));
         } break;
 
         case FountainType::spirit: {
@@ -746,18 +745,47 @@ void Fountain::bump(Actor& actorBumping) {
         } break;
 
         case FountainType::disease: {
-          propHlr.tryApplyProp(
-            new PropDiseased(eng, propTurnsStd));
+          propHlr.tryApplyProp(new PropDiseased(eng, propTurnsSpecific, 50));
         } break;
 
         case FountainType::poison: {
-          propHlr.tryApplyProp(
-            new PropPoisoned(eng, propTurnsStd));
+          propHlr.tryApplyProp(new PropPoisoned(eng, propTurnsStd));
         } break;
 
         case FountainType::frenzy: {
-          propHlr.tryApplyProp(
-            new PropFrenzied(eng, propTurnsStd));
+          propHlr.tryApplyProp(new PropFrenzied(eng, propTurnsStd));
+        } break;
+
+        case FountainType::paralyze: {
+          propHlr.tryApplyProp(new PropParalyzed(eng, propTurnsStd));
+        } break;
+
+        case FountainType::blind: {
+          propHlr.tryApplyProp(new PropBlind(eng, propTurnsStd));
+        } break;
+
+        case FountainType::faint: {
+          propHlr.tryApplyProp(new PropFainted(eng, propTurnsSpecific, 10));
+        } break;
+
+        case FountainType::rFire: {
+          propHlr.tryApplyProp(new PropRFire(eng, propTurnsStd));
+        } break;
+
+        case FountainType::rCold: {
+          propHlr.tryApplyProp(new PropRCold(eng, propTurnsStd));
+        } break;
+
+        case FountainType::rElec: {
+          propHlr.tryApplyProp(new PropRElec(eng, propTurnsStd));
+        } break;
+
+        case FountainType::rConfusion: {
+          propHlr.tryApplyProp(new PropRConfusion(eng, propTurnsStd));
+        } break;
+
+        case FountainType::rFear: {
+          propHlr.tryApplyProp(new PropRFear(eng, propTurnsStd));
         } break;
 
         case FountainType::endOfFountainTypes: {} break;

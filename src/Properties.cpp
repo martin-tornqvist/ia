@@ -306,7 +306,7 @@ void PropDataHandler::initDataList() {
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propParalysed;
+  d.id = propParalyzed;
   d.stdRndTurns = Range(7, 9);
   d.name = "Paralyzed";
   d.nameShort = "Paralyzed";
@@ -718,7 +718,7 @@ Prop* PropHandler::makeProp(const PropId id, PropTurns turnsInit,
     case propFlared:
       return new PropFlared(eng, turnsInit, NR_TURNS);
 
-    case propParalysed:
+    case propParalyzed:
       return new PropParalyzed(eng, turnsInit, NR_TURNS);
 
     case propTerrified:
@@ -1366,13 +1366,15 @@ Prop::Prop(PropId id, Engine& engine, PropTurns turnsInit, int turns) :
 void PropBlessed::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
-  owningActor_->getPropHandler().endAppliedProp(propCursed, visionBlockers);
+  owningActor_->getPropHandler().endAppliedProp(
+    propCursed, visionBlockers, false);
 }
 
 void PropCursed::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
-  owningActor_->getPropHandler().endAppliedProp(propBlessed, visionBlockers);
+  owningActor_->getPropHandler().endAppliedProp(
+    propBlessed, visionBlockers, false);
 }
 
 void PropInfected::onNewTurn() {

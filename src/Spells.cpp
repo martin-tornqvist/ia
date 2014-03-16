@@ -675,7 +675,7 @@ SpellCastRetData SpellEnfeeble::cast_(Actor* const caster, Engine& eng) const {
   const int RND = Rnd::range(1, 5);
   switch(RND) {
     case 1: {propId = propConfused;}  break;
-    case 2: {propId = propParalysed;} break;
+    case 2: {propId = propParalyzed;} break;
     case 3: {propId = propSlowed;}    break;
     case 4: {propId = propBlind;}     break;
     case 5: {propId = propTerrified;} break;
