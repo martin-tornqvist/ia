@@ -148,7 +148,7 @@ string DeviceRepeller::getSpecificActivateMessage() {
 
 void DeviceRepeller::runGoodEffect() {
   const Pos& playerPos = eng.player->pos;
-  for(Actor* actor : eng.gameTime->actors_) {
+  for(Actor * actor : eng.gameTime->actors_) {
     if(actor != eng.player) {
       const Pos& otherPos = actor->pos;
       if(Utils::isPosAdj(playerPos, otherPos, false)) {
@@ -193,10 +193,11 @@ void DeviceTranslocator::runGoodEffect() {
 }
 
 //---------------------------------------------------- ELECTRIC LANTERN
-void DeviceElectricLantern::newTurnInInventory_() {
+void DeviceLantern::newTurnInInventory_() {
   if(isActivated_ && malfunctCooldown_ > 0) {
     malfunctCooldown_--;
     if(malfunctCooldown_ <= 0) {
+      malfState_ = LanternMalfState::working;
       eng.gameTime->updateLightMap();
       eng.player->updateFov();
       Renderer::drawMapAndInterface();
@@ -204,51 +205,57 @@ void DeviceElectricLantern::newTurnInInventory_() {
   }
 }
 
-void DeviceElectricLantern::printToggleMessage() {
+void DeviceLantern::printToggleMessage() {
   const string toggleStr = isActivated_ ? "I turn off" : "I turn on";
   eng.log->addMsg(toggleStr + " an Electric Lantern.");
 }
 
-void DeviceElectricLantern::toggle_() {
+void DeviceLantern::toggle_() {
   Audio::play(SfxId::electricLantern);
   eng.gameTime->updateLightMap();
   eng.player->updateFov();
   Renderer::drawMapAndInterface();
 }
 
-bool DeviceElectricLantern::isGivingLight() const {
-  return isActivated_ && malfunctCooldown_ <= 0;
+LanternLightSize DeviceLantern::getCurLightSize() const {
+  if(isActivated_) {
+    switch(malfState_) {
+      case LanternMalfState::working:     return LanternLightSize::normal;
+      case LanternMalfState::flicker:     return LanternLightSize::small;
+      case LanternMalfState::malfunction: return LanternLightSize::none;
+      case LanternMalfState::destroyed:   return LanternLightSize::none;
+    }
+  }
+  return LanternLightSize::none;
 }
 
-void DeviceElectricLantern::runBadEffect() {
+void DeviceLantern::runBadEffect() {
   if(malfunctCooldown_ <= 0) {
-    bool isVisionUpdateNeeded = false;
-    bool isItemDestroyed = false;
 
     const int RND = Rnd::percentile();
-    if(RND < 6) {
+
+    if(RND < 5) {
       eng.log->addMsg("My Electric Lantern breaks!");
       eng.player->getInv().removetemInGeneralWithPointer(this, false);
-      isVisionUpdateNeeded = true;
-      isItemDestroyed = true;
+      malfState_ = LanternMalfState::destroyed;
     } else if(RND < 20) {
       eng.log->addMsg("My Electric Lantern malfunctions.");
+      malfState_        = LanternMalfState::malfunction;
       malfunctCooldown_ = Rnd::range(3, 4);
-      isVisionUpdateNeeded = true;
-    } else if(RND < 50) {
-      eng.log->addMsg("My Electric Lantern flickers.");
-      malfunctCooldown_ = 2;
-      isVisionUpdateNeeded = true;
+    } else if(RND < 55) {
+      eng.log->addMsg("My Electric Lantern starts to flicker.");
+      malfState_        = LanternMalfState::flicker;
+      malfunctCooldown_ = Rnd::range(6, 12);
+    } else {
+      malfState_        = LanternMalfState::working;
     }
 
-    if(isVisionUpdateNeeded) {
+    if(malfState_ != LanternMalfState::working) {
       eng.gameTime->updateLightMap();
       eng.player->updateFov();
       Renderer::drawMapAndInterface();
     }
-    if(isItemDestroyed) {
-      delete this;
-    }
+    if(malfState_ == LanternMalfState::destroyed) {delete this;}
   }
 }
 

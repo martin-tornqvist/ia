@@ -100,14 +100,18 @@ private:
   string getSpecificActivateMessage() override;
 };
 
-class DeviceElectricLantern: public Device {
+enum class LanternMalfState {working, flicker, malfunction, destroyed};
+enum class LanternLightSize {none, small, normal};
+
+class DeviceLantern: public Device {
 public:
-  DeviceElectricLantern(ItemData* const itemData, Engine& engine) :
-    Device(itemData, engine), malfunctCooldown_(-1) {}
+  DeviceLantern(ItemData* const itemData, Engine& engine) :
+    Device(itemData, engine), malfunctCooldown_(-1),
+    malfState_(LanternMalfState::working) {}
 
-  ~DeviceElectricLantern() override {}
+  ~DeviceLantern() override {}
 
-  bool isGivingLight() const;
+  LanternLightSize getCurLightSize() const;
 
 private:
   void printToggleMessage() override;
@@ -119,6 +123,7 @@ private:
   void toggle_() override;
 
   int malfunctCooldown_;
+  LanternMalfState malfState_;
 };
 
 

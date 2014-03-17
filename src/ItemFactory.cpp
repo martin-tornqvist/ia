@@ -145,7 +145,7 @@ Item* ItemFactory::spawnItem(const ItemId itemId, const int NR_ITEMS) {
     case item_deviceRepeller:           item = new DeviceRepeller(d, eng); break;
     case item_deviceRejuvenator:        item = new DeviceRejuvenator(d, eng); break;
     case item_deviceTranslocator:       item = new DeviceTranslocator(d, eng); break;
-    case item_deviceElectricLantern:    item = new DeviceElectricLantern(d, eng); break;
+    case item_deviceElectricLantern:    item = new DeviceLantern(d, eng); break;
 
     case item_medicalBag:               item = new MedicalBag(d, eng); break;
 

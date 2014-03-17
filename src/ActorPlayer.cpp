@@ -1239,29 +1239,28 @@ void Player::punch(Actor& actorToPunch) {
   delete punchWeapon;
 }
 
-void Player::addLight_(
-  bool light[MAP_W][MAP_H]) const {
+void Player::addLight_(bool light[MAP_W][MAP_H]) const {
+  bool isUsingLightGivingItemSmall  = false;              //3x3 cells
+  bool isUsingLightGivingItemNormal = flareFuseTurns > 0;
 
-  bool isUsingLightGivingItem = flareFuseTurns > 0;
-
-  if(isUsingLightGivingItem == false) {
-    vector<Item*>& generalItems = inv_->getGeneral();
-    for(Item * const item : generalItems) {
-      if(item->getData().id == item_deviceElectricLantern) {
-        DeviceElectricLantern* const lantern =
-          dynamic_cast<DeviceElectricLantern*>(item);
-        if(lantern->isGivingLight()) {
-          isUsingLightGivingItem = true;
-          break;
-        }
+  vector<Item*>& generalItems = inv_->getGeneral();
+  for(Item * const item : generalItems) {
+    if(item->getData().id == item_deviceElectricLantern) {
+      DeviceLantern* const lantern = dynamic_cast<DeviceLantern*>(item);
+      LanternLightSize lightSize = lantern->getCurLightSize();
+      if(lightSize == LanternLightSize::small) {
+        isUsingLightGivingItemSmall = true;
+      } else if(lightSize == LanternLightSize::normal) {
+        isUsingLightGivingItemNormal = true;
+        break;
       }
     }
   }
 
-  if(isUsingLightGivingItem) {
+  if(isUsingLightGivingItemNormal) {
     bool myLight[MAP_W][MAP_H];
     Utils::resetArray(myLight, false);
-    const int RADI = FOV_STD_RADI_INT; //LitFlare::getLightRadius();
+    const int RADI = FOV_STD_RADI_INT;
     Pos x0y0(max(0, pos.x - RADI), max(0, pos.y - RADI));
     Pos x1y1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
 
@@ -1279,6 +1278,12 @@ void Player::addLight_(
         if(myLight[x][y]) {
           light[x][y] = true;
         }
+      }
+    }
+  } else if(isUsingLightGivingItemSmall) {
+    for(int y = pos.y - 1; y <= pos.y + 1; y++) {
+      for(int x = pos.x - 1; x <= pos.x + 1; x++) {
+        light[x][y] = true;
       }
     }
   }

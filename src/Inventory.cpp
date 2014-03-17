@@ -1,6 +1,7 @@
 #include "Inventory.h"
 
 #include <algorithm>
+#include <assert.h>
 
 #include "Item.h"
 #include "ItemWeapon.h"
@@ -323,18 +324,15 @@ void Inventory::deleteItemInGeneralWithElement(const unsigned ELEMENT) {
 void Inventory::removetemInGeneralWithPointer(
   Item* const item, const bool DELETE_ITEM) {
 
-  for(unsigned int i = 0; i < general_.size(); i++) {
+  for(size_t i = 0; i < general_.size(); i++) {
     if(general_.at(i) == item) {
-      if(DELETE_ITEM) {
-        delete item;
-      }
+      if(DELETE_ITEM) {delete item;}
       general_.erase(general_.begin() + i);
       return;
     }
   }
-  trace << "[WARNING] Could not find parameter item in general inventory, in Inventory::deleteItemInGeneralWithPointer()" << endl;
+  assert(false && "Parameter item not in general inventory");
 }
-
 
 void Inventory::decrItemInGeneral(unsigned element) {
   Item* item = general_.at(element);
