@@ -10,9 +10,7 @@ class Engine;
 
 namespace RenderInventory {
 
-void drawBrowseSlots(const MenuBrowser& browser,
-                     const vector<InventorySlotButton>& invSlotButtons,
-                     Engine& eng);
+void drawBrowseSlots(const MenuBrowser& browser, Engine& eng);
 
 void drawBrowseInventory(const MenuBrowser& browser,
                          const vector<unsigned int>& genInvIndexes,

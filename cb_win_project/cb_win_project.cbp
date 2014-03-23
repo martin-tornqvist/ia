@@ -184,7 +184,6 @@
 		<Unit filename="../include/Input.h" />
 		<Unit filename="../include/Inventory.h" />
 		<Unit filename="../include/InventoryHandler.h" />
-		<Unit filename="../include/InventoryIndexes.h" />
 		<Unit filename="../include/Item.h" />
 		<Unit filename="../include/ItemAmmo.h" />
 		<Unit filename="../include/ItemArmor.h" />
@@ -289,7 +288,6 @@
 		<Unit filename="../src/Input.cpp" />
 		<Unit filename="../src/Inventory.cpp" />
 		<Unit filename="../src/InventoryHandler.cpp" />
-		<Unit filename="../src/InventoryIndexes.cpp" />
 		<Unit filename="../src/Item.cpp" />
 		<Unit filename="../src/ItemArmor.cpp" />
 		<Unit filename="../src/ItemArtifact.cpp" />

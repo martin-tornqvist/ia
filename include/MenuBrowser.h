@@ -15,15 +15,14 @@ public:
     pos_(upLeft_) {}
 
   void navigate(const Dir dir);
-  void navigate(const char KEY);
 
-  char enter() const;
+  int getElement() const;
 
   int getNrOfItemsInFirstList()   const {return nrItemsA_;}
   int getNrOfItemsInSecondList()  const {return nrItemsB_;}
   Pos getPos()                    const {return pos_;}
 
-  bool isPosAtKey(const char KEY) const;
+  bool isPosAtElement(const int ELEMENT) const;
 
   void setY(const int Y);
 

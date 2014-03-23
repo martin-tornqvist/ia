@@ -287,35 +287,35 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
   while(done == false) {
     const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
-      case menuAction_browsed: {
+      case MenuAction::browsed: {
         renderMenu(browser);
       } break;
 
-      case menuAction_esc: {
+      case MenuAction::esc: {
         *quitGame = true;
         done      = true;
       } break;
 
-      case menuAction_space:
-      case menuAction_selectedWithShift: {} break;
+      case MenuAction::space:
+      case MenuAction::selectedShift: {} break;
 
-      case menuAction_selected: {
-        if(browser.isPosAtKey('a')) {
+      case MenuAction::selected: {
+        if(browser.isPosAtElement(0)) {
           runInfo();
           renderMenu(browser);
         }
-        if(browser.isPosAtKey('b')) {
+        if(browser.isPosAtElement(1)) {
           eng.highScore->runHighScoreScreen();
           renderMenu(browser);
         }
-        if(browser.isPosAtKey('c')) {
+        if(browser.isPosAtElement(2)) {
           eng.log->displayHistory();
           renderMenu(browser);
         }
-        if(browser.isPosAtKey('d')) {
+        if(browser.isPosAtElement(3)) {
           done = true;
         }
-        if(browser.isPosAtKey('e')) {
+        if(browser.isPosAtElement(4)) {
           *quitGame = true;
           done      = true;
         }
@@ -364,27 +364,27 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   pos.set(55, 14);
   Renderer::drawText(
     "a) Information", panel_screen, pos,
-    browser.isPosAtKey('a') ? clrWhite : clrRedLgt);
+    browser.isPosAtElement(0) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
     "b) View the High Score", panel_screen, pos,
-    browser.isPosAtKey('b') ? clrWhite : clrRedLgt);
+    browser.isPosAtElement(1) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
     "c) View messages", panel_screen, pos,
-    browser.isPosAtKey('c') ? clrWhite : clrRedLgt);
+    browser.isPosAtElement(2) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
     "d) Return to main menu", panel_screen, pos,
-    browser.isPosAtKey('d') ? clrWhite : clrRedLgt);
+    browser.isPosAtElement(3) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
     "e) Quit the game", panel_screen, pos,
-    browser.isPosAtKey('e') ? clrWhite : clrRedLgt);
+    browser.isPosAtElement(4) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::updateScreen();

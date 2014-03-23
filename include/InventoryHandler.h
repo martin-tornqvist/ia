@@ -13,11 +13,6 @@ enum InventoryScreenId {
   endOfInventoryScreens
 };
 
-struct InventorySlotButton {
-  InventorySlot* inventorySlot;
-  char key;
-};
-
 class InventoryHandler {
 public:
   InventoryHandler(Engine& engine);
@@ -35,7 +30,7 @@ public:
   int browserPosToSetAfterDrop;
 
 private:
-  vector<InventorySlotButton> equipmentSlotButtons;
+//  vector<InventorySlotButton> equipmentSlotButtons;
 
   //The values in this vector refer to general inventory elements
   vector<unsigned int> generalItemsToShow;

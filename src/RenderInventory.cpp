@@ -3,7 +3,6 @@
 #include "Engine.h"
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
-#include "InventoryIndexes.h"
 #include "Log.h"
 #include "Renderer.h"
 
@@ -35,9 +34,7 @@ void drawItemSymbol(const Item& item, const Pos& pos) {
 
 namespace RenderInventory {
 
-void drawBrowseSlots(const MenuBrowser& browser,
-                     const vector<InventorySlotButton>& invSlotButtons,
-                     Engine& eng) {
+void drawBrowseSlots(const MenuBrowser& browser, Engine& eng) {
   Pos pos(0, 0);
 
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
@@ -51,17 +48,18 @@ void drawBrowseSlots(const MenuBrowser& browser,
 
   pos.y++;
 
-  for(unsigned int i = 0; i < invSlotButtons.size(); i++) {
+  Inventory& inv = eng.player->getInv();
+  vector<InventorySlot>& slots = inv.getSlots();
+
+  for(size_t i = 0; i < slots.size(); i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
-    str = "x) ";
-    str.at(0) = 'a' + i;
-    InventorySlot* const slot = invSlotButtons.at(i).inventorySlot;
-    str += slot->interfaceName;
+    const InventorySlot& slot = slots.at(i);
+    str = slot.interfaceName;
     pos.x = 0;
     Renderer::drawText(
       str, panel_screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
     pos.x = X_POS_ITEM_NAME;
-    Item* const item = slot->item;
+    Item* const item = slot.item;
     if(item == NULL) {
       pos.x += 2;
       Renderer::drawText(
@@ -75,11 +73,11 @@ void drawBrowseSlots(const MenuBrowser& browser,
 
       const ItemData& d = item->getData();
       PrimaryAttackMode attackMode = primaryAttackMode_none;
-      if(slot->id == slot_wielded || slot->id == slot_wieldedAlt) {
+      if(slot.id == slot_wielded || slot.id == slot_wieldedAlt) {
         attackMode =
           d.primaryAttackMode == primaryAttackMode_missile ?
           primaryAttackMode_melee : d.primaryAttackMode;
-      } else if(slot->id == slot_missiles) {
+      } else if(slot.id == slot_missiles) {
         attackMode = primaryAttackMode_missile;
       }
 
@@ -95,13 +93,12 @@ void drawBrowseSlots(const MenuBrowser& browser,
     pos.y++;
   }
 
-  str = "x) Browse backpack";
-  str.at(0) = invSlotButtons.back().key + 1;
+  str = "Browse backpack";
   pos.x = 0;
   pos.y += 1;
-  const bool IS_CUR_POS = browser.getPos().y == int(invSlotButtons.size());
+  const bool IS_CUR_POS = browser.getPos().y == int(slots.size());
   Renderer::drawText(str, panel_screen, pos,
-                         IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
+                     IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
 
   Renderer::updateScreen();
 }

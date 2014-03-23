@@ -110,51 +110,51 @@ void MainMenu::draw(const MenuBrowser& browser) const {
 
   Renderer::drawTextCentered(
     "New journey", panel_screen, pos,
-    browser.isPosAtKey('a') ? clrActive : clrInactive,
-    browser.isPosAtKey('a') ? clrActiveBg : clrInactiveBg);
+    browser.isPosAtElement(0) ? clrActive : clrInactive,
+    browser.isPosAtElement(0) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Resurrect", panel_screen, pos,
-    browser.isPosAtKey('b') ? clrActive : clrInactive,
-    browser.isPosAtKey('b') ? clrActiveBg : clrInactiveBg);
+    browser.isPosAtElement(1) ? clrActive : clrInactive,
+    browser.isPosAtElement(1) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Manual", panel_screen, pos,
-    browser.isPosAtKey('c') ? clrActive : clrInactive,
-    browser.isPosAtKey('c') ? clrActiveBg : clrInactiveBg);
+    browser.isPosAtElement(2) ? clrActive : clrInactive,
+    browser.isPosAtElement(2) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Options", panel_screen, pos,
-    browser.isPosAtKey('d') ? clrActive : clrInactive,
-    browser.isPosAtKey('d') ? clrActiveBg : clrInactiveBg);
+    browser.isPosAtElement(3) ? clrActive : clrInactive,
+    browser.isPosAtElement(3) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Credits", panel_screen, pos,
-    browser.isPosAtKey('e') ? clrActive : clrInactive,
-    browser.isPosAtKey('e') ? clrActiveBg : clrInactiveBg);
+    browser.isPosAtElement(4) ? clrActive : clrInactive,
+    browser.isPosAtElement(4) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "High scores", panel_screen, pos,
-    browser.isPosAtKey('f') ? clrActive : clrInactive,
-    browser.isPosAtKey('f') ? clrActiveBg : clrInactiveBg);
+    browser.isPosAtElement(5) ? clrActive : clrInactive,
+    browser.isPosAtElement(5) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Escape to reality", panel_screen, pos,
-    browser.isPosAtKey('g') ? clrActive : clrInactive,
-    browser.isPosAtKey('g') ? clrActiveBg : clrInactiveBg);
+    browser.isPosAtElement(6) ? clrActive : clrInactive,
+    browser.isPosAtElement(6) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   if(IS_DEBUG_MODE) {
     Renderer::drawTextCentered(
       "DEBUG: RUN BOT", panel_screen, pos,
-      browser.isPosAtKey('h') ? clrActive : clrInactive,
-      browser.isPosAtKey('h') ? clrActiveBg : clrInactiveBg);
+      browser.isPosAtElement(7) ? clrActive : clrInactive,
+      browser.isPosAtElement(8) ? clrActiveBg : clrInactiveBg);
     pos.y++;
   }
 
@@ -163,7 +163,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   const int BOX_X0      = pos.x - BOX_W_HALF;
   const int BOX_X1      = pos.x + BOX_W_HALF;
   Renderer::drawPopupBox(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
-                             panel_screen);
+                         panel_screen);
 
   Renderer::drawTextCentered(
     gameVersionStr + " - " + __DATE__ + " (c) 2011-2014 Martin Tornqvist",
@@ -189,21 +189,21 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
     const MenuAction action = eng.menuInputHandler->getAction(browser);
 
     switch(action) {
-      case menuAction_browsed: {
+      case MenuAction::browsed: {
         draw(browser);
       } break;
 
-      case menuAction_esc: {
+      case MenuAction::esc: {
         quit    = true;
         return gameEntry_new;
       } break;
 
-      case menuAction_space:
-      case menuAction_selectedWithShift: {} break;
+      case MenuAction::space:
+      case MenuAction::selectedShift: {} break;
 
-      case menuAction_selected: {
-        if(browser.isPosAtKey('a')) {return gameEntry_new;}
-        if(browser.isPosAtKey('b')) {
+      case MenuAction::selected: {
+        if(browser.isPosAtElement(0)) {return gameEntry_new;}
+        if(browser.isPosAtElement(1)) {
           if(eng.saveHandler->isSaveAvailable()) {
             eng.saveHandler->load();
             eng.gameTime->insertActorInLoop(dynamic_cast<Actor*>(eng.player));
@@ -215,28 +215,28 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
             return gameEntry_new;
           }
         }
-        if(browser.isPosAtKey('c')) {
+        if(browser.isPosAtElement(2)) {
           eng.manual->run();
           draw(browser);
         }
-        if(browser.isPosAtKey('d')) {
+        if(browser.isPosAtElement(3)) {
           Config::runOptionsMenu(eng);
           draw(browser);
         }
-        if(browser.isPosAtKey('e')) {
+        if(browser.isPosAtElement(4)) {
           eng.credits->run();
           draw(browser);
         }
-        if(browser.isPosAtKey('f')) {
+        if(browser.isPosAtElement(5)) {
           eng.highScore->runHighScoreScreen();
           draw(browser);
         }
-        if(browser.isPosAtKey('g')) {
+        if(browser.isPosAtElement(6)) {
           quit    = true;
           return gameEntry_new;
         }
         if(IS_DEBUG_MODE) {
-          if(browser.isPosAtKey('h')) {
+          if(browser.isPosAtElement(7)) {
             Config::setBotPlaying();
             return gameEntry_new;
           }

@@ -8,13 +8,7 @@
 
 class Engine;
 
-enum MenuAction {
-  menuAction_browsed,
-  menuAction_selected,
-  menuAction_selectedWithShift,
-  menuAction_space,
-  menuAction_esc,
-};
+enum class MenuAction {browsed, selected, selectedShift, space, esc};
 
 class MenuInputHandler {
 public:
@@ -24,9 +18,7 @@ private:
   Engine& eng;
 
   friend class Engine;
-  MenuInputHandler(Engine& engine) :
-    eng(engine) {
-  }
+  MenuInputHandler(Engine& engine) : eng(engine) {}
 };
 
 #endif

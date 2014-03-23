@@ -104,23 +104,23 @@ int Popup::showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
     const MenuAction action = eng.menuInputHandler->getAction(browser);
 
     switch(action) {
-      case menuAction_browsed: {
+      case MenuAction::browsed: {
         menuMsgDrawingHelper(
           lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
           TEXT_H_TOT, title);
       } break;
 
-      case menuAction_esc:
-      case menuAction_space: {
+      case MenuAction::esc:
+      case MenuAction::space: {
         if(DRAW_MAP_AND_INTERFACE) {
           Renderer::drawMapAndInterface();
         }
         return NR_CHOICES - 1;
       } break;
 
-      case menuAction_selectedWithShift: {} break;
+      case MenuAction::selectedShift: {} break;
 
-      case menuAction_selected: {
+      case MenuAction::selected: {
         if(DRAW_MAP_AND_INTERFACE) {
           Renderer::drawMapAndInterface();
         }

@@ -34,7 +34,6 @@
 #include "Highscore.h"
 #include "Input.h"
 #include "InventoryHandler.h"
-#include "InventoryIndexes.h"
 #include "ItemData.h"
 #include "ItemDrop.h"
 #include "ItemFactory.h"
@@ -121,7 +120,7 @@ void Engine::initGame() {
   populateItems = new PopulateItems(*this);
   populateMonsters = new PopulateMonsters(*this);
   populateTraps = new PopulateTraps(*this);
-  inventoryIndexes = new InventoryIndexes;
+//  inventoryIndexes = new InventoryIndexes;
   query = new Query(*this);
   bash = new Bash(*this);
   close = new Close(*this);
@@ -181,7 +180,7 @@ void Engine::cleanupGame() {
   delete populateItems;
   delete populateMonsters;
   delete populateTraps;
-  delete inventoryIndexes;
+//  delete inventoryIndexes;
   delete query;
   delete actorDataHandler;
   delete scrollNameHandler;

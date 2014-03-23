@@ -8,33 +8,35 @@
 
 1. Command list
 ------------------------------------------------
-   Esc  Menu (manual, options, quit)
-   @    Display character description
-   TAB  Melee attack adjacent monster
-   a    Examine something on the map
-   b    Bash or kick something on the map
-   c    Close door
-   d    Disarm trap
-   e    Use item or throw held explosive
-   f    Aim/fire wielded firearm
-   g    Pick up item
-   i    Browse backpack
-   j    Jam door with an iron spike
-   l    Display descriptions of things in view
-   m    Display message history
-   r    Reload wielded firearm
-   s    Wait and search for 5 turns
-   t    Throw a missile from the missile slot
-   u    Unload or pick up ammunition from the ground
-   w    Handle equipment (wear or wield items)
-   x    Cast previous spell
-   X    Select and cast any memorized spell
-   z    Swap to alternative weapon
+   Esc    Menu (manual, options, quit)
+   Space  Cancel, close
+   Enter  Select something in a menu
+   @      Display character information
+   TAB    Melee attack adjacent monster
+   a      Examine something on the map
+   c      Close door
+   d      Disarm trap
+   D      Jam door with an iron spike
+   e      Use item or throw held explosive
+   f      Aim/fire wielded firearm
+   g      Pick up item
+   i      Browse backpack
+   m      Display message history
+   p      Unload or pick up ammunition from the ground
+   q      Bash or kick something on the map
+   r      Reload wielded firearm
+   s      Wait and search for 5 turns
+   t      Throw a missile from the missile slot
+   v      View descriptions of things on the map
+   w      Handle equipment (wear or wield items)
+   x      Cast previous spell
+   X      Select and cast any memorized spell
+   z      Swap to alternative weapon
 
 
 2. Movement and interaction
 ------------------------------------------------
-You can move in eight directions by using the numpad keys in the following manner:
+You can move in eight directions by using the numpad keys in this manner:
 
    7 8 9
     \|/
@@ -42,7 +44,7 @@ You can move in eight directions by using the numpad keys in the following manne
     /|\
    1 2 3
 
-The '5' key or period (.) key issues a command to wait a turn.
+The '5' key or period key (.) makes you wait for a turn.
 
 You can also use the arrow keys for movement. To move diagonally using the arrow keys, hold shift or ctrl:
    Shift + left  = up left
@@ -50,7 +52,15 @@ You can also use the arrow keys for movement. To move diagonally using the arrow
    Ctrl  + left  = down left
    Ctrl  + right = down right
 
-Page up/Page down/Home/End can also be used for diagonal movement.
+Page up, Page down, Home, and End can also be used for diagonal movement.
+
+Vi keys are also supported:
+
+   y k u
+    \|/
+   h-.-l
+    /|\
+   b j n
 
 Certain things can be interacted with by moving into them (i.e. by "bumping" them), for example:
    * Moving into enemies results in a melee attack

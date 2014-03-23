@@ -71,7 +71,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
       retNum = retNum / 10;
       Renderer::coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
       Renderer::drawText((retNum == 0 ? "" : toString(retNum)) + "_",
-                             panel_screen, pos, clr);
+                         panel_screen, pos, clr);
       Renderer::updateScreen();
       continue;
     }
@@ -81,7 +81,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
       retNum = max(MIN, retNum * 10 + curDigit);
       Renderer::coverArea(panel_screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
       Renderer::drawText((retNum == 0 ? "" : toString(retNum)) + "_",
-                             panel_screen, pos, clr);
+                         panel_screen, pos, clr);
       Renderer::updateScreen();
     }
   }
@@ -100,11 +100,13 @@ void Query::waitForEscOrSpace() const {
 Pos Query::dir() const {
   KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
 
-  while(d.sdlKey_ != SDLK_RIGHT && d.sdlKey_ != SDLK_UP &&
-        d.sdlKey_ != SDLK_LEFT && d.sdlKey_ != SDLK_DOWN &&
-        d.sdlKey_ != SDLK_ESCAPE && d.sdlKey_ != SDLK_SPACE &&
-        d.sdlKey_ != SDLK_PAGEUP && d.sdlKey_ != SDLK_HOME &&
-        d.sdlKey_ != SDLK_END && d.sdlKey_ != SDLK_PAGEDOWN &&
+  while(d.sdlKey_ != SDLK_RIGHT   && d.sdlKey_ != SDLK_UP       &&
+        d.sdlKey_ != SDLK_LEFT    && d.sdlKey_ != SDLK_DOWN     &&
+        d.sdlKey_ != SDLK_ESCAPE  && d.sdlKey_ != SDLK_SPACE    &&
+        d.sdlKey_ != SDLK_PAGEUP  && d.sdlKey_ != SDLK_HOME     &&
+        d.sdlKey_ != SDLK_END     && d.sdlKey_ != SDLK_PAGEDOWN &&
+        d.key_ != 'h' && d.key_ != 'j' && d.key_ != 'k' && d.key_ != 'l' &&
+        d.key_ != 'y' && d.key_ != 'u' && d.key_ != 'b' && d.key_ != 'n' &&
         (d.key_ < '1' || d.key_ > '9' || d.key_ == '5')) {
     d = Input::readKeysUntilFound(eng);
   }
@@ -112,7 +114,7 @@ Pos Query::dir() const {
   if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
     return Pos(0, 0);
   }
-  if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
+  if(d.sdlKey_ == SDLK_RIGHT    || d.key_ == '6' || d.key_ == 'l') {
     if(d.isShiftHeld_) {
       return Pos(1, -1);
     } else if(d.isCtrlHeld_) {
@@ -121,16 +123,16 @@ Pos Query::dir() const {
       return Pos(1, 0);
     }
   }
-  if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
+  if(d.sdlKey_ == SDLK_PAGEUP   || d.key_ == '9' || d.key_ == 'u') {
     return Pos(1, -1);
   }
-  if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
+  if(d.sdlKey_ == SDLK_UP       || d.key_ == '8' || d.key_ == 'k') {
     return Pos(0, -1);
   }
-  if(d.sdlKey_ == SDLK_END || d.key_ == '7') {
+  if(d.sdlKey_ == SDLK_END      || d.key_ == '7' || d.key_ == 'y') {
     return Pos(-1, -1);
   }
-  if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
+  if(d.sdlKey_ == SDLK_LEFT     || d.key_ == '4' || d.key_ == 'h') {
     if(d.isShiftHeld_) {
       return Pos(-1, -1);
     } else if(d.isCtrlHeld_) {
@@ -139,13 +141,13 @@ Pos Query::dir() const {
       return Pos(-1, 0);
     }
   }
-  if(d.sdlKey_ == SDLK_END || d.key_ == '1') {
+  if(d.sdlKey_ == SDLK_END      || d.key_ == '1' || d.key_ == 'b') {
     return Pos(-1, 1);
   }
-  if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
+  if(d.sdlKey_ == SDLK_DOWN     || d.key_ == '2' || d.key_ == 'j') {
     return Pos(0, 1);
   }
-  if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3') {
+  if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3' || d.key_ == 'n') {
     return Pos(1, 1);
   }
 

@@ -6,7 +6,6 @@
 #include "ItemExplosive.h"
 #include "ActorPlayer.h"
 #include "ItemPotion.h"
-#include "InventoryIndexes.h"
 #include "MenuBrowser.h"
 #include "Log.h"
 #include "RenderInventory.h"
@@ -118,53 +117,42 @@ void InventoryHandler::runSlotsScreen() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   Renderer::drawMapAndInterface();
 
-  Inventory& inv                  = eng.player->getInv();
-  vector<InventorySlot>& invSlots = inv.getSlots();
+  Inventory& inv                = eng.player->getInv();
+  vector<InventorySlot>& slots  = inv.getSlots();
 
   inv.sortGeneralInventory(eng);
 
-  equipmentSlotButtons.resize(0);
-  char key = 'a';
-  InventorySlotButton inventorySlotButton;
-  for(InventorySlot & slot : invSlots) {
-    inventorySlotButton.inventorySlot = &slot;
-    inventorySlotButton.key           = key;
-    key++;
-    equipmentSlotButtons.push_back(inventorySlotButton);
-  }
-
-  MenuBrowser browser(invSlots.size() + 1, 0);
+  MenuBrowser browser(slots.size() + 1, 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
-  RenderInventory::drawBrowseSlots(browser, equipmentSlotButtons, eng);
+  RenderInventory::drawBrowseSlots(browser, eng);
 
   while(true) {
     const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
-      case menuAction_browsed: {
-        RenderInventory::drawBrowseSlots(browser, equipmentSlotButtons, eng);
+      case MenuAction::browsed: {
+        RenderInventory::drawBrowseSlots(browser, eng);
       } break;
 
-      case menuAction_selectedWithShift: {
+      case MenuAction::selectedShift: {
         if(runDropScreen(browser.getPos().y)) {
           screenToOpenAfterDrop = inventoryScreen_slots;
           browserPosToSetAfterDrop = browser.getPos().y;
           return;
         }
-        RenderInventory::drawBrowseSlots(browser, equipmentSlotButtons, eng);
+        RenderInventory::drawBrowseSlots(browser, eng);
       } break;
 
-      case menuAction_selected: {
-        const char charIndex = 'a' + browser.getPos().y;
-        if(charIndex >= 'a' && charIndex <= equipmentSlotButtons.back().key) {
-          InventorySlot& slot = invSlots.at(charIndex - 'a');
+      case MenuAction::selected: {
+        const int elementSelected = browser.getElement();
+        if(elementSelected < int(slots.size())) {
+          InventorySlot& slot = slots.at(elementSelected);
           if(slot.item == NULL) {
             if(runEquipScreen(&slot)) {
               Renderer::drawMapAndInterface();
               return;
             } else {
-              RenderInventory::drawBrowseSlots(
-                browser, equipmentSlotButtons, eng);
+              RenderInventory::drawBrowseSlots(browser, eng);
             }
           } else {
             Item* const item = slot.item;
@@ -185,8 +173,7 @@ void InventoryHandler::runSlotsScreen() {
               eng.gameTime->actorDidAct();
               return;
             } else {
-              RenderInventory::drawBrowseSlots(
-                browser, equipmentSlotButtons, eng);
+              RenderInventory::drawBrowseSlots(browser, eng);
             }
 
           }
@@ -196,8 +183,8 @@ void InventoryHandler::runSlotsScreen() {
         }
       } break;
 
-      case menuAction_esc:
-      case menuAction_space: {
+      case MenuAction::esc:
+      case MenuAction::space: {
         Renderer::drawMapAndInterface();
         return;
       } break;
@@ -223,18 +210,18 @@ bool InventoryHandler::runUseScreen() {
   while(true) {
     const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
-      case menuAction_browsed: {
+      case MenuAction::browsed: {
         RenderInventory::drawUse(browser, generalItemsToShow, eng);
       } break;
 
-      case menuAction_selected: {
+      case MenuAction::selected: {
         const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
         activateDefault(INV_ELEM);
         Renderer::drawMapAndInterface();
         return true;
       } break;
 
-      case menuAction_selectedWithShift: {
+      case MenuAction::selectedShift: {
         const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
         if(
           runDropScreen(
@@ -246,8 +233,8 @@ bool InventoryHandler::runUseScreen() {
         RenderInventory::drawUse(browser, generalItemsToShow, eng);
       } break;
 
-      case menuAction_esc:
-      case menuAction_space: {
+      case MenuAction::esc:
+      case MenuAction::space: {
         Renderer::drawMapAndInterface();
         return false;
       } break;
@@ -310,12 +297,12 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   while(true) {
     const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
-      case menuAction_browsed: {
+      case MenuAction::browsed: {
         RenderInventory::drawEquip(
           browser, slotToEquip->id, generalItemsToShow, eng);
       } break;
 
-      case menuAction_selected: {
+      case MenuAction::selected: {
         const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
         eng.player->getInv().equipGeneralItemAndPossiblyEndTurn(
           INV_ELEM, slotToEquip->id, eng);
@@ -325,7 +312,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
         return true;
       } break;
 
-      case menuAction_selectedWithShift: {
+      case MenuAction::selectedShift: {
         const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
         if(
           runDropScreen(
@@ -338,8 +325,8 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
           browser, slotToEquip->id, generalItemsToShow, eng);
       } break;
 
-      case menuAction_esc:
-      case menuAction_space: {return false;} break;
+      case MenuAction::esc:
+      case MenuAction::space: {return false;} break;
     }
   }
 }
@@ -362,13 +349,13 @@ void InventoryHandler::runBrowseInventory() {
   while(true) {
     const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
-      case menuAction_browsed: {
+      case MenuAction::browsed: {
         RenderInventory::drawBrowseInventory(browser, generalItemsToShow, eng);
       } break;
 
-      case menuAction_selected: {} break;
+      case MenuAction::selected: {} break;
 
-      case menuAction_selectedWithShift: {
+      case MenuAction::selectedShift: {
         const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
         if(
           runDropScreen(
@@ -380,8 +367,8 @@ void InventoryHandler::runBrowseInventory() {
         RenderInventory::drawBrowseInventory(browser, generalItemsToShow, eng);
       } break;
 
-      case menuAction_esc:
-      case menuAction_space: {
+      case MenuAction::esc:
+      case MenuAction::space: {
         return;
       } break;
     }

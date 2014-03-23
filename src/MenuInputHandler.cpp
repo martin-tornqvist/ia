@@ -1,51 +1,33 @@
 #include "MenuInputHandler.h"
 
 #include "Engine.h"
+
 #include "Input.h"
+#include "Config.h"
 
 MenuAction MenuInputHandler::getAction(MenuBrowser& browser) {
   while(true) {
     KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
 
-    if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
+    if(d.sdlKey_ == SDLK_RIGHT        || d.key_ == '6' || d.key_ == 'l') {
       browser.navigate(Dir::right);
-      return menuAction_browsed;
-    } else if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
+      return MenuAction::browsed;
+    } else if(d.sdlKey_ == SDLK_LEFT  || d.key_ == '4' || d.key_ == 'h') {
       browser.navigate(Dir::left);
-      return menuAction_browsed;
-    } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
+      return MenuAction::browsed;
+    } else if(d.sdlKey_ == SDLK_UP    || d.key_ == '8' || d.key_ == 'k') {
       browser.navigate(Dir::up);
-      return menuAction_browsed;
-    } else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
+      return MenuAction::browsed;
+    } else if(d.sdlKey_ == SDLK_DOWN  || d.key_ == '2' || d.key_ == 'j') {
       browser.navigate(Dir::down);
-      return menuAction_browsed;
+      return MenuAction::browsed;
     } else if(d.sdlKey_ == SDLK_RETURN) {
-      d.key_ = browser.enter();
-      if(d.isShiftHeld_) {
-        d.key_ = d.key_ - 'a' + 'A';
-      }
+      return d.isShiftHeld_ ? MenuAction::selectedShift : MenuAction::selected;
     } else if(d.sdlKey_ == SDLK_SPACE) {
-      return menuAction_space;
+      return MenuAction::space;
     } else if(d.sdlKey_ == SDLK_ESCAPE) {
-      return menuAction_esc;
-    }
-
-    const int SIZE_OF_FIRST_LIST = browser.getNrOfItemsInFirstList();
-    const int SIZE_OF_SECOND_LIST = browser.getNrOfItemsInSecondList();
-
-    const int TOT_SIZE_OF_LISTS = SIZE_OF_FIRST_LIST + SIZE_OF_SECOND_LIST;
-
-////    const int NR_LETTERS_A_TO_Z = int('z' - 'a');
-
-    if((d.key_ >= 'a' && int(d.key_ - 'a') < TOT_SIZE_OF_LISTS)) {
-      browser.navigate(d.key_);
-      return menuAction_selected;
-    }
-    if((d.key_ >= 'A' && int(d.key_ - 'A') < TOT_SIZE_OF_LISTS)) {
-      browser.navigate(d.key_ - 'A' + 'a');
-      return menuAction_selectedWithShift;
+      return MenuAction::esc;
     }
   }
-  return menuAction_esc;
+  return MenuAction::esc;
 }
-

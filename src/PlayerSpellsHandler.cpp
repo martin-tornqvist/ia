@@ -34,18 +34,18 @@ void PlayerSpellsHandler::playerSelectSpellToCast() {
     while(true) {
       const MenuAction action = eng.menuInputHandler->getAction(browser);
       switch(action) {
-        case menuAction_browsed: {
+        case MenuAction::browsed: {
           draw(browser);
         } break;
 
-        case menuAction_esc:
-        case menuAction_space: {
+        case MenuAction::esc:
+        case MenuAction::space: {
           eng.log->clearLog();
           Renderer::drawMapAndInterface();
           return;
         } break;
 
-        case menuAction_selected: {
+        case MenuAction::selected: {
           tryCast(knownSpells_.at(browser.getPos().y));
           return;
         } break;
@@ -129,20 +129,17 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
   int y = 1;
 
   for(int i = 0; i < NR_SPELLS; i++) {
-    const char CURRENT_KEY = 'a' + i;
+    const int CURRENT_ELEMENT = i;
     const SDL_Color clr =
-      browser.isPosAtKey(CURRENT_KEY) ? clrWhite : clrRedLgt;
+      browser.isPosAtElement(CURRENT_ELEMENT) ? clrWhite : clrRedLgt;
     Spell* const spell = knownSpells_.at(i);
-    const string name = spell->getName();
-    string str = "a";
-    str[0] = CURRENT_KEY;
-    str += ") " + name;
+    string str = spell->getName();
 
     Renderer::drawText(str, panel_screen, Pos(0, y), clr);
 
     string fillStr = "";
-    const unsigned int FILL_SIZE = 28 - str.size();
-    for(unsigned int ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
+    const int FILL_SIZE = 28 - str.size();
+    for(int ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
     SDL_Color fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
     Renderer::drawText(fillStr, panel_screen, Pos(str.size(), y), fillClr);

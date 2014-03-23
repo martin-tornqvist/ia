@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <assert.h>
 
 #include <SDL_image.h>
 
@@ -24,7 +25,8 @@ namespace Config {
 //------------------------------------------------------------------------LOCAL
 namespace {
 
-const int OPT_Y0 = 2;
+const int NR_OPTIONS  = 15;
+const int OPT_Y0      = 1;
 
 string  fontName_                     = "";
 bool    isFullscreen_                 = false;
@@ -131,8 +133,8 @@ void playerSetsOption(const MenuBrowser* const browser,
       for(unsigned int i = 0; i < fontImageNames.size(); i++) {
         if(fontName_ == fontImageNames.at(i)) {
           fontName_ = i == fontImageNames.size() - 1 ?
-                     fontImageNames.front() :
-                     fontImageNames.at(i + 1);
+                      fontImageNames.front() :
+                      fontImageNames.at(i + 1);
           break;
         }
       }
@@ -143,8 +145,8 @@ void playerSetsOption(const MenuBrowser* const browser,
           for(unsigned int i = 0; i < fontImageNames.size(); i++) {
             if(fontName_ == fontImageNames.at(i)) {
               fontName_ = i == fontImageNames.size() - 1 ?
-                         fontImageNames.front() :
-                         fontImageNames.at(i + 1);
+                          fontImageNames.front() :
+                          fontImageNames.at(i + 1);
               break;
             }
           }
@@ -201,13 +203,12 @@ void playerSetsOption(const MenuBrowser* const browser,
         eng.query->number(p, clrNosfTealLgt, 1, 3, delayProjectileDraw_, true);
       if(NR != -1) {delayProjectileDraw_ = NR;}
     } break;
+
     case 12: {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         eng.query->number(p, clrNosfTealLgt, 1, 3, delayShotgun_, true);
-      if(NR != -1) {
-        delayShotgun_ = NR;
-      }
+      if(NR != -1) {delayShotgun_ = NR;}
     } break;
 
     case 13: {
@@ -223,12 +224,12 @@ void playerSetsOption(const MenuBrowser* const browser,
       setCellDimDependentVariables();
       Renderer::init(eng);
     } break;
+
+    default: {assert(false && "Illegal option number");} break;
   }
 }
 
-void draw(const MenuBrowser* const browser,
-          const int OPTION_VALUES_X_POS) {
-
+void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   const SDL_Color clrActive     = clrNosfTealLgt;
   const SDL_Color clrInactive   = clrNosfTealDrk;
 
@@ -244,195 +245,195 @@ void draw(const MenuBrowser* const browser,
   Renderer::drawText("-Options-", panel_screen, Pos(X0, 0), clrWhite);
 
   Renderer::drawText("Play audio", panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   str = isAudioEnabled_ ? "Yes" : "No";
   Renderer::drawText(str, panel_screen, Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   Renderer::drawText("Use tile set", panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   str = isTilesMode_ ? "Yes" : "No";
   Renderer::drawText(str, panel_screen, Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   Renderer::drawText("Font", panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   string fontDispName;
   TextFormatting::replaceAll(fontName_,      "images/",  "",   fontDispName);
   TextFormatting::replaceAll(fontDispName,  "_",        " ",  fontDispName);
   TextFormatting::replaceAll(fontDispName,  ".png",     "",   fontDispName);
   Renderer::drawText(fontDispName, panel_screen, Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   Renderer::drawText("Fullscreen (experimental)", panel_screen,
-                         Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     Pos(X0, OPT_Y0 + optNr),
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(isFullscreen_ ? "Yes" : "No",
-                         panel_screen, Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     panel_screen, Pos(X1, OPT_Y0 + optNr),
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Tiles mode wall symbol";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   str = isTilesWallSymbolFullSquare_ ? "Full square" : "Pseudo-3D";
   Renderer::drawText(str, panel_screen, Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Ascii mode wall symbol";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   str = isAsciiWallSymbolFullSquare_ ? "Full square" : "Hash sign";
   Renderer::drawText(str, panel_screen, Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   Renderer::drawText("Skip intro level", panel_screen,
-                         Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     Pos(X0, OPT_Y0 + optNr),
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   str = isIntroLevelSkipped_ ? "Yes" : "No";
   Renderer::drawText(str, panel_screen, Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Ranged weapon melee attack warning";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   str = isRangedWpnMeleeePrompt_ ? "Yes" : "No";
   Renderer::drawText(str, panel_screen, Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Ranged weapon auto reload";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   str = isRangedWpnAutoReload_ ? "Yes" : "No";
   Renderer::drawText(str, panel_screen, Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Key repeat delay (ms)";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(toString(keyRepeatDelay_), panel_screen,
-                         Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     Pos(X1, OPT_Y0 + optNr),
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Key repeat interval (ms)";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(toString(keyRepeatInterval_), panel_screen,
-                         Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     Pos(X1, OPT_Y0 + optNr),
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Projectile delay (ms)";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(toString(delayProjectileDraw_), panel_screen,
-                         Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     Pos(X1, OPT_Y0 + optNr),
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Shotgun delay (ms)";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(toString(delayShotgun_), panel_screen,
-                         Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     Pos(X1, OPT_Y0 + optNr),
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Explosion delay (ms)";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(":", panel_screen, Pos(X1 - 2, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   Renderer::drawText(toString(delayExplosion_), panel_screen,
-                         Pos(X1, OPT_Y0 + optNr),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     Pos(X1, OPT_Y0 + optNr),
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
   optNr++;
 
   str = "Reset to defaults";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr + 1),
-                         browser->getPos().y == optNr ?
-                         clrActive : clrInactive);
+                     browser->getPos().y == optNr ?
+                     clrActive : clrInactive);
 
   str = "space/esc to confirm changes";
   Renderer::drawText(str, panel_screen, Pos(X0, OPT_Y0 + optNr + 4),
-                         clrWhite);
+                     clrWhite);
 
   str  = "Tile set requires resolution 1280x720 or higher. ";
   str += "Using ASCII mode for smaller";
@@ -459,7 +460,7 @@ void setAllVariablesFromLines(vector<string>& lines) {
   trace << "Config::setAllVariablesFromLines()..." << endl;
 
   string curLine = lines.front();
-  isAudioEnabled_ = curLine == "0" ? false : true;
+  isAudioEnabled_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
@@ -480,27 +481,27 @@ void setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  isFullscreen_ = curLine == "0" ? false : true;
+  isFullscreen_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  isTilesWallSymbolFullSquare_ = curLine == "0" ? false : true;
+  isTilesWallSymbolFullSquare_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  isAsciiWallSymbolFullSquare_ = curLine == "0" ? false : true;
+  isAsciiWallSymbolFullSquare_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  isIntroLevelSkipped_ = curLine == "0" ? false : true;
+  isIntroLevelSkipped_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  isRangedWpnMeleeePrompt_ = curLine == "0" ? false : true;
+  isRangedWpnMeleeePrompt_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  isRangedWpnAutoReload_ = curLine == "0" ? false : true;
+  isRangedWpnAutoReload_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
@@ -522,6 +523,7 @@ void setAllVariablesFromLines(vector<string>& lines) {
   curLine = lines.front();
   delayExplosion_ = toInt(curLine);
   lines.erase(lines.begin());
+
   trace << "Config::setAllVariablesFromLines() [DONE]" << endl;
 }
 
@@ -529,11 +531,9 @@ void writeLinesToFile(vector<string>& lines) {
   ofstream file;
   file.open("config", ios::trunc);
 
-  for(unsigned int i = 0; i < lines.size(); i++) {
+  for(size_t i = 0; i < lines.size(); i++) {
     file << lines.at(i);
-    if(i != lines.size() - 1) {
-      file << endl;
-    }
+    if(i != lines.size() - 1) {file << endl;}
   }
 
   file.close();
@@ -542,15 +542,15 @@ void writeLinesToFile(vector<string>& lines) {
 void collectLinesFromVariables(vector<string>& lines) {
   trace << "Config::collectLinesFromVariables()..." << endl;
   lines.resize(0);
-  lines.push_back(isAudioEnabled_ == false ? "0" : "1");
-  lines.push_back(isTilesMode_ == false ? "0" : "1");
+  lines.push_back(isAudioEnabled_               ? "1" : "0");
+  lines.push_back(isTilesMode_                  ? "1" : "0");
   lines.push_back(fontName_);
-  lines.push_back(isFullscreen_ == false ? "0" : "1");
-  lines.push_back(isTilesWallSymbolFullSquare_ == false ? "0" : "1");
-  lines.push_back(isAsciiWallSymbolFullSquare_ == false ? "0" : "1");
-  lines.push_back(isIntroLevelSkipped_ == false ? "0" : "1");
-  lines.push_back(isRangedWpnMeleeePrompt_ == false ? "0" : "1");
-  lines.push_back(isRangedWpnAutoReload_ == false ? "0" : "1");
+  lines.push_back(isFullscreen_                 ? "1" : "0");
+  lines.push_back(isTilesWallSymbolFullSquare_  ? "1" : "0");
+  lines.push_back(isAsciiWallSymbolFullSquare_  ? "1" : "0");
+  lines.push_back(isIntroLevelSkipped_          ? "1" : "0");
+  lines.push_back(isRangedWpnMeleeePrompt_      ? "1" : "0");
+  lines.push_back(isRangedWpnAutoReload_        ? "1" : "0");
   lines.push_back(toString(keyRepeatDelay_));
   lines.push_back(toString(keyRepeatInterval_));
   lines.push_back(toString(delayProjectileDraw_));
@@ -616,7 +616,7 @@ void init() {
 }
 
 void runOptionsMenu(Engine& eng) {
-  MenuBrowser browser(15, 0);
+  MenuBrowser browser(NR_OPTIONS, 0);
   vector<string> lines;
 
   const int OPTION_VALUES_X_POS = 40;
@@ -626,19 +626,19 @@ void runOptionsMenu(Engine& eng) {
   while(true) {
     const MenuAction action = eng.menuInputHandler->getAction(browser);
     switch(action) {
-      case menuAction_browsed: {
+      case MenuAction::browsed: {
         draw(&browser, OPTION_VALUES_X_POS);
       } break;
 
-      case menuAction_esc:
-      case menuAction_space: {
+      case MenuAction::esc:
+      case MenuAction::space: {
         //Since ASCII mode wall symbol may have changed,
         //we need to redefine the feature data list
         eng.featureDataHandler->initDataList();
         return;
       } break;
 
-      case menuAction_selected: {
+      case MenuAction::selected: {
         draw(&browser, OPTION_VALUES_X_POS);
         playerSetsOption(&browser, OPTION_VALUES_X_POS, eng);
         collectLinesFromVariables(lines);

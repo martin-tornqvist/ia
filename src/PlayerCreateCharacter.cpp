@@ -27,17 +27,17 @@ void PlayerCreateCharacter::pickBg() const {
     while(true) {
       const MenuAction action = eng.menuInputHandler->getAction(browser);
       switch(action) {
-        case menuAction_browsed: {drawPickBg(bgs, browser);} break;
+        case MenuAction::browsed: {drawPickBg(bgs, browser);} break;
 
-        case menuAction_esc:
-        case menuAction_space: {} break;
+        case MenuAction::esc:
+        case MenuAction::space: {} break;
 
-        case menuAction_selected: {
+        case MenuAction::selected: {
           eng.playerBonHandler->pickBg(bgs.at(browser.getPos().y));
           return;
         } break;
 
-        case menuAction_selectedWithShift: {} break;
+        case MenuAction::selectedShift: {} break;
       }
     }
   }
@@ -135,14 +135,14 @@ void PlayerCreateCharacter::pickNewTrait(
       while(true) {
         const MenuAction action = eng.menuInputHandler->getAction(browser);
         switch(action) {
-          case menuAction_browsed: {
+          case MenuAction::browsed: {
             drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
           } break;
 
-          case menuAction_esc:
-          case menuAction_space: {} break;
+          case MenuAction::esc:
+          case MenuAction::space: {} break;
 
-          case menuAction_selected: {
+          case MenuAction::selected: {
             const Pos pos = browser.getPos();
             eng.playerBonHandler->pickTrait(
               pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));
@@ -152,7 +152,7 @@ void PlayerCreateCharacter::pickNewTrait(
             return;
           } break;
 
-          case menuAction_selectedWithShift: {} break;
+          case MenuAction::selectedShift: {} break;
         }
       }
     }

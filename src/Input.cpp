@@ -74,7 +74,7 @@ void cleanup() {
 
 void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
   //----------------------------------- MOVEMENT
-  if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
+  if(d.sdlKey_ == SDLK_RIGHT            || d.key_ == '6' || d.key_ == 'l') {
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.log->clearLog();
       if(d.isShiftHeld_) {
@@ -87,14 +87,14 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
+  } else if(d.sdlKey_ == SDLK_DOWN      || d.key_ == '2' || d.key_ == 'j') {
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.log->clearLog();
       eng.player->moveDir(Dir::down);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
+  } else if(d.sdlKey_ == SDLK_LEFT      || d.key_ == '4' || d.key_ == 'h') {
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.log->clearLog();
       if(d.isShiftHeld_) {
@@ -107,35 +107,35 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
+  } else if(d.sdlKey_ == SDLK_UP        || d.key_ == '8' || d.key_ == 'k') {
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.log->clearLog();
       eng.player->moveDir(Dir::up);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
+  } else if(d.sdlKey_ == SDLK_PAGEUP    || d.key_ == '9' || d.key_ == 'u') {
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.log->clearLog();
       eng.player->moveDir(Dir::upRight);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3') {
+  } else if(d.sdlKey_ == SDLK_PAGEDOWN  || d.key_ == '3' || d.key_ == 'n') {
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.log->clearLog();
       eng.player->moveDir(Dir::downRight);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_END || d.key_ == '1') {
+  } else if(d.sdlKey_ == SDLK_END       || d.key_ == '1' || d.key_ == 'b') {
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.log->clearLog();
       eng.player->moveDir(Dir::downLeft);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey_ == SDLK_HOME || d.key_ == '7') {
+  } else if(d.sdlKey_ == SDLK_HOME      || d.key_ == '7' || d.key_ == 'y') {
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.log->clearLog();
       eng.player->moveDir(Dir::upLeft);
@@ -189,7 +189,7 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
     return;
   }
   //----------------------------------- BASH
-  else if(d.key_ == 'b') {
+  else if((d.key_ == 'q')) {
     eng.log->clearLog();
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.bash->playerBash();
@@ -208,7 +208,7 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
     return;
   }
   //----------------------------------- JAM
-  else if(d.key_ == 'j') {
+  else if(d.key_ == 'D') {
     eng.log->clearLog();
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.jamWithSpike->playerJam();
@@ -226,7 +226,7 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
     return;
   }
   //----------------------------------- UNLOAD AMMO FROM GROUND
-  else if(d.key_ == 'u') {
+  else if(d.key_ == 'p')  {
     eng.log->clearLog();
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.itemPickup->tryUnloadWeaponOrPickupAmmoFromGround();
@@ -420,8 +420,8 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
     clearEvents();
     return;
   }
-  //-----------------------------------  LOOK AROUND
-  else if(d.key_ == 'l') {
+  //-----------------------------------  VIEW DESCRIPTIONS
+  else if(d.key_ == 'v') {
     eng.log->clearLog();
     if(eng.player->deadState == ActorDeadState::alive) {
       if(eng.player->getPropHandler().allowSee()) {

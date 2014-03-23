@@ -15,12 +15,13 @@
 #include "ItemFactory.h"
 #include "LineCalc.h"
 #include "Utils.h"
+#include "Config.h"
 
 void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
                       Item* itemThrown) {
   const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
 
-  if(d.sdlKey_ == SDLK_RIGHT || d.key_ == '6') {
+  if(d.sdlKey_ == SDLK_RIGHT    || d.key_ == '6' || d.key_ == 'l') {
     if(d.isShiftHeld_) {
       move(1, -1, markerTask, itemThrown);
     } else if(d.isCtrlHeld_) {
@@ -29,10 +30,10 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
       move(1, 0, markerTask, itemThrown);
     }
   }
-  if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
+  if(d.sdlKey_ == SDLK_UP       || d.key_ == '8' || d.key_ == 'k') {
     move(0, -1, markerTask, itemThrown);
   }
-  if(d.sdlKey_ == SDLK_LEFT || d.key_ == '4') {
+  if(d.sdlKey_ == SDLK_LEFT     || d.key_ == '4' || d.key_ == 'h') {
     if(d.isShiftHeld_) {
       move(-1, -1, markerTask, itemThrown);
     } else if(d.isCtrlHeld_) {
@@ -41,19 +42,19 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
       move(-1, 0, markerTask, itemThrown);
     }
   }
-  if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
+  if(d.sdlKey_ == SDLK_DOWN     || d.key_ == '2' || d.key_ == 'j') {
     move(0, 1, markerTask, itemThrown);
   }
-  if(d.sdlKey_ == SDLK_PAGEUP || d.key_ == '9') {
+  if(d.sdlKey_ == SDLK_PAGEUP   || d.key_ == '9' || d.key_ == 'u') {
     move(1, -1, markerTask, itemThrown);
   }
-  if(d.sdlKey_ == SDLK_HOME || d.key_ == '7') {
+  if(d.sdlKey_ == SDLK_HOME     || d.key_ == '7' || d.key_ == 'y') {
     move(-1, -1, markerTask, itemThrown);
   }
-  if(d.sdlKey_ == SDLK_END || d.key_ == '1') {
+  if(d.sdlKey_ == SDLK_END      || d.key_ == '1' || d.key_ == 'b') {
     move(-1, 1, markerTask, itemThrown);
   }
-  if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3') {
+  if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3' || d.key_ == 'n') {
     move(1, 1, markerTask, itemThrown);
   }
   // ------------------------------------------------------- AIM RANGED WEAPON
@@ -79,7 +80,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
     }
   }
   // ------------------------------------------------------- LOOK
-  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'l') {
+  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'v') {
     if(markerTask == markerTask_look) {
       eng.look->printExtraActorDescription(pos_);
       move(0, 0, markerTask_look, itemThrown);

@@ -59,7 +59,6 @@ class BresenhamLine;
 class PopulateItems;
 class PopulateMonsters;
 class PopulateTraps;
-class InventoryIndexes;
 class Query;
 class ActorDataHandler;
 class ScrollNameHandler;
@@ -136,7 +135,6 @@ public:
   PopulateItems* populateItems;
   PopulateMonsters* populateMonsters;
   PopulateTraps* populateTraps;
-  InventoryIndexes* inventoryIndexes;
   Query* query;
   ActorDataHandler* actorDataHandler;
   ScrollNameHandler* scrollNameHandler;
