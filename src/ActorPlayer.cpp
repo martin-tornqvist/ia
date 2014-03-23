@@ -49,16 +49,16 @@ Player::Player(Engine& engine) :
   shockTemp_(0.0),
   permShockTakenCurTurn_(0.0),
   nrMovesUntilFreeAction_(-1),
-  carryWeightBase(450) {}
+  carryWeightBase_(450) {}
 
 void Player::spawnStartItems() {
   data_->abilityVals.reset();
 
-  for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
-    insanityPhobias[i] = false;
+  for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
+    phobias[i] = false;
   }
-  for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
-    insanityObsessions[i] = false;
+  for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+    obsessions[i] = false;
   }
 
   int NR_CARTRIDGES        = Rnd::range(1, 2);
@@ -150,11 +150,11 @@ void Player::addSaveLines(vector<string>& lines) const {
     lines.push_back(toString(data_->abilityVals.getRawVal(AbilityId(i))));
   }
 
-  for(int i = 0; i < endOfInsanityPhobias; i++) {
-    lines.push_back(insanityPhobias[i] == 0 ? "0" : "1");
+  for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
+    lines.push_back(phobias[i] == 0 ? "0" : "1");
   }
-  for(int i = 0; i < endOfInsanityObsessions; i++) {
-    lines.push_back(insanityObsessions[i] == 0 ? "0" : "1");
+  for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+    lines.push_back(obsessions[i] == 0 ? "0" : "1");
   }
 }
 
@@ -200,12 +200,12 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
     lines.erase(lines.begin());
   }
 
-  for(int i = 0; i < endOfInsanityPhobias; i++) {
-    insanityPhobias[i] = lines.front() == "0" ? false : true;
+  for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
+    phobias[i] = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
   }
-  for(int i = 0; i < endOfInsanityObsessions; i++) {
-    insanityObsessions[i] = lines.front() == "0" ? false : true;
+  for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+    obsessions[i] = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
   }
 }
@@ -219,12 +219,10 @@ void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
     activeMedicalBag = NULL;
   }
 
-  if(insanityObsessions[insanityObsession_masochism]) {
-    if(dmg > 1) {
-      shock_ = max(0.0, shock_ - 5.0);
-    }
+  if(obsessions[int(Obsession::masochism)]) {
+    if(dmg > 1) {shock_ = max(0.0, shock_ - 5.0);}
   } else {
-    incrShock(1, shockSrc_misc);
+    incrShock(1, ShockSrc::misc);
   }
 
   if(ALLOW_WOUNDS && Config::isBotPlaying() == false) {
@@ -235,6 +233,12 @@ void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
   }
 
   Renderer::drawMapAndInterface();
+}
+
+int Player::getEncPercent() const {
+  const int TOTAL_W = inv_->getTotalItemWeight();
+  const int MAX_W   = getCarryWeightLimit();
+  return int((double(TOTAL_W) / double(MAX_W)) * 100.0);
 }
 
 int Player::getCarryWeightLimit() const {
@@ -250,7 +254,7 @@ int Player::getCarryWeightLimit() const {
   const int CARRY_WEIGHT_MOD =
     (IS_TOUGH * 10) + (IS_STRONG_BACKED * 30) - (IS_WEAKENED * 15);
 
-  return (carryWeightBase * (CARRY_WEIGHT_MOD + 100)) / 100;
+  return (carryWeightBase_ * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
 int Player::getShockResistance(const ShockSrc shockSrc) const {
@@ -268,16 +272,16 @@ int Player::getShockResistance(const ShockSrc shockSrc) const {
   const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
 
   switch(shockSrc) {
-    case shockSrc_castIntrSpell: {} break;
+    case ShockSrc::castIntrSpell: {} break;
 
-    case shockSrc_useStrangeItem: {
+    case ShockSrc::useStrangeItem: {
       if(bonHlr.getBg() == bgOccultist) {res += 50;}
     } break;
 
-    case shockSrc_seeMonster:
-    case shockSrc_time:
-    case shockSrc_misc:
-    case endOfShockSrc: {} break;
+    case ShockSrc::seeMonster:
+    case ShockSrc::time:
+    case ShockSrc::misc:
+    case ShockSrc::endOfShockSrc: {} break;
   }
 
   return getConstrInRange(0, res, 100);
@@ -307,8 +311,8 @@ void Player::restoreShock(const int amountRestored,
                           const bool IS_TEMP_SHOCK_RESTORED) {
   // If an obsession is active, only restore to a certain min level
   bool isObsessionActive = 0;
-  for(int i = 0; i < endOfInsanityObsessions; i++) {
-    if(insanityObsessions[i]) {
+  for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+    if(obsessions[i]) {
       isObsessionActive = true;
       break;
     }
@@ -412,10 +416,8 @@ void Player::incrInsanity() {
             if(insanity_ > 5) {
               //There is a limit to the number of phobias you can have
               int phobiasActive = 0;
-              for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
-                if(insanityPhobias[i]) {
-                  phobiasActive++;
-                }
+              for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
+                if(phobias[i]) {phobiasActive++;}
               }
               if(phobiasActive < 2) {
                 if(Rnd::coinToss()) {
@@ -426,74 +428,73 @@ void Player::incrInsanity() {
                       SpottedEnemies.at(MONSTER_ROLL)->getData();
                     if(
                       monsterData.isRat &&
-                      insanityPhobias[insanityPhobia_rat] == false) {
+                      phobias[int(Phobia::rat)] == false) {
                       msg += "I am afflicted by Murophobia. ";
                       msg += "Rats suddenly seem terrifying.";
-                      eng.popup->showMsg(
-                        msg, true, "Murophobia!", SfxId::insanityRising);
-                      insanityPhobias[insanityPhobia_rat] = true;
+                      eng.popup->showMsg(msg, true, "Murophobia!",
+                                         SfxId::insanityRising);
+                      phobias[int(Phobia::rat)] = true;
                       return;
                     }
                     if(
                       monsterData.isSpider &&
-                      insanityPhobias[insanityPhobia_spider] == false) {
+                      phobias[int(Phobia::spider)] == false) {
                       msg += "I am afflicted by Arachnophobia. ";
                       msg += "Spiders suddenly seem terrifying.";
-                      eng.popup->showMsg(
-                        msg, true, "Arachnophobia!",
-                        SfxId::insanityRising);
-                      insanityPhobias[insanityPhobia_spider] = true;
+                      eng.popup->showMsg(msg, true, "Arachnophobia!",
+                                         SfxId::insanityRising);
+                      phobias[int(Phobia::spider)] = true;
                       return;
                     }
                     if(
                       monsterData.isCanine &&
-                      insanityPhobias[insanityPhobia_dog] == false) {
+                      phobias[int(Phobia::dog)] == false) {
                       msg += "I am afflicted by Cynophobia. ";
                       msg += "Dogs suddenly seem terrifying.";
-                      eng.popup->showMsg(
-                        msg, true, "Cynophobia!", SfxId::insanityRising);
-                      insanityPhobias[insanityPhobia_dog] = true;
+                      eng.popup->showMsg(msg, true, "Cynophobia!",
+                                         SfxId::insanityRising);
+                      phobias[int(Phobia::dog)] = true;
                       return;
                     }
                     if(
                       monsterData.isUndead &&
-                      insanityPhobias[insanityPhobia_undead] == false) {
+                      phobias[int(Phobia::undead)] == false) {
                       msg += "I am afflicted by Necrophobia. ";
                       msg += "The undead suddenly seem much more terrifying.";
                       eng.popup->showMsg(msg, true, "Necrophobia!");
-                      insanityPhobias[insanityPhobia_undead] = true;
+                      phobias[int(Phobia::undead)] = true;
                       return;
                     }
                   }
                 } else {
                   if(Rnd::coinToss()) {
                     if(isStandingInOpenSpace()) {
-                      if(insanityPhobias[insanityPhobia_openPlace] == false) {
+                      if(phobias[int(Phobia::openPlace)] == false) {
                         msg += "I am afflicted by Agoraphobia. ";
                         msg += "Open places suddenly seem terrifying.";
-                        eng.popup->showMsg(
-                          msg, true, "Agoraphobia!", SfxId::insanityRising);
-                        insanityPhobias[insanityPhobia_openPlace] = true;
+                        eng.popup->showMsg(msg, true, "Agoraphobia!",
+                                           SfxId::insanityRising);
+                        phobias[int(Phobia::openPlace)] = true;
                         return;
                       }
                     }
                     if(isStandingInCrampedSpace()) {
-                      if(insanityPhobias[insanityPhobia_closedPlace] == false) {
+                      if(phobias[int(Phobia::closedPlace)] == false) {
                         msg += "I am afflicted by Claustrophobia. ";
                         msg += "Confined places suddenly seem terrifying.";
-                        eng.popup->showMsg(
-                          msg, true, "Claustrophobia!", SfxId::insanityRising);
-                        insanityPhobias[insanityPhobia_closedPlace] = true;
+                        eng.popup->showMsg(msg, true, "Claustrophobia!",
+                                           SfxId::insanityRising);
+                        phobias[int(Phobia::closedPlace)] = true;
                         return;
                       }
                     }
                   } else {
                     if(eng.map->getDlvl() >= 5) {
-                      if(insanityPhobias[insanityPhobia_deepPlaces] == false) {
+                      if(phobias[int(Phobia::deepPlaces)] == false) {
                         msg += "I am afflicted by Bathophobia. ";
                         msg += "It suddenly seems terrifying to delve deeper.";
                         eng.popup->showMsg(msg, true, "Bathophobia!");
-                        insanityPhobias[insanityPhobia_deepPlaces] = true;
+                        phobias[int(Phobia::deepPlaces)] = true;
                         return;
                       }
                     }
@@ -507,17 +508,14 @@ void Player::incrInsanity() {
         case 6: {
           if(insanity_ > 20) {
             int obsessionsActive = 0;
-            for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
-              if(insanityObsessions[i]) {
-                obsessionsActive++;
-              }
+            for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+              if(obsessions[i]) {obsessionsActive++;}
             }
             if(obsessionsActive == 0) {
-              const InsanityObsessionId obsession =
-                (InsanityObsessionId)(Rnd::range(
-                                        0, endOfInsanityObsessions - 1));
+              const Obsession obsession =
+                (Obsession)(Rnd::range(0, int(Obsession::endOfObsessions) - 1));
               switch(obsession) {
-                case insanityObsession_masochism: {
+                case Obsession::masochism: {
                   msg += "To my alarm, I find myself encouraged by the ";
                   msg += "sensation of pain. Every time I am hurt, I find a ";
                   msg += "little relief. However, my depraved mind can no ";
@@ -525,10 +523,10 @@ void Player::incrInsanity() {
                   msg += toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng.popup->showMsg(
                     msg, true, "Masochistic obsession!", SfxId::insanityRising);
-                  insanityObsessions[insanityObsession_masochism] = true;
+                  obsessions[int(Obsession::masochism)] = true;
                   return;
                 } break;
-                case insanityObsession_sadism: {
+                case Obsession::sadism: {
                   msg += "To my alarm, I find myself encouraged by the pain ";
                   msg += "I cause in others. For every life I take, I find a ";
                   msg += "little relief. However, my depraved mind can no ";
@@ -536,7 +534,7 @@ void Player::incrInsanity() {
                   msg += toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng.popup->showMsg(
                     msg, true, "Sadistic obsession!", SfxId::insanityRising);
-                  insanityObsessions[insanityObsession_sadism] = true;
+                  obsessions[int(Obsession::sadism)] = true;
                   return;
                 } break;
                 default: {} break;
@@ -643,33 +641,25 @@ void Player::testPhobias() {
   if(ROLL < 10) {
     for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
       const ActorData& monsterData = SpottedEnemies.at(0)->getData();
-      if(
-        monsterData.isCanine &&
-        insanityPhobias[insanityPhobia_dog]) {
+      if(monsterData.isCanine && phobias[int(Phobia::dog)]) {
         eng.log->addMsg("I am plagued by my canine phobia!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
-      if(
-        monsterData.isRat &&
-        insanityPhobias[insanityPhobia_rat]) {
+      if(monsterData.isRat && phobias[int(Phobia::rat)]) {
         eng.log->addMsg("I am plagued by my rat phobia!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
-      if(
-        monsterData.isUndead &&
-        insanityPhobias[insanityPhobia_undead]) {
+      if(monsterData.isUndead && phobias[int(Phobia::undead)]) {
         eng.log->addMsg("I am plagued by my phobia of the dead!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
-      if(
-        monsterData.isSpider &&
-        insanityPhobias[insanityPhobia_spider]) {
+      if(monsterData.isSpider && phobias[int(Phobia::spider)]) {
         eng.log->addMsg("I am plagued by my spider phobia!");
         propHandler_->tryApplyProp(
           new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
@@ -678,7 +668,7 @@ void Player::testPhobias() {
     }
   }
   if(ROLL < 5) {
-    if(insanityPhobias[insanityPhobia_openPlace]) {
+    if(phobias[int(Phobia::openPlace)]) {
       if(isStandingInOpenSpace()) {
         eng.log->addMsg("I am plagued by my phobia of open places!");
         propHandler_->tryApplyProp(
@@ -687,7 +677,7 @@ void Player::testPhobias() {
       }
     }
 
-    if(insanityPhobias[insanityPhobia_closedPlace]) {
+    if(phobias[int(Phobia::closedPlace)]) {
       if(isStandingInCrampedSpace()) {
         eng.log->addMsg("I am plagued by my phobia of closed places!");
         propHandler_->tryApplyProp(
@@ -824,8 +814,8 @@ void Player::onStandardTurn() {
   }
 
   //If obsessions are active, raise shock to a minimum level
-  for(int i = 0; i < endOfInsanityObsessions; i++) {
-    if(insanityObsessions[i]) {
+  for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+    if(obsessions[i]) {
       shock_ = max(double(MIN_SHOCK_WHEN_OBSESSION), shock_);
       break;
     }
@@ -865,7 +855,7 @@ void Player::onStandardTurn() {
       }
       if(shockFromMonstersCurPlayerTurn < 3.0) {
         incrShock(int(floor(monster->shockCausedCurrent_)),
-                  shockSrc_seeMonster);
+                  ShockSrc::seeMonster);
         shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent_;
       }
     }
@@ -882,11 +872,11 @@ void Player::onStandardTurn() {
       } else {
         eng.popup->showMsg("A chill runs down my spine...", true);
       }
-      incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
+      incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
       Renderer::drawMapAndInterface();
     } else {
       if(eng.map->getDlvl() != 0) {
-        incrShock(1, shockSrc_time);
+        incrShock(1, ShockSrc::time);
       }
     }
   }
@@ -1138,11 +1128,15 @@ void Player::moveDir(Dir dir) {
       }
 
       if(isFeaturesAllowMove) {
-        // Encumbered?
-        if(inv_->getTotalItemWeight() >= getCarryWeightLimit()) {
+        //Encumbrance
+        const int ENC = getEncPercent();
+        if(ENC >= ENC_IMMOBILE_LVL) {
           eng.log->addMsg("I am too encumbered to move!");
           Renderer::drawMapAndInterface();
           return;
+        } else if(ENC >= 100) {
+          eng.log->addMsg("I stagger.", clrMsgImportant);
+          propHandler_->tryApplyProp(new PropWaiting(eng, propTurnsStd));
         }
 
         pos = dest;

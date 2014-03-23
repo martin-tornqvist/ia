@@ -541,7 +541,7 @@ void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
   //----------------------------------- INSANITY CHEAT
   else if(d.sdlKey_ == SDLK_F5) {
     if(IS_DEBUG_MODE) {
-      eng.player->incrShock(50, shockSrc_misc);
+      eng.player->incrShock(50, ShockSrc::misc);
       clearEvents();
     }
     return;

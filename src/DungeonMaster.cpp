@@ -156,7 +156,7 @@ void DungeonMaster::onMonsterKilled(Actor& actor) {
   d.nrOfKills += 1;
 
   if(d.hp >= 3) {
-    if(eng.player->insanityObsessions[insanityObsession_sadism]) {
+    if(eng.player->obsessions[int(Obsession::sadism)]) {
       eng.player->shock_ = max(0.0, eng.player->shock_ - 3.0);
     }
   }

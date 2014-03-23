@@ -401,12 +401,12 @@ bool Khephren::onActorTurn_() {
 
           sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
 
-          const unsigned int NR_OF_SPAWNS = 15;
+          const int NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
             eng.log->addMsg("Khephren calls a plague of Locusts!");
             eng.player->incrShock(ShockValue::shockValue_heavy,
-                                  shockSrc_misc);
-            for(unsigned int i = 0; i < NR_OF_SPAWNS; i++) {
+                                  ShockSrc::misc);
+            for(int i = 0; i < NR_OF_SPAWNS; i++) {
               Actor* const actor =
                 eng.actorFactory->spawnActor(actor_giantLocust,
                                              freeCells.at(0));
@@ -770,7 +770,7 @@ bool MajorClaphamLee::onActorTurn_() {
           eng.actorFactory->summonMonsters(pos, monsterIds, true, this);
           Renderer::drawMapAndInterface();
           hasSummonedTombLegions = true;
-          eng.player->incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
+          eng.player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
           eng.gameTime->actorDidAct();
           return true;
         }
@@ -797,7 +797,7 @@ bool Zombie::tryResurrect() {
           if(eng.map->cells[pos.x][pos.y].isSeenByPlayer) {
             eng.log->addMsg(
               getNameThe() + " rises again!!", clrWhite, true);
-            eng.player->incrShock(ShockValue::shockValue_some, shockSrc_misc);
+            eng.player->incrShock(ShockValue::shockValue_some, ShockSrc::misc);
           }
 
           awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer * 2;

@@ -134,9 +134,9 @@ void PotionOfFortitude::quaff_(Actor* const actor) {
 
   if(actor == eng.player) {
     bool isPhobiasCured = false;
-    for(unsigned int i = 0; i < endOfInsanityPhobias; i++) {
-      if(eng.player->insanityPhobias[i]) {
-        eng.player->insanityPhobias[i] = false;
+    for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
+      if(eng.player->phobias[i]) {
+        eng.player->phobias[i] = false;
         isPhobiasCured = true;
       }
     }
@@ -145,9 +145,9 @@ void PotionOfFortitude::quaff_(Actor* const actor) {
     }
 
     bool isObsessionsCured = false;
-    for(unsigned int i = 0; i < endOfInsanityObsessions; i++) {
-      if(eng.player->insanityObsessions[i]) {
-        eng.player->insanityObsessions[i] = false;
+    for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+      if(eng.player->obsessions[i]) {
+        eng.player->obsessions[i] = false;
         isObsessionsCured = true;
       }
     }
@@ -387,7 +387,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
     if(IS_SILENT_IDENTIFY == false) {
       eng.log->addMsg("It was a " + REAL_NAME + ".");
       eng.player->incrShock(ShockValue::shockValue_heavy,
-                            shockSrc_useStrangeItem);
+                            ShockSrc::useStrangeItem);
     }
 
     data_->isIdentified = true;
@@ -443,7 +443,7 @@ void Potion::quaff(Actor* const actor) {
       eng.log->addMsg("I drink an unknown " + data_->name.name + "...");
     }
     eng.player->incrShock(ShockValue::shockValue_heavy,
-                          shockSrc_useStrangeItem);
+                          ShockSrc::useStrangeItem);
   }
 
   quaff_(actor);

@@ -6,29 +6,25 @@
 #include "Actor.h"
 #include "CommonData.h"
 
-enum InsanityPhobiaId {
-  insanityPhobia_rat,
-  insanityPhobia_spider,
-  insanityPhobia_dog,
-  insanityPhobia_undead,
-  insanityPhobia_openPlace,
-  insanityPhobia_closedPlace,
-  insanityPhobia_deepPlaces,
-  endOfInsanityPhobias
+enum class Phobia {
+  rat,
+  spider,
+  dog,
+  undead,
+  openPlace,
+  closedPlace,
+  deepPlaces,
+  endOfPhobias
 };
 
-enum InsanityObsessionId {
-  insanityObsession_sadism,
-  insanityObsession_masochism,
-  endOfInsanityObsessions
-};
+enum class Obsession {sadism, masochism, endOfObsessions};
 
-enum ShockSrc {
-  shockSrc_seeMonster,
-  shockSrc_useStrangeItem,
-  shockSrc_castIntrSpell,
-  shockSrc_time,
-  shockSrc_misc,
+enum class ShockSrc {
+  seeMonster,
+  useStrangeItem,
+  castIntrSpell,
+  time,
+  misc,
   endOfShockSrc
 };
 
@@ -54,9 +50,6 @@ public:
 
   void explosiveThrown();
 
-  MedicalBag* activeMedicalBag;
-  int waitTurnsLeft;
-
   void incrShock(const ShockValue shockValue, ShockSrc shockSrc);
   void incrShock(const int SHOCK, ShockSrc shockSrc);
   void restoreShock(const int amountRestored,
@@ -77,19 +70,11 @@ public:
   double getShockTakenAfterMods(const int BASE_SHOCK,
                                 const ShockSrc shockSrc) const;
 
-  int getCarryWeightLimit() const;
-
-  int dynamiteFuseTurns;
-  int molotovFuseTurns;
-  int flareFuseTurns;
-
   void addSaveLines(vector<string>& lines) const;
   void setParamsFromSaveLines(vector<string>& lines);
 
-  bool insanityPhobias[endOfInsanityPhobias];
-  bool insanityObsessions[endOfInsanityObsessions];
-
-  Actor* target;
+  bool phobias[int(Phobia::endOfPhobias)];
+  bool obsessions[int(Obsession::endOfObsessions)];
 
   void autoMelee();
 
@@ -100,12 +85,25 @@ public:
 
   void addLight_(bool light[MAP_W][MAP_H]) const;
 
+  void interruptActions();
+
+  int getEncPercent() const;
+
+  MedicalBag* activeMedicalBag;
+  int waitTurnsLeft;
+
+  int dynamiteFuseTurns;
+  int molotovFuseTurns;
+  int flareFuseTurns;
+
+  Actor* target;
+
   int insanity_;
   double shock_, shockTemp_, permShockTakenCurTurn_;
 
-  void interruptActions();
-
 private:
+  int getCarryWeightLimit() const;
+
   void incrInsanity();
 
   void testPhobias();
@@ -120,7 +118,7 @@ private:
 
   int nrMovesUntilFreeAction_;
 
-  const int carryWeightBase;
+  const int carryWeightBase_;
 };
 
 

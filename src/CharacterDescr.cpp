@@ -74,24 +74,24 @@ void CharacterDescr::makeLines() {
 
   lines.push_back(StrAndClr("Mental conditions", clrHeading));
   const int NR_LINES_BEFORE_MENTAL = lines.size();
-  if(eng.player->insanityPhobias[insanityPhobia_closedPlace])
+  if(eng.player->phobias[int(Phobia::closedPlace)])
     lines.push_back(StrAndClr(offset + "Phobia of enclosed spaces", clrText));
-  if(eng.player->insanityPhobias[insanityPhobia_dog])
+  if(eng.player->phobias[int(Phobia::dog)])
     lines.push_back(StrAndClr(offset + "Phobia of dogs", clrText));
-  if(eng.player->insanityPhobias[insanityPhobia_rat])
+  if(eng.player->phobias[int(Phobia::rat)])
     lines.push_back(StrAndClr(offset + "Phobia of rats", clrText));
-  if(eng.player->insanityPhobias[insanityPhobia_undead])
+  if(eng.player->phobias[int(Phobia::undead)])
     lines.push_back(StrAndClr(offset + "Phobia of the dead", clrText));
-  if(eng.player->insanityPhobias[insanityPhobia_openPlace])
+  if(eng.player->phobias[int(Phobia::openPlace)])
     lines.push_back(StrAndClr(offset + "Phobia of open places", clrText));
-  if(eng.player->insanityPhobias[insanityPhobia_spider])
+  if(eng.player->phobias[int(Phobia::spider)])
     lines.push_back(StrAndClr(offset + "Phobia of spiders", clrText));
-  if(eng.player->insanityPhobias[insanityPhobia_deepPlaces])
+  if(eng.player->phobias[int(Phobia::deepPlaces)])
     lines.push_back(StrAndClr(offset + "Phobia of deep places", clrText));
 
-  if(eng.player->insanityObsessions[insanityObsession_masochism])
+  if(eng.player->obsessions[int(Obsession::masochism)])
     lines.push_back(StrAndClr(offset + "Masochistic obsession", clrText));
-  if(eng.player->insanityObsessions[insanityObsession_sadism])
+  if(eng.player->obsessions[int(Obsession::sadism)])
     lines.push_back(StrAndClr(offset + "Sadistic obsession", clrText));
   const int NR_LINES_AFTER_MENTAL = lines.size();
 
@@ -176,12 +176,12 @@ void CharacterDescr::getShockResSrcTitle(
 
   strRef = "";
   switch(shockSrc) {
-    case shockSrc_time:           strRef = "Time";                    break;
-    case shockSrc_castIntrSpell:  strRef = "Casting learned spells";  break;
-    case shockSrc_seeMonster:     strRef = "Seeing monsters";         break;
-    case shockSrc_useStrangeItem: strRef = "Using strange items";     break;
-    case shockSrc_misc:           strRef = "Other";                   break;
-    case endOfShockSrc: {} break;
+    case ShockSrc::time:           strRef = "Time";                    break;
+    case ShockSrc::castIntrSpell:  strRef = "Casting learned spells";  break;
+    case ShockSrc::seeMonster:     strRef = "Seeing monsters";         break;
+    case ShockSrc::useStrangeItem: strRef = "Using strange items";     break;
+    case ShockSrc::misc:           strRef = "Other";                   break;
+    case ShockSrc::endOfShockSrc: {} break;
   }
 }
 

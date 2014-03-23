@@ -670,7 +670,7 @@ void TrapSummonMonster::trigger(
   const string actorName = actor.getNameThe();
   traceVerbose << "TrapSummonMonster: Actor name: " << actorName << endl;
 
-  eng.player->incrShock(5, shockSrc_misc);
+  eng.player->incrShock(5, ShockSrc::misc);
   eng.player->updateFov();
   if(CAN_SEE) {
     eng.log->addMsg("A curious shape on the floor starts to glow!");

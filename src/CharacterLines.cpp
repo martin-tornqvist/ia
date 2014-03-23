@@ -177,12 +177,11 @@ void drawInfoLines(Engine& eng) {
   //Encumbrance
   Renderer::drawText("ENC:", panel_char, pos, clrGenDrk);
   pos.x += 4;
-  const int TOTAL_W = player->getInv().getTotalItemWeight();
-  const int MAX_W = player->getCarryWeightLimit();
-  const int ENC = int((double(TOTAL_W) / double(MAX_W)) * 100.0);
+  const int ENC = player->getEncPercent();
   str = toString(ENC) + "%";
-  Renderer::drawText(str, panel_char, pos,
-                         ENC >= 100 ? clrRedLgt : clrGenLgt);
+  const SDL_Color encClr = ENC < 100 ? clrGreenLgt :
+                           ENC < ENC_IMMOBILE_LVL ? clrYellow : clrRedLgt;
+  Renderer::drawText(str, panel_char, pos, encClr);
   pos.x += str.length() + 1;
 
   //Missile weapon

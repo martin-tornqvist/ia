@@ -41,32 +41,32 @@ void Postmortem::makeInfoLines() {
 
   //TODO Make some sort of insanity class or something where this info is stored,
   //this is ugly as hell
-  if(eng.player->insanityPhobias[insanityPhobia_closedPlace])
+  if(eng.player->phobias[int(Phobia::closedPlace)])
     postmortemLines.push_back(
       StrAndClr("   * Had a phobia of enclosed spaces", clrInfo));
-  if(eng.player->insanityPhobias[insanityPhobia_dog])
+  if(eng.player->phobias[int(Phobia::dog)])
     postmortemLines.push_back(
       StrAndClr("   * Had a phobia of dogs", clrInfo));
-  if(eng.player->insanityPhobias[insanityPhobia_rat])
+  if(eng.player->phobias[int(Phobia::rat)])
     postmortemLines.push_back(
       StrAndClr("   * Had a phobia of rats", clrInfo));
-  if(eng.player->insanityPhobias[insanityPhobia_undead])
+  if(eng.player->phobias[int(Phobia::undead)])
     postmortemLines.push_back(
       StrAndClr("   * Had a phobia of the dead", clrInfo));
-  if(eng.player->insanityPhobias[insanityPhobia_openPlace])
+  if(eng.player->phobias[int(Phobia::openPlace)])
     postmortemLines.push_back(
       StrAndClr("   * Had a phobia of open places", clrInfo));
-  if(eng.player->insanityPhobias[insanityPhobia_spider])
+  if(eng.player->phobias[int(Phobia::spider)])
     postmortemLines.push_back(
       StrAndClr("   * Had a phobia of spiders", clrInfo));
-  if(eng.player->insanityPhobias[insanityPhobia_deepPlaces])
+  if(eng.player->phobias[int(Phobia::deepPlaces)])
     postmortemLines.push_back(
       StrAndClr("   * Had a phobia of deep places", clrInfo));
 
-  if(eng.player->insanityObsessions[insanityObsession_masochism])
+  if(eng.player->obsessions[int(Obsession::masochism)])
     postmortemLines.push_back(
       StrAndClr("   * Had a masochistic obsession", clrInfo));
-  if(eng.player->insanityObsessions[insanityObsession_sadism])
+  if(eng.player->obsessions[int(Obsession::sadism)])
     postmortemLines.push_back(
       StrAndClr("   * Had a sadistic obsession", clrInfo));
 

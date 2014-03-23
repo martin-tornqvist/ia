@@ -159,7 +159,7 @@ void MedicalBag::finishCurAction() {
     case medicalBagAction_takeMorphine: {
       eng.player->restoreHp(999);
       eng.log->addMsg("The morphine takes a toll on my mind.");
-      eng.player->incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
+      eng.player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
     } break;
 
     case endOfMedicalBagActions: {} break;

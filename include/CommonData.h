@@ -34,9 +34,9 @@ const int LAST_ROOM_AND_CORRIDOR_LEVEL  = FIRST_CAVERN_LEVEL - 2;
 
 const int AUDIO_ALLOCATED_CHANNELS = 16;
 
-const int DELAY_PLAYER_UNABLE_TO_ACT  = 7;
+const int DELAY_PLAYER_UNABLE_TO_ACT = 7;
 
-const int PLAYER_START_SPI        = 6;
+const int PLAYER_START_SPI = 6;
 
 const int MIN_DLVL_NASTY_TRAPS = 6;
 
@@ -56,6 +56,8 @@ const int THROWING_RANGE_LIMIT  = FOV_STD_RADI_INT + 3;
 
 const int DYNAMITE_FUSE_TURNS = 5;
 const int EXPLOSION_STD_RADI  = 2;
+
+const int ENC_IMMOBILE_LVL = 125;
 
 const int NR_MG_PROJECTILES                       = 5;
 const int NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES    = 2;

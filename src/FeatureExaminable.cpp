@@ -875,7 +875,7 @@ void Cocoon::triggerTrap(Actor& actor) {
 
   if(RND < 15) {
     eng.log->addMsg("There is a half-dissolved human body inside!");
-    eng.player->incrShock(ShockValue::shockValue_heavy, shockSrc_misc);
+    eng.player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
   } else if(RND < 50) {
     trace << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId> spawnCandidates;

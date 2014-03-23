@@ -141,8 +141,8 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
     if(caster == eng.player) {
       trace << "Spell: Player casting spell" << endl;
       const ShockSrc shockSrc = IS_INTRINSIC ?
-                                shockSrc_castIntrSpell :
-                                shockSrc_useStrangeItem;
+                                ShockSrc::castIntrSpell :
+                                ShockSrc::useStrangeItem;
       const int SHOCK_VALUE = IS_INTRINSIC ? getShockValueIntrCast() : 10;
       eng.player->incrShock(SHOCK_VALUE, shockSrc);
     } else {
