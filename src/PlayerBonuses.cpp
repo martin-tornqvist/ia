@@ -1,7 +1,5 @@
 #include "PlayerBonuses.h"
 
-#include <assert.h>
-
 #include "Engine.h"
 #include "TextFormatting.h"
 #include "ActorPlayer.h"

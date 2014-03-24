@@ -1,6 +1,5 @@
 #include "ActorFactory.h"
 
-#include <assert.h>
 #include <algorithm>
 
 #include "Engine.h"

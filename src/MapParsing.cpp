@@ -1,7 +1,5 @@
 #include "MapParsing.h"
 
-#include <assert.h>
-
 #include "Engine.h"
 #include "Map.h"
 #include "ActorPlayer.h"

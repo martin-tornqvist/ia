@@ -2,7 +2,6 @@
 
 #include <fstream>
 #include <iostream>
-#include <assert.h>
 
 #include <SDL_image.h>
 

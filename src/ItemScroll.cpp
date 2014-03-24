@@ -1,7 +1,5 @@
 #include "ItemScroll.h"
 
-#include <assert.h>
-
 #include "Engine.h"
 
 #include "ActorPlayer.h"

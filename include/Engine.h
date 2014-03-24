@@ -1,7 +1,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "DebugMode.h"
+#include "DebugMode.h" //Must be included before <assert.h>!
+#include <assert.h>
 
 #include <SDL.h>
 
@@ -19,12 +20,12 @@
 //#define DEMO_MODE 1
 //-------------------------------------------------------------------
 
-#ifdef DEBUG
-#define trace if (TRACE_LVL < 1) ; else cerr
-#define traceVerbose if (TRACE_LVL < 2) ; else cerr
-#else
+#ifdef NDEBUG
 #define trace if (1) ; else cerr
 #define traceVerbose if (1) ; else cerr
+#else
+#define trace if (TRACE_LVL < 1) ; else cerr
+#define traceVerbose if (TRACE_LVL < 2) ; else cerr
 #endif
 
 class PlayerVisualMemory;

@@ -1,7 +1,6 @@
 #include "Inventory.h"
 
 #include <algorithm>
-#include <assert.h>
 
 #include "Item.h"
 #include "ItemWeapon.h"

@@ -1,6 +1,5 @@
 #include "Bot.h"
 
-#include <assert.h>
 #include <algorithm>
 #include <vector>
 
@@ -33,8 +32,13 @@ void Bot::act() {
   // TESTS
   //=======================================================================
   for(Actor * actor : eng.gameTime->actors_) {
+#ifdef NDEBUG
+    (void)actor;
+#else
     assert(Utils::isPosInsideMap(actor->pos));
+#endif
   }
+
   //=======================================================================
 
   //Check if we are finished with the current run, if so, go back to DLVL 1

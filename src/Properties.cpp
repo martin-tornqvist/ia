@@ -1,6 +1,5 @@
 #include "Properties.h"
 
-#include <assert.h>
 #include <algorithm>
 
 #include "Engine.h"

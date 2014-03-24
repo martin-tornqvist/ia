@@ -1,7 +1,5 @@
 #include "FeatureWall.h"
 
-#include <assert.h>
-
 #include "Engine.h"
 
 #include "Map.h"
@@ -39,6 +37,7 @@ string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
     case wall_egypt:  {return article + modStr + "stone wall";}
   }
   assert(false && "Failed to get door description");
+  return "";
 }
 
 SDL_Color Wall::getClr() const {

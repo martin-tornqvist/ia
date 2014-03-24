@@ -1,7 +1,6 @@
 #include "MapGen.h"
 
 #include <algorithm>
-#include <assert.h>
 
 #include "Engine.h"
 #include "MapGen.h"

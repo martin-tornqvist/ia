@@ -1,7 +1,5 @@
 #include "FeatureFactory.h"
 
-#include <assert.h>
-
 #include "Engine.h"
 
 #include "FeatureDoor.h"

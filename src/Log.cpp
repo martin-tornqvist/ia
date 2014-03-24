@@ -1,7 +1,6 @@
 #include "Log.h"
 
 #include <algorithm>
-#include <assert.h>
 
 #include "Input.h"
 #include "Engine.h"

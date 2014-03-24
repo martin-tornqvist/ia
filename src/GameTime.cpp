@@ -1,7 +1,5 @@
 #include "GameTime.h"
 
-#include <assert.h>
-
 #include "Engine.h"
 
 #include "CommonTypes.h"

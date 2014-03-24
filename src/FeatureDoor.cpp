@@ -1,7 +1,5 @@
 #include "FeatureDoor.h"
 
-#include <assert.h>
-
 #include "Engine.h"
 
 #include "Actor.h"
@@ -178,7 +176,9 @@ string Door::getDescr(const bool DEFINITE_ARTICLE) const {
     return DEFINITE_ARTICLE ? "the door" : "a door";
   }
 
+
   assert(false && "Failed to get door description");
+  return "";
 }
 //----------------------------------------------------------------------
 

@@ -1,6 +1,5 @@
 #include "ActorMonster.h"
 
-#include <assert.h>
 #include <vector>
 
 #include "Engine.h"

@@ -1,7 +1,6 @@
 #include "FeatureTrap.h"
 
 #include <algorithm>
-#include <assert.h>
 
 #include "Engine.h"
 

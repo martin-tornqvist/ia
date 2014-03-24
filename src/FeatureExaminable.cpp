@@ -1,7 +1,5 @@
 #include "FeatureExaminable.h"
 
-#include <assert.h>
-
 #include "Engine.h"
 #include "Log.h"
 #include "Renderer.h"
@@ -153,6 +151,7 @@ string Tomb::getDescr(const bool DEFINITE_ARTICLE) const {
     case TombAppearance::endOfTombAppearance: {} break;
   }
   assert("Failed to set Tomb description" && false);
+  return "";
 }
 
 SDL_Color Tomb::getClr() const {
@@ -163,6 +162,7 @@ SDL_Color Tomb::getClr() const {
     case TombAppearance::endOfTombAppearance: {} break;
   }
   assert("Failed to set Tomb color" && false);
+  return clrBlack;
 }
 
 void Tomb::bump(Actor& actorBumping) {
@@ -694,6 +694,7 @@ SDL_Color Fountain::getClr() const {
     case FountainMaterial::gold:  return clrYellow;
   }
   assert("Failed to get fountain color" && false);
+  return clrBlack;
 }
 
 string Fountain::getDescr(const bool DEFINITE_ARTICLE) const {
@@ -704,6 +705,7 @@ string Fountain::getDescr(const bool DEFINITE_ARTICLE) const {
     case FountainMaterial::gold:  return article + " golden fountain";
   }
   assert("Failed to get fountain description" && false);
+  return "";
 }
 
 void Fountain::bump(Actor& actorBumping) {
