@@ -47,16 +47,16 @@ void Manual::drawManualInterface() {
 
   const int X_LABEL = 3;
 
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
-  Renderer::drawText(" Displaying manual ", panel_screen, Pos(X_LABEL, 0),
+  Renderer::drawText(" Displaying manual ", Panel::screen, Pos(X_LABEL, 0),
                          clrGray);
 
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                          clrGray);
 
   Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
-                         panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+                         Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 
 void Manual::run() {
@@ -72,7 +72,7 @@ void Manual::run() {
     drawManualInterface();
     int yPos = 1;
     for(int i = topNr; i <= btmNr; i++) {
-      Renderer::drawText(lines.at(i), panel_screen, Pos(0, yPos++),
+      Renderer::drawText(lines.at(i), Panel::screen, Pos(0, yPos++),
                              clrWhite);
     }
     Renderer::updateScreen();

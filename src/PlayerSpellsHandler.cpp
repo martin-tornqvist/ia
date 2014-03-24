@@ -119,12 +119,12 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
   string endLetter = "a";
   endLetter[0] += char(NR_SPELLS - 1);
 
-  Renderer::coverArea(panel_screen, Pos(0, 0), Pos(MAP_W, NR_SPELLS + 1));
+  Renderer::coverArea(Panel::screen, Pos(0, 0), Pos(MAP_W, NR_SPELLS + 1));
 
   const string label =
     "Choose a power to evoke [a-" + endLetter + "]" +
     " | Space/esc to exit";
-  Renderer::drawText(label, panel_screen, Pos(0, 0), clrWhiteHigh);
+  Renderer::drawText(label, Panel::screen, Pos(0, 0), clrWhiteHigh);
 
   int y = 1;
 
@@ -135,14 +135,14 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     Spell* const spell = knownSpells_.at(i);
     string str = spell->getName();
 
-    Renderer::drawText(str, panel_screen, Pos(0, y), clr);
+    Renderer::drawText(str, Panel::screen, Pos(0, y), clr);
 
     string fillStr = "";
     const int FILL_SIZE = 28 - str.size();
     for(int ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
     SDL_Color fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
-    Renderer::drawText(fillStr, panel_screen, Pos(str.size(), y), fillClr);
+    Renderer::drawText(fillStr, Panel::screen, Pos(str.size(), y), fillClr);
 
     int x = 28;
     str = "SPI:";
@@ -150,7 +150,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     const string lowerStr = toString(spiCost.lower);
     const string upperStr = toString(spiCost.upper);
     str += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
-    Renderer::drawText(str, panel_screen, Pos(x, y), clrWhite);
+    Renderer::drawText(str, Panel::screen, Pos(x, y), clrWhite);
 
     x += 10;
     str = "SHOCK: ";
@@ -160,7 +160,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
       case intrSpellShockDisturbing:  str += "Disturbing"; break;
       case intrSpellShockSevere:      str += "Severe";     break;
     }
-    Renderer::drawText(str, panel_screen, Pos(x, y), clrWhite);
+    Renderer::drawText(str, Panel::screen, Pos(x, y), clrWhite);
 
     y++;
   }

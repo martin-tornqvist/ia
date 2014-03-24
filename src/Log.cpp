@@ -28,12 +28,12 @@ void Log::drawLine(const vector<Msg>& lineToDraw, const int Y_POS) const {
   for(const Msg & msg : lineToDraw) {
     string str = "";
     msg.getStrWithRepeats(str);
-    Renderer::drawText(str, panel_log, Pos(msg.xPos_, Y_POS), msg.clr_);
+    Renderer::drawText(str, Panel::log, Pos(msg.xPos_, Y_POS), msg.clr_);
   }
 }
 
 void Log::drawLog(const bool SHOULD_UPDATE_SCREEN) const {
-  Renderer::coverArea(panel_log, Pos(0, 0), Pos(MAP_W, 2));
+  Renderer::coverArea(Panel::log, Pos(0, 0), Pos(MAP_W, 2));
   for(int i = 0; i < 2; i++) drawLine(lines[i], i);
   if(SHOULD_UPDATE_SCREEN) Renderer::updateScreen();
 }
@@ -56,7 +56,7 @@ void Log::promptAndClearLog() {
   }
 
   Renderer::drawText(
-    moreStr, panel_log, Pos(xPos, lineNr), clrBlack, clrGray);
+    moreStr, Panel::log, Pos(xPos, lineNr), clrBlack, clrGray);
 
   Renderer::updateScreen();
   eng.query->waitForKeyPress();
@@ -158,24 +158,24 @@ void Log::drawHistoryInterface(const int TOP_LINE_NR,
                                const int BTM_LINE_NR) const {
   const string decorationLine(MAP_W, '-');
 
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
   const int X_LABEL = 3;
 
   if(history.empty()) {
-    Renderer::drawText(" No message history ", panel_screen,
+    Renderer::drawText(" No message history ", Panel::screen,
                        Pos(X_LABEL, 0), clrGray);
   } else {
     Renderer::drawText(
       " Displaying messages " + toString(TOP_LINE_NR + 1) + "-" +
       toString(BTM_LINE_NR + 1) + " of " +
-      toString(history.size()) + " ", panel_screen, Pos(X_LABEL, 0), clrGray);
+      toString(history.size()) + " ", Panel::screen, Pos(X_LABEL, 0), clrGray);
   }
 
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                      clrGray);
 
   Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
-                     panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+                     Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 

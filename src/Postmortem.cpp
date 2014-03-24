@@ -200,18 +200,18 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
   Renderer::clearScreen();
 
   const string decorationLine(MAP_W, '-');
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
   const int X_LABEL = 3;
 
-  Renderer::drawText(" Displaying postmortem information ", panel_screen,
+  Renderer::drawText(" Displaying postmortem information ", Panel::screen,
                      Pos(X_LABEL, 0), clrGray);
 
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                      clrGray);
 
   Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit  ",
-                     panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+                     Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   const int NR_LINES_TOT = int(postmortemLines.size());
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
@@ -222,7 +222,7 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
     i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++) {
     Renderer::drawText(
-      postmortemLines.at(i).str, panel_screen, Pos(0, yPos++),
+      postmortemLines.at(i).str, Panel::screen, Pos(0, yPos++),
       postmortemLines.at(i).clr);
   }
 
@@ -343,47 +343,47 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
 
   file.close();
 
-  Renderer::coverPanel(panel_screen);
+  Renderer::coverPanel(Panel::screen);
 
   Pos pos(1, 1);
 
   for(unsigned int i = 0; i < art.size(); i++) {
-    Renderer::drawText(art.at(i), panel_screen, pos, clrWhiteHigh);
+    Renderer::drawText(art.at(i), Panel::screen, pos, clrWhiteHigh);
     pos.y += 1;
   }
 
   pos.set(45, 18);
   const string NAME_STR = eng.player->getData().name_a;
-  Renderer::drawTextCentered(NAME_STR, panel_screen, pos, clrWhiteHigh);
+  Renderer::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;
 //  const string LVL_STR = "LVL " + toString(eng.dungeonMaster->getLevel());
-//  Renderer::drawTextCentered(LVL_STR, panel_screen, pos, clrWhiteHigh);
+//  Renderer::drawTextCentered(LVL_STR, Panel::screen, pos, clrWhiteHigh);
 
   //Draw command labels
   pos.set(55, 14);
   Renderer::drawText(
-    "a) Information", panel_screen, pos,
+    "a) Information", Panel::screen, pos,
     browser.isPosAtElement(0) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
-    "b) View the High Score", panel_screen, pos,
+    "b) View the High Score", Panel::screen, pos,
     browser.isPosAtElement(1) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
-    "c) View messages", panel_screen, pos,
+    "c) View messages", Panel::screen, pos,
     browser.isPosAtElement(2) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
-    "d) Return to main menu", panel_screen, pos,
+    "d) Return to main menu", Panel::screen, pos,
     browser.isPosAtElement(3) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
-    "e) Quit the game", panel_screen, pos,
+    "e) Quit the game", Panel::screen, pos,
     browser.isPosAtElement(4) ? clrWhite : clrRedLgt);
   pos.y += 1;
 

@@ -404,7 +404,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
 
     if(PLAYER_SEE_CELL) {
       // TODO Use standard animation
-      Renderer::drawGlyph('*', panel_map, pos, data_->clr);
+      Renderer::drawGlyph('*', Panel::map, pos, data_->clr);
 
       if(actor != NULL) {
         if(actor->deadState == ActorDeadState::alive) {

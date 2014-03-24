@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 
         if(Config::isIntroLevelSkipped() == false) {
           //If intro level is used, build forest.
-          Renderer::coverPanel(panel_screen);
+          Renderer::coverPanel(Panel::screen);
           Renderer::updateScreen();
           MapGenIntroForest(eng).run();
         } else {

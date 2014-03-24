@@ -227,23 +227,23 @@ void drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
   putPixelsOnScreenForGlyph(GLYPH, pixelPos, clr);
 }
 
-Pos getPixelPosForCellInPanel(const PanelId panel, const Pos& pos) {
+Pos getPixelPosForCellInPanel(const Panel panel, const Pos& pos) {
   const Pos cellDims(Config::getCellW(), Config::getCellH());
 
   switch(panel) {
-    case panel_screen: {
+    case Panel::screen: {
       return Pos(pos.x * cellDims.x, pos.y * cellDims.y);
     } break;
 
-    case panel_map: {
+    case Panel::map: {
       return (pos * cellDims) + Pos(0, Config::getMapPixelOffsetH());
     } break;
 
-    case panel_log: {
+    case Panel::log: {
       return pos * cellDims;
     } break;
 
-    case panel_char: {
+    case Panel::charLines: {
       return (pos * cellDims) + Pos(0, Config::getCharLinesPixelOffsetH());
     } break;
   }
@@ -267,7 +267,7 @@ void drawLifeBar(const Pos& pos, const int LENGTH) {
     const int W_BAR_TOT = cellDims.x - 2;
     const int W_RED     = W_BAR_TOT - W_GREEN;
     const Pos pixelPos =
-      getPixelPosForCellInPanel(panel_map, pos + Pos(0, 1)) - Pos(0, 2);
+      getPixelPosForCellInPanel(Panel::map, pos + Pos(0, 1)) - Pos(0, 2);
     const int X0_GREEN  = pixelPos.x + 1;
     const int X0_RED    = X0_GREEN + W_GREEN;
 
@@ -293,7 +293,7 @@ void drawPlayerShockExclMarks() {
   if(NR_EXCL > 0) {
     const Pos& playerPos = eng->player->pos;
     const Pos pixelPosRight =
-      getPixelPosForCellInPanel(panel_map, playerPos);
+      getPixelPosForCellInPanel(Panel::map, playerPos);
 
     for(int i = 0; i < NR_EXCL; i++) {
       drawExclMarkAt(pixelPosRight + Pos(i * 3, 0));
@@ -398,9 +398,9 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
         if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
       if(Config::isTilesMode()) {
-        drawTile(tile_aimMarkerTrail, panel_map, pos, clr, clrBlack);
+        drawTile(tile_aimMarkerTrail, Panel::map, pos, clr, clrBlack);
       } else {
-        drawGlyph('*', panel_map, pos, clr, true, clrBlack);
+        drawGlyph('*', Panel::map, pos, clr, true, clrBlack);
       }
     }
   }
@@ -419,9 +419,9 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
   }
 
   if(Config::isTilesMode()) {
-    drawTile(tile_aimMarkerHead, panel_map, headPos, clr, clrBlack);
+    drawTile(tile_aimMarkerHead, Panel::map, headPos, clr, clrBlack);
   } else {
-    drawGlyph('X', panel_map, headPos, clr, true, clrBlack);
+    drawGlyph('X', Panel::map, headPos, clr, true, clrBlack);
   }
 }
 
@@ -452,9 +452,9 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                                 pos.y == centerPos.y + RADIUS;
           const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
           if(Config::isTilesMode()) {
-            drawTile(tile_blast1, panel_map, pos, color, clrBlack);
+            drawTile(tile_blast1, Panel::map, pos, color, clrBlack);
           } else {
-            drawGlyph('*', panel_map, pos, color, true, clrBlack);
+            drawGlyph('*', Panel::map, pos, color, true, clrBlack);
           }
           isAnyBlastRendered = true;
         }
@@ -478,9 +478,9 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                                 pos.y == centerPos.y + RADIUS;
           const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
           if(Config::isTilesMode()) {
-            drawTile(tile_blast2, panel_map, pos, color, clrBlack);
+            drawTile(tile_blast2, Panel::map, pos, color, clrBlack);
           } else {
-            drawGlyph('*', panel_map, pos, color, true, clrBlack);
+            drawGlyph('*', Panel::map, pos, color, true, clrBlack);
           }
         }
       }
@@ -501,9 +501,9 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
     for(unsigned int i = 0; i < positions.size(); i++) {
       const Pos& pos = positions.at(i);
       if(Config::isTilesMode()) {
-        drawTile(tile_blast1, panel_map, pos, color, clrBlack);
+        drawTile(tile_blast1, Panel::map, pos, color, clrBlack);
       } else {
-        drawGlyph('*', panel_map, pos, color, true, clrBlack);
+        drawGlyph('*', Panel::map, pos, color, true, clrBlack);
       }
     }
     updateScreen();
@@ -512,9 +512,9 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
     for(unsigned int i = 0; i < positions.size(); i++) {
       const Pos& pos = positions.at(i);
       if(Config::isTilesMode()) {
-        drawTile(tile_blast2, panel_map, pos, color, clrBlack);
+        drawTile(tile_blast2, Panel::map, pos, color, clrBlack);
       } else {
-        drawGlyph('*', panel_map, pos, color, true, clrBlack);
+        drawGlyph('*', Panel::map, pos, color, true, clrBlack);
       }
     }
     updateScreen();
@@ -538,7 +538,7 @@ void drawBlastAnimAtPositionsWithPlayerVision(
   Renderer::drawBlastAnimAtPositions(positionsWithVision, clr);
 }
 
-void drawTile(const TileId tile, const PanelId panel, const Pos& pos,
+void drawTile(const TileId tile, const Panel panel, const Pos& pos,
               const SDL_Color& clr, const SDL_Color& bgClr) {
   const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
   const Pos cellDims(Config::getCellW(), Config::getCellH());
@@ -546,14 +546,14 @@ void drawTile(const TileId tile, const PanelId panel, const Pos& pos,
   putPixelsOnScreenForTile(tile, pixelPos, clr);
 }
 
-void drawGlyph(const char GLYPH, const PanelId panel, const Pos& pos,
+void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos,
                const SDL_Color& clr, const bool DRAW_BG_CLR,
                const SDL_Color& bgClr) {
   const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
   drawGlyphAtPixel(GLYPH, pixelPos, clr, DRAW_BG_CLR, bgClr);
 }
 
-void drawText(const string& str, const PanelId panel, const Pos& pos,
+void drawText(const string& str, const Panel panel, const Pos& pos,
               const SDL_Color& clr, const SDL_Color& bgClr) {
   Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
 
@@ -574,7 +574,7 @@ void drawText(const string& str, const PanelId panel, const Pos& pos,
   }
 }
 
-int drawTextCentered(const string& str, const PanelId panel,
+int drawTextCentered(const string& str, const Panel panel,
                      const Pos& pos, const SDL_Color& clr,
                      const SDL_Color& bgClr,
                      const bool IS_PIXEL_POS_ADJ_ALLOWED) {
@@ -610,30 +610,30 @@ int drawTextCentered(const string& str, const PanelId panel,
   return X_POS_LEFT;
 }
 
-void coverPanel(const PanelId panel) {
+void coverPanel(const Panel panel) {
   const int SCREEN_PIXEL_W = Config::getScreenPixelW();
 
   switch(panel) {
-    case panel_char: {
+    case Panel::charLines: {
       const Pos pixelPos = getPixelPosForCellInPanel(panel, Pos(0, 0));
       coverAreaPixel(pixelPos,
                      Pos(SCREEN_PIXEL_W, Config::getCharLinesPixelH()));
     } break;
 
-    case panel_log: {
+    case Panel::log: {
       coverAreaPixel(Pos(0, 0), Pos(SCREEN_PIXEL_W, Config::getLogPixelH()));
     } break;
 
-    case panel_map: {
+    case Panel::map: {
       const Pos pixelPos = getPixelPosForCellInPanel(panel, Pos(0, 0));
       coverAreaPixel(pixelPos, Pos(SCREEN_PIXEL_W, Config::getMapPixelH()));
     } break;
 
-    case panel_screen: {clearScreen();} break;
+    case Panel::screen: {clearScreen();} break;
   }
 }
 
-void coverArea(const PanelId panel, const Pos& pos, const Pos& dims) {
+void coverArea(const Panel panel, const Pos& pos, const Pos& dims) {
   const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
   const Pos cellDims(Config::getCellW(), Config::getCellH());
   coverAreaPixel(pixelPos, dims * cellDims);
@@ -645,7 +645,7 @@ void coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims) {
 
 void coverCellInMap(const Pos& pos) {
   const Pos cellDims(Config::getCellW(), Config::getCellH());
-  Pos pixelPos = getPixelPosForCellInPanel(panel_map, pos);
+  Pos pixelPos = getPixelPosForCellInPanel(Panel::map, pos);
   coverAreaPixel(pixelPos, cellDims);
 }
 
@@ -682,11 +682,11 @@ void drawProjectiles(vector<Projectile*>& projectiles,
       coverCellInMap(p->pos);
       if(Config::isTilesMode()) {
         if(p->tile != tile_empty) {
-          drawTile(p->tile, panel_map, p->pos, p->clr);
+          drawTile(p->tile, Panel::map, p->pos, p->clr);
         }
       } else {
         if(p->glyph != -1) {
-          drawGlyph(p->glyph, panel_map, p->pos, p->clr);
+          drawGlyph(p->glyph, Panel::map, p->pos, p->clr);
         }
       }
     }
@@ -695,7 +695,7 @@ void drawProjectiles(vector<Projectile*>& projectiles,
   updateScreen();
 }
 
-void drawPopupBox(const Rect& border, const PanelId panel,
+void drawPopupBox(const Rect& border, const Panel panel,
                   const SDL_Color& clr) {
   const bool IS_TILES = Config::isTilesMode();
 
@@ -1012,12 +1012,12 @@ void drawMap() {
         Pos pos(x, y);
 
         if(tmpDrw.isAwareOfMonsterHere) {
-          drawGlyph('!', panel_map, pos, clrBlack, true, clrNosfTealDrk);
+          drawGlyph('!', Panel::map, pos, clrBlack, true, clrNosfTealDrk);
         } else if(tmpDrw.tile != tile_empty && tmpDrw.glyph != ' ') {
           if(IS_TILES) {
-            drawTile(tmpDrw.tile, panel_map, pos, tmpDrw.clr, tmpDrw.clrBg);
+            drawTile(tmpDrw.tile, Panel::map, pos, tmpDrw.clr, tmpDrw.clrBg);
           } else {
-            drawGlyph(tmpDrw.glyph, panel_map, pos, tmpDrw.clr, true,
+            drawGlyph(tmpDrw.glyph, Panel::map, pos, tmpDrw.clr, true,
                       tmpDrw.clrBg);
           }
 
@@ -1041,9 +1041,9 @@ void drawMap() {
     }
     if(IS_TILES) {
       const TileId tile = isRangedWpn ? tile_playerFirearm : tile_playerMelee;
-      drawTile(tile, panel_map, pos, eng->player->getClr(), clrBlack);
+      drawTile(tile, Panel::map, pos, eng->player->getClr(), clrBlack);
     } else {
-      drawGlyph('@', panel_map, pos, eng->player->getClr(), true, clrBlack);
+      drawGlyph('@', Panel::map, pos, eng->player->getClr(), true, clrBlack);
     }
     const int LIFE_BAR_LENGTH = getLifebarLength(*eng->player);
     if(LIFE_BAR_LENGTH != -1) {

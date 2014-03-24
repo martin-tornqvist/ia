@@ -6,13 +6,14 @@
 
 #include <SDL_video.h>
 
-#include "Panel.h"
 #include "CommonData.h"
 #include "GameTime.h"
 #include "Config.h"
 #include "Art.h"
 
 struct Projectile;
+
+enum class Panel {screen, map, charLines, log};
 
 namespace Renderer {
 
@@ -30,25 +31,25 @@ void updateScreen();
 
 void clearScreen();
 
-void drawTile(const TileId tile, const PanelId panel, const Pos& pos,
+void drawTile(const TileId tile, const Panel panel, const Pos& pos,
               const SDL_Color& clr, const SDL_Color& bgClr = clrBlack);
 
-void drawGlyph(const char GLYPH, const PanelId panel, const Pos& pos,
+void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos,
                const SDL_Color& clr, const bool DRAW_BG_CLR = true,
                const SDL_Color& bgClr = clrBlack);
 
-void drawText(const string& str, const PanelId panel, const Pos& pos,
+void drawText(const string& str, const Panel panel, const Pos& pos,
               const SDL_Color& clr, const SDL_Color& bgClr = clrBlack);
 
-int drawTextCentered(const string& str, const PanelId panel, const Pos& pos,
+int drawTextCentered(const string& str, const Panel panel, const Pos& pos,
                      const SDL_Color& clr, const SDL_Color& bgClr = clrBlack,
                      const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
 void coverCellInMap(const Pos& pos);
 
-void coverPanel(const PanelId panel);
+void coverPanel(const Panel panel);
 
-void coverArea(const PanelId panel, const Pos& pos, const Pos& dims);
+void coverArea(const Panel panel, const Pos& pos, const Pos& dims);
 
 void coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims);
 
@@ -77,7 +78,7 @@ void drawMainMenuLogo(const int Y_POS);
 void drawProjectiles(vector<Projectile*>& projectiles,
                      const bool SHOULD_DRAW_MAP_BEFORE);
 
-void drawPopupBox(const Rect& area, const PanelId panel = panel_screen,
+void drawPopupBox(const Rect& area, const Panel panel = Panel::screen,
                   const SDL_Color& clr = clrGray);
 
 void applySurface(const Pos& pixelPos, SDL_Surface* const src,

@@ -65,31 +65,31 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
 
   const string decorationLine(MAP_W, '-');
 
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
   Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
-                         panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+                         Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                          clrGray);
 
-  Renderer::drawText(" Displaying High Scores ", panel_screen,
+  Renderer::drawText(" Displaying High Scores ", Panel::screen,
                          Pos(X_LABEL, 0), clrGray);
 
   int yPos = 1;
 
   Renderer::drawText(
-    "Ended",    panel_screen, Pos(X_POS_DATE,     yPos), clrGray);
+    "Ended",    Panel::screen, Pos(X_POS_DATE,     yPos), clrGray);
   Renderer::drawText(
-    "Name",     panel_screen, Pos(X_POS_NAME,     yPos), clrGray);
+    "Name",     Panel::screen, Pos(X_POS_NAME,     yPos), clrGray);
   Renderer::drawText(
-    "Score",    panel_screen, Pos(X_POS_SCORE,    yPos), clrGray);
+    "Score",    Panel::screen, Pos(X_POS_SCORE,    yPos), clrGray);
   Renderer::drawText(
-    "Level",    panel_screen, Pos(X_POS_LVL,      yPos), clrGray);
+    "Level",    Panel::screen, Pos(X_POS_LVL,      yPos), clrGray);
   Renderer::drawText(
-    "Depth",    panel_screen, Pos(X_POS_DLVL,     yPos), clrGray);
+    "Depth",    Panel::screen, Pos(X_POS_DLVL,     yPos), clrGray);
   Renderer::drawText(
-    "Insanity", panel_screen, Pos(X_POS_INSANITY, yPos), clrGray);
+    "Insanity", Panel::screen, Pos(X_POS_INSANITY, yPos), clrGray);
 
   yPos++;
 
@@ -108,17 +108,17 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
 
     const SDL_Color& clr = clrNosfTeal;
     Renderer::drawText(
-      dateAndTime, panel_screen, Pos(X_POS_DATE,      yPos), clr);
+      dateAndTime, Panel::screen, Pos(X_POS_DATE,      yPos), clr);
     Renderer::drawText(
-      name,        panel_screen, Pos(X_POS_NAME,      yPos), clr);
+      name,        Panel::screen, Pos(X_POS_NAME,      yPos), clr);
     Renderer::drawText(
-      score,       panel_screen, Pos(X_POS_SCORE,     yPos), clr);
+      score,       Panel::screen, Pos(X_POS_SCORE,     yPos), clr);
     Renderer::drawText(
-      lvl,         panel_screen, Pos(X_POS_LVL,       yPos), clr);
+      lvl,         Panel::screen, Pos(X_POS_LVL,       yPos), clr);
     Renderer::drawText(
-      dlvl,        panel_screen, Pos(X_POS_DLVL,      yPos), clr);
+      dlvl,        Panel::screen, Pos(X_POS_DLVL,      yPos), clr);
     Renderer::drawText(
-      ins + "%",   panel_screen, Pos(X_POS_INSANITY,  yPos), clr);
+      ins + "%",   Panel::screen, Pos(X_POS_INSANITY,  yPos), clr);
     yPos++;
   }
 

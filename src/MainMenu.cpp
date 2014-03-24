@@ -45,7 +45,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
 //      bgClr.r = BG_BRIGHTNESS / 2;
 //      bgClr.g = BG_BRIGHTNESS / 2;
 //      bgClr.b = BG_BRIGHTNESS;
-//      Renderer::drawGlyph(cha, panel_screen, Pos(x, y), bgClr);
+//      Renderer::drawGlyph(cha, Panel::screen, Pos(x, y), bgClr);
 //    }
 //  }
 
@@ -70,7 +70,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
           SDL_Color clr = clrGreenLgt;
           clr.g += Rnd::range(-50, 100);
           clr.g = max(0, min(254, int(clr.g)));
-          Renderer::drawGlyph(glyph, panel_screen, pos, clr);
+          Renderer::drawGlyph(glyph, Panel::screen, pos, clr);
         }
         pos.x++;
       }
@@ -81,7 +81,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
 
   if(IS_DEBUG_MODE) {
     Renderer::drawText(
-      "## DEBUG MODE ##", panel_screen, Pos(1, 1), clrYellow);
+      "## DEBUG MODE ##", Panel::screen, Pos(1, 1), clrYellow);
   }
 
   trace << "MainMenu: Drawing HPL quote" << endl;
@@ -94,7 +94,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   TextFormatting::lineToLines(quote, 28, quoteLines);
   Pos quotePos(15, pos.y - 1);
   for(string & quoteLine : quoteLines) {
-    Renderer::drawTextCentered(quoteLine, panel_screen, quotePos, quoteClr);
+    Renderer::drawTextCentered(quoteLine, Panel::screen, quotePos, quoteClr);
     quotePos.y++;
   }
 
@@ -109,50 +109,50 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   const int BOX_Y0 = pos.y - 1;
 
   Renderer::drawTextCentered(
-    "New journey", panel_screen, pos,
+    "New journey", Panel::screen, pos,
     browser.isPosAtElement(0) ? clrActive : clrInactive,
     browser.isPosAtElement(0) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
-    "Resurrect", panel_screen, pos,
+    "Resurrect", Panel::screen, pos,
     browser.isPosAtElement(1) ? clrActive : clrInactive,
     browser.isPosAtElement(1) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
-    "Manual", panel_screen, pos,
+    "Manual", Panel::screen, pos,
     browser.isPosAtElement(2) ? clrActive : clrInactive,
     browser.isPosAtElement(2) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
-    "Options", panel_screen, pos,
+    "Options", Panel::screen, pos,
     browser.isPosAtElement(3) ? clrActive : clrInactive,
     browser.isPosAtElement(3) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
-    "Credits", panel_screen, pos,
+    "Credits", Panel::screen, pos,
     browser.isPosAtElement(4) ? clrActive : clrInactive,
     browser.isPosAtElement(4) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
-    "High scores", panel_screen, pos,
+    "High scores", Panel::screen, pos,
     browser.isPosAtElement(5) ? clrActive : clrInactive,
     browser.isPosAtElement(5) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
-    "Escape to reality", panel_screen, pos,
+    "Escape to reality", Panel::screen, pos,
     browser.isPosAtElement(6) ? clrActive : clrInactive,
     browser.isPosAtElement(6) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   if(IS_DEBUG_MODE) {
     Renderer::drawTextCentered(
-      "DEBUG: RUN BOT", panel_screen, pos,
+      "DEBUG: RUN BOT", Panel::screen, pos,
       browser.isPosAtElement(7) ? clrActive : clrInactive,
       browser.isPosAtElement(8) ? clrActiveBg : clrInactiveBg);
     pos.y++;
@@ -163,11 +163,11 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   const int BOX_X0      = pos.x - BOX_W_HALF;
   const int BOX_X1      = pos.x + BOX_W_HALF;
   Renderer::drawPopupBox(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
-                         panel_screen);
+                         Panel::screen);
 
   Renderer::drawTextCentered(
     gameVersionStr + " - " + __DATE__ + " (c) 2011-2014 Martin Tornqvist",
-    panel_screen, Pos(MAP_W_HALF, SCREEN_H - 1), clrWhite);
+    Panel::screen, Pos(MAP_W_HALF, SCREEN_H - 1), clrWhite);
 
   Renderer::updateScreen();
 

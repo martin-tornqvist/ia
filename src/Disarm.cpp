@@ -43,7 +43,6 @@ void playerDisarm(Engine& eng) {
   }
 
   //Abort if encumbered
-  const Inventory& inv = eng.player->getInv();
   if(eng.player->getEncPercent() >= 100) {
     eng.log->addMsg("Not while encumbered.");
     Renderer::drawMapAndInterface();

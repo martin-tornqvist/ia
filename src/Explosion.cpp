@@ -42,9 +42,9 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
           blockers[pos.x][pos.y] == false) {
           isAnyCellSeenByPlayer = true;
           if(IS_TILES) {
-            Renderer::drawTile(tile, panel_map, pos, clr, clrBlack);
+            Renderer::drawTile(tile, Panel::map, pos, clr, clrBlack);
           } else {
-            Renderer::drawGlyph('*', panel_map, pos, clr, true, clrBlack);
+            Renderer::drawGlyph('*', Panel::map, pos, clr, true, clrBlack);
           }
         }
       }

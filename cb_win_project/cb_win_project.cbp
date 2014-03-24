@@ -214,7 +214,6 @@
 		<Unit filename="../include/MenuBrowser.h" />
 		<Unit filename="../include/MenuInputHandler.h" />
 		<Unit filename="../include/MersenneTwister.h" />
-		<Unit filename="../include/Panel.h" />
 		<Unit filename="../include/PlayerBonuses.h" />
 		<Unit filename="../include/PlayerCreateCharacter.h" />
 		<Unit filename="../include/PlayerSpellsHandler.h" />
@@ -321,7 +320,6 @@
 		<Unit filename="../src/Marker.cpp" />
 		<Unit filename="../src/MenuBrowser.cpp" />
 		<Unit filename="../src/MenuInputHandler.cpp" />
-		<Unit filename="../src/Panel.cpp" />
 		<Unit filename="../src/PlayerBonuses.cpp" />
 		<Unit filename="../src/PlayerCreateCharacter.cpp" />
 		<Unit filename="../src/PlayerSpellsHandler.cpp" />

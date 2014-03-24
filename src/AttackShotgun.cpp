@@ -82,9 +82,9 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
             Renderer::drawMapAndInterface(false);
             Renderer::coverCellInMap(curPos);
             if(Config::isTilesMode()) {
-              Renderer::drawTile(tile_blast2, panel_map, curPos, clrRedLgt);
+              Renderer::drawTile(tile_blast2, Panel::map, curPos, clrRedLgt);
             } else {
-              Renderer::drawGlyph('*', panel_map, curPos, clrRedLgt);
+              Renderer::drawGlyph('*', Panel::map, curPos, clrRedLgt);
             }
             Renderer::updateScreen();
             SdlWrapper::sleep(Config::getDelayShotgun());
@@ -130,9 +130,9 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         Renderer::drawMapAndInterface(false);
         Renderer::coverCellInMap(curPos);
         if(Config::isTilesMode()) {
-          Renderer::drawTile(tile_blast2, panel_map, curPos, clrYellow);
+          Renderer::drawTile(tile_blast2, Panel::map, curPos, clrYellow);
         } else {
-          Renderer::drawGlyph('*', panel_map, curPos, clrYellow);
+          Renderer::drawGlyph('*', Panel::map, curPos, clrYellow);
         }
         Renderer::updateScreen();
         SdlWrapper::sleep(Config::getDelayShotgun());
@@ -151,9 +151,9 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         Renderer::drawMapAndInterface(false);
         Renderer::coverCellInMap(curPos);
         if(Config::isTilesMode()) {
-          Renderer::drawTile(tile_blast2, panel_map, curPos, clrYellow);
+          Renderer::drawTile(tile_blast2, Panel::map, curPos, clrYellow);
         } else {
-          Renderer::drawGlyph('*', panel_map, curPos, clrYellow);
+          Renderer::drawGlyph('*', Panel::map, curPos, clrYellow);
         }
         Renderer::updateScreen();
         SdlWrapper::sleep(Config::getDelayShotgun());

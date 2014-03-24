@@ -255,7 +255,7 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
     const string nrStr = "1-" + toString(item->nrItems);
     const string dropStr = "Drop how many (" + nrStr + ")?:      " +
                            "| enter to drop" + cancelInfoStr;
-    Renderer::drawText(dropStr, panel_screen, Pos(0, 0), clrWhiteHigh);
+    Renderer::drawText(dropStr, Panel::screen, Pos(0, 0), clrWhiteHigh);
     Renderer::updateScreen();
     const Pos nrQueryPos(20 + nrStr.size(), 0);
     const int NR_TO_DROP = eng.query->number(nrQueryPos, clrWhiteHigh, 0, 3,

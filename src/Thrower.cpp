@@ -48,7 +48,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     for(unsigned int i = 1; i < path.size() - 1; i++) {
       Renderer::drawMapAndInterface(false);
       if(eng.map->cells[path[i].x][path[i].y].isSeenByPlayer) {
-        Renderer::drawGlyph(glyph, panel_map, path[i], clr);
+        Renderer::drawGlyph(glyph, Panel::map, path[i], clr);
         Renderer::updateScreen();
         SdlWrapper::sleep(Config::getDelayProjectileDraw());
       }
@@ -146,7 +146,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
           data->attackResult >= successSmall &&
           data->isEtherealDefenderMissed == false) {
           if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-            Renderer::drawGlyph('*', panel_map,
+            Renderer::drawGlyph('*', Panel::map,
                                 curPos, clrRedLgt);
             Renderer::updateScreen();
             SdlWrapper::sleep(Config::getDelayProjectileDraw() * 4);
@@ -180,7 +180,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
     }
 
     if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
-      Renderer::drawGlyph(glyph, panel_map, curPos, clr);
+      Renderer::drawGlyph(glyph, Panel::map, curPos, clr);
       Renderer::updateScreen();
       SdlWrapper::sleep(Config::getDelayProjectileDraw());
     }

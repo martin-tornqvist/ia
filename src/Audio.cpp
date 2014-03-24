@@ -85,7 +85,7 @@ void loadAudioFile(const SfxId sfx, const string& filename) {
   const string fileRelPath = "audio/" + filename;
 
   Renderer::clearScreen();
-  Renderer::drawText("Loading " + fileRelPath + "...", panel_screen,
+  Renderer::drawText("Loading " + fileRelPath + "...", Panel::screen,
                      Pos(1, 1), clrWhite);
   Renderer::updateScreen();
 

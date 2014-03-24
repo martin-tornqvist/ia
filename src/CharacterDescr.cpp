@@ -190,16 +190,16 @@ void CharacterDescr::drawInterface() {
 
   const int X_LABEL = 3;
 
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, 0), clrGray);
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
-  Renderer::drawText(" Displaying character description ", panel_screen,
+  Renderer::drawText(" Displaying character description ", Panel::screen,
                          Pos(X_LABEL, 0), clrWhite);
 
-  Renderer::drawText(decorationLine, panel_screen, Pos(0, SCREEN_H - 1),
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                          clrGray);
 
   Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
-                         panel_screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
+                         Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
 }
 
 void CharacterDescr::run() {
@@ -218,7 +218,7 @@ void CharacterDescr::run() {
     int yPos = 1;
     for(int i = topNr; i <= btmNr; i++) {
       Renderer::drawText(
-        lines.at(i).str , panel_screen, Pos(0, yPos++), lines.at(i).clr);
+        lines.at(i).str , Panel::screen, Pos(0, yPos++), lines.at(i).clr);
     }
     Renderer::updateScreen();
 
