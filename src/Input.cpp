@@ -645,10 +645,10 @@ KeyboardReadReturnData readKeysUntilFound(Engine& eng) {
           clearEvents();
           return KeyboardReadReturnData(char(UNICODE));
         } else {
-          // Other key pressed? (escape, return, space, etc)
+          //Other key pressed? (escape, return, space, etc)
           const SDLKey sdlKey = event_->key.keysym.sym;
 
-          // Don't register shift, control or alt as actual key events
+          //Don't register shift, control or alt as actual key events
           if(
             sdlKey == SDLK_LSHIFT ||
             sdlKey == SDLK_RSHIFT ||
