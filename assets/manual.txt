@@ -11,6 +11,7 @@
    Esc    Menu (manual, options, quit)
    Space  Cancel, close
    Enter  Select something in a menu
+   o      Alternative menu selection key (intended for use with Vi-keys)
    @      Display character information
    TAB    Melee attack adjacent monster
    a      Examine something on the map
@@ -63,13 +64,14 @@ Vi keys are also supported:
    b j n
 
 Certain things can be interacted with by moving into them (i.e. by "bumping" them), for example:
-   * Moving into enemies results in a melee attack
-   * Moving into closed doors makes an attempt to open them
+   * Move into enemies to attack them
+   * Move into closed doors, chests, cabinets, etc to open them
+   * Move into fountains to drink from them
 
 
 3. The interface
 ------------------------------------------------
-The following is an example of how The interface lines can look:
+The following is an example of how the interface lines can look:
 
    HP:9/16 INS:45%/12% ARM:1      M1911 Colt 1d8+4 50% 5/7
    DLVL:2 LVL:1 NXT:60 ENC:40%    7 Throwing Knives 2d4 50%

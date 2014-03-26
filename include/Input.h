@@ -7,20 +7,20 @@
 
 class Engine;
 
-struct KeyboardReadReturnData {
+struct KeyboardReadRetData {
 public:
-  KeyboardReadReturnData() :
+  KeyboardReadRetData() :
     key_(-1), sdlKey_(SDLK_LAST), isShiftHeld_(false), isCtrlHeld_(false) {}
 
-  KeyboardReadReturnData(char key, SDLKey sdlKey, bool isShiftHeld,
+  KeyboardReadRetData(char key, SDLKey sdlKey, bool isShiftHeld,
                          bool isCtrlHeld) :
     key_(key), sdlKey_(sdlKey), isShiftHeld_(isShiftHeld),
     isCtrlHeld_(isCtrlHeld) {}
 
-  KeyboardReadReturnData(char key) :
+  KeyboardReadRetData(char key) :
     key_(key), sdlKey_(SDLK_LAST), isShiftHeld_(false), isCtrlHeld_(false) {}
 
-  KeyboardReadReturnData(SDLKey sdlKey) :
+  KeyboardReadRetData(SDLKey sdlKey) :
     key_(-1), sdlKey_(sdlKey), isShiftHeld_(false), isCtrlHeld_(false) {}
 
   char key_;
@@ -35,13 +35,14 @@ void cleanup();
 
 void handleMapModeInputUntilFound(Engine& eng);
 
-KeyboardReadReturnData readKeysUntilFound(Engine& eng);
+KeyboardReadRetData readKeysUntilFound(Engine& eng,
+                                          const bool IS_O_RETURN = true);
 
 void clearEvents();
 
 void setKeyRepeatDelays();
 
-void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng);
+void handleKeyPress(const KeyboardReadRetData& d, Engine& eng);
 
 } //Input
 

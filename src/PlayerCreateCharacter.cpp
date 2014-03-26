@@ -333,7 +333,8 @@ void PlayerEnterName::draw(const string& currentString) const {
 }
 
 void PlayerEnterName::readKeys(string& currentString, bool& isDone) const {
-  const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
+
+  const KeyboardReadRetData& d = Input::readKeysUntilFound(eng, false);
 
   if(d.sdlKey_ == SDLK_RETURN) {
     isDone = true;

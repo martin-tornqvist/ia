@@ -19,7 +19,7 @@
 
 void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
                       Item* itemThrown) {
-  const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
+  const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
 
   if(d.sdlKey_ == SDLK_RIGHT    || d.key_ == '6' || d.key_ == 'l') {
     if(d.isShiftHeld_) {

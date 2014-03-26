@@ -21,7 +21,7 @@ YesNoAnswer Query::yesOrNo(char keyForSpecialEvent) const {
     return YesNoAnswer::yes;
   }
 
-  KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
+  KeyboardReadRetData d = Input::readKeysUntilFound(eng);
   while(
     d.key_    != 'y'          &&
     d.key_    != 'n'          &&
@@ -49,7 +49,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
   Renderer::updateScreen();
 
   while(true) {
-    KeyboardReadReturnData d;
+    KeyboardReadRetData d;
     while((d.key_ < '0' || d.key_ > '9') && d.sdlKey_ != SDLK_RETURN &&
           d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE &&
           d.sdlKey_ != SDLK_BACKSPACE) {
@@ -90,7 +90,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
 
 void Query::waitForEscOrSpace() const {
   if(Config::isBotPlaying() == false) {
-    KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
+    KeyboardReadRetData d = Input::readKeysUntilFound(eng);
     while(d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE) {
       d = Input::readKeysUntilFound(eng);
     }
@@ -98,7 +98,7 @@ void Query::waitForEscOrSpace() const {
 }
 
 Pos Query::dir() const {
-  KeyboardReadReturnData d = Input::readKeysUntilFound(eng);
+  KeyboardReadRetData d = Input::readKeysUntilFound(eng);
 
   while(d.sdlKey_ != SDLK_RIGHT   && d.sdlKey_ != SDLK_UP       &&
         d.sdlKey_ != SDLK_LEFT    && d.sdlKey_ != SDLK_DOWN     &&

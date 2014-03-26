@@ -134,7 +134,7 @@ void Log::displayHistory() {
     }
     Renderer::updateScreen();
 
-    const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
+    const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
       topNr += LINE_JUMP;
       if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {

@@ -72,7 +72,7 @@ void cleanup() {
   }
 }
 
-void handleKeyPress(const KeyboardReadReturnData& d, Engine& eng) {
+void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
   //----------------------------------- MOVEMENT
   if(d.sdlKey_ == SDLK_RIGHT            || d.key_ == '6' || d.key_ == 'l') {
     if(eng.player->deadState == ActorDeadState::alive) {
@@ -612,7 +612,7 @@ void setKeyRepeatDelays() {
 
 void handleMapModeInputUntilFound(Engine& eng) {
   if(event_ != NULL) {
-    const KeyboardReadReturnData& d = readKeysUntilFound(eng);
+    const KeyboardReadRetData& d = readKeysUntilFound(eng);
     if(eng.quitToMainMenu_ == false) {
       handleKeyPress(d, eng);
     }
@@ -623,9 +623,9 @@ void clearEvents() {
   if(event_ != NULL) {while(SDL_PollEvent(event_)) {}}
 }
 
-KeyboardReadReturnData readKeysUntilFound(Engine& eng) {
+KeyboardReadRetData readKeysUntilFound(Engine& eng, const bool IS_O_RETURN) {
   if(event_ == NULL) {
-    return KeyboardReadReturnData();
+    return KeyboardReadRetData();
   }
 
   while(true) {
@@ -634,16 +634,18 @@ KeyboardReadReturnData readKeysUntilFound(Engine& eng) {
 
     while(SDL_PollEvent(event_)) {
       if(event_->type == SDL_QUIT) {
-        return KeyboardReadReturnData(SDLK_ESCAPE);
+        return KeyboardReadRetData(SDLK_ESCAPE);
       } else if(event_->type == SDL_KEYDOWN) {
         // ASCII char entered?
         // Decimal unicode:
         // '!' = 33
         // '~' = 126
-        const Uint16 UNICODE = event_->key.keysym.unicode;
-        if(UNICODE >= 33 && UNICODE < 126) {
+        Uint16 unicode = event_->key.keysym.unicode;
+        if((unicode == 'o' || unicode == 'O') && IS_O_RETURN) {
+          return KeyboardReadRetData(-1, SDLK_RETURN, unicode == 'O', false);
+        } else if(unicode >= 33 && unicode < 126) {
           clearEvents();
-          return KeyboardReadReturnData(char(UNICODE));
+          return KeyboardReadRetData(char(unicode));
         } else {
           //Other key pressed? (escape, return, space, etc)
           const SDLKey sdlKey = event_->key.keysym.sym;
@@ -664,10 +666,10 @@ KeyboardReadReturnData readKeysUntilFound(Engine& eng) {
           const bool IS_CTRL_HELD     = mod & KMOD_CTRL;
           const bool IS_ALT_HELD      = mod & KMOD_ALT;
 
-          KeyboardReadReturnData ret(-1, sdlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
+          KeyboardReadRetData ret(-1, sdlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
 
           if(sdlKey >= SDLK_F1 && sdlKey <= SDLK_F15) {
-            // F-keys
+            //F-keys
             return ret;
           } else {
             switch(sdlKey) {

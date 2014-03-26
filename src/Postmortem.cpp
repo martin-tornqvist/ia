@@ -239,7 +239,7 @@ void Postmortem::runInfo() {
   while(true) {
     renderInfo(topNr);
 
-    const KeyboardReadReturnData& d = Input::readKeysUntilFound(eng);
+    const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
 
     if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
       topNr += LINE_JUMP;
