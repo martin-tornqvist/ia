@@ -193,13 +193,13 @@ void CharacterDescr::drawInterface() {
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
   Renderer::drawText(" Displaying character description ", Panel::screen,
-                         Pos(X_LABEL, 0), clrWhite);
+                     Pos(X_LABEL, 0), clrWhite);
 
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
-                         clrGray);
+                     clrGray);
 
-  Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
-                         Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
+  Renderer::drawText(" 2/8, down/up, j/k to navigate | space/esc to exit ",
+                     Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
 }
 
 void CharacterDescr::run() {
@@ -224,14 +224,14 @@ void CharacterDescr::run() {
 
     const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
 
-    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
+    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN || d.key_ == 'j') {
       topNr += LINE_JUMP;
       if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
         topNr = 0;
       } else {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
-    } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
+    } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP || d.key_ == 'k') {
       topNr = max(0, topNr - LINE_JUMP);
     } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       break;

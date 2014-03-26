@@ -210,7 +210,7 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                      clrGray);
 
-  Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit  ",
+  Renderer::drawText(" 2/8, down/up, j/k to navigate | space/esc to exit  ",
                      Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   const int NR_LINES_TOT = int(postmortemLines.size());
@@ -241,14 +241,14 @@ void Postmortem::runInfo() {
 
     const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
 
-    if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2') {
+    if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2' || d.key_ == 'j') {
       topNr += LINE_JUMP;
       if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
         topNr = 0;
       } else {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
-    } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8') {
+    } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8' || d.key_ == 'k') {
       topNr = max(0, topNr - LINE_JUMP);
     } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       break;
@@ -363,27 +363,27 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   //Draw command labels
   pos.set(55, 14);
   Renderer::drawText(
-    "a) Information", Panel::screen, pos,
+    "Information", Panel::screen, pos,
     browser.isPosAtElement(0) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
-    "b) View the High Score", Panel::screen, pos,
+    "View the High Score", Panel::screen, pos,
     browser.isPosAtElement(1) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
-    "c) View messages", Panel::screen, pos,
+    "View messages", Panel::screen, pos,
     browser.isPosAtElement(2) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
-    "d) Return to main menu", Panel::screen, pos,
+    "Return to main menu", Panel::screen, pos,
     browser.isPosAtElement(3) ? clrWhite : clrRedLgt);
   pos.y += 1;
 
   Renderer::drawText(
-    "e) Quit the game", Panel::screen, pos,
+    "Quit the game", Panel::screen, pos,
     browser.isPosAtElement(4) ? clrWhite : clrRedLgt);
   pos.y += 1;
 

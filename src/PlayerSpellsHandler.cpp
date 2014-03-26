@@ -121,17 +121,17 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 
   Renderer::coverArea(Panel::screen, Pos(0, 0), Pos(MAP_W, NR_SPELLS + 1));
 
-  const string label =
-    "Choose a power to evoke [a-" + endLetter + "]" +
-    " | Space/esc to exit";
+  const string label = "Evoke which power? | space/esc to cancel";
   Renderer::drawText(label, Panel::screen, Pos(0, 0), clrWhiteHigh);
 
   int y = 1;
 
   for(int i = 0; i < NR_SPELLS; i++) {
     const int CURRENT_ELEMENT = i;
+    Scroll scroll(NULL, eng);
+    SDL_Color scrollClr = scroll.getInterfaceClr();
     const SDL_Color clr =
-      browser.isPosAtElement(CURRENT_ELEMENT) ? clrWhite : clrRedLgt;
+      browser.isPosAtElement(CURRENT_ELEMENT) ? clrWhite : scrollClr;
     Spell* const spell = knownSpells_.at(i);
     string str = spell->getName();
 

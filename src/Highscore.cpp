@@ -67,14 +67,14 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
 
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
-  Renderer::drawText(" 2/8, down/up to navigate | space/esc to exit ",
-                         Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+  Renderer::drawText(" Displaying High Scores ", Panel::screen,
+                     Pos(X_LABEL, 0), clrGray);
 
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
-                         clrGray);
+                     clrGray);
 
-  Renderer::drawText(" Displaying High Scores ", Panel::screen,
-                         Pos(X_LABEL, 0), clrGray);
+  Renderer::drawText(" 2/8, down/up, j/k to navigate | space/esc to exit ",
+                     Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
 
@@ -151,7 +151,7 @@ void HighScore::runHighScoreScreen() {
 
     const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
 
-    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN) {
+    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN || d.key_ == 'j') {
       topNr += LINE_JUMP;
       if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
         topNr = 0;
@@ -159,7 +159,7 @@ void HighScore::runHighScoreScreen() {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
     }
-    if(d.key_ == '8' || d.sdlKey_ == SDLK_UP) {
+    if(d.key_ == '8' || d.sdlKey_ == SDLK_UP || d.key_ == '8') {
       topNr = max(0, topNr - LINE_JUMP);
     }
     if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {

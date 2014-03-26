@@ -44,7 +44,7 @@ void drawBrowseSlots(const MenuBrowser& browser, Engine& eng) {
     "Select slot to equip/unequip. | shift+select to drop | space/esc to exit";
   Renderer::drawText(str, Panel::screen, pos, clrWhiteHigh);
 
-  const int X_POS_ITEM_NAME = 15;
+  const int X_POS_ITEM_NAME = 12;
 
   pos.y++;
 
@@ -57,13 +57,13 @@ void drawBrowseSlots(const MenuBrowser& browser, Engine& eng) {
     str = slot.interfaceName;
     pos.x = 0;
     Renderer::drawText(
-      str, Panel::screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
+      str, Panel::screen, pos, IS_CUR_POS ? clrWhiteHigh : clrNosfTealDrk);
     pos.x = X_POS_ITEM_NAME;
     Item* const item = slot.item;
     if(item == NULL) {
       pos.x += 2;
       Renderer::drawText(
-        "<empty>", Panel::screen, pos, IS_CUR_POS ? clrWhite : clrRedLgt);
+        "<empty>", Panel::screen, pos, IS_CUR_POS ? clrWhite : clrNosfTealDrk);
     } else {
       drawItemSymbol(*item, pos);
       pos.x += 2;
@@ -98,7 +98,7 @@ void drawBrowseSlots(const MenuBrowser& browser, Engine& eng) {
   pos.y += 1;
   const bool IS_CUR_POS = browser.getPos().y == int(slots.size());
   Renderer::drawText(str, Panel::screen, pos,
-                     IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
+                     IS_CUR_POS ? clrWhiteHigh : clrNosfTealDrk);
 
   Renderer::updateScreen();
 }
@@ -129,12 +129,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
     const SDL_Color itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
-    str = "x) ";
-    str.at(0) = 'a' + i;
     pos.x = 0;
-    Renderer::drawText(
-      str, Panel::screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 3;
 
     drawItemSymbol(*item, pos);
     pos.x += 2;
@@ -191,12 +186,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
   const int NR_INDEXES = genInvIndexes.size();
   for(int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
-    str = "x) ";
-    str.at(0) = 'a' + i;
     pos.x = 0;
-    Renderer::drawText(
-      str, Panel::screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 3;
 
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
@@ -268,15 +258,10 @@ void drawUse(const MenuBrowser& browser,
     }
     if(isNewLabel) {
       pos.x = 0;
-      Renderer::drawText(label, Panel::screen, pos, clrYellow);
+      Renderer::drawText(label, Panel::screen, pos, clrNosfTealDrk);
     }
 
-    pos.x = 10;
-    str = "x) ";
-    str.at(0) = 'a' + i;
-    Renderer::drawText(
-      str, Panel::screen, pos, IS_CUR_POS ? clrWhiteHigh : clrRedLgt);
-    pos.x += 3;
+    pos.x = 11;
 
     //Draw item symbol
     drawItemSymbol(*item, pos);
