@@ -44,7 +44,7 @@ void DungeonMaster::playerGainLvl() {
     eng.playerCreateCharacter->pickNewTrait(false);
 
     eng.player->restoreHp(999, false);
-    eng.player->changeMaxHp(2, true);
+    eng.player->changeMaxHp(3, true);
     eng.player->changeMaxSpi(1, true);
   }
 }
