@@ -107,7 +107,7 @@ void loadFont() {
 
   SDL_Surface* fontSurfaceTmp = IMG_Load(Config::getFontName().data());
 
-  Uint32 bgClr = SDL_MapRGB(fontSurfaceTmp->format, 255, 255, 255);
+  Uint32 bgClr = SDL_MapRGB(fontSurfaceTmp->format, 0, 0, 0);
 
   for(int y = 0; y < fontSurfaceTmp->h; y++) {
     for(int x = 0; x < fontSurfaceTmp->w; x++) {
