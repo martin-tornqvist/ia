@@ -185,7 +185,7 @@ public:
   Prop* makeProp(const PropId id, PropTurns turnsInit,
                  const int NR_TURNS = -1) const;
 
-  bool tryResistDmg(const DmgTypes dmgType,
+  bool tryResistDmg(const DmgType dmgType,
                     const bool ALLOW_MSG_WHEN_TRUE) const;
 
 private:
@@ -278,7 +278,7 @@ public:
     return false;
   }
   virtual bool tryResistDmg(
-    const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+    const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
     (void)dmgType;
     (void)ALLOW_MSG_WHEN_TRUE;
     return false;
@@ -756,7 +756,7 @@ public:
     Prop(propRAcid, engine, turnsInit, turns) {}
   ~PropRAcid() override {}
 
-  bool tryResistDmg(const DmgTypes dmgType,
+  bool tryResistDmg(const DmgType dmgType,
                     const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
@@ -766,7 +766,7 @@ public:
     Prop(propRCold, engine, turnsInit, turns) {}
   ~PropRCold() override {}
 
-  bool tryResistDmg(const DmgTypes dmgType,
+  bool tryResistDmg(const DmgType dmgType,
                     const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
@@ -787,7 +787,7 @@ public:
     Prop(propRElec, engine, turnsInit, turns) {}
   ~PropRElec() override {}
 
-  bool tryResistDmg(const DmgTypes dmgType,
+  bool tryResistDmg(const DmgType dmgType,
                     const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
@@ -812,7 +812,7 @@ public:
 
   bool tryResistOtherProp(const PropId id) const override;
 
-  bool tryResistDmg(const DmgTypes dmgType,
+  bool tryResistDmg(const DmgType dmgType,
                     const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
@@ -826,7 +826,7 @@ public:
 
   bool tryResistOtherProp(const PropId id) const override;
 
-  bool tryResistDmg(const DmgTypes dmgType,
+  bool tryResistDmg(const DmgType dmgType,
                     const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 

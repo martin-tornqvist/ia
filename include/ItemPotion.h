@@ -35,15 +35,15 @@ protected:
   virtual const string getRealTypeName() {return "[WARNING]";}
 };
 
-class PotionOfHealth: public Potion {
+class PotionOfVitality: public Potion {
 public:
-  PotionOfHealth(ItemData* const itemData, Engine& engine) :
+  PotionOfVitality(ItemData* const itemData, Engine& engine) :
     Potion(itemData, engine) {}
-  ~PotionOfHealth() {}
+  ~PotionOfVitality() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Health";}
+  const string getRealTypeName() {return "Vitality";}
 };
 
 class PotionOfSpirit: public Potion {

@@ -224,7 +224,7 @@ SpellCastRetData SpellDarkbolt::cast_(
   Range dmgRange(4, 10);
   const int DMG = isCharged ? dmgRange.upper : Rnd::range(dmgRange);
 
-  target->hit(DMG, dmgType_physical, true);
+  target->hit(DMG, DmgType::physical, true);
 
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos, NULL,
           SndVol::low, AlertsMonsters::yes);
@@ -273,7 +273,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
 
         const int DMG = IS_CHARGED ? dmgRange.upper : Rnd::range(dmgRange);
 
-        actor->hit(DMG, dmgType_physical, false);
+        actor->hit(DMG, DmgType::physical, false);
 
         Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos, NULL,
                 SndVol::high, AlertsMonsters::yes);
@@ -287,7 +287,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
       vector<Pos> {eng.player->pos}, clrRedLgt);
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecific, 1));
-    eng.player->hit(Rnd::range(dmgRange), dmgType_physical, false);
+    eng.player->hit(Rnd::range(dmgRange), DmgType::physical, false);
     Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, eng.player->pos, NULL,
             SndVol::high, AlertsMonsters::yes);
     SndEmit::emitSnd(snd, eng);
@@ -564,7 +564,7 @@ SpellCastRetData SpellSacrificeLife::cast_(
 
   if(PLAYER_HP_CUR > 2) {
     const int HP_DRAINED = ((PLAYER_HP_CUR - 1) / 2) * 2;
-    eng.player->hit(HP_DRAINED, dmgType_pure, false);
+    eng.player->hit(HP_DRAINED, DmgType::pure, false);
     eng.player->restoreSpi(HP_DRAINED, true, true);
     return SpellCastRetData(true);
   }

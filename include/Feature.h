@@ -33,7 +33,7 @@ public:
   virtual bool isSmokePassable() const;
   virtual bool isBottomless() const;
   virtual string getDescr(const bool DEFINITE_ARTICLE) const;
-  virtual void hit(const int DMG, const DmgTypes dmgType);
+  virtual void hit(const int DMG, const DmgType dmgType);
   virtual SDL_Color getClr() const;
   virtual SDL_Color getClrBg() const;
   virtual char getGlyph() const;

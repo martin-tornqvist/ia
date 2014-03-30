@@ -866,7 +866,7 @@ bool PropHandler::tryResistProp(
 }
 
 bool PropHandler::tryResistDmg(
-  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
@@ -1020,19 +1020,23 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   }
 }
 
-void PropHandler::tryApplyPropFromWpn(
-  const Weapon& wpn, const bool IS_MELEE) {
-
+void PropHandler::tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE) {
   const ItemData& wpnData = wpn.getData();
   Prop* propAppliedFromWpn =
     IS_MELEE ? wpnData.propAppliedOnMelee : wpnData.propAppliedOnRanged;
 
   if(propAppliedFromWpn != NULL) {
-    //Make a copy of the weapon effect
-    Prop* const prop = makeProp(
-                         propAppliedFromWpn->getId(), propTurnsSpecific,
-                         propAppliedFromWpn->turnsLeft_);
-    tryApplyProp(prop);
+
+    //If weapon damage type is resisted by the defender, the property is
+    //automatically resisted
+    DmgType dmgType = IS_MELEE ? wpnData.meleeDmgType : wpnData.rangedDmgType;
+    if(tryResistDmg(dmgType, false) == false) {
+      //Make a copy of the weapon effect
+      Prop* const prop = makeProp(
+                           propAppliedFromWpn->getId(), propTurnsSpecific,
+                           propAppliedFromWpn->turnsLeft_);
+      tryApplyProp(prop);
+    }
   }
 }
 
@@ -1436,7 +1440,7 @@ void PropPoisoned::onNewTurn() {
       }
     }
 
-    owningActor_->hit(1, dmgType_pure, false);
+    owningActor_->hit(1, DmgType::pure, false);
   }
 }
 
@@ -1535,7 +1539,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
       }
     }
 
-    owningActor_->hit(Rnd::dice(1, 3), dmgType_physical, false);
+    owningActor_->hit(Rnd::dice(1, 3), DmgType::physical, false);
 
     if(owningActor_->deadState == ActorDeadState::alive) {
 
@@ -1689,7 +1693,7 @@ void PropBurning::onNewTurn() {
   if(owningActor_ == eng.player) {
     eng.log->addMsg("AAAARGH IT BURNS!!!", clrRedLgt);
   }
-  owningActor_->hit(Rnd::dice(1, 2), dmgType_fire, false);
+  owningActor_->hit(Rnd::dice(1, 2), DmgType::fire, false);
 }
 
 bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
@@ -1760,7 +1764,7 @@ bool PropFainted::shouldUpdatePlayerVisualWhenStartOrEnd() const {
 }
 
 void PropFlared::onNewTurn() {
-  owningActor_->hit(1, dmgType_fire, false);
+  owningActor_->hit(1, DmgType::fire, false);
 
   if(turnsLeft_ == 0) {
     bool visionBlockers[MAP_W][MAP_H];
@@ -1773,9 +1777,9 @@ void PropFlared::onNewTurn() {
 }
 
 bool PropRAcid::tryResistDmg(
-  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
-  if(dmgType == dmgType_acid) {
+  if(dmgType == DmgType::acid) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I feel a faint burning sensation.");
@@ -1789,9 +1793,9 @@ bool PropRAcid::tryResistDmg(
 }
 
 bool PropRCold::tryResistDmg(
-  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
-  if(dmgType == dmgType_cold) {
+  if(dmgType == DmgType::cold) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I feel chilly.");
@@ -1805,9 +1809,9 @@ bool PropRCold::tryResistDmg(
 }
 
 bool PropRElec::tryResistDmg(
-  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
-  if(dmgType == dmgType_electric) {
+  if(dmgType == DmgType::electric) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I feel a faint tingle.");
@@ -1850,9 +1854,9 @@ void PropRPhys::onStart() {
 }
 
 bool PropRPhys::tryResistDmg(
-  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
-  if(dmgType == dmgType_physical) {
+  if(dmgType == DmgType::physical) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I resist harm.");
@@ -1876,9 +1880,9 @@ void PropRFire::onStart() {
 }
 
 bool PropRFire::tryResistDmg(
-  const DmgTypes dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
 
-  if(dmgType == dmgType_fire) {
+  if(dmgType == DmgType::fire) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == eng.player) {
         eng.log->addMsg("I feel hot.");

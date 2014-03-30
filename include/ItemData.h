@@ -142,7 +142,7 @@ enum ItemId {
   item_scrollOfSacrificeLife,
   item_scrollOfSacrificeSpirit,
 
-  item_potionOfHealth,
+  item_potionOfVitality,
   item_potionOfSpirit,
   item_potionOfBlindness,
   item_potionOfFrenzy,
@@ -221,14 +221,14 @@ public:
   int meleeHitChanceMod;
   ItemAttackMessages meleeAttackMessages;
   Prop* propAppliedOnMelee; //TODO This requires deep copy of items
-  DmgTypes meleeDmgType;
+  DmgType meleeDmgType;
   bool meleeCausesKnockBack;
   bool rangedCausesKnockBack;
   DiceParam rangedDmg;
   string rangedDmgLabelOverRide;
   int rangedHitChanceMod;
   ItemId rangedAmmoTypeUsed;
-  DmgTypes rangedDmgType;
+  DmgType rangedDmgType;
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;
   TileId rangedMissileTile;

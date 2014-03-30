@@ -51,9 +51,9 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
   if(data_->isIdentified == false) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
-    const string REAL_NAME = "Manuscript of " + REAL_TYPE_NAME;
+    const string REAL_NAME        = "Manuscript of " + REAL_TYPE_NAME;
     const string REAL_NAME_PLURAL = "Manuscripts of " + REAL_TYPE_NAME;
-    const string REAL_NAME_A = "a Manuscript of " + REAL_TYPE_NAME;
+    const string REAL_NAME_A      = "a Manuscript of " + REAL_TYPE_NAME;
 
     data_->name.name = REAL_NAME;
     data_->name.name_plural = REAL_NAME_PLURAL;

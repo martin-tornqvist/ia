@@ -28,10 +28,10 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   const bool IS_MACHINE_GUN = wpn.getData().isMachineGun;
 
-  const unsigned int NR_PROJECTILES = IS_MACHINE_GUN ?
-                                      NR_MG_PROJECTILES : 1;
+  const int NR_PROJECTILES = IS_MACHINE_GUN ?
+                             NR_MG_PROJECTILES : 1;
 
-  for(unsigned int i = 0; i < NR_PROJECTILES; i++) {
+  for(int i = 0; i < NR_PROJECTILES; i++) {
     Projectile* const p = new Projectile;
     p->setAttackData(new RangedAttackData(
                        attacker, wpn, aimPos, attacker.pos, eng));
@@ -90,13 +90,13 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   const bool LEAVE_TRAIL = wpn.getData().rangedMissileLeavesTrail;
 
-  const unsigned int SIZE_OF_PATH_PLUS_ONE =
+  const int SIZE_OF_PATH_PLUS_ONE =
     projectilePath.size() + (NR_PROJECTILES - 1) *
     NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES;
 
-  for(unsigned int i = 1; i < SIZE_OF_PATH_PLUS_ONE; i++) {
+  for(int i = 1; i < SIZE_OF_PATH_PLUS_ONE; i++) {
 
-    for(unsigned int p = 0; p < NR_PROJECTILES; p++) {
+    for(int p = 0; p < NR_PROJECTILES; p++) {
 
       //Current projectile's place in the path is the current global place (i)
       //minus a certain number of elements
@@ -180,12 +180,12 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
                                   curProj->attackData->dmg,
                                   wpn.getData().rangedDmgType, true);
               if(DIED == false) {
-                // Apply weapon hit properties
+                //Hit properties
                 PropHandler& defenderPropHandler =
                   curProj->attackData->curDefender->getPropHandler();
                 defenderPropHandler.tryApplyPropFromWpn(wpn, false);
 
-                // Knock-back?
+                //Knock-back?
                 if(wpn.getData().rangedCausesKnockBack) {
                   const AttackData* const curData = curProj->attackData;
                   if(curData->attackResult >= successSmall) {
@@ -204,12 +204,9 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         vector<FeatureMob*> featureMobs;
         eng.gameTime->getFeatureMobsAtPos(curProj->pos, featureMobs);
         Feature* featureBlockingShot = NULL;
-        for(
-          unsigned int featMobIndex = 0;
-          featMobIndex < featureMobs.size();
-          featMobIndex++) {
-          if(featureMobs.at(featMobIndex)->isProjectilePassable() == false) {
-            featureBlockingShot = featureMobs.at(featMobIndex);
+        for(FeatureMob * mob : featureMobs) {
+          if(mob->isProjectilePassable() == false) {
+            featureBlockingShot = mob;
           }
         }
         FeatureStatic* featureStatic =
@@ -292,19 +289,20 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     } //End projectile loop
 
     //If any projectile can be seen and not obstructed, delay
-    for(unsigned int nn = 0; nn < projectiles.size(); nn++) {
-      const Pos& p = projectiles.at(nn)->pos;
-      if(eng.map->cells[p.x][p.y].isSeenByPlayer &&
-          projectiles.at(nn)->isObstructed == false) {
+    for(Projectile * projectile : projectiles) {
+      const Pos& pos = projectile->pos;
+      if(
+        eng.map->cells[pos.x][pos.y].isSeenByPlayer &&
+        projectile->isObstructed == false) {
         SdlWrapper::sleep(DELAY);
-        nn = 99999;
+        break;
       }
     }
 
     //Check if all projectiles obstructed
     bool isAllObstructed = true;
-    for(unsigned p = 0; p < projectiles.size(); p++) {
-      if(projectiles.at(p)->isObstructed == false) {
+    for(Projectile * projectile : projectiles) {
+      if(projectile->isObstructed == false) {
         isAllObstructed = false;
       }
     }
@@ -316,20 +314,16 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   //So far, only projectile 0 can have special obstruction events***
   //Must be changed if something like an assault-incinerator is added
-  const Projectile* const projectile = projectiles.at(0);
-  if(projectile->isObstructed == false) {
-    wpn.weaponSpecific_projectileObstructed(
-      aimPos, projectile->actorHit);
+  const Projectile* const firstProjectile = projectiles.at(0);
+  if(firstProjectile->isObstructed == false) {
+    wpn.weaponSpecific_projectileObstructed(aimPos, firstProjectile->actorHit);
   } else {
-    const int element = projectile->obstructedInElement;
+    const int element = firstProjectile->obstructedInElement;
     const Pos& pos = projectilePath.at(element);
-    wpn.weaponSpecific_projectileObstructed(
-      pos, projectile->actorHit);
+    wpn.weaponSpecific_projectileObstructed(pos, firstProjectile->actorHit);
   }
   //Cleanup
-  for(unsigned int i = 0; i < projectiles.size(); i++) {
-    delete projectiles.at(i);
-  }
+  for(Projectile * projectile : projectiles) {delete projectile;}
 
   Renderer::drawMapAndInterface();
 }

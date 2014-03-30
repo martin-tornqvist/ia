@@ -159,11 +159,11 @@ void runExplosionAt(const Pos& origin, Engine& eng, const ExplType explType,
           if(livingActor == eng.player) {
             eng.log->addMsg("I am hit by an explosion!", clrMsgBad);
           }
-          livingActor->hit(DMG, dmgType_physical, true);
+          livingActor->hit(DMG, DmgType::physical, true);
         }
         //Damage dead actors
         for(Actor * corpse : corpsesHere) {
-          corpse->hit(DMG, dmgType_physical, true);
+          corpse->hit(DMG, DmgType::physical, true);
         }
 
         if(Rnd::fraction(6, 10)) {

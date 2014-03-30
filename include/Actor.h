@@ -36,7 +36,7 @@ public:
   void place(const Pos& pos_, ActorData& data);
   virtual void place_() {}
 
-  bool hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS);
+  bool hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS);
   bool hitSpi(const int DMG);
 
   bool restoreHp(const int HP_RESTORED,

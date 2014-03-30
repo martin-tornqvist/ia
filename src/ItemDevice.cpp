@@ -94,7 +94,7 @@ void Device::runBadEffect() {
       ".", clrMsgBad, true);
     eng.player->getPropHandler().tryApplyProp(
       new PropParalyzed(eng, propTurnsSpecific, 2));
-    eng.player->hit(Rnd::range(1, 2), dmgType_electric, false);
+    eng.player->hit(Rnd::range(1, 2), DmgType::electric, false);
   } else {
     eng.log->addMsg("The " + name + " hums ominously.");
   }
@@ -137,7 +137,7 @@ void DeviceSentry::runGoodEffect() {
                     clrMsgGood, true);
     Renderer::drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos>(1, pos), clrYellow);
-    actor->hit(DMG, dmgType_electric, false);
+    actor->hit(DMG, DmgType::electric, false);
   }
 }
 

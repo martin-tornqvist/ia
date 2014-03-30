@@ -343,7 +343,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   }
 }
 
-bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
+bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   traceVerbose << "Actor::hit()..." << endl;
   traceVerbose << "Actor: Damage from parameter: " << dmg << endl;
 
@@ -351,7 +351,7 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
   propHandler_->getAllActivePropIds(props);
 
   if(
-    dmgType == dmgType_light &&
+    dmgType == DmgType::light &&
     find(props.begin(), props.end(), propLightSensitive) == props.end()) {
     return false;
   }
@@ -381,7 +381,7 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
 
   dmg = max(1, dmg);
 
-  if(dmgType == dmgType_spirit) {
+  if(dmgType == DmgType::spirit) {
     return hitSpi(dmg);
   }
 
@@ -398,7 +398,7 @@ bool Actor::hit(int dmg, const DmgTypes dmgType, const bool ALLOW_WOUNDS) {
     if(armor != NULL) {
       traceVerbose << "Actor: Has armor, running hit on armor" << endl;
 
-      if(dmgType == dmgType_physical) {
+      if(dmgType == DmgType::physical) {
         dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg);
 
         if(armor->isDestroyed()) {

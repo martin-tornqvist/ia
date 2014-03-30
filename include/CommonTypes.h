@@ -8,9 +8,15 @@
 
 enum FontType {font_interface, font_big};
 
-enum DmgTypes {
-  dmgType_physical, dmgType_fire, dmgType_cold, dmgType_acid,
-  dmgType_electric, dmgType_spirit, dmgType_light, dmgType_pure,
+enum class DmgType {
+  physical,
+  fire,
+  cold,
+  acid,
+  electric,
+  spirit,
+  light,
+  pure,
   endOfDmgTypes
 };
 

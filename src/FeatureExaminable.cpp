@@ -218,7 +218,7 @@ void Tomb::trySprainPlayer() {
                               bonHlr->hasTrait(traitTough)  ? 5 : 4;
   if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     eng.log->addMsg("I sprain myself.", clrMsgBad);
-    eng.player->hit(Rnd::range(1, 5), dmgType_pure, false);
+    eng.player->hit(Rnd::range(1, 5), DmgType::pure, false);
   }
 }
 
@@ -444,7 +444,7 @@ void Chest::trySprainPlayer() {
                               bonHlr->hasTrait(traitTough)  ? 5 : 4;
   if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     eng.log->addMsg("I sprain myself.", clrMsgBad);
-    eng.player->hit(Rnd::range(1, 5), dmgType_pure, false);
+    eng.player->hit(Rnd::range(1, 5), DmgType::pure, false);
   }
 }
 
@@ -524,7 +524,7 @@ void Chest::bash(Actor& actorTrying) {
 //        eng.log->addMsg(
 //          "I attempt to punch the lock open, nearly breaking my hand.",
 //          clrMsgBad);
-//        eng.player->hit(1, dmgType_pure, false);
+//        eng.player->hit(1, DmgType::pure, false);
 //      } else {
 //        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 //

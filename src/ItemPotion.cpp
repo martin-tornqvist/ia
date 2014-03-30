@@ -19,7 +19,7 @@
 #include "PlayerVisualMemory.h"
 #include "Utils.h"
 
-void PotionOfHealth::quaff_(Actor* const actor) {
+void PotionOfVitality::quaff_(Actor* const actor) {
   actor->getPropHandler().endAppliedPropsByMagicHealing();
 
   //HP is always restored at least up to maximum HP, but can go beyond
@@ -34,7 +34,7 @@ void PotionOfHealth::quaff_(Actor* const actor) {
   }
 }
 
-void PotionOfHealth::collide_(const Pos& pos, Actor* const actor) {
+void PotionOfVitality::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
   if(actor != NULL) {quaff_(actor);}
 }
@@ -376,9 +376,9 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
   if(data_->isIdentified == false) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
-    const string REAL_NAME = "Potion of " + REAL_TYPE_NAME;
+    const string REAL_NAME        = "Potion of " + REAL_TYPE_NAME;
     const string REAL_NAME_PLURAL = "Potions of " + REAL_TYPE_NAME;
-    const string REAL_NAME_A = "a potion of " + REAL_TYPE_NAME;
+    const string REAL_NAME_A      = "a potion of " + REAL_TYPE_NAME;
 
     data_->name.name = REAL_NAME;
     data_->name.name_plural = REAL_NAME_PLURAL;

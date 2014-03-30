@@ -76,7 +76,7 @@ string Feature::getDescr(const bool DEFINITE_ARTICLE) const {
   return DEFINITE_ARTICLE ? data_->name_the : data_->name_a;
 }
 
-void Feature::hit(const int DMG, const DmgTypes dmgType) {
+void Feature::hit(const int DMG, const DmgType dmgType) {
   (void)DMG;
   (void)dmgType;
 }
@@ -162,7 +162,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
       if(Rnd::oneIn(4)) {
         eng.log->addMsg("I sprain myself.", clrMsgBad);
         const int SPRAIN_DMG = Rnd::range(1, 5);
-        actorTrying.hit(SPRAIN_DMG, dmgType_pure, false);
+        actorTrying.hit(SPRAIN_DMG, DmgType::pure, false);
       }
 
       if(Rnd::oneIn(4)) {
