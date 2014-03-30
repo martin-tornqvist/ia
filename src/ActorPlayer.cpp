@@ -211,14 +211,6 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
 }
 
 void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
-  interruptActions();
-
-  //Hit aborts first aid
-  if(activeMedicalBag != NULL) {
-    activeMedicalBag->interrupted();
-    activeMedicalBag = NULL;
-  }
-
   if(obsessions[int(Obsession::masochism)]) {
     if(dmg > 1) {shock_ = max(0.0, shock_ - 5.0);}
   } else {

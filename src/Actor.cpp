@@ -347,6 +347,10 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   traceVerbose << "Actor::hit()..." << endl;
   traceVerbose << "Actor: Damage from parameter: " << dmg << endl;
 
+  if(this == eng.player) {
+    eng.player->interruptActions();
+  }
+
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
@@ -376,11 +380,6 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
     return false;
   }
 
-  hit_(dmg, ALLOW_WOUNDS);
-  traceVerbose << "Actor: Damage after hit_(): " << dmg << endl;
-
-  dmg = max(1, dmg);
-
   if(dmgType == DmgType::spirit) {
     return hitSpi(dmg);
   }
@@ -390,6 +389,11 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {
     return false;
   }
+
+  hit_(dmg, ALLOW_WOUNDS);
+  traceVerbose << "Actor: Damage after hit_(): " << dmg << endl;
+
+  dmg = max(1, dmg);
 
   //Filter damage through worn armor
   if(isHumanoid()) {
