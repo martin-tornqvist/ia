@@ -143,7 +143,6 @@
 		<Unit filename="../include/Art.h" />
 		<Unit filename="../include/Attack.h" />
 		<Unit filename="../include/Audio.h" />
-		<Unit filename="../include/AudioIds.h" />
 		<Unit filename="../include/AutoDescribeActor.h" />
 		<Unit filename="../include/Bash.h" />
 		<Unit filename="../include/Blood.h" />

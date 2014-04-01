@@ -567,17 +567,17 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   Renderer::drawMapAndInterface();
 }
 
-void Actor::addLight(bool light[MAP_W][MAP_H]) const {
+void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const {
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
   if(find(props.begin(), props.end(), propBurning) != props.end()) {
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {
-        light[pos.x + dx][pos.y + dy] = true;
+        lightMap[pos.x + dx][pos.y + dy] = true;
       }
     }
   }
 
-  addLight_(light);
+  addLight_(lightMap);
 }

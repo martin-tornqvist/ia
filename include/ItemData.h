@@ -8,7 +8,7 @@
 #include "AbilityValues.h"
 #include "Spells.h"
 #include "FeatureData.h"
-#include "AudioIds.h"
+#include "Audio.h"
 
 enum class SndVol;
 
@@ -245,6 +245,7 @@ public:
   SfxId meleeHitSmallSfx;
   SfxId meleeHitMediumSfx;
   SfxId meleeHitHardSfx;
+  SfxId meleeMissSfx;
   SfxId reloadSfx;
   Prop* propAppliedOnRanged;
   vector<RoomThemeId> nativeRooms;

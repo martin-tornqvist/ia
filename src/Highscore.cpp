@@ -159,7 +159,7 @@ void HighScore::runHighScoreScreen() {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
     }
-    if(d.key_ == '8' || d.sdlKey_ == SDLK_UP || d.key_ == '8') {
+    if(d.key_ == '8' || d.sdlKey_ == SDLK_UP || d.key_ == 'k') {
       topNr = max(0, topNr - LINE_JUMP);
     }
     if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {

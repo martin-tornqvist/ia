@@ -120,6 +120,9 @@ void init() {
     loadAudioFile(SfxId::hitSmall,                "sfx_hitSmall.ogg");
     loadAudioFile(SfxId::hitMedium,               "sfx_hitMedium.ogg");
     loadAudioFile(SfxId::hitHard,                 "sfx_hitHard.ogg");
+    loadAudioFile(SfxId::missLight,               "sfx_missLight.ogg");
+    loadAudioFile(SfxId::missMedium,              "sfx_missMedium.ogg");
+    loadAudioFile(SfxId::missHeavy,               "sfx_missHeavy.ogg");
     loadAudioFile(SfxId::hitSharp,                "sfx_hitSharp.ogg");
     loadAudioFile(SfxId::pistolFire,              "sfx_pistolFire.ogg");
     loadAudioFile(SfxId::pistolReload,            "sfx_pistolReload.ogg");

@@ -67,7 +67,6 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
                                      const Weapon& wpn) {
   string otherName = "";
 
-
   if(data.isDefenderDodging) {
     //----- DEFENDER DODGES --------
     if(data.attacker == eng.player) {
@@ -83,8 +82,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
       } else {
         otherName = "It";
       }
-      eng.log->addMsg(
-        "I dodge an attack from " + otherName + ".", clrMsgGood);
+      eng.log->addMsg("I dodge an attack from " + otherName + ".", clrMsgGood);
     }
   } else if(data.attackResult <= failSmall) {
     //----- BAD AIMING --------
@@ -96,6 +94,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
       } else if(data.attackResult == failBig) {
         eng.log->addMsg("I miss completely.");
       }
+      Audio::play(wpn.getData().meleeMissSfx);
     } else {
       if(eng.player->isSeeingActor(*data.attacker, NULL)) {
         otherName = data.attacker->getNameThe();
@@ -135,22 +134,22 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
     } else {
       //----- ATTACK CONNECTS WITH DEFENDER --------
       //Determine the relative "size" of the hit
-      MeleeHitSize hitSize = meleeHitSizeSmall;
+      MeleeHitSize hitSize = MeleeHitSize::small;
       const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
       if(MAX_DMG_ROLL >= 4) {
         if(data.dmgRoll > (MAX_DMG_ROLL * 5) / 6) {
-          hitSize = meleeHitSizeHard;
+          hitSize = MeleeHitSize::hard;
         } else if(data.dmgRoll >  MAX_DMG_ROLL / 2) {
-          hitSize = meleeHitSizeMedium;
+          hitSize = MeleeHitSize::medium;
         }
       }
 
       //Punctuation depends on attack strength
       string dmgPunct = ".";
       switch(hitSize) {
-        case meleeHitSizeSmall:                     break;
-        case meleeHitSizeMedium:  dmgPunct = "!";   break;
-        case meleeHitSizeHard:    dmgPunct = "!!!"; break;
+        case MeleeHitSize::small:                     break;
+        case MeleeHitSize::medium:  dmgPunct = "!";   break;
+        case MeleeHitSize::hard:    dmgPunct = "!!!"; break;
       }
 
       if(data.attacker == eng.player) {
@@ -195,13 +194,13 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
 
       SfxId hitSfx = SfxId::endOfSfxId;
       switch(hitSize) {
-        case meleeHitSizeSmall: {
+        case MeleeHitSize::small: {
           hitSfx = wpn.getData().meleeHitSmallSfx;
         } break;
-        case meleeHitSizeMedium: {
+        case MeleeHitSize::medium: {
           hitSfx = wpn.getData().meleeHitMediumSfx;
         } break;
-        case meleeHitSizeHard: {
+        case MeleeHitSize::hard: {
           hitSfx = wpn.getData().meleeHitHardSfx;
         } break;
       }

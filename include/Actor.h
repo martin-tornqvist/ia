@@ -80,7 +80,7 @@ public:
   virtual const SDL_Color& getClr() {return clr_;}
   inline const TileId& getTile() const {return tile_;}
 
-  void addLight(bool light[MAP_W][MAP_H]) const;
+  void addLight(bool lightMap[MAP_W][MAP_H]) const;
 
   virtual void addLight_(
     bool light[MAP_W][MAP_H]) const {

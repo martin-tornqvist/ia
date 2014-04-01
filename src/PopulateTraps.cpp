@@ -120,7 +120,6 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
 
       trace << "PopulateTraps: Placing base trap" << endl;
       spawnTrapAt(trapType, pos);
-      blockers[pos.x][pos.y] = true;
       trapPosCandidates.erase(trapPosCandidates.begin() + ELEMENT);
       nrPosCand--;
 
@@ -132,7 +131,6 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
       for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
         const Pos& adjPos = trapPosCandidates.front();
         spawnTrapAt(trapType, adjPos);
-        blockers[adjPos.x][adjPos.y] = true;
         trapPosCandidates.erase(trapPosCandidates.begin());
         nrPosCand--;
       }

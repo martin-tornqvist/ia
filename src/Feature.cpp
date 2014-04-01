@@ -174,6 +174,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
 
     } else {
       eng.log->addMsg("I kick the air!");
+      Audio::play(SfxId::missMedium);
     }
   }
 

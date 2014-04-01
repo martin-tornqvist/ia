@@ -9,7 +9,7 @@
 #include "RoomTheme.h"
 #include "CommonData.h"
 #include "Properties.h"
-#include "AudioIds.h"
+#include "Audio.h"
 
 enum ActorId {
   actor_empty, //TODO Is it really necessary to have an "empty"(?) actor?

@@ -68,6 +68,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->meleeHitSmallSfx = SfxId::endOfSfxId;
       d->meleeHitMediumSfx = SfxId::endOfSfxId;
       d->meleeHitHardSfx = SfxId::endOfSfxId;
+      d->meleeMissSfx = SfxId::endOfSfxId;
       d->reloadSfx = SfxId::endOfSfxId;
       d->propAppliedOnRanged = NULL;
       d->isExplosive = false;
@@ -97,6 +98,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->meleeHitSmallSfx = SfxId::hitSmall;
       d->meleeHitMediumSfx = SfxId::hitMedium;
       d->meleeHitHardSfx = SfxId::hitHard;
+      d->meleeMissSfx = SfxId::missMedium;
     } break;
 
     case itemData_rangedWpn: {
@@ -115,6 +117,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->meleeHitSmallSfx = SfxId::hitSmall;
       d->meleeHitMediumSfx = SfxId::hitMedium;
       d->meleeHitHardSfx = SfxId::hitHard;
+      d->meleeMissSfx = SfxId::missMedium;
       d->rangedSndVol = SndVol::high;
     } break;
 
@@ -546,6 +549,7 @@ void ItemDataHandler::initDataList() {
   d->meleeHitChanceMod = 20;
   d->meleeHitMediumSfx = SfxId::hitSharp;
   d->meleeHitHardSfx = SfxId::hitSharp;
+  d->meleeMissSfx = SfxId::missLight;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
@@ -565,6 +569,7 @@ void ItemDataHandler::initDataList() {
   d->isMissileWeapon = false;
   d->meleeHitMediumSfx = SfxId::hitSharp;
   d->meleeHitHardSfx = SfxId::hitSharp;
+  d->meleeMissSfx = SfxId::missLight;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
@@ -581,6 +586,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Club");
   d->meleeDmg = pair<int, int>(2, 3);
   d->meleeHitChanceMod = 10;
+  d->meleeMissSfx = SfxId::missMedium;
   dataList[d->id] = d;
 
   d = new ItemData(item_hammer);
@@ -591,6 +597,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a Hammer");
   d->meleeDmg = pair<int, int>(2, 4);
   d->meleeHitChanceMod = 5;
+  d->meleeMissSfx = SfxId::missMedium;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
@@ -605,6 +612,7 @@ void ItemDataHandler::initDataList() {
   d->meleeHitChanceMod = 0;
   d->meleeHitSmallSfx = SfxId::hitSharp;
   d->meleeHitMediumSfx = SfxId::hitSharp;
+  d->meleeMissSfx = SfxId::missMedium;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
@@ -620,6 +628,7 @@ void ItemDataHandler::initDataList() {
   d->meleeHitSmallSfx = SfxId::hitSmall;
   d->meleeHitMediumSfx = SfxId::hitMedium;
   d->meleeHitHardSfx = SfxId::hitHard;
+  d->meleeMissSfx = SfxId::missMedium;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
   addFeatureFoundIn(d, feature_cocoon);
@@ -636,6 +645,7 @@ void ItemDataHandler::initDataList() {
   d->meleeCausesKnockBack = true;
   d->meleeHitSmallSfx = SfxId::hitSharp;
   d->meleeHitMediumSfx = SfxId::hitSharp;
+  d->meleeMissSfx = SfxId::missHeavy;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
   dataList[d->id] = d;
@@ -649,6 +659,7 @@ void ItemDataHandler::initDataList() {
   d->meleeDmg = pair<int, int>(3, 5);
   d->meleeHitChanceMod = -10;
   d->meleeCausesKnockBack = true;
+  d->meleeMissSfx = SfxId::missHeavy;
   addFeatureFoundIn(d, feature_cabinet);
   dataList[d->id] = d;
 
@@ -677,6 +688,7 @@ void ItemDataHandler::initDataList() {
   d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = true;
+  d->meleeMissSfx = SfxId::missMedium;
   dataList[d->id] = d;
 
   d = new ItemData(item_playerStomp);

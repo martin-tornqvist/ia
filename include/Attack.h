@@ -103,11 +103,7 @@ struct Projectile {
   RangedAttackData* attackData;
 };
 
-enum MeleeHitSize {
-  meleeHitSizeSmall,
-  meleeHitSizeMedium,
-  meleeHitSizeHard,
-};
+enum class MeleeHitSize {small, medium, hard};
 
 class Attack {
 public:
