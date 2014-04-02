@@ -150,6 +150,7 @@ void init() {
     loadAudioFile(SfxId::spellGeneric,            "sfx_spellGeneric.ogg");
     loadAudioFile(SfxId::insanityRising,          "sfx_insanityRising.ogg");
     loadAudioFile(SfxId::glop,                    "sfx_glop.ogg");
+    loadAudioFile(SfxId::death,                   "sfx_death.ogg");
 
     int a = 1;
     const int FIRST = int(SfxId::startOfAmbSfx) + 1;

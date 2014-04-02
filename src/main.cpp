@@ -123,9 +123,9 @@ int main(int argc, char* argv[]) {
         } else {
           //Player is dead, run postmortem, then return to main menu
           dynamic_cast<Player*>(eng.player)->waitTurnsLeft = -1;
-          eng.log->addMsg(
-            "=== I AM DEAD === (press space/esc to view postmortem information)",
-            clrMsgBad);
+          eng.log->addMsg("I am dead... (press space/esc to proceed)",
+                          clrMsgBad);
+          Audio::play(SfxId::death);
           Renderer::drawMapAndInterface();
           eng.log->clearLog();
           eng.query->waitForEscOrSpace();

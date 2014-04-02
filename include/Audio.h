@@ -41,6 +41,7 @@ enum class SfxId {
   spellGeneric,
   insanityRising,
   glop,
+  death,
 
   //Ambient sounds
   startOfAmbSfx,
