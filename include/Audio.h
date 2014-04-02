@@ -32,6 +32,7 @@ enum class SfxId {
   explosion,
   explosionMolotov,
   doorOpen, doorClose, doorBang, doorBreak,
+  tombOpen,
 
   //User interface sounds
   backpack,

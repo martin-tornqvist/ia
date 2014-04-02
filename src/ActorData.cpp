@@ -1540,10 +1540,10 @@ void ActorDataHandler::initDataList() {
   d.glyph = 'w';
   d.color = clrWhite;
   d.tile = tile_massOfWorms;
-  d.hp = 2;
+  d.hp = 3;
   d.spi = 1;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 20);
+  d.abilityVals.setVal(ability_accuracyMelee, 40);
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;

@@ -141,6 +141,7 @@ void init() {
     loadAudioFile(SfxId::doorClose,               "sfx_doorClose.ogg");
     loadAudioFile(SfxId::doorBang,                "sfx_doorBang.ogg");
     loadAudioFile(SfxId::doorBreak,               "sfx_doorBreak.ogg");
+    loadAudioFile(SfxId::tombOpen,                "sfx_tombOpen.ogg");
 
     //User interface sounds
     loadAudioFile(SfxId::backpack,                "sfx_backpack.ogg");
@@ -233,13 +234,13 @@ void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY, Engine& eng) {
   if(audioChunks.empty() == false && Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
     const int TIME_NOW = time(0);
-    const int TIME_REQ_BETWEEN_AMB_SFX = 35;
+    const int TIME_REQ_BETWEEN_AMB_SFX = 20;
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;
       const int VOL_PERCENT = Rnd::oneIn(5) ?
-                              Rnd::range(51, 100) :
-                              Rnd::range(1, 50);
+                              Rnd::range(1,  75) :
+                              Rnd::range(76, 100);
       play(getAmbSfxSuitableForDlvl(eng), VOL_PERCENT);
     }
   }

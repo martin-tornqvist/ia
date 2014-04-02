@@ -228,6 +228,11 @@ bool Tomb::open() {
     eng.log->addMsg("The lid comes off!");
     eng.log->addMsg("The tomb opens.");
   }
+  Snd snd("I hear heavy stone sliding.", SfxId::tombOpen,
+          IgnoreMsgIfOriginSeen::yes, pos_, NULL, SndVol::high,
+          AlertsMonsters::yes);
+  SndEmit::emitSnd(snd, eng);
+
   triggerTrap(*eng.player);
   if(itemContainer_.items_.size() > 0) {
     if(IS_SEEN) eng.log->addMsg("There are some items inside.");
