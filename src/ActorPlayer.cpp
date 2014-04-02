@@ -1302,8 +1302,9 @@ void Player::updateFov() {
   //Explore
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
-      if(eng.map->cells[x][y].isSeenByPlayer) {
-        eng.map->cells[x][y].isExplored = true;
+      Cell& cell = eng.map->cells[x][y];
+      if(cell.isSeenByPlayer && cell.isDark == false) {
+        cell.isExplored = true;
       }
     }
   }
