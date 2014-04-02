@@ -145,6 +145,9 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
                                 ShockSrc::useStrangeItem;
       const int SHOCK_VALUE = IS_INTRINSIC ? getShockValueIntrCast() : 10;
       eng.player->incrShock(SHOCK_VALUE, shockSrc);
+      if(eng.player->deadState == ActorDeadState::alive) {
+        Audio::play(SfxId::spellGeneric);
+      }
     } else {
       trace << "Spell: Monster casting spell" << endl;
       Monster* const monster = dynamic_cast<Monster*>(caster);

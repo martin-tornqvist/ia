@@ -38,6 +38,7 @@ enum class SfxId {
   pickup,
   electricLantern,
   potionQuaff,
+  spellGeneric,
   insanityRising,
   glop,
 

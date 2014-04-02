@@ -147,6 +147,7 @@ void init() {
     loadAudioFile(SfxId::pickup,                  "sfx_pickup.ogg");
     loadAudioFile(SfxId::electricLantern,         "sfx_electricLantern.ogg");
     loadAudioFile(SfxId::potionQuaff,             "sfx_potionQuaff.ogg");
+    loadAudioFile(SfxId::spellGeneric,            "sfx_spellGeneric.ogg");
     loadAudioFile(SfxId::insanityRising,          "sfx_insanityRising.ogg");
     loadAudioFile(SfxId::glop,                    "sfx_glop.ogg");
 
