@@ -226,7 +226,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
     return;
   }
   //----------------------------------- UNLOAD AMMO FROM GROUND
-  else if(d.key_ == 'p')  {
+  else if(d.key_ == 'G')  {
     eng.log->clearLog();
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.itemPickup->tryUnloadWeaponOrPickupAmmoFromGround();
