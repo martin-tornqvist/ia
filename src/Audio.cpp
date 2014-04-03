@@ -49,6 +49,12 @@ SfxId getAmbSfxSuitableForDlvl(Engine& eng) {
     sfxCandidates.push_back(SfxId::amb026);
     sfxCandidates.push_back(SfxId::amb027);
     sfxCandidates.push_back(SfxId::amb028);
+    sfxCandidates.push_back(SfxId::amb031);
+    sfxCandidates.push_back(SfxId::amb033);
+    sfxCandidates.push_back(SfxId::amb034);
+    sfxCandidates.push_back(SfxId::amb035);
+    sfxCandidates.push_back(SfxId::amb036);
+    sfxCandidates.push_back(SfxId::amb037);
   } else if(DLVL > FIRST_CAVERN_LEVEL) {
     sfxCandidates.push_back(SfxId::amb001);
     sfxCandidates.push_back(SfxId::amb002);
@@ -71,6 +77,11 @@ SfxId getAmbSfxSuitableForDlvl(Engine& eng) {
     sfxCandidates.push_back(SfxId::amb028);
     sfxCandidates.push_back(SfxId::amb029);
     sfxCandidates.push_back(SfxId::amb030);
+    sfxCandidates.push_back(SfxId::amb032);
+    sfxCandidates.push_back(SfxId::amb033);
+    sfxCandidates.push_back(SfxId::amb034);
+    sfxCandidates.push_back(SfxId::amb035);
+    sfxCandidates.push_back(SfxId::amb037);
   }
 
   if(sfxCandidates.empty()) {
@@ -224,7 +235,7 @@ void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT) {
       case Dir::upRight:    volPercentL = 25;  break;
       case Dir::downRight:  volPercentL = 25;  break;
       case Dir::right:      volPercentL = 15;  break;
-      case Dir::endOfDirs:     volPercentL = 50;  break;
+      case Dir::endOfDirs:  volPercentL = 50;  break;
     }
     play(sfx, VOL_PERCENT_TOT, volPercentL);
   }
@@ -238,18 +249,14 @@ void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY, Engine& eng) {
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;
-      const int VOL_PERCENT = Rnd::oneIn(5) ?
-                              Rnd::range(1,  75) :
-                              Rnd::range(76, 100);
+      const int VOL_PERCENT = Rnd::oneIn(5) ? Rnd::range(1,  99) : 100;
       play(getAmbSfxSuitableForDlvl(eng), VOL_PERCENT);
     }
   }
 }
 
 void fadeOutChannel(const int CHANNEL_NR) {
-  if(audioChunks.empty() == false) {
-    Mix_FadeOutChannel(CHANNEL_NR, 5000);
-  }
+  if(audioChunks.empty() == false) {Mix_FadeOutChannel(CHANNEL_NR, 5000);}
 }
 
 } //Audio
