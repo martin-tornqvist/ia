@@ -21,9 +21,9 @@
    e      Use item or throw held explosive
    f      Aim/fire wielded firearm
    g      Pick up item
+   G      Unload or pick up ammunition from the ground
    i      Browse backpack
    m      Display message history
-   p      Unload or pick up ammunition from the ground
    q      Bash or kick something on the map
    r      Reload wielded firearm
    s      Wait and search for 5 turns
@@ -99,7 +99,6 @@ When various disturbing events occur, the shock value rises. When shock hits 100
    * You do something (scream, laugh, faint, babble, gain a phobia...)
    * The shock value is restored a bit
    * Insanity rises
-   * Mythos knowledge rises by half the amount
 
 Each time you travel to the next dungeon level, shock is completely restored (you have escaped the horrors above, and is bestowed with a sense of progress).
 

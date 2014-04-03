@@ -75,7 +75,7 @@ void Look::descrBriefActor(const Actor& actor, const MarkerTask markerTask,
   eng.log->addMsg(actor.getNameA() + ".");
 
   if(markerTask == markerTask_look) {
-    eng.log->addMsg("| l for description");
+    eng.log->addMsg("| v for description");
   } else if(actor.pos != eng.player->pos) {
     if(markerTask == markerTask_aimRangedWeapon) {
       Item* const item =
