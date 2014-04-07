@@ -583,8 +583,8 @@ void Player::setTempShockFromFeatures() {
     for(int dx = -1; dx <= 1; dx++) {
       const int X = pos.x + dx;
       if(Utils::isPosInsideMap(Pos(X, Y))) {
-        const Feature* const f =
-          eng.map->cells[pos.x + dx][pos.y + dy].featureStatic;
+        Cell& cell = eng.map->cells[pos.x + dx][pos.y + dy];
+        const Feature* const f = cell.featureStatic;
         shockTemp_ += f->getShockWhenAdjacent();
       }
     }

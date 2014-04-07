@@ -1,5 +1,7 @@
 #include "ItemDevice.h"
 
+#include <algorithm>
+
 #include "Engine.h"
 #include "ActorPlayer.h"
 #include "Renderer.h"
@@ -53,7 +55,14 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
     bool isCondDegrade  = false;
     bool isWarning      = false;
     int bon = 0;
-    if(actor->getPropHandler().hasProp(propCursed)) {bon -= 2;}
+    vector<PropId> props;
+    actor->getPropHandler().getAllActivePropIds(props);
+    if(find(props.begin(), props.end(), propBlessed) != props.end()) {
+      bon += 2;
+    }
+    if(find(props.begin(), props.end(), propCursed) != props.end()) {
+      bon -= 2;
+    }
     const int RND = Rnd::range(1, 8 + bon);
     switch(condition_) {
       case Condition::breaking: {
