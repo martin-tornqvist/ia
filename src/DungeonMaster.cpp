@@ -39,7 +39,7 @@ void DungeonMaster::playerGainLvl() {
     clvl++;
 
     eng.log->addMsg(
-      "--- Welcome to level " + toString(clvl) + "! ---", clrGreen);
+      "--- Welcome to level " + toStr(clvl) + "! ---", clrGreen);
 
     eng.playerCreateCharacter->pickNewTrait(false);
 
@@ -74,14 +74,14 @@ void DungeonMaster::playerLoseXpPercent(const int PERCENT) {
 }
 
 void DungeonMaster::addSaveLines(vector<string>& lines) const {
-  lines.push_back(toString(clvl));
-  lines.push_back(toString(xp));
-  lines.push_back(toString(timeStarted.year_));
-  lines.push_back(toString(timeStarted.month_));
-  lines.push_back(toString(timeStarted.day_));
-  lines.push_back(toString(timeStarted.hour_));
-  lines.push_back(toString(timeStarted.minute_));
-  lines.push_back(toString(timeStarted.second_));
+  lines.push_back(toStr(clvl));
+  lines.push_back(toStr(xp));
+  lines.push_back(toStr(timeStarted.year_));
+  lines.push_back(toStr(timeStarted.month_));
+  lines.push_back(toStr(timeStarted.day_));
+  lines.push_back(toStr(timeStarted.hour_));
+  lines.push_back(toStr(timeStarted.minute_));
+  lines.push_back(toStr(timeStarted.second_));
 }
 
 void DungeonMaster::setParamsFromSaveLines(vector<string>& lines) {

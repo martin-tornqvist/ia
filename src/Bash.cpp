@@ -53,7 +53,7 @@ void Bash::playerBash() const {
       eng.log->addMsg("I bash " + name + ".");
 
       pair<int, int> kickDmg =
-        eng.itemDataHandler->dataList[item_playerKick]->meleeDmg;
+        eng.itemDataHandler->dataList[int(ItemId::playerKick)]->meleeDmg;
       deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, false);
       eng.gameTime->actorDidAct();
       return;

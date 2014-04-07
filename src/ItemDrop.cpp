@@ -34,14 +34,14 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     string itemRef = "";
 
     if(IS_WHOLE_STACK_DROPPED) {
-      itemRef = eng.itemDataHandler->getItemRef(*itemToDrop, itemRef_plural);
+      itemRef = eng.itemDataHandler->getItemRef(*itemToDrop, ItemRefType::plural);
       inv.removeItemInElementWithoutDeletingInstance(ELEMENT);
       dropItemOnMap(actorDropping->pos, *itemToDrop);
     } else {
       Item* itemToKeep = itemToDrop;
       itemToDrop = eng.itemFactory->copyItem(itemToKeep);
       itemToDrop->nrItems = NR_ITEMS_TO_DROP;
-      itemRef = eng.itemDataHandler->getItemRef(*itemToDrop, itemRef_plural);
+      itemRef = eng.itemDataHandler->getItemRef(*itemToDrop, ItemRefType::plural);
       itemToKeep->nrItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
       dropItemOnMap(actorDropping->pos, *itemToDrop);
     }

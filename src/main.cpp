@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     if(quitGame == false) {
       eng.quitToMainMenu_ = false;
 
-      if(gameEntryType == gameEntry_new) {
+      if(gameEntryType == GameEntryMode::newGame) {
         if(Config::isBotPlaying()) {
           eng.playerBonHandler->setAllTraitsToPicked();
           eng.bot->init();
@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
       eng.player->updateFov();
       Renderer::drawMapAndInterface();
 
-      if(gameEntryType == gameEntry_new) {
+      if(gameEntryType == GameEntryMode::newGame) {
         if(Config::isIntroLevelSkipped() == 0) {
           string msg = "I stand on a cobbled forest path, ahead lies a ";
           msg += "shunned decrepit old church building. From years of ";

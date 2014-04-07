@@ -23,9 +23,9 @@ enum RoomReshapeType {
 
 struct Room {
 public:
-  Room(Rect dims) : roomTheme(roomTheme_plain), roomDescr(""), dims_(dims) {}
+  Room(Rect dims) : roomTheme(RoomThemeId::plain), roomDescr(""), dims_(dims) {}
 
-  Room() : roomTheme(roomTheme_plain), roomDescr(""),
+  Room() : roomTheme(RoomThemeId::plain), roomDescr(""),
     dims_(Rect(Pos(-1, -1), Pos(-1, -1))) {}
 
   inline Rect getDims()   const {return dims_;}

@@ -42,7 +42,7 @@ void DebugModeStatPrinter::run() {
     name.insert(name.end(), 24 - name.size(), ' ');
     Range cost = spell->getSpiCost(true, eng.player, eng);
     const string costStr =
-      toString(cost.lower) + "-" + toString(cost.upper);
+      toStr(cost.lower) + "-" + toStr(cost.upper);
     delete spell;
     printLine(indent1 + name + costStr);
   }
@@ -66,9 +66,9 @@ void DebugModeStatPrinter::run() {
   }
   for(unsigned int i = 0; i < monstersPerMinDLVL.size(); i++) {
     const int LVL = i;
-    string lvlStr = toString(LVL);
+    string lvlStr = toStr(LVL);
     lvlStr.insert(lvlStr.end(), 6 - lvlStr.size(), ' ');
-    string nrStr = toString(monstersPerMinDLVL.at(i));
+    string nrStr = toStr(monstersPerMinDLVL.at(i));
     nrStr.insert(nrStr.end(), 3, ' ');
     if(monstersPerMinDLVL.at(i) > 0) {
       nrStr.insert(nrStr.end(), monstersPerMinDLVL.at(i), '*');
@@ -76,7 +76,7 @@ void DebugModeStatPrinter::run() {
     printLine(indent1 + lvlStr + nrStr);
   }
   printLine("\n" + indent1 + "Total number of monsters: " +
-            toString(actorDataSorted.size()));
+            toStr(actorDataSorted.size()));
   printLine("\n");
 
   printLine("STATS FOR EACH MONSTER");
@@ -97,16 +97,16 @@ void DebugModeStatPrinter::run() {
     printLine(indent1 + actor->getNameA() + uniqueStr);
 
     const string xpStr =
-      "XP:" + toString(eng.dungeonMaster->getMonsterTotXpWorth(d));
+      "XP:" + toStr(eng.dungeonMaster->getMonsterTotXpWorth(d));
     printLine(indent2 + xpStr);
 
-    string hpStr = "HP:" + toString(d.hp);
+    string hpStr = "HP:" + toStr(d.hp);
     hpStr.insert(hpStr.end(), 8 - hpStr.size(), ' ');
 
     const int attackSkill =
       d.abilityVals.getVal(ability_accuracyMelee, false, *actor);
     const string attackSkillStr =
-      "Attack skill:" + toString(attackSkill) + "%";
+      "Attack skill:" + toStr(attackSkill) + "%";
     printLine(indent2 + hpStr + attackSkillStr);
 
     const Inventory& inv = actor->getInv();
@@ -115,10 +115,10 @@ void DebugModeStatPrinter::run() {
       const Item* const item = inv.getIntrinsicInElement(i_intr);
       const ItemData& itemData = item->getData();
       const string meleeOrRangedStr = itemData.isRangedWeapon ? "(R)" : "(M)";
-      const string attackNrStr = "Attack " + toString(i_intr + 1);
+      const string attackNrStr = "Attack " + toStr(i_intr + 1);
       const string dmgStr =
-        toString(itemData.meleeDmg.first) + "d" +
-        toString(itemData.meleeDmg.second);
+        toStr(itemData.meleeDmg.first) + "d" +
+        toStr(itemData.meleeDmg.second);
       printLine(
         indent2 + attackNrStr + " " + meleeOrRangedStr + ": " + dmgStr);
     }

@@ -13,103 +13,8 @@
 
 //---------------------------------------------------- BASE CLASS
 Device::Device(ItemData* const itemData, Engine& engine) :
-  Item(itemData, engine), isActivated_(false), nrTurnsToNextGoodEffect_(-1),
-  nrTurnsToNextBadEffect_(-1) {}
-
-bool Device::activateDefault(Actor* const actor) {
-  (void)actor;
-
-  if(data_->isIdentified) {
-    bool isDestroyed = toggle();
-    eng.gameTime->actorDidAct();
-    return isDestroyed;
-  } else {
-    eng.log->addMsg("I cannot yet use this.");
-    return false;
-  }
-}
-
-bool Device::toggle() {
-  printToggleMessage();
-
-  if(isActivated_) {
-    isActivated_ = false;
-    nrTurnsToNextGoodEffect_ = nrTurnsToNextBadEffect_ = -1;
-    toggle_();
-  } else {
-    isActivated_ = true;
-    nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect();
-    nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect();
-    toggle_();
-    const string message = getSpecificActivateMessage();
-    if(message.empty() == false) {
-      eng.log->addMsg(message);
-    }
-  }
-  return false;
-}
-
-void Device::printToggleMessage() {
-  const string name_a =
-    eng.itemDataHandler->getItemRef(*this, itemRef_a, true);
-  eng.log->addMsg(
-    (isActivated_ ? "I deactivate " : "I activate ") + name_a + ".");
-}
-
-int Device::getRandomNrTurnsToNextGoodEffect() const {
-  return Rnd::range(6, 9);
-}
-
-int Device::getRandomNrTurnsToNextBadEffect() const {
-  return Rnd::range(12, 16);
-}
-
-void Device::newTurnInInventory() {
-  if(isActivated_) {
-
-    newTurnInInventory_();
-
-    if(--nrTurnsToNextGoodEffect_ <= 0) {
-      nrTurnsToNextGoodEffect_ = getRandomNrTurnsToNextGoodEffect();
-      runGoodEffect();
-    }
-    if(--nrTurnsToNextBadEffect_ <= 0) {
-      nrTurnsToNextBadEffect_ = getRandomNrTurnsToNextBadEffect();
-      runBadEffect();
-    }
-  }
-}
-
-void Device::runBadEffect() {
-  const string name =
-    eng.itemDataHandler->getItemRef(*this, itemRef_plain, true);
-
-  const int RND = Rnd::percentile();
-  if(RND < 2) {
-    eng.log->addMsg("The " + name + " breaks!");
-    eng.player->getInv().removetemInGeneralWithPointer(this, false);
-  } else if(RND < 40) {
-    eng.log->addMsg(
-      "I am hit with a jolt of electricity from the " + name +
-      ".", clrMsgBad, true);
-    eng.player->getPropHandler().tryApplyProp(
-      new PropParalyzed(eng, propTurnsSpecific, 2));
-    eng.player->hit(Rnd::range(1, 2), DmgType::electric, false);
-  } else {
-    eng.log->addMsg("The " + name + " hums ominously.");
-  }
-}
-
-void Device::addSaveLines_(vector<string>& lines) {
-  lines.push_back(isActivated_ ? "1" : "0");
-  deviceSpecificAddSaveLines(lines);
-}
-
-void Device::setParamsFromSaveLines_(vector<string>& lines) {
-  isActivated_ = lines.back() == "1";
-  lines.erase(lines.begin());
-  deviceSpecificSetParamsFromSaveLines(lines);
-}
+  Item(itemData, engine),
+  condition_(Rnd::coinToss() ? Condition::fine : Condition::shoddy) {}
 
 void Device::identify(const bool IS_SILENT_IDENTIFY) {
   (void)eng;
@@ -118,82 +23,195 @@ void Device::identify(const bool IS_SILENT_IDENTIFY) {
   data_->isIdentified = true;
 }
 
-//---------------------------------------------------- SENTRY
-string DeviceSentry::getSpecificActivateMessage() {
-  return "It seems to peruse area.";
+void Device::addSaveLines(vector<string>& lines) {
+  lines.push_back(toStr(int(condition_)));
 }
 
-void DeviceSentry::runGoodEffect() {
-  const int DMG = Rnd::dice(1, 6) + 2;
+void Device::setParamsFromSaveLines(vector<string>& lines) {
+  condition_ = Condition(toInt(lines.front()));
+  lines.erase(lines.begin());
+}
 
+//---------------------------------------------------- STRANGE DEVICE BASE
+StrangeDevice::StrangeDevice(ItemData* const itemData, Engine& engine) :
+  Device(itemData, engine) {}
+
+ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
+  (void)actor;
+
+  if(data_->isIdentified) {
+    const string itemName =
+      eng.itemDataHandler->getItemRef(*this, ItemRefType::plain, true);
+    const string itemNameA =
+      eng.itemDataHandler->getItemRef(*this, ItemRefType::a, true);
+
+    eng.log->addMsg("I activate " + itemNameA + "...");
+
+    //Damage user? Fail to run effect? Condition degrade? Warning?
+    const string hurtMsg = "It hits me with a jolt of electricity!";
+    bool isEffectFailed = false;
+    bool isCondDegrade  = false;
+    bool isWarning      = false;
+    int bon = 0;
+    if(actor->getPropHandler().hasProp(propCursed)) {bon -= 2;}
+    const int RND = Rnd::range(1, 8 + bon);
+    switch(condition_) {
+      case Condition::breaking: {
+        if(RND == 5 || RND == 6) {
+          eng.log->addMsg(hurtMsg, clrMsgBad);
+          actor->hit(Rnd::dice(2, 4), DmgType::electric, true);
+        }
+        isEffectFailed  = RND == 3 || RND == 4;
+        isCondDegrade   = RND <= 2;
+        isWarning       = RND == 7 || RND == 8;
+      } break;
+
+      case Condition::shoddy: {
+        if(RND == 4) {
+          eng.log->addMsg(hurtMsg, clrMsgBad);
+          actor->hit(Rnd::dice(1, 4), DmgType::electric, true);
+        }
+        isEffectFailed  = RND == 3;
+        isCondDegrade   = RND <= 2;
+        isWarning       = RND == 5 || RND == 6;
+      } break;
+
+      case Condition::fine: {
+        isCondDegrade   = RND <= 2;
+        isWarning       = RND == 3 || RND == 4;
+      } break;
+    }
+
+    if(eng.player->deadState != ActorDeadState::alive) {
+      return ConsumeItem::no;
+    }
+    if(isEffectFailed) {
+      eng.log->addMsg("It suddenly stops.");
+    } else {
+      triggerEffect();
+    }
+
+    bool isDestroyed = false;
+    if(isCondDegrade) {
+      if(condition_ == Condition::breaking) {
+        eng.log->addMsg("The " + itemName + " breaks!");
+        isDestroyed = true;
+      } else {
+        eng.log->addMsg("The " + itemName + " makes a terrible grinding "
+                        "noise.");
+        eng.log->addMsg("I seem to have damaged it.");
+        condition_ = Condition(int(condition_) - 1);
+      }
+    }
+
+    if(isWarning) {
+      eng.log->addMsg("The " + itemName + " hums ominously.");
+    }
+
+    eng.gameTime->actorDidAct();
+    return isDestroyed ? ConsumeItem::yes : ConsumeItem::no;
+  } else {
+    eng.log->addMsg("This device is completely alien to me, ");
+    eng.log->addMsg("I could never understand it through normal means.");
+    return ConsumeItem::no;
+  }
+}
+
+//---------------------------------------------------- SENTRY
+void DeviceSentry::triggerEffect() {
   vector<Actor*> targetCandidates;
   eng.player->getSpottedEnemies(targetCandidates);
-  const unsigned int NR_CANDIDATES = targetCandidates.size();
-  if(NR_CANDIDATES > 0) {
-    const int ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
-    Actor* const actor = targetCandidates.at(ELEMENT);
-    const Pos& pos = actor->pos;
-    eng.log->addMsg(actor->getNameThe() + " is hit by a bolt of lightning!",
-                    clrMsgGood, true);
-    Renderer::drawBlastAnimAtPositionsWithPlayerVision(
-      vector<Pos>(1, pos), clrYellow);
-    actor->hit(DMG, DmgType::electric, false);
+  if(targetCandidates.empty()) {
+    eng.log->addMsg("It seems to peruse area.");
+  } else {
+    Spell* const spell = eng.spellHandler->getSpellFromId(spell_azathothsWrath);
+    spell->cast(eng.player, false, eng);
+    delete spell;
   }
 }
 
 //---------------------------------------------------- REPELLER
-string DeviceRepeller::getSpecificActivateMessage() {
-  return "I feel a certain tension in the air around me.";
-}
+void DeviceRepeller::triggerEffect() {
+  eng.log->addMsg("It triggers a shockwave around me.");
 
-void DeviceRepeller::runGoodEffect() {
   const Pos& playerPos = eng.player->pos;
   for(Actor * actor : eng.gameTime->actors_) {
-    if(actor != eng.player) {
+    if(actor != eng.player && actor->deadState == ActorDeadState::alive) {
       const Pos& otherPos = actor->pos;
       if(Utils::isPosAdj(playerPos, otherPos, false)) {
-        eng.knockBack->tryKnockBack(*actor, playerPos, false, true);
+        actor->hit(Rnd::dice(1, 8), DmgType::physical, true);
+        if(actor->deadState == ActorDeadState::alive) {
+          eng.knockBack->tryKnockBack(*actor, playerPos, false, true);
+        }
       }
     }
   }
 }
 
-int DeviceRepeller::getRandomNrTurnsToNextGoodEffect() const {
-  return Rnd::range(2, 4);
-}
-
 //---------------------------------------------------- REJUVENATOR
-string DeviceRejuvenator::getSpecificActivateMessage() {
-  return "It seems to attempt repairing my flesh.";
-}
-
-void DeviceRejuvenator::runGoodEffect() {
-//  const string name = eng.itemData->getItemRef(this, itemRef_plain, true);
-//  eng.log->addMsg(name + " repairs my wounds.");
-  eng.player->restoreHp(1, false);
+void DeviceRejuvenator::triggerEffect() {
+  eng.log->addMsg("It repairs my body.");
+  eng.player->getPropHandler().endAppliedPropsByMagicHealing();
+  eng.player->restoreHp(999, false);
 }
 
 //---------------------------------------------------- TRANSLOCATOR
-string DeviceTranslocator::getSpecificActivateMessage() {
-  return "";
-}
-
-void DeviceTranslocator::runGoodEffect() {
+void DeviceTranslocator::triggerEffect() {
   Player* const player = eng.player;
-  vector<Actor*> SpottedEnemies;
-  player->getSpottedEnemies(SpottedEnemies);
-  if(
-    player->getHp() <= player->getHpMax(true) / 4 &&
-    SpottedEnemies.empty() == false) {
-    const string name = eng.itemDataHandler->getItemRef(
-                          *this, itemRef_plain, true);
-    eng.log->addMsg("The " + name + " makes a droning noise...");
-    player->teleport(true);
+  vector<Actor*> spottedEnemies;
+  player->getSpottedEnemies(spottedEnemies);
+
+  if(spottedEnemies.empty()) {
+    eng.log->addMsg("It seems to peruse area.");
+  } else {
+    for(Actor * actor : spottedEnemies) {
+      eng.log->addMsg(actor->getNameThe() + " is teleported.");
+      Renderer::drawBlastAnimAtPositions(vector<Pos> {actor->pos}, clrYellow);
+      actor->teleport(false);
+    }
   }
 }
 
 //---------------------------------------------------- ELECTRIC LANTERN
-void DeviceLantern::newTurnInInventory_() {
+DeviceLantern::DeviceLantern(ItemData* const itemData, Engine& engine) :
+  Device(itemData, engine),
+  malfunctCooldown_(-1),
+  malfState_(LanternMalfState::working),
+  isActivated_(false),
+  nrTurnsToNextBadEffect_(-1) {}
+
+ConsumeItem DeviceLantern::activateDefault(Actor* const actor) {
+  (void)actor;
+  toggle();
+  return ConsumeItem::no;
+}
+
+void DeviceLantern::addSaveLines(vector<string>& lines) {
+  const int CONDITION_INT = int(condition_);
+  lines.push_back(toStr(CONDITION_INT));
+  lines.push_back(isActivated_ ? "1" : "0");
+}
+
+void DeviceLantern::setParamsFromSaveLines(vector<string>& lines) {
+  condition_ = Condition(toInt(lines.front()));
+  lines.erase(lines.begin());
+  isActivated_ = lines.back() == "1";
+  lines.erase(lines.begin());
+}
+
+void DeviceLantern::toggle() {
+  const string toggleStr = isActivated_ ? "I turn off" : "I turn on";
+  eng.log->addMsg(toggleStr + " an Electric Lantern.");
+
+  isActivated_ = !isActivated_;
+
+  Audio::play(SfxId::electricLantern);
+  eng.gameTime->updateLightMap();
+  eng.player->updateFov();
+  Renderer::drawMapAndInterface();
+}
+
+void DeviceLantern::newTurnInInventory() {
   if(isActivated_ && malfunctCooldown_ > 0) {
     malfunctCooldown_--;
     if(malfunctCooldown_ <= 0) {
@@ -203,18 +221,6 @@ void DeviceLantern::newTurnInInventory_() {
       Renderer::drawMapAndInterface();
     }
   }
-}
-
-void DeviceLantern::printToggleMessage() {
-  const string toggleStr = isActivated_ ? "I turn off" : "I turn on";
-  eng.log->addMsg(toggleStr + " an Electric Lantern.");
-}
-
-void DeviceLantern::toggle_() {
-  Audio::play(SfxId::electricLantern);
-  eng.gameTime->updateLightMap();
-  eng.player->updateFov();
-  Renderer::drawMapAndInterface();
 }
 
 LanternLightSize DeviceLantern::getCurLightSize() const {
@@ -258,5 +264,3 @@ void DeviceLantern::runBadEffect() {
     if(malfState_ == LanternMalfState::destroyed) {delete this;}
   }
 }
-
-

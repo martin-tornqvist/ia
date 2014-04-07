@@ -13,11 +13,12 @@ public:
 
   virtual ~Potion() {}
 
-  virtual bool activateDefault(Actor* const actor) {
+  ConsumeItem activateDefault(Actor* const actor) override {
     quaff(actor);
-    return true;
+    return ConsumeItem::yes;
   }
-  virtual string getDefaultActivationLabel() const {return "Drink";}
+
+  string getDefaultActivationLabel() const {return "Drink";}
 
   SDL_Color getInterfaceClr() const {return clrBlueLgt;}
 

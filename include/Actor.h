@@ -67,7 +67,7 @@ public:
 
   void getSpottedEnemies(vector<Actor*>& vectorRef);
 
-  inline ActorId getId()  const {return data_->id;}
+  inline ActorId getId()    const {return data_->id;}
   inline int getHp()        const {return hp_;}
   inline int getSpi()       const {return spi_;}
   int getHpMax(const bool WITH_MODIFIERS) const;

@@ -3,7 +3,7 @@
 
 #include <string>
 
-std::string toString(int in);
+std::string toStr(int in);
 
 int toInt(std::string in);
 

@@ -46,6 +46,6 @@ string AutoDescribeActor::getSpeedStr(const ActorData& def) const {
 }
 
 string AutoDescribeActor::getDwellingLevelStr(const ActorData& def) const {
-  return toString(max(1, def.spawnMinDLVL));
+  return toStr(max(1, def.spawnMinDLVL));
 }
 

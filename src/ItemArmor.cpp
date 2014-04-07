@@ -16,7 +16,7 @@ string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
 
   if(AP <= 0) {assert(false && "Armor AP less than 1"); return "";}
 
-  const string absorptionPointsStr = toString(AP);
+  const string absorptionPointsStr = toStr(AP);
 
   if(WITH_BRACKETS) {
     return "[" + absorptionPointsStr + "]";
@@ -50,15 +50,15 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
 
   if(AP_AFTER < AP_BEFORE && AP_AFTER != 0) {
     const string armorName =
-      eng.itemDataHandler->getItemRef(*this, itemRef_plain, true);
+      eng.itemDataHandler->getItemRef(*this, ItemRefType::plain, true);
     eng.log->addMsg("My " + armorName + " is damaged!", clrMsgImportant);
   }
 
-  trace << "Armor: Damage before: " + toString(DMG_BEFORE) << endl;
+  trace << "Armor: Damage before: " + toStr(DMG_BEFORE) << endl;
 
   const int DMG_AFTER = max(1, DMG_BEFORE - AP_BEFORE);
 
-  trace << "Armor: Damage after: " + toString(DMG_AFTER) << endl;
+  trace << "Armor: Damage after: " + toStr(DMG_AFTER) << endl;
 
   trace << "Armor::takeDurabilityHitAndGetReducedDamage() [DONE]" << endl;
   return DMG_AFTER;

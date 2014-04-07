@@ -71,23 +71,22 @@ Inventory::~Inventory() {
 }
 
 void Inventory::addSaveLines(vector<string>& lines) const {
-  for(unsigned int i = 0; i < slots_.size(); i++) {
-    Item* const item = slots_.at(i).item;
+  for(const InventorySlot & slot : slots_) {
+    Item* const item = slot.item;
     if(item == NULL) {
       lines.push_back("0");
     } else {
-      lines.push_back(toString(item->getData().id));
-      lines.push_back(toString(item->nrItems));
-      item->addSaveLines_(lines);
+      lines.push_back(toStr(int(item->getData().id)));
+      lines.push_back(toStr(item->nrItems));
+      item->addSaveLines(lines);
     }
   }
 
-  lines.push_back(toString(general_.size()));
-  for(unsigned int i = 0; i < general_.size(); i++) {
-    Item* const item = general_.at(i);
-    lines.push_back(toString(item->getData().id));
-    lines.push_back(toString(item->nrItems));
-    item->addSaveLines_(lines);
+  lines.push_back(toStr(general_.size()));
+  for(Item * item : general_) {
+    lines.push_back(toStr(int(item->getData().id)));
+    lines.push_back(toStr(item->nrItems));
+    item->addSaveLines(lines);
   }
 }
 
@@ -102,11 +101,11 @@ void Inventory::setParamsFromSaveLines(vector<string>& lines, Engine& engine) {
 
     const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(lines.begin());
-    if(id != item_empty) {
+    if(id != ItemId::empty) {
       item = engine.itemFactory->spawnItem(id);
       item->nrItems = toInt(lines.front());
       lines.erase(lines.begin());
-      item->setParamsFromSaveLines_(lines);
+      item->setParamsFromSaveLines(lines);
       slot.item = item;
       //When loading the game, wear the item to apply properties from wearing
       item->onWear();
@@ -125,13 +124,13 @@ void Inventory::setParamsFromSaveLines(vector<string>& lines, Engine& engine) {
     Item* item = engine.itemFactory->spawnItem(id);
     item->nrItems = toInt(lines.front());
     lines.erase(lines.begin());
-    item->setParamsFromSaveLines_(lines);
+    item->setParamsFromSaveLines(lines);
     general_.push_back(item);
   }
 }
 
 bool Inventory::hasDynamiteInGeneral() const {
-  return hasItemInGeneral(item_dynamite);
+  return hasItemInGeneral(ItemId::dynamite);
 }
 
 bool Inventory::hasItemInGeneral(const ItemId id) const {
@@ -159,7 +158,7 @@ int Inventory::getItemStackSizeInGeneral(const ItemId id) const {
 
 void Inventory::decrDynamiteInGeneral() {
   for(unsigned int i = 0; i < general_.size(); i++) {
-    if(general_.at(i)->getData().id == item_dynamite) {
+    if(general_.at(i)->getData().id == ItemId::dynamite) {
       decrItemInGeneral(i);
       break;
     }
@@ -170,7 +169,7 @@ void Inventory::decrDynamiteInGeneral() {
  bool Inventory::hasFirstAidInGeneral()
  {
  for(unsigned int i = 0; i < general_.size(); i++) {
- if(general_.at(i)->getInstanceDefinition().id == item_firstAidKit)
+ if(general_.at(i)->getInstanceDefinition().id == ItemId::firstAidKit)
  return true;
  }
 
@@ -180,7 +179,7 @@ void Inventory::decrDynamiteInGeneral() {
  void Inventory::decreaseFirstAidInGeneral()
  {
  for(unsigned int i = 0; i < general_.size(); i++) {
- if(general_.at(i)->getInstanceDefinition().id == item_firstAidKit) {
+ if(general_.at(i)->getInstanceDefinition().id == ItemId::firstAidKit) {
  decrItemInGeneral(i);
  break;
  }
@@ -189,10 +188,10 @@ void Inventory::decrDynamiteInGeneral() {
  */
 
 void Inventory::putItemInGeneral(Item* item) {
-  bool stackedItem = false;
+  bool isStacked = false;
 
   //If item stacks, see if there is other items of same type
-  if(item->getData().isStackable == true) {
+  if(item->getData().isStackable) {
 
     const int stackIndex = getElementToStackItem(item);
 
@@ -204,13 +203,11 @@ void Inventory::putItemInGeneral(Item* item) {
       item->nrItems += compareItem->nrItems;
       delete compareItem;
       general_.at(stackIndex) = item;
-      stackedItem = true;
+      isStacked = true;
     }
   }
 
-  if(stackedItem == false) {
-    general_.push_back(item);
-  }
+  if(isStacked == false) {general_.push_back(item);}
 }
 
 int Inventory::getElementToStackItem(Item* item) const {
@@ -410,12 +407,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine.itemDataHandler->getItemRef(*itemBefore, itemRef_a);
+          engine.itemDataHandler->getItemRef(*itemBefore, ItemRefType::a);
         engine.log->addMsg(
           "I was wielding " + nameBefore + ".");
       }
       const string nameAfter =
-        engine.itemDataHandler->getItemRef(*itemAfter, itemRef_a);
+        engine.itemDataHandler->getItemRef(*itemAfter, ItemRefType::a);
       engine.log->addMsg(
         "I am now wielding " + nameAfter + ".");
     }
@@ -428,12 +425,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine.itemDataHandler->getItemRef(*itemBefore, itemRef_a);
+          engine.itemDataHandler->getItemRef(*itemBefore, ItemRefType::a);
         engine.log->addMsg(
           "I was wielding " + nameBefore + " as a prepared weapon.");
       }
       const string nameAfter =
-        engine.itemDataHandler->getItemRef(*itemAfter, itemRef_a);
+        engine.itemDataHandler->getItemRef(*itemAfter, ItemRefType::a);
       engine.log->addMsg(
         "I am now wielding " + nameAfter + " as a prepared weapon.");
     }
@@ -446,11 +443,11 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine.itemDataHandler->getItemRef(*itemBefore, itemRef_a);
+          engine.itemDataHandler->getItemRef(*itemBefore, ItemRefType::a);
         engine.log->addMsg("I wore " + nameBefore + ".");
       }
       const string nameAfter =
-        engine.itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
+        engine.itemDataHandler->getItemRef(*itemAfter, ItemRefType::plural);
       engine.log->addMsg("I am now wearing " + nameAfter + ".");
     }
     isFreeTurn = false;
@@ -463,12 +460,12 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
-          engine.itemDataHandler->getItemRef(*itemBefore, itemRef_plural);
+          engine.itemDataHandler->getItemRef(*itemBefore, ItemRefType::plural);
         engine.log->addMsg(
           "I was using " + nameBefore + " as missile weapon.");
       }
       const string nameAfter =
-        engine.itemDataHandler->getItemRef(*itemAfter, itemRef_plural);
+        engine.itemDataHandler->getItemRef(*itemAfter, ItemRefType::plural);
       engine.log->addMsg(
         "I am now using " + nameAfter + " as missile weapon.");
     }
@@ -651,9 +648,9 @@ public:
   }
   bool operator()(Item* const item1, Item* const item2) {
     const string& itemName1 =
-      eng.itemDataHandler->getItemRef(*item1, itemRef_plain, true);
+      eng.itemDataHandler->getItemRef(*item1, ItemRefType::plain, true);
     const string& itemName2 =
-      eng.itemDataHandler->getItemRef(*item2, itemRef_plain, true);
+      eng.itemDataHandler->getItemRef(*item2, ItemRefType::plain, true);
     return std::lexicographical_compare(itemName1.begin(), itemName1.end(),
                                         itemName2.begin(), itemName2.end());
   }

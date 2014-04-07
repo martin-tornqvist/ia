@@ -39,7 +39,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
   if(NR_ITEMS_TO_ATTEMPT > 0) {
     while(items_.empty()) {
       vector<ItemId> itemCandidates;
-      for(unsigned int i = 1; i < endOfItemIds; i++) {
+      for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
         ItemData* const curData = engine.itemDataHandler->dataList[i];
         for(
           unsigned int ii = 0;
@@ -86,7 +86,7 @@ void ItemContainerFeature::destroySingleFragile(Engine& engine) {
   for(unsigned int i = 0; i < items_.size(); i++) {
     Item* const item = items_.at(i);
     const ItemData& d = item->getData();
-    if(d.isPotion || d.id == item_molotov) {
+    if(d.isPotion || d.id == ItemId::molotov) {
       delete item;
       items_.erase(items_.begin() + i);
       engine.log->addMsg("I hear a muffled shatter.");
@@ -298,14 +298,14 @@ void Tomb::examine() {
 //  bool hasSledgehammer = false;
 //  Item* item = inv.getItemInSlot(slot_wielded);
 //  if(item != NULL) {
-//    hasSledgehammer = item->getData().id == item_sledgeHammer;
+//    hasSledgehammer = item->getData().id == ItemId::sledgeHammer;
 //  }
 //  if(hasSledgehammer == false) {
 //    item = inv.getItemInSlot(slot_wieldedAlt);
-//    hasSledgehammer = item->getData().id == item_sledgeHammer;
+//    hasSledgehammer = item->getData().id == ItemId::sledgeHammer;
 //  }
 //  if(hasSledgehammer == false) {
-//    hasSledgehammer = inv.hasItemInGeneral(item_sledgeHammer);
+//    hasSledgehammer = inv.hasItemInGeneral(ItemId::sledgeHammer);
 //  }
 //  if(hasSledgehammer) {
 //    possibleActions.push_back(tombAction_smashLidWithSledgehammer);
@@ -535,7 +535,7 @@ void Chest::bash(Actor& actorTrying) {
 //
 //        if(Rnd::percentile() < CHANCE_TO_DMG_WPN) {
 //          const string wpnName = eng.itemDataHandler->getItemRef(
-//                                   *item, itemRef_plain, true);
+//                                   *item, ItemRefType::plain, true);
 //
 //          Weapon* const wpn = dynamic_cast<Weapon*>(item);
 //

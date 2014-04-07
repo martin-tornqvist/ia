@@ -38,9 +38,9 @@ const string Scroll::getRealTypeName() {
   return "";
 }
 
-bool Scroll::activateDefault(Actor* const actor) {
+ConsumeItem Scroll::activateDefault(Actor* const actor) {
   if(actor->getPropHandler().allowRead(true)) {return read();}
-  return false;
+  return ConsumeItem::no;
 }
 
 Spell* Scroll::getSpell() {
@@ -82,12 +82,12 @@ void Scroll::tryLearn() {
   }
 }
 
-bool Scroll::read() {
+ConsumeItem Scroll::read() {
   Renderer::drawMapAndInterface();
 
   if(eng.player->getPropHandler().allowSee() == false) {
     eng.log->addMsg("I cannot read while blind.");
-    return false;
+    return ConsumeItem::no;
   }
 
   Spell* const spell = getSpell();
@@ -106,7 +106,7 @@ bool Scroll::read() {
   }
   delete spell;
 
-  return true;
+  return ConsumeItem::yes;
 }
 
 ScrollNameHandler::ScrollNameHandler(Engine& engine) :
@@ -187,7 +187,7 @@ void ScrollNameHandler::setFalseScrollName(ItemData& d) {
 }
 
 void ScrollNameHandler::addSaveLines(vector<string>& lines) const {
-  for(unsigned int i = 1; i < endOfItemIds; i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     if(eng.itemDataHandler->dataList[i]->isScroll) {
       lines.push_back(eng.itemDataHandler->dataList[i]->name.name);
       lines.push_back(eng.itemDataHandler->dataList[i]->name.name_plural);
@@ -197,7 +197,7 @@ void ScrollNameHandler::addSaveLines(vector<string>& lines) const {
 }
 
 void ScrollNameHandler::setParamsFromSaveLines(vector<string>& lines) {
-  for(unsigned int i = 1; i < endOfItemIds; i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     if(eng.itemDataHandler->dataList[i]->isScroll) {
       eng.itemDataHandler->dataList[i]->name.name = lines.front();
       lines.erase(lines.begin());

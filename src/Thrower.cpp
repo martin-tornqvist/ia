@@ -43,12 +43,13 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
 
   //Render
   if(path.size() > 1) {
-    const char glyph = eng.itemDataHandler->dataList[item_dynamite]->glyph;
+    const char GLYPH =
+      eng.itemDataHandler->dataList[int(ItemId::dynamite)]->glyph;
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(unsigned int i = 1; i < path.size() - 1; i++) {
       Renderer::drawMapAndInterface(false);
       if(eng.map->cells[path[i].x][path[i].y].isSeenByPlayer) {
-        Renderer::drawGlyph(glyph, Panel::map, path[i], clr);
+        Renderer::drawGlyph(GLYPH, Panel::map, path[i], clr);
         Renderer::updateScreen();
         SdlWrapper::sleep(Config::getDelayProjectileDraw());
       }
@@ -104,7 +105,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   const ItemData& itemThrownData = itemThrown.getData();
 
   const string itemName_a =
-    eng.itemDataHandler->getItemRef(itemThrown, itemRef_a, true);
+    eng.itemDataHandler->getItemRef(itemThrown, ItemRefType::a, true);
   if(&actorThrowing == eng.player) {
     eng.log->clearLog();
     eng.log->addMsg("I throw " + itemName_a + ".");

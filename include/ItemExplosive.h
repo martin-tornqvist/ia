@@ -12,10 +12,10 @@ public:
     Item(itemData, engine) {}
   virtual ~Explosive() {}
 
-  virtual bool activateDefault(Actor* const actor) {
+  virtual ConsumeItem activateDefault(Actor* const actor) override {
     (void)actor;
     setPlayerExplosive();
-    return true;
+    return ConsumeItem::yes;
   }
   virtual string getDefaultActivationLabel() const {
     return "Ignite";

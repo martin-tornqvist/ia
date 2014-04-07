@@ -195,24 +195,24 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
 
       case MenuAction::esc: {
         quit    = true;
-        return gameEntry_new;
+        return GameEntryMode::newGame;
       } break;
 
       case MenuAction::space:
       case MenuAction::selectedShift: {} break;
 
       case MenuAction::selected: {
-        if(browser.isPosAtElement(0)) {return gameEntry_new;}
+        if(browser.isPosAtElement(0)) {return GameEntryMode::newGame;}
         if(browser.isPosAtElement(1)) {
           if(eng.saveHandler->isSaveAvailable()) {
             eng.saveHandler->load();
             eng.gameTime->insertActorInLoop(dynamic_cast<Actor*>(eng.player));
             eng.dungeonClimb->travelDown();
-            return gameEntry_load;
+            return GameEntryMode::loadGame;
           } else {
             eng.popup->showMsg("Starting a new character instead.", false,
                                "No save available");
-            return gameEntry_new;
+            return GameEntryMode::newGame;
           }
         }
         if(browser.isPosAtElement(2)) {
@@ -233,18 +233,18 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
         }
         if(browser.isPosAtElement(6)) {
           quit    = true;
-          return gameEntry_new;
+          return GameEntryMode::newGame;
         }
         if(IS_DEBUG_MODE) {
           if(browser.isPosAtElement(7)) {
             Config::setBotPlaying();
-            return gameEntry_new;
+            return GameEntryMode::newGame;
           }
         }
       } break;
     }
   }
-  return gameEntry_new;
+  return GameEntryMode::newGame;
 }
 
 string MainMenu::getHplQuote() const {

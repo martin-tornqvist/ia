@@ -41,7 +41,7 @@ bool MapGenTrapezohedronLvl::run_() {
   }
   const int ELEMENT = Rnd::range(0, spawnCandidates.size() - 1);
   eng.itemFactory->spawnItemOnMap(
-    item_trapezohedron, spawnCandidates.at(ELEMENT));
+    ItemId::trapezohedron, spawnCandidates.at(ELEMENT));
 
   return true;
 }

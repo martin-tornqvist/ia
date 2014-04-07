@@ -256,7 +256,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
       TextFormatting::getSpaceSeparatedList(curHighscore.getDateAndTime(),
           dateStrVector);
       const string date = dateStrVector.at(0);
-      const string score = toString(curHighscore.getScore());
+      const string score = toStr(curHighscore.getScore());
       grave->setInscription("RIP " + name + " " + date + " Score: " + score);
     }
   }

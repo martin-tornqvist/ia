@@ -173,7 +173,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
           const SDL_Color clr =
             data.isBackstab ? clrBlueLgt : clrMsgGood;
           const string wpnName_a =
-            eng.itemDataHandler->getItemRef(wpn, itemRef_a, true);
+            eng.itemDataHandler->getItemRef(wpn, ItemRefType::a, true);
           eng.log->addMsg(
             "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_STR +
             "with " + wpnName_a + dmgPunct,

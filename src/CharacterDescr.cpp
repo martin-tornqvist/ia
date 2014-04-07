@@ -32,9 +32,9 @@ void CharacterDescr::makeLines() {
   const int BASE_DODGE_ATTACKS =
     min(100, abilities.getVal(ability_dodgeAttack, true, *(eng.player)));
   Weapon* kick =
-    dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerKick));
+    dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerKick));
   string kickStr = eng.itemDataHandler->getItemInterfaceRef(
-                     *kick, false, primaryAttackMode_melee);
+                     *kick, false, PrimaryAttackMode::melee);
   delete kick;
   for(unsigned int i = 0; i < kickStr.length(); i++) {
     if(kickStr.at(0) == ' ') {
@@ -44,9 +44,9 @@ void CharacterDescr::makeLines() {
     }
   }
   Weapon* punch =
-    dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerPunch));
+    dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerPunch));
   string punchStr = eng.itemDataHandler->getItemInterfaceRef(
-                      *punch, false, primaryAttackMode_melee);
+                      *punch, false, PrimaryAttackMode::melee);
   delete punch;
   for(unsigned int i = 0; i < punchStr.length(); i++) {
     if(punchStr.at(0) == ' ') {
@@ -57,13 +57,13 @@ void CharacterDescr::makeLines() {
   }
   lines.push_back(StrAndClr(
                     offset + "Melee    : " +
-                    toString(BASE_MELEE) + "%", clrText));
+                    toStr(BASE_MELEE) + "%", clrText));
   lines.push_back(StrAndClr(
                     offset + "Ranged   : " +
-                    toString(BASE_RANGED) + "%", clrText));
+                    toStr(BASE_RANGED) + "%", clrText));
   lines.push_back(StrAndClr(
                     offset + "Dodging  : " +
-                    toString(BASE_DODGE_ATTACKS) + "%", clrText));
+                    toStr(BASE_DODGE_ATTACKS) + "%", clrText));
   lines.push_back(StrAndClr(
                     offset + "Kicking  : " +
                     kickStr, clrText));
@@ -103,13 +103,13 @@ void CharacterDescr::makeLines() {
   lines.push_back(StrAndClr("Potion knowledge", clrHeading));
   vector<StrAndClr> potionList;
   vector<StrAndClr> manuscriptList;
-  for(unsigned int i = 1; i < endOfItemIds; i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     const ItemData* const d = eng.itemDataHandler->dataList[i];
     if(d->isPotion && (d->isTried || d->isIdentified)) {
       Item* item = eng.itemFactory->spawnItem(d->id);
       potionList.push_back(
         StrAndClr(
-          offset + eng.itemDataHandler->getItemRef(*item, itemRef_plain),
+          offset + eng.itemDataHandler->getItemRef(*item, ItemRefType::plain),
           d->clr));
       delete item;
     } else {
@@ -117,7 +117,7 @@ void CharacterDescr::makeLines() {
         Item* item = eng.itemFactory->spawnItem(d->id);
         manuscriptList.push_back(
           StrAndClr(
-            offset + eng.itemDataHandler->getItemRef(*item, itemRef_plain),
+            offset + eng.itemDataHandler->getItemRef(*item, ItemRefType::plain),
             item->getInterfaceClr()));
         delete item;
       }

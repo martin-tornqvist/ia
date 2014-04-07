@@ -19,7 +19,7 @@
 #include "Utils.h"
 
 void GameTime::addSaveLines(vector<string>& lines) const {
-  lines.push_back(toString(turn_));
+  lines.push_back(toStr(turn_));
 }
 
 void GameTime::setParamsFromSaveLines(vector<string>& lines) {

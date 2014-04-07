@@ -13,13 +13,13 @@ public:
 
   ~Scroll() {}
 
-  bool activateDefault(Actor* const actor);
+  ConsumeItem activateDefault(Actor* const actor) override;
 
   string getDefaultActivationLabel() const {return "Read";}
 
   SDL_Color getInterfaceClr() const {return clrMagenta;}
 
-  bool read();
+  ConsumeItem read();
 
   const string getRealTypeName();
 

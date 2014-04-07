@@ -205,7 +205,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel() const {
 
   //First, attempt to populate all non-plain themed rooms
   for(Room * const room : eng.map->rooms) {
-    if(room->roomTheme != roomTheme_plain) {
+    if(room->roomTheme != RoomThemeId::plain) {
 
       const int ROOM_W = room->getX1() - room->getX0() + 1;
       const int ROOM_H = room->getY1() - room->getY0() + 1;
@@ -265,7 +265,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel() const {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
           blockers[x][y] == false &&
-          eng.roomThemeMaker->themeMap[x][y] == roomTheme_plain) {
+          eng.roomThemeMaker->themeMap[x][y] == RoomThemeId::plain) {
           originCandidates.push_back(Pos(x, y));
         }
       }
@@ -275,7 +275,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel() const {
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
     if(spawnGroupOfRandomNativeToRoomThemeAt(
-          roomTheme_plain, sortedFreeCellsVector, blockers, true)) {
+          RoomThemeId::plain, sortedFreeCellsVector, blockers, true)) {
       nrGroupsSpawned++;
     }
   }
@@ -308,7 +308,7 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(
 
   if(idCandidates.empty()) {
     trace << "PopulateMonsters: Found no valid monsters to spawn ";
-    trace << "at room theme (" + toString(roomTheme) + ")" << endl;
+    trace << "at room theme (" + toStr(int(roomTheme)) + ")" << endl;
     return false;
   } else {
     const int ELEMENT = Rnd::range(0, idCandidates.size() - 1);

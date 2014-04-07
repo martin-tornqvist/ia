@@ -24,7 +24,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
   bool isClip = false;
 
   if(ammo != NULL) {
-    ammoName = eng.itemDataHandler->getItemRef(*ammo, itemRef_a);
+    ammoName = eng.itemDataHandler->getItemRef(*ammo, ItemRefType::a);
     isClip = ammo->getData().isAmmoClip;
   }
 
@@ -64,16 +64,16 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
 
         if(isClip) {
           const string wpnName =
-            eng.itemDataHandler->getItemRef(*wpn, itemRef_plain, true);
+            eng.itemDataHandler->getItemRef(*wpn, ItemRefType::plain, true);
           eng.log->addMsg(
             "I" + swiftStr + " reload the " + wpnName +
-            " (" + toString(wpn->nrAmmoLoaded) + "/" +
-            toString(wpn->ammoCapacity) + ").");
+            " (" + toStr(wpn->nrAmmoLoaded) + "/" +
+            toStr(wpn->ammoCapacity) + ").");
         } else {
           eng.log->addMsg(
             "I" + swiftStr + " load " + ammoName +
-            " (" + toString(wpn->nrAmmoLoaded) + "/" +
-            toString(wpn->ammoCapacity) + ").");
+            " (" + toStr(wpn->nrAmmoLoaded) + "/" +
+            toStr(wpn->ammoCapacity) + ").");
         }
         Renderer::drawMapAndInterface();
       } else {

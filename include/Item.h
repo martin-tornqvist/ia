@@ -5,6 +5,7 @@
 
 #include "ItemData.h"
 #include "Art.h"
+#include "InventoryHandler.h"
 
 class Property;
 
@@ -32,8 +33,8 @@ public:
     (void)IS_SILENT_IDENTIFY;
   }
 
-  virtual void addSaveLines_(vector<string>& lines)           {(void)lines;}
-  virtual void setParamsFromSaveLines_(vector<string>& lines) {(void)lines;}
+  virtual void addSaveLines(vector<string>& lines)            {(void)lines;}
+  virtual void setParamsFromSaveLines(vector<string>& lines)  {(void)lines;}
 
   int getWeight() const {return data_->itemWeight * nrItems;}
 
@@ -48,9 +49,9 @@ public:
     return "Heavy";
   }
 
-  virtual bool activateDefault(Actor* const actor) {
+  virtual ConsumeItem activateDefault(Actor* const actor) {
     (void)actor;
-    return false;
+    return ConsumeItem::no;
   }
   virtual string getDefaultActivationLabel() const  {return "";}
   virtual SDL_Color getInterfaceClr() const         {return clrBrown;}

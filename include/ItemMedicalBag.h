@@ -17,7 +17,7 @@ public:
 
   virtual ~MedicalBag() {}
 
-  bool activateDefault(Actor* const actor);
+  ConsumeItem activateDefault(Actor* const actor) override;
 
   void continueAction();
   void interrupted();
@@ -27,10 +27,10 @@ public:
 
   virtual SDL_Color getInterfaceClr() const {return clrGreen;}
 
-  void addSaveLines_(vector<string>& lines) {
-    lines.push_back(toString(nrSupplies_));
+  void addSaveLines(vector<string>& lines) override {
+    lines.push_back(toStr(nrSupplies_));
   }
-  void setParamsFromSaveLines_(vector<string>& lines) {
+  void setParamsFromSaveLines(vector<string>& lines) override {
     nrSupplies_ = toInt(lines.front());
     lines.erase(lines.begin());
   }

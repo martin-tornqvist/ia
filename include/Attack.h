@@ -57,9 +57,9 @@ public:
   MissileAttackData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
                     const Pos& curPos_, Engine& engine,
                     ActorSize intendedAimLevel_ = actorSize_none);
-  int           hitChanceTot;
-  ActorSize  intendedAimLevel;
-  ActorSize  curDefenderSize;
+  int       hitChanceTot;
+  ActorSize intendedAimLevel;
+  ActorSize curDefenderSize;
 };
 
 struct Projectile {

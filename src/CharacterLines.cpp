@@ -79,8 +79,8 @@ void drawInfoLines(Engine& eng) {
 //  pos.x += str.length() + 1;
 
   //Health
-  const string hp = toString(player->getHp());
-  const string hpMax = toString(player->getHpMax(true));
+  const string hp = toStr(player->getHp());
+  const string hpMax = toStr(player->getHpMax(true));
   Renderer::drawText("HP:", Panel::charLines, pos, clrGenDrk);
   pos.x += 3;
   string str = hp + "/" + hpMax;
@@ -88,8 +88,8 @@ void drawInfoLines(Engine& eng) {
   pos.x += str.length() + 1;
 
   //Spirit
-  const string spi    = toString(player->getSpi());
-  const string spiMax = toString(player->getSpiMax());
+  const string spi    = toStr(player->getSpi());
+  const string spiMax = toStr(player->getSpiMax());
   Renderer::drawText("SPI:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
   str = spi + "/" + spiMax;
@@ -104,10 +104,10 @@ void drawInfoLines(Engine& eng) {
   const SDL_Color shortSanClr =
     SHOCK < 50 ? clrGreenLgt :
     SHOCK < 75 ? clrYellow : clrMagenta;
-  str = toString(SHOCK) + "%/";
+  str = toStr(SHOCK) + "%/";
   Renderer::drawText(str, Panel::charLines, pos, shortSanClr);
   pos.x += str.length();
-  str = toString(INS) + "%";
+  str = toStr(INS) + "%";
   Renderer::drawText(str, Panel::charLines, pos, clrMagenta);
   pos.x += str.length() + 1;
 
@@ -156,13 +156,13 @@ void drawInfoLines(Engine& eng) {
   DungeonMaster* const dm = eng.dungeonMaster;
   Renderer::drawText("LVL:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
-  str = toString(dm->getCLvl());
+  str = toStr(dm->getCLvl());
   Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
   pos.x += str.length() + 1;
   Renderer::drawText("NXT:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
   str = dm->getCLvl() >= PLAYER_MAX_CLVL ? "-" :
-        toString(dm->getXpToNextLvl());
+        toStr(dm->getXpToNextLvl());
   Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
@@ -170,7 +170,7 @@ void drawInfoLines(Engine& eng) {
   Renderer::drawText("DLVL:", Panel::charLines, pos, clrGenDrk);
   pos.x += 5;
   const int DLVL = eng.map->getDlvl();
-  str = DLVL >= 0 ? toString(DLVL) : "?";
+  str = DLVL >= 0 ? toStr(DLVL) : "?";
   Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
@@ -178,7 +178,7 @@ void drawInfoLines(Engine& eng) {
   Renderer::drawText("ENC:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
   const int ENC = player->getEncPercent();
-  str = toString(ENC) + "%";
+  str = toStr(ENC) + "%";
   const SDL_Color encClr = ENC < 100 ? clrGreenLgt :
                            ENC < ENC_IMMOBILE_LVL ? clrYellow : clrRedLgt;
   Renderer::drawText(str, Panel::charLines, pos, encClr);
@@ -202,7 +202,7 @@ void drawInfoLines(Engine& eng) {
     pos.x += 2;
 
     str = eng.itemDataHandler->getItemInterfaceRef(
-            *itemMissiles, false, primaryAttackMode_missile);
+            *itemMissiles, false, PrimaryAttackMode::missile);
     Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
     pos.x += str.length() + 1;
   }
@@ -234,14 +234,14 @@ void drawInfoLines(Engine& eng) {
 //    string propText = prop->getNameShort();
 //    if(IS_SELF_AWARE && prop->allowDisplayTurns()) {
 //      // +1 to offset that the turn is also active on turn 0
-//      propText += "(" + toString(prop->turnsLeft_ + 1) + ")";
+//      propText += "(" + toStr(prop->turnsLeft_ + 1) + ")";
 //    }
 //    Renderer::drawText(propText, Panel::charLines, pos, statusColor);
 //    pos.x += propText.length() + 1;
 //  }
 
 // Turn number
-  str = "T:" + toString(eng.gameTime->getTurn());
+  str = "T:" + toStr(eng.gameTime->getTurn());
   pos.x = MAP_W - str.length() - 1;
   Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
 }

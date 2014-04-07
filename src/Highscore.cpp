@@ -101,10 +101,10 @@ void HighScore::renderHighScoreScreen(const vector<HighScoreEntry>& entries,
     i++) {
     const string dateAndTime  = entries.at(i).getDateAndTime();
     const string name         = entries.at(i).getName();
-    const string score        = toString(entries.at(i).getScore());
-    const string lvl          = toString(entries.at(i).getLvl());
-    const string dlvl         = toString(entries.at(i).getDlvl());
-    const string ins          = toString(entries.at(i).getInsanity());
+    const string score        = toStr(entries.at(i).getScore());
+    const string lvl          = toStr(entries.at(i).getLvl());
+    const string dlvl         = toStr(entries.at(i).getDlvl());
+    const string ins          = toStr(entries.at(i).getInsanity());
 
     const SDL_Color& clr = clrNosfTeal;
     Renderer::drawText(

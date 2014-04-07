@@ -18,7 +18,7 @@ template< typename Expected, typename Actual >
 void CheckEqual(TestResults& results, Expected const& expected, Actual const& actual, TestDetails const& details) {
   if(!(expected == actual)) {
     UnitTest::MemoryOutStream stream;
-    stream << "Expected " << expected << " but was " << actual;
+   stream << "Expected " << expected << " but was " << actual;
 
     results.OnTestFailure(details, stream.GetText());
   }

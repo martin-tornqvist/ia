@@ -67,87 +67,87 @@ void Player::spawnStartItems() {
   int NR_THROWING_KNIVES   = Rnd::range(7, 12);
 
   const int WEAPON_CHOICE = Rnd::range(1, 5);
-  ItemId weaponId = item_dagger;
+  ItemId weaponId = ItemId::dagger;
   switch(WEAPON_CHOICE) {
-    case 1:   weaponId = item_dagger;   break;
-    case 2:   weaponId = item_hatchet;  break;
-    case 3:   weaponId = item_hammer;   break;
-    case 4:   weaponId = item_machete;  break;
-    case 5:   weaponId = item_axe;      break;
-    default:  weaponId = item_dagger;   break;
+    case 1:   weaponId = ItemId::dagger;   break;
+    case 2:   weaponId = ItemId::hatchet;  break;
+    case 3:   weaponId = ItemId::hammer;   break;
+    case 4:   weaponId = ItemId::machete;  break;
+    case 5:   weaponId = ItemId::axe;      break;
+    default:  weaponId = ItemId::dagger;   break;
   }
 
   inv_->putItemInSlot(
     slot_wielded, eng.itemFactory->spawnItem(weaponId), true, true);
 
   inv_->putItemInSlot(
-    slot_wieldedAlt, eng.itemFactory->spawnItem(item_pistol), true, true);
+    slot_wieldedAlt, eng.itemFactory->spawnItem(ItemId::pistol), true, true);
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {
-    inv_->putItemInGeneral(eng.itemFactory->spawnItem(item_pistolClip));
+    inv_->putItemInGeneral(eng.itemFactory->spawnItem(ItemId::pistolClip));
   }
 
   //TODO Remove:
   //--------------------------------------------------------------------------
 //  inv_->putItemInGeneral(
-//    eng.itemFactory->spawnItem(item_machineGun));
+//    eng.itemFactory->spawnItem(ItemId::machineGun));
 //  for(int i = 0; i < 2; i++) {
 //    inv_->putItemInGeneral(
-//      eng.itemFactory->spawnItem(item_drumOfBullets));
+//      eng.itemFactory->spawnItem(ItemId::drumOfBullets));
 //  }
 //  inv_->putItemInGeneral(
-//    eng.itemFactory->spawnItem(item_sawedOff));
+//    eng.itemFactory->spawnItem(ItemId::sawedOff));
 //  inv_->putItemInGeneral(
-//    eng.itemFactory->spawnItem(item_pumpShotgun));
+//    eng.itemFactory->spawnItem(ItemId::pumpShotgun));
 //  inv_->putItemInGeneral(
-//    eng.itemFactory->spawnItem(item_shotgunShell, 80));
+//    eng.itemFactory->spawnItem(ItemId::shotgunShell, 80));
   //--------------------------------------------------------------------------
 
   inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(item_dynamite, NR_DYNAMITE));
+    eng.itemFactory->spawnItem(ItemId::dynamite, NR_DYNAMITE));
   inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(item_molotov, NR_MOLOTOV));
+    eng.itemFactory->spawnItem(ItemId::molotov, NR_MOLOTOV));
 
   if(NR_THROWING_KNIVES > 0) {
     inv_->putItemInSlot(
       slot_missiles,
-      eng.itemFactory->spawnItem(item_throwingKnife, NR_THROWING_KNIVES),
+      eng.itemFactory->spawnItem(ItemId::throwingKnife, NR_THROWING_KNIVES),
       true, true);
   }
 
   inv_->putItemInSlot(
     slot_armorBody,
-    eng.itemFactory->spawnItem(item_armorLeatherJacket),
+    eng.itemFactory->spawnItem(ItemId::armorLeatherJacket),
     true, true);
 
   inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(item_deviceElectricLantern));
+    eng.itemFactory->spawnItem(ItemId::electricLantern));
   inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(item_medicalBag));
+    eng.itemFactory->spawnItem(ItemId::medicalBag));
 }
 
 void Player::addSaveLines(vector<string>& lines) const {
-  lines.push_back(toString(propHandler_->appliedProps_.size()));
+  lines.push_back(toStr(propHandler_->appliedProps_.size()));
   for(Prop * prop : propHandler_->appliedProps_) {
-    lines.push_back(toString(prop->getId()));
-    lines.push_back(toString(prop->turnsLeft_));
+    lines.push_back(toStr(prop->getId()));
+    lines.push_back(toStr(prop->turnsLeft_));
     prop->addSaveLines(lines);
   }
 
-  lines.push_back(toString(insanity_));
-  lines.push_back(toString(int(shock_)));
-  lines.push_back(toString(hp_));
-  lines.push_back(toString(hpMax_));
-  lines.push_back(toString(spi_));
-  lines.push_back(toString(spiMax_));
-  lines.push_back(toString(pos.x));
-  lines.push_back(toString(pos.y));
-  lines.push_back(toString(dynamiteFuseTurns));
-  lines.push_back(toString(molotovFuseTurns));
-  lines.push_back(toString(flareFuseTurns));
+  lines.push_back(toStr(insanity_));
+  lines.push_back(toStr(int(shock_)));
+  lines.push_back(toStr(hp_));
+  lines.push_back(toStr(hpMax_));
+  lines.push_back(toStr(spi_));
+  lines.push_back(toStr(spiMax_));
+  lines.push_back(toStr(pos.x));
+  lines.push_back(toStr(pos.y));
+  lines.push_back(toStr(dynamiteFuseTurns));
+  lines.push_back(toStr(molotovFuseTurns));
+  lines.push_back(toStr(flareFuseTurns));
 
   for(int i = 0; i < endOfAbilityId; i++) {
-    lines.push_back(toString(data_->abilityVals.getRawVal(AbilityId(i))));
+    lines.push_back(toStr(data_->abilityVals.getRawVal(AbilityId(i))));
   }
 
   for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
@@ -512,7 +512,7 @@ void Player::incrInsanity() {
                   msg += "sensation of pain. Every time I am hurt, I find a ";
                   msg += "little relief. However, my depraved mind can no ";
                   msg += "longer find complete peace (shock cannot go below ";
-                  msg += toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                  msg += toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng.popup->showMsg(
                     msg, true, "Masochistic obsession!", SfxId::insanityRising);
                   obsessions[int(Obsession::masochism)] = true;
@@ -523,7 +523,7 @@ void Player::incrInsanity() {
                   msg += "I cause in others. For every life I take, I find a ";
                   msg += "little relief. However, my depraved mind can no ";
                   msg += "longer find complete peace (shock cannot go below ";
-                  msg += toString(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                  msg += toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng.popup->showMsg(
                     msg, true, "Sadistic obsession!", SfxId::insanityRising);
                   obsessions[int(Obsession::sadism)] = true;
@@ -1075,7 +1075,7 @@ void Player::moveDir(Dir dir) {
                   isSeeingActor(*actorAtDest, NULL)) {
                 if(weapon->getData().isRangedWeapon) {
                   const string wpnName =
-                    eng.itemDataHandler->getItemRef(*weapon, itemRef_a);
+                    eng.itemDataHandler->getItemRef(*weapon, ItemRefType::a);
                   eng.log->addMsg(
                     "Attack " + actorAtDest->getNameThe() +
                     " with " + wpnName + "? (y/n)", clrWhiteHigh);
@@ -1208,10 +1208,10 @@ void Player::kick(Actor& actorToKick) {
 
   if(d.actorSize == actorSize_floor && (d.isSpider || d.isRat)) {
     kickWeapon =
-      dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerStomp));
+      dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerStomp));
   } else {
     kickWeapon =
-      dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(item_playerKick));
+      dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerKick));
   }
   eng.attack->melee(*this, *kickWeapon, actorToKick);
   delete kickWeapon;
@@ -1220,7 +1220,7 @@ void Player::kick(Actor& actorToKick) {
 void Player::punch(Actor& actorToPunch) {
   //Spawn a temporary punch weapon to attack with
   Weapon* punchWeapon = dynamic_cast<Weapon*>(
-                          eng.itemFactory->spawnItem(item_playerPunch));
+                          eng.itemFactory->spawnItem(ItemId::playerPunch));
   eng.attack->melee(*this, *punchWeapon, actorToPunch);
   delete punchWeapon;
 }
@@ -1231,7 +1231,7 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
 
   vector<Item*>& generalItems = inv_->getGeneral();
   for(Item * const item : generalItems) {
-    if(item->getData().id == item_deviceElectricLantern) {
+    if(item->getData().id == ItemId::electricLantern) {
       DeviceLantern* const lantern = dynamic_cast<DeviceLantern*>(item);
       LanternLightSize lightSize = lantern->getCurLightSize();
       if(lightSize == LanternLightSize::small) {

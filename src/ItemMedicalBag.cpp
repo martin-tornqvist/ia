@@ -11,14 +11,14 @@
 #include "GameTime.h"
 #include "MapParsing.h"
 
-bool MedicalBag::activateDefault(Actor* const actor) {
+ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;
 
   vector<Actor*> SpottedEnemies;
   eng.player->getSpottedEnemies(SpottedEnemies);
   if(SpottedEnemies.empty() == false) {
     eng.log->addMsg("Not while an enemy is near.");
-    return false;
+    return ConsumeItem::no;
   }
 
   curAction_ = playerChooseAction();
@@ -84,7 +84,7 @@ bool MedicalBag::activateDefault(Actor* const actor) {
     }
   }
 
-  return false;
+  return ConsumeItem::no;
 }
 
 MedicalBagAction MedicalBag::playerChooseAction() const {
@@ -111,14 +111,14 @@ MedicalBagAction MedicalBag::playerChooseAction() const {
       getTotTurnsForAction(MedicalBagAction(actionNr));
     const int NR_SUPPL_NEEDED =
       getNrSuppliesNeededForAction(MedicalBagAction(actionNr));
-    label += " (" + toString(NR_SUPPL_NEEDED) + " suppl";
-    label += "/"  + toString(NR_TURNS_NEEDED) + " turns)";
+    label += " (" + toStr(NR_SUPPL_NEEDED) + " suppl";
+    label += "/"  + toStr(NR_TURNS_NEEDED) + " turns)";
     choiceLabels.push_back(label);
   }
   choiceLabels.push_back("Cancel");
 
   const string suppliesMsg =
-    toString(nrSupplies_) + " medical supplies available.";
+    toStr(nrSupplies_) + " medical supplies available.";
 
   const int CHOICE_NR =
     eng.popup->showMenuMsg(suppliesMsg, true, choiceLabels, "Use medical bag");

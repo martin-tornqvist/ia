@@ -147,8 +147,8 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     int x = 28;
     str = "SPI:";
     const Range spiCost = spell->getSpiCost(false, eng.player, eng);
-    const string lowerStr = toString(spiCost.lower);
-    const string upperStr = toString(spiCost.upper);
+    const string lowerStr = toStr(spiCost.lower);
+    const string upperStr = toStr(spiCost.upper);
     str += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
     Renderer::drawText(str, Panel::screen, Pos(x, y), clrWhite);
 
@@ -169,8 +169,8 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 }
 
 void PlayerSpellsHandler::addSaveLines(vector<string>& lines) const {
-  lines.push_back(toString(knownSpells_.size()));
-  for(Spell * s : knownSpells_) {lines.push_back(toString(s->getId()));}
+  lines.push_back(toStr(knownSpells_.size()));
+  for(Spell * s : knownSpells_) {lines.push_back(toStr(s->getId()));}
 }
 
 void PlayerSpellsHandler::setParamsFromSaveLines(vector<string>& lines) {

@@ -22,7 +22,7 @@ public:
 
   virtual vector<string> itemSpecificWriteToFile() {
     vector<string> lines;
-    lines.push_back(toString(nrAmmoLoaded));
+    lines.push_back(toStr(nrAmmoLoaded));
     return lines;
   }
 
@@ -41,12 +41,12 @@ public:
     return *ammoData_;
   }
 
-  void addSaveLines_(vector<string>& lines) {
-    lines.push_back(toString(meleeDmgPlus));
-    lines.push_back(toString(nrAmmoLoaded));
+  void addSaveLines(vector<string>& lines) override {
+    lines.push_back(toStr(meleeDmgPlus));
+    lines.push_back(toStr(nrAmmoLoaded));
   }
 
-  void setParamsFromSaveLines_(vector<string>& lines) {
+  void setParamsFromSaveLines(vector<string>& lines) override {
     meleeDmgPlus = toInt(lines.front());
     lines.erase(lines.begin());
     nrAmmoLoaded = toInt(lines.front());

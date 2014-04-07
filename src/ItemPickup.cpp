@@ -88,7 +88,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
         Inventory& playerInv = eng.player->getInv();
         const ItemId ammoType = weapon->getData().rangedAmmoTypeUsed;
 
-        ItemData* const ammoData = eng.itemDataHandler->dataList[ammoType];
+        ItemData* const ammoData = eng.itemDataHandler->dataList[int(ammoType)];
 
         Item* spawnedAmmo = eng.itemFactory->spawnItem(ammoType);
 
@@ -100,7 +100,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
           spawnedAmmo->nrItems = nrAmmoLoaded;
         }
         const string WEAPON_REF_A =
-          eng.itemDataHandler->getItemRef(*weapon, itemRef_a);
+          eng.itemDataHandler->getItemRef(*weapon, ItemRefType::a);
         eng.log->addMsg("I unload " + WEAPON_REF_A);
 
         if(isInvFull(playerInv, *spawnedAmmo) == false) {

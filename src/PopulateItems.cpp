@@ -9,66 +9,45 @@
 #include "Utils.h"
 
 void PopulateItems::spawnItems() {
+  int nrOfSpawns = Rnd::range(5, 8);
+
+  if(eng.playerBonHandler->hasTrait(traitTreasureHunter)) {
+    nrOfSpawns += 2;
+  }
+
+  vector<ItemId> candidates;
+  candidates.resize(0);
+
+  ItemData** dataList = eng.itemDataHandler->dataList;
+
+  const int DLVL = eng.map->getDlvl();
+
+  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+    if(
+      DLVL >= dataList[i]->spawnStandardMinDLVL &&
+      DLVL <= dataList[i]->spawnStandardMaxDLVL &&
+      dataList[i]->isIntrinsic == false) {
+      if(Rnd::percentile() < dataList[i]->chanceToIncludeInSpawnList) {
+        candidates.push_back(ItemId(i));
+      }
+    }
+  }
+
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksItems(eng), blockers);
   vector<Pos> freeCells;
   Utils::makeVectorFromBoolMap(false, blockers, freeCells);
 
-  const int CELLS_PER_SPAWN = 135;
-
-  int nrOfSpawns = freeCells.size() / CELLS_PER_SPAWN;
-  nrOfSpawns = max(1, nrOfSpawns);
-  nrOfSpawns += Rnd::dice(1, (nrOfSpawns / 2) + 2) - 1;
-
-  if(eng.playerBonHandler->hasTrait(traitTreasureHunter)) {
-    nrOfSpawns = (nrOfSpawns * 3) / 2;
-  }
-
-  buildCandidateList();
-
-  //Spawn randomly from the Pos-vector
-  int n = 0;
-  ItemId id;
-
   for(int i = 0; i < nrOfSpawns; i++) {
-    if(freeCells.size() > 0) {
+    if(freeCells.empty()) {break;}
 
-      //Roll the dice for random element
-      n = Rnd::dice(1, freeCells.size()) - 1;
-      const Pos pos(freeCells.at(n));
+    const int ELEMENT       = Rnd::dice(1, freeCells.size()) - 1;
+    const Pos& pos          = freeCells.at(ELEMENT);
+    const int NR_CANDIDATES = int(candidates.size());
+    const ItemId id         = candidates.at(Rnd::range(0, NR_CANDIDATES - 1));
 
-      //Get type to spawn
-      id = getFromCandidateList();
+    eng.itemFactory->spawnItemOnMap(id, pos);
 
-      //Spawn
-      eng.itemFactory->spawnItemOnMap(id, pos);
-
-      //Erase position from the vector
-      freeCells.erase(freeCells.begin() + n);
-    }
+    freeCells.erase(freeCells.begin() + ELEMENT);
   }
-}
-
-void PopulateItems::buildCandidateList() {
-  candidates.resize(0);
-
-  ItemData** dataList = eng.itemDataHandler->dataList;
-
-  const unsigned int NUMBER_DEFINED = (unsigned int)endOfItemIds;
-
-  for(unsigned int i = 1; i < NUMBER_DEFINED; i++) {
-    if(
-      eng.map->getDlvl() >= dataList[i]->spawnStandardMinDLVL &&
-      eng.map->getDlvl() <= dataList[i]->spawnStandardMaxDLVL &&
-      dataList[i]->isIntrinsic == false) {
-      if(Rnd::percentile() < dataList[i]->chanceToIncludeInSpawnList) {
-        candidates.push_back(static_cast<ItemId>(i));
-      }
-    }
-  }
-}
-
-ItemId PopulateItems::getFromCandidateList() {
-  const int NUMBER_CANDIDATES = int(candidates.size());
-  return candidates.at(Rnd::dice(1, NUMBER_CANDIDATES) - 1);
 }

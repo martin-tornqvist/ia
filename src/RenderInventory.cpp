@@ -72,13 +72,13 @@ void drawBrowseSlots(const MenuBrowser& browser, Engine& eng) {
         IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
 
       const ItemData& d = item->getData();
-      PrimaryAttackMode attackMode = primaryAttackMode_none;
+      PrimaryAttackMode attackMode = PrimaryAttackMode::none;
       if(slot.id == slot_wielded || slot.id == slot_wieldedAlt) {
         attackMode =
-          d.primaryAttackMode == primaryAttackMode_missile ?
-          primaryAttackMode_melee : d.primaryAttackMode;
+          d.primaryAttackMode == PrimaryAttackMode::missile ?
+          PrimaryAttackMode::melee : d.primaryAttackMode;
       } else if(slot.id == slot_missiles) {
-        attackMode = primaryAttackMode_missile;
+        attackMode = PrimaryAttackMode::missile;
       }
 
       str = eng.itemDataHandler->getItemInterfaceRef(
@@ -198,13 +198,13 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
                                     item->getInterfaceClr();
 
     const ItemData& d = item->getData();
-    PrimaryAttackMode attackMode = primaryAttackMode_none;
+    PrimaryAttackMode attackMode = PrimaryAttackMode::none;
     if(slotToEquip == slot_wielded || slotToEquip == slot_wieldedAlt) {
       attackMode =
-        d.primaryAttackMode == primaryAttackMode_missile ?
-        primaryAttackMode_melee : d.primaryAttackMode;
+        d.primaryAttackMode == PrimaryAttackMode::missile ?
+        PrimaryAttackMode::melee : d.primaryAttackMode;
     } else if(slotToEquip == slot_missiles) {
-      attackMode = primaryAttackMode_missile;
+      attackMode = PrimaryAttackMode::missile;
     }
 
     str = eng.itemDataHandler->getItemInterfaceRef(*item, false, attackMode);
@@ -267,9 +267,9 @@ void drawUse(const MenuBrowser& browser,
     drawItemSymbol(*item, pos);
     pos.x += 2;
 
-    str = eng.itemDataHandler->getItemRef(*item, itemRef_plain, false);
+    str = eng.itemDataHandler->getItemRef(*item, ItemRefType::plain, false);
     if(item->nrItems > 1 && item->getData().isStackable) {
-      str += " (" + toString(item->nrItems) + ")";
+      str += " (" + toStr(item->nrItems) + ")";
     }
 
     Renderer::drawText(str, Panel::screen, pos, itemInterfClr);

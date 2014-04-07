@@ -36,37 +36,37 @@ void RoomThemeMaker::applyThemeToRoom(Room& room) {
   makeThemeSpecificRoomModifications(room);
 
   switch(room.roomTheme) {
-    case roomTheme_plain:   {room.roomDescr = "";}  break;
-    case roomTheme_human:   {room.roomDescr = "";}  break;
-    case roomTheme_ritual:  {room.roomDescr = "";}  break;
-    case roomTheme_spider:  {room.roomDescr = "";}  break;
-    case roomTheme_crypt:   {room.roomDescr = "";}  break;
-    case roomTheme_monster: {room.roomDescr = "";}  break;
-    case roomTheme_flooded: {room.roomDescr = "";}  break;
-    case roomTheme_muddy:   {room.roomDescr = "";}  break;
-    case endOfRoomThemes: {} break;
+    case RoomThemeId::plain:   {room.roomDescr = "";} break;
+    case RoomThemeId::human:   {room.roomDescr = "";} break;
+    case RoomThemeId::ritual:  {room.roomDescr = "";} break;
+    case RoomThemeId::spider:  {room.roomDescr = "";} break;
+    case RoomThemeId::crypt:   {room.roomDescr = "";} break;
+    case RoomThemeId::monster: {room.roomDescr = "";} break;
+    case RoomThemeId::flooded: {room.roomDescr = "";} break;
+    case RoomThemeId::muddy:   {room.roomDescr = "";} break;
+    case RoomThemeId::endOfRoomThemes: {} break;
   }
 }
 
 int RoomThemeMaker::getRandomNrFeaturesForTheme(const RoomThemeId theme) const {
   switch(theme) {
-    case roomTheme_plain:
+    case RoomThemeId::plain:
       return Rnd::oneIn(14) ? 2 : Rnd::oneIn(5) ? 1 : 0;
-    case roomTheme_human:
+    case RoomThemeId::human:
       return Rnd::range(3, 6);
-    case roomTheme_ritual:
+    case RoomThemeId::ritual:
       return Rnd::range(1, 5);
-    case roomTheme_spider:
+    case RoomThemeId::spider:
       return Rnd::range(0, 3);
-    case roomTheme_crypt:
+    case RoomThemeId::crypt:
       return Rnd::range(3, 6);
-    case roomTheme_monster:
+    case RoomThemeId::monster:
       return Rnd::range(0, 6);
-    case roomTheme_flooded:
+    case RoomThemeId::flooded:
       return 0;
-    case roomTheme_muddy:
+    case RoomThemeId::muddy:
       return 0;
-    case endOfRoomThemes: {} break;
+    case RoomThemeId::endOfRoomThemes: {} break;
   }
   return -1;
 }
@@ -89,30 +89,30 @@ bool RoomThemeMaker::isThemeAllowed(
   const int MAX_DIM = max(ROOM_W, ROOM_H);
 
   switch(theme) {
-    case roomTheme_plain: {return true;} break;
+    case RoomThemeId::plain: {return true;} break;
 
-    case roomTheme_human: {
-      return MAX_DIM >= 5 && MAX_DIM <= 8 && MIN_DIM >= 4 && MIN_DIM <= 7 &&
-             nrThemeInMap(roomTheme_human) < 2;
+    case RoomThemeId::human: {
+      return MIN_DIM >= 4 && MAX_DIM <= 8 &&
+             nrThemeInMap(RoomThemeId::human) < 3;
     } break;
 
-    case roomTheme_ritual: {
-      return MAX_DIM >= 4 && MIN_DIM >= 3 &&
-             nrThemeInMap(roomTheme_ritual) == 0;
+    case RoomThemeId::ritual: {
+      return MIN_DIM >= 4 && MAX_DIM <= 8 &&
+             nrThemeInMap(RoomThemeId::ritual) == 0;
     } break;
 
-    case roomTheme_spider: {
-      return MAX_DIM >= 4 && MIN_DIM >= 3;
+    case RoomThemeId::spider: {
+      return MIN_DIM >= 3 && MAX_DIM <= 8;
     } break;
 
-    case roomTheme_crypt: {
-      return MAX_DIM >= 4 && MIN_DIM >= 3 &&
-             nrThemeInMap(roomTheme_crypt) < 2;
+    case RoomThemeId::crypt: {
+      return MIN_DIM >= 3 && MAX_DIM <= 12 &&
+             nrThemeInMap(RoomThemeId::crypt) < 3;
     } break;
 
-    case roomTheme_monster: {
-      return MAX_DIM >= 5 && MIN_DIM >= 4 &&
-             nrThemeInMap(roomTheme_crypt) < 3;
+    case RoomThemeId::monster: {
+      return MIN_DIM >= 4 && MAX_DIM <= 8 &&
+             nrThemeInMap(RoomThemeId::monster) < 3;
     } break;
 
     default: {} break;
@@ -125,10 +125,10 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
   switch(room.roomTheme) {
-    case roomTheme_flooded:
-    case roomTheme_muddy: {
+    case RoomThemeId::flooded:
+    case RoomThemeId::muddy: {
       const FeatureId featureId =
-        room.roomTheme == roomTheme_flooded ? feature_shallowWater :
+        room.roomTheme == RoomThemeId::flooded ? feature_shallowWater :
         feature_shallowMud;
       for(int y = room.getY0(); y <= room.getY1(); y++) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
@@ -139,7 +139,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
       }
     } break;
 
-    case roomTheme_monster: {
+    case RoomThemeId::monster: {
       int nrBloodPut = 0;
       const int NR_TRIES = 1000; //TODO Hacky, needs improving
       for(int i = 0; i < NR_TRIES; i++) {
@@ -161,7 +161,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
 
     //Ritual chamber, set a random god for this level, sometimes make gore
     //at altar (or at random pos if no altar)
-    case roomTheme_ritual: {
+    case RoomThemeId::ritual: {
 
       eng.gods->setRandomGod();
 
@@ -206,11 +206,11 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
       }
     } break;
 
-    case roomTheme_plain: {} break;
-    case roomTheme_human: {} break;
-    case roomTheme_spider: {} break;
-    case roomTheme_crypt: {} break;
-    case endOfRoomThemes: {} break;
+    case RoomThemeId::plain:            {} break;
+    case RoomThemeId::human:            {} break;
+    case RoomThemeId::spider:           {} break;
+    case RoomThemeId::crypt:            {} break;
+    case RoomThemeId::endOfRoomThemes:  {} break;
   }
 }
 
@@ -288,14 +288,14 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
     int chanceToMakeDark = 0;
 
     switch(room.roomTheme) {
-      case roomTheme_plain:     chanceToMakeDark = 5;   break;
-      case roomTheme_human:     chanceToMakeDark = 10;  break;
-      case roomTheme_ritual:    chanceToMakeDark = 15;  break;
-      case roomTheme_spider:    chanceToMakeDark = 33;  break;
-      case roomTheme_crypt:     chanceToMakeDark = 75;  break;
-      case roomTheme_monster:   chanceToMakeDark = 75;  break;
-      case roomTheme_flooded:   chanceToMakeDark = 50;  break;
-      case roomTheme_muddy:     chanceToMakeDark = 50;  break;
+      case RoomThemeId::plain:     chanceToMakeDark = 5;   break;
+      case RoomThemeId::human:     chanceToMakeDark = 10;  break;
+      case RoomThemeId::ritual:    chanceToMakeDark = 15;  break;
+      case RoomThemeId::spider:    chanceToMakeDark = 33;  break;
+      case RoomThemeId::crypt:     chanceToMakeDark = 75;  break;
+      case RoomThemeId::monster:   chanceToMakeDark = 75;  break;
+      case RoomThemeId::flooded:   chanceToMakeDark = 50;  break;
+      case RoomThemeId::muddy:     chanceToMakeDark = 50;  break;
       default: break;
     }
 
@@ -410,7 +410,7 @@ void RoomThemeMaker::assignRoomThemes() {
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      themeMap[x][y] = roomTheme_plain;
+      themeMap[x][y] = RoomThemeId::plain;
     }
   }
 
@@ -433,7 +433,7 @@ void RoomThemeMaker::assignRoomThemes() {
       const int W = r->getX1() - r->getX0() + 1;
       const int H = r->getY1() - r->getY0() + 1;
       if(W < MIN_DIM || W > MAX_DIM || H < MIN_DIM || H > MAX_DIM) {
-        r->roomTheme = roomTheme_plain;
+        r->roomTheme = RoomThemeId::plain;
         isAssigned.at(i) = true;
         continue;
       }
@@ -450,13 +450,13 @@ void RoomThemeMaker::assignRoomThemes() {
       const int ELEMENT = Rnd::range(0, NR_ROOMS - 1);
       if(isAssigned.at(ELEMENT) == false) {
         const RoomThemeId theme =
-          (RoomThemeId)(Rnd::range(1, endOfRoomThemes - 1));
+          (RoomThemeId)(Rnd::range(1, int(RoomThemeId::endOfRoomThemes) - 1));
         Room* const room = rooms.at(ELEMENT);
 
         if(isThemeAllowed(room, theme, blockers)) {
           room->roomTheme = theme;
           trace << "RoomThemeMaker: Assigned non-plain theme";
-          trace << "(" << theme << ") to room" << endl;
+          trace << "(" << int(theme) << ") to room" << endl;
           isAssigned.at(ELEMENT) = true;
           for(int y = room->getY0(); y < room->getY1(); y++) {
             for(int x = room->getX0(); x < room->getX1(); x++) {
@@ -472,7 +472,7 @@ void RoomThemeMaker::assignRoomThemes() {
   trace << "RoomThemeMaker: Assigning plain theme to remaining rooms" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
     if(isAssigned.at(i) == false) {
-      rooms.at(i)->roomTheme = roomTheme_plain;
+      rooms.at(i)->roomTheme = RoomThemeId::plain;
       isAssigned.at(i) = true;
     }
   }

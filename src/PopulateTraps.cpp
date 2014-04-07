@@ -21,20 +21,20 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
   for(Room * const room : eng.map->rooms) {
     const RoomThemeId theme = room->roomTheme;
 
-    if(theme != roomTheme_plain) {
+    if(theme != RoomThemeId::plain) {
 
       int chanceForTrappedRoom = 0;
 
       switch(theme) {
-        case roomTheme_human:   chanceForTrappedRoom = 25;  break;
-        case roomTheme_ritual:  chanceForTrappedRoom = 25;  break;
-        case roomTheme_spider:  chanceForTrappedRoom = 75;  break;
-        case roomTheme_crypt:   chanceForTrappedRoom = 75;  break;
-        case roomTheme_monster: chanceForTrappedRoom = 25;  break;
-        case roomTheme_plain:                               break;
-        case roomTheme_flooded:                             break;
-        case roomTheme_muddy:                               break;
-        case endOfRoomThemes:                               break;
+        case RoomThemeId::human:   chanceForTrappedRoom = 25; break;
+        case RoomThemeId::ritual:  chanceForTrappedRoom = 25; break;
+        case RoomThemeId::spider:  chanceForTrappedRoom = 75; break;
+        case RoomThemeId::crypt:   chanceForTrappedRoom = 75; break;
+        case RoomThemeId::monster: chanceForTrappedRoom = 25; break;
+        case RoomThemeId::plain:                              break;
+        case RoomThemeId::flooded:                            break;
+        case RoomThemeId::muddy:                              break;
+        case RoomThemeId::endOfRoomThemes:                    break;
       }
 
       if(Rnd::range(1, 100) < chanceForTrappedRoom) {
@@ -55,7 +55,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
         }
 
         int nrPosCand = int(trapPosCandidates.size());
-        const bool IS_SPIDER_ROOM = theme == roomTheme_spider;
+        const bool IS_SPIDER_ROOM = theme == RoomThemeId::spider;
         const int NR_BASE_TRAPS = min(nrPosCand / 2, IS_SPIDER_ROOM ? 3 : 1);
         for(int i = 0; i < NR_BASE_TRAPS; i++) {
           if(nrPosCand == 0) {break;}
@@ -101,7 +101,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
           blockers[x][y] == false &&
-          eng.roomThemeMaker->themeMap[x][y] == roomTheme_plain &&
+          eng.roomThemeMaker->themeMap[x][y] == RoomThemeId::plain &&
           eng.map->cells[x][y].featureStatic->canHaveStaticFeature()) {
           trapPosCandidates.push_back(Pos(x, y));
         }

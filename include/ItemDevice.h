@@ -9,95 +9,76 @@ public:
 
   virtual ~Device() {}
 
-  bool activateDefault(Actor* const actor);
-
-  virtual string getDefaultActivationLabel() const {
-    return isActivated_ ? "Deactivate" : "Activate";
-  }
+  virtual ConsumeItem activateDefault(Actor* const actor) override = 0;
 
   virtual SDL_Color getInterfaceClr() const {return clrCyan;}
 
-  void newTurnInInventory();
+  virtual void newTurnInInventory() override {}
 
-  void addSaveLines_(vector<string>& lines);
-  void setParamsFromSaveLines_(vector<string>& lines);
+  virtual string getDefaultActivationLabel() const override = 0;
+
+  virtual void addSaveLines(vector<string>& lines)            override;
+  virtual void setParamsFromSaveLines(vector<string>& lines)  override;
 
   void identify(const bool IS_SILENT_IDENTIFY) override;
 
-protected:
-  virtual void deviceSpecificAddSaveLines(vector<string>& lines) {(void)lines;}
-  virtual void deviceSpecificSetParamsFromSaveLines(vector<string>& lines) {
-    (void)lines;
-  }
-
-  bool toggle();
-
-  virtual int getRandomNrTurnsToNextGoodEffect() const;
-  virtual int getRandomNrTurnsToNextBadEffect() const;
-
-  virtual string getSpecificActivateMessage() {return "";}
-
-  virtual void runGoodEffect() {}
-  virtual void runBadEffect();
-
-  virtual void toggle_() {}
-
-  virtual void newTurnInInventory_() {}
-
-  virtual void printToggleMessage();
-
-  bool isActivated_;
-  int nrTurnsToNextGoodEffect_;
-  int nrTurnsToNextBadEffect_;
+  Condition condition_;
 };
 
-class DeviceSentry: public Device {
+class StrangeDevice : public Device {
+public:
+  StrangeDevice(ItemData* const itemData, Engine& engine);
+
+  ConsumeItem activateDefault(Actor* const actor) override;
+
+  string getDefaultActivationLabel() const override {return "Use";}
+
+private:
+  virtual void triggerEffect() = 0;
+};
+
+class DeviceSentry: public StrangeDevice {
 public:
   DeviceSentry(ItemData* const itemData, Engine& engine) :
-    Device(itemData, engine) {}
+    StrangeDevice(itemData, engine) {}
 
   ~DeviceSentry() override {}
 
 private:
-  void runGoodEffect() override;
-  string getSpecificActivateMessage() override;
+  void triggerEffect() override;
 };
 
-class DeviceRepeller: public Device {
+class DeviceRepeller: public StrangeDevice {
 public:
   DeviceRepeller(ItemData* const itemData, Engine& engine) :
-    Device(itemData, engine) {}
+    StrangeDevice(itemData, engine) {}
 
   ~DeviceRepeller() override {}
 
 private:
-  void runGoodEffect() override;
-  int getRandomNrTurnsToNextGoodEffect() const override;
-  string getSpecificActivateMessage() override;
+  void triggerEffect() override;
 };
 
-class DeviceRejuvenator: public Device {
+class DeviceRejuvenator: public StrangeDevice {
 public:
   DeviceRejuvenator(ItemData* const itemData, Engine& engine) :
-    Device(itemData, engine) {}
+    StrangeDevice(itemData, engine) {}
 
   ~DeviceRejuvenator() override {}
 
 private:
-  void runGoodEffect() override;
-  string getSpecificActivateMessage() override;
+  void triggerEffect() override;
 };
 
-class DeviceTranslocator: public Device {
+class DeviceTranslocator: public StrangeDevice {
 public:
   DeviceTranslocator(ItemData* const itemData, Engine& engine) :
-    Device(itemData, engine) {}
+    StrangeDevice(itemData, engine) {}
 
   ~DeviceTranslocator() override {}
 
 private:
-  void runGoodEffect() override;
-  string getSpecificActivateMessage() override;
+  void triggerEffect() override;
 };
 
 enum class LanternMalfState {working, flicker, malfunction, destroyed};
@@ -105,26 +86,34 @@ enum class LanternLightSize {none, small, normal};
 
 class DeviceLantern: public Device {
 public:
-  DeviceLantern(ItemData* const itemData, Engine& engine) :
-    Device(itemData, engine), malfunctCooldown_(-1),
-    malfState_(LanternMalfState::working) {}
+  DeviceLantern(ItemData* const itemData, Engine& engine);
 
   ~DeviceLantern() override {}
 
+  ConsumeItem activateDefault(Actor* const actor) override;
+
+  void newTurnInInventory() override;
+
   LanternLightSize getCurLightSize() const;
 
+  string getDefaultActivationLabel() const override {
+    return isActivated_ ? "Turn off" : "Turn on";
+  }
+
+  void addSaveLines(vector<string>& lines)            override;
+  void setParamsFromSaveLines(vector<string>& lines)  override;
+
 private:
-  void printToggleMessage() override;
+  void toggle();
 
-  void newTurnInInventory_() override;
+  int getRandomNrTurnsToNextBadEffect() const;
 
-  void runBadEffect() override;
-
-  void toggle_() override;
+  void runBadEffect();
 
   int malfunctCooldown_;
   LanternMalfState malfState_;
+  bool isActivated_;
+  int nrTurnsToNextBadEffect_;
 };
-
 
 #endif

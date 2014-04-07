@@ -6,7 +6,7 @@
 #include "Colors.h"
 #include "Art.h"
 
-enum FontType {font_interface, font_big};
+enum class Condition {breaking, shoddy, fine};
 
 enum class DmgType {
   physical,
@@ -27,15 +27,11 @@ enum class ShockValue {
   shockValue_heavy  = 12
 };
 
-enum MarkerTask  {
-  markerTask_aimRangedWeapon, markerTask_look,
-  markerTask_aimThrownWeapon, markerTask_aimLitExplosive
+enum class MarkerTask  {
+  look, aimRangedWeapon, aimThrownWeapon, aimLitExplosive
 };
 
-enum GameEntryMode {
-  gameEntry_new,
-  gameEntry_load
-};
+enum class GameEntryMode {newGame, loadGame};
 
 struct CellRenderData {
   CellRenderData() {clear();}

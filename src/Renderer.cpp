@@ -555,22 +555,24 @@ void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos,
 
 void drawText(const string& str, const Panel panel, const Pos& pos,
               const SDL_Color& clr, const SDL_Color& bgClr) {
-  Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
+  if(isInited()) {
+    Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
 
-  if(pixelPos.y < 0 || pixelPos.y >= Config::getScreenPixelH()) {
-    return;
-  }
-
-  const Pos cellDims(Config::getCellW(), Config::getCellH());
-  const int LEN = str.size();
-  drawRectangleSolid(pixelPos, Pos(cellDims.x * LEN, cellDims.y), bgClr);
-
-  for(int i = 0; i < LEN; i++) {
-    if(pixelPos.x < 0 || pixelPos.x >= Config::getScreenPixelW()) {
+    if(pixelPos.y < 0 || pixelPos.y >= Config::getScreenPixelH()) {
       return;
     }
-    drawGlyphAtPixel(str.at(i), pixelPos, clr, false);
-    pixelPos.x += cellDims.x;
+
+    const Pos cellDims(Config::getCellW(), Config::getCellH());
+    const int LEN = str.size();
+    drawRectangleSolid(pixelPos, Pos(cellDims.x * LEN, cellDims.y), bgClr);
+
+    for(int i = 0; i < LEN; i++) {
+      if(pixelPos.x < 0 || pixelPos.x >= Config::getScreenPixelW()) {
+        return;
+      }
+      drawGlyphAtPixel(str.at(i), pixelPos, clr, false);
+      pixelPos.x += cellDims.x;
+    }
   }
 }
 

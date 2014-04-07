@@ -28,7 +28,7 @@ void InventoryHandler::activateDefault(
 
   Inventory& playerInv = eng.player->getInv();
   Item* item = playerInv.getGeneral().at(GENERAL_ITEMS_ELEMENT);
-  if(item->activateDefault(eng.player)) {
+  if(item->activateDefault(eng.player) == ConsumeItem::yes) {
     playerInv.decrItemInGeneral(GENERAL_ITEMS_ELEMENT);
   }
 }
@@ -158,7 +158,7 @@ void InventoryHandler::runSlotsScreen() {
             Item* const item = slot.item;
 
             const string itemName =
-              eng.itemDataHandler->getItemRef(*item, itemRef_plain);
+              eng.itemDataHandler->getItemRef(*item, ItemRefType::plain);
 
             inv.moveItemToGeneral(&slot);
 
@@ -252,7 +252,7 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
   if(data.isStackable && item->nrItems > 1) {
     trace << "InventoryHandler: item is stackable and more than one" << endl;
     Renderer::drawMapAndInterface(false);
-    const string nrStr = "1-" + toString(item->nrItems);
+    const string nrStr = "1-" + toStr(item->nrItems);
     const string dropStr = "Drop how many (" + nrStr + ")?:      " +
                            "| enter to drop" + cancelInfoStr;
     Renderer::drawText(dropStr, Panel::screen, Pos(0, 0), clrWhiteHigh);

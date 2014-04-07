@@ -87,26 +87,26 @@ void Cultist::spawnStartItems() {
 
   if(RND <= PISTOL) {
     inv_->putItemInSlot(
-      slot_wielded, eng.itemFactory->spawnItem(item_pistol), true);
+      slot_wielded, eng.itemFactory->spawnItem(ItemId::pistol), true);
     if(Rnd::percentile() < 40) {
       inv_->putItemInGeneral(
-        eng.itemFactory->spawnItem(item_pistolClip));
+        eng.itemFactory->spawnItem(ItemId::pistolClip));
     }
   } else if(RND <= PUMP_SHOTGUN) {
     inv_->putItemInSlot(
-      slot_wielded, eng.itemFactory->spawnItem(item_pumpShotgun), true);
-    Item* item = eng.itemFactory->spawnItem(item_shotgunShell);
+      slot_wielded, eng.itemFactory->spawnItem(ItemId::pumpShotgun), true);
+    Item* item = eng.itemFactory->spawnItem(ItemId::shotgunShell);
     item->nrItems = Rnd::range(5, 9);
     inv_->putItemInGeneral(item);
   } else if(RND <= SAWN_SHOTGUN) {
     inv_->putItemInSlot(
-      slot_wielded, eng.itemFactory->spawnItem(item_sawedOff), true);
-    Item* item = eng.itemFactory->spawnItem(item_shotgunShell);
+      slot_wielded, eng.itemFactory->spawnItem(ItemId::sawedOff), true);
+    Item* item = eng.itemFactory->spawnItem(ItemId::shotgunShell);
     item->nrItems = Rnd::range(6, 12);
     inv_->putItemInGeneral(item);
   } else {
     inv_->putItemInSlot(
-      slot_wielded, eng.itemFactory->spawnItem(item_machineGun), true);
+      slot_wielded, eng.itemFactory->spawnItem(ItemId::machineGun), true);
   }
 
   if(Rnd::percentile() < 33) {
@@ -120,11 +120,11 @@ void Cultist::spawnStartItems() {
 }
 
 void CultistTeslaCannon::spawnStartItems() {
-  Item* item = eng.itemFactory->spawnItem(item_teslaCannon);
+  Item* item = eng.itemFactory->spawnItem(ItemId::teslaCannon);
   inv_->putItemInSlot(slot_wielded, item, true);
 
   inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(item_teslaCanister));
+    eng.itemFactory->spawnItem(ItemId::teslaCanister));
 
   if(Rnd::percentile() < 33) {
     inv_->putItemInGeneral(
@@ -138,14 +138,14 @@ void CultistTeslaCannon::spawnStartItems() {
 
 void CultistSpikeGun::spawnStartItems() {
   inv_->putItemInSlot(
-    slot_wielded, eng.itemFactory->spawnItem(item_spikeGun), true);
-  Item* item = eng.itemFactory->spawnItem(item_ironSpike);
+    slot_wielded, eng.itemFactory->spawnItem(ItemId::spikeGun), true);
+  Item* item = eng.itemFactory->spawnItem(ItemId::ironSpike);
   item->nrItems = 8 + Rnd::dice(1, 8);
   inv_->putItemInGeneral(item);
 }
 
 void CultistPriest::spawnStartItems() {
-  Item* item = eng.itemFactory->spawnItem(item_dagger);
+  Item* item = eng.itemFactory->spawnItem(ItemId::dagger);
   dynamic_cast<Weapon*>(item)->meleeDmgPlus = 2;
   inv_->putItemInSlot(slot_wielded, item, true);
 
@@ -163,13 +163,13 @@ void CultistPriest::spawnStartItems() {
 }
 
 void FireHound::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_fireHoundBreath));
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_fireHoundBite));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::fireHoundBreath));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::fireHoundBite));
 }
 
 void FrostHound::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_frostHoundBreath));
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_frostHoundBite));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::frostHoundBreath));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::frostHoundBite));
 }
 
 void Zuul::place_() {
@@ -186,7 +186,7 @@ void Zuul::place_() {
 }
 
 void Zuul::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_zuulBite));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::zuulBite));
 }
 
 bool Vortex::onActorTurn_() {
@@ -251,7 +251,7 @@ void DustVortex::die_() {
 }
 
 void DustVortex::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_dustVortexEngulf));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::dustVortexEngulf));
 }
 
 void FireVortex::die_() {
@@ -261,7 +261,7 @@ void FireVortex::die_() {
 }
 
 void FireVortex::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_fireVortexEngulf));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::fireVortexEngulf));
 }
 
 void FrostVortex::die_() {
@@ -269,7 +269,7 @@ void FrostVortex::die_() {
 }
 
 void FrostVortex::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_frostVortexEngulf));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::frostVortexEngulf));
 }
 
 bool Ghost::onActorTurn_() {
@@ -305,21 +305,21 @@ bool Ghost::onActorTurn_() {
 }
 
 void Ghost::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_ghostClaw));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::ghostClaw));
 }
 
 void Phantasm::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_phantasmSickle));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::phantasmSickle));
 }
 
 void Wraith::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_wraithClaw));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::wraithClaw));
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
   spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
 }
 
 void MiGo::spawnStartItems() {
-  Item* item = eng.itemFactory->spawnItem(item_miGoElectricGun);
+  Item* item = eng.itemFactory->spawnItem(ItemId::miGoElectricGun);
   inv_->putItemInIntrinsics(item);
 
   spellsKnown.push_back(new SpellTeleport);
@@ -332,33 +332,33 @@ void MiGo::spawnStartItems() {
 }
 
 void FlyingPolyp::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_polypTentacle));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::polypTentacle));
 }
 
 void Rat::spawnStartItems() {
   Item* item = NULL;
   if(Rnd::percentile() < 15) {
-    item = eng.itemFactory->spawnItem(item_ratBiteDiseased);
+    item = eng.itemFactory->spawnItem(ItemId::ratBiteDiseased);
   } else {
-    item = eng.itemFactory->spawnItem(item_ratBite);
+    item = eng.itemFactory->spawnItem(ItemId::ratBite);
   }
   inv_->putItemInIntrinsics(item);
 }
 
 void RatThing::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_ratThingBite));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::ratThingBite));
 }
 
 void Shadow::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_shadowClaw));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::shadowClaw));
 }
 
 void Ghoul::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_ghoulClaw));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::ghoulClaw));
 }
 
 void Mummy::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_mummyMaul));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::mummyMaul));
 
   spellsKnown.push_back(eng.spellHandler->getSpellFromId(spell_disease));
 
@@ -368,7 +368,7 @@ void Mummy::spawnStartItems() {
 }
 
 void MummyUnique::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_mummyMaul));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::mummyMaul));
 
   spellsKnown.push_back(eng.spellHandler->getSpellFromId(spell_disease));
 
@@ -432,34 +432,34 @@ bool Khephren::onActorTurn_() {
 
 void DeepOne::spawnStartItems() {
   inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(
-                              item_deepOneJavelinAttack));
+                              ItemId::deepOneJavelinAttack));
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_deepOneSpearAttack));
+    eng.itemFactory->spawnItem(ItemId::deepOneSpearAttack));
 }
 
 void GiantBat::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_giantBatBite));
+    eng.itemFactory->spawnItem(ItemId::giantBatBite));
 }
 
 void Byakhee::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_byakheeClaw));
+    eng.itemFactory->spawnItem(ItemId::byakheeClaw));
 }
 
 void GiantMantis::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_giantMantisClaw));
+    eng.itemFactory->spawnItem(ItemId::giantMantisClaw));
 }
 
 void Chthonian::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_chthonianBite));
+    eng.itemFactory->spawnItem(ItemId::chthonianBite));
 }
 
 void HuntingHorror::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_huntingHorrorBite));
+    eng.itemFactory->spawnItem(ItemId::huntingHorrorBite));
 }
 
 bool KeziahMason::onActorTurn_() {
@@ -517,27 +517,27 @@ void Ooze::onStandardTurn() {
 
 void OozeBlack::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_oozeBlackSpewPus));
+    eng.itemFactory->spawnItem(ItemId::oozeBlackSpewPus));
 }
 
 void OozeClear::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_oozeClearSpewPus));
+    eng.itemFactory->spawnItem(ItemId::oozeClearSpewPus));
 }
 
 void OozePutrid::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_oozePutridSpewPus));
+    eng.itemFactory->spawnItem(ItemId::oozePutridSpewPus));
 }
 
 void OozePoison::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_oozePoisonSpewPus));
+    eng.itemFactory->spawnItem(ItemId::oozePoisonSpewPus));
 }
 
 void ColourOutOfSpace::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_colourOutOfSpaceTouch));
+    eng.itemFactory->spawnItem(ItemId::colourOutOfSpaceTouch));
 }
 
 const SDL_Color& ColourOutOfSpace::getClr() {
@@ -563,32 +563,32 @@ bool Spider::onActorTurn_() {
 
 void GreenSpider::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_greenSpiderBite));
+    eng.itemFactory->spawnItem(ItemId::greenSpiderBite));
 }
 
 void WhiteSpider::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_whiteSpiderBite));
+    eng.itemFactory->spawnItem(ItemId::whiteSpiderBite));
 }
 
 void RedSpider::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_redSpiderBite));
+    eng.itemFactory->spawnItem(ItemId::redSpiderBite));
 }
 
 void ShadowSpider::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_shadowSpiderBite));
+    eng.itemFactory->spawnItem(ItemId::shadowSpiderBite));
 }
 
 void LengSpider::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_lengSpiderBite));
+    eng.itemFactory->spawnItem(ItemId::lengSpiderBite));
 }
 
 void Wolf::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_wolfBite));
+    eng.itemFactory->spawnItem(ItemId::wolfBite));
 }
 
 bool WormMass::onActorTurn_() {
@@ -623,7 +623,7 @@ bool WormMass::onActorTurn_() {
 
 void WormMass::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_wormMassBite));
+    eng.itemFactory->spawnItem(ItemId::wormMassBite));
 }
 
 bool GiantLocust::onActorTurn_() {
@@ -658,7 +658,7 @@ bool GiantLocust::onActorTurn_() {
 
 void GiantLocust::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_giantLocustBite));
+    eng.itemFactory->spawnItem(ItemId::giantLocustBite));
 }
 
 bool LordOfShadows::onActorTurn_() {
@@ -822,21 +822,21 @@ void Zombie::die_() {
 void ZombieClaw::spawnStartItems() {
   Item* item = NULL;
   if(Rnd::percentile() < 20) {
-    item = eng.itemFactory->spawnItem(item_zombieClawDiseased);
+    item = eng.itemFactory->spawnItem(ItemId::zombieClawDiseased);
   } else {
-    item = eng.itemFactory->spawnItem(item_zombieClaw);
+    item = eng.itemFactory->spawnItem(ItemId::zombieClaw);
   }
   inv_->putItemInIntrinsics(item);
 }
 
 void ZombieAxe::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(item_zombieAxe));
+  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::zombieAxe));
 }
 
 void BloatedZombie::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_bloatedZombiePunch));
+    eng.itemFactory->spawnItem(ItemId::bloatedZombiePunch));
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(item_bloatedZombieSpit));
+    eng.itemFactory->spawnItem(ItemId::bloatedZombieSpit));
 }
 

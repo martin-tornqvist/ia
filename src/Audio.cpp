@@ -97,7 +97,8 @@ void loadAudioFile(const SfxId sfx, const string& filename) {
 
   Renderer::clearScreen();
   Renderer::drawText("Loading " + fileRelPath + "...", Panel::screen,
-                     Pos(1, 1), clrWhite);
+                     Pos(0, 0), clrWhite);
+
   Renderer::updateScreen();
 
   audioChunks.at(int(sfx)) = Mix_LoadWAV((fileRelPath).data());
@@ -168,7 +169,7 @@ void init() {
     const int FIRST = int(SfxId::startOfAmbSfx) + 1;
     const int LAST  = int(SfxId::endOfAmbSfx) - 1;
     for(int i = FIRST; i <= LAST; i++) {
-      const string indexStr = toString(a);
+      const string indexStr = toStr(a);
       const string indexStrPadded =
         a < 10  ? "00" + indexStr : a < 100 ? "0"  + indexStr : indexStr;
       loadAudioFile(SfxId(i), "amb_" + indexStrPadded + ".ogg");

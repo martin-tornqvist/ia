@@ -11,17 +11,17 @@ using namespace std;
 class Engine;
 struct FeatureData;
 
-enum RoomThemeId {
-  roomTheme_plain,
-  roomTheme_human,
-  roomTheme_ritual,
-  roomTheme_spider,
-//  roomTheme_dungeon,
-  roomTheme_crypt,
-  roomTheme_monster,
-  roomTheme_flooded,
-  roomTheme_muddy,
-//  roomTheme_chasm,
+enum class RoomThemeId {
+  plain,
+  human,
+  ritual,
+  spider,
+//  dungeon,
+  crypt,
+  monster,
+  flooded,
+  muddy,
+//  chasm,
 
   endOfRoomThemes
 };

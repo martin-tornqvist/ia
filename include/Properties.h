@@ -304,7 +304,7 @@ public:
   ~PropWound() override {}
 
   void addSaveLines(vector<string>& lines) const override {
-    lines.push_back(toString(nrWounds_));
+    lines.push_back(toStr(nrWounds_));
   }
   void setParamsFromSaveLines(vector<string>& lines) override {
     nrWounds_ = toInt(lines.front());
@@ -312,7 +312,7 @@ public:
   }
 
   string getNameShort() const override {
-    return "Wound(" + toString(nrWounds_) + ")";
+    return "Wound(" + toStr(nrWounds_) + ")";
   }
 
   int getAbilityMod(const AbilityId ability) const override;
@@ -574,7 +574,7 @@ public:
   ~PropNailed() override {}
 
   string getNameShort() const override {
-    return "Nailed(" + toString(nrSpikes_) + ")";
+    return "Nailed(" + toStr(nrSpikes_) + ")";
   }
 
   void changeMoveDir(const Pos& actorPos, Dir& dir) override;

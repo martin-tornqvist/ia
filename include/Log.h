@@ -49,7 +49,7 @@ private:
 
     void incrRepeat() {
       nr_++;
-      repeatsStr_ = "(x" + toString(nr_) + ")";
+      repeatsStr_ = "(x" + toStr(nr_) + ")";
     }
 
     SDL_Color clr_;

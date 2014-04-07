@@ -166,9 +166,9 @@ void Log::drawHistoryInterface(const int TOP_LINE_NR,
                        Pos(X_LABEL, 0), clrGray);
   } else {
     Renderer::drawText(
-      " Displaying messages " + toString(TOP_LINE_NR + 1) + "-" +
-      toString(BTM_LINE_NR + 1) + " of " +
-      toString(history.size()) + " ", Panel::screen, Pos(X_LABEL, 0), clrGray);
+      " Displaying messages " + toStr(TOP_LINE_NR + 1) + "-" +
+      toStr(BTM_LINE_NR + 1) + " of " +
+      toStr(history.size()) + " ", Panel::screen, Pos(X_LABEL, 0), clrGray);
   }
 
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),

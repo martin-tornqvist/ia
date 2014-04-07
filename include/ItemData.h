@@ -1,5 +1,5 @@
-#ifndef ITEM_DATA_H
-#define ITEM_DATA_H
+#ifndef DATA_H
+#define DATA_H
 
 #include <vector>
 #include <string>
@@ -20,11 +20,11 @@ enum ItemWeight {
   itemWeight_heavy      = 120 //Heavy armor, heavy weapons...
 };
 
-enum PrimaryAttackMode {
-  primaryAttackMode_none,
-  primaryAttackMode_melee,
-  primaryAttackMode_missile,
-  primaryAttackMode_ranged
+enum class PrimaryAttackMode {
+  none,
+  melee,
+  missile,
+  ranged
 };
 
 enum ItemDataArchetypes {
@@ -45,125 +45,125 @@ enum ItemDataArchetypes {
 
 enum class ItemValue {normal, minorTreasure, majorTreasure};
 
-enum ItemId {
-  item_empty,
+enum class ItemId {
+  empty,
 
-  item_trapezohedron,
+  trapezohedron,
 
-  item_throwingKnife,
-  item_rock,
-  item_ironSpike,
-  item_dagger,
-  item_hatchet,
-  item_club,
-  item_hammer,
-  item_machete,
-  item_axe,
-  item_pitchFork,
-  item_sledgeHammer,
-  item_sawedOff,
-  item_pumpShotgun,
-  item_machineGun,
-  item_incinerator,
-  item_teslaCannon,
-  item_spikeGun,
-  item_shotgunShell,
-  item_drumOfBullets,
-  item_napalmCartridge,
-  item_teslaCanister,
-  item_pistol,
-  item_pistolClip,
-  item_flareGun,
-  item_dynamite,
-  item_flare,
-  item_molotov,
+  throwingKnife,
+  rock,
+  ironSpike,
+  dagger,
+  hatchet,
+  club,
+  hammer,
+  machete,
+  axe,
+  pitchFork,
+  sledgeHammer,
+  sawedOff,
+  pumpShotgun,
+  machineGun,
+  incinerator,
+  teslaCannon,
+  spikeGun,
+  shotgunShell,
+  drumOfBullets,
+  napalmCartridge,
+  teslaCanister,
+  pistol,
+  pistolClip,
+  flareGun,
+  dynamite,
+  flare,
+  molotov,
 
-  item_playerKick,
-  item_playerStomp,
-  item_playerPunch,
+  playerKick,
+  playerStomp,
+  playerPunch,
 
-  item_bloatedZombiePunch,
-  item_bloatedZombieSpit,
-  item_ratBite,
-  item_ratBiteDiseased,
-  item_ratThingBite,
-  item_wormMassBite,
-  item_greenSpiderBite,
-  item_whiteSpiderBite,
-  item_redSpiderBite,
-  item_shadowSpiderBite,
-  item_lengSpiderBite,
-  item_ghoulClaw,
-  item_shadowClaw,
-  item_byakheeClaw,
-  item_giantMantisClaw,
-  item_giantLocustBite,
-  item_fireHoundBreath, item_frostHoundBreath,
-  item_fireHoundBite, item_frostHoundBite, item_zuulBite,
-  item_giantBatBite,
-  item_zombieAxe,
-  item_zombieClaw,
-  item_zombieClawDiseased,
-  item_wolfBite,
-  item_ghostClaw,
-  item_phantasmSickle,
-  item_wraithClaw,
-  item_miGoElectricGun,
-  item_polypTentacle,
-  item_mummyMaul,
-  item_deepOneSpearAttack,
-  item_deepOneJavelinAttack,
-  item_oozeBlackSpewPus,
-  item_oozePutridSpewPus,
-  item_oozePoisonSpewPus,
-  item_oozeClearSpewPus,
-  item_colourOutOfSpaceTouch,
-  item_chthonianBite,
-  item_huntingHorrorBite,
-  item_dustVortexEngulf, item_fireVortexEngulf, item_frostVortexEngulf,
+  bloatedZombiePunch,
+  bloatedZombieSpit,
+  ratBite,
+  ratBiteDiseased,
+  ratThingBite,
+  wormMassBite,
+  greenSpiderBite,
+  whiteSpiderBite,
+  redSpiderBite,
+  shadowSpiderBite,
+  lengSpiderBite,
+  ghoulClaw,
+  shadowClaw,
+  byakheeClaw,
+  giantMantisClaw,
+  giantLocustBite,
+  fireHoundBreath, frostHoundBreath,
+  fireHoundBite, frostHoundBite, zuulBite,
+  giantBatBite,
+  zombieAxe,
+  zombieClaw,
+  zombieClawDiseased,
+  wolfBite,
+  ghostClaw,
+  phantasmSickle,
+  wraithClaw,
+  miGoElectricGun,
+  polypTentacle,
+  mummyMaul,
+  deepOneSpearAttack,
+  deepOneJavelinAttack,
+  oozeBlackSpewPus,
+  oozePutridSpewPus,
+  oozePoisonSpewPus,
+  oozeClearSpewPus,
+  colourOutOfSpaceTouch,
+  chthonianBite,
+  huntingHorrorBite,
+  dustVortexEngulf, fireVortexEngulf, frostVortexEngulf,
 
-  item_armorLeatherJacket,
-  item_armorIronSuit,
-  item_armorFlackJacket,
-  item_armorAsbestosSuit,
-  item_armorHeavyCoat,
+  armorLeatherJacket,
+  armorIronSuit,
+  armorFlackJacket,
+  armorAsbestosSuit,
+  armorHeavyCoat,
 
-  item_scrollOfPestilence,
-  item_scrollOfTeleportation,
-  item_scrollOfEnfeebleEnemies,
-  item_scrollOfDetectTraps,
-  item_scrollOfDetectItems,
-  item_scrollOfDetectMonsters,
-  item_scrollOfBlessing,
-  item_scrollOfMayhem,
-  item_scrollOfDarkbolt,
-  item_scrollOfAzathothsWrath,
-  item_scrollOfOpening,
-  item_scrollOfSacrificeLife,
-  item_scrollOfSacrificeSpirit,
+  scrollOfPestilence,
+  scrollOfTelep,
+  scrollOfEnfeeble,
+  scrollOfDetTraps,
+  scrollOfDetItems,
+  scrollOfDetMon,
+  scrollOfBlessing,
+  scrollOfMayhem,
+  scrollOfDarkbolt,
+  scrollOfAzathothsWrath,
+  scrollOfOpening,
+  scrollOfSacrLife,
+  scrollOfSacrSpi,
 
-  item_potionOfVitality,
-  item_potionOfSpirit,
-  item_potionOfBlindness,
-  item_potionOfFrenzy,
-  item_potionOfFortitude,
-  item_potionOfParalyzation,
-  item_potionOfRElec,
-  item_potionOfConfusion,
-  item_potionOfPoison,
-  item_potionOfInsight,
-  item_potionOfClairvoyance,
-  item_potionOfRFire,
-  item_potionOfAntidote,
-  item_potionOfDescent,
+  potionOfVitality,
+  potionOfSpirit,
+  potionOfBlindness,
+  potionOfFrenzy,
+  potionOfFortitude,
+  potionOfParalyzation,
+  potionOfRElec,
+  potionOfConfusion,
+  potionOfPoison,
+  potionOfInsight,
+  potionOfClairv,
+  potionOfRFire,
+  potionOfAntidote,
+  potionOfDescent,
 
-  item_deviceSentry,
-  item_deviceRepeller,
-  item_deviceRejuvenator,
-  item_deviceTranslocator,
-  item_deviceElectricLantern,
+  deviceSentry,
+  deviceRepeller,
+  deviceRejuvenator,
+  deviceTranslocator,
+  electricLantern,
 
-  item_medicalBag,
+  medicalBag,
 
   endOfItemIds
 };
@@ -258,13 +258,13 @@ class Engine;
 class Item;
 struct ActorData;
 
-enum ItemRefType {itemRef_plain, itemRef_a, itemRef_plural};
+enum class ItemRefType {plain, a, plural};
 
 class ItemDataHandler {
 public:
   ItemDataHandler(Engine& engine) : eng(engine) {initDataList();}
   ~ItemDataHandler() {
-    for(unsigned int i = 1; i < endOfItemIds; i++)
+    for(size_t i = 1; i < int(ItemId::endOfItemIds); i++)
       delete dataList[i];
   }
 
@@ -273,9 +273,9 @@ public:
 
   string getItemInterfaceRef(
     const Item& item, const bool ADD_A,
-    const PrimaryAttackMode attackMode = primaryAttackMode_none) const;
+    const PrimaryAttackMode attackMode = PrimaryAttackMode::none) const;
 
-  ItemData* dataList[endOfItemIds];
+  ItemData* dataList[int(ItemId::endOfItemIds)];
 
   bool isWeaponStronger(const ItemData& data1, const ItemData& data2,
                         const bool IS_MELEE);

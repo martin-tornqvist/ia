@@ -13,6 +13,8 @@ enum InventoryScreenId {
   endOfInventoryScreens
 };
 
+enum class ConsumeItem {yes, no};
+
 class InventoryHandler {
 public:
   InventoryHandler(Engine& engine);
@@ -30,8 +32,6 @@ public:
   int browserPosToSetAfterDrop;
 
 private:
-//  vector<InventorySlotButton> equipmentSlotButtons;
-
   //The values in this vector refer to general inventory elements
   vector<unsigned int> generalItemsToShow;
 

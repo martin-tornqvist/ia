@@ -17,11 +17,11 @@ public:
 
   int takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE);
 
-  void addSaveLines_(vector<string>& lines) {
-    lines.push_back(toString(dur_));
+  void addSaveLines(vector<string>& lines) override {
+    lines.push_back(toStr(dur_));
   }
 
-  void setParamsFromSaveLines_(vector<string>& lines) {
+  void setParamsFromSaveLines(vector<string>& lines) override {
     dur_ = toInt(lines.front());
     lines.erase(lines.begin());
   }

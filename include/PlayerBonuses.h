@@ -62,9 +62,9 @@ public:
   PlayerBonHandler(Engine& engine);
 
   void addSaveLines(vector<string>& lines) {
-    lines.push_back(toString(bg_));
-    lines.push_back(toString(traitsPicked_.size()));
-    for(TraitId t : traitsPicked_) {lines.push_back(toString(t));}
+    lines.push_back(toStr(bg_));
+    lines.push_back(toStr(traitsPicked_.size()));
+    for(TraitId t : traitsPicked_) {lines.push_back(toStr(t));}
   }
 
   void setParamsFromSaveLines(vector<string>& lines) {

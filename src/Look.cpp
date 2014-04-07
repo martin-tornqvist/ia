@@ -54,13 +54,13 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask markerTask,
   }
 
   if(pos != eng.player->pos) {
-    if(markerTask == markerTask_aimRangedWeapon) {
+    if(markerTask == MarkerTask::aimRangedWeapon) {
       if(IS_VISION) {
         eng.log->addMsg("| f to fire");
       } else {
         eng.log->addMsg("f to fire");
       }
-    } else if(markerTask == markerTask_aimThrownWeapon) {
+    } else if(markerTask == MarkerTask::aimThrownWeapon) {
       if(IS_VISION) {
         eng.log->addMsg("| t to throw");
       } else {
@@ -74,19 +74,19 @@ void Look::descrBriefActor(const Actor& actor, const MarkerTask markerTask,
                            const Item* const itemThrown) const {
   eng.log->addMsg(actor.getNameA() + ".");
 
-  if(markerTask == markerTask_look) {
+  if(markerTask == MarkerTask::look) {
     eng.log->addMsg("| v for description");
   } else if(actor.pos != eng.player->pos) {
-    if(markerTask == markerTask_aimRangedWeapon) {
+    if(markerTask == MarkerTask::aimRangedWeapon) {
       Item* const item =
         eng.player->getInv().getItemInSlot(slot_wielded);
       Weapon* const wpn = dynamic_cast<Weapon*>(item);
       RangedAttackData data(*eng.player, *wpn, actor.pos, actor.pos, eng);
-      eng.log->addMsg("| " + toString(data.hitChanceTot) + "% hit chance");
-    } else if(markerTask == markerTask_aimThrownWeapon) {
+      eng.log->addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
+    } else if(markerTask == MarkerTask::aimThrownWeapon) {
       MissileAttackData data(
         *eng.player, *itemThrown, actor.pos, actor.pos, eng);
-      eng.log->addMsg("| " + toString(data.hitChanceTot) + "% hit chance");
+      eng.log->addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
     }
   }
 }
@@ -122,7 +122,7 @@ void Look::printExtraActorDescription(const Pos& pos) const {
       const unsigned int NR_OF_LINES = formattedText.size();
 
       Renderer::drawMapAndInterface(false);
-      eng.marker->draw(markerTask_look);
+      eng.marker->draw(MarkerTask::look);
       Renderer::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
 
       int y = 1;

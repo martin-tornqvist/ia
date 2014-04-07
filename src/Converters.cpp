@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 
-std::string toString(int in) {
+std::string toStr(int in) {
   std::ostringstream buffer;
   buffer << in;
   return buffer.str();

@@ -257,13 +257,13 @@ TimeData getCurrentTime() {
 //------------------------------------------------------ TIME DATA
 string TimeData::getTimeStr(const TimeType lowest,
                             const bool ADD_SEPARATORS) const {
-  string ret = toString(year_);
+  string ret = toStr(year_);
 
-  string monthStr   = (month_   < 10 ? "0" : "") + toString(month_);
-  string dayStr     = (day_     < 10 ? "0" : "") + toString(day_);
-  string hourStr    = (hour_    < 10 ? "0" : "") + toString(hour_);
-  string minuteStr  = (minute_  < 10 ? "0" : "") + toString(minute_);
-  string secondStr  = (second_  < 10 ? "0" : "") + toString(second_);
+  string monthStr   = (month_   < 10 ? "0" : "") + toStr(month_);
+  string dayStr     = (day_     < 10 ? "0" : "") + toStr(day_);
+  string hourStr    = (hour_    < 10 ? "0" : "") + toStr(hour_);
+  string minuteStr  = (minute_  < 10 ? "0" : "") + toStr(minute_);
+  string secondStr  = (second_  < 10 ? "0" : "") + toStr(second_);
 
   if(lowest >= time_month)  ret += (ADD_SEPARATORS ? "-" : "-") + monthStr;
   if(lowest >= time_day)    ret += (ADD_SEPARATORS ? "-" : "-") + dayStr;

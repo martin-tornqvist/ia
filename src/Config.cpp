@@ -367,7 +367,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   Renderer::drawText(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
-  Renderer::drawText(toString(keyRepeatDelay_), Panel::screen,
+  Renderer::drawText(toStr(keyRepeatDelay_), Panel::screen,
                      Pos(X1, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
@@ -380,7 +380,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   Renderer::drawText(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
-  Renderer::drawText(toString(keyRepeatInterval_), Panel::screen,
+  Renderer::drawText(toStr(keyRepeatInterval_), Panel::screen,
                      Pos(X1, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
@@ -393,7 +393,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   Renderer::drawText(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
-  Renderer::drawText(toString(delayProjectileDraw_), Panel::screen,
+  Renderer::drawText(toStr(delayProjectileDraw_), Panel::screen,
                      Pos(X1, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
@@ -406,7 +406,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   Renderer::drawText(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
-  Renderer::drawText(toString(delayShotgun_), Panel::screen,
+  Renderer::drawText(toStr(delayShotgun_), Panel::screen,
                      Pos(X1, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
@@ -419,7 +419,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   Renderer::drawText(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
-  Renderer::drawText(toString(delayExplosion_), Panel::screen,
+  Renderer::drawText(toStr(delayExplosion_), Panel::screen,
                      Pos(X1, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
@@ -550,11 +550,11 @@ void collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(isIntroLevelSkipped_          ? "1" : "0");
   lines.push_back(isRangedWpnMeleeePrompt_      ? "1" : "0");
   lines.push_back(isRangedWpnAutoReload_        ? "1" : "0");
-  lines.push_back(toString(keyRepeatDelay_));
-  lines.push_back(toString(keyRepeatInterval_));
-  lines.push_back(toString(delayProjectileDraw_));
-  lines.push_back(toString(delayShotgun_));
-  lines.push_back(toString(delayExplosion_));
+  lines.push_back(toStr(keyRepeatDelay_));
+  lines.push_back(toStr(keyRepeatInterval_));
+  lines.push_back(toStr(delayProjectileDraw_));
+  lines.push_back(toStr(delayShotgun_));
+  lines.push_back(toStr(delayExplosion_));
   trace << "Config::collectLinesFromVariables() [DONE]" << endl;
 }
 

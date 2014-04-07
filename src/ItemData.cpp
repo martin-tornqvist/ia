@@ -16,6 +16,7 @@
 #include "ActorPlayer.h"
 #include "ItemMedicalBag.h"
 #include "Sound.h"
+#include "ItemDevice.h"
 
 using namespace std;
 
@@ -36,7 +37,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->glyph = 'X';
       d->clr = clrWhite;
       d->tile = tile_empty;
-      d->primaryAttackMode = primaryAttackMode_none;
+      d->primaryAttackMode = PrimaryAttackMode::none;
       d->isScroll = d->isPotion = d->isEatable = false;
       d->isArmor = d->isCloak = d->isRing = d->isAmulet = false;
       d->isIntrinsic = d->isMeleeWeapon = d->isRangedWeapon = false;
@@ -51,7 +52,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->meleeDmgType = DmgType::physical;
       d->rangedHitChanceMod = 0;
       d->rangedDmgLabelOverRide = "";
-      d->rangedAmmoTypeUsed = item_empty;
+      d->rangedAmmoTypeUsed = ItemId::empty;
       d->rangedDmgType = DmgType::physical;
       d->rangedHasInfiniteAmmo = false;
       d->rangedMissileGlyph = 'X';
@@ -83,7 +84,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->itemWeight = itemWeight_medium;
       d->glyph = '(';
       d->clr = clrWhite;
-      d->primaryAttackMode = primaryAttackMode_melee;
+      d->primaryAttackMode = PrimaryAttackMode::melee;
       d->isMeleeWeapon = true;
       d->meleeHitSmallSfx = SfxId::hitSmall;
       d->meleeHitMediumSfx = SfxId::hitMedium;
@@ -109,7 +110,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->clr = clrWhite;
       d->isMeleeWeapon = true;
       d->meleeDmg = pair<int, int>(1, 6);
-      d->primaryAttackMode = primaryAttackMode_ranged;
+      d->primaryAttackMode = PrimaryAttackMode::ranged;
       d->isRangedWeapon = true;
       d->rangedMissileGlyph = '/';
       d->rangedMissileClr = clrWhite;
@@ -202,13 +203,13 @@ void ItemDataHandler::resetData(ItemData* const d,
     case itemData_device: {
       resetData(d, itemData_general);
       d->isDevice = true;
-      d->chanceToIncludeInSpawnList = 5;
+      d->chanceToIncludeInSpawnList = 10;
       d->itemWeight = itemWeight_light;
       d->isIdentified = true;
       d->glyph = '~';
       d->tile = tile_device1;
       d->isStackable = false;
-      d->spawnStandardMinDLVL = 4;
+      d->spawnStandardMinDLVL = 1;
       d->spawnStandardMaxDLVL = 999;
       d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
       d->landOnHardSurfaceSfx = SfxId::metalClank;
@@ -254,7 +255,7 @@ void ItemDataHandler::setDmgFromMonsterData(
 void ItemDataHandler::initDataList() {
   ItemData* d = NULL;
 
-  d = new ItemData(item_trapezohedron);
+  d = new ItemData(ItemId::trapezohedron);
   resetData(d, itemData_general);
   d->name = ItemName("Shining Trapezohedron", "Shining Trapezohedrons", "The Shining Trapezohedron");
   d->spawnStandardMinDLVL = -1;
@@ -263,9 +264,9 @@ void ItemDataHandler::initDataList() {
   d->glyph = '*';
   d->clr = clrRedLgt;
   d->tile = tile_trapezohedron;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_sawedOff);
+  d = new ItemData(ItemId::sawedOff);
   resetData(d, itemData_rangedWpn);
   d->name = ItemName("Sawed-off Shotgun", "Sawed-off shotguns", "a Sawed-off Shotgun");
   d->itemWeight = itemWeight_medium;
@@ -273,7 +274,7 @@ void ItemDataHandler::initDataList() {
   d->isShotgun = true;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a shotgun");
   d->rangedDmg = DiceParam(8, 3);
-  d->rangedAmmoTypeUsed = item_shotgunShell;
+  d->rangedAmmoTypeUsed = ItemId::shotgunShell;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSndMsg = "I hear a shotgun blast.";
   d->rangedAttackSfx = SfxId::shotgunSawedOffFire;
@@ -282,9 +283,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_pumpShotgun);
+  d = new ItemData(ItemId::pumpShotgun);
   resetData(d, itemData_rangedWpn);
   d->name = ItemName("Pump Shotgun", "Pump shotguns", "a Pump Shotgun");
   d->itemWeight = itemWeight_medium;
@@ -292,7 +293,7 @@ void ItemDataHandler::initDataList() {
   d->isShotgun = true;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a shotgun");
   d->rangedDmg = DiceParam(6, 3);
-  d->rangedAmmoTypeUsed = item_shotgunShell;
+  d->rangedAmmoTypeUsed = ItemId::shotgunShell;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a shotgun");
   d->rangedSndMsg = "I hear a shotgun blast.";
   d->rangedAttackSfx = SfxId::shotgunPumpFire ;
@@ -301,25 +302,25 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_shotgunShell);
+  d = new ItemData(ItemId::shotgunShell);
   resetData(d, itemData_ammo);
   d->name = ItemName("Shotgun shell", "Shotgun shells", "a shotgun shell");
   d->maxStackSizeAtSpawn = 10;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_incinerator);
+  d = new ItemData(ItemId::incinerator);
   resetData(d, itemData_rangedWpn);
   d->name = ItemName("Incinerator", "Incinerators", "an Incinerator");
   d->itemWeight = itemWeight_heavy;
   d->tile = tile_incinerator;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with an Incinerator");
   d->rangedDmg = DiceParam(1, 3);
-  d->rangedAmmoTypeUsed = item_napalmCartridge;
+  d->rangedAmmoTypeUsed = ItemId::napalmCartridge;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires an incinerator");
   d->rangedSndMsg = "I hear the blast of a launched missile.";
   d->rangedMissileGlyph = '*';
@@ -329,9 +330,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest, 25);
   addFeatureFoundIn(d, feature_cabinet, 25);
   addFeatureFoundIn(d, feature_cocoon, 25);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_napalmCartridge);
+  d = new ItemData(ItemId::napalmCartridge);
   resetData(d, itemData_ammoClip);
   d->name = ItemName("Napalm Cartridge", "Napalm Cartridges", "a Napalm Cartridge");
   d->itemWeight = itemWeight_light;
@@ -341,9 +342,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest, 25);
   addFeatureFoundIn(d, feature_cabinet, 25);
   addFeatureFoundIn(d, feature_cocoon, 25);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_machineGun);
+  d = new ItemData(ItemId::machineGun);
   resetData(d, itemData_rangedWpn);
   d->name = ItemName("Tommy Gun", "Tommy Guns", "a Tommy Gun");
   d->itemWeight = itemWeight_medium;
@@ -352,7 +353,7 @@ void ItemDataHandler::initDataList() {
   d->isMachineGun = true;
   d->rangedDmg = DiceParam(2, 2, 2);
   d->rangedHitChanceMod = -10;
-  d->rangedAmmoTypeUsed = item_drumOfBullets;
+  d->rangedAmmoTypeUsed = ItemId::drumOfBullets;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tommy Gun");
   d->rangedSndMsg = "I hear the burst of a machine gun.";
   d->rangedAttackSfx = SfxId::machineGunFire;
@@ -361,24 +362,24 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_drumOfBullets);
+  d = new ItemData(ItemId::drumOfBullets);
   resetData(d, itemData_ammoClip);
   d->name = ItemName("Drum of .45 ACP", "Drums of .45 ACP", "a Drum of .45 ACP");
   d->ammoContainedInClip = 50;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_pistol);
+  d = new ItemData(ItemId::pistol);
   resetData(d, itemData_rangedWpn);
   d->name = ItemName("M1911 Colt", "M1911 Colt", "an M1911 Colt");
   d->itemWeight = itemWeight_light;
   d->tile = tile_pistol;
   d->rangedDmg = DiceParam(1, 8, 4);
-  d->rangedAmmoTypeUsed = item_pistolClip;
+  d->rangedAmmoTypeUsed = ItemId::pistolClip;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a pistol");
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a pistol");
   d->rangedSndMsg = "I hear a pistol being fired.";
@@ -388,16 +389,16 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_flareGun);
+  d = new ItemData(ItemId::flareGun);
   resetData(d, itemData_rangedWpn);
   d->name = ItemName("Flare Gun", "Flare Gun", "a Flare Gun");
   d->itemWeight = itemWeight_light;
   d->tile = tile_flareGun;
   d->rangedDmg = DiceParam(1, 3, 0);
   d->rangedDmgLabelOverRide = "?";
-  d->rangedAmmoTypeUsed = item_flare;
+  d->rangedAmmoTypeUsed = ItemId::flare;
   d->meleeAttackMessages = ItemAttackMessages("strike", "strikes me with a flare gun");
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a flare gun");
   d->rangedSndMsg = "I hear a flare gun being fired.";
@@ -405,18 +406,18 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_pistolClip);
+  d = new ItemData(ItemId::pistolClip);
   resetData(d, itemData_ammoClip);
   d->name = ItemName(".45ACP Colt cartridge", ".45ACP Colt cartridges", "a .45ACP Colt cartridge");
   d->ammoContainedInClip = 7;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_teslaCannon);
+  d = new ItemData(ItemId::teslaCannon);
   resetData(d, itemData_rangedWpn);
   d->name = ItemName("Tesla Cannon", "Tesla Cannons", "a Tesla Cannon");
   d->itemWeight = itemWeight_medium;
@@ -426,7 +427,7 @@ void ItemDataHandler::initDataList() {
   d->rangedHitChanceMod = -15;
   d->rangedDmg = DiceParam(2, 3, 3);
   d->rangedDmgType = DmgType::electric;
-  d->rangedAmmoTypeUsed = item_teslaCanister;
+  d->rangedAmmoTypeUsed = ItemId::teslaCanister;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Tesla Cannon");
   d->rangedSndMsg = "I hear loud electric crackle.";
   d->rangedMissileGlyph = '*';
@@ -435,9 +436,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest, 50);
   addFeatureFoundIn(d, feature_cabinet, 50);
   addFeatureFoundIn(d, feature_cocoon, 50);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_teslaCanister);
+  d = new ItemData(ItemId::teslaCanister);
   resetData(d, itemData_ammoClip);
   d->name = ItemName("Nuclear battery", "Nuclear batteries", "a Nuclear battery");
   d->ammoContainedInClip = 30;
@@ -445,9 +446,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest, 50);
   addFeatureFoundIn(d, feature_cabinet, 50);
   addFeatureFoundIn(d, feature_cocoon, 50);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_spikeGun);
+  d = new ItemData(ItemId::spikeGun);
   resetData(d, itemData_rangedWpn);
   d->name = ItemName("Spike Gun", "Spike Guns", "a Spike Gun");
   d->itemWeight = itemWeight_medium;
@@ -459,7 +460,7 @@ void ItemDataHandler::initDataList() {
   d->rangedDmg = DiceParam(1, 7, 0);
   d->rangedDmgType = DmgType::physical;
   d->rangedCausesKnockBack = true;
-  d->rangedAmmoTypeUsed = item_ironSpike;
+  d->rangedAmmoTypeUsed = ItemId::ironSpike;
   d->rangedAttackMessages = ItemAttackMessages("fire", "fires a Spike Gun");
   d->rangedSndMsg = "I hear a very crude gun being fired.";
   d->rangedMakesRicochetSound = true;
@@ -470,9 +471,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest, 50);
   addFeatureFoundIn(d, feature_cabinet, 50);
   addFeatureFoundIn(d, feature_cocoon, 50);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_dynamite);
+  d = new ItemData(ItemId::dynamite);
   resetData(d, itemData_explosive);
   d->name = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
   d->itemWeight = itemWeight_light;
@@ -481,9 +482,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_flare);
+  d = new ItemData(ItemId::flare);
   resetData(d, itemData_explosive);
   d->name = ItemName("Flare", "Flares", "a Flare");
   d->itemWeight = itemWeight_light;
@@ -493,9 +494,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_molotov);
+  d = new ItemData(ItemId::molotov);
   resetData(d, itemData_explosive);
   d->name = ItemName("Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail");
   d->itemWeight = itemWeight_light;
@@ -504,9 +505,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_throwingKnife);
+  d = new ItemData(ItemId::throwingKnife);
   resetData(d, itemData_missileWeapon);
   d->name = ItemName("Throwing Knife", "Throwing Knives", "a Throwing Knife");
   d->itemWeight = itemWeight_extraLight;
@@ -518,13 +519,13 @@ void ItemDataHandler::initDataList() {
   d->maxStackSizeAtSpawn = 8;
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
   d->landOnHardSurfaceSfx = SfxId::metalClank;
-  d->primaryAttackMode = primaryAttackMode_missile;
+  d->primaryAttackMode = PrimaryAttackMode::missile;
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_rock);
+  d = new ItemData(ItemId::rock);
   resetData(d, itemData_missileWeapon);
   d->name = ItemName("Rock", "Rocks", "a Rock");
   d->itemWeight = itemWeight_extraLight;
@@ -534,12 +535,12 @@ void ItemDataHandler::initDataList() {
   d->missileHitChanceMod = 10;
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 6;
-  d->primaryAttackMode = primaryAttackMode_missile;
+  d->primaryAttackMode = PrimaryAttackMode::missile;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_dagger);
+  d = new ItemData(ItemId::dagger);
   resetData(d, itemData_meleeWpn);
   d->name = ItemName("Dagger", "Daggers", "a Dagger");
   d->itemWeight = itemWeight_light;
@@ -554,9 +555,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_hatchet);
+  d = new ItemData(ItemId::hatchet);
   resetData(d, itemData_meleeWpn);
   d->name = ItemName("Hatchet", "Hatchets", "a Hatchet");
   d->itemWeight = itemWeight_light;
@@ -573,9 +574,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_club);
+  d = new ItemData(ItemId::club);
   resetData(d, itemData_meleeWpn);
   d->name = ItemName("Club", "Clubs", "a Club");
   d->spawnStandardMinDLVL = FIRST_CAVERN_LEVEL;
@@ -587,9 +588,9 @@ void ItemDataHandler::initDataList() {
   d->meleeDmg = pair<int, int>(2, 3);
   d->meleeHitChanceMod = 10;
   d->meleeMissSfx = SfxId::missMedium;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_hammer);
+  d = new ItemData(ItemId::hammer);
   resetData(d, itemData_meleeWpn);
   d->name = ItemName("Hammer", "Hammers", "a Hammer");
   d->itemWeight = itemWeight_medium;
@@ -600,9 +601,9 @@ void ItemDataHandler::initDataList() {
   d->meleeMissSfx = SfxId::missMedium;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_machete);
+  d = new ItemData(ItemId::machete);
   resetData(d, itemData_meleeWpn);
   d->name = ItemName("Machete", "Machetes", "a Machete");
   d->itemWeight = itemWeight_medium;
@@ -615,9 +616,9 @@ void ItemDataHandler::initDataList() {
   d->meleeMissSfx = SfxId::missMedium;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_axe);
+  d = new ItemData(ItemId::axe);
   resetData(d, itemData_meleeWpn);
   d->name = ItemName("Axe", "Axes", "an Axe");
   d->itemWeight = itemWeight_medium;
@@ -632,9 +633,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_tomb);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_pitchFork);
+  d = new ItemData(ItemId::pitchFork);
   resetData(d, itemData_meleeWpn);
   d->name = ItemName("Pitchfork", "Pitchforks", "a Pitchfork");
   d->itemWeight = itemWeight_heavy;
@@ -648,9 +649,9 @@ void ItemDataHandler::initDataList() {
   d->meleeMissSfx = SfxId::missHeavy;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_sledgeHammer);
+  d = new ItemData(ItemId::sledgeHammer);
   resetData(d, itemData_meleeWpn);
   d->name = ItemName("Sledgehammer", "Sledgehammers", "a Sledgehammer");
   d->itemWeight = itemWeight_heavy;
@@ -661,9 +662,9 @@ void ItemDataHandler::initDataList() {
   d->meleeCausesKnockBack = true;
   d->meleeMissSfx = SfxId::missHeavy;
   addFeatureFoundIn(d, feature_cabinet);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_ironSpike);
+  d = new ItemData(ItemId::ironSpike);
   resetData(d, itemData_missileWeapon);
   d->name = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
   d->isAmmo = true;
@@ -677,66 +678,66 @@ void ItemDataHandler::initDataList() {
   d->maxStackSizeAtSpawn = 12;
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
   d->landOnHardSurfaceSfx = SfxId::metalClank;
-  d->primaryAttackMode = primaryAttackMode_missile;
+  d->primaryAttackMode = PrimaryAttackMode::missile;
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_playerKick);
+  d = new ItemData(ItemId::playerKick);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("kick", "");
   d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = true;
   d->meleeMissSfx = SfxId::missMedium;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_playerStomp);
+  d = new ItemData(ItemId::playerStomp);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("stomp", "");
   d->meleeHitChanceMod = 20;
   d->meleeDmg = pair<int, int>(1, 3);
   d->meleeCausesKnockBack = false;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_playerPunch);
+  d = new ItemData(ItemId::playerPunch);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("punch", "");
   d->meleeHitChanceMod = 25;
   d->meleeDmg = pair<int, int>(1, 2);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_zombieClaw);
+  d = new ItemData(ItemId::zombieClaw);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_zombie]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_zombieClawDiseased);
+  d = new ItemData(ItemId::zombieClawDiseased);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_zombie]);
   d->propAppliedOnMelee = new PropInfected(eng, propTurnsStd);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_zombieAxe);
+  d = new ItemData(ItemId::zombieAxe);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "chops me with a rusty axe");
   d->meleeHitSmallSfx = SfxId::hitSmall;
   d->meleeHitMediumSfx = SfxId::hitMedium;
   d->meleeHitHardSfx = SfxId::hitHard;
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_zombieAxe]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_bloatedZombiePunch);
+  d = new ItemData(ItemId::bloatedZombiePunch);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "mauls me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_bloatedZombie]);
   d->meleeCausesKnockBack = true;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_bloatedZombieSpit);
+  d = new ItemData(ItemId::bloatedZombieSpit);
   resetData(d, itemData_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "spits acid pus at me");
   setDmgFromMonsterData(
@@ -745,77 +746,77 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileClr = clrGreenLgt;
   d->rangedDmgType = DmgType::acid;
   d->rangedMissileGlyph = '*';
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_ratBite);
+  d = new ItemData(ItemId::ratBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_rat]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_ratBiteDiseased);
+  d = new ItemData(ItemId::ratBiteDiseased);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_rat]);
   d->propAppliedOnMelee = new PropInfected(eng, propTurnsStd);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_ratThingBite);
+  d = new ItemData(ItemId::ratThingBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_ratThing]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_wormMassBite);
+  d = new ItemData(ItemId::wormMassBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_wormMass]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_wolfBite);
+  d = new ItemData(ItemId::wolfBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_wolf]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_greenSpiderBite);
+  d = new ItemData(ItemId::greenSpiderBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_greenSpider]);
   d->propAppliedOnMelee = new PropBlind(eng, propTurnsSpecific, 4);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_whiteSpiderBite);
+  d = new ItemData(ItemId::whiteSpiderBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_whiteSpider]);
   d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecific, 3);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_redSpiderBite);
+  d = new ItemData(ItemId::redSpiderBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_redSpider]);
   d->propAppliedOnMelee = new PropWeakened(eng, propTurnsStd);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_shadowSpiderBite);
+  d = new ItemData(ItemId::shadowSpiderBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_shadowSpider]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_lengSpiderBite);
+  d = new ItemData(ItemId::lengSpiderBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_lengSpider]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_fireHoundBreath);
+  d = new ItemData(ItemId::fireHoundBreath);
   resetData(d, itemData_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "breaths fire at me");
   d->rangedSndMsg = "I hear a burst of flames.";
@@ -826,16 +827,16 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileLeavesSmoke = true;
   d->rangedDmgType = DmgType::fire;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_fireHoundBite);
+  d = new ItemData(ItemId::fireHoundBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_fireHound]);
   d->meleeDmgType = DmgType::fire;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_frostHoundBreath);
+  d = new ItemData(ItemId::frostHoundBreath);
   resetData(d, itemData_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "breaths frost at me");
   d->rangedSndMsg = "I hear a chilling sound.";
@@ -845,76 +846,76 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileLeavesSmoke = true;
   d->rangedDmgType = DmgType::cold;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_frostHoundBite);
+  d = new ItemData(ItemId::frostHoundBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_frostHound]);
   d->meleeDmgType = DmgType::cold;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_zuulBite);
+  d = new ItemData(ItemId::zuulBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_zuul]);
   d->meleeDmgType = DmgType::physical;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_dustVortexEngulf);
+  d = new ItemData(ItemId::dustVortexEngulf);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "engulfs me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_dustVortex]);
   d->propAppliedOnMelee = new PropBlind(eng, propTurnsStd);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_fireVortexEngulf);
+  d = new ItemData(ItemId::fireVortexEngulf);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "engulfs me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_fireVortex]);
   d->propAppliedOnMelee = new PropBurning(eng, propTurnsStd);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_frostVortexEngulf);
+  d = new ItemData(ItemId::frostVortexEngulf);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "engulfs me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_frostVortex]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_ghostClaw);
+  d = new ItemData(ItemId::ghostClaw);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_ghost]);
   d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecific, 4);
   d->meleeDmgType = DmgType::spirit;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_phantasmSickle);
+  d = new ItemData(ItemId::phantasmSickle);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "slices me with a sickle");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_phantasm]);
   d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecific, 4);
   d->meleeDmgType = DmgType::spirit;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_wraithClaw);
+  d = new ItemData(ItemId::wraithClaw);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_wraith]);
   d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecific, 4);
   d->meleeDmgType = DmgType::spirit;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_giantBatBite);
+  d = new ItemData(ItemId::giantBatBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_giantBat]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_miGoElectricGun);
+  d = new ItemData(ItemId::miGoElectricGun);
   resetData(d, itemData_rangedWpnIntr);
   d->rangedMissileLeavesTrail = true;
   d->rangedMissileClr = clrYellow;
@@ -925,57 +926,57 @@ void ItemDataHandler::initDataList() {
   d->rangedSndMsg = "I hear a bolt of electricity.";
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_miGo]);
   d->rangedSndVol = SndVol::high;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_polypTentacle);
+  d = new ItemData(ItemId::polypTentacle);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "grips me with a tentacle");
   d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecific, 1);
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_flyingPolyp]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_ghoulClaw);
+  d = new ItemData(ItemId::ghoulClaw);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_ghoul]);
   d->propAppliedOnMelee = new PropInfected(eng, propTurnsStd);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_shadowClaw);
+  d = new ItemData(ItemId::shadowClaw);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_shadow]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_byakheeClaw);
+  d = new ItemData(ItemId::byakheeClaw);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_byakhee]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_giantMantisClaw);
+  d = new ItemData(ItemId::giantMantisClaw);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "claws me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_giantMantis]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_giantLocustBite);
+  d = new ItemData(ItemId::giantLocustBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_giantLocust]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_mummyMaul);
+  d = new ItemData(ItemId::mummyMaul);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "mauls me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_mummy]);
   d->propAppliedOnMelee = new PropCursed(eng, propTurnsStd);
   d->meleeCausesKnockBack = true;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_deepOneJavelinAttack);
+  d = new ItemData(ItemId::deepOneJavelinAttack);
   resetData(d, itemData_rangedWpnIntr);
   d->rangedAttackMessages = ItemAttackMessages("", "throws a Javelin at me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_deepOne]);
@@ -983,67 +984,67 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileClr = clrBrown;
   d->rangedMissileGlyph = '/';
   d->rangedSndVol = SndVol::low;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_deepOneSpearAttack);
+  d = new ItemData(ItemId::deepOneSpearAttack);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "thrusts a spear at me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_deepOne]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_oozeBlackSpewPus);
+  d = new ItemData(ItemId::oozeBlackSpewPus);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews pus on me");
   setDmgFromMonsterData(*d, eng.actorDataHandler->dataList[actor_oozeBlack]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_oozeClearSpewPus);
+  d = new ItemData(ItemId::oozeClearSpewPus);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews pus on me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_oozeClear]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_oozePutridSpewPus);
+  d = new ItemData(ItemId::oozePutridSpewPus);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews infected pus on me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_oozePutrid]);
   d->propAppliedOnMelee = new PropInfected(eng, propTurnsStd);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_oozePoisonSpewPus);
+  d = new ItemData(ItemId::oozePoisonSpewPus);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "spews poisonous pus on me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_oozePoison]);
   d->propAppliedOnMelee = new PropPoisoned(eng, propTurnsStd);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_colourOutOfSpaceTouch);
+  d = new ItemData(ItemId::colourOutOfSpaceTouch);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "touches me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_colourOutOfSpace]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_chthonianBite);
+  d = new ItemData(ItemId::chthonianBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "strikes me with a tentacle");
   d->meleeCausesKnockBack = true;
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_chthonian]);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_huntingHorrorBite);
+  d = new ItemData(ItemId::huntingHorrorBite);
   resetData(d, itemData_meleeWpnIntr);
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_huntingHorror]);
   d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsStd);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_armorLeatherJacket);
+  d = new ItemData(ItemId::armorLeatherJacket);
   resetData(d, itemData_armor);
   d->name = ItemName("Leather Jacket", "", "a Leather Jacket");
   d->itemWeight = itemWeight_light;
@@ -1053,9 +1054,9 @@ void ItemDataHandler::initDataList() {
   d->armorData.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMsg = "";
   addFeatureFoundIn(d, feature_cabinet);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_armorIronSuit);
+  d = new ItemData(ItemId::armorIronSuit);
   resetData(d, itemData_armor);
   d->name = ItemName("Iron Suit", "", "an Iron Suit");
   d->itemWeight = itemWeight_heavy;
@@ -1065,9 +1066,9 @@ void ItemDataHandler::initDataList() {
   d->armorData.dmgToDurabilityFactor = 0.5;
   d->landOnHardSurfaceSoundMsg = "I hear a crashing sound.";
   addFeatureFoundIn(d, feature_cabinet);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_armorFlackJacket);
+  d = new ItemData(ItemId::armorFlackJacket);
   resetData(d, itemData_armor);
   d->name = ItemName("Flak Jacket", "", "a Flak Jacket");
   d->itemWeight = itemWeight_heavy;
@@ -1077,9 +1078,9 @@ void ItemDataHandler::initDataList() {
   d->armorData.dmgToDurabilityFactor = 0.5;
   d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
   addFeatureFoundIn(d, feature_cabinet);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_armorAsbestosSuit);
+  d = new ItemData(ItemId::armorAsbestosSuit);
   resetData(d, itemData_armor);
   d->name = ItemName("Asbestos Suit", "", "an Asbestos Suit");
   d->itemWeight = itemWeight_medium;
@@ -1090,9 +1091,9 @@ void ItemDataHandler::initDataList() {
   d->landOnHardSurfaceSoundMsg = "";
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_chest);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_armorHeavyCoat);
+  d = new ItemData(ItemId::armorHeavyCoat);
   resetData(d, itemData_armor);
   d->name = ItemName("Heavy Coat", "", "a Heavy Coat");
   d->itemWeight = itemWeight_medium;
@@ -1102,130 +1103,130 @@ void ItemDataHandler::initDataList() {
   d->armorData.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMsg = "";
   addFeatureFoundIn(d, feature_cabinet);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfMayhem);
+  d = new ItemData(ItemId::scrollOfMayhem);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_mayhem;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfTeleportation);
+  d = new ItemData(ItemId::scrollOfTelep);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_teleport;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfPestilence);
+  d = new ItemData(ItemId::scrollOfPestilence);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_pestilence;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfEnfeebleEnemies);
+  d = new ItemData(ItemId::scrollOfEnfeeble);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_enfeeble;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfDetectItems);
+  d = new ItemData(ItemId::scrollOfDetItems);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_detectItems;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfDetectTraps);
+  d = new ItemData(ItemId::scrollOfDetTraps);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_detectTraps;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfBlessing);
+  d = new ItemData(ItemId::scrollOfBlessing);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_bless;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfDarkbolt);
+  d = new ItemData(ItemId::scrollOfDarkbolt);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_darkbolt;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfAzathothsWrath);
+  d = new ItemData(ItemId::scrollOfAzathothsWrath);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_azathothsWrath;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfOpening);
+  d = new ItemData(ItemId::scrollOfOpening);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_opening;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfSacrificeLife);
+  d = new ItemData(ItemId::scrollOfSacrLife);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_sacrificeLife;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfSacrificeSpirit);
+  d = new ItemData(ItemId::scrollOfSacrSpi);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_sacrificeSpirit;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_scrollOfDetectMonsters);
+  d = new ItemData(ItemId::scrollOfDetMon);
   resetData(d, itemData_scroll);
   d->spellCastFromScroll = spell_detectMonsters;
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfVitality);
+  d = new ItemData(ItemId::potionOfVitality);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfSpirit);
+  d = new ItemData(ItemId::potionOfSpirit);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfBlindness);
+  d = new ItemData(ItemId::potionOfBlindness);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfFrenzy);
+  d = new ItemData(ItemId::potionOfFrenzy);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfFortitude);
+  d = new ItemData(ItemId::potionOfFortitude);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfParalyzation);
+  d = new ItemData(ItemId::potionOfParalyzation);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfRElec);
+  d = new ItemData(ItemId::potionOfRElec);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfConfusion);
+  d = new ItemData(ItemId::potionOfConfusion);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfPoison);
+  d = new ItemData(ItemId::potionOfPoison);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfInsight);
+  d = new ItemData(ItemId::potionOfInsight);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfClairvoyance);
+  d = new ItemData(ItemId::potionOfClairv);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfRFire);
+  d = new ItemData(ItemId::potionOfRFire);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfAntidote);
+  d = new ItemData(ItemId::potionOfAntidote);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_potionOfDescent);
+  d = new ItemData(ItemId::potionOfDescent);
   resetData(d, itemData_potion);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_deviceSentry);
+  d = new ItemData(ItemId::deviceSentry);
   resetData(d, itemData_device);
   d->name = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
   d->itemValue = ItemValue::majorTreasure;
@@ -1234,9 +1235,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_deviceRepeller);
+  d = new ItemData(ItemId::deviceRepeller);
   resetData(d, itemData_device);
   d->name = ItemName("Repeller Device", "Repeller Devices", "a Repeller Device");
   d->itemValue = ItemValue::majorTreasure;
@@ -1245,9 +1246,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_deviceRejuvenator);
+  d = new ItemData(ItemId::deviceRejuvenator);
   resetData(d, itemData_device);
   d->name = ItemName("Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device");
   d->itemValue = ItemValue::majorTreasure;
@@ -1256,9 +1257,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_deviceTranslocator);
+  d = new ItemData(ItemId::deviceTranslocator);
   resetData(d, itemData_device);
   d->name = ItemName("Translocator Device", "Translocator Devices", "a Translocator Device");
   d->itemValue = ItemValue::majorTreasure;
@@ -1267,17 +1268,17 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest, 10);
   addFeatureFoundIn(d, feature_tomb, 10);
   addFeatureFoundIn(d, feature_cocoon, 10);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-//  d = new ItemData(item_deviceSpellReflector);
+//  d = new ItemData(ItemId::deviceSpellReflector);
 //  resetData(d, itemData_device);
 //  d->name = ItemName("Spell Reflector Device", "Spell Reflector Devices", "a Spell Reflector Device");
 //  d->clr = clrGray;
 //  d->featuresCanBeFoundIn.push_back(feature_chest);
 //  d->featuresCanBeFoundIn.push_back(feature_tomb);
-//  dataList[d->id] = d;
+//  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_deviceElectricLantern);
+  d = new ItemData(ItemId::electricLantern);
   resetData(d, itemData_device);
   d->name = ItemName("Electric Lantern", "Electric Lanterns", "an Electric Lantern");
   d->spawnStandardMinDLVL = 1;
@@ -1289,9 +1290,9 @@ void ItemDataHandler::initDataList() {
   addFeatureFoundIn(d, feature_chest);
   addFeatureFoundIn(d, feature_cabinet);
   addFeatureFoundIn(d, feature_cocoon);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 
-  d = new ItemData(item_medicalBag);
+  d = new ItemData(ItemId::medicalBag);
   resetData(d, itemData_general);
   d->isMedicalBag = true;
   d->name = ItemName("Medical Bag", "Medical Bags", "a Medical Bag");
@@ -1304,11 +1305,11 @@ void ItemDataHandler::initDataList() {
   d->clr = clrBrownDrk;
   d->tile = tile_medicalBag;
 //  d->nativeRooms.resize(0);
-  dataList[d->id] = d;
+  dataList[int(d->id)] = d;
 }
 
 void ItemDataHandler::addSaveLines(vector<string>& lines) const {
-  for(unsigned int i = 1; i < endOfItemIds; i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     lines.push_back(dataList[i]->isIdentified ? "1" : "0");
 
     if(dataList[i]->isScroll) {
@@ -1318,7 +1319,7 @@ void ItemDataHandler::addSaveLines(vector<string>& lines) const {
 }
 
 void ItemDataHandler::setParamsFromSaveLines(vector<string>& lines) {
-  for(unsigned int i = 1; i < endOfItemIds; i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     dataList[i]->isIdentified = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
 
@@ -1329,91 +1330,73 @@ void ItemDataHandler::setParamsFromSaveLines(vector<string>& lines) {
   }
 }
 
+//TODO Remove this function
 bool ItemDataHandler::isWeaponStronger(
   const ItemData& data1, const ItemData& data2, const bool IS_MELEE) {
   (void)data1;
   (void)data2;
   (void)IS_MELEE;
-//  int rolls1 = 0;
-//  int sides1 = 0;
-//  int plus1 = 0;
-//  int rolls2 = 0;
-//  int sides2 = 0;
-//  int plus2 = 0;
-//
-//  if(melee == true) {
-//    rolls1 = oldDef.meleeDmg.first;
-//    sides1 = oldDef.meleeDmg.second;
-//    plus1 = ;
-//
-//    rolls2 = newDef.meleeDmg.rolls;
-//    sides2 = newDef.meleeDmg.sides;
-//    plus2 = newDef.meleeDmg.plus;
-//  } else {
-//    rolls1 = oldDef.rangedDmg.rolls;
-//    sides1 = oldDef.rangedDmg.sides;
-//    plus1 = oldDef.rangedDmg.plus;
-//
-//    rolls2 = newDef.rangedDmg.rolls;
-//    sides2 = newDef.rangedDmg.sides;
-//    plus2 = newDef.rangedDmg.plus;
-//  }
-//
-//  bool newWeaponIsStronger = rolls2 * sides2 + plus2 > rolls1 * sides1 + plus1;
-//
-//  return newWeaponIsStronger;
+
   return false;
 }
 
+//TODO Remove this function and make getName() function in Item instead
 string ItemDataHandler::getItemRef(
   const Item& item, const ItemRefType itemRefForm,
   const bool SKIP_EXTRA_INFO) const {
+
   const ItemData& d = item.getData();
   string ret = "";
 
-  if(d.isDevice && d.isIdentified == false) {
-    return itemRefForm == itemRef_plain ?
-           "Strange Device" : "a Strange Device";
+  if(d.isDevice && d.id != ItemId::electricLantern) {
+    if(d.isIdentified) {
+      ret = itemRefForm == ItemRefType::plain ? d.name.name : d.name.name_a;
+      if(SKIP_EXTRA_INFO == false) {
+        const Condition cond = dynamic_cast<const Device*>(&item)->condition_;
+        switch(cond) {
+          case Condition::breaking: ret += " {breaking}"; break;
+          case Condition::shoddy:   ret += " {shoddy}";   break;
+          case Condition::fine:     ret += " {fine}";     break;
+        }
+      }
+      return ret;
+    } else {
+      ret = itemRefForm == ItemRefType::plain ? "" : "a ";
+      return ret + "Strange Device";
+    }
   }
 
-  if(d.isStackable && item.nrItems > 1 && itemRefForm == itemRef_plural) {
-    ret = toString(item.nrItems) + " ";
+  if(d.isStackable && item.nrItems > 1 && itemRefForm == ItemRefType::plural) {
+    ret = toStr(item.nrItems) + " ";
     ret += d.name.name_plural;
   } else {
-    ret += itemRefForm == itemRef_plain ? d.name.name : d.name.name_a;
+    ret = itemRefForm == ItemRefType::plain ? d.name.name : d.name.name_a;
   }
 
   if(d.isAmmoClip) {
     const ItemAmmoClip* const ammoItem =
       dynamic_cast<const ItemAmmoClip*>(&item);
-    return ret + " {" + toString(ammoItem->ammo) + "}";
+    return ret + " {" + toStr(ammoItem->ammo) + "}";
   }
 
   if(d.isMedicalBag) {
     const MedicalBag* const medicalBag =
       dynamic_cast<const MedicalBag*>(&item);
-    return ret + " {" + toString(medicalBag->getNrSupplies()) + "}";
+    return ret + " {" + toStr(medicalBag->getNrSupplies()) + "}";
   }
-
-//  if(d.isArmor) {
-//    const Armor* armor = dynamic_cast<const Armor*>(&item);
-//    const string armorDataLine = armor->getArmorDataLine(true);
-//    return armorDataLine.empty() ? ret : ret + " " + armorDataLine;
-//  }
 
   if(SKIP_EXTRA_INFO == false) {
     if(d.isRangedWeapon) {
       string ammoLoadedStr = "";
       if(d.rangedHasInfiniteAmmo == false) {
         const Weapon* const w = dynamic_cast<const Weapon*>(&item);
-        ammoLoadedStr = " " + toString(w->nrAmmoLoaded) + "/" +
-                        toString(w->ammoCapacity);
+        ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" +
+                        toStr(w->ammoCapacity);
       }
       return ret + ammoLoadedStr;
     }
 
-    if((d.isScroll || d.isPotion) &&
-        d.isTried && d.isIdentified == false) {
+    if((d.isScroll || d.isPotion) && d.isTried && d.isIdentified == false) {
       return ret + " {tried}";
     }
   }
@@ -1421,19 +1404,32 @@ string ItemDataHandler::getItemRef(
   return ret;
 }
 
+//TODO Remove this function and make getName() function in Item instead
 string ItemDataHandler::getItemInterfaceRef(
   const Item& item, const bool ADD_A,
   const PrimaryAttackMode attackMode) const {
   const ItemData& d = item.getData();
 
-  if(d.isDevice && d.isIdentified == false) {
-    return ADD_A ? "a Strange Device" : "Strange Device";
+  if(d.isDevice && d.id != ItemId::electricLantern) {
+    if(d.isIdentified) {
+      string ret = ADD_A ? d.name.name_a : d.name.name;
+      const Condition cond = dynamic_cast<const Device*>(&item)->condition_;
+      switch(cond) {
+        case Condition::breaking: ret += " {breaking}"; break;
+        case Condition::shoddy:   ret += " {shoddy}";   break;
+        case Condition::fine:     ret += " {fine}";     break;
+      }
+      return ret;
+    } else {
+      string ret = ADD_A ? "a " : "";
+      return ret + "Strange Device";
+    }
   }
 
   string ret = "";
 
   if(d.isStackable && item.nrItems > 1) {
-    ret = toString(item.nrItems) + " " + d.name.name_plural;
+    ret = toStr(item.nrItems) + " " + d.name.name_plural;
   } else {
     ret = (ADD_A ? d.name.name_a : d.name.name);
   }
@@ -1443,70 +1439,70 @@ string ItemDataHandler::getItemInterfaceRef(
       ability_accuracyRanged, true, *(eng.player));
 
   if(
-    (attackMode == primaryAttackMode_none &&
-     d.primaryAttackMode == primaryAttackMode_melee) ||
-    (attackMode == primaryAttackMode_melee && d.isMeleeWeapon)) {
-    const string rollsStr = toString(d.meleeDmg.first);
-    const string sidesStr = toString(d.meleeDmg.second);
+    (attackMode == PrimaryAttackMode::none &&
+     d.primaryAttackMode == PrimaryAttackMode::melee) ||
+    (attackMode == PrimaryAttackMode::melee && d.isMeleeWeapon)) {
+    const string rollsStr = toStr(d.meleeDmg.first);
+    const string sidesStr = toStr(d.meleeDmg.second);
     const int PLUS = dynamic_cast<const Weapon*>(&item)->meleeDmgPlus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
-                           toString(PLUS));
+                           toStr(PLUS));
     const int ITEM_SKILL = d.meleeHitChanceMod;
     const int PLAYER_MELEE_SKILL =
       eng.player->getData().abilityVals.getVal(
         ability_accuracyMelee, true, *(eng.player));
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
-    const string skillStr = toString(TOTAL_SKILL) + "%";
+    const string skillStr = toStr(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
   }
 
   if(
-    (attackMode == primaryAttackMode_none &&
-     d.primaryAttackMode == primaryAttackMode_ranged) ||
-    (attackMode == primaryAttackMode_ranged && d.isRangedWeapon)) {
+    (attackMode == PrimaryAttackMode::none &&
+     d.primaryAttackMode == PrimaryAttackMode::ranged) ||
+    (attackMode == PrimaryAttackMode::ranged && d.isRangedWeapon)) {
     const int MULTIPL = d.isMachineGun == true ?
                         NR_MG_PROJECTILES : 1;
-    const string rollsStr = toString(d.rangedDmg.rolls * MULTIPL);
-    const string sidesStr = toString(d.rangedDmg.sides);
+    const string rollsStr = toStr(d.rangedDmg.rolls * MULTIPL);
+    const string sidesStr = toStr(d.rangedDmg.sides);
     const int PLUS = d.rangedDmg.plus * MULTIPL;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
-                           toString(PLUS));
+                           toStr(PLUS));
     const int ITEM_SKILL = d.rangedHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
-    const string skillStr = toString(TOTAL_SKILL) + "%";
+    const string skillStr = toStr(TOTAL_SKILL) + "%";
     string ammoLoadedStr = "";
     if(d.rangedHasInfiniteAmmo == false) {
       const Weapon* const w = dynamic_cast<const Weapon*>(&item);
-      ammoLoadedStr = " " + toString(w->nrAmmoLoaded) + "/" +
-                      toString(w->ammoCapacity);
+      ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" +
+                      toStr(w->ammoCapacity);
     }
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr +
            ammoLoadedStr;
   }
 
   if(
-    (attackMode == primaryAttackMode_none &&
-     d.primaryAttackMode == primaryAttackMode_missile) ||
-    (attackMode == primaryAttackMode_missile && d.isMissileWeapon)) {
-    const string rollsStr = toString(d.missileDmg.rolls);
-    const string sidesStr = toString(d.missileDmg.sides);
+    (attackMode == PrimaryAttackMode::none &&
+     d.primaryAttackMode == PrimaryAttackMode::missile) ||
+    (attackMode == PrimaryAttackMode::missile && d.isMissileWeapon)) {
+    const string rollsStr = toStr(d.missileDmg.rolls);
+    const string sidesStr = toStr(d.missileDmg.sides);
     const int PLUS = d.missileDmg.plus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
-                           toString(PLUS));
+                           toStr(PLUS));
     const int ITEM_SKILL = d.missileHitChanceMod;
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
-    const string skillStr = toString(TOTAL_SKILL) + "%";
+    const string skillStr = toStr(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
   }
 
   if(d.isMedicalBag) {
     const MedicalBag* const medicalBag = dynamic_cast<const MedicalBag*>(&item);
-    return ret + " {" + toString(medicalBag->getNrSupplies()) + "}";
+    return ret + " {" + toStr(medicalBag->getNrSupplies()) + "}";
   }
 
   if(d.isAmmoClip) {
     const ItemAmmoClip* const clip = dynamic_cast<const ItemAmmoClip*>(&item);
-    return ret + " {" + toString(clip->ammo) + "}";
+    return ret + " {" + toStr(clip->ammo) + "}";
   }
 
   if(d.isArmor) {

@@ -12,12 +12,6 @@ public:
   void spawnItems();
 
 private:
-  void buildCandidateList();
-
-  ItemId getFromCandidateList();
-
-  vector<ItemId> candidates;
-
   Engine& eng;
 };
 

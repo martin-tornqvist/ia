@@ -168,7 +168,7 @@ void Trap::disarm() {
   if(getTrapType() == trap_spiderWeb) {
     Item* item = eng.player->getInv().getItemInSlot(slot_wielded);
     if(item != NULL) {
-      isAutoSucceed = item->getData().id == item_machete;
+      isAutoSucceed = item->getData().id == ItemId::machete;
     }
   }
 
@@ -771,7 +771,7 @@ void TrapSpiderWeb::trigger(
     Item* itemWielded = playerInv.getItemInSlot(slot_wielded);
     bool hasMachete = false;
     if(itemWielded != NULL) {
-      hasMachete = itemWielded->getData().id == item_machete;
+      hasMachete = itemWielded->getData().id == ItemId::machete;
     }
 
     if(hasMachete) {

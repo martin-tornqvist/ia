@@ -59,7 +59,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
   }
   // ------------------------------------------------------- AIM RANGED WEAPON
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'f') {
-    if(markerTask == markerTask_aimRangedWeapon) {
+    if(markerTask == MarkerTask::aimRangedWeapon) {
       if(pos_ != eng.player->pos) {
 
         eng.log->clearLog();
@@ -81,14 +81,14 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
   }
   // ------------------------------------------------------- LOOK
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'v') {
-    if(markerTask == markerTask_look) {
+    if(markerTask == MarkerTask::look) {
       eng.look->printExtraActorDescription(pos_);
-      move(0, 0, markerTask_look, itemThrown);
+      move(0, 0, MarkerTask::look, itemThrown);
     }
   }
   // ------------------------------------------------------- THROW
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 't') {
-    if(markerTask == markerTask_aimThrownWeapon) {
+    if(markerTask == MarkerTask::aimThrownWeapon) {
       if(pos_ == eng.player->pos) {
         eng.log->addMsg("I should throw this somewhere else.");
       } else {
@@ -104,7 +104,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
   }
   // ------------------------------------------------------- THROW EXPLOSIVE
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'e') {
-    if(markerTask == markerTask_aimLitExplosive) {
+    if(markerTask == MarkerTask::aimLitExplosive) {
       Renderer::drawMapAndInterface();
       eng.thrower->playerThrowLitExplosive(pos_);
       done();
@@ -125,7 +125,7 @@ void Marker::draw(const MarkerTask markerTask) const {
   const Pos playerPos = eng.player->pos;
   eng.lineCalc->calcNewLine(playerPos, pos_, true, 9999, false, trail);
 
-  if(markerTask == markerTask_aimRangedWeapon) {
+  if(markerTask == MarkerTask::aimRangedWeapon) {
     Item* const item =
       eng.player->getInv().getItemInSlot(slot_wielded);
     Weapon* const weapon = dynamic_cast<Weapon*>(item);
@@ -142,9 +142,9 @@ MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
   MarkerReturnData data;
 
   if(
-    markerTask == markerTask_aimRangedWeapon  ||
-    markerTask == markerTask_look             ||
-    markerTask == markerTask_aimThrownWeapon) {
+    markerTask == MarkerTask::aimRangedWeapon  ||
+    markerTask == MarkerTask::look             ||
+    markerTask == MarkerTask::aimThrownWeapon) {
     //Attempt to place marker at target.
     if(setPosToTargetIfVisible() == false) {
       //Else NULL the target, and attempt to place marker at closest visible enemy.
@@ -155,9 +155,9 @@ MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
   }
 
   if(
-    markerTask == markerTask_look ||
-    markerTask == markerTask_aimRangedWeapon ||
-    markerTask == markerTask_aimThrownWeapon) {
+    markerTask == MarkerTask::look ||
+    markerTask == MarkerTask::aimRangedWeapon ||
+    markerTask == MarkerTask::aimThrownWeapon) {
     eng.look->markerAtPos(pos_, markerTask, itemThrown);
   }
 
@@ -217,9 +217,9 @@ void Marker::move(const int DX, const int DY, const MarkerTask markerTask,
 
   if(isMoved) {
     if(
-      markerTask == markerTask_look             ||
-      markerTask == markerTask_aimRangedWeapon  ||
-      markerTask == markerTask_aimThrownWeapon) {
+      markerTask == MarkerTask::look             ||
+      markerTask == MarkerTask::aimRangedWeapon  ||
+      markerTask == MarkerTask::aimThrownWeapon) {
       eng.look->markerAtPos(pos_, markerTask, itemThrown);
     }
   }

@@ -1158,7 +1158,7 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
       const PropAlignment alignment = prop->getAlignment();
       const int TURNS_LEFT = prop->turnsLeft_;
       const string turnsStr = TURNS_LEFT > 0 && IS_SELF_AWARE ?
-                              ("(" + toString(TURNS_LEFT) + ")") : "";
+                              ("(" + toStr(TURNS_LEFT) + ")") : "";
       line.push_back(
         StrAndClr(propName + turnsStr,
                   alignment == propAlignmentGood ? clrMsgGood :

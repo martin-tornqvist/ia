@@ -144,175 +144,175 @@ void PlayerBonHandler::getTraitDescr(
 
   switch(id) {
     case traitAdeptMeleeFighter: {
-      strRef  = "+10% hit chance with melee weapons";
+      strRef = "+10% hit chance with melee weapons";
     } break;
 
     case traitExpertMeleeFighter: {
-      strRef  = "+10% hit chance with melee weapons";
+      strRef = "+10% hit chance with melee weapons";
     } break;
 
     case traitMasterMeleeFighter: {
-      strRef  = "+10% hit chance with melee weapons";
+      strRef = "+10% hit chance with melee weapons";
     } break;
 
     case traitAdeptMarksman: {
-      strRef  = "+10% hit chance with firearms and thrown weapons";
+      strRef = "+10% hit chance with firearms and thrown weapons";
     } break;
 
     case traitExpertMarksman: {
-      strRef  = "+10% hit chance with firearms and thrown weapons, ";
-      strRef += "you occasionally reload instantly";
+      strRef = "+10% hit chance with firearms and thrown weapons, "
+               "you occasionally reload instantly";
     } break;
 
     case traitMasterMarksman: {
-      strRef  = "+10% hit chance with firearms and thrown weapons";
+      strRef = "+10% hit chance with firearms and thrown weapons";
     } break;
 
     case traitSteadyAimer: {
-      strRef  = "Standing still gives ranged attacks +10% hit chance on the ";
-      strRef += "following turn";
+      strRef = "Standing still gives ranged attacks +10% hit chance on the "
+               "following turn";
     } break;
 
     case traitSharpShooter: {
-      strRef  = "Standing still for three turns gives ranged attacks maximum ";
-      strRef += "hit chance and damage on the following turn";
+      strRef = "Standing still for three turns gives ranged attacks maximum "
+               "hit chance and damage on the following turn";
     } break;
 
     case traitDemolitionExpert: {
-      strRef  = "+1 radius for explosives (be careful), you are not harmed ";
-      strRef += "by your own Molotov Cocktails, you occasionally light ";
-      strRef += "explosives instantly";
+      strRef = "+1 radius for explosives (be careful), you are not harmed "
+               "by your own Molotov Cocktails, you occasionally light "
+               "explosives instantly";
     } break;
 
     case traitCoolHeaded: {
-      strRef  = "+20% shock resistance";
+      strRef = "+20% shock resistance";
     } break;
 
     case traitCourageous: {
-      strRef  = "+20% shock resistance";
+      strRef = "+20% shock resistance";
     } break;
 
     case traitWarlock: {
-      strRef  = "-1 Spirit cost for damage dealing spells, casting any spell ";
-      strRef += "has a chance to make you \"Charged\" for one turn, causing ";
-      strRef += "attack spells to do maximum damage";
+      strRef = "-1 Spirit cost for damage dealing spells, casting any spell "
+               "has a chance to make you \"Charged\" for one turn, causing "
+               "attack spells to do maximum damage";
     } break;
 
     case traitBloodSorcerer: {
-      strRef  = "-1 Spirit cost for all spells, casting a spell drains 2 ";
-      strRef += "Hit points";
+      strRef = "-1 Spirit cost for all spells, casting a spell drains 2 "
+               "Hit points";
     } break;
 
 //    case traitSpiritCannibal: {
-//      strRef  = "For every life you take, you gain 1 Spirit Point by ";
+//      strRef = "For every life you take, you gain 1 Spirit Point by ";
 //      strRef += "absorbing a part of that creatures spirit (does not work ";
 //      strRef += "on insignificant creatures like a small spider or a rat)";
 //      strRef += "[UNIMPLEMENTED]";
 //    } break;
 
     case traitSeer: {
-      strRef  = "Detection spells have decreased Spirit costs, and ";
-      strRef += "the spell \"Detect Monsters\" has tripple duration";
+      strRef = "Detection spells have decreased Spirit costs, and "
+               "the spell \"Detect Monsters\" has tripple duration";
     } break;
 
     case traitTough: {
-      strRef  = "+2 hit points, +10% carry weight limit, better results ";
-      strRef += "for object interactions requiring strength (e.g. bashing ";
-      strRef += "doors or pushing a lid)";
+      strRef = "+2 hit points, +10% carry weight limit, better results "
+               "for object interactions requiring strength (e.g. bashing "
+               "doors or pushing a lid)";
     } break;
 
     case traitRugged: {
-      strRef  = "+2 hit points, +10% carry weight limit, better results ";
-      strRef += "for object interactions requiring strength (such as ";
-      strRef += "bashing doors, or moving the lid from a stone coffin)";
+      strRef = "+2 hit points, +10% carry weight limit, better results "
+               "for object interactions requiring strength (such as "
+               "bashing doors, or moving the lid from a stone coffin)";
     } break;
 
     case traitStrongBacked: {
-      strRef  = "+30% carry weight limit";
+      strRef = "+30% carry weight limit";
     } break;
 
 //    case traitBreachExpert: {
-//      strRef  = "Increased chance of success when bashing doors, breaking ";
-//      strRef += "a door is a free turn, any creature adjacent to the door ";
-//      strRef += "on the opposite side is damaged and stunned";
-//      strRef += "[UNIMPLEMENTED]";
+//      strRef = "Increased chance of success when bashing doors, breaking "
+//      "a door is a free turn, any creature adjacent to the door "
+//      "on the opposite side is damaged and stunned";
+//      "[UNIMPLEMENTED]";
 //    } break;
 
     case traitDexterous: {
-      strRef  = "+20% chance to dodge melee attacks, better chances to evade ";
-      strRef += "traps, every fifth move is a free action";
+      strRef = "+20% chance to dodge melee attacks, better chances to evade "
+               "traps, every fifth move is a free action";
     } break;
 
     case traitLithe: {
-      strRef  = "+20% chance to dodge melee attacks, better chances to evade ";
-      strRef += "traps, every fourth move is a free action";
+      strRef = "+20% chance to dodge melee attacks, better chances to evade "
+               "traps, every fourth move is a free action";
     } break;
 
     case traitMobile: {
-      strRef  = "Every second move is a free action";
+      strRef = "Every second move is a free action";
     } break;
 
     case traitFearless: {
-      strRef  = "You cannot become terrified, +5% shock resistance";
+      strRef = "You cannot become terrified, +5% shock resistance";
     } break;
 
     case traitHealer: {
-      strRef  = "Healing takes half the normal time and resources";
+      strRef = "Healing takes half the normal time and resources";
     } break;
 
     case traitObservant: {
-      strRef  = "You can spot hidden traps and doors from two cells away, ";
-      strRef += "you are more likely to spot hidden things and monsters, and ";
-      strRef += "your attentiveness is higher when examining objects";
+      strRef = "You can spot hidden traps and doors from two cells away, "
+               "you are more likely to spot hidden things and monsters, and "
+               "your attentiveness is higher when examining objects";
     } break;
 
     case traitPerceptive: {
-      strRef  = "You can spot hidden traps and doors from three cells away, ";
-      strRef += "you are more likely to spot hidden things and monsters, and ";
-      strRef += "your attentiveness is higher when examining objects";
+      strRef = "You can spot hidden traps and doors from three cells away, "
+               "you are more likely to spot hidden things and monsters, and "
+               "your attentiveness is higher when examining objects";
     } break;
 
     case traitVigilant: {
-      strRef  = "You cannot be backstabbed - hidden monsters gets no melee ";
-      strRef += "attack bonus against you, and their attacks can be dodged";
+      strRef = "You cannot be backstabbed - hidden monsters gets no melee "
+               "attack bonus against you, and their attacks can be dodged";
     } break;
 
     case traitRapidRecoverer: {
-      strRef  = "Increased Hit Point regeneration rate";
+      strRef = "Increased Hit Point regeneration rate";
     } break;
 
     case traitSurvivalist: {
-      strRef  = "Increased Hit Point regeneration rate, negative effects ";
-      strRef += "from wounds and disease reduced by 50%";
+      strRef = "Increased Hit Point regeneration rate, negative effects "
+               "from wounds and disease reduced by 50%";
     } break;
 
     case traitSelfAware: {
-      strRef  = "You cannot become confused, the number of remaining turns ";
-      strRef += "for status effects are displayed";
+      strRef = "You cannot become confused, the number of remaining turns "
+               "for status effects are displayed";
     } break;
 
     case traitPotentSpirit: {
-      strRef  = "+2 Spirit Points, increased Spirit regeneration rate";
+      strRef = "+2 Spirit Points, increased Spirit regeneration rate";
     } break;
 
     case traitStrongSpirit: {
-      strRef  = "+2 Spirit Points, increased Spirit regeneration rate";
+      strRef = "+2 Spirit Points, increased Spirit regeneration rate";
     } break;
 
     case traitMightySpirit: {
-      strRef  = "+2 Spirit Points, increased Spirit regeneration rate";
+      strRef = "+2 Spirit Points, increased Spirit regeneration rate";
     } break;
 
     case traitStealthy: {
-      strRef  = "You are more likely to avoid detection";
+      strRef = "You are more likely to avoid detection";
     } break;
 
     case traitImperceptible: {
-      strRef  = "You are more likely to avoid detection";
+      strRef = "You are more likely to avoid detection";
     } break;
 
     case traitTreasureHunter: {
-      strRef  = "You tend to find more items";
+      strRef = "You tend to find more items";
     } break;
 
     case endOfTraits: {} break;
@@ -555,7 +555,7 @@ void PlayerBonHandler::pickBg(const Bg bg) {
 
       //Player starts with a scroll of Darkbolt, and one other random scroll
       //Both are identified
-      Item* scroll = eng.itemFactory->spawnItem(item_scrollOfDarkbolt);
+      Item* scroll = eng.itemFactory->spawnItem(ItemId::scrollOfDarkbolt);
       dynamic_cast<Scroll*>(scroll)->identify(true);
       eng.player->getInv().putItemInGeneral(scroll);
       while(true) {

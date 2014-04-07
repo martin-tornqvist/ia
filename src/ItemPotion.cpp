@@ -258,7 +258,7 @@ void PotionOfInsight::quaff_(Actor* const actor) {
   }
   vector<Item*>& general = inv.getGeneral();
   for(Item * item : general) {
-    if(item->getData().id != item_potionOfInsight) {
+    if(item->getData().id != ItemId::potionOfInsight) {
       const ItemData& d = item->getData();
       if(d.isIdentified == false) {identifyCandidates.push_back(item);}
     }
@@ -271,12 +271,12 @@ void PotionOfInsight::quaff_(Actor* const actor) {
     Item* const item = identifyCandidates.at(ELEMENT);
 
     const string itemNameBefore =
-      eng.itemDataHandler->getItemRef(*item, itemRef_a, true);
+      eng.itemDataHandler->getItemRef(*item, ItemRefType::a, true);
 
     item->identify(true);
 
     const string itemNameAfter =
-      eng.itemDataHandler->getItemRef(*item, itemRef_a, true);
+      eng.itemDataHandler->getItemRef(*item, ItemRefType::a, true);
 
     eng.log->addMsg("I gain intuitions about " + itemNameBefore + "...");
     eng.log->addMsg("It is identified as " + itemNameAfter + "!");
@@ -296,9 +296,10 @@ void PotionOfClairvoyance::quaff_(Actor* const actor) {
     MapParse::parse(CellPred::BlocksVision(eng), blockers);
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
-        if(blockers[x][y] == false) {
-          eng.map->cells[x][y].isExplored = true;
-          eng.map->cells[x][y].isSeenByPlayer = true;
+        Cell& cell = eng.map->cells[x][y];
+        if(blockers[x][y] == false && cell.isDark == false) {
+          cell.isExplored = true;
+          cell.isSeenByPlayer = true;
           animPositions.push_back(Pos(x, y));
         }
       }
@@ -339,21 +340,21 @@ void PotionNameHandler::setClrAndFalseName(ItemData* d) {
 }
 
 void PotionNameHandler::addSaveLines(vector<string>& lines) const {
-  for(unsigned int i = 1; i < endOfItemIds; i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     ItemData* const d = eng.itemDataHandler->dataList[i];
     if(d->isPotion) {
       lines.push_back(d->name.name);
       lines.push_back(d->name.name_plural);
       lines.push_back(d->name.name_a);
-      lines.push_back(toString(d->clr.r));
-      lines.push_back(toString(d->clr.g));
-      lines.push_back(toString(d->clr.b));
+      lines.push_back(toStr(d->clr.r));
+      lines.push_back(toStr(d->clr.g));
+      lines.push_back(toStr(d->clr.b));
     }
   }
 }
 
 void PotionNameHandler::setParamsFromSaveLines(vector<string>& lines) {
-  for(unsigned int i = 1; i < endOfItemIds; i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     ItemData* const d = eng.itemDataHandler->dataList[i];
     if(d->isPotion) {
       d->name.name = lines.front();

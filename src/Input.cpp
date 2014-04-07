@@ -253,7 +253,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
           } else {
             Weapon* wpn = dynamic_cast<Weapon*>(item);
             if(wpn->nrAmmoLoaded >= 1 || itemData.rangedHasInfiniteAmmo) {
-              eng.marker->run(markerTask_aimRangedWeapon, NULL);
+              eng.marker->run(MarkerTask::aimRangedWeapon, NULL);
             } else if(Config::isRangedWpnAutoReload()) {
               eng.reload->reloadWieldedWpn(*(eng.player));
             } else {
@@ -273,7 +273,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
       const Pos& p = eng.player->pos;
       Item* const itemAtPlayer = eng.map->cells[p.x][p.y].item;
       if(itemAtPlayer != NULL) {
-        if(itemAtPlayer->getData().id == item_trapezohedron) {
+        if(itemAtPlayer->getData().id == ItemId::trapezohedron) {
           eng.dungeonMaster->winGame();
           eng.quitToMainMenu_ = true;
         }
@@ -324,7 +324,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
         eng.player->dynamiteFuseTurns > 0 ||
         eng.player->flareFuseTurns > 0 ||
         eng.player->molotovFuseTurns > 0) {
-        eng.marker->run(markerTask_aimLitExplosive, NULL);
+        eng.marker->run(MarkerTask::aimLitExplosive, NULL);
       } else {
         eng.inventoryHandler->runUseScreen();
       }
@@ -345,10 +345,10 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
       Item* const itemAlt = eng.player->getInv().getItemInSlot(slot_wieldedAlt);
       const string ITEM_WIELDED_NAME =
         itemWielded == NULL ? "" :
-        eng.itemDataHandler->getItemRef(*itemWielded, itemRef_a);
+        eng.itemDataHandler->getItemRef(*itemWielded, ItemRefType::a);
       const string ITEM_ALT_NAME =
         itemAlt == NULL ? "" :
-        eng.itemDataHandler->getItemRef(*itemAlt, itemRef_a);
+        eng.itemDataHandler->getItemRef(*itemAlt, ItemRefType::a);
       if(itemWielded == NULL && itemAlt == NULL) {
         eng.log->addMsg("I have neither a wielded nor a prepared weapon.");
       } else {
@@ -378,7 +378,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
       eng.player->getSpottedEnemies(SpottedEnemies);
       if(SpottedEnemies.empty()) {
         const int TURNS_TO_APPLY = 5;
-        const string TURNS_STR = toString(TURNS_TO_APPLY);
+        const string TURNS_STR = toStr(TURNS_TO_APPLY);
         eng.log->addMsg("I pause for a while (" + TURNS_STR + " turns).");
         eng.player->waitTurnsLeft = TURNS_TO_APPLY - 1;
         eng.gameTime->actorDidAct();
@@ -407,7 +407,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
           itemToThrow->nrItems = 1;
 
           const MarkerReturnData markerReturnData =
-            eng.marker->run(markerTask_aimThrownWeapon, itemToThrow);
+            eng.marker->run(MarkerTask::aimThrownWeapon, itemToThrow);
 
           if(markerReturnData.didThrowMissile) {
             playerInv.decrItemInSlot(slot_missiles);
@@ -425,7 +425,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
     eng.log->clearLog();
     if(eng.player->deadState == ActorDeadState::alive) {
       if(eng.player->getPropHandler().allowSee()) {
-        eng.marker->run(markerTask_look, NULL);
+        eng.marker->run(MarkerTask::look, NULL);
       } else {
         eng.log->addMsg("Not while blind.");
       }
@@ -546,14 +546,14 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
     }
     return;
   }
-  //----------------------------------- DROP ALL SCROLLS AND POTIONS ON PLAYER
+  //----------------------------------- DROP ITEMS AROUND PLAYER
   else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
-      for(unsigned int i = 1; i < endOfItemIds; i++) {
+      for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
         const ItemData* const data = eng.itemDataHandler->dataList[i];
         if(
           data->isIntrinsic == false &&
-          (data->isPotion || data->isScroll)) {
+          (data->isPotion || data->isScroll || data->isDevice)) {
           eng.itemFactory->spawnItemOnMap((ItemId)(i), eng.player->pos);
         }
       }

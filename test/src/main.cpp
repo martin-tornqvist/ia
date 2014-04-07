@@ -28,6 +28,7 @@
 #include "PlayerBonuses.h"
 #include "Explosion.h"
 #include "ItemAmmo.h"
+#include "ItemDevice.h"
 
 struct BasicFixture {
   BasicFixture() {
@@ -338,7 +339,7 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 10));
   eng.player->pos = Pos(5, 10);
   Pos target(5, 8);
-  Item* item = eng.itemFactory->spawnItem(item_throwingKnife);
+  Item* item = eng.itemFactory->spawnItem(ItemId::throwingKnife);
   eng.thrower->throwItem(*(eng.player), target, *item);
   CHECK(eng.map->cells[5][9].item != NULL);
 }
@@ -512,8 +513,8 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
 
 TEST_FIXTURE(BasicFixture, SavingGame) {
   //Item data
-  eng.itemDataHandler->dataList[item_scrollOfTeleportation]->isTried = true;
-  eng.itemDataHandler->dataList[item_scrollOfOpening]->isIdentified = true;
+  eng.itemDataHandler->dataList[int(ItemId::scrollOfTelep)]->isTried = true;
+  eng.itemDataHandler->dataList[int(ItemId::scrollOfOpening)]->isIdentified = true;
 
   //Bonus
   eng.playerBonHandler->pickBg(bgRogue);
@@ -522,23 +523,29 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   //Player inventory
   Inventory& inv = eng.player->getInv();
   inv.moveItemToGeneral(inv.getSlot(slot_wielded));
-  Item* item = eng.itemFactory->spawnItem(item_teslaCannon);
+  Item* item = eng.itemFactory->spawnItem(ItemId::teslaCannon);
   inv.putItemInSlot(slot_wielded, item);
   //Wear asbestos suit to test properties from wearing items
   inv.moveItemToGeneral(inv.getSlot(slot_armorBody));
-  item = eng.itemFactory->spawnItem(item_armorAsbestosSuit);
+  item = eng.itemFactory->spawnItem(ItemId::armorAsbestosSuit);
   inv.putItemInSlot(slot_armorBody, item);
-  item = eng.itemFactory->spawnItem(item_pistolClip);
+  item = eng.itemFactory->spawnItem(ItemId::pistolClip);
   dynamic_cast<ItemAmmoClip*>(item)->ammo = 1;
   inv.putItemInGeneral(item);
-  item = eng.itemFactory->spawnItem(item_pistolClip);
+  item = eng.itemFactory->spawnItem(ItemId::pistolClip);
   dynamic_cast<ItemAmmoClip*>(item)->ammo = 2;
   inv.putItemInGeneral(item);
-  item = eng.itemFactory->spawnItem(item_pistolClip);
+  item = eng.itemFactory->spawnItem(ItemId::pistolClip);
   dynamic_cast<ItemAmmoClip*>(item)->ammo = 3;
   inv.putItemInGeneral(item);
-  item = eng.itemFactory->spawnItem(item_pistolClip);
+  item = eng.itemFactory->spawnItem(ItemId::pistolClip);
   dynamic_cast<ItemAmmoClip*>(item)->ammo = 3;
+  inv.putItemInGeneral(item);
+  item = eng.itemFactory->spawnItem(ItemId::deviceSentry);
+  dynamic_cast<Device*>(item)->condition_ = Condition::shoddy;
+  inv.putItemInGeneral(item);
+  item = eng.itemFactory->spawnItem(ItemId::electricLantern);
+  dynamic_cast<Device*>(item)->condition_ = Condition::breaking;
   inv.putItemInGeneral(item);
 
   //Player
@@ -585,12 +592,12 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
 
   //Item data
   const ItemDataHandler& iHlr = *(eng.itemDataHandler);
-  CHECK_EQUAL(true,  iHlr.dataList[item_scrollOfTeleportation]->isTried);
-  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfTeleportation]->isIdentified);
-  CHECK_EQUAL(true,  iHlr.dataList[item_scrollOfOpening]->isIdentified);
-  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfOpening]->isTried);
-  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfDetectMonsters]->isTried);
-  CHECK_EQUAL(false, iHlr.dataList[item_scrollOfDetectMonsters]->isIdentified);
+  CHECK_EQUAL(true,  iHlr.dataList[int(ItemId::scrollOfTelep)]->isTried);
+  CHECK_EQUAL(false, iHlr.dataList[int(ItemId::scrollOfTelep)]->isIdentified);
+  CHECK_EQUAL(true,  iHlr.dataList[int(ItemId::scrollOfOpening)]->isIdentified);
+  CHECK_EQUAL(false, iHlr.dataList[int(ItemId::scrollOfOpening)]->isTried);
+  CHECK_EQUAL(false, iHlr.dataList[int(ItemId::scrollOfDetMon)]->isTried);
+  CHECK_EQUAL(false, iHlr.dataList[int(ItemId::scrollOfDetMon)]->isIdentified);
 
   //Bonus
   CHECK_EQUAL(bgRogue, eng.playerBonHandler->getBg());
@@ -600,26 +607,40 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
 
   //Player inventory
   Inventory& inv = eng.player->getInv();
-  CHECK_EQUAL(item_teslaCannon, inv.getItemInSlot(slot_wielded)->getData().id);
-  CHECK_EQUAL(item_armorAsbestosSuit,
-              inv.getItemInSlot(slot_armorBody)->getData().id);
+  CHECK_EQUAL(int(ItemId::teslaCannon),
+              int(inv.getItemInSlot(slot_wielded)->getData().id));
+  CHECK_EQUAL(int(ItemId::armorAsbestosSuit),
+              int(inv.getItemInSlot(slot_armorBody)->getData().id));
   vector<Item*> genInv = inv.getGeneral();
   int nrClipWith1 = 0;
   int nrClipWith2 = 0;
   int nrClipWith3 = 0;
+  bool isSentryDeviceFound    = false;
+  bool isElectricLanternFound = false;
   for(Item * item : genInv) {
-    if(item->getData().id == item_pistolClip) {
+    ItemId id = item->getData().id;
+    if(id == ItemId::pistolClip) {
       switch(dynamic_cast<ItemAmmoClip*>(item)->ammo) {
         case 1: nrClipWith1++; break;
         case 2: nrClipWith2++; break;
         case 3: nrClipWith3++; break;
         default: {} break;
       }
+    } else if(id == ItemId::deviceSentry) {
+      isSentryDeviceFound = true;
+      CHECK_EQUAL(int(Condition::shoddy),
+                  int(dynamic_cast<Device*>(item)->condition_));
+    } else if(id == ItemId::electricLantern) {
+      isElectricLanternFound = true;
+      CHECK_EQUAL(int(Condition::breaking),
+                  int(dynamic_cast<Device*>(item)->condition_));
     }
   }
   CHECK_EQUAL(1, nrClipWith1);
   CHECK_EQUAL(1, nrClipWith2);
   CHECK_EQUAL(2, nrClipWith3);
+  CHECK(isSentryDeviceFound);
+  CHECK(isElectricLanternFound);
 
   //Player
   ActorData& def = eng.player->getData();
