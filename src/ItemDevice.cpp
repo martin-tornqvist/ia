@@ -221,13 +221,43 @@ void DeviceLantern::toggle() {
 }
 
 void DeviceLantern::newTurnInInventory() {
-  if(isActivated_ && malfunctCooldown_ > 0) {
-    malfunctCooldown_--;
-    if(malfunctCooldown_ <= 0) {
-      malfState_ = LanternMalfState::working;
-      eng.gameTime->updateLightMap();
-      eng.player->updateFov();
-      Renderer::drawMapAndInterface();
+  if(isActivated_) {
+    if(malfunctCooldown_ > 0) {
+      //A malfunction is active, count down on effect
+      malfunctCooldown_--;
+      if(malfunctCooldown_ <= 0) {
+        malfState_ = LanternMalfState::working;
+        eng.gameTime->updateLightMap();
+        eng.player->updateFov();
+        Renderer::drawMapAndInterface();
+      }
+    } else {
+      //No malfunction active, check if new should be applied
+
+      const int RND = Rnd::percentile();
+
+      if(RND <= 2) {
+        eng.log->addMsg("My Electric Lantern breaks!");
+        eng.player->getInv().removetemInGeneralWithPointer(this, false);
+        malfState_ = LanternMalfState::destroyed;
+      } else if(RND <= 5) {
+        eng.log->addMsg("My Electric Lantern malfunctions.");
+        malfState_        = LanternMalfState::malfunction;
+        malfunctCooldown_ = Rnd::range(3, 4);
+      } else if(RND <= 13) {
+        eng.log->addMsg("My Electric Lantern starts to flicker.");
+        malfState_        = LanternMalfState::flicker;
+        malfunctCooldown_ = Rnd::range(6, 12);
+      } else {
+        malfState_        = LanternMalfState::working;
+      }
+
+      if(malfState_ != LanternMalfState::working) {
+        eng.gameTime->updateLightMap();
+        eng.player->updateFov();
+        Renderer::drawMapAndInterface();
+      }
+      if(malfState_ == LanternMalfState::destroyed) {delete this;}
     }
   }
 }
@@ -242,34 +272,4 @@ LanternLightSize DeviceLantern::getCurLightSize() const {
     }
   }
   return LanternLightSize::none;
-}
-
-void DeviceLantern::runBadEffect() {
-  if(malfunctCooldown_ <= 0) {
-
-    const int RND = Rnd::percentile();
-
-    if(RND < 5) {
-      eng.log->addMsg("My Electric Lantern breaks!");
-      eng.player->getInv().removetemInGeneralWithPointer(this, false);
-      malfState_ = LanternMalfState::destroyed;
-    } else if(RND < 20) {
-      eng.log->addMsg("My Electric Lantern malfunctions.");
-      malfState_        = LanternMalfState::malfunction;
-      malfunctCooldown_ = Rnd::range(3, 4);
-    } else if(RND < 55) {
-      eng.log->addMsg("My Electric Lantern starts to flicker.");
-      malfState_        = LanternMalfState::flicker;
-      malfunctCooldown_ = Rnd::range(6, 12);
-    } else {
-      malfState_        = LanternMalfState::working;
-    }
-
-    if(malfState_ != LanternMalfState::working) {
-      eng.gameTime->updateLightMap();
-      eng.player->updateFov();
-      Renderer::drawMapAndInterface();
-    }
-    if(malfState_ == LanternMalfState::destroyed) {delete this;}
-  }
 }

@@ -108,8 +108,6 @@ private:
 
   int getRandomNrTurnsToNextBadEffect() const;
 
-  void runBadEffect();
-
   int malfunctCooldown_;
   LanternMalfState malfState_;
   bool isActivated_;

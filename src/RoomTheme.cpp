@@ -416,7 +416,7 @@ void RoomThemeMaker::assignRoomThemes() {
 
   const int MIN_DIM = 3;
   const int MAX_DIM = 12;
-  const int NR_NON_PLAIN_THEMED = Rnd::range(1, 3);
+  const int NR_NON_PLAIN_THEMED = Rnd::range(1, 4);
 
   vector<Room*>& rooms = eng.map->rooms;
   const int NR_ROOMS = rooms.size();

@@ -203,7 +203,7 @@ void ItemDataHandler::resetData(ItemData* const d,
     case itemData_device: {
       resetData(d, itemData_general);
       d->isDevice = true;
-      d->chanceToIncludeInSpawnList = 10;
+      d->chanceToIncludeInSpawnList = 12;
       d->itemWeight = itemWeight_light;
       d->isIdentified = true;
       d->glyph = '~';
