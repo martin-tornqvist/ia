@@ -712,9 +712,7 @@ void Player::onActorTurn() {
 
   resetPermShockTakenCurTurn();
 
-  if(deadState != ActorDeadState::alive) {
-    return;
-  }
+  if(deadState != ActorDeadState::alive) {return;}
 
   //If player dropped item, check if should go back to inventory screen
   vector<Actor*> spottedEnemies;
@@ -759,14 +757,15 @@ void Player::onActorTurn() {
 }
 
 void Player::onStandardTurn() {
+  shockTemp_ = 0.0;
+  setTempShockFromFeatures();
+
   // Dynamite
   if(dynamiteFuseTurns > 0) {
     dynamiteFuseTurns--;
     if(dynamiteFuseTurns > 0) {
       string fuseMsg = "***F";
-      for(int i = 0; i < dynamiteFuseTurns; i++) {
-        fuseMsg += "Z";
-      }
+      for(int i = 0; i < dynamiteFuseTurns; i++) {fuseMsg += "Z";}
       fuseMsg += "***";
       eng.log->addMsg(fuseMsg, clrYellow);
     }
@@ -827,25 +826,24 @@ void Player::onStandardTurn() {
     if(data.monsterShockLevel != MonsterShockLevel::none) {
       switch(data.monsterShockLevel) {
         case MonsterShockLevel::unsettling: {
-          monster->shockCausedCurrent_ += 0.10;
           monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.05, 1.0);
+            min(monster->shockCausedCurrent_ + 0.05,  1.0);
         } break;
         case MonsterShockLevel::scary: {
           monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.15, 1.0);
+            min(monster->shockCausedCurrent_ + 0.1,   1.0);
         } break;
         case MonsterShockLevel::terrifying: {
           monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.5, 2.0);
+            min(monster->shockCausedCurrent_ + 0.5,   2.0);
         } break;
         case MonsterShockLevel::mindShattering: {
           monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.75, 3.0);
+            min(monster->shockCausedCurrent_ + 0.75,  3.0);
         } break;
         default: {} break;
       }
-      if(shockFromMonstersCurPlayerTurn < 3.0) {
+      if(shockFromMonstersCurPlayerTurn < 2.5) {
         incrShock(int(floor(monster->shockCausedCurrent_)),
                   ShockSrc::seeMonster);
         shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent_;
@@ -858,7 +856,7 @@ void Player::onStandardTurn() {
   if(eng.playerBonHandler->getBg() == bgRogue) loseNTurns *= 2;
   const int TURN = eng.gameTime->getTurn();
   if(TURN % loseNTurns == 0 && TURN > 1) {
-    if(Rnd::oneIn(750)) {
+    if(Rnd::oneIn(850)) {
       if(Rnd::coinToss()) {
         eng.popup->showMsg("I have a bad feeling about this...", true);
       } else {
