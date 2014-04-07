@@ -9,7 +9,7 @@
 #include "Utils.h"
 
 void PopulateItems::spawnItems() {
-  int nrOfSpawns = Rnd::range(5, 8);
+  int nrOfSpawns = Rnd::range(6, 8);
 
   if(eng.playerBonHandler->hasTrait(traitTreasureHunter)) {
     nrOfSpawns += 2;
