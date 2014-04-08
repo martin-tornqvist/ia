@@ -243,6 +243,7 @@ void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT) {
 }
 
 void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY, Engine& eng) {
+
   if(audioChunks.empty() == false && Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
     const int TIME_NOW = time(0);
@@ -250,7 +251,7 @@ void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY, Engine& eng) {
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;
-      const int VOL_PERCENT = Rnd::oneIn(5) ? Rnd::range(1,  99) : 100;
+      const int VOL_PERCENT = Rnd::oneIn(5) ? Rnd::range(50,  99) : 100;
       play(getAmbSfxSuitableForDlvl(eng), VOL_PERCENT);
     }
   }

@@ -234,20 +234,20 @@ void DeviceLantern::newTurnInInventory() {
     } else {
       //No malfunction active, check if new should be applied
 
-      const int RND = Rnd::percentile();
+      const int RND = Rnd::range(1, 1000);
 
-      if(RND <= 1) {
+      if(RND <= 6) {
         eng.log->addMsg("My Electric Lantern breaks!");
         eng.player->getInv().removetemInGeneralWithPointer(this, false);
         malfState_ = LanternMalfState::destroyed;
-      } else if(RND <= 4) {
+      } else if(RND <= 10) {
         eng.log->addMsg("My Electric Lantern malfunctions.");
         malfState_        = LanternMalfState::malfunction;
         malfunctCooldown_ = Rnd::range(3, 4);
-      } else if(RND <= 12) {
+      } else if(RND <= 40) {
         eng.log->addMsg("My Electric Lantern starts to flicker.");
         malfState_        = LanternMalfState::flicker;
-        malfunctCooldown_ = Rnd::range(6, 12);
+        malfunctCooldown_ = Rnd::range(4, 6);
       } else {
         malfState_        = LanternMalfState::working;
       }

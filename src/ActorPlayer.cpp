@@ -46,10 +46,11 @@ Player::Player(Engine& engine) :
   target(NULL),
   insanity_(0),
   shock_(0.0),
-  shockTemp_(0.0),
+  shockTmp_(0.0),
   permShockTakenCurTurn_(0.0),
   nrMovesUntilFreeAction_(-1),
-  carryWeightBase_(450) {}
+  nrTurnsUntilIns_(-1),
+  CARRY_WEIGHT_BASE_(450) {}
 
 void Player::spawnStartItems() {
   data_->abilityVals.reset();
@@ -246,7 +247,7 @@ int Player::getCarryWeightLimit() const {
   const int CARRY_WEIGHT_MOD =
     (IS_TOUGH * 10) + (IS_STRONG_BACKED * 30) - (IS_WEAKENED * 15);
 
-  return (carryWeightBase_ * (CARRY_WEIGHT_MOD + 100)) / 100;
+  return (CARRY_WEIGHT_BASE_ * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
 
 int Player::getShockResistance(const ShockSrc shockSrc) const {
@@ -314,7 +315,7 @@ void Player::restoreShock(const int amountRestored,
   shock_ = max(
              (isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION_DB : 0.0),
              shock_ - amountRestored);
-  if(IS_TEMP_SHOCK_RESTORED) {shockTemp_ = 0;}
+  if(IS_TEMP_SHOCK_RESTORED) {shockTmp_ = 0;}
 }
 
 void Player::incrInsanity() {
@@ -571,11 +572,11 @@ void Player::incrInsanity() {
   }
 }
 
-void Player::setTempShockFromFeatures() {
+void Player::addTmpShockFromFeatures() {
   if(
     eng.map->cells[pos.x][pos.y].isDark &&
     eng.map->cells[pos.x][pos.y].isLight == false) {
-    shockTemp_ += 20;
+    shockTmp_ += 20;
   }
 
   for(int dy = -1; dy <= 1; dy++) {
@@ -585,11 +586,11 @@ void Player::setTempShockFromFeatures() {
       if(Utils::isPosInsideMap(Pos(X, Y))) {
         Cell& cell = eng.map->cells[pos.x + dx][pos.y + dy];
         const Feature* const f = cell.featureStatic;
-        shockTemp_ += f->getShockWhenAdjacent();
+        shockTmp_ += f->getShockWhenAdjacent();
       }
     }
   }
-  shockTemp_ = min(99.0, shockTemp_);
+  shockTmp_ = min(99.0, shockTmp_);
 }
 
 bool Player::isStandingInOpenSpace() const {
@@ -695,7 +696,7 @@ void Player::updateColor() {
     return;
   }
 
-  const int CUR_SHOCK = shock_ + shockTemp_;
+  const int CUR_SHOCK = shock_ + shockTmp_;
   if(CUR_SHOCK >= 75) {
     clr_ = clrMagenta;
     return;
@@ -705,9 +706,6 @@ void Player::updateColor() {
 }
 
 void Player::onActorTurn() {
-  shockTemp_ = 0.0;
-  setTempShockFromFeatures();
-
   Renderer::drawMapAndInterface();
 
   resetPermShockTakenCurTurn();
@@ -757,8 +755,8 @@ void Player::onActorTurn() {
 }
 
 void Player::onStandardTurn() {
-  shockTemp_ = 0.0;
-  setTempShockFromFeatures();
+  shockTmp_ = 0.0;
+  addTmpShockFromFeatures();
 
   // Dynamite
   if(dynamiteFuseTurns > 0) {
@@ -873,11 +871,20 @@ void Player::onStandardTurn() {
 
   //Take sanity hit from high shock?
   if(getShockTotal() >= 100) {
-    incrInsanity();
-    if(deadState == ActorDeadState::alive) {
-      eng.gameTime->actorDidAct();
+    nrTurnsUntilIns_ = nrTurnsUntilIns_ < 0 ? 3 : nrTurnsUntilIns_ - 1;
+    if(nrTurnsUntilIns_ > 0) {
+      eng.log->addMsg("I feel my sanity slipping...", clrMsgWarning, true,
+                      true);
+    } else {
+      nrTurnsUntilIns_ = -1;
+      incrInsanity();
+      if(deadState == ActorDeadState::alive) {
+        eng.gameTime->actorDidAct();
+      }
+      return;
     }
-    return;
+  } else {
+    nrTurnsUntilIns_ = -1;
   }
 
   for(Actor * actor : eng.gameTime->actors_) {
@@ -905,7 +912,7 @@ void Player::onStandardTurn() {
                 updateFov();
                 Renderer::drawMapAndInterface();
                 eng.log->addMsg("I spot " + monster.getNameA() + "!",
-                                clrMsgImportant, true, true);
+                                clrMsgWarning, true, true);
               }
             }
           }
@@ -1125,7 +1132,7 @@ void Player::moveDir(Dir dir) {
           Renderer::drawMapAndInterface();
           return;
         } else if(ENC >= 100) {
-          eng.log->addMsg("I stagger.", clrMsgImportant);
+          eng.log->addMsg("I stagger.", clrMsgWarning);
           propHandler_->tryApplyProp(new PropWaiting(eng, propTurnsStd));
         }
 

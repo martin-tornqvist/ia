@@ -411,7 +411,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
             const string armorName =
               eng.itemDataHandler->getItemRef(*armor, ItemRefType::plain);
             eng.log->addMsg("My " + armorName + " is torn apart!",
-                            clrMsgImportant);
+                            clrMsgWarning);
           }
           delete armor;
           armor = NULL;

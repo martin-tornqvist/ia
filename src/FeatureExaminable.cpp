@@ -251,7 +251,7 @@ void Tomb::examine() {
 
   if(find(props.begin(), props.end(), propConfused) != props.end()) {
     eng.log->addMsg("I start to search the tomb...");
-    eng.log->addMsg("but I cannot grasp the purpose.");
+    eng.log->addMsg("but I cannot grasp what for.");
     eng.gameTime->actorDidAct();
   } else if(itemContainer_.items_.empty() && isContentKnown_) {
     eng.log->addMsg("The tomb is empty.");

@@ -102,8 +102,9 @@ void drawInfoLines(Engine& eng) {
   Renderer::drawText("INS:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
   const SDL_Color shortSanClr =
-    SHOCK < 50 ? clrGreenLgt :
-    SHOCK < 75 ? clrYellow : clrMagenta;
+    SHOCK < 50  ? clrGreenLgt :
+    SHOCK < 75  ? clrYellow   :
+    SHOCK < 100 ? clrMagenta  : clrRedLgt;
   str = toStr(SHOCK) + "%/";
   Renderer::drawText(str, Panel::charLines, pos, shortSanClr);
   pos.x += str.length();

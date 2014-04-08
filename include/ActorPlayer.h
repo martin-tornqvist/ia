@@ -54,7 +54,7 @@ public:
   void incrShock(const int SHOCK, ShockSrc shockSrc);
   void restoreShock(const int amountRestored,
                     const bool IS_TEMP_SHOCK_RESTORED);
-  inline int getShockTotal()  const {return int(floor(shock_ + shockTemp_));}
+  inline int getShockTotal()  const {return int(floor(shock_ + shockTmp_));}
   inline int getInsanity()    const {return min(100, insanity_);}
 
   //The following is used for determining if '!'-marks should be drawn on the
@@ -64,7 +64,7 @@ public:
   }
   void resetPermShockTakenCurTurn() {permShockTakenCurTurn_ = 0.0;}
 
-  void setTempShockFromFeatures();
+  void addTmpShockFromFeatures();
 
   int getShockResistance(const ShockSrc shockSrc) const;
   double getShockTakenAfterMods(const int BASE_SHOCK,
@@ -99,7 +99,7 @@ public:
   Actor* target;
 
   int insanity_;
-  double shock_, shockTemp_, permShockTakenCurTurn_;
+  double shock_, shockTmp_, permShockTakenCurTurn_;
 
 private:
   int getCarryWeightLimit() const;
@@ -118,7 +118,9 @@ private:
 
   int nrMovesUntilFreeAction_;
 
-  const int carryWeightBase_;
+  int nrTurnsUntilIns_;
+
+  const int CARRY_WEIGHT_BASE_;
 };
 
 

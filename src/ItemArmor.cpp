@@ -51,7 +51,7 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
   if(AP_AFTER < AP_BEFORE && AP_AFTER != 0) {
     const string armorName =
       eng.itemDataHandler->getItemRef(*this, ItemRefType::plain, true);
-    eng.log->addMsg("My " + armorName + " is damaged!", clrMsgImportant);
+    eng.log->addMsg("My " + armorName + " is damaged!", clrMsgWarning);
   }
 
   trace << "Armor: Damage before: " + toStr(DMG_BEFORE) << endl;
