@@ -139,7 +139,7 @@ void MainMenu::draw(const MenuBrowser& browser) const {
   pos.y++;
 
   Renderer::drawTextCentered(
-    "High scores", Panel::screen, pos,
+    "Graveyard", Panel::screen, pos,
     browser.isPosAtElement(5) ? clrActive : clrInactive,
     browser.isPosAtElement(5) ? clrActiveBg : clrInactiveBg);
   pos.y++;
