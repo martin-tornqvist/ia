@@ -174,15 +174,17 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   MapParse::parse(CellPred::BlocksActor(*this, true, eng), blockers);
   vector<Pos> freeCells;
   Utils::makeVectorFromBoolMap(false, blockers, freeCells);
-  const Pos CELL = freeCells.at(Rnd::dice(1, freeCells.size()) - 1);
+  const Pos newPos = freeCells.at(Rnd::range(0, freeCells.size() - 1));
 
   if(this == eng.player) {
     eng.player->updateFov();
     Renderer::drawMapAndInterface();
     eng.playerVisualMemory->updateVisualMemory();
+  } else {
+    dynamic_cast<Monster*>(this)->playerAwareOfMeCounter_ = 0;
   }
 
-  pos = CELL;
+  pos = newPos;
 
   if(this == eng.player) {
     eng.player->updateFov();

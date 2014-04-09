@@ -580,7 +580,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 2;
   d.dmgMelee = 1;
   d.abilityVals.setVal(ability_accuracyMelee, 15);
-  d.spawnMinDLVL = 1;
+  d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSizeGroup;
@@ -1280,7 +1280,7 @@ void ActorDataHandler::initDataList() {
   d.intrProps[propRPoison] = true;
   d.intrProps[propRSleep] = true;
   d.spawnMinDLVL = 6;
-  d.groupSize = monsterGroupSizeFew;
+  d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = false;
   d.canOpenDoors = false;

@@ -630,16 +630,14 @@ void TrapTeleport::trigger(
   if(IS_PLAYER) {
     eng.player->updateFov();
     if(CAN_SEE) {
-      eng.popup->showMsg(
-        "A curious shape on the floor starts to glow!", true);
+      eng.popup->showMsg("A curious shape on the floor starts to glow!", true);
     } else {
       eng.popup->showMsg("I feel a peculiar energy around me!", true);
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
       eng.log->addMsg(
-        "A curious shape on the floor starts go glow under "
-        + actorName + ".");
+        "A curious shape on the floor starts go glow under " + actorName + ".");
     }
   }
 
