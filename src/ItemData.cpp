@@ -43,7 +43,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isIntrinsic = d->isMeleeWeapon = d->isRangedWeapon = false;
       d->isMissileWeapon = d->isShotgun = d->isMachineGun = false;
       d->isAmmo = d->isAmmoClip = d->isDevice = d->isMedicalBag = false;
-      d->spellCastFromScroll = endOfSpellId;
+      d->spellCastFromScroll = SpellId::endOfSpellId;
       d->ammoContainedInClip = 0;
       d->meleeHitChanceMod = 0;
       d->propAppliedOnMelee = NULL;
@@ -191,7 +191,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isMissileWeapon = true;
       d->missileHitChanceMod = -5;
       d->missileDmg = DiceParam(1, 3, 0);
-      d->maxStackSizeAtSpawn = 1;
+      d->maxStackSizeAtSpawn = 2;
       d->landOnHardSurfaceSoundMsg = "";
       addFeatureFoundIn(d, feature_chest);
       addFeatureFoundIn(d, feature_tomb);
@@ -1107,67 +1107,77 @@ void ItemDataHandler::initDataList() {
 
   d = new ItemData(ItemId::scrollOfMayhem);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_mayhem;
+  d->spellCastFromScroll = SpellId::mayhem;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfTelep);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_teleport;
+  d->spellCastFromScroll = SpellId::teleport;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfPestilence);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_pestilence;
+  d->spellCastFromScroll = SpellId::pestilence;
   dataList[int(d->id)] = d;
 
-  d = new ItemData(ItemId::scrollOfEnfeeble);
+  d = new ItemData(ItemId::scrollOfSlowEnemies);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_enfeeble;
+  d->spellCastFromScroll = SpellId::slowEnemies;
+  dataList[int(d->id)] = d;
+
+  d = new ItemData(ItemId::scrollOfTerrifyEnemies);
+  resetData(d, itemData_scroll);
+  d->spellCastFromScroll = SpellId::terrifyEnemies;
+  dataList[int(d->id)] = d;
+
+  d = new ItemData(ItemId::scrollOfParalyzeEnemies);
+  resetData(d, itemData_scroll);
+  d->spellCastFromScroll = SpellId::paralyzeEnemies;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfDetItems);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_detectItems;
+  d->spellCastFromScroll = SpellId::detectItems;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfDetTraps);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_detectTraps;
+  d->spellCastFromScroll = SpellId::detectTraps;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfBlessing);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_bless;
+  d->spellCastFromScroll = SpellId::bless;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfDarkbolt);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_darkbolt;
+  d->spellCastFromScroll = SpellId::darkbolt;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfAzathothsWrath);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_azathothsWrath;
+  d->spellCastFromScroll = SpellId::azathothsWrath;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfOpening);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_opening;
+  d->spellCastFromScroll = SpellId::opening;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfSacrLife);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_sacrificeLife;
+  d->spellCastFromScroll = SpellId::sacrificeLife;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfSacrSpi);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_sacrificeSpirit;
+  d->spellCastFromScroll = SpellId::sacrificeSpirit;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfDetMon);
   resetData(d, itemData_scroll);
-  d->spellCastFromScroll = spell_detectMonsters;
+  d->spellCastFromScroll = SpellId::detectMonsters;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::potionOfVitality);

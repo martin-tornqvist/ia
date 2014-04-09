@@ -20,12 +20,12 @@
 #include "MapParsing.h"
 #include "LineCalc.h"
 #include "SdlWrapper.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Utils.h"
 
 Spell* SpellHandler::getRandomSpellForMonster() {
   vector<SpellId> candidates;
-  for(int i = 0; i < endOfSpellId; i++) {
+  for(int i = 0; i < int(SpellId::endOfSpellId); i++) {
     Spell* const spell = getSpellFromId(SpellId(i));
     if(spell->isAvailForAllMonsters()) {
       candidates.push_back(SpellId(i));
@@ -38,30 +38,30 @@ Spell* SpellHandler::getRandomSpellForMonster() {
 
 Spell* SpellHandler::getSpellFromId(const SpellId spellId) const {
   switch(spellId) {
-    case spell_enfeeble:            return new SpellEnfeeble;
-    case spell_disease:             return new SpellDisease;
-    case spell_darkbolt:            return new SpellDarkbolt;
-    case spell_azathothsWrath:      return new SpellAzathothsWrath;
-    case spell_summonRandom:        return new SpellSummonRandom;
-    case spell_healSelf:            return new SpellHealSelf;
-    case spell_knockBack:           return new SpellKnockBack;
-    case spell_teleport:            return new SpellTeleport;
-    case spell_mayhem:              return new SpellMayhem;
-    case spell_pestilence:          return new SpellPestilence;
-    case spell_detectItems:         return new SpellDetectItems;
-    case spell_detectTraps:         return new SpellDetectTraps;
-    case spell_detectMonsters:      return new SpellDetectMonsters;
-    case spell_opening:             return new SpellOpening;
-    case spell_sacrificeLife:       return new SpellSacrificeLife;
-    case spell_sacrificeSpirit:     return new SpellSacrificeSpirit;
-    case spell_cloudMinds:          return new SpellCloudMinds;
-    case spell_bless:               return new SpellBless;
-    case spell_miGoHypnosis:        return new SpellMiGoHypnosis;
-
-    case endOfSpellId: {} break;
+    case SpellId::slowEnemies:        return new SpellSlowEnemies;
+    case SpellId::terrifyEnemies:     return new SpellTerrifyEnemies;
+    case SpellId::paralyzeEnemies:    return new SpellParalyzeEnemies;
+    case SpellId::disease:            return new SpellDisease;
+    case SpellId::darkbolt:           return new SpellDarkbolt;
+    case SpellId::azathothsWrath:     return new SpellAzathothsWrath;
+    case SpellId::summonRandom:       return new SpellSummonRandom;
+    case SpellId::healSelf:           return new SpellHealSelf;
+    case SpellId::knockBack:          return new SpellKnockBack;
+    case SpellId::teleport:           return new SpellTeleport;
+    case SpellId::mayhem:             return new SpellMayhem;
+    case SpellId::pestilence:         return new SpellPestilence;
+    case SpellId::detectItems:        return new SpellDetectItems;
+    case SpellId::detectTraps:        return new SpellDetectTraps;
+    case SpellId::detectMonsters:     return new SpellDetectMonsters;
+    case SpellId::opening:            return new SpellOpening;
+    case SpellId::sacrificeLife:      return new SpellSacrificeLife;
+    case SpellId::sacrificeSpirit:    return new SpellSacrificeSpirit;
+    case SpellId::cloudMinds:         return new SpellCloudMinds;
+    case SpellId::bless:              return new SpellBless;
+    case SpellId::miGoHypnosis:       return new SpellMiGoHypnosis;
+    case SpellId::endOfSpellId: {} break;
   }
-  trace << "[WARNING] Found no spell for ID: " << spellId;
-  trace << ", in SpellHandler::getSpellFromId()" << endl;
+  assert(false && "No spell found for ID");
   return NULL;
 }
 
@@ -90,11 +90,11 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
       bool isBloodSorc    = false;
       bool isSeer         = false;
 
-      for(TraitId id : eng.playerBonHandler->traitsPicked_) {
+      for(Trait id : PlayerBon::traitsPicked_) {
         switch(id) {
-          case traitWarlock:        isWarlock     = true; break;
-          case traitBloodSorcerer:  isBloodSorc   = true; break;
-          case traitSeer:           isSeer        = true; break;
+          case Trait::warlock:        isWarlock     = true; break;
+          case Trait::bloodSorcerer:  isBloodSorc   = true; break;
+          case Trait::seer:           isSeer        = true; break;
           default: {} break;
         }
       }
@@ -102,12 +102,12 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
       if(isBloodSorc) costMax--;
 
       switch(getId()) {
-        case spell_darkbolt:       {if(isWarlock)  costMax--;}    break;
-        case spell_azathothsWrath: {if(isWarlock)  costMax--;}    break;
-        case spell_mayhem:         {if(isWarlock)  costMax--;}    break;
-        case spell_detectMonsters: {if(isSeer)     costMax--;}    break;
-        case spell_detectItems:    {if(isSeer)     costMax -= 3;} break;
-        case spell_detectTraps:    {if(isSeer)     costMax -= 3;} break;
+        case SpellId::darkbolt:       {if(isWarlock)  costMax--;}    break;
+        case SpellId::azathothsWrath: {if(isWarlock)  costMax--;}    break;
+        case SpellId::mayhem:         {if(isWarlock)  costMax--;}    break;
+        case SpellId::detectMonsters: {if(isSeer)     costMax--;}    break;
+        case SpellId::detectItems:    {if(isSeer)     costMax -= 3;} break;
+        case SpellId::detectTraps:    {if(isSeer)     costMax -= 3;} break;
         default: {} break;
       }
     }
@@ -136,7 +136,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
 
 SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
                              Engine& eng) const {
-  trace << "Spell::cast()..." << endl;
+  trace << "SpellId::cast()..." << endl;
   if(caster->getPropHandler().allowCastSpells(true)) {
     if(caster == eng.player) {
       trace << "Spell: Player casting spell" << endl;
@@ -168,17 +168,15 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
     }
 
     eng.gameTime->actorDidAct();
-    trace << "Spell::cast() [DONE]" << endl;
+    trace << "SpellId::cast() [DONE]" << endl;
     return ret;
   }
-  trace << "Spell::cast() [DONE]" << endl;
+  trace << "SpellId::cast() [DONE]" << endl;
   return SpellCastRetData(false);
 }
 
 //------------------------------------------------------------ DARKBOLT
-SpellCastRetData SpellDarkbolt::cast_(
-  Actor* const caster, Engine& eng) const {
-
+SpellCastRetData SpellDarkbolt::cast_(Actor* const caster, Engine& eng) const {
   Actor* target = NULL;
 
   vector<Actor*> spottedActors;
@@ -503,7 +501,7 @@ SpellCastRetData SpellDetectMonsters::cast_(
   Actor* const caster, Engine& eng) const {
   (void)caster;
 
-  bool isSeer           = eng.playerBonHandler->hasTrait(traitSeer);
+  bool isSeer           = PlayerBon::hasTrait(Trait::seer);
   const int MULTIPLIER  = 6 * (isSeer ? 3 : 1);
 
   const int MAX_DIST    = FOV_STD_RADI_INT * 2;
@@ -670,19 +668,11 @@ bool SpellKnockBack::isGoodForMonsterToCastNow(
   return monster->isSeeingActor(*(eng.player), blockers);
 }
 
-//------------------------------------------------------------ ENFEEBLE
-SpellCastRetData SpellEnfeeble::cast_(Actor* const caster, Engine& eng) const {
+//------------------------------------------------------------ PROP ON OTHERS
+SpellCastRetData SpellPropOnEnemies::cast_(
+  Actor* const caster, Engine& eng) const {
 
-  PropId propId = endOfPropIds;
-
-  const int RND = Rnd::range(1, 5);
-  switch(RND) {
-    case 1: {propId = propConfused;}  break;
-    case 2: {propId = propParalyzed;} break;
-    case 3: {propId = propSlowed;}    break;
-    case 4: {propId = propBlind;}     break;
-    case 5: {propId = propTerrified;} break;
-  }
+  const PropId propId = getPropId();
 
   if(caster == eng.player) {
     vector<Actor*> targets;
@@ -719,7 +709,7 @@ SpellCastRetData SpellEnfeeble::cast_(Actor* const caster, Engine& eng) const {
   }
 }
 
-bool SpellEnfeeble::isGoodForMonsterToCastNow(
+bool SpellPropOnEnemies::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), blockers);

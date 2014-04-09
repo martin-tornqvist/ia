@@ -85,7 +85,7 @@ void ActorDataHandler::initDataList() {
   d.name_a = "Player";
   d.name_the = "Player";
   d.id = actor_player;
-  d.hp = 16;
+  d.hp = PLAYER_START_HP;
   d.spi = PLAYER_START_SPI;
   d.speed = ActorSpeed::normal;
   d.glyph = '@';

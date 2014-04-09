@@ -13,7 +13,7 @@
 #include "ItemFactory.h"
 #include "PlayerCreateCharacter.h"
 #include "DungeonMaster.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 
 Inventory::Inventory(bool humanoid) {
   InventorySlot invSlot;

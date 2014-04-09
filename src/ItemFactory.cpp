@@ -115,7 +115,9 @@ Item* ItemFactory::spawnItem(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::scrollOfMayhem:          item = new Scroll(d, eng); break;
     case ItemId::scrollOfTelep:           item = new Scroll(d, eng); break;
     case ItemId::scrollOfPestilence:      item = new Scroll(d, eng); break;
-    case ItemId::scrollOfEnfeeble:        item = new Scroll(d, eng); break;
+    case ItemId::scrollOfSlowEnemies:     item = new Scroll(d, eng); break;
+    case ItemId::scrollOfTerrifyEnemies:  item = new Scroll(d, eng); break;
+    case ItemId::scrollOfParalyzeEnemies: item = new Scroll(d, eng); break;
     case ItemId::scrollOfDetItems:        item = new Scroll(d, eng); break;
     case ItemId::scrollOfDetTraps:        item = new Scroll(d, eng); break;
     case ItemId::scrollOfDetMon:          item = new Scroll(d, eng); break;
@@ -193,7 +195,7 @@ void ItemFactory::setItemRandomizedProperties(Item* item) {
   }
 
   if(d.isStackable) {
-    item->nrItems = Rnd::dice(1, d.maxStackSizeAtSpawn);
+    item->nrItems = Rnd::range(1, d.maxStackSizeAtSpawn);
   }
 }
 

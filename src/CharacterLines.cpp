@@ -12,7 +12,7 @@
 #include "Map.h"
 #include "DungeonMaster.h"
 #include "MapGen.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Inventory.h"
 
 using namespace std;
@@ -222,7 +222,7 @@ void drawInfoLines(Engine& eng) {
   }
 
 //  const bool IS_SELF_AWARE =
-//    playerBonHandler->hasTrait(traitselfAware);
+//    playerBonHandler->hasTrait(Trait::traitselfAware);
 //  //TODO This should be collected from applied and inventory by the Property handler
 //  const vector<Prop*>& appliedProps =
 //    player->getPropHandler().appliedProps_;

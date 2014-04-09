@@ -12,7 +12,7 @@
 #include "ActorPlayer.h"
 #include "Utils.h"
 #include "SdlWrapper.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 
 namespace {
 
@@ -138,7 +138,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const ExplType explType,
     }
   }
 
-  const bool IS_DEM_EXP = eng.playerBonHandler->hasTrait(traitDemolitionExpert);
+  const bool IS_DEM_EXP = PlayerBon::hasTrait(Trait::demolitionExpert);
 
   const int NR_OUTER = posLists.size();
   for(int curRadi = 0; curRadi < NR_OUTER; curRadi++) {

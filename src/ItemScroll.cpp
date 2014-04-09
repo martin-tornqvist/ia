@@ -4,7 +4,7 @@
 
 #include "ActorPlayer.h"
 #include "Map.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Log.h"
 #include "Inventory.h"
 #include "PlayerSpellsHandler.h"
@@ -13,26 +13,28 @@
 
 const string Scroll::getRealTypeName() {
   switch(data_->spellCastFromScroll) {
-    case spell_darkbolt:            return "Darkbolt";
-    case spell_azathothsWrath:      return "Azathoths Wrath";
-    case spell_enfeeble:            return "Enfeeblement";
-    case spell_teleport:            return "Teleportation";
-    case spell_bless:               return "Blessing";
-    case spell_mayhem:              return "Mayhem";
-    case spell_pestilence:          return "Pestilence";
-    case spell_detectItems:         return "Detect Items";
-    case spell_detectTraps:         return "Detect Traps";
-    case spell_detectMonsters:      return "Detect Monsters";
-    case spell_opening:             return "Opening";
-    case spell_sacrificeLife:       return "Sacrifice Life Force";
-    case spell_sacrificeSpirit:     return "Sacrifice Spirit";
-    case spell_disease:             return "";
-    case spell_summonRandom:        return "";
-    case spell_healSelf:            return "";
-    case spell_knockBack:           return "";
-    case spell_cloudMinds:          return "";
-    case spell_miGoHypnosis:        return "";
-    case endOfSpellId: {} break;
+    case SpellId::darkbolt:           return "Darkbolt";
+    case SpellId::azathothsWrath:     return "Azathoths Wrath";
+    case SpellId::slowEnemies:        return "Slow Enemies";
+    case SpellId::terrifyEnemies:     return "Terrify Enemies";
+    case SpellId::paralyzeEnemies:    return "Paralyze Enemies";
+    case SpellId::teleport:           return "Teleportation";
+    case SpellId::bless:              return "Blessing";
+    case SpellId::mayhem:             return "Mayhem";
+    case SpellId::pestilence:         return "Pestilence";
+    case SpellId::detectItems:        return "Detect Items";
+    case SpellId::detectTraps:        return "Detect Traps";
+    case SpellId::detectMonsters:     return "Detect Monsters";
+    case SpellId::opening:            return "Opening";
+    case SpellId::sacrificeLife:      return "Sacrifice Life Force";
+    case SpellId::sacrificeSpirit:    return "Sacrifice Spirit";
+    case SpellId::disease:            return "";
+    case SpellId::summonRandom:       return "";
+    case SpellId::healSelf:           return "";
+    case SpellId::knockBack:          return "";
+    case SpellId::cloudMinds:         return "";
+    case SpellId::miGoHypnosis:       return "";
+    case SpellId::endOfSpellId: {} break;
   }
   assert(false && "No spell found for scroll");
   return "";
@@ -69,7 +71,7 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
 }
 
 void Scroll::tryLearn() {
-  if(eng.playerBonHandler->getBg() == bgOccultist) {
+  if(PlayerBon::getBg() == Bg::occultist) {
     Spell* const spell = getSpell();
     if(
       spell->isAvailForPlayer() &&

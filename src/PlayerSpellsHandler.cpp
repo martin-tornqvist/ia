@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "Inventory.h"
 #include "ItemFactory.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Query.h"
 #include "Utils.h"
 
@@ -83,9 +83,9 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
 
     bool isBloodSorc  = false;
     bool isWarlock    = false;
-    for(TraitId id : eng.playerBonHandler->traitsPicked_) {
-      if(id == traitBloodSorcerer)  isBloodSorc = true;
-      if(id == traitWarlock)        isWarlock   = true;
+    for(Trait id : PlayerBon::traitsPicked_) {
+      if(id == Trait::bloodSorcerer)  isBloodSorc = true;
+      if(id == Trait::warlock)        isWarlock   = true;
     }
 
     const int BLOOD_SORC_HP_DRAINED = 2;
@@ -170,7 +170,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 
 void PlayerSpellsHandler::addSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(knownSpells_.size()));
-  for(Spell * s : knownSpells_) {lines.push_back(toStr(s->getId()));}
+  for(Spell * s : knownSpells_) {lines.push_back(toStr(int(s->getId())));}
 }
 
 void PlayerSpellsHandler::setParamsFromSaveLines(vector<string>& lines) {

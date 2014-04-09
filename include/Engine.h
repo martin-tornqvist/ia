@@ -69,7 +69,6 @@ class Close;
 class Look;
 class AutoDescribeActor;
 class AbilityRoll;
-class PlayerBonHandler;
 class SpellHandler;
 class Postmortem;
 class HighScore;
@@ -145,7 +144,6 @@ public:
   Look* look;
   AutoDescribeActor* autoDescribeActor;
   AbilityRoll* abilityRoll;
-  PlayerBonHandler* playerBonHandler;
   SpellHandler* spellHandler;
   Postmortem* postmortem;
   HighScore* highScore;

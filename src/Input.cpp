@@ -26,7 +26,7 @@
 #include "ItemFactory.h"
 #include "ActorFactory.h"
 #include "ActorMonster.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Examine.h"
 #include "PlayerCreateCharacter.h"
 #include "Disarm.h"
@@ -38,7 +38,6 @@ using namespace std;
 
 namespace Input {
 
-//------------------------------------------------------------------------LOCAL
 namespace {
 
 SDL_Event* event_ = NULL;
@@ -57,7 +56,6 @@ void queryQuit(Engine& eng) {
 
 } //Namespace
 
-//---------------------------------------------------------------------- GLOBAL
 void init() {
   if(event_ == NULL) {
     event_ = new SDL_Event;
@@ -146,13 +144,12 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
     if(eng.player->deadState == ActorDeadState::alive) {
       eng.log->clearLog();
 
-      PlayerBonHandler& bonHlr = *eng.playerBonHandler;
-      if(bonHlr.hasTrait(traitSteadyAimer)) {
+      if(PlayerBon::hasTrait(Trait::steadyAimer)) {
         PropHandler& propHlr = eng.player->getPropHandler();
 
         int nrTurnsAimingOld = 0;
 
-        if(bonHlr.hasTrait(traitSharpShooter)) {
+        if(PlayerBon::hasTrait(Trait::sharpShooter)) {
           Prop* const propAimingOld =
             propHlr.getProp(propAiming, PropSrc::applied);
           if(propAimingOld != NULL) {
@@ -307,7 +304,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
 //  else if(d.key_ == 'h') {
 //    eng.log->clearLog();
 //    if(eng.player->deadState == ActorDeadState::alive) {
-//      if(eng.playerBonHandler->getBg() == bgRogue) {
+//      if(PlayerBon::getBg() == Bg::rogue) {
 //        eng.hide->playerTryHide();
 //      } else {
 //        eng.log->addMsg("I do not have this ability.");
@@ -337,7 +334,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
     eng.log->clearLog();
     if(eng.player->deadState == ActorDeadState::alive) {
 
-      const bool IS_FREE_TURN = false; //eng.playerBonHandler->hasTrait(traitnimble);
+      const bool IS_FREE_TURN = false; //PlayerBon::hasTrait(Trait::traitnimble);
 
       const string swiftStr = IS_FREE_TURN ? " swiftly" : "";
 

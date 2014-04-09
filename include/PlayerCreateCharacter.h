@@ -4,15 +4,13 @@
 #include <string>
 
 #include "CommonTypes.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 
 using namespace std;
 
 class Engine;
 class MenuBrowser;
 
-//This class is responsible for letting the player create a character
-//(bg, traits and name), and also for picking traits when gaining levels
 class PlayerCreateCharacter {
 public:
   PlayerCreateCharacter(Engine& engine) : eng(engine) {}
@@ -22,8 +20,8 @@ public:
   void pickNewTrait(const bool IS_CHARACTER_CREATION) const;
 
 private:
-  void drawPickTrait(const vector<TraitId>& traitsColOne,
-                     const vector<TraitId>& traitsColTwo,
+  void drawPickTrait(const vector<Trait>& traitsColOne,
+                     const vector<Trait>& traitsColTwo,
                      const MenuBrowser& browser,
                      const bool IS_CHARACTER_CREATION) const;
 

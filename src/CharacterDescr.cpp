@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include "Engine.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "ActorPlayer.h"
 #include "Renderer.h"
 #include "TextFormatting.h"
@@ -148,19 +148,19 @@ void CharacterDescr::makeLines() {
 
   lines.push_back(StrAndClr("Traits gained", clrHeading));
   string abilitiesLine = "";
-  vector<TraitId>& traits = eng.playerBonHandler->traitsPicked_;
+  vector<Trait>& traits = PlayerBon::traitsPicked_;
   if(traits.empty()) {
     lines.push_back(StrAndClr(offset + "None", clrText));
     lines.push_back(StrAndClr(" ", clrText));
   } else {
     const int MAX_W_DESCR = (MAP_W * 2) / 3;
 
-    for(TraitId trait : traits) {
+    for(Trait trait : traits) {
       string title = "";
-      eng.playerBonHandler->getTraitTitle(trait, title);
+      PlayerBon::getTraitTitle(trait, title);
       lines.push_back(StrAndClr(offset + title, clrText));
       string descr = "";
-      eng.playerBonHandler->getTraitDescr(trait, descr);
+      PlayerBon::getTraitDescr(trait, descr);
       vector<string> descrLines;
       TextFormatting::lineToLines(descr, MAX_W_DESCR, descrLines);
       for(string & descrLine : descrLines) {

@@ -10,7 +10,6 @@
 
 namespace Rnd {
 
-//------------------------------------------------------------------------LOCAL
 namespace {
 
 MTRand mtRand;
@@ -28,7 +27,6 @@ int roll(const int ROLLS, const int SIDES) {
 
 } //Namespace
 
-//---------------------------------------------------------------------- GLOBAL
 void seed(const unsigned long val) {mtRand = MTRand(val);}
 
 int dice(const int ROLLS, const int SIDES) {return roll(ROLLS, SIDES);}
@@ -57,7 +55,6 @@ int percentile() {return roll(1, 100);}
 
 namespace Utils {
 
-//---------------------------------------------------------------------- GLOBAL
 bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2) {
   return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
 }
@@ -276,7 +273,6 @@ string TimeData::getTimeStr(const TimeType lowest,
 
 namespace DirUtils {
 
-//------------------------------------------------------------------------LOCAL
 namespace {
 
 const string compassDirNames[3][3] = {
@@ -298,7 +294,6 @@ double edge[4] = {
 
 } //namespace
 
-//---------------------------------------------------------------------- GLOBAL
 Dir getDir(const Pos& offset) {
   assert(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
 

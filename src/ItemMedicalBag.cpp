@@ -6,7 +6,7 @@
 #include "Log.h"
 #include "Renderer.h"
 #include "Inventory.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Popup.h"
 #include "GameTime.h"
 #include "MapParsing.h"
@@ -184,7 +184,7 @@ void MedicalBag::interrupted() {
 
 int MedicalBag::getTotTurnsForAction(const MedicalBagAction action) const {
   const bool IS_HEALER =
-    eng.playerBonHandler->hasTrait(traitHealer);
+    PlayerBon::hasTrait(Trait::healer);
 
   switch(action) {
     case medicalBagAction_sanitizeInfection: {
@@ -208,7 +208,7 @@ int MedicalBag::getNrSuppliesNeededForAction(
   const MedicalBagAction action) const {
 
   const bool IS_HEALER =
-    eng.playerBonHandler->hasTrait(traitHealer);
+    PlayerBon::hasTrait(Trait::healer);
 
   switch(action) {
     case medicalBagAction_sanitizeInfection: {

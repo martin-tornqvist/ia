@@ -60,7 +60,7 @@ void PotionOfSpirit::collide_(const Pos& pos, Actor* const actor) {
 
 void PotionOfBlindness::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropBlind(eng, propTurnsStd));
+    new PropBlind(eng, propTurnsSpecific), Rnd::range(50, 100));
   if(eng.player->isSeeingActor(*actor, NULL)) {
     identify(false);
   }

@@ -4,14 +4,14 @@
 #include "Explosion.h"
 #include "Map.h"
 #include "Fov.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Utils.h"
 
 void LitDynamite::newTurn() {
   turnsLeftToExplosion_--;
   if(turnsLeftToExplosion_ <= 0) {
     const int D_R =
-      eng.playerBonHandler->hasTrait(traitDemolitionExpert) ? 1 : 0;
+      PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
     Explosion::runExplosionAt(pos_, eng, ExplType::expl, ExplSrc::misc, D_R);
     eng.gameTime->eraseFeatureMob(this, true);
   }

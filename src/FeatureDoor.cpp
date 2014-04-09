@@ -9,7 +9,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Postmortem.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Renderer.h"
 #include "MapParsing.h"
 #include "Utils.h"
@@ -246,7 +246,7 @@ void Door::bash_(Actor& actorTrying) {
     if(IS_BASHER_WEAK == false) {
       if(IS_PLAYER) {
         const int BON =
-          eng.playerBonHandler->hasTrait(traitTough) ? 20 : 0;
+          PlayerBon::hasTrait(Trait::tough) ? 20 : 0;
         skillValueBash = 40 + BON - min(58, nrSpikes_ * 20);
       } else {
         skillValueBash = 10 - min(9, nrSpikes_ * 3);

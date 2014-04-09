@@ -5,7 +5,7 @@
 #include "Engine.h"
 #include "Log.h"
 #include "Utils.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 
 Armor::Armor(ItemData* const itemData, Engine& engine) :
   Item(itemData, engine), dur_(Rnd::range(80, 100)) {}
@@ -36,7 +36,7 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
 
   const double DDF_BASE         = data_->armorData.dmgToDurabilityFactor;
   //TODO Add check for if wearer is player
-  const double DDF_WAR_VET_MOD  = eng.playerBonHandler->getBg() == bgWarVet ?
+  const double DDF_WAR_VET_MOD  = PlayerBon::getBg() == Bg::warVet ?
                                   0.5 : 1.0;
   const double DDF_K            = 1.5;
 

@@ -38,14 +38,14 @@ void DungeonMaster::playerGainLvl() {
   if(eng.player->deadState == ActorDeadState::alive) {
     clvl++;
 
-    eng.log->addMsg(
-      "--- Welcome to level " + toStr(clvl) + "! ---", clrGreen);
+    eng.log->addMsg("Welcome to level " + toStr(clvl) + "!", clrGreen,
+                    false, true);
 
     eng.playerCreateCharacter->pickNewTrait(false);
 
     eng.player->restoreHp(999, false);
-    eng.player->changeMaxHp(3, true);
-    eng.player->changeMaxSpi(1, true);
+    eng.player->changeMaxHp(HP_PER_LVL, true);
+    eng.player->changeMaxSpi(SPI_PER_LVL, true);
   }
 }
 

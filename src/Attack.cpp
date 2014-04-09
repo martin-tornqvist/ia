@@ -8,7 +8,7 @@
 #include "ActorMonster.h"
 #include "Map.h"
 #include "FeatureTrap.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "MapParsing.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
@@ -40,7 +40,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   } else {
     isDefenderAware =
       eng.player->isSeeingActor(*attacker, NULL) ||
-      eng.playerBonHandler->hasTrait(traitVigilant);
+      PlayerBon::hasTrait(Trait::vigilant);
   }
 
   isDefenderDodging = false;
@@ -211,7 +211,7 @@ RangedAttackData::RangedAttackData(
     const int SIZE_MOD          = curDefenderSize == actorSize_floor ? -10 : 0;
 
     int unawareDefMod = 0;
-    const bool IS_ROGUE = eng.playerBonHandler->getBg() == bgRogue;
+    const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
     if(attacker == eng.player && curDefender != eng.player && IS_ROGUE) {
       if(dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ <= 0) {
         unawareDefMod = 25;
@@ -305,7 +305,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
     const int SIZE_MOD          = curDefenderSize == actorSize_floor ? -15 : 0;
 
     int unawareDefMod = 0;
-    const bool IS_ROGUE = eng.playerBonHandler->getBg() == bgRogue;
+    const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
     if(attacker == eng.player && curDefender != eng.player && IS_ROGUE) {
       if(dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ <= 0) {
         unawareDefMod = 25;

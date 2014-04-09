@@ -4,14 +4,14 @@
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "ItemFactory.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "MapParsing.h"
 #include "Utils.h"
 
 void PopulateItems::spawnItems() {
   int nrOfSpawns = Rnd::range(6, 8);
 
-  if(eng.playerBonHandler->hasTrait(traitTreasureHunter)) {
+  if(PlayerBon::hasTrait(Trait::treasureHunter)) {
     nrOfSpawns += 2;
   }
 

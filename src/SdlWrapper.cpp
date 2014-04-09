@@ -13,14 +13,12 @@ using namespace std;
 
 namespace SdlWrapper {
 
-//------------------------------------------------------------------------LOCAL
 namespace {
 
 bool isInited = false;
 
 }
 
-//---------------------------------------------------------------------- GLOBAL
 void init() {
   trace << "SdlWrapper::initSdl()..." << endl;
 

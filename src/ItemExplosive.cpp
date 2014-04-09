@@ -5,14 +5,14 @@
 #include "Log.h"
 #include "Renderer.h"
 #include "GameTime.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Utils.h"
 
 void Dynamite::setPlayerExplosive() const {
   eng.player->dynamiteFuseTurns = 6;
 
   const bool IS_SWIFT =
-    eng.playerBonHandler->hasTrait(traitDemolitionExpert) && Rnd::coinToss();
+    PlayerBon::hasTrait(Trait::demolitionExpert) && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   eng.player->clr_ = clrYellow;
@@ -25,7 +25,7 @@ void Molotov::setPlayerExplosive() const {
   eng.player->molotovFuseTurns = 12;
 
   const bool IS_SWIFT =
-    eng.playerBonHandler->hasTrait(traitDemolitionExpert) && Rnd::coinToss();
+    PlayerBon::hasTrait(Trait::demolitionExpert) && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   eng.player->clr_ = clrYellow;
@@ -38,7 +38,7 @@ void Flare::setPlayerExplosive() const {
   eng.player->flareFuseTurns = 200;
 
   const bool IS_SWIFT =
-    eng.playerBonHandler->hasTrait(traitDemolitionExpert) && Rnd::coinToss();
+    PlayerBon::hasTrait(Trait::demolitionExpert) && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   eng.player->clr_ = clrYellow;

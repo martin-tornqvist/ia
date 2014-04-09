@@ -13,7 +13,6 @@
 
 namespace SndEmit {
 
-//------------------------------------------------------------------------LOCAL
 namespace {
 
 int nrSndMsgPrintedCurTurn_;
@@ -24,7 +23,6 @@ bool isSndHeardAtRange(const int RANGE, const Snd& snd) {
 
 } //namespace
 
-//-----------------------------------------------------------------------GLOBAL
 void resetNrSoundMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
 
 void emitSnd(Snd snd, Engine& eng) {

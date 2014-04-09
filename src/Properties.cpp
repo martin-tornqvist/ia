@@ -14,7 +14,7 @@
 #include "Map.h"
 #include "Explosion.h"
 #include "FeatureFactory.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "MapParsing.h"
 #include "LineCalc.h"
 #include "Blood.h"
@@ -1146,7 +1146,7 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
   line.resize(0);
 
   const bool IS_SELF_AWARE =
-    eng.playerBonHandler->hasTrait(traitSelfAware);
+    PlayerBon::hasTrait(Trait::selfAware);
 
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
@@ -1393,7 +1393,7 @@ void PropInfected::onNewTurn() {
 int PropDiseased::getChangedMaxHp(const int HP_MAX) const {
   if(
     owningActor_ == eng.player &&
-    eng.playerBonHandler->hasTrait(traitSurvivalist)) {
+    PlayerBon::hasTrait(Trait::survivalist)) {
     //Survavlist halves HP lost - i.e. you only lose 25% instead of 50%
     return (HP_MAX * 3) / 4;
   } else {
@@ -1463,7 +1463,7 @@ bool PropTerrified::allowAttackRanged(
 
 int PropWound::getAbilityMod(const AbilityId ability) const {
   const bool IS_SURVIVALIST = owningActor_ == eng.player &&
-                              eng.playerBonHandler->hasTrait(traitSurvivalist);
+                              PlayerBon::hasTrait(Trait::survivalist);
 
   const int DIV = IS_SURVIVALIST ? 2 : 1;
 

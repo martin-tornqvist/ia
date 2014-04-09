@@ -4,7 +4,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Renderer.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Audio.h"
 
 FeatureLiquidShallow::FeatureLiquidShallow(

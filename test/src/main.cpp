@@ -25,7 +25,7 @@
 #include "SaveHandler.h"
 #include "Inventory.h"
 #include "PlayerSpellsHandler.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Explosion.h"
 #include "ItemAmmo.h"
 #include "ItemDevice.h"
@@ -36,7 +36,8 @@ struct BasicFixture {
     eng.initGame();
     eng.gameTime->insertActorInLoop(eng.player);
     eng.player->pos = Pos(1, 1);
-    eng.map->resetMap();
+    eng.map->resetMap(); //Because map generation is not run
+    PlayerBon::init();
   }
   ~BasicFixture() {
     eng.cleanupGame();
@@ -517,8 +518,8 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   eng.itemDataHandler->dataList[int(ItemId::scrollOfOpening)]->isIdentified = true;
 
   //Bonus
-  eng.playerBonHandler->pickBg(bgRogue);
-  eng.playerBonHandler->traitsPicked_.push_back(traitHealer);
+  PlayerBon::pickBg(Bg::rogue, eng);
+  PlayerBon::traitsPicked_.push_back(Trait::healer);
 
   //Player inventory
   Inventory& inv = eng.player->getInv();
@@ -561,8 +562,8 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   eng.actorDataHandler->dataList[endOfActorIds - 1].nrOfKills = 123;
 
   //Learned spells
-  eng.playerSpellsHandler->learnSpellIfNotKnown(spell_bless);
-  eng.playerSpellsHandler->learnSpellIfNotKnown(spell_enfeeble);
+  eng.playerSpellsHandler->learnSpellIfNotKnown(SpellId::bless);
+  eng.playerSpellsHandler->learnSpellIfNotKnown(SpellId::enfeeble);
 
   //Applied properties
   PropHandler& propHlr = eng.player->getPropHandler();
@@ -600,10 +601,10 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(false, iHlr.dataList[int(ItemId::scrollOfDetMon)]->isIdentified);
 
   //Bonus
-  CHECK_EQUAL(bgRogue, eng.playerBonHandler->getBg());
-  CHECK(eng.playerBonHandler->hasTrait(traitHealer));
-  CHECK_EQUAL(false, eng.playerBonHandler->hasTrait(traitSharpShooter));
-  eng.playerBonHandler->traitsPicked_.push_back(traitHealer);
+  CHECK_EQUAL(int(Bg::rogue), int(PlayerBon::getBg()));
+  CHECK(PlayerBon::hasTrait(Trait::healer));
+  CHECK_EQUAL(false, PlayerBon::hasTrait(Trait::sharpShooter));
+  PlayerBon::traitsPicked_.push_back(Trait::healer);
 
   //Player inventory
   Inventory& inv = eng.player->getInv();
@@ -659,9 +660,9 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
 
   //Learned spells
   PlayerSpellsHandler& spHlr = *(eng.playerSpellsHandler);
-  CHECK(spHlr.isSpellLearned(spell_bless));
-  CHECK(spHlr.isSpellLearned(spell_enfeeble));
-  CHECK_EQUAL(false, spHlr.isSpellLearned(spell_mayhem));
+  CHECK(spHlr.isSpellLearned(SpellId::bless));
+  CHECK(spHlr.isSpellLearned(SpellId::enfeeble));
+  CHECK_EQUAL(false, spHlr.isSpellLearned(SpellId::mayhem));
 
   //Properties
   PropHandler& propHlr = eng.player->getPropHandler();

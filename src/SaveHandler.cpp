@@ -10,7 +10,7 @@
 #include "DungeonMaster.h"
 #include "ItemScroll.h"
 #include "ItemPotion.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Map.h"
 #include "DungeonClimb.h"
 #include "Inventory.h"
@@ -39,7 +39,7 @@ void SaveHandler::collectLinesFromGame(vector<string>& lines) {
   eng.itemDataHandler->addSaveLines(lines);
   eng.player->getInv().addSaveLines(lines);
   eng.player->addSaveLines(lines);
-  eng.playerBonHandler->addSaveLines(lines);
+  PlayerBon::addSaveLines(lines);
   eng.map->addSaveLines(lines);
   eng.actorDataHandler->addSaveLines(lines);
   eng.gameTime->addSaveLines(lines);
@@ -61,7 +61,7 @@ void SaveHandler::setGameParamsFromLines(vector<string>& lines) const {
   eng.itemDataHandler->setParamsFromSaveLines(lines);
   eng.player->getInv().setParamsFromSaveLines(lines, eng);
   eng.player->setParamsFromSaveLines(lines);
-  eng.playerBonHandler->setParamsFromSaveLines(lines);
+  PlayerBon::setParamsFromSaveLines(lines);
   eng.map->setParamsFromSaveLines(lines);
   eng.actorDataHandler->setParamsFromSaveLines(lines);
   eng.gameTime->setParamsFromSaveLines(lines);

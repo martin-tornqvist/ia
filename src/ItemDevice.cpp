@@ -133,7 +133,7 @@ void DeviceSentry::triggerEffect() {
   if(targetCandidates.empty()) {
     eng.log->addMsg("It seems to peruse area.");
   } else {
-    Spell* const spell = eng.spellHandler->getSpellFromId(spell_azathothsWrath);
+    Spell* const spell = eng.spellHandler->getSpellFromId(SpellId::azathothsWrath);
     spell->cast(eng.player, false, eng);
     delete spell;
   }
@@ -192,6 +192,7 @@ DeviceLantern::DeviceLantern(ItemData* const itemData, Engine& engine) :
 ConsumeItem DeviceLantern::activateDefault(Actor* const actor) {
   (void)actor;
   toggle();
+  eng.gameTime->actorDidAct();
   return ConsumeItem::no;
 }
 

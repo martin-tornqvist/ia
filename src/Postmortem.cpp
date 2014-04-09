@@ -13,7 +13,7 @@
 #include "Log.h"
 #include "MenuInputHandler.h"
 #include "Highscore.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "TextFormatting.h"
 
 void Postmortem::run(bool* const quitGame) {
@@ -76,7 +76,7 @@ void Postmortem::makeInfoLines() {
   trace << "Postmortem: Listing abilities gained" << endl;
   postmortemLines.push_back(StrAndClr(" Abilities gained:", clrHeading));
   string abilitiesLine;
-  eng.playerBonHandler->getAllPickedTraitsTitlesLine(abilitiesLine);
+  PlayerBon::getAllPickedTraitsTitlesLine(abilitiesLine);
   if(abilitiesLine.empty()) {
     postmortemLines.push_back(StrAndClr("   * None", clrInfo));
   } else {

@@ -57,7 +57,6 @@
 #include "MapTemplates.h"
 #include "Marker.h"
 #include "PlayerCreateCharacter.h"
-#include "PlayerBonuses.h"
 #include "PlayerSpellsHandler.h"
 #include "PlayerVisualMemory.h"
 #include "Popup.h"
@@ -86,7 +85,6 @@ void Engine::initGame() {
   abilityRoll = new AbilityRoll();
   itemFactory = new ItemFactory(*this);
   inventoryHandler = new InventoryHandler(*this);
-  playerBonHandler = new PlayerBonHandler(*this);
   playerCreateCharacter = new PlayerCreateCharacter(*this);
   mapPatterns = new MapPatterns(*this);
   roomThemeMaker = new RoomThemeMaker(*this);
@@ -150,7 +148,6 @@ void Engine::cleanupGame() {
 
   delete map;
   delete playerCreateCharacter;
-  delete playerBonHandler;
   delete playerVisualMemory;
   delete itemDataHandler;
   delete log;
@@ -180,7 +177,6 @@ void Engine::cleanupGame() {
   delete populateItems;
   delete populateMonsters;
   delete populateTraps;
-//  delete inventoryIndexes;
   delete query;
   delete actorDataHandler;
   delete scrollNameHandler;

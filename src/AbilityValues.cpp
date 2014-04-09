@@ -4,7 +4,7 @@
 
 #include "Engine.h"
 #include "ActorPlayer.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Utils.h"
 #include "Properties.h"
 
@@ -17,46 +17,44 @@ int AbilityValues::getVal(const AbilityId ability,
     val += actor.getPropHandler().getAbilityMod(ability);
   }
 
-  PlayerBonHandler& bonHlr = *eng->playerBonHandler;
-
   if(&actor == eng->player) {
     switch(ability) {
       case ability_searching: {
         val += 8;
-        if(bonHlr.hasTrait(traitObservant))   val += 4;
-        if(bonHlr.hasTrait(traitPerceptive))  val += 4;
+        if(PlayerBon::hasTrait(Trait::observant))   val += 4;
+        if(PlayerBon::hasTrait(Trait::perceptive))  val += 4;
       } break;
 
       case ability_accuracyMelee: {
         val += 45;
-        if(bonHlr.hasTrait(traitAdeptMeleeFighter))   val += 10;
-        if(bonHlr.hasTrait(traitExpertMeleeFighter))  val += 10;
-        if(bonHlr.hasTrait(traitMasterMeleeFighter))  val += 10;
+        if(PlayerBon::hasTrait(Trait::adeptMeleeFighter))   val += 10;
+        if(PlayerBon::hasTrait(Trait::expertMeleeFighter))  val += 10;
+        if(PlayerBon::hasTrait(Trait::masterMeleeFighter))  val += 10;
       } break;
 
       case ability_accuracyRanged: {
         val += 50;
-        if(bonHlr.hasTrait(traitAdeptMarksman))   val += 10;
-        if(bonHlr.hasTrait(traitExpertMarksman))  val += 10;
-        if(bonHlr.hasTrait(traitMasterMarksman))  val += 10;
+        if(PlayerBon::hasTrait(Trait::adeptMarksman))   val += 10;
+        if(PlayerBon::hasTrait(Trait::expertMarksman))  val += 10;
+        if(PlayerBon::hasTrait(Trait::masterMarksman))  val += 10;
       } break;
 
       case ability_dodgeTrap: {
         val += 5;
-        if(bonHlr.hasTrait(traitDexterous)) val += 20;
-        if(bonHlr.hasTrait(traitLithe))     val += 20;
+        if(PlayerBon::hasTrait(Trait::dexterous)) val += 20;
+        if(PlayerBon::hasTrait(Trait::lithe))     val += 20;
       } break;
 
       case ability_dodgeAttack: {
         val += 10;
-        if(bonHlr.hasTrait(traitDexterous)) val += 20;
-        if(bonHlr.hasTrait(traitLithe))     val += 20;
+        if(PlayerBon::hasTrait(Trait::dexterous)) val += 20;
+        if(PlayerBon::hasTrait(Trait::lithe))     val += 20;
       } break;
 
       case ability_stealth: {
         val += 10;
-        if(bonHlr.hasTrait(traitStealthy))      val += 50;
-        if(bonHlr.hasTrait(traitImperceptible)) val += 30;
+        if(PlayerBon::hasTrait(Trait::stealthy))      val += 50;
+        if(PlayerBon::hasTrait(Trait::imperceptible)) val += 30;
       } break;
 
       case ability_empty:

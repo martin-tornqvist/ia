@@ -19,7 +19,7 @@
 #include "ActorFactory.h"
 #include "Renderer.h"
 #include "Utils.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 
 //------------------------------------------------------------- TRAP
 Trap::Trap(FeatureId id, Pos pos, Engine& engine, TrapSpawnData* spawnData) :
@@ -172,7 +172,7 @@ void Trap::disarm() {
     }
   }
 
-  const bool IS_OCCULTIST   = eng.playerBonHandler->getBg() == bgOccultist;
+  const bool IS_OCCULTIST   = PlayerBon::getBg() == Bg::occultist;
 
   if(isMagical() && IS_OCCULTIST == false) {
     eng.log->addMsg("I do not know how to dispel magic traps.");

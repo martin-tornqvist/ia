@@ -26,14 +26,13 @@ using namespace std;
 
 namespace Renderer {
 
-//---------------------------------------------------------------------- GLOBAL
 CellRenderData  renderArray_[MAP_W][MAP_H];
 CellRenderData  renderArrayNoActors_[MAP_W][MAP_H];
 SDL_Surface*    screenSurface_       = NULL;
 SDL_Surface*    mainMenuLogoSurface_ = NULL;
 
-//------------------------------------------------------------------------LOCAL
 namespace {
+
 bool tilePixelData_[400][400];
 bool fontPixelData_[400][400];
 
@@ -303,7 +302,6 @@ void drawPlayerShockExclMarks() {
 
 } //Namespace
 
-//---------------------------------------------------------------------- GLOBAL
 void init(Engine& engine) {
   trace << "Renderer::init()..." << endl;
   cleanup();

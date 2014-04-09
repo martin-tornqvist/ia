@@ -22,7 +22,7 @@
 #include "Fov.h"
 #include "ItemFactory.h"
 #include "ActorFactory.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "FeatureLitDynamite.h"
 #include "ItemDevice.h"
 #include "Inventory.h"
@@ -235,9 +235,8 @@ int Player::getEncPercent() const {
 }
 
 int Player::getCarryWeightLimit() const {
-  PlayerBonHandler* const bon = eng.playerBonHandler;
-  const bool IS_TOUGH         = bon->hasTrait(traitTough);
-  const bool IS_STRONG_BACKED = bon->hasTrait(traitStrongBacked);
+  const bool IS_TOUGH         = PlayerBon::hasTrait(Trait::tough);
+  const bool IS_STRONG_BACKED = PlayerBon::hasTrait(Trait::strongBacked);
 
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
@@ -252,23 +251,15 @@ int Player::getCarryWeightLimit() const {
 
 int Player::getShockResistance(const ShockSrc shockSrc) const {
   int res = 0;
-  if(eng.playerBonHandler->hasTrait(traitFearless)) {
-    res += 5;
-  }
-  if(eng.playerBonHandler->hasTrait(traitCoolHeaded)) {
-    res += 20;
-  }
-  if(eng.playerBonHandler->hasTrait(traitCourageous)) {
-    res += 20;
-  }
-
-  const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
+  if(PlayerBon::hasTrait(Trait::fearless))    {res += 5;}
+  if(PlayerBon::hasTrait(Trait::coolHeaded))  {res += 20;}
+  if(PlayerBon::hasTrait(Trait::courageous))  {res += 20;}
 
   switch(shockSrc) {
     case ShockSrc::castIntrSpell: {} break;
 
     case ShockSrc::useStrangeItem: {
-      if(bonHlr.getBg() == bgOccultist) {res += 50;}
+      if(PlayerBon::getBg() == Bg::occultist) {res += 50;}
     } break;
 
     case ShockSrc::seeMonster:
@@ -851,7 +842,7 @@ void Player::onStandardTurn() {
 
   //Some shock is taken every Xth turn
   int loseNTurns = 12;
-  if(eng.playerBonHandler->getBg() == bgRogue) loseNTurns *= 2;
+  if(PlayerBon::getBg() == Bg::rogue) loseNTurns *= 2;
   const int TURN = eng.gameTime->getTurn();
   if(TURN % loseNTurns == 0 && TURN > 1) {
     if(Rnd::oneIn(850)) {
@@ -932,8 +923,6 @@ void Player::onStandardTurn() {
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
-  const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
-
   if(activeMedicalBag == NULL) {
     if(find(props.begin(), props.end(), propPoisoned) == props.end()) {
       int nrWounds = 0;
@@ -942,8 +931,8 @@ void Player::onStandardTurn() {
         nrWounds = dynamic_cast<PropWound*>(propWnd)->getNrWounds();
       }
 
-      const bool IS_RAPID_REC     = bonHlr.hasTrait(traitRapidRecoverer);
-      const bool IS_SURVIVALIST   = bonHlr.hasTrait(traitSurvivalist);
+      const bool IS_RAPID_REC     = PlayerBon::hasTrait(Trait::rapidRecoverer);
+      const bool IS_SURVIVALIST   = PlayerBon::hasTrait(Trait::survivalist);
 
       //Survivalist trait halves the penalty form wounds
       const int WOUND_TURNS_DIV  = IS_SURVIVALIST ? 2 : 1;
@@ -962,8 +951,8 @@ void Player::onStandardTurn() {
       propHandler_->allowSee() &&
       find(props.begin(), props.end(), propConfused) == props.end()) {
 
-      const int R = bonHlr.hasTrait(traitPerceptive) ? 3 :
-                    (bonHlr.hasTrait(traitObservant) ? 2 : 1);
+      const int R = PlayerBon::hasTrait(Trait::perceptive) ? 3 :
+                    (PlayerBon::hasTrait(Trait::observant) ? 2 : 1);
 
       int x0 = max(0, pos.x - R);
       int y0 = max(0, pos.y - R);
@@ -1138,12 +1127,10 @@ void Player::moveDir(Dir dir) {
 
         pos = dest;
 
-        PlayerBonHandler* const bonHlr = eng.playerBonHandler;
-
         const int FREE_MOVE_EVERY_N_TURN =
-          bonHlr->hasTrait(traitMobile)     ? 2 :
-          bonHlr->hasTrait(traitLithe)      ? 4 :
-          bonHlr->hasTrait(traitDexterous)  ? 5 : 0;
+          PlayerBon::hasTrait(Trait::mobile)     ? 2 :
+          PlayerBon::hasTrait(Trait::lithe)      ? 4 :
+          PlayerBon::hasTrait(Trait::dexterous)  ? 5 : 0;
 
         if(FREE_MOVE_EVERY_N_TURN > 0) {
           if(nrMovesUntilFreeAction_ == -1) {

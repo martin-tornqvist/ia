@@ -12,7 +12,7 @@
 #include "Inventory.h"
 #include "ItemFactory.h"
 #include "DungeonMaster.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "GameTime.h"
 #include "Audio.h"
 #include "Renderer.h"
@@ -112,7 +112,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
   bool isSwiftReload    = false;
 
   if(&actorReloading == eng.player) {
-    isSwiftReload = eng.playerBonHandler->hasTrait(traitExpertMarksman) &&
+    isSwiftReload = PlayerBon::hasTrait(Trait::expertMarksman) &&
                     Rnd::coinToss();
   }
 

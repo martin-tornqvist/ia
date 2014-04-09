@@ -130,7 +130,9 @@ enum class ItemId {
 
   scrollOfPestilence,
   scrollOfTelep,
-  scrollOfEnfeeble,
+  scrollOfSlowEnemies,
+  scrollOfTerrifyEnemies,
+  scrollOfParalyzeEnemies,
   scrollOfDetTraps,
   scrollOfDetItems,
   scrollOfDetMon,

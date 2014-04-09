@@ -11,7 +11,6 @@
 
 namespace Audio {
 
-//------------------------------------------------------------------------LOCAL
 namespace {
 
 vector<Mix_Chunk*> audioChunks;
@@ -112,7 +111,6 @@ void loadAudioFile(const SfxId sfx, const string& filename) {
 
 } //Namespace
 
-//---------------------------------------------------------------------- GLOBAL
 void init() {
   cleanup();
 

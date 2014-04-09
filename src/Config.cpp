@@ -21,7 +21,6 @@ using namespace std;
 
 namespace Config {
 
-//------------------------------------------------------------------------LOCAL
 namespace {
 
 const int NR_OPTIONS  = 15;
@@ -560,7 +559,6 @@ void collectLinesFromVariables(vector<string>& lines) {
 
 } //Namespace
 
-//---------------------------------------------------------------------- GLOBAL
 bool    isTilesMode()                 {return isTilesMode_;}
 string  getFontName()                 {return fontName_;}
 bool    isFullscreen()                {return isFullscreen_;}

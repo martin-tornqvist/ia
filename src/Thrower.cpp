@@ -16,7 +16,7 @@
 #include "ItemFactory.h"
 #include "Attack.h"
 #include "LineCalc.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Utils.h"
 #include "SdlWrapper.h"
 
@@ -79,7 +79,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   } else {
     eng.log->addMsg("I throw a lit Molotov Cocktail.");
     const int EXPL_RADI_CHANGE =
-      eng.playerBonHandler->hasTrait(traitDemolitionExpert) ? 1 : 0;
+      PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
       Explosion::runExplosionAt(
         path.back(), eng, ExplType::applyProp,

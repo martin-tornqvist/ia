@@ -12,7 +12,7 @@
 #include "Input.h"
 #include "Inventory.h"
 #include "InventoryHandler.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "Audio.h"
 #include "MapParsing.h"
 #include "Renderer.h"
@@ -186,13 +186,13 @@ void GameTime::runStandardTurnEvents() {
     if(actor->deadState == ActorDeadState::alive) {
       //Regen Spi
       if(actor == eng.player) {
-        if(eng.playerBonHandler->hasTrait(traitPotentSpirit)) {
+        if(PlayerBon::hasTrait(Trait::potentSpirit)) {
           regenSpiEveryNTurns -= 2;
         }
-        if(eng.playerBonHandler->hasTrait(traitStrongSpirit)) {
+        if(PlayerBon::hasTrait(Trait::strongSpirit)) {
           regenSpiEveryNTurns -= 2;
         }
-        if(eng.playerBonHandler->hasTrait(traitMightySpirit)) {
+        if(PlayerBon::hasTrait(Trait::mightySpirit)) {
           regenSpiEveryNTurns -= 2;
         }
       }

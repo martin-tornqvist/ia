@@ -5,7 +5,7 @@
 #include "MainMenu.h"
 #include "Renderer.h"
 #include "InventoryHandler.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "PlayerCreateCharacter.h"
 #include "ActorPlayer.h"
 #include "MapGen.h"
@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
 
   bool quitGame = false;
   while(quitGame == false) {
+    PlayerBon::init();
     eng.initGame();
 
     int introMusChannel = -1;
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
 
       if(gameEntryType == GameEntryMode::newGame) {
         if(Config::isBotPlaying()) {
-          eng.playerBonHandler->setAllTraitsToPicked();
+          PlayerBon::setAllTraitsToPicked();
           eng.bot->init();
         }
         eng.playerCreateCharacter->createCharacter();

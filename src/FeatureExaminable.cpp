@@ -8,7 +8,7 @@
 #include "ItemFactory.h"
 #include "ItemDrop.h"
 #include "Popup.h"
-#include "PlayerBonuses.h"
+#include "PlayerBon.h"
 #include "ActorPlayer.h"
 #include "Inventory.h"
 #include "ActorFactory.h"
@@ -102,10 +102,9 @@ Tomb::Tomb(FeatureId id, Pos pos, Engine& engine) :
   appearance_(TombAppearance::common), trait_(TombTrait::endOfTombTraits) {
 
   //Contained items
-  PlayerBonHandler* const bonHlr = eng.playerBonHandler;
   const int NR_ITEMS_MIN = Rnd::oneIn(3) ? 0 : 1;
   const int NR_ITEMS_MAX =
-    NR_ITEMS_MIN + (bonHlr->hasTrait(traitTreasureHunter) ? 1 : 0);
+    NR_ITEMS_MIN + (PlayerBon::hasTrait(Trait::treasureHunter) ? 1 : 0);
 
   itemContainer_.setRandomItemsForFeature(
     feature_tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX), eng);
@@ -179,9 +178,8 @@ void Tomb::bump(Actor& actorBumping) {
         trySprainPlayer();
         eng.log->addMsg("It seems futile.");
       } else {
-        const PlayerBonHandler* const bonHlr = eng.playerBonHandler;
-        const int BON = bonHlr->hasTrait(traitRugged) ? 8 :
-                        bonHlr->hasTrait(traitTough)  ? 4 : 0;
+        const int BON = PlayerBon::hasTrait(Trait::rugged) ? 8 :
+                        PlayerBon::hasTrait(Trait::tough)  ? 4 : 0;
 
         trace << "Tomb: Base chance to push lid is: 1 in ";
         trace << pushLidOneInN_ << endl;
@@ -213,9 +211,8 @@ void Tomb::bump(Actor& actorBumping) {
 }
 
 void Tomb::trySprainPlayer() {
-  const PlayerBonHandler* const bonHlr = eng.playerBonHandler;
-  const int SPRAIN_ONE_IN_N = bonHlr->hasTrait(traitRugged) ? 6 :
-                              bonHlr->hasTrait(traitTough)  ? 5 : 4;
+  const int SPRAIN_ONE_IN_N = PlayerBon::hasTrait(Trait::rugged) ? 6 :
+                              PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
   if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     eng.log->addMsg("I sprain myself.", clrMsgBad);
     eng.player->hit(Rnd::range(1, 5), DmgType::pure, false);
@@ -257,9 +254,8 @@ void Tomb::examine() {
     eng.log->addMsg("The tomb is empty.");
   } else {
     if(isTraitKnown_ == false && trait_ != TombTrait::endOfTombTraits) {
-      const PlayerBonHandler& bonHlr = *eng.playerBonHandler;
-      const int FIND_ONE_IN_N = bonHlr.hasTrait(traitPerceptive) ? 2 :
-                                (bonHlr.hasTrait(traitObservant) ? 3 : 6);
+      const int FIND_ONE_IN_N = PlayerBon::hasTrait(Trait::perceptive) ? 2 :
+                                (PlayerBon::hasTrait(Trait::observant) ? 3 : 6);
 
       isTraitKnown_ = Rnd::oneIn(FIND_ONE_IN_N);
     }
@@ -271,7 +267,7 @@ void Tomb::examine() {
         } break;
 
         case TombTrait::forebodingCarvedSigns: {
-          if(eng.playerBonHandler->getBg() == bgOccultist) {
+          if(PlayerBon::getBg() == Bg::occultist) {
             eng.log->addMsg("There is a curse carved on the box.");
           } else {
             eng.log->addMsg("There are some ominous runes carved on the box.");
@@ -418,9 +414,8 @@ Chest::Chest(FeatureId id, Pos pos, Engine& engine) :
   isLocked_(false), isTrapped_(false), isTrapStatusKnown_(false),
   material(ChestMtrl(Rnd::range(0, endOfChestMaterial - 1))) {
 
-  PlayerBonHandler* const bonHlr = eng.playerBonHandler;
   const bool IS_TREASURE_HUNTER =
-    bonHlr->hasTrait(traitTreasureHunter);
+    PlayerBon::hasTrait(Trait::treasureHunter);
   const int NR_ITEMS_MIN = Rnd::oneIn(10) ? 0 : 1;
   const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 3 : 2;
   itemContainer_.setRandomItemsForFeature(
@@ -444,9 +439,8 @@ void Chest::bump(Actor& actorBumping) {
 }
 
 void Chest::trySprainPlayer() {
-  const PlayerBonHandler* const bonHlr = eng.playerBonHandler;
-  const int SPRAIN_ONE_IN_N = bonHlr->hasTrait(traitRugged) ? 6 :
-                              bonHlr->hasTrait(traitTough)  ? 5 : 4;
+  const int SPRAIN_ONE_IN_N = PlayerBon::hasTrait(Trait::rugged) ? 6 :
+                              PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
   if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     eng.log->addMsg("I sprain myself.", clrMsgBad);
     eng.player->hit(Rnd::range(1, 5), DmgType::pure, false);
@@ -504,9 +498,8 @@ void Chest::bash(Actor& actorTrying) {
         itemContainer_.destroySingleFragile(eng);
       }
 
-      PlayerBonHandler* const bonHlr = eng.playerBonHandler;
-      const bool IS_TOUGH     = bonHlr->hasTrait(traitTough);
-      const bool IS_RUGGED    = bonHlr->hasTrait(traitRugged);
+      const bool IS_TOUGH     = PlayerBon::hasTrait(Trait::tough);
+      const bool IS_RUGGED    = PlayerBon::hasTrait(Trait::rugged);
 
       const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
 
@@ -579,10 +572,8 @@ void Chest::examine() {
       eng.log->addMsg("The chest is locked.");
     }
 
-    PlayerBonHandler* const bonHlr = eng.playerBonHandler;
-
-    const int FIND_ONE_IN_N = bonHlr->hasTrait(traitPerceptive) ? 3 :
-                              (bonHlr->hasTrait(traitObservant) ? 4 : 7);
+    const int FIND_ONE_IN_N = PlayerBon::hasTrait(Trait::perceptive) ? 3 :
+                              (PlayerBon::hasTrait(Trait::observant) ? 4 : 7);
 
     if(isTrapped_ && (isTrapStatusKnown_ || (Rnd::oneIn(FIND_ONE_IN_N)))) {
       eng.log->addMsg("There appears to be a hidden trap mechanism!");
@@ -814,9 +805,8 @@ void Fountain::bump(Actor& actorBumping) {
 Cabinet::Cabinet(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false) {
 
-  PlayerBonHandler* const bonHlr = eng.playerBonHandler;
   const bool IS_TREASURE_HUNTER =
-    bonHlr->hasTrait(traitTreasureHunter);
+    PlayerBon::hasTrait(Trait::treasureHunter);
   const int IS_EMPTY_N_IN_10 = 5;
   const int NR_ITEMS_MIN = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 2 : 1;
@@ -855,9 +845,8 @@ bool Cabinet::open() {
 Cocoon::Cocoon(FeatureId id, Pos pos, Engine& engine) :
   FeatureStatic(id, pos, engine), isContentKnown_(false) {
 
-  PlayerBonHandler* const bonHlr = eng.playerBonHandler;
   const bool IS_TREASURE_HUNTER =
-    bonHlr->hasTrait(traitTreasureHunter);
+    PlayerBon::hasTrait(Trait::treasureHunter);
   const int IS_EMPTY_N_IN_10 = 6;
   const int NR_ITEMS_MIN = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
