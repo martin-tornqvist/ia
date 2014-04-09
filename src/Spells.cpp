@@ -377,41 +377,19 @@ SpellCastRetData SpellMayhem::cast_(
 SpellCastRetData SpellPestilence::cast_(
   Actor* const caster, Engine& eng) const {
   (void)caster;
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
-  const int RADI = 4;
-  const int x0 = max(0, eng.player->pos.x - RADI);
-  const int y0 = max(0, eng.player->pos.y - RADI);
-  const int x1 = min(MAP_W - 1, eng.player->pos.x + RADI);
-  const int y1 = min(MAP_H - 1, eng.player->pos.y + RADI);
+  const int RND = Rnd::range(1, 4);
+  const ActorId monsterId = RND == 1 ? actor_greenSpider  :
+                            RND == 2 ? actor_redSpider    :
+                            RND == 3 ? actor_rat          : actor_wormMass;
 
-  vector<Pos> positions;
-
-  for(int x = x0; x <= x1; x++) {
-    for(int y = y0; y <= y1; y++) {
-      if(blockers[x][y] == false) {
-        positions.push_back(Pos(x, y));
-      }
-    }
-  }
-
-  Renderer::drawBlastAnimAtPositionsWithPlayerVision(
-    positions, clrMagenta);
-
-  for(Pos & pos : positions) {
-    ActorId monsterId = actor_rat;
-    if(Rnd::range(1, 3) == 1) {
-      if(Rnd::coinToss()) {
-        monsterId = actor_greenSpider;
-      } else {
-        monsterId = Rnd::coinToss() ? actor_whiteSpider : actor_redSpider;
-      }
-    }
-    eng.actorFactory->spawnActor(monsterId, pos);
-  }
+  const size_t NR_MON = Rnd::range(7, 10);
 
   eng.log->addMsg("Disgusting critters appear around me!");
+
+  eng.actorFactory->summonMonsters(
+    eng.player->pos, vector<ActorId> {NR_MON, monsterId}, true);
+
   return SpellCastRetData(true);
 }
 
