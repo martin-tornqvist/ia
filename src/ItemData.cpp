@@ -792,7 +792,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttackMessages = ItemAttackMessages("", "bites me");
   setDmgFromMonsterData(
     *d, eng.actorDataHandler->dataList[actor_whiteSpider]);
-  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecific, 3);
+  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecific, 2);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::redSpiderBite);
@@ -1071,7 +1071,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(ItemId::armorFlackJacket);
   resetData(d, itemData_armor);
   d->name = ItemName("Flak Jacket", "", "a Flak Jacket");
-  d->itemWeight = itemWeight_heavy;
+  d->itemWeight = itemWeight_medium;
   d->clr = clrGreen;
   d->spawnStandardMinDLVL = 3;
   d->armorData.absorptionPoints = 3;

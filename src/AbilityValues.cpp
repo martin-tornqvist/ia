@@ -9,15 +9,17 @@
 #include "Properties.h"
 
 int AbilityValues::getVal(const AbilityId ability,
-                          const bool IS_AFFECTED_BY_STATUS_EFFECTS,
+                          const bool IS_AFFECTED_BY_PROPS,
                           Actor& actor) const {
   int val = abilityList[ability];
 
-  if(IS_AFFECTED_BY_STATUS_EFFECTS) {
+  if(IS_AFFECTED_BY_PROPS) {
     val += actor.getPropHandler().getAbilityMod(ability);
   }
 
   if(&actor == eng->player) {
+    const int HP_PCT  = (actor.getHp() * 100) / actor.getHpMax(true);
+
     switch(ability) {
       case ability_searching: {
         val += 8;
@@ -30,6 +32,7 @@ int AbilityValues::getVal(const AbilityId ability,
         if(PlayerBon::hasTrait(Trait::adeptMeleeFighter))   val += 10;
         if(PlayerBon::hasTrait(Trait::expertMeleeFighter))  val += 10;
         if(PlayerBon::hasTrait(Trait::masterMeleeFighter))  val += 10;
+        if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
       } break;
 
       case ability_accuracyRanged: {
@@ -37,6 +40,7 @@ int AbilityValues::getVal(const AbilityId ability,
         if(PlayerBon::hasTrait(Trait::adeptMarksman))   val += 10;
         if(PlayerBon::hasTrait(Trait::expertMarksman))  val += 10;
         if(PlayerBon::hasTrait(Trait::masterMarksman))  val += 10;
+        if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
       } break;
 
       case ability_dodgeTrap: {
@@ -49,6 +53,7 @@ int AbilityValues::getVal(const AbilityId ability,
         val += 10;
         if(PlayerBon::hasTrait(Trait::dexterous)) val += 20;
         if(PlayerBon::hasTrait(Trait::lithe))     val += 20;
+        if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 50;
       } break;
 
       case ability_stealth: {
@@ -61,9 +66,10 @@ int AbilityValues::getVal(const AbilityId ability,
       case endOfAbilityId: {} break;
     }
 
-    //Searching must be at least 1
     if(ability == ability_searching) {
-      val = max(1, val);
+      val = max(val, 1);
+    } else if(ability == ability_dodgeAttack) {
+      val = min(val, 95);
     }
   }
 

@@ -160,7 +160,7 @@ SpellCastRetData Spell::cast(Actor* const caster, const bool IS_INTRINSIC,
 
     if(IS_INTRINSIC) {
       const Range cost = getSpiCost(false, caster, eng);
-      caster->hitSpi(Rnd::range(cost));
+      caster->hitSpi(Rnd::range(cost), false);
     }
     SpellCastRetData ret(false);
     if(caster->deadState == ActorDeadState::alive) {
@@ -561,7 +561,7 @@ SpellCastRetData SpellSacrificeSpirit::cast_(
 
   if(PLAYER_SPI_CUR > 0) {
     const int HP_DRAINED = PLAYER_SPI_CUR - 1;
-    eng.player->hitSpi(HP_DRAINED);
+    eng.player->hitSpi(HP_DRAINED, true);
     eng.player->restoreHp(HP_DRAINED, true, true);
     return SpellCastRetData(true);
   }

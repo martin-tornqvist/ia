@@ -208,8 +208,7 @@ void Actor::updateColor() {
   clr_ = data_->color;
 }
 
-bool Actor::restoreHp(const int HP_RESTORED,
-                      const bool ALLOW_MESSAGES,
+bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
                       const bool IS_ALLOWED_ABOVE_MAX) {
   bool isHpGained = IS_ALLOWED_ABOVE_MAX;
 
@@ -235,7 +234,7 @@ bool Actor::restoreHp(const int HP_RESTORED,
 
   updateColor();
 
-  if(ALLOW_MESSAGES) {
+  if(ALLOW_MSG) {
     if(isHpGained) {
       if(this == eng.player) {
         eng.log->addMsg("I feel healthier!", clrMsgGood);
@@ -251,8 +250,7 @@ bool Actor::restoreHp(const int HP_RESTORED,
   return isHpGained;
 }
 
-bool Actor::restoreSpi(const int SPI_RESTORED,
-                       const bool ALLOW_MESSAGES,
+bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
                        const bool IS_ALLOWED_ABOVE_MAX) {
   bool isSpiGained = IS_ALLOWED_ABOVE_MAX;
 
@@ -279,7 +277,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED,
     isSpiGained = true;
   }
 
-  if(ALLOW_MESSAGES) {
+  if(ALLOW_MSG) {
     if(isSpiGained) {
       if(this == eng.player) {
         eng.log->addMsg("I feel more spirited!", clrMsgGood);
@@ -295,11 +293,11 @@ bool Actor::restoreSpi(const int SPI_RESTORED,
   return isSpiGained;
 }
 
-void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MESSAGES) {
+void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG) {
   hpMax_  = max(1, hpMax_ + CHANGE);
   hp_     = max(1, hp_ + CHANGE);
 
-  if(ALLOW_MESSAGES) {
+  if(ALLOW_MSG) {
     if(this == eng.player) {
       if(CHANGE > 0) {
         eng.log->addMsg("I feel more vigorous!");
@@ -383,7 +381,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   }
 
   if(dmgType == DmgType::spirit) {
-    return hitSpi(dmg);
+    return hitSpi(dmg, true);
   }
 
   //Property resists?
@@ -447,14 +445,22 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   }
 }
 
-bool Actor::hitSpi(const int DMG) {
+bool Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
+  if(ALLOW_MSG) {
+    if(this == eng.player) {
+      eng.log->addMsg("My spirit is drained!", clrMsgBad);
+    }
+  }
+
+  propHandler_->onHit();
+
   if(this != eng.player || Config::isBotPlaying() == false) {
     spi_ = max(0, spi_ - DMG);
   }
   if(getSpi() <= 0) {
     if(this == eng.player) {
-      eng.log->addMsg(
-        "All my spirit is depleted, I am devoid of life!");
+      eng.log->addMsg("All my spirit is depleted, I am devoid of life!",
+                      clrMsgBad);
     } else {
       if(eng.player->isSeeingActor(*this, NULL)) {
         eng.log->addMsg(getNameThe() + " has no spirit left!");

@@ -37,8 +37,7 @@ public:
 
   void reset();
 
-  int getVal(const AbilityId ability,
-             const bool IS_AFFECTED_BY_STATUS_EFFECTS,
+  int getVal(const AbilityId ability, const bool IS_AFFECTED_BY_PROPS,
              Actor& actor) const;
 
   inline int getRawVal(const AbilityId ability) {

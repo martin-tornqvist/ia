@@ -83,8 +83,9 @@ void getTraitTitle(const Trait id, string& strRef) {
     case Trait::vigilant:             strRef = "Vigilant";                break;
     case Trait::rapidRecoverer:       strRef = "Rapid Recoverer";         break;
     case Trait::survivalist:          strRef = "Survivalist";             break;
+    case Trait::perseverant:          strRef = "Perseverant";             break;
     case Trait::selfAware:            strRef = "Self-aware";              break;
-    case Trait::potentSpirit:         strRef = "Potent Spirit";           break;
+    case Trait::stoutSpirit:          strRef = "Stout Spirit";            break;
     case Trait::strongSpirit:         strRef = "Strong Spirit";           break;
     case Trait::mightySpirit:         strRef = "Mighty Spirit";           break;
     case Trait::stealthy:             strRef = "Stealthy";                break;
@@ -115,8 +116,8 @@ void getBgDescr(const Bg id, vector<string>& linesRef) {
       linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back(" ");
-      getTraitTitle(Trait::potentSpirit, s); linesRef.push_back("* " + s);
-      getTraitDescr(Trait::potentSpirit, s); linesRef.push_back(s);
+      getTraitTitle(Trait::stoutSpirit, s); linesRef.push_back("* " + s);
+      getTraitDescr(Trait::stoutSpirit, s); linesRef.push_back(s);
     } break;
 
     case Bg::rogue: {
@@ -165,15 +166,15 @@ void getTraitDescr(const Trait id, string& strRef) {
 
   switch(id) {
     case Trait::adeptMeleeFighter: {
-      strRef = "+10% hit chance with melee weapons";
+      strRef = "+10% hit chance with melee attacks";
     } break;
 
     case Trait::expertMeleeFighter: {
-      strRef = "+10% hit chance with melee weapons";
+      strRef = "+10% hit chance with melee attacks";
     } break;
 
     case Trait::masterMeleeFighter: {
-      strRef = "+10% hit chance with melee weapons";
+      strRef = "+10% hit chance with melee attacks";
     } break;
 
     case Trait::adeptMarksman: {
@@ -293,12 +294,18 @@ void getTraitDescr(const Trait id, string& strRef) {
                "from wounds and disease reduced by 50%";
     } break;
 
+    case Trait::perseverant: {
+      strRef = "When your Hit Points are reduced to 25% or less, you gain "
+               "+50% chance to dodge melee attacks, and +30% hit chance with "
+               "melee and ranged attacks";
+    } break;
+
     case Trait::selfAware: {
       strRef = "You cannot become confused, the number of remaining turns "
                "for status effects are displayed";
     } break;
 
-    case Trait::potentSpirit: {
+    case Trait::stoutSpirit: {
       strRef = "+2 Spirit Points, increased Spirit regeneration rate";
     } break;
 
@@ -438,16 +445,21 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef) {
       traitsRef.push_back(Trait::rapidRecoverer);
     } break;
 
+    case Trait::perseverant: {
+      traitsRef.push_back(Trait::tough);
+      traitsRef.push_back(Trait::fearless);
+    } break;
+
     case Trait::selfAware: {
-      traitsRef.push_back(Trait::potentSpirit);
+      traitsRef.push_back(Trait::stoutSpirit);
       traitsRef.push_back(Trait::observant);
     } break;
 
-    case Trait::potentSpirit: {
+    case Trait::stoutSpirit: {
     } break;
 
     case Trait::strongSpirit: {
-      traitsRef.push_back(Trait::potentSpirit);
+      traitsRef.push_back(Trait::stoutSpirit);
     } break;
 
     case Trait::mightySpirit: {
@@ -546,7 +558,7 @@ void pickBg(const Bg bg, Engine& eng) {
 
   switch(bg_) {
     case Bg::occultist: {
-      pickTrait(Trait::potentSpirit, eng);
+      pickTrait(Trait::stoutSpirit, eng);
 
       eng.player->changeMaxHp(-2, false);
 
@@ -618,7 +630,7 @@ void pickTrait(const Trait id, Engine& eng) {
       eng.player->changeMaxHp(2, false);
     } break;
 
-    case Trait::potentSpirit: {
+    case Trait::stoutSpirit: {
       eng.player->changeMaxSpi(2, false);
     } break;
 

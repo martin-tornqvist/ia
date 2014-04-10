@@ -163,7 +163,7 @@ void GameTime::runStandardTurnEvents() {
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
 
-  int regenSpiEveryNTurns = 12;
+  int regenSpiNTurns = 12;
 
   for(size_t i = 0; i < actors_.size(); i++) {
     Actor* const actor = actors_.at(i);
@@ -186,18 +186,14 @@ void GameTime::runStandardTurnEvents() {
     if(actor->deadState == ActorDeadState::alive) {
       //Regen Spi
       if(actor == eng.player) {
-        if(PlayerBon::hasTrait(Trait::potentSpirit)) {
-          regenSpiEveryNTurns -= 2;
-        }
-        if(PlayerBon::hasTrait(Trait::strongSpirit)) {
-          regenSpiEveryNTurns -= 2;
-        }
-        if(PlayerBon::hasTrait(Trait::mightySpirit)) {
-          regenSpiEveryNTurns -= 2;
-        }
+        if(PlayerBon::hasTrait(Trait::stoutSpirit))   regenSpiNTurns -= 2;
+        if(PlayerBon::hasTrait(Trait::strongSpirit))  regenSpiNTurns -= 2;
+        if(PlayerBon::hasTrait(Trait::mightySpirit))  regenSpiNTurns -= 2;
       }
 
-      if(isSpiRegenThisTurn(regenSpiEveryNTurns)) {
+      regenSpiNTurns = max(2, regenSpiNTurns);
+
+      if(isSpiRegenThisTurn(regenSpiNTurns)) {
         actor->restoreSpi(1, false);
       }
 

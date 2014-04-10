@@ -15,23 +15,11 @@ class Item;
 
 class Actor;
 
-//struct ThrownObject {
-////  double xIncr, yIncr, xPos_prec, yPos_prec, hypot;
-//  Pos pos;
-//  Pos aimPos;
-//  int cellPotential;
-//  vector<Pos> flightPath;
-//  //  Pos blockedByCell;
-//};
-
 class Thrower {
 public:
-  Thrower(Engine& engine) :
-    eng(engine) {
-  }
+  Thrower(Engine& engine) : eng(engine) {}
 
-  void throwItem(Actor& actorThrowing, const Pos& targetCell,
-                 Item& itemThrown);
+  void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown);
 
   void playerThrowLitExplosive(const Pos& aimCell);
 

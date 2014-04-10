@@ -37,16 +37,14 @@ public:
   virtual void place_() {}
 
   bool hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS);
-  bool hitSpi(const int DMG);
+  bool hitSpi(const int DMG, const bool ALLOW_MSG);
 
-  bool restoreHp(const int HP_RESTORED,
-                 const bool ALLOW_MESSAGES = true,
+  bool restoreHp(const int HP_RESTORED, const bool ALLOW_MSG = true,
                  const bool IS_ALLOWED_ABOVE_MAX = false);
-  bool restoreSpi(const int SPI_RESTORED,
-                  const bool ALLOW_MESSAGES = true,
+  bool restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG = true,
                   const bool IS_ALLOWED_ABOVE_MAX = false);
-  void changeMaxHp(const int CHANGE, const bool ALLOW_MESSAGES);
-  void changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES);
+  void changeMaxHp(const int CHANGE, const bool ALLOW_MSG);
+  void changeMaxSpi(const int CHANGE, const bool ALLOW_MSG);
 
   void die(const bool IS_DESTROYED, const bool ALLOW_GORE,
            const bool ALLOW_DROP_ITEMS);

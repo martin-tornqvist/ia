@@ -248,7 +248,7 @@ void DeviceLantern::newTurnInInventory() {
       } else if(RND <= 40) {
         eng.log->addMsg("My Electric Lantern starts to flicker.");
         malfState_        = LanternMalfState::flicker;
-        malfunctCooldown_ = Rnd::range(4, 6);
+        malfunctCooldown_ = Rnd::range(4, 12);
       } else {
         malfState_        = LanternMalfState::working;
       }

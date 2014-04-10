@@ -376,7 +376,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
       if(SpottedEnemies.empty()) {
         const int TURNS_TO_APPLY = 5;
         const string TURNS_STR = toStr(TURNS_TO_APPLY);
-        eng.log->addMsg("I pause for a while (" + TURNS_STR + " turns).");
+        eng.log->addMsg("I pause for a while (" + TURNS_STR + " turns)...");
         eng.player->waitTurnsLeft = TURNS_TO_APPLY - 1;
         eng.gameTime->actorDidAct();
       } else {
