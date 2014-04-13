@@ -25,12 +25,12 @@ void ActorData::reset() {
   for(int i = 0; i < endOfPropIds; i++) {intrProps[i] = false;}
   rangedCooldownTurns = spellCooldownTurns = 0;
   abilityVals.reset();
-  for(int i = 0; i < endOfAiBehaviorId; i++) {ai[i] = false;}
+  for(int i = 0; i < int(Ai::endOfAi); i++) {ai[i] = false;}
   nrTurnsAwarePlayer = 0;
   spawnMinDLVL = spawnMaxDLVL = 999;
   actorSize = actorSize_humanoid;
   isHumanoid = false;
-  isAutoDescriptionAllowed = true;
+  isAutoDescrAllowed = true;
   deathMessageOverride = "";
   nrOfKills = 0;
   canOpenDoors = canBashDoors = false;
@@ -46,7 +46,7 @@ void ActorData::reset() {
   canBleed = true;
   canLeaveCorpse = true;
   nativeRooms.resize(0);
-  description = "";
+  descr = "";
   aggroTextMonsterSeen = "";
   aggroTextMonsterHidden = "";
   aggroSfxMonsterSeen = SfxId::endOfSfxId;
@@ -74,7 +74,7 @@ void ActorDataHandler::setParamsFromSaveLines(vector<string>& lines) {
 
 void ActorDataHandler::addData(ActorData& d) {
   dataList[d.id] = d;
-  d.description.resize(0);
+  d.descr.resize(0);
 }
 
 void ActorDataHandler::initDataList() {
@@ -100,13 +100,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Reanimated Corpse";
   d.name_the = "The Reanimated Corpse";
   d.id = actor_zombie;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
@@ -123,7 +123,9 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 12;
-  d.description = "This rotting thing appears to have been brought back to life through some abominable process. It has grown sharp claws to attack with.";
+  d.descr = "This rotting thing appears to have been brought back to life "
+            "through some abominable process. It has grown sharp claws to "
+            "attack with.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
   d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
@@ -140,13 +142,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Reanimated Corpse";
   d.name_the = "The Reanimated Corpse";
   d.id = actor_zombieAxe;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
@@ -164,7 +166,8 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 10;
-  d.description = "This rotting thing appears to have been brought back to life through some abominable process. It is wielding a rusty axe.";
+  d.descr = "This rotting thing appears to have been brought back to life "
+            "through some abominable process. It is wielding a rusty axe.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
   d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
@@ -181,13 +184,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Bloated Corpse";
   d.name_the = "The Bloated Corpse";
   d.id = actor_bloatedZombie;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 20;
   d.glyph = 'Z';
@@ -206,7 +209,9 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 50;
-  d.description = "This lumbering giant corpse seems to be artificially bloated somehow. It is constantly oozing putrid liquid that it can spit to attack with.";
+  d.descr = "This lumbering giant corpse seems to be artificially bloated "
+            "somehow. It is constantly oozing putrid liquid that it can spit "
+            "to attack with.";
   d.aggroTextMonsterHidden = "I hear heavy footsteps.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = MonsterShockLevel::scary;
@@ -220,13 +225,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "Major Clapham-Lee";
   d.name_the = "Major Clapham-Lee";
   d.id = actor_majorClaphamLee;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
@@ -243,7 +248,10 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 999;
-  d.description = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer during the Great War. Shortly after his plane was shot down, his body was stolen. Now he roams these halls as a resurrected warrior in service of the cult, commanding a squad of undead.";
+  d.descr = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer "
+            "during the Great War. Shortly after his plane was shot down, his "
+            "body was stolen. Now he roams these halls as a resurrected "
+            "warrior in service of the cult, commanding a squad of undead.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
@@ -258,13 +266,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "Dean Halsey";
   d.name_the = "Dean Halsey";
   d.id = actor_deanHalsey;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
@@ -282,7 +290,9 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
   d.nrTurnsAwarePlayer = 999;
-  d.description = "Alan Halsey was the dean of the Miskatonic University in New England. Somehow he must have gotten into the hands of the Cult, who turned him into the hellish zombie warrior I now see before me.";
+  d.descr = "Alan Halsey was the dean of the Miskatonic University in New "
+            "England. He must have gotten into the hands of the Cult, who "
+            "turned him into the hellish zombie warrior I now see before me.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
@@ -297,13 +307,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Cultist";
   d.name_the = "The Cultist";
   d.id = actor_cultist;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
@@ -322,7 +332,8 @@ void ActorDataHandler::initDataList() {
   d.canOpenDoors = true;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language.";
+  d.descr = "A fanatic cultist of the lowest rank, madly gibbering in some "
+            "half-lost language.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -334,13 +345,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Cultist";
   d.name_the = "The Cultist";
   d.id = actor_cultistTeslaCannon;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
@@ -359,7 +370,8 @@ void ActorDataHandler::initDataList() {
   d.canOpenDoors = true;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. It is wielding a Tesla Cannon.";
+  d.descr = "A fanatic cultist of the lowest rank, madly gibbering in some "
+            "half-lost language. It is wielding a Tesla Cannon.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -371,13 +383,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Cultist";
   d.name_the = "The Cultist";
   d.id = actor_cultistSpikeGun;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
@@ -396,7 +408,8 @@ void ActorDataHandler::initDataList() {
   d.canOpenDoors = true;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "A fanatic cultist of the lowest rank, madly gibbering in some half-lost language. It is wielding a Spike gun.";
+  d.descr = "A fanatic cultist of the lowest rank, madly gibbering in some "
+            "half-lost language. It is wielding a Spike gun.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -408,12 +421,12 @@ void ActorDataHandler::initDataList() {
   d.name_a = "Keziah Mason";
   d.name_the = "Keziah Mason";
   d.id = actor_keziahMason;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 2;
@@ -431,7 +444,16 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
-  d.description = "During the Salem witch trials of 1692 an old woman by the name of Keziah Mason was arrested for her suspicious behavior and seeming insight into other worlds. In her testimony to the judge, she confessed to having signed her name in the Black Book of Azathoth, and of her secret name of Nahab. She later disappeared mysteriously from Salem. She is described as having a \"bent back, long nose, and shrivelled chin\" and has a \"croaking voice\". She has an animal familiar; the rat Brown Jenkin, which she trusts to carry messages between her and the devil. She feeds this creature on her blood.";
+  d.descr = "During the Salem witch trials of 1692 an old woman by the name of "
+            "Keziah Mason was arrested for her suspicious behavior and seeming "
+            "insight into other worlds. In her testimony to the judge, she "
+            "confessed to having signed her name in the Black Book of "
+            "Azathoth, and of her secret name of Nahab. She later disappeared "
+            "mysteriously from Salem. She is described as having a \"bent "
+            "back, long nose, and shrivelled chin\" and has a \"croaking "
+            "voice\". She has an animal familiar; the rat Brown Jenkin, which "
+            "she trusts to carry messages between her and the devil. She feeds "
+            "this creature on her blood.";
   d.spellCastMessage = "Keziah makes strange gestures in the air.";
   d.aggroTextMonsterSeen = d.name_the + " chortles at me in a croaking voice.";
   d.aggroTextMonsterHidden = "I hear a repulsive croaking voice.";
@@ -446,13 +468,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "Brown Jenkin";
   d.name_the = "Brown Jenkin";
   d.id = actor_brownJenkin;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
@@ -468,7 +490,18 @@ void ActorDataHandler::initDataList() {
   d.spawnMinDLVL = dataList[actor_keziahMason].spawnMinDLVL;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_floor;
-  d.description = "\"That object - no larger than a good sized rat and quaintly called by the townspeople, \"Brown Jenkin\" - seemed to have been the fruit of a remarkable case of sympathetic herd-delusion, for in 1692, no less than eleven persons had testified to glimpsing it. There were recent rumors, too, with a baffling and disconcerting amount of agreement. Witnesses said it had long hair and the shape of a rat, but that its sharp-toothed, bearded face was evilly human while its paws were like tiny human hands. It took messages betwixt old Keziah and the devil, and was nursed on the witch's blood, which it sucked like a vampire. Its voice was a kind of loathsome titter, and could speak all languages.\" H.P.Lovecraft -\"Dreams in the witch house\".";
+  d.descr = "\"That object - no larger than a good sized rat and quaintly "
+            "called by the townspeople, \"Brown Jenkin\" - seemed to have been "
+            "the fruit of a remarkable case of sympathetic herd-delusion, for "
+            "in 1692, no less than eleven persons had persons had testified to "
+            "glimpsing it. There were recent rumors, too, with a baffling and "
+            "disconcerting amount of agreement. Witnesses said it had long "
+            "hair and the shape of a rat, but that its sharp-toothed, bearded "
+            "face was evilly human while its paws were like tiny human hands. "
+            "It took messages betwixt old Keziah and the devil, and was nursed "
+            "on the witch's blood, which it sucked like a vampire. Its voice "
+            "was a kind of loathsome titter, and could speak all languages.\" "
+            "H.P.Lovecraft -\"Dreams in the witch house\".";
   d.aggroTextMonsterSeen = d.name_the + " titters at me in a loathsome voice.";
   d.aggroTextMonsterHidden = "I hear a loathsome titter.";
   d.nrTurnsAwarePlayer = 999;
@@ -497,13 +530,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Cultist Priest";
   d.name_the = "The Cultist Priest";
   d.id = actor_cultistPriest;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 2;
@@ -521,7 +554,8 @@ void ActorDataHandler::initDataList() {
   d.canOpenDoors = true;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "A fanatic cultist of the priest rank, madly gibbering in some half-lost language.";
+  d.descr = "A fanatic cultist of the priest rank, madly gibbering in some "
+            "half-lost language.";
   d.spellCastMessage = "The priest makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -533,13 +567,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Green Spider";
   d.name_the = "The Green Spider";
   d.id = actor_greenSpider;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
@@ -554,7 +588,7 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "A large green spider.";
+  d.descr = "A large green spider.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -565,13 +599,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A White Spider";
   d.name_the = "The White Spider";
   d.id = actor_whiteSpider;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
@@ -586,7 +620,7 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.nrTurnsAwarePlayer = 5;
   d.actorSize = actorSize_floor;
-  d.description = "A large white spider.";
+  d.descr = "A large white spider.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -597,13 +631,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Red Spider";
   d.name_the = "The Red Spider";
   d.id = actor_redSpider;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
@@ -618,7 +652,7 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.nrTurnsAwarePlayer = 5;
   d.actorSize = actorSize_floor;
-  d.description = "A large red spider.";
+  d.descr = "A large red spider.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -629,13 +663,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Shadow Spider";
   d.name_the = "The Shadow Spider";
   d.id = actor_shadowSpider;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
@@ -655,7 +689,7 @@ void ActorDataHandler::initDataList() {
   d.isSpider = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.description = "A faint shadow of a huge spider, lurking in my periphery.";
+  d.descr = "A faint shadow of a huge spider, lurking in my periphery.";
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
@@ -665,13 +699,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Leng Spider";
   d.name_the = "The Leng Spider";
   d.id = actor_lengSpider;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'S';
@@ -687,7 +721,9 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeFew;
   d.nrTurnsAwarePlayer = 20;
   d.actorSize = actorSize_giant;
-  d.description = "Leng spiders are huge, purplish arachnids, with pustulent bloated bodies and long, bristly legs. Native to the Dreamlands, the spiders of Leng are intelligent, dangerous, and gigantic.";
+  d.descr = "Leng spiders are huge, purplish arachnids, with pustulent bloated "
+            "bodies and long, bristly legs. Native to the Dreamlands, the "
+            "spiders of Leng are intelligent, dangerous, and gigantic.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
   d.monsterShockLevel = MonsterShockLevel::scary;
@@ -699,13 +735,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Fire hound";
   d.name_the = "The Fire hound";
   d.id = actor_fireHound;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
@@ -724,7 +760,8 @@ void ActorDataHandler::initDataList() {
   d.actorSize = actorSize_floor;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "This extremely aggressive canine seems to be part corporeal and part fire. It breathes searing flames.";
+  d.descr = "This extremely aggressive canine seems to be part corporeal and "
+            "part fire. It breathes searing flames.";
   d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a snarl.";
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
@@ -741,13 +778,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Frost hound";
   d.name_the = "The Frost hound";
   d.id = actor_frostHound;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
@@ -766,7 +803,8 @@ void ActorDataHandler::initDataList() {
   d.actorSize = actorSize_floor;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "This extremely aggressive canine seems to be part corporeal and part living ice. It breathes frost.";
+  d.descr = "This extremely aggressive canine seems to be part corporeal and "
+            "part living ice. It breathes frost.";
   d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a snarl.";
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
@@ -783,13 +821,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "Zuul the Gatekeeper";
   d.name_the = "Zuul the Gatekeeper";
   d.id = actor_zuul;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.glyph = 'D';
   d.color = clrGray;
@@ -807,7 +845,9 @@ void ActorDataHandler::initDataList() {
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 50;
-  d.description = "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It was worshiped by the Sumerians and Hittites in 6000 BC, along with Gozer.";
+  d.descr = "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It "
+            "was worshiped by the Sumerians and Hittites in 6000 BC, along "
+            "with Gozer.";
   d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a snarl.";
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
@@ -828,13 +868,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Ghost";
   d.name_the = "The Ghost";
   d.id = actor_ghost;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
@@ -853,7 +893,7 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "A restless spirit.";
+  d.descr = "A restless spirit.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
@@ -870,13 +910,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Phantasm";
   d.name_the = "The Phantasm";
   d.id = actor_phantasm;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
@@ -895,7 +935,9 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 7;
-  d.description = "It exists between the land of the dead and the living. It resembles a grim reaper, including the cloak, scythe, and skeletal appearance.";
+  d.descr = "It exists between the land of the dead and the living. It "
+            "resembles a grim reaper, including the cloak, scythe, and "
+            "skeletal appearance.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
@@ -912,13 +954,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Wraith";
   d.name_the = "The Wraith";
   d.id = actor_wraith;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 4;
@@ -938,7 +980,7 @@ void ActorDataHandler::initDataList() {
   d.spellCastMessage = "The Wraith casts a spell.";
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "A powerful spirit.";
+  d.descr = "A powerful spirit.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.isUndead = true;
@@ -955,13 +997,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Rat";
   d.name_the = "The Rat";
   d.id = actor_rat;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = false;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = false;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
@@ -977,7 +1019,7 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeHorde;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "A large and aggressive rodent.";
+  d.descr = "A large and aggressive rodent.";
   d.erraticMovement = actorErratic_somewhat;
   d.isRat = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -991,13 +1033,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Rat-thing";
   d.name_the = "The Rat-thing";
   d.id = actor_ratThing;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = false;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = false;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
@@ -1014,7 +1056,12 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeHorde;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "At first sight, a Rat-thing can easily be mistaken for a large, dark rat. On closer examination, however, their human hands and evil caricatures of human heads reveal their unnatural nature. Rat-things are said to be created from dead cultists by foul witchcraft. Thus, they are found where the witch who created them had her lair.";
+  d.descr = "At first sight, a Rat-thing can easily be mistaken for a large, "
+            "dark rat. On closer examination, however, their human hands and "
+            "evil caricatures of human heads reveal their unnatural nature. "
+            "Rat-things are said to be created from dead cultists by foul "
+            "witchcraft. Thus, they are found where the witch who created them "
+            "had her lair.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.isRat = true;
@@ -1029,13 +1076,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Wolf";
   d.name_the = "The Wolf";
   d.id = actor_wolf;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'd';
@@ -1052,7 +1099,7 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "A large wolf with eyes full of cunning.";
+  d.descr = "A large wolf with eyes full of cunning.";
   d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a chilling howl.";
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
@@ -1067,13 +1114,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Giant Bat";
   d.name_the = "The Giant Bat";
   d.id = actor_giantBat;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fastest;
   d.glyph = 'B';
   d.color = clrGray;
@@ -1090,7 +1137,8 @@ void ActorDataHandler::initDataList() {
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "An unknown species, perhaps stemming from some hidden bowels of the earth. It is about as tall as a full-grown human.";
+  d.descr = "An unknown species, perhaps stemming from some hidden bowels of "
+            "the earth. It is about as tall as a full-grown human.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
   d.aggroSfxMonsterSeen = SfxId::flappingWings;
   d.aggroSfxMonsterHidden = SfxId::flappingWings;
@@ -1105,13 +1153,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Byakhee";
   d.name_the = "The Byakhee";
   d.id = actor_byakhee;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fastest;
   d.glyph = 'B';
   d.color = clrBrownDrk;
@@ -1129,7 +1177,15 @@ void ActorDataHandler::initDataList() {
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "\"There flapped rhythmically a horde of tame, trained, hybrid winged things ... not altogether crows, nor moles, nor buzzards, nor ants, nor decomposed human beings, but something I cannot and must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee appears as a disturbing mixture of creatures composing a humanoid form. Insect traits vie with predatory birds, digging mammals, and possibly the necrotic flesh of human victims. At home in lonely voids of interstellar space, Byakhee are a created race, though their origin is buried in the distant past.";
+  d.descr = "\"There flapped rhythmically a horde of tame, trained, hybrid "
+            "winged things ... not altogether crows, nor moles, nor buzzards, "
+            "nor ants, nor decomposed human beings, but something I cannot and "
+            "must not recall.\"-H.P. Lovecraft, \"The Festival\". A Byakhee "
+            "appears as a disturbing mixture of creatures composing a humanoid "
+            "form. Insect traits vie with predatory birds, digging mammals, "
+            "and possibly the necrotic flesh of human victims. At home in "
+            "lonely voids of interstellar space, Byakhee are a created race, "
+            "though their origin is buried in the distant past.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
   d.aggroSfxMonsterSeen = SfxId::flappingWings;
   d.aggroSfxMonsterHidden = SfxId::flappingWings;
@@ -1144,13 +1200,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Giant Mantis";
   d.name_the = "The Giant Mantis";
   d.id = actor_giantMantis;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fastest;
   d.glyph = 'I';
   d.color = clrGreenLgt;
@@ -1167,7 +1223,7 @@ void ActorDataHandler::initDataList() {
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.nrTurnsAwarePlayer = 5;
-  d.description = "A huge predatory insect.";
+  d.descr = "A huge predatory insect.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.canBeSummoned = false;
@@ -1178,13 +1234,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Giant Locust";
   d.name_the = "The Giant Locust";
   d.id = actor_giantLocust;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.glyph = 'I';
   d.color = clrBrown;
@@ -1201,7 +1257,7 @@ void ActorDataHandler::initDataList() {
   d.actorSize = actorSize_floor;
   d.canBashDoors = false;
   d.nrTurnsAwarePlayer = 12;
-  d.description = "A huge swarming insect. They breed rapidly.";
+  d.descr = "A huge swarming insect. They breed rapidly.";
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::none;
   d.canBeSummoned = false;
@@ -1212,13 +1268,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Fungi from Yuggoth";
   d.name_the = "The Fungi from Yuggoth";
   d.id = actor_miGo;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = false;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = false;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 3;
@@ -1237,7 +1293,23 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "Fungi are more closely related to animals than plants, so it's no wonder that on some worlds, fungal life evolved to dominate animal based intelligences. The mi-go, as they are called, come from such a world. More like crustaceans than any other terrestrial life form, they find themselves somewhat hampered by our planet's thicker atmosphere and heavy gravity. They are a highly scientific race with great aptitude for surgery. Typical mi-go have heads like large exposed brains, with many convolutions on the wrinkled surfaces; six to eight limbs, a single pair of vast membranous wings, and a long semiprehensile tail trailing beind. They have visited Earth for centuries to mine certain minerals not available on their icy world, and more recently, to study its odd inhabitants. The mi-go are responsible for many \"alien abduction\" kidnappings. Physically they are not much more robust than the average human, they rely upon their superior science to subdue any primitives who stumble upon their mines and outposts.";
+  d.descr = "Fungi are more closely related to animals than plants, so it's no "
+            "wonder that on some worlds, fungal life evolved to dominate "
+            "animal based intelligences. The mi-go, as they are called, come "
+            "from such a world. More like crustaceans than any other "
+            "terrestrial life form, they find themselves somewhat hampered by "
+            "our planet's thicker atmosphere and heavy gravity. They are a "
+            "highly scientific race with great aptitude for surgery. Typical "
+            "Mi-go have heads like large exposed brains, with many "
+            "convolutions on the wrinkled surfaces; six to eight limbs, a "
+            "single pair of vast membranous wings, and a long semiprehensile "
+            "tail trailing beind. They have visited Earth for centuries to "
+            "mine certain minerals not available on their icy world, and more "
+            "recently, to study its odd inhabitants. The mi-go are responsible "
+            "for many \"alien abduction\" kidnappings. Physically they are not "
+            "much more robust than the average human, they rely upon their "
+            "superior science to subdue any primitives who stumble upon their "
+            "mines and outposts.";
   d.spellCastMessage = "The Fungi makes strange gestures in the air.";
   d.aggroTextMonsterSeen = d.name_the + " speaks at me in a droning voice.";
   d.aggroTextMonsterHidden = "I hear a droning voice.";
@@ -1253,13 +1325,13 @@ void ActorDataHandler::initDataList() {
   d.id = actor_flyingPolyp;
   d.canBeSummoned = false;
   d.canBleed = false;
-  d.ai[aiLooks] = false;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = false;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
@@ -1285,7 +1357,13 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = false;
   d.canOpenDoors = false;
   d.nrTurnsAwarePlayer = 6;
-  d.description = "Flying polyps are a horrible elder race of half polypous, utterly alien entities. They are only partly material and have the power of aerial motion, despite the absence of wings. Their senses does not include sight, but what senses they have can penetrate all material obstructions. They are invulnerable to normal means of damage, though they can be destroyed by certain forms of electrical energy.";
+  d.descr = "Flying polyps are a horrible elder race of half polypous, utterly "
+            "alien entities. They are only partly material and have the power "
+            "of aerial motion, despite the absence of wings. Their senses does "
+            "not include sight, but what senses they have can penetrate all "
+            "material obstructions. They are invulnerable to normal means of "
+            "damage, though they can be destroyed by certain forms of "
+            "electrical energy.";
   d.aggroTextMonsterSeen = d.name_the + " makes shrill whistling noises.";
   d.aggroTextMonsterHidden = "I hear a shrill whistling.";
   d.erraticMovement = actorErratic_somewhat;
@@ -1297,13 +1375,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Ghoul";
   d.name_the = "The Ghoul";
   d.id = actor_ghoul;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'M';
@@ -1321,7 +1399,14 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 25;
-  d.description = "\"These figures were seldom completely human, but often approached humanity in varying degrees. Most of the bodies, while roughly bipedal, had a forward slumping, and a vaguely canine cast. The texture of the majority was a kind of unpleasant rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are rubbery, loathsome humanoids with hooflike feet, canine features, and claws. They are often encrusted with grave mold collected as they feed.";
+  d.descr = "\"These figures were seldom completely human, but often "
+            "approached humanity in varying degrees. Most of the bodies, while "
+            "roughly bipedal, had a forward slumping, and a vaguely canine "
+            "cast. The texture of the majority was a kind of unpleasant "
+            "rubberiness\" -H.P.Lovecraft \"Pickman's Model\". Ghouls are "
+            "rubbery, loathsome humanoids with hooflike feet, canine features, "
+            "and claws. They are often encrusted with grave mold collected as "
+            "they feed.";
   d.aggroTextMonsterSeen = d.name_the + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a chilling howl.";
   d.aggroSfxMonsterSeen = SfxId::ghoulGrowl;
@@ -1336,13 +1421,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Shadow";
   d.name_the = "The Shadow";
   d.id = actor_shadow;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = false;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = false;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'M';
@@ -1368,8 +1453,8 @@ void ActorDataHandler::initDataList() {
   d.canLeaveCorpse = false;
   d.deathMessageOverride = "The shadow fades.";
   d.nrTurnsAwarePlayer = 25;
-  d.description = "A living shadow";
-  d.isAutoDescriptionAllowed = false;
+  d.descr = "A living shadow";
+  d.isAutoDescrAllowed = false;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::monster);
@@ -1380,13 +1465,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Mummy";
   d.name_the = "The Mummy";
   d.id = actor_mummy;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
@@ -1403,7 +1488,7 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 9999;
-  d.description = "A mummified human being, possibly dating back millennia.";
+  d.descr = "A mummified human being, possibly dating back millennia.";
   d.spellCastMessage = "The mummy casts a spell.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = MonsterShockLevel::scary;
@@ -1416,13 +1501,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "Khephren";
   d.name_the = "Khephren";
   d.id = actor_khephren;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
@@ -1442,7 +1527,9 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 9999;
-  d.description = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he came to dwell here is beyond my guess. His name means \"Rise, Ra!\"";
+  d.descr = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he "
+            "came to dwell here is beyond my guess. His name means "
+            "\"Rise, Ra!\"";
   d.spellCastMessage = "Khephren casts a spell.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = MonsterShockLevel::terrifying;
@@ -1455,13 +1542,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "Nitokris";
   d.name_the = "Nitokris";
   d.id = actor_nitokris;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
@@ -1480,7 +1567,12 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 9999;
-  d.description = "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she came to dwell here is beyond my guess. Her name is found in the histories of Herodotus and writings of Manetho. According to the writings of the former, she took the throne by inviting her brothers murderers to a banquet. Then killed them by flooding the sealed room with the Nile.";
+  d.descr = "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she "
+            "came to dwell here is beyond my guess. Her name is found in the "
+            "histories of Herodotus and writings of Manetho. According to the "
+            "writings of the former, she took the throne by inviting her "
+            "brothers murderers to a banquet. Then killed them by flooding the "
+            "sealed room with the Nile.";
   d.spellCastMessage = "Nitokris casts a spell.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = MonsterShockLevel::terrifying;
@@ -1493,13 +1585,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Deep One";
   d.name_the = "The Deep One";
   d.id = actor_deepOne;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = true;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = true;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 15;
   d.glyph = 'F';
@@ -1518,7 +1610,14 @@ void ActorDataHandler::initDataList() {
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAwarePlayer = 20;
-  d.description = "Deep ones are misbegotten creatures of the deep. A deep one appears as an abominable crossbreed of a human and amphibian. Its fins are merged with twisted arms and legs; its bent back is crowned with a long, spiny frill. They can breathe both air and water. In the timeless depths of the sea, the deep one's alien, arrogant lives are coldly beautiful, unbelievably cruel, and effectively immortal. Deep ones may be worshipped by humans with whom they regularly interbreed.";
+  d.descr = "Deep ones are misbegotten creatures of the deep. A deep one "
+            "appears as an abominable crossbreed of a human and amphibian. Its "
+            "fins are merged with twisted arms and legs; its bent back is "
+            "crowned with a long, spiny frill. They can breathe both air and "
+            "water. In the timeless depths of the sea, the deep one's alien, "
+            "arrogant lives are coldly beautiful, unbelievably cruel, and "
+            "effectively immortal. Deep ones may be worshipped by humans with "
+            "whom they regularly interbreed.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::flooded);
@@ -1529,13 +1628,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Mass of Worms";
   d.name_the = "The Mass of Worms";
   d.id = actor_wormMass;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = false;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = false;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'w';
@@ -1551,8 +1650,9 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 10;
-  d.description = "A slithering conglomeration of carnivorous worms. They multiply rapidly.";
-  d.isAutoDescriptionAllowed = false;
+  d.descr = "A slithering conglomeration of carnivorous worms. They multiply "
+            "rapidly.";
+  d.isAutoDescrAllowed = false;
   d.erraticMovement = actorErratic_very;
   d.canBleed = false;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -1563,13 +1663,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Dust Vortex";
   d.name_the = "The Dust Vortex";
   d.id = actor_dustVortex;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = false;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = false;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
@@ -1587,10 +1687,11 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeFew;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
-  d.isAutoDescriptionAllowed = true;
+  d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = true;
-  d.description = "A spinning force of destruction. It seems to move with some manner of purpose.";
+  d.descr = "A spinning force of destruction. It seems to move with some "
+            "manner of purpose.";
   d.aggroTextMonsterHidden = "I hear a howling wind.";
   d.canBeSummoned = true;
   d.canBleed = false;
@@ -1604,13 +1705,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Fire Vortex";
   d.name_the = "The Fire Vortex";
   d.id = actor_fireVortex;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = false;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = false;
   d.speed = ActorSpeed::normal ;
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
@@ -1628,10 +1729,11 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeFew;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
-  d.isAutoDescriptionAllowed = true;
+  d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = true;
-  d.description = "A spinning force of fire and destruction. It seems to move with some manner of purpose.";
+  d.descr = "A spinning force of fire and destruction. It seems to move with "
+            "some manner of purpose.";
   d.aggroTextMonsterHidden = "I hear a howling wind.";
   d.canBeSummoned = true;
   d.canBleed = false;
@@ -1645,13 +1747,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Frost Vortex";
   d.name_the = "The Frost Vortex";
   d.id = actor_frostVortex;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = false;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = false;
   d.speed = ActorSpeed::normal ;
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
@@ -1669,10 +1771,11 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeFew;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
-  d.isAutoDescriptionAllowed = true;
+  d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = true;
-  d.description = "A spinning force of ice and destruction. It seems to move with some manner of purpose.";
+  d.descr = "A spinning force of ice and destruction. It seems to move with "
+            "some manner of purpose.";
   d.aggroTextMonsterHidden = "I hear a howling wind.";
   d.canBeSummoned = true;
   d.canBleed = false;
@@ -1686,13 +1789,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Black Ooze";
   d.name_the = "The Black Ooze";
   d.id = actor_oozeBlack;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
@@ -1711,10 +1814,10 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 250;
-  d.isAutoDescriptionAllowed = true;
+  d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
-  d.description = "It's just a mass of gunk, but it seems sentient.";
+  d.descr = "It's just a mass of gunk, but it seems sentient.";
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
@@ -1735,13 +1838,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Clear Ooze";
   d.name_the = "The Clear Ooze";
   d.id = actor_oozeClear;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
@@ -1761,10 +1864,10 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 250;
-  d.isAutoDescriptionAllowed = true;
+  d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
-  d.description = "It's a clear mass of gunk. They can be hard to spot.";
+  d.descr = "It's a clear mass of gunk. They can be hard to spot.";
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
@@ -1785,13 +1888,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Putrid Ooze";
   d.name_the = "The Putrid Ooze";
   d.id = actor_oozePutrid;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
@@ -1810,10 +1913,11 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 250;
-  d.isAutoDescriptionAllowed = true;
+  d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
-  d.description = "It's just a mass of gunk, but it seems sentient. It stinks like rotting cadavers.";
+  d.descr = "It's just a mass of gunk, but it seems sentient. It stinks like "
+            "rotting cadavers.";
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
@@ -1834,13 +1938,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Poison Ooze";
   d.name_the = "The Poison Ooze";
   d.id = actor_oozePoison;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
@@ -1859,10 +1963,11 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 250;
-  d.isAutoDescriptionAllowed = true;
+  d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
-  d.description = "It's just a mass of gunk, but it seems sentient. It drips and sizzles with poison.";
+  d.descr = "It's just a mass of gunk, but it seems sentient. It drips and "
+            "sizzles with poison.";
   d.deathMessageOverride = "The Ooze disintegrates.";
   d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
@@ -1883,13 +1988,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Colour out of space";
   d.name_the = "The Colour out of space";
   d.id = actor_colourOutOfSpace;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = true;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = false;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = true;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = true;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'O';
@@ -1910,8 +2015,9 @@ void ActorDataHandler::initDataList() {
   d.nrTurnsAwarePlayer = 250;
   d.canOpenDoors = false;
   d.canBashDoors = false;
-  d.description = "A very peculiar floating speck of strange and shifting colours. It is hard to tell what colour it is exactly.";
-  d.isAutoDescriptionAllowed = false;
+  d.descr = "A very peculiar floating speck of strange and shifting colours. "
+            "It is hard to tell what colour it is exactly.";
+  d.isAutoDescrAllowed = false;
   d.deathMessageOverride = "The Colour disintegrates.";
   d.canBeSummoned = true;
   d.canBleed = false;
@@ -1927,13 +2033,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Chthonian";
   d.name_the = "The Chthonian";
   d.id = actor_chthonian;
-  d.ai[aiLooks] = false;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = false;
+  d.ai[int(Ai::looks)] = false;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = false;
   d.speed = ActorSpeed::sluggish;
   d.glyph = 'W';
   d.color = clrBrownDrk;
@@ -1950,10 +2056,12 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 5;
-  d.isAutoDescriptionAllowed = true;
+  d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
-  d.description = "It resembles an immense squid, with reaching, groping tentacles, and a pulpy, elongated sack of a body. Chthonians are powerful burrowers, and live for more than a thousand years.";
+  d.descr = "It resembles an immense squid, with reaching, groping tentacles, "
+            "and a pulpy, elongated sack of a body. Chthonians are powerful "
+            "burrowers, and live for more than a thousand years.";
   d.aggroTextMonsterSeen = "";
   d.aggroTextMonsterHidden = "";
   d.aggroSfxMonsterSeen = SfxId::endOfSfxId;
@@ -1969,13 +2077,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Hunting Horror";
   d.name_the = "The Hunting Horror";
   d.id = actor_huntingHorror;
-  d.ai[aiLooks] = true;
-  d.ai[aiMakesRoomForFriend] = false;
-  d.ai[aiAttacks] = true;
-  d.ai[aiPathsToTargetWhenAware] = true;
-  d.ai[aiMovesTowardTargetWhenVision] = true;
-  d.ai[aiMovesTowardLair] = false;
-  d.ai[aiMovesTowardLeader] = false;
+  d.ai[int(Ai::looks)] = true;
+  d.ai[int(Ai::makesRoomForFriend)] = false;
+  d.ai[int(Ai::attacks)] = true;
+  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
+  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
+  d.ai[int(Ai::movesTowardLair)] = false;
+  d.ai[int(Ai::movesTowardLeader)] = false;
   d.speed = ActorSpeed::fastest;
   d.rangedCooldownTurns = 0;
   d.glyph = 'W';
@@ -1993,10 +2101,14 @@ void ActorDataHandler::initDataList() {
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAwarePlayer = 2;
-  d.isAutoDescriptionAllowed = true;
+  d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = true;
-  d.description = "It resembles an enormous black ropy worm, like a legless dragon seen in a nightmare. A great gaping maw filled with jagged, irregular teeth gapes open hungrily as it flies in search of prey. Hunting horrors haunt the dark places of the universe, from which they are called up at the whim of their lord Nyarlathotep.";
+  d.descr = "It resembles an enormous black ropy worm, like a legless dragon "
+            "seen in a nightmare. A great gaping maw filled with jagged, "
+            "irregular teeth gapes open hungrily as it flies in search of "
+            "prey. Hunting horrors haunt the dark places of the universe, from "
+            "which they are called up at the whim of their lord Nyarlathotep.";
   d.aggroTextMonsterHidden = "I hear the flapping of great wings.";
   d.aggroSfxMonsterSeen = SfxId::flappingWings;
   d.aggroSfxMonsterHidden = SfxId::flappingWings;

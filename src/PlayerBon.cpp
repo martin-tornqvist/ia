@@ -107,8 +107,8 @@ void getBgDescr(const Bg id, vector<string>& linesRef) {
     case Bg::occultist: {
       linesRef.push_back("Can memorize spells cast from manuscripts");
       linesRef.push_back(" ");
-      linesRef.push_back("-50% shock taken from using and identifying ");
-      linesRef.push_back("strange items (e.g. potions)");
+      linesRef.push_back("-50% shock taken from using and identifying "
+                         "strange items (e.g. potions)");
       linesRef.push_back(" ");
       linesRef.push_back("Can dispel magic traps");
       linesRef.push_back(" ");
@@ -121,15 +121,16 @@ void getBgDescr(const Bg id, vector<string>& linesRef) {
     } break;
 
     case Bg::rogue: {
-      linesRef.push_back("Has an arcane ability to cloud the minds of ");
-      linesRef.push_back("enemies, causing them to forget their pursuit ");
-      linesRef.push_back("(press [x])");
+      linesRef.push_back("Has an arcane ability to cloud the minds of "
+                         "enemies, causing them to forget their pursuit "
+                         "(press [x])");
       linesRef.push_back(" ");
       //TODO This should be a trait
-      linesRef.push_back("+25% hit chance with ranged attacks vs unaware ");
-      linesRef.push_back("targets");
+      linesRef.push_back("+25% hit chance with ranged attacks vs unaware "
+                         "targets");
       linesRef.push_back(" ");
-      linesRef.push_back("-50% shock recieved passively over time");
+      linesRef.push_back("The rate of shock recieved passively over time "
+                         "is reduced by half");
       linesRef.push_back(" ");
       linesRef.push_back("Starts with the following trait(s):");
       linesRef.push_back(" ");

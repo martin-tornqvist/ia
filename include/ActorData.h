@@ -76,15 +76,15 @@ enum class MonsterShockLevel {
   none, unsettling, scary, terrifying, mindShattering, endOfMonsterShockLevel,
 };
 
-enum AiBehaviorId {
-  aiLooks,
-  aiMakesRoomForFriend,
-  aiAttacks,
-  aiPathsToTargetWhenAware,
-  aiMovesTowardTargetWhenVision,
-  aiMovesTowardLair,
-  aiMovesTowardLeader,
-  endOfAiBehaviorId
+enum class Ai {
+  looks,
+  makesRoomForFriend,
+  attacks,
+  pathsToTargetWhenAware,
+  movesTowardTargetWhenVision,
+  movesTowardLair,
+  movesTowardLeader,
+  endOfAi
 };
 
 struct ActorData {
@@ -105,12 +105,12 @@ public:
   AbilityValues abilityVals;
   bool intrProps[endOfPropIds];
   int rangedCooldownTurns, spellCooldownTurns;
-  bool ai[endOfAiBehaviorId];
+  bool ai[int(Ai::endOfAi)];
   int nrTurnsAwarePlayer;
   int spawnMinDLVL, spawnMaxDLVL;
   ActorSize actorSize;
   bool isHumanoid;
-  bool isAutoDescriptionAllowed;
+  bool isAutoDescrAllowed;
   string deathMessageOverride;
   int nrOfKills;
   bool canOpenDoors, canBashDoors;
@@ -126,7 +126,7 @@ public:
   bool canBleed;
   bool canLeaveCorpse;
   vector<RoomThemeId> nativeRooms;
-  string description;
+  string descr;
   string aggroTextMonsterSeen;
   string aggroTextMonsterHidden;
   SfxId aggroSfxMonsterSeen;

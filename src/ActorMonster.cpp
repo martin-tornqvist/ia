@@ -116,7 +116,7 @@ void Monster::onActorTurn() {
   //Looking counts as an action if monster not aware before, and became aware
   //from looking. (This is to give the monsters some reaction time, and not
   //instantly attack)
-  if(data_->ai[aiLooks]) {
+  if(data_->ai[int(Ai::looks)]) {
     if(leader != eng.player) {
       if(AI_look_becomePlayerAware::action(*this, eng)) {
         return;
@@ -124,7 +124,7 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(data_->ai[aiMakesRoomForFriend]) {
+  if(data_->ai[int(Ai::makesRoomForFriend)]) {
     if(leader != eng.player) {
       if(AI_makeRoomForFriend::action(*this, eng)) {
         return;
@@ -141,7 +141,7 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(data_->ai[aiAttacks]) {
+  if(data_->ai[int(Ai::attacks)]) {
     if(target != NULL) {
       if(tryAttack(*target)) {
         return;
@@ -161,7 +161,7 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(data_->ai[aiMovesTowardTargetWhenVision]) {
+  if(data_->ai[int(Ai::movesTowardTargetWhenVision)]) {
     if(AI_moveTowardsTargetSimple::action(*this, eng)) {
       return;
     }
@@ -169,7 +169,7 @@ void Monster::onActorTurn() {
 
   vector<Pos> path;
 
-  if(data_->ai[aiPathsToTargetWhenAware]) {
+  if(data_->ai[int(Ai::pathsToTargetWhenAware)]) {
     if(leader != eng.player) {
       AI_setPathToPlayerIfAware::learn(*this, path, eng);
     }
@@ -185,14 +185,14 @@ void Monster::onActorTurn() {
     return;
   }
 
-  if(data_->ai[aiMovesTowardLeader]) {
+  if(data_->ai[int(Ai::movesTowardLeader)]) {
     AI_setPathToLeaderIfNoLosToleader::learn(*this, path, eng);
     if(AI_stepPath::action(*this, path)) {
       return;
     }
   }
 
-  if(data_->ai[aiMovesTowardLair]) {
+  if(data_->ai[int(Ai::movesTowardLair)]) {
     if(leader != eng.player) {
       if(AI_stepToLairIfHasLosToLair::action(*this, lairCell_, eng)) {
         return;
