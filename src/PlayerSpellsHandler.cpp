@@ -79,6 +79,7 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
         Renderer::drawMapAndInterface();
         return;
       }
+      eng.log->clearLog();
     }
 
     bool isBloodSorc  = false;
