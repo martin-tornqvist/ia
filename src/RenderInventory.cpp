@@ -73,11 +73,11 @@ void drawBrowseSlots(const MenuBrowser& browser, Engine& eng) {
 
       const ItemData& d = item->getData();
       PrimaryAttackMode attackMode = PrimaryAttackMode::none;
-      if(slot.id == slot_wielded || slot.id == slot_wieldedAlt) {
+      if(slot.id == SlotId::wielded || slot.id == SlotId::wieldedAlt) {
         attackMode =
           d.primaryAttackMode == PrimaryAttackMode::missile ?
           PrimaryAttackMode::melee : d.primaryAttackMode;
-      } else if(slot.id == slot_missiles) {
+      } else if(slot.id == SlotId::missiles) {
         attackMode = PrimaryAttackMode::missile;
       }
 
@@ -158,19 +158,19 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
 
   string str = "";
   switch(slotToEquip) {
-    case slot_armorBody:
+    case SlotId::armorBody:
       str = IS_ANY_ITEM_AVAILABLE ? "Wear which armor?" :
             "I carry no armor.";
       break;
-    case slot_missiles:
+    case SlotId::missiles:
       str = IS_ANY_ITEM_AVAILABLE ? "Use which item as missiles?" :
             "I carry no weapon to throw." ;
       break;
-    case slot_wielded:
+    case SlotId::wielded:
       str = IS_ANY_ITEM_AVAILABLE ? "Wield which item?" :
             "I carry no weapon to wield.";
       break;
-    case slot_wieldedAlt:
+    case SlotId::wieldedAlt:
       str = IS_ANY_ITEM_AVAILABLE ? "Prepare which weapon?" :
             "I carry no weapon to wield.";
       break;
@@ -199,11 +199,11 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
 
     const ItemData& d = item->getData();
     PrimaryAttackMode attackMode = PrimaryAttackMode::none;
-    if(slotToEquip == slot_wielded || slotToEquip == slot_wieldedAlt) {
+    if(slotToEquip == SlotId::wielded || slotToEquip == SlotId::wieldedAlt) {
       attackMode =
         d.primaryAttackMode == PrimaryAttackMode::missile ?
         PrimaryAttackMode::melee : d.primaryAttackMode;
-    } else if(slotToEquip == slot_missiles) {
+    } else if(slotToEquip == SlotId::missiles) {
       attackMode = PrimaryAttackMode::missile;
     }
 

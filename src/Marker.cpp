@@ -68,7 +68,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
         Actor* const actor = Utils::getActorAtPos(pos_, eng);
         if(actor != NULL) {eng.player->target = actor;}
 
-        Item* const item = eng.player->getInv().getItemInSlot(slot_wielded);
+        Item* const item = eng.player->getInv().getItemInSlot(SlotId::wielded);
         Weapon* const weapon = dynamic_cast<Weapon*>(item);
         if(eng.attack->ranged(*eng.player, *weapon, pos_) == false) {
           eng.log->addMsg("No ammunition loaded.");
@@ -127,7 +127,7 @@ void Marker::draw(const MarkerTask markerTask) const {
 
   if(markerTask == MarkerTask::aimRangedWeapon) {
     Item* const item =
-      eng.player->getInv().getItemInSlot(slot_wielded);
+      eng.player->getInv().getItemInSlot(SlotId::wielded);
     Weapon* const weapon = dynamic_cast<Weapon*>(item);
     effectiveRange = weapon->effectiveRangeLimit;
   }

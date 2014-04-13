@@ -99,7 +99,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
   bool didAct = false;
 
   Inventory& inv      = actorReloading.getInv();
-  Item* const wpnItem = inv.getItemInSlot(slot_wielded);
+  Item* const wpnItem = inv.getItemInSlot(SlotId::wielded);
 
   if(wpnItem == NULL) {
     printMsgAndPlaySfx(actorReloading, NULL, NULL,

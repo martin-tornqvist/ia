@@ -44,25 +44,25 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(
     const ItemData& data = item->getData();
 
     switch(slotToEquip) {
-      case slot_armorBody: {
+      case SlotId::armorBody: {
         if(data.isArmor) {
           generalItemsToShow.push_back(i);
         }
       }
       break;
-      case slot_wielded: {
+      case SlotId::wielded: {
         if(data.isMeleeWeapon || data.isRangedWeapon) {
           generalItemsToShow.push_back(i);
         }
       }
       break;
-      case slot_wieldedAlt: {
+      case SlotId::wieldedAlt: {
         if(data.isMeleeWeapon || data.isRangedWeapon) {
           generalItemsToShow.push_back(i);
         }
       }
       break;
-      case slot_missiles: {
+      case SlotId::missiles: {
         if(data.isMissileWeapon) {
           generalItemsToShow.push_back(i);
         }
@@ -162,7 +162,7 @@ void InventoryHandler::runSlotsScreen() {
 
             inv.moveItemToGeneral(&slot);
 
-            if(slot.id == slot_armorBody) {
+            if(slot.id == SlotId::armorBody) {
               screenToOpenAfterDrop = inventoryScreen_slots;
               browserPosToSetAfterDrop = browser.getPos().y;
 
@@ -306,7 +306,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
         const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
         eng.player->getInv().equipGeneralItemAndPossiblyEndTurn(
           INV_ELEM, slotToEquip->id, eng);
-        if(slotToEquip->id == slot_armorBody) {
+        if(slotToEquip->id == SlotId::armorBody) {
           slotToEquip->item->onWear();
         }
         return true;

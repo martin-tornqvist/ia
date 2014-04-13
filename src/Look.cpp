@@ -79,7 +79,7 @@ void Look::descrBriefActor(const Actor& actor, const MarkerTask markerTask,
   } else if(actor.pos != eng.player->pos) {
     if(markerTask == MarkerTask::aimRangedWeapon) {
       Item* const item =
-        eng.player->getInv().getItemInSlot(slot_wielded);
+        eng.player->getInv().getItemInSlot(SlotId::wielded);
       Weapon* const wpn = dynamic_cast<Weapon*>(item);
       RangedAttackData data(*eng.player, *wpn, actor.pos, actor.pos, eng);
       eng.log->addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");

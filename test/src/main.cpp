@@ -523,13 +523,13 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
 
   //Player inventory
   Inventory& inv = eng.player->getInv();
-  inv.moveItemToGeneral(inv.getSlot(slot_wielded));
+  inv.moveItemToGeneral(inv.getSlot(SlotId::wielded));
   Item* item = eng.itemFactory->spawnItem(ItemId::teslaCannon);
-  inv.putItemInSlot(slot_wielded, item);
+  inv.putItemInSlot(SlotId::wielded, item);
   //Wear asbestos suit to test properties from wearing items
-  inv.moveItemToGeneral(inv.getSlot(slot_armorBody));
+  inv.moveItemToGeneral(inv.getSlot(SlotId::armorBody));
   item = eng.itemFactory->spawnItem(ItemId::armorAsbestosSuit);
-  inv.putItemInSlot(slot_armorBody, item);
+  inv.putItemInSlot(SlotId::armorBody, item);
   item = eng.itemFactory->spawnItem(ItemId::pistolClip);
   dynamic_cast<ItemAmmoClip*>(item)->ammo = 1;
   inv.putItemInGeneral(item);
@@ -609,9 +609,9 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   //Player inventory
   Inventory& inv = eng.player->getInv();
   CHECK_EQUAL(int(ItemId::teslaCannon),
-              int(inv.getItemInSlot(slot_wielded)->getData().id));
+              int(inv.getItemInSlot(SlotId::wielded)->getData().id));
   CHECK_EQUAL(int(ItemId::armorAsbestosSuit),
-              int(inv.getItemInSlot(slot_armorBody)->getData().id));
+              int(inv.getItemInSlot(SlotId::armorBody)->getData().id));
   vector<Item*> genInv = inv.getGeneral();
   int nrClipWith1 = 0;
   int nrClipWith2 = 0;

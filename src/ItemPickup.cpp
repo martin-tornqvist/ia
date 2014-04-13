@@ -36,7 +36,7 @@ void ItemPickup::tryPick() {
 
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getData().isMissileWeapon) {
-      Item* const carriedMissile = playerInv.getItemInSlot(slot_missiles);
+      Item* const carriedMissile = playerInv.getItemInSlot(SlotId::missiles);
       if(carriedMissile != NULL) {
         if(item->getData().id == carriedMissile->getData().id) {
           Audio::play(SfxId::pickup);

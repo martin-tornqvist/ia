@@ -1035,7 +1035,7 @@ void drawMap() {
     //---------------- DRAW PLAYER CHARACTER
     bool isRangedWpn = false;
     const Pos& pos = eng->player->pos;
-    Item* item = eng->player->getInv().getItemInSlot(slot_wielded);
+    Item* item = eng->player->getInv().getItemInSlot(SlotId::wielded);
     if(item != NULL) {
       isRangedWpn = item->getData().isRangedWeapon;
     }

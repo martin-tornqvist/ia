@@ -292,12 +292,12 @@ void Tomb::examine() {
 
 //  const Inventory& inv = eng.player->getInv();
 //  bool hasSledgehammer = false;
-//  Item* item = inv.getItemInSlot(slot_wielded);
+//  Item* item = inv.getItemInSlot(SlotId::wielded);
 //  if(item != NULL) {
 //    hasSledgehammer = item->getData().id == ItemId::sledgeHammer;
 //  }
 //  if(hasSledgehammer == false) {
-//    item = inv.getItemInSlot(slot_wieldedAlt);
+//    item = inv.getItemInSlot(SlotId::wieldedAlt);
 //    hasSledgehammer = item->getData().id == ItemId::sledgeHammer;
 //  }
 //  if(hasSledgehammer == false) {
@@ -516,7 +516,7 @@ void Chest::bash(Actor& actorTrying) {
 
   //TODO Force lock with weapon - remove or reimplement - how?
 //      Inventory& inv    = eng.player->getInv();
-//      Item* const item  = inv.getItemInSlot(slot_wielded);
+//      Item* const item  = inv.getItemInSlot(SlotId::wielded);
 //
 //      if(item == NULL) {
 //        eng.log->addMsg(
@@ -535,7 +535,7 @@ void Chest::bash(Actor& actorTrying) {
 //          if(wpn->meleeDmgPlus == 0) {
 //            eng.log->addMsg("My " + wpnName + " breaks!");
 //            delete wpn;
-//            inv.getSlot(slot_wielded)->item = NULL;
+//            inv.getSlot(SlotId::wielded)->item = NULL;
 //          } else {
 //            eng.log->addMsg("My " + wpnName + " is damaged!");
 //            wpn->meleeDmgPlus--;

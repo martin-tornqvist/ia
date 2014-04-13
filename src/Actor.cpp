@@ -398,7 +398,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   //Filter damage through worn armor
   if(isHumanoid()) {
     Armor* armor =
-      dynamic_cast<Armor*>(inv_->getItemInSlot(slot_armorBody));
+      dynamic_cast<Armor*>(inv_->getItemInSlot(SlotId::armorBody));
     if(armor != NULL) {
       traceVerbose << "Actor: Has armor, running hit on armor" << endl;
 
@@ -415,7 +415,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
           }
           delete armor;
           armor = NULL;
-          inv_->getSlot(slot_armorBody)->item = NULL;
+          inv_->getSlot(SlotId::armorBody)->item = NULL;
         }
       }
     }

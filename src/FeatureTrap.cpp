@@ -166,7 +166,7 @@ void Trap::disarm() {
   //Spider webs are automatically destroyed if wielding machete
   bool isAutoSucceed = false;
   if(getTrapType() == trap_spiderWeb) {
-    Item* item = eng.player->getInv().getItemInSlot(slot_wielded);
+    Item* item = eng.player->getInv().getItemInSlot(SlotId::wielded);
     if(item != NULL) {
       isAutoSucceed = item->getData().id == ItemId::machete;
     }
@@ -766,7 +766,7 @@ void TrapSpiderWeb::trigger(
   if(IS_PLAYER) {
     trace << "TrapSpiderWeb: Checking if player has machete" << endl;
     Inventory& playerInv = eng.player->getInv();
-    Item* itemWielded = playerInv.getItemInSlot(slot_wielded);
+    Item* itemWielded = playerInv.getItemInSlot(SlotId::wielded);
     bool hasMachete = false;
     if(itemWielded != NULL) {
       hasMachete = itemWielded->getData().id == ItemId::machete;

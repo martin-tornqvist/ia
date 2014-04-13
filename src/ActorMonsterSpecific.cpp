@@ -87,26 +87,26 @@ void Cultist::spawnStartItems() {
 
   if(RND <= PISTOL) {
     inv_->putItemInSlot(
-      slot_wielded, eng.itemFactory->spawnItem(ItemId::pistol), true);
+      SlotId::wielded, eng.itemFactory->spawnItem(ItemId::pistol), true);
     if(Rnd::percentile() < 40) {
       inv_->putItemInGeneral(
         eng.itemFactory->spawnItem(ItemId::pistolClip));
     }
   } else if(RND <= PUMP_SHOTGUN) {
     inv_->putItemInSlot(
-      slot_wielded, eng.itemFactory->spawnItem(ItemId::pumpShotgun), true);
+      SlotId::wielded, eng.itemFactory->spawnItem(ItemId::pumpShotgun), true);
     Item* item = eng.itemFactory->spawnItem(ItemId::shotgunShell);
     item->nrItems = Rnd::range(5, 9);
     inv_->putItemInGeneral(item);
   } else if(RND <= SAWN_SHOTGUN) {
     inv_->putItemInSlot(
-      slot_wielded, eng.itemFactory->spawnItem(ItemId::sawedOff), true);
+      SlotId::wielded, eng.itemFactory->spawnItem(ItemId::sawedOff), true);
     Item* item = eng.itemFactory->spawnItem(ItemId::shotgunShell);
     item->nrItems = Rnd::range(6, 12);
     inv_->putItemInGeneral(item);
   } else {
     inv_->putItemInSlot(
-      slot_wielded, eng.itemFactory->spawnItem(ItemId::machineGun), true);
+      SlotId::wielded, eng.itemFactory->spawnItem(ItemId::machineGun), true);
   }
 
   if(Rnd::percentile() < 33) {
@@ -121,7 +121,7 @@ void Cultist::spawnStartItems() {
 
 void CultistTeslaCannon::spawnStartItems() {
   Item* item = eng.itemFactory->spawnItem(ItemId::teslaCannon);
-  inv_->putItemInSlot(slot_wielded, item, true);
+  inv_->putItemInSlot(SlotId::wielded, item, true);
 
   inv_->putItemInGeneral(
     eng.itemFactory->spawnItem(ItemId::teslaCanister));
@@ -138,7 +138,7 @@ void CultistTeslaCannon::spawnStartItems() {
 
 void CultistSpikeGun::spawnStartItems() {
   inv_->putItemInSlot(
-    slot_wielded, eng.itemFactory->spawnItem(ItemId::spikeGun), true);
+    SlotId::wielded, eng.itemFactory->spawnItem(ItemId::spikeGun), true);
   Item* item = eng.itemFactory->spawnItem(ItemId::ironSpike);
   item->nrItems = 8 + Rnd::dice(1, 8);
   inv_->putItemInGeneral(item);
@@ -147,7 +147,7 @@ void CultistSpikeGun::spawnStartItems() {
 void CultistPriest::spawnStartItems() {
   Item* item = eng.itemFactory->spawnItem(ItemId::dagger);
   dynamic_cast<Weapon*>(item)->meleeDmgPlus = 2;
-  inv_->putItemInSlot(slot_wielded, item, true);
+  inv_->putItemInSlot(SlotId::wielded, item, true);
 
   inv_->putItemInGeneral(
     eng.itemFactory->spawnRandomScrollOrPotion(true, true));

@@ -381,7 +381,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 
         //Melee weapon in wielded slot?
         weapon =
-          dynamic_cast<Weapon*>(inv_->getItemInSlot(slot_wielded));
+          dynamic_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
         if(weapon != NULL) {
           if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
@@ -400,7 +400,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
       if(propHandler_->allowAttackRanged(false)) {
         //Ranged weapon in wielded slot?
         weapon =
-          dynamic_cast<Weapon*>(inv_->getItemInSlot(slot_wielded));
+          dynamic_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
 
         if(weapon != NULL) {
           if(weapon->getData().isRangedWeapon == true) {

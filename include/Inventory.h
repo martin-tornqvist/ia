@@ -11,15 +11,11 @@ using namespace std;
 
 class Engine;
 
-enum SlotId {
-  slot_wielded,
-  slot_wieldedAlt,
-  slot_missiles,
-  slot_armorBody
-//slot_cloak,
-//slot_ringLeft,
-//slot_ringRight,
-//slot_amulet
+enum class SlotId {
+  wielded,
+  wieldedAlt,
+  missiles,
+  armorBody
 };
 
 struct InventorySlot {
@@ -33,7 +29,7 @@ struct InventorySlot {
     allowAmulet         = false;
     allowRing           = false;
     interfaceName       = "";
-    id                  = slot_wielded;
+    id                  = SlotId::wielded;
     item                = NULL;
   }
   bool allowWieldedWeapon;

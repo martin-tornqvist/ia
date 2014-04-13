@@ -19,46 +19,46 @@ Inventory::Inventory(bool humanoid) {
   InventorySlot invSlot;
 
   if(humanoid) {
-    invSlot.id = slot_wielded;
+    invSlot.id = SlotId::wielded;
     invSlot.interfaceName       = "Wielding";
     invSlot.allowWieldedWeapon  = true;
     slots_.push_back(invSlot);
     invSlot.reset();
 
-    invSlot.id = slot_wieldedAlt;
+    invSlot.id = SlotId::wieldedAlt;
     invSlot.interfaceName       = "Prepared";
     invSlot.allowWieldedWeapon  = true;
     slots_.push_back(invSlot);
     invSlot.reset();
 
-    invSlot.id = slot_missiles;
+    invSlot.id = SlotId::missiles;
     invSlot.interfaceName       = "Missiles";
     invSlot.allowMissile        = true;
     slots_.push_back(invSlot);
     invSlot.reset();
 
-    invSlot.id = slot_armorBody;
+    invSlot.id = SlotId::armorBody;
     invSlot.interfaceName       = "On body";
     invSlot.allowArmor          = true;
     slots_.push_back(invSlot);
 
-    //    invSlot.id = slot_cloak;
+    //    invSlot.id = SlotId::cloak;
     //    invSlot.interfaceName = "Cloak";
     //    invSlot.allowCloak = true;
     //    slots_.push_back(invSlot);
     //    invSlot.allowCloak = false;
 
-    //    invSlot.id = slot_amulet;
+    //    invSlot.id = SlotId::amulet;
     //    invSlot.interfaceName = "Amulet";
     //    invSlot.allowAmulet = true;
     //    slots_.push_back(invSlot);
     //    invSlot.allowAmulet = false;
 
-    //    invSlot.id = slot_ringLeft;
+    //    invSlot.id = SlotId::ringLeft;
     //    invSlot.interfaceName = "Left ring";
     //    invSlot.allowRing = true;
     //    slots_.push_back(invSlot);
-    //    invSlot.id = slot_ringRight;
+    //    invSlot.id = SlotId::ringRight;
     //    invSlot.interfaceName = "Right ring";
     //    slots_.push_back(invSlot);
   }
@@ -263,7 +263,7 @@ void Inventory::dropAllNonIntrinsic(
 }
 
 bool Inventory::hasAmmoForFirearmInInventory() {
-  Weapon* weapon = dynamic_cast<Weapon*>(getItemInSlot(slot_wielded));
+  Weapon* weapon = dynamic_cast<Weapon*>(getItemInSlot(SlotId::wielded));
 
   //If weapon found
   if(weapon != NULL) {
@@ -400,10 +400,10 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     }
   }
 
-  if(slotToEquip == slot_wielded) {
-    Item* const itemBefore = getItemInSlot(slot_wielded);
-    moveItemToSlot(getSlot(slot_wielded), GENERAL_INV_ELEMENT);
-    Item* const itemAfter = getItemInSlot(slot_wielded);
+  if(slotToEquip == SlotId::wielded) {
+    Item* const itemBefore = getItemInSlot(SlotId::wielded);
+    moveItemToSlot(getSlot(SlotId::wielded), GENERAL_INV_ELEMENT);
+    Item* const itemAfter = getItemInSlot(SlotId::wielded);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
@@ -418,10 +418,10 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     }
   }
 
-  if(slotToEquip == slot_wieldedAlt) {
-    Item* const itemBefore = getItemInSlot(slot_wieldedAlt);
-    moveItemToSlot(getSlot(slot_wieldedAlt), GENERAL_INV_ELEMENT);
-    Item* const itemAfter = getItemInSlot(slot_wieldedAlt);
+  if(slotToEquip == SlotId::wieldedAlt) {
+    Item* const itemBefore = getItemInSlot(SlotId::wieldedAlt);
+    moveItemToSlot(getSlot(SlotId::wieldedAlt), GENERAL_INV_ELEMENT);
+    Item* const itemAfter = getItemInSlot(SlotId::wieldedAlt);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
@@ -436,10 +436,10 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     }
   }
 
-  if(slotToEquip == slot_armorBody) {
-    Item* const itemBefore = getItemInSlot(slot_armorBody);
-    moveItemToSlot(getSlot(slot_armorBody), GENERAL_INV_ELEMENT);
-    Item* const itemAfter = getItemInSlot(slot_armorBody);
+  if(slotToEquip == SlotId::armorBody) {
+    Item* const itemBefore = getItemInSlot(SlotId::armorBody);
+    moveItemToSlot(getSlot(SlotId::armorBody), GENERAL_INV_ELEMENT);
+    Item* const itemAfter = getItemInSlot(SlotId::armorBody);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
@@ -453,10 +453,10 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     isFreeTurn = false;
   }
 
-  if(slotToEquip == slot_missiles) {
-    Item* const itemBefore = getItemInSlot(slot_missiles);
-    moveItemToSlot(getSlot(slot_missiles), GENERAL_INV_ELEMENT);
-    Item* const itemAfter = getItemInSlot(slot_missiles);
+  if(slotToEquip == SlotId::missiles) {
+    Item* const itemBefore = getItemInSlot(SlotId::missiles);
+    moveItemToSlot(getSlot(SlotId::missiles), GENERAL_INV_ELEMENT);
+    Item* const itemAfter = getItemInSlot(SlotId::missiles);
     if(IS_PLAYER) {
       if(itemBefore != NULL) {
         const string nameBefore =
@@ -475,8 +475,9 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
 
 void Inventory::swapWieldedAndPrepared(
   const bool IS_FREE_TURN, Engine& engine) {
-  InventorySlot* slot1 = getSlot(slot_wielded);
-  InventorySlot* slot2 = getSlot(slot_wieldedAlt);
+
+  InventorySlot* slot1 = getSlot(SlotId::wielded);
+  InventorySlot* slot2 = getSlot(SlotId::wieldedAlt);
   Item* item1 = slot1->item;
   Item* item2 = slot2->item;
   slot1->item = item2;

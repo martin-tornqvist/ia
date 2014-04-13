@@ -239,7 +239,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
       if(eng.player->getPropHandler().allowAttackRanged(true)) {
 
         Item* const item =
-          eng.player->getInv().getItemInSlot(slot_wielded);
+          eng.player->getInv().getItemInSlot(SlotId::wielded);
 
         if(item == NULL) {
           eng.log->addMsg("I am not wielding a weapon.");
@@ -334,12 +334,16 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
     eng.log->clearLog();
     if(eng.player->deadState == ActorDeadState::alive) {
 
-      const bool IS_FREE_TURN = false; //PlayerBon::hasTrait(Trait::traitnimble);
+      //PlayerBon::hasTrait(Trait::traitnimble);
+
+      const bool IS_FREE_TURN = PlayerBon::getBg() == Bg::warVet;
 
       const string swiftStr = IS_FREE_TURN ? " swiftly" : "";
 
-      Item* const itemWielded = eng.player->getInv().getItemInSlot(slot_wielded);
-      Item* const itemAlt = eng.player->getInv().getItemInSlot(slot_wieldedAlt);
+      Inventory& inv = eng.player->getInv();
+
+      Item* const itemWielded = inv.getItemInSlot(SlotId::wielded);
+      Item* const itemAlt     = inv.getItemInSlot(SlotId::wieldedAlt);
       const string ITEM_WIELDED_NAME =
         itemWielded == NULL ? "" :
         eng.itemDataHandler->getItemRef(*itemWielded, ItemRefType::a);
@@ -350,18 +354,18 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
         eng.log->addMsg("I have neither a wielded nor a prepared weapon.");
       } else {
         if(itemWielded == NULL) {
-          eng.log->addMsg(
-            "I" + swiftStr + " wield my prepared weapon (" + ITEM_ALT_NAME + ").");
+          eng.log->addMsg("I" + swiftStr + " wield my prepared weapon (" +
+                          ITEM_ALT_NAME + ").");
         } else {
           if(itemAlt == NULL) {
-            eng.log->addMsg(
-              "I" + swiftStr + " put away my weapon (" + ITEM_WIELDED_NAME + ").");
+            eng.log->addMsg("I" + swiftStr + " put away my weapon (" +
+                            ITEM_WIELDED_NAME + ").");
           } else {
-            eng.log->addMsg(
-              "I" + swiftStr + " swap to my prepared weapon (" + ITEM_ALT_NAME + ").");
+            eng.log->addMsg("I" + swiftStr + " swap to my prepared weapon (" +
+                            ITEM_ALT_NAME + ").");
           }
         }
-        eng.player->getInv().swapWieldedAndPrepared(IS_FREE_TURN, eng);
+        inv.swapWieldedAndPrepared(IS_FREE_TURN, eng);
       }
     }
     clearEvents();
@@ -394,7 +398,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
 
       if(eng.player->getPropHandler().allowAttackRanged(true)) {
         Inventory& playerInv = eng.player->getInv();
-        Item* itemStack = playerInv.getItemInSlot(slot_missiles);
+        Item* itemStack = playerInv.getItemInSlot(SlotId::missiles);
 
         if(itemStack == NULL) {
           eng.log->addMsg(
@@ -407,7 +411,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
             eng.marker->run(MarkerTask::aimThrownWeapon, itemToThrow);
 
           if(markerReturnData.didThrowMissile) {
-            playerInv.decrItemInSlot(slot_missiles);
+            playerInv.decrItemInSlot(SlotId::missiles);
           } else {
             delete itemToThrow;
           }

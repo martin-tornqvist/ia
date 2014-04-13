@@ -60,41 +60,41 @@ void getTraitTitle(const Trait id, string& strRef) {
   strRef = "[TRAIT TITLE MISSING]";
 
   switch(id) {
-    case Trait::adeptMeleeFighter:    strRef = "Adept Melee Fighter";     break;
-    case Trait::expertMeleeFighter:   strRef = "Expert Melee Fighter";    break;
-    case Trait::masterMeleeFighter:   strRef = "Master Melee Fighter";    break;
-    case Trait::coolHeaded:           strRef = "Cool-headed";             break;
-    case Trait::courageous:           strRef = "Courageous";              break;
-    case Trait::warlock:              strRef = "Warlock";                 break;
-    case Trait::bloodSorcerer:        strRef = "Blood Sorcerer";          break;
-    case Trait::seer:                 strRef = "Seer";                    break;
-    case Trait::dexterous:            strRef = "Dexterous";               break;
-    case Trait::lithe:                strRef = "Lithe";                   break;
-    case Trait::mobile:               strRef = "Mobile";                  break;
-    case Trait::fearless:             strRef = "Fearless";                break;
-    case Trait::healer:               strRef = "Healer";                  break;
-    case Trait::adeptMarksman:        strRef = "Adept Marksman";          break;
-    case Trait::expertMarksman:       strRef = "Expert Marksman";         break;
-    case Trait::masterMarksman:       strRef = "Master Marksman";         break;
-    case Trait::steadyAimer:          strRef = "Steady Aimer";            break;
-    case Trait::sharpShooter:         strRef = "Sharpshooter";            break;
-    case Trait::observant:            strRef = "Observant";               break;
-    case Trait::perceptive:           strRef = "Perceptive";              break;
-    case Trait::vigilant:             strRef = "Vigilant";                break;
-    case Trait::rapidRecoverer:       strRef = "Rapid Recoverer";         break;
-    case Trait::survivalist:          strRef = "Survivalist";             break;
-    case Trait::perseverant:          strRef = "Perseverant";             break;
-    case Trait::selfAware:            strRef = "Self-aware";              break;
-    case Trait::stoutSpirit:          strRef = "Stout Spirit";            break;
-    case Trait::strongSpirit:         strRef = "Strong Spirit";           break;
-    case Trait::mightySpirit:         strRef = "Mighty Spirit";           break;
-    case Trait::stealthy:             strRef = "Stealthy";                break;
-    case Trait::imperceptible:        strRef = "Imperceptible";           break;
-    case Trait::strongBacked:         strRef = "Strong-backed";           break;
-    case Trait::tough:                strRef = "Tough";                   break;
-    case Trait::rugged:               strRef = "Rugged";                  break;
-    case Trait::treasureHunter:       strRef = "Treasure Hunter";         break;
-    case Trait::demolitionExpert:     strRef = "Demolition Expert";       break;
+    case Trait::adeptMeleeFighter:    strRef = "Adept Melee Fighter";   break;
+    case Trait::expertMeleeFighter:   strRef = "Expert Melee Fighter";  break;
+    case Trait::masterMeleeFighter:   strRef = "Master Melee Fighter";  break;
+    case Trait::coolHeaded:           strRef = "Cool-headed";           break;
+    case Trait::courageous:           strRef = "Courageous";            break;
+    case Trait::warlock:              strRef = "Warlock";               break;
+    case Trait::bloodSorcerer:        strRef = "Blood Sorcerer";        break;
+    case Trait::seer:                 strRef = "Seer";                  break;
+    case Trait::dexterous:            strRef = "Dexterous";             break;
+    case Trait::lithe:                strRef = "Lithe";                 break;
+    case Trait::mobile:               strRef = "Mobile";                break;
+    case Trait::fearless:             strRef = "Fearless";              break;
+    case Trait::healer:               strRef = "Healer";                break;
+    case Trait::adeptMarksman:        strRef = "Adept Marksman";        break;
+    case Trait::expertMarksman:       strRef = "Expert Marksman";       break;
+    case Trait::masterMarksman:       strRef = "Master Marksman";       break;
+    case Trait::steadyAimer:          strRef = "Steady Aimer";          break;
+    case Trait::sharpShooter:         strRef = "Sharpshooter";          break;
+    case Trait::observant:            strRef = "Observant";             break;
+    case Trait::perceptive:           strRef = "Perceptive";            break;
+    case Trait::vigilant:             strRef = "Vigilant";              break;
+    case Trait::rapidRecoverer:       strRef = "Rapid Recoverer";       break;
+    case Trait::survivalist:          strRef = "Survivalist";           break;
+    case Trait::perseverant:          strRef = "Perseverant";           break;
+    case Trait::selfAware:            strRef = "Self-aware";            break;
+    case Trait::stoutSpirit:          strRef = "Stout Spirit";          break;
+    case Trait::strongSpirit:         strRef = "Strong Spirit";         break;
+    case Trait::mightySpirit:         strRef = "Mighty Spirit";         break;
+    case Trait::stealthy:             strRef = "Stealthy";              break;
+    case Trait::imperceptible:        strRef = "Imperceptible";         break;
+    case Trait::strongBacked:         strRef = "Strong-backed";         break;
+    case Trait::tough:                strRef = "Tough";                 break;
+    case Trait::rugged:               strRef = "Rugged";                break;
+    case Trait::treasureHunter:       strRef = "Treasure Hunter";       break;
+    case Trait::demolitionExpert:     strRef = "Demolition Expert";     break;
     case Trait::endOfTraits: break;
   }
 }
@@ -142,6 +142,8 @@ void getBgDescr(const Bg id, vector<string>& linesRef) {
     } break;
 
     case Bg::warVet: {
+      linesRef.push_back("Can switch to prepared weapon instantly");
+      linesRef.push_back(" ");
       linesRef.push_back("Maintains armor twice as long before it breaks");
       linesRef.push_back(" ");
       linesRef.push_back("Starts with 10% insanity");

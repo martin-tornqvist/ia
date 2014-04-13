@@ -116,7 +116,7 @@ void drawInfoLines(Engine& eng) {
   Renderer::drawText("ARM:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
   const Item* const armor =
-    player->getInv().getItemInSlot(slot_armorBody);
+    player->getInv().getItemInSlot(SlotId::armorBody);
   if(armor == NULL) {
     Renderer::drawText("N/A", Panel::charLines, pos, clrGenLgt);
     pos.x += 4;
@@ -130,7 +130,7 @@ void drawInfoLines(Engine& eng) {
   pos.x += 6;
   const int X_POS_MISSILE = pos.x;
 
-  Item* itemWielded = player->getInv().getItemInSlot(slot_wielded);
+  Item* itemWielded = player->getInv().getItemInSlot(SlotId::wielded);
   if(itemWielded == NULL) {
     Renderer::drawText(
       "Unarmed", Panel::charLines, pos, clrGenMed);
@@ -188,7 +188,7 @@ void drawInfoLines(Engine& eng) {
   //Missile weapon
   pos.x = X_POS_MISSILE;
 
-  Item* const itemMissiles = player->getInv().getItemInSlot(slot_missiles);
+  Item* const itemMissiles = player->getInv().getItemInSlot(SlotId::missiles);
   if(itemMissiles == NULL) {
     Renderer::drawText("No missile weapon", Panel::charLines, pos, clrGenMed);
   } else {

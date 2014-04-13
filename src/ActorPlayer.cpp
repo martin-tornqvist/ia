@@ -79,10 +79,10 @@ void Player::spawnStartItems() {
   }
 
   inv_->putItemInSlot(
-    slot_wielded, eng.itemFactory->spawnItem(weaponId), true, true);
+    SlotId::wielded, eng.itemFactory->spawnItem(weaponId), true, true);
 
   inv_->putItemInSlot(
-    slot_wieldedAlt, eng.itemFactory->spawnItem(ItemId::pistol), true, true);
+    SlotId::wieldedAlt, eng.itemFactory->spawnItem(ItemId::pistol), true, true);
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {
     inv_->putItemInGeneral(eng.itemFactory->spawnItem(ItemId::pistolClip));
@@ -111,13 +111,13 @@ void Player::spawnStartItems() {
 
   if(NR_THROWING_KNIVES > 0) {
     inv_->putItemInSlot(
-      slot_missiles,
+      SlotId::missiles,
       eng.itemFactory->spawnItem(ItemId::throwingKnife, NR_THROWING_KNIVES),
       true, true);
   }
 
   inv_->putItemInSlot(
-    slot_armorBody,
+    SlotId::armorBody,
     eng.itemFactory->spawnItem(ItemId::armorLeatherJacket),
     true, true);
 
@@ -1061,7 +1061,7 @@ void Player::moveDir(Dir dir) {
       if(actorAtDest != NULL) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
-          Item* const item = inv_->getItemInSlot(slot_wielded);
+          Item* const item = inv_->getItemInSlot(SlotId::wielded);
           if(item != NULL) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getData().isMeleeWeapon) {
