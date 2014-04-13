@@ -9,10 +9,6 @@
 //------------------------------------------------------------ CELL PREDICATES
 namespace CellPred {
 
-//bool CellPred::canWalkAt(const int X, const int Y) const {
-//  return eng.map->cells[X][Y].featureStatic-> canMoveCmn();
-//}
-
 bool BlocksVision::check(const Cell& c)  const {
   return c.featureStatic->isVisionPassable() == false;
 }
@@ -34,7 +30,7 @@ bool BlocksMoveCmn::check(const Actor& a) const {
 }
 
 BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking, Engine& engine) :
-  CellPred(engine), IS_ACTORS_BLOCKING_(isActorsBlocking) {
+  Pred(engine), IS_ACTORS_BLOCKING_(isActorsBlocking) {
   actor.getPropHandler().getAllActivePropIds(actorsProps_);
 }
 
@@ -176,7 +172,7 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
 //------------------------------------------------------------ MAP PARSE
 namespace MapParse {
 
-void parse(const CellPred::CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
+void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
            const MapParseWriteRule writeRule) {
 
   assert(predicate.isCheckingCells()       == true ||
@@ -185,7 +181,7 @@ void parse(const CellPred::CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
 
   const Engine& eng = predicate.eng;
 
-  const bool ALLOW_WRITE_FALSE = writeRule == mapParseWriteAlways;
+  const bool ALLOW_WRITE_FALSE = writeRule == MapParseWriteRule::always;
 
   if(predicate.isCheckingCells()) {
     for(int y = 0; y < MAP_H; y++) {

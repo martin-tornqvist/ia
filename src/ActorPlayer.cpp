@@ -1295,7 +1295,9 @@ void Player::updateFov() {
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
       Cell& cell = eng.map->cells[x][y];
-      if(cell.isSeenByPlayer && cell.isDark == false) {
+      const bool IS_BLOCKING = CellPred::BlocksMoveCmn(false, eng).check(cell);
+      //Do not explore dark floor cells
+      if(cell.isSeenByPlayer && (cell.isDark == false || IS_BLOCKING)) {
         cell.isExplored = true;
       }
     }

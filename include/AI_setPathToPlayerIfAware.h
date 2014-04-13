@@ -42,7 +42,7 @@ public:
 
         //Append living adjacent actors to the blocking array
         MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, engine),
-                        blockers, mapParseWriteOnlyTrue);
+                        blockers, MapParseWriteRule::writeOnlyTrue);
 
         PathFind::run(monster.pos, engine.player->pos, blockers, path);
       } else {

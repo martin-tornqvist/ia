@@ -246,7 +246,7 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 
   d.id = propFainted;
-  d.stdRndTurns = Range(50, 75);
+  d.stdRndTurns = Range(100, 200);
   d.name = "Fainted";
   d.nameShort = "Fainted";
   d.msg[propMsgOnStartPlayer] = "I faint!";

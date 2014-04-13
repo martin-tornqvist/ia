@@ -14,7 +14,7 @@ class Actor;
 
 namespace CellPred {
 
-class CellPred {
+class Pred {
 public:
   virtual bool isCheckingCells()          const {return false;}
   virtual bool isCheckingMobFeatures()    const {return false;}
@@ -24,23 +24,23 @@ public:
   virtual bool check(const Actor& a)      const {(void)a; return false;}
   const Engine& eng;
 protected:
-  CellPred(Engine& engine) : eng(engine) {}
+  Pred(Engine& engine) : eng(engine) {}
 //  bool canWalkAt(const int X, const int Y) const;
 };
 
-class BlocksVision : public CellPred {
+class BlocksVision : public Pred {
 public:
-  BlocksVision(Engine& engine) : CellPred(engine) {}
+  BlocksVision(Engine& engine) : Pred(engine) {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
   bool check(const Cell& c)       const override;
   bool check(const FeatureMob& f) const override;
 };
 
-class BlocksMoveCmn : public CellPred {
+class BlocksMoveCmn : public Pred {
 public:
   BlocksMoveCmn(bool isActorsBlocking, Engine& engine) :
-    CellPred(engine), IS_ACTORS_BLOCKING_(isActorsBlocking) {}
+    Pred(engine), IS_ACTORS_BLOCKING_(isActorsBlocking) {}
 
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
@@ -52,7 +52,7 @@ private:
   const bool IS_ACTORS_BLOCKING_;
 };
 
-class BlocksActor : public CellPred {
+class BlocksActor : public Pred {
 public:
   BlocksActor(Actor& actor, bool isActorsBlocking, Engine& engine);
 
@@ -67,36 +67,36 @@ private:
   vector<PropId> actorsProps_;
 };
 
-class BlocksProjectiles : public CellPred {
+class BlocksProjectiles : public Pred {
 public:
-  BlocksProjectiles(Engine& engine) : CellPred(engine) {}
+  BlocksProjectiles(Engine& engine) : Pred(engine) {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
   bool check(const Cell& c)       const override;
   bool check(const FeatureMob& f) const override;
 };
 
-class LivingActorsAdjToPos : public CellPred {
+class LivingActorsAdjToPos : public Pred {
 public:
   LivingActorsAdjToPos(const Pos& pos, Engine& engine) :
-    CellPred(engine), pos_(pos) {}
+    Pred(engine), pos_(pos) {}
   bool isCheckingActors()         const override {return true;}
   bool check(const Actor& a)      const override;
   const Pos& pos_;
 };
 
-class BlocksItems : public CellPred {
+class BlocksItems : public Pred {
 public:
-  BlocksItems(Engine& engine) : CellPred(engine) {}
+  BlocksItems(Engine& engine) : Pred(engine) {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
   bool check(const Cell& c)       const override;
   bool check(const FeatureMob& f) const override;
 };
 
-//class Corridor : public CellPred {
+//class Corridor : public Pred {
 //public:
-//  Corridor(Engine& engine) : CellPred(engine) {}
+//  Corridor(Engine& engine) : Pred(engine) {}
 //  bool isCheckingCells()          const override {return true;}
 //  bool check(const Cell& c)       const override;
 //};
@@ -104,27 +104,27 @@ public:
 // E.g. ##
 //      #.
 //      ##
-//class Nook : public CellPred {
+//class Nook : public Pred {
 //public:
-//  Nook(Engine& engine) : CellPred(engine) {}
+//  Nook(Engine& engine) : Pred(engine) {}
 //  bool isCheckingCells()          const override {return true;}
 //  bool check(const Cell& c)       const override;
 //};
 
-class IsAnyOfFeatures : public CellPred {
+class IsAnyOfFeatures : public Pred {
 public:
   IsAnyOfFeatures(Engine& engine, const vector<FeatureId>& features) :
-    CellPred(engine), features_(features) {}
+    Pred(engine), features_(features) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
   vector<FeatureId> features_;
 };
 
-class AllAdjIsAnyOfFeatures : public CellPred {
+class AllAdjIsAnyOfFeatures : public Pred {
 public:
   AllAdjIsAnyOfFeatures(Engine& engine, const vector<FeatureId>& features) :
-    CellPred(engine), features_(features) {}
+    Pred(engine), features_(features) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
@@ -133,14 +133,12 @@ private:
 
 } //CellPred
 
-enum MapParseWriteRule {
-  mapParseWriteAlways, mapParseWriteOnlyTrue
-};
+enum class MapParseWriteRule {always, writeOnlyTrue};
 
 namespace MapParse {
 
-void parse(const CellPred::CellPred& predicate, bool arrayOut[MAP_W][MAP_H],
-           const MapParseWriteRule writeRule = mapParseWriteAlways);
+void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
+           const MapParseWriteRule writeRule = MapParseWriteRule::always);
 
 void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
                                 bool out[MAP_W][MAP_H],

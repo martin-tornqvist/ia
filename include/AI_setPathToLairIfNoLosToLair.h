@@ -21,7 +21,7 @@ public:
       MapParse::parse(CellPred::BlocksActor(monster, false, eng), blockers);
 
       MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos, eng),
-                      blockers, mapParseWriteOnlyTrue);
+                      blockers, MapParseWriteRule::writeOnlyTrue);
 
       PathFind::run(monster.pos, lairCell, blockers, path);
       return;
