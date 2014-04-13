@@ -156,9 +156,9 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
     str = "SHOCK: ";
     const IntrSpellShock shockType = spell->getShockTypeIntrCast();
     switch(shockType) {
-      case intrSpellShockMild:        str += "Mild";       break;
-      case intrSpellShockDisturbing:  str += "Disturbing"; break;
-      case intrSpellShockSevere:      str += "Severe";     break;
+      case IntrSpellShock::mild:        str += "Mild";       break;
+      case IntrSpellShock::disturbing:  str += "Disturbing"; break;
+      case IntrSpellShock::severe:      str += "Severe";     break;
     }
     Renderer::drawText(str, Panel::screen, Pos(x, y), clrWhite);
 

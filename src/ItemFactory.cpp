@@ -121,19 +121,20 @@ Item* ItemFactory::spawnItem(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::scrollOfDetItems:        item = new Scroll(d, eng); break;
     case ItemId::scrollOfDetTraps:        item = new Scroll(d, eng); break;
     case ItemId::scrollOfDetMon:          item = new Scroll(d, eng); break;
-    case ItemId::scrollOfBlessing:        item = new Scroll(d, eng); break;
+    case ItemId::scrollOfBless:           item = new Scroll(d, eng); break;
     case ItemId::scrollOfDarkbolt:        item = new Scroll(d, eng); break;
     case ItemId::scrollOfAzathothsWrath:  item = new Scroll(d, eng); break;
     case ItemId::scrollOfOpening:         item = new Scroll(d, eng); break;
     case ItemId::scrollOfSacrLife:        item = new Scroll(d, eng); break;
     case ItemId::scrollOfSacrSpi:         item = new Scroll(d, eng); break;
+    case ItemId::scrollOfElemRes:         item = new Scroll(d, eng); break;
 
     case ItemId::potionOfVitality:        item = new PotionOfVitality(d, eng); break;
     case ItemId::potionOfSpirit:          item = new PotionOfSpirit(d, eng); break;
     case ItemId::potionOfBlindness:       item = new PotionOfBlindness(d, eng); break;
     case ItemId::potionOfFrenzy:          item = new PotionOfFrenzy(d, eng); break;
     case ItemId::potionOfFortitude:       item = new PotionOfFortitude(d, eng); break;
-    case ItemId::potionOfParalyzation:    item = new PotionOfParalyzation(d, eng); break;
+    case ItemId::potionOfParalyze:        item = new PotionOfParalyzation(d, eng); break;
     case ItemId::potionOfRElec:           item = new PotionOfRElec(d, eng); break;
     case ItemId::potionOfConfusion:       item = new PotionOfConfusion(d, eng); break;
     case ItemId::potionOfPoison:          item = new PotionOfPoison(d, eng); break;

@@ -22,12 +22,13 @@ const string Scroll::getRealTypeName() {
     case SpellId::bless:              return "Blessing";
     case SpellId::mayhem:             return "Mayhem";
     case SpellId::pestilence:         return "Pestilence";
-    case SpellId::detectItems:        return "Detect Items";
-    case SpellId::detectTraps:        return "Detect Traps";
-    case SpellId::detectMonsters:     return "Detect Monsters";
+    case SpellId::detItems:           return "Detect Items";
+    case SpellId::detTraps:           return "Detect Traps";
+    case SpellId::detMon:             return "Detect Monsters";
     case SpellId::opening:            return "Opening";
-    case SpellId::sacrificeLife:      return "Sacrifice Life Force";
-    case SpellId::sacrificeSpirit:    return "Sacrifice Spirit";
+    case SpellId::sacrLife:           return "Sacrifice Life Force";
+    case SpellId::sacrSpi:            return "Sacrifice Spirit";
+    case SpellId::elemRes:            return "Elemental Resistance";
     case SpellId::disease:            return "";
     case SpellId::summonRandom:       return "";
     case SpellId::healSelf:           return "";

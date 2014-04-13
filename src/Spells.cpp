@@ -38,27 +38,28 @@ Spell* SpellHandler::getRandomSpellForMonster() {
 
 Spell* SpellHandler::getSpellFromId(const SpellId spellId) const {
   switch(spellId) {
-    case SpellId::slowEnemies:        return new SpellSlowEnemies;
-    case SpellId::terrifyEnemies:     return new SpellTerrifyEnemies;
-    case SpellId::paralyzeEnemies:    return new SpellParalyzeEnemies;
-    case SpellId::disease:            return new SpellDisease;
-    case SpellId::darkbolt:           return new SpellDarkbolt;
-    case SpellId::azathothsWrath:     return new SpellAzathothsWrath;
-    case SpellId::summonRandom:       return new SpellSummonRandom;
-    case SpellId::healSelf:           return new SpellHealSelf;
-    case SpellId::knockBack:          return new SpellKnockBack;
-    case SpellId::teleport:           return new SpellTeleport;
-    case SpellId::mayhem:             return new SpellMayhem;
-    case SpellId::pestilence:         return new SpellPestilence;
-    case SpellId::detectItems:        return new SpellDetectItems;
-    case SpellId::detectTraps:        return new SpellDetectTraps;
-    case SpellId::detectMonsters:     return new SpellDetectMonsters;
-    case SpellId::opening:            return new SpellOpening;
-    case SpellId::sacrificeLife:      return new SpellSacrificeLife;
-    case SpellId::sacrificeSpirit:    return new SpellSacrificeSpirit;
-    case SpellId::cloudMinds:         return new SpellCloudMinds;
-    case SpellId::bless:              return new SpellBless;
-    case SpellId::miGoHypnosis:       return new SpellMiGoHypnosis;
+    case SpellId::slowEnemies:        return new SpellSlowEnemies; break;
+    case SpellId::terrifyEnemies:     return new SpellTerrifyEnemies; break;
+    case SpellId::paralyzeEnemies:    return new SpellParalyzeEnemies; break;
+    case SpellId::disease:            return new SpellDisease; break;
+    case SpellId::darkbolt:           return new SpellDarkbolt; break;
+    case SpellId::azathothsWrath:     return new SpellAzathothsWrath; break;
+    case SpellId::summonRandom:       return new SpellSummonRandom; break;
+    case SpellId::healSelf:           return new SpellHealSelf; break;
+    case SpellId::knockBack:          return new SpellKnockBack; break;
+    case SpellId::teleport:           return new SpellTeleport; break;
+    case SpellId::mayhem:             return new SpellMayhem; break;
+    case SpellId::pestilence:         return new SpellPestilence; break;
+    case SpellId::detItems:           return new SpellDetItems; break;
+    case SpellId::detTraps:           return new SpellDetTraps; break;
+    case SpellId::detMon:             return new SpellDetMon; break;
+    case SpellId::opening:            return new SpellOpening; break;
+    case SpellId::sacrLife:           return new SpellSacrLife; break;
+    case SpellId::sacrSpi:            return new SpellSacrSpi; break;
+    case SpellId::cloudMinds:         return new SpellCloudMinds; break;
+    case SpellId::bless:              return new SpellBless; break;
+    case SpellId::miGoHypnosis:       return new SpellMiGoHypnosis; break;
+    case SpellId::elemRes:            return new SpellElemRes; break;
     case SpellId::endOfSpellId: {} break;
   }
   assert(false && "No spell found for ID");
@@ -105,9 +106,9 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
         case SpellId::darkbolt:       {if(isWarlock)  costMax--;}    break;
         case SpellId::azathothsWrath: {if(isWarlock)  costMax--;}    break;
         case SpellId::mayhem:         {if(isWarlock)  costMax--;}    break;
-        case SpellId::detectMonsters: {if(isSeer)     costMax--;}    break;
-        case SpellId::detectItems:    {if(isSeer)     costMax -= 3;} break;
-        case SpellId::detectTraps:    {if(isSeer)     costMax -= 3;} break;
+        case SpellId::detMon:         {if(isSeer)     costMax--;}    break;
+        case SpellId::detItems:       {if(isSeer)     costMax -= 3;} break;
+        case SpellId::detTraps:       {if(isSeer)     costMax -= 3;} break;
         default: {} break;
       }
     }
@@ -394,8 +395,7 @@ SpellCastRetData SpellPestilence::cast_(
 }
 
 //------------------------------------------------------------ DETECT ITEMS
-SpellCastRetData SpellDetectItems::cast_(
-  Actor* const caster, Engine& eng) const {
+SpellCastRetData SpellDetItems::cast_(Actor* const caster, Engine& eng) const {
   (void)caster;
 
   const int RADI    = FOV_STD_RADI_INT + 3;
@@ -437,9 +437,7 @@ SpellCastRetData SpellDetectItems::cast_(
 }
 
 //------------------------------------------------------------ DETECT TRAPS
-SpellCastRetData SpellDetectTraps::cast_(
-  Actor* const caster, Engine& eng) const {
-
+SpellCastRetData SpellDetTraps::cast_(Actor* const caster, Engine& eng) const {
   (void)caster;
 
   vector<Pos> trapsRevealedPositions;
@@ -475,8 +473,7 @@ SpellCastRetData SpellDetectTraps::cast_(
 }
 
 //------------------------------------------------------------ DETECT MONSTERS
-SpellCastRetData SpellDetectMonsters::cast_(
-  Actor* const caster, Engine& eng) const {
+SpellCastRetData SpellDetMon::cast_(Actor* const caster, Engine& eng) const {
   (void)caster;
 
   bool isSeer           = PlayerBon::hasTrait(Trait::seer);
@@ -533,8 +530,7 @@ SpellCastRetData SpellOpening::cast_(
 }
 
 //------------------------------------------------------------ SACRIFICE LIFE
-SpellCastRetData SpellSacrificeLife::cast_(
-  Actor* const caster, Engine& eng) const {
+SpellCastRetData SpellSacrLife::cast_(Actor* const caster, Engine& eng) const {
   (void)caster;
 
   //Convert every 2 HP to 1 SPI
@@ -551,8 +547,7 @@ SpellCastRetData SpellSacrificeLife::cast_(
 }
 
 //------------------------------------------------------------ SACRIFICE SPIRIT
-SpellCastRetData SpellSacrificeSpirit::cast_(
-  Actor* const caster, Engine& eng) const {
+SpellCastRetData SpellSacrSpi::cast_(Actor* const caster, Engine& eng) const {
   (void)caster;
 
   //Convert every SPI to HP
@@ -625,6 +620,26 @@ bool SpellTeleport::isGoodForMonsterToCastNow(
   return monster->isSeeingActor(*(eng.player), blockers) &&
          monster->getHp() <= (monster->getHpMax(true) / 2) &&
          Rnd::coinToss();
+}
+
+//------------------------------------------------------------ ELEMENTAL RES
+SpellCastRetData SpellElemRes::cast_(Actor* const caster, Engine& eng) const {
+  const int DURATION = 20;
+  PropRCold* rCold = new PropRCold(eng, propTurnsSpecific, DURATION);
+  PropRElec* rElec = new PropRElec(eng, propTurnsSpecific, DURATION);
+  PropRFire* rFire = new PropRFire(eng, propTurnsSpecific, DURATION);
+  PropHandler& propHlr = caster->getPropHandler();
+  propHlr.tryApplyProp(rCold);
+  propHlr.tryApplyProp(rElec);
+  propHlr.tryApplyProp(rFire);
+  return SpellCastRetData(true);
+}
+
+bool SpellElemRes::isGoodForMonsterToCastNow(
+  Monster* const monster, Engine& eng) {
+  bool blockers[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
+  return monster->isSeeingActor(*(eng.player), blockers) && Rnd::oneIn(3);
 }
 
 //------------------------------------------------------------ KNOCKBACK

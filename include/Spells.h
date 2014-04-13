@@ -26,12 +26,13 @@ enum class SpellId {
   //Player only
   mayhem,
   pestilence,
-  detectItems,
-  detectTraps,
-  detectMonsters,
+  detItems,
+  detTraps,
+  detMon,
   opening,
-  sacrificeLife,
-  sacrificeSpirit,
+  sacrLife,
+  sacrSpi,
+  elemRes,
 
   cloudMinds,
 
@@ -45,11 +46,7 @@ enum class SpellId {
   endOfSpellId
 };
 
-enum IntrSpellShock {
-  intrSpellShockMild,
-  intrSpellShockDisturbing,
-  intrSpellShockSevere,
-};
+enum class IntrSpellShock {mild, disturbing, severe};
 
 class Spell;
 
@@ -91,9 +88,9 @@ public:
     const IntrSpellShock shockType = getShockTypeIntrCast();
 
     switch(shockType) {
-      case intrSpellShockMild:        return 2;
-      case intrSpellShockDisturbing:  return 8;
-      case intrSpellShockSevere:      return 16;
+      case IntrSpellShock::mild:        return 2;
+      case IntrSpellShock::disturbing:  return 8;
+      case IntrSpellShock::severe:      return 16;
     }
     return -1;
   }
@@ -114,7 +111,7 @@ public:
   string getName()              const override {return "Darkbolt";}
   SpellId getId()               const override {return SpellId::darkbolt;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockMild;
+    return IntrSpellShock::mild;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -132,7 +129,7 @@ public:
   string getName()              const override {return "Azathoths Wrath";}
   SpellId getId()               const override {return SpellId::azathothsWrath;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -149,7 +146,7 @@ public:
   string getName()              const override {return "Mayhem";}
   SpellId getId()               const override {return SpellId::mayhem;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockSevere;
+    return IntrSpellShock::severe;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -166,7 +163,7 @@ public:
   string getName()              const override {return "Pestilence";}
   SpellId getId()               const override {return SpellId::pestilence;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -175,15 +172,15 @@ private:
   }
 };
 
-class SpellDetectItems: public Spell {
+class SpellDetItems: public Spell {
 public:
-  SpellDetectItems() : Spell() {}
+  SpellDetItems() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Items";}
-  SpellId getId()               const override {return SpellId::detectItems;}
+  SpellId getId()               const override {return SpellId::detItems;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -192,15 +189,15 @@ private:
   }
 };
 
-class SpellDetectTraps: public Spell {
+class SpellDetTraps: public Spell {
 public:
-  SpellDetectTraps() : Spell() {}
+  SpellDetTraps() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Traps";}
-  SpellId getId()               const override {return SpellId::detectTraps;}
+  SpellId getId()               const override {return SpellId::detTraps;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -209,15 +206,15 @@ private:
   }
 };
 
-class SpellDetectMonsters: public Spell {
+class SpellDetMon: public Spell {
 public:
-  SpellDetectMonsters() : Spell() {}
+  SpellDetMon() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Detect Monsters";}
-  SpellId getId()               const override {return SpellId::detectMonsters;}
+  SpellId getId()               const override {return SpellId::detMon;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -234,7 +231,7 @@ public:
   string getName()              const override {return "Opening";}
   SpellId getId()               const override {return SpellId::opening;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -243,15 +240,15 @@ private:
   }
 };
 
-class SpellSacrificeLife: public Spell {
+class SpellSacrLife: public Spell {
 public:
-  SpellSacrificeLife() : Spell() {}
+  SpellSacrLife() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Sacrifice Life Force";}
-  SpellId getId()               const override {return SpellId::sacrificeLife;}
+  SpellId getId()               const override {return SpellId::sacrLife;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -260,15 +257,15 @@ private:
   }
 };
 
-class SpellSacrificeSpirit: public Spell {
+class SpellSacrSpi: public Spell {
 public:
-  SpellSacrificeSpirit() : Spell() {}
+  SpellSacrSpi() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Sacrifice Spirit";}
-  SpellId getId()               const override {return SpellId::sacrificeSpirit;}
+  SpellId getId()               const override {return SpellId::sacrSpi;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -285,7 +282,7 @@ public:
   string getName()              const override {return "Cloud Minds";}
   SpellId getId()               const override {return SpellId::cloudMinds;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockMild;
+    return IntrSpellShock::mild;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -303,7 +300,7 @@ public:
   string getName()              const override {return "Bless";}
   SpellId getId()               const override {return SpellId::bless;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -321,7 +318,7 @@ public:
   string getName()              const override {return "Knockback";}
   SpellId getId()               const override {return SpellId::knockBack;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -337,12 +334,30 @@ public:
   string getName()              const override {return "Teleport";}
   SpellId getId()               const override {return SpellId::teleport;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(2);
+  }
+};
+
+class SpellElemRes: public Spell {
+public:
+  SpellElemRes() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return true;}
+  string getName()              const override {return "Elemental Resistance";}
+  SpellId getId()               const override {return SpellId::elemRes;}
+  IntrSpellShock getShockTypeIntrCast() const override {
+    return IntrSpellShock::disturbing;
+  }
+private:
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  int getMaxSpiCost_() const override {
+    return PlayerBon::getSpiOccultistCanCastAtLvl(4);
   }
 };
 
@@ -367,7 +382,7 @@ public:
   string getName()  const override {return "Slow Enemies";}
   SpellId getId()   const override {return SpellId::slowEnemies;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   PropId getPropId() const override {return propSlowed;}
@@ -382,7 +397,7 @@ public:
   string getName()  const override {return "Terrify Enemies";}
   SpellId getId()   const override {return SpellId::terrifyEnemies;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::severe;
   }
 private:
   PropId getPropId() const override {return propTerrified;}
@@ -397,7 +412,7 @@ public:
   string getName()  const override {return "Paralyze Enemies";}
   SpellId getId()   const override {return SpellId::paralyzeEnemies;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   PropId getPropId() const override {return propParalyzed;}
@@ -415,7 +430,7 @@ public:
   string getName()              const override {return "Disease";}
   SpellId getId()               const override {return SpellId::disease;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -433,7 +448,7 @@ public:
   string getName()              const override {return "Summon monster";}
   SpellId getId()               const override {return SpellId::summonRandom;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -451,7 +466,7 @@ public:
   string getName()              const override {return "Healing";}
   SpellId getId()               const override {return SpellId::healSelf;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
@@ -469,7 +484,7 @@ public:
   string getName()              const override {return "MiGo Hypnosis";}
   SpellId getId()               const override {return SpellId::miGoHypnosis;}
   IntrSpellShock getShockTypeIntrCast() const override {
-    return intrSpellShockDisturbing;
+    return IntrSpellShock::disturbing;
   }
 private:
   SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;

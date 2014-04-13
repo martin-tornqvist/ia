@@ -20,27 +20,22 @@ enum ItemWeight {
   itemWeight_heavy      = 110 //Heavy armor, heavy weapons...
 };
 
-enum class PrimaryAttackMode {
-  none,
-  melee,
-  missile,
-  ranged
-};
+enum class PrimaryAttackMode {none, melee, missile, ranged};
 
-enum ItemDataArchetypes {
-  itemData_general,
-  itemData_meleeWpn,
-  itemData_meleeWpnIntr,
-  itemData_rangedWpn,
-  itemData_rangedWpnIntr,
-  itemData_missileWeapon,
-  itemData_ammo,
-  itemData_ammoClip,
-  itemData_scroll,
-  itemData_potion,
-  itemData_device,
-  itemData_armor,
-  itemData_explosive
+enum class ItemType {
+  general,
+  meleeWpn,
+  meleeWpnIntr,
+  rangedWpn,
+  rangedWpnIntr,
+  missileWeapon,
+  ammo,
+  ammoClip,
+  scroll,
+  potion,
+  device,
+  armor,
+  explosive
 };
 
 enum class ItemValue {normal, minorTreasure, majorTreasure};
@@ -136,20 +131,21 @@ enum class ItemId {
   scrollOfDetTraps,
   scrollOfDetItems,
   scrollOfDetMon,
-  scrollOfBlessing,
+  scrollOfBless,
   scrollOfMayhem,
   scrollOfDarkbolt,
   scrollOfAzathothsWrath,
   scrollOfOpening,
   scrollOfSacrLife,
   scrollOfSacrSpi,
+  scrollOfElemRes,
 
   potionOfVitality,
   potionOfSpirit,
   potionOfBlindness,
   potionOfFrenzy,
   potionOfFortitude,
-  potionOfParalyzation,
+  potionOfParalyze,
   potionOfRElec,
   potionOfConfusion,
   potionOfPoison,
@@ -289,8 +285,7 @@ private:
   void setDmgFromMonsterData(ItemData& itemData,
                              const ActorData& actorData) const;
 
-  void resetData(ItemData* const d,
-                 ItemDataArchetypes const archetype) const;
+  void resetData(ItemData* const d, ItemType const itemType) const;
 
   void addFeatureFoundIn(ItemData* const itemData, const FeatureId featureId,
                          const int CHANCE_TO_INCLUDE = 100) const;
