@@ -189,7 +189,7 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->tile = tile_potion;
       d->isPotion = true;
       d->isMissileWeapon = true;
-      d->missileHitChanceMod = -5;
+      d->missileHitChanceMod = 10;
       d->missileDmg = DiceParam(1, 3, 0);
       d->maxStackSizeAtSpawn = 2;
       d->landOnHardSurfaceSoundMsg = "";

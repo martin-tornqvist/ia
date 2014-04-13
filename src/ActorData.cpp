@@ -32,7 +32,7 @@ void ActorData::reset() {
   isHumanoid = false;
   isAutoDescrAllowed = true;
   deathMessageOverride = "";
-  nrOfKills = 0;
+  nrKills = 0;
   canOpenDoors = canBashDoors = false;
   canSeeInDarkness = false;
   nrLeftAllowedToSpawn = -1;
@@ -56,7 +56,7 @@ void ActorData::reset() {
 void ActorDataHandler::addSaveLines(vector<string>& lines) const {
   for(unsigned int i = 1; i < endOfActorIds; i++) {
     lines.push_back(toStr(dataList[i].nrLeftAllowedToSpawn));
-    lines.push_back(toStr(dataList[i].nrOfKills));
+    lines.push_back(toStr(dataList[i].nrKills));
   }
 }
 
@@ -68,7 +68,7 @@ void ActorDataHandler::setParamsFromSaveLines(vector<string>& lines) {
     const int NR_KILLS = toInt(lines.front());
     lines.erase(lines.begin());
     d.nrLeftAllowedToSpawn = NR_ALLOWED_TO_SPAWN;
-    d.nrOfKills = NR_KILLS;
+    d.nrKills = NR_KILLS;
   }
 }
 
@@ -1391,7 +1391,6 @@ void ActorDataHandler::initDataList() {
   d.spi = 20;
   d.dmgMelee = 4;
   d.abilityVals.setVal(ability_accuracyMelee, 50);
-  d.intrProps[propRConfusion] = true;
   d.spawnMinDLVL = 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSizeGroup;

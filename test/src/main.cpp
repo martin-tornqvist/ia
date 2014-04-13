@@ -559,7 +559,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   eng.map->incrDlvl(7 - CUR_DLVL); //Set current DLVL to 7
 
   //Actor data
-  eng.actorDataHandler->dataList[endOfActorIds - 1].nrOfKills = 123;
+  eng.actorDataHandler->dataList[endOfActorIds - 1].nrKills = 123;
 
   //Learned spells
   eng.playerSpellsHandler->learnSpellIfNotKnown(SpellId::bless);
@@ -655,8 +655,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(7, eng.map->getDlvl());
 
   //Actor data
-  CHECK_EQUAL(123,
-              eng.actorDataHandler->dataList[endOfActorIds - 1].nrOfKills);
+  CHECK_EQUAL(123, eng.actorDataHandler->dataList[endOfActorIds - 1].nrKills);
 
   //Learned spells
   PlayerSpellsHandler& spHlr = *(eng.playerSpellsHandler);

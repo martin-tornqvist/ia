@@ -725,6 +725,13 @@ public:
     Prop(propSlowed, engine, turnsInit, turns) {}
 
   ~PropSlowed() override {}
+
+  int getAbilityMod(const AbilityId ability) const override {
+    if(ability == ability_dodgeAttack)    return -30;
+    if(ability == ability_accuracyRanged) return -10;
+    if(ability == ability_accuracyMelee)  return -10;
+    return 0;
+  }
 };
 
 class PropFrenzied: public Prop {

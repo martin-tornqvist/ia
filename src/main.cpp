@@ -83,14 +83,14 @@ int main(int argc, char* argv[]) {
 
       if(gameEntryType == GameEntryMode::newGame) {
         if(Config::isIntroLevelSkipped() == 0) {
-          string msg = "I stand on a cobbled forest path, ahead lies a ";
-          msg += "shunned decrepit old church building. From years of ";
-          msg += "investigation and discreet inquiries, I know this to be the ";
-          msg += "access point to the abhorred \"Cult of Starry Wisdom\". ";
-          msg += "I will enter these sprawling catacombs and rob them of ";
-          msg += "treasures and knowledge. The ultimate prize is an artifact ";
-          msg += "of non-human origin called \"The shining Trapezohedron\" ";
-          msg += "- a window to all secrets of the universe.";
+          const string msg =
+            "I stand on a cobbled forest path, ahead lies a shunned decrepit "
+            "old church building. From years of investigation and discreet "
+            "inquiries, I know this to be the access point to the abhorred "
+            "\"Cult of Starry Wisdom\". I will enter these sprawling catacombs "
+            "and rob them of treasures and knowledge. The ultimate prize is an "
+            "artifact of non-human origin called \"The shining Trapezohedron\" "
+            "- a window to all secrets of the universe.";
           eng.popup->showMsg(msg, true, "The story so far...");
         }
       }

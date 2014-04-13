@@ -1427,20 +1427,22 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
 }
 
 void PropPoisoned::onNewTurn() {
-  const int DMG_N_TURN = 3;
-  const int TURN = eng.gameTime->getTurn();
-  if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN) {
+  if(owningActor_->deadState == ActorDeadState::alive) {
+    const int DMG_N_TURN = 3;
+    const int TURN = eng.gameTime->getTurn();
+    if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN) {
 
-    if(owningActor_ == eng.player) {
-      eng.log->addMsg("I am suffering from the poison!", clrMsgBad, true);
-    } else {
-      if(eng.player->isSeeingActor(*owningActor_, NULL)) {
-        eng.log->addMsg(
-          owningActor_->getNameThe() + " suffers from poisoning!");
+      if(owningActor_ == eng.player) {
+        eng.log->addMsg("I am suffering from the poison!", clrMsgBad, true);
+      } else {
+        if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+          eng.log->addMsg(
+            owningActor_->getNameThe() + " suffers from poisoning!");
+        }
       }
-    }
 
-    owningActor_->hit(1, DmgType::pure, false);
+      owningActor_->hit(1, DmgType::pure, false);
+    }
   }
 }
 
@@ -1619,37 +1621,32 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
 }
 
 void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
-  vector<Actor*> SpottedEnemies;
-  owningActor_->getSpottedEnemies(SpottedEnemies);
+  if(owningActor_ == eng.player) {
+    vector<Actor*> SpottedEnemies;
+    owningActor_->getSpottedEnemies(SpottedEnemies);
 
-  if(SpottedEnemies.empty()) {
-    return;
-  }
+    if(SpottedEnemies.empty()) {return;}
 
-  vector<Pos> SpottedEnemiesPositions;
-  SpottedEnemiesPositions.resize(0);
-  for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
-    SpottedEnemiesPositions.push_back(SpottedEnemies.at(i)->pos);
-  }
-  sort(SpottedEnemiesPositions.begin(), SpottedEnemiesPositions.end(),
-       IsCloserToOrigin(actorPos, eng));
-
-  const Pos& closestEnemyPos = SpottedEnemiesPositions.at(0);
-
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksActor(*owningActor_, false, eng), blockers);
-
-  vector<Pos> line;
-  eng.lineCalc->calcNewLine(actorPos, closestEnemyPos, true, 999, false, line);
-
-  if(line.size() > 1) {
-    for(unsigned int i = 0; i < line.size(); i++) {
-      const Pos& pos = line.at(i);
-      if(blockers[pos.x][pos.y]) {
-        return;
-      }
+    vector<Pos> SpottedEnemiesPositions;
+    SpottedEnemiesPositions.resize(0);
+    for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+      SpottedEnemiesPositions.push_back(SpottedEnemies.at(i)->pos);
     }
-    dir = DirUtils::getDir(line.at(1) - actorPos);
+    sort(SpottedEnemiesPositions.begin(), SpottedEnemiesPositions.end(),
+         IsCloserToOrigin(actorPos, eng));
+
+    const Pos& closestMonPos = SpottedEnemiesPositions.at(0);
+
+    bool blockers[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksActor(*owningActor_, false, eng), blockers);
+
+    vector<Pos> line;
+    eng.lineCalc->calcNewLine(actorPos, closestMonPos, true, 999, false, line);
+
+    if(line.size() > 1) {
+      for(Pos & pos : line) {if(blockers[pos.x][pos.y]) {return;}}
+      dir = DirUtils::getDir(line.at(1) - actorPos);
+    }
   }
 }
 

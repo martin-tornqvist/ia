@@ -153,7 +153,7 @@ void DungeonMaster::winGame() {
 void DungeonMaster::onMonsterKilled(Actor& actor) {
   ActorData& d = actor.getData();
 
-  d.nrOfKills += 1;
+  d.nrKills += 1;
 
   if(d.hp >= 3) {
     if(eng.player->obsessions[int(Obsession::sadism)]) {

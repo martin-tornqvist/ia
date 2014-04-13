@@ -21,27 +21,23 @@ public:
 private:
   struct StrAndClr {
     StrAndClr(const string str_, const SDL_Color clr_) :
-      str(str_), clr(clr_) {
-    }
-    StrAndClr() {
-    }
+      str(str_), clr(clr_) {}
+    StrAndClr() {}
     string str;
     SDL_Color clr;
   };
 
-  vector<StrAndClr> postmortemLines;
-
-  void readKeysMenu(bool* const quitGame);
+  void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame);
 
   void renderMenu(const MenuBrowser& browser);
 
-  void runInfo();
+  void runInfo(const vector<StrAndClr>& lines);
 
-  void renderInfo(const int TOP_ELEMENT);
+  void render(const vector<StrAndClr>& linesAndClr, const int TOP_ELEMENT);
 
-  void makeMemorialFile();
+  void makeMemorialFile(const vector<StrAndClr>& lines);
 
-  void makeInfoLines();
+  void makeInfoLines(vector<StrAndClr>& linesRef);
 
   Engine& eng;
 };

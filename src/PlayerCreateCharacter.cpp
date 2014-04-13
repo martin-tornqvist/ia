@@ -338,7 +338,7 @@ void PlayerEnterName::readKeys(string& currentString, bool& isDone) const {
 
   if(d.sdlKey_ == SDLK_RETURN) {
     isDone = true;
-    currentString = currentString.empty() ? "Rogue" : currentString;
+    currentString = currentString.empty() ? "Player" : currentString;
     return;
   }
 

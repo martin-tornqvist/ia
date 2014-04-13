@@ -17,123 +17,97 @@
 #include "TextFormatting.h"
 
 void Postmortem::run(bool* const quitGame) {
-  makeInfoLines();
-  makeMemorialFile();
-  readKeysMenu(quitGame);
+  vector<StrAndClr> lines;
+  makeInfoLines(lines);
+  makeMemorialFile(lines);
+  readKeysMenu(lines, quitGame);
 }
 
-void Postmortem::makeInfoLines() {
+void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
   trace << "Postmortem::makeInfoLines()..." << endl;
 
   const SDL_Color clrHeading  = clrWhiteHigh;
   const SDL_Color clrInfo     = clrWhite;
 
-  postmortemLines.push_back(
-    StrAndClr(" " + eng.player->getNameA(), clrHeading));
+  trace << "Postmortem: Finding number of killed monsters" << endl;
+  vector<string> uniqueKilledNames;
+  int nrKillsTotAllMonsters = 0;
+  for(int i = actor_player + 1; i < endOfActorIds; i++) {
+    const ActorData& d = eng.actorDataHandler->dataList[i];
+    if(d.nrKills > 0) {
+      nrKillsTotAllMonsters += d.nrKills;
+      if(d.isUnique) {
+        uniqueKilledNames.push_back(d.name_a);
+      }
+    }
+  }
 
-  postmortemLines.push_back(
-    StrAndClr("   * Explored to the depth of dungeon level " +
-              toStr(eng.map->getDlvl()), clrInfo));
-  postmortemLines.push_back(
-    StrAndClr("   * Was " +
-              toStr(min(100, eng.player->getInsanity())) +
-              "% insane", clrInfo));
+  linesRef.push_back(StrAndClr(" " + eng.player->getNameA(), clrHeading));
 
-  //TODO Make some sort of insanity class or something where this info is stored,
-  //this is ugly as hell
+  linesRef.push_back(StrAndClr("   * Explored to the depth of dungeon level " +
+                               toStr(eng.map->getDlvl()), clrInfo));
+  linesRef.push_back(StrAndClr("   * Was " +
+                               toStr(min(100, eng.player->getInsanity())) + "% "
+                               "insane", clrInfo));
+  linesRef.push_back(StrAndClr("   * Killed " + toStr(nrKillsTotAllMonsters) +
+                               " monsters ", clrInfo));
+
+  //TODO This is ugly as hell
   if(eng.player->phobias[int(Phobia::closedPlace)])
-    postmortemLines.push_back(
+    linesRef.push_back(
       StrAndClr("   * Had a phobia of enclosed spaces", clrInfo));
   if(eng.player->phobias[int(Phobia::dog)])
-    postmortemLines.push_back(
+    linesRef.push_back(
       StrAndClr("   * Had a phobia of dogs", clrInfo));
   if(eng.player->phobias[int(Phobia::rat)])
-    postmortemLines.push_back(
+    linesRef.push_back(
       StrAndClr("   * Had a phobia of rats", clrInfo));
   if(eng.player->phobias[int(Phobia::undead)])
-    postmortemLines.push_back(
+    linesRef.push_back(
       StrAndClr("   * Had a phobia of the dead", clrInfo));
   if(eng.player->phobias[int(Phobia::openPlace)])
-    postmortemLines.push_back(
+    linesRef.push_back(
       StrAndClr("   * Had a phobia of open places", clrInfo));
   if(eng.player->phobias[int(Phobia::spider)])
-    postmortemLines.push_back(
+    linesRef.push_back(
       StrAndClr("   * Had a phobia of spiders", clrInfo));
   if(eng.player->phobias[int(Phobia::deepPlaces)])
-    postmortemLines.push_back(
+    linesRef.push_back(
       StrAndClr("   * Had a phobia of deep places", clrInfo));
 
   if(eng.player->obsessions[int(Obsession::masochism)])
-    postmortemLines.push_back(
-      StrAndClr("   * Had a masochistic obsession", clrInfo));
+    linesRef.push_back(StrAndClr("   * Had a masochistic obsession", clrInfo));
   if(eng.player->obsessions[int(Obsession::sadism)])
-    postmortemLines.push_back(
-      StrAndClr("   * Had a sadistic obsession", clrInfo));
+    linesRef.push_back(StrAndClr("   * Had a sadistic obsession", clrInfo));
 
-  postmortemLines.push_back(StrAndClr(" ", clrInfo));
+  linesRef.push_back(StrAndClr(" ", clrInfo));
 
-
-  trace << "Postmortem: Listing abilities gained" << endl;
-  postmortemLines.push_back(StrAndClr(" Abilities gained:", clrHeading));
-  string abilitiesLine;
-  PlayerBon::getAllPickedTraitsTitlesLine(abilitiesLine);
-  if(abilitiesLine.empty()) {
-    postmortemLines.push_back(StrAndClr("   * None", clrInfo));
+  trace << "Postmortem: Finding traits gained" << endl;
+  linesRef.push_back(StrAndClr(" Traits gained:", clrHeading));
+  string traitsLine;
+  PlayerBon::getAllPickedTraitsTitlesLine(traitsLine);
+  if(traitsLine.empty()) {
+    linesRef.push_back(StrAndClr("   * None", clrInfo));
   } else {
     vector<string> abilitiesLines;
-    TextFormatting::lineToLines(abilitiesLine, 60, abilitiesLines);
-    for(unsigned int i = 0; i < abilitiesLines.size(); i++) {
-      postmortemLines.push_back(
-        StrAndClr("   " + abilitiesLines.at(i), clrInfo));
+    TextFormatting::lineToLines(traitsLine, 60, abilitiesLines);
+    for(string & str : abilitiesLines) {
+      linesRef.push_back(StrAndClr("   " + str, clrInfo));
     }
   }
-  postmortemLines.push_back(StrAndClr(" ", clrInfo));
+  linesRef.push_back(StrAndClr(" ", clrInfo));
 
-  trace << "Postmortem: Listing monster kills" << endl;
-  // TODO Add name_plural_a, and name_plural_the to actor defs?
-  postmortemLines.push_back(StrAndClr(" Monsters killed:", clrHeading));
-  vector< pair<string, int> > killList;
-  int nrOfTotalKills = 0;
-  for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorData& d = eng.actorDataHandler->dataList[i];
-    if(d.nrOfKills > 0) {
-
-      nrOfTotalKills += d.nrOfKills;
-
-      bool isAlreadyAdded = false;
-      for(unsigned int ii = 0; ii < killList.size(); ii++) {
-        if(killList.at(ii).first == d.name_a) {
-          killList.at(ii).second += d.nrOfKills;
-          isAlreadyAdded = true;
-        }
-      }
-
-      if(isAlreadyAdded == false) {
-        if(d.isUnique) {
-          killList.push_back(pair<string, int>(d.name_a, -1));
-        } else {
-          killList.push_back(pair<string, int>(d.name_a, d.nrOfKills));
-        }
-      }
-    }
-  }
-  if(killList.empty()) {
-    postmortemLines.push_back(StrAndClr("   * None", clrInfo));
+  linesRef.push_back(StrAndClr(" Unique monsters killed:", clrHeading));
+  if(uniqueKilledNames.empty()) {
+    linesRef.push_back(StrAndClr("   * None", clrInfo));
   } else {
-    postmortemLines.back().str += " (" + toStr(nrOfTotalKills) + " total)";
-
-    for(unsigned int i = 0; i < killList.size(); i++) {
-      const string name = killList.at(i).first;
-      const int nrOfKills = killList.at(i).second;
-      const string nrOfKillsStr =
-        nrOfKills == -1 ? "" : (": " + toStr(nrOfKills));
-      postmortemLines.push_back(
-        StrAndClr("   * " + name + nrOfKillsStr, clrInfo));
+    for(string & monsterName : uniqueKilledNames) {
+      linesRef.push_back(StrAndClr("   * " + monsterName, clrInfo));
     }
   }
-  postmortemLines.push_back(StrAndClr(" ", clrInfo));
+  linesRef.push_back(StrAndClr(" ", clrInfo));
 
-  postmortemLines.push_back(StrAndClr(" The last messages:", clrHeading));
+  linesRef.push_back(StrAndClr(" The last messages:", clrHeading));
   int historyElement = max(0, int(eng.log->history.size()) - 20);
   for(unsigned int i = historyElement; i < eng.log->history.size(); i++) {
     string row = "";
@@ -142,12 +116,12 @@ void Postmortem::makeInfoLines() {
       eng.log->history.at(i).at(ii).getStrWithRepeats(msgStr);
       row += msgStr + " ";
     }
-    postmortemLines.push_back(StrAndClr("   " + row, clrInfo));
+    linesRef.push_back(StrAndClr("   " + row, clrInfo));
   }
-  postmortemLines.push_back(StrAndClr(" ", clrInfo));
+  linesRef.push_back(StrAndClr(" ", clrInfo));
 
   trace << "Postmortem: Drawing the final map" << endl;
-  postmortemLines.push_back(StrAndClr(" The final moment:", clrHeading));
+  linesRef.push_back(StrAndClr(" The final moment:", clrHeading));
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       for(int dx = -1; dx <= 1; dx++) {
@@ -189,14 +163,15 @@ void Postmortem::makeInfoLines() {
         }
       }
     }
-    postmortemLines.push_back(StrAndClr(currentRow, clrInfo));
+    linesRef.push_back(StrAndClr(currentRow, clrInfo));
     currentRow.clear();
   }
 
   trace << "Postmortem::makeInfoLines() [DONE]" << endl;
 }
 
-void Postmortem::renderInfo(const int TOP_ELEMENT) {
+void Postmortem::render(const vector<StrAndClr>& linesAndClr,
+                        const int TOP_ELEMENT) {
   Renderer::clearScreen();
 
   const string decorationLine(MAP_W, '-');
@@ -213,7 +188,7 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
   Renderer::drawText(" 2/8, down/up, j/k to navigate | space/esc to exit  ",
                      Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
-  const int NR_LINES_TOT = int(postmortemLines.size());
+  const int NR_LINES_TOT = int(linesAndClr.size());
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
   int yPos = 1;
 
@@ -222,22 +197,22 @@ void Postmortem::renderInfo(const int TOP_ELEMENT) {
     i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++) {
     Renderer::drawText(
-      postmortemLines.at(i).str, Panel::screen, Pos(0, yPos++),
-      postmortemLines.at(i).clr);
+      linesAndClr.at(i).str, Panel::screen, Pos(0, yPos++),
+      linesAndClr.at(i).clr);
   }
 
   Renderer::updateScreen();
 }
 
-void Postmortem::runInfo() {
+void Postmortem::runInfo(const vector<StrAndClr>& lines) {
   const int LINE_JUMP           = 3;
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
-  const int NR_LINES_TOT        = postmortemLines.size();
+  const int NR_LINES_TOT        = lines.size();
 
   int topNr = 0;
 
   while(true) {
-    renderInfo(topNr);
+    render(lines, topNr);
 
     const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
 
@@ -256,7 +231,7 @@ void Postmortem::runInfo() {
   }
 }
 
-void Postmortem::makeMemorialFile() {
+void Postmortem::makeMemorialFile(const vector<StrAndClr>& lines) {
   const string timeStamp =
     eng.dungeonMaster->getTimeStarted().getTimeStr(time_second, false);
   const string memorialFileName =
@@ -266,9 +241,7 @@ void Postmortem::makeMemorialFile() {
   // Add memorial file
   ofstream file;
   file.open(memorialFilePath.data(), ios::trunc);
-  for(unsigned int i = 0; i < postmortemLines.size(); i++) {
-    file << postmortemLines.at(i).str << endl;
-  }
+  for(const StrAndClr & line : lines) {file << line.str << endl;}
   file.close();
 
   // Add reference to memorial file in list
@@ -278,7 +251,8 @@ void Postmortem::makeMemorialFile() {
   file.close();
 }
 
-void Postmortem::readKeysMenu(bool* const quitGame) {
+void Postmortem::readKeysMenu(const vector<StrAndClr>& linesAndClr,
+                              bool* const quitGame) {
   MenuBrowser browser(5, 0);
 
   renderMenu(browser);
@@ -301,7 +275,7 @@ void Postmortem::readKeysMenu(bool* const quitGame) {
 
       case MenuAction::selected: {
         if(browser.isPosAtElement(0)) {
-          runInfo();
+          runInfo(linesAndClr);
           renderMenu(browser);
         }
         if(browser.isPosAtElement(1)) {

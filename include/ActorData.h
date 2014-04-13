@@ -112,7 +112,7 @@ public:
   bool isHumanoid;
   bool isAutoDescrAllowed;
   string deathMessageOverride;
-  int nrOfKills;
+  int nrKills;
   bool canOpenDoors, canBashDoors;
   bool canSeeInDarkness;
   int nrLeftAllowedToSpawn;

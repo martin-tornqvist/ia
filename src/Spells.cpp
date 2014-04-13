@@ -238,7 +238,7 @@ bool SpellDarkbolt::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(eng), blockers);
-  return monster->isSeeingActor(*(eng.player), blockers);
+  return monster->isSeeingActor(*(eng.player), blockers) && Rnd::oneIn(2);
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH

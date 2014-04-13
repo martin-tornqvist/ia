@@ -793,7 +793,7 @@ bool Zombie::tryResurrect() {
           tile_ = data_->tile;
           clr_ = data_->color;
           hasResurrected = true;
-          data_->nrOfKills--;
+          data_->nrKills--;
           if(eng.map->cells[pos.x][pos.y].isSeenByPlayer) {
             eng.log->addMsg(
               getNameThe() + " rises again!!", clrWhite, true);
