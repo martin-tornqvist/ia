@@ -59,6 +59,7 @@ Spell* SpellHandler::getSpellFromId(const SpellId spellId) const {
     case SpellId::cloudMinds:         return new SpellCloudMinds; break;
     case SpellId::bless:              return new SpellBless; break;
     case SpellId::miGoHypnosis:       return new SpellMiGoHypnosis; break;
+    case SpellId::immolation:         return new SpellImmolation; break;
     case SpellId::elemRes:            return new SpellElemRes; break;
     case SpellId::endOfSpellId: {} break;
   }
@@ -835,6 +836,29 @@ SpellCastRetData SpellMiGoHypnosis::cast_(
 }
 
 bool SpellMiGoHypnosis::isGoodForMonsterToCastNow(
+  Monster* const monster, Engine& eng) {
+
+  bool blockers[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(eng), blockers);
+  return monster->isSeeingActor(*(eng.player), blockers) &&
+         Rnd::oneIn(4);
+}
+
+//------------------------------------------------------------ IMMOLATION
+SpellCastRetData SpellImmolation::cast_(
+  Actor* const caster, Engine& eng) const {
+
+  (void)caster;
+
+  eng.log->addMsg("Flames are rising around me!");
+
+  eng.player->getPropHandler().tryApplyProp(
+    new PropBurning(eng, propTurnsSpecific, Rnd::range(3, 4)));
+
+  return true;
+}
+
+bool SpellImmolation::isGoodForMonsterToCastNow(
   Monster* const monster, Engine& eng) {
 
   bool blockers[MAP_W][MAP_H];

@@ -35,6 +35,7 @@ const string Scroll::getRealTypeName() {
     case SpellId::knockBack:          return "";
     case SpellId::cloudMinds:         return "";
     case SpellId::miGoHypnosis:       return "";
+    case SpellId::immolation:         return "";
     case SpellId::endOfSpellId: {} break;
   }
   assert(false && "No spell found for scroll");

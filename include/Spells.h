@@ -42,6 +42,7 @@ enum class SpellId {
   healSelf,
   knockBack,
   miGoHypnosis,
+  immolation,
 
   endOfSpellId
 };
@@ -483,6 +484,24 @@ public:
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "MiGo Hypnosis";}
   SpellId getId()               const override {return SpellId::miGoHypnosis;}
+  IntrSpellShock getShockTypeIntrCast() const override {
+    return IntrSpellShock::disturbing;
+  }
+private:
+  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  int getMaxSpiCost_() const override {
+    return PlayerBon::getSpiOccultistCanCastAtLvl(2);
+  }
+};
+
+class SpellImmolation: public Spell {
+public:
+  SpellImmolation() : Spell() {}
+  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isAvailForAllMonsters()  const override {return true;}
+  bool isAvailForPlayer()       const override {return false;}
+  string getName()              const override {return "Immolation";}
+  SpellId getId()               const override {return SpellId::immolation;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }

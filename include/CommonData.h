@@ -5,7 +5,7 @@
 
 const unsigned int PLAYER_NAME_MAX_LENGTH = 12;
 
-const std::string gameVersionStr = "v16.0 RC 1";
+const std::string gameVersionStr = "v16.0";
 
 const std::string tilesImgName         = "images/gfx_16x24.png";
 const std::string mainMenuLogoImgName  = "images/main_menu_logo.png";
