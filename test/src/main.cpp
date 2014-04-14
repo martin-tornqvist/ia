@@ -563,7 +563,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
 
   //Learned spells
   eng.playerSpellsHandler->learnSpellIfNotKnown(SpellId::bless);
-  eng.playerSpellsHandler->learnSpellIfNotKnown(SpellId::enfeeble);
+  eng.playerSpellsHandler->learnSpellIfNotKnown(SpellId::azathothsWrath);
 
   //Applied properties
   PropHandler& propHlr = eng.player->getPropHandler();
@@ -660,7 +660,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   //Learned spells
   PlayerSpellsHandler& spHlr = *(eng.playerSpellsHandler);
   CHECK(spHlr.isSpellLearned(SpellId::bless));
-  CHECK(spHlr.isSpellLearned(SpellId::enfeeble));
+  CHECK(spHlr.isSpellLearned(SpellId::azathothsWrath));
   CHECK_EQUAL(false, spHlr.isSpellLearned(SpellId::mayhem));
 
   //Properties
