@@ -217,13 +217,13 @@ public:
   int missileHitChanceMod;
   pair<int, int> meleeDmg;
   int meleeHitChanceMod;
-  ItemAttackMessages meleeAttackMessages;
+  ItemAttMsgs meleeAttMsgs;
   Prop* propAppliedOnMelee; //TODO This requires deep copy of items
   DmgType meleeDmgType;
   bool meleeCausesKnockBack;
   bool rangedCausesKnockBack;
   DiceParam rangedDmg;
-  string rangedDmgLabelOverRide;
+  string rangedDmgInfoOverride;
   int rangedHitChanceMod;
   ItemId rangedAmmoTypeUsed;
   DmgType rangedDmgType;
@@ -233,7 +233,7 @@ public:
   SDL_Color rangedMissileClr;
   bool rangedMissileLeavesTrail;
   bool rangedMissileLeavesSmoke;
-  ItemAttackMessages rangedAttackMessages;
+  ItemAttMsgs rangedAttMsgs;
   string rangedSndMsg;
   SndVol rangedSndVol;
   bool rangedMakesRicochetSound;

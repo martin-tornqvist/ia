@@ -153,7 +153,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
       }
 
       if(data.attacker == eng.player) {
-        const string wpnVerb = wpn.getData().meleeAttackMessages.player;
+        const string wpnVerb = wpn.getData().meleeAttMsgs.player;
 
         if(eng.player->isSeeingActor(*data.curDefender, NULL)) {
           otherName = data.curDefender->getNameThe();
@@ -180,7 +180,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
             clr);
         }
       } else {
-        const string wpnVerb = wpn.getData().meleeAttackMessages.other;
+        const string wpnVerb = wpn.getData().meleeAttMsgs.other;
 
         if(eng.player->isSeeingActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();

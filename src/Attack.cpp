@@ -170,8 +170,8 @@ RangedAttackData::RangedAttackData(
   intendedAimLevel(actorSize_none), curDefenderSize(actorSize_none),
   verbPlayerAttacks(""), verbOtherAttacks("")  {
 
-  verbPlayerAttacks = wpn_.getData().rangedAttackMessages.player;
-  verbOtherAttacks  = wpn_.getData().rangedAttackMessages.other;
+  verbPlayerAttacks = wpn_.getData().rangedAttMsgs.player;
+  verbOtherAttacks  = wpn_.getData().rangedAttMsgs.other;
 
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_, eng);
 

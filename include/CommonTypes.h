@@ -189,6 +189,13 @@ public:
     rolls(other.rolls), sides(other.sides), plus(other.plus) {
   }
 
+  DiceParam& operator=(const DiceParam& other) {
+    rolls = other.rolls;
+    sides = other.sides;
+    plus  = other.plus;
+    return *this;
+  }
+
   inline int getHighest() const {return (rolls * sides) + plus;}
 
   int rolls, sides, plus;
@@ -214,11 +221,11 @@ public:
   std::string name, name_plural, name_a;
 };
 
-struct ItemAttackMessages {
+struct ItemAttMsgs {
 public:
-  ItemAttackMessages() : player(""), other("") {}
+  ItemAttMsgs() : player(""), other("") {}
 
-  ItemAttackMessages(const std::string& PLAYER, const std::string& OTHER) :
+  ItemAttMsgs(const std::string& PLAYER, const std::string& OTHER) :
     player(PLAYER), other(OTHER) {}
 
   std::string player, other;
