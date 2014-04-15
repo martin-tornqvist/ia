@@ -54,33 +54,34 @@ void playerDisarm(Engine& eng) {
 
   const Pos pos(eng.player->pos + eng.query->dir());
 
-  //Abort if cell is unseen
-  if(eng.map->cells[pos.x][pos.y].isSeenByPlayer == false) {
-    eng.log->addMsg("I cannot see there.");
-    Renderer::drawMapAndInterface();
-    return;
-  }
-
-  eng.log->clearLog();
-
-  Actor* actorOnTrap = Utils::getActorAtPos(pos, eng);
-
-  //Abort if trap blocked by monster
-  if(actorOnTrap != NULL) {
-    if(eng.player->isSeeingActor(*actorOnTrap, NULL)) {
-      eng.log->addMsg("It's blocked.");
-    } else {
-      eng.log->addMsg("Something is blocking it.");
-    }
-    Renderer::drawMapAndInterface();
-    return;
-  }
-
-  eng.log->clearLog();
   if(pos != eng.player->pos) {
+
+    //Abort if cell is unseen
+    if(eng.map->cells[pos.x][pos.y].isSeenByPlayer == false) {
+      eng.log->addMsg("I cannot see there.");
+      Renderer::drawMapAndInterface();
+      return;
+    }
+
+    eng.log->clearLog();
+
+    Actor* actorOnTrap = Utils::getActorAtPos(pos, eng);
+
+    //Abort if trap blocked by monster
+    if(actorOnTrap != NULL) {
+      if(eng.player->isSeeingActor(*actorOnTrap, NULL)) {
+        eng.log->addMsg("It's blocked.");
+      } else {
+        eng.log->addMsg("Something is blocking it.");
+      }
+      Renderer::drawMapAndInterface();
+      return;
+    }
+
+    eng.log->clearLog();
     eng.map->cells[pos.x][pos.y].featureStatic->disarm();
+    Renderer::drawMapAndInterface();
   }
-  Renderer::drawMapAndInterface();
 }
 
 } //Disarm
