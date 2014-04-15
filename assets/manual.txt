@@ -9,9 +9,12 @@
 1. Command list
 ------------------------------------------------
    Esc    Menu (manual, options, quit)
+   ?      Manual
+   =      Options
+   Q      Quit
    Space  Cancel, close
-   Enter  Select something in a menu
-   o      Alternative menu selection key (intended for use with Vi-keys)
+   Enter  Select something in a menu, confirm
+   o      Alternative Enter key (intended for use with Vi-keys)
    @      Display character information
    TAB    Melee attack adjacent monster
    a      Examine something on the map

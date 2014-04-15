@@ -167,6 +167,20 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
     clearEvents();
     return;
   }
+  //----------------------------------- MANUAL
+  else if(d.key_ == '?') {
+    eng.log->clearLog();
+    eng.manual->run();
+    clearEvents();
+    return;
+  }
+  //----------------------------------- OPTIONS
+  else if(d.key_ == '=') {
+    eng.log->clearLog();
+    Config::runOptionsMenu(eng);
+    clearEvents();
+    return;
+  }
   //----------------------------------- EXAMINE
   else if(d.key_ == 'a') {
     eng.log->clearLog();
@@ -300,19 +314,6 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
     clearEvents();
     return;
   }
-  //----------------------------------- HIDE (ROGUE)
-//  else if(d.key_ == 'h') {
-//    eng.log->clearLog();
-//    if(eng.player->deadState == ActorDeadState::alive) {
-//      if(PlayerBon::getBg() == Bg::rogue) {
-//        eng.hide->playerTryHide();
-//      } else {
-//        eng.log->addMsg("I do not have this ability.");
-//      }
-//    }
-//    clearEvents();
-//    return;
-//  }
   //----------------------------------- USE
   else if(d.key_ == 'e') {
     eng.log->clearLog();
@@ -498,7 +499,7 @@ void handleKeyPress(const KeyboardReadRetData& d, Engine& eng) {
     }
     clearEvents();
     return;
-  } else if(d.key_ == 'Q' && IS_DEBUG_MODE) {
+  } else if(d.key_ == 'Q' /*&& IS_DEBUG_MODE*/) {
     //----------------------------------- MENU
     queryQuit(eng);
     clearEvents();
