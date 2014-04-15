@@ -101,7 +101,6 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
     eng.log->addMsg("I cast " + spell->getName() + "!");
 
     if(isBloodSorc) {
-//      eng.log->addMsg("My life force fuels the spell.", clrMsgBad);
       eng.player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure, false);
     }
     if(eng.player->deadState == ActorDeadState::alive) {
