@@ -212,9 +212,7 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
 }
 
 void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
-  if(obsessions[int(Obsession::masochism)]) {
-    if(dmg > 1) {shock_ = max(0.0, shock_ - 5.0);}
-  } else {
+  if(obsessions[int(Obsession::masochism)] == false) {
     incrShock(1, ShockSrc::misc);
   }
 
@@ -324,8 +322,8 @@ void Player::incrInsanity() {
   Renderer::drawMapAndInterface();
 
   if(getInsanity() >= 100) {
-    msg += "My mind can no longer withstand what it has grasped.";
-    msg += " I am hopelessly lost.";
+    msg += "My mind can no longer withstand what it has grasped. "
+           "I am hopelessly lost.";
     eng.popup->showMsg(msg, true, "Complete insanity!",
                        SfxId::insanityRising);
     die(true, false, false);
@@ -413,8 +411,8 @@ void Player::incrInsanity() {
                     if(
                       monsterData.isRat &&
                       phobias[int(Phobia::rat)] == false) {
-                      msg += "I am afflicted by Murophobia. ";
-                      msg += "Rats suddenly seem terrifying.";
+                      msg += "I am afflicted by Murophobia. "
+                             "Rats suddenly seem terrifying.";
                       eng.popup->showMsg(msg, true, "Murophobia!",
                                          SfxId::insanityRising);
                       phobias[int(Phobia::rat)] = true;
@@ -423,8 +421,8 @@ void Player::incrInsanity() {
                     if(
                       monsterData.isSpider &&
                       phobias[int(Phobia::spider)] == false) {
-                      msg += "I am afflicted by Arachnophobia. ";
-                      msg += "Spiders suddenly seem terrifying.";
+                      msg += "I am afflicted by Arachnophobia. "
+                             "Spiders suddenly seem terrifying.";
                       eng.popup->showMsg(msg, true, "Arachnophobia!",
                                          SfxId::insanityRising);
                       phobias[int(Phobia::spider)] = true;
@@ -433,8 +431,8 @@ void Player::incrInsanity() {
                     if(
                       monsterData.isCanine &&
                       phobias[int(Phobia::dog)] == false) {
-                      msg += "I am afflicted by Cynophobia. ";
-                      msg += "Dogs suddenly seem terrifying.";
+                      msg += "I am afflicted by Cynophobia. "
+                             "Dogs suddenly seem terrifying.";
                       eng.popup->showMsg(msg, true, "Cynophobia!",
                                          SfxId::insanityRising);
                       phobias[int(Phobia::dog)] = true;
@@ -443,8 +441,8 @@ void Player::incrInsanity() {
                     if(
                       monsterData.isUndead &&
                       phobias[int(Phobia::undead)] == false) {
-                      msg += "I am afflicted by Necrophobia. ";
-                      msg += "The undead suddenly seem much more terrifying.";
+                      msg += "I am afflicted by Necrophobia. "
+                             "The undead suddenly seem much more terrifying.";
                       eng.popup->showMsg(msg, true, "Necrophobia!");
                       phobias[int(Phobia::undead)] = true;
                       return;
@@ -454,8 +452,8 @@ void Player::incrInsanity() {
                   if(Rnd::coinToss()) {
                     if(isStandingInOpenSpace()) {
                       if(phobias[int(Phobia::openPlace)] == false) {
-                        msg += "I am afflicted by Agoraphobia. ";
-                        msg += "Open places suddenly seem terrifying.";
+                        msg += "I am afflicted by Agoraphobia. "
+                               "Open places suddenly seem terrifying.";
                         eng.popup->showMsg(msg, true, "Agoraphobia!",
                                            SfxId::insanityRising);
                         phobias[int(Phobia::openPlace)] = true;
@@ -464,8 +462,8 @@ void Player::incrInsanity() {
                     }
                     if(isStandingInCrampedSpace()) {
                       if(phobias[int(Phobia::closedPlace)] == false) {
-                        msg += "I am afflicted by Claustrophobia. ";
-                        msg += "Confined places suddenly seem terrifying.";
+                        msg += "I am afflicted by Claustrophobia. "
+                               "Confined places suddenly seem terrifying.";
                         eng.popup->showMsg(msg, true, "Claustrophobia!",
                                            SfxId::insanityRising);
                         phobias[int(Phobia::closedPlace)] = true;
@@ -475,8 +473,8 @@ void Player::incrInsanity() {
                   } else {
                     if(eng.map->getDlvl() >= 5) {
                       if(phobias[int(Phobia::deepPlaces)] == false) {
-                        msg += "I am afflicted by Bathophobia. ";
-                        msg += "It suddenly seems terrifying to delve deeper.";
+                        msg += "I am afflicted by Bathophobia. "
+                               "It suddenly seems terrifying to delve deeper.";
                         eng.popup->showMsg(msg, true, "Bathophobia!");
                         phobias[int(Phobia::deepPlaces)] = true;
                         return;
@@ -500,24 +498,26 @@ void Player::incrInsanity() {
                 (Obsession)(Rnd::range(0, int(Obsession::endOfObsessions) - 1));
               switch(obsession) {
                 case Obsession::masochism: {
-                  msg += "To my alarm, I find myself encouraged by the ";
-                  msg += "sensation of pain. Every time I am hurt, I find a ";
-                  msg += "little relief. However, my depraved mind can no ";
-                  msg += "longer find complete peace (shock cannot go below ";
-                  msg += toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-                  eng.popup->showMsg(
-                    msg, true, "Masochistic obsession!", SfxId::insanityRising);
+                  msg +=
+                    "To my alarm, I find myself encouraged by the sensation of "
+                    "pain. Physical suffering does not frighten me at all. "
+                    "However, my depraved mind can never find complete peace "
+                    "(no shock from taking damage, but shock cannot go below "
+                    + toStr(MIN_SHOCK_WHEN_OBSESSION) + " %).";
+                  eng.popup->showMsg(msg, true, "Masochistic obsession!",
+                                     SfxId::insanityRising);
                   obsessions[int(Obsession::masochism)] = true;
                   return;
                 } break;
                 case Obsession::sadism: {
-                  msg += "To my alarm, I find myself encouraged by the pain ";
-                  msg += "I cause in others. For every life I take, I find a ";
-                  msg += "little relief. However, my depraved mind can no ";
-                  msg += "longer find complete peace (shock cannot go below ";
-                  msg += toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-                  eng.popup->showMsg(
-                    msg, true, "Sadistic obsession!", SfxId::insanityRising);
+                  msg +=
+                    "To my alarm, I find myself encouraged by the pain I cause "
+                    "in others. For every life I take, I find a little relief. "
+                    "However, my depraved mind can no longer find complete "
+                    "peace (shock cannot go below "
+                    + toStr(MIN_SHOCK_WHEN_OBSESSION) + " %).";
+                  eng.popup->showMsg(msg, true, "Sadistic obsession!",
+                                     SfxId::insanityRising);
                   obsessions[int(Obsession::sadism)] = true;
                   return;
                 } break;
@@ -547,9 +547,9 @@ void Player::incrInsanity() {
         } break;
 
         case 8: {
-          msg += "I find myself in a peculiar detached daze, ";
-          msg += "a tranced state of mind. I struggle to recall ";
-          msg += "where I am, or what I'm doing.";
+          msg += "I find myself in a peculiar detached daze, "
+                 "a tranced state of mind. I struggle to recall "
+                 "where I am, or what I'm doing.";
           eng.popup->showMsg(msg, true, "Confusion!", SfxId::insanityRising);
 
           propHandler_->tryApplyProp(new PropConfused(eng, propTurnsStd));

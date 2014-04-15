@@ -17,7 +17,11 @@ enum class Phobia {
   endOfPhobias
 };
 
-enum class Obsession {sadism, masochism, endOfObsessions};
+enum class Obsession {
+  sadism,
+  masochism,
+  endOfObsessions
+};
 
 enum class ShockSrc {
   seeMonster,
