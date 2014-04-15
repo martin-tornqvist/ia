@@ -202,13 +202,12 @@ void Trap::disarm() {
   } else {
     eng.log->addMsg(specificTrap_->getDisarmFailMsg());
 
-    if(getTrapType() == trap_spiderWeb) {
-      eng.player->pos = pos_;
-    }
-
     Renderer::drawMapAndInterface();
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
     if(Rnd::oneIn(TRIGGER_ONE_IN_N)) {
+      if(getTrapType() == trap_spiderWeb) {
+        eng.player->pos = pos_;
+      }
       triggerTrap(*eng.player);
     }
   }
