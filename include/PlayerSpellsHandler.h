@@ -1,11 +1,6 @@
 #ifndef PLAYER_SPELLS_HANDLER_H
 #define PLAYER_SPELLS_HANDLER_H
 
-/*
- * Responsible for providing a user interface for selecting spells to
- * cast, and for storing the player's spells
- */
-
 #include <vector>
 
 #include "MenuBrowser.h"

@@ -261,6 +261,14 @@ void Trap::triggerTrap(Actor& actor) {
 void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   traceVerbose << "Trap::reveal()..." << endl;
   isHidden_ = false;
+
+  //Destroy any corpse on the trap
+  for(Actor * actor : eng.gameTime->actors_) {
+    if(actor->pos == pos_ && actor->deadState == ActorDeadState::corpse) {
+      actor->deadState = ActorDeadState::destroyed;
+    }
+  }
+
   clearGore();
 
   Item* item = eng.map->cells[pos_.x][pos_.y].item;

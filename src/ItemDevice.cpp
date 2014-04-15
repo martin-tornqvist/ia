@@ -238,7 +238,8 @@ void DeviceLantern::newTurnInInventory() {
       const int RND = Rnd::range(1, 1000);
 
       if(RND <= 6) {
-        eng.log->addMsg("My Electric Lantern breaks!");
+        eng.log->addMsg("My Electric Lantern breaks!", clrMsgWarning,
+                        false, true);
         eng.player->getInv().removetemInGeneralWithPointer(this, false);
         malfState_ = LanternMalfState::destroyed;
       } else if(RND <= 10) {

@@ -478,19 +478,17 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   for(Actor * actor : eng.gameTime->actors_) {
     if(actor != this && actor != eng.player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
-      if(monster->leader == this) {
-        monster->leader = NULL;
-      }
+      if(monster->leader == this) {monster->leader = NULL;}
     }
   }
 
-  bool diedOnVisibleTrap = false;
+  bool isOnVisibleTrap = false;
 
-  //If died on a visible trap, always destroy the corpse
+  //If died on a visible trap, destroy the corpse
   const Feature* const f = eng.map->cells[pos.x][pos.y].featureStatic;
   if(f->getId() == feature_trap) {
     if(dynamic_cast<const Trap*>(f)->isHidden() == false) {
-      diedOnVisibleTrap = true;
+      isOnVisibleTrap = true;
     }
   }
 
@@ -511,7 +509,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   }
 
   deadState =
-    (IS_DESTROYED || (diedOnVisibleTrap && this != eng.player)) ?
+    (IS_DESTROYED || (isOnVisibleTrap && this != eng.player)) ?
     ActorDeadState::destroyed : ActorDeadState::corpse;
 
   if(this != eng.player) {
