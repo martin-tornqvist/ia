@@ -1004,7 +1004,7 @@ void ActorDataHandler::initDataList() {
   d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
   d.ai[int(Ai::movesTowardLair)] = false;
   d.ai[int(Ai::movesTowardLeader)] = false;
-  d.speed = ActorSpeed::slow;
+  d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
   d.color = clrGray;
