@@ -105,7 +105,7 @@ void getBgDescr(const Bg id, vector<string>& linesRef) {
 
   switch(id) {
     case Bg::occultist: {
-      linesRef.push_back("Can memorize spells cast from manuscripts");
+      linesRef.push_back("Can learn spells cast from manuscripts");
       linesRef.push_back(" ");
       linesRef.push_back("-50% shock taken from using and identifying "
                          "strange items (e.g. potions)");

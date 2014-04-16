@@ -27,7 +27,7 @@ void Manual::readFile() {
           }
         }
         if(shouldFormatLine) {
-          TextFormatting::lineToLines(curLine, MAP_W - 2, formatted);
+          TextFormatting::lineToLines(curLine, MAP_W - 3, formatted);
           for(unsigned int i = 0; i < formatted.size(); i++) {
             lines.push_back(formatted.at(i));
           }
