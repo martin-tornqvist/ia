@@ -8,7 +8,7 @@
 
 
 1. Command list
-------------------------------------
+-------------------------------------------------
    Esc    Menu (manual, options, quit)
    ?      Manual
    =      Options
@@ -40,7 +40,7 @@
 
 
 2. Movement and interaction
-------------------------------------
+-------------------------------------------------
 You can move in eight directions by using the numpad keys in this manner:
 
    7 8 9
@@ -74,7 +74,7 @@ Certain things can be interacted with by moving into them (i.e. by "bumping" the
 
 
 3. The interface
-------------------------------------
+-------------------------------------------------
 The following is an example of how the interface lines can look:
 
    HP:9/16 SPI:8/8 INS:45%/12% ARM:1   M1911 Colt 1d8+4 60% 5/7
@@ -89,7 +89,7 @@ The third line displays properties currently affecting you. This can be temporar
 
 
 4. Spirit and spell casting
-------------------------------------
+-------------------------------------------------
 In addition to your physical and mental health, you have an "essence" - or Spirit - to preserve. If you lose all your Spirit, you are dead.
 
 Your Spirit is shown like this:
@@ -107,7 +107,7 @@ There are also other ways you can lose your Spirit. Some monsters can drain your
 
 
 5. Insanity
-------------------------------------
+-------------------------------------------------
 "A few steps more, and our breaths were literally snatched from us by what we saw; so literally that Thornton, the psychic investigator, actually fainted in the arms of the dazed man who stood behind him. Norrys, his plump face utterly white and flabby, simply cried out inarticulately; whilst I think that what I did was to gasp or hiss, and cover my eyes. The man behind me - the only one of the party older than I - croaked the hackneyed "My God!" in the most cracked voice I ever heard. Of seven cultivated men, only Sir William Brinton retained his composure; a thing the more to his credit because he led the party and must have seen the sight first."-H.P. Lovecraft, "Rats in the Walls"
 
 Certain events in this game affects the sanity and composure of your character. One of the main threats to your mental health are the various horrifying creatures that inhabit the game world. When inside your view, some creatures may cause a vague unease, while others are very disturbing to behold. You also lose sanity from using occult powers, and other bizarre events. Finally, there is a slow perpetual draining of your sanity from exploring and dwelling in this ancient haunted dungeon.
@@ -128,7 +128,7 @@ If your Insanity reaches 100%, you are hopelessly lost, and the game is over.
 
 
 6. Hit Points, Wounds and healing
-------------------------------------
+-------------------------------------------------
 The state of your physical health is described in two ways:
    (1) Hit Points (HP)
 This represents minor wounds like bruises and sprains, and also general combat morale, fatigue, stance, etc. If your HP reaches 0, it means you received a killing blow, or the circumstances are such that you can no longer fight back (you are fallen, pinned or exhausted). Hit Points usually regenerates automatically over time.
@@ -148,7 +148,7 @@ This will heal a wound, although it requires many uninterrupted turns, and drain
 
 
 7. Sneaking and backstabbing
-------------------------------------
+-------------------------------------------------
 Monsters unaware of your presence have a blue background in their map icon. This is their default mode. While in this state they may roam the map, but they will not actively search for you or purposefully attack you.
 
 For each turn you spend in a monsters visual area, there is a certain chance it will notice you. Most monsters also have other methods of searching, such as listening. Monsters will also disturb nearby monsters when becoming aware, alerting them to your presence.
