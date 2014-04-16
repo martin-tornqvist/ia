@@ -6,7 +6,6 @@
 #include "Feature.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
-#include "PlayerVisualMemory.h"
 #include "Map.h"
 #include "PopulateMonsters.h"
 #include "Input.h"
@@ -74,7 +73,7 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
   if(currentActor == eng.player) {
     eng.player->updateFov();
     Renderer::drawMapAndInterface();
-    eng.playerVisualMemory->updateVisualMemory();
+    eng.map->updateVisualMemory();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
     if(monster->awareOfPlayerCounter_ > 0) {

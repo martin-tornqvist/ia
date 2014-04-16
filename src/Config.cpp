@@ -659,7 +659,7 @@ void setCellDimDependentVariables() {
 }
 
 void toggleFullscreen(Engine& eng) {
-  SDL_Surface* screenCpy = SDL_DisplayFormat(Renderer::screenSurface_);
+  SDL_Surface* screenCpy = SDL_DisplayFormat(Renderer::screenSurface);
 
   isFullscreen_ = !isFullscreen_;
   parseFontNameAndSetCellDims();

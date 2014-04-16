@@ -17,10 +17,10 @@ enum class Panel {screen, map, charLines, log};
 
 namespace Renderer {
 
-extern CellRenderData renderArray_[MAP_W][MAP_H];
-extern CellRenderData renderArrayNoActors_[MAP_W][MAP_H];
-extern SDL_Surface*   screenSurface_;
-extern SDL_Surface*   mainMenuLogoSurface_;
+extern CellRenderData renderArray[MAP_W][MAP_H];
+extern CellRenderData renderArrayNoActors[MAP_W][MAP_H];
+extern SDL_Surface*   screenSurface;
+extern SDL_Surface*   mainMenuLogoSurface;
 
 void init(Engine& engine);
 void cleanup();

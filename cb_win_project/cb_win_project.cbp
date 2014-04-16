@@ -216,7 +216,6 @@
 		<Unit filename="../include/PlayerBon.h" />
 		<Unit filename="../include/PlayerCreateCharacter.h" />
 		<Unit filename="../include/PlayerSpellsHandler.h" />
-		<Unit filename="../include/PlayerVisualMemory.h" />
 		<Unit filename="../include/PopulateItems.h" />
 		<Unit filename="../include/PopulateMonsters.h" />
 		<Unit filename="../include/PopulateTraps.h" />
@@ -322,7 +321,6 @@
 		<Unit filename="../src/PlayerBon.cpp" />
 		<Unit filename="../src/PlayerCreateCharacter.cpp" />
 		<Unit filename="../src/PlayerSpellsHandler.cpp" />
-		<Unit filename="../src/PlayerVisualMemory.cpp" />
 		<Unit filename="../src/PopulateItems.cpp" />
 		<Unit filename="../src/PopulateMonsters.cpp" />
 		<Unit filename="../src/PopulateTraps.cpp" />

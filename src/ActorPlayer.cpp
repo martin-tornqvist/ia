@@ -18,7 +18,6 @@
 #include "FeatureDoor.h"
 #include "Query.h"
 #include "Attack.h"
-#include "PlayerVisualMemory.h"
 #include "Fov.h"
 #include "ItemFactory.h"
 #include "ActorFactory.h"

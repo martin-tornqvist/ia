@@ -112,6 +112,9 @@ void Map::resetCells(const bool MAKE_STONE_WALLS) {
 
       cells[x][y].pos = Pos(x, y);
 
+      Renderer::renderArray[x][y].clear();
+      Renderer::renderArrayNoActors[x][y].clear();
+
       if(MAKE_STONE_WALLS) {
         eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
       }
@@ -119,3 +122,11 @@ void Map::resetCells(const bool MAKE_STONE_WALLS) {
   }
 }
 
+void Map::updateVisualMemory() {
+  for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; y++) {
+      eng.map->cells[x][y].playerVisualMemory =
+        Renderer::renderArrayNoActors[x][y];
+    }
+  }
+}

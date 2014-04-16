@@ -50,6 +50,11 @@ public:
 
   void resetMap();
 
+  //Makes a copy of the renderers current array
+  //TODO This is a bit weird, and it's unclear how it should be used
+  //Can it be removed? Can it not be copied in the map drawing function instead?
+  void updateVisualMemory();
+
   void switchToDestroyedFeatAt(const Pos& pos);
 
   void addSaveLines(vector<string>& lines) const {

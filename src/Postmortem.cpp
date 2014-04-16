@@ -145,20 +145,20 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
         currentRow.push_back('@');
       } else {
         if(
-          Renderer::renderArray_[x][y].glyph == ' ' &&
+          Renderer::renderArray[x][y].glyph == ' ' &&
           (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1)) {
           currentRow.push_back('*');
         } else {
-          if(Renderer::renderArray_[x][y].glyph ==
+          if(Renderer::renderArray[x][y].glyph ==
               eng.featureDataHandler->getData(feature_stoneWall)->glyph
-              || Renderer::renderArray_[x][y].glyph ==
+              || Renderer::renderArray[x][y].glyph ==
               eng.featureDataHandler->getData(feature_rubbleHigh)->glyph) {
             currentRow.push_back('#');
-          } else if(Renderer::renderArray_[x][y].glyph ==
+          } else if(Renderer::renderArray[x][y].glyph ==
                     eng.featureDataHandler->getData(feature_statue)->glyph) {
             currentRow.push_back('M');
           } else {
-            currentRow.push_back(Renderer::renderArray_[x][y].glyph);
+            currentRow.push_back(Renderer::renderArray[x][y].glyph);
           }
         }
       }

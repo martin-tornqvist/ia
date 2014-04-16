@@ -28,7 +28,6 @@
 #define traceVerbose if (TRACE_LVL < 2) ; else cerr
 #endif
 
-class PlayerVisualMemory;
 class ItemDataHandler;
 class Map;
 class Log;
@@ -103,7 +102,6 @@ public:
   void initGame();
   void cleanupGame();
 
-  PlayerVisualMemory* playerVisualMemory;
   ItemDataHandler* itemDataHandler;
   Map* map;
   Log* log;

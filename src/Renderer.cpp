@@ -26,10 +26,10 @@ using namespace std;
 
 namespace Renderer {
 
-CellRenderData  renderArray_[MAP_W][MAP_H];
-CellRenderData  renderArrayNoActors_[MAP_W][MAP_H];
-SDL_Surface*    screenSurface_       = NULL;
-SDL_Surface*    mainMenuLogoSurface_ = NULL;
+CellRenderData  renderArray[MAP_W][MAP_H];
+CellRenderData  renderArrayNoActors[MAP_W][MAP_H];
+SDL_Surface*    screenSurface       = NULL;
+SDL_Surface*    mainMenuLogoSurface = NULL;
 
 namespace {
 
@@ -39,7 +39,7 @@ bool fontPixelData_[400][400];
 Engine* eng = NULL;
 
 bool isInited() {
-  return eng != NULL && screenSurface_ != NULL;
+  return eng != NULL && screenSurface != NULL;
 }
 
 void loadMainMenuLogo() {
@@ -47,7 +47,7 @@ void loadMainMenuLogo() {
 
   SDL_Surface* mainMenuLogoSurfaceTmp = IMG_Load(mainMenuLogoImgName.data());
 
-  mainMenuLogoSurface_ = SDL_DisplayFormatAlpha(mainMenuLogoSurfaceTmp);
+  mainMenuLogoSurface = SDL_DisplayFormatAlpha(mainMenuLogoSurfaceTmp);
 
   SDL_FreeSurface(mainMenuLogoSurfaceTmp);
 
@@ -139,9 +139,9 @@ void loadTiles() {
 void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
                               const SDL_Color& clr) {
   if(isInited()) {
-    const int CLR_TO = SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b);
+    const int CLR_TO = SDL_MapRGB(screenSurface->format, clr.r, clr.g, clr.b);
 
-    SDL_LockSurface(screenSurface_);
+    SDL_LockSurface(screenSurface);
 
     const int CELL_W = Config::getCellW();
     const int CELL_H = Config::getCellH();
@@ -161,22 +161,22 @@ void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
       screenX = SCREEN_X0;
       for(int sheetX = SHEET_X0; sheetX <= SHEET_X1; sheetX++) {
         if(tilePixelData_[sheetX][sheetY]) {
-          putPixel(screenSurface_, screenX, screenY, CLR_TO);
+          putPixel(screenSurface, screenX, screenY, CLR_TO);
         }
         screenX++;
       }
       screenY++;
     }
 
-    SDL_UnlockSurface(screenSurface_);
+    SDL_UnlockSurface(screenSurface);
   }
 }
 
 void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
                                const SDL_Color& clr) {
-  const int CLR_TO = SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b);
+  const int CLR_TO = SDL_MapRGB(screenSurface->format, clr.r, clr.g, clr.b);
 
-  SDL_LockSurface(screenSurface_);
+  SDL_LockSurface(screenSurface);
 
   const int CELL_W = Config::getCellW();
   const int CELL_H = Config::getCellH();
@@ -203,7 +203,7 @@ void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
       if(fontPixelData_[sheetX][sheetY]) {
         for(int dy = 0; dy < SCALE; dy++) {
           for(int dx = 0; dx < SCALE; dx++) {
-            putPixel(screenSurface_, screenX + dx, screenY + dy, CLR_TO);
+            putPixel(screenSurface, screenX + dx, screenY + dy, CLR_TO);
           }
         }
       }
@@ -212,7 +212,7 @@ void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
     screenY += SCALE;
   }
 
-  SDL_UnlockSurface(screenSurface_);
+  SDL_UnlockSurface(screenSurface);
 }
 
 void drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
@@ -315,15 +315,15 @@ void init(Engine& engine) {
   const int W = Config::getScreenPixelW();
   const int H = Config::getScreenPixelH();
   if(Config::isFullscreen()) {
-    screenSurface_ =
+    screenSurface =
       SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
   }
-  if(Config::isFullscreen() == false || screenSurface_ == NULL) {
-    screenSurface_ =
+  if(Config::isFullscreen() == false || screenSurface == NULL) {
+    screenSurface =
       SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
   }
 
-  if(screenSurface_ == NULL) {
+  if(screenSurface == NULL) {
     trace << "[WARNING] Failed to create screen surface, ";
     trace << "in Renderer::init()" << endl;
   }
@@ -343,27 +343,27 @@ void cleanup() {
 
   eng = NULL;
 
-  if(screenSurface_ != NULL) {
-    SDL_FreeSurface(screenSurface_);
-    screenSurface_ = NULL;
+  if(screenSurface != NULL) {
+    SDL_FreeSurface(screenSurface);
+    screenSurface = NULL;
   }
 
-  if(mainMenuLogoSurface_ != NULL) {
-    SDL_FreeSurface(mainMenuLogoSurface_);
-    mainMenuLogoSurface_ = NULL;
+  if(mainMenuLogoSurface != NULL) {
+    SDL_FreeSurface(mainMenuLogoSurface);
+    mainMenuLogoSurface = NULL;
   }
 
   trace << "Renderer::cleanup() [DONE]" << endl;
 }
 
 void updateScreen() {
-  if(isInited()) {SDL_Flip(screenSurface_);}
+  if(isInited()) {SDL_Flip(screenSurface);}
 }
 
 void clearScreen() {
   if(isInited()) {
-    SDL_FillRect(screenSurface_, NULL,
-                 SDL_MapRGB(screenSurface_->format, 0, 0, 0));
+    SDL_FillRect(screenSurface, NULL,
+                 SDL_MapRGB(screenSurface->format, 0, 0, 0));
   }
 }
 
@@ -373,14 +373,14 @@ void applySurface(const Pos& pixelPos, SDL_Surface* const src,
     SDL_Rect offset;
     offset.x = pixelPos.x;
     offset.y = pixelPos.y;
-    SDL_BlitSurface(src, clip, screenSurface_, &offset);
+    SDL_BlitSurface(src, clip, screenSurface, &offset);
   }
 }
 
 void drawMainMenuLogo(const int Y_POS) {
-  const Pos pos((Config::getScreenPixelW() - mainMenuLogoSurface_->w) / 2,
+  const Pos pos((Config::getScreenPixelW() - mainMenuLogoSurface->w) / 2,
                 Config::getCellH() * Y_POS);
-  applySurface(pos, mainMenuLogoSurface_);
+  applySurface(pos, mainMenuLogoSurface);
 }
 
 void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
@@ -597,7 +597,7 @@ int drawTextCentered(const string& str, const Panel panel,
     (Sint16)pixelPos.x, (Sint16)pixelPos.y,
     (Uint16)W_TOT_PIXEL, (Uint16)cellDims.y
   };
-  SDL_FillRect(screenSurface_, &sdlRect, SDL_MapRGB(screenSurface_->format,
+  SDL_FillRect(screenSurface, &sdlRect, SDL_MapRGB(screenSurface->format,
                bgClr.r, bgClr.g, bgClr.b));
 
   for(int i = 0; i < LEN; i++) {
@@ -667,8 +667,8 @@ void drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
     SDL_Rect sdlRect = {(Sint16)pixelPos.x, (Sint16)pixelPos.y,
                         (Uint16)pixelDims.x, (Uint16)pixelDims.y
                        };
-    SDL_FillRect(screenSurface_, &sdlRect,
-                 SDL_MapRGB(screenSurface_->format, clr.r, clr.g, clr.b));
+    SDL_FillRect(screenSurface, &sdlRect,
+                 SDL_MapRGB(screenSurface->format, clr.r, clr.g, clr.b));
   }
 }
 
@@ -780,7 +780,7 @@ void drawMap() {
 
         if(eng->map->cells[x][y].isSeenByPlayer) {
 
-          curDrw = &renderArray_[x][y];
+          curDrw = &renderArray[x][y];
           curDrw->clear();
 
           const FeatureStatic* const f = eng->map->cells[x][y].featureStatic;
@@ -824,7 +824,7 @@ void drawMap() {
         actor->getData().glyph != ' ' &&
         actor->getData().tile != tile_empty &&
         eng->map->cells[xPos][yPos].isSeenByPlayer) {
-        curDrw = &renderArray_[xPos][yPos];
+        curDrw = &renderArray[xPos][yPos];
         curDrw->clr   = clrRed;
         curDrw->tile  = actor->getTile();
         curDrw->glyph = actor->getGlyph();
@@ -833,7 +833,7 @@ void drawMap() {
 
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
-        curDrw = &renderArray_[x][y];
+        curDrw = &renderArray[x][y];
         if(eng->map->cells[x][y].isSeenByPlayer) {
           //---------------- INSERT ITEMS INTO ARRAY
           const Item* const item = eng->map->cells[x][y].item;
@@ -844,7 +844,7 @@ void drawMap() {
           }
 
           //COPY ARRAY TO PLAYER MEMORY (BEFORE LIVING ACTORS AND MOBILE FEATURES)
-          renderArrayNoActors_[x][y] = renderArray_[x][y];
+          renderArrayNoActors[x][y] = renderArray[x][y];
 
           //COLOR CELLS MARKED AS LIT YELLOW
           if(curDrw->isMarkedAsLit) {
@@ -863,7 +863,7 @@ void drawMap() {
       if(
         mobTile != tile_empty && mobGlyph != ' ' &&
         eng->map->cells[xPos][yPos].isSeenByPlayer) {
-        curDrw = &renderArray_[xPos][yPos];
+        curDrw = &renderArray[xPos][yPos];
         curDrw->clr = mob->getClr();
         curDrw->tile  = mobTile;
         curDrw->glyph = mobGlyph;
@@ -878,7 +878,7 @@ void drawMap() {
 
         if(actor->deadState == ActorDeadState::alive) {
 
-          curDrw = &renderArray_[xPos][yPos];
+          curDrw = &renderArray[xPos][yPos];
 
           const Monster* const monster = dynamic_cast<const Monster*>(actor);
 
@@ -917,7 +917,7 @@ void drawMap() {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
 
-        tmpDrw = renderArray_[x][y];
+        tmpDrw = renderArray[x][y];
 
         if(eng->map->cells[x][y].isSeenByPlayer) {
           if(tmpDrw.isFadeEffectAllowed) {
@@ -933,8 +933,8 @@ void drawMap() {
           }
         } else if(eng->map->cells[x][y].isExplored) {
           bool isAwareOfMonsterHere = tmpDrw.isAwareOfMonsterHere;
-          renderArray_[x][y] = eng->map->cells[x][y].playerVisualMemory;
-          tmpDrw = renderArray_[x][y];
+          renderArray[x][y] = eng->map->cells[x][y].playerVisualMemory;
+          tmpDrw = renderArray[x][y];
           tmpDrw.isAwareOfMonsterHere = isAwareOfMonsterHere;
 
           tmpDrw.clr.r   /= 4; tmpDrw.clr.g   /= 4; tmpDrw.clr.b   /= 4;
@@ -949,7 +949,7 @@ void drawMap() {
           if(
             tmpDrw.isLivingActorSeenHere == false &&
             tmpDrw.isAwareOfMonsterHere  == false) {
-            const TileId tileSeen = renderArrayNoActors_[x][y].tile;
+            const TileId tileSeen = renderArrayNoActors[x][y].tile;
             const TileId tileMem  = eng->map->cells[x][y].playerVisualMemory.tile;
             const bool IS_TILE_WALL =
               eng->map->cells[x][y].isSeenByPlayer ?
@@ -970,7 +970,7 @@ void drawMap() {
                     eng->map->cells[x][y + 1].isSeenByPlayer;
 
                   const TileId tileBelowSeen =
-                    renderArrayNoActors_[x][y + 1].tile;
+                    renderArrayNoActors[x][y + 1].tile;
 
                   const TileId tileBelowMem =
                     eng->map->cells[x][y + 1].playerVisualMemory.tile;
@@ -1027,7 +1027,7 @@ void drawMap() {
         }
 
         if(eng->map->cells[x][y].isExplored == false) {
-          renderArray_[x][y].clear();
+          renderArray[x][y].clear();
         }
       }
     }

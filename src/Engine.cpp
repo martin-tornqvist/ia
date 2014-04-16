@@ -58,7 +58,6 @@
 #include "Marker.h"
 #include "PlayerCreateCharacter.h"
 #include "PlayerSpellsHandler.h"
-#include "PlayerVisualMemory.h"
 #include "Popup.h"
 #include "Postmortem.h"
 #include "Query.h"
@@ -112,13 +111,11 @@ void Engine::initGame() {
   art = new Art;
   thrower = new Thrower(*this);
   reload = new Reload(*this);
-  playerVisualMemory = new PlayerVisualMemory(*this);
   gore = new Gore(*this);
   manual = new Manual(*this);
   populateItems = new PopulateItems(*this);
   populateMonsters = new PopulateMonsters(*this);
   populateTraps = new PopulateTraps(*this);
-//  inventoryIndexes = new InventoryIndexes;
   query = new Query(*this);
   bash = new Bash(*this);
   close = new Close(*this);
@@ -148,7 +145,6 @@ void Engine::cleanupGame() {
 
   delete map;
   delete playerCreateCharacter;
-  delete playerVisualMemory;
   delete itemDataHandler;
   delete log;
   delete fov;

@@ -9,7 +9,6 @@
 #include "ActorMonster.h"
 #include "Map.h"
 #include "Fov.h"
-#include "PlayerVisualMemory.h"
 #include "Log.h"
 #include "Blood.h"
 #include "FeatureTrap.h"
@@ -179,7 +178,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   if(this == eng.player) {
     eng.player->updateFov();
     Renderer::drawMapAndInterface();
-    eng.playerVisualMemory->updateVisualMemory();
+    eng.map->updateVisualMemory();
   } else {
     dynamic_cast<Monster*>(this)->playerAwareOfMeCounter_ = 0;
   }
@@ -189,7 +188,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   if(this == eng.player) {
     eng.player->updateFov();
     Renderer::drawMapAndInterface();
-    eng.playerVisualMemory->updateVisualMemory();
+    eng.map->updateVisualMemory();
     eng.log->addMsg("I suddenly find myself in a different location!");
     propHandler_->tryApplyProp(new PropConfused(eng, propTurnsSpecific, 8));
   }

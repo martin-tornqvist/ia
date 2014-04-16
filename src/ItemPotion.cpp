@@ -16,7 +16,6 @@
 #include "Inventory.h"
 #include "DungeonClimb.h"
 #include "MapParsing.h"
-#include "PlayerVisualMemory.h"
 #include "Utils.h"
 
 void PotionOfVitality::quaff_(Actor* const actor) {
@@ -304,7 +303,7 @@ void PotionOfClairvoyance::quaff_(Actor* const actor) {
     }
 
     Renderer::drawMapAndInterface(false);
-    eng.playerVisualMemory->updateVisualMemory();
+//    eng.map->updateVisualMemory();
     eng.player->updateFov();
 
     Renderer::drawBlastAnimAtPositions(animPositions, clrWhite);
