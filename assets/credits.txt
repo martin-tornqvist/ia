@@ -6,6 +6,8 @@ I (Martin) want to thank the following people for their great contributions to I
 
 * Agata Skrzypczyk - Contributed a gorgeous logo and icon.
 
-* Paul Onyschuk - Provided a much improved Makefile.
+* Paul Onyschuk - Provided much feedback and ideas, and also some code and an improved Makefile.
+
+* Musica Cthulhiana for letting me use their track "Madness" from the album "Fragment" as music in the main menu.
 
 * Everyone on the Infra Arcana forum, Roguetemple, RPGCodex, Bay12 Games, etc, who give praise, ideas, and motivation.
