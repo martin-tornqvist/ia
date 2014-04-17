@@ -1,5 +1,92 @@
 --------------------------------------------------------------
-v15.0 November 26, 2013)
+v16.0 (April 17, 2014)
+--------------------------------------------------------------
+Gameplay
+* You now pick traits when gaining character levels (as it was in v14) instead of only at the start. Many new traits have been added. You pick a trait each level, but the XP rate is roughly halved compared to older versions, and your character is limited to 10 levels.
+
+* You now select a background when starting a game, the choices are “Occultist” (magic), “Rogue” (stealth), and “War Veteran” (fighter/firearms) - Your background determines which traits and items you start with, there are also special background-specific abilities, and some traits have background prerequisites.
+
+* You now gain half a monsters worth of experience when spotting it, and the other half when killing it (killing a monster without spotting it gives the full worth)
+
+* You can now “become aware” of a monster by hearing or seeing it - this “awareness” will last for a few turns and cause the monster to be marked on the map with an exclamation mark (“!”) while it is not in your view. This represents the player character listening more closely for footsteps and other small clues, and estimating where the monster could go. This feature is intended to help avoid situations like walking around a corner to get instantly killed by a shotgun blast - now you should have more opportunity to make better decisions about such things.
+
+* Objects on the map are no longer interacted with through popup menus (which were considered slow and boring). Instead you use the standard keyboard commands listed in the manual - such as [d] for disarming traps, or [q] for bashing something. The examine command [a] is now merely used for searching an object (for traps). Bumping an object will attempt to use it in the normal way (opening a chest, drinking from a fountain, descending the stairs, reading the inscriptions on the graves in the forest level, etc).
+
+* Bashing now works in a more general way. You can attempt to find secret doors by bashing on any wall. You can destroy corpses by bashing them. Bashing/kicking now always consumes a turn, whether you hit something or not (“I kick the air!”). When attempting to kick in a cell with an unseen monster (due to blindness or monster hiding), it will behave in the same way as normal melee attacks (“I kick it”) - this fixes a bug where an attempt to kick an unseen monster had no effect
+
+* Reworked Strange Devices. Now instead of keeping them enabled for random occasional effects, you activate them for an instant effect. They can be activated multiple times, although their condition may degrade, and they can malfunction or break. The effects of some of the Devices have been reworked as well. The result of these changes is that the Devices should now be more effective and fun to use. Also, they are more common now, and you can even find them on the first dungeon level.
+
+* Your insanity no longer rises immediately when shock is at 100% or more, instead you now first have three turns with warning messages - during these turns you have a chance to reduce shock below 100% (e.g. by turning on a light in a dark room, drinking a Potion of Fortitude, descending the stairs, or stepping away from a ghoulish statue)
+
+* Added sound effects for melee attacks, spellcasting, dying, and opening tombs - also added more ambient sounds
+* The game now prompts for confirmation when attempting to cast an intrinsic spell which could potentially deplete your Spirit
+* Greatly reduced duration of Weakening
+* Greatly reduced duration of Disease when received from fountains, tombs, and spells (disease will only last a very long time when received from infections)
+* You are now immune to Infection while Diseased (being Infected and Diseased at the same time was redundant and annoying)
+* Added “Manuscript of Darkbolt”, this is similar to “Azathoths Wrath”, but targets only one monster and costs less spirit to cast intrinsically - selecting the background “Occultist” guarantees starting with this spell
+* Added spell “Mi-Go hypnosis”, available for all monsters (but not the player) - all Mi-Go (Fungi from Yuggoth) know this spell - when this is cast, there is a chance that you will faint for a few turns
+* Added a spell available only for monsters, which causes the player to burn for a few turns
+* Changed “Manuscript of Clairvoyance” to a Potion, and instead of continuously revealing monsters and dungeon layout around you, it now instantly reveals the layout of the whole level (including items, but not monsters)
+* Added “Manuscript of Detect Monsters”, which marks all unseen monsters on the map with an exclamation mark for a number of turns (no shock taken from these detected monsters)
+* Added “Manuscript of Elemental Resistance”, which gives you temporary resistance to fire, cold, and electricity
+* Manuscript of Pestilence no longer spawns dozens of monsters - it is now a more reasonable number
+* Quaffing Potions of Health/Spirit when already at max HP/SPI no longer raises your max values, instead they can now temporarily raise your current HP/SPI above the max values
+* Reduced the number of vertical map cells
+* Added two common monsters (Flying Polyps, Chthonians), and one unique monster
+* Added Golden Fountains, which are guaranteed to have a positive effect
+* Hearing sounds no longer aborts multi-turn actions (such as healing)
+* Reduced the propagation range of sounds (especially loud sounds like pistol fire)
+* Added natural fear and confusion resistance for various monsters (e.g. Ooze-types, Spirit-types)
+* Knockback no longer cause confusion
+* Added a message that tells you when a monster spots you and becomes aware of you
+* More sensible rules for where stairs can spawn, and where player descends on the next level
+* Reduced number of turns waited when pressing [s] from 10 to 5
+* Removed the message “was that supposed to do something?” when reading scrolls with no apparent effect
+* The trait “Observant” no longer makes you find clues about hidden doors (was represented by a yellow wall) - instead this trait simply raises your chance of finding doors, and allows you to spot them from two cells away (another trait “Perceptive” raises the distance to three cells)
+* Mummies now generally spawn alone instead of in groups
+* Removed “Mythos knowledge”, and removed the spell you gained at a certain level of MTH
+* You can now disarm traps by pressing [d] and choosing a direction (works both for traps on the ground and on chests)
+* When the electric lantern is flickering, it now merely reduces the lit area to 3x3 cells, it can still also malfunction and fail to give any light, or break completely
+* When encumbered there is now an interval between 100-125% where you are able to move at half speed - at 125% and above you are completely immobile
+* Added messages when your Spirit is being drained (e.g. by Ghosts)
+* The postmortem information no longer lists number of kills for each type of monster, instead it only lists unique monsters killed, and the total number of monsters
+* Masochistic Obsession no longer restores shock when player is damaged, it now merely removes the shock normally taken when damaged (and raises minimum shock to 35%)
+
+Interface
+* The game now supports Vi-keys
+* You can no longer select things in menus by pressing letter keys
+* To make it easier to notice when shocking events happen, exclamation marks (“!”) are now drawn on the player character if enough shock is received during a turn (up to three marks can be drawn)
+* There is now two lines for displaying messages - significantly reducing the number of “--More--” prompts.
+* Some important messages are now colored orange, and some of these messages always trigger a “--More--” prompt (for example spotting traps and monsters), making them easier to notice and react to
+* Item symbols are now drawn in the inventory screen and the wielding info at the bottom of the screen
+* Changed the appearance of the main menu and character creation screens
+* Removed the option to scale the font to 2x size
+* Added a 16x24 DOS font
+* Added option for how tiles mode should render walls - full square or pseudo-3D
+* The game now handles delays in a nicer way. Previously, a delay would freeze the whole program. So for example while a projectile was travelling, the game could appear frozen (especially noticeable if setting a long delay). Now user input is read during delays so the game is not freezing - you can move the screen, alt-tab back and forth, minimize etc.
+* The screen is now redrawn when toggling fullscreen (previously the screen would be black until you entered a command)
+* Popup windows with multiple choices (e.g. the medical bag menu) can be closed with space or escape
+* The options menu is now accessible from within an ongoing game
+* Pressing [x] re-casts previous spell, and pressing [X] (uppercase) opens the list of all memorized spells
+* Added an in-game menu opened with [Esc], where you can select Options, Manual, Quit, or Cancel
+* Removed commands [>] (descend stairs) and [S] (save and quit) - instead you now bump the stairs, which opens a menu asking if you want to Descend, Save and quit, or Cancel
+* Changed command for viewing descriptions to [v] instead of [l] (lowercase L)
+* Changed command for bashing/kicking to [q] instead of [b]
+* Changed command for unloading/picking up ammo to [G] instead of [u]
+* Changed the message log command to [m] instead of [L]
+* When reloading, the amount of ammo loaded in the weapon is now printed in the log
+* Some special ranged weapons now only show “*” (asterisk) as damage info (e.g. the Incinerator, which previously displayed “1d3” as damage - this only represented the “impact damage” of the shell, and did not include the explosion - the asterisk used now should give a clearer indication that the weapon will do damage in a special way)
+
+Bug fixes
+* Fixed many bugs related to saving/loading (e.g. crashing, losing memorized spells)
+* Fixed many bugs related to properties (especially concerning properties which were supposed to be permanent, but would time out - e.g. confusion resistance gained from picking the trait “Self-aware”)
+* Corrected various spelling mistakes
+* Fixed a bug that prevented Ooze-type monsters from passing through closed doors (they should be able to do this)
+* Fixed a bug that prevented using Page Up/Page Down/Home/End for diagonal movement
+
+
+--------------------------------------------------------------
+v15.0 (November 26, 2013)
 --------------------------------------------------------------
 * Added sound effects (for weapons, monsters, etc) and atmospheric ambient background sounds. Audio can be enabled/disabled in the options menu.
 * The track “Madness” by Musica Cthulhiana (from the album “Fragment”) is used as intro music in the main menu
