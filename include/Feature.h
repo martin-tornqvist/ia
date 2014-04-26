@@ -7,14 +7,13 @@
 #include <iostream>
 
 #include "Colors.h"
-#include "CommonData.h"
+#include "CmnData.h"
 #include "ActorData.h"
 #include "FeatureData.h"
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 
 using namespace std;
 
-class Engine;
 class Actor;
 class FeatureFactory;
 class FeatureSpawnData;
@@ -50,13 +49,12 @@ public:
   virtual int getDodgeModifier() const;
   int getShockWhenAdjacent() const;
   virtual MaterialType getMaterialType() const;
-protected:
-  friend class Map;
-  Feature(FeatureId id, Pos pos, Engine& engine,
-          FeatureSpawnData* spawnData = NULL);
 
+  Feature(FeatureId id, Pos pos, FeatureSpawnData* spawnData = NULL);
+
+protected:
   Pos pos_;
-  Engine& eng;
+
   const FeatureData* const data_;
   bool hasBlood_;
 };
@@ -72,9 +70,9 @@ public:
 
 protected:
   friend class FeatureFactory;
-  FeatureMob(FeatureId id, Pos pos, Engine& engine,
+  FeatureMob(FeatureId id, Pos pos,
              FeatureSpawnData* spawnData = NULL) :
-    Feature(id, pos, engine), shouldBeDeleted_(false) {
+    Feature(id, pos), shouldBeDeleted_(false) {
     (void)spawnData;
   }
 
@@ -103,15 +101,12 @@ public:
   virtual void disarm();
   virtual void examine();
 
-protected:
-  friend class FeatureFactory;
-  friend class Map;
-  FeatureStatic(FeatureId id, Pos pos, Engine& engine,
-                FeatureSpawnData* spawnData = NULL) :
-    Feature(id, pos, engine), goreTile_(tile_empty), goreGlyph_(' ') {
+  FeatureStatic(FeatureId id, Pos pos, FeatureSpawnData* spawnData = NULL) :
+    Feature(id, pos), goreTile_(tile_empty), goreGlyph_(' ') {
     (void)spawnData;
   }
 
+protected:
   virtual void triggerTrap(Actor& actor) {(void)actor;}
 
   TileId goreTile_;
@@ -132,8 +127,8 @@ private:
   string inscription_;
 
   friend class FeatureFactory;
-  Grave(FeatureId id, Pos pos, Engine& engine) :
-    FeatureStatic(id, pos, engine) {}
+  Grave(FeatureId id, Pos pos) :
+    FeatureStatic(id, pos) {}
 };
 
 class Stairs: public FeatureStatic {
@@ -144,8 +139,8 @@ public:
 
 private:
   friend class FeatureFactory;
-  Stairs(FeatureId id, Pos pos, Engine& engine) :
-    FeatureStatic(id, pos, engine) {}
+  Stairs(FeatureId id, Pos pos) :
+    FeatureStatic(id, pos) {}
 };
 
 #endif

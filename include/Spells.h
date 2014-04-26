@@ -3,13 +3,12 @@
 
 #include <vector>
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "Properties.h"
 #include "PlayerBon.h"
 
 using namespace std;
 
-class Engine;
 class Actor;
 class Monster;
 
@@ -69,12 +68,11 @@ class Spell {
 public:
   Spell() {}
   virtual ~Spell() {}
-  SpellCastRetData cast(Actor* const caster, const bool IS_INTRINSIC,
-                        Engine& eng) const;
+  SpellCastRetData cast(Actor* const caster, const bool IS_INTRINSIC) const;
+
   virtual bool isGoodForMonsterToCastNow(
-    Monster* const monster, Engine& eng) {
+    Monster* const monster) {
     (void)monster;
-    (void)eng;
     return false;
   }
   virtual bool isAvailForAllMonsters()  const = 0;
@@ -82,8 +80,7 @@ public:
   virtual string getName()              const = 0;
   virtual SpellId getId()               const = 0;
 
-  Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster,
-                   Engine& eng) const;
+  Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const;
 
   int getShockValueIntrCast() const {
     const IntrSpellShock shockType = getShockTypeIntrCast();
@@ -98,7 +95,7 @@ public:
 
   virtual IntrSpellShock getShockTypeIntrCast() const = 0;
 protected:
-  virtual SpellCastRetData cast_(Actor* const caster, Engine& eng) const = 0;
+  virtual SpellCastRetData cast_(Actor* const caster) const = 0;
 
   virtual int getMaxSpiCost_() const = 0;
 };
@@ -106,7 +103,7 @@ protected:
 class SpellDarkbolt: public Spell {
 public:
   SpellDarkbolt() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Darkbolt";}
@@ -115,7 +112,7 @@ public:
     return IntrSpellShock::mild;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(1) - (SPI_PER_LVL * 3);
   }
@@ -124,7 +121,7 @@ private:
 class SpellAzathothsWrath: public Spell {
 public:
   SpellAzathothsWrath() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Azathoths Wrath";}
@@ -133,7 +130,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(2);
   }
@@ -150,7 +147,7 @@ public:
     return IntrSpellShock::severe;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(11);
   }
@@ -167,7 +164,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(4);
   }
@@ -184,7 +181,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(6);
   }
@@ -201,7 +198,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(4);
   }
@@ -218,7 +215,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(6);
   }
@@ -235,7 +232,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(9);
   }
@@ -252,7 +249,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(2);
   }
@@ -269,7 +266,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(1) - (SPI_PER_LVL * 3);
   }
@@ -286,7 +283,7 @@ public:
     return IntrSpellShock::mild;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(1) - (SPI_PER_LVL * 2);
   }
@@ -295,7 +292,7 @@ private:
 class SpellBless: public Spell {
 public:
   SpellBless() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Bless";}
@@ -304,7 +301,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(11);
   }
@@ -313,7 +310,7 @@ private:
 class SpellKnockBack: public Spell {
 public:
   SpellKnockBack() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Knockback";}
@@ -322,14 +319,14 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
 };
 
 class SpellTeleport: public Spell {
 public:
   SpellTeleport() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Teleport";}
@@ -338,7 +335,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(2);
   }
@@ -347,7 +344,7 @@ private:
 class SpellElemRes: public Spell {
 public:
   SpellElemRes() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   string getName()              const override {return "Elemental Resistance";}
@@ -356,7 +353,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(4);
   }
@@ -365,14 +362,14 @@ private:
 class SpellPropOnEnemies: public Spell {
 public:
   SpellPropOnEnemies() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   virtual string getName()      const override = 0;
   virtual SpellId getId()       const override = 0;
   virtual IntrSpellShock getShockTypeIntrCast() const override = 0;
 protected:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   virtual PropId getPropId()    const           = 0;
   virtual int getMaxSpiCost_()  const override  = 0;
 };
@@ -392,9 +389,9 @@ private:
   }
 };
 
-class SpellTerrifyEnemies: public SpellPropOnEnemies {
+class SpellTerrifyMon: public SpellPropOnEnemies {
 public:
-  SpellTerrifyEnemies() : SpellPropOnEnemies() {}
+  SpellTerrifyMon() : SpellPropOnEnemies() {}
   string getName()  const override {return "Terrify Enemies";}
   SpellId getId()   const override {return SpellId::terrifyEnemies;}
   IntrSpellShock getShockTypeIntrCast() const override {
@@ -425,7 +422,7 @@ private:
 class SpellDisease: public Spell {
 public:
   SpellDisease() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Disease";}
@@ -434,7 +431,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(2);
   }
@@ -443,7 +440,7 @@ private:
 class SpellSummonRandom: public Spell {
 public:
   SpellSummonRandom() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Summon monster";}
@@ -452,7 +449,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(2);
   }
@@ -461,7 +458,7 @@ private:
 class SpellHealSelf: public Spell {
 public:
   SpellHealSelf() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Healing";}
@@ -470,7 +467,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(2);
   }
@@ -479,7 +476,7 @@ private:
 class SpellMiGoHypnosis: public Spell {
 public:
   SpellMiGoHypnosis() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "MiGo Hypnosis";}
@@ -488,7 +485,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(2);
   }
@@ -497,7 +494,7 @@ private:
 class SpellImmolation: public Spell {
 public:
   SpellImmolation() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster, Engine& eng) override;
+  bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   string getName()              const override {return "Immolation";}
@@ -506,7 +503,7 @@ public:
     return IntrSpellShock::disturbing;
   }
 private:
-  SpellCastRetData cast_(Actor* const caster, Engine& eng) const override;
+  SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(2);
   }

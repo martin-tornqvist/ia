@@ -4,16 +4,14 @@
 #include <iostream>
 #include <vector>
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 
 using namespace std;
 
-class Engine;
-
 class Bot {
 public:
-  Bot(Engine& engine) :
-    eng(engine) {
+  Bot() :
+    eng() {
   }
 
   void init();
@@ -25,7 +23,6 @@ private:
   bool walkToAdjacentCell(const Pos& cellToGoTo);
 
   vector<Pos> currentPath_;
-  Engine& eng;
 };
 
 #endif

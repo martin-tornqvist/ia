@@ -34,7 +34,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Wall(FeatureId id, Pos pos, Engine& engine);
+  Wall(FeatureId id, Pos pos);
 };
 
 #endif

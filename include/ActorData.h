@@ -7,7 +7,7 @@
 #include "Converters.h"
 #include "AbilityValues.h"
 #include "RoomTheme.h"
-#include "CommonData.h"
+#include "CmnData.h"
 #include "Properties.h"
 #include "Audio.h"
 
@@ -39,7 +39,7 @@ enum ActorId {
   actor_wormMass,
   actor_dustVortex, actor_fireVortex, actor_frostVortex,
   actor_oozeBlack, actor_oozeClear, actor_oozePutrid, actor_oozePoison,
-  actor_colourOutOfSpace,
+  actor_colourOOSpace,
   actor_chthonian,
   actor_huntingHorror,
 
@@ -76,7 +76,7 @@ enum class MonsterShockLevel {
   none, unsettling, scary, terrifying, mindShattering, endOfMonsterShockLevel,
 };
 
-enum class Ai {
+enum class AiId {
   looks,
   makesRoomForFriend,
   attacks,
@@ -87,9 +87,8 @@ enum class Ai {
   endOfAi
 };
 
-struct ActorData {
-public:
-  ActorData() {reset();}
+struct ActorDataT {
+  ActorDataT() {reset();}
 
   void reset();
 
@@ -102,10 +101,10 @@ public:
   MonsterGroupSize groupSize;
   int hp, spi, dmgMelee, dmgRanged;
   ActorSpeed speed;
-  AbilityValues abilityVals;
+  AbilityVals abilityVals;
   bool intrProps[endOfPropIds];
   int rangedCooldownTurns, spellCooldownTurns;
-  bool ai[int(Ai::endOfAi)];
+  bool ai[int(AiId::endOfAi)];
   int nrTurnsAwarePlayer;
   int spawnMinDLVL, spawnMaxDLVL;
   ActorSize actorSize;
@@ -133,24 +132,15 @@ public:
   SfxId aggroSfxMonsterHidden;
 };
 
-class ActorDataHandler {
-public:
-  ActorDataHandler(Engine& engine) {
-    for(unsigned int i = 0; i < endOfActorIds; i++) {
-      dataList[i].abilityVals.eng = &engine;
-    }
-    initDataList();
-  }
+namespace ActorData {
 
-  ActorData dataList[endOfActorIds];
+ActorDataT dataList[endOfActorIds];
 
-  void addSaveLines(vector<string>& lines) const;
+void init();
 
-  void setParamsFromSaveLines(vector<string>& lines);
+void storeToSaveLines(vector<string>& lines);
+void setupFromSaveLines(vector<string>& lines);
 
-private:
-  void initDataList();
-  void addData(ActorData& d);
-};
+} //ActorData
 
 #endif

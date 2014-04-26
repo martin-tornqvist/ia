@@ -3,12 +3,11 @@
 
 #include <vector>
 
-#include "CommonData.h"
-#include "CommonTypes.h"
+#include "CmnData.h"
+#include "CmnTypes.h"
 #include "Colors.h"
 #include "Audio.h"
 
-class Engine;
 class Prop;
 
 enum class ExplType {expl, applyProp};
@@ -18,7 +17,6 @@ namespace Explosion {
 
 void runExplosionAt(
   const Pos& origin,
-  Engine& eng,
   const ExplType  explType,
   const ExplSrc   explSrc             = ExplSrc::misc,
   const int RADI_CHANGE               = 0,
@@ -26,7 +24,7 @@ void runExplosionAt(
   Prop* const prop                    = NULL,
   const SDL_Color* const clrOverride  = NULL);
 
-void runSmokeExplosionAt(const Pos& origin, Engine& eng);
+void runSmokeExplosionAt(const Pos& origin);
 
 } //Explosion
 

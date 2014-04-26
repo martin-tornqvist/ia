@@ -1,5 +1,5 @@
-#ifndef COMMON_DATA_H
-#define COMMON_DATA_H
+#ifndef CMN_DATA_H
+#define CMN_DATA_H
 
 #include <string>
 

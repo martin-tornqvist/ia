@@ -6,11 +6,11 @@
 
 using namespace std;
 
-class Engine;
+
 
 class Credits {
 public:
-  Credits(Engine& engine) : eng(engine) {readFile();}
+  Credits() : eng() {readFile();}
 
   void run();
 
@@ -18,7 +18,7 @@ private:
   void readFile();
 
   vector<string> lines;
-  Engine& eng;
+
 };
 
 #endif

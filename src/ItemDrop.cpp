@@ -1,7 +1,6 @@
 #include "ItemDrop.h"
 
-#include "Engine.h"
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "GameTime.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -47,29 +46,29 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     }
 
     //Messages
-    const Actor* const curActor = eng.gameTime->getCurrentActor();
-    if(curActor == eng.player) {
+    const Actor* const curActor = GameTime::getCurrentActor();
+    if(curActor == Map::player) {
       eng.log->clearLog();
       eng.log->addMsg(
         "I drop " + itemRef + ".", clrWhite, false, true);
     } else {
       bool blockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksVision(eng), blockers);
-      if(eng.player->isSeeingActor(*curActor, blockers)) {
+      MapParse::parse(CellPred::BlocksVision(), blockers);
+      if(Map::player->isSeeingActor(*curActor, blockers)) {
         eng.log->addMsg(
           "I see " + curActor->getNameThe() + " drop " + itemRef + ".");
       }
     }
 
     //End turn
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   }
 }
 
 Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
   //If target cell is bottomless, just destroy the item
   const Feature* const targetFeature =
-    eng.map->cells[intendedPos.x][intendedPos.y].featureStatic;
+    Map::cells[intendedPos.x][intendedPos.y].featureStatic;
   if(targetFeature->isBottomless()) {
     delete &item;
     return NULL;
@@ -79,7 +78,7 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
   bool freeCellArray[MAP_W][MAP_H];
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      FeatureStatic* const f = eng.map->cells[x][y].featureStatic;
+      FeatureStatic* const f = Map::cells[x][y].featureStatic;
       freeCellArray[x][y] = f->canHaveItem() && f->isBottomless() == false;
     }
   }
@@ -102,12 +101,12 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
       //While ii cell is not further away than i cell
       while(isCloserToOrigin(freeCells.at(i), freeCells.at(ii)) == false) {
         stackPos = freeCells.at(ii);
-        Item* itemFoundOnFloor = eng.map->cells[stackPos.x][stackPos.y].item;
+        Item* itemFoundOnFloor = Map::cells[stackPos.x][stackPos.y].item;
         if(itemFoundOnFloor != NULL) {
           if(itemFoundOnFloor->getData().id == item.getData().id) {
             item.nrItems += itemFoundOnFloor->nrItems;
             delete itemFoundOnFloor;
-            eng.map->cells[stackPos.x][stackPos.y].item = &item;
+            Map::cells[stackPos.x][stackPos.y].item = &item;
             return &item;
           }
         }
@@ -120,11 +119,11 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
     if(&item == NULL) {break;}
 
     curPos = freeCells.at(i);
-    if(eng.map->cells[curPos.x][curPos.y].item == NULL) {
+    if(Map::cells[curPos.x][curPos.y].item == NULL) {
 
-      eng.map->cells[curPos.x][curPos.y].item = &item;
+      Map::cells[curPos.x][curPos.y].item = &item;
 
-      const bool IS_PLAYER_POS    = eng.player->pos == curPos;
+      const bool IS_PLAYER_POS    = Map::player->pos == curPos;
       const bool IS_INTENDED_POS  = curPos == intendedPos;
       if(IS_PLAYER_POS && IS_INTENDED_POS == false) {
         eng.log->addMsg("I feel something by my feet.");

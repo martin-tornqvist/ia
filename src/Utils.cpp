@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-#include "Engine.h"
-
 #include "Converters.h"
 #include "GameTime.h"
 #include "MersenneTwister.h"
@@ -113,8 +111,8 @@ void getActorPositions(const vector<Actor*>& actors, vector<Pos>& vectorRef) {
 }
 
 
-Actor* getActorAtPos(const Pos& pos, Engine& eng, ActorDeadState deadState) {
-  for(Actor * actor : eng.gameTime->actors_) {
+Actor* getActorAtPos(const Pos& pos, ActorDeadState deadState) {
+  for(Actor * actor : GameTime::actors_) {
     if(actor->pos == pos && actor->deadState == deadState) {
       return actor;
     }
@@ -122,10 +120,10 @@ Actor* getActorAtPos(const Pos& pos, Engine& eng, ActorDeadState deadState) {
   return NULL;
 }
 
-void makeActorArray(Actor* a[MAP_W][MAP_H], Engine& eng) {
+void makeActorArray(Actor* a[MAP_W][MAP_H]) {
   resetArray(a);
 
-  for(Actor * actor : eng.gameTime->actors_) {
+  for(Actor * actor : GameTime::actors_) {
     const Pos& p = actor->pos;
     a[p.x][p.y] = actor;
   }

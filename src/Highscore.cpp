@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include "Converters.h"
-#include "Engine.h"
+
 #include "Highscore.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
@@ -41,11 +41,11 @@ void HighScore::gameOver(const bool IS_VICTORY) {
 
   HighScoreEntry currentPlayer(
     Utils::getCurrentTime().getTimeStr(time_minute, true),
-    eng.player->getNameA(),
+    Map::player->getNameA(),
     eng.dungeonMaster->getXp(),
     eng.dungeonMaster->getCLvl(),
-    eng.map->getDlvl(),
-    eng.player->getInsanity(),
+    Map::getDlvl(),
+    Map::player->getInsanity(),
     IS_VICTORY);
 
   entries.push_back(currentPlayer);
@@ -149,7 +149,7 @@ void HighScore::runHighScoreScreen() {
   while(true) {
     renderHighScoreScreen(entries, topNr);
 
-    const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
+    const KeyboardReadRetData& d = Input::readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN || d.key_ == 'j') {
       topNr += LINE_JUMP;

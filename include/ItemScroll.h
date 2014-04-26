@@ -4,12 +4,11 @@
 #include "Item.h"
 #include "Spells.h"
 
-class Engine;
 class Actor;
 
 class Scroll: public Item {
 public:
-  Scroll(ItemData* const itemData, Engine& engine) : Item(itemData, engine) {}
+  Scroll(ItemData* const itemData) : Item(itemData) {}
 
   ~Scroll() {}
 
@@ -30,20 +29,15 @@ protected:
   void tryLearn();
 };
 
-class ScrollNameHandler {
-public:
-  ScrollNameHandler(Engine& engine);
-  ~ScrollNameHandler() {}
+namespace ScrollNameHandling {
 
-  void setFalseScrollName(ItemData& d);
+void init();
 
-  void addSaveLines(vector<string>& lines) const;
-  void setParamsFromSaveLines(vector<string>& lines);
+void setFalseScrollName(ItemData& d);
 
-private:
-  vector<string> falseNames_;
+void storeToSaveLines(vector<string>& lines);
+void setupFromSaveLines(vector<string>& lines);
 
-  Engine& eng;
-};
+} //ScrollNameHandling
 
 #endif

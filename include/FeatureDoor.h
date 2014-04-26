@@ -19,7 +19,6 @@ enum DoorMaterial {
   doorMaterial_metal
 };
 
-class Engine;
 class DoorSpawnData;
 
 class Door: public FeatureStatic {
@@ -70,7 +69,7 @@ protected:
   friend class FeatureFactory;
   friend class MapGenBsp;
   friend class FeatureLever;
-  Door(FeatureId id, Pos pos, Engine& engine, DoorSpawnData* spawnData);
+  Door(FeatureId id, Pos pos, DoorSpawnData* spawnData);
 
   const FeatureData* const mimicFeature_;
   int nrSpikes_;

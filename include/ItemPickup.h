@@ -1,7 +1,7 @@
 #ifndef ITEM_PICKUP_H
 #define ITEM_PICKUP_H
 
-class Engine;
+
 
 class Item;
 class Actor;
@@ -10,7 +10,7 @@ class Actor;
 
 class ItemPickup {
 public:
-  ItemPickup(Engine& engine) : eng(engine) {}
+  ItemPickup() {}
 
   void tryPick();
 
@@ -21,7 +21,7 @@ private:
 
   bool isInvFull(Inventory& inv, Item& item) const;
 
-  Engine& eng;
+
 };
 
 #endif

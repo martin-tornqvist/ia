@@ -3,15 +3,15 @@
 
 #include <vector>
 
-#include "CommonData.h"
-#include "CommonTypes.h"
+#include "CmnData.h"
+#include "CmnTypes.h"
 
 //TODO This should be merged into MapParsing
 //Also, most/all things in here really needs clearer purpose/naming
 
 using namespace std;
 
-class Engine;
+
 
 enum PlacementRule {
   placementRule_nextToWalls,
@@ -21,7 +21,7 @@ enum PlacementRule {
 
 class MapPatterns {
 public:
-  MapPatterns(Engine& engine) : eng(engine) {}
+  MapPatterns() {}
 
   void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
                           vector<Pos>& awayFromWalls);
@@ -29,7 +29,7 @@ public:
   int getWalkBlockersInDir(const Dir dir, const Pos& pos);
 
 private:
-  Engine& eng;
+
 };
 
 #endif

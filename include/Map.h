@@ -4,8 +4,8 @@
 #include <vector>
 #include <iostream>
 
-#include "CommonData.h"
-#include "CommonTypes.h"
+#include "CmnData.h"
+#include "CmnTypes.h"
 #include "Colors.h"
 #include "ItemData.h"
 #include "Feature.h"
@@ -13,7 +13,7 @@
 
 using namespace std;
 
-class Engine;
+
 class SaveHandler;
 class FeatureStatic;
 
@@ -35,47 +35,27 @@ struct Cell {
   Pos pos;
 };
 
-class Map {
-public:
-  Map(Engine& engine);
+namespace Map {
 
-  ~Map();
+extern Player*        player;
+extern int            dlvl;
+extern Cell           cells[MAP_W][MAP_H];
+extern vector<Room*>  rooms;
 
-  Cell cells[MAP_W][MAP_H];
+void init();
+void cleanup();
+void storeToSaveLines(vector<string>& lines);
+void setupFromSaveLines(vector<string>& lines);
 
-  inline int getDlvl() {return dlvl_;}
+void resetMap();
 
-  inline void incrDlvl(const int levels = 1) {dlvl_ += levels;}
-  inline void decrDlvl(const int levels = 1) {dlvl_ -= levels;}
+//Makes a copy of the renderers current array
+//TODO This is weird, and it's unclear how it should be used. Remove?
+//Can it not be copied in the map drawing function instead?
+void updateVisualMemory();
 
-  void resetMap();
+void switchToDestroyedFeatAt(const Pos& pos);
 
-  //Makes a copy of the renderers current array
-  //TODO This is a bit weird, and it's unclear how it should be used
-  //Can it be removed? Can it not be copied in the map drawing function instead?
-  void updateVisualMemory();
-
-  void switchToDestroyedFeatAt(const Pos& pos);
-
-  void addSaveLines(vector<string>& lines) const {
-    lines.push_back(toStr(dlvl_));
-  }
-
-  void setParamsFromSaveLines(vector<string>& lines) {
-    dlvl_ = toInt(lines.front());
-    lines.erase(lines.begin());
-  }
-
-  vector<Room*> rooms;
-
-private:
-  void resetCells(const bool MAKE_STONE_WALLS);
-
-  Engine& eng;
-
-  friend class SaveHandler;
-  friend class Bot;
-  int dlvl_;
-};
+} //Map
 
 #endif

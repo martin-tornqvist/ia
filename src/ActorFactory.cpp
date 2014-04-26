@@ -1,8 +1,8 @@
 #include "ActorFactory.h"
 
 #include <algorithm>
+#include <assert.h>
 
-#include "Engine.h"
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
 #include "Map.h"
@@ -14,54 +14,54 @@ Actor* ActorFactory::makeActorFromId(const ActorId id) const {
   assert(id >= 1 && id < endOfActorIds);
 
   switch(id) {
-    case actor_zombie:              return new ZombieClaw(eng);
-    case actor_zombieAxe:           return new ZombieAxe(eng);
-    case actor_bloatedZombie:       return new BloatedZombie(eng);
-    case actor_majorClaphamLee:     return new MajorClaphamLee(eng);
-    case actor_deanHalsey:          return new DeanHalsey(eng);
-    case actor_rat:                 return new Rat(eng);
-    case actor_ratThing:            return new RatThing(eng);
-    case actor_brownJenkin:         return new BrownJenkin(eng);
-    case actor_greenSpider:         return new GreenSpider(eng);
-    case actor_redSpider:           return new RedSpider(eng);
-    case actor_whiteSpider:         return new WhiteSpider(eng);
-    case actor_shadowSpider:        return new ShadowSpider(eng);
-    case actor_lengSpider:          return new LengSpider(eng);
-    case actor_fireHound:           return new FireHound(eng);
-    case actor_frostHound:          return new FrostHound(eng);
-    case actor_zuul:                return new Zuul(eng);
-    case actor_ghost:               return new Ghost(eng);
-    case actor_wraith:              return new Wraith(eng);
-    case actor_phantasm:            return new Phantasm(eng);
-    case actor_giantBat:            return new GiantBat(eng);
-    case actor_cultist:             return new Cultist(eng);
-    case actor_cultistTeslaCannon:  return new CultistTeslaCannon(eng);
-    case actor_cultistSpikeGun:     return new CultistSpikeGun(eng);
-    case actor_cultistPriest:       return new CultistPriest(eng);
-    case actor_keziahMason:         return new KeziahMason(eng);
-    case actor_wolf:                return new Wolf(eng);
-    case actor_flyingPolyp:         return new FlyingPolyp(eng);
-    case actor_miGo:                return new MiGo(eng);
-    case actor_ghoul:               return new Ghoul(eng);
-    case actor_shadow:              return new Shadow(eng);
-    case actor_byakhee:             return new Byakhee(eng);
-    case actor_giantMantis:         return new GiantMantis(eng);
-    case actor_giantLocust:         return new GiantLocust(eng);
-    case actor_mummy:               return new Mummy(eng);
-    case actor_khephren:            return new Khephren(eng);
-    case actor_nitokris:            return new MummyUnique(eng);
-    case actor_deepOne:             return new DeepOne(eng);
-    case actor_wormMass:            return new WormMass(eng);
-    case actor_dustVortex:          return new DustVortex(eng);
-    case actor_fireVortex:          return new FireVortex(eng);
-    case actor_frostVortex:         return new FrostVortex(eng);
-    case actor_oozeBlack:           return new OozeBlack(eng);
-    case actor_colourOutOfSpace:    return new ColourOutOfSpace(eng);
-    case actor_oozeClear:           return new OozeClear(eng);
-    case actor_oozePutrid:          return new OozePutrid(eng);
-    case actor_oozePoison:          return new OozePoison(eng);
-    case actor_chthonian:           return new Chthonian(eng);
-    case actor_huntingHorror:       return new HuntingHorror(eng);
+    case actor_zombie:              return new ZombieClaw();
+    case actor_zombieAxe:           return new ZombieAxe();
+    case actor_bloatedZombie:       return new BloatedZombie();
+    case actor_majorClaphamLee:     return new MajorClaphamLee();
+    case actor_deanHalsey:          return new DeanHalsey();
+    case actor_rat:                 return new Rat();
+    case actor_ratThing:            return new RatThing();
+    case actor_brownJenkin:         return new BrownJenkin();
+    case actor_greenSpider:         return new GreenSpider();
+    case actor_redSpider:           return new RedSpider();
+    case actor_whiteSpider:         return new WhiteSpider();
+    case actor_shadowSpider:        return new ShadowSpider();
+    case actor_lengSpider:          return new LengSpider();
+    case actor_fireHound:           return new FireHound();
+    case actor_frostHound:          return new FrostHound();
+    case actor_zuul:                return new Zuul();
+    case actor_ghost:               return new Ghost();
+    case actor_wraith:              return new Wraith();
+    case actor_phantasm:            return new Phantasm();
+    case actor_giantBat:            return new GiantBat();
+    case actor_cultist:             return new Cultist();
+    case actor_cultistTeslaCannon:  return new CultistTeslaCannon();
+    case actor_cultistSpikeGun:     return new CultistSpikeGun();
+    case actor_cultistPriest:       return new CultistPriest();
+    case actor_keziahMason:         return new KeziahMason();
+    case actor_wolf:                return new Wolf();
+    case actor_flyingPolyp:         return new FlyingPolyp();
+    case actor_miGo:                return new MiGo();
+    case actor_ghoul:               return new Ghoul();
+    case actor_shadow:              return new Shadow();
+    case actor_byakhee:             return new Byakhee();
+    case actor_giantMantis:         return new GiantMantis();
+    case actor_giantLocust:         return new GiantLocust();
+    case actor_mummy:               return new Mummy();
+    case actor_khephren:            return new Khephren();
+    case actor_nitokris:            return new MummyUnique();
+    case actor_deepOne:             return new DeepOne();
+    case actor_wormMass:            return new WormMass();
+    case actor_dustVortex:          return new DustVortex();
+    case actor_fireVortex:          return new FireVortex();
+    case actor_frostVortex:         return new FrostVortex();
+    case actor_oozeBlack:           return new OozeBlack();
+    case actor_colourOOSpace:       return new ColourOOSpace();
+    case actor_oozeClear:           return new OozeClear();
+    case actor_oozePutrid:          return new OozePutrid();
+    case actor_oozePoison:          return new OozePoison();
+    case actor_chthonian:           return new Chthonian();
+    case actor_huntingHorror:       return new HuntingHorror();
 
 //  case actor_lordOfPestilence: return new LordOfPestilence;
 //  case actor_lordOfShadows:    return new LordOfShadows;
@@ -78,28 +78,28 @@ Actor* ActorFactory::makeActorFromId(const ActorId id) const {
 Actor* ActorFactory::spawnActor(const ActorId id, const Pos& pos) const {
   Actor* const actor = makeActorFromId(id);
 
-  actor->place(pos, eng.actorDataHandler->dataList[id]);
+  actor->place(pos, ActorData::dataList[id]);
 
   if(actor->getData().nrLeftAllowedToSpawn != -1) {
     actor->getData().nrLeftAllowedToSpawn--;
   }
 
-  eng.gameTime->insertActorInLoop(actor);
+  GameTime::insertActorInLoop(actor);
 
   return actor;
 }
 
 void ActorFactory::deleteAllMonsters() const {
-  vector<Actor*>& actors = eng.gameTime->actors_;
+  vector<Actor*>& actors = GameTime::actors_;
 
   for(size_t i = 0; i < actors.size(); i++) {
-    if(actors.at(i) != eng.player) {
-      eng.gameTime->eraseActorInElement(i);
+    if(actors.at(i) != Map::player) {
+      GameTime::eraseActorInElement(i);
       i--;
     }
   }
 
-  eng.player->target = NULL;
+  Map::player->target = NULL;
 }
 
 void ActorFactory::summonMonsters(const Pos& origin,
@@ -140,7 +140,7 @@ void ActorFactory::summonMonsters(const Pos& origin,
       monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
     }
 
-    if(eng.player->isSeeingActor(*actor, NULL)) {
+    if(Map::player->isSeeingActor(*actor, NULL)) {
       positionsToAnimate.push_back(pos);
     }
   }

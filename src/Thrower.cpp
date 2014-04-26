@@ -1,7 +1,5 @@
 #include "Thrower.h"
 
-#include "Engine.h"
-
 #include "Item.h"
 #include "ItemPotion.h"
 #include "ActorData.h"
@@ -21,20 +19,20 @@
 #include "SdlWrapper.h"
 
 void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
-  const int DYNAMITE_FUSE = eng.player->dynamiteFuseTurns;
-  const int FLARE_FUSE = eng.player->flareFuseTurns;
+  const int DYNAMITE_FUSE = Map::player->dynamiteFuseTurns;
+  const int FLARE_FUSE = Map::player->flareFuseTurns;
 
-  eng.player->explosiveThrown();
+  Map::player->explosiveThrown();
 
   vector<Pos> path;
-  eng.lineCalc->calcNewLine(eng.player->pos, aimCell, true,
+  eng.lineCalc->calcNewLine(Map::player->pos, aimCell, true,
                             THROWING_RANGE_LIMIT, false, path);
 
   //Remove cells after blocked cells
   for(unsigned int i = 1; i < path.size(); i++) {
     const Pos curPos = path.at(i);
     const Feature* featureHere =
-      eng.map->cells[curPos.x][curPos.y].featureStatic;
+      Map::cells[curPos.x][curPos.y].featureStatic;
     if(featureHere->isProjectilePassable() == false) {
       path.resize(i);
       break;
@@ -48,7 +46,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(unsigned int i = 1; i < path.size() - 1; i++) {
       Renderer::drawMapAndInterface(false);
-      if(eng.map->cells[path[i].x][path[i].y].isSeenByPlayer) {
+      if(Map::cells[path[i].x][path[i].y].isSeenByPlayer) {
         Renderer::drawGlyph(GLYPH, Panel::map, path[i], clr);
         Renderer::updateScreen();
         SdlWrapper::sleep(Config::getDelayProjectileDraw());
@@ -57,7 +55,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   }
 
   Feature* const featureAtDest =
-    eng.map->cells[path.back().x][path.back().y].featureStatic;
+    Map::cells[path.back().x][path.back().y].featureStatic;
   const bool IS_DEST_FEAT_BOTTOMLESS = featureAtDest->isBottomless();
 
   if(DYNAMITE_FUSE != -1) {
@@ -73,8 +71,8 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
       eng.featureFactory->spawnFeatureAt(
         feature_litFlare, path.back(), new DynamiteSpawnData(FLARE_FUSE));
     }
-    eng.gameTime->updateLightMap();
-    eng.player->updateFov();
+    GameTime::updateLightMap();
+    Map::player->updateFov();
     Renderer::drawMapAndInterface();
   } else {
     eng.log->addMsg("I throw a lit Molotov Cocktail.");
@@ -88,7 +86,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
     }
   }
 
-  eng.gameTime->actorDidAct();
+  GameTime::actorDidAct();
 }
 
 void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
@@ -106,12 +104,12 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
   const string itemName_a =
     eng.itemDataHandler->getItemRef(itemThrown, ItemRefType::a, true);
-  if(&actorThrowing == eng.player) {
+  if(&actorThrowing == Map::player) {
     eng.log->clearLog();
     eng.log->addMsg("I throw " + itemName_a + ".");
   } else {
     const Pos& p = path.front();
-    if(eng.map->cells[p.x][p.y].isSeenByPlayer) {
+    if(Map::cells[p.x][p.y].isSeenByPlayer) {
       eng.log->addMsg(
         actorThrowing.getNameThe() + " throws " + itemName_a + ".");
     }
@@ -146,17 +144,17 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
         if(
           data->attackResult >= successSmall &&
           data->isEtherealDefenderMissed == false) {
-          if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+          if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
             Renderer::drawGlyph('*', Panel::map,
                                 curPos, clrRedLgt);
             Renderer::updateScreen();
             SdlWrapper::sleep(Config::getDelayProjectileDraw() * 4);
           }
           const SDL_Color hitMessageClr =
-            actorHere == eng.player ? clrMsgBad : clrMsgGood;
+            actorHere == Map::player ? clrMsgBad : clrMsgGood;
 
           const bool CAN_SEE_ACTOR =
-            eng.player->isSeeingActor(*actorHere, NULL);
+            Map::player->isSeeingActor(*actorHere, NULL);
           string defenderName = CAN_SEE_ACTOR ? actorHere->getNameThe() : "It";
 
           eng.log->addMsg(defenderName + " is hit.", hitMessageClr);
@@ -169,7 +167,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
             dynamic_cast<Potion*>(&itemThrown)->collide(curPos, actorHere);
             delete &itemThrown;
             delete data;
-            eng.gameTime->actorDidAct();
+            GameTime::actorDidAct();
             return;
           }
 
@@ -180,14 +178,14 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
       }
     }
 
-    if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+    if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
       Renderer::drawGlyph(glyph, Panel::map, curPos, clr);
       Renderer::updateScreen();
       SdlWrapper::sleep(Config::getDelayProjectileDraw());
     }
 
     const Feature* featureHere =
-      eng.map->cells[curPos.x][curPos.y].featureStatic;
+      Map::cells[curPos.x][curPos.y].featureStatic;
     if(featureHere->isProjectilePassable() == false) {
       blockedInElement = itemThrownData.isPotion ? i : i - 1;
       break;
@@ -206,7 +204,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
         path.at(blockedInElement), NULL);
       delete &itemThrown;
       delete data;
-      eng.gameTime->actorDidAct();
+      GameTime::actorDidAct();
       return;
     }
   }
@@ -218,9 +216,9 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
                              path.size() - 1 : blockedInElement;
     const Pos dropPos = path.at(DROP_ELEMENT);
     const MaterialType materialAtDropPos =
-      eng.map->cells[dropPos.x][dropPos.y].featureStatic->getMaterialType();
+      Map::cells[dropPos.x][dropPos.y].featureStatic->getMaterialType();
     if(materialAtDropPos == materialType_hard) {
-      const AlertsMonsters alertsMonsters = &actorThrowing == eng.player ?
+      const AlertsMonsters alertsMonsters = &actorThrowing == Map::player ?
                                             AlertsMonsters::yes :
                                             AlertsMonsters::no;
       if(isActorHit == false) {
@@ -236,5 +234,5 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
   delete data;
   Renderer::drawMapAndInterface();
-  eng.gameTime->actorDidAct();
+  GameTime::actorDidAct();
 }

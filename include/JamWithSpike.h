@@ -3,12 +3,12 @@
 
 #include "FeatureDoor.h"
 
-class Engine;
+
 class Feature;
 
 class JamWithSpike {
 public:
-  JamWithSpike(Engine& engine) : eng(engine) {}
+  JamWithSpike() {}
   ~JamWithSpike() {}
 
   void playerJam() const;
@@ -17,7 +17,7 @@ private:
   friend class Feature;
   void playerJamFeature(Feature* const feature) const;
 
-  Engine& eng;
+
 };
 
 #endif

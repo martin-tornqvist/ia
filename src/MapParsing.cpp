@@ -1,6 +1,5 @@
 #include "MapParsing.h"
 
-#include "Engine.h"
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "GameTime.h"
@@ -29,8 +28,8 @@ bool BlocksMoveCmn::check(const Actor& a) const {
   return a.deadState == ActorDeadState::alive;
 }
 
-BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking, Engine& engine) :
-  Pred(engine), IS_ACTORS_BLOCKING_(isActorsBlocking) {
+BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking) :
+  Pred(), IS_ACTORS_BLOCKING_(isActorsBlocking) {
   actor.getPropHandler().getAllActivePropIds(actorsProps_);
 }
 
@@ -150,7 +149,7 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       const FeatureId curId =
-        eng.map->cells[X + dx][Y + dy].featureStatic->getId();
+        Map::cells[X + dx][Y + dy].featureStatic->getId();
 
       bool isMatch = false;
       for(FeatureId f : features_) {
@@ -186,7 +185,7 @@ void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
   if(predicate.isCheckingCells()) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
-        const Cell& c = eng.map->cells[x][y];
+        const Cell& c = Map::cells[x][y];
         const bool IS_MATCH = predicate.check(c);
         if(IS_MATCH || ALLOW_WRITE_FALSE) {
           arrayOut[x][y] = IS_MATCH;
@@ -196,7 +195,7 @@ void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
   }
 
   if(predicate.isCheckingMobFeatures()) {
-    for(FeatureMob * mob : eng.gameTime->featureMobs_) {
+    for(FeatureMob * mob : GameTime::featureMobs_) {
       const Pos& p = mob->getPos();
       const bool IS_MATCH = predicate.check(*mob);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
@@ -207,7 +206,7 @@ void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
   }
 
   if(predicate.isCheckingActors()) {
-    for(Actor * actor : eng.gameTime->actors_) {
+    for(Actor * actor : GameTime::actors_) {
       const Pos& p = actor->pos;
       const bool IS_MATCH = predicate.check(*actor);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {

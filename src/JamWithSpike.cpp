@@ -1,6 +1,5 @@
 #include "JamWithSpike.h"
 
-#include "Engine.h"
 #include "GameTime.h"
 #include "Feature.h"
 #include "Actor.h"
@@ -14,7 +13,7 @@
 void JamWithSpike::playerJam() const {
   eng.log->clearLog();
 
-  if(eng.player->getInv().hasItemInGeneral(ItemId::ironSpike) == false) {
+  if(Map::player->getInv().hasItemInGeneral(ItemId::ironSpike) == false) {
     eng.log->addMsg("I have no spikes to jam with.", clrWhite);
     Renderer::drawMapAndInterface();
     return;
@@ -22,10 +21,10 @@ void JamWithSpike::playerJam() const {
 
   eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Renderer::drawMapAndInterface();
-  const Pos jamPos(eng.player->pos + eng.query->dir());
+  const Pos jamPos(Map::player->pos + eng.query->dir());
   eng.log->clearLog();
 
-  playerJamFeature(eng.map->cells[jamPos.x][jamPos.y].featureStatic);
+  playerJamFeature(Map::cells[jamPos.x][jamPos.y].featureStatic);
 
   Renderer::drawMapAndInterface();
 }
@@ -35,15 +34,15 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
 
   if(feature->getId() == feature_door) {
     Door* const door = dynamic_cast<Door*>(feature);
-    const bool DOOR_SPIKED = door->trySpike(eng.player);
+    const bool DOOR_SPIKED = door->trySpike(Map::player);
 
     if(DOOR_SPIKED == true) {
 
       jamableObjectFound = true;
 
-      eng.player->getInv().decrItemTypeInGeneral(ItemId::ironSpike);
+      Map::player->getInv().decrItemTypeInGeneral(ItemId::ironSpike);
       const int SPIKES_LEFT =
-        eng.player->getInv().getItemStackSizeInGeneral(ItemId::ironSpike);
+        Map::player->getInv().getItemStackSizeInGeneral(ItemId::ironSpike);
       if(SPIKES_LEFT == 0) {
         eng.log->addMsg("I have no iron spikes left.");
       } else {
@@ -53,7 +52,7 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
   }
 
   if(jamableObjectFound == false) {
-    const bool PLAYER_IS_BLIND = eng.player->getPropHandler().allowSee();
+    const bool PLAYER_IS_BLIND = Map::player->getPropHandler().allowSee();
     if(PLAYER_IS_BLIND == false) {
       eng.log->addMsg("I see nothing there to jam with a spike.");
     } else {

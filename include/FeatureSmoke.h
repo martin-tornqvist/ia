@@ -12,8 +12,8 @@ public:
 
 protected:
   friend class FeatureFactory;
-  Smoke(FeatureId id, Pos pos, Engine& engine, SmokeSpawnData* spawnData) :
-    FeatureMob(id, pos, engine), life_(spawnData->life_),
+  Smoke(FeatureId id, Pos pos, SmokeSpawnData* spawnData) :
+    FeatureMob(id, pos), life_(spawnData->life_),
     isPermanent_(life_ == -1) {
   }
 

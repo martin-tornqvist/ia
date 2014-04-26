@@ -1,7 +1,5 @@
 #include "ActorPlayer.h"
 
-#include "Engine.h"
-
 #include "Renderer.h"
 #include "Audio.h"
 #include "ItemWeapon.h"
@@ -35,8 +33,8 @@
 
 const int MIN_SHOCK_WHEN_OBSESSION = 35;
 
-Player::Player(Engine& engine) :
-  Actor(engine),
+Player::Player() :
+  Actor(),
   activeMedicalBag(NULL),
   waitTurnsLeft(-1),
   dynamiteFuseTurns(-1),
@@ -126,12 +124,12 @@ void Player::spawnStartItems() {
     eng.itemFactory->spawnItem(ItemId::medicalBag));
 }
 
-void Player::addSaveLines(vector<string>& lines) const {
+void Player::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(propHandler_->appliedProps_.size()));
   for(Prop * prop : propHandler_->appliedProps_) {
     lines.push_back(toStr(prop->getId()));
     lines.push_back(toStr(prop->turnsLeft_));
-    prop->addSaveLines(lines);
+    prop->storeToSaveLines(lines);
   }
 
   lines.push_back(toStr(insanity_));
@@ -158,7 +156,7 @@ void Player::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void Player::setParamsFromSaveLines(vector<string>& lines) {
+void Player::setupFromSaveLines(vector<string>& lines) {
   const int NR_PROPS = toInt(lines.front());
   lines.erase(lines.begin());
   for(int i = 0; i < NR_PROPS; i++) {
@@ -169,7 +167,7 @@ void Player::setParamsFromSaveLines(vector<string>& lines) {
     Prop* const prop = propHandler_->makeProp(
                          id, propTurnsSpecific, NR_TURNS);
     propHandler_->tryApplyProp(prop, true, true, true, true);
-    prop->setParamsFromSaveLines(lines);
+    prop->setupFromSaveLines(lines);
   }
 
   insanity_ = toInt(lines.front());
@@ -362,7 +360,7 @@ void Player::incrInsanity() {
           eng.popup->showMsg(msg, true, "Babbling!", SfxId::insanityRising);
           const string playerName = getNameThe();
           for(int i = Rnd::range(3, 5); i > 0; i--) {
-            const string phrase = Cultist::getCultistPhrase(eng);
+            const string phrase = Cultist::getCultistPhrase();
             eng.log->addMsg(playerName + ": " + phrase);
           }
           Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
@@ -470,7 +468,7 @@ void Player::incrInsanity() {
                       }
                     }
                   } else {
-                    if(eng.map->getDlvl() >= 5) {
+                    if(Map::getDlvl() >= 5) {
                       if(phobias[int(Phobia::deepPlaces)] == false) {
                         msg += "I am afflicted by Bathophobia. "
                                "It suddenly seems terrifying to delve deeper.";
@@ -502,7 +500,7 @@ void Player::incrInsanity() {
                     "pain. Physical suffering does not frighten me at all. "
                     "However, my depraved mind can never find complete peace "
                     "(no shock from taking damage, but shock cannot go below "
-                    + toStr(MIN_SHOCK_WHEN_OBSESSION) + " %).";
+                    + toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng.popup->showMsg(msg, true, "Masochistic obsession!",
                                      SfxId::insanityRising);
                   obsessions[int(Obsession::masochism)] = true;
@@ -514,7 +512,7 @@ void Player::incrInsanity() {
                     "in others. For every life I take, I find a little relief. "
                     "However, my depraved mind can no longer find complete "
                     "peace (shock cannot go below "
-                    + toStr(MIN_SHOCK_WHEN_OBSESSION) + " %).";
+                    + toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
                   eng.popup->showMsg(msg, true, "Sadistic obsession!",
                                      SfxId::insanityRising);
                   obsessions[int(Obsession::sadism)] = true;
@@ -534,7 +532,7 @@ void Player::incrInsanity() {
 
             const int NR_SHADOWS_LOWER = 1;
             const int NR_SHADOWS_UPPER =
-              getConstrInRange(2, (eng.map->getDlvl() + 1) / 2, 6);
+              getConstrInRange(2, (Map::getDlvl() + 1) / 2, 6);
             const int NR_SHADOWS =
               Rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 
@@ -564,8 +562,8 @@ void Player::incrInsanity() {
 
 void Player::addTmpShockFromFeatures() {
   if(
-    eng.map->cells[pos.x][pos.y].isDark &&
-    eng.map->cells[pos.x][pos.y].isLight == false) {
+    Map::cells[pos.x][pos.y].isDark &&
+    Map::cells[pos.x][pos.y].isLight == false) {
     shockTmp_ += 20;
   }
 
@@ -574,7 +572,7 @@ void Player::addTmpShockFromFeatures() {
     for(int dx = -1; dx <= 1; dx++) {
       const int X = pos.x + dx;
       if(Utils::isPosInsideMap(Pos(X, Y))) {
-        Cell& cell = eng.map->cells[pos.x + dx][pos.y + dy];
+        Cell& cell = Map::cells[pos.x + dx][pos.y + dy];
         const Feature* const f = cell.featureStatic;
         shockTmp_ += f->getShockWhenAdjacent();
       }
@@ -740,7 +738,7 @@ void Player::onActorTurn() {
     eng.bot->act();
   } else {
     Input::clearEvents();
-    Input::handleMapModeInputUntilFound(eng);
+    Input::handleMapModeInputUntilFound();
   }
 }
 
@@ -842,7 +840,7 @@ void Player::onStandardTurn() {
   //Some shock is taken every Xth turn
   int loseNTurns = 12;
   if(PlayerBon::getBg() == Bg::rogue) loseNTurns *= 2;
-  const int TURN = eng.gameTime->getTurn();
+  const int TURN = GameTime::getTurn();
   if(TURN % loseNTurns == 0 && TURN > 1) {
     if(Rnd::oneIn(850)) {
       if(Rnd::coinToss()) {
@@ -853,7 +851,7 @@ void Player::onStandardTurn() {
       incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
       Renderer::drawMapAndInterface();
     } else {
-      if(eng.map->getDlvl() != 0) {
+      if(Map::getDlvl() != 0) {
         incrShock(1, ShockSrc::time);
       }
     }
@@ -869,7 +867,7 @@ void Player::onStandardTurn() {
       nrTurnsUntilIns_ = -1;
       incrInsanity();
       if(deadState == ActorDeadState::alive) {
-        eng.gameTime->actorDidAct();
+        GameTime::actorDidAct();
       }
       return;
     }
@@ -877,7 +875,7 @@ void Player::onStandardTurn() {
     nrTurnsUntilIns_ = -1;
   }
 
-  for(Actor * actor : eng.gameTime->actors_) {
+  for(Actor * actor : GameTime::actors_) {
     if(actor != this) {
       if(actor->deadState == ActorDeadState::alive) {
 
@@ -895,7 +893,7 @@ void Player::onStandardTurn() {
           monster.messageMonsterInViewPrinted = false;
 
           //Is the monster sneaking? Try to spot it
-          if(eng.map->cells[monster.pos.x][monster.pos.y].isSeenByPlayer) {
+          if(Map::cells[monster.pos.x][monster.pos.y].isSeenByPlayer) {
             if(monster.isStealth) {
               if(isSpottingHiddenActor(monster)) {
                 monster.isStealth = false;
@@ -913,10 +911,10 @@ void Player::onStandardTurn() {
 
   const int DECR_ABOVE_MAX_N_TURNS = 7;
   if(getHp() > getHpMax(true)) {
-    if(eng.gameTime->getTurn() % DECR_ABOVE_MAX_N_TURNS == 0) {hp_--;}
+    if(GameTime::getTurn() % DECR_ABOVE_MAX_N_TURNS == 0) {hp_--;}
   }
   if(getSpi() > getSpiMax()) {
-    if(eng.gameTime->getTurn() % DECR_ABOVE_MAX_N_TURNS == 0) {spi_--;}
+    if(GameTime::getTurn() % DECR_ABOVE_MAX_N_TURNS == 0) {spi_--;}
   }
 
   vector<PropId> props;
@@ -960,8 +958,8 @@ void Player::onStandardTurn() {
 
       for(int y = y0; y <= y1; y++) {
         for(int x = x0; x <= x1; x++) {
-          if(eng.map->cells[x][y].isSeenByPlayer) {
-            Feature* f = eng.map->cells[x][y].featureStatic;
+          if(Map::cells[x][y].isSeenByPlayer) {
+            Feature* f = Map::cells[x][y].featureStatic;
 
             if(f->getId() == feature_trap) {
               dynamic_cast<Trap*>(f)->playerTrySpotHidden();
@@ -981,7 +979,7 @@ void Player::onStandardTurn() {
 
   if(waitTurnsLeft > 0) {
     waitTurnsLeft--;
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   }
 }
 
@@ -1043,7 +1041,7 @@ void Player::moveDir(Dir dir) {
 
     //Trap affects leaving?
     if(dir != Dir::center) {
-      Feature* f = eng.map->cells[pos.x][pos.y].featureStatic;
+      Feature* f = Map::cells[pos.x][pos.y].featureStatic;
       if(f->getId() == feature_trap) {
         trace << "Player: Standing on trap, check if affects move" << endl;
         dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
@@ -1097,11 +1095,11 @@ void Player::moveDir(Dir dir) {
       //Blocking mobile or static features?
       vector<PropId> props;
       getPropHandler().getAllActivePropIds(props);
-      Cell& cell = eng.map->cells[dest.x][dest.y];
+      Cell& cell = Map::cells[dest.x][dest.y];
       bool isFeaturesAllowMove = cell.featureStatic->canMove(props);
 
       vector<FeatureMob*> featureMobs;
-      eng.gameTime->getFeatureMobsAtPos(dest, featureMobs);
+      GameTime::getFeatureMobsAtPos(dest, featureMobs);
 
       if(isFeaturesAllowMove) {
         for(FeatureMob * m : featureMobs) {
@@ -1143,7 +1141,7 @@ void Player::moveDir(Dir dir) {
         }
 
         //Print message if walking on item
-        Item* const item = eng.map->cells[pos.x][pos.y].item;
+        Item* const item = Map::cells[pos.x][pos.y].item;
         if(item != NULL) {
           string message = propHandler_->allowSee() == false ?
                            "I feel here: " : "I see here: ";
@@ -1155,11 +1153,11 @@ void Player::moveDir(Dir dir) {
       //Note: bump() prints block messages.
       for(FeatureMob * m : featureMobs) {m->bump(*this);}
 
-      eng.map->cells[dest.x][dest.y].featureStatic->bump(*this);
+      Map::cells[dest.x][dest.y].featureStatic->bump(*this);
     }
 
     if(pos == dest) {
-      eng.gameTime->actorDidAct(isFreeTurn);
+      GameTime::actorDidAct(isFreeTurn);
       return;
     }
   }
@@ -1244,12 +1242,12 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
     bool visionBlockers[MAP_W][MAP_H];
     for(int y = x0y0.y; y <= x1y1.y; y++) {
       for(int x = x0y0.x; x <= x1y1.x; x++) {
-        const FeatureStatic* const f = eng.map->cells[x][y].featureStatic;
+        const FeatureStatic* const f = Map::cells[x][y].featureStatic;
         visionBlockers[x][y] = f->isVisionPassable() == false;
       }
     }
 
-    eng.fov->runFovOnArray(visionBlockers, pos, myLight, false);
+    Fov::runFovOnArray(visionBlockers, pos, myLight, false);
     for(int y = x0y0.y; y <= x1y1.y; y++) {
       for(int x = x0y0.x; x <= x1y1.x; x++) {
         if(myLight[x][y]) {
@@ -1269,15 +1267,15 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
 void Player::updateFov() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      eng.map->cells[x][y].isSeenByPlayer = false;
+      Map::cells[x][y].isSeenByPlayer = false;
     }
   }
 
   if(propHandler_->allowSee()) {
     bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(eng), blockers);
-    eng.fov->runPlayerFov(blockers, pos);
-    eng.map->cells[pos.x][pos.y].isSeenByPlayer = true;
+    MapParse::parse(CellPred::BlocksVision(), blockers);
+    Fov::runPlayerFov(blockers, pos);
+    Map::cells[pos.x][pos.y].isSeenByPlayer = true;
   }
 
   if(propHandler_->allowSee()) {FOVhack();}
@@ -1285,7 +1283,7 @@ void Player::updateFov() {
   if(eng.isCheatVisionEnabled_) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
-        eng.map->cells[x][y].isSeenByPlayer = true;
+        Map::cells[x][y].isSeenByPlayer = true;
       }
     }
   }
@@ -1293,7 +1291,7 @@ void Player::updateFov() {
   //Explore
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
-      Cell& cell = eng.map->cells[x][y];
+      Cell& cell = Map::cells[x][y];
       const bool IS_BLOCKING = CellPred::BlocksMoveCmn(false, eng).check(cell);
       //Do not explore dark floor cells
       if(cell.isSeenByPlayer && (cell.isDark == false || IS_BLOCKING)) {
@@ -1305,7 +1303,7 @@ void Player::updateFov() {
 
 void Player::FOVhack() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
@@ -1317,12 +1315,12 @@ void Player::FOVhack() {
           for(int dx = -1; dx <= 1; dx++) {
             const Pos adj(x + dx, y + dy);
             if(Utils::isPosInsideMap(adj)) {
-              const Cell& adjCell = eng.map->cells[adj.x][adj.y];
+              const Cell& adjCell = Map::cells[adj.x][adj.y];
               if(
                 adjCell.isSeenByPlayer &&
                 (adjCell.isDark == false || adjCell.isLight) &&
                 blockers[adj.x][adj.y] == false) {
-                eng.map->cells[x][y].isSeenByPlayer = true;
+                Map::cells[x][y].isSeenByPlayer = true;
                 dx = 999;
                 dy = 999;
               }

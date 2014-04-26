@@ -1,7 +1,5 @@
 #include "ItemPickup.h"
 
-#include "Engine.h"
-
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "ItemAmmo.h"
@@ -22,14 +20,14 @@ void ItemPickup::pickupEffects(Actor* actor, Item* item) {
 
 //Can always be called, to check if something is there to be picked up.
 void ItemPickup::tryPick() {
-  const Pos& pos = eng.player->pos;
-  Item* const item = eng.map->cells[pos.x][pos.y].item;
+  const Pos& pos = Map::player->pos;
+  Item* const item = Map::cells[pos.x][pos.y].item;
 
   if(item == NULL) {
     eng.log->clearLog();
     eng.log->addMsg("I see nothing to pick up here.");
   } else {
-    Inventory& playerInv = eng.player->getInv();
+    Inventory& playerInv = Map::player->getInv();
 
     const string ITEM_NAME =
       eng.itemDataHandler->getItemInterfaceRef(*item, true);
@@ -44,8 +42,8 @@ void ItemPickup::tryPick() {
           eng.log->addMsg("I add " + ITEM_NAME + " to my missile stack.");
           carriedMissile->nrItems += item->nrItems;
           delete item;
-          eng.map->cells[pos.x][pos.y].item = NULL;
-          eng.gameTime->actorDidAct();
+          Map::cells[pos.x][pos.y].item = NULL;
+          GameTime::actorDidAct();
           return;
         }
       }
@@ -62,9 +60,9 @@ void ItemPickup::tryPick() {
 
       playerInv.putItemInGeneral(item);
 
-      eng.map->cells[pos.x][pos.y].item = NULL;
+      Map::cells[pos.x][pos.y].item = NULL;
 
-      eng.gameTime->actorDidAct();
+      GameTime::actorDidAct();
     }
   }
 }
@@ -77,7 +75,7 @@ bool ItemPickup::isInvFull(Inventory& inv, Item& item) const {
 }
 
 void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
-  Item* item = eng.map->cells[eng.player->pos.x][eng.player->pos.y].item;
+  Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
 
   if(item != NULL) {
     if(item->getData().isRangedWeapon) {
@@ -85,7 +83,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
       const int nrAmmoLoaded = weapon->nrAmmoLoaded;
 
       if(nrAmmoLoaded > 0 && weapon->getData().rangedHasInfiniteAmmo == false) {
-        Inventory& playerInv = eng.player->getInv();
+        Inventory& playerInv = Map::player->getInv();
         const ItemId ammoType = weapon->getData().rangedAmmoTypeUsed;
 
         ItemData* const ammoData = eng.itemDataHandler->dataList[int(ammoType)];
@@ -108,14 +106,14 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
           playerInv.putItemInGeneral(spawnedAmmo);
         } else {
           Audio::play(SfxId::pickup);
-          eng.itemDrop->dropItemOnMap(eng.player->pos, *spawnedAmmo);
+          eng.itemDrop->dropItemOnMap(Map::player->pos, *spawnedAmmo);
           string str =  "I have no room to keep the unloaded ammunition.";
           eng.log->addMsg(str);
         }
 
         dynamic_cast<Weapon*>(item)->nrAmmoLoaded = 0;
 
-        eng.gameTime->actorDidAct();
+        GameTime::actorDidAct();
         return;
       }
     } else {

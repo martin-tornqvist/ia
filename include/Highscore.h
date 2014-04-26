@@ -4,11 +4,9 @@
 #include <vector>
 #include <string>
 
-#include "CommonData.h"
+#include "CmnData.h"
 
 using namespace std;
-
-class Engine;
 
 struct HighScoreEntry {
 public:
@@ -57,7 +55,7 @@ private:
 
 class HighScore {
 public:
-  HighScore(Engine& engine) : eng(engine) {}
+  HighScore() {}
   ~HighScore() {}
 
   void gameOver(const bool IS_VICTORY);
@@ -74,8 +72,6 @@ private:
 
   static bool isEntryHigher(const HighScoreEntry& current,
                             const HighScoreEntry& other);
-
-  Engine& eng;
 };
 
 

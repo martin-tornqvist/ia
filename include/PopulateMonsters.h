@@ -5,12 +5,12 @@
 
 #include "ActorData.h"
 
-class Engine;
+
 
 
 class PopulateMonsters {
 public:
-  PopulateMonsters(Engine& engine) : eng(engine) {}
+  PopulateMonsters() {}
 
   void trySpawnDueToTimePassed() const;
 
@@ -42,7 +42,7 @@ private:
   void makeListOfMonstersEligibleForAutoSpawning(
     const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, vector<ActorId>& listRef) const;
 
-  Engine& eng;
+
 };
 
 

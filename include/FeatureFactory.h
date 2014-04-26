@@ -11,7 +11,6 @@
 
 using namespace std;
 
-class Engine;
 struct FeatureData;
 
 enum FeatureSpawnDataId {
@@ -91,7 +90,7 @@ public:
 
 class FeatureFactory {
 public:
-  FeatureFactory(Engine& engine) : eng(engine) {}
+  FeatureFactory() {}
 
   //Note: Position parameter should NOT be a reference here, because the
   //calling object (e.g. a spider web) might get destroyed.
@@ -101,7 +100,7 @@ public:
 private:
   void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos);
 
-  Engine& eng;
+
 };
 
 #endif

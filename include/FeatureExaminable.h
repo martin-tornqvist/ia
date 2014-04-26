@@ -17,9 +17,9 @@ public:
                                 const int NR_ITEMS_TO_ATTEMPT,
                                 Engine& engine);
 
-  void dropItems(const Pos& pos, Engine& engine);
+  void dropItems(const Pos& pos);
 
-  void destroySingleFragile(Engine& engine);
+  void destroySingleFragile();
 
   vector<Item*> items_;
 };
@@ -50,7 +50,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Tomb(FeatureId id, Pos pos, Engine& engine);
+  Tomb(FeatureId id, Pos pos);
 
   void triggerTrap(Actor& actor) override;
 
@@ -94,7 +94,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Chest(FeatureId id, Pos pos, Engine& engine);
+  Chest(FeatureId id, Pos pos);
 
   void triggerTrap(Actor& actor) override;
 
@@ -116,7 +116,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Cabinet(FeatureId id, Pos pos, Engine& engine);
+  Cabinet(FeatureId id, Pos pos);
 
   ItemContainerFeature itemContainer_;
   bool isContentKnown_;
@@ -156,7 +156,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Fountain(FeatureId id, Pos pos, Engine& engine);
+  Fountain(FeatureId id, Pos pos);
 
   FountainType fountainType_;
   FountainMaterial fountainMaterial_;
@@ -171,7 +171,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  Cocoon(FeatureId id, Pos pos, Engine& engine);
+  Cocoon(FeatureId id, Pos pos);
 
   void triggerTrap(Actor& actor) override;
 

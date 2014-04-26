@@ -3,9 +3,7 @@
 
 #include <SDL.h>
 
-#include "CommonData.h"
-
-class Engine;
+#include "CmnData.h"
 
 struct KeyboardReadRetData {
 public:
@@ -33,16 +31,15 @@ namespace Input {
 void init();
 void cleanup();
 
-void handleMapModeInputUntilFound(Engine& eng);
+void handleMapModeInputUntilFound();
 
-KeyboardReadRetData readKeysUntilFound(Engine& eng,
-                                          const bool IS_O_RETURN = true);
+KeyboardReadRetData readKeysUntilFound(const bool IS_O_RETURN = true);
 
 void clearEvents();
 
 void setKeyRepeatDelays();
 
-void handleKeyPress(const KeyboardReadRetData& d, Engine& eng);
+void handleKeyPress(const KeyboardReadRetData& d);
 
 } //Input
 

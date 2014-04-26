@@ -2,13 +2,12 @@
 
 #include <cassert>
 
-#include "Engine.h"
 #include "Log.h"
 #include "Utils.h"
 #include "PlayerBon.h"
 
-Armor::Armor(ItemData* const itemData, Engine& engine) :
-  Item(itemData, engine), dur_(Rnd::range(80, 100)) {}
+Armor::Armor(ItemData* const itemData) :
+  Item(itemData), dur_(Rnd::range(80, 100)) {}
 
 string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
 
@@ -75,13 +74,13 @@ int Armor::getAbsorptionPoints() const {
   return 0;
 }
 
-void ArmorAsbestosSuit::onWear() {
+void ArmorAsbSuit::onWear() {
   propsEnabledOnCarrier.push_back(new PropRFire(eng, propTurnsIndefinite));
   propsEnabledOnCarrier.push_back(new PropRAcid(eng, propTurnsIndefinite));
   propsEnabledOnCarrier.push_back(new PropRElec(eng, propTurnsIndefinite));
 }
 
-void ArmorAsbestosSuit::onTakeOff() {
+void ArmorAsbSuit::onTakeOff() {
   clearPropsEnabledOnCarrier();
 }
 

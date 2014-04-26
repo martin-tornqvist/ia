@@ -4,7 +4,7 @@
 #include <math.h>
 
 #include "Actor.h"
-#include "CommonData.h"
+#include "CmnData.h"
 
 enum class Phobia {
   rat,
@@ -37,7 +37,7 @@ class MedicalBag;
 
 class Player: public Actor {
 public:
-  Player(Engine& eng);
+  Player();
   virtual ~Player() {}
 
   void updateFov();
@@ -74,8 +74,8 @@ public:
   double getShockTakenAfterMods(const int BASE_SHOCK,
                                 const ShockSrc shockSrc) const;
 
-  void addSaveLines(vector<string>& lines) const;
-  void setParamsFromSaveLines(vector<string>& lines);
+  void storeToSaveLines(vector<string>& lines) const;
+  void setupFromSaveLines(vector<string>& lines);
 
   bool phobias[int(Phobia::endOfPhobias)];
   bool obsessions[int(Obsession::endOfObsessions)];

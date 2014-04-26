@@ -3,18 +3,14 @@
 
 #include "FeatureDoor.h"
 
-class Engine;
 class Feature;
 
 class Bash {
 public:
-  Bash(Engine& engine) : eng(engine) {}
+  Bash() {}
   ~Bash() {}
 
   void playerBash() const;
-
-private:
-  Engine& eng;
 };
 
 #endif

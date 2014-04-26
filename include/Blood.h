@@ -1,21 +1,17 @@
 #ifndef BLOOD_H
 #define BLOOD_H
 
-#include "CommonTypes.h"
-
-class Engine;
+#include "CmnTypes.h"
 
 class Gore {
 public:
-  Gore(Engine& engine) :
-    eng(engine) {
-  }
+  Gore() {}
 
   void makeBlood(const Pos& origin);
   void makeGore(const Pos& origin);
 
 private:
-  Engine& eng;
+
 };
 
 #endif

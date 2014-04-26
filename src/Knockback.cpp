@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include "Engine.h"
 #include "Attack.h"
 #include "ActorPlayer.h"
 #include "Map.h"
@@ -16,7 +15,7 @@
 void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                              const bool IS_SPIKE_GUN,
                              const bool IS_MSG_ALLOWED) {
-  const bool DEFENDER_IS_MONSTER = &defender != eng.player;
+  const bool DEFENDER_IS_MONSTER = &defender != Map::player;
 
   if(DEFENDER_IS_MONSTER || Config::isBotPlaying() == false) {
     if(defender.getData().actorSize <= actorSize_giant) {
@@ -43,17 +42,17 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
         MapParse::parse(CellPred::BlocksActor(defender, true, eng), blockers);
         const bool CELL_BLOCKED = blockers[newPos.x][newPos.y];
         const bool CELL_IS_BOTTOMLESS =
-          eng.map->cells[newPos.x][newPos.y].featureStatic->isBottomless();
+          Map::cells[newPos.x][newPos.y].featureStatic->isBottomless();
 
         if(
           (ACTOR_CAN_BE_KNOCKED_BACK) &&
           (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
 
           bool visionBlockers[MAP_W][MAP_H];
-          MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+          MapParse::parse(CellPred::BlocksVision(), visionBlockers);
           const bool PLAYER_SEE_DEFENDER =
             DEFENDER_IS_MONSTER == false ? true :
-            eng.player->isSeeingActor(defender, blockers);
+            Map::player->isSeeingActor(defender, blockers);
 
           if(i == 0) {
             if(IS_MSG_ALLOWED) {
@@ -89,7 +88,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           // Bump features (e.g. so monsters can be knocked back into traps)
           vector<FeatureMob*> featureMobs;
-          eng.gameTime->getFeatureMobsAtPos(defender.pos, featureMobs);
+          GameTime::getFeatureMobsAtPos(defender.pos, featureMobs);
           for(
             unsigned int featureMobIndex = 0;
             featureMobIndex < featureMobs.size();
@@ -102,7 +101,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           }
 
           FeatureStatic* const f =
-            eng.map->cells[defender.pos.x][defender.pos.y].featureStatic;
+            Map::cells[defender.pos.x][defender.pos.y].featureStatic;
           f->bump(defender);
 
           if(defender.deadState != ActorDeadState::alive) {
@@ -112,7 +111,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           // Defender nailed to a wall from a spike gun?
           if(IS_SPIKE_GUN) {
             FeatureStatic* const f =
-              eng.map->cells[newPos.x][newPos.y].featureStatic;
+              Map::cells[newPos.x][newPos.y].featureStatic;
             if(f->isVisionPassable() == false) {
               defender.getPropHandler().tryApplyProp(
                 new PropNailed(eng, propTurnsIndefinite));

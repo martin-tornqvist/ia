@@ -6,21 +6,19 @@
 #include "ItemData.h"
 #include "MenuBrowser.h"
 
-class Engine;
-
 namespace RenderInventory {
 
-void drawBrowseSlots(const MenuBrowser& browser, Engine& eng);
+void drawBrowseSlots(const MenuBrowser& browser);
 
 void drawBrowseInventory(const MenuBrowser& browser,
                          const vector<unsigned int>& genInvIndexes,
                          Engine& eng);
 
 void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
-               const vector<unsigned int>& genInvIndexes, Engine& eng);
+               const vector<unsigned int>& genInvIndexes);
 
 void drawUse(const MenuBrowser& browser,
-             const vector<unsigned int>& genInvIndexes, Engine& eng);
+             const vector<unsigned int>& genInvIndexes);
 
 } //RenderInventory
 

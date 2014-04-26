@@ -3,11 +3,10 @@
 
 #include <vector>
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "Config.h"
 #include "FeatureData.h"
 
-class Engine;
 struct Cell;
 class FeatureMob;
 class Actor;
@@ -22,15 +21,14 @@ public:
   virtual bool check(const Cell& c)       const {(void)c; return false;}
   virtual bool check(const FeatureMob& f) const {(void)f; return false;}
   virtual bool check(const Actor& a)      const {(void)a; return false;}
-  const Engine& eng;
 protected:
-  Pred(Engine& engine) : eng(engine) {}
+  Pred() {}
 //  bool canWalkAt(const int X, const int Y) const;
 };
 
 class BlocksVision : public Pred {
 public:
-  BlocksVision(Engine& engine) : Pred(engine) {}
+  BlocksVision() : Pred() {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
   bool check(const Cell& c)       const override;
@@ -39,8 +37,8 @@ public:
 
 class BlocksMoveCmn : public Pred {
 public:
-  BlocksMoveCmn(bool isActorsBlocking, Engine& engine) :
-    Pred(engine), IS_ACTORS_BLOCKING_(isActorsBlocking) {}
+  BlocksMoveCmn(bool isActorsBlocking) :
+    Pred(), IS_ACTORS_BLOCKING_(isActorsBlocking) {}
 
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
@@ -54,7 +52,7 @@ private:
 
 class BlocksActor : public Pred {
 public:
-  BlocksActor(Actor& actor, bool isActorsBlocking, Engine& engine);
+  BlocksActor(Actor& actor, bool isActorsBlocking);
 
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
@@ -69,7 +67,7 @@ private:
 
 class BlocksProjectiles : public Pred {
 public:
-  BlocksProjectiles(Engine& engine) : Pred(engine) {}
+  BlocksProjectiles() : Pred() {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
   bool check(const Cell& c)       const override;
@@ -78,8 +76,8 @@ public:
 
 class LivingActorsAdjToPos : public Pred {
 public:
-  LivingActorsAdjToPos(const Pos& pos, Engine& engine) :
-    Pred(engine), pos_(pos) {}
+  LivingActorsAdjToPos(const Pos& pos) :
+    Pred(), pos_(pos) {}
   bool isCheckingActors()         const override {return true;}
   bool check(const Actor& a)      const override;
   const Pos& pos_;
@@ -87,7 +85,7 @@ public:
 
 class BlocksItems : public Pred {
 public:
-  BlocksItems(Engine& engine) : Pred(engine) {}
+  BlocksItems() : Pred() {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
   bool check(const Cell& c)       const override;
@@ -96,7 +94,7 @@ public:
 
 //class Corridor : public Pred {
 //public:
-//  Corridor(Engine& engine) : Pred(engine) {}
+//  Corridor() : Pred() {}
 //  bool isCheckingCells()          const override {return true;}
 //  bool check(const Cell& c)       const override;
 //};
@@ -106,15 +104,15 @@ public:
 //      ##
 //class Nook : public Pred {
 //public:
-//  Nook(Engine& engine) : Pred(engine) {}
+//  Nook() : Pred() {}
 //  bool isCheckingCells()          const override {return true;}
 //  bool check(const Cell& c)       const override;
 //};
 
 class IsAnyOfFeatures : public Pred {
 public:
-  IsAnyOfFeatures(Engine& engine, const vector<FeatureId>& features) :
-    Pred(engine), features_(features) {}
+  IsAnyOfFeatures(const vector<FeatureId>& features) :
+    Pred(), features_(features) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
@@ -123,8 +121,8 @@ private:
 
 class AllAdjIsAnyOfFeatures : public Pred {
 public:
-  AllAdjIsAnyOfFeatures(Engine& engine, const vector<FeatureId>& features) :
-    Pred(engine), features_(features) {}
+  AllAdjIsAnyOfFeatures(const vector<FeatureId>& features) :
+    Pred(), features_(features) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
@@ -151,10 +149,9 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]);
 //Function object for sorting STL containers by distance to origin
 struct IsCloserToOrigin {
 public:
-  IsCloserToOrigin(const Pos& c, const Engine& engine) : c_(c), eng(engine) {}
+  IsCloserToOrigin(const Pos& c) : c_(c) {}
   bool operator()(const Pos& c1, const Pos& c2);
   Pos c_;
-  const Engine& eng;
 };
 
 namespace FloodFill {

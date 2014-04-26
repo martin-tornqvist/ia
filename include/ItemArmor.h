@@ -1,13 +1,11 @@
 #ifndef ITEM_ARMOR_H
 #define ITEM_ARMOR_H
 
-#include "Engine.h"
-
 #include "Item.h"
 
 class Armor: public Item {
 public:
-  Armor(ItemData* const itemData, Engine& engine);
+  Armor(ItemDataT* const itemData);
 
   ~Armor() {}
 
@@ -17,11 +15,11 @@ public:
 
   int takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE);
 
-  void addSaveLines(vector<string>& lines) override {
+  void storeToSaveLines(vector<string>& lines) override {
     lines.push_back(toStr(dur_));
   }
 
-  void setParamsFromSaveLines(vector<string>& lines) override {
+  void setupFromSaveLines(vector<string>& lines) override {
     dur_ = toInt(lines.front());
     lines.erase(lines.begin());
   }
@@ -41,11 +39,11 @@ protected:
   int dur_;
 };
 
-class ArmorAsbestosSuit: public Armor {
+class ArmorAsbSuit: public Armor {
 public:
-  ArmorAsbestosSuit(ItemData* const itemData, Engine& engine) :
-    Armor(itemData, engine) {}
-  ~ArmorAsbestosSuit() {}
+  ArmorAsbSuit(ItemDataT* const itemData) :
+    Armor(itemData) {}
+  ~ArmorAsbSuit() {}
 
   void onWear()     override;
   void onTakeOff()  override;
@@ -53,8 +51,8 @@ public:
 
 class ArmorHeavyCoat: public Armor {
 public:
-  ArmorHeavyCoat(ItemData* const itemData, Engine& engine) :
-    Armor(itemData, engine) {}
+  ArmorHeavyCoat(ItemDataT* const itemData) :
+    Armor(itemData) {}
   ~ArmorHeavyCoat() {}
 
   void onWear()     override;

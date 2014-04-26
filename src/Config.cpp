@@ -5,8 +5,6 @@
 
 #include <SDL_image.h>
 
-#include "Engine.h"
-
 #include "Converters.h"
 #include "MenuInputHandler.h"
 #include "MenuBrowser.h"
@@ -124,7 +122,7 @@ void playerSetsOption(const MenuBrowser* const browser,
       }
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
-      Renderer::init(eng);
+      Renderer::init();
     } break;
 
     case 2: {
@@ -153,12 +151,12 @@ void playerSetsOption(const MenuBrowser* const browser,
       }
 
       setCellDimDependentVariables();
-      Renderer::init(eng);
+      Renderer::init();
     } break;
 
     case 3: {
       isFullscreen_ = !isFullscreen_;
-      Renderer::init(eng);
+      Renderer::init();
     } break;
 
     case 4: {
@@ -220,7 +218,7 @@ void playerSetsOption(const MenuBrowser* const browser,
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
-      Renderer::init(eng);
+      Renderer::init();
     } break;
 
     default: {assert(false && "Illegal option number");} break;
@@ -612,7 +610,7 @@ void init() {
   setCellDimDependentVariables();
 }
 
-void runOptionsMenu(Engine& eng) {
+void runOptionsMenu() {
   MenuBrowser browser(NR_OPTIONS, 0);
   vector<string> lines;
 
@@ -658,13 +656,13 @@ void setCellDimDependentVariables() {
   screenPixelH_           = cellH_ * SCREEN_H;
 }
 
-void toggleFullscreen(Engine& eng) {
+void toggleFullscreen() {
   SDL_Surface* screenCpy = SDL_DisplayFormat(Renderer::screenSurface);
 
   isFullscreen_ = !isFullscreen_;
   parseFontNameAndSetCellDims();
   setCellDimDependentVariables();
-  Renderer::init(eng);
+  Renderer::init();
 
   Renderer::applySurface(Pos(0, 0), screenCpy, NULL);
   Renderer::updateScreen();

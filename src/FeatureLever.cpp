@@ -2,12 +2,11 @@
 
 #include "FeatureDoor.h"
 #include "FeatureFactory.h"
-#include "Engine.h"
 #include "Renderer.h"
 #include "ActorPlayer.h"
 
-FeatureLever::FeatureLever(FeatureId id, Pos pos, Engine& engine, LeverSpawnData* spawnData) :
-  FeatureStatic(id, pos, engine), isPositionLeft_(true), doorLinkedTo_(spawnData->doorLinkedTo_)  {
+FeatureLever::FeatureLever(FeatureId id, Pos pos, LeverSpawnData* spawnData) :
+  FeatureStatic(id, pos), isPositionLeft_(true), doorLinkedTo_(spawnData->doorLinkedTo_)  {
 }
 
 SDL_Color FeatureLever::getClr() const {
@@ -34,7 +33,7 @@ void FeatureLever::pull() {
     doorLinkedTo_->isOpen_ = !doorLinkedTo_->isOpen_;
     doorLinkedTo_->isStuck_ = false;
   }
-  eng.player->updateFov();
+  Map::player->updateFov();
   Renderer::drawMapAndInterface();
   trace << "FeatureLever::pull() [DONE]" << endl;
 }

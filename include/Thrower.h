@@ -6,25 +6,21 @@
 #include <iostream>
 #include <math.h>
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 
 using namespace std;
 
-class Engine;
 class Item;
 
 class Actor;
 
 class Thrower {
 public:
-  Thrower(Engine& engine) : eng(engine) {}
+  Thrower() {}
 
   void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown);
 
   void playerThrowLitExplosive(const Pos& aimCell);
-
-private:
-  Engine& eng;
 };
 
 #endif

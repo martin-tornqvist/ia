@@ -1,12 +1,11 @@
 #include "Popup.h"
 
-#include "Engine.h"
 #include "Config.h"
 #include "Renderer.h"
 #include "TextFormatting.h"
 #include "Log.h"
 #include "Query.h"
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "MenuBrowser.h"
 #include "MenuInputHandler.h"
 #include "Audio.h"

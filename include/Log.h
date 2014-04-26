@@ -7,14 +7,11 @@
 
 #include "Colors.h"
 #include "Converters.h"
-#include "CommonTypes.h"
-
-class Engine;
+#include "CmnTypes.h"
 
 class Log {
 public:
-  Log(Engine& engine) :
-    eng(engine) {clearLog();}
+  Log() {clearLog();}
 
   void addMsg(const std::string& text, const SDL_Color& clr = clrWhite,
               const bool INTERRUPT_PLAYER_ACTIONS = false,
@@ -79,8 +76,6 @@ private:
   void drawLine(const std::vector<Msg>& lineToDraw, const int Y_POS) const;
 
   std::vector<Msg> lines[2];
-
-  Engine& eng;
 
   friend class Postmortem;
   std::vector< std::vector<Msg> > history;

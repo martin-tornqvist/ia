@@ -1,12 +1,10 @@
 #include "FeatureWall.h"
 
-#include "Engine.h"
-
 #include "Map.h"
 #include "Utils.h"
 
-Wall::Wall(FeatureId id, Pos pos, Engine& engine) :
-  FeatureStatic(id, pos, engine), wallType(wall_common), isMossGrown(false) {
+Wall::Wall(FeatureId id, Pos pos) :
+  FeatureStatic(id, pos), wallType(wall_common), isMossGrown(false) {
 }
 
 bool Wall::isTileAnyWallFront(const TileId tile) {

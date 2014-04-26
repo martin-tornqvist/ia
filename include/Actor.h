@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "CommonData.h"
+#include "CmnData.h"
 
 #include "ActorData.h"
 #include "Sound.h"
@@ -13,18 +13,18 @@
 
 using namespace std;
 
-class Engine;
+
 
 class PropHandler;
 class Inventory;
 
 class Actor {
 public:
-  Actor(Engine& engine);
+  Actor();
   virtual ~Actor();
 
   inline PropHandler& getPropHandler()  {return *propHandler_;}
-  inline ActorData&   getData()         {return *data_;}
+  inline ActorDataT&  getData()         {return *data_;}
   inline Inventory&   getInv()          {return *inv_;}
 
   //This function is not concerned with whether the parameter actor is within
@@ -33,7 +33,7 @@ public:
   //It has no side effects - it merely does a randomized check.
   bool isSpottingHiddenActor(Actor& actor);
 
-  void place(const Pos& pos_, ActorData& data);
+  void place(const Pos& pos_, ActorDataT& data);
   virtual void place_() {}
 
   bool hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS);
@@ -90,11 +90,11 @@ public:
   Pos pos;
   ActorDeadState deadState;
 
-  Engine& eng;
+
 
 protected:
   //TODO Try to get rid of these friend declarations
-  friend class AbilityValues;
+  friend class AbilityVals;
   friend class DungeonMaster;
   friend class Dynamite;
   friend class Molotov;
@@ -117,7 +117,7 @@ protected:
   Pos lairCell_;
 
   PropHandler*  propHandler_;
-  ActorData*    data_;
+  ActorDataT*   data_;
   Inventory*    inv_;
 };
 

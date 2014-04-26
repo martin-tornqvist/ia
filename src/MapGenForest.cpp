@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 
-#include "Engine.h"
 #include "Converters.h"
 #include "FeatureFactory.h"
 #include "ActorPlayer.h"
@@ -99,13 +98,13 @@ void MapGenIntroForest::buildForestTreePatch() {
   while(nrTerrainCreated < terrain_size) {
     if(
       Utils::isPosInsideMap(curPos) &&
-      Utils::chebyshevDist(curPos, eng.player->pos) > 2) {
+      Utils::chebyshevDist(curPos, Map::player->pos) > 2) {
       eng.featureFactory->spawnFeatureAt(feature_tree, curPos);
       nrTerrainCreated++;
 
       while(
-        eng.map->cells[curPos.x][curPos.y].featureStatic->getId() == feature_tree ||
-        Utils::chebyshevDist(curPos, eng.player->pos) <= 2) {
+        Map::cells[curPos.x][curPos.y].featureStatic->getId() == feature_tree ||
+        Utils::chebyshevDist(curPos, Map::player->pos) <= 2) {
 
         if(Rnd::dice(1, 2) == 1) {
           while(stepX == 0) {
@@ -153,7 +152,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     bool blockers[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
-    PathFind::run(eng.player->pos, stairsPos, blockers, path);
+    PathFind::run(Map::player->pos, stairsPos, blockers, path);
 
     eng.featureFactory->spawnFeatureAt(feature_stairs, stairsPos);
 
@@ -172,7 +171,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
       for(int dy = -1; dy < 1; dy++) {
         const Pos c(path.at(i) + Pos(dx, dy));
         if(
-          eng.map->cells[c.x][c.y].featureStatic->canHaveStaticFeature() &&
+          Map::cells[c.x][c.y].featureStatic->canHaveStaticFeature() &&
           Utils::isPosInsideMap(c)) {
           eng.featureFactory->spawnFeatureAt(feature_forestPath, c);
         }
@@ -201,7 +200,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
     for(unsigned int i = 0; i < path.size(); i++) {
       if(pathWalkCount == TRY_PLACE_EVERY_N_STEP) {
 
-        eng.fov->runFovOnArray(blockers, path.at(i), vision, false);
+        Fov::runFovOnArray(blockers, path.at(i), vision, false);
 
         for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; dy++) {
           for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; dx++) {
@@ -211,7 +210,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
 
             const bool IS_LEFT_OF_CHURCH = X < churchPos.x - (SEARCH_RADI) + 2;
             const bool IS_ON_STONE_PATH =
-              eng.map->cells[X][Y].featureStatic->getId() == feature_forestPath;
+              Map::cells[X][Y].featureStatic->getId() == feature_forestPath;
 
             bool isLeftOfPrev = true;
             if(gravePositions.empty() == false) {

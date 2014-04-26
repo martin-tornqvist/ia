@@ -1,7 +1,5 @@
 #include "Attack.h"
 
-#include "Engine.h"
-
 #include "Renderer.h"
 #include "Item.h"
 #include "ItemWeapon.h"
@@ -25,7 +23,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   const ActorSize intendedAimLevel = data->intendedAimLevel;
 
   bool featureBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksProjectiles(eng), featureBlockers);
+  MapParse::parse(CellPred::BlocksProjectiles(), featureBlockers);
 
   Actor* actorArray[MAP_W][MAP_H];
   Utils::makeActorArray(actorArray, eng);
@@ -39,7 +37,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   int monsterKilledInElement = -1;
 
   //Emit sound
-  const bool IS_ATTACKER_PLAYER = &attacker == eng.player;
+  const bool IS_ATTACKER_PLAYER = &attacker == Map::player;
   string sndMsg = wpn.getData().rangedSndMsg;
   if(sndMsg.empty() == false) {
     if(IS_ATTACKER_PLAYER) {sndMsg = "";}
@@ -78,7 +76,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           IS_WITHIN_RANGE_LMT &&
           data->attackResult >= successSmall &&
           data->isEtherealDefenderMissed == false) {
-          if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+          if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
             Renderer::drawMapAndInterface(false);
             Renderer::coverCellInMap(curPos);
             if(Config::isTilesMode()) {
@@ -126,7 +124,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
               curPos, NULL, SndVol::low, AlertsMonsters::yes);
       SndEmit::emitSnd(snd, eng);
 
-      if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+      if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
         Renderer::drawMapAndInterface(false);
         Renderer::coverCellInMap(curPos);
         if(Config::isTilesMode()) {
@@ -147,7 +145,7 @@ void Attack::shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
               curPos, NULL, SndVol::low, AlertsMonsters::yes);
       SndEmit::emitSnd(snd, eng);
 
-      if(eng.map->cells[curPos.x][curPos.y].isSeenByPlayer) {
+      if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
         Renderer::drawMapAndInterface(false);
         Renderer::coverCellInMap(curPos);
         if(Config::isTilesMode()) {

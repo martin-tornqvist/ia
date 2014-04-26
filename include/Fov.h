@@ -1,15 +1,13 @@
 #ifndef FOV_H
 #define FOV_H
 
-#include "CommonData.h"
-#include "CommonTypes.h"
+#include "CmnData.h"
+#include "CmnTypes.h"
 
 class Actor;
-class Engine;
-
 class Fov {
 public:
-  Fov(Engine& engine) : eng(engine) {}
+  Fov() {}
 
   bool checkCell(const bool obstructions[MAP_W][MAP_H],
                  const Pos& cellToCheck,
@@ -26,8 +24,6 @@ private:
     const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
     const Pos& origin, bool values[MAP_W][MAP_H],
     const bool IS_AFFECTED_BY_DARKNESS);
-
-  Engine& eng;
 };
 
 #endif

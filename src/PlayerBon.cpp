@@ -1,6 +1,5 @@
 #include "PlayerBon.h"
 
-#include "Engine.h"
 #include "TextFormatting.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
@@ -27,13 +26,13 @@ void init() {
   bg_ = Bg::endOfBgs;
 }
 
-void addSaveLines(vector<string>& lines) {
+void storeToSaveLines(vector<string>& lines) {
   lines.push_back(toStr(int(bg_)));
   lines.push_back(toStr(traitsPicked_.size()));
   for(Trait t : traitsPicked_) {lines.push_back(toStr(int(t)));}
 }
 
-void setParamsFromSaveLines(vector<string>& lines) {
+void setupFromSaveLines(vector<string>& lines) {
   bg_ = Bg(toInt(lines.front()));
   lines.erase(lines.begin());
 
@@ -554,7 +553,7 @@ void getPickableTraits(vector<Trait>& traitsRef) {
   });
 }
 
-void pickBg(const Bg bg, Engine& eng) {
+void pickBg(const Bg bg) {
   assert(bg != Bg::endOfBgs);
 
   bg_ = bg;
@@ -563,13 +562,13 @@ void pickBg(const Bg bg, Engine& eng) {
     case Bg::occultist: {
       pickTrait(Trait::stoutSpirit, eng);
 
-      eng.player->changeMaxHp(-2, false);
+      Map::player->changeMaxHp(-2, false);
 
       //Player starts with a scroll of Darkbolt, and one other random scroll
       //Both are identified
       Item* scroll = eng.itemFactory->spawnItem(ItemId::scrollOfDarkbolt);
       dynamic_cast<Scroll*>(scroll)->identify(true);
-      eng.player->getInv().putItemInGeneral(scroll);
+      Map::player->getInv().putItemInGeneral(scroll);
       while(true) {
         scroll = eng.itemFactory->spawnRandomScrollOrPotion(true, false);
 
@@ -580,7 +579,7 @@ void pickBg(const Bg bg, Engine& eng) {
 
         if(IS_AVAIL && id != SpellId::darkbolt) {
           dynamic_cast<Scroll*>(scroll)->identify(true);
-          eng.player->getInv().putItemInGeneral(scroll);
+          Map::player->getInv().putItemInGeneral(scroll);
           break;
         }
       }
@@ -591,13 +590,13 @@ void pickBg(const Bg bg, Engine& eng) {
         Item* const potion =
           eng.itemFactory->spawnRandomScrollOrPotion(false, true);
         dynamic_cast<Potion*>(potion)->identify(true);
-        eng.player->getInv().putItemInGeneral(potion);
+        Map::player->getInv().putItemInGeneral(potion);
       }
 
     } break;
 
     case Bg::rogue: {
-      eng.playerSpellsHandler->learnSpellIfNotKnown(SpellId::cloudMinds);
+      Map::playerSpellsHandler->learnSpellIfNotKnown(SpellId::cloudMinds);
       pickTrait(Trait::observant, eng);
       pickTrait(Trait::stealthy, eng);
     } break;
@@ -606,7 +605,7 @@ void pickBg(const Bg bg, Engine& eng) {
       pickTrait(Trait::adeptMeleeFighter, eng);
       pickTrait(Trait::adeptMarksman, eng);
       pickTrait(Trait::tough, eng);
-      eng.player->insanity_ += 10;
+      Map::player->insanity_ += 10;
     } break;
 
     case Bg::endOfBgs: {} break;
@@ -619,39 +618,39 @@ void setAllTraitsToPicked() {
   }
 }
 
-void pickTrait(const Trait id, Engine& eng) {
+void pickTrait(const Trait id) {
   assert(id != Trait::endOfTraits);
 
   traitsPicked_.push_back(id);
 
   switch(id) {
     case Trait::tough: {
-      eng.player->changeMaxHp(2, false);
+      Map::player->changeMaxHp(2, false);
     } break;
 
     case Trait::rugged: {
-      eng.player->changeMaxHp(2, false);
+      Map::player->changeMaxHp(2, false);
     } break;
 
     case Trait::stoutSpirit: {
-      eng.player->changeMaxSpi(2, false);
+      Map::player->changeMaxSpi(2, false);
     } break;
 
     case Trait::strongSpirit: {
-      eng.player->changeMaxSpi(2, false);
+      Map::player->changeMaxSpi(2, false);
     } break;
 
     case Trait::mightySpirit: {
-      eng.player->changeMaxSpi(2, false);
+      Map::player->changeMaxSpi(2, false);
     } break;
 
     case Trait::selfAware: {
-      eng.player->getPropHandler().tryApplyProp(
+      Map::player->getPropHandler().tryApplyProp(
         new PropRConfusion(eng, propTurnsIndefinite), true, true, true, false);
     } break;
 
     case Trait::fearless: {
-      eng.player->getPropHandler().tryApplyProp(
+      Map::player->getPropHandler().tryApplyProp(
         new PropRFear(eng, propTurnsIndefinite), true, true, true, false);
     } break;
 

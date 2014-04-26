@@ -1,7 +1,5 @@
 #include "TextFormatting.h"
 
-#include "Engine.h"
-
 using namespace std;
 
 namespace {

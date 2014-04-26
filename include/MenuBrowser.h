@@ -1,7 +1,7 @@
 #ifndef MENU_BROWSER_H
 #define MENU_BROWSER_H
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 
 class MenuBrowser {
 public:

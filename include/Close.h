@@ -1,15 +1,15 @@
 #ifndef CLOSE_H
 #define CLOSE_H
 
-#include "CommonData.h"
+#include "CmnData.h"
 
-class Engine;
+
 class Actor;
 class Feature;
 
 class Close {
 public:
-  Close(Engine& engine) : eng(engine) {
+  Close() : eng() {
   }
 
   ~Close() {
@@ -21,7 +21,7 @@ private:
   friend class Feature;
   void playerCloseFeature(Feature* const feature) const;
 
-  Engine& eng;
+
 };
 
 #endif

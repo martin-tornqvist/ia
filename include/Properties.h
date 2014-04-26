@@ -4,13 +4,11 @@
 #include <string>
 
 #include "AbilityValues.h"
-#include "CommonData.h"
+#include "CmnData.h"
 #include "Converters.h"
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 
 using namespace std;
-
-class Engine;
 
 class Actor;
 class Weapon;
@@ -89,8 +87,8 @@ enum PropAlignment {
 
 enum class PropSrc {applied, inv, endOfPropSrc};
 
-struct PropData {
-  PropData() :
+struct PropDataT {
+  PropDataT() :
     id(endOfPropIds),
     stdRndTurns(Range(10, 10)),
     name(""),
@@ -119,23 +117,20 @@ struct PropData {
   PropAlignment alignment;
 };
 
-class PropDataHandler {
-public:
-  PropDataHandler() {initDataList();}
+namespace PropData {
 
-  PropData dataList[endOfPropIds];
+PropDataT dataList[endOfPropIds];
 
-private:
-  void initDataList();
-  void addPropData(PropData& d);
-};
+void init();
+
+} //PropData
 
 class Prop;
 
 //Each actor has an instance of this
 class PropHandler {
 public:
-  PropHandler(Actor* owningActor, Engine& engine);
+  PropHandler(Actor* owningActor);
 
   ~PropHandler();
 
@@ -195,21 +190,17 @@ private:
   bool tryResistProp(const PropId id, const vector<Prop*>& propList) const;
 
   Actor* owningActor_;
-  Engine& eng;
+
 };
 
 class Prop {
 public:
-  Prop(PropId id, Engine& engine, PropTurns turnsInit, int turns);
+  Prop(PropId id, PropTurns turnsInit, int turns);
 
   virtual ~Prop() {}
 
-  virtual void addSaveLines(vector<string>& lines) const {
-    (void)lines;
-  }
-  virtual void setParamsFromSaveLines(vector<string>& lines) {
-    (void)lines;
-  }
+  virtual void storeToSaveLines(vector<string>& lines) const  {(void)lines;}
+  virtual void setupFromSaveLines(vector<string>& lines)      {(void)lines;}
 
   PropId getId() {return id_;}
 
@@ -292,21 +283,21 @@ public:
 
 protected:
   const PropId id_;
-  Engine& eng;
-  const PropData* const data_;
+
+  const PropDataT* const data_;
 };
 
 class PropWound: public Prop {
 public:
-  PropWound(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propWound, engine, turnsInit, turns), nrWounds_(1) {}
+  PropWound(PropTurns turnsInit, int turns = -1) :
+    Prop(propWound, turnsInit, turns), nrWounds_(1) {}
 
   ~PropWound() override {}
 
-  void addSaveLines(vector<string>& lines) const override {
+  void storeToSaveLines(vector<string>& lines) const override {
     lines.push_back(toStr(nrWounds_));
   }
-  void setParamsFromSaveLines(vector<string>& lines) override {
+  void setupFromSaveLines(vector<string>& lines) override {
     nrWounds_ = toInt(lines.front());
     lines.erase(lines.begin());
   }
@@ -331,14 +322,14 @@ private:
 
 class PropTerrified: public Prop {
 public:
-  PropTerrified(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propTerrified, engine, turnsInit, turns) {}
+  PropTerrified(PropTurns turnsInit, int turns = -1) :
+    Prop(propTerrified, turnsInit, turns) {}
 
   ~PropTerrified() override {}
 
   int getAbilityMod(const AbilityId ability) const override {
-    if(ability == ability_dodgeAttack)      return 20;
-    if(ability == ability_accuracyRanged)   return -20;
+    if(ability == AbilityId::dodgeAttack)      return 20;
+    if(ability == AbilityId::accuracyRanged)   return -20;
     return 0;
   }
 
@@ -349,15 +340,15 @@ public:
 
 class PropWeakened: public Prop {
 public:
-  PropWeakened(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propWeakened, engine, turnsInit, turns) {}
+  PropWeakened(PropTurns turnsInit, int turns = -1) :
+    Prop(propWeakened, turnsInit, turns) {}
   ~PropWeakened() override {}
 };
 
 class PropInfected: public Prop {
 public:
-  PropInfected(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propInfected, engine, turnsInit, turns) {}
+  PropInfected(PropTurns turnsInit, int turns = -1) :
+    Prop(propInfected, turnsInit, turns) {}
 
   ~PropInfected() override {}
 
@@ -366,8 +357,8 @@ public:
 
 class PropDiseased: public Prop {
 public:
-  PropDiseased(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propDiseased, engine, turnsInit, turns) {}
+  PropDiseased(PropTurns turnsInit, int turns = -1) :
+    Prop(propDiseased, turnsInit, turns) {}
 
   ~PropDiseased() override {}
 
@@ -380,29 +371,29 @@ public:
 
 class PropFlying: public Prop {
 public:
-  PropFlying(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propFlying, engine, turnsInit, turns) {}
+  PropFlying(PropTurns turnsInit, int turns = -1) :
+    Prop(propFlying, turnsInit, turns) {}
   ~PropFlying() override {}
 };
 
 class PropEthereal: public Prop {
 public:
-  PropEthereal(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propEthereal, engine, turnsInit, turns) {}
+  PropEthereal(PropTurns turnsInit, int turns = -1) :
+    Prop(propEthereal, turnsInit, turns) {}
   ~PropEthereal() override {}
 };
 
 class PropOoze: public Prop {
 public:
-  PropOoze(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propOoze, engine, turnsInit, turns) {}
+  PropOoze(PropTurns turnsInit, int turns = -1) :
+    Prop(propOoze, turnsInit, turns) {}
   ~PropOoze() override {}
 };
 
 class PropBurrowing: public Prop {
 public:
-  PropBurrowing(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propBurrowing, engine, turnsInit, turns) {}
+  PropBurrowing(PropTurns turnsInit, int turns = -1) :
+    Prop(propBurrowing, turnsInit, turns) {}
   ~PropBurrowing() override {}
 
   void onNewTurn() override;
@@ -410,8 +401,8 @@ public:
 
 class PropPossessedByZuul: public Prop {
 public:
-  PropPossessedByZuul(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propPossessedByZuul, engine, turnsInit, turns) {}
+  PropPossessedByZuul(PropTurns turnsInit, int turns = -1) :
+    Prop(propPossessedByZuul, turnsInit, turns) {}
 
   ~PropPossessedByZuul() override {}
 
@@ -424,8 +415,8 @@ public:
 
 class PropPoisoned: public Prop {
 public:
-  PropPoisoned(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propPoisoned, engine, turnsInit, turns) {}
+  PropPoisoned(PropTurns turnsInit, int turns = -1) :
+    Prop(propPoisoned, turnsInit, turns) {}
 
   ~PropPoisoned() override {}
 
@@ -434,8 +425,8 @@ public:
 
 class PropAiming: public Prop {
 public:
-  PropAiming(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propAiming, engine, turnsInit, turns), nrTurnsAiming(1) {}
+  PropAiming(PropTurns turnsInit, int turns = -1) :
+    Prop(propAiming, turnsInit, turns), nrTurnsAiming(1) {}
 
   ~PropAiming() override {}
 
@@ -446,7 +437,7 @@ public:
   }
 
   int getAbilityMod(const AbilityId ability) const override {
-    if(ability == ability_accuracyRanged) return nrTurnsAiming >= 3 ? 999 : 10;
+    if(ability == AbilityId::accuracyRanged) return nrTurnsAiming >= 3 ? 999 : 10;
     return 0;
   }
 
@@ -457,8 +448,8 @@ public:
 
 class PropBlind: public Prop {
 public:
-  PropBlind(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propBlind, engine, turnsInit, turns) {}
+  PropBlind(PropTurns turnsInit, int turns = -1) :
+    Prop(propBlind, turnsInit, turns) {}
 
   ~PropBlind() override {}
 
@@ -467,34 +458,34 @@ public:
   bool allowSee() const override {return false;}
 
   int getAbilityMod(const AbilityId ability) const override {
-    if(ability == ability_searching)      return -9999;
-    if(ability == ability_dodgeTrap ||
-        ability == ability_dodgeAttack)   return -50;
-    if(ability == ability_accuracyRanged) return -50;
-    if(ability == ability_accuracyMelee)  return -25;
+    if(ability == AbilityId::searching)      return -9999;
+    if(ability == AbilityId::dodgeTrap ||
+        ability == AbilityId::dodgeAttack)   return -50;
+    if(ability == AbilityId::accuracyRanged) return -50;
+    if(ability == AbilityId::accuracyMelee)  return -25;
     return 0;
   }
 };
 
 class PropBlessed: public Prop {
 public:
-  PropBlessed(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propBlessed, engine, turnsInit, turns) {}
+  PropBlessed(PropTurns turnsInit, int turns = -1) :
+    Prop(propBlessed, turnsInit, turns) {}
 
   ~PropBlessed() override {}
 
   void onStart() override;
 
   int getAbilityMod(const AbilityId ability) const override {
-    if(ability == ability_searching)  return 0;
+    if(ability == AbilityId::searching)  return 0;
     return 10;
   }
 };
 
 class PropCursed: public Prop {
 public:
-  PropCursed(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propCursed, engine, turnsInit, turns) {}
+  PropCursed(PropTurns turnsInit, int turns = -1) :
+    Prop(propCursed, turnsInit, turns) {}
 
   ~PropCursed() override {}
 
@@ -508,8 +499,8 @@ public:
 
 class PropBurning: public Prop {
 public:
-  PropBurning(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propBurning, engine, turnsInit, turns) {}
+  PropBurning(PropTurns turnsInit, int turns = -1) :
+    Prop(propBurning, turnsInit, turns) {}
 
   ~PropBurning() override {}
 
@@ -528,8 +519,8 @@ public:
 
 class PropFlared: public Prop {
 public:
-  PropFlared(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propFlared, engine, turnsInit, turns) {}
+  PropFlared(PropTurns turnsInit, int turns = -1) :
+    Prop(propFlared, turnsInit, turns) {}
 
   ~PropFlared() override {}
 
@@ -538,8 +529,8 @@ public:
 
 class PropWarlockCharged: public Prop {
 public:
-  PropWarlockCharged(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propWarlockCharged, engine, turnsInit, turns) {}
+  PropWarlockCharged(PropTurns turnsInit, int turns = -1) :
+    Prop(propWarlockCharged, turnsInit, turns) {}
   ~PropWarlockCharged() override {}
 
   PropTurnMode getTurnMode() const override {return propTurnModeActor;}
@@ -547,8 +538,8 @@ public:
 
 class PropConfused: public Prop {
 public:
-  PropConfused(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propConfused, engine, turnsInit, turns) {}
+  PropConfused(PropTurns turnsInit, int turns = -1) :
+    Prop(propConfused, turnsInit, turns) {}
 
   ~PropConfused() override {}
 
@@ -562,15 +553,15 @@ public:
 
 class PropStunned: public Prop {
 public:
-  PropStunned(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propStunned, engine, turnsInit, turns) {}
+  PropStunned(PropTurns turnsInit, int turns = -1) :
+    Prop(propStunned, turnsInit, turns) {}
   ~PropStunned() override {}
 };
 
 class PropNailed: public Prop {
 public:
-  PropNailed(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propNailed, engine, turnsInit, turns), nrSpikes_(1) {}
+  PropNailed(PropTurns turnsInit, int turns = -1) :
+    Prop(propNailed, turnsInit, turns), nrSpikes_(1) {}
   ~PropNailed() override {}
 
   string getNameShort() const override {
@@ -589,8 +580,8 @@ private:
 
 class PropWaiting: public Prop {
 public:
-  PropWaiting(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propWaiting, engine, turnsInit, turns) {}
+  PropWaiting(PropTurns turnsInit, int turns = -1) :
+    Prop(propWaiting, turnsInit, turns) {}
 
   ~PropWaiting() override {}
 
@@ -610,8 +601,8 @@ public:
 
 class PropDisabledAttack: public Prop {
 public:
-  PropDisabledAttack(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propDisabledAttack, engine, turnsInit, turns) {}
+  PropDisabledAttack(PropTurns turnsInit, int turns = -1) :
+    Prop(propDisabledAttack, turnsInit, turns) {}
 
   ~PropDisabledAttack() override {}
 
@@ -629,8 +620,8 @@ public:
 
 class PropDisabledMelee: public Prop {
 public:
-  PropDisabledMelee(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propDisabledMelee, engine, turnsInit, turns) {}
+  PropDisabledMelee(PropTurns turnsInit, int turns = -1) :
+    Prop(propDisabledMelee, turnsInit, turns) {}
 
   ~PropDisabledMelee() override {}
 
@@ -644,8 +635,8 @@ public:
 
 class PropDisabledRanged: public Prop {
 public:
-  PropDisabledRanged(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propDisabledRanged, engine, turnsInit, turns) {}
+  PropDisabledRanged(PropTurns turnsInit, int turns = -1) :
+    Prop(propDisabledRanged, turnsInit, turns) {}
 
   ~PropDisabledRanged() override {}
 
@@ -659,8 +650,8 @@ public:
 
 class PropParalyzed: public Prop {
 public:
-  PropParalyzed(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propParalyzed, engine, turnsInit, turns) {}
+  PropParalyzed(PropTurns turnsInit, int turns = -1) :
+    Prop(propParalyzed, turnsInit, turns) {}
 
   ~PropParalyzed() override {}
 
@@ -671,7 +662,7 @@ public:
   bool allowAct() const override {return false;}
 
   int getAbilityMod(const AbilityId ability) const override {
-    if(ability == ability_dodgeTrap || ability == ability_dodgeAttack)
+    if(ability == AbilityId::dodgeTrap || ability == AbilityId::dodgeAttack)
       return -999;
     return 0;
   }
@@ -687,8 +678,8 @@ public:
 
 class PropFainted: public Prop {
 public:
-  PropFainted(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propFainted, engine, turnsInit, turns) {}
+  PropFainted(PropTurns turnsInit, int turns = -1) :
+    Prop(propFainted, turnsInit, turns) {}
 
   ~PropFainted() override {}
 
@@ -700,8 +691,8 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override {
     if(
-      ability == ability_dodgeTrap ||
-      ability == ability_dodgeAttack)
+      ability == AbilityId::dodgeTrap ||
+      ability == AbilityId::dodgeAttack)
       return -999;
     return 0;
   }
@@ -720,24 +711,24 @@ public:
 
 class PropSlowed: public Prop {
 public:
-  PropSlowed(Engine& engine, PropTurns turnsInit,
+  PropSlowed(PropTurns turnsInit,
              int turns = -1) :
-    Prop(propSlowed, engine, turnsInit, turns) {}
+    Prop(propSlowed, turnsInit, turns) {}
 
   ~PropSlowed() override {}
 
   int getAbilityMod(const AbilityId ability) const override {
-    if(ability == ability_dodgeAttack)    return -30;
-    if(ability == ability_accuracyRanged) return -10;
-    if(ability == ability_accuracyMelee)  return -10;
+    if(ability == AbilityId::dodgeAttack)    return -30;
+    if(ability == AbilityId::accuracyRanged) return -10;
+    if(ability == AbilityId::accuracyMelee)  return -10;
     return 0;
   }
 };
 
 class PropFrenzied: public Prop {
 public:
-  PropFrenzied(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propFrenzied, engine, turnsInit, turns) {}
+  PropFrenzied(PropTurns turnsInit, int turns = -1) :
+    Prop(propFrenzied, turnsInit, turns) {}
 
   ~PropFrenzied() override {}
 
@@ -752,15 +743,15 @@ public:
   bool tryResistOtherProp(const PropId id) const override;
 
   int getAbilityMod(const AbilityId ability) const override {
-    if(ability == ability_accuracyMelee) return 999;
+    if(ability == AbilityId::accuracyMelee) return 999;
     return 0;
   }
 };
 
 class PropRAcid: public Prop {
 public:
-  PropRAcid(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propRAcid, engine, turnsInit, turns) {}
+  PropRAcid(PropTurns turnsInit, int turns = -1) :
+    Prop(propRAcid, turnsInit, turns) {}
   ~PropRAcid() override {}
 
   bool tryResistDmg(const DmgType dmgType,
@@ -769,8 +760,8 @@ public:
 
 class PropRCold: public Prop {
 public:
-  PropRCold(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propRCold, engine, turnsInit, turns) {}
+  PropRCold(PropTurns turnsInit, int turns = -1) :
+    Prop(propRCold, turnsInit, turns) {}
   ~PropRCold() override {}
 
   bool tryResistDmg(const DmgType dmgType,
@@ -779,8 +770,8 @@ public:
 
 class PropRConfusion: public Prop {
 public:
-  PropRConfusion(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propRConfusion, engine, turnsInit, turns) {}
+  PropRConfusion(PropTurns turnsInit, int turns = -1) :
+    Prop(propRConfusion, turnsInit, turns) {}
   ~PropRConfusion() override {}
 
   void onStart() override;
@@ -790,8 +781,8 @@ public:
 
 class PropRElec: public Prop {
 public:
-  PropRElec(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propRElec, engine, turnsInit, turns) {}
+  PropRElec(PropTurns turnsInit, int turns = -1) :
+    Prop(propRElec, turnsInit, turns) {}
   ~PropRElec() override {}
 
   bool tryResistDmg(const DmgType dmgType,
@@ -800,8 +791,8 @@ public:
 
 class PropRFear: public Prop {
 public:
-  PropRFear(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propRFear, engine, turnsInit, turns) {}
+  PropRFear(PropTurns turnsInit, int turns = -1) :
+    Prop(propRFear, turnsInit, turns) {}
   ~PropRFear() override {}
 
   void onStart() override;
@@ -811,8 +802,8 @@ public:
 
 class PropRPhys: public Prop {
 public:
-  PropRPhys(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propRPhys, engine, turnsInit, turns) {}
+  PropRPhys(PropTurns turnsInit, int turns = -1) :
+    Prop(propRPhys, turnsInit, turns) {}
   ~PropRPhys() override {}
 
   void onStart() override;
@@ -825,8 +816,8 @@ public:
 
 class PropRFire: public Prop {
 public:
-  PropRFire(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propRFire, engine, turnsInit, turns) {}
+  PropRFire(PropTurns turnsInit, int turns = -1) :
+    Prop(propRFire, turnsInit, turns) {}
   ~PropRFire() override {}
 
   void onStart() override;
@@ -839,8 +830,8 @@ public:
 
 class PropRPoison: public Prop {
 public:
-  PropRPoison(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propRPoison, engine, turnsInit, turns) {}
+  PropRPoison(PropTurns turnsInit, int turns = -1) :
+    Prop(propRPoison, turnsInit, turns) {}
   ~PropRPoison() override {}
 
   void onStart() override;
@@ -850,8 +841,8 @@ public:
 
 class PropRSleep: public Prop {
 public:
-  PropRSleep(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propRSleep, engine, turnsInit, turns) {}
+  PropRSleep(PropTurns turnsInit, int turns = -1) :
+    Prop(propRSleep, turnsInit, turns) {}
   ~PropRSleep() override {}
 
   void onStart() override;
@@ -861,8 +852,8 @@ public:
 
 class PropLightSensitive: public Prop {
 public:
-  PropLightSensitive(Engine& engine, PropTurns turnsInit, int turns = -1) :
-    Prop(propLightSensitive, engine, turnsInit, turns) {}
+  PropLightSensitive(PropTurns turnsInit, int turns = -1) :
+    Prop(propLightSensitive, turnsInit, turns) {}
   ~PropLightSensitive() override {}
 };
 

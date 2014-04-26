@@ -13,7 +13,7 @@ description text and adds them to the string
 
 using namespace std;
 
-class Engine;
+
 class Actor;
 
 class AutoDescribeActor {

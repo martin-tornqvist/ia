@@ -1,9 +1,7 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include "CommonTypes.h"
-
-class Engine;
+#include "CmnTypes.h"
 
 enum class SfxId {
   //Monster sounds
@@ -69,7 +67,7 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT = 100,
 
 void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT);
 
-void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY, Engine& eng);
+void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY);
 
 void fadeOutChannel(const int CHANNEL_NR);
 

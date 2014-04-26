@@ -10,7 +10,7 @@
 #include "ActorData.h"
 #include "Art.h"
 
-class Engine;
+
 
 class Actor;
 class Weapon;
@@ -26,14 +26,14 @@ public:
   bool isEtherealDefenderMissed;
 
 protected:
-  AttackData(Actor& attacker_, const Item& itemAttackedWith_, Engine& engine);
-  Engine& eng;
+  AttackData(Actor& attacker_, const Item& itemAttackedWith_);
+
 };
 
 class MeleeAttackData: public AttackData {
 public:
   MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
-                  Actor& defender_, Engine& engine);
+                  Actor& defender_);
   bool isDefenderDodging;
   bool isBackstab;
   bool isWeakAttack;
@@ -43,7 +43,7 @@ public:
 class RangedAttackData: public AttackData {
 public:
   RangedAttackData(Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
-                   const Pos& curPos_, Engine& engine,
+                   const Pos& curPos_,
                    ActorSize intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
   ActorSize  intendedAimLevel;
@@ -55,7 +55,7 @@ public:
 class MissileAttackData: public AttackData {
 public:
   MissileAttackData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
-                    const Pos& curPos_, Engine& engine,
+                    const Pos& curPos_,
                     ActorSize intendedAimLevel_ = actorSize_none);
   int       hitChanceTot;
   ActorSize intendedAimLevel;
@@ -107,7 +107,7 @@ enum class MeleeHitSize {small, medium, hard};
 
 class Attack {
 public:
-  Attack(Engine& engine) : eng(engine) {}
+  Attack() {}
 
   bool ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos);
 
@@ -129,7 +129,7 @@ private:
 
   bool isCellOnLine(vector<Pos> line, int x, int y);
 
-  Engine& eng;
+
 };
 
 #endif

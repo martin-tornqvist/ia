@@ -2,8 +2,6 @@
 
 #include <vector>
 
-#include "Engine.h"
-
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
@@ -16,24 +14,12 @@
 #include "Renderer.h"
 #include "Sound.h"
 
-#include "AI_setSpecialBlockedCells.h"
-#include "AI_handleClosedBlockingDoor.h"
-#include "AI_look_becomePlayerAware.h"
-#include "AI_makeRoomForFriend.h"
-#include "AI_stepPath.h"
-#include "AI_moveTowardsTargetSimple.h"
-#include "AI_stepToLairIfHasLosToLair.h"
-#include "AI_setPathToPlayerIfAware.h"
-#include "AI_setPathToLairIfNoLosToLair.h"
-#include "AI_setPathToLeaderIfNoLosToLeader.h"
-#include "AI_moveToRandomAdjacentCell.h"
-#include "AI_castRandomSpell.h"
-#include "AI_handleInventory.h"
+#include "Ai.h"
 
 using namespace std;
 
-Monster::Monster(Engine& engine) :
-  Actor(engine),
+Monster::Monster() :
+  Actor(),
   awareOfPlayerCounter_(0),
   playerAwareOfMeCounter_(0),
   messageMonsterInViewPrinted(false),
@@ -60,7 +46,7 @@ void Monster::onActorTurn() {
 
   if(waiting_) {
     if(awareOfPlayerCounter_ <= 0) {
-      eng.gameTime->actorDidAct();
+      GameTime::actorDidAct();
       return;
     }
   }
@@ -83,7 +69,7 @@ void Monster::onActorTurn() {
       }
     } else {
       if(leader->deadState == ActorDeadState::alive) {
-        if(leader != eng.player) {
+        if(leader != Map::player) {
           dynamic_cast<Monster*>(leader)->awareOfPlayerCounter_ =
             leader->getData().nrTurnsAwarePlayer;
         }
@@ -92,8 +78,8 @@ void Monster::onActorTurn() {
   }
 
   const bool HAS_SNEAK_SKILL = data_->abilityVals.getVal(
-                                 ability_stealth, true, *this) > 0;
-  isStealth = eng.player->isSeeingActor(*this, NULL) == false &&
+                                 AbilityId::stealth, true, *this) > 0;
+  isStealth = Map::player->isSeeingActor(*this, NULL) == false &&
               HAS_SNEAK_SKILL;
 
   //Array used for AI purposes, e.g. to prevent tactically bad positions,
@@ -105,7 +91,7 @@ void Monster::onActorTurn() {
 
   //------------------------------ SPECIAL MONSTER ACTIONS
   //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-  if(leader != eng.player/*TODO temporary restriction, allow this later(?)*/) {
+  if(leader != Map::player/*TODO temporary restriction, allow this later(?)*/) {
     if(onActorTurn_()) {
       return;
     }
@@ -117,7 +103,7 @@ void Monster::onActorTurn() {
   //from looking. (This is to give the monsters some reaction time, and not
   //instantly attack)
   if(data_->ai[int(Ai::looks)]) {
-    if(leader != eng.player) {
+    if(leader != Map::player) {
       if(AI_look_becomePlayerAware::action(*this, eng)) {
         return;
       }
@@ -125,7 +111,7 @@ void Monster::onActorTurn() {
   }
 
   if(data_->ai[int(Ai::makesRoomForFriend)]) {
-    if(leader != eng.player) {
+    if(leader != Map::player) {
       if(AI_makeRoomForFriend::action(*this, eng)) {
         return;
       }
@@ -170,12 +156,12 @@ void Monster::onActorTurn() {
   vector<Pos> path;
 
   if(data_->ai[int(Ai::pathsToTargetWhenAware)]) {
-    if(leader != eng.player) {
+    if(leader != Map::player) {
       AI_setPathToPlayerIfAware::learn(*this, path, eng);
     }
   }
 
-  if(leader != eng.player) {
+  if(leader != Map::player) {
     if(AI_handleClosedBlockingDoor::action(*this, path, eng)) {
       return;
     }
@@ -193,7 +179,7 @@ void Monster::onActorTurn() {
   }
 
   if(data_->ai[int(Ai::movesTowardLair)]) {
-    if(leader != eng.player) {
+    if(leader != Map::player) {
       if(AI_stepToLairIfHasLosToLair::action(*this, lairCell_, eng)) {
         return;
       }
@@ -208,7 +194,7 @@ void Monster::onActorTurn() {
     return;
   }
 
-  eng.gameTime->actorDidAct();
+  GameTime::actorDidAct();
 }
 
 void Monster::hit_(int& dmg, const bool ALLOW_WOUNDS) {
@@ -226,12 +212,12 @@ void Monster::moveDir(Dir dir) {
 
   //Trap affects leaving?
   if(dir != Dir::center) {
-    Feature* f = eng.map->cells[pos.x][pos.y].featureStatic;
+    Feature* f = Map::cells[pos.x][pos.y].featureStatic;
     if(f->getId() == feature_trap) {
       dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == Dir::center) {
         traceVerbose << "Monster: Move prevented by trap" << endl;
-        eng.gameTime->actorDidAct();
+        GameTime::actorDidAct();
         return;
       }
     }
@@ -249,12 +235,12 @@ void Monster::moveDir(Dir dir) {
 
     //Bump features in target cell (i.e. to trigger traps)
     vector<FeatureMob*> featureMobs;
-    eng.gameTime->getFeatureMobsAtPos(pos, featureMobs);
+    GameTime::getFeatureMobsAtPos(pos, featureMobs);
     for(FeatureMob * m : featureMobs) {m->bump(*this);}
-    eng.map->cells[pos.x][pos.y].featureStatic->bump(*this);
+    Map::cells[pos.x][pos.y].featureStatic->bump(*this);
   }
 
-  eng.gameTime->actorDidAct();
+  GameTime::actorDidAct();
 }
 
 void Monster::hearSound(const Snd& snd) {
@@ -266,7 +252,7 @@ void Monster::hearSound(const Snd& snd) {
 }
 
 void Monster::speakPhrase() {
-  const bool IS_SEEN_BY_PLAYER = eng.player->isSeeingActor(*this, NULL);
+  const bool IS_SEEN_BY_PLAYER = Map::player->isSeeingActor(*this, NULL);
   const string msg = IS_SEEN_BY_PLAYER ?
                      getAggroPhraseMonsterSeen() :
                      getAggroPhraseMonsterHidden();
@@ -284,8 +270,8 @@ void Monster::becomeAware(const bool IS_FROM_SEEING) {
     const int AWARENESS_CNT_BEFORE = awareOfPlayerCounter_;
     awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
     if(AWARENESS_CNT_BEFORE <= 0) {
-      if(IS_FROM_SEEING && eng.player->isSeeingActor(*this, NULL)) {
-        eng.player->updateFov();
+      if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, NULL)) {
+        Map::player->updateFov();
         Renderer::drawMapAndInterface(true);
         eng.log->addMsg(getNameThe() + " sees me!");
       }
@@ -305,12 +291,12 @@ void Monster::playerBecomeAwareOfMe(const int DURATION_FACTOR) {
 
 bool Monster::tryAttack(Actor& defender) {
   if(deadState == ActorDeadState::alive) {
-    if(awareOfPlayerCounter_ > 0 || leader == eng.player) {
+    if(awareOfPlayerCounter_ > 0 || leader == Map::player) {
 
       bool blockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksVision(eng), blockers);
+      MapParse::parse(CellPred::BlocksVision(), blockers);
 
-      if(isSeeingActor(*eng.player, blockers)) {
+      if(isSeeingActor(*Map::player, blockers)) {
         AttackOpport opport = getAttackOpport(defender);
         const BestAttack attack = getBestAttack(opport);
 

@@ -1,6 +1,5 @@
 #include "Close.h"
 
-#include "Engine.h"
 #include "GameTime.h"
 #include "Feature.h"
 #include "Actor.h"
@@ -15,11 +14,11 @@ void Close::playerClose() const {
   eng.log->clearLog();
   eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Renderer::drawMapAndInterface();
-  Pos closePos(eng.player->pos + eng.query->dir());
+  Pos closePos(Map::player->pos + eng.query->dir());
   eng.log->clearLog();
 
-  if(closePos != eng.player->pos) {
-    playerCloseFeature(eng.map->cells[closePos.x][closePos.y].featureStatic);
+  if(closePos != Map::player->pos) {
+    playerCloseFeature(Map::cells[closePos.x][closePos.y].featureStatic);
   }
 
   Renderer::drawMapAndInterface();
@@ -30,12 +29,12 @@ void Close::playerCloseFeature(Feature* const feature) const {
 
   if(feature->getId() == feature_door) {
     Door* const door = dynamic_cast<Door*>(feature);
-    door->tryClose(eng.player);
+    door->tryClose(Map::player);
     closeAbleObjectFound = true;
   }
 
   if(closeAbleObjectFound == false) {
-    const bool PLAYER_CAN_SEE = eng.player->getPropHandler().allowSee();
+    const bool PLAYER_CAN_SEE = Map::player->getPropHandler().allowSee();
     if(PLAYER_CAN_SEE) {
       eng.log->addMsg("I see nothing there to close.");
     } else {

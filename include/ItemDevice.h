@@ -5,7 +5,7 @@
 
 class Device: public Item {
 public:
-  Device(ItemData* const itemData, Engine& engine);
+  Device(ItemData* const itemData);
 
   virtual ~Device() {}
 
@@ -17,8 +17,8 @@ public:
 
   virtual string getDefaultActivationLabel() const override = 0;
 
-  virtual void addSaveLines(vector<string>& lines)            override;
-  virtual void setParamsFromSaveLines(vector<string>& lines)  override;
+  virtual void storeToSaveLines(vector<string>& lines)    override;
+  virtual void setupFromSaveLines(vector<string>& lines)  override;
 
   void identify(const bool IS_SILENT_IDENTIFY) override;
 
@@ -27,7 +27,7 @@ public:
 
 class StrangeDevice : public Device {
 public:
-  StrangeDevice(ItemData* const itemData, Engine& engine);
+  StrangeDevice(ItemData* const itemData);
 
   ConsumeItem activateDefault(Actor* const actor) override;
 
@@ -39,8 +39,8 @@ private:
 
 class DeviceSentry: public StrangeDevice {
 public:
-  DeviceSentry(ItemData* const itemData, Engine& engine) :
-    StrangeDevice(itemData, engine) {}
+  DeviceSentry(ItemData* const itemData) :
+    StrangeDevice(itemData) {}
 
   ~DeviceSentry() override {}
 
@@ -50,8 +50,8 @@ private:
 
 class DeviceRepeller: public StrangeDevice {
 public:
-  DeviceRepeller(ItemData* const itemData, Engine& engine) :
-    StrangeDevice(itemData, engine) {}
+  DeviceRepeller(ItemData* const itemData) :
+    StrangeDevice(itemData) {}
 
   ~DeviceRepeller() override {}
 
@@ -61,8 +61,8 @@ private:
 
 class DeviceRejuvenator: public StrangeDevice {
 public:
-  DeviceRejuvenator(ItemData* const itemData, Engine& engine) :
-    StrangeDevice(itemData, engine) {}
+  DeviceRejuvenator(ItemData* const itemData) :
+    StrangeDevice(itemData) {}
 
   ~DeviceRejuvenator() override {}
 
@@ -72,8 +72,8 @@ private:
 
 class DeviceTranslocator: public StrangeDevice {
 public:
-  DeviceTranslocator(ItemData* const itemData, Engine& engine) :
-    StrangeDevice(itemData, engine) {}
+  DeviceTranslocator(ItemData* const itemData) :
+    StrangeDevice(itemData) {}
 
   ~DeviceTranslocator() override {}
 
@@ -86,7 +86,7 @@ enum class LanternLightSize {none, small, normal};
 
 class DeviceLantern: public Device {
 public:
-  DeviceLantern(ItemData* const itemData, Engine& engine);
+  DeviceLantern(ItemData* const itemData);
 
   ~DeviceLantern() override {}
 
@@ -100,8 +100,8 @@ public:
     return isActivated_ ? "Turn off" : "Turn on";
   }
 
-  void addSaveLines(vector<string>& lines)            override;
-  void setParamsFromSaveLines(vector<string>& lines)  override;
+  void storeToSaveLines(vector<string>& lines)    override;
+  void setupFromSaveLines(vector<string>& lines)  override;
 
 private:
   void toggle();

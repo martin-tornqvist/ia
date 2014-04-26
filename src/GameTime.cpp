@@ -1,8 +1,6 @@
 #include "GameTime.h"
 
-#include "Engine.h"
-
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "Feature.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
@@ -17,11 +15,11 @@
 #include "Renderer.h"
 #include "Utils.h"
 
-void GameTime::addSaveLines(vector<string>& lines) const {
+void GameTime::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(turn_));
 }
 
-void GameTime::setParamsFromSaveLines(vector<string>& lines) {
+void GameTime::setupFromSaveLines(vector<string>& lines) {
   turn_ = toInt(lines.front());
   lines.erase(lines.begin());
 }
@@ -70,10 +68,10 @@ void GameTime::actorDidAct(const bool IS_FREE_TURN) {
 
   Actor* currentActor = getCurrentActor();
 
-  if(currentActor == eng.player) {
-    eng.player->updateFov();
+  if(currentActor == Map::player) {
+    Map::player->updateFov();
     Renderer::drawMapAndInterface();
-    eng.map->updateVisualMemory();
+    Map::updateVisualMemory();
   } else {
     Monster* monster = dynamic_cast<Monster*>(currentActor);
     if(monster->awareOfPlayerCounter_ > 0) {
@@ -160,7 +158,7 @@ void GameTime::runStandardTurnEvents() {
 //  traceVerbose << "GameTime: Current turn: " << turn_ << endl;
 
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
 
   int regenSpiNTurns = 12;
 
@@ -169,7 +167,7 @@ void GameTime::runStandardTurnEvents() {
 
     actor->getPropHandler().tick(propTurnModeStandard, visionBlockers);
 
-    if(actor != eng.player) {
+    if(actor != Map::player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
       if(monster->playerAwareOfMeCounter_ > 0) {
         monster->playerAwareOfMeCounter_--;
@@ -178,13 +176,13 @@ void GameTime::runStandardTurnEvents() {
 
     //Do light damage if actor in lit cell
     const Pos& pos = actor->pos;
-    if(eng.map->cells[pos.x][pos.y].isLight) {
+    if(Map::cells[pos.x][pos.y].isLight) {
       actor->hit(1, DmgType::light, false);
     }
 
     if(actor->deadState == ActorDeadState::alive) {
       //Regen Spi
-      if(actor == eng.player) {
+      if(actor == Map::player) {
         if(PlayerBon::hasTrait(Trait::stoutSpirit))   regenSpiNTurns -= 2;
         if(PlayerBon::hasTrait(Trait::strongSpirit))  regenSpiNTurns -= 2;
         if(PlayerBon::hasTrait(Trait::mightySpirit))  regenSpiNTurns -= 2;
@@ -202,10 +200,10 @@ void GameTime::runStandardTurnEvents() {
     //Delete destroyed actors
     if(actor->deadState == ActorDeadState::destroyed) {
       //Do not delete player if player died, just exit the function
-      if(actor == eng.player) {return;}
+      if(actor == Map::player) {return;}
 
       delete actor;
-      if(eng.player->target == actor) {eng.player->target = NULL;}
+      if(Map::player->target == actor) {Map::player->target = NULL;}
       actors_.erase(actors_.begin() + i);
       i--;
       if(currentActorVectorPos_ >= int(actors_.size())) {
@@ -221,13 +219,13 @@ void GameTime::runStandardTurnEvents() {
   //Update timed features
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      eng.map->cells[x][y].featureStatic->newTurn();
+      Map::cells[x][y].featureStatic->newTurn();
     }
   }
 
   //Spawn more monsters?
   //(If an unexplored cell is selected, the spawn is aborted)
-  const int DLVL = eng.map->getDlvl();
+  const int DLVL = Map::getDlvl();
   if(DLVL >= 1 && DLVL <= LAST_CAVERN_LEVEL) {
     const int SPAWN_N_TURN = 125;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
@@ -236,7 +234,7 @@ void GameTime::runStandardTurnEvents() {
   }
 
   //Run new turn events on all player items
-  Inventory& playerInv = eng.player->getInv();
+  Inventory& playerInv = Map::player->getInv();
   vector<Item*>& playerBackpack = playerInv.getGeneral();
   for(Item * const item : playerBackpack) {item->newTurnInInventory();}
   vector<InventorySlot>& playerSlots = playerInv.getSlots();
@@ -267,12 +265,12 @@ void GameTime::updateLightMap() {
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      eng.map->cells[x][y].isLight = false;
+      Map::cells[x][y].isLight = false;
       lightTmp[x][y] = false;
     }
   }
 
-  eng.player->addLight(lightTmp);
+  Map::player->addLight(lightTmp);
 
   const int NR_ACTORS = actors_.size();
   for(int i = 0; i < NR_ACTORS; i++) {
@@ -286,11 +284,11 @@ void GameTime::updateLightMap() {
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      eng.map->cells[x][y].featureStatic->addLight(lightTmp);
+      Map::cells[x][y].featureStatic->addLight(lightTmp);
 
       //Note: Here the temporary values are copied to the map.
       //This must of course be done last!
-      eng.map->cells[x][y].isLight = lightTmp[x][y];
+      Map::cells[x][y].isLight = lightTmp[x][y];
     }
   }
 }

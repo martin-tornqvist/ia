@@ -1,7 +1,5 @@
 #include "FeatureDoor.h"
 
-#include "Engine.h"
-
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "FeatureFactory.h"
@@ -15,8 +13,8 @@
 #include "Utils.h"
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(FeatureId id, Pos pos, Engine& engine, DoorSpawnData* spawnData) :
-  FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_),
+Door::Door(FeatureId id, Pos pos, DoorSpawnData* spawnData) :
+  FeatureStatic(id, pos), mimicFeature_(spawnData->mimicFeature_),
   nrSpikes_(0) {
 
   isOpenedAndClosedExternally_ = false;
@@ -140,9 +138,9 @@ MaterialType Door::getMaterialType() const {
 }
 
 void Door::bump(Actor& actorBumping) {
-  if(&actorBumping == eng.player) {
+  if(&actorBumping == Map::player) {
     if(isSecret_) {
-      if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
+      if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
         trace << "Door: Player bumped into secret door, ";
         trace << "with vision in cell" << endl;
         eng.log->addMsg("That way is blocked.");
@@ -185,7 +183,7 @@ string Door::getDescr(const bool DEFINITE_ARTICLE) const {
 void Door::reveal(const bool ALLOW_MESSAGE) {
   if(isSecret_) {
     isSecret_ = false;
-    if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
+    if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
       Renderer::drawMapAndInterface();
       if(ALLOW_MESSAGE) {
         eng.log->addMsg("A secret is revealed.");
@@ -197,16 +195,16 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
 
 void Door::playerTrySpotHidden() {
   if(isSecret_) {
-    const int PLAYER_SKILL = eng.player->getData().abilityVals.getVal(
-                               ability_searching, true, *(eng.player));
-    if(eng.abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
+    const int PLAYER_SKILL = Map::player->getData().abilityVals.getVal(
+                               AbilityId::searching, true, *(Map::player));
+    if(AbilityRoll::roll(PLAYER_SKILL) >= successSmall) {
       reveal(true);
     }
   }
 }
 
 bool Door::trySpike(Actor* actorTrying) {
-  const bool IS_PLAYER = actorTrying == eng.player;
+  const bool IS_PLAYER = actorTrying == Map::player;
   const bool TRYER_IS_BLIND =
     actorTrying->getPropHandler().allowSee() == false;
 
@@ -225,7 +223,7 @@ bool Door::trySpike(Actor* actorTrying) {
       eng.log->addMsg("I jam a door with a spike.");
     }
   }
-  eng.gameTime->actorDidAct();
+  GameTime::actorDidAct();
   return true;
 }
 
@@ -234,7 +232,7 @@ void Door::bash_(Actor& actorTrying) {
 
   if(isOpen_ == false) {
 
-    const bool IS_PLAYER = &actorTrying == eng.player;
+    const bool IS_PLAYER = &actorTrying == Map::player;
 
     int skillValueBash = 0;
 
@@ -283,9 +281,9 @@ void Door::bash_(Actor& actorTrying) {
           }
         }
       } else {
-        if(eng.player->isSeeingActor(actorTrying, NULL)) {
+        if(Map::player->isSeeingActor(actorTrying, NULL)) {
           eng.log->addMsg("The door crashes open!");
-        } else if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
+        } else if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
           eng.log->addMsg("A door crashes open!");
         }
         Snd snd("I hear a door crashing open!",
@@ -306,7 +304,7 @@ void Door::bash_(Actor& actorTrying) {
                 SfxId::doorBang, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
                 &actorTrying, SndVol::low, AlertsMonsters::no);
         SndEmit::emitSnd(snd, eng);
-        if(eng.player->isSeeingActor(actorTrying, NULL)) {
+        if(Map::player->isSeeingActor(actorTrying, NULL)) {
           eng.log->addMsg(actorTrying.getNameThe() + " bashes at a door!");
         }
       }
@@ -316,16 +314,16 @@ void Door::bash_(Actor& actorTrying) {
 }
 
 void Door::tryClose(Actor* actorTrying) {
-  const bool IS_PLAYER = actorTrying == eng.player;
+  const bool IS_PLAYER = actorTrying == Map::player;
   const bool TRYER_IS_BLIND =
     actorTrying->getPropHandler().allowSee() == false;
-  //const bool PLAYER_SEE_DOOR    = eng.map->playerVision[pos_.x][pos_.y];
+  //const bool PLAYER_SEE_DOOR    = Map::playerVision[pos_.x][pos_.y];
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(), blockers);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true :
-    eng.player->isSeeingActor(*actorTrying, blockers);
+    Map::player->isSeeingActor(*actorTrying, blockers);
 
   bool isClosable = true;
 
@@ -362,13 +360,13 @@ void Door::tryClose(Actor* actorTrying) {
   //Blocked?
   if(isClosable) {
     bool isblockedByActor = false;
-    for(Actor * actor : eng.gameTime->actors_) {
+    for(Actor * actor : GameTime::actors_) {
       if(actor->pos == pos_) {
         isblockedByActor = true;
         break;
       }
     }
-    if(isblockedByActor || eng.map->cells[pos_.x][pos_.y].item != NULL) {
+    if(isblockedByActor || Map::cells[pos_.x][pos_.y].item != NULL) {
       isClosable = false;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false) {
@@ -432,21 +430,21 @@ void Door::tryClose(Actor* actorTrying) {
   }
 
   if(isOpen_ == false && isClosable) {
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   }
 }
 
 void Door::tryOpen(Actor* actorTrying) {
   trace << "Door::tryOpen()" << endl;
-  const bool IS_PLAYER = actorTrying == eng.player;
+  const bool IS_PLAYER = actorTrying == Map::player;
   const bool TRYER_IS_BLIND =
     actorTrying->getPropHandler().allowSee() == false;
-  const bool PLAYER_SEE_DOOR = eng.map->cells[pos_.x][pos_.y].isSeenByPlayer;
+  const bool PLAYER_SEE_DOOR = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(), blockers);
 
   const bool PLAYER_SEE_TRYER =
-    IS_PLAYER ? true : eng.player->isSeeingActor(*actorTrying, blockers);
+    IS_PLAYER ? true : Map::player->isSeeingActor(*actorTrying, blockers);
 
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
@@ -524,7 +522,7 @@ void Door::tryOpen(Actor* actorTrying) {
                             " fumbles blindly and fails to open a door.");
           }
         }
-        eng.gameTime->actorDidAct();
+        GameTime::actorDidAct();
       }
     }
   }
@@ -536,7 +534,7 @@ void Door::tryOpen(Actor* actorTrying) {
       reveal(true);
     }
     trace << "Door: Calling GameTime::endTurnOfCurrentActor()" << endl;
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   }
 }
 

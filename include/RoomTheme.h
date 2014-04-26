@@ -3,12 +3,12 @@
 
 #include <vector>
 
-#include "CommonData.h"
-#include "CommonTypes.h"
+#include "CmnData.h"
+#include "CmnTypes.h"
 
 using namespace std;
 
-class Engine;
+
 struct FeatureData;
 
 enum class RoomThemeId {
@@ -30,7 +30,7 @@ struct Room;
 
 class RoomThemeMaker {
 public:
-  RoomThemeMaker(Engine& engine) : eng(engine) {}
+  RoomThemeMaker() {}
 
   void run();
 
@@ -64,7 +64,7 @@ private:
 
   int nrThemeInMap(const RoomThemeId theme) const;
 
-  Engine& eng;
+
 };
 
 

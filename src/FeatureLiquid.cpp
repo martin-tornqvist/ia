@@ -1,6 +1,5 @@
 #include "FeatureLiquid.h"
 
-#include "Engine.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Renderer.h"
@@ -8,8 +7,8 @@
 #include "Audio.h"
 
 FeatureLiquidShallow::FeatureLiquidShallow(
-  FeatureId id, Pos pos, Engine& engine) :
-  FeatureStatic(id, pos, engine) {}
+  FeatureId id, Pos pos) :
+  FeatureStatic(id, pos) {}
 
 void FeatureLiquidShallow::bump(Actor& actorBumping) {
   vector<PropId> props;
@@ -22,12 +21,12 @@ void FeatureLiquidShallow::bump(Actor& actorBumping) {
     actorBumping.getPropHandler().tryApplyProp(
       new PropWaiting(eng, propTurnsStd));
 
-    if(&actorBumping == eng.player) eng.log->addMsg("*glop*");
+    if(&actorBumping == Map::player) eng.log->addMsg("*glop*");
   }
 }
 
-FeatureLiquidDeep::FeatureLiquidDeep(FeatureId id, Pos pos, Engine& engine) :
-  FeatureStatic(id, pos, engine) {}
+FeatureLiquidDeep::FeatureLiquidDeep(FeatureId id, Pos pos) :
+  FeatureStatic(id, pos) {}
 
 void FeatureLiquidDeep::bump(Actor& actorBumping) {
   (void)actorBumping;

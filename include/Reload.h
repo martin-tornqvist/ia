@@ -1,8 +1,6 @@
 #ifndef RELOAD_H
 #define RELOAD_H
 
-class Engine;
-
 class Actor;
 class Item;
 class Weapon;
@@ -18,7 +16,7 @@ enum ReloadResult {
 
 class Reload {
 public:
-  Reload(Engine& engine) : eng(engine) {}
+  Reload() {}
 
   bool reloadWieldedWpn(Actor& actorReloading);
 
@@ -26,7 +24,6 @@ private:
   void printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
                           Item* const ammo, const ReloadResult result,
                           const bool IS_SWIFT_RELOAD);
-  Engine& eng;
 };
 
 

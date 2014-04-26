@@ -3,13 +3,12 @@
 
 #include <string>
 
-#include "CommonData.h"
+#include "CmnData.h"
 #include "ItemData.h"
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 
 using namespace std;
 
-class Engine;
 class Actor;
 
 enum class SndVol                 {low, high};
@@ -64,7 +63,7 @@ private:
 
 namespace SndEmit {
 
-void emitSnd(Snd snd, Engine& eng);
+void emitSnd(Snd snd);
 
 void resetNrSoundMsgPrintedCurTurn();
 

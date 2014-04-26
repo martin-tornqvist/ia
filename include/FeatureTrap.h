@@ -5,9 +5,8 @@
 #include "AbilityValues.h"
 #include "Art.h"
 #include "Feature.h"
-#include "CommonData.h"
+#include "CmnData.h"
 
-class Engine;
 class SpecificTrapBase;
 class TrapSpawnData;
 
@@ -60,7 +59,7 @@ public:
 
 protected:
   friend class FeatureFactory;
-  Trap(FeatureId id, Pos pos, Engine& engine, TrapSpawnData* spawnData);
+  Trap(FeatureId id, Pos pos, TrapSpawnData* spawnData);
 
   void triggerTrap(Actor& actor) override;
 
@@ -77,8 +76,8 @@ protected:
 class SpecificTrapBase {
 protected:
   friend class Trap;
-  SpecificTrapBase(Pos pos, TrapId trapType, Engine& engine) :
-    pos_(pos), trapType_(trapType), eng(engine) {}
+  SpecificTrapBase(Pos pos, TrapId trapType) :
+    pos_(pos), trapType_(trapType) {}
 
   virtual ~SpecificTrapBase() {}
 
@@ -106,13 +105,12 @@ protected:
 
   Pos pos_;
   TrapId trapType_;
-  Engine& eng;
 };
 
 class TrapDart: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapDart(Pos pos, Engine& engine);
+  TrapDart(Pos pos);
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrWhiteHigh;}
   string      getTitle()      const override {return "Dart trap";}
@@ -127,7 +125,7 @@ private:
 class TrapSpear: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapSpear(Pos pos, Engine& engine);
+  TrapSpear(Pos pos);
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrWhiteHigh;}
   string      getTitle()      const override {return "Spear trap";}
@@ -142,8 +140,8 @@ private:
 class TrapGasConfusion: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapGasConfusion(Pos pos, Engine& engine) :
-    SpecificTrapBase(pos, trap_gasConfusion, engine) {}
+  TrapGasConfusion(Pos pos) :
+    SpecificTrapBase(pos, trap_gasConfusion) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrMagenta;}
   string      getTitle()      const override {return "Gas trap";}
@@ -156,8 +154,8 @@ private:
 class TrapGasParalyzation: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapGasParalyzation(Pos pos, Engine& engine) :
-    SpecificTrapBase(pos, trap_gasParalyze, engine) {
+  TrapGasParalyzation(Pos pos) :
+    SpecificTrapBase(pos, trap_gasParalyze) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrMagenta;}
@@ -171,8 +169,8 @@ private:
 class TrapGasFear: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapGasFear(Pos pos, Engine& engine) :
-    SpecificTrapBase(pos, trap_gasFear, engine) {}
+  TrapGasFear(Pos pos) :
+    SpecificTrapBase(pos, trap_gasFear) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrMagenta;}
   string      getTitle()      const override {return "Gas trap";}
@@ -185,8 +183,8 @@ private:
 class TrapBlindingFlash: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapBlindingFlash(Pos pos, Engine& engine) :
-    SpecificTrapBase(pos, trap_blinding, engine) {}
+  TrapBlindingFlash(Pos pos) :
+    SpecificTrapBase(pos, trap_blinding) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrYellow;}
   string      getTitle()      const override {return "Blinding trap";}
@@ -199,8 +197,8 @@ private:
 class TrapTeleport: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapTeleport(Pos pos, Engine& engine) :
-    SpecificTrapBase(pos, trap_teleport, engine) {
+  TrapTeleport(Pos pos) :
+    SpecificTrapBase(pos, trap_teleport) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrCyan;}
@@ -214,8 +212,8 @@ private:
 class TrapSummonMonster: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapSummonMonster(Pos pos, Engine& engine) :
-    SpecificTrapBase(pos, trap_summonMonster, engine) {
+  TrapSummonMonster(Pos pos) :
+    SpecificTrapBase(pos, trap_summonMonster) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrBrownDrk;}
@@ -229,8 +227,8 @@ private:
 class TrapSmoke: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapSmoke(Pos pos, Engine& engine) :
-    SpecificTrapBase(pos, trap_smoke, engine) {}
+  TrapSmoke(Pos pos) :
+    SpecificTrapBase(pos, trap_smoke) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrGray;}
   string      getTitle()      const override {return "Smoke trap";}
@@ -243,8 +241,8 @@ private:
 class TrapAlarm: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapAlarm(Pos pos, Engine& engine) :
-    SpecificTrapBase(pos, trap_alarm, engine) {}
+  TrapAlarm(Pos pos) :
+    SpecificTrapBase(pos, trap_alarm) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrBrown;}
   string      getTitle()      const override {return "Alarm trap";}
@@ -263,8 +261,8 @@ public:
 
 private:
   friend class Trap;
-  TrapSpiderWeb(Pos pos, Engine& engine) :
-    SpecificTrapBase(pos, trap_spiderWeb, engine), isHoldingActor(false) {}
+  TrapSpiderWeb(Pos pos) :
+    SpecificTrapBase(pos, trap_spiderWeb), isHoldingActor(false) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrWhiteHigh;}
   string      getTitle()      const override {return "Spider web";}

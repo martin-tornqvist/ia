@@ -6,21 +6,13 @@
 
 using namespace std;
 
-class Engine;
-
 class Examine {
 public:
-  Examine(Engine& engine) : eng(engine) {
-  }
+  Examine() {}
 
-  ~Examine() {
-  }
+  ~Examine() {}
 
   void playerExamine() const;
-
-private:
-
-  Engine& eng;
 };
 
 #endif

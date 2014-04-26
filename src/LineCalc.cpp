@@ -2,8 +2,21 @@
 
 #include <math.h>
 
-#include "Engine.h"
 #include "Utils.h"
+
+namespace LineCalc {
+
+namespace {
+
+double fovAbsDistances[FOV_MAX_W_INT][FOV_MAX_W_INT];
+vector<Pos> fovDeltaLines[FOV_MAX_W_INT][FOV_MAX_W_INT];
+
+} //Namespace
+
+void init() {
+  calcFovAbsDistances();
+  calcFovDeltaLines();
+}
 
 void LineCalc::calcNewLine(const Pos& origin, const Pos& target,
                            const bool SHOULD_STOP_AT_TARGET,
@@ -110,3 +123,4 @@ void LineCalc::calcFovAbsDistances() {
   }
 }
 
+} //LineCalc

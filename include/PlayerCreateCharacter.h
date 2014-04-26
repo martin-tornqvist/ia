@@ -3,17 +3,16 @@
 
 #include <string>
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "PlayerBon.h"
 
 using namespace std;
 
-class Engine;
 class MenuBrowser;
 
 class PlayerCreateCharacter {
 public:
-  PlayerCreateCharacter(Engine& engine) : eng(engine) {}
+  PlayerCreateCharacter() {}
 
   void createCharacter() const;
 
@@ -28,8 +27,6 @@ private:
   void pickBg() const;
   void drawPickBg(const vector<Bg>& bgs,
                   const MenuBrowser& browser) const;
-
-  Engine& eng;
 };
 
 //Helper class for PlayerCreateCharacter for input and rendering when the
@@ -38,11 +35,10 @@ class PlayerEnterName {
 public:
 private:
   friend class PlayerCreateCharacter;
-  PlayerEnterName(Engine& engine) : eng(engine) {}
+  PlayerEnterName() {}
   void run() const;
   void draw(const string& currentString) const;
   void readKeys(string& currentString, bool& isDone) const;
-  Engine& eng;
 };
 
 #endif

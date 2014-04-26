@@ -140,7 +140,7 @@ enum TileId {
   tile_popupVerticalBar
 };
 
-class Engine;
+
 struct Pos;
 
 class Art {

@@ -1,6 +1,5 @@
 #include "PlayerCreateCharacter.h"
 
-#include "Engine.h"
 #include "Renderer.h"
 #include "ActorPlayer.h"
 #include "Input.h"
@@ -11,7 +10,7 @@
 void PlayerCreateCharacter::createCharacter() const {
   pickBg();
   pickNewTrait(true);
-  PlayerEnterName(eng).run();
+  PlayerEnterName().run();
 }
 
 void PlayerCreateCharacter::pickBg() const {
@@ -309,7 +308,7 @@ void PlayerEnterName::run() const {
       readKeys(name, isDone);
     }
   }
-  ActorData& def  = eng.player->getData();
+  ActorData& def  = Map::player->getData();
   def.name_a      = def.name_the = name;
 }
 

@@ -1,8 +1,6 @@
 #include "CharacterLines.h"
 
-#include "Engine.h"
-
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "GameTime.h"
 #include "Colors.h"
 #include "ItemWeapon.h"
@@ -19,17 +17,15 @@ using namespace std;
 
 namespace CharacterLines {
 
-void drawLocationInfo(Engine& eng) {
-  Player* const player = eng.player;
-
-  if(player->getPropHandler().allowSee()) {
+void drawLocationInfo() {
+  if(Map::player->getPropHandler().allowSee()) {
     string str = "";
 
-    const Pos& playerPos = player->pos;
+    const Pos& playerPos = Map::player->pos;
 
-    const int DLVL = eng.map->getDlvl();
+    const int DLVL = Map::getDlvl();
     if(DLVL > 0 && DLVL < FIRST_CAVERN_LEVEL) {
-      const vector<Room*>& rooms = eng.map->rooms;
+      const vector<Room*>& rooms = Map::rooms;
       for(unsigned int i = 0; i < rooms.size(); i++) {
         const Room* const room = rooms.at(i);
         const Pos& x0y0 = room->getX0Y0();
@@ -43,10 +39,9 @@ void drawLocationInfo(Engine& eng) {
       }
     }
 
-    const bool IS_DRK_AT_PLAYER =
-      eng.map->cells[playerPos.x][playerPos.y].isDark;
+    const bool IS_DRK_AT_PLAYER = Map::cells[playerPos.x][playerPos.y].isDark;
     const bool IS_LGT_AT_PLAYER =
-      eng.map->cells[playerPos.x][playerPos.y].isLight;
+      Map::cells[playerPos.x][playerPos.y].isLight;
     if(IS_DRK_AT_PLAYER) {
       str += IS_LGT_AT_PLAYER ?
              "The darkness is lit up. " :
@@ -59,9 +54,7 @@ void drawLocationInfo(Engine& eng) {
   }
 }
 
-void drawInfoLines(Engine& eng) {
-  Player* const player = eng.player;
-
+void drawInfoLines() {
   Renderer::coverPanel(Panel::charLines);
 
   const int CHARACTER_LINE_X0 = 0;
@@ -73,14 +66,16 @@ void drawInfoLines(Engine& eng) {
   const SDL_Color clrGenLgt = clrNosfTealLgt;
   const SDL_Color clrGenMed = clrNosfTeal;
 
+  Player& player = *Map::player;
+
   //Name
 //  str = player->getNameA();
 //  Renderer::drawText(str, Panel::charLines, pos, clrRedLgt);
 //  pos.x += str.length() + 1;
 
   //Health
-  const string hp = toStr(player->getHp());
-  const string hpMax = toStr(player->getHpMax(true));
+  const string hp = toStr(player.getHp());
+  const string hpMax = toStr(player.getHpMax(true));
   Renderer::drawText("HP:", Panel::charLines, pos, clrGenDrk);
   pos.x += 3;
   string str = hp + "/" + hpMax;
@@ -88,8 +83,8 @@ void drawInfoLines(Engine& eng) {
   pos.x += str.length() + 1;
 
   //Spirit
-  const string spi    = toStr(player->getSpi());
-  const string spiMax = toStr(player->getSpiMax());
+  const string spi    = toStr(player.getSpi());
+  const string spiMax = toStr(player.getSpiMax());
   Renderer::drawText("SPI:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
   str = spi + "/" + spiMax;
@@ -97,8 +92,8 @@ void drawInfoLines(Engine& eng) {
   pos.x += str.length() + 1;
 
   //Sanity
-  const int SHOCK = player->getShockTotal();
-  const int INS = player->getInsanity();
+  const int SHOCK = player.getShockTotal();
+  const int INS = player.getInsanity();
   Renderer::drawText("INS:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
   const SDL_Color shortSanClr =
@@ -115,8 +110,7 @@ void drawInfoLines(Engine& eng) {
   //Armor
   Renderer::drawText("ARM:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
-  const Item* const armor =
-    player->getInv().getItemInSlot(SlotId::armorBody);
+  const Item* const armor = player.getInv().getItemInSlot(SlotId::armorBody);
   if(armor == NULL) {
     Renderer::drawText("N/A", Panel::charLines, pos, clrGenLgt);
     pos.x += 4;
@@ -162,15 +156,14 @@ void drawInfoLines(Engine& eng) {
   pos.x += str.length() + 1;
   Renderer::drawText("NXT:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
-  str = dm->getCLvl() >= PLAYER_MAX_CLVL ? "-" :
-        toStr(dm->getXpToNextLvl());
+  str = dm->getCLvl() >= PLAYER_MAX_CLVL ? "-" : toStr(dm->getXpToNextLvl());
   Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
   //Dungeon level
   Renderer::drawText("DLVL:", Panel::charLines, pos, clrGenDrk);
   pos.x += 5;
-  const int DLVL = eng.map->getDlvl();
+  const int DLVL = Map::getDlvl();
   str = DLVL >= 0 ? toStr(DLVL) : "?";
   Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
   pos.x += str.length() + 1;
@@ -203,7 +196,7 @@ void drawInfoLines(Engine& eng) {
     pos.x += 2;
 
     str = eng.itemDataHandler->getItemInterfaceRef(
-            *itemMissiles, false, PrimaryAttackMode::missile);
+            *itemMissiles, false, PrimaryAttMode::missile);
     Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
     pos.x += str.length() + 1;
   }
@@ -242,7 +235,7 @@ void drawInfoLines(Engine& eng) {
 //  }
 
 // Turn number
-  str = "T:" + toStr(eng.gameTime->getTurn());
+  str = "T:" + toStr(GameTime::getTurn());
   pos.x = MAP_W - str.length() - 1;
   Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
 }

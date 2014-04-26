@@ -6,8 +6,6 @@
 
 using namespace std;
 
-class Engine;
-
 struct God {
 public:
   God(const string& name, const string& descr) : name_(name), descr_(descr) {}

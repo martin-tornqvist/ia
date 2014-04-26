@@ -1,6 +1,5 @@
 #include "RenderInventory.h"
 
-#include "Engine.h"
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -34,7 +33,7 @@ void drawItemSymbol(const Item& item, const Pos& pos) {
 
 namespace RenderInventory {
 
-void drawBrowseSlots(const MenuBrowser& browser, Engine& eng) {
+void drawBrowseSlots(const MenuBrowser& browser) {
   Pos pos(0, 0);
 
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
@@ -48,7 +47,7 @@ void drawBrowseSlots(const MenuBrowser& browser, Engine& eng) {
 
   pos.y++;
 
-  Inventory& inv = eng.player->getInv();
+  Inventory& inv = Map::player->getInv();
   vector<InventorySlot>& slots = inv.getSlots();
 
   for(size_t i = 0; i < slots.size(); i++) {
@@ -72,13 +71,13 @@ void drawBrowseSlots(const MenuBrowser& browser, Engine& eng) {
         IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
 
       const ItemData& d = item->getData();
-      PrimaryAttackMode attackMode = PrimaryAttackMode::none;
+      PrimaryAttMode attackMode = PrimaryAttMode::none;
       if(slot.id == SlotId::wielded || slot.id == SlotId::wieldedAlt) {
         attackMode =
-          d.primaryAttackMode == PrimaryAttackMode::missile ?
-          PrimaryAttackMode::melee : d.primaryAttackMode;
+          d.primaryAttackMode == PrimaryAttMode::missile ?
+          PrimaryAttMode::melee : d.primaryAttackMode;
       } else if(slot.id == SlotId::missiles) {
-        attackMode = PrimaryAttackMode::missile;
+        attackMode = PrimaryAttMode::missile;
       }
 
       str = eng.itemDataHandler->getItemInterfaceRef(
@@ -120,7 +119,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
   Renderer::drawText(str, Panel::screen, pos, clrWhiteHigh);
   pos.y++;
 
-  Inventory& inv = eng.player->getInv();
+  Inventory& inv = Map::player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
   for(int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
@@ -146,7 +145,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
 }
 
 void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
-               const vector<unsigned int>& genInvIndexes, Engine& eng) {
+               const vector<unsigned int>& genInvIndexes) {
 
   Pos pos(0, 0);
 
@@ -182,7 +181,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
   Renderer::drawText(str, Panel::screen, pos, clrWhiteHigh);
   pos.y++;
 
-  Inventory& inv = eng.player->getInv();
+  Inventory& inv = Map::player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
   for(int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
@@ -198,13 +197,13 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
                                     item->getInterfaceClr();
 
     const ItemData& d = item->getData();
-    PrimaryAttackMode attackMode = PrimaryAttackMode::none;
+    PrimaryAttMode attackMode = PrimaryAttMode::none;
     if(slotToEquip == SlotId::wielded || slotToEquip == SlotId::wieldedAlt) {
       attackMode =
-        d.primaryAttackMode == PrimaryAttackMode::missile ?
-        PrimaryAttackMode::melee : d.primaryAttackMode;
+        d.primaryAttackMode == PrimaryAttMode::missile ?
+        PrimaryAttMode::melee : d.primaryAttackMode;
     } else if(slotToEquip == SlotId::missiles) {
-      attackMode = PrimaryAttackMode::missile;
+      attackMode = PrimaryAttMode::missile;
     }
 
     str = eng.itemDataHandler->getItemInterfaceRef(*item, false, attackMode);
@@ -219,7 +218,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
 }
 
 void drawUse(const MenuBrowser& browser,
-             const vector<unsigned int>& genInvIndexes, Engine& eng) {
+             const vector<unsigned int>& genInvIndexes) {
   Pos pos(0, 0);
 
 //  Renderer::clearScreen();
@@ -236,7 +235,7 @@ void drawUse(const MenuBrowser& browser,
   Renderer::drawText(str, Panel::screen, pos, clrWhiteHigh);
   pos.y++;
 
-  Inventory& inv = eng.player->getInv();
+  Inventory& inv = Map::player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
   for(int i = 0; i < NR_INDEXES; i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);

@@ -1,6 +1,5 @@
 #include "FeatureExaminable.h"
 
-#include "Engine.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "Item.h"
@@ -30,7 +29,7 @@ ItemContainerFeature::~ItemContainerFeature() {
 
 void ItemContainerFeature::setRandomItemsForFeature(
   const FeatureId featureId,
-  const int NR_ITEMS_TO_ATTEMPT, Engine& engine) {
+  const int NR_ITEMS_TO_ATTEMPT) {
   for(unsigned int i = 0; i < items_.size(); i++) {
     delete items_.at(i);
   }
@@ -73,14 +72,14 @@ void ItemContainerFeature::setRandomItemsForFeature(
   }
 }
 
-void ItemContainerFeature::dropItems(const Pos& pos, Engine& engine) {
+void ItemContainerFeature::dropItems(const Pos& pos) {
   for(unsigned int i = 0; i < items_.size(); i++) {
     engine.itemDrop->dropItemOnMap(pos, *items_.at(i));
   }
   items_.resize(0);
 }
 
-void ItemContainerFeature::destroySingleFragile(Engine& engine) {
+void ItemContainerFeature::destroySingleFragile() {
   //TODO Generalize this function (perhaps isFragile variable in item data)
 
   for(unsigned int i = 0; i < items_.size(); i++) {
@@ -96,8 +95,8 @@ void ItemContainerFeature::destroySingleFragile(Engine& engine) {
 }
 
 //--------------------------------------------------------- TOMB
-Tomb::Tomb(FeatureId id, Pos pos, Engine& engine) :
-  FeatureStatic(id, pos, engine), isContentKnown_(false),
+Tomb::Tomb(FeatureId id, Pos pos) :
+  FeatureStatic(id, pos), isContentKnown_(false),
   isTraitKnown_(false), pushLidOneInN_(Rnd::range(6, 14)),
   appearance_(TombAppearance::common), trait_(TombTrait::endOfTombTraits) {
 
@@ -165,14 +164,14 @@ SDL_Color Tomb::getClr() const {
 }
 
 void Tomb::bump(Actor& actorBumping) {
-  if(&actorBumping == eng.player) {
+  if(&actorBumping == Map::player) {
     if(itemContainer_.items_.empty() && isContentKnown_) {
       eng.log->addMsg("The tomb is empty.");
     } else {
       eng.log->addMsg("I attempt to push the lid.");
 
       vector<PropId> props;
-      eng.player->getPropHandler().getAllActivePropIds(props);
+      Map::player->getPropHandler().getAllActivePropIds(props);
 
       if(find(props.begin(), props.end(), propWeakened) != props.end()) {
         trySprainPlayer();
@@ -205,7 +204,7 @@ void Tomb::bump(Actor& actorBumping) {
 
         if(isSuccess) {open();} else  {trySprainPlayer();}
       }
-      eng.gameTime->actorDidAct();
+      GameTime::actorDidAct();
     }
   }
 }
@@ -215,12 +214,12 @@ void Tomb::trySprainPlayer() {
                               PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
   if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     eng.log->addMsg("I sprain myself.", clrMsgBad);
-    eng.player->hit(Rnd::range(1, 5), DmgType::pure, false);
+    Map::player->hit(Rnd::range(1, 5), DmgType::pure, false);
   }
 }
 
 bool Tomb::open() {
-  const bool IS_SEEN = eng.map->cells[pos_.x][pos_.y].isSeenByPlayer;
+  const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
   if(IS_SEEN) {
     eng.log->addMsg("The lid comes off!");
     eng.log->addMsg("The tomb opens.");
@@ -230,7 +229,7 @@ bool Tomb::open() {
           AlertsMonsters::yes);
   SndEmit::emitSnd(snd, eng);
 
-  triggerTrap(*eng.player);
+  triggerTrap(*Map::player);
   if(itemContainer_.items_.size() > 0) {
     if(IS_SEEN) eng.log->addMsg("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
@@ -244,12 +243,12 @@ bool Tomb::open() {
 
 void Tomb::examine() {
   vector<PropId> props;
-  eng.player->getPropHandler().getAllActivePropIds(props);
+  Map::player->getPropHandler().getAllActivePropIds(props);
 
   if(find(props.begin(), props.end(), propConfused) != props.end()) {
     eng.log->addMsg("I start to search the tomb...");
     eng.log->addMsg("but I cannot grasp what for.");
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   } else if(itemContainer_.items_.empty() && isContentKnown_) {
     eng.log->addMsg("The tomb is empty.");
   } else {
@@ -283,14 +282,14 @@ void Tomb::examine() {
     } else {
       eng.log->addMsg("I find nothing significant.");
     }
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   }
 }
 
 //void Tomb::bash(Actor& actorTrying) {
 //  (void)actorTrying;
 
-//  const Inventory& inv = eng.player->getInv();
+//  const Inventory& inv = Map::player->getInv();
 //  bool hasSledgehammer = false;
 //  Item* item = inv.getItemInSlot(SlotId::wielded);
 //  if(item != NULL) {
@@ -312,14 +311,14 @@ void Tomb::examine() {
 //  if(Rnd::fraction(BREAK_N_IN_10, 10)) {
 //    eng.log->addMsg("The lid cracks open!");
 //    if(IS_BLESSED == false && (IS_CURSED || Rnd::oneIn(3))) {
-//      itemContainer_.destroySingleFragile(eng);
+//      itemContainer_.destroySingleFragile();
 //    }
 //    open();
 //  } else {
 //    eng.log->addMsg("The lid resists.");
 //  }
 
-//  eng.gameTime->actorDidAct();
+//  GameTime::actorDidAct();
 //}
 
 //void Tomb::disarm() {
@@ -345,10 +344,10 @@ void Tomb::triggerTrap(Actor& actor) {
 
   switch(trait_) {
     case TombTrait::auraOfUnrest: {
-      const int DLVL = eng.map->getDlvl();
+      const int DLVL = Map::getDlvl();
 
       for(int i = 1; i < endOfActorIds; i++) {
-        const ActorData& d = eng.actorDataHandler->dataList[i];
+        const ActorData& d = ActorData::dataList[i];
         if(
           d.isGhost && d.isAutoSpawnAllowed && d.isUnique == false &&
           ((DLVL + 5) >= d.spawnMinDLVL || DLVL >= MIN_DLVL_NASTY_TRAPS)) {
@@ -359,7 +358,7 @@ void Tomb::triggerTrap(Actor& actor) {
     } break;
 
     case TombTrait::forebodingCarvedSigns: {
-      eng.player->getPropHandler().tryApplyProp(
+      Map::player->getPropHandler().tryApplyProp(
         new PropCursed(eng, propTurnsStd));
     } break;
 
@@ -384,7 +383,7 @@ void Tomb::triggerTrap(Actor& actor) {
           prop, &fumeClr);
       } else {
         for(int i = 1; i < endOfActorIds; i++) {
-          const ActorData& d = eng.actorDataHandler->dataList[i];
+          const ActorData& d = ActorData::dataList[i];
           if(
             d.intrProps[propOoze] &&
             d.isAutoSpawnAllowed  &&
@@ -409,8 +408,8 @@ void Tomb::triggerTrap(Actor& actor) {
 }
 
 //--------------------------------------------------------- CHEST
-Chest::Chest(FeatureId id, Pos pos, Engine& engine) :
-  FeatureStatic(id, pos, engine), isContentKnown_(false),
+Chest::Chest(FeatureId id, Pos pos) :
+  FeatureStatic(id, pos), isContentKnown_(false),
   isLocked_(false), isTrapped_(false), isTrapStatusKnown_(false),
   material(ChestMtrl(Rnd::range(0, endOfChestMaterial - 1))) {
 
@@ -428,12 +427,12 @@ Chest::Chest(FeatureId id, Pos pos, Engine& engine) :
 }
 
 void Chest::bump(Actor& actorBumping) {
-  if(&actorBumping == eng.player) {
+  if(&actorBumping == Map::player) {
     if(itemContainer_.items_.empty() && isContentKnown_) {
       eng.log->addMsg("The chest is empty.");
     } else {
       if(isLocked_) {eng.log->addMsg("The chest is locked.");} else {open();}
-      eng.gameTime->actorDidAct();
+      GameTime::actorDidAct();
     }
   }
 }
@@ -443,17 +442,17 @@ void Chest::trySprainPlayer() {
                               PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
   if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     eng.log->addMsg("I sprain myself.", clrMsgBad);
-    eng.player->hit(Rnd::range(1, 5), DmgType::pure, false);
+    Map::player->hit(Rnd::range(1, 5), DmgType::pure, false);
   }
 }
 
 bool Chest::open() {
-  const bool IS_SEEN = eng.map->cells[pos_.x][pos_.y].isSeenByPlayer;
+  const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 
   if(IS_SEEN) eng.log->addMsg("The chest opens.");
-  triggerTrap(*eng.player);
+  triggerTrap(*Map::player);
 
-  if(eng.player->deadState == ActorDeadState::alive) {
+  if(Map::player->deadState == ActorDeadState::alive) {
     if(itemContainer_.items_.empty()) {
       if(IS_SEEN) eng.log->addMsg("There is nothing of value inside.");
     } else {
@@ -480,7 +479,7 @@ void Chest::bash(Actor& actorTrying) {
     eng.log->addMsg("I kick the lid.");
 
     vector<PropId> props;
-    eng.player->getPropHandler().getAllActivePropIds(props);
+    Map::player->getPropHandler().getAllActivePropIds(props);
 
     if(
       find(props.begin(), props.end(), propWeakened) != props.end() ||
@@ -495,7 +494,7 @@ void Chest::bash(Actor& actorTrying) {
         find(props.begin(), props.end(), propBlessed) != props.end();
 
       if(IS_BLESSED == false && (IS_CURSED || Rnd::oneIn(3))) {
-        itemContainer_.destroySingleFragile(eng);
+        itemContainer_.destroySingleFragile();
       }
 
       const bool IS_TOUGH     = PlayerBon::hasTrait(Trait::tough);
@@ -511,18 +510,18 @@ void Chest::bash(Actor& actorTrying) {
         trySprainPlayer();
       }
     }
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   }
 
   //TODO Force lock with weapon - remove or reimplement - how?
-//      Inventory& inv    = eng.player->getInv();
+//      Inventory& inv    = Map::player->getInv();
 //      Item* const item  = inv.getItemInSlot(SlotId::wielded);
 //
 //      if(item == NULL) {
 //        eng.log->addMsg(
 //          "I attempt to punch the lock open, nearly breaking my hand.",
 //          clrMsgBad);
-//        eng.player->hit(1, DmgType::pure, false);
+//        Map::player->hit(1, DmgType::pure, false);
 //      } else {
 //        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 //
@@ -559,12 +558,12 @@ void Chest::bash(Actor& actorTrying) {
 
 void Chest::examine() {
   vector<PropId> props;
-  eng.player->getPropHandler().getAllActivePropIds(props);
+  Map::player->getPropHandler().getAllActivePropIds(props);
 
   if(find(props.begin(), props.end(), propConfused) != props.end()) {
     eng.log->addMsg("I start to search the chest...");
     eng.log->addMsg("but I cannot grasp the purpose.");
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   } else if(itemContainer_.items_.empty() && isContentKnown_) {
     eng.log->addMsg("The chest is empty.");
   } else {
@@ -581,7 +580,7 @@ void Chest::examine() {
     } else {
       eng.log->addMsg("I find nothing unusual about it.");
     }
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   }
 }
 
@@ -593,7 +592,7 @@ void Chest::disarm() {
     const int TRIGGER_ONE_IN_N = 5;
     if(Rnd::oneIn(TRIGGER_ONE_IN_N)) {
       eng.log->addMsg("I set off the trap!");
-      triggerTrap(*eng.player);
+      triggerTrap(*Map::player);
     } else {
 
       const int DISARM_ONE_IN_N = 2;
@@ -605,14 +604,14 @@ void Chest::disarm() {
         eng.log->addMsg("I failed to disarm it.");
       }
     }
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
     return;
   }
 
 
   //Try picking the lock //TODO Implement
 //  if(isLocked_) {
-//      eng.gameTime->actorDidAct();
+//      GameTime::actorDidAct();
 //  }
 
   //If no other action was taken, try examining the chest instead
@@ -630,12 +629,12 @@ void Chest::triggerTrap(Actor& actor) {
 
     const int EXPLODE_ONE_IN_N = 7;
     if(
-      eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS &&
+      Map::getDlvl() >= MIN_DLVL_NASTY_TRAPS &&
       Rnd::oneIn(EXPLODE_ONE_IN_N)) {
       eng.log->addMsg("The trap explodes!");
       Explosion::runExplosionAt(pos_, eng, ExplType::expl, ExplSrc::misc, 0,
                                 SfxId::explosion);
-      if(eng.player->deadState == ActorDeadState::alive) {
+      if(Map::player->deadState == ActorDeadState::alive) {
         eng.featureFactory->spawnFeatureAt(feature_rubbleLow, pos_);
       }
     } else {
@@ -660,8 +659,8 @@ void Chest::triggerTrap(Actor& actor) {
 }
 
 //--------------------------------------------------------- FOUNTAIN
-Fountain::Fountain(FeatureId id, Pos pos, Engine& engine) :
-  FeatureStatic(id, pos, engine), fountainType_(FountainType::tepid),
+Fountain::Fountain(FeatureId id, Pos pos) :
+  FeatureStatic(id, pos), fountainType_(FountainType::tepid),
   fountainMaterial_(FountainMaterial::stone) {
 
   if(Rnd::oneIn(4)) {fountainMaterial_ = FountainMaterial::gold;}
@@ -705,12 +704,12 @@ string Fountain::getDescr(const bool DEFINITE_ARTICLE) const {
 }
 
 void Fountain::bump(Actor& actorBumping) {
-  if(&actorBumping == eng.player) {
+  if(&actorBumping == Map::player) {
 
     if(fountainType_ == FountainType::dry) {
       eng.log->addMsg("The fountain is dried out.");
     } else {
-      PropHandler& propHlr = eng.player->getPropHandler();
+      PropHandler& propHlr = Map::player->getPropHandler();
 
       eng.log->addMsg("I drink from the fountain...");
 
@@ -723,9 +722,9 @@ void Fountain::bump(Actor& actorBumping) {
 
         case FountainType::refreshing: {
           eng.log->addMsg("It's very refreshing.");
-          eng.player->restoreHp(1, false);
-          eng.player->restoreSpi(1, false);
-          eng.player->restoreShock(5, false);
+          Map::player->restoreHp(1, false);
+          Map::player->restoreSpi(1, false);
+          Map::player->restoreShock(5, false);
         } break;
 
         case FountainType::bless: {
@@ -737,11 +736,11 @@ void Fountain::bump(Actor& actorBumping) {
         } break;
 
         case FountainType::spirit: {
-          eng.player->restoreSpi(2, true, true);
+          Map::player->restoreSpi(2, true, true);
         } break;
 
         case FountainType::vitality: {
-          eng.player->restoreHp(2, true, true);
+          Map::player->restoreHp(2, true, true);
         } break;
 
         case FountainType::disease: {
@@ -797,13 +796,13 @@ void Fountain::bump(Actor& actorBumping) {
       }
     }
   }
-  eng.gameTime->actorDidAct();
+  GameTime::actorDidAct();
 }
 
 
 //--------------------------------------------------------- CABINET
-Cabinet::Cabinet(FeatureId id, Pos pos, Engine& engine) :
-  FeatureStatic(id, pos, engine), isContentKnown_(false) {
+Cabinet::Cabinet(FeatureId id, Pos pos) :
+  FeatureStatic(id, pos), isContentKnown_(false) {
 
   const bool IS_TREASURE_HUNTER =
     PlayerBon::hasTrait(Trait::treasureHunter);
@@ -815,7 +814,7 @@ Cabinet::Cabinet(FeatureId id, Pos pos, Engine& engine) :
 }
 
 void Cabinet::bump(Actor& actorBumping) {
-  if(&actorBumping == eng.player) {
+  if(&actorBumping == Map::player) {
 
     if(itemContainer_.items_.empty() && isContentKnown_) {
       eng.log->addMsg("The cabinet is empty.");
@@ -826,7 +825,7 @@ void Cabinet::bump(Actor& actorBumping) {
 }
 
 bool Cabinet::open() {
-  const bool IS_SEEN = eng.map->cells[pos_.x][pos_.y].isSeenByPlayer;
+  const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 
   if(IS_SEEN) eng.log->addMsg("The cabinet opens.");
 
@@ -842,8 +841,8 @@ bool Cabinet::open() {
 }
 
 //--------------------------------------------------------- COCOON
-Cocoon::Cocoon(FeatureId id, Pos pos, Engine& engine) :
-  FeatureStatic(id, pos, engine), isContentKnown_(false) {
+Cocoon::Cocoon(FeatureId id, Pos pos) :
+  FeatureStatic(id, pos), isContentKnown_(false) {
 
   const bool IS_TREASURE_HUNTER =
     PlayerBon::hasTrait(Trait::treasureHunter);
@@ -855,7 +854,7 @@ Cocoon::Cocoon(FeatureId id, Pos pos, Engine& engine) :
 }
 
 void Cocoon::bump(Actor& actorBumping) {
-  if(&actorBumping == eng.player) {
+  if(&actorBumping == Map::player) {
     if(itemContainer_.items_.empty() && isContentKnown_) {
       eng.log->addMsg("The cocoon is empty.");
     } else {
@@ -871,12 +870,12 @@ void Cocoon::triggerTrap(Actor& actor) {
 
   if(RND < 15) {
     eng.log->addMsg("There is a half-dissolved human body inside!");
-    eng.player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
+    Map::player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
   } else if(RND < 50) {
     trace << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId> spawnCandidates;
     for(unsigned int i = 1; i < endOfActorIds; i++) {
-      const ActorData& d = eng.actorDataHandler->dataList[i];
+      const ActorData& d = ActorData::dataList[i];
       if(d.isSpider && d.actorSize == actorSize_floor &&
           d.isAutoSpawnAllowed && d.isUnique == false) {
         spawnCandidates.push_back(d.id);
@@ -897,9 +896,9 @@ void Cocoon::triggerTrap(Actor& actor) {
 }
 
 bool Cocoon::open() {
-  const bool IS_SEEN = eng.map->cells[pos_.x][pos_.y].isSeenByPlayer;
+  const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
   if(IS_SEEN) eng.log->addMsg("The cocoon opens.");
-  triggerTrap(*eng.player);
+  triggerTrap(*Map::player);
   if(itemContainer_.items_.size() > 0) {
     if(IS_SEEN) eng.log->addMsg("There are some items inside.");
     itemContainer_.dropItems(pos_, eng);
@@ -913,21 +912,21 @@ bool Cocoon::open() {
 }
 
 //--------------------------------------------------------- ALTAR
-//Altar::Altar(FeatureId id, Pos pos, Engine& engine) :
+//Altar::Altar(FeatureId id, Pos pos) :
 //  FeatureStatic(id, pos, eng) {}
 //
 //void Altar::featureSpecific_examine() {
 //}
 
 //--------------------------------------------------------- CARVED PILLAR
-//CarvedPillar::CarvedPillar(FeatureId id, Pos pos, Engine& engine) :
+//CarvedPillar::CarvedPillar(FeatureId id, Pos pos) :
 //  FeatureStatic(id, pos, eng) {}
 //
 //void CarvedPillar::featureSpecific_examine() {
 //}
 
 //--------------------------------------------------------- BARREL
-//Barrel::Barrel(FeatureId id, Pos pos, Engine& engine) :
+//Barrel::Barrel(FeatureId id, Pos pos) :
 //  FeatureStatic(id, pos, eng) {}
 //
 //void Barrel::featureSpecific_examine() {

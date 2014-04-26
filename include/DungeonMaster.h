@@ -4,7 +4,7 @@
 #include <iostream>
 #include <math.h>
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "AbilityValues.h"
 #include "Colors.h"
 #include "Converters.h"
@@ -12,20 +12,16 @@
 #include "Utils.h"
 #include "ActorMonster.h"
 
-class Engine;
-
 class DungeonMaster {
 public:
-  DungeonMaster(Engine& engine) : clvl(1), xp(0), eng(engine) {
-    initXpArray();
-  }
+  DungeonMaster() : clvl(1), xp(0) {initXpArray();}
   ~DungeonMaster() {}
 
   void onMonsterKilled(Actor& actor);
   void onMonsterSpotted(Actor& actor);
 
-  void addSaveLines(vector<string>& lines) const;
-  void setParamsFromSaveLines(vector<string>& lines);
+  void storeToSaveLines(vector<string>& lines) const;
+  void setupFromSaveLines(vector<string>& lines);
 
   void winGame();
 
@@ -34,7 +30,7 @@ public:
 
   void playerLoseXpPercent(const int PERCENT);
 
-  int getMonsterTotXpWorth(const ActorData& d) const;
+  int getMonsterTotXpWorth(const ActorDataT& d) const;
 
   inline int getCLvl()  const {return clvl;}
   inline int getXp()    const {return xp;}
@@ -53,7 +49,6 @@ private:
   int clvl, xp;
 
   TimeData timeStarted;
-  Engine& eng;
 };
 
 #endif

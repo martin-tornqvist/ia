@@ -8,12 +8,12 @@
 
 using namespace std;
 
-class Engine;
+
 class Monster;
 
 class ActorFactory {
 public:
-  ActorFactory(Engine& engine) : eng(engine) {}
+  ActorFactory() {}
 
   void deleteAllMonsters() const;
 
@@ -28,7 +28,7 @@ private:
   friend class DebugModeStatPrinter;
   Actor* makeActorFromId(const ActorId id) const;
 
-  Engine& eng;
+
 };
 
 #endif

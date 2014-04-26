@@ -1,9 +1,9 @@
 #ifndef LOOK_H
 #define LOOK_H
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 
-class Engine;
+
 class Actor;
 class Item;
 class FeatureMob;
@@ -32,7 +32,7 @@ public:
 
 class Look {
 public:
-  Look(Engine& engine) : eng(engine) {}
+  Look() {}
 
   void markerAtPos(const Pos& pos, const MarkerTask markerTask,
                    const Item* const itemThrown);
@@ -49,7 +49,7 @@ private:
 
   Entity getEntityToDescribe(const Pos pos);
 
-  Engine& eng;
+
 };
 
 #endif

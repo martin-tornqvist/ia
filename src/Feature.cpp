@@ -1,6 +1,5 @@
 #include "Feature.h"
 
-#include "Engine.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -14,9 +13,9 @@
 #include "Utils.h"
 
 //---------------------------------------------------------- FEATURE
-Feature::Feature(FeatureId id, Pos pos, Engine& engine,
+Feature::Feature(FeatureId id, Pos pos,
                  FeatureSpawnData* spawnData) :
-  pos_(pos), eng(engine), data_(eng.featureDataHandler->getData(id)),
+  pos_(pos), data_(eng.featureDataHandler->getData(id)),
   hasBlood_(false) {
   (void)spawnData;
 }
@@ -26,8 +25,8 @@ void Feature::bump(Actor& actorBumping) {
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
   if(canMove(props) == false) {
-    if(&actorBumping == eng.player) {
-      if(eng.player->getPropHandler().allowSee()) {
+    if(&actorBumping == Map::player) {
+      if(Map::player->getPropHandler().allowSee()) {
         eng.log->addMsg(data_->messageOnPlayerBlocked);
       } else {
         eng.log->addMsg(data_->messageOnPlayerBlockedBlind);
@@ -152,8 +151,8 @@ void FeatureStatic::disarm() {
 }
 
 void FeatureStatic::bash(Actor& actorTrying) {
-  if(&actorTrying == eng.player) {
-    const bool IS_BLIND    = eng.player->getPropHandler().allowSee() == false;
+  if(&actorTrying == Map::player) {
+    const bool IS_BLIND    = Map::player->getPropHandler().allowSee() == false;
     const bool IS_BLOCKING = canMoveCmn() == false && getId() != feature_stairs;
     if(IS_BLOCKING) {
       eng.log->addMsg(
@@ -180,16 +179,16 @@ void FeatureStatic::bash(Actor& actorTrying) {
 
   bash_(actorTrying);
 
-  eng.gameTime->actorDidAct();
+  GameTime::actorDidAct();
 
-  eng.player->updateFov();
+  Map::player->updateFov();
   Renderer::drawMapAndInterface();
 }
 
 void FeatureStatic::bash_(Actor& actorTrying) {
   //Emitting the sound from the actor instead of the bashed object, because the
   //sound massage should be received even if the object is seen
-  const AlertsMonsters alertsMonsters = &actorTrying == eng.player ?
+  const AlertsMonsters alertsMonsters = &actorTrying == Map::player ?
                                         AlertsMonsters::yes :
                                         AlertsMonsters::no;
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
@@ -237,25 +236,25 @@ string Grave::getDescr(const bool DEFINITE_ARTICLE) const {
 }
 
 void Grave::bump(Actor& actorBumping) {
-  if(&actorBumping == eng.player) {
+  if(&actorBumping == Map::player) {
     eng.log->addMsg(inscription_);
   }
 }
 
 //---------------------------------------------------------- STAIRS
 void Stairs::bump(Actor& actorBumping) {
-  if(&actorBumping == eng.player) {
+  if(&actorBumping == Map::player) {
 
     const vector<string> choices {"Descend", "Save and quit", "Cancel"};
     const int CHOICE = eng.popup->showMenuMsg("", true, choices,
                        "A staircase leading downwards");
 
     if(CHOICE == 0) {
-      eng.player->pos = pos_;
+      Map::player->pos = pos_;
       trace << "Stairs: Calling DungeonClimb::tryUseDownStairs()" << endl;
       eng.dungeonClimb->tryUseDownStairs();
     } else if(CHOICE == 1) {
-      eng.player->pos = pos_;
+      Map::player->pos = pos_;
       eng.saveHandler->save();
       eng.quitToMainMenu_ = true;
     } else {

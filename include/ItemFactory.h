@@ -5,27 +5,21 @@
 
 #include "Item.h"
 
-using namespace std;
+namespace ItemFactory {
 
-class Engine;
+Item* spawnItem(const ItemId itemId, const int NR_ITEMS = 1);
 
-class ItemFactory {
-public:
-  ItemFactory(Engine& engine) : eng(engine) {}
+void setItemRandomizedProperties(Item* item);
 
-  Item* spawnItem(const ItemId itemId, const int NR_ITEMS = 1);
+//TODO Ugly function, refactor. Perhaps use a vector of ItemType as parameter?
+//(Then ItemDataT must store ItemType)
+Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
+                                const bool ALLOW_POTIONS);
 
-  void setItemRandomizedProperties(Item* item);
+Item* spawnItemOnMap(const ItemId itemId, const Pos& pos);
 
-  Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
-                                  const bool ALLOW_POTIONS);
+Item* copyItem(Item* oldItem);
 
-  Item* spawnItemOnMap(const ItemId itemId, const Pos& pos);
-
-  Item* copyItem(Item* oldItem);
-
-private:
-  Engine& eng;
-};
+} //ItemFactory
 
 #endif

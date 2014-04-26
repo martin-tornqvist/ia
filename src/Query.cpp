@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include "Engine.h"
 #include "Config.h"
 #include "Input.h"
 #include "Renderer.h"
@@ -12,7 +11,7 @@ using namespace std;
 
 void Query::waitForKeyPress() const {
   if(Config::isBotPlaying() == false) {
-    Input::readKeysUntilFound(eng);
+    Input::readKeysUntilFound();
   }
 }
 
@@ -21,14 +20,14 @@ YesNoAnswer Query::yesOrNo(char keyForSpecialEvent) const {
     return YesNoAnswer::yes;
   }
 
-  KeyboardReadRetData d = Input::readKeysUntilFound(eng);
+  KeyboardReadRetData d = Input::readKeysUntilFound();
   while(
     d.key_    != 'y'          &&
     d.key_    != 'n'          &&
     d.sdlKey_ != SDLK_ESCAPE  &&
     d.sdlKey_ != SDLK_SPACE   &&
     (d.key_ != keyForSpecialEvent || keyForSpecialEvent == -1)) {
-    d = Input::readKeysUntilFound(eng);
+    d = Input::readKeysUntilFound();
   }
   if(d.key_ == keyForSpecialEvent && keyForSpecialEvent != -1) {
     return YesNoAnswer::special;
@@ -53,7 +52,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
     while((d.key_ < '0' || d.key_ > '9') && d.sdlKey_ != SDLK_RETURN &&
           d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE &&
           d.sdlKey_ != SDLK_BACKSPACE) {
-      d = Input::readKeysUntilFound(eng);
+      d = Input::readKeysUntilFound();
     }
 
     if(d.sdlKey_ == SDLK_RETURN) {
@@ -90,15 +89,15 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
 
 void Query::waitForEscOrSpace() const {
   if(Config::isBotPlaying() == false) {
-    KeyboardReadRetData d = Input::readKeysUntilFound(eng);
+    KeyboardReadRetData d = Input::readKeysUntilFound();
     while(d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE) {
-      d = Input::readKeysUntilFound(eng);
+      d = Input::readKeysUntilFound();
     }
   }
 }
 
 Pos Query::dir() const {
-  KeyboardReadRetData d = Input::readKeysUntilFound(eng);
+  KeyboardReadRetData d = Input::readKeysUntilFound();
 
   while(d.sdlKey_ != SDLK_RIGHT   && d.sdlKey_ != SDLK_UP       &&
         d.sdlKey_ != SDLK_LEFT    && d.sdlKey_ != SDLK_DOWN     &&
@@ -108,7 +107,7 @@ Pos Query::dir() const {
         d.key_ != 'h' && d.key_ != 'j' && d.key_ != 'k' && d.key_ != 'l' &&
         d.key_ != 'y' && d.key_ != 'u' && d.key_ != 'b' && d.key_ != 'n' &&
         (d.key_ < '1' || d.key_ > '9' || d.key_ == '5')) {
-    d = Input::readKeysUntilFound(eng);
+    d = Input::readKeysUntilFound();
   }
 
   if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {

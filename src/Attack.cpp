@@ -1,7 +1,5 @@
 #include "Attack.h"
 
-#include "Engine.h"
-
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "GameTime.h"
@@ -20,13 +18,13 @@ AttackData::AttackData(Actor& attacker_, const Item& itemAttackedWith_,
                        Engine& engine) :
   attacker(&attacker_), curDefender(NULL), attackResult(failSmall),
   dmgRolls(0), dmgSides(0), dmgPlus(0), dmgRoll(0), dmg(0),
-  isIntrinsicAttack(false), isEtherealDefenderMissed(false), eng(engine) {
+  isIntrinsicAttack(false), isEtherealDefenderMissed(false) {
   isIntrinsicAttack = itemAttackedWith_.getData().isIntrinsic;
 }
 
 MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
-                                 Actor& defender_, Engine& engine) :
-  AttackData(attacker_, wpn_, engine), isDefenderDodging(false),
+                                 Actor& defender_) :
+  AttackData(attacker_, wpn_), isDefenderDodging(false),
   isBackstab(false), isWeakAttack(false) {
 
   curDefender = &defender_;
@@ -34,12 +32,12 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   const Pos& defPos = curDefender->pos;
 
   bool isDefenderAware = true;
-  if(attacker == eng.player) {
+  if(attacker == Map::player) {
     isDefenderAware =
       dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ > 0;
   } else {
     isDefenderAware =
-      eng.player->isSeeingActor(*attacker, NULL) ||
+      Map::player->isSeeingActor(*attacker, NULL) ||
       PlayerBon::hasTrait(Trait::vigilant);
   }
 
@@ -47,16 +45,16 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
   if(isDefenderAware) {
     const int DEFENDER_DODGE_SKILL =
       curDefender->getData().abilityVals.getVal(
-        ability_dodgeAttack, true, *curDefender);
+        AbilityId::dodgeAttack, true, *curDefender);
 
     const int DODGE_MOD_AT_FEATURE =
-      eng.map->cells[defPos.x][defPos.y].featureStatic->getDodgeModifier();
+      Map::cells[defPos.x][defPos.y].featureStatic->getDodgeModifier();
 
     const int DODGE_CHANCE_TOT = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;
 
     if(DODGE_CHANCE_TOT > 0) {
       isDefenderDodging =
-        eng.abilityRoll->roll(DODGE_CHANCE_TOT) >= successSmall;
+        AbilityRoll::roll(DODGE_CHANCE_TOT) >= successSmall;
     }
   }
 
@@ -65,14 +63,14 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
     isBackstab = false;
 
     const int ATTACKER_SKILL      = attacker->getData().abilityVals.getVal(
-                                      ability_accuracyMelee, true, *attacker);
+                                      AbilityId::accuracyMelee, true, *attacker);
     const int WPN_HIT_CHANCE_MOD  = wpn_.getData().meleeHitChanceMod;
 
     int hitChanceTot              = ATTACKER_SKILL + WPN_HIT_CHANCE_MOD;
 
     bool isAttackerAware = true;
-    if(attacker == eng.player) {
-      isAttackerAware = eng.player->isSeeingActor(*curDefender, NULL);
+    if(attacker == Map::player) {
+      isAttackerAware = Map::player->isSeeingActor(*curDefender, NULL);
     } else {
       Monster* const monster = dynamic_cast<Monster*>(attacker);
       isAttackerAware = monster->awareOfPlayerCounter_ > 0;
@@ -87,7 +85,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       bool isSmallBon = false;
 
       const FeatureStatic* const f =
-        eng.map->cells[defPos.x][defPos.y].featureStatic;
+        Map::cells[defPos.x][defPos.y].featureStatic;
       if(f->getId() == feature_trap) {
         const Trap* const t = dynamic_cast<const Trap*>(f);
         if(t->getTrapType() == trap_spiderWeb) {
@@ -125,7 +123,7 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
       hitChanceTot += isBigBon ? 50 : isSmallBon ? 20 : 0;
     }
 
-    attackResult = eng.abilityRoll->roll(hitChanceTot);
+    attackResult = AbilityRoll::roll(hitChanceTot);
 
     //Ethereal target missed?
     if(find(defProps.begin(), defProps.end(), propEthereal) != defProps.end()) {
@@ -165,8 +163,8 @@ MeleeAttackData::MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
 
 RangedAttackData::RangedAttackData(
   Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
-  const Pos& curPos_, Engine& engine, ActorSize intendedAimLevel_) :
-  AttackData(attacker_, wpn_, engine), hitChanceTot(0),
+  const Pos& curPos_, ActorSize intendedAimLevel_) :
+  AttackData(attacker_, wpn_), hitChanceTot(0),
   intendedAimLevel(actorSize_none), curDefenderSize(actorSize_none),
   verbPlayerAttacks(""), verbOtherAttacks("")  {
 
@@ -181,7 +179,7 @@ RangedAttackData::RangedAttackData(
       intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
       bool blockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksProjectiles(eng), blockers);
+      MapParse::parse(CellPred::BlocksProjectiles(), blockers);
       intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
                          actorSize_humanoid : actorSize_floor;
     }
@@ -194,7 +192,7 @@ RangedAttackData::RangedAttackData(
   if(curDefender != NULL) {
     trace << "RangedAttackData: Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
-                                    ability_accuracyRanged, true, *attacker);
+                                    AbilityId::accuracyRanged, true, *attacker);
     const int WPN_MOD           = wpn_.getData().rangedHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(curDefender->pos);
@@ -212,7 +210,7 @@ RangedAttackData::RangedAttackData(
 
     int unawareDefMod = 0;
     const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
-    if(attacker == eng.player && curDefender != eng.player && IS_ROGUE) {
+    if(attacker == Map::player && curDefender != Map::player && IS_ROGUE) {
       if(dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ <= 0) {
         unawareDefMod = 25;
       }
@@ -228,7 +226,7 @@ RangedAttackData::RangedAttackData(
 
     constrInRange(5, hitChanceTot, 99);
 
-    attackResult = eng.abilityRoll->roll(hitChanceTot);
+    attackResult = AbilityRoll::roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
       trace << "RangedAttackData: Attack roll succeeded" << endl;
@@ -241,7 +239,7 @@ RangedAttackData::RangedAttackData(
       }
 
       bool playerAimX3 = false;
-      if(attacker == eng.player) {
+      if(attacker == Map::player) {
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
         if(prop != NULL) {
@@ -264,7 +262,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
                                      const Pos& aimPos_, const Pos& curPos_,
                                      Engine& engine,
                                      ActorSize intendedAimLevel_) :
-  AttackData(attacker_, item_, engine), hitChanceTot(0),
+  AttackData(attacker_, item_), hitChanceTot(0),
   intendedAimLevel(actorSize_none), curDefenderSize(actorSize_none) {
 
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_, eng);
@@ -275,7 +273,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
       intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
       bool blockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksProjectiles(eng), blockers);
+      MapParse::parse(CellPred::BlocksProjectiles(), blockers);
       intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
                          actorSize_humanoid : actorSize_floor;
     }
@@ -288,7 +286,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
   if(curDefender != NULL) {
     trace << "MissileAttackData: Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
-                                    ability_accuracyRanged, true, *attacker);
+                                    AbilityId::accuracyRanged, true, *attacker);
     const int WPN_MOD           = item_.getData().missileHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(curDefender->pos);
@@ -306,7 +304,7 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
 
     int unawareDefMod = 0;
     const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
-    if(attacker == eng.player && curDefender != eng.player && IS_ROGUE) {
+    if(attacker == Map::player && curDefender != Map::player && IS_ROGUE) {
       if(dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ <= 0) {
         unawareDefMod = 25;
       }
@@ -320,13 +318,13 @@ MissileAttackData::MissileAttackData(Actor& attacker_, const Item& item_,
                        SIZE_MOD   +
                        unawareDefMod);
 
-    attackResult = eng.abilityRoll->roll(hitChanceTot);
+    attackResult = AbilityRoll::roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
       trace << "MissileAttackData: Attack roll succeeded" << endl;
 
       bool playerAimX3 = false;
-      if(attacker == eng.player) {
+      if(attacker == Map::player) {
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
         if(prop != NULL) {

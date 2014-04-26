@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include "Engine.h"
 #include "ItemArmor.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -22,6 +21,15 @@
 #include "Utils.h"
 
 using namespace std;
+
+namespace PropData {
+
+namespace {
+
+void PropDataHandler::addPropData(PropData& d) {
+  dataList[d.id] = d;
+  d = PropData();
+}
 
 void PropDataHandler::initDataList() {
   PropData d;
@@ -676,13 +684,16 @@ void PropDataHandler::initDataList() {
   addPropData(d);
 }
 
-void PropDataHandler::addPropData(PropData& d) {
-  dataList[d.id] = d;
-  d = PropData();
+} //namespace
+
+void init() {
+  initDataList();
 }
 
-PropHandler::PropHandler(Actor* owningActor, Engine& engine) :
-  owningActor_(owningActor), eng(engine) {
+} //PropData
+
+PropHandler::PropHandler(Actor* owningActor) :
+  owningActor_(owningActor) {
   appliedProps_.resize(0);
   actorTurnPropBuffer_.resize(0);
 
@@ -911,8 +922,8 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 
   prop->owningActor_    = owningActor_;
 
-  const bool IS_PLAYER  = owningActor_ == eng.player;
-  bool playerSeeOwner   = eng.player->isSeeingActor(*owningActor_, NULL);
+  const bool IS_PLAYER  = owningActor_ == Map::player;
+  bool playerSeeOwner   = Map::player->isSeeingActor(*owningActor_, NULL);
 
   if(FORCE_EFFECT == false) {
     vector<Prop*> allProps;
@@ -928,7 +939,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
             eng.log->addMsg(msg, clrWhite, true);
           }
         } else {
-          if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+          if(Map::player->isSeeingActor(*owningActor_, NULL)) {
             string msg = "";
             prop->getMsg(propMsgOnResMonster, msg);
             if(msg.empty() == false) {
@@ -996,7 +1007,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   if(DISABLE_REDRAW == false) {
     if(prop->shouldUpdatePlayerVisualWhenStartOrEnd()) {
       prop->owningActor_->updateColor();
-      eng.player->updateFov();
+      Map::player->updateFov();
       Renderer::drawMapAndInterface();
     }
   }
@@ -1065,16 +1076,16 @@ bool PropHandler::endAppliedProp(
 
     if(IS_VISUAL_UPDATE_NEEDED) {
       prop->owningActor_->updateColor();
-      eng.player->updateFov();
+      Map::player->updateFov();
       Renderer::drawMapAndInterface();
     }
 
-    if(owningActor_ == eng.player) {
+    if(owningActor_ == Map::player) {
       string msg = "";
       prop->getMsg(propMsgOnEndPlayer, msg);
       if(msg.empty() == false) {eng.log->addMsg(msg, clrWhite);}
     } else {
-      if(eng.player->isSeeingActor(*owningActor_, visionBlockers)) {
+      if(Map::player->isSeeingActor(*owningActor_, visionBlockers)) {
         string msg = "";
         prop->getMsg(propMsgOnEndMonster, msg);
         if(msg.empty() == false) {
@@ -1104,7 +1115,7 @@ void PropHandler::tick(const PropTurnMode turnMode,
     //(standard turns or actor turns)
     if(prop->getTurnMode() == turnMode) {
 
-      if(owningActor_ != eng.player) {
+      if(owningActor_ != Map::player) {
         if(prop->isMakingMonsterAware()) {
           dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter_ =
             owningActor_->getData().nrTurnsAwarePlayer;
@@ -1132,7 +1143,7 @@ void PropHandler::tick(const PropTurnMode turnMode,
   sources[int(PropSrc::inv)] = true;
   getPropsFromSources(invProps, sources);
   for(Prop * prop : invProps) {
-    if(owningActor_ != eng.player) {
+    if(owningActor_ != Map::player) {
       if(prop->isMakingMonsterAware()) {
         dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter_ =
           owningActor_->getData().nrTurnsAwarePlayer;
@@ -1340,7 +1351,7 @@ bool PropHandler::changeActorClr(SDL_Color& clr) const {
 
 void PropHandler::endAppliedPropsByMagicHealing() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
   for(bool & v : sources) {v = true;}
@@ -1354,8 +1365,8 @@ void PropHandler::endAppliedPropsByMagicHealing() {
   }
 }
 
-Prop::Prop(PropId id, Engine& engine, PropTurns turnsInit, int turns) :
-  turnsLeft_(turns), owningActor_(NULL), id_(id), eng(engine),
+Prop::Prop(PropId id, PropTurns turnsInit, int turns) :
+  turnsLeft_(turns), owningActor_(NULL), id_(id),
   data_(&(engine.propDataHandler->dataList[id])) {
 
   if(turnsInit == propTurnsStd) {
@@ -1368,14 +1379,14 @@ Prop::Prop(PropId id, Engine& engine, PropTurns turnsInit, int turns) :
 
 void PropBlessed::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(
     propCursed, visionBlockers, false);
 }
 
 void PropCursed::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(
     propBlessed, visionBlockers, false);
 }
@@ -1385,14 +1396,14 @@ void PropInfected::onNewTurn() {
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(eng, propTurnsStd));
     bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(eng), blockers);
+    MapParse::parse(CellPred::BlocksVision(), blockers);
     propHlr.endAppliedProp(propInfected, blockers, false);
   }
 }
 
 int PropDiseased::getChangedMaxHp(const int HP_MAX) const {
   if(
-    owningActor_ == eng.player &&
+    owningActor_ == Map::player &&
     PlayerBon::hasTrait(Trait::survivalist)) {
     //Survavlist halves HP lost - i.e. you only lose 25% instead of 50%
     return (HP_MAX * 3) / 4;
@@ -1405,7 +1416,7 @@ void PropDiseased::onStart() {
   //Actor::getHpMax() will now return a decreased value
   //cap current HP to the new, lower, maximum
   int& hp = owningActor_->hp_;
-  hp = min(eng.player->getHpMax(true), hp);
+  hp = min(Map::player->getHpMax(true), hp);
 }
 
 bool PropDiseased::tryResistOtherProp(const PropId id) const {
@@ -1416,7 +1427,7 @@ bool PropDiseased::tryResistOtherProp(const PropId id) const {
 void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   if(IS_PLAYER_SEE_OWNING_ACTOR) {
     const string& name1 = owningActor_->getNameThe();
-    const string& name2 = eng.actorDataHandler->dataList[actor_zuul].name_the;
+    const string& name2 = ActorData::dataList[actor_zuul].name_the;
     eng.log->addMsg(name1 + " was possessed by " + name2 + "!");
   }
   owningActor_->deadState = ActorDeadState::destroyed;
@@ -1429,13 +1440,13 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
 void PropPoisoned::onNewTurn() {
   if(owningActor_->deadState == ActorDeadState::alive) {
     const int DMG_N_TURN = 3;
-    const int TURN = eng.gameTime->getTurn();
+    const int TURN = GameTime::getTurn();
     if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN) {
 
-      if(owningActor_ == eng.player) {
+      if(owningActor_ == Map::player) {
         eng.log->addMsg("I am suffering from the poison!", clrMsgBad, true);
       } else {
-        if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+        if(Map::player->isSeeingActor(*owningActor_, NULL)) {
           eng.log->addMsg(
             owningActor_->getNameThe() + " suffers from poisoning!");
         }
@@ -1449,7 +1460,7 @@ void PropPoisoned::onNewTurn() {
 bool PropTerrified::allowAttackMelee(
   const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 
-  if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg(
       "I am too terrified to engage in close combat!");
   }
@@ -1464,15 +1475,15 @@ bool PropTerrified::allowAttackRanged(
 }
 
 int PropWound::getAbilityMod(const AbilityId ability) const {
-  const bool IS_SURVIVALIST = owningActor_ == eng.player &&
+  const bool IS_SURVIVALIST = owningActor_ == Map::player &&
                               PlayerBon::hasTrait(Trait::survivalist);
 
   const int DIV = IS_SURVIVALIST ? 2 : 1;
 
-  if(ability == ability_accuracyMelee)  return (nrWounds_ * -10)  / DIV;
-  if(ability == ability_accuracyRanged) return (nrWounds_ * -5)   / DIV;
-  if(ability == ability_dodgeAttack)    return (nrWounds_ * -10)  / DIV;
-  if(ability == ability_dodgeTrap)      return (nrWounds_ * -10)  / DIV;
+  if(ability == AbilityId::accuracyMelee)  return (nrWounds_ * -10)  / DIV;
+  if(ability == AbilityId::accuracyRanged) return (nrWounds_ * -5)   / DIV;
+  if(ability == AbilityId::dodgeAttack)    return (nrWounds_ * -10)  / DIV;
+  if(ability == AbilityId::dodgeTrap)      return (nrWounds_ * -10)  / DIV;
   return 0;
 }
 
@@ -1510,7 +1521,7 @@ void PropWound::healOneWound() {
     eng.log->addMsg("A wound is healed!");
   } else {
     bool visionBlockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+    MapParse::parse(CellPred::BlocksVision(), visionBlockers);
     owningActor_->getPropHandler().endAppliedProp(
       propWound, visionBlockers);
   }
@@ -1520,7 +1531,7 @@ void PropWound::onMore() {
   nrWounds_++;
 
   if(nrWounds_ >= 5) {
-    if(owningActor_ == eng.player) {
+    if(owningActor_ == Map::player) {
       eng.log->addMsg("I die from my wounds!");
     }
     owningActor_->die(false, false, true);
@@ -1532,10 +1543,10 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
   if(dir != Dir::center) {
 
-    if(owningActor_ == eng.player) {
+    if(owningActor_ == Map::player) {
       eng.log->addMsg("I struggle to tear out the spike!", clrMsgBad);
     } else {
-      if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+      if(Map::player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() +  " struggles in pain!",
                         clrMsgGood);
       }
@@ -1550,10 +1561,10 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
       if(Rnd::oneIn(4)) {
         nrSpikes_--;
         if(nrSpikes_ > 0) {
-          if(owningActor_ == eng.player) {
+          if(owningActor_ == Map::player) {
             eng.log->addMsg("I rip out a spike from my flesh!");
           } else {
-            if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+            if(Map::player->isSeeingActor(*owningActor_, NULL)) {
               eng.log->addMsg(
                 owningActor_->getNameThe() + " tears out a spike!");
             }
@@ -1567,7 +1578,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
 }
 
 bool PropConfused::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("I'm too confused.");
   }
   return false;
@@ -1578,7 +1589,7 @@ bool PropConfused::allowAttackMelee(
 
   (void)ALLOW_MESSAGE_WHEN_FALSE;
 
-  if(owningActor_ != eng.player) {
+  if(owningActor_ != Map::player) {
     return Rnd::coinToss();
   }
   return true;
@@ -1590,7 +1601,7 @@ bool PropConfused::allowAttackRanged(
   (void)ALLOW_MESSAGE_WHEN_FALSE;
 
 
-  if(owningActor_ != eng.player) {
+  if(owningActor_ != Map::player) {
     return Rnd::coinToss();
   }
   return true;
@@ -1621,7 +1632,7 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
 }
 
 void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
-  if(owningActor_ == eng.player) {
+  if(owningActor_ == Map::player) {
     vector<Actor*> SpottedEnemies;
     owningActor_->getSpottedEnemies(SpottedEnemies);
 
@@ -1657,7 +1668,7 @@ bool PropFrenzied::tryResistOtherProp(const PropId id) const {
 
 void PropFrenzied::onStart() {
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), blockers);
+  MapParse::parse(CellPred::BlocksVision(), blockers);
   owningActor_->getPropHandler().endAppliedProp(propConfused,  blockers);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, blockers);
   owningActor_->getPropHandler().endAppliedProp(propWeakened,  blockers);
@@ -1669,62 +1680,62 @@ void PropFrenzied::onEnd() {
 }
 
 bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("I'm too enraged to concentrate!");
   }
   return false;
 }
 
 bool PropFrenzied::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("I'm too enraged to concentrate!");
   }
   return false;
 }
 
 void PropBurning::onStart() {
-//  owningActor_->addLight(eng.map->light);
+//  owningActor_->addLight(Map::light);
 }
 
 void PropBurning::onNewTurn() {
-  if(owningActor_ == eng.player) {
+  if(owningActor_ == Map::player) {
     eng.log->addMsg("AAAARGH IT BURNS!!!", clrRedLgt);
   }
   owningActor_->hit(Rnd::dice(1, 2), DmgType::fire, false);
 }
 
 bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("Not while burning.");
   }
   return false;
 }
 
 bool PropBurning::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == eng.player && ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
     eng.log->addMsg("Not while burning.");
   }
   return false;
 }
 
 bool PropBlind::shouldUpdatePlayerVisualWhenStartOrEnd() const {
-  return owningActor_ == eng.player;
+  return owningActor_ == Map::player;
 }
 
 void PropParalyzed::onStart() {
-  Player* const player = eng.player;
+  Player* const player = Map::player;
   if(owningActor_ == player) {
     const Pos& playerPos = player->pos;
-    const int DYNAMITE_FUSE = eng.player->dynamiteFuseTurns;
-    const int FLARE_FUSE = eng.player->flareFuseTurns;
-    const int MOLOTOV_FUSE = eng.player->molotovFuseTurns;
+    const int DYNAMITE_FUSE = Map::player->dynamiteFuseTurns;
+    const int FLARE_FUSE = Map::player->flareFuseTurns;
+    const int MOLOTOV_FUSE = Map::player->molotovFuseTurns;
 
     if(DYNAMITE_FUSE > 0) {
       player->dynamiteFuseTurns = -1;
       player->updateColor();
       eng.log->addMsg("The lit Dynamite stick falls from my hands!");
       Feature* const f =
-        eng.map->cells[playerPos.x][playerPos.y].featureStatic;
+        Map::cells[playerPos.x][playerPos.y].featureStatic;
       if(f->isBottomless() == false) {
         eng.featureFactory->spawnFeatureAt(
           feature_litDynamite, playerPos,
@@ -1736,12 +1747,12 @@ void PropParalyzed::onStart() {
       player->updateColor();
       eng.log->addMsg("The lit Flare falls from my hands.");
       Feature* const f =
-        eng.map->cells[playerPos.x][playerPos.y].featureStatic;
+        Map::cells[playerPos.x][playerPos.y].featureStatic;
       if(f->isBottomless() == false) {
         eng.featureFactory->spawnFeatureAt(
           feature_litFlare, playerPos, new DynamiteSpawnData(FLARE_FUSE));
       }
-      eng.gameTime->updateLightMap();
+      GameTime::updateLightMap();
       player->updateFov();
       Renderer::drawMapAndInterface();
     }
@@ -1757,7 +1768,7 @@ void PropParalyzed::onStart() {
 }
 
 bool PropFainted::shouldUpdatePlayerVisualWhenStartOrEnd() const {
-  return owningActor_ == eng.player;
+  return owningActor_ == Map::player;
 }
 
 void PropFlared::onNewTurn() {
@@ -1765,7 +1776,7 @@ void PropFlared::onNewTurn() {
 
   if(turnsLeft_ == 0) {
     bool visionBlockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+    MapParse::parse(CellPred::BlocksVision(), visionBlockers);
     owningActor_->getPropHandler().tryApplyProp(
       new PropBurning(eng, propTurnsStd));
     owningActor_->getPropHandler().endAppliedProp(
@@ -1778,9 +1789,9 @@ bool PropRAcid::tryResistDmg(
 
   if(dmgType == DmgType::acid) {
     if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == eng.player) {
+      if(owningActor_ == Map::player) {
         eng.log->addMsg("I feel a faint burning sensation.");
-      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1794,9 +1805,9 @@ bool PropRCold::tryResistDmg(
 
   if(dmgType == DmgType::cold) {
     if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == eng.player) {
+      if(owningActor_ == Map::player) {
         eng.log->addMsg("I feel chilly.");
-      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1810,9 +1821,9 @@ bool PropRElec::tryResistDmg(
 
   if(dmgType == DmgType::electric) {
     if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == eng.player) {
+      if(owningActor_ == Map::player) {
         eng.log->addMsg("I feel a faint tingle.");
-      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1827,7 +1838,7 @@ bool PropRConfusion::tryResistOtherProp(const PropId id) const {
 
 void PropRConfusion::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propConfused, visionBlockers);
 }
 
@@ -1837,7 +1848,7 @@ bool PropRFear::tryResistOtherProp(const PropId id) const {
 
 void PropRFear::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, visionBlockers);
 }
 
@@ -1855,9 +1866,9 @@ bool PropRPhys::tryResistDmg(
 
   if(dmgType == DmgType::physical) {
     if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == eng.player) {
+      if(owningActor_ == Map::player) {
         eng.log->addMsg("I resist harm.");
-      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1872,7 +1883,7 @@ bool PropRFire::tryResistOtherProp(const PropId id) const {
 
 void PropRFire::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propBurning, visionBlockers);
 }
 
@@ -1881,9 +1892,9 @@ bool PropRFire::tryResistDmg(
 
   if(dmgType == DmgType::fire) {
     if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == eng.player) {
+      if(owningActor_ == Map::player) {
         eng.log->addMsg("I feel hot.");
-      } else if(eng.player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
         eng.log->addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1898,7 +1909,7 @@ bool PropRPoison::tryResistOtherProp(const PropId id) const {
 
 void PropRPoison::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propPoisoned, visionBlockers);
 }
 
@@ -1908,11 +1919,11 @@ bool PropRSleep::tryResistOtherProp(const PropId id) const {
 
 void PropRSleep::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   owningActor_->getPropHandler().endAppliedProp(propFainted, visionBlockers);
 }
 
 void PropBurrowing::onNewTurn() {
   const Pos& pos = owningActor_->pos;
-  eng.map->switchToDestroyedFeatAt(pos);
+  Map::switchToDestroyedFeatAt(pos);
 }

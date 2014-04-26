@@ -1,7 +1,5 @@
 #include "Explosion.h"
 
-#include "Engine.h"
-
 #include "FeatureSmoke.h"
 #include "Renderer.h"
 #include "Map.h"
@@ -17,7 +15,7 @@
 namespace {
 
 void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
-          const SDL_Color* const clrOverride, Engine& eng) {
+          const SDL_Color* const clrOverride) {
   Renderer::drawMapAndInterface();
 
   const SDL_Color& clrInner = clrOverride == NULL ? clrYellow : *clrOverride;
@@ -38,7 +36,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
       const vector<Pos>& inner = posLists.at(iOuter);
       for(const Pos & pos : inner) {
         if(
-          eng.map->cells[pos.x][pos.y].isSeenByPlayer &&
+          Map::cells[pos.x][pos.y].isSeenByPlayer &&
           blockers[pos.x][pos.y] == false) {
           isAnyCellSeenByPlayer = true;
           if(IS_TILES) {
@@ -62,7 +60,7 @@ void getArea(const Pos& c, const int RADI, Rect& rectRef) {
 }
 
 void getPositionsReached(const Rect& area, const Pos& origin,
-                         bool blockers[MAP_W][MAP_H], Engine& eng,
+                         bool blockers[MAP_W][MAP_H],
                          vector< vector<Pos> >& posListRef) {
   vector<Pos> line;
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
@@ -92,7 +90,7 @@ void getPositionsReached(const Rect& area, const Pos& origin,
 
 namespace Explosion {
 
-void runExplosionAt(const Pos& origin, Engine& eng, const ExplType explType,
+void runExplosionAt(const Pos& origin, const ExplType explType,
                     const ExplSrc explSrc, const int RADI_CHANGE,
                     const SfxId sfx, Prop* const prop,
                     const SDL_Color* const clrOverride) {
@@ -101,7 +99,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const ExplType explType,
   getArea(origin, RADI, area);
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksProjectiles(eng), blockers);
+  MapParse::parse(CellPred::BlocksProjectiles(), blockers);
 
   vector< vector<Pos> > posLists;
   getPositionsReached(area, origin, blockers, eng, posLists);
@@ -129,7 +127,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const ExplType explType,
     }
   }
 
-  for(Actor * actor : eng.gameTime->actors_) {
+  for(Actor * actor : GameTime::actors_) {
     const Pos& pos = actor->pos;
     if(actor->deadState == ActorDeadState::alive) {
       livingActors[pos.x][pos.y] = actor;
@@ -151,12 +149,12 @@ void runExplosionAt(const Pos& origin, Engine& eng, const ExplType explType,
 
       if(explType == ExplType::expl) {
         //Damage environment
-        if(curRadi <= 1) {eng.map->switchToDestroyedFeatAt(pos);}
+        if(curRadi <= 1) {Map::switchToDestroyedFeatAt(pos);}
         const int DMG = Rnd::dice(DMG_ROLLS - curRadi, DMG_SIDES) + DMG_PLUS;
 
         //Damage living actor
         if(livingActor != NULL) {
-          if(livingActor == eng.player) {
+          if(livingActor == Map::player) {
             eng.log->addMsg("I am hit by an explosion!", clrMsgBad);
           }
           livingActor->hit(DMG, DmgType::physical, true);
@@ -176,7 +174,7 @@ void runExplosionAt(const Pos& origin, Engine& eng, const ExplType explType,
       if(prop != NULL) {
         if(
           livingActor != NULL &&
-          (livingActor != eng.player || IS_DEM_EXP == false ||
+          (livingActor != Map::player || IS_DEM_EXP == false ||
            explSrc != ExplSrc::playerUseMoltvIntended)) {
           PropHandler& propHlr = livingActor->getPropHandler();
           Prop* propCpy = propHlr.makeProp(prop->getId(), propTurnsSpecific,
@@ -196,19 +194,19 @@ void runExplosionAt(const Pos& origin, Engine& eng, const ExplType explType,
     }
   }
 
-  eng.player->updateFov();
+  Map::player->updateFov();
   Renderer::drawMapAndInterface();
 
   if(prop != NULL) {delete prop;}
 }
 
-void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
+void runSmokeExplosionAt(const Pos& origin) {
   Rect area;
   const int RADI = EXPLOSION_STD_RADI;
   getArea(origin, RADI, area);
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksProjectiles(eng), blockers);
+  MapParse::parse(CellPred::BlocksProjectiles(), blockers);
 
   vector< vector<Pos> > posLists;
   getPositionsReached(area, origin, blockers, eng, posLists);
@@ -227,7 +225,7 @@ void runSmokeExplosionAt(const Pos& origin, Engine& eng) {
     }
   }
 
-  eng.player->updateFov();
+  Map::player->updateFov();
   Renderer::drawMapAndInterface();
 }
 

@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include "Engine.h"
 #include "ItemFactory.h"
 #include "Inventory.h"
 #include "Explosion.h"
@@ -11,7 +10,7 @@
 #include "GameTime.h"
 #include "ActorFactory.h"
 #include "Renderer.h"
-#include "CommonData.h"
+#include "CmnData.h"
 #include "Map.h"
 #include "Blood.h"
 #include "FeatureFactory.h"
@@ -23,7 +22,7 @@
 
 using namespace std;
 
-string Cultist::getCultistPhrase(Engine& engine) {
+string Cultist::getCultistPhrase() {
   vector<string> phraseCandidates;
 
   const God* const god = engine.gods->getCurrentGod();
@@ -75,7 +74,7 @@ string Cultist::getCultistPhrase(Engine& engine) {
 }
 
 void Cultist::spawnStartItems() {
-  const int DLVL = eng.map->getDlvl();
+  const int DLVL = Map::getDlvl();
 
   const int PISTOL = 6;
   const int PUMP_SHOTGUN = PISTOL + 4;
@@ -173,7 +172,7 @@ void FrostHound::spawnStartItems() {
 }
 
 void Zuul::place_() {
-  if(eng.actorDataHandler->dataList[actor_zuul].nrLeftAllowedToSpawn > 0) {
+  if(ActorData::dataList[actor_zuul].nrLeftAllowedToSpawn > 0) {
     //Note: Do not call die() here, that would have side effects such as
     //player getting XP. Instead, simply set the dead state to destroyed.
     deadState = ActorDeadState::destroyed;
@@ -199,7 +198,7 @@ bool Vortex::onActorTurn_() {
       if(awareOfPlayerCounter_ > 0) {
         trace << "Vortex: pullCooldown: " << pullCooldown << endl;
         trace << "Vortex: Is player aware" << endl;
-        const Pos& playerPos = eng.player->pos;
+        const Pos& playerPos = Map::player->pos;
         if(Utils::isPosAdj(pos, playerPos, true) == false) {
 
           const int CHANCE_TO_KNOCK = 25;
@@ -220,19 +219,19 @@ bool Vortex::onActorTurn_() {
               trace << "Vortex: Player position: ";
               trace << playerPos.x << "," << playerPos.y << ")" << endl;
               bool visionBlockers[MAP_W][MAP_H];
-              MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
-              if(isSeeingActor(*(eng.player), visionBlockers)) {
+              MapParse::parse(CellPred::BlocksVision(), visionBlockers);
+              if(isSeeingActor(*(Map::player), visionBlockers)) {
                 trace << "Vortex: I am seeing the player" << endl;
-                if(eng.player->isSeeingActor(*this, NULL)) {
+                if(Map::player->isSeeingActor(*this, NULL)) {
                   eng.log->addMsg("The Vortex attempts to pull me in!");
                 } else {
                   eng.log->addMsg("A powerful wind is pulling me!");
                 }
                 trace << "Vortex: Attempt pull (knockback)" << endl;
                 eng.knockBack->tryKnockBack(
-                  *(eng.player), knockBackFromPos, false, false);
+                  *(Map::player), knockBackFromPos, false, false);
                 pullCooldown = 5;
-                eng.gameTime->actorDidAct();
+                GameTime::actorDidAct();
                 return true;
               }
             }
@@ -276,26 +275,26 @@ bool Ghost::onActorTurn_() {
   if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
 
-      if(Utils::isPosAdj(pos, eng.player->pos, false)) {
+      if(Utils::isPosAdj(pos, Map::player->pos, false)) {
         if(Rnd::percentile() < 30) {
 
           bool blockers[MAP_W][MAP_H];
-          MapParse::parse(CellPred::BlocksVision(eng), blockers);
+          MapParse::parse(CellPred::BlocksVision(), blockers);
           const bool PLAYER_SEES_ME =
-            eng.player->isSeeingActor(*this, blockers);
+            Map::player->isSeeingActor(*this, blockers);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
           eng.log->addMsg(refer + " reaches for me... ");
           const AbilityRollResult rollResult =
-            eng.abilityRoll->roll(eng.player->getData().abilityVals.getVal(
-                                    ability_dodgeAttack, true, *this));
+            AbilityRoll::roll(Map::player->getData().abilityVals.getVal(
+                                AbilityId::dodgeAttack, true, *this));
           const bool PLAYER_DODGES = rollResult >= successSmall;
           if(PLAYER_DODGES) {
             eng.log->addMsg("I dodge!", clrMsgGood);
           } else {
-            eng.player->getPropHandler().tryApplyProp(
+            Map::player->getPropHandler().tryApplyProp(
               new PropSlowed(eng, propTurnsStd));
           }
-          eng.gameTime->actorDidAct();
+          GameTime::actorDidAct();
           return true;
         }
       }
@@ -383,13 +382,13 @@ bool Khephren::onActorTurn_() {
       if(hasSummonedLocusts == false) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksVision(eng), blockers);
+        MapParse::parse(CellPred::BlocksVision(), blockers);
 
-        if(isSeeingActor(*(eng.player), blockers)) {
+        if(isSeeingActor(*(Map::player), blockers)) {
           MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
           const int SPAWN_AFTER_X =
-            eng.player->pos.x + FOV_STD_RADI_INT + 1;
+            Map::player->pos.x + FOV_STD_RADI_INT + 1;
           for(int y = 0; y  < MAP_H; y++) {
             for(int x = 0; x <= SPAWN_AFTER_X; x++) {
               blockers[x][y] = true;
@@ -404,8 +403,8 @@ bool Khephren::onActorTurn_() {
           const int NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
             eng.log->addMsg("Khephren calls a plague of Locusts!");
-            eng.player->incrShock(ShockValue::shockValue_heavy,
-                                  ShockSrc::misc);
+            Map::player->incrShock(ShockValue::shockValue_heavy,
+                                   ShockSrc::misc);
             for(int i = 0; i < NR_OF_SPAWNS; i++) {
               Actor* const actor =
                 eng.actorFactory->spawnActor(actor_giantLocust,
@@ -417,7 +416,7 @@ bool Khephren::onActorTurn_() {
             }
             Renderer::drawMapAndInterface();
             hasSummonedLocusts = true;
-            eng.gameTime->actorDidAct();
+            GameTime::actorDidAct();
             return true;
           }
         }
@@ -432,9 +431,9 @@ bool Khephren::onActorTurn_() {
 
 void DeepOne::spawnStartItems() {
   inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(
-                              ItemId::deepOneJavelinAttack));
+                              ItemId::deepOneJavelinAtt));
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::deepOneSpearAttack));
+    eng.itemFactory->spawnItem(ItemId::deepOneSpearAtt));
 }
 
 void GiantBat::spawnStartItems() {
@@ -468,14 +467,14 @@ bool KeziahMason::onActorTurn_() {
       if(hasSummonedJenkin == false) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksVision(eng), blockers);
+        MapParse::parse(CellPred::BlocksVision(), blockers);
 
-        if(isSeeingActor(*(eng.player), blockers)) {
+        if(isSeeingActor(*(Map::player), blockers)) {
 
           MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
 
           vector<Pos> line;
-          eng.lineCalc->calcNewLine(pos, eng.player->pos, true, 9999,
+          eng.lineCalc->calcNewLine(pos, Map::player->pos, true, 9999,
                                     false, line);
 
           const int LINE_SIZE = line.size();
@@ -491,7 +490,7 @@ bool KeziahMason::onActorTurn_() {
               hasSummonedJenkin = true;
               jenkin->awareOfPlayerCounter_ = 999;
               jenkin->leader = this;
-              eng.gameTime->actorDidAct();
+              GameTime::actorDidAct();
               return true;
             }
           }
@@ -535,24 +534,24 @@ void OozePoison::spawnStartItems() {
     eng.itemFactory->spawnItem(ItemId::oozePoisonSpewPus));
 }
 
-void ColourOutOfSpace::spawnStartItems() {
+void ColourOOSpace::spawnStartItems() {
   inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::colourOutOfSpaceTouch));
+    eng.itemFactory->spawnItem(ItemId::colourOOSpaceTouch));
 }
 
-const SDL_Color& ColourOutOfSpace::getClr() {
+const SDL_Color& ColourOOSpace::getClr() {
   return currentColor;
 }
 
-void ColourOutOfSpace::onStandardTurn() {
+void ColourOOSpace::onStandardTurn() {
   currentColor.r = Rnd::range(40, 255);
   currentColor.g = Rnd::range(40, 255);
   currentColor.b = Rnd::range(40, 255);
 
   restoreHp(1, false);
 
-  if(eng.player->isSeeingActor(*this, NULL)) {
-    eng.player->getPropHandler().tryApplyProp(
+  if(Map::player->isSeeingActor(*this, NULL)) {
+    Map::player->getPropHandler().tryApplyProp(
       new PropConfused(eng, propTurnsStd));
   }
 }
@@ -610,7 +609,7 @@ bool WormMass::onActorTurn_() {
               chanceToSpawnNew -= 4;
               worm->chanceToSpawnNew = chanceToSpawnNew;
               worm->awareOfPlayerCounter_ = awareOfPlayerCounter_;
-              eng.gameTime->actorDidAct();
+              GameTime::actorDidAct();
               return true;
             }
           }
@@ -645,7 +644,7 @@ bool GiantLocust::onActorTurn_() {
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
               locust->awareOfPlayerCounter_ = awareOfPlayerCounter_;
-              eng.gameTime->actorDidAct();
+              GameTime::actorDidAct();
               return true;
             }
           }
@@ -675,9 +674,9 @@ bool LordOfSpiders::onActorTurn_() {
 
       if(Rnd::coinToss()) {
 
-        const Pos playerPos = eng.player->pos;
+        const Pos playerPos = Map::player->pos;
 
-        if(eng.player->isSeeingActor(*this, NULL)) {
+        if(Map::player->isSeeingActor(*this, NULL)) {
           eng.log->addMsg(data_->spellCastMessage);
         }
 
@@ -688,7 +687,7 @@ bool LordOfSpiders::onActorTurn_() {
 
               const Pos c(playerPos + Pos(dx, dy));
               const FeatureStatic* const mimicFeature =
-                eng.map->cells[c.x][c.y].featureStatic;
+                Map::cells[c.x][c.y].featureStatic;
 
               if(mimicFeature->canHaveStaticFeature()) {
 
@@ -746,9 +745,9 @@ bool MajorClaphamLee::onActorTurn_() {
       if(hasSummonedTombLegions == false) {
 
         bool visionBlockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+        MapParse::parse(CellPred::BlocksVision(), visionBlockers);
 
-        if(isSeeingActor(*(eng.player), visionBlockers)) {
+        if(isSeeingActor(*(Map::player), visionBlockers)) {
           eng.log->addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
           vector<ActorId> monsterIds;
           monsterIds.resize(0);
@@ -770,8 +769,8 @@ bool MajorClaphamLee::onActorTurn_() {
           eng.actorFactory->summonMonsters(pos, monsterIds, true, this);
           Renderer::drawMapAndInterface();
           hasSummonedTombLegions = true;
-          eng.player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
-          eng.gameTime->actorDidAct();
+          Map::player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
+          GameTime::actorDidAct();
           return true;
         }
       }
@@ -786,7 +785,7 @@ bool Zombie::tryResurrect() {
     if(hasResurrected == false) {
       deadTurnCounter += 1;
       if(deadTurnCounter > 5) {
-        if(pos != eng.player->pos && Rnd::percentile() < 7) {
+        if(pos != Map::player->pos && Rnd::percentile() < 7) {
           deadState = ActorDeadState::alive;
           hp_ = (getHpMax(true) * 3) / 4;
           glyph_ = data_->glyph;
@@ -794,14 +793,14 @@ bool Zombie::tryResurrect() {
           clr_ = data_->color;
           hasResurrected = true;
           data_->nrKills--;
-          if(eng.map->cells[pos.x][pos.y].isSeenByPlayer) {
+          if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
             eng.log->addMsg(
               getNameThe() + " rises again!!", clrWhite, true);
-            eng.player->incrShock(ShockValue::shockValue_some, ShockSrc::misc);
+            Map::player->incrShock(ShockValue::shockValue_some, ShockSrc::misc);
           }
 
           awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer * 2;
-          eng.gameTime->actorDidAct();
+          GameTime::actorDidAct();
           return true;
         }
       }

@@ -3,16 +3,16 @@
 
 #include <iostream>
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 
-class Engine;
+
 
 class Item;
 class Actor;
 
 class ItemDrop {
 public:
-  ItemDrop(Engine& engine) : eng(engine) {}
+  ItemDrop() {}
 
   void dropAllCharactersItems(Actor* actor, bool died);
 
@@ -25,7 +25,7 @@ public:
                              const int NR_ITEMS_TO_DROP = -1);
 
 private:
-  Engine& eng;
+
 };
 
 #endif

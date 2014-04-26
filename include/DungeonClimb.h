@@ -5,20 +5,17 @@
 
 using namespace std;
 
-class Engine;
 class SaveHandler;
 
 class DungeonClimb {
 public:
-  DungeonClimb(Engine& engine) : eng(engine) {}
+  DungeonClimb() {}
 
   void tryUseDownStairs();
 
   void travelDown(const int levels = 1);
 
 private:
-  Engine& eng;
-
   void makeLevel();
 };
 

@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include "Engine.h"
 #include "Map.h"
 #include "MapGen.h"
 #include "FeatureFactory.h"
@@ -18,7 +17,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
   MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
 
   //Put traps in non-plain rooms
-  for(Room * const room : eng.map->rooms) {
+  for(Room * const room : Map::rooms) {
     const RoomThemeId theme = room->roomTheme;
 
     if(theme != RoomThemeId::plain) {
@@ -48,7 +47,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
           for(int x = x0y0.x; x <= x1y1.x; x++) {
             if(
               blockers[x][y] == false &&
-              eng.map->cells[x][y].featureStatic->canHaveStaticFeature()) {
+              Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
               trapPosCandidates.push_back(Pos(x, y));
             }
           }
@@ -92,7 +91,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
   }
 
   const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS =
-    min(85, 30 + (eng.map->getDlvl() * 5));
+    min(85, 30 + (Map::getDlvl() * 5));
   if(Rnd::percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
     trace << "PopulateTraps: Trapping plain room" << endl;
 
@@ -102,7 +101,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
         if(
           blockers[x][y] == false &&
           eng.roomThemeMaker->themeMap[x][y] == RoomThemeId::plain &&
-          eng.map->cells[x][y].featureStatic->canHaveStaticFeature()) {
+          Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
           trapPosCandidates.push_back(Pos(x, y));
         }
       }
@@ -141,7 +140,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
 }
 
 void PopulateTraps::spawnTrapAt(const TrapId id, const Pos& pos) const {
-  FeatureStatic* const f = eng.map->cells[pos.x][pos.y].featureStatic;
+  FeatureStatic* const f = Map::cells[pos.x][pos.y].featureStatic;
   const FeatureData* const d = eng.featureDataHandler->getData(f->getId());
   eng.featureFactory->spawnFeatureAt(
     feature_trap, pos, new TrapSpawnData(d, id));

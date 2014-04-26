@@ -1,5 +1,5 @@
-#ifndef COMMON_TYPES_H
-#define COMMON_TYPES_H
+#ifndef CMN_TYPES_H
+#define CMN_TYPES_H
 
 #include <string>
 

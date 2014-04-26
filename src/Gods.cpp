@@ -1,6 +1,5 @@
 #include "Gods.h"
 
-#include "Engine.h"
 #include "Utils.h"
 
 void Gods::setRandomGod() {

@@ -8,11 +8,9 @@
 
 using namespace std;
 
-class Engine;
-
 class SaveHandler {
 public:
-  SaveHandler(Engine& engine) : eng(engine) {}
+  SaveHandler() {}
 
   void load();
   void save();
@@ -21,11 +19,9 @@ public:
 
 private:
   void collectLinesFromGame(vector<string>& lines);
-  void setGameParamsFromLines(vector<string>& lines) const;
+  void setupGameFromLines(vector<string>& lines) const;
   void readFile(vector<string>& lines);
   void writeFile(const vector<string>& lines) const;
-
-  Engine& eng;
 };
 
 #endif

@@ -1,12 +1,11 @@
 #include "ItemWeapon.h"
-#include "Engine.h"
 
 #include "Explosion.h"
 #include "Utils.h"
 
 Weapon::Weapon(ItemData* const itemData, ItemData* const ammoData,
                Engine& engine) :
-  Item(itemData, engine), ammoData_(ammoData) {
+  Item(itemData), ammoData_(ammoData) {
   nrAmmoLoaded = 0;
   ammoCapacity = 0;
   effectiveRangeLimit = 3;

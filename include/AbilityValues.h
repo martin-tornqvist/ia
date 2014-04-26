@@ -7,29 +7,26 @@
 
 using namespace std;
 
-class Engine;
 class Actor;
 
-enum AbilityId {
-  ability_empty,
-  ability_searching,
-  ability_accuracyRanged,
-  ability_accuracyMelee,
-  ability_dodgeTrap,
-  ability_dodgeAttack,
-  ability_stealth,
+enum class AbilityId {
+  empty,
+  searching,
+  accuracyRanged,
+  accuracyMelee,
+  dodgeTrap,
+  dodgeAttack,
+  stealth,
   endOfAbilityId
 };
 
 //Each actor has an instance of this class
-class AbilityValues {
+class AbilityVals {
 public:
-  AbilityValues() : eng(NULL) {
-    reset();
-  }
+  AbilityVals() {reset();}
 
-  AbilityValues& operator=(const AbilityValues& other) {
-    for(unsigned int i = 0; i < endOfAbilityId; i++) {
+  AbilityVals& operator=(const AbilityVals& other) {
+    for(int i = 0; i < int(AbilityId::endOfAbilityId); i++) {
       abilityList[i] = other.abilityList[i];
     }
     return *this;
@@ -37,32 +34,35 @@ public:
 
   void reset();
 
-  int getVal(const AbilityId ability, const bool IS_AFFECTED_BY_PROPS,
+  int getVal(const AbilityId abilityId, const bool IS_AFFECTED_BY_PROPS,
              Actor& actor) const;
 
   inline int getRawVal(const AbilityId ability) {
-    return abilityList[ability];
+    return abilityList[int(ability)];
   }
 
   void setVal(const AbilityId ability, const int VAL);
 
   void changeVal(const AbilityId ability, const int CHANGE);
-
-  Engine* eng;
 private:
-  int abilityList[endOfAbilityId];
+  int abilityList[int(AbilityId::endOfAbilityId)];
 };
 
+//TODO Is this necessary to have? Most functionality now just roll their own
+//percentile dice, or use a coin toss, etc. Probably the only case where
+//failSmall and failBig is used is for melee attack messages. It seems simpler
+//and more transparent to just use the Rnd functions for rolling, together with
+//AbilityVals::getVal() for retrieving abilities to roll against.
 enum AbilityRollResult {
   failCritical, failBig, failNormal, failSmall,
   successSmall, successNormal, successBig, successCritical
 };
 
-//This is a single global class
-class AbilityRoll {
-public:
-  AbilityRoll() {}
-  AbilityRollResult roll(const int TOTAL_SKILL_VALUE) const;
-};
+//TODO See comment above for AbilityRollResult
+namespace AbilityRoll {
+
+AbilityRollResult roll(const int TOT_SKILL_VALUE);
+
+} //AbilityRoll
 
 #endif

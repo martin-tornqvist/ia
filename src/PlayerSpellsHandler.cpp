@@ -1,6 +1,5 @@
 #include "PlayerSpellsHandler.h"
 
-#include "Engine.h"
 #include "ItemScroll.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -65,12 +64,12 @@ void PlayerSpellsHandler::tryCastPrevSpell() {
 }
 
 void PlayerSpellsHandler::tryCast(const Spell* const spell) {
-  if(eng.player->getPropHandler().allowRead(true)) {
+  if(Map::player->getPropHandler().allowRead(true)) {
     eng.log->clearLog();
     Renderer::drawMapAndInterface();
 
-    const Range spiCost = spell->getSpiCost(false, eng.player, eng);
-    if(spiCost.upper >= eng.player->getSpi()) {
+    const Range spiCost = spell->getSpiCost(false, Map::player, eng);
+    if(spiCost.upper >= Map::player->getSpi()) {
       eng.log->addMsg("Cast spell and risk depleting your spirit (y/n)?",
                       clrWhiteHigh);
       Renderer::drawMapAndInterface();
@@ -91,7 +90,7 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
 
     const int BLOOD_SORC_HP_DRAINED = 2;
     if(isBloodSorc) {
-      if(eng.player->getHp() <= BLOOD_SORC_HP_DRAINED) {
+      if(Map::player->getHp() <= BLOOD_SORC_HP_DRAINED) {
         eng.log->addMsg("I do not have enough life force to cast this spell.");
         Renderer::drawMapAndInterface();
         return;
@@ -101,13 +100,13 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
     eng.log->addMsg("I cast " + spell->getName() + "!");
 
     if(isBloodSorc) {
-      eng.player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure, false);
+      Map::player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure, false);
     }
-    if(eng.player->deadState == ActorDeadState::alive) {
-      spell->cast(eng.player, true, eng);
+    if(Map::player->deadState == ActorDeadState::alive) {
+      spell->cast(Map::player, true, eng);
       prevSpellCast_ = spell;
       if(isWarlock && Rnd::oneIn(2)) {
-        eng.player->getPropHandler().tryApplyProp(
+        Map::player->getPropHandler().tryApplyProp(
           new PropWarlockCharged(eng, propTurnsStd));
       }
     }
@@ -146,7 +145,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 
     int x = 28;
     str = "SPI:";
-    const Range spiCost = spell->getSpiCost(false, eng.player, eng);
+    const Range spiCost = spell->getSpiCost(false, Map::player, eng);
     const string lowerStr = toStr(spiCost.lower);
     const string upperStr = toStr(spiCost.upper);
     str += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
@@ -168,12 +167,12 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
   Renderer::updateScreen();
 }
 
-void PlayerSpellsHandler::addSaveLines(vector<string>& lines) const {
+void PlayerSpellsHandler::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(knownSpells_.size()));
   for(Spell * s : knownSpells_) {lines.push_back(toStr(int(s->getId())));}
 }
 
-void PlayerSpellsHandler::setParamsFromSaveLines(vector<string>& lines) {
+void PlayerSpellsHandler::setupFromSaveLines(vector<string>& lines) {
   const int NR_SPELLS = toInt(lines.front());
   lines.erase(lines.begin());
 

@@ -7,7 +7,6 @@
 
 #include "AbilityValues.h"
 #include "Converters.h"
-#include "Engine.h"
 
 #include <math.h>
 
@@ -62,9 +61,9 @@ extern vector<Trait> traitsPicked_;
 
 void init();
 
-void addSaveLines(vector<string>& lines);
+void storeToSaveLines(vector<string>& lines);
 
-void setParamsFromSaveLines(vector<string>& lines);
+void setupFromSaveLines(vector<string>& lines);
 
 void getPickableBgs(vector<Bg>& bgsRef);
 
@@ -86,9 +85,9 @@ void getBgDescr(const Bg id, vector<string>& linesRef);
 
 void getAllPickedTraitsTitlesLine(string& strRef);
 
-void pickTrait(const Trait id, Engine& eng);
+void pickTrait(const Trait id);
 
-void pickBg(const Bg bg, Engine& eng);
+void pickBg(const Bg bg);
 
 void setAllTraitsToPicked();
 

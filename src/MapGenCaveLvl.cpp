@@ -4,7 +4,6 @@
 #include <vector>
 #include <algorithm>
 
-#include "Engine.h"
 #include "Converters.h"
 #include "FeatureFactory.h"
 #include "ActorPlayer.h"
@@ -15,19 +14,19 @@
 #include "Utils.h"
 
 bool MapGenCaveLvl::run_() {
-  eng.map->resetMap();
+  Map::resetMap();
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
       Wall* const wall = dynamic_cast<Wall*>(
-                           eng.map->cells[x][y].featureStatic);
+                           Map::cells[x][y].featureStatic);
       wall->wallType = wall_cave;
       wall->isMossGrown = false;
     }
   }
 
-  const Pos& playerPos = eng.player->pos;
+  const Pos& playerPos = Map::player->pos;
   eng.featureFactory->spawnFeatureAt(feature_caveFloor, playerPos);
 
   vector<Pos> previousCenters(1, playerPos);

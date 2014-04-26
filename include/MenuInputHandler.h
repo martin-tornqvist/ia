@@ -6,7 +6,7 @@
 
 #include "MenuBrowser.h"
 
-class Engine;
+
 
 enum class MenuAction {browsed, selected, selectedShift, space, esc};
 
@@ -15,10 +15,10 @@ public:
   MenuAction getAction(MenuBrowser& browser);
 
 private:
-  Engine& eng;
 
-  friend class Engine;
-  MenuInputHandler(Engine& engine) : eng(engine) {}
+
+  friend
+  MenuInputHandler() {}
 };
 
 #endif

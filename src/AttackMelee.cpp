@@ -1,7 +1,5 @@
 #include "Attack.h"
 
-#include "Engine.h"
-
 #include "GameTime.h"
 #include "ItemWeapon.h"
 #include "Renderer.h"
@@ -52,7 +50,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
     }
   }
 
-  if(data.curDefender == eng.player) {
+  if(data.curDefender == Map::player) {
     if(data.attackResult >= failSmall) {
       dynamic_cast<Monster*>(data.attacker)->isStealth = false;
     }
@@ -60,7 +58,7 @@ void Attack::melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
     Monster* const monster = dynamic_cast<Monster*>(data.curDefender);
     monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
   }
-  eng.gameTime->actorDidAct();
+  GameTime::actorDidAct();
 }
 
 void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
@@ -69,15 +67,15 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
 
   if(data.isDefenderDodging) {
     //----- DEFENDER DODGES --------
-    if(data.attacker == eng.player) {
-      if(eng.player->isSeeingActor(*data.curDefender, NULL)) {
+    if(data.attacker == Map::player) {
+      if(Map::player->isSeeingActor(*data.curDefender, NULL)) {
         otherName = data.curDefender->getNameThe();
       } else {
         otherName = "It ";
       }
       eng.log->addMsg(otherName + " dodges my attack.");
     } else {
-      if(eng.player->isSeeingActor(*data.attacker, NULL)) {
+      if(Map::player->isSeeingActor(*data.attacker, NULL)) {
         otherName = data.attacker->getNameThe();
       } else {
         otherName = "It";
@@ -86,7 +84,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
     }
   } else if(data.attackResult <= failSmall) {
     //----- BAD AIMING --------
-    if(data.attacker == eng.player) {
+    if(data.attacker == Map::player) {
       if(data.attackResult == failSmall) {
         eng.log->addMsg("I barely miss!");
       } else if(data.attackResult == failNormal) {
@@ -96,7 +94,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
       }
       Audio::play(wpn.getData().meleeMissSfx);
     } else {
-      if(eng.player->isSeeingActor(*data.attacker, NULL)) {
+      if(Map::player->isSeeingActor(*data.attacker, NULL)) {
         otherName = data.attacker->getNameThe();
       } else {
         otherName = "It";
@@ -113,8 +111,8 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
     //----- AIM IS CORRECT -------
     if(data.isEtherealDefenderMissed) {
       //----- ATTACK MISSED DUE TO ETHEREAL TARGET --------
-      if(data.attacker == eng.player) {
-        if(eng.player->isSeeingActor(*data.curDefender, NULL)) {
+      if(data.attacker == Map::player) {
+        if(Map::player->isSeeingActor(*data.curDefender, NULL)) {
           otherName = data.curDefender->getNameThe();
         } else {
           otherName = "It ";
@@ -122,7 +120,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
         eng.log->addMsg(
           "My attack passes right through " + otherName + "!");
       } else {
-        if(eng.player->isSeeingActor(*data.attacker, NULL)) {
+        if(Map::player->isSeeingActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();
         } else {
           otherName = "It";
@@ -152,10 +150,10 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
         case MeleeHitSize::hard:    dmgPunct = "!!!"; break;
       }
 
-      if(data.attacker == eng.player) {
+      if(data.attacker == Map::player) {
         const string wpnVerb = wpn.getData().meleeAttMsgs.player;
 
-        if(eng.player->isSeeingActor(*data.curDefender, NULL)) {
+        if(Map::player->isSeeingActor(*data.curDefender, NULL)) {
           otherName = data.curDefender->getNameThe();
         } else {
           otherName = "it";
@@ -182,7 +180,7 @@ void Attack::printMeleeMsgAndPlaySfx(const MeleeAttackData& data,
       } else {
         const string wpnVerb = wpn.getData().meleeAttMsgs.other;
 
-        if(eng.player->isSeeingActor(*data.attacker, NULL)) {
+        if(Map::player->isSeeingActor(*data.attacker, NULL)) {
           otherName = data.attacker->getNameThe();
         } else {
           otherName = "It";

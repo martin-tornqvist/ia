@@ -1,6 +1,5 @@
 #include "FeatureProxEvent.h"
 
-#include "Engine.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
 #include "Map.h"
@@ -12,7 +11,7 @@
 
 //-------------------------------------------PROX EVENT
 void ProxEvent::newTurn() {
-  if(Utils::isPosAdj(pos_, eng.player->pos, true)) {
+  if(Utils::isPosAdj(pos_, Map::player->pos, true)) {
     playerIsNear();
   }
 }
@@ -24,7 +23,7 @@ void ProxEventWallCrumble::playerIsNear() {
   const int NR_WALL_CELLS = wallCells_.size();
   for(int i = 0; i < NR_WALL_CELLS; i++) {
     const Pos c = wallCells_.at(i);
-    FeatureStatic* const f = eng.map->cells[c.x][c.y].featureStatic;
+    FeatureStatic* const f = Map::cells[c.x][c.y].featureStatic;
     const bool IS_VISION_PASSABLE = f->isVisionPassable();
     const bool IS_WALK_PASSABLE   = f->canMoveCmn();
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
@@ -35,7 +34,7 @@ void ProxEventWallCrumble::playerIsNear() {
   const int NR_INNER_CELLS = innerCells_.size();
   for(int i = 0; i < NR_INNER_CELLS; i++) {
     const Pos c = innerCells_.at(i);
-    FeatureStatic* const f  = eng.map->cells[c.x][c.y].featureStatic;
+    FeatureStatic* const f  = Map::cells[c.x][c.y].featureStatic;
     const bool IS_VISION_PASSABLE = f->isVisionPassable();
     const bool IS_WALK_PASSABLE   = f->canMoveCmn();
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
@@ -52,22 +51,22 @@ void ProxEventWallCrumble::playerIsNear() {
         const Pos pos = wallCells_.at(i);
         if(Utils::isPosInside(
               pos, Rect(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2)))) {
-          eng.map->switchToDestroyedFeatAt(wallCells_.at(i));
+          Map::switchToDestroyedFeatAt(wallCells_.at(i));
         }
       }
 
       bool isOpeningMade = true;
       for(int i = 0; i < NR_WALL_CELLS; i++) {
         const Pos pos = wallCells_.at(i);
-        if(Utils::isPosAdj(eng.player->pos, pos, true)) {
-          FeatureStatic* const f = eng.map->cells[pos.x][pos.y].featureStatic;
+        if(Utils::isPosAdj(Map::player->pos, pos, true)) {
+          FeatureStatic* const f = Map::cells[pos.x][pos.y].featureStatic;
           if(f->canMoveCmn() == false) {
             isOpeningMade = false;
           }
         }
       }
 
-      eng.player->updateFov();
+      Map::player->updateFov();
       Renderer::drawMapAndInterface();
 
       done = isOpeningMade;
@@ -130,9 +129,9 @@ void ProxEventWallCrumble::playerIsNear() {
     }
 
     eng.log->addMsg("The walls suddenly crumbles!");
-    eng.player->updateFov();
+    Map::player->updateFov();
     Renderer::drawMapAndInterface();
-    eng.gameTime->eraseFeatureMob(this, true);
+    GameTime::eraseFeatureMob(this, true);
   }
 }
 

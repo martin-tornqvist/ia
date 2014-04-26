@@ -1,6 +1,5 @@
 #include "FeatureLitDynamite.h"
 
-#include "Engine.h"
 #include "Explosion.h"
 #include "Map.h"
 #include "Fov.h"
@@ -13,18 +12,18 @@ void LitDynamite::newTurn() {
     const int D_R =
       PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
     Explosion::runExplosionAt(pos_, eng, ExplType::expl, ExplSrc::misc, D_R);
-    eng.gameTime->eraseFeatureMob(this, true);
+    GameTime::eraseFeatureMob(this, true);
   }
 }
 
 void LitFlare::newTurn() {
   life_--;
-  if(life_ <= 0) {eng.gameTime->eraseFeatureMob(this, true);}
+  if(life_ <= 0) {GameTime::eraseFeatureMob(this, true);}
 }
 
-LitFlare::LitFlare(FeatureId id, Pos pos, Engine& engine,
+LitFlare::LitFlare(FeatureId id, Pos pos,
                    DynamiteSpawnData* spawnData) :
-  FeatureMob(id, pos, engine), life_(spawnData->turnsLeftToExplosion_) {
+  FeatureMob(id, pos), life_(spawnData->turnsLeftToExplosion_) {
 }
 
 void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
@@ -38,11 +37,11 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
   for(int y = x0y0.y; y <= x1y1.y; y++) {
     for(int x = x0y0.x; x <= x1y1.x; x++) {
       visionBlockers[x][y] =
-        eng.map->cells[x][y].featureStatic->isVisionPassable() == false;
+        Map::cells[x][y].featureStatic->isVisionPassable() == false;
     }
   }
 
-  eng.fov->runFovOnArray(visionBlockers, pos_, myLight, false);
+  Fov::runFovOnArray(visionBlockers, pos_, myLight, false);
   for(int y = x0y0.y; y <= x1y1.y; y++) {
     for(int x = x0y0.x; x <= x1y1.x; x++) {
       if(myLight[x][y]) {

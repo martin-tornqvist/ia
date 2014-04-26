@@ -15,8 +15,8 @@ enum ItemActivateReturnType {
 
 class Item {
 public:
-  Item(ItemData* itemData, Engine& engine) :
-    nrItems(1), data_(itemData), eng(engine) {}
+  Item(ItemDataT* itemData) :
+    nrItems(1), data_(itemData) {}
 
   Item& operator=(Item& other) {(void)other; return *this;}
 
@@ -24,7 +24,7 @@ public:
 
   virtual void reset() {nrItems = 1;}
 
-  const ItemData& getData()   const {return *data_;}
+  const ItemDataT& getData()  const {return *data_;}
   virtual SDL_Color getClr()  const {return data_->clr;}
   char getGlyph()             const {return data_->glyph;}
   TileId getTile()            const {return data_->tile;}
@@ -33,8 +33,8 @@ public:
     (void)IS_SILENT_IDENTIFY;
   }
 
-  virtual void addSaveLines(vector<string>& lines)            {(void)lines;}
-  virtual void setParamsFromSaveLines(vector<string>& lines)  {(void)lines;}
+  virtual void storeToSaveLines(vector<string>& lines)            {(void)lines;}
+  virtual void setupFromSaveLines(vector<string>& lines)  {(void)lines;}
 
   int getWeight() const {return data_->itemWeight * nrItems;}
 
@@ -74,9 +74,7 @@ protected:
     propsEnabledOnCarrier.resize(0);
   }
 
-  ItemData* data_;
-
-  Engine& eng;
+  ItemDataT* data_;
 
   //Called by the ItemDrop class to make noise etc
   friend class ItemDrop;

@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include "Engine.h"
 #include "Colors.h"
 #include "Renderer.h"
 #include "MenuInputHandler.h"
@@ -206,7 +205,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
         if(browser.isPosAtElement(1)) {
           if(eng.saveHandler->isSaveAvailable()) {
             eng.saveHandler->load();
-            eng.gameTime->insertActorInLoop(dynamic_cast<Actor*>(eng.player));
+            GameTime::insertActorInLoop(dynamic_cast<Actor*>(Map::player));
             eng.dungeonClimb->travelDown();
             return GameEntryMode::loadGame;
           } else {
@@ -220,7 +219,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
           draw(browser);
         }
         if(browser.isPosAtElement(3)) {
-          Config::runOptionsMenu(eng);
+          Config::runOptionsMenu();
           draw(browser);
         }
         if(browser.isPosAtElement(4)) {

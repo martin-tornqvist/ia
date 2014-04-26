@@ -6,14 +6,14 @@
 #include <iostream>
 
 #include "Art.h"
-#include "CommonData.h"
+#include "CmnData.h"
 #include "RoomTheme.h"
 #include "MapPatterns.h"
 #include "Properties.h"
 
 using namespace std;
 
-class Engine;
+
 
 enum FeatureId {
   feature_empty,

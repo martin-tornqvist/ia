@@ -1,6 +1,5 @@
 #include "RoomTheme.h"
 
-#include "Engine.h"
 #include "MapGen.h"
 #include "FeatureData.h"
 #include "FeatureFactory.h"
@@ -20,9 +19,7 @@ void RoomThemeMaker::run() {
 
   assignRoomThemes();
 
-  vector<Room*>& rooms = eng.map->rooms;
-
-  for(Room * const room : rooms) {
+  for(Room * const room : Map::rooms) {
     applyThemeToRoom(*room);
     makeRoomDarkWithChance(*room);
   }
@@ -73,7 +70,7 @@ int RoomThemeMaker::getRandomNrFeaturesForTheme(const RoomThemeId theme) const {
 
 int RoomThemeMaker::nrThemeInMap(const RoomThemeId theme) const {
   int nr = 0;
-  for(Room * r : eng.map->rooms) {if(r->roomTheme == theme) nr++;}
+  for(Room * r : Map::rooms) {if(r->roomTheme == theme) nr++;}
   return nr;
 }
 
@@ -172,7 +169,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
         vector<Pos> originCandidates;
         for(int y = room.getY0(); y <= room.getY1(); y++) {
           for(int x = room.getX0(); x <= room.getX1(); x++) {
-            if(eng.map->cells[x][y].featureStatic->getId() == feature_altar) {
+            if(Map::cells[x][y].featureStatic->getId() == feature_altar) {
               origin = Pos(x, y);
               y = 999;
               x = 999;
@@ -299,12 +296,12 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
       default: break;
     }
 
-    chanceToMakeDark += eng.map->getDlvl() - 1;
+    chanceToMakeDark += Map::getDlvl() - 1;
 
     if(Rnd::range(1, 100) < chanceToMakeDark) {
       for(int y = room.getY0(); y <= room.getY1(); y++) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
-          eng.map->cells[x][y].isDark = true;
+          Map::cells[x][y].isDark = true;
         }
       }
     }
@@ -418,8 +415,7 @@ void RoomThemeMaker::assignRoomThemes() {
   const int MAX_DIM = 12;
   const int NR_NON_PLAIN_THEMED = Rnd::range(1, 4);
 
-  vector<Room*>& rooms = eng.map->rooms;
-  const int NR_ROOMS = rooms.size();
+  const int NR_ROOMS = Map::rooms.size();
 
   vector<bool> isAssigned(NR_ROOMS, false);
 

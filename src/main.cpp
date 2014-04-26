@@ -1,49 +1,45 @@
+#include <iostream>
+
 #include <SDL.h>
 
-#include "Engine.h"
+#include "InitGame.h"
 
-#include "MainMenu.h"
+#include "SdlWrapper.h"
+#include "Config.h"
+#include "Input.h"
 #include "Renderer.h"
-#include "InventoryHandler.h"
+#include "MainMenu.h"
 #include "PlayerBon.h"
+#include "Bot.h"
 #include "PlayerCreateCharacter.h"
 #include "ActorPlayer.h"
 #include "MapGen.h"
-#include "PopulateMonsters.h"
 #include "DungeonClimb.h"
+#include "DungeonMaster.h"
 #include "Popup.h"
-#include "CharacterLines.h"
 #include "Log.h"
 #include "Query.h"
 #include "Highscore.h"
 #include "Postmortem.h"
-#include "DungeonMaster.h"
-#include "DebugModeStatPrinter.h"
-#include "Audio.h"
-#include "Bot.h"
-#include "Input.h"
-#include "SdlWrapper.h"
 
 #ifdef _WIN32
 #undef main
 #endif
+
+using namespace std;
+
 int main(int argc, char* argv[]) {
   trace << "main()..." << endl;
 
   (void)argc;
   (void)argv;
 
-  Engine eng;
-  SdlWrapper::init();
-  Config::init();
-  Input::init();
-  Renderer::init(eng);
-  Audio::init();
+  Init::initIO();
+  Init::initGame();
 
   bool quitGame = false;
   while(quitGame == false) {
-    PlayerBon::init();
-    eng.initGame();
+    Init::initSession();
 
     int introMusChannel = -1;
     const GameEntryMode gameEntryType =
@@ -57,16 +53,16 @@ int main(int argc, char* argv[]) {
           PlayerBon::setAllTraitsToPicked();
           eng.bot->init();
         }
-        eng.playerCreateCharacter->createCharacter();
-        eng.player->spawnStartItems();
+        Map::playerCreateCharacter->createCharacter();
+        Map::player->spawnStartItems();
 
-        eng.gameTime->insertActorInLoop(eng.player);
+        GameTime::insertActorInLoop(Map::player);
 
         if(Config::isIntroLevelSkipped() == false) {
           //If intro level is used, build forest.
           Renderer::coverPanel(Panel::screen);
           Renderer::updateScreen();
-          MapGenIntroForest(eng).run();
+          MapGenIntroForest().run();
         } else {
           //Else build first dungeon level
           eng.dungeonClimb->travelDown();
@@ -78,7 +74,7 @@ int main(int argc, char* argv[]) {
 
       Audio::fadeOutChannel(introMusChannel);
 
-      eng.player->updateFov();
+      Map::player->updateFov();
       Renderer::drawMapAndInterface();
 
       if(gameEntryType == GameEntryMode::newGame) {
@@ -97,9 +93,9 @@ int main(int argc, char* argv[]) {
 
       //========== M A I N   L O O P ==========
       while(eng.quitToMainMenu_ == false) {
-        if(eng.player->deadState == ActorDeadState::alive) {
+        if(Map::player->deadState == ActorDeadState::alive) {
 
-          Actor* const actor = eng.gameTime->getCurrentActor();
+          Actor* const actor = GameTime::getCurrentActor();
 
           //Properties running on the actor's turn are not immediately applied
           //on the actor, but instead placed in a buffer. This is to ensure
@@ -116,14 +112,14 @@ int main(int argc, char* argv[]) {
             actor->deadState != ActorDeadState::destroyed) {
             actor->onActorTurn();
           } else {
-            if(actor == eng.player) {
+            if(actor == Map::player) {
               SdlWrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
             }
-            eng.gameTime->actorDidAct();
+            GameTime::actorDidAct();
           }
         } else {
           //Player is dead, run postmortem, then return to main menu
-          dynamic_cast<Player*>(eng.player)->waitTurnsLeft = -1;
+          dynamic_cast<Player*>(Map::player)->waitTurnsLeft = -1;
           eng.log->addMsg("I am dead... (press space/esc to proceed)",
                           clrMsgBad);
           Audio::play(SfxId::death);
@@ -136,12 +132,10 @@ int main(int argc, char* argv[]) {
         }
       }
     }
-    eng.cleanupGame();
+    Init::cleanupSession();
   }
-  Audio::cleanup();
-  Renderer::cleanup();
-  Input::cleanup();
-  SdlWrapper::cleanup();
+  Init::cleanupGame();
+  Init::cleanupIO();
 
   trace << "main() [DONE]" << endl;
 

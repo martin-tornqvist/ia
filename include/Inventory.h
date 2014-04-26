@@ -9,8 +9,6 @@
 
 using namespace std;
 
-class Engine;
-
 enum class SlotId {
   wielded,
   wieldedAlt,
@@ -43,8 +41,6 @@ struct InventorySlot {
   Item* item;
 };
 
-class Engine;
-
 class Inventory {
 public:
   Inventory(bool humanoid);
@@ -52,7 +48,7 @@ public:
   ~Inventory();
 
   void dropAllNonIntrinsic(
-    const Pos& pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine);
+    const Pos& pos, const bool ROLL_FOR_DESTRUCTION);
 
   bool hasItemInSlot(SlotId slotName) const;
 
@@ -77,9 +73,9 @@ public:
 
   void equipGeneralItemAndPossiblyEndTurn(
     const unsigned int GENERAL_INV_ELEMENT,
-    const SlotId slotToEquip, Engine& engine);
+    const SlotId slotToEquip);
 
-  void swapWieldedAndPrepared(const bool IS_FREE_TURN, Engine& engine);
+  void swapWieldedAndPrepared(const bool IS_FREE_TURN);
 
   bool hasAmmoForFirearmInInventory();
 
@@ -116,7 +112,7 @@ public:
 
   InventorySlot* getSlot(SlotId slotName);
 
-  void sortGeneralInventory(Engine& engine);
+  void sortGeneralInventory();
 
   vector<InventorySlot>& getSlots() {return slots_;}
 
@@ -126,9 +122,9 @@ public:
 
   void getAllItems(vector<Item*>& itemList) const;
 
-  void addSaveLines(vector<string>& lines) const;
-  void setParamsFromSaveLines(
-    vector<string>& lines, Engine& engine);
+  void storeToSaveLines(vector<string>& lines) const;
+  void setupFromSaveLines(
+    vector<string>& lines);
 
 private:
   vector<InventorySlot> slots_;

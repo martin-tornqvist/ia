@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "CommonData.h"
+#include "CmnData.h"
 #include "Actor.h"
 
-class Engine;
+
 
 namespace Rnd {
 
@@ -73,13 +73,13 @@ void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
                            bool a[MAP_W][MAP_H],
                            vector<Pos>& vectorRef);
 
-Actor* getActorAtPos(const Pos& pos, Engine& eng,
+Actor* getActorAtPos(const Pos& pos,
                      ActorDeadState deadState = ActorDeadState::alive);
 
 void getActorPositions(const vector<Actor*>& actors,
                        vector<Pos>& vectorRef);
 
-void makeActorArray(Actor* a[MAP_W][MAP_H], Engine& eng);
+void makeActorArray(Actor* a[MAP_W][MAP_H]);
 
 bool isPosInsideMap(const Pos& pos);
 

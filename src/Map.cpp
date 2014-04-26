@@ -1,6 +1,5 @@
 #include "Map.h"
 
-#include "Engine.h"
 #include "Feature.h"
 #include "FeatureFactory.h"
 #include "ActorFactory.h"
@@ -29,17 +28,54 @@ inline void Cell::clear() {
   playerVisualMemory.clear();
 }
 
-Map::Map(Engine& engine) : eng(engine), dlvl_(0) {
+namespace Map {
+
+Player*       player  = NULL;
+int           dlvl    = 0;
+Cell          cells[MAP_W][MAP_H];
+vector<Room*> rooms;
+
+namespace {
+
+void Map::resetCells(const bool MAKE_STONE_WALLS) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+
+      cells[x][y].clear();
+
+      cells[x][y].pos = Pos(x, y);
+
+      Renderer::renderArray[x][y].clear();
+      Renderer::renderArrayNoActors[x][y].clear();
+
+      if(MAKE_STONE_WALLS) {
+        eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
+      }
+    }
+  }
+}
+
+} //Namespace
+
+void init() {
+  const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
+  player = ActorFactory::spawnActor(actor_player, playerPos);
+
+  dlvl = 0;
+
   rooms.resize(0);
 
   eng.actorFactory->deleteAllMonsters();
 
   resetCells(false);
-  eng.gameTime->eraseAllFeatureMobs();
-  eng.gameTime->resetTurnTypeAndActorCounters();
+  GameTime::eraseAllFeatureMobs();
+  GameTime::resetTurnTypeAndActorCounters();
 }
 
-Map::~Map() {
+void cleanup() {
+  delete player;
+  player = NULL;
+
   resetMap();
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -48,12 +84,21 @@ Map::~Map() {
   }
 }
 
+void storeToSaveLines(vector<string>& lines) const {
+  lines.push_back(toStr(dlvl_));
+}
+
+void setupFromSaveLines(vector<string>& lines) {
+  dlvl_ = toInt(lines.front());
+  lines.erase(lines.begin());
+}
+
 //TODO This should probably go in a virtual method in Feature instead
 void Map::switchToDestroyedFeatAt(const Pos& pos) {
   if(Utils::isPosInsideMap(pos)) {
 
     const FeatureId OLD_FEATURE_ID =
-      eng.map->cells[pos.x][pos.y].featureStatic->getId();
+      Map::cells[pos.x][pos.y].featureStatic->getId();
 
     const vector<FeatureId> convertionCandidates =
       eng.featureDataHandler->getData(OLD_FEATURE_ID)->featuresOnDestroyed;
@@ -73,7 +118,7 @@ void Map::switchToDestroyedFeatAt(const Pos& pos) {
           for(int y = pos.y - 1; y <= pos.y + 1; y++) {
             if(x == 0 || y == 0) {
               const FeatureStatic* const f =
-                eng.map->cells[x][y].featureStatic;
+                Map::cells[x][y].featureStatic;
               if(f->getId() == feature_door) {
                 eng.featureFactory->spawnFeatureAt(
                   feature_rubbleLow, Pos(x, y));
@@ -100,33 +145,17 @@ void Map::resetMap() {
   rooms.resize(0);
 
   resetCells(true);
-  eng.gameTime->eraseAllFeatureMobs();
-  eng.gameTime->resetTurnTypeAndActorCounters();
-}
-
-void Map::resetCells(const bool MAKE_STONE_WALLS) {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
-
-      cells[x][y].clear();
-
-      cells[x][y].pos = Pos(x, y);
-
-      Renderer::renderArray[x][y].clear();
-      Renderer::renderArrayNoActors[x][y].clear();
-
-      if(MAKE_STONE_WALLS) {
-        eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
-      }
-    }
-  }
+  GameTime::eraseAllFeatureMobs();
+  GameTime::resetTurnTypeAndActorCounters();
 }
 
 void Map::updateVisualMemory() {
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
-      eng.map->cells[x][y].playerVisualMemory =
+      Map::cells[x][y].playerVisualMemory =
         Renderer::renderArrayNoActors[x][y];
     }
   }
 }
+
+} //Map

@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include "Engine.h"
 #include "Feature.h"
 #include "Map.h"
 #include "ActorPlayer.h"
@@ -25,12 +24,12 @@ bool isSndHeardAtRange(const int RANGE, const Snd& snd) {
 
 void resetNrSoundMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
 
-void emitSnd(Snd snd, Engine& eng) {
+void emitSnd(Snd snd) {
   bool blockers[MAP_W][MAP_H];
   FeatureStatic* f = NULL;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      f = eng.map->cells[x][y].featureStatic;
+      f = Map::cells[x][y].featureStatic;
       blockers[x][y] = f->isSoundPassable() == false;
     }
   }
@@ -39,14 +38,14 @@ void emitSnd(Snd snd, Engine& eng) {
   FloodFill::run(origin, blockers, floodFill, 999, Pos(-1, -1));
   floodFill[origin.x][origin.y] = 0;
 
-  for(Actor * actor : eng.gameTime->actors_) {
+  for(Actor * actor : GameTime::actors_) {
     const int FLOOD_VALUE_AT_ACTOR = floodFill[actor->pos.x][actor->pos.y];
 
     const bool IS_ORIGIN_SEEN_BY_PLAYER =
-      eng.map->cells[origin.x][origin.y].isSeenByPlayer;
+      Map::cells[origin.x][origin.y].isSeenByPlayer;
 
     if(isSndHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd)) {
-      if(actor == eng.player) {
+      if(actor == Map::player) {
 
         //Various conditions may clear the sound message
         if(
@@ -55,7 +54,7 @@ void emitSnd(Snd snd, Engine& eng) {
           snd.clearMsg();
         }
 
-        const Pos& playerPos = eng.player->pos;
+        const Pos& playerPos = Map::player->pos;
 
         if(snd.getMsg().empty() == false) {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
@@ -74,7 +73,7 @@ void emitSnd(Snd snd, Engine& eng) {
 
         const Pos offset = (origin - playerPos).getSigns();
         const Dir dirToOrigin = DirUtils::getDir(offset);
-        eng.player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER, dirToOrigin,
+        Map::player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER, dirToOrigin,
                               PERCENT_DISTANCE);
       } else {
         Monster* const monster = dynamic_cast<Monster*>(actor);

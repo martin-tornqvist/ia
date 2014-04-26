@@ -6,11 +6,11 @@
 
 using namespace std;
 
-class Engine;
+
 
 class Manual {
 public:
-  Manual(Engine& engine) : eng(engine) {
+  Manual() : eng() {
     readFile();
   }
 
@@ -23,7 +23,7 @@ private:
 
   vector<string> lines;
 
-  Engine& eng;
+
 };
 
 #endif

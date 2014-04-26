@@ -1,7 +1,5 @@
 #include "Reload.h"
 
-#include "Engine.h"
-
 #include "Converters.h"
 #include "Item.h"
 #include "ItemWeapon.h"
@@ -28,7 +26,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
     isClip = ammo->getData().isAmmoClip;
   }
 
-  const bool IS_PLAYER    = &actorReloading == eng.player;
+  const bool IS_PLAYER    = &actorReloading == Map::player;
   const string actorName  = actorReloading.getNameThe();
 
   switch(result) {
@@ -77,7 +75,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
         }
         Renderer::drawMapAndInterface();
       } else {
-        if(eng.player->isSeeingActor(actorReloading, NULL)) {
+        if(Map::player->isSeeingActor(actorReloading, NULL)) {
           eng.log->addMsg(actorName + swiftStr + " reloads.");
         }
       }
@@ -87,7 +85,7 @@ void Reload::printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
       if(IS_PLAYER) {
         eng.log->addMsg("I fumble with " + ammoName + ".");
       } else {
-        if(eng.player->isSeeingActor(actorReloading, NULL)) {
+        if(Map::player->isSeeingActor(actorReloading, NULL)) {
           eng.log->addMsg(actorName + " fumbles with " + ammoName + ".");
         }
       }
@@ -111,7 +109,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
   ReloadResult result = reloadResult_noAmmo;
   bool isSwiftReload    = false;
 
-  if(&actorReloading == eng.player) {
+  if(&actorReloading == Map::player) {
     isSwiftReload = PlayerBon::hasTrait(Trait::expertMarksman) &&
                     Rnd::coinToss();
   }
@@ -201,7 +199,7 @@ bool Reload::reloadWieldedWpn(Actor& actorReloading) {
 
   if(result == reloadResult_success || result == reloadResult_fumble) {
     didAct = true;
-    eng.gameTime->actorDidAct(isSwiftReload);
+    GameTime::actorDidAct(isSwiftReload);
   }
 
   return didAct;

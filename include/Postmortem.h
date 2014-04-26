@@ -8,13 +8,9 @@
 
 using namespace std;
 
-class Engine;
-
 class Postmortem {
 public:
-  Postmortem(Engine& engine) :
-    eng(engine) {
-  }
+  Postmortem() {}
 
   void run(bool* const quitGame);
 
@@ -38,8 +34,6 @@ private:
   void makeMemorialFile(const vector<StrAndClr>& lines);
 
   void makeInfoLines(vector<StrAndClr>& linesRef);
-
-  Engine& eng;
 };
 
 #endif

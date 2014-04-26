@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "Engine.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "ActorPlayer.h"
@@ -26,47 +25,47 @@ void SaveHandler::save() {
 void SaveHandler::load() {
   vector<string> lines;
   readFile(lines);
-  setGameParamsFromLines(lines);
+  setupGameFromLines(lines);
 }
 
 void SaveHandler::collectLinesFromGame(vector<string>& lines) {
   lines.resize(0);
-  lines.push_back(eng.player->getNameA());
+  lines.push_back(Map::player->getNameA());
 
-  eng.dungeonMaster->addSaveLines(lines);
-  eng.scrollNameHandler->addSaveLines(lines);
-  eng.potionNameHandler->addSaveLines(lines);
-  eng.itemDataHandler->addSaveLines(lines);
-  eng.player->getInv().addSaveLines(lines);
-  eng.player->addSaveLines(lines);
-  PlayerBon::addSaveLines(lines);
-  eng.map->addSaveLines(lines);
-  eng.actorDataHandler->addSaveLines(lines);
-  eng.gameTime->addSaveLines(lines);
-  eng.playerSpellsHandler->addSaveLines(lines);
+  eng.dungeonMaster->storeToSaveLines(lines);
+  eng.scrollNameHandler->storeToSaveLines(lines);
+  eng.potionNameHandler->storeToSaveLines(lines);
+  eng.itemDataHandler->storeToSaveLines(lines);
+  Map::player->getInv().storeToSaveLines(lines);
+  Map::player->storeToSaveLines(lines);
+  PlayerBon::storeToSaveLines(lines);
+  Map::storeToSaveLines(lines);
+  ActorData::storeToSaveLines(lines);
+  GameTime::storeToSaveLines(lines);
+  Map::playerSpellsHandler->storeToSaveLines(lines);
 }
 
-void SaveHandler::setGameParamsFromLines(vector<string>& lines) const {
-  trace << "SaveHandler::setGameParamsFromLines()..." << endl;
+void SaveHandler::setupGameFromLines(vector<string>& lines) const {
+  trace << "SaveHandler::setupGameFromLines()..." << endl;
   trace << "SaveHandler: Nr lines: " << lines.size() << endl;
   const string& playerName = lines.front();
   trace << "SaveHandler: playerName: " << playerName << endl;
-  eng.player->getData().name_a = playerName;
-  eng.player->getData().name_the = playerName;
+  Map::player->getData().name_a = playerName;
+  Map::player->getData().name_the = playerName;
   lines.erase(lines.begin());
 
-  eng.dungeonMaster->setParamsFromSaveLines(lines);
-  eng.scrollNameHandler->setParamsFromSaveLines(lines);
-  eng.potionNameHandler->setParamsFromSaveLines(lines);
-  eng.itemDataHandler->setParamsFromSaveLines(lines);
-  eng.player->getInv().setParamsFromSaveLines(lines, eng);
-  eng.player->setParamsFromSaveLines(lines);
-  PlayerBon::setParamsFromSaveLines(lines);
-  eng.map->setParamsFromSaveLines(lines);
-  eng.actorDataHandler->setParamsFromSaveLines(lines);
-  eng.gameTime->setParamsFromSaveLines(lines);
-  eng.playerSpellsHandler->setParamsFromSaveLines(lines);
-  trace << "SaveHandler::setGameParamsFromLines() [DONE]" << endl;
+  eng.dungeonMaster->setupFromSaveLines(lines);
+  eng.scrollNameHandler->setupFromSaveLines(lines);
+  eng.potionNameHandler->setupFromSaveLines(lines);
+  eng.itemDataHandler->setupFromSaveLines(lines);
+  Map::player->getInv().setupFromSaveLines(lines, eng);
+  Map::player->setupFromSaveLines(lines);
+  PlayerBon::setupFromSaveLines(lines);
+  Map::setupFromSaveLines(lines);
+  ActorData::setupFromSaveLines(lines);
+  GameTime::setupFromSaveLines(lines);
+  Map::playerSpellsHandler->setupFromSaveLines(lines);
+  trace << "SaveHandler::setupGameFromLines() [DONE]" << endl;
 }
 
 bool SaveHandler::isSaveAvailable() {

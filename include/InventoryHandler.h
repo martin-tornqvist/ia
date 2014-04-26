@@ -3,8 +3,6 @@
 
 #include "Inventory.h"
 
-class Engine;
-
 enum InventoryScreenId {
   inventoryScreen_slots,
   inventoryScreen_equip,
@@ -17,7 +15,7 @@ enum class ConsumeItem {yes, no};
 
 class InventoryHandler {
 public:
-  InventoryHandler(Engine& engine);
+  InventoryHandler();
 
   void runSlotsScreen();
   bool runUseScreen();
@@ -43,7 +41,7 @@ private:
 
   void swapItems(Item** item1, Item** item2);
 
-  Engine& eng;
+
 };
 
 #endif

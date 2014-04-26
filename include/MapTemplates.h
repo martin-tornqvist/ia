@@ -9,8 +9,6 @@
 
 using namespace std;
 
-class Engine;
-
 enum MapTemplateId {
   mapTemplate_church,
   mapTemplate_pharaohsChamber

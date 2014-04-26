@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include "Engine.h"
 #include "PlayerBon.h"
 #include "ActorPlayer.h"
 #include "Renderer.h"
@@ -22,19 +21,19 @@ void CharacterDescr::makeLines() {
   const SDL_Color clrText     = clrWhite;
   const SDL_Color clrTextDark = clrGray;
 
-  const AbilityValues& abilities = eng.player->getData().abilityVals;
+  const AbilityVals& abilities = Map::player->getData().abilityVals;
 
   lines.push_back(StrAndClr("Combat skills", clrHeading));
   const int BASE_MELEE =
-    min(100, abilities.getVal(ability_accuracyMelee, true, *(eng.player)));
+    min(100, abilities.getVal(AbilityId::accuracyMelee, true, *(Map::player)));
   const int BASE_RANGED =
-    min(100, abilities.getVal(ability_accuracyRanged, true, *(eng.player)));
+    min(100, abilities.getVal(AbilityId::accuracyRanged, true, *(Map::player)));
   const int BASE_DODGE_ATTACKS =
-    min(100, abilities.getVal(ability_dodgeAttack, true, *(eng.player)));
+    min(100, abilities.getVal(AbilityId::dodgeAttack, true, *(Map::player)));
   Weapon* kick =
     dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerKick));
   string kickStr = eng.itemDataHandler->getItemInterfaceRef(
-                     *kick, false, PrimaryAttackMode::melee);
+                     *kick, false, PrimaryAttMode::melee);
   delete kick;
   for(unsigned int i = 0; i < kickStr.length(); i++) {
     if(kickStr.at(0) == ' ') {
@@ -46,7 +45,7 @@ void CharacterDescr::makeLines() {
   Weapon* punch =
     dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerPunch));
   string punchStr = eng.itemDataHandler->getItemInterfaceRef(
-                      *punch, false, PrimaryAttackMode::melee);
+                      *punch, false, PrimaryAttMode::melee);
   delete punch;
   for(unsigned int i = 0; i < punchStr.length(); i++) {
     if(punchStr.at(0) == ' ') {
@@ -74,24 +73,24 @@ void CharacterDescr::makeLines() {
 
   lines.push_back(StrAndClr("Mental conditions", clrHeading));
   const int NR_LINES_BEFORE_MENTAL = lines.size();
-  if(eng.player->phobias[int(Phobia::closedPlace)])
+  if(Map::player->phobias[int(Phobia::closedPlace)])
     lines.push_back(StrAndClr(offset + "Phobia of enclosed spaces", clrText));
-  if(eng.player->phobias[int(Phobia::dog)])
+  if(Map::player->phobias[int(Phobia::dog)])
     lines.push_back(StrAndClr(offset + "Phobia of dogs", clrText));
-  if(eng.player->phobias[int(Phobia::rat)])
+  if(Map::player->phobias[int(Phobia::rat)])
     lines.push_back(StrAndClr(offset + "Phobia of rats", clrText));
-  if(eng.player->phobias[int(Phobia::undead)])
+  if(Map::player->phobias[int(Phobia::undead)])
     lines.push_back(StrAndClr(offset + "Phobia of the dead", clrText));
-  if(eng.player->phobias[int(Phobia::openPlace)])
+  if(Map::player->phobias[int(Phobia::openPlace)])
     lines.push_back(StrAndClr(offset + "Phobia of open places", clrText));
-  if(eng.player->phobias[int(Phobia::spider)])
+  if(Map::player->phobias[int(Phobia::spider)])
     lines.push_back(StrAndClr(offset + "Phobia of spiders", clrText));
-  if(eng.player->phobias[int(Phobia::deepPlaces)])
+  if(Map::player->phobias[int(Phobia::deepPlaces)])
     lines.push_back(StrAndClr(offset + "Phobia of deep places", clrText));
 
-  if(eng.player->obsessions[int(Obsession::masochism)])
+  if(Map::player->obsessions[int(Obsession::masochism)])
     lines.push_back(StrAndClr(offset + "Masochistic obsession", clrText));
-  if(eng.player->obsessions[int(Obsession::sadism)])
+  if(Map::player->obsessions[int(Obsession::sadism)])
     lines.push_back(StrAndClr(offset + "Sadistic obsession", clrText));
   const int NR_LINES_AFTER_MENTAL = lines.size();
 
@@ -222,7 +221,7 @@ void CharacterDescr::run() {
     }
     Renderer::updateScreen();
 
-    const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
+    const KeyboardReadRetData& d = Input::readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN || d.key_ == 'j') {
       topNr += LINE_JUMP;

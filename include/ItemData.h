@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "CommonData.h"
+#include "CmnData.h"
 
 #include "AbilityValues.h"
 #include "Spells.h"
@@ -20,7 +20,7 @@ enum ItemWeight {
   itemWeight_heavy      = 110 //Heavy armor, heavy weapons...
 };
 
-enum class PrimaryAttackMode {none, melee, missile, ranged};
+enum class PrimaryAttMode {none, melee, missile, ranged};
 
 enum class ItemType {
   general,
@@ -106,13 +106,13 @@ enum class ItemId {
   miGoElectricGun,
   polypTentacle,
   mummyMaul,
-  deepOneSpearAttack,
-  deepOneJavelinAttack,
+  deepOneSpearAtt,
+  deepOneJavelinAtt,
   oozeBlackSpewPus,
   oozePutridSpewPus,
   oozePoisonSpewPus,
   oozeClearSpewPus,
-  colourOutOfSpaceTouch,
+  colourOOSpaceTouch,
   chthonianBite,
   huntingHorrorBite,
   dustVortexEngulf, fireVortexEngulf, frostVortexEngulf,
@@ -120,21 +120,21 @@ enum class ItemId {
   armorLeatherJacket,
   armorIronSuit,
   armorFlackJacket,
-  armorAsbestosSuit,
+  armorAsbSuit,
   armorHeavyCoat,
 
   scrollOfPestilence,
   scrollOfTelep,
-  scrollOfSlowEnemies,
-  scrollOfTerrifyEnemies,
-  scrollOfParalyzeEnemies,
+  scrollOfSlowMon,
+  scrollOfTerrifyMon,
+  scrollOfParalMon,
   scrollOfDetTraps,
   scrollOfDetItems,
   scrollOfDetMon,
   scrollOfBless,
   scrollOfMayhem,
   scrollOfDarkbolt,
-  scrollOfAzathothsWrath,
+  scrollOfAzaWrath,
   scrollOfOpening,
   scrollOfSacrLife,
   scrollOfSacrSpi,
@@ -147,7 +147,7 @@ enum class ItemId {
   potionOfFortitude,
   potionOfParalyze,
   potionOfRElec,
-  potionOfConfusion,
+  potionOfConf,
   potionOfPoison,
   potionOfInsight,
   potionOfClairv,
@@ -169,17 +169,16 @@ enum class ItemId {
 struct ArmorData {
   ArmorData() : absorptionPoints(0), dmgToDurabilityFactor(0.0) {}
 
-//  string overRideAbsorptionPointLabel;
   int absorptionPoints;
   double dmgToDurabilityFactor;
 };
 
-class ItemData {
+class ItemDataT {
 public:
-  ItemData(const ItemId itemId) :
+  ItemDataT(const ItemId itemId) :
     id(itemId), propAppliedOnMelee(NULL), propAppliedOnRanged(NULL) {}
 
-  ~ItemData() {
+  ~ItemDataT() {
     if(propAppliedOnMelee  != NULL) delete propAppliedOnMelee;
     if(propAppliedOnRanged != NULL) delete propAppliedOnRanged;
   }
@@ -205,7 +204,7 @@ public:
   char glyph;
   SDL_Color clr;
   TileId tile;
-  PrimaryAttackMode primaryAttackMode;
+  PrimaryAttMode primaryAttackMode;
   bool isExplosive, isScroll, isPotion, isDevice, isEatable;
   bool isArmor, isCloak, isRing, isAmulet;
   bool isIntrinsic, isMeleeWeapon, isRangedWeapon, isMissileWeapon, isShotgun;
@@ -250,47 +249,29 @@ public:
   vector< pair<FeatureId, int> > featuresCanBeFoundIn;
 };
 
-using namespace std;
-
-class Engine;
 class Item;
-struct ActorData;
 
 enum class ItemRefType {plain, a, plural};
 
-class ItemDataHandler {
-public:
-  ItemDataHandler(Engine& engine) : eng(engine) {initDataList();}
-  ~ItemDataHandler() {
-    for(size_t i = 1; i < int(ItemId::endOfItemIds); i++)
-      delete dataList[i];
-  }
+namespace ItemData {
 
-  string getItemRef(const Item& item, const ItemRefType itemRefForm,
-                    const bool SKIP_EXTRA_INFO = false) const;
+ItemDataT* dataList[int(ItemId::endOfItemIds)];
 
-  string getItemInterfaceRef(
-    const Item& item, const bool ADD_A,
-    const PrimaryAttackMode attackMode = PrimaryAttackMode::none) const;
+void init();
+void cleanup();
 
-  ItemData* dataList[int(ItemId::endOfItemIds)];
+void storeToSaveLines(vector<string>& lines);
+void setupFromSaveLines(vector<string>& lines);
 
-  bool isWeaponStronger(const ItemData& data1, const ItemData& data2,
-                        const bool IS_MELEE);
-  void addSaveLines(vector<string>& lines) const;
-  void setParamsFromSaveLines(vector<string>& lines);
+string getItemRef(const Item& item, const ItemRefType itemRefForm,
+                  const bool SKIP_EXTRA_INFO = false);
 
-private:
-  void initDataList();
-  void setDmgFromMonsterData(ItemData& itemData,
-                             const ActorData& actorData) const;
+string getItemInterfaceRef(const Item& item, const bool ADD_A,
+                           const PrimaryAttMode attMode = PrimaryAttMode::none);
 
-  void resetData(ItemData* const d, ItemType const itemType) const;
+bool isWeaponStronger(const ItemDataT& data1, const ItemDataT& data2,
+                      const bool IS_MELEE);
 
-  void addFeatureFoundIn(ItemData* const itemData, const FeatureId featureId,
-                         const int CHANCE_TO_INCLUDE = 100) const;
-
-  Engine& eng;
-};
+} //ItemData
 
 #endif

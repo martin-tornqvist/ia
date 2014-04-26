@@ -3,8 +3,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "Engine.h"
-
 #include "Renderer.h"
 #include "Input.h"
 #include "ActorPlayer.h"
@@ -33,7 +31,7 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMonsters = 0;
   for(int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorData& d = eng.actorDataHandler->dataList[i];
+    const ActorData& d = ActorData::dataList[i];
     if(d.nrKills > 0) {
       nrKillsTotAllMonsters += d.nrKills;
       if(d.isUnique) {
@@ -42,42 +40,42 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
     }
   }
 
-  linesRef.push_back(StrAndClr(" " + eng.player->getNameA(), clrHeading));
+  linesRef.push_back(StrAndClr(" " + Map::player->getNameA(), clrHeading));
 
   linesRef.push_back(StrAndClr("   * Explored to the depth of dungeon level " +
-                               toStr(eng.map->getDlvl()), clrInfo));
+                               toStr(Map::getDlvl()), clrInfo));
   linesRef.push_back(StrAndClr("   * Was " +
-                               toStr(min(100, eng.player->getInsanity())) + "% "
+                               toStr(min(100, Map::player->getInsanity())) + "% "
                                "insane", clrInfo));
   linesRef.push_back(StrAndClr("   * Killed " + toStr(nrKillsTotAllMonsters) +
                                " monsters ", clrInfo));
 
   //TODO This is ugly as hell
-  if(eng.player->phobias[int(Phobia::closedPlace)])
+  if(Map::player->phobias[int(Phobia::closedPlace)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of enclosed spaces", clrInfo));
-  if(eng.player->phobias[int(Phobia::dog)])
+  if(Map::player->phobias[int(Phobia::dog)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of dogs", clrInfo));
-  if(eng.player->phobias[int(Phobia::rat)])
+  if(Map::player->phobias[int(Phobia::rat)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of rats", clrInfo));
-  if(eng.player->phobias[int(Phobia::undead)])
+  if(Map::player->phobias[int(Phobia::undead)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of the dead", clrInfo));
-  if(eng.player->phobias[int(Phobia::openPlace)])
+  if(Map::player->phobias[int(Phobia::openPlace)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of open places", clrInfo));
-  if(eng.player->phobias[int(Phobia::spider)])
+  if(Map::player->phobias[int(Phobia::spider)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of spiders", clrInfo));
-  if(eng.player->phobias[int(Phobia::deepPlaces)])
+  if(Map::player->phobias[int(Phobia::deepPlaces)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of deep places", clrInfo));
 
-  if(eng.player->obsessions[int(Obsession::masochism)])
+  if(Map::player->obsessions[int(Obsession::masochism)])
     linesRef.push_back(StrAndClr("   * Had a masochistic obsession", clrInfo));
-  if(eng.player->obsessions[int(Obsession::sadism)])
+  if(Map::player->obsessions[int(Obsession::sadism)])
     linesRef.push_back(StrAndClr("   * Had a sadistic obsession", clrInfo));
 
   linesRef.push_back(StrAndClr(" ", clrInfo));
@@ -128,9 +126,9 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
         for(int dy = -1; dy <= 1; dy++) {
           if(Utils::isPosInsideMap(Pos(x + dx, y + dy))) {
             const FeatureStatic* const f =
-              eng.map->cells[x + dx][y + dy].featureStatic;
+              Map::cells[x + dx][y + dy].featureStatic;
             if(f->isVisionPassable()) {
-              eng.map->cells[x][y].isSeenByPlayer = true;
+              Map::cells[x][y].isSeenByPlayer = true;
             }
           }
         }
@@ -141,7 +139,7 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
   for(int y = 0; y < MAP_H; y++) {
     string currentRow = "";
     for(int x = 0; x < MAP_W; x++) {
-      if(Pos(x, y) == eng.player->pos) {
+      if(Pos(x, y) == Map::player->pos) {
         currentRow.push_back('@');
       } else {
         if(
@@ -214,7 +212,7 @@ void Postmortem::runInfo(const vector<StrAndClr>& lines) {
   while(true) {
     render(lines, topNr);
 
-    const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
+    const KeyboardReadRetData& d = Input::readKeysUntilFound();
 
     if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2' || d.key_ == 'j') {
       topNr += LINE_JUMP;
@@ -235,7 +233,7 @@ void Postmortem::makeMemorialFile(const vector<StrAndClr>& lines) {
   const string timeStamp =
     eng.dungeonMaster->getTimeStarted().getTimeStr(time_second, false);
   const string memorialFileName =
-    eng.player->getNameA() + "_" + timeStamp + ".txt";
+    Map::player->getNameA() + "_" + timeStamp + ".txt";
   const string memorialFilePath = "data/" + memorialFileName;
 
   // Add memorial file
@@ -327,7 +325,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   }
 
   pos.set(45, 18);
-  const string NAME_STR = eng.player->getData().name_a;
+  const string NAME_STR = Map::player->getData().name_a;
   Renderer::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;

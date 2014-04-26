@@ -2,13 +2,11 @@
 #define MAIN_MENU_H
 
 #include "MenuBrowser.h"
-#include "CommonData.h"
-
-class Engine;
+#include "CmnData.h"
 
 class MainMenu {
 public:
-  MainMenu(Engine& engine) : quote(""), eng(engine) {}
+  MainMenu() : quote("") {}
 
   GameEntryMode run(bool& quit, int& introMusChannel);
 
@@ -18,8 +16,6 @@ private:
   std::string getHplQuote() const;
 
   std::string quote;
-
-  Engine& eng;
 };
 
 #endif

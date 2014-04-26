@@ -4,11 +4,11 @@
 #include <iostream>
 #include <vector>
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 
 using namespace std;
 
-class Engine;
+
 class Actor;
 class Item;
 
@@ -19,7 +19,7 @@ struct MarkerReturnData {
 
 class Marker {
 public:
-  Marker(Engine& engine) : eng(engine) {
+  Marker() : eng() {
   }
 
   MarkerReturnData run(const MarkerTask markerTask, Item* itemThrown);
@@ -47,7 +47,7 @@ private:
 
   Pos pos_;
 
-  Engine& eng;
+
 };
 
 

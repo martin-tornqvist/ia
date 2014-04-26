@@ -7,12 +7,9 @@
 
 class PopulateItems {
 public:
-  PopulateItems(Engine& engine) : eng(engine) {}
+  PopulateItems() {}
 
   void spawnItems();
-
-private:
-  Engine& eng;
 };
 
 

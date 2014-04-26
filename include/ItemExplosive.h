@@ -4,12 +4,10 @@
 #include "Properties.h"
 #include "Item.h"
 
-class Engine;
-
 class Explosive : public Item {
 public:
-  Explosive(ItemData* const itemData, Engine& engine) :
-    Item(itemData, engine) {}
+  Explosive(ItemData* const itemData) :
+    Item(itemData) {}
   virtual ~Explosive() {}
 
   virtual ConsumeItem activateDefault(Actor* const actor) override {
@@ -30,8 +28,8 @@ protected:
 
 class Dynamite: public Explosive {
 public:
-  Dynamite(ItemData* const itemData, Engine& engine) :
-    Explosive(itemData, engine) {}
+  Dynamite(ItemData* const itemData) :
+    Explosive(itemData) {}
   ~Dynamite() {}
   void setPlayerExplosive() const;
 private:
@@ -39,8 +37,8 @@ private:
 
 class Molotov: public Explosive {
 public:
-  Molotov(ItemData* const itemData, Engine& engine) :
-    Explosive(itemData, engine) {}
+  Molotov(ItemData* const itemData) :
+    Explosive(itemData) {}
   ~Molotov() {}
   void setPlayerExplosive() const;
 private:
@@ -48,8 +46,8 @@ private:
 
 class Flare: public Explosive {
 public:
-  Flare(ItemData* const itemData, Engine& engine) :
-    Explosive(itemData, engine) {}
+  Flare(ItemData* const itemData) :
+    Explosive(itemData) {}
   ~Flare() {}
   void setPlayerExplosive() const;
 private:

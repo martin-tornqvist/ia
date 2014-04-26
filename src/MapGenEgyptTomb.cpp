@@ -1,6 +1,5 @@
 #include "MapGen.h"
 
-#include "Engine.h"
 #include "ActorPlayer.h"
 #include "FeatureFactory.h"
 #include "ActorFactory.h"
@@ -10,15 +9,15 @@
 #include "Utils.h"
 
 bool MapGenEgyptTomb::run_() {
-  eng.map->resetMap();
+  Map::resetMap();
 
   buildFromTemplate(Pos(0, 0), mapTemplate_pharaohsChamber);
 
-  eng.player->pos = Pos(40, 11);
+  Map::player->pos = Pos(40, 11);
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      Feature* const f = eng.map->cells[x][y].featureStatic;
+      Feature* const f = Map::cells[x][y].featureStatic;
       if(f->getId() == feature_stoneWall) {
         dynamic_cast<Wall*>(f)->wallType = wall_egypt;
       }

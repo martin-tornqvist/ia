@@ -1,6 +1,5 @@
 #include "Marker.h"
 
-#include "Engine.h"
 #include "Input.h"
 #include "InventoryHandler.h"
 #include "ItemWeapon.h"
@@ -19,7 +18,7 @@
 
 void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
                       Item* itemThrown) {
-  const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
+  const KeyboardReadRetData& d = Input::readKeysUntilFound();
 
   if(d.sdlKey_ == SDLK_RIGHT    || d.key_ == '6' || d.key_ == 'l') {
     if(d.isShiftHeld_) {
@@ -60,17 +59,17 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
   // ------------------------------------------------------- AIM RANGED WEAPON
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'f') {
     if(markerTask == MarkerTask::aimRangedWeapon) {
-      if(pos_ != eng.player->pos) {
+      if(pos_ != Map::player->pos) {
 
         eng.log->clearLog();
         Renderer::drawMapAndInterface();
 
         Actor* const actor = Utils::getActorAtPos(pos_, eng);
-        if(actor != NULL) {eng.player->target = actor;}
+        if(actor != NULL) {Map::player->target = actor;}
 
-        Item* const item = eng.player->getInv().getItemInSlot(SlotId::wielded);
+        Item* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
         Weapon* const weapon = dynamic_cast<Weapon*>(item);
-        if(eng.attack->ranged(*eng.player, *weapon, pos_) == false) {
+        if(eng.attack->ranged(*Map::player, *weapon, pos_) == false) {
           eng.log->addMsg("No ammunition loaded.");
         }
       } else {
@@ -89,13 +88,13 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
   // ------------------------------------------------------- THROW
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 't') {
     if(markerTask == MarkerTask::aimThrownWeapon) {
-      if(pos_ == eng.player->pos) {
+      if(pos_ == Map::player->pos) {
         eng.log->addMsg("I should throw this somewhere else.");
       } else {
         Renderer::drawMapAndInterface();
         Actor* const actor = Utils::getActorAtPos(pos_, eng);
-        if(actor != NULL) {eng.player->target = actor;}
-        eng.thrower->throwItem(*eng.player, pos_, *itemThrown);
+        if(actor != NULL) {Map::player->target = actor;}
+        eng.thrower->throwItem(*Map::player, pos_, *itemThrown);
         data.didThrowMissile = true;
       }
 
@@ -122,12 +121,12 @@ void Marker::draw(const MarkerTask markerTask) const {
 
   int effectiveRange = -1;
 
-  const Pos playerPos = eng.player->pos;
+  const Pos playerPos = Map::player->pos;
   eng.lineCalc->calcNewLine(playerPos, pos_, true, 9999, false, trail);
 
   if(markerTask == MarkerTask::aimRangedWeapon) {
     Item* const item =
-      eng.player->getInv().getItemInSlot(SlotId::wielded);
+      Map::player->getInv().getItemInSlot(SlotId::wielded);
     Weapon* const weapon = dynamic_cast<Weapon*>(item);
     effectiveRange = weapon->effectiveRangeLimit;
   }
@@ -137,7 +136,7 @@ void Marker::draw(const MarkerTask markerTask) const {
 }
 
 MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
-  pos_ = eng.player->pos;
+  pos_ = Map::player->pos;
 
   MarkerReturnData data;
 
@@ -149,7 +148,7 @@ MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
     if(setPosToTargetIfVisible() == false) {
       //Else NULL the target, and attempt to place marker at closest visible enemy.
       //This sets a new target if successful.
-      eng.player->target = NULL;
+      Map::player->target = NULL;
       setPosToClosestEnemyIfVisible();
     }
   }
@@ -173,25 +172,25 @@ MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
 
 void Marker::setPosToClosestEnemyIfVisible() {
   vector<Actor*> SpottedEnemies;
-  eng.player->getSpottedEnemies(SpottedEnemies);
+  Map::player->getSpottedEnemies(SpottedEnemies);
   vector<Pos> spottedEnemiesPositions;
 
   Utils::getActorPositions(SpottedEnemies, spottedEnemiesPositions);
 
   //If player sees enemies, suggest one for targeting
   if(spottedEnemiesPositions.empty() == false) {
-    pos_ = Utils::getClosestPos(eng.player->pos, spottedEnemiesPositions);
+    pos_ = Utils::getClosestPos(Map::player->pos, spottedEnemiesPositions);
 
-    eng.player->target = Utils::getActorAtPos(pos_, eng);
+    Map::player->target = Utils::getActorAtPos(pos_, eng);
   }
 }
 
 bool Marker::setPosToTargetIfVisible() {
-  const Actor* const target = eng.player->target;
+  const Actor* const target = Map::player->target;
 
   if(target != NULL) {
     vector<Actor*> SpottedEnemies;
-    eng.player->getSpottedEnemies(SpottedEnemies);
+    Map::player->getSpottedEnemies(SpottedEnemies);
 
     if(SpottedEnemies.empty() == false) {
 

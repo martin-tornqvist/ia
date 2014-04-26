@@ -1,13 +1,11 @@
 #include "MenuInputHandler.h"
 
-#include "Engine.h"
-
 #include "Input.h"
 #include "Config.h"
 
 MenuAction MenuInputHandler::getAction(MenuBrowser& browser) {
   while(true) {
-    KeyboardReadRetData d = Input::readKeysUntilFound(eng);
+    KeyboardReadRetData d = Input::readKeysUntilFound();
 
     if(d.sdlKey_ == SDLK_RIGHT        || d.key_ == '6' || d.key_ == 'l') {
       browser.navigate(Dir::right);

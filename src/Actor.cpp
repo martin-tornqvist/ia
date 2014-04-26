@@ -1,7 +1,5 @@
 #include "Actor.h"
 
-#include "Engine.h"
-
 #include "Renderer.h"
 #include "ItemArmor.h"
 #include "GameTime.h"
@@ -20,10 +18,9 @@
 
 using namespace std;
 
-Actor::Actor(Engine& engine) :
+Actor::Actor() :
   pos(),
   deadState(ActorDeadState::alive),
-  eng(engine),
   clr_(clrBlack),
   glyph_(' '),
   tile_(tile_empty),
@@ -43,20 +40,20 @@ bool Actor::isSpottingHiddenActor(Actor& other) {
   const Pos& otherPos = other.pos;
 
   int playerBon = 0;
-  if(this == eng.player) {
-    playerBon = data_->abilityVals.getVal(ability_searching, true, *this) / 3;
+  if(this == Map::player) {
+    playerBon = data_->abilityVals.getVal(AbilityId::searching, true, *this) / 3;
   }
 
   const int SNEAK_BASE = other.getData().abilityVals.getVal(
-                           ability_stealth, true, other);
+                           AbilityId::stealth, true, other);
 
   const int  DIST     = Utils::chebyshevDist(pos, otherPos);
   const int  DIST_BON = getConstrInRange(0, (DIST - 1) * 10, 60);
-  const int  LGT_DIV  = eng.map->cells[otherPos.x][otherPos.y].isLight ? 2 : 1;
+  const int  LGT_DIV  = Map::cells[otherPos.x][otherPos.y].isLight ? 2 : 1;
   const int  SKILL =
     getConstrInRange(0, (SNEAK_BASE + DIST_BON - playerBon) / LGT_DIV, 90);
 
-  return eng.abilityRoll->roll(SKILL) <= failSmall;
+  return AbilityRoll::roll(SKILL) <= failSmall;
 }
 
 int Actor::getHpMax(const bool WITH_MODIFIERS) const {
@@ -71,16 +68,16 @@ bool Actor::isSeeingActor(
       return true;
     }
 
-    if(this == eng.player) {
+    if(this == Map::player) {
       const bool IS_MONSTER_SNEAKING =
         dynamic_cast<const Monster*>(&other)->isStealth;
-      return eng.map->cells[other.pos.x][other.pos.y].isSeenByPlayer &&
+      return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer &&
              IS_MONSTER_SNEAKING == false;
     }
 
     if(
       dynamic_cast<const Monster*>(this)->leader ==
-      eng.player && &other != eng.player) {
+      Map::player && &other != Map::player) {
       const bool IS_MONSTER_SNEAKING =
         dynamic_cast<const Monster*>(&other)->isStealth;
       if(IS_MONSTER_SNEAKING) return false;
@@ -97,8 +94,8 @@ bool Actor::isSeeingActor(
 
     if(visionBlockingCells != NULL) {
       const bool IS_BLOCKED_BY_DARKNESS = data_->canSeeInDarkness == false;
-      return eng.fov->checkCell(
-               visionBlockingCells, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
+      return Fov::checkCell(visionBlockingCells, other.pos, pos,
+                            IS_BLOCKED_BY_DARKNESS);
     }
   }
   return false;
@@ -107,15 +104,15 @@ bool Actor::isSeeingActor(
 void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
   vectorRef.resize(0);
 
-  const bool IS_SELF_PLAYER = this == eng.player;
+  const bool IS_SELF_PLAYER = this == Map::player;
 
   bool visionBlockers[MAP_W][MAP_H];
 
   if(IS_SELF_PLAYER == false) {
-    MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
+    MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   }
 
-  for(Actor * actor : eng.gameTime->actors_) {
+  for(Actor * actor : GameTime::actors_) {
     if(actor != this && actor->deadState == ActorDeadState::alive) {
 
       if(IS_SELF_PLAYER) {
@@ -125,12 +122,12 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
           }
         }
       } else {
-        const bool IS_OTHER_PLAYER = actor == eng.player;
+        const bool IS_OTHER_PLAYER = actor == Map::player;
         const bool IS_HOSTILE_TO_PLAYER =
-          dynamic_cast<Monster*>(this)->leader != eng.player;
+          dynamic_cast<Monster*>(this)->leader != Map::player;
         const bool IS_OTHER_HOSTILE_TO_PLAYER =
           IS_OTHER_PLAYER ? false :
-          dynamic_cast<Monster*>(actor)->leader != eng.player;
+          dynamic_cast<Monster*>(actor)->leader != Map::player;
 
         //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if other IS the player,
         //there is no need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
@@ -159,7 +156,7 @@ void Actor::place(const Pos& pos_, ActorData& data) {
   spi_            = spiMax_ = data_->spi;
   lairCell_       = pos;
 
-  if(this != eng.player) {spawnStartItems();}
+  if(this != Map::player) {spawnStartItems();}
 
   place_();
 
@@ -175,20 +172,20 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   Utils::makeVectorFromBoolMap(false, blockers, freeCells);
   const Pos newPos = freeCells.at(Rnd::range(0, freeCells.size() - 1));
 
-  if(this == eng.player) {
-    eng.player->updateFov();
+  if(this == Map::player) {
+    Map::player->updateFov();
     Renderer::drawMapAndInterface();
-    eng.map->updateVisualMemory();
+    Map::updateVisualMemory();
   } else {
     dynamic_cast<Monster*>(this)->playerAwareOfMeCounter_ = 0;
   }
 
   pos = newPos;
 
-  if(this == eng.player) {
-    eng.player->updateFov();
+  if(this == Map::player) {
+    Map::player->updateFov();
     Renderer::drawMapAndInterface();
-    eng.map->updateVisualMemory();
+    Map::updateVisualMemory();
     eng.log->addMsg("I suddenly find myself in a different location!");
     propHandler_->tryApplyProp(new PropConfused(eng, propTurnsSpecific, 8));
   }
@@ -235,10 +232,10 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
 
   if(ALLOW_MSG) {
     if(isHpGained) {
-      if(this == eng.player) {
+      if(this == Map::player) {
         eng.log->addMsg("I feel healthier!", clrMsgGood);
       } else {
-        if(eng.player->isSeeingActor(*this, NULL)) {
+        if(Map::player->isSeeingActor(*this, NULL)) {
           eng.log->addMsg(data_->name_the + " looks healthier.");
         }
       }
@@ -278,10 +275,10 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
 
   if(ALLOW_MSG) {
     if(isSpiGained) {
-      if(this == eng.player) {
+      if(this == Map::player) {
         eng.log->addMsg("I feel more spirited!", clrMsgGood);
       } else {
-        if(eng.player->isSeeingActor(*this, NULL)) {
+        if(Map::player->isSeeingActor(*this, NULL)) {
           eng.log->addMsg(data_->name_the + " looks more spirited.");
         }
       }
@@ -297,7 +294,7 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG) {
   hp_     = max(1, hp_ + CHANGE);
 
   if(ALLOW_MSG) {
-    if(this == eng.player) {
+    if(this == Map::player) {
       if(CHANGE > 0) {
         eng.log->addMsg("I feel more vigorous!");
       }
@@ -305,7 +302,7 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG) {
         eng.log->addMsg("I feel frailer!");
       }
     } else {
-      if(eng.player->isSeeingActor(*this, NULL)) {
+      if(Map::player->isSeeingActor(*this, NULL)) {
         if(CHANGE > 0) {
           eng.log->addMsg(getNameThe() + " looks more vigorous.");
         }
@@ -322,7 +319,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   spi_    = max(1, spi_ + CHANGE);
 
   if(ALLOW_MESSAGES) {
-    if(this == eng.player) {
+    if(this == Map::player) {
       if(CHANGE > 0) {
         eng.log->addMsg("My spirit is stronger!");
       }
@@ -330,7 +327,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
         eng.log->addMsg("My spirit is weaker!");
       }
     } else {
-      if(eng.player->isSeeingActor(*this, NULL)) {
+      if(Map::player->isSeeingActor(*this, NULL)) {
         if(CHANGE > 0) {
           eng.log->addMsg(getNameThe() + " appears to grow in spirit.");
         }
@@ -346,8 +343,8 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   traceVerbose << "Actor::hit()..." << endl;
   traceVerbose << "Actor: Damage from parameter: " << dmg << endl;
 
-  if(this == eng.player) {
-    eng.player->interruptActions();
+  if(this == Map::player) {
+    Map::player->interruptActions();
   }
 
   vector<PropId> props;
@@ -365,8 +362,8 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   if(deadState != ActorDeadState::alive) {
     if(Rnd::oneIn(3) || dmg >= ((getHpMax(true) * 2) / 3)) {
 
-      if(this != eng.player) {
-        if(eng.map->cells[pos.x][pos.y].isSeenByPlayer) {
+      if(this != Map::player) {
+        if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
           eng.log->addMsg("The body of " + getNameA() + " is destroyed.");
         }
       }
@@ -406,7 +403,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
 
         if(armor->isDestroyed()) {
           trace << "Actor: Armor was destroyed" << endl;
-          if(this == eng.player) {
+          if(this == Map::player) {
             const string armorName =
               eng.itemDataHandler->getItemRef(*armor, ItemRefType::plain);
             eng.log->addMsg("My " + armorName + " is torn apart!",
@@ -422,13 +419,13 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
 
   propHandler_->onHit();
 
-  if(this != eng.player || Config::isBotPlaying() == false) {
+  if(this != Map::player || Config::isBotPlaying() == false) {
     hp_ -= dmg;
   }
 
   if(getHp() <= 0) {
     const bool IS_ON_BOTTOMLESS =
-      eng.map->cells[pos.x][pos.y].featureStatic->isBottomless();
+      Map::cells[pos.x][pos.y].featureStatic->isBottomless();
     const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((getHpMax(true) * 5) / 4);
     const bool IS_DESTROYED =
       data_->canLeaveCorpse == false  ||
@@ -446,22 +443,22 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
 
 bool Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
   if(ALLOW_MSG) {
-    if(this == eng.player) {
+    if(this == Map::player) {
       eng.log->addMsg("My spirit is drained!", clrMsgBad);
     }
   }
 
   propHandler_->onHit();
 
-  if(this != eng.player || Config::isBotPlaying() == false) {
+  if(this != Map::player || Config::isBotPlaying() == false) {
     spi_ = max(0, spi_ - DMG);
   }
   if(getSpi() <= 0) {
-    if(this == eng.player) {
+    if(this == Map::player) {
       eng.log->addMsg("All my spirit is depleted, I am devoid of life!",
                       clrMsgBad);
     } else {
-      if(eng.player->isSeeingActor(*this, NULL)) {
+      if(Map::player->isSeeingActor(*this, NULL)) {
         eng.log->addMsg(getNameThe() + " has no spirit left!");
       }
     }
@@ -474,8 +471,8 @@ bool Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
 void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
                 const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
-  for(Actor * actor : eng.gameTime->actors_) {
-    if(actor != this && actor != eng.player) {
+  for(Actor * actor : GameTime::actors_) {
+    if(actor != this && actor != Map::player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
       if(monster->leader == this) {monster->leader = NULL;}
     }
@@ -484,7 +481,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   bool isOnVisibleTrap = false;
 
   //If died on a visible trap, destroy the corpse
-  const Feature* const f = eng.map->cells[pos.x][pos.y].featureStatic;
+  const Feature* const f = Map::cells[pos.x][pos.y].featureStatic;
   if(f->getId() == feature_trap) {
     if(dynamic_cast<const Trap*>(f)->isHidden() == false) {
       isOnVisibleTrap = true;
@@ -494,9 +491,9 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   bool isPlayerSeeDyingActor = true;
 
   //Print death messages
-  if(this != eng.player) {
+  if(this != Map::player) {
     //Only print if visible
-    if(eng.player->isSeeingActor(*this, NULL)) {
+    if(Map::player->isSeeingActor(*this, NULL)) {
       isPlayerSeeDyingActor = true;
       const string deathMessageOverride = data_->deathMessageOverride;
       if(deathMessageOverride.empty() == false) {
@@ -508,10 +505,10 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   }
 
   deadState =
-    (IS_DESTROYED || (isOnVisibleTrap && this != eng.player)) ?
+    (IS_DESTROYED || (isOnVisibleTrap && this != Map::player)) ?
     ActorDeadState::destroyed : ActorDeadState::corpse;
 
-  if(this != eng.player) {
+  if(this != Map::player) {
     if(isHumanoid() == true) {
       Snd snd(
         "I hear agonised screaming.", SfxId::endOfSfxId,
@@ -535,16 +532,16 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
       }
     }
   } else {
-    if(this != eng.player) {
+    if(this != Map::player) {
       Pos newPos;
-      Feature* featureHere = eng.map->cells[pos.x][pos.y].featureStatic;
+      Feature* featureHere = Map::cells[pos.x][pos.y].featureStatic;
       //TODO this should be decided with a floodfill instead
       if(featureHere->canHaveCorpse() == false) {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             newPos = pos + Pos(dx, dy);
             featureHere =
-              eng.map->cells[pos.x + dx][pos.y + dy].featureStatic;
+              Map::cells[pos.x + dx][pos.y + dy].featureStatic;
             if(featureHere->canHaveCorpse()) {
               pos.set(newPos);
               dx = 9999;
@@ -565,7 +562,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   propHandler_->onDeath(isPlayerSeeDyingActor);
 
   //Give exp if monster, and count up nr of kills.
-  if(this != eng.player) {
+  if(this != Map::player) {
     eng.dungeonMaster->onMonsterKilled(*this);
   }
 

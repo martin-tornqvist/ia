@@ -3,14 +3,14 @@
 
 #include <string>
 
-class Engine;
+
 
 namespace Config {
 
 void init();
-void runOptionsMenu(Engine& eng);
+void runOptionsMenu();
 void setCellDimDependentVariables();
-void toggleFullscreen(Engine& eng);
+void toggleFullscreen();
 
 bool          isTilesMode();
 std::string   getFontName();

@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "Input.h"
-#include "Engine.h"
 #include "TextFormatting.h"
 #include "Renderer.h"
 
@@ -77,7 +76,7 @@ void Manual::run() {
     }
     Renderer::updateScreen();
 
-    const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
+    const KeyboardReadRetData& d = Input::readKeysUntilFound();
 
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN || d.key_ == 'j') {
       topNr += LINE_JUMP;

@@ -4,7 +4,6 @@
 
 #include <SDL_mixer.h>
 
-#include "Engine.h"
 #include "Map.h"
 #include "Renderer.h"
 #include "Utils.h"
@@ -18,11 +17,11 @@ vector<Mix_Chunk*> audioChunks;
 int curChannel    = 0;
 int timeAtLastAmb = -1;
 
-SfxId getAmbSfxSuitableForDlvl(Engine& eng) {
+SfxId getAmbSfxSuitableForDlvl() {
   vector<SfxId> sfxCandidates;
   sfxCandidates.resize(0);
 
-  const int DLVL = eng.map->getDlvl();
+  const int DLVL = Map::getDlvl();
   if(DLVL >= 1 && DLVL < LAST_ROOM_AND_CORRIDOR_LEVEL) {
     sfxCandidates.push_back(SfxId::amb002);
     sfxCandidates.push_back(SfxId::amb003);
@@ -240,7 +239,7 @@ void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT) {
   }
 }
 
-void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY, Engine& eng) {
+void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
 
   if(audioChunks.empty() == false && Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
@@ -250,7 +249,7 @@ void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY, Engine& eng) {
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;
       const int VOL_PERCENT = Rnd::oneIn(5) ? Rnd::range(50,  99) : 100;
-      play(getAmbSfxSuitableForDlvl(eng), VOL_PERCENT);
+      play(getAmbSfxSuitableForDlvl(), VOL_PERCENT);
     }
   }
 }

@@ -4,14 +4,14 @@
 
 #include "ActorData.h"
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "Converters.h"
 #include "Item.h"
 #include "RoomTheme.h"
 
 using namespace std;
 
-void ActorData::reset() {
+void ActorDataT::reset() {
   id = actor_empty;
   name_a = "";
   name_the = "";
@@ -25,7 +25,7 @@ void ActorData::reset() {
   for(int i = 0; i < endOfPropIds; i++) {intrProps[i] = false;}
   rangedCooldownTurns = spellCooldownTurns = 0;
   abilityVals.reset();
-  for(int i = 0; i < int(Ai::endOfAi); i++) {ai[i] = false;}
+  for(int i = 0; i < int(AiId::endOfAi); i++) {ai[i] = false;}
   nrTurnsAwarePlayer = 0;
   spawnMinDLVL = spawnMaxDLVL = 999;
   actorSize = actorSize_humanoid;
@@ -53,34 +53,14 @@ void ActorData::reset() {
   aggroSfxMonsterHidden = SfxId::endOfSfxId;
 }
 
-void ActorDataHandler::addSaveLines(vector<string>& lines) const {
-  for(unsigned int i = 1; i < endOfActorIds; i++) {
-    lines.push_back(toStr(dataList[i].nrLeftAllowedToSpawn));
-    lines.push_back(toStr(dataList[i].nrKills));
-  }
-}
+namespace ActorData {
 
-void ActorDataHandler::setParamsFromSaveLines(vector<string>& lines) {
-  for(unsigned int i = 1; i < endOfActorIds; i++) {
-    ActorData& d = dataList[i];
-    const int NR_ALLOWED_TO_SPAWN = toInt(lines.front());
-    lines.erase(lines.begin());
-    const int NR_KILLS = toInt(lines.front());
-    lines.erase(lines.begin());
-    d.nrLeftAllowedToSpawn = NR_ALLOWED_TO_SPAWN;
-    d.nrKills = NR_KILLS;
-  }
-}
+namespace {
 
-void ActorDataHandler::addData(ActorData& d) {
-  dataList[d.id] = d;
-  d.descr.resize(0);
-}
-
-void ActorDataHandler::initDataList() {
-  ActorData d;
+void initDataList() {
+  ActorDataT d;
   d.reset();
-  addData(d);
+  dataList[d.id] = d;
 
   d.name_a = "Player";
   d.name_the = "Player";
@@ -94,19 +74,19 @@ void ActorDataHandler::initDataList() {
   d.isAutoSpawnAllowed = false;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Reanimated Corpse";
   d.name_the = "The Reanimated Corpse";
   d.id = actor_zombie;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
@@ -114,7 +94,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_zombieUnarmed;
   d.hp = 10;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(ability_accuracyMelee, 25);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 25);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeGroup;
@@ -136,19 +116,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Reanimated Corpse";
   d.name_the = "The Reanimated Corpse";
   d.id = actor_zombieAxe;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
@@ -156,8 +136,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_zombieArmed;
   d.hp = 10;
   d.dmgMelee = 8;
-  d.abilityVals.setVal(ability_accuracyMelee, 35);
-  d.abilityVals.setVal(ability_accuracyRanged, 0);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 35);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 0);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeGroup;
@@ -178,19 +158,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Bloated Corpse";
   d.name_the = "The Bloated Corpse";
   d.id = actor_bloatedZombie;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 20;
   d.glyph = 'Z';
@@ -199,8 +179,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 14;
   d.dmgMelee = 4;
   d.dmgRanged = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 50);
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeFew;
@@ -219,19 +199,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "Major Clapham-Lee";
   d.name_the = "Major Clapham-Lee";
   d.id = actor_majorClaphamLee;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
@@ -239,8 +219,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_zombieUnarmed;
   d.hp = 24;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
   d.spawnMinDLVL = 4;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -260,19 +240,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "Dean Halsey";
   d.name_the = "Dean Halsey";
   d.id = actor_deanHalsey;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
@@ -280,8 +260,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_zombieUnarmed;
   d.hp = 24;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
   d.isAutoSpawnAllowed = false;
   d.spawnMinDLVL = 4;
   d.groupSize = monsterGroupSize_alone;
@@ -301,19 +281,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Cultist";
   d.name_the = "The Cultist";
   d.id = actor_cultist;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
@@ -322,8 +302,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_cultistFirearm;
   d.hp = 4;
   d.spi = 12;
-  d.abilityVals.setVal(ability_accuracyMelee, 35);
-  d.abilityVals.setVal(ability_accuracyRanged, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 35);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 50);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeFew;
@@ -339,19 +319,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Cultist";
   d.name_the = "The Cultist";
   d.id = actor_cultistTeslaCannon;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
@@ -360,8 +340,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_cultistFirearm;
   d.hp = 5;
   d.spi = 12;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 50);
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeFew;
@@ -377,19 +357,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Cultist";
   d.name_the = "The Cultist";
   d.id = actor_cultistSpikeGun;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 4;
@@ -398,8 +378,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_cultistFirearm;
   d.hp = 6;
   d.spi = 12;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeFew;
@@ -415,18 +395,18 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "Keziah Mason";
   d.name_the = "Keziah Mason";
   d.id = actor_keziahMason;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 2;
@@ -435,8 +415,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_witchOrWarlock;
   d.hp = 10;
   d.spi = 40;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
   d.nrLeftAllowedToSpawn = 1;
   d.isUnique = true;
   d.canSeeInDarkness = true;
@@ -462,19 +442,19 @@ void ActorDataHandler::initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "Brown Jenkin";
   d.name_the = "Brown Jenkin";
   d.id = actor_brownJenkin;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
@@ -482,7 +462,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_ratThing;
   d.hp = 10;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
   d.isAutoSpawnAllowed = false;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
@@ -508,7 +488,7 @@ void ActorDataHandler::initDataList() {
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.isRat = true;
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
 //  d.name_a = "The Lord of Pestilence";
@@ -530,13 +510,13 @@ void ActorDataHandler::initDataList() {
   d.name_a = "A Cultist Priest";
   d.name_the = "The Cultist Priest";
   d.id = actor_cultistPriest;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 2;
@@ -545,7 +525,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_cultistDagger;
   d.hp = 6;
   d.spi = 20;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
   d.spawnMinDLVL = 5;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_alone;
@@ -561,19 +541,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Green Spider";
   d.name_the = "The Green Spider";
   d.id = actor_greenSpider;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
@@ -581,7 +561,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_spider;
   d.hp = 2;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(ability_accuracyMelee, 15);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 15);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -593,19 +573,19 @@ void ActorDataHandler::initDataList() {
   d.isSpider = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A White Spider";
   d.name_the = "The White Spider";
   d.id = actor_whiteSpider;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
@@ -613,7 +593,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_spider;
   d.hp = 2;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(ability_accuracyMelee, 15);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 15);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -625,19 +605,19 @@ void ActorDataHandler::initDataList() {
   d.isSpider = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Red Spider";
   d.name_the = "The Red Spider";
   d.id = actor_redSpider;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
@@ -645,7 +625,7 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_spider;
   d.hp = 3;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 25);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 25);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -657,19 +637,19 @@ void ActorDataHandler::initDataList() {
   d.isSpider = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Shadow Spider";
   d.name_the = "The Shadow Spider";
   d.id = actor_shadowSpider;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
@@ -677,8 +657,8 @@ void ActorDataHandler::initDataList() {
   d.tile = tile_spiderLeng;
   d.hp = 8;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_stealth, 90);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::stealth, 90);
   d.intrProps[propLightSensitive] = true;
   d.spawnMinDLVL = 6;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
@@ -693,19 +673,19 @@ void ActorDataHandler::initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Leng Spider";
   d.name_the = "The Leng Spider";
   d.id = actor_lengSpider;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'S';
@@ -714,8 +694,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 30;
   d.dmgMelee = 8;
 //  d.dmgRanged = 1;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-//  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+//  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
   d.spawnMinDLVL = 10;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSizeFew;
@@ -729,19 +709,19 @@ void ActorDataHandler::initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Fire hound";
   d.name_the = "The Fire hound";
   d.id = actor_fireHound;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
@@ -750,9 +730,9 @@ void ActorDataHandler::initDataList() {
   d.hp = 13;
   d.dmgMelee = 4;
   d.dmgRanged = 4;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 60);
-  d.abilityVals.setVal(ability_dodgeAttack, 35);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 60);
+  d.abilityVals.setVal(AbilityId::dodgeAttack, 35);
   d.intrProps[propRFire] = true;
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
@@ -772,19 +752,19 @@ void ActorDataHandler::initDataList() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Frost hound";
   d.name_the = "The Frost hound";
   d.id = actor_frostHound;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
@@ -793,9 +773,9 @@ void ActorDataHandler::initDataList() {
   d.hp = 16;
   d.dmgMelee = 6;
   d.dmgRanged = 6;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 60);
-  d.abilityVals.setVal(ability_dodgeAttack, 35);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 60);
+  d.abilityVals.setVal(AbilityId::dodgeAttack, 35);
   d.intrProps[propRCold] = true;
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
@@ -815,19 +795,19 @@ void ActorDataHandler::initDataList() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "Zuul the Gatekeeper";
   d.name_the = "Zuul the Gatekeeper";
   d.id = actor_zuul;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.glyph = 'D';
   d.color = clrGray;
@@ -835,8 +815,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 65;
   d.spi = 40;
   d.dmgMelee = 8;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
-  d.abilityVals.setVal(ability_dodgeAttack, 25);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::dodgeAttack, 25);
   d.intrProps[propRFear] = true;
   d.spawnMinDLVL = 13;
   d.spawnMaxDLVL = 999;
@@ -862,19 +842,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Ghost";
   d.name_the = "The Ghost";
   d.id = actor_ghost;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
@@ -883,7 +863,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 4;
   d.spi = 12;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
   d.intrProps[propEthereal] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -904,19 +884,19 @@ void ActorDataHandler::initDataList() {
   d.deathMessageOverride = "The Ghost is put to rest.";
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Phantasm";
   d.name_the = "The Phantasm";
   d.id = actor_phantasm;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
@@ -925,7 +905,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 9;
   d.spi = 12;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 45);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 45);
   d.intrProps[propEthereal] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -948,19 +928,19 @@ void ActorDataHandler::initDataList() {
   d.deathMessageOverride = "The Phantasm is put to rest.";
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Wraith";
   d.name_the = "The Wraith";
   d.id = actor_wraith;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 4;
@@ -970,7 +950,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 15;
   d.spi = 20;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
   d.intrProps[propEthereal] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -991,19 +971,19 @@ void ActorDataHandler::initDataList() {
   d.deathMessageOverride = "The Wraith is put to rest.";
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Rat";
   d.name_the = "The Rat";
   d.id = actor_rat;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = false;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = false;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
@@ -1012,7 +992,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 2;
   d.spi = 1;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(ability_accuracyMelee, 15);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 15);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1027,19 +1007,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::crypt);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Rat-thing";
   d.name_the = "The Rat-thing";
   d.id = actor_ratThing;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = false;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = false;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
@@ -1048,8 +1028,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 4;
   d.spi = 8;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 25);
-  d.abilityVals.setVal(ability_dodgeAttack, 15);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 25);
+  d.abilityVals.setVal(AbilityId::dodgeAttack, 15);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 15;
   d.canSeeInDarkness = true;
@@ -1070,19 +1050,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::crypt);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Wolf";
   d.name_the = "The Wolf";
   d.id = actor_wolf;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'd';
@@ -1091,8 +1071,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 4;
   d.spi = 2;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 35);
-  d.abilityVals.setVal(ability_dodgeAttack, 20);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 35);
+  d.abilityVals.setVal(AbilityId::dodgeAttack, 20);
   d.canSeeInDarkness = true;
   d.spawnMinDLVL = 0;
   d.spawnMaxDLVL = 10;
@@ -1108,19 +1088,19 @@ void ActorDataHandler::initDataList() {
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Giant Bat";
   d.name_the = "The Giant Bat";
   d.id = actor_giantBat;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fastest;
   d.glyph = 'B';
   d.color = clrGray;
@@ -1128,8 +1108,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 8;
   d.spi = 6;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_dodgeAttack, 75);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::dodgeAttack, 75);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 4;
   d.canSeeInDarkness = true;
@@ -1147,19 +1127,19 @@ void ActorDataHandler::initDataList() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Byakhee";
   d.name_the = "The Byakhee";
   d.id = actor_byakhee;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fastest;
   d.glyph = 'B';
   d.color = clrBrownDrk;
@@ -1167,9 +1147,9 @@ void ActorDataHandler::initDataList() {
   d.hp = 14;
   d.spi = 20;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
-  d.abilityVals.setVal(ability_accuracyRanged, 40);
-  d.abilityVals.setVal(ability_dodgeAttack, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::dodgeAttack, 40);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 6;
   d.canSeeInDarkness = true;
@@ -1194,19 +1174,19 @@ void ActorDataHandler::initDataList() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Giant Mantis";
   d.name_the = "The Giant Mantis";
   d.id = actor_giantMantis;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fastest;
   d.glyph = 'I';
   d.color = clrGreenLgt;
@@ -1214,9 +1194,9 @@ void ActorDataHandler::initDataList() {
   d.hp = 15;
   d.spi = 20;
   d.dmgMelee = 5;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
-  d.abilityVals.setVal(ability_dodgeAttack, 40);
-  d.abilityVals.setVal(ability_stealth, 20);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::dodgeAttack, 40);
+  d.abilityVals.setVal(AbilityId::stealth, 20);
   d.spawnMinDLVL = 8;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
@@ -1228,19 +1208,19 @@ void ActorDataHandler::initDataList() {
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Giant Locust";
   d.name_the = "The Giant Locust";
   d.id = actor_giantLocust;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.glyph = 'I';
   d.color = clrBrown;
@@ -1248,7 +1228,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 3;
   d.spi = 2;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(ability_accuracyMelee, 25);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 25);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL;
@@ -1262,19 +1242,19 @@ void ActorDataHandler::initDataList() {
   d.monsterShockLevel = MonsterShockLevel::none;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Fungi from Yuggoth";
   d.name_the = "The Fungi from Yuggoth";
   d.id = actor_miGo;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = false;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = false;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 3;
   d.spellCooldownTurns = 3;
@@ -1284,8 +1264,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 6;
   d.spi = 20;
   d.dmgRanged = 6;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
-  d.abilityVals.setVal(ability_accuracyRanged, 65);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 65);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSizeFew;
@@ -1317,7 +1297,7 @@ void ActorDataHandler::initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Flying Polyp";
@@ -1325,13 +1305,13 @@ void ActorDataHandler::initDataList() {
   d.id = actor_flyingPolyp;
   d.canBeSummoned = false;
   d.canBleed = false;
-  d.ai[int(Ai::looks)] = false;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = false;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
@@ -1340,8 +1320,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 12;
   d.spi = 20;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(ability_accuracyMelee, 60);
-  d.abilityVals.setVal(ability_stealth, 85);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 60);
+  d.abilityVals.setVal(AbilityId::stealth, 85);
 //  d.intrProps[propEthereal] = true; //Does not match well with stealth
   d.intrProps[propRPhys] = true;
   d.intrProps[propRConfusion] = true;
@@ -1369,19 +1349,19 @@ void ActorDataHandler::initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Ghoul";
   d.name_the = "The Ghoul";
   d.id = actor_ghoul;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'M';
@@ -1390,7 +1370,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 21;
   d.spi = 20;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
   d.spawnMinDLVL = 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSizeGroup;
@@ -1414,19 +1394,19 @@ void ActorDataHandler::initDataList() {
   d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Shadow";
   d.name_the = "The Shadow";
   d.id = actor_shadow;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = false;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = false;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'M';
@@ -1435,8 +1415,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 4;
   d.spi = 12;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 35);
-  d.abilityVals.setVal(ability_stealth, 90);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 35);
+  d.abilityVals.setVal(AbilityId::stealth, 90);
   d.intrProps[propLightSensitive] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1458,19 +1438,19 @@ void ActorDataHandler::initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Mummy";
   d.name_the = "The Mummy";
   d.id = actor_mummy;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
@@ -1480,7 +1460,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 25;
   d.spi = 30;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
   d.spawnMinDLVL = 7;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -1494,19 +1474,19 @@ void ActorDataHandler::initDataList() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "Khephren";
   d.name_the = "Khephren";
   d.id = actor_khephren;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
@@ -1518,7 +1498,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 70;
   d.spi = 60;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
   d.spawnMinDLVL = FIRST_CAVERN_LEVEL - 1;
   d.isAutoSpawnAllowed = false;
   d.groupSize = monsterGroupSize_alone;
@@ -1535,19 +1515,19 @@ void ActorDataHandler::initDataList() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "Nitokris";
   d.name_the = "Nitokris";
   d.id = actor_nitokris;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.spellCooldownTurns = 3;
@@ -1559,7 +1539,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 70;
   d.spi = 60;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
   d.spawnMinDLVL = 11;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -1578,19 +1558,19 @@ void ActorDataHandler::initDataList() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Deep One";
   d.name_the = "The Deep One";
   d.id = actor_deepOne;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = true;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = true;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 15;
   d.glyph = 'F';
@@ -1600,8 +1580,8 @@ void ActorDataHandler::initDataList() {
   d.spi = 12;
   d.dmgMelee = 5;
   d.dmgRanged = 5;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
-  d.abilityVals.setVal(ability_accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
   d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSizeHorde;
   d.actorSize = actorSize_humanoid;
@@ -1621,19 +1601,19 @@ void ActorDataHandler::initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Mass of Worms";
   d.name_the = "The Mass of Worms";
   d.id = actor_wormMass;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = false;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = false;
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'w';
@@ -1642,7 +1622,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 3;
   d.spi = 1;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1656,19 +1636,19 @@ void ActorDataHandler::initDataList() {
   d.canBleed = false;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Dust Vortex";
   d.name_the = "The Dust Vortex";
   d.id = actor_dustVortex;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = false;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = false;
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
@@ -1677,7 +1657,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 10;
   d.spi = 12;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1698,19 +1678,19 @@ void ActorDataHandler::initDataList() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Fire Vortex";
   d.name_the = "The Fire Vortex";
   d.id = actor_fireVortex;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = false;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = false;
   d.speed = ActorSpeed::normal ;
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
@@ -1719,7 +1699,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1740,19 +1720,19 @@ void ActorDataHandler::initDataList() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Frost Vortex";
   d.name_the = "The Frost Vortex";
   d.id = actor_frostVortex;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = false;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = false;
   d.speed = ActorSpeed::normal ;
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
@@ -1761,7 +1741,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(ability_accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1782,19 +1762,19 @@ void ActorDataHandler::initDataList() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Black Ooze";
   d.name_the = "The Black Ooze";
   d.id = actor_oozeBlack;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
@@ -1803,7 +1783,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 12;
   d.spi = 12;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1831,19 +1811,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Clear Ooze";
   d.name_the = "The Clear Ooze";
   d.id = actor_oozeClear;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
@@ -1852,8 +1832,8 @@ void ActorDataHandler::initDataList() {
   d.hp = 8;
   d.spi = 12;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
-  d.abilityVals.setVal(ability_stealth, 90);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::stealth, 90);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1881,19 +1861,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Putrid Ooze";
   d.name_the = "The Putrid Ooze";
   d.id = actor_oozePutrid;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
@@ -1902,7 +1882,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 14;
   d.spi = 12;
   d.dmgMelee = 5;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1931,19 +1911,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Poison Ooze";
   d.name_the = "The Poison Ooze";
   d.id = actor_oozePoison;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
@@ -1952,7 +1932,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 7;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1981,19 +1961,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Colour out of space";
   d.name_the = "The Colour out of space";
-  d.id = actor_colourOutOfSpace;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = true;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = false;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = true;
+  d.id = actor_colourOOSpace;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = false;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = true;
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'O';
@@ -2002,7 +1982,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 70;
   d.spi = 40;
   d.dmgMelee = 10;
-  d.abilityVals.setVal(ability_accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -2026,19 +2006,19 @@ void ActorDataHandler::initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Chthonian";
   d.name_the = "The Chthonian";
   d.id = actor_chthonian;
-  d.ai[int(Ai::looks)] = false;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = false;
+  d.ai[int(AiId::looks)] = false;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = false;
   d.speed = ActorSpeed::sluggish;
   d.glyph = 'W';
   d.color = clrBrownDrk;
@@ -2046,7 +2026,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 200;
   d.spi = 40;
   d.dmgMelee = 10;
-  d.abilityVals.setVal(ability_accuracyMelee, 45);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 45);
   d.intrProps[propBurrowing] = true;
   d.intrProps[propRFear] = true;
   d.spawnMinDLVL = 12;
@@ -2070,19 +2050,19 @@ void ActorDataHandler::initDataList() {
   d.monsterShockLevel = MonsterShockLevel::mindShattering;
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 
   d.name_a = "A Hunting Horror";
   d.name_the = "The Hunting Horror";
   d.id = actor_huntingHorror;
-  d.ai[int(Ai::looks)] = true;
-  d.ai[int(Ai::makesRoomForFriend)] = false;
-  d.ai[int(Ai::attacks)] = true;
-  d.ai[int(Ai::pathsToTargetWhenAware)] = true;
-  d.ai[int(Ai::movesTowardTargetWhenVision)] = true;
-  d.ai[int(Ai::movesTowardLair)] = false;
-  d.ai[int(Ai::movesTowardLeader)] = false;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTargetWhenAware)] = true;
+  d.ai[int(AiId::movesTowardTargetWhenVision)] = true;
+  d.ai[int(AiId::movesTowardLair)] = false;
+  d.ai[int(AiId::movesTowardLeader)] = false;
   d.speed = ActorSpeed::fastest;
   d.rangedCooldownTurns = 0;
   d.glyph = 'W';
@@ -2091,7 +2071,7 @@ void ActorDataHandler::initDataList() {
   d.hp = 60;
   d.spi = 40;
   d.dmgMelee = 10;
-  d.abilityVals.setVal(ability_accuracyMelee, 60);
+  d.abilityVals.setVal(AbilityId::accuracyMelee, 60);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.spawnMinDLVL = LAST_CAVERN_LEVEL - 1;
@@ -2115,7 +2095,31 @@ void ActorDataHandler::initDataList() {
   d.canBeSummoned = false;
   d.monsterShockLevel = MonsterShockLevel::mindShattering;
   d.erraticMovement = actorErratic_somewhat;
-  addData(d);
+  dataList[d.id] = d;
   d.reset();
 }
 
+} //namespace
+
+void init() {initDataList();}
+
+void storeToSaveLines(vector<string>& lines) {
+  for(int i = 1; i < endOfActorIds; i++) {
+    lines.push_back(toStr(dataList[i].nrLeftAllowedToSpawn));
+    lines.push_back(toStr(dataList[i].nrKills));
+  }
+}
+
+void setupFromSaveLines(vector<string>& lines) {
+  for(int i = 1; i < endOfActorIds; i++) {
+    ActorDataT& d = dataList[i];
+    const int NR_ALLOWED_TO_SPAWN = toInt(lines.front());
+    lines.erase(lines.begin());
+    const int NR_KILLS = toInt(lines.front());
+    lines.erase(lines.begin());
+    d.nrLeftAllowedToSpawn = NR_ALLOWED_TO_SPAWN;
+    d.nrKills = NR_KILLS;
+  }
+}
+
+} //ActorData

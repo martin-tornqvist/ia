@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-#include "Engine.h"
-
 #include "FeatureFactory.h"
 #include "FeatureData.h"
 #include "ActorPlayer.h"
@@ -22,15 +20,15 @@
 #include "PlayerBon.h"
 
 //------------------------------------------------------------- TRAP
-Trap::Trap(FeatureId id, Pos pos, Engine& engine, TrapSpawnData* spawnData) :
-  FeatureStatic(id, pos, engine), mimicFeature_(spawnData->mimicFeature_),
+Trap::Trap(FeatureId id, Pos pos, TrapSpawnData* spawnData) :
+  FeatureStatic(id, pos), mimicFeature_(spawnData->mimicFeature_),
   isHidden_(true) {
 
   assert(spawnData->trapType_ != endOfTraps);
   assert(mimicFeature_ != NULL);
 
   assert(
-    engine.map->cells[pos.x][pos.y].featureStatic->canHaveStaticFeature());
+    Map::cells[pos.x][pos.y].featureStatic->canHaveStaticFeature());
 
   if(spawnData->trapType_ == trap_any) {
     setSpecificTrapFromId(TrapId(Rnd::range(0, endOfTraps - 1)));
@@ -97,11 +95,11 @@ void Trap::bump(Actor& actorBumping) {
   if(
     find(props.begin(), props.end(), propEthereal)  == props.end() &&
     find(props.begin(), props.end(), propFlying)    == props.end()) {
-    const bool IS_PLAYER = &actorBumping == actorBumping.eng.player;
+    const bool IS_PLAYER = &actorBumping == actorBumping.Map::player;
     const bool ACTOR_CAN_SEE = actorBumping.getPropHandler().allowSee();
-    AbilityValues& abilities = actorBumping.getData().abilityVals;
+    AbilityVals& abilities = actorBumping.getData().abilityVals;
     const int DODGE_SKILL =
-      abilities.getVal(ability_dodgeTrap, true, actorBumping);
+      abilities.getVal(AbilityId::dodgeTrap, true, actorBumping);
     const int BASE_CHANCE_TO_AVOID = 30;
 
     const string trapName = specificTrap_->getTitle();
@@ -111,7 +109,7 @@ void Trap::bump(Actor& actorBumping) {
       const int CHANCE_TO_AVOID = isHidden_ == true ? 10 :
                                   (BASE_CHANCE_TO_AVOID + DODGE_SKILL);
       const AbilityRollResult result =
-        actorBumping.eng.abilityRoll->roll(CHANCE_TO_AVOID);
+        actorBumping.AbilityRoll::roll(CHANCE_TO_AVOID);
 
       if(result >= successSmall) {
         if(isHidden_ == false) {
@@ -133,11 +131,11 @@ void Trap::bump(Actor& actorBumping) {
           trace << "Trap: Monster eligible for triggering trap" << endl;
 
           const bool IS_ACTOR_SEEN_BY_PLAYER =
-            actorBumping.eng.player->isSeeingActor(actorBumping, NULL);
+            actorBumping.Map::player->isSeeingActor(actorBumping, NULL);
 
           const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
           const AbilityRollResult result =
-            actorBumping.eng.abilityRoll->roll(CHANCE_TO_AVOID);
+            actorBumping.AbilityRoll::roll(CHANCE_TO_AVOID);
 
           if(result >= successSmall) {
             if(isHidden_ == false && IS_ACTOR_SEEN_BY_PLAYER) {
@@ -166,7 +164,7 @@ void Trap::disarm() {
   //Spider webs are automatically destroyed if wielding machete
   bool isAutoSucceed = false;
   if(getTrapType() == trap_spiderWeb) {
-    Item* item = eng.player->getInv().getItemInSlot(SlotId::wielded);
+    Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
     if(item != NULL) {
       isAutoSucceed = item->getData().id == ItemId::machete;
     }
@@ -180,7 +178,7 @@ void Trap::disarm() {
   }
 
   vector<PropId> props;
-  eng.player->getPropHandler().getAllActivePropIds(props);
+  Map::player->getPropHandler().getAllActivePropIds(props);
 
   const bool IS_BLESSED =
     find(props.begin(), props.end(), propBlessed) != props.end();
@@ -206,12 +204,12 @@ void Trap::disarm() {
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
     if(Rnd::oneIn(TRIGGER_ONE_IN_N)) {
       if(getTrapType() == trap_spiderWeb) {
-        eng.player->pos = pos_;
+        Map::player->pos = pos_;
       }
-      triggerTrap(*eng.player);
+      triggerTrap(*Map::player);
     }
   }
-  eng.gameTime->actorDidAct();
+  GameTime::actorDidAct();
 
   if(IS_DISARMED) {
     eng.featureFactory->spawnFeatureAt(feature_stoneFloor, pos_);
@@ -230,23 +228,23 @@ void Trap::triggerTrap(Actor& actor) {
   trace << d.name_a << endl;
 
   const int DODGE_SKILL =
-    d.abilityVals.getVal(ability_dodgeTrap, true, actor);
+    d.abilityVals.getVal(AbilityId::dodgeTrap, true, actor);
 
   trace << "Trap: Actor dodge skill is ";
   trace << DODGE_SKILL << endl;
 
-  if(&actor == eng.player) {
+  if(&actor == Map::player) {
     traceVerbose << "Trap: Player triggering trap" << endl;
     const AbilityRollResult DODGE_RESULT =
-      eng.abilityRoll->roll(DODGE_SKILL);
+      AbilityRoll::roll(DODGE_SKILL);
     reveal(false);
     traceVerbose << "Trap: Calling trigger" << endl;
     specificTrap_->trigger(actor, DODGE_RESULT);
   } else {
     traceVerbose << "Trap: Monster triggering trap" << endl;
     const bool IS_ACTOR_SEEN_BY_PLAYER =
-      eng.player->isSeeingActor(actor, NULL);
-    const AbilityRollResult dodgeResult = eng.abilityRoll->roll(DODGE_SKILL);
+      Map::player->isSeeingActor(actor, NULL);
+    const AbilityRollResult dodgeResult = AbilityRoll::roll(DODGE_SKILL);
     if(IS_ACTOR_SEEN_BY_PLAYER) {
       reveal(false);
     }
@@ -262,7 +260,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   isHidden_ = false;
 
   //Destroy any corpse on the trap
-  for(Actor * actor : eng.gameTime->actors_) {
+  for(Actor * actor : GameTime::actors_) {
     if(actor->pos == pos_ && actor->deadState == ActorDeadState::corpse) {
       actor->deadState = ActorDeadState::destroyed;
     }
@@ -270,13 +268,13 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 
   clearGore();
 
-  Item* item = eng.map->cells[pos_.x][pos_.y].item;
+  Item* item = Map::cells[pos_.x][pos_.y].item;
   if(item != NULL) {
-    eng.map->cells[pos_.x][pos_.y].item = NULL;
+    Map::cells[pos_.x][pos_.y].item = NULL;
     eng.itemDrop->dropItemOnMap(pos_, *item);
   }
 
-  if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
+  if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
     Renderer::drawMapAndInterface();
 
     if(PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
@@ -289,10 +287,10 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 
 void Trap::playerTrySpotHidden() {
   if(isHidden_) {
-    const int PLAYER_SKILL = eng.player->getData().abilityVals.getVal(
-                               ability_searching, true, *(eng.player));
+    const int PLAYER_SKILL = Map::player->getData().abilityVals.getVal(
+                               AbilityId::searching, true, *(Map::player));
 
-    if(eng.abilityRoll->roll(PLAYER_SKILL) >= successSmall) {
+    if(AbilityRoll::roll(PLAYER_SKILL) >= successSmall) {
       reveal(true);
     }
   }
@@ -330,19 +328,19 @@ MaterialType Trap::getMaterialType() const {
 }
 
 //------------------------------------------------------------- SPECIFIC TRAPS
-TrapDart::TrapDart(Pos pos, Engine& engine) :
-  SpecificTrapBase(pos, trap_dart, engine), isPoisoned(false) {
+TrapDart::TrapDart(Pos pos) :
+  SpecificTrapBase(pos, trap_dart), isPoisoned(false) {
   isPoisoned =
-    eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
+    Map::getDlvl() >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
 }
 
 void TrapDart::trigger(
   Actor& actor, const AbilityRollResult dodgeResult) {
 
   traceVerbose << "TrapDart::trigger()..." << endl;
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   //Dodge?
@@ -403,10 +401,10 @@ void TrapDart::trigger(
   traceVerbose << "TrapDart::trigger() [DONE]" << endl;
 }
 
-TrapSpear::TrapSpear(Pos pos, Engine& engine) :
-  SpecificTrapBase(pos, trap_spear, engine), isPoisoned(false) {
+TrapSpear::TrapSpear(Pos pos) :
+  SpecificTrapBase(pos, trap_spear), isPoisoned(false) {
   isPoisoned =
-    eng.map->getDlvl() >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
+    Map::getDlvl() >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
 }
 
 void TrapSpear::trigger(
@@ -414,9 +412,9 @@ void TrapSpear::trigger(
 
   traceVerbose << "TrapSpear::trigger()..." << endl;
 
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   //Dodge?
@@ -487,9 +485,9 @@ void TrapGasConfusion::trigger(
   traceVerbose << "TrapGasConfusion::trigger()..." << endl;
   (void)dodgeResult;
 
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -519,9 +517,9 @@ void TrapGasParalyzation::trigger(
   traceVerbose << "TrapGasParalyzation::trigger()..." << endl;
   (void)dodgeResult;
 
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -550,9 +548,9 @@ void TrapGasFear::trigger(Actor& actor,
   traceVerbose << "TrapGasFear::trigger()..." << endl;
   (void)dodgeResult;
 
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -579,10 +577,10 @@ void TrapBlindingFlash::trigger(
   Actor& actor, const AbilityRollResult dodgeResult) {
 
   traceVerbose << "TrapBlindingFlash::trigger()..." << endl;
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
   const bool CAN_PLAYER_SEE_ACTOR =
-    eng.player->isSeeingActor(actor, NULL);
+    Map::player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   //Dodge?
@@ -629,13 +627,13 @@ void TrapTeleport::trigger(
   traceVerbose << "TrapTeleport::trigger()..." << endl;
   (void)dodgeResult;
 
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
-    eng.player->updateFov();
+    Map::player->updateFov();
     if(CAN_SEE) {
       eng.popup->showMsg("A curious shape on the floor starts to glow!", true);
     } else {
@@ -659,7 +657,7 @@ void TrapSummonMonster::trigger(
 
   (void)dodgeResult;
 
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   traceVerbose << "TrapSummonMonster: Is player: " << IS_PLAYER << endl;
 
   if(IS_PLAYER == false) {
@@ -674,8 +672,8 @@ void TrapSummonMonster::trigger(
   const string actorName = actor.getNameThe();
   traceVerbose << "TrapSummonMonster: Actor name: " << actorName << endl;
 
-  eng.player->incrShock(5, ShockSrc::misc);
-  eng.player->updateFov();
+  Map::player->incrShock(5, ShockSrc::misc);
+  Map::player->updateFov();
   if(CAN_SEE) {
     eng.log->addMsg("A curious shape on the floor starts to glow!");
   } else {
@@ -685,8 +683,8 @@ void TrapSummonMonster::trigger(
   trace << "TrapSummonMonster: Finding summon candidates" << endl;
   vector<ActorId> summonCandidates;
   for(int i = 1; i < endOfActorIds; i++) {
-    const ActorData& data = eng.actorDataHandler->dataList[i];
-    if(data.canBeSummoned && data.spawnMinDLVL <= eng.map->getDlvl() + 3) {
+    const ActorData& data = ActorData::dataList[i];
+    if(data.canBeSummoned && data.spawnMinDLVL <= Map::getDlvl() + 3) {
       summonCandidates.push_back(ActorId(i));
     }
   }
@@ -713,9 +711,9 @@ void TrapSmoke::trigger(
   traceVerbose << "TrapSmoke::trigger()..." << endl;
   (void)dodgeResult;
 
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
@@ -744,7 +742,7 @@ void TrapAlarm::trigger(
 
   IgnoreMsgIfOriginSeen msgIgnoreRule;
 
-  if(eng.map->cells[pos_.x][pos_.y].isSeenByPlayer) {
+  if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
     eng.log->addMsg("An alarm sounds!");
     msgIgnoreRule = IgnoreMsgIfOriginSeen::yes;
   } else {
@@ -765,14 +763,14 @@ void TrapSpiderWeb::trigger(
 
   isHoldingActor = true;
 
-  const bool IS_PLAYER = &actor == eng.player;
+  const bool IS_PLAYER = &actor == Map::player;
   const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = eng.player->isSeeingActor(actor, NULL);
+  const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, NULL);
   const string actorName = actor.getNameThe();
 
   if(IS_PLAYER) {
     trace << "TrapSpiderWeb: Checking if player has machete" << endl;
-    Inventory& playerInv = eng.player->getInv();
+    Inventory& playerInv = Map::player->getInv();
     Item* itemWielded = playerInv.getItemInSlot(SlotId::wielded);
     bool hasMachete = false;
     if(itemWielded != NULL) {
@@ -809,10 +807,10 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
   if(isHoldingActor) {
     trace << "TrapSpiderWeb: Is holding actor" << endl;
 
-    const bool IS_PLAYER = &actor == eng.player;
-    const bool PLAYER_CAN_SEE = eng.player->getPropHandler().allowSee();
+    const bool IS_PLAYER = &actor == Map::player;
+    const bool PLAYER_CAN_SEE = Map::player->getPropHandler().allowSee();
     const bool PLAYER_CAN_SEE_ACTOR =
-      eng.player->isSeeingActor(actor, NULL);
+      Map::player->isSeeingActor(actor, NULL);
     const string actorName = actor.getNameThe();
 
     trace << "TrapSpiderWeb: Name of actor held: " << actorName << endl;

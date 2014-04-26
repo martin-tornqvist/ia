@@ -1,12 +1,11 @@
 #include "SdlWrapper.h"
 
-#include "Engine.h"
 #include <iostream>
 
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 
-#include "CommonData.h"
+#include "CmnData.h"
 #include "Config.h"
 
 using namespace std;

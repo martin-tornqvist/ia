@@ -1,6 +1,5 @@
 #include "ItemMedicalBag.h"
 
-#include "Engine.h"
 #include "Properties.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -15,7 +14,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;
 
   vector<Actor*> SpottedEnemies;
-  eng.player->getSpottedEnemies(SpottedEnemies);
+  Map::player->getSpottedEnemies(SpottedEnemies);
   if(SpottedEnemies.empty() == false) {
     eng.log->addMsg("Not while an enemy is near.");
     return ConsumeItem::no;
@@ -26,7 +25,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
   if(curAction_ != endOfMedicalBagActions) {
     //Check if chosen action can be done
     vector<PropId> props;
-    eng.player->getPropHandler().getAllActivePropIds(props);
+    Map::player->getPropHandler().getAllActivePropIds(props);
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
         if(find(props.begin(), props.end(), propInfected) == props.end()) {
@@ -36,7 +35,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
       } break;
 
       case medicalBagAction_takeMorphine: {
-        if(eng.player->getHp() >= eng.player->getHpMax(true)) {
+        if(Map::player->getHp() >= Map::player->getHpMax(true)) {
           eng.log->addMsg("I am not in pain.");
           curAction_ = endOfMedicalBagActions;
         }
@@ -62,7 +61,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
     if(curAction_ != endOfMedicalBagActions) {
       //Action can be done
       nrTurnsLeft_ = getTotTurnsForAction(curAction_);
-      eng.player->activeMedicalBag = this;
+      Map::player->activeMedicalBag = this;
 
       switch(curAction_) {
         case medicalBagAction_sanitizeInfection: {
@@ -80,7 +79,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
         case endOfMedicalBagActions: {} break;
       }
 
-      eng.gameTime->actorDidAct();
+      GameTime::actorDidAct();
     }
   }
 
@@ -130,24 +129,24 @@ void MedicalBag::continueAction() {
   if(nrTurnsLeft_ <= 0) {
     finishCurAction();
   } else {
-    eng.gameTime->actorDidAct();
+    GameTime::actorDidAct();
   }
 }
 
 void MedicalBag::finishCurAction() {
-  eng.player->activeMedicalBag = NULL;
+  Map::player->activeMedicalBag = NULL;
 
   switch(curAction_) {
     case medicalBagAction_sanitizeInfection: {
       bool visionBlockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksVision(eng), visionBlockers);
-      eng.player->getPropHandler().endAppliedProp(
+      MapParse::parse(CellPred::BlocksVision(), visionBlockers);
+      Map::player->getPropHandler().endAppliedProp(
         propInfected, visionBlockers);
     } break;
 
     case medicalBagAction_treatWound: {
       Prop* prop =
-        eng.player->getPropHandler().getProp(propWound, PropSrc::applied);
+        Map::player->getPropHandler().getProp(propWound, PropSrc::applied);
       if(prop == NULL) {
         trace << "[WARNING] No wound prop found, ";
         trace << "in MedicalBag::finishCurAction()" << endl;
@@ -157,9 +156,9 @@ void MedicalBag::finishCurAction() {
     } break;
 
     case medicalBagAction_takeMorphine: {
-      eng.player->restoreHp(999);
+      Map::player->restoreHp(999);
       eng.log->addMsg("The morphine takes a toll on my mind.");
-      eng.player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
+      Map::player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
     } break;
 
     case endOfMedicalBagActions: {} break;
@@ -170,7 +169,7 @@ void MedicalBag::finishCurAction() {
   curAction_ = endOfMedicalBagActions;
 
   if(nrSupplies_ <= 0) {
-    eng.player->getInv().removetemInGeneralWithPointer(this, true);
+    Map::player->getInv().removetemInGeneralWithPointer(this, true);
   }
 }
 
@@ -179,7 +178,7 @@ void MedicalBag::interrupted() {
 
   nrTurnsLeft_ = -1;
 
-  eng.player->activeMedicalBag = NULL;
+  Map::player->activeMedicalBag = NULL;
 }
 
 int MedicalBag::getTotTurnsForAction(const MedicalBagAction action) const {

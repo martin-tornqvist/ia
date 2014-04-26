@@ -1,6 +1,5 @@
 #include "MapGen.h"
 
-#include "Engine.h"
 #include "Map.h"
 #include "FeatureFactory.h"
 #include "MapParsing.h"
@@ -23,7 +22,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
   for(int y = room1.getY0(); y <= room1.getY1(); y++) {
     for(int x = room1.getX0(); x <= room1.getX1(); x++) {
       const Pos c = Pos(x, y);
-      if(eng.map->cells[c.x][c.y].featureStatic->getId() ==
+      if(Map::cells[c.x][c.y].featureStatic->getId() ==
           feature_stoneFloor) {
         floorInR1Vector.push_back(c);
         floorInR1Grid[x][y] = true;
@@ -62,7 +61,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     for(int x = room2.getX0(); x <= room2.getX1(); x++) {
       Pos c = Pos(x, y);
       const FeatureStatic* const f =
-        eng.map->cells[c.x][c.y].featureStatic;
+        Map::cells[c.x][c.y].featureStatic;
       if(f->getId() == feature_stoneFloor) {
         floorInR2Vector.push_back(c);
         floorInR2Grid[x][y] = true;
@@ -219,7 +218,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 void MapGen::backupMap() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      backup[x][y] = eng.map->cells[x][y].featureStatic->getId();
+      backup[x][y] = Map::cells[x][y].featureStatic->getId();
     }
   }
 }
@@ -244,7 +243,7 @@ void MapGen::makeStraightPathByPathfinder(
   for(int i = 0; i < PATH_SIZE; i++) {
     const Pos c = path.at(i);
     const FeatureStatic* const f =
-      eng.map->cells[c.x][c.y].featureStatic;
+      Map::cells[c.x][c.y].featureStatic;
     if(f->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
       eng.featureFactory->spawnFeatureAt(feature, c);
       if(SMOOTH == false && Rnd::percentile() < 33) {
@@ -281,7 +280,7 @@ void MapGen::makePathByRandomWalk(
         );
     }
     const FeatureStatic* const f =
-      eng.map->cells[xPos + dx][yPos + dy].featureStatic;
+      Map::cells[xPos + dx][yPos + dy].featureStatic;
     if(f->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
       positionsToSet.push_back(Pos(xPos + dx, yPos + dy));
       xPos += dx;

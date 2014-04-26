@@ -1,6 +1,5 @@
 #include "AutoDescribeActor.h"
 
-#include "Engine.h"
 #include "ActorData.h"
 #include "Actor.h"
 

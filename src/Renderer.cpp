@@ -5,7 +5,6 @@
 
 #include <SDL_image.h>
 
-#include "Engine.h"
 #include "Item.h"
 #include "CharacterLines.h"
 #include "Marker.h"
@@ -19,7 +18,7 @@
 #include "FeatureDoor.h"
 #include "Inventory.h"
 #include "Utils.h"
-#include "CommonData.h"
+#include "CmnData.h"
 #include "SdlWrapper.h"
 
 using namespace std;
@@ -286,11 +285,11 @@ void drawExclMarkAt(const Pos& pixelPos) {
 }
 
 void drawPlayerShockExclMarks() {
-  const double SHOCK  = eng->player->getPermShockTakenCurTurn();
+  const double SHOCK  = Map::player->getPermShockTakenCurTurn();
   const int NR_EXCL   = SHOCK > 8 ? 3 : SHOCK > 3 ? 2 : SHOCK > 1 ? 1 : 0;
 
   if(NR_EXCL > 0) {
-    const Pos& playerPos = eng->player->pos;
+    const Pos& playerPos = Map::player->pos;
     const Pos pixelPosRight =
       getPixelPosForCellInPanel(Panel::map, playerPos);
 
@@ -302,7 +301,7 @@ void drawPlayerShockExclMarks() {
 
 } //Namespace
 
-void init(Engine& engine) {
+void init() {
   trace << "Renderer::init()..." << endl;
   cleanup();
 
@@ -872,7 +871,7 @@ void drawMap() {
 
     //---------------- INSERT LIVING ACTORS INTO ARRAY
     for(Actor * actor : eng->gameTime->actors_) {
-      if(actor != eng->player) {
+      if(actor != Map::player) {
         xPos = actor->pos.x;
         yPos = actor->pos.y;
 
@@ -882,7 +881,7 @@ void drawMap() {
 
           const Monster* const monster = dynamic_cast<const Monster*>(actor);
 
-          if(eng->player->isSeeingActor(*actor, NULL)) {
+          if(Map::player->isSeeingActor(*actor, NULL)) {
 
             if(
               actor->getTile()  != tile_empty &&
@@ -896,7 +895,7 @@ void drawMap() {
               curDrw->isLivingActorSeenHere = true;
               curDrw->isFadeEffectAllowed = false;
 
-              if(monster->leader == eng->player) {
+              if(monster->leader == Map::player) {
                 // TODO reimplement allied indicator
               } else {
                 if(monster->awareOfPlayerCounter_ <= 0) {
@@ -922,7 +921,7 @@ void drawMap() {
         if(eng->map->cells[x][y].isSeenByPlayer) {
           if(tmpDrw.isFadeEffectAllowed) {
             const int DIST_FROM_PLAYER =
-              Utils::chebyshevDist(eng->player->pos, Pos(x, y));
+              Utils::chebyshevDist(Map::player->pos, Pos(x, y));
             if(DIST_FROM_PLAYER > 1) {
               const double DIST_FADE_DIV =
                 min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
@@ -1034,18 +1033,18 @@ void drawMap() {
 
     //---------------- DRAW PLAYER CHARACTER
     bool isRangedWpn = false;
-    const Pos& pos = eng->player->pos;
-    Item* item = eng->player->getInv().getItemInSlot(SlotId::wielded);
+    const Pos& pos = Map::player->pos;
+    Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
     if(item != NULL) {
       isRangedWpn = item->getData().isRangedWeapon;
     }
     if(IS_TILES) {
       const TileId tile = isRangedWpn ? tile_playerFirearm : tile_playerMelee;
-      drawTile(tile, Panel::map, pos, eng->player->getClr(), clrBlack);
+      drawTile(tile, Panel::map, pos, Map::player->getClr(), clrBlack);
     } else {
-      drawGlyph('@', Panel::map, pos, eng->player->getClr(), true, clrBlack);
+      drawGlyph('@', Panel::map, pos, Map::player->getClr(), true, clrBlack);
     }
-    const int LIFE_BAR_LENGTH = getLifebarLength(*eng->player);
+    const int LIFE_BAR_LENGTH = getLifebarLength(*Map::player);
     if(LIFE_BAR_LENGTH != -1) {
       drawLifeBar(pos, LIFE_BAR_LENGTH);
     }

@@ -15,8 +15,8 @@ public:
 
 private:
   friend class FeatureFactory;
-  LitDynamite(FeatureId id, Pos pos, Engine& engine, DynamiteSpawnData* spawnData) :
-    FeatureMob(id, pos, engine), turnsLeftToExplosion_(spawnData->turnsLeftToExplosion_) {
+  LitDynamite(FeatureId id, Pos pos, DynamiteSpawnData* spawnData) :
+    FeatureMob(id, pos), turnsLeftToExplosion_(spawnData->turnsLeftToExplosion_) {
   }
 
   int turnsLeftToExplosion_;
@@ -37,7 +37,7 @@ public:
 
 private:
   friend class FeatureFactory;
-  LitFlare(FeatureId id, Pos pos, Engine& engine, DynamiteSpawnData* spawnData);
+  LitFlare(FeatureId id, Pos pos, DynamiteSpawnData* spawnData);
 
 //  vector<Pos> light_;
   int life_;

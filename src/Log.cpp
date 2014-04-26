@@ -3,7 +3,6 @@
 #include <algorithm>
 
 #include "Input.h"
-#include "Engine.h"
 #include "Converters.h"
 #include "Renderer.h"
 #include "Query.h"
@@ -111,7 +110,7 @@ void Log::addMsg(const string& text, const SDL_Color& clr,
 
   //Messages may stop long actions like first aid and auto travel.
   if(INTERRUPT_PLAYER_ACTIONS) {
-    eng.player->interruptActions();
+    Map::player->interruptActions();
   }
 }
 
@@ -134,7 +133,7 @@ void Log::displayHistory() {
     }
     Renderer::updateScreen();
 
-    const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
+    const KeyboardReadRetData& d = Input::readKeysUntilFound();
     if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN || d.key_ == 'j') {
       topNr += LINE_JUMP;
       if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {

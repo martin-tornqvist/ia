@@ -1,7 +1,5 @@
 #include "FeatureFactory.h"
 
-#include "Engine.h"
-
 #include "FeatureDoor.h"
 #include "FeatureLever.h"
 #include "FeatureLitDynamite.h"
@@ -34,7 +32,7 @@ Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos& pos,
   if(data->spawnType == featureSpawnType_mob) {
     assert(spawnData == NULL);
     FeatureMob* feature = new FeatureMob(id, pos, eng);
-    eng.gameTime->addFeatureMob(feature);
+    GameTime::addFeatureMob(feature);
     return feature;
   }
 
@@ -70,7 +68,7 @@ Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos& pos,
       LitDynamite* dynamite =
         new LitDynamite(
         id, pos, eng, dynamic_cast<DynamiteSpawnData*>(spawnData));
-      eng.gameTime->addFeatureMob(dynamite);
+      GameTime::addFeatureMob(dynamite);
       delete spawnData;
       return dynamite;
     }
@@ -79,7 +77,7 @@ Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos& pos,
       LitFlare* flare =
         new LitFlare(
         id, pos, eng, dynamic_cast<DynamiteSpawnData*>(spawnData));
-      eng.gameTime->addFeatureMob(flare);
+      GameTime::addFeatureMob(flare);
       delete spawnData;
       return flare;
     }
@@ -87,7 +85,7 @@ Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos& pos,
       assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_smoke);
       Smoke* smoke =
         new Smoke(id, pos, eng, dynamic_cast<SmokeSpawnData*>(spawnData));
-      eng.gameTime->addFeatureMob(smoke);
+      GameTime::addFeatureMob(smoke);
       delete spawnData;
       return smoke;
     }
@@ -97,7 +95,7 @@ Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos& pos,
       ProxEventWallCrumble* proxEvent =
         new ProxEventWallCrumble(
         id, pos, eng, dynamic_cast<ProxEventWallCrumbleSpawnData*>(spawnData));
-      eng.gameTime->addFeatureMob(proxEvent);
+      GameTime::addFeatureMob(proxEvent);
       delete spawnData;
       return proxEvent;
     }
@@ -194,7 +192,7 @@ Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos& pos,
 void FeatureFactory::replaceStaticFeatureAt(
   FeatureStatic* const newFeature, const Pos& pos) {
 
-  Cell& cell = eng.map->cells[pos.x][pos.y];
+  Cell& cell = Map::cells[pos.x][pos.y];
 
   FeatureStatic* const oldFeature = cell.featureStatic;
 

@@ -1,7 +1,5 @@
 #include "ItemScroll.h"
 
-#include "Engine.h"
-
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "PlayerBon.h"
@@ -77,9 +75,9 @@ void Scroll::tryLearn() {
     Spell* const spell = getSpell();
     if(
       spell->isAvailForPlayer() &&
-      eng.playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
+      Map::playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
       eng.log->addMsg("I learn to cast this incantation by heart!");
-      eng.playerSpellsHandler->learnSpellIfNotKnown(spell);
+      Map::playerSpellsHandler->learnSpellIfNotKnown(spell);
     } else {
       delete spell;
     }
@@ -89,7 +87,7 @@ void Scroll::tryLearn() {
 ConsumeItem Scroll::read() {
   Renderer::drawMapAndInterface();
 
-  if(eng.player->getPropHandler().allowSee() == false) {
+  if(Map::player->getPropHandler().allowSee() == false) {
     eng.log->addMsg("I cannot read while blind.");
     return ConsumeItem::no;
   }
@@ -99,12 +97,12 @@ ConsumeItem Scroll::read() {
   if(data_->isIdentified) {
     eng.log->addMsg(
       "I read a scroll of " + getRealTypeName() + "...");
-    spell->cast(eng.player, false, eng);
+    spell->cast(Map::player, false, eng);
     tryLearn();
   } else {
     eng.log->addMsg("I recite forbidden incantations...");
     data_->isTried = true;
-    if(spell->cast(eng.player, false, eng).isCastIdenifying) {
+    if(spell->cast(Map::player, false, eng).isCastIdenifying) {
       identify(false);
     }
   }
@@ -113,8 +111,15 @@ ConsumeItem Scroll::read() {
   return ConsumeItem::yes;
 }
 
-ScrollNameHandler::ScrollNameHandler(Engine& engine) :
-  eng(engine) {
+namespace ScrollNameHandling {
+
+namespace {
+
+vector<string> falseNames_;
+
+} //namespace
+
+void init() {
   falseNames_.resize(0);
   falseNames_.push_back("Cruensseasrjit");
   falseNames_.push_back("Rudsceleratus");
@@ -167,9 +172,9 @@ ScrollNameHandler::ScrollNameHandler(Engine& engine) :
   cmb.push_back("Barada");
   cmb.push_back("Nikto");
 
-  const int CMB_SIZ = cmb.size();
-  for(int i = 0; i < CMB_SIZ; i++) {
-    for(int ii = 0; ii < CMB_SIZ; ii++) {
+  const size_t NR_CMB_PARTS = cmb.size();
+  for(size_t i = 0; i < NR_CMB_PARTS; i++) {
+    for(size_t ii = 0; ii < NR_CMB_PARTS; ii++) {
       if(i != ii) {
         falseNames_.push_back(cmb.at(i) + " " + cmb.at(ii));
       }
@@ -177,7 +182,7 @@ ScrollNameHandler::ScrollNameHandler(Engine& engine) :
   }
 }
 
-void ScrollNameHandler::setFalseScrollName(ItemData& d) {
+void setFalseScrollName(ItemData& d) {
   const int NR_ELEMENTS = falseNames_.size();
   const int ELEMENT     = Rnd::range(0, NR_ELEMENTS - 1);
 
@@ -190,7 +195,7 @@ void ScrollNameHandler::setFalseScrollName(ItemData& d) {
   falseNames_.erase(falseNames_.begin() + ELEMENT);
 }
 
-void ScrollNameHandler::addSaveLines(vector<string>& lines) const {
+void storeToSaveLines(vector<string>& lines) const {
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     if(eng.itemDataHandler->dataList[i]->isScroll) {
       lines.push_back(eng.itemDataHandler->dataList[i]->name.name);
@@ -200,7 +205,7 @@ void ScrollNameHandler::addSaveLines(vector<string>& lines) const {
   }
 }
 
-void ScrollNameHandler::setParamsFromSaveLines(vector<string>& lines) {
+void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     if(eng.itemDataHandler->dataList[i]->isScroll) {
       eng.itemDataHandler->dataList[i]->name.name = lines.front();
@@ -212,3 +217,5 @@ void ScrollNameHandler::setParamsFromSaveLines(vector<string>& lines) {
     }
   }
 }
+
+} //ScrollNameHandling

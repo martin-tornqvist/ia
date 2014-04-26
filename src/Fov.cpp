@@ -3,8 +3,7 @@
 #include <math.h>
 #include <iostream>
 
-#include "Engine.h"
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "LineCalc.h"
 #include "Map.h"
 #include "Utils.h"
@@ -23,7 +22,7 @@ void Fov::checkOneCellOfMany(
   }
 
   const bool TGT_IS_LGT =
-    eng.map->cells[cellToCheck.x][cellToCheck.y].isLight;
+    Map::cells[cellToCheck.x][cellToCheck.y].isLight;
 
   Pos curPos;
   Pos prevPos;
@@ -33,9 +32,9 @@ void Fov::checkOneCellOfMany(
     curPos.set(origin + pathDeltas->at(i));
     if(i > 1) {
       prevPos.set(origin + pathDeltas->at(i - 1));
-      const bool PRE_CELL_IS_DRK = eng.map->cells[prevPos.x][prevPos.y].isDark;
-      const bool CUR_CELL_IS_DRK = eng.map->cells[curPos.x][curPos.y].isDark;
-      const bool CUR_CELL_IS_LGT = eng.map->cells[curPos.x][curPos.y].isLight;
+      const bool PRE_CELL_IS_DRK = Map::cells[prevPos.x][prevPos.y].isDark;
+      const bool CUR_CELL_IS_DRK = Map::cells[curPos.x][curPos.y].isDark;
+      const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLight;
       if(
         CUR_CELL_IS_LGT == false && TGT_IS_LGT == false &&
         (PRE_CELL_IS_DRK || CUR_CELL_IS_DRK) && IS_AFFECTED_BY_DARKNESS) {
@@ -78,7 +77,7 @@ bool Fov::checkCell(const bool obstructions[MAP_W][MAP_H],
   }
 
   const bool TGT_IS_LGT =
-    eng.map->cells[cellToCheck.x][cellToCheck.y].isLight;
+    Map::cells[cellToCheck.x][cellToCheck.y].isLight;
 
   Pos curPos;
   Pos prevPos;
@@ -88,9 +87,9 @@ bool Fov::checkCell(const bool obstructions[MAP_W][MAP_H],
     curPos.set(origin + pathDeltas->at(i));
     if(i > 1) {
       prevPos.set(origin + pathDeltas->at(i - 1));
-      const bool PRE_CELL_IS_DRK = eng.map->cells[prevPos.x][prevPos.y].isDark;
-      const bool CUR_CELL_IS_DRK = eng.map->cells[curPos.x][curPos.y].isDark;
-      const bool CUR_CELL_IS_LGT = eng.map->cells[curPos.x][curPos.y].isLight;
+      const bool PRE_CELL_IS_DRK = Map::cells[prevPos.x][prevPos.y].isDark;
+      const bool CUR_CELL_IS_DRK = Map::cells[curPos.x][curPos.y].isDark;
+      const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLight;
       if(
         CUR_CELL_IS_LGT == false && TGT_IS_LGT == false &&
         (PRE_CELL_IS_DRK || CUR_CELL_IS_DRK) && IS_AFFECTED_BY_DARKNESS) {
@@ -145,12 +144,12 @@ void Fov::runPlayerFov(const bool obstructions[MAP_W][MAP_H],
 
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
-      eng.map->cells[x][y].isSeenByPlayer = false;
+      Map::cells[x][y].isSeenByPlayer = false;
       visionTmp[x][y] = false;
     }
   }
 
-  eng.map->cells[origin.x][origin.y].isSeenByPlayer = true;
+  Map::cells[origin.x][origin.y].isSeenByPlayer = true;
   visionTmp[origin.x][origin.y] = true;
 
   const int R = FOV_STD_RADI_INT;
@@ -162,7 +161,7 @@ void Fov::runPlayerFov(const bool obstructions[MAP_W][MAP_H],
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
       checkOneCellOfMany(obstructions, Pos(x, y), origin, visionTmp, true);
-      eng.map->cells[x][y].isSeenByPlayer = visionTmp[x][y];
+      Map::cells[x][y].isSeenByPlayer = visionTmp[x][y];
     }
   }
 }

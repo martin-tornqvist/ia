@@ -12,8 +12,8 @@ enum MedicalBagAction {
 
 class MedicalBag: public Item {
 public:
-  MedicalBag(ItemData* const itemData, Engine& engine) :
-    Item(itemData, engine), nrSupplies_(60), nrTurnsLeft_(-1) {}
+  MedicalBag(ItemData* const itemData) :
+    Item(itemData), nrSupplies_(60), nrTurnsLeft_(-1) {}
 
   virtual ~MedicalBag() {}
 
@@ -27,10 +27,10 @@ public:
 
   virtual SDL_Color getInterfaceClr() const {return clrGreen;}
 
-  void addSaveLines(vector<string>& lines) override {
+  void storeToSaveLines(vector<string>& lines) override {
     lines.push_back(toStr(nrSupplies_));
   }
-  void setParamsFromSaveLines(vector<string>& lines) override {
+  void setupFromSaveLines(vector<string>& lines) override {
     nrSupplies_ = toInt(lines.front());
     lines.erase(lines.begin());
   }

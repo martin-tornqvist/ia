@@ -1,6 +1,5 @@
 #include "DungeonMaster.h"
 
-#include "Engine.h"
 #include "Highscore.h"
 #include "TextFormatting.h"
 #include "Renderer.h"
@@ -35,22 +34,22 @@ int DungeonMaster::getMonsterTotXpWorth(const ActorData& d) const {
 }
 
 void DungeonMaster::playerGainLvl() {
-  if(eng.player->deadState == ActorDeadState::alive) {
+  if(Map::player->deadState == ActorDeadState::alive) {
     clvl++;
 
     eng.log->addMsg("Welcome to level " + toStr(clvl) + "!", clrGreen,
                     false, true);
 
-    eng.playerCreateCharacter->pickNewTrait(false);
+    Map::playerCreateCharacter->pickNewTrait(false);
 
-    eng.player->restoreHp(999, false);
-    eng.player->changeMaxHp(HP_PER_LVL, true);
-    eng.player->changeMaxSpi(SPI_PER_LVL, true);
+    Map::player->restoreHp(999, false);
+    Map::player->changeMaxHp(HP_PER_LVL, true);
+    Map::player->changeMaxSpi(SPI_PER_LVL, true);
   }
 }
 
 void DungeonMaster::playerGainXp(const int XP_GAINED) {
-  if(eng.player->deadState == ActorDeadState::alive) {
+  if(Map::player->deadState == ActorDeadState::alive) {
     for(int i = 0; i < XP_GAINED; i++) {
       xp++;
       if(clvl < PLAYER_MAX_CLVL) {
@@ -73,7 +72,7 @@ void DungeonMaster::playerLoseXpPercent(const int PERCENT) {
   xp = (xp * (100 - PERCENT)) / 100;
 }
 
-void DungeonMaster::addSaveLines(vector<string>& lines) const {
+void DungeonMaster::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(clvl));
   lines.push_back(toStr(xp));
   lines.push_back(toStr(timeStarted.year_));
@@ -84,7 +83,7 @@ void DungeonMaster::addSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(timeStarted.second_));
 }
 
-void DungeonMaster::setParamsFromSaveLines(vector<string>& lines) {
+void DungeonMaster::setupFromSaveLines(vector<string>& lines) {
   clvl = toInt(lines.front());
   lines.erase(lines.begin());
   xp = toInt(lines.front());
@@ -156,8 +155,8 @@ void DungeonMaster::onMonsterKilled(Actor& actor) {
   d.nrKills += 1;
 
   if(d.hp >= 3) {
-    if(eng.player->obsessions[int(Obsession::sadism)]) {
-      eng.player->shock_ = max(0.0, eng.player->shock_ - 3.0);
+    if(Map::player->obsessions[int(Obsession::sadism)]) {
+      Map::player->shock_ = max(0.0, Map::player->shock_ - 3.0);
     }
   }
 

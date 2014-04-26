@@ -1,7 +1,5 @@
 #include "Look.h"
 
-#include "Engine.h"
-
 #include "ActorMonster.h"
 #include "Feature.h"
 #include "Item.h"
@@ -28,7 +26,7 @@ Entity::Entity(FeatureStatic* feature_) :
 
 void Look::markerAtPos(const Pos& pos, const MarkerTask markerTask,
                        const Item* const itemThrown) {
-  const bool IS_VISION = eng.map->cells[pos.x][pos.y].isSeenByPlayer;
+  const bool IS_VISION = Map::cells[pos.x][pos.y].isSeenByPlayer;
 
   eng.log->clearLog();
 
@@ -53,7 +51,7 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask markerTask,
     }
   }
 
-  if(pos != eng.player->pos) {
+  if(pos != Map::player->pos) {
     if(markerTask == MarkerTask::aimRangedWeapon) {
       if(IS_VISION) {
         eng.log->addMsg("| f to fire");
@@ -76,16 +74,16 @@ void Look::descrBriefActor(const Actor& actor, const MarkerTask markerTask,
 
   if(markerTask == MarkerTask::look) {
     eng.log->addMsg("| v for description");
-  } else if(actor.pos != eng.player->pos) {
+  } else if(actor.pos != Map::player->pos) {
     if(markerTask == MarkerTask::aimRangedWeapon) {
       Item* const item =
-        eng.player->getInv().getItemInSlot(SlotId::wielded);
+        Map::player->getInv().getItemInSlot(SlotId::wielded);
       Weapon* const wpn = dynamic_cast<Weapon*>(item);
-      RangedAttackData data(*eng.player, *wpn, actor.pos, actor.pos, eng);
+      RangedAttackData data(*Map::player, *wpn, actor.pos, actor.pos, eng);
       eng.log->addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
     } else if(markerTask == MarkerTask::aimThrownWeapon) {
       MissileAttackData data(
-        *eng.player, *itemThrown, actor.pos, actor.pos, eng);
+        *Map::player, *itemThrown, actor.pos, actor.pos, eng);
       eng.log->addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
     }
   }
@@ -107,7 +105,7 @@ void Look::descrBriefFeatureStatic(const Feature& feature) const {
 void Look::printExtraActorDescription(const Pos& pos) const {
   Actor* actor = Utils::getActorAtPos(pos, eng);
   if(actor != NULL) {
-    if(actor != eng.player) {
+    if(actor != Map::player) {
       //Add written description.
       string descr = actor->getData().descr;
 
@@ -145,26 +143,26 @@ Entity Look::getEntityToDescribe(const Pos pos) {
   Actor* actor = Utils::getActorAtPos(pos, eng);
 
   //If there is a living actor there, describe the actor.
-  if(actor != NULL && actor != eng.player) {
+  if(actor != NULL && actor != Map::player) {
     if(actor->deadState == ActorDeadState::alive) {
-      if(eng.player->isSeeingActor(*actor, NULL)) {
+      if(Map::player->isSeeingActor(*actor, NULL)) {
         return Entity(actor);
       }
     }
   }
 
   //Describe mob feature
-  for(FeatureMob * mob : eng.gameTime->featureMobs_) {
+  for(FeatureMob * mob : GameTime::featureMobs_) {
     if(mob->getPos() == pos) {return Entity(mob);}
   }
 
   //If item there, describe that.
-  Item* item = eng.map->cells[pos.x][pos.y].item;
+  Item* item = Map::cells[pos.x][pos.y].item;
   if(item != NULL)
     return Entity(item);
 
   //If static feature, describe that.
-  return Entity(eng.map->cells[pos.x][pos.y].featureStatic);
+  return Entity(Map::cells[pos.x][pos.y].featureStatic);
 
   return Entity();
 }

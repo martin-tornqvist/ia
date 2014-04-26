@@ -1,9 +1,7 @@
 #include "Attack.h"
 
-#include "Engine.h"
-
 #include "GameTime.h"
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "Renderer.h"
@@ -22,7 +20,7 @@ using namespace std;
 
 void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
-  const bool IS_ATTACKER_PLAYER = &attacker == eng.player;
+  const bool IS_ATTACKER_PLAYER = &attacker == Map::player;
 
   vector<Projectile*> projectiles;
 
@@ -128,7 +126,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         curProj->pos = projectilePath.at(projectilePathElement);
 
         curProj->isVisibleToPlayer =
-          eng.map->cells[curProj->pos.x][curProj->pos.y].isSeenByPlayer;
+          Map::cells[curProj->pos.x][curProj->pos.y].isSeenByPlayer;
 
         //Get attack data again for every cell traveled through
         curProj->setAttackData(
@@ -202,7 +200,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         //PROJECTILE HIT FEATURE?
         vector<FeatureMob*> featureMobs;
-        eng.gameTime->getFeatureMobsAtPos(curProj->pos, featureMobs);
+        GameTime::getFeatureMobsAtPos(curProj->pos, featureMobs);
         Feature* featureBlockingShot = NULL;
         for(FeatureMob * mob : featureMobs) {
           if(mob->isProjectilePassable() == false) {
@@ -210,7 +208,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           }
         }
         FeatureStatic* featureStatic =
-          eng.map->cells[curProj->pos.x][curProj->pos.y].featureStatic;
+          Map::cells[curProj->pos.x][curProj->pos.y].featureStatic;
         if(featureStatic->isProjectilePassable() == false) {
           featureBlockingShot = featureStatic;
         }
@@ -292,7 +290,7 @@ void Attack::projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     for(Projectile * projectile : projectiles) {
       const Pos& pos = projectile->pos;
       if(
-        eng.map->cells[pos.x][pos.y].isSeenByPlayer &&
+        Map::cells[pos.x][pos.y].isSeenByPlayer &&
         projectile->isObstructed == false) {
         SdlWrapper::sleep(DELAY);
         break;
@@ -353,7 +351,7 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     if(wpn.nrAmmoLoaded >= nrOfProjectiles || WPN_HAS_INF_AMMO) {
       projectileFire(attacker, wpn, aimPos);
 
-      if(eng.player->deadState == ActorDeadState::alive) {
+      if(Map::player->deadState == ActorDeadState::alive) {
 
         didAttack = true;
 
@@ -368,17 +366,17 @@ bool Attack::ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
   Renderer::drawMapAndInterface();
 
-  if(didAttack) {eng.gameTime->actorDidAct();}
+  if(didAttack) {GameTime::actorDidAct();}
 
   return didAttack;
 }
 
 void Attack::printRangedInitiateMessages(const RangedAttackData& data) const {
-  if(data.attacker == eng.player)
+  if(data.attacker == Map::player)
     eng.log->addMsg("I " + data.verbPlayerAttacks + ".");
   else {
     const Pos& p = data.attacker->pos;
-    if(eng.map->cells[p.x][p.y].isSeenByPlayer) {
+    if(Map::cells[p.x][p.y].isSeenByPlayer) {
       const string attackerName = data.attacker->getNameThe();
       const string attackVerb = data.verbOtherAttacks;
       eng.log->addMsg(attackerName + " " + attackVerb + ".", clrWhite, true);
@@ -391,7 +389,7 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
   //Only print messages if player can see the cell
   const int defX = data.curDefender->pos.x;
   const int defY = data.curDefender->pos.y;
-  if(eng.map->cells[defX][defY].isSeenByPlayer) {
+  if(Map::cells[defX][defY].isSeenByPlayer) {
 
     //Punctuation or exclamation marks depending on attack strength
     if(IS_HIT) {
@@ -404,12 +402,12 @@ void Attack::printProjectileAtActorMessages(const RangedAttackData& data,
           dmgPunctuation;
       }
 
-      if(data.curDefender == eng.player) {
+      if(data.curDefender == Map::player) {
         eng.log->addMsg("I am hit" + dmgPunctuation, clrMsgBad, true);
       } else {
         string otherName = "It";
 
-        if(eng.map->cells[defX][defY].isSeenByPlayer)
+        if(Map::cells[defX][defY].isSeenByPlayer)
           otherName = data.curDefender->getNameThe();
 
         eng.log->addMsg(otherName + " is hit" + dmgPunctuation, clrMsgGood);

@@ -1,8 +1,5 @@
 #include "MapTemplates.h"
 
-#include "Engine.h"
-
-
 void MapTemplateHandler::initTemplates() {
   string templStr;
   vector<CharToIdTranslation> translationVector;

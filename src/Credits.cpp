@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "Input.h"
-#include "Engine.h"
 #include "TextFormatting.h"
 #include "Renderer.h"
 
@@ -59,7 +58,7 @@ void Credits::run() {
 
   //Read keys
   while(true) {
-    const KeyboardReadRetData& d = Input::readKeysUntilFound(eng);
+    const KeyboardReadRetData& d = Input::readKeysUntilFound();
     if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
       break;
     }

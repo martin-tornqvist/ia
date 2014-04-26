@@ -4,7 +4,6 @@
 
 #include "Item.h"
 #include "ItemWeapon.h"
-#include "Engine.h"
 #include "ItemDrop.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -70,7 +69,7 @@ Inventory::~Inventory() {
   for(Item * item : intrinsics_)      {delete item;}
 }
 
-void Inventory::addSaveLines(vector<string>& lines) const {
+void Inventory::storeToSaveLines(vector<string>& lines) const {
   for(const InventorySlot & slot : slots_) {
     Item* const item = slot.item;
     if(item == NULL) {
@@ -78,7 +77,7 @@ void Inventory::addSaveLines(vector<string>& lines) const {
     } else {
       lines.push_back(toStr(int(item->getData().id)));
       lines.push_back(toStr(item->nrItems));
-      item->addSaveLines(lines);
+      item->storeToSaveLines(lines);
     }
   }
 
@@ -86,11 +85,11 @@ void Inventory::addSaveLines(vector<string>& lines) const {
   for(Item * item : general_) {
     lines.push_back(toStr(int(item->getData().id)));
     lines.push_back(toStr(item->nrItems));
-    item->addSaveLines(lines);
+    item->storeToSaveLines(lines);
   }
 }
 
-void Inventory::setParamsFromSaveLines(vector<string>& lines, Engine& engine) {
+void Inventory::setupFromSaveLines(vector<string>& lines) {
   for(InventorySlot & slot : slots_) {
     //Previous item is destroyed
     Item* item = slot.item;
@@ -105,7 +104,7 @@ void Inventory::setParamsFromSaveLines(vector<string>& lines, Engine& engine) {
       item = engine.itemFactory->spawnItem(id);
       item->nrItems = toInt(lines.front());
       lines.erase(lines.begin());
-      item->setParamsFromSaveLines(lines);
+      item->setupFromSaveLines(lines);
       slot.item = item;
       //When loading the game, wear the item to apply properties from wearing
       item->onWear();
@@ -124,7 +123,7 @@ void Inventory::setParamsFromSaveLines(vector<string>& lines, Engine& engine) {
     Item* item = engine.itemFactory->spawnItem(id);
     item->nrItems = toInt(lines.front());
     lines.erase(lines.begin());
-    item->setParamsFromSaveLines(lines);
+    item->setupFromSaveLines(lines);
     general_.push_back(item);
   }
 }
@@ -225,7 +224,7 @@ int Inventory::getElementToStackItem(Item* item) const {
 }
 
 void Inventory::dropAllNonIntrinsic(
-  const Pos& pos, const bool ROLL_FOR_DESTRUCTION, Engine& engine) {
+  const Pos& pos, const bool ROLL_FOR_DESTRUCTION) {
 
   Item* item;
 
@@ -385,9 +384,9 @@ void Inventory::moveItemToSlot(
 
 void Inventory::equipGeneralItemAndPossiblyEndTurn(
   const unsigned int GENERAL_INV_ELEMENT,
-  const SlotId slotToEquip, Engine& engine) {
+  const SlotId slotToEquip) {
 
-  const bool IS_PLAYER = this == &engine.player->getInv();
+  const bool IS_PLAYER = this == &Map::player->getInv();
 
   bool isFreeTurn = false;
 
@@ -470,11 +469,11 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
         "I am now using " + nameAfter + " as missile weapon.");
     }
   }
-  engine.gameTime->actorDidAct(isFreeTurn);
+  GameTime::actorDidAct(isFreeTurn);
 }
 
 void Inventory::swapWieldedAndPrepared(
-  const bool IS_FREE_TURN, Engine& engine) {
+  const bool IS_FREE_TURN) {
 
   InventorySlot* slot1 = getSlot(SlotId::wielded);
   InventorySlot* slot2 = getSlot(SlotId::wieldedAlt);
@@ -485,7 +484,7 @@ void Inventory::swapWieldedAndPrepared(
 
   Renderer::drawMapAndInterface();
 
-  engine.gameTime->actorDidAct(IS_FREE_TURN);
+  GameTime::actorDidAct(IS_FREE_TURN);
 }
 
 void Inventory::moveItemFromGeneralToIntrinsics(
@@ -645,7 +644,7 @@ int Inventory::getTotalItemWeight() const {
 // Function for lexicographically comparing two items
 struct LexicograhicalCompareItems {
 public:
-  LexicograhicalCompareItems(Engine& engine) : eng(engine) {
+  LexicograhicalCompareItems() : eng() {
   }
   bool operator()(Item* const item1, Item* const item2) {
     const string& itemName1 =
@@ -655,10 +654,10 @@ public:
     return std::lexicographical_compare(itemName1.begin(), itemName1.end(),
                                         itemName2.begin(), itemName2.end());
   }
-  Engine& eng;
+
 };
 
-void Inventory::sortGeneralInventory(Engine& engine) {
+void Inventory::sortGeneralInventory() {
   vector< vector<Item*> > sortBuffer;
 
   // Sort according to item interface color first
@@ -682,7 +681,7 @@ void Inventory::sortGeneralInventory(Engine& engine) {
   }
 
   // Sort lexicographically sedond
-  LexicograhicalCompareItems cmp(engine);
+  LexicograhicalCompareItems cmp();
   for(unsigned int i = 0; i < sortBuffer.size(); i++) {
     std::sort(sortBuffer.at(i).begin(), sortBuffer.at(i).end(), cmp);
   }

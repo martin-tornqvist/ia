@@ -1,7 +1,5 @@
 #include "InventoryHandler.h"
 
-#include "Engine.h"
-
 #include "ItemScroll.h"
 #include "ItemExplosive.h"
 #include "ActorPlayer.h"
@@ -17,18 +15,18 @@
 #include "GameTime.h"
 #include "Audio.h"
 
-InventoryHandler::InventoryHandler(Engine& engine) :
+InventoryHandler::InventoryHandler() :
   screenToOpenAfterDrop(endOfInventoryScreens),
   equipSlotToOpenAfterDrop(NULL),
   browserPosToSetAfterDrop(0),
-  eng(engine) {}
+  eng() {}
 
 void InventoryHandler::activateDefault(
   const unsigned int GENERAL_ITEMS_ELEMENT) {
 
-  Inventory& playerInv = eng.player->getInv();
+  Inventory& playerInv = Map::player->getInv();
   Item* item = playerInv.getGeneral().at(GENERAL_ITEMS_ELEMENT);
-  if(item->activateDefault(eng.player) == ConsumeItem::yes) {
+  if(item->activateDefault(Map::player) == ConsumeItem::yes) {
     playerInv.decrItemInGeneral(GENERAL_ITEMS_ELEMENT);
   }
 }
@@ -36,7 +34,7 @@ void InventoryHandler::activateDefault(
 void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(
   const SlotId slotToEquip) {
 
-  vector<Item*>& general = eng.player->getInv().getGeneral();
+  vector<Item*>& general = Map::player->getInv().getGeneral();
   generalItemsToShow.resize(0);
 
   for(unsigned int i = 0; i < general.size(); i++) {
@@ -73,7 +71,7 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsEquip(
 }
 
 void InventoryHandler::filterPlayerGeneralSlotButtonsUsable() {
-  vector<Item*>& general = eng.player->getInv().getGeneral();
+  vector<Item*>& general = Map::player->getInv().getGeneral();
 
   vector< vector<unsigned int> > groups;
 
@@ -107,7 +105,7 @@ void InventoryHandler::filterPlayerGeneralSlotButtonsUsable() {
 }
 
 void InventoryHandler::filterPlayerGeneralSlotButtonsShowAll() {
-  vector<Item*>& general = eng.player->getInv().getGeneral();
+  vector<Item*>& general = Map::player->getInv().getGeneral();
   generalItemsToShow.resize(0);
   const int NR_GEN = general.size();
   for(int i = 0; i < NR_GEN; i++) {generalItemsToShow.push_back(i);}
@@ -117,10 +115,10 @@ void InventoryHandler::runSlotsScreen() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   Renderer::drawMapAndInterface();
 
-  Inventory& inv                = eng.player->getInv();
+  Inventory& inv                = Map::player->getInv();
   vector<InventorySlot>& slots  = inv.getSlots();
 
-  inv.sortGeneralInventory(eng);
+  inv.sortGeneralInventory();
 
   MenuBrowser browser(slots.size() + 1, 0);
   browser.setY(browserPosToSetAfterDrop);
@@ -170,7 +168,7 @@ void InventoryHandler::runSlotsScreen() {
                 "I take off my " + itemName + ".", clrWhite, true, true);
               item->onTakeOff();
               Renderer::drawMapAndInterface();
-              eng.gameTime->actorDidAct();
+              GameTime::actorDidAct();
               return;
             } else {
               RenderInventory::drawBrowseSlots(browser, eng);
@@ -196,7 +194,7 @@ bool InventoryHandler::runUseScreen() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   Renderer::drawMapAndInterface();
 
-  eng.player->getInv().sortGeneralInventory(eng);
+  Map::player->getInv().sortGeneralInventory();
 
   filterPlayerGeneralSlotButtonsUsable();
   MenuBrowser browser(generalItemsToShow.size(), 0);
@@ -222,7 +220,7 @@ bool InventoryHandler::runUseScreen() {
       } break;
 
       case MenuAction::selectedShift: {
-        const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
+        const int SLOTS_SIZE = Map::player->getInv().getSlots().size();
         if(
           runDropScreen(
             SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
@@ -244,7 +242,7 @@ bool InventoryHandler::runUseScreen() {
 
 bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
   trace << "InventoryHandler::runDropScreen()" << endl;
-  Inventory& inv = eng.player->getInv();
+  Inventory& inv = Map::player->getInv();
   Item* const item = inv.getItemInElement(GLOBAL_ELEMENT_NR);
   const ItemData& data = item->getData();
 
@@ -264,13 +262,13 @@ bool InventoryHandler::runDropScreen(const int GLOBAL_ELEMENT_NR) {
       trace << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
       return false;
     } else {
-      eng.itemDrop->dropItemFromInventory(eng.player, GLOBAL_ELEMENT_NR,
+      eng.itemDrop->dropItemFromInventory(Map::player, GLOBAL_ELEMENT_NR,
                                           NR_TO_DROP);
       return true;
     }
   } else {
     trace << "InventoryHandler: item not stackable, or only one item" << endl;
-    eng.itemDrop->dropItemFromInventory(eng.player, GLOBAL_ELEMENT_NR);
+    eng.itemDrop->dropItemFromInventory(Map::player, GLOBAL_ELEMENT_NR);
     return true;
   }
   return false;
@@ -281,7 +279,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
   equipSlotToOpenAfterDrop = slotToEquip;
   Renderer::drawMapAndInterface();
 
-  eng.player->getInv().sortGeneralInventory(eng);
+  Map::player->getInv().sortGeneralInventory();
 
   filterPlayerGeneralSlotButtonsEquip(slotToEquip->id);
 
@@ -304,7 +302,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
 
       case MenuAction::selected: {
         const int INV_ELEM = generalItemsToShow.at(browser.getPos().y);
-        eng.player->getInv().equipGeneralItemAndPossiblyEndTurn(
+        Map::player->getInv().equipGeneralItemAndPossiblyEndTurn(
           INV_ELEM, slotToEquip->id, eng);
         if(slotToEquip->id == SlotId::armorBody) {
           slotToEquip->item->onWear();
@@ -313,7 +311,7 @@ bool InventoryHandler::runEquipScreen(InventorySlot* const slotToEquip) {
       } break;
 
       case MenuAction::selectedShift: {
-        const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
+        const int SLOTS_SIZE = Map::player->getInv().getSlots().size();
         if(
           runDropScreen(
             SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {
@@ -335,7 +333,7 @@ void InventoryHandler::runBrowseInventory() {
   screenToOpenAfterDrop = endOfInventoryScreens;
   Renderer::drawMapAndInterface();
 
-  eng.player->getInv().sortGeneralInventory(eng);
+  Map::player->getInv().sortGeneralInventory();
 
   filterPlayerGeneralSlotButtonsShowAll();
   MenuBrowser browser(generalItemsToShow.size(), 0);
@@ -356,7 +354,7 @@ void InventoryHandler::runBrowseInventory() {
       case MenuAction::selected: {} break;
 
       case MenuAction::selectedShift: {
-        const int SLOTS_SIZE = eng.player->getInv().getSlots().size();
+        const int SLOTS_SIZE = Map::player->getInv().getSlots().size();
         if(
           runDropScreen(
             SLOTS_SIZE + generalItemsToShow.at(browser.getPos().y))) {

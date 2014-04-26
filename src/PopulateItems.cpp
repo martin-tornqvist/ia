@@ -1,5 +1,4 @@
 #include "PopulateItems.h"
-#include "Engine.h"
 
 #include "ActorPlayer.h"
 #include "Map.h"
@@ -20,7 +19,7 @@ void PopulateItems::spawnItems() {
 
   ItemData** dataList = eng.itemDataHandler->dataList;
 
-  const int DLVL = eng.map->getDlvl();
+  const int DLVL = Map::getDlvl();
 
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     if(
@@ -34,7 +33,7 @@ void PopulateItems::spawnItems() {
   }
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksItems(eng), blockers);
+  MapParse::parse(CellPred::BlocksItems(), blockers);
   vector<Pos> freeCells;
   Utils::makeVectorFromBoolMap(false, blockers, freeCells);
 

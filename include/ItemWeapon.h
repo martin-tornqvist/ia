@@ -4,11 +4,9 @@
 #include "Item.h"
 #include "Converters.h"
 
-class Engine;
-
 class Weapon: public Item {
 public:
-  Weapon(ItemData* const itemData, ItemData* const ammoData, Engine& engine);
+  Weapon(ItemDataT* const itemData, ItemDataT* const ammoData);
   virtual ~Weapon() {}
 
   int nrAmmoLoaded;
@@ -37,16 +35,14 @@ public:
     (void) actor;
   }
 
-  const ItemData& getAmmoData() {
-    return *ammoData_;
-  }
+  const ItemDataT& getAmmoData() {return *ammoData_;}
 
-  void addSaveLines(vector<string>& lines) override {
+  void storeToSaveLines(vector<string>& lines) override {
     lines.push_back(toStr(meleeDmgPlus));
     lines.push_back(toStr(nrAmmoLoaded));
   }
 
-  void setParamsFromSaveLines(vector<string>& lines) override {
+  void setupFromSaveLines(vector<string>& lines) override {
     meleeDmgPlus = toInt(lines.front());
     lines.erase(lines.begin());
     nrAmmoLoaded = toInt(lines.front());
@@ -73,14 +69,13 @@ protected:
     return *this;
   }
 
-  ItemData* const ammoData_;
+  ItemDataT* const ammoData_;
 };
 
 class SawedOff: public Weapon {
 public:
-  SawedOff(ItemData* const itemData, ItemData* const ammoData,
-           Engine& engine) :
-    Weapon(itemData, ammoData, engine) {
+  SawedOff(ItemDataT* const itemData, ItemDataT* const ammoData) :
+    Weapon(itemData, ammoData) {
     ammoCapacity = 2;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
@@ -92,9 +87,8 @@ private:
 
 class PumpShotgun: public Weapon {
 public:
-  PumpShotgun(ItemData* const itemData, ItemData* const ammoData,
-              Engine& engine) :
-    Weapon(itemData, ammoData, engine) {
+  PumpShotgun(ItemDataT* const itemData, ItemDataT* const ammoData) :
+    Weapon(itemData, ammoData) {
     ammoCapacity = 8;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
@@ -106,9 +100,8 @@ private:
 
 class Pistol: public Weapon {
 public:
-  Pistol(ItemData* const itemData, ItemData* const ammoData,
-         Engine& engine) :
-    Weapon(itemData, ammoData, engine) {
+  Pistol(ItemDataT* const itemData, ItemDataT* const ammoData) :
+    Weapon(itemData, ammoData) {
     ammoCapacity = 7;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 6;
@@ -120,9 +113,8 @@ private:
 
 class FlareGun: public Weapon {
 public:
-  FlareGun(ItemData* const itemData, ItemData* const ammoData,
-           Engine& engine) :
-    Weapon(itemData, ammoData, engine) {
+  FlareGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
+    Weapon(itemData, ammoData) {
     nrAmmoLoaded = 1;
     ammoCapacity = 1;
     effectiveRangeLimit = 6;
@@ -134,9 +126,8 @@ private:
 
 class MachineGun: public Weapon {
 public:
-  MachineGun(ItemData* const itemData, ItemData* const ammoData,
-             Engine& engine) :
-    Weapon(itemData, ammoData, engine) {
+  MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
+    Weapon(itemData, ammoData) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
@@ -149,9 +140,8 @@ private:
 
 class Incinerator: public Weapon {
 public:
-  Incinerator(ItemData* const itemData, ItemData* const ammoData,
-              Engine& engine) :
-    Weapon(itemData, ammoData, engine) {
+  Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
+    Weapon(itemData, ammoData) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
@@ -165,9 +155,8 @@ private:
 
 class TeslaCannon: public Weapon {
 public:
-  TeslaCannon(ItemData* const itemData, ItemData* const ammoData,
-              Engine& engine) :
-    Weapon(itemData, ammoData, engine) {
+  TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData) :
+    Weapon(itemData, ammoData) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
@@ -179,9 +168,8 @@ private:
 
 class SpikeGun: public Weapon {
 public:
-  SpikeGun(ItemData* const itemData, ItemData* const ammoData,
-           Engine& engine) :
-    Weapon(itemData, ammoData, engine) {
+  SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
+    Weapon(itemData, ammoData) {
     ammoCapacity = 12;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;

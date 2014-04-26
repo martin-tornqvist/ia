@@ -8,12 +8,12 @@
 
 using namespace std;
 
-class Engine;
+
 class Spell;
 
 class PlayerSpellsHandler {
 public:
-  PlayerSpellsHandler(Engine& engine) : prevSpellCast_(NULL), eng(engine) {
+  PlayerSpellsHandler() : prevSpellCast_(NULL) {
     knownSpells_.resize(0);
   }
   ~PlayerSpellsHandler();
@@ -33,9 +33,9 @@ public:
 
   bool isSpellLearned(const SpellId id);
 
-  void addSaveLines(vector<string>& lines) const;
+  void storeToSaveLines(vector<string>& lines) const;
 
-  void setParamsFromSaveLines(vector<string>& lines);
+  void setupFromSaveLines(vector<string>& lines);
 private:
   void draw(MenuBrowser& browser);
 
@@ -44,7 +44,7 @@ private:
   vector<Spell*>  knownSpells_;
   const Spell*    prevSpellCast_;
 
-  Engine& eng;
+
 };
 
 #endif

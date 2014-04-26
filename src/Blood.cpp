@@ -1,6 +1,5 @@
 #include "Blood.h"
 
-#include "Engine.h"
 #include "Map.h"
 #include "Utils.h"
 
@@ -8,7 +7,7 @@ void Gore::makeBlood(const Pos& origin) {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       const Pos c = origin + Pos(dx, dy);
-      FeatureStatic* const f  = eng.map->cells[c.x][c.y].featureStatic;
+      FeatureStatic* const f  = Map::cells[c.x][c.y].featureStatic;
       if(f->canHaveBlood()) {
         if(Rnd::percentile() > 66) {
           f->setHasBlood(true);
@@ -23,7 +22,7 @@ void Gore::makeGore(const Pos& origin) {
     for(int dy = -1; dy <= 1; dy++) {
       const Pos c = origin + Pos(dx, dy);
       if(Rnd::percentile() > 66) {
-        eng.map->cells[c.x][c.y].featureStatic->setGoreIfPossible();
+        Map::cells[c.x][c.y].featureStatic->setGoreIfPossible();
       }
     }
   }

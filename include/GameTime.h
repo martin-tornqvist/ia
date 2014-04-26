@@ -6,7 +6,7 @@
 #include "Feature.h"
 #include "ActorData.h"
 
-class Engine;
+
 
 enum TurnType {
   turnType_fast,
@@ -19,19 +19,19 @@ enum TurnType {
 
 class GameTime {
 public:
-  GameTime(Engine& engine) :
+  GameTime() :
     currentTurnTypePos_(0),
     currentActorVectorPos_(0),
-    turn_(0), eng(engine) {
+    turn_(0) {
     actors_.resize(0);
     featureMobs_.resize(0);
   }
 
   ~GameTime();
 
-  void addSaveLines(vector<string>& lines) const;
+  void storeToSaveLines(vector<string>& lines) const;
 
-  void setParamsFromSaveLines(vector<string>& lines);
+  void setupFromSaveLines(vector<string>& lines);
 
   void insertActorInLoop(Actor* actor);
 
@@ -88,7 +88,7 @@ private:
 
   int turn_;
 
-  Engine& eng;
+
 };
 
 #endif

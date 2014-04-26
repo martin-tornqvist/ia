@@ -6,7 +6,7 @@
 
 #include <SDL_video.h>
 
-#include "CommonData.h"
+#include "CmnData.h"
 #include "GameTime.h"
 #include "Config.h"
 #include "Art.h"
@@ -22,7 +22,7 @@ extern CellRenderData renderArrayNoActors[MAP_W][MAP_H];
 extern SDL_Surface*   screenSurface;
 extern SDL_Surface*   mainMenuLogoSurface;
 
-void init(Engine& engine);
+void init();
 void cleanup();
 
 void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN = true);

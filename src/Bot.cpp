@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <vector>
 
-#include "Engine.h"
-
 #include "Properties.h"
 #include "Actor.h"
 #include "Feature.h"
@@ -31,7 +29,7 @@ void Bot::act() {
   //=======================================================================
   // TESTS
   //=======================================================================
-  for(Actor * actor : eng.gameTime->actors_) {
+  for(Actor * actor : GameTime::actors_) {
 #ifdef NDEBUG
     (void)actor;
 #else
@@ -42,13 +40,13 @@ void Bot::act() {
   //=======================================================================
 
   //Check if we are finished with the current run, if so, go back to DLVL 1
-  if(eng.map->getDlvl() >= LAST_CAVERN_LEVEL) {
+  if(Map::getDlvl() >= LAST_CAVERN_LEVEL) {
     trace << "Bot: Starting new run on first dungeon level" << endl;
-    eng.map->dlvl_ = 1;
+    Map::dlvl_ = 1;
     return;
   }
 
-  PropHandler& propHandler = eng.player->getPropHandler();
+  PropHandler& propHandler = Map::player->getPropHandler();
 
   //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)
   if(Rnd::oneIn(7)) {
@@ -57,9 +55,9 @@ void Bot::act() {
 
   //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
   if(Rnd::oneIn(10)) {
-    const int ELEMENT = Rnd::range(0, eng.gameTime->actors_.size() - 1);
-    Actor* const actor = eng.gameTime->actors_.at(ELEMENT);
-    if(actor != eng.player) {
+    const int ELEMENT = Rnd::range(0, GameTime::actors_.size() - 1);
+    Actor* const actor = GameTime::actors_.at(ELEMENT);
+    if(actor != Map::player) {
       actor->getPropHandler().tryApplyProp(
         new PropBurning(eng, propTurnsStd), true);
     }
@@ -67,7 +65,7 @@ void Bot::act() {
 
   //Occasionally teleport (to avoid getting stuck)
   if(Rnd::oneIn(200)) {
-    eng.player->teleport(false);
+    Map::player->teleport(false);
   }
 
   //Occasionally send a TAB command to attack nearby monsters
@@ -96,16 +94,16 @@ void Bot::act() {
   }
 
   //Handle blocking door
-  const Pos& playerPos = eng.player->pos;
+  const Pos& playerPos = Map::player->pos;
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       FeatureStatic* f =
-        eng.map->cells[playerPos.x + dx][playerPos.y + dy].featureStatic;
+        Map::cells[playerPos.x + dx][playerPos.y + dy].featureStatic;
       if(f->getId() == feature_door) {
         Door* const door = dynamic_cast<Door*>(f);
         door->reveal(false);
         if(door->isStuck()) {
-          f->bash(*eng.player);
+          f->bash(*Map::player);
           return;
         }
       }
@@ -114,7 +112,7 @@ void Bot::act() {
 
   //If we are terrified, wait in place
   vector<PropId> props;
-  eng.player->getPropHandler().getAllActivePropIds(props);
+  Map::player->getPropHandler().getAllActivePropIds(props);
 
   if(find(props.begin(), props.end(), propTerrified) != props.end()) {
     if(walkToAdjacentCell(playerPos)) {
@@ -130,7 +128,7 @@ void Bot::act() {
 }
 
 bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
-  Pos playerCell(eng.player->pos);
+  Pos playerCell(Map::player->pos);
 
   assert(Utils::isPosAdj(playerCell, cellToGoTo, true));
 
@@ -177,7 +175,7 @@ void Bot::findPathToStairs() {
 
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
-      const FeatureId curId = eng.map->cells[x][y].featureStatic->getId();
+      const FeatureId curId = Map::cells[x][y].featureStatic->getId();
       if(curId == feature_stairs) {
         blockers[x][y] = false;
         stairPos.set(x, y);
@@ -188,6 +186,6 @@ void Bot::findPathToStairs() {
   }
   assert(stairPos != Pos(-1, -1));
 
-  PathFind::run(eng.player->pos, stairPos, blockers, currentPath_);
+  PathFind::run(Map::player->pos, stairPos, blockers, currentPath_);
 }
 

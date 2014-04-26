@@ -1,14 +1,14 @@
 #ifndef MAPBUILD_H
 #define MAPBUILD_H
 
-#include "CommonTypes.h"
+#include "CmnTypes.h"
 #include "RoomTheme.h"
 #include "Feature.h"
 #include "MapTemplates.h"
 
 using namespace std;
 
-class Engine;
+
 struct Region;
 
 enum HorizontalVertical {
@@ -46,7 +46,7 @@ private:
 
 class MapGenUtilCorridorBuilder {
 public:
-  MapGenUtilCorridorBuilder(Engine& engine) : eng(engine) {}
+  MapGenUtilCorridorBuilder() {}
   ~MapGenUtilCorridorBuilder() {}
 
   void buildZCorridorBetweenRooms(
@@ -54,12 +54,12 @@ public:
     bool doorPosCandidates[MAP_W][MAP_H] = NULL);
 
 private:
-  Engine& eng;
+
 };
 
 class MapGen {
 public:
-  MapGen(Engine& engine) : eng(engine) {}
+  MapGen() {}
   ~MapGen() {}
 
   inline bool run() {return run_();}
@@ -84,12 +84,12 @@ protected:
     const Pos& origin, const Pos& target, FeatureId feature, const bool SMOOTH,
     const bool TUNNEL_THROUGH_ANY_FEATURE);
 
-  Engine& eng;
+
 };
 
 class MapGenBsp : public MapGen {
 public:
-  MapGenBsp(Engine& engine) : MapGen(engine) {}
+  MapGenBsp() : MapGen() {}
   virtual ~MapGenBsp() {}
 
 private:
@@ -191,7 +191,7 @@ private:
 
 class MapGenIntroForest : public MapGen {
 public:
-  MapGenIntroForest(Engine& engine) : MapGen(engine) {}
+  MapGenIntroForest() : MapGen() {}
   ~MapGenIntroForest() {}
 
 private:
@@ -205,7 +205,7 @@ private:
 
 class MapGenEgyptTomb : public MapGen {
 public:
-  MapGenEgyptTomb(Engine& engine) : MapGen(engine) {}
+  MapGenEgyptTomb() : MapGen() {}
   ~MapGenEgyptTomb() {}
 
 private:
@@ -214,7 +214,7 @@ private:
 
 class MapGenCaveLvl : public MapGen {
 public:
-  MapGenCaveLvl(Engine& engine) : MapGen(engine) {}
+  MapGenCaveLvl() : MapGen() {}
   ~MapGenCaveLvl() {}
 
 private:
@@ -223,7 +223,7 @@ private:
 
 class MapGenTrapezohedronLvl : public MapGen {
 public:
-  MapGenTrapezohedronLvl(Engine& engine) : MapGen(engine) {}
+  MapGenTrapezohedronLvl() : MapGen() {}
   ~MapGenTrapezohedronLvl() {}
 
 private:
