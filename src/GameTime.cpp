@@ -237,8 +237,8 @@ void GameTime::runStandardTurnEvents() {
   Inventory& playerInv = Map::player->getInv();
   vector<Item*>& playerBackpack = playerInv.getGeneral();
   for(Item * const item : playerBackpack) {item->newTurnInInventory();}
-  vector<InventorySlot>& playerSlots = playerInv.getSlots();
-  for(InventorySlot & slot : playerSlots) {
+  vector<InvSlot>& playerSlots = playerInv.getSlots();
+  for(InvSlot & slot : playerSlots) {
     if(slot.item != NULL) {
       slot.item->newTurnInInventory();
     }

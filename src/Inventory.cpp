@@ -15,7 +15,7 @@
 #include "PlayerBon.h"
 
 Inventory::Inventory(bool humanoid) {
-  InventorySlot invSlot;
+  InvSlot invSlot;
 
   if(humanoid) {
     invSlot.id = SlotId::wielded;
@@ -64,13 +64,13 @@ Inventory::Inventory(bool humanoid) {
 }
 
 Inventory::~Inventory() {
-  for(InventorySlot & slot : slots_)  {if(slot.item) {delete slot.item;}}
+  for(InvSlot & slot : slots_)  {if(slot.item) {delete slot.item;}}
   for(Item * item : general_)         {delete item;}
   for(Item * item : intrinsics_)      {delete item;}
 }
 
 void Inventory::storeToSaveLines(vector<string>& lines) const {
-  for(const InventorySlot & slot : slots_) {
+  for(const InvSlot & slot : slots_) {
     Item* const item = slot.item;
     if(item == NULL) {
       lines.push_back("0");
@@ -90,7 +90,7 @@ void Inventory::storeToSaveLines(vector<string>& lines) const {
 }
 
 void Inventory::setupFromSaveLines(vector<string>& lines) {
-  for(InventorySlot & slot : slots_) {
+  for(InvSlot & slot : slots_) {
     //Previous item is destroyed
     Item* item = slot.item;
     if(item != NULL) {
@@ -359,7 +359,7 @@ void Inventory::decrItemTypeInGeneral(const ItemId id) {
 }
 
 void Inventory::moveItemToSlot(
-  InventorySlot* inventorySlot,
+  InvSlot* inventorySlot,
   const unsigned int GENERAL_INV_ELEMENT) {
 
   bool generalSlotExists = GENERAL_INV_ELEMENT < general_.size();
@@ -475,8 +475,8 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
 void Inventory::swapWieldedAndPrepared(
   const bool IS_FREE_TURN) {
 
-  InventorySlot* slot1 = getSlot(SlotId::wielded);
-  InventorySlot* slot2 = getSlot(SlotId::wieldedAlt);
+  InvSlot* slot1 = getSlot(SlotId::wielded);
+  InvSlot* slot2 = getSlot(SlotId::wieldedAlt);
   Item* item1 = slot1->item;
   Item* item2 = slot2->item;
   slot1->item = item2;
@@ -502,7 +502,7 @@ void Inventory::moveItemFromGeneralToIntrinsics(
   }
 }
 
-bool Inventory::moveItemToGeneral(InventorySlot* inventorySlot) {
+bool Inventory::moveItemToGeneral(InvSlot* inventorySlot) {
   Item* const item = inventorySlot->item;
   if(item == NULL) {
     return false;
@@ -597,8 +597,8 @@ Item* Inventory::getLastItemInGeneral() {
   return NULL;
 }
 
-InventorySlot* Inventory::getSlot(SlotId slotName) {
-  InventorySlot* slot = NULL;
+InvSlot* Inventory::getSlot(SlotId slotName) {
+  InvSlot* slot = NULL;
 
   for(unsigned int i = 0; i < slots_.size(); i++) {
     if(slots_[i].id == slotName) {
@@ -699,7 +699,7 @@ void Inventory::getAllItems(vector<Item*>& itemList) const {
   itemList.resize(0);
   itemList.reserve(slots_.size() + general_.size());
 
-  for(const InventorySlot & slot : slots_) {
+  for(const InvSlot & slot : slots_) {
     Item* const item = slot.item;
     if(item != NULL) {
       itemList.push_back(item);

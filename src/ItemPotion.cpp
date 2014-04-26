@@ -244,8 +244,8 @@ void PotionOfInsight::quaff_(Actor* const actor) {
 
   vector<Item*> identifyCandidates;
 
-  vector<InventorySlot>& slots = inv.getSlots();
-  for(InventorySlot & slot : slots) {
+  vector<InvSlot>& slots = inv.getSlots();
+  for(InvSlot & slot : slots) {
     Item* const item = slot.item;
     if(item) {
       const ItemData& d = item->getData();

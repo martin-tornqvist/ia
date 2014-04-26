@@ -708,20 +708,20 @@ void Player::onActorTurn() {
       eng.inventoryHandler->screenToOpenAfterDrop;
     if(invScreen != endOfInventoryScreens) {
       switch(invScreen) {
-        case inventoryScreen_backpack: {
+        case InvScrId::backpack: {
           eng.inventoryHandler->runBrowseInventory();
         } break;
 
-        case inventoryScreen_use: {
+        case InvScrId::use: {
           eng.inventoryHandler->runUseScreen();
         } break;
 
-        case inventoryScreen_equip: {
+        case InvScrId::equip: {
           eng.inventoryHandler->runEquipScreen(
             eng.inventoryHandler->equipSlotToOpenAfterDrop);
         } break;
 
-        case inventoryScreen_slots: {
+        case InvScrId::slots: {
           eng.inventoryHandler->runSlotsScreen();
         } break;
 

@@ -16,8 +16,8 @@ enum class SlotId {
   armorBody
 };
 
-struct InventorySlot {
-  InventorySlot() {reset();}
+struct InvSlot {
+  InvSlot() {reset();}
 
   void reset() {
     allowWieldedWeapon  = false;
@@ -62,13 +62,13 @@ public:
 
   void putItemInIntrinsics(Item* item);
 
-  bool moveItemToGeneral(InventorySlot* inventorySlot);
+  bool moveItemToGeneral(InvSlot* inventorySlot);
 
   void moveItemFromGeneralToIntrinsics(
     const unsigned int GENERAL_INV_ELEMENT);
 
   void moveItemToSlot(
-    InventorySlot* inventoryslot,
+    InvSlot* inventoryslot,
     const unsigned int GENERAL_INV_ELEMENT);
 
   void equipGeneralItemAndPossiblyEndTurn(
@@ -110,11 +110,11 @@ public:
 
   void decrDynamiteInGeneral();
 
-  InventorySlot* getSlot(SlotId slotName);
+  InvSlot* getSlot(SlotId slotName);
 
   void sortGeneralInventory();
 
-  vector<InventorySlot>& getSlots() {return slots_;}
+  vector<InvSlot>& getSlots() {return slots_;}
 
   vector<Item*>& getGeneral() {return general_;}
 
@@ -127,7 +127,7 @@ public:
     vector<string>& lines);
 
 private:
-  vector<InventorySlot> slots_;
+  vector<InvSlot> slots_;
   vector<Item*> general_;
   vector<Item*> intrinsics_;
 };

@@ -48,7 +48,7 @@ void initSession() {
   ScrollNameHandling::init();
   PotionNameHandling::init();
   ItemData::init();
-//  inventoryHandler = new InventoryHandler(*this);
+  InvHandling::init();
 //  playerCreateCharacter = new PlayerCreateCharacter(*this);
 //  mapPatterns = new MapPatterns(*this);
 //  roomThemeMaker = new RoomThemeMaker(*this);

@@ -48,11 +48,11 @@ void drawBrowseSlots(const MenuBrowser& browser) {
   pos.y++;
 
   Inventory& inv = Map::player->getInv();
-  vector<InventorySlot>& slots = inv.getSlots();
+  vector<InvSlot>& slots = inv.getSlots();
 
   for(size_t i = 0; i < slots.size(); i++) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
-    const InventorySlot& slot = slots.at(i);
+    const InvSlot& slot = slots.at(i);
     str = slot.interfaceName;
     pos.x = 0;
     Renderer::drawText(
