@@ -14,14 +14,13 @@ public:
   ~ItemContainerFeature();
 
   void setRandomItemsForFeature(const FeatureId featureId,
-                                const int NR_ITEMS_TO_ATTEMPT,
-                                Engine& engine);
+                                const int NR_ITEMS_TO_ATTEMPT);
 
   void dropItems(const Pos& pos);
 
   void destroySingleFragile();
 
-  vector<Item*> items_;
+  std::vector<Item*> items_;
 };
 
 enum class TombTrait {
@@ -40,18 +39,16 @@ enum class TombAppearance {
 
 class Tomb: public FeatureStatic {
 public:
+  Tomb(FeatureId id, Pos pos);
 
   void bump(Actor& actorBumping)  override;
   bool open()                     override;
   void examine()                  override;
 
-  string getDescr(const bool DEFINITE_ARTICLE)  const override;
+  std::string getDescr(const bool DEFINITE_ARTICLE)  const override;
   SDL_Color getClr()                            const override;
 
 private:
-  friend class FeatureFactory;
-  Tomb(FeatureId id, Pos pos);
-
   void triggerTrap(Actor& actor) override;
 
   void trySprainPlayer();
@@ -73,6 +70,7 @@ enum ChestMtrl {
 
 class Chest: public FeatureStatic {
 public:
+  Chest(FeatureId id, Pos pos);
   ~Chest() {}
 
   void bump(Actor& actorBumping)  override;
@@ -85,17 +83,14 @@ public:
     return material == chestMtrl_wood ? clrBrownDrk : clrGray;
   }
 
-  string getDescr(const bool DEFINITE_ARTICLE) const override {
-    const string a = DEFINITE_ARTICLE ?
+  std::string getDescr(const bool DEFINITE_ARTICLE) const override {
+    const std::string a = DEFINITE_ARTICLE ?
                      "the " : (material == chestMtrl_wood ? "a " : "an ");
 
     return a + (material == chestMtrl_wood ? "wooden " : "iron ") + "chest";
   }
 
 private:
-  friend class FeatureFactory;
-  Chest(FeatureId id, Pos pos);
-
   void triggerTrap(Actor& actor) override;
 
   void trySprainPlayer();
@@ -109,15 +104,13 @@ private:
 
 class Cabinet: public FeatureStatic {
 public:
+  Cabinet(FeatureId id, Pos pos);
   ~Cabinet() {}
 
   void bump(Actor& actorBumping) override;
   bool open()                     override;
 
 private:
-  friend class FeatureFactory;
-  Cabinet(FeatureId id, Pos pos);
-
   ItemContainerFeature itemContainer_;
   bool isContentKnown_;
 };
@@ -148,31 +141,27 @@ enum class FountainMaterial {stone, gold};
 
 class Fountain: public FeatureStatic {
 public:
+  Fountain(FeatureId id, Pos pos);
   ~Fountain() {}
 
   void bump(Actor& actorBumping)                override;
   SDL_Color getClr()                            const override;
-  string getDescr(const bool DEFINITE_ARTICLE)  const override;
+  std::string getDescr(const bool DEFINITE_ARTICLE)  const override;
 
 private:
-  friend class FeatureFactory;
-  Fountain(FeatureId id, Pos pos);
-
   FountainType fountainType_;
   FountainMaterial fountainMaterial_;
 };
 
 class Cocoon: public FeatureStatic {
 public:
+  Cocoon(FeatureId id, Pos pos);
   ~Cocoon() {}
 
   void bump(Actor& actorBumping)  override;
   bool open()                     override;
 
 private:
-  friend class FeatureFactory;
-  Cocoon(FeatureId id, Pos pos);
-
   void triggerTrap(Actor& actor) override;
 
   bool isContentKnown_;

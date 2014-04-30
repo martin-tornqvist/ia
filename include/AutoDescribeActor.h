@@ -11,9 +11,6 @@ description text and adds them to the string
 
 #include "ActorData.h"
 
-using namespace std;
-
-
 class Actor;
 
 class AutoDescribeActor {
@@ -21,12 +18,12 @@ public:
   AutoDescribeActor() {}
   ~AutoDescribeActor() {}
 
-  void addAutoDescriptionLines(Actor* const actor, string& line) const;
+  void addAutoDescriptionLines(Actor* const actor, std::string& line) const;
 
 private:
-  string getNormalGroupSizeStr(const ActorData& def) const;
-  string getDwellingLevelStr(const ActorData& def) const;
-  string getSpeedStr(const ActorData& def) const;
+  std::string getNormalGroupSizeStr(const ActorDataT& def) const;
+  std::string getDwellingLevelStr(const ActorDataT& def) const;
+  std::string getSpeedStr(const ActorDataT& def) const;
 };
 
 #endif

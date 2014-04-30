@@ -5,7 +5,7 @@
 
 #include "ItemData.h"
 #include "Art.h"
-#include "InventoryHandler.h"
+#include "InventoryHandling.h"
 
 class Property;
 
@@ -33,12 +33,12 @@ public:
     (void)IS_SILENT_IDENTIFY;
   }
 
-  virtual void storeToSaveLines(vector<string>& lines)            {(void)lines;}
-  virtual void setupFromSaveLines(vector<string>& lines)  {(void)lines;}
+  virtual void storeToSaveLines(std::vector<std::string>& lines)            {(void)lines;}
+  virtual void setupFromSaveLines(std::vector<std::string>& lines)  {(void)lines;}
 
   int getWeight() const {return data_->itemWeight * nrItems;}
 
-  string getWeightLabel() const {
+  std::string getWeightLabel() const {
     const int WEIGHT = getWeight();
     if(WEIGHT <= (itemWeight_extraLight + itemWeight_light) / 2)
       return "Very light";
@@ -53,7 +53,7 @@ public:
     (void)actor;
     return ConsumeItem::no;
   }
-  virtual string getDefaultActivationLabel() const  {return "";}
+  virtual std::string getDefaultActivationLabel() const  {return "";}
   virtual SDL_Color getInterfaceClr() const         {return clrBrown;}
 
   virtual void newTurnInInventory() {}
@@ -64,21 +64,18 @@ public:
   virtual void onTakeOff() {}
 
   //Properties to apply e.g. when wearing a ring of fire resistance
-  vector<Prop*> propsEnabledOnCarrier;
+  std::vector<Prop*> propsEnabledOnCarrier;
+
+  //Called by the ItemDrop class to make noise etc
+  virtual void appplyDropEffects() {}
 
 protected:
   void clearPropsEnabledOnCarrier() {
-    for(unsigned int i = 0; i < propsEnabledOnCarrier.size(); i++) {
-      delete propsEnabledOnCarrier.at(i);
-    }
+    for(Prop* prop : propsEnabledOnCarrier) {delete prop;}
     propsEnabledOnCarrier.resize(0);
   }
 
   ItemDataT* data_;
-
-  //Called by the ItemDrop class to make noise etc
-  friend class ItemDrop;
-  virtual void appplyDropEffects() {}
 };
 
 #endif

@@ -8,6 +8,7 @@ class LeverSpawnData;
 
 class FeatureLever: public FeatureStatic {
 public:
+  FeatureLever(FeatureId id, Pos pos, LeverSpawnData* spawnData);
   ~FeatureLever() {}
   SDL_Color getClr() const;
   TileId getTile() const;
@@ -15,10 +16,6 @@ public:
   void examine() override;
 
 protected:
-  friend class FeatureFactory;
-  friend class MapGenBsp;
-  FeatureLever(FeatureId id, Pos pos, LeverSpawnData* spawnData);
-
   void pull();
 
   bool isPositionLeft_;

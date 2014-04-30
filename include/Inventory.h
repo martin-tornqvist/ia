@@ -7,8 +7,6 @@
 
 #include "ItemData.h"
 
-using namespace std;
-
 enum class SlotId {
   wielded,
   wieldedAlt,
@@ -36,7 +34,7 @@ struct InvSlot {
   bool allowCloak;
   bool allowAmulet;
   bool allowRing;
-  string interfaceName;
+  std::string interfaceName;
   SlotId id;
   Item* item;
 };
@@ -52,28 +50,25 @@ public:
 
   bool hasItemInSlot(SlotId slotName) const;
 
-  void putItemInSlot(
+  void putInSlot(
     SlotId slotName, Item* item, bool putInGeneral_ifOccupied = true,
     bool putInGeneral_ifSlotNotFound = true);
 
-  void putItemInGeneral(Item* item);
+  void putInGeneral(Item* item);
 
   int getElementToStackItem(Item* item) const;
 
-  void putItemInIntrinsics(Item* item);
+  void putInIntrinsics(Item* item);
 
-  bool moveItemToGeneral(InvSlot* inventorySlot);
+  bool moveToGeneral(InvSlot* inventorySlot);
 
-  void moveItemFromGeneralToIntrinsics(
-    const unsigned int GENERAL_INV_ELEMENT);
+  void moveFromGeneralToIntrinsics(const unsigned int GENERAL_INV_ELEMENT);
 
-  void moveItemToSlot(
-    InvSlot* inventoryslot,
-    const unsigned int GENERAL_INV_ELEMENT);
+  void moveItemToSlot(InvSlot* inventoryslot,
+                      const unsigned int GENERAL_INV_ELEMENT);
 
   void equipGeneralItemAndPossiblyEndTurn(
-    const unsigned int GENERAL_INV_ELEMENT,
-    const SlotId slotToEquip);
+    const unsigned int GENERAL_INV_ELEMENT, const SlotId slotToEquip);
 
   void swapWieldedAndPrepared(const bool IS_FREE_TURN);
 
@@ -84,7 +79,7 @@ public:
   Item* getItemInSlot(SlotId slotName) const;
   Item* getItemInElement(const int GLOBAL_ELEMENT_NR) const;
 
-  void removeItemInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT);
+  void removeInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT);
 
   void decrItemInSlot(SlotId slotName);
 
@@ -93,8 +88,7 @@ public:
   void decrItemTypeInGeneral(const ItemId itemId);
 
   void deleteItemInGeneralWithElement(const unsigned ELEMENT);
-  void removetemInGeneralWithPointer(
-    Item* const item, const bool DELETE_ITEM);
+  void removetemInGeneralWithPointer(Item* const item, const bool DELETE_ITEM);
 
   int getIntrinsicsSize() const {return intrinsics_.size();}
 
@@ -114,22 +108,21 @@ public:
 
   void sortGeneralInventory();
 
-  vector<InvSlot>& getSlots() {return slots_;}
+  std::vector<InvSlot>& getSlots() {return slots_;}
 
-  vector<Item*>& getGeneral() {return general_;}
+  std::vector<Item*>& getGeneral() {return general_;}
 
   int getTotalItemWeight() const;
 
-  void getAllItems(vector<Item*>& itemList) const;
+  void getAllItems(std::vector<Item*>& itemList) const;
 
-  void storeToSaveLines(vector<string>& lines) const;
-  void setupFromSaveLines(
-    vector<string>& lines);
+  void storeToSaveLines(std::vector<std::string>& lines) const;
+  void setupFromSaveLines(std::vector<std::string>& lines);
 
 private:
-  vector<InvSlot> slots_;
-  vector<Item*> general_;
-  vector<Item*> intrinsics_;
+  std::vector<InvSlot> slots_;
+  std::vector<Item*> general_;
+  std::vector<Item*> intrinsics_;
 };
 
 #endif

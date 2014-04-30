@@ -8,19 +8,19 @@ class Actor;
 
 class Scroll: public Item {
 public:
-  Scroll(ItemData* const itemData) : Item(itemData) {}
+  Scroll(ItemDataT* const itemData) : Item(itemData) {}
 
   ~Scroll() {}
 
   ConsumeItem activateDefault(Actor* const actor) override;
 
-  string getDefaultActivationLabel() const {return "Read";}
+  std::string getDefaultActivationLabel() const {return "Read";}
 
   SDL_Color getInterfaceClr() const {return clrMagenta;}
 
   ConsumeItem read();
 
-  const string getRealTypeName();
+  const std::string getRealTypeName();
 
   void identify(const bool IS_SILENT_IDENTIFY) override;
 
@@ -33,10 +33,10 @@ namespace ScrollNameHandling {
 
 void init();
 
-void setFalseScrollName(ItemData& d);
+void setFalseScrollName(ItemDataT& d);
 
-void storeToSaveLines(vector<string>& lines);
-void setupFromSaveLines(vector<string>& lines);
+void storeToSaveLines(std::vector<std::string>& lines);
+void setupFromSaveLines(std::vector<std::string>& lines);
 
 } //ScrollNameHandling
 

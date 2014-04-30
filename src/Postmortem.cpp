@@ -9,7 +9,7 @@
 #include "DungeonMaster.h"
 #include "Map.h"
 #include "Log.h"
-#include "MenuInputHandler.h"
+#include "MenuInputHandling.h"
 #include "Highscore.h"
 #include "PlayerBon.h"
 #include "TextFormatting.h"
@@ -31,7 +31,7 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMonsters = 0;
   for(int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorData& d = ActorData::dataList[i];
+    const ActorDataT& d = ActorData::dataList[i];
     if(d.nrKills > 0) {
       nrKillsTotAllMonsters += d.nrKills;
       if(d.isUnique) {
@@ -43,7 +43,7 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
   linesRef.push_back(StrAndClr(" " + Map::player->getNameA(), clrHeading));
 
   linesRef.push_back(StrAndClr("   * Explored to the depth of dungeon level " +
-                               toStr(Map::getDlvl()), clrInfo));
+                               toStr(Map::dlvl), clrInfo));
   linesRef.push_back(StrAndClr("   * Was " +
                                toStr(min(100, Map::player->getInsanity())) + "% "
                                "insane", clrInfo));
@@ -106,12 +106,12 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
   linesRef.push_back(StrAndClr(" ", clrInfo));
 
   linesRef.push_back(StrAndClr(" The last messages:", clrHeading));
-  int historyElement = max(0, int(eng.log->history.size()) - 20);
-  for(unsigned int i = historyElement; i < eng.log->history.size(); i++) {
+  int historyElement = max(0, int(Log::history.size()) - 20);
+  for(unsigned int i = historyElement; i < Log::history.size(); i++) {
     string row = "";
-    for(unsigned int ii = 0; ii < eng.log->history.at(i).size(); ii++) {
+    for(unsigned int ii = 0; ii < Log::history.at(i).size(); ii++) {
       string msgStr = "";
-      eng.log->history.at(i).at(ii).getStrWithRepeats(msgStr);
+      Log::history.at(i).at(ii).getStrWithRepeats(msgStr);
       row += msgStr + " ";
     }
     linesRef.push_back(StrAndClr("   " + row, clrInfo));
@@ -148,12 +148,12 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
           currentRow.push_back('*');
         } else {
           if(Renderer::renderArray[x][y].glyph ==
-              eng.featureDataHandler->getData(feature_stoneWall)->glyph
+              FeatureData::getData(FeatureId::stoneWall)->glyph
               || Renderer::renderArray[x][y].glyph ==
-              eng.featureDataHandler->getData(feature_rubbleHigh)->glyph) {
+              FeatureData::getData(FeatureId::rubbleHigh)->glyph) {
             currentRow.push_back('#');
           } else if(Renderer::renderArray[x][y].glyph ==
-                    eng.featureDataHandler->getData(feature_statue)->glyph) {
+                    FeatureData::getData(FeatureId::statue)->glyph) {
             currentRow.push_back('M');
           } else {
             currentRow.push_back(Renderer::renderArray[x][y].glyph);
@@ -231,7 +231,7 @@ void Postmortem::runInfo(const vector<StrAndClr>& lines) {
 
 void Postmortem::makeMemorialFile(const vector<StrAndClr>& lines) {
   const string timeStamp =
-    eng.dungeonMaster->getTimeStarted().getTimeStr(time_second, false);
+    DungeonMaster::getTimeStarted().getTimeStr(time_second, false);
   const string memorialFileName =
     Map::player->getNameA() + "_" + timeStamp + ".txt";
   const string memorialFilePath = "data/" + memorialFileName;
@@ -257,7 +257,7 @@ void Postmortem::readKeysMenu(const vector<StrAndClr>& linesAndClr,
 
   bool done = false;
   while(done == false) {
-    const MenuAction action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = MenuInputHandling::getAction(browser);
     switch(action) {
       case MenuAction::browsed: {
         renderMenu(browser);
@@ -281,7 +281,7 @@ void Postmortem::readKeysMenu(const vector<StrAndClr>& linesAndClr,
           renderMenu(browser);
         }
         if(browser.isPosAtElement(2)) {
-          eng.log->displayHistory();
+          Log::displayHistory();
           renderMenu(browser);
         }
         if(browser.isPosAtElement(3)) {
@@ -329,7 +329,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
   Renderer::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;
-//  const string LVL_STR = "LVL " + toStr(eng.dungeonMaster->getLevel());
+//  const string LVL_STR = "LVL " + toStr(DungeonMaster::getLevel());
 //  Renderer::drawTextCentered(LVL_STR, Panel::screen, pos, clrWhiteHigh);
 
   //Draw command labels

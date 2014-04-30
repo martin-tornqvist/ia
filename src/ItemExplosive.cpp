@@ -15,7 +15,7 @@ void Dynamite::setPlayerExplosive() const {
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Map::player->clr_ = clrYellow;
-  eng.log->addMsg("I " + swiftStr + "light a dynamite stick.");
+  Log::addMsg("I " + swiftStr + "light a dynamite stick.");
   Renderer::drawMapAndInterface();
   GameTime::actorDidAct(IS_SWIFT);
 }
@@ -28,7 +28,7 @@ void Molotov::setPlayerExplosive() const {
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Map::player->clr_ = clrYellow;
-  eng.log->addMsg("I " + swiftStr + "light a Molotov Cocktail.");
+  Log::addMsg("I " + swiftStr + "light a Molotov Cocktail.");
   Renderer::drawMapAndInterface();
   GameTime::actorDidAct(IS_SWIFT);
 }
@@ -41,7 +41,7 @@ void Flare::setPlayerExplosive() const {
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Map::player->clr_ = clrYellow;
-  eng.log->addMsg("I " + swiftStr + "light a Flare.");
+  Log::addMsg("I " + swiftStr + "light a Flare.");
   GameTime::updateLightMap();
   Map::player->updateFov();
   Renderer::drawMapAndInterface();

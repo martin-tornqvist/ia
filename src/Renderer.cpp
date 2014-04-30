@@ -35,8 +35,6 @@ namespace {
 bool tilePixelData_[400][400];
 bool fontPixelData_[400][400];
 
-Engine* eng = NULL;
-
 bool isInited() {
   return eng != NULL && screenSurface != NULL;
 }
@@ -290,8 +288,7 @@ void drawPlayerShockExclMarks() {
 
   if(NR_EXCL > 0) {
     const Pos& playerPos = Map::player->pos;
-    const Pos pixelPosRight =
-      getPixelPosForCellInPanel(Panel::map, playerPos);
+    const Pos pixelPosRight = getPixelPosForCellInPanel(Panel::map, playerPos);
 
     for(int i = 0; i < NR_EXCL; i++) {
       drawExclMarkAt(pixelPosRight + Pos(i * 3, 0));
@@ -305,8 +302,6 @@ void init() {
   trace << "Renderer::init()..." << endl;
   cleanup();
 
-  eng = &engine;
-
   trace << "Renderer: Setting up rendering window" << endl;
   const string title = "IA " + gameVersionStr;
   SDL_WM_SetCaption(title.data(), NULL);
@@ -314,12 +309,11 @@ void init() {
   const int W = Config::getScreenPixelW();
   const int H = Config::getScreenPixelH();
   if(Config::isFullscreen()) {
-    screenSurface =
-      SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
+    screenSurface = SDL_SetVideoMode(W, H, SCREEN_BPP,
+                                     SDL_SWSURFACE | SDL_FULLSCREEN);
   }
   if(Config::isFullscreen() == false || screenSurface == NULL) {
-    screenSurface =
-      SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
+    screenSurface = SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
   }
 
   if(screenSurface == NULL) {
@@ -339,8 +333,6 @@ void init() {
 
 void cleanup() {
   trace << "Renderer::cleanup()..." << endl;
-
-  eng = NULL;
 
   if(screenSurface != NULL) {
     SDL_FreeSurface(screenSurface);
@@ -391,7 +383,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
       SDL_Color clr = clrGreenLgt;
 
       if(EFFECTIVE_RANGE != -1) {
-        const int CHEB_DIST = Utils::chebyshevDist(trail.at(0), pos);
+        const int CHEB_DIST = Utils::kingDist(trail.at(0), pos);
         if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
       if(Config::isTilesMode()) {
@@ -408,7 +400,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
 
   if(trail.size() > 2) {
     if(EFFECTIVE_RANGE != -1) {
-      const int CHEB_DIST = Utils::chebyshevDist(trail.at(0), headPos);
+      const int CHEB_DIST = Utils::kingDist(trail.at(0), headPos);
       if(CHEB_DIST > EFFECTIVE_RANGE) {
         clr = clrYellow;
       }
@@ -921,7 +913,7 @@ void drawMap() {
         if(eng->map->cells[x][y].isSeenByPlayer) {
           if(tmpDrw.isFadeEffectAllowed) {
             const int DIST_FROM_PLAYER =
-              Utils::chebyshevDist(Map::player->pos, Pos(x, y));
+              Utils::kingDist(Map::player->pos, Pos(x, y));
             if(DIST_FROM_PLAYER > 1) {
               const double DIST_FADE_DIV =
                 min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
@@ -958,12 +950,12 @@ void drawMap() {
               const Feature* const f = eng->map->cells[x][y].featureStatic;
               const FeatureId featureId = f->getId();
               bool isHiddenDoor = false;
-              if(featureId == feature_door) {
+              if(featureId == FeatureId::door) {
                 isHiddenDoor = dynamic_cast<const Door*>(f)->isSecret();
               }
               if(
                 y < MAP_H - 1 &&
-                (featureId == feature_stoneWall || isHiddenDoor)) {
+                (featureId == FeatureId::stoneWall || isHiddenDoor)) {
                 if(eng->map->cells[x][y + 1].isExplored) {
                   const bool IS_CELL_BELOW_SEEN =
                     eng->map->cells[x][y + 1].isSeenByPlayer;
@@ -990,15 +982,15 @@ void drawMap() {
                     TILE_BELOW_IS_WALL_FRONT  ||
                     TILE_BELOW_IS_WALL_TOP    ||
                     tileBelowIsRevealedDoor) {
-                    if(featureId == feature_stoneWall) {
+                    if(featureId == FeatureId::stoneWall) {
                       const Wall* const wall = dynamic_cast<const Wall*>(f);
                       tmpDrw.tile = wall->getTopWallTile();
                     }
-                  } else if(featureId == feature_stoneWall) {
+                  } else if(featureId == FeatureId::stoneWall) {
                     const Wall* const wall = dynamic_cast<const Wall*>(f);
                     tmpDrw.tile = wall->getFrontWallTile();
                   } else if(isHiddenDoor) {
-                    tmpDrw.tile = Config::isTilesWallSymbolFullSquare() ?
+                    tmpDrw.tile = Config::isTilesWallFullSquare() ?
                                   tile_wallTop :
                                   tile_wallFront;
                   }

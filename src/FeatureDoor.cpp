@@ -12,6 +12,8 @@
 #include "MapParsing.h"
 #include "Utils.h"
 
+using namespace std;
+
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(FeatureId id, Pos pos, DoorSpawnData* spawnData) :
   FeatureStatic(id, pos), mimicFeature_(spawnData->mimicFeature_),
@@ -143,11 +145,11 @@ void Door::bump(Actor& actorBumping) {
       if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
         trace << "Door: Player bumped into secret door, ";
         trace << "with vision in cell" << endl;
-        eng.log->addMsg("That way is blocked.");
+        Log::addMsg("That way is blocked.");
       } else {
         trace << "Door: Player bumped into secret door, ";
         trace << "without vision in cell" << endl;
-        eng.log->addMsg("I bump into something.");
+        Log::addMsg("I bump into something.");
       }
       return;
     }
@@ -186,7 +188,7 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
     if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
       Renderer::drawMapAndInterface();
       if(ALLOW_MESSAGE) {
-        eng.log->addMsg("A secret is revealed.");
+        Log::addMsg("A secret is revealed.");
         Renderer::drawMapAndInterface();
       }
     }
@@ -218,9 +220,9 @@ bool Door::trySpike(Actor* actorTrying) {
 
   if(IS_PLAYER) {
     if(TRYER_IS_BLIND == false) {
-      eng.log->addMsg("I jam the door with a spike.");
+      Log::addMsg("I jam the door with a spike.");
     } else {
-      eng.log->addMsg("I jam a door with a spike.");
+      Log::addMsg("I jam a door with a spike.");
     }
   }
   GameTime::actorDidAct();
@@ -257,7 +259,7 @@ void Door::bash_(Actor& actorTrying) {
     if(
       IS_PLAYER && isSecret_ == false &&
       (material_ == doorMaterial_metal || IS_BASHER_WEAK)) {
-      eng.log->addMsg("It seems futile.");
+      Log::addMsg("It seems futile.");
     }
 
     if(IS_DOOR_SMASHED) {
@@ -270,42 +272,42 @@ void Door::bash_(Actor& actorTrying) {
       if(IS_PLAYER) {
         Snd snd("", SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_,
                 &actorTrying, SndVol::low, AlertsMonsters::yes);
-        SndEmit::emitSnd(snd, eng);
+        SndEmit::emitSnd(snd);
         if(actorTrying.getPropHandler().allowSee() == false) {
-          eng.log->addMsg("I feel a door crashing open!");
+          Log::addMsg("I feel a door crashing open!");
         } else {
           if(IS_SECRET_BEFORE) {
-            eng.log->addMsg("A door crashes open!");
+            Log::addMsg("A door crashes open!");
           } else {
-            eng.log->addMsg("The door crashes open!");
+            Log::addMsg("The door crashes open!");
           }
         }
       } else {
         if(Map::player->isSeeingActor(actorTrying, NULL)) {
-          eng.log->addMsg("The door crashes open!");
+          Log::addMsg("The door crashes open!");
         } else if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
-          eng.log->addMsg("A door crashes open!");
+          Log::addMsg("A door crashes open!");
         }
         Snd snd("I hear a door crashing open!",
                 SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, &actorTrying,
                 SndVol::high, AlertsMonsters::no);
-        SndEmit::emitSnd(snd, eng);
+        SndEmit::emitSnd(snd);
       }
     } else {
       if(IS_PLAYER) {
         const SfxId sfx = isSecret_ ? SfxId::endOfSfxId : SfxId::doorBang;
         Snd snd("", sfx, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
                 &actorTrying, SndVol::low, AlertsMonsters::yes);
-        SndEmit::emitSnd(snd, eng);
+        SndEmit::emitSnd(snd);
       } else {
         //Emitting the sound from the actor instead of the door, because the
         //sound message should be received even if the door is seen
         Snd snd("I hear a loud banging on a door.",
                 SfxId::doorBang, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
                 &actorTrying, SndVol::low, AlertsMonsters::no);
-        SndEmit::emitSnd(snd, eng);
+        SndEmit::emitSnd(snd);
         if(Map::player->isSeeingActor(actorTrying, NULL)) {
-          eng.log->addMsg(actorTrying.getNameThe() + " bashes at a door!");
+          Log::addMsg(actorTrying.getNameThe() + " bashes at a door!");
         }
       }
     }
@@ -329,7 +331,7 @@ void Door::tryClose(Actor* actorTrying) {
 
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
-      eng.log->addMsg(
+      Log::addMsg(
         "This door refuses to be closed, perhaps it is handled elsewhere?");
       Renderer::drawMapAndInterface();
     }
@@ -341,7 +343,7 @@ void Door::tryClose(Actor* actorTrying) {
     isClosable = false;
     if(IS_PLAYER) {
       if(IS_PLAYER)
-        eng.log->addMsg("The door appears to be broken.");
+        Log::addMsg("The door appears to be broken.");
     }
   }
 
@@ -351,8 +353,8 @@ void Door::tryClose(Actor* actorTrying) {
       isClosable = false;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false)
-          eng.log->addMsg("I see nothing there to close.");
-        else eng.log->addMsg("I find nothing there to close.");
+          Log::addMsg("I see nothing there to close.");
+        else Log::addMsg("I find nothing there to close.");
       }
     }
   }
@@ -370,9 +372,9 @@ void Door::tryClose(Actor* actorTrying) {
       isClosable = false;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false) {
-          eng.log->addMsg("The door is blocked.");
+          Log::addMsg("The door is blocked.");
         } else {
-          eng.log->addMsg("Something is blocking the door.");
+          Log::addMsg("Something is blocking the door.");
         }
       }
     }
@@ -386,15 +388,15 @@ void Door::tryClose(Actor* actorTrying) {
       if(IS_PLAYER) {
         Snd snd("", SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_,
                 actorTrying, SndVol::low, AlertsMonsters::yes);
-        SndEmit::emitSnd(snd, eng);
-        eng.log->addMsg("I close the door.");
+        SndEmit::emitSnd(snd);
+        Log::addMsg("I close the door.");
       } else {
         Snd snd("I hear a door closing.",
                 SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
                 SndVol::low, AlertsMonsters::no);
-        SndEmit::emitSnd(snd, eng);
+        SndEmit::emitSnd(snd);
         if(PLAYER_SEE_TRYER) {
-          eng.log->addMsg(actorTrying->getNameThe() + " closes a door.");
+          Log::addMsg(actorTrying->getNameThe() + " closes a door.");
         }
       }
     } else {
@@ -403,25 +405,25 @@ void Door::tryClose(Actor* actorTrying) {
         if(IS_PLAYER) {
           Snd snd("", SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMonsters::yes);
-          SndEmit::emitSnd(snd, eng);
-          eng.log->addMsg("I fumble with a door and succeed to close it.");
+          SndEmit::emitSnd(snd);
+          Log::addMsg("I fumble with a door and succeed to close it.");
         } else {
           Snd snd("I hear a door closing.",
                   SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
                   SndVol::low, AlertsMonsters::no);
-          SndEmit::emitSnd(snd, eng);
+          SndEmit::emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
-            eng.log->addMsg(actorTrying->getNameThe() +
+            Log::addMsg(actorTrying->getNameThe() +
                             "fumbles about and succeeds to close a door.");
           }
         }
       } else {
         if(IS_PLAYER) {
-          eng.log->addMsg(
+          Log::addMsg(
             "I fumble blindly with a door and fail to close it.");
         } else {
           if(PLAYER_SEE_TRYER) {
-            eng.log->addMsg(actorTrying->getNameThe() +
+            Log::addMsg(actorTrying->getNameThe() +
                             " fumbles blindly and fails to close a door.");
           }
         }
@@ -448,7 +450,7 @@ void Door::tryOpen(Actor* actorTrying) {
 
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
-      eng.log->addMsg(
+      Log::addMsg(
         "I see no way to open this door, perhaps it is opened elsewhere?");
       Renderer::drawMapAndInterface();
     }
@@ -459,7 +461,7 @@ void Door::tryOpen(Actor* actorTrying) {
     trace << "Door: Is stuck" << endl;
 
     if(IS_PLAYER) {
-      eng.log->addMsg("The door seems to be stuck.");
+      Log::addMsg("The door seems to be stuck.");
     }
 
   } else {
@@ -470,16 +472,16 @@ void Door::tryOpen(Actor* actorTrying) {
       if(IS_PLAYER) {
         Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
                 SndVol::low, AlertsMonsters::yes);
-        SndEmit::emitSnd(snd, eng);
-        eng.log->addMsg("I open the door.");
+        SndEmit::emitSnd(snd);
+        Log::addMsg("I open the door.");
       } else {
         Snd snd("I hear a door open.", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes,
                 pos_, actorTrying, SndVol::low, AlertsMonsters::no);
-        SndEmit::emitSnd(snd, eng);
+        SndEmit::emitSnd(snd);
         if(PLAYER_SEE_TRYER) {
-          eng.log->addMsg(actorTrying->getNameThe() + " opens a door.");
+          Log::addMsg(actorTrying->getNameThe() + " opens a door.");
         } else if(PLAYER_SEE_DOOR) {
-          eng.log->addMsg("I see a door opening.");
+          Log::addMsg("I see a door opening.");
         }
       }
     } else {
@@ -489,18 +491,18 @@ void Door::tryOpen(Actor* actorTrying) {
         if(IS_PLAYER) {
           Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMonsters::yes);
-          SndEmit::emitSnd(snd, eng);
-          eng.log->addMsg("I fumble with a door and succeed to open it.");
+          SndEmit::emitSnd(snd);
+          Log::addMsg("I fumble with a door and succeed to open it.");
         } else {
           Snd snd("I hear something open a door clumsily.", SfxId::doorOpen,
                   IgnoreMsgIfOriginSeen::yes, pos_, actorTrying, SndVol::low,
                   AlertsMonsters::no);
-          SndEmit::emitSnd(snd, eng);
+          SndEmit::emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
-            eng.log->addMsg(actorTrying->getNameThe() +
+            Log::addMsg(actorTrying->getNameThe() +
                             "fumbles about and succeeds to open a door.");
           } else if(PLAYER_SEE_DOOR) {
-            eng.log->addMsg("I see a door open clumsily.");
+            Log::addMsg("I see a door open clumsily.");
           }
         }
       } else {
@@ -508,17 +510,17 @@ void Door::tryOpen(Actor* actorTrying) {
         if(IS_PLAYER) {
           Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMonsters::yes);
-          SndEmit::emitSnd(snd, eng);
-          eng.log->addMsg("I fumble blindly with a door and fail to open it.");
+          SndEmit::emitSnd(snd);
+          Log::addMsg("I fumble blindly with a door and fail to open it.");
         } else {
           //Emitting the sound from the actor instead of the door, because the
           //sound message should be received even if the door is seen
           Snd snd("I hear something attempting to open a door.", SfxId::endOfSfxId,
                   IgnoreMsgIfOriginSeen::yes, actorTrying->pos, actorTrying,
                   SndVol::low, AlertsMonsters::no);
-          SndEmit::emitSnd(snd, eng);
+          SndEmit::emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
-            eng.log->addMsg(actorTrying->getNameThe() +
+            Log::addMsg(actorTrying->getNameThe() +
                             " fumbles blindly and fails to open a door.");
           }
         }

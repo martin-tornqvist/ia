@@ -18,7 +18,7 @@ void playerDisarm() {
 
   //Abort if blind
   if(Map::player->getPropHandler().allowSee() == false) {
-    eng.log->addMsg("Not while blind.");
+    Log::addMsg("Not while blind.");
     Renderer::drawMapAndInterface();
     return;
   }
@@ -27,13 +27,13 @@ void playerDisarm() {
   const Pos playerPos = Map::player->pos;
   const FeatureStatic* const featureAtPlayer =
     Map::cells[playerPos.x][playerPos.y].featureStatic;
-  if(featureAtPlayer->getId() == feature_trap) {
+  if(featureAtPlayer->getId() == FeatureId::trap) {
     const Trap* const trap = dynamic_cast<const Trap*>(featureAtPlayer);
     if(trap->getTrapType() == trap_spiderWeb) {
       const TrapSpiderWeb* const web =
         dynamic_cast<const TrapSpiderWeb*>(trap->getSpecificTrap());
       if(web->isHolding()) {
-        eng.log->addMsg("Not while entangled in a spider web.");
+        Log::addMsg("Not while entangled in a spider web.");
         Renderer::drawMapAndInterface();
         return;
       }
@@ -42,41 +42,41 @@ void playerDisarm() {
 
   //Abort if encumbered
   if(Map::player->getEncPercent() >= 100) {
-    eng.log->addMsg("Not while encumbered.");
+    Log::addMsg("Not while encumbered.");
     Renderer::drawMapAndInterface();
     return;
   }
 
-  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Renderer::drawMapAndInterface();
 
-  const Pos pos(Map::player->pos + eng.query->dir());
+  const Pos pos(Map::player->pos + Query::dir());
 
   if(pos != Map::player->pos) {
 
     //Abort if cell is unseen
     if(Map::cells[pos.x][pos.y].isSeenByPlayer == false) {
-      eng.log->addMsg("I cannot see there.");
+      Log::addMsg("I cannot see there.");
       Renderer::drawMapAndInterface();
       return;
     }
 
-    eng.log->clearLog();
+    Log::clearLog();
 
-    Actor* actorOnTrap = Utils::getActorAtPos(pos, eng);
+    Actor* actorOnTrap = Utils::getActorAtPos(pos);
 
     //Abort if trap blocked by monster
     if(actorOnTrap != NULL) {
       if(Map::player->isSeeingActor(*actorOnTrap, NULL)) {
-        eng.log->addMsg("It's blocked.");
+        Log::addMsg("It's blocked.");
       } else {
-        eng.log->addMsg("Something is blocking it.");
+        Log::addMsg("Something is blocking it.");
       }
       Renderer::drawMapAndInterface();
       return;
     }
 
-    eng.log->clearLog();
+    Log::clearLog();
     Map::cells[pos.x][pos.y].featureStatic->disarm();
     Renderer::drawMapAndInterface();
   }

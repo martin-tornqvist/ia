@@ -9,11 +9,9 @@ class Feature;
 
 class Close {
 public:
-  Close() : eng() {
-  }
+  Close() {}
 
-  ~Close() {
-  }
+  ~Close() {}
 
   void playerClose() const;
 

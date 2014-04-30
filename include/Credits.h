@@ -4,20 +4,16 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
-
-
 class Credits {
 public:
-  Credits() : eng() {readFile();}
+  Credits() {readFile();}
 
   void run();
 
 private:
   void readFile();
 
-  vector<string> lines;
+  std::vector<std::string> lines;
 
 };
 

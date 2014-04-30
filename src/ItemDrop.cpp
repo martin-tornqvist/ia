@@ -12,13 +12,15 @@
 
 #include <algorithm>
 
-void ItemDrop::dropAllCharactersItems(Actor* actor, bool died) {
+namespace ItemDrop {
+
+void dropAllCharactersItems(Actor* actor, bool died) {
   (void)died;
-  actor->getInv().dropAllNonIntrinsic(actor->pos, true, eng);
+  actor->getInv().dropAllNonIntrinsic(actor->pos, true);
 }
 
-void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
-                                     const int NR_ITEMS_TO_DROP) {
+void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
+                     const int NR_ITEMS_TO_DROP) {
   Inventory& inv = actorDropping->getInv();
   Item* itemToDrop = inv.getItemInElement(ELEMENT);
 
@@ -33,14 +35,14 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     string itemRef = "";
 
     if(IS_WHOLE_STACK_DROPPED) {
-      itemRef = eng.itemDataHandler->getItemRef(*itemToDrop, ItemRefType::plural);
-      inv.removeItemInElementWithoutDeletingInstance(ELEMENT);
+      itemRef = ItemData::getItemRef(*itemToDrop, ItemRefType::plural);
+      inv.removeInElementWithoutDeletingInstance(ELEMENT);
       dropItemOnMap(actorDropping->pos, *itemToDrop);
     } else {
       Item* itemToKeep = itemToDrop;
-      itemToDrop = eng.itemFactory->copyItem(itemToKeep);
+      itemToDrop = ItemFactory::copyItem(itemToKeep);
       itemToDrop->nrItems = NR_ITEMS_TO_DROP;
-      itemRef = eng.itemDataHandler->getItemRef(*itemToDrop, ItemRefType::plural);
+      itemRef = ItemData::getItemRef(*itemToDrop, ItemRefType::plural);
       itemToKeep->nrItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
       dropItemOnMap(actorDropping->pos, *itemToDrop);
     }
@@ -48,14 +50,14 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
     //Messages
     const Actor* const curActor = GameTime::getCurrentActor();
     if(curActor == Map::player) {
-      eng.log->clearLog();
-      eng.log->addMsg(
+      Log::clearLog();
+      Log::addMsg(
         "I drop " + itemRef + ".", clrWhite, false, true);
     } else {
       bool blockers[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksVision(), blockers);
       if(Map::player->isSeeingActor(*curActor, blockers)) {
-        eng.log->addMsg(
+        Log::addMsg(
           "I see " + curActor->getNameThe() + " drop " + itemRef + ".");
       }
     }
@@ -65,7 +67,9 @@ void ItemDrop::dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
   }
 }
 
-Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
+//TODO This function is really weirdly written, and seems to even be doing
+//wrong things. It should be refactored.
+Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
   //If target cell is bottomless, just destroy the item
   const Feature* const targetFeature =
     Map::cells[intendedPos.x][intendedPos.y].featureStatic;
@@ -86,18 +90,19 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
   Utils::makeVectorFromBoolMap(true, freeCellArray, freeCells);
 
   //Sort the vector according to distance to origin
-  IsCloserToOrigin isCloserToOrigin(intendedPos, eng);
+  IsCloserToOrigin isCloserToOrigin(intendedPos);
   sort(freeCells.begin(), freeCells.end(), isCloserToOrigin);
 
   Pos curPos;
   Pos stackPos;
-  const bool ITEM_STACKS = item.getData().isStackable;
+  const bool IS_STACKABLE_TYPE = item.getData().isStackable;
+
   int ii = 0;
-  const unsigned int vectorSize = freeCells.size();
-  for(unsigned int i = 0; i < vectorSize; i++) {
+  const int VEC_SIZE = freeCells.size();
+  for(int i = 0; i < VEC_SIZE; i++) {
     //First look in all cells that has distance to origin equal to cell i
     //to try and merge the item if it stacks
-    if(ITEM_STACKS) {
+    if(IS_STACKABLE_TYPE) {
       //While ii cell is not further away than i cell
       while(isCloserToOrigin(freeCells.at(i), freeCells.at(ii)) == false) {
         stackPos = freeCells.at(ii);
@@ -113,6 +118,7 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
         ii++;
       }
     } else {
+      //TODO Why is this called here? It doesn't seem right.
       item.appplyDropEffects();
     }
 
@@ -126,13 +132,15 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
       const bool IS_PLAYER_POS    = Map::player->pos == curPos;
       const bool IS_INTENDED_POS  = curPos == intendedPos;
       if(IS_PLAYER_POS && IS_INTENDED_POS == false) {
-        eng.log->addMsg("I feel something by my feet.");
+        Log::addMsg("I feel something by my feet.");
       }
 
-      i = 99999;
+      //TODO Won't this cause NULL to be returned?
+      //Shouldn't a pointer to the item be returned?
+      break;
     }
 
-    if(i == vectorSize - 1) {
+    if(i == VEC_SIZE - 1) {
       delete &item;
       return NULL;
     }
@@ -140,3 +148,4 @@ Item* ItemDrop::dropItemOnMap(const Pos& intendedPos, Item& item) {
   return NULL;
 }
 
+} //ItemDrop

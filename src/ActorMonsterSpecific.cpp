@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "Init.h"
+
 #include "ItemFactory.h"
 #include "Inventory.h"
 #include "Explosion.h"
@@ -12,7 +14,6 @@
 #include "Renderer.h"
 #include "CmnData.h"
 #include "Map.h"
-#include "Blood.h"
 #include "FeatureFactory.h"
 #include "Knockback.h"
 #include "Gods.h"
@@ -25,7 +26,8 @@ using namespace std;
 string Cultist::getCultistPhrase() {
   vector<string> phraseCandidates;
 
-  const God* const god = engine.gods->getCurrentGod();
+  const God* const god = Gods::getCurrentGod();
+
   if(god != NULL && Rnd::coinToss()) {
     const string name = god->getName();
     const string descr = god->getDescr();
@@ -74,101 +76,93 @@ string Cultist::getCultistPhrase() {
 }
 
 void Cultist::spawnStartItems() {
-  const int DLVL = Map::getDlvl();
-
   const int PISTOL = 6;
   const int PUMP_SHOTGUN = PISTOL + 4;
   const int SAWN_SHOTGUN = PUMP_SHOTGUN + 3;
-  const int MG = SAWN_SHOTGUN + (DLVL < 3 ? 0 : 2);
+  const int MG = SAWN_SHOTGUN + (Map::dlvl < 3 ? 0 : 2);
 
   const int TOT = MG;
-  const int RND = DLVL == 0 ? PISTOL : Rnd::range(1, TOT);
+  const int RND = Map::dlvl == 0 ? PISTOL : Rnd::range(1, TOT);
 
   if(RND <= PISTOL) {
-    inv_->putItemInSlot(
-      SlotId::wielded, eng.itemFactory->spawnItem(ItemId::pistol), true);
+    inv_->putInSlot(SlotId::wielded, ItemFactory::spawnItem(ItemId::pistol),
+                    true);
     if(Rnd::percentile() < 40) {
-      inv_->putItemInGeneral(
-        eng.itemFactory->spawnItem(ItemId::pistolClip));
+      inv_->putInGeneral(ItemFactory::spawnItem(ItemId::pistolClip));
     }
   } else if(RND <= PUMP_SHOTGUN) {
-    inv_->putItemInSlot(
-      SlotId::wielded, eng.itemFactory->spawnItem(ItemId::pumpShotgun), true);
-    Item* item = eng.itemFactory->spawnItem(ItemId::shotgunShell);
+    inv_->putInSlot(SlotId::wielded,
+                    ItemFactory::spawnItem(ItemId::pumpShotgun), true);
+    Item* item = ItemFactory::spawnItem(ItemId::shotgunShell);
     item->nrItems = Rnd::range(5, 9);
-    inv_->putItemInGeneral(item);
+    inv_->putInGeneral(item);
   } else if(RND <= SAWN_SHOTGUN) {
-    inv_->putItemInSlot(
-      SlotId::wielded, eng.itemFactory->spawnItem(ItemId::sawedOff), true);
-    Item* item = eng.itemFactory->spawnItem(ItemId::shotgunShell);
+    inv_->putInSlot(SlotId::wielded, ItemFactory::spawnItem(ItemId::sawedOff),
+                    true);
+    Item* item = ItemFactory::spawnItem(ItemId::shotgunShell);
     item->nrItems = Rnd::range(6, 12);
-    inv_->putItemInGeneral(item);
+    inv_->putInGeneral(item);
   } else {
-    inv_->putItemInSlot(
-      SlotId::wielded, eng.itemFactory->spawnItem(ItemId::machineGun), true);
+    inv_->putInSlot(SlotId::wielded, ItemFactory::spawnItem(ItemId::machineGun),
+                    true);
   }
 
   if(Rnd::percentile() < 33) {
-    inv_->putItemInGeneral(
-      eng.itemFactory->spawnRandomScrollOrPotion(true, true));
+    inv_->putInGeneral(ItemFactory::spawnRandomScrollOrPotion(true, true));
   }
 
   if(Rnd::percentile() < 8) {
-    spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
   }
 }
 
 void CultistTeslaCannon::spawnStartItems() {
-  Item* item = eng.itemFactory->spawnItem(ItemId::teslaCannon);
-  inv_->putItemInSlot(SlotId::wielded, item, true);
+  Item* item = ItemFactory::spawnItem(ItemId::teslaCannon);
+  inv_->putInSlot(SlotId::wielded, item, true);
 
-  inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(ItemId::teslaCanister));
+  inv_->putInGeneral(ItemFactory::spawnItem(ItemId::teslaCanister));
 
   if(Rnd::percentile() < 33) {
-    inv_->putItemInGeneral(
-      eng.itemFactory->spawnRandomScrollOrPotion(true, true));
+    inv_->putInGeneral(ItemFactory::spawnRandomScrollOrPotion(true, true));
   }
 
   if(Rnd::percentile() < 10) {
-    spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
   }
 }
 
 void CultistSpikeGun::spawnStartItems() {
-  inv_->putItemInSlot(
-    SlotId::wielded, eng.itemFactory->spawnItem(ItemId::spikeGun), true);
-  Item* item = eng.itemFactory->spawnItem(ItemId::ironSpike);
+  inv_->putInSlot(SlotId::wielded, ItemFactory::spawnItem(ItemId::spikeGun),
+                  true);
+  Item* item = ItemFactory::spawnItem(ItemId::ironSpike);
   item->nrItems = 8 + Rnd::dice(1, 8);
-  inv_->putItemInGeneral(item);
+  inv_->putInGeneral(item);
 }
 
 void CultistPriest::spawnStartItems() {
-  Item* item = eng.itemFactory->spawnItem(ItemId::dagger);
+  Item* item = ItemFactory::spawnItem(ItemId::dagger);
   dynamic_cast<Weapon*>(item)->meleeDmgPlus = 2;
-  inv_->putItemInSlot(SlotId::wielded, item, true);
+  inv_->putInSlot(SlotId::wielded, item, true);
 
-  inv_->putItemInGeneral(
-    eng.itemFactory->spawnRandomScrollOrPotion(true, true));
-  inv_->putItemInGeneral(
-    eng.itemFactory->spawnRandomScrollOrPotion(true, true));
+  inv_->putInGeneral(ItemFactory::spawnRandomScrollOrPotion(true, true));
+  inv_->putInGeneral(ItemFactory::spawnRandomScrollOrPotion(true, true));
 
-  spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
-  spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
 
   if(Rnd::percentile() < 33) {
-    spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
   }
 }
 
 void FireHound::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::fireHoundBreath));
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::fireHoundBite));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::fireHoundBreath));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::fireHoundBite));
 }
 
 void FrostHound::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::frostHoundBreath));
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::frostHoundBite));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::frostHoundBreath));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::frostHoundBite));
 }
 
 void Zuul::place_() {
@@ -176,16 +170,16 @@ void Zuul::place_() {
     //Note: Do not call die() here, that would have side effects such as
     //player getting XP. Instead, simply set the dead state to destroyed.
     deadState = ActorDeadState::destroyed;
-    Actor* actor = eng.actorFactory->spawnActor(actor_cultistPriest, pos);
+    Actor* actor = ActorFactory::spawnActor(actor_cultistPriest, pos);
     PropHandler& propHandler = actor->getPropHandler();
     propHandler.tryApplyProp(
-      new PropPossessedByZuul(eng, propTurnsIndefinite), true);
+      new PropPossessedByZuul(propTurnsIndefinite), true);
     actor->restoreHp(999, false);
   }
 }
 
 void Zuul::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::zuulBite));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::zuulBite));
 }
 
 bool Vortex::onActorTurn_() {
@@ -223,12 +217,12 @@ bool Vortex::onActorTurn_() {
               if(isSeeingActor(*(Map::player), visionBlockers)) {
                 trace << "Vortex: I am seeing the player" << endl;
                 if(Map::player->isSeeingActor(*this, NULL)) {
-                  eng.log->addMsg("The Vortex attempts to pull me in!");
+                  Log::addMsg("The Vortex attempts to pull me in!");
                 } else {
-                  eng.log->addMsg("A powerful wind is pulling me!");
+                  Log::addMsg("A powerful wind is pulling me!");
                 }
                 trace << "Vortex: Attempt pull (knockback)" << endl;
-                eng.knockBack->tryKnockBack(
+                KnockBack::tryKnockBack(
                   *(Map::player), knockBackFromPos, false, false);
                 pullCooldown = 5;
                 GameTime::actorDidAct();
@@ -245,22 +239,22 @@ bool Vortex::onActorTurn_() {
 
 void DustVortex::die_() {
   Explosion::runExplosionAt(
-    pos, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
-    new PropBlind(eng, propTurnsStd), &clrGray);
+    pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    new PropBlind(propTurnsStd), &clrGray);
 }
 
 void DustVortex::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::dustVortexEngulf));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::dustVortexEngulf));
 }
 
 void FireVortex::die_() {
   Explosion::runExplosionAt(
-    pos, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
-    new PropBurning(eng, propTurnsStd), &clrRedLgt);
+    pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    new PropBurning(propTurnsStd), &clrRedLgt);
 }
 
 void FireVortex::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::fireVortexEngulf));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::fireVortexEngulf));
 }
 
 void FrostVortex::die_() {
@@ -268,7 +262,7 @@ void FrostVortex::die_() {
 }
 
 void FrostVortex::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::frostVortexEngulf));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::frostVortexEngulf));
 }
 
 bool Ghost::onActorTurn_() {
@@ -283,16 +277,16 @@ bool Ghost::onActorTurn_() {
           const bool PLAYER_SEES_ME =
             Map::player->isSeeingActor(*this, blockers);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
-          eng.log->addMsg(refer + " reaches for me... ");
+          Log::addMsg(refer + " reaches for me... ");
           const AbilityRollResult rollResult =
             AbilityRoll::roll(Map::player->getData().abilityVals.getVal(
                                 AbilityId::dodgeAttack, true, *this));
           const bool PLAYER_DODGES = rollResult >= successSmall;
           if(PLAYER_DODGES) {
-            eng.log->addMsg("I dodge!", clrMsgGood);
+            Log::addMsg("I dodge!", clrMsgGood);
           } else {
             Map::player->getPropHandler().tryApplyProp(
-              new PropSlowed(eng, propTurnsStd));
+              new PropSlowed(propTurnsStd));
           }
           GameTime::actorDidAct();
           return true;
@@ -304,76 +298,76 @@ bool Ghost::onActorTurn_() {
 }
 
 void Ghost::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::ghostClaw));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::ghostClaw));
 }
 
 void Phantasm::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::phantasmSickle));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::phantasmSickle));
 }
 
 void Wraith::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::wraithClaw));
-  spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
-  spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::wraithClaw));
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
 }
 
 void MiGo::spawnStartItems() {
-  Item* item = eng.itemFactory->spawnItem(ItemId::miGoElectricGun);
-  inv_->putItemInIntrinsics(item);
+  Item* item = ItemFactory::spawnItem(ItemId::miGoElectricGun);
+  inv_->putInIntrinsics(item);
 
   spellsKnown.push_back(new SpellTeleport);
   spellsKnown.push_back(new SpellMiGoHypnosis);
   spellsKnown.push_back(new SpellHealSelf);
 
   if(Rnd::coinToss()) {
-    spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
   }
 }
 
 void FlyingPolyp::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::polypTentacle));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::polypTentacle));
 }
 
 void Rat::spawnStartItems() {
   Item* item = NULL;
   if(Rnd::percentile() < 15) {
-    item = eng.itemFactory->spawnItem(ItemId::ratBiteDiseased);
+    item = ItemFactory::spawnItem(ItemId::ratBiteDiseased);
   } else {
-    item = eng.itemFactory->spawnItem(ItemId::ratBite);
+    item = ItemFactory::spawnItem(ItemId::ratBite);
   }
-  inv_->putItemInIntrinsics(item);
+  inv_->putInIntrinsics(item);
 }
 
 void RatThing::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::ratThingBite));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::ratThingBite));
 }
 
 void Shadow::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::shadowClaw));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::shadowClaw));
 }
 
 void Ghoul::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::ghoulClaw));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::ghoulClaw));
 }
 
 void Mummy::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::mummyMaul));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::mummyMaul));
 
-  spellsKnown.push_back(eng.spellHandler->getSpellFromId(SpellId::disease));
+  spellsKnown.push_back(SpellHandling::getSpellFromId(SpellId::disease));
 
   for(int i = Rnd::range(1, 2); i > 0; i--) {
-    spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
   }
 }
 
 void MummyUnique::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::mummyMaul));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::mummyMaul));
 
-  spellsKnown.push_back(eng.spellHandler->getSpellFromId(SpellId::disease));
+  spellsKnown.push_back(SpellHandling::getSpellFromId(SpellId::disease));
 
-  spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
-  spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
-  spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
 }
 
 bool Khephren::onActorTurn_() {
@@ -385,7 +379,7 @@ bool Khephren::onActorTurn_() {
         MapParse::parse(CellPred::BlocksVision(), blockers);
 
         if(isSeeingActor(*(Map::player), blockers)) {
-          MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
+          MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
 
           const int SPAWN_AFTER_X =
             Map::player->pos.x + FOV_STD_RADI_INT + 1;
@@ -398,17 +392,17 @@ bool Khephren::onActorTurn_() {
           vector<Pos> freeCells;
           Utils::makeVectorFromBoolMap(false, blockers, freeCells);
 
-          sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos, eng));
+          sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos));
 
           const int NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
-            eng.log->addMsg("Khephren calls a plague of Locusts!");
+            Log::addMsg("Khephren calls a plague of Locusts!");
             Map::player->incrShock(ShockValue::shockValue_heavy,
                                    ShockSrc::misc);
             for(int i = 0; i < NR_OF_SPAWNS; i++) {
               Actor* const actor =
-                eng.actorFactory->spawnActor(actor_giantLocust,
-                                             freeCells.at(0));
+                ActorFactory::spawnActor(actor_giantLocust,
+                                         freeCells.at(0));
               Monster* const monster = dynamic_cast<Monster*>(actor);
               monster->awareOfPlayerCounter_ = 999;
               monster->leader = this;
@@ -430,35 +424,28 @@ bool Khephren::onActorTurn_() {
 
 
 void DeepOne::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(
-                              ItemId::deepOneJavelinAtt));
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::deepOneSpearAtt));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::deepOneJavelinAtt));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::deepOneSpearAtt));
 }
 
 void GiantBat::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::giantBatBite));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::giantBatBite));
 }
 
 void Byakhee::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::byakheeClaw));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::byakheeClaw));
 }
 
 void GiantMantis::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::giantMantisClaw));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::giantMantisClaw));
 }
 
 void Chthonian::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::chthonianBite));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::chthonianBite));
 }
 
 void HuntingHorror::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::huntingHorrorBite));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::huntingHorrorBite));
 }
 
 bool KeziahMason::onActorTurn_() {
@@ -471,20 +458,20 @@ bool KeziahMason::onActorTurn_() {
 
         if(isSeeingActor(*(Map::player), blockers)) {
 
-          MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
+          MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
 
           vector<Pos> line;
-          eng.lineCalc->calcNewLine(pos, Map::player->pos, true, 9999,
-                                    false, line);
+          LineCalc::calcNewLine(pos, Map::player->pos, true, 9999,
+                                false, line);
 
           const int LINE_SIZE = line.size();
           for(int i = 0; i < LINE_SIZE; i++) {
             const Pos c = line.at(i);
             if(blockers[c.x][c.y] == false) {
               //TODO Make a generalized summoning functionality
-              eng.log->addMsg("Keziah summons Brown Jenkin!");
+              Log::addMsg("Keziah summons Brown Jenkin!");
               Actor* const actor =
-                eng.actorFactory->spawnActor(actor_brownJenkin, c);
+                ActorFactory::spawnActor(actor_brownJenkin, c);
               Monster* jenkin = dynamic_cast<Monster*>(actor);
               Renderer::drawMapAndInterface();
               hasSummonedJenkin = true;
@@ -507,7 +494,7 @@ void KeziahMason::spawnStartItems() {
   spellsKnown.push_back(new SpellHealSelf);
   spellsKnown.push_back(new SpellSummonRandom);
   spellsKnown.push_back(new SpellAzathothsWrath);
-  spellsKnown.push_back(eng.spellHandler->getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
 }
 
 void Ooze::onStandardTurn() {
@@ -515,28 +502,23 @@ void Ooze::onStandardTurn() {
 }
 
 void OozeBlack::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::oozeBlackSpewPus));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::oozeBlackSpewPus));
 }
 
 void OozeClear::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::oozeClearSpewPus));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::oozeClearSpewPus));
 }
 
 void OozePutrid::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::oozePutridSpewPus));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::oozePutridSpewPus));
 }
 
 void OozePoison::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::oozePoisonSpewPus));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::oozePoisonSpewPus));
 }
 
 void ColourOOSpace::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::colourOOSpaceTouch));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::colourOOSpaceTouch));
 }
 
 const SDL_Color& ColourOOSpace::getClr() {
@@ -552,7 +534,7 @@ void ColourOOSpace::onStandardTurn() {
 
   if(Map::player->isSeeingActor(*this, NULL)) {
     Map::player->getPropHandler().tryApplyProp(
-      new PropConfused(eng, propTurnsStd));
+      new PropConfused(propTurnsStd));
   }
 }
 
@@ -561,33 +543,33 @@ bool Spider::onActorTurn_() {
 }
 
 void GreenSpider::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::greenSpiderBite));
+  inv_->putInIntrinsics(
+    ItemFactory::spawnItem(ItemId::greenSpiderBite));
 }
 
 void WhiteSpider::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::whiteSpiderBite));
+  inv_->putInIntrinsics(
+    ItemFactory::spawnItem(ItemId::whiteSpiderBite));
 }
 
 void RedSpider::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::redSpiderBite));
+  inv_->putInIntrinsics(
+    ItemFactory::spawnItem(ItemId::redSpiderBite));
 }
 
 void ShadowSpider::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::shadowSpiderBite));
+  inv_->putInIntrinsics(
+    ItemFactory::spawnItem(ItemId::shadowSpiderBite));
 }
 
 void LengSpider::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::lengSpiderBite));
+  inv_->putInIntrinsics(
+    ItemFactory::spawnItem(ItemId::lengSpiderBite));
 }
 
 void Wolf::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::wolfBite));
+  inv_->putInIntrinsics(
+    ItemFactory::spawnItem(ItemId::wolfBite));
 }
 
 bool WormMass::onActorTurn_() {
@@ -596,7 +578,7 @@ bool WormMass::onActorTurn_() {
       if(Rnd::percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksActor(*this, true, eng), blockers);
+        MapParse::parse(CellPred::BlocksActor(*this, true), blockers);
 
         Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {
@@ -604,7 +586,7 @@ bool WormMass::onActorTurn_() {
             spawnPos.set(pos + Pos(dx, dy));
             if(blockers[spawnPos.x][spawnPos.y] == false) {
               Actor* const actor =
-                eng.actorFactory->spawnActor(data_->id, spawnPos);
+                ActorFactory::spawnActor(data_->id, spawnPos);
               WormMass* const worm = dynamic_cast<WormMass*>(actor);
               chanceToSpawnNew -= 4;
               worm->chanceToSpawnNew = chanceToSpawnNew;
@@ -621,8 +603,8 @@ bool WormMass::onActorTurn_() {
 }
 
 void WormMass::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::wormMassBite));
+  inv_->putInIntrinsics(
+    ItemFactory::spawnItem(ItemId::wormMassBite));
 }
 
 bool GiantLocust::onActorTurn_() {
@@ -631,7 +613,7 @@ bool GiantLocust::onActorTurn_() {
       if(Rnd::percentile() < chanceToSpawnNew) {
 
         bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksActor(*this, true, eng), blockers);
+        MapParse::parse(CellPred::BlocksActor(*this, true), blockers);
 
         Pos spawnPos;
         for(int dx = -1; dx <= 1; dx++) {
@@ -639,7 +621,7 @@ bool GiantLocust::onActorTurn_() {
             spawnPos.set(pos + Pos(dx, dy));
             if(blockers[spawnPos.x][spawnPos.y] == false) {
               Actor* const actor =
-                eng.actorFactory->spawnActor(data_->id, spawnPos);
+                ActorFactory::spawnActor(data_->id, spawnPos);
               GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
@@ -656,8 +638,8 @@ bool GiantLocust::onActorTurn_() {
 }
 
 void GiantLocust::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::giantLocustBite));
+  inv_->putInIntrinsics(
+    ItemFactory::spawnItem(ItemId::giantLocustBite));
 }
 
 bool LordOfShadows::onActorTurn_() {
@@ -677,7 +659,7 @@ bool LordOfSpiders::onActorTurn_() {
         const Pos playerPos = Map::player->pos;
 
         if(Map::player->isSeeingActor(*this, NULL)) {
-          eng.log->addMsg(data_->spellCastMessage);
+          Log::addMsg(data_->spellCastMessage);
         }
 
         for(int dy = -1; dy <= 1; dy++) {
@@ -691,13 +673,12 @@ bool LordOfSpiders::onActorTurn_() {
 
               if(mimicFeature->canHaveStaticFeature()) {
 
-                const FeatureData* const mimicData =
-                  eng.featureDataHandler->getData(
-                    mimicFeature->getId());
+                const FeatureDataT* const mimicData =
+                  FeatureData::getData(mimicFeature->getId());
 
                 Feature* const f =
-                  eng.featureFactory->spawnFeatureAt(
-                    feature_trap, c,
+                  FeatureFactory::spawnFeatureAt(
+                    FeatureId::trap, c,
                     new TrapSpawnData(mimicData, trap_spiderWeb));
 
                 dynamic_cast<Trap*>(f)->reveal(false);
@@ -748,7 +729,7 @@ bool MajorClaphamLee::onActorTurn_() {
         MapParse::parse(CellPred::BlocksVision(), visionBlockers);
 
         if(isSeeingActor(*(Map::player), visionBlockers)) {
-          eng.log->addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
+          Log::addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
           vector<ActorId> monsterIds;
           monsterIds.resize(0);
 
@@ -766,7 +747,7 @@ bool MajorClaphamLee::onActorTurn_() {
             }
             monsterIds.push_back(id);
           }
-          eng.actorFactory->summonMonsters(pos, monsterIds, true, this);
+          ActorFactory::summonMonsters(pos, monsterIds, true, this);
           Renderer::drawMapAndInterface();
           hasSummonedTombLegions = true;
           Map::player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
@@ -794,7 +775,7 @@ bool Zombie::tryResurrect() {
           hasResurrected = true;
           data_->nrKills--;
           if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
-            eng.log->addMsg(
+            Log::addMsg(
               getNameThe() + " rises again!!", clrWhite, true);
             Map::player->incrShock(ShockValue::shockValue_some, ShockSrc::misc);
           }
@@ -813,29 +794,27 @@ void Zombie::die_() {
   //If resurrected once and has corpse, blow up the corpse
   if(hasResurrected && deadState == ActorDeadState::corpse) {
     deadState = ActorDeadState::destroyed;
-    eng.gore->makeBlood(pos);
-    eng.gore->makeGore(pos);
+    Map::makeBlood(pos);
+    Map::makeGore(pos);
   }
 }
 
 void ZombieClaw::spawnStartItems() {
   Item* item = NULL;
   if(Rnd::percentile() < 20) {
-    item = eng.itemFactory->spawnItem(ItemId::zombieClawDiseased);
+    item = ItemFactory::spawnItem(ItemId::zombieClawDiseased);
   } else {
-    item = eng.itemFactory->spawnItem(ItemId::zombieClaw);
+    item = ItemFactory::spawnItem(ItemId::zombieClaw);
   }
-  inv_->putItemInIntrinsics(item);
+  inv_->putInIntrinsics(item);
 }
 
 void ZombieAxe::spawnStartItems() {
-  inv_->putItemInIntrinsics(eng.itemFactory->spawnItem(ItemId::zombieAxe));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::zombieAxe));
 }
 
 void BloatedZombie::spawnStartItems() {
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::bloatedZombiePunch));
-  inv_->putItemInIntrinsics(
-    eng.itemFactory->spawnItem(ItemId::bloatedZombieSpit));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::bloatedZombiePunch));
+  inv_->putInIntrinsics(ItemFactory::spawnItem(ItemId::bloatedZombieSpit));
 }
 

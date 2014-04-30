@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "ActorPlayer.h"
 #include "Input.h"
-#include "MenuInputHandler.h"
+#include "MenuInputHandling.h"
 #include "TextFormatting.h"
 #include "Utils.h"
 
@@ -15,7 +15,7 @@ void PlayerCreateCharacter::createCharacter() const {
 
 void PlayerCreateCharacter::pickBg() const {
   if(Config::isBotPlaying()) {
-    PlayerBon::pickBg(Bg(Rnd::range(0, int(Bg::endOfBgs) - 1)), eng);
+    PlayerBon::pickBg(Bg(Rnd::range(0, int(Bg::endOfBgs) - 1)));
   } else {
     vector<Bg> bgs;
     PlayerBon::getPickableBgs(bgs);
@@ -24,7 +24,7 @@ void PlayerCreateCharacter::pickBg() const {
     drawPickBg(bgs, browser);
 
     while(true) {
-      const MenuAction action = eng.menuInputHandler->getAction(browser);
+      const MenuAction action = MenuInputHandling::getAction(browser);
       switch(action) {
         case MenuAction::browsed: {drawPickBg(bgs, browser);} break;
 
@@ -32,7 +32,7 @@ void PlayerCreateCharacter::pickBg() const {
         case MenuAction::space: {} break;
 
         case MenuAction::selected: {
-          PlayerBon::pickBg(bgs.at(browser.getPos().y), eng);
+          PlayerBon::pickBg(bgs.at(browser.getPos().y));
           return;
         } break;
 
@@ -132,7 +132,7 @@ void PlayerCreateCharacter::pickNewTrait(
       drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
 
       while(true) {
-        const MenuAction action = eng.menuInputHandler->getAction(browser);
+        const MenuAction action = MenuInputHandling::getAction(browser);
         switch(action) {
           case MenuAction::browsed: {
             drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
@@ -144,7 +144,7 @@ void PlayerCreateCharacter::pickNewTrait(
           case MenuAction::selected: {
             const Pos pos = browser.getPos();
             PlayerBon::pickTrait(
-              pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y), eng);
+              pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));
             if(IS_CHARACTER_CREATION == false) {
               Renderer::drawMapAndInterface();
             }
@@ -308,7 +308,7 @@ void PlayerEnterName::run() const {
       readKeys(name, isDone);
     }
   }
-  ActorData& def  = Map::player->getData();
+  ActorDataT& def  = Map::player->getData();
   def.name_a      = def.name_the = name;
 }
 
@@ -333,7 +333,7 @@ void PlayerEnterName::draw(const string& currentString) const {
 
 void PlayerEnterName::readKeys(string& currentString, bool& isDone) const {
 
-  const KeyboardReadRetData& d = Input::readKeysUntilFound(eng, false);
+  const KeyboardReadRetData& d = Input::readKeysUntilFound(false);
 
   if(d.sdlKey_ == SDLK_RETURN) {
     isDone = true;

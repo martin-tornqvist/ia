@@ -6,10 +6,7 @@
 #include "CmnData.h"
 #include "CmnTypes.h"
 
-using namespace std;
-
-
-struct FeatureData;
+struct FeatureDataT;
 
 enum class RoomThemeId {
   plain,
@@ -49,13 +46,13 @@ private:
   void makeRoomDarkWithChance(const Room& room);
 
   int trySetFeatureToPlace(
-    const FeatureData** data, Pos& pos, vector<Pos>& nextToWalls,
-    vector<Pos>& awayFromWalls,
-    vector<const FeatureData*> featureDataBelongingToTheme);
+    const FeatureDataT** data, Pos& pos, std::vector<Pos>& nextToWalls,
+    std::vector<Pos>& awayFromWalls,
+    std::vector<const FeatureDataT*> featureDataBelongingToTheme);
 
   void eraseAdjacentCellsFromVectors(
-    const Pos& pos,  vector<Pos>& nextToWalls,
-    vector<Pos>& awayFromWalls);
+    const Pos& pos,  std::vector<Pos>& nextToWalls,
+    std::vector<Pos>& awayFromWalls);
 
   void assignRoomThemes();
 

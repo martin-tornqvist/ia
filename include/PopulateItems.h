@@ -1,16 +1,10 @@
 #ifndef POPULATE_ITEMS_H
 #define POPULATE_ITEMS_H
 
-#include <vector>
+namespace PopulateItems {
 
-#include "ItemData.h"
+void spawnItems();
 
-class PopulateItems {
-public:
-  PopulateItems() {}
-
-  void spawnItems();
-};
-
+} //PopulateItems
 
 #endif

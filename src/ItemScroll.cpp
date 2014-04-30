@@ -46,7 +46,7 @@ ConsumeItem Scroll::activateDefault(Actor* const actor) {
 }
 
 Spell* Scroll::getSpell() {
-  return eng.spellHandler->getSpellFromId(data_->spellCastFromScroll);
+  return SpellHandling::getSpellFromId(data_->spellCastFromScroll);
 }
 
 void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
@@ -62,7 +62,7 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
     data_->name.name_a = REAL_NAME_A;
 
     if(IS_SILENT_IDENTIFY == false) {
-      eng.log->addMsg("It was " + data_->name.name_a + ".");
+      Log::addMsg("It was " + data_->name.name_a + ".");
       Renderer::drawMapAndInterface();
     }
 
@@ -76,7 +76,7 @@ void Scroll::tryLearn() {
     if(
       spell->isAvailForPlayer() &&
       Map::playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
-      eng.log->addMsg("I learn to cast this incantation by heart!");
+      Log::addMsg("I learn to cast this incantation by heart!");
       Map::playerSpellsHandler->learnSpellIfNotKnown(spell);
     } else {
       delete spell;
@@ -88,21 +88,21 @@ ConsumeItem Scroll::read() {
   Renderer::drawMapAndInterface();
 
   if(Map::player->getPropHandler().allowSee() == false) {
-    eng.log->addMsg("I cannot read while blind.");
+    Log::addMsg("I cannot read while blind.");
     return ConsumeItem::no;
   }
 
   Spell* const spell = getSpell();
 
   if(data_->isIdentified) {
-    eng.log->addMsg(
+    Log::addMsg(
       "I read a scroll of " + getRealTypeName() + "...");
-    spell->cast(Map::player, false, eng);
+    spell->cast(Map::player, false);
     tryLearn();
   } else {
-    eng.log->addMsg("I recite forbidden incantations...");
+    Log::addMsg("I recite forbidden incantations...");
     data_->isTried = true;
-    if(spell->cast(Map::player, false, eng).isCastIdenifying) {
+    if(spell->cast(Map::player, false).isCastIdenifying) {
       identify(false);
     }
   }
@@ -197,22 +197,22 @@ void setFalseScrollName(ItemData& d) {
 
 void storeToSaveLines(vector<string>& lines) const {
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
-    if(eng.itemDataHandler->dataList[i]->isScroll) {
-      lines.push_back(eng.itemDataHandler->dataList[i]->name.name);
-      lines.push_back(eng.itemDataHandler->dataList[i]->name.name_plural);
-      lines.push_back(eng.itemDataHandler->dataList[i]->name.name_a);
+    if(ItemData::dataList[i]->isScroll) {
+      lines.push_back(ItemData::dataList[i]->name.name);
+      lines.push_back(ItemData::dataList[i]->name.name_plural);
+      lines.push_back(ItemData::dataList[i]->name.name_a);
     }
   }
 }
 
 void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
-    if(eng.itemDataHandler->dataList[i]->isScroll) {
-      eng.itemDataHandler->dataList[i]->name.name = lines.front();
+    if(ItemData::dataList[i]->isScroll) {
+      ItemData::dataList[i]->name.name = lines.front();
       lines.erase(lines.begin());
-      eng.itemDataHandler->dataList[i]->name.name_plural = lines.front();
+      ItemData::dataList[i]->name.name_plural = lines.front();
       lines.erase(lines.begin());
-      eng.itemDataHandler->dataList[i]->name.name_a = lines.front();
+      ItemData::dataList[i]->name.name_a = lines.front();
       lines.erase(lines.begin());
     }
   }

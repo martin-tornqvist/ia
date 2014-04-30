@@ -4,9 +4,12 @@
 
 #include <SDL_mixer.h>
 
+#include "Init.h"
 #include "Map.h"
 #include "Renderer.h"
 #include "Utils.h"
+
+using namespace std;
 
 namespace Audio {
 
@@ -21,8 +24,7 @@ SfxId getAmbSfxSuitableForDlvl() {
   vector<SfxId> sfxCandidates;
   sfxCandidates.resize(0);
 
-  const int DLVL = Map::getDlvl();
-  if(DLVL >= 1 && DLVL < LAST_ROOM_AND_CORRIDOR_LEVEL) {
+  if(Map::dlvl >= 1 && Map::dlvl < LAST_ROOM_AND_CORRIDOR_LEVEL) {
     sfxCandidates.push_back(SfxId::amb002);
     sfxCandidates.push_back(SfxId::amb003);
     sfxCandidates.push_back(SfxId::amb004);
@@ -53,7 +55,7 @@ SfxId getAmbSfxSuitableForDlvl() {
     sfxCandidates.push_back(SfxId::amb035);
     sfxCandidates.push_back(SfxId::amb036);
     sfxCandidates.push_back(SfxId::amb037);
-  } else if(DLVL > FIRST_CAVERN_LEVEL) {
+  } else if(Map::dlvl > FIRST_CAVERN_LEVEL) {
     sfxCandidates.push_back(SfxId::amb001);
     sfxCandidates.push_back(SfxId::amb002);
     sfxCandidates.push_back(SfxId::amb003);

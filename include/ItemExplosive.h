@@ -6,7 +6,7 @@
 
 class Explosive : public Item {
 public:
-  Explosive(ItemData* const itemData) :
+  Explosive(ItemDataT* const itemData) :
     Item(itemData) {}
   virtual ~Explosive() {}
 
@@ -15,7 +15,7 @@ public:
     setPlayerExplosive();
     return ConsumeItem::yes;
   }
-  virtual string getDefaultActivationLabel() const {
+  virtual std::string getDefaultActivationLabel() const {
     return "Ignite";
   }
 
@@ -28,7 +28,7 @@ protected:
 
 class Dynamite: public Explosive {
 public:
-  Dynamite(ItemData* const itemData) :
+  Dynamite(ItemDataT* const itemData) :
     Explosive(itemData) {}
   ~Dynamite() {}
   void setPlayerExplosive() const;
@@ -37,7 +37,7 @@ private:
 
 class Molotov: public Explosive {
 public:
-  Molotov(ItemData* const itemData) :
+  Molotov(ItemDataT* const itemData) :
     Explosive(itemData) {}
   ~Molotov() {}
   void setPlayerExplosive() const;
@@ -46,7 +46,7 @@ private:
 
 class Flare: public Explosive {
 public:
-  Flare(ItemData* const itemData) :
+  Flare(ItemDataT* const itemData) :
     Explosive(itemData) {}
   ~Flare() {}
   void setPlayerExplosive() const;

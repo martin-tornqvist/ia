@@ -4,8 +4,8 @@
 
 #include "Colors.h"
 #include "Renderer.h"
-#include "MenuInputHandler.h"
-#include "SaveHandler.h"
+#include "MenuInputHandling.h"
+#include "SaveHandling.h"
 #include "Highscore.h"
 #include "Manual.h"
 #include "Popup.h"
@@ -185,7 +185,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
   draw(browser);
 
   while(true) {
-    const MenuAction action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = MenuInputHandling::getAction(browser);
 
     switch(action) {
       case MenuAction::browsed: {
@@ -203,13 +203,13 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
       case MenuAction::selected: {
         if(browser.isPosAtElement(0)) {return GameEntryMode::newGame;}
         if(browser.isPosAtElement(1)) {
-          if(eng.saveHandler->isSaveAvailable()) {
-            eng.saveHandler->load();
+          if(SaveHandling::isSaveAvailable()) {
+            SaveHandling::load();
             GameTime::insertActorInLoop(dynamic_cast<Actor*>(Map::player));
-            eng.dungeonClimb->travelDown();
+            DungeonClimb::travelDown();
             return GameEntryMode::loadGame;
           } else {
-            eng.popup->showMsg("Starting a new character instead.", false,
+            Popup::showMsg("Starting a new character instead.", false,
                                "No save available");
             return GameEntryMode::newGame;
           }

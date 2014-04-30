@@ -6,7 +6,7 @@
 #include "Utils.h"
 #include "PlayerBon.h"
 
-Armor::Armor(ItemData* const itemData) :
+Armor::Armor(ItemDataT* const itemData) :
   Item(itemData), dur_(Rnd::range(80, 100)) {}
 
 string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
@@ -49,8 +49,8 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
 
   if(AP_AFTER < AP_BEFORE && AP_AFTER != 0) {
     const string armorName =
-      eng.itemDataHandler->getItemRef(*this, ItemRefType::plain, true);
-    eng.log->addMsg("My " + armorName + " is damaged!", clrMsgWarning);
+      ItemData::getItemRef(*this, ItemRefType::plain, true);
+    Log::addMsg("My " + armorName + " is damaged!", clrMsgWarning);
   }
 
   trace << "Armor: Damage before: " + toStr(DMG_BEFORE) << endl;
@@ -75,9 +75,9 @@ int Armor::getAbsorptionPoints() const {
 }
 
 void ArmorAsbSuit::onWear() {
-  propsEnabledOnCarrier.push_back(new PropRFire(eng, propTurnsIndefinite));
-  propsEnabledOnCarrier.push_back(new PropRAcid(eng, propTurnsIndefinite));
-  propsEnabledOnCarrier.push_back(new PropRElec(eng, propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRFire(propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRAcid(propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRElec(propTurnsIndefinite));
 }
 
 void ArmorAsbSuit::onTakeOff() {
@@ -85,7 +85,7 @@ void ArmorAsbSuit::onTakeOff() {
 }
 
 void ArmorHeavyCoat::onWear() {
-  propsEnabledOnCarrier.push_back(new PropRCold(eng, propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRCold(propTurnsIndefinite));
 }
 
 void ArmorHeavyCoat::onTakeOff() {

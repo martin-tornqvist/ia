@@ -7,7 +7,7 @@
 
 class ItemAmmo: public Item {
 public:
-  ItemAmmo(ItemData* const itemData) :
+  ItemAmmo(ItemDataT* const itemData) :
     Item(itemData) {}
   virtual ~ItemAmmo() {}
   virtual SDL_Color getInterfaceClr() const {return clrWhite;}
@@ -17,7 +17,7 @@ private:
 
 class ItemAmmoClip: public ItemAmmo {
 public:
-  ItemAmmoClip(ItemData* const itemData) :
+  ItemAmmoClip(ItemDataT* const itemData) :
     ItemAmmo(itemData) {
     setFullAmmo();
   }
@@ -28,11 +28,11 @@ public:
 
   void setFullAmmo() {ammo = data_->ammoContainedInClip;}
 
-  void storeToSaveLines(vector<string>& lines) override {
+  void storeToSaveLines(std::vector<std::string>& lines) override {
     lines.push_back(toStr(ammo));
   }
 
-  void setupFromSaveLines(vector<string>& lines) {
+  void setupFromSaveLines(std::vector<std::string>& lines) {
     ammo = toInt(lines.front());
     lines.erase(lines.begin());
   }

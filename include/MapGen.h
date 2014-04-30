@@ -6,9 +6,6 @@
 #include "Feature.h"
 #include "MapTemplates.h"
 
-using namespace std;
-
-
 struct Region;
 
 enum HorizontalVertical {
@@ -38,7 +35,7 @@ public:
 
   RoomThemeId roomTheme;
 
-  string roomDescr;
+  std::string roomDescr;
 
 private:
   Rect dims_;
@@ -131,7 +128,7 @@ private:
 
   bool globalDoorPosCandidates[MAP_W][MAP_H];
 
-//  void findEdgesOfRoom(const Rect roomPoss, vector<Pos>& vectorRef);
+//  void findEdgesOfRoom(const Rect roomPoss, std::vector<Pos>& vectorRef);
 
   bool isRegionFoundInCardinalDir(
     const Pos& pos, bool region[MAP_W][MAP_H]) const;
@@ -158,7 +155,7 @@ private:
 //  void buildNaturalArea(Region* regions[3][3]);
 //  void makeRiver(Region* regions[3][3]);
 
-//  vector<Room*> rooms_;
+//  std::vector<Room*> rooms_;
   void deleteAndRemoveRoomFromList(Room* const room);
 };
 

@@ -19,12 +19,11 @@ void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(
 
   listRef.resize(0);
 
-  const int DLVL = Map::getDlvl();
   const int EFFECTIVE_DLVL =
     max(1, min(LAST_CAVERN_LEVEL, DLVL + NR_LVLS_OUT_OF_DEPTH));
 
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorData& d = ActorData::dataList[i];
+    const ActorDataT& d = ActorData::dataList[i];
     if(
       d.isAutoSpawnAllowed &&
       d.nrLeftAllowedToSpawn != 0 &&
@@ -58,7 +57,7 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   trace << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
 
   const int MIN_DIST_TO_PLAYER = FOV_STD_RADI_INT + 3;
 
@@ -106,7 +105,7 @@ void PopulateMonsters::populateCaveLevel() const {
   bool blockers[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
-  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -147,7 +146,7 @@ void PopulateMonsters::populateIntroLevel() {
   bool blockers[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT + 3;
-  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -188,7 +187,7 @@ void PopulateMonsters::populateRoomAndCorridorLevel() const {
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 1;
 
-  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -291,7 +290,7 @@ bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(
     NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idCandidates);
 
   for(size_t i = 0; i < idCandidates.size(); i++) {
-    const ActorData& d = ActorData::dataList[idCandidates.at(i)];
+    const ActorDataT& d = ActorData::dataList[idCandidates.at(i)];
     bool isMonsterNativeToRoom = false;
     for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
       if(d.nativeRooms.at(iNative) == roomTheme) {
@@ -322,7 +321,7 @@ void PopulateMonsters::spawnGroupAt(
   const ActorId id, const vector<Pos>& sortedFreeCellsVector,
   bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) const {
 
-  const ActorData& d = ActorData::dataList[id];
+  const ActorDataT& d = ActorData::dataList[id];
 
   int maxNrInGroup = 1;
 
@@ -341,7 +340,7 @@ void PopulateMonsters::spawnGroupAt(
   for(int i = 0; i < NR_CAN_BE_SPAWNED; i++) {
     const Pos& pos = sortedFreeCellsVector.at(i);
 
-    Actor* const actor = eng.actorFactory->spawnActor(id, pos);
+    Actor* const actor = ActorFactory::spawnActor(id, pos);
     Monster* const monster = dynamic_cast<Monster*>(actor);
     monster->isRoamingAllowed_ = IS_ROAMING_ALLOWED;
 
@@ -375,13 +374,11 @@ void PopulateMonsters::makeSortedFreeCellsVector(
     }
   }
 
-  IsCloserToOrigin sorter(origin, eng);
+  IsCloserToOrigin sorter(origin);
   std::sort(vectorRef.begin(), vectorRef.end(), sorter);
 }
 
 int PopulateMonsters::getRandomOutOfDepth() const {
-  const int DLVL = Map::getDlvl();
-
   if(DLVL == 0)                   {return 0;}
   if(Rnd::oneIn(40) && DLVL > 1)  {return 5;}
   if(Rnd::oneIn(5))               {return 2;}

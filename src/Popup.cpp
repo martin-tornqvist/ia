@@ -7,16 +7,20 @@
 #include "Query.h"
 #include "CmnTypes.h"
 #include "MenuBrowser.h"
-#include "MenuInputHandler.h"
+#include "MenuInputHandling.h"
 #include "Audio.h"
 
 using namespace std;
 
-const int TEXT_W = 39;
+namespace Popup {
+
+namespace {
+
+const int TEXT_W  = 39;
 const int TEXT_X0 = MAP_W_HALF - ((TEXT_W) / 2);
 
-int Popup::printBoxAndGetTitleYPos(const int TEXT_H_TOT,
-                                   const int TEXT_W_OVERRIDE) const {
+int printBoxAndGetTitleYPos(const int TEXT_H_TOT,
+                            const int TEXT_W_OVERRIDE) const {
   const int TEXT_W_USED = TEXT_W_OVERRIDE == - 1 ? TEXT_W : TEXT_W_OVERRIDE;
   const int BOX_W       = TEXT_W_USED + 2;
   const int BOX_H       = TEXT_H_TOT + 2;
@@ -33,103 +37,7 @@ int Popup::printBoxAndGetTitleYPos(const int TEXT_H_TOT,
   return Y0 + 1;
 }
 
-void Popup::showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
-                    const string& title, const SfxId sfx) const {
-
-  if(DRAW_MAP_AND_INTERFACE) {Renderer::drawMapAndInterface(false);}
-
-  vector<string> lines;
-  TextFormatting::lineToLines(msg, TEXT_W, lines);
-  const int TEXT_H_TOT =  int(lines.size()) + 3;
-
-  int y = printBoxAndGetTitleYPos(TEXT_H_TOT);
-
-  if(sfx != SfxId::endOfSfxId) {Audio::play(sfx);}
-
-  if(title.empty() == false) {
-    Renderer::drawTextCentered(
-      title, Panel::map, Pos(MAP_W_HALF, y),
-      /*clrNosfTealLgt*/ clrWhite, clrBlack, true);
-  }
-
-  const bool SHOW_MSG_CENTERED = lines.size() == 1;
-
-  for(string & line : lines) {
-    y++;
-    if(SHOW_MSG_CENTERED) {
-      Renderer::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
-                                 clrWhite, clrBlack, true);
-    } else {
-      Renderer::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
-    }
-    eng.log->addLineToHistory(line);
-  }
-  y += 2;
-
-  Renderer::drawTextCentered("space/esc to close", Panel::map,
-                             Pos(MAP_W_HALF, y), clrNosfTeal);
-
-  Renderer::updateScreen();
-
-  eng.query->waitForEscOrSpace();
-
-  if(DRAW_MAP_AND_INTERFACE) {Renderer::drawMapAndInterface();}
-}
-
-int Popup::showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
-                       const vector<string>& choices,
-                       const string& title, const SfxId sfx) const {
-
-  if(Config::isBotPlaying()) {return 0;}
-
-  vector<string> lines;
-  TextFormatting::lineToLines(msg, TEXT_W, lines);
-  const int TITLE_H         = title.empty() ? 0 : 1;
-  const int NR_MSG_LINES    = int(lines.size());
-  const int NR_BLANK_LINES  = (NR_MSG_LINES == 0 && TITLE_H == 0) ? 0 : 1;
-  const int NR_CHOICES      = int(choices.size());
-
-  const int TEXT_H_TOT = TITLE_H + NR_MSG_LINES + NR_BLANK_LINES + NR_CHOICES;
-
-  MenuBrowser browser(NR_CHOICES, 0);
-
-  if(sfx != SfxId::endOfSfxId) {Audio::play(sfx);}
-
-  menuMsgDrawingHelper(
-    lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
-    TEXT_H_TOT, title);
-
-  while(true) {
-    const MenuAction action = eng.menuInputHandler->getAction(browser);
-
-    switch(action) {
-      case MenuAction::browsed: {
-        menuMsgDrawingHelper(
-          lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
-          TEXT_H_TOT, title);
-      } break;
-
-      case MenuAction::esc:
-      case MenuAction::space: {
-        if(DRAW_MAP_AND_INTERFACE) {
-          Renderer::drawMapAndInterface();
-        }
-        return NR_CHOICES - 1;
-      } break;
-
-      case MenuAction::selectedShift: {} break;
-
-      case MenuAction::selected: {
-        if(DRAW_MAP_AND_INTERFACE) {
-          Renderer::drawMapAndInterface();
-        }
-        return browser.getPos().y;
-      } break;
-    }
-  }
-}
-
-void Popup::menuMsgDrawingHelper(
+void menuMsgDrawingHelper(
   const vector<string>& lines, const vector<string>& choices,
   const bool DRAW_MAP_AND_INTERFACE, const unsigned int currentChoice,
   const int TEXT_H_TOT, const string& title) const {
@@ -165,7 +73,7 @@ void Popup::menuMsgDrawingHelper(
     } else {
       Renderer::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
     }
-    eng.log->addLineToHistory(line);
+    Log::addLineToHistory(line);
   }
   if(lines.empty() == false || title.empty() == false) {y += 2;}
 
@@ -179,3 +87,102 @@ void Popup::menuMsgDrawingHelper(
   Renderer::updateScreen();
 }
 
+} //namespace
+
+void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
+             const string& title, const SfxId sfx) const {
+
+  if(DRAW_MAP_AND_INTERFACE) {Renderer::drawMapAndInterface(false);}
+
+  vector<string> lines;
+  TextFormatting::lineToLines(msg, TEXT_W, lines);
+  const int TEXT_H_TOT =  int(lines.size()) + 3;
+
+  int y = printBoxAndGetTitleYPos(TEXT_H_TOT);
+
+  if(sfx != SfxId::endOfSfxId) {Audio::play(sfx);}
+
+  if(title.empty() == false) {
+    Renderer::drawTextCentered(
+      title, Panel::map, Pos(MAP_W_HALF, y),
+      /*clrNosfTealLgt*/ clrWhite, clrBlack, true);
+  }
+
+  const bool SHOW_MSG_CENTERED = lines.size() == 1;
+
+  for(string & line : lines) {
+    y++;
+    if(SHOW_MSG_CENTERED) {
+      Renderer::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
+                                 clrWhite, clrBlack, true);
+    } else {
+      Renderer::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
+    }
+    Log::addLineToHistory(line);
+  }
+  y += 2;
+
+  Renderer::drawTextCentered("space/esc to close", Panel::map,
+                             Pos(MAP_W_HALF, y), clrNosfTeal);
+
+  Renderer::updateScreen();
+
+  Query::waitForEscOrSpace();
+
+  if(DRAW_MAP_AND_INTERFACE) {Renderer::drawMapAndInterface();}
+}
+
+int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
+                const vector<string>& choices,
+                const string& title, const SfxId sfx) const {
+
+  if(Config::isBotPlaying()) {return 0;}
+
+  vector<string> lines;
+  TextFormatting::lineToLines(msg, TEXT_W, lines);
+  const int TITLE_H         = title.empty() ? 0 : 1;
+  const int NR_MSG_LINES    = int(lines.size());
+  const int NR_BLANK_LINES  = (NR_MSG_LINES == 0 && TITLE_H == 0) ? 0 : 1;
+  const int NR_CHOICES      = int(choices.size());
+
+  const int TEXT_H_TOT = TITLE_H + NR_MSG_LINES + NR_BLANK_LINES + NR_CHOICES;
+
+  MenuBrowser browser(NR_CHOICES, 0);
+
+  if(sfx != SfxId::endOfSfxId) {Audio::play(sfx);}
+
+  menuMsgDrawingHelper(
+    lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
+    TEXT_H_TOT, title);
+
+  while(true) {
+    const MenuAction action = MenuInputHandling::getAction(browser);
+
+    switch(action) {
+      case MenuAction::browsed: {
+        menuMsgDrawingHelper(
+          lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
+          TEXT_H_TOT, title);
+      } break;
+
+      case MenuAction::esc:
+      case MenuAction::space: {
+        if(DRAW_MAP_AND_INTERFACE) {
+          Renderer::drawMapAndInterface();
+        }
+        return NR_CHOICES - 1;
+      } break;
+
+      case MenuAction::selectedShift: {} break;
+
+      case MenuAction::selected: {
+        if(DRAW_MAP_AND_INTERFACE) {
+          Renderer::drawMapAndInterface();
+        }
+        return browser.getPos().y;
+      } break;
+    }
+  }
+}
+
+} //Popup

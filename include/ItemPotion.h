@@ -6,7 +6,7 @@
 
 class Potion: public Item {
 public:
-  Potion(ItemData* const itemData) :
+  Potion(ItemDataT* const itemData) :
     Item(itemData) {}
 
   virtual ~Potion() {}
@@ -16,7 +16,7 @@ public:
     return ConsumeItem::yes;
   }
 
-  string getDefaultActivationLabel() const {return "Drink";}
+  std::string getDefaultActivationLabel() const {return "Drink";}
 
   SDL_Color getInterfaceClr() const {return clrBlueLgt;}
 
@@ -31,56 +31,56 @@ protected:
 
   virtual void quaff_(Actor* const actor) {(void) actor;}
 
-  virtual const string getRealTypeName() {return "[WARNING]";}
+  virtual const std::string getRealTypeName() {return "[WARNING]";}
 };
 
 class PotionOfVitality: public Potion {
 public:
-  PotionOfVitality(ItemData* const itemData) :
+  PotionOfVitality(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfVitality() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Vitality";}
+  const std::string getRealTypeName() {return "Vitality";}
 };
 
 class PotionOfSpirit: public Potion {
 public:
-  PotionOfSpirit(ItemData* const itemData) :
+  PotionOfSpirit(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfSpirit() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Spirit";}
+  const std::string getRealTypeName() {return "Spirit";}
 };
 
 class PotionOfBlindness: public Potion {
 public:
-  PotionOfBlindness(ItemData* const itemData) :
+  PotionOfBlindness(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfBlindness() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Blindness";}
+  const std::string getRealTypeName() {return "Blindness";}
 };
 
 class PotionOfParal: public Potion {
 public:
-  PotionOfParal(ItemData* const itemData) :
+  PotionOfParal(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfParal() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Paralyzation";}
+  const std::string getRealTypeName() {return "Paralyzation";}
 };
 
 class PotionOfDisease: public Potion {
 public:
-  PotionOfDisease(ItemData* const itemData) :
+  PotionOfDisease(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfDisease() {}
   void quaff_(Actor* const actor);
@@ -89,58 +89,58 @@ private:
     (void)pos;
     (void)actor;
   }
-  const string getRealTypeName() {return "Disease";}
+  const std::string getRealTypeName() {return "Disease";}
 };
 
 class PotionOfConf: public Potion {
 public:
-  PotionOfConf(ItemData* const itemData) :
+  PotionOfConf(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfConf() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Confusion";}
+  const std::string getRealTypeName() {return "Confusion";}
 };
 
 class PotionOfFrenzy: public Potion {
 public:
-  PotionOfFrenzy(ItemData* const itemData) :
+  PotionOfFrenzy(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfFrenzy() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Frenzy";}
+  const std::string getRealTypeName() {return "Frenzy";}
 };
 
 class PotionOfFortitude: public Potion {
 public:
-  PotionOfFortitude(ItemData* const itemData) :
+  PotionOfFortitude(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfFortitude() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {
+  const std::string getRealTypeName() {
     return "Fortitude";
   }
 };
 
 class PotionOfPoison: public Potion {
 public:
-  PotionOfPoison(ItemData* const itemData) :
+  PotionOfPoison(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfPoison() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Poison";}
+  const std::string getRealTypeName() {return "Poison";}
 };
 
 class PotionOfInsight: public Potion {
 public:
-  PotionOfInsight(ItemData* const itemData) :
+  PotionOfInsight(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfInsight() {}
   void quaff_(Actor* const actor);
@@ -149,12 +149,12 @@ private:
     (void)pos;
     (void)actor;
   }
-  const string getRealTypeName() {return "Insight";}
+  const std::string getRealTypeName() {return "Insight";}
 };
 
 class PotionOfClairv: public Potion {
 public:
-  PotionOfClairv(ItemData* const itemData) :
+  PotionOfClairv(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfClairv() {}
   void quaff_(Actor* const actor);
@@ -163,56 +163,56 @@ private:
     (void)pos;
     (void)actor;
   }
-  const string getRealTypeName() {return "Clairvoyance";}
+  const std::string getRealTypeName() {return "Clairvoyance";}
 };
 
 class PotionOfRFire: public Potion {
 public:
-  PotionOfRFire(ItemData* const itemData) :
+  PotionOfRFire(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfRFire() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Fire Resistance";}
+  const std::string getRealTypeName() {return "Fire Resistance";}
 };
 
 class PotionOfAntidote: public Potion {
 public:
-  PotionOfAntidote(ItemData* const itemData) :
+  PotionOfAntidote(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfAntidote() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Antidote";}
+  const std::string getRealTypeName() {return "Antidote";}
 };
 
 class PotionOfRElec: public Potion {
 public:
-  PotionOfRElec(ItemData* const itemData) :
+  PotionOfRElec(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfRElec() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Insulation";}
+  const std::string getRealTypeName() {return "Insulation";}
 };
 
 class PotionOfRAcid: public Potion {
 public:
-  PotionOfRAcid(ItemData* const itemData) :
+  PotionOfRAcid(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfRAcid() {}
   void quaff_(Actor* const actor);
 private:
   void collide_(const Pos& pos, Actor* const actor);
-  const string getRealTypeName() {return "Acid Resistance";}
+  const std::string getRealTypeName() {return "Acid Resistance";}
 };
 
 class PotionOfDescent: public Potion {
 public:
-  PotionOfDescent(ItemData* const itemData) :
+  PotionOfDescent(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionOfDescent() {}
   void quaff_(Actor* const actor);
@@ -221,12 +221,12 @@ private:
     (void)pos;
     (void)actor;
   }
-  const string getRealTypeName() {return "Descent";}
+  const std::string getRealTypeName() {return "Descent";}
 };
 
 struct PotionLook {
-  string namePlain;
-  string nameA;
+  std::string namePlain;
+  std::string nameA;
   SDL_Color clr;
 };
 
@@ -234,10 +234,10 @@ namespace PotionNameHandling {
 
 void init();
 
-void setClrAndFalseName(ItemData* d);
+void setClrAndFalseName(ItemDataT* d);
 
-void storeToSaveLines(vector<string>& lines);
-void setupFromSaveLines(vector<string>& lines);
+void storeToSaveLines(std::vector<std::string>& lines);
+void setupFromSaveLines(std::vector<std::string>& lines);
 
 } //PotionNameHandling
 

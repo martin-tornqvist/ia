@@ -13,22 +13,22 @@ bool MapGenTrapezohedronLvl::run_() {
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneWall, Pos(x, y));
       dynamic_cast<Wall*>(
         Map::cells[x][y].featureStatic)->wallType = wall_cave;
     }
   }
 
   makePathByRandomWalk(
-    Map::player->pos.x, Map::player->pos.y, 150, feature_caveFloor, true);
+    Map::player->pos.x, Map::player->pos.y, 150, FeatureId::caveFloor, true);
   makePathByRandomWalk(
-    MAP_W_HALF, MAP_H_HALF, 800, feature_caveFloor, true);
+    MAP_W_HALF, MAP_H_HALF, 800, FeatureId::caveFloor, true);
   makeStraightPathByPathfinder(
     Map::player->pos, Pos(MAP_W_HALF, MAP_H_HALF),
-    feature_caveFloor, false, true);
+    FeatureId::caveFloor, false, true);
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
   vector<Pos> spawnCandidates;
   spawnCandidates.resize(0);
   for(int y = 0; y < MAP_H; y++) {
@@ -39,7 +39,7 @@ bool MapGenTrapezohedronLvl::run_() {
     }
   }
   const int ELEMENT = Rnd::range(0, spawnCandidates.size() - 1);
-  eng.itemFactory->spawnItemOnMap(
+  ItemFactory::spawnItemOnMap(
     ItemId::trapezohedron, spawnCandidates.at(ELEMENT));
 
   return true;

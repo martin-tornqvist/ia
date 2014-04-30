@@ -8,16 +8,83 @@
 #include "CharacterLines.h"
 #include "Log.h"
 #include "SdlWrapper.h"
+#include "Map.h"
 
-void DungeonMaster::initXpArray() {
-  xpForLvl[0] = 0;
-  xpForLvl[1] = 0;
-  for(int lvl = 2; lvl <= PLAYER_MAX_CLVL; lvl++) {
-    xpForLvl[lvl] = xpForLvl[lvl - 1] + (100 * lvl);
+namespace DungeonMaster {
+
+namespace {
+
+int       xpForLvl_[PLAYER_MAX_CLVL + 1];
+int       clvl_  = 0;
+int       xp_    = 0;
+TimeData  timeStarted_;
+
+void playerGainLvl() {
+  if(Map::player->deadState == ActorDeadState::alive) {
+    clvl_++;
+
+    Log::addMsg("Welcome to level " + toStr(clvl_) + "!", clrGreen,
+                false, true);
+
+    PlayerCreateCharacter::pickNewTrait(false);
+
+    Map::player->restoreHp(999, false);
+    Map::player->changeMaxHp(HP_PER_LVL, true);
+    Map::player->changeMaxSpi(SPI_PER_LVL, true);
   }
 }
 
-int DungeonMaster::getMonsterTotXpWorth(const ActorData& d) const {
+void initXpArray() {
+  xpForLvl_[0] = 0;
+  xpForLvl_[1] = 0;
+  for(int lvl = 2; lvl <= PLAYER_MAX_CLVL; lvl++) {
+    xpForLvl_[lvl] = xpForLvl_[lvl - 1] + (100 * lvl);
+  }
+}
+
+} //namespace
+
+void init() {
+  clvl  = 1;
+  xp    = 0;
+  initXpArray();
+}
+
+void storeToSaveLines(vector<string>& lines) {
+  lines.push_back(toStr(clvl_));
+  lines.push_back(toStr(xp_));
+  lines.push_back(toStr(timeStarted_.year_));
+  lines.push_back(toStr(timeStarted_.month_));
+  lines.push_back(toStr(timeStarted_.day_));
+  lines.push_back(toStr(timeStarted_.hour_));
+  lines.push_back(toStr(timeStarted_.minute_));
+  lines.push_back(toStr(timeStarted_.second_));
+}
+
+void setupFromSaveLines(vector<string>& lines) {
+  clvl_ = toInt(lines.front());
+  lines.erase(lines.begin());
+  xp_ = toInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted_.year_ = toInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted_.month_ = toInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted_.day_ = toInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted_.hour_ = toInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted_.minute_ = toInt(lines.front());
+  lines.erase(lines.begin());
+  timeStarted_.second_ = toInt(lines.front());
+  lines.erase(lines.begin());
+}
+
+int getCLvl()             {return clvl_;}
+int getXp()               {return xp_;}
+TimeData getTimeStarted() {return timeStarted_;}
+
+int getMonsterTotXpWorth(const ActorDataT& d) {
   //K regulates player XP rate, higher -> more XP per monster
   const double K          = 0.6;
   const double HP         = d.hp;
@@ -33,27 +100,12 @@ int DungeonMaster::getMonsterTotXpWorth(const ActorData& d) const {
   return ceil(K * HP * SPEED_FACTOR * SHOCK_FACTOR * UNIQUE_FACTOR);
 }
 
-void DungeonMaster::playerGainLvl() {
-  if(Map::player->deadState == ActorDeadState::alive) {
-    clvl++;
-
-    eng.log->addMsg("Welcome to level " + toStr(clvl) + "!", clrGreen,
-                    false, true);
-
-    Map::playerCreateCharacter->pickNewTrait(false);
-
-    Map::player->restoreHp(999, false);
-    Map::player->changeMaxHp(HP_PER_LVL, true);
-    Map::player->changeMaxSpi(SPI_PER_LVL, true);
-  }
-}
-
-void DungeonMaster::playerGainXp(const int XP_GAINED) {
+void playerGainXp(const int XP_GAINED) {
   if(Map::player->deadState == ActorDeadState::alive) {
     for(int i = 0; i < XP_GAINED; i++) {
-      xp++;
-      if(clvl < PLAYER_MAX_CLVL) {
-        if(xp >= xpForLvl[clvl + 1]) {
+      xp_++;
+      if(clvl_ < PLAYER_MAX_CLVL) {
+        if(xp_ >= xpForLvl_[clvl_ + 1]) {
           playerGainLvl();
         }
       }
@@ -61,76 +113,51 @@ void DungeonMaster::playerGainXp(const int XP_GAINED) {
   }
 }
 
-int DungeonMaster::getXpToNextLvl() const {
-  if(clvl == PLAYER_MAX_CLVL) {
+int getXpToNextLvl() {
+  if(clvl_ == PLAYER_MAX_CLVL) {
     return -1;
   }
-  return xpForLvl[clvl + 1] - xp;
+  return xpForLvl_[clvl_ + 1] - xp_;
 }
 
-void DungeonMaster::playerLoseXpPercent(const int PERCENT) {
-  xp = (xp * (100 - PERCENT)) / 100;
+void playerLoseXpPercent(const int PERCENT) {
+  xp_ = (xp_ * (100 - PERCENT)) / 100;
 }
 
-void DungeonMaster::storeToSaveLines(vector<string>& lines) const {
-  lines.push_back(toStr(clvl));
-  lines.push_back(toStr(xp));
-  lines.push_back(toStr(timeStarted.year_));
-  lines.push_back(toStr(timeStarted.month_));
-  lines.push_back(toStr(timeStarted.day_));
-  lines.push_back(toStr(timeStarted.hour_));
-  lines.push_back(toStr(timeStarted.minute_));
-  lines.push_back(toStr(timeStarted.second_));
-}
-
-void DungeonMaster::setupFromSaveLines(vector<string>& lines) {
-  clvl = toInt(lines.front());
-  lines.erase(lines.begin());
-  xp = toInt(lines.front());
-  lines.erase(lines.begin());
-  timeStarted.year_ = toInt(lines.front());
-  lines.erase(lines.begin());
-  timeStarted.month_ = toInt(lines.front());
-  lines.erase(lines.begin());
-  timeStarted.day_ = toInt(lines.front());
-  lines.erase(lines.begin());
-  timeStarted.hour_ = toInt(lines.front());
-  lines.erase(lines.begin());
-  timeStarted.minute_ = toInt(lines.front());
-  lines.erase(lines.begin());
-  timeStarted.second_ = toInt(lines.front());
-  lines.erase(lines.begin());
-}
-
-void DungeonMaster::winGame() {
+void winGame() {
   eng.highScore->gameOver(true);
 
-  string winMessage = "As I touch the crystal, there is a jolt of electricity. A surreal glow suddenly illuminates the area. ";
-  winMessage += "I feel as if I have stirred something. I notice a dark figure observing me from the edge of the light. ";
-  winMessage += "It is the shape of a human. The figure approaches me, but still no light falls on it as it enters. ";
-  winMessage += "There is no doubt in my mind concerning the nature of this entity; It is the Faceless God who dwells in the depths of ";
-  winMessage += "the earth, it is the Crawling Chaos - NYARLATHOTEP! ";
-  winMessage += "I panic. Why is it I find myself here, stumbling around in darkness? ";
-  winMessage += "The being beckons me to gaze into the stone. In the divine radiance I see visions beyond eternity, ";
-  winMessage += "visions of unreal reality, visions of the brightest light of day and the darkest night of madness. ";
-  winMessage += "The torrent of revelations does not seem unwelcome - I feel as if under a spell. There is only onward now. ";
-  winMessage += "I demand to attain more - everything! So I make a pact with the Fiend......... ";
-  winMessage += "I now harness the shadows that stride from world to world to sow death and madness. ";
-  winMessage += "The destinies of all things on earth, living and dead, are mine. ";
+  const string winMsg =
+    "As I touch the crystal, there is a jolt of electricity. A surreal glow "
+    "suddenly illuminates the area. I feel as if I have stirred something. "
+    "I notice a dark figure observing me from the edge of the light. It is "
+    "the shape of a human. The figure approaches me, but still no light falls "
+    "on it as it enters. There is no doubt in my mind concerning the nature "
+    "of this entity; It is the Faceless God who dwells in the depths of the "
+    "earth, it is the Crawling Chaos - NYARLATHOTEP! I panic. Why is it I "
+    "find myself here, stumbling around in darkness? The being beckons me to "
+    "gaze into the stone. In the divine radiance I see visions beyond "
+    "eternity, visions of unreal reality, visions of the brightest light of "
+    "day and the darkest night of madness. The torrent of revelations does "
+    "not seem unwelcome - I feel as if under a spell. There is only onward "
+    "now. I demand to attain more! So I make a pact with the Fiend......... "
+    "I now harness the shadows that stride from world to world to sow death "
+    "and madness. The destinies of all things on earth, living and dead, are "
+    "mine.";
 
-  vector<string> winMessageLines;
-  TextFormatting::lineToLines(winMessage, 68, winMessageLines);
+  vector<string> winMsgLines;
+  TextFormatting::lineToLines(winMsg, 68, winMsgLines);
 
   Renderer::coverPanel(Panel::screen);
   Renderer::updateScreen();
 
   const int Y0 = 2;
-  const unsigned int NR_OF_WIN_MESSAGE_LINES = winMessageLines.size();
+  const unsigned int NR_OF_WIN_MESSAGE_LINES = winMsgLines.size();
   const int DELAY_BETWEEN_LINES = 40;
   SdlWrapper::sleep(DELAY_BETWEEN_LINES);
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
     for(unsigned int ii = 0; ii <= i; ii++) {
-      Renderer::drawTextCentered(winMessageLines.at(ii), Panel::screen,
+      Renderer::drawTextCentered(winMsgLines.at(ii), Panel::screen,
                                  Pos(MAP_W_HALF, Y0 + ii),
                                  clrMsgBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
@@ -146,11 +173,11 @@ void DungeonMaster::winGame() {
     SdlWrapper::sleep(DELAY_BETWEEN_LINES);
   }
 
-  eng.query->waitForEscOrSpace();
+  Query::waitForEscOrSpace();
 }
 
-void DungeonMaster::onMonsterKilled(Actor& actor) {
-  ActorData& d = actor.getData();
+void onMonsterKilled(Actor& actor) {
+  ActorDataT& d = actor.getData();
 
   d.nrKills += 1;
 
@@ -167,7 +194,7 @@ void DungeonMaster::onMonsterKilled(Actor& actor) {
   playerGainXp(XP_GAINED);
 }
 
-void DungeonMaster::onMonsterSpotted(Actor& actor) {
+void onMonsterSpotted(Actor& actor) {
   Monster* const monster = dynamic_cast<Monster*>(&actor);
   if(monster->hasGivenXpForSpotting_ == false) {
     monster->hasGivenXpForSpotting_ = true;
@@ -175,7 +202,8 @@ void DungeonMaster::onMonsterSpotted(Actor& actor) {
   }
 }
 
-void DungeonMaster::setTimeStartedToNow() {
-  timeStarted = Utils::getCurrentTime();
+void setTimeStartedToNow() {
+  timeStarted_ = Utils::getCurrentTime();
 }
 
+} //DungeonMaster

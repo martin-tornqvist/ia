@@ -52,7 +52,8 @@ struct TimeData {
     year_(year), month_(month), day_(day), hour_(hour), minute_(minute),
     second_(second) {}
 
-  string getTimeStr(const TimeType lowest, const bool ADD_SEPARATORS) const;
+  std::string getTimeStr(const TimeType lowest,
+                         const bool ADD_SEPARATORS) const;
 
   int year_, month_, day_, hour_, minute_, second_;
 };
@@ -71,13 +72,13 @@ void reverseBoolArray(bool array[MAP_W][MAP_H]);
 
 void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
                            bool a[MAP_W][MAP_H],
-                           vector<Pos>& vectorRef);
+                           std::vector<Pos>& vectorRef);
 
 Actor* getActorAtPos(const Pos& pos,
                      ActorDeadState deadState = ActorDeadState::alive);
 
-void getActorPositions(const vector<Actor*>& actors,
-                       vector<Pos>& vectorRef);
+void getActorPositions(const std::vector<Actor*>& actors,
+                       std::vector<Pos>& vectorRef);
 
 void makeActorArray(Actor* a[MAP_W][MAP_H]);
 
@@ -93,13 +94,12 @@ bool isAreaInsideMap(const Rect& area);
 bool isPosAdj(const Pos& pos1, const Pos& pos2,
               const bool COUNT_SAME_CELL_AS_NEIGHBOUR);
 
-Pos getClosestPos(const Pos& c, const vector<Pos>& positions);
+Pos getClosestPos(const Pos& c, const std::vector<Pos>& positions);
 
-Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors);
+Actor* getRandomClosestActor(const Pos& c, const std::vector<Actor*>& actors);
 
-int chebyshevDist(const int X0, const int Y0, const int X1, const int Y1);
-
-int chebyshevDist(const Pos& c1, const Pos& c2);
+int kingDist(const int X0, const int Y0, const int X1, const int Y1);
+int kingDist(const Pos& c1, const Pos& c2);
 
 TimeData getCurrentTime();
 
@@ -111,11 +111,11 @@ Dir getDir(const Pos& offset);
 
 Pos getOffset(const Dir dir);
 
-void getCompassDirName(const Pos& fromPos, const Pos& toPos, string& strRef);
+void getCompassDirName(const Pos& fromPos, const Pos& toPos, std::string& strRef);
 
-void getCompassDirName(const Dir dir, string& strRef);
+void getCompassDirName(const Dir dir, std::string& strRef);
 
-void getCompassDirName(const Pos& offset, string& strRef);
+void getCompassDirName(const Pos& offset, std::string& strRef);
 
 } //DirUtils
 

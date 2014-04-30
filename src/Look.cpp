@@ -16,22 +16,22 @@
 #include "Renderer.h"
 #include "Utils.h"
 
-Entity::Entity(FeatureMob* feature_) :
-  feature(dynamic_cast<Feature*>(feature_)),
+Entity::Entity(FeatureMob* FeatureId::) :
+  feature(dynamic_cast<Feature*>(FeatureId::)),
   entityType(entityFeatureMob) {}
 
-Entity::Entity(FeatureStatic* feature_) :
-  feature(dynamic_cast<Feature*>(feature_)),
+Entity::Entity(FeatureStatic* FeatureId::) :
+  feature(dynamic_cast<Feature*>(FeatureId::)),
   entityType(entityFeatureStatic) {}
 
 void Look::markerAtPos(const Pos& pos, const MarkerTask markerTask,
                        const Item* const itemThrown) {
   const bool IS_VISION = Map::cells[pos.x][pos.y].isSeenByPlayer;
 
-  eng.log->clearLog();
+  Log::clearLog();
 
   if(IS_VISION) {
-    eng.log->addMsg("I see here:");
+    Log::addMsg("I see here:");
 
     entityDescribed = getEntityToDescribe(pos);
 
@@ -54,15 +54,15 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask markerTask,
   if(pos != Map::player->pos) {
     if(markerTask == MarkerTask::aimRangedWeapon) {
       if(IS_VISION) {
-        eng.log->addMsg("| f to fire");
+        Log::addMsg("| f to fire");
       } else {
-        eng.log->addMsg("f to fire");
+        Log::addMsg("f to fire");
       }
     } else if(markerTask == MarkerTask::aimThrownWeapon) {
       if(IS_VISION) {
-        eng.log->addMsg("| t to throw");
+        Log::addMsg("| t to throw");
       } else {
-        eng.log->addMsg("t to throw");
+        Log::addMsg("t to throw");
       }
     }
   }
@@ -70,40 +70,39 @@ void Look::markerAtPos(const Pos& pos, const MarkerTask markerTask,
 
 void Look::descrBriefActor(const Actor& actor, const MarkerTask markerTask,
                            const Item* const itemThrown) const {
-  eng.log->addMsg(actor.getNameA() + ".");
+  Log::addMsg(actor.getNameA() + ".");
 
   if(markerTask == MarkerTask::look) {
-    eng.log->addMsg("| v for description");
+    Log::addMsg("| v for description");
   } else if(actor.pos != Map::player->pos) {
     if(markerTask == MarkerTask::aimRangedWeapon) {
       Item* const item =
         Map::player->getInv().getItemInSlot(SlotId::wielded);
       Weapon* const wpn = dynamic_cast<Weapon*>(item);
-      RangedAttackData data(*Map::player, *wpn, actor.pos, actor.pos, eng);
-      eng.log->addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
+      RangedAttData data(*Map::player, *wpn, actor.pos, actor.pos);
+      Log::addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
     } else if(markerTask == MarkerTask::aimThrownWeapon) {
-      MissileAttackData data(
-        *Map::player, *itemThrown, actor.pos, actor.pos, eng);
-      eng.log->addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
+      MissileAttData data(
+        *Map::player, *itemThrown, actor.pos, actor.pos);
+      Log::addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
     }
   }
 }
 
 void Look::descrBriefFeatureMob(const Feature& feature) const {
-  eng.log->addMsg(feature.getDescr(false) + ".");
+  Log::addMsg(feature.getDescr(false) + ".");
 }
 
 void Look::descrBriefItem(const Item& item) const {
-  eng.log->addMsg(
-    eng.itemDataHandler->getItemInterfaceRef(item, true) + ".");
+  Log::addMsg(ItemData::getItemInterfaceRef(item, true) + ".");
 }
 
 void Look::descrBriefFeatureStatic(const Feature& feature) const {
-  eng.log->addMsg(feature.getDescr(false) + ".");
+  Log::addMsg(feature.getDescr(false) + ".");
 }
 
 void Look::printExtraActorDescription(const Pos& pos) const {
-  Actor* actor = Utils::getActorAtPos(pos, eng);
+  Actor* actor = Utils::getActorAtPos(pos);
   if(actor != NULL) {
     if(actor != Map::player) {
       //Add written description.
@@ -120,7 +119,7 @@ void Look::printExtraActorDescription(const Pos& pos) const {
       const unsigned int NR_OF_LINES = formattedText.size();
 
       Renderer::drawMapAndInterface(false);
-      eng.marker->draw(MarkerTask::look);
+      Marker::draw(MarkerTask::look);
       Renderer::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
 
       int y = 1;
@@ -131,7 +130,7 @@ void Look::printExtraActorDescription(const Pos& pos) const {
 
       Renderer::updateScreen();
 
-      eng.query->waitForKeyPress();
+      Query::waitForKeyPress();
     }
   }
 }
@@ -140,7 +139,7 @@ Entity Look::getEntityToDescribe(const Pos pos) {
 
   //TODO this method is a little wonky
 
-  Actor* actor = Utils::getActorAtPos(pos, eng);
+  Actor* actor = Utils::getActorAtPos(pos);
 
   //If there is a living actor there, describe the actor.
   if(actor != NULL && actor != Map::player) {

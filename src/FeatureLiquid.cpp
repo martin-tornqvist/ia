@@ -19,9 +19,9 @@ void FeatureLiquidShallow::bump(Actor& actorBumping) {
     find(props.begin(), props.end(), propFlying)    == props.end()) {
 
     actorBumping.getPropHandler().tryApplyProp(
-      new PropWaiting(eng, propTurnsStd));
+      new PropWaiting(propTurnsStd));
 
-    if(&actorBumping == Map::player) eng.log->addMsg("*glop*");
+    if(&actorBumping == Map::player) Log::addMsg("*glop*");
   }
 }
 

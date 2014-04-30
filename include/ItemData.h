@@ -214,7 +214,7 @@ public:
   int ammoContainedInClip;
   DiceParam missileDmg;
   int missileHitChanceMod;
-  pair<int, int> meleeDmg;
+  std::pair<int, int> meleeDmg;
   int meleeHitChanceMod;
   ItemAttMsgs meleeAttMsgs;
   Prop* propAppliedOnMelee; //TODO This requires deep copy of items
@@ -222,7 +222,7 @@ public:
   bool meleeCausesKnockBack;
   bool rangedCausesKnockBack;
   DiceParam rangedDmg;
-  string rangedDmgInfoOverride;
+  std::string rangedDmgInfoOverride;
   int rangedHitChanceMod;
   ItemId rangedAmmoTypeUsed;
   DmgType rangedDmgType;
@@ -233,10 +233,10 @@ public:
   bool rangedMissileLeavesTrail;
   bool rangedMissileLeavesSmoke;
   ItemAttMsgs rangedAttMsgs;
-  string rangedSndMsg;
+  std::string rangedSndMsg;
   SndVol rangedSndVol;
   bool rangedMakesRicochetSound;
-  string landOnHardSurfaceSoundMsg;
+  std::string landOnHardSurfaceSoundMsg;
   SfxId landOnHardSurfaceSfx;
   SfxId rangedAttackSfx;
   SfxId meleeHitSmallSfx;
@@ -245,8 +245,8 @@ public:
   SfxId meleeMissSfx;
   SfxId reloadSfx;
   Prop* propAppliedOnRanged;
-  vector<RoomThemeId> nativeRooms;
-  vector< pair<FeatureId, int> > featuresCanBeFoundIn;
+  std::vector<RoomThemeId> nativeRooms;
+  std::vector< std::pair<FeatureId, int> > featuresCanBeFoundIn;
 };
 
 class Item;
@@ -260,14 +260,15 @@ ItemDataT* dataList[int(ItemId::endOfItemIds)];
 void init();
 void cleanup();
 
-void storeToSaveLines(vector<string>& lines);
-void setupFromSaveLines(vector<string>& lines);
+void storeToSaveLines(std::vector<std::string>& lines);
+void setupFromSaveLines(std::vector<std::string>& lines);
 
-string getItemRef(const Item& item, const ItemRefType itemRefForm,
-                  const bool SKIP_EXTRA_INFO = false);
+std::string getItemRef(const Item& item, const ItemRefType itemRefForm,
+                       const bool SKIP_EXTRA_INFO = false);
 
-string getItemInterfaceRef(const Item& item, const bool ADD_A,
-                           const PrimaryAttMode attMode = PrimaryAttMode::none);
+std::string getItemInterfaceRef(
+  const Item& item, const bool ADD_A,
+  const PrimaryAttMode attMode = PrimaryAttMode::none);
 
 bool isWeaponStronger(const ItemDataT& data1, const ItemDataT& data2,
                       const bool IS_MELEE);

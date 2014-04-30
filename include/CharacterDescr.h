@@ -13,11 +13,11 @@ public:
   CharacterDescr() {}
   void run();
 private:
-  void getShockResSrcTitle(const ShockSrc shockSrc, string& strRef);
+  void getShockResSrcTitle(const ShockSrc shockSrc, std::string& strRef);
 
   void drawInterface();
   void makeLines();
-  vector<StrAndClr> lines;
+  std::vector<StrAndClr> lines;
 
 };
 

@@ -20,8 +20,8 @@ public:
 
   Entity(Item* item_) : item(item_), entityType(entityItem) {}
 
-  Entity(FeatureMob* feature_);
-  Entity(FeatureStatic* feature_);
+  Entity(FeatureMob* FeatureId::);
+  Entity(FeatureStatic* FeatureId::);
 
   const Actor* actor;
   Item* item;

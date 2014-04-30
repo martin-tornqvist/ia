@@ -46,27 +46,27 @@ Trap::~Trap() {
 void Trap::setSpecificTrapFromId(const TrapId id) {
   switch(id) {
     case trap_dart:
-      specificTrap_ = new TrapDart(pos_, eng); break;
+      specificTrap_ = new TrapDart(pos_); break;
     case trap_spear:
-      specificTrap_ = new TrapSpear(pos_, eng); break;
+      specificTrap_ = new TrapSpear(pos_); break;
     case trap_gasConfusion:
-      specificTrap_ = new TrapGasConfusion(pos_, eng); break;
+      specificTrap_ = new TrapGasConfusion(pos_); break;
     case trap_gasParalyze:
-      specificTrap_ = new TrapGasParalyzation(pos_, eng); break;
+      specificTrap_ = new TrapGasParalyzation(pos_); break;
     case trap_gasFear:
-      specificTrap_ = new TrapGasFear(pos_, eng); break;
+      specificTrap_ = new TrapGasFear(pos_); break;
     case trap_blinding:
-      specificTrap_ = new TrapBlindingFlash(pos_, eng);   break;
+      specificTrap_ = new TrapBlindingFlash(pos_);   break;
     case trap_teleport:
-      specificTrap_ = new TrapTeleport(pos_, eng); break;
+      specificTrap_ = new TrapTeleport(pos_); break;
     case trap_summonMonster:
-      specificTrap_ = new TrapSummonMonster(pos_, eng); break;
+      specificTrap_ = new TrapSummonMonster(pos_); break;
     case trap_smoke:
-      specificTrap_ = new TrapSmoke(pos_, eng); break;
+      specificTrap_ = new TrapSmoke(pos_); break;
     case trap_alarm:
-      specificTrap_ = new TrapAlarm(pos_, eng); break;
+      specificTrap_ = new TrapAlarm(pos_); break;
     case trap_spiderWeb:
-      specificTrap_ = new TrapSpiderWeb(pos_, eng); break;
+      specificTrap_ = new TrapSpiderWeb(pos_); break;
     default:
       specificTrap_ = NULL; break;
   }
@@ -84,7 +84,7 @@ void Trap::triggerOnPurpose(Actor& actorTriggering) {
 void Trap::bump(Actor& actorBumping) {
   trace << "Trap::bump()..." << endl;
 
-  const ActorData& d = actorBumping.getData();
+  const ActorDataT& d = actorBumping.getData();
 
   trace << "Trap: Name of actor bumping: \"" << d.name_a << "\"" << endl;
 
@@ -114,7 +114,7 @@ void Trap::bump(Actor& actorBumping) {
       if(result >= successSmall) {
         if(isHidden_ == false) {
           if(ACTOR_CAN_SEE) {
-            actorBumping.eng.log->addMsg(
+            actorBumping.Log::addMsg(
               "I avoid a " + trapName + ".", clrMsgGood);
           }
         }
@@ -140,7 +140,7 @@ void Trap::bump(Actor& actorBumping) {
           if(result >= successSmall) {
             if(isHidden_ == false && IS_ACTOR_SEEN_BY_PLAYER) {
               const string actorName = actorBumping.getNameThe();
-              actorBumping.eng.log->addMsg(
+              actorBumping.Log::addMsg(
                 actorName + " avoids a " + trapName + ".");
             }
           } else {
@@ -156,7 +156,7 @@ void Trap::bump(Actor& actorBumping) {
 void Trap::disarm() {
   //Abort if trap is hidden
   if(isHidden()) {
-    eng.log->addMsg(msgDisarmNoTrap);
+    Log::addMsg(msgDisarmNoTrap);
     Renderer::drawMapAndInterface();
     return;
   }
@@ -173,7 +173,7 @@ void Trap::disarm() {
   const bool IS_OCCULTIST   = PlayerBon::getBg() == Bg::occultist;
 
   if(isMagical() && IS_OCCULTIST == false) {
-    eng.log->addMsg("I do not know how to dispel magic traps.");
+    Log::addMsg("I do not know how to dispel magic traps.");
     return;
   }
 
@@ -196,9 +196,9 @@ void Trap::disarm() {
   const bool IS_DISARMED =
     Rnd::fraction(disarmNumerator, DISARM_DENOMINATOR) || isAutoSucceed;
   if(IS_DISARMED) {
-    eng.log->addMsg(specificTrap_->getDisarmMsg());
+    Log::addMsg(specificTrap_->getDisarmMsg());
   } else {
-    eng.log->addMsg(specificTrap_->getDisarmFailMsg());
+    Log::addMsg(specificTrap_->getDisarmFailMsg());
 
     Renderer::drawMapAndInterface();
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
@@ -212,7 +212,7 @@ void Trap::disarm() {
   GameTime::actorDidAct();
 
   if(IS_DISARMED) {
-    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, pos_);
+    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, pos_);
   }
 }
 
@@ -222,7 +222,7 @@ void Trap::triggerTrap(Actor& actor) {
   trace << "Trap: Specific trap is ";
   trace << specificTrap_->getTitle() << endl;
 
-  const ActorData& d = actor.getData();
+  const ActorDataT& d = actor.getData();
 
   trace << "Trap: Actor triggering is ";
   trace << d.name_a << endl;
@@ -271,7 +271,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   Item* item = Map::cells[pos_.x][pos_.y].item;
   if(item != NULL) {
     Map::cells[pos_.x][pos_.y].item = NULL;
-    eng.itemDrop->dropItemOnMap(pos_, *item);
+    ItemDrop::dropItemOnMap(pos_, *item);
   }
 
   if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
@@ -279,7 +279,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 
     if(PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
       const string name = specificTrap_->getTitle();
-      eng.log->addMsg("I spot a " + name + ".", clrMsgWarning, false, true);
+      Log::addMsg("I spot a " + name + ".", clrMsgWarning, false, true);
     }
   }
   traceVerbose << "Trap::reveal() [DONE]" << endl;
@@ -331,7 +331,7 @@ MaterialType Trap::getMaterialType() const {
 TrapDart::TrapDart(Pos pos) :
   SpecificTrapBase(pos, trap_dart), isPoisoned(false) {
   isPoisoned =
-    Map::getDlvl() >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
+    Map::dlvl >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
 }
 
 void TrapDart::trigger(
@@ -347,15 +347,15 @@ void TrapDart::trigger(
   if(dodgeResult >= successSmall) {
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng.log->addMsg("I dodge a dart!", clrMsgGood);
+        Log::addMsg("I dodge a dart!", clrMsgGood);
       } else {
-        eng.log->addMsg(
+        Log::addMsg(
           "I feel a mechanism trigger and quickly leap aside!",
           clrMsgGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
-        eng.log->addMsg(actorName +  " dodges a dart!");
+        Log::addMsg(actorName +  " dodges a dart!");
       }
     }
   } else {
@@ -364,37 +364,37 @@ void TrapDart::trigger(
     if(Rnd::percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng.log->addMsg("A dart barely misses me!", clrMsgGood);
+          Log::addMsg("A dart barely misses me!", clrMsgGood);
         } else {
-          eng.log->addMsg(
+          Log::addMsg(
             "A mechanism triggers, I hear something barely missing me!",
             clrMsgGood);
         }
       } else if(CAN_PLAYER_SEE_ACTOR) {
-        eng.log->addMsg("A dart barely misses " + actorName + "!");
+        Log::addMsg("A dart barely misses " + actorName + "!");
       }
     } else {
       //Dodge failed and trap hits
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng.log->addMsg("I am hit by a dart!", clrMsgBad);
+          Log::addMsg("I am hit by a dart!", clrMsgBad);
         } else {
-          eng.log->addMsg(
+          Log::addMsg(
             "A mechanism triggers, I feel a needle piercing my skin!",
             clrMsgBad);
         }
       } else if(CAN_PLAYER_SEE_ACTOR) {
-        eng.log->addMsg(actorName + " is hit by a dart!", clrMsgGood);
+        Log::addMsg(actorName + " is hit by a dart!", clrMsgGood);
       }
 
       const int DMG = Rnd::dice(1, 8);
       actor.hit(DMG, DmgType::physical, true);
       if(actor.deadState == ActorDeadState::alive && isPoisoned) {
         if(IS_PLAYER) {
-          eng.log->addMsg("It was poisoned!");
+          Log::addMsg("It was poisoned!");
         }
         actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(eng, propTurnsStd));
+          new PropPoisoned(propTurnsStd));
       }
     }
   }
@@ -404,7 +404,7 @@ void TrapDart::trigger(
 TrapSpear::TrapSpear(Pos pos) :
   SpecificTrapBase(pos, trap_spear), isPoisoned(false) {
   isPoisoned =
-    Map::getDlvl() >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
+    Map::dlvl >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
 }
 
 void TrapSpear::trigger(
@@ -421,15 +421,15 @@ void TrapSpear::trigger(
   if(dodgeResult >= successSmall) {
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng.log->addMsg("I dodge a spear!", clrMsgGood);
+        Log::addMsg("I dodge a spear!", clrMsgGood);
       } else {
-        eng.log->addMsg(
+        Log::addMsg(
           "I feel a mechanism trigger and quickly leap aside!",
           clrMsgGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
-        eng.log->addMsg(actorName +  " dodges a spear!");
+        Log::addMsg(actorName +  " dodges a spear!");
       }
     }
   } else {
@@ -438,30 +438,30 @@ void TrapSpear::trigger(
     if(Rnd::percentile() > CHANCE_TO_HIT) {
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng.log->addMsg("A spear barely misses me!", clrMsgGood);
+          Log::addMsg("A spear barely misses me!", clrMsgGood);
         } else {
-          eng.log->addMsg(
+          Log::addMsg(
             "A mechanism triggers, I hear a *swoosh*!",
             clrMsgGood);
         }
       } else {
         if(CAN_PLAYER_SEE_ACTOR) {
-          eng.log->addMsg("A spear barely misses " + actorName + "!");
+          Log::addMsg("A spear barely misses " + actorName + "!");
         }
       }
     } else {
       //Dodge failed and trap hits
       if(IS_PLAYER) {
         if(CAN_SEE) {
-          eng.log->addMsg("I am hit by a spear!", clrMsgBad);
+          Log::addMsg("I am hit by a spear!", clrMsgBad);
         } else {
-          eng.log->addMsg(
+          Log::addMsg(
             "A mechanism triggers, something sharp pierces my skin!",
             clrMsgBad);
         }
       } else {
         if(CAN_PLAYER_SEE_ACTOR) {
-          eng.log->addMsg(actorName + " is hit by a spear!", clrMsgGood);
+          Log::addMsg(actorName + " is hit by a spear!", clrMsgGood);
         }
       }
 
@@ -469,10 +469,10 @@ void TrapSpear::trigger(
       actor.hit(DMG, DmgType::physical, true);
       if(actor.deadState == ActorDeadState::alive && isPoisoned) {
         if(IS_PLAYER) {
-          eng.log->addMsg("It was poisoned!");
+          Log::addMsg("It was poisoned!");
         }
         actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(eng, propTurnsStd));
+          new PropPoisoned(propTurnsStd));
       }
     }
   }
@@ -492,22 +492,22 @@ void TrapGasConfusion::trigger(
 
   if(IS_PLAYER) {
     if(CAN_SEE) {
-      eng.log->addMsg("I am hit by a burst of gas!");
+      Log::addMsg("I am hit by a burst of gas!");
     } else {
-      eng.log->addMsg(
+      Log::addMsg(
         "A mechanism triggers, I am hit by a burst of gas!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng.log->addMsg(actorName + " is hit by a burst of gas!");
+      Log::addMsg(actorName + " is hit by a burst of gas!");
     }
   }
 
   SDL_Color clr = getClr();
 
   Explosion::runExplosionAt(
-    pos_, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
-    new PropConfused(eng, propTurnsStd), &clr);
+    pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    new PropConfused(propTurnsStd), &clr);
   traceVerbose << "TrapGasConfusion::trigger() [DONE]" << endl;
 }
 
@@ -524,21 +524,21 @@ void TrapGasParalyzation::trigger(
 
   if(IS_PLAYER) {
     if(CAN_SEE) {
-      eng.log->addMsg("I am hit by a burst of gas!");
+      Log::addMsg("I am hit by a burst of gas!");
     } else {
-      eng.log->addMsg(
+      Log::addMsg(
         "A mechanism triggers, I am hit by a burst of gas!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng.log->addMsg(actorName + " is hit by a burst of gas!");
+      Log::addMsg(actorName + " is hit by a burst of gas!");
     }
   }
 
   SDL_Color clr = getClr();
   Explosion::runExplosionAt(
-    pos_, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
-    new PropParalyzed(eng, propTurnsStd), &clr) ;
+    pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    new PropParalyzed(propTurnsStd), &clr) ;
   traceVerbose << "TrapGasParalyzation::trigger() [DONE]" << endl;
 }
 
@@ -555,21 +555,21 @@ void TrapGasFear::trigger(Actor& actor,
 
   if(IS_PLAYER) {
     if(CAN_SEE) {
-      eng.log->addMsg("I am hit by a burst of gas!");
+      Log::addMsg("I am hit by a burst of gas!");
     } else {
-      eng.log->addMsg(
+      Log::addMsg(
         "A mechanism triggers, I am hit by a burst of gas!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng.log->addMsg(actorName + " is hit by a burst of gas!");
+      Log::addMsg(actorName + " is hit by a burst of gas!");
     }
   }
 
   SDL_Color clr = getClr();
   Explosion::runExplosionAt(
-    pos_, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
-    new PropTerrified(eng, propTurnsStd), &clr);
+    pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    new PropTerrified(propTurnsStd), &clr);
   traceVerbose << "TrapGasFear::trigger() [DONE]" << endl;
 }
 
@@ -587,34 +587,34 @@ void TrapBlindingFlash::trigger(
   if(dodgeResult >= successSmall) {
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng.log->addMsg(
+        Log::addMsg(
           "I cover my eyes just in time to avoid an intense flash!",
           clrMsgGood);
       } else {
-        eng.log->addMsg("I feel a mechanism trigger!", clrMsgGood);
+        Log::addMsg("I feel a mechanism trigger!", clrMsgGood);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
-        eng.log->addMsg(actorName + " covers from a blinding flash!");
+        Log::addMsg(actorName + " covers from a blinding flash!");
       }
     }
   } else {
     //Dodge failed
     if(IS_PLAYER) {
       if(CAN_SEE) {
-        eng.log->addMsg(
+        Log::addMsg(
           "A sharp flash of light pierces my eyes!", clrWhite);
         actor.getPropHandler().tryApplyProp(
-          new PropBlind(eng, propTurnsStd));
+          new PropBlind(propTurnsStd));
       } else {
-        eng.log->addMsg("I feel a mechanism trigger!", clrWhite);
+        Log::addMsg("I feel a mechanism trigger!", clrWhite);
       }
     } else {
       if(CAN_PLAYER_SEE_ACTOR) {
-        eng.log->addMsg(
+        Log::addMsg(
           actorName + " is hit by a flash of blinding light!");
         actor.getPropHandler().tryApplyProp(
-          new PropBlind(eng, propTurnsStd));
+          new PropBlind(propTurnsStd));
       }
     }
   }
@@ -635,13 +635,13 @@ void TrapTeleport::trigger(
   if(IS_PLAYER) {
     Map::player->updateFov();
     if(CAN_SEE) {
-      eng.popup->showMsg("A curious shape on the floor starts to glow!", true);
+      Popup::showMsg("A curious shape on the floor starts to glow!", true);
     } else {
-      eng.popup->showMsg("I feel a peculiar energy around me!", true);
+      Popup::showMsg("I feel a peculiar energy around me!", true);
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng.log->addMsg(
+      Log::addMsg(
         "A curious shape on the floor starts go glow under " + actorName + ".");
     }
   }
@@ -675,16 +675,16 @@ void TrapSummonMonster::trigger(
   Map::player->incrShock(5, ShockSrc::misc);
   Map::player->updateFov();
   if(CAN_SEE) {
-    eng.log->addMsg("A curious shape on the floor starts to glow!");
+    Log::addMsg("A curious shape on the floor starts to glow!");
   } else {
-    eng.log->addMsg("I feel a peculiar energy around me!");
+    Log::addMsg("I feel a peculiar energy around me!");
   }
 
   trace << "TrapSummonMonster: Finding summon candidates" << endl;
   vector<ActorId> summonCandidates;
   for(int i = 1; i < endOfActorIds; i++) {
-    const ActorData& data = ActorData::dataList[i];
-    if(data.canBeSummoned && data.spawnMinDLVL <= Map::getDlvl() + 3) {
+    const ActorDataT& data = ActorData::dataList[i];
+    if(data.canBeSummoned && data.spawnMinDLVL <= Map::dlvl + 3) {
       summonCandidates.push_back(ActorId(i));
     }
   }
@@ -698,7 +698,7 @@ void TrapSummonMonster::trigger(
     const ActorId actorIdToSummon = summonCandidates.at(ELEMENT);
     trace << "TrapSummonMonster: Actor id: " << actorIdToSummon << endl;
 
-    eng.actorFactory->summonMonsters(
+    ActorFactory::summonMonsters(
       pos_, vector<ActorId>(1, actorIdToSummon), true);
     trace << "TrapSummonMonster: Monster was summoned" << endl;
   }
@@ -718,19 +718,19 @@ void TrapSmoke::trigger(
 
   if(IS_PLAYER) {
     if(CAN_SEE) {
-      eng.log->addMsg("Suddenly the air is thick with smoke!");
+      Log::addMsg("Suddenly the air is thick with smoke!");
     } else {
-      eng.log->addMsg(
+      Log::addMsg(
         "A mechanism triggers, the air is thick with smoke!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng.log->addMsg("Suddenly the air around " + actorName +
+      Log::addMsg("Suddenly the air around " + actorName +
                       " is thick with smoke!");
     }
   }
 
-  Explosion::runSmokeExplosionAt(pos_, eng);
+  Explosion::runSmokeExplosionAt(pos_);
   traceVerbose << "TrapSmoke::trigger() [DONE]" << endl;
 }
 
@@ -743,7 +743,7 @@ void TrapAlarm::trigger(
   IgnoreMsgIfOriginSeen msgIgnoreRule;
 
   if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
-    eng.log->addMsg("An alarm sounds!");
+    Log::addMsg("An alarm sounds!");
     msgIgnoreRule = IgnoreMsgIfOriginSeen::yes;
   } else {
     msgIgnoreRule = IgnoreMsgIfOriginSeen::no;
@@ -751,7 +751,7 @@ void TrapAlarm::trigger(
 
   Snd snd("I hear an alarm sounding!", SfxId::endOfSfxId, msgIgnoreRule, pos_,
           &actor, SndVol::high, AlertsMonsters::yes);
-  SndEmit::emitSnd(snd, eng);
+  SndEmit::emitSnd(snd);
   traceVerbose << "TrapAlarm::trigger() [DONE]" << endl;
 }
 
@@ -779,22 +779,22 @@ void TrapSpiderWeb::trigger(
 
     if(hasMachete) {
       if(CAN_SEE) {
-        eng.log->addMsg("I cut down a spider web with my machete.");
+        Log::addMsg("I cut down a spider web with my machete.");
       } else {
-        eng.log->addMsg(
+        Log::addMsg(
           "I cut down a sticky mass of threads with my machete.");
       }
-      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, pos_);
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, pos_);
     } else {
       if(CAN_SEE) {
-        eng.log->addMsg("I am entangled in a spider web!");
+        Log::addMsg("I am entangled in a spider web!");
       } else {
-        eng.log->addMsg("I am entangled by a sticky mass of threads!");
+        Log::addMsg("I am entangled by a sticky mass of threads!");
       }
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
-      eng.log->addMsg(actorName + " is entangled in a huge spider web!");
+      Log::addMsg(actorName + " is entangled in a huge spider web!");
     }
   }
   traceVerbose << "TrapSpiderWeb::trigger() [DONE]" << endl;
@@ -823,10 +823,10 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
       isHoldingActor = false;
 
       if(IS_PLAYER) {
-        eng.log->addMsg("I break free.");
+        Log::addMsg("I break free.");
       } else {
         if(PLAYER_CAN_SEE_ACTOR) {
-          eng.log->addMsg(actorName + " breaks free from a spiderweb.");
+          Log::addMsg(actorName + " breaks free from a spiderweb.");
         }
       }
 
@@ -836,15 +836,15 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
         if(
           (IS_PLAYER && PLAYER_CAN_SEE) ||
           (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {
-          eng.log->addMsg("The web is destroyed.");
+          Log::addMsg("The web is destroyed.");
         }
-        eng.featureFactory->spawnFeatureAt(feature_stoneFloor, pos_);
+        FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, pos_);
       }
     } else {
       if(IS_PLAYER) {
-        eng.log->addMsg("I struggle to break free.");
+        Log::addMsg("I struggle to break free.");
       } else if(PLAYER_CAN_SEE_ACTOR) {
-        eng.log->addMsg(actorName + " struggles to break free.");
+        Log::addMsg(actorName + " struggles to break free.");
       }
     }
     return Dir::center;

@@ -85,7 +85,6 @@ bool MapGenBsp::run_() {
   buildMergedRegionsAndRooms(regions, SPL_X1, SPL_X2, SPL_Y1, SPL_Y2);
 
   const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 10;
-  const int DLVL = Map::getDlvl();
   const int CHANCE_FOR_CAVE_AREA =
     (DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
   if(Rnd::percentile() < CHANCE_FOR_CAVE_AREA) {
@@ -168,14 +167,14 @@ bool MapGenBsp::run_() {
 
   movePlayerToNearestAllowedPos();
 
-  eng.populateMonsters->populateRoomAndCorridorLevel();
-  eng.populateTraps->populateRoomAndCorridorLevel();
+  PopulateMonsters::populateRoomAndCorridorLevel();
+  PopulateTraps::populateRoomAndCorridorLevel();
 
   const Pos stairsPos = placeStairs();
   if(stairsPos.x == -1) {return false;}
 
   const int LAST_LEVEL_TO_REVEAL_STAIRS_PATH = 9;
-  if(Map::getDlvl() <= LAST_LEVEL_TO_REVEAL_STAIRS_PATH) {
+  if(Map::dlvl <= LAST_LEVEL_TO_REVEAL_STAIRS_PATH) {
     revealAllDoorsBetweenPlayerAndStairs(stairsPos);
   }
 
@@ -227,7 +226,7 @@ void MapGenBsp::deleteAndRemoveRoomFromList(Room* const room) {
 //  for(int y = 1; y < MAP_H - 1; y++) {
 //    for(int x = 1; x < MAP_W - 1; x++) {
 //      Feature* const feature = Map::featuresStatic[x][y];
-//      if(feature->getId() == feature_door) {
+//      if(feature->getId() == FeatureId::door) {
 //        Door* const door = dynamic_cast<Door*>(feature);
 //        doorCandidates.push_back(door);
 //      }
@@ -241,7 +240,7 @@ void MapGenBsp::deleteAndRemoveRoomFromList(Room* const room) {
 //  for(int y = 1; y < MAP_H - 1; y++) {
 //    for(int x = 1; x < MAP_W - 1; x++) {
 //      Feature* const feature = Map::featuresStatic[x][y];
-//      if(feature->getId() == feature_door) {
+//      if(feature->getId() == FeatureId::door) {
 //        blockers[x][y] = false;
 //      }
 //    }
@@ -272,7 +271,7 @@ void MapGenBsp::deleteAndRemoveRoomFromList(Room* const room) {
 
 //void MapGenBsp::spawnLeverAdaptAndLinkDoor(const Pos& leverPos, Door& door) {
 //  trace << "MapGenBsp: Spawning lever and linking it to the door" << endl;
-//  eng.featureFactory->spawnFeatureAt(feature_lever, leverPos, new LeverSpawnData(&door));
+//  FeatureFactory::spawnFeatureAt(FeatureId::lever, leverPos, new LeverSpawnData(&door));
 //
 //  trace << "MapGenBsp: Changing door properties" << endl;
 //  door.material_ = doorMaterial_metal;
@@ -311,8 +310,8 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
                   const FeatureId featureId =
                     Map::cells[x + dx][y + dy].featureStatic->getId();
                   const bool IS_FLOOR =
-                    featureId == feature_stoneFloor ||
-                    featureId == feature_caveFloor;
+                    featureId == FeatureId::stoneFloor ||
+                    featureId == FeatureId::caveFloor;
                   if(
                     IS_FLOOR &&
                     Utils::isPosInside(
@@ -338,7 +337,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
             const Pos c(x, y);
             if(c == origin || floodFillResult[x][y] > 0) {
 
-              eng.featureFactory->spawnFeatureAt(feature_caveFloor, c);
+              FeatureFactory::spawnFeatureAt(FeatureId::caveFloor, c);
 #ifdef DEMO_MODE
               Renderer::drawMapAndInterface();
               SdlWrapper::sleep(5);
@@ -347,9 +346,9 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
                   Cell& adjCell = Map::cells[x + dx][y + dy];
-                  if(adjCell.featureStatic->getId() == feature_stoneWall) {
-                    eng.featureFactory->spawnFeatureAt(
-                      feature_stoneWall, c + Pos(dx , dy));
+                  if(adjCell.featureStatic->getId() == FeatureId::stoneWall) {
+                    FeatureFactory::spawnFeatureAt(
+                      FeatureId::stoneWall, c + Pos(dx , dy));
                     Wall* const wall =
                       dynamic_cast<Wall*>(adjCell.featureStatic);
                     wall->wallType = wall_cave;
@@ -375,7 +374,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
                   Cell& adjCell = Map::cells[x + dx][y + dy];
-                  if(adjCell.featureStatic->getId() == feature_stoneWall) {
+                  if(adjCell.featureStatic->getId() == FeatureId::stoneWall) {
                     blockers[x][y] = blockers[x + dx][y + dy] = true;
                   }
                 }
@@ -392,7 +391,7 @@ void MapGenBsp::buildCaves(Region* regions[3][3]) {
               if(
                 blockers[x][y] == false &&
                 (c == origin || floodFillResult[x][y] > 0)) {
-                eng.featureFactory->spawnFeatureAt(feature_chasm, c);
+                FeatureFactory::spawnFeatureAt(FeatureId::chasm, c);
 #ifdef DEMO_MODE
                 Renderer::drawMapAndInterface();
                 SdlWrapper::sleep(5);
@@ -554,13 +553,13 @@ void MapGenBsp::buildRoomsInRooms() {
                     y == roomX1Y1.y + 1) {
                     if(
                       Map::cells[x][y].featureStatic->getId() !=
-                      feature_stoneWall) {
+                      FeatureId::stoneWall) {
                       isSpaceFree = false;
                     }
                   } else {
                     if(
                       Map::cells[x][y].featureStatic->getId() !=
-                      feature_stoneFloor) {
+                      FeatureId::stoneFloor) {
                       isSpaceFree = false;
                     }
                   }
@@ -582,8 +581,8 @@ void MapGenBsp::buildRoomsInRooms() {
                 for(int x = X0; x <= X1; x++) {
                   if(x == X0 || x == X1 || y == Y0 || y == Y1) {
 
-                    eng.featureFactory->spawnFeatureAt(
-                      feature_stoneWall, Pos(x, y));
+                    FeatureFactory::spawnFeatureAt(
+                      FeatureId::stoneWall, Pos(x, y));
 
                     if(
                       x != roomX0Y0.x - 1 && x != roomX0Y0.x      &&
@@ -601,7 +600,7 @@ void MapGenBsp::buildRoomsInRooms() {
                 const int DOOR_POS_ELEMENT =
                   Rnd::range(0, doorCandidates.size() - 1);
                 const Pos doorPos = doorCandidates.at(DOOR_POS_ELEMENT);
-                eng.featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
+                FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, doorPos);
                 globalDoorPosCandidates[doorPos.x][doorPos.y] = true;
               } else {
                 vector<Pos> positionsWithDoor;
@@ -619,8 +618,8 @@ void MapGenBsp::buildRoomsInRooms() {
                     }
                   }
                   if(positionOk) {
-                    eng.featureFactory->spawnFeatureAt(
-                      feature_stoneFloor, doorPos);
+                    FeatureFactory::spawnFeatureAt(
+                      FeatureId::stoneFloor, doorPos);
                     positionsWithDoor.push_back(doorPos);
                   }
                 }
@@ -640,7 +639,7 @@ void MapGenBsp::buildRoomsInRooms() {
 
 void MapGenBsp::postProcessFillDeadEnds() {
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
 
   //Find an origin with no adjacent walls, to ensure we don't start in a dead end
   Pos origin;
@@ -676,7 +675,7 @@ void MapGenBsp::postProcessFillDeadEnds() {
     const int NR_ADJ_CARDINAL_WALLS = blockers[x + 1][y] + blockers[x - 1][y] +
                                       blockers[x][y + 1] + blockers[x][y - 1];
     if(NR_ADJ_CARDINAL_WALLS == 3) {
-      eng.featureFactory->spawnFeatureAt(feature_stoneWall, pos);
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneWall, pos);
       blockers[x][y] = true;
     }
   }
@@ -687,7 +686,7 @@ void MapGenBsp::postProcessFillDeadEnds() {
 //  for(int y = 1; y < MAP_H - 1; y++) {
 //    for(int x = 1; x < MAP_W - 1; x++) {
 //      if(Utils::pointDist(origin.x, origin.y, x, y) < 20) {
-//        eng.featureFactory->spawnFeatureAt(feature_deepWater, Pos(x,y));
+//        FeatureFactory::spawnFeatureAt(FeatureId::deepWater, Pos(x,y));
 //        for(int yRegion = 0; yRegion < 3; yRegion++) {
 //          for(int xRegion = 0; xRegion < 3; xRegion++) {
 //            Region* region = regions[xRegion][yRegion];
@@ -711,7 +710,7 @@ void MapGenBsp::postProcessFillDeadEnds() {
 //
 //  Pos leftPos(X_POS_START, 0);
 //  while(Utils::isPosInsideMap(leftPos) && Utils::isPosInsideMap(leftPos + Pos(W,0))) {
-//    coverAreaWithFeature(Rect(leftPos, leftPos + Pos(W, 0)), feature_deepWater);
+//    coverAreaWithFeature(Rect(leftPos, leftPos + Pos(W, 0)), FeatureId::deepWater);
 //    leftPos += Pos(Rnd::range(-1,1), 1);
 //  }
 //}
@@ -722,9 +721,9 @@ void MapGenBsp::getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) const {
   //Stairs are only allowed in cells with - and completely surrounded by -
   //stone floor or cave floor
 
-  vector<FeatureId> featIdsOk {feature_stoneFloor, feature_caveFloor};
+  vector<FeatureId> featIdsOk {FeatureId::stoneFloor, FeatureId::caveFloor};
 
-  MapParse::parse(CellPred::AllAdjIsAnyOfFeatures(eng, featIdsOk), cellsToSet);
+  MapParse::parse(CellPred::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
 
   trace << "MapGenBsp::getAllowedStairCells() [DONE]" << endl;
 }
@@ -750,7 +749,7 @@ Pos MapGenBsp::placeStairs() {
 
   trace << "MapGenBsp: Sorting the allowed cells vector ";
   trace << "(" << allowedCellsList.size() << " cells)" << endl;
-  IsCloserToOrigin isCloserToOrigin(Map::player->pos, eng);
+  IsCloserToOrigin isCloserToOrigin(Map::player->pos);
   sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
 
   trace << "MapGenBsp: Picking random cell from furthest half" << endl;
@@ -758,8 +757,8 @@ Pos MapGenBsp::placeStairs() {
   const Pos stairsPos(allowedCellsList.at(ELEMENT));
 
   trace << "MapGenBsp: Spawning stairs at chosen cell" << endl;
-  Feature* f = eng.featureFactory->spawnFeatureAt(
-                 feature_stairs, stairsPos);
+  Feature* f = FeatureFactory::spawnFeatureAt(
+                 FeatureId::stairs, stairsPos);
   f->setHasBlood(false);
 
   trace << "MapGenBsp::placeStairs()[DONE]" << endl;
@@ -779,7 +778,7 @@ void MapGenBsp::movePlayerToNearestAllowedPos() {
 
   trace << "MapGenBsp: Sorting the allowed cells vector ";
   trace << "(" << allowedCellsList.size() << " cells)" << endl;
-  IsCloserToOrigin isCloserToOrigin(Map::player->pos, eng);
+  IsCloserToOrigin isCloserToOrigin(Map::player->pos);
   sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
 
   Map::player->pos = allowedCellsList.front();
@@ -791,13 +790,13 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
   trace << "MapGenBsp::revealAllDoorsBetweenPlayerAndStairs()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
 
   blockers[stairsPos.x][stairsPos.y] = false;
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(Map::cells[x][y].featureStatic->getId() == feature_door) {
+      if(Map::cells[x][y].featureStatic->getId() == FeatureId::door) {
         blockers[x][y] = false;
       }
     }
@@ -811,7 +810,7 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
   trace << "MapGenBsp: Travelling along path and revealing all doors" << endl;
   for(Pos & pos : path) {
     Feature* const feature = Map::cells[pos.x][pos.y].featureStatic;
-    if(feature->getId() == feature_door) {
+    if(feature->getId() == FeatureId::door) {
       dynamic_cast<Door*>(feature)->reveal(false);
     }
   }
@@ -822,7 +821,7 @@ void MapGenBsp::revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos) {
 void MapGenBsp::decorate() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(Map::cells[x][y].featureStatic->getId() == feature_stoneWall) {
+      if(Map::cells[x][y].featureStatic->getId() == FeatureId::stoneWall) {
 
         int nrAdjFloor = 0;
 
@@ -831,7 +830,7 @@ void MapGenBsp::decorate() {
             if(xx != x || yy != y) {
               const FeatureStatic* const f =
                 Map::cells[xx][yy].featureStatic;
-              if(f->getId() == feature_stoneFloor) {
+              if(f->getId() == FeatureId::stoneFloor) {
                 nrAdjFloor++;
               }
             }
@@ -840,7 +839,7 @@ void MapGenBsp::decorate() {
 
         //Randomly convert walls to rubble
         if(Rnd::percentile() < 10) {
-          eng.featureFactory->spawnFeatureAt(feature_rubbleHigh, Pos(x, y));
+          FeatureFactory::spawnFeatureAt(FeatureId::rubbleHigh, Pos(x, y));
 #ifdef DEMO_MODE
           Renderer::drawMapAndInterface();
           SdlWrapper::sleep(1);
@@ -873,10 +872,10 @@ void MapGenBsp::decorate() {
 
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
-      if(Map::cells[x][y].featureStatic->getId() == feature_stoneFloor) {
+      if(Map::cells[x][y].featureStatic->getId() == FeatureId::stoneFloor) {
         //Randomly convert stone floor to low rubble
         if(Rnd::percentile() == 1) {
-          eng.featureFactory->spawnFeatureAt(feature_rubbleLow, Pos(x, y));
+          FeatureFactory::spawnFeatureAt(FeatureId::rubbleLow, Pos(x, y));
 #ifdef DEMO_MODE
           Renderer::drawMapAndInterface();
           SdlWrapper::sleep(1);
@@ -946,7 +945,7 @@ bool MapGenBsp::isAllRoomsConnected() {
       c.set(x, y);
       const FeatureStatic* const f =
         Map::cells[c.x][c.y].featureStatic;
-      if(f->getId() == feature_stoneFloor) {
+      if(f->getId() == FeatureId::stoneFloor) {
         x = 999;
         y = 999;
       }
@@ -954,12 +953,12 @@ bool MapGenBsp::isAllRoomsConnected() {
   }
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
   int floodFill[MAP_W][MAP_H];
   FloodFill::run(c, blockers, floodFill, 99999, Pos(-1, -1));
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
-      if(Map::cells[x][y].featureStatic->getId() == feature_stoneFloor) {
+      if(Map::cells[x][y].featureStatic->getId() == FeatureId::stoneFloor) {
         if(Pos(x, y) != c && floodFill[x][y] == 0) {
           return false;
         }
@@ -992,7 +991,7 @@ void MapGenBsp::placeDoorAtPosIfSuitable(const Pos& pos) {
         if(Utils::isPosInsideMap(pos + Pos(dx, dy))) {
           const FeatureStatic* const f =
             Map::cells[pos.x + dx][pos.y + dy].featureStatic;
-          if(f->getId() == feature_door) {
+          if(f->getId() == FeatureId::door) {
             return;
           }
         }
@@ -1005,33 +1004,33 @@ void MapGenBsp::placeDoorAtPosIfSuitable(const Pos& pos) {
 
   for(int d = -1; d <= 1; d++) {
     if(Map::cells[pos.x + d][pos.y].featureStatic->getId() ==
-        feature_stoneWall) {
+        FeatureId::stoneWall) {
       goodHorizontal = false;
     }
 
     if(Map::cells[pos.x][pos.y + d].featureStatic->getId() ==
-        feature_stoneWall) {
+        FeatureId::stoneWall) {
       goodVertical = false;
     }
 
     if(d != 0) {
       if(Map::cells[pos.x][pos.y + d].featureStatic->getId() !=
-          feature_stoneWall) {
+          FeatureId::stoneWall) {
         goodHorizontal = false;
       }
 
       if(Map::cells[pos.x + d][pos.y].featureStatic->getId() !=
-          feature_stoneWall) {
+          FeatureId::stoneWall) {
         goodVertical = false;
       }
     }
   }
 
   if(goodHorizontal || goodVertical) {
-    const FeatureData* const mimicFeatData =
-      eng.featureDataHandler->getData(feature_stoneWall);
-    eng.featureFactory->spawnFeatureAt(
-      feature_door, pos, new DoorSpawnData(mimicFeatData));
+    const FeatureDataT* const mimicFeatData =
+      FeatureData::getData(FeatureId::stoneWall);
+    FeatureFactory::spawnFeatureAt(
+      FeatureId::door, pos, new DoorSpawnData(mimicFeatData));
 #ifdef DEMO_MODE
     Renderer::drawMapAndInterface();
     SdlWrapper::sleep(1000);
@@ -1040,7 +1039,7 @@ void MapGenBsp::placeDoorAtPosIfSuitable(const Pos& pos) {
 }
 
 Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
-  coverAreaWithFeature(roomPoss, feature_stoneFloor);
+  coverAreaWithFeature(roomPoss, FeatureId::stoneFloor);
   for(int y = roomPoss.x0y0.y; y <= roomPoss.x1y1.y; y++) {
     for(int x = roomPoss.x0y0.x; x <= roomPoss.x1y1.x; x++) {
       roomCells[x][y] = true;
@@ -1059,7 +1058,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
 //  //Top to bottom
 //  for(c.x = roomPoss.x0y0.x; c.x <= roomPoss.x1y1.x; c.x++) {
 //    for(c.y = roomPoss.x0y0.y; c.y <= roomPoss.x1y1.y; c.y++) {
-//      if(Map::featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
+//      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::stoneFloor) {
 //        PossToAdd[c.x][c.y] = true;
 //        c.y = 9999;
 //      }
@@ -1068,7 +1067,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
 //  //Left to right
 //  for(c.y = roomPoss.x0y0.y; c.y <= roomPoss.x1y1.y; c.y++) {
 //    for(c.x = roomPoss.x0y0.x; c.x <= roomPoss.x1y1.x; c.x++) {
-//      if(Map::featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
+//      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::stoneFloor) {
 //        PossToAdd[c.x][c.y] = true;
 //        c.x = 99999;
 //      }
@@ -1077,7 +1076,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
 //  //Bottom to top
 //  for(c.x = roomPoss.x0y0.x; c.x <= roomPoss.x1y1.x; c.x++) {
 //    for(c.y = roomPoss.x1y1.y; c.y >= roomPoss.x0y0.y; c.y--) {
-//      if(Map::featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
+//      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::stoneFloor) {
 //        PossToAdd[c.x][c.y] = true;
 //        c.y = -9999;
 //      }
@@ -1086,7 +1085,7 @@ Room* MapGenBsp::buildRoom(const Rect& roomPoss) {
 //  //Right to left
 //  for(c.y = roomPoss.x0y0.y; c.y <= roomPoss.x1y1.y; c.y++) {
 //    for(c.x = roomPoss.x1y1.x; c.x >= roomPoss.x0y0.x; c.x--) {
-//      if(Map::featuresStatic[c.x][c.y]->getId() == feature_stoneFloor) {
+//      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::stoneFloor) {
 //        PossToAdd[c.x][c.y] = true;
 //        c.x = -9999;
 //      }
@@ -1114,7 +1113,7 @@ void MapGenBsp::coverAreaWithFeature(
 
   for(int x = x0y0.x; x <= x1y1.x; x++) {
     for(int y = x0y0.y; y <= x1y1.y; y++) {
-      eng.featureFactory->spawnFeatureAt(feature, Pos(x, y), NULL);
+      FeatureFactory::spawnFeatureAt(feature, Pos(x, y), NULL);
 
 #ifdef DEMO_MODE
       Renderer::drawMapAndInterface();
@@ -1156,25 +1155,25 @@ void MapGenBsp::reshapeRoom(const Room& room) {
           if(TRIM_ALL || Rnd::coinToss()) {
             const Pos upLeft(room.getX0() + W - 1, room.getY0() + H - 1);
             Rect rect(room.getX0Y0(), upLeft);
-            MapGenBsp::coverAreaWithFeature(rect, feature_stoneWall);
+            MapGenBsp::coverAreaWithFeature(rect, FeatureId::stoneWall);
           }
 
           if(TRIM_ALL || Rnd::coinToss()) {
             const Pos upRight(room.getX1() - W + 1, room.getY0() + H - 1);
             Rect rect(Pos(room.getX0() + ROOM_W - 1, room.getY0()), upRight);
-            MapGenBsp::coverAreaWithFeature(rect, feature_stoneWall);
+            MapGenBsp::coverAreaWithFeature(rect, FeatureId::stoneWall);
           }
 
           if(TRIM_ALL || Rnd::coinToss()) {
             const Pos downLeft(room.getX0() + W - 1, room.getY1() - H + 1);
             Rect rect(Pos(room.getX0(), room.getY0() + ROOM_H - 1), downLeft);
-            MapGenBsp::coverAreaWithFeature(rect, feature_stoneWall);
+            MapGenBsp::coverAreaWithFeature(rect, FeatureId::stoneWall);
           }
 
           if(TRIM_ALL || Rnd::coinToss()) {
             const Pos downRight(room.getX1() - W + 1, room.getY1() - H + 1);
             Rect rect(room.getX1Y1(), downRight);
-            MapGenBsp::coverAreaWithFeature(rect, feature_stoneWall);
+            MapGenBsp::coverAreaWithFeature(rect, FeatureId::stoneWall);
           }
         }
         break;
@@ -1188,14 +1187,14 @@ void MapGenBsp::reshapeRoom(const Room& room) {
                 for(int dy = -1; dy <= 1; dy++) {
                   const FeatureStatic* const f =
                     Map::cells[c.x + dx][c.y + dy].featureStatic;
-                  if(f->getId() == feature_stoneWall) {
+                  if(f->getId() == FeatureId::stoneWall) {
                     isNextToWall = true;
                   }
                 }
               }
               if(isNextToWall == false) {
                 if(Rnd::oneIn(5)) {
-                  eng.featureFactory->spawnFeatureAt(feature_stoneWall, c);
+                  FeatureFactory::spawnFeatureAt(FeatureId::stoneWall, c);
                 }
               }
             }
@@ -1221,7 +1220,7 @@ int MapGenBsp::getNrStepsInDirUntilWallFound(
     if(Utils::isPosInsideMap(c) == false) {
       return -1;
     }
-    if(Map::cells[c.x][c.y].featureStatic->getId() == feature_stoneWall) {
+    if(Map::cells[c.x][c.y].featureStatic->getId() == FeatureId::stoneWall) {
       return stepsTaken;
     }
     c +=
@@ -1270,7 +1269,7 @@ void MapGenBsp::buildAuxRooms(Region* regions[3][3]) {
         if(mainRoom != NULL) {
 
           bool cellsWithFloor[MAP_W][MAP_H];
-          MapParse::parse(CellPred::BlocksMoveCmn(false, eng), cellsWithFloor);
+          MapParse::parse(CellPred::BlocksMoveCmn(false), cellsWithFloor);
 
           Utils::reverseBoolArray(cellsWithFloor);
 
@@ -1392,7 +1391,7 @@ bool MapGenBsp::tryPlaceAuxRoom(const int X0, const int Y0,
       deleteAndRemoveRoomFromList(room);
       room = NULL;
     } else {
-      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, doorPos);
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, doorPos);
 #ifdef DEMO_MODE
       Renderer::drawMapAndInterface();
       SdlWrapper::sleep(1000);
@@ -1419,14 +1418,14 @@ void MapGenBsp::makeCrumbleRoom(const Rect& roomAreaIncludingWalls,
       } else {
         innerCells.push_back(Pos(x, y));
       }
-      eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneWall, Pos(x, y));
     }
   }
 
   ProxEventWallCrumbleSpawnData* const spawnData =
     new ProxEventWallCrumbleSpawnData(wallCells, innerCells);
-  eng.featureFactory->spawnFeatureAt(
-    feature_proxEventWallCrumble, proxEventPos, spawnData);
+  FeatureFactory::spawnFeatureAt(
+    FeatureId::proxEventWallCrumble, proxEventPos, spawnData);
 }
 
 

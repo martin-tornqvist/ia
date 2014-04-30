@@ -6,9 +6,6 @@
 #include "MenuBrowser.h"
 #include "Spells.h"
 
-using namespace std;
-
-
 class Spell;
 
 class PlayerSpellsHandler {
@@ -33,15 +30,15 @@ public:
 
   bool isSpellLearned(const SpellId id);
 
-  void storeToSaveLines(vector<string>& lines) const;
+  void storeToSaveLines(std::vector<std::string>& lines) const;
 
-  void setupFromSaveLines(vector<string>& lines);
+  void setupFromSaveLines(std::vector<std::string>& lines);
 private:
   void draw(MenuBrowser& browser);
 
   void tryCast(const Spell* const spell);
 
-  vector<Spell*>  knownSpells_;
+  std::vector<Spell*>  knownSpells_;
   const Spell*    prevSpellCast_;
 
 

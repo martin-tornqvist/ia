@@ -23,7 +23,7 @@ namespace ItemData {
 namespace {
 
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
-void ItemDataHandler::resetData(ItemData* const d,
+void ItemDataHandler::resetData(ItemDataT* const d,
                                 ItemType const itemType) const {
   switch(itemType) {
     case ItemType::general: {
@@ -175,10 +175,10 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->isScroll = true;
       d->maxStackSizeAtSpawn = 1;
       d->landOnHardSurfaceSoundMsg = "";
-      addFeatureFoundIn(d, feature_chest);
-      addFeatureFoundIn(d, feature_tomb);
-      addFeatureFoundIn(d, feature_cabinet, 25);
-      addFeatureFoundIn(d, feature_cocoon, 25);
+      addFeatureFoundIn(d, FeatureId::chest);
+      addFeatureFoundIn(d, FeatureId::tomb);
+      addFeatureFoundIn(d, FeatureId::cabinet, 25);
+      addFeatureFoundIn(d, FeatureId::cocoon, 25);
       eng.scrollNameHandler->setFalseScrollName(*d);
     } break;
 
@@ -196,10 +196,10 @@ void ItemDataHandler::resetData(ItemData* const d,
       d->missileDmg = DiceParam(1, 3, 0);
       d->maxStackSizeAtSpawn = 2;
       d->landOnHardSurfaceSoundMsg = "";
-      addFeatureFoundIn(d, feature_chest);
-      addFeatureFoundIn(d, feature_tomb);
-      addFeatureFoundIn(d, feature_cabinet, 25);
-      addFeatureFoundIn(d, feature_cocoon, 25);
+      addFeatureFoundIn(d, FeatureId::chest);
+      addFeatureFoundIn(d, FeatureId::tomb);
+      addFeatureFoundIn(d, FeatureId::cabinet, 25);
+      addFeatureFoundIn(d, FeatureId::cocoon, 25);
       eng.potionNameHandler->setClrAndFalseName(d);
     } break;
 
@@ -241,7 +241,7 @@ void ItemDataHandler::resetData(ItemData* const d,
 }
 
 void ItemDataHandler::addFeatureFoundIn(
-  ItemData* const itemData, const FeatureId featureId,
+  ItemDataT* const itemData, const FeatureId featureId,
   const int CHANCE_TO_INCLUDE) const {
 
   itemData->featuresCanBeFoundIn.push_back(
@@ -249,7 +249,7 @@ void ItemDataHandler::addFeatureFoundIn(
 }
 
 void ItemDataHandler::setDmgFromMonsterData(
-  ItemData& itemData, const ActorData& actorData) const {
+  ItemData& itemData, const ActorDataT& actorData) const {
 
   itemData.meleeDmg  = pair<int, int>(1, actorData.dmgMelee);
   itemData.rangedDmg = DiceParam(1, actorData.dmgRanged, 0);
@@ -257,7 +257,7 @@ void ItemDataHandler::setDmgFromMonsterData(
 
 //------------------------------- LIST OF ITEMS
 void ItemDataHandler::initDataList() {
-  ItemData* d = NULL;
+  ItemDataT* d = NULL;
 
   d = new ItemData(ItemId::trapezohedron);
   resetData(d, ItemType::general);
@@ -286,9 +286,9 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackSfx = SfxId::shotgunSawedOffFire;
   d->rangedMakesRicochetSound = true;
   d->reloadSfx = SfxId::shotgunReload;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::pumpShotgun);
@@ -305,18 +305,18 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackSfx = SfxId::shotgunPumpFire ;
   d->rangedMakesRicochetSound = true;
   d->reloadSfx = SfxId::shotgunReload;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::shotgunShell);
   resetData(d, ItemType::ammo);
   d->name = ItemName("Shotgun shell", "Shotgun shells", "a shotgun shell");
   d->maxStackSizeAtSpawn = 10;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::incinerator);
@@ -333,9 +333,9 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileGlyph = '*';
   d->rangedMissileClr = clrRedLgt;
   d->spawnStandardMinDLVL = 5;
-  addFeatureFoundIn(d, feature_chest, 25);
-  addFeatureFoundIn(d, feature_cabinet, 25);
-  addFeatureFoundIn(d, feature_cocoon, 25);
+  addFeatureFoundIn(d, FeatureId::chest, 25);
+  addFeatureFoundIn(d, FeatureId::cabinet, 25);
+  addFeatureFoundIn(d, FeatureId::cocoon, 25);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::napalmCartridge);
@@ -346,9 +346,9 @@ void ItemDataHandler::initDataList() {
   d->ammoContainedInClip = 3;
   d->spawnStandardMinDLVL = 5;
   d->maxStackSizeAtSpawn = 1;
-  addFeatureFoundIn(d, feature_chest, 25);
-  addFeatureFoundIn(d, feature_cabinet, 25);
-  addFeatureFoundIn(d, feature_cocoon, 25);
+  addFeatureFoundIn(d, FeatureId::chest, 25);
+  addFeatureFoundIn(d, FeatureId::cabinet, 25);
+  addFeatureFoundIn(d, FeatureId::cocoon, 25);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::machineGun);
@@ -366,9 +366,9 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackSfx = SfxId::machineGunFire;
   d->rangedMakesRicochetSound = true;
   d->reloadSfx = SfxId::machineGunReload;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::drumOfBullets);
@@ -376,9 +376,9 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Drum of .45 ACP", "Drums of .45 ACP",
                      "a Drum of .45 ACP");
   d->ammoContainedInClip = 50;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::pistol);
@@ -394,9 +394,9 @@ void ItemDataHandler::initDataList() {
   d->rangedAttackSfx = SfxId::pistolFire;
   d->rangedMakesRicochetSound = true;
   d->reloadSfx = SfxId::pistolReload;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::flareGun);
@@ -410,10 +410,10 @@ void ItemDataHandler::initDataList() {
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a flare gun");
   d->rangedAttMsgs = ItemAttMsgs("fire", "fires a flare gun");
   d->rangedSndMsg = "I hear a flare gun being fired.";
-  d->propAppliedOnRanged = new PropFlared(eng, propTurnsStd);
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  d->propAppliedOnRanged = new PropFlared(propTurnsStd);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::pistolClip);
@@ -421,9 +421,9 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName(".45ACP Colt cartridge", ".45ACP Colt cartridges",
                      "a .45ACP Colt cartridge");
   d->ammoContainedInClip = 7;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::teslaCannon);
@@ -442,9 +442,9 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileGlyph = '*';
   d->rangedMissileClr = clrYellow;
   d->spawnStandardMinDLVL = 7;
-  addFeatureFoundIn(d, feature_chest, 50);
-  addFeatureFoundIn(d, feature_cabinet, 50);
-  addFeatureFoundIn(d, feature_cocoon, 50);
+  addFeatureFoundIn(d, FeatureId::chest, 50);
+  addFeatureFoundIn(d, FeatureId::cabinet, 50);
+  addFeatureFoundIn(d, FeatureId::cocoon, 50);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::teslaCanister);
@@ -453,9 +453,9 @@ void ItemDataHandler::initDataList() {
                      "a Nuclear battery");
   d->ammoContainedInClip = 30;
   d->spawnStandardMinDLVL = 6;
-  addFeatureFoundIn(d, feature_chest, 50);
-  addFeatureFoundIn(d, feature_cabinet, 50);
-  addFeatureFoundIn(d, feature_cocoon, 50);
+  addFeatureFoundIn(d, FeatureId::chest, 50);
+  addFeatureFoundIn(d, FeatureId::cabinet, 50);
+  addFeatureFoundIn(d, FeatureId::cocoon, 50);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::spikeGun);
@@ -478,9 +478,9 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileClr = clrGray;
   d->spawnStandardMinDLVL = 4;
   d->rangedSndVol = SndVol::low;
-  addFeatureFoundIn(d, feature_chest, 50);
-  addFeatureFoundIn(d, feature_cabinet, 50);
-  addFeatureFoundIn(d, feature_cocoon, 50);
+  addFeatureFoundIn(d, FeatureId::chest, 50);
+  addFeatureFoundIn(d, FeatureId::cabinet, 50);
+  addFeatureFoundIn(d, FeatureId::cocoon, 50);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::dynamite);
@@ -489,9 +489,9 @@ void ItemDataHandler::initDataList() {
   d->itemWeight = itemWeight_light;
   d->tile = tile_dynamite;
   d->clr = clrRedLgt;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::flare);
@@ -501,9 +501,9 @@ void ItemDataHandler::initDataList() {
   d->tile = tile_flare;
   d->clr = clrGray;
   d->isAmmo = true;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::molotov);
@@ -513,9 +513,9 @@ void ItemDataHandler::initDataList() {
   d->itemWeight = itemWeight_light;
   d->tile = tile_molotov;
   d->clr = clrWhite;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::throwingKnife);
@@ -531,9 +531,9 @@ void ItemDataHandler::initDataList() {
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
   d->landOnHardSurfaceSfx = SfxId::metalClank;
   d->primaryAttackMode = PrimaryAttMode::missile;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::rock);
@@ -547,8 +547,8 @@ void ItemDataHandler::initDataList() {
   d->missileDmg = DiceParam(1, 3);
   d->maxStackSizeAtSpawn = 6;
   d->primaryAttackMode = PrimaryAttMode::missile;
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::dagger);
@@ -562,10 +562,10 @@ void ItemDataHandler::initDataList() {
   d->meleeHitMediumSfx = SfxId::hitSharp;
   d->meleeHitHardSfx = SfxId::hitSharp;
   d->meleeMissSfx = SfxId::missLight;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_tomb);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::tomb);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::hatchet);
@@ -582,9 +582,9 @@ void ItemDataHandler::initDataList() {
   d->meleeHitMediumSfx = SfxId::hitSharp;
   d->meleeHitHardSfx = SfxId::hitSharp;
   d->meleeMissSfx = SfxId::missLight;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::club);
@@ -610,8 +610,8 @@ void ItemDataHandler::initDataList() {
   d->meleeDmg = pair<int, int>(2, 4);
   d->meleeHitChanceMod = 5;
   d->meleeMissSfx = SfxId::missMedium;
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::machete);
@@ -625,8 +625,8 @@ void ItemDataHandler::initDataList() {
   d->meleeHitSmallSfx = SfxId::hitSharp;
   d->meleeHitMediumSfx = SfxId::hitSharp;
   d->meleeMissSfx = SfxId::missMedium;
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::axe);
@@ -641,9 +641,9 @@ void ItemDataHandler::initDataList() {
   d->meleeHitMediumSfx = SfxId::hitMedium;
   d->meleeHitHardSfx = SfxId::hitHard;
   d->meleeMissSfx = SfxId::missMedium;
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_tomb);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::tomb);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::pitchFork);
@@ -658,8 +658,8 @@ void ItemDataHandler::initDataList() {
   d->meleeHitSmallSfx = SfxId::hitSharp;
   d->meleeHitMediumSfx = SfxId::hitSharp;
   d->meleeMissSfx = SfxId::missHeavy;
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::sledgeHammer);
@@ -672,7 +672,7 @@ void ItemDataHandler::initDataList() {
   d->meleeHitChanceMod = -10;
   d->meleeCausesKnockBack = true;
   d->meleeMissSfx = SfxId::missHeavy;
-  addFeatureFoundIn(d, feature_cabinet);
+  addFeatureFoundIn(d, FeatureId::cabinet);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::ironSpike);
@@ -690,8 +690,8 @@ void ItemDataHandler::initDataList() {
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
   d->landOnHardSurfaceSfx = SfxId::metalClank;
   d->primaryAttackMode = PrimaryAttMode::missile;
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::playerKick);
@@ -728,7 +728,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "claws me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_zombie]);
-  d->propAppliedOnMelee = new PropInfected(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropInfected(propTurnsStd);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::zombieAxe);
@@ -767,7 +767,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "bites me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_rat]);
-  d->propAppliedOnMelee = new PropInfected(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropInfected(propTurnsStd);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::ratThingBite);
@@ -792,21 +792,21 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "bites me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_greenSpider]);
-  d->propAppliedOnMelee = new PropBlind(eng, propTurnsSpecific, 4);
+  d->propAppliedOnMelee = new PropBlind(propTurnsSpecific, 4);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::whiteSpiderBite);
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "bites me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_whiteSpider]);
-  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecific, 2);
+  d->propAppliedOnMelee = new PropParalyzed(propTurnsSpecific, 2);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::redSpiderBite);
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "bites me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_redSpider]);
-  d->propAppliedOnMelee = new PropWeakened(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropWeakened(propTurnsStd);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::shadowSpiderBite);
@@ -827,7 +827,7 @@ void ItemDataHandler::initDataList() {
   d->rangedAttMsgs = ItemAttMsgs("", "breaths fire at me");
   d->rangedSndMsg = "I hear a burst of flames.";
   setDmgFromMonsterData(*d, ActorData::dataList[actor_fireHound]);
-  d->propAppliedOnRanged = new PropBurning(eng, propTurnsStd);
+  d->propAppliedOnRanged = new PropBurning(propTurnsStd);
   d->rangedMissileClr = clrRedLgt;
   d->rangedMissileGlyph = '*';
   d->rangedMissileLeavesTrail = true;
@@ -872,7 +872,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "engulfs me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_dustVortex]);
-  d->propAppliedOnMelee = new PropBlind(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropBlind(propTurnsStd);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::fireVortexEngulf);
@@ -880,7 +880,7 @@ void ItemDataHandler::initDataList() {
   d->meleeAttMsgs = ItemAttMsgs("", "engulfs me");
   setDmgFromMonsterData(
     *d, ActorData::dataList[actor_fireVortex]);
-  d->propAppliedOnMelee = new PropBurning(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropBurning(propTurnsStd);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::frostVortexEngulf);
@@ -893,7 +893,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "claws me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_ghost]);
-  d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecific, 4);
+  d->propAppliedOnMelee = new PropTerrified(propTurnsSpecific, 4);
   d->meleeDmgType = DmgType::spirit;
   dataList[int(d->id)] = d;
 
@@ -901,7 +901,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "slices me with a sickle");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_phantasm]);
-  d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecific, 4);
+  d->propAppliedOnMelee = new PropTerrified(propTurnsSpecific, 4);
   d->meleeDmgType = DmgType::spirit;
   dataList[int(d->id)] = d;
 
@@ -909,7 +909,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "claws me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_wraith]);
-  d->propAppliedOnMelee = new PropTerrified(eng, propTurnsSpecific, 4);
+  d->propAppliedOnMelee = new PropTerrified(propTurnsSpecific, 4);
   d->meleeDmgType = DmgType::spirit;
   dataList[int(d->id)] = d;
 
@@ -926,7 +926,7 @@ void ItemDataHandler::initDataList() {
   d->rangedMissileGlyph = '/';
   d->rangedAttMsgs = ItemAttMsgs("", "fires an electric gun");
   d->rangedDmgType = DmgType::electric;
-  d->propAppliedOnRanged = new PropParalyzed(eng, propTurnsSpecific, 2);
+  d->propAppliedOnRanged = new PropParalyzed(propTurnsSpecific, 2);
   d->rangedSndMsg = "I hear a bolt of electricity.";
   setDmgFromMonsterData(*d, ActorData::dataList[actor_miGo]);
   d->rangedSndVol = SndVol::high;
@@ -935,7 +935,7 @@ void ItemDataHandler::initDataList() {
   d = new ItemData(ItemId::polypTentacle);
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "grips me with a tentacle");
-  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsSpecific, 1);
+  d->propAppliedOnMelee = new PropParalyzed(propTurnsSpecific, 1);
   setDmgFromMonsterData(*d, ActorData::dataList[actor_flyingPolyp]);
   dataList[int(d->id)] = d;
 
@@ -943,7 +943,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "claws me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_ghoul]);
-  d->propAppliedOnMelee = new PropInfected(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropInfected(propTurnsStd);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::shadowClaw);
@@ -974,7 +974,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "mauls me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_mummy]);
-  d->propAppliedOnMelee = new PropCursed(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropCursed(propTurnsStd);
   d->meleeCausesKnockBack = true;
   dataList[int(d->id)] = d;
 
@@ -1010,14 +1010,14 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "spews infected pus on me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_oozePutrid]);
-  d->propAppliedOnMelee = new PropInfected(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropInfected(propTurnsStd);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::oozePoisonSpewPus);
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "spews poisonous pus on me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_oozePoison]);
-  d->propAppliedOnMelee = new PropPoisoned(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropPoisoned(propTurnsStd);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::colourOOSpaceTouch);
@@ -1037,7 +1037,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "bites me");
   setDmgFromMonsterData(*d, ActorData::dataList[actor_huntingHorror]);
-  d->propAppliedOnMelee = new PropParalyzed(eng, propTurnsStd);
+  d->propAppliedOnMelee = new PropParalyzed(propTurnsStd);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::armorLeatherJacket);
@@ -1049,7 +1049,7 @@ void ItemDataHandler::initDataList() {
   d->armorData.absorptionPoints = 1;
   d->armorData.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMsg = "";
-  addFeatureFoundIn(d, feature_cabinet);
+  addFeatureFoundIn(d, FeatureId::cabinet);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::armorIronSuit);
@@ -1061,7 +1061,7 @@ void ItemDataHandler::initDataList() {
   d->armorData.absorptionPoints = 4;
   d->armorData.dmgToDurabilityFactor = 0.5;
   d->landOnHardSurfaceSoundMsg = "I hear a crashing sound.";
-  addFeatureFoundIn(d, feature_cabinet);
+  addFeatureFoundIn(d, FeatureId::cabinet);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::armorFlackJacket);
@@ -1073,7 +1073,7 @@ void ItemDataHandler::initDataList() {
   d->armorData.absorptionPoints = 3;
   d->armorData.dmgToDurabilityFactor = 0.5;
   d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
-  addFeatureFoundIn(d, feature_cabinet);
+  addFeatureFoundIn(d, FeatureId::cabinet);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::armorAsbSuit);
@@ -1085,8 +1085,8 @@ void ItemDataHandler::initDataList() {
   d->armorData.absorptionPoints = 1;
   d->armorData.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMsg = "";
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::chest);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::armorHeavyCoat);
@@ -1098,7 +1098,7 @@ void ItemDataHandler::initDataList() {
   d->armorData.absorptionPoints = 1;
   d->armorData.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMsg = "";
-  addFeatureFoundIn(d, feature_cabinet);
+  addFeatureFoundIn(d, FeatureId::cabinet);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::scrollOfMayhem);
@@ -1243,9 +1243,9 @@ void ItemDataHandler::initDataList() {
   d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
-  addFeatureFoundIn(d, feature_chest, 10);
-  addFeatureFoundIn(d, feature_tomb, 10);
-  addFeatureFoundIn(d, feature_cocoon, 10);
+  addFeatureFoundIn(d, FeatureId::chest, 10);
+  addFeatureFoundIn(d, FeatureId::tomb, 10);
+  addFeatureFoundIn(d, FeatureId::cocoon, 10);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::deviceRepeller);
@@ -1255,9 +1255,9 @@ void ItemDataHandler::initDataList() {
   d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
-  addFeatureFoundIn(d, feature_chest, 10);
-  addFeatureFoundIn(d, feature_tomb, 10);
-  addFeatureFoundIn(d, feature_cocoon, 10);
+  addFeatureFoundIn(d, FeatureId::chest, 10);
+  addFeatureFoundIn(d, FeatureId::tomb, 10);
+  addFeatureFoundIn(d, FeatureId::cocoon, 10);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::deviceRejuvenator);
@@ -1267,9 +1267,9 @@ void ItemDataHandler::initDataList() {
   d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
-  addFeatureFoundIn(d, feature_chest, 10);
-  addFeatureFoundIn(d, feature_tomb, 10);
-  addFeatureFoundIn(d, feature_cocoon, 10);
+  addFeatureFoundIn(d, FeatureId::chest, 10);
+  addFeatureFoundIn(d, FeatureId::tomb, 10);
+  addFeatureFoundIn(d, FeatureId::cocoon, 10);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::deviceTranslocator);
@@ -1279,9 +1279,9 @@ void ItemDataHandler::initDataList() {
   d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
-  addFeatureFoundIn(d, feature_chest, 10);
-  addFeatureFoundIn(d, feature_tomb, 10);
-  addFeatureFoundIn(d, feature_cocoon, 10);
+  addFeatureFoundIn(d, FeatureId::chest, 10);
+  addFeatureFoundIn(d, FeatureId::tomb, 10);
+  addFeatureFoundIn(d, FeatureId::cocoon, 10);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::electricLantern);
@@ -1294,9 +1294,9 @@ void ItemDataHandler::initDataList() {
   d->isIdentified = true;
   d->tile = tile_electricLantern;
   d->clr = clrYellow;
-  addFeatureFoundIn(d, feature_chest);
-  addFeatureFoundIn(d, feature_cabinet);
-  addFeatureFoundIn(d, feature_cocoon);
+  addFeatureFoundIn(d, FeatureId::chest);
+  addFeatureFoundIn(d, FeatureId::cabinet);
+  addFeatureFoundIn(d, FeatureId::cocoon);
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::medicalBag);
@@ -1451,7 +1451,7 @@ string ItemDataHandler::getItemInterfaceRef(
 
   const int PLAYER_RANGED_SKILL =
     Map::player->getData().abilityVals.getVal(
-      AbilityId::accuracyRanged, true, *(Map::player));
+      AbilityId::ranged, true, *(Map::player));
 
   if(
     (attackMode == PrimaryAttMode::none &&
@@ -1463,9 +1463,8 @@ string ItemDataHandler::getItemInterfaceRef(
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
                            toStr(PLUS));
     const int ITEM_SKILL = d.meleeHitChanceMod;
-    const int PLAYER_MELEE_SKILL =
-      Map::player->getData().abilityVals.getVal(
-        AbilityId::accuracyMelee, true, *(Map::player));
+    const int PLAYER_MELEE_SKILL = Map::player->getData().abilityVals.getVal(
+                                     AbilityId::melee, true, *(Map::player));
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
     const string skillStr = toStr(TOTAL_SKILL) + "%";
     return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;

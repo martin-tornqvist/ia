@@ -8,8 +8,6 @@
 #include "Converters.h"
 #include "CmnTypes.h"
 
-using namespace std;
-
 class Actor;
 class Weapon;
 
@@ -105,9 +103,9 @@ struct PropDataT {
 
   PropId id;
   Range stdRndTurns;
-  string name;
-  string nameShort;
-  string msg[endOfPropMsg];
+  std::string name;
+  std::string nameShort;
+  std::string msg[endOfPropMsg];
   bool isMakingMonsterAware;
   bool allowDisplayTurns;
   bool allowApplyMoreWhileActive;
@@ -155,7 +153,7 @@ public:
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
   int getAbilityMod(const AbilityId ability) const;
 
-  void getAllActivePropIds(vector<PropId>& idVectorRef) const;
+  void getAllActivePropIds(std::vector<PropId>& idVectorRef) const;
 
   Prop* getProp(const PropId id, const PropSrc source) const;
 
@@ -167,15 +165,15 @@ public:
 
   bool changeActorClr(SDL_Color& clr) const;
 
-  vector<Prop*> appliedProps_;
-  vector<Prop*> actorTurnPropBuffer_;
+  std::vector<Prop*> appliedProps_;
+  std::vector<Prop*> actorTurnPropBuffer_;
 
   void applyActorTurnPropBuffer();
 
   void tick(const PropTurnMode turnMode,
             const bool visionBlockers[MAP_W][MAP_H]);
 
-  void getPropsInterfaceLine(vector<StrAndClr>& line) const;
+  void getPropsInterfaceLine(std::vector<StrAndClr>& line) const;
 
   Prop* makeProp(const PropId id, PropTurns turnsInit,
                  const int NR_TURNS = -1) const;
@@ -184,10 +182,10 @@ public:
                     const bool ALLOW_MSG_WHEN_TRUE) const;
 
 private:
-  void getPropsFromSources(vector<Prop*>& propList,
+  void getPropsFromSources(std::vector<Prop*>& propList,
                            bool sources[int(PropSrc::endOfPropSrc)]) const;
 
-  bool tryResistProp(const PropId id, const vector<Prop*>& propList) const;
+  bool tryResistProp(const PropId id, const std::vector<Prop*>& propList) const;
 
   Actor* owningActor_;
 
@@ -199,8 +197,12 @@ public:
 
   virtual ~Prop() {}
 
-  virtual void storeToSaveLines(vector<string>& lines) const  {(void)lines;}
-  virtual void setupFromSaveLines(vector<string>& lines)      {(void)lines;}
+  virtual void storeToSaveLines(std::vector<std::string>& lines) const {
+    (void)lines;
+  }
+  virtual void setupFromSaveLines(std::vector<std::string>& lines) {
+    (void)lines;
+  }
 
   PropId getId() {return id_;}
 
@@ -210,9 +212,9 @@ public:
   virtual bool isMakingMonsterAware() const {
     return data_->isMakingMonsterAware;
   }
-  virtual string getName() const {return data_->name;}
-  virtual string getNameShort() const {return data_->nameShort;}
-  virtual void getMsg(const PropMsgType msgType, string& msgRef) const {
+  virtual std::string getName() const {return data_->name;}
+  virtual std::string getNameShort() const {return data_->nameShort;}
+  virtual void getMsg(const PropMsgType msgType, std::string& msgRef) const {
     msgRef = data_->msg[msgType];
   }
   virtual bool allowApplyMoreWhileActive() const {
@@ -294,21 +296,21 @@ public:
 
   ~PropWound() override {}
 
-  void storeToSaveLines(vector<string>& lines) const override {
+  void storeToSaveLines(std::vector<std::string>& lines) const override {
     lines.push_back(toStr(nrWounds_));
   }
-  void setupFromSaveLines(vector<string>& lines) override {
+  void setupFromSaveLines(std::vector<std::string>& lines) override {
     nrWounds_ = toInt(lines.front());
     lines.erase(lines.begin());
   }
 
-  string getNameShort() const override {
+  std::string getNameShort() const override {
     return "Wound(" + toStr(nrWounds_) + ")";
   }
 
   int getAbilityMod(const AbilityId ability) const override;
 
-  void getMsg(const PropMsgType msgType, string& msgRef) const override;
+  void getMsg(const PropMsgType msgType, std::string& msgRef) const override;
 
   void onMore() override;
 
@@ -329,7 +331,7 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override {
     if(ability == AbilityId::dodgeAttack)      return 20;
-    if(ability == AbilityId::accuracyRanged)   return -20;
+    if(ability == AbilityId::ranged)   return -20;
     return 0;
   }
 
@@ -432,12 +434,12 @@ public:
 
   PropTurnMode getTurnMode() const override {return propTurnModeActor;}
 
-  string getNameShort() const override {
+  std::string getNameShort() const override {
     return data_->nameShort + (nrTurnsAiming >= 3 ? "(3)" : "");
   }
 
   int getAbilityMod(const AbilityId ability) const override {
-    if(ability == AbilityId::accuracyRanged) return nrTurnsAiming >= 3 ? 999 : 10;
+    if(ability == AbilityId::ranged) return nrTurnsAiming >= 3 ? 999 : 10;
     return 0;
   }
 
@@ -461,8 +463,8 @@ public:
     if(ability == AbilityId::searching)      return -9999;
     if(ability == AbilityId::dodgeTrap ||
         ability == AbilityId::dodgeAttack)   return -50;
-    if(ability == AbilityId::accuracyRanged) return -50;
-    if(ability == AbilityId::accuracyMelee)  return -25;
+    if(ability == AbilityId::ranged) return -50;
+    if(ability == AbilityId::melee)  return -25;
     return 0;
   }
 };
@@ -564,7 +566,7 @@ public:
     Prop(propNailed, turnsInit, turns), nrSpikes_(1) {}
   ~PropNailed() override {}
 
-  string getNameShort() const override {
+  std::string getNameShort() const override {
     return "Nailed(" + toStr(nrSpikes_) + ")";
   }
 
@@ -719,8 +721,8 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override {
     if(ability == AbilityId::dodgeAttack)    return -30;
-    if(ability == AbilityId::accuracyRanged) return -10;
-    if(ability == AbilityId::accuracyMelee)  return -10;
+    if(ability == AbilityId::ranged) return -10;
+    if(ability == AbilityId::melee)  return -10;
     return 0;
   }
 };
@@ -743,7 +745,7 @@ public:
   bool tryResistOtherProp(const PropId id) const override;
 
   int getAbilityMod(const AbilityId ability) const override {
-    if(ability == AbilityId::accuracyMelee) return 999;
+    if(ability == AbilityId::melee) return 999;
     return 0;
   }
 };

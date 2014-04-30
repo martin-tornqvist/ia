@@ -10,9 +10,7 @@
 #include "ItemData.h"
 #include "Feature.h"
 #include "Config.h"
-
-using namespace std;
-
+#include "ActorPlayer.h"
 
 class SaveHandler;
 class FeatureStatic;
@@ -40,12 +38,12 @@ namespace Map {
 extern Player*        player;
 extern int            dlvl;
 extern Cell           cells[MAP_W][MAP_H];
-extern vector<Room*>  rooms;
+extern std::vector<Room*>  rooms;
 
 void init();
 void cleanup();
-void storeToSaveLines(vector<string>& lines);
-void setupFromSaveLines(vector<string>& lines);
+void storeToSaveLines(std::vector<std::string>& lines);
+void setupFromSaveLines(std::vector<std::string>& lines);
 
 void resetMap();
 
@@ -55,6 +53,9 @@ void resetMap();
 void updateVisualMemory();
 
 void switchToDestroyedFeatAt(const Pos& pos);
+
+void makeBlood(const Pos& origin);
+void makeGore(const Pos& origin);
 
 } //Map
 

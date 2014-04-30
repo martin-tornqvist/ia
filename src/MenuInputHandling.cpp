@@ -1,7 +1,9 @@
-#include "MenuInputHandler.h"
+#include "MenuInputHandling.h"
 
 #include "Input.h"
 #include "Config.h"
+
+namespace MenuInputHandling {
 
 MenuAction MenuInputHandler::getAction(MenuBrowser& browser) {
   while(true) {
@@ -29,3 +31,5 @@ MenuAction MenuInputHandler::getAction(MenuBrowser& browser) {
   }
   return MenuAction::esc;
 }
+
+} //MenuInputHandling

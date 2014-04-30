@@ -74,7 +74,7 @@ void emitSnd(Snd snd) {
         const Pos offset = (origin - playerPos).getSigns();
         const Dir dirToOrigin = DirUtils::getDir(offset);
         Map::player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER, dirToOrigin,
-                              PERCENT_DISTANCE);
+                               PERCENT_DISTANCE);
       } else {
         Monster* const monster = dynamic_cast<Monster*>(actor);
         monster->hearSound(snd);

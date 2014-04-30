@@ -40,7 +40,7 @@ void MapPatterns::setPositionsInArea(
       for(int dx = -1; dx <= 1; dx++) {
         const FeatureStatic* const f =
           Map::cells[pos.x + dx][pos.y + dy].featureStatic;
-        if(f->getId() == feature_door) {
+        if(f->getId() == FeatureId::door) {
           isDoorAdjacent = true;
         }
       }

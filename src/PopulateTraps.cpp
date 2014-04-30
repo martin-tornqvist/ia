@@ -14,7 +14,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
   trace << "PopulateTraps::populateRoomAndCorridorLevel()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
 
   //Put traps in non-plain rooms
   for(Room * const room : Map::rooms) {
@@ -73,7 +73,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
           nrPosCand--;
 
           //Spawn up to N traps in nearest cells (not necessarily adjacent)
-          IsCloserToOrigin sorter(pos, eng);
+          IsCloserToOrigin sorter(pos);
           sort(trapPosCandidates.begin(), trapPosCandidates.end(), sorter);
           const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
           trace << "PopulateTraps: Placing adjacent traps" << endl;
@@ -91,7 +91,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
   }
 
   const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS =
-    min(85, 30 + (Map::getDlvl() * 5));
+    min(85, 30 + (Map::dlvl * 5));
   if(Rnd::percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
     trace << "PopulateTraps: Trapping plain room" << endl;
 
@@ -123,7 +123,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
       nrPosCand--;
 
       //Spawn up to N traps in nearest cells (not necessarily adjacent)
-      IsCloserToOrigin sorter(pos, eng);
+      IsCloserToOrigin sorter(pos);
       sort(trapPosCandidates.begin(), trapPosCandidates.end(), sorter);
       const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
       trace << "PopulateTraps: Placing adjacent traps..." << endl;
@@ -141,7 +141,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
 
 void PopulateTraps::spawnTrapAt(const TrapId id, const Pos& pos) const {
   FeatureStatic* const f = Map::cells[pos.x][pos.y].featureStatic;
-  const FeatureData* const d = eng.featureDataHandler->getData(f->getId());
-  eng.featureFactory->spawnFeatureAt(
-    feature_trap, pos, new TrapSpawnData(d, id));
+  const FeatureDataT* const d = FeatureData::getData(f->getId());
+  FeatureFactory::spawnFeatureAt(
+    FeatureId::trap, pos, new TrapSpawnData(d, id));
 }

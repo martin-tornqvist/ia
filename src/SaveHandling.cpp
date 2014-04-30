@@ -1,4 +1,4 @@
-#include "SaveHandler.h"
+#include "SaveHandling.h"
 
 #include <fstream>
 #include <iostream>
@@ -16,26 +16,20 @@
 #include "GameTime.h"
 #include "PlayerSpellsHandler.h"
 
-void SaveHandler::save() {
-  vector<string> lines;
-  collectLinesFromGame(lines);
-  writeFile(lines);
-}
+using namespace std;
 
-void SaveHandler::load() {
-  vector<string> lines;
-  readFile(lines);
-  setupGameFromLines(lines);
-}
+namespace SaveHandling {
 
-void SaveHandler::collectLinesFromGame(vector<string>& lines) {
+namespace {
+
+void collectLinesFromGame(vector<string>& lines) {
   lines.resize(0);
   lines.push_back(Map::player->getNameA());
 
-  eng.dungeonMaster->storeToSaveLines(lines);
+  DungeonMaster::storeToSaveLines(lines);
   eng.scrollNameHandler->storeToSaveLines(lines);
   eng.potionNameHandler->storeToSaveLines(lines);
-  eng.itemDataHandler->storeToSaveLines(lines);
+  ItemData::storeToSaveLines(lines);
   Map::player->getInv().storeToSaveLines(lines);
   Map::player->storeToSaveLines(lines);
   PlayerBon::storeToSaveLines(lines);
@@ -45,7 +39,7 @@ void SaveHandler::collectLinesFromGame(vector<string>& lines) {
   Map::playerSpellsHandler->storeToSaveLines(lines);
 }
 
-void SaveHandler::setupGameFromLines(vector<string>& lines) const {
+void setupGameFromLines(vector<string>& lines) const {
   trace << "SaveHandler::setupGameFromLines()..." << endl;
   trace << "SaveHandler: Nr lines: " << lines.size() << endl;
   const string& playerName = lines.front();
@@ -54,11 +48,11 @@ void SaveHandler::setupGameFromLines(vector<string>& lines) const {
   Map::player->getData().name_the = playerName;
   lines.erase(lines.begin());
 
-  eng.dungeonMaster->setupFromSaveLines(lines);
+  DungeonMaster::setupFromSaveLines(lines);
   eng.scrollNameHandler->setupFromSaveLines(lines);
   eng.potionNameHandler->setupFromSaveLines(lines);
-  eng.itemDataHandler->setupFromSaveLines(lines);
-  Map::player->getInv().setupFromSaveLines(lines, eng);
+  ItemData::setupFromSaveLines(lines);
+  Map::player->getInv().setupFromSaveLines(lines);
   Map::player->setupFromSaveLines(lines);
   PlayerBon::setupFromSaveLines(lines);
   Map::setupFromSaveLines(lines);
@@ -68,19 +62,7 @@ void SaveHandler::setupGameFromLines(vector<string>& lines) const {
   trace << "SaveHandler::setupGameFromLines() [DONE]" << endl;
 }
 
-bool SaveHandler::isSaveAvailable() {
-  ifstream file("data/save");
-  if(file.good()) {
-    const bool IS_EMPTY = file.peek() == std::ifstream::traits_type::eof();
-    file.close();
-    return IS_EMPTY == false;
-  } else {
-    file.close();
-    return false;
-  }
-}
-
-void SaveHandler::readFile(vector<string>& lines) {
+void readFile(vector<string>& lines) {
   lines.resize(0);
 
   string curLine;
@@ -100,7 +82,7 @@ void SaveHandler::readFile(vector<string>& lines) {
   }
 }
 
-void SaveHandler::writeFile(const vector<string>& lines) const {
+void writeFile(const vector<string>& lines) const {
   ofstream file;
   file.open("data/save", ios::trunc);
 
@@ -114,3 +96,31 @@ void SaveHandler::writeFile(const vector<string>& lines) const {
     file.close();
   }
 }
+
+} //namespace
+
+void save() {
+  vector<string> lines;
+  collectLinesFromGame(lines);
+  writeFile(lines);
+}
+
+void load() {
+  vector<string> lines;
+  readFile(lines);
+  setupGameFromLines(lines);
+}
+
+bool isSaveAvailable() {
+  ifstream file("data/save");
+  if(file.good()) {
+    const bool IS_EMPTY = file.peek() == std::ifstream::traits_type::eof();
+    file.close();
+    return IS_EMPTY == false;
+  } else {
+    file.close();
+    return false;
+  }
+}
+
+} //SaveHandling

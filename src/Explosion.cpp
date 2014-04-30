@@ -12,6 +12,8 @@
 #include "SdlWrapper.h"
 #include "PlayerBon.h"
 
+using namespace std;
+
 namespace {
 
 void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
@@ -66,10 +68,10 @@ void getPositionsReached(const Rect& area, const Pos& origin,
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
     for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
       const Pos pos(x, y);
-      const int DIST = Utils::chebyshevDist(pos, origin);
+      const int DIST = Utils::kingDist(pos, origin);
       bool isReached = true;
       if(DIST > 1) {
-        eng.lineCalc->calcNewLine(origin, pos, true, 999, false, line);
+        LineCalc::calcNewLine(origin, pos, true, 999, false, line);
         for(Pos & posCheckBlock : line) {
           if(blockers[posCheckBlock.x][posCheckBlock.y]) {
             isReached = false;
@@ -102,15 +104,15 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   MapParse::parse(CellPred::BlocksProjectiles(), blockers);
 
   vector< vector<Pos> > posLists;
-  getPositionsReached(area, origin, blockers, eng, posLists);
+  getPositionsReached(area, origin, blockers, posLists);
 
   SndVol vol = explType == ExplType::expl ? SndVol::high : SndVol::low;
 
   Snd snd("I hear an explosion!", sfx, IgnoreMsgIfOriginSeen::yes, origin,
           NULL, vol, AlertsMonsters::yes);
-  SndEmit::emitSnd(snd, eng);
+  SndEmit::emitSnd(snd);
 
-  draw(posLists, blockers, clrOverride, eng);
+  draw(posLists, blockers, clrOverride);
 
   //Do damage, apply effect
   const int DMG_ROLLS = 5;
@@ -155,7 +157,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         //Damage living actor
         if(livingActor != NULL) {
           if(livingActor == Map::player) {
-            eng.log->addMsg("I am hit by an explosion!", clrMsgBad);
+            Log::addMsg("I am hit by an explosion!", clrMsgBad);
           }
           livingActor->hit(DMG, DmgType::physical, true);
         }
@@ -165,8 +167,8 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         }
 
         if(Rnd::fraction(6, 10)) {
-          eng.featureFactory->spawnFeatureAt(
-            feature_smoke, pos, new SmokeSpawnData(Rnd::range(2, 4)));
+          FeatureFactory::spawnFeatureAt(
+            FeatureId::smoke, pos, new SmokeSpawnData(Rnd::range(2, 4)));
         }
       }
 
@@ -209,18 +211,18 @@ void runSmokeExplosionAt(const Pos& origin) {
   MapParse::parse(CellPred::BlocksProjectiles(), blockers);
 
   vector< vector<Pos> > posLists;
-  getPositionsReached(area, origin, blockers, eng, posLists);
+  getPositionsReached(area, origin, blockers, posLists);
 
   //TODO Sound message?
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, origin, NULL,
           SndVol::low, AlertsMonsters::yes);
-  SndEmit::emitSnd(snd, eng);
+  SndEmit::emitSnd(snd);
 
   for(const vector<Pos>& inner : posLists) {
     for(const Pos & pos : inner) {
       if(blockers[pos.x][pos.y] == false) {
-        eng.featureFactory->spawnFeatureAt(
-          feature_smoke, pos, new SmokeSpawnData(Rnd::range(17, 22)));
+        FeatureFactory::spawnFeatureAt(
+          FeatureId::smoke, pos, new SmokeSpawnData(Rnd::range(17, 22)));
       }
     }
   }

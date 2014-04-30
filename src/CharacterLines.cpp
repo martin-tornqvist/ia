@@ -23,8 +23,7 @@ void drawLocationInfo() {
 
     const Pos& playerPos = Map::player->pos;
 
-    const int DLVL = Map::getDlvl();
-    if(DLVL > 0 && DLVL < FIRST_CAVERN_LEVEL) {
+    if(Map::dlvl > 0 && Map::dlvl < FIRST_CAVERN_LEVEL) {
       const vector<Room*>& rooms = Map::rooms;
       for(unsigned int i = 0; i < rooms.size(); i++) {
         const Room* const room = rooms.at(i);
@@ -44,8 +43,7 @@ void drawLocationInfo() {
       Map::cells[playerPos.x][playerPos.y].isLight;
     if(IS_DRK_AT_PLAYER) {
       str += IS_LGT_AT_PLAYER ?
-             "The darkness is lit up. " :
-             "It is dark here. ";
+             "The darkness is lit up. " : "It is dark here. ";
     }
 
     if(str.empty() == false) {
@@ -124,7 +122,7 @@ void drawInfoLines() {
   pos.x += 6;
   const int X_POS_MISSILE = pos.x;
 
-  Item* itemWielded = player->getInv().getItemInSlot(SlotId::wielded);
+  Item* itemWielded = Map::player->getInv().getItemInSlot(SlotId::wielded);
   if(itemWielded == NULL) {
     Renderer::drawText(
       "Unarmed", Panel::charLines, pos, clrGenMed);
@@ -139,7 +137,7 @@ void drawInfoLines() {
     }
     pos.x += 2;
 
-    str = eng.itemDataHandler->getItemInterfaceRef(*itemWielded, false);
+    str = ItemData::getItemInterfaceRef(*itemWielded, false);
     Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
     pos.x += str.length() + 1;
   }
@@ -148,30 +146,29 @@ void drawInfoLines() {
   pos.y += 1;
 
   // Level and xp
-  DungeonMaster* const dm = eng.dungeonMaster;
   Renderer::drawText("LVL:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
-  str = toStr(dm->getCLvl());
+  str = toStr(DungeonMaster::getCLvl());
   Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
   pos.x += str.length() + 1;
   Renderer::drawText("NXT:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
-  str = dm->getCLvl() >= PLAYER_MAX_CLVL ? "-" : toStr(dm->getXpToNextLvl());
+  str = DungeonMaster::getCLvl() >= PLAYER_MAX_CLVL ? "-" :
+        toStr(DungeonMaster::getXpToNextLvl());
   Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
   //Dungeon level
   Renderer::drawText("DLVL:", Panel::charLines, pos, clrGenDrk);
   pos.x += 5;
-  const int DLVL = Map::getDlvl();
-  str = DLVL >= 0 ? toStr(DLVL) : "?";
+  str = Map::dlvl >= 0 ? toStr(Map::dlvl) : "?";
   Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
   pos.x += str.length() + 1;
 
   //Encumbrance
   Renderer::drawText("ENC:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
-  const int ENC = player->getEncPercent();
+  const int ENC = Map::player->getEncPercent();
   str = toStr(ENC) + "%";
   const SDL_Color encClr = ENC < 100 ? clrGreenLgt :
                            ENC < ENC_IMMOBILE_LVL ? clrYellow : clrRedLgt;
@@ -181,7 +178,8 @@ void drawInfoLines() {
   //Missile weapon
   pos.x = X_POS_MISSILE;
 
-  Item* const itemMissiles = player->getInv().getItemInSlot(SlotId::missiles);
+  Item* const itemMissiles =
+    Map::player->getInv().getItemInSlot(SlotId::missiles);
   if(itemMissiles == NULL) {
     Renderer::drawText("No missile weapon", Panel::charLines, pos, clrGenMed);
   } else {
@@ -195,7 +193,7 @@ void drawInfoLines() {
     }
     pos.x += 2;
 
-    str = eng.itemDataHandler->getItemInterfaceRef(
+    str = ItemData::getItemInterfaceRef(
             *itemMissiles, false, PrimaryAttMode::missile);
     Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
     pos.x += str.length() + 1;

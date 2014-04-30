@@ -12,9 +12,11 @@
 #include "MapParsing.h"
 #include "SdlWrapper.h"
 
-void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
-                             const bool IS_SPIKE_GUN,
-                             const bool IS_MSG_ALLOWED) {
+namespace KnockBack {
+
+void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
+                  const bool IS_SPIKE_GUN, const bool IS_MSG_ALLOWED) {
+
   const bool DEFENDER_IS_MONSTER = &defender != Map::player;
 
   if(DEFENDER_IS_MONSTER || Config::isBotPlaying() == false) {
@@ -39,7 +41,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
         const Pos newPos = defender.pos + delta;
 
         bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksActor(defender, true, eng), blockers);
+        MapParse::parse(CellPred::BlocksActor(defender, true), blockers);
         const bool CELL_BLOCKED = blockers[newPos.x][newPos.y];
         const bool CELL_IS_BOTTOMLESS =
           Map::cells[newPos.x][newPos.y].featureStatic->isBottomless();
@@ -57,14 +59,13 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           if(i == 0) {
             if(IS_MSG_ALLOWED) {
               if(DEFENDER_IS_MONSTER && PLAYER_SEE_DEFENDER) {
-                eng.log->addMsg(
-                  defender.getNameThe() + " is knocked back!");
+                Log::addMsg(defender.getNameThe() + " is knocked back!");
               } else {
-                eng.log->addMsg("I am knocked back!");
+                Log::addMsg("I am knocked back!");
               }
             }
             defender.getPropHandler().tryApplyProp(
-              new PropParalyzed(eng, propTurnsSpecific, 1), false, false);
+              new PropParalyzed(propTurnsSpecific, 1), false, false);
           }
 
           defender.pos = newPos;
@@ -75,12 +76,11 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           if(CELL_IS_BOTTOMLESS) {
             if(DEFENDER_IS_MONSTER && PLAYER_SEE_DEFENDER) {
-              eng.log->addMsg(
+              Log::addMsg(
                 defender.getNameThe() + " plummets down the depths.",
                 clrMsgGood);
             } else {
-              eng.log->addMsg(
-                "I plummet down the depths!", clrMsgBad);
+              Log::addMsg("I plummet down the depths!", clrMsgBad);
             }
             defender.die(true, false, false);
             return;
@@ -114,7 +114,7 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
               Map::cells[newPos.x][newPos.y].featureStatic;
             if(f->isVisionPassable() == false) {
               defender.getPropHandler().tryApplyProp(
-                new PropNailed(eng, propTurnsIndefinite));
+                new PropNailed(propTurnsIndefinite));
             }
           }
           return;
@@ -123,3 +123,5 @@ void KnockBack::tryKnockBack(Actor& defender, const Pos& attackedFromPos,
     }
   }
 }
+
+} //KnockBack

@@ -93,8 +93,8 @@ struct ActorDataT {
   void reset();
 
   ActorId id;
-  string name_a;
-  string name_the;
+  std::string name_a;
+  std::string name_the;
   TileId tile;
   char glyph;
   SDL_Color color;
@@ -110,24 +110,24 @@ struct ActorDataT {
   ActorSize actorSize;
   bool isHumanoid;
   bool isAutoDescrAllowed;
-  string deathMessageOverride;
+  std::string deathMessageOverride;
   int nrKills;
   bool canOpenDoors, canBashDoors;
   bool canSeeInDarkness;
   int nrLeftAllowedToSpawn;
   bool isUnique;
   bool isAutoSpawnAllowed;
-  string spellCastMessage;
+  std::string spellCastMessage;
   ActorErraticFreq erraticMovement;
   MonsterShockLevel monsterShockLevel;
   bool isRat, isCanine, isSpider, isUndead, isGhost;
   bool canBeSummoned;
   bool canBleed;
   bool canLeaveCorpse;
-  vector<RoomThemeId> nativeRooms;
-  string descr;
-  string aggroTextMonsterSeen;
-  string aggroTextMonsterHidden;
+  std::vector<RoomThemeId> nativeRooms;
+  std::string descr;
+  std::string aggroTextMonsterSeen;
+  std::string aggroTextMonsterHidden;
   SfxId aggroSfxMonsterSeen;
   SfxId aggroSfxMonsterHidden;
 };
@@ -138,8 +138,8 @@ ActorDataT dataList[endOfActorIds];
 
 void init();
 
-void storeToSaveLines(vector<string>& lines);
-void setupFromSaveLines(vector<string>& lines);
+void storeToSaveLines(std::vector<std::string>& lines);
+void setupFromSaveLines(std::vector<std::string>& lines);
 
 } //ActorData
 

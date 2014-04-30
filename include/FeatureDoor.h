@@ -3,8 +3,6 @@
 
 #include "Feature.h"
 
-using namespace std;
-
 enum DoorSpawnState {
   doorSpawnState_open,
   doorSpawnState_closed,
@@ -23,11 +21,12 @@ class DoorSpawnData;
 
 class Door: public FeatureStatic {
 public:
+  Door(FeatureId id, Pos pos, DoorSpawnData* spawnData);
   ~Door() override {}
 
   void bump(Actor& actorBumping)      override;
   virtual bool canMoveCmn()           const override;
-  virtual bool canMove(const vector<PropId>& actorsProps) const override;
+  virtual bool canMove(const std::vector<PropId>& actorsProps) const override;
   bool isVisionPassable()             const override;
   bool isProjectilePassable()         const override;
   bool isSmokePassable()              const override;
@@ -48,7 +47,7 @@ public:
     return isOpenedAndClosedExternally_;
   }
 
-  string getDescr(const bool DEFINITE_ARTICLE) const override;
+  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
   MaterialType getMaterialType() const;
 
@@ -66,12 +65,7 @@ public:
   }
 
 protected:
-  friend class FeatureFactory;
-  friend class MapGenBsp;
-  friend class FeatureLever;
-  Door(FeatureId id, Pos pos, DoorSpawnData* spawnData);
-
-  const FeatureData* const mimicFeature_;
+  const FeatureDataT* const mimicFeature_;
   int nrSpikes_;
 
   bool isOpen_, isBroken_, isStuck_, isSecret_, isOpenedAndClosedExternally_;

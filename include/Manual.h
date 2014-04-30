@@ -4,15 +4,9 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
-
-
 class Manual {
 public:
-  Manual() : eng() {
-    readFile();
-  }
+  Manual() : eng() {readFile();}
 
   void run();
 
@@ -21,7 +15,7 @@ private:
 
   void drawManualInterface();
 
-  vector<string> lines;
+  std::vector<std::string> lines;
 
 
 };

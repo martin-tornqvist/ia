@@ -11,56 +11,52 @@
 #include "MapPatterns.h"
 #include "Properties.h"
 
-using namespace std;
+enum class FeatureId {
+  empty,
+  stoneFloor,
+  stoneWall,
+  tree,
+  grass,
+  grassWithered,
+  bush,
+  bushWithered,
+  forestPath,
+  stairs,
+  lever,
+  brazierGolden,
+  caveFloor,
+  gravestone,
+  tomb,
+  churchBench,
+  altar,
+  churchCarpet,
+  rubbleHigh,
+  rubbleLow,
+  statue,
+  ghoulStatue,
+  cocoon,
+  chest,
+  cabinet,
+  fountain,
+//  barrel,
+  pillar,
+  pillarBroken,
+//  pillarCarved,
+  chasm,
+  shallowWater,
+  deepWater,
+  poolBlood,
+  shallowMud,
 
+  door,
+  litDynamite,
+  litFlare,
+  trap,
+  gore,
+  smoke,
+  proxEventWallCrumble,
 
-
-enum FeatureId {
-  feature_empty,
-  feature_stoneFloor,
-  feature_stoneWall,
-  feature_tree,
-  feature_grass,
-  feature_grassWithered,
-  feature_bush,
-  feature_bushWithered,
-  feature_forestPath,
-  feature_stairs,
-  feature_lever,
-  feature_brazierGolden,
-  feature_caveFloor,
-  feature_gravestone,
-  feature_tomb,
-  feature_churchBench,
-  feature_altar,
-  feature_churchCarpet,
-  feature_rubbleHigh,
-  feature_rubbleLow,
-  feature_statue,
-  feature_ghoulStatue,
-  feature_cocoon,
-  feature_chest,
-  feature_cabinet,
-  feature_fountain,
-//  feature_barrel,
-  feature_pillar,
-  feature_pillarBroken,
-//  feature_pillarCarved,
-  feature_chasm,
-  feature_shallowWater,
-  feature_deepWater,
-  feature_poolBlood,
-  feature_shallowMud,
-
-  feature_door,
-  feature_litDynamite,
-  feature_litFlare,
-  feature_trap,
-  feature_gore,
-  feature_smoke,
-  feature_proxEventWallCrumble,
-
-  feature_pit,
+  pit,
 
   endOfFeatureId
 };
@@ -109,7 +105,7 @@ public:
 private:
   int maxNrInRoom_;
   PlacementRule placementRule_;
-  vector<RoomThemeId> themesBelongingTo_;
+  std::vector<RoomThemeId> themesBelongingTo_;
 };
 
 class Actor;
@@ -130,14 +126,14 @@ public:
 
   bool canMoveCmn() const {return canMoveCmn_;}
 
-  bool canMove(const vector<PropId>& actorsProps) const;
+  bool canMove(const std::vector<PropId>& actorsProps) const;
 
 private:
   bool canMoveCmn_;
   bool canMoveIfHaveProp_[endOfPropIds];
 };
 
-struct FeatureData {
+struct FeatureDataT {
   FeatureId id;
   FeatureSpawnType spawnType;
   char glyph;
@@ -156,34 +152,22 @@ struct FeatureData {
   bool canHaveItem;
   bool isBottomless;
   MaterialType materialType;
-  string name_a;
-  string name_the;
-  string messageOnPlayerBlocked;
-  string messageOnPlayerBlockedBlind;
+  std::string name_a;
+  std::string name_the;
+  std::string messageOnPlayerBlocked;
+  std::string messageOnPlayerBlockedBlind;
   int dodgeModifier;
   int shockWhenAdjacent;
   FeatureThemeSpawnRules featureThemeSpawnRules;
-  vector<FeatureId> featuresOnDestroyed;
+  std::vector<FeatureId> featuresOnDestroyed;
 };
 
-class FeatureDataHandler {
-public:
-  FeatureDataHandler() {initDataList();}
+namespace FeatureData {
 
-  ~FeatureDataHandler() {}
+void init();
 
-  inline const FeatureData* getData(const FeatureId id) const {
-    return &(dataList[id]);
-  }
+const FeatureDataT* getData(const FeatureId id);
 
-  void initDataList();
-
-private:
-  void addToListAndReset(FeatureData& d);
-
-  FeatureData dataList[endOfFeatureId];
-
-  void resetData(FeatureData& d);
-};
+} //FeatureData
 
 #endif

@@ -80,7 +80,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
         attackMode = PrimaryAttMode::missile;
       }
 
-      str = eng.itemDataHandler->getItemInterfaceRef(
+      str = ItemData::getItemInterfaceRef(
               *item, false, attackMode);
       Renderer::drawText(str, Panel::screen, pos, itemInterfClr);
       drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
@@ -103,8 +103,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
 }
 
 void drawBrowseInventory(const MenuBrowser& browser,
-                         const vector<unsigned int>& genInvIndexes,
-                         Engine& eng) {
+                         const vector<unsigned int>& genInvIndexes) {
 
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
 
@@ -133,7 +132,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
     drawItemSymbol(*item, pos);
     pos.x += 2;
 
-    str = eng.itemDataHandler->getItemInterfaceRef(*item, false);
+    str = ItemData::getItemInterfaceRef(*item, false);
     Renderer::drawText(str, Panel::screen, pos, itemInterfClr);
     drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
     Renderer::drawText(
@@ -206,7 +205,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
       attackMode = PrimaryAttMode::missile;
     }
 
-    str = eng.itemDataHandler->getItemInterfaceRef(*item, false, attackMode);
+    str = ItemData::getItemInterfaceRef(*item, false, attackMode);
     Renderer::drawText(str, Panel::screen, pos, itemInterfClr);
     drawDots(pos.x, int(str.size()), X_POS_WEIGHT, pos.y, itemInterfClr);
     Renderer::drawText(
@@ -266,7 +265,7 @@ void drawUse(const MenuBrowser& browser,
     drawItemSymbol(*item, pos);
     pos.x += 2;
 
-    str = eng.itemDataHandler->getItemRef(*item, ItemRefType::plain, false);
+    str = ItemData::getItemRef(*item, ItemRefType::plain, false);
     if(item->nrItems > 1 && item->getData().isStackable) {
       str += " (" + toStr(item->nrItems) + ")";
     }

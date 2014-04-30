@@ -9,9 +9,7 @@
 #include "FeatureTrap.h"
 #include "FeatureDoor.h"
 
-using namespace std;
-
-struct FeatureData;
+struct FeatureDataT;
 
 enum FeatureSpawnDataId {
   featureSpawnData_dynamite,
@@ -54,31 +52,31 @@ public:
 
 class ProxEventWallCrumbleSpawnData: public FeatureSpawnData {
 public:
-  ProxEventWallCrumbleSpawnData(vector<Pos> wallCells,
-                                vector<Pos> innerCells) :
+  ProxEventWallCrumbleSpawnData(std::vector<Pos> wallCells,
+                                std::vector<Pos> innerCells) :
     FeatureSpawnData(featureSpawnData_proxEventWallCrumble),
     wallCells_(wallCells), innerCells_(innerCells) {}
-  vector<Pos> wallCells_;
-  vector<Pos> innerCells_;
+  std::vector<Pos> wallCells_;
+  std::vector<Pos> innerCells_;
 };
 
 class TrapSpawnData: public FeatureSpawnData {
 public:
-  TrapSpawnData(const FeatureData* const mimicFeature, TrapId trapType) :
+  TrapSpawnData(const FeatureDataT* const mimicFeature, TrapId trapType) :
     FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
     trapType_(trapType) {}
-  TrapSpawnData(const FeatureData* const mimicFeature) :
+  TrapSpawnData(const FeatureDataT* const mimicFeature) :
     FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
     trapType_(trap_any) {}
-  const FeatureData* const mimicFeature_;
+  const FeatureDataT* const mimicFeature_;
   const TrapId trapType_;
 };
 
 class DoorSpawnData: public FeatureSpawnData {
 public:
-  DoorSpawnData(const FeatureData* const mimicFeature) :
+  DoorSpawnData(const FeatureDataT* const mimicFeature) :
     FeatureSpawnData(featureSpawnData_door), mimicFeature_(mimicFeature) {}
-  const FeatureData* const mimicFeature_;
+  const FeatureDataT* const mimicFeature_;
 };
 
 class LeverSpawnData: public FeatureSpawnData {
@@ -88,19 +86,13 @@ public:
   Door* const doorLinkedTo_;
 };
 
-class FeatureFactory {
-public:
-  FeatureFactory() {}
+namespace FeatureFactory {
 
-  //Note: Position parameter should NOT be a reference here, because the
-  //calling object (e.g. a spider web) might get destroyed.
-  Feature* spawnFeatureAt(const FeatureId id, const Pos& pos,
-                          FeatureSpawnData* spawnData = NULL);
+//Note: Position parameter should NOT be a reference here, because the
+//calling object (e.g. a spider web) might get destroyed.
+Feature* spawnFeatureAt(const FeatureId id, const Pos pos,
+                        FeatureSpawnData* spawnData = NULL);
 
-private:
-  void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos);
-
-
-};
+} //FeatureFactory
 
 #endif

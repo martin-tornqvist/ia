@@ -5,24 +5,20 @@
 
 class FeatureLiquidShallow: public FeatureStatic {
 public:
+  FeatureLiquidShallow(FeatureId id, Pos pos);
+
   ~FeatureLiquidShallow() {}
 
   void bump(Actor& actorBumping) override;
-
-protected:
-  friend class FeatureFactory;
-  FeatureLiquidShallow(FeatureId id, Pos pos);
 };
 
 class FeatureLiquidDeep: public FeatureStatic {
 public:
+  FeatureLiquidDeep(FeatureId id, Pos pos);
+
   ~FeatureLiquidDeep() {}
 
   void bump(Actor& actorBumping) override;
-
-protected:
-  friend class FeatureFactory;
-  FeatureLiquidDeep(FeatureId id, Pos pos);
 };
 
 #endif

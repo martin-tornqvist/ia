@@ -3,7 +3,7 @@
 #include "ItemScroll.h"
 #include "ActorPlayer.h"
 #include "Log.h"
-#include "MenuInputHandler.h"
+#include "MenuInputHandling.h"
 #include "Renderer.h"
 #include "Inventory.h"
 #include "ItemFactory.h"
@@ -17,7 +17,7 @@ PlayerSpellsHandler::~PlayerSpellsHandler() {
 
 void PlayerSpellsHandler::playerSelectSpellToCast() {
   if(knownSpells_.empty()) {
-    eng.log->addMsg("I do not know any spells to invoke.");
+    Log::addMsg("I do not know any spells to invoke.");
   } else {
     sort(knownSpells_.begin(), knownSpells_.end(),
     [](Spell * s1, Spell * s2) {
@@ -31,7 +31,7 @@ void PlayerSpellsHandler::playerSelectSpellToCast() {
     draw(browser);
 
     while(true) {
-      const MenuAction action = eng.menuInputHandler->getAction(browser);
+      const MenuAction action = MenuInputHandling::getAction(browser);
       switch(action) {
         case MenuAction::browsed: {
           draw(browser);
@@ -39,7 +39,7 @@ void PlayerSpellsHandler::playerSelectSpellToCast() {
 
         case MenuAction::esc:
         case MenuAction::space: {
-          eng.log->clearLog();
+          Log::clearLog();
           Renderer::drawMapAndInterface();
           return;
         } break;
@@ -65,20 +65,20 @@ void PlayerSpellsHandler::tryCastPrevSpell() {
 
 void PlayerSpellsHandler::tryCast(const Spell* const spell) {
   if(Map::player->getPropHandler().allowRead(true)) {
-    eng.log->clearLog();
+    Log::clearLog();
     Renderer::drawMapAndInterface();
 
-    const Range spiCost = spell->getSpiCost(false, Map::player, eng);
+    const Range spiCost = spell->getSpiCost(false, Map::player);
     if(spiCost.upper >= Map::player->getSpi()) {
-      eng.log->addMsg("Cast spell and risk depleting your spirit (y/n)?",
+      Log::addMsg("Cast spell and risk depleting your spirit (y/n)?",
                       clrWhiteHigh);
       Renderer::drawMapAndInterface();
-      if(eng.query->yesOrNo() == YesNoAnswer::no) {
-        eng.log->clearLog();
+      if(Query::yesOrNo() == YesNoAnswer::no) {
+        Log::clearLog();
         Renderer::drawMapAndInterface();
         return;
       }
-      eng.log->clearLog();
+      Log::clearLog();
     }
 
     bool isBloodSorc  = false;
@@ -91,23 +91,23 @@ void PlayerSpellsHandler::tryCast(const Spell* const spell) {
     const int BLOOD_SORC_HP_DRAINED = 2;
     if(isBloodSorc) {
       if(Map::player->getHp() <= BLOOD_SORC_HP_DRAINED) {
-        eng.log->addMsg("I do not have enough life force to cast this spell.");
+        Log::addMsg("I do not have enough life force to cast this spell.");
         Renderer::drawMapAndInterface();
         return;
       }
     }
 
-    eng.log->addMsg("I cast " + spell->getName() + "!");
+    Log::addMsg("I cast " + spell->getName() + "!");
 
     if(isBloodSorc) {
       Map::player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure, false);
     }
     if(Map::player->deadState == ActorDeadState::alive) {
-      spell->cast(Map::player, true, eng);
+      spell->cast(Map::player, true);
       prevSpellCast_ = spell;
       if(isWarlock && Rnd::oneIn(2)) {
         Map::player->getPropHandler().tryApplyProp(
-          new PropWarlockCharged(eng, propTurnsStd));
+          new PropWarlockCharged(propTurnsStd));
       }
     }
   }
@@ -127,7 +127,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 
   for(int i = 0; i < NR_SPELLS; i++) {
     const int CURRENT_ELEMENT = i;
-    Scroll scroll(NULL, eng);
+    Scroll scroll(NULL);
     SDL_Color scrollClr = scroll.getInterfaceClr();
     const SDL_Color clr =
       browser.isPosAtElement(CURRENT_ELEMENT) ? clrWhite : scrollClr;
@@ -145,7 +145,7 @@ void PlayerSpellsHandler::draw(MenuBrowser& browser) {
 
     int x = 28;
     str = "SPI:";
-    const Range spiCost = spell->getSpiCost(false, Map::player, eng);
+    const Range spiCost = spell->getSpiCost(false, Map::player);
     const string lowerStr = toStr(spiCost.lower);
     const string upperStr = toStr(spiCost.upper);
     str += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
@@ -179,7 +179,7 @@ void PlayerSpellsHandler::setupFromSaveLines(vector<string>& lines) {
   for(int i = 0; i < NR_SPELLS; i++) {
     const int ID = toInt(lines.front());
     lines.erase(lines.begin());
-    knownSpells_.push_back(eng.spellHandler->getSpellFromId(SpellId(ID)));
+    knownSpells_.push_back(SpellHandling::getSpellFromId(SpellId(ID)));
   }
 }
 
@@ -189,7 +189,7 @@ bool PlayerSpellsHandler::isSpellLearned(const SpellId id) {
 }
 
 void PlayerSpellsHandler::learnSpellIfNotKnown(const SpellId id) {
-  learnSpellIfNotKnown(eng.spellHandler->getSpellFromId(id));
+  learnSpellIfNotKnown(SpellHandling::getSpellFromId(id));
 }
 
 void PlayerSpellsHandler::learnSpellIfNotKnown(Spell* const spell) {

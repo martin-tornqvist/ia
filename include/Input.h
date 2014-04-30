@@ -11,7 +11,7 @@ public:
     key_(-1), sdlKey_(SDLK_LAST), isShiftHeld_(false), isCtrlHeld_(false) {}
 
   KeyboardReadRetData(char key, SDLKey sdlKey, bool isShiftHeld,
-                         bool isCtrlHeld) :
+                      bool isCtrlHeld) :
     key_(key), sdlKey_(sdlKey), isShiftHeld_(isShiftHeld),
     isCtrlHeld_(isCtrlHeld) {}
 

@@ -4,22 +4,22 @@
 #include "Inventory.h"
 
 enum class InvScrId {
-    slots,
-    equip,
-    use,
-    backpack,
-    endOfInventoryScreens
+  slots,
+  equip,
+  use,
+  backpack,
+  endOfInventoryScreens
 };
 
 enum class ConsumeItem {
-    yes, no
+  yes, no
 };
 
 namespace InvHandling {
 
-extern InventoryScreenId  screenToOpenAfterDrop;
-extern InvSlot*           equipSlotToOpenAfterDrop;
-extern int                browserPosToSetAfterDrop;
+extern InvScrId screenToOpenAfterDrop;
+extern InvSlot* equipSlotToOpenAfterDrop;
+extern int      browserPosToSetAfterDrop;
 
 void init();
 

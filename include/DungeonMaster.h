@@ -12,43 +12,32 @@
 #include "Utils.h"
 #include "ActorMonster.h"
 
-class DungeonMaster {
-public:
-  DungeonMaster() : clvl(1), xp(0) {initXpArray();}
-  ~DungeonMaster() {}
+namespace  DungeonMaster {
 
-  void onMonsterKilled(Actor& actor);
-  void onMonsterSpotted(Actor& actor);
+void init();
 
-  void storeToSaveLines(vector<string>& lines) const;
-  void setupFromSaveLines(vector<string>& lines);
+void storeToSaveLines(std::vector<std::string>& lines);
+void setupFromSaveLines(std::vector<std::string>& lines);
 
-  void winGame();
+int getCLvl();
+int getXp();
+TimeData getTimeStarted();
 
-  TimeData getTimeStarted() const {return timeStarted;}
-  void setTimeStartedToNow();
+void onMonsterKilled(Actor& actor);
+void onMonsterSpotted(Actor& actor);
 
-  void playerLoseXpPercent(const int PERCENT);
+void winGame();
 
-  int getMonsterTotXpWorth(const ActorDataT& d) const;
+void setTimeStartedToNow();
 
-  inline int getCLvl()  const {return clvl;}
-  inline int getXp()    const {return xp;}
+void playerLoseXpPercent(const int PERCENT);
 
-  int getXpToNextLvl() const;
+int getMonsterTotXpWorth(const ActorDataT& d);
 
-  void playerGainXp(int XP_GAINED);
+int getXpToNextLvl();
 
-private:
-  void playerGainLvl();
+void playerGainXp(const int XP_GAINED);
 
-  void initXpArray();
-
-  int xpForLvl[PLAYER_MAX_CLVL + 1];
-
-  int clvl, xp;
-
-  TimeData timeStarted;
-};
+} //DungeonMaster
 
 #endif

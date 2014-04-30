@@ -16,12 +16,12 @@ namespace ItemFactory {
 Item* spawnItem(const ItemId itemId, const int NR_ITEMS) {
   Item* r = NULL;
 
-  ItemData* const d = eng.itemDataHandler->dataList[int(itemId)];
+  ItemDataT* const d = ItemData::dataList[int(itemId)];
 
-  ItemData* ammoD = NULL;
+  ItemDataT* ammoD = NULL;
 
   if(d->rangedAmmoTypeUsed != ItemId::empty) {
-    ammoD = eng.itemDataHandler->dataList[int(d->rangedAmmoTypeUsed)];
+    ammoD = ItemData::dataList[int(d->rangedAmmoTypeUsed)];
   }
 
   switch(itemId) {
@@ -203,7 +203,7 @@ void setItemRandomizedProperties(Item* item) {
 Item* spawnItemOnMap(const ItemId itemId, const Pos& pos) {
   Item* item = spawnItem(itemId);
   setItemRandomizedProperties(item);
-  eng.itemDrop->dropItemOnMap(pos, *item);
+  ItemDrop::dropItemOnMap(pos, *item);
   return item;
 }
 
@@ -218,7 +218,7 @@ Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
   vector<ItemId> itemCandidates;
 
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
-    const ItemData* const d = eng.itemDataHandler->dataList[i];
+    const ItemDataT* const d = ItemData::dataList[i];
     if(
       d->isIntrinsic == false &&
       ((d->isScroll && ALLOW_SCROLLS) ||

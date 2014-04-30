@@ -11,11 +11,11 @@
 #include "Renderer.h"
 
 void Close::playerClose() const {
-  eng.log->clearLog();
-  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+  Log::clearLog();
+  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Renderer::drawMapAndInterface();
-  Pos closePos(Map::player->pos + eng.query->dir());
-  eng.log->clearLog();
+  Pos closePos(Map::player->pos + Query::dir());
+  Log::clearLog();
 
   if(closePos != Map::player->pos) {
     playerCloseFeature(Map::cells[closePos.x][closePos.y].featureStatic);
@@ -27,7 +27,7 @@ void Close::playerClose() const {
 void Close::playerCloseFeature(Feature* const feature) const {
   bool closeAbleObjectFound = false;
 
-  if(feature->getId() == feature_door) {
+  if(feature->getId() == FeatureId::door) {
     Door* const door = dynamic_cast<Door*>(feature);
     door->tryClose(Map::player);
     closeAbleObjectFound = true;
@@ -36,9 +36,9 @@ void Close::playerCloseFeature(Feature* const feature) const {
   if(closeAbleObjectFound == false) {
     const bool PLAYER_CAN_SEE = Map::player->getPropHandler().allowSee();
     if(PLAYER_CAN_SEE) {
-      eng.log->addMsg("I see nothing there to close.");
+      Log::addMsg("I see nothing there to close.");
     } else {
-      eng.log->addMsg("I find nothing there to close.");
+      Log::addMsg("I find nothing there to close.");
     }
   }
 }

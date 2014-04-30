@@ -5,20 +5,20 @@
 
 enum class YesNoAnswer {yes, no, special};
 
-class Query {
-public:
-  Query() {}
-  void waitForKeyPress() const;
+namespace Query {
 
-  YesNoAnswer yesOrNo(char keyForSpecialEvent = -1) const;
+void waitForKeyPress();
 
-  Pos dir() const;
+YesNoAnswer yesOrNo(char keyForSpecialEvent = -1);
 
-  void waitForEscOrSpace() const;
+Pos dir();
 
-  int number(const Pos& pos, const SDL_Color clr, const int MIN,
-             const int MAX_NR_DIGITS, const int DEFAULT,
-             const bool CANCEL_RETURNS_DEFAULT) const;
-};
+void waitForEscOrSpace();
+
+int number(const Pos& pos, const SDL_Color clr, const int MIN,
+           const int MAX_NR_DIGITS, const int DEFAULT,
+           const bool CANCEL_RETURNS_DEFAULT);
+
+} //Query
 
 #endif

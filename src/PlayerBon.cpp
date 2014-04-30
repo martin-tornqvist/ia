@@ -560,26 +560,26 @@ void pickBg(const Bg bg) {
 
   switch(bg_) {
     case Bg::occultist: {
-      pickTrait(Trait::stoutSpirit, eng);
+      pickTrait(Trait::stoutSpirit);
 
       Map::player->changeMaxHp(-2, false);
 
       //Player starts with a scroll of Darkbolt, and one other random scroll
       //Both are identified
-      Item* scroll = eng.itemFactory->spawnItem(ItemId::scrollOfDarkbolt);
+      Item* scroll = ItemFactory::spawnItem(ItemId::scrollOfDarkbolt);
       dynamic_cast<Scroll*>(scroll)->identify(true);
-      Map::player->getInv().putItemInGeneral(scroll);
+      Map::player->getInv().putInGeneral(scroll);
       while(true) {
-        scroll = eng.itemFactory->spawnRandomScrollOrPotion(true, false);
+        scroll = ItemFactory::spawnRandomScrollOrPotion(true, false);
 
         SpellId id = scroll->getData().spellCastFromScroll;
-        Spell* const spell = eng.spellHandler->getSpellFromId(id);
+        Spell* const spell = SpellHandling::getSpellFromId(id);
         const bool IS_AVAIL = spell->isAvailForPlayer();
         delete spell;
 
         if(IS_AVAIL && id != SpellId::darkbolt) {
           dynamic_cast<Scroll*>(scroll)->identify(true);
-          Map::player->getInv().putItemInGeneral(scroll);
+          Map::player->getInv().putInGeneral(scroll);
           break;
         }
       }
@@ -588,23 +588,23 @@ void pickBg(const Bg bg) {
       const int NR_POTIONS = 2;
       for(int i = 0; i < NR_POTIONS; i++) {
         Item* const potion =
-          eng.itemFactory->spawnRandomScrollOrPotion(false, true);
+          ItemFactory::spawnRandomScrollOrPotion(false, true);
         dynamic_cast<Potion*>(potion)->identify(true);
-        Map::player->getInv().putItemInGeneral(potion);
+        Map::player->getInv().putInGeneral(potion);
       }
 
     } break;
 
     case Bg::rogue: {
       Map::playerSpellsHandler->learnSpellIfNotKnown(SpellId::cloudMinds);
-      pickTrait(Trait::observant, eng);
-      pickTrait(Trait::stealthy, eng);
+      pickTrait(Trait::observant);
+      pickTrait(Trait::stealthy);
     } break;
 
     case Bg::warVet: {
-      pickTrait(Trait::adeptMeleeFighter, eng);
-      pickTrait(Trait::adeptMarksman, eng);
-      pickTrait(Trait::tough, eng);
+      pickTrait(Trait::adeptMeleeFighter);
+      pickTrait(Trait::adeptMarksman);
+      pickTrait(Trait::tough);
       Map::player->insanity_ += 10;
     } break;
 
@@ -646,12 +646,12 @@ void pickTrait(const Trait id) {
 
     case Trait::selfAware: {
       Map::player->getPropHandler().tryApplyProp(
-        new PropRConfusion(eng, propTurnsIndefinite), true, true, true, false);
+        new PropRConfusion(propTurnsIndefinite), true, true, true, false);
     } break;
 
     case Trait::fearless: {
       Map::player->getPropHandler().tryApplyProp(
-        new PropRFear(eng, propTurnsIndefinite), true, true, true, false);
+        new PropRFear(propTurnsIndefinite), true, true, true, false);
     } break;
 
     default: {} break;

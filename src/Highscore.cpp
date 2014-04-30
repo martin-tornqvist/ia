@@ -42,9 +42,9 @@ void HighScore::gameOver(const bool IS_VICTORY) {
   HighScoreEntry currentPlayer(
     Utils::getCurrentTime().getTimeStr(time_minute, true),
     Map::player->getNameA(),
-    eng.dungeonMaster->getXp(),
-    eng.dungeonMaster->getCLvl(),
-    Map::getDlvl(),
+    DungeonMaster::getXp(),
+    DungeonMaster::getCLvl(),
+    Map::dlvl,
     Map::player->getInsanity(),
     IS_VICTORY);
 
@@ -132,7 +132,7 @@ void HighScore::runHighScoreScreen() {
   readFile(entries);
 
   if(entries.empty()) {
-    eng.popup->showMsg("No High Score entries found.", false);
+    Popup::showMsg("No High Score entries found.", false);
     return;
   }
 

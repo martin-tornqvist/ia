@@ -6,7 +6,7 @@
 #include <SDL_image.h>
 
 #include "Converters.h"
-#include "MenuInputHandler.h"
+#include "MenuInputHandling.h"
 #include "MenuBrowser.h"
 #include "Query.h"
 #include "Renderer.h"
@@ -14,6 +14,8 @@
 #include "Audio.h"
 #include "TextFormatting.h"
 #include "Utils.h"
+#include "init.h"
+
 
 using namespace std;
 
@@ -26,8 +28,8 @@ const int OPT_Y0      = 1;
 
 string  fontName_                     = "";
 bool    isFullscreen_                 = false;
-bool    isTilesWallSymbolFullSquare_  = false;
-bool    isAsciiWallSymbolFullSquare_  = false;
+bool    isTilesWallFullSquare_  = false;
+bool    isAsciiWallFullSquare_  = false;
 bool    isRangedWpnMeleeePrompt_      = false;
 bool    isRangedWpnAutoReload_        = false;
 bool    isIntroLevelSkipped_          = false;
@@ -93,8 +95,8 @@ void setDefaultVariables() {
   fontName_                      = "images/16x24_v1.png";
   parseFontNameAndSetCellDims();
   isFullscreen_ = false;
-  isTilesWallSymbolFullSquare_  = false;
-  isAsciiWallSymbolFullSquare_  = true;
+  isTilesWallFullSquare_  = false;
+  isAsciiWallFullSquare_  = true;
   isIntroLevelSkipped_          = false;
   isRangedWpnMeleeePrompt_      = true;
   isRangedWpnAutoReload_        = false;
@@ -107,8 +109,7 @@ void setDefaultVariables() {
 }
 
 void playerSetsOption(const MenuBrowser* const browser,
-                      const int OPTION_VALUES_X_POS,
-                      Engine& eng) {
+                      const int OPTION_VALUES_X_POS) {
   switch(browser->getPos().y) {
     case 0: {
       isAudioEnabled_ = !isAudioEnabled_;
@@ -160,11 +161,11 @@ void playerSetsOption(const MenuBrowser* const browser,
     } break;
 
     case 4: {
-      isTilesWallSymbolFullSquare_ = !isTilesWallSymbolFullSquare_;
+      isTilesWallFullSquare_ = !isTilesWallFullSquare_;
     } break;
 
     case 5: {
-      isAsciiWallSymbolFullSquare_ = !isAsciiWallSymbolFullSquare_;
+      isAsciiWallFullSquare_ = !isAsciiWallFullSquare_;
     } break;
 
     case 6: {isIntroLevelSkipped_ = !isIntroLevelSkipped_;} break;
@@ -176,7 +177,7 @@ void playerSetsOption(const MenuBrowser* const browser,
     case 9: {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
-        eng.query->number(p, clrNosfTealLgt, 1, 3, keyRepeatDelay_, true);
+        Query::number(p, clrNosfTealLgt, 1, 3, keyRepeatDelay_, true);
       if(NR != -1) {
         keyRepeatDelay_ = NR;
         Input::setKeyRepeatDelays();
@@ -186,7 +187,7 @@ void playerSetsOption(const MenuBrowser* const browser,
     case 10: {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
-        eng.query->number(p, clrNosfTealLgt, 1, 3, keyRepeatInterval_, true);
+        Query::number(p, clrNosfTealLgt, 1, 3, keyRepeatInterval_, true);
       if(NR != -1) {
         keyRepeatInterval_ = NR;
         Input::setKeyRepeatDelays();
@@ -196,21 +197,21 @@ void playerSetsOption(const MenuBrowser* const browser,
     case 11: {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
-        eng.query->number(p, clrNosfTealLgt, 1, 3, delayProjectileDraw_, true);
+        Query::number(p, clrNosfTealLgt, 1, 3, delayProjectileDraw_, true);
       if(NR != -1) {delayProjectileDraw_ = NR;}
     } break;
 
     case 12: {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
-        eng.query->number(p, clrNosfTealLgt, 1, 3, delayShotgun_, true);
+        Query::number(p, clrNosfTealLgt, 1, 3, delayShotgun_, true);
       if(NR != -1) {delayShotgun_ = NR;}
     } break;
 
     case 13: {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
-        eng.query->number(p, clrNosfTealLgt, 1, 3, delayExplosion_, true);
+        Query::number(p, clrNosfTealLgt, 1, 3, delayExplosion_, true);
       if(NR != -1) {delayExplosion_ = NR;}
     } break;
 
@@ -299,7 +300,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   Renderer::drawText(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
-  str = isTilesWallSymbolFullSquare_ ? "Full square" : "Pseudo-3D";
+  str = isTilesWallFullSquare_ ? "Full square" : "Pseudo-3D";
   Renderer::drawText(str, Panel::screen, Pos(X1, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
@@ -312,7 +313,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   Renderer::drawText(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
-  str = isAsciiWallSymbolFullSquare_ ? "Full square" : "Hash sign";
+  str = isAsciiWallFullSquare_ ? "Full square" : "Hash sign";
   Renderer::drawText(str, Panel::screen, Pos(X1, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
@@ -481,11 +482,11 @@ void setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  isTilesWallSymbolFullSquare_ = curLine == "1";
+  isTilesWallFullSquare_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  isAsciiWallSymbolFullSquare_ = curLine == "1";
+  isAsciiWallFullSquare_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
@@ -542,8 +543,8 @@ void collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(isTilesMode_                  ? "1" : "0");
   lines.push_back(fontName_);
   lines.push_back(isFullscreen_                 ? "1" : "0");
-  lines.push_back(isTilesWallSymbolFullSquare_  ? "1" : "0");
-  lines.push_back(isAsciiWallSymbolFullSquare_  ? "1" : "0");
+  lines.push_back(isTilesWallFullSquare_        ? "1" : "0");
+  lines.push_back(isAsciiWallFullSquare_        ? "1" : "0");
   lines.push_back(isIntroLevelSkipped_          ? "1" : "0");
   lines.push_back(isRangedWpnMeleeePrompt_      ? "1" : "0");
   lines.push_back(isRangedWpnAutoReload_        ? "1" : "0");
@@ -556,32 +557,6 @@ void collectLinesFromVariables(vector<string>& lines) {
 }
 
 } //Namespace
-
-bool    isTilesMode()                 {return isTilesMode_;}
-string  getFontName()                 {return fontName_;}
-bool    isFullscreen()                {return isFullscreen_;}
-int     getScreenPixelW()             {return screenPixelW_;}
-int     getScreenPixelH()             {return screenPixelH_;}
-int     getCellW()                    {return cellW_;}
-int     getCellH()                    {return cellH_;}
-int     getLogPixelH()                {return logPixelH_;}
-int     getMapPixelH()                {return mapPixelH_;}
-int     getMapPixelOffsetH()          {return mapPixelOffsetH_;}
-int     getCharLinesPixelOffsetH()    {return charLinesPixelOffsetH_;}
-int     getCharLinesPixelH()          {return charLinesPixelH_;}
-bool    isAsciiWallSymbolFullSquare() {return isAsciiWallSymbolFullSquare_;}
-bool    isTilesWallSymbolFullSquare() {return isTilesWallSymbolFullSquare_;}
-bool    isAudioEnabled()              {return isAudioEnabled_;}
-bool    isBotPlaying()                {return isBotPlaying_;}
-void    setBotPlaying()               {isBotPlaying_ = true;}
-bool    isRangedWpnMeleeePrompt()     {return isRangedWpnMeleeePrompt_;}
-bool    isRangedWpnAutoReload()       {return isRangedWpnAutoReload_;}
-bool    isIntroLevelSkipped()         {return isIntroLevelSkipped_;}
-int     getDelayProjectileDraw()      {return delayProjectileDraw_;}
-int     getDelayShotgun()             {return delayShotgun_;}
-int     getDelayExplosion()           {return delayExplosion_;}
-int     getKeyRepeatDelay()           {return keyRepeatDelay_;}
-int     getKeyRepeatInterval()        {return keyRepeatInterval_;}
 
 void init() {
   fontName_ = "";
@@ -610,6 +585,32 @@ void init() {
   setCellDimDependentVariables();
 }
 
+bool    isTilesMode()                 {return isTilesMode_;}
+string  getFontName()                 {return fontName_;}
+bool    isFullscreen()                {return isFullscreen_;}
+int     getScreenPixelW()             {return screenPixelW_;}
+int     getScreenPixelH()             {return screenPixelH_;}
+int     getCellW()                    {return cellW_;}
+int     getCellH()                    {return cellH_;}
+int     getLogPixelH()                {return logPixelH_;}
+int     getMapPixelH()                {return mapPixelH_;}
+int     getMapPixelOffsetH()          {return mapPixelOffsetH_;}
+int     getCharLinesPixelOffsetH()    {return charLinesPixelOffsetH_;}
+int     getCharLinesPixelH()          {return charLinesPixelH_;}
+bool    isAsciiWallFullSquare()       {return isAsciiWallFullSquare_;}
+bool    isTilesWallFullSquare()       {return isTilesWallFullSquare_;}
+bool    isAudioEnabled()              {return isAudioEnabled_;}
+bool    isBotPlaying()                {return isBotPlaying_;}
+void    setBotPlaying()               {isBotPlaying_ = true;}
+bool    isRangedWpnMeleeePrompt()     {return isRangedWpnMeleeePrompt_;}
+bool    isRangedWpnAutoReload()       {return isRangedWpnAutoReload_;}
+bool    isIntroLevelSkipped()         {return isIntroLevelSkipped_;}
+int     getDelayProjectileDraw()      {return delayProjectileDraw_;}
+int     getDelayShotgun()             {return delayShotgun_;}
+int     getDelayExplosion()           {return delayExplosion_;}
+int     getKeyRepeatDelay()           {return keyRepeatDelay_;}
+int     getKeyRepeatInterval()        {return keyRepeatInterval_;}
+
 void runOptionsMenu() {
   MenuBrowser browser(NR_OPTIONS, 0);
   vector<string> lines;
@@ -619,7 +620,7 @@ void runOptionsMenu() {
   draw(&browser, OPTION_VALUES_X_POS);
 
   while(true) {
-    const MenuAction action = eng.menuInputHandler->getAction(browser);
+    const MenuAction action = MenuInputHandling::getAction(browser);
     switch(action) {
       case MenuAction::browsed: {
         draw(&browser, OPTION_VALUES_X_POS);
@@ -629,13 +630,13 @@ void runOptionsMenu() {
       case MenuAction::space: {
         //Since ASCII mode wall symbol may have changed,
         //we need to redefine the feature data list
-        eng.featureDataHandler->initDataList();
+        FeatureData::init();
         return;
       } break;
 
       case MenuAction::selected: {
         draw(&browser, OPTION_VALUES_X_POS);
-        playerSetsOption(&browser, OPTION_VALUES_X_POS, eng);
+        playerSetsOption(&browser, OPTION_VALUES_X_POS);
         collectLinesFromVariables(lines);
         writeLinesToFile(lines);
         draw(&browser, OPTION_VALUES_X_POS);

@@ -1,5 +1,6 @@
 #include "Feature.h"
 
+#include "Init.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -8,14 +9,17 @@
 #include "GameTime.h"
 #include "DungeonClimb.h"
 #include "Query.h"
-#include "SaveHandler.h"
+#include "SaveHandling.h"
 #include "Popup.h"
 #include "Utils.h"
+#include "Map.h"
+
+using namespace std;
 
 //---------------------------------------------------------- FEATURE
 Feature::Feature(FeatureId id, Pos pos,
                  FeatureSpawnData* spawnData) :
-  pos_(pos), data_(eng.featureDataHandler->getData(id)),
+  pos_(pos), data_(FeatureData::getData(id)),
   hasBlood_(false) {
   (void)spawnData;
 }
@@ -27,9 +31,9 @@ void Feature::bump(Actor& actorBumping) {
   if(canMove(props) == false) {
     if(&actorBumping == Map::player) {
       if(Map::player->getPropHandler().allowSee()) {
-        eng.log->addMsg(data_->messageOnPlayerBlocked);
+        Log::addMsg(data_->messageOnPlayerBlocked);
       } else {
-        eng.log->addMsg(data_->messageOnPlayerBlockedBlind);
+        Log::addMsg(data_->messageOnPlayerBlockedBlind);
       }
     }
   }
@@ -142,37 +146,37 @@ MaterialType Feature::getMaterialType() const {
 
 //---------------------------------------------------------- STATIC FEATURE
 void FeatureStatic::examine() {
-  eng.log->addMsg("I find nothing specific there to examine or use.");
+  Log::addMsg("I find nothing specific there to examine or use.");
 }
 
 void FeatureStatic::disarm() {
-  eng.log->addMsg(msgDisarmNoTrap);
+  Log::addMsg(msgDisarmNoTrap);
   Renderer::drawMapAndInterface();
 }
 
 void FeatureStatic::bash(Actor& actorTrying) {
   if(&actorTrying == Map::player) {
     const bool IS_BLIND    = Map::player->getPropHandler().allowSee() == false;
-    const bool IS_BLOCKING = canMoveCmn() == false && getId() != feature_stairs;
+    const bool IS_BLOCKING = canMoveCmn() == false && getId() != FeatureId::stairs;
     if(IS_BLOCKING) {
-      eng.log->addMsg(
+      Log::addMsg(
         "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
 
       if(Rnd::oneIn(4)) {
-        eng.log->addMsg("I sprain myself.", clrMsgBad);
+        Log::addMsg("I sprain myself.", clrMsgBad);
         const int SPRAIN_DMG = Rnd::range(1, 5);
         actorTrying.hit(SPRAIN_DMG, DmgType::pure, false);
       }
 
       if(Rnd::oneIn(4)) {
-        eng.log->addMsg("I am off-balance.");
+        Log::addMsg("I am off-balance.");
 
         actorTrying.getPropHandler().tryApplyProp(
-          new PropParalyzed(eng, propTurnsSpecific, 2));
+          new PropParalyzed(propTurnsSpecific, 2));
       }
 
     } else {
-      eng.log->addMsg("I kick the air!");
+      Log::addMsg("I kick the air!");
       Audio::play(SfxId::missMedium);
     }
   }
@@ -193,7 +197,7 @@ void FeatureStatic::bash_(Actor& actorTrying) {
                                         AlertsMonsters::no;
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
           &actorTrying, SndVol::low, alertsMonsters);
-  SndEmit::emitSnd(snd, eng);
+  SndEmit::emitSnd(snd);
 }
 
 void FeatureStatic::setGoreIfPossible() {
@@ -237,7 +241,7 @@ string Grave::getDescr(const bool DEFINITE_ARTICLE) const {
 
 void Grave::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {
-    eng.log->addMsg(inscription_);
+    Log::addMsg(inscription_);
   }
 }
 
@@ -246,19 +250,19 @@ void Stairs::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {
 
     const vector<string> choices {"Descend", "Save and quit", "Cancel"};
-    const int CHOICE = eng.popup->showMenuMsg("", true, choices,
+    const int CHOICE = Popup::showMenuMsg("", true, choices,
                        "A staircase leading downwards");
 
     if(CHOICE == 0) {
       Map::player->pos = pos_;
       trace << "Stairs: Calling DungeonClimb::tryUseDownStairs()" << endl;
-      eng.dungeonClimb->tryUseDownStairs();
+      DungeonClimb::tryUseDownStairs();
     } else if(CHOICE == 1) {
       Map::player->pos = pos_;
-      eng.saveHandler->save();
-      eng.quitToMainMenu_ = true;
+      SaveHandling::save();
+      Init::quitToMainMenu = true;
     } else {
-      eng.log->clearLog();
+      Log::clearLog();
       Renderer::drawMapAndInterface();
     }
   }

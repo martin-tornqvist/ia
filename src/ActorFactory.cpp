@@ -9,8 +9,15 @@
 #include "Renderer.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "Actor.h"
 
-Actor* ActorFactory::makeActorFromId(const ActorId id) const {
+using namespace std;
+
+namespace ActorFactory {
+
+namespace {
+
+Actor* makeActorFromId(const ActorId id) {
   assert(id >= 1 && id < endOfActorIds);
 
   switch(id) {
@@ -75,7 +82,9 @@ Actor* ActorFactory::makeActorFromId(const ActorId id) const {
   return NULL;
 }
 
-Actor* ActorFactory::spawnActor(const ActorId id, const Pos& pos) const {
+} //namespace
+
+Actor* spawnActor(const ActorId id, const Pos& pos) {
   Actor* const actor = makeActorFromId(id);
 
   actor->place(pos, ActorData::dataList[id]);
@@ -89,7 +98,7 @@ Actor* ActorFactory::spawnActor(const ActorId id, const Pos& pos) const {
   return actor;
 }
 
-void ActorFactory::deleteAllMonsters() const {
+void deleteAllMonsters() {
   vector<Actor*>& actors = GameTime::actors_;
 
   for(size_t i = 0; i < actors.size(); i++) {
@@ -102,19 +111,18 @@ void ActorFactory::deleteAllMonsters() const {
   Map::player->target = NULL;
 }
 
-void ActorFactory::summonMonsters(const Pos& origin,
-                                  const vector<ActorId>& monsterIds,
-                                  const bool MAKE_MONSTERS_AWARE,
-                                  Actor* const actorToSetAsLeader,
-                                  vector<Monster*>* monstersRet) const {
+void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
+                    const bool MAKE_MONSTERS_AWARE,
+                    Actor* const actorToSetAsLeader,
+                    vector<Monster*>* monstersRet) {
 
   if(monstersRet != NULL) {monstersRet->resize(0);}
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
   vector<Pos> freeCells;
   Utils::makeVectorFromBoolMap(false, blockers, freeCells);
-  sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(origin, eng));
+  sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(origin));
 
   const int NR_FREE_CELLS   = freeCells.size();
   const int NR_MONSTER_IDS  = monsterIds.size();
@@ -148,4 +156,4 @@ void ActorFactory::summonMonsters(const Pos& origin,
   Renderer::drawBlastAnimAtPositions(positionsToAnimate, clrMagenta);
 }
 
-
+} //ActorFactory

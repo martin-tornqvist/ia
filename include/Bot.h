@@ -6,23 +6,12 @@
 
 #include "CmnTypes.h"
 
-using namespace std;
+namespace Bot {
 
-class Bot {
-public:
-  Bot() :
-    eng() {
-  }
+void init();
 
-  void init();
+void act();
 
-  void act();
-
-private:
-  void findPathToStairs();
-  bool walkToAdjacentCell(const Pos& cellToGoTo);
-
-  vector<Pos> currentPath_;
-};
+} //Bot
 
 #endif

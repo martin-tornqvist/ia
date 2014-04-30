@@ -23,7 +23,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     for(int x = room1.getX0(); x <= room1.getX1(); x++) {
       const Pos c = Pos(x, y);
       if(Map::cells[c.x][c.y].featureStatic->getId() ==
-          feature_stoneFloor) {
+          FeatureId::stoneFloor) {
         floorInR1Vector.push_back(c);
         floorInR1Grid[x][y] = true;
       }
@@ -62,7 +62,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
       Pos c = Pos(x, y);
       const FeatureStatic* const f =
         Map::cells[c.x][c.y].featureStatic;
-      if(f->getId() == feature_stoneFloor) {
+      if(f->getId() == FeatureId::stoneFloor) {
         floorInR2Vector.push_back(c);
         floorInR2Grid[x][y] = true;
 
@@ -90,7 +90,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     Pos c = PossInR1closeToR2.at(Rnd::dice(1, PossInR1closeToR2.size()) - 1);
     while(floorInR2Grid[c.x][c.y] == false) {
       c += roomDeltaSigns;
-      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, c, NULL);
       if(doorPosCandidates != NULL) {
         doorPosCandidates[c.x][c.y] = true;
       }
@@ -164,7 +164,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     while(floorInR1Grid[c.x][c.y] == true) {
       c += roomDeltaSigns;
     }
-    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, c, NULL);
 #ifdef DEMO_MODE
     SdlWrapper::sleep(50);
 #endif // DEMO_MODE
@@ -176,7 +176,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
     // (3)
     Pos cTemp(c - roomDeltaSigns);
     while(floorInR1Grid[cTemp.x][cTemp.y] == false) {
-      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, cTemp, NULL);
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, cTemp, NULL);
 #ifdef DEMO_MODE
       SdlWrapper::sleep(50);
 #endif // DEMO_MODE
@@ -191,7 +191,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 
     // (4)
     while(c.x != c2.x && c.y != c2.y && floorInR2Grid[c.x][c.y] == false) {
-      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, c, NULL);
 #ifdef DEMO_MODE
       SdlWrapper::sleep(50);
 #endif // DEMO_MODE
@@ -200,7 +200,7 @@ void MapGenUtilCorridorBuilder::buildZCorridorBetweenRooms(
 
     // (5)
     while(c != c2 && floorInR2Grid[c.x][c.y] == false) {
-      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, c, NULL);
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, c, NULL);
 #ifdef DEMO_MODE
       SdlWrapper::sleep(50);
 #endif // DEMO_MODE
@@ -226,7 +226,7 @@ void MapGen::backupMap() {
 void MapGen::restoreMap() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      eng.featureFactory->spawnFeatureAt(backup[x][y], Pos(x, y));
+      FeatureFactory::spawnFeatureAt(backup[x][y], Pos(x, y));
     }
   }
 }
@@ -245,7 +245,7 @@ void MapGen::makeStraightPathByPathfinder(
     const FeatureStatic* const f =
       Map::cells[c.x][c.y].featureStatic;
     if(f->canHaveStaticFeature() || TUNNEL_THROUGH_ANY_FEATURE) {
-      eng.featureFactory->spawnFeatureAt(feature, c);
+      FeatureFactory::spawnFeatureAt(feature, c);
       if(SMOOTH == false && Rnd::percentile() < 33) {
         makePathByRandomWalk(c.x, c.y, Rnd::dice(1, 6), feature, true);
       }
@@ -290,7 +290,7 @@ void MapGen::makePathByRandomWalk(
     dirOk = false;
   }
   for(unsigned int i = 0; i < positionsToSet.size(); i++) {
-    eng.featureFactory->spawnFeatureAt(featureToMake, positionsToSet.at(i));
+    FeatureFactory::spawnFeatureAt(featureToMake, positionsToSet.at(i));
   }
 }
 
@@ -298,8 +298,8 @@ void MapGen::buildFromTemplate(const Pos& pos, MapTemplate* t) {
   for(int dy = 0; dy < t->h; dy++) {
     for(int dx = 0; dx < t->w; dx++) {
       const FeatureId featureId = t->featureVector[dy][dx];
-      if(featureId != feature_empty) {
-        eng.featureFactory->spawnFeatureAt(featureId, pos + Pos(dx, dy));
+      if(featureId != FeatureId::empty) {
+        FeatureFactory::spawnFeatureAt(featureId, pos + Pos(dx, dy));
       }
     }
   }

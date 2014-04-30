@@ -2,29 +2,20 @@
 #define RELOAD_H
 
 class Actor;
-class Item;
-class Weapon;
 
-enum ReloadResult {
-  reloadResult_success,
-  reloadResult_noAmmo,
-  reloadResult_notCarryingWpn,
-  reloadResult_alreadyFull,
-  reloadResult_wpnNotUsingAmmo,
-  reloadResult_fumble
+enum class ReloadResult {
+  success,
+  noAmmo,
+  notCarryingWpn,
+  alreadyFull,
+  wpnNotUsingAmmo,
+  fumble
 };
 
-class Reload {
-public:
-  Reload() {}
+namespace Reload {
 
-  bool reloadWieldedWpn(Actor& actorReloading);
+bool reloadWieldedWpn(Actor& actorReloading);
 
-private:
-  void printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
-                          Item* const ammo, const ReloadResult result,
-                          const bool IS_SWIFT_RELOAD);
-};
-
+} //Reload
 
 #endif

@@ -7,7 +7,9 @@
 #include "MapParsing.h"
 #include "Utils.h"
 
-void PopulateItems::spawnItems() {
+namespace PopulateItems {
+
+void spawnItems() {
   int nrOfSpawns = Rnd::range(6, 8);
 
   if(PlayerBon::hasTrait(Trait::treasureHunter)) {
@@ -17,9 +19,7 @@ void PopulateItems::spawnItems() {
   vector<ItemId> candidates;
   candidates.resize(0);
 
-  ItemData** dataList = eng.itemDataHandler->dataList;
-
-  const int DLVL = Map::getDlvl();
+  ItemDataT** dataList = ItemData::dataList;
 
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     if(
@@ -45,8 +45,10 @@ void PopulateItems::spawnItems() {
     const int NR_CANDIDATES = int(candidates.size());
     const ItemId id         = candidates.at(Rnd::range(0, NR_CANDIDATES - 1));
 
-    eng.itemFactory->spawnItemOnMap(id, pos);
+    ItemFactory::spawnItemOnMap(id, pos);
 
     freeCells.erase(freeCells.begin() + ELEMENT);
   }
 }
+
+} //PopulateItems

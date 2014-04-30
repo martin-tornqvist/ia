@@ -6,17 +6,15 @@
 
 class Smoke: public FeatureMob {
 public:
+  Smoke(FeatureId id, Pos pos, SmokeSpawnData* spawnData) :
+    FeatureMob(id, pos), life_(spawnData->life_),
+    isPermanent_(life_ == -1) {}
+
   ~Smoke() {}
 
   void newTurn();
 
 protected:
-  friend class FeatureFactory;
-  Smoke(FeatureId id, Pos pos, SmokeSpawnData* spawnData) :
-    FeatureMob(id, pos), life_(spawnData->life_),
-    isPermanent_(life_ == -1) {
-  }
-
   int life_;
   bool isPermanent_;
 };

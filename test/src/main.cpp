@@ -22,7 +22,7 @@
 #include "MapParsing.h"
 #include "Fov.h"
 #include "LineCalc.h"
-#include "SaveHandler.h"
+#include "SaveHandling.h"
 #include "Inventory.h"
 #include "PlayerSpellsHandler.h"
 #include "PlayerBon.h"
@@ -43,7 +43,6 @@ struct BasicFixture {
     Init::cleanupSession();
     Init::cleanupGame();
   }
-  Engine eng;
 };
 
 TEST(RollDice) {
@@ -77,10 +76,10 @@ TEST(ConstrainValInRange) {
 }
 
 TEST(CalculateDistances) {
-  CHECK_EQUAL(Utils::chebyshevDist(Pos(1, 2), Pos(2, 3)), 1);
-  CHECK_EQUAL(Utils::chebyshevDist(Pos(1, 2), Pos(2, 4)), 2);
-  CHECK_EQUAL(Utils::chebyshevDist(Pos(1, 2), Pos(1, 2)), 0);
-  CHECK_EQUAL(Utils::chebyshevDist(Pos(10, 3), Pos(1, 4)), 9);
+  CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 3)), 1);
+  CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 4)), 2);
+  CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(1, 2)), 0);
+  CHECK_EQUAL(Utils::kingDist(Pos(10, 3), Pos(1, 4)), 9);
 }
 
 TEST(Directions) {
@@ -175,63 +174,63 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   Pos origin(0, 0);
   vector<Pos> line;
 
-  eng.lineCalc->calcNewLine(origin, Pos(3, 0), true, 999, true, line);
+  LineCalc::calcNewLine(origin, Pos(3, 0), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(1, 0));
   CHECK(line.at(2) == Pos(2, 0));
   CHECK(line.at(3) ==  Pos(3, 0));
 
-  eng.lineCalc->calcNewLine(origin, Pos(-3, 0), true, 999, true, line);
+  LineCalc::calcNewLine(origin, Pos(-3, 0), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(-1, 0));
   CHECK(line.at(2) == Pos(-2, 0));
   CHECK(line.at(3) == Pos(-3, 0));
 
-  eng.lineCalc->calcNewLine(origin, Pos(0, 3), true, 999, true, line);
+  LineCalc::calcNewLine(origin, Pos(0, 3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(0, 1));
   CHECK(line.at(2) == Pos(0, 2));
   CHECK(line.at(3) == Pos(0, 3));
 
-  eng.lineCalc->calcNewLine(origin, Pos(0, -3), true, 999, true, line);
+  LineCalc::calcNewLine(origin, Pos(0, -3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(0, -1));
   CHECK(line.at(2) == Pos(0, -2));
   CHECK(line.at(3) == Pos(0, -3));
 
-  eng.lineCalc->calcNewLine(origin, Pos(3, 3), true, 999, true, line);
+  LineCalc::calcNewLine(origin, Pos(3, 3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(1, 1));
   CHECK(line.at(2) == Pos(2, 2));
   CHECK(line.at(3) == Pos(3, 3));
 
-  eng.lineCalc->calcNewLine(Pos(9, 9), Pos(6, 12), true, 999, true, line);
+  LineCalc::calcNewLine(Pos(9, 9), Pos(6, 12), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == Pos(9, 9));
   CHECK(line.at(1) == Pos(8, 10));
   CHECK(line.at(2) == Pos(7, 11));
   CHECK(line.at(3) == Pos(6, 12));
 
-  eng.lineCalc->calcNewLine(origin, Pos(-3, 3), true, 999, true, line);
+  LineCalc::calcNewLine(origin, Pos(-3, 3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(-1, 1));
   CHECK(line.at(2) == Pos(-2, 2));
   CHECK(line.at(3) == Pos(-3, 3));
 
-  eng.lineCalc->calcNewLine(origin, Pos(3, -3), true, 999, true, line);
+  LineCalc::calcNewLine(origin, Pos(3, -3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(1, -1));
   CHECK(line.at(2) == Pos(2, -2));
   CHECK(line.at(3) == Pos(3, -3));
 
-  eng.lineCalc->calcNewLine(origin, Pos(-3, -3), true, 999, true, line);
+  LineCalc::calcNewLine(origin, Pos(-3, -3), true, 999, true, line);
   CHECK(line.size() == 4);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(-1, -1));
@@ -239,13 +238,13 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(line.at(3) == Pos(-3, -3));
 
   //Test disallowing outside map
-  eng.lineCalc->calcNewLine(Pos(1, 0), Pos(-9, 0), true, 999, false, line);
+  LineCalc::calcNewLine(Pos(1, 0), Pos(-9, 0), true, 999, false, line);
   CHECK(line.size() == 2);
   CHECK(line.at(0) == Pos(1, 0));
   CHECK(line.at(1) == Pos(0, 0));
 
   //Test travel limit parameter
-  eng.lineCalc->calcNewLine(origin, Pos(20, 0), true, 2, true, line);
+  LineCalc::calcNewLine(origin, Pos(20, 0), true, 2, true, line);
   CHECK(line.size() == 3);
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(1, 0));
@@ -253,7 +252,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
 
   //Test precalculated FOV line offsets
   const vector<Pos>* deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(3, 3), FOV_STD_RADI_DB);
+    LineCalc::getFovDeltaLine(Pos(3, 3), FOV_STD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(1, 1));
@@ -261,7 +260,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(deltaLine->at(3) == Pos(3, 3));
 
   deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(-3, 3), FOV_STD_RADI_DB);
+    LineCalc::getFovDeltaLine(Pos(-3, 3), FOV_STD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(-1, 1));
@@ -269,7 +268,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(deltaLine->at(3) == Pos(-3, 3));
 
   deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(3, -3), FOV_STD_RADI_DB);
+    LineCalc::getFovDeltaLine(Pos(3, -3), FOV_STD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(1, -1));
@@ -277,7 +276,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(deltaLine->at(3) == Pos(3, -3));
 
   deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(-3, -3), FOV_STD_RADI_DB);
+    LineCalc::getFovDeltaLine(Pos(-3, -3), FOV_STD_RADI_DB);
   CHECK(deltaLine->size() == 4);
   CHECK(deltaLine->at(0) == Pos(0, 0));
   CHECK(deltaLine->at(1) == Pos(-1, -1));
@@ -287,11 +286,11 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   //Check constraints for retrieving FOV offset lines
   //Delta > parameter max distance
   deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(3, 0), 2);
+    LineCalc::getFovDeltaLine(Pos(3, 0), 2);
   CHECK(deltaLine == NULL);
   //Delta > limit of precalculated
   deltaLine =
-    eng.lineCalc->getFovDeltaLine(Pos(50, 0), 999);
+    LineCalc::getFovDeltaLine(Pos(50, 0), 999);
   CHECK(deltaLine == NULL);
 }
 
@@ -336,12 +335,12 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   // @ <- Player position (5, 10).
   //-----------------------------------------------------------------
 
-  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 7));
-  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 9));
-  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(5, 10));
+  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(5, 7));
+  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(5, 9));
+  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(5, 10));
   Map::player->pos = Pos(5, 10);
   Pos target(5, 8);
-  Item* item = eng.itemFactory->spawnItem(ItemId::throwingKnife);
+  Item* item = ItemFactory::spawnItem(ItemId::throwingKnife);
   eng.thrower->throwItem(*(Map::player), target, *item);
   CHECK(Map::cells[5][9].item != NULL);
 }
@@ -350,14 +349,14 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   const int X0 = 5;
   const int Y0 = 7;
 
-  const FeatureId wallId  = feature_stoneWall;
-  const FeatureId floorId = feature_stoneFloor;
+  const FeatureId wallId  = FeatureId::stoneWall;
+  const FeatureId floorId = FeatureId::stoneFloor;
 
-  eng.featureFactory->spawnFeatureAt(floorId, Pos(X0, Y0));
+  FeatureFactory::spawnFeatureAt(floorId, Pos(X0, Y0));
 
   //Check wall destruction
   for(int i = 0; i < 2; i++) {
-    Explosion::runExplosionAt(Pos(X0, Y0), eng, ExplType::expl);
+    Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
 
     //Cells around the center, at a distance of 1, should be destroyed
     int r = 1;
@@ -383,34 +382,34 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   }
 
   //Check damage to actors
-  Actor* a1 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
-  Explosion::runExplosionAt(Pos(X0, Y0), eng, ExplType::expl);
+  Actor* a1 = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
+  Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
   CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
 
   //Check that corpses can be destroyed, and do not block living actors
   const int NR_CORPSES = 3;
   Actor* corpses[NR_CORPSES];
   for(int i = 0; i < NR_CORPSES; i++) {
-    corpses[i] = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
+    corpses[i] = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
-  a1 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
-  Explosion::runExplosionAt(Pos(X0, Y0), eng, ExplType::expl);
+  a1 = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
+  Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
   for(int i = 0; i < NR_CORPSES; i++) {
     CHECK_EQUAL(int(ActorDeadState::destroyed), int(corpses[i]->deadState));
   }
   CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
 
   //Check explosion applying Burning to living and dead actors
-  a1        = eng.actorFactory->spawnActor(actor_rat, Pos(X0 - 1, Y0));
-  Actor* a2 = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
+  a1        = ActorFactory::spawnActor(actor_rat, Pos(X0 - 1, Y0));
+  Actor* a2 = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
   for(int i = 0; i < NR_CORPSES; i++) {
-    corpses[i] = eng.actorFactory->spawnActor(actor_rat, Pos(X0 + 1, Y0));
+    corpses[i] = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
-  Explosion::runExplosionAt(Pos(X0, Y0), eng, ExplType::applyProp,
+  Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
                             ExplSrc::misc, 0, SfxId::endOfSfxId,
-                            new PropBurning(eng, propTurnsStd));
+                            new PropBurning(propTurnsStd));
   CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
   CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
   for(int i = 0; i < NR_CORPSES; i++) {
@@ -424,8 +423,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //North-west edge
   int x = 1;
   int y = 1;
-  eng.featureFactory->spawnFeatureAt(floorId, Pos(x, y));
-  Explosion::runExplosionAt(Pos(x, y), eng, ExplType::expl);
+  FeatureFactory::spawnFeatureAt(floorId, Pos(x, y));
+  Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
   CHECK(Map::cells[x + 1][y    ].featureStatic->getId() != wallId);
   CHECK(Map::cells[x    ][y + 1].featureStatic->getId() != wallId);
   CHECK(Map::cells[x - 1][y    ].featureStatic->getId() == wallId);
@@ -434,8 +433,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //South-east edge
   x = MAP_W - 2;
   y = MAP_H - 2;
-  eng.featureFactory->spawnFeatureAt(floorId, Pos(x, y));
-  Explosion::runExplosionAt(Pos(x, y), eng, ExplType::expl);
+  FeatureFactory::spawnFeatureAt(floorId, Pos(x, y));
+  Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
   CHECK(Map::cells[x - 1][y    ].featureStatic->getId() != wallId);
   CHECK(Map::cells[x    ][y - 1].featureStatic->getId() != wallId);
   CHECK(Map::cells[x + 1][y    ].featureStatic->getId() == wallId);
@@ -454,7 +453,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   const Pos posR(2, 4);
 
   //Spawn left floor cell
-  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, posL);
+  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, posL);
 
   //Conditions for finished test
   bool isTestedStuck              = false;
@@ -467,20 +466,20 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     isTestedLooseWebDestroyed == false) {
 
     //Spawn right floor cell
-    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, posR);
+    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, posR);
 
     //Spawn a monster that can get stuck in the web
-    Actor* const actor = eng.actorFactory->spawnActor(actor_zombie, posL);
+    Actor* const actor = ActorFactory::spawnActor(actor_zombie, posL);
     Monster* const monster = dynamic_cast<Monster*>(actor);
 
     //Create a spider web in the right cell
     const FeatureId mimicId =
       Map::cells[posR.x][posR.x].featureStatic->getId();
-    const FeatureData* const mimicData =
-      eng.featureDataHandler->getData(mimicId);
+    const FeatureDataT* const mimicData =
+      FeatureData::getData(mimicId);
     TrapSpawnData* const trapSpawnData = new TrapSpawnData(
       mimicData, trap_spiderWeb);
-    eng.featureFactory->spawnFeatureAt(feature_trap, posR, trapSpawnData);
+    FeatureFactory::spawnFeatureAt(FeatureId::trap, posR, trapSpawnData);
 
     //Move the monster into the trap, and back again
     monster->awareOfPlayerCounter_ = INT_MAX; // > 0 req. for triggering trap
@@ -496,7 +495,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     } else if(monster->pos == posL) {
       const FeatureId featureId =
         Map::cells[posR.x][posR.y].featureStatic->getId();
-      if(featureId == feature_stoneFloor) {
+      if(featureId == FeatureId::stoneFloor) {
         isTestedLooseWebDestroyed = true;
       } else {
         isTestedLooseWebIntact = true;
@@ -504,7 +503,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     }
 
     //Remove the monster
-    eng.actorFactory->deleteAllMonsters();
+    ActorFactory::deleteAllMonsters();
   }
   //Check that all cases have been triggered (not really necessary, it just
   //verifies that the loop above is correctly written).
@@ -515,48 +514,48 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
 
 TEST_FIXTURE(BasicFixture, SavingGame) {
   //Item data
-  eng.itemDataHandler->dataList[int(ItemId::scrollOfTelep)]->isTried = true;
-  eng.itemDataHandler->dataList[int(ItemId::scrollOfOpening)]->isIdentified = true;
+  ItemData::dataList[int(ItemId::scrollOfTelep)]->isTried = true;
+  ItemData::dataList[int(ItemId::scrollOfOpening)]->isIdentified = true;
 
   //Bonus
-  PlayerBon::pickBg(Bg::rogue, eng);
+  PlayerBon::pickBg(Bg::rogue);
   PlayerBon::traitsPicked_.push_back(Trait::healer);
 
   //Player inventory
   Inventory& inv = Map::player->getInv();
-  inv.moveItemToGeneral(inv.getSlot(SlotId::wielded));
-  Item* item = eng.itemFactory->spawnItem(ItemId::teslaCannon);
-  inv.putItemInSlot(SlotId::wielded, item);
+  inv.moveToGeneral(inv.getSlot(SlotId::wielded));
+  Item* item = ItemFactory::spawnItem(ItemId::teslaCannon);
+  inv.putInSlot(SlotId::wielded, item);
   //Wear asbestos suit to test properties from wearing items
-  inv.moveItemToGeneral(inv.getSlot(SlotId::armorBody));
-  item = eng.itemFactory->spawnItem(ItemId::armorAsbSuit);
-  inv.putItemInSlot(SlotId::armorBody, item);
-  item = eng.itemFactory->spawnItem(ItemId::pistolClip);
+  inv.moveToGeneral(inv.getSlot(SlotId::armorBody));
+  item = ItemFactory::spawnItem(ItemId::armorAsbSuit);
+  inv.putInSlot(SlotId::armorBody, item);
+  item = ItemFactory::spawnItem(ItemId::pistolClip);
   dynamic_cast<ItemAmmoClip*>(item)->ammo = 1;
-  inv.putItemInGeneral(item);
-  item = eng.itemFactory->spawnItem(ItemId::pistolClip);
+  inv.putInGeneral(item);
+  item = ItemFactory::spawnItem(ItemId::pistolClip);
   dynamic_cast<ItemAmmoClip*>(item)->ammo = 2;
-  inv.putItemInGeneral(item);
-  item = eng.itemFactory->spawnItem(ItemId::pistolClip);
+  inv.putInGeneral(item);
+  item = ItemFactory::spawnItem(ItemId::pistolClip);
   dynamic_cast<ItemAmmoClip*>(item)->ammo = 3;
-  inv.putItemInGeneral(item);
-  item = eng.itemFactory->spawnItem(ItemId::pistolClip);
+  inv.putInGeneral(item);
+  item = ItemFactory::spawnItem(ItemId::pistolClip);
   dynamic_cast<ItemAmmoClip*>(item)->ammo = 3;
-  inv.putItemInGeneral(item);
-  item = eng.itemFactory->spawnItem(ItemId::deviceSentry);
+  inv.putInGeneral(item);
+  item = ItemFactory::spawnItem(ItemId::deviceSentry);
   dynamic_cast<Device*>(item)->condition_ = Condition::shoddy;
-  inv.putItemInGeneral(item);
-  item = eng.itemFactory->spawnItem(ItemId::electricLantern);
+  inv.putInGeneral(item);
+  item = ItemFactory::spawnItem(ItemId::electricLantern);
   dynamic_cast<Device*>(item)->condition_ = Condition::breaking;
-  inv.putItemInGeneral(item);
+  inv.putInGeneral(item);
 
   //Player
-  ActorData& def = Map::player->getData();
+  ActorDataT& def = Map::player->getData();
   def.name_a = def.name_the = "TEST PLAYER";
   Map::player->changeMaxHp(5, false);
 
   //Map
-  const int CUR_DLVL = Map::getDlvl();
+  const int CUR_DLVL = Map::dlvl;
   Map::incrDlvl(7 - CUR_DLVL); //Set current DLVL to 7
 
   //Actor data
@@ -568,10 +567,10 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
 
   //Applied properties
   PropHandler& propHlr = Map::player->getPropHandler();
-  propHlr.tryApplyProp(new PropDiseased(eng, propTurnsIndefinite));
-  propHlr.tryApplyProp(new PropRSleep(eng, propTurnsSpecific, 3));
-  propHlr.tryApplyProp(new PropBlessed(eng, propTurnsStd));
-  propHlr.tryApplyProp(new PropWound(eng, propTurnsStd));
+  propHlr.tryApplyProp(new PropDiseased(propTurnsIndefinite));
+  propHlr.tryApplyProp(new PropRSleep(propTurnsSpecific, 3));
+  propHlr.tryApplyProp(new PropBlessed(propTurnsStd));
+  propHlr.tryApplyProp(new PropWound(propTurnsStd));
   Prop* prop      = propHlr.getProp(propWound, PropSrc::applied);
   PropWound* wnd  = dynamic_cast<PropWound*>(prop);
   CHECK(wnd != NULL);
@@ -581,16 +580,16 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   wnd->onMore();
   CHECK_EQUAL(3, wnd->getNrWounds());
 
-  eng.saveHandler->save();
-  CHECK(eng.saveHandler->isSaveAvailable());
+  SaveHandling::save();
+  CHECK(SaveHandling::isSaveAvailable());
 }
 
 TEST_FIXTURE(BasicFixture, LoadingGame) {
-  CHECK(eng.saveHandler->isSaveAvailable());
+  CHECK(SaveHandling::isSaveAvailable());
 
   const int PLAYER_MAX_HP_BEFORE_LOAD = Map::player->getHpMax(true);
 
-  eng.saveHandler->load();
+  SaveHandling::load();
 
   //Item data
   const ItemDataHandler& iHlr = *(eng.itemDataHandler);
@@ -645,7 +644,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK(isElectricLanternFound);
 
   //Player
-  ActorData& def = Map::player->getData();
+  ActorDataT& def = Map::player->getData();
   def.name_a = def.name_the = "TEST PLAYER";
   CHECK_EQUAL("TEST PLAYER", def.name_a);
   CHECK_EQUAL("TEST PLAYER", def.name_the);
@@ -653,7 +652,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL((PLAYER_MAX_HP_BEFORE_LOAD + 5) / 2, Map::player->getHpMax(true));
 
   //Map
-  CHECK_EQUAL(7, Map::getDlvl());
+  CHECK_EQUAL(7, Map::dlvl);
 
   //Actor data
   CHECK_EQUAL(123, ActorData::dataList[endOfActorIds - 1].nrKills);
@@ -701,13 +700,13 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 
   for(int y = roomArea1.x0y0.y; y <= roomArea1.x1y1.y; y++) {
     for(int x = roomArea1.x0y0.x; x <= roomArea1.x1y1.x; x++) {
-      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, y));
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, y));
     }
   }
 
   for(int y = roomArea2.x0y0.y; y <= roomArea2.x1y1.y; y++) {
     for(int x = roomArea2.x0y0.x; x <= roomArea2.x1y1.x; x++) {
-      eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, y));
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, y));
     }
   }
 
@@ -734,7 +733,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #...#
 //  // #####
 //  for(int x = 3; x <= 5; x++) {
-//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 7));
+//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, 7));
 //  }
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[2][7]));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[3][7]));
@@ -745,17 +744,17 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #####
 //  // #.#.#
 //  // #####
-//  eng.featureFactory->spawnFeatureAt(feature_stoneWall,  Pos(4, 7));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneWall,  Pos(4, 7));
 //  CHECK_EQUAL(false,  CellPred::Corridor().check(Map::cells[4][7]));
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 7));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 7));
 //
 //  //  ###
 //  // ##.##
 //  // #...#
 //  // ##.##
 //  //  ###
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 6));
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 8));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 6));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 8));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[4][7]));
 //
 //  // ###
@@ -764,7 +763,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #.#
 //  // ###
 //  for(int y = 6; y <= 8; y++) {
-//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, y));
+//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(20, y));
 //  }
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][5]));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][6]));
@@ -777,27 +776,27 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // ###
 //  // #.#
 //  // ###
-//  eng.featureFactory->spawnFeatureAt(feature_stoneWall,  Pos(20, 7));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneWall,  Pos(20, 7));
 //  CHECK_EQUAL(false,  CellPred::Corridor().check(Map::cells[20][7]));
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, 7));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(20, 7));
 //
 //  //  ###
 //  // ##.##
 //  // #...#
 //  // ##.##
 //  //  ###
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(19, 7));
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(21, 7));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(19, 7));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(21, 7));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][8]));
 //
 //  // ...
 //  // #.#
 //  // ...
 //  for(int x = 30; x <= 32; x++) {
-//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 7));
-//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 9));
+//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, 7));
+//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, 9));
 //  }
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(31, 8));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(31, 8));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[31][7]));
 //  CHECK_EQUAL(true,  CellPred::Corridor().check(Map::cells[31][8]));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[31][9]));
@@ -806,10 +805,10 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // ...
 //  // .#.
 //  for(int y = 17; y <= 19; y++) {
-//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(30, y));
-//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(32, y));
+//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(30, y));
+//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(32, y));
 //  }
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(31, 18));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(31, 18));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[30][18]));
 //  CHECK_EQUAL(true,  CellPred::Corridor().check(Map::cells[31][18]));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[32][18]));
@@ -821,7 +820,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #...#
 //  // #####
 //  for(int x = 3; x <= 5; x++) {
-//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(x, 7));
+//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, 7));
 //  }
 //  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[2][7]));
 //  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[3][7]));
@@ -832,8 +831,8 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // ##.
 //  // #..
 //  // ##.
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 6));
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(4, 8));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 6));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 8));
 //  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[3][7]));
 //
 //  // ###
@@ -842,7 +841,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #.#
 //  // ###
 //  for(int y = 6; y <= 8; y++) {
-//    eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, y));
+//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(20, y));
 //  }
 //  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[20][5]));
 //  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[20][6]));
@@ -853,14 +852,14 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // ###
 //  // #.#
 //  // ...
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(19, 7));
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(21, 7));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(19, 7));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(21, 7));
 //  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[20][6]));
 //
 //  // ###
 //  // #.#
 //  // ###
-//  eng.featureFactory->spawnFeatureAt(feature_stoneFloor, Pos(20, 12));
+//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(20, 12));
 //  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[20][12]));
 //}
 

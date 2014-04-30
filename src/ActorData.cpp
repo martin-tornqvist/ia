@@ -94,7 +94,7 @@ void initDataList() {
   d.tile = tile_zombieUnarmed;
   d.hp = 10;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 25);
+  d.abilityVals.setVal(AbilityId::melee, 25);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeGroup;
@@ -136,8 +136,8 @@ void initDataList() {
   d.tile = tile_zombieArmed;
   d.hp = 10;
   d.dmgMelee = 8;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 35);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 0);
+  d.abilityVals.setVal(AbilityId::melee, 35);
+  d.abilityVals.setVal(AbilityId::ranged, 0);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeGroup;
@@ -179,8 +179,8 @@ void initDataList() {
   d.hp = 14;
   d.dmgMelee = 4;
   d.dmgRanged = 3;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 50);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.abilityVals.setVal(AbilityId::ranged, 50);
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeFew;
@@ -219,8 +219,8 @@ void initDataList() {
   d.tile = tile_zombieUnarmed;
   d.hp = 24;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.abilityVals.setVal(AbilityId::ranged, 40);
   d.spawnMinDLVL = 4;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -260,8 +260,8 @@ void initDataList() {
   d.tile = tile_zombieUnarmed;
   d.hp = 24;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.abilityVals.setVal(AbilityId::ranged, 40);
   d.isAutoSpawnAllowed = false;
   d.spawnMinDLVL = 4;
   d.groupSize = monsterGroupSize_alone;
@@ -302,8 +302,8 @@ void initDataList() {
   d.tile = tile_cultistFirearm;
   d.hp = 4;
   d.spi = 12;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 35);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 50);
+  d.abilityVals.setVal(AbilityId::melee, 35);
+  d.abilityVals.setVal(AbilityId::ranged, 50);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeFew;
@@ -340,8 +340,8 @@ void initDataList() {
   d.tile = tile_cultistFirearm;
   d.hp = 5;
   d.spi = 12;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 50);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.abilityVals.setVal(AbilityId::ranged, 50);
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeFew;
@@ -378,8 +378,8 @@ void initDataList() {
   d.tile = tile_cultistFirearm;
   d.hp = 6;
   d.spi = 12;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.abilityVals.setVal(AbilityId::ranged, 40);
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSizeFew;
@@ -415,8 +415,8 @@ void initDataList() {
   d.tile = tile_witchOrWarlock;
   d.hp = 10;
   d.spi = 40;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.abilityVals.setVal(AbilityId::ranged, 40);
   d.nrLeftAllowedToSpawn = 1;
   d.isUnique = true;
   d.canSeeInDarkness = true;
@@ -462,7 +462,7 @@ void initDataList() {
   d.tile = tile_ratThing;
   d.hp = 10;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.isAutoSpawnAllowed = false;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
@@ -525,7 +525,7 @@ void initDataList() {
   d.tile = tile_cultistDagger;
   d.hp = 6;
   d.spi = 20;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = 5;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
   d.groupSize = monsterGroupSize_alone;
@@ -561,7 +561,7 @@ void initDataList() {
   d.tile = tile_spider;
   d.hp = 2;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 15);
+  d.abilityVals.setVal(AbilityId::melee, 15);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -593,7 +593,7 @@ void initDataList() {
   d.tile = tile_spider;
   d.hp = 2;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 15);
+  d.abilityVals.setVal(AbilityId::melee, 15);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -625,7 +625,7 @@ void initDataList() {
   d.tile = tile_spider;
   d.hp = 3;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 25);
+  d.abilityVals.setVal(AbilityId::melee, 25);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -657,7 +657,7 @@ void initDataList() {
   d.tile = tile_spiderLeng;
   d.hp = 8;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::stealth, 90);
   d.intrProps[propLightSensitive] = true;
   d.spawnMinDLVL = 6;
@@ -694,8 +694,8 @@ void initDataList() {
   d.hp = 30;
   d.dmgMelee = 8;
 //  d.dmgRanged = 1;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-//  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+//  d.abilityVals.setVal(AbilityId::ranged, 40);
   d.spawnMinDLVL = 10;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSizeFew;
@@ -730,8 +730,8 @@ void initDataList() {
   d.hp = 13;
   d.dmgMelee = 4;
   d.dmgRanged = 4;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 60);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.abilityVals.setVal(AbilityId::ranged, 60);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 35);
   d.intrProps[propRFire] = true;
   d.spawnMinDLVL = 9;
@@ -773,8 +773,8 @@ void initDataList() {
   d.hp = 16;
   d.dmgMelee = 6;
   d.dmgRanged = 6;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 60);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.abilityVals.setVal(AbilityId::ranged, 60);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 35);
   d.intrProps[propRCold] = true;
   d.spawnMinDLVL = 9;
@@ -815,7 +815,7 @@ void initDataList() {
   d.hp = 65;
   d.spi = 40;
   d.dmgMelee = 8;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 25);
   d.intrProps[propRFear] = true;
   d.spawnMinDLVL = 13;
@@ -863,7 +863,7 @@ void initDataList() {
   d.hp = 4;
   d.spi = 12;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.intrProps[propEthereal] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -905,7 +905,7 @@ void initDataList() {
   d.hp = 9;
   d.spi = 12;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 45);
+  d.abilityVals.setVal(AbilityId::melee, 45);
   d.intrProps[propEthereal] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -950,7 +950,7 @@ void initDataList() {
   d.hp = 15;
   d.spi = 20;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.intrProps[propEthereal] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -992,7 +992,7 @@ void initDataList() {
   d.hp = 2;
   d.spi = 1;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 15);
+  d.abilityVals.setVal(AbilityId::melee, 15);
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1028,7 +1028,7 @@ void initDataList() {
   d.hp = 4;
   d.spi = 8;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 25);
+  d.abilityVals.setVal(AbilityId::melee, 25);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 15);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 15;
@@ -1071,7 +1071,7 @@ void initDataList() {
   d.hp = 4;
   d.spi = 2;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 35);
+  d.abilityVals.setVal(AbilityId::melee, 35);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 20);
   d.canSeeInDarkness = true;
   d.spawnMinDLVL = 0;
@@ -1108,7 +1108,7 @@ void initDataList() {
   d.hp = 8;
   d.spi = 6;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 75);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 4;
@@ -1147,8 +1147,8 @@ void initDataList() {
   d.hp = 14;
   d.spi = 20;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.abilityVals.setVal(AbilityId::ranged, 40);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 40);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 6;
@@ -1194,7 +1194,7 @@ void initDataList() {
   d.hp = 15;
   d.spi = 20;
   d.dmgMelee = 5;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 40);
   d.abilityVals.setVal(AbilityId::stealth, 20);
   d.spawnMinDLVL = 8;
@@ -1228,7 +1228,7 @@ void initDataList() {
   d.hp = 3;
   d.spi = 2;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 25);
+  d.abilityVals.setVal(AbilityId::melee, 25);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = FIRST_CAVERN_LEVEL;
@@ -1264,8 +1264,8 @@ void initDataList() {
   d.hp = 6;
   d.spi = 20;
   d.dmgRanged = 6;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 65);
+  d.abilityVals.setVal(AbilityId::melee, 50);
+  d.abilityVals.setVal(AbilityId::ranged, 65);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSizeFew;
@@ -1320,7 +1320,7 @@ void initDataList() {
   d.hp = 12;
   d.spi = 20;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 60);
+  d.abilityVals.setVal(AbilityId::melee, 60);
   d.abilityVals.setVal(AbilityId::stealth, 85);
 //  d.intrProps[propEthereal] = true; //Does not match well with stealth
   d.intrProps[propRPhys] = true;
@@ -1370,7 +1370,7 @@ void initDataList() {
   d.hp = 21;
   d.spi = 20;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.spawnMinDLVL = 5;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSizeGroup;
@@ -1415,7 +1415,7 @@ void initDataList() {
   d.hp = 4;
   d.spi = 12;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 35);
+  d.abilityVals.setVal(AbilityId::melee, 35);
   d.abilityVals.setVal(AbilityId::stealth, 90);
   d.intrProps[propLightSensitive] = true;
   d.intrProps[propRFear] = true;
@@ -1460,7 +1460,7 @@ void initDataList() {
   d.hp = 25;
   d.spi = 30;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = 7;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -1498,7 +1498,7 @@ void initDataList() {
   d.hp = 70;
   d.spi = 60;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = FIRST_CAVERN_LEVEL - 1;
   d.isAutoSpawnAllowed = false;
   d.groupSize = monsterGroupSize_alone;
@@ -1539,7 +1539,7 @@ void initDataList() {
   d.hp = 70;
   d.spi = 60;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = 11;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -1580,8 +1580,8 @@ void initDataList() {
   d.spi = 12;
   d.dmgMelee = 5;
   d.dmgRanged = 5;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
-  d.abilityVals.setVal(AbilityId::accuracyRanged, 40);
+  d.abilityVals.setVal(AbilityId::melee, 50);
+  d.abilityVals.setVal(AbilityId::ranged, 40);
   d.spawnMinDLVL = 6;
   d.groupSize = monsterGroupSizeHorde;
   d.actorSize = actorSize_humanoid;
@@ -1622,7 +1622,7 @@ void initDataList() {
   d.hp = 3;
   d.spi = 1;
   d.dmgMelee = 2;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1657,7 +1657,7 @@ void initDataList() {
   d.hp = 10;
   d.spi = 12;
   d.dmgMelee = 4;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1699,7 +1699,7 @@ void initDataList() {
   d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1741,7 +1741,7 @@ void initDataList() {
   d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 6;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 40);
+  d.abilityVals.setVal(AbilityId::melee, 40);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1783,7 +1783,7 @@ void initDataList() {
   d.hp = 12;
   d.spi = 12;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1832,7 +1832,7 @@ void initDataList() {
   d.hp = 8;
   d.spi = 12;
   d.dmgMelee = 3;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.abilityVals.setVal(AbilityId::stealth, 90);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
@@ -1882,7 +1882,7 @@ void initDataList() {
   d.hp = 14;
   d.spi = 12;
   d.dmgMelee = 5;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1932,7 +1932,7 @@ void initDataList() {
   d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 7;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -1982,7 +1982,7 @@ void initDataList() {
   d.hp = 70;
   d.spi = 40;
   d.dmgMelee = 10;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 50);
+  d.abilityVals.setVal(AbilityId::melee, 50);
   d.intrProps[propOoze] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
@@ -2026,7 +2026,7 @@ void initDataList() {
   d.hp = 200;
   d.spi = 40;
   d.dmgMelee = 10;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 45);
+  d.abilityVals.setVal(AbilityId::melee, 45);
   d.intrProps[propBurrowing] = true;
   d.intrProps[propRFear] = true;
   d.spawnMinDLVL = 12;
@@ -2071,7 +2071,7 @@ void initDataList() {
   d.hp = 60;
   d.spi = 40;
   d.dmgMelee = 10;
-  d.abilityVals.setVal(AbilityId::accuracyMelee, 60);
+  d.abilityVals.setVal(AbilityId::melee, 60);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.spawnMinDLVL = LAST_CAVERN_LEVEL - 1;

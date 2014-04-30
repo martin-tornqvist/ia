@@ -59,7 +59,7 @@ public:
   void restoreShock(const int amountRestored,
                     const bool IS_TEMP_SHOCK_RESTORED);
   inline int getShockTotal()  const {return int(floor(shock_ + shockTmp_));}
-  inline int getInsanity()    const {return min(100, insanity_);}
+  inline int getInsanity()    const {return std::min(100, insanity_);}
 
   //The following is used for determining if '!'-marks should be drawn on the
   //player map symbol
@@ -74,8 +74,8 @@ public:
   double getShockTakenAfterMods(const int BASE_SHOCK,
                                 const ShockSrc shockSrc) const;
 
-  void storeToSaveLines(vector<string>& lines) const;
-  void setupFromSaveLines(vector<string>& lines);
+  void storeToSaveLines(std::vector<std::string>& lines) const;
+  void setupFromSaveLines(std::vector<std::string>& lines);
 
   bool phobias[int(Phobia::endOfPhobias)];
   bool obsessions[int(Obsession::endOfObsessions)];

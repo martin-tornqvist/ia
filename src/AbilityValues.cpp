@@ -8,6 +8,8 @@
 #include "Properties.h"
 #include "Map.h"
 
+using namespace std;
+
 int AbilityVals::getVal(const AbilityId abilityId,
                         const bool IS_AFFECTED_BY_PROPS, Actor& actor) const {
   int val = abilityList[int(abilityId)];
@@ -26,7 +28,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
         if(PlayerBon::hasTrait(Trait::perceptive))  val += 4;
       } break;
 
-      case AbilityId::accuracyMelee: {
+      case AbilityId::melee: {
         val += 45;
         if(PlayerBon::hasTrait(Trait::adeptMeleeFighter))   val += 10;
         if(PlayerBon::hasTrait(Trait::expertMeleeFighter))  val += 10;
@@ -34,7 +36,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
         if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
       } break;
 
-      case AbilityId::accuracyRanged: {
+      case AbilityId::ranged: {
         val += 50;
         if(PlayerBon::hasTrait(Trait::adeptMarksman))   val += 10;
         if(PlayerBon::hasTrait(Trait::expertMarksman))  val += 10;

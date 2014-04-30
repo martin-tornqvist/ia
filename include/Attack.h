@@ -10,12 +10,10 @@
 #include "ActorData.h"
 #include "Art.h"
 
-
-
 class Actor;
 class Weapon;
 
-class AttackData {
+class AttData {
 public:
   Actor* attacker;
   Actor* curDefender;
@@ -26,37 +24,36 @@ public:
   bool isEtherealDefenderMissed;
 
 protected:
-  AttackData(Actor& attacker_, const Item& itemAttackedWith_);
-
+  AttData(Actor& attacker_, const Item& itemAttackedWith_);
 };
 
-class MeleeAttackData: public AttackData {
+class MeleeAttData: public AttData {
 public:
-  MeleeAttackData(Actor& attacker_, const Weapon& wpn_,
-                  Actor& defender_);
+  MeleeAttData(Actor& attacker_, const Weapon& wpn_,
+               Actor& defender_);
   bool isDefenderDodging;
   bool isBackstab;
   bool isWeakAttack;
 
 };
 
-class RangedAttackData: public AttackData {
+class RangedAttData: public AttData {
 public:
-  RangedAttackData(Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
-                   const Pos& curPos_,
-                   ActorSize intendedAimLevel_ = actorSize_none);
+  RangedAttData(Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
+                const Pos& curPos_,
+                ActorSize intendedAimLevel_ = actorSize_none);
   int           hitChanceTot;
   ActorSize  intendedAimLevel;
   ActorSize  curDefenderSize;
-  string        verbPlayerAttacks;
-  string        verbOtherAttacks;
+  std::string        verbPlayerAttacks;
+  std::string        verbOtherAttacks;
 };
 
-class MissileAttackData: public AttackData {
+class MissileAttData: public AttData {
 public:
-  MissileAttackData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
-                    const Pos& curPos_,
-                    ActorSize intendedAimLevel_ = actorSize_none);
+  MissileAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
+                 const Pos& curPos_,
+                 ActorSize intendedAimLevel_ = actorSize_none);
   int       hitChanceTot;
   ActorSize intendedAimLevel;
   ActorSize curDefenderSize;
@@ -68,16 +65,10 @@ struct Projectile {
     isDoneRendering(false), glyph(-1), tile(tile_empty), clr(clrWhite),
     attackData(NULL) {}
 
-  ~Projectile() {
-    if(attackData != NULL) {
-      delete attackData;
-    }
-  }
+  ~Projectile() {if(attackData != NULL) {delete attackData;}}
 
-  void setAttackData(RangedAttackData* attackData_) {
-    if(attackData != NULL) {
-      delete attackData;
-    }
+  void setAttData(RangedAttData* attackData_) {
+    if(attackData != NULL) {delete attackData;}
     attackData = attackData_;
   }
 
@@ -100,37 +91,21 @@ struct Projectile {
   char glyph;
   TileId tile;
   SDL_Color clr;
-  RangedAttackData* attackData;
+  RangedAttData* attackData;
 };
 
 enum class MeleeHitSize {small, medium, hard};
 
-class Attack {
-public:
-  Attack() {}
+namespace Attack {
 
-  bool ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos);
+void melee(Actor& attacker, const Weapon& wpn, Actor& defender);
 
-  void melee(Actor& attacker, const Weapon& wpn, Actor& defender);
+bool ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos);
 
-  void getRangedHitChance(const Actor& attacker, const Actor& defender,
-                          const Weapon& wpn);
+void getRangedHitChance(const Actor& attacker, const Actor& defender,
+                        const Weapon& wpn);
 
-private:
-  void printMeleeMsgAndPlaySfx(const MeleeAttackData& data, const Weapon& wpn);
-
-  void printRangedInitiateMessages(const RangedAttackData& data) const;
-  void printProjectileAtActorMessages(const RangedAttackData& data,
-                                      const bool IS_HIT) const;
-
-  void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos);
-
-  void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos);
-
-  bool isCellOnLine(vector<Pos> line, int x, int y);
-
-
-};
+} //Attack
 
 #endif
 

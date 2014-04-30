@@ -5,15 +5,13 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
-
 class Actor;
 
 enum class AbilityId {
   empty,
   searching,
-  accuracyRanged,
-  accuracyMelee,
+  ranged,
+  melee,
   dodgeTrap,
   dodgeAttack,
   stealth,

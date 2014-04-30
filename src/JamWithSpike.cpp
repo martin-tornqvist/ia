@@ -11,18 +11,18 @@
 #include "Renderer.h"
 
 void JamWithSpike::playerJam() const {
-  eng.log->clearLog();
+  Log::clearLog();
 
   if(Map::player->getInv().hasItemInGeneral(ItemId::ironSpike) == false) {
-    eng.log->addMsg("I have no spikes to jam with.", clrWhite);
+    Log::addMsg("I have no spikes to jam with.", clrWhite);
     Renderer::drawMapAndInterface();
     return;
   }
 
-  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Renderer::drawMapAndInterface();
-  const Pos jamPos(Map::player->pos + eng.query->dir());
-  eng.log->clearLog();
+  const Pos jamPos(Map::player->pos + Query::dir());
+  Log::clearLog();
 
   playerJamFeature(Map::cells[jamPos.x][jamPos.y].featureStatic);
 
@@ -32,7 +32,7 @@ void JamWithSpike::playerJam() const {
 void JamWithSpike::playerJamFeature(Feature* const feature) const {
   bool jamableObjectFound = false;
 
-  if(feature->getId() == feature_door) {
+  if(feature->getId() == FeatureId::door) {
     Door* const door = dynamic_cast<Door*>(feature);
     const bool DOOR_SPIKED = door->trySpike(Map::player);
 
@@ -44,9 +44,9 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
       const int SPIKES_LEFT =
         Map::player->getInv().getItemStackSizeInGeneral(ItemId::ironSpike);
       if(SPIKES_LEFT == 0) {
-        eng.log->addMsg("I have no iron spikes left.");
+        Log::addMsg("I have no iron spikes left.");
       } else {
-        eng.log->addMsg("I have " + toStr(SPIKES_LEFT) + " iron spikes left.");
+        Log::addMsg("I have " + toStr(SPIKES_LEFT) + " iron spikes left.");
       }
     }
   }
@@ -54,9 +54,9 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
   if(jamableObjectFound == false) {
     const bool PLAYER_IS_BLIND = Map::player->getPropHandler().allowSee();
     if(PLAYER_IS_BLIND == false) {
-      eng.log->addMsg("I see nothing there to jam with a spike.");
+      Log::addMsg("I see nothing there to jam with a spike.");
     } else {
-      eng.log->addMsg("I find nothing there to jam with a spike.");
+      Log::addMsg("I find nothing there to jam with a spike.");
     }
   }
 }

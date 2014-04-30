@@ -8,8 +8,6 @@
 
 #include "CmnTypes.h"
 
-using namespace std;
-
 class Item;
 
 class Actor;

@@ -9,16 +9,14 @@
 
 using namespace std;
 
-void Query::waitForKeyPress() const {
-  if(Config::isBotPlaying() == false) {
-    Input::readKeysUntilFound();
-  }
+namespace Query {
+
+void waitForKeyPress() {
+  if(Config::isBotPlaying() == false) {Input::readKeysUntilFound();}
 }
 
-YesNoAnswer Query::yesOrNo(char keyForSpecialEvent) const {
-  if(Config::isBotPlaying()) {
-    return YesNoAnswer::yes;
-  }
+YesNoAnswer yesOrNo(char keyForSpecialEvent) {
+  if(Config::isBotPlaying()) {return YesNoAnswer::yes;}
 
   KeyboardReadRetData d = Input::readKeysUntilFound();
   while(
@@ -35,12 +33,13 @@ YesNoAnswer Query::yesOrNo(char keyForSpecialEvent) const {
   if(d.key_ == 'y') {
     return YesNoAnswer::yes;
   }
+
   return YesNoAnswer::no;
 }
 
-int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
-                  const int MAX_NR_DIGITS, const int DEFAULT,
-                  const bool CANCEL_RETURNS_DEFAULT) const {
+int number(const Pos& pos, const SDL_Color clr, const int MIN,
+           const int MAX_NR_DIGITS, const int DEFAULT,
+           const bool CANCEL_RETURNS_DEFAULT) {
   int retNum = max(MIN, DEFAULT);
   Renderer::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
   const string str = (retNum == 0 ? "" : toStr(retNum)) + "_";
@@ -87,7 +86,7 @@ int Query::number(const Pos& pos, const SDL_Color clr, const int MIN,
   return -1;
 }
 
-void Query::waitForEscOrSpace() const {
+void waitForEscOrSpace() {
   if(Config::isBotPlaying() == false) {
     KeyboardReadRetData d = Input::readKeysUntilFound();
     while(d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE) {
@@ -96,7 +95,7 @@ void Query::waitForEscOrSpace() const {
   }
 }
 
-Pos Query::dir() const {
+Pos dir() {
   KeyboardReadRetData d = Input::readKeysUntilFound();
 
   while(d.sdlKey_ != SDLK_RIGHT   && d.sdlKey_ != SDLK_UP       &&
@@ -152,3 +151,5 @@ Pos Query::dir() const {
 
   return Pos(0, 0);
 }
+
+} //Query

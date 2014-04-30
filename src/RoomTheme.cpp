@@ -119,18 +119,18 @@ bool RoomThemeMaker::isThemeAllowed(
 
 void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
 
   switch(room.roomTheme) {
     case RoomThemeId::flooded:
     case RoomThemeId::muddy: {
       const FeatureId featureId =
-        room.roomTheme == RoomThemeId::flooded ? feature_shallowWater :
-        feature_shallowMud;
+        room.roomTheme == RoomThemeId::flooded ? FeatureId::shallowWater :
+        FeatureId::shallowMud;
       for(int y = room.getY0(); y <= room.getY1(); y++) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
           if(blockers[x][y] == false) {
-            eng.featureFactory->spawnFeatureAt(featureId, Pos(x, y));
+            FeatureFactory::spawnFeatureAt(featureId, Pos(x, y));
           }
         }
       }
@@ -145,8 +145,8 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
             if(blockers[x][y] == false) {
               const int CHANCE_TO_PUT_BLOOD = 40;
               if(Rnd::percentile() < CHANCE_TO_PUT_BLOOD) {
-                eng.gore->makeGore(Pos(x, y));
-                eng.gore->makeBlood(Pos(x, y));
+                Map::makeGore(Pos(x, y));
+                Map::makeBlood(Pos(x, y));
                 nrBloodPut++;
               }
             }
@@ -169,7 +169,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
         vector<Pos> originCandidates;
         for(int y = room.getY0(); y <= room.getY1(); y++) {
           for(int x = room.getX0(); x <= room.getX1(); x++) {
-            if(Map::cells[x][y].featureStatic->getId() == feature_altar) {
+            if(Map::cells[x][y].featureStatic->getId() == FeatureId::altar) {
               origin = Pos(x, y);
               y = 999;
               x = 999;
@@ -193,8 +193,8 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
                 (Rnd::percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {
                 const Pos pos = origin + Pos(dx, dy);
                 if(blockers[pos.x][pos.y] == false) {
-                  eng.gore->makeGore(pos);
-                  eng.gore->makeBlood(pos);
+                  Map::makeGore(pos);
+                  Map::makeBlood(pos);
                 }
               }
             }
@@ -213,12 +213,12 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
 
 int RoomThemeMaker::placeThemeFeatures(Room& room) {
   trace << "RoomThemeMaker::placeThemeFeatures()" << endl;
-  vector<const FeatureData*> featureDataBelongingToTheme;
+  vector<const FeatureDataT*> featureDataBelongingToTheme;
   featureDataBelongingToTheme.resize(0);
 
   for(unsigned int i = 0; i < endOfFeatureId; i++) {
-    const FeatureData* const d =
-      eng.featureDataHandler->getData((FeatureId)(i));
+    const FeatureDataT* const d =
+      FeatureData::getData((FeatureId)(i));
     if(d->featureThemeSpawnRules.isBelongingToTheme(room.roomTheme)) {
       featureDataBelongingToTheme.push_back(d);
     }
@@ -241,7 +241,7 @@ int RoomThemeMaker::placeThemeFeatures(Room& room) {
       return nrFeaturesPlaced;
     }
 
-    const FeatureData* d = NULL;
+    const FeatureDataT* d = NULL;
     Pos pos(-1, -1);
     const int FEATURE_CANDIDATE_ELEMENT =
       trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls,
@@ -253,7 +253,7 @@ int RoomThemeMaker::placeThemeFeatures(Room& room) {
       return nrFeaturesPlaced;
     } else {
       trace << "RoomThemeMaker: Placing " << d->name_a << endl;
-      eng.featureFactory->spawnFeatureAt(d->id, pos);
+      FeatureFactory::spawnFeatureAt(d->id, pos);
       featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT)++;
 
       nrFeaturesLeftToPlace--;
@@ -296,7 +296,7 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
       default: break;
     }
 
-    chanceToMakeDark += Map::getDlvl() - 1;
+    chanceToMakeDark += Map::dlvl - 1;
 
     if(Rnd::range(1, 100) < chanceToMakeDark) {
       for(int y = room.getY0(); y <= room.getY1(); y++) {
@@ -308,10 +308,10 @@ void RoomThemeMaker::makeRoomDarkWithChance(const Room& room) {
   }
 }
 
-int RoomThemeMaker::trySetFeatureToPlace(const FeatureData** def, Pos& pos,
+int RoomThemeMaker::trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
     vector<Pos>& nextToWalls,
     vector<Pos>& awayFromWalls,
-    vector<const FeatureData*> featureDataBelongingToTheme) {
+    vector<const FeatureDataT*> featureDataBelongingToTheme) {
   trace << "RoomThemeMaker::trySetFeatureToPlace()" << endl;
 
   if(featureDataBelongingToTheme.empty()) {
@@ -332,7 +332,7 @@ int RoomThemeMaker::trySetFeatureToPlace(const FeatureData** def, Pos& pos,
   for(int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; i++) {
     const int FEATURE_DEF_ELEMENT =
       Rnd::range(0, featureDataBelongingToTheme.size() - 1);
-    const FeatureData* const dTemp =
+    const FeatureDataT* const dTemp =
       featureDataBelongingToTheme.at(FEATURE_DEF_ELEMENT);
 
     if(
@@ -439,7 +439,7 @@ void RoomThemeMaker::assignRoomThemes() {
   trace << "RoomThemeMaker: Trying to set non-plain themes ";
   trace << "for some rooms" << endl;
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
   const int NR_TRIES_TO_ASSIGN = 100;
   for(int i = 0; i < NR_NON_PLAIN_THEMED; i++) {
     for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ii++) {

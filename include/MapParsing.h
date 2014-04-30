@@ -62,7 +62,7 @@ public:
   bool check(const Actor& a)      const override;
 private:
   const bool IS_ACTORS_BLOCKING_;
-  vector<PropId> actorsProps_;
+  std::vector<PropId> actorsProps_;
 };
 
 class BlocksProjectiles : public Pred {
@@ -111,22 +111,22 @@ public:
 
 class IsAnyOfFeatures : public Pred {
 public:
-  IsAnyOfFeatures(const vector<FeatureId>& features) :
+  IsAnyOfFeatures(const std::vector<FeatureId>& features) :
     Pred(), features_(features) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
-  vector<FeatureId> features_;
+  std::vector<FeatureId> features_;
 };
 
 class AllAdjIsAnyOfFeatures : public Pred {
 public:
-  AllAdjIsAnyOfFeatures(const vector<FeatureId>& features) :
+  AllAdjIsAnyOfFeatures(const std::vector<FeatureId>& features) :
     Pred(), features_(features) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
-  vector<FeatureId> features_;
+  std::vector<FeatureId> features_;
 };
 
 } //CellPred
@@ -164,7 +164,7 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
 namespace PathFind {
 
 void run(const Pos& origin, const Pos& target, bool blockers[MAP_W][MAP_H],
-         vector<Pos>& vectorRef);
+         std::vector<Pos>& vectorRef);
 
 } //PathFind
 

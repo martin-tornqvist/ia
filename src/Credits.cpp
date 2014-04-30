@@ -7,6 +7,8 @@
 #include "TextFormatting.h"
 #include "Renderer.h"
 
+using namespace std;
+
 void Credits::readFile() {
   lines.resize(0);
 
@@ -41,13 +43,13 @@ void Credits::run() {
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
   Renderer::drawText(" Displaying credits.txt ", Panel::screen,
-                         Pos(X_LABEL, 0), clrGray);
+                     Pos(X_LABEL, 0), clrGray);
 
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
-                         clrGray);
+                     clrGray);
 
   Renderer::drawText(" space/esc to exit ", Panel::screen,
-                         Pos(X_LABEL, SCREEN_H - 1), clrGray);
+                     Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
   for(string & line : lines) {

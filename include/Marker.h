@@ -6,9 +6,6 @@
 
 #include "CmnTypes.h"
 
-using namespace std;
-
-
 class Actor;
 class Item;
 
@@ -19,8 +16,7 @@ struct MarkerReturnData {
 
 class Marker {
 public:
-  Marker() : eng() {
-  }
+  Marker() : eng() {}
 
   MarkerReturnData run(const MarkerTask markerTask, Item* itemThrown);
 
@@ -33,7 +29,7 @@ public:
 private:
   Pos lastKnownPlayerPos_;
 
-  Pos getClosestPos(const Pos& c, const vector<Pos>& positions) const;
+  Pos getClosestPos(const Pos& c, const std::vector<Pos>& positions) const;
   void setPosToClosestEnemyIfVisible();
   bool setPosToTargetIfVisible();
   void readKeys(const MarkerTask markerTask, MarkerReturnData& data,

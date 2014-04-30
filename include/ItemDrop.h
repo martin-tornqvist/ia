@@ -5,27 +5,20 @@
 
 #include "CmnTypes.h"
 
-
-
 class Item;
 class Actor;
 
-class ItemDrop {
-public:
-  ItemDrop() {}
+namespace ItemDrop {
 
-  void dropAllCharactersItems(Actor* actor, bool died);
+void dropAllCharactersItems(Actor* actor, bool died);
 
-  //This function places the item as close to the origin as possible, but not
-  //on top of other items, unless they can be stacked, in which case the
-  //parameter item is destroyed.
-  Item* dropItemOnMap(const Pos& intendedPos, Item& item);
+//This function places the item as close to the origin as possible, but not
+//on top of other items, unless they can be stacked.
+Item* dropItemOnMap(const Pos& intendedPos, Item& item);
 
-  void dropItemFromInventory(Actor* actorDropping, const int ELEMENT,
-                             const int NR_ITEMS_TO_DROP = -1);
+void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
+                     const int NR_ITEMS_TO_DROP = -1);
 
-private:
-
-};
+} //ItemDrop
 
 #endif

@@ -19,18 +19,16 @@ protected:
 
 class ProxEventWallCrumble: public ProxEvent {
 public:
-
-private:
-  friend class FeatureFactory;
   ProxEventWallCrumble(FeatureId id, Pos pos,
                        ProxEventWallCrumbleSpawnData* spawnData) :
     ProxEvent(id, pos), wallCells_(spawnData->wallCells_),
     innerCells_(spawnData->innerCells_) {}
 
+private:
   void playerIsNear();
 
-  vector<Pos> wallCells_;
-  vector<Pos> innerCells_;
+  std::vector<Pos> wallCells_;
+  std::vector<Pos> innerCells_;
 };
 
 #endif

@@ -18,13 +18,13 @@ public:
 
   void setRandomMeleePlus();
 
-  virtual vector<string> itemSpecificWriteToFile() {
-    vector<string> lines;
+  virtual std::vector<std::string> itemSpecificWriteToFile() {
+    std::vector<std::string> lines;
     lines.push_back(toStr(nrAmmoLoaded));
     return lines;
   }
 
-  virtual void itemSpecificReadFromFile(vector<string> lines) {
+  virtual void itemSpecificReadFromFile(std::vector<std::string> lines) {
     nrAmmoLoaded = toInt(lines.at(0));
   }
 
@@ -37,12 +37,12 @@ public:
 
   const ItemDataT& getAmmoData() {return *ammoData_;}
 
-  void storeToSaveLines(vector<string>& lines) override {
+  void storeToSaveLines(std::vector<std::string>& lines) override {
     lines.push_back(toStr(meleeDmgPlus));
     lines.push_back(toStr(nrAmmoLoaded));
   }
 
-  void setupFromSaveLines(vector<string>& lines) override {
+  void setupFromSaveLines(std::vector<std::string>& lines) override {
     meleeDmgPlus = toInt(lines.front());
     lines.erase(lines.begin());
     nrAmmoLoaded = toInt(lines.front());

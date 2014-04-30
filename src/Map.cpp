@@ -49,7 +49,7 @@ void Map::resetCells(const bool MAKE_STONE_WALLS) {
       Renderer::renderArrayNoActors[x][y].clear();
 
       if(MAKE_STONE_WALLS) {
-        eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
+        FeatureFactory::spawnFeatureAt(FeatureId::stoneWall, Pos(x, y));
       }
     }
   }
@@ -65,7 +65,7 @@ void init() {
 
   rooms.resize(0);
 
-  eng.actorFactory->deleteAllMonsters();
+  ActorFactory::deleteAllMonsters();
 
   resetCells(false);
   GameTime::eraseAllFeatureMobs();
@@ -101,36 +101,36 @@ void Map::switchToDestroyedFeatAt(const Pos& pos) {
       Map::cells[pos.x][pos.y].featureStatic->getId();
 
     const vector<FeatureId> convertionCandidates =
-      eng.featureDataHandler->getData(OLD_FEATURE_ID)->featuresOnDestroyed;
+      FeatureData::getData(OLD_FEATURE_ID)->featuresOnDestroyed;
 
     const int SIZE = convertionCandidates.size();
     if(SIZE > 0) {
       const FeatureId NEW_ID =
         convertionCandidates.at(Rnd::dice(1, SIZE) - 1);
 
-      eng.featureFactory->spawnFeatureAt(NEW_ID, pos);
+      FeatureFactory::spawnFeatureAt(NEW_ID, pos);
 
       //Destroy adjacent doors?
       if(
-        (NEW_ID == feature_rubbleHigh || NEW_ID == feature_rubbleLow) &&
+        (NEW_ID == FeatureId::rubbleHigh || NEW_ID == FeatureId::rubbleLow) &&
         NEW_ID != OLD_FEATURE_ID) {
         for(int x = pos.x - 1; x <= pos.x + 1; x++) {
           for(int y = pos.y - 1; y <= pos.y + 1; y++) {
             if(x == 0 || y == 0) {
               const FeatureStatic* const f =
                 Map::cells[x][y].featureStatic;
-              if(f->getId() == feature_door) {
-                eng.featureFactory->spawnFeatureAt(
-                  feature_rubbleLow, Pos(x, y));
+              if(f->getId() == FeatureId::door) {
+                FeatureFactory::spawnFeatureAt(
+                  FeatureId::rubbleLow, Pos(x, y));
               }
             }
           }
         }
       }
 
-      if(NEW_ID == feature_rubbleLow && NEW_ID != OLD_FEATURE_ID) {
+      if(NEW_ID == FeatureId::rubbleLow && NEW_ID != OLD_FEATURE_ID) {
         if(Rnd::percentile() < 50) {
-          eng.itemFactory->spawnItemOnMap(ItemId::rock, pos);
+          ItemFactory::spawnItemOnMap(ItemId::rock, pos);
         }
       }
     }
@@ -138,7 +138,7 @@ void Map::switchToDestroyedFeatAt(const Pos& pos) {
 }
 
 void Map::resetMap() {
-  eng.actorFactory->deleteAllMonsters();
+  ActorFactory::deleteAllMonsters();
 
   for(Room * room : rooms) {delete room;}
 
@@ -154,6 +154,31 @@ void Map::updateVisualMemory() {
     for(int y = 0; y < MAP_H; y++) {
       Map::cells[x][y].playerVisualMemory =
         Renderer::renderArrayNoActors[x][y];
+    }
+  }
+}
+
+void makeBlood(const Pos& origin) {
+  for(int dx = -1; dx <= 1; dx++) {
+    for(int dy = -1; dy <= 1; dy++) {
+      const Pos c = origin + Pos(dx, dy);
+      FeatureStatic* const f  = Map::cells[c.x][c.y].featureStatic;
+      if(f->canHaveBlood()) {
+        if(Rnd::percentile() > 66) {
+          f->setHasBlood(true);
+        }
+      }
+    }
+  }
+}
+
+void makeGore(const Pos& origin) {
+  for(int dx = -1; dx <= 1; dx++) {
+    for(int dy = -1; dy <= 1; dy++) {
+      const Pos c = origin + Pos(dx, dy);
+      if(Rnd::percentile() > 66) {
+        Map::cells[c.x][c.y].featureStatic->setGoreIfPossible();
+      }
     }
   }
 }

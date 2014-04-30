@@ -1,5 +1,6 @@
 #include "Bash.h"
 
+#include "Init.h"
 #include "GameTime.h"
 #include "Feature.h"
 #include "ActorPlayer.h"
@@ -10,19 +11,21 @@
 #include "MapParsing.h"
 #include "Utils.h"
 
+using namespace std;
+
 void Bash::playerBash() const {
   trace << "Bash::playerBash()" << endl;
 
-  eng.log->clearLog();
-  eng.log->addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+  Log::clearLog();
+  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Renderer::drawMapAndInterface();
-  Pos bashPos(Map::player->pos + eng.query->dir());
-  eng.log->clearLog();
+  Pos bashPos(Map::player->pos + Query::dir());
+  Log::clearLog();
 
   if(bashPos != Map::player->pos) {
     //Bash living actor?
     Actor* livingActor =
-      Utils::getActorAtPos(bashPos, eng, ActorDeadState::alive);
+      Utils::getActorAtPos(bashPos, ActorDeadState::alive);
     if(livingActor != NULL) {
       trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
       if(Map::player->getPropHandler().allowAttackMelee(true)) {
@@ -38,7 +41,7 @@ void Bash::playerBash() const {
 
     //Bash corpse?
     Actor* deadActor =
-      Utils::getActorAtPos(bashPos, eng, ActorDeadState::corpse);
+      Utils::getActorAtPos(bashPos, ActorDeadState::corpse);
     if(deadActor != NULL) {
       const bool IS_SEEING_CORPSE =
         Map::cells[bashPos.x][bashPos.y].isSeenByPlayer;
@@ -48,10 +51,10 @@ void Bash::playerBash() const {
       const string name =
         IS_SEEING_CORPSE ? ("the body of " + actorNameA) : "a corpse";
 
-      eng.log->addMsg("I bash " + name + ".");
+      Log::addMsg("I bash " + name + ".");
 
       pair<int, int> kickDmg =
-        eng.itemDataHandler->dataList[int(ItemId::playerKick)]->meleeDmg;
+        ItemData::dataList[int(ItemId::playerKick)]->meleeDmg;
       deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, false);
       GameTime::actorDidAct();
       return;

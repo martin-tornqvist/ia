@@ -11,10 +11,6 @@
 #include "Config.h"
 #include "Art.h"
 
-using namespace std;
-
-
-
 class PropHandler;
 class Inventory;
 
@@ -60,10 +56,9 @@ public:
   //This is the final word on whether an actor can visually perceive
   //another actor.
   bool isSeeingActor(
-    const Actor& other,
-    const bool visionBlockingCells[MAP_W][MAP_H]) const;
+    const Actor& other, const bool visionBlockingCells[MAP_W][MAP_H]) const;
 
-  void getSpottedEnemies(vector<Actor*>& vectorRef);
+  void getSpottedEnemies(std::vector<Actor*>& vectorRef);
 
   inline ActorId getId()    const {return data_->id;}
   inline int getHp()        const {return hp_;}
@@ -71,8 +66,8 @@ public:
   int getHpMax(const bool WITH_MODIFIERS) const;
   inline int getSpiMax()    const {return spiMax_;}
 
-  inline string getNameThe() const {return data_->name_the;}
-  inline string getNameA() const {return data_->name_a;}
+  inline std::string getNameThe() const {return data_->name_the;}
+  inline std::string getNameA() const {return data_->name_a;}
   inline bool isHumanoid() const {return data_->isHumanoid;}
   inline char getGlyph() const {return glyph_;}
   virtual const SDL_Color& getClr() {return clr_;}
@@ -90,12 +85,9 @@ public:
   Pos pos;
   ActorDeadState deadState;
 
-
-
 protected:
   //TODO Try to get rid of these friend declarations
   friend class AbilityVals;
-  friend class DungeonMaster;
   friend class Dynamite;
   friend class Molotov;
   friend class Flare;

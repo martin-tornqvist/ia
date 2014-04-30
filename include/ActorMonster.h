@@ -33,7 +33,7 @@ struct AttackOpport {
     return *this;
   }
 
-  vector<Weapon*> weapons;
+  std::vector<Weapon*> weapons;
   bool isTimeToReload;
   bool isMelee;
 };
@@ -65,10 +65,10 @@ public:
   virtual bool onActorTurn_() {return false;}
   virtual void onStandardTurn() override {}
 
-  virtual string getAggroPhraseMonsterSeen() const {
+  virtual std::string getAggroPhraseMonsterSeen() const {
     return data_->aggroTextMonsterSeen;
   }
-  virtual string getAggroPhraseMonsterHidden() const {
+  virtual std::string getAggroPhraseMonsterHidden() const {
     return data_->aggroTextMonsterHidden;
   }
   virtual SfxId getAggroSfxMonsterSeen() const {
@@ -85,7 +85,7 @@ public:
 
   Dir lastDirTravelled_;
 
-  vector<Spell*> spellsKnown;
+  std::vector<Spell*> spellsKnown;
   int spellCoolDownCurrent;
 
   bool isRoamingAllowed_;
@@ -240,12 +240,12 @@ public:
 
   virtual void spawnStartItems() override;
 
-  static string getCultistPhrase();
+  static std::string getCultistPhrase();
 
-  string getAggroPhraseMonsterSeen() const {
+  std::string getAggroPhraseMonsterSeen() const {
     return getNameThe() + ": " + getCultistPhrase();
   }
-  string getAggroPhraseMonsterHidden() const {
+  std::string getAggroPhraseMonsterHidden() const {
     return "Voice: " + getCultistPhrase();
   }
 

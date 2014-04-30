@@ -6,89 +6,43 @@
 #include "Feature.h"
 #include "ActorData.h"
 
+class FeatureMob;
 
+enum class TurnType {fast, normal1, slow, fastest, normal_2, endOfTurnType};
 
-enum TurnType {
-  turnType_fast,
-  turnType_normal_1,
-  turnType_slow,
-  turnType_fastest,
-  turnType_normal_2,
-  endOfTurnType
-};
+namespace GameTime {
 
-class GameTime {
-public:
-  GameTime() :
-    currentTurnTypePos_(0),
-    currentActorVectorPos_(0),
-    turn_(0) {
-    actors_.resize(0);
-    featureMobs_.resize(0);
-  }
+extern std::vector<Actor*>       actors_;
+extern std::vector<FeatureMob*>  featureMobs_;
 
-  ~GameTime();
+void init();
+void cleanup();
 
-  void storeToSaveLines(vector<string>& lines) const;
+void storeToSaveLines(std::vector<std::string>& lines);
+void setupFromSaveLines(std::vector<std::string>& lines);
 
-  void setupFromSaveLines(vector<string>& lines);
+void insertActorInLoop(Actor* actor);
 
-  void insertActorInLoop(Actor* actor);
+void actorDidAct(const bool IS_FREE_TURN = false);
 
-  void actorDidAct(const bool IS_FREE_TURN = false);
+int getTurn();
 
-  inline int getTurn() {return turn_;}
+Actor* getCurrentActor();
 
-  Actor* getCurrentActor();
+void eraseActorInElement(const unsigned int i);
 
-  void eraseActorInElement(const unsigned int i);
+void getFeatureMobsAtPos(const Pos& pos, std::vector<FeatureMob*>& vectorRef);
 
-  void getFeatureMobsAtPos(const Pos& pos, vector<FeatureMob*>& vectorRef);
+void addFeatureMob(FeatureMob* const feature);
 
-  void addFeatureMob(FeatureMob* const feature) {
-    featureMobs_.push_back(feature);
-  }
+void eraseFeatureMob(FeatureMob* const feature, const bool DESTROY_OBJECT);
 
-  void eraseAllFeatureMobs() {
-    for(FeatureMob * m : featureMobs_) {delete m;}
-    featureMobs_.resize(0);
-  }
+void eraseAllFeatureMobs();
 
-  void eraseFeatureMob(FeatureMob* const feature, const bool DESTROY_OBJECT) {
-    const int SIZE = featureMobs_.size();
-    for(int i = 0; i < SIZE; i++) {
-      if(featureMobs_.at(i) == feature) {
-        if(DESTROY_OBJECT) {delete feature;}
-        featureMobs_.erase(featureMobs_.begin() + i);
-        return;
-      }
-    }
-  }
+void resetTurnTypeAndActorCounters();
 
-  void resetTurnTypeAndActorCounters() {
-    currentTurnTypePos_ = 0;
-    currentActorVectorPos_ = 0;
-  }
+void updateLightMap();
 
-  void updateLightMap();
-
-  vector<Actor*> actors_;
-  vector<FeatureMob*> featureMobs_;
-
-private:
-  void runStandardTurnEvents();
-
-  void runAtomicTurnEvents();
-
-  bool isSpiRegenThisTurn(const int REGEN_N_TURNS);
-
-  vector<ActorSpeed> turnTypeVector_;
-  int currentTurnTypePos_;
-  int currentActorVectorPos_;
-
-  int turn_;
-
-
-};
+} //GameTime
 
 #endif

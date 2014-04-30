@@ -133,7 +133,6 @@
 		<Unit filename="../include/Audio.h" />
 		<Unit filename="../include/AutoDescribeActor.h" />
 		<Unit filename="../include/Bash.h" />
-		<Unit filename="../include/Blood.h" />
 		<Unit filename="../include/Bot.h" />
 		<Unit filename="../include/CharacterDescr.h" />
 		<Unit filename="../include/CharacterLines.h" />
@@ -168,7 +167,7 @@
 		<Unit filename="../include/Init.h" />
 		<Unit filename="../include/Input.h" />
 		<Unit filename="../include/Inventory.h" />
-		<Unit filename="../include/InventoryHandler.h" />
+		<Unit filename="../include/InventoryHandling.h" />
 		<Unit filename="../include/Item.h" />
 		<Unit filename="../include/ItemAmmo.h" />
 		<Unit filename="../include/ItemArmor.h" />
@@ -197,7 +196,7 @@
 		<Unit filename="../include/MapTemplates.h" />
 		<Unit filename="../include/Marker.h" />
 		<Unit filename="../include/MenuBrowser.h" />
-		<Unit filename="../include/MenuInputHandler.h" />
+		<Unit filename="../include/MenuInputHandling.h" />
 		<Unit filename="../include/MersenneTwister.h" />
 		<Unit filename="../include/PlayerBon.h" />
 		<Unit filename="../include/PlayerCreateCharacter.h" />
@@ -213,7 +212,7 @@
 		<Unit filename="../include/RenderInventory.h" />
 		<Unit filename="../include/Renderer.h" />
 		<Unit filename="../include/RoomTheme.h" />
-		<Unit filename="../include/SaveHandler.h" />
+		<Unit filename="../include/SaveHandling.h" />
 		<Unit filename="../include/SdlWrapper.h" />
 		<Unit filename="../include/Sound.h" />
 		<Unit filename="../include/Spells.h" />
@@ -227,15 +226,12 @@
 		<Unit filename="../src/ActorMonster.cpp" />
 		<Unit filename="../src/ActorMonsterSpecific.cpp" />
 		<Unit filename="../src/ActorPlayer.cpp" />
+		<Unit filename="../src/Ai.cpp" />
 		<Unit filename="../src/Art.cpp" />
 		<Unit filename="../src/Attack.cpp" />
-		<Unit filename="../src/AttackMelee.cpp" />
-		<Unit filename="../src/AttackRanged.cpp" />
-		<Unit filename="../src/AttackShotgun.cpp" />
 		<Unit filename="../src/Audio.cpp" />
 		<Unit filename="../src/AutoDescribeActor.cpp" />
 		<Unit filename="../src/Bash.cpp" />
-		<Unit filename="../src/Blood.cpp" />
 		<Unit filename="../src/Bot.cpp" />
 		<Unit filename="../src/CharacterDescr.cpp" />
 		<Unit filename="../src/CharacterLines.cpp" />
@@ -267,7 +263,7 @@
 		<Unit filename="../src/Init.cpp" />
 		<Unit filename="../src/Input.cpp" />
 		<Unit filename="../src/Inventory.cpp" />
-		<Unit filename="../src/InventoryHandler.cpp" />
+		<Unit filename="../src/InventoryHandling.cpp" />
 		<Unit filename="../src/Item.cpp" />
 		<Unit filename="../src/ItemArmor.cpp" />
 		<Unit filename="../src/ItemArtifact.cpp" />
@@ -300,7 +296,7 @@
 		<Unit filename="../src/MapTemplates.cpp" />
 		<Unit filename="../src/Marker.cpp" />
 		<Unit filename="../src/MenuBrowser.cpp" />
-		<Unit filename="../src/MenuInputHandler.cpp" />
+		<Unit filename="../src/MenuInputHandling.cpp" />
 		<Unit filename="../src/PlayerBon.cpp" />
 		<Unit filename="../src/PlayerCreateCharacter.cpp" />
 		<Unit filename="../src/PlayerSpellsHandler.cpp" />
@@ -315,7 +311,7 @@
 		<Unit filename="../src/RenderInventory.cpp" />
 		<Unit filename="../src/Renderer.cpp" />
 		<Unit filename="../src/RoomTheme.cpp" />
-		<Unit filename="../src/SaveHandler.cpp" />
+		<Unit filename="../src/SaveHandling.cpp" />
 		<Unit filename="../src/SdlWrapper.cpp" />
 		<Unit filename="../src/Sound.cpp" />
 		<Unit filename="../src/Spells.cpp" />

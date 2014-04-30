@@ -8,21 +8,22 @@
 #include "Map.h"
 #include "Utils.h"
 
-void Fov::checkOneCellOfMany(
-  const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
-  const Pos& origin, bool values[MAP_W][MAP_H],
-  const bool IS_AFFECTED_BY_DARKNESS) {
+namespace Fov {
+
+namespace {
+
+void checkOneCellOfMany(const bool obstructions[MAP_W][MAP_H],
+                        const Pos& cellToCheck,
+                        const Pos& origin, bool values[MAP_W][MAP_H],
+                        const bool IS_AFFECTED_BY_DARKNESS) {
 
   const Pos deltaToTarget(cellToCheck.x - origin.x, cellToCheck.y - origin.y);
   const vector<Pos>* pathDeltas =
-    eng.lineCalc->getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
+    LineCalc::getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
 
-  if(pathDeltas == NULL) {
-    return;
-  }
+  if(pathDeltas == NULL) {return;}
 
-  const bool TGT_IS_LGT =
-    Map::cells[cellToCheck.x][cellToCheck.y].isLight;
+  const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLight;
 
   Pos curPos;
   Pos prevPos;
@@ -53,37 +54,28 @@ void Fov::checkOneCellOfMany(
   }
 }
 
-bool Fov::checkCell(const bool obstructions[MAP_W][MAP_H],
-                    const Pos& cellToCheck,
-                    const Pos& origin,
-                    const bool IS_AFFECTED_BY_DARKNESS) {
+} //namespace
 
-  if(Utils::isPosInsideMap(cellToCheck) == false) {
-    return false;
-  }
+bool checkCell(const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
+               const Pos& origin, const bool IS_AFFECTED_BY_DARKNESS) {
 
-  if(
-    Utils::chebyshevDist(origin, cellToCheck) >
-    FOV_STD_RADI_INT) {
-    return false;
-  }
+  if(Utils::isPosInsideMap(cellToCheck) == false) {return false;}
+
+  if(Utils::kingDist(origin, cellToCheck) > FOV_STD_RADI_INT) {return false;}
 
   const Pos deltaToTarget(cellToCheck - origin);
   const vector<Pos>* pathDeltas =
-    eng.lineCalc->getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
+    LineCalc::getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
 
-  if(pathDeltas == NULL) {
-    return false;
-  }
+  if(pathDeltas == NULL) {return false;}
 
-  const bool TGT_IS_LGT =
-    Map::cells[cellToCheck.x][cellToCheck.y].isLight;
+  const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLight;
 
   Pos curPos;
   Pos prevPos;
-  const unsigned int PATH_SIZE = pathDeltas->size();
+  const int PATH_SIZE = pathDeltas->size();
 
-  for(unsigned int i = 0; i < PATH_SIZE; i++) {
+  for(int i = 0; i < PATH_SIZE; i++) {
     curPos.set(origin + pathDeltas->at(i));
     if(i > 1) {
       prevPos.set(origin + pathDeltas->at(i - 1));
@@ -96,27 +88,17 @@ bool Fov::checkCell(const bool obstructions[MAP_W][MAP_H],
         return false;
       }
     }
-    if(curPos == cellToCheck) {
-      return true;
-    }
-    if(i > 0) {
-      if(obstructions[curPos.x][curPos.y]) {
-        return false;
-      }
-    }
+    if(curPos == cellToCheck) {return true;}
+    if(i > 0 && obstructions[curPos.x][curPos.y]) {return false;}
   }
   return false;
 }
 
-void Fov::runFovOnArray(const bool obstructions[MAP_W][MAP_H],
-                        const Pos& origin,
-                        bool values[MAP_W][MAP_H],
-                        const bool IS_AFFECTED_BY_DARKNESS) {
-  for(int x = 0; x < MAP_W; x++) {
-    for(int y = 0; y < MAP_H; y++) {
-      values[x][y] = false;
-    }
-  }
+void runFovOnArray(const bool obstructions[MAP_W][MAP_H], const Pos& origin,
+                   bool values[MAP_W][MAP_H],
+                   const bool IS_AFFECTED_BY_DARKNESS) {
+
+  Utils::resetArray(values, false);
 
   values[origin.x][origin.y] = true;
 
@@ -137,9 +119,7 @@ void Fov::runFovOnArray(const bool obstructions[MAP_W][MAP_H],
   }
 }
 
-void Fov::runPlayerFov(const bool obstructions[MAP_W][MAP_H],
-                       const Pos& origin) {
-
+void runPlayerFov(const bool obstructions[MAP_W][MAP_H], const Pos& origin) {
   bool visionTmp[MAP_W][MAP_H];
 
   for(int x = 0; x < MAP_W; x++) {
@@ -166,3 +146,4 @@ void Fov::runPlayerFov(const bool obstructions[MAP_W][MAP_H],
   }
 }
 
+} //Fov

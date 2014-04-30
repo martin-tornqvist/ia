@@ -10,8 +10,6 @@
 
 #include <math.h>
 
-using namespace std;
-
 enum class Trait {
   adeptMeleeFighter,
   expertMeleeFighter,
@@ -57,33 +55,33 @@ enum class Bg {
 
 namespace PlayerBon {
 
-extern vector<Trait> traitsPicked_;
+extern std::vector<Trait> traitsPicked_;
 
 void init();
 
-void storeToSaveLines(vector<string>& lines);
+void storeToSaveLines(std::vector<std::string>& lines);
 
-void setupFromSaveLines(vector<string>& lines);
+void setupFromSaveLines(std::vector<std::string>& lines);
 
-void getPickableBgs(vector<Bg>& bgsRef);
+void getPickableBgs(std::vector<Bg>& bgsRef);
 
-void getPickableTraits(vector<Trait>& traitsRef);
+void getPickableTraits(std::vector<Trait>& traitsRef);
 
-void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef);
+void getTraitPrereqs(const Trait id, std::vector<Trait>& traitsRef, Bg& bgRef);
 
 Bg getBg();
 
-void getTraitTitle(const Trait id, string& strRef);
-void getTraitDescr(const Trait id, string& strRef);
+void getTraitTitle(const Trait id, std::string& strRef);
+void getTraitDescr(const Trait id, std::string& strRef);
 
-void getBgTitle(const Bg id, string& strRef);
-//The string vector reference parameter set in this function does not get
+void getBgTitle(const Bg id, std::string& strRef);
+//The std::string std::vector reference parameter set in this function does not get
 //formatted in getBgDescr. Each line still needs to be formatted by the
-//calling function. The reason for using a vector reference instead of simply
-//a string, is only to specify line breaks.
-void getBgDescr(const Bg id, vector<string>& linesRef);
+//calling function. The reason for using a std::vector reference instead of simply
+//a std::string, is only to specify line breaks.
+void getBgDescr(const Bg id, std::vector<std::string>& linesRef);
 
-void getAllPickedTraitsTitlesLine(string& strRef);
+void getAllPickedTraitsTitlesLine(std::string& strRef);
 
 void pickTrait(const Trait id);
 

@@ -178,8 +178,6 @@ void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
          predicate.isCheckingMobFeatures() == true ||
          predicate.isCheckingActors()      == true);
 
-  const Engine& eng = predicate.eng;
-
   const bool ALLOW_WRITE_FALSE = writeRule == MapParseWriteRule::always;
 
   if(predicate.isCheckingCells()) {
@@ -266,8 +264,8 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
 
 //------------------------------------------------------------ FUNCT OBJECT
 bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
-  const int chebDist1 = Utils::chebyshevDist(c_.x, c_.y, c1.x, c1.y);
-  const int chebDist2 = Utils::chebyshevDist(c_.x, c_.y, c2.x, c2.y);
+  const int chebDist1 = Utils::kingDist(c_.x, c_.y, c1.x, c1.y);
+  const int chebDist2 = Utils::kingDist(c_.x, c_.y, c2.x, c2.y);
   return chebDist1 < chebDist2;
 }
 

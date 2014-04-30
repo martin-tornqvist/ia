@@ -38,10 +38,10 @@ void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos,
                const SDL_Color& clr, const bool DRAW_BG_CLR = true,
                const SDL_Color& bgClr = clrBlack);
 
-void drawText(const string& str, const Panel panel, const Pos& pos,
+void drawText(const std::string& str, const Panel panel, const Pos& pos,
               const SDL_Color& clr, const SDL_Color& bgClr = clrBlack);
 
-int drawTextCentered(const string& str, const Panel panel, const Pos& pos,
+int drawTextCentered(const std::string& str, const Panel panel, const Pos& pos,
                      const SDL_Color& clr, const SDL_Color& bgClr = clrBlack,
                      const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
@@ -70,12 +70,12 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
 void drawBlastAnimAtPositions(const std::vector<Pos>& positions,
                               const SDL_Color& color);
 
-void drawBlastAnimAtPositionsWithPlayerVision(const vector<Pos>& positions,
+void drawBlastAnimAtPositionsWithPlayerVision(const std::vector<Pos>& positions,
     const SDL_Color& clr);
 
 void drawMainMenuLogo(const int Y_POS);
 
-void drawProjectiles(vector<Projectile*>& projectiles,
+void drawProjectiles(std::vector<Projectile*>& projectiles,
                      const bool SHOULD_DRAW_MAP_BEFORE);
 
 void drawPopupBox(const Rect& area, const Panel panel = Panel::screen,

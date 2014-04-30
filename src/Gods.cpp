@@ -2,14 +2,12 @@
 
 #include "Utils.h"
 
-void Gods::setRandomGod() {
-  const int NR_GODS = int(godList.size());
-  currentGodElem_ = Rnd::range(0, NR_GODS - 1);
-}
+namespace Gods {
 
-void Gods::setNoGod() {
-  currentGodElem_ = -1;
-}
+namespace {
+
+vector<God> godList;
+int         currentGodElem_;
 
 void Gods::initGodList() {
   godList.push_back(God("Abholos", "The Devourer in the Mist"));
@@ -110,3 +108,29 @@ void Gods::initGodList() {
   godList.push_back(God("Zvilpogghua", "The Feaster from the Stars"));
   godList.push_back(God("Gozer", "The Destroyer"));
 }
+
+} //namespace
+
+void init() {
+  initGodList();
+}
+
+bool isGodLevel() {
+  return currentGodElem_ >= 0;
+}
+
+const God* getCurrentGod() {
+  if(currentGodElem_ >= 0) {return &(godList.at(currentGodElem_));}
+  return NULL;
+}
+
+void Gods::setRandomGod() {
+  const int NR_GODS = int(godList.size());
+  currentGodElem_ = Rnd::range(0, NR_GODS - 1);
+}
+
+void Gods::setNoGod() {
+  currentGodElem_ = -1;
+}
+
+} //Gods

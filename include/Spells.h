@@ -7,8 +7,6 @@
 #include "Properties.h"
 #include "PlayerBon.h"
 
-using namespace std;
-
 class Actor;
 class Monster;
 
@@ -50,12 +48,12 @@ enum class IntrSpellShock {mild, disturbing, severe};
 
 class Spell;
 
-class SpellHandler {
-public:
-  SpellHandler() {}
-  Spell* getRandomSpellForMonster();
-  Spell* getSpellFromId(const SpellId spellId) const;
-};
+namespace SpellHandling {
+
+Spell* getRandomSpellForMonster();
+Spell* getSpellFromId(const SpellId spellId);
+
+} //SpellHandling
 
 struct SpellCastRetData {
 public:
@@ -77,7 +75,7 @@ public:
   }
   virtual bool isAvailForAllMonsters()  const = 0;
   virtual bool isAvailForPlayer()       const = 0;
-  virtual string getName()              const = 0;
+  virtual std::string getName()         const = 0;
   virtual SpellId getId()               const = 0;
 
   Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const;
@@ -106,7 +104,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Darkbolt";}
+  std::string getName()         const override {return "Darkbolt";}
   SpellId getId()               const override {return SpellId::darkbolt;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::mild;
@@ -124,7 +122,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Azathoths Wrath";}
+  std::string getName()         const override {return "Azathoths Wrath";}
   SpellId getId()               const override {return SpellId::azathothsWrath;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -141,7 +139,7 @@ public:
   SpellMayhem() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Mayhem";}
+  std::string getName()         const override {return "Mayhem";}
   SpellId getId()               const override {return SpellId::mayhem;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::severe;
@@ -158,7 +156,7 @@ public:
   SpellPestilence() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return false;}
-  string getName()              const override {return "Pestilence";}
+  std::string getName()         const override {return "Pestilence";}
   SpellId getId()               const override {return SpellId::pestilence;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -175,7 +173,7 @@ public:
   SpellDetItems() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Detect Items";}
+  std::string getName()         const override {return "Detect Items";}
   SpellId getId()               const override {return SpellId::detItems;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -192,7 +190,7 @@ public:
   SpellDetTraps() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Detect Traps";}
+  std::string getName()         const override {return "Detect Traps";}
   SpellId getId()               const override {return SpellId::detTraps;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -209,7 +207,7 @@ public:
   SpellDetMon() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Detect Monsters";}
+  std::string getName()         const override {return "Detect Monsters";}
   SpellId getId()               const override {return SpellId::detMon;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -226,7 +224,7 @@ public:
   SpellOpening() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Opening";}
+  std::string getName()         const override {return "Opening";}
   SpellId getId()               const override {return SpellId::opening;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -243,7 +241,7 @@ public:
   SpellSacrLife() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Sacrifice Life Force";}
+  std::string getName()         const override {return "Sacrifice Life Force";}
   SpellId getId()               const override {return SpellId::sacrLife;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -260,7 +258,7 @@ public:
   SpellSacrSpi() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Sacrifice Spirit";}
+  std::string getName()         const override {return "Sacrifice Spirit";}
   SpellId getId()               const override {return SpellId::sacrSpi;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -277,7 +275,7 @@ public:
   SpellCloudMinds() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Cloud Minds";}
+  std::string getName()         const override {return "Cloud Minds";}
   SpellId getId()               const override {return SpellId::cloudMinds;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::mild;
@@ -295,7 +293,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Bless";}
+  std::string getName()         const override {return "Bless";}
   SpellId getId()               const override {return SpellId::bless;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -313,7 +311,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
-  string getName()              const override {return "Knockback";}
+  std::string getName()         const override {return "Knockback";}
   SpellId getId()               const override {return SpellId::knockBack;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -329,7 +327,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Teleport";}
+  std::string getName()         const override {return "Teleport";}
   SpellId getId()               const override {return SpellId::teleport;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -347,7 +345,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
-  string getName()              const override {return "Elemental Resistance";}
+  std::string getName()         const override {return "Elemental Resistance";}
   SpellId getId()               const override {return SpellId::elemRes;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -365,7 +363,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
-  virtual string getName()      const override = 0;
+  virtual std::string getName() const override = 0;
   virtual SpellId getId()       const override = 0;
   virtual IntrSpellShock getShockTypeIntrCast() const override = 0;
 protected:
@@ -377,8 +375,8 @@ protected:
 class SpellSlowEnemies: public SpellPropOnEnemies {
 public:
   SpellSlowEnemies() : SpellPropOnEnemies() {}
-  string getName()  const override {return "Slow Enemies";}
-  SpellId getId()   const override {return SpellId::slowEnemies;}
+  std::string getName() const override {return "Slow Enemies";}
+  SpellId getId()       const override {return SpellId::slowEnemies;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
@@ -392,8 +390,8 @@ private:
 class SpellTerrifyMon: public SpellPropOnEnemies {
 public:
   SpellTerrifyMon() : SpellPropOnEnemies() {}
-  string getName()  const override {return "Terrify Enemies";}
-  SpellId getId()   const override {return SpellId::terrifyEnemies;}
+  std::string getName() const override {return "Terrify Enemies";}
+  SpellId getId()       const override {return SpellId::terrifyEnemies;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::severe;
   }
@@ -407,8 +405,8 @@ private:
 class SpellParalyzeEnemies: public SpellPropOnEnemies {
 public:
   SpellParalyzeEnemies() : SpellPropOnEnemies() {}
-  string getName()  const override {return "Paralyze Enemies";}
-  SpellId getId()   const override {return SpellId::paralyzeEnemies;}
+  std::string getName() const override {return "Paralyze Enemies";}
+  SpellId getId()       const override {return SpellId::paralyzeEnemies;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
@@ -425,7 +423,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
-  string getName()              const override {return "Disease";}
+  std::string getName()         const override {return "Disease";}
   SpellId getId()               const override {return SpellId::disease;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -443,7 +441,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
-  string getName()              const override {return "Summon monster";}
+  std::string getName()         const override {return "Summon monster";}
   SpellId getId()               const override {return SpellId::summonRandom;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -461,7 +459,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
-  string getName()              const override {return "Healing";}
+  std::string getName()         const override {return "Healing";}
   SpellId getId()               const override {return SpellId::healSelf;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -479,7 +477,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
-  string getName()              const override {return "MiGo Hypnosis";}
+  std::string getName()         const override {return "MiGo Hypnosis";}
   SpellId getId()               const override {return SpellId::miGoHypnosis;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
@@ -497,7 +495,7 @@ public:
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
-  string getName()              const override {return "Immolation";}
+  std::string getName()         const override {return "Immolation";}
   SpellId getId()               const override {return SpellId::immolation;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;

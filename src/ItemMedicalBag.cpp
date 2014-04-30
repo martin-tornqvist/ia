@@ -16,7 +16,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
   vector<Actor*> SpottedEnemies;
   Map::player->getSpottedEnemies(SpottedEnemies);
   if(SpottedEnemies.empty() == false) {
-    eng.log->addMsg("Not while an enemy is near.");
+    Log::addMsg("Not while an enemy is near.");
     return ConsumeItem::no;
   }
 
@@ -29,21 +29,21 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
         if(find(props.begin(), props.end(), propInfected) == props.end()) {
-          eng.log->addMsg("I have no infections to sanitize.");
+          Log::addMsg("I have no infections to sanitize.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
 
       case medicalBagAction_takeMorphine: {
         if(Map::player->getHp() >= Map::player->getHpMax(true)) {
-          eng.log->addMsg("I am not in pain.");
+          Log::addMsg("I am not in pain.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
 
       case medicalBagAction_treatWound: {
         if(find(props.begin(), props.end(), propWound) == props.end()) {
-          eng.log->addMsg("I have no wounds to treat.");
+          Log::addMsg("I have no wounds to treat.");
           curAction_ = endOfMedicalBagActions;
         }
       } break;
@@ -53,7 +53,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
 
     if(curAction_ != endOfMedicalBagActions) {
       if(getNrSuppliesNeededForAction(curAction_) > nrSupplies_) {
-        eng.log->addMsg("I do not have enough supplies for that.");
+        Log::addMsg("I do not have enough supplies for that.");
         curAction_ = endOfMedicalBagActions;
       }
     }
@@ -65,15 +65,15 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
 
       switch(curAction_) {
         case medicalBagAction_sanitizeInfection: {
-          eng.log->addMsg("I start to sanitize an infection...");
+          Log::addMsg("I start to sanitize an infection...");
         } break;
 
         case medicalBagAction_takeMorphine: {
-          eng.log->addMsg("I start to take Morphine...");
+          Log::addMsg("I start to take Morphine...");
         } break;
 
         case medicalBagAction_treatWound: {
-          eng.log->addMsg("I start to treat a wound...");
+          Log::addMsg("I start to treat a wound...");
         } break;
 
         case endOfMedicalBagActions: {} break;
@@ -120,7 +120,7 @@ MedicalBagAction MedicalBag::playerChooseAction() const {
     toStr(nrSupplies_) + " medical supplies available.";
 
   const int CHOICE_NR =
-    eng.popup->showMenuMsg(suppliesMsg, true, choiceLabels, "Use medical bag");
+    Popup::showMenuMsg(suppliesMsg, true, choiceLabels, "Use medical bag");
   return MedicalBagAction(CHOICE_NR);
 }
 
@@ -157,7 +157,7 @@ void MedicalBag::finishCurAction() {
 
     case medicalBagAction_takeMorphine: {
       Map::player->restoreHp(999);
-      eng.log->addMsg("The morphine takes a toll on my mind.");
+      Log::addMsg("The morphine takes a toll on my mind.");
       Map::player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
     } break;
 
@@ -174,7 +174,7 @@ void MedicalBag::finishCurAction() {
 }
 
 void MedicalBag::interrupted() {
-  eng.log->addMsg("My healing is disrupted.", clrWhite, false);
+  Log::addMsg("My healing is disrupted.", clrWhite, false);
 
   nrTurnsLeft_ = -1;
 

@@ -4,6 +4,8 @@
 #include "Colors.h"
 #include "Actor.h"
 
+using namespace std;
+
 bool MoveRules::canMove(const vector<PropId>& actorsProps) const {
   if(canMoveCmn_) return true;
 
@@ -13,8 +15,14 @@ bool MoveRules::canMove(const vector<PropId>& actorsProps) const {
   return false;
 }
 
-void FeatureDataHandler::resetData(FeatureData& d) {
-  d.id = feature_empty;
+namespace FeatureData {
+
+FeatureDataT dataList[int(FeatureId::endOfFeatureId)];
+
+namespace {
+
+void resetData(FeatureDataT& d) {
+  d.id = FeatureId::empty;
   d.spawnType = featureSpawnType_static;
   d.glyph = ' ';
   d.tile = tile_empty;
@@ -42,18 +50,18 @@ void FeatureDataHandler::resetData(FeatureData& d) {
   d.featuresOnDestroyed.resize(0);
 }
 
-void FeatureDataHandler::addToListAndReset(FeatureData& d) {
-  dataList[d.id] = d;
+void addToListAndReset(FeatureDataT& d) {
+  dataList[int(d.id)] = d;
   resetData(d);
 }
 
-void FeatureDataHandler::initDataList() {
-  FeatureData d;
+void initDataList() {
+  FeatureDataT d;
   resetData(d);
   addToListAndReset(d);
 
   /*---------------------------------------------*/
-  d.id = feature_stoneFloor;
+  d.id = FeatureId::stoneFloor;
   d.name_a = "stone floor";
   d.name_the = "the stone floor";
   d.glyph = '.';
@@ -62,11 +70,11 @@ void FeatureDataHandler::initDataList() {
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_stoneWall;
+  d.id = FeatureId::stoneWall;
   d.spawnType = featureSpawnType_other;
   d.name_a = "a stone wall";
   d.name_the = "the stone wall";
-  d.glyph = Config::isAsciiWallSymbolFullSquare() == false ? '#' : 10;
+  d.glyph = Config::isAsciiWallFullSquare() == false ? '#' : 10;
   d.color = clrGray;
   d.tile = tile_wallTop;
   d.moveRules.setPropCanMove(propEthereal);
@@ -79,12 +87,12 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featuresOnDestroyed.push_back(feature_rubbleHigh);
-  d.featuresOnDestroyed.push_back(feature_rubbleLow);
-  d.featuresOnDestroyed.push_back(feature_stoneFloor);
+  d.featuresOnDestroyed.push_back(FeatureId::rubbleHigh);
+  d.featuresOnDestroyed.push_back(FeatureId::rubbleLow);
+  d.featuresOnDestroyed.push_back(FeatureId::stoneFloor);
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_tree;
+  d.id = FeatureId::tree;
   d.name_a = "a tree";
   d.name_the = "the tree";
   d.glyph = '|';
@@ -104,7 +112,7 @@ void FeatureDataHandler::initDataList() {
   d.messageOnPlayerBlocked = "There is a tree in the way.";
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_grass;
+  d.id = FeatureId::grass;
   d.name_a = "grass";
   d.name_the = "the grass";
   d.glyph = '.';
@@ -114,7 +122,7 @@ void FeatureDataHandler::initDataList() {
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_grassWithered;
+  d.id = FeatureId::grassWithered;
   d.name_a = "withered grass";
   d.name_the = "the withered grass";
   d.glyph = '.';
@@ -124,7 +132,7 @@ void FeatureDataHandler::initDataList() {
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_bush;
+  d.id = FeatureId::bush;
   d.name_a = "a shrub";
   d.name_the = "the shrub";
   d.glyph = '"';
@@ -134,7 +142,7 @@ void FeatureDataHandler::initDataList() {
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_bushWithered;
+  d.id = FeatureId::bushWithered;
   d.name_a = "a withered shrub";
   d.name_the = "the withered shrub";
   d.glyph = '"';
@@ -144,7 +152,7 @@ void FeatureDataHandler::initDataList() {
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_forestPath;
+  d.id = FeatureId::forestPath;
   d.name_a = "a stony path";
   d.name_the = "the stony path";
   d.glyph = '.';
@@ -154,7 +162,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveStaticFeature = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_stairs;
+  d.id = FeatureId::stairs;
   d.spawnType = featureSpawnType_other;
   d.name_a = "a downward staircase";
   d.name_the = "the downward staircase";
@@ -168,7 +176,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveItem = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_lever;
+  d.id = FeatureId::lever;
   d.spawnType = featureSpawnType_other;
   d.name_a = "a lever";
   d.name_the = "the lever";
@@ -182,7 +190,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveItem = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_brazierGolden;
+  d.id = FeatureId::brazierGolden;
   d.name_a = "a golden brazier";
   d.name_the = "the golden brazier";
   d.glyph = '0';
@@ -198,7 +206,7 @@ void FeatureDataHandler::initDataList() {
   {RoomThemeId::ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_shallowWater;
+  d.id = FeatureId::shallowWater;
   d.spawnType = featureSpawnType_other;
   d.name_a = "shallow water";
   d.name_the = "the shallow water";
@@ -213,7 +221,7 @@ void FeatureDataHandler::initDataList() {
   d.materialType = materialType_fluid;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_deepWater;
+  d.id = FeatureId::deepWater;
   d.spawnType = featureSpawnType_other;
   d.name_a = "deep water";
   d.name_the = "the deep water";
@@ -231,7 +239,7 @@ void FeatureDataHandler::initDataList() {
   d.materialType = materialType_fluid;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_shallowMud;
+  d.id = FeatureId::shallowMud;
   d.spawnType = featureSpawnType_other;
   d.name_a = "shallow mud";
   d.name_the = "the shallow mud";
@@ -246,7 +254,7 @@ void FeatureDataHandler::initDataList() {
   d.materialType = materialType_fluid;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_poolBlood;
+  d.id = FeatureId::poolBlood;
   d.spawnType = featureSpawnType_other;
   d.name_a = "a pool of blood";
   d.name_the = "the pool of blood";
@@ -262,7 +270,7 @@ void FeatureDataHandler::initDataList() {
   d.materialType = materialType_fluid;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_chasm;
+  d.id = FeatureId::chasm;
   d.name_a = "a chasm";
   d.name_the = "the chasm";
   d.glyph = ' ';
@@ -275,12 +283,13 @@ void FeatureDataHandler::initDataList() {
   d.canHaveStaticFeature = false;
   d.isBottomless = true;
   d.messageOnPlayerBlocked = "A chasm lies in my way.";
-  d.messageOnPlayerBlockedBlind = "I realize I am standing on the edge of a chasm.";
+  d.messageOnPlayerBlockedBlind =
+    "I realize I am standing on the edge of a chasm.";
   d.shockWhenAdjacent = 3;
   d.materialType = materialType_empty;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_caveFloor;
+  d.id = FeatureId::caveFloor;
   d.name_a = "cavern floor";
   d.name_the = "the cavern floor";
   d.glyph = '.';
@@ -289,7 +298,7 @@ void FeatureDataHandler::initDataList() {
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_gravestone;
+  d.id = FeatureId::gravestone;
   d.name_a = "a gravestone";
   d.name_the = "the gravestone";
   d.spawnType = featureSpawnType_other;
@@ -306,7 +315,7 @@ void FeatureDataHandler::initDataList() {
   d.shockWhenAdjacent = 2;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_churchBench;
+  d.id = FeatureId::churchBench;
   d.name_a = "a church bench";
   d.name_the = "the church bench";
   d.glyph = '[';
@@ -324,7 +333,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveItem = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_churchCarpet;
+  d.id = FeatureId::churchCarpet;
   d.name_a = "a red carpet";
   d.name_the = "the red carpet";
   d.glyph = '.';
@@ -335,11 +344,11 @@ void FeatureDataHandler::initDataList() {
   d.materialType = materialType_soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_rubbleHigh;
+  d.id = FeatureId::rubbleHigh;
   d.name_a = "a big pile of debris";
   d.name_the = "the big pile of debris";
   d.glyph = 8;
-  d.color = dataList[feature_stoneWall].color;
+  d.color = dataList[int(FeatureId::stoneWall)].color;
   d.tile = tile_rubbleHigh;
   d.moveRules.setPropCanMove(propEthereal);
   d.moveRules.setPropCanMove(propOoze);
@@ -352,21 +361,21 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featuresOnDestroyed.push_back(feature_rubbleLow);
+  d.featuresOnDestroyed.push_back(FeatureId::rubbleLow);
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_rubbleLow;
+  d.id = FeatureId::rubbleLow;
   d.name_a = "rubble";
   d.name_the = "the rubble";
   d.glyph = ',';
-  d.color = dataList[feature_stoneWall].color;
+  d.color = dataList[int(FeatureId::stoneWall)].color;
   d.tile = tile_rubbleLow;
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   d.featureThemeSpawnRules.set(4, placementRule_nextToWallsOrAwayFromWalls,
   {RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::monster});
   /*---------------------------------------------*/
-  d.id = feature_statue;
+  d.id = FeatureId::statue;
   d.name_a = "a statue";
   d.name_the = "the statue";
   d.glyph = 5;
@@ -383,7 +392,7 @@ void FeatureDataHandler::initDataList() {
   {RoomThemeId::plain, RoomThemeId::human});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_ghoulStatue;
+  d.id = FeatureId::ghoulStatue;
   d.name_a = "a statue of a ghoulish creature";
   d.name_the = "the statue of a ghoulish creature";
   d.glyph = 'M';
@@ -401,7 +410,7 @@ void FeatureDataHandler::initDataList() {
   {RoomThemeId::plain, RoomThemeId::crypt});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_cocoon;
+  d.id = FeatureId::cocoon;
   d.name_a = "a cocoon";
   d.name_the = "the cocoon";
   d.spawnType = featureSpawnType_other;
@@ -420,7 +429,7 @@ void FeatureDataHandler::initDataList() {
   {RoomThemeId::spider});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_chest;
+  d.id = FeatureId::chest;
   d.name_a = "a chest";
   d.name_the = "the chest";
   d.spawnType = featureSpawnType_other;
@@ -432,10 +441,11 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(1, placementRule_nextToWalls, {RoomThemeId::human});
+  d.featureThemeSpawnRules.set(1, placementRule_nextToWalls,
+  {RoomThemeId::human});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_cabinet;
+  d.id = FeatureId::cabinet;
   d.name_a = "a cabinet";
   d.name_the = "the cabinet";
   d.spawnType = featureSpawnType_other;
@@ -449,10 +459,11 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(1, placementRule_nextToWalls, {RoomThemeId::human});
+  d.featureThemeSpawnRules.set(1, placementRule_nextToWalls,
+  {RoomThemeId::human});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_fountain;
+  d.id = FeatureId::fountain;
   d.name_a = "a fountain";
   d.name_the = "the fountain";
   d.spawnType = featureSpawnType_other;
@@ -470,7 +481,7 @@ void FeatureDataHandler::initDataList() {
   {RoomThemeId::plain, RoomThemeId::human});
   addToListAndReset(d);
   /*---------------------------------------------*/
-//  d.id = feature_pillarCarved;
+//  d.id = FeatureId::pillarCarved;
 //  d.name_a = "a carved pillar";
 //  d.name_the = "the carved pillar";
 //  d.spawnType = featureSpawnType_other;
@@ -488,7 +499,7 @@ void FeatureDataHandler::initDataList() {
 ////  d.featureThemeSpawnRules.set(1, placementRule_awayFromWalls, RoomThemeId::crypt, RoomThemeId::ritual, RoomThemeId::monster);
 //  addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_pillar;
+  d.id = FeatureId::pillar;
   d.name_a = "a pillar";
   d.name_the = "the pillar";
   d.glyph = '|';
@@ -501,11 +512,13 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(3, placementRule_awayFromWalls,
-  {RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::ritual, RoomThemeId::monster});
+  d.featureThemeSpawnRules.set(3, placementRule_awayFromWalls, {
+    RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::ritual,
+    RoomThemeId::monster
+  });
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_pillarBroken;
+  d.id = FeatureId::pillarBroken;
   d.name_a = "a broken pillar";
   d.name_the = "the broken pillar";
   d.glyph = '|';
@@ -518,11 +531,13 @@ void FeatureDataHandler::initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(4, placementRule_awayFromWalls,
-  {RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::ritual, RoomThemeId::monster});
+  d.featureThemeSpawnRules.set(4, placementRule_awayFromWalls, {
+    RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::ritual,
+    RoomThemeId::monster
+  });
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_altar;
+  d.id = FeatureId::altar;
   d.name_a = "an altar";
   d.name_the = "the altar";
   d.spawnType = featureSpawnType_static;
@@ -539,7 +554,7 @@ void FeatureDataHandler::initDataList() {
   {RoomThemeId::ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_tomb;
+  d.id = FeatureId::tomb;
   d.name_a = "a tomb";
   d.name_the = "the tomb";
   d.spawnType = featureSpawnType_other;
@@ -558,7 +573,7 @@ void FeatureDataHandler::initDataList() {
   {RoomThemeId::crypt});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_pit;
+  d.id = FeatureId::pit;
   d.name_a = "a pit";
   d.name_the = "the pit";
   d.glyph = '^';
@@ -573,27 +588,28 @@ void FeatureDataHandler::initDataList() {
   d.isBottomless = true;
   d.canHaveItem = false;
   d.messageOnPlayerBlocked = "A pit lies in my way.";
-  d.messageOnPlayerBlockedBlind = "I realize I am standing on the edge of a pit.";
+  d.messageOnPlayerBlockedBlind =
+    "I realize I am standing on the edge of a pit.";
   d.shockWhenAdjacent = 5;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_door;
+  d.id = FeatureId::door;
   d.spawnType = featureSpawnType_other;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featuresOnDestroyed.push_back(feature_rubbleLow);
+  d.featuresOnDestroyed.push_back(FeatureId::rubbleLow);
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_trap;
+  d.id = FeatureId::trap;
   d.spawnType = featureSpawnType_other;
   d.moveRules.setCanMoveCmn();
   d.canHaveStaticFeature = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_litDynamite;
+  d.id = FeatureId::litDynamite;
   d.spawnType = featureSpawnType_other;
   d.name_a = "a lit stick of dynamite";
   d.name_the = "the lit stick of dynamite";
@@ -607,7 +623,7 @@ void FeatureDataHandler::initDataList() {
   d.canHaveItem = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_litFlare;
+  d.id = FeatureId::litFlare;
   d.spawnType = featureSpawnType_other;
   d.name_a = "a lit flare";
   d.name_the = "the lit flare";
@@ -617,7 +633,7 @@ void FeatureDataHandler::initDataList() {
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_smoke;
+  d.id = FeatureId::smoke;
   d.spawnType = featureSpawnType_other;
   d.name_a = "smoke";
   d.name_the = "the smoke";
@@ -628,10 +644,21 @@ void FeatureDataHandler::initDataList() {
   d.isVisionPassable = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = feature_proxEventWallCrumble;
+  d.id = FeatureId::proxEventWallCrumble;
   d.spawnType = featureSpawnType_other;
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
 }
 
+} //namespace
+
+void init() {
+  initDataList();
+}
+
+const FeatureDataT* getData(const FeatureId id) {
+  return &(dataList[int(id)]);
+}
+
+} //FeatureData

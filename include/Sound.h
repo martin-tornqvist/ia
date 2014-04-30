@@ -7,8 +7,6 @@
 #include "ItemData.h"
 #include "CmnTypes.h"
 
-using namespace std;
-
 class Actor;
 
 enum class SndVol                 {low, high};
@@ -18,7 +16,7 @@ enum class IgnoreMsgIfOriginSeen  {no, yes};
 class Snd {
 public:
   Snd(
-    const string& msg,
+    const std::string& msg,
     const SfxId sfx,
     const IgnoreMsgIfOriginSeen ignoreMsgIfOriginSeen,
     const Pos& origin,
@@ -32,7 +30,7 @@ public:
   Snd() {}
   ~Snd() {}
 
-  inline const string& getMsg() const {return msg_;}
+  inline const std::string& getMsg() const {return msg_;}
   inline SfxId getSfx() const {return sfx_;}
   inline void clearMsg() {msg_ = "";}
 
@@ -47,12 +45,12 @@ public:
   inline Actor* getActorWhoMadeSound()  const {return actorWhoMadeSound_;}
   inline int isLoud()                   const {return vol_ == SndVol::high;}
 
-  void addString(const string str) {
+  inline void addString(const std::string& str) {
     msg_ += str;
   }
 
 private:
-  string msg_;
+  std::string msg_;
   SfxId sfx_;
   IgnoreMsgIfOriginSeen isMsgIgnoredIfOriginSeen_;
   Pos origin_;

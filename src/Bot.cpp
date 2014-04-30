@@ -1,8 +1,10 @@
 #include "Bot.h"
 
+#include <assert.h>
 #include <algorithm>
 #include <vector>
 
+#include "Init.h"
 #include "Properties.h"
 #include "Actor.h"
 #include "Feature.h"
@@ -21,113 +23,40 @@
 
 using namespace std;
 
-void Bot::init() {
-  currentPath_.resize(0);
-}
+namespace Bot {
 
-void Bot::act() {
-  //=======================================================================
-  // TESTS
-  //=======================================================================
-  for(Actor * actor : GameTime::actors_) {
-#ifdef NDEBUG
-    (void)actor;
-#else
-    assert(Utils::isPosInsideMap(actor->pos));
-#endif
-  }
+namespace {
 
-  //=======================================================================
+std::vector<Pos> curPath_;
 
-  //Check if we are finished with the current run, if so, go back to DLVL 1
-  if(Map::getDlvl() >= LAST_CAVERN_LEVEL) {
-    trace << "Bot: Starting new run on first dungeon level" << endl;
-    Map::dlvl_ = 1;
-    return;
-  }
+void findPathToStairs() {
+  curPath_.resize(0);
 
-  PropHandler& propHandler = Map::player->getPropHandler();
+  bool blockers[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
 
-  //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)
-  if(Rnd::oneIn(7)) {
-    propHandler.tryApplyProp(new PropRFear(eng, propTurnsSpecific, 4), true);
-  }
+  vector<Pos> bla;
+  Utils::makeVectorFromBoolMap(false, blockers, bla);
 
-  //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
-  if(Rnd::oneIn(10)) {
-    const int ELEMENT = Rnd::range(0, GameTime::actors_.size() - 1);
-    Actor* const actor = GameTime::actors_.at(ELEMENT);
-    if(actor != Map::player) {
-      actor->getPropHandler().tryApplyProp(
-        new PropBurning(eng, propTurnsStd), true);
-    }
-  }
+  Pos stairPos(-1, -1);
 
-  //Occasionally teleport (to avoid getting stuck)
-  if(Rnd::oneIn(200)) {
-    Map::player->teleport(false);
-  }
-
-  //Occasionally send a TAB command to attack nearby monsters
-  if(Rnd::coinToss()) {
-    Input::handleKeyPress(KeyboardReadRetData(SDLK_TAB), eng);
-    return;
-  }
-
-  //Occasionally apply a random property to exercise the prop code
-  if(Rnd::oneIn(10)) {
-    vector<PropId> propCandidates;
-    propCandidates.resize(0);
-    for(unsigned int i = 0; i < endOfPropIds; i++) {
-      PropData& d = eng.propDataHandler->dataList[i];
-      if(d.allowTestingOnBot) {
-        propCandidates.push_back(PropId(i));
-      }
-    }
-    PropId propId =
-      propCandidates.at(Rnd::range(0, propCandidates.size() - 1));
-
-    Prop* const prop =
-      propHandler.makeProp(propId, propTurnsSpecific, 5);
-
-    propHandler.tryApplyProp(prop, true);
-  }
-
-  //Handle blocking door
-  const Pos& playerPos = Map::player->pos;
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
-      FeatureStatic* f =
-        Map::cells[playerPos.x + dx][playerPos.y + dy].featureStatic;
-      if(f->getId() == feature_door) {
-        Door* const door = dynamic_cast<Door*>(f);
-        door->reveal(false);
-        if(door->isStuck()) {
-          f->bash(*Map::player);
-          return;
-        }
+  for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; y++) {
+      const FeatureId curId = Map::cells[x][y].featureStatic->getId();
+      if(curId == FeatureId::stairs) {
+        blockers[x][y] = false;
+        stairPos.set(x, y);
+      } else if(curId == FeatureId::door) {
+        blockers[x][y] = false;
       }
     }
   }
+  assert(stairPos != Pos(-1, -1));
 
-  //If we are terrified, wait in place
-  vector<PropId> props;
-  Map::player->getPropHandler().getAllActivePropIds(props);
-
-  if(find(props.begin(), props.end(), propTerrified) != props.end()) {
-    if(walkToAdjacentCell(playerPos)) {
-      return;
-    }
-  }
-
-  findPathToStairs();
-
-  const Pos nextCell = currentPath_.back();
-
-  walkToAdjacentCell(nextCell);
+  PathFind::run(Map::player->pos, stairPos, blockers, curPath_);
 }
 
-bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
+bool walkToAdjacentCell(const Pos& cellToGoTo) {
   Pos playerCell(Map::player->pos);
 
   assert(Utils::isPosAdj(playerCell, cellToGoTo, true));
@@ -157,35 +86,115 @@ bool Bot::walkToAdjacentCell(const Pos& cellToGoTo) {
     key = '0' + Rnd::range(1, 9);
   }
 
-  Input::handleKeyPress(KeyboardReadRetData(key), eng);
+  Input::handleKeyPress(KeyboardReadRetData(key));
 
   return playerCell == cellToGoTo;
 }
 
-void Bot::findPathToStairs() {
-  currentPath_.resize(0);
+} //namespace
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+void init() {
+  curPath_.resize(0);
+}
 
-  vector<Pos> bla;
-  Utils::makeVectorFromBoolMap(false, blockers, bla);
+void act() {
+  //=======================================================================
+  // TESTS
+  //=======================================================================
+  for(Actor * actor : GameTime::actors_) {
+#ifdef NDEBUG
+    (void)actor;
+#else
+    assert(Utils::isPosInsideMap(actor->pos));
+#endif
+  }
 
-  Pos stairPos(-1, -1);
+  //=======================================================================
 
-  for(int x = 0; x < MAP_W; x++) {
-    for(int y = 0; y < MAP_H; y++) {
-      const FeatureId curId = Map::cells[x][y].featureStatic->getId();
-      if(curId == feature_stairs) {
-        blockers[x][y] = false;
-        stairPos.set(x, y);
-      } else if(curId == feature_door) {
-        blockers[x][y] = false;
+  //Check if we are finished with the current run, if so, go back to DLVL 1
+  if(Map::dlvl >= LAST_CAVERN_LEVEL) {
+    trace << "Bot: Starting new run on first dungeon level" << endl;
+    Map::dlvl = 1;
+    return;
+  }
+
+  PropHandler& propHandler = Map::player->getPropHandler();
+
+  //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)
+  if(Rnd::oneIn(7)) {
+    propHandler.tryApplyProp(new PropRFear(propTurnsSpecific, 4), true);
+  }
+
+  //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
+  if(Rnd::oneIn(10)) {
+    const int ELEMENT = Rnd::range(0, GameTime::actors_.size() - 1);
+    Actor* const actor = GameTime::actors_.at(ELEMENT);
+    if(actor != Map::player) {
+      actor->getPropHandler().tryApplyProp(
+        new PropBurning(propTurnsStd), true);
+    }
+  }
+
+  //Occasionally teleport (to avoid getting stuck)
+  if(Rnd::oneIn(200)) {
+    Map::player->teleport(false);
+  }
+
+  //Occasionally send a TAB command to attack nearby monsters
+  if(Rnd::coinToss()) {
+    Input::handleKeyPress(KeyboardReadRetData(SDLK_TAB));
+    return;
+  }
+
+  //Occasionally apply a random property to exercise the prop code
+  if(Rnd::oneIn(10)) {
+    vector<PropId> propCandidates;
+    propCandidates.resize(0);
+    for(unsigned int i = 0; i < endOfPropIds; i++) {
+      PropDataT& d = PropData::dataList[i];
+      if(d.allowTestingOnBot) {propCandidates.push_back(PropId(i));}
+    }
+    PropId propId =
+      propCandidates.at(Rnd::range(0, propCandidates.size() - 1));
+
+    Prop* const prop =
+      propHandler.makeProp(propId, propTurnsSpecific, 5);
+
+    propHandler.tryApplyProp(prop, true);
+  }
+
+  //Handle blocking door
+  const Pos& playerPos = Map::player->pos;
+  for(int dx = -1; dx <= 1; dx++) {
+    for(int dy = -1; dy <= 1; dy++) {
+      FeatureStatic* f =
+        Map::cells[playerPos.x + dx][playerPos.y + dy].featureStatic;
+      if(f->getId() == FeatureId::door) {
+        Door* const door = dynamic_cast<Door*>(f);
+        door->reveal(false);
+        if(door->isStuck()) {
+          f->bash(*Map::player);
+          return;
+        }
       }
     }
   }
-  assert(stairPos != Pos(-1, -1));
 
-  PathFind::run(Map::player->pos, stairPos, blockers, currentPath_);
+  //If we are terrified, wait in place
+  vector<PropId> props;
+  Map::player->getPropHandler().getAllActivePropIds(props);
+
+  if(find(props.begin(), props.end(), propTerrified) != props.end()) {
+    if(walkToAdjacentCell(playerPos)) {
+      return;
+    }
+  }
+
+  findPathToStairs();
+
+  const Pos nextCell = curPath_.back();
+
+  walkToAdjacentCell(nextCell);
 }
 
+} //Bot

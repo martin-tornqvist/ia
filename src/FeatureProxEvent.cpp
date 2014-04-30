@@ -109,18 +109,18 @@ void ProxEventWallCrumble::playerIsNear() {
     for(int i = 0; i < NR_INNER_CELLS; i++) {
       const Pos& pos = innerCells_.at(i);
 
-      eng.featureFactory->spawnFeatureAt(
-        feature_stoneFloor, pos);
+      FeatureFactory::spawnFeatureAt(
+        FeatureId::stoneFloor, pos);
 
       if(Rnd::range(1, 100) < 20) {
-        eng.gore->makeGore(pos);
-        eng.gore->makeBlood(pos);
+        Map::makeGore(pos);
+        Map::makeBlood(pos);
       }
 
       if(
         nrMonstersSpawned < nrMonsterLimitExceptAdjToEntry ||
         Utils::isPosAdj(pos, pos_, false)) {
-        Actor* const actor = eng.actorFactory->spawnActor(monsterType, pos);
+        Actor* const actor = ActorFactory::spawnActor(monsterType, pos);
         Monster* const monster = dynamic_cast<Monster*>(actor);
         monster->awareOfPlayerCounter_ =
           monster->getData().nrTurnsAwarePlayer;
@@ -128,7 +128,7 @@ void ProxEventWallCrumble::playerIsNear() {
       }
     }
 
-    eng.log->addMsg("The walls suddenly crumbles!");
+    Log::addMsg("The walls suddenly crumbles!");
     Map::player->updateFov();
     Renderer::drawMapAndInterface();
     GameTime::eraseFeatureMob(this, true);

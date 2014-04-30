@@ -7,8 +7,6 @@
 
 #include "FeatureData.h"
 
-using namespace std;
-
 enum MapTemplateId {
   mapTemplate_church,
   mapTemplate_pharaohsChamber
@@ -21,7 +19,7 @@ struct MapTemplate {
   MapTemplate() {
   }
 
-  vector<vector<FeatureId> > featureVector;
+  std::vector< std::vector<FeatureId> > featureVector;
 
   MapTemplateId templateId;
   int w, h;
@@ -49,28 +47,29 @@ private:
     FeatureId featureId_;
   };
 
-  void addTranslationToVector(vector<CharToIdTranslation>& vec,
+  void addTranslationToVector(std::vector<CharToIdTranslation>& vec,
                               const char cha, const FeatureId featureId) {
     CharToIdTranslation t(cha, featureId);
     vec.push_back(t);
   }
 
   FeatureId translate(const char cha,
-                      const vector<CharToIdTranslation>& translations) {
+                      const std::vector<CharToIdTranslation>& translations) {
     for(unsigned int i = 0; i < translations.size(); i++) {
       if(cha == translations.at(i).cha) {
         return translations.at(i).featureId_;
       }
     }
 
-    return feature_empty;
+    return FeatureId::empty;
   }
 
-  MapTemplate stringToTemplate(const string& str,
-                               const vector<CharToIdTranslation>& translations,
-                               const MapTemplateId templateId);
+  MapTemplate stringToTemplate(
+    const std::string& str,
+    const std::vector<CharToIdTranslation>& translations,
+    const MapTemplateId templateId);
 
-  vector<MapTemplate> templates_;
+  std::vector<MapTemplate> templates_;
 };
 
 #endif

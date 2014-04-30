@@ -1,7 +1,9 @@
 #include "ActorMonster.h"
 
 #include <vector>
+#include <assert.h>
 
+#include "Init.h"
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
@@ -13,8 +15,12 @@
 #include "Properties.h"
 #include "Renderer.h"
 #include "Sound.h"
-
+#include "Utils.h"
+#include "Map.h"
+#include "Log.h"
+#include "MapParsing.h"
 #include "Ai.h"
+#include "LineCalc.h"
 
 using namespace std;
 
@@ -87,14 +93,12 @@ void Monster::onActorTurn() {
   //This is checked in all AI movement functions. Cells set to true are
   //totally forbidden for the monster to move into.
   bool aiSpecialBlockers[MAP_W][MAP_H];
-  AI_setSpecialBlockedCells::learn(*this, aiSpecialBlockers, eng);
+  Ai::Info::setSpecialBlockedCells(*this, aiSpecialBlockers);
 
   //------------------------------ SPECIAL MONSTER ACTIONS
   //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
   if(leader != Map::player/*TODO temporary restriction, allow this later(?)*/) {
-    if(onActorTurn_()) {
-      return;
-    }
+    if(onActorTurn_()) {return;}
   }
 
   //------------------------------ COMMON ACTIONS
@@ -102,32 +106,26 @@ void Monster::onActorTurn() {
   //Looking counts as an action if monster not aware before, and became aware
   //from looking. (This is to give the monsters some reaction time, and not
   //instantly attack)
-  if(data_->ai[int(Ai::looks)]) {
+  if(data_->ai[int(AiId::looks)]) {
     if(leader != Map::player) {
-      if(AI_look_becomePlayerAware::action(*this, eng)) {
-        return;
-      }
+      if(Ai::Info::lookBecomePlayerAware(*this)) {return;}
     }
   }
 
-  if(data_->ai[int(Ai::makesRoomForFriend)]) {
+  if(data_->ai[int(AiId::makesRoomForFriend)]) {
     if(leader != Map::player) {
-      if(AI_makeRoomForFriend::action(*this, eng)) {
-        return;
-      }
+      if(Ai::Action::makeRoomForFriend(*this)) {return;}
     }
   }
 
   if(target != NULL) {
     const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
     if(Rnd::percentile() < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
-      if(AI_castRandomSpellIfAware::action(this, eng)) {
-        return;
-      }
+      if(Ai::Action::castRandomSpellIfAware(this)) {return;}
     }
   }
 
-  if(data_->ai[int(Ai::attacks)]) {
+  if(data_->ai[int(AiId::attacks)]) {
     if(target != NULL) {
       if(tryAttack(*target)) {
         return;
@@ -136,63 +134,54 @@ void Monster::onActorTurn() {
   }
 
   if(target != NULL) {
-    if(AI_castRandomSpellIfAware::action(this, eng)) {
+    if(Ai::Action::castRandomSpellIfAware(this)) {
       return;
     }
   }
 
   if(Rnd::percentile() < data_->erraticMovement) {
-    if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
+    if(Ai::Action::moveToRandomAdjacentCell(*this)) {
       return;
     }
   }
 
-  if(data_->ai[int(Ai::movesTowardTargetWhenVision)]) {
-    if(AI_moveTowardsTargetSimple::action(*this, eng)) {
-      return;
-    }
+  if(data_->ai[int(AiId::movesTowardTargetWhenVision)]) {
+    if(Ai::Action::moveTowardsTargetSimple(*this)) {return;}
   }
 
   vector<Pos> path;
 
-  if(data_->ai[int(Ai::pathsToTargetWhenAware)]) {
+  if(data_->ai[int(AiId::pathsToTargetWhenAware)]) {
     if(leader != Map::player) {
-      AI_setPathToPlayerIfAware::learn(*this, path, eng);
+      Ai::Info::setPathToPlayerIfAware(*this, path);
     }
   }
 
   if(leader != Map::player) {
-    if(AI_handleClosedBlockingDoor::action(*this, path, eng)) {
+    if(Ai::Action::handleClosedBlockingDoor(*this, path)) {
       return;
     }
   }
 
-  if(AI_stepPath::action(*this, path)) {
-    return;
+  if(Ai::Action::stepPath(*this, path)) {return;}
+
+  if(data_->ai[int(AiId::movesTowardLeader)]) {
+    Ai::Info::setPathToLeaderIfNoLosToleader(*this, path);
+    if(Ai::Action::stepPath(*this, path)) {return;}
   }
 
-  if(data_->ai[int(Ai::movesTowardLeader)]) {
-    AI_setPathToLeaderIfNoLosToleader::learn(*this, path, eng);
-    if(AI_stepPath::action(*this, path)) {
-      return;
-    }
-  }
-
-  if(data_->ai[int(Ai::movesTowardLair)]) {
+  if(data_->ai[int(AiId::movesTowardLair)]) {
     if(leader != Map::player) {
-      if(AI_stepToLairIfHasLosToLair::action(*this, lairCell_, eng)) {
+      if(Ai::Action::stepToLairIfLos(*this, lairCell_)) {
         return;
-      }
-      AI_setPathToLairIfNoLosToLair::learn(*this, path, lairCell_, eng);
-      if(AI_stepPath::action(*this, path)) {
-        return;
+      } else {
+        Ai::Info::setPathToLairIfNoLos(*this, path, lairCell_);
+        if(Ai::Action::stepPath(*this, path)) {return;}
       }
     }
   }
 
-  if(AI_moveToRandomAdjacentCell::action(*this, eng)) {
-    return;
-  }
+  if(Ai::Action::moveToRandomAdjacentCell(*this)) {return;}
 
   GameTime::actorDidAct();
 }
@@ -213,7 +202,7 @@ void Monster::moveDir(Dir dir) {
   //Trap affects leaving?
   if(dir != Dir::center) {
     Feature* f = Map::cells[pos.x][pos.y].featureStatic;
-    if(f->getId() == feature_trap) {
+    if(f->getId() == FeatureId::trap) {
       dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == Dir::center) {
         traceVerbose << "Monster: Move prevented by trap" << endl;
@@ -262,7 +251,7 @@ void Monster::speakPhrase() {
 
   Snd snd(msg, sfx, IgnoreMsgIfOriginSeen::no, pos, this,
           SndVol::low, AlertsMonsters::yes);
-  SndEmit::emitSnd(snd, eng);
+  SndEmit::emitSnd(snd);
 }
 
 void Monster::becomeAware(const bool IS_FROM_SEEING) {
@@ -273,7 +262,7 @@ void Monster::becomeAware(const bool IS_FROM_SEEING) {
       if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, NULL)) {
         Map::player->updateFov();
         Renderer::drawMapAndInterface(true);
-        eng.log->addMsg(getNameThe() + " sees me!");
+        Log::addMsg(getNameThe() + " sees me!");
       }
       if(Rnd::coinToss()) {
         speakPhrase();
@@ -290,67 +279,62 @@ void Monster::playerBecomeAwareOfMe(const int DURATION_FACTOR) {
 }
 
 bool Monster::tryAttack(Actor& defender) {
-  if(deadState == ActorDeadState::alive) {
-    if(awareOfPlayerCounter_ > 0 || leader == Map::player) {
+  if(
+    deadState != ActorDeadState::alive ||
+    (awareOfPlayerCounter_ <= 0 && leader != Map::player)) {
+    return false;
+  }
 
-      bool blockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksVision(), blockers);
+  bool blockers[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blockers);
 
-      if(isSeeingActor(*Map::player, blockers)) {
-        AttackOpport opport = getAttackOpport(defender);
-        const BestAttack attack = getBestAttack(opport);
+  if(isSeeingActor(*Map::player, blockers) == false) {return false;}
 
-        if(attack.weapon != NULL) {
-          if(attack.isMelee) {
-            if(attack.weapon->getData().isMeleeWeapon) {
-              eng.attack->melee(*this, *attack.weapon, defender);
-              return true;
-            }
-          } else {
-            if(attack.weapon->getData().isRangedWeapon) {
-              if(opport.isTimeToReload) {
-                eng.reload->reloadWieldedWpn(*this);
-                return true;
-              } else {
-                //Check if friend is in the way
-                //(with a small chance to ignore this)
-                bool isBlockedByFriend = false;
-                if(Rnd::fraction(4, 5)) {
-                  vector<Pos> line;
-                  eng.lineCalc->calcNewLine(
-                    pos, defender.pos, true, 9999, false, line);
-                  for(unsigned int i = 0; i < line.size(); i++) {
-                    const Pos& curPos = line.at(i);
-                    if(curPos != pos && curPos != defender.pos) {
-                      Actor* const actorHere =
-                        Utils::getActorAtPos(curPos, eng);
-                      if(actorHere != NULL) {
-                        isBlockedByFriend = true;
-                        break;
-                      }
-                    }
-                  }
-                }
+  AttackOpport opport     = getAttackOpport(defender);
+  const BestAttack attack = getBestAttack(opport);
 
-                if(isBlockedByFriend == false) {
-                  const int NR_TURNS_DISABLED_RANGED =
-                    data_->rangedCooldownTurns;
-                  PropDisabledRanged* status =
-                    new PropDisabledRanged(
-                    eng, propTurnsSpecific, NR_TURNS_DISABLED_RANGED);
-                  propHandler_->tryApplyProp(status);
-                  eng.attack->ranged(*this, *attack.weapon, defender.pos);
-                  return true;
-                } else {
-                  return false;
-                }
-              }
-            }
+  if(attack.weapon == NULL) {return false;}
+
+  if(attack.isMelee) {
+    if(attack.weapon->getData().isMeleeWeapon) {
+      Attack::melee(*this, *attack.weapon, defender);
+      return true;
+    }
+    return false;
+  }
+
+  if(attack.weapon->getData().isRangedWeapon) {
+    if(opport.isTimeToReload) {
+      Reload::reloadWieldedWpn(*this);
+      return true;
+    }
+
+    //Check if friend is in the way (with a small chance to ignore this)
+    bool isBlockedByFriend = false;
+    if(Rnd::fraction(4, 5)) {
+      vector<Pos> line;
+      LineCalc::calcNewLine(pos, defender.pos, true, 9999, false, line);
+      for(Pos & linePos : line) {
+        if(linePos != pos && linePos != defender.pos) {
+          Actor* const actorHere = Utils::getActorAtPos(linePos);
+          if(actorHere != NULL) {
+            isBlockedByFriend = true;
+            break;
           }
         }
       }
     }
+
+    if(isBlockedByFriend) {return false;}
+
+    const int NR_TURNS_NO_RANGED = data_->rangedCooldownTurns;
+    PropDisabledRanged* status =
+      new PropDisabledRanged(propTurnsSpecific, NR_TURNS_NO_RANGED);
+    propHandler_->tryApplyProp(status);
+    Attack::ranged(*this, *attack.weapon, defender.pos);
+    return true;
   }
+
   return false;
 }
 
@@ -430,7 +414,7 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
   if(nrOfWeapons > 0) {
     attack.weapon = attackOpport.weapons.at(0);
 
-    const ItemData* data = &(attack.weapon->getData());
+    const ItemDataT* data = &(attack.weapon->getData());
 
     //If there are more than one possible weapon, find strongest.
     if(nrOfWeapons > 1) {
@@ -438,11 +422,11 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
 
         //Found new weapon in element i.
         newWeapon = attackOpport.weapons.at(i);
-        const ItemData* newData = &(newWeapon->getData());
+        const ItemDataT* newData = &(newWeapon->getData());
 
         //Compare definitions.
         //If weapon i is stronger -
-        if(eng.itemDataHandler->isWeaponStronger(*data, *newData, attack.isMelee)) {
+        if(ItemData::isWeaponStronger(*data, *newData, attack.isMelee)) {
           // - use new weapon instead.
           attack.weapon = newWeapon;
           data = newData;

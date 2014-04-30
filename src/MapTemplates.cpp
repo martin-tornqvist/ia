@@ -26,11 +26,11 @@ void MapTemplateHandler::initTemplates() {
 
 
   translationVector.resize(0);
-  addTranslationToVector(translationVector, ',', feature_grassWithered);
-  addTranslationToVector(translationVector, 'v', feature_brazierGolden);
-  addTranslationToVector(translationVector, '[', feature_churchBench);
-  addTranslationToVector(translationVector, '-', feature_altar);
-  addTranslationToVector(translationVector, '*', feature_churchCarpet);
+  addTranslationToVector(translationVector, ',', FeatureId::grassWithered);
+  addTranslationToVector(translationVector, 'v', FeatureId::brazierGolden);
+  addTranslationToVector(translationVector, '[', FeatureId::churchBench);
+  addTranslationToVector(translationVector, '-', FeatureId::altar);
+  addTranslationToVector(translationVector, '*', FeatureId::churchCarpet);
 
   templates_.push_back(stringToTemplate(templStr, translationVector, mapTemplate_church));
 
@@ -64,9 +64,9 @@ void MapTemplateHandler::initTemplates() {
   //              01234567890123456789012345678901234567890123456789012345678901234567890123456789
   //                        1         2         3         4         5         6         7
   translationVector.resize(0);
-  addTranslationToVector(translationVector, 'v', feature_brazierGolden);
-  addTranslationToVector(translationVector, '1', feature_pillar);
-  addTranslationToVector(translationVector, 'P', feature_statue);
+  addTranslationToVector(translationVector, 'v', FeatureId::brazierGolden);
+  addTranslationToVector(translationVector, '1', FeatureId::pillar);
+  addTranslationToVector(translationVector, 'P', FeatureId::statue);
   templates_.push_back(stringToTemplate(templStr, translationVector, mapTemplate_pharaohsChamber));
 }
 
@@ -94,11 +94,11 @@ MapTemplate MapTemplateHandler::stringToTemplate(
       resultVector.push_back(curInnerVector);
       curInnerVector.resize(0);
     } else if(str[strPos] == '#') {
-      curInnerVector.push_back(feature_stoneWall);
+      curInnerVector.push_back(FeatureId::stoneWall);
     } else if(str[strPos] == '.') {
-      curInnerVector.push_back(feature_stoneFloor);
+      curInnerVector.push_back(FeatureId::stoneFloor);
     } else if(str[strPos] == ' ') {
-      curInnerVector.push_back(feature_empty);
+      curInnerVector.push_back(FeatureId::empty);
     } else {
       curInnerVector.push_back(translate(str[strPos], translations));
     }

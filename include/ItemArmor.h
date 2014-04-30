@@ -11,15 +11,15 @@ public:
 
   int getDurability() const {return dur_;}
 
-  string getArmorDataLine(const bool WITH_BRACKETS) const;
+  std::string getArmorDataLine(const bool WITH_BRACKETS) const;
 
   int takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE);
 
-  void storeToSaveLines(vector<string>& lines) override {
+  void storeToSaveLines(std::vector<std::string>& lines) override {
     lines.push_back(toStr(dur_));
   }
 
-  void setupFromSaveLines(vector<string>& lines) override {
+  void setupFromSaveLines(std::vector<std::string>& lines) override {
     dur_ = toInt(lines.front());
     lines.erase(lines.begin());
   }

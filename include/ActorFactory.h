@@ -2,33 +2,23 @@
 #define ACTOR_FACTORY
 
 #include <vector>
-#include <string>
 
-#include "GameTime.h"
+#include "ActorData.h"
 
-using namespace std;
-
-
+class Actor;
 class Monster;
 
-class ActorFactory {
-public:
-  ActorFactory() {}
+namespace ActorFactory {
 
-  void deleteAllMonsters() const;
+void deleteAllMonsters();
 
-  Actor* spawnActor(const ActorId id, const Pos& pos) const;
+Actor* spawnActor(const ActorId id, const Pos& pos);
 
-  void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
-                      const bool MAKE_MONSTERS_AWARE,
-                      Actor* const actorToSetAsLeader = NULL,
-                      vector<Monster*>* monstersRet = NULL) const;
+void summonMonsters(const Pos& origin, const std::vector<ActorId>& monsterIds,
+                    const bool MAKE_MONSTERS_AWARE,
+                    Actor* const actorToSetAsLeader = NULL,
+                    std::vector<Monster*>* monstersRet = NULL);
 
-private:
-  friend class DebugModeStatPrinter;
-  Actor* makeActorFromId(const ActorId id) const;
-
-
-};
+} //ActorFactory
 
 #endif

@@ -4,44 +4,30 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 struct God {
 public:
-  God(const string& name, const string& descr) : name_(name), descr_(descr) {}
+  God(const std::string& name, const std::string& descr) : name_(name), descr_(descr) {}
 
-  inline string getName() const {return name_;}
-  inline string getDescr() const {return descr_;}
-
-private:
-  string name_;
-  string descr_;
-};
-
-class Gods {
-public:
-  Gods() {initGodList();}
-  ~Gods() {}
-
-  inline bool isGodLevel() const {return currentGodElem_ >= 0;}
-
-  inline const God* getCurrentGod() const {
-    if(currentGodElem_ >= 0) {
-      return &(godList.at((unsigned int)currentGodElem_));
-    }
-    return NULL;
-  }
-
-  void setRandomGod();
-
-  void setNoGod();
+  inline std::string getName()   const {return name_;}
+  inline std::string getDescr()  const {return descr_;}
 
 private:
-  vector<God> godList;
-
-  int currentGodElem_;
-
-  void initGodList();
+  std::string name_;
+  std::string descr_;
 };
+
+namespace Gods {
+
+void init();
+
+bool isGodLevel();
+
+const God* getCurrentGod();
+
+void setRandomGod();
+
+void setNoGod();
+
+} //Gods
 
 #endif

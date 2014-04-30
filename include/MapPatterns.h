@@ -9,10 +9,6 @@
 //TODO This should be merged into MapParsing
 //Also, most/all things in here really needs clearer purpose/naming
 
-using namespace std;
-
-
-
 enum PlacementRule {
   placementRule_nextToWalls,
   placementRule_awayFromWalls,
@@ -23,8 +19,8 @@ class MapPatterns {
 public:
   MapPatterns() {}
 
-  void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
-                          vector<Pos>& awayFromWalls);
+  void setPositionsInArea(const Rect& area, std::vector<Pos>& nextToWalls,
+                          std::vector<Pos>& awayFromWalls);
 
   int getWalkBlockersInDir(const Dir dir, const Pos& pos);
 

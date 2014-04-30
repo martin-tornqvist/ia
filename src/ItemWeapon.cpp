@@ -3,8 +3,7 @@
 #include "Explosion.h"
 #include "Utils.h"
 
-Weapon::Weapon(ItemData* const itemData, ItemData* const ammoData,
-               Engine& engine) :
+Weapon::Weapon(ItemDataT* const itemData, ItemDataT* const ammoData) :
   Item(itemData), ammoData_(ammoData) {
   nrAmmoLoaded = 0;
   ammoCapacity = 0;
@@ -26,5 +25,5 @@ void Weapon::setRandomMeleePlus() {
 void Incinerator::weaponSpecific_projectileObstructed(
   const Pos& pos, Actor* actorHit) {
   (void)actorHit;
-  Explosion::runExplosionAt(pos, eng, ExplType::expl);
+  Explosion::runExplosionAt(pos, ExplType::expl);
 }

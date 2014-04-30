@@ -12,6 +12,9 @@
 #include "ItemFactory.h"
 #include "Item.h"
 #include "ItemWeapon.h"
+#include "Map.h"
+
+using namespace std;
 
 void CharacterDescr::makeLines() {
   lines.resize(0);
@@ -25,14 +28,14 @@ void CharacterDescr::makeLines() {
 
   lines.push_back(StrAndClr("Combat skills", clrHeading));
   const int BASE_MELEE =
-    min(100, abilities.getVal(AbilityId::accuracyMelee, true, *(Map::player)));
+    min(100, abilities.getVal(AbilityId::melee, true, *(Map::player)));
   const int BASE_RANGED =
-    min(100, abilities.getVal(AbilityId::accuracyRanged, true, *(Map::player)));
+    min(100, abilities.getVal(AbilityId::ranged, true, *(Map::player)));
   const int BASE_DODGE_ATTACKS =
     min(100, abilities.getVal(AbilityId::dodgeAttack, true, *(Map::player)));
   Weapon* kick =
-    dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerKick));
-  string kickStr = eng.itemDataHandler->getItemInterfaceRef(
+    dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerKick));
+  string kickStr = ItemData::getItemInterfaceRef(
                      *kick, false, PrimaryAttMode::melee);
   delete kick;
   for(unsigned int i = 0; i < kickStr.length(); i++) {
@@ -43,8 +46,8 @@ void CharacterDescr::makeLines() {
     }
   }
   Weapon* punch =
-    dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerPunch));
-  string punchStr = eng.itemDataHandler->getItemInterfaceRef(
+    dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerPunch));
+  string punchStr = ItemData::getItemInterfaceRef(
                       *punch, false, PrimaryAttMode::melee);
   delete punch;
   for(unsigned int i = 0; i < punchStr.length(); i++) {
@@ -103,20 +106,20 @@ void CharacterDescr::makeLines() {
   vector<StrAndClr> potionList;
   vector<StrAndClr> manuscriptList;
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
-    const ItemData* const d = eng.itemDataHandler->dataList[i];
+    const ItemDataT* const d = ItemData::dataList[i];
     if(d->isPotion && (d->isTried || d->isIdentified)) {
-      Item* item = eng.itemFactory->spawnItem(d->id);
+      Item* item = ItemFactory::spawnItem(d->id);
       potionList.push_back(
         StrAndClr(
-          offset + eng.itemDataHandler->getItemRef(*item, ItemRefType::plain),
+          offset + ItemData::getItemRef(*item, ItemRefType::plain),
           d->clr));
       delete item;
     } else {
       if(d->isScroll && (d->isTried || d->isIdentified)) {
-        Item* item = eng.itemFactory->spawnItem(d->id);
+        Item* item = ItemFactory::spawnItem(d->id);
         manuscriptList.push_back(
           StrAndClr(
-            offset + eng.itemDataHandler->getItemRef(*item, ItemRefType::plain),
+            offset + ItemData::getItemRef(*item, ItemRefType::plain),
             item->getInterfaceClr()));
         delete item;
       }

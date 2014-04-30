@@ -18,7 +18,7 @@ bool MapGenCaveLvl::run_() {
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      eng.featureFactory->spawnFeatureAt(feature_stoneWall, Pos(x, y));
+      FeatureFactory::spawnFeatureAt(FeatureId::stoneWall, Pos(x, y));
       Wall* const wall = dynamic_cast<Wall*>(
                            Map::cells[x][y].featureStatic);
       wall->wallType = wall_cave;
@@ -27,14 +27,14 @@ bool MapGenCaveLvl::run_() {
   }
 
   const Pos& playerPos = Map::player->pos;
-  eng.featureFactory->spawnFeatureAt(feature_caveFloor, playerPos);
+  FeatureFactory::spawnFeatureAt(FeatureId::caveFloor, playerPos);
 
   vector<Pos> previousCenters(1, playerPos);
 
   //Make a random walk path from player
   int length = 40 + Rnd::dice(1, 40);
   makePathByRandomWalk(
-    playerPos.x, playerPos.y, length, feature_caveFloor, true);
+    playerPos.x, playerPos.y, length, FeatureId::caveFloor, true);
   const bool IS_TUNNEL_CAVE = Rnd::coinToss();
 
   //Make some more at random places, connect them to each other.
@@ -44,17 +44,17 @@ bool MapGenCaveLvl::run_() {
                         2 + Rnd::dice(1, MAP_H - 1 - 2) - 1);
     length = IS_TUNNEL_CAVE ? 30 + Rnd::dice(1, 50) : 650;
     makePathByRandomWalk(
-      curCenter.x, curCenter.y, length, feature_caveFloor, true);
+      curCenter.x, curCenter.y, length, FeatureId::caveFloor, true);
     const Pos prevCenter = previousCenters.at(
                              Rnd::range(0, previousCenters.size() - 1));
     makeStraightPathByPathfinder(
-      prevCenter, curCenter, feature_caveFloor, false, true);
+      prevCenter, curCenter, FeatureId::caveFloor, false, true);
     previousCenters.push_back(curCenter);
   }
 
   //Make a floodfill and place the stairs in one of the furthest positions
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
   int floodFill[MAP_W][MAP_H];
   FloodFill::run(playerPos, blockers, floodFill, 99999, Pos(-1, -1));
   vector<PosAndVal> floodFillVector;
@@ -70,10 +70,10 @@ bool MapGenCaveLvl::run_() {
   std::sort(floodFillVector.begin(), floodFillVector.end(), floodFillSorter);
   const unsigned int STAIR_ELEMENT =
     Rnd::range((floodFillVector.size() * 4) / 5,
-                   floodFillVector.size() - 1);
-  eng.featureFactory->spawnFeatureAt(
-    feature_stairs, floodFillVector.at(STAIR_ELEMENT).pos);
-  eng.populateMonsters->populateCaveLevel();
+               floodFillVector.size() - 1);
+  FeatureFactory::spawnFeatureAt(
+    FeatureId::stairs, floodFillVector.at(STAIR_ELEMENT).pos);
+  PopulateMonsters::populateCaveLevel();
 
   return true;
 }

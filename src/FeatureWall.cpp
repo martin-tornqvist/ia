@@ -46,11 +46,11 @@ SDL_Color Wall::getClr() const {
 }
 
 char Wall::getGlyph() const {
-  return Config::isAsciiWallSymbolFullSquare() ? 10 : '#';
+  return Config::isAsciiWallFullSquare() ? 10 : '#';
 }
 
 TileId Wall::getFrontWallTile() const {
-  if(Config::isTilesWallSymbolFullSquare()) {
+  if(Config::isTilesWallFullSquare()) {
     switch(wallType) {
       case wall_common:   return tile_wallTop;        break;
       case wall_alt1:     return tile_wallTop;        break;

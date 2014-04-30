@@ -6,8 +6,6 @@
 #include "CmnTypes.h"
 #include "PlayerBon.h"
 
-using namespace std;
-
 class MenuBrowser;
 
 class PlayerCreateCharacter {
@@ -19,13 +17,13 @@ public:
   void pickNewTrait(const bool IS_CHARACTER_CREATION) const;
 
 private:
-  void drawPickTrait(const vector<Trait>& traitsColOne,
-                     const vector<Trait>& traitsColTwo,
+  void drawPickTrait(const std::vector<Trait>& traitsColOne,
+                     const std::vector<Trait>& traitsColTwo,
                      const MenuBrowser& browser,
                      const bool IS_CHARACTER_CREATION) const;
 
   void pickBg() const;
-  void drawPickBg(const vector<Bg>& bgs,
+  void drawPickBg(const std::vector<Bg>& bgs,
                   const MenuBrowser& browser) const;
 };
 
@@ -33,11 +31,9 @@ private:
 //player enters a character name
 class PlayerEnterName {
 public:
-private:
-  friend class PlayerCreateCharacter;
   PlayerEnterName() {}
   void run() const;
-  void draw(const string& currentString) const;
+  void draw(const std::string& currentString) const;
   void readKeys(string& currentString, bool& isDone) const;
 };
 

@@ -12,10 +12,7 @@
 #include "FeatureData.h"
 #include "CmnTypes.h"
 
-using namespace std;
-
 class Actor;
-class FeatureFactory;
 class FeatureSpawnData;
 
 class Feature {
@@ -25,13 +22,13 @@ public:
   virtual void bump(Actor& actorBumping);
   virtual void newTurn();
   virtual bool canMoveCmn() const;
-  virtual bool canMove(const vector<PropId>& actorsProps) const;
+  virtual bool canMove(const std::vector<PropId>& actorsProps) const;
   virtual bool isSoundPassable() const;
   virtual bool isVisionPassable() const;
   virtual bool isProjectilePassable() const;
   virtual bool isSmokePassable() const;
   virtual bool isBottomless() const;
-  virtual string getDescr(const bool DEFINITE_ARTICLE) const;
+  virtual std::string getDescr(const bool DEFINITE_ARTICLE) const;
   virtual void hit(const int DMG, const DmgType dmgType);
   virtual SDL_Color getClr() const;
   virtual SDL_Color getClrBg() const;
@@ -55,12 +52,15 @@ public:
 protected:
   Pos pos_;
 
-  const FeatureData* const data_;
+  const FeatureDataT* const data_;
   bool hasBlood_;
 };
 
 class FeatureMob: public Feature {
 public:
+  FeatureMob(FeatureId id, Pos pos, FeatureSpawnData* spawnData = NULL) :
+    Feature(id, pos), shouldBeDeleted_(false) {(void)spawnData;}
+
   Pos getPos()  const {return pos_;}
   int getX()    const {return pos_.x;}
   int getY()    const {return pos_.y;}
@@ -69,19 +69,17 @@ public:
   bool shouldBeDeleted() {return shouldBeDeleted_;}
 
 protected:
-  friend class FeatureFactory;
-  FeatureMob(FeatureId id, Pos pos,
-             FeatureSpawnData* spawnData = NULL) :
-    Feature(id, pos), shouldBeDeleted_(false) {
-    (void)spawnData;
-  }
-
   bool shouldBeDeleted_;
 };
 
 class FeatureStatic: public Feature {
 public:
-  virtual string getDescr(const bool DEFINITE_ARTICLE) const override;
+  FeatureStatic(FeatureId id, Pos pos, FeatureSpawnData* spawnData = NULL) :
+    Feature(id, pos), goreTile_(tile_empty), goreGlyph_(' ') {
+    (void)spawnData;
+  }
+
+  virtual std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
   void setGoreIfPossible();
 
@@ -101,11 +99,6 @@ public:
   virtual void disarm();
   virtual void examine();
 
-  FeatureStatic(FeatureId id, Pos pos, FeatureSpawnData* spawnData = NULL) :
-    Feature(id, pos), goreTile_(tile_empty), goreGlyph_(' ') {
-    (void)spawnData;
-  }
-
 protected:
   virtual void triggerTrap(Actor& actor) {(void)actor;}
 
@@ -115,32 +108,25 @@ protected:
 
 class Grave: public FeatureStatic {
 public:
+  Grave(FeatureId id, Pos pos) : FeatureStatic(id, pos) {}
   ~Grave() {}
 
-  string getDescr(const bool DEFINITE_ARTICLE) const override;
+  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
-  void setInscription(const string& str) {inscription_ = str;}
+  void setInscription(const std::string& str) {inscription_ = str;}
 
   void bump(Actor& actorBumping) override;
 
 private:
-  string inscription_;
-
-  friend class FeatureFactory;
-  Grave(FeatureId id, Pos pos) :
-    FeatureStatic(id, pos) {}
+  std::string inscription_;
 };
 
 class Stairs: public FeatureStatic {
 public:
+  Stairs(FeatureId id, Pos pos) : FeatureStatic(id, pos) {}
   ~Stairs() {}
 
   void bump(Actor& actorBumping) override;
-
-private:
-  friend class FeatureFactory;
-  Stairs(FeatureId id, Pos pos) :
-    FeatureStatic(id, pos) {}
 };
 
 #endif

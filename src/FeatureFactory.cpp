@@ -18,176 +18,9 @@
 
 using namespace std;
 
-Feature* FeatureFactory::spawnFeatureAt(const FeatureId id, const Pos& pos,
-                                        FeatureSpawnData* spawnData) {
-  const FeatureData* const data = eng.featureDataHandler->getData(id);
+namespace FeatureFactory {
 
-  //General (simple) features
-  if(data->spawnType == featureSpawnType_static) {
-    assert(spawnData == NULL);
-    FeatureStatic* feature = new FeatureStatic(id, pos, eng);
-    replaceStaticFeatureAt(feature, pos);
-    return feature;
-  }
-  if(data->spawnType == featureSpawnType_mob) {
-    assert(spawnData == NULL);
-    FeatureMob* feature = new FeatureMob(id, pos, eng);
-    GameTime::addFeatureMob(feature);
-    return feature;
-  }
-
-  //Features with specific class
-  switch(id) {
-    case feature_door: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_door);
-      Door* door =
-        new Door(id, pos, eng, dynamic_cast<DoorSpawnData*>(spawnData));
-      replaceStaticFeatureAt(door, pos);
-      delete spawnData;
-      return door;
-    }
-    case feature_lever: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_lever);
-      FeatureLever* lever =
-        new FeatureLever(
-        id, pos, eng, dynamic_cast<LeverSpawnData*>(spawnData));
-      replaceStaticFeatureAt(lever, pos);
-      delete spawnData;
-      return lever;
-    }
-    case feature_trap: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_trap);
-      Trap* trap =
-        new Trap(id, pos, eng, dynamic_cast<TrapSpawnData*>(spawnData));
-      replaceStaticFeatureAt(trap, pos);
-      delete spawnData;
-      return trap;
-    }
-    case feature_litDynamite: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
-      LitDynamite* dynamite =
-        new LitDynamite(
-        id, pos, eng, dynamic_cast<DynamiteSpawnData*>(spawnData));
-      GameTime::addFeatureMob(dynamite);
-      delete spawnData;
-      return dynamite;
-    }
-    case feature_litFlare: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
-      LitFlare* flare =
-        new LitFlare(
-        id, pos, eng, dynamic_cast<DynamiteSpawnData*>(spawnData));
-      GameTime::addFeatureMob(flare);
-      delete spawnData;
-      return flare;
-    }
-    case feature_smoke: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_smoke);
-      Smoke* smoke =
-        new Smoke(id, pos, eng, dynamic_cast<SmokeSpawnData*>(spawnData));
-      GameTime::addFeatureMob(smoke);
-      delete spawnData;
-      return smoke;
-    }
-    case feature_proxEventWallCrumble: {
-      assert(spawnData->getFeatureSpawnDataType() ==
-             featureSpawnData_proxEventWallCrumble);
-      ProxEventWallCrumble* proxEvent =
-        new ProxEventWallCrumble(
-        id, pos, eng, dynamic_cast<ProxEventWallCrumbleSpawnData*>(spawnData));
-      GameTime::addFeatureMob(proxEvent);
-      delete spawnData;
-      return proxEvent;
-    }
-    case feature_tomb: {
-      assert(spawnData == NULL);
-      Tomb* tomb = new Tomb(id, pos, eng);
-      replaceStaticFeatureAt(tomb, pos);
-      return tomb;
-    }
-//    case feature_pillarCarved: {
-//        assert(spawnData == NULL);
-//        CarvedPillar* pillar = new CarvedPillar(id, pos, eng);
-//        replaceStaticFeatureAt(pillar, pos);
-//        return pillar;
-//      }
-//      break;
-//    case feature_barrel: {
-//        assert(spawnData == NULL);
-//        Barrel* barrel = new Barrel(id, pos, eng);
-//        replaceStaticFeatureAt(barrel, pos);
-//        return barrel;
-//      }
-//      break;
-    case feature_cabinet: {
-      assert(spawnData == NULL);
-      Cabinet* cabinet = new Cabinet(id, pos, eng);
-      replaceStaticFeatureAt(cabinet, pos);
-      return cabinet;
-    }
-    case feature_chest: {
-      assert(spawnData == NULL);
-      Chest* chest = new Chest(id, pos, eng);
-      replaceStaticFeatureAt(chest, pos);
-      return chest;
-    }
-    case feature_fountain: {
-      assert(spawnData == NULL);
-      Fountain* fountain = new Fountain(id, pos, eng);
-      replaceStaticFeatureAt(fountain, pos);
-      return fountain;
-    }
-    case feature_cocoon: {
-      assert(spawnData == NULL);
-      Cocoon* cocoon = new Cocoon(id, pos, eng);
-      replaceStaticFeatureAt(cocoon, pos);
-      return cocoon;
-    }
-//    case feature_altar: {
-//        assert(spawnData == NULL);
-//        Altar* altar = new Altar(id, pos, eng);
-//        replaceStaticFeatureAt(altar, pos);
-//
-//        return altar;
-//      }
-//      break;
-    case feature_shallowMud:
-    case feature_shallowWater:
-    case feature_poolBlood: {
-      assert(spawnData == NULL);
-      FeatureLiquidShallow* liquid = new FeatureLiquidShallow(id, pos, eng);
-      replaceStaticFeatureAt(liquid, pos);
-      return liquid;
-    }
-    case feature_deepWater: {
-      assert(spawnData == NULL);
-      FeatureLiquidDeep* liquid = new FeatureLiquidDeep(id, pos, eng);
-      replaceStaticFeatureAt(liquid, pos);
-      return liquid;
-    }
-    case feature_gravestone: {
-      assert(spawnData == NULL);
-      Grave* grave = new Grave(id, pos, eng);
-      replaceStaticFeatureAt(grave, pos);
-      return grave;
-    }
-    case feature_stairs: {
-      assert(spawnData == NULL);
-      Stairs* stairs = new Stairs(id, pos, eng);
-      replaceStaticFeatureAt(stairs, pos);
-      return stairs;
-    }
-    case feature_stoneWall: {
-      assert(spawnData == NULL);
-      Wall* wall = new Wall(id, pos, eng);
-      replaceStaticFeatureAt(wall, pos);
-      return wall;
-    }
-    default: {} break;
-  }
-
-  return NULL;
-}
+namespace {
 
 void FeatureFactory::replaceStaticFeatureAt(
   FeatureStatic* const newFeature, const Pos& pos) {
@@ -202,3 +35,177 @@ void FeatureFactory::replaceStaticFeatureAt(
   cell.featureStatic = newFeature;
 }
 
+} //namespace
+
+Feature* spawnFeatureAt(const FeatureId id, const Pos pos,
+                        FeatureSpawnData* spawnData) {
+  const FeatureDataT* const data = FeatureData::getData(id);
+
+  //General (simple) features
+  if(data->spawnType == featureSpawnType_static) {
+    assert(spawnData == NULL);
+    FeatureStatic* feature = new FeatureStatic(id, pos);
+    replaceStaticFeatureAt(feature, pos);
+    return feature;
+  }
+  if(data->spawnType == featureSpawnType_mob) {
+    assert(spawnData == NULL);
+    FeatureMob* feature = new FeatureMob(id, pos);
+    GameTime::addFeatureMob(feature);
+    return feature;
+  }
+
+  //Features with specific class
+  switch(id) {
+    case FeatureId::door: {
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_door);
+      Door* door =
+        new Door(id, pos, dynamic_cast<DoorSpawnData*>(spawnData));
+      replaceStaticFeatureAt(door, pos);
+      delete spawnData;
+      return door;
+    }
+    case FeatureId::lever: {
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_lever);
+      FeatureLever* lever =
+        new FeatureLever(
+        id, pos, dynamic_cast<LeverSpawnData*>(spawnData));
+      replaceStaticFeatureAt(lever, pos);
+      delete spawnData;
+      return lever;
+    }
+    case FeatureId::trap: {
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_trap);
+      Trap* trap =
+        new Trap(id, pos, dynamic_cast<TrapSpawnData*>(spawnData));
+      replaceStaticFeatureAt(trap, pos);
+      delete spawnData;
+      return trap;
+    }
+    case FeatureId::litDynamite: {
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
+      LitDynamite* dynamite =
+        new LitDynamite(
+        id, pos, dynamic_cast<DynamiteSpawnData*>(spawnData));
+      GameTime::addFeatureMob(dynamite);
+      delete spawnData;
+      return dynamite;
+    }
+    case FeatureId::litFlare: {
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
+      LitFlare* flare =
+        new LitFlare(
+        id, pos, dynamic_cast<DynamiteSpawnData*>(spawnData));
+      GameTime::addFeatureMob(flare);
+      delete spawnData;
+      return flare;
+    }
+    case FeatureId::smoke: {
+      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_smoke);
+      Smoke* smoke =
+        new Smoke(id, pos, dynamic_cast<SmokeSpawnData*>(spawnData));
+      GameTime::addFeatureMob(smoke);
+      delete spawnData;
+      return smoke;
+    }
+    case FeatureId::proxEventWallCrumble: {
+      assert(spawnData->getFeatureSpawnDataType() ==
+             featureSpawnData_proxEventWallCrumble);
+      ProxEventWallCrumble* proxEvent =
+        new ProxEventWallCrumble(
+        id, pos, dynamic_cast<ProxEventWallCrumbleSpawnData*>(spawnData));
+      GameTime::addFeatureMob(proxEvent);
+      delete spawnData;
+      return proxEvent;
+    }
+    case FeatureId::tomb: {
+      assert(spawnData == NULL);
+      Tomb* tomb = new Tomb(id, pos);
+      replaceStaticFeatureAt(tomb, pos);
+      return tomb;
+    }
+//    case FeatureId::pillarCarved: {
+//        assert(spawnData == NULL);
+//        CarvedPillar* pillar = new CarvedPillar(id, pos);
+//        replaceStaticFeatureAt(pillar, pos);
+//        return pillar;
+//      }
+//      break;
+//    case FeatureId::barrel: {
+//        assert(spawnData == NULL);
+//        Barrel* barrel = new Barrel(id, pos);
+//        replaceStaticFeatureAt(barrel, pos);
+//        return barrel;
+//      }
+//      break;
+    case FeatureId::cabinet: {
+      assert(spawnData == NULL);
+      Cabinet* cabinet = new Cabinet(id, pos);
+      replaceStaticFeatureAt(cabinet, pos);
+      return cabinet;
+    }
+    case FeatureId::chest: {
+      assert(spawnData == NULL);
+      Chest* chest = new Chest(id, pos);
+      replaceStaticFeatureAt(chest, pos);
+      return chest;
+    }
+    case FeatureId::fountain: {
+      assert(spawnData == NULL);
+      Fountain* fountain = new Fountain(id, pos);
+      replaceStaticFeatureAt(fountain, pos);
+      return fountain;
+    }
+    case FeatureId::cocoon: {
+      assert(spawnData == NULL);
+      Cocoon* cocoon = new Cocoon(id, pos);
+      replaceStaticFeatureAt(cocoon, pos);
+      return cocoon;
+    }
+//    case FeatureId::altar: {
+//        assert(spawnData == NULL);
+//        Altar* altar = new Altar(id, pos);
+//        replaceStaticFeatureAt(altar, pos);
+//
+//        return altar;
+//      }
+//      break;
+    case FeatureId::shallowMud:
+    case FeatureId::shallowWater:
+    case FeatureId::poolBlood: {
+      assert(spawnData == NULL);
+      FeatureLiquidShallow* liquid = new FeatureLiquidShallow(id, pos);
+      replaceStaticFeatureAt(liquid, pos);
+      return liquid;
+    }
+    case FeatureId::deepWater: {
+      assert(spawnData == NULL);
+      FeatureLiquidDeep* liquid = new FeatureLiquidDeep(id, pos);
+      replaceStaticFeatureAt(liquid, pos);
+      return liquid;
+    }
+    case FeatureId::gravestone: {
+      assert(spawnData == NULL);
+      Grave* grave = new Grave(id, pos);
+      replaceStaticFeatureAt(grave, pos);
+      return grave;
+    }
+    case FeatureId::stairs: {
+      assert(spawnData == NULL);
+      Stairs* stairs = new Stairs(id, pos);
+      replaceStaticFeatureAt(stairs, pos);
+      return stairs;
+    }
+    case FeatureId::stoneWall: {
+      assert(spawnData == NULL);
+      Wall* wall = new Wall(id, pos);
+      replaceStaticFeatureAt(wall, pos);
+      return wall;
+    }
+    default: {} break;
+  }
+
+  return NULL;
+}
+
+} //FeatureFactory

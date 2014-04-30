@@ -46,12 +46,11 @@ int main(int argc, char* argv[]) {
       eng.mainMenu->run(quitGame, introMusChannel);
 
     if(quitGame == false) {
-      eng.quitToMainMenu_ = false;
+      Init::quitToMainMenu = false;
 
       if(gameEntryType == GameEntryMode::newGame) {
         if(Config::isBotPlaying()) {
           PlayerBon::setAllTraitsToPicked();
-          eng.bot->init();
         }
         Map::playerCreateCharacter->createCharacter();
         Map::player->spawnStartItems();
@@ -65,10 +64,10 @@ int main(int argc, char* argv[]) {
           MapGenIntroForest().run();
         } else {
           //Else build first dungeon level
-          eng.dungeonClimb->travelDown();
+          DungeonClimb::travelDown();
         }
-        eng.dungeonMaster->setTimeStartedToNow();
-        const TimeData& t = eng.dungeonMaster->getTimeStarted();
+        DungeonMaster::setTimeStartedToNow();
+        const TimeData& t = DungeonMaster::getTimeStarted();
         trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
@@ -87,12 +86,12 @@ int main(int argc, char* argv[]) {
             "and rob them of treasures and knowledge. The ultimate prize is an "
             "artifact of non-human origin called \"The shining Trapezohedron\" "
             "- a window to all secrets of the universe.";
-          eng.popup->showMsg(msg, true, "The story so far...");
+          Popup::showMsg(msg, true, "The story so far...");
         }
       }
 
       //========== M A I N   L O O P ==========
-      while(eng.quitToMainMenu_ == false) {
+      while(Init::quitToMainMenu == false) {
         if(Map::player->deadState == ActorDeadState::alive) {
 
           Actor* const actor = GameTime::getCurrentActor();
@@ -120,15 +119,15 @@ int main(int argc, char* argv[]) {
         } else {
           //Player is dead, run postmortem, then return to main menu
           dynamic_cast<Player*>(Map::player)->waitTurnsLeft = -1;
-          eng.log->addMsg("I am dead... (press space/esc to proceed)",
+          Log::addMsg("I am dead... (press space/esc to proceed)",
                           clrMsgBad);
           Audio::play(SfxId::death);
           Renderer::drawMapAndInterface();
-          eng.log->clearLog();
-          eng.query->waitForEscOrSpace();
+          Log::clearLog();
+          Query::waitForEscOrSpace();
           eng.highScore->gameOver(false);
           eng.postmortem->run(&quitGame);
-          eng.quitToMainMenu_ = true;
+          Init::quitToMainMenu = true;
         }
       }
     }

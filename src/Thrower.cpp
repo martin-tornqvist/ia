@@ -25,8 +25,8 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   Map::player->explosiveThrown();
 
   vector<Pos> path;
-  eng.lineCalc->calcNewLine(Map::player->pos, aimCell, true,
-                            THROWING_RANGE_LIMIT, false, path);
+  LineCalc::calcNewLine(Map::player->pos, aimCell, true,
+                        THROWING_RANGE_LIMIT, false, path);
 
   //Remove cells after blocked cells
   for(unsigned int i = 1; i < path.size(); i++) {
@@ -42,7 +42,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   //Render
   if(path.size() > 1) {
     const char GLYPH =
-      eng.itemDataHandler->dataList[int(ItemId::dynamite)]->glyph;
+      ItemData::dataList[int(ItemId::dynamite)]->glyph;
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(unsigned int i = 1; i < path.size() - 1; i++) {
       Renderer::drawMapAndInterface(false);
@@ -59,30 +59,30 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   const bool IS_DEST_FEAT_BOTTOMLESS = featureAtDest->isBottomless();
 
   if(DYNAMITE_FUSE != -1) {
-    eng.log->addMsg("I throw a lit dynamite stick.");
+    Log::addMsg("I throw a lit dynamite stick.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      eng.featureFactory->spawnFeatureAt(
-        feature_litDynamite, path.back(),
+      FeatureFactory::spawnFeatureAt(
+        FeatureId::litDynamite, path.back(),
         new DynamiteSpawnData(DYNAMITE_FUSE));
     }
   } else if(FLARE_FUSE != -1) {
-    eng.log->addMsg("I throw a lit flare.");
+    Log::addMsg("I throw a lit flare.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      eng.featureFactory->spawnFeatureAt(
-        feature_litFlare, path.back(), new DynamiteSpawnData(FLARE_FUSE));
+      FeatureFactory::spawnFeatureAt(
+        FeatureId::litFlare, path.back(), new DynamiteSpawnData(FLARE_FUSE));
     }
     GameTime::updateLightMap();
     Map::player->updateFov();
     Renderer::drawMapAndInterface();
   } else {
-    eng.log->addMsg("I throw a lit Molotov Cocktail.");
+    Log::addMsg("I throw a lit Molotov Cocktail.");
     const int EXPL_RADI_CHANGE =
       PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
       Explosion::runExplosionAt(
-        path.back(), eng, ExplType::applyProp,
+        path.back(), ExplType::applyProp,
         ExplSrc::playerUseMoltvIntended, EXPL_RADI_CHANGE,
-        SfxId::explosionMolotov, new PropBurning(eng, propTurnsStd));
+        SfxId::explosionMolotov, new PropBurning(propTurnsStd));
     }
   }
 
@@ -91,26 +91,26 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
 
 void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
                         Item& itemThrown) {
-  MissileAttackData* data = new MissileAttackData(
-    actorThrowing, itemThrown, targetCell, actorThrowing.pos, eng);
+  MissileAttData* data = new MissileAttData(
+    actorThrowing, itemThrown, targetCell, actorThrowing.pos);
 
   const ActorSize aimLevel = data->intendedAimLevel;
 
   vector<Pos> path;
-  eng.lineCalc->calcNewLine(actorThrowing.pos, targetCell, false,
-                            THROWING_RANGE_LIMIT, false, path);
+  LineCalc::calcNewLine(actorThrowing.pos, targetCell, false,
+                        THROWING_RANGE_LIMIT, false, path);
 
   const ItemData& itemThrownData = itemThrown.getData();
 
   const string itemName_a =
-    eng.itemDataHandler->getItemRef(itemThrown, ItemRefType::a, true);
+    ItemData::getItemRef(itemThrown, ItemRefType::a, true);
   if(&actorThrowing == Map::player) {
-    eng.log->clearLog();
-    eng.log->addMsg("I throw " + itemName_a + ".");
+    Log::clearLog();
+    Log::addMsg("I throw " + itemName_a + ".");
   } else {
     const Pos& p = path.front();
     if(Map::cells[p.x][p.y].isSeenByPlayer) {
-      eng.log->addMsg(
+      Log::addMsg(
         actorThrowing.getNameThe() + " throws " + itemName_a + ".");
     }
   }
@@ -131,15 +131,15 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
 
     curPos.set(path.at(i));
 
-    Actor* const actorHere = Utils::getActorAtPos(curPos, eng);
+    Actor* const actorHere = Utils::getActorAtPos(curPos);
     if(actorHere != NULL) {
       if(
         curPos == targetCell ||
         actorHere->getData().actorSize >= actorSize_humanoid) {
 
         delete data;
-        data = new MissileAttackData(actorThrowing, itemThrown, targetCell,
-                                     curPos, eng, aimLevel);
+        data = new MissileAttData(actorThrowing, itemThrown, targetCell,
+                                  curPos, aimLevel);
 
         if(
           data->attackResult >= successSmall &&
@@ -157,7 +157,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
             Map::player->isSeeingActor(*actorHere, NULL);
           string defenderName = CAN_SEE_ACTOR ? actorHere->getNameThe() : "It";
 
-          eng.log->addMsg(defenderName + " is hit.", hitMessageClr);
+          Log::addMsg(defenderName + " is hit.", hitMessageClr);
 
           actorHere->hit(data->dmg, DmgType::physical, true);
           isActorHit = true;
@@ -226,10 +226,10 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
                 itemThrownData.landOnHardSurfaceSfx,
                 IgnoreMsgIfOriginSeen::yes, dropPos, NULL, SndVol::low,
                 alertsMonsters);
-        SndEmit::emitSnd(snd, eng);
+        SndEmit::emitSnd(snd);
       }
     }
-    eng.itemDrop->dropItemOnMap(dropPos, itemThrown);
+    ItemDrop::dropItemOnMap(dropPos, itemThrown);
   }
 
   delete data;

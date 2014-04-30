@@ -1,5 +1,6 @@
 #include "ActorPlayer.h"
 
+#include "Init.h"
 #include "Renderer.h"
 #include "Audio.h"
 #include "ItemWeapon.h"
@@ -21,15 +22,15 @@
 #include "ActorFactory.h"
 #include "PlayerBon.h"
 #include "FeatureLitDynamite.h"
-#include "ItemDevice.h"
 #include "Inventory.h"
-#include "InventoryHandler.h"
+#include "InventoryHandling.h"
 #include "ItemMedicalBag.h"
 #include "PlayerSpellsHandler.h"
 #include "Bot.h"
 #include "Input.h"
 #include "MapParsing.h"
 #include "Properties.h"
+#include "ItemDevice.h"
 
 const int MIN_SHOCK_WHEN_OBSESSION = 35;
 
@@ -75,53 +76,48 @@ void Player::spawnStartItems() {
     default:  weaponId = ItemId::dagger;   break;
   }
 
-  inv_->putItemInSlot(
-    SlotId::wielded, eng.itemFactory->spawnItem(weaponId), true, true);
+  inv_->putInSlot(SlotId::wielded, ItemFactory::spawnItem(weaponId), true,
+                  true);
 
-  inv_->putItemInSlot(
-    SlotId::wieldedAlt, eng.itemFactory->spawnItem(ItemId::pistol), true, true);
+  inv_->putInSlot(SlotId::wieldedAlt, ItemFactory::spawnItem(ItemId::pistol),
+                  true, true);
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {
-    inv_->putItemInGeneral(eng.itemFactory->spawnItem(ItemId::pistolClip));
+    inv_->putInGeneral(ItemFactory::spawnItem(ItemId::pistolClip));
   }
 
   //TODO Remove:
   //--------------------------------------------------------------------------
-//  inv_->putItemInGeneral(
-//    eng.itemFactory->spawnItem(ItemId::machineGun));
+//  inv_->putInGeneral(
+//    ItemFactory::spawnItem(ItemId::machineGun));
 //  for(int i = 0; i < 2; i++) {
-//    inv_->putItemInGeneral(
-//      eng.itemFactory->spawnItem(ItemId::drumOfBullets));
+//    inv_->putInGeneral(
+//      ItemFactory::spawnItem(ItemId::drumOfBullets));
 //  }
-//  inv_->putItemInGeneral(
-//    eng.itemFactory->spawnItem(ItemId::sawedOff));
-//  inv_->putItemInGeneral(
-//    eng.itemFactory->spawnItem(ItemId::pumpShotgun));
-//  inv_->putItemInGeneral(
-//    eng.itemFactory->spawnItem(ItemId::shotgunShell, 80));
+//  inv_->putInGeneral(
+//    ItemFactory::spawnItem(ItemId::sawedOff));
+//  inv_->putInGeneral(
+//    ItemFactory::spawnItem(ItemId::pumpShotgun));
+//  inv_->putInGeneral(
+//    ItemFactory::spawnItem(ItemId::shotgunShell, 80));
   //--------------------------------------------------------------------------
 
-  inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(ItemId::dynamite, NR_DYNAMITE));
-  inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(ItemId::molotov, NR_MOLOTOV));
+  inv_->putInGeneral(ItemFactory::spawnItem(ItemId::dynamite, NR_DYNAMITE));
+  inv_->putInGeneral(ItemFactory::spawnItem(ItemId::molotov, NR_MOLOTOV));
 
   if(NR_THROWING_KNIVES > 0) {
-    inv_->putItemInSlot(
+    inv_->putInSlot(
       SlotId::missiles,
-      eng.itemFactory->spawnItem(ItemId::throwingKnife, NR_THROWING_KNIVES),
+      ItemFactory::spawnItem(ItemId::throwingKnife, NR_THROWING_KNIVES),
       true, true);
   }
 
-  inv_->putItemInSlot(
-    SlotId::armorBody,
-    eng.itemFactory->spawnItem(ItemId::armorLeatherJacket),
-    true, true);
+  inv_->putInSlot(SlotId::armorBody,
+                  ItemFactory::spawnItem(ItemId::armorLeatherJacket),
+                  true, true);
 
-  inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(ItemId::electricLantern));
-  inv_->putItemInGeneral(
-    eng.itemFactory->spawnItem(ItemId::medicalBag));
+  inv_->putInGeneral(ItemFactory::spawnItem(ItemId::electricLantern));
+  inv_->putInGeneral(ItemFactory::spawnItem(ItemId::medicalBag));
 }
 
 void Player::storeToSaveLines(vector<string>& lines) const {
@@ -144,7 +140,7 @@ void Player::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(molotovFuseTurns));
   lines.push_back(toStr(flareFuseTurns));
 
-  for(int i = 0; i < endOfAbilityId; i++) {
+  for(int i = 0; i < int(AbilityId::endOfAbilityId); i++) {
     lines.push_back(toStr(data_->abilityVals.getRawVal(AbilityId(i))));
   }
 
@@ -193,7 +189,7 @@ void Player::setupFromSaveLines(vector<string>& lines) {
   flareFuseTurns = toInt(lines.front());
   lines.erase(lines.begin());
 
-  for(int i = 0; i < endOfAbilityId; i++) {
+  for(int i = 0; i < int(AbilityId::endOfAbilityId); i++) {
     data_->abilityVals.setVal(AbilityId(i), toInt(lines.front()));
     lines.erase(lines.begin());
   }
@@ -215,7 +211,7 @@ void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
 
   if(ALLOW_WOUNDS && Config::isBotPlaying() == false) {
     if(dmg >= 5) {
-      Prop* const prop = new PropWound(eng, propTurnsIndefinite);
+      Prop* const prop = new PropWound(propTurnsIndefinite);
       propHandler_->tryApplyProp(prop);
     }
   }
@@ -321,15 +317,14 @@ void Player::incrInsanity() {
   if(getInsanity() >= 100) {
     msg += "My mind can no longer withstand what it has grasped. "
            "I am hopelessly lost.";
-    eng.popup->showMsg(msg, true, "Complete insanity!",
-                       SfxId::insanityRising);
+    Popup::showMsg(msg, true, "Complete insanity!", SfxId::insanityRising);
     die(true, false, false);
   } else {
     bool playerSeeShockingMonster = false;
     vector<Actor*> SpottedEnemies;
     getSpottedEnemies(SpottedEnemies);
     for(Actor * actor : SpottedEnemies) {
-      const ActorData& def = actor->getData();
+      const ActorDataT& def = actor->getData();
       if(def.monsterShockLevel != MonsterShockLevel::none) {
         playerSeeShockingMonster = true;
       }
@@ -347,42 +342,42 @@ void Player::incrInsanity() {
             } else {
               msg += "I scream in terror.";
             }
-            eng.popup->showMsg(msg, true, "Screaming!", SfxId::insanityRising);
+            Popup::showMsg(msg, true, "Screaming!", SfxId::insanityRising);
             Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
                     SndVol::high, AlertsMonsters::yes);
-            SndEmit::emitSnd(snd, eng);
+            SndEmit::emitSnd(snd);
             return;
           }
         } break;
 
         case 2: {
           msg += "I find myself babbling incoherently.";
-          eng.popup->showMsg(msg, true, "Babbling!", SfxId::insanityRising);
+          Popup::showMsg(msg, true, "Babbling!", SfxId::insanityRising);
           const string playerName = getNameThe();
           for(int i = Rnd::range(3, 5); i > 0; i--) {
             const string phrase = Cultist::getCultistPhrase();
-            eng.log->addMsg(playerName + ": " + phrase);
+            Log::addMsg(playerName + ": " + phrase);
           }
           Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMonsters::yes);
-          SndEmit::emitSnd(snd, eng);
+          SndEmit::emitSnd(snd);
           return;
         } break;
 
         case 3: {
           msg += "I struggle to not fall into a stupor.";
-          eng.popup->showMsg(msg, true, "Fainting!",
-                             SfxId::insanityRising);
-          propHandler_->tryApplyProp(new PropFainted(eng, propTurnsStd));
+          Popup::showMsg(msg, true, "Fainting!",
+                         SfxId::insanityRising);
+          propHandler_->tryApplyProp(new PropFainted(propTurnsStd));
           return;
         } break;
 
         case 4: {
           msg += "I laugh nervously.";
-          eng.popup->showMsg(msg, true, "HAHAHA!", SfxId::insanityRising);
+          Popup::showMsg(msg, true, "HAHAHA!", SfxId::insanityRising);
           Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMonsters::yes);
-          SndEmit::emitSnd(snd, eng);
+          SndEmit::emitSnd(snd);
           return;
         } break;
 
@@ -403,15 +398,15 @@ void Player::incrInsanity() {
                   if(SpottedEnemies.empty() == false) {
                     const int MONSTER_ROLL =
                       Rnd::range(0, SpottedEnemies.size() - 1);
-                    const ActorData& monsterData =
+                    const ActorDataT& monsterData =
                       SpottedEnemies.at(MONSTER_ROLL)->getData();
                     if(
                       monsterData.isRat &&
                       phobias[int(Phobia::rat)] == false) {
                       msg += "I am afflicted by Murophobia. "
                              "Rats suddenly seem terrifying.";
-                      eng.popup->showMsg(msg, true, "Murophobia!",
-                                         SfxId::insanityRising);
+                      Popup::showMsg(msg, true, "Murophobia!",
+                                     SfxId::insanityRising);
                       phobias[int(Phobia::rat)] = true;
                       return;
                     }
@@ -420,8 +415,8 @@ void Player::incrInsanity() {
                       phobias[int(Phobia::spider)] == false) {
                       msg += "I am afflicted by Arachnophobia. "
                              "Spiders suddenly seem terrifying.";
-                      eng.popup->showMsg(msg, true, "Arachnophobia!",
-                                         SfxId::insanityRising);
+                      Popup::showMsg(msg, true, "Arachnophobia!",
+                                     SfxId::insanityRising);
                       phobias[int(Phobia::spider)] = true;
                       return;
                     }
@@ -430,8 +425,8 @@ void Player::incrInsanity() {
                       phobias[int(Phobia::dog)] == false) {
                       msg += "I am afflicted by Cynophobia. "
                              "Dogs suddenly seem terrifying.";
-                      eng.popup->showMsg(msg, true, "Cynophobia!",
-                                         SfxId::insanityRising);
+                      Popup::showMsg(msg, true, "Cynophobia!",
+                                     SfxId::insanityRising);
                       phobias[int(Phobia::dog)] = true;
                       return;
                     }
@@ -440,7 +435,7 @@ void Player::incrInsanity() {
                       phobias[int(Phobia::undead)] == false) {
                       msg += "I am afflicted by Necrophobia. "
                              "The undead suddenly seem much more terrifying.";
-                      eng.popup->showMsg(msg, true, "Necrophobia!");
+                      Popup::showMsg(msg, true, "Necrophobia!");
                       phobias[int(Phobia::undead)] = true;
                       return;
                     }
@@ -451,8 +446,8 @@ void Player::incrInsanity() {
                       if(phobias[int(Phobia::openPlace)] == false) {
                         msg += "I am afflicted by Agoraphobia. "
                                "Open places suddenly seem terrifying.";
-                        eng.popup->showMsg(msg, true, "Agoraphobia!",
-                                           SfxId::insanityRising);
+                        Popup::showMsg(msg, true, "Agoraphobia!",
+                                       SfxId::insanityRising);
                         phobias[int(Phobia::openPlace)] = true;
                         return;
                       }
@@ -461,18 +456,18 @@ void Player::incrInsanity() {
                       if(phobias[int(Phobia::closedPlace)] == false) {
                         msg += "I am afflicted by Claustrophobia. "
                                "Confined places suddenly seem terrifying.";
-                        eng.popup->showMsg(msg, true, "Claustrophobia!",
-                                           SfxId::insanityRising);
+                        Popup::showMsg(msg, true, "Claustrophobia!",
+                                       SfxId::insanityRising);
                         phobias[int(Phobia::closedPlace)] = true;
                         return;
                       }
                     }
                   } else {
-                    if(Map::getDlvl() >= 5) {
+                    if(Map::dlvl >= 5) {
                       if(phobias[int(Phobia::deepPlaces)] == false) {
                         msg += "I am afflicted by Bathophobia. "
                                "It suddenly seems terrifying to delve deeper.";
-                        eng.popup->showMsg(msg, true, "Bathophobia!");
+                        Popup::showMsg(msg, true, "Bathophobia!");
                         phobias[int(Phobia::deepPlaces)] = true;
                         return;
                       }
@@ -501,8 +496,8 @@ void Player::incrInsanity() {
                     "However, my depraved mind can never find complete peace "
                     "(no shock from taking damage, but shock cannot go below "
                     + toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-                  eng.popup->showMsg(msg, true, "Masochistic obsession!",
-                                     SfxId::insanityRising);
+                  Popup::showMsg(msg, true, "Masochistic obsession!",
+                                 SfxId::insanityRising);
                   obsessions[int(Obsession::masochism)] = true;
                   return;
                 } break;
@@ -513,8 +508,8 @@ void Player::incrInsanity() {
                     "However, my depraved mind can no longer find complete "
                     "peace (shock cannot go below "
                     + toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-                  eng.popup->showMsg(msg, true, "Sadistic obsession!",
-                                     SfxId::insanityRising);
+                  Popup::showMsg(msg, true, "Sadistic obsession!",
+                                 SfxId::insanityRising);
                   obsessions[int(Obsession::sadism)] = true;
                   return;
                 } break;
@@ -527,16 +522,16 @@ void Player::incrInsanity() {
         case 7: {
           if(insanity_ > 8) {
             msg += "The shadows are closing in on me!";
-            eng.popup->showMsg(
+            Popup::showMsg(
               msg, true, "Haunted by shadows!", SfxId::insanityRising);
 
             const int NR_SHADOWS_LOWER = 1;
             const int NR_SHADOWS_UPPER =
-              getConstrInRange(2, (Map::getDlvl() + 1) / 2, 6);
+              getConstrInRange(2, (Map::dlvl + 1) / 2, 6);
             const int NR_SHADOWS =
               Rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
 
-            eng.actorFactory->summonMonsters(
+            ActorFactory::summonMonsters(
               pos, vector<ActorId>(NR_SHADOWS, actor_shadow), true);
 
             return;
@@ -547,9 +542,9 @@ void Player::incrInsanity() {
           msg += "I find myself in a peculiar detached daze, "
                  "a tranced state of mind. I struggle to recall "
                  "where I am, or what I'm doing.";
-          eng.popup->showMsg(msg, true, "Confusion!", SfxId::insanityRising);
+          Popup::showMsg(msg, true, "Confusion!", SfxId::insanityRising);
 
-          propHandler_->tryApplyProp(new PropConfused(eng, propTurnsStd));
+          propHandler_->tryApplyProp(new PropConfused(propTurnsStd));
 
           return;
         } break;
@@ -583,7 +578,7 @@ void Player::addTmpShockFromFeatures() {
 
 bool Player::isStandingInOpenSpace() const {
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
       if(blockers[x][y]) {
@@ -597,7 +592,7 @@ bool Player::isStandingInOpenSpace() const {
 
 bool Player::isStandingInCrampedSpace() const {
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
   int blockCount = 0;
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
@@ -621,29 +616,29 @@ void Player::testPhobias() {
   //Phobia vs creature type?
   if(ROLL < 10) {
     for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
-      const ActorData& monsterData = SpottedEnemies.at(0)->getData();
+      const ActorDataT& monsterData = SpottedEnemies.at(0)->getData();
       if(monsterData.isCanine && phobias[int(Phobia::dog)]) {
-        eng.log->addMsg("I am plagued by my canine phobia!");
+        Log::addMsg("I am plagued by my canine phobia!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
+          new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
       if(monsterData.isRat && phobias[int(Phobia::rat)]) {
-        eng.log->addMsg("I am plagued by my rat phobia!");
+        Log::addMsg("I am plagued by my rat phobia!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
+          new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
       if(monsterData.isUndead && phobias[int(Phobia::undead)]) {
-        eng.log->addMsg("I am plagued by my phobia of the dead!");
+        Log::addMsg("I am plagued by my phobia of the dead!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
+          new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
       if(monsterData.isSpider && phobias[int(Phobia::spider)]) {
-        eng.log->addMsg("I am plagued by my spider phobia!");
+        Log::addMsg("I am plagued by my spider phobia!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
+          new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
     }
@@ -651,18 +646,18 @@ void Player::testPhobias() {
   if(ROLL < 5) {
     if(phobias[int(Phobia::openPlace)]) {
       if(isStandingInOpenSpace()) {
-        eng.log->addMsg("I am plagued by my phobia of open places!");
+        Log::addMsg("I am plagued by my phobia of open places!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
+          new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
     }
 
     if(phobias[int(Phobia::closedPlace)]) {
       if(isStandingInCrampedSpace()) {
-        eng.log->addMsg("I am plagued by my phobia of closed places!");
+        Log::addMsg("I am plagued by my phobia of closed places!");
         propHandler_->tryApplyProp(
-          new PropTerrified(eng, propTurnsSpecific, Rnd::dice(1, 6)));
+          new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
         return;
       }
     }
@@ -704,38 +699,36 @@ void Player::onActorTurn() {
   vector<Actor*> spottedEnemies;
   getSpottedEnemies(spottedEnemies);
   if(spottedEnemies.empty()) {
-    const InventoryScreenId invScreen =
-      eng.inventoryHandler->screenToOpenAfterDrop;
-    if(invScreen != endOfInventoryScreens) {
+    const InvScrId invScreen = InvHandling::screenToOpenAfterDrop;
+    if(invScreen != InvScrId::endOfInventoryScreens) {
       switch(invScreen) {
         case InvScrId::backpack: {
-          eng.inventoryHandler->runBrowseInventory();
+          InvHandling::runBrowseInventory();
         } break;
 
         case InvScrId::use: {
-          eng.inventoryHandler->runUseScreen();
+          InvHandling::runUseScreen();
         } break;
 
         case InvScrId::equip: {
-          eng.inventoryHandler->runEquipScreen(
-            eng.inventoryHandler->equipSlotToOpenAfterDrop);
+          InvHandling::runEquipScreen(InvHandling::equipSlotToOpenAfterDrop);
         } break;
 
         case InvScrId::slots: {
-          eng.inventoryHandler->runSlotsScreen();
+          InvHandling::runSlotsScreen();
         } break;
 
-        case endOfInventoryScreens: {} break;
+        case InvScrId::endOfInventoryScreens: {} break;
       }
       return;
     }
   } else {
-    eng.inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
-    eng.inventoryHandler->browserPosToSetAfterDrop = 0;
+    InvHandling::screenToOpenAfterDrop    = InvScrId::endOfInventoryScreens;
+    InvHandling::browserPosToSetAfterDrop = 0;
   }
 
   if(Config::isBotPlaying()) {
-    eng.bot->act();
+    Bot::act();
   } else {
     Input::clearEvents();
     Input::handleMapModeInputUntilFound();
@@ -753,12 +746,12 @@ void Player::onStandardTurn() {
       string fuseMsg = "***F";
       for(int i = 0; i < dynamiteFuseTurns; i++) {fuseMsg += "Z";}
       fuseMsg += "***";
-      eng.log->addMsg(fuseMsg, clrYellow);
+      Log::addMsg(fuseMsg, clrYellow);
     }
   }
   if(dynamiteFuseTurns == 0) {
-    eng.log->addMsg("The dynamite explodes in my hands!");
-    Explosion::runExplosionAt(pos, eng, ExplType::expl);
+    Log::addMsg("The dynamite explodes in my hands!");
+    Explosion::runExplosionAt(pos, ExplType::expl);
     updateColor();
     dynamiteFuseTurns = -1;
   }
@@ -768,12 +761,12 @@ void Player::onStandardTurn() {
     molotovFuseTurns--;
   }
   if(molotovFuseTurns == 0) {
-    eng.log->addMsg("The Molotov Cocktail explodes in my hands!");
+    Log::addMsg("The Molotov Cocktail explodes in my hands!");
     molotovFuseTurns = -1;
     updateColor();
     Explosion::runExplosionAt(
-      pos, eng, ExplType::applyProp, ExplSrc::misc, 0, SfxId::explosionMolotov,
-      new PropBurning(eng, propTurnsStd));
+      pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::explosionMolotov,
+      new PropBurning(propTurnsStd));
   }
 
   //Flare
@@ -781,7 +774,7 @@ void Player::onStandardTurn() {
     flareFuseTurns--;
   }
   if(flareFuseTurns == 0) {
-    eng.log->addMsg("The flare is extinguished.");
+    Log::addMsg("The flare is extinguished.");
     updateColor();
     flareFuseTurns = -1;
   }
@@ -802,13 +795,13 @@ void Player::onStandardTurn() {
   getSpottedEnemies(spottedEnemies);
   double shockFromMonstersCurPlayerTurn = 0.0;
   for(Actor * actor : spottedEnemies) {
-    eng.dungeonMaster->onMonsterSpotted(*actor);
+    DungeonMaster::onMonsterSpotted(*actor);
 
     Monster* monster = dynamic_cast<Monster*>(actor);
 
     monster->playerBecomeAwareOfMe();
 
-    const ActorData& data = monster->getData();
+    const ActorDataT& data = monster->getData();
     if(data.monsterShockLevel != MonsterShockLevel::none) {
       switch(data.monsterShockLevel) {
         case MonsterShockLevel::unsettling: {
@@ -844,14 +837,14 @@ void Player::onStandardTurn() {
   if(TURN % loseNTurns == 0 && TURN > 1) {
     if(Rnd::oneIn(850)) {
       if(Rnd::coinToss()) {
-        eng.popup->showMsg("I have a bad feeling about this...", true);
+        Popup::showMsg("I have a bad feeling about this...", true);
       } else {
-        eng.popup->showMsg("A chill runs down my spine...", true);
+        Popup::showMsg("A chill runs down my spine...", true);
       }
       incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
       Renderer::drawMapAndInterface();
     } else {
-      if(Map::getDlvl() != 0) {
+      if(Map::dlvl != 0) {
         incrShock(1, ShockSrc::time);
       }
     }
@@ -861,8 +854,8 @@ void Player::onStandardTurn() {
   if(getShockTotal() >= 100) {
     nrTurnsUntilIns_ = nrTurnsUntilIns_ < 0 ? 3 : nrTurnsUntilIns_ - 1;
     if(nrTurnsUntilIns_ > 0) {
-      eng.log->addMsg("I feel my sanity slipping...", clrMsgWarning, true,
-                      true);
+      Log::addMsg("I feel my sanity slipping...", clrMsgWarning, true,
+                  true);
     } else {
       nrTurnsUntilIns_ = -1;
       incrInsanity();
@@ -884,8 +877,8 @@ void Player::onStandardTurn() {
         if(IS_MONSTER_SEEN) {
           if(monster.messageMonsterInViewPrinted == false) {
             if(activeMedicalBag != NULL || waitTurnsLeft > 0) {
-              eng.log->addMsg(actor->getNameA() + " comes into my view.",
-                              clrWhite, true);
+              Log::addMsg(actor->getNameA() + " comes into my view.",
+                          clrWhite, true);
             }
             monster.messageMonsterInViewPrinted = true;
           }
@@ -899,8 +892,8 @@ void Player::onStandardTurn() {
                 monster.isStealth = false;
                 updateFov();
                 Renderer::drawMapAndInterface();
-                eng.log->addMsg("I spot " + monster.getNameA() + "!",
-                                clrMsgWarning, true, true);
+                Log::addMsg("I spot " + monster.getNameA() + "!",
+                            clrMsgWarning, true, true);
               }
             }
           }
@@ -961,10 +954,10 @@ void Player::onStandardTurn() {
           if(Map::cells[x][y].isSeenByPlayer) {
             Feature* f = Map::cells[x][y].featureStatic;
 
-            if(f->getId() == feature_trap) {
+            if(f->getId() == FeatureId::trap) {
               dynamic_cast<Trap*>(f)->playerTrySpotHidden();
             }
-            if(f->getId() == feature_door) {
+            if(f->getId() == FeatureId::door) {
               dynamic_cast<Door*>(f)->playerTrySpotHidden();
             }
           }
@@ -986,12 +979,12 @@ void Player::onStandardTurn() {
 void Player::interruptActions() {
   Renderer::drawMapAndInterface();
 
-  eng.inventoryHandler->screenToOpenAfterDrop = endOfInventoryScreens;
-  eng.inventoryHandler->browserPosToSetAfterDrop = 0;
+  InvHandling::screenToOpenAfterDrop    = InvScrId::endOfInventoryScreens;
+  InvHandling::browserPosToSetAfterDrop = 0;
 
   //Abort searching
   if(waitTurnsLeft > 0) {
-    eng.log->addMsg("I stop waiting.", clrWhite);
+    Log::addMsg("I stop waiting.", clrWhite);
     Renderer::drawMapAndInterface();
   }
   waitTurnsLeft = -1;
@@ -1018,7 +1011,7 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   const string& msg = snd.getMsg();
   const bool HAS_SND_MSG = msg.empty() == false && msg != " ";
 
-  if(HAS_SND_MSG) {eng.log->addMsg(msg, clrWhite);}
+  if(HAS_SND_MSG) {Log::addMsg(msg, clrWhite);}
 
   //Play audio after message to ensure synch between audio and animation
   //If origin is hidden, we only play the sound if there is a message
@@ -1042,7 +1035,7 @@ void Player::moveDir(Dir dir) {
     //Trap affects leaving?
     if(dir != Dir::center) {
       Feature* f = Map::cells[pos.x][pos.y].featureStatic;
-      if(f->getId() == feature_trap) {
+      if(f->getId() == FeatureId::trap) {
         trace << "Player: Standing on trap, check if affects move" << endl;
         dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       }
@@ -1054,7 +1047,7 @@ void Player::moveDir(Dir dir) {
 
     if(dir != Dir::center) {
       //Attack?
-      Actor* const actorAtDest = Utils::getActorAtPos(dest, eng);
+      Actor* const actorAtDest = Utils::getActorAtPos(dest);
       if(actorAtDest != NULL) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
@@ -1066,19 +1059,19 @@ void Player::moveDir(Dir dir) {
                   isSeeingActor(*actorAtDest, NULL)) {
                 if(weapon->getData().isRangedWeapon) {
                   const string wpnName =
-                    eng.itemDataHandler->getItemRef(*weapon, ItemRefType::a);
-                  eng.log->addMsg(
+                    ItemData::getItemRef(*weapon, ItemRefType::a);
+                  Log::addMsg(
                     "Attack " + actorAtDest->getNameThe() +
                     " with " + wpnName + "? (y/n)", clrWhiteHigh);
                   Renderer::drawMapAndInterface();
-                  if(eng.query->yesOrNo() == YesNoAnswer::no) {
-                    eng.log->clearLog();
+                  if(Query::yesOrNo() == YesNoAnswer::no) {
+                    Log::clearLog();
                     Renderer::drawMapAndInterface();
                     return;
                   }
                 }
               }
-              eng.attack->melee(*this, *weapon, *actorAtDest);
+              Attack::melee(*this, *weapon, *actorAtDest);
               target = actorAtDest;
               return;
             }
@@ -1114,12 +1107,12 @@ void Player::moveDir(Dir dir) {
         //Encumbrance
         const int ENC = getEncPercent();
         if(ENC >= ENC_IMMOBILE_LVL) {
-          eng.log->addMsg("I am too encumbered to move!");
+          Log::addMsg("I am too encumbered to move!");
           Renderer::drawMapAndInterface();
           return;
         } else if(ENC >= 100) {
-          eng.log->addMsg("I stagger.", clrMsgWarning);
-          propHandler_->tryApplyProp(new PropWaiting(eng, propTurnsStd));
+          Log::addMsg("I stagger.", clrMsgWarning);
+          propHandler_->tryApplyProp(new PropWaiting(propTurnsStd));
         }
 
         pos = dest;
@@ -1145,8 +1138,8 @@ void Player::moveDir(Dir dir) {
         if(item != NULL) {
           string message = propHandler_->allowSee() == false ?
                            "I feel here: " : "I see here: ";
-          message += eng.itemDataHandler->getItemInterfaceRef(*item, true);
-          eng.log->addMsg(message + ".");
+          message += ItemData::getItemInterfaceRef(*item, true);
+          Log::addMsg(message + ".");
         }
       }
 
@@ -1177,7 +1170,7 @@ void Player::autoMelee() {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
-        Actor* const actor = Utils::getActorAtPos(pos + Pos(dx, dy), eng);
+        Actor* const actor = Utils::getActorAtPos(pos + Pos(dx, dy));
         if(actor != NULL) {
           if(isSeeingActor(*actor, NULL)) {
             target = actor;
@@ -1193,24 +1186,24 @@ void Player::autoMelee() {
 void Player::kick(Actor& actorToKick) {
   Weapon* kickWeapon = NULL;
 
-  const ActorData& d = actorToKick.getData();
+  const ActorDataT& d = actorToKick.getData();
 
   if(d.actorSize == actorSize_floor && (d.isSpider || d.isRat)) {
     kickWeapon =
-      dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerStomp));
+      dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerStomp));
   } else {
     kickWeapon =
-      dynamic_cast<Weapon*>(eng.itemFactory->spawnItem(ItemId::playerKick));
+      dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerKick));
   }
-  eng.attack->melee(*this, *kickWeapon, actorToKick);
+  Attack::melee(*this, *kickWeapon, actorToKick);
   delete kickWeapon;
 }
 
 void Player::punch(Actor& actorToPunch) {
   //Spawn a temporary punch weapon to attack with
-  Weapon* punchWeapon = dynamic_cast<Weapon*>(
-                          eng.itemFactory->spawnItem(ItemId::playerPunch));
-  eng.attack->melee(*this, *punchWeapon, actorToPunch);
+  Weapon* punchWeapon =
+    dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerPunch));
+  Attack::melee(*this, *punchWeapon, actorToPunch);
   delete punchWeapon;
 }
 
@@ -1280,7 +1273,7 @@ void Player::updateFov() {
 
   if(propHandler_->allowSee()) {FOVhack();}
 
-  if(eng.isCheatVisionEnabled_) {
+  if(Init::isCheatVisionEnabled) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
         Map::cells[x][y].isSeenByPlayer = true;
@@ -1292,7 +1285,7 @@ void Player::updateFov() {
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
       Cell& cell = Map::cells[x][y];
-      const bool IS_BLOCKING = CellPred::BlocksMoveCmn(false, eng).check(cell);
+      const bool IS_BLOCKING = CellPred::BlocksMoveCmn(false).check(cell);
       //Do not explore dark floor cells
       if(cell.isSeenByPlayer && (cell.isDark == false || IS_BLOCKING)) {
         cell.isExplored = true;
@@ -1306,7 +1299,7 @@ void Player::FOVhack() {
   MapParse::parse(CellPred::BlocksVision(), visionBlockers);
 
   bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false, eng), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
