@@ -277,7 +277,7 @@ void Postmortem::readKeysMenu(const vector<StrAndClr>& linesAndClr,
           renderMenu(browser);
         }
         if(browser.isPosAtElement(1)) {
-          eng.highScore->runHighScoreScreen();
+          HighScore::runHighScoreScreen();
           renderMenu(browser);
         }
         if(browser.isPosAtElement(2)) {

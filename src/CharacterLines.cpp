@@ -203,7 +203,7 @@ void drawInfoLines() {
   pos.x = CHARACTER_LINE_X0;
 
   vector<StrAndClr> propsLine;
-  player->getPropHandler().getPropsInterfaceLine(propsLine);
+  Map::player->getPropHandler().getPropsInterfaceLine(propsLine);
   const int NR_PROPS = propsLine.size();
   for(int i = 0; i < NR_PROPS; i++) {
     const StrAndClr& curPropLabel = propsLine.at(i);

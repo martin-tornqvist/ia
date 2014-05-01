@@ -23,8 +23,7 @@ namespace ItemData {
 namespace {
 
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
-void ItemDataHandler::resetData(ItemDataT* const d,
-                                ItemType const itemType) const {
+void resetData(ItemDataT* const d, ItemType const itemType) const {
   switch(itemType) {
     case ItemType::general: {
       d->itemValue = ItemValue::normal;
@@ -38,7 +37,7 @@ void ItemDataHandler::resetData(ItemDataT* const d,
       d->isTried = false;
       d->glyph = 'X';
       d->clr = clrWhite;
-      d->tile = tile_empty;
+      d->tile = TileId::empty;
       d->primaryAttackMode = PrimaryAttMode::none;
       d->isScroll = d->isPotion = d->isEatable = false;
       d->isArmor = d->isCloak = d->isRing = d->isAmulet = false;
@@ -59,7 +58,7 @@ void ItemDataHandler::resetData(ItemDataT* const d,
       d->rangedDmgType = DmgType::physical;
       d->rangedHasInfiniteAmmo = false;
       d->rangedMissileGlyph = 'X';
-      d->rangedMissileTile = tile_projectileStandardFrontSlash;
+      d->rangedMissileTile = TileId::projectileStandardFrontSlash;
       d->rangedMissileClr = clrWhite;
       d->rangedMissileLeavesTrail = false;
       d->rangedMissileLeavesSmoke = false;
@@ -150,7 +149,7 @@ void ItemDataHandler::resetData(ItemDataT* const d,
       d->itemWeight = itemWeight_extraLight;
       d->glyph = '{';
       d->clr = clrWhite;
-      d->tile = tile_ammo;
+      d->tile = TileId::ammo;
       d->isAmmo = true;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
     } break;
@@ -171,7 +170,7 @@ void ItemDataHandler::resetData(ItemDataT* const d,
       d->isIdentified = false;
       d->glyph = '?';
       d->clr = clrWhite;
-      d->tile = tile_scroll;
+      d->tile = TileId::scroll;
       d->isScroll = true;
       d->maxStackSizeAtSpawn = 1;
       d->landOnHardSurfaceSoundMsg = "";
@@ -189,7 +188,7 @@ void ItemDataHandler::resetData(ItemDataT* const d,
       d->itemWeight = itemWeight_light;
       d->isIdentified = false;
       d->glyph = '!';
-      d->tile = tile_potion;
+      d->tile = TileId::potion;
       d->isPotion = true;
       d->isMissileWeapon = true;
       d->missileHitChanceMod = 15;
@@ -210,7 +209,7 @@ void ItemDataHandler::resetData(ItemDataT* const d,
       d->itemWeight = itemWeight_light;
       d->isIdentified = true;
       d->glyph = '~';
-      d->tile = tile_device1;
+      d->tile = TileId::device1;
       d->isStackable = false;
       d->spawnStandardMinDLVL = 1;
       d->spawnStandardMaxDLVL = 999;
@@ -222,7 +221,7 @@ void ItemDataHandler::resetData(ItemDataT* const d,
       resetData(d, ItemType::general);
       d->itemWeight = itemWeight_heavy;
       d->glyph = '[';
-      d->tile = tile_armor;
+      d->tile = TileId::armor;
       d->isArmor = true;
       d->isStackable = false;
     } break;
@@ -240,7 +239,7 @@ void ItemDataHandler::resetData(ItemDataT* const d,
   }
 }
 
-void ItemDataHandler::addFeatureFoundIn(
+void addFeatureFoundIn(
   ItemDataT* const itemData, const FeatureId featureId,
   const int CHANCE_TO_INCLUDE) const {
 
@@ -248,15 +247,15 @@ void ItemDataHandler::addFeatureFoundIn(
     pair<FeatureId, int>(featureId, CHANCE_TO_INCLUDE));
 }
 
-void ItemDataHandler::setDmgFromMonsterData(
-  ItemData& itemData, const ActorDataT& actorData) const {
+void setDmgFromMonsterData(
+  ItemDataT& itemData, const ActorDataT& actorData) const {
 
   itemData.meleeDmg  = pair<int, int>(1, actorData.dmgMelee);
   itemData.rangedDmg = DiceParam(1, actorData.dmgRanged, 0);
 }
 
 //------------------------------- LIST OF ITEMS
-void ItemDataHandler::initDataList() {
+void initDataList() {
   ItemDataT* d = NULL;
 
   d = new ItemData(ItemId::trapezohedron);
@@ -268,7 +267,7 @@ void ItemDataHandler::initDataList() {
   d->isStackable = false;
   d->glyph = '*';
   d->clr = clrRedLgt;
-  d->tile = tile_trapezohedron;
+  d->tile = TileId::trapezohedron;
   dataList[int(d->id)] = d;
 
   d = new ItemData(ItemId::sawedOff);
@@ -276,7 +275,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Sawed-off Shotgun", "Sawed-off shotguns",
                      "a Sawed-off Shotgun");
   d->itemWeight = itemWeight_medium;
-  d->tile = tile_shotgun;
+  d->tile = TileId::shotgun;
   d->isShotgun = true;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a shotgun");
   d->rangedDmg = DiceParam(8, 3);
@@ -295,7 +294,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::rangedWpn);
   d->name = ItemName("Pump Shotgun", "Pump shotguns", "a Pump Shotgun");
   d->itemWeight = itemWeight_medium;
-  d->tile = tile_shotgun;
+  d->tile = TileId::shotgun;
   d->isShotgun = true;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a shotgun");
   d->rangedDmg = DiceParam(6, 3);
@@ -323,7 +322,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::rangedWpn);
   d->name = ItemName("Incinerator", "Incinerators", "an Incinerator");
   d->itemWeight = itemWeight_heavy;
-  d->tile = tile_incinerator;
+  d->tile = TileId::incinerator;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with an Incinerator");
   d->rangedDmg = DiceParam(1, 3);
   d->rangedDmgInfoOverride = "*";
@@ -355,7 +354,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::rangedWpn);
   d->name = ItemName("Tommy Gun", "Tommy Guns", "a Tommy Gun");
   d->itemWeight = itemWeight_medium;
-  d->tile = tile_tommyGun;
+  d->tile = TileId::tommyGun;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Tommy Gun");
   d->isMachineGun = true;
   d->rangedDmg = DiceParam(2, 2, 2);
@@ -385,7 +384,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::rangedWpn);
   d->name = ItemName("M1911 Colt", "M1911 Colt", "an M1911 Colt");
   d->itemWeight = itemWeight_light;
-  d->tile = tile_pistol;
+  d->tile = TileId::pistol;
   d->rangedDmg = DiceParam(1, 8, 4);
   d->rangedAmmoTypeUsed = ItemId::pistolClip;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a pistol");
@@ -403,7 +402,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::rangedWpn);
   d->name = ItemName("Flare Gun", "Flare Gun", "a Flare Gun");
   d->itemWeight = itemWeight_light;
-  d->tile = tile_flareGun;
+  d->tile = TileId::flareGun;
   d->rangedDmg = DiceParam(1, 3, 0);
   d->rangedDmgInfoOverride = "*";
   d->rangedAmmoTypeUsed = ItemId::flare;
@@ -430,7 +429,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::rangedWpn);
   d->name = ItemName("Tesla Cannon", "Tesla Cannons", "a Tesla Cannon");
   d->itemWeight = itemWeight_medium;
-  d->tile = tile_teslaCannon;
+  d->tile = TileId::teslaCannon;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Tesla Cannon");
   d->isMachineGun = true;
   d->rangedHitChanceMod = -15;
@@ -462,7 +461,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::rangedWpn);
   d->name = ItemName("Spike Gun", "Spike Guns", "a Spike Gun");
   d->itemWeight = itemWeight_medium;
-  d->tile = tile_tommyGun;
+  d->tile = TileId::tommyGun;
   d->clr = clrBlueLgt;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Spike Gun");
   d->isMachineGun = false;
@@ -487,7 +486,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::explosive);
   d->name = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
   d->itemWeight = itemWeight_light;
-  d->tile = tile_dynamite;
+  d->tile = TileId::dynamite;
   d->clr = clrRedLgt;
   addFeatureFoundIn(d, FeatureId::chest);
   addFeatureFoundIn(d, FeatureId::cabinet);
@@ -498,7 +497,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::explosive);
   d->name = ItemName("Flare", "Flares", "a Flare");
   d->itemWeight = itemWeight_light;
-  d->tile = tile_flare;
+  d->tile = TileId::flare;
   d->clr = clrGray;
   d->isAmmo = true;
   addFeatureFoundIn(d, FeatureId::chest);
@@ -511,7 +510,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Molotov Cocktail", "Molotov Cocktails",
                      "a Molotov Cocktail");
   d->itemWeight = itemWeight_light;
-  d->tile = tile_molotov;
+  d->tile = TileId::molotov;
   d->clr = clrWhite;
   addFeatureFoundIn(d, FeatureId::chest);
   addFeatureFoundIn(d, FeatureId::cabinet);
@@ -522,7 +521,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::missileWeapon);
   d->name = ItemName("Throwing Knife", "Throwing Knives", "a Throwing Knife");
   d->itemWeight = itemWeight_extraLight;
-  d->tile = tile_dagger;
+  d->tile = TileId::dagger;
   d->glyph = '/';
   d->clr = clrWhite;
   d->missileHitChanceMod = 0;
@@ -540,7 +539,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::missileWeapon);
   d->name = ItemName("Rock", "Rocks", "a Rock");
   d->itemWeight = itemWeight_extraLight;
-  d->tile = tile_rock;
+  d->tile = TileId::rock;
   d->glyph = '*';
   d->clr = clrGray;
   d->missileHitChanceMod = 10;
@@ -555,7 +554,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpn);
   d->name = ItemName("Dagger", "Daggers", "a Dagger");
   d->itemWeight = itemWeight_light;
-  d->tile = tile_dagger;
+  d->tile = TileId::dagger;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Dagger");
   d->meleeDmg = pair<int, int>(1, 4);
   d->meleeHitChanceMod = 20;
@@ -572,7 +571,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpn);
   d->name = ItemName("Hatchet", "Hatchets", "a Hatchet");
   d->itemWeight = itemWeight_light;
-  d->tile = tile_axe;
+  d->tile = TileId::axe;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Hatchet");
   d->meleeDmg = pair<int, int>(1, 5);
   d->meleeHitChanceMod = 15;
@@ -593,7 +592,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMinDLVL = FIRST_CAVERN_LEVEL;
   d->spawnStandardMaxDLVL = 999;
   d->itemWeight = itemWeight_medium;
-  d->tile = tile_club;
+  d->tile = TileId::club;
   d->clr = clrBrown;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Club");
   d->meleeDmg = pair<int, int>(2, 3);
@@ -605,7 +604,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpn);
   d->name = ItemName("Hammer", "Hammers", "a Hammer");
   d->itemWeight = itemWeight_medium;
-  d->tile = tile_hammer;
+  d->tile = TileId::hammer;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Hammer");
   d->meleeDmg = pair<int, int>(2, 4);
   d->meleeHitChanceMod = 5;
@@ -618,7 +617,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpn);
   d->name = ItemName("Machete", "Machetes", "a Machete");
   d->itemWeight = itemWeight_medium;
-  d->tile = tile_machete;
+  d->tile = TileId::machete;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Machete");
   d->meleeDmg = pair<int, int>(2, 5);
   d->meleeHitChanceMod = 0;
@@ -633,7 +632,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpn);
   d->name = ItemName("Axe", "Axes", "an Axe");
   d->itemWeight = itemWeight_medium;
-  d->tile = tile_axe;
+  d->tile = TileId::axe;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with an axe");
   d->meleeDmg = pair<int, int>(2, 6);
   d->meleeHitChanceMod = -5;
@@ -650,7 +649,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpn);
   d->name = ItemName("Pitchfork", "Pitchforks", "a Pitchfork");
   d->itemWeight = itemWeight_heavy;
-  d->tile = tile_pitchfork;
+  d->tile = TileId::pitchfork;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Pitchfork");
   d->meleeDmg = pair<int, int>(3, 4);
   d->meleeHitChanceMod = -5;
@@ -666,7 +665,7 @@ void ItemDataHandler::initDataList() {
   resetData(d, ItemType::meleeWpn);
   d->name = ItemName("Sledgehammer", "Sledgehammers", "a Sledgehammer");
   d->itemWeight = itemWeight_heavy;
-  d->tile = tile_sledgeHammer;
+  d->tile = TileId::sledgeHammer;
   d->meleeAttMsgs = ItemAttMsgs("strike", "strikes me with a Sledgehammer");
   d->meleeDmg = pair<int, int>(3, 5);
   d->meleeHitChanceMod = -10;
@@ -680,7 +679,7 @@ void ItemDataHandler::initDataList() {
   d->name = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
   d->isAmmo = true;
   d->itemWeight = itemWeight_extraLight;
-  d->tile = tile_ironSpike;
+  d->tile = TileId::ironSpike;
   d->isStackable = true;
   d->clr = clrGray;
   d->glyph = '/';
@@ -1292,7 +1291,7 @@ void ItemDataHandler::initDataList() {
   d->spawnStandardMaxDLVL = 10;
   d->chanceToIncludeInSpawnList = 50;
   d->isIdentified = true;
-  d->tile = tile_electricLantern;
+  d->tile = TileId::electricLantern;
   d->clr = clrYellow;
   addFeatureFoundIn(d, FeatureId::chest);
   addFeatureFoundIn(d, FeatureId::cabinet);
@@ -1310,7 +1309,7 @@ void ItemDataHandler::initDataList() {
   d->isStackable = false;
   d->glyph = '~';
   d->clr = clrBrownDrk;
-  d->tile = tile_medicalBag;
+  d->tile = TileId::medicalBag;
 //  d->nativeRooms.resize(0);
   dataList[int(d->id)] = d;
 
@@ -1323,7 +1322,7 @@ void cleanup() {
 }
 
 
-void ItemDataHandler::storeToSaveLines(vector<string>& lines) const {
+void storeToSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     lines.push_back(dataList[i]->isIdentified ? "1" : "0");
 
@@ -1333,7 +1332,7 @@ void ItemDataHandler::storeToSaveLines(vector<string>& lines) const {
   }
 }
 
-void ItemDataHandler::setupFromSaveLines(vector<string>& lines) {
+void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     dataList[i]->isIdentified = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
@@ -1346,8 +1345,8 @@ void ItemDataHandler::setupFromSaveLines(vector<string>& lines) {
 }
 
 //TODO Remove this function
-bool ItemDataHandler::isWeaponStronger(
-  const ItemData& data1, const ItemData& data2, const bool IS_MELEE) {
+bool isWeaponStronger(const ItemDataT& data1, const ItemDataT& data2,
+                      const bool IS_MELEE) {
   (void)data1;
   (void)data2;
   (void)IS_MELEE;
@@ -1356,11 +1355,10 @@ bool ItemDataHandler::isWeaponStronger(
 }
 
 //TODO Remove this function and make getName() function in Item instead
-string ItemDataHandler::getItemRef(
-  const Item& item, const ItemRefType itemRefForm,
-  const bool SKIP_EXTRA_INFO) const {
+string getItemRef(const Item& item, const ItemRefType itemRefForm,
+                  const bool SKIP_EXTRA_INFO) {
 
-  const ItemData& d = item.getData();
+  const ItemDataT& d = item.getData();
   string ret = "";
 
   if(d.isDevice && d.id != ItemId::electricLantern) {
@@ -1420,10 +1418,9 @@ string ItemDataHandler::getItemRef(
 }
 
 //TODO Remove this function and make getName() function in Item instead
-string ItemDataHandler::getItemInterfaceRef(
-  const Item& item, const bool ADD_A,
-  const PrimaryAttMode attackMode) const {
-  const ItemData& d = item.getData();
+string getItemInterfaceRef(const Item& item, const bool ADD_A,
+                           const PrimaryAttMode attackMode) {
+  const ItemDataT& d = item.getData();
 
   if(d.isDevice && d.id != ItemId::electricLantern) {
     if(d.isIdentified) {

@@ -212,14 +212,14 @@ void FeatureStatic::setGoreIfPossible() {
 
     const int ROLL_TILE = Rnd::dice(1, 8);
     switch(ROLL_TILE) {
-      case 1: {goreTile_ = tile_gore1;} break;
-      case 2: {goreTile_ = tile_gore2;} break;
-      case 3: {goreTile_ = tile_gore3;} break;
-      case 4: {goreTile_ = tile_gore4;} break;
-      case 5: {goreTile_ = tile_gore5;} break;
-      case 6: {goreTile_ = tile_gore6;} break;
-      case 7: {goreTile_ = tile_gore7;} break;
-      case 8: {goreTile_ = tile_gore8;} break;
+      case 1: {goreTile_ = TileId::gore1;} break;
+      case 2: {goreTile_ = TileId::gore2;} break;
+      case 3: {goreTile_ = TileId::gore3;} break;
+      case 4: {goreTile_ = TileId::gore4;} break;
+      case 5: {goreTile_ = TileId::gore5;} break;
+      case 6: {goreTile_ = TileId::gore6;} break;
+      case 7: {goreTile_ = TileId::gore7;} break;
+      case 8: {goreTile_ = TileId::gore8;} break;
     }
   }
 }

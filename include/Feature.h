@@ -75,7 +75,7 @@ protected:
 class FeatureStatic: public Feature {
 public:
   FeatureStatic(FeatureId id, Pos pos, FeatureSpawnData* spawnData = NULL) :
-    Feature(id, pos), goreTile_(tile_empty), goreGlyph_(' ') {
+    Feature(id, pos), goreTile_(TileId::empty), goreGlyph_(' ') {
     (void)spawnData;
   }
 
@@ -88,7 +88,7 @@ public:
   inline char getGoreGlyph()  const {return goreGlyph_;}
 
   inline void clearGore() {
-    goreTile_ = tile_empty;
+    goreTile_ = TileId::empty;
     goreGlyph_ = ' ';
     hasBlood_ = false;
   }

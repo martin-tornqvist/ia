@@ -1,10 +1,14 @@
 #include "FeatureLiquid.h"
 
+#include "Init.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "PlayerBon.h"
 #include "Audio.h"
+#include "Map.H"
+
+using namespace std;
 
 FeatureLiquidShallow::FeatureLiquidShallow(
   FeatureId id, Pos pos) :

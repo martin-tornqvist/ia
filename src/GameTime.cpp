@@ -1,5 +1,8 @@
 #include "GameTime.h"
 
+#include <vector>
+#include <assert.h>
+
 #include "CmnTypes.h"
 #include "Feature.h"
 #include "ActorPlayer.h"
@@ -15,6 +18,8 @@
 #include "Renderer.h"
 #include "Utils.h"
 
+using namespace std;
+
 namespace GameTime {
 
 vector<Actor*>      actors_;
@@ -23,9 +28,14 @@ vector<FeatureMob*> featureMobs_;
 namespace {
 
 vector<ActorSpeed>  turnTypeVector_;
-int                 currentTurnTypePos_     = 0;
+int                 curTurnTypePos_         = 0;
 int                 currentActorVectorPos_  = 0;
 int                 turn_                   = 0;
+
+bool isSpiRegenThisTurn(const int REGEN_N_TURNS) {
+  assert(REGEN_N_TURNS != 0);
+  return turn_ == (turn_ / REGEN_N_TURNS) * REGEN_N_TURNS;
+}
 
 void runStandardTurnEvents() {
   turn_++;
@@ -65,9 +75,7 @@ void runStandardTurnEvents() {
 
       regenSpiNTurns = max(2, regenSpiNTurns);
 
-      if(isSpiRegenThisTurn(regenSpiNTurns)) {
-        actor->restoreSpi(1, false);
-      }
+      if(isSpiRegenThisTurn(regenSpiNTurns)) {actor->restoreSpi(1, false);}
 
       actor->onStandardTurn();
     }
@@ -101,7 +109,7 @@ void runStandardTurnEvents() {
   //Spawn more monsters?
   //(If an unexplored cell is selected, the spawn is aborted)
 
-  if(DLVL >= 1 && DLVL <= LAST_CAVERN_LEVEL) {
+  if(Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LEVEL) {
     const int SPAWN_N_TURN = 125;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
       PopulateMonsters::trySpawnDueToTimePassed();
@@ -128,15 +136,10 @@ void runAtomicTurnEvents() {
   updateLightMap();
 }
 
-bool isSpiRegenThisTurn(const int REGEN_N_TURNS) {
-  assert(REGEN_N_TURNS != 0);
-  return turn_ == (turn_ / REGEN_N_TURNS) * REGEN_N_TURNS;
-}
-
 } //namespace
 
 void init() {
-  currentTurnTypePos_     = 0;
+  curTurnTypePos_         = 0;
   currentActorVectorPos_  = 0;
   turn_                   = 0;
   actors_.resize(0);
@@ -208,7 +211,7 @@ void insertActorInLoop(Actor* actor) {
 }
 
 void resetTurnTypeAndActorCounters() {
-  currentTurnTypePos_     = 0;
+  curTurnTypePos_         = 0;
   currentActorVectorPos_  = 0;
 }
 
@@ -239,15 +242,15 @@ void actorDidAct(const bool IS_FREE_TURN) {
 
     bool actorWhoCanActThisTurnFound = false;
     while(actorWhoCanActThisTurnFound == false) {
-      TurnType currentTurnType = (TurnType)(currentTurnTypePos_);
+      TurnType currentTurnType = (TurnType)(curTurnTypePos_);
 
       currentActorVectorPos_++;
 
       if((unsigned int)currentActorVectorPos_ >= actors_.size()) {
         currentActorVectorPos_ = 0;
-        currentTurnTypePos_++;
-        if(currentTurnTypePos_ == endOfTurnType) {
-          currentTurnTypePos_ = 0;
+        curTurnTypePos_++;
+        if(curTurnTypePos_ == int(TurnType::endOfTurnType)) {
+          curTurnTypePos_ = 0;
         }
 
         if(
@@ -269,22 +272,19 @@ void actorDidAct(const bool IS_FREE_TURN) {
         defSpeed : ActorSpeed(int(defSpeed) - 1);
       switch(realSpeed) {
         case ActorSpeed::sluggish: {
-          actorWhoCanActThisTurnFound =
-            (currentTurnType == TurnType::slow ||
-             currentTurnType == TurnType::normal2)
-            && Rnd::fraction(2, 3);
+          actorWhoCanActThisTurnFound = (currentTurnType == TurnType::slow ||
+                                         currentTurnType == TurnType::normal2)
+                                        && Rnd::fraction(2, 3);
         } break;
 
         case ActorSpeed::slow: {
-          actorWhoCanActThisTurnFound =
-            currentTurnType == TurnType::slow ||
-            currentTurnType == TurnType::normal2;
+          actorWhoCanActThisTurnFound = currentTurnType == TurnType::slow ||
+                                        currentTurnType == TurnType::normal2;
         } break;
 
         case ActorSpeed::normal: {
-          actorWhoCanActThisTurnFound =
-            currentTurnType != TurnType::fast &&
-            currentTurnType != TurnType::fastest;
+          actorWhoCanActThisTurnFound = currentTurnType != TurnType::fast &&
+                                        currentTurnType != TurnType::fastest;
         } break;
 
         case ActorSpeed::fast: {

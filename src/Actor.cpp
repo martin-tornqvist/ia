@@ -24,7 +24,7 @@ Actor::Actor() :
   deadState(ActorDeadState::alive),
   clr_(clrBlack),
   glyph_(' '),
-  tile_(tile_empty),
+  tile_(TileId::empty),
   hp_(-1),
   spi_(-1),
   lairCell_(),
@@ -524,7 +524,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
   if(IS_DESTROYED) {
     glyph_ = ' ';
-    tile_ = tile_empty;
+    tile_ = TileId::empty;
     if(isHumanoid() == true) {
       if(ALLOW_GORE) {
         Map::makeGore(pos);
@@ -551,7 +551,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
       }
     }
     glyph_ = '&';
-    tile_ = tile_corpse2;
+    tile_ = TileId::corpse2;
   }
 
   clr_ = clrRedLgt;

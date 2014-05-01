@@ -100,7 +100,7 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   LineCalc::calcNewLine(actorThrowing.pos, targetCell, false,
                         THROWING_RANGE_LIMIT, false, path);
 
-  const ItemData& itemThrownData = itemThrown.getData();
+  const ItemDataT& itemThrownData = itemThrown.getData();
 
   const string itemName_a =
     ItemData::getItemRef(itemThrown, ItemRefType::a, true);

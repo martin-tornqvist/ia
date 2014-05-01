@@ -142,6 +142,7 @@
 		<Unit filename="../include/Colors.h" />
 		<Unit filename="../include/Config.h" />
 		<Unit filename="../include/Converters.h" />
+		<Unit filename="../include/CreateCharacter.h" />
 		<Unit filename="../include/Credits.h" />
 		<Unit filename="../include/Disarm.h" />
 		<Unit filename="../include/DungeonClimb.h" />
@@ -199,7 +200,6 @@
 		<Unit filename="../include/MenuInputHandling.h" />
 		<Unit filename="../include/MersenneTwister.h" />
 		<Unit filename="../include/PlayerBon.h" />
-		<Unit filename="../include/PlayerCreateCharacter.h" />
 		<Unit filename="../include/PlayerSpellsHandler.h" />
 		<Unit filename="../include/PopulateItems.h" />
 		<Unit filename="../include/PopulateMonsters.h" />
@@ -238,6 +238,7 @@
 		<Unit filename="../src/Close.cpp" />
 		<Unit filename="../src/Config.cpp" />
 		<Unit filename="../src/Converters.cpp" />
+		<Unit filename="../src/CreateCharacter.cpp" />
 		<Unit filename="../src/Credits.cpp" />
 		<Unit filename="../src/Disarm.cpp" />
 		<Unit filename="../src/DungeonClimb.cpp" />
@@ -298,7 +299,6 @@
 		<Unit filename="../src/MenuBrowser.cpp" />
 		<Unit filename="../src/MenuInputHandling.cpp" />
 		<Unit filename="../src/PlayerBon.cpp" />
-		<Unit filename="../src/PlayerCreateCharacter.cpp" />
 		<Unit filename="../src/PlayerSpellsHandler.cpp" />
 		<Unit filename="../src/PopulateItems.cpp" />
 		<Unit filename="../src/PopulateMonsters.cpp" />

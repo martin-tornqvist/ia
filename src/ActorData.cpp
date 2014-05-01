@@ -15,7 +15,7 @@ void ActorDataT::reset() {
   id = actor_empty;
   name_a = "";
   name_the = "";
-  tile = tile_empty;
+  tile = TileId::empty;
   glyph = 'X';
   color = clrYellow;
   groupSize = monsterGroupSize_alone;
@@ -70,7 +70,7 @@ void initDataList() {
   d.speed = ActorSpeed::normal;
   d.glyph = '@';
   d.color = clrWhiteHigh;
-  d.tile = tile_playerFirearm;
+  d.tile = TileId::playerFirearm;
   d.isAutoSpawnAllowed = false;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -91,7 +91,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
   d.color = clrBrown;
-  d.tile = tile_zombieUnarmed;
+  d.tile = TileId::zombieUnarmed;
   d.hp = 10;
   d.dmgMelee = 4;
   d.abilityVals.setVal(AbilityId::melee, 25);
@@ -133,7 +133,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
   d.color = clrGray;
-  d.tile = tile_zombieArmed;
+  d.tile = TileId::zombieArmed;
   d.hp = 10;
   d.dmgMelee = 8;
   d.abilityVals.setVal(AbilityId::melee, 35);
@@ -175,7 +175,7 @@ void initDataList() {
   d.rangedCooldownTurns = 20;
   d.glyph = 'Z';
   d.color = clrWhiteHigh;
-  d.tile = tile_zombieBloated;
+  d.tile = TileId::zombieBloated;
   d.hp = 14;
   d.dmgMelee = 4;
   d.dmgRanged = 3;
@@ -216,7 +216,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
   d.color = clrCyanLgt;
-  d.tile = tile_zombieUnarmed;
+  d.tile = TileId::zombieUnarmed;
   d.hp = 24;
   d.dmgMelee = 2;
   d.abilityVals.setVal(AbilityId::melee, 40);
@@ -257,7 +257,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'Z';
   d.color = clrCyan;
-  d.tile = tile_zombieUnarmed;
+  d.tile = TileId::zombieUnarmed;
   d.hp = 24;
   d.dmgMelee = 2;
   d.abilityVals.setVal(AbilityId::melee, 40);
@@ -299,7 +299,7 @@ void initDataList() {
   d.spellCooldownTurns = 4;
   d.glyph = 'P';
   d.color = clrGray;
-  d.tile = tile_cultistFirearm;
+  d.tile = TileId::cultistFirearm;
   d.hp = 4;
   d.spi = 12;
   d.abilityVals.setVal(AbilityId::melee, 35);
@@ -337,7 +337,7 @@ void initDataList() {
   d.spellCooldownTurns = 4;
   d.glyph = 'P';
   d.color = clrYellow;
-  d.tile = tile_cultistFirearm;
+  d.tile = TileId::cultistFirearm;
   d.hp = 5;
   d.spi = 12;
   d.abilityVals.setVal(AbilityId::melee, 40);
@@ -375,7 +375,7 @@ void initDataList() {
   d.spellCooldownTurns = 4;
   d.glyph = 'P';
   d.color = clrBlueLgt;
-  d.tile = tile_cultistFirearm;
+  d.tile = TileId::cultistFirearm;
   d.hp = 6;
   d.spi = 12;
   d.abilityVals.setVal(AbilityId::melee, 40);
@@ -412,7 +412,7 @@ void initDataList() {
   d.spellCooldownTurns = 2;
   d.glyph = 'P';
   d.color = clrMagenta;
-  d.tile = tile_witchOrWarlock;
+  d.tile = TileId::witchOrWarlock;
   d.hp = 10;
   d.spi = 40;
   d.abilityVals.setVal(AbilityId::melee, 40);
@@ -459,7 +459,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
   d.color = clrMagenta;
-  d.tile = tile_ratThing;
+  d.tile = TileId::ratThing;
   d.hp = 10;
   d.dmgMelee = 4;
   d.abilityVals.setVal(AbilityId::melee, 50);
@@ -522,7 +522,7 @@ void initDataList() {
   d.spellCooldownTurns = 2;
   d.glyph = 'P';
   d.color = clrCyanLgt;
-  d.tile = tile_cultistDagger;
+  d.tile = TileId::cultistDagger;
   d.hp = 6;
   d.spi = 20;
   d.abilityVals.setVal(AbilityId::melee, 40);
@@ -558,7 +558,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
   d.color = clrGreenLgt;
-  d.tile = tile_spider;
+  d.tile = TileId::spider;
   d.hp = 2;
   d.dmgMelee = 1;
   d.abilityVals.setVal(AbilityId::melee, 15);
@@ -590,7 +590,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
   d.color = clrWhiteHigh;
-  d.tile = tile_spider;
+  d.tile = TileId::spider;
   d.hp = 2;
   d.dmgMelee = 1;
   d.abilityVals.setVal(AbilityId::melee, 15);
@@ -622,7 +622,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
   d.color = clrRedLgt;
-  d.tile = tile_spider;
+  d.tile = TileId::spider;
   d.hp = 3;
   d.dmgMelee = 2;
   d.abilityVals.setVal(AbilityId::melee, 25);
@@ -654,7 +654,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 's';
   d.color = clrGray;
-  d.tile = tile_spiderLeng;
+  d.tile = TileId::spiderLeng;
   d.hp = 8;
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 40);
@@ -690,7 +690,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'S';
   d.color = clrMagenta;
-  d.tile = tile_spiderLeng;
+  d.tile = TileId::spiderLeng;
   d.hp = 30;
   d.dmgMelee = 8;
 //  d.dmgRanged = 1;
@@ -726,7 +726,7 @@ void initDataList() {
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
   d.color = clrRed;
-  d.tile = tile_hound;
+  d.tile = TileId::hound;
   d.hp = 13;
   d.dmgMelee = 4;
   d.dmgRanged = 4;
@@ -769,7 +769,7 @@ void initDataList() {
   d.rangedCooldownTurns = 6;
   d.glyph = 'd';
   d.color = clrBlueLgt;
-  d.tile = tile_hound;
+  d.tile = TileId::hound;
   d.hp = 16;
   d.dmgMelee = 6;
   d.dmgRanged = 6;
@@ -811,7 +811,7 @@ void initDataList() {
   d.speed = ActorSpeed::fast;
   d.glyph = 'D';
   d.color = clrGray;
-  d.tile = tile_hound;
+  d.tile = TileId::hound;
   d.hp = 65;
   d.spi = 40;
   d.dmgMelee = 8;
@@ -859,7 +859,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
   d.color = clrGray;
-  d.tile = tile_ghost;
+  d.tile = TileId::ghost;
   d.hp = 4;
   d.spi = 12;
   d.dmgMelee = 2;
@@ -901,7 +901,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
   d.color = clrWhite;
-  d.tile = tile_phantasm;
+  d.tile = TileId::phantasm;
   d.hp = 9;
   d.spi = 12;
   d.dmgMelee = 2;
@@ -946,7 +946,7 @@ void initDataList() {
   d.spellCooldownTurns = 4;
   d.glyph = 'G';
   d.color = clrRed;
-  d.tile = tile_wraith;
+  d.tile = TileId::wraith;
   d.hp = 15;
   d.spi = 20;
   d.dmgMelee = 2;
@@ -988,7 +988,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
   d.color = clrGray;
-  d.tile = tile_rat;
+  d.tile = TileId::rat;
   d.hp = 2;
   d.spi = 1;
   d.dmgMelee = 1;
@@ -1024,7 +1024,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
   d.color = clrBrown;
-  d.tile = tile_ratThing;
+  d.tile = TileId::ratThing;
   d.hp = 4;
   d.spi = 8;
   d.dmgMelee = 3;
@@ -1067,7 +1067,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'd';
   d.color = clrGray;
-  d.tile = tile_wolf;
+  d.tile = TileId::wolf;
   d.hp = 4;
   d.spi = 2;
   d.dmgMelee = 3;
@@ -1104,7 +1104,7 @@ void initDataList() {
   d.speed = ActorSpeed::fastest;
   d.glyph = 'B';
   d.color = clrGray;
-  d.tile = tile_bat;
+  d.tile = TileId::bat;
   d.hp = 8;
   d.spi = 6;
   d.dmgMelee = 2;
@@ -1143,7 +1143,7 @@ void initDataList() {
   d.speed = ActorSpeed::fastest;
   d.glyph = 'B';
   d.color = clrBrownDrk;
-  d.tile = tile_byakhee;
+  d.tile = TileId::byakhee;
   d.hp = 14;
   d.spi = 20;
   d.dmgMelee = 4;
@@ -1190,7 +1190,7 @@ void initDataList() {
   d.speed = ActorSpeed::fastest;
   d.glyph = 'I';
   d.color = clrGreenLgt;
-  d.tile = tile_mantis;
+  d.tile = TileId::mantis;
   d.hp = 15;
   d.spi = 20;
   d.dmgMelee = 5;
@@ -1224,7 +1224,7 @@ void initDataList() {
   d.speed = ActorSpeed::fast;
   d.glyph = 'I';
   d.color = clrBrown;
-  d.tile = tile_locust;
+  d.tile = TileId::locust;
   d.hp = 3;
   d.spi = 2;
   d.dmgMelee = 1;
@@ -1260,7 +1260,7 @@ void initDataList() {
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
   d.color = clrBrownDrk;
-  d.tile = tile_migo;
+  d.tile = TileId::migo;
   d.hp = 6;
   d.spi = 20;
   d.dmgRanged = 6;
@@ -1316,7 +1316,7 @@ void initDataList() {
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
   d.color = clrMagenta;
-  d.tile = tile_polyp;
+  d.tile = TileId::polyp;
   d.hp = 12;
   d.spi = 20;
   d.dmgMelee = 4;
@@ -1366,7 +1366,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'M';
   d.color = clrGreen;
-  d.tile = tile_ghoul;
+  d.tile = TileId::ghoul;
   d.hp = 21;
   d.spi = 20;
   d.dmgMelee = 4;
@@ -1411,7 +1411,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'M';
   d.color = clrGray;
-  d.tile = tile_shadow;
+  d.tile = TileId::shadow;
   d.hp = 4;
   d.spi = 12;
   d.dmgMelee = 2;
@@ -1456,7 +1456,7 @@ void initDataList() {
   d.spellCooldownTurns = 3;
   d.glyph = 'P';
   d.color = clrMagenta;
-  d.tile = tile_mummy;
+  d.tile = TileId::mummy;
   d.hp = 25;
   d.spi = 30;
   d.dmgMelee = 6;
@@ -1494,7 +1494,7 @@ void initDataList() {
   d.nrLeftAllowedToSpawn = 0;
   d.glyph = 'P';
   d.color = clrRed;
-  d.tile = tile_mummy;
+  d.tile = TileId::mummy;
   d.hp = 70;
   d.spi = 60;
   d.dmgMelee = 6;
@@ -1535,7 +1535,7 @@ void initDataList() {
   d.nrLeftAllowedToSpawn = 1;
   d.glyph = 'P';
   d.color = clrRedLgt;
-  d.tile = tile_mummy;
+  d.tile = TileId::mummy;
   d.hp = 70;
   d.spi = 60;
   d.dmgMelee = 6;
@@ -1575,7 +1575,7 @@ void initDataList() {
   d.rangedCooldownTurns = 15;
   d.glyph = 'F';
   d.color = clrWhite;
-  d.tile = tile_deepOne;
+  d.tile = TileId::deepOne;
   d.hp = 10;
   d.spi = 12;
   d.dmgMelee = 5;
@@ -1618,7 +1618,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'w';
   d.color = clrWhite;
-  d.tile = tile_massOfWorms;
+  d.tile = TileId::massOfWorms;
   d.hp = 3;
   d.spi = 1;
   d.dmgMelee = 2;
@@ -1653,7 +1653,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
   d.color = clrGray;
-  d.tile = tile_vortex;
+  d.tile = TileId::vortex;
   d.hp = 10;
   d.spi = 12;
   d.dmgMelee = 4;
@@ -1695,7 +1695,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
   d.color = clrRed;
-  d.tile = tile_vortex;
+  d.tile = TileId::vortex;
   d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 6;
@@ -1737,7 +1737,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'V';
   d.color = clrBlueLgt;
-  d.tile = tile_vortex;
+  d.tile = TileId::vortex;
   d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 6;
@@ -1779,7 +1779,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
   d.color = clrGray;
-  d.tile = tile_ooze;
+  d.tile = TileId::ooze;
   d.hp = 12;
   d.spi = 12;
   d.dmgMelee = 3;
@@ -1828,7 +1828,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
   d.color = clrWhiteHigh;
-  d.tile = tile_ooze;
+  d.tile = TileId::ooze;
   d.hp = 8;
   d.spi = 12;
   d.dmgMelee = 3;
@@ -1878,7 +1878,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
   d.color = clrGreen;
-  d.tile = tile_ooze;
+  d.tile = TileId::ooze;
   d.hp = 14;
   d.spi = 12;
   d.dmgMelee = 5;
@@ -1928,7 +1928,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
   d.color = clrGreenLgt;
-  d.tile = tile_ooze;
+  d.tile = TileId::ooze;
   d.hp = 16;
   d.spi = 12;
   d.dmgMelee = 7;
@@ -1978,7 +1978,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'O';
   d.color = clrGreenLgt;
-  d.tile = tile_ooze;
+  d.tile = TileId::ooze;
   d.hp = 70;
   d.spi = 40;
   d.dmgMelee = 10;
@@ -2022,7 +2022,7 @@ void initDataList() {
   d.speed = ActorSpeed::sluggish;
   d.glyph = 'W';
   d.color = clrBrownDrk;
-  d.tile = tile_chthonian;
+  d.tile = TileId::chthonian;
   d.hp = 200;
   d.spi = 40;
   d.dmgMelee = 10;
@@ -2067,7 +2067,7 @@ void initDataList() {
   d.rangedCooldownTurns = 0;
   d.glyph = 'W';
   d.color = clrGray;
-  d.tile = tile_huntingHorror;
+  d.tile = TileId::huntingHorror;
   d.hp = 60;
   d.spi = 40;
   d.dmgMelee = 10;

@@ -70,7 +70,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
       const SDL_Color itemInterfClr =
         IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
 
-      const ItemData& d = item->getData();
+      const ItemDataT& d = item->getData();
       PrimaryAttMode attackMode = PrimaryAttMode::none;
       if(slot.id == SlotId::wielded || slot.id == SlotId::wieldedAlt) {
         attackMode =
@@ -195,7 +195,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
 
-    const ItemData& d = item->getData();
+    const ItemDataT& d = item->getData();
     PrimaryAttMode attackMode = PrimaryAttMode::none;
     if(slotToEquip == SlotId::wielded || slotToEquip == SlotId::wieldedAlt) {
       attackMode =

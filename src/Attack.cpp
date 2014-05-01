@@ -596,15 +596,15 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       projectileGlyph = '\\';
   }
   TileId projectileTile = wpn.getData().rangedMissileTile;
-  if(projectileTile == tile_projectileStandardFrontSlash) {
+  if(projectileTile == TileId::projectileStandardFrontSlash) {
     if(projectileGlyph == '-') {
-      projectileTile = tile_projectileStandardDash;
+      projectileTile = TileId::projectileStandardDash;
     }
     if(projectileGlyph == '|') {
-      projectileTile = tile_projectileStandardVerticalBar;
+      projectileTile = TileId::projectileStandardVerticalBar;
     }
     if(projectileGlyph == '\\') {
-      projectileTile = tile_projectileStandardBackSlash;
+      projectileTile = TileId::projectileStandardBackSlash;
     }
   }
 
@@ -673,10 +673,10 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
               //RENDER ACTOR HIT
               if(curProj->isVisibleToPlayer) {
                 if(Config::isTilesMode()) {
-                  curProj->setTile(tile_blast1, clrRedLgt);
+                  curProj->setTile(TileId::blast1, clrRedLgt);
                   Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
                   SdlWrapper::sleep(DELAY / 2);
-                  curProj->setTile(tile_blast2, clrRedLgt);
+                  curProj->setTile(TileId::blast2, clrRedLgt);
                   Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
                   SdlWrapper::sleep(DELAY / 2);
                 } else {
@@ -750,10 +750,10 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           //RENDER FEATURE HIT
           if(curProj->isVisibleToPlayer) {
             if(Config::isTilesMode()) {
-              curProj->setTile(tile_blast1, clrYellow);
+              curProj->setTile(TileId::blast1, clrYellow);
               Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY / 2);
-              curProj->setTile(tile_blast2, clrYellow);
+              curProj->setTile(TileId::blast2, clrYellow);
               Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY / 2);
             } else {
@@ -782,10 +782,10 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           //RENDER GROUND HITS
           if(curProj->isVisibleToPlayer) {
             if(Config::isTilesMode()) {
-              curProj->setTile(tile_blast1, clrYellow);
+              curProj->setTile(TileId::blast1, clrYellow);
               Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY / 2);
-              curProj->setTile(tile_blast2, clrYellow);
+              curProj->setTile(TileId::blast2, clrYellow);
               Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
               SdlWrapper::sleep(DELAY / 2);
             } else {
@@ -910,7 +910,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
             Renderer::drawMapAndInterface(false);
             Renderer::coverCellInMap(curPos);
             if(Config::isTilesMode()) {
-              Renderer::drawTile(tile_blast2, Panel::map, curPos, clrRedLgt);
+              Renderer::drawTile(TileId::blast2, Panel::map, curPos, clrRedLgt);
             } else {
               Renderer::drawGlyph('*', Panel::map, curPos, clrRedLgt);
             }
@@ -958,7 +958,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         Renderer::drawMapAndInterface(false);
         Renderer::coverCellInMap(curPos);
         if(Config::isTilesMode()) {
-          Renderer::drawTile(tile_blast2, Panel::map, curPos, clrYellow);
+          Renderer::drawTile(TileId::blast2, Panel::map, curPos, clrYellow);
         } else {
           Renderer::drawGlyph('*', Panel::map, curPos, clrYellow);
         }
@@ -979,7 +979,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         Renderer::drawMapAndInterface(false);
         Renderer::coverCellInMap(curPos);
         if(Config::isTilesMode()) {
-          Renderer::drawTile(tile_blast2, Panel::map, curPos, clrYellow);
+          Renderer::drawTile(TileId::blast2, Panel::map, curPos, clrYellow);
         } else {
           Renderer::drawGlyph('*', Panel::map, curPos, clrYellow);
         }

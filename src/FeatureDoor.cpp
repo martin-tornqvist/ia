@@ -1,5 +1,6 @@
 #include "FeatureDoor.h"
 
+#include "Init.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "FeatureFactory.h"
@@ -128,9 +129,9 @@ TileId Door::getTile() const {
     return mimicFeature_->tile;
   } else {
     if(isOpen_) {
-      return isBroken_ ? tile_doorBroken : tile_doorOpen;
+      return isBroken_ ? TileId::doorBroken : TileId::doorOpen;
     } else {
-      return tile_doorClosed;
+      return TileId::doorClosed;
     }
   }
 }

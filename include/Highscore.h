@@ -8,22 +8,28 @@
 
 struct HighScoreEntry {
 public:
-  HighScoreEntry(string dateAndTime, std::string name, int xp, int lvl, int dlvl,
-                 int insanity, bool isVictory) :
-    dateAndTime_(dateAndTime), name_(name), xp_(xp), lvl_(lvl), dlvl_(dlvl),
-    insanity_(insanity), isVictory_(isVictory) {}
+  HighScoreEntry(std::string dateAndTime, std::string name, int xp, int lvl,
+                 int dlvl, int insanity, bool isVictory) :
+    dateAndTime_(dateAndTime),
+    name_(name),
+    xp_(xp),
+    lvl_(lvl),
+    dlvl_(dlvl),
+    insanity_(insanity),
+    isVictory_(isVictory) {}
+
   ~HighScoreEntry() {}
 
   void set(const std::string& dateAndTime, const std::string& name,
            const int XP, const int LVL, const int DLVL, const int INSANITY,
            const bool IS_VICTORY) {
-    dateAndTime_ = dateAndTime;
-    name_ = name;
-    xp_ = XP;
-    lvl_ = LVL;
-    dlvl_ = DLVL;
-    insanity_ = INSANITY;
-    isVictory_ = IS_VICTORY;
+    dateAndTime_  = dateAndTime;
+    name_         = name;
+    xp_           = XP;
+    lvl_          = LVL;
+    dlvl_         = DLVL;
+    insanity_     = INSANITY;
+    isVictory_    = IS_VICTORY;
   }
 
   inline int getScore() const {
@@ -36,13 +42,14 @@ public:
       ((INS_DB / 3.0) + 1.0);
     return int(SCORE_DB);
   }
-  inline std::string getDateAndTime() const {return dateAndTime_;}
-  inline std::string getName() const {return name_;}
-  inline int getXp() const {return xp_;}
-  inline int getLvl() const {return lvl_;}
-  inline int getDlvl() const {return dlvl_;}
-  inline int getInsanity() const {return insanity_;}
-  inline bool isVictoryGame() const {return isVictory_;}
+
+  inline std::string  getDateAndTime()  const {return dateAndTime_;}
+  inline std::string  getName()         const {return name_;}
+  inline int          getXp()           const {return xp_;}
+  inline int          getLvl()          const {return lvl_;}
+  inline int          getDlvl()         const {return dlvl_;}
+  inline int          getInsanity()     const {return insanity_;}
+  inline bool         isVictoryGame()   const {return isVictory_;}
 
 private:
   std::string dateAndTime_;
@@ -51,26 +58,15 @@ private:
   bool isVictory_;
 };
 
-class HighScore {
-public:
-  HighScore() {}
-  ~HighScore() {}
+namespace HighScore {
 
-  void gameOver(const bool IS_VICTORY);
-  void runHighScoreScreen();
-  std::vector<HighScoreEntry> getEntriesSorted();
+void runHighScoreScreen();
 
-private:
-  void sortEntries(std::vector<HighScoreEntry>& entries);
-  void writeFile(std::vector<HighScoreEntry>& entries);
-  void readFile(std::vector<HighScoreEntry>& entries);
+void onGameOver(const bool IS_VICTORY);
 
-  void renderHighScoreScreen(const std::vector<HighScoreEntry>& entries,
-                             const int TOP_ELEMENT) const;
+std::vector<HighScoreEntry> getEntriesSorted();
 
-  static bool isEntryHigher(const HighScoreEntry& current,
-                            const HighScoreEntry& other);
-};
+} //HighScore
 
 
 #endif

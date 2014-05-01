@@ -181,7 +181,7 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
 
 
   //Place graves
-  vector<HighScoreEntry> highscoreEntries = eng.highScore->getEntriesSorted();
+  vector<HighScoreEntry> highscoreEntries = HighScore::getEntriesSorted();
   const int PLACE_TOP_N_HIGHSCORES = 7;
   const int NR_HIGHSCORES =
     min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));

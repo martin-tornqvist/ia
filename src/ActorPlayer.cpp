@@ -5,7 +5,7 @@
 #include "Audio.h"
 #include "ItemWeapon.h"
 #include "FeatureTrap.h"
-#include "PlayerCreateCharacter.h"
+#include "CreateCharacter.h"
 #include "Log.h"
 #include "CharacterLines.h"
 #include "Popup.h"
@@ -31,6 +31,8 @@
 #include "MapParsing.h"
 #include "Properties.h"
 #include "ItemDevice.h"
+
+using namespace std;
 
 const int MIN_SHOCK_WHEN_OBSESSION = 35;
 

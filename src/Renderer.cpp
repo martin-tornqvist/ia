@@ -387,7 +387,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
         if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
       if(Config::isTilesMode()) {
-        drawTile(tile_aimMarkerTrail, Panel::map, pos, clr, clrBlack);
+        drawTile(TileId::aimMarkerTrail, Panel::map, pos, clr, clrBlack);
       } else {
         drawGlyph('*', Panel::map, pos, clr, true, clrBlack);
       }
@@ -408,7 +408,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
   }
 
   if(Config::isTilesMode()) {
-    drawTile(tile_aimMarkerHead, Panel::map, headPos, clr, clrBlack);
+    drawTile(TileId::aimMarkerHead, Panel::map, headPos, clr, clrBlack);
   } else {
     drawGlyph('X', Panel::map, headPos, clr, true, clrBlack);
   }
@@ -441,7 +441,7 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                                 pos.y == centerPos.y + RADIUS;
           const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
           if(Config::isTilesMode()) {
-            drawTile(tile_blast1, Panel::map, pos, color, clrBlack);
+            drawTile(TileId::blast1, Panel::map, pos, color, clrBlack);
           } else {
             drawGlyph('*', Panel::map, pos, color, true, clrBlack);
           }
@@ -467,7 +467,7 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                                 pos.y == centerPos.y + RADIUS;
           const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
           if(Config::isTilesMode()) {
-            drawTile(tile_blast2, Panel::map, pos, color, clrBlack);
+            drawTile(TileId::blast2, Panel::map, pos, color, clrBlack);
           } else {
             drawGlyph('*', Panel::map, pos, color, true, clrBlack);
           }
@@ -490,7 +490,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
     for(unsigned int i = 0; i < positions.size(); i++) {
       const Pos& pos = positions.at(i);
       if(Config::isTilesMode()) {
-        drawTile(tile_blast1, Panel::map, pos, color, clrBlack);
+        drawTile(TileId::blast1, Panel::map, pos, color, clrBlack);
       } else {
         drawGlyph('*', Panel::map, pos, color, true, clrBlack);
       }
@@ -501,7 +501,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
     for(unsigned int i = 0; i < positions.size(); i++) {
       const Pos& pos = positions.at(i);
       if(Config::isTilesMode()) {
-        drawTile(tile_blast2, Panel::map, pos, color, clrBlack);
+        drawTile(TileId::blast2, Panel::map, pos, color, clrBlack);
       } else {
         drawGlyph('*', Panel::map, pos, color, true, clrBlack);
       }
@@ -672,7 +672,7 @@ void drawProjectiles(vector<Projectile*>& projectiles,
     if(p->isDoneRendering == false && p->isVisibleToPlayer) {
       coverCellInMap(p->pos);
       if(Config::isTilesMode()) {
-        if(p->tile != tile_empty) {
+        if(p->tile != TileId::empty) {
           drawTile(p->tile, Panel::map, p->pos, p->clr);
         }
       } else {
@@ -695,9 +695,9 @@ void drawPopupBox(const Rect& border, const Panel panel,
   const int Y1_VERT = border.x1y1.y - 1;
   for(int y = Y0_VERT; y <= Y1_VERT; y++) {
     if(IS_TILES) {
-      drawTile(tile_popupVerticalBar,
+      drawTile(TileId::popupVerticalBar,
                panel, Pos(border.x0y0.x, y), clr, clrBlack);
-      drawTile(tile_popupVerticalBar,
+      drawTile(TileId::popupVerticalBar,
                panel, Pos(border.x1y1.x, y), clr, clrBlack);
     } else {
       drawGlyph('|',
@@ -712,9 +712,9 @@ void drawPopupBox(const Rect& border, const Panel panel,
   const int X1_VERT = border.x1y1.x - 1;
   for(int x = X0_VERT; x <= X1_VERT; x++) {
     if(IS_TILES) {
-      drawTile(tile_popupHorizontalBar,
+      drawTile(TileId::popupHorizontalBar,
                panel, Pos(x, border.x0y0.y), clr, clrBlack);
-      drawTile(tile_popupHorizontalBar,
+      drawTile(TileId::popupHorizontalBar,
                panel, Pos(x, border.x1y1.y), clr, clrBlack);
     } else {
       drawGlyph('-', panel, Pos(x, border.x0y0.y), clr, true, clrBlack);
@@ -724,13 +724,13 @@ void drawPopupBox(const Rect& border, const Panel panel,
 
   //Corners
   if(IS_TILES) {
-    drawTile(tile_popupCornerTopLeft,
+    drawTile(TileId::popupCornerTopLeft,
              panel, Pos(border.x0y0.x, border.x0y0.y), clr, clrBlack);
-    drawTile(tile_popupCornerTopRight,
+    drawTile(TileId::popupCornerTopRight,
              panel, Pos(border.x1y1.x, border.x0y0.y), clr, clrBlack);
-    drawTile(tile_popupCornerBottomLeft,
+    drawTile(TileId::popupCornerBottomLeft,
              panel, Pos(border.x0y0.x, border.x1y1.y), clr, clrBlack);
-    drawTile(tile_popupCornerBottomRight,
+    drawTile(TileId::popupCornerBottomRight,
              panel, Pos(border.x1y1.x, border.x1y1.y), clr, clrBlack);
   } else {
     drawGlyph(
@@ -776,13 +776,13 @@ void drawMap() {
 
           const FeatureStatic* const f = eng->map->cells[x][y].featureStatic;
 
-          TileId  goreTile  = tile_empty;
+          TileId  goreTile  = TileId::empty;
           char    goreGlyph = ' ';
           if(f->canHaveGore()) {
             goreTile  = f->getGoreTile();
             goreGlyph = f->getGoreGlyph();
           }
-          if(goreTile == tile_empty) {
+          if(goreTile == TileId::empty) {
             curDrw->tile  = f->getTile();
             curDrw->glyph = f->getGlyph();
             const SDL_Color& featureClr   = f->getClr();
@@ -813,7 +813,7 @@ void drawMap() {
       if(
         actor->deadState == ActorDeadState::corpse &&
         actor->getData().glyph != ' ' &&
-        actor->getData().tile != tile_empty &&
+        actor->getData().tile != TileId::empty &&
         eng->map->cells[xPos][yPos].isSeenByPlayer) {
         curDrw = &renderArray[xPos][yPos];
         curDrw->clr   = clrRed;
@@ -852,7 +852,7 @@ void drawMap() {
       const TileId  mobTile   = mob->getTile();
       const char    mobGlyph  = mob->getGlyph();
       if(
-        mobTile != tile_empty && mobGlyph != ' ' &&
+        mobTile != TileId::empty && mobGlyph != ' ' &&
         eng->map->cells[xPos][yPos].isSeenByPlayer) {
         curDrw = &renderArray[xPos][yPos];
         curDrw->clr = mob->getClr();
@@ -876,7 +876,7 @@ void drawMap() {
           if(Map::player->isSeeingActor(*actor, NULL)) {
 
             if(
-              actor->getTile()  != tile_empty &&
+              actor->getTile()  != TileId::empty &&
               actor->getGlyph() != ' ') {
 
               curDrw->clr   = actor->getClr();
@@ -991,8 +991,8 @@ void drawMap() {
                     tmpDrw.tile = wall->getFrontWallTile();
                   } else if(isHiddenDoor) {
                     tmpDrw.tile = Config::isTilesWallFullSquare() ?
-                                  tile_wallTop :
-                                  tile_wallFront;
+                                  TileId::wallTop :
+                                  TileId::wallFront;
                   }
                 }
               }
@@ -1004,7 +1004,7 @@ void drawMap() {
 
         if(tmpDrw.isAwareOfMonsterHere) {
           drawGlyph('!', Panel::map, pos, clrBlack, true, clrNosfTealDrk);
-        } else if(tmpDrw.tile != tile_empty && tmpDrw.glyph != ' ') {
+        } else if(tmpDrw.tile != TileId::empty && tmpDrw.glyph != ' ') {
           if(IS_TILES) {
             drawTile(tmpDrw.tile, Panel::map, pos, tmpDrw.clr, tmpDrw.clrBg);
           } else {
@@ -1031,7 +1031,7 @@ void drawMap() {
       isRangedWpn = item->getData().isRangedWeapon;
     }
     if(IS_TILES) {
-      const TileId tile = isRangedWpn ? tile_playerFirearm : tile_playerMelee;
+      const TileId tile = isRangedWpn ? TileId::playerFirearm : TileId::playerMelee;
       drawTile(tile, Panel::map, pos, Map::player->getClr(), clrBlack);
     } else {
       drawGlyph('@', Panel::map, pos, Map::player->getClr(), true, clrBlack);

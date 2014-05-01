@@ -1,5 +1,7 @@
 #include "DungeonMaster.h"
 
+#include <vector>
+
 #include "Highscore.h"
 #include "TextFormatting.h"
 #include "Renderer.h"
@@ -9,6 +11,8 @@
 #include "Log.h"
 #include "SdlWrapper.h"
 #include "Map.h"
+
+using namespace std;
 
 namespace DungeonMaster {
 
@@ -26,7 +30,7 @@ void playerGainLvl() {
     Log::addMsg("Welcome to level " + toStr(clvl_) + "!", clrGreen,
                 false, true);
 
-    PlayerCreateCharacter::pickNewTrait(false);
+    CreateCharacter::pickNewTrait(false);
 
     Map::player->restoreHp(999, false);
     Map::player->changeMaxHp(HP_PER_LVL, true);
@@ -45,8 +49,8 @@ void initXpArray() {
 } //namespace
 
 void init() {
-  clvl  = 1;
-  xp    = 0;
+  clvl_ = 1;
+  xp_   = 0;
   initXpArray();
 }
 
@@ -125,7 +129,7 @@ void playerLoseXpPercent(const int PERCENT) {
 }
 
 void winGame() {
-  eng.highScore->gameOver(true);
+  HighScore::onGameOver(true);
 
   const string winMsg =
     "As I touch the crystal, there is a jolt of electricity. A surreal glow "

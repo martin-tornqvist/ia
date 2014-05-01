@@ -3,7 +3,6 @@
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
 #include "Map.h"
-#include "Blood.h"
 #include "ActorFactory.h"
 #include "Log.h"
 #include "Renderer.h"

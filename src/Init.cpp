@@ -1,6 +1,21 @@
 #include "Init.h"
 
 #include "PlayerBon.h"
+#include "SdlWrapper.h"
+#include "Config.h"
+#include "Input.h"
+#include "Renderer.h"
+#include "Audio.h"
+#include "LineCalc.h"
+#include "Gods.h"
+#include "ItemScroll.h"
+#include "ItemPotion.h"
+#include "Map.h"
+#include "Log.h"
+#include "DungeonMaster.h"
+#include "Bot.h"
+
+using namespace std;
 
 namespace Init {
 

@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "Init.h"
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -27,10 +28,9 @@
 #include "ActorMonster.h"
 #include "PlayerBon.h"
 #include "Examine.h"
-#include "PlayerCreateCharacter.h"
+#include "CreateCharacter.h"
 #include "Disarm.h"
 #include "SdlWrapper.h"
-#include "Hide.h"
 #include "Popup.h"
 
 using namespace std;
@@ -169,7 +169,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   //----------------------------------- MANUAL
   else if(d.key_ == '?') {
     Log::clearLog();
-    eng.manual->run();
+    Manual::run();
     clearEvents();
     return;
   }
@@ -257,7 +257,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
         if(item == NULL) {
           Log::addMsg("I am not wielding a weapon.");
         } else {
-          const ItemData& itemData = item->getData();
+          const ItemDataT& itemData = item->getData();
           if(itemData.isRangedWeapon == false) {
             Log::addMsg("I am not wielding a firearm.");
           } else {
@@ -487,7 +487,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
         Renderer::drawMapAndInterface();
       } else if(CHOICE == 1) {
         //---------------------------- Manual
-        eng.manual->run();
+        Manual::run();
         Renderer::drawMapAndInterface();
       } else if(CHOICE == 2) {
         //---------------------------- Quit

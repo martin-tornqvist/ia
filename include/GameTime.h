@@ -8,7 +8,7 @@
 
 class FeatureMob;
 
-enum class TurnType {fast, normal1, slow, fastest, normal_2, endOfTurnType};
+enum class TurnType {fast, normal1, slow, fastest, normal2, endOfTurnType};
 
 namespace GameTime {
 

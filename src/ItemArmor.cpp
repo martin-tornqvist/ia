@@ -1,10 +1,14 @@
 #include "ItemArmor.h"
 
-#include <cassert>
+#include <string>
+#include <assert.h>
 
+#include "Init.h"
 #include "Log.h"
 #include "Utils.h"
 #include "PlayerBon.h"
+
+using namespace std;
 
 Armor::Armor(ItemDataT* const itemData) :
   Item(itemData), dur_(Rnd::range(80, 100)) {}

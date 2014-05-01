@@ -1,4 +1,4 @@
-#include "PlayerCreateCharacter.h"
+#include "CreateCharacter.h"
 
 #include "Renderer.h"
 #include "ActorPlayer.h"
@@ -6,44 +6,87 @@
 #include "MenuInputHandling.h"
 #include "TextFormatting.h"
 #include "Utils.h"
+#include "Map.h"
 
-void PlayerCreateCharacter::createCharacter() const {
-  pickBg();
-  pickNewTrait(true);
-  PlayerEnterName().run();
+using namespace std;
+
+namespace CreateCharacter {
+
+namespace {
+
+namespace EnterName {
+
+void draw(const string& currentString) {
+  Renderer::clearScreen();
+  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+
+  Renderer::drawTextCentered("What is your name?", Panel::screen,
+                             Pos(MAP_W_HALF, 0), clrWhite);
+  const int Y_NAME = 2;
+  const string NAME_STR =
+    currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
+    currentString;
+  const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
+  const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
+  Renderer::drawText(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
+                     clrNosfTealLgt);
+  Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
+  Renderer::drawPopupBox(boxRect);
+  Renderer::updateScreen();
 }
 
-void PlayerCreateCharacter::pickBg() const {
-  if(Config::isBotPlaying()) {
-    PlayerBon::pickBg(Bg(Rnd::range(0, int(Bg::endOfBgs) - 1)));
-  } else {
-    vector<Bg> bgs;
-    PlayerBon::getPickableBgs(bgs);
+void readKeys(string& currentString, bool& isDone) {
+  const KeyboardReadRetData& d = Input::readKeysUntilFound(false);
 
-    MenuBrowser browser(bgs.size(), 0);
-    drawPickBg(bgs, browser);
+  if(d.sdlKey_ == SDLK_RETURN) {
+    isDone = true;
+    currentString = currentString.empty() ? "Player" : currentString;
+    return;
+  }
 
-    while(true) {
-      const MenuAction action = MenuInputHandling::getAction(browser);
-      switch(action) {
-        case MenuAction::browsed: {drawPickBg(bgs, browser);} break;
-
-        case MenuAction::esc:
-        case MenuAction::space: {} break;
-
-        case MenuAction::selected: {
-          PlayerBon::pickBg(bgs.at(browser.getPos().y));
-          return;
-        } break;
-
-        case MenuAction::selectedShift: {} break;
+  if(currentString.size() < PLAYER_NAME_MAX_LENGTH) {
+    if(
+      d.sdlKey_ == SDLK_SPACE ||
+      (d.key_ >= int('a') && d.key_ <= int('z')) ||
+      (d.key_ >= int('A') && d.key_ <= int('Z')) ||
+      (d.key_ >= int('0') && d.key_ <= int('9'))) {
+      if(d.sdlKey_ == SDLK_SPACE) {
+        currentString.push_back(' ');
+      } else {
+        currentString.push_back(char(d.key_));
       }
+      draw(currentString);
+      return;
+    }
+  }
+
+  if(currentString.size() > 0) {
+    if(d.sdlKey_ == SDLK_BACKSPACE) {
+      currentString.erase(currentString.end() - 1);
+      draw(currentString);
     }
   }
 }
 
-void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
-                                       const MenuBrowser& browser) const {
+void run() {
+  string name = "";
+  draw(name);
+  bool isDone = false;
+  while(isDone == false) {
+    if(Config::isBotPlaying()) {
+      name = "AZATHOTH";
+      isDone = true;
+    } else {
+      readKeys(name, isDone);
+    }
+  }
+  ActorDataT& def = Map::player->getData();
+  def.name_a      = def.name_the = name;
+}
+
+} //EnterName
+
+void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
   Renderer::clearScreen();
   Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
@@ -98,69 +141,42 @@ void PlayerCreateCharacter::drawPickBg(const vector<Bg>& bgs,
       Renderer::drawText(line, Panel::screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
-//    y++;
   }
   Renderer::updateScreen();
 }
 
-void PlayerCreateCharacter::pickNewTrait(
-  const bool IS_CHARACTER_CREATION)  const {
+void pickBg() {
+  if(Config::isBotPlaying()) {
+    PlayerBon::pickBg(Bg(Rnd::range(0, int(Bg::endOfBgs) - 1)));
+  } else {
+    vector<Bg> bgs;
+    PlayerBon::getPickableBgs(bgs);
 
-  if(Config::isBotPlaying() == false) {
-    vector<Trait> pickableTraits;
-    PlayerBon::getPickableTraits(pickableTraits);
+    MenuBrowser browser(bgs.size(), 0);
+    drawPickBg(bgs, browser);
 
-    if(pickableTraits.empty() == false) {
+    while(true) {
+      const MenuAction action = MenuInputHandling::getAction(browser);
+      switch(action) {
+        case MenuAction::browsed: {drawPickBg(bgs, browser);} break;
 
-      const int NR_TRAITS_TOT = int(pickableTraits.size());
-      const int NR_TRAITS_2   = NR_TRAITS_TOT / 2;
-      const int NR_TRAITS_1   = NR_TRAITS_TOT - NR_TRAITS_2;
+        case MenuAction::esc:
+        case MenuAction::space: {} break;
 
-      vector<Trait> traits1; traits1.resize(0);
-      vector<Trait> traits2; traits2.resize(0);
+        case MenuAction::selected: {
+          PlayerBon::pickBg(bgs.at(browser.getPos().y));
+          return;
+        } break;
 
-      for(int i = 0; i < NR_TRAITS_TOT; i++) {
-        const Trait trait = pickableTraits.at(i);
-        if(i < NR_TRAITS_1) {
-          traits1.push_back(trait);
-        } else {
-          traits2.push_back(trait);
-        }
-      }
-
-      MenuBrowser browser(traits1.size(), traits2.size());
-      drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
-
-      while(true) {
-        const MenuAction action = MenuInputHandling::getAction(browser);
-        switch(action) {
-          case MenuAction::browsed: {
-            drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
-          } break;
-
-          case MenuAction::esc:
-          case MenuAction::space: {} break;
-
-          case MenuAction::selected: {
-            const Pos pos = browser.getPos();
-            PlayerBon::pickTrait(
-              pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));
-            if(IS_CHARACTER_CREATION == false) {
-              Renderer::drawMapAndInterface();
-            }
-            return;
-          } break;
-
-          case MenuAction::selectedShift: {} break;
-        }
+        case MenuAction::selectedShift: {} break;
       }
     }
   }
 }
 
-void PlayerCreateCharacter::drawPickTrait(
+void drawPickTrait(
   const vector<Trait>& traits1, const vector<Trait>& traits2,
-  const MenuBrowser& browser, const bool IS_CHARACTER_CREATION) const {
+  const MenuBrowser& browser, const bool IS_CHARACTER_CREATION) {
 
   Renderer::clearScreen();
   Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
@@ -296,71 +312,65 @@ void PlayerCreateCharacter::drawPickTrait(
   Renderer::updateScreen();
 }
 
-void PlayerEnterName::run() const {
-  string name = "";
-  draw(name);
-  bool isDone = false;
-  while(isDone == false) {
-    if(Config::isBotPlaying()) {
-      name = "AZATHOTH";
-      isDone = true;
-    } else {
-      readKeys(name, isDone);
-    }
-  }
-  ActorDataT& def  = Map::player->getData();
-  def.name_a      = def.name_the = name;
+} //namespace
+
+void createCharacter() {
+  pickBg();
+  pickNewTrait(true);
+  EnterName::run();
 }
 
-void PlayerEnterName::draw(const string& currentString) const {
-  Renderer::clearScreen();
-  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+void pickNewTrait(const bool IS_CHARACTER_CREATION) {
+  if(Config::isBotPlaying() == false) {
+    vector<Trait> pickableTraits;
+    PlayerBon::getPickableTraits(pickableTraits);
 
-  Renderer::drawTextCentered("What is your name?", Panel::screen,
-                             Pos(MAP_W_HALF, 0), clrWhite);
-  const int Y_NAME = 2;
-  const string NAME_STR =
-    currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
-    currentString;
-  const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
-  const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
-  Renderer::drawText(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
-                     clrNosfTealLgt);
-  Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
-  Renderer::drawPopupBox(boxRect);
-  Renderer::updateScreen();
-}
+    if(pickableTraits.empty() == false) {
 
-void PlayerEnterName::readKeys(string& currentString, bool& isDone) const {
+      const int NR_TRAITS_TOT = int(pickableTraits.size());
+      const int NR_TRAITS_2   = NR_TRAITS_TOT / 2;
+      const int NR_TRAITS_1   = NR_TRAITS_TOT - NR_TRAITS_2;
 
-  const KeyboardReadRetData& d = Input::readKeysUntilFound(false);
+      vector<Trait> traits1; traits1.resize(0);
+      vector<Trait> traits2; traits2.resize(0);
 
-  if(d.sdlKey_ == SDLK_RETURN) {
-    isDone = true;
-    currentString = currentString.empty() ? "Player" : currentString;
-    return;
-  }
-
-  if(currentString.size() < PLAYER_NAME_MAX_LENGTH) {
-    if(
-      d.sdlKey_ == SDLK_SPACE ||
-      (d.key_ >= int('a') && d.key_ <= int('z')) ||
-      (d.key_ >= int('A') && d.key_ <= int('Z')) ||
-      (d.key_ >= int('0') && d.key_ <= int('9'))) {
-      if(d.sdlKey_ == SDLK_SPACE) {
-        currentString.push_back(' ');
-      } else {
-        currentString.push_back(char(d.key_));
+      for(int i = 0; i < NR_TRAITS_TOT; i++) {
+        const Trait trait = pickableTraits.at(i);
+        if(i < NR_TRAITS_1) {
+          traits1.push_back(trait);
+        } else {
+          traits2.push_back(trait);
+        }
       }
-      draw(currentString);
-      return;
-    }
-  }
 
-  if(currentString.size() > 0) {
-    if(d.sdlKey_ == SDLK_BACKSPACE) {
-      currentString.erase(currentString.end() - 1);
-      draw(currentString);
+      MenuBrowser browser(traits1.size(), traits2.size());
+      drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
+
+      while(true) {
+        const MenuAction action = MenuInputHandling::getAction(browser);
+        switch(action) {
+          case MenuAction::browsed: {
+            drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
+          } break;
+
+          case MenuAction::esc:
+          case MenuAction::space: {} break;
+
+          case MenuAction::selected: {
+            const Pos pos = browser.getPos();
+            PlayerBon::pickTrait(
+              pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));
+            if(IS_CHARACTER_CREATION == false) {
+              Renderer::drawMapAndInterface();
+            }
+            return;
+          } break;
+
+          case MenuAction::selectedShift: {} break;
+        }
+      }
     }
   }
 }
+
+} //CreateCharacter

@@ -11,7 +11,7 @@
 #include "MainMenu.h"
 #include "PlayerBon.h"
 #include "Bot.h"
-#include "PlayerCreateCharacter.h"
+#include "CreateCharacter.h"
 #include "ActorPlayer.h"
 #include "MapGen.h"
 #include "DungeonClimb.h"
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
           Renderer::drawMapAndInterface();
           Log::clearLog();
           Query::waitForEscOrSpace();
-          eng.highScore->gameOver(false);
+          HighScore::gameOver(false);
           eng.postmortem->run(&quitGame);
           Init::quitToMainMenu = true;
         }

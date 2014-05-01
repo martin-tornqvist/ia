@@ -1,5 +1,7 @@
 #include "FeatureFactory.h"
 
+#include <assert.h>
+
 #include "FeatureDoor.h"
 #include "FeatureLever.h"
 #include "FeatureLitDynamite.h"
@@ -22,16 +24,13 @@ namespace FeatureFactory {
 
 namespace {
 
-void FeatureFactory::replaceStaticFeatureAt(
-  FeatureStatic* const newFeature, const Pos& pos) {
-
+void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos) {
   Cell& cell = Map::cells[pos.x][pos.y];
 
   FeatureStatic* const oldFeature = cell.featureStatic;
 
-  if(oldFeature != NULL) {
-    delete oldFeature;
-  }
+  if(oldFeature != NULL) {delete oldFeature;}
+
   cell.featureStatic = newFeature;
 }
 

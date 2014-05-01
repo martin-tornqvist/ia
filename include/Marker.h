@@ -16,13 +16,9 @@ struct MarkerReturnData {
 
 class Marker {
 public:
-  Marker() : eng() {}
-
   MarkerReturnData run(const MarkerTask markerTask, Item* itemThrown);
 
-  const Pos& getPos() {
-    return pos_;
-  }
+  const Pos& getPos() {return pos_;}
 
   void draw(const MarkerTask markerTask) const;
 
@@ -42,8 +38,6 @@ private:
   bool isDone_;
 
   Pos pos_;
-
-
 };
 
 

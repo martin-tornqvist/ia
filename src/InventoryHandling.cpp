@@ -1,5 +1,8 @@
 #include "InventoryHandling.h"
 
+#include <vector>
+
+#include "Init.h"
 #include "ItemScroll.h"
 #include "ItemExplosive.h"
 #include "ActorPlayer.h"
@@ -14,6 +17,9 @@
 #include "ItemFactory.h"
 #include "GameTime.h"
 #include "Audio.h"
+#include "Map.h"
+
+using namespace std;
 
 namespace InvHandling {
 
@@ -30,7 +36,7 @@ bool runDropScreen(const int GLOBAL_ELEMENT_NR) {
   trace << "InventoryHandler::runDropScreen()" << endl;
   Inventory& inv = Map::player->getInv();
   Item* const item = inv.getItemInElement(GLOBAL_ELEMENT_NR);
-  const ItemData& data = item->getData();
+  const ItemDataT& data = item->getData();
 
   Log::clearLog();
   if(data.isStackable && item->nrItems > 1) {
@@ -68,7 +74,7 @@ void filterPlayerGeneralSlotButtonsEquip(
 
   for(unsigned int i = 0; i < general.size(); i++) {
     const Item* const item = general.at(i);
-    const ItemData& data = item->getData();
+    const ItemDataT& data = item->getData();
 
     switch(slotToEquip) {
       case SlotId::armorBody: {
@@ -165,7 +171,7 @@ void activateDefault(
 }
 
 void runSlotsScreen() {
-  screenToOpenAfterDrop = endOfInventoryScreens;
+  screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
   Renderer::drawMapAndInterface();
 
   Inventory& inv                = Map::player->getInv();
@@ -244,7 +250,7 @@ void runSlotsScreen() {
 }
 
 bool runUseScreen() {
-  screenToOpenAfterDrop = endOfInventoryScreens;
+  screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
   Renderer::drawMapAndInterface();
 
   Map::player->getInv().sortGeneralInventory();
@@ -294,7 +300,7 @@ bool runUseScreen() {
 }
 
 bool runEquipScreen(InvSlot* const slotToEquip) {
-  screenToOpenAfterDrop = endOfInventoryScreens;
+  screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
   equipSlotToOpenAfterDrop = slotToEquip;
   Renderer::drawMapAndInterface();
 
@@ -349,7 +355,7 @@ bool runEquipScreen(InvSlot* const slotToEquip) {
 }
 
 void runBrowseInventory() {
-  screenToOpenAfterDrop = endOfInventoryScreens;
+  screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
   Renderer::drawMapAndInterface();
 
   Map::player->getInv().sortGeneralInventory();

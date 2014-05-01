@@ -182,7 +182,7 @@ void init() {
   }
 }
 
-void setFalseScrollName(ItemData& d) {
+void setFalseScrollName(ItemDataT& d) {
   const int NR_ELEMENTS = falseNames_.size();
   const int ELEMENT     = Rnd::range(0, NR_ELEMENTS - 1);
 

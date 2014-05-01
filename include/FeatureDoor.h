@@ -30,7 +30,7 @@ public:
   bool isVisionPassable()             const override;
   bool isProjectilePassable()         const override;
   bool isSmokePassable()              const override;
-  SDL_Color getClr()                const override;
+  SDL_Color getClr()                  const override;
   char getGlyph()                     const override;
   TileId getTile()                    const override;
 
@@ -59,9 +59,9 @@ public:
 
   static bool isTileAnyDoor(const TileId tile) {
     return
-      tile == tile_doorBroken ||
-      tile == tile_doorClosed ||
-      tile == tile_doorOpen;
+      tile == TileId::doorBroken ||
+      tile == TileId::doorClosed ||
+      tile == TileId::doorOpen;
   }
 
 protected:

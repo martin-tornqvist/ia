@@ -39,7 +39,7 @@ struct CellRenderData {
   inline void clear() {
     clr                   = clrBlack;
     clrBg                 = clrBlack;
-    tile                  = tile_empty;
+    tile                  = TileId::empty;
     glyph                 = ' ';
     lifebarLength         = -1;
     isFadeEffectAllowed   = true;

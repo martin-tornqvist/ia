@@ -14,9 +14,20 @@
 
 using namespace std;
 
-void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(
-  const int NR_LVLS_OUT_OF_DEPTH, vector<ActorId>& listRef) const {
+namespace PopulateMonsters {
 
+namespace {
+
+int getRandomOutOfDepth() {
+  if(DLVL == 0)                   {return 0;}
+  if(Rnd::oneIn(40) && DLVL > 1)  {return 5;}
+  if(Rnd::oneIn(5))               {return 2;}
+
+  return 0;
+}
+
+void makeListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
+                                    vector<ActorId>& listRef) {
   listRef.resize(0);
 
   const int EFFECTIVE_DLVL =
@@ -34,12 +45,10 @@ void PopulateMonsters::makeListOfMonstersEligibleForAutoSpawning(
   }
 }
 
-void PopulateMonsters::spawnGroupOfRandomAt(
-  const vector<Pos>& sortedFreeCellsVector,
-  bool blockers[MAP_W][MAP_H],
-  const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
-  const bool IS_ROAMING_ALLOWED) const {
-
+void spawnGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
+                          bool blockers[MAP_W][MAP_H],
+                          const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
+                          const bool IS_ROAMING_ALLOWED) {
   vector<ActorId> idCandidates;
   makeListOfMonstersEligibleForAutoSpawning(
     NR_LVLS_OUT_OF_DEPTH_ALLOWED, idCandidates);
@@ -53,7 +62,47 @@ void PopulateMonsters::spawnGroupOfRandomAt(
   }
 }
 
-void PopulateMonsters::trySpawnDueToTimePassed() const {
+bool spawnGroupOfRandomNativeToRoomThemeAt(
+  const RoomThemeId roomTheme, const vector<Pos>& sortedFreeCellsVector,
+  bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
+
+  trace << "PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt()" << endl;
+  const int NR_LEVELS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
+  vector<ActorId> idCandidates;
+  makeListOfMonstersEligibleForAutoSpawning(
+    NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idCandidates);
+
+  for(size_t i = 0; i < idCandidates.size(); i++) {
+    const ActorDataT& d = ActorData::dataList[idCandidates.at(i)];
+    bool isMonsterNativeToRoom = false;
+    for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
+      if(d.nativeRooms.at(iNative) == roomTheme) {
+        isMonsterNativeToRoom = true;
+        break;
+      }
+    }
+    if(isMonsterNativeToRoom == false) {
+      idCandidates.erase(idCandidates.begin() + i);
+      i--;
+    }
+  }
+
+  if(idCandidates.empty()) {
+    trace << "PopulateMonsters: Found no valid monsters to spawn "
+          "at room theme (" + toStr(int(roomTheme)) + ")" << endl;
+    return false;
+  } else {
+    const int ELEMENT = Rnd::range(0, idCandidates.size() - 1);
+    const ActorId id = idCandidates.at(ELEMENT);
+    spawnGroupAt(id, sortedFreeCellsVector, blockers,
+                 IS_ROAMING_ALLOWED);
+    return true;
+  }
+}
+
+} //namespace
+
+void trySpawnDueToTimePassed() const {
   trace << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
@@ -99,7 +148,7 @@ void PopulateMonsters::trySpawnDueToTimePassed() const {
   trace << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
 }
 
-void PopulateMonsters::populateCaveLevel() const {
+void populateCaveLevel() const {
   const int NR_GROUPS_ALLOWED = Rnd::range(6, 7);
 
   bool blockers[MAP_W][MAP_H];
@@ -140,7 +189,7 @@ void PopulateMonsters::populateCaveLevel() const {
   }
 }
 
-void PopulateMonsters::populateIntroLevel() {
+void populateIntroLevel() {
   const int NR_GROUPS_ALLOWED = 2; //Rnd::range(2, 3);
 
   bool blockers[MAP_W][MAP_H];
@@ -179,7 +228,7 @@ void PopulateMonsters::populateIntroLevel() {
   }
 }
 
-void PopulateMonsters::populateRoomAndCorridorLevel() const {
+void populateRoomAndCorridorLevel() const {
   const int NR_GROUPS_ALLOWED_ON_MAP = Rnd::range(5, 9);
   int nrGroupsSpawned = 0;
 
@@ -279,48 +328,8 @@ void PopulateMonsters::populateRoomAndCorridorLevel() const {
   }
 }
 
-bool PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt(
-  const RoomThemeId roomTheme, const vector<Pos>& sortedFreeCellsVector,
-  bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) const {
-
-  trace << "PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt()" << endl;
-  const int NR_LEVELS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
-  vector<ActorId> idCandidates;
-  makeListOfMonstersEligibleForAutoSpawning(
-    NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idCandidates);
-
-  for(size_t i = 0; i < idCandidates.size(); i++) {
-    const ActorDataT& d = ActorData::dataList[idCandidates.at(i)];
-    bool isMonsterNativeToRoom = false;
-    for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
-      if(d.nativeRooms.at(iNative) == roomTheme) {
-        isMonsterNativeToRoom = true;
-        break;
-      }
-    }
-    if(isMonsterNativeToRoom == false) {
-      idCandidates.erase(idCandidates.begin() + i);
-      i--;
-    }
-  }
-
-  if(idCandidates.empty()) {
-    trace << "PopulateMonsters: Found no valid monsters to spawn ";
-    trace << "at room theme (" + toStr(int(roomTheme)) + ")" << endl;
-    return false;
-  } else {
-    const int ELEMENT = Rnd::range(0, idCandidates.size() - 1);
-    const ActorId id = idCandidates.at(ELEMENT);
-    spawnGroupAt(id, sortedFreeCellsVector, blockers,
-                 IS_ROAMING_ALLOWED);
-    return true;
-  }
-}
-
-void PopulateMonsters::spawnGroupAt(
-  const ActorId id, const vector<Pos>& sortedFreeCellsVector,
-  bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) const {
-
+void spawnGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
+                  bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
   const ActorDataT& d = ActorData::dataList[id];
 
   int maxNrInGroup = 1;
@@ -354,7 +363,7 @@ void PopulateMonsters::spawnGroupAt(
   }
 }
 
-void PopulateMonsters::makeSortedFreeCellsVector(
+void makeSortedFreeCellsVector(
   const Pos& origin, const bool blockers[MAP_W][MAP_H],
   vector<Pos>& vectorRef) const {
 
@@ -378,10 +387,4 @@ void PopulateMonsters::makeSortedFreeCellsVector(
   std::sort(vectorRef.begin(), vectorRef.end(), sorter);
 }
 
-int PopulateMonsters::getRandomOutOfDepth() const {
-  if(DLVL == 0)                   {return 0;}
-  if(Rnd::oneIn(40) && DLVL > 1)  {return 5;}
-  if(Rnd::oneIn(5))               {return 2;}
-
-  return 0;
-}
+} //PopulateMonsters

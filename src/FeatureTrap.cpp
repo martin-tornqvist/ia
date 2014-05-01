@@ -1,7 +1,9 @@
 #include "FeatureTrap.h"
 
 #include <algorithm>
+#include <assert.h>
 
+#include "Init.h"
 #include "FeatureFactory.h"
 #include "FeatureData.h"
 #include "ActorPlayer.h"
@@ -18,6 +20,8 @@
 #include "Renderer.h"
 #include "Utils.h"
 #include "PlayerBon.h"
+
+using namespace std;
 
 //------------------------------------------------------------- TRAP
 Trap::Trap(FeatureId id, Pos pos, TrapSpawnData* spawnData) :
@@ -95,9 +99,9 @@ void Trap::bump(Actor& actorBumping) {
   if(
     find(props.begin(), props.end(), propEthereal)  == props.end() &&
     find(props.begin(), props.end(), propFlying)    == props.end()) {
-    const bool IS_PLAYER = &actorBumping == actorBumping.Map::player;
-    const bool ACTOR_CAN_SEE = actorBumping.getPropHandler().allowSee();
-    AbilityVals& abilities = actorBumping.getData().abilityVals;
+    const bool IS_PLAYER      = &actorBumping == Map::player;
+    const bool ACTOR_CAN_SEE  = actorBumping.getPropHandler().allowSee();
+    AbilityVals& abilities    = actorBumping.getData().abilityVals;
     const int DODGE_SKILL =
       abilities.getVal(AbilityId::dodgeTrap, true, actorBumping);
     const int BASE_CHANCE_TO_AVOID = 30;
@@ -108,14 +112,12 @@ void Trap::bump(Actor& actorBumping) {
       trace << "Trap: Player bumping" << endl;
       const int CHANCE_TO_AVOID = isHidden_ == true ? 10 :
                                   (BASE_CHANCE_TO_AVOID + DODGE_SKILL);
-      const AbilityRollResult result =
-        actorBumping.AbilityRoll::roll(CHANCE_TO_AVOID);
+      const AbilityRollResult result = AbilityRoll::roll(CHANCE_TO_AVOID);
 
       if(result >= successSmall) {
         if(isHidden_ == false) {
           if(ACTOR_CAN_SEE) {
-            actorBumping.Log::addMsg(
-              "I avoid a " + trapName + ".", clrMsgGood);
+            Log::addMsg("I avoid a " + trapName + ".", clrMsgGood);
           }
         }
       } else {
@@ -131,17 +133,15 @@ void Trap::bump(Actor& actorBumping) {
           trace << "Trap: Monster eligible for triggering trap" << endl;
 
           const bool IS_ACTOR_SEEN_BY_PLAYER =
-            actorBumping.Map::player->isSeeingActor(actorBumping, NULL);
+            Map::player->isSeeingActor(actorBumping, NULL);
 
           const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
-          const AbilityRollResult result =
-            actorBumping.AbilityRoll::roll(CHANCE_TO_AVOID);
+          const AbilityRollResult result = AbilityRoll::roll(CHANCE_TO_AVOID);
 
           if(result >= successSmall) {
             if(isHidden_ == false && IS_ACTOR_SEEN_BY_PLAYER) {
               const string actorName = actorBumping.getNameThe();
-              actorBumping.Log::addMsg(
-                actorName + " avoids a " + trapName + ".");
+              Log::addMsg(actorName + " avoids a " + trapName + ".");
             }
           } else {
             triggerTrap(actorBumping);
@@ -331,7 +331,7 @@ MaterialType Trap::getMaterialType() const {
 TrapDart::TrapDart(Pos pos) :
   SpecificTrapBase(pos, trap_dart), isPoisoned(false) {
   isPoisoned =
-    Map::dlvl >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
+    Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::coinToss();
 }
 
 void TrapDart::trigger(
@@ -403,8 +403,7 @@ void TrapDart::trigger(
 
 TrapSpear::TrapSpear(Pos pos) :
   SpecificTrapBase(pos, trap_spear), isPoisoned(false) {
-  isPoisoned =
-    Map::dlvl >= MIN_DLVL_NASTY_TRAPS && Rnd::coinToss();
+  isPoisoned = Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::oneIn(4);
 }
 
 void TrapSpear::trigger(
@@ -726,7 +725,7 @@ void TrapSmoke::trigger(
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
       Log::addMsg("Suddenly the air around " + actorName +
-                      " is thick with smoke!");
+                  " is thick with smoke!");
     }
   }
 

@@ -5,45 +5,24 @@
 
 #include "ActorData.h"
 
+namespace PopulateMonsters {
 
+void trySpawnDueToTimePassed();
 
+void populateRoomAndCorridorLevel();
 
-class PopulateMonsters {
-public:
-  PopulateMonsters() {}
+void populateCaveLevel();
 
-  void trySpawnDueToTimePassed() const;
+void populateIntroLevel();
 
-  void populateRoomAndCorridorLevel() const;
+void spawnGroupAt(const ActorId id,
+                  const std::vector<Pos>& sortedFreeCellsVector,
+                  bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED);
 
-  void populateCaveLevel() const;
+void makeSortedFreeCellsVector(const Pos& origin,
+                               const bool blockers[MAP_W][MAP_H],
+                               std::vector<Pos>& vectorRef);
 
-  void populateIntroLevel();
-
-  void spawnGroupAt(
-    const ActorId id, const std::vector<Pos>& sortedFreeCellsVector,
-    bool forbiddenCells[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) const;
-
-  void makeSortedFreeCellsVector(
-    const Pos& origin, const bool forbiddenCells[MAP_W][MAP_H],
-    std::vector<Pos>& vectorRef) const;
-
-private:
-  bool spawnGroupOfRandomNativeToRoomThemeAt(
-    const RoomThemeId roomTheme, const std::vector<Pos>& sortedFreeCellsVector,
-    bool forbiddenCells[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) const;
-
-  int getRandomOutOfDepth() const;
-
-  void spawnGroupOfRandomAt(
-    const std::vector<Pos>& sortedFreeCellsVector, bool forbiddenCells[MAP_W][MAP_H],
-    const int NR_LVLS_OUT_OF_DEPTH, const bool IS_ROAMING_ALLOWED) const;
-
-  void makeListOfMonstersEligibleForAutoSpawning(
-    const int NR_LVLS_OUT_OF_DEPTH_ALLOWED, std::vector<ActorId>& listRef) const;
-
-
-};
-
+} //PopulateMonsters
 
 #endif

@@ -6,7 +6,7 @@
 
 class Manual {
 public:
-  Manual() : eng() {readFile();}
+  Manual() {readFile();}
 
   void run();
 
@@ -16,7 +16,6 @@ private:
   void drawManualInterface();
 
   std::vector<std::string> lines;
-
 
 };
 

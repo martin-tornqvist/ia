@@ -30,7 +30,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
 
   for(int iAnim = 0; iAnim < NR_ANIM_STEPS; iAnim++) {
 
-    const TileId tile = iAnim == 0 ? tile_blast1 : tile_blast2;
+    const TileId tile = iAnim == 0 ? TileId::blast1 : TileId::blast2;
 
     const int NR_OUTER = posLists.size();
     for(int iOuter = 0; iOuter < NR_OUTER; iOuter++) {

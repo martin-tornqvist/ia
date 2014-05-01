@@ -167,7 +167,7 @@ Item* spawnItem(const ItemId itemId, const int NR_ITEMS) {
 }
 
 void setItemRandomizedProperties(Item* item) {
-  const ItemData& d = item->getData();
+  const ItemDataT& d = item->getData();
 
   //If it is a pure melee weapon, it may get a plus
   if(d.isMeleeWeapon && d.isRangedWeapon == false) {

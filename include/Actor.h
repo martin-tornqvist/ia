@@ -66,19 +66,16 @@ public:
   int getHpMax(const bool WITH_MODIFIERS) const;
   inline int getSpiMax()    const {return spiMax_;}
 
-  inline std::string getNameThe() const {return data_->name_the;}
-  inline std::string getNameA() const {return data_->name_a;}
-  inline bool isHumanoid() const {return data_->isHumanoid;}
-  inline char getGlyph() const {return glyph_;}
-  virtual const SDL_Color& getClr() {return clr_;}
-  inline const TileId& getTile() const {return tile_;}
+  inline std::string getNameThe()   const {return data_->name_the;}
+  inline std::string getNameA()     const {return data_->name_a;}
+  inline bool isHumanoid()          const {return data_->isHumanoid;}
+  inline char getGlyph()            const {return glyph_;}
+  virtual const SDL_Color& getClr()       {return clr_;}
+  inline const TileId& getTile()    const {return tile_;}
 
   void addLight(bool lightMap[MAP_W][MAP_H]) const;
 
-  virtual void addLight_(
-    bool light[MAP_W][MAP_H]) const {
-    (void)light;
-  }
+  virtual void addLight_(bool light[MAP_W][MAP_H]) const {(void)light;}
 
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
 

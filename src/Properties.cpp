@@ -1032,7 +1032,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 }
 
 void PropHandler::tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE) {
-  const ItemData& wpnData = wpn.getData();
+  const ItemDataT& wpnData = wpn.getData();
   Prop* propAppliedFromWpn =
     IS_MELEE ? wpnData.propAppliedOnMelee : wpnData.propAppliedOnRanged;
 

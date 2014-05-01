@@ -2,11 +2,14 @@
 
 #include <math.h>
 #include <iostream>
+#include <vector>
 
 #include "CmnTypes.h"
 #include "LineCalc.h"
 #include "Map.h"
 #include "Utils.h"
+
+using namespace std;
 
 namespace Fov {
 

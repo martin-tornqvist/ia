@@ -1,5 +1,9 @@
 #include "FeatureExaminable.h"
 
+#include <vector>
+#include <assert.h>
+
+#include "Init.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "Item.h"
@@ -17,6 +21,8 @@
 #include "Map.h"
 #include "FeatureFactory.h"
 #include "Utils.h"
+
+using namespace std;
 
 //---------------------------------------------------------ITEM CONTAINE
 ItemContainerFeature::ItemContainerFeature() {items_.resize(0);}
@@ -83,7 +89,7 @@ void ItemContainerFeature::destroySingleFragile() {
 
   for(unsigned int i = 0; i < items_.size(); i++) {
     Item* const item = items_.at(i);
-    const ItemData& d = item->getData();
+    const ItemDataT& d = item->getData();
     if(d.isPotion || d.id == ItemId::molotov) {
       delete item;
       items_.erase(items_.begin() + i);
@@ -348,7 +354,8 @@ void Tomb::triggerTrap(Actor& actor) {
         const ActorDataT& d = ActorData::dataList[i];
         if(
           d.isGhost && d.isAutoSpawnAllowed && d.isUnique == false &&
-          ((DLVL + 5) >= d.spawnMinDLVL || DLVL >= MIN_DLVL_NASTY_TRAPS)) {
+          ((Map::dlvl + 5) >= d.spawnMinDLVL ||
+           Map::dlvl >= MIN_DLVL_HARDER_TRAPS)) {
           actorCandidates.push_back(ActorId(i));
         }
       }
@@ -627,7 +634,7 @@ void Chest::triggerTrap(Actor& actor) {
 
     const int EXPLODE_ONE_IN_N = 7;
     if(
-      Map::dlvl >= MIN_DLVL_NASTY_TRAPS &&
+      Map::dlvl >= MIN_DLVL_HARDER_TRAPS &&
       Rnd::oneIn(EXPLODE_ONE_IN_N)) {
       Log::addMsg("The trap explodes!");
       Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0,

@@ -1,7 +1,9 @@
 #include "Inventory.h"
 
 #include <algorithm>
+#include <vector>
 
+#include "Init.h"
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "ItemDrop.h"
@@ -10,9 +12,12 @@
 #include "GameTime.h"
 #include "Renderer.h"
 #include "ItemFactory.h"
-#include "PlayerCreateCharacter.h"
+#include "CreateCharacter.h"
 #include "DungeonMaster.h"
 #include "PlayerBon.h"
+#include "Map.h"
+
+using namespace std;
 
 Inventory::Inventory(bool humanoid) {
   InvSlot invSlot;
@@ -229,7 +234,7 @@ void Inventory::dropAllNonIntrinsic(
   Item* item;
 
   //Drop from slots
-  for(Slot & slot : slots_) {
+  for(InvSlot & slot : slots_) {
     item = slot.item;
     if(item != NULL) {
       if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
@@ -269,7 +274,9 @@ bool Inventory::hasAmmoForFirearmInInventory() {
 
     //If weapon has infinite ammo, return true but with a warning
     if(weapon->getData().rangedHasInfiniteAmmo) {
-      trace << "[WARNING] Inventory::hasAmmoForFirearm...() ran on weapon with infinite ammo" << endl;
+      trace <<
+            "[WARNING] Inventory::hasAmmoForFirearmInInventory...() "
+            "ran on weapon with infinite ammo" << endl;
       return true;
     }
 
@@ -391,7 +398,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
   bool isFreeTurn = false;
 
   Item* item = general_.at(GENERAL_INV_ELEMENT);
-  const ItemData& d = item->getData();
+  const ItemDataT& d = item->getData();
 
   if(IS_PLAYER) {
     if(d.isArmor == false) {
@@ -638,8 +645,6 @@ int Inventory::getTotalItemWeight() const {
 // Function for lexicographically comparing two items
 struct LexicograhicalCompareItems {
 public:
-  LexicograhicalCompareItems() : eng() {
-  }
   bool operator()(Item* const item1, Item* const item2) {
     const string& itemName1 =
       ItemData::getItemRef(*item1, ItemRefType::plain, true);
@@ -648,39 +653,43 @@ public:
     return std::lexicographical_compare(itemName1.begin(), itemName1.end(),
                                         itemName2.begin(), itemName2.end());
   }
-
 };
 
 void Inventory::sortGeneralInventory() {
   vector< vector<Item*> > sortBuffer;
 
-  // Sort according to item interface color first
-  for(unsigned int iGeneral = 0; iGeneral < general_.size(); iGeneral++) {
+  //Sort according to item interface color first
+  for(Item * item : general_) {
+
     bool isAddedToBuffer = false;
-    for(unsigned int iBuffer = 0;  iBuffer < sortBuffer.size(); iBuffer++) {
-      const SDL_Color clrCurrentGroup = sortBuffer.at(iBuffer).at(0)->getInterfaceClr();
-      if(Utils::isClrEq(general_.at(iGeneral)->getInterfaceClr(), clrCurrentGroup)) {
-        sortBuffer.at(iBuffer).push_back(general_.at(iGeneral));
+
+    //Check if item should be added to any existing color group
+    for(vector<Item*>& group : sortBuffer) {
+      const SDL_Color clrCurGroup = group.at(0)->getInterfaceClr();
+      if(Utils::isClrEq(item->getInterfaceClr(), clrCurGroup)) {
+        group.push_back(item);
         isAddedToBuffer = true;
         break;
       }
     }
+
     if(isAddedToBuffer) {
       continue;
     } else {
-      vector<Item*> newItemCategory;
-      newItemCategory.push_back(general_.at(iGeneral));
-      sortBuffer.push_back(newItemCategory);
+      //Item is a new color, create a new color group
+      vector<Item*> newGroup;
+      newGroup.push_back(item);
+      sortBuffer.push_back(newGroup);
     }
   }
 
-  // Sort lexicographically sedond
+  //Sort lexicographically secondarily
   LexicograhicalCompareItems cmp();
-  for(unsigned int i = 0; i < sortBuffer.size(); i++) {
-    std::sort(sortBuffer.at(i).begin(), sortBuffer.at(i).end(), cmp);
+  for(vector<Item*>& group : sortBuffer) {
+    std::sort(group.begin(), group.end(), cmp);
   }
 
-  // Set the inventory from the sorting buffer
+  //Set the inventory from the sorting buffer
   general_.resize(0);
   for(unsigned int i = 0; i < sortBuffer.size(); i++) {
     for(unsigned int ii = 0; ii < sortBuffer.at(i).size(); ii++) {

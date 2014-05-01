@@ -1,6 +1,10 @@
 #include "Gods.h"
 
+#include <vector>
+
 #include "Utils.h"
+
+using namespace std;
 
 namespace Gods {
 
@@ -9,7 +13,7 @@ namespace {
 vector<God> godList;
 int         currentGodElem_;
 
-void Gods::initGodList() {
+void initGodList() {
   godList.push_back(God("Abholos", "The Devourer in the Mist"));
   godList.push_back(God("Alala", "The Herald of S'glhuo"));
   godList.push_back(God("Ammutseba", "The Devourer of Stars"));
@@ -124,12 +128,12 @@ const God* getCurrentGod() {
   return NULL;
 }
 
-void Gods::setRandomGod() {
+void setRandomGod() {
   const int NR_GODS = int(godList.size());
   currentGodElem_ = Rnd::range(0, NR_GODS - 1);
 }
 
-void Gods::setNoGod() {
+void setNoGod() {
   currentGodElem_ = -1;
 }
 

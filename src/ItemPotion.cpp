@@ -227,14 +227,14 @@ void PotionOfInsight::quaff_(Actor* const actor) {
   for(InvSlot & slot : slots) {
     Item* const item = slot.item;
     if(item) {
-      const ItemData& d = item->getData();
+      const ItemDataT& d = item->getData();
       if(d.isIdentified == false) {identifyCandidates.push_back(item);}
     }
   }
   vector<Item*>& general = inv.getGeneral();
   for(Item * item : general) {
     if(item->getData().id != ItemId::potionOfInsight) {
-      const ItemData& d = item->getData();
+      const ItemDataT& d = item->getData();
       if(d.isIdentified == false) {identifyCandidates.push_back(item);}
     }
   }

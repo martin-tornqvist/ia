@@ -62,7 +62,7 @@ public:
 struct Projectile {
   Projectile() : pos(Pos(-1, -1)), isObstructed(false),
     isVisibleToPlayer(true), actorHit(NULL), obstructedInElement(-1),
-    isDoneRendering(false), glyph(-1), tile(tile_empty), clr(clrWhite),
+    isDoneRendering(false), glyph(-1), tile(TileId::empty), clr(clrWhite),
     attackData(NULL) {}
 
   ~Projectile() {if(attackData != NULL) {delete attackData;}}

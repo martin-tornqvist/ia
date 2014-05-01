@@ -1,7 +1,12 @@
 #include "FeatureWall.h"
 
+#include <string>
+#include <assert.h>
+
 #include "Map.h"
 #include "Utils.h"
+
+using namespace std;
 
 Wall::Wall(FeatureId id, Pos pos) :
   FeatureStatic(id, pos), wallType(wall_common), isMossGrown(false) {
@@ -9,19 +14,19 @@ Wall::Wall(FeatureId id, Pos pos) :
 
 bool Wall::isTileAnyWallFront(const TileId tile) {
   return
-    tile == tile_wallFront      ||
-    tile == tile_wallFrontAlt1  ||
-    tile == tile_wallFrontAlt2  ||
-    tile == tile_caveWallFront  ||
-    tile == tile_egyptWallFront;
+    tile == TileId::wallFront      ||
+    tile == TileId::wallFrontAlt1  ||
+    tile == TileId::wallFrontAlt2  ||
+    tile == TileId::caveWallFront  ||
+    tile == TileId::egyptWallFront;
 }
 
 bool Wall::isTileAnyWallTop(const TileId tile) {
   return
-    tile == tile_wallTop      ||
-    tile == tile_caveWallTop  ||
-    tile == tile_egyptWallTop ||
-    tile == tile_rubbleHigh;
+    tile == TileId::wallTop      ||
+    tile == TileId::caveWallTop  ||
+    tile == TileId::egyptWallTop ||
+    tile == TileId::rubbleHigh;
 }
 
 string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
@@ -52,30 +57,30 @@ char Wall::getGlyph() const {
 TileId Wall::getFrontWallTile() const {
   if(Config::isTilesWallFullSquare()) {
     switch(wallType) {
-      case wall_common:   return tile_wallTop;        break;
-      case wall_alt1:     return tile_wallTop;        break;
-      case wall_cave:     return tile_caveWallTop;    break;
-      case wall_egypt:    return tile_egyptWallTop;   break;
-      default:            return tile_wallTop;        break;
+      case wall_common:   return TileId::wallTop;        break;
+      case wall_alt1:     return TileId::wallTop;        break;
+      case wall_cave:     return TileId::caveWallTop;    break;
+      case wall_egypt:    return TileId::egyptWallTop;   break;
+      default:            return TileId::wallTop;        break;
     }
   } else {
     switch(wallType) {
-      case wall_common:   return tile_wallFront;        break;
-      case wall_alt1:     return tile_wallFrontAlt1;    break;
-      case wall_cave:     return tile_caveWallFront;    break;
-      case wall_egypt:    return tile_egyptWallFront;   break;
-      default:            return tile_wallFront;        break;
+      case wall_common:   return TileId::wallFront;        break;
+      case wall_alt1:     return TileId::wallFrontAlt1;    break;
+      case wall_cave:     return TileId::caveWallFront;    break;
+      case wall_egypt:    return TileId::egyptWallFront;   break;
+      default:            return TileId::wallFront;        break;
     }
   }
 }
 
 TileId Wall::getTopWallTile() const {
   switch(wallType) {
-    case wall_common:   return tile_wallTop;        break;
-    case wall_alt1:     return tile_wallTop;        break;
-    case wall_cave:     return tile_caveWallTop;    break;
-    case wall_egypt:    return tile_egyptWallTop;   break;
-    default:            return tile_wallTop;        break;
+    case wall_common:   return TileId::wallTop;        break;
+    case wall_alt1:     return TileId::wallTop;        break;
+    case wall_cave:     return TileId::caveWallTop;    break;
+    case wall_egypt:    return TileId::egyptWallTop;   break;
+    default:            return TileId::wallTop;        break;
   }
 }
 

@@ -215,7 +215,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
           }
         }
         if(browser.isPosAtElement(2)) {
-          eng.manual->run();
+          Manual::run();
           draw(browser);
         }
         if(browser.isPosAtElement(3)) {
@@ -227,7 +227,7 @@ GameEntryMode MainMenu::run(bool& quit, int& introMusChannel) {
           draw(browser);
         }
         if(browser.isPosAtElement(5)) {
-          eng.highScore->runHighScoreScreen();
+          HighScore::runHighScoreScreen();
           draw(browser);
         }
         if(browser.isPosAtElement(6)) {

@@ -6,6 +6,8 @@
 #include "PlayerBon.h"
 #include "Utils.h"
 
+using namespace std;
+
 void LitDynamite::newTurn() {
   turnsLeftToExplosion_--;
   if(turnsLeftToExplosion_ <= 0) {
