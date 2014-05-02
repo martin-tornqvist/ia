@@ -34,7 +34,7 @@ void makeListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
     max(1, min(LAST_CAVERN_LEVEL, DLVL + NR_LVLS_OUT_OF_DEPTH));
 
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorDataT& d = ActorData::dataList[i];
+    const ActorDataT& d = ActorData::data[i];
     if(
       d.isAutoSpawnAllowed &&
       d.nrLeftAllowedToSpawn != 0 &&
@@ -73,7 +73,7 @@ bool spawnGroupOfRandomNativeToRoomThemeAt(
     NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idCandidates);
 
   for(size_t i = 0; i < idCandidates.size(); i++) {
-    const ActorDataT& d = ActorData::dataList[idCandidates.at(i)];
+    const ActorDataT& d = ActorData::data[idCandidates.at(i)];
     bool isMonsterNativeToRoom = false;
     for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
       if(d.nativeRooms.at(iNative) == roomTheme) {
@@ -266,7 +266,7 @@ void populateRoomAndCorridorLevel() const {
           for(int x = room->getX0(); x <= room->getX1(); x++) {
             if(
               blockers[x][y] == false &&
-              eng.roomThemeMaker->themeMap[x][y] == room->roomTheme) {
+              RoomThemeMaker::themeMap[x][y] == room->roomTheme) {
               originCandidates.push_back(Pos(x, y));
             }
           }
@@ -312,7 +312,7 @@ void populateRoomAndCorridorLevel() const {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
           blockers[x][y] == false &&
-          eng.roomThemeMaker->themeMap[x][y] == RoomThemeId::plain) {
+          RoomThemeMaker::themeMap[x][y] == RoomThemeId::plain) {
           originCandidates.push_back(Pos(x, y));
         }
       }
@@ -330,7 +330,7 @@ void populateRoomAndCorridorLevel() const {
 
 void spawnGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
                   bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
-  const ActorDataT& d = ActorData::dataList[id];
+  const ActorDataT& d = ActorData::data[id];
 
   int maxNrInGroup = 1;
 

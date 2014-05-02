@@ -1,5 +1,8 @@
 #include "ItemMedicalBag.h"
 
+#include <vector>
+
+#include "Init.h"
 #include "Properties.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -9,6 +12,9 @@
 #include "Popup.h"
 #include "GameTime.h"
 #include "MapParsing.h"
+#include "Map.h"
+
+using namespace std;
 
 ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;

@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-#include "InitGame.h"
+#include "Init.h"
 
 #include "SdlWrapper.h"
 #include "Config.h"
@@ -21,6 +21,7 @@
 #include "Query.h"
 #include "Highscore.h"
 #include "Postmortem.h"
+#include "Map.h"
 
 #ifdef _WIN32
 #undef main
@@ -41,9 +42,8 @@ int main(int argc, char* argv[]) {
   while(quitGame == false) {
     Init::initSession();
 
-    int introMusChannel = -1;
-    const GameEntryMode gameEntryType =
-      eng.mainMenu->run(quitGame, introMusChannel);
+    int introMusChan = -1;
+    const GameEntryMode gameEntryType = MainMenu::run(quitGame, introMusChan);
 
     if(quitGame == false) {
       Init::quitToMainMenu = false;
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
         if(Config::isBotPlaying()) {
           PlayerBon::setAllTraitsToPicked();
         }
-        Map::playerCreateCharacter->createCharacter();
+        CreateCharacter::createCharacter();
         Map::player->spawnStartItems();
 
         GameTime::insertActorInLoop(Map::player);
@@ -120,13 +120,13 @@ int main(int argc, char* argv[]) {
           //Player is dead, run postmortem, then return to main menu
           dynamic_cast<Player*>(Map::player)->waitTurnsLeft = -1;
           Log::addMsg("I am dead... (press space/esc to proceed)",
-                          clrMsgBad);
+                      clrMsgBad);
           Audio::play(SfxId::death);
           Renderer::drawMapAndInterface();
           Log::clearLog();
           Query::waitForEscOrSpace();
           HighScore::gameOver(false);
-          eng.postmortem->run(&quitGame);
+          Postmortem::run(&quitGame);
           Init::quitToMainMenu = true;
         }
       }

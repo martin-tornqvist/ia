@@ -1,16 +1,10 @@
 #ifndef BASH_H
 #define BASH_H
 
-#include "FeatureDoor.h"
+namespace Bash {
 
-class Feature;
+void playerBash();
 
-class Bash {
-public:
-  Bash() {}
-  ~Bash() {}
-
-  void playerBash() const;
-};
+} //Bash
 
 #endif

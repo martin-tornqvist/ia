@@ -1,17 +1,11 @@
 #ifndef EXAMINE_H
 #define EXAMINE_H
 
-#include <vector>
-#include <string>
+namespace Examine {
 
-class Examine {
-public:
-  Examine() {}
+void playerExamine();
 
-  ~Examine() {}
-
-  void playerExamine() const;
-};
+} //Examine
 
 #endif
 

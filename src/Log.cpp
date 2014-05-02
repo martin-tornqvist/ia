@@ -1,12 +1,16 @@
 #include "Log.h"
 
 #include <algorithm>
+#include <vector>
+#include <string>
+#include <assert.h>
 
 #include "Input.h"
 #include "Converters.h"
 #include "Renderer.h"
 #include "Query.h"
 #include "ActorPlayer.h"
+#include "Map.h"
 
 using namespace std;
 
@@ -43,8 +47,8 @@ private:
 };
 
 vector<Msg>           lines_[2];
-vector< vector<Msg> > history_
-const string moreStr = "--More--";
+vector< vector<Msg> > history_;
+const string          moreStr = "--More--";
 
 int getXAfterMsg(const Msg* const msg) {
   if(msg == NULL) {
@@ -232,7 +236,7 @@ void displayHistory() {
 void addLineToHistory(const string& lineToAdd) {
   vector<Msg> historyLine;
   historyLine.push_back(Msg(lineToAdd, clrWhite, 0));
-  history.push_back(historyLine);
+  history_.push_back(historyLine);
 }
 
 } //Log

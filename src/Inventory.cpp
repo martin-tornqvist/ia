@@ -645,13 +645,13 @@ int Inventory::getTotalItemWeight() const {
 // Function for lexicographically comparing two items
 struct LexicograhicalCompareItems {
 public:
-  bool operator()(Item* const item1, Item* const item2) {
+  bool operator()(const Item* const item1, const Item* const item2) {
     const string& itemName1 =
       ItemData::getItemRef(*item1, ItemRefType::plain, true);
     const string& itemName2 =
       ItemData::getItemRef(*item2, ItemRefType::plain, true);
-    return std::lexicographical_compare(itemName1.begin(), itemName1.end(),
-                                        itemName2.begin(), itemName2.end());
+    return lexicographical_compare(itemName1.begin(), itemName1.end(),
+                                   itemName2.begin(), itemName2.end());
   }
 };
 
@@ -684,7 +684,7 @@ void Inventory::sortGeneralInventory() {
   }
 
   //Sort lexicographically secondarily
-  LexicograhicalCompareItems cmp();
+  LexicograhicalCompareItems cmp;
   for(vector<Item*>& group : sortBuffer) {
     std::sort(group.begin(), group.end(), cmp);
   }

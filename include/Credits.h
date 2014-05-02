@@ -1,20 +1,12 @@
 #ifndef CREDITS_SCR_H
 #define CREDITS_SCR_H
 
-#include <vector>
-#include <string>
+namespace Credits {
 
-class Credits {
-public:
-  Credits() {readFile();}
+void init();
 
-  void run();
+void run();
 
-private:
-  void readFile();
-
-  std::vector<std::string> lines;
-
-};
+} //Credits
 
 #endif

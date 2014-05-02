@@ -17,7 +17,7 @@ bool MoveRules::canMove(const vector<PropId>& actorsProps) const {
 
 namespace FeatureData {
 
-FeatureDataT dataList[int(FeatureId::endOfFeatureId)];
+FeatureDataT data[int(FeatureId::endOfFeatureId)];
 
 namespace {
 
@@ -51,7 +51,7 @@ void resetData(FeatureDataT& d) {
 }
 
 void addToListAndReset(FeatureDataT& d) {
-  dataList[int(d.id)] = d;
+  data[int(d.id)] = d;
   resetData(d);
 }
 
@@ -348,7 +348,7 @@ void initDataList() {
   d.name_a = "a big pile of debris";
   d.name_the = "the big pile of debris";
   d.glyph = 8;
-  d.color = dataList[int(FeatureId::stoneWall)].color;
+  d.color = data[int(FeatureId::stoneWall)].color;
   d.tile = TileId::rubbleHigh;
   d.moveRules.setPropCanMove(propEthereal);
   d.moveRules.setPropCanMove(propOoze);
@@ -368,7 +368,7 @@ void initDataList() {
   d.name_a = "rubble";
   d.name_the = "the rubble";
   d.glyph = ',';
-  d.color = dataList[int(FeatureId::stoneWall)].color;
+  d.color = data[int(FeatureId::stoneWall)].color;
   d.tile = TileId::rubbleLow;
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
@@ -658,7 +658,7 @@ void init() {
 }
 
 const FeatureDataT* getData(const FeatureId id) {
-  return &(dataList[int(id)]);
+  return &(data[int(id)]);
 }
 
 } //FeatureData

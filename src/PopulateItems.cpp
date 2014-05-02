@@ -19,14 +19,14 @@ void spawnItems() {
   vector<ItemId> candidates;
   candidates.resize(0);
 
-  ItemDataT** dataList = ItemData::dataList;
+  ItemDataT** data = ItemData::data;
 
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     if(
-      DLVL >= dataList[i]->spawnStandardMinDLVL &&
-      DLVL <= dataList[i]->spawnStandardMaxDLVL &&
-      dataList[i]->isIntrinsic == false) {
-      if(Rnd::percentile() < dataList[i]->chanceToIncludeInSpawnList) {
+      DLVL >= data[i]->spawnStandardMinDLVL &&
+      DLVL <= data[i]->spawnStandardMaxDLVL &&
+      data[i]->isIntrinsic == false) {
+      if(Rnd::percentile() < data[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(ItemId(i));
       }
     }

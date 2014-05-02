@@ -87,7 +87,7 @@ Actor* makeActorFromId(const ActorId id) {
 Actor* spawnActor(const ActorId id, const Pos& pos) {
   Actor* const actor = makeActorFromId(id);
 
-  actor->place(pos, ActorData::dataList[id]);
+  actor->place(pos, ActorData::data[id]);
 
   if(actor->getData().nrLeftAllowedToSpawn != -1) {
     actor->getData().nrLeftAllowedToSpawn--;

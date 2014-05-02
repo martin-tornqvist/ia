@@ -159,7 +159,7 @@ bool MapGenBsp::run_() {
 #endif // DEMO_MODE
 
   trace << "MapGenBsp: Calling RoomThemeMaker::run()" << endl;
-  eng.roomThemeMaker->run();
+  RoomThemeMaker::run();
 #ifdef DEMO_MODE
   Renderer::drawMapAndInterface();
   SdlWrapper::sleep(3000);

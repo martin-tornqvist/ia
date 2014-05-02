@@ -73,8 +73,7 @@ void init() {
 }
 
 void cleanup() {
-  delete player;
-  player = NULL;
+  player = NULL; //Note: GameTime will delete player
 
   resetMap();
   for(int y = 0; y < MAP_H; y++) {

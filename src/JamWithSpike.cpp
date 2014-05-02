@@ -9,27 +9,11 @@
 #include "Query.h"
 #include "Inventory.h"
 #include "Renderer.h"
+#include "FeatureDoor.h"
 
-void JamWithSpike::playerJam() const {
-  Log::clearLog();
+namespace JamWithSpike {
 
-  if(Map::player->getInv().hasItemInGeneral(ItemId::ironSpike) == false) {
-    Log::addMsg("I have no spikes to jam with.", clrWhite);
-    Renderer::drawMapAndInterface();
-    return;
-  }
-
-  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  Renderer::drawMapAndInterface();
-  const Pos jamPos(Map::player->pos + Query::dir());
-  Log::clearLog();
-
-  playerJamFeature(Map::cells[jamPos.x][jamPos.y].featureStatic);
-
-  Renderer::drawMapAndInterface();
-}
-
-void JamWithSpike::playerJamFeature(Feature* const feature) const {
+void playerJamFeature(Feature* const feature) {
   bool jamableObjectFound = false;
 
   if(feature->getId() == FeatureId::door) {
@@ -61,3 +45,23 @@ void JamWithSpike::playerJamFeature(Feature* const feature) const {
   }
 }
 
+void playerJam() {
+  Log::clearLog();
+
+  if(Map::player->getInv().hasItemInGeneral(ItemId::ironSpike) == false) {
+    Log::addMsg("I have no spikes to jam with.", clrWhite);
+    Renderer::drawMapAndInterface();
+    return;
+  }
+
+  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+  Renderer::drawMapAndInterface();
+  const Pos jamPos(Map::player->pos + Query::dir());
+  Log::clearLog();
+
+  playerJamFeature(Map::cells[jamPos.x][jamPos.y].featureStatic);
+
+  Renderer::drawMapAndInterface();
+}
+
+} //JamWithSpike

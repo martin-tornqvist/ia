@@ -1,23 +1,14 @@
 #ifndef JAM_WITH_SPIKE_H
 #define JAM_WITH_SPIKE_H
 
-#include "FeatureDoor.h"
-
-
 class Feature;
 
-class JamWithSpike {
-public:
-  JamWithSpike() {}
-  ~JamWithSpike() {}
+namespace JamWithSpike {
 
-  void playerJam() const;
+void playerJam();
 
-private:
-  friend class Feature;
-  void playerJamFeature(Feature* const feature) const;
+void playerJamFeature(Feature* const feature);
 
-
-};
+} //JamWithSpike
 
 #endif

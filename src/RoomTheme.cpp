@@ -15,7 +15,7 @@
 void RoomThemeMaker::run() {
   trace << "RoomThemeMaker::run()..." << endl;
 
-  eng.gods->setNoGod();
+  Gods::setNoGod();
 
   assignRoomThemes();
 
@@ -160,7 +160,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
     //at altar (or at random pos if no altar)
     case RoomThemeId::ritual: {
 
-      eng.gods->setRandomGod();
+      Gods::setRandomGod();
 
       const int CHANCE_FOR_BLOODY_CHAMBER = 60;
       if(Rnd::percentile() < CHANCE_FOR_BLOODY_CHAMBER) {
@@ -226,8 +226,7 @@ int RoomThemeMaker::placeThemeFeatures(Room& room) {
 
   vector<Pos> nextToWalls;
   vector<Pos> awayFromWalls;
-  eng.mapPatterns->setPositionsInArea(
-    room.getDims(), nextToWalls, awayFromWalls);
+  MapPatterns::setPositionsInArea(room.getDims(), nextToWalls, awayFromWalls);
 
   vector<int> featuresSpawnCount(featureDataBelongingToTheme.size(), 0);
 

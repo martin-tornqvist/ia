@@ -131,7 +131,6 @@
 		<Unit filename="../include/Art.h" />
 		<Unit filename="../include/Attack.h" />
 		<Unit filename="../include/Audio.h" />
-		<Unit filename="../include/AutoDescribeActor.h" />
 		<Unit filename="../include/Bash.h" />
 		<Unit filename="../include/Bot.h" />
 		<Unit filename="../include/CharacterDescr.h" />
@@ -200,7 +199,7 @@
 		<Unit filename="../include/MenuInputHandling.h" />
 		<Unit filename="../include/MersenneTwister.h" />
 		<Unit filename="../include/PlayerBon.h" />
-		<Unit filename="../include/PlayerSpellsHandler.h" />
+		<Unit filename="../include/PlayerSpellsHandling.h" />
 		<Unit filename="../include/PopulateItems.h" />
 		<Unit filename="../include/PopulateMonsters.h" />
 		<Unit filename="../include/PopulateTraps.h" />
@@ -230,7 +229,6 @@
 		<Unit filename="../src/Art.cpp" />
 		<Unit filename="../src/Attack.cpp" />
 		<Unit filename="../src/Audio.cpp" />
-		<Unit filename="../src/AutoDescribeActor.cpp" />
 		<Unit filename="../src/Bash.cpp" />
 		<Unit filename="../src/Bot.cpp" />
 		<Unit filename="../src/CharacterDescr.cpp" />
@@ -299,7 +297,7 @@
 		<Unit filename="../src/MenuBrowser.cpp" />
 		<Unit filename="../src/MenuInputHandling.cpp" />
 		<Unit filename="../src/PlayerBon.cpp" />
-		<Unit filename="../src/PlayerSpellsHandler.cpp" />
+		<Unit filename="../src/PlayerSpellsHandling.cpp" />
 		<Unit filename="../src/PopulateItems.cpp" />
 		<Unit filename="../src/PopulateMonsters.cpp" />
 		<Unit filename="../src/PopulateTraps.cpp" />

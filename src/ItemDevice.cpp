@@ -1,6 +1,7 @@
 #include "ItemDevice.h"
 
 #include <algorithm>
+#include <vector>
 
 #include "ActorPlayer.h"
 #include "Renderer.h"
@@ -12,13 +13,14 @@
 #include "Audio.h"
 #include "Utils.h"
 
+using namespace std;
+
 //---------------------------------------------------- BASE CLASS
 Device::Device(ItemDataT* const itemData) :
   Item(itemData),
   condition_(Rnd::coinToss() ? Condition::fine : Condition::shoddy) {}
 
 void Device::identify(const bool IS_SILENT_IDENTIFY) {
-  (void)eng;
   (void)IS_SILENT_IDENTIFY;
 
   data_->isIdentified = true;

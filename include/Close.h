@@ -1,26 +1,15 @@
 #ifndef CLOSE_H
 #define CLOSE_H
 
-#include "CmnData.h"
-
-
-class Actor;
 class Feature;
 
-class Close {
-public:
-  Close() {}
+namespace Close {
 
-  ~Close() {}
+void playerClose();
 
-  void playerClose() const;
+void playerCloseFeature(Feature* const feature);
 
-private:
-  friend class Feature;
-  void playerCloseFeature(Feature* const feature) const;
-
-
-};
+} //Close
 
 #endif
 

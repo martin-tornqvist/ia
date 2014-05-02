@@ -18,7 +18,7 @@
 #include "Marker.h"
 #include "Map.h"
 #include "DungeonMaster.h"
-#include "PlayerSpellsHandler.h"
+#include "PlayerSpellsHandling.h"
 #include "Manual.h"
 #include "CharacterDescr.h"
 #include "Query.h"
@@ -184,7 +184,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if(d.key_ == 'a') {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      eng.examine->playerExamine();
+      Examine::playerExamine();
     }
     clearEvents();
     return;
@@ -202,7 +202,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if((d.key_ == 'q')) {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      eng.bash->playerBash();
+      Bash::playerBash();
       Renderer::drawMapAndInterface();
     }
     clearEvents();
@@ -212,7 +212,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if(d.key_ == 'c') {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      eng.close->playerClose();
+      Close::playerClose();
     }
     clearEvents();
     return;
@@ -221,7 +221,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if(d.key_ == 'D') {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      eng.jamWithSpike->playerJam();
+      JamWithSpike::playerJam();
     }
     clearEvents();
     return;
@@ -355,14 +355,14 @@ void handleKeyPress(const KeyboardReadRetData& d) {
       } else {
         if(itemWielded == NULL) {
           Log::addMsg("I" + swiftStr + " wield my prepared weapon (" +
-                          ITEM_ALT_NAME + ").");
+                      ITEM_ALT_NAME + ").");
         } else {
           if(itemAlt == NULL) {
             Log::addMsg("I" + swiftStr + " put away my weapon (" +
-                            ITEM_WIELDED_NAME + ").");
+                        ITEM_WIELDED_NAME + ").");
           } else {
             Log::addMsg("I" + swiftStr + " swap to my prepared weapon (" +
-                            ITEM_ALT_NAME + ").");
+                        ITEM_ALT_NAME + ").");
           }
         }
         inv.swapWieldedAndPrepared(IS_FREE_TURN);
@@ -407,7 +407,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
           Item* itemToThrow = ItemFactory::copyItem(itemStack);
           itemToThrow->nrItems = 1;
 
-          const MarkerReturnData markerReturnData =
+          const MarkerRetData markerReturnData =
             Marker::run(MarkerTask::aimThrownWeapon, itemToThrow);
 
           if(markerReturnData.didThrowMissile) {
@@ -447,7 +447,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if(d.key_ == 'x') {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      Map::playerSpellsHandler->tryCastPrevSpell();
+      PlayerSpellsHandling::tryCastPrevSpell();
     }
     clearEvents();
     return;
@@ -456,14 +456,14 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if(d.key_ == 'X') {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      Map::playerSpellsHandler->playerSelectSpellToCast();
+      PlayerSpellsHandling::playerSelectSpellToCast();
     }
     clearEvents();
     return;
   }
   //----------------------------------- CHARACTER INFO
   else if(d.key_ == '@') {
-    eng.characterDescr->run();
+    CharacterDescr::run();
     clearEvents();
     return;
   }
@@ -551,7 +551,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
       for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
-        const ItemDataT* const data = ItemData::dataList[i];
+        const ItemDataT* const data = ItemData::data[i];
         if(
           data->isIntrinsic == false &&
           (data->isPotion || data->isScroll || data->isDevice)) {

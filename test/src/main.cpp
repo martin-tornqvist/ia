@@ -24,7 +24,7 @@
 #include "LineCalc.h"
 #include "SaveHandling.h"
 #include "Inventory.h"
-#include "PlayerSpellsHandler.h"
+#include "PlayerSpellsHandling.h"
 #include "PlayerBon.h"
 #include "Explosion.h"
 #include "ItemAmmo.h"
@@ -514,8 +514,8 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
 
 TEST_FIXTURE(BasicFixture, SavingGame) {
   //Item data
-  ItemData::dataList[int(ItemId::scrollOfTelep)]->isTried = true;
-  ItemData::dataList[int(ItemId::scrollOfOpening)]->isIdentified = true;
+  ItemData::data[int(ItemId::scrollTelep)]->isTried = true;
+  ItemData::data[int(ItemId::scrollOpening)]->isIdentified = true;
 
   //Bonus
   PlayerBon::pickBg(Bg::rogue);
@@ -559,11 +559,11 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   Map::incrDlvl(7 - CUR_DLVL); //Set current DLVL to 7
 
   //Actor data
-  ActorData::dataList[endOfActorIds - 1].nrKills = 123;
+  ActorData::data[endOfActorIds - 1].nrKills = 123;
 
   //Learned spells
-  Map::playerSpellsHandler->learnSpellIfNotKnown(SpellId::bless);
-  Map::playerSpellsHandler->learnSpellIfNotKnown(SpellId::azathothsWrath);
+  PlayerSpellsHandling::learnSpellIfNotKnown(SpellId::bless);
+  PlayerSpellsHandling::learnSpellIfNotKnown(SpellId::azathothsWrath);
 
   //Applied properties
   PropHandler& propHlr = Map::player->getPropHandler();
@@ -592,13 +592,12 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   SaveHandling::load();
 
   //Item data
-  const ItemDataHandler& iHlr = *(eng.itemDataHandler);
-  CHECK_EQUAL(true,  iHlr.dataList[int(ItemId::scrollOfTelep)]->isTried);
-  CHECK_EQUAL(false, iHlr.dataList[int(ItemId::scrollOfTelep)]->isIdentified);
-  CHECK_EQUAL(true,  iHlr.dataList[int(ItemId::scrollOfOpening)]->isIdentified);
-  CHECK_EQUAL(false, iHlr.dataList[int(ItemId::scrollOfOpening)]->isTried);
-  CHECK_EQUAL(false, iHlr.dataList[int(ItemId::scrollOfDetMon)]->isTried);
-  CHECK_EQUAL(false, iHlr.dataList[int(ItemId::scrollOfDetMon)]->isIdentified);
+  CHECK_EQUAL(true,  ItemData::data[int(ItemId::scrollTelep)]->isTried);
+  CHECK_EQUAL(false, ItemData::data[int(ItemId::scrollTelep)]->isIdentified);
+  CHECK_EQUAL(true,  ItemData::data[int(ItemId::scrollOpening)]->isIdentified);
+  CHECK_EQUAL(false, ItemData::data[int(ItemId::scrollOpening)]->isTried);
+  CHECK_EQUAL(false, ItemData::data[int(ItemId::scrollDetMon)]->isTried);
+  CHECK_EQUAL(false, ItemData::data[int(ItemId::scrollDetMon)]->isIdentified);
 
   //Bonus
   CHECK_EQUAL(int(Bg::rogue), int(PlayerBon::getBg()));
@@ -655,7 +654,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(7, Map::dlvl);
 
   //Actor data
-  CHECK_EQUAL(123, ActorData::dataList[endOfActorIds - 1].nrKills);
+  CHECK_EQUAL(123, ActorData::data[endOfActorIds - 1].nrKills);
 
   //Learned spells
   PlayerSpellsHandler& spHlr = *(Map::playerSpellsHandler);

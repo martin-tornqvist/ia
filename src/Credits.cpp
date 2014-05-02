@@ -2,6 +2,8 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include "Input.h"
 #include "TextFormatting.h"
@@ -9,8 +11,14 @@
 
 using namespace std;
 
-void Credits::readFile() {
-  lines.resize(0);
+namespace Credits {
+
+namespace {
+
+vector<string> lines_;
+
+void readFile() {
+  lines_.resize(0);
 
   string curLine;
   ifstream file("credits.txt");
@@ -20,10 +28,10 @@ void Credits::readFile() {
   if(file.is_open()) {
     while(getline(file, curLine)) {
       if(curLine.empty()) {
-        lines.push_back(curLine);
+        lines_.push_back(curLine);
       } else {
         TextFormatting::lineToLines(curLine, MAP_W - 2, formattedLines);
-        for(string & line : formattedLines) {lines.push_back(line);}
+        for(string & line : formattedLines) {lines_.push_back(line);}
       }
     }
   }
@@ -31,7 +39,13 @@ void Credits::readFile() {
   file.close();
 }
 
-void Credits::run() {
+} //namespace
+
+void init() {
+  readFile();
+}
+
+void run() {
   Renderer::clearScreen();
 
   string str;
@@ -52,7 +66,7 @@ void Credits::run() {
                      Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
-  for(string & line : lines) {
+  for(string & line : lines_) {
     Renderer::drawText(line, Panel::screen, Pos(0, yPos++), clrWhite);
   }
 
@@ -66,3 +80,5 @@ void Credits::run() {
     }
   }
 }
+
+} //Credits

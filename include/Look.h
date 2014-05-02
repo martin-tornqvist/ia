@@ -3,7 +3,6 @@
 
 #include "CmnTypes.h"
 
-
 class Actor;
 class Item;
 class FeatureMob;
@@ -20,8 +19,8 @@ public:
 
   Entity(Item* item_) : item(item_), entityType(entityItem) {}
 
-  Entity(FeatureMob* FeatureId::);
-  Entity(FeatureStatic* FeatureId::);
+  Entity(FeatureMob* feature_);
+  Entity(FeatureStatic* feature_);
 
   const Actor* actor;
   Item* item;
@@ -30,26 +29,19 @@ public:
   EntityType entityType;
 };
 
-class Look {
-public:
-  Look() {}
+namespace AutoDescrActor {
 
-  void markerAtPos(const Pos& pos, const MarkerTask markerTask,
+void addAutoDescriptionLines(Actor* const actor, std::string& line);
+
+} //AutoDescrActor
+
+namespace Look {
+
+void onMarkerAtPos(const Pos& pos, const MarkerTask markerTask,
                    const Item* const itemThrown);
-  void printExtraActorDescription(const Pos& pos) const;
 
-private:
-  Entity entityDescribed;
+void printExtraActorDescription(const Pos& pos);
 
-  void descrBriefActor(const Actor& actor, const MarkerTask markerTask,
-                       const Item* const itemThrown) const;
-  void descrBriefFeatureMob(const Feature& feature) const;
-  void descrBriefFeatureStatic(const Feature& feature) const;
-  void descrBriefItem(const Item& item) const;
-
-  Entity getEntityToDescribe(const Pos pos);
-
-
-};
+} //Look
 
 #endif

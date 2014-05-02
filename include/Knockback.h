@@ -1,6 +1,8 @@
 #ifndef KNOCKBACK_H
 #define KNOCKBACK_H
 
+#include "CmnTypes.h"
+
 class Actor;
 
 namespace KnockBack {

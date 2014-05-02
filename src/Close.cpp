@@ -10,21 +10,9 @@
 #include "Query.h"
 #include "Renderer.h"
 
-void Close::playerClose() const {
-  Log::clearLog();
-  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  Renderer::drawMapAndInterface();
-  Pos closePos(Map::player->pos + Query::dir());
-  Log::clearLog();
+namespace Close {
 
-  if(closePos != Map::player->pos) {
-    playerCloseFeature(Map::cells[closePos.x][closePos.y].featureStatic);
-  }
-
-  Renderer::drawMapAndInterface();
-}
-
-void Close::playerCloseFeature(Feature* const feature) const {
+void playerCloseFeature(Feature* const feature) {
   bool closeAbleObjectFound = false;
 
   if(feature->getId() == FeatureId::door) {
@@ -43,3 +31,18 @@ void Close::playerCloseFeature(Feature* const feature) const {
   }
 }
 
+void playerClose() {
+  Log::clearLog();
+  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+  Renderer::drawMapAndInterface();
+  Pos closePos(Map::player->pos + Query::dir());
+  Log::clearLog();
+
+  if(closePos != Map::player->pos) {
+    playerCloseFeature(Map::cells[closePos.x][closePos.y].featureStatic);
+  }
+
+  Renderer::drawMapAndInterface();
+}
+
+} //Close

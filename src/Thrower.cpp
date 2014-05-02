@@ -42,7 +42,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   //Render
   if(path.size() > 1) {
     const char GLYPH =
-      ItemData::dataList[int(ItemId::dynamite)]->glyph;
+      ItemData::data[int(ItemId::dynamite)]->glyph;
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(unsigned int i = 1; i < path.size() - 1; i++) {
       Renderer::drawMapAndInterface(false);

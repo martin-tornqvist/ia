@@ -13,7 +13,9 @@
 
 using namespace std;
 
-void Bash::playerBash() const {
+namespace Bash {
+
+void playerBash() {
   trace << "Bash::playerBash()" << endl;
 
   Log::clearLog();
@@ -54,7 +56,7 @@ void Bash::playerBash() const {
       Log::addMsg("I bash " + name + ".");
 
       pair<int, int> kickDmg =
-        ItemData::dataList[int(ItemId::playerKick)]->meleeDmg;
+        ItemData::data[int(ItemId::playerKick)]->meleeDmg;
       deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, false);
       GameTime::actorDidAct();
       return;
@@ -67,3 +69,5 @@ void Bash::playerBash() const {
     cell.featureStatic->bash(*Map::player);
   }
 }
+
+} //Bash

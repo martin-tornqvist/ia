@@ -16,8 +16,14 @@
 
 using namespace std;
 
-void CharacterDescr::makeLines() {
-  lines.resize(0);
+namespace CharacterDescr {
+
+namespace {
+
+vector<StrAndClr> lines_;
+
+void makeLines() {
+  lines_.resize(0);
 
   const string offset = "   ";
   const SDL_Color clrHeading  = clrWhiteHigh;
@@ -26,7 +32,7 @@ void CharacterDescr::makeLines() {
 
   const AbilityVals& abilities = Map::player->getData().abilityVals;
 
-  lines.push_back(StrAndClr("Combat skills", clrHeading));
+  lines_.push_back(StrAndClr("Combat skills", clrHeading));
   const int BASE_MELEE =
     min(100, abilities.getVal(AbilityId::melee, true, *(Map::player)));
   const int BASE_RANGED =
@@ -50,63 +56,56 @@ void CharacterDescr::makeLines() {
   string punchStr = ItemData::getItemInterfaceRef(
                       *punch, false, PrimaryAttMode::melee);
   delete punch;
-  for(unsigned int i = 0; i < punchStr.length(); i++) {
+  for(size_t i = 0; i < punchStr.length(); i++) {
     if(punchStr.at(0) == ' ') {
       punchStr.erase(punchStr.begin());
     } else {
       break;
     }
   }
-  lines.push_back(StrAndClr(
-                    offset + "Melee    : " +
-                    toStr(BASE_MELEE) + "%", clrText));
-  lines.push_back(StrAndClr(
-                    offset + "Ranged   : " +
-                    toStr(BASE_RANGED) + "%", clrText));
-  lines.push_back(StrAndClr(
-                    offset + "Dodging  : " +
-                    toStr(BASE_DODGE_ATTACKS) + "%", clrText));
-  lines.push_back(StrAndClr(
-                    offset + "Kicking  : " +
-                    kickStr, clrText));
-  lines.push_back(StrAndClr(
-                    offset + "Punching : " +
-                    punchStr, clrText));
-  lines.push_back(StrAndClr(" ", clrText));
+  lines_.push_back(StrAndClr(offset + "Melee    : " +
+                             toStr(BASE_MELEE) + "%", clrText));
+  lines_.push_back(StrAndClr(offset + "Ranged   : " +
+                             toStr(BASE_RANGED) + "%", clrText));
+  lines_.push_back(StrAndClr(offset + "Dodging  : " +
+                             toStr(BASE_DODGE_ATTACKS) + "%", clrText));
+  lines_.push_back(StrAndClr(offset + "Kicking  : " + kickStr, clrText));
+  lines_.push_back(StrAndClr(offset + "Punching : " + punchStr, clrText));
+  lines_.push_back(StrAndClr(" ", clrText));
 
-  lines.push_back(StrAndClr("Mental conditions", clrHeading));
-  const int NR_LINES_BEFORE_MENTAL = lines.size();
+  lines_.push_back(StrAndClr("Mental conditions", clrHeading));
+  const int NR_LINES_BEFORE_MENTAL = lines_.size();
   if(Map::player->phobias[int(Phobia::closedPlace)])
-    lines.push_back(StrAndClr(offset + "Phobia of enclosed spaces", clrText));
+    lines_.push_back(StrAndClr(offset + "Phobia of enclosed spaces", clrText));
   if(Map::player->phobias[int(Phobia::dog)])
-    lines.push_back(StrAndClr(offset + "Phobia of dogs", clrText));
+    lines_.push_back(StrAndClr(offset + "Phobia of dogs", clrText));
   if(Map::player->phobias[int(Phobia::rat)])
-    lines.push_back(StrAndClr(offset + "Phobia of rats", clrText));
+    lines_.push_back(StrAndClr(offset + "Phobia of rats", clrText));
   if(Map::player->phobias[int(Phobia::undead)])
-    lines.push_back(StrAndClr(offset + "Phobia of the dead", clrText));
+    lines_.push_back(StrAndClr(offset + "Phobia of the dead", clrText));
   if(Map::player->phobias[int(Phobia::openPlace)])
-    lines.push_back(StrAndClr(offset + "Phobia of open places", clrText));
+    lines_.push_back(StrAndClr(offset + "Phobia of open places", clrText));
   if(Map::player->phobias[int(Phobia::spider)])
-    lines.push_back(StrAndClr(offset + "Phobia of spiders", clrText));
+    lines_.push_back(StrAndClr(offset + "Phobia of spiders", clrText));
   if(Map::player->phobias[int(Phobia::deepPlaces)])
-    lines.push_back(StrAndClr(offset + "Phobia of deep places", clrText));
+    lines_.push_back(StrAndClr(offset + "Phobia of deep places", clrText));
 
   if(Map::player->obsessions[int(Obsession::masochism)])
-    lines.push_back(StrAndClr(offset + "Masochistic obsession", clrText));
+    lines_.push_back(StrAndClr(offset + "Masochistic obsession", clrText));
   if(Map::player->obsessions[int(Obsession::sadism)])
-    lines.push_back(StrAndClr(offset + "Sadistic obsession", clrText));
-  const int NR_LINES_AFTER_MENTAL = lines.size();
+    lines_.push_back(StrAndClr(offset + "Sadistic obsession", clrText));
+  const int NR_LINES_AFTER_MENTAL = lines_.size();
 
   if(NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL) {
-    lines.push_back(StrAndClr(offset + "No special symptoms", clrText));
+    lines_.push_back(StrAndClr(offset + "No special symptoms", clrText));
   }
-  lines.push_back(StrAndClr(" ", clrText));
+  lines_.push_back(StrAndClr(" ", clrText));
 
-  lines.push_back(StrAndClr("Potion knowledge", clrHeading));
+  lines_.push_back(StrAndClr("Potion knowledge", clrHeading));
   vector<StrAndClr> potionList;
   vector<StrAndClr> manuscriptList;
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
-    const ItemDataT* const d = ItemData::dataList[i];
+    const ItemDataT* const d = ItemData::data[i];
     if(d->isPotion && (d->isTried || d->isIdentified)) {
       Item* item = ItemFactory::spawnItem(d->id);
       potionList.push_back(
@@ -131,49 +130,49 @@ void CharacterDescr::makeLines() {
   };
 
   if(potionList.empty()) {
-    lines.push_back(StrAndClr(offset + "No known potions", clrText));
+    lines_.push_back(StrAndClr(offset + "No known potions", clrText));
   } else {
     sort(potionList.begin(), potionList.end(), strAndClrSort);
-    for(StrAndClr & e : potionList) {lines.push_back(e);}
+    for(StrAndClr & e : potionList) {lines_.push_back(e);}
   }
-  lines.push_back(StrAndClr(" ", clrText));
+  lines_.push_back(StrAndClr(" ", clrText));
 
 
-  lines.push_back(StrAndClr("Manuscript knowledge", clrHeading));
+  lines_.push_back(StrAndClr("Manuscript knowledge", clrHeading));
   if(manuscriptList.size() == 0) {
-    lines.push_back(StrAndClr(offset + "No known manuscripts", clrText));
+    lines_.push_back(StrAndClr(offset + "No known manuscripts", clrText));
   } else {
     sort(manuscriptList.begin(), manuscriptList.end(), strAndClrSort);
-    for(StrAndClr & e : manuscriptList) {lines.push_back(e);}
+    for(StrAndClr & e : manuscriptList) {lines_.push_back(e);}
   }
-  lines.push_back(StrAndClr(" ", clrText));
+  lines_.push_back(StrAndClr(" ", clrText));
 
-  lines.push_back(StrAndClr("Traits gained", clrHeading));
+  lines_.push_back(StrAndClr("Traits gained", clrHeading));
   string abilitiesLine = "";
   vector<Trait>& traits = PlayerBon::traitsPicked_;
   if(traits.empty()) {
-    lines.push_back(StrAndClr(offset + "None", clrText));
-    lines.push_back(StrAndClr(" ", clrText));
+    lines_.push_back(StrAndClr(offset + "None", clrText));
+    lines_.push_back(StrAndClr(" ", clrText));
   } else {
     const int MAX_W_DESCR = (MAP_W * 2) / 3;
 
     for(Trait trait : traits) {
       string title = "";
       PlayerBon::getTraitTitle(trait, title);
-      lines.push_back(StrAndClr(offset + title, clrText));
+      lines_.push_back(StrAndClr(offset + title, clrText));
       string descr = "";
       PlayerBon::getTraitDescr(trait, descr);
       vector<string> descrLines;
       TextFormatting::lineToLines(descr, MAX_W_DESCR, descrLines);
       for(string & descrLine : descrLines) {
-        lines.push_back(StrAndClr(offset + descrLine, clrTextDark));
+        lines_.push_back(StrAndClr(offset + descrLine, clrTextDark));
       }
-      lines.push_back(StrAndClr(" ", clrText));
+      lines_.push_back(StrAndClr(" ", clrText));
     }
   }
 }
 
-void CharacterDescr::getShockResSrcTitle(
+void getShockResSrcTitle(
   const ShockSrc shockSrc, string& strRef) {
 
   strRef = "";
@@ -187,7 +186,7 @@ void CharacterDescr::getShockResSrcTitle(
   }
 }
 
-void CharacterDescr::drawInterface() {
+void drawInterface() {
   const string decorationLine(MAP_W, '-');
 
   const int X_LABEL = 3;
@@ -204,11 +203,13 @@ void CharacterDescr::drawInterface() {
                      Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
 }
 
-void CharacterDescr::run() {
+} //namespace
+
+void run() {
   makeLines();
 
   const int LINE_JUMP           = 3;
-  const int NR_LINES_TOT        = lines.size();
+  const int NR_LINES_TOT        = lines_.size();
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
 
   int topNr = 0;
@@ -219,8 +220,8 @@ void CharacterDescr::run() {
     drawInterface();
     int yPos = 1;
     for(int i = topNr; i <= btmNr; i++) {
-      Renderer::drawText(
-        lines.at(i).str , Panel::screen, Pos(0, yPos++), lines.at(i).clr);
+      const StrAndClr& line = lines_.at(i);
+      Renderer::drawText(line.str , Panel::screen, Pos(0, yPos++), line.clr);
     }
     Renderer::updateScreen();
 
@@ -242,3 +243,5 @@ void CharacterDescr::run() {
   }
   Renderer::drawMapAndInterface();
 }
+
+} //CharacterDescr

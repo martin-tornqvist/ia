@@ -8,7 +8,9 @@
 #include "Query.h"
 #include "Renderer.h"
 
-void Examine::playerExamine() const {
+namespace Examine {
+
+void playerExamine() {
   //TODO It would probably be more fun if examine were allowed while blind,
   //with some potentially horrible results
   if(Map::player->getPropHandler().allowSee()) {
@@ -27,3 +29,5 @@ void Examine::playerExamine() const {
   }
   Renderer::drawMapAndInterface();
 }
+
+} //Examine

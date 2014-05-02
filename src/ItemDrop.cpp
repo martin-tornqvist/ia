@@ -1,5 +1,8 @@
 #include "ItemDrop.h"
 
+#include <algorithm>
+#include <string>
+
 #include "CmnTypes.h"
 #include "GameTime.h"
 #include "ActorPlayer.h"
@@ -10,7 +13,7 @@
 #include "MapParsing.h"
 #include "Utils.h"
 
-#include <algorithm>
+using namespace std;
 
 namespace ItemDrop {
 

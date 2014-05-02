@@ -16,8 +16,82 @@
 #include "Utils.h"
 #include "Config.h"
 
-void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
-                      Item* itemThrown) {
+namespace Marker {
+
+namespace {
+
+Pos   pos_;
+bool  isDone_ = false;
+
+void done() {
+  Renderer::drawMapAndInterface();
+  isDone_ = true;
+}
+
+void cancel() {
+  Log::clearLog();
+  Renderer::drawMapAndInterface();
+  isDone_ = true;
+}
+
+void setPosToClosestEnemyIfVisible() {
+  vector<Actor*> SpottedEnemies;
+  Map::player->getSpottedEnemies(SpottedEnemies);
+  vector<Pos> spottedEnemiesPositions;
+
+  Utils::getActorPositions(SpottedEnemies, spottedEnemiesPositions);
+
+  //If player sees enemies, suggest one for targeting
+  if(spottedEnemiesPositions.empty() == false) {
+    pos_ = Utils::getClosestPos(Map::player->pos, spottedEnemiesPositions);
+
+    Map::player->target = Utils::getActorAtPos(pos_);
+  }
+}
+
+void move(const int DX, const int DY, const MarkerTask markerTask,
+          const Item* itemThrown) {
+  bool isMoved = false;
+  const Pos newPos = pos_ + Pos(DX, DY);
+  if(Utils::isPosInsideMap(newPos)) {
+    pos_ = newPos;
+    isMoved = true;
+  }
+
+  if(isMoved) {
+    if(
+      markerTask == MarkerTask::look             ||
+      markerTask == MarkerTask::aimRangedWeapon  ||
+      markerTask == MarkerTask::aimThrownWeapon) {
+      Look::markerAtPos(pos_, markerTask, itemThrown);
+    }
+  }
+
+  draw(markerTask);
+}
+
+bool setPosToTargetIfVisible() {
+  const Actor* const target = Map::player->target;
+
+  if(target != NULL) {
+    vector<Actor*> SpottedEnemies;
+    Map::player->getSpottedEnemies(SpottedEnemies);
+
+    if(SpottedEnemies.empty() == false) {
+
+      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+        if(target == SpottedEnemies.at(i)) {
+          pos_ = SpottedEnemies.at(i)->pos;
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+void readKeys(const MarkerTask markerTask, MarkerRetData& data,
+              Item* itemThrown) {
   const KeyboardReadRetData& d = Input::readKeysUntilFound();
 
   if(d.sdlKey_ == SDLK_RIGHT    || d.key_ == '6' || d.key_ == 'l') {
@@ -81,7 +155,7 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
   // ------------------------------------------------------- LOOK
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'v') {
     if(markerTask == MarkerTask::look) {
-      eng.look->printExtraActorDescription(pos_);
+      Look::printExtraActorDescription(pos_);
       move(0, 0, MarkerTask::look, itemThrown);
     }
   }
@@ -114,7 +188,11 @@ void Marker::readKeys(const MarkerTask markerTask, MarkerReturnData& data,
   }
 }
 
-void Marker::draw(const MarkerTask markerTask) const {
+} //namespace
+
+const Pos& getPos() {return pos_;}
+
+void draw(const MarkerTask markerTask) const {
   Renderer::drawMapAndInterface(false);
 
   vector<Pos> trail;
@@ -135,10 +213,10 @@ void Marker::draw(const MarkerTask markerTask) const {
   Renderer::updateScreen();
 }
 
-MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
+MarkerRetData run(const MarkerTask markerTask, Item* itemThrown) {
   pos_ = Map::player->pos;
 
-  MarkerReturnData data;
+  MarkerRetData data;
 
   if(
     markerTask == MarkerTask::aimRangedWeapon  ||
@@ -146,7 +224,7 @@ MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
     markerTask == MarkerTask::aimThrownWeapon) {
     //Attempt to place marker at target.
     if(setPosToTargetIfVisible() == false) {
-      //Else NULL the target, and attempt to place marker at closest visible enemy.
+      //Else attempt to place marker at closest visible enemy.
       //This sets a new target if successful.
       Map::player->target = NULL;
       setPosToClosestEnemyIfVisible();
@@ -157,7 +235,7 @@ MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
     markerTask == MarkerTask::look ||
     markerTask == MarkerTask::aimRangedWeapon ||
     markerTask == MarkerTask::aimThrownWeapon) {
-    eng.look->markerAtPos(pos_, markerTask, itemThrown);
+    Look::markerAtPos(pos_, markerTask, itemThrown);
   }
 
   draw(markerTask);
@@ -170,70 +248,4 @@ MarkerReturnData Marker::run(const MarkerTask markerTask, Item* itemThrown) {
   return data;
 }
 
-void Marker::setPosToClosestEnemyIfVisible() {
-  vector<Actor*> SpottedEnemies;
-  Map::player->getSpottedEnemies(SpottedEnemies);
-  vector<Pos> spottedEnemiesPositions;
-
-  Utils::getActorPositions(SpottedEnemies, spottedEnemiesPositions);
-
-  //If player sees enemies, suggest one for targeting
-  if(spottedEnemiesPositions.empty() == false) {
-    pos_ = Utils::getClosestPos(Map::player->pos, spottedEnemiesPositions);
-
-    Map::player->target = Utils::getActorAtPos(pos_);
-  }
-}
-
-bool Marker::setPosToTargetIfVisible() {
-  const Actor* const target = Map::player->target;
-
-  if(target != NULL) {
-    vector<Actor*> SpottedEnemies;
-    Map::player->getSpottedEnemies(SpottedEnemies);
-
-    if(SpottedEnemies.empty() == false) {
-
-      for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
-        if(target == SpottedEnemies.at(i)) {
-          pos_ = SpottedEnemies.at(i)->pos;
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
-void Marker::move(const int DX, const int DY, const MarkerTask markerTask,
-                  const Item* itemThrown) {
-  bool isMoved = false;
-  const Pos newPos = pos_ + Pos(DX, DY);
-  if(Utils::isPosInsideMap(newPos)) {
-    pos_ = newPos;
-    isMoved = true;
-  }
-
-  if(isMoved) {
-    if(
-      markerTask == MarkerTask::look             ||
-      markerTask == MarkerTask::aimRangedWeapon  ||
-      markerTask == MarkerTask::aimThrownWeapon) {
-      eng.look->markerAtPos(pos_, markerTask, itemThrown);
-    }
-  }
-
-  draw(markerTask);
-}
-
-void Marker::done() {
-  Renderer::drawMapAndInterface();
-  isDone_ = true;
-}
-
-void Marker::cancel() {
-  Log::clearLog();
-  Renderer::drawMapAndInterface();
-  isDone_ = true;
-}
-
+} //Marker

@@ -2,12 +2,21 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 #include "Input.h"
 #include "TextFormatting.h"
 #include "Renderer.h"
 
-void Manual::readFile() {
+using namespace std;
+
+namespace Manual {
+
+namespace {
+
+vector<string> lines_;
+
+void readFile() {
   string curLine;
   ifstream file("manual.txt");
 
@@ -16,7 +25,7 @@ void Manual::readFile() {
   if(file.is_open()) {
     while(getline(file, curLine)) {
       if(curLine.empty()) {
-        lines.push_back(curLine);
+        lines_.push_back(curLine);
       } else {
         //Do not format lines that start with two spaces
         bool shouldFormatLine = true;
@@ -28,11 +37,11 @@ void Manual::readFile() {
         if(shouldFormatLine) {
           TextFormatting::lineToLines(curLine, MAP_W - 3, formatted);
           for(unsigned int i = 0; i < formatted.size(); i++) {
-            lines.push_back(formatted.at(i));
+            lines_.push_back(formatted.at(i));
           }
         } else {
           curLine.erase(curLine.begin());
-          lines.push_back(curLine);
+          lines_.push_back(curLine);
         }
       }
     }
@@ -41,7 +50,7 @@ void Manual::readFile() {
   file.close();
 }
 
-void Manual::drawManualInterface() {
+void drawManualInterface() {
   const string decorationLine(MAP_W, '-');
 
   const int X_LABEL = 3;
@@ -58,9 +67,15 @@ void Manual::drawManualInterface() {
                      Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 
-void Manual::run() {
+} //namespace
+
+void init() {
+  readFile();
+}
+
+void run() {
   const int LINE_JUMP           = 3;
-  const int NR_LINES_TOT        = lines.size();
+  const int NR_LINES_TOT        = lines_.size();
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
 
   int topNr = 0;
@@ -71,7 +86,7 @@ void Manual::run() {
     drawManualInterface();
     int yPos = 1;
     for(int i = topNr; i <= btmNr; i++) {
-      Renderer::drawText(lines.at(i), Panel::screen, Pos(0, yPos++),
+      Renderer::drawText(lines_.at(i), Panel::screen, Pos(0, yPos++),
                          clrWhite);
     }
     Renderer::updateScreen();
@@ -93,3 +108,5 @@ void Manual::run() {
     btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
   }
 }
+
+} //Manual

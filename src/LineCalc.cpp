@@ -1,8 +1,11 @@
 #include "LineCalc.h"
 
 #include <math.h>
+#include <vector>
 
 #include "Utils.h"
+
+using namespace std;
 
 namespace LineCalc {
 
@@ -65,8 +68,8 @@ const vector<Pos>* getFovDeltaLine(const Pos& delta,
   const int X = delta.x + FOV_MAX_RADI_INT;
   const int Y = delta.y + FOV_MAX_RADI_INT;
   if(X >= 0 && Y >= 0 && X < FOV_MAX_W_INT && Y < FOV_MAX_W_INT) {
-    if(fovAbsDistances[X][Y] <= MAX_DIST_ABS) {
-      return &(fovDeltaLines[X][Y]);
+    if(fovAbsDistances_[X][Y] <= MAX_DIST_ABS) {
+      return &(fovDeltaLines_[X][Y]);
     }
   }
   return NULL;

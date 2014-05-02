@@ -1,13 +1,18 @@
 #include "ItemScroll.h"
 
+#include <string>
+#include <assert.h>
+
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "PlayerBon.h"
 #include "Log.h"
 #include "Inventory.h"
-#include "PlayerSpellsHandler.h"
+#include "PlayerSpellsHandling.h"
 #include "Renderer.h"
 #include "Utils.h"
+
+using namespace std;
 
 const string Scroll::getRealTypeName() {
   switch(data_->spellCastFromScroll) {
@@ -57,12 +62,12 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
     const string REAL_NAME_PLURAL = "Manuscripts of " + REAL_TYPE_NAME;
     const string REAL_NAME_A      = "a Manuscript of " + REAL_TYPE_NAME;
 
-    data_->name.name = REAL_NAME;
-    data_->name.name_plural = REAL_NAME_PLURAL;
-    data_->name.name_a = REAL_NAME_A;
+    data_->baseName.name        = REAL_NAME;
+    data_->baseName.name_plural = REAL_NAME_PLURAL;
+    data_->baseName.name_a      = REAL_NAME_A;
 
     if(IS_SILENT_IDENTIFY == false) {
-      Log::addMsg("It was " + data_->name.name_a + ".");
+      Log::addMsg("It was " + data_->baseName.name_a + ".");
       Renderer::drawMapAndInterface();
     }
 
@@ -75,9 +80,9 @@ void Scroll::tryLearn() {
     Spell* const spell = getSpell();
     if(
       spell->isAvailForPlayer() &&
-      Map::playerSpellsHandler->isSpellLearned(spell->getId()) == false) {
+      PlayerSpellsHandling::isSpellLearned(spell->getId()) == false) {
       Log::addMsg("I learn to cast this incantation by heart!");
-      Map::playerSpellsHandler->learnSpellIfNotKnown(spell);
+      PlayerSpellsHandling::learnSpellIfNotKnown(spell);
     } else {
       delete spell;
     }
@@ -188,31 +193,31 @@ void setFalseScrollName(ItemDataT& d) {
 
   const string& TITLE = "\"" + falseNames_.at(ELEMENT) + "\"";
 
-  d.name.name         = "Manuscript titled " + TITLE;
-  d.name.name_plural  = "Manuscripts titled " + TITLE;
-  d.name.name_a       = "a Manuscript titled " + TITLE;
+  d.baseName.name         = "Manuscript titled " + TITLE;
+  d.baseName.name_plural  = "Manuscripts titled " + TITLE;
+  d.baseName.name_a       = "a Manuscript titled " + TITLE;
 
   falseNames_.erase(falseNames_.begin() + ELEMENT);
 }
 
-void storeToSaveLines(vector<string>& lines) const {
+void storeToSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
-    if(ItemData::dataList[i]->isScroll) {
-      lines.push_back(ItemData::dataList[i]->name.name);
-      lines.push_back(ItemData::dataList[i]->name.name_plural);
-      lines.push_back(ItemData::dataList[i]->name.name_a);
+    if(ItemData::data[i]->isScroll) {
+      lines.push_back(ItemData::data[i]->baseName.name);
+      lines.push_back(ItemData::data[i]->baseName.name_plural);
+      lines.push_back(ItemData::data[i]->baseName.name_a);
     }
   }
 }
 
 void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
-    if(ItemData::dataList[i]->isScroll) {
-      ItemData::dataList[i]->name.name = lines.front();
+    if(ItemData::data[i]->isScroll) {
+      ItemData::data[i]->baseName.name        = lines.front();
       lines.erase(lines.begin());
-      ItemData::dataList[i]->name.name_plural = lines.front();
+      ItemData::data[i]->baseName.name_plural = lines.front();
       lines.erase(lines.begin());
-      ItemData::dataList[i]->name.name_a = lines.front();
+      ItemData::data[i]->baseName.name_a      = lines.front();
       lines.erase(lines.begin());
     }
   }

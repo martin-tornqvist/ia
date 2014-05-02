@@ -60,7 +60,7 @@ namespace {
 void initDataList() {
   ActorDataT d;
   d.reset();
-  dataList[d.id] = d;
+  data[d.id] = d;
 
   d.name_a = "Player";
   d.name_the = "Player";
@@ -74,7 +74,7 @@ void initDataList() {
   d.isAutoSpawnAllowed = false;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Reanimated Corpse";
@@ -116,7 +116,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Reanimated Corpse";
@@ -158,7 +158,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Bloated Corpse";
@@ -199,7 +199,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "Major Clapham-Lee";
@@ -240,7 +240,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "Dean Halsey";
@@ -281,7 +281,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Cultist";
@@ -319,7 +319,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Cultist";
@@ -357,7 +357,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Cultist";
@@ -395,7 +395,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "Keziah Mason";
@@ -442,7 +442,7 @@ void initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "Brown Jenkin";
@@ -467,7 +467,7 @@ void initDataList() {
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
   d.canSeeInDarkness = true;
-  d.spawnMinDLVL = dataList[actor_keziahMason].spawnMinDLVL;
+  d.spawnMinDLVL = data[actor_keziahMason].spawnMinDLVL;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_floor;
   d.descr = "\"That object - no larger than a good sized rat and quaintly "
@@ -488,7 +488,7 @@ void initDataList() {
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.isRat = true;
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
 //  d.name_a = "The Lord of Pestilence";
@@ -541,7 +541,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Green Spider";
@@ -573,7 +573,7 @@ void initDataList() {
   d.isSpider = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A White Spider";
@@ -605,7 +605,7 @@ void initDataList() {
   d.isSpider = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Red Spider";
@@ -637,7 +637,7 @@ void initDataList() {
   d.isSpider = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Shadow Spider";
@@ -673,7 +673,7 @@ void initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Leng Spider";
@@ -709,7 +709,7 @@ void initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Fire hound";
@@ -752,7 +752,7 @@ void initDataList() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Frost hound";
@@ -795,7 +795,7 @@ void initDataList() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "Zuul the Gatekeeper";
@@ -842,7 +842,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::ritual);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Ghost";
@@ -884,7 +884,7 @@ void initDataList() {
   d.deathMessageOverride = "The Ghost is put to rest.";
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Phantasm";
@@ -928,7 +928,7 @@ void initDataList() {
   d.deathMessageOverride = "The Phantasm is put to rest.";
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Wraith";
@@ -971,7 +971,7 @@ void initDataList() {
   d.deathMessageOverride = "The Wraith is put to rest.";
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::crypt);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Rat";
@@ -1007,7 +1007,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::crypt);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Rat-thing";
@@ -1050,7 +1050,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::human);
   d.nativeRooms.push_back(RoomThemeId::crypt);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Wolf";
@@ -1088,7 +1088,7 @@ void initDataList() {
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Giant Bat";
@@ -1127,7 +1127,7 @@ void initDataList() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Byakhee";
@@ -1174,7 +1174,7 @@ void initDataList() {
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Giant Mantis";
@@ -1208,7 +1208,7 @@ void initDataList() {
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Giant Locust";
@@ -1242,7 +1242,7 @@ void initDataList() {
   d.monsterShockLevel = MonsterShockLevel::none;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Fungi from Yuggoth";
@@ -1297,7 +1297,7 @@ void initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Flying Polyp";
@@ -1349,7 +1349,7 @@ void initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Ghoul";
@@ -1394,7 +1394,7 @@ void initDataList() {
   d.monsterShockLevel = MonsterShockLevel::terrifying;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Shadow";
@@ -1438,7 +1438,7 @@ void initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Mummy";
@@ -1474,7 +1474,7 @@ void initDataList() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "Khephren";
@@ -1515,7 +1515,7 @@ void initDataList() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "Nitokris";
@@ -1558,7 +1558,7 @@ void initDataList() {
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Deep One";
@@ -1601,7 +1601,7 @@ void initDataList() {
   d.monsterShockLevel = MonsterShockLevel::scary;
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Mass of Worms";
@@ -1636,7 +1636,7 @@ void initDataList() {
   d.canBleed = false;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Dust Vortex";
@@ -1678,7 +1678,7 @@ void initDataList() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Fire Vortex";
@@ -1720,7 +1720,7 @@ void initDataList() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Frost Vortex";
@@ -1762,7 +1762,7 @@ void initDataList() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLevel = MonsterShockLevel::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Black Ooze";
@@ -1811,7 +1811,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Clear Ooze";
@@ -1861,7 +1861,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Putrid Ooze";
@@ -1911,7 +1911,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Poison Ooze";
@@ -1961,7 +1961,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Colour out of space";
@@ -2006,7 +2006,7 @@ void initDataList() {
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Chthonian";
@@ -2050,7 +2050,7 @@ void initDataList() {
   d.monsterShockLevel = MonsterShockLevel::mindShattering;
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomThemeId::plain);
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 
   d.name_a = "A Hunting Horror";
@@ -2095,7 +2095,7 @@ void initDataList() {
   d.canBeSummoned = false;
   d.monsterShockLevel = MonsterShockLevel::mindShattering;
   d.erraticMovement = actorErratic_somewhat;
-  dataList[d.id] = d;
+  data[d.id] = d;
   d.reset();
 }
 
@@ -2105,14 +2105,14 @@ void init() {initDataList();}
 
 void storeToSaveLines(vector<string>& lines) {
   for(int i = 1; i < endOfActorIds; i++) {
-    lines.push_back(toStr(dataList[i].nrLeftAllowedToSpawn));
-    lines.push_back(toStr(dataList[i].nrKills));
+    lines.push_back(toStr(data[i].nrLeftAllowedToSpawn));
+    lines.push_back(toStr(data[i].nrKills));
   }
 }
 
 void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < endOfActorIds; i++) {
-    ActorDataT& d = dataList[i];
+    ActorDataT& d = data[i];
     const int NR_ALLOWED_TO_SPAWN = toInt(lines.front());
     lines.erase(lines.begin());
     const int NR_KILLS = toInt(lines.front());

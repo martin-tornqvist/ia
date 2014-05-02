@@ -11,7 +11,7 @@
 #include "Map.h"
 #include "ActorFactory.h"
 #include "FeatureTrap.h"
-#include "PlayerSpellsHandler.h"
+#include "PlayerSpellsHandling.h"
 #include "ItemScroll.h"
 #include "ItemArmor.h"
 #include "Inventory.h"
@@ -780,7 +780,7 @@ SpellCastRetData SpellSummonRandom::cast_(
 
   vector<ActorId> summonCandidates;
   for(int i = 1; i < endOfActorIds; i++) {
-    const ActorDataT& data = ActorData::dataList[i];
+    const ActorDataT& data = ActorData::data[i];
     if(data.canBeSummoned) {
       if(data.spawnMinDLVL <= caster->getData().spawnMinDLVL) {
         summonCandidates.push_back(ActorId(i));

@@ -4,19 +4,12 @@
 #include <vector>
 #include <string>
 
-class Manual {
-public:
-  Manual() {readFile();}
+namespace Manual {
 
-  void run();
+void init(); //{readFile();}
 
-private:
-  void readFile();
+void run();
 
-  void drawManualInterface();
-
-  std::vector<std::string> lines;
-
-};
+} //Manual
 
 #endif

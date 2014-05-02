@@ -1,6 +1,7 @@
 #include "Knockback.h"
 
 #include <algorithm>
+#include <vector>
 
 #include "Attack.h"
 #include "ActorPlayer.h"
@@ -11,6 +12,8 @@
 #include "Renderer.h"
 #include "MapParsing.h"
 #include "SdlWrapper.h"
+
+using namespace std;
 
 namespace KnockBack {
 

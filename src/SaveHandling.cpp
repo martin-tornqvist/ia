@@ -14,7 +14,7 @@
 #include "DungeonClimb.h"
 #include "Inventory.h"
 #include "GameTime.h"
-#include "PlayerSpellsHandler.h"
+#include "PlayerSpellsHandling.h"
 
 using namespace std;
 
@@ -27,8 +27,8 @@ void collectLinesFromGame(vector<string>& lines) {
   lines.push_back(Map::player->getNameA());
 
   DungeonMaster::storeToSaveLines(lines);
-  eng.scrollNameHandler->storeToSaveLines(lines);
-  eng.potionNameHandler->storeToSaveLines(lines);
+  ScrollNameHandling::storeToSaveLines(lines);
+  PotionNameHandling::storeToSaveLines(lines);
   ItemData::storeToSaveLines(lines);
   Map::player->getInv().storeToSaveLines(lines);
   Map::player->storeToSaveLines(lines);
@@ -36,7 +36,7 @@ void collectLinesFromGame(vector<string>& lines) {
   Map::storeToSaveLines(lines);
   ActorData::storeToSaveLines(lines);
   GameTime::storeToSaveLines(lines);
-  Map::playerSpellsHandler->storeToSaveLines(lines);
+  PlayerSpellsHandling::storeToSaveLines(lines);
 }
 
 void setupGameFromLines(vector<string>& lines) const {
@@ -49,8 +49,8 @@ void setupGameFromLines(vector<string>& lines) const {
   lines.erase(lines.begin());
 
   DungeonMaster::setupFromSaveLines(lines);
-  eng.scrollNameHandler->setupFromSaveLines(lines);
-  eng.potionNameHandler->setupFromSaveLines(lines);
+  ScrollNameHandling::setupFromSaveLines(lines);
+  PotionNameHandling::setupFromSaveLines(lines);
   ItemData::setupFromSaveLines(lines);
   Map::player->getInv().setupFromSaveLines(lines);
   Map::player->setupFromSaveLines(lines);
@@ -58,7 +58,7 @@ void setupGameFromLines(vector<string>& lines) const {
   Map::setupFromSaveLines(lines);
   ActorData::setupFromSaveLines(lines);
   GameTime::setupFromSaveLines(lines);
-  Map::playerSpellsHandler->setupFromSaveLines(lines);
+  PlayerSpellsHandling::setupFromSaveLines(lines);
   trace << "SaveHandler::setupGameFromLines() [DONE]" << endl;
 }
 

@@ -7,7 +7,7 @@
 #include "ItemPotion.h"
 #include "ItemFactory.h"
 #include "Inventory.h"
-#include "PlayerSpellsHandler.h"
+#include "PlayerSpellsHandling.h"
 
 using namespace std;
 
@@ -566,7 +566,7 @@ void pickBg(const Bg bg) {
 
       //Player starts with a scroll of Darkbolt, and one other random scroll
       //Both are identified
-      Item* scroll = ItemFactory::spawnItem(ItemId::scrollOfDarkbolt);
+      Item* scroll = ItemFactory::spawnItem(ItemId::scrollDarkbolt);
       dynamic_cast<Scroll*>(scroll)->identify(true);
       Map::player->getInv().putInGeneral(scroll);
       while(true) {
@@ -596,7 +596,7 @@ void pickBg(const Bg bg) {
     } break;
 
     case Bg::rogue: {
-      Map::playerSpellsHandler->learnSpellIfNotKnown(SpellId::cloudMinds);
+      PlayerSpellsHandling::learnSpellIfNotKnown(SpellId::cloudMinds);
       pickTrait(Trait::observant);
       pickTrait(Trait::stealthy);
     } break;

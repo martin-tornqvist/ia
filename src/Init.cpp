@@ -14,6 +14,9 @@
 #include "Log.h"
 #include "DungeonMaster.h"
 #include "Bot.h"
+#include "Manual.h"
+#include "PlayerSpellsHandling.h"
+#include "Credits.h"
 
 using namespace std;
 
@@ -22,7 +25,7 @@ namespace Init {
 bool isCheatVisionEnabled = false;
 bool quitToMainMenu       = false;
 
-//Note: Initialization order is important
+//Note: Initialization order matters in some cases
 void initIO() {
   trace << "Init::initIO()..." << endl;
   SdlWrapper::init();
@@ -42,12 +45,13 @@ void cleanupIO() {
   trace << "Init::cleanupIO() [DONE]" << endl;
 }
 
-//Note: Initialization order is important in some cases
+//Note: Initialization order matters in some cases
 void initGame() {
   trace << "Init::initGame()..." << endl;
   LineCalc::init();
-  PropData::init();
   Gods::init();
+  Manual::init();
+  Credits::init();
   trace << "Init::initGame() [DONE]" << endl;
 }
 
@@ -57,19 +61,20 @@ void cleanupGame() {
   trace << "Init::cleanupGame() [DONE]" << endl;
 }
 
-//Note: Initialization order is important in some cases
+//Note: Initialization order matters in some cases
 void initSession() {
   trace << "Init::initSession()..." << endl;
   ActorData::init();
   ScrollNameHandling::init();
   PotionNameHandling::init();
   ItemData::init();
+  PropData::init();
   InvHandling::init();
 //  playerCreateCharacter = new PlayerCreateCharacter(*this);
 //  mapPatterns = new MapPatterns(*this);
 //  roomThemeMaker = new RoomThemeMaker(*this);
 //  player->place(Pos(PLAYER_START_X, PLAYER_START_Y),
-//                actorDataHandler->dataList[actor_player]);
+//                actorDataHandler->data[actor_player]);
   GameTime::init();
 //  featureDataHandler = new FeatureDataHandler();
   Map::init();
@@ -84,7 +89,6 @@ void initSession() {
   Bot::init();
 //  art = new Art;
 //  thrower = new Thrower(*this);
-//  manual = new Manual(*this);
 //  populateItems = new PopulateItems(*this);
 //  populateMonsters = new PopulateMonsters(*this);
 //  populateTraps = new PopulateTraps(*this);
@@ -96,7 +100,7 @@ void initSession() {
 //  postmortem = new Postmortem(*this);
 //  highScore = new HighScore(*this);
 //  jamWithSpike = new JamWithSpike(*this);
-//  playerSpellsHandler = new PlayerSpellsHandler(*this);
+  PlayerSpellsHandling::init();
 //  knockBack = new KnockBack(*this);
 //  examine = new Examine(*this);
 //  characterDescr = new CharacterDescr(*this);
@@ -108,6 +112,7 @@ void cleanupSession() {
   trace << "Init::cleanupSession()..." << endl;
   ItemData::cleanup();
   GameTime::cleanup();
+  PlayerSpellsHandling::cleanup();
   trace << "Init::cleanupSession() [DONE]" << endl;
 }
 

@@ -1,11 +1,16 @@
 #include "ItemExplosive.h"
 
+#include <vector>
+
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "GameTime.h"
 #include "PlayerBon.h"
 #include "Utils.h"
+#include "Map.h"
+
+using namespace std;
 
 void Dynamite::setPlayerExplosive() const {
   Map::player->dynamiteFuseTurns = 6;

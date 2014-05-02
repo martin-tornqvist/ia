@@ -1,5 +1,6 @@
 #include "ItemFactory.h"
 
+#include "Init.h"
 #include "ItemWeapon.h"
 #include "ItemAmmo.h"
 #include "ItemExplosive.h"
@@ -11,17 +12,19 @@
 #include "ItemMedicalBag.h"
 #include "Utils.h"
 
+using namespace std;
+
 namespace ItemFactory {
 
 Item* spawnItem(const ItemId itemId, const int NR_ITEMS) {
   Item* r = NULL;
 
-  ItemDataT* const d = ItemData::dataList[int(itemId)];
+  ItemDataT* const d = ItemData::data[int(itemId)];
 
   ItemDataT* ammoD = NULL;
 
   if(d->rangedAmmoTypeUsed != ItemId::empty) {
-    ammoD = ItemData::dataList[int(d->rangedAmmoTypeUsed)];
+    ammoD = ItemData::data[int(d->rangedAmmoTypeUsed)];
   }
 
   switch(itemId) {
@@ -112,37 +115,37 @@ Item* spawnItem(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::fireVortexEngulf:    r = new Weapon(d, ammoD);         break;
     case ItemId::frostVortexEngulf:   r = new Weapon(d, ammoD);         break;
 
-    case ItemId::scrollOfMayhem:      r = new Scroll(d);                break;
-    case ItemId::scrollOfTelep:       r = new Scroll(d);                break;
-    case ItemId::scrollOfPestilence:  r = new Scroll(d);                break;
-    case ItemId::scrollOfSlowMon:     r = new Scroll(d);                break;
-    case ItemId::scrollOfTerrifyMon:  r = new Scroll(d);                break;
-    case ItemId::scrollOfParalMon:    r = new Scroll(d);                break;
-    case ItemId::scrollOfDetItems:    r = new Scroll(d);                break;
-    case ItemId::scrollOfDetTraps:    r = new Scroll(d);                break;
-    case ItemId::scrollOfDetMon:      r = new Scroll(d);                break;
-    case ItemId::scrollOfBless:       r = new Scroll(d);                break;
-    case ItemId::scrollOfDarkbolt:    r = new Scroll(d);                break;
-    case ItemId::scrollOfAzaWrath:    r = new Scroll(d);                break;
-    case ItemId::scrollOfOpening:     r = new Scroll(d);                break;
-    case ItemId::scrollOfSacrLife:    r = new Scroll(d);                break;
-    case ItemId::scrollOfSacrSpi:     r = new Scroll(d);                break;
-    case ItemId::scrollOfElemRes:     r = new Scroll(d);                break;
+    case ItemId::scrollMayhem:        r = new Scroll(d);                break;
+    case ItemId::scrollTelep:         r = new Scroll(d);                break;
+    case ItemId::scrollPestilence:    r = new Scroll(d);                break;
+    case ItemId::scrollSlowMon:       r = new Scroll(d);                break;
+    case ItemId::scrollTerrifyMon:    r = new Scroll(d);                break;
+    case ItemId::scrollParalMon:      r = new Scroll(d);                break;
+    case ItemId::scrollDetItems:      r = new Scroll(d);                break;
+    case ItemId::scrollDetTraps:      r = new Scroll(d);                break;
+    case ItemId::scrollDetMon:        r = new Scroll(d);                break;
+    case ItemId::scrollBless:         r = new Scroll(d);                break;
+    case ItemId::scrollDarkbolt:      r = new Scroll(d);                break;
+    case ItemId::scrollAzaWrath:      r = new Scroll(d);                break;
+    case ItemId::scrollOpening:       r = new Scroll(d);                break;
+    case ItemId::scrollSacrLife:      r = new Scroll(d);                break;
+    case ItemId::scrollSacrSpi:       r = new Scroll(d);                break;
+    case ItemId::scrollElemRes:       r = new Scroll(d);                break;
 
-    case ItemId::potionOfVitality:    r = new PotionOfVitality(d);      break;
-    case ItemId::potionOfSpirit:      r = new PotionOfSpirit(d);        break;
-    case ItemId::potionOfBlindness:   r = new PotionOfBlindness(d);     break;
-    case ItemId::potionOfFrenzy:      r = new PotionOfFrenzy(d);        break;
-    case ItemId::potionOfFortitude:   r = new PotionOfFortitude(d);     break;
-    case ItemId::potionOfParalyze:    r = new PotionOfParal(d);         break;
-    case ItemId::potionOfRElec:       r = new PotionOfRElec(d);         break;
-    case ItemId::potionOfConf:        r = new PotionOfConf(d);          break;
-    case ItemId::potionOfPoison:      r = new PotionOfPoison(d);        break;
-    case ItemId::potionOfInsight:     r = new PotionOfInsight(d);       break;
-    case ItemId::potionOfClairv:      r = new PotionOfClairv(d);        break;
-    case ItemId::potionOfRFire:       r = new PotionOfRFire(d);         break;
-    case ItemId::potionOfAntidote:    r = new PotionOfAntidote(d);      break;
-    case ItemId::potionOfDescent:     r = new PotionOfDescent(d);       break;
+    case ItemId::potionVitality:      r = new PotionVitality(d);        break;
+    case ItemId::potionSpirit:        r = new PotionSpirit(d);          break;
+    case ItemId::potionBlindness:     r = new PotionBlindness(d);       break;
+    case ItemId::potionFrenzy:        r = new PotionFrenzy(d);          break;
+    case ItemId::potionFortitude:     r = new PotionFortitude(d);       break;
+    case ItemId::potionParalyze:      r = new PotionParal(d);           break;
+    case ItemId::potionRElec:         r = new PotionRElec(d);           break;
+    case ItemId::potionConf:          r = new PotionConf(d);            break;
+    case ItemId::potionPoison:        r = new PotionPoison(d);          break;
+    case ItemId::potionInsight:       r = new PotionInsight(d);         break;
+    case ItemId::potionClairv:        r = new PotionClairv(d);          break;
+    case ItemId::potionRFire:         r = new PotionRFire(d);           break;
+    case ItemId::potionAntidote:      r = new PotionAntidote(d);        break;
+    case ItemId::potionDescent:       r = new PotionDescent(d);         break;
 
     case ItemId::deviceSentry:        r = new DeviceSentry(d);          break;
     case ItemId::deviceRepeller:      r = new DeviceRepeller(d);        break;
@@ -218,7 +221,7 @@ Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
   vector<ItemId> itemCandidates;
 
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
-    const ItemDataT* const d = ItemData::dataList[i];
+    const ItemDataT* const d = ItemData::data[i];
     if(
       d->isIntrinsic == false &&
       ((d->isScroll && ALLOW_SCROLLS) ||

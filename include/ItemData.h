@@ -123,37 +123,37 @@ enum class ItemId {
   armorAsbSuit,
   armorHeavyCoat,
 
-  scrollOfPestilence,
-  scrollOfTelep,
-  scrollOfSlowMon,
-  scrollOfTerrifyMon,
-  scrollOfParalMon,
-  scrollOfDetTraps,
-  scrollOfDetItems,
-  scrollOfDetMon,
-  scrollOfBless,
-  scrollOfMayhem,
-  scrollOfDarkbolt,
-  scrollOfAzaWrath,
-  scrollOfOpening,
-  scrollOfSacrLife,
-  scrollOfSacrSpi,
-  scrollOfElemRes,
+  scrollPestilence,
+  scrollTelep,
+  scrollSlowMon,
+  scrollTerrifyMon,
+  scrollParalMon,
+  scrollDetTraps,
+  scrollDetItems,
+  scrollDetMon,
+  scrollBless,
+  scrollMayhem,
+  scrollDarkbolt,
+  scrollAzaWrath,
+  scrollOpening,
+  scrollSacrLife,
+  scrollSacrSpi,
+  scrollElemRes,
 
-  potionOfVitality,
-  potionOfSpirit,
-  potionOfBlindness,
-  potionOfFrenzy,
-  potionOfFortitude,
-  potionOfParalyze,
-  potionOfRElec,
-  potionOfConf,
-  potionOfPoison,
-  potionOfInsight,
-  potionOfClairv,
-  potionOfRFire,
-  potionOfAntidote,
-  potionOfDescent,
+  potionVitality,
+  potionSpirit,
+  potionBlindness,
+  potionFrenzy,
+  potionFortitude,
+  potionParalyze,
+  potionRElec,
+  potionConf,
+  potionPoison,
+  potionInsight,
+  potionClairv,
+  potionRFire,
+  potionAntidote,
+  potionDescent,
 
   deviceSentry,
   deviceRepeller,
@@ -193,14 +193,7 @@ public:
   bool isStackable;
   bool isIdentified;
   bool isTried;
-private:
-  friend class ItemDataHandler;
-  friend class PotionNameHandler;
-  friend class Potion;
-  friend class ScrollNameHandler;
-  friend class Scroll;
-  ItemName name;
-public:
+  ItemName baseName;
   char glyph;
   SDL_Color clr;
   TileId tile;
@@ -255,7 +248,7 @@ enum class ItemRefType {plain, a, plural};
 
 namespace ItemData {
 
-ItemDataT* dataList[int(ItemId::endOfItemIds)];
+ItemDataT* data[int(ItemId::endOfItemIds)];
 
 void init();
 void cleanup();

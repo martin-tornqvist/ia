@@ -151,7 +151,7 @@ void act() {
     vector<PropId> propCandidates;
     propCandidates.resize(0);
     for(unsigned int i = 0; i < endOfPropIds; i++) {
-      PropDataT& d = PropData::dataList[i];
+      PropDataT& d = PropData::data[i];
       if(d.allowTestingOnBot) {propCandidates.push_back(PropId(i));}
     }
     PropId propId =

@@ -31,7 +31,7 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMonsters = 0;
   for(int i = actor_player + 1; i < endOfActorIds; i++) {
-    const ActorDataT& d = ActorData::dataList[i];
+    const ActorDataT& d = ActorData::data[i];
     if(d.nrKills > 0) {
       nrKillsTotAllMonsters += d.nrKills;
       if(d.isUnique) {

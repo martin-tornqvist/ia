@@ -27,7 +27,7 @@ namespace PropData {
 namespace {
 
 void PropDataHandler::addPropData(PropData& d) {
-  dataList[d.id] = d;
+  data[d.id] = d;
   d = PropData();
 }
 
@@ -1367,7 +1367,7 @@ void PropHandler::endAppliedPropsByMagicHealing() {
 
 Prop::Prop(PropId id, PropTurns turnsInit, int turns) :
   turnsLeft_(turns), owningActor_(NULL), id_(id),
-  data_(&(PropData::dataList[id])) {
+  data_(&(PropData::data[id])) {
 
   if(turnsInit == propTurnsStd) {
     turnsLeft_ = Rnd::range(data_->stdRndTurns);
@@ -1427,7 +1427,8 @@ bool PropDiseased::tryResistOtherProp(const PropId id) const {
 void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   if(IS_PLAYER_SEE_OWNING_ACTOR) {
     const string& name1 = owningActor_->getNameThe();
-    const string& name2 = ActorData::dataList[actor_zuul].name_the;
+    const string& name2 = ActorData::data[actor_zuul].name_the;
+    const string& name2 = ActorData::data[actor_zuul].name_the;
     Log::addMsg(name1 + " was possessed by " + name2 + "!");
   }
   owningActor_->deadState = ActorDeadState::destroyed;

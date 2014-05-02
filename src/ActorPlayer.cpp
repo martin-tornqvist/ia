@@ -25,7 +25,7 @@
 #include "Inventory.h"
 #include "InventoryHandling.h"
 #include "ItemMedicalBag.h"
-#include "PlayerSpellsHandler.h"
+#include "PlayerSpellsHandling.h"
 #include "Bot.h"
 #include "Input.h"
 #include "MapParsing.h"

@@ -1,5 +1,7 @@
 #include "ItemPickup.h"
 
+#include <string>
+
 #include "Item.h"
 #include "ItemWeapon.h"
 #include "ItemAmmo.h"
@@ -12,14 +14,28 @@
 #include "GameTime.h"
 #include "Audio.h"
 
-//--------------ITEM PICKUP EFFECTS--------------
-void ItemPickup::pickupEffects(Actor* actor, Item* item) {
+using namespace std;
+
+namespace ItemPickup {
+
+namespace {
+
+void pickupEffects(Actor* actor, Item* item) {
   (void)actor;
   (void)item;
 }
 
+bool isInvFull(Inventory& inv, Item& item) {
+  //If item can be stacked, the inventory is not considered full.
+  if(inv.getElementToStackItem(&item) != -1) {return false;}
+  const int INV_SIZE = inv.getGeneral().size();
+  return INV_SIZE >= (SCREEN_H - 1);
+}
+
+} //namespace
+
 //Can always be called, to check if something is there to be picked up.
-void ItemPickup::tryPick() {
+void tryPick() {
   const Pos& pos = Map::player->pos;
   Item* const item = Map::cells[pos.x][pos.y].item;
 
@@ -29,8 +45,7 @@ void ItemPickup::tryPick() {
   } else {
     Inventory& playerInv = Map::player->getInv();
 
-    const string ITEM_NAME =
-      ItemData::getItemInterfaceRef(*item, true);
+    const string ITEM_NAME = ItemData::getItemInterfaceRef(*item, true);
 
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getData().isMissileWeapon) {
@@ -67,14 +82,7 @@ void ItemPickup::tryPick() {
   }
 }
 
-bool ItemPickup::isInvFull(Inventory& inv, Item& item) const {
-  //If item can be stacked, the inventory is not considered full.
-  if(inv.getElementToStackItem(&item) != -1) {return false;}
-  const int INV_SIZE = inv.getGeneral().size();
-  return INV_SIZE >= (SCREEN_H - 1);
-}
-
-void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
+void tryUnloadWeaponOrPickupAmmoFromGround() {
   Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
 
   if(item != NULL) {
@@ -86,7 +94,7 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
         Inventory& playerInv = Map::player->getInv();
         const ItemId ammoType = weapon->getData().rangedAmmoTypeUsed;
 
-        ItemDataT* const ammoData = ItemData::dataList[int(ammoType)];
+        ItemDataT* const ammoData = ItemData::data[int(ammoType)];
 
         Item* spawnedAmmo = ItemFactory::spawnItem(ammoType);
 
@@ -127,3 +135,4 @@ void ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround() {
   Log::addMsg("I see no ammo to unload or pick up here.");
 }
 
+} //ItemPickup
