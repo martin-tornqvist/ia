@@ -28,13 +28,13 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
       }
 
       if(monsterActing->spellsKnown.empty() == false) {
-        vector<Spell*> spellCandidates = monsterActing->spellsKnown;
+        vector<Spell*> spellBucket = monsterActing->spellsKnown;
 
-        while(spellCandidates.empty() == false) {
+        while(spellBucket.empty() == false) {
           const unsigned int ELEMENT =
-            Rnd::range(0, spellCandidates.size() - 1);
+            Rnd::range(0, spellBucket.size() - 1);
 
-          Spell* const spell = spellCandidates.at(ELEMENT);
+          Spell* const spell = spellBucket.at(ELEMENT);
 
           if(spell->isGoodForMonsterToCastNow(monsterActing)) {
             const int CUR_SPI = monsterActing->getSpi();
@@ -60,7 +60,7 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
             }
             return false;
           } else {
-            spellCandidates.erase(spellCandidates.begin() + ELEMENT);
+            spellBucket.erase(spellBucket.begin() + ELEMENT);
           }
         }
       }
@@ -115,7 +115,7 @@ bool checkIfBlockingMon(const Pos& pos, Monster* other) {
 
 //Returns all free positions around the acting monster that is further
 //from the player than the monster's current position
-void getMoveCandidates(Monster& self, vector<Pos>& dirsToMake) {
+void getMoveBucket(Monster& self, vector<Pos>& dirsToMake) {
 
   dirsToMake.resize(0);
 
@@ -132,8 +132,8 @@ void getMoveCandidates(Monster& self, vector<Pos>& dirsToMake) {
       if(x != OLD_X || y != OLD_Y) {
         const int NEW_X = OLD_X + x;
         const int NEW_Y = OLD_Y + y;
-        const int DIST_CUR = Utils::kingDist(OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
-        const int DIST_NEW = Utils::kingDist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
+        const int DIST_CUR = Utils::getKingDist(OLD_X, OLD_Y, PLAYER_X, PLAYER_Y);
+        const int DIST_NEW = Utils::getKingDist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
 
         if(DIST_NEW <= DIST_CUR) {
           if(blockers[NEW_X][NEW_Y] == false) {
@@ -187,8 +187,7 @@ bool makeRoomForFriend(Monster& monster) {
             //Other monster sees the player, or it's a neighbour that
             //does not see the player?
             if(
-              otherMonster->isSeeingActor(
-                *Map::player, visionBlockers) ||
+              otherMonster->isSeeingActor(*Map::player, visionBlockers) ||
               isOtherAdjWithoutVision) {
 
               // If we are indeed blocking a pal, check every neighbouring
@@ -205,16 +204,16 @@ bool makeRoomForFriend(Monster& monster) {
                 isOtherAdjWithoutVision) {
 
                 // Get a list of neighbouring free cells
-                vector<Pos> candidates;
-                getMoveCandidates(monster, candidates);
+                vector<Pos> posBucket;
+                getMoveBucket(monster, posBucket);
 
                 // Sort the list by closeness to player
                 IsCloserToOrigin sorter(Map::player->pos);
-                sort(candidates.begin(), candidates.end(), sorter);
+                sort(posBucket.begin(), posBucket.end(), sorter);
 
                 // Test the candidate cells until one is found that
                 //is not also blocking someone.
-                const int NR_CANDIDATES = candidates.size();
+                const int NR_CANDIDATES = posBucket.size();
                 for(int ii = 0; ii < NR_CANDIDATES; ii++) {
 
                   bool isGoodCandidateFound = true;
@@ -226,8 +225,7 @@ bool makeRoomForFriend(Monster& monster) {
                         otherMonster->isSeeingActor(
                           *Map::player, visionBlockers)) {
                         if(
-                          checkIfBlockingMon(
-                            candidates.at(ii), otherMonster)) {
+                          checkIfBlockingMon(posBucket.at(ii), otherMonster)) {
                           isGoodCandidateFound = false;
                           break;
                         }
@@ -236,7 +234,7 @@ bool makeRoomForFriend(Monster& monster) {
                   }
 
                   if(isGoodCandidateFound) {
-                    const Pos offset = candidates.at(ii) - monster.pos;
+                    const Pos offset = posBucket.at(ii) - monster.pos;
                     monster.moveDir(DirUtils::getDir(offset));
                     return true;
                   }
@@ -292,8 +290,8 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
   }
 
   //Attempt to find a random non-blocked adjacent cell
-  vector<Dir> dirCandidates;
-  dirCandidates.resize(0);
+  vector<Dir> dirBucket;
+  dirBucket.resize(0);
   for(int dy = -1; dy <= 1; dy++) {
     for(int dx = -1; dx <= 1; dx++) {
       if(dx != 0 || dy != 0) {
@@ -302,17 +300,17 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
         if(
           blockers[targetCell.x][targetCell.y] == false &&
           Utils::isPosInside(targetCell, areaAllowed)) {
-          dirCandidates.push_back(DirUtils::getDir(offset));
+          dirBucket.push_back(DirUtils::getDir(offset));
         }
       }
     }
   }
 
-  const int NR_ELEMENTS = dirCandidates.size();
+  const int NR_ELEMENTS = dirBucket.size();
   if(NR_ELEMENTS == 0) {
     return Dir::center;
   } else {
-    return dirCandidates.at(Rnd::range(0, NR_ELEMENTS - 1));
+    return dirBucket.at(Rnd::range(0, NR_ELEMENTS - 1));
   }
 }
 

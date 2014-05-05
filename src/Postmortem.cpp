@@ -2,6 +2,8 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
+#include <string>
 
 #include "Renderer.h"
 #include "Input.h"
@@ -13,15 +15,22 @@
 #include "Highscore.h"
 #include "PlayerBon.h"
 #include "TextFormatting.h"
+#include "MenuBrowser.h"
 
-void Postmortem::run(bool* const quitGame) {
-  vector<StrAndClr> lines;
-  makeInfoLines(lines);
-  makeMemorialFile(lines);
-  readKeysMenu(lines, quitGame);
-}
+using namespace std;
 
-void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
+namespace Postmortem {
+
+namespace {
+
+struct StrAndClr {
+  StrAndClr(const std::string str, const SDL_Color clr) : str(str), clr(clr) {}
+  StrAndClr() {}
+  std::string str;
+  SDL_Color clr;
+};
+
+void makeInfoLines(vector<StrAndClr>& linesRef) {
   trace << "Postmortem::makeInfoLines()..." << endl;
 
   const SDL_Color clrHeading  = clrWhiteHigh;
@@ -148,7 +157,7 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
           currentRow.push_back('*');
         } else {
           if(Renderer::renderArray[x][y].glyph ==
-              FeatureData::getData(FeatureId::stoneWall)->glyph
+              FeatureData::getData(FeatureId::wall)->glyph
               || Renderer::renderArray[x][y].glyph ==
               FeatureData::getData(FeatureId::rubbleHigh)->glyph) {
             currentRow.push_back('#');
@@ -168,8 +177,8 @@ void Postmortem::makeInfoLines(vector<StrAndClr>& linesRef) {
   trace << "Postmortem::makeInfoLines() [DONE]" << endl;
 }
 
-void Postmortem::render(const vector<StrAndClr>& linesAndClr,
-                        const int TOP_ELEMENT) {
+void render(const vector<StrAndClr>& linesAndClr,
+            const int TOP_ELEMENT) {
   Renderer::clearScreen();
 
   const string decorationLine(MAP_W, '-');
@@ -194,15 +203,14 @@ void Postmortem::render(const vector<StrAndClr>& linesAndClr,
     int i = TOP_ELEMENT;
     i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++) {
-    Renderer::drawText(
-      linesAndClr.at(i).str, Panel::screen, Pos(0, yPos++),
-      linesAndClr.at(i).clr);
+    Renderer::drawText(linesAndClr.at(i).str, Panel::screen, Pos(0, yPos++),
+                       linesAndClr.at(i).clr);
   }
 
   Renderer::updateScreen();
 }
 
-void Postmortem::runInfo(const vector<StrAndClr>& lines) {
+void runInfo(const vector<StrAndClr>& lines) {
   const int LINE_JUMP           = 3;
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
   const int NR_LINES_TOT        = lines.size();
@@ -229,7 +237,7 @@ void Postmortem::runInfo(const vector<StrAndClr>& lines) {
   }
 }
 
-void Postmortem::makeMemorialFile(const vector<StrAndClr>& lines) {
+void makeMemorialFile(const vector<StrAndClr>& lines) {
   const string timeStamp =
     DungeonMaster::getTimeStarted().getTimeStr(time_second, false);
   const string memorialFileName =
@@ -249,8 +257,8 @@ void Postmortem::makeMemorialFile(const vector<StrAndClr>& lines) {
   file.close();
 }
 
-void Postmortem::readKeysMenu(const vector<StrAndClr>& linesAndClr,
-                              bool* const quitGame) {
+void readKeysMenu(const vector<StrAndClr>& linesAndClr,
+                  bool* const quitGame) {
   MenuBrowser browser(5, 0);
 
   renderMenu(browser);
@@ -296,7 +304,7 @@ void Postmortem::readKeysMenu(const vector<StrAndClr>& linesAndClr,
   }
 }
 
-void Postmortem::renderMenu(const MenuBrowser& browser) {
+void renderMenu(const MenuBrowser& browser) {
   vector<string> art;
 
   string curLine;
@@ -309,8 +317,8 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
       }
     }
   } else {
-    trace << "[WARNING] Could not open ascii graveyard file, ";
-    trace << "in Postmortem::renderMenu()" << endl;
+    trace << "[WARNING] Could not open ascii graveyard file, "
+          "in Postmortem::renderMenu()" << endl;
   }
 
   file.close();
@@ -321,7 +329,7 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
 
   for(unsigned int i = 0; i < art.size(); i++) {
     Renderer::drawText(art.at(i), Panel::screen, pos, clrWhiteHigh);
-    pos.y += 1;
+    pos.y++;
   }
 
   pos.set(45, 18);
@@ -334,30 +342,36 @@ void Postmortem::renderMenu(const MenuBrowser& browser) {
 
   //Draw command labels
   pos.set(55, 14);
-  Renderer::drawText(
-    "Information", Panel::screen, pos,
-    browser.isPosAtElement(0) ? clrWhite : clrRedLgt);
-  pos.y += 1;
+  Renderer::drawText("Information", Panel::screen, pos,
+                     browser.isPosAtElement(0) ? clrWhite : clrRedLgt);
+  pos.y++;
 
-  Renderer::drawText(
-    "View the High Score", Panel::screen, pos,
-    browser.isPosAtElement(1) ? clrWhite : clrRedLgt);
-  pos.y += 1;
+  Renderer::drawText("View the High Score", Panel::screen, pos,
+                     browser.isPosAtElement(1) ? clrWhite : clrRedLgt);
+  pos.y++;
 
-  Renderer::drawText(
-    "View messages", Panel::screen, pos,
-    browser.isPosAtElement(2) ? clrWhite : clrRedLgt);
-  pos.y += 1;
+  Renderer::drawText("View messages", Panel::screen, pos,
+                     browser.isPosAtElement(2) ? clrWhite : clrRedLgt);
+  pos.y++;
 
-  Renderer::drawText(
-    "Return to main menu", Panel::screen, pos,
-    browser.isPosAtElement(3) ? clrWhite : clrRedLgt);
-  pos.y += 1;
+  Renderer::drawText("Return to main menu", Panel::screen, pos,
+                     browser.isPosAtElement(3) ? clrWhite : clrRedLgt);
+  pos.y++;
 
-  Renderer::drawText(
-    "Quit the game", Panel::screen, pos,
-    browser.isPosAtElement(4) ? clrWhite : clrRedLgt);
-  pos.y += 1;
+  Renderer::drawText("Quit the game", Panel::screen, pos,
+                     browser.isPosAtElement(4) ? clrWhite : clrRedLgt);
+  pos.y++;
 
   Renderer::updateScreen();
 }
+
+} //namespace
+
+void run(bool* const quitGame) {
+  vector<StrAndClr> lines;
+  makeInfoLines(lines);
+  makeMemorialFile(lines);
+  readKeysMenu(lines, quitGame);
+}
+
+} //Postmortem

@@ -24,55 +24,55 @@
 using namespace std;
 
 string Cultist::getCultistPhrase() {
-  vector<string> phraseCandidates;
+  vector<string> phraseBucket;
 
   const God* const god = Gods::getCurrentGod();
 
   if(god != NULL && Rnd::coinToss()) {
     const string name = god->getName();
     const string descr = god->getDescr();
-    phraseCandidates.push_back(name + " save us!");
-    phraseCandidates.push_back(descr + " will save us!");
-    phraseCandidates.push_back(name + ", guide us!");
-    phraseCandidates.push_back(descr + " guides us!");
-    phraseCandidates.push_back("For " + name + "!");
-    phraseCandidates.push_back("For " + descr + "!");
-    phraseCandidates.push_back("Blood for " + name + "!");
-    phraseCandidates.push_back("Blood for " + descr + "!");
-    phraseCandidates.push_back("Perish for " + name + "!");
-    phraseCandidates.push_back("Perish for " + descr + "!");
-    phraseCandidates.push_back("In the name of " + name + "!");
+    phraseBucket.push_back(name + " save us!");
+    phraseBucket.push_back(descr + " will save us!");
+    phraseBucket.push_back(name + ", guide us!");
+    phraseBucket.push_back(descr + " guides us!");
+    phraseBucket.push_back("For " + name + "!");
+    phraseBucket.push_back("For " + descr + "!");
+    phraseBucket.push_back("Blood for " + name + "!");
+    phraseBucket.push_back("Blood for " + descr + "!");
+    phraseBucket.push_back("Perish for " + name + "!");
+    phraseBucket.push_back("Perish for " + descr + "!");
+    phraseBucket.push_back("In the name of " + name + "!");
   } else {
-    phraseCandidates.push_back("Apigami!");
-    phraseCandidates.push_back("Bhuudesco invisuu!");
-    phraseCandidates.push_back("Bhuuesco marana!");
-    phraseCandidates.push_back("Crudux cruo!");
-    phraseCandidates.push_back("Cruento paashaeximus!");
-    phraseCandidates.push_back("Cruento pestis shatruex!");
-    phraseCandidates.push_back("Cruo crunatus durbe!");
-    phraseCandidates.push_back("Cruo lokemundux!");
-    phraseCandidates.push_back("Cruo-stragaraNa!");
-    phraseCandidates.push_back("Gero shay cruo!");
-    phraseCandidates.push_back("In marana domus-bhaava crunatus!");
-    phraseCandidates.push_back("Caecux infirmux!");
-    phraseCandidates.push_back("Malax sayti!");
-    phraseCandidates.push_back("Marana pallex!");
-    phraseCandidates.push_back("Marana malax!");
-    phraseCandidates.push_back("Pallex ti!");
-    phraseCandidates.push_back("Peroshay bibox malax!");
-    phraseCandidates.push_back("Pestis Cruento!");
-    phraseCandidates.push_back("Pestis cruento vilomaxus pretiacruento!");
-    phraseCandidates.push_back("Pretaanluxis cruonit!");
-    phraseCandidates.push_back("Pretiacruento!");
-    phraseCandidates.push_back("StragarNaya!");
-    phraseCandidates.push_back("Vorox esco marana!");
-    phraseCandidates.push_back("Vilomaxus!");
-    phraseCandidates.push_back("Prostragaranar malachtose!");
-    phraseCandidates.push_back("Apigami!");
+    phraseBucket.push_back("Apigami!");
+    phraseBucket.push_back("Bhuudesco invisuu!");
+    phraseBucket.push_back("Bhuuesco marana!");
+    phraseBucket.push_back("Crudux cruo!");
+    phraseBucket.push_back("Cruento paashaeximus!");
+    phraseBucket.push_back("Cruento pestis shatruex!");
+    phraseBucket.push_back("Cruo crunatus durbe!");
+    phraseBucket.push_back("Cruo lokemundux!");
+    phraseBucket.push_back("Cruo-stragaraNa!");
+    phraseBucket.push_back("Gero shay cruo!");
+    phraseBucket.push_back("In marana domus-bhaava crunatus!");
+    phraseBucket.push_back("Caecux infirmux!");
+    phraseBucket.push_back("Malax sayti!");
+    phraseBucket.push_back("Marana pallex!");
+    phraseBucket.push_back("Marana malax!");
+    phraseBucket.push_back("Pallex ti!");
+    phraseBucket.push_back("Peroshay bibox malax!");
+    phraseBucket.push_back("Pestis Cruento!");
+    phraseBucket.push_back("Pestis cruento vilomaxus pretiacruento!");
+    phraseBucket.push_back("Pretaanluxis cruonit!");
+    phraseBucket.push_back("Pretiacruento!");
+    phraseBucket.push_back("StragarNaya!");
+    phraseBucket.push_back("Vorox esco marana!");
+    phraseBucket.push_back("Vilomaxus!");
+    phraseBucket.push_back("Prostragaranar malachtose!");
+    phraseBucket.push_back("Apigami!");
   }
 
-  return phraseCandidates.at(
-           Rnd::range(0, phraseCandidates.size() - 1));
+  return phraseBucket.at(
+           Rnd::range(0, phraseBucket.size() - 1));
 }
 
 void Cultist::spawnStartItems() {
@@ -170,7 +170,7 @@ void Zuul::place_() {
     //Note: Do not call die() here, that would have side effects such as
     //player getting XP. Instead, simply set the dead state to destroyed.
     deadState = ActorDeadState::destroyed;
-    Actor* actor = ActorFactory::spawnActor(actor_cultistPriest, pos);
+    Actor* actor = ActorFactory::spawn(actor_cultistPriest, pos);
     PropHandler& propHandler = actor->getPropHandler();
     propHandler.tryApplyProp(
       new PropPossessedByZuul(propTurnsIndefinite), true);
@@ -400,9 +400,7 @@ bool Khephren::onActorTurn_() {
             Map::player->incrShock(ShockValue::shockValue_heavy,
                                    ShockSrc::misc);
             for(int i = 0; i < NR_OF_SPAWNS; i++) {
-              Actor* const actor =
-                ActorFactory::spawnActor(actor_giantLocust,
-                                         freeCells.at(0));
+              Actor* const actor = ActorFactory::spawn(actor_locust, freeCells.at(0));
               Monster* const monster = dynamic_cast<Monster*>(actor);
               monster->awareOfPlayerCounter_ = 999;
               monster->leader = this;
@@ -471,7 +469,7 @@ bool KeziahMason::onActorTurn_() {
               //TODO Make a generalized summoning functionality
               Log::addMsg("Keziah summons Brown Jenkin!");
               Actor* const actor =
-                ActorFactory::spawnActor(actor_brownJenkin, c);
+                ActorFactory::spawn(actor_brownJenkin, c);
               Monster* jenkin = dynamic_cast<Monster*>(actor);
               Renderer::drawMapAndInterface();
               hasSummonedJenkin = true;
@@ -586,7 +584,7 @@ bool WormMass::onActorTurn_() {
             spawnPos.set(pos + Pos(dx, dy));
             if(blockers[spawnPos.x][spawnPos.y] == false) {
               Actor* const actor =
-                ActorFactory::spawnActor(data_->id, spawnPos);
+                ActorFactory::spawn(data_->id, spawnPos);
               WormMass* const worm = dynamic_cast<WormMass*>(actor);
               chanceToSpawnNew -= 4;
               worm->chanceToSpawnNew = chanceToSpawnNew;
@@ -621,7 +619,7 @@ bool GiantLocust::onActorTurn_() {
             spawnPos.set(pos + Pos(dx, dy));
             if(blockers[spawnPos.x][spawnPos.y] == false) {
               Actor* const actor =
-                ActorFactory::spawnActor(data_->id, spawnPos);
+                ActorFactory::spawn(data_->id, spawnPos);
               GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
@@ -651,38 +649,37 @@ void LordOfShadows::spawnStartItems() {
 }
 
 bool LordOfSpiders::onActorTurn_() {
-  if(deadState == ActorDeadState::alive) {
-    if(awareOfPlayerCounter_ > 0) {
+  if(deadState == ActorDeadState::alive && awareOfPlayerCounter_ > 0) {
 
-      if(Rnd::coinToss()) {
+    if(Rnd::coinToss()) {
 
-        const Pos playerPos = Map::player->pos;
+      const Pos playerPos = Map::player->pos;
 
-        if(Map::player->isSeeingActor(*this, NULL)) {
-          Log::addMsg(data_->spellCastMessage);
-        }
+      if(Map::player->isSeeingActor(*this, NULL)) {
+        Log::addMsg(data_->spellCastMessage);
+      }
 
-        for(int dy = -1; dy <= 1; dy++) {
-          for(int dx = -1; dx <= 1; dx++) {
+      for(int dy = -1; dy <= 1; dy++) {
+        for(int dx = -1; dx <= 1; dx++) {
 
-            if(Rnd::percentile() < 75) {
+          if(Rnd::fraction(3, 4)) {
 
-              const Pos c(playerPos + Pos(dx, dy));
-              const FeatureStatic* const mimicFeature =
-                Map::cells[c.x][c.y].featureStatic;
+            const Pos c(playerPos + Pos(dx, dy));
+            const FeatureStatic* const mimicFeature =
+              Map::cells[c.x][c.y].featureStatic;
 
-              if(mimicFeature->canHaveStaticFeature()) {
+            if(mimicFeature->canHaveStaticFeature()) {
 
-                const FeatureDataT* const mimicData =
-                  FeatureData::getData(mimicFeature->getId());
+              const FeatureDataT* const mimicData =
+                FeatureData::getData(mimicFeature->getId());
 
-                Feature* const f =
-                  FeatureFactory::spawnFeatureAt(
-                    FeatureId::trap, c,
-                    new TrapSpawnData(mimicData, trap_spiderWeb));
+              TrapSpawnData* trapSpawnData =
+                new TrapSpawnData(mimicData, trap_spiderWeb);
 
-                dynamic_cast<Trap*>(f)->reveal(false);
-              }
+              Feature* const f =
+                FeatureFactory::spawn(FeatureId::trap, c, trapSpawnData);
+
+              dynamic_cast<Trap*>(f)->reveal(false);
             }
           }
         }

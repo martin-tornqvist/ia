@@ -6,8 +6,6 @@
 #include "CmnData.h"
 #include "Actor.h"
 
-
-
 namespace Rnd {
 
 //Note: If MTRand is not provided any parameters to the constructor,
@@ -98,8 +96,8 @@ Pos getClosestPos(const Pos& c, const std::vector<Pos>& positions);
 
 Actor* getRandomClosestActor(const Pos& c, const std::vector<Actor*>& actors);
 
-int kingDist(const int X0, const int Y0, const int X1, const int Y1);
-int kingDist(const Pos& c1, const Pos& c2);
+int getKingDist(const int X0, const int Y0, const int X1, const int Y1);
+int getKingDist(const Pos& c1, const Pos& c2);
 
 TimeData getCurrentTime();
 
@@ -107,11 +105,16 @@ TimeData getCurrentTime();
 
 namespace DirUtils {
 
+//Useful lists to iterate over (e.g. in map generation)
+const Pos cardinalOffsets[] = {Pos(1, 0), Pos(-1, 0), Pos(0, 1), Pos(0, -1)};
+const Pos diagonalOffsets[] = {Pos(1, 1), Pos(-1, 1), Pos(1, -1), Pos(-1, -1)};
+
 Dir getDir(const Pos& offset);
 
 Pos getOffset(const Dir dir);
 
-void getCompassDirName(const Pos& fromPos, const Pos& toPos, std::string& strRef);
+void getCompassDirName(const Pos& fromPos, const Pos& toPos,
+                       std::string& strRef);
 
 void getCompassDirName(const Dir dir, std::string& strRef);
 

@@ -43,7 +43,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
 
   if(NR_ITEMS_TO_ATTEMPT > 0) {
     while(items_.empty()) {
-      vector<ItemId> itemCandidates;
+      vector<ItemId> itemBucket;
       for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
         ItemDataT* const curData = ItemData::data[i];
         for(
@@ -55,7 +55,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
           if(featuresFoundIn.first == featureId) {
             if(Rnd::percentile() < featuresFoundIn.second) {
               if(Rnd::percentile() < curData->chanceToIncludeInSpawnList) {
-                itemCandidates.push_back(ItemId(i));
+                itemBucket.push_back(ItemId(i));
                 break;
               }
             }
@@ -63,12 +63,12 @@ void ItemContainerFeature::setRandomItemsForFeature(
         }
       }
 
-      const int NR_CANDIDATES = int(itemCandidates.size());
+      const int NR_CANDIDATES = int(itemBucket.size());
       if(NR_CANDIDATES > 0) {
         for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; i++) {
           const unsigned int ELEMENT =
             Rnd::range(0, NR_CANDIDATES - 1);
-          Item* item = ItemFactory::spawnItem(itemCandidates.at(ELEMENT));
+          Item* item = ItemFactory::spawnItem(itemBucket.at(ELEMENT));
           ItemFactory::setItemRandomizedProperties(item);
           items_.push_back(item);
         }
@@ -345,7 +345,7 @@ void Tomb::examine() {
 void Tomb::triggerTrap(Actor& actor) {
   (void)actor;
 
-  vector<ActorId> actorCandidates;
+  vector<ActorId> actorBucket;
 
   switch(trait_) {
     case TombTrait::auraOfUnrest: {
@@ -356,7 +356,7 @@ void Tomb::triggerTrap(Actor& actor) {
           d.isGhost && d.isAutoSpawnAllowed && d.isUnique == false &&
           ((Map::dlvl + 5) >= d.spawnMinDLVL ||
            Map::dlvl >= MIN_DLVL_HARDER_TRAPS)) {
-          actorCandidates.push_back(ActorId(i));
+          actorBucket.push_back(ActorId(i));
         }
       }
       Log::addMsg("Something rises from the tomb!");
@@ -393,7 +393,7 @@ void Tomb::triggerTrap(Actor& actor) {
             d.intrProps[propOoze] &&
             d.isAutoSpawnAllowed  &&
             d.isUnique == false) {
-            actorCandidates.push_back(ActorId(i));
+            actorBucket.push_back(ActorId(i));
           }
         }
         Log::addMsg("Something creeps up from the tomb!");
@@ -404,10 +404,10 @@ void Tomb::triggerTrap(Actor& actor) {
     default: {} break;
   }
 
-  if(actorCandidates.empty() == false) {
-    const unsigned int ELEM = Rnd::range(0, actorCandidates.size() - 1);
-    const ActorId actorIdToSpawn = actorCandidates.at(ELEM);
-    Actor* const monster = ActorFactory::spawnActor(actorIdToSpawn, pos_);
+  if(actorBucket.empty() == false) {
+    const unsigned int ELEM = Rnd::range(0, actorBucket.size() - 1);
+    const ActorId actorIdToSpawn = actorBucket.at(ELEM);
+    Actor* const monster = ActorFactory::spawn(actorIdToSpawn, pos_);
     dynamic_cast<Monster*>(monster)->becomeAware(false);
   }
 }
@@ -640,7 +640,7 @@ void Chest::triggerTrap(Actor& actor) {
       Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0,
                                 SfxId::explosion);
       if(Map::player->deadState == ActorDeadState::alive) {
-        FeatureFactory::spawnFeatureAt(FeatureId::rubbleLow, pos_);
+        FeatureFactory::spawn(FeatureId::rubbleLow, pos_);
       }
     } else {
       Log::addMsg("Fumes burst out from the chest!");
@@ -677,13 +677,13 @@ Fountain::Fountain(FeatureId id, Pos pos) :
     } break;
 
     case FountainMaterial::gold: {
-      vector<FountainType> typeCandidates {
+      vector<FountainType> typeBucket {
         FountainType::bless, FountainType::refreshing, FountainType::spirit,
         FountainType::vitality, FountainType::rFire, FountainType::rCold,
         FountainType::rElec, FountainType::rFear, FountainType::rConfusion
       };
-      const int ELEMENT = Rnd::range(0, typeCandidates.size() - 1);
-      fountainType_ = typeCandidates.at(ELEMENT);
+      const int ELEMENT = Rnd::range(0, typeBucket.size() - 1);
+      fountainType_ = typeBucket.at(ELEMENT);
     } break;
   }
 }
@@ -878,22 +878,22 @@ void Cocoon::triggerTrap(Actor& actor) {
     Map::player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
   } else if(RND < 50) {
     trace << "Cocoon: Attempting to spawn spiders" << endl;
-    vector<ActorId> spawnCandidates;
+    vector<ActorId> spawnBucket;
     for(unsigned int i = 1; i < endOfActorIds; i++) {
       const ActorDataT& d = ActorData::data[i];
       if(d.isSpider && d.actorSize == actorSize_floor &&
           d.isAutoSpawnAllowed && d.isUnique == false) {
-        spawnCandidates.push_back(d.id);
+        spawnBucket.push_back(d.id);
       }
     }
 
-    const int NR_CANDIDATES = spawnCandidates.size();
+    const int NR_CANDIDATES = spawnBucket.size();
     if(NR_CANDIDATES > 0) {
       trace << "Cocoon: Spawn candidates found, attempting to place" << endl;
       Log::addMsg("There are spiders inside!");
       const int NR_SPIDERS = Rnd::range(2, 5);
       const int ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
-      const ActorId actorIdToSummon = spawnCandidates.at(ELEMENT);
+      const ActorId actorIdToSummon = spawnBucket.at(ELEMENT);
       ActorFactory::summonMonsters(
         pos_, vector<ActorId>(NR_SPIDERS, actorIdToSummon), true);
     }

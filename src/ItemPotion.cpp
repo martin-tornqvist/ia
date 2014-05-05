@@ -223,29 +223,29 @@ void PotionInsight::quaff_(Actor* const actor) {
 
   Inventory& inv = Map::player->getInv();
 
-  vector<Item*> identifyCandidates;
+  vector<Item*> identifyBucket;
 
   vector<InvSlot>& slots = inv.getSlots();
   for(InvSlot & slot : slots) {
     Item* const item = slot.item;
     if(item) {
       const ItemDataT& d = item->getData();
-      if(d.isIdentified == false) {identifyCandidates.push_back(item);}
+      if(d.isIdentified == false) {identifyBucket.push_back(item);}
     }
   }
   vector<Item*>& general = inv.getGeneral();
   for(Item * item : general) {
     if(item->getData().id != ItemId::potionInsight) {
       const ItemDataT& d = item->getData();
-      if(d.isIdentified == false) {identifyCandidates.push_back(item);}
+      if(d.isIdentified == false) {identifyBucket.push_back(item);}
     }
   }
 
-  const unsigned int NR_ELEMENTS = identifyCandidates.size();
+  const unsigned int NR_ELEMENTS = identifyBucket.size();
   if(NR_ELEMENTS > 0) {
     const int ELEMENT = Rnd::range(0, NR_ELEMENTS - 1);
 
-    Item* const item = identifyCandidates.at(ELEMENT);
+    Item* const item = identifyBucket.at(ELEMENT);
 
     const string itemNameBefore =
       ItemData::getItemRef(*item, ItemRefType::a, true);

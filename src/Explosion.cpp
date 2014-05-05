@@ -68,7 +68,7 @@ void getPositionsReached(const Rect& area, const Pos& origin,
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
     for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
       const Pos pos(x, y);
-      const int DIST = Utils::kingDist(pos, origin);
+      const int DIST = Utils::getKingDist(pos, origin);
       bool isReached = true;
       if(DIST > 1) {
         LineCalc::calcNewLine(origin, pos, true, 999, false, line);
@@ -167,8 +167,8 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         }
 
         if(Rnd::fraction(6, 10)) {
-          FeatureFactory::spawnFeatureAt(
-            FeatureId::smoke, pos, new SmokeSpawnData(Rnd::range(2, 4)));
+          FeatureFactory::spawn(FeatureId::smoke, pos,
+                                new SmokeSpawnData(Rnd::range(2, 4)));
         }
       }
 
@@ -221,8 +221,8 @@ void runSmokeExplosionAt(const Pos& origin) {
   for(const vector<Pos>& inner : posLists) {
     for(const Pos & pos : inner) {
       if(blockers[pos.x][pos.y] == false) {
-        FeatureFactory::spawnFeatureAt(
-          FeatureId::smoke, pos, new SmokeSpawnData(Rnd::range(17, 22)));
+        FeatureFactory::spawn(FeatureId::smoke, pos,
+                              new SmokeSpawnData(Rnd::range(17, 22)));
       }
     }
   }

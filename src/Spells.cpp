@@ -491,7 +491,7 @@ SpellCastRetData SpellDetMon::cast_(Actor* const caster) const {
 
   for(Actor * actor : GameTime::actors_) {
     if(actor != Map::player) {
-      if(Utils::kingDist(playerPos, actor->pos) <= MAX_DIST) {
+      if(Utils::getKingDist(playerPos, actor->pos) <= MAX_DIST) {
         dynamic_cast<Monster*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
         didDetect = true;
       }
@@ -778,18 +778,18 @@ SpellCastRetData SpellSummonRandom::cast_(
     summonPos = freePositionsSeenByPlayer.at(ELEMENT);
   }
 
-  vector<ActorId> summonCandidates;
+  vector<ActorId> summonBucket;
   for(int i = 1; i < endOfActorIds; i++) {
     const ActorDataT& data = ActorData::data[i];
     if(data.canBeSummoned) {
       if(data.spawnMinDLVL <= caster->getData().spawnMinDLVL) {
-        summonCandidates.push_back(ActorId(i));
+        summonBucket.push_back(ActorId(i));
       }
     }
   }
-  const int ELEMENT = Rnd::range(1, summonCandidates.size() - 1);
-  const ActorId id = summonCandidates.at(ELEMENT);
-  Actor* const actor = ActorFactory::spawnActor(id, summonPos);
+  const int ELEMENT = Rnd::range(1, summonBucket.size() - 1);
+  const ActorId id = summonBucket.at(ELEMENT);
+  Actor* const actor = ActorFactory::spawn(id, summonPos);
   Monster* monster = dynamic_cast<Monster*>(actor);
   monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
   if(Map::cells[summonPos.x][summonPos.y].isSeenByPlayer) {

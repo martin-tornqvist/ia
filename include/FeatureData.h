@@ -13,8 +13,8 @@
 
 enum class FeatureId {
   empty,
-  stoneFloor,
-  stoneWall,
+  floor,
+  wall,
   tree,
   grass,
   grassWithered,

@@ -16,7 +16,7 @@ void calcNewLine(const Pos& origin, const Pos& target,
                  const bool ALLOW_OUTSIDE_MAP, std::vector<Pos>& lineRef);
 
 const std::vector<Pos>* getFovDeltaLine(const Pos& delta,
-                                   const double& MAX_DIST_ABS);
+                                        const double& MAX_DIST_ABS);
 
 } //LineCalc
 

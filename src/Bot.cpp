@@ -148,14 +148,13 @@ void act() {
 
   //Occasionally apply a random property to exercise the prop code
   if(Rnd::oneIn(10)) {
-    vector<PropId> propCandidates;
-    propCandidates.resize(0);
+    vector<PropId> propBucket;
+    propBucket.resize(0);
     for(unsigned int i = 0; i < endOfPropIds; i++) {
       PropDataT& d = PropData::data[i];
-      if(d.allowTestingOnBot) {propCandidates.push_back(PropId(i));}
+      if(d.allowTestingOnBot) {propBucket.push_back(PropId(i));}
     }
-    PropId propId =
-      propCandidates.at(Rnd::range(0, propCandidates.size() - 1));
+    PropId propId = propBucket.at(Rnd::range(0, propBucket.size() - 1));
 
     Prop* const prop =
       propHandler.makeProp(propId, propTurnsSpecific, 5);

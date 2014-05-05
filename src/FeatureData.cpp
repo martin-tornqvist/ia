@@ -61,7 +61,7 @@ void initDataList() {
   addToListAndReset(d);
 
   /*---------------------------------------------*/
-  d.id = FeatureId::stoneFloor;
+  d.id = FeatureId::floor;
   d.name_a = "stone floor";
   d.name_the = "the stone floor";
   d.glyph = '.';
@@ -70,7 +70,7 @@ void initDataList() {
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::stoneWall;
+  d.id = FeatureId::wall;
   d.spawnType = featureSpawnType_other;
   d.name_a = "a stone wall";
   d.name_the = "the stone wall";
@@ -89,7 +89,7 @@ void initDataList() {
   d.canHaveItem = false;
   d.featuresOnDestroyed.push_back(FeatureId::rubbleHigh);
   d.featuresOnDestroyed.push_back(FeatureId::rubbleLow);
-  d.featuresOnDestroyed.push_back(FeatureId::stoneFloor);
+  d.featuresOnDestroyed.push_back(FeatureId::floor);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::tree;
@@ -348,7 +348,7 @@ void initDataList() {
   d.name_a = "a big pile of debris";
   d.name_the = "the big pile of debris";
   d.glyph = 8;
-  d.color = data[int(FeatureId::stoneWall)].color;
+  d.color = data[int(FeatureId::wall)].color;
   d.tile = TileId::rubbleHigh;
   d.moveRules.setPropCanMove(propEthereal);
   d.moveRules.setPropCanMove(propOoze);
@@ -368,7 +368,7 @@ void initDataList() {
   d.name_a = "rubble";
   d.name_the = "the rubble";
   d.glyph = ',';
-  d.color = data[int(FeatureId::stoneWall)].color;
+  d.color = data[int(FeatureId::wall)].color;
   d.tile = TileId::rubbleLow;
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);

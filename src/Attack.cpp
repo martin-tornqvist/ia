@@ -22,9 +22,16 @@
 using namespace std;
 
 AttData::AttData(Actor& attacker_, const Item& itemAttackedWith_) :
-  attacker(&attacker_), curDefender(NULL), attackResult(failSmall),
-  dmgRolls(0), dmgSides(0), dmgPlus(0), dmgRoll(0), dmg(0),
-  isIntrinsicAttack(false), isEtherealDefenderMissed(false) {
+  attacker(&attacker_),
+  curDefender(NULL),
+  attackResult(failSmall),
+  dmgRolls(0),
+  dmgSides(0),
+  dmgPlus(0),
+  dmgRoll(0),
+  dmg(0),
+  isIntrinsicAttack(false),
+  isEtherealDefenderMissed(false) {
   isIntrinsicAttack = itemAttackedWith_.getData().isIntrinsic;
 }
 
@@ -202,7 +209,7 @@ RangedAttData::RangedAttData(
     const int WPN_MOD           = wpn_.getData().rangedHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(curDefender->pos);
-    const int DIST_TO_TGT       = Utils::kingDist(
+    const int DIST_TO_TGT       = Utils::getKingDist(
                                     attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
     const ActorSpeed defSpeed = curDefender->getData().speed;
@@ -295,7 +302,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
     const int WPN_MOD           = item_.getData().missileHitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(curDefender->pos);
-    const int DIST_TO_TGT       = Utils::kingDist(
+    const int DIST_TO_TGT       = Utils::getKingDist(
                                     attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
     const ActorSpeed defSpeed = curDefender->getData().speed;
@@ -901,7 +908,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         data = new RangedAttData(
           attacker, wpn, aimPos, curPos, intendedAimLevel);
         const bool IS_WITHIN_RANGE_LMT =
-          Utils::kingDist(origin, curPos) <= wpn.effectiveRangeLimit;
+          Utils::getKingDist(origin, curPos) <= wpn.effectiveRangeLimit;
         if(
           IS_WITHIN_RANGE_LMT &&
           data->attackResult >= successSmall &&

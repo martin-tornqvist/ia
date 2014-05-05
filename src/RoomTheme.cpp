@@ -130,7 +130,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
       for(int y = room.getY0(); y <= room.getY1(); y++) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
           if(blockers[x][y] == false) {
-            FeatureFactory::spawnFeatureAt(featureId, Pos(x, y));
+            FeatureFactory::spawn(featureId, Pos(x, y));
           }
         }
       }
@@ -166,7 +166,7 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
       if(Rnd::percentile() < CHANCE_FOR_BLOODY_CHAMBER) {
 
         Pos origin(-1, -1);
-        vector<Pos> originCandidates;
+        vector<Pos> originBucket;
         for(int y = room.getY0(); y <= room.getY1(); y++) {
           for(int x = room.getX0(); x <= room.getX1(); x++) {
             if(Map::cells[x][y].featureStatic->getId() == FeatureId::altar) {
@@ -175,16 +175,15 @@ void RoomThemeMaker::makeThemeSpecificRoomModifications(Room& room) {
               x = 999;
             } else {
               if(blockers[x][y] == false) {
-                originCandidates.push_back(Pos(x, y));
+                originBucket.push_back(Pos(x, y));
               }
             }
           }
         }
-        if(originCandidates.empty() == false) {
+        if(originBucket.empty() == false) {
           if(origin.x == -1) {
-            const int ELEMENT =
-              Rnd::range(0, originCandidates.size() - 1);
-            origin = originCandidates.at(ELEMENT);
+            const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
+            origin = originBucket.at(ELEMENT);
           }
           for(int dy = -1; dy <= 1; dy++) {
             for(int dx = -1; dx <= 1; dx++) {
@@ -252,7 +251,7 @@ int RoomThemeMaker::placeThemeFeatures(Room& room) {
       return nrFeaturesPlaced;
     } else {
       trace << "RoomThemeMaker: Placing " << d->name_a << endl;
-      FeatureFactory::spawnFeatureAt(d->id, pos);
+      FeatureFactory::spawn(d->id, pos);
       featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT)++;
 
       nrFeaturesLeftToPlace--;

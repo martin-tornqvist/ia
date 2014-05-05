@@ -76,10 +76,10 @@ TEST(ConstrainValInRange) {
 }
 
 TEST(CalculateDistances) {
-  CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 3)), 1);
-  CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 4)), 2);
-  CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(1, 2)), 0);
-  CHECK_EQUAL(Utils::kingDist(Pos(10, 3), Pos(1, 4)), 9);
+  CHECK_EQUAL(Utils::getKingDist(Pos(1, 2), Pos(2, 3)), 1);
+  CHECK_EQUAL(Utils::getKingDist(Pos(1, 2), Pos(2, 4)), 2);
+  CHECK_EQUAL(Utils::getKingDist(Pos(1, 2), Pos(1, 2)), 0);
+  CHECK_EQUAL(Utils::getKingDist(Pos(10, 3), Pos(1, 4)), 9);
 }
 
 TEST(Directions) {
@@ -335,9 +335,9 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   // @ <- Player position (5, 10).
   //-----------------------------------------------------------------
 
-  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(5, 7));
-  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(5, 9));
-  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(5, 10));
+  FeatureFactory::spawn(FeatureId::floor, Pos(5, 7));
+  FeatureFactory::spawn(FeatureId::floor, Pos(5, 9));
+  FeatureFactory::spawn(FeatureId::floor, Pos(5, 10));
   Map::player->pos = Pos(5, 10);
   Pos target(5, 8);
   Item* item = ItemFactory::spawnItem(ItemId::throwingKnife);
@@ -349,10 +349,10 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   const int X0 = 5;
   const int Y0 = 7;
 
-  const FeatureId wallId  = FeatureId::stoneWall;
-  const FeatureId floorId = FeatureId::stoneFloor;
+  const FeatureId wallId  = FeatureId::wall;
+  const FeatureId floorId = FeatureId::floor;
 
-  FeatureFactory::spawnFeatureAt(floorId, Pos(X0, Y0));
+  FeatureFactory::spawn(floorId, Pos(X0, Y0));
 
   //Check wall destruction
   for(int i = 0; i < 2; i++) {
@@ -382,7 +382,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   }
 
   //Check damage to actors
-  Actor* a1 = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
+  Actor* a1 = ActorFactory::spawn(actor_rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
   CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
 
@@ -390,10 +390,10 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   const int NR_CORPSES = 3;
   Actor* corpses[NR_CORPSES];
   for(int i = 0; i < NR_CORPSES; i++) {
-    corpses[i] = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
+    corpses[i] = ActorFactory::spawn(actor_rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
-  a1 = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
+  a1 = ActorFactory::spawn(actor_rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
   for(int i = 0; i < NR_CORPSES; i++) {
     CHECK_EQUAL(int(ActorDeadState::destroyed), int(corpses[i]->deadState));
@@ -401,10 +401,10 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
 
   //Check explosion applying Burning to living and dead actors
-  a1        = ActorFactory::spawnActor(actor_rat, Pos(X0 - 1, Y0));
-  Actor* a2 = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
+  a1        = ActorFactory::spawn(actor_rat, Pos(X0 - 1, Y0));
+  Actor* a2 = ActorFactory::spawn(actor_rat, Pos(X0 + 1, Y0));
   for(int i = 0; i < NR_CORPSES; i++) {
-    corpses[i] = ActorFactory::spawnActor(actor_rat, Pos(X0 + 1, Y0));
+    corpses[i] = ActorFactory::spawn(actor_rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
@@ -423,7 +423,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //North-west edge
   int x = 1;
   int y = 1;
-  FeatureFactory::spawnFeatureAt(floorId, Pos(x, y));
+  FeatureFactory::spawn(floorId, Pos(x, y));
   Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
   CHECK(Map::cells[x + 1][y    ].featureStatic->getId() != wallId);
   CHECK(Map::cells[x    ][y + 1].featureStatic->getId() != wallId);
@@ -433,7 +433,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //South-east edge
   x = MAP_W - 2;
   y = MAP_H - 2;
-  FeatureFactory::spawnFeatureAt(floorId, Pos(x, y));
+  FeatureFactory::spawn(floorId, Pos(x, y));
   Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
   CHECK(Map::cells[x - 1][y    ].featureStatic->getId() != wallId);
   CHECK(Map::cells[x    ][y - 1].featureStatic->getId() != wallId);
@@ -453,7 +453,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   const Pos posR(2, 4);
 
   //Spawn left floor cell
-  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, posL);
+  FeatureFactory::spawn(FeatureId::floor, posL);
 
   //Conditions for finished test
   bool isTestedStuck              = false;
@@ -466,10 +466,10 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     isTestedLooseWebDestroyed == false) {
 
     //Spawn right floor cell
-    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, posR);
+    FeatureFactory::spawn(FeatureId::floor, posR);
 
     //Spawn a monster that can get stuck in the web
-    Actor* const actor = ActorFactory::spawnActor(actor_zombie, posL);
+    Actor* const actor = ActorFactory::spawn(actor_zombie, posL);
     Monster* const monster = dynamic_cast<Monster*>(actor);
 
     //Create a spider web in the right cell
@@ -479,7 +479,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
       FeatureData::getData(mimicId);
     TrapSpawnData* const trapSpawnData = new TrapSpawnData(
       mimicData, trap_spiderWeb);
-    FeatureFactory::spawnFeatureAt(FeatureId::trap, posR, trapSpawnData);
+    FeatureFactory::spawn(FeatureId::trap, posR, trapSpawnData);
 
     //Move the monster into the trap, and back again
     monster->awareOfPlayerCounter_ = INT_MAX; // > 0 req. for triggering trap
@@ -495,7 +495,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     } else if(monster->pos == posL) {
       const FeatureId featureId =
         Map::cells[posR.x][posR.y].featureStatic->getId();
-      if(featureId == FeatureId::stoneFloor) {
+      if(featureId == FeatureId::floor) {
         isTestedLooseWebDestroyed = true;
       } else {
         isTestedLooseWebIntact = true;
@@ -699,13 +699,13 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 
   for(int y = roomArea1.x0y0.y; y <= roomArea1.x1y1.y; y++) {
     for(int x = roomArea1.x0y0.x; x <= roomArea1.x1y1.x; x++) {
-      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, y));
+      FeatureFactory::spawn(FeatureId::floor, Pos(x, y));
     }
   }
 
   for(int y = roomArea2.x0y0.y; y <= roomArea2.x1y1.y; y++) {
     for(int x = roomArea2.x0y0.x; x <= roomArea2.x1y1.x; x++) {
-      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, y));
+      FeatureFactory::spawn(FeatureId::floor, Pos(x, y));
     }
   }
 
@@ -732,7 +732,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #...#
 //  // #####
 //  for(int x = 3; x <= 5; x++) {
-//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, 7));
+//    FeatureFactory::spawn(FeatureId::floor, Pos(x, 7));
 //  }
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[2][7]));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[3][7]));
@@ -743,17 +743,17 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #####
 //  // #.#.#
 //  // #####
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneWall,  Pos(4, 7));
+//  FeatureFactory::spawn(FeatureId::wall,  Pos(4, 7));
 //  CHECK_EQUAL(false,  CellPred::Corridor().check(Map::cells[4][7]));
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 7));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(4, 7));
 //
 //  //  ###
 //  // ##.##
 //  // #...#
 //  // ##.##
 //  //  ###
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 6));
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 8));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(4, 6));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(4, 8));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[4][7]));
 //
 //  // ###
@@ -762,7 +762,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #.#
 //  // ###
 //  for(int y = 6; y <= 8; y++) {
-//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(20, y));
+//    FeatureFactory::spawn(FeatureId::floor, Pos(20, y));
 //  }
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][5]));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][6]));
@@ -775,27 +775,27 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // ###
 //  // #.#
 //  // ###
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneWall,  Pos(20, 7));
+//  FeatureFactory::spawn(FeatureId::wall,  Pos(20, 7));
 //  CHECK_EQUAL(false,  CellPred::Corridor().check(Map::cells[20][7]));
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(20, 7));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(20, 7));
 //
 //  //  ###
 //  // ##.##
 //  // #...#
 //  // ##.##
 //  //  ###
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(19, 7));
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(21, 7));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(19, 7));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(21, 7));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][8]));
 //
 //  // ...
 //  // #.#
 //  // ...
 //  for(int x = 30; x <= 32; x++) {
-//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, 7));
-//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, 9));
+//    FeatureFactory::spawn(FeatureId::floor, Pos(x, 7));
+//    FeatureFactory::spawn(FeatureId::floor, Pos(x, 9));
 //  }
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(31, 8));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(31, 8));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[31][7]));
 //  CHECK_EQUAL(true,  CellPred::Corridor().check(Map::cells[31][8]));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[31][9]));
@@ -804,10 +804,10 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // ...
 //  // .#.
 //  for(int y = 17; y <= 19; y++) {
-//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(30, y));
-//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(32, y));
+//    FeatureFactory::spawn(FeatureId::floor, Pos(30, y));
+//    FeatureFactory::spawn(FeatureId::floor, Pos(32, y));
 //  }
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(31, 18));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(31, 18));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[30][18]));
 //  CHECK_EQUAL(true,  CellPred::Corridor().check(Map::cells[31][18]));
 //  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[32][18]));
@@ -819,7 +819,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #...#
 //  // #####
 //  for(int x = 3; x <= 5; x++) {
-//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(x, 7));
+//    FeatureFactory::spawn(FeatureId::floor, Pos(x, 7));
 //  }
 //  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[2][7]));
 //  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[3][7]));
@@ -830,8 +830,8 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // ##.
 //  // #..
 //  // ##.
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 6));
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(4, 8));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(4, 6));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(4, 8));
 //  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[3][7]));
 //
 //  // ###
@@ -840,7 +840,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // #.#
 //  // ###
 //  for(int y = 6; y <= 8; y++) {
-//    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(20, y));
+//    FeatureFactory::spawn(FeatureId::floor, Pos(20, y));
 //  }
 //  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[20][5]));
 //  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[20][6]));
@@ -851,14 +851,14 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 //  // ###
 //  // #.#
 //  // ...
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(19, 7));
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(21, 7));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(19, 7));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(21, 7));
 //  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[20][6]));
 //
 //  // ###
 //  // #.#
 //  // ###
-//  FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, Pos(20, 12));
+//  FeatureFactory::spawn(FeatureId::floor, Pos(20, 12));
 //  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[20][12]));
 //}
 

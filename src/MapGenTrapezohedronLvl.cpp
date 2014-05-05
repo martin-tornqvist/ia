@@ -8,39 +8,50 @@
 #include "MapParsing.h"
 #include "Utils.h"
 
-bool MapGenTrapezohedronLvl::run_() {
+using namespace std;
+
+namespace MapGen {
+
+namespace TrapezohedronLvl {
+
+bool run() {
   Map::resetMap();
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      FeatureFactory::spawnFeatureAt(FeatureId::stoneWall, Pos(x, y));
-      dynamic_cast<Wall*>(
-        Map::cells[x][y].featureStatic)->wallType = wall_cave;
+      Wall* const wall =
+        dynamic_cast<Wall*>(FeatureFactory::spawn(FeatureId::wall, Pos(x, y)));
+      wall->wallType    = WallType::cave;
+      wall->isMossGrown = false;
     }
   }
 
-  makePathByRandomWalk(
-    Map::player->pos.x, Map::player->pos.y, 150, FeatureId::caveFloor, true);
-  makePathByRandomWalk(
-    MAP_W_HALF, MAP_H_HALF, 800, FeatureId::caveFloor, true);
-  makeStraightPathByPathfinder(
-    Map::player->pos, Pos(MAP_W_HALF, MAP_H_HALF),
-    FeatureId::caveFloor, false, true);
+  const Pos& origin       = Map::player->pos;
+  const Pos  mapCenter    = Pos(MAP_W_HALF, MAP_H_HALF);
+  const FeatureId floorId = FeatureId::caveFloor;
+
+  MapGenUtils::digByRandomWalk(origin, 150, floorId, true);
+  MapGenUtils::digByRandomWalk(mapCenter, 800, floorId, true);
+  MapGenUtils::digWithPathfinder(origin, mapCenter, floorId, false, true);
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
-  vector<Pos> spawnCandidates;
-  spawnCandidates.resize(0);
+  vector<Pos> itemPosBucket;
+  itemPosBucket.resize(0);
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(blockers[x][y] == false && Pos(x, y) != Map::player->pos) {
-        spawnCandidates.push_back(Pos(x, y));
+      if(blockers[x][y] == false && Pos(x, y) != origin) {
+        itemPosBucket.push_back(Pos(x, y));
       }
     }
   }
-  const int ELEMENT = Rnd::range(0, spawnCandidates.size() - 1);
-  ItemFactory::spawnItemOnMap(
-    ItemId::trapezohedron, spawnCandidates.at(ELEMENT));
 
+  const int ELEMENT = Rnd::range(0, itemPosBucket.size() - 1);
+  ItemFactory::spawnItemOnMap(ItemId::trapezohedron,
+                              itemPosBucket.at(ELEMENT));
   return true;
 }
+
+} //TrapezohedronLvl
+
+} //MapGen

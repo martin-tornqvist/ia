@@ -8,15 +8,9 @@
 
 struct Region;
 
-enum HorizontalVertical {
-  horizontal,
-  vertical
-};
+enum HorizontalVertical {horizontal, vertical};
 
-enum RoomReshapeType {
-  roomReshape_trimCorners,
-  roomReshape_pillarsRandom
-};
+enum class RoomReshapeType {trimCorners, pillarsRandom};
 
 struct Room {
 public:
@@ -41,132 +35,14 @@ private:
   Rect dims_;
 };
 
-class MapGenUtilCorridorBuilder {
-public:
-  MapGenUtilCorridorBuilder() {}
-  ~MapGenUtilCorridorBuilder() {}
-
-  void buildZCorridorBetweenRooms(
-    const Room& room1, const Room& room2, Dir cardinalDirToTravel,
-    bool doorPosCandidates[MAP_W][MAP_H] = NULL);
-
-private:
-
-};
-
-class MapGen {
-public:
-  MapGen() {}
-  ~MapGen() {}
-
-  inline bool run() {return run_();}
-
-protected:
-  virtual bool run_() = 0;
-
-  void buildFromTemplate(const Pos& pos, MapTemplate* t);
-  void buildFromTemplate(const Pos& pos, MapTemplateId templateId);
-
-  FeatureId backup[MAP_W][MAP_H];
-  void backupMap();
-  void restoreMap();
-
-  void makePathByRandomWalk(
-    int originX, int originY, int len, FeatureId featureToMake,
-    const bool TUNNEL_THROUGH_ANY_FEATURE, const bool ONLY_STRAIGHT = true,
-    const Pos& x0y0Lim = Pos(1, 1),
-    const Pos& x1y1Lim = Pos(MAP_W - 2, MAP_H - 2));
-
-  void makeStraightPathByPathfinder(
-    const Pos& origin, const Pos& target, FeatureId feature, const bool SMOOTH,
-    const bool TUNNEL_THROUGH_ANY_FEATURE);
-
-
-};
-
-class MapGenBsp : public MapGen {
-public:
-  MapGenBsp() : MapGen() {}
-  virtual ~MapGenBsp() {}
-
-private:
-  bool run_();
-
-  void coverAreaWithFeature(const Rect& area, const FeatureId feature);
-
-  int getNrStepsInDirUntilWallFound(Pos c, const Dir dir) const;
-
-  bool isAllRoomsConnected();
-
-  Room* buildRoom(const Rect& roomPoss);
-
-  bool roomCells[MAP_W][MAP_H]; //Used for help building the map
-  bool regionsToBuildCave[3][3];
-
-  void makeCrumbleRoom(const Rect& roomAreaIncludingWalls,
-                       const Pos& proxEventPos);
-
-  void connectRegions(Region* regions[3][3]);
-  void buildAuxRooms(Region* regions[3][3]);
-  bool tryPlaceAuxRoom(
-    const int X0, const int Y0, const int W, const int H,
-    bool blockers[MAP_W][MAP_H], const Pos& doorPos);
-
-  void buildMergedRegionsAndRooms(
-    Region* regions[3][3], const int SPLIT_X1, const int SPLIT_X2,
-    const int SPLIT_Y1, const int SPLIT_Y2);
-
-  void buildCaves(Region* regions[3][3]);
-
-  void placeDoorAtPosIfSuitable(const Pos& pos);
-
-  void reshapeRoom(const Room& room);
-
-  void buildRoomsInRooms();
-
-  void postProcessFillDeadEnds();
-
-  bool globalDoorPosCandidates[MAP_W][MAP_H];
-
-//  void findEdgesOfRoom(const Rect roomPoss, std::vector<Pos>& vectorRef);
-
-  bool isRegionFoundInCardinalDir(
-    const Pos& pos, bool region[MAP_W][MAP_H]) const;
-
-  bool isAreaFree(
-    const Rect& area, bool blockingCells[MAP_W][MAP_H]);
-  bool isAreaAndBorderFree(
-    const Rect& areaWithBorder, bool blockingCells[MAP_W][MAP_H]);
-  bool isAreaFree(
-    const int X0, const int Y0, const int X1, const int Y1,
-    bool blockingCells[MAP_W][MAP_H]);
-
-  void decorate();
-
-  void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) const;
-  Pos placeStairs();
-  void movePlayerToNearestAllowedPos();
-
-//  void makeLevers();
-//  void spawnLeverAdaptAndLinkDoor(const Pos& leverPos, Door& door);
-
-  void revealAllDoorsBetweenPlayerAndStairs(const Pos& stairsPos);
-
-//  void buildNaturalArea(Region* regions[3][3]);
-//  void makeRiver(Region* regions[3][3]);
-
-//  std::vector<Room*> rooms_;
-  void deleteAndRemoveRoomFromList(Room* const room);
-};
-
 struct Region {
 public:
   Region(const Pos& x0y0, const Pos& x1y1);
   Region();
   ~Region();
 
-  Rect getRandomPossForRoom() const;
-  Rect getRegionPoss() const {return Rect(x0y0_, x1y1_);}
+  Rect getRandomRectForRoom() const;
+  Rect getRegionRect() const {return Rect(x0y0_, x1y1_);}
 
   bool isRegionNeighbour(const Region& other);
 
@@ -186,45 +62,68 @@ private:
   Pos x0y0_, x1y1_;
 };
 
-class MapGenIntroForest : public MapGen {
-public:
-  MapGenIntroForest() : MapGen() {}
-  ~MapGenIntroForest() {}
+namespace MapGenUtils {
 
-private:
-  bool run_();
+void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
+                                Dir cardinalDirToTravel,
+                                bool doorPosBucket[MAP_W][MAP_H] = NULL);
 
-  void buildForestLimit();
-  void buildForestOuterTreeline();
-  void buildForestTreePatch();
-  void buildForestTrees(const Pos& stairsPos);
-};
+void backupMap();
+void restoreMap();
 
-class MapGenEgyptTomb : public MapGen {
-public:
-  MapGenEgyptTomb() : MapGen() {}
-  ~MapGenEgyptTomb() {}
+void buildFromTemplate(const Pos& pos, MapTemplate* t);
+void buildFromTemplate(const Pos& pos, MapTemplateId templateId);
 
-private:
-  bool run_();
-};
+void digByRandomWalk(const Pos& origin, int len, FeatureId featureToMake,
+                     const bool DIG_THROUGH_ANY_FEATURE,
+                     const bool ONLY_STRAIGHT = true,
+                     const Pos& x0y0Lim = Pos(1, 1),
+                     const Pos& x1y1Lim = Pos(MAP_W - 2, MAP_H - 2));
 
-class MapGenCaveLvl : public MapGen {
-public:
-  MapGenCaveLvl() : MapGen() {}
-  ~MapGenCaveLvl() {}
+void digWithPathfinder(const Pos& origin, const Pos& target,
+                       FeatureId feature, const bool SMOOTH,
+                       const bool DIG_THROUGH_ANY_FEATURE);
 
-private:
-  bool run_();
-};
+} //MapGenUtils
 
-class MapGenTrapezohedronLvl : public MapGen {
-public:
-  MapGenTrapezohedronLvl() : MapGen() {}
-  ~MapGenTrapezohedronLvl() {}
+namespace MapGen {
 
-private:
-  bool run_();
-};
+namespace Bsp {
+
+bool run();
+
+} //Bsp
+
+namespace IntroForest {
+
+bool run();
+
+//private:
+//  void buildForestLimit();
+//  void buildForestOuterTreeline();
+//  void buildForestTreePatch();
+//  void buildForestTrees(const Pos& stairsPos);
+
+} //IntroForest
+
+namespace EgyptTomb {
+
+bool run();
+
+} //EgyptTomb
+
+namespace CaveLvl {
+
+bool run();
+
+} //CaveLvl
+
+namespace TrapezohedronLvl {
+
+bool run();
+
+} //TrapezohedronLvl
+
+} //MapGen
 
 #endif

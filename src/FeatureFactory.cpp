@@ -36,8 +36,8 @@ void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos) {
 
 } //namespace
 
-Feature* spawnFeatureAt(const FeatureId id, const Pos pos,
-                        FeatureSpawnData* spawnData) {
+Feature* spawn(const FeatureId id, const Pos pos,
+               FeatureSpawnData* spawnData) {
   const FeatureDataT* const data = FeatureData::getData(id);
 
   //General (simple) features
@@ -195,7 +195,7 @@ Feature* spawnFeatureAt(const FeatureId id, const Pos pos,
       replaceStaticFeatureAt(stairs, pos);
       return stairs;
     }
-    case FeatureId::stoneWall: {
+    case FeatureId::wall: {
       assert(spawnData == NULL);
       Wall* wall = new Wall(id, pos);
       replaceStaticFeatureAt(wall, pos);

@@ -6,14 +6,14 @@ void MapPatterns::setPositionsInArea(
   const Rect& area, vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
 
   trace << "MapPatterns::setPositionsInArea()..." << endl;
-  vector<Pos> positionCandidates;
-  positionCandidates.resize(0);
+  vector<Pos> posBucket;
+  posBucket.resize(0);
 
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
     for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
       FeatureStatic* const f = Map::cells[x][y].featureStatic;
       if(f->canMoveCmn() && f->canHaveStaticFeature()) {
-        positionCandidates.push_back(Pos(x, y));
+        posBucket.push_back(Pos(x, y));
       }
     }
   }
@@ -21,7 +21,7 @@ void MapPatterns::setPositionsInArea(
   nextToWalls.resize(0);
   awayFromWalls.resize(0);
 
-  for(Pos & pos : positionCandidates) {
+  for(Pos & pos : posBucket) {
     const int NR_BLK_R = getWalkBlockersInDir(Dir::right, pos);
     const int NR_BLK_D = getWalkBlockersInDir(Dir::down, pos);
     const int NR_BLK_L = getWalkBlockersInDir(Dir::left, pos);

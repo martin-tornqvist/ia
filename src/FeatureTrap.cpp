@@ -211,9 +211,7 @@ void Trap::disarm() {
   }
   GameTime::actorDidAct();
 
-  if(IS_DISARMED) {
-    FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, pos_);
-  }
+  if(IS_DISARMED) {FeatureFactory::spawn(FeatureId::floor, pos_);}
 }
 
 void Trap::triggerTrap(Actor& actor) {
@@ -680,21 +678,21 @@ void TrapSummonMonster::trigger(
   }
 
   trace << "TrapSummonMonster: Finding summon candidates" << endl;
-  vector<ActorId> summonCandidates;
+  vector<ActorId> summonBucket;
   for(int i = 1; i < endOfActorIds; i++) {
     const ActorDataT& data = ActorData::data[i];
     if(data.canBeSummoned && data.spawnMinDLVL <= Map::dlvl + 3) {
-      summonCandidates.push_back(ActorId(i));
+      summonBucket.push_back(ActorId(i));
     }
   }
-  const int NR_ELEMENTS = summonCandidates.size();
+  const int NR_ELEMENTS = summonBucket.size();
   trace << "TrapSummonMonster: Nr candidates: " << NR_ELEMENTS << endl;
 
   if(NR_ELEMENTS == 0) {
     trace << "TrapSummonMonster: No eligible candidates found" << endl;
   } else {
     const int ELEMENT = Rnd::range(0, NR_ELEMENTS - 1);
-    const ActorId actorIdToSummon = summonCandidates.at(ELEMENT);
+    const ActorId actorIdToSummon = summonBucket.at(ELEMENT);
     trace << "TrapSummonMonster: Actor id: " << actorIdToSummon << endl;
 
     ActorFactory::summonMonsters(
@@ -719,8 +717,7 @@ void TrapSmoke::trigger(
     if(CAN_SEE) {
       Log::addMsg("Suddenly the air is thick with smoke!");
     } else {
-      Log::addMsg(
-        "A mechanism triggers, the air is thick with smoke!");
+      Log::addMsg("A mechanism triggers, the air is thick with smoke!");
     }
   } else {
     if(CAN_PLAYER_SEE_ACTOR) {
@@ -783,7 +780,7 @@ void TrapSpiderWeb::trigger(
         Log::addMsg(
           "I cut down a sticky mass of threads with my machete.");
       }
-      FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, pos_);
+      FeatureFactory::spawn(FeatureId::floor, pos_);
     } else {
       if(CAN_SEE) {
         Log::addMsg("I am entangled in a spider web!");
@@ -837,7 +834,7 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
           (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {
           Log::addMsg("The web is destroyed.");
         }
-        FeatureFactory::spawnFeatureAt(FeatureId::stoneFloor, pos_);
+        FeatureFactory::spawn(FeatureId::floor, pos_);
       }
     } else {
       if(IS_PLAYER) {

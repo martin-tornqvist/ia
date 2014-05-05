@@ -53,7 +53,7 @@ Actor* makeActorFromId(const ActorId id) {
     case actor_shadow:              return new Shadow();
     case actor_byakhee:             return new Byakhee();
     case actor_giantMantis:         return new GiantMantis();
-    case actor_giantLocust:         return new GiantLocust();
+    case actor_locust:              return new GiantLocust();
     case actor_mummy:               return new Mummy();
     case actor_khephren:            return new Khephren();
     case actor_nitokris:            return new MummyUnique();
@@ -84,7 +84,7 @@ Actor* makeActorFromId(const ActorId id) {
 
 } //namespace
 
-Actor* spawnActor(const ActorId id, const Pos& pos) {
+Actor* spawn(const ActorId id, const Pos& pos) {
   Actor* const actor = makeActorFromId(id);
 
   actor->place(pos, ActorData::data[id]);
@@ -135,7 +135,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
     const Pos&      pos = freeCells.at(i);
     const ActorId id  = monsterIds.at(i);
 
-    Actor*   const actor    = spawnActor(id, pos);
+    Actor*   const actor    = spawn(id, pos);
     Monster* const monster  = dynamic_cast<Monster*>(actor);
 
     if(monstersRet != NULL) {

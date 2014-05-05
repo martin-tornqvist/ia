@@ -7,17 +7,12 @@
 
 #include "FeatureData.h"
 
-enum MapTemplateId {
-  mapTemplate_church,
-  mapTemplate_pharaohsChamber
-};
+enum class MapTemplateId {church, pharaohsChamber};
 
 struct MapTemplate {
-  MapTemplate(MapTemplateId templateId_) :
-    templateId(templateId_) {}
+  MapTemplate(MapTemplateId templateId_) : templateId(templateId_) {}
 
-  MapTemplate() {
-  }
+  MapTemplate() {}
 
   std::vector< std::vector<FeatureId> > featureVector;
 
@@ -27,9 +22,7 @@ struct MapTemplate {
 
 class MapTemplateHandler {
 public:
-  MapTemplateHandler() {
-    initTemplates();
-  }
+  MapTemplateHandler() {initTemplates();}
 
   MapTemplate* getTemplate(MapTemplateId templateId);
 
@@ -38,8 +31,7 @@ private:
 
   struct CharToIdTranslation {
     CharToIdTranslation(char cha_, FeatureId featureId) :
-      cha(cha_), featureId_(featureId) {
-    }
+      cha(cha_), featureId_(featureId) {}
 
     CharToIdTranslation() {}
 

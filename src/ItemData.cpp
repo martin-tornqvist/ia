@@ -964,7 +964,7 @@ void initDataList() {
   d = new ItemDataT(ItemId::giantLocustBite);
   resetData(d, ItemType::meleeWpnIntr);
   d->meleeAttMsgs = ItemAttMsgs("", "bites me");
-  setDmgFromMonsterData(*d, ActorData::data[actor_giantLocust]);
+  setDmgFromMonsterData(*d, ActorData::data[actor_locust]);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::mummyMaul);

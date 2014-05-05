@@ -8,9 +8,9 @@ class Actor;
 
 namespace ItemPickup {
 
-  void tryPick();
+void tryPick();
 
-  void tryUnloadWeaponOrPickupAmmoFromGround();
+void tryUnloadWeaponOrPickupAmmoFromGround();
 
 } //ItemPickup
 

@@ -61,15 +61,14 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   if(DYNAMITE_FUSE != -1) {
     Log::addMsg("I throw a lit dynamite stick.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      FeatureFactory::spawnFeatureAt(
-        FeatureId::litDynamite, path.back(),
-        new DynamiteSpawnData(DYNAMITE_FUSE));
+      FeatureFactory::spawn(FeatureId::litDynamite, path.back(),
+                            new DynamiteSpawnData(DYNAMITE_FUSE));
     }
   } else if(FLARE_FUSE != -1) {
     Log::addMsg("I throw a lit flare.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      FeatureFactory::spawnFeatureAt(
-        FeatureId::litFlare, path.back(), new DynamiteSpawnData(FLARE_FUSE));
+      FeatureFactory::spawn(FeatureId::litFlare, path.back(),
+                            new DynamiteSpawnData(FLARE_FUSE));
     }
     GameTime::updateLightMap();
     Map::player->updateFov();

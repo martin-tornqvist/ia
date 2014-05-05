@@ -218,7 +218,7 @@ Item* copyItem(Item* oldItem) {
 
 Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
                                 const bool ALLOW_POTIONS) {
-  vector<ItemId> itemCandidates;
+  vector<ItemId> itemBucket;
 
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     const ItemDataT* const d = ItemData::data[i];
@@ -226,13 +226,13 @@ Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
       d->isIntrinsic == false &&
       ((d->isScroll && ALLOW_SCROLLS) ||
        (d->isPotion && ALLOW_POTIONS))) {
-      itemCandidates.push_back(static_cast<ItemId>(i));
+      itemBucket.push_back(static_cast<ItemId>(i));
     }
   }
 
-  if(itemCandidates.size() > 0) {
-    const int ELEMENT = Rnd::range(0, itemCandidates.size() - 1);
-    return spawnItem(itemCandidates.at(ELEMENT));
+  if(itemBucket.empty() == false) {
+    const int ELEMENT = Rnd::range(0, itemBucket.size() - 1);
+    return spawnItem(itemBucket.at(ELEMENT));
   }
 
   return NULL;

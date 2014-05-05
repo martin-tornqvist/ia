@@ -49,7 +49,7 @@ bool runDropScreen(const int GLOBAL_ELEMENT_NR) {
     Renderer::updateScreen();
     const Pos nrQueryPos(20 + nrStr.size(), 0);
     const int NR_TO_DROP = Query::number(nrQueryPos, clrWhiteHigh, 0, 3,
-                           item->nrItems, false);
+                                         item->nrItems, false);
     if(NR_TO_DROP <= 0) {
       trace << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
       return false;

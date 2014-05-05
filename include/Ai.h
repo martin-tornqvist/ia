@@ -35,7 +35,7 @@ namespace Info {
 bool lookBecomePlayerAware(Monster& monster);
 
 void setPathToLairIfNoLos(Monster& monster, std::vector<Pos>& path,
-                                const Pos& lairCell);
+                          const Pos& lairCell);
 
 void setPathToLeaderIfNoLosToleader(Monster& monster, std::vector<Pos>& path);
 

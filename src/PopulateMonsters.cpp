@@ -49,16 +49,13 @@ void spawnGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
                           bool blockers[MAP_W][MAP_H],
                           const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
                           const bool IS_ROAMING_ALLOWED) {
-  vector<ActorId> idCandidates;
+  vector<ActorId> idBucket;
   makeListOfMonstersEligibleForAutoSpawning(
-    NR_LVLS_OUT_OF_DEPTH_ALLOWED, idCandidates);
+    NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
-  if(idCandidates.empty() == false) {
-    const ActorId id =
-      idCandidates.at(Rnd::range(0, idCandidates.size() - 1));
-
-    spawnGroupAt(id, sortedFreeCellsVector, blockers,
-                 IS_ROAMING_ALLOWED);
+  if(idBucket.empty() == false) {
+    const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
+    spawnGroupAt(id, sortedFreeCellsVector, blockers, IS_ROAMING_ALLOWED);
   }
 }
 
@@ -68,12 +65,12 @@ bool spawnGroupOfRandomNativeToRoomThemeAt(
 
   trace << "PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt()" << endl;
   const int NR_LEVELS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
-  vector<ActorId> idCandidates;
+  vector<ActorId> idBucket;
   makeListOfMonstersEligibleForAutoSpawning(
-    NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idCandidates);
+    NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
-  for(size_t i = 0; i < idCandidates.size(); i++) {
-    const ActorDataT& d = ActorData::data[idCandidates.at(i)];
+  for(size_t i = 0; i < idBucket.size(); i++) {
+    const ActorDataT& d = ActorData::data[idBucket.at(i)];
     bool isMonsterNativeToRoom = false;
     for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
       if(d.nativeRooms.at(iNative) == roomTheme) {
@@ -82,18 +79,18 @@ bool spawnGroupOfRandomNativeToRoomThemeAt(
       }
     }
     if(isMonsterNativeToRoom == false) {
-      idCandidates.erase(idCandidates.begin() + i);
+      idBucket.erase(idBucket.begin() + i);
       i--;
     }
   }
 
-  if(idCandidates.empty()) {
+  if(idBucket.empty()) {
     trace << "PopulateMonsters: Found no valid monsters to spawn "
           "at room theme (" + toStr(int(roomTheme)) + ")" << endl;
     return false;
   } else {
-    const int ELEMENT = Rnd::range(0, idCandidates.size() - 1);
-    const ActorId id = idCandidates.at(ELEMENT);
+    const int ELEMENT = Rnd::range(0, idBucket.size() - 1);
+    const ActorId id = idBucket.at(ELEMENT);
     spawnGroupAt(id, sortedFreeCellsVector, blockers,
                  IS_ROAMING_ALLOWED);
     return true;
@@ -170,16 +167,16 @@ void populateCaveLevel() const {
   }
 
   for(int i = 0; i < NR_GROUPS_ALLOWED; i++) {
-    vector<Pos> originCandidates;
+    vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(blockers[x][y] == false) {
-          originCandidates.push_back(Pos(x, y));
+          originBucket.push_back(Pos(x, y));
         }
       }
     }
-    const int ELEMENT = Rnd::range(0, originCandidates.size() - 1);
-    const Pos origin = originCandidates.at(ELEMENT);
+    const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
+    const Pos origin = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
     if(sortedFreeCellsVector.empty() == false) {
@@ -210,16 +207,14 @@ void populateIntroLevel() {
   }
 
   for(int i = 0; i < NR_GROUPS_ALLOWED; i++) {
-    vector<Pos> originCandidates;
+    vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
-        if(blockers[x][y] == false) {
-          originCandidates.push_back(Pos(x, y));
-        }
+        if(blockers[x][y] == false) {originBucket.push_back(Pos(x, y));}
       }
     }
-    const int ELEMENT = Rnd::range(0, originCandidates.size() - 1);
-    const Pos origin = originCandidates.at(ELEMENT);
+    const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
+    const Pos origin = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
     if(sortedFreeCellsVector.empty() == false) {
@@ -261,26 +256,26 @@ void populateRoomAndCorridorLevel() const {
       const int MAX_NR_GROUPS_IN_ROOM = 2;
       for(int i = 0; i < MAX_NR_GROUPS_IN_ROOM; i++) {
         //Randomly pick a free position inside the room
-        vector<Pos> originCandidates;
+        vector<Pos> originBucket;
         for(int y = room->getY0(); y <= room->getY1(); y++) {
           for(int x = room->getX0(); x <= room->getX1(); x++) {
             if(
               blockers[x][y] == false &&
               RoomThemeMaker::themeMap[x][y] == room->roomTheme) {
-              originCandidates.push_back(Pos(x, y));
+              originBucket.push_back(Pos(x, y));
             }
           }
         }
 
         //If room is too full (due to spawned monsters and features),
         //stop spawning in this room
-        const int NR_ORIGIN_CANDIDATES = originCandidates.size();
+        const int NR_ORIGIN_CANDIDATES = originBucket.size();
         if(NR_ORIGIN_CANDIDATES < (NR_CELLS_IN_ROOM / 3)) {break;}
 
         //Spawn monsters in room
         if(NR_ORIGIN_CANDIDATES > 0) {
           const int ELEMENT = Rnd::range(0, NR_ORIGIN_CANDIDATES - 1);
-          const Pos& origin = originCandidates.at(ELEMENT);
+          const Pos& origin = originBucket.at(ELEMENT);
           vector<Pos> sortedFreeCellsVector;
           makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
 
@@ -307,18 +302,18 @@ void populateRoomAndCorridorLevel() const {
   //Second, place groups randomly in plain-themed areas until
   //no more groups to place
   while(nrGroupsSpawned < NR_GROUPS_ALLOWED_ON_MAP) {
-    vector<Pos> originCandidates;
+    vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
           blockers[x][y] == false &&
           RoomThemeMaker::themeMap[x][y] == RoomThemeId::plain) {
-          originCandidates.push_back(Pos(x, y));
+          originBucket.push_back(Pos(x, y));
         }
       }
     }
-    const int ELEMENT = Rnd::range(0, originCandidates.size() - 1);
-    const Pos origin  = originCandidates.at(ELEMENT);
+    const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
+    const Pos origin  = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
     if(spawnGroupOfRandomNativeToRoomThemeAt(
@@ -349,7 +344,7 @@ void spawnGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
   for(int i = 0; i < NR_CAN_BE_SPAWNED; i++) {
     const Pos& pos = sortedFreeCellsVector.at(i);
 
-    Actor* const actor = ActorFactory::spawnActor(id, pos);
+    Actor* const actor = ActorFactory::spawn(id, pos);
     Monster* const monster = dynamic_cast<Monster*>(actor);
     monster->isRoamingAllowed_ = IS_ROAMING_ALLOWED;
 

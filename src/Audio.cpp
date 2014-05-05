@@ -21,75 +21,75 @@ int curChannel    = 0;
 int timeAtLastAmb = -1;
 
 SfxId getAmbSfxSuitableForDlvl() {
-  vector<SfxId> sfxCandidates;
-  sfxCandidates.resize(0);
+  vector<SfxId> sfxBucket;
+  sfxBucket.resize(0);
 
   if(Map::dlvl >= 1 && Map::dlvl < LAST_ROOM_AND_CORRIDOR_LEVEL) {
-    sfxCandidates.push_back(SfxId::amb002);
-    sfxCandidates.push_back(SfxId::amb003);
-    sfxCandidates.push_back(SfxId::amb004);
-    sfxCandidates.push_back(SfxId::amb005);
-    sfxCandidates.push_back(SfxId::amb006);
-    sfxCandidates.push_back(SfxId::amb007);
-    sfxCandidates.push_back(SfxId::amb008);
-    sfxCandidates.push_back(SfxId::amb009);
-    sfxCandidates.push_back(SfxId::amb010);
-    sfxCandidates.push_back(SfxId::amb011);
-    sfxCandidates.push_back(SfxId::amb012);
-    sfxCandidates.push_back(SfxId::amb013);
-    sfxCandidates.push_back(SfxId::amb014);
-    sfxCandidates.push_back(SfxId::amb015);
-    sfxCandidates.push_back(SfxId::amb017);
-    sfxCandidates.push_back(SfxId::amb018);
-    sfxCandidates.push_back(SfxId::amb019);
-    sfxCandidates.push_back(SfxId::amb021);
-    sfxCandidates.push_back(SfxId::amb022);
-    sfxCandidates.push_back(SfxId::amb023);
-    sfxCandidates.push_back(SfxId::amb024);
-    sfxCandidates.push_back(SfxId::amb026);
-    sfxCandidates.push_back(SfxId::amb027);
-    sfxCandidates.push_back(SfxId::amb028);
-    sfxCandidates.push_back(SfxId::amb031);
-    sfxCandidates.push_back(SfxId::amb033);
-    sfxCandidates.push_back(SfxId::amb034);
-    sfxCandidates.push_back(SfxId::amb035);
-    sfxCandidates.push_back(SfxId::amb036);
-    sfxCandidates.push_back(SfxId::amb037);
+    sfxBucket.push_back(SfxId::amb002);
+    sfxBucket.push_back(SfxId::amb003);
+    sfxBucket.push_back(SfxId::amb004);
+    sfxBucket.push_back(SfxId::amb005);
+    sfxBucket.push_back(SfxId::amb006);
+    sfxBucket.push_back(SfxId::amb007);
+    sfxBucket.push_back(SfxId::amb008);
+    sfxBucket.push_back(SfxId::amb009);
+    sfxBucket.push_back(SfxId::amb010);
+    sfxBucket.push_back(SfxId::amb011);
+    sfxBucket.push_back(SfxId::amb012);
+    sfxBucket.push_back(SfxId::amb013);
+    sfxBucket.push_back(SfxId::amb014);
+    sfxBucket.push_back(SfxId::amb015);
+    sfxBucket.push_back(SfxId::amb017);
+    sfxBucket.push_back(SfxId::amb018);
+    sfxBucket.push_back(SfxId::amb019);
+    sfxBucket.push_back(SfxId::amb021);
+    sfxBucket.push_back(SfxId::amb022);
+    sfxBucket.push_back(SfxId::amb023);
+    sfxBucket.push_back(SfxId::amb024);
+    sfxBucket.push_back(SfxId::amb026);
+    sfxBucket.push_back(SfxId::amb027);
+    sfxBucket.push_back(SfxId::amb028);
+    sfxBucket.push_back(SfxId::amb031);
+    sfxBucket.push_back(SfxId::amb033);
+    sfxBucket.push_back(SfxId::amb034);
+    sfxBucket.push_back(SfxId::amb035);
+    sfxBucket.push_back(SfxId::amb036);
+    sfxBucket.push_back(SfxId::amb037);
   } else if(Map::dlvl > FIRST_CAVERN_LEVEL) {
-    sfxCandidates.push_back(SfxId::amb001);
-    sfxCandidates.push_back(SfxId::amb002);
-    sfxCandidates.push_back(SfxId::amb003);
-    sfxCandidates.push_back(SfxId::amb004);
-    sfxCandidates.push_back(SfxId::amb005);
-    sfxCandidates.push_back(SfxId::amb006);
-    sfxCandidates.push_back(SfxId::amb007);
-    sfxCandidates.push_back(SfxId::amb010);
-    sfxCandidates.push_back(SfxId::amb011);
-    sfxCandidates.push_back(SfxId::amb012);
-    sfxCandidates.push_back(SfxId::amb013);
-    sfxCandidates.push_back(SfxId::amb016);
-    sfxCandidates.push_back(SfxId::amb017);
-    sfxCandidates.push_back(SfxId::amb019);
-    sfxCandidates.push_back(SfxId::amb020);
-    sfxCandidates.push_back(SfxId::amb024);
-    sfxCandidates.push_back(SfxId::amb025);
-    sfxCandidates.push_back(SfxId::amb026);
-    sfxCandidates.push_back(SfxId::amb028);
-    sfxCandidates.push_back(SfxId::amb029);
-    sfxCandidates.push_back(SfxId::amb030);
-    sfxCandidates.push_back(SfxId::amb032);
-    sfxCandidates.push_back(SfxId::amb033);
-    sfxCandidates.push_back(SfxId::amb034);
-    sfxCandidates.push_back(SfxId::amb035);
-    sfxCandidates.push_back(SfxId::amb037);
+    sfxBucket.push_back(SfxId::amb001);
+    sfxBucket.push_back(SfxId::amb002);
+    sfxBucket.push_back(SfxId::amb003);
+    sfxBucket.push_back(SfxId::amb004);
+    sfxBucket.push_back(SfxId::amb005);
+    sfxBucket.push_back(SfxId::amb006);
+    sfxBucket.push_back(SfxId::amb007);
+    sfxBucket.push_back(SfxId::amb010);
+    sfxBucket.push_back(SfxId::amb011);
+    sfxBucket.push_back(SfxId::amb012);
+    sfxBucket.push_back(SfxId::amb013);
+    sfxBucket.push_back(SfxId::amb016);
+    sfxBucket.push_back(SfxId::amb017);
+    sfxBucket.push_back(SfxId::amb019);
+    sfxBucket.push_back(SfxId::amb020);
+    sfxBucket.push_back(SfxId::amb024);
+    sfxBucket.push_back(SfxId::amb025);
+    sfxBucket.push_back(SfxId::amb026);
+    sfxBucket.push_back(SfxId::amb028);
+    sfxBucket.push_back(SfxId::amb029);
+    sfxBucket.push_back(SfxId::amb030);
+    sfxBucket.push_back(SfxId::amb032);
+    sfxBucket.push_back(SfxId::amb033);
+    sfxBucket.push_back(SfxId::amb034);
+    sfxBucket.push_back(SfxId::amb035);
+    sfxBucket.push_back(SfxId::amb037);
   }
 
-  if(sfxCandidates.empty()) {
+  if(sfxBucket.empty()) {
     return SfxId::endOfSfxId;
   }
 
-  const int ELEMENT = Rnd::range(0, sfxCandidates.size() - 1);
-  return sfxCandidates.at(ELEMENT);
+  const int ELEMENT = Rnd::range(0, sfxBucket.size() - 1);
+  return sfxBucket.at(ELEMENT);
 }
 
 void loadAudioFile(const SfxId sfx, const string& filename) {

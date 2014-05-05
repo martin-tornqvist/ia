@@ -415,7 +415,7 @@ void Door::tryClose(Actor* actorTrying) {
           SndEmit::emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
             Log::addMsg(actorTrying->getNameThe() +
-                            "fumbles about and succeeds to close a door.");
+                        "fumbles about and succeeds to close a door.");
           }
         }
       } else {
@@ -425,7 +425,7 @@ void Door::tryClose(Actor* actorTrying) {
         } else {
           if(PLAYER_SEE_TRYER) {
             Log::addMsg(actorTrying->getNameThe() +
-                            " fumbles blindly and fails to close a door.");
+                        " fumbles blindly and fails to close a door.");
           }
         }
       }
@@ -501,7 +501,7 @@ void Door::tryOpen(Actor* actorTrying) {
           SndEmit::emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
             Log::addMsg(actorTrying->getNameThe() +
-                            "fumbles about and succeeds to open a door.");
+                        "fumbles about and succeeds to open a door.");
           } else if(PLAYER_SEE_DOOR) {
             Log::addMsg("I see a door open clumsily.");
           }
@@ -522,7 +522,7 @@ void Door::tryOpen(Actor* actorTrying) {
           SndEmit::emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
             Log::addMsg(actorTrying->getNameThe() +
-                            " fumbles blindly and fails to open a door.");
+                        " fumbles blindly and fails to open a door.");
           }
         }
         GameTime::actorDidAct();

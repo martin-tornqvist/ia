@@ -1213,7 +1213,7 @@ void initDataList() {
 
   d.name_a = "A Giant Locust";
   d.name_the = "The Giant Locust";
-  d.id = actor_giantLocust;
+  d.id = actor_locust;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;

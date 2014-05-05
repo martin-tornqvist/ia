@@ -32,7 +32,8 @@ void MapTemplateHandler::initTemplates() {
   addTranslationToVector(translationVector, '-', FeatureId::altar);
   addTranslationToVector(translationVector, '*', FeatureId::churchCarpet);
 
-  templates_.push_back(stringToTemplate(templStr, translationVector, mapTemplate_church));
+  templates_.push_back(
+    stringToTemplate(templStr, translationVector, MapTemplateId::church));
 
   //---------------------------------------------------- PHARAOH CHAMBER
 
@@ -67,7 +68,7 @@ void MapTemplateHandler::initTemplates() {
   addTranslationToVector(translationVector, 'v', FeatureId::brazierGolden);
   addTranslationToVector(translationVector, '1', FeatureId::pillar);
   addTranslationToVector(translationVector, 'P', FeatureId::statue);
-  templates_.push_back(stringToTemplate(templStr, translationVector, mapTemplate_pharaohsChamber));
+  templates_.push_back(stringToTemplate(templStr, translationVector, MapTemplateId::pharaohsChamber));
 }
 
 MapTemplate* MapTemplateHandler::getTemplate(MapTemplateId templateId) {
@@ -94,9 +95,9 @@ MapTemplate MapTemplateHandler::stringToTemplate(
       resultVector.push_back(curInnerVector);
       curInnerVector.resize(0);
     } else if(str[strPos] == '#') {
-      curInnerVector.push_back(FeatureId::stoneWall);
+      curInnerVector.push_back(FeatureId::wall);
     } else if(str[strPos] == '.') {
-      curInnerVector.push_back(FeatureId::stoneFloor);
+      curInnerVector.push_back(FeatureId::floor);
     } else if(str[strPos] == ' ') {
       curInnerVector.push_back(FeatureId::empty);
     } else {

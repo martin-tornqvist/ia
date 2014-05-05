@@ -383,7 +383,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
       SDL_Color clr = clrGreenLgt;
 
       if(EFFECTIVE_RANGE != -1) {
-        const int CHEB_DIST = Utils::kingDist(trail.at(0), pos);
+        const int CHEB_DIST = Utils::getKingDist(trail.at(0), pos);
         if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
       if(Config::isTilesMode()) {
@@ -400,7 +400,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
 
   if(trail.size() > 2) {
     if(EFFECTIVE_RANGE != -1) {
-      const int CHEB_DIST = Utils::kingDist(trail.at(0), headPos);
+      const int CHEB_DIST = Utils::getKingDist(trail.at(0), headPos);
       if(CHEB_DIST > EFFECTIVE_RANGE) {
         clr = clrYellow;
       }
@@ -913,7 +913,7 @@ void drawMap() {
         if(eng->map->cells[x][y].isSeenByPlayer) {
           if(tmpDrw.isFadeEffectAllowed) {
             const int DIST_FROM_PLAYER =
-              Utils::kingDist(Map::player->pos, Pos(x, y));
+              Utils::getKingDist(Map::player->pos, Pos(x, y));
             if(DIST_FROM_PLAYER > 1) {
               const double DIST_FADE_DIV =
                 min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
@@ -955,7 +955,7 @@ void drawMap() {
               }
               if(
                 y < MAP_H - 1 &&
-                (featureId == FeatureId::stoneWall || isHiddenDoor)) {
+                (featureId == FeatureId::wall || isHiddenDoor)) {
                 if(eng->map->cells[x][y + 1].isExplored) {
                   const bool IS_CELL_BELOW_SEEN =
                     eng->map->cells[x][y + 1].isSeenByPlayer;
@@ -982,11 +982,11 @@ void drawMap() {
                     TILE_BELOW_IS_WALL_FRONT  ||
                     TILE_BELOW_IS_WALL_TOP    ||
                     tileBelowIsRevealedDoor) {
-                    if(featureId == FeatureId::stoneWall) {
+                    if(featureId == FeatureId::wall) {
                       const Wall* const wall = dynamic_cast<const Wall*>(f);
                       tmpDrw.tile = wall->getTopWallTile();
                     }
-                  } else if(featureId == FeatureId::stoneWall) {
+                  } else if(featureId == FeatureId::wall) {
                     const Wall* const wall = dynamic_cast<const Wall*>(f);
                     tmpDrw.tile = wall->getFrontWallTile();
                   } else if(isHiddenDoor) {

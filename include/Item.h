@@ -71,7 +71,7 @@ public:
 
 protected:
   void clearPropsEnabledOnCarrier() {
-    for(Prop* prop : propsEnabledOnCarrier) {delete prop;}
+    for(Prop * prop : propsEnabledOnCarrier) {delete prop;}
     propsEnabledOnCarrier.resize(0);
   }
 

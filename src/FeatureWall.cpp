@@ -9,7 +9,7 @@
 using namespace std;
 
 Wall::Wall(FeatureId id, Pos pos) :
-  FeatureStatic(id, pos), wallType(wall_common), isMossGrown(false) {
+  FeatureStatic(id, pos), wallType(WallType::common), isMossGrown(false) {
 }
 
 bool Wall::isTileAnyWallFront(const TileId tile) {
@@ -34,10 +34,10 @@ string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
   const string article  = (DEFINITE_ARTICLE ? "the " : "a ");
 
   switch(wallType) {
-    case wall_common:
-    case wall_alt1:   {return article + modStr + "stone wall";}
-    case wall_cave:   {return article + modStr + "cavern wall";}
-    case wall_egypt:  {return article + modStr + "stone wall";}
+    case WallType::common:
+    case WallType::alt1:   {return article + modStr + "stone wall";}
+    case WallType::cave:   {return article + modStr + "cavern wall";}
+    case WallType::egypt:  {return article + modStr + "stone wall";}
   }
   assert(false && "Failed to get door description");
   return "";
@@ -45,8 +45,8 @@ string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
 
 SDL_Color Wall::getClr() const {
   if(isMossGrown)             {return clrGreen;}
-  if(wallType == wall_cave)   {return clrBrownGray;}
-  if(wallType == wall_egypt)  {return clrBrownGray;}
+  if(wallType == WallType::cave)   {return clrBrownGray;}
+  if(wallType == WallType::egypt)  {return clrBrownGray;}
   return data_->color;
 }
 
@@ -57,18 +57,18 @@ char Wall::getGlyph() const {
 TileId Wall::getFrontWallTile() const {
   if(Config::isTilesWallFullSquare()) {
     switch(wallType) {
-      case wall_common:   return TileId::wallTop;        break;
-      case wall_alt1:     return TileId::wallTop;        break;
-      case wall_cave:     return TileId::caveWallTop;    break;
-      case wall_egypt:    return TileId::egyptWallTop;   break;
+      case WallType::common:   return TileId::wallTop;        break;
+      case WallType::alt1:     return TileId::wallTop;        break;
+      case WallType::cave:     return TileId::caveWallTop;    break;
+      case WallType::egypt:    return TileId::egyptWallTop;   break;
       default:            return TileId::wallTop;        break;
     }
   } else {
     switch(wallType) {
-      case wall_common:   return TileId::wallFront;        break;
-      case wall_alt1:     return TileId::wallFrontAlt1;    break;
-      case wall_cave:     return TileId::caveWallFront;    break;
-      case wall_egypt:    return TileId::egyptWallFront;   break;
+      case WallType::common:   return TileId::wallFront;        break;
+      case WallType::alt1:     return TileId::wallFrontAlt1;    break;
+      case WallType::cave:     return TileId::caveWallFront;    break;
+      case WallType::egypt:    return TileId::egyptWallFront;   break;
       default:            return TileId::wallFront;        break;
     }
   }
@@ -76,10 +76,10 @@ TileId Wall::getFrontWallTile() const {
 
 TileId Wall::getTopWallTile() const {
   switch(wallType) {
-    case wall_common:   return TileId::wallTop;        break;
-    case wall_alt1:     return TileId::wallTop;        break;
-    case wall_cave:     return TileId::caveWallTop;    break;
-    case wall_egypt:    return TileId::egyptWallTop;   break;
+    case WallType::common:   return TileId::wallTop;        break;
+    case WallType::alt1:     return TileId::wallTop;        break;
+    case WallType::cave:     return TileId::caveWallTop;    break;
+    case WallType::egypt:    return TileId::egyptWallTop;   break;
     default:            return TileId::wallTop;        break;
   }
 }
@@ -87,8 +87,8 @@ TileId Wall::getTopWallTile() const {
 void Wall::setRandomNormalWall() {
   const int RND = Rnd::range(1, 6);
   switch(RND) {
-    case 1:   wallType = wall_alt1;     break;
-    default:  wallType = wall_common;   break;
+    case 1:   wallType = WallType::alt1;     break;
+    default:  wallType = WallType::common;   break;
   }
 }
 

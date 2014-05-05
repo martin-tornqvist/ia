@@ -13,67 +13,79 @@
 #include "MapParsing.h"
 #include "Utils.h"
 
-bool MapGenCaveLvl::run_() {
+using namespace std;
+
+namespace MapGen {
+
+namespace CaveLvl {
+
+bool run() {
   Map::resetMap();
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      FeatureFactory::spawnFeatureAt(FeatureId::stoneWall, Pos(x, y));
-      Wall* const wall = dynamic_cast<Wall*>(
-                           Map::cells[x][y].featureStatic);
-      wall->wallType = wall_cave;
+      Wall* const wall =
+        dynamic_cast<Wall*>(FeatureFactory::spawn(FeatureId::wall, Pos(x, y)));
+      wall->wallType    = WallType::cave;
       wall->isMossGrown = false;
     }
   }
 
-  const Pos& playerPos = Map::player->pos;
-  FeatureFactory::spawnFeatureAt(FeatureId::caveFloor, playerPos);
+  const Pos& origin       = Map::player->pos;
+  const FeatureId floorId = FeatureId::caveFloor;
 
-  vector<Pos> previousCenters(1, playerPos);
+  FeatureFactory::spawn(floorId, origin);
+
+  vector<Pos> prevCenters(1, origin);
 
   //Make a random walk path from player
   int length = 40 + Rnd::dice(1, 40);
-  makePathByRandomWalk(
-    playerPos.x, playerPos.y, length, FeatureId::caveFloor, true);
+  MapGenUtils::digByRandomWalk(origin, length, floorId, true);
   const bool IS_TUNNEL_CAVE = Rnd::coinToss();
 
   //Make some more at random places, connect them to each other.
   const int NR_OPEN_PLACES = IS_TUNNEL_CAVE ? Rnd::range(6, 8) : 4;
+
+  const int EDGE_DIST_W = 10;
+  const int EDGE_DIST_H = 2;
+
   for(int i = 0; i < NR_OPEN_PLACES; i++) {
-    const Pos curCenter(10 + Rnd::dice(1, MAP_W - 1 - 10) - 1,
-                        2 + Rnd::dice(1, MAP_H - 1 - 2) - 1);
+    const Pos curPos(Rnd::range(EDGE_DIST_W, MAP_W - EDGE_DIST_W - 1),
+                     Rnd::range(EDGE_DIST_H, MAP_H - EDGE_DIST_H - 1));
+
     length = IS_TUNNEL_CAVE ? 30 + Rnd::dice(1, 50) : 650;
-    makePathByRandomWalk(
-      curCenter.x, curCenter.y, length, FeatureId::caveFloor, true);
-    const Pos prevCenter = previousCenters.at(
-                             Rnd::range(0, previousCenters.size() - 1));
-    makeStraightPathByPathfinder(
-      prevCenter, curCenter, FeatureId::caveFloor, false, true);
-    previousCenters.push_back(curCenter);
+    MapGenUtils::digByRandomWalk(curPos, length, floorId, true);
+    const Pos prevPos = prevCenters.at(Rnd::range(0, prevCenters.size() - 1));
+
+    MapGenUtils::digWithPathfinder(prevPos, curPos, floorId, false, true);
+
+    prevCenters.push_back(curPos);
   }
 
   //Make a floodfill and place the stairs in one of the furthest positions
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
   int floodFill[MAP_W][MAP_H];
-  FloodFill::run(playerPos, blockers, floodFill, 99999, Pos(-1, -1));
-  vector<PosAndVal> floodFillVector;
-  for(unsigned int y = 1; y < MAP_H - 1; y++) {
-    for(unsigned int x = 1; x < MAP_W - 1; x++) {
+  FloodFill::run(origin, blockers, floodFill, 99999, Pos(-1, -1));
+  vector<PosAndVal> floodVals;
+  for(int y = 1; y < MAP_H - 1; y++) {
+    for(int x = 1; x < MAP_W - 1; x++) {
       const int VAL = floodFill[x][y];
-      if(VAL > 0) {
-        floodFillVector.push_back(PosAndVal(Pos(x, y), VAL));
-      }
+      if(VAL > 0) {floodVals.push_back(PosAndVal(Pos(x, y), VAL));}
     }
   }
-  PosAndVal_compareForVal floodFillSorter;
-  std::sort(floodFillVector.begin(), floodFillVector.end(), floodFillSorter);
-  const unsigned int STAIR_ELEMENT =
-    Rnd::range((floodFillVector.size() * 4) / 5,
-               floodFillVector.size() - 1);
-  FeatureFactory::spawnFeatureAt(
-    FeatureId::stairs, floodFillVector.at(STAIR_ELEMENT).pos);
+
+  std::sort(floodVals.begin(), floodVals.end(),
+  [](const PosAndVal & a, const PosAndVal & b) {return a.val < b.val;});
+
+  const int NR_VALS       = floodVals.size();
+  const int STAIR_ELEMENT = Rnd::range((NR_VALS * 4) / 5, NR_VALS - 1);
+  FeatureFactory::spawn(FeatureId::stairs, floodVals.at(STAIR_ELEMENT).pos);
   PopulateMonsters::populateCaveLevel();
 
   return true;
 }
+
+} //CaveLvl
+
+} //MapGen

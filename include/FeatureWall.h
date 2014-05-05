@@ -3,12 +3,7 @@
 
 #include "Feature.h"
 
-enum WallType {
-  wall_common,
-  wall_alt1,
-  wall_cave,
-  wall_egypt
-};
+enum class WallType {common, alt1, cave, egypt};
 
 class Wall: public FeatureStatic {
 public:

@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
           //If intro level is used, build forest.
           Renderer::coverPanel(Panel::screen);
           Renderer::updateScreen();
-          MapGenIntroForest().run();
+          MapGen::IntroForest::run();
         } else {
           //Else build first dungeon level
           DungeonClimb::travelDown();
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
         trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
-      Audio::fadeOutChannel(introMusChannel);
+      Audio::fadeOutChannel(introMusChan);
 
       Map::player->updateFov();
       Renderer::drawMapAndInterface();
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
           Renderer::drawMapAndInterface();
           Log::clearLog();
           Query::waitForEscOrSpace();
-          HighScore::gameOver(false);
+          HighScore::onGameOver(false);
           Postmortem::run(&quitGame);
           Init::quitToMainMenu = true;
         }

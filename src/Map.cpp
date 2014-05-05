@@ -37,7 +37,7 @@ vector<Room*> rooms;
 
 namespace {
 
-void Map::resetCells(const bool MAKE_STONE_WALLS) {
+void resetCells(const bool MAKE_STONE_WALLS) {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
 
@@ -49,7 +49,7 @@ void Map::resetCells(const bool MAKE_STONE_WALLS) {
       Renderer::renderArrayNoActors[x][y].clear();
 
       if(MAKE_STONE_WALLS) {
-        FeatureFactory::spawnFeatureAt(FeatureId::stoneWall, Pos(x, y));
+        FeatureFactory::spawn(FeatureId::wall, Pos(x, y));
       }
     }
   }
@@ -59,7 +59,7 @@ void Map::resetCells(const bool MAKE_STONE_WALLS) {
 
 void init() {
   const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
-  player = ActorFactory::spawnActor(actor_player, playerPos);
+  player = dynamic_cast<Player*>(ActorFactory::spawn(actor_player, playerPos));
 
   dlvl = 0;
 
@@ -83,31 +83,29 @@ void cleanup() {
   }
 }
 
-void storeToSaveLines(vector<string>& lines) const {
-  lines.push_back(toStr(dlvl_));
+void storeToSaveLines(vector<string>& lines) {
+  lines.push_back(toStr(dlvl));
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  dlvl_ = toInt(lines.front());
+  dlvl = toInt(lines.front());
   lines.erase(lines.begin());
 }
 
 //TODO This should probably go in a virtual method in Feature instead
-void Map::switchToDestroyedFeatAt(const Pos& pos) {
+void switchToDestroyedFeatAt(const Pos& pos) {
   if(Utils::isPosInsideMap(pos)) {
 
-    const FeatureId OLD_FEATURE_ID =
-      Map::cells[pos.x][pos.y].featureStatic->getId();
+    const FeatureId OLD_FEATURE_ID = cells[pos.x][pos.y].featureStatic->getId();
 
-    const vector<FeatureId> convertionCandidates =
+    const vector<FeatureId> convertionBucket =
       FeatureData::getData(OLD_FEATURE_ID)->featuresOnDestroyed;
 
-    const int SIZE = convertionCandidates.size();
+    const int SIZE = convertionBucket.size();
     if(SIZE > 0) {
-      const FeatureId NEW_ID =
-        convertionCandidates.at(Rnd::dice(1, SIZE) - 1);
+      const FeatureId NEW_ID = convertionBucket.at(Rnd::dice(1, SIZE) - 1);
 
-      FeatureFactory::spawnFeatureAt(NEW_ID, pos);
+      FeatureFactory::spawn(NEW_ID, pos);
 
       //Destroy adjacent doors?
       if(
@@ -116,11 +114,9 @@ void Map::switchToDestroyedFeatAt(const Pos& pos) {
         for(int x = pos.x - 1; x <= pos.x + 1; x++) {
           for(int y = pos.y - 1; y <= pos.y + 1; y++) {
             if(x == 0 || y == 0) {
-              const FeatureStatic* const f =
-                Map::cells[x][y].featureStatic;
+              const FeatureStatic* const f = cells[x][y].featureStatic;
               if(f->getId() == FeatureId::door) {
-                FeatureFactory::spawnFeatureAt(
-                  FeatureId::rubbleLow, Pos(x, y));
+                FeatureFactory::spawn(FeatureId::rubbleLow, Pos(x, y));
               }
             }
           }
@@ -136,7 +132,7 @@ void Map::switchToDestroyedFeatAt(const Pos& pos) {
   }
 }
 
-void Map::resetMap() {
+void resetMap() {
   ActorFactory::deleteAllMonsters();
 
   for(Room * room : rooms) {delete room;}
@@ -148,11 +144,10 @@ void Map::resetMap() {
   GameTime::resetTurnTypeAndActorCounters();
 }
 
-void Map::updateVisualMemory() {
+void updateVisualMemory() {
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
-      Map::cells[x][y].playerVisualMemory =
-        Renderer::renderArrayNoActors[x][y];
+      cells[x][y].playerVisualMemory = Renderer::renderArrayNoActors[x][y];
     }
   }
 }
@@ -161,7 +156,7 @@ void makeBlood(const Pos& origin) {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       const Pos c = origin + Pos(dx, dy);
-      FeatureStatic* const f  = Map::cells[c.x][c.y].featureStatic;
+      FeatureStatic* const f  = cells[c.x][c.y].featureStatic;
       if(f->canHaveBlood()) {
         if(Rnd::percentile() > 66) {
           f->setHasBlood(true);
@@ -176,7 +171,7 @@ void makeGore(const Pos& origin) {
     for(int dy = -1; dy <= 1; dy++) {
       const Pos c = origin + Pos(dx, dy);
       if(Rnd::percentile() > 66) {
-        Map::cells[c.x][c.y].featureStatic->setGoreIfPossible();
+        cells[c.x][c.y].featureStatic->setGoreIfPossible();
       }
     }
   }

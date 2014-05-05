@@ -48,7 +48,7 @@ bool Actor::isSpottingHiddenActor(Actor& other) {
   const int SNEAK_BASE = other.getData().abilityVals.getVal(
                            AbilityId::stealth, true, other);
 
-  const int  DIST     = Utils::kingDist(pos, otherPos);
+  const int  DIST     = Utils::getKingDist(pos, otherPos);
   const int  DIST_BON = getConstrInRange(0, (DIST - 1) * 10, 60);
   const int  LGT_DIV  = Map::cells[otherPos.x][otherPos.y].isLight ? 2 : 1;
   const int  SKILL =
@@ -408,7 +408,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
             const string armorName =
               ItemData::getItemRef(*armor, ItemRefType::plain);
             Log::addMsg("My " + armorName + " is torn apart!",
-                            clrMsgWarning);
+                        clrMsgWarning);
           }
           delete armor;
           armor = NULL;
@@ -457,7 +457,7 @@ bool Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
   if(getSpi() <= 0) {
     if(this == Map::player) {
       Log::addMsg("All my spirit is depleted, I am devoid of life!",
-                      clrMsgBad);
+                  clrMsgBad);
     } else {
       if(Map::player->isSeeingActor(*this, NULL)) {
         Log::addMsg(getNameThe() + " has no spirit left!");

@@ -27,7 +27,7 @@ enum ActorId {
   actor_wolf, actor_fireHound, actor_frostHound, actor_zuul,
   actor_ghost, actor_phantasm, actor_wraith,
   actor_giantBat, actor_byakhee,
-  actor_giantMantis, actor_giantLocust,
+  actor_giantMantis, actor_locust,
   actor_mummy, actor_khephren, actor_nitokris,
   actor_deepOne,
   actor_keziahMason, actor_brownJenkin,

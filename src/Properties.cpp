@@ -1738,9 +1738,8 @@ void PropParalyzed::onStart() {
       Feature* const f =
         Map::cells[playerPos.x][playerPos.y].featureStatic;
       if(f->isBottomless() == false) {
-        FeatureFactory::spawnFeatureAt(
-          FeatureId::litDynamite, playerPos,
-          new DynamiteSpawnData(DYNAMITE_FUSE));
+        FeatureFactory::spawn(FeatureId::litDynamite, playerPos,
+                              new DynamiteSpawnData(DYNAMITE_FUSE));
       }
     }
     if(FLARE_FUSE > 0) {
@@ -1750,8 +1749,8 @@ void PropParalyzed::onStart() {
       Feature* const f =
         Map::cells[playerPos.x][playerPos.y].featureStatic;
       if(f->isBottomless() == false) {
-        FeatureFactory::spawnFeatureAt(
-          FeatureId::litFlare, playerPos, new DynamiteSpawnData(FLARE_FUSE));
+        FeatureFactory::spawn(FeatureId::litFlare, playerPos,
+                              new DynamiteSpawnData(FLARE_FUSE));
       }
       GameTime::updateLightMap();
       player->updateFov();

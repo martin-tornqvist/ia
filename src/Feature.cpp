@@ -251,7 +251,7 @@ void Stairs::bump(Actor& actorBumping) {
 
     const vector<string> choices {"Descend", "Save and quit", "Cancel"};
     const int CHOICE = Popup::showMenuMsg("", true, choices,
-                       "A staircase leading downwards");
+                                          "A staircase leading downwards");
 
     if(CHOICE == 0) {
       Map::player->pos = pos_;

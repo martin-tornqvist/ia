@@ -108,7 +108,7 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
         isDestroyed = true;
       } else {
         Log::addMsg("The " + itemName + " makes a terrible grinding "
-                        "noise.");
+                    "noise.");
         Log::addMsg("I seem to have damaged it.");
         condition_ = Condition(int(condition_) - 1);
       }
@@ -129,9 +129,9 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
 
 //---------------------------------------------------- SENTRY
 void DeviceSentry::triggerEffect() {
-  vector<Actor*> targetCandidates;
-  Map::player->getSpottedEnemies(targetCandidates);
-  if(targetCandidates.empty()) {
+  vector<Actor*> targetBucket;
+  Map::player->getSpottedEnemies(targetBucket);
+  if(targetBucket.empty()) {
     Log::addMsg("It seems to peruse area.");
   } else {
     Spell* const spell = SpellHandling::getSpellFromId(SpellId::azathothsWrath);
@@ -239,7 +239,7 @@ void DeviceLantern::newTurnInInventory() {
 
       if(RND <= 6) {
         Log::addMsg("My Electric Lantern breaks!", clrMsgWarning,
-                        false, true);
+                    false, true);
         Map::player->getInv().removetemInGeneralWithPointer(this, false);
         malfState_ = LanternMalfState::destroyed;
       } else if(RND <= 10) {

@@ -85,7 +85,7 @@ public:
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override {
     const std::string a = DEFINITE_ARTICLE ?
-                     "the " : (material == chestMtrl_wood ? "a " : "an ");
+                          "the " : (material == chestMtrl_wood ? "a " : "an ");
 
     return a + (material == chestMtrl_wood ? "wooden " : "iron ") + "chest";
   }
