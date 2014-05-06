@@ -4,14 +4,10 @@
 #include "RoomTheme.h"
 #include "FeatureTrap.h"
 
-class PopulateTraps {
-public:
-  PopulateTraps() {}
+namespace PopulateTraps {
 
-  void populateRoomAndCorridorLevel() const;
+void populateRoomAndCorridorLevel();
 
-private:
-  void spawnTrapAt(const TrapId id, const Pos& pos) const;
-};
+}
 
 #endif

@@ -5,6 +5,7 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 
+#include "Init.h"
 #include "CmnData.h"
 #include "Config.h"
 

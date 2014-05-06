@@ -18,34 +18,6 @@ namespace Log {
 
 namespace {
 
-class Msg {
-public:
-  Msg(const string& text, const SDL_Color& clr, const int X_POS) :
-    clr_(clr), xPos_(X_POS), str_(text), repeatsStr_(""),
-    nr_(1) {}
-
-  Msg() : Msg("", clrWhite, 0) {}
-
-  inline void getStrWithRepeats(string& strRef) const {
-    strRef = str_ + (nr_ > 1 ? repeatsStr_ : "");
-  }
-
-  inline void getStrRaw(string& strRef) const {strRef = str_;}
-
-  void incrRepeat() {
-    nr_++;
-    repeatsStr_ = "(x" + toStr(nr_) + ")";
-  }
-
-  SDL_Color clr_;
-  int xPos_;
-
-private:
-  string str_;
-  string repeatsStr_;
-  int nr_;
-};
-
 vector<Msg>           lines_[2];
 vector< vector<Msg> > history_;
 const string          moreStr = "--More--";
@@ -237,6 +209,10 @@ void addLineToHistory(const string& lineToAdd) {
   vector<Msg> historyLine;
   historyLine.push_back(Msg(lineToAdd, clrWhite, 0));
   history_.push_back(historyLine);
+}
+
+const vector< vector<Msg> >& getHistory() {
+  return history_;
 }
 
 } //Log

@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 
+#include "Init.h"
 #include "Renderer.h"
 #include "Input.h"
 #include "ActorPlayer.h"
@@ -24,10 +25,10 @@ namespace Postmortem {
 namespace {
 
 struct StrAndClr {
-  StrAndClr(const std::string str, const SDL_Color clr) : str(str), clr(clr) {}
+  StrAndClr(const string str_, const SDL_Color clr_) : str(str_), clr(clr_) {}
   StrAndClr() {}
   std::string str;
-  SDL_Color clr;
+  SDL_Color   clr;
 };
 
 void makeInfoLines(vector<StrAndClr>& linesRef) {
@@ -115,12 +116,13 @@ void makeInfoLines(vector<StrAndClr>& linesRef) {
   linesRef.push_back(StrAndClr(" ", clrInfo));
 
   linesRef.push_back(StrAndClr(" The last messages:", clrHeading));
-  int historyElement = max(0, int(Log::history.size()) - 20);
-  for(unsigned int i = historyElement; i < Log::history.size(); i++) {
+  const vector< vector<Msg> >& history = Log::getHistory();
+  int historyElement = max(0, int(history.size()) - 20);
+  for(unsigned int i = historyElement; i < history.size(); i++) {
     string row = "";
-    for(unsigned int ii = 0; ii < Log::history.at(i).size(); ii++) {
+    for(unsigned int ii = 0; ii < history.at(i).size(); ii++) {
       string msgStr = "";
-      Log::history.at(i).at(ii).getStrWithRepeats(msgStr);
+      history.at(i).at(ii).getStrWithRepeats(msgStr);
       row += msgStr + " ";
     }
     linesRef.push_back(StrAndClr("   " + row, clrInfo));
@@ -257,53 +259,6 @@ void makeMemorialFile(const vector<StrAndClr>& lines) {
   file.close();
 }
 
-void readKeysMenu(const vector<StrAndClr>& linesAndClr,
-                  bool* const quitGame) {
-  MenuBrowser browser(5, 0);
-
-  renderMenu(browser);
-
-  bool done = false;
-  while(done == false) {
-    const MenuAction action = MenuInputHandling::getAction(browser);
-    switch(action) {
-      case MenuAction::browsed: {
-        renderMenu(browser);
-      } break;
-
-      case MenuAction::esc: {
-        *quitGame = true;
-        done      = true;
-      } break;
-
-      case MenuAction::space:
-      case MenuAction::selectedShift: {} break;
-
-      case MenuAction::selected: {
-        if(browser.isPosAtElement(0)) {
-          runInfo(linesAndClr);
-          renderMenu(browser);
-        }
-        if(browser.isPosAtElement(1)) {
-          HighScore::runHighScoreScreen();
-          renderMenu(browser);
-        }
-        if(browser.isPosAtElement(2)) {
-          Log::displayHistory();
-          renderMenu(browser);
-        }
-        if(browser.isPosAtElement(3)) {
-          done = true;
-        }
-        if(browser.isPosAtElement(4)) {
-          *quitGame = true;
-          done      = true;
-        }
-      } break;
-    }
-  }
-}
-
 void renderMenu(const MenuBrowser& browser) {
   vector<string> art;
 
@@ -363,6 +318,52 @@ void renderMenu(const MenuBrowser& browser) {
   pos.y++;
 
   Renderer::updateScreen();
+}
+
+void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame) {
+  MenuBrowser browser(5, 0);
+
+  renderMenu(browser);
+
+  bool done = false;
+  while(done == false) {
+    const MenuAction action = MenuInputHandling::getAction(browser);
+    switch(action) {
+      case MenuAction::browsed: {
+        renderMenu(browser);
+      } break;
+
+      case MenuAction::esc: {
+        *quitGame = true;
+        done      = true;
+      } break;
+
+      case MenuAction::space:
+      case MenuAction::selectedShift: {} break;
+
+      case MenuAction::selected: {
+        if(browser.isPosAtElement(0)) {
+          runInfo(linesAndClr);
+          renderMenu(browser);
+        }
+        if(browser.isPosAtElement(1)) {
+          HighScore::runHighScoreScreen();
+          renderMenu(browser);
+        }
+        if(browser.isPosAtElement(2)) {
+          Log::displayHistory();
+          renderMenu(browser);
+        }
+        if(browser.isPosAtElement(3)) {
+          done = true;
+        }
+        if(browser.isPosAtElement(4)) {
+          *quitGame = true;
+          done      = true;
+        }
+      } break;
+    }
+  }
 }
 
 } //namespace

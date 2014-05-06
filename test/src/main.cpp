@@ -1,10 +1,11 @@
 #include "UnitTest++.h"
 
 #include <climits>
+#include <string>
 
 #include <SDL.h>
 
-#include "InitGame.h"
+#include "Init.h"
 #include "Config.h"
 #include "Utils.h"
 #include "Renderer.h"
@@ -30,12 +31,12 @@
 #include "ItemAmmo.h"
 #include "ItemDevice.h"
 
+using namespace std;
+
 struct BasicFixture {
   BasicFixture() {
-//    Config::init();
     Init::initGame();
     Init::initSession();
-    GameTime::insertActorInLoop(Map::player);
     Map::player->pos = Pos(1, 1);
     Map::resetMap(); //Because map generation is not run
   }
@@ -76,10 +77,10 @@ TEST(ConstrainValInRange) {
 }
 
 TEST(CalculateDistances) {
-  CHECK_EQUAL(Utils::getKingDist(Pos(1, 2), Pos(2, 3)), 1);
-  CHECK_EQUAL(Utils::getKingDist(Pos(1, 2), Pos(2, 4)), 2);
-  CHECK_EQUAL(Utils::getKingDist(Pos(1, 2), Pos(1, 2)), 0);
-  CHECK_EQUAL(Utils::getKingDist(Pos(10, 3), Pos(1, 4)), 9);
+  CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 3)), 1);
+  CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 4)), 2);
+  CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(1, 2)), 0);
+  CHECK_EQUAL(Utils::kingDist(Pos(10, 3), Pos(1, 4)), 9);
 }
 
 TEST(Directions) {
@@ -341,7 +342,7 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   Map::player->pos = Pos(5, 10);
   Pos target(5, 8);
   Item* item = ItemFactory::spawnItem(ItemId::throwingKnife);
-  eng.thrower->throwItem(*(Map::player), target, *item);
+  Throwing::throwItem(*(Map::player), target, *item);
   CHECK(Map::cells[5][9].item != NULL);
 }
 
@@ -555,8 +556,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   Map::player->changeMaxHp(5, false);
 
   //Map
-  const int CUR_DLVL = Map::dlvl;
-  Map::incrDlvl(7 - CUR_DLVL); //Set current DLVL to 7
+  Map::dlvl = 7;
 
   //Actor data
   ActorData::data[endOfActorIds - 1].nrKills = 123;
@@ -657,10 +657,9 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(123, ActorData::data[endOfActorIds - 1].nrKills);
 
   //Learned spells
-  PlayerSpellsHandler& spHlr = *(Map::playerSpellsHandler);
-  CHECK(spHlr.isSpellLearned(SpellId::bless));
-  CHECK(spHlr.isSpellLearned(SpellId::azathothsWrath));
-  CHECK_EQUAL(false, spHlr.isSpellLearned(SpellId::mayhem));
+  CHECK(PlayerSpellsHandling::isSpellLearned(SpellId::bless));
+  CHECK(PlayerSpellsHandling::isSpellLearned(SpellId::azathothsWrath));
+  CHECK_EQUAL(false, PlayerSpellsHandling::isSpellLearned(SpellId::mayhem));
 
   //Properties
   PropHandler& propHlr = Map::player->getPropHandler();
@@ -712,19 +711,18 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Room room1(roomArea1);
   Room room2(roomArea2);
 
-  MapGenUtilCorridorBuilder().buildZCorridorBetweenRooms(
-    room1, room2, Dir::right);
+  MapGenUtils::buildZCorridorBetweenRooms(room1, room2, Dir::right);
 }
 
 //TODO This would benefit a lot from modifying the map through some
 //template parameter instead. Perhaps adapt the map template functionality
 //to allow easily creating structures with string parameters, e.g.:
 //
-//MapTemplate::build(Pos(1, 1), vector<string>("#...#"));
+//MapTempl::build(Pos(1, 1), vector<string>("#...#"));
 //
 //It would be neat if this also had functionality for automatically rotate
 //or flip structures, e.g.:
-//MapTemplate::build(Pos(1, 1), templateRotate90, templateNoFlip,
+//MapTempl::build(Pos(1, 1), templateRotate90, templateNoFlip,
 //                   vector<string>("#...#"));
 //Where templateRotate90 and templateNoFlip would be enums
 //TEST_FIXTURE(BasicFixture, CellPredCorridor) {

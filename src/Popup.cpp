@@ -20,7 +20,8 @@ const int TEXT_W  = 39;
 const int TEXT_X0 = MAP_W_HALF - ((TEXT_W) / 2);
 
 int printBoxAndGetTitleYPos(const int TEXT_H_TOT,
-                            const int TEXT_W_OVERRIDE) const {
+                            const int TEXT_W_OVERRIDE = -1) {
+
   const int TEXT_W_USED = TEXT_W_OVERRIDE == - 1 ? TEXT_W : TEXT_W_OVERRIDE;
   const int BOX_W       = TEXT_W_USED + 2;
   const int BOX_H       = TEXT_H_TOT + 2;
@@ -40,7 +41,7 @@ int printBoxAndGetTitleYPos(const int TEXT_H_TOT,
 void menuMsgDrawingHelper(
   const vector<string>& lines, const vector<string>& choices,
   const bool DRAW_MAP_AND_INTERFACE, const unsigned int currentChoice,
-  const int TEXT_H_TOT, const string& title) const {
+  const int TEXT_H_TOT, const string& title) {
 
   if(DRAW_MAP_AND_INTERFACE) {
     Renderer::drawMapAndInterface(false);
@@ -90,7 +91,7 @@ void menuMsgDrawingHelper(
 } //namespace
 
 void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
-             const string& title, const SfxId sfx) const {
+             const string& title, const SfxId sfx) {
 
   if(DRAW_MAP_AND_INTERFACE) {Renderer::drawMapAndInterface(false);}
 
@@ -134,7 +135,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
 int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
                 const vector<string>& choices,
-                const string& title, const SfxId sfx) const {
+                const string& title, const SfxId sfx) {
 
   if(Config::isBotPlaying()) {return 0;}
 

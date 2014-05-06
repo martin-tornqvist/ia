@@ -68,7 +68,7 @@ void getPositionsReached(const Rect& area, const Pos& origin,
   for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
     for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
       const Pos pos(x, y);
-      const int DIST = Utils::getKingDist(pos, origin);
+      const int DIST = Utils::kingDist(pos, origin);
       bool isReached = true;
       if(DIST > 1) {
         LineCalc::calcNewLine(origin, pos, true, 999, false, line);

@@ -1,10 +1,16 @@
 #include "MapPatterns.h"
 
+#include <vector>
+
+#include "Init.h"
 #include "Map.h"
 
-void MapPatterns::setPositionsInArea(
-  const Rect& area, vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
+using namespace std;
 
+namespace MapPatterns {
+
+void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
+                        vector<Pos>& awayFromWalls) {
   trace << "MapPatterns::setPositionsInArea()..." << endl;
   vector<Pos> posBucket;
   posBucket.resize(0);
@@ -64,7 +70,7 @@ void MapPatterns::setPositionsInArea(
   trace << "MapPatterns::setPositionsInArea() [DONE]" << endl;
 }
 
-int MapPatterns::getWalkBlockersInDir(const Dir dir, const Pos& pos) {
+int getWalkBlockersInDir(const Dir dir, const Pos& pos) {
   int nrBlockers = 0;
   switch(dir) {
     case Dir::right: {
@@ -116,3 +122,5 @@ int MapPatterns::getWalkBlockersInDir(const Dir dir, const Pos& pos) {
   }
   return nrBlockers;
 }
+
+} //MapPatterns

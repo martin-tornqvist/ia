@@ -55,6 +55,8 @@ void ActorDataT::reset() {
 
 namespace ActorData {
 
+ActorDataT data[endOfActorIds];
+
 namespace {
 
 void initDataList() {

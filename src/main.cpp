@@ -55,8 +55,6 @@ int main(int argc, char* argv[]) {
         CreateCharacter::createCharacter();
         Map::player->spawnStartItems();
 
-        GameTime::insertActorInLoop(Map::player);
-
         if(Config::isIntroLevelSkipped() == false) {
           //If intro level is used, build forest.
           Renderer::coverPanel(Panel::screen);

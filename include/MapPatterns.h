@@ -9,23 +9,17 @@
 //TODO This should be merged into MapParsing
 //Also, most/all things in here really needs clearer purpose/naming
 
-enum PlacementRule {
-  placementRule_nextToWalls,
-  placementRule_awayFromWalls,
-  placementRule_nextToWallsOrAwayFromWalls
+enum class PlacementRule {
+  nextToWalls, awayFromWalls, nextToWallsOrAwayFromWalls
 };
 
-class MapPatterns {
-public:
-  MapPatterns() {}
+namespace MapPatterns {
 
-  void setPositionsInArea(const Rect& area, std::vector<Pos>& nextToWalls,
-                          std::vector<Pos>& awayFromWalls);
+void setPositionsInArea(const Rect& area, std::vector<Pos>& nextToWalls,
+                        std::vector<Pos>& awayFromWalls);
 
-  int getWalkBlockersInDir(const Dir dir, const Pos& pos);
+int getWalkBlockersInDir(const Dir dir, const Pos& pos);
 
-private:
-
-};
+} //MapPatterns
 
 #endif

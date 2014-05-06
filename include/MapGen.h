@@ -71,8 +71,8 @@ void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
 void backupMap();
 void restoreMap();
 
-void buildFromTemplate(const Pos& pos, MapTemplate* t);
-void buildFromTemplate(const Pos& pos, MapTemplateId templateId);
+void buildFromTempl(const Pos& pos, const MapTempl& t);
+void buildFromTempl(const Pos& pos, const MapTemplId templateId);
 
 void digByRandomWalk(const Pos& origin, int len, FeatureId featureToMake,
                      const bool DIG_THROUGH_ANY_FEATURE,
@@ -97,12 +97,6 @@ bool run();
 namespace IntroForest {
 
 bool run();
-
-//private:
-//  void buildForestLimit();
-//  void buildForestOuterTreeline();
-//  void buildForestTreePatch();
-//  void buildForestTrees(const Pos& stairsPos);
 
 } //IntroForest
 

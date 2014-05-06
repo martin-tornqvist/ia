@@ -9,6 +9,34 @@
 #include "Converters.h"
 #include "CmnTypes.h"
 
+class Msg {
+public:
+  Msg(const std::string& text, const SDL_Color& clr, const int X_POS) :
+    clr_(clr), xPos_(X_POS), str_(text), repeatsStr_(""),
+    nr_(1) {}
+
+  Msg() : Msg("", clrWhite, 0) {}
+
+  inline void getStrWithRepeats(std::string& strRef) const {
+    strRef = str_ + (nr_ > 1 ? repeatsStr_ : "");
+  }
+
+  inline void getStrRaw(std::string& strRef) const {strRef = str_;}
+
+  inline void incrRepeat() {
+    nr_++;
+    repeatsStr_ = "(x" + toStr(nr_) + ")";
+  }
+
+  SDL_Color clr_;
+  int xPos_;
+
+private:
+  std::string str_;
+  std::string repeatsStr_;
+  int nr_;
+};
+
 namespace Log {
 
 void init();
@@ -24,6 +52,8 @@ void displayHistory();
 void clearLog();
 
 void addLineToHistory(const std::string& lineToAdd);
+
+const std::vector< std::vector<Msg> >& getHistory();
 
 } //Log
 

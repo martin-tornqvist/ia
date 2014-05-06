@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "Init.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "ActorPlayer.h"
@@ -39,7 +40,7 @@ void collectLinesFromGame(vector<string>& lines) {
   PlayerSpellsHandling::storeToSaveLines(lines);
 }
 
-void setupGameFromLines(vector<string>& lines) const {
+void setupGameFromLines(vector<string>& lines) {
   trace << "SaveHandler::setupGameFromLines()..." << endl;
   trace << "SaveHandler: Nr lines: " << lines.size() << endl;
   const string& playerName = lines.front();
@@ -62,6 +63,21 @@ void setupGameFromLines(vector<string>& lines) const {
   trace << "SaveHandler::setupGameFromLines() [DONE]" << endl;
 }
 
+void writeFile(const vector<string>& lines) {
+  ofstream file;
+  file.open("data/save", ios::trunc);
+
+  if(file.is_open()) {
+    for(unsigned int i = 0; i < lines.size(); i++) {
+      file << lines.at(i);
+      if(i != lines.size() - 1) {
+        file << endl;
+      }
+    }
+    file.close();
+  }
+}
+
 void readFile(vector<string>& lines) {
   lines.resize(0);
 
@@ -79,21 +95,6 @@ void readFile(vector<string>& lines) {
   } else {
     trace << "[WARNING] Could not open save file, ";
     trace << "in SaveHandler::readFile()" << endl;
-  }
-}
-
-void writeFile(const vector<string>& lines) const {
-  ofstream file;
-  file.open("data/save", ios::trunc);
-
-  if(file.is_open()) {
-    for(unsigned int i = 0; i < lines.size(); i++) {
-      file << lines.at(i);
-      if(i != lines.size() - 1) {
-        file << endl;
-      }
-    }
-    file.close();
   }
 }
 

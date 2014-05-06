@@ -1,10 +1,14 @@
 #include "Utils.h"
 
 #include <algorithm>
+#include <vector>
+#include <assert.h>
 
 #include "Converters.h"
 #include "GameTime.h"
 #include "MersenneTwister.h"
+
+using namespace std;
 
 namespace Rnd {
 
@@ -167,11 +171,11 @@ bool isAreaInsideMap(const Rect& area) {
   return true;
 }
 
-int getKingDist(const int X0, const int Y0, const int X1, const int Y1) {
+int kingDist(const int X0, const int Y0, const int X1, const int Y1) {
   return max(std::abs(X1 - X0), std::abs(Y1 - Y0));
 }
 
-int getKingDist(const Pos& c1, const Pos& c2) {
+int kingDist(const Pos& c1, const Pos& c2) {
   return max(std::abs(c2.x - c1.x), std::abs(c2.y - c1.y));
 }
 
@@ -180,7 +184,7 @@ Pos getClosestPos(const Pos& c, const vector<Pos>& positions) {
   int closestElement = 0;
   const int NR_POSITIONS = positions.size();
   for(int i = 0; i < NR_POSITIONS; i++) {
-    const int CUR_DIST = getKingDist(c, positions.at(i));
+    const int CUR_DIST = kingDist(c, positions.at(i));
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
       closestElement = i;
@@ -196,7 +200,7 @@ Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {
   //Find distance to nearest actor(s)
   int distToNearest = INT_MAX;
   for(Actor * actor : actors) {
-    const int CUR_DIST = getKingDist(c, actor->pos);
+    const int CUR_DIST = kingDist(c, actor->pos);
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
     }
@@ -207,7 +211,7 @@ Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {
   //Store all actors with distance equal to the nearest distance
   vector<Actor*> closestActors;
   for(Actor * actor : actors) {
-    if(getKingDist(c, actor->pos) == distToNearest) {
+    if(kingDist(c, actor->pos) == distToNearest) {
       closestActors.push_back(actor);
     }
   }

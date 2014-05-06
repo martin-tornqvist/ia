@@ -1,9 +1,14 @@
 #include "MapParsing.h"
 
+#include <assert.h>
+#include <algorithm>
+
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "GameTime.h"
 #include "Utils.h"
+
+using namespace std;
 
 //------------------------------------------------------------ CELL PREDICATES
 namespace CellPred {
@@ -264,8 +269,8 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
 
 //------------------------------------------------------------ FUNCT OBJECT
 bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
-  const int chebDist1 = Utils::getKingDist(c_.x, c_.y, c1.x, c1.y);
-  const int chebDist2 = Utils::getKingDist(c_.x, c_.y, c2.x, c2.y);
+  const int chebDist1 = Utils::kingDist(c_.x, c_.y, c1.x, c1.y);
+  const int chebDist2 = Utils::kingDist(c_.x, c_.y, c2.x, c2.y);
   return chebDist1 < chebDist2;
 }
 

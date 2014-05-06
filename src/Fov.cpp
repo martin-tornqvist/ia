@@ -64,7 +64,7 @@ bool checkCell(const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
 
   if(Utils::isPosInsideMap(cellToCheck) == false) {return false;}
 
-  if(Utils::getKingDist(origin, cellToCheck) > FOV_STD_RADI_INT) {return false;}
+  if(Utils::kingDist(origin, cellToCheck) > FOV_STD_RADI_INT) {return false;}
 
   const Pos deltaToTarget(cellToCheck - origin);
   const vector<Pos>* pathDeltas =

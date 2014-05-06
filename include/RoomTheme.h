@@ -25,44 +25,14 @@ enum class RoomThemeId {
 
 struct Room;
 
-class RoomThemeMaker {
-public:
-  RoomThemeMaker() {}
+namespace RoomThemeMaking {
 
-  void run();
+//This array is a support for placing items, monsters and traps
+extern RoomThemeId themeMap[MAP_W][MAP_H];
 
-  //This array is a support for placing items, monsters and traps
-  RoomThemeId themeMap[MAP_W][MAP_H];
+void run();
 
-private:
-  void applyThemeToRoom(Room& room);
-
-  int placeThemeFeatures(Room& room);
-
-  int getRandomNrFeaturesForTheme(const RoomThemeId theme) const;
-
-  void makeThemeSpecificRoomModifications(Room& room);
-
-  void makeRoomDarkWithChance(const Room& room);
-
-  int trySetFeatureToPlace(
-    const FeatureDataT** data, Pos& pos, std::vector<Pos>& nextToWalls,
-    std::vector<Pos>& awayFromWalls,
-    std::vector<const FeatureDataT*> featureDataBelongingToTheme);
-
-  void eraseAdjacentCellsFromVectors(
-    const Pos& pos,  std::vector<Pos>& nextToWalls,
-    std::vector<Pos>& awayFromWalls);
-
-  void assignRoomThemes();
-
-  bool isThemeAllowed(const Room* const room, const RoomThemeId theme,
-                      const bool blockers[MAP_W][MAP_H]) const;
-
-  int nrThemeInMap(const RoomThemeId theme) const;
-
-
-};
+} //RoomThemeMaking
 
 
 #endif

@@ -5,7 +5,7 @@
 
 namespace MenuInputHandling {
 
-MenuAction MenuInputHandler::getAction(MenuBrowser& browser) {
+MenuAction getAction(MenuBrowser& browser) {
   while(true) {
     KeyboardReadRetData d = Input::readKeysUntilFound();
 

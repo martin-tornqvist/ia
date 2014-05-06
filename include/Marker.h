@@ -1,6 +1,8 @@
 #ifndef MARKER_H
 #define MARKER_H
 
+#include "CmnTypes.h"
+
 class Item;
 
 struct MarkerRetData {

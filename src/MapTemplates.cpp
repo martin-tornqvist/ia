@@ -1,11 +1,71 @@
 #include "MapTemplates.h"
 
-void MapTemplateHandler::initTemplates() {
-  string templStr;
-  vector<CharToIdTranslation> translationVector;
+#include <vector>
+#include <assert.h>
+
+using namespace std;
+
+namespace MapTemplHandling {
+
+namespace {
+
+MapTempl templates_[int(MapTemplId::endOfMapTemplId)];
+
+struct CharAndFeatureId {
+  CharAndFeatureId(char cha_, FeatureId featureId_) :
+    cha(cha_), featureId(featureId_) {}
+
+  CharAndFeatureId() : cha(0), featureId(FeatureId::empty) {}
+
+  char      cha;
+  FeatureId featureId;
+};
+
+FeatureId translate(const char cha,
+                    const vector<CharAndFeatureId>& translations) {
+  for(const CharAndFeatureId & translation : translations) {
+    if(cha == translation.cha) {return translation.featureId;}
+  }
+  return FeatureId::empty;
+}
+
+MapTempl strToTempl(const string& str,
+                    const vector<CharAndFeatureId>& translations) {
+  MapTempl                    result;
+  int                         strPos = 0;
+  const int                   STR_SIZE = str.size();
+  vector< vector<FeatureId> > resultVector;
+  vector<FeatureId>           curInnerVector;
+
+  while(strPos != STR_SIZE) {
+    //If delim character found push inner vector to outer
+    if(str[strPos] == ';') {
+      resultVector.push_back(curInnerVector);
+      curInnerVector.resize(0);
+    } else if(str[strPos] == '#') {
+      curInnerVector.push_back(FeatureId::wall);
+    } else if(str[strPos] == '.') {
+      curInnerVector.push_back(FeatureId::floor);
+    } else if(str[strPos] == ' ') {
+      curInnerVector.push_back(FeatureId::empty);
+    } else {
+      curInnerVector.push_back(translate(str[strPos], translations));
+    }
+    strPos++;
+  }
+
+  result.featureVector.swap(resultVector);
+  result.w  = result.featureVector.back().size();
+  result.h  = result.featureVector.size();
+
+  return result;
+}
+
+void initTempls() {
+  vector<CharAndFeatureId> translations;
 
   //---------------------------------------------------- CHURCH
-  templStr =
+  string templStr =
     "             ,,,,,,,,,,,     ;"
     "          ,,,,,######,,,,    ;"
     " ,,,,,,,,,,,,,,#v..v#,,,,,   ;"
@@ -25,21 +85,21 @@ void MapTemplateHandler::initTemplates() {
     "            ,,,,,,,,,,,,     ;";
 
 
-  translationVector.resize(0);
-  addTranslationToVector(translationVector, ',', FeatureId::grassWithered);
-  addTranslationToVector(translationVector, 'v', FeatureId::brazierGolden);
-  addTranslationToVector(translationVector, '[', FeatureId::churchBench);
-  addTranslationToVector(translationVector, '-', FeatureId::altar);
-  addTranslationToVector(translationVector, '*', FeatureId::churchCarpet);
+  translations.resize(0);
+  translations.push_back(CharAndFeatureId(',', FeatureId::grassWithered));
+  translations.push_back(CharAndFeatureId(',', FeatureId::grassWithered));
+  translations.push_back(CharAndFeatureId('v', FeatureId::brazierGolden));
+  translations.push_back(CharAndFeatureId('[', FeatureId::churchBench));
+  translations.push_back(CharAndFeatureId('-', FeatureId::altar));
+  translations.push_back(CharAndFeatureId('*', FeatureId::churchCarpet));
 
-  templates_.push_back(
-    stringToTemplate(templStr, translationVector, MapTemplateId::church));
+  templates_[int(MapTemplId::church)] = strToTempl(templStr, translations);
 
   //---------------------------------------------------- PHARAOH CHAMBER
 
   templStr =
-    //                      1         2         3         4         5         6         7
-    //            01234567890123456789012345678901234567890123456789012345678901234567890123456789
+    //               1         2         3         4         5         6         7
+    //     01234567890123456789012345678901234567890123456789012345678901234567890123456789
     /* 0*/"################################################################################;"/* 0*/
     /* 1*/"###...################################........................##################;"/* 1*/
     /* 2*/"###...###############################..######################..#################;"/* 2*/
@@ -62,54 +122,24 @@ void MapTemplateHandler::initTemplates() {
     /*19*/"###...##########################...##################v..##########........######;"/*19*/
     /*20*/"###...############################v....................##############1...1######;"/*20*/
     /*21*/"################################################################################;"/*21*/;
-  //              01234567890123456789012345678901234567890123456789012345678901234567890123456789
-  //                        1         2         3         4         5         6         7
-  translationVector.resize(0);
-  addTranslationToVector(translationVector, 'v', FeatureId::brazierGolden);
-  addTranslationToVector(translationVector, '1', FeatureId::pillar);
-  addTranslationToVector(translationVector, 'P', FeatureId::statue);
-  templates_.push_back(stringToTemplate(templStr, translationVector, MapTemplateId::pharaohsChamber));
+  //       01234567890123456789012345678901234567890123456789012345678901234567890123456789
+  //                 1         2         3         4         5         6         7
+  translations.resize(0);
+  translations.push_back(CharAndFeatureId('v', FeatureId::brazierGolden));
+  translations.push_back(CharAndFeatureId('1', FeatureId::pillar));
+  translations.push_back(CharAndFeatureId('P', FeatureId::statue));
+  templates_[int(MapTemplId::egypt)] = strToTempl(templStr, translations);
 }
 
-MapTemplate* MapTemplateHandler::getTemplate(MapTemplateId templateId) {
-  for(MapTemplate & t : templates_) {
-    if(t.templateId == templateId) return &t;
-  }
-  return NULL;
+} //namespace
+
+void init() {
+  initTempls();
 }
 
-
-MapTemplate MapTemplateHandler::stringToTemplate(
-  const string& str, const vector<CharToIdTranslation>& translations,
-  const MapTemplateId templateId) {
-
-  MapTemplate             result(templateId);
-  unsigned int            strPos = 0;
-  const unsigned int      strSize = str.size();
-  vector< vector<FeatureId> > resultVector;
-  vector<FeatureId> curInnerVector;
-
-  while(strPos != strSize) {
-    //If delim character found push inner vector to outer
-    if(str[strPos] == ';') {
-      resultVector.push_back(curInnerVector);
-      curInnerVector.resize(0);
-    } else if(str[strPos] == '#') {
-      curInnerVector.push_back(FeatureId::wall);
-    } else if(str[strPos] == '.') {
-      curInnerVector.push_back(FeatureId::floor);
-    } else if(str[strPos] == ' ') {
-      curInnerVector.push_back(FeatureId::empty);
-    } else {
-      curInnerVector.push_back(translate(str[strPos], translations));
-    }
-    strPos++;
-  }
-
-  result.featureVector.swap(resultVector);
-  result.w  = result.featureVector.at(0).size();
-  result.h = result.featureVector.size();
-
-  return result;
+const MapTempl& getTempl(const MapTemplId id) {
+  assert(id != MapTemplId::endOfMapTemplId);
+  return templates_[int(id)];
 }
 
+} //MapTemplHandling

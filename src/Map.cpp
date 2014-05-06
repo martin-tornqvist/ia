@@ -58,16 +58,17 @@ void resetCells(const bool MAKE_STONE_WALLS) {
 } //Namespace
 
 void init() {
-  const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
-  player = dynamic_cast<Player*>(ActorFactory::spawn(actor_player, playerPos));
-
   dlvl = 0;
 
   rooms.resize(0);
 
+  resetCells(false);
+
+  const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
+  player = dynamic_cast<Player*>(ActorFactory::spawn(actor_player, playerPos));
+
   ActorFactory::deleteAllMonsters();
 
-  resetCells(false);
   GameTime::eraseAllFeatureMobs();
   GameTime::resetTurnTypeAndActorCounters();
 }

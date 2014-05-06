@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "Init.h"
 #include "Map.h"
 #include "MapGen.h"
 #include "FeatureFactory.h"
@@ -10,7 +11,19 @@
 
 using namespace std;
 
-void PopulateTraps::populateRoomAndCorridorLevel() const {
+namespace PopulateTraps {
+
+namespace {
+
+void spawnTrapAt(const TrapId id, const Pos& pos) {
+  FeatureStatic* const f = Map::cells[pos.x][pos.y].featureStatic;
+  const FeatureDataT* const d = FeatureData::getData(f->getId());
+  FeatureFactory::spawn(FeatureId::trap, pos, new TrapSpawnData(d, id));
+}
+
+} //namespace
+
+void populateRoomAndCorridorLevel() {
   trace << "PopulateTraps::populateRoomAndCorridorLevel()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
@@ -100,7 +113,7 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
           blockers[x][y] == false &&
-          RoomThemeMaker::themeMap[x][y] == RoomThemeId::plain &&
+          RoomThemeMaking::themeMap[x][y] == RoomThemeId::plain &&
           Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
           trapPosBucket.push_back(Pos(x, y));
         }
@@ -139,8 +152,4 @@ void PopulateTraps::populateRoomAndCorridorLevel() const {
   trace << "PopulateTraps::populateRoomAndCorridorLevel() [DONE]" << endl;
 }
 
-void PopulateTraps::spawnTrapAt(const TrapId id, const Pos& pos) const {
-  FeatureStatic* const f = Map::cells[pos.x][pos.y].featureStatic;
-  const FeatureDataT* const d = FeatureData::getData(f->getId());
-  FeatureFactory::spawn(FeatureId::trap, pos, new TrapSpawnData(d, id));
-}
+} //PopulateTraps

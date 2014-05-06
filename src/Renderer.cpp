@@ -5,6 +5,7 @@
 
 #include <SDL_image.h>
 
+#include "Init.h"
 #include "Item.h"
 #include "CharacterLines.h"
 #include "Marker.h"
@@ -36,7 +37,7 @@ bool tilePixelData_[400][400];
 bool fontPixelData_[400][400];
 
 bool isInited() {
-  return eng != NULL && screenSurface != NULL;
+  return screenSurface != NULL;
 }
 
 void loadMainMenuLogo() {
@@ -143,9 +144,9 @@ void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
     const int CELL_W = Config::getCellW();
     const int CELL_H = Config::getCellH();
 
-    const Pos sheetPoss = eng->art->getTilePoss(tile);
-    const int SHEET_X0  = sheetPoss.x * CELL_W;
-    const int SHEET_Y0  = sheetPoss.y * CELL_H;
+    const Pos sheetPos  = Art::getTilePos(tile);
+    const int SHEET_X0  = sheetPos.x * CELL_W;
+    const int SHEET_Y0  = sheetPos.y * CELL_H;
     const int SHEET_X1  = SHEET_X0 + CELL_W - 1;
     const int SHEET_Y1  = SHEET_Y0 + CELL_H - 1;
     const int SCREEN_X0 = pixelPos.x;
@@ -183,9 +184,9 @@ void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
   const int CELL_W_SHEET = CELL_W / SCALE;
   const int CELL_H_SHEET = CELL_H / SCALE;
 
-  const Pos sheetPoss = eng->art->getGlyphPoss(GLYPH);
-  const int SHEET_X0  = sheetPoss.x * CELL_W_SHEET;
-  const int SHEET_Y0  = sheetPoss.y * CELL_H_SHEET;
+  const Pos sheetPos  = Art::getGlyphPos(GLYPH);
+  const int SHEET_X0  = sheetPos.x * CELL_W_SHEET;
+  const int SHEET_Y0  = sheetPos.y * CELL_H_SHEET;
   const int SHEET_X1  = SHEET_X0 + CELL_W_SHEET - 1;
   const int SHEET_Y1  = SHEET_Y0 + CELL_H_SHEET - 1;
   const int SCREEN_X0 = pixelPos.x;
@@ -383,7 +384,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
       SDL_Color clr = clrGreenLgt;
 
       if(EFFECTIVE_RANGE != -1) {
-        const int CHEB_DIST = Utils::getKingDist(trail.at(0), pos);
+        const int CHEB_DIST = Utils::kingDist(trail.at(0), pos);
         if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
       if(Config::isTilesMode()) {
@@ -394,13 +395,13 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
     }
   }
 
-  const Pos& headPos = eng->marker->getPos();
+  const Pos& headPos = Marker::getPos();
 
   SDL_Color clr = clrGreenLgt;
 
   if(trail.size() > 2) {
     if(EFFECTIVE_RANGE != -1) {
-      const int CHEB_DIST = Utils::getKingDist(trail.at(0), headPos);
+      const int CHEB_DIST = Utils::kingDist(trail.at(0), headPos);
       if(CHEB_DIST > EFFECTIVE_RANGE) {
         clr = clrYellow;
       }
@@ -519,7 +520,7 @@ void drawBlastAnimAtPositionsWithPlayerVision(
   vector<Pos> positionsWithVision;
   for(unsigned int i = 0; i < positions.size(); i++) {
     const Pos& pos = positions.at(i);
-    if(eng->map->cells[pos.x][pos.y].isSeenByPlayer) {
+    if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
       positionsWithVision.push_back(pos);
     }
   }
@@ -750,298 +751,296 @@ void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN) {
 
     drawMap();
 
-    CharacterLines::drawInfoLines(*eng);
-    CharacterLines::drawLocationInfo(*eng);
-    eng->log->drawLog(false);
+    CharacterLines::drawInfoLines();
+    CharacterLines::drawLocationInfo();
+    Log::drawLog(false);
 
     if(SHOULD_UPDATE_SCREEN) {updateScreen();}
   }
 }
 
 void drawMap() {
-  if(isInited()) {
-    CellRenderData* curDrw = NULL;
-    CellRenderData tmpDrw;
+  if(isInited() == false) {return;}
 
-    const bool IS_TILES = Config::isTilesMode();
+                                 CellRenderData* curDrw = NULL;
+  CellRenderData tmpDrw;
 
-    //---------------- INSERT STATIC FEATURES AND BLOOD INTO ARRAY
-    for(int y = 0; y < MAP_H; y++) {
-      for(int x = 0; x < MAP_W; x++) {
+  const bool IS_TILES = Config::isTilesMode();
 
-        if(eng->map->cells[x][y].isSeenByPlayer) {
+  //---------------- INSERT STATIC FEATURES AND BLOOD INTO ARRAY
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
 
-          curDrw = &renderArray[x][y];
-          curDrw->clear();
+      if(Map::cells[x][y].isSeenByPlayer) {
 
-          const FeatureStatic* const f = eng->map->cells[x][y].featureStatic;
+        curDrw = &renderArray[x][y];
+        curDrw->clear();
 
-          TileId  goreTile  = TileId::empty;
-          char    goreGlyph = ' ';
-          if(f->canHaveGore()) {
-            goreTile  = f->getGoreTile();
-            goreGlyph = f->getGoreGlyph();
+        const FeatureStatic* const f = Map::cells[x][y].featureStatic;
+
+        TileId  goreTile  = TileId::empty;
+        char    goreGlyph = ' ';
+        if(f->canHaveGore()) {
+          goreTile  = f->getGoreTile();
+          goreGlyph = f->getGoreGlyph();
+        }
+        if(goreTile == TileId::empty) {
+          curDrw->tile  = f->getTile();
+          curDrw->glyph = f->getGlyph();
+          const SDL_Color& featureClr   = f->getClr();
+          const SDL_Color& featureClrBg = f->getClrBg();
+          curDrw->clr = f->hasBlood() ? clrRedLgt : featureClr;
+          if(Utils::isClrEq(featureClrBg, clrBlack) == false) {
+            curDrw->clrBg = featureClrBg;
           }
-          if(goreTile == TileId::empty) {
-            curDrw->tile  = f->getTile();
-            curDrw->glyph = f->getGlyph();
-            const SDL_Color& featureClr   = f->getClr();
-            const SDL_Color& featureClrBg = f->getClrBg();
-            curDrw->clr = f->hasBlood() ? clrRedLgt : featureClr;
-            if(Utils::isClrEq(featureClrBg, clrBlack) == false) {
-              curDrw->clrBg = featureClrBg;
-            }
-          } else {
-            curDrw->tile  = goreTile;
-            curDrw->glyph = goreGlyph;
-            curDrw->clr   = clrRed;
-          }
-          if(eng->map->cells[x][y].isLight) {
-            if(f->canMoveCmn()) {
-              curDrw->isMarkedAsLit = true;
-            }
-          }
+        } else {
+          curDrw->tile  = goreTile;
+          curDrw->glyph = goreGlyph;
+          curDrw->clr   = clrRed;
+        }
+        if(Map::cells[x][y].isLight && f->canMoveCmn()) {
+          curDrw->isMarkedAsLit = true;
         }
       }
     }
+  }
 
-    int xPos, yPos;
-    //---------------- INSERT DEAD ACTORS INTO ARRAY
-    for(Actor * actor : eng->gameTime->actors_) {
+  int xPos, yPos;
+  //---------------- INSERT DEAD ACTORS INTO ARRAY
+  for(Actor * actor : GameTime::actors_) {
+    xPos = actor->pos.x;
+    yPos = actor->pos.y;
+    if(
+      actor->deadState == ActorDeadState::corpse &&
+      actor->getData().glyph != ' ' &&
+      actor->getData().tile != TileId::empty &&
+      Map::cells[xPos][yPos].isSeenByPlayer) {
+      curDrw = &renderArray[xPos][yPos];
+      curDrw->clr   = clrRed;
+      curDrw->tile  = actor->getTile();
+      curDrw->glyph = actor->getGlyph();
+    }
+  }
+
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      curDrw = &renderArray[x][y];
+      if(Map::cells[x][y].isSeenByPlayer) {
+        //---------------- INSERT ITEMS INTO ARRAY
+        const Item* const item = Map::cells[x][y].item;
+        if(item != NULL) {
+          curDrw->clr   = item->getClr();
+          curDrw->tile  = item->getTile();
+          curDrw->glyph = item->getGlyph();
+        }
+
+        //COPY ARRAY TO PLAYER MEMORY (BEFORE LIVING ACTORS AND MOBILE FEATURES)
+        renderArrayNoActors[x][y] = renderArray[x][y];
+
+        //COLOR CELLS MARKED AS LIT YELLOW
+        if(curDrw->isMarkedAsLit) {
+          curDrw->clr = clrYellow;
+        }
+      }
+    }
+  }
+
+  //---------------- INSERT MOBILE FEATURES INTO ARRAY
+  for(FeatureMob * mob : GameTime::featureMobs_) {
+    xPos = mob->getX();
+    yPos = mob->getY();
+    const TileId  mobTile   = mob->getTile();
+    const char    mobGlyph  = mob->getGlyph();
+    if(
+      mobTile != TileId::empty && mobGlyph != ' ' &&
+      Map::cells[xPos][yPos].isSeenByPlayer) {
+      curDrw = &renderArray[xPos][yPos];
+      curDrw->clr = mob->getClr();
+      curDrw->tile  = mobTile;
+      curDrw->glyph = mobGlyph;
+    }
+  }
+
+  //---------------- INSERT LIVING ACTORS INTO ARRAY
+  for(Actor * actor : GameTime::actors_) {
+    if(actor != Map::player) {
       xPos = actor->pos.x;
       yPos = actor->pos.y;
-      if(
-        actor->deadState == ActorDeadState::corpse &&
-        actor->getData().glyph != ' ' &&
-        actor->getData().tile != TileId::empty &&
-        eng->map->cells[xPos][yPos].isSeenByPlayer) {
+
+      if(actor->deadState == ActorDeadState::alive) {
+
         curDrw = &renderArray[xPos][yPos];
-        curDrw->clr   = clrRed;
-        curDrw->tile  = actor->getTile();
-        curDrw->glyph = actor->getGlyph();
-      }
-    }
 
-    for(int y = 0; y < MAP_H; y++) {
-      for(int x = 0; x < MAP_W; x++) {
-        curDrw = &renderArray[x][y];
-        if(eng->map->cells[x][y].isSeenByPlayer) {
-          //---------------- INSERT ITEMS INTO ARRAY
-          const Item* const item = eng->map->cells[x][y].item;
-          if(item != NULL) {
-            curDrw->clr   = item->getClr();
-            curDrw->tile  = item->getTile();
-            curDrw->glyph = item->getGlyph();
-          }
+        const Monster* const monster = dynamic_cast<const Monster*>(actor);
 
-          //COPY ARRAY TO PLAYER MEMORY (BEFORE LIVING ACTORS AND MOBILE FEATURES)
-          renderArrayNoActors[x][y] = renderArray[x][y];
+        if(Map::player->isSeeingActor(*actor, NULL)) {
 
-          //COLOR CELLS MARKED AS LIT YELLOW
-          if(curDrw->isMarkedAsLit) {
-            curDrw->clr = clrYellow;
-          }
-        }
-      }
-    }
-
-    //---------------- INSERT MOBILE FEATURES INTO ARRAY
-    for(FeatureMob * mob : eng->gameTime->featureMobs_) {
-      xPos = mob->getX();
-      yPos = mob->getY();
-      const TileId  mobTile   = mob->getTile();
-      const char    mobGlyph  = mob->getGlyph();
-      if(
-        mobTile != TileId::empty && mobGlyph != ' ' &&
-        eng->map->cells[xPos][yPos].isSeenByPlayer) {
-        curDrw = &renderArray[xPos][yPos];
-        curDrw->clr = mob->getClr();
-        curDrw->tile  = mobTile;
-        curDrw->glyph = mobGlyph;
-      }
-    }
-
-    //---------------- INSERT LIVING ACTORS INTO ARRAY
-    for(Actor * actor : eng->gameTime->actors_) {
-      if(actor != Map::player) {
-        xPos = actor->pos.x;
-        yPos = actor->pos.y;
-
-        if(actor->deadState == ActorDeadState::alive) {
-
-          curDrw = &renderArray[xPos][yPos];
-
-          const Monster* const monster = dynamic_cast<const Monster*>(actor);
-
-          if(Map::player->isSeeingActor(*actor, NULL)) {
-
-            if(
-              actor->getTile()  != TileId::empty &&
-              actor->getGlyph() != ' ') {
-
-              curDrw->clr   = actor->getClr();
-              curDrw->tile  = actor->getTile();
-              curDrw->glyph = actor->getGlyph();
-
-              curDrw->lifebarLength = getLifebarLength(*actor);
-              curDrw->isLivingActorSeenHere = true;
-              curDrw->isFadeEffectAllowed = false;
-
-              if(monster->leader == Map::player) {
-                // TODO reimplement allied indicator
-              } else {
-                if(monster->awareOfPlayerCounter_ <= 0) {
-                  curDrw->clrBg = clrBlue;
-                }
-              }
-            }
-          } else {
-            if(monster->playerAwareOfMeCounter_ > 0) {
-              curDrw->isAwareOfMonsterHere  = true;
-            }
-          }
-        }
-      }
-    }
-
-    //---------------- DRAW THE GRID
-    for(int y = 0; y < MAP_H; y++) {
-      for(int x = 0; x < MAP_W; x++) {
-
-        tmpDrw = renderArray[x][y];
-
-        if(eng->map->cells[x][y].isSeenByPlayer) {
-          if(tmpDrw.isFadeEffectAllowed) {
-            const int DIST_FROM_PLAYER =
-              Utils::getKingDist(Map::player->pos, Pos(x, y));
-            if(DIST_FROM_PLAYER > 1) {
-              const double DIST_FADE_DIV =
-                min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
-              tmpDrw.clr.r /= DIST_FADE_DIV;
-              tmpDrw.clr.g /= DIST_FADE_DIV;
-              tmpDrw.clr.b /= DIST_FADE_DIV;
-            }
-          }
-        } else if(eng->map->cells[x][y].isExplored) {
-          bool isAwareOfMonsterHere = tmpDrw.isAwareOfMonsterHere;
-          renderArray[x][y] = eng->map->cells[x][y].playerVisualMemory;
-          tmpDrw = renderArray[x][y];
-          tmpDrw.isAwareOfMonsterHere = isAwareOfMonsterHere;
-
-          tmpDrw.clr.r   /= 4; tmpDrw.clr.g   /= 4; tmpDrw.clr.b   /= 4;
-          tmpDrw.clrBg.r /= 4; tmpDrw.clrBg.g /= 4; tmpDrw.clrBg.b /= 4;
-        }
-
-        if(IS_TILES) {
-          //Walls are given perspective.
-          //If the tile to be set is a (top) wall tile, check the tile beneath it.
-          //If the tile beneath is not a front or top wall tile, and that cell is
-          //explored, change the current tile to wall front
           if(
-            tmpDrw.isLivingActorSeenHere == false &&
-            tmpDrw.isAwareOfMonsterHere  == false) {
-            const TileId tileSeen = renderArrayNoActors[x][y].tile;
-            const TileId tileMem  = eng->map->cells[x][y].playerVisualMemory.tile;
-            const bool IS_TILE_WALL =
-              eng->map->cells[x][y].isSeenByPlayer ?
-              Wall::isTileAnyWallTop(tileSeen) :
-              Wall::isTileAnyWallTop(tileMem);
-            if(IS_TILE_WALL) {
-              const Feature* const f = eng->map->cells[x][y].featureStatic;
-              const FeatureId featureId = f->getId();
-              bool isHiddenDoor = false;
-              if(featureId == FeatureId::door) {
-                isHiddenDoor = dynamic_cast<const Door*>(f)->isSecret();
+            actor->getTile()  != TileId::empty &&
+            actor->getGlyph() != ' ') {
+
+            curDrw->clr   = actor->getClr();
+            curDrw->tile  = actor->getTile();
+            curDrw->glyph = actor->getGlyph();
+
+            curDrw->lifebarLength = getLifebarLength(*actor);
+            curDrw->isLivingActorSeenHere = true;
+            curDrw->isFadeEffectAllowed = false;
+
+            if(monster->leader == Map::player) {
+              // TODO reimplement allied indicator
+            } else {
+              if(monster->awareOfPlayerCounter_ <= 0) {
+                curDrw->clrBg = clrBlue;
               }
-              if(
-                y < MAP_H - 1 &&
-                (featureId == FeatureId::wall || isHiddenDoor)) {
-                if(eng->map->cells[x][y + 1].isExplored) {
-                  const bool IS_CELL_BELOW_SEEN =
-                    eng->map->cells[x][y + 1].isSeenByPlayer;
+            }
+          }
+        } else {
+          if(monster->playerAwareOfMeCounter_ > 0) {
+            curDrw->isAwareOfMonsterHere  = true;
+          }
+        }
+      }
+    }
+  }
 
-                  const TileId tileBelowSeen =
-                    renderArrayNoActors[x][y + 1].tile;
+  //---------------- DRAW THE GRID
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
 
-                  const TileId tileBelowMem =
-                    eng->map->cells[x][y + 1].playerVisualMemory.tile;
+      tmpDrw = renderArray[x][y];
 
-                  const bool TILE_BELOW_IS_WALL_FRONT =
-                    IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallFront(tileBelowSeen) :
-                    Wall::isTileAnyWallFront(tileBelowMem);
+      if(Map::cells[x][y].isSeenByPlayer) {
+        if(tmpDrw.isFadeEffectAllowed) {
+          const int DIST_FROM_PLAYER =
+            Utils::kingDist(Map::player->pos, Pos(x, y));
+          if(DIST_FROM_PLAYER > 1) {
+            const double DIST_FADE_DIV =
+              min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
+            tmpDrw.clr.r /= DIST_FADE_DIV;
+            tmpDrw.clr.g /= DIST_FADE_DIV;
+            tmpDrw.clr.b /= DIST_FADE_DIV;
+          }
+        }
+      } else if(Map::cells[x][y].isExplored) {
+        bool isAwareOfMonsterHere = tmpDrw.isAwareOfMonsterHere;
+        renderArray[x][y] = Map::cells[x][y].playerVisualMemory;
+        tmpDrw = renderArray[x][y];
+        tmpDrw.isAwareOfMonsterHere = isAwareOfMonsterHere;
 
-                  const bool TILE_BELOW_IS_WALL_TOP =
-                    IS_CELL_BELOW_SEEN ? Wall::isTileAnyWallTop(tileBelowSeen) :
-                    Wall::isTileAnyWallTop(tileBelowMem);
+        tmpDrw.clr.r   /= 4; tmpDrw.clr.g   /= 4; tmpDrw.clr.b   /= 4;
+        tmpDrw.clrBg.r /= 4; tmpDrw.clrBg.g /= 4; tmpDrw.clrBg.b /= 4;
+      }
 
-                  bool tileBelowIsRevealedDoor =
-                    IS_CELL_BELOW_SEEN ? Door::isTileAnyDoor(tileBelowSeen) :
-                    Door::isTileAnyDoor(tileBelowMem);
+      if(IS_TILES) {
+        //Walls are given perspective.
+        //If the tile to be set is a (top) wall tile, check the tile beneath it.
+        //If the tile beneath is not a front or top wall tile, and that cell is
+        //explored, change the current tile to wall front
+        if(
+          tmpDrw.isLivingActorSeenHere == false &&
+          tmpDrw.isAwareOfMonsterHere  == false) {
+          const TileId tileSeen = renderArrayNoActors[x][y].tile;
+          const TileId tileMem  = Map::cells[x][y].playerVisualMemory.tile;
+          const bool IS_TILE_WALL =
+            Map::cells[x][y].isSeenByPlayer ?
+            Wall::isTileAnyWallTop(tileSeen) :
+            Wall::isTileAnyWallTop(tileMem);
+          if(IS_TILE_WALL) {
+            const Feature* const f = Map::cells[x][y].featureStatic;
+            const FeatureId featureId = f->getId();
+            bool isHiddenDoor = false;
+            if(featureId == FeatureId::door) {
+              isHiddenDoor = dynamic_cast<const Door*>(f)->isSecret();
+            }
+            if(
+              y < MAP_H - 1 &&
+              (featureId == FeatureId::wall || isHiddenDoor)) {
+              if(Map::cells[x][y + 1].isExplored) {
+                const bool IS_SEEN_BELOW = Map::cells[x][y + 1].isSeenByPlayer;
 
-                  if(
-                    TILE_BELOW_IS_WALL_FRONT  ||
-                    TILE_BELOW_IS_WALL_TOP    ||
-                    tileBelowIsRevealedDoor) {
-                    if(featureId == FeatureId::wall) {
-                      const Wall* const wall = dynamic_cast<const Wall*>(f);
-                      tmpDrw.tile = wall->getTopWallTile();
-                    }
-                  } else if(featureId == FeatureId::wall) {
+                const TileId tileBelowSeen = renderArrayNoActors[x][y + 1].tile;
+
+                const TileId tileBelowMem =
+                  Map::cells[x][y + 1].playerVisualMemory.tile;
+
+                const bool TILE_BELOW_IS_WALL_FRONT =
+                  IS_SEEN_BELOW ? Wall::isTileAnyWallFront(tileBelowSeen) :
+                  Wall::isTileAnyWallFront(tileBelowMem);
+
+                const bool TILE_BELOW_IS_WALL_TOP =
+                  IS_SEEN_BELOW ? Wall::isTileAnyWallTop(tileBelowSeen) :
+                  Wall::isTileAnyWallTop(tileBelowMem);
+
+                bool tileBelowIsRevealedDoor =
+                  IS_SEEN_BELOW ? Door::isTileAnyDoor(tileBelowSeen) :
+                  Door::isTileAnyDoor(tileBelowMem);
+
+                if(
+                  TILE_BELOW_IS_WALL_FRONT  ||
+                  TILE_BELOW_IS_WALL_TOP    ||
+                  tileBelowIsRevealedDoor) {
+                  if(featureId == FeatureId::wall) {
                     const Wall* const wall = dynamic_cast<const Wall*>(f);
-                    tmpDrw.tile = wall->getFrontWallTile();
-                  } else if(isHiddenDoor) {
-                    tmpDrw.tile = Config::isTilesWallFullSquare() ?
-                                  TileId::wallTop :
-                                  TileId::wallFront;
+                    tmpDrw.tile = wall->getTopWallTile();
                   }
+                } else if(featureId == FeatureId::wall) {
+                  const Wall* const wall = dynamic_cast<const Wall*>(f);
+                  tmpDrw.tile = wall->getFrontWallTile();
+                } else if(isHiddenDoor) {
+                  tmpDrw.tile = Config::isTilesWallFullSquare() ?
+                                TileId::wallTop :
+                                TileId::wallFront;
                 }
               }
             }
           }
         }
+      }
 
-        Pos pos(x, y);
+      Pos pos(x, y);
 
-        if(tmpDrw.isAwareOfMonsterHere) {
-          drawGlyph('!', Panel::map, pos, clrBlack, true, clrNosfTealDrk);
-        } else if(tmpDrw.tile != TileId::empty && tmpDrw.glyph != ' ') {
-          if(IS_TILES) {
-            drawTile(tmpDrw.tile, Panel::map, pos, tmpDrw.clr, tmpDrw.clrBg);
-          } else {
-            drawGlyph(tmpDrw.glyph, Panel::map, pos, tmpDrw.clr, true,
-                      tmpDrw.clrBg);
-          }
-
-          if(tmpDrw.lifebarLength != -1) {
-            drawLifeBar(pos, tmpDrw.lifebarLength);
-          }
+      if(tmpDrw.isAwareOfMonsterHere) {
+        drawGlyph('!', Panel::map, pos, clrBlack, true, clrNosfTealDrk);
+      } else if(tmpDrw.tile != TileId::empty && tmpDrw.glyph != ' ') {
+        if(IS_TILES) {
+          drawTile(tmpDrw.tile, Panel::map, pos, tmpDrw.clr, tmpDrw.clrBg);
+        } else {
+          drawGlyph(tmpDrw.glyph, Panel::map, pos, tmpDrw.clr, true,
+                    tmpDrw.clrBg);
         }
 
-        if(eng->map->cells[x][y].isExplored == false) {
-          renderArray[x][y].clear();
+        if(tmpDrw.lifebarLength != -1) {
+          drawLifeBar(pos, tmpDrw.lifebarLength);
         }
       }
-    }
 
-    //---------------- DRAW PLAYER CHARACTER
-    bool isRangedWpn = false;
-    const Pos& pos = Map::player->pos;
-    Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
-    if(item != NULL) {
-      isRangedWpn = item->getData().isRangedWeapon;
+      if(Map::cells[x][y].isExplored == false) {
+        renderArray[x][y].clear();
+      }
     }
-    if(IS_TILES) {
-      const TileId tile = isRangedWpn ? TileId::playerFirearm : TileId::playerMelee;
-      drawTile(tile, Panel::map, pos, Map::player->getClr(), clrBlack);
-    } else {
-      drawGlyph('@', Panel::map, pos, Map::player->getClr(), true, clrBlack);
-    }
-    const int LIFE_BAR_LENGTH = getLifebarLength(*Map::player);
-    if(LIFE_BAR_LENGTH != -1) {
-      drawLifeBar(pos, LIFE_BAR_LENGTH);
-    }
-    drawPlayerShockExclMarks();
   }
+
+  //---------------- DRAW PLAYER CHARACTER
+  bool isRangedWpn = false;
+  const Pos& pos = Map::player->pos;
+  Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
+  if(item != NULL) {
+    isRangedWpn = item->getData().isRangedWeapon;
+  }
+  if(IS_TILES) {
+    const TileId tile = isRangedWpn ?
+                        TileId::playerFirearm : TileId::playerMelee;
+    drawTile(tile, Panel::map, pos, Map::player->getClr(), clrBlack);
+  } else {
+    drawGlyph('@', Panel::map, pos, Map::player->getClr(), true, clrBlack);
+  }
+  const int LIFE_BAR_LENGTH = getLifebarLength(*Map::player);
+  if(LIFE_BAR_LENGTH != -1) {
+    drawLifeBar(pos, LIFE_BAR_LENGTH);
+  }
+  drawPlayerShockExclMarks();
 }
+
 } //Render
 

@@ -1,7 +1,9 @@
 #include "Properties.h"
 
 #include <algorithm>
+#include <assert.h>
 
+#include "Init.h"
 #include "ItemArmor.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -16,7 +18,6 @@
 #include "PlayerBon.h"
 #include "MapParsing.h"
 #include "LineCalc.h"
-#include "Blood.h"
 #include "ActorFactory.h"
 #include "Utils.h"
 
@@ -24,15 +25,18 @@ using namespace std;
 
 namespace PropData {
 
+PropDataT data[endOfPropIds];
+
 namespace {
 
-void PropDataHandler::addPropData(PropData& d) {
+void addPropData(PropDataT& d) {
   data[d.id] = d;
-  d = PropData();
+  PropDataT blank;
+  d = blank;
 }
 
-void PropDataHandler::initDataList() {
-  PropData d;
+void initDataList() {
+  PropDataT d;
 
   d.id = propRPhys;
   d.stdRndTurns = Range(40, 60);
@@ -1427,7 +1431,6 @@ bool PropDiseased::tryResistOtherProp(const PropId id) const {
 void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   if(IS_PLAYER_SEE_OWNING_ACTOR) {
     const string& name1 = owningActor_->getNameThe();
-    const string& name2 = ActorData::data[actor_zuul].name_the;
     const string& name2 = ActorData::data[actor_zuul].name_the;
     Log::addMsg(name1 + " was possessed by " + name2 + "!");
   }

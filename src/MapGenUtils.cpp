@@ -6,6 +6,7 @@
 #include "FeatureFactory.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "MapTemplates.h"
 
 #ifdef DEMO_MODE
 #include "SdlWrapper.h"
@@ -278,10 +279,10 @@ void digByRandomWalk(const Pos& origin, int len, FeatureId featureToMake,
   }
 }
 
-void buildFromTemplate(const Pos& pos, MapTemplate* t) {
-  for(int dy = 0; dy < t->h; dy++) {
-    for(int dx = 0; dx < t->w; dx++) {
-      const FeatureId featureId = t->featureVector[dy][dx];
+void buildFromTempl(const Pos& pos, const MapTempl& t) {
+  for(int dy = 0; dy < t.h; dy++) {
+    for(int dx = 0; dx < t.w; dx++) {
+      const FeatureId featureId = t.featureVector[dy][dx];
       if(featureId != FeatureId::empty) {
         FeatureFactory::spawn(featureId, pos + Pos(dx, dy));
       }
@@ -289,9 +290,8 @@ void buildFromTemplate(const Pos& pos, MapTemplate* t) {
   }
 }
 
-void buildFromTemplate(const Pos& pos, MapTemplateId templateId) {
-  MapTemplate* t = MapTemplateHandling::getTemplate(templateId);
-  buildFromTemplate(pos, t);
+void buildFromTempl(const Pos& pos, MapTemplId templateId) {
+  buildFromTempl(pos, MapTemplHandling::getTempl(templateId));
 }
 
 } //MapGenUtils

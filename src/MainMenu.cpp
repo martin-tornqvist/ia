@@ -377,7 +377,6 @@ GameEntryMode run(bool& quit, int& introMusChannel) {
         if(browser.isPosAtElement(1)) {
           if(SaveHandling::isSaveAvailable()) {
             SaveHandling::load();
-            GameTime::insertActorInLoop(dynamic_cast<Actor*>(Map::player));
             DungeonClimb::travelDown();
             return GameEntryMode::loadGame;
           } else {

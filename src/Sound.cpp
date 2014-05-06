@@ -1,6 +1,7 @@
 #include "Sound.h"
 
 #include <iostream>
+#include <string>
 
 #include "Feature.h"
 #include "Map.h"
@@ -9,6 +10,8 @@
 #include "GameTime.h"
 #include "MapParsing.h"
 #include "Utils.h"
+
+using namespace std;
 
 namespace SndEmit {
 

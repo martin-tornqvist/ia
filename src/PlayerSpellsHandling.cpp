@@ -1,5 +1,7 @@
 #include "PlayerSpellsHandling.h"
 
+#include <vector>
+
 #include "ItemScroll.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -10,6 +12,9 @@
 #include "PlayerBon.h"
 #include "Query.h"
 #include "Utils.h"
+#include "Map.h"
+
+using namespace std;
 
 namespace PlayerSpellsHandling {
 

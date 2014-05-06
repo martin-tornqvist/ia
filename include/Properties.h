@@ -117,7 +117,7 @@ struct PropDataT {
 
 namespace PropData {
 
-PropDataT data[endOfPropIds];
+extern PropDataT data[endOfPropIds];
 
 void init();
 

@@ -1,5 +1,7 @@
 #include "Thrower.h"
 
+#include <vector>
+
 #include "Item.h"
 #include "ItemPotion.h"
 #include "ActorData.h"
@@ -18,7 +20,11 @@
 #include "Utils.h"
 #include "SdlWrapper.h"
 
-void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
+using namespace std;
+
+namespace Throwing {
+
+void playerThrowLitExplosive(const Pos& aimCell) {
   const int DYNAMITE_FUSE = Map::player->dynamiteFuseTurns;
   const int FLARE_FUSE = Map::player->flareFuseTurns;
 
@@ -88,8 +94,7 @@ void Thrower::playerThrowLitExplosive(const Pos& aimCell) {
   GameTime::actorDidAct();
 }
 
-void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
-                        Item& itemThrown) {
+void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
   MissileAttData* data = new MissileAttData(
     actorThrowing, itemThrown, targetCell, actorThrowing.pos);
 
@@ -118,8 +123,8 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   int blockedInElement = -1;
   bool isActorHit = false;
 
-  const char glyph = itemThrown.getGlyph();
-  const SDL_Color clr = itemThrown.getClr();
+  const char      glyph = itemThrown.getGlyph();
+  const SDL_Color clr   = itemThrown.getClr();
 
   int chanceToDestroyItem = 0;
 
@@ -235,3 +240,5 @@ void Thrower::throwItem(Actor& actorThrowing, const Pos& targetCell,
   Renderer::drawMapAndInterface();
   GameTime::actorDidAct();
 }
+
+} //Throwing

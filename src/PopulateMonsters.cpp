@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "Init.h"
 #include "FeatureTrap.h"
 #include "Map.h"
 #include "ActorFactory.h"
@@ -19,9 +20,9 @@ namespace PopulateMonsters {
 namespace {
 
 int getRandomOutOfDepth() {
-  if(DLVL == 0)                   {return 0;}
-  if(Rnd::oneIn(40) && DLVL > 1)  {return 5;}
-  if(Rnd::oneIn(5))               {return 2;}
+  if(Map::dlvl == 0)                  {return 0;}
+  if(Rnd::oneIn(40) && Map::dlvl > 1) {return 5;}
+  if(Rnd::oneIn(5))                   {return 2;}
 
   return 0;
 }
@@ -31,7 +32,7 @@ void makeListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
   listRef.resize(0);
 
   const int EFFECTIVE_DLVL =
-    max(1, min(LAST_CAVERN_LEVEL, DLVL + NR_LVLS_OUT_OF_DEPTH));
+    max(1, min(LAST_CAVERN_LEVEL, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
 
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
     const ActorDataT& d = ActorData::data[i];
@@ -50,8 +51,7 @@ void spawnGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
                           const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
                           const bool IS_ROAMING_ALLOWED) {
   vector<ActorId> idBucket;
-  makeListOfMonstersEligibleForAutoSpawning(
-    NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
+  makeListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
   if(idBucket.empty() == false) {
     const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
@@ -66,8 +66,7 @@ bool spawnGroupOfRandomNativeToRoomThemeAt(
   trace << "PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt()" << endl;
   const int NR_LEVELS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
   vector<ActorId> idBucket;
-  makeListOfMonstersEligibleForAutoSpawning(
-    NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idBucket);
+  makeListOfMonstersCanAutoSpawn(NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
   for(size_t i = 0; i < idBucket.size(); i++) {
     const ActorDataT& d = ActorData::data[idBucket.at(i)];
@@ -99,7 +98,7 @@ bool spawnGroupOfRandomNativeToRoomThemeAt(
 
 } //namespace
 
-void trySpawnDueToTimePassed() const {
+void trySpawnDueToTimePassed() {
   trace << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
   bool blockers[MAP_W][MAP_H];
@@ -145,7 +144,7 @@ void trySpawnDueToTimePassed() const {
   trace << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
 }
 
-void populateCaveLevel() const {
+void populateCaveLevel() {
   const int NR_GROUPS_ALLOWED = Rnd::range(6, 7);
 
   bool blockers[MAP_W][MAP_H];
@@ -223,7 +222,7 @@ void populateIntroLevel() {
   }
 }
 
-void populateRoomAndCorridorLevel() const {
+void populateRoomAndCorridorLevel() {
   const int NR_GROUPS_ALLOWED_ON_MAP = Rnd::range(5, 9);
   int nrGroupsSpawned = 0;
 
@@ -261,7 +260,7 @@ void populateRoomAndCorridorLevel() const {
           for(int x = room->getX0(); x <= room->getX1(); x++) {
             if(
               blockers[x][y] == false &&
-              RoomThemeMaker::themeMap[x][y] == room->roomTheme) {
+              RoomThemeMaking::themeMap[x][y] == room->roomTheme) {
               originBucket.push_back(Pos(x, y));
             }
           }
@@ -307,7 +306,7 @@ void populateRoomAndCorridorLevel() const {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
           blockers[x][y] == false &&
-          RoomThemeMaker::themeMap[x][y] == RoomThemeId::plain) {
+          RoomThemeMaking::themeMap[x][y] == RoomThemeId::plain) {
           originBucket.push_back(Pos(x, y));
         }
       }
@@ -358,10 +357,9 @@ void spawnGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
   }
 }
 
-void makeSortedFreeCellsVector(
-  const Pos& origin, const bool blockers[MAP_W][MAP_H],
-  vector<Pos>& vectorRef) const {
-
+void makeSortedFreeCellsVector(const Pos& origin,
+                               const bool blockers[MAP_W][MAP_H],
+                               vector<Pos>& vectorRef) {
   vectorRef.resize(0);
 
   const int RADI = 10;

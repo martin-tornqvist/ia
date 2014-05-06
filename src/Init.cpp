@@ -17,6 +17,7 @@
 #include "Manual.h"
 #include "PlayerSpellsHandling.h"
 #include "Credits.h"
+#include "MapTemplates.h"
 
 using namespace std;
 
@@ -52,6 +53,7 @@ void initGame() {
   Gods::init();
   Manual::init();
   Credits::init();
+  MapTemplHandling::init();
   trace << "Init::initGame() [DONE]" << endl;
 }
 
@@ -70,41 +72,13 @@ void initSession() {
   ItemData::init();
   PropData::init();
   InvHandling::init();
-//  playerCreateCharacter = new PlayerCreateCharacter(*this);
-//  mapPatterns = new MapPatterns(*this);
-//  roomThemeMaker = new RoomThemeMaker(*this);
-//  player->place(Pos(PLAYER_START_X, PLAYER_START_Y),
-//                actorDataHandler->data[actor_player]);
   GameTime::init();
-//  featureDataHandler = new FeatureDataHandler();
   Map::init();
   PlayerBon::init();
-//  marker = new Marker(*this);
   Log::init();
   DungeonMaster::init();
-//  dungeonClimb = new DungeonClimb(*this);
-//  mapTemplateHandler = new MapTemplateHandler();
-//  itemPickup = new ItemPickup(*this);
-//  mainMenu = new MainMenu(*this);
   Bot::init();
-//  art = new Art;
-//  thrower = new Thrower(*this);
-//  populateItems = new PopulateItems(*this);
-//  populateMonsters = new PopulateMonsters(*this);
-//  populateTraps = new PopulateTraps(*this);
-//  query = new Query(*this);
-//  bash = new Bash(*this);
-//  close = new Close(*this);
-//  look = new Look(*this);
-//  autoDescribeActor = new AutoDescribeActor();
-//  postmortem = new Postmortem(*this);
-//  highScore = new HighScore(*this);
-//  jamWithSpike = new JamWithSpike(*this);
   PlayerSpellsHandling::init();
-//  knockBack = new KnockBack(*this);
-//  examine = new Examine(*this);
-//  characterDescr = new CharacterDescr(*this);
-//  credits = new Credits(*this);
   trace << "Init::initSession() [DONE]" << endl;
 }
 

@@ -201,6 +201,18 @@ void connectRegions(Region* regions[3][3]) {
   trace << "MapGen::Bsp::connectRegions()[DONE]" << endl;
 }
 
+//TODO Should be in Map
+void deleteAndRemoveRoomFromList(Room* const room) {
+  for(size_t i = 0; i < Map::rooms.size(); i++) {
+    if(Map::rooms.at(i) == room) {
+      delete room;
+      Map::rooms.erase(Map::rooms.begin() + i);
+      return;
+    }
+  }
+  assert(false && "Tried to remove non-existing room");
+}
+
 bool tryPlaceAuxRoom(const int X0, const int Y0, const int W, const int H,
                      bool blockers[MAP_W][MAP_H], const Pos& doorPos) {
   Rect auxArea, auxAreaWithWalls;
@@ -346,6 +358,90 @@ void buildAuxRooms(Region* regions[3][3]) {
 #endif // DEMO_MODE
 
   trace << "MapGen::Bsp::buildAuxRooms() [DONE]" << endl;
+}
+
+void reshapeRoom(const Room& room) {
+  const int ROOM_W = room.getX1() - room.getX0() + 1;
+  const int ROOM_H = room.getY1() - room.getY0() + 1;
+
+  if(ROOM_W >= 4 && ROOM_H >= 4) {
+
+    vector<RoomReshapeType> reshapesToPerform;
+    if(Rnd::fraction(3, 4)) {
+      reshapesToPerform.push_back(RoomReshapeType::trimCorners);
+    }
+    if(Rnd::fraction(3, 4)) {
+      reshapesToPerform.push_back(RoomReshapeType::pillarsRandom);
+    }
+
+    for(RoomReshapeType reshapeType : reshapesToPerform) {
+      switch(reshapeType) {
+        case RoomReshapeType::trimCorners: {
+          const int W_DIV = 3 + (Rnd::coinToss() ? Rnd::range(0, 1) : 0);
+          const int H_DIV = 3 + (Rnd::coinToss() ? Rnd::range(0, 1) : 0);
+
+          const int W = max(1, ROOM_W / W_DIV);
+          const int H = max(1, ROOM_H / H_DIV);
+
+          const bool TRIM_ALL = false;
+
+          if(TRIM_ALL || Rnd::coinToss()) {
+            const Pos upLeft(room.getX0() + W - 1, room.getY0() + H - 1);
+            Rect rect(room.getX0Y0(), upLeft);
+            coverAreaWithFeature(rect, FeatureId::wall);
+          }
+
+          if(TRIM_ALL || Rnd::coinToss()) {
+            const Pos upRight(room.getX1() - W + 1, room.getY0() + H - 1);
+            Rect rect(Pos(room.getX0() + ROOM_W - 1, room.getY0()), upRight);
+            coverAreaWithFeature(rect, FeatureId::wall);
+          }
+
+          if(TRIM_ALL || Rnd::coinToss()) {
+            const Pos downLeft(room.getX0() + W - 1, room.getY1() - H + 1);
+            Rect rect(Pos(room.getX0(), room.getY0() + ROOM_H - 1), downLeft);
+            coverAreaWithFeature(rect, FeatureId::wall);
+          }
+
+          if(TRIM_ALL || Rnd::coinToss()) {
+            const Pos downRight(room.getX1() - W + 1, room.getY1() - H + 1);
+            Rect rect(room.getX1Y1(), downRight);
+            coverAreaWithFeature(rect, FeatureId::wall);
+          }
+        }
+        break;
+
+        case RoomReshapeType::pillarsRandom: {
+          for(int x = room.getX0() + 1; x <= room.getX1() - 1; x++) {
+            for(int y = room.getY0() + 1; y <= room.getY1() - 1; y++) {
+              Pos c(x + Rnd::dice(1, 3) - 2, y + Rnd::dice(1, 3) - 2);
+              bool isNextToWall = false;
+              for(int dx = -1; dx <= 1; dx++) {
+                for(int dy = -1; dy <= 1; dy++) {
+                  const FeatureStatic* const f =
+                    Map::cells[c.x + dx][c.y + dy].featureStatic;
+                  if(f->getId() == FeatureId::wall) {
+                    isNextToWall = true;
+                  }
+                }
+              }
+              if(isNextToWall == false) {
+                if(Rnd::oneIn(5)) {
+                  FeatureFactory::spawn(FeatureId::wall, c);
+                }
+              }
+            }
+          }
+        }
+        break;
+      }
+    }
+  }
+
+#ifdef DEMO_MODE
+  Renderer::drawMapAndInterface();
+  SdlWrapper::sleep(2000);
+#endif // DEMO_MODE
 }
 
 void buildMergedRegionsAndRooms(Region* regions[3][3],
@@ -615,90 +711,6 @@ void placeDoorAtPosIfSuitable(const Pos& p) {
   }
 }
 
-void reshapeRoom(const Room& room) {
-  const int ROOM_W = room.getX1() - room.getX0() + 1;
-  const int ROOM_H = room.getY1() - room.getY0() + 1;
-
-  if(ROOM_W >= 4 && ROOM_H >= 4) {
-
-    vector<RoomReshapeType> reshapesToPerform;
-    if(Rnd::fraction(3, 4)) {
-      reshapesToPerform.push_back(RoomReshapeType::trimCorners);
-    }
-    if(Rnd::fraction(3, 4)) {
-      reshapesToPerform.push_back(RoomReshapeType::pillarsRandom);
-    }
-
-    for(RoomReshapeType reshapeType : reshapesToPerform) {
-      switch(reshapeType) {
-        case RoomReshapeType::trimCorners: {
-          const int W_DIV = 3 + (Rnd::coinToss() ? Rnd::range(0, 1) : 0);
-          const int H_DIV = 3 + (Rnd::coinToss() ? Rnd::range(0, 1) : 0);
-
-          const int W = max(1, ROOM_W / W_DIV);
-          const int H = max(1, ROOM_H / H_DIV);
-
-          const bool TRIM_ALL = false;
-
-          if(TRIM_ALL || Rnd::coinToss()) {
-            const Pos upLeft(room.getX0() + W - 1, room.getY0() + H - 1);
-            Rect rect(room.getX0Y0(), upLeft);
-            coverAreaWithFeature(rect, FeatureId::wall);
-          }
-
-          if(TRIM_ALL || Rnd::coinToss()) {
-            const Pos upRight(room.getX1() - W + 1, room.getY0() + H - 1);
-            Rect rect(Pos(room.getX0() + ROOM_W - 1, room.getY0()), upRight);
-            coverAreaWithFeature(rect, FeatureId::wall);
-          }
-
-          if(TRIM_ALL || Rnd::coinToss()) {
-            const Pos downLeft(room.getX0() + W - 1, room.getY1() - H + 1);
-            Rect rect(Pos(room.getX0(), room.getY0() + ROOM_H - 1), downLeft);
-            coverAreaWithFeature(rect, FeatureId::wall);
-          }
-
-          if(TRIM_ALL || Rnd::coinToss()) {
-            const Pos downRight(room.getX1() - W + 1, room.getY1() - H + 1);
-            Rect rect(room.getX1Y1(), downRight);
-            coverAreaWithFeature(rect, FeatureId::wall);
-          }
-        }
-        break;
-
-        case RoomReshapeType::pillarsRandom: {
-          for(int x = room.getX0() + 1; x <= room.getX1() - 1; x++) {
-            for(int y = room.getY0() + 1; y <= room.getY1() - 1; y++) {
-              Pos c(x + Rnd::dice(1, 3) - 2, y + Rnd::dice(1, 3) - 2);
-              bool isNextToWall = false;
-              for(int dx = -1; dx <= 1; dx++) {
-                for(int dy = -1; dy <= 1; dy++) {
-                  const FeatureStatic* const f =
-                    Map::cells[c.x + dx][c.y + dy].featureStatic;
-                  if(f->getId() == FeatureId::wall) {
-                    isNextToWall = true;
-                  }
-                }
-              }
-              if(isNextToWall == false) {
-                if(Rnd::oneIn(5)) {
-                  FeatureFactory::spawn(FeatureId::wall, c);
-                }
-              }
-            }
-          }
-        }
-        break;
-      }
-    }
-  }
-
-#ifdef DEMO_MODE
-  Renderer::drawMapAndInterface();
-  SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
-}
-
 void buildRoomsInRooms() {
   const int NR_OF_TRIES         = 40;
   const int MAX_NR_INNER_ROOMS  = 7;
@@ -707,8 +719,8 @@ void buildRoomsInRooms() {
 
   for(size_t i = 0; i < Map::rooms.size(); i++) {
 
-    const Pos roomX0Y0 = rooms.at(i)->getX0Y0();
-    const Pos roomX1Y1 = rooms.at(i)->getX1Y1();
+    const Pos roomX0Y0 = Map::rooms.at(i)->getX0Y0();
+    const Pos roomX1Y1 = Map::rooms.at(i)->getX1Y1();
 
     const int ROOM_WI = roomX1Y1.x - roomX0Y0.x + 1;
     const int ROOM_HE = roomX1Y1.y - roomX0Y0.y + 1;
@@ -770,7 +782,7 @@ void buildRoomsInRooms() {
 
             if(isSpaceFree) {
               vector<Pos> doorBucket;
-              rooms.push_back(
+              Map::rooms.push_back(
                 new Room(Rect(Pos(X0 + 1, Y0 + 1), Pos(X1 - 1, Y1 - 1))));
               for(int y = Y0; y <= Y1; y++) {
                 for(int x = X0; x <= X1; x++) {
@@ -796,7 +808,7 @@ void buildRoomsInRooms() {
                   Rnd::range(0, doorBucket.size() - 1);
                 const Pos doorPos = doorBucket.at(DOOR_POS_ELEMENT);
                 FeatureFactory::spawn(FeatureId::floor, doorPos);
-                globalDoorPosCandidates[doorPos.x][doorPos.y] = true;
+                globalDoorPosBucket[doorPos.x][doorPos.y] = true;
               } else {
                 vector<Pos> positionsWithDoor;
                 const int NR_TRIES = Rnd::range(1, 10);
@@ -1202,18 +1214,6 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 //  }
 //}
 
-//TODO Should be in Map
-void deleteAndRemoveRoomFromList(Room* const room) {
-  for(size_t i = 0; i < Map::rooms.size(); i++) {
-    if(Map::rooms.at(i) == room) {
-      delete room;
-      Map::rooms.erase(Map::rooms.begin() + i);
-      return;
-    }
-  }
-  assert(false && "Tried to remove non-existing room");
-}
-
 } //namespace
 
 bool run() {
@@ -1228,7 +1228,7 @@ bool run() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       roomCells[x][y] = false;
-      globalDoorPosCandidates[x][y] = false;
+      globalDoorPosBucket[x][y] = false;
 
 #ifdef DEMO_MODE
       Cell& cell = Map::cells[x][y];
@@ -1279,10 +1279,10 @@ bool run() {
   buildMergedRegionsAndRooms(regions, SPL_X1, SPL_X2, SPL_Y1, SPL_Y2);
 
   const int FIRST_DUNGEON_LEVEL_CAVES_ALLOWED = 10;
-  const int CHANCE_FOR_CAVE_AREA =
-    (DLVL - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
-  if(Rnd::percentile() < CHANCE_FOR_CAVE_AREA) {
-    const bool IS_TWO_CAVES = Rnd::percentile() < CHANCE_FOR_CAVE_AREA / 3;
+  const int CHANCE_CAVE_AREA =
+    (Map::dlvl - FIRST_DUNGEON_LEVEL_CAVES_ALLOWED + 1) * 20;
+  if(Rnd::percentile() < CHANCE_CAVE_AREA) {
+    const bool IS_TWO_CAVES = Rnd::percentile() < (CHANCE_CAVE_AREA / 3);
     for(int nrCaves = IS_TWO_CAVES ? 2 : 1; nrCaves > 0; nrCaves--) {
       int nrTriesToMark = 1000;
       while(nrTriesToMark > 0) {
@@ -1341,7 +1341,7 @@ bool run() {
   const int CHANCE_TP_OLACE_DOOR = 70;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(globalDoorPosCandidates[x][y] == true) {
+      if(globalDoorPosBucket[x][y] == true) {
         if(Rnd::percentile() < CHANCE_TP_OLACE_DOOR) {
           placeDoorAtPosIfSuitable(Pos(x, y));
         }
@@ -1352,8 +1352,8 @@ bool run() {
   SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 
-  trace << "MapGen::Bsp: Calling RoomThemeMaker::run()" << endl;
-  RoomThemeMaker::run();
+  trace << "MapGen::Bsp: Calling RoomThemeMaking::run()" << endl;
+  RoomThemeMaking::run();
 #ifdef DEMO_MODE
   Renderer::drawMapAndInterface();
   SdlWrapper::sleep(3000);
@@ -1399,7 +1399,9 @@ bool run() {
   return true;
 }
 
-} //MapGen::Bsp
+} //Bsp
+
+} //MapGen
 
 //=============================================================== REGION
 Region::Region(const Pos& x0y0, const Pos& x1y1) :
@@ -1470,7 +1472,3 @@ Rect Region::getRandomRectForRoom() const {
 
   return Rect(Pos(X0, Y0), Pos(X1, Y1));
 }
-
-} //Bsp
-
-} //MapGen

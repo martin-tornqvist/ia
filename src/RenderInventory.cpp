@@ -1,9 +1,14 @@
 #include "RenderInventory.h"
 
+#include <string>
+
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Renderer.h"
+#include "Map.h"
+
+using namespace std;
 
 const int X_POS_WEIGHT = 62;
 

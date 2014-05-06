@@ -1,5 +1,7 @@
 #include "PlayerBon.h"
 
+#include <assert.h>
+
 #include "TextFormatting.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
@@ -8,6 +10,7 @@
 #include "ItemFactory.h"
 #include "Inventory.h"
 #include "PlayerSpellsHandling.h"
+#include "Map.h"
 
 using namespace std;
 

@@ -1,5 +1,7 @@
 #include "Reload.h"
 
+#include <string>
+
 #include "Converters.h"
 #include "Item.h"
 #include "ItemWeapon.h"
@@ -14,6 +16,8 @@
 #include "GameTime.h"
 #include "Audio.h"
 #include "Renderer.h"
+
+using namespace std;
 
 namespace Reload {
 

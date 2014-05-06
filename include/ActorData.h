@@ -134,7 +134,7 @@ struct ActorDataT {
 
 namespace ActorData {
 
-ActorDataT data[endOfActorIds];
+extern ActorDataT data[endOfActorIds];
 
 void init();
 

@@ -248,7 +248,7 @@ enum class ItemRefType {plain, a, plural};
 
 namespace ItemData {
 
-ItemDataT* data[int(ItemId::endOfItemIds)];
+extern ItemDataT* data[int(ItemId::endOfItemIds)];
 
 void init();
 void cleanup();

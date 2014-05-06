@@ -1,24 +1,17 @@
 #ifndef THROWER_H
 #define THROWER_H
 
-#include <iostream>
-#include <vector>
-#include <iostream>
-#include <math.h>
-
-#include "CmnTypes.h"
 
 class Item;
-
 class Actor;
+struct Pos;
 
-class Thrower {
-public:
-  Thrower() {}
+namespace Throwing {
 
-  void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown);
+void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown);
 
-  void playerThrowLitExplosive(const Pos& aimCell);
-};
+void playerThrowLitExplosive(const Pos& aimCell);
+
+} //Throwing
 
 #endif

@@ -48,7 +48,7 @@ bool Actor::isSpottingHiddenActor(Actor& other) {
   const int SNEAK_BASE = other.getData().abilityVals.getVal(
                            AbilityId::stealth, true, other);
 
-  const int  DIST     = Utils::getKingDist(pos, otherPos);
+  const int  DIST     = Utils::kingDist(pos, otherPos);
   const int  DIST_BON = getConstrInRange(0, (DIST - 1) * 10, 60);
   const int  LGT_DIV  = Map::cells[otherPos.x][otherPos.y].isLight ? 2 : 1;
   const int  SKILL =

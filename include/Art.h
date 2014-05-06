@@ -143,14 +143,11 @@ enum class TileId {
 
 struct Pos;
 
-class Art {
-public:
-  Pos getGlyphPoss(const char glyph);
-  Pos getTilePoss(const TileId tile);
+namespace Art {
 
-private:
-  Pos getColumnAndRowGlyph(const char glyph);
-  Pos getColumnAndRowTile(const TileId tile);
-};
+Pos getGlyphPos(const char glyph);
+Pos getTilePos(const TileId tile);
+
+} //Art
 
 #endif

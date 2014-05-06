@@ -126,7 +126,7 @@ void calcNewLine(const Pos& origin, const Pos& target,
     if(SHOULD_STOP_AT_TARGET && (curPos == target)) {return;}
 
     const int DISTANCE_TRAVELED =
-      Utils::getKingDist(origin.x, origin.y, curPos.x, curPos.y);
+      Utils::kingDist(origin.x, origin.y, curPos.x, curPos.y);
 
     if(DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT) {return;}
   }

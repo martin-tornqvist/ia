@@ -72,13 +72,13 @@ enum MaterialType {
 struct FeatureThemeSpawnRules {
 public:
   FeatureThemeSpawnRules() :
-    maxNrInRoom_(-1), placementRule_(placementRule_nextToWalls) {
+    maxNrInRoom_(-1), placementRule_(PlacementRule::nextToWalls) {
     themesBelongingTo_.resize(0);
   }
 
   void reset() {
     maxNrInRoom_ = -1;
-    placementRule_ = placementRule_awayFromWalls;
+    placementRule_ = PlacementRule::awayFromWalls;
     themesBelongingTo_.resize(0);
   }
 

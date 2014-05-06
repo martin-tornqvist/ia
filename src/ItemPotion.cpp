@@ -390,6 +390,8 @@ namespace {
 
 vector<PotionLook> potionLooks_;
 
+} //namespace
+
 void init() {
   potionLooks_.resize(0);
 
@@ -416,8 +418,6 @@ void init() {
   potionLooks_.push_back(PotionLook {"Moldy",    "a Moldy",    clrBrown});
   potionLooks_.push_back(PotionLook {"Frothy",   "a Frothy",   clrWhite});
 }
-
-} //namespace
 
 void setClrAndFalseName(ItemDataT* d) {
   const int ELEMENT = Rnd::range(0, potionLooks_.size() - 1);

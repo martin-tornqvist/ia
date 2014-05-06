@@ -21,6 +21,8 @@ using namespace std;
 
 namespace ItemData {
 
+ItemDataT* data[int(ItemId::endOfItemIds)];
+
 namespace {
 
 void addFeatureFoundIn(ItemDataT* const itemData, const FeatureId featureId,

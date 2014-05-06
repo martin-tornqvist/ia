@@ -21,6 +21,7 @@ Actor* makeActorFromId(const ActorId id) {
   assert(id >= 1 && id < endOfActorIds);
 
   switch(id) {
+    case actor_player:              return new Player();
     case actor_zombie:              return new ZombieClaw();
     case actor_zombieAxe:           return new ZombieAxe();
     case actor_bloatedZombie:       return new BloatedZombie();
@@ -76,7 +77,6 @@ Actor* makeActorFromId(const ActorId id) {
 //  case actor_lordOfSpirits:    return new LordOfSpirits;
 
     case actor_empty:
-    case actor_player:
     case endOfActorIds: {} break;
   }
   return NULL;

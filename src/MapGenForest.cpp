@@ -16,7 +16,15 @@
 #include "MapParsing.h"
 #include "Utils.h"
 
-void MapGenIntroForest::buildForestLimit() {
+using namespace std;
+
+namespace MapGen {
+
+namespace IntroForest {
+
+namespace {
+
+void buildForestLimit() {
   for(int y = 0; y < MAP_H; y++) {
     FeatureFactory::spawn(FeatureId::tree, Pos(0, y));
   }
@@ -34,7 +42,7 @@ void MapGenIntroForest::buildForestLimit() {
   }
 }
 
-void MapGenIntroForest::buildForestOuterTreeline() {
+void buildForestOuterTreeline() {
   const int MAX_LEN = 2;
 
   for(int y = 0; y < MAP_H; y++) {
@@ -42,7 +50,7 @@ void MapGenIntroForest::buildForestOuterTreeline() {
       if(Rnd::range(1, 4) > 1 || x == 0) {
         FeatureFactory::spawn(FeatureId::tree, Pos(x, y));
       } else {
-        x = 9999;
+        break;
       }
     }
   }
@@ -52,7 +60,7 @@ void MapGenIntroForest::buildForestOuterTreeline() {
       if(Rnd::range(1, 4) > 1 || y == 0) {
         FeatureFactory::spawn(FeatureId::tree, Pos(x, y));
       } else {
-        y = 9999;
+        break;
       }
     }
   }
@@ -62,7 +70,7 @@ void MapGenIntroForest::buildForestOuterTreeline() {
       if(Rnd::range(1, 4) > 1 || x == MAP_W - 1) {
         FeatureFactory::spawn(FeatureId::tree, Pos(x, y));
       } else {
-        x = -1;
+        break;
       }
     }
   }
@@ -72,82 +80,63 @@ void MapGenIntroForest::buildForestOuterTreeline() {
       if(Rnd::range(1, 4) > 1 || y == MAP_H - 1) {
         FeatureFactory::spawn(FeatureId::tree, Pos(x, y));
       } else {
-        y = -1;
+        break;
       }
     }
   }
 }
 
-void MapGenIntroForest::buildForestTreePatch() {
-  int terrain_size_min = 5;
-  int terrain_size_max = 17;
+void buildForestTreePatch() {
+  const int NR_TREES_TO_PUT = Rnd::range(5, 17);
 
-  int terrain_size = terrain_size_min + Rnd::dice(1, terrain_size_max - terrain_size_min);
+  Pos curPos(Rnd::range(1, MAP_W - 2), Rnd::range(1, MAP_H - 2));
 
-  int nrTerrainCreated = 0;
+  int nrTreesCreated = 0;
 
-  //Set a start position where trees start to spawn
-  int terrainStartX = Rnd::dice(1, MAP_W - 1);
-  int terrainStartY = Rnd::dice(1, MAP_H - 1);
-
-  int stepX = 0;
-  int stepY = 0;
-
-  Pos curPos(terrainStartX + stepX, terrainStartY + stepY);
-
-  while(nrTerrainCreated < terrain_size) {
+  while(nrTreesCreated < NR_TREES_TO_PUT) {
     if(
-      Utils::isPosInsideMap(curPos) &&
-      Utils::getKingDist(curPos, Map::player->pos) > 2) {
-      FeatureFactory::spawn(FeatureId::tree, curPos);
-      nrTerrainCreated++;
+      Utils::isPosInsideMap(curPos) == false ||
+      Utils::kingDist(curPos, Map::player->pos) <= 1) {
+      return;
+    }
 
-      while(
-        Map::cells[curPos.x][curPos.y].featureStatic->getId() == FeatureId::tree ||
-        Utils::getKingDist(curPos, Map::player->pos) <= 2) {
+    const FeatureId treeId = FeatureId::tree;
 
-        if(Rnd::dice(1, 2) == 1) {
-          while(stepX == 0) {
-            stepX = Rnd::dice(1, 3) - 2;
-          }
-          stepY = 0;
-        } else {
-          while(stepY == 0) {
-            stepY = Rnd::dice(1, 3) - 2;
-          }
-          stepX = 0;
-        }
+    FeatureFactory::spawn(treeId, curPos);
+    nrTreesCreated++;
 
-        curPos += Pos(stepX, stepY);
+    //Find next pos
+    while(
+      Map::cells[curPos.x][curPos.y].featureStatic->getId() == treeId ||
+      Utils::kingDist(curPos, Map::player->pos) <= 2) {
 
-        if(Utils::isPosInsideMap(curPos) == false) {
-          nrTerrainCreated = 99999;
-          break;
-        }
+      if(Rnd::coinToss()) {
+        curPos.x += Rnd::coinToss() ? -1 : 1;
+      } else {
+        curPos.y += Rnd::coinToss() ? -1 : 1;
       }
-    } else nrTerrainCreated = 9999;
+
+      if(Utils::isPosInsideMap(curPos) == false) {return;}
+    }
   }
 }
 
-void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
-  unsigned minPathLength = 1;
-  unsigned maxPathLength = 999;
-
-  int forestPatches = 40 + Rnd::dice(1, 15);
-
-  vector<Pos> path;
-
-  backupMap();
+void buildForestTrees(const Pos& stairsPos) {
+  MapGenUtils::backupMap();
 
   const Pos churchPos = stairsPos - Pos(26, 7);
 
+  int nrForestPatches = Rnd::range(40, 55);
+
+  vector<Pos> path;
+
   bool proceed = false;
   while(proceed == false) {
-    for(int i = 0; i < forestPatches; i++) {
+    for(int i = 0; i < nrForestPatches; i++) {
       buildForestTreePatch();
     }
 
-    buildFromTemplate(churchPos, MapTemplateId::church);
+    MapGenUtils::buildFromTempl(churchPos, MapTemplId::church);
 
     bool blockers[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
@@ -156,20 +145,23 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
 
     FeatureFactory::spawn(FeatureId::stairs, stairsPos);
 
+    size_t minPathLength = 1;
+    size_t maxPathLength = 999;
+
     if(path.size() >= minPathLength && path.size() <= maxPathLength) {
       proceed = true;
     } else {
-      restoreMap();
+      MapGenUtils::restoreMap();
     }
 
     maxPathLength++;
   }
 
   //Build path
-  for(unsigned int i = 0; i < path.size(); i++) {
+  for(const Pos& pathPos : path) {
     for(int dx = -1; dx < 1; dx++) {
       for(int dy = -1; dy < 1; dy++) {
-        const Pos c(path.at(i) + Pos(dx, dy));
+        const Pos c(pathPos + Pos(dx, dy));
         if(
           Map::cells[c.x][c.y].featureStatic->canHaveStaticFeature() &&
           Utils::isPosInsideMap(c)) {
@@ -261,24 +253,20 @@ void MapGenIntroForest::buildForestTrees(const Pos& stairsPos) {
   }
 }
 
-bool MapGenIntroForest::run_() {
+} //namespace
+
+bool run() {
   int grass = 0;
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
       const Pos c(x, y);
-      grass = Rnd::dice(1, 12);
-      if(grass == 1) {
-        FeatureFactory::spawn(FeatureId::bush, c);
-      }
-      if(grass == 2) {
-        FeatureFactory::spawn(FeatureId::bushWithered, c);
-      }
-      if(grass == 3 || grass == 4) {
-        FeatureFactory::spawn(FeatureId::grassWithered, c);
-      }
-      if(grass >= 5) {
-        FeatureFactory::spawn(FeatureId::grass, c);
-      }
+      grass = Rnd::range(1, 12);
+      FeatureId id = FeatureId::empty;
+      if(grass == 1)                {id = FeatureId::bush;}
+      if(grass == 2)                {id = FeatureId::bushWithered;}
+      if(grass == 3 || grass == 4)  {id = FeatureId::grassWithered;}
+      if(grass >= 5)                {id = FeatureId::grass;}
+      FeatureFactory::spawn(id, c);
     }
   }
 
@@ -292,3 +280,6 @@ bool MapGenIntroForest::run_() {
   return true;
 }
 
+} //IntroForest
+
+} //MapGen

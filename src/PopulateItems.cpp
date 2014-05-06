@@ -1,11 +1,15 @@
 #include "PopulateItems.h"
 
+#include <vector>
+
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "ItemFactory.h"
 #include "PlayerBon.h"
 #include "MapParsing.h"
 #include "Utils.h"
+
+using namespace std;
 
 namespace PopulateItems {
 
@@ -23,8 +27,8 @@ void spawnItems() {
 
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     if(
-      DLVL >= data[i]->spawnStandardMinDLVL &&
-      DLVL <= data[i]->spawnStandardMaxDLVL &&
+      Map::dlvl >= data[i]->spawnStandardMinDLVL &&
+      Map::dlvl <= data[i]->spawnStandardMaxDLVL &&
       data[i]->isIntrinsic == false) {
       if(Rnd::percentile() < data[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(ItemId(i));

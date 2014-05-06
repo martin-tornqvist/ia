@@ -1,7 +1,10 @@
 #include "Spells.h"
 
 #include <algorithm>
+#include <vector>
+#include <assert.h>
 
+#include "Init.h"
 #include "Renderer.h"
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
@@ -21,20 +24,22 @@
 #include "PlayerBon.h"
 #include "Utils.h"
 
+using namespace std;
+
 namespace SpellHandling {
 
 Spell* getRandomSpellForMonster() {
 
-  vector<SpellId> candidates;
+  vector<SpellId> bucket;
   for(int i = 0; i < int(SpellId::endOfSpellId); i++) {
     Spell* const spell = getSpellFromId(SpellId(i));
     if(spell->isAvailForAllMonsters()) {
-      candidates.push_back(SpellId(i));
+      bucket.push_back(SpellId(i));
     }
     delete spell;
   }
-  const int ELEMENT = Rnd::range(0, candidates.size() - 1);
-  return getSpellFromId(candidates.at(ELEMENT));
+  const int ELEMENT = Rnd::range(0, bucket.size() - 1);
+  return getSpellFromId(bucket.at(ELEMENT));
 }
 
 Spell* getSpellFromId(const SpellId spellId) {
@@ -491,7 +496,7 @@ SpellCastRetData SpellDetMon::cast_(Actor* const caster) const {
 
   for(Actor * actor : GameTime::actors_) {
     if(actor != Map::player) {
-      if(Utils::getKingDist(playerPos, actor->pos) <= MAX_DIST) {
+      if(Utils::kingDist(playerPos, actor->pos) <= MAX_DIST) {
         dynamic_cast<Monster*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
         didDetect = true;
       }
@@ -595,7 +600,6 @@ SpellCastRetData SpellBless::cast_(
 
 bool SpellBless::isGoodForMonsterToCastNow(
   Monster* const monster) {
-  (void)eng;
 
   vector<PropId> props;
   monster->getPropHandler().getAllActivePropIds(props);
@@ -808,22 +812,17 @@ bool SpellSummonRandom::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ HEAL SELF
-SpellCastRetData SpellHealSelf::cast_(
-  Actor* const caster) const {
-  (void)eng;
+SpellCastRetData SpellHealSelf::cast_(Actor* const caster) const {
   return SpellCastRetData(caster->restoreHp(999, true));
 }
 
 bool SpellHealSelf::isGoodForMonsterToCastNow(
   Monster* const monster) {
-  (void)eng;
   return monster->getHp() < monster->getHpMax(true);
 }
 
 //------------------------------------------------------------ MI-GO HYPNOSIS
-SpellCastRetData SpellMiGoHypnosis::cast_(
-  Actor* const caster) const {
-
+SpellCastRetData SpellMiGoHypnosis::cast_(Actor* const caster) const {
   (void)caster;
   Log::addMsg("There is a sharp droning in my head!");
 

@@ -7,61 +7,23 @@
 
 #include "FeatureData.h"
 
-enum class MapTemplateId {church, pharaohsChamber};
+enum class MapTemplId {church, egypt, endOfMapTemplId};
 
-struct MapTemplate {
-  MapTemplate(MapTemplateId templateId_) : templateId(templateId_) {}
-
-  MapTemplate() {}
+struct MapTempl {
+  MapTempl() : w(0), h(0) {
+    featureVector.resize(0);
+  }
 
   std::vector< std::vector<FeatureId> > featureVector;
-
-  MapTemplateId templateId;
   int w, h;
 };
 
-class MapTemplateHandler {
-public:
-  MapTemplateHandler() {initTemplates();}
+namespace MapTemplHandling {
 
-  MapTemplate* getTemplate(MapTemplateId templateId);
+void init();
 
-private:
-  void initTemplates();
+const MapTempl& getTempl(const MapTemplId id);
 
-  struct CharToIdTranslation {
-    CharToIdTranslation(char cha_, FeatureId featureId) :
-      cha(cha_), featureId_(featureId) {}
-
-    CharToIdTranslation() {}
-
-    char cha;
-    FeatureId featureId_;
-  };
-
-  void addTranslationToVector(std::vector<CharToIdTranslation>& vec,
-                              const char cha, const FeatureId featureId) {
-    CharToIdTranslation t(cha, featureId);
-    vec.push_back(t);
-  }
-
-  FeatureId translate(const char cha,
-                      const std::vector<CharToIdTranslation>& translations) {
-    for(unsigned int i = 0; i < translations.size(); i++) {
-      if(cha == translations.at(i).cha) {
-        return translations.at(i).featureId_;
-      }
-    }
-
-    return FeatureId::empty;
-  }
-
-  MapTemplate stringToTemplate(
-    const std::string& str,
-    const std::vector<CharToIdTranslation>& translations,
-    const MapTemplateId templateId);
-
-  std::vector<MapTemplate> templates_;
-};
+} //MapTemplHandling
 
 #endif

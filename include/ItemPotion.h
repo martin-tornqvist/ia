@@ -234,10 +234,10 @@ namespace PotionNameHandling {
 
 void init();
 
-void setClrAndFalseName(ItemDataT* d);
-
 void storeToSaveLines(std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);
+
+void setClrAndFalseName(ItemDataT* d);
 
 } //PotionNameHandling
 
