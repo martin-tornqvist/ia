@@ -101,12 +101,10 @@ bool isAllRoomsConnected() {
     for(int x = 1; x < MAP_W - 1; x++) {
       c.set(x, y);
       const FeatureStatic* const f = Map::cells[c.x][c.y].featureStatic;
-      if(f->getId() == FeatureId::floor) {
-        x = INT_MAX;
-        y = INT_MAX;
-      }
+      if(f->getId() == FeatureId::floor) {goto stop;}
     }
   }
+  stop:
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
@@ -853,11 +851,11 @@ void postProcessFillDeadEnds() {
     for(int x = 2; x < MAP_W - 2; x++) {
       if(isAreaFree(x - 1, y - 1, x + 1, y + 1, blockers)) {
         origin = Pos(x, y);
-        y = INT_MAX;
-        x = INT_MAX;
+        goto stop;
       }
     }
   }
+  stop:
 
   //Floodfill from origin, then sort the positions for flood value
   int floodFill[MAP_W][MAP_H];
@@ -1217,7 +1215,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 } //namespace
 
 bool run() {
-  trace << "MapGen::Bsp::run_()..." << endl;
+  trace << "MapGen::Bsp::run()..." << endl;
 
   Renderer::clearScreen();
   Renderer::updateScreen();
@@ -1395,7 +1393,7 @@ bool run() {
     }
   }
 #endif // DEMO_MODE
-  trace << "MapGen::Bsp::run_() [DONE]" << endl;
+  trace << "MapGen::Bsp::run() [DONE]" << endl;
   return true;
 }
 

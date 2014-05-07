@@ -488,8 +488,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
   if(isInited()) {
     drawMapAndInterface();
 
-    for(unsigned int i = 0; i < positions.size(); i++) {
-      const Pos& pos = positions.at(i);
+    for(const Pos & pos : positions) {
       if(Config::isTilesMode()) {
         drawTile(TileId::blast1, Panel::map, pos, color, clrBlack);
       } else {
@@ -499,8 +498,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
     updateScreen();
     SdlWrapper::sleep(Config::getDelayExplosion() / 2);
 
-    for(unsigned int i = 0; i < positions.size(); i++) {
-      const Pos& pos = positions.at(i);
+    for(const Pos & pos : positions) {
       if(Config::isTilesMode()) {
         drawTile(TileId::blast2, Panel::map, pos, color, clrBlack);
       } else {
@@ -530,17 +528,21 @@ void drawBlastAnimAtPositionsWithPlayerVision(
 
 void drawTile(const TileId tile, const Panel panel, const Pos& pos,
               const SDL_Color& clr, const SDL_Color& bgClr) {
-  const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
-  const Pos cellDims(Config::getCellW(), Config::getCellH());
-  drawRectangleSolid(pixelPos, cellDims, bgClr);
-  putPixelsOnScreenForTile(tile, pixelPos, clr);
+  if(isInited()) {
+    const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
+    const Pos cellDims(Config::getCellW(), Config::getCellH());
+    drawRectangleSolid(pixelPos, cellDims, bgClr);
+    putPixelsOnScreenForTile(tile, pixelPos, clr);
+  }
 }
 
 void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos,
                const SDL_Color& clr, const bool DRAW_BG_CLR,
                const SDL_Color& bgClr) {
-  const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
-  drawGlyphAtPixel(GLYPH, pixelPos, clr, DRAW_BG_CLR, bgClr);
+  if(isInited()) {
+    const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
+    drawGlyphAtPixel(GLYPH, pixelPos, clr, DRAW_BG_CLR, bgClr);
+  }
 }
 
 void drawText(const string& str, const Panel panel, const Pos& pos,
@@ -762,7 +764,7 @@ void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN) {
 void drawMap() {
   if(isInited() == false) {return;}
 
-                                 CellRenderData* curDrw = NULL;
+  CellRenderData* curDrw = NULL;
   CellRenderData tmpDrw;
 
   const bool IS_TILES = Config::isTilesMode();

@@ -147,7 +147,7 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
 void Actor::place(const Pos& pos_, ActorDataT& data) {
   pos             = pos_;
   data_           = &data;
-  inv_      = new Inventory(data_->isHumanoid);
+  inv_            = new Inventory(data_->isHumanoid);
   propHandler_    = new PropHandler(this);
   deadState       = ActorDeadState::alive;
   clr_            = data_->color;
@@ -157,7 +157,7 @@ void Actor::place(const Pos& pos_, ActorDataT& data) {
   spi_            = spiMax_ = data_->spi;
   lairCell_       = pos;
 
-  if(this != Map::player) {spawnStartItems();}
+  if(data_->id != actor_player) {spawnStartItems();}
 
   place_();
 

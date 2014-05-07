@@ -136,6 +136,7 @@ void init() {
 
 void cleanup() {
   for(Spell * spell : knownSpells_) {delete spell;}
+  knownSpells_.resize(0);
 }
 
 void storeToSaveLines(vector<string>& lines) {

@@ -180,8 +180,8 @@ int kingDist(const Pos& c1, const Pos& c2) {
 }
 
 Pos getClosestPos(const Pos& c, const vector<Pos>& positions) {
-  int distToNearest = INT_MAX;
-  int closestElement = 0;
+  int distToNearest   = INT_MAX;
+  int closestElement  = 0;
   const int NR_POSITIONS = positions.size();
   for(int i = 0; i < NR_POSITIONS; i++) {
     const int CUR_DIST = kingDist(c, positions.at(i));

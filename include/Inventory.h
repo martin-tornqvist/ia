@@ -45,14 +45,13 @@ public:
 
   ~Inventory();
 
-  void dropAllNonIntrinsic(
-    const Pos& pos, const bool ROLL_FOR_DESTRUCTION);
+  void dropAllNonIntrinsic(const Pos& pos, const bool ROLL_FOR_DESTRUCTION);
 
   bool hasItemInSlot(SlotId slotName) const;
 
-  void putInSlot(
-    SlotId slotName, Item* item, bool putInGeneral_ifOccupied = true,
-    bool putInGeneral_ifSlotNotFound = true);
+  void putInSlot(SlotId slotName, Item* item,
+                 bool putInGeneral_ifOccupied = true,
+                 bool putInGeneral_ifSlotNotFound = true);
 
   void putInGeneral(Item* item);
 

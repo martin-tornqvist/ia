@@ -524,11 +524,21 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
 
   //Player inventory
   Inventory& inv = Map::player->getInv();
-  inv.moveToGeneral(inv.getSlot(SlotId::wielded));
+  //First, remove all present items (to have a known state)
+  vector<Item*>& gen = inv.getGeneral();
+  for(Item * item : gen) {delete item;}
+  gen.resize(0);
+  vector<InvSlot>& slots = inv.getSlots();
+  for(InvSlot & slot : slots) {
+    if(slot.item != NULL) {
+      delete slot.item;
+      slot.item = NULL;
+    }
+  }
+  //Put new items
   Item* item = ItemFactory::spawnItem(ItemId::teslaCannon);
   inv.putInSlot(SlotId::wielded, item);
   //Wear asbestos suit to test properties from wearing items
-  inv.moveToGeneral(inv.getSlot(SlotId::armorBody));
   item = ItemFactory::spawnItem(ItemId::armorAsbSuit);
   inv.putInSlot(SlotId::armorBody, item);
   item = ItemFactory::spawnItem(ItemId::pistolClip);
@@ -607,11 +617,12 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
 
   //Player inventory
   Inventory& inv = Map::player->getInv();
+  vector<Item*> genInv = inv.getGeneral();
+  CHECK_EQUAL(6, int(genInv.size()));
   CHECK_EQUAL(int(ItemId::teslaCannon),
               int(inv.getItemInSlot(SlotId::wielded)->getData().id));
   CHECK_EQUAL(int(ItemId::armorAsbSuit),
               int(inv.getItemInSlot(SlotId::armorBody)->getData().id));
-  vector<Item*> genInv = inv.getGeneral();
   int nrClipWith1 = 0;
   int nrClipWith2 = 0;
   int nrClipWith3 = 0;
@@ -633,7 +644,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
     } else if(id == ItemId::electricLantern) {
       isElectricLanternFound = true;
       CHECK_EQUAL(int(Condition::breaking),
-                  int(dynamic_cast<Device*>(item)->condition_));
+                  int(dynamic_cast<DeviceLantern*>(item)->condition_));
     }
   }
   CHECK_EQUAL(1, nrClipWith1);

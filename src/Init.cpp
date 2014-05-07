@@ -67,6 +67,7 @@ void cleanupGame() {
 void initSession() {
   trace << "Init::initSession()..." << endl;
   ActorData::init();
+  FeatureData::init();
   ScrollNameHandling::init();
   PotionNameHandling::init();
   ItemData::init();
