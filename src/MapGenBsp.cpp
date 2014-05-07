@@ -20,10 +20,6 @@
 #include "PopulateMonsters.h"
 #include "PopulateTraps.h"
 
-#ifdef DEMO_MODE
-#include "SdlWrapper.h"
-#endif // DEMO_MODE
-
 using namespace std;
 
 //============================================================= MAPBUILD-BSP
@@ -38,30 +34,22 @@ namespace {
 bool roomCells[MAP_W][MAP_H];
 bool regionsToBuildCave[3][3];
 
-bool globalDoorPosBucket[MAP_W][MAP_H];
+bool globalDoorPosSuggestions[MAP_W][MAP_H];
 
 //Note: The parameter rectangle does not have to go up-left to bottom-right,
 //the method adjusts the order
 void coverAreaWithFeature(const Rect& area, const FeatureId feature) {
-  const Pos x0y0 =
-    Pos(min(area.x0y0.x, area.x1y1.x), min(area.x0y0.y, area.x1y1.y));
-  const Pos x1y1 =
-    Pos(max(area.x0y0.x, area.x1y1.x), max(area.x0y0.y, area.x1y1.y));
+  const Pos x0y0 = Pos(min(area.x0y0.x, area.x1y1.x),
+                       min(area.x0y0.y, area.x1y1.y));
+
+  const Pos x1y1 = Pos(max(area.x0y0.x, area.x1y1.x),
+                       max(area.x0y0.y, area.x1y1.y));
 
   for(int x = x0y0.x; x <= x1y1.x; x++) {
     for(int y = x0y0.y; y <= x1y1.y; y++) {
       FeatureFactory::spawn(feature, Pos(x, y), NULL);
-
-#ifdef DEMO_MODE
-      Renderer::drawMapAndInterface();
-      SdlWrapper::sleep(1);
-#endif // DEMO_MODE
     }
   }
-
-#ifdef DEMO_MODE
-  SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
 }
 
 bool isAreaFree(const int X0, const int Y0, const int X1, const int Y1,
@@ -101,10 +89,10 @@ bool isAllRoomsConnected() {
     for(int x = 1; x < MAP_W - 1; x++) {
       c.set(x, y);
       const FeatureStatic* const f = Map::cells[c.x][c.y].featureStatic;
-      if(f->getId() == FeatureId::floor) {goto stop;}
+      if(f->getId() == FeatureId::floor) {goto LOOP_END;}
     }
   }
-  stop:
+LOOP_END:
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
@@ -175,7 +163,7 @@ void connectRegions(Region* regions[3][3]) {
       const bool IS_DIAGONAL    = delta.x != 0 && delta.y != 0;
       isDeltaOk = IS_ZERO_DELTA     == false &&
                   IS_DIAGONAL       == false &&
-                  IS_INSIDE_BOUNDS  == true;
+                  IS_INSIDE_BOUNDS;
     }
     Pos c2(c1 + delta);
 
@@ -185,12 +173,7 @@ void connectRegions(Region* regions[3][3]) {
       const Dir regionDir = DirUtils::getDir(c2 - c1);
 
       MapGenUtils::buildZCorridorBetweenRooms(
-        *(r1->mainRoom), *(r2->mainRoom), regionDir, globalDoorPosBucket);
-
-#ifdef DEMO_MODE
-      Renderer::drawMapAndInterface();
-      SdlWrapper::sleep(1000);
-#endif // DEMO_MODE
+        *(r1->mainRoom), *(r2->mainRoom), regionDir, globalDoorPosSuggestions);
 
       r1->regionsConnectedTo[c2.x][c2.y] = true;
       r2->regionsConnectedTo[c1.x][c1.y] = true;
@@ -239,11 +222,7 @@ bool tryPlaceAuxRoom(const int X0, const int Y0, const int W, const int H,
       room = NULL;
     } else {
       FeatureFactory::spawn(FeatureId::floor, doorPos);
-#ifdef DEMO_MODE
-      Renderer::drawMapAndInterface();
-      SdlWrapper::sleep(1000);
-#endif // DEMO_MODE
-      globalDoorPosBucket[doorPos.x][doorPos.y] = true;
+      globalDoorPosSuggestions[doorPos.x][doorPos.y] = true;
     }
 
     return true;
@@ -350,10 +329,6 @@ void buildAuxRooms(Region* regions[3][3]) {
       }
     }
   }
-#ifdef DEMO_MODE
-  Renderer::drawMapAndInterface();
-  SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
 
   trace << "MapGen::Bsp::buildAuxRooms() [DONE]" << endl;
 }
@@ -435,11 +410,6 @@ void reshapeRoom(const Room& room) {
       }
     }
   }
-
-#ifdef DEMO_MODE
-  Renderer::drawMapAndInterface();
-  SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
 }
 
 void buildMergedRegionsAndRooms(Region* regions[3][3],
@@ -481,18 +451,6 @@ void buildMergedRegionsAndRooms(Region* regions[3][3],
     const int MERGED_Y1 =
       regionIndex2.y == 0 ? SPL_Y1 - 1 :
       regionIndex2.y == 1 ? SPL_Y2 - 1 : MAP_H - 1;
-
-#ifdef DEMO_MODE
-    const int P_W = Config::getCellW();
-    const int P_H = Config::getCellH();
-    const int P_O = Config::mainscreenOffsetY;
-    Pos dims((MERGED_X1 - MERGED_X0) * P_W, (MERGED_Y1 - MERGED_Y0) * P_H);
-    Renderer::drawRectangleSolid(
-      Pos(MERGED_X0 * P_W, P_O + MERGED_Y0 * P_H), dims,
-      clrBlueLgt);
-    Renderer::updateScreen();
-    SdlWrapper::sleep(500);
-#endif // DEMO_MODE
 
     const int AREA_2_X0 =
       regionIndex2.x == 0 ? 0 : regionIndex2.x == 1 ? SPL_X1 : SPL_X2;
@@ -591,10 +549,6 @@ void buildCaves(Region* regions[3][3]) {
             if(c == origin || floodFillResult[x][y] > 0) {
 
               FeatureFactory::spawn(FeatureId::caveFloor, c);
-#ifdef DEMO_MODE
-              Renderer::drawMapAndInterface();
-              SdlWrapper::sleep(5);
-#endif // DEMO_MODE
 
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
@@ -606,10 +560,6 @@ void buildCaves(Region* regions[3][3]) {
                       dynamic_cast<Wall*>(adjCell.featureStatic);
                     wall->wallType = WallType::cave;
                     wall->setRandomIsMossGrown();
-#ifdef DEMO_MODE
-                    Renderer::drawMapAndInterface();
-                    SdlWrapper::sleep(5);
-#endif // DEMO_MODE
                   }
                 }
               }
@@ -645,10 +595,6 @@ void buildCaves(Region* regions[3][3]) {
                 blockers[x][y] == false &&
                 (c == origin || floodFillResult[x][y] > 0)) {
                 FeatureFactory::spawn(FeatureId::chasm, c);
-#ifdef DEMO_MODE
-                Renderer::drawMapAndInterface();
-                SdlWrapper::sleep(5);
-#endif // DEMO_MODE
               }
             }
           }
@@ -656,9 +602,6 @@ void buildCaves(Region* regions[3][3]) {
       }
     }
   }
-#ifdef DEMO_MODE
-  SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
   trace << "MapGen::Bsp::buildCaves()[DONE]" << endl;
 }
 
@@ -702,10 +645,6 @@ void placeDoorAtPosIfSuitable(const Pos& p) {
     const FeatureDataT* const mimicData = FeatureData::getData(FeatureId::wall);
     FeatureFactory::spawn(FeatureId::door, p,
                           new DoorSpawnData(mimicData));
-#ifdef DEMO_MODE
-    Renderer::drawMapAndInterface();
-    SdlWrapper::sleep(1000);
-#endif // DEMO_MODE
   }
 }
 
@@ -806,7 +745,7 @@ void buildRoomsInRooms() {
                   Rnd::range(0, doorBucket.size() - 1);
                 const Pos doorPos = doorBucket.at(DOOR_POS_ELEMENT);
                 FeatureFactory::spawn(FeatureId::floor, doorPos);
-                globalDoorPosBucket[doorPos.x][doorPos.y] = true;
+                globalDoorPosSuggestions[doorPos.x][doorPos.y] = true;
               } else {
                 vector<Pos> positionsWithDoor;
                 const int NR_TRIES = Rnd::range(1, 10);
@@ -828,10 +767,6 @@ void buildRoomsInRooms() {
                   }
                 }
               }
-#ifdef DEMO_MODE
-              Renderer::drawMapAndInterface();
-              SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
               break;
             }
           }
@@ -851,11 +786,11 @@ void postProcessFillDeadEnds() {
     for(int x = 2; x < MAP_W - 2; x++) {
       if(isAreaFree(x - 1, y - 1, x + 1, y + 1, blockers)) {
         origin = Pos(x, y);
-        goto stop;
+        goto LOOP_END;
       }
     }
   }
-  stop:
+LOOP_END:
 
   //Floodfill from origin, then sort the positions for flood value
   int floodFill[MAP_W][MAP_H];
@@ -931,7 +866,7 @@ void postProcessFillDeadEnds() {
 //
 //  for(c.x = roomRect.x0y0.x; c.x <= roomRect.x1y1.x; c.x++) {
 //    for(c.y = roomRect.x0y0.y; c.y <= roomRect.x1y1.y; c.y++) {
-//      if(PossToAdd[c.x][c.y] == true) {
+//      if(PossToAdd[c.x][c.y]) {
 //        vectorRef.push_back(c);
 //      }
 //    }
@@ -964,10 +899,6 @@ void decorate() {
         //Randomly convert walls to rubble
         if(Rnd::oneIn(10)) {
           FeatureFactory::spawn(FeatureId::rubbleHigh, Pos(x, y));
-#ifdef DEMO_MODE
-          Renderer::drawMapAndInterface();
-          SdlWrapper::sleep(1);
-#endif // DEMO_MODE
           continue;
         }
 
@@ -975,20 +906,12 @@ void decorate() {
         FeatureStatic* const f = Map::cells[x][y].featureStatic;
         Wall* const wall = dynamic_cast<Wall*>(f);
         wall->setRandomIsMossGrown();
-#ifdef DEMO_MODE
-        Renderer::drawMapAndInterface();
-        SdlWrapper::sleep(1);
-#endif // DEMO_MODE
 
         //Convert walls with no adjacent stone floor to cave walls
         if(nrAdjFloor == 0) {
           wall->wallType = WallType::cave;
         } else {
           wall->setRandomNormalWall();
-#ifdef DEMO_MODE
-          Renderer::drawMapAndInterface();
-          SdlWrapper::sleep(1);
-#endif // DEMO_MODE
         }
       }
     }
@@ -1000,18 +923,11 @@ void decorate() {
         //Randomly convert stone floor to low rubble
         if(Rnd::oneIn(100)) {
           FeatureFactory::spawn(FeatureId::rubbleLow, Pos(x, y));
-#ifdef DEMO_MODE
-          Renderer::drawMapAndInterface();
-          SdlWrapper::sleep(1);
-#endif // DEMO_MODE
           continue;
         }
       }
     }
   }
-#ifdef DEMO_MODE
-  SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
 }
 
 void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) {
@@ -1226,12 +1142,7 @@ bool run() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       roomCells[x][y] = false;
-      globalDoorPosBucket[x][y] = false;
-
-#ifdef DEMO_MODE
-      Cell& cell = Map::cells[x][y];
-      cell.isSeenByPlayer = cell.isExplored = true;
-#endif // DEMO_MODE
+      globalDoorPosSuggestions[x][y] = false;
     }
   }
 
@@ -1239,31 +1150,6 @@ bool run() {
   const int SPL_X2 = 2 * (MAP_W / 3) + Rnd::range(-1, 1);
   const int SPL_Y1 = MAP_H / 3;
   const int SPL_Y2 = 2 * (MAP_H / 3);
-
-#ifdef DEMO_MODE
-  Renderer::drawMapAndInterface();
-  SdlWrapper::sleep(1000);
-  const int P_W = Config::getCellW();
-  const int P_H = Config::getCellH();
-  const int P_M_O = Config::mainscreenOffsetY;
-  const int P_S_W = Config::getScreenPixelW();
-  const int P_C_O = Config::characterLinesOffsetY;
-  const int P_M_H = P_C_O - P_M_O;
-  Renderer::drawLineHor(Pos(0, SPL_Y1 * P_H + P_M_O), P_S_W, clrRedLgt);
-  Renderer::updateScreen();
-  SdlWrapper::sleep(2000);
-  Renderer::drawLineHor(Pos(0, SPL_Y2 * P_H + P_M_O), P_S_W, clrRedLgt);
-  Renderer::updateScreen();
-  SdlWrapper::sleep(2000);
-  Renderer::drawLineVer(Pos(SPL_X1 * P_W, P_M_O), P_M_H, clrRedLgt);
-  Renderer::updateScreen();
-  SdlWrapper::sleep(2000);
-  Renderer::drawLineVer(Pos(SPL_X2 * P_W, P_M_O), P_M_H, clrRedLgt);
-  Renderer::updateScreen();
-  SdlWrapper::sleep(2000);
-  Renderer::drawMapAndInterface(true);
-  SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
 
   Region* regions[3][3];
 
@@ -1307,14 +1193,6 @@ bool run() {
         Region* region = new Region(Pos(X0, Y0), Pos(X1, Y1));
         regions[x][y] = region;
 
-#ifdef DEMO_MODE
-        const Pos dims((X1 - X0) * P_W, (Y1 - Y0) * P_H);
-        Renderer::drawRectangleSolid(
-          Pos(X0 * P_W, P_M_O + Y0 * P_H), dims, clrGreenLgt);
-        Renderer::updateScreen();
-        SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
-
         const Rect roomRect = region->getRandomRectForRoom();
 
         Map::rooms.push_back(buildRoom(roomRect));
@@ -1339,23 +1217,16 @@ bool run() {
   const int CHANCE_TP_OLACE_DOOR = 70;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(globalDoorPosBucket[x][y] == true) {
+      if(globalDoorPosSuggestions[x][y]) {
         if(Rnd::percentile() < CHANCE_TP_OLACE_DOOR) {
           placeDoorAtPosIfSuitable(Pos(x, y));
         }
       }
     }
   }
-#ifdef DEMO_MODE
-  SdlWrapper::sleep(2000);
-#endif // DEMO_MODE
 
   trace << "MapGen::Bsp: Calling RoomThemeMaking::run()" << endl;
   RoomThemeMaking::run();
-#ifdef DEMO_MODE
-  Renderer::drawMapAndInterface();
-  SdlWrapper::sleep(3000);
-#endif // DEMO_MODE
 
   movePlayerToNearestAllowedPos();
 
@@ -1382,17 +1253,6 @@ bool run() {
     }
   }
 
-#ifdef DEMO_MODE
-  Renderer::drawMapAndInterface();
-  SdlWrapper::sleep(5000);
-
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
-      Cell& cell = Map::cells[x][y];
-      cell.isSeenByPlayer = cell.isExplored = false;
-    }
-  }
-#endif // DEMO_MODE
   trace << "MapGen::Bsp::run() [DONE]" << endl;
   return true;
 }

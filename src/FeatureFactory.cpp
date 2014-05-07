@@ -13,10 +13,10 @@
 #include "FeatureLiquid.h"
 #include "FeatureWall.h"
 
-#ifdef DEMO_MODE
-#include "Renderer.h"
-#include "SdlWrapper.h"
-#endif // DEMO_MODE
+//#ifdef DEMO_MODE
+//#include "Renderer.h"
+//#include "SdlWrapper.h"
+//#endif // DEMO_MODE
 
 using namespace std;
 

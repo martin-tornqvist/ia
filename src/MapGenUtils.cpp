@@ -156,9 +156,6 @@ void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
       c += roomDeltaSigns;
     }
     FeatureFactory::spawn(FeatureId::floor, c, NULL);
-#ifdef DEMO_MODE
-    SdlWrapper::sleep(50);
-#endif // DEMO_MODE
     if(doorPosBucket != NULL) {doorPosBucket[c.x][c.y] = true;}
     c += roomDeltaSigns;
 
@@ -166,9 +163,6 @@ void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
     Pos cTemp(c - roomDeltaSigns);
     while(floorInR1Grid[cTemp.x][cTemp.y] == false) {
       FeatureFactory::spawn(FeatureId::floor, cTemp, NULL);
-#ifdef DEMO_MODE
-      SdlWrapper::sleep(50);
-#endif // DEMO_MODE
       cTemp -= roomDeltaSigns;
     }
 
@@ -181,18 +175,12 @@ void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
     // (4)
     while(c.x != c2.x && c.y != c2.y && floorInR2Grid[c.x][c.y] == false) {
       FeatureFactory::spawn(FeatureId::floor, c, NULL);
-#ifdef DEMO_MODE
-      SdlWrapper::sleep(50);
-#endif // DEMO_MODE
       c += deltaCurSign - roomDeltaSigns;
     }
 
     // (5)
     while(c != c2 && floorInR2Grid[c.x][c.y] == false) {
       FeatureFactory::spawn(FeatureId::floor, c, NULL);
-#ifdef DEMO_MODE
-      SdlWrapper::sleep(50);
-#endif // DEMO_MODE
       c += roomDeltaSigns;
     }
     c -= roomDeltaSigns;
