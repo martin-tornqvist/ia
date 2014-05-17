@@ -29,7 +29,7 @@ void resetNrSoundMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
 
 void emitSnd(Snd snd) {
   bool blockers[MAP_W][MAP_H];
-  FeatureStatic* f = NULL;
+  FeatureStatic* f = nullptr;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       f = Map::cells[x][y].featureStatic;

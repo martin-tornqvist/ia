@@ -90,9 +90,9 @@ Entity getEntityToDescribe(const Pos pos) {
   Actor* actor = Utils::getActorAtPos(pos);
 
   //If there is a living actor there, describe the actor.
-  if(actor != NULL && actor != Map::player) {
+  if(actor != nullptr && actor != Map::player) {
     if(actor->deadState == ActorDeadState::alive) {
-      if(Map::player->isSeeingActor(*actor, NULL)) {
+      if(Map::player->isSeeingActor(*actor, nullptr)) {
         return Entity(actor);
       }
     }
@@ -105,7 +105,7 @@ Entity getEntityToDescribe(const Pos pos) {
 
   //If item there, describe that.
   Item* item = Map::cells[pos.x][pos.y].item;
-  if(item != NULL)
+  if(item != nullptr)
     return Entity(item);
 
   //If static feature, describe that.
@@ -195,7 +195,7 @@ void onMarkerAtPos(const Pos& pos, const MarkerTask markerTask,
 
 void printExtraActorDescription(const Pos& pos) {
   Actor* actor = Utils::getActorAtPos(pos);
-  if(actor != NULL) {
+  if(actor != nullptr) {
     if(actor != Map::player) {
       //Add written description.
       string descr = actor->getData().descr;

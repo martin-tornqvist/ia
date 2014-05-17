@@ -17,11 +17,11 @@ using namespace std;
 namespace ItemFactory {
 
 Item* spawnItem(const ItemId itemId, const int NR_ITEMS) {
-  Item* r = NULL;
+  Item* r = nullptr;
 
   ItemDataT* const d = ItemData::data[int(itemId)];
 
-  ItemDataT* ammoD = NULL;
+  ItemDataT* ammoD = nullptr;
 
   if(d->rangedAmmoTypeUsed != ItemId::empty) {
     ammoD = ItemData::data[int(d->rangedAmmoTypeUsed)];
@@ -156,7 +156,7 @@ Item* spawnItem(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::medicalBag:          r = new MedicalBag(d);            break;
 
     case ItemId::empty:
-    case ItemId::endOfItemIds: return NULL;
+    case ItemId::endOfItemIds: return nullptr;
   }
 
   if(r->getData().isStackable == false && NR_ITEMS != 1) {
@@ -235,7 +235,7 @@ Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
     return spawnItem(itemBucket.at(ELEMENT));
   }
 
-  return NULL;
+  return nullptr;
 }
 
 } //ItemFactory

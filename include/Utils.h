@@ -5,13 +5,14 @@
 
 #include "CmnData.h"
 #include "Actor.h"
+#include "MersenneTwister.h"
 
 namespace Rnd {
 
-//Note: If MTRand is not provided any parameters to the constructor,
-//it will instead seed with current time. So seeding it manually is
-//not necessary for normal gameplay purposes - only if seed should be
-//controlled for testing purposes, or recreating a certain level, etc.
+//Note: If MTRand is not provided any parameters to the constructor, it will be
+//seeded with current time. So seeding it manually is not necessary for normal
+//gameplay purposes - only if seed should be controlled for testing purposes,
+//or recreating a certain level, etc.
 void seed(const unsigned long val);
 
 int dice(const int ROLLS, const int SIDES);
@@ -61,12 +62,12 @@ namespace Utils {
 bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2);
 
 void resetArray(int a[MAP_W][MAP_H]);
-
 void resetArray(Actor* a[MAP_W][MAP_H]);
-
 void resetArray(bool a[MAP_W][MAP_H], const bool value);
 
 void reverseBoolArray(bool array[MAP_W][MAP_H]);
+
+void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]);
 
 void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
                            bool a[MAP_W][MAP_H],

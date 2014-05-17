@@ -72,7 +72,7 @@ const vector<Pos>* getFovDeltaLine(const Pos& delta,
       return &(fovDeltaLines_[X][Y]);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 void calcNewLine(const Pos& origin, const Pos& target,

@@ -36,36 +36,6 @@ bool regionsToBuildCave[3][3];
 
 bool globalDoorPosSuggestions[MAP_W][MAP_H];
 
-//Note: The parameter rectangle does not have to go up-left to bottom-right,
-//the method adjusts the order
-void coverAreaWithFeature(const Rect& area, const FeatureId feature) {
-  const Pos x0y0 = Pos(min(area.x0y0.x, area.x1y1.x),
-                       min(area.x0y0.y, area.x1y1.y));
-
-  const Pos x1y1 = Pos(max(area.x0y0.x, area.x1y1.x),
-                       max(area.x0y0.y, area.x1y1.y));
-
-  for(int x = x0y0.x; x <= x1y1.x; x++) {
-    for(int y = x0y0.y; y <= x1y1.y; y++) {
-      FeatureFactory::spawn(feature, Pos(x, y), NULL);
-    }
-  }
-}
-
-bool isAreaFree(const int X0, const int Y0, const int X1, const int Y1,
-                bool blockingCells[MAP_W][MAP_H]) {
-  for(int y = Y0; y <= Y1; y++) {
-    for(int x = X0; x <= X1; x++) {
-      if(blockingCells[x][y]) {return false;}
-    }
-  }
-  return true;
-}
-
-bool isAreaFree(const Rect& a, bool blockingCells[MAP_W][MAP_H]) {
-  return isAreaFree(a.x0y0.x, a.x0y0.y, a.x1y1.x, a.x1y1.y, blockingCells);
-}
-
 int getNrStepsInDirUntilWallFound(Pos c, const Dir dir) {
   int nrSteps = 0;
   bool isDone = false;
@@ -86,13 +56,17 @@ int getNrStepsInDirUntilWallFound(Pos c, const Dir dir) {
 bool isAllRoomsConnected() {
   Pos c;
   for(int y = 1; y < MAP_H - 1; y++) {
+    bool isFound = false;
     for(int x = 1; x < MAP_W - 1; x++) {
       c.set(x, y);
       const FeatureStatic* const f = Map::cells[c.x][c.y].featureStatic;
-      if(f->getId() == FeatureId::floor) {goto LOOP_END;}
+      if(f->getId() == FeatureId::floor) {
+        isFound = true;
+        break;
+      }
     }
+    if(isFound) {break;}
   }
-LOOP_END:
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
@@ -110,9 +84,9 @@ LOOP_END:
 }
 
 Room* buildRoom(const Rect& roomRect) {
-  coverAreaWithFeature(roomRect, FeatureId::floor);
-  for(int y = roomRect.x0y0.y; y <= roomRect.x1y1.y; y++) {
-    for(int x = roomRect.x0y0.x; x <= roomRect.x1y1.x; x++) {
+  MapGenUtils::build(roomRect, FeatureId::floor);
+  for(int y = roomRect.p0.y; y <= roomRect.p1.y; y++) {
+    for(int x = roomRect.p0.x; x <= roomRect.p1.x; x++) {
       roomCells[x][y] = true;
     }
   }
@@ -126,9 +100,9 @@ void makeCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos) {
 
   const Rect& a = roomAreaInclWalls; //abbreviation
 
-  for(int y = a.x0y0.y; y <= a.x1y1.y; y++) {
-    for(int x = a.x0y0.x; x <= a.x1y1.x; x++) {
-      if(x == a.x0y0.x || x == a.x1y1.x || y == a.x0y0.y || y == a.x1y1.y) {
+  for(int y = a.p0.y; y <= a.p1.y; y++) {
+    for(int x = a.p0.x; x <= a.p1.x; x++) {
+      if(x == a.p0.x || x == a.p1.x || y == a.p0.y || y == a.p1.y) {
         wallCells.push_back(Pos(x, y));
       } else {
         innerCells.push_back(Pos(x, y));
@@ -197,17 +171,17 @@ void deleteAndRemoveRoomFromList(Room* const room) {
 bool tryPlaceAuxRoom(const int X0, const int Y0, const int W, const int H,
                      bool blockers[MAP_W][MAP_H], const Pos& doorPos) {
   Rect auxArea, auxAreaWithWalls;
-  auxArea.x0y0.set(X0, Y0);
-  auxArea.x1y1.set(X0 + W - 1, Y0 + H - 1);
-  auxAreaWithWalls.x0y0.set(auxArea.x0y0 - Pos(1, 1));
-  auxAreaWithWalls.x1y1.set(auxArea.x1y1 + Pos(1, 1));
+  auxArea.p0.set(X0, Y0);
+  auxArea.p1.set(X0 + W - 1, Y0 + H - 1);
+  auxAreaWithWalls.p0.set(auxArea.p0 - Pos(1, 1));
+  auxAreaWithWalls.p1.set(auxArea.p1 + Pos(1, 1));
   if(
-    isAreaFree(auxAreaWithWalls, blockers) &&
+    MapParse::isValInArea(auxAreaWithWalls, blockers) &&
     Utils::isAreaInsideMap(auxAreaWithWalls)) {
     Room* room = buildRoom(auxArea);
     Map::rooms.push_back(room);
-    for(int y = auxArea.x0y0.y; y <= auxArea.x1y1.y; y++) {
-      for(int x = auxArea.x0y0.x; x <= auxArea.x1y1.x; x++) {
+    for(int y = auxArea.p0.y; y <= auxArea.p1.y; y++) {
+      for(int x = auxArea.p0.x; x <= auxArea.p1.x; x++) {
         blockers[x][y] = true;
       }
     }
@@ -219,7 +193,7 @@ bool tryPlaceAuxRoom(const int X0, const int Y0, const int W, const int H,
       //If we're making a "crumble room" we don't want to keep it
       //for applying a theme and such
       deleteAndRemoveRoomFromList(room);
-      room = NULL;
+      room = nullptr;
     } else {
       FeatureFactory::spawn(FeatureId::floor, doorPos);
       globalDoorPosSuggestions[doorPos.x][doorPos.y] = true;
@@ -241,7 +215,7 @@ void buildAuxRooms(Region* regions[3][3]) {
         const Region* const region    = regions[regionX][regionY];
         const Room*   const mainRoom  = region->mainRoom;
 
-        if(mainRoom != NULL) {
+        if(mainRoom != nullptr) {
 
           bool cellsWithFloor[MAP_W][MAP_H];
           MapParse::parse(CellPred::BlocksMoveCmn(false), cellsWithFloor);
@@ -361,25 +335,25 @@ void reshapeRoom(const Room& room) {
           if(TRIM_ALL || Rnd::coinToss()) {
             const Pos upLeft(room.getX0() + W - 1, room.getY0() + H - 1);
             Rect rect(room.getX0Y0(), upLeft);
-            coverAreaWithFeature(rect, FeatureId::wall);
+            MapGenUtils::build(rect, FeatureId::wall);
           }
 
           if(TRIM_ALL || Rnd::coinToss()) {
             const Pos upRight(room.getX1() - W + 1, room.getY0() + H - 1);
             Rect rect(Pos(room.getX0() + ROOM_W - 1, room.getY0()), upRight);
-            coverAreaWithFeature(rect, FeatureId::wall);
+            MapGenUtils::build(rect, FeatureId::wall);
           }
 
           if(TRIM_ALL || Rnd::coinToss()) {
             const Pos downLeft(room.getX0() + W - 1, room.getY1() - H + 1);
             Rect rect(Pos(room.getX0(), room.getY0() + ROOM_H - 1), downLeft);
-            coverAreaWithFeature(rect, FeatureId::wall);
+            MapGenUtils::build(rect, FeatureId::wall);
           }
 
           if(TRIM_ALL || Rnd::coinToss()) {
             const Pos downRight(room.getX1() - W + 1, room.getY1() - H + 1);
             Rect rect(room.getX1Y1(), downRight);
-            coverAreaWithFeature(rect, FeatureId::wall);
+            MapGenUtils::build(rect, FeatureId::wall);
           }
         }
         break;
@@ -437,8 +411,8 @@ void buildMergedRegionsAndRooms(Region* regions[3][3],
       regionIndex1 = Pos(Rnd::range(0, 2), Rnd::range(0, 1));
       regionIndex2 = Pos(regionIndex1 + Pos(0, 1));
       isGoodRegionsFound =
-        regions[regionIndex1.x][regionIndex1.y] == NULL &&
-        regions[regionIndex2.x][regionIndex2.y] == NULL;
+        regions[regionIndex1.x][regionIndex1.y] == nullptr &&
+        regions[regionIndex2.x][regionIndex2.y] == nullptr;
     }
 
     const int MERGED_X0 =
@@ -469,8 +443,8 @@ void buildMergedRegionsAndRooms(Region* regions[3][3],
     const Rect area1(Pos(AREA_1_X0, AREA_1_Y0), Pos(AREA_1_X1, AREA_1_Y1));
     const Rect area2(Pos(AREA_2_X0, AREA_2_Y0), Pos(AREA_2_X1, AREA_2_Y1));
 
-    Region* region1 = new Region(area1.x0y0, area1.x1y1);
-    Region* region2 = new Region(area2.x0y0, area2.x1y1);
+    Region* region1 = new Region(area1.p0, area1.p1);
+    Region* region2 = new Region(area2.p0, area2.p1);
     regions[regionIndex1.x][regionIndex1.y] = region1;
     regions[regionIndex2.x][regionIndex2.y] = region2;
 
@@ -478,8 +452,8 @@ void buildMergedRegionsAndRooms(Region* regions[3][3],
     const int OFFSET_Y0 = Rnd::range(1, 4);
     const int OFFSET_X1 = Rnd::range(1, 4);
     const int OFFSET_Y1 = Rnd::range(1, 4);
-    Rect roomRect(area1.x0y0 + Pos(OFFSET_X0, OFFSET_Y0),
-                  area2.x1y1 - Pos(OFFSET_X1, OFFSET_Y1));
+    Rect roomRect(area1.p0 + Pos(OFFSET_X0, OFFSET_Y0),
+                  area2.p1 - Pos(OFFSET_X1, OFFSET_Y1));
     Room* const room = buildRoom(roomRect);
     Map::rooms.push_back(room);
 
@@ -503,7 +477,7 @@ void buildCaves(Region* regions[3][3]) {
 
         //This region no longer has a room, delete it from list
         deleteAndRemoveRoomFromList(region->mainRoom);
-        region->mainRoom = NULL;
+        region->mainRoom = nullptr;
 
         bool blockers[MAP_W][MAP_H];
 
@@ -777,14 +751,17 @@ void buildRoomsInRooms() {
 }
 
 void postProcessFillDeadEnds() {
+  //Find an origin with no adjacent walls, to ensure not starting in a dead end
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
 
-  //Find an origin with no adjacent walls, to ensure not starting in a dead end
+  bool expandedBlockers[MAP_W][MAP_H];
+  MapParse::expand(blockers, expandedBlockers, 1);
+
   Pos origin;
   for(int y = 2; y < MAP_H - 2; y++) {
     for(int x = 2; x < MAP_W - 2; x++) {
-      if(isAreaFree(x - 1, y - 1, x + 1, y + 1, blockers)) {
+      if(expandedBlockers[x][y] == false) {
         origin = Pos(x, y);
         goto LOOP_END;
       }
@@ -828,8 +805,8 @@ LOOP_END:
 //  Pos c;
 //
 //  //Top to bottom
-//  for(c.x = roomRect.x0y0.x; c.x <= roomRect.x1y1.x; c.x++) {
-//    for(c.y = roomRect.x0y0.y; c.y <= roomRect.x1y1.y; c.y++) {
+//  for(c.x = roomRect.p0.x; c.x <= roomRect.p1.x; c.x++) {
+//    for(c.y = roomRect.p0.y; c.y <= roomRect.p1.y; c.y++) {
 //      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::floor) {
 //        PossToAdd[c.x][c.y] = true;
 //        c.y = INT_MAX;
@@ -837,8 +814,8 @@ LOOP_END:
 //    }
 //  }
 //  //Left to right
-//  for(c.y = roomRect.x0y0.y; c.y <= roomRect.x1y1.y; c.y++) {
-//    for(c.x = roomRect.x0y0.x; c.x <= roomRect.x1y1.x; c.x++) {
+//  for(c.y = roomRect.p0.y; c.y <= roomRect.p1.y; c.y++) {
+//    for(c.x = roomRect.p0.x; c.x <= roomRect.p1.x; c.x++) {
 //      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::floor) {
 //        PossToAdd[c.x][c.y] = true;
 //        c.x = INT_MAX;
@@ -846,8 +823,8 @@ LOOP_END:
 //    }
 //  }
 //  //Bottom to top
-//  for(c.x = roomRect.x0y0.x; c.x <= roomRect.x1y1.x; c.x++) {
-//    for(c.y = roomRect.x1y1.y; c.y >= roomRect.x0y0.y; c.y--) {
+//  for(c.x = roomRect.p0.x; c.x <= roomRect.p1.x; c.x++) {
+//    for(c.y = roomRect.p1.y; c.y >= roomRect.p0.y; c.y--) {
 //      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::floor) {
 //        PossToAdd[c.x][c.y] = true;
 //        c.y = INT_MIN;
@@ -855,8 +832,8 @@ LOOP_END:
 //    }
 //  }
 //  //Right to left
-//  for(c.y = roomRect.x0y0.y; c.y <= roomRect.x1y1.y; c.y++) {
-//    for(c.x = roomRect.x1y1.x; c.x >= roomRect.x0y0.x; c.x--) {
+//  for(c.y = roomRect.p0.y; c.y <= roomRect.p1.y; c.y++) {
+//    for(c.x = roomRect.p1.x; c.x >= roomRect.p0.x; c.x--) {
 //      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::floor) {
 //        PossToAdd[c.x][c.y] = true;
 //        c.x = INT_MIN;
@@ -864,8 +841,8 @@ LOOP_END:
 //    }
 //  }
 //
-//  for(c.x = roomRect.x0y0.x; c.x <= roomRect.x1y1.x; c.x++) {
-//    for(c.y = roomRect.x0y0.y; c.y <= roomRect.x1y1.y; c.y++) {
+//  for(c.x = roomRect.p0.x; c.x <= roomRect.p1.x; c.x++) {
+//    for(c.y = roomRect.p0.y; c.y <= roomRect.p1.y; c.y++) {
 //      if(PossToAdd[c.x][c.y]) {
 //        vectorRef.push_back(c);
 //      }
@@ -1123,7 +1100,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 //
 //  Pos leftPos(X_POS_START, 0);
 //  while(Utils::isPosInsideMap(leftPos) && Utils::isPosInsideMap(leftPos + Pos(W,0))) {
-//    coverAreaWithFeature(Rect(leftPos, leftPos + Pos(W, 0)), FeatureId::deepWater);
+//    MapGenUtils::build(Rect(leftPos, leftPos + Pos(W, 0)), FeatureId::deepWater);
 //    leftPos += Pos(Rnd::range(-1,1), 1);
 //  }
 //}
@@ -1155,7 +1132,7 @@ bool run() {
 
   for(int y = 0; y < 3; y++) {
     for(int x = 0; x < 3; x++) {
-      regions[x][y] = NULL;
+      regions[x][y] = nullptr;
       regionsToBuildCave[x][y] = false;
     }
   }
@@ -1171,7 +1148,7 @@ bool run() {
       int nrTriesToMark = 1000;
       while(nrTriesToMark > 0) {
         Pos c(Rnd::range(0, 2), Rnd::range(0, 2));
-        if(regions[c.x][c.y] == NULL && regionsToBuildCave[c.x][c.y] == false) {
+        if(regions[c.x][c.y] == nullptr && regionsToBuildCave[c.x][c.y] == false) {
           regionsToBuildCave[c.x][c.y] = true;
           nrTriesToMark = 0;
         }
@@ -1183,7 +1160,7 @@ bool run() {
   trace << "MapGen::Bsp: Making rooms" << endl;
   for(int y = 0; y < 3; y++) {
     for(int x = 0; x < 3; x++) {
-      if(regions[x][y] == NULL) {
+      if(regions[x][y] == nullptr) {
         const int X0 = x == 0 ? 0 : x == 1 ? SPL_X1 : SPL_X2;
         const int Y0 = y == 0 ? 0 : y == 1 ? SPL_Y1 : SPL_Y2;
         const int X1 = x == 0 ? SPL_X1 - 1 :
@@ -1249,7 +1226,7 @@ bool run() {
   for(int y = 0; y < 3; y++) {
     for(int x = 0; x < 3; x++) {
       delete regions[x][y];
-      regions[x][y] = NULL;
+      regions[x][y] = nullptr;
     }
   }
 
@@ -1262,8 +1239,8 @@ bool run() {
 } //MapGen
 
 //=============================================================== REGION
-Region::Region(const Pos& x0y0, const Pos& x1y1) :
-  mainRoom(NULL), isConnected(false), x0y0_(x0y0), x1y1_(x1y1) {
+Region::Region(const Pos& p0, const Pos& p1) :
+  mainRoom(nullptr), isConnected(false), p0_(p0), p1_(p1) {
   for(int x = 0; x <= 2; x++) {
     for(int y = 0; y <= 2; y++) {
       regionsConnectedTo[x][y] = false;
@@ -1272,7 +1249,7 @@ Region::Region(const Pos& x0y0, const Pos& x1y1) :
 }
 
 Region::Region() :
-  mainRoom(NULL), isConnected(false), x0y0_(Pos(-1, -1)), x1y1_(Pos(-1, -1)) {
+  mainRoom(nullptr), isConnected(false), p0_(Pos(-1, -1)), p1_(Pos(-1, -1)) {
   for(int x = 0; x <= 2; x++) {
     for(int y = 0; y <= 2; y++) {
       regionsConnectedTo[x][y] = false;
@@ -1295,10 +1272,10 @@ int Region::getNrOfConnections() {
 }
 
 bool Region::isRegionNeighbour(const Region& other) {
-  for(int x = x0y0_.x; x <= x1y1_.x; x++) {
-    for(int y = x0y0_.y; y <= x1y1_.y; y++) {
-      for(int xx = other.x0y0_.x; xx <= other.x1y1_.x; xx++) {
-        for(int yy = other.x0y0_.y; yy <= other.x1y1_.y; yy++) {
+  for(int x = p0_.x; x <= p1_.x; x++) {
+    for(int y = p0_.y; y <= p1_.y; y++) {
+      for(int xx = other.p0_.x; xx <= other.p1_.x; xx++) {
+        for(int yy = other.p0_.y; yy <= other.p1_.y; yy++) {
           if(Utils::isPosAdj(
                 Pos(x, y), Pos(xx, yy), false)) {
             return true;
@@ -1314,7 +1291,7 @@ Rect Region::getRandomRectForRoom() const {
   const bool TINY_ALLOWED_HOR = Rnd::coinToss();
 
   const Pos minDim(TINY_ALLOWED_HOR ? 2 : 4, TINY_ALLOWED_HOR ? 4 : 2);
-  const Pos maxDim = x1y1_ - x0y0_ - Pos(2, 2);
+  const Pos maxDim = p1_ - p0_ - Pos(2, 2);
 
   const int H = Rnd::range(minDim.y, maxDim.y);
   const bool ALLOW_BIG_W = H > (maxDim.y * 5) / 6;
@@ -1323,8 +1300,8 @@ Rect Region::getRandomRectForRoom() const {
 
   const Pos dim(W, H);
 
-  const int X0 = x0y0_.x + 1 + Rnd::range(0, maxDim.x - dim.x);
-  const int Y0 = x0y0_.y + 1 + Rnd::range(0, maxDim.y - dim.y);
+  const int X0 = p0_.x + 1 + Rnd::range(0, maxDim.x - dim.x);
+  const int Y0 = p0_.y + 1 + Rnd::range(0, maxDim.y - dim.y);
   const int X1 = X0 + dim.x - 1;
   const int Y1 = Y0 + dim.y - 1;
 

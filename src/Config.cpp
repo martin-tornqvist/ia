@@ -665,7 +665,7 @@ void toggleFullscreen() {
   setCellDimDependentVariables();
   Renderer::init();
 
-  Renderer::applySurface(Pos(0, 0), screenCpy, NULL);
+  Renderer::applySurface(Pos(0, 0), screenCpy, nullptr);
   Renderer::updateScreen();
 
   vector<string> lines;

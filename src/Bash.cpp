@@ -28,7 +28,7 @@ void playerBash() {
     //Bash living actor?
     Actor* livingActor =
       Utils::getActorAtPos(bashPos, ActorDeadState::alive);
-    if(livingActor != NULL) {
+    if(livingActor != nullptr) {
       trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
       if(Map::player->getPropHandler().allowAttackMelee(true)) {
         trace << "Bash: Player is allowed to do melee attack" << endl;
@@ -44,7 +44,7 @@ void playerBash() {
     //Bash corpse?
     Actor* deadActor =
       Utils::getActorAtPos(bashPos, ActorDeadState::corpse);
-    if(deadActor != NULL) {
+    if(deadActor != nullptr) {
       const bool IS_SEEING_CORPSE =
         Map::cells[bashPos.x][bashPos.y].isSeenByPlayer;
 

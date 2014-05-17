@@ -54,10 +54,10 @@ void populateRoomAndCorridorLevel() {
 
         vector<Pos> trapPosBucket;
 
-        const Pos& x0y0 = room->getX0Y0();
-        const Pos& x1y1 = room->getX1Y1();
-        for(int y = x0y0.y; y <= x1y1.y; y++) {
-          for(int x = x0y0.x; x <= x1y1.x; x++) {
+        const Pos& p0 = room->getX0Y0();
+        const Pos& p1 = room->getX1Y1();
+        for(int y = p0.y; y <= p1.y; y++) {
+          for(int x = p0.x; x <= p1.x; x++) {
             if(
               blockers[x][y] == false &&
               Map::cells[x][y].featureStatic->canHaveStaticFeature()) {

@@ -37,7 +37,7 @@ void draw(MenuBrowser& browser) {
 
   for(int i = 0; i < NR_SPELLS; i++) {
     const int CURRENT_ELEMENT = i;
-    Scroll scroll(NULL);
+    Scroll scroll(nullptr);
     SDL_Color scrollClr = scroll.getInterfaceClr();
     const SDL_Color clr =
       browser.isPosAtElement(CURRENT_ELEMENT) ? clrWhite : scrollClr;
@@ -204,7 +204,7 @@ void playerSelectSpellToCast() {
 }
 
 void tryCastPrevSpell() {
-  if(prevSpellCast_ == NULL) {
+  if(prevSpellCast_ == nullptr) {
     playerSelectSpellToCast();
   } else {
     tryCast(prevSpellCast_);

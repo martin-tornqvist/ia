@@ -24,7 +24,7 @@ using namespace std;
 namespace InvHandling {
 
 InvScrId  screenToOpenAfterDrop     = InvScrId::endOfInventoryScreens;
-InvSlot*  equipSlotToOpenAfterDrop  = NULL;
+InvSlot*  equipSlotToOpenAfterDrop  = nullptr;
 int       browserPosToSetAfterDrop  = 0;
 
 namespace {
@@ -156,7 +156,7 @@ void swapItems(Item** item1, Item** item2) {
 
 void init() {
   screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
-  equipSlotToOpenAfterDrop = NULL;
+  equipSlotToOpenAfterDrop = nullptr;
   browserPosToSetAfterDrop = 0;
 }
 
@@ -204,7 +204,7 @@ void runSlotsScreen() {
         const int elementSelected = browser.getElement();
         if(elementSelected < int(slots.size())) {
           InvSlot& slot = slots.at(elementSelected);
-          if(slot.item == NULL) {
+          if(slot.item == nullptr) {
             if(runEquipScreen(&slot)) {
               Renderer::drawMapAndInterface();
               return;

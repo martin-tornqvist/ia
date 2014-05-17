@@ -336,7 +336,7 @@ void spawnGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
     default: {} break;
   }
 
-  Actor* originActor = NULL;
+  Actor* originActor = nullptr;
 
   const int NR_FREE_CELLS = sortedFreeCellsVector.size();
   const int NR_CAN_BE_SPAWNED = min(NR_FREE_CELLS, maxNrInGroup);

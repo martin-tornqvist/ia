@@ -52,7 +52,7 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
 
             // Cast spell with a certain chance if HP is low.
             if(CUR_HP < MAX_HP / 3 && Rnd::percentile() <= 5) {
-              if(Map::player->isSeeingActor(*monsterActing, NULL)) {
+              if(Map::player->isSeeingActor(*monsterActing, nullptr)) {
                 Log::addMsg(monsterActing->getNameThe() + " looks desperate.");
               }
               spell->cast(monsterActing, true);
@@ -334,7 +334,7 @@ bool moveToRandomAdjacentCell(Monster& monster) {
 
 bool moveTowardsTargetSimple(Monster& monster) {
   if(monster.deadState == ActorDeadState::alive) {
-    if(monster.target != NULL) {
+    if(monster.target != nullptr) {
       if(
         monster.awareOfPlayerCounter_ > 0 ||
         monster.leader == Map::player) {
@@ -465,7 +465,7 @@ void setPathToLairIfNoLos(Monster& monster, vector<Pos>& path,
 void setPathToLeaderIfNoLosToleader(Monster& monster, vector<Pos>& path) {
   if(monster.deadState == ActorDeadState::alive) {
     Actor* leader = monster.leader;
-    if(leader != NULL) {
+    if(leader != nullptr) {
       if(leader->deadState == ActorDeadState::alive) {
         bool blockers[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(), blockers);

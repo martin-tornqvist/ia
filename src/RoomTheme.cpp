@@ -57,7 +57,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
   if(IS_NEXT_TO_WALL_AVAIL == false && IS_AWAY_FROM_WALLS_AVAIL == false) {
     trace << "RoomThemeMaking: Neither cells next to walls or away from ";
     trace << "walls found, returning" << endl;
-    def = NULL;
+    def = nullptr;
     return -1;
   }
 
@@ -162,13 +162,13 @@ int placeThemeFeatures(Room& room) {
       return nrFeaturesPlaced;
     }
 
-    const FeatureDataT* d = NULL;
+    const FeatureDataT* d = nullptr;
     Pos pos(-1, -1);
     const int FEATURE_CANDIDATE_ELEMENT =
       trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls,
                            themeFeatureData);
 
-    if(d == NULL) {
+    if(d == nullptr) {
       trace << "RoomThemeMaking: Could not find any more spots ";
       trace << "to place feature, returning" << endl;
       return nrFeaturesPlaced;

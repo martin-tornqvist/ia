@@ -34,9 +34,9 @@ bool run() {
   }
 
   if(Rnd::coinToss()) {
-    FeatureFactory::spawn(FeatureId::stairs, Pos(4, 2), NULL);
+    FeatureFactory::spawn(FeatureId::stairs, Pos(4, 2), nullptr);
   } else {
-    FeatureFactory::spawn(FeatureId::stairs, Pos(4, 19), NULL);
+    FeatureFactory::spawn(FeatureId::stairs, Pos(4, 19), nullptr);
   }
 
 

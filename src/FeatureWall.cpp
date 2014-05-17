@@ -44,9 +44,9 @@ string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
 }
 
 SDL_Color Wall::getClr() const {
-  if(isMossGrown)             {return clrGreen;}
-  if(wallType == WallType::cave)   {return clrBrownGray;}
-  if(wallType == WallType::egypt)  {return clrBrownGray;}
+  if(isMossGrown)                   {return clrGreen;}
+  if(wallType == WallType::cave)    {return clrBrownGray;}
+  if(wallType == WallType::egypt)   {return clrBrownGray;}
   return data_->color;
 }
 
@@ -57,30 +57,30 @@ char Wall::getGlyph() const {
 TileId Wall::getFrontWallTile() const {
   if(Config::isTilesWallFullSquare()) {
     switch(wallType) {
-      case WallType::common:   return TileId::wallTop;        break;
-      case WallType::alt1:     return TileId::wallTop;        break;
-      case WallType::cave:     return TileId::caveWallTop;    break;
-      case WallType::egypt:    return TileId::egyptWallTop;   break;
-      default:            return TileId::wallTop;        break;
+      case WallType::common:  return TileId::wallTop;         break;
+      case WallType::alt1:    return TileId::wallTop;         break;
+      case WallType::cave:    return TileId::caveWallTop;     break;
+      case WallType::egypt:   return TileId::egyptWallTop;    break;
+      default:                return TileId::wallTop;         break;
     }
   } else {
     switch(wallType) {
-      case WallType::common:   return TileId::wallFront;        break;
-      case WallType::alt1:     return TileId::wallFrontAlt1;    break;
-      case WallType::cave:     return TileId::caveWallFront;    break;
-      case WallType::egypt:    return TileId::egyptWallFront;   break;
-      default:            return TileId::wallFront;        break;
+      case WallType::common:  return TileId::wallFront;       break;
+      case WallType::alt1:    return TileId::wallFrontAlt1;   break;
+      case WallType::cave:    return TileId::caveWallFront;   break;
+      case WallType::egypt:   return TileId::egyptWallFront;  break;
+      default:                return TileId::wallFront;       break;
     }
   }
 }
 
 TileId Wall::getTopWallTile() const {
   switch(wallType) {
-    case WallType::common:   return TileId::wallTop;        break;
-    case WallType::alt1:     return TileId::wallTop;        break;
-    case WallType::cave:     return TileId::caveWallTop;    break;
-    case WallType::egypt:    return TileId::egyptWallTop;   break;
-    default:            return TileId::wallTop;        break;
+    case WallType::common:    return TileId::wallTop;         break;
+    case WallType::alt1:      return TileId::wallTop;         break;
+    case WallType::cave:      return TileId::caveWallTop;     break;
+    case WallType::egypt:     return TileId::egyptWallTop;    break;
+    default:                  return TileId::wallTop;         break;
   }
 }
 

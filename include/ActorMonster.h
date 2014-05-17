@@ -9,7 +9,7 @@
 #include "Spells.h"
 
 struct BestAttack {
-  BestAttack() : weapon(NULL), isMelee(true) {}
+  BestAttack() : weapon(nullptr), isMelee(true) {}
 
   Weapon* weapon;
   bool isMelee;

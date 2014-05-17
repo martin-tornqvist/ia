@@ -21,8 +21,8 @@ void runExplosionAt(
   const ExplSrc   explSrc             = ExplSrc::misc,
   const int RADI_CHANGE               = 0,
   const SfxId sfx                     = SfxId::explosion,
-  Prop* const prop                    = NULL,
-  const SDL_Color* const clrOverride  = NULL);
+  Prop* const prop                    = nullptr,
+  const SDL_Color* const clrOverride  = nullptr);
 
 void runSmokeExplosionAt(const Pos& origin);
 

@@ -24,7 +24,7 @@ void checkOneCellOfMany(const bool obstructions[MAP_W][MAP_H],
   const vector<Pos>* pathDeltas =
     LineCalc::getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
 
-  if(pathDeltas == NULL) {return;}
+  if(pathDeltas == nullptr) {return;}
 
   const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLight;
 
@@ -70,7 +70,7 @@ bool checkCell(const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
   const vector<Pos>* pathDeltas =
     LineCalc::getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
 
-  if(pathDeltas == NULL) {return false;}
+  if(pathDeltas == nullptr) {return false;}
 
   const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLight;
 

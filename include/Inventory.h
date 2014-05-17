@@ -26,7 +26,7 @@ struct InvSlot {
     allowRing           = false;
     interfaceName       = "";
     id                  = SlotId::wielded;
-    item                = NULL;
+    item                = nullptr;
   }
   bool allowWieldedWeapon;
   bool allowMissile;

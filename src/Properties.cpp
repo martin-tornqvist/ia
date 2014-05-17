@@ -833,7 +833,7 @@ Prop* PropHandler::makeProp(const PropId id, PropTurns turnsInit,
 
     case endOfPropIds: {assert(false && "Bad property id");}
   }
-  return NULL;
+  return nullptr;
 }
 
 PropHandler::~PropHandler() {
@@ -927,7 +927,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   prop->owningActor_    = owningActor_;
 
   const bool IS_PLAYER  = owningActor_ == Map::player;
-  bool playerSeeOwner   = Map::player->isSeeingActor(*owningActor_, NULL);
+  bool playerSeeOwner   = Map::player->isSeeingActor(*owningActor_, nullptr);
 
   if(FORCE_EFFECT == false) {
     vector<Prop*> allProps;
@@ -943,7 +943,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
             Log::addMsg(msg, clrWhite, true);
           }
         } else {
-          if(Map::player->isSeeingActor(*owningActor_, NULL)) {
+          if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
             string msg = "";
             prop->getMsg(propMsgOnResMonster, msg);
             if(msg.empty() == false) {
@@ -1040,7 +1040,7 @@ void PropHandler::tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE) {
   Prop* propAppliedFromWpn =
     IS_MELEE ? wpnData.propAppliedOnMelee : wpnData.propAppliedOnRanged;
 
-  if(propAppliedFromWpn != NULL) {
+  if(propAppliedFromWpn != nullptr) {
 
     //If weapon damage type is resisted by the defender, the property is
     //automatically resisted
@@ -1061,7 +1061,7 @@ bool PropHandler::endAppliedProp(
   const bool RUN_PROP_END_EFFECTS) {
 
   int index   = -1;
-  Prop* prop  = NULL;
+  Prop* prop  = nullptr;
   const unsigned int NR_APPLIED_PROPS = appliedProps_.size();
   for(unsigned int i = 0; i < NR_APPLIED_PROPS; i++) {
     prop = appliedProps_.at(i);
@@ -1341,7 +1341,7 @@ Prop* PropHandler::getProp(const PropId id, const PropSrc source) const {
     getPropsFromSources(invProps, sources);
     for(Prop * prop : invProps) {if(prop->getId() == id) {return prop;}}
   }
-  return NULL;
+  return nullptr;
 }
 
 bool PropHandler::changeActorClr(SDL_Color& clr) const {
@@ -1370,7 +1370,7 @@ void PropHandler::endAppliedPropsByMagicHealing() {
 }
 
 Prop::Prop(PropId id, PropTurns turnsInit, int turns) :
-  turnsLeft_(turns), owningActor_(NULL), id_(id),
+  turnsLeft_(turns), owningActor_(nullptr), id_(id),
   data_(&(PropData::data[id])) {
 
   if(turnsInit == propTurnsStd) {
@@ -1450,7 +1450,7 @@ void PropPoisoned::onNewTurn() {
       if(owningActor_ == Map::player) {
         Log::addMsg("I am suffering from the poison!", clrMsgBad, true);
       } else {
-        if(Map::player->isSeeingActor(*owningActor_, NULL)) {
+        if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
           Log::addMsg(
             owningActor_->getNameThe() + " suffers from poisoning!");
         }
@@ -1550,7 +1550,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
     if(owningActor_ == Map::player) {
       Log::addMsg("I struggle to tear out the spike!", clrMsgBad);
     } else {
-      if(Map::player->isSeeingActor(*owningActor_, NULL)) {
+      if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
         Log::addMsg(owningActor_->getNameThe() +  " struggles in pain!",
                     clrMsgGood);
       }
@@ -1568,7 +1568,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
           if(owningActor_ == Map::player) {
             Log::addMsg("I rip out a spike from my flesh!");
           } else {
-            if(Map::player->isSeeingActor(*owningActor_, NULL)) {
+            if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
               Log::addMsg(
                 owningActor_->getNameThe() + " tears out a spike!");
             }
@@ -1794,7 +1794,7 @@ bool PropRAcid::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I feel a faint burning sensation.");
-      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1810,7 +1810,7 @@ bool PropRCold::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I feel chilly.");
-      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1826,7 +1826,7 @@ bool PropRElec::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I feel a faint tingle.");
-      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1871,7 +1871,7 @@ bool PropRPhys::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I resist harm.");
-      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1897,7 +1897,7 @@ bool PropRFire::tryResistDmg(
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I feel hot.");
-      } else if(Map::player->isSeeingActor(*owningActor_, NULL)) {
+      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }

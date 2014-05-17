@@ -27,9 +27,9 @@ void drawLocationInfo() {
       const vector<Room*>& rooms = Map::rooms;
       for(unsigned int i = 0; i < rooms.size(); i++) {
         const Room* const room = rooms.at(i);
-        const Pos& x0y0 = room->getX0Y0();
-        const Pos& x1y1 = room->getX1Y1();
-        if(Utils::isPosInside(playerPos, Rect(x0y0, x1y1))) {
+        const Pos& p0 = room->getX0Y0();
+        const Pos& p1 = room->getX1Y1();
+        if(Utils::isPosInside(playerPos, Rect(p0, p1))) {
           const string& roomDescr = room->roomDescr;
           if(roomDescr.empty() == false) {
             str += room->roomDescr + " ";
@@ -109,7 +109,7 @@ void drawInfoLines() {
   Renderer::drawText("ARM:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
   const Item* const armor = player.getInv().getItemInSlot(SlotId::armorBody);
-  if(armor == NULL) {
+  if(armor == nullptr) {
     Renderer::drawText("N/A", Panel::charLines, pos, clrGenLgt);
     pos.x += 4;
   } else {
@@ -123,7 +123,7 @@ void drawInfoLines() {
   const int X_POS_MISSILE = pos.x;
 
   Item* itemWielded = Map::player->getInv().getItemInSlot(SlotId::wielded);
-  if(itemWielded == NULL) {
+  if(itemWielded == nullptr) {
     Renderer::drawText(
       "Unarmed", Panel::charLines, pos, clrGenMed);
   } else {
@@ -180,7 +180,7 @@ void drawInfoLines() {
 
   Item* const itemMissiles =
     Map::player->getInv().getItemInSlot(SlotId::missiles);
-  if(itemMissiles == NULL) {
+  if(itemMissiles == nullptr) {
     Renderer::drawText("No missile weapon", Panel::charLines, pos, clrGenMed);
   } else {
     const SDL_Color itemClr = itemMissiles->getClr();

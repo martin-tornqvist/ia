@@ -140,7 +140,7 @@ void MedicalBag::continueAction() {
 }
 
 void MedicalBag::finishCurAction() {
-  Map::player->activeMedicalBag = NULL;
+  Map::player->activeMedicalBag = nullptr;
 
   switch(curAction_) {
     case medicalBagAction_sanitizeInfection: {
@@ -153,7 +153,7 @@ void MedicalBag::finishCurAction() {
     case medicalBagAction_treatWound: {
       Prop* prop =
         Map::player->getPropHandler().getProp(propWound, PropSrc::applied);
-      if(prop == NULL) {
+      if(prop == nullptr) {
         trace << "[WARNING] No wound prop found, ";
         trace << "in MedicalBag::finishCurAction()" << endl;
       } else {
@@ -184,7 +184,7 @@ void MedicalBag::interrupted() {
 
   nrTurnsLeft_ = -1;
 
-  Map::player->activeMedicalBag = NULL;
+  Map::player->activeMedicalBag = nullptr;
 }
 
 int MedicalBag::getTotTurnsForAction(const MedicalBagAction action) const {

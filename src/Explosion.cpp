@@ -20,8 +20,8 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
           const SDL_Color* const clrOverride) {
   Renderer::drawMapAndInterface();
 
-  const SDL_Color& clrInner = clrOverride == NULL ? clrYellow : *clrOverride;
-  const SDL_Color& clrOuter = clrOverride == NULL ? clrRedLgt : *clrOverride;
+  const SDL_Color& clrInner = clrOverride == nullptr ? clrYellow : *clrOverride;
+  const SDL_Color& clrOuter = clrOverride == nullptr ? clrRedLgt : *clrOverride;
 
   const bool IS_TILES     = Config::isTilesMode();
   const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
@@ -65,8 +65,8 @@ void getPositionsReached(const Rect& area, const Pos& origin,
                          bool blockers[MAP_W][MAP_H],
                          vector< vector<Pos> >& posListRef) {
   vector<Pos> line;
-  for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
-    for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
+  for(int y = area.p0.y; y <= area.p1.y; y++) {
+    for(int x = area.p0.x; x <= area.p1.x; x++) {
       const Pos pos(x, y);
       const int DIST = Utils::kingDist(pos, origin);
       bool isReached = true;
@@ -109,7 +109,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   SndVol vol = explType == ExplType::expl ? SndVol::high : SndVol::low;
 
   Snd snd("I hear an explosion!", sfx, IgnoreMsgIfOriginSeen::yes, origin,
-          NULL, vol, AlertsMonsters::yes);
+          nullptr, vol, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 
   draw(posLists, blockers, clrOverride);
@@ -124,7 +124,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      livingActors[x][y] = NULL;
+      livingActors[x][y] = nullptr;
       corpses[x][y].resize(0);
     }
   }
@@ -155,7 +155,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         const int DMG = Rnd::dice(DMG_ROLLS - curRadi, DMG_SIDES) + DMG_PLUS;
 
         //Damage living actor
-        if(livingActor != NULL) {
+        if(livingActor != nullptr) {
           if(livingActor == Map::player) {
             Log::addMsg("I am hit by an explosion!", clrMsgBad);
           }
@@ -173,9 +173,9 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
       }
 
       //Apply property
-      if(prop != NULL) {
+      if(prop != nullptr) {
         if(
-          livingActor != NULL &&
+          livingActor != nullptr &&
           (livingActor != Map::player || IS_DEM_EXP == false ||
            explSrc != ExplSrc::playerUseMoltvIntended)) {
           PropHandler& propHlr = livingActor->getPropHandler();
@@ -199,7 +199,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   Map::player->updateFov();
   Renderer::drawMapAndInterface();
 
-  if(prop != NULL) {delete prop;}
+  if(prop != nullptr) {delete prop;}
 }
 
 void runSmokeExplosionAt(const Pos& origin) {
@@ -214,7 +214,7 @@ void runSmokeExplosionAt(const Pos& origin) {
   getPositionsReached(area, origin, blockers, posLists);
 
   //TODO Sound message?
-  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, origin, NULL,
+  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, origin, nullptr,
           SndVol::low, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 

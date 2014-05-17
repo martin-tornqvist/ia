@@ -82,7 +82,7 @@ void drawPopupBox(const Rect& area, const Panel panel = Panel::screen,
                   const SDL_Color& clr = clrGray);
 
 void applySurface(const Pos& pixelPos, SDL_Surface* const src,
-                  SDL_Rect* clip = NULL);
+                  SDL_Rect* clip = nullptr);
 
 void drawMap();
 

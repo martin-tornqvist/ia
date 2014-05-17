@@ -72,7 +72,7 @@ void resetArray(int a[MAP_W][MAP_H]) {
 void resetArray(Actor* a[MAP_W][MAP_H]) {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      a[x][y] = NULL;
+      a[x][y] = nullptr;
     }
   }
 }
@@ -89,6 +89,14 @@ void reverseBoolArray(bool array[MAP_W][MAP_H]) {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       array[x][y] = !array[x][y];
+    }
+  }
+}
+
+void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_H; x++) {
+      out[x][y] = in[x][y];
     }
   }
 }
@@ -121,7 +129,7 @@ Actor* getActorAtPos(const Pos& pos, ActorDeadState deadState) {
       return actor;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 void makeActorArray(Actor* a[MAP_W][MAP_H]) {
@@ -139,33 +147,33 @@ bool isPosInsideMap(const Pos& pos) {
 
 bool isPosInside(const Pos& pos, const Rect& area) {
   return
-    pos.x >= area.x0y0.x &&
-    pos.x <= area.x1y1.x &&
-    pos.y >= area.x0y0.y &&
-    pos.y <= area.x1y1.y;
+    pos.x >= area.p0.x &&
+    pos.x <= area.p1.x &&
+    pos.y >= area.p0.y &&
+    pos.y <= area.p1.y;
 }
 
 bool isAreaInsideOther(const Rect& inner, const Rect& outer,
                        const bool COUNT_EQUAL_AS_INSIDE) {
   if(COUNT_EQUAL_AS_INSIDE) {
     return
-      inner.x0y0.x >= outer.x0y0.x &&
-      inner.x1y1.x <= outer.x1y1.x &&
-      inner.x0y0.y >= outer.x0y0.y &&
-      inner.x1y1.y <= outer.x1y1.y;
+      inner.p0.x >= outer.p0.x &&
+      inner.p1.x <= outer.p1.x &&
+      inner.p0.y >= outer.p0.y &&
+      inner.p1.y <= outer.p1.y;
   } else {
     return
-      inner.x0y0.x > outer.x0y0.x &&
-      inner.x1y1.x < outer.x1y1.x &&
-      inner.x0y0.y > outer.x0y0.y &&
-      inner.x1y1.y < outer.x1y1.y;
+      inner.p0.x > outer.p0.x &&
+      inner.p1.x < outer.p1.x &&
+      inner.p0.y > outer.p0.y &&
+      inner.p1.y < outer.p1.y;
   }
 }
 
 bool isAreaInsideMap(const Rect& area) {
   if(
-    area.x0y0.x < 0 || area.x0y0.y < 0 ||
-    area.x1y1.x >= MAP_W || area.x1y1.y >= MAP_H) {
+    area.p0.x < 0 || area.p0.y < 0 ||
+    area.p1.x >= MAP_W || area.p1.y >= MAP_H) {
     return false;
   }
   return true;
@@ -195,7 +203,7 @@ Pos getClosestPos(const Pos& c, const vector<Pos>& positions) {
 }
 
 Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {
-  if(actors.empty()) return NULL;
+  if(actors.empty()) return nullptr;
 
   //Find distance to nearest actor(s)
   int distToNearest = INT_MAX;
@@ -229,18 +237,10 @@ bool isPosAdj(const Pos& pos1, const Pos& pos2,
   if(pos1.x == pos2.x && pos1.y == pos2.y) {
     return COUNT_SAME_CELL_AS_NEIGHBOUR;
   }
-  if(pos1.x < pos2.x - 1) {
-    return false;
-  }
-  if(pos1.x > pos2.x + 1) {
-    return false;
-  }
-  if(pos1.y < pos2.y - 1) {
-    return false;
-  }
-  if(pos1.y > pos2.y + 1) {
-    return false;
-  }
+  if(pos1.x < pos2.x - 1) {return false;}
+  if(pos1.x > pos2.x + 1) {return false;}
+  if(pos1.y < pos2.y - 1) {return false;}
+  if(pos1.y > pos2.y + 1) {return false;}
   return true;
 }
 
@@ -287,7 +287,7 @@ const double PI_DB            = 3.14159265;
 const double ANGLE_45_DB      = 2 * PI_DB / 8;
 const double ANGLE_45_HALF_DB = ANGLE_45_DB / 2.0;
 
-double edge[4] = {
+const double edge[4] = {
   ANGLE_45_HALF_DB + (ANGLE_45_DB * 0),
   ANGLE_45_HALF_DB + (ANGLE_45_DB * 1),
   ANGLE_45_HALF_DB + (ANGLE_45_DB * 2),

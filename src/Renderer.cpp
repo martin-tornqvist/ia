@@ -28,8 +28,8 @@ namespace Renderer {
 
 CellRenderData  renderArray[MAP_W][MAP_H];
 CellRenderData  renderArrayNoActors[MAP_W][MAP_H];
-SDL_Surface*    screenSurface       = NULL;
-SDL_Surface*    mainMenuLogoSurface = NULL;
+SDL_Surface*    screenSurface       = nullptr;
+SDL_Surface*    mainMenuLogoSurface = nullptr;
 
 namespace {
 
@@ -37,7 +37,7 @@ bool tilePixelData_[400][400];
 bool fontPixelData_[400][400];
 
 bool isInited() {
-  return screenSurface != NULL;
+  return screenSurface != nullptr;
 }
 
 void loadMainMenuLogo() {
@@ -179,16 +179,11 @@ void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
   const int CELL_W = Config::getCellW();
   const int CELL_H = Config::getCellH();
 
-  const int SCALE = 1;
-
-  const int CELL_W_SHEET = CELL_W / SCALE;
-  const int CELL_H_SHEET = CELL_H / SCALE;
-
   const Pos sheetPos  = Art::getGlyphPos(GLYPH);
-  const int SHEET_X0  = sheetPos.x * CELL_W_SHEET;
-  const int SHEET_Y0  = sheetPos.y * CELL_H_SHEET;
-  const int SHEET_X1  = SHEET_X0 + CELL_W_SHEET - 1;
-  const int SHEET_Y1  = SHEET_Y0 + CELL_H_SHEET - 1;
+  const int SHEET_X0  = sheetPos.x * CELL_W;
+  const int SHEET_Y0  = sheetPos.y * CELL_H;
+  const int SHEET_X1  = SHEET_X0 + CELL_W - 1;
+  const int SHEET_Y1  = SHEET_Y0 + CELL_H - 1;
   const int SCREEN_X0 = pixelPos.x;
   const int SCREEN_Y0 = pixelPos.y;
 
@@ -199,15 +194,11 @@ void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
     screenX = SCREEN_X0;
     for(int sheetX = SHEET_X0; sheetX <= SHEET_X1; sheetX++) {
       if(fontPixelData_[sheetX][sheetY]) {
-        for(int dy = 0; dy < SCALE; dy++) {
-          for(int dx = 0; dx < SCALE; dx++) {
-            putPixel(screenSurface, screenX + dx, screenY + dy, CLR_TO);
-          }
-        }
+        putPixel(screenSurface, screenX, screenY, CLR_TO);
       }
-      screenX += SCALE;
+      screenX++;
     }
-    screenY += SCALE;
+    screenY++;
   }
 
   SDL_UnlockSurface(screenSurface);
@@ -305,7 +296,7 @@ void init() {
 
   trace << "Renderer: Setting up rendering window" << endl;
   const string title = "IA " + gameVersionStr;
-  SDL_WM_SetCaption(title.data(), NULL);
+  SDL_WM_SetCaption(title.data(), nullptr);
 
   const int W = Config::getScreenPixelW();
   const int H = Config::getScreenPixelH();
@@ -313,11 +304,11 @@ void init() {
     screenSurface = SDL_SetVideoMode(W, H, SCREEN_BPP,
                                      SDL_SWSURFACE | SDL_FULLSCREEN);
   }
-  if(Config::isFullscreen() == false || screenSurface == NULL) {
+  if(Config::isFullscreen() == false || screenSurface == nullptr) {
     screenSurface = SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
   }
 
-  if(screenSurface == NULL) {
+  if(screenSurface == nullptr) {
     trace << "[WARNING] Failed to create screen surface, ";
     trace << "in Renderer::init()" << endl;
   }
@@ -335,14 +326,14 @@ void init() {
 void cleanup() {
   trace << "Renderer::cleanup()..." << endl;
 
-  if(screenSurface != NULL) {
+  if(screenSurface != nullptr) {
     SDL_FreeSurface(screenSurface);
-    screenSurface = NULL;
+    screenSurface = nullptr;
   }
 
-  if(mainMenuLogoSurface != NULL) {
+  if(mainMenuLogoSurface != nullptr) {
     SDL_FreeSurface(mainMenuLogoSurface);
-    mainMenuLogoSurface = NULL;
+    mainMenuLogoSurface = nullptr;
   }
 
   trace << "Renderer::cleanup() [DONE]" << endl;
@@ -354,7 +345,7 @@ void updateScreen() {
 
 void clearScreen() {
   if(isInited()) {
-    SDL_FillRect(screenSurface, NULL,
+    SDL_FillRect(screenSurface, nullptr,
                  SDL_MapRGB(screenSurface->format, 0, 0, 0));
   }
 }
@@ -645,9 +636,7 @@ void coverCellInMap(const Pos& pos) {
 
 void drawLineHor(const Pos& pixelPos, const int W,
                  const SDL_Color& clr) {
-  const int SCALE = 1;
-  const Pos offset(0, 1 - SCALE);
-  drawRectangleSolid(pixelPos + offset, Pos(W, 2 * SCALE), clr);
+  drawRectangleSolid(pixelPos, Pos(W, 2), clr);
 }
 
 void drawLineVer(const Pos& pixelPos, const int H,
@@ -694,56 +683,56 @@ void drawPopupBox(const Rect& border, const Panel panel,
   const bool IS_TILES = Config::isTilesMode();
 
   //Vertical bars
-  const int Y0_VERT = border.x0y0.y + 1;
-  const int Y1_VERT = border.x1y1.y - 1;
+  const int Y0_VERT = border.p0.y + 1;
+  const int Y1_VERT = border.p1.y - 1;
   for(int y = Y0_VERT; y <= Y1_VERT; y++) {
     if(IS_TILES) {
       drawTile(TileId::popupVerticalBar,
-               panel, Pos(border.x0y0.x, y), clr, clrBlack);
+               panel, Pos(border.p0.x, y), clr, clrBlack);
       drawTile(TileId::popupVerticalBar,
-               panel, Pos(border.x1y1.x, y), clr, clrBlack);
+               panel, Pos(border.p1.x, y), clr, clrBlack);
     } else {
       drawGlyph('|',
-                panel, Pos(border.x0y0.x, y), clr, true, clrBlack);
+                panel, Pos(border.p0.x, y), clr, true, clrBlack);
       drawGlyph('|',
-                panel, Pos(border.x1y1.x, y), clr, true, clrBlack);
+                panel, Pos(border.p1.x, y), clr, true, clrBlack);
     }
   }
 
   //Horizontal bars
-  const int X0_VERT = border.x0y0.x + 1;
-  const int X1_VERT = border.x1y1.x - 1;
+  const int X0_VERT = border.p0.x + 1;
+  const int X1_VERT = border.p1.x - 1;
   for(int x = X0_VERT; x <= X1_VERT; x++) {
     if(IS_TILES) {
       drawTile(TileId::popupHorizontalBar,
-               panel, Pos(x, border.x0y0.y), clr, clrBlack);
+               panel, Pos(x, border.p0.y), clr, clrBlack);
       drawTile(TileId::popupHorizontalBar,
-               panel, Pos(x, border.x1y1.y), clr, clrBlack);
+               panel, Pos(x, border.p1.y), clr, clrBlack);
     } else {
-      drawGlyph('-', panel, Pos(x, border.x0y0.y), clr, true, clrBlack);
-      drawGlyph('-', panel, Pos(x, border.x1y1.y), clr, true, clrBlack);
+      drawGlyph('-', panel, Pos(x, border.p0.y), clr, true, clrBlack);
+      drawGlyph('-', panel, Pos(x, border.p1.y), clr, true, clrBlack);
     }
   }
 
   //Corners
   if(IS_TILES) {
     drawTile(TileId::popupCornerTopLeft,
-             panel, Pos(border.x0y0.x, border.x0y0.y), clr, clrBlack);
+             panel, Pos(border.p0.x, border.p0.y), clr, clrBlack);
     drawTile(TileId::popupCornerTopRight,
-             panel, Pos(border.x1y1.x, border.x0y0.y), clr, clrBlack);
+             panel, Pos(border.p1.x, border.p0.y), clr, clrBlack);
     drawTile(TileId::popupCornerBottomLeft,
-             panel, Pos(border.x0y0.x, border.x1y1.y), clr, clrBlack);
+             panel, Pos(border.p0.x, border.p1.y), clr, clrBlack);
     drawTile(TileId::popupCornerBottomRight,
-             panel, Pos(border.x1y1.x, border.x1y1.y), clr, clrBlack);
+             panel, Pos(border.p1.x, border.p1.y), clr, clrBlack);
   } else {
     drawGlyph(
-      '+', panel, Pos(border.x0y0.x, border.x0y0.y), clr, true, clrBlack);
+      '+', panel, Pos(border.p0.x, border.p0.y), clr, true, clrBlack);
     drawGlyph(
-      '+', panel, Pos(border.x1y1.x, border.x0y0.y), clr, true, clrBlack);
+      '+', panel, Pos(border.p1.x, border.p0.y), clr, true, clrBlack);
     drawGlyph(
-      '+', panel, Pos(border.x0y0.x, border.x1y1.y), clr, true, clrBlack);
+      '+', panel, Pos(border.p0.x, border.p1.y), clr, true, clrBlack);
     drawGlyph(
-      '+', panel, Pos(border.x1y1.x, border.x1y1.y), clr, true, clrBlack);
+      '+', panel, Pos(border.p1.x, border.p1.y), clr, true, clrBlack);
   }
 }
 
@@ -764,7 +753,7 @@ void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN) {
 void drawMap() {
   if(isInited() == false) {return;}
 
-  CellRenderData* curDrw = NULL;
+  CellRenderData* curDrw = nullptr;
   CellRenderData tmpDrw;
 
   const bool IS_TILES = Config::isTilesMode();
@@ -830,7 +819,7 @@ void drawMap() {
       if(Map::cells[x][y].isSeenByPlayer) {
         //---------------- INSERT ITEMS INTO ARRAY
         const Item* const item = Map::cells[x][y].item;
-        if(item != NULL) {
+        if(item != nullptr) {
           curDrw->clr   = item->getClr();
           curDrw->tile  = item->getTile();
           curDrw->glyph = item->getGlyph();
@@ -875,7 +864,7 @@ void drawMap() {
 
         const Monster* const monster = dynamic_cast<const Monster*>(actor);
 
-        if(Map::player->isSeeingActor(*actor, NULL)) {
+        if(Map::player->isSeeingActor(*actor, nullptr)) {
 
           if(
             actor->getTile()  != TileId::empty &&
@@ -1027,7 +1016,7 @@ void drawMap() {
   bool isRangedWpn = false;
   const Pos& pos = Map::player->pos;
   Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
-  if(item != NULL) {
+  if(item != nullptr) {
     isRangedWpn = item->getData().isRangedWeapon;
   }
   if(IS_TILES) {

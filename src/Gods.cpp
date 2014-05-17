@@ -125,7 +125,7 @@ bool isGodLevel() {
 
 const God* getCurrentGod() {
   if(currentGodElem_ >= 0) {return &(godList.at(currentGodElem_));}
-  return NULL;
+  return nullptr;
 }
 
 void setRandomGod() {

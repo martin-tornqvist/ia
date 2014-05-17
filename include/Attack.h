@@ -61,14 +61,14 @@ public:
 
 struct Projectile {
   Projectile() : pos(Pos(-1, -1)), isObstructed(false),
-    isVisibleToPlayer(true), actorHit(NULL), obstructedInElement(-1),
+    isVisibleToPlayer(true), actorHit(nullptr), obstructedInElement(-1),
     isDoneRendering(false), glyph(-1), tile(TileId::empty), clr(clrWhite),
-    attackData(NULL) {}
+    attackData(nullptr) {}
 
-  ~Projectile() {if(attackData != NULL) {delete attackData;}}
+  ~Projectile() {if(attackData != nullptr) {delete attackData;}}
 
   void setAttData(RangedAttData* attackData_) {
-    if(attackData != NULL) {delete attackData;}
+    if(attackData != nullptr) {delete attackData;}
     attackData = attackData_;
   }
 

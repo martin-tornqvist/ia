@@ -107,17 +107,17 @@ struct Pos {
 };
 
 struct Rect {
-  Rect() : x0y0(Pos()), x1y1(Pos()) {}
+  Rect() : p0(Pos()), p1(Pos()) {}
 
-  Rect(const Pos& x0y0_, const Pos& x1y1_) :  x0y0(x0y0_), x1y1(x1y1_) {}
+  Rect(const Pos& p0_, const Pos& p1_) :  p0(p0_), p1(p1_) {}
 
   Rect(const int X0, const int Y0, const int X1, const int Y1) :
-    x0y0(Pos(X0, Y0)), x1y1(Pos(X1, Y1)) {}
+    p0(Pos(X0, Y0)), p1(Pos(X1, Y1)) {}
 
-  Rect(const Rect& r) : x0y0(r.x0y0), x1y1(r.x1y1) {}
+  Rect(const Rect& r) : p0(r.p0), p1(r.p1) {}
 
-  Pos x0y0;
-  Pos x1y1;
+  Pos p0;
+  Pos p1;
 };
 
 struct PosAndVal {

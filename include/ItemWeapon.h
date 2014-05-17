@@ -28,7 +28,7 @@ public:
     nrAmmoLoaded = toInt(lines.at(0));
   }
 
-  //actorHit may be NULL
+  //actorHit may be nullptr
   virtual void weaponSpecific_projectileObstructed(
     const Pos& pos, Actor* actor) {
     (void) pos;

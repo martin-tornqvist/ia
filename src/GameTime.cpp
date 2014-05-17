@@ -86,7 +86,7 @@ void runStandardTurnEvents() {
       if(actor == Map::player) {return;}
 
       delete actor;
-      if(Map::player->target == actor) {Map::player->target = NULL;}
+      if(Map::player->target == actor) {Map::player->target = nullptr;}
       actors_.erase(actors_.begin() + i);
       i--;
       if(currentActorVectorPos_ >= int(actors_.size())) {
@@ -122,7 +122,7 @@ void runStandardTurnEvents() {
   for(Item * const item : playerBackpack) {item->newTurnInInventory();}
   vector<InvSlot>& playerSlots = playerInv.getSlots();
   for(InvSlot & slot : playerSlots) {
-    if(slot.item != NULL) {
+    if(slot.item != nullptr) {
       slot.item->newTurnInInventory();
     }
   }
@@ -236,7 +236,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
   }
 
   //Tick properties running on actor turns
-  currentActor->getPropHandler().tick(propTurnModeActor, NULL);
+  currentActor->getPropHandler().tick(propTurnModeActor, nullptr);
 
   if(IS_FREE_TURN == false) {
 

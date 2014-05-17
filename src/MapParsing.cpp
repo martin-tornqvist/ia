@@ -176,7 +176,7 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
 //------------------------------------------------------------ MAP PARSE
 namespace MapParse {
 
-void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
+void parse(const CellPred::Pred& predicate, bool out[MAP_W][MAP_H],
            const MapParseWriteRule writeRule) {
 
   assert(predicate.isCheckingCells()       == true ||
@@ -191,7 +191,7 @@ void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
         const Cell& c = Map::cells[x][y];
         const bool IS_MATCH = predicate.check(c);
         if(IS_MATCH || ALLOW_WRITE_FALSE) {
-          arrayOut[x][y] = IS_MATCH;
+          out[x][y] = IS_MATCH;
         }
       }
     }
@@ -202,7 +202,7 @@ void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
       const Pos& p = mob->getPos();
       const bool IS_MATCH = predicate.check(*mob);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
-        bool& v = arrayOut[p.x][p.y];
+        bool& v = out[p.x][p.y];
         if(v == false) {v = IS_MATCH;}
       }
     }
@@ -213,7 +213,7 @@ void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
       const Pos& p = actor->pos;
       const bool IS_MATCH = predicate.check(*actor);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
-        bool& v = arrayOut[p.x][p.y];
+        bool& v = out[p.x][p.y];
         if(v == false) {v = IS_MATCH;}
       }
     }
@@ -222,8 +222,7 @@ void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
 
 void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
                                 bool out[MAP_W][MAP_H],
-                                const Range& distIntervall) {
-
+                                const Range& distInterval) {
   assert(in != out);
 
   for(int y = 0; y < MAP_H; y++) {
@@ -235,18 +234,18 @@ void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
   for(int yOuter = 0; yOuter < MAP_H; yOuter++) {
     for(int xOuter = 0; xOuter < MAP_W; xOuter++) {
       if(out[xOuter][yOuter] == false) {
-        for(int d = distIntervall.lower; d <= distIntervall.upper; d++) {
-          Pos x0y0(max(0,         xOuter - d), max(0,         yOuter - d));
-          Pos x1y1(min(MAP_W - 1, xOuter + d), min(MAP_H - 1, yOuter + d));
+        for(int d = distInterval.lower; d <= distInterval.upper; d++) {
+          Pos p0(max(0,         xOuter - d), max(0,         yOuter - d));
+          Pos p1(min(MAP_W - 1, xOuter + d), min(MAP_H - 1, yOuter + d));
 
-          for(int x = x0y0.x; x <= x1y1.x; x++) {
-            if(in[x][x0y0.y] || in[x][x1y1.y]) {
+          for(int x = p0.x; x <= p1.x; x++) {
+            if(in[x][p0.y] || in[x][p1.y]) {
               out[xOuter][yOuter] = true;
               break;
             }
           }
-          for(int y = x0y0.y; y <= x1y1.y; y++) {
-            if(in[x0y0.x][y] || in[x1y1.x][y]) {
+          for(int y = p0.y; y <= p1.y; y++) {
+            if(in[p0.x][y] || in[p1.x][y]) {
               out[xOuter][yOuter] = true;
               break;
             }
@@ -257,10 +256,49 @@ void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
   }
 }
 
+bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
+                 const bool VAL) {
+  for(int y = area.p0.y; y <= area.p1.y; y++) {
+    for(int x = area.p0.x; x <= area.p1.x; x++) {
+      if(in[x][y] == VAL) {return false;}
+    }
+  }
+  return true;
+}
+
 void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(append[x][y]) base[x][y] = true;
+      if(append[x][y]) {base[x][y] = true;}
+    }
+  }
+}
+
+void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST,
+            const bool VAL_TO_EXPAND) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+
+      out[x][y] = !VAL_TO_EXPAND;
+
+      const int CHECK_X0 = max(x - DIST, 0);
+      const int CHECK_Y0 = max(y - DIST, 0);
+      const int CHECK_X1 = min(x + DIST, MAP_W - 1);
+      const int CHECK_Y1 = min(y + DIST, MAP_H - 1);
+
+      for(int checkY = CHECK_Y0; checkY <= CHECK_Y1; checkY++) {
+
+        bool isFound = false;
+
+        for(int checkX = CHECK_X0; checkX <= CHECK_X1; checkX++) {
+          if(in[checkX][checkY] == VAL_TO_EXPAND) {
+            out[x][y] = VAL_TO_EXPAND;
+            isFound = true;
+            break;
+          }
+          if(isFound) {break;}
+        }
+      }
     }
   }
 }

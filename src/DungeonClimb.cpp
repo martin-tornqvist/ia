@@ -67,7 +67,7 @@ void travelDown(const int LEVELS) {
 
   makeLevel();
 
-  Map::player->target = NULL;
+  Map::player->target = nullptr;
   Map::player->updateFov();
   Map::player->updateColor();
   Renderer::drawMapAndInterface();

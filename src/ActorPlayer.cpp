@@ -38,12 +38,12 @@ const int MIN_SHOCK_WHEN_OBSESSION = 35;
 
 Player::Player() :
   Actor(),
-  activeMedicalBag(NULL),
+  activeMedicalBag(nullptr),
   waitTurnsLeft(-1),
   dynamiteFuseTurns(-1),
   molotovFuseTurns(-1),
   flareFuseTurns(-1),
-  target(NULL),
+  target(nullptr),
   insanity_(0),
   shock_(0.0),
   shockTmp_(0.0),
@@ -781,7 +781,7 @@ void Player::onStandardTurn() {
     flareFuseTurns = -1;
   }
 
-  if(activeMedicalBag == NULL) {
+  if(activeMedicalBag == nullptr) {
     testPhobias();
   }
 
@@ -875,10 +875,10 @@ void Player::onStandardTurn() {
       if(actor->deadState == ActorDeadState::alive) {
 
         Monster& monster = *dynamic_cast<Monster*>(actor);
-        const bool IS_MONSTER_SEEN = isSeeingActor(*actor, NULL);
+        const bool IS_MONSTER_SEEN = isSeeingActor(*actor, nullptr);
         if(IS_MONSTER_SEEN) {
           if(monster.messageMonsterInViewPrinted == false) {
-            if(activeMedicalBag != NULL || waitTurnsLeft > 0) {
+            if(activeMedicalBag != nullptr || waitTurnsLeft > 0) {
               Log::addMsg(actor->getNameA() + " comes into my view.",
                           clrWhite, true);
             }
@@ -915,11 +915,11 @@ void Player::onStandardTurn() {
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
-  if(activeMedicalBag == NULL) {
+  if(activeMedicalBag == nullptr) {
     if(find(props.begin(), props.end(), propPoisoned) == props.end()) {
       int nrWounds = 0;
       Prop* const propWnd = propHandler_->getProp(propWound, PropSrc::applied);
-      if(propWnd != NULL) {
+      if(propWnd != nullptr) {
         nrWounds = dynamic_cast<PropWound*>(propWnd)->getNrWounds();
       }
 
@@ -968,7 +968,7 @@ void Player::onStandardTurn() {
     }
   }
 
-  if(activeMedicalBag != NULL) {
+  if(activeMedicalBag != nullptr) {
     activeMedicalBag->continueAction();
   }
 
@@ -991,9 +991,9 @@ void Player::interruptActions() {
   }
   waitTurnsLeft = -1;
 
-  if(activeMedicalBag != NULL) {
+  if(activeMedicalBag != nullptr) {
     activeMedicalBag->interrupted();
-    activeMedicalBag = NULL;
+    activeMedicalBag = nullptr;
   }
 }
 
@@ -1023,7 +1023,7 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
 
   if(HAS_SND_MSG) {
     Actor* const actorWhoMadeSnd = snd.getActorWhoMadeSound();
-    if(actorWhoMadeSnd != NULL && actorWhoMadeSnd != this) {
+    if(actorWhoMadeSnd != nullptr && actorWhoMadeSnd != this) {
       dynamic_cast<Monster*>(actorWhoMadeSnd)->playerBecomeAwareOfMe();
     }
   }
@@ -1050,15 +1050,15 @@ void Player::moveDir(Dir dir) {
     if(dir != Dir::center) {
       //Attack?
       Actor* const actorAtDest = Utils::getActorAtPos(dest);
-      if(actorAtDest != NULL) {
+      if(actorAtDest != nullptr) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
           Item* const item = inv_->getItemInSlot(SlotId::wielded);
-          if(item != NULL) {
+          if(item != nullptr) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getData().isMeleeWeapon) {
               if(Config::isRangedWpnMeleeePrompt() &&
-                  isSeeingActor(*actorAtDest, NULL)) {
+                  isSeeingActor(*actorAtDest, nullptr)) {
                 if(weapon->getData().isRangedWeapon) {
                   const string wpnName =
                     ItemData::getItemRef(*weapon, ItemRefType::a);
@@ -1137,7 +1137,7 @@ void Player::moveDir(Dir dir) {
 
         //Print message if walking on item
         Item* const item = Map::cells[pos.x][pos.y].item;
-        if(item != NULL) {
+        if(item != nullptr) {
           string message = propHandler_->allowSee() == false ?
                            "I feel here: " : "I see here: ";
           message += ItemData::getItemInterfaceRef(*item, true);
@@ -1159,9 +1159,9 @@ void Player::moveDir(Dir dir) {
 }
 
 void Player::autoMelee() {
-  if(target != NULL) {
+  if(target != nullptr) {
     if(Utils::isPosAdj(pos, target->pos, false)) {
-      if(isSeeingActor(*target, NULL)) {
+      if(isSeeingActor(*target, nullptr)) {
         moveDir(DirUtils::getDir(target->pos - pos));
         return;
       }
@@ -1173,8 +1173,8 @@ void Player::autoMelee() {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
         Actor* const actor = Utils::getActorAtPos(pos + Pos(dx, dy));
-        if(actor != NULL) {
-          if(isSeeingActor(*actor, NULL)) {
+        if(actor != nullptr) {
+          if(isSeeingActor(*actor, nullptr)) {
             target = actor;
             moveDir(DirUtils::getDir(Pos(dx, dy)));
             return;
@@ -1186,7 +1186,7 @@ void Player::autoMelee() {
 }
 
 void Player::kick(Actor& actorToKick) {
-  Weapon* kickWeapon = NULL;
+  Weapon* kickWeapon = nullptr;
 
   const ActorDataT& d = actorToKick.getData();
 
@@ -1231,20 +1231,20 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
     bool myLight[MAP_W][MAP_H];
     Utils::resetArray(myLight, false);
     const int RADI = FOV_STD_RADI_INT;
-    Pos x0y0(max(0, pos.x - RADI), max(0, pos.y - RADI));
-    Pos x1y1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
+    Pos p0(max(0, pos.x - RADI), max(0, pos.y - RADI));
+    Pos p1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
 
     bool visionBlockers[MAP_W][MAP_H];
-    for(int y = x0y0.y; y <= x1y1.y; y++) {
-      for(int x = x0y0.x; x <= x1y1.x; x++) {
+    for(int y = p0.y; y <= p1.y; y++) {
+      for(int x = p0.x; x <= p1.x; x++) {
         const FeatureStatic* const f = Map::cells[x][y].featureStatic;
         visionBlockers[x][y] = f->isVisionPassable() == false;
       }
     }
 
     Fov::runFovOnArray(visionBlockers, pos, myLight, false);
-    for(int y = x0y0.y; y <= x1y1.y; y++) {
-      for(int x = x0y0.x; x <= x1y1.x; x++) {
+    for(int y = p0.y; y <= p1.y; y++) {
+      for(int x = p0.x; x <= p1.x; x++) {
         if(myLight[x][y]) {
           light[x][y] = true;
         }

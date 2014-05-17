@@ -28,7 +28,7 @@ string Cultist::getCultistPhrase() {
 
   const God* const god = Gods::getCurrentGod();
 
-  if(god != NULL && Rnd::coinToss()) {
+  if(god != nullptr && Rnd::coinToss()) {
     const string name = god->getName();
     const string descr = god->getDescr();
     phraseBucket.push_back(name + " save us!");
@@ -216,7 +216,7 @@ bool Vortex::onActorTurn_() {
               MapParse::parse(CellPred::BlocksVision(), visionBlockers);
               if(isSeeingActor(*(Map::player), visionBlockers)) {
                 trace << "Vortex: I am seeing the player" << endl;
-                if(Map::player->isSeeingActor(*this, NULL)) {
+                if(Map::player->isSeeingActor(*this, nullptr)) {
                   Log::addMsg("The Vortex attempts to pull me in!");
                 } else {
                   Log::addMsg("A powerful wind is pulling me!");
@@ -329,7 +329,7 @@ void FlyingPolyp::spawnStartItems() {
 }
 
 void Rat::spawnStartItems() {
-  Item* item = NULL;
+  Item* item = nullptr;
   if(Rnd::percentile() < 15) {
     item = ItemFactory::spawnItem(ItemId::ratBiteDiseased);
   } else {
@@ -530,7 +530,7 @@ void ColourOOSpace::onStandardTurn() {
 
   restoreHp(1, false);
 
-  if(Map::player->isSeeingActor(*this, NULL)) {
+  if(Map::player->isSeeingActor(*this, nullptr)) {
     Map::player->getPropHandler().tryApplyProp(
       new PropConfused(propTurnsStd));
   }
@@ -655,7 +655,7 @@ bool LordOfSpiders::onActorTurn_() {
 
       const Pos playerPos = Map::player->pos;
 
-      if(Map::player->isSeeingActor(*this, NULL)) {
+      if(Map::player->isSeeingActor(*this, nullptr)) {
         Log::addMsg(data_->spellCastMessage);
       }
 
@@ -797,7 +797,7 @@ void Zombie::die_() {
 }
 
 void ZombieClaw::spawnStartItems() {
-  Item* item = NULL;
+  Item* item = nullptr;
   if(Rnd::percentile() < 20) {
     item = ItemFactory::spawnItem(ItemId::zombieClawDiseased);
   } else {

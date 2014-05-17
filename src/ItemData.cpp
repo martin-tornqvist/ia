@@ -56,7 +56,7 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->spellCastFromScroll = SpellId::endOfSpellId;
       d->ammoContainedInClip = 0;
       d->meleeHitChanceMod = 0;
-      d->propAppliedOnMelee = NULL;
+      d->propAppliedOnMelee = nullptr;
       d->meleeCausesKnockBack = false;
       d->rangedCausesKnockBack = false;
       d->meleeDmgType = DmgType::physical;
@@ -82,7 +82,7 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->meleeHitHardSfx = SfxId::endOfSfxId;
       d->meleeMissSfx = SfxId::endOfSfxId;
       d->reloadSfx = SfxId::endOfSfxId;
-      d->propAppliedOnRanged = NULL;
+      d->propAppliedOnRanged = nullptr;
       d->isExplosive = false;
       d->armorData = ArmorData();
       d->nativeRooms.resize(0);
@@ -255,7 +255,7 @@ void setDmgFromMonsterData(ItemDataT& itemData, const ActorDataT& actorData)  {
 
 //------------------------------- LIST OF ITEMS
 void initDataList() {
-  ItemDataT* d = NULL;
+  ItemDataT* d = nullptr;
 
   d = new ItemDataT(ItemId::trapezohedron);
   resetData(d, ItemType::general);

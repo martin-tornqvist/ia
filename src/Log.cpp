@@ -23,7 +23,7 @@ vector< vector<Msg> > history_;
 const string          moreStr = "--More--";
 
 int getXAfterMsg(const Msg* const msg) {
-  if(msg == NULL) {
+  if(msg == nullptr) {
     return 0;
   } else {
     string str = "";
@@ -121,13 +121,13 @@ void addMsg(const string& text, const SDL_Color& clr,
 
   int curLineNr = lines_[1].empty() ? 0 : 1;
 
-  Msg* lastMsg = NULL;
+  Msg* lastMsg = nullptr;
   if(lines_[curLineNr].empty() == false) {lastMsg = &lines_[curLineNr].back();}
 
   bool isRepeated = false;
 
   //Check if message is identical to previous
-  if(ADD_MORE_PROMPT_AFTER_MSG == false && lastMsg != NULL) {
+  if(ADD_MORE_PROMPT_AFTER_MSG == false && lastMsg != nullptr) {
     string str = "";
     lastMsg->getStrRaw(str);
     if(str.compare(text) == 0) {

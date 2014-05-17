@@ -17,7 +17,7 @@ class FeatureStatic;
 
 struct Cell {
   Cell() : isExplored(false), isSeenByPlayer(false), isLight(false),
-    isDark(false), item(NULL), featureStatic(NULL), pos(Pos(-1, -1)) {
+    isDark(false), item(nullptr), featureStatic(nullptr), pos(Pos(-1, -1)) {
     playerVisualMemory.clear();
   }
 

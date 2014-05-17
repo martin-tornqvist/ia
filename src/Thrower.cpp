@@ -136,7 +136,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
     curPos.set(path.at(i));
 
     Actor* const actorHere = Utils::getActorAtPos(curPos);
-    if(actorHere != NULL) {
+    if(actorHere != nullptr) {
       if(
         curPos == targetCell ||
         actorHere->getData().actorSize >= actorSize_humanoid) {
@@ -158,7 +158,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
             actorHere == Map::player ? clrMsgBad : clrMsgGood;
 
           const bool CAN_SEE_ACTOR =
-            Map::player->isSeeingActor(*actorHere, NULL);
+            Map::player->isSeeingActor(*actorHere, nullptr);
           string defenderName = CAN_SEE_ACTOR ? actorHere->getNameThe() : "It";
 
           Log::addMsg(defenderName + " is hit.", hitMessageClr);
@@ -205,7 +205,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
   if(itemThrownData.isPotion) {
     if(blockedInElement >= 0) {
       dynamic_cast<Potion*>(&itemThrown)->collide(
-        path.at(blockedInElement), NULL);
+        path.at(blockedInElement), nullptr);
       delete &itemThrown;
       delete data;
       GameTime::actorDidAct();
@@ -228,7 +228,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
       if(isActorHit == false) {
         Snd snd(itemThrownData.landOnHardSurfaceSoundMsg,
                 itemThrownData.landOnHardSurfaceSfx,
-                IgnoreMsgIfOriginSeen::yes, dropPos, NULL, SndVol::low,
+                IgnoreMsgIfOriginSeen::yes, dropPos, nullptr, SndVol::low,
                 alertsMonsters);
         SndEmit::emitSnd(snd);
       }

@@ -284,7 +284,7 @@ void Door::bash_(Actor& actorTrying) {
           }
         }
       } else {
-        if(Map::player->isSeeingActor(actorTrying, NULL)) {
+        if(Map::player->isSeeingActor(actorTrying, nullptr)) {
           Log::addMsg("The door crashes open!");
         } else if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
           Log::addMsg("A door crashes open!");
@@ -307,7 +307,7 @@ void Door::bash_(Actor& actorTrying) {
                 SfxId::doorBang, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
                 &actorTrying, SndVol::low, AlertsMonsters::no);
         SndEmit::emitSnd(snd);
-        if(Map::player->isSeeingActor(actorTrying, NULL)) {
+        if(Map::player->isSeeingActor(actorTrying, nullptr)) {
           Log::addMsg(actorTrying.getNameThe() + " bashes at a door!");
         }
       }
@@ -369,7 +369,7 @@ void Door::tryClose(Actor* actorTrying) {
         break;
       }
     }
-    if(isblockedByActor || Map::cells[pos_.x][pos_.y].item != NULL) {
+    if(isblockedByActor || Map::cells[pos_.x][pos_.y].item != nullptr) {
       isClosable = false;
       if(IS_PLAYER) {
         if(TRYER_IS_BLIND == false) {

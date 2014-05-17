@@ -15,8 +15,8 @@ void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
   vector<Pos> posBucket;
   posBucket.resize(0);
 
-  for(int y = area.x0y0.y; y <= area.x1y1.y; y++) {
-    for(int x = area.x0y0.x; x <= area.x1y1.x; x++) {
+  for(int y = area.p0.y; y <= area.p1.y; y++) {
+    for(int x = area.p0.x; x <= area.p1.x; x++) {
       FeatureStatic* const f = Map::cells[x][y].featureStatic;
       if(f->canMoveCmn() && f->canHaveStaticFeature()) {
         posBucket.push_back(Pos(x, y));

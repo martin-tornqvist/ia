@@ -77,7 +77,7 @@ void move(const int DX, const int DY, const MarkerTask markerTask,
 bool setPosToTargetIfVisible() {
   const Actor* const target = Map::player->target;
 
-  if(target != NULL) {
+  if(target != nullptr) {
     vector<Actor*> spottedEnemies;
     Map::player->getSpottedEnemies(spottedEnemies);
 
@@ -143,7 +143,7 @@ void readKeys(const MarkerTask markerTask, MarkerRetData& data,
         Renderer::drawMapAndInterface();
 
         Actor* const actor = Utils::getActorAtPos(pos_);
-        if(actor != NULL) {Map::player->target = actor;}
+        if(actor != nullptr) {Map::player->target = actor;}
 
         Item* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
         Weapon* const weapon = dynamic_cast<Weapon*>(item);
@@ -171,7 +171,7 @@ void readKeys(const MarkerTask markerTask, MarkerRetData& data,
       } else {
         Renderer::drawMapAndInterface();
         Actor* const actor = Utils::getActorAtPos(pos_);
-        if(actor != NULL) {Map::player->target = actor;}
+        if(actor != nullptr) {Map::player->target = actor;}
         Throwing::throwItem(*Map::player, pos_, *itemThrown);
         data.didThrowMissile = true;
       }
@@ -230,7 +230,7 @@ MarkerRetData run(const MarkerTask markerTask, Item* itemThrown) {
     if(setPosToTargetIfVisible() == false) {
       //Else attempt to place marker at closest visible enemy.
       //This sets a new target if successful.
-      Map::player->target = NULL;
+      Map::player->target = nullptr;
       setPosToClosestEnemyIfVisible();
     }
   }

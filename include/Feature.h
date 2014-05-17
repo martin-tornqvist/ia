@@ -47,7 +47,7 @@ public:
   int getShockWhenAdjacent() const;
   virtual MaterialType getMaterialType() const;
 
-  Feature(FeatureId id, Pos pos, FeatureSpawnData* spawnData = NULL);
+  Feature(FeatureId id, Pos pos, FeatureSpawnData* spawnData = nullptr);
 
 protected:
   Pos pos_;
@@ -58,7 +58,7 @@ protected:
 
 class FeatureMob: public Feature {
 public:
-  FeatureMob(FeatureId id, Pos pos, FeatureSpawnData* spawnData = NULL) :
+  FeatureMob(FeatureId id, Pos pos, FeatureSpawnData* spawnData = nullptr) :
     Feature(id, pos), shouldBeDeleted_(false) {(void)spawnData;}
 
   Pos getPos()  const {return pos_;}
@@ -74,7 +74,7 @@ protected:
 
 class FeatureStatic: public Feature {
 public:
-  FeatureStatic(FeatureId id, Pos pos, FeatureSpawnData* spawnData = NULL) :
+  FeatureStatic(FeatureId id, Pos pos, FeatureSpawnData* spawnData = nullptr) :
     Feature(id, pos), goreTile_(TileId::empty), goreGlyph_(' ') {
     (void)spawnData;
   }

@@ -230,7 +230,7 @@ bool Tomb::open() {
     Log::addMsg("The tomb opens.");
   }
   Snd snd("I hear heavy stone sliding.", SfxId::tombOpen,
-          IgnoreMsgIfOriginSeen::yes, pos_, NULL, SndVol::high,
+          IgnoreMsgIfOriginSeen::yes, pos_, nullptr, SndVol::high,
           AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 
@@ -297,7 +297,7 @@ void Tomb::examine() {
 //  const Inventory& inv = Map::player->getInv();
 //  bool hasSledgehammer = false;
 //  Item* item = inv.getItemInSlot(SlotId::wielded);
-//  if(item != NULL) {
+//  if(item != nullptr) {
 //    hasSledgehammer = item->getData().id == ItemId::sledgeHammer;
 //  }
 //  if(hasSledgehammer == false) {
@@ -370,7 +370,7 @@ void Tomb::triggerTrap(Actor& actor) {
     case TombTrait::stench: {
       if(Rnd::coinToss()) {
         Log::addMsg("Fumes burst out from the tomb!");
-        Prop* prop = NULL;
+        Prop* prop = nullptr;
         SDL_Color fumeClr = clrMagenta;
         const int RND = Rnd::percentile();
         if(RND < 20) {
@@ -522,7 +522,7 @@ void Chest::bash(Actor& actorTrying) {
 //      Inventory& inv    = Map::player->getInv();
 //      Item* const item  = inv.getItemInSlot(SlotId::wielded);
 //
-//      if(item == NULL) {
+//      if(item == nullptr) {
 //        Log::addMsg(
 //          "I attempt to punch the lock open, nearly breaking my hand.",
 //          clrMsgBad);
@@ -539,7 +539,7 @@ void Chest::bash(Actor& actorTrying) {
 //          if(wpn->meleeDmgPlus == 0) {
 //            Log::addMsg("My " + wpnName + " breaks!");
 //            delete wpn;
-//            inv.getSlot(SlotId::wielded)->item = NULL;
+//            inv.getSlot(SlotId::wielded)->item = nullptr;
 //          } else {
 //            Log::addMsg("My " + wpnName + " is damaged!");
 //            wpn->meleeDmgPlus--;
@@ -644,7 +644,7 @@ void Chest::triggerTrap(Actor& actor) {
       }
     } else {
       Log::addMsg("Fumes burst out from the chest!");
-      Prop* prop = NULL;
+      Prop* prop = nullptr;
       SDL_Color fumeClr = clrMagenta;
       const int RND = Rnd::percentile();
       if(RND < 20) {

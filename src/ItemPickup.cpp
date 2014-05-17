@@ -39,7 +39,7 @@ void tryPick() {
   const Pos& pos = Map::player->pos;
   Item* const item = Map::cells[pos.x][pos.y].item;
 
-  if(item == NULL) {
+  if(item == nullptr) {
     Log::clearLog();
     Log::addMsg("I see nothing to pick up here.");
   } else {
@@ -50,14 +50,14 @@ void tryPick() {
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getData().isMissileWeapon) {
       Item* const carriedMissile = playerInv.getItemInSlot(SlotId::missiles);
-      if(carriedMissile != NULL) {
+      if(carriedMissile != nullptr) {
         if(item->getData().id == carriedMissile->getData().id) {
           Audio::play(SfxId::pickup);
 
           Log::addMsg("I add " + ITEM_NAME + " to my missile stack.");
           carriedMissile->nrItems += item->nrItems;
           delete item;
-          Map::cells[pos.x][pos.y].item = NULL;
+          Map::cells[pos.x][pos.y].item = nullptr;
           GameTime::actorDidAct();
           return;
         }
@@ -75,7 +75,7 @@ void tryPick() {
 
       playerInv.putInGeneral(item);
 
-      Map::cells[pos.x][pos.y].item = NULL;
+      Map::cells[pos.x][pos.y].item = nullptr;
 
       GameTime::actorDidAct();
     }
@@ -85,7 +85,7 @@ void tryPick() {
 void tryUnloadWeaponOrPickupAmmoFromGround() {
   Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
 
-  if(item != NULL) {
+  if(item != nullptr) {
     if(item->getData().isRangedWeapon) {
       Weapon* const weapon = dynamic_cast<Weapon*>(item);
       const int nrAmmoLoaded = weapon->nrAmmoLoaded;

@@ -176,11 +176,11 @@ struct ArmorData {
 class ItemDataT {
 public:
   ItemDataT(const ItemId itemId) :
-    id(itemId), propAppliedOnMelee(NULL), propAppliedOnRanged(NULL) {}
+    id(itemId), propAppliedOnMelee(nullptr), propAppliedOnRanged(nullptr) {}
 
   ~ItemDataT() {
-    if(propAppliedOnMelee  != NULL) delete propAppliedOnMelee;
-    if(propAppliedOnRanged != NULL) delete propAppliedOnRanged;
+    if(propAppliedOnMelee  != nullptr) delete propAppliedOnMelee;
+    if(propAppliedOnRanged != nullptr) delete propAppliedOnRanged;
   }
 
   ItemId id;

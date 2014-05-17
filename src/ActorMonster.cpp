@@ -33,8 +33,8 @@ Monster::Monster() :
   spellCoolDownCurrent(0),
   isRoamingAllowed_(true),
   isStealth(false),
-  leader(NULL),
-  target(NULL),
+  leader(nullptr),
+  target(nullptr),
   waiting_(false),
   shockCausedCurrent_(0.0),
   hasGivenXpForSpotting_(false) {}
@@ -67,7 +67,7 @@ void Monster::onActorTurn() {
 
   if(awareOfPlayerCounter_ > 0) {
     isRoamingAllowed_ = true;
-    if(leader == NULL) {
+    if(leader == nullptr) {
       if(deadState == ActorDeadState::alive) {
         if(Rnd::oneIn(14)) {
           speakPhrase();
@@ -85,7 +85,7 @@ void Monster::onActorTurn() {
 
   const bool HAS_SNEAK_SKILL = data_->abilityVals.getVal(
                                  AbilityId::stealth, true, *this) > 0;
-  isStealth = Map::player->isSeeingActor(*this, NULL) == false &&
+  isStealth = Map::player->isSeeingActor(*this, nullptr) == false &&
               HAS_SNEAK_SKILL;
 
   //Array used for AI purposes, e.g. to prevent tactically bad positions,
@@ -118,7 +118,7 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(target != NULL) {
+  if(target != nullptr) {
     const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
     if(Rnd::percentile() < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
       if(Ai::Action::castRandomSpellIfAware(this)) {return;}
@@ -126,14 +126,14 @@ void Monster::onActorTurn() {
   }
 
   if(data_->ai[int(AiId::attacks)]) {
-    if(target != NULL) {
+    if(target != nullptr) {
       if(tryAttack(*target)) {
         return;
       }
     }
   }
 
-  if(target != NULL) {
+  if(target != nullptr) {
     if(Ai::Action::castRandomSpellIfAware(this)) {
       return;
     }
@@ -241,7 +241,7 @@ void Monster::hearSound(const Snd& snd) {
 }
 
 void Monster::speakPhrase() {
-  const bool IS_SEEN_BY_PLAYER = Map::player->isSeeingActor(*this, NULL);
+  const bool IS_SEEN_BY_PLAYER = Map::player->isSeeingActor(*this, nullptr);
   const string msg = IS_SEEN_BY_PLAYER ?
                      getAggroPhraseMonsterSeen() :
                      getAggroPhraseMonsterHidden();
@@ -259,7 +259,7 @@ void Monster::becomeAware(const bool IS_FROM_SEEING) {
     const int AWARENESS_CNT_BEFORE = awareOfPlayerCounter_;
     awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
     if(AWARENESS_CNT_BEFORE <= 0) {
-      if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, NULL)) {
+      if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr)) {
         Map::player->updateFov();
         Renderer::drawMapAndInterface(true);
         Log::addMsg(getNameThe() + " sees me!");
@@ -293,7 +293,7 @@ bool Monster::tryAttack(Actor& defender) {
   AttackOpport opport     = getAttackOpport(defender);
   const BestAttack attack = getBestAttack(opport);
 
-  if(attack.weapon == NULL) {return false;}
+  if(attack.weapon == nullptr) {return false;}
 
   if(attack.isMelee) {
     if(attack.weapon->getData().isMeleeWeapon) {
@@ -317,7 +317,7 @@ bool Monster::tryAttack(Actor& defender) {
       for(Pos & linePos : line) {
         if(linePos != pos && linePos != defender.pos) {
           Actor* const actorHere = Utils::getActorAtPos(linePos);
-          if(actorHere != NULL) {
+          if(actorHere != nullptr) {
             isBlockedByFriend = true;
             break;
           }
@@ -344,7 +344,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
     opport.isMelee =
       Utils::isPosAdj(pos, defender.pos, false);
 
-    Weapon* weapon = NULL;
+    Weapon* weapon = nullptr;
     const unsigned nrOfIntrinsics = inv_->getIntrinsicsSize();
     if(opport.isMelee) {
       if(propHandler_->allowAttackMelee(false)) {
@@ -352,7 +352,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         //Melee weapon in wielded slot?
         weapon =
           dynamic_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
-        if(weapon != NULL) {
+        if(weapon != nullptr) {
           if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
           }
@@ -372,7 +372,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         weapon =
           dynamic_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
 
-        if(weapon != NULL) {
+        if(weapon != nullptr) {
           if(weapon->getData().isRangedWeapon == true) {
             opport.weapons.push_back(weapon);
 
@@ -406,7 +406,7 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
   BestAttack attack;
   attack.isMelee = attackOpport.isMelee;
 
-  Weapon* newWeapon = NULL;
+  Weapon* newWeapon = nullptr;
 
   const unsigned int nrOfWeapons = attackOpport.weapons.size();
 

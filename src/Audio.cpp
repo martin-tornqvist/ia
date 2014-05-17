@@ -103,7 +103,7 @@ void loadAudioFile(const SfxId sfx, const string& filename) {
 
   audioChunks.at(int(sfx)) = Mix_LoadWAV((fileRelPath).data());
 
-  if(audioChunks.at(int(sfx)) == NULL) {
+  if(audioChunks.at(int(sfx)) == nullptr) {
     trace << "[WARNING] Problem loading audio file with name " + filename;
     trace << ", in Audio::loadAudio()" << endl;
     trace << "SDL_mixer: " << Mix_GetError() << endl;

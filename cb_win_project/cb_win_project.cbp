@@ -103,6 +103,8 @@
 			<Add option="-Wunreachable-code" />
 			<Add option="-Wmissing-declarations" />
 			<Add option="-Wmissing-include-dirs" />
+			<Add option="-Wzero-as-null-pointer-constant" />
+			<Add option="-Weffc++" />
 			<Add option="-Wmain" />
 			<Add option="-pedantic-errors" />
 			<Add option="-pedantic" />

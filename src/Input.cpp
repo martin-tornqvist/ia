@@ -39,7 +39,7 @@ namespace Input {
 
 namespace {
 
-SDL_Event* event_ = NULL;
+SDL_Event* sdlEvent_ = nullptr;
 
 void queryQuit() {
   const vector<string> quitChoices = vector<string> {"yes", "no"};
@@ -56,16 +56,16 @@ void queryQuit() {
 } //Namespace
 
 void init() {
-  if(event_ == NULL) {
-    event_ = new SDL_Event;
+  if(sdlEvent_ == nullptr) {
+    sdlEvent_ = new SDL_Event;
   }
   setKeyRepeatDelays();
 }
 
 void cleanup() {
-  if(event_ != NULL) {
-    delete event_;
-    event_ = NULL;
+  if(sdlEvent_ != nullptr) {
+    delete sdlEvent_;
+    sdlEvent_ = nullptr;
   }
 }
 
@@ -151,7 +151,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
         if(PlayerBon::hasTrait(Trait::sharpShooter)) {
           Prop* const propAimingOld =
             propHlr.getProp(propAiming, PropSrc::applied);
-          if(propAimingOld != NULL) {
+          if(propAimingOld != nullptr) {
             nrTurnsAimingOld =
               dynamic_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
           }
@@ -254,7 +254,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
         Item* const item =
           Map::player->getInv().getItemInSlot(SlotId::wielded);
 
-        if(item == NULL) {
+        if(item == nullptr) {
           Log::addMsg("I am not wielding a weapon.");
         } else {
           const ItemDataT& itemData = item->getData();
@@ -263,7 +263,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
           } else {
             Weapon* wpn = dynamic_cast<Weapon*>(item);
             if(wpn->nrAmmoLoaded >= 1 || itemData.rangedHasInfiniteAmmo) {
-              Marker::run(MarkerTask::aimRangedWeapon, NULL);
+              Marker::run(MarkerTask::aimRangedWeapon, nullptr);
             } else if(Config::isRangedWpnAutoReload()) {
               Reload::reloadWieldedWpn(*(Map::player));
             } else {
@@ -282,7 +282,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
     if(Map::player->deadState == ActorDeadState::alive) {
       const Pos& p = Map::player->pos;
       Item* const itemAtPlayer = Map::cells[p.x][p.y].item;
-      if(itemAtPlayer != NULL) {
+      if(itemAtPlayer != nullptr) {
         if(itemAtPlayer->getData().id == ItemId::trapezohedron) {
           DungeonMaster::winGame();
           Init::quitToMainMenu = true;
@@ -321,7 +321,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
         Map::player->dynamiteFuseTurns > 0 ||
         Map::player->flareFuseTurns > 0 ||
         Map::player->molotovFuseTurns > 0) {
-        Marker::run(MarkerTask::aimLitExplosive, NULL);
+        Marker::run(MarkerTask::aimLitExplosive, nullptr);
       } else {
         InvHandling::runUseScreen();
       }
@@ -345,19 +345,19 @@ void handleKeyPress(const KeyboardReadRetData& d) {
       Item* const itemWielded = inv.getItemInSlot(SlotId::wielded);
       Item* const itemAlt     = inv.getItemInSlot(SlotId::wieldedAlt);
       const string ITEM_WIELDED_NAME =
-        itemWielded == NULL ? "" :
+        itemWielded == nullptr ? "" :
         ItemData::getItemRef(*itemWielded, ItemRefType::a);
       const string ITEM_ALT_NAME =
-        itemAlt == NULL ? "" :
+        itemAlt == nullptr ? "" :
         ItemData::getItemRef(*itemAlt, ItemRefType::a);
-      if(itemWielded == NULL && itemAlt == NULL) {
+      if(itemWielded == nullptr && itemAlt == nullptr) {
         Log::addMsg("I have neither a wielded nor a prepared weapon.");
       } else {
-        if(itemWielded == NULL) {
+        if(itemWielded == nullptr) {
           Log::addMsg("I" + swiftStr + " wield my prepared weapon (" +
                       ITEM_ALT_NAME + ").");
         } else {
-          if(itemAlt == NULL) {
+          if(itemAlt == nullptr) {
             Log::addMsg("I" + swiftStr + " put away my weapon (" +
                         ITEM_WIELDED_NAME + ").");
           } else {
@@ -400,7 +400,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
         Inventory& playerInv = Map::player->getInv();
         Item* itemStack = playerInv.getItemInSlot(SlotId::missiles);
 
-        if(itemStack == NULL) {
+        if(itemStack == nullptr) {
           Log::addMsg(
             "I have no missiles chosen for throwing (press 'w').");
         } else {
@@ -426,7 +426,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
       if(Map::player->getPropHandler().allowSee()) {
-        Marker::run(MarkerTask::look, NULL);
+        Marker::run(MarkerTask::look, nullptr);
       } else {
         Log::addMsg("Not while blind.");
       }
@@ -612,7 +612,7 @@ void setKeyRepeatDelays() {
 }
 
 void handleMapModeInputUntilFound() {
-  if(event_ != NULL) {
+  if(sdlEvent_ != nullptr) {
     const KeyboardReadRetData& d = readKeysUntilFound();
     if(Init::quitToMainMenu == false) {
       handleKeyPress(d);
@@ -621,11 +621,11 @@ void handleMapModeInputUntilFound() {
 }
 
 void clearEvents() {
-  if(event_ != NULL) {while(SDL_PollEvent(event_)) {}}
+  if(sdlEvent_ != nullptr) {while(SDL_PollEvent(sdlEvent_)) {}}
 }
 
 KeyboardReadRetData readKeysUntilFound(const bool IS_O_RETURN) {
-  if(event_ == NULL) {
+  if(sdlEvent_ == nullptr) {
     return KeyboardReadRetData();
   }
 
@@ -633,15 +633,15 @@ KeyboardReadRetData readKeysUntilFound(const bool IS_O_RETURN) {
 
     SdlWrapper::sleep(1);
 
-    while(SDL_PollEvent(event_)) {
-      if(event_->type == SDL_QUIT) {
+    while(SDL_PollEvent(sdlEvent_)) {
+      if(sdlEvent_->type == SDL_QUIT) {
         return KeyboardReadRetData(SDLK_ESCAPE);
-      } else if(event_->type == SDL_KEYDOWN) {
+      } else if(sdlEvent_->type == SDL_KEYDOWN) {
         // ASCII char entered?
         // Decimal unicode:
         // '!' = 33
         // '~' = 126
-        Uint16 unicode = event_->key.keysym.unicode;
+        Uint16 unicode = sdlEvent_->key.keysym.unicode;
         if((unicode == 'o' || unicode == 'O') && IS_O_RETURN) {
           return KeyboardReadRetData(-1, SDLK_RETURN, unicode == 'O', false);
         } else if(unicode >= 33 && unicode < 126) {
@@ -649,7 +649,7 @@ KeyboardReadRetData readKeysUntilFound(const bool IS_O_RETURN) {
           return KeyboardReadRetData(char(unicode));
         } else {
           //Other key pressed? (escape, return, space, etc)
-          const SDLKey sdlKey = event_->key.keysym.sym;
+          const SDLKey sdlKey = sdlEvent_->key.keysym.sym;
 
           //Don't register shift, control or alt as actual key events
           if(

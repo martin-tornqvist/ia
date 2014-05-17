@@ -22,6 +22,26 @@ FeatureId backup[MAP_W][MAP_H];
 
 } //namespace
 
+//Note: The parameter rectangle does not have to go up-left to bottom-right,
+//the method adjusts the order
+void build(const Rect& area, const FeatureId id) {
+  const Pos p0 = Pos(min(area.p0.x, area.p1.x),
+                       min(area.p0.y, area.p1.y));
+
+  const Pos p1 = Pos(max(area.p0.x, area.p1.x),
+                       max(area.p0.y, area.p1.y));
+
+  for(int x = p0.x; x <= p1.x; x++) {
+    for(int y = p0.y; y <= p1.y; y++) {
+      FeatureFactory::spawn(id, Pos(x, y), nullptr);
+    }
+  }
+}
+
+void build(const vector<Pos>& posList, const FeatureId id) {
+  for(const Pos & pos : posList) {FeatureFactory::spawn(id, pos);}
+}
+
 void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
                                 Dir cardinalDirToTravel,
                                 bool doorPosBucket[MAP_W][MAP_H]) {
@@ -83,8 +103,8 @@ void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
     Pos c = possInR1closeToR2.at(Rnd::dice(1, possInR1closeToR2.size()) - 1);
     while(floorInR2Grid[c.x][c.y] == false) {
       c += roomDeltaSigns;
-      FeatureFactory::spawn(FeatureId::floor, c, NULL);
-      if(doorPosBucket != NULL) {doorPosBucket[c.x][c.y] = true;}
+      FeatureFactory::spawn(FeatureId::floor, c, nullptr);
+      if(doorPosBucket != nullptr) {doorPosBucket[c.x][c.y] = true;}
     }
   } else {
 
@@ -108,7 +128,7 @@ void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
 
     (1) One position in each room is picked randomly (c1 and c2).
 
-    (2) While still in the x0y0,x1y1-boundaries of room 1, move straight out
+    (2) While still in the p0,p1-boundaries of room 1, move straight out
     from room 1 ("straight out" means in the direction of roomDeltaSigns).
     When we stand in the first cell outside room 1, we turn that into floor,
     and store that as a suggestion for a door. Then we move yet another step
@@ -155,14 +175,14 @@ void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
     while(floorInR1Grid[c.x][c.y] == true) {
       c += roomDeltaSigns;
     }
-    FeatureFactory::spawn(FeatureId::floor, c, NULL);
-    if(doorPosBucket != NULL) {doorPosBucket[c.x][c.y] = true;}
+    FeatureFactory::spawn(FeatureId::floor, c, nullptr);
+    if(doorPosBucket != nullptr) {doorPosBucket[c.x][c.y] = true;}
     c += roomDeltaSigns;
 
     // (3)
     Pos cTemp(c - roomDeltaSigns);
     while(floorInR1Grid[cTemp.x][cTemp.y] == false) {
-      FeatureFactory::spawn(FeatureId::floor, cTemp, NULL);
+      FeatureFactory::spawn(FeatureId::floor, cTemp, nullptr);
       cTemp -= roomDeltaSigns;
     }
 
@@ -174,18 +194,18 @@ void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
 
     // (4)
     while(c.x != c2.x && c.y != c2.y && floorInR2Grid[c.x][c.y] == false) {
-      FeatureFactory::spawn(FeatureId::floor, c, NULL);
+      FeatureFactory::spawn(FeatureId::floor, c, nullptr);
       c += deltaCurSign - roomDeltaSigns;
     }
 
     // (5)
     while(c != c2 && floorInR2Grid[c.x][c.y] == false) {
-      FeatureFactory::spawn(FeatureId::floor, c, NULL);
+      FeatureFactory::spawn(FeatureId::floor, c, nullptr);
       c += roomDeltaSigns;
     }
     c -= roomDeltaSigns;
     if(floorInR2Vector.size() > 1) {
-      if(doorPosBucket != NULL) {doorPosBucket[c.x][c.y] = true;}
+      if(doorPosBucket != nullptr) {doorPosBucket[c.x][c.y] = true;}
     }
   }
 }
@@ -229,8 +249,8 @@ void digWithPathfinder(const Pos& origin, const Pos& target, FeatureId feature,
 
 void digByRandomWalk(const Pos& origin, int len, FeatureId featureToMake,
                      const bool DIG_THROUGH_ANY_FEATURE,
-                     const bool ONLY_STRAIGHT, const Pos& x0y0Lim,
-                     const Pos& x1y1Lim) {
+                     const bool ONLY_STRAIGHT, const Pos& p0Lim,
+                     const Pos& p1Lim) {
   int dx = 0;
   int dy = 0;
   int xPos = origin.x;
@@ -246,9 +266,9 @@ void digByRandomWalk(const Pos& origin, int len, FeatureId featureToMake,
       //TODO This is really ugly!
       dirOk =
         !(
-          (dx == 0 && dy == 0) || xPos + dx < x0y0Lim.x ||
-          yPos + dy < x0y0Lim.y || xPos + dx > x1y1Lim.x ||
-          yPos + dy > x1y1Lim.y ||
+          (dx == 0 && dy == 0) || xPos + dx < p0Lim.x ||
+          yPos + dy < p0Lim.y || xPos + dx > p1Lim.x ||
+          yPos + dy > p1Lim.y ||
           (ONLY_STRAIGHT == true && dx != 0 && dy != 0)
         );
     }

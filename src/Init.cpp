@@ -85,9 +85,10 @@ void initSession() {
 
 void cleanupSession() {
   trace << "Init::cleanupSession()..." << endl;
-  ItemData::cleanup();
-  GameTime::cleanup();
   PlayerSpellsHandling::cleanup();
+  Map::cleanup();
+  GameTime::cleanup();
+  ItemData::cleanup();
   trace << "Init::cleanupSession() [DONE]" << endl;
 }
 

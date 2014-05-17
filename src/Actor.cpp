@@ -28,9 +28,9 @@ Actor::Actor() :
   hp_(-1),
   spi_(-1),
   lairCell_(),
-  propHandler_(NULL),
-  data_(NULL),
-  inv_(NULL) {}
+  propHandler_(nullptr),
+  data_(nullptr),
+  inv_(nullptr) {}
 
 Actor::~Actor() {
   delete propHandler_;
@@ -93,7 +93,7 @@ bool Actor::isSeeingActor(
     if(other.pos.y - pos.y > FOV_STD_RADI_INT) return false;
     if(pos.y - other.pos.y > FOV_STD_RADI_INT) return false;
 
-    if(visionBlockingCells != NULL) {
+    if(visionBlockingCells != nullptr) {
       const bool IS_BLOCKED_BY_DARKNESS = data_->canSeeInDarkness == false;
       return Fov::checkCell(visionBlockingCells, other.pos, pos,
                             IS_BLOCKED_BY_DARKNESS);
@@ -118,7 +118,7 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
 
       if(IS_SELF_PLAYER) {
         if(dynamic_cast<Monster*>(actor)->leader != this) {
-          if(isSeeingActor(*actor, NULL)) {
+          if(isSeeingActor(*actor, nullptr)) {
             vectorRef.push_back(actor);
           }
         }
@@ -236,7 +236,7 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
       if(this == Map::player) {
         Log::addMsg("I feel healthier!", clrMsgGood);
       } else {
-        if(Map::player->isSeeingActor(*this, NULL)) {
+        if(Map::player->isSeeingActor(*this, nullptr)) {
           Log::addMsg(data_->name_the + " looks healthier.");
         }
       }
@@ -279,7 +279,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
       if(this == Map::player) {
         Log::addMsg("I feel more spirited!", clrMsgGood);
       } else {
-        if(Map::player->isSeeingActor(*this, NULL)) {
+        if(Map::player->isSeeingActor(*this, nullptr)) {
           Log::addMsg(data_->name_the + " looks more spirited.");
         }
       }
@@ -303,7 +303,7 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG) {
         Log::addMsg("I feel frailer!");
       }
     } else {
-      if(Map::player->isSeeingActor(*this, NULL)) {
+      if(Map::player->isSeeingActor(*this, nullptr)) {
         if(CHANGE > 0) {
           Log::addMsg(getNameThe() + " looks more vigorous.");
         }
@@ -328,7 +328,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
         Log::addMsg("My spirit is weaker!");
       }
     } else {
-      if(Map::player->isSeeingActor(*this, NULL)) {
+      if(Map::player->isSeeingActor(*this, nullptr)) {
         if(CHANGE > 0) {
           Log::addMsg(getNameThe() + " appears to grow in spirit.");
         }
@@ -396,7 +396,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   if(isHumanoid()) {
     Armor* armor =
       dynamic_cast<Armor*>(inv_->getItemInSlot(SlotId::armorBody));
-    if(armor != NULL) {
+    if(armor != nullptr) {
       traceVerbose << "Actor: Has armor, running hit on armor" << endl;
 
       if(dmgType == DmgType::physical) {
@@ -411,8 +411,8 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
                         clrMsgWarning);
           }
           delete armor;
-          armor = NULL;
-          inv_->getSlot(SlotId::armorBody)->item = NULL;
+          armor = nullptr;
+          inv_->getSlot(SlotId::armorBody)->item = nullptr;
         }
       }
     }
@@ -459,7 +459,7 @@ bool Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
       Log::addMsg("All my spirit is depleted, I am devoid of life!",
                   clrMsgBad);
     } else {
-      if(Map::player->isSeeingActor(*this, NULL)) {
+      if(Map::player->isSeeingActor(*this, nullptr)) {
         Log::addMsg(getNameThe() + " has no spirit left!");
       }
     }
@@ -475,7 +475,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   for(Actor * actor : GameTime::actors_) {
     if(actor != this && actor != Map::player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
-      if(monster->leader == this) {monster->leader = NULL;}
+      if(monster->leader == this) {monster->leader = nullptr;}
     }
   }
 
@@ -494,7 +494,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   //Print death messages
   if(this != Map::player) {
     //Only print if visible
-    if(Map::player->isSeeingActor(*this, NULL)) {
+    if(Map::player->isSeeingActor(*this, nullptr)) {
       isPlayerSeeDyingActor = true;
       const string deathMessageOverride = data_->deathMessageOverride;
       if(deathMessageOverride.empty() == false) {
@@ -517,7 +517,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
         AlertsMonsters::no);
       SndEmit::emitSnd(snd);
     }
-    dynamic_cast<Monster*>(this)->leader = NULL;
+    dynamic_cast<Monster*>(this)->leader = nullptr;
   }
 
   if(ALLOW_DROP_ITEMS) {ItemDrop::dropAllCharactersItems(this, true);}

@@ -70,7 +70,7 @@ Spell* getSpellFromId(const SpellId spellId) {
     case SpellId::endOfSpellId: {} break;
   }
   assert(false && "No spell found for ID");
-  return NULL;
+  return nullptr;
 }
 
 } //SpellHandling
@@ -187,7 +187,7 @@ SpellCastRetData Spell::cast(Actor* const caster,
 
 //------------------------------------------------------------ DARKBOLT
 SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
-  Actor* target = NULL;
+  Actor* target = nullptr;
 
   vector<Actor*> spottedActors;
   caster->getSpottedEnemies(spottedActors);
@@ -237,7 +237,7 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
 
   target->hit(DMG, DmgType::physical, true);
 
-  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos, NULL,
+  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos, nullptr,
           SndVol::low, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 
@@ -286,7 +286,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
 
         actor->hit(DMG, DmgType::physical, false);
 
-        Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos, NULL,
+        Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos, nullptr,
                 SndVol::high, AlertsMonsters::yes);
         SndEmit::emitSnd(snd);
       }
@@ -299,7 +299,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     Map::player->getPropHandler().tryApplyProp(
       new PropParalyzed(propTurnsSpecific, 1));
     Map::player->hit(Rnd::range(dmgRange), DmgType::physical, false);
-    Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, Map::player->pos, NULL,
+    Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, Map::player->pos, nullptr,
             SndVol::high, AlertsMonsters::yes);
     SndEmit::emitSnd(snd);
   }
@@ -369,7 +369,7 @@ SpellCastRetData SpellMayhem::cast_(
 
   for(Actor * actor : GameTime::actors_) {
     if(actor != Map::player) {
-      if(Map::player->isSeeingActor(*actor, NULL)) {
+      if(Map::player->isSeeingActor(*actor, nullptr)) {
         actor->getPropHandler().tryApplyProp(
           new PropBurning(propTurnsStd));
       }
@@ -377,7 +377,7 @@ SpellCastRetData SpellMayhem::cast_(
   }
 
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, Map::player->pos,
-          NULL, SndVol::high, AlertsMonsters::yes);
+          nullptr, SndVol::high, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 
   return SpellCastRetData(true);
@@ -420,7 +420,7 @@ SpellCastRetData SpellDetItems::cast_(Actor* const caster) const {
   for(int y = Y0; y < Y1; y++) {
     for(int x = X0; x <= X1; x++) {
       Item* item = Map::cells[x][y].item;
-      if(item != NULL) {
+      if(item != nullptr) {
         Map::cells[x][y].isSeenByPlayer = true;
         Map::cells[x][y].isExplored = true;
         itemsRevealedPositions.push_back(Pos(x, y));
@@ -611,7 +611,7 @@ SpellCastRetData SpellTeleport::cast_(
   Actor* const caster) const {
 
   if(caster != Map::player) {
-    if(Map::player->isSeeingActor(*caster, NULL)) {
+    if(Map::player->isSeeingActor(*caster, nullptr)) {
       Log::addMsg(
         caster->getNameThe() + " disappears in a blast of smoke!");
     }

@@ -12,7 +12,7 @@ class Feature;
 struct Entity {
 public:
   Entity() :
-    actor(NULL), item(NULL), feature(NULL),
+    actor(nullptr), item(nullptr), feature(nullptr),
     entityType(entityFeatureStatic) {}
 
   Entity(Actor* actor_) : actor(actor_), entityType(entityActor) {}

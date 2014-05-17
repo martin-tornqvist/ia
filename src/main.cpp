@@ -1,8 +1,8 @@
+#include "Init.h"
+
 #include <iostream>
 
 #include <SDL.h>
-
-#include "Init.h"
 
 #include "SdlWrapper.h"
 #include "Config.h"

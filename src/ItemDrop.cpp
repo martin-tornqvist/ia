@@ -27,7 +27,7 @@ void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
   Inventory& inv = actorDropping->getInv();
   Item* itemToDrop = inv.getItemInElement(ELEMENT);
 
-  if(itemToDrop != NULL) {
+  if(itemToDrop != nullptr) {
     const bool IS_STACKABLE = itemToDrop->getData().isStackable;
     const int NR_ITEMS_BEFORE_DROP = itemToDrop->nrItems;
     const bool IS_WHOLE_STACK_DROPPED =
@@ -78,7 +78,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
     Map::cells[intendedPos.x][intendedPos.y].featureStatic;
   if(targetFeature->isBottomless()) {
     delete &item;
-    return NULL;
+    return nullptr;
   }
 
   //Make a vector of all cells on map with no blocking feature
@@ -110,7 +110,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
       while(isCloserToOrigin(freeCells.at(i), freeCells.at(ii)) == false) {
         stackPos = freeCells.at(ii);
         Item* itemFoundOnFloor = Map::cells[stackPos.x][stackPos.y].item;
-        if(itemFoundOnFloor != NULL) {
+        if(itemFoundOnFloor != nullptr) {
           if(itemFoundOnFloor->getData().id == item.getData().id) {
             item.nrItems += itemFoundOnFloor->nrItems;
             delete itemFoundOnFloor;
@@ -125,10 +125,10 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
       item.appplyDropEffects();
     }
 
-    if(&item == NULL) {break;}
+    if(&item == nullptr) {break;}
 
     curPos = freeCells.at(i);
-    if(Map::cells[curPos.x][curPos.y].item == NULL) {
+    if(Map::cells[curPos.x][curPos.y].item == nullptr) {
 
       Map::cells[curPos.x][curPos.y].item = &item;
 
@@ -138,17 +138,17 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
         Log::addMsg("I feel something by my feet.");
       }
 
-      //TODO Won't this cause NULL to be returned?
+      //TODO Won't this cause nullptr to be returned?
       //Shouldn't a pointer to the item be returned?
       break;
     }
 
     if(i == VEC_SIZE - 1) {
       delete &item;
-      return NULL;
+      return nullptr;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 } //ItemDrop

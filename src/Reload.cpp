@@ -29,7 +29,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
   string ammoName = "";
   bool isClip = false;
 
-  if(ammo != NULL) {
+  if(ammo != nullptr) {
     ammoName = ItemData::getItemRef(*ammo, ItemRefType::a);
     isClip = ammo->getData().isAmmoClip;
   }
@@ -83,7 +83,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
         }
         Renderer::drawMapAndInterface();
       } else {
-        if(Map::player->isSeeingActor(actorReloading, NULL)) {
+        if(Map::player->isSeeingActor(actorReloading, nullptr)) {
           Log::addMsg(actorName + swiftStr + " reloads.");
         }
       }
@@ -93,7 +93,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
       if(IS_PLAYER) {
         Log::addMsg("I fumble with " + ammoName + ".");
       } else {
-        if(Map::player->isSeeingActor(actorReloading, NULL)) {
+        if(Map::player->isSeeingActor(actorReloading, nullptr)) {
           Log::addMsg(actorName + " fumbles with " + ammoName + ".");
         }
       }
@@ -109,8 +109,8 @@ bool reloadWieldedWpn(Actor& actorReloading) {
   Inventory& inv      = actorReloading.getInv();
   Item* const wpnItem = inv.getItemInSlot(SlotId::wielded);
 
-  if(wpnItem == NULL) {
-    printMsgAndPlaySfx(actorReloading, NULL, NULL,
+  if(wpnItem == nullptr) {
+    printMsgAndPlaySfx(actorReloading, nullptr, nullptr,
                        ReloadResult::notCarryingWpn, false);
     return didAct;
   }
@@ -127,11 +127,11 @@ bool reloadWieldedWpn(Actor& actorReloading) {
   const int wpnAmmoCapacity = wpn->ammoCapacity;
 
   if(wpnAmmoCapacity == 0) {
-    printMsgAndPlaySfx(actorReloading, wpn, NULL,
+    printMsgAndPlaySfx(actorReloading, wpn, nullptr,
                        ReloadResult::wpnNotUsingAmmo, false);
   } else {
     const ItemId ammoType = wpn->getData().rangedAmmoTypeUsed;
-    Item* item = NULL;
+    Item* item = nullptr;
 
     if(wpn->nrAmmoLoaded < wpnAmmoCapacity) {
 
@@ -156,7 +156,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
           if(Rnd::percentile() < CHANCE_TO_FUMBLE) {
             isSwiftReload = false;
             result = ReloadResult::fumble;
-            printMsgAndPlaySfx(actorReloading, NULL, item,
+            printMsgAndPlaySfx(actorReloading, nullptr, item,
                                ReloadResult::fumble, false);
           } else {
             result = ReloadResult::success;

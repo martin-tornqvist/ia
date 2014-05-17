@@ -288,11 +288,11 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   //Delta > parameter max distance
   deltaLine =
     LineCalc::getFovDeltaLine(Pos(3, 0), 2);
-  CHECK(deltaLine == NULL);
+  CHECK(deltaLine == nullptr);
   //Delta > limit of precalculated
   deltaLine =
     LineCalc::getFovDeltaLine(Pos(50, 0), 999);
-  CHECK(deltaLine == NULL);
+  CHECK(deltaLine == nullptr);
 }
 
 TEST_FIXTURE(BasicFixture, Fov) {
@@ -343,7 +343,7 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   Pos target(5, 8);
   Item* item = ItemFactory::spawnItem(ItemId::throwingKnife);
   Throwing::throwItem(*(Map::player), target, *item);
-  CHECK(Map::cells[5][9].item != NULL);
+  CHECK(Map::cells[5][9].item != nullptr);
 }
 
 TEST_FIXTURE(BasicFixture, Explosions) {
@@ -411,11 +411,11 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
                             ExplSrc::misc, 0, SfxId::endOfSfxId,
                             new PropBurning(propTurnsStd));
-  CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
-  CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied) != NULL);
+  CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied) != nullptr);
+  CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied) != nullptr);
   for(int i = 0; i < NR_CORPSES; i++) {
     PropHandler& propHlr = corpses[i]->getPropHandler();
-    CHECK(propHlr.getProp(propBurning, PropSrc::applied) != NULL);
+    CHECK(propHlr.getProp(propBurning, PropSrc::applied) != nullptr);
   }
 
   //Check that the explosion can handle the map edge (e.g. that it does not
@@ -530,9 +530,9 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   gen.resize(0);
   vector<InvSlot>& slots = inv.getSlots();
   for(InvSlot & slot : slots) {
-    if(slot.item != NULL) {
+    if(slot.item != nullptr) {
       delete slot.item;
-      slot.item = NULL;
+      slot.item = nullptr;
     }
   }
   //Put new items
@@ -583,7 +583,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   propHlr.tryApplyProp(new PropWound(propTurnsStd));
   Prop* prop      = propHlr.getProp(propWound, PropSrc::applied);
   PropWound* wnd  = dynamic_cast<PropWound*>(prop);
-  CHECK(wnd != NULL);
+  CHECK(wnd != nullptr);
   CHECK_EQUAL(1, wnd->getNrWounds());
   wnd->onMore();
   CHECK_EQUAL(2, wnd->getNrWounds());
@@ -675,28 +675,28 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   //Properties
   PropHandler& propHlr = Map::player->getPropHandler();
   Prop* prop = propHlr.getProp(propDiseased, PropSrc::applied);
-  CHECK(prop != NULL);
+  CHECK(prop != nullptr);
   CHECK(prop->turnsLeft_ == -1);
   //Check currrent HP (affected by disease)
   CHECK_EQUAL((Map::player->getData().hp + 5) / 2, Map::player->getHp());
   prop = propHlr.getProp(propRSleep, PropSrc::applied);
-  CHECK(prop != NULL);
+  CHECK(prop != nullptr);
   CHECK(prop->turnsLeft_ == 3);
   prop = propHlr.getProp(propBlessed, PropSrc::applied);
-  CHECK(prop != NULL);
+  CHECK(prop != nullptr);
   CHECK(prop->turnsLeft_ > 0);
   prop = propHlr.getProp(propWound, PropSrc::applied);
   PropWound* wnd = dynamic_cast<PropWound*>(prop);
-  CHECK(wnd != NULL);
+  CHECK(wnd != nullptr);
   CHECK(wnd->turnsLeft_ == -1);
   CHECK_EQUAL(3, wnd->getNrWounds());
 
   //Properties from worn item
   prop = propHlr.getProp(propRAcid, PropSrc::inv);
-  CHECK(prop != NULL);
+  CHECK(prop != nullptr);
   CHECK(prop->turnsLeft_ == -1);
   prop = propHlr.getProp(propRFire, PropSrc::inv);
-  CHECK(prop != NULL);
+  CHECK(prop != nullptr);
   CHECK(prop->turnsLeft_ == -1);
 
   //Game time
@@ -707,14 +707,14 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Rect roomArea1(Pos(1, 1), Pos(10, 10));
   Rect roomArea2(Pos(15, 4), Pos(23, 14));
 
-  for(int y = roomArea1.x0y0.y; y <= roomArea1.x1y1.y; y++) {
-    for(int x = roomArea1.x0y0.x; x <= roomArea1.x1y1.x; x++) {
+  for(int y = roomArea1.p0.y; y <= roomArea1.p1.y; y++) {
+    for(int x = roomArea1.p0.x; x <= roomArea1.p1.x; x++) {
       FeatureFactory::spawn(FeatureId::floor, Pos(x, y));
     }
   }
 
-  for(int y = roomArea2.x0y0.y; y <= roomArea2.x1y1.y; y++) {
-    for(int x = roomArea2.x0y0.x; x <= roomArea2.x1y1.x; x++) {
+  for(int y = roomArea2.p0.y; y <= roomArea2.p1.y; y++) {
+    for(int x = roomArea2.p0.x; x <= roomArea2.p1.x; x++) {
       FeatureFactory::spawn(FeatureId::floor, Pos(x, y));
     }
   }

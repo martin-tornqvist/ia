@@ -29,14 +29,14 @@ void PotionVitality::quaff_(Actor* const actor) {
 
   actor->restoreHp(HP_RESTORED, true, true);
 
-  if(Map::player->isSeeingActor(*actor, NULL)) {
+  if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
 }
 
 void PotionVitality::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionSpirit::quaff_(Actor* const actor) {
@@ -48,31 +48,31 @@ void PotionSpirit::quaff_(Actor* const actor) {
 
   actor->restoreSpi(SPI_RESTORED, true, true);
 
-  if(Map::player->isSeeingActor(*actor, NULL)) {
+  if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
 }
 
 void PotionSpirit::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionBlindness::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(new PropBlind(propTurnsStd));
-  if(Map::player->isSeeingActor(*actor, NULL)) {
+  if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
 }
 
 void PotionBlindness::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionParal::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(new PropParalyzed(propTurnsStd));
-  if(Map::player->isSeeingActor(*actor, NULL)) {
+  if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
 }
@@ -80,13 +80,13 @@ void PotionParal::quaff_(Actor* const actor) {
 void PotionParal::collide_(const Pos& pos, Actor* const actor) {
 
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionDisease::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropDiseased(propTurnsStd));
-  if(Map::player->isSeeingActor(*actor, NULL)) {
+  if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
 }
@@ -94,27 +94,27 @@ void PotionDisease::quaff_(Actor* const actor) {
 void PotionConf::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropConfused(propTurnsStd));
-  if(Map::player->isSeeingActor(*actor, NULL)) {
+  if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
 }
 
 void PotionConf::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionFrenzy::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
     new PropFrenzied(propTurnsStd));
-  if(Map::player->isSeeingActor(*actor, NULL)) {
+  if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
 }
 
 void PotionFrenzy::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionFortitude::quaff_(Actor* const actor) {
@@ -154,32 +154,32 @@ void PotionFortitude::quaff_(Actor* const actor) {
     Log::addMsg("I feel more at ease.");
   }
 
-  if(Map::player->isSeeingActor(*actor, NULL)) {identify(false);}
+  if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
 void PotionFortitude::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionPoison::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(new PropPoisoned(propTurnsStd));
-  if(Map::player->isSeeingActor(*actor, NULL)) {identify(false);}
+  if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
 void PotionPoison::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionRFire::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(new PropRFire(propTurnsStd));
-  if(Map::player->isSeeingActor(*actor, NULL)) {identify(false);}
+  if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
 void PotionRFire::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionAntidote::quaff_(Actor* const actor) {
@@ -188,34 +188,34 @@ void PotionAntidote::quaff_(Actor* const actor) {
   const bool IS_POISON_ENDED =
     actor->getPropHandler().endAppliedProp(propPoisoned, visionBlockers);
 
-  if(IS_POISON_ENDED && Map::player->isSeeingActor(*actor, NULL)) {
+  if(IS_POISON_ENDED && Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
 }
 
 void PotionAntidote::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionRElec::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(new PropRElec(propTurnsStd));
-  if(Map::player->isSeeingActor(*actor, NULL)) {identify(false);}
+  if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
 void PotionRElec::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionRAcid::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(new PropRAcid(propTurnsStd));
-  if(Map::player->isSeeingActor(*actor, NULL)) {identify(false);}
+  if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
 void PotionRAcid::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != NULL) {quaff_(actor);}
+  if(actor != nullptr) {quaff_(actor);}
 }
 
 void PotionInsight::quaff_(Actor* const actor) {
@@ -327,7 +327,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
 
 void Potion::collide(const Pos& pos, Actor* const actor) {
   if(Map::cells[pos.x][pos.y].featureStatic->isBottomless() == false ||
-      actor != NULL) {
+      actor != nullptr) {
 //    ItemDataT* const potData =
 //      ItemData::data[d.id];
 
@@ -337,7 +337,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
       // TODO Use standard animation
       Renderer::drawGlyph('*', Panel::map, pos, data_->clr);
 
-      if(actor != NULL) {
+      if(actor != nullptr) {
         if(actor->deadState == ActorDeadState::alive) {
           Log::addMsg(
             "The potion shatters on " +
@@ -349,7 +349,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
       }
     }
     //If the blow from the bottle didn't kill the actor, apply what's inside
-    if(actor != NULL) {
+    if(actor != nullptr) {
       if(actor->deadState == ActorDeadState::alive) {
         collide_(pos, actor);
         if(

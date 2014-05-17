@@ -15,14 +15,14 @@ using namespace std;
 inline void Cell::clear() {
   isExplored = isSeenByPlayer = isLight = isDark = false;
 
-  if(featureStatic != NULL) {
+  if(featureStatic != nullptr) {
     delete featureStatic;
-    featureStatic = NULL;
+    featureStatic = nullptr;
   }
 
-  if(item != NULL) {
+  if(item != nullptr) {
     delete item;
-    item = NULL;
+    item = nullptr;
   }
 
   playerVisualMemory.clear();
@@ -30,7 +30,7 @@ inline void Cell::clear() {
 
 namespace Map {
 
-Player*       player  = NULL;
+Player*       player  = nullptr;
 int           dlvl    = 0;
 Cell          cells[MAP_W][MAP_H];
 vector<Room*> rooms;
@@ -74,7 +74,7 @@ void init() {
 }
 
 void cleanup() {
-  player = NULL; //Note: GameTime will delete player
+  player = nullptr; //Note: GameTime will delete player
 
   resetMap();
   for(int y = 0; y < MAP_H; y++) {

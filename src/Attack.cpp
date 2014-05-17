@@ -23,7 +23,7 @@ using namespace std;
 
 AttData::AttData(Actor& attacker_, const Item& itemAttackedWith_) :
   attacker(&attacker_),
-  curDefender(NULL),
+  curDefender(nullptr),
   attackResult(failSmall),
   dmgRolls(0),
   dmgSides(0),
@@ -50,7 +50,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
       dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ > 0;
   } else {
     isDefenderAware =
-      Map::player->isSeeingActor(*attacker, NULL) ||
+      Map::player->isSeeingActor(*attacker, nullptr) ||
       PlayerBon::hasTrait(Trait::vigilant);
   }
 
@@ -83,7 +83,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
 
     bool isAttackerAware = true;
     if(attacker == Map::player) {
-      isAttackerAware = Map::player->isSeeingActor(*curDefender, NULL);
+      isAttackerAware = Map::player->isSeeingActor(*curDefender, nullptr);
     } else {
       Monster* const monster = dynamic_cast<Monster*>(attacker);
       isAttackerAware = monster->awareOfPlayerCounter_ > 0;
@@ -188,7 +188,7 @@ RangedAttData::RangedAttData(
 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
-    if(actorAimedAt != NULL) {
+    if(actorAimedAt != nullptr) {
       intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
       bool blockers[MAP_W][MAP_H];
@@ -202,7 +202,7 @@ RangedAttData::RangedAttData(
 
   curDefender = Utils::getActorAtPos(curPos_);
 
-  if(curDefender != NULL) {
+  if(curDefender != nullptr) {
     trace << "RangedAttData: Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
@@ -255,7 +255,7 @@ RangedAttData::RangedAttData(
       if(attacker == Map::player) {
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
-        if(prop != NULL) {
+        if(prop != nullptr) {
           playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }
       }
@@ -281,7 +281,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
 
   //If aim level parameter not given, determine it now
   if(intendedAimLevel_ == actorSize_none) {
-    if(actorAimedAt != NULL) {
+    if(actorAimedAt != nullptr) {
       intendedAimLevel = actorAimedAt->getData().actorSize;
     } else {
       bool blockers[MAP_W][MAP_H];
@@ -295,7 +295,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
 
   curDefender = Utils::getActorAtPos(curPos_);
 
-  if(curDefender != NULL) {
+  if(curDefender != nullptr) {
     trace << "MissileAttData: Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
@@ -339,7 +339,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
       if(attacker == Map::player) {
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
-        if(prop != NULL) {
+        if(prop != nullptr) {
           playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }
       }
@@ -365,14 +365,14 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Weapon& wpn) {
   if(data.isDefenderDodging) {
     //----- DEFENDER DODGES --------
     if(data.attacker == Map::player) {
-      if(Map::player->isSeeingActor(*data.curDefender, NULL)) {
+      if(Map::player->isSeeingActor(*data.curDefender, nullptr)) {
         otherName = data.curDefender->getNameThe();
       } else {
         otherName = "It ";
       }
       Log::addMsg(otherName + " dodges my attack.");
     } else {
-      if(Map::player->isSeeingActor(*data.attacker, NULL)) {
+      if(Map::player->isSeeingActor(*data.attacker, nullptr)) {
         otherName = data.attacker->getNameThe();
       } else {
         otherName = "It";
@@ -391,7 +391,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Weapon& wpn) {
       }
       Audio::play(wpn.getData().meleeMissSfx);
     } else {
-      if(Map::player->isSeeingActor(*data.attacker, NULL)) {
+      if(Map::player->isSeeingActor(*data.attacker, nullptr)) {
         otherName = data.attacker->getNameThe();
       } else {
         otherName = "It";
@@ -409,7 +409,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Weapon& wpn) {
     if(data.isEtherealDefenderMissed) {
       //----- ATTACK MISSED DUE TO ETHEREAL TARGET --------
       if(data.attacker == Map::player) {
-        if(Map::player->isSeeingActor(*data.curDefender, NULL)) {
+        if(Map::player->isSeeingActor(*data.curDefender, nullptr)) {
           otherName = data.curDefender->getNameThe();
         } else {
           otherName = "It ";
@@ -417,7 +417,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Weapon& wpn) {
         Log::addMsg(
           "My attack passes right through " + otherName + "!");
       } else {
-        if(Map::player->isSeeingActor(*data.attacker, NULL)) {
+        if(Map::player->isSeeingActor(*data.attacker, nullptr)) {
           otherName = data.attacker->getNameThe();
         } else {
           otherName = "It";
@@ -450,7 +450,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Weapon& wpn) {
       if(data.attacker == Map::player) {
         const string wpnVerb = wpn.getData().meleeAttMsgs.player;
 
-        if(Map::player->isSeeingActor(*data.curDefender, NULL)) {
+        if(Map::player->isSeeingActor(*data.curDefender, nullptr)) {
           otherName = data.curDefender->getNameThe();
         } else {
           otherName = "it";
@@ -477,7 +477,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Weapon& wpn) {
       } else {
         const string wpnVerb = wpn.getData().meleeAttMsgs.other;
 
-        if(Map::player->isSeeingActor(*data.attacker, NULL)) {
+        if(Map::player->isSeeingActor(*data.attacker, nullptr)) {
           otherName = data.attacker->getNameThe();
         } else {
           otherName = "It";
@@ -666,7 +666,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         //HIT ACTOR?
         if(
-          curProj->attackData->curDefender != NULL &&
+          curProj->attackData->curDefender != nullptr &&
           curProj->isObstructed == false &&
           curProj->attackData->isEtherealDefenderMissed == false) {
 
@@ -731,7 +731,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         //PROJECTILE HIT FEATURE?
         vector<FeatureMob*> featureMobs;
         GameTime::getFeatureMobsAtPos(curProj->pos, featureMobs);
-        Feature* featureBlockingShot = NULL;
+        Feature* featureBlockingShot = nullptr;
         for(FeatureMob * mob : featureMobs) {
           if(mob->isProjectilePassable() == false) {
             featureBlockingShot = mob;
@@ -743,13 +743,13 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           featureBlockingShot = featureStatic;
         }
 
-        if(featureBlockingShot != NULL && curProj->isObstructed == false) {
+        if(featureBlockingShot != nullptr && curProj->isObstructed == false) {
           curProj->obstructedInElement = projectilePathElement - 1;
           curProj->isObstructed = true;
 
           if(wpn.getData().rangedMakesRicochetSound) {
             Snd snd("I hear a ricochet.", SfxId::ricochet,
-                    IgnoreMsgIfOriginSeen::yes, curProj->pos, NULL,
+                    IgnoreMsgIfOriginSeen::yes, curProj->pos, nullptr,
                     SndVol::low, AlertsMonsters::yes);
             SndEmit::emitSnd(snd);
           }
@@ -781,7 +781,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
           if(wpn.getData().rangedMakesRicochetSound) {
             Snd snd("I hear a ricochet.", SfxId::ricochet,
-                    IgnoreMsgIfOriginSeen::yes, curProj->pos, NULL,
+                    IgnoreMsgIfOriginSeen::yes, curProj->pos, nullptr,
                     SndVol::low, AlertsMonsters::yes);
             SndEmit::emitSnd(snd);
           }
@@ -896,7 +896,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     const Pos curPos(path.at(i));
 
-    if(actorArray[curPos.x][curPos.y] != NULL) {
+    if(actorArray[curPos.x][curPos.y] != nullptr) {
 
       //Only attempt hit if aiming at a level that would hit the actor
       const ActorSize sizeOfActor =
@@ -958,7 +958,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     //Wall hit?
     if(featureBlockers[curPos.x][curPos.y]) {
       Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
-              curPos, NULL, SndVol::low, AlertsMonsters::yes);
+              curPos, nullptr, SndVol::low, AlertsMonsters::yes);
       SndEmit::emitSnd(snd);
 
       if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
@@ -979,7 +979,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     //Floor hit?
     if(intendedAimLevel == actorSize_floor && curPos == aimPos) {
       Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
-              curPos, NULL, SndVol::low, AlertsMonsters::yes);
+              curPos, nullptr, SndVol::low, AlertsMonsters::yes);
       SndEmit::emitSnd(snd);
 
       if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
@@ -1032,7 +1032,7 @@ void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
         itemData.itemWeight > itemWeight_light &&
         itemData.isIntrinsic == false) {
         Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes,
-                data.curDefender->pos, NULL, SndVol::low, AlertsMonsters::yes);
+                data.curDefender->pos, nullptr, SndVol::low, AlertsMonsters::yes);
         SndEmit::emitSnd(snd);
       }
     }

@@ -79,7 +79,7 @@ Actor* makeActorFromId(const ActorId id) {
     case actor_empty:
     case endOfActorIds: {} break;
   }
-  return NULL;
+  return nullptr;
 }
 
 } //namespace
@@ -108,7 +108,7 @@ void deleteAllMonsters() {
     }
   }
 
-  Map::player->target = NULL;
+  Map::player->target = nullptr;
 }
 
 void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
@@ -116,7 +116,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
                     Actor* const actorToSetAsLeader,
                     vector<Monster*>* monstersRet) {
 
-  if(monstersRet != NULL) {monstersRet->resize(0);}
+  if(monstersRet != nullptr) {monstersRet->resize(0);}
 
   bool blockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
@@ -138,17 +138,17 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
     Actor*   const actor    = spawn(id, pos);
     Monster* const monster  = dynamic_cast<Monster*>(actor);
 
-    if(monstersRet != NULL) {
+    if(monstersRet != nullptr) {
       monstersRet->push_back(monster);
     }
-    if(actorToSetAsLeader != NULL) {
+    if(actorToSetAsLeader != nullptr) {
       monster->leader = actorToSetAsLeader;
     }
     if(MAKE_MONSTERS_AWARE) {
       monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
     }
 
-    if(Map::player->isSeeingActor(*actor, NULL)) {
+    if(Map::player->isSeeingActor(*actor, nullptr)) {
       positionsToAnimate.push_back(pos);
     }
   }

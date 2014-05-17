@@ -135,14 +135,20 @@ enum class MapParseWriteRule {always, writeOnlyTrue};
 
 namespace MapParse {
 
-void parse(const CellPred::Pred& predicate, bool arrayOut[MAP_W][MAP_H],
+void parse(const CellPred::Pred& predicate, bool out[MAP_W][MAP_H],
            const MapParseWriteRule writeRule = MapParseWriteRule::always);
 
 void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
                                 bool out[MAP_W][MAP_H],
-                                const Range& distIntervall);
+                                const Range& distInterval);
+
+bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
+                 const bool VAL = true);
 
 void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]);
+
+void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST,
+            const bool VAL_TO_EXPAND = true);
 
 } //MapParse
 

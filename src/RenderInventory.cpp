@@ -64,7 +64,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
       str, Panel::screen, pos, IS_CUR_POS ? clrWhiteHigh : clrNosfTealDrk);
     pos.x = X_POS_ITEM_NAME;
     Item* const item = slot.item;
-    if(item == NULL) {
+    if(item == nullptr) {
       pos.x += 2;
       Renderer::drawText(
         "<empty>", Panel::screen, pos, IS_CUR_POS ? clrWhite : clrNosfTealDrk);
