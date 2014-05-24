@@ -23,7 +23,6 @@ public:
   virtual bool check(const Actor& a)      const {(void)a; return false;}
 protected:
   Pred() {}
-//  bool canWalkAt(const int X, const int Y) const;
 };
 
 class BlocksVision : public Pred {
@@ -138,9 +137,16 @@ namespace MapParse {
 void parse(const CellPred::Pred& predicate, bool out[MAP_W][MAP_H],
            const MapParseWriteRule writeRule = MapParseWriteRule::always);
 
+//Given a map array of booleans, this will fill a second map array of boolens
+//where the cells are set to true if they are within the specified distance
+//interval of the first array.
+//This can be used for example to find all cells up to 3 steps from a wall.
 void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
                                 bool out[MAP_W][MAP_H],
                                 const Range& distInterval);
+
+int getNrAdjCellsWithFeature(const Pos& p,
+                             const CellPred::IsAnyOfFeatures& pred);
 
 bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
                  const bool VAL = true);

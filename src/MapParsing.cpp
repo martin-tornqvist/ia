@@ -176,20 +176,20 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
 //------------------------------------------------------------ MAP PARSE
 namespace MapParse {
 
-void parse(const CellPred::Pred& predicate, bool out[MAP_W][MAP_H],
+void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
            const MapParseWriteRule writeRule) {
 
-  assert(predicate.isCheckingCells()       == true ||
-         predicate.isCheckingMobFeatures() == true ||
-         predicate.isCheckingActors()      == true);
+  assert(pred.isCheckingCells()       == true ||
+         pred.isCheckingMobFeatures() == true ||
+         pred.isCheckingActors()      == true);
 
   const bool ALLOW_WRITE_FALSE = writeRule == MapParseWriteRule::always;
 
-  if(predicate.isCheckingCells()) {
+  if(pred.isCheckingCells()) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
         const Cell& c = Map::cells[x][y];
-        const bool IS_MATCH = predicate.check(c);
+        const bool IS_MATCH = pred.check(c);
         if(IS_MATCH || ALLOW_WRITE_FALSE) {
           out[x][y] = IS_MATCH;
         }
@@ -197,10 +197,10 @@ void parse(const CellPred::Pred& predicate, bool out[MAP_W][MAP_H],
     }
   }
 
-  if(predicate.isCheckingMobFeatures()) {
+  if(pred.isCheckingMobFeatures()) {
     for(FeatureMob * mob : GameTime::featureMobs_) {
       const Pos& p = mob->getPos();
-      const bool IS_MATCH = predicate.check(*mob);
+      const bool IS_MATCH = pred.check(*mob);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
         bool& v = out[p.x][p.y];
         if(v == false) {v = IS_MATCH;}
@@ -208,10 +208,10 @@ void parse(const CellPred::Pred& predicate, bool out[MAP_W][MAP_H],
     }
   }
 
-  if(predicate.isCheckingActors()) {
+  if(pred.isCheckingActors()) {
     for(Actor * actor : GameTime::actors_) {
       const Pos& p = actor->pos;
-      const bool IS_MATCH = predicate.check(*actor);
+      const bool IS_MATCH = pred.check(*actor);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
         bool& v = out[p.x][p.y];
         if(v == false) {v = IS_MATCH;}
@@ -254,6 +254,24 @@ void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
       }
     }
   }
+}
+
+int getNrAdjCellsWithFeature(const Pos& p,
+                             const CellPred::IsAnyOfFeatures& pred) {
+  int ret = 0;
+
+  const int X0 = getConstrInRange(0, p.x - 1, MAP_W - 1);
+  const int Y0 = getConstrInRange(0, p.y - 1, MAP_W - 1);
+  const int X1 = getConstrInRange(0, p.x + 1, MAP_W - 1);
+  const int Y1 = getConstrInRange(0, p.y + 1, MAP_W - 1);
+
+  for(int y = Y0; y <= Y1; y++) {
+    for(int x = X0; x <= X1; x++) {
+      if(pred.check(Map::cells[x][y])) {ret++;}
+    }
+  }
+
+  return ret;
 }
 
 bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],

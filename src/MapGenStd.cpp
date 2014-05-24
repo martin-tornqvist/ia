@@ -831,17 +831,6 @@ void decorate() {
     for(int x = 0; x < MAP_W; x++) {
       if(Map::cells[x][y].featureStatic->getId() == FeatureId::wall) {
 
-        int nrAdjFloor = 0;
-
-        for(int yy = max(0, y - 1); yy <= min(MAP_H - 1, y + 1); yy++) {
-          for(int xx = max(0, x - 1); xx <= min(MAP_W - 1, x + 1); xx++) {
-            if(xx != x || yy != y) {
-              const FeatureStatic* const f = Map::cells[xx][yy].featureStatic;
-              if(f->getId() == FeatureId::floor) {nrAdjFloor++;}
-            }
-          }
-        }
-
         //Randomly convert walls to rubble
         if(Rnd::oneIn(10)) {
           FeatureFactory::mk(FeatureId::rubbleHigh, Pos(x, y));
@@ -854,7 +843,8 @@ void decorate() {
         wall->setRandomIsMossGrown();
 
         //Convert walls with no adjacent stone floor to cave walls
-        if(nrAdjFloor == 0) {
+        CellPred::IsAnyOfFeatures pred(vector<FeatureId> {FeatureId::floor});
+        if(MapParse::getNrAdjCellsWithFeature(Pos(x, y), pred) == 0) {
           wall->wallType = WallType::cave;
         } else {
           wall->setRandomNormalWall();
