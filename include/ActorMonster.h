@@ -53,7 +53,7 @@ public:
   BestAttack getBestAttack(const AttackOpport& attackOpport);
   bool tryAttack(Actor& defender);
 
-  virtual void spawnStartItems() override = 0;
+  virtual void mkStartItems() override = 0;
 
   void hearSound(const Snd& snd);
 
@@ -86,7 +86,7 @@ public:
   Dir lastDirTravelled_;
 
   std::vector<Spell*> spellsKnown;
-  int spellCoolDownCurrent;
+  int spellCoolDownCur;
 
   bool isRoamingAllowed_;
 
@@ -99,7 +99,7 @@ public:
 
   void speakPhrase();
 
-  double shockCausedCurrent_;
+  double shockCausedCur_;
 
   bool hasGivenXpForSpotting_;
 
@@ -111,14 +111,14 @@ class Rat: public Monster {
 public:
   Rat() : Monster() {}
   ~Rat() {}
-  virtual void spawnStartItems() override;
+  virtual void mkStartItems() override;
 };
 
 class RatThing: public Rat {
 public:
   RatThing() : Rat() {}
   ~RatThing() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class BrownJenkin: public RatThing {
@@ -138,35 +138,35 @@ class GreenSpider: public Spider {
 public:
   GreenSpider() : Spider() {}
   ~GreenSpider() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class WhiteSpider: public Spider {
 public:
   WhiteSpider() : Spider() {}
   ~WhiteSpider() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class RedSpider: public Spider {
 public:
   RedSpider() : Spider() {}
   ~RedSpider() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class ShadowSpider: public Spider {
 public:
   ShadowSpider() : Spider() {}
   ~ShadowSpider() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class LengSpider: public Spider {
 public:
   LengSpider() : Spider() {}
   ~LengSpider() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Zombie: public Monster {
@@ -188,14 +188,14 @@ class ZombieClaw: public Zombie {
 public:
   ZombieClaw() : Zombie() {}
   ~ZombieClaw() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class ZombieAxe: public Zombie {
 public:
   ZombieAxe() : Zombie() {}
   ~ZombieAxe() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class BloatedZombie: public Zombie {
@@ -203,7 +203,7 @@ public:
   BloatedZombie() : Zombie() {}
   ~BloatedZombie() {}
 
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class MajorClaphamLee: public ZombieClaw {
@@ -229,7 +229,7 @@ public:
   KeziahMason() : Monster(), hasSummonedJenkin(false) {}
   ~KeziahMason() {}
   bool onActorTurn_() override;
-  void spawnStartItems() override;
+  void mkStartItems() override;
 private:
   bool hasSummonedJenkin;
 };
@@ -238,7 +238,7 @@ class Cultist: public Monster {
 public:
   Cultist() : Monster() {}
 
-  virtual void spawnStartItems() override;
+  virtual void mkStartItems() override;
 
   static std::string getCultistPhrase();
 
@@ -256,21 +256,21 @@ class CultistTeslaCannon: public Cultist {
 public:
   CultistTeslaCannon() : Cultist() {}
   ~CultistTeslaCannon() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class CultistSpikeGun: public Cultist {
 public:
   CultistSpikeGun() : Cultist() {}
   ~CultistSpikeGun() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class CultistPriest: public Cultist {
 public:
   CultistPriest() : Cultist() {}
   ~CultistPriest() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class LordOfShadows: public Monster {
@@ -278,7 +278,7 @@ public:
   LordOfShadows() : Monster() {}
   ~LordOfShadows() {}
   bool onActorTurn_() override;
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class LordOfSpiders: public Monster {
@@ -286,7 +286,7 @@ public:
   LordOfSpiders() : Monster() {}
   ~LordOfSpiders() {}
   bool onActorTurn_() override;
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class LordOfSpirits: public Monster {
@@ -294,7 +294,7 @@ public:
   LordOfSpirits() : Monster() {}
   ~LordOfSpirits() {}
   bool onActorTurn_() override;
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class LordOfPestilence: public Monster {
@@ -302,21 +302,21 @@ public:
   LordOfPestilence() : Monster() {}
   ~LordOfPestilence() {}
   bool onActorTurn_() override;
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class FireHound: public Monster {
 public:
   FireHound() : Monster() {}
   ~FireHound() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class FrostHound: public Monster {
 public:
   FrostHound() : Monster() {}
   ~FrostHound() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Zuul: public Monster {
@@ -326,7 +326,7 @@ public:
 
   void place_() override;
 
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Ghost: public Monster {
@@ -334,105 +334,105 @@ public:
   Ghost() : Monster() {}
   ~Ghost() {}
   bool onActorTurn_() override;
-  virtual void spawnStartItems() override;
+  virtual void mkStartItems() override;
 };
 
 class Phantasm: public Ghost {
 public:
   Phantasm() : Ghost() {}
   ~Phantasm() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Wraith: public Ghost {
 public:
   Wraith() : Ghost() {}
   ~Wraith() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class GiantBat: public Monster {
 public:
   GiantBat() : Monster() {}
   ~GiantBat() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Byakhee: public GiantBat {
 public:
   Byakhee() : GiantBat() {}
   ~Byakhee() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class GiantMantis: public Monster {
 public:
   GiantMantis() : Monster() {}
   ~GiantMantis() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Chthonian: public Monster {
 public:
   Chthonian() : Monster() {}
   ~Chthonian() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class HuntingHorror: public GiantBat {
 public:
   HuntingHorror() : GiantBat() {}
   ~HuntingHorror() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Wolf: public Monster {
 public:
   Wolf() : Monster() {}
   ~Wolf() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class MiGo: public Monster {
 public:
   MiGo() : Monster() {}
   ~MiGo() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class FlyingPolyp: public Monster {
 public:
   FlyingPolyp() : Monster() {}
   ~FlyingPolyp() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Ghoul: public Monster {
 public:
   Ghoul() : Monster() {}
   ~Ghoul() {}
-  virtual void spawnStartItems() override;
+  virtual void mkStartItems() override;
 };
 
 class DeepOne: public Monster {
 public:
   DeepOne() : Monster() {}
   ~DeepOne() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Mummy: public Monster {
 public:
   Mummy() : Monster() {}
   ~Mummy() {}
-  virtual void spawnStartItems() override;
+  virtual void mkStartItems() override;
 };
 
 class MummyUnique: public Mummy {
 public:
   MummyUnique() : Mummy() {}
   ~MummyUnique() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class Khephren: public MummyUnique {
@@ -450,7 +450,7 @@ public:
   Shadow() : Monster() {}
   ~Shadow() {}
 
-  virtual void spawnStartItems() override;
+  virtual void mkStartItems() override;
 };
 
 class WormMass: public Monster {
@@ -458,7 +458,7 @@ public:
   WormMass() : Monster(), chanceToSpawnNew(12) {}
   ~WormMass() {}
   bool onActorTurn_() override;
-  virtual void spawnStartItems() override;
+  virtual void mkStartItems() override;
 private:
   int chanceToSpawnNew;
 };
@@ -468,7 +468,7 @@ public:
   GiantLocust() : Monster(), chanceToSpawnNew(5) {}
   ~GiantLocust() {}
   bool onActorTurn_() override;
-  virtual void spawnStartItems() override;
+  virtual void mkStartItems() override;
 private:
   int chanceToSpawnNew;
 };
@@ -480,7 +480,7 @@ public:
 
   bool onActorTurn_() override;
 
-  virtual void spawnStartItems() = 0;
+  virtual void mkStartItems() = 0;
   virtual void die_() = 0;
 private:
   int pullCooldown;
@@ -490,7 +490,7 @@ class DustVortex: public Vortex {
 public:
   DustVortex() : Vortex() {}
   ~DustVortex() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
   void die_();
 };
 
@@ -498,7 +498,7 @@ class FireVortex: public Vortex {
 public:
   FireVortex() : Vortex() {}
   ~FireVortex() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
   void die_();
 };
 
@@ -506,7 +506,7 @@ class FrostVortex: public Vortex {
 public:
   FrostVortex() : Vortex() {}
   ~FrostVortex() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
   void die_();
 };
 
@@ -515,48 +515,48 @@ public:
   Ooze() : Monster() {}
   ~Ooze() {}
   virtual void onStandardTurn() override;
-  virtual void spawnStartItems() = 0;
+  virtual void mkStartItems() = 0;
 };
 
 class OozeBlack: public Ooze {
 public:
   OozeBlack() : Ooze() {}
   ~OozeBlack() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class OozeClear: public Ooze {
 public:
   OozeClear() : Ooze() {}
   ~OozeClear() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class OozePutrid: public Ooze {
 public:
   OozePutrid() : Ooze() {}
   ~OozePutrid() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class OozePoison: public Ooze {
 public:
   OozePoison() : Ooze() {}
   ~OozePoison() {}
-  void spawnStartItems() override;
+  void mkStartItems() override;
 };
 
 class ColourOOSpace: public Ooze {
 public:
   ColourOOSpace() : Ooze(),
-    currentColor(clrMagentaLgt) {}
+    curColor(clrMagentaLgt) {}
   ~ColourOOSpace() {}
 //  bool onActorTurn_() override;
   void onStandardTurn() override;
-  void spawnStartItems() override;
+  void mkStartItems() override;
   const SDL_Color& getClr();
 private:
-  SDL_Color currentColor;
+  SDL_Color curColor;
 };
 
 #endif

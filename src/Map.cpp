@@ -1,3 +1,5 @@
+#include "Init.h"
+
 #include "Map.h"
 
 #include "Feature.h"
@@ -49,7 +51,7 @@ void resetCells(const bool MAKE_STONE_WALLS) {
       Renderer::renderArrayNoActors[x][y].clear();
 
       if(MAKE_STONE_WALLS) {
-        FeatureFactory::spawn(FeatureId::wall, Pos(x, y));
+        FeatureFactory::mk(FeatureId::wall, Pos(x, y));
       }
     }
   }
@@ -65,7 +67,7 @@ void init() {
   resetCells(false);
 
   const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
-  player = dynamic_cast<Player*>(ActorFactory::spawn(actor_player, playerPos));
+  player = dynamic_cast<Player*>(ActorFactory::mk(actor_player, playerPos));
 
   ActorFactory::deleteAllMonsters();
 
@@ -106,7 +108,7 @@ void switchToDestroyedFeatAt(const Pos& pos) {
     if(SIZE > 0) {
       const FeatureId NEW_ID = convertionBucket.at(Rnd::dice(1, SIZE) - 1);
 
-      FeatureFactory::spawn(NEW_ID, pos);
+      FeatureFactory::mk(NEW_ID, pos);
 
       //Destroy adjacent doors?
       if(
@@ -117,7 +119,7 @@ void switchToDestroyedFeatAt(const Pos& pos) {
             if(x == 0 || y == 0) {
               const FeatureStatic* const f = cells[x][y].featureStatic;
               if(f->getId() == FeatureId::door) {
-                FeatureFactory::spawn(FeatureId::rubbleLow, Pos(x, y));
+                FeatureFactory::mk(FeatureId::rubbleLow, Pos(x, y));
               }
             }
           }
@@ -126,7 +128,7 @@ void switchToDestroyedFeatAt(const Pos& pos) {
 
       if(NEW_ID == FeatureId::rubbleLow && NEW_ID != OLD_FEATURE_ID) {
         if(Rnd::percentile() < 50) {
-          ItemFactory::spawnItemOnMap(ItemId::rock, pos);
+          ItemFactory::mkItemOnMap(ItemId::rock, pos);
         }
       }
     }
@@ -153,7 +155,7 @@ void updateVisualMemory() {
   }
 }
 
-void makeBlood(const Pos& origin) {
+void mkBlood(const Pos& origin) {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       const Pos c = origin + Pos(dx, dy);
@@ -167,7 +169,7 @@ void makeBlood(const Pos& origin) {
   }
 }
 
-void makeGore(const Pos& origin) {
+void mkGore(const Pos& origin) {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       const Pos c = origin + Pos(dx, dy);

@@ -16,7 +16,7 @@ namespace {
 
 namespace EnterName {
 
-void draw(const string& currentString) {
+void draw(const string& curString) {
   Renderer::clearScreen();
   Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
@@ -24,8 +24,8 @@ void draw(const string& currentString) {
                              Pos(MAP_W_HALF, 0), clrWhite);
   const int Y_NAME = 2;
   const string NAME_STR =
-    currentString.size() < PLAYER_NAME_MAX_LENGTH ? currentString + "_" :
-    currentString;
+    curString.size() < PLAYER_NAME_MAX_LENGTH ? curString + "_" :
+    curString;
   const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
   Renderer::drawText(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
@@ -35,35 +35,35 @@ void draw(const string& currentString) {
   Renderer::updateScreen();
 }
 
-void readKeys(string& currentString, bool& isDone) {
+void readKeys(string& curString, bool& isDone) {
   const KeyboardReadRetData& d = Input::readKeysUntilFound(false);
 
   if(d.sdlKey_ == SDLK_RETURN) {
     isDone = true;
-    currentString = currentString.empty() ? "Player" : currentString;
+    curString = curString.empty() ? "Player" : curString;
     return;
   }
 
-  if(currentString.size() < PLAYER_NAME_MAX_LENGTH) {
+  if(curString.size() < PLAYER_NAME_MAX_LENGTH) {
     if(
       d.sdlKey_ == SDLK_SPACE ||
       (d.key_ >= int('a') && d.key_ <= int('z')) ||
       (d.key_ >= int('A') && d.key_ <= int('Z')) ||
       (d.key_ >= int('0') && d.key_ <= int('9'))) {
       if(d.sdlKey_ == SDLK_SPACE) {
-        currentString.push_back(' ');
+        curString.push_back(' ');
       } else {
-        currentString.push_back(char(d.key_));
+        curString.push_back(char(d.key_));
       }
-      draw(currentString);
+      draw(curString);
       return;
     }
   }
 
-  if(currentString.size() > 0) {
+  if(curString.size() > 0) {
     if(d.sdlKey_ == SDLK_BACKSPACE) {
-      currentString.erase(currentString.end() - 1);
-      draw(currentString);
+      curString.erase(curString.end() - 1);
+      draw(curString);
     }
   }
 }

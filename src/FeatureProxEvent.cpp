@@ -108,17 +108,17 @@ void ProxEventWallCrumble::playerIsNear() {
     for(int i = 0; i < NR_INNER_CELLS; i++) {
       const Pos& pos = innerCells_.at(i);
 
-      FeatureFactory::spawn(FeatureId::floor, pos);
+      FeatureFactory::mk(FeatureId::floor, pos);
 
       if(Rnd::range(1, 100) < 20) {
-        Map::makeGore(pos);
-        Map::makeBlood(pos);
+        Map::mkGore(pos);
+        Map::mkBlood(pos);
       }
 
       if(
         nrMonstersSpawned < nrMonsterLimitExceptAdjToEntry ||
         Utils::isPosAdj(pos, pos_, false)) {
-        Actor* const actor = ActorFactory::spawn(monsterType, pos);
+        Actor* const actor = ActorFactory::mk(monsterType, pos);
         Monster* const monster = dynamic_cast<Monster*>(actor);
         monster->awareOfPlayerCounter_ =
           monster->getData().nrTurnsAwarePlayer;

@@ -15,19 +15,19 @@ namespace PopulateTraps {
 
 namespace {
 
-void spawnTrapAt(const TrapId id, const Pos& pos) {
+void mkTrapAt(const TrapId id, const Pos& pos) {
   FeatureStatic* const f = Map::cells[pos.x][pos.y].featureStatic;
   const FeatureDataT* const d = FeatureData::getData(f->getId());
-  FeatureFactory::spawn(FeatureId::trap, pos, new TrapSpawnData(d, id));
+  FeatureFactory::mk(FeatureId::trap, pos, new TrapSpawnData(d, id));
 }
 
 } //namespace
 
-void populateRoomAndCorridorLevel() {
-  trace << "PopulateTraps::populateRoomAndCorridorLevel()..." << endl;
+void populateStdLvl() {
+  trace << "PopulateTraps::populateStdLvl()..." << endl;
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   //Put traps in non-plain rooms
   for(Room * const room : Map::rooms) {
@@ -54,12 +54,12 @@ void populateRoomAndCorridorLevel() {
 
         vector<Pos> trapPosBucket;
 
-        const Pos& p0 = room->getX0Y0();
-        const Pos& p1 = room->getX1Y1();
+        const Pos& p0 = room->getP0();
+        const Pos& p1 = room->getP1();
         for(int y = p0.y; y <= p1.y; y++) {
           for(int x = p0.x; x <= p1.x; x++) {
             if(
-              blockers[x][y] == false &&
+              blocked[x][y] == false &&
               Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
               trapPosBucket.push_back(Pos(x, y));
             }
@@ -80,8 +80,8 @@ void populateRoomAndCorridorLevel() {
           const Pos& pos = trapPosBucket.at(ELEMENT);
 
           trace << "PopulateTraps: Placing base trap" << endl;
-          spawnTrapAt(trapType, pos);
-          blockers[pos.x][pos.y] = true;
+          mkTrapAt(trapType, pos);
+          blocked[pos.x][pos.y] = true;
           trapPosBucket.erase(trapPosBucket.begin() + ELEMENT);
           nrPosCand--;
 
@@ -92,8 +92,8 @@ void populateRoomAndCorridorLevel() {
           trace << "PopulateTraps: Placing adjacent traps" << endl;
           for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
             const Pos& adjPos = trapPosBucket.front();
-            spawnTrapAt(trapType, adjPos);
-            blockers[adjPos.x][adjPos.y] = true;
+            mkTrapAt(trapType, adjPos);
+            blocked[adjPos.x][adjPos.y] = true;
             trapPosBucket.erase(trapPosBucket.begin());
             nrPosCand--;
           }
@@ -112,7 +112,7 @@ void populateRoomAndCorridorLevel() {
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
-          blockers[x][y] == false &&
+          blocked[x][y] == false &&
           RoomThemeMaking::themeMap[x][y] == RoomThemeId::plain &&
           Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
           trapPosBucket.push_back(Pos(x, y));
@@ -131,7 +131,7 @@ void populateRoomAndCorridorLevel() {
       const Pos& pos = trapPosBucket.at(ELEMENT);
 
       trace << "PopulateTraps: Placing base trap" << endl;
-      spawnTrapAt(trapType, pos);
+      mkTrapAt(trapType, pos);
       trapPosBucket.erase(trapPosBucket.begin() + ELEMENT);
       nrPosCand--;
 
@@ -142,14 +142,14 @@ void populateRoomAndCorridorLevel() {
       trace << "PopulateTraps: Placing adjacent traps..." << endl;
       for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
         const Pos& adjPos = trapPosBucket.front();
-        spawnTrapAt(trapType, adjPos);
+        mkTrapAt(trapType, adjPos);
         trapPosBucket.erase(trapPosBucket.begin());
         nrPosCand--;
       }
       trace << "PopulateTraps: Placing adjacent traps [DONE]" << endl;
     }
   }
-  trace << "PopulateTraps::populateRoomAndCorridorLevel() [DONE]" << endl;
+  trace << "PopulateTraps::populateStdLvl() [DONE]" << endl;
 }
 
 } //PopulateTraps

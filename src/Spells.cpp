@@ -165,7 +165,7 @@ SpellCastRetData Spell::cast(Actor* const caster,
         const string spellStr = monster->getData().spellCastMessage;
         Log::addMsg(spellStr);
       }
-      monster->spellCoolDownCurrent = monster->getData().spellCooldownTurns;
+      monster->spellCoolDownCur = monster->getData().spellCooldownTurns;
     }
 
     if(IS_INTRINSIC) {
@@ -246,9 +246,9 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
 
 bool SpellDarkbolt::isGoodForMonsterToCastNow(
   Monster* const monster) {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return monster->isSeeingActor(*(Map::player), blockers) && Rnd::oneIn(2);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked) && Rnd::oneIn(2);
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH
@@ -308,9 +308,9 @@ SpellCastRetData SpellAzathothsWrath::cast_(
 
 bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
   Monster* const monster) {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return monster->isSeeingActor(*(Map::player), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked);
 }
 
 //------------------------------------------------------------ MAYHEM
@@ -623,9 +623,9 @@ SpellCastRetData SpellTeleport::cast_(
 
 bool SpellTeleport::isGoodForMonsterToCastNow(
   Monster* const monster) {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return monster->isSeeingActor(*(Map::player), blockers) &&
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked) &&
          monster->getHp() <= (monster->getHpMax(true) / 2) &&
          Rnd::coinToss();
 }
@@ -645,9 +645,9 @@ SpellCastRetData SpellElemRes::cast_(Actor* const caster) const {
 
 bool SpellElemRes::isGoodForMonsterToCastNow(
   Monster* const monster) {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return monster->isSeeingActor(*(Map::player), blockers) && Rnd::oneIn(3);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked) && Rnd::oneIn(3);
 }
 
 //------------------------------------------------------------ KNOCKBACK
@@ -664,9 +664,9 @@ SpellCastRetData SpellKnockBack::cast_(
 
 bool SpellKnockBack::isGoodForMonsterToCastNow(
   Monster* const monster) {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return monster->isSeeingActor(*(Map::player), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked);
 }
 
 //------------------------------------------------------------ PROP ON OTHERS
@@ -692,7 +692,7 @@ SpellCastRetData SpellPropOnEnemies::cast_(
 
       for(Actor * actor : targets) {
         PropHandler& propHlr = actor->getPropHandler();
-        Prop* const prop = propHlr.makeProp(propId, propTurnsStd);
+        Prop* const prop = propHlr.mkProp(propId, propTurnsStd);
         propHlr.tryApplyProp(prop);
       }
       return SpellCastRetData(true);
@@ -702,7 +702,7 @@ SpellCastRetData SpellPropOnEnemies::cast_(
       vector<Pos>(1, Map::player->pos), clrMagenta);
 
     PropHandler& propHandler = Map::player->getPropHandler();
-    Prop* const prop = propHandler.makeProp(
+    Prop* const prop = propHandler.mkProp(
                          propId, propTurnsStd);
     propHandler.tryApplyProp(prop);
 
@@ -712,9 +712,9 @@ SpellCastRetData SpellPropOnEnemies::cast_(
 
 bool SpellPropOnEnemies::isGoodForMonsterToCastNow(
   Monster* const monster) {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return monster->isSeeingActor(*(Map::player), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked);
 }
 
 //------------------------------------------------------------ DISEASE
@@ -732,9 +732,9 @@ SpellCastRetData SpellDisease::cast_(
 
 bool SpellDisease::isGoodForMonsterToCastNow(
   Monster* const monster) {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return Rnd::coinToss() && monster->isSeeingActor(*Map::player, blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return Rnd::coinToss() && monster->isSeeingActor(*Map::player, blocked);
 }
 
 //------------------------------------------------------------ SUMMON RANDOM
@@ -758,12 +758,12 @@ SpellCastRetData SpellSummonRandom::cast_(
     }
   }
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
   for(int i = 0; i < int(freePositionsSeenByPlayer.size()); i++) {
     const Pos pos(freePositionsSeenByPlayer.at(i));
-    if(blockers[pos.x][pos.y]) {
+    if(blocked[pos.x][pos.y]) {
       freePositionsSeenByPlayer.erase(freePositionsSeenByPlayer.begin() + i);
       i--;
     }
@@ -771,7 +771,7 @@ SpellCastRetData SpellSummonRandom::cast_(
 
   if(freePositionsSeenByPlayer.empty()) {
     vector<Pos> freeCellsVector;
-    Utils::makeVectorFromBoolMap(false, blockers, freeCellsVector);
+    Utils::mkVectorFromBoolMap(false, blocked, freeCellsVector);
     if(freeCellsVector.empty() == false) {
       sort(freeCellsVector.begin(), freeCellsVector.end(),
            IsCloserToOrigin(caster->pos));
@@ -793,7 +793,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   }
   const int ELEMENT = Rnd::range(1, summonBucket.size() - 1);
   const ActorId id = summonBucket.at(ELEMENT);
-  Actor* const actor = ActorFactory::spawn(id, summonPos);
+  Actor* const actor = ActorFactory::mk(id, summonPos);
   Monster* monster = dynamic_cast<Monster*>(actor);
   monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
   if(Map::cells[summonPos.x][summonPos.y].isSeenByPlayer) {
@@ -805,9 +805,9 @@ SpellCastRetData SpellSummonRandom::cast_(
 bool SpellSummonRandom::isGoodForMonsterToCastNow(
   Monster* const monster) {
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return monster->isSeeingActor(*(Map::player), blockers) ||
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked) ||
          (Rnd::oneIn(20));
 }
 
@@ -839,9 +839,9 @@ SpellCastRetData SpellMiGoHypnosis::cast_(Actor* const caster) const {
 bool SpellMiGoHypnosis::isGoodForMonsterToCastNow(
   Monster* const monster) {
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return monster->isSeeingActor(*(Map::player), blockers) &&
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked) &&
          Rnd::oneIn(4);
 }
 
@@ -862,8 +862,8 @@ SpellCastRetData SpellImmolation::cast_(
 bool SpellImmolation::isGoodForMonsterToCastNow(
   Monster* const monster) {
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  return monster->isSeeingActor(*(Map::player), blockers) &&
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked) &&
          Rnd::oneIn(4);
 }

@@ -54,8 +54,8 @@ void updateVisualMemory();
 
 void switchToDestroyedFeatAt(const Pos& pos);
 
-void makeBlood(const Pos& origin);
-void makeGore(const Pos& origin);
+void mkBlood(const Pos& origin);
+void mkGore(const Pos& origin);
 
 } //Map
 

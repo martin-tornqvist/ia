@@ -53,9 +53,9 @@ int main(int argc, char* argv[]) {
           PlayerBon::setAllTraitsToPicked();
         }
         CreateCharacter::createCharacter();
-        Map::player->spawnStartItems();
+        Map::player->mkStartItems();
 
-        if(Config::isIntroLevelSkipped() == false) {
+        if(Config::isIntroLvlSkipped() == false) {
           //If intro level is used, build forest.
           Renderer::coverPanel(Panel::screen);
           Renderer::updateScreen();
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
       Renderer::drawMapAndInterface();
 
       if(gameEntryType == GameEntryMode::newGame) {
-        if(Config::isIntroLevelSkipped() == 0) {
+        if(Config::isIntroLvlSkipped() == 0) {
           const string msg =
             "I stand on a cobbled forest path, ahead lies a shunned decrepit "
             "old church building. From years of investigation and discreet "
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
       while(Init::quitToMainMenu == false) {
         if(Map::player->deadState == ActorDeadState::alive) {
 
-          Actor* const actor = GameTime::getCurrentActor();
+          Actor* const actor = GameTime::getCurActor();
 
           //Properties running on the actor's turn are not immediately applied
           //on the actor, but instead placed in a buffer. This is to ensure

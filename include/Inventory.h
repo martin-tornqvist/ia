@@ -47,11 +47,10 @@ public:
 
   void dropAllNonIntrinsic(const Pos& pos, const bool ROLL_FOR_DESTRUCTION);
 
-  bool hasItemInSlot(SlotId slotName) const;
+  bool hasItemInSlot(SlotId id) const;
 
-  void putInSlot(SlotId slotName, Item* item,
-                 bool putInGeneral_ifOccupied = true,
-                 bool putInGeneral_ifSlotNotFound = true);
+  //Note: Will put item in general if slot occupied
+  void putInSlot(const SlotId id, Item* item);
 
   void putInGeneral(Item* item);
 

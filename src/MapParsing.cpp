@@ -258,6 +258,8 @@ void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
 
 bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
                  const bool VAL) {
+  assert(Utils::isAreaInsideMap(area));
+
   for(int y = area.p0.y; y <= area.p1.y; y++) {
     for(int x = area.p0.x; x <= area.p1.x; x++) {
       if(in[x][y] == VAL) {return false;}
@@ -315,7 +317,7 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 //------------------------------------------------------------ FLOOD FILL
 namespace FloodFill {
 
-void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
+void run(const Pos& origin, bool blocked[MAP_W][MAP_H],
          int values[MAP_W][MAP_H], int travelLimit, const Pos& target) {
 
   Utils::resetArray(values);
@@ -328,7 +330,7 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
   int curX = origin.x;
   int curY = origin.y;
 
-  int currentValue = 0;
+  int curValue = 0;
 
   bool pathExists = true;
   bool isAtTarget = false;
@@ -344,13 +346,13 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
         if((dx != 0 || dy != 0)) {
           const Pos newPos(curX + dx, curY + dy);
           if(
-            blockers[newPos.x][newPos.y] == false &&
+            blocked[newPos.x][newPos.y] == false &&
             Utils::isPosInside(newPos, bounds) &&
             values[newPos.x][newPos.y] == 0) {
-            currentValue = values[curX][curY];
+            curValue = values[curX][curY];
 
-            if(currentValue < travelLimit) {
-              values[newPos.x][newPos.y] = currentValue + 1;
+            if(curValue < travelLimit) {
+              values[newPos.x][newPos.y] = curValue + 1;
             }
 
             if(isStoppingAtTarget) {
@@ -380,7 +382,7 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
       done = true;
     }
 
-    if(currentValue == travelLimit) {
+    if(curValue == travelLimit) {
       done = true;
     }
 
@@ -402,13 +404,13 @@ void run(const Pos& origin, bool blockers[MAP_W][MAP_H],
 //------------------------------------------------------------ PATHFINDER
 namespace PathFind {
 
-void run(const Pos& origin, const Pos& target, bool blockers[MAP_W][MAP_H],
+void run(const Pos& origin, const Pos& target, bool blocked[MAP_W][MAP_H],
          vector<Pos>& vectorRef) {
 
   vectorRef.resize(0);
 
   int vals[MAP_W][MAP_H];
-  FloodFill::run(origin, blockers, vals, 1000, target);
+  FloodFill::run(origin, blocked, vals, 1000, target);
 
   bool pathExists = vals[target.x][target.y] != 0;
 

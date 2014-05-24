@@ -32,7 +32,7 @@ bool    isTilesWallFullSquare_  = false;
 bool    isAsciiWallFullSquare_  = false;
 bool    isRangedWpnMeleeePrompt_      = false;
 bool    isRangedWpnAutoReload_        = false;
-bool    isIntroLevelSkipped_          = false;
+bool    isIntroLvlSkipped_          = false;
 int     mapPixelH_                    = -1;
 int     logPixelH_                    = -1;
 int     mapPixelOffsetH_              = -1;
@@ -97,7 +97,7 @@ void setDefaultVariables() {
   isFullscreen_ = false;
   isTilesWallFullSquare_  = false;
   isAsciiWallFullSquare_  = true;
-  isIntroLevelSkipped_          = false;
+  isIntroLvlSkipped_          = false;
   isRangedWpnMeleeePrompt_      = true;
   isRangedWpnAutoReload_        = false;
   keyRepeatDelay_               = 130;
@@ -168,7 +168,7 @@ void playerSetsOption(const MenuBrowser* const browser,
       isAsciiWallFullSquare_ = !isAsciiWallFullSquare_;
     } break;
 
-    case 6: {isIntroLevelSkipped_ = !isIntroLevelSkipped_;} break;
+    case 6: {isIntroLvlSkipped_ = !isIntroLvlSkipped_;} break;
 
     case 7: {isRangedWpnMeleeePrompt_ = !isRangedWpnMeleeePrompt_;} break;
 
@@ -326,7 +326,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   Renderer::drawText(":", Panel::screen, Pos(X1 - 2, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
-  str = isIntroLevelSkipped_ ? "Yes" : "No";
+  str = isIntroLvlSkipped_ ? "Yes" : "No";
   Renderer::drawText(str, Panel::screen, Pos(X1, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
@@ -490,7 +490,7 @@ void setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(lines.begin());
 
   curLine = lines.front();
-  isIntroLevelSkipped_ = curLine == "1";
+  isIntroLvlSkipped_ = curLine == "1";
   lines.erase(lines.begin());
 
   curLine = lines.front();
@@ -545,7 +545,7 @@ void collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(isFullscreen_                 ? "1" : "0");
   lines.push_back(isTilesWallFullSquare_        ? "1" : "0");
   lines.push_back(isAsciiWallFullSquare_        ? "1" : "0");
-  lines.push_back(isIntroLevelSkipped_          ? "1" : "0");
+  lines.push_back(isIntroLvlSkipped_          ? "1" : "0");
   lines.push_back(isRangedWpnMeleeePrompt_      ? "1" : "0");
   lines.push_back(isRangedWpnAutoReload_        ? "1" : "0");
   lines.push_back(toStr(keyRepeatDelay_));
@@ -604,7 +604,7 @@ bool    isBotPlaying()                {return isBotPlaying_;}
 void    setBotPlaying()               {isBotPlaying_ = true;}
 bool    isRangedWpnMeleeePrompt()     {return isRangedWpnMeleeePrompt_;}
 bool    isRangedWpnAutoReload()       {return isRangedWpnAutoReload_;}
-bool    isIntroLevelSkipped()         {return isIntroLevelSkipped_;}
+bool    isIntroLvlSkipped()         {return isIntroLvlSkipped_;}
 int     getDelayProjectileDraw()      {return delayProjectileDraw_;}
 int     getDelayShotgun()             {return delayShotgun_;}
 int     getDelayExplosion()           {return delayExplosion_;}

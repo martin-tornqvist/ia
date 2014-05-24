@@ -16,7 +16,7 @@ using namespace std;
 
 namespace {
 
-void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
+void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
           const SDL_Color* const clrOverride) {
   Renderer::drawMapAndInterface();
 
@@ -39,7 +39,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blockers[MAP_W][MAP_H],
       for(const Pos & pos : inner) {
         if(
           Map::cells[pos.x][pos.y].isSeenByPlayer &&
-          blockers[pos.x][pos.y] == false) {
+          blocked[pos.x][pos.y] == false) {
           isAnyCellSeenByPlayer = true;
           if(IS_TILES) {
             Renderer::drawTile(tile, Panel::map, pos, clr, clrBlack);
@@ -62,7 +62,7 @@ void getArea(const Pos& c, const int RADI, Rect& rectRef) {
 }
 
 void getPositionsReached(const Rect& area, const Pos& origin,
-                         bool blockers[MAP_W][MAP_H],
+                         bool blocked[MAP_W][MAP_H],
                          vector< vector<Pos> >& posListRef) {
   vector<Pos> line;
   for(int y = area.p0.y; y <= area.p1.y; y++) {
@@ -73,7 +73,7 @@ void getPositionsReached(const Rect& area, const Pos& origin,
       if(DIST > 1) {
         LineCalc::calcNewLine(origin, pos, true, 999, false, line);
         for(Pos & posCheckBlock : line) {
-          if(blockers[posCheckBlock.x][posCheckBlock.y]) {
+          if(blocked[posCheckBlock.x][posCheckBlock.y]) {
             isReached = false;
             break;
           }
@@ -100,11 +100,11 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
   getArea(origin, RADI, area);
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksProjectiles(), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksProjectiles(), blocked);
 
   vector< vector<Pos> > posLists;
-  getPositionsReached(area, origin, blockers, posLists);
+  getPositionsReached(area, origin, blocked, posLists);
 
   SndVol vol = explType == ExplType::expl ? SndVol::high : SndVol::low;
 
@@ -112,7 +112,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
           nullptr, vol, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 
-  draw(posLists, blockers, clrOverride);
+  draw(posLists, blocked, clrOverride);
 
   //Do damage, apply effect
   const int DMG_ROLLS = 5;
@@ -167,8 +167,8 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         }
 
         if(Rnd::fraction(6, 10)) {
-          FeatureFactory::spawn(FeatureId::smoke, pos,
-                                new SmokeSpawnData(Rnd::range(2, 4)));
+          FeatureFactory::mk(FeatureId::smoke, pos,
+                             new SmokeSpawnData(Rnd::range(2, 4)));
         }
       }
 
@@ -179,16 +179,16 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
           (livingActor != Map::player || IS_DEM_EXP == false ||
            explSrc != ExplSrc::playerUseMoltvIntended)) {
           PropHandler& propHlr = livingActor->getPropHandler();
-          Prop* propCpy = propHlr.makeProp(prop->getId(), propTurnsSpecific,
-                                           prop->turnsLeft_);
+          Prop* propCpy = propHlr.mkProp(prop->getId(), propTurnsSpecific,
+                                         prop->turnsLeft_);
           propHlr.tryApplyProp(propCpy);
         }
         //If property is burning, also apply it to corpses
         if(prop->getId() == propBurning) {
           for(Actor * corpse : corpsesHere) {
             PropHandler& propHlr = corpse->getPropHandler();
-            Prop* propCpy = propHlr.makeProp(prop->getId(), propTurnsSpecific,
-                                             prop->turnsLeft_);
+            Prop* propCpy = propHlr.mkProp(prop->getId(), propTurnsSpecific,
+                                           prop->turnsLeft_);
             propHlr.tryApplyProp(propCpy);
           }
         }
@@ -207,11 +207,11 @@ void runSmokeExplosionAt(const Pos& origin) {
   const int RADI = EXPLOSION_STD_RADI;
   getArea(origin, RADI, area);
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksProjectiles(), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksProjectiles(), blocked);
 
   vector< vector<Pos> > posLists;
-  getPositionsReached(area, origin, blockers, posLists);
+  getPositionsReached(area, origin, blocked, posLists);
 
   //TODO Sound message?
   Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, origin, nullptr,
@@ -220,9 +220,9 @@ void runSmokeExplosionAt(const Pos& origin) {
 
   for(const vector<Pos>& inner : posLists) {
     for(const Pos & pos : inner) {
-      if(blockers[pos.x][pos.y] == false) {
-        FeatureFactory::spawn(FeatureId::smoke, pos,
-                              new SmokeSpawnData(Rnd::range(17, 22)));
+      if(blocked[pos.x][pos.y] == false) {
+        FeatureFactory::mk(FeatureId::smoke, pos,
+                           new SmokeSpawnData(Rnd::range(17, 22)));
       }
     }
   }

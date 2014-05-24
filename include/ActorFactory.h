@@ -12,7 +12,7 @@ namespace ActorFactory {
 
 void deleteAllMonsters();
 
-Actor* spawn(const ActorId id, const Pos& pos);
+Actor* mk(const ActorId id, const Pos& pos);
 
 void summonMonsters(const Pos& origin, const std::vector<ActorId>& monsterIds,
                     const bool MAKE_MONSTERS_AWARE,

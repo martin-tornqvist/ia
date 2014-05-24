@@ -23,12 +23,12 @@ void drawLocationInfo() {
 
     const Pos& playerPos = Map::player->pos;
 
-    if(Map::dlvl > 0 && Map::dlvl < FIRST_CAVERN_LEVEL) {
+    if(Map::dlvl > 0 && Map::dlvl < FIRST_CAVERN_LVL) {
       const vector<Room*>& rooms = Map::rooms;
       for(unsigned int i = 0; i < rooms.size(); i++) {
         const Room* const room = rooms.at(i);
-        const Pos& p0 = room->getX0Y0();
-        const Pos& p1 = room->getX1Y1();
+        const Pos& p0 = room->getP0();
+        const Pos& p1 = room->getP1();
         if(Utils::isPosInside(playerPos, Rect(p0, p1))) {
           const string& roomDescr = room->roomDescr;
           if(roomDescr.empty() == false) {

@@ -40,7 +40,7 @@ int printBoxAndGetTitleYPos(const int TEXT_H_TOT,
 
 void menuMsgDrawingHelper(
   const vector<string>& lines, const vector<string>& choices,
-  const bool DRAW_MAP_AND_INTERFACE, const unsigned int currentChoice,
+  const bool DRAW_MAP_AND_INTERFACE, const unsigned int curChoice,
   const int TEXT_H_TOT, const string& title) {
 
   if(DRAW_MAP_AND_INTERFACE) {
@@ -79,7 +79,7 @@ void menuMsgDrawingHelper(
   if(lines.empty() == false || title.empty() == false) {y += 2;}
 
   for(size_t i = 0; i < choices.size(); i++) {
-    SDL_Color clr = i == currentChoice ? clrNosfTealLgt : clrNosfTealDrk;
+    SDL_Color clr = i == curChoice ? clrNosfTealLgt : clrNosfTealDrk;
     Renderer::drawTextCentered(
       choices.at(i), Panel::map, Pos(MAP_W_HALF, y),
       clr, clrBlack, true);

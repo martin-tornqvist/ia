@@ -44,7 +44,7 @@ public:
 
   void moveDir(Dir dir);
 
-  void spawnStartItems()  override;
+  void mkStartItems()  override;
   void onActorTurn()      override;
   void onStandardTurn()   override;
 

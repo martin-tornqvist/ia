@@ -90,8 +90,8 @@ namespace FeatureFactory {
 
 //Note: Position parameter should NOT be a reference here, because the
 //calling object (e.g. a spider web) might get destroyed.
-Feature* spawn(const FeatureId id, const Pos pos,
-               FeatureSpawnData* spawnData = nullptr);
+Feature* mk(const FeatureId id, const Pos pos,
+            FeatureSpawnData* spawnData = nullptr);
 
 } //FeatureFactory
 

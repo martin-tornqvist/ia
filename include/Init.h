@@ -8,7 +8,7 @@
 //-------------------------------------------------------------------
 // OPTIONS
 //-------------------------------------------------------------------
-//Level of trace output in debug mode
+//Lvl of trace output in debug mode
 // 0 : Disabled
 // 1 : Standard
 // 2 : Verbose
@@ -16,7 +16,7 @@
 
 //Enable rendering and delays during map gen for evaluation/demo purposes
 //Comment out to disable, uncomment to enable
-//#define DEMO_MODE 1
+#define DEMO_MODE 1
 //-------------------------------------------------------------------
 
 #ifdef NDEBUG

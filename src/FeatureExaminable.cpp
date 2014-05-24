@@ -68,7 +68,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
         for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; i++) {
           const unsigned int ELEMENT =
             Rnd::range(0, NR_CANDIDATES - 1);
-          Item* item = ItemFactory::spawnItem(itemBucket.at(ELEMENT));
+          Item* item = ItemFactory::mk(itemBucket.at(ELEMENT));
           ItemFactory::setItemRandomizedProperties(item);
           items_.push_back(item);
         }
@@ -407,7 +407,7 @@ void Tomb::triggerTrap(Actor& actor) {
   if(actorBucket.empty() == false) {
     const unsigned int ELEM = Rnd::range(0, actorBucket.size() - 1);
     const ActorId actorIdToSpawn = actorBucket.at(ELEM);
-    Actor* const monster = ActorFactory::spawn(actorIdToSpawn, pos_);
+    Actor* const monster = ActorFactory::mk(actorIdToSpawn, pos_);
     dynamic_cast<Monster*>(monster)->becomeAware(false);
   }
 }
@@ -640,7 +640,7 @@ void Chest::triggerTrap(Actor& actor) {
       Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0,
                                 SfxId::explosion);
       if(Map::player->deadState == ActorDeadState::alive) {
-        FeatureFactory::spawn(FeatureId::rubbleLow, pos_);
+        FeatureFactory::mk(FeatureId::rubbleLow, pos_);
       }
     } else {
       Log::addMsg("Fumes burst out from the chest!");
@@ -879,10 +879,11 @@ void Cocoon::triggerTrap(Actor& actor) {
   } else if(RND < 50) {
     trace << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId> spawnBucket;
-    for(unsigned int i = 1; i < endOfActorIds; i++) {
+    for(int i = 1; i < endOfActorIds; i++) {
       const ActorDataT& d = ActorData::data[i];
-      if(d.isSpider && d.actorSize == actorSize_floor &&
-          d.isAutoSpawnAllowed && d.isUnique == false) {
+      if(
+        d.isSpider && d.actorSize == actorSize_floor &&
+        d.isAutoSpawnAllowed && d.isUnique == false) {
         spawnBucket.push_back(d.id);
       }
     }

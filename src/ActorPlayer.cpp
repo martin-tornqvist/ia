@@ -52,7 +52,7 @@ Player::Player() :
   nrTurnsUntilIns_(-1),
   CARRY_WEIGHT_BASE_(450) {}
 
-void Player::spawnStartItems() {
+void Player::mkStartItems() {
   data_->abilityVals.reset();
 
   for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
@@ -62,10 +62,10 @@ void Player::spawnStartItems() {
     obsessions[i] = false;
   }
 
-  int NR_CARTRIDGES        = Rnd::range(1, 2);
-  int NR_DYNAMITE          = Rnd::range(2, 3);
-  int NR_MOLOTOV           = Rnd::range(2, 3);
-  int NR_THROWING_KNIVES   = Rnd::range(7, 12);
+  int NR_CARTRIDGES = Rnd::range(1, 2);
+  int NR_DYNAMITE   = Rnd::range(2, 3);
+  int NR_MOLOTOV    = Rnd::range(2, 3);
+  int NR_THR_KNIVES = Rnd::range(7, 12);
 
   const int WEAPON_CHOICE = Rnd::range(1, 5);
   ItemId weaponId = ItemId::dagger;
@@ -78,48 +78,43 @@ void Player::spawnStartItems() {
     default:  weaponId = ItemId::dagger;   break;
   }
 
-  inv_->putInSlot(SlotId::wielded, ItemFactory::spawnItem(weaponId), true,
-                  true);
+  inv_->putInSlot(SlotId::wielded, ItemFactory::mk(weaponId));
 
-  inv_->putInSlot(SlotId::wieldedAlt, ItemFactory::spawnItem(ItemId::pistol),
-                  true, true);
+  inv_->putInSlot(SlotId::wieldedAlt, ItemFactory::mk(ItemId::pistol));
 
   for(int i = 0; i < NR_CARTRIDGES; i++) {
-    inv_->putInGeneral(ItemFactory::spawnItem(ItemId::pistolClip));
+    inv_->putInGeneral(ItemFactory::mk(ItemId::pistolClip));
   }
 
   //TODO Remove:
   //--------------------------------------------------------------------------
 //  inv_->putInGeneral(
-//    ItemFactory::spawnItem(ItemId::machineGun));
+//    ItemFactory::mk(ItemId::machineGun));
 //  for(int i = 0; i < 2; i++) {
 //    inv_->putInGeneral(
-//      ItemFactory::spawnItem(ItemId::drumOfBullets));
+//      ItemFactory::mk(ItemId::drumOfBullets));
 //  }
 //  inv_->putInGeneral(
-//    ItemFactory::spawnItem(ItemId::sawedOff));
+//    ItemFactory::mk(ItemId::sawedOff));
 //  inv_->putInGeneral(
-//    ItemFactory::spawnItem(ItemId::pumpShotgun));
+//    ItemFactory::mk(ItemId::pumpShotgun));
 //  inv_->putInGeneral(
-//    ItemFactory::spawnItem(ItemId::shotgunShell, 80));
+//    ItemFactory::mk(ItemId::shotgunShell, 80));
   //--------------------------------------------------------------------------
 
-  inv_->putInGeneral(ItemFactory::spawnItem(ItemId::dynamite, NR_DYNAMITE));
-  inv_->putInGeneral(ItemFactory::spawnItem(ItemId::molotov, NR_MOLOTOV));
+  inv_->putInGeneral(ItemFactory::mk(ItemId::dynamite, NR_DYNAMITE));
+  inv_->putInGeneral(ItemFactory::mk(ItemId::molotov, NR_MOLOTOV));
 
-  if(NR_THROWING_KNIVES > 0) {
-    inv_->putInSlot(
-      SlotId::missiles,
-      ItemFactory::spawnItem(ItemId::throwingKnife, NR_THROWING_KNIVES),
-      true, true);
+  if(NR_THR_KNIVES > 0) {
+    inv_->putInSlot(SlotId::missiles,
+                    ItemFactory::mk(ItemId::throwingKnife, NR_THR_KNIVES));
   }
 
   inv_->putInSlot(SlotId::armorBody,
-                  ItemFactory::spawnItem(ItemId::armorLeatherJacket),
-                  true, true);
+                  ItemFactory::mk(ItemId::armorLeatherJacket));
 
-  inv_->putInGeneral(ItemFactory::spawnItem(ItemId::electricLantern));
-  inv_->putInGeneral(ItemFactory::spawnItem(ItemId::medicalBag));
+  inv_->putInGeneral(ItemFactory::mk(ItemId::electricLantern));
+  inv_->putInGeneral(ItemFactory::mk(ItemId::medicalBag));
 }
 
 void Player::storeToSaveLines(vector<string>& lines) const {
@@ -162,7 +157,7 @@ void Player::setupFromSaveLines(vector<string>& lines) {
     lines.erase(lines.begin());
     const int NR_TURNS = toInt(lines.front());
     lines.erase(lines.begin());
-    Prop* const prop = propHandler_->makeProp(
+    Prop* const prop = propHandler_->mkProp(
                          id, propTurnsSpecific, NR_TURNS);
     propHandler_->tryApplyProp(prop, true, true, true, true);
     prop->setupFromSaveLines(lines);
@@ -327,7 +322,7 @@ void Player::incrInsanity() {
     getSpottedEnemies(SpottedEnemies);
     for(Actor * actor : SpottedEnemies) {
       const ActorDataT& def = actor->getData();
-      if(def.monsterShockLevel != MonsterShockLevel::none) {
+      if(def.monsterShockLvl != MonsterShockLvl::none) {
         playerSeeShockingMonster = true;
       }
     }
@@ -579,11 +574,11 @@ void Player::addTmpShockFromFeatures() {
 }
 
 bool Player::isStandingInOpenSpace() const {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
-      if(blockers[x][y]) {
+      if(blocked[x][y]) {
         return false;
       }
     }
@@ -593,12 +588,12 @@ bool Player::isStandingInOpenSpace() const {
 }
 
 bool Player::isStandingInCrampedSpace() const {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   int blockCount = 0;
   for(int y = pos.y - 1; y <= pos.y + 1; y++) {
     for(int x = pos.x - 1; x <= pos.x + 1; x++) {
-      if(blockers[x][y]) {
+      if(blocked[x][y]) {
         blockCount++;
         if(blockCount >= 6) {
           return true;
@@ -804,30 +799,30 @@ void Player::onStandardTurn() {
     monster->playerBecomeAwareOfMe();
 
     const ActorDataT& data = monster->getData();
-    if(data.monsterShockLevel != MonsterShockLevel::none) {
-      switch(data.monsterShockLevel) {
-        case MonsterShockLevel::unsettling: {
-          monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.05,  1.0);
+    if(data.monsterShockLvl != MonsterShockLvl::none) {
+      switch(data.monsterShockLvl) {
+        case MonsterShockLvl::unsettling: {
+          monster->shockCausedCur_ =
+            min(monster->shockCausedCur_ + 0.05,  1.0);
         } break;
-        case MonsterShockLevel::scary: {
-          monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.1,   1.0);
+        case MonsterShockLvl::scary: {
+          monster->shockCausedCur_ =
+            min(monster->shockCausedCur_ + 0.1,   1.0);
         } break;
-        case MonsterShockLevel::terrifying: {
-          monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.5,   2.0);
+        case MonsterShockLvl::terrifying: {
+          monster->shockCausedCur_ =
+            min(monster->shockCausedCur_ + 0.5,   2.0);
         } break;
-        case MonsterShockLevel::mindShattering: {
-          monster->shockCausedCurrent_ =
-            min(monster->shockCausedCurrent_ + 0.75,  3.0);
+        case MonsterShockLvl::mindShattering: {
+          monster->shockCausedCur_ =
+            min(monster->shockCausedCur_ + 0.75,  3.0);
         } break;
         default: {} break;
       }
       if(shockFromMonstersCurPlayerTurn < 2.5) {
-        incrShock(int(floor(monster->shockCausedCurrent_)),
+        incrShock(int(floor(monster->shockCausedCur_)),
                   ShockSrc::seeMonster);
-        shockFromMonstersCurPlayerTurn += monster->shockCausedCurrent_;
+        shockFromMonstersCurPlayerTurn += monster->shockCausedCur_;
       }
     }
   }
@@ -1168,7 +1163,7 @@ void Player::autoMelee() {
     }
   }
 
-  //If this line reached, there is no adjacent current target.
+  //If this line reached, there is no adjacent cur target.
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
@@ -1192,10 +1187,10 @@ void Player::kick(Actor& actorToKick) {
 
   if(d.actorSize == actorSize_floor && (d.isSpider || d.isRat)) {
     kickWeapon =
-      dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerStomp));
+      dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerStomp));
   } else {
     kickWeapon =
-      dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerKick));
+      dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
   }
   Attack::melee(*this, *kickWeapon, actorToKick);
   delete kickWeapon;
@@ -1204,7 +1199,7 @@ void Player::kick(Actor& actorToKick) {
 void Player::punch(Actor& actorToPunch) {
   //Spawn a temporary punch weapon to attack with
   Weapon* punchWeapon =
-    dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerPunch));
+    dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
   Attack::melee(*this, *punchWeapon, actorToPunch);
   delete punchWeapon;
 }
@@ -1267,9 +1262,9 @@ void Player::updateFov() {
   }
 
   if(propHandler_->allowSee()) {
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(), blockers);
-    Fov::runPlayerFov(blockers, pos);
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksVision(), blocked);
+    Fov::runPlayerFov(blocked, pos);
     Map::cells[pos.x][pos.y].isSeenByPlayer = true;
   }
 
@@ -1300,12 +1295,12 @@ void Player::FOVhack() {
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), visionBlockers);
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(visionBlockers[x][y] && blockers[x][y]) {
+      if(visionBlockers[x][y] && blocked[x][y]) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {
             const Pos adj(x + dx, y + dy);
@@ -1314,7 +1309,7 @@ void Player::FOVhack() {
               if(
                 adjCell.isSeenByPlayer &&
                 (adjCell.isDark == false || adjCell.isLight) &&
-                blockers[adj.x][adj.y] == false) {
+                blocked[adj.x][adj.y] == false) {
                 Map::cells[x][y].isSeenByPlayer = true;
                 dx = 999;
                 dy = 999;

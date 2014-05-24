@@ -106,7 +106,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines) {
     const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(lines.begin());
     if(id != ItemId::empty) {
-      item = ItemFactory::spawnItem(id);
+      item = ItemFactory::mk(id);
       item->nrItems = toInt(lines.front());
       lines.erase(lines.begin());
       item->setupFromSaveLines(lines);
@@ -125,7 +125,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines) {
   for(int i = 0; i < NR_OF_GENERAL; i++) {
     const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(lines.begin());
-    Item* item = ItemFactory::spawnItem(id);
+    Item* item = ItemFactory::mk(id);
     item->nrItems = toInt(lines.front());
     lines.erase(lines.begin());
     item->setupFromSaveLines(lines);
@@ -514,9 +514,9 @@ bool Inventory::moveToGeneral(InvSlot* inventorySlot) {
   }
 }
 
-bool Inventory::hasItemInSlot(SlotId slotName) const {
+bool Inventory::hasItemInSlot(SlotId id) const {
   for(unsigned int i = 0; i < slots_.size(); i++) {
-    if(slots_[i].id == slotName) {
+    if(slots_[i].id == id) {
       if(slots_[i].item != nullptr) {
         return true;
       }
@@ -609,24 +609,20 @@ InvSlot* Inventory::getSlot(SlotId slotName) {
   return slot;
 }
 
-void Inventory::putInSlot(SlotId slotName, Item* item,
-                          bool putInGeneral_ifOccupied,
-                          bool putInGeneral_ifSlotNotFound) {
-  bool hasSlot = false;
-
-  for(unsigned int i = 0; i < slots_.size(); i++) {
-    if(slots_[i].id == slotName) {
-      hasSlot = true;
-      if(slots_[i].item == nullptr)
-        slots_[i].item = item;
-      else if(putInGeneral_ifOccupied)
+void Inventory::putInSlot(const SlotId id, Item* item) {
+  for(InvSlot & slot : slots_) {
+    if(slot.id == id) {
+      if(slot.item == nullptr) {
+        slot.item = item;
+      } else {
         general_.push_back(item);
+      }
+      return;
     }
   }
 
-  if(putInGeneral_ifSlotNotFound && hasSlot == false) {
-    general_.push_back(item);
-  }
+  general_.push_back(item);
+  assert(false && "Bad slot id");
 }
 
 int Inventory::getTotalItemWeight() const {

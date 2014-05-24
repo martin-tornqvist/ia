@@ -28,17 +28,17 @@ bool isSndHeardAtRange(const int RANGE, const Snd& snd) {
 void resetNrSoundMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
 
 void emitSnd(Snd snd) {
-  bool blockers[MAP_W][MAP_H];
+  bool blocked[MAP_W][MAP_H];
   FeatureStatic* f = nullptr;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       f = Map::cells[x][y].featureStatic;
-      blockers[x][y] = f->isSoundPassable() == false;
+      blocked[x][y] = f->isSoundPassable() == false;
     }
   }
   int floodFill[MAP_W][MAP_H];
   const Pos& origin = snd.getOrigin();
-  FloodFill::run(origin, blockers, floodFill, 999, Pos(-1, -1));
+  FloodFill::run(origin, blocked, floodFill, 999, Pos(-1, -1));
   floodFill[origin.x][origin.y] = 0;
 
   for(Actor * actor : GameTime::actors_) {

@@ -29,7 +29,7 @@ namespace {
 
 vector<ActorSpeed>  turnTypeVector_;
 int                 curTurnTypePos_         = 0;
-int                 currentActorVectorPos_  = 0;
+int                 curActorVectorPos_  = 0;
 int                 turn_                   = 0;
 
 bool isSpiRegenThisTurn(const int REGEN_N_TURNS) {
@@ -40,7 +40,7 @@ bool isSpiRegenThisTurn(const int REGEN_N_TURNS) {
 void runStandardTurnEvents() {
   turn_++;
 
-//  traceVerbose << "GameTime: Current turn: " << turn_ << endl;
+//  traceVerbose << "GameTime: Cur turn: " << turn_ << endl;
 
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), visionBlockers);
@@ -89,8 +89,8 @@ void runStandardTurnEvents() {
       if(Map::player->target == actor) {Map::player->target = nullptr;}
       actors_.erase(actors_.begin() + i);
       i--;
-      if(currentActorVectorPos_ >= int(actors_.size())) {
-        currentActorVectorPos_ = 0;
+      if(curActorVectorPos_ >= int(actors_.size())) {
+        curActorVectorPos_ = 0;
       }
     }
   }
@@ -109,7 +109,7 @@ void runStandardTurnEvents() {
   //Spawn more monsters?
   //(If an unexplored cell is selected, the spawn is aborted)
 
-  if(Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LEVEL) {
+  if(Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LVL) {
     const int SPAWN_N_TURN = 125;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
       PopulateMonsters::trySpawnDueToTimePassed();
@@ -140,7 +140,7 @@ void runAtomicTurnEvents() {
 
 void init() {
   curTurnTypePos_         = 0;
-  currentActorVectorPos_  = 0;
+  curActorVectorPos_  = 0;
   turn_                   = 0;
   actors_.resize(0);
   featureMobs_.resize(0);
@@ -212,7 +212,7 @@ void insertActorInLoop(Actor* actor) {
 
 void resetTurnTypeAndActorCounters() {
   curTurnTypePos_         = 0;
-  currentActorVectorPos_  = 0;
+  curActorVectorPos_  = 0;
 }
 
 //For every turn type step, run through all actors and let those who can act
@@ -222,73 +222,73 @@ void resetTurnTypeAndActorCounters() {
 void actorDidAct(const bool IS_FREE_TURN) {
   runAtomicTurnEvents();
 
-  Actor* currentActor = getCurrentActor();
+  Actor* curActor = getCurActor();
 
-  if(currentActor == Map::player) {
+  if(curActor == Map::player) {
     Map::player->updateFov();
     Renderer::drawMapAndInterface();
     Map::updateVisualMemory();
   } else {
-    Monster* monster = dynamic_cast<Monster*>(currentActor);
+    Monster* monster = dynamic_cast<Monster*>(curActor);
     if(monster->awareOfPlayerCounter_ > 0) {
       monster->awareOfPlayerCounter_ -= 1;
     }
   }
 
   //Tick properties running on actor turns
-  currentActor->getPropHandler().tick(propTurnModeActor, nullptr);
+  curActor->getPropHandler().tick(propTurnModeActor, nullptr);
 
   if(IS_FREE_TURN == false) {
 
     bool actorWhoCanActThisTurnFound = false;
     while(actorWhoCanActThisTurnFound == false) {
-      TurnType currentTurnType = (TurnType)(curTurnTypePos_);
+      TurnType curTurnType = (TurnType)(curTurnTypePos_);
 
-      currentActorVectorPos_++;
+      curActorVectorPos_++;
 
-      if((unsigned int)currentActorVectorPos_ >= actors_.size()) {
-        currentActorVectorPos_ = 0;
+      if((unsigned int)curActorVectorPos_ >= actors_.size()) {
+        curActorVectorPos_ = 0;
         curTurnTypePos_++;
         if(curTurnTypePos_ == int(TurnType::endOfTurnType)) {
           curTurnTypePos_ = 0;
         }
 
         if(
-          currentTurnType != TurnType::fast &&
-          currentTurnType != TurnType::fastest) {
+          curTurnType != TurnType::fast &&
+          curTurnType != TurnType::fastest) {
           runStandardTurnEvents();
         }
       }
 
-      currentActor = getCurrentActor();
+      curActor = getCurActor();
       vector<PropId> props;
-      currentActor->getPropHandler().getAllActivePropIds(props);
+      curActor->getPropHandler().getAllActivePropIds(props);
 
       const bool IS_SLOWED =
         find(props.begin(), props.end(), propSlowed) != props.end();
-      const ActorSpeed defSpeed = currentActor->getData().speed;
+      const ActorSpeed defSpeed = curActor->getData().speed;
       const ActorSpeed realSpeed =
         IS_SLOWED == false || defSpeed == ActorSpeed::sluggish ?
         defSpeed : ActorSpeed(int(defSpeed) - 1);
       switch(realSpeed) {
         case ActorSpeed::sluggish: {
-          actorWhoCanActThisTurnFound = (currentTurnType == TurnType::slow ||
-                                         currentTurnType == TurnType::normal2)
+          actorWhoCanActThisTurnFound = (curTurnType == TurnType::slow ||
+                                         curTurnType == TurnType::normal2)
                                         && Rnd::fraction(2, 3);
         } break;
 
         case ActorSpeed::slow: {
-          actorWhoCanActThisTurnFound = currentTurnType == TurnType::slow ||
-                                        currentTurnType == TurnType::normal2;
+          actorWhoCanActThisTurnFound = curTurnType == TurnType::slow ||
+                                        curTurnType == TurnType::normal2;
         } break;
 
         case ActorSpeed::normal: {
-          actorWhoCanActThisTurnFound = currentTurnType != TurnType::fast &&
-                                        currentTurnType != TurnType::fastest;
+          actorWhoCanActThisTurnFound = curTurnType != TurnType::fast &&
+                                        curTurnType != TurnType::fastest;
         } break;
 
         case ActorSpeed::fast: {
-          actorWhoCanActThisTurnFound = currentTurnType != TurnType::fastest;
+          actorWhoCanActThisTurnFound = curTurnType != TurnType::fastest;
         } break;
 
         case ActorSpeed::fastest: {
@@ -334,8 +334,8 @@ void updateLightMap() {
   }
 }
 
-Actor* getCurrentActor() {
-  Actor* const actor = actors_.at(currentActorVectorPos_);
+Actor* getCurActor() {
+  Actor* const actor = actors_.at(curActorVectorPos_);
 
   //Sanity check actor retrieved
   assert(Utils::isPosInsideMap(actor->pos));

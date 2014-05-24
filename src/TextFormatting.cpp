@@ -6,8 +6,8 @@ namespace {
 
 //Reads and removes the first word of the string.
 //It reads until ' ' or end of string. The ' '-char is also removed.
-void readAndRemoveNextWord(string& line, string& nextWordToMake) {
-  nextWordToMake = "";
+void readAndRemoveNextWord(string& line, string& nextWordToMk) {
+  nextWordToMk = "";
 
   //Build a word until parameter string is empty,
   //or a a space character is found.
@@ -19,16 +19,16 @@ void readAndRemoveNextWord(string& line, string& nextWordToMake) {
     if(CURRENT_CHARACTER == ' ') {
       return;
     } else {
-      nextWordToMake += CURRENT_CHARACTER;
+      nextWordToMk += CURRENT_CHARACTER;
     }
 
     i--;
   }
 }
 
-bool isWordFit(const string& currentString, const string& wordToFit,
+bool isWordFit(const string& curString, const string& wordToFit,
                const int MAX_W) {
-  return int(currentString.size() + wordToFit.size() + 1) <= MAX_W;
+  return int(curString.size() + wordToFit.size() + 1) <= MAX_W;
 }
 
 } //namespace

@@ -27,7 +27,7 @@ void actorDidAct(const bool IS_FREE_TURN = false);
 
 int getTurn();
 
-Actor* getCurrentActor();
+Actor* getCurActor();
 
 void eraseActorInElement(const unsigned int i);
 

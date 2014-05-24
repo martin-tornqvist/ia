@@ -30,13 +30,13 @@ Monster::Monster() :
   playerAwareOfMeCounter_(0),
   messageMonsterInViewPrinted(false),
   lastDirTravelled_(Dir::center),
-  spellCoolDownCurrent(0),
+  spellCoolDownCur(0),
   isRoamingAllowed_(true),
   isStealth(false),
   leader(nullptr),
   target(nullptr),
   waiting_(false),
-  shockCausedCurrent_(0.0),
+  shockCausedCur_(0.0),
   hasGivenXpForSpotting_(false) {}
 
 Monster::~Monster() {
@@ -61,8 +61,8 @@ void Monster::onActorTurn() {
   getSpottedEnemies(spottedEnemies);
   target = Utils::getRandomClosestActor(pos, spottedEnemies);
 
-  if(spellCoolDownCurrent != 0) {
-    spellCoolDownCurrent--;
+  if(spellCoolDownCur != 0) {
+    spellCoolDownCur--;
   }
 
   if(awareOfPlayerCounter_ > 0) {
@@ -285,10 +285,10 @@ bool Monster::tryAttack(Actor& defender) {
     return false;
   }
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
 
-  if(isSeeingActor(*Map::player, blockers) == false) {return false;}
+  if(isSeeingActor(*Map::player, blocked) == false) {return false;}
 
   AttackOpport opport     = getAttackOpport(defender);
   const BestAttack attack = getBestAttack(opport);

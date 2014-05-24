@@ -22,7 +22,7 @@ namespace {
 
 vector<StrAndClr> lines_;
 
-void makeLines() {
+void mkLines() {
   lines_.resize(0);
 
   const string offset = "   ";
@@ -40,7 +40,7 @@ void makeLines() {
   const int BASE_DODGE_ATTACKS =
     min(100, abilities.getVal(AbilityId::dodgeAttack, true, *(Map::player)));
   Weapon* kick =
-    dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerKick));
+    dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
   string kickStr = ItemData::getItemInterfaceRef(
                      *kick, false, PrimaryAttMode::melee);
   delete kick;
@@ -52,7 +52,7 @@ void makeLines() {
     }
   }
   Weapon* punch =
-    dynamic_cast<Weapon*>(ItemFactory::spawnItem(ItemId::playerPunch));
+    dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
   string punchStr = ItemData::getItemInterfaceRef(
                       *punch, false, PrimaryAttMode::melee);
   delete punch;
@@ -107,7 +107,7 @@ void makeLines() {
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     const ItemDataT* const d = ItemData::data[i];
     if(d->isPotion && (d->isTried || d->isIdentified)) {
-      Item* item = ItemFactory::spawnItem(d->id);
+      Item* item = ItemFactory::mk(d->id);
       potionList.push_back(
         StrAndClr(
           offset + ItemData::getItemRef(*item, ItemRefType::plain),
@@ -115,7 +115,7 @@ void makeLines() {
       delete item;
     } else {
       if(d->isScroll && (d->isTried || d->isIdentified)) {
-        Item* item = ItemFactory::spawnItem(d->id);
+        Item* item = ItemFactory::mk(d->id);
         manuscriptList.push_back(
           StrAndClr(
             offset + ItemData::getItemRef(*item, ItemRefType::plain),
@@ -206,7 +206,7 @@ void drawInterface() {
 } //namespace
 
 void run() {
-  makeLines();
+  mkLines();
 
   const int LINE_JUMP           = 3;
   const int NR_LINES_TOT        = lines_.size();

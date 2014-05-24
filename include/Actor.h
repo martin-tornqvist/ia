@@ -95,7 +95,7 @@ protected:
     (void)dmg;
     (void)ALLOW_WOUNDS;
   }
-  virtual void spawnStartItems() = 0;
+  virtual void mkStartItems() = 0;
 
   SDL_Color clr_;
   char glyph_;

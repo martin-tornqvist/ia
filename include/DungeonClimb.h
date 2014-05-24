@@ -5,9 +5,9 @@ namespace DungeonClimb {
 
 void tryUseDownStairs();
 
-void travelDown(const int LEVELS = 1);
+void travelDown(const int LVLS = 1);
 
-//  void makeLevel();
+//  void mkLvl();
 
 } //DungeonClimb
 

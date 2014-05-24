@@ -20,7 +20,7 @@ bool run() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       Wall* const wall =
-        dynamic_cast<Wall*>(FeatureFactory::spawn(FeatureId::wall, Pos(x, y)));
+        dynamic_cast<Wall*>(FeatureFactory::mk(FeatureId::wall, Pos(x, y)));
       wall->wallType    = WallType::cave;
       wall->isMossGrown = false;
     }
@@ -34,21 +34,21 @@ bool run() {
   MapGenUtils::digByRandomWalk(mapCenter, 800, floorId, true);
   MapGenUtils::digWithPathfinder(origin, mapCenter, floorId, false, true);
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   vector<Pos> itemPosBucket;
   itemPosBucket.resize(0);
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(blockers[x][y] == false && Pos(x, y) != origin) {
+      if(blocked[x][y] == false && Pos(x, y) != origin) {
         itemPosBucket.push_back(Pos(x, y));
       }
     }
   }
 
   const int ELEMENT = Rnd::range(0, itemPosBucket.size() - 1);
-  ItemFactory::spawnItemOnMap(ItemId::trapezohedron,
-                              itemPosBucket.at(ELEMENT));
+  ItemFactory::mkItemOnMap(ItemId::trapezohedron,
+                           itemPosBucket.at(ELEMENT));
   return true;
 }
 

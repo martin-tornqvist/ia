@@ -38,7 +38,7 @@ public:
     const double INS_DB   = double(insanity_);
     const double SCORE_DB =
       (XP_DB + (isVictory_ * XP_DB / 5.0)) *
-      ((((DLVL_DB + 1.0) / LAST_CAVERN_LEVEL) / 3.0) + 1.0) *
+      ((((DLVL_DB + 1.0) / LAST_CAVERN_LVL) / 3.0) + 1.0) *
       ((INS_DB / 3.0) + 1.0);
     return int(SCORE_DB);
   }

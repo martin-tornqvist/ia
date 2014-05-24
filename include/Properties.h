@@ -175,8 +175,8 @@ public:
 
   void getPropsInterfaceLine(std::vector<StrAndClr>& line) const;
 
-  Prop* makeProp(const PropId id, PropTurns turnsInit,
-                 const int NR_TURNS = -1) const;
+  Prop* mkProp(const PropId id, PropTurns turnsInit,
+               const int NR_TURNS = -1) const;
 
   bool tryResistDmg(const DmgType dmgType,
                     const bool ALLOW_MSG_WHEN_TRUE) const;

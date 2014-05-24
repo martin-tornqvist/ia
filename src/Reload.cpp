@@ -176,7 +176,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
 
               //If weapon previously contained ammo, create a new clip item
               if(previousAmmoCount > 0) {
-                item = ItemFactory::spawnItem(ammoType);
+                item = ItemFactory::mk(ammoType);
                 clipItem = dynamic_cast<ItemAmmoClip*>(item);
                 clipItem->ammo = previousAmmoCount;
                 inv.putInGeneral(clipItem);

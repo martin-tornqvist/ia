@@ -157,7 +157,7 @@ void Actor::place(const Pos& pos_, ActorDataT& data) {
   spi_            = spiMax_ = data_->spi;
   lairCell_       = pos;
 
-  if(data_->id != actor_player) {spawnStartItems();}
+  if(data_->id != actor_player) {mkStartItems();}
 
   place_();
 
@@ -167,10 +167,10 @@ void Actor::place(const Pos& pos_, ActorDataT& data) {
 void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksActor(*this, true), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksActor(*this, true), blocked);
   vector<Pos> freeCells;
-  Utils::makeVectorFromBoolMap(false, blockers, freeCells);
+  Utils::mkVectorFromBoolMap(false, blocked, freeCells);
   const Pos newPos = freeCells.at(Rnd::range(0, freeCells.size() - 1));
 
   if(this == Map::player) {
@@ -371,7 +371,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
 
       deadState = ActorDeadState::destroyed;
       glyph_ = ' ';
-      if(isHumanoid()) {Map::makeGore(pos);}
+      if(isHumanoid()) {Map::mkGore(pos);}
     }
     traceVerbose << "Actor::hit() [DONE]" << endl;
     return false;
@@ -527,7 +527,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     tile_ = TileId::empty;
     if(isHumanoid() == true) {
       if(ALLOW_GORE) {
-        Map::makeGore(pos);
+        Map::mkGore(pos);
       }
     }
   } else {

@@ -29,7 +29,7 @@ bool            isBotPlaying();
 void            setBotPlaying();
 bool            isRangedWpnMeleeePrompt();
 bool            isRangedWpnAutoReload();
-bool            isIntroLevelSkipped();
+bool            isIntroLvlSkipped();
 int             getDelayProjectileDraw();
 int             getDelayShotgun();
 int             getDelayExplosion();

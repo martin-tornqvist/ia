@@ -9,19 +9,19 @@ namespace PopulateMonsters {
 
 void trySpawnDueToTimePassed();
 
-void populateRoomAndCorridorLevel();
+void populateStdLvl();
 
-void populateCaveLevel();
+void populateCaveLvl();
 
-void populateIntroLevel();
+void populateIntroLvl();
 
-void spawnGroupAt(const ActorId id,
-                  const std::vector<Pos>& sortedFreeCellsVector,
-                  bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED);
+void mkGroupAt(const ActorId id,
+               const std::vector<Pos>& sortedFreeCellsVector,
+               bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED);
 
-void makeSortedFreeCellsVector(const Pos& origin,
-                               const bool blockers[MAP_W][MAP_H],
-                               std::vector<Pos>& vectorRef);
+void mkSortedFreeCellsVector(const Pos& origin,
+                             const bool blocked[MAP_W][MAP_H],
+                             std::vector<Pos>& vectorRef);
 
 } //PopulateMonsters
 

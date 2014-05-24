@@ -555,7 +555,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
         if(
           data->isIntrinsic == false &&
           (data->isPotion || data->isScroll || data->isDevice)) {
-          ItemFactory::spawnItemOnMap((ItemId)(i), Map::player->pos);
+          ItemFactory::mkItemOnMap((ItemId)(i), Map::player->pos);
         }
       }
       clearEvents();

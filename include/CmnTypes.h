@@ -78,20 +78,22 @@ struct StrAndClr {
 
 struct Pos {
   Pos() : x(0), y(0) {}
-  Pos(const int x_, const int y_) : x(x_), y(y_) {}
+  Pos(const int X, const int Y) : x(X), y(Y) {}
   Pos(const Pos& p) : x(p.x), y(p.y) {}
+  Pos(const int V) : x(V), y(V) {}
 
-  Pos& operator/=(const int div)  {x /= div; y /= div; return *this;}
-  Pos& operator+=(const Pos& o)   {x += o.x; y += o.y; return *this;}
-  Pos& operator-=(const Pos& o)   {x -= o.x; y -= o.y; return *this;}
-
-  Pos operator+(const Pos& p)     const {return Pos(x + p.x, y + p.y);}
-  Pos operator-(const Pos& p)     const {return Pos(x - p.x, y - p.y);}
-  Pos operator/(const int DIV)    const {return Pos(x / DIV, y / DIV);}
-  Pos operator*(const int FACTOR) const {return Pos(x * FACTOR, y * FACTOR);}
-  Pos operator*(const Pos& p)     const {return Pos(x * p.x, y * p.y);}
-  bool operator==(const Pos& p)   const {return x == p.x && y == p.y;}
-  bool operator!=(const Pos& p)   const {return x != p.x || y != p.y;}
+  Pos& operator/=(const int div)      {x /= div; y /= div; return *this;}
+  Pos& operator+=(const Pos& o)       {x += o.x; y += o.y; return *this;}
+  Pos& operator-=(const Pos& o)       {x -= o.x; y -= o.y; return *this;}
+  Pos operator+(const Pos& p)   const {return Pos(x + p.x, y + p.y);}
+  Pos operator+(const int V)    const {return Pos(x + V, y + V);}
+  Pos operator-(const Pos& p)   const {return Pos(x - p.x, y - p.y);}
+  Pos operator-(const int V)    const {return Pos(x - V, y - V);}
+  Pos operator/(const int V)    const {return Pos(x / V, y / V);}
+  Pos operator*(const int V)    const {return Pos(x * V, y * V);}
+  Pos operator*(const Pos& p)   const {return Pos(x * p.x , y * p.y);}
+  bool operator==(const Pos& p) const {return x == p.x && y == p.y;}
+  bool operator!=(const Pos& p) const {return x != p.x || y != p.y;}
 
   Pos getSigns() const {
     return Pos(x == 0 ? 0 : x > 0 ? 1 : -1,

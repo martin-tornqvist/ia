@@ -24,7 +24,7 @@ SfxId getAmbSfxSuitableForDlvl() {
   vector<SfxId> sfxBucket;
   sfxBucket.resize(0);
 
-  if(Map::dlvl >= 1 && Map::dlvl < LAST_ROOM_AND_CORRIDOR_LEVEL) {
+  if(Map::dlvl >= 1 && Map::dlvl < LAST_ROOM_AND_CORRIDOR_LVL) {
     sfxBucket.push_back(SfxId::amb002);
     sfxBucket.push_back(SfxId::amb003);
     sfxBucket.push_back(SfxId::amb004);
@@ -55,7 +55,7 @@ SfxId getAmbSfxSuitableForDlvl() {
     sfxBucket.push_back(SfxId::amb035);
     sfxBucket.push_back(SfxId::amb036);
     sfxBucket.push_back(SfxId::amb037);
-  } else if(Map::dlvl > FIRST_CAVERN_LEVEL) {
+  } else if(Map::dlvl > FIRST_CAVERN_LVL) {
     sfxBucket.push_back(SfxId::amb001);
     sfxBucket.push_back(SfxId::amb002);
     sfxBucket.push_back(SfxId::amb003);
@@ -245,8 +245,8 @@ void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
 
   if(audioChunks.empty() == false && Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
-    const int TIME_NOW = time(0);
-    const int TIME_REQ_BETWEEN_AMB_SFX = 20;
+    const int TIME_NOW                  = time(nullptr);
+    const int TIME_REQ_BETWEEN_AMB_SFX  = 20;
 
     if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb) {
       timeAtLastAmb = TIME_NOW;

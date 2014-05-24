@@ -31,8 +31,8 @@ struct StrAndClr {
   SDL_Color   clr;
 };
 
-void makeInfoLines(vector<StrAndClr>& linesRef) {
-  trace << "Postmortem::makeInfoLines()..." << endl;
+void mkInfoLines(vector<StrAndClr>& linesRef) {
+  trace << "Postmortem::mkInfoLines()..." << endl;
 
   const SDL_Color clrHeading  = clrWhiteHigh;
   const SDL_Color clrInfo     = clrWhite;
@@ -148,35 +148,35 @@ void makeInfoLines(vector<StrAndClr>& linesRef) {
   }
   Renderer::drawMap(); //To set the glyph array
   for(int y = 0; y < MAP_H; y++) {
-    string currentRow = "";
+    string curRow = "";
     for(int x = 0; x < MAP_W; x++) {
       if(Pos(x, y) == Map::player->pos) {
-        currentRow.push_back('@');
+        curRow.push_back('@');
       } else {
         if(
           Renderer::renderArray[x][y].glyph == ' ' &&
           (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1)) {
-          currentRow.push_back('*');
+          curRow.push_back('*');
         } else {
           if(Renderer::renderArray[x][y].glyph ==
               FeatureData::getData(FeatureId::wall)->glyph
               || Renderer::renderArray[x][y].glyph ==
               FeatureData::getData(FeatureId::rubbleHigh)->glyph) {
-            currentRow.push_back('#');
+            curRow.push_back('#');
           } else if(Renderer::renderArray[x][y].glyph ==
                     FeatureData::getData(FeatureId::statue)->glyph) {
-            currentRow.push_back('M');
+            curRow.push_back('M');
           } else {
-            currentRow.push_back(Renderer::renderArray[x][y].glyph);
+            curRow.push_back(Renderer::renderArray[x][y].glyph);
           }
         }
       }
     }
-    linesRef.push_back(StrAndClr(currentRow, clrInfo));
-    currentRow.clear();
+    linesRef.push_back(StrAndClr(curRow, clrInfo));
+    curRow.clear();
   }
 
-  trace << "Postmortem::makeInfoLines() [DONE]" << endl;
+  trace << "Postmortem::mkInfoLines() [DONE]" << endl;
 }
 
 void render(const vector<StrAndClr>& linesAndClr,
@@ -239,7 +239,7 @@ void runInfo(const vector<StrAndClr>& lines) {
   }
 }
 
-void makeMemorialFile(const vector<StrAndClr>& lines) {
+void mkMemorialFile(const vector<StrAndClr>& lines) {
   const string timeStamp =
     DungeonMaster::getTimeStarted().getTimeStr(time_second, false);
   const string memorialFileName =
@@ -292,7 +292,7 @@ void renderMenu(const MenuBrowser& browser) {
   Renderer::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;
-//  const string LVL_STR = "LVL " + toStr(DungeonMaster::getLevel());
+//  const string LVL_STR = "LVL " + toStr(DungeonMaster::getLvl());
 //  Renderer::drawTextCentered(LVL_STR, Panel::screen, pos, clrWhiteHigh);
 
   //Draw command labels
@@ -370,8 +370,8 @@ void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame) {
 
 void run(bool* const quitGame) {
   vector<StrAndClr> lines;
-  makeInfoLines(lines);
-  makeMemorialFile(lines);
+  mkInfoLines(lines);
+  mkMemorialFile(lines);
   readKeysMenu(lines, quitGame);
 }
 

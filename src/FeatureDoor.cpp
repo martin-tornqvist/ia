@@ -321,12 +321,12 @@ void Door::tryClose(Actor* actorTrying) {
   const bool TRYER_IS_BLIND =
     actorTrying->getPropHandler().allowSee() == false;
   //const bool PLAYER_SEE_DOOR    = Map::playerVision[pos_.x][pos_.y];
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true :
-    Map::player->isSeeingActor(*actorTrying, blockers);
+    Map::player->isSeeingActor(*actorTrying, blocked);
 
   bool isClosable = true;
 
@@ -443,11 +443,11 @@ void Door::tryOpen(Actor* actorTrying) {
   const bool TRYER_IS_BLIND =
     actorTrying->getPropHandler().allowSee() == false;
   const bool PLAYER_SEE_DOOR = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
 
   const bool PLAYER_SEE_TRYER =
-    IS_PLAYER ? true : Map::player->isSeeingActor(*actorTrying, blockers);
+    IS_PLAYER ? true : Map::player->isSeeingActor(*actorTrying, blocked);
 
   if(isOpenedAndClosedExternally_) {
     if(IS_PLAYER) {
@@ -536,7 +536,7 @@ void Door::tryOpen(Actor* actorTrying) {
       trace << "Door: Was secret, now revealing" << endl;
       reveal(true);
     }
-    trace << "Door: Calling GameTime::endTurnOfCurrentActor()" << endl;
+    trace << "Door: Calling GameTime::endTurnOfCurActor()" << endl;
     GameTime::actorDidAct();
   }
 }

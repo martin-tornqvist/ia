@@ -11,7 +11,7 @@ namespace Gods {
 namespace {
 
 vector<God> godList;
-int         currentGodElem_;
+int         curGodElem_;
 
 void initGodList() {
   godList.push_back(God("Abholos", "The Devourer in the Mist"));
@@ -119,22 +119,22 @@ void init() {
   initGodList();
 }
 
-bool isGodLevel() {
-  return currentGodElem_ >= 0;
+bool isGodLvl() {
+  return curGodElem_ >= 0;
 }
 
-const God* getCurrentGod() {
-  if(currentGodElem_ >= 0) {return &(godList.at(currentGodElem_));}
+const God* getCurGod() {
+  if(curGodElem_ >= 0) {return &(godList.at(curGodElem_));}
   return nullptr;
 }
 
 void setRandomGod() {
   const int NR_GODS = int(godList.size());
-  currentGodElem_ = Rnd::range(0, NR_GODS - 1);
+  curGodElem_ = Rnd::range(0, NR_GODS - 1);
 }
 
 void setNoGod() {
-  currentGodElem_ = -1;
+  curGodElem_ = -1;
 }
 
 } //Gods

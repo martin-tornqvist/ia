@@ -101,9 +101,9 @@ void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
   }
 }
 
-void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
-                           bool a[MAP_W][MAP_H],
-                           vector<Pos>& vectorRef) {
+void mkVectorFromBoolMap(const bool VALUE_TO_STORE,
+                         bool a[MAP_W][MAP_H],
+                         vector<Pos>& vectorRef) {
   vectorRef.resize(0);
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -132,7 +132,7 @@ Actor* getActorAtPos(const Pos& pos, ActorDeadState deadState) {
   return nullptr;
 }
 
-void makeActorArray(Actor* a[MAP_W][MAP_H]) {
+void mkActorArray(Actor* a[MAP_W][MAP_H]) {
   resetArray(a);
 
   for(Actor * actor : GameTime::actors_) {
@@ -171,12 +171,7 @@ bool isAreaInsideOther(const Rect& inner, const Rect& outer,
 }
 
 bool isAreaInsideMap(const Rect& area) {
-  if(
-    area.p0.x < 0 || area.p0.y < 0 ||
-    area.p1.x >= MAP_W || area.p1.y >= MAP_H) {
-    return false;
-  }
-  return true;
+  return isPosInsideMap(area.p0) && isPosInsideMap(area.p1);
 }
 
 int kingDist(const int X0, const int Y0, const int X1, const int Y1) {
@@ -244,8 +239,8 @@ bool isPosAdj(const Pos& pos1, const Pos& pos2,
   return true;
 }
 
-TimeData getCurrentTime() {
-  time_t t = time(0);
+TimeData getCurTime() {
+  time_t t = time(nullptr);
   struct tm* now = localtime(&t);
   return TimeData(now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
                   now->tm_hour, now->tm_min, now->tm_sec);

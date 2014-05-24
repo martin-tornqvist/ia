@@ -32,8 +32,8 @@ void playerBash() {
       trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
       if(Map::player->getPropHandler().allowAttackMelee(true)) {
         trace << "Bash: Player is allowed to do melee attack" << endl;
-        bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksVision(), blockers);
+        bool blocked[MAP_W][MAP_H];
+        MapParse::parse(CellPred::BlocksVision(), blocked);
 
         trace << "Bash: Player can see actor" << endl;
         Map::player->kick(*livingActor);

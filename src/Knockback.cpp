@@ -43,9 +43,9 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
         const Pos newPos = defender.pos + delta;
 
-        bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksActor(defender, true), blockers);
-        const bool CELL_BLOCKED = blockers[newPos.x][newPos.y];
+        bool blocked[MAP_W][MAP_H];
+        MapParse::parse(CellPred::BlocksActor(defender, true), blocked);
+        const bool CELL_BLOCKED = blocked[newPos.x][newPos.y];
         const bool CELL_IS_BOTTOMLESS =
           Map::cells[newPos.x][newPos.y].featureStatic->isBottomless();
 
@@ -57,7 +57,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           MapParse::parse(CellPred::BlocksVision(), visionBlockers);
           const bool PLAYER_SEE_DEFENDER =
             DEFENDER_IS_MONSTER == false ? true :
-            Map::player->isSeeingActor(defender, blockers);
+            Map::player->isSeeingActor(defender, blocked);
 
           if(i == 0) {
             if(IS_MSG_ALLOWED) {

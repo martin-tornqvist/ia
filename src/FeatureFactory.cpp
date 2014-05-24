@@ -1,3 +1,5 @@
+#include "Init.h"
+
 #include "FeatureFactory.h"
 
 #include <assert.h>
@@ -13,10 +15,10 @@
 #include "FeatureLiquid.h"
 #include "FeatureWall.h"
 
-//#ifdef DEMO_MODE
-//#include "Renderer.h"
-//#include "SdlWrapper.h"
-//#endif // DEMO_MODE
+#ifdef DEMO_MODE
+#include "Renderer.h"
+#include "SdlWrapper.h"
+#endif // DEMO_MODE
 
 using namespace std;
 
@@ -32,12 +34,25 @@ void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos) {
   if(oldFeature != nullptr) {delete oldFeature;}
 
   cell.featureStatic = newFeature;
+
+#ifdef DEMO_MODE
+  if(newFeature->getId() == FeatureId::floor) {
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
+        Map::cells[x][y].isSeenByPlayer = true;
+        Map::cells[x][y].isExplored     = true;
+      }
+    }
+    Renderer::drawMap();
+    Renderer::updateScreen();
+    SdlWrapper::sleep(30);
+  }
+#endif // DEMO_MODE
 }
 
 } //namespace
 
-Feature* spawn(const FeatureId id, const Pos pos,
-               FeatureSpawnData* spawnData) {
+Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
   const FeatureDataT* const data = FeatureData::getData(id);
 
   //General (simple) features

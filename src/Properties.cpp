@@ -705,14 +705,14 @@ PropHandler::PropHandler(Actor* owningActor) :
 
   for(unsigned int i = 0; i < endOfPropIds; i++) {
     if(d.intrProps[i]) {
-      Prop* const prop = makeProp(PropId(i), propTurnsIndefinite);
+      Prop* const prop = mkProp(PropId(i), propTurnsIndefinite);
       tryApplyProp(prop, true, true, true, true);
     }
   }
 }
 
-Prop* PropHandler::makeProp(const PropId id, PropTurns turnsInit,
-                            const int NR_TURNS) const {
+Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
+                          const int NR_TURNS) const {
   switch(id) {
     case propWound:
       return new PropWound(turnsInit, NR_TURNS);
@@ -1047,7 +1047,7 @@ void PropHandler::tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE) {
     DmgType dmgType = IS_MELEE ? wpnData.meleeDmgType : wpnData.rangedDmgType;
     if(tryResistDmg(dmgType, false) == false) {
       //Make a copy of the weapon effect
-      Prop* const prop = makeProp(
+      Prop* const prop = mkProp(
                            propAppliedFromWpn->getId(), propTurnsSpecific,
                            propAppliedFromWpn->turnsLeft_);
       tryApplyProp(prop);
@@ -1399,9 +1399,9 @@ void PropInfected::onNewTurn() {
   if(Rnd::oneIn(250)) {
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(propTurnsStd));
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(), blockers);
-    propHlr.endAppliedProp(propInfected, blockers, false);
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksVision(), blocked);
+    propHlr.endAppliedProp(propInfected, blocked, false);
   }
 }
 
@@ -1436,8 +1436,8 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   }
   owningActor_->deadState = ActorDeadState::destroyed;
   const Pos& pos = owningActor_->pos;
-  Map::makeGore(pos);
-  Map::makeBlood(pos);
+  Map::mkGore(pos);
+  Map::mkBlood(pos);
   ActorFactory::summonMonsters(pos, vector<ActorId> {actor_zuul}, true);
 }
 
@@ -1614,9 +1614,9 @@ bool PropConfused::allowAttackRanged(
 void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
   if(dir != Dir::center) {
 
-    bool blockers[MAP_W][MAP_H];
+    bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksActor(*owningActor_, true),
-                    blockers);
+                    blocked);
 
     if(Rnd::oneIn(8)) {
       int triesLeft = 100;
@@ -1625,7 +1625,7 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
         const Pos delta(Rnd::range(-1, 1), Rnd::range(-1, 1));
         if(delta.x != 0 || delta.y != 0) {
           const Pos c = actorPos + delta;
-          if(blockers[c.x][c.y] == false) {
+          if(blocked[c.x][c.y] == false) {
             dir = DirUtils::getDir(delta);
           }
         }
@@ -1652,14 +1652,14 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
     const Pos& closestMonPos = SpottedEnemiesPositions.at(0);
 
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksActor(*owningActor_, false), blockers);
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksActor(*owningActor_, false), blocked);
 
     vector<Pos> line;
     LineCalc::calcNewLine(actorPos, closestMonPos, true, 999, false, line);
 
     if(line.size() > 1) {
-      for(Pos & pos : line) {if(blockers[pos.x][pos.y]) {return;}}
+      for(Pos & pos : line) {if(blocked[pos.x][pos.y]) {return;}}
       dir = DirUtils::getDir(line.at(1) - actorPos);
     }
   }
@@ -1671,11 +1671,11 @@ bool PropFrenzied::tryResistOtherProp(const PropId id) const {
 }
 
 void PropFrenzied::onStart() {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blockers);
-  owningActor_->getPropHandler().endAppliedProp(propConfused,  blockers);
-  owningActor_->getPropHandler().endAppliedProp(propTerrified, blockers);
-  owningActor_->getPropHandler().endAppliedProp(propWeakened,  blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  owningActor_->getPropHandler().endAppliedProp(propConfused,  blocked);
+  owningActor_->getPropHandler().endAppliedProp(propTerrified, blocked);
+  owningActor_->getPropHandler().endAppliedProp(propWeakened,  blocked);
 }
 
 void PropFrenzied::onEnd() {
@@ -1741,8 +1741,8 @@ void PropParalyzed::onStart() {
       Feature* const f =
         Map::cells[playerPos.x][playerPos.y].featureStatic;
       if(f->isBottomless() == false) {
-        FeatureFactory::spawn(FeatureId::litDynamite, playerPos,
-                              new DynamiteSpawnData(DYNAMITE_FUSE));
+        FeatureFactory::mk(FeatureId::litDynamite, playerPos,
+                           new DynamiteSpawnData(DYNAMITE_FUSE));
       }
     }
     if(FLARE_FUSE > 0) {
@@ -1752,8 +1752,8 @@ void PropParalyzed::onStart() {
       Feature* const f =
         Map::cells[playerPos.x][playerPos.y].featureStatic;
       if(f->isBottomless() == false) {
-        FeatureFactory::spawn(FeatureId::litFlare, playerPos,
-                              new DynamiteSpawnData(FLARE_FUSE));
+        FeatureFactory::mk(FeatureId::litFlare, playerPos,
+                           new DynamiteSpawnData(FLARE_FUSE));
       }
       GameTime::updateLightMap();
       player->updateFov();

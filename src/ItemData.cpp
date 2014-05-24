@@ -125,7 +125,7 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->isRangedWeapon = true;
       d->rangedMissileGlyph = '/';
       d->rangedMissileClr = clrWhite;
-      d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+      d->spawnStandardMaxDLVL = FIRST_CAVERN_LVL - 1;
       d->meleeHitSmallSfx = SfxId::hitSmall;
       d->meleeHitMediumSfx = SfxId::hitMedium;
       d->meleeHitHardSfx = SfxId::hitHard;
@@ -149,7 +149,7 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->itemWeight = itemWeight_extraLight;
       d->isStackable = true;
       d->isMissileWeapon = true;
-      d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+      d->spawnStandardMaxDLVL = FIRST_CAVERN_LVL - 1;
       d->rangedSndVol = SndVol::low;
     } break;
 
@@ -160,7 +160,7 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->clr = clrWhite;
       d->tile = TileId::ammo;
       d->isAmmo = true;
-      d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+      d->spawnStandardMaxDLVL = FIRST_CAVERN_LVL - 1;
     } break;
 
     case ItemType::ammoClip: {
@@ -168,7 +168,7 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->itemWeight = itemWeight_light;
       d->isStackable = false;
       d->isAmmoClip = true;
-      d->spawnStandardMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+      d->spawnStandardMaxDLVL = FIRST_CAVERN_LVL - 1;
     } break;
 
     case ItemType::scroll: {
@@ -590,7 +590,7 @@ void initDataList() {
   d = new ItemDataT(ItemId::club);
   resetData(d, ItemType::meleeWpn);
   d->baseName = ItemName("Club", "Clubs", "a Club");
-  d->spawnStandardMinDLVL = FIRST_CAVERN_LEVEL;
+  d->spawnStandardMinDLVL = FIRST_CAVERN_LVL;
   d->spawnStandardMaxDLVL = 999;
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::club;
@@ -1305,7 +1305,7 @@ void initDataList() {
   d->itemValue = ItemValue::normal;
   d->itemWeight = itemWeight_medium;
   d->spawnStandardMinDLVL = 1;
-  d->spawnStandardMaxDLVL = LAST_ROOM_AND_CORRIDOR_LEVEL;
+  d->spawnStandardMaxDLVL = LAST_ROOM_AND_CORRIDOR_LVL;
   d->isStackable = false;
   d->glyph = '~';
   d->clr = clrBrownDrk;

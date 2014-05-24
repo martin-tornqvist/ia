@@ -29,9 +29,9 @@ const int X_POS_DLVL      = X_POS_LVL + 8;
 const int X_POS_INSANITY  = X_POS_DLVL + 8;
 const int X_POS_RANK      = X_POS_INSANITY + 10;
 
-bool isEntryHigher(const HighScoreEntry& current,
+bool isEntryHigher(const HighScoreEntry& cur,
                    const HighScoreEntry& other) {
-  return other.getScore() < current.getScore();
+  return other.getScore() < cur.getScore();
 }
 
 void sortEntries(vector<HighScoreEntry>& entries) {
@@ -201,8 +201,8 @@ void runHighScoreScreen() {
 void onGameOver(const bool IS_VICTORY) {
   vector<HighScoreEntry> entries = getEntriesSorted();
 
-  HighScoreEntry currentPlayer(
-    Utils::getCurrentTime().getTimeStr(time_minute, true),
+  HighScoreEntry curPlayer(
+    Utils::getCurTime().getTimeStr(time_minute, true),
     Map::player->getNameA(),
     DungeonMaster::getXp(),
     DungeonMaster::getCLvl(),
@@ -210,7 +210,7 @@ void onGameOver(const bool IS_VICTORY) {
     Map::player->getInsanity(),
     IS_VICTORY);
 
-  entries.push_back(currentPlayer);
+  entries.push_back(curPlayer);
 
   sortEntries(entries);
 

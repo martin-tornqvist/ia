@@ -54,7 +54,7 @@ string getSpeedStr(const ActorDataT& def) {
   return "";
 }
 
-string getDwellingLevelStr(const ActorDataT& def) {
+string getDwellingLvlStr(const ActorDataT& def) {
   return toStr(max(1, def.spawnMinDLVL));
 }
 
@@ -65,14 +65,14 @@ void addAutoDescriptionLines(Actor* const actor, string& line) {
   const ActorDataT& def = actor->getData();
 
   if(def.isUnique) {
-    if(def.spawnMinDLVL < LAST_CAVERN_LEVEL) {
+    if(def.spawnMinDLVL < LAST_CAVERN_LVL) {
       line += " " + def.name_the + " is normally found beneath level " +
-              getDwellingLevelStr(def) + ". ";
+              getDwellingLvlStr(def) + ". ";
     }
   } else {
     line += " They tend to dwell " + getNormalGroupSizeStr(def) + ",";
     line += " and usually stay at depths beneath level " +
-            getDwellingLevelStr(def) + ".";
+            getDwellingLvlStr(def) + ".";
     line += " They appear to move " + getSpeedStr(def) + ". ";
   }
 }

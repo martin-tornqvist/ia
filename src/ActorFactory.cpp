@@ -17,7 +17,7 @@ namespace ActorFactory {
 
 namespace {
 
-Actor* makeActorFromId(const ActorId id) {
+Actor* mkActorFromId(const ActorId id) {
   assert(id >= 1 && id < endOfActorIds);
 
   switch(id) {
@@ -84,8 +84,8 @@ Actor* makeActorFromId(const ActorId id) {
 
 } //namespace
 
-Actor* spawn(const ActorId id, const Pos& pos) {
-  Actor* const actor = makeActorFromId(id);
+Actor* mk(const ActorId id, const Pos& pos) {
+  Actor* const actor = mkActorFromId(id);
 
   actor->place(pos, ActorData::data[id]);
 
@@ -118,10 +118,10 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
 
   if(monstersRet != nullptr) {monstersRet->resize(0);}
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
   vector<Pos> freeCells;
-  Utils::makeVectorFromBoolMap(false, blockers, freeCells);
+  Utils::mkVectorFromBoolMap(false, blocked, freeCells);
   sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(origin));
 
   const int NR_FREE_CELLS   = freeCells.size();
@@ -135,7 +135,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
     const Pos&      pos = freeCells.at(i);
     const ActorId id  = monsterIds.at(i);
 
-    Actor*   const actor    = spawn(id, pos);
+    Actor*   const actor    = mk(id, pos);
     Monster* const monster  = dynamic_cast<Monster*>(actor);
 
     if(monstersRet != nullptr) {

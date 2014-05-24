@@ -269,12 +269,12 @@ void PotionClairv::quaff_(Actor* const actor) {
     vector<Pos> animPositions;
     animPositions.resize(0);
 
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(), blockers);
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksVision(), blocked);
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
         Cell& cell = Map::cells[x][y];
-        if(blockers[x][y] == false && cell.isDark == false) {
+        if(blocked[x][y] == false && cell.isDark == false) {
           cell.isExplored = true;
           cell.isSeenByPlayer = true;
           animPositions.push_back(Pos(x, y));
@@ -293,7 +293,7 @@ void PotionClairv::quaff_(Actor* const actor) {
 
 void PotionDescent::quaff_(Actor* const actor) {
   (void)actor;
-  if(Map::dlvl < LAST_CAVERN_LEVEL) {
+  if(Map::dlvl < LAST_CAVERN_LVL) {
     DungeonClimb::travelDown(1);
     Log::addMsg("I sink downwards!");
   } else {

@@ -13,7 +13,7 @@ using namespace std;
 
 namespace PopulateItems {
 
-void spawnItems() {
+void mkItems() {
   int nrOfSpawns = Rnd::range(6, 8);
 
   if(PlayerBon::hasTrait(Trait::treasureHunter)) {
@@ -36,10 +36,10 @@ void spawnItems() {
     }
   }
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksItems(), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksItems(), blocked);
   vector<Pos> freeCells;
-  Utils::makeVectorFromBoolMap(false, blockers, freeCells);
+  Utils::mkVectorFromBoolMap(false, blocked, freeCells);
 
   for(int i = 0; i < nrOfSpawns; i++) {
     if(freeCells.empty()) {break;}
@@ -49,7 +49,7 @@ void spawnItems() {
     const int NR_CANDIDATES = int(candidates.size());
     const ItemId id         = candidates.at(Rnd::range(0, NR_CANDIDATES - 1));
 
-    ItemFactory::spawnItemOnMap(id, pos);
+    ItemFactory::mkItemOnMap(id, pos);
 
     freeCells.erase(freeCells.begin() + ELEMENT);
   }

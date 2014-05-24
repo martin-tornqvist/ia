@@ -174,7 +174,7 @@ int placeThemeFeatures(Room& room) {
       return nrFeaturesPlaced;
     } else {
       trace << "RoomThemeMaking: Placing " << d->name_a << endl;
-      FeatureFactory::spawn(d->id, pos);
+      FeatureFactory::mk(d->id, pos);
       featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT)++;
 
       nrFeaturesLeftToPlace--;
@@ -199,9 +199,9 @@ int placeThemeFeatures(Room& room) {
   }
 }
 
-void makeThemeSpecificRoomModifications(Room& room) {
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
+void mkThemeSpecificRoomModifications(Room& room) {
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   switch(room.roomTheme) {
     case RoomThemeId::flooded:
@@ -211,8 +211,8 @@ void makeThemeSpecificRoomModifications(Room& room) {
         FeatureId::shallowMud;
       for(int y = room.getY0(); y <= room.getY1(); y++) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
-          if(blockers[x][y] == false) {
-            FeatureFactory::spawn(featureId, Pos(x, y));
+          if(blocked[x][y] == false) {
+            FeatureFactory::mk(featureId, Pos(x, y));
           }
         }
       }
@@ -224,11 +224,11 @@ void makeThemeSpecificRoomModifications(Room& room) {
       for(int i = 0; i < NR_TRIES; i++) {
         for(int y = room.getY0(); y <= room.getY1(); y++) {
           for(int x = room.getX0(); x <= room.getX1(); x++) {
-            if(blockers[x][y] == false) {
+            if(blocked[x][y] == false) {
               const int CHANCE_TO_PUT_BLOOD = 40;
               if(Rnd::percentile() < CHANCE_TO_PUT_BLOOD) {
-                Map::makeGore(Pos(x, y));
-                Map::makeBlood(Pos(x, y));
+                Map::mkGore(Pos(x, y));
+                Map::mkBlood(Pos(x, y));
                 nrBloodPut++;
               }
             }
@@ -256,7 +256,7 @@ void makeThemeSpecificRoomModifications(Room& room) {
               y = 999;
               x = 999;
             } else {
-              if(blockers[x][y] == false) {
+              if(blocked[x][y] == false) {
                 originBucket.push_back(Pos(x, y));
               }
             }
@@ -273,9 +273,9 @@ void makeThemeSpecificRoomModifications(Room& room) {
                 (dx == 0 && dy == 0) ||
                 (Rnd::percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {
                 const Pos pos = origin + Pos(dx, dy);
-                if(blockers[pos.x][pos.y] == false) {
-                  Map::makeGore(pos);
-                  Map::makeBlood(pos);
+                if(blocked[pos.x][pos.y] == false) {
+                  Map::mkGore(pos);
+                  Map::mkBlood(pos);
                 }
               }
             }
@@ -295,7 +295,7 @@ void makeThemeSpecificRoomModifications(Room& room) {
 void applyThemeToRoom(Room& room) {
   placeThemeFeatures(room);
 
-  makeThemeSpecificRoomModifications(room);
+  mkThemeSpecificRoomModifications(room);
 
   switch(room.roomTheme) {
     case RoomThemeId::plain:   {room.roomDescr = "";} break;
@@ -317,8 +317,8 @@ int nrThemeInMap(const RoomThemeId theme) {
 }
 
 bool isThemeAllowed(const Room* const room, const RoomThemeId theme,
-                    const bool blockers[MAP_W][MAP_H]) {
-  (void)blockers;
+                    const bool blocked[MAP_W][MAP_H]) {
+  (void)blocked;
 
   const int ROOM_W  = room->getX1() - room->getX0() + 1;
   const int ROOM_H  = room->getY1() - room->getY0() + 1;
@@ -357,27 +357,27 @@ bool isThemeAllowed(const Room* const room, const RoomThemeId theme,
   return true;
 }
 
-void makeRoomDarkWithChance(const Room& room) {
+void mkRoomDarkWithChance(const Room& room) {
   const int ROOM_W = room.getX1() - room.getX0() + 1;
   const int ROOM_H = room.getY1() - room.getY0() + 1;
   if(ROOM_W >= 4 && ROOM_H >= 4) {
-    int chanceToMakeDark = 0;
+    int chanceToMkDark = 0;
 
     switch(room.roomTheme) {
-      case RoomThemeId::plain:     chanceToMakeDark = 5;   break;
-      case RoomThemeId::human:     chanceToMakeDark = 10;  break;
-      case RoomThemeId::ritual:    chanceToMakeDark = 15;  break;
-      case RoomThemeId::spider:    chanceToMakeDark = 33;  break;
-      case RoomThemeId::crypt:     chanceToMakeDark = 75;  break;
-      case RoomThemeId::monster:   chanceToMakeDark = 75;  break;
-      case RoomThemeId::flooded:   chanceToMakeDark = 50;  break;
-      case RoomThemeId::muddy:     chanceToMakeDark = 50;  break;
+      case RoomThemeId::plain:     chanceToMkDark = 5;   break;
+      case RoomThemeId::human:     chanceToMkDark = 10;  break;
+      case RoomThemeId::ritual:    chanceToMkDark = 15;  break;
+      case RoomThemeId::spider:    chanceToMkDark = 33;  break;
+      case RoomThemeId::crypt:     chanceToMkDark = 75;  break;
+      case RoomThemeId::monster:   chanceToMkDark = 75;  break;
+      case RoomThemeId::flooded:   chanceToMkDark = 50;  break;
+      case RoomThemeId::muddy:     chanceToMkDark = 50;  break;
       default: break;
     }
 
-    chanceToMakeDark += Map::dlvl - 1;
+    chanceToMkDark += Map::dlvl - 1;
 
-    if(Rnd::range(1, 100) < chanceToMakeDark) {
+    if(Rnd::range(1, 100) < chanceToMkDark) {
       for(int y = room.getY0(); y <= room.getY1(); y++) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
           Map::cells[x][y].isDark = true;
@@ -423,8 +423,8 @@ void assignRoomThemes() {
 
   trace << "RoomThemeMaking: Trying to set non-plain themes ";
   trace << "for some rooms" << endl;
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   const int NR_TRIES_TO_ASSIGN = 100;
   for(int i = 0; i < NR_NON_PLAIN_THEMED; i++) {
     for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ii++) {
@@ -434,7 +434,7 @@ void assignRoomThemes() {
           (RoomThemeId)(Rnd::range(1, int(RoomThemeId::endOfRoomThemes) - 1));
         Room* const room = Map::rooms.at(ELEMENT);
 
-        if(isThemeAllowed(room, theme, blockers)) {
+        if(isThemeAllowed(room, theme, blocked)) {
           room->roomTheme = theme;
           trace << "RoomThemeMaking: Assigned non-plain theme";
           trace << "(" << int(theme) << ") to room" << endl;
@@ -472,7 +472,7 @@ void run() {
 
   for(Room * const room : Map::rooms) {
     applyThemeToRoom(*room);
-    makeRoomDarkWithChance(*room);
+    mkRoomDarkWithChance(*room);
   }
 
   trace << "RoomThemeMaking::run() [DONE]" << endl;

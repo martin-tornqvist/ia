@@ -32,11 +32,11 @@ std::vector<Pos> curPath_;
 void findPathToStairs() {
   curPath_.resize(0);
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   vector<Pos> bla;
-  Utils::makeVectorFromBoolMap(false, blockers, bla);
+  Utils::mkVectorFromBoolMap(false, blocked, bla);
 
   Pos stairPos(-1, -1);
 
@@ -44,16 +44,16 @@ void findPathToStairs() {
     for(int y = 0; y < MAP_H; y++) {
       const FeatureId curId = Map::cells[x][y].featureStatic->getId();
       if(curId == FeatureId::stairs) {
-        blockers[x][y] = false;
+        blocked[x][y] = false;
         stairPos.set(x, y);
       } else if(curId == FeatureId::door) {
-        blockers[x][y] = false;
+        blocked[x][y] = false;
       }
     }
   }
   assert(stairPos != Pos(-1, -1));
 
-  PathFind::run(Map::player->pos, stairPos, blockers, curPath_);
+  PathFind::run(Map::player->pos, stairPos, blocked, curPath_);
 }
 
 bool walkToAdjacentCell(const Pos& cellToGoTo) {
@@ -112,7 +112,7 @@ void act() {
   //=======================================================================
 
   //Check if we are finished with the current run, if so, go back to DLVL 1
-  if(Map::dlvl >= LAST_CAVERN_LEVEL) {
+  if(Map::dlvl >= LAST_CAVERN_LVL) {
     trace << "Bot: Starting new run on first dungeon level" << endl;
     Map::dlvl = 1;
     return;
@@ -157,7 +157,7 @@ void act() {
     PropId propId = propBucket.at(Rnd::range(0, propBucket.size() - 1));
 
     Prop* const prop =
-      propHandler.makeProp(propId, propTurnsSpecific, 5);
+      propHandler.mkProp(propId, propTurnsSpecific, 5);
 
     propHandler.tryApplyProp(prop, true);
   }

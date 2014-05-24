@@ -104,7 +104,6 @@
 			<Add option="-Wmissing-declarations" />
 			<Add option="-Wmissing-include-dirs" />
 			<Add option="-Wzero-as-null-pointer-constant" />
-			<Add option="-Weffc++" />
 			<Add option="-Wmain" />
 			<Add option="-pedantic-errors" />
 			<Add option="-pedantic" />
@@ -286,10 +285,10 @@
 		<Unit filename="../src/MainMenu.cpp" />
 		<Unit filename="../src/Manual.cpp" />
 		<Unit filename="../src/Map.cpp" />
-		<Unit filename="../src/MapGenBsp.cpp" />
 		<Unit filename="../src/MapGenCaveLvl.cpp" />
 		<Unit filename="../src/MapGenEgyptTomb.cpp" />
 		<Unit filename="../src/MapGenForest.cpp" />
+		<Unit filename="../src/MapGenStd.cpp" />
 		<Unit filename="../src/MapGenTrapezohedronLvl.cpp" />
 		<Unit filename="../src/MapGenUtils.cpp" />
 		<Unit filename="../src/MapParsing.cpp" />

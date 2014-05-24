@@ -25,7 +25,7 @@ bool run() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       Wall* const wall =
-        dynamic_cast<Wall*>(FeatureFactory::spawn(FeatureId::wall, Pos(x, y)));
+        dynamic_cast<Wall*>(FeatureFactory::mk(FeatureId::wall, Pos(x, y)));
       wall->wallType    = WallType::cave;
       wall->isMossGrown = false;
     }
@@ -34,7 +34,7 @@ bool run() {
   const Pos& origin       = Map::player->pos;
   const FeatureId floorId = FeatureId::caveFloor;
 
-  FeatureFactory::spawn(floorId, origin);
+  FeatureFactory::mk(floorId, origin);
 
   vector<Pos> prevCenters(1, origin);
 
@@ -63,10 +63,10 @@ bool run() {
   }
 
   //Make a floodfill and place the stairs in one of the furthest positions
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
   int floodFill[MAP_W][MAP_H];
-  FloodFill::run(origin, blockers, floodFill, 99999, Pos(-1, -1));
+  FloodFill::run(origin, blocked, floodFill, 99999, Pos(-1, -1));
   vector<PosAndVal> floodVals;
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
@@ -80,8 +80,8 @@ bool run() {
 
   const int NR_VALS       = floodVals.size();
   const int STAIR_ELEMENT = Rnd::range((NR_VALS * 4) / 5, NR_VALS - 1);
-  FeatureFactory::spawn(FeatureId::stairs, floodVals.at(STAIR_ELEMENT).pos);
-  PopulateMonsters::populateCaveLevel();
+  FeatureFactory::mk(FeatureId::stairs, floodVals.at(STAIR_ELEMENT).pos);
+  PopulateMonsters::populateCaveLvl();
 
   return true;
 }

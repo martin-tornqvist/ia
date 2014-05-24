@@ -24,31 +24,31 @@ namespace IntroForest {
 
 namespace {
 
-void buildForestLimit() {
+void mkForestLimit() {
   for(int y = 0; y < MAP_H; y++) {
-    FeatureFactory::spawn(FeatureId::tree, Pos(0, y));
+    FeatureFactory::mk(FeatureId::tree, Pos(0, y));
   }
 
   for(int x = 0; x < MAP_W; x++) {
-    FeatureFactory::spawn(FeatureId::tree, Pos(x, 0));
+    FeatureFactory::mk(FeatureId::tree, Pos(x, 0));
   }
 
   for(int y = 0; y < MAP_H; y++) {
-    FeatureFactory::spawn(FeatureId::tree, Pos(MAP_W - 1, y));
+    FeatureFactory::mk(FeatureId::tree, Pos(MAP_W - 1, y));
   }
 
   for(int x = 0; x < MAP_W; x++) {
-    FeatureFactory::spawn(FeatureId::tree, Pos(x, MAP_H - 1));
+    FeatureFactory::mk(FeatureId::tree, Pos(x, MAP_H - 1));
   }
 }
 
-void buildForestOuterTreeline() {
+void mkForestOuterTreeline() {
   const int MAX_LEN = 2;
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x <= MAX_LEN; x++) {
       if(Rnd::range(1, 4) > 1 || x == 0) {
-        FeatureFactory::spawn(FeatureId::tree, Pos(x, y));
+        FeatureFactory::mk(FeatureId::tree, Pos(x, y));
       } else {
         break;
       }
@@ -58,7 +58,7 @@ void buildForestOuterTreeline() {
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAX_LEN; y++) {
       if(Rnd::range(1, 4) > 1 || y == 0) {
-        FeatureFactory::spawn(FeatureId::tree, Pos(x, y));
+        FeatureFactory::mk(FeatureId::tree, Pos(x, y));
       } else {
         break;
       }
@@ -68,7 +68,7 @@ void buildForestOuterTreeline() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = MAP_W - 1; x >= MAP_W - MAX_LEN; x--) {
       if(Rnd::range(1, 4) > 1 || x == MAP_W - 1) {
-        FeatureFactory::spawn(FeatureId::tree, Pos(x, y));
+        FeatureFactory::mk(FeatureId::tree, Pos(x, y));
       } else {
         break;
       }
@@ -78,7 +78,7 @@ void buildForestOuterTreeline() {
   for(int x = 0; x < MAP_W; x++) {
     for(int y = MAP_H - 1; y >= MAP_H - MAX_LEN; y--) {
       if(Rnd::range(1, 4) > 1 || y == MAP_H - 1) {
-        FeatureFactory::spawn(FeatureId::tree, Pos(x, y));
+        FeatureFactory::mk(FeatureId::tree, Pos(x, y));
       } else {
         break;
       }
@@ -86,7 +86,7 @@ void buildForestOuterTreeline() {
   }
 }
 
-void buildForestTreePatch() {
+void mkForestTreePatch() {
   const int NR_TREES_TO_PUT = Rnd::range(5, 17);
 
   Pos curPos(Rnd::range(1, MAP_W - 2), Rnd::range(1, MAP_H - 2));
@@ -102,7 +102,7 @@ void buildForestTreePatch() {
 
     const FeatureId treeId = FeatureId::tree;
 
-    FeatureFactory::spawn(treeId, curPos);
+    FeatureFactory::mk(treeId, curPos);
     nrTreesCreated++;
 
     //Find next pos
@@ -121,7 +121,7 @@ void buildForestTreePatch() {
   }
 }
 
-void buildForestTrees(const Pos& stairsPos) {
+void mkForestTrees(const Pos& stairsPos) {
   MapGenUtils::backupMap();
 
   const Pos churchPos = stairsPos - Pos(26, 7);
@@ -133,17 +133,17 @@ void buildForestTrees(const Pos& stairsPos) {
   bool proceed = false;
   while(proceed == false) {
     for(int i = 0; i < nrForestPatches; i++) {
-      buildForestTreePatch();
+      mkForestTreePatch();
     }
 
-    MapGenUtils::buildFromTempl(churchPos, MapTemplId::church);
+    MapGenUtils::mkFromTempl(churchPos, MapTemplId::church);
 
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksMoveCmn(false), blockers);
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
-    PathFind::run(Map::player->pos, stairsPos, blockers, path);
+    PathFind::run(Map::player->pos, stairsPos, blocked, path);
 
-    FeatureFactory::spawn(FeatureId::stairs, stairsPos);
+    FeatureFactory::mk(FeatureId::stairs, stairsPos);
 
     size_t minPathLength = 1;
     size_t maxPathLength = 999;
@@ -158,14 +158,14 @@ void buildForestTrees(const Pos& stairsPos) {
   }
 
   //Build path
-  for(const Pos& pathPos : path) {
+  for(const Pos & pathPos : path) {
     for(int dx = -1; dx < 1; dx++) {
       for(int dy = -1; dy < 1; dy++) {
         const Pos c(pathPos + Pos(dx, dy));
         if(
           Map::cells[c.x][c.y].featureStatic->canHaveStaticFeature() &&
           Utils::isPosInsideMap(c)) {
-          FeatureFactory::spawn(FeatureId::forestPath, c);
+          FeatureFactory::mk(FeatureId::forestPath, c);
         }
       }
     }
@@ -178,8 +178,8 @@ void buildForestTrees(const Pos& stairsPos) {
   const int NR_HIGHSCORES =
     min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
   if(NR_HIGHSCORES > 0) {
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
     bool vision[MAP_W][MAP_H];
 
@@ -192,7 +192,7 @@ void buildForestTrees(const Pos& stairsPos) {
     for(unsigned int i = 0; i < path.size(); i++) {
       if(pathWalkCount == TRY_PLACE_EVERY_N_STEP) {
 
-        Fov::runFovOnArray(blockers, path.at(i), vision, false);
+        Fov::runFovOnArray(blocked, path.at(i), vision, false);
 
         for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; dy++) {
           for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; dx++) {
@@ -215,14 +215,14 @@ void buildForestTrees(const Pos& stairsPos) {
             if(isPosOk) {
               for(int dy_small = -1; dy_small <= 1; dy_small++) {
                 for(int dx_small = -1; dx_small <= 1; dx_small++) {
-                  if(blockers[X + dx_small][Y + dy_small]) {
+                  if(blocked[X + dx_small][Y + dy_small]) {
                     isPosOk = false;
                   }
                 }
               }
               if(isPosOk) {
                 gravePositions.push_back(Pos(X, Y));
-                blockers[X][Y] = true;
+                blocked[X][Y] = true;
                 if(gravePositions.size() == (unsigned int)NR_HIGHSCORES) {
                   i = 9999;
                 }
@@ -237,7 +237,7 @@ void buildForestTrees(const Pos& stairsPos) {
       pathWalkCount++;
     }
     for(unsigned int i = 0; i < gravePositions.size(); i++) {
-      Feature* f = FeatureFactory::spawn(
+      Feature* f = FeatureFactory::mk(
                      FeatureId::gravestone, gravePositions.at(i));
       Grave* const grave = dynamic_cast<Grave*>(f);
       HighScoreEntry curHighscore = highscoreEntries.at(i);
@@ -266,16 +266,16 @@ bool run() {
       if(grass == 2)                {id = FeatureId::bushWithered;}
       if(grass == 3 || grass == 4)  {id = FeatureId::grassWithered;}
       if(grass >= 5)                {id = FeatureId::grass;}
-      FeatureFactory::spawn(id, c);
+      FeatureFactory::mk(id, c);
     }
   }
 
   Pos stairCell(MAP_W - 6, 9);
-  buildForestOuterTreeline();
-  buildForestTrees(stairCell);
-  buildForestLimit();
+  mkForestOuterTreeline();
+  mkForestTrees(stairCell);
+  mkForestLimit();
 
-  PopulateMonsters::populateIntroLevel();
+  PopulateMonsters::populateIntroLvl();
 
   return true;
 }

@@ -51,15 +51,15 @@ void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
     }
 
     //Messages
-    const Actor* const curActor = GameTime::getCurrentActor();
+    const Actor* const curActor = GameTime::getCurActor();
     if(curActor == Map::player) {
       Log::clearLog();
       Log::addMsg(
         "I drop " + itemRef + ".", clrWhite, false, true);
     } else {
-      bool blockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksVision(), blockers);
-      if(Map::player->isSeeingActor(*curActor, blockers)) {
+      bool blocked[MAP_W][MAP_H];
+      MapParse::parse(CellPred::BlocksVision(), blocked);
+      if(Map::player->isSeeingActor(*curActor, blocked)) {
         Log::addMsg(
           "I see " + curActor->getNameThe() + " drop " + itemRef + ".");
       }
@@ -90,7 +90,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
     }
   }
   vector<Pos> freeCells;
-  Utils::makeVectorFromBoolMap(true, freeCellArray, freeCells);
+  Utils::mkVectorFromBoolMap(true, freeCellArray, freeCells);
 
   //Sort the vector according to distance to origin
   IsCloserToOrigin isCloserToOrigin(intendedPos);

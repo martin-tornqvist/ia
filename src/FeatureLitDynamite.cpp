@@ -32,7 +32,7 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
   const int RADI = FOV_STD_RADI_INT; //getLightRadius();
   Pos p0(max(0, pos_.x - RADI), max(0, pos_.y - RADI));
   Pos p1(min(MAP_W - 1, pos_.x + RADI),
-           min(MAP_H - 1, pos_.y + RADI));
+         min(MAP_H - 1, pos_.y + RADI));
   bool visionBlockers[MAP_W][MAP_H];
   for(int y = p0.y; y <= p1.y; y++) {
     for(int x = p0.x; x <= p1.x; x++) {

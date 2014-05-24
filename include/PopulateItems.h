@@ -3,7 +3,7 @@
 
 namespace PopulateItems {
 
-void spawnItems();
+void mkItems();
 
 } //PopulateItems
 

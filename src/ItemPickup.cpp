@@ -96,7 +96,7 @@ void tryUnloadWeaponOrPickupAmmoFromGround() {
 
         ItemDataT* const ammoData = ItemData::data[int(ammoType)];
 
-        Item* spawnedAmmo = ItemFactory::spawnItem(ammoType);
+        Item* spawnedAmmo = ItemFactory::mk(ammoType);
 
         if(ammoData->isAmmoClip == true) {
           //Unload a clip

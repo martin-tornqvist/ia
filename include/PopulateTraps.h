@@ -6,7 +6,7 @@
 
 namespace PopulateTraps {
 
-void populateRoomAndCorridorLevel();
+void populateStdLvl();
 
 }
 

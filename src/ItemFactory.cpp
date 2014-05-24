@@ -16,7 +16,7 @@ using namespace std;
 
 namespace ItemFactory {
 
-Item* spawnItem(const ItemId itemId, const int NR_ITEMS) {
+Item* mk(const ItemId itemId, const int NR_ITEMS) {
   Item* r = nullptr;
 
   ItemDataT* const d = ItemData::data[int(itemId)];
@@ -161,7 +161,7 @@ Item* spawnItem(const ItemId itemId, const int NR_ITEMS) {
 
   if(r->getData().isStackable == false && NR_ITEMS != 1) {
     trace << "[WARNING] Specified " + toStr(NR_ITEMS) + " nr items";
-    trace << " for non-stackable item, in ItemFactory::spawnItem()" << endl;
+    trace << " for non-stackable item, in ItemFactory::mk()" << endl;
   } else {
     r->nrItems = NR_ITEMS;
   }
@@ -203,21 +203,21 @@ void setItemRandomizedProperties(Item* item) {
   }
 }
 
-Item* spawnItemOnMap(const ItemId itemId, const Pos& pos) {
-  Item* item = spawnItem(itemId);
+Item* mkItemOnMap(const ItemId itemId, const Pos& pos) {
+  Item* item = mk(itemId);
   setItemRandomizedProperties(item);
   ItemDrop::dropItemOnMap(pos, *item);
   return item;
 }
 
 Item* copyItem(Item* oldItem) {
-  Item* newItem = spawnItem(oldItem->getData().id);
+  Item* newItem = mk(oldItem->getData().id);
   *newItem = *oldItem;
   return newItem;
 }
 
-Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
-                                const bool ALLOW_POTIONS) {
+Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS,
+                             const bool ALLOW_POTIONS) {
   vector<ItemId> itemBucket;
 
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
@@ -232,7 +232,7 @@ Item* spawnRandomScrollOrPotion(const bool ALLOW_SCROLLS,
 
   if(itemBucket.empty() == false) {
     const int ELEMENT = Rnd::range(0, itemBucket.size() - 1);
-    return spawnItem(itemBucket.at(ELEMENT));
+    return mk(itemBucket.at(ELEMENT));
   }
 
   return nullptr;

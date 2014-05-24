@@ -14,9 +14,9 @@ void run(bool* const quitGame);
 //
 //  void render(const std::vector<StrAndClr>& linesAndClr, const int TOP_ELEMENT);
 //
-//  void makeMemorialFile(const std::vector<StrAndClr>& lines);
+//  void mkMemorialFile(const std::vector<StrAndClr>& lines);
 //
-//  void makeInfoLines(std::vector<StrAndClr>& linesRef);
+//  void mkInfoLines(std::vector<StrAndClr>& linesRef);
 
 } //Postmortem
 

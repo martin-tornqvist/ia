@@ -27,12 +27,12 @@ int getRandomOutOfDepth() {
   return 0;
 }
 
-void makeListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
-                                    vector<ActorId>& listRef) {
+void mkListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
+                                  vector<ActorId>& listRef) {
   listRef.resize(0);
 
   const int EFFECTIVE_DLVL =
-    max(1, min(LAST_CAVERN_LEVEL, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
+    max(1, min(LAST_CAVERN_LVL, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
 
   for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
     const ActorDataT& d = ActorData::data[i];
@@ -46,27 +46,27 @@ void makeListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
   }
 }
 
-void spawnGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
-                          bool blockers[MAP_W][MAP_H],
-                          const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
-                          const bool IS_ROAMING_ALLOWED) {
+void mkGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
+                       bool blocked[MAP_W][MAP_H],
+                       const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
+                       const bool IS_ROAMING_ALLOWED) {
   vector<ActorId> idBucket;
-  makeListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
+  mkListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
   if(idBucket.empty() == false) {
     const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
-    spawnGroupAt(id, sortedFreeCellsVector, blockers, IS_ROAMING_ALLOWED);
+    mkGroupAt(id, sortedFreeCellsVector, blocked, IS_ROAMING_ALLOWED);
   }
 }
 
-bool spawnGroupOfRandomNativeToRoomThemeAt(
+bool mkGroupOfRandomNativeToRoomThemeAt(
   const RoomThemeId roomTheme, const vector<Pos>& sortedFreeCellsVector,
-  bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
+  bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
 
-  trace << "PopulateMonsters::spawnGroupOfRandomNativeToRoomThemeAt()" << endl;
-  const int NR_LEVELS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
+  trace << "PopulateMonsters::mkGroupOfRandomNativeToRoomThemeAt()" << endl;
+  const int NR_LVLS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
   vector<ActorId> idBucket;
-  makeListOfMonstersCanAutoSpawn(NR_LEVELS_OUT_OF_DEPTH_ALLOWED, idBucket);
+  mkListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
   for(size_t i = 0; i < idBucket.size(); i++) {
     const ActorDataT& d = ActorData::data[idBucket.at(i)];
@@ -90,8 +90,8 @@ bool spawnGroupOfRandomNativeToRoomThemeAt(
   } else {
     const int ELEMENT = Rnd::range(0, idBucket.size() - 1);
     const ActorId id = idBucket.at(ELEMENT);
-    spawnGroupAt(id, sortedFreeCellsVector, blockers,
-                 IS_ROAMING_ALLOWED);
+    mkGroupAt(id, sortedFreeCellsVector, blocked,
+              IS_ROAMING_ALLOWED);
     return true;
   }
 }
@@ -101,8 +101,8 @@ bool spawnGroupOfRandomNativeToRoomThemeAt(
 void trySpawnDueToTimePassed() {
   trace << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
   const int MIN_DIST_TO_PLAYER = FOV_STD_RADI_INT + 3;
 
@@ -114,14 +114,14 @@ void trySpawnDueToTimePassed() {
 
   for(int x = X0; x <= X1; x++) {
     for(int y = Y0; y <= Y1; y++) {
-      blockers[x][y] = true;
+      blocked[x][y] = true;
     }
   }
 
   vector<Pos> freeCellsVector;
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
-      if(blockers[x][y] == false) {
+      if(blocked[x][y] == false) {
         freeCellsVector.push_back(Pos(x, y));
       }
     }
@@ -132,25 +132,25 @@ void trySpawnDueToTimePassed() {
     const int ELEMENT = Rnd::range(0, freeCellsVector.size() - 1);
     const Pos& origin = freeCellsVector.at(ELEMENT);
 
-    makeSortedFreeCellsVector(origin, blockers, freeCellsVector);
+    mkSortedFreeCellsVector(origin, blocked, freeCellsVector);
 
     if(freeCellsVector.empty() == false) {
       if(Map::cells[origin.x][origin.y].isExplored) {
         const int NR_OOD = getRandomOutOfDepth();
-        spawnGroupOfRandomAt(freeCellsVector, blockers, NR_OOD, true);
+        mkGroupOfRandomAt(freeCellsVector, blocked, NR_OOD, true);
       }
     }
   }
   trace << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
 }
 
-void populateCaveLevel() {
+void populateCaveLvl() {
   const int NR_GROUPS_ALLOWED = Rnd::range(6, 7);
 
-  bool blockers[MAP_W][MAP_H];
+  bool blocked[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -161,7 +161,7 @@ void populateCaveLevel() {
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
-      blockers[x][y] = true;
+      blocked[x][y] = true;
     }
   }
 
@@ -169,7 +169,7 @@ void populateCaveLevel() {
     vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
-        if(blockers[x][y] == false) {
+        if(blocked[x][y] == false) {
           originBucket.push_back(Pos(x, y));
         }
       }
@@ -177,21 +177,21 @@ void populateCaveLevel() {
     const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
     const Pos origin = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
-    makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
+    mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
     if(sortedFreeCellsVector.empty() == false) {
-      spawnGroupOfRandomAt(sortedFreeCellsVector, blockers,
-                           getRandomOutOfDepth(), true);
+      mkGroupOfRandomAt(sortedFreeCellsVector, blocked,
+                        getRandomOutOfDepth(), true);
     }
   }
 }
 
-void populateIntroLevel() {
+void populateIntroLvl() {
   const int NR_GROUPS_ALLOWED = 2; //Rnd::range(2, 3);
 
-  bool blockers[MAP_W][MAP_H];
+  bool blocked[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT + 3;
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -201,7 +201,7 @@ void populateIntroLevel() {
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_FROM_PLAYER) - 1;
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
-      blockers[x][y] = true;
+      blocked[x][y] = true;
     }
   }
 
@@ -209,28 +209,28 @@ void populateIntroLevel() {
     vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
-        if(blockers[x][y] == false) {originBucket.push_back(Pos(x, y));}
+        if(blocked[x][y] == false) {originBucket.push_back(Pos(x, y));}
       }
     }
     const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
     const Pos origin = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
-    makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
+    mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
     if(sortedFreeCellsVector.empty() == false) {
-      spawnGroupAt(actor_wolf, sortedFreeCellsVector, blockers, true);
+      mkGroupAt(actor_wolf, sortedFreeCellsVector, blocked, true);
     }
   }
 }
 
-void populateRoomAndCorridorLevel() {
+void populateStdLvl() {
   const int NR_GROUPS_ALLOWED_ON_MAP = Rnd::range(5, 9);
   int nrGroupsSpawned = 0;
 
-  bool blockers[MAP_W][MAP_H];
+  bool blocked[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 1;
 
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blockers);
+  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -240,7 +240,7 @@ void populateRoomAndCorridorLevel() {
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_FROM_PLAYER);
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
-      blockers[x][y] = true;
+      blocked[x][y] = true;
     }
   }
 
@@ -259,7 +259,7 @@ void populateRoomAndCorridorLevel() {
         for(int y = room->getY0(); y <= room->getY1(); y++) {
           for(int x = room->getX0(); x <= room->getX1(); x++) {
             if(
-              blockers[x][y] == false &&
+              blocked[x][y] == false &&
               RoomThemeMaking::themeMap[x][y] == room->roomTheme) {
               originBucket.push_back(Pos(x, y));
             }
@@ -276,10 +276,10 @@ void populateRoomAndCorridorLevel() {
           const int ELEMENT = Rnd::range(0, NR_ORIGIN_CANDIDATES - 1);
           const Pos& origin = originBucket.at(ELEMENT);
           vector<Pos> sortedFreeCellsVector;
-          makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
+          mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
 
-          if(spawnGroupOfRandomNativeToRoomThemeAt(
-                room->roomTheme, sortedFreeCellsVector, blockers, false)) {
+          if(mkGroupOfRandomNativeToRoomThemeAt(
+                room->roomTheme, sortedFreeCellsVector, blocked, false)) {
             nrGroupsSpawned++;
             if(nrGroupsSpawned >= NR_GROUPS_ALLOWED_ON_MAP) {
               return;
@@ -292,7 +292,7 @@ void populateRoomAndCorridorLevel() {
       //mark that area as forbidden
       for(int y = room->getY0(); y <= room->getY1(); y++) {
         for(int x = room->getX0(); x <= room->getX1(); x++) {
-          blockers[x][y] = true;
+          blocked[x][y] = true;
         }
       }
     }
@@ -305,7 +305,7 @@ void populateRoomAndCorridorLevel() {
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
-          blockers[x][y] == false &&
+          blocked[x][y] == false &&
           RoomThemeMaking::themeMap[x][y] == RoomThemeId::plain) {
           originBucket.push_back(Pos(x, y));
         }
@@ -314,16 +314,16 @@ void populateRoomAndCorridorLevel() {
     const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
     const Pos origin  = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
-    makeSortedFreeCellsVector(origin, blockers, sortedFreeCellsVector);
-    if(spawnGroupOfRandomNativeToRoomThemeAt(
-          RoomThemeId::plain, sortedFreeCellsVector, blockers, true)) {
+    mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
+    if(mkGroupOfRandomNativeToRoomThemeAt(
+          RoomThemeId::plain, sortedFreeCellsVector, blocked, true)) {
       nrGroupsSpawned++;
     }
   }
 }
 
-void spawnGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
-                  bool blockers[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
+void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
+               bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
   const ActorDataT& d = ActorData::data[id];
 
   int maxNrInGroup = 1;
@@ -343,7 +343,7 @@ void spawnGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
   for(int i = 0; i < NR_CAN_BE_SPAWNED; i++) {
     const Pos& pos = sortedFreeCellsVector.at(i);
 
-    Actor* const actor = ActorFactory::spawn(id, pos);
+    Actor* const actor = ActorFactory::mk(id, pos);
     Monster* const monster = dynamic_cast<Monster*>(actor);
     monster->isRoamingAllowed_ = IS_ROAMING_ALLOWED;
 
@@ -353,13 +353,13 @@ void spawnGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
       monster->leader = originActor;
     }
 
-    blockers[pos.x][pos.y] = true;
+    blocked[pos.x][pos.y] = true;
   }
 }
 
-void makeSortedFreeCellsVector(const Pos& origin,
-                               const bool blockers[MAP_W][MAP_H],
-                               vector<Pos>& vectorRef) {
+void mkSortedFreeCellsVector(const Pos& origin,
+                             const bool blocked[MAP_W][MAP_H],
+                             vector<Pos>& vectorRef) {
   vectorRef.resize(0);
 
   const int RADI = 10;
@@ -370,7 +370,7 @@ void makeSortedFreeCellsVector(const Pos& origin,
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
-      if(blockers[x][y] == false) {
+      if(blocked[x][y] == false) {
         vectorRef.push_back(Pos(x, y));
       }
     }

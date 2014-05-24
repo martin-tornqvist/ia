@@ -21,7 +21,7 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
   if(monsterActing->deadState == ActorDeadState::alive) {
     if(
       monsterActing->awareOfPlayerCounter_ > 0 &&
-      monsterActing->spellCoolDownCurrent == 0) {
+      monsterActing->spellCoolDownCur == 0) {
 
       if(monsterActing->getPropHandler().allowRead(false) == false) {
         return false;
@@ -115,17 +115,17 @@ bool checkIfBlockingMon(const Pos& pos, Monster* other) {
 
 //Returns all free positions around the acting monster that is further
 //from the player than the monster's current position
-void getMoveBucket(Monster& self, vector<Pos>& dirsToMake) {
+void getMoveBucket(Monster& self, vector<Pos>& dirsToMk) {
 
-  dirsToMake.resize(0);
+  dirsToMk.resize(0);
 
   const int PLAYER_X = Map::player->pos.x;
   const int PLAYER_Y = Map::player->pos.y;
   const int OLD_X = self.pos.x;
   const int OLD_Y = self.pos.y;
 
-  bool blockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksActor(self, true), blockers);
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksActor(self, true), blocked);
 
   for(int x = -1; x <= 1; x++) {
     for(int y = -1; y <= 1; y++) {
@@ -136,8 +136,8 @@ void getMoveBucket(Monster& self, vector<Pos>& dirsToMake) {
         const int DIST_NEW = Utils::kingDist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
 
         if(DIST_NEW <= DIST_CUR) {
-          if(blockers[NEW_X][NEW_Y] == false) {
-            dirsToMake.push_back(Pos(NEW_X, NEW_Y));
+          if(blocked[NEW_X][NEW_Y] == false) {
+            dirsToMk.push_back(Pos(NEW_X, NEW_Y));
           }
         }
       }
@@ -256,24 +256,24 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
 
   //This is slightly hacky (a bit too coupled to implementation details),
   //but it optimizes this (very frequently used) function
-  bool blockers[MAP_W][MAP_H];
+  bool blocked[MAP_W][MAP_H];
   CellPred::BlocksActor cellPred(monster, true);
 
   const Pos& monsterPos = monster.pos;
   for(int dy = -1; dy <= 1; dy++) {
     for(int dx = -1; dx <= 1; dx++) {
       const Pos p(monsterPos.x + dx, monsterPos.y + dy);
-      blockers[p.x][p.y] = cellPred.check(Map::cells[p.x][p.y]);
+      blocked[p.x][p.y] = cellPred.check(Map::cells[p.x][p.y]);
     }
   }
 
   for(Actor * actor : GameTime::actors_) {
     const Pos& p = actor->pos;
-    blockers[p.x][p.y] = true;
+    blocked[p.x][p.y] = true;
   }
   for(FeatureMob * mob : GameTime::featureMobs_) {
     const Pos& p = mob->getPos();
-    blockers[p.x][p.y] = cellPred.check(*mob);
+    blocked[p.x][p.y] = cellPred.check(*mob);
   }
 
   const Rect areaAllowed(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
@@ -283,7 +283,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
   if(lastDirTravelled != Dir::center) {
     const Pos targetCell(monsterPos + DirUtils::getOffset(lastDirTravelled));
     if(
-      blockers[targetCell.x][targetCell.y] == false &&
+      blocked[targetCell.x][targetCell.y] == false &&
       Utils::isPosInside(targetCell, areaAllowed)) {
       return lastDirTravelled;
     }
@@ -298,7 +298,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
         const Pos offset(dx, dy);
         const Pos targetCell(monsterPos + offset);
         if(
-          blockers[targetCell.x][targetCell.y] == false &&
+          blocked[targetCell.x][targetCell.y] == false &&
           Utils::isPosInside(targetCell, areaAllowed)) {
           dirBucket.push_back(DirUtils::getDir(offset));
         }
@@ -342,11 +342,11 @@ bool moveTowardsTargetSimple(Monster& monster) {
         Pos offset = monster.target->pos - monster.pos;
         offset.x = offset.x == 0 ? 0 : (offset.x > 0 ? 1 : -1);
         offset.y = offset.y == 0 ? 0 : (offset.y > 0 ? 1 : -1);
-        bool blockers[MAP_W][MAP_H];
+        bool blocked[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksActor(monster, true),
-                        blockers);
+                        blocked);
         const Pos newPos(monster.pos + offset);
-        if(blockers[newPos.x][newPos.y] == false) {
+        if(blocked[newPos.x][newPos.y] == false) {
           monster.moveDir(DirUtils::getDir(offset));
           return true;
         } else {
@@ -371,10 +371,10 @@ bool stepPath(Monster& monster, vector<Pos>& path) {
 
 bool stepToLairIfLos(Monster& monster, const Pos& lairCell) {
   if(monster.deadState == ActorDeadState::alive) {
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(), blockers);
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksVision(), blocked);
     const bool HAS_LOS_TO_LAIR =
-      Fov::checkCell(blockers, lairCell, monster.pos, true);
+      Fov::checkCell(blocked, lairCell, monster.pos, true);
 
     if(HAS_LOS_TO_LAIR) {
       Pos delta = lairCell - monster.pos;
@@ -383,8 +383,8 @@ bool stepToLairIfLos(Monster& monster, const Pos& lairCell) {
       delta.y = delta.y == 0 ? 0 : (delta.y > 0 ? 1 : -1);
       const Pos newPos = monster.pos + delta;
 
-      MapParse::parse(CellPred::BlocksVision(), blockers);
-      if(blockers[newPos.x][newPos.y]) {
+      MapParse::parse(CellPred::BlocksVision(), blocked);
+      if(blocked[newPos.x][newPos.y]) {
         return false;
       } else {
         monster.moveDir(DirUtils::getDir(delta));
@@ -442,20 +442,20 @@ void setPathToLairIfNoLos(Monster& monster, vector<Pos>& path,
                           const Pos& lairCell) {
   if(monster.deadState == ActorDeadState::alive) {
 
-    bool blockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(), blockers);
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksVision(), blocked);
 
-    if(Fov::checkCell(blockers, lairCell, monster.pos, true)) {
+    if(Fov::checkCell(blocked, lairCell, monster.pos, true)) {
       path.resize(0);
       return;
     }
 
-    MapParse::parse(CellPred::BlocksActor(monster, false), blockers);
+    MapParse::parse(CellPred::BlocksActor(monster, false), blocked);
 
     MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos),
-                    blockers, MapParseWriteRule::writeOnlyTrue);
+                    blocked, MapParseWriteRule::writeOnlyTrue);
 
-    PathFind::run(monster.pos, lairCell, blockers, path);
+    PathFind::run(monster.pos, lairCell, blocked, path);
     return;
   }
 
@@ -467,21 +467,21 @@ void setPathToLeaderIfNoLosToleader(Monster& monster, vector<Pos>& path) {
     Actor* leader = monster.leader;
     if(leader != nullptr) {
       if(leader->deadState == ActorDeadState::alive) {
-        bool blockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksVision(), blockers);
+        bool blocked[MAP_W][MAP_H];
+        MapParse::parse(CellPred::BlocksVision(), blocked);
 
         if(
-          Fov::checkCell(blockers, leader->pos, monster.pos, true)) {
+          Fov::checkCell(blocked, leader->pos, monster.pos, true)) {
           path.resize(0);
           return;
         }
 
-        MapParse::parse(CellPred::BlocksActor(monster, false), blockers);
+        MapParse::parse(CellPred::BlocksActor(monster, false), blocked);
 
         MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos),
-                        blockers, MapParseWriteRule::writeOnlyTrue);
+                        blocked, MapParseWriteRule::writeOnlyTrue);
 
-        PathFind::run(monster.pos, leader->pos, blockers, path);
+        PathFind::run(monster.pos, leader->pos, blocked, path);
         return;
       }
     }
@@ -494,8 +494,8 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
   if(monster.deadState == ActorDeadState::alive) {
     if(monster.awareOfPlayerCounter_ > 0) {
 
-      bool blockers[MAP_W][MAP_H];
-      Utils::resetArray(blockers, false);
+      bool blocked[MAP_W][MAP_H];
+      Utils::resetArray(blocked, false);
 
       vector<PropId> props;
       monster.getPropHandler().getAllActivePropIds(props);
@@ -514,11 +514,11 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
               if(
                 (d.canOpenDoors == false && d.canBashDoors == false) ||
                 door->isOpenedAndClosedExternally()) {
-                blockers[x][y] = true;
+                blocked[x][y] = true;
               }
 
             } else {
-              blockers[x][y] = true;
+              blocked[x][y] = true;
             }
           }
         }
@@ -526,9 +526,9 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
 
       //Append living adjacent actors to the blocking array
       MapParse::parse(CellPred::LivingActorsAdjToPos(monster.pos),
-                      blockers, MapParseWriteRule::writeOnlyTrue);
+                      blocked, MapParseWriteRule::writeOnlyTrue);
 
-      PathFind::run(monster.pos, Map::player->pos, blockers, path);
+      PathFind::run(monster.pos, Map::player->pos, blocked, path);
     } else {
       path.resize(0);
     }

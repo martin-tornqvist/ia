@@ -69,9 +69,9 @@ void reverseBoolArray(bool array[MAP_W][MAP_H]);
 
 void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]);
 
-void makeVectorFromBoolMap(const bool VALUE_TO_STORE,
-                           bool a[MAP_W][MAP_H],
-                           std::vector<Pos>& vectorRef);
+void mkVectorFromBoolMap(const bool VALUE_TO_STORE,
+                         bool a[MAP_W][MAP_H],
+                         std::vector<Pos>& vectorRef);
 
 Actor* getActorAtPos(const Pos& pos,
                      ActorDeadState deadState = ActorDeadState::alive);
@@ -79,7 +79,7 @@ Actor* getActorAtPos(const Pos& pos,
 void getActorPositions(const std::vector<Actor*>& actors,
                        std::vector<Pos>& vectorRef);
 
-void makeActorArray(Actor* a[MAP_W][MAP_H]);
+void mkActorArray(Actor* a[MAP_W][MAP_H]);
 
 bool isPosInsideMap(const Pos& pos);
 
@@ -100,7 +100,7 @@ Actor* getRandomClosestActor(const Pos& c, const std::vector<Actor*>& actors);
 int kingDist(const int X0, const int Y0, const int X1, const int Y1);
 int kingDist(const Pos& c1, const Pos& c2);
 
-TimeData getCurrentTime();
+TimeData getCurTime();
 
 } //Utils
 

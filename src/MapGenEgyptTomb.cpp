@@ -20,7 +20,7 @@ namespace EgyptTomb {
 bool run() {
   Map::resetMap();
 
-  MapGenUtils::buildFromTempl(Pos(0, 0), MapTemplId::egypt);
+  MapGenUtils::mkFromTempl(Pos(0, 0), MapTemplId::egypt);
 
   Map::player->pos = Pos(40, 11);
 
@@ -34,19 +34,19 @@ bool run() {
   }
 
   if(Rnd::coinToss()) {
-    FeatureFactory::spawn(FeatureId::stairs, Pos(4, 2), nullptr);
+    FeatureFactory::mk(FeatureId::stairs, Pos(4, 2), nullptr);
   } else {
-    FeatureFactory::spawn(FeatureId::stairs, Pos(4, 19), nullptr);
+    FeatureFactory::mk(FeatureId::stairs, Pos(4, 19), nullptr);
   }
 
 
   vector<Actor*> actors;
 
-  actors.push_back(ActorFactory::spawn(actor_mummy,     Pos(12, 10)));
-  actors.push_back(ActorFactory::spawn(actor_khephren,  Pos(11, 11)));
-  actors.push_back(ActorFactory::spawn(actor_mummy,     Pos(12, 12)));
-  actors.push_back(ActorFactory::spawn(actor_cultist,   Pos(17, 10)));
-  actors.push_back(ActorFactory::spawn(actor_cultist,   Pos(17, 12)));
+  actors.push_back(ActorFactory::mk(actor_mummy,     Pos(12, 10)));
+  actors.push_back(ActorFactory::mk(actor_khephren,  Pos(11, 11)));
+  actors.push_back(ActorFactory::mk(actor_mummy,     Pos(12, 12)));
+  actors.push_back(ActorFactory::mk(actor_cultist,   Pos(17, 10)));
+  actors.push_back(ActorFactory::mk(actor_cultist,   Pos(17, 12)));
 
   for(Actor * a : actors) {dynamic_cast<Monster*>(a)->isRoamingAllowed_ = true;}
 

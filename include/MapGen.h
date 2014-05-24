@@ -16,71 +16,72 @@ enum class RoomReshapeType {trimCorners, pillarsRandom};
 
 struct Room {
 public:
-  Room(Rect dims) : roomTheme(RoomThemeId::plain), roomDescr(""), dims_(dims) {}
+  Room(Rect r) : roomTheme(RoomThemeId::plain), roomDescr(""), r_(r) {}
 
-  Room() : roomTheme(RoomThemeId::plain), roomDescr(""),
-    dims_(Rect(Pos(-1, -1), Pos(-1, -1))) {}
+  Room() : roomTheme(RoomThemeId::plain), roomDescr(""), r_() {}
 
-  inline Rect getDims()   const {return dims_;}
-  inline int getX0()      const {return dims_.p0.x;}
-  inline int getY0()      const {return dims_.p0.y;}
-  inline int getX1()      const {return dims_.p1.x;}
-  inline int getY1()      const {return dims_.p1.y;}
-  inline Pos getX0Y0()    const {return dims_.p0;}
-  inline Pos getX1Y1()    const {return dims_.p1;}
+  inline Rect getDims()   const {return r_;}
+  inline int getX0()      const {return r_.p0.x;}
+  inline int getY0()      const {return r_.p0.y;}
+  inline int getX1()      const {return r_.p1.x;}
+  inline int getY1()      const {return r_.p1.y;}
+  inline Pos getP0()      const {return r_.p0;}
+  inline Pos getP1()      const {return r_.p1;}
 
   RoomThemeId roomTheme;
 
   std::string roomDescr;
 
 private:
-  Rect dims_;
+  Rect r_;
 };
 
 struct Region {
 public:
-  Region(const Pos& p0, const Pos& p1);
+  Region(const Rect& r);
   Region();
-  ~Region();
+  ~Region() {}
 
-  Rect getRandomRectForRoom() const;
-  Rect getRegionRect() const {return Rect(p0_, p1_);}
+  Rect getRndRoomRect() const;
 
   bool isRegionNeighbour(const Region& other);
 
-  inline Pos getCenterPos() const {return (p1_ + p0_) / 2;}
-  inline Pos getX0Y0()      const {return p0_;}
-  inline Pos getX1Y1()      const {return p1_;}
+  Pos getCenterPos()    const {return (r_.p1 + r_.p0) / 2;}
+  Rect getRect()        const {return r_;}
+  Pos getP0()           const {return r_.p0;}
+  Pos getP1()           const {return r_.p1;}
 
-  int getNrOfConnections();
+  int getNrConnections();
 
-  bool regionsConnectedTo[3][3];
+  bool regionsConnectedTo_[3][3];
 
-  Room* mainRoom;
+  Room* mainRoom_;
 
-  bool isConnected;
+  bool isConnected_;
+  bool hasBuiltInside_;
 
 private:
-  Pos p0_, p1_;
+  Rect r_;
+
 };
 
 namespace MapGenUtils {
 
-void build(const Rect& area, const FeatureId id);
+void mk(const Rect& area, const FeatureId id);
 
-void build(const std::vector<Pos>& posList, const FeatureId id);
+void mk(const std::vector<Pos>& posList, const FeatureId id);
 
-void buildZCorridorBetweenRooms(const Room& r1, const Room& r2,
-                                Dir cardinalDirToTravel,
-                                bool doorPosBucket[MAP_W][MAP_H] = nullptr);
+void mkZCorridorBetweenRooms(const Room& r1, const Room& r2,
+                             Dir cardinalDirToTravel,
+                             bool doorPosBucket[MAP_W][MAP_H] = nullptr);
 
 void backupMap();
 void restoreMap();
 
-void buildFromTempl(const Pos& pos, const MapTempl& t);
-void buildFromTempl(const Pos& pos, const MapTemplId templateId);
+void mkFromTempl(const Pos& pos, const MapTempl& t);
+void mkFromTempl(const Pos& pos, const MapTemplId templateId);
 
-void digByRandomWalk(const Pos& origin, int len, FeatureId featureToMake,
+void digByRandomWalk(const Pos& origin, int len, FeatureId featureToMk,
                      const bool DIG_THROUGH_ANY_FEATURE,
                      const bool ONLY_STRAIGHT = true,
                      const Pos& p0Lim = Pos(1, 1),
@@ -94,11 +95,11 @@ void digWithPathfinder(const Pos& origin, const Pos& target,
 
 namespace MapGen {
 
-namespace Bsp {
+namespace Std {
 
 bool run();
 
-} //Bsp
+} //Std
 
 namespace IntroForest {
 

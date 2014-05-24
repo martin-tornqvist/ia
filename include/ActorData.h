@@ -72,8 +72,8 @@ enum ActorSize {
   actorSize_giant
 };
 
-enum class MonsterShockLevel {
-  none, unsettling, scary, terrifying, mindShattering, endOfMonsterShockLevel,
+enum class MonsterShockLvl {
+  none, unsettling, scary, terrifying, mindShattering, endOfMonsterShockLvl,
 };
 
 enum class AiId {
@@ -119,7 +119,7 @@ struct ActorDataT {
   bool isAutoSpawnAllowed;
   std::string spellCastMessage;
   ActorErraticFreq erraticMovement;
-  MonsterShockLevel monsterShockLevel;
+  MonsterShockLvl monsterShockLvl;
   bool isRat, isCanine, isSpider, isUndead, isGhost;
   bool canBeSummoned;
   bool canBleed;

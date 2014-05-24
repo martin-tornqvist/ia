@@ -40,7 +40,7 @@ void ActorDataT::reset() {
   isAutoSpawnAllowed = true;
   spellCastMessage = "[SPELL MESSAGE HERE]";
   erraticMovement = actorErratic_rare;
-  monsterShockLevel = MonsterShockLevel::none;
+  monsterShockLvl = MonsterShockLvl::none;
   isRat = isCanine = isSpider = isUndead = isGhost = false;
   canBeSummoned = false;
   canBleed = true;
@@ -98,7 +98,7 @@ void initDataList() {
   d.dmgMelee = 4;
   d.abilityVals.setVal(AbilityId::melee, 25);
   d.spawnMinDLVL = 1;
-  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -113,7 +113,7 @@ void initDataList() {
   d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
   d.aggroSfxMonsterHidden = SfxId::zombieGrowl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.isUndead = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
@@ -141,7 +141,7 @@ void initDataList() {
   d.abilityVals.setVal(AbilityId::melee, 35);
   d.abilityVals.setVal(AbilityId::ranged, 0);
   d.spawnMinDLVL = 2;
-  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -155,7 +155,7 @@ void initDataList() {
   d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
   d.aggroSfxMonsterHidden = SfxId::zombieGrowl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.isUndead = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
@@ -184,7 +184,7 @@ void initDataList() {
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 50);
   d.spawnMinDLVL = 3;
-  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.groupSize = monsterGroupSizeFew;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -196,7 +196,7 @@ void initDataList() {
             "to attack with.";
   d.aggroTextMonsterHidden = "I hear heavy footsteps.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.isUndead = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
@@ -235,7 +235,7 @@ void initDataList() {
             "body was stolen. Now he roams these halls as a resurrected "
             "warrior in service of the cult, commanding a squad of undead.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::terrifying;
+  d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 1;
@@ -276,7 +276,7 @@ void initDataList() {
             "England. He must have gotten into the hands of the Cult, who "
             "turned him into the hellish zombie warrior I now see before me.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = MonsterShockLevel::terrifying;
+  d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 0;
@@ -307,7 +307,7 @@ void initDataList() {
   d.abilityVals.setVal(AbilityId::melee, 35);
   d.abilityVals.setVal(AbilityId::ranged, 50);
   d.spawnMinDLVL = 1;
-  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.groupSize = monsterGroupSizeFew;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -345,7 +345,7 @@ void initDataList() {
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 50);
   d.spawnMinDLVL = 7;
-  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.groupSize = monsterGroupSizeFew;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -383,7 +383,7 @@ void initDataList() {
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 40);
   d.spawnMinDLVL = 4;
-  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.groupSize = monsterGroupSizeFew;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -441,7 +441,7 @@ void initDataList() {
   d.aggroTextMonsterHidden = "I hear a repulsive croaking voice.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::ritual);
   data[d.id] = d;
@@ -488,7 +488,7 @@ void initDataList() {
   d.aggroTextMonsterHidden = "I hear a loathsome titter.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.isRat = true;
   data[d.id] = d;
   d.reset();
@@ -529,7 +529,7 @@ void initDataList() {
   d.spi = 20;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = 5;
-  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -663,7 +663,7 @@ void initDataList() {
   d.abilityVals.setVal(AbilityId::stealth, 90);
   d.intrProps[propLightSensitive] = true;
   d.spawnMinDLVL = 6;
-  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL - 1;
+  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSizeGroup;
   d.nrTurnsAwarePlayer = 5;
@@ -708,7 +708,7 @@ void initDataList() {
             "spiders of Leng are intelligent, dangerous, and gigantic.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::spider);
   data[d.id] = d;
@@ -749,7 +749,7 @@ void initDataList() {
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::dogSnarl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -792,7 +792,7 @@ void initDataList() {
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::dogSnarl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -835,7 +835,7 @@ void initDataList() {
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::dogSnarl;
   d.erraticMovement = actorErratic_never;
-  d.monsterShockLevel = MonsterShockLevel::mindShattering;
+  d.monsterShockLvl = MonsterShockLvl::mindShattering;
   d.isCanine = true;
   d.canBeSummoned = false;
   d.isUnique = true;
@@ -877,7 +877,7 @@ void initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.descr = "A restless spirit.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::terrifying;
+  d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.isUndead = true;
   d.isGhost = true;
   d.canBeSummoned = true;
@@ -921,7 +921,7 @@ void initDataList() {
             "resembles a grim reaper, including the cloak, scythe, and "
             "skeletal appearance.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::terrifying;
+  d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.isUndead = true;
   d.isGhost = true;
   d.canBeSummoned = true;
@@ -964,7 +964,7 @@ void initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.descr = "A powerful spirit.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::terrifying;
+  d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.isUndead = true;
   d.isGhost = true;
   d.canBeSummoned = true;
@@ -1045,7 +1045,7 @@ void initDataList() {
             "witchcraft. Thus, they are found where the witch who created them "
             "had her lair.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::unsettling;
+  d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.isRat = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
@@ -1125,7 +1125,7 @@ void initDataList() {
   d.aggroSfxMonsterSeen = SfxId::flappingWings;
   d.aggroSfxMonsterHidden = SfxId::flappingWings;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = MonsterShockLevel::unsettling;
+  d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
@@ -1172,7 +1172,7 @@ void initDataList() {
   d.aggroSfxMonsterSeen = SfxId::flappingWings;
   d.aggroSfxMonsterHidden = SfxId::flappingWings;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
@@ -1207,7 +1207,7 @@ void initDataList() {
   d.nrTurnsAwarePlayer = 5;
   d.descr = "A huge predatory insect.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::unsettling;
+  d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(RoomThemeId::plain);
   data[d.id] = d;
@@ -1233,7 +1233,7 @@ void initDataList() {
   d.abilityVals.setVal(AbilityId::melee, 25);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 7;
-  d.spawnMaxDLVL = FIRST_CAVERN_LEVEL;
+  d.spawnMaxDLVL = FIRST_CAVERN_LVL;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSizeSwarm;
   d.actorSize = actorSize_floor;
@@ -1241,7 +1241,7 @@ void initDataList() {
   d.nrTurnsAwarePlayer = 12;
   d.descr = "A huge swarming insect. They breed rapidly.";
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = MonsterShockLevel::none;
+  d.monsterShockLvl = MonsterShockLvl::none;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(RoomThemeId::plain);
   data[d.id] = d;
@@ -1296,7 +1296,7 @@ void initDataList() {
   d.aggroTextMonsterSeen = d.name_the + " speaks at me in a droning voice.";
   d.aggroTextMonsterHidden = "I hear a droning voice.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
 //  d.nativeRooms.push_back(RoomThemeId::chasm);
   data[d.id] = d;
@@ -1349,7 +1349,7 @@ void initDataList() {
   d.aggroTextMonsterSeen = d.name_the + " makes shrill whistling noises.";
   d.aggroTextMonsterHidden = "I hear a shrill whistling.";
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::terrifying;
+  d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.nativeRooms.push_back(RoomThemeId::plain);
   data[d.id] = d;
   d.reset();
@@ -1393,7 +1393,7 @@ void initDataList() {
   d.aggroSfxMonsterSeen = SfxId::ghoulGrowl;
   d.aggroSfxMonsterHidden = SfxId::wolfHowl;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::terrifying;
+  d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::monster);
   data[d.id] = d;
@@ -1437,7 +1437,7 @@ void initDataList() {
   d.descr = "A living shadow";
   d.isAutoDescrAllowed = false;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.nativeRooms.push_back(RoomThemeId::monster);
   d.nativeRooms.push_back(RoomThemeId::plain);
   data[d.id] = d;
@@ -1472,7 +1472,7 @@ void initDataList() {
   d.descr = "A mummified human being, possibly dating back millennia.";
   d.spellCastMessage = "The mummy casts a spell.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -1501,7 +1501,7 @@ void initDataList() {
   d.spi = 60;
   d.dmgMelee = 6;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.spawnMinDLVL = FIRST_CAVERN_LEVEL - 1;
+  d.spawnMinDLVL = FIRST_CAVERN_LVL - 1;
   d.isAutoSpawnAllowed = false;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_humanoid;
@@ -1513,7 +1513,7 @@ void initDataList() {
             "\"Rise, Ra!\"";
   d.spellCastMessage = "Khephren casts a spell.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = MonsterShockLevel::terrifying;
+  d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -1556,7 +1556,7 @@ void initDataList() {
             "sealed room with the Nile.";
   d.spellCastMessage = "Nitokris casts a spell.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = MonsterShockLevel::terrifying;
+  d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomThemeId::plain);
@@ -1600,7 +1600,7 @@ void initDataList() {
             "effectively immortal. Deep ones may be worshipped by humans with "
             "whom they regularly interbreed.";
   d.erraticMovement = actorErratic_rare;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
   data[d.id] = d;
@@ -1678,7 +1678,7 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = MonsterShockLevel::unsettling;
+  d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
   data[d.id] = d;
   d.reset();
@@ -1720,7 +1720,7 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = MonsterShockLevel::unsettling;
+  d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
   data[d.id] = d;
   d.reset();
@@ -1762,7 +1762,7 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = MonsterShockLevel::unsettling;
+  d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
   data[d.id] = d;
   d.reset();
@@ -1808,7 +1808,7 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::unsettling;
+  d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
@@ -1857,7 +1857,7 @@ void initDataList() {
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::flooded);
@@ -1908,7 +1908,7 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
@@ -1958,7 +1958,7 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_somewhat;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
@@ -2004,7 +2004,7 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
-  d.monsterShockLevel = MonsterShockLevel::scary;
+  d.monsterShockLvl = MonsterShockLvl::scary;
   d.nativeRooms.push_back(RoomThemeId::plain);
   d.nativeRooms.push_back(RoomThemeId::flooded);
   d.nativeRooms.push_back(RoomThemeId::muddy);
@@ -2049,7 +2049,7 @@ void initDataList() {
   d.aggroSfxMonsterHidden = SfxId::endOfSfxId;
   d.canBleed = true;
   d.canBeSummoned = false;
-  d.monsterShockLevel = MonsterShockLevel::mindShattering;
+  d.monsterShockLvl = MonsterShockLvl::mindShattering;
   d.erraticMovement = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomThemeId::plain);
   data[d.id] = d;
@@ -2076,7 +2076,7 @@ void initDataList() {
   d.abilityVals.setVal(AbilityId::melee, 60);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
-  d.spawnMinDLVL = LAST_CAVERN_LEVEL - 1;
+  d.spawnMinDLVL = LAST_CAVERN_LVL - 1;
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
   d.groupSize = monsterGroupSize_alone;
@@ -2095,7 +2095,7 @@ void initDataList() {
   d.aggroSfxMonsterHidden = SfxId::flappingWings;
   d.canBleed = true;
   d.canBeSummoned = false;
-  d.monsterShockLevel = MonsterShockLevel::mindShattering;
+  d.monsterShockLvl = MonsterShockLvl::mindShattering;
   d.erraticMovement = actorErratic_somewhat;
   data[d.id] = d;
   d.reset();

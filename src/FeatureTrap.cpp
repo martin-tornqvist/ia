@@ -211,7 +211,7 @@ void Trap::disarm() {
   }
   GameTime::actorDidAct();
 
-  if(IS_DISARMED) {FeatureFactory::spawn(FeatureId::floor, pos_);}
+  if(IS_DISARMED) {FeatureFactory::mk(FeatureId::floor, pos_);}
 }
 
 void Trap::triggerTrap(Actor& actor) {
@@ -780,7 +780,7 @@ void TrapSpiderWeb::trigger(
         Log::addMsg(
           "I cut down a sticky mass of threads with my machete.");
       }
-      FeatureFactory::spawn(FeatureId::floor, pos_);
+      FeatureFactory::mk(FeatureId::floor, pos_);
     } else {
       if(CAN_SEE) {
         Log::addMsg("I am entangled in a spider web!");
@@ -834,7 +834,7 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
           (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {
           Log::addMsg("The web is destroyed.");
         }
-        FeatureFactory::spawn(FeatureId::floor, pos_);
+        FeatureFactory::mk(FeatureId::floor, pos_);
       }
     } else {
       if(IS_PLAYER) {

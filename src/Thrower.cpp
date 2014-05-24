@@ -67,14 +67,14 @@ void playerThrowLitExplosive(const Pos& aimCell) {
   if(DYNAMITE_FUSE != -1) {
     Log::addMsg("I throw a lit dynamite stick.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      FeatureFactory::spawn(FeatureId::litDynamite, path.back(),
-                            new DynamiteSpawnData(DYNAMITE_FUSE));
+      FeatureFactory::mk(FeatureId::litDynamite, path.back(),
+                         new DynamiteSpawnData(DYNAMITE_FUSE));
     }
   } else if(FLARE_FUSE != -1) {
     Log::addMsg("I throw a lit flare.");
     if(IS_DEST_FEAT_BOTTOMLESS == false) {
-      FeatureFactory::spawn(FeatureId::litFlare, path.back(),
-                            new DynamiteSpawnData(FLARE_FUSE));
+      FeatureFactory::mk(FeatureId::litFlare, path.back(),
+                         new DynamiteSpawnData(FLARE_FUSE));
     }
     GameTime::updateLightMap();
     Map::player->updateFov();
@@ -98,7 +98,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
   MissileAttData* data = new MissileAttData(
     actorThrowing, itemThrown, targetCell, actorThrowing.pos);
 
-  const ActorSize aimLevel = data->intendedAimLevel;
+  const ActorSize aimLvl = data->intendedAimLvl;
 
   vector<Pos> path;
   LineCalc::calcNewLine(actorThrowing.pos, targetCell, false,
@@ -143,7 +143,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
 
         delete data;
         data = new MissileAttData(actorThrowing, itemThrown, targetCell,
-                                  curPos, aimLevel);
+                                  curPos, aimLvl);
 
         if(
           data->attackResult >= successSmall &&

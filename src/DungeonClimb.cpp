@@ -15,14 +15,14 @@ namespace DungeonClimb {
 
 namespace {
 
-void makeLevel() {
-  trace << "DungeonClimb::makeLevel()..." << endl;
+void mkLvl() {
+  trace << "DungeonClimb::mkLvl()..." << endl;
 
   bool levelBuilt = false;
 
-  //------------------------------------- TRAPEZOHEDRON LEVEL
+  //------------------------------------- TRAPEZOHEDRON LVL
   if(levelBuilt == false) {
-    if(Map::dlvl > LAST_CAVERN_LEVEL) {
+    if(Map::dlvl > LAST_CAVERN_LVL) {
       while(MapGen::TrapezohedronLvl::run() == false) {}
       levelBuilt = true;
     }
@@ -30,42 +30,42 @@ void makeLevel() {
 
   //------------------------------------- KINGS TOMB
   if(levelBuilt == false) {
-    if(Map::dlvl == LAST_ROOM_AND_CORRIDOR_LEVEL + 1) {
+    if(Map::dlvl == LAST_ROOM_AND_CORRIDOR_LVL + 1) {
       while(MapGen::EgyptTomb::run() == false) {}
       levelBuilt = true;
     }
   }
 
-  //------------------------------------- DUNGEON LEVELS
+  //------------------------------------- DUNGEON LVLS
   if(levelBuilt == false) {
-    if(Map::dlvl < FIRST_CAVERN_LEVEL) {
-      while(MapGen::Bsp::run() == false) {}
+    if(Map::dlvl < FIRST_CAVERN_LVL) {
+      while(MapGen::Std::run() == false) {}
       levelBuilt = true;
     }
   }
-  //------------------------------------- CAVERN LEVELS
+  //------------------------------------- CAVERN LVLS
   if(levelBuilt == false) {
-    if(Map::dlvl >= FIRST_CAVERN_LEVEL) {
+    if(Map::dlvl >= FIRST_CAVERN_LVL) {
       while(MapGen::CaveLvl::run() == false) {}
     }
   }
-  if(Map::dlvl > 0 && Map::dlvl <= LAST_CAVERN_LEVEL) {
-    trace << "DungeonClimb: Calling PopulateItems::spawnItems()" << endl;
-    PopulateItems::spawnItems();
+  if(Map::dlvl > 0 && Map::dlvl <= LAST_CAVERN_LVL) {
+    trace << "DungeonClimb: Calling PopulateItems::mkItems()" << endl;
+    PopulateItems::mkItems();
   }
-  trace << "DungeonClimb::makeLevel() [DONE]" << endl;
+  trace << "DungeonClimb::mkLvl() [DONE]" << endl;
 }
 
 } //namespace
 
-void travelDown(const int LEVELS) {
+void travelDown(const int LVLS) {
   trace << "DungeonClimb::travelDown()..." << endl;
 
   Map::player->restoreShock(999, true);
 
-  Map::dlvl += LEVELS;
+  Map::dlvl += LVLS;
 
-  makeLevel();
+  mkLvl();
 
   Map::player->target = nullptr;
   Map::player->updateFov();
@@ -87,7 +87,7 @@ void tryUseDownStairs() {
 
   if(featureIdAtPlayer == FeatureId::stairs) {
     trace << "DungeonClimb: Player is on stairs" << endl;
-    if(Map::dlvl >= FIRST_CAVERN_LEVEL && Map::dlvl <= LAST_CAVERN_LEVEL) {
+    if(Map::dlvl >= FIRST_CAVERN_LVL && Map::dlvl <= LAST_CAVERN_LVL) {
       Log::addMsg("I climb downwards.");
     } else {
       Log::addMsg("I descend the stairs.");
@@ -102,7 +102,7 @@ void tryUseDownStairs() {
       return;
     }
   } else {
-    if(Map::dlvl >= FIRST_CAVERN_LEVEL && Map::dlvl <= LAST_CAVERN_LEVEL) {
+    if(Map::dlvl >= FIRST_CAVERN_LVL && Map::dlvl <= LAST_CAVERN_LVL) {
       Log::addMsg("I see no path leading downwards here.");
     } else {
       Log::addMsg("I see no stairs leading downwards here.");

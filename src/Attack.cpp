@@ -176,9 +176,9 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
 
 RangedAttData::RangedAttData(
   Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
-  const Pos& curPos_, ActorSize intendedAimLevel_) :
+  const Pos& curPos_, ActorSize intendedAimLvl_) :
   AttData(attacker_, wpn_), hitChanceTot(0),
-  intendedAimLevel(actorSize_none), curDefenderSize(actorSize_none),
+  intendedAimLvl(actorSize_none), curDefenderSize(actorSize_none),
   verbPlayerAttacks(""), verbOtherAttacks("")  {
 
   verbPlayerAttacks = wpn_.getData().rangedAttMsgs.player;
@@ -187,17 +187,17 @@ RangedAttData::RangedAttData(
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
-  if(intendedAimLevel_ == actorSize_none) {
+  if(intendedAimLvl_ == actorSize_none) {
     if(actorAimedAt != nullptr) {
-      intendedAimLevel = actorAimedAt->getData().actorSize;
+      intendedAimLvl = actorAimedAt->getData().actorSize;
     } else {
-      bool blockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksProjectiles(), blockers);
-      intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
-                         actorSize_humanoid : actorSize_floor;
+      bool blocked[MAP_W][MAP_H];
+      MapParse::parse(CellPred::BlocksProjectiles(), blocked);
+      intendedAimLvl = blocked[curPos_.x][curPos_.y] ?
+                       actorSize_humanoid : actorSize_floor;
     }
   } else {
-    intendedAimLevel = intendedAimLevel_;
+    intendedAimLvl = intendedAimLvl_;
   }
 
   curDefender = Utils::getActorAtPos(curPos_);
@@ -273,24 +273,24 @@ RangedAttData::RangedAttData(
 
 MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
                                const Pos& aimPos_, const Pos& curPos_,
-                               ActorSize intendedAimLevel_) :
+                               ActorSize intendedAimLvl_) :
   AttData(attacker_, item_), hitChanceTot(0),
-  intendedAimLevel(actorSize_none), curDefenderSize(actorSize_none) {
+  intendedAimLvl(actorSize_none), curDefenderSize(actorSize_none) {
 
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
-  if(intendedAimLevel_ == actorSize_none) {
+  if(intendedAimLvl_ == actorSize_none) {
     if(actorAimedAt != nullptr) {
-      intendedAimLevel = actorAimedAt->getData().actorSize;
+      intendedAimLvl = actorAimedAt->getData().actorSize;
     } else {
-      bool blockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksProjectiles(), blockers);
-      intendedAimLevel = blockers[curPos_.x][curPos_.y] ?
-                         actorSize_humanoid : actorSize_floor;
+      bool blocked[MAP_W][MAP_H];
+      MapParse::parse(CellPred::BlocksProjectiles(), blocked);
+      intendedAimLvl = blocked[curPos_.x][curPos_.y] ?
+                       actorSize_humanoid : actorSize_floor;
     }
   } else {
-    intendedAimLevel = intendedAimLevel_;
+    intendedAimLvl = intendedAimLvl_;
   }
 
   curDefender = Utils::getActorAtPos(curPos_);
@@ -565,14 +565,14 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     projectiles.push_back(p);
   }
 
-  const ActorSize aimLevel =
-    projectiles.at(0)->attackData->intendedAimLevel;
+  const ActorSize aimLvl =
+    projectiles.at(0)->attackData->intendedAimLvl;
 
   const int DELAY = Config::getDelayProjectileDraw() / (IS_MACHINE_GUN ? 2 : 1);
 
   printRangedInitiateMsgs(*projectiles.at(0)->attackData);
 
-  const bool stopAtTarget = aimLevel == actorSize_floor;
+  const bool stopAtTarget = aimLvl == actorSize_floor;
   const int chebTrvlLim = 30;
 
   //Get projectile path
@@ -660,7 +660,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         //Get attack data again for every cell traveled through
         curProj->setAttData(
           new RangedAttData(
-            attacker, wpn, aimPos, curProj->pos , aimLevel));
+            attacker, wpn, aimPos, curProj->pos , aimLvl));
 
         const Pos drawPos(curProj->pos);
 
@@ -774,7 +774,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         //PROJECTILE HIT THE GROUND?
         if(
           curProj->pos == aimPos       &&
-          aimLevel == actorSize_floor  &&
+          aimLvl == actorSize_floor  &&
           curProj->isObstructed == false) {
           curProj->isObstructed = true;
           curProj->obstructedInElement = projectilePathElement;
@@ -862,13 +862,13 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
   printRangedInitiateMsgs(*data);
 
-  const ActorSize intendedAimLevel = data->intendedAimLevel;
+  const ActorSize intendedAimLvl = data->intendedAimLvl;
 
   bool featureBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksProjectiles(), featureBlockers);
 
   Actor* actorArray[MAP_W][MAP_H];
-  Utils::makeActorArray(actorArray);
+  Utils::mkActorArray(actorArray);
 
   const Pos origin = attacker.pos;
   vector<Pos> path;
@@ -906,7 +906,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         //Actor hit?
         delete data;
         data = new RangedAttData(
-          attacker, wpn, aimPos, curPos, intendedAimLevel);
+          attacker, wpn, aimPos, curPos, intendedAimLvl);
         const bool IS_WITHIN_RANGE_LMT =
           Utils::kingDist(origin, curPos) <= wpn.effectiveRangeLimit;
         if(
@@ -948,7 +948,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           if(
             (nrActorsHit >= 2) ||
             (IS_TARGET_KILLED == false) ||
-            (intendedAimLevel == actorSize_floor && curPos == aimPos)) {
+            (intendedAimLvl == actorSize_floor && curPos == aimPos)) {
             break;
           }
         }
@@ -977,7 +977,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     }
 
     //Floor hit?
-    if(intendedAimLevel == actorSize_floor && curPos == aimPos) {
+    if(intendedAimLvl == actorSize_floor && curPos == aimPos) {
       Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
               curPos, nullptr, SndVol::low, AlertsMonsters::yes);
       SndEmit::emitSnd(snd);
@@ -1016,7 +1016,7 @@ void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
       }
       if(data.attackResult >= successNormal) {
         if(data.curDefender->getData().canBleed == true) {
-          Map::makeBlood(data.curDefender->pos);
+          Map::mkBlood(data.curDefender->pos);
         }
       }
       if(IS_DEFENDER_KILLED == false) {
