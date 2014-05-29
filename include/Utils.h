@@ -121,6 +121,8 @@ void getCompassDirName(const Dir dir, std::string& strRef);
 
 void getCompassDirName(const Pos& offset, std::string& strRef);
 
+bool isCardinal(const Pos& d);
+
 } //DirUtils
 
 #endif

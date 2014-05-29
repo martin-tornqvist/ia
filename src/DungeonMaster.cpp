@@ -200,7 +200,7 @@ void onMonsterKilled(Actor& actor) {
 
 void onMonsterSpotted(Actor& actor) {
   Monster* const monster = dynamic_cast<Monster*>(&actor);
-  if(monster->hasGivenXpForSpotting_ == false) {
+  if(!monster->hasGivenXpForSpotting_) {
     monster->hasGivenXpForSpotting_ = true;
     playerGainXp(getMonsterTotXpWorth(monster->getData()) / 2);
   }

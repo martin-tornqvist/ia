@@ -107,9 +107,7 @@ void calcNewLine(const Pos& origin, const Pos& target,
 
     curPos.set(floor(curX_db), floor(curY_db));
 
-    if(ALLOW_OUTSIDE_MAP == false) {
-      if(Utils::isPosInsideMap(curPos) == false) {return;}
-    }
+    if(!ALLOW_OUTSIDE_MAP && !Utils::isPosInsideMap(curPos)) {return;}
 
     bool isPosOkToAdd = false;
     if(lineRef.empty()) {

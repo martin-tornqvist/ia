@@ -258,7 +258,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
           Log::addMsg("I am not wielding a weapon.");
         } else {
           const ItemDataT& itemData = item->getData();
-          if(itemData.isRangedWeapon == false) {
+          if(!itemData.isRangedWeapon) {
             Log::addMsg("I am not wielding a firearm.");
           } else {
             Weapon* wpn = dynamic_cast<Weapon*>(item);
@@ -288,9 +288,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
           Init::quitToMainMenu = true;
         }
       }
-      if(Init::quitToMainMenu == false) {
-        ItemPickup::tryPick();
-      }
+      if(!Init::quitToMainMenu) {ItemPickup::tryPick();}
     }
     clearEvents();
     return;
@@ -553,7 +551,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
       for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
         const ItemDataT* const data = ItemData::data[i];
         if(
-          data->isIntrinsic == false &&
+          !data->isIntrinsic &&
           (data->isPotion || data->isScroll || data->isDevice)) {
           ItemFactory::mkItemOnMap((ItemId)(i), Map::player->pos);
         }
@@ -584,7 +582,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   //----------------------------------- POSSESSED BY ZUUL
   else if(d.sdlKey_ == SDLK_F9) {
     if(IS_DEBUG_MODE) {
-      for(Actor * actor : GameTime::actors_) {
+      for(Actor* actor : GameTime::actors_) {
         actor->getPropHandler().tryApplyProp(
           new PropPossessedByZuul(propTurnsIndefinite), true);
       }
@@ -614,9 +612,7 @@ void setKeyRepeatDelays() {
 void handleMapModeInputUntilFound() {
   if(sdlEvent_ != nullptr) {
     const KeyboardReadRetData& d = readKeysUntilFound();
-    if(Init::quitToMainMenu == false) {
-      handleKeyPress(d);
-    }
+    if(!Init::quitToMainMenu) {handleKeyPress(d);}
   }
 }
 
@@ -625,12 +621,9 @@ void clearEvents() {
 }
 
 KeyboardReadRetData readKeysUntilFound(const bool IS_O_RETURN) {
-  if(sdlEvent_ == nullptr) {
-    return KeyboardReadRetData();
-  }
+  if(sdlEvent_ == nullptr) {return KeyboardReadRetData();}
 
   while(true) {
-
     SdlWrapper::sleep(1);
 
     while(SDL_PollEvent(sdlEvent_)) {

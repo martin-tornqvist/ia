@@ -51,7 +51,7 @@ void menuMsgDrawingHelper(
   int textWidthOverride = -1;
   if(lines.empty()) {
     textWidthOverride = title.size();
-    for(const string & s : choices) {
+    for(const string& s : choices) {
       textWidthOverride = max(textWidthOverride, int(s.size()));
     }
     textWidthOverride += 2;
@@ -59,14 +59,14 @@ void menuMsgDrawingHelper(
 
   int y = printBoxAndGetTitleYPos(TEXT_H_TOT, textWidthOverride);
 
-  if(title.empty() == false) {
+  if(!title.empty()) {
     Renderer::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y),
                                clrCyanLgt, clrBlack, true);
   }
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
 
-  for(const string & line : lines) {
+  for(const string& line : lines) {
     y++;
     if(SHOW_MSG_CENTERED) {
       Renderer::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
@@ -76,7 +76,7 @@ void menuMsgDrawingHelper(
     }
     Log::addLineToHistory(line);
   }
-  if(lines.empty() == false || title.empty() == false) {y += 2;}
+  if(!lines.empty() || !title.empty()) {y += 2;}
 
   for(size_t i = 0; i < choices.size(); i++) {
     SDL_Color clr = i == curChoice ? clrNosfTealLgt : clrNosfTealDrk;
@@ -103,7 +103,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   if(sfx != SfxId::endOfSfxId) {Audio::play(sfx);}
 
-  if(title.empty() == false) {
+  if(!title.empty()) {
     Renderer::drawTextCentered(
       title, Panel::map, Pos(MAP_W_HALF, y),
       /*clrNosfTealLgt*/ clrWhite, clrBlack, true);
@@ -111,7 +111,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
 
-  for(string & line : lines) {
+  for(string& line : lines) {
     y++;
     if(SHOW_MSG_CENTERED) {
       Renderer::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),

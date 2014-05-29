@@ -226,7 +226,7 @@ void PotionInsight::quaff_(Actor* const actor) {
   vector<Item*> identifyBucket;
 
   vector<InvSlot>& slots = inv.getSlots();
-  for(InvSlot & slot : slots) {
+  for(InvSlot& slot : slots) {
     Item* const item = slot.item;
     if(item) {
       const ItemDataT& d = item->getData();
@@ -234,7 +234,7 @@ void PotionInsight::quaff_(Actor* const actor) {
     }
   }
   vector<Item*>& general = inv.getGeneral();
-  for(Item * item : general) {
+  for(Item* item : general) {
     if(item->getData().id != ItemId::potionInsight) {
       const ItemDataT& d = item->getData();
       if(d.isIdentified == false) {identifyBucket.push_back(item);}

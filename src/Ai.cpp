@@ -109,7 +109,7 @@ bool checkIfBlockingMon(const Pos& pos, Monster* other) {
   vector<Pos> line;
   LineCalc::calcNewLine(other->pos, Map::player->pos, true, 9999, false, line);
 
-  for(const Pos & posInLine : line) {if(posInLine == pos) {return true;}}
+  for(const Pos& posInLine : line) {if(posInLine == pos) {return true;}}
   return false;
 }
 
@@ -175,7 +175,7 @@ bool makeRoomForFriend(Monster& monster) {
     if(monster.isSeeingActor(*Map::player, visionBlockers)) {
 
       //Loop through all actors
-      for(Actor * actor : GameTime::actors_) {
+      for(Actor* actor : GameTime::actors_) {
         if(actor != Map::player && actor != &monster) {
           if(actor->deadState == ActorDeadState::alive) {
             Monster* otherMonster = dynamic_cast<Monster*>(actor);
@@ -218,7 +218,7 @@ bool makeRoomForFriend(Monster& monster) {
 
                   bool isGoodCandidateFound = true;
 
-                  for(Actor * actor2 : GameTime::actors_) {
+                  for(Actor* actor2 : GameTime::actors_) {
                     if(actor2 != Map::player && actor2 != &monster) {
                       otherMonster = dynamic_cast<Monster*>(actor2);
                       if(
@@ -267,11 +267,11 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
     }
   }
 
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     const Pos& p = actor->pos;
     blocked[p.x][p.y] = true;
   }
-  for(FeatureMob * mob : GameTime::featureMobs_) {
+  for(FeatureMob* mob : GameTime::featureMobs_) {
     const Pos& p = mob->getPos();
     blocked[p.x][p.y] = cellPred.check(*mob);
   }
@@ -360,7 +360,7 @@ bool moveTowardsTargetSimple(Monster& monster) {
 
 bool stepPath(Monster& monster, vector<Pos>& path) {
   if(monster.deadState == ActorDeadState::alive) {
-    if(path.empty() == false) {
+    if(!path.empty()) {
       const Pos delta = path.back() - monster.pos;
       monster.moveDir(DirUtils::getDir(delta));
       return true;
@@ -413,7 +413,7 @@ bool lookBecomePlayerAware(Monster& monster) {
       return false;
     }
 
-    for(Actor * actor : spottedEnemies) {
+    for(Actor* actor : spottedEnemies) {
       if(actor == Map::player) {
         if(monster.isSpottingHiddenActor(*actor)) {
           monster.becomeAware(true);
@@ -502,7 +502,7 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
 
       for(int y = 1; y < MAP_H - 1; y++) {
         for(int x = 1; x < MAP_W - 1; x++) {
-          const Feature* const f = Map::cells[x][y].featureStatic;
+          const auto* const f = Map::cells[x][y].featureStatic;
           if(f->canMove(props) == false) {
 
             if(f->getId() == FeatureId::door) {

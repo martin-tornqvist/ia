@@ -54,7 +54,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -74,7 +74,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -94,7 +94,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -114,7 +114,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -134,7 +134,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -154,7 +154,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -174,7 +174,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -194,7 +194,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -214,7 +214,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -253,7 +253,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.isEndedByMagicHealing = true;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -272,7 +272,7 @@ void initDataList() {
   d.isMakingMonsterAware = true;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -292,7 +292,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = true;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -313,7 +313,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = true;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -334,7 +334,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = false;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = true;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -354,7 +354,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -374,7 +374,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -395,7 +395,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = true;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -415,7 +415,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -479,7 +479,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = true;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -500,7 +500,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = true;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -521,7 +521,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = true;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -541,7 +541,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
@@ -556,7 +556,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -572,7 +572,7 @@ void initDataList() {
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentBad;
   addPropData(d);
 
@@ -607,7 +607,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = false;
   d.updatePlayerVisualWhenStartOrEnd = true;
   d.isEndedByMagicHealing = false;
-  d.allowTestingOnBot = true;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
@@ -617,7 +617,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = false;
-  d.allowTestingOnBot = false;
+  d.allowTestOnBot = false;
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
@@ -627,7 +627,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = false;
-  d.allowTestingOnBot = false;
+  d.allowTestOnBot = false;
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
@@ -637,7 +637,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = false;
-  d.allowTestingOnBot = false;
+  d.allowTestOnBot = false;
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
@@ -647,7 +647,7 @@ void initDataList() {
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = false;
-  d.allowTestingOnBot = false;
+  d.allowTestOnBot = false;
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
@@ -837,7 +837,7 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
 }
 
 PropHandler::~PropHandler() {
-  for(Prop * prop : appliedProps_) {delete prop;}
+  for(Prop* prop : appliedProps_) {delete prop;}
 }
 
 void PropHandler::getPropsFromSources(
@@ -852,8 +852,8 @@ void PropHandler::getPropsFromSources(
   if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)]) {
     vector<Item*> items;
     owningActor_->getInv().getAllItems(items);
-    for(Item * item : items) {
-      for(Prop * prop : item->propsEnabledOnCarrier) {
+    for(Item* item : items) {
+      for(Prop* prop : item->propsEnabledOnCarrier) {
         prop->owningActor_ = owningActor_;
         propList.push_back(prop);
       }
@@ -864,19 +864,19 @@ void PropHandler::getPropsFromSources(
 void PropHandler::getAllActivePropIds(vector<PropId>& idVectorRef) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
 
   idVectorRef.resize(0);
   idVectorRef.reserve(propList.size());
 
-  for(Prop * p : propList) {idVectorRef.push_back(p->getId());}
+  for(Prop* p : propList) {idVectorRef.push_back(p->getId());}
 }
 
 bool PropHandler::tryResistProp(
   const PropId id, const vector<Prop*>& propList) const {
 
-  for(Prop * p : propList) {if(p->tryResistOtherProp(id)) return true;}
+  for(Prop* p : propList) {if(p->tryResistOtherProp(id)) return true;}
   return false;
 }
 
@@ -885,10 +885,10 @@ bool PropHandler::tryResistDmg(
 
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
 
-  for(Prop * p : propList) {
+  for(Prop* p : propList) {
     if(p->tryResistDmg(dmgType, ALLOW_MSG_WHEN_TRUE)) return true;
   }
   return false;
@@ -897,10 +897,10 @@ bool PropHandler::tryResistDmg(
 bool PropHandler::allowSee() const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
 
-  for(Prop * p : propList) {if(p->allowSee() == false) return false;}
+  for(Prop* p : propList) {if(p->allowSee() == false) return false;}
   return true;
 }
 
@@ -932,7 +932,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   if(FORCE_EFFECT == false) {
     vector<Prop*> allProps;
     bool sources[int(PropSrc::endOfPropSrc)];
-    for(bool & v : sources) {v = true;}
+    for(bool& v : sources) {v = true;}
     getPropsFromSources(allProps, sources);
     if(tryResistProp(prop->getId(), allProps)) {
       if(NO_MESSAGES == false) {
@@ -960,7 +960,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   //This point reached means nothing is blocking the property.
 
   //Actor already has property applied?
-  for(Prop * oldProp : appliedProps_) {
+  for(Prop* oldProp : appliedProps_) {
     if(prop->getId() == oldProp->getId()) {
 
       if(prop->allowApplyMoreWhileActive() == false) {
@@ -1105,7 +1105,7 @@ bool PropHandler::endAppliedProp(
 }
 
 void PropHandler::applyActorTurnPropBuffer() {
-  for(Prop * prop : actorTurnPropBuffer_) {tryApplyProp(prop);}
+  for(Prop* prop : actorTurnPropBuffer_) {tryApplyProp(prop);}
   actorTurnPropBuffer_.resize(0);
 }
 
@@ -1143,10 +1143,10 @@ void PropHandler::tick(const PropTurnMode turnMode,
 
   vector<Prop*> invProps;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = false;}
+  for(bool& v : sources) {v = false;}
   sources[int(PropSrc::inv)] = true;
   getPropsFromSources(invProps, sources);
-  for(Prop * prop : invProps) {
+  for(Prop* prop : invProps) {
     if(owningActor_ != Map::player) {
       if(prop->isMakingMonsterAware()) {
         dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter_ =
@@ -1165,9 +1165,9 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
 
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {
+  for(Prop* prop : propList) {
     const string propName = prop->getNameShort();
     if(propName.empty() == false) {
       const PropAlignment alignment = prop->getAlignment();
@@ -1186,27 +1186,27 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
 int PropHandler::getChangedMaxHp(const int HP_MAX) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   int newHpMax = HP_MAX;
-  for(Prop * prop : propList) {newHpMax = prop->getChangedMaxHp(newHpMax);}
+  for(Prop* prop : propList) {newHpMax = prop->getChangedMaxHp(newHpMax);}
   return newHpMax;
 }
 
 void PropHandler::changeMoveDir(const Pos& actorPos, Dir& dir) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {prop->changeMoveDir(actorPos, dir);}
+  for(Prop* prop : propList) {prop->changeMoveDir(actorPos, dir);}
 }
 
 bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {
+  for(Prop* prop : propList) {
     if(
       prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false &&
       prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
@@ -1219,9 +1219,9 @@ bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {
+  for(Prop* prop : propList) {
     if(prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
     }
@@ -1232,9 +1232,9 @@ bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {
+  for(Prop* prop : propList) {
     if(prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
       return false;
     }
@@ -1245,9 +1245,9 @@ bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 bool PropHandler::allowMove() const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {
+  for(Prop* prop : propList) {
     if(prop->allowMove() == false) {
       return false;
     }
@@ -1258,9 +1258,9 @@ bool PropHandler::allowMove() const {
 bool PropHandler::allowAct() const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {
+  for(Prop* prop : propList) {
     if(prop->allowAct() == false) {
       return false;
     }
@@ -1272,7 +1272,7 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   traceVerbose << "PropHandler::allowRead()..." << endl;
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
@@ -1288,7 +1288,7 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
@@ -1302,26 +1302,26 @@ bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 void PropHandler::onHit() {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {prop->onHit();}
+  for(Prop* prop : propList) {prop->onHit();}
 }
 
 void PropHandler::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {prop->onDeath(IS_PLAYER_SEE_OWNING_ACTOR);}
+  for(Prop* prop : propList) {prop->onDeath(IS_PLAYER_SEE_OWNING_ACTOR);}
 }
 
 int PropHandler::getAbilityMod(const AbilityId ability) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   int modifier = 0;
-  for(Prop * prop : propList) {
+  for(Prop* prop : propList) {
     modifier += prop->getAbilityMod(ability);
   }
   return modifier;
@@ -1332,14 +1332,14 @@ Prop* PropHandler::getProp(const PropId id, const PropSrc source) const {
   assert(source != PropSrc::endOfPropSrc);
 
   if(source == PropSrc::applied) {
-    for(Prop * prop : appliedProps_) {if(prop->getId() == id) {return prop;}}
+    for(Prop* prop : appliedProps_) {if(prop->getId() == id) {return prop;}}
   } else if(source == PropSrc::inv) {
     vector<Prop*> invProps;
     bool sources[int(PropSrc::endOfPropSrc)];
-    for(bool & v : sources) {v = false;}
+    for(bool& v : sources) {v = false;}
     sources[int(PropSrc::inv)] = true;
     getPropsFromSources(invProps, sources);
-    for(Prop * prop : invProps) {if(prop->getId() == id) {return prop;}}
+    for(Prop* prop : invProps) {if(prop->getId() == id) {return prop;}}
   }
   return nullptr;
 }
@@ -1347,9 +1347,9 @@ Prop* PropHandler::getProp(const PropId id, const PropSrc source) const {
 bool PropHandler::changeActorClr(SDL_Color& clr) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop * prop : propList) {if(prop->changeActorClr(clr)) return true;}
+  for(Prop* prop : propList) {if(prop->changeActorClr(clr)) return true;}
   return false;
 }
 
@@ -1358,7 +1358,7 @@ void PropHandler::endAppliedPropsByMagicHealing() {
   MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
-  for(bool & v : sources) {v = true;}
+  for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   for(unsigned int i = 0; i < propList.size(); i++) {
     if(propList.at(i)->isEndedByMagicHealing()) {
@@ -1659,7 +1659,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
     LineCalc::calcNewLine(actorPos, closestMonPos, true, 999, false, line);
 
     if(line.size() > 1) {
-      for(Pos & pos : line) {if(blocked[pos.x][pos.y]) {return;}}
+      for(Pos& pos : line) {if(blocked[pos.x][pos.y]) {return;}}
       dir = DirUtils::getDir(line.at(1) - actorPos);
     }
   }

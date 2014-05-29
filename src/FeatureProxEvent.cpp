@@ -45,7 +45,7 @@ void ProxEventWallCrumble::playerIsNear() {
   if(isCrumbleOk) {
     //Crumble
     bool done = false;
-    while(done == false) {
+    while(!done) {
       for(int i = 0; i < NR_WALL_CELLS; i++) {
         const Pos pos = wallCells_.at(i);
         if(Utils::isPosInside(

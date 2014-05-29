@@ -124,7 +124,7 @@ void getActorPositions(const vector<Actor*>& actors, vector<Pos>& vectorRef) {
 
 
 Actor* getActorAtPos(const Pos& pos, ActorDeadState deadState) {
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     if(actor->pos == pos && actor->deadState == deadState) {
       return actor;
     }
@@ -135,7 +135,7 @@ Actor* getActorAtPos(const Pos& pos, ActorDeadState deadState) {
 void mkActorArray(Actor* a[MAP_W][MAP_H]) {
   resetArray(a);
 
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     const Pos& p = actor->pos;
     a[p.x][p.y] = actor;
   }
@@ -202,7 +202,7 @@ Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {
 
   //Find distance to nearest actor(s)
   int distToNearest = INT_MAX;
-  for(Actor * actor : actors) {
+  for(Actor* actor : actors) {
     const int CUR_DIST = kingDist(c, actor->pos);
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
@@ -213,13 +213,13 @@ Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {
 
   //Store all actors with distance equal to the nearest distance
   vector<Actor*> closestActors;
-  for(Actor * actor : actors) {
+  for(Actor* actor : actors) {
     if(kingDist(c, actor->pos) == distToNearest) {
       closestActors.push_back(actor);
     }
   }
 
-  assert(closestActors.empty() == false);
+  assert(!closestActors.empty());
 
   const int ELEMENT = Rnd::range(0, closestActors.size() - 1);
 
@@ -368,6 +368,11 @@ void getCompassDirName(const Dir dir, string& strRef) {
 
 void getCompassDirName(const Pos& offset, string& strRef) {
   strRef = compassDirNames[offset.x + 1][offset.y + 1];
+}
+
+bool isCardinal(const Pos& d) {
+  assert(d.x >= -1 && d.x <= 1 && d.y >= -1 && d.y <= 1);
+  return d != 0 && (d.x == 0 || d.y == 0);
 }
 
 } //DirUtils

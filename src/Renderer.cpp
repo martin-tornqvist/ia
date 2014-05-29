@@ -479,7 +479,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
   if(isInited()) {
     drawMapAndInterface();
 
-    for(const Pos & pos : positions) {
+    for(const Pos& pos : positions) {
       if(Config::isTilesMode()) {
         drawTile(TileId::blast1, Panel::map, pos, color, clrBlack);
       } else {
@@ -489,7 +489,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
     updateScreen();
     SdlWrapper::sleep(Config::getDelayExplosion() / 2);
 
-    for(const Pos & pos : positions) {
+    for(const Pos& pos : positions) {
       if(Config::isTilesMode()) {
         drawTile(TileId::blast2, Panel::map, pos, color, clrBlack);
       } else {
@@ -660,7 +660,7 @@ void drawProjectiles(vector<Projectile*>& projectiles,
 
   if(SHOULD_DRAW_MAP_BEFORE) {drawMapAndInterface(false);}
 
-  for(Projectile * p : projectiles) {
+  for(Projectile* p : projectiles) {
     if(p->isDoneRendering == false && p->isVisibleToPlayer) {
       coverCellInMap(p->pos);
       if(Config::isTilesMode()) {
@@ -767,7 +767,7 @@ void drawMap() {
         curDrw = &renderArray[x][y];
         curDrw->clear();
 
-        const FeatureStatic* const f = Map::cells[x][y].featureStatic;
+        const auto* const f = Map::cells[x][y].featureStatic;
 
         TileId  goreTile  = TileId::empty;
         char    goreGlyph = ' ';
@@ -798,7 +798,7 @@ void drawMap() {
 
   int xPos, yPos;
   //---------------- INSERT DEAD ACTORS INTO ARRAY
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     xPos = actor->pos.x;
     yPos = actor->pos.y;
     if(
@@ -837,7 +837,7 @@ void drawMap() {
   }
 
   //---------------- INSERT MOBILE FEATURES INTO ARRAY
-  for(FeatureMob * mob : GameTime::featureMobs_) {
+  for(auto* mob : GameTime::featureMobs_) {
     xPos = mob->getX();
     yPos = mob->getY();
     const TileId  mobTile   = mob->getTile();
@@ -853,7 +853,7 @@ void drawMap() {
   }
 
   //---------------- INSERT LIVING ACTORS INTO ARRAY
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     if(actor != Map::player) {
       xPos = actor->pos.x;
       yPos = actor->pos.y;
@@ -862,7 +862,7 @@ void drawMap() {
 
         curDrw = &renderArray[xPos][yPos];
 
-        const Monster* const monster = dynamic_cast<const Monster*>(actor);
+        const auto* const monster = dynamic_cast<const Monster*>(actor);
 
         if(Map::player->isSeeingActor(*actor, nullptr)) {
 
@@ -931,15 +931,15 @@ void drawMap() {
         if(
           tmpDrw.isLivingActorSeenHere == false &&
           tmpDrw.isAwareOfMonsterHere  == false) {
-          const TileId tileSeen = renderArrayNoActors[x][y].tile;
-          const TileId tileMem  = Map::cells[x][y].playerVisualMemory.tile;
+          const auto tileSeen = renderArrayNoActors[x][y].tile;
+          const auto tileMem  = Map::cells[x][y].playerVisualMemory.tile;
           const bool IS_TILE_WALL =
             Map::cells[x][y].isSeenByPlayer ?
             Wall::isTileAnyWallTop(tileSeen) :
             Wall::isTileAnyWallTop(tileMem);
           if(IS_TILE_WALL) {
-            const Feature* const f = Map::cells[x][y].featureStatic;
-            const FeatureId featureId = f->getId();
+            const auto* const f = Map::cells[x][y].featureStatic;
+            const auto featureId = f->getId();
             bool isHiddenDoor = false;
             if(featureId == FeatureId::door) {
               isHiddenDoor = dynamic_cast<const Door*>(f)->isSecret();
@@ -950,9 +950,9 @@ void drawMap() {
               if(Map::cells[x][y + 1].isExplored) {
                 const bool IS_SEEN_BELOW = Map::cells[x][y + 1].isSeenByPlayer;
 
-                const TileId tileBelowSeen = renderArrayNoActors[x][y + 1].tile;
+                const auto tileBelowSeen = renderArrayNoActors[x][y + 1].tile;
 
-                const TileId tileBelowMem =
+                const auto tileBelowMem =
                   Map::cells[x][y + 1].playerVisualMemory.tile;
 
                 const bool TILE_BELOW_IS_WALL_FRONT =
@@ -972,11 +972,11 @@ void drawMap() {
                   TILE_BELOW_IS_WALL_TOP    ||
                   tileBelowIsRevealedDoor) {
                   if(featureId == FeatureId::wall) {
-                    const Wall* const wall = dynamic_cast<const Wall*>(f);
+                    const auto* const wall = dynamic_cast<const Wall*>(f);
                     tmpDrw.tile = wall->getTopWallTile();
                   }
                 } else if(featureId == FeatureId::wall) {
-                  const Wall* const wall = dynamic_cast<const Wall*>(f);
+                  const auto* const wall = dynamic_cast<const Wall*>(f);
                   tmpDrw.tile = wall->getFrontWallTile();
                 } else if(isHiddenDoor) {
                   tmpDrw.tile = Config::isTilesWallFullSquare() ?

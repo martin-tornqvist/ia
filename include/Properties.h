@@ -96,7 +96,7 @@ struct PropDataT {
     allowApplyMoreWhileActive(true),
     updatePlayerVisualWhenStartOrEnd(false),
     isEndedByMagicHealing(false),
-    allowTestingOnBot(false),
+    allowTestOnBot(false),
     alignment(propAlignmentBad) {
     for(int i = 0; i < endOfPropMsg; i++) {msg[i] = "";}
   }
@@ -111,7 +111,7 @@ struct PropDataT {
   bool allowApplyMoreWhileActive;
   bool updatePlayerVisualWhenStartOrEnd;
   bool isEndedByMagicHealing;
-  bool allowTestingOnBot;
+  bool allowTestOnBot;
   PropAlignment alignment;
 };
 

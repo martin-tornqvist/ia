@@ -40,7 +40,7 @@ void checkOneCellOfMany(const bool obstructions[MAP_W][MAP_H],
       const bool CUR_CELL_IS_DRK = Map::cells[curPos.x][curPos.y].isDark;
       const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLight;
       if(
-        CUR_CELL_IS_LGT == false && TGT_IS_LGT == false &&
+        !CUR_CELL_IS_LGT && !TGT_IS_LGT &&
         (PRE_CELL_IS_DRK || CUR_CELL_IS_DRK) && IS_AFFECTED_BY_DARKNESS) {
         return;
       }
@@ -62,7 +62,7 @@ void checkOneCellOfMany(const bool obstructions[MAP_W][MAP_H],
 bool checkCell(const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
                const Pos& origin, const bool IS_AFFECTED_BY_DARKNESS) {
 
-  if(Utils::isPosInsideMap(cellToCheck) == false) {return false;}
+  if(!Utils::isPosInsideMap(cellToCheck)) {return false;}
 
   if(Utils::kingDist(origin, cellToCheck) > FOV_STD_RADI_INT) {return false;}
 
@@ -86,7 +86,7 @@ bool checkCell(const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
       const bool CUR_CELL_IS_DRK = Map::cells[curPos.x][curPos.y].isDark;
       const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLight;
       if(
-        CUR_CELL_IS_LGT == false && TGT_IS_LGT == false &&
+        !CUR_CELL_IS_LGT && !TGT_IS_LGT &&
         (PRE_CELL_IS_DRK || CUR_CELL_IS_DRK) && IS_AFFECTED_BY_DARKNESS) {
         return false;
       }

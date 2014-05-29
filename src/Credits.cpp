@@ -31,7 +31,7 @@ void readFile() {
         lines_.push_back(curLine);
       } else {
         TextFormatting::lineToLines(curLine, MAP_W - 2, formattedLines);
-        for(string & line : formattedLines) {lines_.push_back(line);}
+        for(string& line : formattedLines) {lines_.push_back(line);}
       }
     }
   }
@@ -66,7 +66,7 @@ void run() {
                      Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
-  for(string & line : lines_) {
+  for(string& line : lines_) {
     Renderer::drawText(line, Panel::screen, Pos(0, yPos++), clrWhite);
   }
 

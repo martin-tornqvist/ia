@@ -145,7 +145,7 @@ void DeviceRepeller::triggerEffect() {
   Log::addMsg("It triggers a shockwave around me.");
 
   const Pos& playerPos = Map::player->pos;
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     if(actor != Map::player && actor->deadState == ActorDeadState::alive) {
       const Pos& otherPos = actor->pos;
       if(Utils::isPosAdj(playerPos, otherPos, false)) {
@@ -174,7 +174,7 @@ void DeviceTranslocator::triggerEffect() {
   if(spottedEnemies.empty()) {
     Log::addMsg("It seems to peruse area.");
   } else {
-    for(Actor * actor : spottedEnemies) {
+    for(Actor* actor : spottedEnemies) {
       Log::addMsg(actor->getNameThe() + " is teleported.");
       Renderer::drawBlastAnimAtPositions(vector<Pos> {actor->pos}, clrYellow);
       actor->teleport(false);

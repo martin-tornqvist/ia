@@ -63,9 +63,9 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
 
   const int NR_ATTEMPTS_TO_FIND_POS = 100;
   for(int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; i++) {
-    const int NR_DATA               = themeFeatureData.size();
-    const int ELEMENT               = Rnd::range(0, NR_DATA - 1);
-    const FeatureDataT* const dTmp  = themeFeatureData.at(ELEMENT);
+    const int NR_DATA       = themeFeatureData.size();
+    const int ELEMENT       = Rnd::range(0, NR_DATA - 1);
+    const auto* const dTmp  = themeFeatureData.at(ELEMENT);
 
     if(
       dTmp->featureThemeSpawnRules.getPlacementRule() ==
@@ -137,10 +137,9 @@ void eraseAdjacentCellsFromVectors(
 int placeThemeFeatures(Room& room) {
   trace << "RoomThemeMaking::placeThemeFeatures()" << endl;
   vector<const FeatureDataT*> themeFeatureData;
-  themeFeatureData.resize(0);
 
   for(int i = 0; i < int(FeatureId::endOfFeatureId); i++) {
-    const FeatureDataT* const d = FeatureData::getData((FeatureId)(i));
+    const auto* const d = FeatureData::getData((FeatureId)(i));
     if(d->featureThemeSpawnRules.isBelongingToTheme(room.roomTheme)) {
       themeFeatureData.push_back(d);
     }
@@ -148,7 +147,7 @@ int placeThemeFeatures(Room& room) {
 
   vector<Pos> nextToWalls;
   vector<Pos> awayFromWalls;
-  MapPatterns::setPositionsInArea(room.getDims(), nextToWalls, awayFromWalls);
+  MapPatterns::setPositionsInArea(room.getRect(), nextToWalls, awayFromWalls);
 
   vector<int> featuresSpawnCount(themeFeatureData.size(), 0);
 
@@ -206,9 +205,8 @@ void mkThemeSpecificRoomModifications(Room& room) {
   switch(room.roomTheme) {
     case RoomThemeId::flooded:
     case RoomThemeId::muddy: {
-      const FeatureId featureId =
-        room.roomTheme == RoomThemeId::flooded ? FeatureId::shallowWater :
-        FeatureId::shallowMud;
+      const auto featureId = room.roomTheme == RoomThemeId::flooded ?
+                             FeatureId::shallowWater : FeatureId::shallowMud;
       for(int y = room.getY0(); y <= room.getY1(); y++) {
         for(int x = room.getX0(); x <= room.getX1(); x++) {
           if(blocked[x][y] == false) {
@@ -312,7 +310,7 @@ void applyThemeToRoom(Room& room) {
 
 int nrThemeInMap(const RoomThemeId theme) {
   int nr = 0;
-  for(Room * r : Map::rooms) {if(r->roomTheme == theme) nr++;}
+  for(Room* r : Map::rooms) {if(r->roomTheme == theme) nr++;}
   return nr;
 }
 
@@ -470,7 +468,7 @@ void run() {
 
   assignRoomThemes();
 
-  for(Room * const room : Map::rooms) {
+  for(Room* const room : Map::rooms) {
     applyThemeToRoom(*room);
     mkRoomDarkWithChance(*room);
   }

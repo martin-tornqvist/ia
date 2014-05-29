@@ -73,7 +73,7 @@ bool Actor::isSeeingActor(
       const bool IS_MONSTER_SNEAKING =
         dynamic_cast<const Monster*>(&other)->isStealth;
       return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer &&
-             IS_MONSTER_SNEAKING == false;
+             !IS_MONSTER_SNEAKING;
     }
 
     if(
@@ -84,7 +84,7 @@ bool Actor::isSeeingActor(
       if(IS_MONSTER_SNEAKING) return false;
     }
 
-    if(propHandler_->allowSee() == false) {
+    if(!propHandler_->allowSee()) {
       return false;
     }
 
@@ -94,7 +94,7 @@ bool Actor::isSeeingActor(
     if(pos.y - other.pos.y > FOV_STD_RADI_INT) return false;
 
     if(visionBlockingCells != nullptr) {
-      const bool IS_BLOCKED_BY_DARKNESS = data_->canSeeInDarkness == false;
+      const bool IS_BLOCKED_BY_DARKNESS = !data_->canSeeInDarkness;
       return Fov::checkCell(visionBlockingCells, other.pos, pos,
                             IS_BLOCKED_BY_DARKNESS);
     }
@@ -109,11 +109,11 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
 
   bool visionBlockers[MAP_W][MAP_H];
 
-  if(IS_SELF_PLAYER == false) {
+  if(!IS_SELF_PLAYER) {
     MapParse::parse(CellPred::BlocksVision(), visionBlockers);
   }
 
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     if(actor != this && actor->deadState == ActorDeadState::alive) {
 
       if(IS_SELF_PLAYER) {
@@ -133,8 +133,8 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
         //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if other IS the player,
         //there is no need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
         if(
-          (IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER == false) ||
-          (IS_HOSTILE_TO_PLAYER == false && IS_OTHER_HOSTILE_TO_PLAYER)) {
+          (IS_HOSTILE_TO_PLAYER && !IS_OTHER_HOSTILE_TO_PLAYER) ||
+          (!IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER)) {
           if(isSeeingActor(*actor, visionBlockers)) {
             vectorRef.push_back(actor);
           }
@@ -214,10 +214,8 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
   //If hp is below limit, but restored hp will push it over the limit,
   //hp is set to max.
   if(
-    IS_ALLOWED_ABOVE_MAX == false &&
-    getHp() > DIF_FROM_MAX &&
+    !IS_ALLOWED_ABOVE_MAX && getHp() > DIF_FROM_MAX &&
     getHp() < getHpMax(true)) {
-
     hp_ = getHpMax(true);
     isHpGained = true;
   }
@@ -256,8 +254,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
   //If spi is below limit, but restored spi will push it over the limit,
   //spi is set to max.
   if(
-    IS_ALLOWED_ABOVE_MAX == false &&
-    getSpi() > DIF_FROM_MAX &&
+    !IS_ALLOWED_ABOVE_MAX && getSpi() > DIF_FROM_MAX &&
     getSpi() < getSpiMax()) {
 
     spi_ = getSpiMax();
@@ -420,20 +417,16 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
 
   propHandler_->onHit();
 
-  if(this != Map::player || Config::isBotPlaying() == false) {
-    hp_ -= dmg;
-  }
+  if(this != Map::player || !Config::isBotPlaying()) {hp_ -= dmg;}
 
   if(getHp() <= 0) {
     const bool IS_ON_BOTTOMLESS =
       Map::cells[pos.x][pos.y].featureStatic->isBottomless();
     const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((getHpMax(true) * 5) / 4);
-    const bool IS_DESTROYED =
-      data_->canLeaveCorpse == false  ||
-      IS_ON_BOTTOMLESS                ||
-      IS_DMG_ENOUGH_TO_DESTROY;
+    const bool IS_DESTROYED = !data_->canLeaveCorpse || IS_ON_BOTTOMLESS ||
+                              IS_DMG_ENOUGH_TO_DESTROY;
 
-    die(IS_DESTROYED, IS_ON_BOTTOMLESS == false, IS_ON_BOTTOMLESS == false);
+    die(IS_DESTROYED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
     traceVerbose << "Actor::hit() [DONE]" << endl;
     return true;
   } else {
@@ -451,7 +444,7 @@ bool Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
 
   propHandler_->onHit();
 
-  if(this != Map::player || Config::isBotPlaying() == false) {
+  if(this != Map::player || !Config::isBotPlaying()) {
     spi_ = max(0, spi_ - DMG);
   }
   if(getSpi() <= 0) {
@@ -472,7 +465,7 @@ bool Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
 void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
                 const bool ALLOW_DROP_ITEMS) {
   //Check all monsters and unset this actor as leader
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     if(actor != this && actor != Map::player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
       if(monster->leader == this) {monster->leader = nullptr;}
@@ -482,11 +475,9 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   bool isOnVisibleTrap = false;
 
   //If died on a visible trap, destroy the corpse
-  const Feature* const f = Map::cells[pos.x][pos.y].featureStatic;
+  const auto* const f = Map::cells[pos.x][pos.y].featureStatic;
   if(f->getId() == FeatureId::trap) {
-    if(dynamic_cast<const Trap*>(f)->isHidden() == false) {
-      isOnVisibleTrap = true;
-    }
+    if(!dynamic_cast<const Trap*>(f)->isHidden()) {isOnVisibleTrap = true;}
   }
 
   bool isPlayerSeeDyingActor = true;
@@ -497,7 +488,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     if(Map::player->isSeeingActor(*this, nullptr)) {
       isPlayerSeeDyingActor = true;
       const string deathMessageOverride = data_->deathMessageOverride;
-      if(deathMessageOverride.empty() == false) {
+      if(!deathMessageOverride.empty()) {
         Log::addMsg(deathMessageOverride);
       } else {
         Log::addMsg(getNameThe() + " dies.");
@@ -533,9 +524,9 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   } else {
     if(this != Map::player) {
       Pos newPos;
-      Feature* featureHere = Map::cells[pos.x][pos.y].featureStatic;
+      auto* featureHere = Map::cells[pos.x][pos.y].featureStatic;
       //TODO this should be decided with a floodfill instead
-      if(featureHere->canHaveCorpse() == false) {
+      if(!featureHere->canHaveCorpse()) {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             newPos = pos + Pos(dx, dy);

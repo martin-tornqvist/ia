@@ -224,7 +224,7 @@ void draw(const MenuBrowser& browser) {
     pos.y += 10;
   } else {
     vector<string> logo;
-    if(Config::isTilesMode() == false) {
+    if(!Config::isTilesMode()) {
       logo.push_back("        ___  __                __  __                  ");
       logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
       logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
@@ -232,9 +232,9 @@ void draw(const MenuBrowser& browser) {
       logo.push_back("               \\                 \\                      ");
     }
     const int LOGO_X_POS_LEFT = (MAP_W - logo.at(0).size()) / 2;
-    for(const string & row : logo) {
+    for(const string& row : logo) {
       pos.x = LOGO_X_POS_LEFT;
-      for(const char & glyph : row) {
+      for(const char& glyph : row) {
         if(glyph != ' ') {
           SDL_Color clr = clrGreenLgt;
           clr.g += Rnd::range(-50, 100);
@@ -262,7 +262,7 @@ void draw(const MenuBrowser& browser) {
   vector<string> quoteLines;
   TextFormatting::lineToLines(quote, 28, quoteLines);
   Pos quotePos(15, pos.y - 1);
-  for(string & quoteLine : quoteLines) {
+  for(string& quoteLine : quoteLines) {
     Renderer::drawTextCentered(quoteLine, Panel::screen, quotePos, quoteClr);
     quotePos.y++;
   }

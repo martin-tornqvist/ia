@@ -83,7 +83,7 @@ void drawHistoryInterface(const int TOP_LINE_NR, const int BTM_LINE_NR) {
 
 //Used by normal log and history viewer
 void drawLine(const vector<Msg>& lineToDraw, const int Y_POS) {
-  for(const Msg & msg : lineToDraw) {
+  for(const Msg& msg : lineToDraw) {
     string str = "";
     msg.getStrWithRepeats(str);
     Renderer::drawText(str, Panel::log, Pos(msg.xPos_, Y_POS), msg.clr_);

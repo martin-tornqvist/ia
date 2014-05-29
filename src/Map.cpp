@@ -66,6 +66,8 @@ void init() {
 
   resetCells(false);
 
+  if(player != nullptr) {delete player; player = nullptr;}
+
   const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
   player = dynamic_cast<Player*>(ActorFactory::mk(actor_player, playerPos));
 
@@ -76,12 +78,14 @@ void init() {
 }
 
 void cleanup() {
-  player = nullptr; //Note: GameTime will delete player
+  player = nullptr; //Note: GameTime has deleted player at this point
 
   resetMap();
+
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       delete cells[x][y].featureStatic;
+      cells[x][y].featureStatic = nullptr;
     }
   }
 }
@@ -99,14 +103,14 @@ void setupFromSaveLines(vector<string>& lines) {
 void switchToDestroyedFeatAt(const Pos& pos) {
   if(Utils::isPosInsideMap(pos)) {
 
-    const FeatureId OLD_FEATURE_ID = cells[pos.x][pos.y].featureStatic->getId();
+    const auto OLD_FEATURE_ID = cells[pos.x][pos.y].featureStatic->getId();
 
-    const vector<FeatureId> convertionBucket =
+    const auto convertionBucket =
       FeatureData::getData(OLD_FEATURE_ID)->featuresOnDestroyed;
 
     const int SIZE = convertionBucket.size();
     if(SIZE > 0) {
-      const FeatureId NEW_ID = convertionBucket.at(Rnd::dice(1, SIZE) - 1);
+      const auto NEW_ID = convertionBucket.at(Rnd::dice(1, SIZE) - 1);
 
       FeatureFactory::mk(NEW_ID, pos);
 
@@ -117,7 +121,7 @@ void switchToDestroyedFeatAt(const Pos& pos) {
         for(int x = pos.x - 1; x <= pos.x + 1; x++) {
           for(int y = pos.y - 1; y <= pos.y + 1; y++) {
             if(x == 0 || y == 0) {
-              const FeatureStatic* const f = cells[x][y].featureStatic;
+              const auto* const f = cells[x][y].featureStatic;
               if(f->getId() == FeatureId::door) {
                 FeatureFactory::mk(FeatureId::rubbleLow, Pos(x, y));
               }
@@ -138,7 +142,7 @@ void switchToDestroyedFeatAt(const Pos& pos) {
 void resetMap() {
   ActorFactory::deleteAllMonsters();
 
-  for(Room * room : rooms) {delete room;}
+  for(auto* room : rooms) {delete room;}
 
   rooms.resize(0);
 

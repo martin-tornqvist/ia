@@ -97,12 +97,11 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
       bool isBigBon   = false;
       bool isSmallBon = false;
 
-      const FeatureStatic* const f =
-        Map::cells[defPos.x][defPos.y].featureStatic;
+      const auto* const f = Map::cells[defPos.x][defPos.y].featureStatic;
       if(f->getId() == FeatureId::trap) {
-        const Trap* const t = dynamic_cast<const Trap*>(f);
+        const auto* const t = dynamic_cast<const Trap*>(f);
         if(t->getTrapType() == trap_spiderWeb) {
-          const TrapSpiderWeb* const web =
+          const auto* const web =
             dynamic_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
           if(web->isHolding()) {
             isBigBon = true;
@@ -732,7 +731,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         vector<FeatureMob*> featureMobs;
         GameTime::getFeatureMobsAtPos(curProj->pos, featureMobs);
         Feature* featureBlockingShot = nullptr;
-        for(FeatureMob * mob : featureMobs) {
+        for(auto* mob : featureMobs) {
           if(mob->isProjectilePassable() == false) {
             featureBlockingShot = mob;
           }
@@ -817,7 +816,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     } //End projectile loop
 
     //If any projectile can be seen and not obstructed, delay
-    for(Projectile * projectile : projectiles) {
+    for(Projectile* projectile : projectiles) {
       const Pos& pos = projectile->pos;
       if(
         Map::cells[pos.x][pos.y].isSeenByPlayer &&
@@ -829,7 +828,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
     //Check if all projectiles obstructed
     bool isAllObstructed = true;
-    for(Projectile * projectile : projectiles) {
+    for(Projectile* projectile : projectiles) {
       if(projectile->isObstructed == false) {
         isAllObstructed = false;
       }
@@ -851,7 +850,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     wpn.weaponSpecific_projectileObstructed(pos, firstProjectile->actorHit);
   }
   //Cleanup
-  for(Projectile * projectile : projectiles) {delete projectile;}
+  for(Projectile* projectile : projectiles) {delete projectile;}
 
   Renderer::drawMapAndInterface();
 }

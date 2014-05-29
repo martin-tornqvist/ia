@@ -130,18 +130,18 @@ void tryCast(const Spell* const spell) {
 } //PlayerSpellsHandling
 
 void init() {
-  for(Spell * spell : knownSpells_) {delete spell;}
+  for(Spell* spell : knownSpells_) {delete spell;}
   knownSpells_.resize(0);
 }
 
 void cleanup() {
-  for(Spell * spell : knownSpells_) {delete spell;}
+  for(Spell* spell : knownSpells_) {delete spell;}
   knownSpells_.resize(0);
 }
 
 void storeToSaveLines(vector<string>& lines) {
   lines.push_back(toStr(knownSpells_.size()));
-  for(Spell * s : knownSpells_) {lines.push_back(toStr(int(s->getId())));}
+  for(Spell* s : knownSpells_) {lines.push_back(toStr(int(s->getId())));}
 }
 
 void setupFromSaveLines(vector<string>& lines) {
@@ -212,7 +212,7 @@ void tryCastPrevSpell() {
 }
 
 bool isSpellLearned(const SpellId id) {
-  for(Spell * s : knownSpells_) {if(s->getId() == id) {return true;}}
+  for(Spell* s : knownSpells_) {if(s->getId() == id) {return true;}}
   return false;
 }
 
@@ -222,7 +222,7 @@ void learnSpellIfNotKnown(const SpellId id) {
 
 void learnSpellIfNotKnown(Spell* const spell) {
   bool isAlreadyLearned = false;
-  for(Spell * spellCmpr : knownSpells_) {
+  for(Spell* spellCmpr : knownSpells_) {
     if(spellCmpr->getId() == spell->getId()) {
       isAlreadyLearned = true;
       break;

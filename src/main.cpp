@@ -39,13 +39,13 @@ int main(int argc, char* argv[]) {
   Init::initGame();
 
   bool quitGame = false;
-  while(quitGame == false) {
+  while(!quitGame) {
     Init::initSession();
 
     int introMusChan = -1;
     const GameEntryMode gameEntryType = MainMenu::run(quitGame, introMusChan);
 
-    if(quitGame == false) {
+    if(!quitGame) {
       Init::quitToMainMenu = false;
 
       if(gameEntryType == GameEntryMode::newGame) {
@@ -55,14 +55,14 @@ int main(int argc, char* argv[]) {
         CreateCharacter::createCharacter();
         Map::player->mkStartItems();
 
-        if(Config::isIntroLvlSkipped() == false) {
-          //If intro level is used, build forest.
+        if(Config::isIntroLvlSkipped()) {
+          //Build first dungeon level
+          DungeonClimb::travelDown();
+        } else {
+          //Build forest.
           Renderer::coverPanel(Panel::screen);
           Renderer::updateScreen();
           MapGen::IntroForest::run();
-        } else {
-          //Else build first dungeon level
-          DungeonClimb::travelDown();
         }
         DungeonMaster::setTimeStartedToNow();
         const TimeData& t = DungeonMaster::getTimeStarted();
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
       }
 
       //========== M A I N   L O O P ==========
-      while(Init::quitToMainMenu == false) {
+      while(!Init::quitToMainMenu) {
         if(Map::player->deadState == ActorDeadState::alive) {
 
           Actor* const actor = GameTime::getCurActor();

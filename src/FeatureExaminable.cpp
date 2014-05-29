@@ -50,8 +50,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
           unsigned int ii = 0;
           ii < curData->featuresCanBeFoundIn.size();
           ii++) {
-          pair<FeatureId, int> featuresFoundIn =
-            curData->featuresCanBeFoundIn.at(ii);
+          auto featuresFoundIn = curData->featuresCanBeFoundIn.at(ii);
           if(featuresFoundIn.first == featureId) {
             if(Rnd::percentile() < featuresFoundIn.second) {
               if(Rnd::percentile() < curData->chanceToIncludeInSpawnList) {
@@ -66,8 +65,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
       const int NR_CANDIDATES = int(itemBucket.size());
       if(NR_CANDIDATES > 0) {
         for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; i++) {
-          const unsigned int ELEMENT =
-            Rnd::range(0, NR_CANDIDATES - 1);
+          const auto ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
           Item* item = ItemFactory::mk(itemBucket.at(ELEMENT));
           ItemFactory::setItemRandomizedProperties(item);
           items_.push_back(item);
@@ -78,16 +76,14 @@ void ItemContainerFeature::setRandomItemsForFeature(
 }
 
 void ItemContainerFeature::dropItems(const Pos& pos) {
-  for(unsigned int i = 0; i < items_.size(); i++) {
-    ItemDrop::dropItemOnMap(pos, *items_.at(i));
-  }
+  for(auto* item : items_) {ItemDrop::dropItemOnMap(pos, *item);}
   items_.resize(0);
 }
 
 void ItemContainerFeature::destroySingleFragile() {
   //TODO Generalize this function (perhaps isFragile variable in item data)
 
-  for(unsigned int i = 0; i < items_.size(); i++) {
+  for(size_t i = 0; i < items_.size(); i++) {
     Item* const item = items_.at(i);
     const ItemDataT& d = item->getData();
     if(d.isPotion || d.id == ItemId::molotov) {
@@ -118,7 +114,7 @@ Tomb::Tomb(FeatureId id, Pos pos) :
     const TombAppearance lastAppearance = TombAppearance::endOfTombAppearance;
     appearance_ = TombAppearance(Rnd::range(0, int(lastAppearance) - 1));
   } else {
-    for(Item * item : itemContainer_.items_) {
+    for(Item* item : itemContainer_.items_) {
       const ItemValue itemValue = item->getData().itemValue;
       if(itemValue == ItemValue::majorTreasure) {
         appearance_ = TombAppearance::marvelous;

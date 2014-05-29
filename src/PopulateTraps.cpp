@@ -16,8 +16,8 @@ namespace PopulateTraps {
 namespace {
 
 void mkTrapAt(const TrapId id, const Pos& pos) {
-  FeatureStatic* const f = Map::cells[pos.x][pos.y].featureStatic;
-  const FeatureDataT* const d = FeatureData::getData(f->getId());
+  auto* const f       = Map::cells[pos.x][pos.y].featureStatic;
+  const auto* const d = FeatureData::getData(f->getId());
   FeatureFactory::mk(FeatureId::trap, pos, new TrapSpawnData(d, id));
 }
 
@@ -30,7 +30,7 @@ void populateStdLvl() {
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   //Put traps in non-plain rooms
-  for(Room * const room : Map::rooms) {
+  for(Room* const room : Map::rooms) {
     const RoomThemeId theme = room->roomTheme;
 
     if(theme != RoomThemeId::plain) {

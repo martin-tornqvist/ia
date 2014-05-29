@@ -1368,7 +1368,7 @@ string getItemRef(const Item& item, const ItemRefType itemRefForm,
     if(d.isIdentified) {
       ret = itemRefForm == ItemRefType::plain ?
             d.baseName.name : d.baseName.name_a;
-      if(SKIP_EXTRA_INFO == false) {
+      if(!SKIP_EXTRA_INFO) {
         const Condition cond = dynamic_cast<const Device*>(&item)->condition_;
         switch(cond) {
           case Condition::breaking: ret += " {breaking}"; break;
@@ -1403,10 +1403,10 @@ string getItemRef(const Item& item, const ItemRefType itemRefForm,
     return ret + " {" + toStr(medicalBag->getNrSupplies()) + "}";
   }
 
-  if(SKIP_EXTRA_INFO == false) {
+  if(!SKIP_EXTRA_INFO) {
     if(d.isRangedWeapon) {
       string ammoLoadedStr = "";
-      if(d.rangedHasInfiniteAmmo == false) {
+      if(!d.rangedHasInfiniteAmmo) {
         const Weapon* const w = dynamic_cast<const Weapon*>(&item);
         ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" +
                         toStr(w->ammoCapacity);
@@ -1414,7 +1414,7 @@ string getItemRef(const Item& item, const ItemRefType itemRefForm,
       return ret + ammoLoadedStr;
     }
 
-    if((d.isScroll || d.isPotion) && d.isTried && d.isIdentified == false) {
+    if((d.isScroll || d.isPotion) && d.isTried && !d.isIdentified) {
       return ret + " {tried}";
     }
   }
@@ -1493,7 +1493,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
     const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr = toStr(TOTAL_SKILL) + "%";
     string ammoLoadedStr = "";
-    if(d.rangedHasInfiniteAmmo == false) {
+    if(!d.rangedHasInfiniteAmmo) {
       const Weapon* const w = dynamic_cast<const Weapon*>(&item);
       ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" +
                       toStr(w->ammoCapacity);
@@ -1532,7 +1532,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
     return armorDataLine.empty() ? ret : ret + " " + armorDataLine;
   }
 
-  if((d.isScroll || d.isPotion) && d.isTried && d.isIdentified == false) {
+  if((d.isScroll || d.isPotion) && d.isTried && !d.isIdentified) {
     return ret + " {tried}";
   }
 

@@ -23,7 +23,7 @@ struct CharAndFeatureId {
 
 FeatureId translate(const char cha,
                     const vector<CharAndFeatureId>& translations) {
-  for(const CharAndFeatureId & translation : translations) {
+  for(const CharAndFeatureId& translation : translations) {
     if(cha == translation.cha) {return translation.featureId;}
   }
   return FeatureId::empty;

@@ -48,7 +48,7 @@ bool run() {
   actors.push_back(ActorFactory::mk(actor_cultist,   Pos(17, 10)));
   actors.push_back(ActorFactory::mk(actor_cultist,   Pos(17, 12)));
 
-  for(Actor * a : actors) {dynamic_cast<Monster*>(a)->isRoamingAllowed_ = true;}
+  for(Actor* a : actors) {dynamic_cast<Monster*>(a)->isRoamingAllowed_ = true;}
 
   return true;
 }

@@ -21,7 +21,7 @@ void mkLvl() {
   bool levelBuilt = false;
 
   //------------------------------------- TRAPEZOHEDRON LVL
-  if(levelBuilt == false) {
+  if(!levelBuilt) {
     if(Map::dlvl > LAST_CAVERN_LVL) {
       while(MapGen::TrapezohedronLvl::run() == false) {}
       levelBuilt = true;
@@ -29,7 +29,7 @@ void mkLvl() {
   }
 
   //------------------------------------- KINGS TOMB
-  if(levelBuilt == false) {
+  if(!levelBuilt) {
     if(Map::dlvl == LAST_ROOM_AND_CORRIDOR_LVL + 1) {
       while(MapGen::EgyptTomb::run() == false) {}
       levelBuilt = true;
@@ -37,14 +37,14 @@ void mkLvl() {
   }
 
   //------------------------------------- DUNGEON LVLS
-  if(levelBuilt == false) {
+  if(!levelBuilt) {
     if(Map::dlvl < FIRST_CAVERN_LVL) {
       while(MapGen::Std::run() == false) {}
       levelBuilt = true;
     }
   }
   //------------------------------------- CAVERN LVLS
-  if(levelBuilt == false) {
+  if(!levelBuilt) {
     if(Map::dlvl >= FIRST_CAVERN_LVL) {
       while(MapGen::CaveLvl::run() == false) {}
     }
@@ -82,7 +82,7 @@ void tryUseDownStairs() {
 
   const Pos& playerPos = Map::player->pos;
 
-  const FeatureId featureIdAtPlayer =
+  const auto featureIdAtPlayer =
     Map::cells[playerPos.x][playerPos.y].featureStatic->getId();
 
   if(featureIdAtPlayer == FeatureId::stairs) {

@@ -97,7 +97,7 @@ void runStandardTurnEvents() {
 
   //Update mobile features
   const vector<FeatureMob*> mobsCpy = featureMobs_;
-  for(FeatureMob * f : mobsCpy) {f->newTurn();}
+  for(auto* f : mobsCpy) {f->newTurn();}
 
   //Update timed features
   for(int y = 0; y < MAP_H; y++) {
@@ -119,9 +119,9 @@ void runStandardTurnEvents() {
   //Run new turn events on all player items
   Inventory& playerInv = Map::player->getInv();
   vector<Item*>& playerBackpack = playerInv.getGeneral();
-  for(Item * const item : playerBackpack) {item->newTurnInInventory();}
+  for(Item* const item : playerBackpack) {item->newTurnInInventory();}
   vector<InvSlot>& playerSlots = playerInv.getSlots();
-  for(InvSlot & slot : playerSlots) {
+  for(InvSlot& slot : playerSlots) {
     if(slot.item != nullptr) {
       slot.item->newTurnInInventory();
     }
@@ -147,10 +147,10 @@ void init() {
 }
 
 void cleanup() {
-  for(Actor * a : actors_) {delete a;}
+  for(Actor* a : actors_) {delete a;}
   actors_.resize(0);
 
-  for(FeatureMob * f : featureMobs_) {delete f;}
+  for(auto* f : featureMobs_) {delete f;}
   featureMobs_.resize(0);
 }
 
@@ -170,7 +170,7 @@ int getTurn() {
 void getFeatureMobsAtPos(
   const Pos& pos, vector<FeatureMob*>& vectorRef) {
   vectorRef.resize(0);
-  for(FeatureMob * m : featureMobs_) {
+  for(auto* m : featureMobs_) {
     if(m->getPos() == pos) {
       vectorRef.push_back(m);
     }
@@ -193,12 +193,12 @@ void eraseFeatureMob(FeatureMob* const feature, const bool DESTROY_OBJECT) {
 }
 
 void eraseAllFeatureMobs() {
-  for(FeatureMob * m : featureMobs_) {delete m;}
+  for(auto* m : featureMobs_) {delete m;}
   featureMobs_.resize(0);
 }
 
 void eraseActorInElement(const unsigned int i) {
-  if(actors_.empty() == false) {
+  if(!actors_.empty()) {
     delete actors_.at(i);
     actors_.erase(actors_.begin() + i);
   }
@@ -238,10 +238,10 @@ void actorDidAct(const bool IS_FREE_TURN) {
   //Tick properties running on actor turns
   curActor->getPropHandler().tick(propTurnModeActor, nullptr);
 
-  if(IS_FREE_TURN == false) {
+  if(!IS_FREE_TURN) {
 
     bool actorWhoCanActThisTurnFound = false;
-    while(actorWhoCanActThisTurnFound == false) {
+    while(!actorWhoCanActThisTurnFound) {
       TurnType curTurnType = (TurnType)(curTurnTypePos_);
 
       curActorVectorPos_++;
@@ -268,7 +268,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
         find(props.begin(), props.end(), propSlowed) != props.end();
       const ActorSpeed defSpeed = curActor->getData().speed;
       const ActorSpeed realSpeed =
-        IS_SLOWED == false || defSpeed == ActorSpeed::sluggish ?
+        !IS_SLOWED || defSpeed == ActorSpeed::sluggish ?
         defSpeed : ActorSpeed(int(defSpeed) - 1);
       switch(realSpeed) {
         case ActorSpeed::sluggish: {

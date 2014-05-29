@@ -17,7 +17,7 @@ void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
 
   for(int y = area.p0.y; y <= area.p1.y; y++) {
     for(int x = area.p0.x; x <= area.p1.x; x++) {
-      FeatureStatic* const f = Map::cells[x][y].featureStatic;
+      auto* const f = Map::cells[x][y].featureStatic;
       if(f->canMoveCmn() && f->canHaveStaticFeature()) {
         posBucket.push_back(Pos(x, y));
       }
@@ -27,7 +27,7 @@ void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
   nextToWalls.resize(0);
   awayFromWalls.resize(0);
 
-  for(Pos & pos : posBucket) {
+  for(Pos& pos : posBucket) {
     const int NR_BLK_R = getWalkBlockersInDir(Dir::right, pos);
     const int NR_BLK_D = getWalkBlockersInDir(Dir::down, pos);
     const int NR_BLK_L = getWalkBlockersInDir(Dir::left, pos);
@@ -44,17 +44,12 @@ void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
     bool isDoorAdjacent = false;
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {
-        const FeatureStatic* const f =
-          Map::cells[pos.x + dx][pos.y + dy].featureStatic;
-        if(f->getId() == FeatureId::door) {
-          isDoorAdjacent = true;
-        }
+        const auto* const f = Map::cells[pos.x + dx][pos.y + dy].featureStatic;
+        if(f->getId() == FeatureId::door) {isDoorAdjacent = true;}
       }
     }
 
-    if(isDoorAdjacent) {
-      continue;
-    }
+    if(isDoorAdjacent) {continue;}
 
     if(
       (NR_BLK_R == 3 && NR_BLK_U == 1 && NR_BLK_D == 1 && NR_BLK_L == 0) ||
@@ -75,41 +70,29 @@ int getWalkBlockersInDir(const Dir dir, const Pos& pos) {
   switch(dir) {
     case Dir::right: {
       for(int dy = -1; dy <= 1; dy++) {
-        const FeatureStatic* const f =
-          Map::cells[pos.x + 1][pos.y + dy].featureStatic;
-        if(f->canMoveCmn() == false) {
-          nrBlockers += 1;
-        }
+        const auto* const f = Map::cells[pos.x + 1][pos.y + dy].featureStatic;
+        if(!f->canMoveCmn()) {nrBlockers += 1;}
       }
     } break;
 
     case Dir::down: {
       for(int dx = -1; dx <= 1; dx++) {
-        const FeatureStatic* const f =
-          Map::cells[pos.x + dx][pos.y + 1].featureStatic;
-        if(f->canMoveCmn() == false) {
-          nrBlockers += 1;
-        }
+        const auto* const f = Map::cells[pos.x + dx][pos.y + 1].featureStatic;
+        if(!f->canMoveCmn()) {nrBlockers += 1;}
       }
     } break;
 
     case Dir::left: {
       for(int dy = -1; dy <= 1; dy++) {
-        const FeatureStatic* const f =
-          Map::cells[pos.x - 1][pos.y + dy].featureStatic;
-        if(f->canMoveCmn() == false) {
-          nrBlockers += 1;
-        }
+        const auto* const f = Map::cells[pos.x - 1][pos.y + dy].featureStatic;
+        if(!f->canMoveCmn()) {nrBlockers += 1;}
       }
     } break;
 
     case Dir::up: {
       for(int dx = -1; dx <= 1; dx++) {
-        const FeatureStatic* const f =
-          Map::cells[pos.x + dx][pos.y - 1].featureStatic;
-        if(f->canMoveCmn() == false) {
-          nrBlockers += 1;
-        }
+        const auto* const f = Map::cells[pos.x + dx][pos.y - 1].featureStatic;
+        if(!f->canMoveCmn()) {nrBlockers += 1;}
       }
     } break;
 

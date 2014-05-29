@@ -99,7 +99,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   } else {
     vector<string> abilitiesLines;
     TextFormatting::lineToLines(traitsLine, 60, abilitiesLines);
-    for(string & str : abilitiesLines) {
+    for(string& str : abilitiesLines) {
       linesRef.push_back(StrAndClr("   " + str, clrInfo));
     }
   }
@@ -109,7 +109,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   if(uniqueKilledNames.empty()) {
     linesRef.push_back(StrAndClr("   * None", clrInfo));
   } else {
-    for(string & monsterName : uniqueKilledNames) {
+    for(string& monsterName : uniqueKilledNames) {
       linesRef.push_back(StrAndClr("   * " + monsterName, clrInfo));
     }
   }
@@ -136,11 +136,8 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
       for(int dx = -1; dx <= 1; dx++) {
         for(int dy = -1; dy <= 1; dy++) {
           if(Utils::isPosInsideMap(Pos(x + dx, y + dy))) {
-            const FeatureStatic* const f =
-              Map::cells[x + dx][y + dy].featureStatic;
-            if(f->isVisionPassable()) {
-              Map::cells[x][y].isSeenByPlayer = true;
-            }
+            const auto* const f = Map::cells[x + dx][y + dy].featureStatic;
+            if(f->isVisionPassable()) {Map::cells[x][y].isSeenByPlayer = true;}
           }
         }
       }
@@ -249,7 +246,7 @@ void mkMemorialFile(const vector<StrAndClr>& lines) {
   // Add memorial file
   ofstream file;
   file.open(memorialFilePath.data(), ios::trunc);
-  for(const StrAndClr & line : lines) {file << line.str << endl;}
+  for(const StrAndClr& line : lines) {file << line.str << endl;}
   file.close();
 
   // Add reference to memorial file in list
@@ -326,7 +323,7 @@ void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame) {
   renderMenu(browser);
 
   bool done = false;
-  while(done == false) {
+  while(!done) {
     const MenuAction action = MenuInputHandling::getAction(browser);
     switch(action) {
       case MenuAction::browsed: {

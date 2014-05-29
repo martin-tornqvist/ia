@@ -35,9 +35,9 @@ void playerJamFeature(Feature* const feature) {
     }
   }
 
-  if(jamableObjectFound == false) {
+  if(!jamableObjectFound) {
     const bool PLAYER_IS_BLIND = Map::player->getPropHandler().allowSee();
-    if(PLAYER_IS_BLIND == false) {
+    if(!PLAYER_IS_BLIND) {
       Log::addMsg("I see nothing there to jam with a spike.");
     } else {
       Log::addMsg("I find nothing there to jam with a spike.");
@@ -48,7 +48,7 @@ void playerJamFeature(Feature* const feature) {
 void playerJam() {
   Log::clearLog();
 
-  if(Map::player->getInv().hasItemInGeneral(ItemId::ironSpike) == false) {
+  if(!Map::player->getInv().hasItemInGeneral(ItemId::ironSpike)) {
     Log::addMsg("I have no spikes to jam with.", clrWhite);
     Renderer::drawMapAndInterface();
     return;

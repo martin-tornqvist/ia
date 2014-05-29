@@ -29,19 +29,18 @@ void resetNrSoundMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
 
 void emitSnd(Snd snd) {
   bool blocked[MAP_W][MAP_H];
-  FeatureStatic* f = nullptr;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      f = Map::cells[x][y].featureStatic;
+      const auto f = Map::cells[x][y].featureStatic;
       blocked[x][y] = f->isSoundPassable() == false;
     }
   }
   int floodFill[MAP_W][MAP_H];
   const Pos& origin = snd.getOrigin();
-  FloodFill::run(origin, blocked, floodFill, 999, Pos(-1, -1));
+  FloodFill::run(origin, blocked, floodFill, 999, Pos(-1, -1), true);
   floodFill[origin.x][origin.y] = 0;
 
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     const int FLOOD_VALUE_AT_ACTOR = floodFill[actor->pos.x][actor->pos.y];
 
     const bool IS_ORIGIN_SEEN_BY_PLAYER =

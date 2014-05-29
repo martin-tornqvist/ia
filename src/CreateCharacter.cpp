@@ -134,10 +134,10 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
 
   vector<string> rawDescrLines;
   PlayerBon::getBgDescr(markedBg, rawDescrLines);
-  for(string & rawLine : rawDescrLines) {
+  for(string& rawLine : rawDescrLines) {
     vector<string> formattedLines;
     TextFormatting::lineToLines(rawLine, MAX_W_DESCR, formattedLines);
-    for(string & line : formattedLines) {
+    for(string& line : formattedLines) {
       Renderer::drawText(line, Panel::screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
@@ -185,7 +185,7 @@ void drawPickTrait(
   const int NR_TRAITS_2 = traits2.size();
 
   int lenOfLongestInCol2 = -1;
-  for(const Trait & id : traits2) {
+  for(const Trait& id : traits2) {
     string title = "";
     PlayerBon::getTraitTitle(id, title);
     const int CUR_LEN = title.length();
@@ -257,7 +257,7 @@ void drawPickTrait(
   vector<string> descrLines;
   TextFormatting::lineToLines(
     "Effect(s): " + descr, MAX_W_DESCR, descrLines);
-  for(const string & str : descrLines) {
+  for(const string& str : descrLines) {
     Renderer::drawText(str, Panel::screen, Pos(X0_DESCR, y), clrWhite);
     y++;
   }
@@ -287,7 +287,7 @@ void drawPickTrait(
 
     vector<string> prereqLines;
     TextFormatting::lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
-    for(const string & str : prereqLines) {
+    for(const string& str : prereqLines) {
       Renderer::drawText(str, Panel::screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
@@ -302,7 +302,7 @@ void drawPickTrait(
     pickedStr = "Trait(s) gained: " + pickedStr;
     vector<string> pickedLines;
     TextFormatting::lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
-    for(const string & str : pickedLines) {
+    for(const string& str : pickedLines) {
       Renderer::drawText(
         str, Panel::screen, Pos(1, y), clrWhite);
       y++;

@@ -133,7 +133,7 @@ void mkLines() {
     lines_.push_back(StrAndClr(offset + "No known potions", clrText));
   } else {
     sort(potionList.begin(), potionList.end(), strAndClrSort);
-    for(StrAndClr & e : potionList) {lines_.push_back(e);}
+    for(StrAndClr& e : potionList) {lines_.push_back(e);}
   }
   lines_.push_back(StrAndClr(" ", clrText));
 
@@ -143,7 +143,7 @@ void mkLines() {
     lines_.push_back(StrAndClr(offset + "No known manuscripts", clrText));
   } else {
     sort(manuscriptList.begin(), manuscriptList.end(), strAndClrSort);
-    for(StrAndClr & e : manuscriptList) {lines_.push_back(e);}
+    for(StrAndClr& e : manuscriptList) {lines_.push_back(e);}
   }
   lines_.push_back(StrAndClr(" ", clrText));
 
@@ -164,7 +164,7 @@ void mkLines() {
       PlayerBon::getTraitDescr(trait, descr);
       vector<string> descrLines;
       TextFormatting::lineToLines(descr, MAX_W_DESCR, descrLines);
-      for(string & descrLine : descrLines) {
+      for(string& descrLine : descrLines) {
         lines_.push_back(StrAndClr(offset + descrLine, clrTextDark));
       }
       lines_.push_back(StrAndClr(" ", clrText));

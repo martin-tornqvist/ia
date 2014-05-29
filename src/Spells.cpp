@@ -237,8 +237,8 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
 
   target->hit(DMG, DmgType::physical, true);
 
-  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos, nullptr,
-          SndVol::low, AlertsMonsters::yes);
+  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos,
+          nullptr, SndVol::low, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 
   return SpellCastRetData(true);
@@ -272,12 +272,12 @@ SpellCastRetData SpellAzathothsWrath::cast_(
         find(props.begin(), props.end(), propWarlockCharged) != props.end();
 
       vector<Pos> actorPositions; actorPositions.resize(0);
-      for(Actor * a : targets) {actorPositions.push_back(a->pos);}
+      for(Actor* a : targets) {actorPositions.push_back(a->pos);}
 
       Renderer::drawBlastAnimAtPositionsWithPlayerVision(
         actorPositions, clrRedLgt);
 
-      for(Actor * actor : targets) {
+      for(Actor* actor : targets) {
         Log::addMsg(actor->getNameThe() + " is " + msgEnd, clrMsgGood);
         actor->getPropHandler().tryApplyProp(
           new PropParalyzed(propTurnsSpecific, 2));
@@ -286,8 +286,8 @@ SpellCastRetData SpellAzathothsWrath::cast_(
 
         actor->hit(DMG, DmgType::physical, false);
 
-        Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos, nullptr,
-                SndVol::high, AlertsMonsters::yes);
+        Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos,
+                nullptr, SndVol::high, AlertsMonsters::yes);
         SndEmit::emitSnd(snd);
       }
       return SpellCastRetData(true);
@@ -299,8 +299,8 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     Map::player->getPropHandler().tryApplyProp(
       new PropParalyzed(propTurnsSpecific, 1));
     Map::player->hit(Rnd::range(dmgRange), DmgType::physical, false);
-    Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, Map::player->pos, nullptr,
-            SndVol::high, AlertsMonsters::yes);
+    Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, Map::player->pos,
+            nullptr, SndVol::high, AlertsMonsters::yes);
     SndEmit::emitSnd(snd);
   }
   return SpellCastRetData(false);
@@ -345,10 +345,7 @@ SpellCastRetData SpellMayhem::cast_(
           }
         }
         if(isAdjToWalkableCell) {
-          const int CHANCE_TO_DESTROY = 10;
-          if(Rnd::percentile() < CHANCE_TO_DESTROY) {
-            Map::switchToDestroyedFeatAt(c);
-          }
+          if(Rnd::oneIn(10)) {Map::switchToDestroyedFeatAt(c);}
         }
       }
     }
@@ -356,22 +353,17 @@ SpellCastRetData SpellMayhem::cast_(
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
-      FeatureStatic* const f =
-        Map::cells[x][y].featureStatic;
+      auto* const f = Map::cells[x][y].featureStatic;
       if(f->canHaveBlood()) {
-        const int CHANCE_FOR_BLOOD = 10;
-        if(Rnd::percentile() < CHANCE_FOR_BLOOD) {
-          f->setHasBlood(true);
-        }
+        if(Rnd::oneIn(10)) {f->setHasBlood(true);}
       }
     }
   }
 
-  for(Actor * actor : GameTime::actors_) {
+  for(auto* actor : GameTime::actors_) {
     if(actor != Map::player) {
       if(Map::player->isSeeingActor(*actor, nullptr)) {
-        actor->getPropHandler().tryApplyProp(
-          new PropBurning(propTurnsStd));
+        actor->getPropHandler().tryApplyProp(new PropBurning(propTurnsStd));
       }
     }
   }
@@ -384,8 +376,7 @@ SpellCastRetData SpellMayhem::cast_(
 }
 
 //------------------------------------------------------------ PESTILENCE
-SpellCastRetData SpellPestilence::cast_(
-  Actor* const caster) const {
+SpellCastRetData SpellPestilence::cast_(Actor* const caster) const {
   (void)caster;
 
   const int RND = Rnd::range(1, 4);
@@ -454,9 +445,9 @@ SpellCastRetData SpellDetTraps::cast_(Actor* const caster) const {
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
       if(Map::cells[x][y].isSeenByPlayer) {
-        FeatureStatic* const f = Map::cells[x][y].featureStatic;
+        auto* const f = Map::cells[x][y].featureStatic;
         if(f->getId() == FeatureId::trap) {
-          Trap* const trap = dynamic_cast<Trap*>(f);
+          auto* const trap = dynamic_cast<Trap*>(f);
           trap->reveal(false);
           trapsRevealedPositions.push_back(Pos(x, y));
         }
@@ -467,8 +458,7 @@ SpellCastRetData SpellDetTraps::cast_(Actor* const caster) const {
   if(trapsRevealedPositions.empty() == false) {
     Renderer::drawMapAndInterface();
     Map::player->updateFov();
-    Renderer::drawBlastAnimAtPositions(
-      trapsRevealedPositions, clrWhite);
+    Renderer::drawBlastAnimAtPositions(trapsRevealedPositions, clrWhite);
     Renderer::drawMapAndInterface();
     if(trapsRevealedPositions.size() == 1) {
       Log::addMsg("A hidden trap is revealed to me.");
@@ -494,7 +484,7 @@ SpellCastRetData SpellDetMon::cast_(Actor* const caster) const {
 
   bool didDetect        = false;
 
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     if(actor != Map::player) {
       if(Utils::kingDist(playerPos, actor->pos) <= MAX_DIST) {
         dynamic_cast<Monster*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
@@ -579,7 +569,7 @@ SpellCastRetData SpellCloudMinds::cast_(
   (void)caster;
   Log::addMsg("I vanish from the minds of my enemies.");
 
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     if(actor != Map::player) {
       Monster* const monster = dynamic_cast<Monster*>(actor);
       monster->awareOfPlayerCounter_ = 0;
@@ -685,12 +675,12 @@ SpellCastRetData SpellPropOnEnemies::cast_(
       vector<Pos> actorPositions;
       actorPositions.resize(0);
 
-      for(Actor * a : targets) {actorPositions.push_back(a->pos);}
+      for(Actor* a : targets) {actorPositions.push_back(a->pos);}
 
       Renderer::drawBlastAnimAtPositionsWithPlayerVision(
         actorPositions, clrMagenta);
 
-      for(Actor * actor : targets) {
+      for(Actor* actor : targets) {
         PropHandler& propHlr = actor->getPropHandler();
         Prop* const prop = propHlr.mkProp(propId, propTurnsStd);
         propHlr.tryApplyProp(prop);

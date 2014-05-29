@@ -31,8 +31,7 @@ void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
     const bool IS_STACKABLE = itemToDrop->getData().isStackable;
     const int NR_ITEMS_BEFORE_DROP = itemToDrop->nrItems;
     const bool IS_WHOLE_STACK_DROPPED =
-      IS_STACKABLE == false ||
-      NR_ITEMS_TO_DROP == -1 ||
+      !IS_STACKABLE || NR_ITEMS_TO_DROP == -1 ||
       (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
 
     string itemRef = "";
@@ -74,7 +73,7 @@ void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
 //wrong things. It should be refactored.
 Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
   //If target cell is bottomless, just destroy the item
-  const Feature* const targetFeature =
+  const auto* const targetFeature =
     Map::cells[intendedPos.x][intendedPos.y].featureStatic;
   if(targetFeature->isBottomless()) {
     delete &item;
@@ -86,7 +85,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       FeatureStatic* const f = Map::cells[x][y].featureStatic;
-      freeCellArray[x][y] = f->canHaveItem() && f->isBottomless() == false;
+      freeCellArray[x][y] = f->canHaveItem() && !f->isBottomless();
     }
   }
   vector<Pos> freeCells;
@@ -107,7 +106,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
     //to try and merge the item if it stacks
     if(IS_STACKABLE_TYPE) {
       //While ii cell is not further away than i cell
-      while(isCloserToOrigin(freeCells.at(i), freeCells.at(ii)) == false) {
+      while(!isCloserToOrigin(freeCells.at(i), freeCells.at(ii))) {
         stackPos = freeCells.at(ii);
         Item* itemFoundOnFloor = Map::cells[stackPos.x][stackPos.y].item;
         if(itemFoundOnFloor != nullptr) {
@@ -134,7 +133,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
 
       const bool IS_PLAYER_POS    = Map::player->pos == curPos;
       const bool IS_INTENDED_POS  = curPos == intendedPos;
-      if(IS_PLAYER_POS && IS_INTENDED_POS == false) {
+      if(IS_PLAYER_POS && !IS_INTENDED_POS) {
         Log::addMsg("I feel something by my feet.");
       }
 

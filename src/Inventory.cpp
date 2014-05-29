@@ -69,13 +69,13 @@ Inventory::Inventory(bool humanoid) {
 }
 
 Inventory::~Inventory() {
-  for(InvSlot & slot : slots_)  {if(slot.item) {delete slot.item;}}
-  for(Item * item : general_)         {delete item;}
-  for(Item * item : intrinsics_)      {delete item;}
+  for(InvSlot& slot : slots_)  {if(slot.item) {delete slot.item;}}
+  for(Item* item : general_)         {delete item;}
+  for(Item* item : intrinsics_)      {delete item;}
 }
 
 void Inventory::storeToSaveLines(vector<string>& lines) const {
-  for(const InvSlot & slot : slots_) {
+  for(const InvSlot& slot : slots_) {
     Item* const item = slot.item;
     if(item == nullptr) {
       lines.push_back("0");
@@ -87,7 +87,7 @@ void Inventory::storeToSaveLines(vector<string>& lines) const {
   }
 
   lines.push_back(toStr(general_.size()));
-  for(Item * item : general_) {
+  for(Item* item : general_) {
     lines.push_back(toStr(int(item->getData().id)));
     lines.push_back(toStr(item->nrItems));
     item->storeToSaveLines(lines);
@@ -95,7 +95,7 @@ void Inventory::storeToSaveLines(vector<string>& lines) const {
 }
 
 void Inventory::setupFromSaveLines(vector<string>& lines) {
-  for(InvSlot & slot : slots_) {
+  for(InvSlot& slot : slots_) {
     //Previous item is destroyed
     Item* item = slot.item;
     if(item != nullptr) {
@@ -149,10 +149,10 @@ bool Inventory::hasItemInGeneral(const ItemId id) const {
 int Inventory::getItemStackSizeInGeneral(const ItemId id) const {
   for(unsigned int i = 0; i < general_.size(); i++) {
     if(general_.at(i)->getData().id == id) {
-      if(general_.at(i)->getData().isStackable == false) {
-        return 1;
-      } else {
+      if(general_.at(i)->getData().isStackable) {
         return general_.at(i)->nrItems;
+      } else {
+        return 1;
       }
     }
   }
@@ -211,7 +211,7 @@ void Inventory::putInGeneral(Item* item) {
     }
   }
 
-  if(isStacked == false) {general_.push_back(item);}
+  if(!isStacked) {general_.push_back(item);}
 }
 
 int Inventory::getElementToStackItem(Item* item) const {
@@ -234,7 +234,7 @@ void Inventory::dropAllNonIntrinsic(
   Item* item;
 
   //Drop from slots
-  for(InvSlot & slot : slots_) {
+  for(InvSlot& slot : slots_) {
     item = slot.item;
     if(item != nullptr) {
       if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
@@ -400,11 +400,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
   Item* item = general_.at(GENERAL_INV_ELEMENT);
   const ItemDataT& d = item->getData();
 
-  if(IS_PLAYER) {
-    if(d.isArmor == false) {
-      isFreeTurn = false;
-    }
-  }
+  if(IS_PLAYER && !d.isArmor) {isFreeTurn = false;}
 
   if(slotToEquip == SlotId::wielded) {
     Item* const itemBefore = getItemInSlot(SlotId::wielded);
@@ -610,7 +606,7 @@ InvSlot* Inventory::getSlot(SlotId slotName) {
 }
 
 void Inventory::putInSlot(const SlotId id, Item* item) {
-  for(InvSlot & slot : slots_) {
+  for(InvSlot& slot : slots_) {
     if(slot.id == id) {
       if(slot.item == nullptr) {
         slot.item = item;
@@ -655,7 +651,7 @@ void Inventory::sortGeneralInventory() {
   vector< vector<Item*> > sortBuffer;
 
   //Sort according to item interface color first
-  for(Item * item : general_) {
+  for(Item* item : general_) {
 
     bool isAddedToBuffer = false;
 
@@ -698,13 +694,13 @@ void Inventory::getAllItems(vector<Item*>& itemList) const {
   itemList.resize(0);
   itemList.reserve(slots_.size() + general_.size());
 
-  for(const InvSlot & slot : slots_) {
+  for(const InvSlot& slot : slots_) {
     Item* const item = slot.item;
     if(item != nullptr) {
       itemList.push_back(item);
     }
   }
 
-  for(Item * item : general_) {itemList.push_back(item);}
+  for(Item* item : general_) {itemList.push_back(item);}
 }
 

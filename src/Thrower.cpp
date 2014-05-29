@@ -35,10 +35,9 @@ void playerThrowLitExplosive(const Pos& aimCell) {
                         THROWING_RANGE_LIMIT, false, path);
 
   //Remove cells after blocked cells
-  for(unsigned int i = 1; i < path.size(); i++) {
+  for(size_t i = 1; i < path.size(); i++) {
     const Pos curPos = path.at(i);
-    const Feature* featureHere =
-      Map::cells[curPos.x][curPos.y].featureStatic;
+    const auto* featureHere = Map::cells[curPos.x][curPos.y].featureStatic;
     if(featureHere->isProjectilePassable() == false) {
       path.resize(i);
       break;
@@ -47,10 +46,9 @@ void playerThrowLitExplosive(const Pos& aimCell) {
 
   //Render
   if(path.size() > 1) {
-    const char GLYPH =
-      ItemData::data[int(ItemId::dynamite)]->glyph;
+    const auto GLYPH = ItemData::data[int(ItemId::dynamite)]->glyph;
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
-    for(unsigned int i = 1; i < path.size() - 1; i++) {
+    for(size_t i = 1; i < path.size() - 1; i++) {
       Renderer::drawMapAndInterface(false);
       if(Map::cells[path[i].x][path[i].y].isSeenByPlayer) {
         Renderer::drawGlyph(GLYPH, Panel::map, path[i], clr);
@@ -60,7 +58,7 @@ void playerThrowLitExplosive(const Pos& aimCell) {
     }
   }
 
-  Feature* const featureAtDest =
+  auto* const featureAtDest =
     Map::cells[path.back().x][path.back().y].featureStatic;
   const bool IS_DEST_FEAT_BOTTOMLESS = featureAtDest->isBottomless();
 
@@ -188,8 +186,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
       SdlWrapper::sleep(Config::getDelayProjectileDraw());
     }
 
-    const Feature* featureHere =
-      Map::cells[curPos.x][curPos.y].featureStatic;
+    const auto* featureHere = Map::cells[curPos.x][curPos.y].featureStatic;
     if(featureHere->isProjectilePassable() == false) {
       blockedInElement = itemThrownData.isPotion ? i : i - 1;
       break;

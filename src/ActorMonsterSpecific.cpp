@@ -186,7 +186,7 @@ bool Vortex::onActorTurn_() {
         trace << "Vortex: pullCooldown: " << pullCooldown << endl;
         trace << "Vortex: Is player aware" << endl;
         const Pos& playerPos = Map::player->pos;
-        if(Utils::isPosAdj(pos, playerPos, true) == false) {
+        if(!Utils::isPosAdj(pos, playerPos, true)) {
 
           const int CHANCE_TO_KNOCK = 25;
           if(Rnd::percentile() < CHANCE_TO_KNOCK) {
@@ -366,7 +366,7 @@ void MummyUnique::mkStartItems() {
 bool Khephren::onActorTurn_() {
   if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
-      if(hasSummonedLocusts == false) {
+      if(!hasSummonedLocusts) {
 
         bool blocked[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(), blocked);
@@ -443,7 +443,7 @@ void HuntingHorror::mkStartItems() {
 bool KeziahMason::onActorTurn_() {
   if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
-      if(hasSummonedJenkin == false) {
+      if(!hasSummonedJenkin) {
 
         bool blocked[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(), blocked);
@@ -459,7 +459,7 @@ bool KeziahMason::onActorTurn_() {
           const int LINE_SIZE = line.size();
           for(int i = 0; i < LINE_SIZE; i++) {
             const Pos c = line.at(i);
-            if(blocked[c.x][c.y] == false) {
+            if(!blocked[c.x][c.y]) {
               //TODO Make a generalized summoning functionality
               Log::addMsg("Keziah summons Brown Jenkin!");
               Actor* const actor =
@@ -576,7 +576,7 @@ bool WormMass::onActorTurn_() {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             mkPos.set(pos + Pos(dx, dy));
-            if(blocked[mkPos.x][mkPos.y] == false) {
+            if(!blocked[mkPos.x][mkPos.y]) {
               Actor* const actor =
                 ActorFactory::mk(data_->id, mkPos);
               WormMass* const worm = dynamic_cast<WormMass*>(actor);
@@ -611,7 +611,7 @@ bool GiantLocust::onActorTurn_() {
         for(int dx = -1; dx <= 1; dx++) {
           for(int dy = -1; dy <= 1; dy++) {
             mkPos.set(pos + Pos(dx, dy));
-            if(blocked[mkPos.x][mkPos.y] == false) {
+            if(!blocked[mkPos.x][mkPos.y]) {
               Actor* const actor =
                 ActorFactory::mk(data_->id, mkPos);
               GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
@@ -659,18 +659,17 @@ bool LordOfSpiders::onActorTurn_() {
           if(Rnd::fraction(3, 4)) {
 
             const Pos c(playerPos + Pos(dx, dy));
-            const FeatureStatic* const mimicFeature =
-              Map::cells[c.x][c.y].featureStatic;
+            const auto* const mimicFeature = Map::cells[c.x][c.y].featureStatic;
 
             if(mimicFeature->canHaveStaticFeature()) {
 
-              const FeatureDataT* const mimicData =
+              const auto* const mimicData =
                 FeatureData::getData(mimicFeature->getId());
 
-              TrapSpawnData* trapSpawnData =
+              auto* trapSpawnData =
                 new TrapSpawnData(mimicData, trap_spiderWeb);
 
-              Feature* const f =
+              auto* const f =
                 FeatureFactory::mk(FeatureId::trap, c, trapSpawnData);
 
               dynamic_cast<Trap*>(f)->reveal(false);
@@ -714,7 +713,7 @@ bool MajorClaphamLee::onActorTurn_() {
 
   if(deadState == ActorDeadState::alive) {
     if(awareOfPlayerCounter_ > 0) {
-      if(hasSummonedTombLegions == false) {
+      if(!hasSummonedTombLegions) {
 
         bool visionBlockers[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(), visionBlockers);
@@ -754,7 +753,7 @@ bool MajorClaphamLee::onActorTurn_() {
 
 bool Zombie::tryResurrect() {
   if(deadState == ActorDeadState::corpse) {
-    if(hasResurrected == false) {
+    if(!hasResurrected) {
       deadTurnCounter += 1;
       if(deadTurnCounter > 5) {
         if(pos != Map::player->pos && Rnd::percentile() < 7) {

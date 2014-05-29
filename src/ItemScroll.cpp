@@ -55,7 +55,7 @@ Spell* Scroll::getSpell() {
 }
 
 void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
-  if(data_->isIdentified == false) {
+  if(!data_->isIdentified) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
     const string REAL_NAME        = "Manuscript of " + REAL_TYPE_NAME;
@@ -66,7 +66,7 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
     data_->baseName.name_plural = REAL_NAME_PLURAL;
     data_->baseName.name_a      = REAL_NAME_A;
 
-    if(IS_SILENT_IDENTIFY == false) {
+    if(!IS_SILENT_IDENTIFY) {
       Log::addMsg("It was " + data_->baseName.name_a + ".");
       Renderer::drawMapAndInterface();
     }
@@ -80,7 +80,7 @@ void Scroll::tryLearn() {
     Spell* const spell = getSpell();
     if(
       spell->isAvailForPlayer() &&
-      PlayerSpellsHandling::isSpellLearned(spell->getId()) == false) {
+      !PlayerSpellsHandling::isSpellLearned(spell->getId())) {
       Log::addMsg("I learn to cast this incantation by heart!");
       PlayerSpellsHandling::learnSpellIfNotKnown(spell);
     } else {
@@ -92,7 +92,7 @@ void Scroll::tryLearn() {
 ConsumeItem Scroll::read() {
   Renderer::drawMapAndInterface();
 
-  if(Map::player->getPropHandler().allowSee() == false) {
+  if(!Map::player->getPropHandler().allowSee()) {
     Log::addMsg("I cannot read while blind.");
     return ConsumeItem::no;
   }

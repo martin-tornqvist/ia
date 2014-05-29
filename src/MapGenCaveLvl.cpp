@@ -31,8 +31,8 @@ bool run() {
     }
   }
 
-  const Pos& origin       = Map::player->pos;
-  const FeatureId floorId = FeatureId::caveFloor;
+  const Pos& origin   = Map::player->pos;
+  const auto floorId  = FeatureId::caveFloor;
 
   FeatureFactory::mk(floorId, origin);
 
@@ -40,7 +40,7 @@ bool run() {
 
   //Make a random walk path from player
   int length = 40 + Rnd::dice(1, 40);
-  MapGenUtils::digByRandomWalk(origin, length, floorId, true);
+  MapGenUtils::mkByRandomWalk(origin, length, floorId, true);
   const bool IS_TUNNEL_CAVE = Rnd::coinToss();
 
   //Make some more at random places, connect them to each other.
@@ -54,10 +54,10 @@ bool run() {
                      Rnd::range(EDGE_DIST_H, MAP_H - EDGE_DIST_H - 1));
 
     length = IS_TUNNEL_CAVE ? 30 + Rnd::dice(1, 50) : 650;
-    MapGenUtils::digByRandomWalk(curPos, length, floorId, true);
+    MapGenUtils::mkByRandomWalk(curPos, length, floorId, true);
     const Pos prevPos = prevCenters.at(Rnd::range(0, prevCenters.size() - 1));
 
-    MapGenUtils::digWithPathfinder(prevPos, curPos, floorId, false, true);
+    MapGenUtils::mkWithPathfinder(prevPos, curPos, floorId, false, true);
 
     prevCenters.push_back(curPos);
   }
@@ -66,7 +66,7 @@ bool run() {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
   int floodFill[MAP_W][MAP_H];
-  FloodFill::run(origin, blocked, floodFill, 99999, Pos(-1, -1));
+  FloodFill::run(origin, blocked, floodFill, 99999, Pos(-1, -1), true);
   vector<PosAndVal> floodVals;
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {

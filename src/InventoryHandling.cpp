@@ -113,7 +113,7 @@ void filterPlayerGeneralSlotButtonsUsable() {
   for(unsigned int i = 0; i < general.size(); i++) {
     const Item* const item = general.at(i);
     const string& label = item->getDefaultActivationLabel();
-    if(label.empty() == false) {
+    if(!label.empty()) {
       bool isExistingGroupFound = false;
       for(vector<unsigned int>& group : groups) {
         if(label == general.at(group.front())->getDefaultActivationLabel()) {
@@ -122,7 +122,7 @@ void filterPlayerGeneralSlotButtonsUsable() {
           break;
         }
       }
-      if(isExistingGroupFound == false) {
+      if(!isExistingGroupFound) {
         groups.resize(groups.size() + 1);
         groups.back().resize(0);
         groups.back().push_back(i);

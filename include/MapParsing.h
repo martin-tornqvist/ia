@@ -15,6 +15,7 @@ namespace CellPred {
 
 class Pred {
 public:
+  virtual ~Pred() {}
   virtual bool isCheckingCells()          const {return false;}
   virtual bool isCheckingMobFeatures()    const {return false;}
   virtual bool isCheckingActors()         const {return false;}
@@ -38,7 +39,6 @@ class BlocksMoveCmn : public Pred {
 public:
   BlocksMoveCmn(bool isActorsBlocking) :
     Pred(), IS_ACTORS_BLOCKING_(isActorsBlocking) {}
-
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
   bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
@@ -52,7 +52,6 @@ private:
 class BlocksActor : public Pred {
 public:
   BlocksActor(Actor& actor, bool isActorsBlocking);
-
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobFeatures()    const override {return true;}
   bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
@@ -108,20 +107,63 @@ public:
 //  bool check(const Cell& c)       const override;
 //};
 
+class IsFeature : public Pred {
+public:
+  IsFeature(const FeatureId id) : Pred(), feature_(id) {}
+  bool isCheckingCells()          const override {return true;}
+  bool check(const Cell& c)       const override;
+private:
+  const FeatureId feature_;
+};
+
 class IsAnyOfFeatures : public Pred {
 public:
   IsAnyOfFeatures(const std::vector<FeatureId>& features) :
     Pred(), features_(features) {}
+  IsAnyOfFeatures(const FeatureId id) :
+    Pred(), features_(std::vector<FeatureId> {id}) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
   std::vector<FeatureId> features_;
 };
 
+class AllAdjIsFeature : public Pred {
+public:
+  AllAdjIsFeature(const FeatureId id) : Pred(), feature_(id) {}
+  bool isCheckingCells()          const override {return true;}
+  bool check(const Cell& c)       const override;
+private:
+  const FeatureId feature_;
+};
+
 class AllAdjIsAnyOfFeatures : public Pred {
 public:
   AllAdjIsAnyOfFeatures(const std::vector<FeatureId>& features) :
     Pred(), features_(features) {}
+  AllAdjIsAnyOfFeatures(const FeatureId id) :
+    Pred(), features_(std::vector<FeatureId> {id}) {}
+  bool isCheckingCells()          const override {return true;}
+  bool check(const Cell& c)       const override;
+private:
+  std::vector<FeatureId> features_;
+};
+
+class AllAdjIsNotFeature : public Pred {
+public:
+  AllAdjIsNotFeature(const FeatureId id) : Pred(), feature_(id) {}
+  bool isCheckingCells()          const override {return true;}
+  bool check(const Cell& c)       const override;
+private:
+  const FeatureId feature_;
+};
+
+class AllAdjIsNoneOfFeatures : public Pred {
+public:
+  AllAdjIsNoneOfFeatures(const std::vector<FeatureId>& features) :
+    Pred(), features_(features) {}
+  AllAdjIsNoneOfFeatures(const FeatureId id) :
+    Pred(), features_(std::vector<FeatureId> {id}) {}
   bool isCheckingCells()          const override {return true;}
   bool check(const Cell& c)       const override;
 private:
@@ -145,9 +187,6 @@ void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
                                 bool out[MAP_W][MAP_H],
                                 const Range& distInterval);
 
-int getNrAdjCellsWithFeature(const Pos& p,
-                             const CellPred::IsAnyOfFeatures& pred);
-
 bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
                  const bool VAL = true);
 
@@ -168,15 +207,17 @@ public:
 
 namespace FloodFill {
 
-void run(const Pos& origin, bool blocked[MAP_W][MAP_H],
-         int values[MAP_W][MAP_H], int travelLimit, const Pos& target);
+void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
+         int out[MAP_W][MAP_H], int travelLimit, const Pos& p1,
+         const bool ALLOW_DIAGONAL);
 
 } //FloodFill
 
 namespace PathFind {
 
-void run(const Pos& origin, const Pos& target, bool blocked[MAP_W][MAP_H],
-         std::vector<Pos>& vectorRef);
+//Note: The resulting path does not include the origin
+void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
+         std::vector<Pos>& out, const bool ALLOW_DIAGONAL = true);
 
 } //PathFind
 

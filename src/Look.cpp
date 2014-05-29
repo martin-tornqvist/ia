@@ -99,7 +99,7 @@ Entity getEntityToDescribe(const Pos pos) {
   }
 
   //Describe mob feature
-  for(FeatureMob * mob : GameTime::featureMobs_) {
+  for(auto* mob : GameTime::featureMobs_) {
     if(mob->getPos() == pos) {return Entity(mob);}
   }
 
@@ -215,7 +215,7 @@ void printExtraActorDescription(const Pos& pos) {
       Renderer::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
 
       int y = 1;
-      for(string & s : formattedText) {
+      for(string& s : formattedText) {
         Renderer::drawText(s, Panel::screen, Pos(0, y), clrWhiteHigh);
         y++;
       }

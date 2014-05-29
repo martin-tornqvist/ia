@@ -1,3 +1,5 @@
+#include "Init.h"
+
 #include "UnitTest++.h"
 
 #include <climits>
@@ -5,7 +7,6 @@
 
 #include <SDL.h>
 
-#include "Init.h"
 #include "Config.h"
 #include "Utils.h"
 #include "Renderer.h"
@@ -69,10 +70,10 @@ TEST(ConstrainValInRange) {
   CHECK_EQUAL(val, 18);
 
   //Test faulty paramters
-  val = getConstrInRange(9, 4, 2); //Min > Max -> return -1
+  val = getConstrInRange(9, 4, 2);   //Min > Max -> return -1
   CHECK_EQUAL(val, -1);
   val = 10;
-  constrInRange(20, val, 3); //Min > Max -> do nothing
+  constrInRange(20, val, 3);   //Min > Max -> do nothing
   CHECK_EQUAL(val, 10);
 }
 
@@ -298,7 +299,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
 TEST_FIXTURE(BasicFixture, Fov) {
   bool blocked[MAP_W][MAP_H];
 
-  Utils::resetArray(blocked, false); //Nothing blocking sight
+  Utils::resetArray(blocked, false);   //Nothing blocking sight
 
   const int X = MAP_W_HALF;
   const int Y = MAP_H_HALF;
@@ -350,8 +351,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   const int X0 = 5;
   const int Y0 = 7;
 
-  const FeatureId wallId  = FeatureId::wall;
-  const FeatureId floorId = FeatureId::floor;
+  const auto wallId   = FeatureId::wall;
+  const auto floorId  = FeatureId::floor;
 
   FeatureFactory::mk(floorId, Pos(X0, Y0));
 
@@ -457,14 +458,11 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   FeatureFactory::mk(FeatureId::floor, posL);
 
   //Conditions for finished test
-  bool isTestedStuck              = false;
-  bool isTestedLooseWebIntact     = false;
-  bool isTestedLooseWebDestroyed  = false;
+  bool testedStuck              = false;
+  bool testedLooseWebIntact     = false;
+  bool testedLooseWebDestroyed  = false;
 
-  while(
-    isTestedStuck             == false ||
-    isTestedLooseWebIntact    == false ||
-    isTestedLooseWebDestroyed == false) {
+  while(!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed) {
 
     //Spawn right floor cell
     FeatureFactory::mk(FeatureId::floor, posR);
@@ -474,12 +472,9 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     Monster* const monster = dynamic_cast<Monster*>(actor);
 
     //Create a spider web in the right cell
-    const FeatureId mimicId =
-      Map::cells[posR.x][posR.x].featureStatic->getId();
-    const FeatureDataT* const mimicData =
-      FeatureData::getData(mimicId);
-    TrapSpawnData* const trapSpawnData = new TrapSpawnData(
-      mimicData, trap_spiderWeb);
+    const auto mimicId = Map::cells[posR.x][posR.x].featureStatic->getId();
+    const auto* const mimicData = FeatureData::getData(mimicId);
+    auto* const trapSpawnData = new TrapSpawnData(mimicData, trap_spiderWeb);
     FeatureFactory::mk(FeatureId::trap, posR, trapSpawnData);
 
     //Move the monster into the trap, and back again
@@ -492,14 +487,13 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
 
     //Check conditions
     if(monster->pos == posR) {
-      isTestedStuck = true;
+      testedStuck = true;
     } else if(monster->pos == posL) {
-      const FeatureId featureId =
-        Map::cells[posR.x][posR.y].featureStatic->getId();
+      const auto featureId = Map::cells[posR.x][posR.y].featureStatic->getId();
       if(featureId == FeatureId::floor) {
-        isTestedLooseWebDestroyed = true;
+        testedLooseWebDestroyed = true;
       } else {
-        isTestedLooseWebIntact = true;
+        testedLooseWebIntact = true;
       }
     }
 
@@ -508,9 +502,9 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   }
   //Check that all cases have been triggered (not really necessary, it just
   //verifies that the loop above is correctly written).
-  CHECK(isTestedStuck);
-  CHECK(isTestedLooseWebIntact);
-  CHECK(isTestedLooseWebDestroyed);
+  CHECK(testedStuck);
+  CHECK(testedLooseWebIntact);
+  CHECK(testedLooseWebDestroyed);
 }
 
 TEST_FIXTURE(BasicFixture, SavingGame) {
@@ -526,10 +520,10 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   Inventory& inv = Map::player->getInv();
   //First, remove all present items (to have a known state)
   vector<Item*>& gen = inv.getGeneral();
-  for(Item * item : gen) {delete item;}
+  for(Item* item : gen) {delete item;}
   gen.resize(0);
   vector<InvSlot>& slots = inv.getSlots();
-  for(InvSlot & slot : slots) {
+  for(InvSlot& slot : slots) {
     if(slot.item != nullptr) {
       delete slot.item;
       slot.item = nullptr;
@@ -628,7 +622,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   int nrClipWith3 = 0;
   bool isSentryDeviceFound    = false;
   bool isElectricLanternFound = false;
-  for(Item * item : genInv) {
+  for(Item* item : genInv) {
     ItemId id = item->getData().id;
     if(id == ItemId::pistolClip) {
       switch(dynamic_cast<ItemAmmoClip*>(item)->ammo) {
@@ -703,6 +697,91 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(0, GameTime::getTurn());
 }
 
+TEST_FIXTURE(BasicFixture, FloodFilling) {
+  bool b[MAP_W][MAP_H];
+  Utils::resetArray(b, false);
+  for(int y = 0; y < MAP_H; y++) {b[0][y] = b[MAP_W - 1][y] = false;}
+  for(int x = 0; x < MAP_W; x++) {b[x][0] = b[x][MAP_H - 1] = false;}
+  int flood[MAP_W][MAP_H];
+  FloodFill::run(Pos(20, 10), b, flood, 999, Pos(-1, -1), true);
+  CHECK_EQUAL(0, flood[20][10]);
+  CHECK_EQUAL(1, flood[19][10]);
+  CHECK_EQUAL(1, flood[21][10]);
+  CHECK_EQUAL(1, flood[20][11]);
+  CHECK_EQUAL(1, flood[21][11]);
+  CHECK_EQUAL(4, flood[24][12]);
+  CHECK_EQUAL(4, flood[24][14]);
+  CHECK_EQUAL(5, flood[24][15]);
+  CHECK_EQUAL(0, flood[0][0]);
+  CHECK_EQUAL(0, flood[MAP_W - 1][MAP_H - 1]);
+}
+
+TEST_FIXTURE(BasicFixture, PathFinding) {
+  vector<Pos> path;
+  bool b[MAP_W][MAP_H];
+  Utils::resetArray(b, false);
+  for(int y = 0; y < MAP_H; y++) {b[0][y] = b[MAP_W - 1][y] = false;}
+  for(int x = 0; x < MAP_W; x++) {b[x][0] = b[x][MAP_H - 1] = false;}
+
+  PathFind::run(Pos(20, 10), Pos(25, 10), b, path);
+
+  CHECK(!path.empty());
+  CHECK(path.back() != Pos(20, 10));
+  CHECK_EQUAL(25, path.front().x);
+  CHECK_EQUAL(10, path.front().y);
+  CHECK_EQUAL(5, int(path.size()));
+
+  PathFind::run(Pos(20, 10), Pos(5, 3), b, path);
+
+  CHECK(!path.empty());
+  CHECK(path.back() != Pos(20, 10));
+  CHECK_EQUAL(5, path.front().x);
+  CHECK_EQUAL(3, path.front().y);
+  CHECK_EQUAL(15, int(path.size()));
+
+  b[10][5] = true;
+
+  PathFind::run(Pos(7, 5), Pos(20, 5), b, path);
+
+  CHECK(!path.empty());
+  CHECK(path.back() != Pos(7, 5));
+  CHECK_EQUAL(20, path.front().x);
+  CHECK_EQUAL(5, path.front().y);
+  CHECK_EQUAL(13, int(path.size()));
+  CHECK(find(path.begin(), path.end(), Pos(10, 5)) == path.end());
+
+  b[19][4] = b[19][5] =  b[19][6] = true;
+
+  PathFind::run(Pos(7, 5), Pos(20, 5), b, path);
+
+  CHECK(!path.empty());
+  CHECK(path.back() != Pos(7, 5));
+  CHECK_EQUAL(20, path.front().x);
+  CHECK_EQUAL(5, path.front().y);
+  CHECK_EQUAL(14, int(path.size()));
+  CHECK(find(path.begin(), path.end(), Pos(19, 4)) == path.end());
+  CHECK(find(path.begin(), path.end(), Pos(19, 5)) == path.end());
+  CHECK(find(path.begin(), path.end(), Pos(19, 6)) == path.end());
+
+  PathFind::run(Pos(40, 10), Pos(43, 15), b, path, false);
+
+  CHECK(!path.empty());
+  CHECK(path.back() != Pos(40, 10));
+  CHECK_EQUAL(43, path.front().x);
+  CHECK_EQUAL(15, path.front().y);
+  CHECK_EQUAL(8, int(path.size()));
+
+  b[41][10] = b[40][11]  = true;
+
+  PathFind::run(Pos(40, 10), Pos(43, 15), b, path, false);
+
+  CHECK(!path.empty());
+  CHECK(path.back() != Pos(40, 10));
+  CHECK_EQUAL(43, path.front().x);
+  CHECK_EQUAL(15, path.front().y);
+  CHECK_EQUAL(10, int(path.size()));
+}
+
 TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Rect roomArea1(Pos(1, 1), Pos(10, 10));
   Rect roomArea2(Pos(15, 4), Pos(23, 14));
@@ -722,160 +801,14 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Room room1(roomArea1);
   Room room2(roomArea2);
 
-  MapGenUtils::mkZCorridorBetweenRooms(room1, room2, Dir::right);
+  MapGenUtils::mkPathFindCorridor(room1, room2);
 }
-
-//TODO This would benefit a lot from modifying the map through some
-//template parameter instead. Perhaps adapt the map template functionality
-//to allow easily creating structures with string parameters, e.g.:
-//
-//MapTempl::mk(Pos(1, 1), vector<string>("#...#"));
-//
-//It would be neat if this also had functionality for automatically rotate
-//or flip structures, e.g.:
-//MapTempl::mk(Pos(1, 1), templateRotate90, templateNoFlip,
-//                   vector<string>("#...#"));
-//Where templateRotate90 and templateNoFlip would be enums
-//TEST_FIXTURE(BasicFixture, CellPredCorridor) {
-//  // #####
-//  // #...#
-//  // #####
-//  for(int x = 3; x <= 5; x++) {
-//    FeatureFactory::mk(FeatureId::floor, Pos(x, 7));
-//  }
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[2][7]));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[3][7]));
-//  CHECK_EQUAL(true,  CellPred::Corridor().check(Map::cells[4][7]));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[5][7]));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[6][7]));
-//
-//  // #####
-//  // #.#.#
-//  // #####
-//  FeatureFactory::mk(FeatureId::wall,  Pos(4, 7));
-//  CHECK_EQUAL(false,  CellPred::Corridor().check(Map::cells[4][7]));
-//  FeatureFactory::mk(FeatureId::floor, Pos(4, 7));
-//
-//  //  ###
-//  // ##.##
-//  // #...#
-//  // ##.##
-//  //  ###
-//  FeatureFactory::mk(FeatureId::floor, Pos(4, 6));
-//  FeatureFactory::mk(FeatureId::floor, Pos(4, 8));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[4][7]));
-//
-//  // ###
-//  // #.#
-//  // #.#
-//  // #.#
-//  // ###
-//  for(int y = 6; y <= 8; y++) {
-//    FeatureFactory::mk(FeatureId::floor, Pos(20, y));
-//  }
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][5]));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][6]));
-//  CHECK_EQUAL(true,  CellPred::Corridor().check(Map::cells[20][7]));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][8]));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][9]));
-//
-//  // ###
-//  // #.#
-//  // ###
-//  // #.#
-//  // ###
-//  FeatureFactory::mk(FeatureId::wall,  Pos(20, 7));
-//  CHECK_EQUAL(false,  CellPred::Corridor().check(Map::cells[20][7]));
-//  FeatureFactory::mk(FeatureId::floor, Pos(20, 7));
-//
-//  //  ###
-//  // ##.##
-//  // #...#
-//  // ##.##
-//  //  ###
-//  FeatureFactory::mk(FeatureId::floor, Pos(19, 7));
-//  FeatureFactory::mk(FeatureId::floor, Pos(21, 7));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[20][8]));
-//
-//  // ...
-//  // #.#
-//  // ...
-//  for(int x = 30; x <= 32; x++) {
-//    FeatureFactory::mk(FeatureId::floor, Pos(x, 7));
-//    FeatureFactory::mk(FeatureId::floor, Pos(x, 9));
-//  }
-//  FeatureFactory::mk(FeatureId::floor, Pos(31, 8));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[31][7]));
-//  CHECK_EQUAL(true,  CellPred::Corridor().check(Map::cells[31][8]));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[31][9]));
-//
-//  // .#.
-//  // ...
-//  // .#.
-//  for(int y = 17; y <= 19; y++) {
-//    FeatureFactory::mk(FeatureId::floor, Pos(30, y));
-//    FeatureFactory::mk(FeatureId::floor, Pos(32, y));
-//  }
-//  FeatureFactory::mk(FeatureId::floor, Pos(31, 18));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[30][18]));
-//  CHECK_EQUAL(true,  CellPred::Corridor().check(Map::cells[31][18]));
-//  CHECK_EQUAL(false, CellPred::Corridor().check(Map::cells[32][18]));
-//}
-
-//TODO See comment above CellPredCorridor test
-//TEST_FIXTURE(BasicFixture, CellPredNook) {
-//  // #####
-//  // #...#
-//  // #####
-//  for(int x = 3; x <= 5; x++) {
-//    FeatureFactory::mk(FeatureId::floor, Pos(x, 7));
-//  }
-//  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[2][7]));
-//  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[3][7]));
-//  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[4][7]));
-//  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[5][7]));
-//  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[6][7]));
-//
-//  // ##.
-//  // #..
-//  // ##.
-//  FeatureFactory::mk(FeatureId::floor, Pos(4, 6));
-//  FeatureFactory::mk(FeatureId::floor, Pos(4, 8));
-//  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[3][7]));
-//
-//  // ###
-//  // #.#
-//  // #.#
-//  // #.#
-//  // ###
-//  for(int y = 6; y <= 8; y++) {
-//    FeatureFactory::mk(FeatureId::floor, Pos(20, y));
-//  }
-//  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[20][5]));
-//  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[20][6]));
-//  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[20][7]));
-//  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[20][8]));
-//  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[20][9]));
-//
-//  // ###
-//  // #.#
-//  // ...
-//  FeatureFactory::mk(FeatureId::floor, Pos(19, 7));
-//  FeatureFactory::mk(FeatureId::floor, Pos(21, 7));
-//  CHECK_EQUAL(true,  CellPred::Nook().check(Map::cells[20][6]));
-//
-//  // ###
-//  // #.#
-//  // ###
-//  FeatureFactory::mk(FeatureId::floor, Pos(20, 12));
-//  CHECK_EQUAL(false, CellPred::Nook().check(Map::cells[20][12]));
-//}
 
 TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
   bool in[MAP_W][MAP_H];
   bool out[MAP_W][MAP_H];
 
-  Utils::resetArray(in, false); //Make sure all values are 0
+  Utils::resetArray(in, false);   //Make sure all values are 0
 
   in[20][10] = true;
 
@@ -918,6 +851,13 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
   CHECK_EQUAL(true,  out[24][10]);
   CHECK_EQUAL(false, out[25][10]);
 }
+
+//-----------------------------------------------------------------------------
+// Some code exercise - Ichi! Ni! San!
+//-----------------------------------------------------------------------------
+//TEST_FIXTURE(BasicFixture, MapGenStd) {
+//  for(int i = 0; i < 100; i++) {MapGen::Std::run();}
+//}
 
 #ifdef _WIN32
 #undef main

@@ -1,10 +1,11 @@
+#include "Init.h"
+
 #include "Bot.h"
 
 #include <assert.h>
 #include <algorithm>
 #include <vector>
 
-#include "Init.h"
 #include "Properties.h"
 #include "Actor.h"
 #include "Feature.h"
@@ -35,14 +36,11 @@ void findPathToStairs() {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
-  vector<Pos> bla;
-  Utils::mkVectorFromBoolMap(false, blocked, bla);
-
   Pos stairPos(-1, -1);
 
   for(int x = 0; x < MAP_W; x++) {
     for(int y = 0; y < MAP_H; y++) {
-      const FeatureId curId = Map::cells[x][y].featureStatic->getId();
+      const auto curId = Map::cells[x][y].featureStatic->getId();
       if(curId == FeatureId::stairs) {
         blocked[x][y] = false;
         stairPos.set(x, y);
@@ -54,41 +52,22 @@ void findPathToStairs() {
   assert(stairPos != Pos(-1, -1));
 
   PathFind::run(Map::player->pos, stairPos, blocked, curPath_);
+
+  assert(!curPath_.empty());
+  assert(curPath_.front() == stairPos);
 }
 
-bool walkToAdjacentCell(const Pos& cellToGoTo) {
-  Pos playerCell(Map::player->pos);
+bool walkToAdjacentCell(const Pos& p) {
+  assert(Utils::isPosAdj(Map::player->pos, p, true));
 
-  assert(Utils::isPosAdj(playerCell, cellToGoTo, true));
-
-  //Get relative positions
-  const int xRel =
-    cellToGoTo.x > playerCell.x ? 1 : cellToGoTo.x < playerCell.x ? -1 : 0;
-  const int yRel =
-    cellToGoTo.y > playerCell.y ? 1 : cellToGoTo.y < playerCell.y ? -1 : 0;
-
-  assert(cellToGoTo == playerCell || xRel != 0 || yRel != 0);
-
-  char key = ' ';
-
-  if(xRel ==  0 && yRel ==  0) {key = '5';}
-  if(xRel ==  1 && yRel ==  0) {key = '6';}
-  if(xRel ==  1 && yRel == -1) {key = '9';}
-  if(xRel ==  0 && yRel == -1) {key = '8';}
-  if(xRel == -1 && yRel == -1) {key = '7';}
-  if(xRel == -1 && yRel ==  0) {key = '4';}
-  if(xRel == -1 && yRel ==  1) {key = '1';}
-  if(xRel ==  0 && yRel ==  1) {key = '2';}
-  if(xRel ==  1 && yRel ==  1) {key = '3';}
+  char key = '0' + int(DirUtils::getDir(p - Map::player->pos));
 
   //Occasionally randomize movement
-  if(Rnd::oneIn(3)) {
-    key = '0' + Rnd::range(1, 9);
-  }
+  if(Rnd::oneIn(3)) {key = '0' + Rnd::range(1, 9);}
 
   Input::handleKeyPress(KeyboardReadRetData(key));
 
-  return playerCell == cellToGoTo;
+  return Map::player->pos == p;
 }
 
 } //namespace
@@ -101,7 +80,7 @@ void act() {
   //=======================================================================
   // TESTS
   //=======================================================================
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
 #ifdef NDEBUG
     (void)actor;
 #else
@@ -130,8 +109,7 @@ void act() {
     const int ELEMENT = Rnd::range(0, GameTime::actors_.size() - 1);
     Actor* const actor = GameTime::actors_.at(ELEMENT);
     if(actor != Map::player) {
-      actor->getPropHandler().tryApplyProp(
-        new PropBurning(propTurnsStd), true);
+      actor->getPropHandler().tryApplyProp(new PropBurning(propTurnsStd), true);
     }
   }
 
@@ -150,24 +128,21 @@ void act() {
   if(Rnd::oneIn(10)) {
     vector<PropId> propBucket;
     propBucket.resize(0);
-    for(unsigned int i = 0; i < endOfPropIds; i++) {
-      PropDataT& d = PropData::data[i];
-      if(d.allowTestingOnBot) {propBucket.push_back(PropId(i));}
+    for(int i = 0; i < endOfPropIds; i++) {
+      if(PropData::data[i].allowTestOnBot) {propBucket.push_back(PropId(i));}
     }
     PropId propId = propBucket.at(Rnd::range(0, propBucket.size() - 1));
 
-    Prop* const prop =
-      propHandler.mkProp(propId, propTurnsSpecific, 5);
+    Prop* const prop = propHandler.mkProp(propId, propTurnsSpecific, 5);
 
     propHandler.tryApplyProp(prop, true);
   }
 
   //Handle blocking door
-  const Pos& playerPos = Map::player->pos;
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
-      FeatureStatic* f =
-        Map::cells[playerPos.x + dx][playerPos.y + dy].featureStatic;
+      const Pos p(Map::player->pos + Pos(dx, dy));
+      auto* const f = Map::cells[p.x][p.y].featureStatic;
       if(f->getId() == FeatureId::door) {
         Door* const door = dynamic_cast<Door*>(f);
         door->reveal(false);
@@ -184,16 +159,11 @@ void act() {
   Map::player->getPropHandler().getAllActivePropIds(props);
 
   if(find(props.begin(), props.end(), propTerrified) != props.end()) {
-    if(walkToAdjacentCell(playerPos)) {
-      return;
-    }
+    if(walkToAdjacentCell(Map::player->pos)) {return;}
   }
 
   findPathToStairs();
-
-  const Pos nextCell = curPath_.back();
-
-  walkToAdjacentCell(nextCell);
+  walkToAdjacentCell(curPath_.back());
 }
 
 } //Bot

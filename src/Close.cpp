@@ -21,7 +21,7 @@ void playerCloseFeature(Feature* const feature) {
     closeAbleObjectFound = true;
   }
 
-  if(closeAbleObjectFound == false) {
+  if(!closeAbleObjectFound) {
     const bool PLAYER_CAN_SEE = Map::player->getPropHandler().allowSee();
     if(PLAYER_CAN_SEE) {
       Log::addMsg("I see nothing there to close.");

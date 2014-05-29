@@ -85,8 +85,7 @@ void Monster::onActorTurn() {
 
   const bool HAS_SNEAK_SKILL = data_->abilityVals.getVal(
                                  AbilityId::stealth, true, *this) > 0;
-  isStealth = Map::player->isSeeingActor(*this, nullptr) == false &&
-              HAS_SNEAK_SKILL;
+  isStealth = !Map::player->isSeeingActor(*this, nullptr) && HAS_SNEAK_SKILL;
 
   //Array used for AI purposes, e.g. to prevent tactically bad positions,
   //or prevent certain monsters from walking on a certain type of cells, etc.
@@ -201,7 +200,7 @@ void Monster::moveDir(Dir dir) {
 
   //Trap affects leaving?
   if(dir != Dir::center) {
-    Feature* f = Map::cells[pos.x][pos.y].featureStatic;
+    auto* f = Map::cells[pos.x][pos.y].featureStatic;
     if(f->getId() == FeatureId::trap) {
       dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == Dir::center) {
@@ -225,7 +224,7 @@ void Monster::moveDir(Dir dir) {
     //Bump features in target cell (i.e. to trigger traps)
     vector<FeatureMob*> featureMobs;
     GameTime::getFeatureMobsAtPos(pos, featureMobs);
-    for(FeatureMob * m : featureMobs) {m->bump(*this);}
+    for(auto* m : featureMobs) {m->bump(*this);}
     Map::cells[pos.x][pos.y].featureStatic->bump(*this);
   }
 
@@ -288,7 +287,7 @@ bool Monster::tryAttack(Actor& defender) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
 
-  if(isSeeingActor(*Map::player, blocked) == false) {return false;}
+  if(!isSeeingActor(*Map::player, blocked)) {return false;}
 
   AttackOpport opport     = getAttackOpport(defender);
   const BestAttack attack = getBestAttack(opport);
@@ -314,7 +313,7 @@ bool Monster::tryAttack(Actor& defender) {
     if(Rnd::fraction(4, 5)) {
       vector<Pos> line;
       LineCalc::calcNewLine(pos, defender.pos, true, 9999, false, line);
-      for(Pos & linePos : line) {
+      for(Pos& linePos : line) {
         if(linePos != pos && linePos != defender.pos) {
           Actor* const actorHere = Utils::getActorAtPos(linePos);
           if(actorHere != nullptr) {
@@ -379,7 +378,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
             //Check if reload time instead
             if(
               weapon->nrAmmoLoaded == 0 &&
-              weapon->getData().rangedHasInfiniteAmmo == false) {
+              !weapon->getData().rangedHasInfiniteAmmo) {
               if(inv_->hasAmmoForFirearmInInventory()) {
                 opport.isTimeToReload = true;
               }

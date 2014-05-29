@@ -50,7 +50,7 @@ bool isAllRoomsConnected() {
     bool isFound = false;
     for(int x = 1; x < MAP_W - 1; x++) {
       c.set(x, y);
-      const FeatureStatic* const f = Map::cells[c.x][c.y].featureStatic;
+      const auto* const f = Map::cells[c.x][c.y].featureStatic;
       if(f->getId() == FeatureId::floor) {
         isFound = true;
         break;
@@ -62,7 +62,7 @@ bool isAllRoomsConnected() {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   int floodFill[MAP_W][MAP_H];
-  FloodFill::run(c, blocked, floodFill, INT_MAX, Pos(-1, -1));
+  FloodFill::run(c, blocked, floodFill, INT_MAX, Pos(-1, -1), true);
 
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
@@ -111,38 +111,33 @@ void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos) {
 void connectRegions(Region* regions[3][3]) {
   trace << "MapGen::Std::connectRegions()..." << endl;
 
-  bool isAllConnected = false;
-  while(isAllConnected == false) {
-    isAllConnected = isAllRoomsConnected();
+  while(true) {
+    const Pos c0(Rnd::range(0, 2), Rnd::range(0, 2));
+    assert(Utils::isPosInside(c0, Rect(0, 0, 2, 2)));
 
-    Pos c1(Rnd::range(0, 2), Rnd::range(0, 2));
-    Region* r1 = regions[c1.x][c1.y];
+    Region* r0 = regions[c0.x][c0.y];
+    assert(r0);
 
-    Pos delta(0, 0);
-    bool isDeltaOk = false;
-    while(isDeltaOk == false) {
-      delta.set(Rnd::range(-1, 1), Rnd::range(-1, 1));
-      Pos c2(c1 + delta);
-      const bool IS_INSIDE_BOUNDS = Utils::isPosInside(c2, Rect(0, 0, 2, 2));
-      const bool IS_ZERO_DELTA  = delta.x == 0 && delta.y == 0;
-      const bool IS_DIAGONAL    = delta.x != 0 && delta.y != 0;
-      isDeltaOk = IS_ZERO_DELTA     == false &&
-                  IS_DIAGONAL       == false &&
-                  IS_INSIDE_BOUNDS;
+    Pos d(0, 0);
+    while(true) {
+      d.set(Rnd::range(-1, 1), Rnd::range(-1, 1));
+      if(d != 0 && Utils::isPosInside(c0 + d, Rect(0, 0, 2, 2))) {break;}
     }
-    Pos c2(c1 + delta);
+    const Pos c1(c0 + d);
+    assert(Utils::isPosInside(c1, Rect(0, 0, 2, 2)));
 
-    Region* const r2 = regions[c2.x][c2.y];
+    Region* const r1 = regions[c1.x][c1.y];
+    assert(r1);
 
-    if(r1->regionsConnectedTo_[c2.x][c2.y] == false) {
-      const Dir regionDir = DirUtils::getDir(c2 - c1);
+    if(!r0->regionsConnectedTo_[c1.x][c1.y]) {
+      MapGenUtils::mkPathFindCorridor(*r0->mainRoom_, *r1->mainRoom_,
+                                      doorPosProposals);
 
-      MapGenUtils::mkZCorridorBetweenRooms(
-        *(r1->mainRoom_), *(r2->mainRoom_), regionDir, doorPosProposals);
-
-      r1->regionsConnectedTo_[c2.x][c2.y] = true;
-      r2->regionsConnectedTo_[c1.x][c1.y] = true;
+      r0->regionsConnectedTo_[c1.x][c1.y] = true;
+      r1->regionsConnectedTo_[c0.x][c0.y] = true;
     }
+
+    if(isAllRoomsConnected()) {break;}
   }
   trace << "MapGen::Std::connectRegions()[DONE]" << endl;
 }
@@ -336,17 +331,15 @@ void reshapeRoom(const Room& room) {
               bool isNextToWall = false;
               for(int dx = -1; dx <= 1; dx++) {
                 for(int dy = -1; dy <= 1; dy++) {
-                  const FeatureStatic* const f =
+                  const auto* const f =
                     Map::cells[c.x + dx][c.y + dy].featureStatic;
                   if(f->getId() == FeatureId::wall) {
                     isNextToWall = true;
                   }
                 }
               }
-              if(isNextToWall == false) {
-                if(Rnd::oneIn(5)) {
-                  FeatureFactory::mk(FeatureId::wall, c);
-                }
+              if(!isNextToWall) {
+                if(Rnd::oneIn(5)) {FeatureFactory::mk(FeatureId::wall, c);}
               }
             }
           }
@@ -373,17 +366,15 @@ void mkMergedRegionsAndRooms(Region* regions[3][3],
     //Find two non-occupied regions
     int nrTriesToFindRegions = 100;
     bool isGoodRegionsFound = false;
-    while(isGoodRegionsFound == false) {
+    while(!isGoodRegionsFound) {
       nrTriesToFindRegions--;
-      if(nrTriesToFindRegions <= 0) {
-        return;
-      }
+      if(nrTriesToFindRegions <= 0) {return;}
 
       regI1 = Pos(Rnd::range(0, 2), Rnd::range(0, 1));
       regI2 = Pos(regI1 + Pos(0, 1));
       isGoodRegionsFound =
-        regions[regI1.x][regI1.y]->hasBuiltInside_ == false &&
-        regions[regI2.x][regI2.y]->hasBuiltInside_ == false;
+        !regions[regI1.x][regI1.y]->isBuilt_ &&
+        !regions[regI2.x][regI2.y]->isBuilt_;
     }
 
     const int MERGED_X0 = regI1.x == 0 ? 0 : regI1.x == 1 ? SPL_X0 : SPL_X1;
@@ -426,8 +417,8 @@ void mkMergedRegionsAndRooms(Region* regions[3][3],
 
     reg1->regionsConnectedTo_[regI2.x][regI2.y] = true;
     reg2->regionsConnectedTo_[regI1.x][regI1.y] = true;
-    reg1->hasBuiltInside_                       = true;
-    reg2->hasBuiltInside_                       = true;
+    reg1->isBuilt_                              = true;
+    reg2->isBuilt_                              = true;
 
 #ifdef RESHAPE_ROOMS
     if(Rnd::oneIn(3)) {reshapeRoom(*room);}
@@ -460,14 +451,14 @@ void mkCaves(Region* regions[3][3]) {
             } else {
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  const FeatureId featureId =
+                  const auto featureId =
                     Map::cells[x + dx][y + dy].featureStatic->getId();
                   const bool IS_FLOOR = featureId == FeatureId::floor ||
                                         featureId == FeatureId::caveFloor;
                   if(
                     IS_FLOOR &&
-                    Utils::isPosInside(
-                      Pos(x + dx, y + dy), region->getRect()) == false) {
+                    !Utils::isPosInside(
+                      Pos(x + dx, y + dy), region->getRect())) {
                     blocked[x][y] = true;
                   }
                 }
@@ -482,23 +473,23 @@ void mkCaves(Region* regions[3][3]) {
         const int FLOOD_FILL_TRAVEL_LIMIT = 20;
 
         FloodFill::run(origin, blocked, floodFillResult,
-                       FLOOD_FILL_TRAVEL_LIMIT, Pos(-1, -1));
+                       FLOOD_FILL_TRAVEL_LIMIT, Pos(-1, -1), true);
 
         for(int y = 1; y < MAP_H - 1; y++) {
           for(int x = 1; x < MAP_W - 1; x++) {
-            const Pos c(x, y);
-            if(c == origin || floodFillResult[x][y] > 0) {
+            const Pos p(x, y);
+            if(p == origin || floodFillResult[x][y] > 0) {
 
-              FeatureFactory::mk(FeatureId::caveFloor, c);
+              FeatureFactory::mk(FeatureId::caveFloor, p);
 
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
-                  Cell& adjCell = Map::cells[x + dx][y + dy];
+                  const Pos adjP(p + Pos(dx, dy));
+                  Cell& adjCell = Map::cells[adjP.x][adjP.y];
                   if(adjCell.featureStatic->getId() == FeatureId::wall) {
-                    FeatureFactory::mk(
-                      FeatureId::wall, c + Pos(dx , dy));
-                    Wall* const wall =
-                      dynamic_cast<Wall*>(adjCell.featureStatic);
+                    Feature* const f =
+                      FeatureFactory::mk(FeatureId::wall, adjP);
+                    Wall* const wall = dynamic_cast<Wall*>(f);
                     wall->wallType = WallType::cave;
                     wall->setRandomIsMossGrown();
                   }
@@ -508,9 +499,7 @@ void mkCaves(Region* regions[3][3]) {
           }
         }
 
-        const int CHANCE_TO_MAKE_CHASM = 25;
-
-        if(Rnd::percentile() < CHANCE_TO_MAKE_CHASM) {
+        if(Rnd::oneIn(4)) {
           Utils::resetArray(blocked, false);
 
           for(int y = 1; y < MAP_H - 1; y++) {
@@ -527,13 +516,13 @@ void mkCaves(Region* regions[3][3]) {
           }
 
           FloodFill::run(origin, blocked, floodFillResult,
-                         FLOOD_FILL_TRAVEL_LIMIT / 2, Pos(-1, -1));
+                         FLOOD_FILL_TRAVEL_LIMIT / 2, Pos(-1, -1), true);
 
           for(int y = 1; y < MAP_H - 1; y++) {
             for(int x = 1; x < MAP_W - 1; x++) {
               const Pos c(x, y);
               if(
-                blocked[x][y] == false &&
+                !blocked[x][y] &&
                 (c == origin || floodFillResult[x][y] > 0)) {
                 FeatureFactory::mk(FeatureId::chasm, c);
               }
@@ -583,9 +572,8 @@ void placeDoorAtPosIfSuitable(const Pos& p) {
   }
 
   if(isGoodHor || isGoodVer) {
-    const FeatureDataT* const mimicData = FeatureData::getData(FeatureId::wall);
-    FeatureFactory::mk(FeatureId::door, p,
-                       new DoorSpawnData(mimicData));
+    const auto* const mimicData = FeatureData::getData(FeatureId::wall);
+    FeatureFactory::mk(FeatureId::door, p, new DoorSpawnData(mimicData));
   }
 }
 
@@ -696,7 +684,7 @@ void mkSubRooms() {
                   const Pos posCand = doorBucket.at(DOOR_POS_ELEMENT);
 
                   bool isPosOk = true;
-                  for(Pos & posWithDoor : positionsWithDoor) {
+                  for(Pos& posWithDoor : positionsWithDoor) {
                     if(Utils::isPosAdj(posCand, posWithDoor, false)) {
                       isPosOk = false;
                       break;
@@ -729,7 +717,7 @@ void fillDeadEnds() {
   bool isDone = false;
   for(int y = 2; y < MAP_H - 2; y++) {
     for(int x = 2; x < MAP_W - 2; x++) {
-      if(expandedBlockers[x][y] == false) {
+      if(!expandedBlockers[x][y]) {
         origin = Pos(x, y);
         isDone = true;
         break;
@@ -740,11 +728,11 @@ void fillDeadEnds() {
 
   //Floodfill from origin, then sort the positions for flood value
   int floodFill[MAP_W][MAP_H];
-  FloodFill::run(origin, blocked, floodFill, INT_MAX, Pos(-1, -1));
+  FloodFill::run(origin, blocked, floodFill, INT_MAX, Pos(-1, -1), true);
   vector<PosAndVal> floodFillVector;
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
-      if(blocked[x][y] == false) {
+      if(!blocked[x][y]) {
         floodFillVector.push_back(PosAndVal(Pos(x, y), floodFill[x][y]));
       }
     }
@@ -819,17 +807,11 @@ void fillDeadEnds() {
 //  }
 //}
 
-bool isRegionFoundInCardinalDir(const Pos& pos, bool region[MAP_W][MAP_H]) {
-  for(Pos offset : DirUtils::cardinalOffsets) {
-    if(region[pos.x + offset.x][pos.y + offset.y]) {return true;}
-  }
-  return false;
-}
-
 void decorate() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(Map::cells[x][y].featureStatic->getId() == FeatureId::wall) {
+      Cell& cell = Map::cells[x][y];
+      if(cell.featureStatic->getId() == FeatureId::wall) {
 
         //Randomly convert walls to rubble
         if(Rnd::oneIn(10)) {
@@ -838,13 +820,11 @@ void decorate() {
         }
 
         //Moss grown walls
-        FeatureStatic* const f = Map::cells[x][y].featureStatic;
-        Wall* const wall = dynamic_cast<Wall*>(f);
+        Wall* const wall = dynamic_cast<Wall*>(cell.featureStatic);
         wall->setRandomIsMossGrown();
 
         //Convert walls with no adjacent stone floor to cave walls
-        CellPred::IsAnyOfFeatures pred(vector<FeatureId> {FeatureId::floor});
-        if(MapParse::getNrAdjCellsWithFeature(Pos(x, y), pred) == 0) {
+        if(CellPred::AllAdjIsNotFeature(FeatureId::floor).check(cell)) {
           wall->wallType = WallType::cave;
         } else {
           wall->setRandomNormalWall();
@@ -868,9 +848,6 @@ void decorate() {
 
 void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) {
   trace << "MapGen::Std::getAllowedStairCells()..." << endl;
-
-  //Stairs are only allowed in cells with, and completely surrounded by,
-  //stone floor or cave floor
 
   vector<FeatureId> featIdsOk {FeatureId::floor, FeatureId::caveFloor};
 
@@ -924,7 +901,7 @@ void movePlayerToNearestAllowedPos() {
   vector<Pos> allowedCellsList;
   Utils::mkVectorFromBoolMap(true, allowedCells, allowedCellsList);
 
-  assert(allowedCellsList.empty() == false);
+  assert(!allowedCellsList.empty());
 
   trace << "MapGen::Std: Sorting the allowed cells vector ";
   trace << "(" << allowedCellsList.size() << " cells)" << endl;
@@ -1017,11 +994,11 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
   vector<Pos> path;
   PathFind::run(Map::player->pos, stairsPos, blocked, path);
 
-  assert(path.empty() == false);
+  assert(!path.empty());
 
   trace << "MapGen::Std: Travelling along path and revealing all doors" << endl;
-  for(Pos & pos : path) {
-    Feature* const feature = Map::cells[pos.x][pos.y].featureStatic;
+  for(Pos& pos : path) {
+    auto* const feature = Map::cells[pos.x][pos.y].featureStatic;
     if(feature->getId() == FeatureId::door) {
       dynamic_cast<Door*>(feature)->reveal(false);
     }
@@ -1128,7 +1105,7 @@ bool run() {
       int nrTriesToMark = 1000;
       while(nrTriesToMark > 0) {
         Pos c(Rnd::range(0, 2), Rnd::range(0, 2));
-        if(regions[c.x][c.y] == nullptr && regionsToMkCave[c.x][c.y] == false) {
+        if(regions[c.x][c.y] == nullptr && !regionsToMkCave[c.x][c.y]) {
           regionsToMkCave[c.x][c.y] = true;
           nrTriesToMark = 0;
         }
@@ -1140,15 +1117,15 @@ bool run() {
   trace << "MapGen::Std: Making rooms" << endl;
   for(int y = 0; y < 3; y++) {
     for(int x = 0; x < 3; x++) {
-      Region& region = *regions[x][y];
-      if(region.hasBuiltInside_ == false) {
+      auto& region = *regions[x][y];
+      if(!region.isBuilt_) {
         const Rect roomRect = region.getRndRoomRect();
-        Room* room = mkRoom(roomRect);
+        auto* room = mkRoom(roomRect);
         Map::rooms.push_back(room);
-        region.mainRoom_ = room;
-        region.hasBuiltInside_ = true;
+        region.mainRoom_  = room;
+        region.isBuilt_   = true;
 #ifdef RESHAPE_ROOMS
-        if(Rnd::oneIn(3)) {reshapeRoom(room);}
+        if(Rnd::oneIn(3)) {reshapeRoom(*room);}
 #endif
       }
     }
@@ -1227,7 +1204,7 @@ bool run() {
 
 //=============================================================== REGION
 Region::Region(const Rect& r) :
-  mainRoom_(nullptr), isConnected_(false), hasBuiltInside_(false), r_(r) {
+  mainRoom_(nullptr), isConnected_(false), isBuilt_(false), r_(r) {
 
   for(int x = 0; x <= 2; x++) {
     for(int y = 0; y <= 2; y++) {
@@ -1237,7 +1214,7 @@ Region::Region(const Rect& r) :
 }
 
 Region::Region() :
-  mainRoom_(nullptr), isConnected_(false), hasBuiltInside_(false), r_() {
+  mainRoom_(nullptr), isConnected_(false), isBuilt_(false), r_() {
 
   for(int x = 0; x <= 2; x++) {
     for(int y = 0; y <= 2; y++) {

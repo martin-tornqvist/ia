@@ -107,8 +107,6 @@ void deleteAllMonsters() {
       i--;
     }
   }
-
-  Map::player->target = nullptr;
 }
 
 void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,

@@ -68,7 +68,7 @@ void Player::mkStartItems() {
   int NR_THR_KNIVES = Rnd::range(7, 12);
 
   const int WEAPON_CHOICE = Rnd::range(1, 5);
-  ItemId weaponId = ItemId::dagger;
+  auto weaponId = ItemId::dagger;
   switch(WEAPON_CHOICE) {
     case 1:   weaponId = ItemId::dagger;   break;
     case 2:   weaponId = ItemId::hatchet;  break;
@@ -119,7 +119,7 @@ void Player::mkStartItems() {
 
 void Player::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(propHandler_->appliedProps_.size()));
-  for(Prop * prop : propHandler_->appliedProps_) {
+  for(Prop* prop : propHandler_->appliedProps_) {
     lines.push_back(toStr(prop->getId()));
     lines.push_back(toStr(prop->turnsLeft_));
     prop->storeToSaveLines(lines);
@@ -153,11 +153,11 @@ void Player::setupFromSaveLines(vector<string>& lines) {
   const int NR_PROPS = toInt(lines.front());
   lines.erase(lines.begin());
   for(int i = 0; i < NR_PROPS; i++) {
-    const PropId id = PropId(toInt(lines.front()));
+    const auto id = PropId(toInt(lines.front()));
     lines.erase(lines.begin());
     const int NR_TURNS = toInt(lines.front());
     lines.erase(lines.begin());
-    Prop* const prop = propHandler_->mkProp(
+    auto* const prop = propHandler_->mkProp(
                          id, propTurnsSpecific, NR_TURNS);
     propHandler_->tryApplyProp(prop, true, true, true, true);
     prop->setupFromSaveLines(lines);
@@ -202,11 +202,9 @@ void Player::setupFromSaveLines(vector<string>& lines) {
 }
 
 void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
-  if(obsessions[int(Obsession::masochism)] == false) {
-    incrShock(1, ShockSrc::misc);
-  }
+  if(!obsessions[int(Obsession::masochism)]) {incrShock(1, ShockSrc::misc);}
 
-  if(ALLOW_WOUNDS && Config::isBotPlaying() == false) {
+  if(ALLOW_WOUNDS && !Config::isBotPlaying()) {
     if(dmg >= 5) {
       Prop* const prop = new PropWound(propTurnsIndefinite);
       propHandler_->tryApplyProp(prop);
@@ -301,7 +299,7 @@ void Player::incrInsanity() {
   trace << "Player: Increasing insanity" << endl;
   string msg = getInsanity() < 100 ? "Insanity draws nearer... " : "";
 
-  if(Config::isBotPlaying() == false) {
+  if(!Config::isBotPlaying()) {
     const int INS_INCR = 6;
     insanity_ += INS_INCR;
   }
@@ -320,7 +318,7 @@ void Player::incrInsanity() {
     bool playerSeeShockingMonster = false;
     vector<Actor*> SpottedEnemies;
     getSpottedEnemies(SpottedEnemies);
-    for(Actor * actor : SpottedEnemies) {
+    for(Actor* actor : SpottedEnemies) {
       const ActorDataT& def = actor->getData();
       if(def.monsterShockLvl != MonsterShockLvl::none) {
         playerSeeShockingMonster = true;
@@ -392,14 +390,12 @@ void Player::incrInsanity() {
               }
               if(phobiasActive < 2) {
                 if(Rnd::coinToss()) {
-                  if(SpottedEnemies.empty() == false) {
+                  if(!SpottedEnemies.empty()) {
                     const int MONSTER_ROLL =
                       Rnd::range(0, SpottedEnemies.size() - 1);
                     const ActorDataT& monsterData =
                       SpottedEnemies.at(MONSTER_ROLL)->getData();
-                    if(
-                      monsterData.isRat &&
-                      phobias[int(Phobia::rat)] == false) {
+                    if(monsterData.isRat && !phobias[int(Phobia::rat)]) {
                       msg += "I am afflicted by Murophobia. "
                              "Rats suddenly seem terrifying.";
                       Popup::showMsg(msg, true, "Murophobia!",
@@ -407,9 +403,7 @@ void Player::incrInsanity() {
                       phobias[int(Phobia::rat)] = true;
                       return;
                     }
-                    if(
-                      monsterData.isSpider &&
-                      phobias[int(Phobia::spider)] == false) {
+                    if(monsterData.isSpider && !phobias[int(Phobia::spider)]) {
                       msg += "I am afflicted by Arachnophobia. "
                              "Spiders suddenly seem terrifying.";
                       Popup::showMsg(msg, true, "Arachnophobia!",
@@ -417,9 +411,7 @@ void Player::incrInsanity() {
                       phobias[int(Phobia::spider)] = true;
                       return;
                     }
-                    if(
-                      monsterData.isCanine &&
-                      phobias[int(Phobia::dog)] == false) {
+                    if(monsterData.isCanine && !phobias[int(Phobia::dog)]) {
                       msg += "I am afflicted by Cynophobia. "
                              "Dogs suddenly seem terrifying.";
                       Popup::showMsg(msg, true, "Cynophobia!",
@@ -427,9 +419,7 @@ void Player::incrInsanity() {
                       phobias[int(Phobia::dog)] = true;
                       return;
                     }
-                    if(
-                      monsterData.isUndead &&
-                      phobias[int(Phobia::undead)] == false) {
+                    if(monsterData.isUndead && !phobias[int(Phobia::undead)]) {
                       msg += "I am afflicted by Necrophobia. "
                              "The undead suddenly seem much more terrifying.";
                       Popup::showMsg(msg, true, "Necrophobia!");
@@ -440,7 +430,7 @@ void Player::incrInsanity() {
                 } else {
                   if(Rnd::coinToss()) {
                     if(isStandingInOpenSpace()) {
-                      if(phobias[int(Phobia::openPlace)] == false) {
+                      if(!phobias[int(Phobia::openPlace)]) {
                         msg += "I am afflicted by Agoraphobia. "
                                "Open places suddenly seem terrifying.";
                         Popup::showMsg(msg, true, "Agoraphobia!",
@@ -450,7 +440,7 @@ void Player::incrInsanity() {
                       }
                     }
                     if(isStandingInCrampedSpace()) {
-                      if(phobias[int(Phobia::closedPlace)] == false) {
+                      if(!phobias[int(Phobia::closedPlace)]) {
                         msg += "I am afflicted by Claustrophobia. "
                                "Confined places suddenly seem terrifying.";
                         Popup::showMsg(msg, true, "Claustrophobia!",
@@ -461,7 +451,7 @@ void Player::incrInsanity() {
                     }
                   } else {
                     if(Map::dlvl >= 5) {
-                      if(phobias[int(Phobia::deepPlaces)] == false) {
+                      if(!phobias[int(Phobia::deepPlaces)]) {
                         msg += "I am afflicted by Bathophobia. "
                                "It suddenly seems terrifying to delve deeper.";
                         Popup::showMsg(msg, true, "Bathophobia!");
@@ -553,20 +543,16 @@ void Player::incrInsanity() {
 }
 
 void Player::addTmpShockFromFeatures() {
-  if(
-    Map::cells[pos.x][pos.y].isDark &&
-    Map::cells[pos.x][pos.y].isLight == false) {
-    shockTmp_ += 20;
-  }
+  Cell& cell = Map::cells[pos.x][pos.y];
+
+  if(cell.isDark && !cell.isLight) {shockTmp_ += 20;}
 
   for(int dy = -1; dy <= 1; dy++) {
     const int Y = pos.y + dy;
     for(int dx = -1; dx <= 1; dx++) {
       const int X = pos.x + dx;
       if(Utils::isPosInsideMap(Pos(X, Y))) {
-        Cell& cell = Map::cells[pos.x + dx][pos.y + dy];
-        const Feature* const f = cell.featureStatic;
-        shockTmp_ += f->getShockWhenAdjacent();
+        shockTmp_ += Map::cells[X][Y].featureStatic->getShockWhenAdjacent();
       }
     }
   }
@@ -791,7 +777,7 @@ void Player::onStandardTurn() {
   vector<Actor*> spottedEnemies;
   getSpottedEnemies(spottedEnemies);
   double shockFromMonstersCurPlayerTurn = 0.0;
-  for(Actor * actor : spottedEnemies) {
+  for(Actor* actor : spottedEnemies) {
     DungeonMaster::onMonsterSpotted(*actor);
 
     Monster* monster = dynamic_cast<Monster*>(actor);
@@ -865,14 +851,14 @@ void Player::onStandardTurn() {
     nrTurnsUntilIns_ = -1;
   }
 
-  for(Actor * actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_) {
     if(actor != this) {
       if(actor->deadState == ActorDeadState::alive) {
 
         Monster& monster = *dynamic_cast<Monster*>(actor);
         const bool IS_MONSTER_SEEN = isSeeingActor(*actor, nullptr);
         if(IS_MONSTER_SEEN) {
-          if(monster.messageMonsterInViewPrinted == false) {
+          if(!monster.messageMonsterInViewPrinted) {
             if(activeMedicalBag != nullptr || waitTurnsLeft > 0) {
               Log::addMsg(actor->getNameA() + " comes into my view.",
                           clrWhite, true);
@@ -949,7 +935,7 @@ void Player::onStandardTurn() {
       for(int y = y0; y <= y1; y++) {
         for(int x = x0; x <= x1; x++) {
           if(Map::cells[x][y].isSeenByPlayer) {
-            Feature* f = Map::cells[x][y].featureStatic;
+            auto* f = Map::cells[x][y].featureStatic;
 
             if(f->getId() == FeatureId::trap) {
               dynamic_cast<Trap*>(f)->playerTrySpotHidden();
@@ -1006,7 +992,7 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   const SfxId sfx = snd.getSfx();
 
   const string& msg = snd.getMsg();
-  const bool HAS_SND_MSG = msg.empty() == false && msg != " ";
+  const bool HAS_SND_MSG = !msg.empty() && msg != " ";
 
   if(HAS_SND_MSG) {Log::addMsg(msg, clrWhite);}
 
@@ -1073,9 +1059,7 @@ void Player::moveDir(Dir dir) {
               return;
             }
           }
-          if(hasMeleeWeapon == false) {
-            punch(*actorAtDest);
-          }
+          if(!hasMeleeWeapon) {punch(*actorAtDest);}
         }
         return;
       }
@@ -1092,8 +1076,8 @@ void Player::moveDir(Dir dir) {
       GameTime::getFeatureMobsAtPos(dest, featureMobs);
 
       if(isFeaturesAllowMove) {
-        for(FeatureMob * m : featureMobs) {
-          if(m->canMove(props) == false) {
+        for(auto* m : featureMobs) {
+          if(!m->canMove(props)) {
             isFeaturesAllowMove = false;
             break;
           }
@@ -1133,15 +1117,15 @@ void Player::moveDir(Dir dir) {
         //Print message if walking on item
         Item* const item = Map::cells[pos.x][pos.y].item;
         if(item != nullptr) {
-          string message = propHandler_->allowSee() == false ?
-                           "I feel here: " : "I see here: ";
+          string message = propHandler_->allowSee() ?
+                           "I see here: " : "I feel here: ";
           message += ItemData::getItemInterfaceRef(*item, true);
           Log::addMsg(message + ".");
         }
       }
 
       //Note: bump() prints block messages.
-      for(FeatureMob * m : featureMobs) {m->bump(*this);}
+      for(auto* m : featureMobs) {m->bump(*this);}
 
       Map::cells[dest.x][dest.y].featureStatic->bump(*this);
     }
@@ -1209,7 +1193,7 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
   bool isUsingLightGivingItemNormal = flareFuseTurns > 0;
 
   vector<Item*>& generalItems = inv_->getGeneral();
-  for(Item * const item : generalItems) {
+  for(Item* const item : generalItems) {
     if(item->getData().id == ItemId::electricLantern) {
       DeviceLantern* const lantern = dynamic_cast<DeviceLantern*>(item);
       LanternLightSize lightSize = lantern->getCurLightSize();
@@ -1232,8 +1216,8 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
     bool visionBlockers[MAP_W][MAP_H];
     for(int y = p0.y; y <= p1.y; y++) {
       for(int x = p0.x; x <= p1.x; x++) {
-        const FeatureStatic* const f = Map::cells[x][y].featureStatic;
-        visionBlockers[x][y] = f->isVisionPassable() == false;
+        const auto* const f = Map::cells[x][y].featureStatic;
+        visionBlockers[x][y] = !f->isVisionPassable();
       }
     }
 
@@ -1284,7 +1268,7 @@ void Player::updateFov() {
       Cell& cell = Map::cells[x][y];
       const bool IS_BLOCKING = CellPred::BlocksMoveCmn(false).check(cell);
       //Do not explore dark floor cells
-      if(cell.isSeenByPlayer && (cell.isDark == false || IS_BLOCKING)) {
+      if(cell.isSeenByPlayer && (!cell.isDark || IS_BLOCKING)) {
         cell.isExplored = true;
       }
     }
@@ -1308,8 +1292,8 @@ void Player::FOVhack() {
               const Cell& adjCell = Map::cells[adj.x][adj.y];
               if(
                 adjCell.isSeenByPlayer &&
-                (adjCell.isDark == false || adjCell.isLight) &&
-                blocked[adj.x][adj.y] == false) {
+                (!adjCell.isDark || adjCell.isLight) &&
+                !blocked[adj.x][adj.y]) {
                 Map::cells[x][y].isSeenByPlayer = true;
                 dx = 999;
                 dy = 999;

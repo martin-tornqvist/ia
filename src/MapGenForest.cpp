@@ -95,12 +95,12 @@ void mkForestTreePatch() {
 
   while(nrTreesCreated < NR_TREES_TO_PUT) {
     if(
-      Utils::isPosInsideMap(curPos) == false ||
+      !Utils::isPosInsideMap(curPos) ||
       Utils::kingDist(curPos, Map::player->pos) <= 1) {
       return;
     }
 
-    const FeatureId treeId = FeatureId::tree;
+    const auto treeId = FeatureId::tree;
 
     FeatureFactory::mk(treeId, curPos);
     nrTreesCreated++;
@@ -116,7 +116,7 @@ void mkForestTreePatch() {
         curPos.y += Rnd::coinToss() ? -1 : 1;
       }
 
-      if(Utils::isPosInsideMap(curPos) == false) {return;}
+      if(!Utils::isPosInsideMap(curPos)) {return;}
     }
   }
 }
@@ -131,7 +131,7 @@ void mkForestTrees(const Pos& stairsPos) {
   vector<Pos> path;
 
   bool proceed = false;
-  while(proceed == false) {
+  while(!proceed) {
     for(int i = 0; i < nrForestPatches; i++) {
       mkForestTreePatch();
     }
@@ -158,7 +158,7 @@ void mkForestTrees(const Pos& stairsPos) {
   }
 
   //Build path
-  for(const Pos & pathPos : path) {
+  for(const Pos& pathPos : path) {
     for(int dx = -1; dx < 1; dx++) {
       for(int dy = -1; dy < 1; dy++) {
         const Pos c(pathPos + Pos(dx, dy));
@@ -205,12 +205,12 @@ void mkForestTrees(const Pos& stairsPos) {
               Map::cells[X][Y].featureStatic->getId() == FeatureId::forestPath;
 
             bool isLeftOfPrev = true;
-            if(gravePositions.empty() == false) {
+            if(!gravePositions.empty()) {
               isLeftOfPrev = X < gravePositions.back().x;
             }
 
             bool isPosOk = vision[X][Y] && IS_LEFT_OF_CHURCH &&
-                           IS_ON_STONE_PATH == false && isLeftOfPrev;
+                           !IS_ON_STONE_PATH && isLeftOfPrev;
 
             if(isPosOk) {
               for(int dy_small = -1; dy_small <= 1; dy_small++) {
@@ -223,9 +223,7 @@ void mkForestTrees(const Pos& stairsPos) {
               if(isPosOk) {
                 gravePositions.push_back(Pos(X, Y));
                 blocked[X][Y] = true;
-                if(gravePositions.size() == (unsigned int)NR_HIGHSCORES) {
-                  i = 9999;
-                }
+                if(int(gravePositions.size()) == NR_HIGHSCORES) {i = 9999;}
                 dy = 99999;
                 dx = 99999;
               }
@@ -261,7 +259,7 @@ bool run() {
     for(int x = 1; x < MAP_W - 1; x++) {
       const Pos c(x, y);
       grass = Rnd::range(1, 12);
-      FeatureId id = FeatureId::empty;
+      auto id = FeatureId::empty;
       if(grass == 1)                {id = FeatureId::bush;}
       if(grass == 2)                {id = FeatureId::bushWithered;}
       if(grass == 3 || grass == 4)  {id = FeatureId::grassWithered;}

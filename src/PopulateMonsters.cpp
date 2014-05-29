@@ -245,7 +245,7 @@ void populateStdLvl() {
   }
 
   //First, attempt to populate all non-plain themed rooms
-  for(Room * const room : Map::rooms) {
+  for(Room* const room : Map::rooms) {
     if(room->roomTheme != RoomThemeId::plain) {
 
       const int ROOM_W = room->getX1() - room->getX0() + 1;

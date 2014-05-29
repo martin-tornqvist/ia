@@ -74,7 +74,7 @@ void initDataList() {
   d.spawnType = featureSpawnType_other;
   d.name_a = "a stone wall";
   d.name_the = "the stone wall";
-  d.glyph = Config::isAsciiWallFullSquare() == false ? '#' : 10;
+  d.glyph = Config::isAsciiWallFullSquare() ? 10 : '#';
   d.color = clrGray;
   d.tile = TileId::wallTop;
   d.moveRules.setPropCanMove(propEthereal);

@@ -14,19 +14,19 @@ using namespace std;
 namespace CellPred {
 
 bool BlocksVision::check(const Cell& c)  const {
-  return c.featureStatic->isVisionPassable() == false;
+  return !c.featureStatic->isVisionPassable();
 }
 
 bool BlocksVision::check(const FeatureMob& f) const {
-  return f.isVisionPassable() == false;
+  return !f.isVisionPassable();
 }
 
 bool BlocksMoveCmn::check(const Cell& c) const {
-  return c.featureStatic->canMoveCmn() == false;
+  return !c.featureStatic->canMoveCmn();
 }
 
 bool BlocksMoveCmn::check(const FeatureMob& f) const {
-  return f.canMoveCmn() == false;
+  return !f.canMoveCmn();
 }
 
 bool BlocksMoveCmn::check(const Actor& a) const {
@@ -39,11 +39,11 @@ BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking) :
 }
 
 bool BlocksActor::check(const Cell& c) const {
-  return c.featureStatic->canMove(actorsProps_) == false;
+  return !c.featureStatic->canMove(actorsProps_);
 }
 
 bool BlocksActor::check(const FeatureMob& f) const {
-  return f.canMove(actorsProps_) == false;
+  return !f.canMove(actorsProps_);
 }
 
 bool BlocksActor::check(const Actor& a) const {
@@ -51,11 +51,11 @@ bool BlocksActor::check(const Actor& a) const {
 }
 
 bool BlocksProjectiles::check(const Cell& c)  const {
-  return c.featureStatic->isProjectilePassable() == false;
+  return !c.featureStatic->isProjectilePassable();
 }
 
 bool BlocksProjectiles::check(const FeatureMob& f)  const {
-  return f.isProjectilePassable() == false;
+  return !f.isProjectilePassable();
 }
 
 bool LivingActorsAdjToPos::check(const Actor& a) const {
@@ -66,83 +66,37 @@ bool LivingActorsAdjToPos::check(const Actor& a) const {
 }
 
 bool BlocksItems::check(const Cell& c)  const {
-  return c.featureStatic->canHaveItem() == false;
+  return !c.featureStatic->canHaveItem();
 }
 
 bool BlocksItems::check(const FeatureMob& f) const {
-  return f.canHaveItem() == false;
+  return !f.canHaveItem();
 }
 
-//bool Corridor::check(const Cell& c) const {
-//  const int X = c.pos.x;
-//  const int Y = c.pos.y;
-//
-//  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
-//
-//  const bool IS_HOR_COR = canWalkAt(X,     Y - 1) == false &&
-//                          canWalkAt(X,     Y)              &&
-//                          canWalkAt(X,     Y + 1) == false &&
-//                          canWalkAt(X - 1, Y)              &&
-//                          canWalkAt(X + 1, Y);
-//
-//  const bool IS_VER_COR = canWalkAt(X - 1, Y) == false &&
-//                          canWalkAt(X,     Y)          &&
-//                          canWalkAt(X + 1, Y) == false &&
-//                          canWalkAt(X,     Y - 1)      &&
-//                          canWalkAt(X,     Y + 1);
-//
-//  return IS_HOR_COR != IS_VER_COR;
-//}
-
-//bool Nook::check(const Cell& c) const {
-//  const int X = c.pos.x;
-//  const int Y = c.pos.y;
-//
-//  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
-//
-//  const bool C  = canWalkAt(X    , Y);
-//  const bool E  = canWalkAt(X + 1, Y);
-//  const bool W  = canWalkAt(X - 1, Y);
-//  const bool N  = canWalkAt(X,     Y - 1);
-//  const bool S  = canWalkAt(X,     Y + 1);
-//  const bool NE = canWalkAt(X + 1, Y - 1);
-//  const bool NW = canWalkAt(X - 1, Y - 1);
-//  const bool SE = canWalkAt(X + 1, Y + 1);
-//  const bool SW = canWalkAt(X - 1, Y + 1);
-//
-//  if(C == false) {return false;}
-//
-//  //Horizontal nook
-//  if(N == false && S == false) {
-//    // ##
-//    // #..
-//    // ##
-//    if(NW == false && W == false && SW == false && E) {return true;}
-//
-//    //  ##
-//    // ..#
-//    //  ##
-//    if(NE == false && E == false && SE == false && W) {return true;}
-//  }
-//
-//  //Vertical nook
-//  if(E == false && W == false) {
-//    // ###
-//    // #.#
-//    //  .
-//    if(NW == false && N == false && NE == false && S) {return true;}
-//
-//    //  .
-//    // #.#
-//    // ###
-//    if(SW == false && S == false && SE == false && N) {return true;}
-//  }
-//  return false;
-//}
+bool IsFeature::check(const Cell& c) const {
+  return c.featureStatic->getId() == feature_;
+}
 
 bool IsAnyOfFeatures::check(const Cell& c) const {
-  for(FeatureId f : features_) {if(f == c.featureStatic->getId()) return true;}
+  for(auto f : features_) {if(f == c.featureStatic->getId()) return true;}
   return false;
+}
+
+bool AllAdjIsFeature::check(const Cell& c) const {
+  const int X = c.pos.x;
+  const int Y = c.pos.y;
+
+  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+
+  for(int dx = -1; dx <= 1; dx++) {
+    for(int dy = -1; dy <= 1; dy++) {
+      if(Map::cells[X + dx][Y + dy].featureStatic->getId() != feature_) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
@@ -153,18 +107,44 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
 
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
-      const FeatureId curId =
-        Map::cells[X + dx][Y + dy].featureStatic->getId();
+      const auto curId = Map::cells[X + dx][Y + dy].featureStatic->getId();
 
       bool isMatch = false;
-      for(FeatureId f : features_) {
-        if(f == curId) {
-          isMatch = true;
-          break;
-        }
-      }
+      for(auto f : features_) {if(f == curId) {isMatch = true; break;}}
+      if(!isMatch) return false;
+    }
+  }
 
-      if(isMatch == false) return false;
+  return true;
+}
+
+bool AllAdjIsNotFeature::check(const Cell& c) const {
+  const int X = c.pos.x;
+  const int Y = c.pos.y;
+
+  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+
+  for(int dx = -1; dx <= 1; dx++) {
+    for(int dy = -1; dy <= 1; dy++) {
+      if(Map::cells[X + dx][Y + dy].featureStatic->getId() == feature_) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+bool AllAdjIsNoneOfFeatures::check(const Cell& c) const {
+  const int X = c.pos.x;
+  const int Y = c.pos.y;
+
+  if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+
+  for(int dx = -1; dx <= 1; dx++) {
+    for(int dy = -1; dy <= 1; dy++) {
+      const auto curId = Map::cells[X + dx][Y + dy].featureStatic->getId();
+      for(auto f : features_) {if(f == curId) {return false;}}
     }
   }
 
@@ -179,42 +159,40 @@ namespace MapParse {
 void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
            const MapParseWriteRule writeRule) {
 
-  assert(pred.isCheckingCells()       == true ||
-         pred.isCheckingMobFeatures() == true ||
-         pred.isCheckingActors()      == true);
+  assert(pred.isCheckingCells()       ||
+         pred.isCheckingMobFeatures() ||
+         pred.isCheckingActors());
 
   const bool ALLOW_WRITE_FALSE = writeRule == MapParseWriteRule::always;
 
   if(pred.isCheckingCells()) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
-        const Cell& c = Map::cells[x][y];
+        const auto& c = Map::cells[x][y];
         const bool IS_MATCH = pred.check(c);
-        if(IS_MATCH || ALLOW_WRITE_FALSE) {
-          out[x][y] = IS_MATCH;
-        }
+        if(IS_MATCH || ALLOW_WRITE_FALSE) {out[x][y] = IS_MATCH;}
       }
     }
   }
 
   if(pred.isCheckingMobFeatures()) {
-    for(FeatureMob * mob : GameTime::featureMobs_) {
+    for(FeatureMob* mob : GameTime::featureMobs_) {
       const Pos& p = mob->getPos();
       const bool IS_MATCH = pred.check(*mob);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
         bool& v = out[p.x][p.y];
-        if(v == false) {v = IS_MATCH;}
+        if(!v) {v = IS_MATCH;}
       }
     }
   }
 
   if(pred.isCheckingActors()) {
-    for(Actor * actor : GameTime::actors_) {
+    for(Actor* actor : GameTime::actors_) {
       const Pos& p = actor->pos;
       const bool IS_MATCH = pred.check(*actor);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {
         bool& v = out[p.x][p.y];
-        if(v == false) {v = IS_MATCH;}
+        if(!v) {v = IS_MATCH;}
       }
     }
   }
@@ -233,7 +211,7 @@ void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
 
   for(int yOuter = 0; yOuter < MAP_H; yOuter++) {
     for(int xOuter = 0; xOuter < MAP_W; xOuter++) {
-      if(out[xOuter][yOuter] == false) {
+      if(!out[xOuter][yOuter]) {
         for(int d = distInterval.lower; d <= distInterval.upper; d++) {
           Pos p0(max(0,         xOuter - d), max(0,         yOuter - d));
           Pos p1(min(MAP_W - 1, xOuter + d), min(MAP_H - 1, yOuter + d));
@@ -254,24 +232,6 @@ void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
       }
     }
   }
-}
-
-int getNrAdjCellsWithFeature(const Pos& p,
-                             const CellPred::IsAnyOfFeatures& pred) {
-  int ret = 0;
-
-  const int X0 = getConstrInRange(0, p.x - 1, MAP_W - 1);
-  const int Y0 = getConstrInRange(0, p.y - 1, MAP_W - 1);
-  const int X1 = getConstrInRange(0, p.x + 1, MAP_W - 1);
-  const int Y1 = getConstrInRange(0, p.y + 1, MAP_W - 1);
-
-  for(int y = Y0; y <= Y1; y++) {
-    for(int x = X0; x <= X1; x++) {
-      if(pred.check(Map::cells[x][y])) {ret++;}
-    }
-  }
-
-  return ret;
 }
 
 bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
@@ -335,82 +295,69 @@ bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
 //------------------------------------------------------------ FLOOD FILL
 namespace FloodFill {
 
-void run(const Pos& origin, bool blocked[MAP_W][MAP_H],
-         int values[MAP_W][MAP_H], int travelLimit, const Pos& target) {
+void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
+         int out[MAP_W][MAP_H], int travelLimit, const Pos& p1,
+         const bool ALLOW_DIAGONAL) {
 
-  Utils::resetArray(values);
+  Utils::resetArray(out);
 
   vector<Pos> positions;
   positions.resize(0);
-  unsigned int nrElementsToSkip = 0;
-  Pos c;
 
-  int curX = origin.x;
-  int curY = origin.y;
+  unsigned int  nrElementsToSkip  = 0;
+  int           curVal            = 0;
+  bool          pathExists        = true;
+  bool          isAtTarget        = false;
+  bool          isStoppingAtP1    = p1.x != -1;
+  const         Rect bounds(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
+  Pos           curPos(p0);
 
-  int curValue = 0;
-
-  bool pathExists = true;
-  bool isAtTarget = false;
-
-  bool isStoppingAtTarget = target.x != -1;
-
-  const Rect bounds(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
+  vector<Pos> dirs {Pos(0, -1), Pos(-1, 0), Pos(0, 1), Pos(1, 0)};
+  if(ALLOW_DIAGONAL) {
+    dirs.push_back(Pos(-1, -1));
+    dirs.push_back(Pos(-1, 1));
+    dirs.push_back(Pos(1, -1));
+    dirs.push_back(Pos(1, 1));
+  }
 
   bool done = false;
-  while(done == false) {
-    for(int dx = -1; dx <= 1; dx++) {
-      for(int dy = -1; dy <= 1; dy++) {
-        if((dx != 0 || dy != 0)) {
-          const Pos newPos(curX + dx, curY + dy);
-          if(
-            blocked[newPos.x][newPos.y] == false &&
-            Utils::isPosInside(newPos, bounds) &&
-            values[newPos.x][newPos.y] == 0) {
-            curValue = values[curX][curY];
+  while(!done) {
 
-            if(curValue < travelLimit) {
-              values[newPos.x][newPos.y] = curValue + 1;
-            }
+    for(const Pos& d : dirs) {
+      if((d != 0)) {
+        const Pos newPos(curPos + d);
+        if(
+          !blocked[newPos.x][newPos.y]        &&
+          Utils::isPosInside(newPos, bounds)  &&
+          out[newPos.x][newPos.y] == 0        &&
+          newPos != p0) {
+          curVal = out[curPos.x][curPos.y];
 
-            if(isStoppingAtTarget) {
-              if(curX == target.x - dx && curY == target.y - dy) {
-                isAtTarget = true;
-                dx = 9999;
-                dy = 9999;
-              }
-            }
+          if(curVal < travelLimit) {out[newPos.x][newPos.y] = curVal + 1;}
 
-            if(isStoppingAtTarget == false || isAtTarget == false) {
-              positions.push_back(newPos);
-            }
+          if(isStoppingAtP1 && curPos == p1 - d) {
+            isAtTarget = true;
+            break;
           }
+          if(!isStoppingAtP1 || !isAtTarget) {positions.push_back(newPos);}
         }
       }
     }
 
-    if(isStoppingAtTarget) {
-      if(positions.size() == nrElementsToSkip) {
-        pathExists = false;
-      }
-      if(isAtTarget || pathExists == false) {
-        done = true;
-      }
+    if(isStoppingAtP1) {
+      if(positions.size() == nrElementsToSkip)  {pathExists = false;}
+      if(isAtTarget || !pathExists)             {done = true;}
     } else if(positions.size() == nrElementsToSkip) {
       done = true;
     }
 
-    if(curValue == travelLimit) {
-      done = true;
-    }
+    if(curVal == travelLimit) {done = true;}
 
-    if(isStoppingAtTarget == false || isAtTarget == false) {
+    if(!isStoppingAtP1 || !isAtTarget) {
       if(positions.size() == nrElementsToSkip) {
         pathExists = false;
       } else {
-        c = positions.at(nrElementsToSkip);
-        curX = c.x;
-        curY = c.y;
+        curPos = positions.at(nrElementsToSkip);
         nrElementsToSkip++;
       }
     }
@@ -422,59 +369,47 @@ void run(const Pos& origin, bool blocked[MAP_W][MAP_H],
 //------------------------------------------------------------ PATHFINDER
 namespace PathFind {
 
-void run(const Pos& origin, const Pos& target, bool blocked[MAP_W][MAP_H],
-         vector<Pos>& vectorRef) {
+void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
+         vector<Pos>& out, const bool ALLOW_DIAGONAL) {
 
-  vectorRef.resize(0);
+  out.resize(0);
 
-  int vals[MAP_W][MAP_H];
-  FloodFill::run(origin, blocked, vals, 1000, target);
+  int flood[MAP_W][MAP_H];
+  FloodFill::run(p0, blocked, flood, 1000, p1, ALLOW_DIAGONAL);
 
-  bool pathExists = vals[target.x][target.y] != 0;
+  if(flood[p1.x][p1.y] == 0) {return;} //No path exists
 
-  if(pathExists == true) {
-    Pos c;
+  Pos curPos(p1);
+  out.push_back(curPos);
 
-    int curX = target.x;
-    int curY = target.y;
+  vector<Pos> dirs {Pos(0, -1), Pos(-1, 0), Pos(0, 1), Pos(1, 0)};
+  if(ALLOW_DIAGONAL) {
+    dirs.push_back(Pos(-1, -1));
+    dirs.push_back(Pos(-1, 1));
+    dirs.push_back(Pos(1, -1));
+    dirs.push_back(Pos(1, 1));
+  }
 
-    bool done = false;
-    while(done == false) {
-      //TODO use for-loop instead
-      //Starts from 0 instead of -1 so that cardinal directions are tried first
-      int dX = 0;
-      while(dX <= 1) {
-        int dY = 0;
-        while(dY <= 1) {
-          if(dX != 0 || dY != 0) {
-            const Pos newPos(curX + dX, curY + dY);
+  while(true) {
+    for(const Pos& d : dirs) {
 
-            if(newPos.x >= 0 && newPos.y >= 0) {
-              const int VAL_AT_NEW = vals[newPos.x][newPos.y];
-              const int VAL_AT_CUR = vals[curX][curY];
-              if(
-                (VAL_AT_NEW == VAL_AT_CUR - 1 && VAL_AT_NEW != 0) ||
-                (newPos == origin)) {
+      const Pos adjPos(curPos + d);
 
-                c.x = curX;
-                c.y = curY;
-                vectorRef.push_back(c);
+      if(Utils::isPosInsideMap(adjPos)) {
+        const int VAL_AT_ADJ = flood[adjPos.x][adjPos.y];
+        const int VAL_AT_CUR = flood[curPos.x][curPos.y];
+        if(
+          (VAL_AT_ADJ < VAL_AT_CUR && VAL_AT_ADJ != 0) ||
+          (adjPos == p0)) {
 
-                curX = curX + dX;
-                curY = curY + dY;
+          if(adjPos == p0) {return;} //Origin reached
 
-                if(curX == origin.x && curY == origin.y) {
-                  done = true;
-                }
+          out.push_back(adjPos);
 
-                dX = 99;
-                dY = 99;
-              }
-            }
-          }
-          dY = dY == 1 ? 2 : dY == -1 ? 1 : dY == 0 ? -1 : dY;
+          curPos = adjPos;
+
+          break;
         }
-        dX = dX == 1 ? 2 : dX == -1 ? 1 : dX == 0 ? -1 : dX;
       }
     }
   }

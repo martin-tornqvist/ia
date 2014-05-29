@@ -14,6 +14,7 @@
 #include "FeatureExaminable.h"
 #include "FeatureLiquid.h"
 #include "FeatureWall.h"
+#include "Utils.h"
 
 #ifdef DEMO_MODE
 #include "Renderer.h"
@@ -53,6 +54,8 @@ void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos) {
 } //namespace
 
 Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
+  assert(Utils::isPosInsideMap(pos));
+
   const FeatureDataT* const data = FeatureData::getData(id);
 
   //General (simple) features

@@ -181,7 +181,7 @@ void init() {
 }
 
 void cleanup() {
-  for(Mix_Chunk * chunk : audioChunks) {Mix_FreeChunk(chunk);}
+  for(Mix_Chunk* chunk : audioChunks) {Mix_FreeChunk(chunk);}
   audioChunks.resize(0);
 
   curChannel    = 0;

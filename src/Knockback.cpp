@@ -20,9 +20,9 @@ namespace KnockBack {
 void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                   const bool IS_SPIKE_GUN, const bool IS_MSG_ALLOWED) {
 
-  const bool DEFENDER_IS_MONSTER = &defender != Map::player;
+  const bool DEFENDER_IS_MON = &defender != Map::player;
 
-  if(DEFENDER_IS_MONSTER || Config::isBotPlaying() == false) {
+  if(DEFENDER_IS_MON || !Config::isBotPlaying()) {
     if(defender.getData().actorSize <= actorSize_giant) {
 
       vector<PropId> props;
@@ -51,17 +51,17 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
         if(
           (ACTOR_CAN_BE_KNOCKED_BACK) &&
-          (CELL_BLOCKED == false || CELL_IS_BOTTOMLESS)) {
+          (!CELL_BLOCKED || CELL_IS_BOTTOMLESS)) {
 
           bool visionBlockers[MAP_W][MAP_H];
           MapParse::parse(CellPred::BlocksVision(), visionBlockers);
           const bool PLAYER_SEE_DEFENDER =
-            DEFENDER_IS_MONSTER == false ? true :
-            Map::player->isSeeingActor(defender, blocked);
+            DEFENDER_IS_MON ? Map::player->isSeeingActor(defender, blocked) :
+            true;
 
           if(i == 0) {
             if(IS_MSG_ALLOWED) {
-              if(DEFENDER_IS_MONSTER && PLAYER_SEE_DEFENDER) {
+              if(DEFENDER_IS_MON && PLAYER_SEE_DEFENDER) {
                 Log::addMsg(defender.getNameThe() + " is knocked back!");
               } else {
                 Log::addMsg("I am knocked back!");
@@ -78,7 +78,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           SdlWrapper::sleep(Config::getDelayProjectileDraw());
 
           if(CELL_IS_BOTTOMLESS) {
-            if(DEFENDER_IS_MONSTER && PLAYER_SEE_DEFENDER) {
+            if(DEFENDER_IS_MON && PLAYER_SEE_DEFENDER) {
               Log::addMsg(
                 defender.getNameThe() + " plummets down the depths.",
                 clrMsgGood);
@@ -115,7 +115,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           if(IS_SPIKE_GUN) {
             FeatureStatic* const f =
               Map::cells[newPos.x][newPos.y].featureStatic;
-            if(f->isVisionPassable() == false) {
+            if(!f->isVisionPassable()) {
               defender.getPropHandler().tryApplyProp(
                 new PropNailed(propTurnsIndefinite));
             }

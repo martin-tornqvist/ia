@@ -17,7 +17,7 @@ void playerDisarm() {
   //with some potentially horrible results
 
   //Abort if blind
-  if(Map::player->getPropHandler().allowSee() == false) {
+  if(!Map::player->getPropHandler().allowSee()) {
     Log::addMsg("Not while blind.");
     Renderer::drawMapAndInterface();
     return;
@@ -25,12 +25,12 @@ void playerDisarm() {
 
   //Abort if held by spider web
   const Pos playerPos = Map::player->pos;
-  const FeatureStatic* const featureAtPlayer =
+  const auto* const featureAtPlayer =
     Map::cells[playerPos.x][playerPos.y].featureStatic;
   if(featureAtPlayer->getId() == FeatureId::trap) {
     const Trap* const trap = dynamic_cast<const Trap*>(featureAtPlayer);
     if(trap->getTrapType() == trap_spiderWeb) {
-      const TrapSpiderWeb* const web =
+      const auto* const web =
         dynamic_cast<const TrapSpiderWeb*>(trap->getSpecificTrap());
       if(web->isHolding()) {
         Log::addMsg("Not while entangled in a spider web.");
@@ -55,7 +55,7 @@ void playerDisarm() {
   if(pos != Map::player->pos) {
 
     //Abort if cell is unseen
-    if(Map::cells[pos.x][pos.y].isSeenByPlayer == false) {
+    if(!Map::cells[pos.x][pos.y].isSeenByPlayer) {
       Log::addMsg("I cannot see there.");
       Renderer::drawMapAndInterface();
       return;
