@@ -23,16 +23,13 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
       monsterActing->awareOfPlayerCounter_ > 0 &&
       monsterActing->spellCoolDownCur == 0) {
 
-      if(monsterActing->getPropHandler().allowRead(false) == false) {
-        return false;
-      }
+      if(!monsterActing->getPropHandler().allowRead(false)) {return false;}
 
-      if(monsterActing->spellsKnown.empty() == false) {
+      if(!monsterActing->spellsKnown.empty()) {
         vector<Spell*> spellBucket = monsterActing->spellsKnown;
 
-        while(spellBucket.empty() == false) {
-          const unsigned int ELEMENT =
-            Rnd::range(0, spellBucket.size() - 1);
+        while(!spellBucket.empty()) {
+          const unsigned int ELEMENT = Rnd::range(0, spellBucket.size() - 1);
 
           Spell* const spell = spellBucket.at(ELEMENT);
 
@@ -70,15 +67,15 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
 }
 
 bool handleClosedBlockingDoor(Monster& monster, vector<Pos> path) {
-  if(monster.deadState == ActorDeadState::alive && path.empty() == false) {
+  if(monster.deadState == ActorDeadState::alive && !path.empty()) {
     const Pos& p = path.back();
     Feature* const f = Map::cells[p.x][p.y].featureStatic;
     if(f->getId() == FeatureId::door) {
       Door* const door = dynamic_cast<Door*>(f);
       vector<PropId> props;
       monster.getPropHandler().getAllActivePropIds(props);
-      if(door->canMove(props) == false) {
-        if(door->isStuck() == false) {
+      if(!door->canMove(props)) {
+        if(!door->isStuck()) {
           if(monster.getData().canOpenDoors) {
             door->tryOpen(&monster);
             return true;
@@ -136,9 +133,7 @@ void getMoveBucket(Monster& self, vector<Pos>& dirsToMk) {
         const int DIST_NEW = Utils::kingDist(NEW_X, NEW_Y, PLAYER_X, PLAYER_Y);
 
         if(DIST_NEW <= DIST_CUR) {
-          if(blocked[NEW_X][NEW_Y] == false) {
-            dirsToMk.push_back(Pos(NEW_X, NEW_Y));
-          }
+          if(!blocked[NEW_X][NEW_Y]) {dirsToMk.push_back(Pos(NEW_X, NEW_Y));}
         }
       }
     }
@@ -157,9 +152,7 @@ bool isAdjAndWithoutVision(const Monster& self, Monster& other,
   //If the pal is next to me
   if(Utils::isPosAdj(self.pos, other.pos, false)) {
     //If pal does not see player
-    if(other.isSeeingActor(*Map::player, visionBlockers) == false) {
-      return true;
-    }
+    if(!other.isSeeingActor(*Map::player, visionBlockers)) {return true;}
   }
   return false;
 }
@@ -283,7 +276,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
   if(lastDirTravelled != Dir::center) {
     const Pos targetCell(monsterPos + DirUtils::getOffset(lastDirTravelled));
     if(
-      blocked[targetCell.x][targetCell.y] == false &&
+      !blocked[targetCell.x][targetCell.y] &&
       Utils::isPosInside(targetCell, areaAllowed)) {
       return lastDirTravelled;
     }
@@ -298,7 +291,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
         const Pos offset(dx, dy);
         const Pos targetCell(monsterPos + offset);
         if(
-          blocked[targetCell.x][targetCell.y] == false &&
+          !blocked[targetCell.x][targetCell.y] &&
           Utils::isPosInside(targetCell, areaAllowed)) {
           dirBucket.push_back(DirUtils::getDir(offset));
         }
@@ -346,7 +339,7 @@ bool moveTowardsTargetSimple(Monster& monster) {
         MapParse::parse(CellPred::BlocksActor(monster, true),
                         blocked);
         const Pos newPos(monster.pos + offset);
-        if(blocked[newPos.x][newPos.y] == false) {
+        if(!blocked[newPos.x][newPos.y]) {
           monster.moveDir(DirUtils::getDir(offset));
           return true;
         } else {
@@ -408,7 +401,7 @@ bool lookBecomePlayerAware(Monster& monster) {
     vector<Actor*> spottedEnemies;
     monster.getSpottedEnemies(spottedEnemies);
 
-    if(spottedEnemies.empty() == false && WAS_AWARE_BEFORE) {
+    if(!spottedEnemies.empty() && WAS_AWARE_BEFORE) {
       monster.becomeAware(false);
       return false;
     }
@@ -503,7 +496,7 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
       for(int y = 1; y < MAP_H - 1; y++) {
         for(int x = 1; x < MAP_W - 1; x++) {
           const auto* const f = Map::cells[x][y].featureStatic;
-          if(f->canMove(props) == false) {
+          if(!f->canMove(props)) {
 
             if(f->getId() == FeatureId::door) {
 
@@ -512,7 +505,7 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
               const ActorDataT& d = monster.getData();
 
               if(
-                (d.canOpenDoors == false && d.canBashDoors == false) ||
+                (!d.canOpenDoors && !d.canBashDoors) ||
                 door->isOpenedAndClosedExternally()) {
                 blocked[x][y] = true;
               }

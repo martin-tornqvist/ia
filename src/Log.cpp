@@ -38,7 +38,7 @@ void promptAndClearLog() {
   int xPos    = 0;
   int lineNr = lines_[1].empty() ? 0 : 1;
 
-  if(lines_[lineNr].empty() == false) {
+  if(!lines_[lineNr].empty()) {
     Msg* const lastMsg = &lines_[lineNr].back();
     xPos = getXAfterMsg(lastMsg);
     if(lineNr == 0) {
@@ -98,7 +98,7 @@ void init() {
 
 void clearLog() {
   for(vector<Msg>& line : lines_) {
-    if(line.empty() == false) {
+    if(!line.empty()) {
       history_.push_back(line);
       while(history_.size() > 300) {history_.erase(history_.begin());}
       line.resize(0);
@@ -116,18 +116,18 @@ void addMsg(const string& text, const SDL_Color& clr,
             const bool INTERRUPT_PLAYER_ACTIONS,
             const bool ADD_MORE_PROMPT_AFTER_MSG) {
 
-  assert(text.empty() == false);
+  assert(!text.empty());
   assert(text.at(0) != ' ');
 
   int curLineNr = lines_[1].empty() ? 0 : 1;
 
   Msg* lastMsg = nullptr;
-  if(lines_[curLineNr].empty() == false) {lastMsg = &lines_[curLineNr].back();}
+  if(!lines_[curLineNr].empty()) {lastMsg = &lines_[curLineNr].back();}
 
   bool isRepeated = false;
 
   //Check if message is identical to previous
-  if(ADD_MORE_PROMPT_AFTER_MSG == false && lastMsg != nullptr) {
+  if(!ADD_MORE_PROMPT_AFTER_MSG && lastMsg != nullptr) {
     string str = "";
     lastMsg->getStrRaw(str);
     if(str.compare(text) == 0) {
@@ -136,7 +136,7 @@ void addMsg(const string& text, const SDL_Color& clr,
     }
   }
 
-  if(isRepeated == false) {
+  if(!isRepeated) {
     const int REPEAT_STR_LEN = 4;
 
     const int PADDING_LEN = REPEAT_STR_LEN +
@@ -146,7 +146,7 @@ void addMsg(const string& text, const SDL_Color& clr,
 
     const bool IS_MSG_FIT = xPos + int(text.size()) + PADDING_LEN - 1 < MAP_W;
 
-    if(IS_MSG_FIT == false) {
+    if(!IS_MSG_FIT) {
       if(curLineNr == 0) {
         curLineNr = 1;
       } else {

@@ -54,7 +54,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
   const bool IS_NEXT_TO_WALL_AVAIL = nextToWalls.size() != 0;
   const bool IS_AWAY_FROM_WALLS_AVAIL = awayFromWalls.size() != 0;
 
-  if(IS_NEXT_TO_WALL_AVAIL == false && IS_AWAY_FROM_WALLS_AVAIL == false) {
+  if(!IS_NEXT_TO_WALL_AVAIL && !IS_AWAY_FROM_WALLS_AVAIL) {
     trace << "RoomThemeMaking: Neither cells next to walls or away from ";
     trace << "walls found, returning" << endl;
     def = nullptr;
@@ -147,7 +147,7 @@ int placeThemeFeatures(Room& room) {
 
   vector<Pos> nextToWalls;
   vector<Pos> awayFromWalls;
-  MapPatterns::setPositionsInArea(room.getRect(), nextToWalls, awayFromWalls);
+  MapPatterns::setPositionsInArea(room.r_, nextToWalls, awayFromWalls);
 
   vector<int> featuresSpawnCount(themeFeatureData.size(), 0);
 
@@ -207,9 +207,9 @@ void mkThemeSpecificRoomModifications(Room& room) {
     case RoomThemeId::muddy: {
       const auto featureId = room.roomTheme == RoomThemeId::flooded ?
                              FeatureId::shallowWater : FeatureId::shallowMud;
-      for(int y = room.getY0(); y <= room.getY1(); y++) {
-        for(int x = room.getX0(); x <= room.getX1(); x++) {
-          if(blocked[x][y] == false) {
+      for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
+        for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
+          if(!blocked[x][y]) {
             FeatureFactory::mk(featureId, Pos(x, y));
           }
         }
@@ -220,9 +220,9 @@ void mkThemeSpecificRoomModifications(Room& room) {
       int nrBloodPut = 0;
       const int NR_TRIES = 1000; //TODO Hacky, needs improving
       for(int i = 0; i < NR_TRIES; i++) {
-        for(int y = room.getY0(); y <= room.getY1(); y++) {
-          for(int x = room.getX0(); x <= room.getX1(); x++) {
-            if(blocked[x][y] == false) {
+        for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
+          for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
+            if(!blocked[x][y]) {
               const int CHANCE_TO_PUT_BLOOD = 40;
               if(Rnd::percentile() < CHANCE_TO_PUT_BLOOD) {
                 Map::mkGore(Pos(x, y));
@@ -247,20 +247,18 @@ void mkThemeSpecificRoomModifications(Room& room) {
 
         Pos origin(-1, -1);
         vector<Pos> originBucket;
-        for(int y = room.getY0(); y <= room.getY1(); y++) {
-          for(int x = room.getX0(); x <= room.getX1(); x++) {
+        for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
+          for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
             if(Map::cells[x][y].featureStatic->getId() == FeatureId::altar) {
               origin = Pos(x, y);
               y = 999;
               x = 999;
             } else {
-              if(blocked[x][y] == false) {
-                originBucket.push_back(Pos(x, y));
-              }
+              if(!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
             }
           }
         }
-        if(originBucket.empty() == false) {
+        if(!originBucket.empty()) {
           if(origin.x == -1) {
             const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
             origin = originBucket.at(ELEMENT);
@@ -271,7 +269,7 @@ void mkThemeSpecificRoomModifications(Room& room) {
                 (dx == 0 && dy == 0) ||
                 (Rnd::percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {
                 const Pos pos = origin + Pos(dx, dy);
-                if(blocked[pos.x][pos.y] == false) {
+                if(!blocked[pos.x][pos.y]) {
                   Map::mkGore(pos);
                   Map::mkBlood(pos);
                 }
@@ -310,7 +308,7 @@ void applyThemeToRoom(Room& room) {
 
 int nrThemeInMap(const RoomThemeId theme) {
   int nr = 0;
-  for(Room* r : Map::rooms) {if(r->roomTheme == theme) nr++;}
+  for(Room* r : Map::roomList) {if(r->roomTheme == theme) nr++;}
   return nr;
 }
 
@@ -318,8 +316,8 @@ bool isThemeAllowed(const Room* const room, const RoomThemeId theme,
                     const bool blocked[MAP_W][MAP_H]) {
   (void)blocked;
 
-  const int ROOM_W  = room->getX1() - room->getX0() + 1;
-  const int ROOM_H  = room->getY1() - room->getY0() + 1;
+  const int ROOM_W  = room->r_.p1.x - room->r_.p0.x + 1;
+  const int ROOM_H  = room->r_.p1.y - room->r_.p0.y + 1;
   const int MIN_DIM = min(ROOM_W, ROOM_H);
   const int MAX_DIM = max(ROOM_W, ROOM_H);
 
@@ -356,8 +354,8 @@ bool isThemeAllowed(const Room* const room, const RoomThemeId theme,
 }
 
 void mkRoomDarkWithChance(const Room& room) {
-  const int ROOM_W = room.getX1() - room.getX0() + 1;
-  const int ROOM_H = room.getY1() - room.getY0() + 1;
+  const int ROOM_W = room.r_.p1.x - room.r_.p0.x + 1;
+  const int ROOM_H = room.r_.p1.y - room.r_.p0.y + 1;
   if(ROOM_W >= 4 && ROOM_H >= 4) {
     int chanceToMkDark = 0;
 
@@ -376,8 +374,8 @@ void mkRoomDarkWithChance(const Room& room) {
     chanceToMkDark += Map::dlvl - 1;
 
     if(Rnd::range(1, 100) < chanceToMkDark) {
-      for(int y = room.getY0(); y <= room.getY1(); y++) {
-        for(int x = room.getX0(); x <= room.getX1(); x++) {
+      for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
+        for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
           Map::cells[x][y].isDark = true;
         }
       }
@@ -398,21 +396,21 @@ void assignRoomThemes() {
   const int MAX_DIM = 12;
   const int NR_NON_PLAIN_THEMED = Rnd::range(1, 4);
 
-  const int NR_ROOMS = Map::rooms.size();
+  const int NR_ROOMS = Map::roomList.size();
 
   vector<bool> isAssigned(NR_ROOMS, false);
 
   trace << "RoomThemeMaking: Assigning plain theme to rooms with ";
   trace << "wrong dimensions" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
-    Room* const r = Map::rooms.at(i);
+    Room* const room = Map::roomList.at(i);
 
     // Check dimensions, assign plain if too small or too big
-    if(isAssigned.at(i) == false) {
-      const int W = r->getX1() - r->getX0() + 1;
-      const int H = r->getY1() - r->getY0() + 1;
+    if(!isAssigned.at(i)) {
+      const int W = room->r_.p1.x - room->r_.p0.x + 1;
+      const int H = room->r_.p1.y - room->r_.p0.y + 1;
       if(W < MIN_DIM || W > MAX_DIM || H < MIN_DIM || H > MAX_DIM) {
-        r->roomTheme = RoomThemeId::plain;
+        room->roomTheme = RoomThemeId::plain;
         isAssigned.at(i) = true;
         continue;
       }
@@ -427,18 +425,18 @@ void assignRoomThemes() {
   for(int i = 0; i < NR_NON_PLAIN_THEMED; i++) {
     for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ii++) {
       const int ELEMENT = Rnd::range(0, NR_ROOMS - 1);
-      if(isAssigned.at(ELEMENT) == false) {
+      if(!isAssigned.at(ELEMENT)) {
         const RoomThemeId theme =
           (RoomThemeId)(Rnd::range(1, int(RoomThemeId::endOfRoomThemes) - 1));
-        Room* const room = Map::rooms.at(ELEMENT);
+        Room* const room = Map::roomList.at(ELEMENT);
 
         if(isThemeAllowed(room, theme, blocked)) {
           room->roomTheme = theme;
           trace << "RoomThemeMaking: Assigned non-plain theme";
           trace << "(" << int(theme) << ") to room" << endl;
           isAssigned.at(ELEMENT) = true;
-          for(int y = room->getY0(); y < room->getY1(); y++) {
-            for(int x = room->getX0(); x < room->getX1(); x++) {
+          for(int y = room->r_.p0.y; y < room->r_.p1.y; y++) {
+            for(int x = room->r_.p0.x; x < room->r_.p1.x; x++) {
               themeMap[x][y] = theme;
             }
           }
@@ -450,8 +448,8 @@ void assignRoomThemes() {
 
   trace << "RoomThemeMaking: Assigning plain theme to remaining rooms" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
-    if(isAssigned.at(i) == false) {
-      Map::rooms.at(i)->roomTheme = RoomThemeId::plain;
+    if(!isAssigned.at(i)) {
+      Map::roomList.at(i)->roomTheme = RoomThemeId::plain;
       isAssigned.at(i) = true;
     }
   }
@@ -468,7 +466,7 @@ void run() {
 
   assignRoomThemes();
 
-  for(Room* const room : Map::rooms) {
+  for(Room* const room : Map::roomList) {
     applyThemeToRoom(*room);
     mkRoomDarkWithChance(*room);
   }

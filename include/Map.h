@@ -35,10 +35,11 @@ struct Cell {
 
 namespace Map {
 
-extern Player*        player;
-extern int            dlvl;
-extern Cell           cells[MAP_W][MAP_H];
-extern std::vector<Room*>  rooms;
+extern Player*            player;
+extern int                dlvl;
+extern Cell               cells[MAP_W][MAP_H];
+extern std::vector<Room*> roomList;               //Owns the rooms
+extern Room*              roomMap[MAP_W][MAP_H];  //Helper array
 
 void init();
 void cleanup();
@@ -56,6 +57,8 @@ void switchToDestroyedFeatAt(const Pos& pos);
 
 void mkBlood(const Pos& origin);
 void mkGore(const Pos& origin);
+
+void deleteAndRemoveRoomFromList(Room* const room);
 
 } //Map
 

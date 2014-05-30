@@ -245,19 +245,19 @@ void populateStdLvl() {
   }
 
   //First, attempt to populate all non-plain themed rooms
-  for(Room* const room : Map::rooms) {
+  for(Room* const room : Map::roomList) {
     if(room->roomTheme != RoomThemeId::plain) {
 
-      const int ROOM_W = room->getX1() - room->getX0() + 1;
-      const int ROOM_H = room->getY1() - room->getY0() + 1;
+      const int ROOM_W = room->r_.p1.x - room->r_.p0.x + 1;
+      const int ROOM_H = room->r_.p1.y - room->r_.p0.y + 1;
       const int NR_CELLS_IN_ROOM = ROOM_W * ROOM_H;
 
       const int MAX_NR_GROUPS_IN_ROOM = 2;
       for(int i = 0; i < MAX_NR_GROUPS_IN_ROOM; i++) {
         //Randomly pick a free position inside the room
         vector<Pos> originBucket;
-        for(int y = room->getY0(); y <= room->getY1(); y++) {
-          for(int x = room->getX0(); x <= room->getX1(); x++) {
+        for(int y = room->r_.p0.y; y <= room->r_.p1.y; y++) {
+          for(int x = room->r_.p0.x; x <= room->r_.p1.x; x++) {
             if(
               blocked[x][y] == false &&
               RoomThemeMaking::themeMap[x][y] == room->roomTheme) {
@@ -290,8 +290,8 @@ void populateStdLvl() {
 
       //After attempting to populate a non-plain themed room,
       //mark that area as forbidden
-      for(int y = room->getY0(); y <= room->getY1(); y++) {
-        for(int x = room->getX0(); x <= room->getX1(); x++) {
+      for(int y = room->r_.p0.y; y <= room->r_.p1.y; y++) {
+        for(int x = room->r_.p0.x; x <= room->r_.p1.x; x++) {
           blocked[x][y] = true;
         }
       }

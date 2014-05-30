@@ -17,15 +17,8 @@ using namespace std;
 inline void Cell::clear() {
   isExplored = isSeenByPlayer = isLight = isDark = false;
 
-  if(featureStatic != nullptr) {
-    delete featureStatic;
-    featureStatic = nullptr;
-  }
-
-  if(item != nullptr) {
-    delete item;
-    item = nullptr;
-  }
+  if(featureStatic) {delete featureStatic;  featureStatic = nullptr;}
+  if(item)          {delete item;           item = nullptr;}
 
   playerVisualMemory.clear();
 }
@@ -35,7 +28,8 @@ namespace Map {
 Player*       player  = nullptr;
 int           dlvl    = 0;
 Cell          cells[MAP_W][MAP_H];
-vector<Room*> rooms;
+vector<Room*> roomList;
+Room*         roomMap[MAP_W][MAP_H];
 
 namespace {
 
@@ -44,15 +38,14 @@ void resetCells(const bool MAKE_STONE_WALLS) {
     for(int x = 0; x < MAP_W; x++) {
 
       cells[x][y].clear();
-
       cells[x][y].pos = Pos(x, y);
+
+      roomMap[x][y] = nullptr;
 
       Renderer::renderArray[x][y].clear();
       Renderer::renderArrayNoActors[x][y].clear();
 
-      if(MAKE_STONE_WALLS) {
-        FeatureFactory::mk(FeatureId::wall, Pos(x, y));
-      }
+      if(MAKE_STONE_WALLS) {FeatureFactory::mk(FeatureId::wall, Pos(x, y));}
     }
   }
 }
@@ -62,11 +55,11 @@ void resetCells(const bool MAKE_STONE_WALLS) {
 void init() {
   dlvl = 0;
 
-  rooms.resize(0);
+  roomList.resize(0);
 
   resetCells(false);
 
-  if(player != nullptr) {delete player; player = nullptr;}
+  if(player) {delete player; player = nullptr;}
 
   const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
   player = dynamic_cast<Player*>(ActorFactory::mk(actor_player, playerPos));
@@ -142,9 +135,8 @@ void switchToDestroyedFeatAt(const Pos& pos) {
 void resetMap() {
   ActorFactory::deleteAllMonsters();
 
-  for(auto* room : rooms) {delete room;}
-
-  rooms.resize(0);
+  for(auto* room : roomList) {delete room;}
+  roomList.resize(0);
 
   resetCells(true);
   GameTime::eraseAllFeatureMobs();
@@ -182,6 +174,17 @@ void mkGore(const Pos& origin) {
       }
     }
   }
+}
+
+void deleteAndRemoveRoomFromList(Room* const room) {
+  for(size_t i = 0; i < roomList.size(); i++) {
+    if(roomList.at(i) == room) {
+      delete room;
+      roomList.erase(roomList.begin() + i);
+      return;
+    }
+  }
+  assert(false && "Tried to remove non-existing room");
 }
 
 } //Map

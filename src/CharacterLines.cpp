@@ -24,29 +24,24 @@ void drawLocationInfo() {
     const Pos& playerPos = Map::player->pos;
 
     if(Map::dlvl > 0 && Map::dlvl < FIRST_CAVERN_LVL) {
-      const vector<Room*>& rooms = Map::rooms;
-      for(unsigned int i = 0; i < rooms.size(); i++) {
+      const vector<Room*>& rooms = Map::roomList;
+      for(size_t i = 0; i < rooms.size(); i++) {
         const Room* const room = rooms.at(i);
-        const Pos& p0 = room->getP0();
-        const Pos& p1 = room->getP1();
+        const Pos& p0 = room->r_.p0;
+        const Pos& p1 = room->r_.p1;
         if(Utils::isPosInside(playerPos, Rect(p0, p1))) {
           const string& roomDescr = room->roomDescr;
-          if(roomDescr.empty() == false) {
-            str += room->roomDescr + " ";
-          }
+          if(!roomDescr.empty()) {str += room->roomDescr + " ";}
         }
       }
     }
 
-    const bool IS_DRK_AT_PLAYER = Map::cells[playerPos.x][playerPos.y].isDark;
-    const bool IS_LGT_AT_PLAYER =
-      Map::cells[playerPos.x][playerPos.y].isLight;
-    if(IS_DRK_AT_PLAYER) {
-      str += IS_LGT_AT_PLAYER ?
-             "The darkness is lit up. " : "It is dark here. ";
+    const auto& cell = Map::cells[playerPos.x][playerPos.y];
+    if(cell.isDark) {
+      str += cell.isLight ? "The darkness is lit up. " : "It is dark here. ";
     }
 
-    if(str.empty() == false) {
+    if(!str.empty()) {
       Renderer::drawText(str, Panel::charLines, Pos(0, -1), clrWhite);
     }
   }

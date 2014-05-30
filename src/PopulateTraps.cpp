@@ -30,7 +30,7 @@ void populateStdLvl() {
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   //Put traps in non-plain rooms
-  for(Room* const room : Map::rooms) {
+  for(Room* const room : Map::roomList) {
     const RoomThemeId theme = room->roomTheme;
 
     if(theme != RoomThemeId::plain) {
@@ -54,8 +54,8 @@ void populateStdLvl() {
 
         vector<Pos> trapPosBucket;
 
-        const Pos& p0 = room->getP0();
-        const Pos& p1 = room->getP1();
+        const Pos& p0 = room->r_.p0;
+        const Pos& p1 = room->r_.p1;
         for(int y = p0.y; y <= p1.y; y++) {
           for(int x = p0.x; x <= p1.x; x++) {
             if(

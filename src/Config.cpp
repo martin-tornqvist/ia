@@ -80,8 +80,8 @@ void parseFontNameAndSetCellDims() {
     ch = fontName.at(0);
   }
 
-  trace << "Config: Parsed font image name, found dims: ";
-  trace << wStr << "x" << hStr << endl;
+  trace << "Config: Parsed font image name, found dims: "
+        << wStr << "x" << hStr << endl;
 
   cellW_ = toInt(wStr);
   cellH_ = toInt(hStr);

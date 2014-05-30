@@ -69,14 +69,6 @@ void resetArray(int a[MAP_W][MAP_H]) {
   }
 }
 
-void resetArray(Actor* a[MAP_W][MAP_H]) {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
-      a[x][y] = nullptr;
-    }
-  }
-}
-
 void resetArray(bool a[MAP_W][MAP_H], const bool value) {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -101,24 +93,29 @@ void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
   }
 }
 
-void mkVectorFromBoolMap(const bool VALUE_TO_STORE,
-                         bool a[MAP_W][MAP_H],
-                         vector<Pos>& vectorRef) {
-  vectorRef.resize(0);
+void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
+                         vector<Pos>& out) {
+  out.resize(0);
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       if(a[x][y] == VALUE_TO_STORE) {
-        vectorRef.push_back(Pos(x, y));
+        out.push_back(Pos(x, y));
       }
     }
   }
 }
 
-void getActorPositions(const vector<Actor*>& actors, vector<Pos>& vectorRef) {
-  vectorRef.resize(0);
+void mkBoolMapFromVector(const std::vector<Pos>& positions,
+                         bool out[MAP_W][MAP_H]) {
+  resetArray(out, false);
+  for(const Pos& p : positions) {out[p.x][p.y] = true;}
+}
+
+void getActorPositions(const vector<Actor*>& actors, vector<Pos>& out) {
+  out.resize(0);
   const unsigned int NR_ACTORS = actors.size();
   for(unsigned int i = 0; i < NR_ACTORS; i++) {
-    vectorRef.push_back(actors.at(i)->pos);
+    out.push_back(actors.at(i)->pos);
   }
 }
 

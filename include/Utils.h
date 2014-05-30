@@ -62,22 +62,31 @@ namespace Utils {
 bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2);
 
 void resetArray(int a[MAP_W][MAP_H]);
-void resetArray(Actor* a[MAP_W][MAP_H]);
 void resetArray(bool a[MAP_W][MAP_H], const bool value);
+
+template<typename T> void resetArray(T* a[MAP_W][MAP_H]) {
+  for(int y = 0; y < MAP_H; y++) {
+    for(int x = 0; x < MAP_W; x++) {
+      a[x][y] = nullptr;
+    }
+  }
+}
 
 void reverseBoolArray(bool array[MAP_W][MAP_H]);
 
 void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]);
 
-void mkVectorFromBoolMap(const bool VALUE_TO_STORE,
-                         bool a[MAP_W][MAP_H],
-                         std::vector<Pos>& vectorRef);
+void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
+                         std::vector<Pos>& out);
+
+void mkBoolMapFromVector(const std::vector<Pos>& positions,
+                         bool out[MAP_W][MAP_H]);
 
 Actor* getActorAtPos(const Pos& pos,
                      ActorDeadState deadState = ActorDeadState::alive);
 
 void getActorPositions(const std::vector<Actor*>& actors,
-                       std::vector<Pos>& vectorRef);
+                       std::vector<Pos>& out);
 
 void mkActorArray(Actor* a[MAP_W][MAP_H]);
 

@@ -46,7 +46,7 @@ void setPosToClosestEnemyIfVisible() {
   Utils::getActorPositions(spottedEnemies, spottedEnemiesPositions);
 
   //If player sees enemies, suggest one for targeting
-  if(spottedEnemiesPositions.empty() == false) {
+  if(!spottedEnemiesPositions.empty()) {
     pos_ = Utils::getClosestPos(Map::player->pos, spottedEnemiesPositions);
 
     Map::player->target = Utils::getActorAtPos(pos_);
@@ -81,9 +81,9 @@ bool setPosToTargetIfVisible() {
     vector<Actor*> spottedEnemies;
     Map::player->getSpottedEnemies(spottedEnemies);
 
-    if(spottedEnemies.empty() == false) {
+    if(!spottedEnemies.empty()) {
 
-      for(unsigned int i = 0; i < spottedEnemies.size(); i++) {
+      for(size_t i = 0; i < spottedEnemies.size(); i++) {
         if(target == spottedEnemies.at(i)) {
           pos_ = spottedEnemies.at(i)->pos;
           return true;
@@ -147,7 +147,7 @@ void readKeys(const MarkerTask markerTask, MarkerRetData& data,
 
         Item* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
         Weapon* const weapon = dynamic_cast<Weapon*>(item);
-        if(Attack::ranged(*Map::player, *weapon, pos_) == false) {
+        if(!Attack::ranged(*Map::player, *weapon, pos_)) {
           Log::addMsg("No ammunition loaded.");
         }
       } else {
@@ -227,7 +227,7 @@ MarkerRetData run(const MarkerTask markerTask, Item* itemThrown) {
     markerTask == MarkerTask::look             ||
     markerTask == MarkerTask::aimThrownWeapon) {
     //Attempt to place marker at target.
-    if(setPosToTargetIfVisible() == false) {
+    if(!setPosToTargetIfVisible()) {
       //Else attempt to place marker at closest visible enemy.
       //This sets a new target if successful.
       Map::player->target = nullptr;
@@ -245,9 +245,7 @@ MarkerRetData run(const MarkerTask markerTask, Item* itemThrown) {
   draw(markerTask);
 
   isDone_ = false;
-  while(isDone_ == false) {
-    readKeys(markerTask, data, itemThrown);
-  }
+  while(!isDone_) {readKeys(markerTask, data, itemThrown);}
 
   return data;
 }

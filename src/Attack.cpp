@@ -71,7 +71,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
     }
   }
 
-  if(isDefenderDodging == false) {
+  if(!isDefenderDodging) {
     //--------------------------------------- DETERMINE ATTACK RESULT
     isBackstab = false;
 
@@ -111,9 +111,9 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
 
       for(PropId propId : defProps) {
         if(
-          isDefenderAware == false ||
-          propId == propParalyzed  ||
-          propId == propNailed     ||
+          !isDefenderAware        ||
+          propId == propParalyzed ||
+          propId == propNailed    ||
           propId == propFainted) {
           isBigBon = true;
           break;
@@ -126,10 +126,8 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
           isSmallBon = true;
         }
       }
-      if(isBigBon == false && isSmallBon == false) {
-        if(defPropHlr.allowSee() == false) {
-          isSmallBon = true;
-        }
+      if(!isBigBon && !isSmallBon && !defPropHlr.allowSee()) {
+        isSmallBon = true;
       }
 
       hitChanceTot += isBigBon ? 50 : isSmallBon ? 20 : 0;
@@ -156,7 +154,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
       dmgRoll = dmgRolls;
       dmg = dmgRoll + dmgPlus;
       isWeakAttack = true;
-    } else if(isAttackerAware && isDefenderAware == false) {
+    } else if(isAttackerAware && !isDefenderAware) {
       //Backstab (Above max damage)
       dmgRoll = dmgRolls * dmgSides;
       dmg = ((dmgRoll + dmgPlus) * 3) / 2;
@@ -633,7 +631,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       if(projectilePathElement == 1) {
         string sndMsg = wpn.getData().rangedSndMsg;
         const SfxId sfx = wpn.getData().rangedAttackSfx;
-        if(sndMsg.empty() == false) {
+        if(!sndMsg.empty()) {
           if(IS_ATTACKER_PLAYER) sndMsg = "";
           const SndVol vol = wpn.getData().rangedSndVol;
           Snd snd(sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos,
@@ -649,7 +647,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       if(
         projectilePathElement >= 1 &&
         projectilePathElement < int(projectilePath.size()) &&
-        curProj->isObstructed == false) {
+        !curProj->isObstructed) {
 
         curProj->pos = projectilePath.at(projectilePathElement);
 
@@ -666,8 +664,8 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         //HIT ACTOR?
         if(
           curProj->attackData->curDefender != nullptr &&
-          curProj->isObstructed == false &&
-          curProj->attackData->isEtherealDefenderMissed == false) {
+          !curProj->isObstructed &&
+          !curProj->attackData->isEtherealDefenderMissed) {
 
           const bool IS_ACTOR_AIMED_FOR = curProj->pos == aimPos;
 
@@ -680,21 +678,21 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
               if(curProj->isVisibleToPlayer) {
                 if(Config::isTilesMode()) {
                   curProj->setTile(TileId::blast1, clrRedLgt);
-                  Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+                  Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
                   SdlWrapper::sleep(DELAY / 2);
                   curProj->setTile(TileId::blast2, clrRedLgt);
-                  Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+                  Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
                   SdlWrapper::sleep(DELAY / 2);
                 } else {
                   curProj->setGlyph('*', clrRedLgt);
-                  Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+                  Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
                   SdlWrapper::sleep(DELAY);
                 }
 
                 //MESSAGES FOR ACTOR HIT
                 printProjAtActorMsgs(*curProj->attackData, true);
                 //Need to draw again here to show log message
-                Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+                Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
               }
 
               curProj->isDoneRendering = true;
@@ -705,7 +703,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
               const bool DIED = curProj->attackData->curDefender->hit(
                                   curProj->attackData->dmg,
                                   wpn.getData().rangedDmgType, true);
-              if(DIED == false) {
+              if(!DIED) {
                 //Hit properties
                 PropHandler& defenderPropHandler =
                   curProj->attackData->curDefender->getPropHandler();
@@ -732,17 +730,15 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         GameTime::getFeatureMobsAtPos(curProj->pos, featureMobs);
         Feature* featureBlockingShot = nullptr;
         for(auto* mob : featureMobs) {
-          if(mob->isProjectilePassable() == false) {
-            featureBlockingShot = mob;
-          }
+          if(!mob->isProjectilePassable()) {featureBlockingShot = mob;}
         }
         FeatureStatic* featureStatic =
           Map::cells[curProj->pos.x][curProj->pos.y].featureStatic;
-        if(featureStatic->isProjectilePassable() == false) {
+        if(!featureStatic->isProjectilePassable()) {
           featureBlockingShot = featureStatic;
         }
 
-        if(featureBlockingShot != nullptr && curProj->isObstructed == false) {
+        if(featureBlockingShot != nullptr && !curProj->isObstructed) {
           curProj->obstructedInElement = projectilePathElement - 1;
           curProj->isObstructed = true;
 
@@ -757,14 +753,14 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           if(curProj->isVisibleToPlayer) {
             if(Config::isTilesMode()) {
               curProj->setTile(TileId::blast1, clrYellow);
-              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY / 2);
               curProj->setTile(TileId::blast2, clrYellow);
-              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY);
             }
           }
@@ -772,9 +768,8 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         //PROJECTILE HIT THE GROUND?
         if(
-          curProj->pos == aimPos       &&
-          aimLvl == actorSize_floor  &&
-          curProj->isObstructed == false) {
+          curProj->pos == aimPos && aimLvl == actorSize_floor &&
+          !curProj->isObstructed) {
           curProj->isObstructed = true;
           curProj->obstructedInElement = projectilePathElement;
 
@@ -789,27 +784,27 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           if(curProj->isVisibleToPlayer) {
             if(Config::isTilesMode()) {
               curProj->setTile(TileId::blast1, clrYellow);
-              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY / 2);
               curProj->setTile(TileId::blast2, clrYellow);
-              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY);
             }
           }
         }
 
         //RENDER FLYING PROJECTILES
-        if(curProj->isObstructed == false && curProj->isVisibleToPlayer) {
+        if(!curProj->isObstructed && curProj->isVisibleToPlayer) {
           if(Config::isTilesMode()) {
             curProj->setTile(projectileTile, projectileColor);
-            Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+            Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
           } else {
             curProj->setGlyph(projectileGlyph, projectileColor);
-            Renderer::drawProjectiles(projectiles, LEAVE_TRAIL == false);
+            Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
           }
         }
       }
@@ -820,7 +815,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       const Pos& pos = projectile->pos;
       if(
         Map::cells[pos.x][pos.y].isSeenByPlayer &&
-        projectile->isObstructed == false) {
+        !projectile->isObstructed) {
         SdlWrapper::sleep(DELAY);
         break;
       }
@@ -829,9 +824,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     //Check if all projectiles obstructed
     bool isAllObstructed = true;
     for(Projectile* projectile : projectiles) {
-      if(projectile->isObstructed == false) {
-        isAllObstructed = false;
-      }
+      if(!projectile->isObstructed) {isAllObstructed = false;}
     }
     if(isAllObstructed) {
       break;
@@ -842,7 +835,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   //So far, only projectile 0 can have special obstruction events***
   //Must be changed if something like an assault-incinerator is added
   const Projectile* const firstProjectile = projectiles.at(0);
-  if(firstProjectile->isObstructed == false) {
+  if(!firstProjectile->isObstructed) {
     wpn.weaponSpecific_projectileObstructed(aimPos, firstProjectile->actorHit);
   } else {
     const int element = firstProjectile->obstructedInElement;
@@ -880,7 +873,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   //Emit sound
   const bool IS_ATTACKER_PLAYER = &attacker == Map::player;
   string sndMsg = wpn.getData().rangedSndMsg;
-  if(sndMsg.empty() == false) {
+  if(!sndMsg.empty()) {
     if(IS_ATTACKER_PLAYER) {sndMsg = "";}
     const SndVol vol = wpn.getData().rangedSndVol;
     const SfxId sfx = wpn.getData().rangedAttackSfx;
@@ -911,7 +904,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         if(
           IS_WITHIN_RANGE_LMT &&
           data->attackResult >= successSmall &&
-          data->isEtherealDefenderMissed == false) {
+          !data->isEtherealDefenderMissed) {
           if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
             Renderer::drawMapAndInterface(false);
             Renderer::coverCellInMap(curPos);
@@ -945,8 +938,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
             nrMonKilledInElem = i;
           }
           if(
-            (nrActorsHit >= 2) ||
-            (IS_TARGET_KILLED == false) ||
+            nrActorsHit >= 2 || !IS_TARGET_KILLED ||
             (intendedAimLvl == actorSize_floor && curPos == aimPos)) {
             break;
           }
@@ -1005,12 +997,12 @@ void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
 
   printMeleeMsgAndPlaySfx(data, wpn);
 
-  if(data.isEtherealDefenderMissed == false) {
-    if(data.attackResult >= successSmall && data.isDefenderDodging == false) {
+  if(!data.isEtherealDefenderMissed) {
+    if(data.attackResult >= successSmall && !data.isDefenderDodging) {
       const bool IS_DEFENDER_KILLED =
         data.curDefender->hit(data.dmg, wpn.getData().meleeDmgType, true);
 
-      if(IS_DEFENDER_KILLED == false) {
+      if(!IS_DEFENDER_KILLED) {
         data.curDefender->getPropHandler().tryApplyPropFromWpn(wpn, true);
       }
       if(data.attackResult >= successNormal) {
@@ -1018,7 +1010,7 @@ void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
           Map::mkBlood(data.curDefender->pos);
         }
       }
-      if(IS_DEFENDER_KILLED == false) {
+      if(!IS_DEFENDER_KILLED) {
         if(wpn.getData().meleeCausesKnockBack) {
           if(data.attackResult > successSmall) {
             KnockBack::tryKnockBack(
@@ -1027,9 +1019,7 @@ void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
         }
       }
       const ItemDataT& itemData = wpn.getData();
-      if(
-        itemData.itemWeight > itemWeight_light &&
-        itemData.isIntrinsic == false) {
+      if(itemData.itemWeight > itemWeight_light && !itemData.isIntrinsic) {
         Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes,
                 data.curDefender->pos, nullptr, SndVol::low, AlertsMonsters::yes);
         SndEmit::emitSnd(snd);
@@ -1059,16 +1049,12 @@ bool ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
       shotgun(attacker, wpn, aimPos);
 
       didAttack = true;
-      if(WPN_HAS_INF_AMMO == false) {
-        wpn.nrAmmoLoaded -= 1;
-      }
+      if(!WPN_HAS_INF_AMMO) {wpn.nrAmmoLoaded -= 1;}
     }
   } else {
     int nrOfProjectiles = 1;
 
-    if(wpn.getData().isMachineGun) {
-      nrOfProjectiles = NR_MG_PROJECTILES;
-    }
+    if(wpn.getData().isMachineGun) {nrOfProjectiles = NR_MG_PROJECTILES;}
 
     if(wpn.nrAmmoLoaded >= nrOfProjectiles || WPN_HAS_INF_AMMO) {
       projectileFire(attacker, wpn, aimPos);
@@ -1077,9 +1063,7 @@ bool ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         didAttack = true;
 
-        if(WPN_HAS_INF_AMMO == false) {
-          wpn.nrAmmoLoaded -= nrOfProjectiles;
-        }
+        if(!WPN_HAS_INF_AMMO) {wpn.nrAmmoLoaded -= nrOfProjectiles;}
       } else {
         return true;
       }

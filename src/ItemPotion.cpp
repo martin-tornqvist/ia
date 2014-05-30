@@ -230,14 +230,14 @@ void PotionInsight::quaff_(Actor* const actor) {
     Item* const item = slot.item;
     if(item) {
       const ItemDataT& d = item->getData();
-      if(d.isIdentified == false) {identifyBucket.push_back(item);}
+      if(!d.isIdentified) {identifyBucket.push_back(item);}
     }
   }
   vector<Item*>& general = inv.getGeneral();
   for(Item* item : general) {
     if(item->getData().id != ItemId::potionInsight) {
       const ItemDataT& d = item->getData();
-      if(d.isIdentified == false) {identifyBucket.push_back(item);}
+      if(!d.isIdentified) {identifyBucket.push_back(item);}
     }
   }
 
@@ -274,7 +274,7 @@ void PotionClairv::quaff_(Actor* const actor) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
         Cell& cell = Map::cells[x][y];
-        if(blocked[x][y] == false && cell.isDark == false) {
+        if(!blocked[x][y] && !cell.isDark) {
           cell.isExplored = true;
           cell.isSeenByPlayer = true;
           animPositions.push_back(Pos(x, y));
@@ -304,7 +304,7 @@ void PotionDescent::quaff_(Actor* const actor) {
 }
 
 void Potion::identify(const bool IS_SILENT_IDENTIFY) {
-  if(data_->isIdentified == false) {
+  if(!data_->isIdentified) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
     const string REAL_NAME        = "Potion of " + REAL_TYPE_NAME;
@@ -315,7 +315,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
     data_->baseName.name_plural = REAL_NAME_PLURAL;
     data_->baseName.name_a      = REAL_NAME_A;
 
-    if(IS_SILENT_IDENTIFY == false) {
+    if(!IS_SILENT_IDENTIFY) {
       Log::addMsg("It was a " + REAL_NAME + ".");
       Map::player->incrShock(ShockValue::shockValue_heavy,
                              ShockSrc::useStrangeItem);
@@ -326,7 +326,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
 }
 
 void Potion::collide(const Pos& pos, Actor* const actor) {
-  if(Map::cells[pos.x][pos.y].featureStatic->isBottomless() == false ||
+  if(!Map::cells[pos.x][pos.y].featureStatic->isBottomless() ||
       actor != nullptr) {
 //    ItemDataT* const potData =
 //      ItemData::data[d.id];
@@ -354,7 +354,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
         collide_(pos, actor);
         if(
           actor->deadState == ActorDeadState::alive &&
-          data_->isIdentified == false && PLAYER_SEE_CELL) {
+          !data_->isIdentified && PLAYER_SEE_CELL) {
           Log::addMsg("It had no apparent effect...");
         }
       }

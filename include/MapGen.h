@@ -16,24 +16,11 @@ enum class RoomReshapeType {trimCorners, pillarsRandom};
 
 struct Room {
 public:
-  Room(Rect r) : roomTheme(RoomThemeId::plain), roomDescr(""), r_(r) {}
-
-  Room() : roomTheme(RoomThemeId::plain), roomDescr(""), r_() {}
-
-  Rect getRect()  const {return r_;}
-  int getX0()     const {return r_.p0.x;}
-  int getY0()     const {return r_.p0.y;}
-  int getX1()     const {return r_.p1.x;}
-  int getY1()     const {return r_.p1.y;}
-  Pos getP0()     const {return r_.p0;}
-  Pos getP1()     const {return r_.p1;}
-
+  Room(Rect r)  : roomTheme(RoomThemeId::plain), roomDescr(""), r_(r) {}
+  Room()        : roomTheme(RoomThemeId::plain), roomDescr(""), r_()  {}
   RoomThemeId roomTheme;
-
   std::string roomDescr;
-
-private:
-  Rect r_;
+  Rect        r_;
 };
 
 struct Region {
@@ -51,8 +38,6 @@ public:
   Pos getP0()           const {return r_.p0;}
   Pos getP1()           const {return r_.p1;}
 
-  int getNrConnections();
-
   bool regionsConnectedTo_[3][3];
 
   Room* mainRoom_;
@@ -67,7 +52,7 @@ private:
 
 namespace MapGenUtils {
 
-void getValidRoomCorrEntries(Room& r, std::vector<Pos>& out);
+void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out);
 
 void mk(const Rect& area, const FeatureId id);
 
@@ -94,35 +79,15 @@ void mkWithPathfinder(const Pos& p0, const Pos& p1,
 
 namespace MapGen {
 
-namespace Std {
+namespace Std               {bool run();} //Std
 
-bool run();
+namespace IntroForest       {bool run();} //IntroForest
 
-} //Std
+namespace EgyptTomb         {bool run();} //EgyptTomb
 
-namespace IntroForest {
+namespace CaveLvl           {bool run();} //CaveLvl
 
-bool run();
-
-} //IntroForest
-
-namespace EgyptTomb {
-
-bool run();
-
-} //EgyptTomb
-
-namespace CaveLvl {
-
-bool run();
-
-} //CaveLvl
-
-namespace TrapezohedronLvl {
-
-bool run();
-
-} //TrapezohedronLvl
+namespace TrapezohedronLvl  {bool run();} //TrapezohedronLvl
 
 } //MapGen
 

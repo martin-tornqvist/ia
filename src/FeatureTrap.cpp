@@ -217,19 +217,16 @@ void Trap::disarm() {
 void Trap::triggerTrap(Actor& actor) {
   trace << "Trap::trigger()..." << endl;
 
-  trace << "Trap: Specific trap is ";
-  trace << specificTrap_->getTitle() << endl;
+  trace << "Trap: Specific trap is " << specificTrap_->getTitle() << endl;
 
   const ActorDataT& d = actor.getData();
 
-  trace << "Trap: Actor triggering is ";
-  trace << d.name_a << endl;
+  trace << "Trap: Actor triggering is " << d.name_a << endl;
 
   const int DODGE_SKILL =
     d.abilityVals.getVal(AbilityId::dodgeTrap, true, actor);
 
-  trace << "Trap: Actor dodge skill is ";
-  trace << DODGE_SKILL << endl;
+  trace << "Trap: Actor dodge skill is " << DODGE_SKILL << endl;
 
   if(&actor == Map::player) {
     traceVerbose << "Trap: Player triggering trap" << endl;

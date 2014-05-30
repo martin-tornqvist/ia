@@ -782,6 +782,39 @@ TEST_FIXTURE(BasicFixture, PathFinding) {
   CHECK_EQUAL(10, int(path.size()));
 }
 
+TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
+  const Rect roomRect(20, 5, 30, 10);
+
+  Room room(roomRect);
+
+  Utils::resetArray<Room>(Map::roomMap);
+
+  for(int y = roomRect.p0.y; y <= roomRect.p1.y; y++) {
+    for(int x = roomRect.p0.x; x <= roomRect.p1.x; x++) {
+      Map::roomMap[x][y] = &room;
+      FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+    }
+  }
+
+  vector<Pos> antryList;
+
+  MapGenUtils::getValidRoomCorrEntries(room, antryList);
+
+  bool entryMap[MAP_W][MAP_H];
+  Utils::mkBoolMapFromVector(antryList, entryMap);
+
+  CHECK(!entryMap[19][4]);
+  CHECK(entryMap[19][5]);
+  CHECK(entryMap[20][4]);
+  CHECK(!entryMap[20][5]);
+  CHECK(entryMap[21][4]);
+  CHECK(entryMap[25][4]);
+  CHECK(!entryMap[25][8]);
+  CHECK(entryMap[29][4]);
+  CHECK(entryMap[30][4]);
+  CHECK(!entryMap[31][4]);
+}
+
 TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Rect roomArea1(Pos(1, 1), Pos(10, 10));
   Rect roomArea2(Pos(15, 4), Pos(23, 14));

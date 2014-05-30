@@ -12,19 +12,23 @@
 // 0 : Disabled
 // 1 : Standard
 // 2 : Verbose
-#define TRACE_LVL 1
+#define TRACE_LVL 2
 
 //Enable rendering and delays during map gen for evaluation/demo purposes
 //Comment out to disable, uncomment to enable
-//#define DEMO_MODE 1
+#define DEMO_MODE 1
 //-------------------------------------------------------------------
 
 #ifdef NDEBUG
 #define trace if (1) ; else cerr
 #define traceVerbose if (1) ; else cerr
 #else
-#define trace if (TRACE_LVL < 1) ; else cerr
-#define traceVerbose if (TRACE_LVL < 2) ; else cerr
+#define trace if (TRACE_LVL < 1) ; else cerr \
+  << endl \
+  << __FILE__ << ", " \
+  << __func__ << "()" << ", " \
+  << __LINE__ << ":" << endl
+#define traceVerbose if (TRACE_LVL < 2) ; else trace
 #endif
 
 namespace Init {
