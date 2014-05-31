@@ -274,7 +274,7 @@ bool Inventory::hasAmmoForFirearmInInventory() {
 
     //If weapon has infinite ammo, return true but with a warning
     if(weapon->getData().rangedHasInfiniteAmmo) {
-      trace <<
+      TRACE <<
             "[WARNING] Inventory::hasAmmoForFirearmInInventory...() "
             "ran on weapon with infinite ammo" << endl;
       return true;
@@ -580,8 +580,8 @@ void Inventory::putInIntrinsics(Item* item) {
   if(item->getData().isIntrinsic) {
     intrinsics_.push_back(item);
   } else {
-    trace << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, ";
-    trace << "in putInIntrinsics()" << endl;
+    TRACE << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, ";
+    TRACE << "in putInIntrinsics()" << endl;
   }
 }
 

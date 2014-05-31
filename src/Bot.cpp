@@ -92,7 +92,7 @@ void act() {
 
   //Check if we are finished with the current run, if so, go back to DLVL 1
   if(Map::dlvl >= LAST_CAVERN_LVL) {
-    trace << "Bot: Starting new run on first dungeon level" << endl;
+    TRACE << "Bot: Starting new run on first dungeon level" << endl;
     Map::dlvl = 1;
     return;
   }

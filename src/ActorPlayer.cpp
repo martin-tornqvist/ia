@@ -296,7 +296,7 @@ void Player::restoreShock(const int amountRestored,
 }
 
 void Player::incrInsanity() {
-  trace << "Player: Increasing insanity" << endl;
+  TRACE << "Player: Increasing insanity" << endl;
   string msg = getInsanity() < 100 ? "Insanity draws nearer... " : "";
 
   if(!Config::isBotPlaying()) {
@@ -1019,7 +1019,7 @@ void Player::moveDir(Dir dir) {
     if(dir != Dir::center) {
       Feature* f = Map::cells[pos.x][pos.y].featureStatic;
       if(f->getId() == FeatureId::trap) {
-        trace << "Player: Standing on trap, check if affects move" << endl;
+        TRACE << "Player: Standing on trap, check if affects move" << endl;
         dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       }
     }

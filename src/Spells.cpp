@@ -146,10 +146,10 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY,
 
 SpellCastRetData Spell::cast(Actor* const caster,
                              const bool IS_INTRINSIC) const {
-  trace << "SpellId::cast()..." << endl;
+  TRACE << "SpellId::cast()..." << endl;
   if(caster->getPropHandler().allowCastSpells(true)) {
     if(caster == Map::player) {
-      trace << "Spell: Player casting spell" << endl;
+      TRACE << "Spell: Player casting spell" << endl;
       const ShockSrc shockSrc = IS_INTRINSIC ?
                                 ShockSrc::castIntrSpell :
                                 ShockSrc::useStrangeItem;
@@ -159,7 +159,7 @@ SpellCastRetData Spell::cast(Actor* const caster,
         Audio::play(SfxId::spellGeneric);
       }
     } else {
-      trace << "Spell: Monster casting spell" << endl;
+      TRACE << "Spell: Monster casting spell" << endl;
       Monster* const monster = dynamic_cast<Monster*>(caster);
       if(Map::cells[monster->pos.x][monster->pos.y].isSeenByPlayer) {
         const string spellStr = monster->getData().spellCastMessage;
@@ -178,10 +178,10 @@ SpellCastRetData Spell::cast(Actor* const caster,
     }
 
     GameTime::actorDidAct();
-    trace << "SpellId::cast() [DONE]" << endl;
+    TRACE << "SpellId::cast() [DONE]" << endl;
     return ret;
   }
-  trace << "SpellId::cast() [DONE]" << endl;
+  TRACE << "SpellId::cast() [DONE]" << endl;
   return SpellCastRetData(false);
 }
 

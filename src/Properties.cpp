@@ -1269,7 +1269,7 @@ bool PropHandler::allowAct() const {
 }
 
 bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  traceVerbose << "PropHandler::allowRead()..." << endl;
+  TRACE_VERBOSE << "PropHandler::allowRead()..." << endl;
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
   for(bool& v : sources) {v = true;}
@@ -1277,11 +1277,11 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
     if(propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE) == false) {
-      traceVerbose << "PropHandler::allowRead() [DONE] - return false" << endl;
+      TRACE_VERBOSE << "PropHandler::allowRead() [DONE] - return false" << endl;
       return false;
     }
   }
-  traceVerbose << "PropHandler::allowRead() [DONE] - return true" << endl;
+  TRACE_VERBOSE << "PropHandler::allowRead() [DONE] - return true" << endl;
   return true;
 }
 
@@ -1520,7 +1520,7 @@ void PropWound::getMsg(const PropMsgType msgType, string& msgRef) const {
 }
 
 void PropWound::healOneWound() {
-  trace << "StatusWound: Nr wounds before healing one: " << nrWounds_ << endl;
+  TRACE << "StatusWound: Nr wounds before healing one: " << nrWounds_ << endl;
   if(--nrWounds_ > 0) {
     Log::addMsg("A wound is healed!");
   } else {

@@ -154,8 +154,8 @@ void MedicalBag::finishCurAction() {
       Prop* prop =
         Map::player->getPropHandler().getProp(propWound, PropSrc::applied);
       if(prop == nullptr) {
-        trace << "[WARNING] No wound prop found, ";
-        trace << "in MedicalBag::finishCurAction()" << endl;
+        TRACE << "[WARNING] No wound prop found, ";
+        TRACE << "in MedicalBag::finishCurAction()" << endl;
       } else {
         dynamic_cast<PropWound*>(prop)->healOneWound();
       }

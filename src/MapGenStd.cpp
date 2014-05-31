@@ -23,7 +23,8 @@
 //Some options (comment out to disable)
 //#define MK_MERGED_REGIONS   1
 //#define RESHAPE_ROOMS       1
-//#define MK_AUX_ROOMS        1
+#define MK_AUX_ROOMS        1
+//#define MK_CRUMBLE_ROOMS    1
 //#define MK_CAVES            1
 //#define MK_SUB_ROOMS        1
 //#define FILL_DEAD_ENDS      1
@@ -109,38 +110,80 @@ void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos) {
     FeatureId::proxEventWallCrumble, proxEventPos, spawnData);
 }
 
-void connectRegions(Region* regions[3][3]) {
-  trace << "MapGen::Std::connectRegions()..." << endl;
+void connectRooms() {
+  TRACE << "MapGen::Std::connectRooms()..." << endl;
 
   while(true) {
-    const Pos c0(Rnd::range(0, 2), Rnd::range(0, 2));
-    assert(Utils::isPosInside(c0, Rect(0, 0, 2, 2)));
+    const int NR_CON_ALLOWED = 3;
 
-    Region* region0 = regions[c0.x][c0.y];
-    assert(region0);
+    Room* room0 = Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
 
-    Pos d(0, 0);
-    while(true) {
-      d.set(Rnd::range(-1, 1), Rnd::range(-1, 1));
-      if(d != 0 && Utils::isPosInside(c0 + d, Rect(0, 0, 2, 2))) {break;}
+    if(int(room0->roomsConTo_.size()) >= NR_CON_ALLOWED) {continue;}
+
+    Room* room1 = room0;
+    while(room1 == room0 || int(room1->roomsConTo_.size()) >= NR_CON_ALLOWED) {
+      room1 = Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
     }
-    const Pos c1(c0 + d);
-    assert(Utils::isPosInside(c1, Rect(0, 0, 2, 2)));
 
-    Region* const region1 = regions[c1.x][c1.y];
-    assert(region1);
-
-    if(!region0->regionsConnectedTo_[c1.x][c1.y]) {
-      MapGenUtils::mkPathFindCorridor(*region0->mainRoom_, *region1->mainRoom_,
-                                      doorPosProposals);
-
-      region0->regionsConnectedTo_[c1.x][c1.y] = true;
-      region1->regionsConnectedTo_[c0.x][c0.y] = true;
+    //Do not allow two rooms to be connected twice
+    const auto& consRoom0 = room0->roomsConTo_;
+    if(find(consRoom0.begin(), consRoom0.end(), room1) != consRoom0.end()) {
+      continue;
     }
+
+    //Do not connect room 0 and 1 if another room lies in a rectangle defined
+    //by the center points of room 0 and 1
+    bool isOtherRoomInWay = false;
+    const Pos c0((room0->r_.p0 + room0->r_.p1) / 2);
+    const Pos c1((room1->r_.p0 + room1->r_.p1) / 2);
+    const int X0 = min(c0.x, c1.x);
+    const int Y0 = min(c0.y, c1.y);
+    const int X1 = max(c0.x, c1.x);
+    const int Y1 = max(c0.y, c1.y);
+    for(int y = Y0; y <= Y1; y++) {
+      for(int x = X0; x <= X1; x++) {
+        const Room* const roomHere = Map::roomMap[x][y];
+        if(roomHere && roomHere != room0 && roomHere != room1) {
+          isOtherRoomInWay = true;
+          break;
+        }
+      }
+      if(isOtherRoomInWay) {break;}
+    }
+    if(isOtherRoomInWay) {continue;}
+
+    MapGenUtils::mkPathFindCor(*room0, *room1, doorPosProposals);
 
     if(isAllRoomsConnected()) {break;}
+
+//    const Pos c0(Rnd::range(0, 2), Rnd::range(0, 2));
+//    assert(Utils::isPosInside(c0, Rect(0, 0, 2, 2)));
+//
+//    Region* region0 = regions[c0.x][c0.y];
+//    assert(region0);
+//
+//    Pos d(0, 0);
+//    while(true) {
+//      d.set(Rnd::range(-1, 1), Rnd::range(-1, 1));
+//      if(d != 0 && Utils::isPosInside(c0 + d, Rect(0, 0, 2, 2))) {break;}
+//    }
+//    const Pos c1(c0 + d);
+//    assert(Utils::isPosInside(c1, Rect(0, 0, 2, 2)));
+//
+//    Region* const region1 = regions[c1.x][c1.y];
+//    assert(region1);
+//
+//    if(!region0->regionsConnectedTo_[c1.x][c1.y]) {
+//      MapGenUtils::mkPathFindCor(*region0->mainRoom_, *region1->mainRoom_,
+//                                      doorPosProposals);
+//
+//      region0->regionsConnectedTo_[c1.x][c1.y] = true;
+//      region1->regionsConnectedTo_[c0.x][c0.y] = true;
+//    }
+//
+//    if(isAllRoomsConnected()) {break;}
   }
-  trace << "MapGen::Std::connectRegions()[DONE]" << endl;
+  TRACE << "MapGen::Std::connectRooms()[DONE]" << endl;
 }
 
 //Note: The positions and size can be outside map (e.g. negative positions).
@@ -152,22 +195,27 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
 
   if(Utils::isAreaInsideMap(auxRectWithBorder)) {
     if(MapParse::isValInArea(auxRectWithBorder, blocked)) {
-      Room* room = mkRoom(auxRect);
-      Map::roomList.push_back(room);
       for(int y = auxRect.p0.y; y <= auxRect.p1.y; y++) {
         for(int x = auxRect.p0.x; x <= auxRect.p1.x; x++) {
           blocked[x][y] = true;
+          assert(!Map::roomMap[x][y]);
         }
       }
+      Room* room = mkRoom(auxRect);
+      Map::roomList.push_back(room);
 
+#ifdef MK_CRUMBLE_ROOMS
       if(Rnd::oneIn(5)) {
         mkCrumbleRoom(auxRectWithBorder, doorP);
         Map::deleteAndRemoveRoomFromList(room); //Don't apply themes etc
         room = nullptr;
       } else {
-        FeatureFactory::mk(FeatureId::floor, doorP);
-        doorPosProposals[doorP.x][doorP.y] = true;
+#endif
+//        FeatureFactory::mk(FeatureId::floor, doorP);
+//        doorPosProposals[doorP.x][doorP.y] = true;
+#ifdef MK_CRUMBLE_ROOMS
       }
+#endif
       return true;
     }
   }
@@ -179,7 +227,7 @@ Pos rndAuxRoomDim() {
 }
 
 void mkAuxRooms(Region* regions[3][3]) {
-  trace << "MapGen::Std::mkAuxRooms()..." << endl;
+  TRACE << "MapGen::Std::mkAuxRooms()..." << endl;
   const int NR_TRIES_PER_SIDE = 10;
 
   for(int regionY = 0; regionY < 3; regionY++) {
@@ -205,7 +253,7 @@ void mkAuxRooms(Region* regions[3][3]) {
                          Pos(1, Rnd::range(conP.y - auxD.y + 1, auxD.y)));
           if(floorCells[conP.x - 1][conP.y]) {
             if(tryMkAuxRoom(auxP, auxD, floorCells, conP)) {
-              traceVerbose << "MapGen::Std: Aux room placed right" << endl;
+              TRACE_VERBOSE << "MapGen::Std: Aux room placed right" << endl;
               break;
             }
           }
@@ -220,7 +268,7 @@ void mkAuxRooms(Region* regions[3][3]) {
                          Pos(Rnd::range(conP.x - auxD.x + 1, conP.x), -auxD.y));
           if(floorCells[conP.x][conP.y + 1]) {
             if(tryMkAuxRoom(auxP, auxD, floorCells, conP)) {
-              traceVerbose << "MapGen::Std: Aux room placed up" << endl;
+              TRACE_VERBOSE << "MapGen::Std: Aux room placed up" << endl;
               break;
             }
           }
@@ -235,7 +283,7 @@ void mkAuxRooms(Region* regions[3][3]) {
                          Pos(-auxD.x, Rnd::range(conP.y - auxD.y + 1, conP.y)));
           if(floorCells[conP.x + 1][conP.y]) {
             if(tryMkAuxRoom(auxP, auxD, floorCells, conP)) {
-              traceVerbose << "MapGen::Std: Aux room placed left" << endl;
+              TRACE_VERBOSE << "MapGen::Std: Aux room placed left" << endl;
               break;
             }
           }
@@ -250,7 +298,7 @@ void mkAuxRooms(Region* regions[3][3]) {
                          Pos(Rnd::range(conP.x - auxD.x + 1, conP.x), 1));
           if(floorCells[conP.x][conP.y - 1]) {
             if(tryMkAuxRoom(auxP, auxD, floorCells, conP)) {
-              traceVerbose << "MapGen::Std: Aux room placed down" << endl;
+              TRACE_VERBOSE << "MapGen::Std: Aux room placed down" << endl;
               break;
             }
           }
@@ -259,7 +307,7 @@ void mkAuxRooms(Region* regions[3][3]) {
     }
   }
 
-  trace << "MapGen::Std::mkAuxRooms() [DONE]" << endl;
+  TRACE << "MapGen::Std::mkAuxRooms() [DONE]" << endl;
 }
 
 void reshapeRoom(const Room& room) {
@@ -362,8 +410,8 @@ void mkMergedRegionsAndRooms(Region* regions[3][3],
       regI1 = Pos(Rnd::range(0, 2), Rnd::range(0, 1));
       regI2 = Pos(regI1 + Pos(0, 1));
       isGoodRegionsFound =
-        !regions[regI1.x][regI1.y]->isBuilt_ &&
-        !regions[regI2.x][regI2.y]->isBuilt_;
+        !regions[regI1.x][regI1.y]->mainRoom_ &&
+        !regions[regI2.x][regI2.y]->mainRoom_;
     }
 
     const int MERGED_X0 = regI1.x == 0 ? 0 : regI1.x == 1 ? SPL_X0 : SPL_X1;
@@ -404,11 +452,6 @@ void mkMergedRegionsAndRooms(Region* regions[3][3],
 
     reg1->mainRoom_ = reg2->mainRoom_ = room;
 
-    reg1->regionsConnectedTo_[regI2.x][regI2.y] = true;
-    reg2->regionsConnectedTo_[regI1.x][regI1.y] = true;
-    reg1->isBuilt_                              = true;
-    reg2->isBuilt_                              = true;
-
 #ifdef RESHAPE_ROOMS
     if(Rnd::oneIn(3)) {reshapeRoom(*room);}
 #endif
@@ -416,7 +459,7 @@ void mkMergedRegionsAndRooms(Region* regions[3][3],
 }
 
 void mkCaves(Region* regions[3][3]) {
-  trace << "MapGen::Std::mkCaves()..." << endl;
+  TRACE << "MapGen::Std::mkCaves()..." << endl;
   for(int regY = 0; regY <= 2; regY++) {
     for(int regX = 0; regX <= 2; regX++) {
 
@@ -446,8 +489,7 @@ void mkCaves(Region* regions[3][3]) {
                                         featureId == FeatureId::caveFloor;
                   if(
                     IS_FLOOR &&
-                    !Utils::isPosInside(
-                      Pos(x + dx, y + dy), region->getRect())) {
+                    !Utils::isPosInside(Pos(x + dx, y + dy), region->r_)) {
                     blocked[x][y] = true;
                   }
                 }
@@ -456,7 +498,7 @@ void mkCaves(Region* regions[3][3]) {
           }
         }
 
-        const Pos origin(region->getP0() + Pos(1, 1));
+        const Pos origin(region->r_.p0 + Pos(1, 1));
         int floodFillResult[MAP_W][MAP_H];
 
         const int FLOOD_FILL_TRAVEL_LIMIT = 20;
@@ -521,7 +563,7 @@ void mkCaves(Region* regions[3][3]) {
       }
     }
   }
-  trace << "MapGen::Std::mkCaves()[DONE]" << endl;
+  TRACE << "MapGen::Std::mkCaves()[DONE]" << endl;
 }
 
 void placeDoorAtPosIfSuitable(const Pos& p) {
@@ -836,17 +878,17 @@ void decorate() {
 }
 
 void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) {
-  trace << "MapGen::Std::getAllowedStairCells()..." << endl;
+  TRACE << "MapGen::Std::getAllowedStairCells()..." << endl;
 
   vector<FeatureId> featIdsOk {FeatureId::floor, FeatureId::caveFloor};
 
   MapParse::parse(CellPred::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
 
-  trace << "MapGen::Std::getAllowedStairCells() [DONE]" << endl;
+  TRACE << "MapGen::Std::getAllowedStairCells() [DONE]" << endl;
 }
 
 Pos placeStairs() {
-  trace << "MapGen::Std::placeStairs()..." << endl;
+  TRACE << "MapGen::Std::placeStairs()..." << endl;
 
   bool allowedCells[MAP_W][MAP_H];
   getAllowedStairCells(allowedCells);
@@ -859,30 +901,30 @@ Pos placeStairs() {
   const int MIN_NR_OK_CELLS_REQ = 80;
 
   if(NR_OK_CELLS < MIN_NR_OK_CELLS_REQ) {
-    trace << "MapGen::Std: Number of allowed cells too low ";
-    trace << "(" << NR_OK_CELLS << "), discarding map" << endl;
+    TRACE << "MapGen::Std: Number of allowed cells too low ";
+    TRACE << "(" << NR_OK_CELLS << "), discarding map" << endl;
     return Pos(-1, -1);
   }
 
-  trace << "MapGen::Std: Sorting the allowed cells vector "
+  TRACE << "MapGen::Std: Sorting the allowed cells vector "
         << "(" << allowedCellsList.size() << " cells)" << endl;
   IsCloserToOrigin isCloserToOrigin(Map::player->pos);
   sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
 
-  trace << "MapGen::Std: Picking random cell from furthest half" << endl;
+  TRACE << "MapGen::Std: Picking random cell from furthest half" << endl;
   const int ELEMENT = Rnd::range(NR_OK_CELLS / 2, NR_OK_CELLS - 1);
   const Pos stairsPos(allowedCellsList.at(ELEMENT));
 
-  trace << "MapGen::Std: Spawning stairs at chosen cell" << endl;
+  TRACE << "MapGen::Std: Spawning stairs at chosen cell" << endl;
   Feature* f = FeatureFactory::mk(FeatureId::stairs, stairsPos);
   f->setHasBlood(false);
 
-  trace << "MapGen::Std::placeStairs()[DONE]" << endl;
+  TRACE << "MapGen::Std::placeStairs()[DONE]" << endl;
   return stairsPos;
 }
 
 void movePlayerToNearestAllowedPos() {
-  trace << "MapGen::Std::movePlayerToNearestAllowedPos()..." << endl;
+  TRACE << "MapGen::Std::movePlayerToNearestAllowedPos()..." << endl;
 
   bool allowedCells[MAP_W][MAP_H];
   getAllowedStairCells(allowedCells);
@@ -892,20 +934,20 @@ void movePlayerToNearestAllowedPos() {
 
   assert(!allowedCellsList.empty());
 
-  trace << "MapGen::Std: Sorting the allowed cells vector "
+  TRACE << "MapGen::Std: Sorting the allowed cells vector "
         << "(" << allowedCellsList.size() << " cells)" << endl;
   IsCloserToOrigin isCloserToOrigin(Map::player->pos);
   sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
 
   Map::player->pos = allowedCellsList.front();
 
-  trace << "MapGen::Std::movePlayerToNearestAllowedPos() [DONE]" << endl;
+  TRACE << "MapGen::Std::movePlayerToNearestAllowedPos() [DONE]" << endl;
 }
 
 //void mkLevers() {
-//  trace << "MapGen::Std::mkLeverPuzzle()..." << endl;
+//  TRACE << "MapGen::Std::mkLeverPuzzle()..." << endl;
 //
-//  trace << "MapGen::Std: Picking a random door" << endl;
+//  TRACE << "MapGen::Std: Picking a random door" << endl;
 //  vector<Door*> doorBucket;
 //  for(int y = 1; y < MAP_H - 1; y++) {
 //    for(int x = 1; x < MAP_W - 1; x++) {
@@ -918,7 +960,7 @@ void movePlayerToNearestAllowedPos() {
 //  }
 //  Door* const doorToLink = doorBucket.at(Rnd::range(0, doorBucket.size() - 1));
 //
-//  trace << "MapGen::Std: Making floodfill and keeping only positions with lower value than the door" << endl;
+//  TRACE << "MapGen::Std: Making floodfill and keeping only positions with lower value than the door" << endl;
 //  bool blocked[MAP_W][MAP_H];
 //  eng.mapTests->mkMoveBlockerArrayForBodyTypeFeaturesOnly(bodyType_normal, blocked);
 //  for(int y = 1; y < MAP_H - 1; y++) {
@@ -948,16 +990,16 @@ void movePlayerToNearestAllowedPos() {
 //    const Pos leverPos(leverPosBucket.at(ELEMENT));
 //    spawnLeverAdaptAndLinkDoor(leverPos, *doorToLink);
 //  } else {
-//    trace << "[WARNING] Could not find position to place lever, in mkLeverPuzzle()" << endl;
+//    TRACE << "[WARNING] Could not find position to place lever, in mkLeverPuzzle()" << endl;
 //  }
-//  trace << "MapGen::Std::mkLeverPuzzle() [DONE]" << endl;
+//  TRACE << "MapGen::Std::mkLeverPuzzle() [DONE]" << endl;
 //}
 
 //void spawnLeverAdaptAndLinkDoor(const Pos& leverPos, Door& door) {
-//  trace << "MapGen::Std: Spawning lever and linking it to the door" << endl;
+//  TRACE << "MapGen::Std: Spawning lever and linking it to the door" << endl;
 //  FeatureFactory::mk(FeatureId::lever, leverPos, new LeverSpawnData(&door));
 //
-//  trace << "MapGen::Std: Changing door properties" << endl;
+//  TRACE << "MapGen::Std: Changing door properties" << endl;
 //  door.material_ = doorMaterial_metal;
 //  door.isOpen_ = false;
 //  door.isStuck_ = false;
@@ -965,7 +1007,7 @@ void movePlayerToNearestAllowedPos() {
 //}
 
 void revealDoorsOnPathToStairs(const Pos& stairsPos) {
-  trace << "MapGen::Std::revealDoorsOnPathToStairs()..." << endl;
+  TRACE << "MapGen::Std::revealDoorsOnPathToStairs()..." << endl;
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
@@ -985,7 +1027,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 
   assert(!path.empty());
 
-  trace << "MapGen::Std: Travelling along path and revealing all doors" << endl;
+  TRACE << "MapGen::Std: Travelling along path and revealing all doors" << endl;
   for(Pos& pos : path) {
     auto* const feature = Map::cells[pos.x][pos.y].featureStatic;
     if(feature->getId() == FeatureId::door) {
@@ -993,7 +1035,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
     }
   }
 
-  trace << "MapGen::Std::revealDoorsOnPathToStairs() [DONE]" << endl;
+  TRACE << "MapGen::Std::revealDoorsOnPathToStairs() [DONE]" << endl;
 }
 
 //void mkNaturalArea(Region* regions[3][3]) {
@@ -1033,14 +1075,14 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 } //namespace
 
 bool run() {
-  trace << "MapGen::Std::run()..." << endl;
+  TRACE << "MapGen::Std::run()..." << endl;
 
   Renderer::clearScreen();
   Renderer::updateScreen();
 
   Map::resetMap();
 
-  trace << "MapGen::Std: Resetting helper arrays" << endl;
+  TRACE << "MapGen::Std: Resetting helper arrays" << endl;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       Map::roomMap[x][y]      = nullptr;
@@ -1054,7 +1096,7 @@ bool run() {
     }
   }
 
-  trace << "MapGen::Std: Init regions" << endl;
+  TRACE << "MapGen::Std: Init regions" << endl;
   const int MAP_W_THIRD = MAP_W / 3;
   const int MAP_H_THIRD = MAP_H / 3;
   const int SPL_X0 = MAP_W_THIRD; //+ Rnd::range(-1, 1);
@@ -1073,7 +1115,7 @@ bool run() {
         y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : MAP_H - 2);
 
       regions[x][y] = new Region(r);
-//      trace << "MapGen::Std: Region(" << x << "," << y << "): "
+//      TRACE << "MapGen::Std: Region(" << x << "," << y << "): "
 //            << "W: " << r.p1.x - r.p0.x + 1 << " "
 //            << "H: " << r.p1.y - r.p0.y + 1 << " "
 //            << r.p0.x << "," << r.p0.y << "," << r.p1.x << "," << r.p1.y
@@ -1103,16 +1145,15 @@ bool run() {
     }
   }
 
-  trace << "MapGen::Std: Making rooms" << endl;
+  TRACE << "MapGen::Std: Making rooms" << endl;
   for(int y = 0; y < 3; y++) {
     for(int x = 0; x < 3; x++) {
       auto& region = *regions[x][y];
-      if(!region.isBuilt_) {
+      if(!region.mainRoom_) {
         const Rect roomRect = region.getRndRoomRect();
         auto* room = mkRoom(roomRect);
         Map::roomList.push_back(room);
         region.mainRoom_  = room;
-        region.isBuilt_   = true;
 #ifdef RESHAPE_ROOMS
         if(Rnd::oneIn(3)) {reshapeRoom(*room);}
 #endif
@@ -1120,11 +1161,11 @@ bool run() {
     }
   }
 
-  connectRegions(regions);
-
 #ifdef MK_AUX_ROOMS
   mkAuxRooms(regions);
 #endif
+
+  connectRooms();
 
 #ifdef MK_CAVES
   mkCaves(regions);
@@ -1138,7 +1179,7 @@ bool run() {
   fillDeadEnds();
 #endif
 
-  trace << "MapGen::Std: Placing doors" << endl;
+  TRACE << "MapGen::Std: Placing doors" << endl;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       if(doorPosProposals[x][y] && Rnd::fraction(7, 10)) {
@@ -1148,7 +1189,7 @@ bool run() {
   }
 
 #ifdef ROOM_THEMING
-  trace << "MapGen::Std: Calling RoomThemeMaking::run()" << endl;
+  TRACE << "MapGen::Std: Calling RoomThemeMaking::run()" << endl;
   RoomThemeMaking::run();
 #endif
 
@@ -1183,7 +1224,7 @@ bool run() {
     }
   }
 
-  trace << "MapGen::Std::run() [DONE]" << endl;
+  TRACE << "MapGen::Std::run() [DONE]" << endl;
   return isMapOk;
 }
 
@@ -1192,42 +1233,6 @@ bool run() {
 } //MapGen
 
 //=============================================================== REGION
-Region::Region(const Rect& r) :
-  mainRoom_(nullptr), isConnected_(false), isBuilt_(false), r_(r) {
-
-  for(int x = 0; x <= 2; x++) {
-    for(int y = 0; y <= 2; y++) {
-      regionsConnectedTo_[x][y] = false;
-    }
-  }
-}
-
-Region::Region() :
-  mainRoom_(nullptr), isConnected_(false), isBuilt_(false), r_() {
-
-  for(int x = 0; x <= 2; x++) {
-    for(int y = 0; y <= 2; y++) {
-      regionsConnectedTo_[x][y] = false;
-    }
-  }
-}
-
-bool Region::isRegionNeighbour(const Region& other) {
-  for(int x = r_.p0.x; x <= r_.p1.x; x++) {
-    for(int y = r_.p0.y; y <= r_.p1.y; y++) {
-      for(int xx = other.r_.p0.x; xx <= other.r_.p1.x; xx++) {
-        for(int yy = other.r_.p0.y; yy <= other.r_.p1.y; yy++) {
-          if(Utils::isPosAdj(
-                Pos(x, y), Pos(xx, yy), false)) {
-            return true;
-          }
-        }
-      }
-    }
-  }
-  return false;
-}
-
 Rect Region::getRndRoomRect() const {
   const bool TINY_ALLOWED_HOR = Rnd::coinToss();
 

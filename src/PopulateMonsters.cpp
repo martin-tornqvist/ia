@@ -63,7 +63,7 @@ bool mkGroupOfRandomNativeToRoomThemeAt(
   const RoomThemeId roomTheme, const vector<Pos>& sortedFreeCellsVector,
   bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
 
-  trace << "PopulateMonsters::mkGroupOfRandomNativeToRoomThemeAt()" << endl;
+  TRACE << "PopulateMonsters::mkGroupOfRandomNativeToRoomThemeAt()" << endl;
   const int NR_LVLS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
   vector<ActorId> idBucket;
   mkListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
@@ -84,7 +84,7 @@ bool mkGroupOfRandomNativeToRoomThemeAt(
   }
 
   if(idBucket.empty()) {
-    trace << "PopulateMonsters: Found no valid monsters to spawn "
+    TRACE << "PopulateMonsters: Found no valid monsters to spawn "
           "at room theme (" + toStr(int(roomTheme)) + ")" << endl;
     return false;
   } else {
@@ -99,7 +99,7 @@ bool mkGroupOfRandomNativeToRoomThemeAt(
 } //namespace
 
 void trySpawnDueToTimePassed() {
-  trace << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
+  TRACE << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
@@ -141,7 +141,7 @@ void trySpawnDueToTimePassed() {
       }
     }
   }
-  trace << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
+  TRACE << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
 }
 
 void populateCaveLvl() {
@@ -246,7 +246,7 @@ void populateStdLvl() {
 
   //First, attempt to populate all non-plain themed rooms
   for(Room* const room : Map::roomList) {
-    if(room->roomTheme != RoomThemeId::plain) {
+    if(room->theme_ != RoomThemeId::plain) {
 
       const int ROOM_W = room->r_.p1.x - room->r_.p0.x + 1;
       const int ROOM_H = room->r_.p1.y - room->r_.p0.y + 1;
@@ -260,7 +260,7 @@ void populateStdLvl() {
           for(int x = room->r_.p0.x; x <= room->r_.p1.x; x++) {
             if(
               blocked[x][y] == false &&
-              RoomThemeMaking::themeMap[x][y] == room->roomTheme) {
+              RoomThemeMaking::themeMap[x][y] == room->theme_) {
               originBucket.push_back(Pos(x, y));
             }
           }
@@ -279,11 +279,9 @@ void populateStdLvl() {
           mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
 
           if(mkGroupOfRandomNativeToRoomThemeAt(
-                room->roomTheme, sortedFreeCellsVector, blocked, false)) {
+                room->theme_, sortedFreeCellsVector, blocked, false)) {
             nrGroupsSpawned++;
-            if(nrGroupsSpawned >= NR_GROUPS_ALLOWED_ON_MAP) {
-              return;
-            }
+            if(nrGroupsSpawned >= NR_GROUPS_ALLOWED_ON_MAP) {return;}
           }
         }
       }

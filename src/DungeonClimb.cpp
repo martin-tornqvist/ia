@@ -16,7 +16,7 @@ namespace DungeonClimb {
 namespace {
 
 void mkLvl() {
-  trace << "DungeonClimb::mkLvl()..." << endl;
+  TRACE << "DungeonClimb::mkLvl()..." << endl;
 
   bool levelBuilt = false;
 
@@ -50,16 +50,16 @@ void mkLvl() {
     }
   }
   if(Map::dlvl > 0 && Map::dlvl <= LAST_CAVERN_LVL) {
-    trace << "DungeonClimb: Calling PopulateItems::mkItems()" << endl;
+    TRACE << "DungeonClimb: Calling PopulateItems::mkItems()" << endl;
     PopulateItems::mkItems();
   }
-  trace << "DungeonClimb::mkLvl() [DONE]" << endl;
+  TRACE << "DungeonClimb::mkLvl() [DONE]" << endl;
 }
 
 } //namespace
 
 void travelDown(const int LVLS) {
-  trace << "DungeonClimb::travelDown()..." << endl;
+  TRACE << "DungeonClimb::travelDown()..." << endl;
 
   Map::player->restoreShock(999, true);
 
@@ -72,11 +72,11 @@ void travelDown(const int LVLS) {
   Map::player->updateColor();
   Renderer::drawMapAndInterface();
   Audio::tryPlayAmb(1);
-  trace << "DungeonClimb::travelDown() [DONE]" << endl;
+  TRACE << "DungeonClimb::travelDown() [DONE]" << endl;
 }
 
 void tryUseDownStairs() {
-  trace << "DungeonClimb::tryUseDownStairs()..." << endl;
+  TRACE << "DungeonClimb::tryUseDownStairs()..." << endl;
 
   Log::clearLog();
 
@@ -86,7 +86,7 @@ void tryUseDownStairs() {
     Map::cells[playerPos.x][playerPos.y].featureStatic->getId();
 
   if(featureIdAtPlayer == FeatureId::stairs) {
-    trace << "DungeonClimb: Player is on stairs" << endl;
+    TRACE << "DungeonClimb: Player is on stairs" << endl;
     if(Map::dlvl >= FIRST_CAVERN_LVL && Map::dlvl <= LAST_CAVERN_LVL) {
       Log::addMsg("I climb downwards.");
     } else {
@@ -109,7 +109,7 @@ void tryUseDownStairs() {
     }
 //    Renderer::updateScreen();
   }
-  trace << "DungeonClimb::tryUseDownStairs() [DONE]" << endl;
+  TRACE << "DungeonClimb::tryUseDownStairs() [DONE]" << endl;
 }
 
 } //DungeonClimb

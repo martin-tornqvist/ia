@@ -160,8 +160,8 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
   }
 
   if(r->getData().isStackable == false && NR_ITEMS != 1) {
-    trace << "[WARNING] Specified " + toStr(NR_ITEMS) + " nr items";
-    trace << " for non-stackable item, in ItemFactory::mk()" << endl;
+    TRACE << "[WARNING] Specified " + toStr(NR_ITEMS) + " nr items";
+    TRACE << " for non-stackable item, in ItemFactory::mk()" << endl;
   } else {
     r->nrItems = NR_ITEMS;
   }

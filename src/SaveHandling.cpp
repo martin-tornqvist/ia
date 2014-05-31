@@ -41,10 +41,10 @@ void collectLinesFromGame(vector<string>& lines) {
 }
 
 void setupGameFromLines(vector<string>& lines) {
-  trace << "SaveHandler::setupGameFromLines()..." << endl;
-  trace << "SaveHandler: Nr lines: " << lines.size() << endl;
+  TRACE << "SaveHandler::setupGameFromLines()..." << endl;
+  TRACE << "SaveHandler: Nr lines: " << lines.size() << endl;
   const string& playerName = lines.front();
-  trace << "SaveHandler: playerName: " << playerName << endl;
+  TRACE << "SaveHandler: playerName: " << playerName << endl;
   Map::player->getData().name_a = playerName;
   Map::player->getData().name_the = playerName;
   lines.erase(lines.begin());
@@ -60,7 +60,7 @@ void setupGameFromLines(vector<string>& lines) {
   ActorData::setupFromSaveLines(lines);
   GameTime::setupFromSaveLines(lines);
   PlayerSpellsHandling::setupFromSaveLines(lines);
-  trace << "SaveHandler::setupGameFromLines() [DONE]" << endl;
+  TRACE << "SaveHandler::setupGameFromLines() [DONE]" << endl;
 }
 
 void writeFile(const vector<string>& lines) {
@@ -93,8 +93,8 @@ void readFile(vector<string>& lines) {
     emptyLines.resize(0);
     writeFile(emptyLines);
   } else {
-    trace << "[WARNING] Could not open save file, ";
-    trace << "in SaveHandler::readFile()" << endl;
+    TRACE << "[WARNING] Could not open save file, ";
+    TRACE << "in SaveHandler::readFile()" << endl;
   }
 }
 

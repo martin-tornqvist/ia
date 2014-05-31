@@ -16,7 +16,7 @@ using namespace std;
 namespace Bash {
 
 void playerBash() {
-  trace << "Bash::playerBash()" << endl;
+  TRACE << "Bash::playerBash()" << endl;
 
   Log::clearLog();
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
@@ -29,13 +29,13 @@ void playerBash() {
     Actor* livingActor =
       Utils::getActorAtPos(bashPos, ActorDeadState::alive);
     if(livingActor != nullptr) {
-      trace << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
+      TRACE << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
       if(Map::player->getPropHandler().allowAttackMelee(true)) {
-        trace << "Bash: Player is allowed to do melee attack" << endl;
+        TRACE << "Bash: Player is allowed to do melee attack" << endl;
         bool blocked[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(), blocked);
 
-        trace << "Bash: Player can see actor" << endl;
+        TRACE << "Bash: Player can see actor" << endl;
         Map::player->kick(*livingActor);
       }
       return;
@@ -63,8 +63,8 @@ void playerBash() {
     }
 
     //Bash feature
-    trace << "Bash: No actor at bash pos, ";
-    trace << "attempting to bash feature instead" << endl;
+    TRACE << "Bash: No actor at bash pos, ";
+    TRACE << "attempting to bash feature instead" << endl;
     Cell& cell = Map::cells[bashPos.x][bashPos.y];
     cell.featureStatic->bash(*Map::player);
   }

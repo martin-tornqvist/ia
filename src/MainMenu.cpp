@@ -156,7 +156,7 @@ string getHplQuote() {
     "who knows must strike before reckoning the consequences.");
   quotes.push_back(
     "Non-Euclidean calculus and quantum physics are enough to stretch any "
-    "brain; and when one mixes them with folklore, and tries to trace a "
+    "brain; and when one mixes them with folklore, and tries to TRACE a "
     "strange background of multi-dimensional reality behind the ghoulish "
     "hints of Gothic tales and the wild whispers of the chimney-corner, one "
     "can hardly expect to be wholly free from mental tension.");
@@ -209,17 +209,17 @@ string getHplQuote() {
 }
 
 void draw(const MenuBrowser& browser) {
-  trace << "MainMenu::draw()..." << endl;
+  TRACE << "MainMenu::draw()..." << endl;
 
   Pos pos(MAP_W_HALF, 3);
 
-  trace << "MainMenu: Calling clearWindow()" << endl;
+  TRACE << "MainMenu: Calling clearWindow()" << endl;
   Renderer::clearScreen();
 
   Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   if(Config::isTilesMode()) {
-    trace << "MainMenu: Calling drawMainMenuLogo()" << endl;
+    TRACE << "MainMenu: Calling drawMainMenuLogo()" << endl;
     Renderer::drawMainMenuLogo(0);
     pos.y += 10;
   } else {
@@ -253,7 +253,7 @@ void draw(const MenuBrowser& browser) {
       "## DEBUG MODE ##", Panel::screen, Pos(1, 1), clrYellow);
   }
 
-  trace << "MainMenu: Drawing HPL quote" << endl;
+  TRACE << "MainMenu: Drawing HPL quote" << endl;
   SDL_Color quoteClr = clrGray;
   quoteClr.r /= 7;
   quoteClr.g /= 7;
@@ -267,7 +267,7 @@ void draw(const MenuBrowser& browser) {
     quotePos.y++;
   }
 
-  trace << "MainMenu: Drawing main menu" << endl;
+  TRACE << "MainMenu: Drawing main menu" << endl;
   SDL_Color clrActive     = clrNosfTealLgt;
   SDL_Color clrInactive   = clrNosfTealDrk;
   SDL_Color clrActiveBg   = clrBlack;
@@ -340,13 +340,13 @@ void draw(const MenuBrowser& browser) {
 
   Renderer::updateScreen();
 
-  trace << "MainMenu::draw() [DONE]" << endl;
+  TRACE << "MainMenu::draw() [DONE]" << endl;
 }
 
 } //namespace
 
 GameEntryMode run(bool& quit, int& introMusChannel) {
-  trace << "MainMenu::run()" << endl;
+  TRACE << "MainMenu::run()" << endl;
 
   quote = getHplQuote();
 

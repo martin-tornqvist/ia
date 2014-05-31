@@ -13,6 +13,7 @@
 
 #ifdef DEMO_MODE
 #include "SdlWrapper.h"
+#include "Renderer.h"
 #endif // DEMO_MODE
 
 using namespace std;
@@ -103,8 +104,11 @@ void mk(const Rect& area, const FeatureId id) {
   }
 }
 
-void mkPathFindCorridor(const Room& r0, const Room& r1,
-                        bool doorPosProposals[MAP_W][MAP_H]) {
+void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
+  TRACE_VERBOSE << "MapGenUtils::mkPathFindCor()..." << endl;
+  TRACE_VERBOSE << "Making corridor between rooms "
+                << &r0 << " and " << &r1 << endl;
+
   assert(Utils::isAreaInsideMap(r0.r_));
   assert(Utils::isAreaInsideMap(r1.r_));
 
@@ -129,44 +133,66 @@ void mkPathFindCorridor(const Room& r0, const Room& r1,
 
   vector< pair<Pos, Pos> > entriesBucket;
 
-  for(const Pos& p0 : p0Bucket) {
-    for(const Pos& p1 : p1Bucket) {
-      const int CUR_DIST = Utils::kingDist(p0, p1);
-      if(CUR_DIST == shortestDist) {
-        entriesBucket.push_back(pair<Pos, Pos>(p0, p1));
+//  for(int i = 0; i < 10; i++)  {
+
+    for(const Pos& p0 : p0Bucket) {
+      for(const Pos& p1 : p1Bucket) {
+        const int CUR_DIST = Utils::kingDist(p0, p1);
+        if(CUR_DIST == shortestDist) {
+          entriesBucket.push_back(pair<Pos, Pos>(p0, p1));
+        }
       }
     }
-  }
 
-  assert(!entriesBucket.empty());
+    assert(!entriesBucket.empty());
 
-  for(int i = 0; i < 10; i++)  {
     const pair<Pos, Pos>& entries =
       entriesBucket.at(Rnd::range(0, entriesBucket.size() - 1));
     const Pos& p0 = entries.first;
     const Pos& p1 = entries.second;
 
-    bool blocked[MAP_W][MAP_H];
-    Utils::resetArray(blocked, false);
-
-    for(int y = 0; y < MAP_H; y++) {
-      for(int x = 0; x < MAP_W; x++) {
-        blocked[x][y] = Map::roomMap[x][y];
-      }
-    }
-    bool blockedExpanded[MAP_W][MAP_H];
-    MapParse::expand(blocked, blockedExpanded, 1, true);
-    blockedExpanded[p0.x][p0.y] = blockedExpanded[p1.x][p1.y] = false;
+#ifdef DEMO_MODE
+    Renderer::drawBlastAnimAtPositions(vector<Pos> {p0}, clrGreenLgt);
+    Renderer::drawBlastAnimAtPositions(vector<Pos> {p1}, clrRedLgt);
+#endif // DEMO_MODE
 
     vector<Pos> path;
-    PathFind::run(p0, p1, blockedExpanded, path, false);
+
+    //IS entry points same cell (rooms are adjacent)? Then simply use that
+    if(p0 == p1) {
+      path.push_back(p0);
+    } else {
+      //Else, try to find a path to the other entry point
+      bool blocked[MAP_W][MAP_H];
+      Utils::resetArray(blocked, false);
+
+      for(int y = 0; y < MAP_H; y++) {
+        for(int x = 0; x < MAP_W; x++) {
+          blocked[x][y] =
+            Map::cells[x][y].featureStatic->getId() != FeatureId::wall ||
+            Map::roomMap[x][y];
+        }
+      }
+      bool blockedExpanded[MAP_W][MAP_H];
+      MapParse::expand(blocked, blockedExpanded, 1, true);
+      blockedExpanded[p0.x][p0.y] = blockedExpanded[p1.x][p1.y] = false;
+
+      PathFind::run(p0, p1, blockedExpanded, path, false);
+    }
 
     if(!path.empty()) {
       path.push_back(p0);
       for(Pos& p : path) {FeatureFactory::mk(FeatureId::floor, p, nullptr);}
-      break;
+      doorPosProposals[p0.x][p0.y] = doorPosProposals[p1.x][p1.y] = true;
+      r0.roomsConTo_.push_back(&r1);
+      r1.roomsConTo_.push_back(&r0);
+      TRACE_VERBOSE << "MapGenUtils::mkPathFindCor() [DONE]"
+                    << " - successfully connected roooms" << endl;
+      return;
     }
-  }
+//  }
+  TRACE_VERBOSE << "MapGenUtils::mkPathFindCor() [DONE]"
+                << " - failed to connect roooms" << endl;
 }
 
 void backupMap() {

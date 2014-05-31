@@ -28,44 +28,44 @@ bool quitToMainMenu       = false;
 
 //Note: Initialization order matters in some cases
 void initIO() {
-  trace << "Init::initIO()..." << endl;
+  TRACE << "Init::initIO()..." << endl;
   SdlWrapper::init();
   Config::init();
   Input::init();
   Renderer::init();
   Audio::init();
-  trace << "Init::initIO() [DONE]" << endl;
+  TRACE << "Init::initIO() [DONE]" << endl;
 }
 
 void cleanupIO() {
-  trace << "Init::cleanupIO()..." << endl;
+  TRACE << "Init::cleanupIO()..." << endl;
   Audio::cleanup();
   Renderer::cleanup();
   Input::cleanup();
   SdlWrapper::cleanup();
-  trace << "Init::cleanupIO() [DONE]" << endl;
+  TRACE << "Init::cleanupIO() [DONE]" << endl;
 }
 
 //Note: Initialization order matters in some cases
 void initGame() {
-  trace << "Init::initGame()..." << endl;
+  TRACE << "Init::initGame()..." << endl;
   LineCalc::init();
   Gods::init();
   Manual::init();
   Credits::init();
   MapTemplHandling::init();
-  trace << "Init::initGame() [DONE]" << endl;
+  TRACE << "Init::initGame() [DONE]" << endl;
 }
 
 void cleanupGame() {
-  trace << "Init::cleanupGame()..." << endl;
+  TRACE << "Init::cleanupGame()..." << endl;
 
-  trace << "Init::cleanupGame() [DONE]" << endl;
+  TRACE << "Init::cleanupGame() [DONE]" << endl;
 }
 
 //Note: Initialization order matters in some cases
 void initSession() {
-  trace << "Init::initSession()..." << endl;
+  TRACE << "Init::initSession()..." << endl;
   ActorData::init();
   FeatureData::init();
   ScrollNameHandling::init();
@@ -80,16 +80,16 @@ void initSession() {
   DungeonMaster::init();
   Bot::init();
   PlayerSpellsHandling::init();
-  trace << "Init::initSession() [DONE]" << endl;
+  TRACE << "Init::initSession() [DONE]" << endl;
 }
 
 void cleanupSession() {
-  trace << "Init::cleanupSession()..." << endl;
+  TRACE << "Init::cleanupSession()..." << endl;
   PlayerSpellsHandling::cleanup();
   Map::cleanup();
   GameTime::cleanup();
   ItemData::cleanup();
-  trace << "Init::cleanupSession() [DONE]" << endl;
+  TRACE << "Init::cleanupSession() [DONE]" << endl;
 }
 
 } //Init

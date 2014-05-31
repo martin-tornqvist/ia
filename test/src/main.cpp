@@ -834,7 +834,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Room room1(roomArea1);
   Room room2(roomArea2);
 
-  MapGenUtils::mkPathFindCorridor(room1, room2);
+  MapGenUtils::mkPathFindCor(room1, room2);
 }
 
 TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
@@ -896,7 +896,7 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
 #undef main
 #endif
 int main() {
-  trace << "Running all tests" << endl;
+  TRACE << "Running all tests" << endl;
   UnitTest::RunAllTests();
   return 0;
 }

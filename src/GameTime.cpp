@@ -40,7 +40,7 @@ bool isSpiRegenThisTurn(const int REGEN_N_TURNS) {
 void runStandardTurnEvents() {
   turn_++;
 
-//  traceVerbose << "GameTime: Cur turn: " << turn_ << endl;
+//  TRACE_VERBOSE << "GameTime: Cur turn: " << turn_ << endl;
 
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), visionBlockers);

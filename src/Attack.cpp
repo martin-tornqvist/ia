@@ -200,7 +200,7 @@ RangedAttData::RangedAttData(
   curDefender = Utils::getActorAtPos(curPos_);
 
   if(curDefender != nullptr) {
-    trace << "RangedAttData: Defender found" << endl;
+    TRACE << "RangedAttData: Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
     const int WPN_MOD           = wpn_.getData().rangedHitChanceMod;
@@ -239,7 +239,7 @@ RangedAttData::RangedAttData(
     attackResult = AbilityRoll::roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
-      trace << "RangedAttData: Attack roll succeeded" << endl;
+      TRACE << "RangedAttData: Attack roll succeeded" << endl;
 
       vector<PropId> props;
       curDefender->getPropHandler().getAllActivePropIds(props);
@@ -293,7 +293,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
   curDefender = Utils::getActorAtPos(curPos_);
 
   if(curDefender != nullptr) {
-    trace << "MissileAttData: Defender found" << endl;
+    TRACE << "MissileAttData: Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
     const int WPN_MOD           = item_.getData().missileHitChanceMod;
@@ -330,7 +330,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
     attackResult = AbilityRoll::roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
-      trace << "MissileAttData: Attack roll succeeded" << endl;
+      TRACE << "MissileAttData: Attack roll succeeded" << endl;
 
       bool playerAimX3 = false;
       if(attacker == Map::player) {

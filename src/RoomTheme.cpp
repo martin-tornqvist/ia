@@ -47,7 +47,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
                          vector<Pos>& nextToWalls,
                          vector<Pos>& awayFromWalls,
                          vector<const FeatureDataT*> themeFeatureData) {
-  trace << "RoomThemeMaking::trySetFeatureToPlace()" << endl;
+  TRACE << "RoomThemeMaking::trySetFeatureToPlace()" << endl;
 
   if(themeFeatureData.empty()) {return -1;}
 
@@ -55,8 +55,8 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
   const bool IS_AWAY_FROM_WALLS_AVAIL = awayFromWalls.size() != 0;
 
   if(!IS_NEXT_TO_WALL_AVAIL && !IS_AWAY_FROM_WALLS_AVAIL) {
-    trace << "RoomThemeMaking: Neither cells next to walls or away from ";
-    trace << "walls found, returning" << endl;
+    TRACE << "RoomThemeMaking: Neither cells next to walls or away from ";
+    TRACE << "walls found, returning" << endl;
     def = nullptr;
     return -1;
   }
@@ -118,7 +118,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
 
 void eraseAdjacentCellsFromVectors(
   const Pos& pos,  vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
-  trace << "RoomThemeMaking::eraseAdjacentCellsFromVectors()..." << endl;
+  TRACE << "RoomThemeMaking::eraseAdjacentCellsFromVectors()..." << endl;
   for(unsigned int i = 0; i < nextToWalls.size(); i++) {
     if(Utils::isPosAdj(pos, nextToWalls.at(i), true)) {
       nextToWalls.erase(nextToWalls.begin() + i);
@@ -131,16 +131,16 @@ void eraseAdjacentCellsFromVectors(
       i--;
     }
   }
-  trace << "RoomThemeMaking::eraseAdjacentCellsFromVectors() [DONE]" << endl;
+  TRACE << "RoomThemeMaking::eraseAdjacentCellsFromVectors() [DONE]" << endl;
 }
 
 int placeThemeFeatures(Room& room) {
-  trace << "RoomThemeMaking::placeThemeFeatures()" << endl;
+  TRACE << "RoomThemeMaking::placeThemeFeatures()" << endl;
   vector<const FeatureDataT*> themeFeatureData;
 
   for(int i = 0; i < int(FeatureId::endOfFeatureId); i++) {
     const auto* const d = FeatureData::getData((FeatureId)(i));
-    if(d->featureThemeSpawnRules.isBelongingToTheme(room.roomTheme)) {
+    if(d->featureThemeSpawnRules.isBelongingToTheme(room.theme_)) {
       themeFeatureData.push_back(d);
     }
   }
@@ -151,13 +151,13 @@ int placeThemeFeatures(Room& room) {
 
   vector<int> featuresSpawnCount(themeFeatureData.size(), 0);
 
-  int nrFeaturesLeftToPlace = getRandomNrFeaturesForTheme(room.roomTheme);
+  int nrFeaturesLeftToPlace = getRandomNrFeaturesForTheme(room.theme_);
 
   int nrFeaturesPlaced = 0;
 
   while(true) {
     if(nrFeaturesLeftToPlace == 0) {
-      trace << "RoomThemeMaking: Placed enough features, returning" << endl;
+      TRACE << "RoomThemeMaking: Placed enough features, returning" << endl;
       return nrFeaturesPlaced;
     }
 
@@ -168,11 +168,11 @@ int placeThemeFeatures(Room& room) {
                            themeFeatureData);
 
     if(d == nullptr) {
-      trace << "RoomThemeMaking: Could not find any more spots ";
-      trace << "to place feature, returning" << endl;
+      TRACE << "RoomThemeMaking: Could not find any more spots ";
+      TRACE << "to place feature, returning" << endl;
       return nrFeaturesPlaced;
     } else {
-      trace << "RoomThemeMaking: Placing " << d->name_a << endl;
+      TRACE << "RoomThemeMaking: Placing " << d->name_a << endl;
       FeatureFactory::mk(d->id, pos);
       featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT)++;
 
@@ -202,10 +202,10 @@ void mkThemeSpecificRoomModifications(Room& room) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
-  switch(room.roomTheme) {
+  switch(room.theme_) {
     case RoomThemeId::flooded:
     case RoomThemeId::muddy: {
-      const auto featureId = room.roomTheme == RoomThemeId::flooded ?
+      const auto featureId = room.theme_ == RoomThemeId::flooded ?
                              FeatureId::shallowWater : FeatureId::shallowMud;
       for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
         for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
@@ -293,22 +293,22 @@ void applyThemeToRoom(Room& room) {
 
   mkThemeSpecificRoomModifications(room);
 
-  switch(room.roomTheme) {
-    case RoomThemeId::plain:   {room.roomDescr = "";} break;
-    case RoomThemeId::human:   {room.roomDescr = "";} break;
-    case RoomThemeId::ritual:  {room.roomDescr = "";} break;
-    case RoomThemeId::spider:  {room.roomDescr = "";} break;
-    case RoomThemeId::crypt:   {room.roomDescr = "";} break;
-    case RoomThemeId::monster: {room.roomDescr = "";} break;
-    case RoomThemeId::flooded: {room.roomDescr = "";} break;
-    case RoomThemeId::muddy:   {room.roomDescr = "";} break;
+  switch(room.theme_) {
+    case RoomThemeId::plain:   {room.descr_ = "";} break;
+    case RoomThemeId::human:   {room.descr_ = "";} break;
+    case RoomThemeId::ritual:  {room.descr_ = "";} break;
+    case RoomThemeId::spider:  {room.descr_ = "";} break;
+    case RoomThemeId::crypt:   {room.descr_ = "";} break;
+    case RoomThemeId::monster: {room.descr_ = "";} break;
+    case RoomThemeId::flooded: {room.descr_ = "";} break;
+    case RoomThemeId::muddy:   {room.descr_ = "";} break;
     case RoomThemeId::endOfRoomThemes: {} break;
   }
 }
 
 int nrThemeInMap(const RoomThemeId theme) {
   int nr = 0;
-  for(Room* r : Map::roomList) {if(r->roomTheme == theme) nr++;}
+  for(Room* r : Map::roomList) {if(r->theme_ == theme) nr++;}
   return nr;
 }
 
@@ -359,7 +359,7 @@ void mkRoomDarkWithChance(const Room& room) {
   if(ROOM_W >= 4 && ROOM_H >= 4) {
     int chanceToMkDark = 0;
 
-    switch(room.roomTheme) {
+    switch(room.theme_) {
       case RoomThemeId::plain:     chanceToMkDark = 5;   break;
       case RoomThemeId::human:     chanceToMkDark = 10;  break;
       case RoomThemeId::ritual:    chanceToMkDark = 15;  break;
@@ -384,7 +384,7 @@ void mkRoomDarkWithChance(const Room& room) {
 }
 
 void assignRoomThemes() {
-  trace << "RoomThemeMaking::assignRoomThemes()..." << endl;
+  TRACE << "RoomThemeMaking::assignRoomThemes()..." << endl;
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -400,8 +400,8 @@ void assignRoomThemes() {
 
   vector<bool> isAssigned(NR_ROOMS, false);
 
-  trace << "RoomThemeMaking: Assigning plain theme to rooms with ";
-  trace << "wrong dimensions" << endl;
+  TRACE << "RoomThemeMaking: Assigning plain theme to rooms with ";
+  TRACE << "wrong dimensions" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
     Room* const room = Map::roomList.at(i);
 
@@ -410,15 +410,15 @@ void assignRoomThemes() {
       const int W = room->r_.p1.x - room->r_.p0.x + 1;
       const int H = room->r_.p1.y - room->r_.p0.y + 1;
       if(W < MIN_DIM || W > MAX_DIM || H < MIN_DIM || H > MAX_DIM) {
-        room->roomTheme = RoomThemeId::plain;
+        room->theme_ = RoomThemeId::plain;
         isAssigned.at(i) = true;
         continue;
       }
     }
   }
 
-  trace << "RoomThemeMaking: Trying to set non-plain themes ";
-  trace << "for some rooms" << endl;
+  TRACE << "RoomThemeMaking: Trying to set non-plain themes ";
+  TRACE << "for some rooms" << endl;
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   const int NR_TRIES_TO_ASSIGN = 100;
@@ -431,9 +431,9 @@ void assignRoomThemes() {
         Room* const room = Map::roomList.at(ELEMENT);
 
         if(isThemeAllowed(room, theme, blocked)) {
-          room->roomTheme = theme;
-          trace << "RoomThemeMaking: Assigned non-plain theme";
-          trace << "(" << int(theme) << ") to room" << endl;
+          room->theme_ = theme;
+          TRACE << "RoomThemeMaking: Assigned non-plain theme";
+          TRACE << "(" << int(theme) << ") to room" << endl;
           isAssigned.at(ELEMENT) = true;
           for(int y = room->r_.p0.y; y < room->r_.p1.y; y++) {
             for(int x = room->r_.p0.x; x < room->r_.p1.x; x++) {
@@ -446,21 +446,21 @@ void assignRoomThemes() {
     }
   }
 
-  trace << "RoomThemeMaking: Assigning plain theme to remaining rooms" << endl;
+  TRACE << "RoomThemeMaking: Assigning plain theme to remaining rooms" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
     if(!isAssigned.at(i)) {
-      Map::roomList.at(i)->roomTheme = RoomThemeId::plain;
+      Map::roomList.at(i)->theme_ = RoomThemeId::plain;
       isAssigned.at(i) = true;
     }
   }
 
-  trace << "RoomThemeMaking::assignRoomThemes() [DONE]" << endl;
+  TRACE << "RoomThemeMaking::assignRoomThemes() [DONE]" << endl;
 }
 
 } //namespace
 
 void run() {
-  trace << "RoomThemeMaking::run()..." << endl;
+  TRACE << "RoomThemeMaking::run()..." << endl;
 
   Gods::setNoGod();
 
@@ -471,7 +471,7 @@ void run() {
     mkRoomDarkWithChance(*room);
   }
 
-  trace << "RoomThemeMaking::run() [DONE]" << endl;
+  TRACE << "RoomThemeMaking::run() [DONE]" << endl;
 }
 
 } //RoomThemeMaking

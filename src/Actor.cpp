@@ -338,8 +338,8 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
 }
 
 bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
-  traceVerbose << "Actor::hit()..." << endl;
-  traceVerbose << "Actor: Damage from parameter: " << dmg << endl;
+  TRACE_VERBOSE << "Actor::hit()..." << endl;
+  TRACE_VERBOSE << "Actor: Damage from parameter: " << dmg << endl;
 
   if(this == Map::player) {
     Map::player->interruptActions();
@@ -370,7 +370,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
       glyph_ = ' ';
       if(isHumanoid()) {Map::mkGore(pos);}
     }
-    traceVerbose << "Actor::hit() [DONE]" << endl;
+    TRACE_VERBOSE << "Actor::hit() [DONE]" << endl;
     return false;
   }
 
@@ -385,7 +385,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   }
 
   hit_(dmg, ALLOW_WOUNDS);
-  traceVerbose << "Actor: Damage after hit_(): " << dmg << endl;
+  TRACE_VERBOSE << "Actor: Damage after hit_(): " << dmg << endl;
 
   dmg = max(1, dmg);
 
@@ -394,13 +394,13 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
     Armor* armor =
       dynamic_cast<Armor*>(inv_->getItemInSlot(SlotId::armorBody));
     if(armor != nullptr) {
-      traceVerbose << "Actor: Has armor, running hit on armor" << endl;
+      TRACE_VERBOSE << "Actor: Has armor, running hit on armor" << endl;
 
       if(dmgType == DmgType::physical) {
         dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg);
 
         if(armor->isDestroyed()) {
-          trace << "Actor: Armor was destroyed" << endl;
+          TRACE << "Actor: Armor was destroyed" << endl;
           if(this == Map::player) {
             const string armorName =
               ItemData::getItemRef(*armor, ItemRefType::plain);
@@ -427,10 +427,10 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
                               IS_DMG_ENOUGH_TO_DESTROY;
 
     die(IS_DESTROYED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
-    traceVerbose << "Actor::hit() [DONE]" << endl;
+    TRACE_VERBOSE << "Actor::hit() [DONE]" << endl;
     return true;
   } else {
-    traceVerbose << "Actor::hit() [DONE]" << endl;
+    TRACE_VERBOSE << "Actor::hit() [DONE]" << endl;
     return false;
   }
 }

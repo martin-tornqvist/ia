@@ -32,12 +32,12 @@ struct StrAndClr {
 };
 
 void mkInfoLines(vector<StrAndClr>& linesRef) {
-  trace << "Postmortem::mkInfoLines()..." << endl;
+  TRACE << "Postmortem::mkInfoLines()..." << endl;
 
   const SDL_Color clrHeading  = clrWhiteHigh;
   const SDL_Color clrInfo     = clrWhite;
 
-  trace << "Postmortem: Finding number of killed monsters" << endl;
+  TRACE << "Postmortem: Finding number of killed monsters" << endl;
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMonsters = 0;
   for(int i = actor_player + 1; i < endOfActorIds; i++) {
@@ -90,7 +90,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
 
   linesRef.push_back(StrAndClr(" ", clrInfo));
 
-  trace << "Postmortem: Finding traits gained" << endl;
+  TRACE << "Postmortem: Finding traits gained" << endl;
   linesRef.push_back(StrAndClr(" Traits gained:", clrHeading));
   string traitsLine;
   PlayerBon::getAllPickedTraitsTitlesLine(traitsLine);
@@ -129,7 +129,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   }
   linesRef.push_back(StrAndClr(" ", clrInfo));
 
-  trace << "Postmortem: Drawing the final map" << endl;
+  TRACE << "Postmortem: Drawing the final map" << endl;
   linesRef.push_back(StrAndClr(" The final moment:", clrHeading));
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -173,7 +173,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
     curRow.clear();
   }
 
-  trace << "Postmortem::mkInfoLines() [DONE]" << endl;
+  TRACE << "Postmortem::mkInfoLines() [DONE]" << endl;
 }
 
 void render(const vector<StrAndClr>& linesAndClr,
@@ -269,7 +269,7 @@ void renderMenu(const MenuBrowser& browser) {
       }
     }
   } else {
-    trace << "[WARNING] Could not open ascii graveyard file, "
+    TRACE << "[WARNING] Could not open ascii graveyard file, "
           "in Postmortem::renderMenu()" << endl;
   }
 

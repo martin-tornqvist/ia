@@ -20,20 +20,20 @@ bool isInited = false;
 }
 
 void init() {
-  trace << "SdlWrapper::initSdl()..." << endl;
+  TRACE << "SdlWrapper::initSdl()..." << endl;
 
   isInited = true;
 
   if(SDL_Init(SDL_INIT_EVERYTHING) == -1) {
-    trace << "[WARNING] Problem to init SDL, ";
-    trace << "in SdlWrapper::initSdl()" << endl;
+    TRACE << "[WARNING] Problem to init SDL, ";
+    TRACE << "in SdlWrapper::initSdl()" << endl;
   }
 
   SDL_EnableUNICODE(1);
 
   if(IMG_Init(IMG_INIT_PNG) == -1) {
-    trace << "[WARNING] Problem to init SDL_image";
-    trace << ", in SdlWrapper::initSdl()" << endl;
+    TRACE << "[WARNING] Problem to init SDL_image";
+    TRACE << ", in SdlWrapper::initSdl()" << endl;
   }
 
   const int     AUDIO_FREQ      = 44100;
@@ -43,13 +43,13 @@ void init() {
 
   if(Mix_OpenAudio(
         AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1) {
-    trace << "[WARNING] Problem to init SDL_mixer";
-    trace << ", in SdlWrapper::initSdl()" << endl;
+    TRACE << "[WARNING] Problem to init SDL_mixer";
+    TRACE << ", in SdlWrapper::initSdl()" << endl;
   }
 
   Mix_AllocateChannels(AUDIO_ALLOCATED_CHANNELS);
 
-  trace << "SdlWrapper::initSdl() [DONE]" << endl;
+  TRACE << "SdlWrapper::initSdl() [DONE]" << endl;
 }
 
 void cleanup() {

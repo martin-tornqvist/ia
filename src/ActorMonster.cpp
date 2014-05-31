@@ -204,7 +204,7 @@ void Monster::moveDir(Dir dir) {
     if(f->getId() == FeatureId::trap) {
       dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == Dir::center) {
-        traceVerbose << "Monster: Move prevented by trap" << endl;
+        TRACE_VERBOSE << "Monster: Move prevented by trap" << endl;
         GameTime::actorDidAct();
         return;
       }

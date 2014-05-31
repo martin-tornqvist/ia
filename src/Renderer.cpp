@@ -41,7 +41,7 @@ bool isInited() {
 }
 
 void loadMainMenuLogo() {
-  trace << "Renderer::loadMainMenuLogo()..." << endl;
+  TRACE << "Renderer::loadMainMenuLogo()..." << endl;
 
   SDL_Surface* mainMenuLogoSurfaceTmp = IMG_Load(mainMenuLogoImgName.data());
 
@@ -49,7 +49,7 @@ void loadMainMenuLogo() {
 
   SDL_FreeSurface(mainMenuLogoSurfaceTmp);
 
-  trace << "Renderer::loadMainMenuLogo() [DONE]" << endl;
+  TRACE << "Renderer::loadMainMenuLogo() [DONE]" << endl;
 }
 
 Uint32 getPixel(SDL_Surface* const surface,
@@ -100,7 +100,7 @@ void putPixel(SDL_Surface* const surface,
 }
 
 void loadFont() {
-  trace << "Renderer::loadFont()..." << endl;
+  TRACE << "Renderer::loadFont()..." << endl;
 
   SDL_Surface* fontSurfaceTmp = IMG_Load(Config::getFontName().data());
 
@@ -114,11 +114,11 @@ void loadFont() {
 
   SDL_FreeSurface(fontSurfaceTmp);
 
-  trace << "Renderer::loadFont() [DONE]" << endl;
+  TRACE << "Renderer::loadFont() [DONE]" << endl;
 }
 
 void loadTiles() {
-  trace << "Renderer::loadTiles()..." << endl;
+  TRACE << "Renderer::loadTiles()..." << endl;
 
   SDL_Surface* tileSurfaceTmp = IMG_Load(tilesImgName.data());
 
@@ -131,7 +131,7 @@ void loadTiles() {
 
   SDL_FreeSurface(tileSurfaceTmp);
 
-  trace << "Renderer::loadTiles() [DONE]" << endl;
+  TRACE << "Renderer::loadTiles() [DONE]" << endl;
 }
 
 void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
@@ -291,10 +291,10 @@ void drawPlayerShockExclMarks() {
 } //Namespace
 
 void init() {
-  trace << "Renderer::init()..." << endl;
+  TRACE << "Renderer::init()..." << endl;
   cleanup();
 
-  trace << "Renderer: Setting up rendering window" << endl;
+  TRACE << "Renderer: Setting up rendering window" << endl;
   const string title = "IA " + gameVersionStr;
   SDL_WM_SetCaption(title.data(), nullptr);
 
@@ -309,8 +309,8 @@ void init() {
   }
 
   if(screenSurface == nullptr) {
-    trace << "[WARNING] Failed to create screen surface, ";
-    trace << "in Renderer::init()" << endl;
+    TRACE << "[WARNING] Failed to create screen surface, ";
+    TRACE << "in Renderer::init()" << endl;
   }
 
   loadFont();
@@ -320,11 +320,11 @@ void init() {
     loadMainMenuLogo();
   }
 
-  trace << "Renderer::init() [DONE]" << endl;
+  TRACE << "Renderer::init() [DONE]" << endl;
 }
 
 void cleanup() {
-  trace << "Renderer::cleanup()..." << endl;
+  TRACE << "Renderer::cleanup()..." << endl;
 
   if(screenSurface != nullptr) {
     SDL_FreeSurface(screenSurface);
@@ -336,7 +336,7 @@ void cleanup() {
     mainMenuLogoSurface = nullptr;
   }
 
-  trace << "Renderer::cleanup() [DONE]" << endl;
+  TRACE << "Renderer::cleanup() [DONE]" << endl;
 }
 
 void updateScreen() {
@@ -410,7 +410,7 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                           bool forbiddenCells[MAP_W][MAP_H],
                           const SDL_Color& colorInner,
                           const SDL_Color& colorOuter) {
-  trace << "Renderer::drawBlastAnimAtField()..." << endl;
+  TRACE << "Renderer::drawBlastAnimAtField()..." << endl;
   if(isInited()) {
     drawMapAndInterface();
 
@@ -470,12 +470,12 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
     if(isAnyBlastRendered) {SdlWrapper::sleep(Config::getDelayExplosion() / 2);}
     drawMapAndInterface();
   }
-  trace << "Renderer::drawBlastAnimAtField() [DONE]" << endl;
+  TRACE << "Renderer::drawBlastAnimAtField() [DONE]" << endl;
 }
 
 void drawBlastAnimAtPositions(const vector<Pos>& positions,
                               const SDL_Color& color) {
-  trace << "Renderer::drawBlastAnimAtPositions()..." << endl;
+  TRACE << "Renderer::drawBlastAnimAtPositions()..." << endl;
   if(isInited()) {
     drawMapAndInterface();
 
@@ -500,7 +500,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
     SdlWrapper::sleep(Config::getDelayExplosion() / 2);
     drawMapAndInterface();
   }
-  trace << "Renderer::drawBlastAnimAtPositions() [DONE]" << endl;
+  TRACE << "Renderer::drawBlastAnimAtPositions() [DONE]" << endl;
 }
 
 void drawBlastAnimAtPositionsWithPlayerVision(

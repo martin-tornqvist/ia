@@ -33,14 +33,14 @@ namespace {
 vector<unsigned int> generalItemsToShow_;
 
 bool runDropScreen(const int GLOBAL_ELEMENT_NR) {
-  trace << "InventoryHandler::runDropScreen()" << endl;
+  TRACE << "InventoryHandler::runDropScreen()" << endl;
   Inventory& inv = Map::player->getInv();
   Item* const item = inv.getItemInElement(GLOBAL_ELEMENT_NR);
   const ItemDataT& data = item->getData();
 
   Log::clearLog();
   if(data.isStackable && item->nrItems > 1) {
-    trace << "InventoryHandler: item is stackable and more than one" << endl;
+    TRACE << "InventoryHandler: item is stackable and more than one" << endl;
     Renderer::drawMapAndInterface(false);
     const string nrStr = "1-" + toStr(item->nrItems);
     const string dropStr = "Drop how many (" + nrStr + ")?:      " +
@@ -51,7 +51,7 @@ bool runDropScreen(const int GLOBAL_ELEMENT_NR) {
     const int NR_TO_DROP = Query::number(nrQueryPos, clrWhiteHigh, 0, 3,
                                          item->nrItems, false);
     if(NR_TO_DROP <= 0) {
-      trace << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
+      TRACE << "InventoryHandler: nr to drop <= 0, nothing to be done" << endl;
       return false;
     } else {
       ItemDrop::dropItemFromInv(Map::player, GLOBAL_ELEMENT_NR,
@@ -59,7 +59,7 @@ bool runDropScreen(const int GLOBAL_ELEMENT_NR) {
       return true;
     }
   } else {
-    trace << "InventoryHandler: item not stackable, or only one item" << endl;
+    TRACE << "InventoryHandler: item not stackable, or only one item" << endl;
     ItemDrop::dropItemFromInv(Map::player, GLOBAL_ELEMENT_NR);
     return true;
   }

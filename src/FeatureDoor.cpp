@@ -144,12 +144,12 @@ void Door::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {
     if(isSecret_) {
       if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
-        trace << "Door: Player bumped into secret door, ";
-        trace << "with vision in cell" << endl;
+        TRACE << "Door: Player bumped into secret door, ";
+        TRACE << "with vision in cell" << endl;
         Log::addMsg("That way is blocked.");
       } else {
-        trace << "Door: Player bumped into secret door, ";
-        trace << "without vision in cell" << endl;
+        TRACE << "Door: Player bumped into secret door, ";
+        TRACE << "without vision in cell" << endl;
         Log::addMsg("I bump into something.");
       }
       return;
@@ -221,7 +221,7 @@ bool Door::trySpike(Actor* actorTrying) {
 }
 
 void Door::bash_(Actor& actorTrying) {
-  trace << "Door::bash()..." << endl;
+  TRACE << "Door::bash()..." << endl;
 
   if(!isOpen_) {
 
@@ -254,7 +254,7 @@ void Door::bash_(Actor& actorTrying) {
     }
 
     if(IS_DOOR_SMASHED) {
-      trace << "Door: Bash successful" << endl;
+      TRACE << "Door: Bash successful" << endl;
       const bool IS_SECRET_BEFORE = isSecret_;
       isBroken_ = true;
       isStuck_  = false;
@@ -303,7 +303,7 @@ void Door::bash_(Actor& actorTrying) {
       }
     }
   }
-  trace << "Door::bash() [DONE]" << endl;
+  TRACE << "Door::bash() [DONE]" << endl;
 }
 
 void Door::tryClose(Actor* actorTrying) {
@@ -425,7 +425,7 @@ void Door::tryClose(Actor* actorTrying) {
 }
 
 void Door::tryOpen(Actor* actorTrying) {
-  trace << "Door::tryOpen()" << endl;
+  TRACE << "Door::tryOpen()" << endl;
   const bool IS_PLAYER        = actorTrying == Map::player;
   const bool TRYER_IS_BLIND   = !actorTrying->getPropHandler().allowSee();
   const bool PLAYER_SEE_DOOR  = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
@@ -445,16 +445,16 @@ void Door::tryOpen(Actor* actorTrying) {
   }
 
   if(isStuck_) {
-    trace << "Door: Is stuck" << endl;
+    TRACE << "Door: Is stuck" << endl;
 
     if(IS_PLAYER) {
       Log::addMsg("The door seems to be stuck.");
     }
 
   } else {
-    trace << "Door: Is not stuck" << endl;
+    TRACE << "Door: Is not stuck" << endl;
     if(!TRYER_IS_BLIND) {
-      trace << "Door: Tryer can see, opening" << endl;
+      TRACE << "Door: Tryer can see, opening" << endl;
       isOpen_ = true;
       if(IS_PLAYER) {
         Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_,
@@ -474,7 +474,7 @@ void Door::tryOpen(Actor* actorTrying) {
       }
     } else {
       if(Rnd::percentile() < 50) {
-        trace << "Door: Tryer is blind, but open succeeded anyway" << endl;
+        TRACE << "Door: Tryer is blind, but open succeeded anyway" << endl;
         isOpen_ = true;
         if(IS_PLAYER) {
           Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_,
@@ -494,7 +494,7 @@ void Door::tryOpen(Actor* actorTrying) {
           }
         }
       } else {
-        trace << "Door: Tryer is blind, and open failed" << endl;
+        TRACE << "Door: Tryer is blind, and open failed" << endl;
         if(IS_PLAYER) {
           Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMonsters::yes);
@@ -518,12 +518,12 @@ void Door::tryOpen(Actor* actorTrying) {
   }
 
   if(isOpen_) {
-    trace << "Door: Open was successful" << endl;
+    TRACE << "Door: Open was successful" << endl;
     if(isSecret_) {
-      trace << "Door: Was secret, now revealing" << endl;
+      TRACE << "Door: Was secret, now revealing" << endl;
       reveal(true);
     }
-    trace << "Door: Calling GameTime::endTurnOfCurActor()" << endl;
+    TRACE << "Door: Calling GameTime::endTurnOfCurActor()" << endl;
     GameTime::actorDidAct();
   }
 }

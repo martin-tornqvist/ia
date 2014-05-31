@@ -24,14 +24,14 @@ void mkTrapAt(const TrapId id, const Pos& pos) {
 } //namespace
 
 void populateStdLvl() {
-  trace << "PopulateTraps::populateStdLvl()..." << endl;
+  TRACE << "PopulateTraps::populateStdLvl()..." << endl;
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   //Put traps in non-plain rooms
   for(Room* const room : Map::roomList) {
-    const RoomThemeId theme = room->roomTheme;
+    const RoomThemeId theme = room->theme_;
 
     if(theme != RoomThemeId::plain) {
 
@@ -50,7 +50,7 @@ void populateStdLvl() {
       }
 
       if(Rnd::range(1, 100) < chanceForTrappedRoom) {
-        trace << "PopulateTraps: Trapping non-plain room" << endl;
+        TRACE << "PopulateTraps: Trapping non-plain room" << endl;
 
         vector<Pos> trapPosBucket;
 
@@ -79,7 +79,7 @@ void populateStdLvl() {
           const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
           const Pos& pos = trapPosBucket.at(ELEMENT);
 
-          trace << "PopulateTraps: Placing base trap" << endl;
+          TRACE << "PopulateTraps: Placing base trap" << endl;
           mkTrapAt(trapType, pos);
           blocked[pos.x][pos.y] = true;
           trapPosBucket.erase(trapPosBucket.begin() + ELEMENT);
@@ -89,7 +89,7 @@ void populateStdLvl() {
           IsCloserToOrigin sorter(pos);
           sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
           const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
-          trace << "PopulateTraps: Placing adjacent traps" << endl;
+          TRACE << "PopulateTraps: Placing adjacent traps" << endl;
           for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
             const Pos& adjPos = trapPosBucket.front();
             mkTrapAt(trapType, adjPos);
@@ -97,7 +97,7 @@ void populateStdLvl() {
             trapPosBucket.erase(trapPosBucket.begin());
             nrPosCand--;
           }
-          trace << "PopulateTraps: Placing adjacent traps [DONE]" << endl;
+          TRACE << "PopulateTraps: Placing adjacent traps [DONE]" << endl;
         }
       }
     }
@@ -106,7 +106,7 @@ void populateStdLvl() {
   const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS =
     min(85, 30 + (Map::dlvl * 5));
   if(Rnd::percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
-    trace << "PopulateTraps: Trapping plain room" << endl;
+    TRACE << "PopulateTraps: Trapping plain room" << endl;
 
     vector<Pos> trapPosBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
@@ -130,7 +130,7 @@ void populateStdLvl() {
       const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
       const Pos& pos = trapPosBucket.at(ELEMENT);
 
-      trace << "PopulateTraps: Placing base trap" << endl;
+      TRACE << "PopulateTraps: Placing base trap" << endl;
       mkTrapAt(trapType, pos);
       trapPosBucket.erase(trapPosBucket.begin() + ELEMENT);
       nrPosCand--;
@@ -139,17 +139,17 @@ void populateStdLvl() {
       IsCloserToOrigin sorter(pos);
       sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
       const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
-      trace << "PopulateTraps: Placing adjacent traps..." << endl;
+      TRACE << "PopulateTraps: Placing adjacent traps..." << endl;
       for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
         const Pos& adjPos = trapPosBucket.front();
         mkTrapAt(trapType, adjPos);
         trapPosBucket.erase(trapPosBucket.begin());
         nrPosCand--;
       }
-      trace << "PopulateTraps: Placing adjacent traps [DONE]" << endl;
+      TRACE << "PopulateTraps: Placing adjacent traps [DONE]" << endl;
     }
   }
-  trace << "PopulateTraps::populateStdLvl() [DONE]" << endl;
+  TRACE << "PopulateTraps::populateStdLvl() [DONE]" << endl;
 }
 
 } //PopulateTraps

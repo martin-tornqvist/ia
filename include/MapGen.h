@@ -16,38 +16,23 @@ enum class RoomReshapeType {trimCorners, pillarsRandom};
 
 struct Room {
 public:
-  Room(Rect r)  : roomTheme(RoomThemeId::plain), roomDescr(""), r_(r) {}
-  Room()        : roomTheme(RoomThemeId::plain), roomDescr(""), r_()  {}
-  RoomThemeId roomTheme;
-  std::string roomDescr;
+  Room(Rect r)  : theme_(RoomThemeId::plain), descr_(""), r_(r) {}
+  Room()        : theme_(RoomThemeId::plain), descr_(""), r_()  {}
+  RoomThemeId theme_;
+  std::string descr_;
   Rect        r_;
+  std::vector<Room*> roomsConTo_;
 };
 
 struct Region {
 public:
-  Region(const Rect& r);
-  Region();
-  ~Region() {}
+  Region(const Rect& r) : mainRoom_(nullptr), r_(r) {}
+  Region()              : mainRoom_(nullptr), r_()  {}
 
-  Rect getRndRoomRect() const;
-
-  bool isRegionNeighbour(const Region& other);
-
-  Pos getCenterPos()    const {return (r_.p1 + r_.p0) / 2;}
-  Rect getRect()        const {return r_;}
-  Pos getP0()           const {return r_.p0;}
-  Pos getP1()           const {return r_.p1;}
-
-  bool regionsConnectedTo_[3][3];
+  Rect  getRndRoomRect()  const;
 
   Room* mainRoom_;
-
-  bool isConnected_;
-  bool isBuilt_;
-
-private:
-  Rect r_;
-
+  Rect  r_;
 };
 
 namespace MapGenUtils {
@@ -56,8 +41,8 @@ void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out);
 
 void mk(const Rect& area, const FeatureId id);
 
-void mkPathFindCorridor(const Room& r0, const Room& r1,
-                        bool doorPosProposals[MAP_W][MAP_H] = nullptr);
+void mkPathFindCor(Room& r0, Room& r1,
+                   bool doorPosProposals[MAP_W][MAP_H] = nullptr);
 
 void backupMap();
 void restoreMap();

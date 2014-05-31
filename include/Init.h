@@ -8,7 +8,7 @@
 //-------------------------------------------------------------------
 // OPTIONS
 //-------------------------------------------------------------------
-//Lvl of trace output in debug mode
+//Lvl of TRACE output in debug mode
 // 0 : Disabled
 // 1 : Standard
 // 2 : Verbose
@@ -20,15 +20,15 @@
 //-------------------------------------------------------------------
 
 #ifdef NDEBUG
-#define trace if (1) ; else cerr
-#define traceVerbose if (1) ; else cerr
+#define TRACE if (1) ; else cerr
+#define TRACE_VERBOSE if (1) ; else cerr
 #else
-#define trace if (TRACE_LVL < 1) ; else cerr \
+#define TRACE if (TRACE_LVL < 1) ; else cerr \
   << endl \
   << __FILE__ << ", " \
   << __func__ << "()" << ", " \
   << __LINE__ << ":" << endl
-#define traceVerbose if (TRACE_LVL < 2) ; else trace
+#define TRACE_VERBOSE if (TRACE_LVL < 2) ; else TRACE
 #endif
 
 namespace Init {

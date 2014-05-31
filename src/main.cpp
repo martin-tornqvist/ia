@@ -30,7 +30,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  trace << "main()..." << endl;
+  TRACE << "main()..." << endl;
 
   (void)argc;
   (void)argv;
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
         }
         DungeonMaster::setTimeStartedToNow();
         const TimeData& t = DungeonMaster::getTimeStarted();
-        trace << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
+        TRACE << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
       }
 
       Audio::fadeOutChannel(introMusChan);
@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
   Init::cleanupGame();
   Init::cleanupIO();
 
-  trace << "main() [DONE]" << endl;
+  TRACE << "main() [DONE]" << endl;
 
   return 0;
 }

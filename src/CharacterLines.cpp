@@ -30,8 +30,8 @@ void drawLocationInfo() {
         const Pos& p0 = room->r_.p0;
         const Pos& p1 = room->r_.p1;
         if(Utils::isPosInside(playerPos, Rect(p0, p1))) {
-          const string& roomDescr = room->roomDescr;
-          if(!roomDescr.empty()) {str += room->roomDescr + " ";}
+          const string& roomDescr = room->descr_;
+          if(!roomDescr.empty()) {str += roomDescr + " ";}
         }
       }
     }
