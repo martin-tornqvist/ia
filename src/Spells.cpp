@@ -146,7 +146,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY,
 
 SpellCastRetData Spell::cast(Actor* const caster,
                              const bool IS_INTRINSIC) const {
-  TRACE << "SpellId::cast()..." << endl;
+  TRACE_FUNC_BEGIN;
   if(caster->getPropHandler().allowCastSpells(true)) {
     if(caster == Map::player) {
       TRACE << "Spell: Player casting spell" << endl;
@@ -178,10 +178,10 @@ SpellCastRetData Spell::cast(Actor* const caster,
     }
 
     GameTime::actorDidAct();
-    TRACE << "SpellId::cast() [DONE]" << endl;
+    TRACE_FUNC_END;
     return ret;
   }
-  TRACE << "SpellId::cast() [DONE]" << endl;
+  TRACE_FUNC_END;
   return SpellCastRetData(false);
 }
 

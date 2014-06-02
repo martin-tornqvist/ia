@@ -221,7 +221,7 @@ bool Door::trySpike(Actor* actorTrying) {
 }
 
 void Door::bash_(Actor& actorTrying) {
-  TRACE << "Door::bash()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   if(!isOpen_) {
 
@@ -303,7 +303,7 @@ void Door::bash_(Actor& actorTrying) {
       }
     }
   }
-  TRACE << "Door::bash() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void Door::tryClose(Actor* actorTrying) {

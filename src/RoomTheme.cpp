@@ -118,7 +118,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
 
 void eraseAdjacentCellsFromVectors(
   const Pos& pos,  vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
-  TRACE << "RoomThemeMaking::eraseAdjacentCellsFromVectors()..." << endl;
+  TRACE_FUNC_BEGIN;
   for(unsigned int i = 0; i < nextToWalls.size(); i++) {
     if(Utils::isPosAdj(pos, nextToWalls.at(i), true)) {
       nextToWalls.erase(nextToWalls.begin() + i);
@@ -131,7 +131,7 @@ void eraseAdjacentCellsFromVectors(
       i--;
     }
   }
-  TRACE << "RoomThemeMaking::eraseAdjacentCellsFromVectors() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 int placeThemeFeatures(Room& room) {
@@ -384,7 +384,7 @@ void mkRoomDarkWithChance(const Room& room) {
 }
 
 void assignRoomThemes() {
-  TRACE << "RoomThemeMaking::assignRoomThemes()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
@@ -454,13 +454,13 @@ void assignRoomThemes() {
     }
   }
 
-  TRACE << "RoomThemeMaking::assignRoomThemes() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 } //namespace
 
 void run() {
-  TRACE << "RoomThemeMaking::run()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   Gods::setNoGod();
 
@@ -471,7 +471,7 @@ void run() {
     mkRoomDarkWithChance(*room);
   }
 
-  TRACE << "RoomThemeMaking::run() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 } //RoomThemeMaking

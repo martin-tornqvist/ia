@@ -105,7 +105,7 @@ void mk(const Rect& area, const FeatureId id) {
 }
 
 void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
-  TRACE_VERBOSE << "MapGenUtils::mkPathFindCor()..." << endl;
+  TRACE_FUNC_BEGIN_VERBOSE;
   TRACE_VERBOSE << "Making corridor between rooms "
                 << &r0 << " and " << &r1 << endl;
 
@@ -135,64 +135,62 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
 
 //  for(int i = 0; i < 10; i++)  {
 
-    for(const Pos& p0 : p0Bucket) {
-      for(const Pos& p1 : p1Bucket) {
-        const int CUR_DIST = Utils::kingDist(p0, p1);
-        if(CUR_DIST == shortestDist) {
-          entriesBucket.push_back(pair<Pos, Pos>(p0, p1));
-        }
+  for(const Pos& p0 : p0Bucket) {
+    for(const Pos& p1 : p1Bucket) {
+      const int CUR_DIST = Utils::kingDist(p0, p1);
+      if(CUR_DIST == shortestDist) {
+        entriesBucket.push_back(pair<Pos, Pos>(p0, p1));
       }
     }
+  }
 
-    assert(!entriesBucket.empty());
+  assert(!entriesBucket.empty());
 
-    const pair<Pos, Pos>& entries =
-      entriesBucket.at(Rnd::range(0, entriesBucket.size() - 1));
-    const Pos& p0 = entries.first;
-    const Pos& p1 = entries.second;
+  const pair<Pos, Pos>& entries =
+    entriesBucket.at(Rnd::range(0, entriesBucket.size() - 1));
+  const Pos& p0 = entries.first;
+  const Pos& p1 = entries.second;
 
 #ifdef DEMO_MODE
-    Renderer::drawBlastAnimAtPositions(vector<Pos> {p0}, clrGreenLgt);
-    Renderer::drawBlastAnimAtPositions(vector<Pos> {p1}, clrRedLgt);
+  Renderer::drawBlastAnimAtPositions(vector<Pos> {p0}, clrGreenLgt);
+  Renderer::drawBlastAnimAtPositions(vector<Pos> {p1}, clrRedLgt);
 #endif // DEMO_MODE
 
-    vector<Pos> path;
+  vector<Pos> path;
 
-    //IS entry points same cell (rooms are adjacent)? Then simply use that
-    if(p0 == p1) {
-      path.push_back(p0);
-    } else {
-      //Else, try to find a path to the other entry point
-      bool blocked[MAP_W][MAP_H];
-      Utils::resetArray(blocked, false);
+  //IS entry points same cell (rooms are adjacent)? Then simply use that
+  if(p0 == p1) {
+    path.push_back(p0);
+  } else {
+    //Else, try to find a path to the other entry point
+    bool blocked[MAP_W][MAP_H];
+    Utils::resetArray(blocked, false);
 
-      for(int y = 0; y < MAP_H; y++) {
-        for(int x = 0; x < MAP_W; x++) {
-          blocked[x][y] =
-            Map::cells[x][y].featureStatic->getId() != FeatureId::wall ||
-            Map::roomMap[x][y];
-        }
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
+        blocked[x][y] =
+          Map::cells[x][y].featureStatic->getId() != FeatureId::wall ||
+          Map::roomMap[x][y];
       }
-      bool blockedExpanded[MAP_W][MAP_H];
-      MapParse::expand(blocked, blockedExpanded, 1, true);
-      blockedExpanded[p0.x][p0.y] = blockedExpanded[p1.x][p1.y] = false;
-
-      PathFind::run(p0, p1, blockedExpanded, path, false);
     }
+    bool blockedExpanded[MAP_W][MAP_H];
+    MapParse::expand(blocked, blockedExpanded, 1, true);
+    blockedExpanded[p0.x][p0.y] = blockedExpanded[p1.x][p1.y] = false;
 
-    if(!path.empty()) {
-      path.push_back(p0);
-      for(Pos& p : path) {FeatureFactory::mk(FeatureId::floor, p, nullptr);}
-      doorPosProposals[p0.x][p0.y] = doorPosProposals[p1.x][p1.y] = true;
-      r0.roomsConTo_.push_back(&r1);
-      r1.roomsConTo_.push_back(&r0);
-      TRACE_VERBOSE << "MapGenUtils::mkPathFindCor() [DONE]"
-                    << " - successfully connected roooms" << endl;
-      return;
-    }
+    PathFind::run(p0, p1, blockedExpanded, path, false);
+  }
+
+  if(!path.empty()) {
+    path.push_back(p0);
+    for(Pos& p : path) {FeatureFactory::mk(FeatureId::floor, p, nullptr);}
+    doorPosProposals[p0.x][p0.y] = doorPosProposals[p1.x][p1.y] = true;
+    r0.roomsConTo_.push_back(&r1);
+    r1.roomsConTo_.push_back(&r0);
+    TRACE_FUNC_END_VERBOSE << "Successfully connected roooms" << endl;
+    return;
+  }
 //  }
-  TRACE_VERBOSE << "MapGenUtils::mkPathFindCor() [DONE]"
-                << " - failed to connect roooms" << endl;
+  TRACE_FUNC_END_VERBOSE << "Failed to connect roooms" << endl;
 }
 
 void backupMap() {

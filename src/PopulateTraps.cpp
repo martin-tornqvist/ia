@@ -24,7 +24,7 @@ void mkTrapAt(const TrapId id, const Pos& pos) {
 } //namespace
 
 void populateStdLvl() {
-  TRACE << "PopulateTraps::populateStdLvl()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
@@ -97,7 +97,7 @@ void populateStdLvl() {
             trapPosBucket.erase(trapPosBucket.begin());
             nrPosCand--;
           }
-          TRACE << "PopulateTraps: Placing adjacent traps [DONE]" << endl;
+          TRACE_FUNC_END;
         }
       }
     }
@@ -139,17 +139,17 @@ void populateStdLvl() {
       IsCloserToOrigin sorter(pos);
       sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
       const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
-      TRACE << "PopulateTraps: Placing adjacent traps..." << endl;
+      TRACE_FUNC_BEGIN;
       for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
         const Pos& adjPos = trapPosBucket.front();
         mkTrapAt(trapType, adjPos);
         trapPosBucket.erase(trapPosBucket.begin());
         nrPosCand--;
       }
-      TRACE << "PopulateTraps: Placing adjacent traps [DONE]" << endl;
+      TRACE_FUNC_END;
     }
   }
-  TRACE << "PopulateTraps::populateStdLvl() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 } //PopulateTraps

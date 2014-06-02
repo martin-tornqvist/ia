@@ -209,7 +209,7 @@ string getHplQuote() {
 }
 
 void draw(const MenuBrowser& browser) {
-  TRACE << "MainMenu::draw()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   Pos pos(MAP_W_HALF, 3);
 
@@ -340,7 +340,7 @@ void draw(const MenuBrowser& browser) {
 
   Renderer::updateScreen();
 
-  TRACE << "MainMenu::draw() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 } //namespace

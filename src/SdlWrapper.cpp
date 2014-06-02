@@ -20,7 +20,7 @@ bool isInited = false;
 }
 
 void init() {
-  TRACE << "SdlWrapper::initSdl()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   isInited = true;
 
@@ -49,7 +49,7 @@ void init() {
 
   Mix_AllocateChannels(AUDIO_ALLOCATED_CHANNELS);
 
-  TRACE << "SdlWrapper::initSdl() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void cleanup() {

@@ -85,7 +85,7 @@ void readFile(vector<HighScoreEntry>& entries) {
 }
 
 void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) {
-  TRACE << "HighScore::draw()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   Renderer::clearScreen();
 
@@ -152,7 +152,7 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) {
 
   Renderer::updateScreen();
 
-  TRACE << "HighScore::draw() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 } //namespace

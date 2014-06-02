@@ -338,7 +338,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
 }
 
 bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
-  TRACE_VERBOSE << "Actor::hit()..." << endl;
+  TRACE_FUNC_BEGIN_VERBOSE;
   TRACE_VERBOSE << "Actor: Damage from parameter: " << dmg << endl;
 
   if(this == Map::player) {
@@ -370,7 +370,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
       glyph_ = ' ';
       if(isHumanoid()) {Map::mkGore(pos);}
     }
-    TRACE_VERBOSE << "Actor::hit() [DONE]" << endl;
+    TRACE_FUNC_END_VERBOSE;
     return false;
   }
 
@@ -397,7 +397,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
       TRACE_VERBOSE << "Actor: Has armor, running hit on armor" << endl;
 
       if(dmgType == DmgType::physical) {
-        dmg = armor->takeDurabilityHitAndGetReducedDamage(dmg);
+        dmg = armor->takeDurHitAndGetReducedDmg(dmg);
 
         if(armor->isDestroyed()) {
           TRACE << "Actor: Armor was destroyed" << endl;
@@ -427,10 +427,10 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
                               IS_DMG_ENOUGH_TO_DESTROY;
 
     die(IS_DESTROYED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
-    TRACE_VERBOSE << "Actor::hit() [DONE]" << endl;
+    TRACE_FUNC_END_VERBOSE;
     return true;
   } else {
-    TRACE_VERBOSE << "Actor::hit() [DONE]" << endl;
+    TRACE_FUNC_END_VERBOSE;
     return false;
   }
 }

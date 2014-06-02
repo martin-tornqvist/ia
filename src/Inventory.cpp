@@ -270,15 +270,9 @@ bool Inventory::hasAmmoForFirearmInInventory() {
   Weapon* weapon = dynamic_cast<Weapon*>(getItemInSlot(SlotId::wielded));
 
   //If weapon found
-  if(weapon != nullptr) {
+  if(weapon) {
 
-    //If weapon has infinite ammo, return true but with a warning
-    if(weapon->getData().rangedHasInfiniteAmmo) {
-      TRACE <<
-            "[WARNING] Inventory::hasAmmoForFirearmInInventory...() "
-            "ran on weapon with infinite ammo" << endl;
-      return true;
-    }
+    assert(!weapon->getData().rangedHasInfiniteAmmo); //Should not happen
 
     //If weapon is a firearm
     if(weapon->getData().isRangedWeapon == true) {

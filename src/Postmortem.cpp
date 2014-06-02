@@ -32,7 +32,7 @@ struct StrAndClr {
 };
 
 void mkInfoLines(vector<StrAndClr>& linesRef) {
-  TRACE << "Postmortem::mkInfoLines()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   const SDL_Color clrHeading  = clrWhiteHigh;
   const SDL_Color clrInfo     = clrWhite;
@@ -173,7 +173,8 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
     curRow.clear();
   }
 
-  TRACE << "Postmortem::mkInfoLines() [DONE]" << endl;
+  TRACE_FUNC_END;
+  TRACE_FUNC_END;
 }
 
 void render(const vector<StrAndClr>& linesAndClr,

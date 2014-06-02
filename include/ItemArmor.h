@@ -13,7 +13,7 @@ public:
 
   std::string getArmorDataLine(const bool WITH_BRACKETS) const;
 
-  int takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE);
+  int takeDurHitAndGetReducedDmg(const int DMG_BEFORE);
 
   void storeToSaveLines(std::vector<std::string>& lines) override {
     lines.push_back(toStr(dur_));

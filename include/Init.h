@@ -20,15 +20,39 @@
 //-------------------------------------------------------------------
 
 #ifdef NDEBUG
-#define TRACE if (1) ; else cerr
-#define TRACE_VERBOSE if (1) ; else cerr
+#define TRACE                     if (1) ; else cerr
+#define TRACE_FUNC_BEGIN          if (1) ; else cerr
+#define TRACE_FUNC_END            if (1) ; else cerr
+#define TRACE_VERBOSE             if (1) ; else cerr
+#define TRACE_FUNC_BEGIN_VERBOSE  if (1) ; else cerr
+#define TRACE_FUNC_END_VERBOSE    if (1) ; else cerr
 #else
+
 #define TRACE if (TRACE_LVL < 1) ; else cerr \
-  << endl \
-  << __FILE__ << ", " \
-  << __func__ << "()" << ", " \
-  << __LINE__ << ":" << endl
-#define TRACE_VERBOSE if (TRACE_LVL < 2) ; else TRACE
+    << endl \
+    << "[INF] " \
+    << __FILE__ << ", " \
+    << __func__ << "(), " \
+    << __LINE__ << ":" << endl
+
+#define TRACE_FUNC_BEGIN if (TRACE_LVL < 1) ; else cerr \
+    << endl \
+    << "[FN.] " \
+    << __FILE__ << ", " \
+    << __func__ << "(), " \
+    << __LINE__ << endl
+
+#define TRACE_FUNC_END if (TRACE_LVL < 1) ; else cerr \
+    << endl \
+    << "[END] " \
+    << __FILE__ << ", " \
+    << __func__ << "(), " \
+    << __LINE__ << endl
+
+#define TRACE_VERBOSE             if (TRACE_LVL < 2) ; else TRACE
+#define TRACE_FUNC_BEGIN_VERBOSE  if (TRACE_LVL < 2) ; else TRACE_FUNC_BEGIN
+#define TRACE_FUNC_END_VERBOSE    if (TRACE_LVL < 2) ; else TRACE_FUNC_END
+
 #endif
 
 namespace Init {

@@ -41,7 +41,7 @@ void collectLinesFromGame(vector<string>& lines) {
 }
 
 void setupGameFromLines(vector<string>& lines) {
-  TRACE << "SaveHandler::setupGameFromLines()..." << endl;
+  TRACE_FUNC_BEGIN;
   TRACE << "SaveHandler: Nr lines: " << lines.size() << endl;
   const string& playerName = lines.front();
   TRACE << "SaveHandler: playerName: " << playerName << endl;
@@ -60,7 +60,7 @@ void setupGameFromLines(vector<string>& lines) {
   ActorData::setupFromSaveLines(lines);
   GameTime::setupFromSaveLines(lines);
   PlayerSpellsHandling::setupFromSaveLines(lines);
-  TRACE << "SaveHandler::setupGameFromLines() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void writeFile(const vector<string>& lines) {

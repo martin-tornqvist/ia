@@ -27,7 +27,7 @@ void FeatureLever::examine() {
 }
 
 void FeatureLever::pull() {
-  TRACE << "FeatureLever::pull()..." << endl;
+  TRACE_FUNC_BEGIN;
   isPositionLeft_ = !isPositionLeft_;
 
   //TODO Implement something like openByLever in the Door class
@@ -41,6 +41,6 @@ void FeatureLever::pull() {
 //  }
   Map::player->updateFov();
   Renderer::drawMapAndInterface();
-  TRACE << "FeatureLever::pull() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 

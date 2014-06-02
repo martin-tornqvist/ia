@@ -11,7 +11,7 @@ namespace MapPatterns {
 
 void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
                         vector<Pos>& awayFromWalls) {
-  TRACE << "MapPatterns::setPositionsInArea()..." << endl;
+  TRACE_FUNC_BEGIN;
   vector<Pos> posBucket;
   posBucket.resize(0);
 
@@ -62,7 +62,7 @@ void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
 
   }
 
-  TRACE << "MapPatterns::setPositionsInArea() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 int getWalkBlockersInDir(const Dir dir, const Pos& pos) {

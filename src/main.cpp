@@ -30,7 +30,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  TRACE << "main()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   (void)argc;
   (void)argv;
@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
   Init::cleanupGame();
   Init::cleanupIO();
 
-  TRACE << "main() [DONE]" << endl;
+  TRACE_FUNC_END;
 
   return 0;
 }

@@ -602,11 +602,11 @@ void handleKeyPress(const KeyboardReadRetData& d) {
 }
 
 void setKeyRepeatDelays() {
-  TRACE << "Input::setKeyRepeatDelays()..." << endl;
+  TRACE_FUNC_BEGIN;
   const int DELAY     = Config::getKeyRepeatDelay();
   const int INTERVAL  = Config::getKeyRepeatInterval();
   SDL_EnableKeyRepeat(DELAY, INTERVAL);
-  TRACE << "Input::setKeyRepeatDelays() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void handleMapModeInputUntilFound() {

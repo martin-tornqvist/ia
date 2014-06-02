@@ -111,7 +111,7 @@ void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos) {
 }
 
 void connectRooms() {
-  TRACE << "MapGen::Std::connectRooms()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   while(true) {
     const int NR_CON_ALLOWED = 3;
@@ -183,7 +183,7 @@ void connectRooms() {
 //
 //    if(isAllRoomsConnected()) {break;}
   }
-  TRACE << "MapGen::Std::connectRooms()[DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 //Note: The positions and size can be outside map (e.g. negative positions).
@@ -227,7 +227,7 @@ Pos rndAuxRoomDim() {
 }
 
 void mkAuxRooms(Region* regions[3][3]) {
-  TRACE << "MapGen::Std::mkAuxRooms()..." << endl;
+  TRACE_FUNC_BEGIN;
   const int NR_TRIES_PER_SIDE = 10;
 
   for(int regionY = 0; regionY < 3; regionY++) {
@@ -307,7 +307,7 @@ void mkAuxRooms(Region* regions[3][3]) {
     }
   }
 
-  TRACE << "MapGen::Std::mkAuxRooms() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void reshapeRoom(const Room& room) {
@@ -459,7 +459,7 @@ void mkMergedRegionsAndRooms(Region* regions[3][3],
 }
 
 void mkCaves(Region* regions[3][3]) {
-  TRACE << "MapGen::Std::mkCaves()..." << endl;
+  TRACE_FUNC_BEGIN;
   for(int regY = 0; regY <= 2; regY++) {
     for(int regX = 0; regX <= 2; regX++) {
 
@@ -563,7 +563,7 @@ void mkCaves(Region* regions[3][3]) {
       }
     }
   }
-  TRACE << "MapGen::Std::mkCaves()[DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void placeDoorAtPosIfSuitable(const Pos& p) {
@@ -878,17 +878,17 @@ void decorate() {
 }
 
 void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) {
-  TRACE << "MapGen::Std::getAllowedStairCells()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   vector<FeatureId> featIdsOk {FeatureId::floor, FeatureId::caveFloor};
 
   MapParse::parse(CellPred::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
 
-  TRACE << "MapGen::Std::getAllowedStairCells() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 Pos placeStairs() {
-  TRACE << "MapGen::Std::placeStairs()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   bool allowedCells[MAP_W][MAP_H];
   getAllowedStairCells(allowedCells);
@@ -919,12 +919,12 @@ Pos placeStairs() {
   Feature* f = FeatureFactory::mk(FeatureId::stairs, stairsPos);
   f->setHasBlood(false);
 
-  TRACE << "MapGen::Std::placeStairs()[DONE]" << endl;
+  TRACE_FUNC_END;
   return stairsPos;
 }
 
 void movePlayerToNearestAllowedPos() {
-  TRACE << "MapGen::Std::movePlayerToNearestAllowedPos()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   bool allowedCells[MAP_W][MAP_H];
   getAllowedStairCells(allowedCells);
@@ -941,11 +941,11 @@ void movePlayerToNearestAllowedPos() {
 
   Map::player->pos = allowedCellsList.front();
 
-  TRACE << "MapGen::Std::movePlayerToNearestAllowedPos() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 //void mkLevers() {
-//  TRACE << "MapGen::Std::mkLeverPuzzle()..." << endl;
+//  TRACE_FUNC_BEGIN;
 //
 //  TRACE << "MapGen::Std: Picking a random door" << endl;
 //  vector<Door*> doorBucket;
@@ -992,7 +992,7 @@ void movePlayerToNearestAllowedPos() {
 //  } else {
 //    TRACE << "[WARNING] Could not find position to place lever, in mkLeverPuzzle()" << endl;
 //  }
-//  TRACE << "MapGen::Std::mkLeverPuzzle() [DONE]" << endl;
+//  TRACE_FUNC_END;
 //}
 
 //void spawnLeverAdaptAndLinkDoor(const Pos& leverPos, Door& door) {
@@ -1007,7 +1007,7 @@ void movePlayerToNearestAllowedPos() {
 //}
 
 void revealDoorsOnPathToStairs(const Pos& stairsPos) {
-  TRACE << "MapGen::Std::revealDoorsOnPathToStairs()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
@@ -1035,7 +1035,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
     }
   }
 
-  TRACE << "MapGen::Std::revealDoorsOnPathToStairs() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 //void mkNaturalArea(Region* regions[3][3]) {
@@ -1075,7 +1075,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 } //namespace
 
 bool run() {
-  TRACE << "MapGen::Std::run()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   Renderer::clearScreen();
   Renderer::updateScreen();
@@ -1224,7 +1224,7 @@ bool run() {
     }
   }
 
-  TRACE << "MapGen::Std::run() [DONE]" << endl;
+  TRACE_FUNC_END;
   return isMapOk;
 }
 

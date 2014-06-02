@@ -16,7 +16,7 @@ namespace DungeonClimb {
 namespace {
 
 void mkLvl() {
-  TRACE << "DungeonClimb::mkLvl()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   bool levelBuilt = false;
 
@@ -53,13 +53,13 @@ void mkLvl() {
     TRACE << "DungeonClimb: Calling PopulateItems::mkItems()" << endl;
     PopulateItems::mkItems();
   }
-  TRACE << "DungeonClimb::mkLvl() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 } //namespace
 
 void travelDown(const int LVLS) {
-  TRACE << "DungeonClimb::travelDown()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   Map::player->restoreShock(999, true);
 
@@ -72,11 +72,11 @@ void travelDown(const int LVLS) {
   Map::player->updateColor();
   Renderer::drawMapAndInterface();
   Audio::tryPlayAmb(1);
-  TRACE << "DungeonClimb::travelDown() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void tryUseDownStairs() {
-  TRACE << "DungeonClimb::tryUseDownStairs()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   Log::clearLog();
 
@@ -109,7 +109,7 @@ void tryUseDownStairs() {
     }
 //    Renderer::updateScreen();
   }
-  TRACE << "DungeonClimb::tryUseDownStairs() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 } //DungeonClimb

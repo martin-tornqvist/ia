@@ -41,7 +41,7 @@ bool isInited() {
 }
 
 void loadMainMenuLogo() {
-  TRACE << "Renderer::loadMainMenuLogo()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   SDL_Surface* mainMenuLogoSurfaceTmp = IMG_Load(mainMenuLogoImgName.data());
 
@@ -49,7 +49,7 @@ void loadMainMenuLogo() {
 
   SDL_FreeSurface(mainMenuLogoSurfaceTmp);
 
-  TRACE << "Renderer::loadMainMenuLogo() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 Uint32 getPixel(SDL_Surface* const surface,
@@ -100,7 +100,7 @@ void putPixel(SDL_Surface* const surface,
 }
 
 void loadFont() {
-  TRACE << "Renderer::loadFont()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   SDL_Surface* fontSurfaceTmp = IMG_Load(Config::getFontName().data());
 
@@ -114,11 +114,11 @@ void loadFont() {
 
   SDL_FreeSurface(fontSurfaceTmp);
 
-  TRACE << "Renderer::loadFont() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void loadTiles() {
-  TRACE << "Renderer::loadTiles()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   SDL_Surface* tileSurfaceTmp = IMG_Load(tilesImgName.data());
 
@@ -131,7 +131,7 @@ void loadTiles() {
 
   SDL_FreeSurface(tileSurfaceTmp);
 
-  TRACE << "Renderer::loadTiles() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
@@ -291,7 +291,7 @@ void drawPlayerShockExclMarks() {
 } //Namespace
 
 void init() {
-  TRACE << "Renderer::init()..." << endl;
+  TRACE_FUNC_BEGIN;
   cleanup();
 
   TRACE << "Renderer: Setting up rendering window" << endl;
@@ -320,11 +320,11 @@ void init() {
     loadMainMenuLogo();
   }
 
-  TRACE << "Renderer::init() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void cleanup() {
-  TRACE << "Renderer::cleanup()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   if(screenSurface != nullptr) {
     SDL_FreeSurface(screenSurface);
@@ -336,7 +336,7 @@ void cleanup() {
     mainMenuLogoSurface = nullptr;
   }
 
-  TRACE << "Renderer::cleanup() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void updateScreen() {
@@ -410,7 +410,7 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                           bool forbiddenCells[MAP_W][MAP_H],
                           const SDL_Color& colorInner,
                           const SDL_Color& colorOuter) {
-  TRACE << "Renderer::drawBlastAnimAtField()..." << endl;
+  TRACE_FUNC_BEGIN;
   if(isInited()) {
     drawMapAndInterface();
 
@@ -470,12 +470,12 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
     if(isAnyBlastRendered) {SdlWrapper::sleep(Config::getDelayExplosion() / 2);}
     drawMapAndInterface();
   }
-  TRACE << "Renderer::drawBlastAnimAtField() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void drawBlastAnimAtPositions(const vector<Pos>& positions,
                               const SDL_Color& color) {
-  TRACE << "Renderer::drawBlastAnimAtPositions()..." << endl;
+  TRACE_FUNC_BEGIN;
   if(isInited()) {
     drawMapAndInterface();
 
@@ -500,7 +500,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
     SdlWrapper::sleep(Config::getDelayExplosion() / 2);
     drawMapAndInterface();
   }
-  TRACE << "Renderer::drawBlastAnimAtPositions() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void drawBlastAnimAtPositionsWithPlayerVision(

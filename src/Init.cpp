@@ -28,44 +28,44 @@ bool quitToMainMenu       = false;
 
 //Note: Initialization order matters in some cases
 void initIO() {
-  TRACE << "Init::initIO()..." << endl;
+  TRACE_FUNC_BEGIN;
   SdlWrapper::init();
   Config::init();
   Input::init();
   Renderer::init();
   Audio::init();
-  TRACE << "Init::initIO() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void cleanupIO() {
-  TRACE << "Init::cleanupIO()..." << endl;
+  TRACE_FUNC_BEGIN;
   Audio::cleanup();
   Renderer::cleanup();
   Input::cleanup();
   SdlWrapper::cleanup();
-  TRACE << "Init::cleanupIO() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 //Note: Initialization order matters in some cases
 void initGame() {
-  TRACE << "Init::initGame()..." << endl;
+  TRACE_FUNC_BEGIN;
   LineCalc::init();
   Gods::init();
   Manual::init();
   Credits::init();
   MapTemplHandling::init();
-  TRACE << "Init::initGame() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void cleanupGame() {
-  TRACE << "Init::cleanupGame()..." << endl;
+  TRACE_FUNC_BEGIN;
 
-  TRACE << "Init::cleanupGame() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 //Note: Initialization order matters in some cases
 void initSession() {
-  TRACE << "Init::initSession()..." << endl;
+  TRACE_FUNC_BEGIN;
   ActorData::init();
   FeatureData::init();
   ScrollNameHandling::init();
@@ -80,16 +80,16 @@ void initSession() {
   DungeonMaster::init();
   Bot::init();
   PlayerSpellsHandling::init();
-  TRACE << "Init::initSession() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void cleanupSession() {
-  TRACE << "Init::cleanupSession()..." << endl;
+  TRACE_FUNC_BEGIN;
   PlayerSpellsHandling::cleanup();
   Map::cleanup();
   GameTime::cleanup();
   ItemData::cleanup();
-  TRACE << "Init::cleanupSession() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 } //Init

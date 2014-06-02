@@ -14,10 +14,10 @@ enum class SndVol;
 
 enum ItemWeight {
   itemWeight_none       = 0,
-  itemWeight_extraLight = 1,  //Ammo...
-  itemWeight_light      = 10, //Dynamite, daggers...
-  itemWeight_medium     = 50, //Most firearms...
-  itemWeight_heavy      = 110 //Heavy armor, heavy weapons...
+  itemWeight_extraLight = 1,  //E.g. ammo
+  itemWeight_light      = 10, //E.g. dynamite, daggers
+  itemWeight_medium     = 50, //E.g. most firearms
+  itemWeight_heavy      = 110 //E.g. heavy armor, heavy weapons
 };
 
 enum class PrimaryAttMode {none, melee, missile, ranged};

@@ -54,7 +54,7 @@ int     cellH_                        = -1;
 vector<string> fontImageNames;
 
 void parseFontNameAndSetCellDims() {
-  TRACE << "Config::parseFontNameAndSetCellDims()..." << endl;
+  TRACE_FUNC_BEGIN;
   string fontName = fontName_;
 
   char ch = 'a';
@@ -80,16 +80,16 @@ void parseFontNameAndSetCellDims() {
     ch = fontName.at(0);
   }
 
-  TRACE << "Config: Parsed font image name, found dims: "
+  TRACE << "Parsed font image name, found dims: "
         << wStr << "x" << hStr << endl;
 
   cellW_ = toInt(wStr);
   cellH_ = toInt(hStr);
-  TRACE << "Config::parseFontNameAndSetCellDims() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void setDefaultVariables() {
-  TRACE << "Config::setDefaultVariables()..." << endl;
+  TRACE_FUNC_BEGIN;
   isAudioEnabled_               = true;
   isTilesMode_                  = true;
   fontName_                      = "images/16x24_v1.png";
@@ -105,7 +105,7 @@ void setDefaultVariables() {
   delayProjectileDraw_          = 50;
   delayShotgun_                 = 120;
   delayExplosion_               = 350;
-  TRACE << "Config::setDefaultVariables() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void playerSetsOption(const MenuBrowser* const browser,
@@ -454,7 +454,7 @@ void readFile(vector<string>& lines) {
 }
 
 void setAllVariablesFromLines(vector<string>& lines) {
-  TRACE << "Config::setAllVariablesFromLines()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   string curLine = lines.front();
   isAudioEnabled_ = curLine == "1";
@@ -521,7 +521,7 @@ void setAllVariablesFromLines(vector<string>& lines) {
   delayExplosion_ = toInt(curLine);
   lines.erase(lines.begin());
 
-  TRACE << "Config::setAllVariablesFromLines() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void writeLinesToFile(vector<string>& lines) {
@@ -537,7 +537,7 @@ void writeLinesToFile(vector<string>& lines) {
 }
 
 void collectLinesFromVariables(vector<string>& lines) {
-  TRACE << "Config::collectLinesFromVariables()..." << endl;
+  TRACE_FUNC_BEGIN;
   lines.resize(0);
   lines.push_back(isAudioEnabled_               ? "1" : "0");
   lines.push_back(isTilesMode_                  ? "1" : "0");
@@ -553,7 +553,7 @@ void collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(toStr(delayProjectileDraw_));
   lines.push_back(toStr(delayShotgun_));
   lines.push_back(toStr(delayExplosion_));
-  TRACE << "Config::collectLinesFromVariables() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 } //Namespace

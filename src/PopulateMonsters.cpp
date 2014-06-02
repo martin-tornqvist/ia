@@ -99,7 +99,7 @@ bool mkGroupOfRandomNativeToRoomThemeAt(
 } //namespace
 
 void trySpawnDueToTimePassed() {
-  TRACE << "PopulateMonsters::trySpawnDueToTimePassed()..." << endl;
+  TRACE_FUNC_BEGIN;
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
@@ -141,7 +141,7 @@ void trySpawnDueToTimePassed() {
       }
     }
   }
-  TRACE << "PopulateMonsters::trySpawnDueToTimePassed() [DONE]" << endl;
+  TRACE_FUNC_END;
 }
 
 void populateCaveLvl() {

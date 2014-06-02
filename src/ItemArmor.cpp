@@ -28,8 +28,8 @@ string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
   }
 }
 
-int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
-  TRACE << "Armor::takeDurabilityHitAndGetReducedDamage()..." << endl;
+int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE) {
+  TRACE_FUNC_BEGIN;
 
   //Absorption points (AP) = damage soaked up instead of hitting the player
   //DDF = Damage (to) Durability Factor
@@ -63,7 +63,7 @@ int Armor::takeDurabilityHitAndGetReducedDamage(const int DMG_BEFORE) {
 
   TRACE << "Armor: Damage after: " + toStr(DMG_AFTER) << endl;
 
-  TRACE << "Armor::takeDurabilityHitAndGetReducedDamage() [DONE]" << endl;
+  TRACE_FUNC_END;
   return DMG_AFTER;
 }
 
