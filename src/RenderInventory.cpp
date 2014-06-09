@@ -64,7 +64,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
       str, Panel::screen, pos, IS_CUR_POS ? clrWhiteHigh : clrNosfTealDrk);
     pos.x = X_POS_ITEM_NAME;
     Item* const item = slot.item;
-    if(item == nullptr) {
+    if(!item) {
       pos.x += 2;
       Renderer::drawText(
         "<empty>", Panel::screen, pos, IS_CUR_POS ? clrWhite : clrNosfTealDrk);
@@ -157,7 +157,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
   Renderer::coverArea(
     Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
-  const bool IS_ANY_ITEM_AVAILABLE = genInvIndexes.empty() == false;
+  const bool IS_ANY_ITEM_AVAILABLE = !genInvIndexes.empty();
 
   string str = "";
   switch(slotToEquip) {
@@ -230,7 +230,7 @@ void drawUse(const MenuBrowser& browser,
   Renderer::coverArea(
     Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
-  const bool IS_ANY_ITEM_AVAILABLE = genInvIndexes.empty() == false;
+  const bool IS_ANY_ITEM_AVAILABLE = !genInvIndexes.empty();
   string str =
     IS_ANY_ITEM_AVAILABLE ? "Use which item? | shift+select to drop" :
     "I carry no item to use.";

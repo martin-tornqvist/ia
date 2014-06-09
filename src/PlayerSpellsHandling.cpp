@@ -204,10 +204,10 @@ void playerSelectSpellToCast() {
 }
 
 void tryCastPrevSpell() {
-  if(prevSpellCast_ == nullptr) {
-    playerSelectSpellToCast();
-  } else {
+  if(prevSpellCast_) {
     tryCast(prevSpellCast_);
+  } else {
+    playerSelectSpellToCast();
   }
 }
 

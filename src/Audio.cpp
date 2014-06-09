@@ -84,9 +84,7 @@ SfxId getAmbSfxSuitableForDlvl() {
     sfxBucket.push_back(SfxId::amb037);
   }
 
-  if(sfxBucket.empty()) {
-    return SfxId::endOfSfxId;
-  }
+  if(sfxBucket.empty()) {return SfxId::endOfSfxId;}
 
   const int ELEMENT = Rnd::range(0, sfxBucket.size() - 1);
   return sfxBucket.at(ELEMENT);
@@ -97,16 +95,15 @@ void loadAudioFile(const SfxId sfx, const string& filename) {
 
   Renderer::clearScreen();
   Renderer::drawText("Loading " + fileRelPath + "...", Panel::screen,
-                     Pos(0, 0), clrWhite);
+                     Pos(0), clrWhite);
 
   Renderer::updateScreen();
 
   audioChunks.at(int(sfx)) = Mix_LoadWAV((fileRelPath).data());
 
-  if(audioChunks.at(int(sfx)) == nullptr) {
-    TRACE << "[WARNING] Problem loading audio file with name " + filename;
-    TRACE << ", in Audio::loadAudio()" << endl;
-    TRACE << "SDL_mixer: " << Mix_GetError() << endl;
+  if(!audioChunks.at(int(sfx))) {
+    TRACE << "Problem loading audio file with name " + filename << endl
+          << Mix_GetError() << endl;
   }
 }
 
@@ -193,11 +190,11 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
   int ret = -1;
 
   if(
-    audioChunks.empty() == false  &&
+    !audioChunks.empty()          &&
     sfx != SfxId::endOfSfxId      &&
     sfx != SfxId::startOfAmbSfx   &&
     sfx != SfxId::endOfAmbSfx     &&
-    Config::isBotPlaying() == false) {
+    !Config::isBotPlaying()) {
 
     const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
     const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;
@@ -220,7 +217,7 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
 }
 
 void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT) {
-  if(audioChunks.empty() == false && dir != Dir::endOfDirs) {
+  if(!audioChunks.empty() && dir != Dir::endOfDirs) {
     //The distance value is scaled down to avoid too much volume degradation
     const int VOL_PERCENT_TOT = 100 - ((DISTANCE_PERCENT * 2) / 3);
 
@@ -243,7 +240,7 @@ void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT) {
 
 void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
 
-  if(audioChunks.empty() == false && Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
+  if(!audioChunks.empty() && Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY)) {
 
     const int TIME_NOW                  = time(nullptr);
     const int TIME_REQ_BETWEEN_AMB_SFX  = 20;
@@ -257,7 +254,7 @@ void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY) {
 }
 
 void fadeOutChannel(const int CHANNEL_NR) {
-  if(audioChunks.empty() == false) {Mix_FadeOutChannel(CHANNEL_NR, 5000);}
+  if(!audioChunks.empty()) {Mix_FadeOutChannel(CHANNEL_NR, 5000);}
 }
 
 } //Audio

@@ -61,7 +61,7 @@ void cleanup() {
 }
 
 void sleep(const Uint32 DURATION) {
-  if(isInited && Config::isBotPlaying() == false) {
+  if(isInited && !Config::isBotPlaying()) {
     if(DURATION == 1) {
       SDL_Delay(DURATION);
     } else {

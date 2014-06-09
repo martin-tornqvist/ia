@@ -36,7 +36,7 @@ void PotionVitality::quaff_(Actor* const actor) {
 
 void PotionVitality::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionSpirit::quaff_(Actor* const actor) {
@@ -55,7 +55,7 @@ void PotionSpirit::quaff_(Actor* const actor) {
 
 void PotionSpirit::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionBlindness::quaff_(Actor* const actor) {
@@ -67,7 +67,7 @@ void PotionBlindness::quaff_(Actor* const actor) {
 
 void PotionBlindness::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionParal::quaff_(Actor* const actor) {
@@ -80,7 +80,7 @@ void PotionParal::quaff_(Actor* const actor) {
 void PotionParal::collide_(const Pos& pos, Actor* const actor) {
 
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionDisease::quaff_(Actor* const actor) {
@@ -101,7 +101,7 @@ void PotionConf::quaff_(Actor* const actor) {
 
 void PotionConf::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionFrenzy::quaff_(Actor* const actor) {
@@ -114,7 +114,7 @@ void PotionFrenzy::quaff_(Actor* const actor) {
 
 void PotionFrenzy::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionFortitude::quaff_(Actor* const actor) {
@@ -159,7 +159,7 @@ void PotionFortitude::quaff_(Actor* const actor) {
 
 void PotionFortitude::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionPoison::quaff_(Actor* const actor) {
@@ -169,7 +169,7 @@ void PotionPoison::quaff_(Actor* const actor) {
 
 void PotionPoison::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionRFire::quaff_(Actor* const actor) {
@@ -179,7 +179,7 @@ void PotionRFire::quaff_(Actor* const actor) {
 
 void PotionRFire::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionAntidote::quaff_(Actor* const actor) {
@@ -195,7 +195,7 @@ void PotionAntidote::quaff_(Actor* const actor) {
 
 void PotionAntidote::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionRElec::quaff_(Actor* const actor) {
@@ -205,7 +205,7 @@ void PotionRElec::quaff_(Actor* const actor) {
 
 void PotionRElec::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionRAcid::quaff_(Actor* const actor) {
@@ -215,7 +215,7 @@ void PotionRAcid::quaff_(Actor* const actor) {
 
 void PotionRAcid::collide_(const Pos& pos, Actor* const actor) {
   (void)pos;
-  if(actor != nullptr) {quaff_(actor);}
+  if(actor) {quaff_(actor);}
 }
 
 void PotionInsight::quaff_(Actor* const actor) {
@@ -327,7 +327,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
 
 void Potion::collide(const Pos& pos, Actor* const actor) {
   if(!Map::cells[pos.x][pos.y].featureStatic->isBottomless() ||
-      actor != nullptr) {
+      actor) {
 //    ItemDataT* const potData =
 //      ItemData::data[d.id];
 
@@ -337,7 +337,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
       // TODO Use standard animation
       Renderer::drawGlyph('*', Panel::map, pos, data_->clr);
 
-      if(actor != nullptr) {
+      if(actor) {
         if(actor->deadState == ActorDeadState::alive) {
           Log::addMsg(
             "The potion shatters on " +
@@ -349,7 +349,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
       }
     }
     //If the blow from the bottle didn't kill the actor, apply what's inside
-    if(actor != nullptr) {
+    if(actor) {
       if(actor->deadState == ActorDeadState::alive) {
         collide_(pos, actor);
         if(

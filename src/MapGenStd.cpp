@@ -208,7 +208,7 @@ void mkAuxRooms(Region* regions[3][3]) {
 
       const Region* const region    = regions[regionX][regionY];
 
-      if(region->mainRoom_ != nullptr && Rnd::oneIn(3)) {
+      if(region->mainRoom_ && Rnd::oneIn(3)) {
 
         Room& mainR = *region->mainRoom_;
 
@@ -1109,7 +1109,7 @@ bool run() {
       int nrTriesToMark = 1000;
       while(nrTriesToMark > 0) {
         Pos c(Rnd::range(0, 2), Rnd::range(0, 2));
-        if(regions[c.x][c.y] == nullptr && !regionsToMkCave[c.x][c.y]) {
+        if(!regions[c.x][c.y] && !regionsToMkCave[c.x][c.y]) {
           regionsToMkCave[c.x][c.y] = true;
           nrTriesToMark = 0;
         }

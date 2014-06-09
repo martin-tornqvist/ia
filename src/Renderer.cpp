@@ -37,7 +37,7 @@ bool tilePixelData_[400][400];
 bool fontPixelData_[400][400];
 
 bool isInited() {
-  return screenSurface != nullptr;
+  return screenSurface;
 }
 
 void loadMainMenuLogo() {
@@ -304,11 +304,11 @@ void init() {
     screenSurface = SDL_SetVideoMode(W, H, SCREEN_BPP,
                                      SDL_SWSURFACE | SDL_FULLSCREEN);
   }
-  if(Config::isFullscreen() == false || screenSurface == nullptr) {
+  if(!Config::isFullscreen() || !screenSurface) {
     screenSurface = SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
   }
 
-  if(screenSurface == nullptr) {
+  if(!screenSurface) {
     TRACE << "[WARNING] Failed to create screen surface, ";
     TRACE << "in Renderer::init()" << endl;
   }
@@ -326,12 +326,12 @@ void init() {
 void cleanup() {
   TRACE_FUNC_BEGIN;
 
-  if(screenSurface != nullptr) {
+  if(screenSurface) {
     SDL_FreeSurface(screenSurface);
     screenSurface = nullptr;
   }
 
-  if(mainMenuLogoSurface != nullptr) {
+  if(mainMenuLogoSurface) {
     SDL_FreeSurface(mainMenuLogoSurface);
     mainMenuLogoSurface = nullptr;
   }
@@ -426,7 +426,7 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
         pos.x = max(1, centerPos.x - RADIUS);
         pos.x <= min(MAP_W - 2, centerPos.x + RADIUS);
         pos.x++) {
-        if(forbiddenCells[pos.x][pos.y] == false) {
+        if(!forbiddenCells[pos.x][pos.y]) {
           const bool IS_OUTER = pos.x == centerPos.x - RADIUS ||
                                 pos.x == centerPos.x + RADIUS ||
                                 pos.y == centerPos.y - RADIUS ||
@@ -452,7 +452,7 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
         pos.x = max(1, centerPos.x - RADIUS);
         pos.x <= min(MAP_W - 2, centerPos.x + RADIUS);
         pos.x++) {
-        if(forbiddenCells[pos.x][pos.y] == false) {
+        if(!forbiddenCells[pos.x][pos.y]) {
           const bool IS_OUTER = pos.x == centerPos.x - RADIUS ||
                                 pos.x == centerPos.x + RADIUS ||
                                 pos.y == centerPos.y - RADIUS ||
@@ -661,7 +661,7 @@ void drawProjectiles(vector<Projectile*>& projectiles,
   if(SHOULD_DRAW_MAP_BEFORE) {drawMapAndInterface(false);}
 
   for(Projectile* p : projectiles) {
-    if(p->isDoneRendering == false && p->isVisibleToPlayer) {
+    if(!p->isDoneRendering && p->isVisibleToPlayer) {
       coverCellInMap(p->pos);
       if(Config::isTilesMode()) {
         if(p->tile != TileId::empty) {
@@ -751,7 +751,7 @@ void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN) {
 }
 
 void drawMap() {
-  if(isInited() == false) {return;}
+  if(!isInited()) {return;}
 
   CellRenderData* curDrw = nullptr;
   CellRenderData tmpDrw;
@@ -781,7 +781,7 @@ void drawMap() {
           const SDL_Color& featureClr   = f->getClr();
           const SDL_Color& featureClrBg = f->getClrBg();
           curDrw->clr = f->hasBlood() ? clrRedLgt : featureClr;
-          if(Utils::isClrEq(featureClrBg, clrBlack) == false) {
+          if(!Utils::isClrEq(featureClrBg, clrBlack)) {
             curDrw->clrBg = featureClrBg;
           }
         } else {
@@ -819,7 +819,7 @@ void drawMap() {
       if(Map::cells[x][y].isSeenByPlayer) {
         //---------------- INSERT ITEMS INTO ARRAY
         const Item* const item = Map::cells[x][y].item;
-        if(item != nullptr) {
+        if(item) {
           curDrw->clr   = item->getClr();
           curDrw->tile  = item->getTile();
           curDrw->glyph = item->getGlyph();
@@ -928,9 +928,7 @@ void drawMap() {
         //If the tile to be set is a (top) wall tile, check the tile beneath it.
         //If the tile beneath is not a front or top wall tile, and that cell is
         //explored, change the current tile to wall front
-        if(
-          tmpDrw.isLivingActorSeenHere == false &&
-          tmpDrw.isAwareOfMonsterHere  == false) {
+        if(!tmpDrw.isLivingActorSeenHere && !tmpDrw.isAwareOfMonsterHere) {
           const auto tileSeen = renderArrayNoActors[x][y].tile;
           const auto tileMem  = Map::cells[x][y].playerVisualMemory.tile;
           const bool IS_TILE_WALL =
@@ -1006,9 +1004,7 @@ void drawMap() {
         }
       }
 
-      if(Map::cells[x][y].isExplored == false) {
-        renderArray[x][y].clear();
-      }
+      if(!Map::cells[x][y].isExplored) {renderArray[x][y].clear();}
     }
   }
 
@@ -1016,7 +1012,7 @@ void drawMap() {
   bool isRangedWpn = false;
   const Pos& pos = Map::player->pos;
   Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
-  if(item != nullptr) {
+  if(item) {
     isRangedWpn = item->getData().isRangedWeapon;
   }
   if(IS_TILES) {

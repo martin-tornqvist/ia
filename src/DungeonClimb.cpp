@@ -23,7 +23,7 @@ void mkLvl() {
   //------------------------------------- TRAPEZOHEDRON LVL
   if(!levelBuilt) {
     if(Map::dlvl > LAST_CAVERN_LVL) {
-      while(MapGen::TrapezohedronLvl::run() == false) {}
+      while(!MapGen::TrapezohedronLvl::run()) {}
       levelBuilt = true;
     }
   }
@@ -31,7 +31,7 @@ void mkLvl() {
   //------------------------------------- KINGS TOMB
   if(!levelBuilt) {
     if(Map::dlvl == LAST_ROOM_AND_CORRIDOR_LVL + 1) {
-      while(MapGen::EgyptTomb::run() == false) {}
+      while(!MapGen::EgyptTomb::run()) {}
       levelBuilt = true;
     }
   }
@@ -39,14 +39,14 @@ void mkLvl() {
   //------------------------------------- DUNGEON LVLS
   if(!levelBuilt) {
     if(Map::dlvl < FIRST_CAVERN_LVL) {
-      while(MapGen::Std::run() == false) {}
+      while(!MapGen::Std::run()) {}
       levelBuilt = true;
     }
   }
   //------------------------------------- CAVERN LVLS
   if(!levelBuilt) {
     if(Map::dlvl >= FIRST_CAVERN_LVL) {
-      while(MapGen::CaveLvl::run() == false) {}
+      while(!MapGen::CaveLvl::run()) {}
     }
   }
   if(Map::dlvl > 0 && Map::dlvl <= LAST_CAVERN_LVL) {

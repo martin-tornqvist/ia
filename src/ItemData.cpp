@@ -1480,7 +1480,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
     string dmgStr = d.rangedDmgInfoOverride;
 
     if(dmgStr.empty()) {
-      const int MULTIPL = d.isMachineGun == true ?
+      const int MULTIPL = d.isMachineGun ?
                           NR_MG_PROJECTILES : 1;
       const string rollsStr = toStr(d.rangedDmg.rolls * MULTIPL);
       const string sidesStr = toStr(d.rangedDmg.sides);

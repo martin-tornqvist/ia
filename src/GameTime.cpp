@@ -89,9 +89,7 @@ void runStandardTurnEvents() {
       if(Map::player->target == actor) {Map::player->target = nullptr;}
       actors_.erase(actors_.begin() + i);
       i--;
-      if(curActorVectorPos_ >= int(actors_.size())) {
-        curActorVectorPos_ = 0;
-      }
+      if(curActorVectorPos_ >= int(actors_.size())) {curActorVectorPos_ = 0;}
     }
   }
 
@@ -118,13 +116,12 @@ void runStandardTurnEvents() {
 
   //Run new turn events on all player items
   Inventory& playerInv = Map::player->getInv();
-  vector<Item*>& playerBackpack = playerInv.getGeneral();
+  auto& playerBackpack = playerInv.getGeneral();
   for(Item* const item : playerBackpack) {item->newTurnInInventory();}
-  vector<InvSlot>& playerSlots = playerInv.getSlots();
+
+  auto& playerSlots = playerInv.getSlots();
   for(InvSlot& slot : playerSlots) {
-    if(slot.item != nullptr) {
-      slot.item->newTurnInInventory();
-    }
+    if(slot.item) {slot.item->newTurnInInventory();}
   }
 
   SndEmit::resetNrSoundMsgPrintedCurTurn();
@@ -139,9 +136,9 @@ void runAtomicTurnEvents() {
 } //namespace
 
 void init() {
-  curTurnTypePos_         = 0;
+  curTurnTypePos_     = 0;
   curActorVectorPos_  = 0;
-  turn_                   = 0;
+  turn_               = 0;
   actors_.resize(0);
   featureMobs_.resize(0);
 }
@@ -167,14 +164,9 @@ int getTurn() {
   return turn_;
 }
 
-void getFeatureMobsAtPos(
-  const Pos& pos, vector<FeatureMob*>& vectorRef) {
+void getFeatureMobsAtPos(const Pos& p, vector<FeatureMob*>& vectorRef) {
   vectorRef.resize(0);
-  for(auto* m : featureMobs_) {
-    if(m->getPos() == pos) {
-      vectorRef.push_back(m);
-    }
-  }
+  for(auto* m : featureMobs_) {if(m->getPos() == p) {vectorRef.push_back(m);}}
 }
 
 void addFeatureMob(FeatureMob* const feature) {
@@ -222,14 +214,14 @@ void resetTurnTypeAndActorCounters() {
 void actorDidAct(const bool IS_FREE_TURN) {
   runAtomicTurnEvents();
 
-  Actor* curActor = getCurActor();
+  auto* curActor = getCurActor();
 
   if(curActor == Map::player) {
     Map::player->updateFov();
     Renderer::drawMapAndInterface();
     Map::updateVisualMemory();
   } else {
-    Monster* monster = dynamic_cast<Monster*>(curActor);
+    auto* monster = dynamic_cast<Monster*>(curActor);
     if(monster->awareOfPlayerCounter_ > 0) {
       monster->awareOfPlayerCounter_ -= 1;
     }
@@ -242,7 +234,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
 
     bool actorWhoCanActThisTurnFound = false;
     while(!actorWhoCanActThisTurnFound) {
-      TurnType curTurnType = (TurnType)(curTurnTypePos_);
+      auto curTurnType = (TurnType)(curTurnTypePos_);
 
       curActorVectorPos_++;
 
@@ -253,9 +245,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
           curTurnTypePos_ = 0;
         }
 
-        if(
-          curTurnType != TurnType::fast &&
-          curTurnType != TurnType::fastest) {
+        if(curTurnType != TurnType::fast && curTurnType != TurnType::fastest) {
           runStandardTurnEvents();
         }
       }

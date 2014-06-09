@@ -12,7 +12,7 @@ using namespace std;
 namespace Query {
 
 void waitForKeyPress() {
-  if(Config::isBotPlaying() == false) {Input::readKeysUntilFound();}
+  if(!Config::isBotPlaying()) {Input::readKeysUntilFound();}
 }
 
 YesNoAnswer yesOrNo(char keyForSpecialEvent) {
@@ -87,7 +87,7 @@ int number(const Pos& pos, const SDL_Color clr, const int MIN,
 }
 
 void waitForEscOrSpace() {
-  if(Config::isBotPlaying() == false) {
+  if(!Config::isBotPlaying()) {
     KeyboardReadRetData d = Input::readKeysUntilFound();
     while(d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE) {
       d = Input::readKeysUntilFound();

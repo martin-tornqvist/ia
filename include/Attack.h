@@ -65,10 +65,10 @@ struct Projectile {
     isDoneRendering(false), glyph(-1), tile(TileId::empty), clr(clrWhite),
     attackData(nullptr) {}
 
-  ~Projectile() {if(attackData != nullptr) {delete attackData;}}
+  ~Projectile() {if(attackData) {delete attackData;}}
 
   void setAttData(RangedAttData* attackData_) {
-    if(attackData != nullptr) {delete attackData;}
+    if(attackData) {delete attackData;}
     attackData = attackData_;
   }
 

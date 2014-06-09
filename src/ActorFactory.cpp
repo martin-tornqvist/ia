@@ -114,7 +114,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
                     Actor* const actorToSetAsLeader,
                     vector<Monster*>* monstersRet) {
 
-  if(monstersRet != nullptr) {monstersRet->resize(0);}
+  if(monstersRet) {monstersRet->resize(0);}
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
@@ -136,10 +136,10 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
     Actor*   const actor    = mk(id, pos);
     Monster* const monster  = dynamic_cast<Monster*>(actor);
 
-    if(monstersRet != nullptr) {
+    if(monstersRet) {
       monstersRet->push_back(monster);
     }
-    if(actorToSetAsLeader != nullptr) {
+    if(actorToSetAsLeader) {
       monster->leader = actorToSetAsLeader;
     }
     if(MAKE_MONSTERS_AWARE) {

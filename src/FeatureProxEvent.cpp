@@ -59,9 +59,7 @@ void ProxEventWallCrumble::playerIsNear() {
         const Pos pos = wallCells_.at(i);
         if(Utils::isPosAdj(Map::player->pos, pos, true)) {
           FeatureStatic* const f = Map::cells[pos.x][pos.y].featureStatic;
-          if(f->canMoveCmn() == false) {
-            isOpeningMade = false;
-          }
+          if(!f->canMoveCmn()) {isOpeningMade = false;}
         }
       }
 

@@ -204,14 +204,7 @@ void runSlotsScreen() {
         const int elementSelected = browser.getElement();
         if(elementSelected < int(slots.size())) {
           InvSlot& slot = slots.at(elementSelected);
-          if(slot.item == nullptr) {
-            if(runEquipScreen(&slot)) {
-              Renderer::drawMapAndInterface();
-              return;
-            } else {
-              RenderInventory::drawBrowseSlots(browser);
-            }
-          } else {
+          if(slot.item) {
             Item* const item = slot.item;
 
             const string itemName =
@@ -232,7 +225,13 @@ void runSlotsScreen() {
             } else {
               RenderInventory::drawBrowseSlots(browser);
             }
-
+          } else {
+            if(runEquipScreen(&slot)) {
+              Renderer::drawMapAndInterface();
+              return;
+            } else {
+              RenderInventory::drawBrowseSlots(browser);
+            }
           }
         } else {
           runBrowseInventory();

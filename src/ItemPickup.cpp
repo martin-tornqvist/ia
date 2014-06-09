@@ -39,10 +39,7 @@ void tryPick() {
   const Pos& pos = Map::player->pos;
   Item* const item = Map::cells[pos.x][pos.y].item;
 
-  if(item == nullptr) {
-    Log::clearLog();
-    Log::addMsg("I see nothing to pick up here.");
-  } else {
+  if(item) {
     Inventory& playerInv = Map::player->getInv();
 
     const string ITEM_NAME = ItemData::getItemInterfaceRef(*item, true);
@@ -50,7 +47,7 @@ void tryPick() {
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getData().isMissileWeapon) {
       Item* const carriedMissile = playerInv.getItemInSlot(SlotId::missiles);
-      if(carriedMissile != nullptr) {
+      if(carriedMissile) {
         if(item->getData().id == carriedMissile->getData().id) {
           Audio::play(SfxId::pickup);
 
@@ -79,18 +76,21 @@ void tryPick() {
 
       GameTime::actorDidAct();
     }
+  } else {
+    Log::clearLog();
+    Log::addMsg("I see nothing to pick up here.");
   }
 }
 
 void tryUnloadWeaponOrPickupAmmoFromGround() {
   Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
 
-  if(item != nullptr) {
+  if(item) {
     if(item->getData().isRangedWeapon) {
       Weapon* const weapon = dynamic_cast<Weapon*>(item);
       const int nrAmmoLoaded = weapon->nrAmmoLoaded;
 
-      if(nrAmmoLoaded > 0 && weapon->getData().rangedHasInfiniteAmmo == false) {
+      if(nrAmmoLoaded > 0 && !weapon->getData().rangedHasInfiniteAmmo) {
         Inventory& playerInv = Map::player->getInv();
         const ItemId ammoType = weapon->getData().rangedAmmoTypeUsed;
 
@@ -98,7 +98,7 @@ void tryUnloadWeaponOrPickupAmmoFromGround() {
 
         Item* spawnedAmmo = ItemFactory::mk(ammoType);
 
-        if(ammoData->isAmmoClip == true) {
+        if(ammoData->isAmmoClip) {
           //Unload a clip
           dynamic_cast<ItemAmmoClip*>(spawnedAmmo)->ammo = nrAmmoLoaded;
         } else {
@@ -109,14 +109,14 @@ void tryUnloadWeaponOrPickupAmmoFromGround() {
           ItemData::getItemRef(*weapon, ItemRefType::a);
         Log::addMsg("I unload " + WEAPON_REF_A);
 
-        if(isInvFull(playerInv, *spawnedAmmo) == false) {
-          Audio::play(SfxId::pickup);
-          playerInv.putInGeneral(spawnedAmmo);
-        } else {
+        if(isInvFull(playerInv, *spawnedAmmo)) {
           Audio::play(SfxId::pickup);
           ItemDrop::dropItemOnMap(Map::player->pos, *spawnedAmmo);
           string str =  "I have no room to keep the unloaded ammunition.";
           Log::addMsg(str);
+        } else {
+          Audio::play(SfxId::pickup);
+          playerInv.putInGeneral(spawnedAmmo);
         }
 
         dynamic_cast<Weapon*>(item)->nrAmmoLoaded = 0;

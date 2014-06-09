@@ -312,7 +312,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
 bool moveToRandomAdjacentCell(Monster& monster) {
   if(monster.deadState == ActorDeadState::alive) {
     if(
-      monster.isRoamingAllowed_ == true ||
+      monster.isRoamingAllowed_ ||
       monster.awareOfPlayerCounter_ > 0) {
 
       const Dir dir = getDirToRndAdjFreeCell(monster);
@@ -327,7 +327,7 @@ bool moveToRandomAdjacentCell(Monster& monster) {
 
 bool moveTowardsTargetSimple(Monster& monster) {
   if(monster.deadState == ActorDeadState::alive) {
-    if(monster.target != nullptr) {
+    if(monster.target) {
       if(
         monster.awareOfPlayerCounter_ > 0 ||
         monster.leader == Map::player) {
@@ -458,7 +458,7 @@ void setPathToLairIfNoLos(Monster& monster, vector<Pos>& path,
 void setPathToLeaderIfNoLosToleader(Monster& monster, vector<Pos>& path) {
   if(monster.deadState == ActorDeadState::alive) {
     Actor* leader = monster.leader;
-    if(leader != nullptr) {
+    if(leader) {
       if(leader->deadState == ActorDeadState::alive) {
         bool blocked[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(), blocked);

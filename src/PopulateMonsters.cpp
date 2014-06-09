@@ -53,7 +53,7 @@ void mkGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
   vector<ActorId> idBucket;
   mkListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
-  if(idBucket.empty() == false) {
+  if(!idBucket.empty()) {
     const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
     mkGroupAt(id, sortedFreeCellsVector, blocked, IS_ROAMING_ALLOWED);
   }
@@ -77,7 +77,7 @@ bool mkGroupOfRandomNativeToRoomThemeAt(
         break;
       }
     }
-    if(isMonsterNativeToRoom == false) {
+    if(!isMonsterNativeToRoom) {
       idBucket.erase(idBucket.begin() + i);
       i--;
     }
@@ -121,20 +121,18 @@ void trySpawnDueToTimePassed() {
   vector<Pos> freeCellsVector;
   for(int y = 1; y < MAP_H - 1; y++) {
     for(int x = 1; x < MAP_W - 1; x++) {
-      if(blocked[x][y] == false) {
-        freeCellsVector.push_back(Pos(x, y));
-      }
+      if(!blocked[x][y]) {freeCellsVector.push_back(Pos(x, y));}
     }
   }
 
-  if(freeCellsVector.empty() == false) {
+  if(!freeCellsVector.empty()) {
 
     const int ELEMENT = Rnd::range(0, freeCellsVector.size() - 1);
     const Pos& origin = freeCellsVector.at(ELEMENT);
 
     mkSortedFreeCellsVector(origin, blocked, freeCellsVector);
 
-    if(freeCellsVector.empty() == false) {
+    if(!freeCellsVector.empty()) {
       if(Map::cells[origin.x][origin.y].isExplored) {
         const int NR_OOD = getRandomOutOfDepth();
         mkGroupOfRandomAt(freeCellsVector, blocked, NR_OOD, true);
@@ -169,16 +167,14 @@ void populateCaveLvl() {
     vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
-        if(blocked[x][y] == false) {
-          originBucket.push_back(Pos(x, y));
-        }
+        if(!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
       }
     }
     const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
     const Pos origin = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
-    if(sortedFreeCellsVector.empty() == false) {
+    if(!sortedFreeCellsVector.empty()) {
       mkGroupOfRandomAt(sortedFreeCellsVector, blocked,
                         getRandomOutOfDepth(), true);
     }
@@ -209,14 +205,14 @@ void populateIntroLvl() {
     vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
-        if(blocked[x][y] == false) {originBucket.push_back(Pos(x, y));}
+        if(!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
       }
     }
     const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
     const Pos origin = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
-    if(sortedFreeCellsVector.empty() == false) {
+    if(!sortedFreeCellsVector.empty()) {
       mkGroupAt(actor_wolf, sortedFreeCellsVector, blocked, true);
     }
   }
@@ -259,7 +255,7 @@ void populateStdLvl() {
         for(int y = room->r_.p0.y; y <= room->r_.p1.y; y++) {
           for(int x = room->r_.p0.x; x <= room->r_.p1.x; x++) {
             if(
-              blocked[x][y] == false &&
+              !blocked[x][y] &&
               RoomThemeMaking::themeMap[x][y] == room->theme_) {
               originBucket.push_back(Pos(x, y));
             }
@@ -303,7 +299,7 @@ void populateStdLvl() {
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
-          blocked[x][y] == false &&
+          !blocked[x][y] &&
           RoomThemeMaking::themeMap[x][y] == RoomThemeId::plain) {
           originBucket.push_back(Pos(x, y));
         }
@@ -368,9 +364,7 @@ void mkSortedFreeCellsVector(const Pos& origin,
 
   for(int y = Y0; y <= Y1; y++) {
     for(int x = X0; x <= X1; x++) {
-      if(blocked[x][y] == false) {
-        vectorRef.push_back(Pos(x, y));
-      }
+      if(!blocked[x][y]) {vectorRef.push_back(Pos(x, y));}
     }
   }
 

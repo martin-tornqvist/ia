@@ -32,7 +32,7 @@ void emitSnd(Snd snd) {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       const auto f = Map::cells[x][y].featureStatic;
-      blocked[x][y] = f->isSoundPassable() == false;
+      blocked[x][y] = !f->isSoundPassable();
     }
   }
   int floodFill[MAP_W][MAP_H];
@@ -58,7 +58,7 @@ void emitSnd(Snd snd) {
 
         const Pos& playerPos = Map::player->pos;
 
-        if(snd.getMsg().empty() == false) {
+        if(!snd.getMsg().empty()) {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
           if(playerPos != origin) {
             string dirStr;

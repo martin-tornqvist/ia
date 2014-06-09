@@ -56,14 +56,12 @@ void queryQuit() {
 } //Namespace
 
 void init() {
-  if(sdlEvent_ == nullptr) {
-    sdlEvent_ = new SDL_Event;
-  }
+  if(!sdlEvent_) {sdlEvent_ = new SDL_Event;}
   setKeyRepeatDelays();
 }
 
 void cleanup() {
-  if(sdlEvent_ != nullptr) {
+  if(sdlEvent_) {
     delete sdlEvent_;
     sdlEvent_ = nullptr;
   }
@@ -151,7 +149,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
         if(PlayerBon::hasTrait(Trait::sharpShooter)) {
           Prop* const propAimingOld =
             propHlr.getProp(propAiming, PropSrc::applied);
-          if(propAimingOld != nullptr) {
+          if(propAimingOld) {
             nrTurnsAimingOld =
               dynamic_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
           }
@@ -251,17 +249,14 @@ void handleKeyPress(const KeyboardReadRetData& d) {
 
       if(Map::player->getPropHandler().allowAttackRanged(true)) {
 
-        Item* const item =
-          Map::player->getInv().getItemInSlot(SlotId::wielded);
+        auto* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
 
-        if(item == nullptr) {
-          Log::addMsg("I am not wielding a weapon.");
-        } else {
+        if(item) {
           const ItemDataT& itemData = item->getData();
           if(!itemData.isRangedWeapon) {
             Log::addMsg("I am not wielding a firearm.");
           } else {
-            Weapon* wpn = dynamic_cast<Weapon*>(item);
+            auto* wpn = dynamic_cast<Weapon*>(item);
             if(wpn->nrAmmoLoaded >= 1 || itemData.rangedHasInfiniteAmmo) {
               Marker::run(MarkerTask::aimRangedWeapon, nullptr);
             } else if(Config::isRangedWpnAutoReload()) {
@@ -270,6 +265,8 @@ void handleKeyPress(const KeyboardReadRetData& d) {
               Log::addMsg("There is no ammo loaded.");
             }
           }
+        } else {
+          Log::addMsg("I am not wielding a weapon.");
         }
       }
     }
@@ -282,7 +279,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
     if(Map::player->deadState == ActorDeadState::alive) {
       const Pos& p = Map::player->pos;
       Item* const itemAtPlayer = Map::cells[p.x][p.y].item;
-      if(itemAtPlayer != nullptr) {
+      if(itemAtPlayer) {
         if(itemAtPlayer->getData().id == ItemId::trapezohedron) {
           DungeonMaster::winGame();
           Init::quitToMainMenu = true;
@@ -332,38 +329,32 @@ void handleKeyPress(const KeyboardReadRetData& d) {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
 
-      //PlayerBon::hasTrait(Trait::traitnimble);
-
       const bool IS_FREE_TURN = PlayerBon::getBg() == Bg::warVet;
 
       const string swiftStr = IS_FREE_TURN ? " swiftly" : "";
 
       Inventory& inv = Map::player->getInv();
 
-      Item* const itemWielded = inv.getItemInSlot(SlotId::wielded);
-      Item* const itemAlt     = inv.getItemInSlot(SlotId::wieldedAlt);
-      const string ITEM_WIELDED_NAME =
-        itemWielded == nullptr ? "" :
-        ItemData::getItemRef(*itemWielded, ItemRefType::a);
-      const string ITEM_ALT_NAME =
-        itemAlt == nullptr ? "" :
-        ItemData::getItemRef(*itemAlt, ItemRefType::a);
-      if(itemWielded == nullptr && itemAlt == nullptr) {
-        Log::addMsg("I have neither a wielded nor a prepared weapon.");
-      } else {
-        if(itemWielded == nullptr) {
-          Log::addMsg("I" + swiftStr + " wield my prepared weapon (" +
-                      ITEM_ALT_NAME + ").");
-        } else {
-          if(itemAlt == nullptr) {
-            Log::addMsg("I" + swiftStr + " put away my weapon (" +
-                        ITEM_WIELDED_NAME + ").");
-          } else {
+      Item* const wielded   = inv.getItemInSlot(SlotId::wielded);
+      Item* const alt       = inv.getItemInSlot(SlotId::wieldedAlt);
+      const string ALT_NAME =
+        alt ? ItemData::getItemRef(*alt, ItemRefType::a) : "";
+      if(wielded || alt) {
+        if(wielded) {
+          if(alt) {
             Log::addMsg("I" + swiftStr + " swap to my prepared weapon (" +
-                        ITEM_ALT_NAME + ").");
+                        ALT_NAME + ").");
+          } else {
+            const string NAME = ItemData::getItemRef(*wielded, ItemRefType::a);
+            Log::addMsg("I" + swiftStr + " put away my weapon (" + NAME + ").");
           }
+        } else {
+          Log::addMsg("I" + swiftStr + " wield my prepared weapon (" +
+                      ALT_NAME + ").");
         }
         inv.swapWieldedAndPrepared(IS_FREE_TURN);
+      } else {
+        Log::addMsg("I have neither a wielded nor a prepared weapon.");
       }
     }
     clearEvents();
@@ -398,12 +389,9 @@ void handleKeyPress(const KeyboardReadRetData& d) {
         Inventory& playerInv = Map::player->getInv();
         Item* itemStack = playerInv.getItemInSlot(SlotId::missiles);
 
-        if(itemStack == nullptr) {
-          Log::addMsg(
-            "I have no missiles chosen for throwing (press 'w').");
-        } else {
-          Item* itemToThrow = ItemFactory::copyItem(itemStack);
-          itemToThrow->nrItems = 1;
+        if(itemStack) {
+          Item* itemToThrow     = ItemFactory::copyItem(itemStack);
+          itemToThrow->nrItems  = 1;
 
           const MarkerRetData markerReturnData =
             Marker::run(MarkerTask::aimThrownWeapon, itemToThrow);
@@ -413,6 +401,8 @@ void handleKeyPress(const KeyboardReadRetData& d) {
           } else {
             delete itemToThrow;
           }
+        } else {
+          Log::addMsg("I have no missiles chosen for throwing (press 'w').");
         }
       }
     }
@@ -610,18 +600,18 @@ void setKeyRepeatDelays() {
 }
 
 void handleMapModeInputUntilFound() {
-  if(sdlEvent_ != nullptr) {
+  if(sdlEvent_) {
     const KeyboardReadRetData& d = readKeysUntilFound();
     if(!Init::quitToMainMenu) {handleKeyPress(d);}
   }
 }
 
 void clearEvents() {
-  if(sdlEvent_ != nullptr) {while(SDL_PollEvent(sdlEvent_)) {}}
+  if(sdlEvent_) {while(SDL_PollEvent(sdlEvent_)) {}}
 }
 
 KeyboardReadRetData readKeysUntilFound(const bool IS_O_RETURN) {
-  if(sdlEvent_ == nullptr) {return KeyboardReadRetData();}
+  if(!sdlEvent_) {return KeyboardReadRetData();}
 
   while(true) {
     SdlWrapper::sleep(1);

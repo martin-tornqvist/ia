@@ -28,7 +28,7 @@ void Feature::bump(Actor& actorBumping) {
   vector<PropId> props;
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
-  if(canMove(props) == false) {
+  if(!canMove(props)) {
     if(&actorBumping == Map::player) {
       if(Map::player->getPropHandler().allowSee()) {
         Log::addMsg(data_->messageOnPlayerBlocked);
@@ -156,8 +156,8 @@ void FeatureStatic::disarm() {
 
 void FeatureStatic::bash(Actor& actorTrying) {
   if(&actorTrying == Map::player) {
-    const bool IS_BLIND    = Map::player->getPropHandler().allowSee() == false;
-    const bool IS_BLOCKING = canMoveCmn() == false && getId() != FeatureId::stairs;
+    const bool IS_BLIND    = !Map::player->getPropHandler().allowSee();
+    const bool IS_BLOCKING = !canMoveCmn() && getId() != FeatureId::stairs;
     if(IS_BLOCKING) {
       Log::addMsg(
         "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");

@@ -29,7 +29,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
   string ammoName = "";
   bool isClip = false;
 
-  if(ammo != nullptr) {
+  if(ammo) {
     ammoName = ItemData::getItemRef(*ammo, ItemRefType::a);
     isClip = ammo->getData().isAmmoClip;
   }
@@ -109,7 +109,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
   Inventory& inv      = actorReloading.getInv();
   Item* const wpnItem = inv.getItemInSlot(SlotId::wielded);
 
-  if(wpnItem == nullptr) {
+  if(!wpnItem) {
     printMsgAndPlaySfx(actorReloading, nullptr, nullptr,
                        ReloadResult::notCarryingWpn, false);
     return didAct;
@@ -147,7 +147,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
           propHlr.getAllActivePropIds(props);
 
           const bool IS_RELOADER_BLIND =
-            actorReloading.getPropHandler().allowSee() == false;
+            !actorReloading.getPropHandler().allowSee();
           const bool IS_REALOADER_TERRIFIED =
             find(props.begin(), props.end(), propTerrified) != props.end();
           const int CHANCE_TO_FUMBLE =

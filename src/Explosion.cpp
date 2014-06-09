@@ -20,8 +20,8 @@ void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
           const SDL_Color* const clrOverride) {
   Renderer::drawMapAndInterface();
 
-  const SDL_Color& clrInner = clrOverride == nullptr ? clrYellow : *clrOverride;
-  const SDL_Color& clrOuter = clrOverride == nullptr ? clrRedLgt : *clrOverride;
+  const SDL_Color& clrInner = clrOverride ? *clrOverride : clrYellow;
+  const SDL_Color& clrOuter = clrOverride ? *clrOverride : clrRedLgt;
 
   const bool IS_TILES     = Config::isTilesMode();
   const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
@@ -39,7 +39,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
       for(const Pos& pos : inner) {
         if(
           Map::cells[pos.x][pos.y].isSeenByPlayer &&
-          blocked[pos.x][pos.y] == false) {
+          !blocked[pos.x][pos.y]) {
           isAnyCellSeenByPlayer = true;
           if(IS_TILES) {
             Renderer::drawTile(tile, Panel::map, pos, clr, clrBlack);
@@ -155,7 +155,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         const int DMG = Rnd::dice(DMG_ROLLS - curRadi, DMG_SIDES) + DMG_PLUS;
 
         //Damage living actor
-        if(livingActor != nullptr) {
+        if(livingActor) {
           if(livingActor == Map::player) {
             Log::addMsg("I am hit by an explosion!", clrMsgBad);
           }
@@ -173,9 +173,9 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
       }
 
       //Apply property
-      if(prop != nullptr) {
+      if(prop) {
         if(
-          livingActor != nullptr &&
+          livingActor &&
           (livingActor != Map::player || !IS_DEM_EXP ||
            explSrc != ExplSrc::playerUseMoltvIntended)) {
           PropHandler& propHlr = livingActor->getPropHandler();
@@ -199,7 +199,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   Map::player->updateFov();
   Renderer::drawMapAndInterface();
 
-  if(prop != nullptr) {delete prop;}
+  if(prop) {delete prop;}
 }
 
 void runSmokeExplosionAt(const Pos& origin) {
@@ -220,7 +220,7 @@ void runSmokeExplosionAt(const Pos& origin) {
 
   for(const vector<Pos>& inner : posLists) {
     for(const Pos& pos : inner) {
-      if(blocked[pos.x][pos.y] == false) {
+      if(!blocked[pos.x][pos.y]) {
         FeatureFactory::mk(FeatureId::smoke, pos,
                            new SmokeSpawnData(Rnd::range(17, 22)));
       }

@@ -159,9 +159,9 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::endOfItemIds: return nullptr;
   }
 
-  if(r->getData().isStackable == false && NR_ITEMS != 1) {
-    TRACE << "[WARNING] Specified " + toStr(NR_ITEMS) + " nr items";
-    TRACE << " for non-stackable item, in ItemFactory::mk()" << endl;
+  if(!r->getData().isStackable && NR_ITEMS != 1) {
+    TRACE << "Warning, Specified " + toStr(NR_ITEMS) + " nr items"
+          << " for non-stackable item";
   } else {
     r->nrItems = NR_ITEMS;
   }
@@ -173,12 +173,12 @@ void setItemRandomizedProperties(Item* item) {
   const ItemDataT& d = item->getData();
 
   //If it is a pure melee weapon, it may get a plus
-  if(d.isMeleeWeapon && d.isRangedWeapon == false) {
+  if(d.isMeleeWeapon && !d.isRangedWeapon) {
     dynamic_cast<Weapon*>(item)->setRandomMeleePlus();
   }
 
   //If firearm, spawn with random amount of ammo
-  if(d.isRangedWeapon && d.rangedHasInfiniteAmmo == false) {
+  if(d.isRangedWeapon && !d.rangedHasInfiniteAmmo) {
     Weapon* const weapon = dynamic_cast<Weapon*>(item);
     if(weapon->ammoCapacity == 1) {
       weapon->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
@@ -223,14 +223,14 @@ Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS,
   for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
     const ItemDataT* const d = ItemData::data[i];
     if(
-      d->isIntrinsic == false &&
+      !d->isIntrinsic &&
       ((d->isScroll && ALLOW_SCROLLS) ||
        (d->isPotion && ALLOW_POTIONS))) {
       itemBucket.push_back(static_cast<ItemId>(i));
     }
   }
 
-  if(itemBucket.empty() == false) {
+  if(!itemBucket.empty()) {
     const int ELEMENT = Rnd::range(0, itemBucket.size() - 1);
     return mk(itemBucket.at(ELEMENT));
   }

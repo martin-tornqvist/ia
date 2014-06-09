@@ -104,13 +104,13 @@ void drawInfoLines() {
   Renderer::drawText("ARM:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
   const Item* const armor = player.getInv().getItemInSlot(SlotId::armorBody);
-  if(armor == nullptr) {
-    Renderer::drawText("N/A", Panel::charLines, pos, clrGenLgt);
-    pos.x += 4;
-  } else {
+  if(armor) {
     str = dynamic_cast<const Armor*>(armor)->getArmorDataLine(false);
     Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
     pos.x += str.length() + 1;
+  } else {
+    Renderer::drawText("N/A", Panel::charLines, pos, clrGenLgt);
+    pos.x += 4;
   }
 
   //Wielded weapon
@@ -118,10 +118,7 @@ void drawInfoLines() {
   const int X_POS_MISSILE = pos.x;
 
   Item* itemWielded = Map::player->getInv().getItemInSlot(SlotId::wielded);
-  if(itemWielded == nullptr) {
-    Renderer::drawText(
-      "Unarmed", Panel::charLines, pos, clrGenMed);
-  } else {
+  if(itemWielded) {
     const SDL_Color itemClr = itemWielded->getClr();
     if(Config::isTilesMode()) {
       Renderer::drawTile(
@@ -135,6 +132,8 @@ void drawInfoLines() {
     str = ItemData::getItemInterfaceRef(*itemWielded, false);
     Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
     pos.x += str.length() + 1;
+  } else {
+    Renderer::drawText("Unarmed", Panel::charLines, pos, clrGenMed);
   }
 
   pos.x = CHARACTER_LINE_X0;
@@ -173,11 +172,10 @@ void drawInfoLines() {
   //Missile weapon
   pos.x = X_POS_MISSILE;
 
-  Item* const itemMissiles =
+  auto* const itemMissiles =
     Map::player->getInv().getItemInSlot(SlotId::missiles);
-  if(itemMissiles == nullptr) {
-    Renderer::drawText("No missile weapon", Panel::charLines, pos, clrGenMed);
-  } else {
+
+  if(itemMissiles) {
     const SDL_Color itemClr = itemMissiles->getClr();
     if(Config::isTilesMode()) {
       Renderer::drawTile(
@@ -192,6 +190,8 @@ void drawInfoLines() {
             *itemMissiles, false, PrimaryAttMode::missile);
     Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
     pos.x += str.length() + 1;
+  } else {
+    Renderer::drawText("No missile weapon", Panel::charLines, pos, clrGenMed);
   }
 
   pos.y += 1;

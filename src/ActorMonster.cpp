@@ -40,9 +40,7 @@ Monster::Monster() :
   hasGivenXpForSpotting_(false) {}
 
 Monster::~Monster() {
-  for(unsigned int i = 0; i < spellsKnown.size(); i++) {
-    delete spellsKnown.at(i);
-  }
+  for(Spell* const spell : spellsKnown) {delete spell;}
 }
 
 void Monster::onActorTurn() {
@@ -67,7 +65,7 @@ void Monster::onActorTurn() {
 
   if(awareOfPlayerCounter_ > 0) {
     isRoamingAllowed_ = true;
-    if(leader == nullptr) {
+    if(!leader) {
       if(deadState == ActorDeadState::alive) {
         if(Rnd::oneIn(14)) {
           speakPhrase();
@@ -117,7 +115,7 @@ void Monster::onActorTurn() {
     }
   }
 
-  if(target != nullptr) {
+  if(target) {
     const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
     if(Rnd::percentile() < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
       if(Ai::Action::castRandomSpellIfAware(this)) {return;}
@@ -125,14 +123,14 @@ void Monster::onActorTurn() {
   }
 
   if(data_->ai[int(AiId::attacks)]) {
-    if(target != nullptr) {
+    if(target) {
       if(tryAttack(*target)) {
         return;
       }
     }
   }
 
-  if(target != nullptr) {
+  if(target) {
     if(Ai::Action::castRandomSpellIfAware(this)) {
       return;
     }
@@ -292,7 +290,7 @@ bool Monster::tryAttack(Actor& defender) {
   AttackOpport opport     = getAttackOpport(defender);
   const BestAttack attack = getBestAttack(opport);
 
-  if(attack.weapon == nullptr) {return false;}
+  if(!attack.weapon) {return false;}
 
   if(attack.isMelee) {
     if(attack.weapon->getData().isMeleeWeapon) {
@@ -316,7 +314,7 @@ bool Monster::tryAttack(Actor& defender) {
       for(Pos& linePos : line) {
         if(linePos != pos && linePos != defender.pos) {
           Actor* const actorHere = Utils::getActorAtPos(linePos);
-          if(actorHere != nullptr) {
+          if(actorHere) {
             isBlockedByFriend = true;
             break;
           }
@@ -351,7 +349,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         //Melee weapon in wielded slot?
         weapon =
           dynamic_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
-        if(weapon != nullptr) {
+        if(weapon) {
           if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
           }
@@ -371,8 +369,8 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         weapon =
           dynamic_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
 
-        if(weapon != nullptr) {
-          if(weapon->getData().isRangedWeapon == true) {
+        if(weapon) {
+          if(weapon->getData().isRangedWeapon) {
             opport.weapons.push_back(weapon);
 
             //Check if reload time instead

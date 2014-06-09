@@ -257,7 +257,7 @@ void mkByRandomWalk(const Pos& p0, int len, FeatureId featureToMk,
           (dx == 0 && dy == 0) || xPos + dx < p0Lim.x ||
           yPos + dy < p0Lim.y || xPos + dx > p1Lim.x ||
           yPos + dy > p1Lim.y ||
-          (ONLY_STRAIGHT == true && dx != 0 && dy != 0)
+          (ONLY_STRAIGHT && dx != 0 && dy != 0)
         );
     }
     const auto* const f = Map::cells[xPos + dx][yPos + dy].featureStatic;

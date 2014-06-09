@@ -77,12 +77,12 @@ Inventory::~Inventory() {
 void Inventory::storeToSaveLines(vector<string>& lines) const {
   for(const InvSlot& slot : slots_) {
     Item* const item = slot.item;
-    if(item == nullptr) {
-      lines.push_back("0");
-    } else {
+    if(item) {
       lines.push_back(toStr(int(item->getData().id)));
       lines.push_back(toStr(item->nrItems));
       item->storeToSaveLines(lines);
+    } else {
+      lines.push_back("0");
     }
   }
 
@@ -98,7 +98,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines) {
   for(InvSlot& slot : slots_) {
     //Previous item is destroyed
     Item* item = slot.item;
-    if(item != nullptr) {
+    if(item) {
       delete item;
       slot.item = nullptr;
     }
@@ -215,7 +215,7 @@ void Inventory::putInGeneral(Item* item) {
 }
 
 int Inventory::getElementToStackItem(Item* item) const {
-  if(item->getData().isStackable == true) {
+  if(item->getData().isStackable) {
     for(size_t i = 0; i < general_.size(); i++) {
       Item* compare = general_.at(i);
 
@@ -236,7 +236,7 @@ void Inventory::dropAllNonIntrinsic(
   //Drop from slots
   for(InvSlot& slot : slots_) {
     item = slot.item;
-    if(item != nullptr) {
+    if(item) {
       if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
           CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete slot.item;
@@ -252,7 +252,7 @@ void Inventory::dropAllNonIntrinsic(
   unsigned int i = 0;
   while(i < general_.size()) {
     item = general_.at(i);
-    if(item != nullptr) {
+    if(item) {
       if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
           CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP) {
         delete general_.at(i);
@@ -275,7 +275,7 @@ bool Inventory::hasAmmoForFirearmInInventory() {
     assert(!weapon->getData().rangedHasInfiniteAmmo); //Should not happen
 
     //If weapon is a firearm
-    if(weapon->getData().isRangedWeapon == true) {
+    if(weapon->getData().isRangedWeapon) {
 
       //Get weapon ammo type
       const ItemId ammoId = weapon->getData().rangedAmmoTypeUsed;
@@ -296,7 +296,7 @@ void Inventory::decrItemInSlot(SlotId slotName) {
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
 
-  if(stack == true) {
+  if(stack) {
     item->nrItems -= 1;
 
     if(item->nrItems > 0) {
@@ -304,7 +304,7 @@ void Inventory::decrItemInSlot(SlotId slotName) {
     }
   }
 
-  if(deleteItem == true) {
+  if(deleteItem) {
     getSlot(slotName)->item = nullptr;
     delete item;
   }
@@ -335,7 +335,7 @@ void Inventory::decrItemInGeneral(unsigned element) {
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
 
-  if(stack == true) {
+  if(stack) {
     item->nrItems -= 1;
 
     if(item->nrItems > 0) {
@@ -343,7 +343,7 @@ void Inventory::decrItemInGeneral(unsigned element) {
     }
   }
 
-  if(deleteItem == true) {
+  if(deleteItem) {
     general_.erase(general_.begin() + element);
 
     delete item;
@@ -371,14 +371,14 @@ void Inventory::moveItemToSlot(
     item = general_.at(GENERAL_INV_ELEMENT);
   }
 
-  if(generalSlotExists && item != nullptr) {
-    if(slotItem == nullptr) {
-      inventorySlot->item = item;
-      general_.erase(general_.begin() + GENERAL_INV_ELEMENT);
-    } else {
+  if(generalSlotExists && item) {
+    if(slotItem) {
       general_.erase(general_.begin() + GENERAL_INV_ELEMENT);
       general_.push_back(slotItem);
       inventorySlot->item = item;
+    } else {
+      inventorySlot->item = item;
+      general_.erase(general_.begin() + GENERAL_INV_ELEMENT);
     }
   }
 }
@@ -401,7 +401,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     moveItemToSlot(getSlot(SlotId::wielded), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(SlotId::wielded);
     if(IS_PLAYER) {
-      if(itemBefore != nullptr) {
+      if(itemBefore) {
         const string nameBefore =
           ItemData::getItemRef(*itemBefore, ItemRefType::a);
         Log::addMsg("I was wielding " + nameBefore + ".");
@@ -417,7 +417,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     moveItemToSlot(getSlot(SlotId::wieldedAlt), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(SlotId::wieldedAlt);
     if(IS_PLAYER) {
-      if(itemBefore != nullptr) {
+      if(itemBefore) {
         const string nameBefore =
           ItemData::getItemRef(*itemBefore, ItemRefType::a);
         Log::addMsg("I was wielding " + nameBefore + " as a prepared weapon.");
@@ -433,7 +433,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     moveItemToSlot(getSlot(SlotId::armorBody), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(SlotId::armorBody);
     if(IS_PLAYER) {
-      if(itemBefore != nullptr) {
+      if(itemBefore) {
         const string nameBefore =
           ItemData::getItemRef(*itemBefore, ItemRefType::a);
         Log::addMsg("I wore " + nameBefore + ".");
@@ -450,7 +450,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
     moveItemToSlot(getSlot(SlotId::missiles), GENERAL_INV_ELEMENT);
     Item* const itemAfter = getItemInSlot(SlotId::missiles);
     if(IS_PLAYER) {
-      if(itemBefore != nullptr) {
+      if(itemBefore) {
         const string nameBefore =
           ItemData::getItemRef(*itemBefore, ItemRefType::plural);
         Log::addMsg("I was using " + nameBefore + " as missile weapon.");
@@ -484,7 +484,7 @@ void Inventory::moveFromGeneralToIntrinsics(
 
   if(generalSlotExists) {
     Item* item = general_.at(GENERAL_INV_ELEMENT);
-    bool itemExistsInGeneralSlot = item != nullptr;
+    bool itemExistsInGeneralSlot = item;
 
     if(itemExistsInGeneralSlot) {
       intrinsics_.push_back(item);
@@ -495,19 +495,19 @@ void Inventory::moveFromGeneralToIntrinsics(
 
 bool Inventory::moveToGeneral(InvSlot* inventorySlot) {
   Item* const item = inventorySlot->item;
-  if(item == nullptr) {
-    return false;
-  } else {
+  if(item) {
     inventorySlot->item = nullptr;
     putInGeneral(item);
     return true;
+  } else {
+    return false;
   }
 }
 
 bool Inventory::hasItemInSlot(SlotId id) const {
   for(unsigned int i = 0; i < slots_.size(); i++) {
     if(slots_[i].id == id) {
-      if(slots_[i].item != nullptr) {
+      if(slots_[i].item) {
         return true;
       }
     }
@@ -580,11 +580,7 @@ void Inventory::putInIntrinsics(Item* item) {
 }
 
 Item* Inventory::getLastItemInGeneral() {
-  int s = general_.size();
-
-  if(s != 0)
-    return general_.at(general_.size() - 1);
-
+  if(!general_.empty()) {return general_.at(general_.size() - 1);}
   return nullptr;
 }
 
@@ -602,10 +598,10 @@ InvSlot* Inventory::getSlot(SlotId slotName) {
 void Inventory::putInSlot(const SlotId id, Item* item) {
   for(InvSlot& slot : slots_) {
     if(slot.id == id) {
-      if(slot.item == nullptr) {
-        slot.item = item;
-      } else {
+      if(slot.item) {
         general_.push_back(item);
+      } else {
+        slot.item = item;
       }
       return;
     }
@@ -618,7 +614,7 @@ void Inventory::putInSlot(const SlotId id, Item* item) {
 int Inventory::getTotalItemWeight() const {
   int weight = 0;
   for(unsigned int i = 0; i < slots_.size(); i++) {
-    if(slots_.at(i).item != nullptr) {
+    if(slots_.at(i).item) {
       weight += slots_.at(i).item->getWeight();
     }
   }
@@ -690,7 +686,7 @@ void Inventory::getAllItems(vector<Item*>& itemList) const {
 
   for(const InvSlot& slot : slots_) {
     Item* const item = slot.item;
-    if(item != nullptr) {
+    if(item) {
       itemList.push_back(item);
     }
   }

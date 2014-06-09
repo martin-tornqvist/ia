@@ -287,13 +287,11 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
 
   //Check constraints for retrieving FOV offset lines
   //Delta > parameter max distance
-  deltaLine =
-    LineCalc::getFovDeltaLine(Pos(3, 0), 2);
-  CHECK(deltaLine == nullptr);
+  deltaLine = LineCalc::getFovDeltaLine(Pos(3, 0), 2);
+  CHECK(!deltaLine);
   //Delta > limit of precalculated
-  deltaLine =
-    LineCalc::getFovDeltaLine(Pos(50, 0), 999);
-  CHECK(deltaLine == nullptr);
+  deltaLine = LineCalc::getFovDeltaLine(Pos(50, 0), 999);
+  CHECK(!deltaLine);
 }
 
 TEST_FIXTURE(BasicFixture, Fov) {
@@ -344,7 +342,7 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   Pos target(5, 8);
   Item* item = ItemFactory::mk(ItemId::throwingKnife);
   Throwing::throwItem(*(Map::player), target, *item);
-  CHECK(Map::cells[5][9].item != nullptr);
+  CHECK(Map::cells[5][9].item);
 }
 
 TEST_FIXTURE(BasicFixture, Explosions) {
@@ -412,11 +410,11 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
                             ExplSrc::misc, 0, SfxId::endOfSfxId,
                             new PropBurning(propTurnsStd));
-  CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied) != nullptr);
-  CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied) != nullptr);
+  CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied));
+  CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied));
   for(int i = 0; i < NR_CORPSES; i++) {
     PropHandler& propHlr = corpses[i]->getPropHandler();
-    CHECK(propHlr.getProp(propBurning, PropSrc::applied) != nullptr);
+    CHECK(propHlr.getProp(propBurning, PropSrc::applied));
   }
 
   //Check that the explosion can handle the map edge (e.g. that it does not
@@ -524,7 +522,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   gen.resize(0);
   vector<InvSlot>& slots = inv.getSlots();
   for(InvSlot& slot : slots) {
-    if(slot.item != nullptr) {
+    if(slot.item) {
       delete slot.item;
       slot.item = nullptr;
     }
@@ -577,7 +575,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   propHlr.tryApplyProp(new PropWound(propTurnsStd));
   Prop* prop      = propHlr.getProp(propWound, PropSrc::applied);
   PropWound* wnd  = dynamic_cast<PropWound*>(prop);
-  CHECK(wnd != nullptr);
+  CHECK(wnd);
   CHECK_EQUAL(1, wnd->getNrWounds());
   wnd->onMore();
   CHECK_EQUAL(2, wnd->getNrWounds());
@@ -669,28 +667,28 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   //Properties
   PropHandler& propHlr = Map::player->getPropHandler();
   Prop* prop = propHlr.getProp(propDiseased, PropSrc::applied);
-  CHECK(prop != nullptr);
+  CHECK(prop);
   CHECK(prop->turnsLeft_ == -1);
   //Check currrent HP (affected by disease)
   CHECK_EQUAL((Map::player->getData().hp + 5) / 2, Map::player->getHp());
   prop = propHlr.getProp(propRSleep, PropSrc::applied);
-  CHECK(prop != nullptr);
+  CHECK(prop);
   CHECK(prop->turnsLeft_ == 3);
   prop = propHlr.getProp(propBlessed, PropSrc::applied);
-  CHECK(prop != nullptr);
+  CHECK(prop);
   CHECK(prop->turnsLeft_ > 0);
   prop = propHlr.getProp(propWound, PropSrc::applied);
   PropWound* wnd = dynamic_cast<PropWound*>(prop);
-  CHECK(wnd != nullptr);
+  CHECK(wnd);
   CHECK(wnd->turnsLeft_ == -1);
   CHECK_EQUAL(3, wnd->getNrWounds());
 
   //Properties from worn item
   prop = propHlr.getProp(propRAcid, PropSrc::inv);
-  CHECK(prop != nullptr);
+  CHECK(prop);
   CHECK(prop->turnsLeft_ == -1);
   prop = propHlr.getProp(propRFire, PropSrc::inv);
-  CHECK(prop != nullptr);
+  CHECK(prop);
   CHECK(prop->turnsLeft_ == -1);
 
   //Game time

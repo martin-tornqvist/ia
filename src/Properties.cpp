@@ -900,7 +900,7 @@ bool PropHandler::allowSee() const {
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
 
-  for(Prop* p : propList) {if(p->allowSee() == false) return false;}
+  for(Prop* p : propList) {if(!p->allowSee()) return false;}
   return true;
 }
 
@@ -929,24 +929,22 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   const bool IS_PLAYER  = owningActor_ == Map::player;
   bool playerSeeOwner   = Map::player->isSeeingActor(*owningActor_, nullptr);
 
-  if(FORCE_EFFECT == false) {
+  if(!FORCE_EFFECT) {
     vector<Prop*> allProps;
     bool sources[int(PropSrc::endOfPropSrc)];
     for(bool& v : sources) {v = true;}
     getPropsFromSources(allProps, sources);
     if(tryResistProp(prop->getId(), allProps)) {
-      if(NO_MESSAGES == false) {
+      if(!NO_MESSAGES) {
         if(IS_PLAYER) {
           string msg = "";
           prop->getMsg(propMsgOnResPlayer, msg);
-          if(msg.empty() == false) {
-            Log::addMsg(msg, clrWhite, true);
-          }
+          if(!msg.empty()) {Log::addMsg(msg, clrWhite, true);}
         } else {
           if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
             string msg = "";
             prop->getMsg(propMsgOnResMonster, msg);
-            if(msg.empty() == false) {
+            if(!msg.empty()) {
               const string monsterName = owningActor_->getNameThe();
               Log::addMsg(monsterName + " " + msg, clrWhite, true);
             }
@@ -963,7 +961,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   for(Prop* oldProp : appliedProps_) {
     if(prop->getId() == oldProp->getId()) {
 
-      if(prop->allowApplyMoreWhileActive() == false) {
+      if(!prop->allowApplyMoreWhileActive()) {
         delete prop;
         return;
       }
@@ -974,18 +972,18 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
       if(
         TURNS_LEFT_OLD != -1 &&
         TURNS_LEFT_NEW >= TURNS_LEFT_OLD &&
-        NO_MESSAGES == false) {
+        !NO_MESSAGES) {
         if(IS_PLAYER) {
           string msg = "";
           prop->getMsg(propMsgOnMorePlayer, msg);
-          if(msg.empty() == false) {
+          if(!msg.empty()) {
             Log::addMsg(msg, clrWhite, true);
           }
         } else {
           if(playerSeeOwner) {
             string msg = "";
             prop->getMsg(propMsgOnMoreMonster, msg);
-            if(msg.empty() == false) {
+            if(!msg.empty()) {
               Log::addMsg(owningActor_->getNameThe() + " " + msg);
             }
           }
@@ -1004,11 +1002,9 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   //This part reached means the property is new
   appliedProps_.push_back(prop);
 
-  if(DISABLE_PROP_START_EFFECTS == false) {
-    prop->onStart();
-  }
+  if(!DISABLE_PROP_START_EFFECTS) {prop->onStart();}
 
-  if(DISABLE_REDRAW == false) {
+  if(!DISABLE_REDRAW) {
     if(prop->shouldUpdatePlayerVisualWhenStartOrEnd()) {
       prop->owningActor_->updateColor();
       Map::player->updateFov();
@@ -1016,18 +1012,18 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
     }
   }
 
-  if(NO_MESSAGES == false) {
+  if(!NO_MESSAGES) {
     if(IS_PLAYER) {
       string msg = "";
       prop->getMsg(propMsgOnStartPlayer, msg);
-      if(msg.empty() == false) {
+      if(!msg.empty()) {
         Log::addMsg(msg, clrWhite, true);
       }
     } else {
       if(playerSeeOwner) {
         string msg = "";
         prop->getMsg(propMsgOnStartMonster, msg);
-        if(msg.empty() == false) {
+        if(!msg.empty()) {
           Log::addMsg(owningActor_->getNameThe() + " " + msg);
         }
       }
@@ -1040,12 +1036,12 @@ void PropHandler::tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE) {
   Prop* propAppliedFromWpn =
     IS_MELEE ? wpnData.propAppliedOnMelee : wpnData.propAppliedOnRanged;
 
-  if(propAppliedFromWpn != nullptr) {
+  if(propAppliedFromWpn) {
 
     //If weapon damage type is resisted by the defender, the property is
     //automatically resisted
     DmgType dmgType = IS_MELEE ? wpnData.meleeDmgType : wpnData.rangedDmgType;
-    if(tryResistDmg(dmgType, false) == false) {
+    if(!tryResistDmg(dmgType, false)) {
       //Make a copy of the weapon effect
       Prop* const prop = mkProp(
                            propAppliedFromWpn->getId(), propTurnsSpecific,
@@ -1087,12 +1083,12 @@ bool PropHandler::endAppliedProp(
     if(owningActor_ == Map::player) {
       string msg = "";
       prop->getMsg(propMsgOnEndPlayer, msg);
-      if(msg.empty() == false) {Log::addMsg(msg, clrWhite);}
+      if(!msg.empty()) {Log::addMsg(msg, clrWhite);}
     } else {
       if(Map::player->isSeeingActor(*owningActor_, visionBlockers)) {
         string msg = "";
         prop->getMsg(propMsgOnEndMonster, msg);
-        if(msg.empty() == false) {
+        if(!msg.empty()) {
           Log::addMsg(owningActor_->getNameThe() + " " + msg);
         }
       }
@@ -1169,7 +1165,7 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
   getPropsFromSources(propList, sources);
   for(Prop* prop : propList) {
     const string propName = prop->getNameShort();
-    if(propName.empty() == false) {
+    if(!propName.empty()) {
       const PropAlignment alignment = prop->getAlignment();
       const int TURNS_LEFT = prop->turnsLeft_;
       const string turnsStr = TURNS_LEFT > 0 && IS_SELF_AWARE ?
@@ -1208,8 +1204,8 @@ bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   getPropsFromSources(propList, sources);
   for(Prop* prop : propList) {
     if(
-      prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false &&
-      prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
+      !prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) &&
+      !prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE)) {
       return false;
     }
   }
@@ -1222,7 +1218,7 @@ bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   for(Prop* prop : propList) {
-    if(prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) == false) {
+    if(!prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE)) {
       return false;
     }
   }
@@ -1235,9 +1231,7 @@ bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   for(Prop* prop : propList) {
-    if(prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE) == false) {
-      return false;
-    }
+    if(!prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE)) {return false;}
   }
   return true;
 }
@@ -1248,9 +1242,7 @@ bool PropHandler::allowMove() const {
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   for(Prop* prop : propList) {
-    if(prop->allowMove() == false) {
-      return false;
-    }
+    if(!prop->allowMove()) {return false;}
   }
   return true;
 }
@@ -1261,9 +1253,7 @@ bool PropHandler::allowAct() const {
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   for(Prop* prop : propList) {
-    if(prop->allowAct() == false) {
-      return false;
-    }
+    if(!prop->allowAct()) {return false;}
   }
   return true;
 }
@@ -1276,7 +1266,7 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   getPropsFromSources(propList, sources);
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
-    if(propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE) == false) {
+    if(!propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE)) {
       TRACE_FUNC_END_VERBOSE;
       return false;
     }
@@ -1292,7 +1282,7 @@ bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   getPropsFromSources(propList, sources);
   const unsigned int NR_PROPS = propList.size();
   for(unsigned int i = 0; i < NR_PROPS; i++) {
-    if(propList.at(i)->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE) == false) {
+    if(!propList.at(i)->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE)) {
       return false;
     }
   }
@@ -1625,9 +1615,7 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
         const Pos delta(Rnd::range(-1, 1), Rnd::range(-1, 1));
         if(delta.x != 0 || delta.y != 0) {
           const Pos c = actorPos + delta;
-          if(blocked[c.x][c.y] == false) {
-            dir = DirUtils::getDir(delta);
-          }
+          if(!blocked[c.x][c.y]) {dir = DirUtils::getDir(delta);}
         }
         triesLeft--;
       }
@@ -1740,7 +1728,7 @@ void PropParalyzed::onStart() {
       Log::addMsg("The lit Dynamite stick falls from my hands!");
       Feature* const f =
         Map::cells[playerPos.x][playerPos.y].featureStatic;
-      if(f->isBottomless() == false) {
+      if(!f->isBottomless()) {
         FeatureFactory::mk(FeatureId::litDynamite, playerPos,
                            new DynamiteSpawnData(DYNAMITE_FUSE));
       }
@@ -1751,7 +1739,7 @@ void PropParalyzed::onStart() {
       Log::addMsg("The lit Flare falls from my hands.");
       Feature* const f =
         Map::cells[playerPos.x][playerPos.y].featureStatic;
-      if(f->isBottomless() == false) {
+      if(!f->isBottomless()) {
         FeatureFactory::mk(FeatureId::litFlare, playerPos,
                            new DynamiteSpawnData(FLARE_FUSE));
       }

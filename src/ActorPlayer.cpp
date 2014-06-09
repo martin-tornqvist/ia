@@ -762,9 +762,7 @@ void Player::onStandardTurn() {
     flareFuseTurns = -1;
   }
 
-  if(activeMedicalBag == nullptr) {
-    testPhobias();
-  }
+  if(!activeMedicalBag) {testPhobias();}
 
   //If obsessions are active, raise shock to a minimum level
   for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
@@ -859,7 +857,7 @@ void Player::onStandardTurn() {
         const bool IS_MONSTER_SEEN = isSeeingActor(*actor, nullptr);
         if(IS_MONSTER_SEEN) {
           if(!monster.messageMonsterInViewPrinted) {
-            if(activeMedicalBag != nullptr || waitTurnsLeft > 0) {
+            if(activeMedicalBag || waitTurnsLeft > 0) {
               Log::addMsg(actor->getNameA() + " comes into my view.",
                           clrWhite, true);
             }
@@ -896,11 +894,11 @@ void Player::onStandardTurn() {
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
-  if(activeMedicalBag == nullptr) {
+  if(!activeMedicalBag) {
     if(find(props.begin(), props.end(), propPoisoned) == props.end()) {
       int nrWounds = 0;
       Prop* const propWnd = propHandler_->getProp(propWound, PropSrc::applied);
-      if(propWnd != nullptr) {
+      if(propWnd) {
         nrWounds = dynamic_cast<PropWound*>(propWnd)->getNrWounds();
       }
 
@@ -949,7 +947,7 @@ void Player::onStandardTurn() {
     }
   }
 
-  if(activeMedicalBag != nullptr) {
+  if(activeMedicalBag) {
     activeMedicalBag->continueAction();
   }
 
@@ -972,7 +970,7 @@ void Player::interruptActions() {
   }
   waitTurnsLeft = -1;
 
-  if(activeMedicalBag != nullptr) {
+  if(activeMedicalBag) {
     activeMedicalBag->interrupted();
     activeMedicalBag = nullptr;
   }
@@ -1004,7 +1002,7 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
 
   if(HAS_SND_MSG) {
     Actor* const actorWhoMadeSnd = snd.getActorWhoMadeSound();
-    if(actorWhoMadeSnd != nullptr && actorWhoMadeSnd != this) {
+    if(actorWhoMadeSnd && actorWhoMadeSnd != this) {
       dynamic_cast<Monster*>(actorWhoMadeSnd)->playerBecomeAwareOfMe();
     }
   }
@@ -1031,11 +1029,11 @@ void Player::moveDir(Dir dir) {
     if(dir != Dir::center) {
       //Attack?
       Actor* const actorAtDest = Utils::getActorAtPos(dest);
-      if(actorAtDest != nullptr) {
+      if(actorAtDest) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
           Item* const item = inv_->getItemInSlot(SlotId::wielded);
-          if(item != nullptr) {
+          if(item) {
             Weapon* const weapon = dynamic_cast<Weapon*>(item);
             if(weapon->getData().isMeleeWeapon) {
               if(Config::isRangedWpnMeleeePrompt() &&
@@ -1116,7 +1114,7 @@ void Player::moveDir(Dir dir) {
 
         //Print message if walking on item
         Item* const item = Map::cells[pos.x][pos.y].item;
-        if(item != nullptr) {
+        if(item) {
           string message = propHandler_->allowSee() ?
                            "I see here: " : "I feel here: ";
           message += ItemData::getItemInterfaceRef(*item, true);
@@ -1138,7 +1136,7 @@ void Player::moveDir(Dir dir) {
 }
 
 void Player::autoMelee() {
-  if(target != nullptr) {
+  if(target) {
     if(Utils::isPosAdj(pos, target->pos, false)) {
       if(isSeeingActor(*target, nullptr)) {
         moveDir(DirUtils::getDir(target->pos - pos));
@@ -1152,7 +1150,7 @@ void Player::autoMelee() {
     for(int dy = -1; dy <= 1; dy++) {
       if(dx != 0 || dy != 0) {
         Actor* const actor = Utils::getActorAtPos(pos + Pos(dx, dy));
-        if(actor != nullptr) {
+        if(actor) {
           if(isSeeingActor(*actor, nullptr)) {
             target = actor;
             moveDir(DirUtils::getDir(Pos(dx, dy)));

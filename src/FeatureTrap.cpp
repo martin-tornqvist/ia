@@ -29,7 +29,7 @@ Trap::Trap(FeatureId id, Pos pos, TrapSpawnData* spawnData) :
   isHidden_(true) {
 
   assert(spawnData->trapType_ != endOfTraps);
-  assert(mimicFeature_ != nullptr);
+  assert(mimicFeature_);
 
   assert(
     Map::cells[pos.x][pos.y].featureStatic->canHaveStaticFeature());
@@ -39,11 +39,11 @@ Trap::Trap(FeatureId id, Pos pos, TrapSpawnData* spawnData) :
   } else {
     setSpecificTrapFromId(spawnData->trapType_);
   }
-  assert(specificTrap_ != nullptr);
+  assert(specificTrap_);
 }
 
 Trap::~Trap() {
-  assert(specificTrap_ != nullptr);
+  assert(specificTrap_);
   delete specificTrap_;
 }
 
@@ -110,12 +110,12 @@ void Trap::bump(Actor& actorBumping) {
 
     if(IS_PLAYER) {
       TRACE << "Trap: Player bumping" << endl;
-      const int CHANCE_TO_AVOID = isHidden_ == true ? 10 :
+      const int CHANCE_TO_AVOID = isHidden_ ? 10 :
                                   (BASE_CHANCE_TO_AVOID + DODGE_SKILL);
       const AbilityRollResult result = AbilityRoll::roll(CHANCE_TO_AVOID);
 
       if(result >= successSmall) {
-        if(isHidden_ == false) {
+        if(!isHidden_) {
           if(ACTOR_CAN_SEE) {
             Log::addMsg("I avoid a " + trapName + ".", clrMsgGood);
           }
@@ -124,12 +124,10 @@ void Trap::bump(Actor& actorBumping) {
         triggerTrap(actorBumping);
       }
     } else {
-      if(d.actorSize == actorSize_humanoid && d.isSpider == false) {
+      if(d.actorSize == actorSize_humanoid && !d.isSpider) {
         TRACE << "Trap: Humanoid monster bumping" << endl;
         Monster* const monster = dynamic_cast<Monster*>(&actorBumping);
-        if(
-          monster->awareOfPlayerCounter_ > 0 &&
-          monster->isStealth == false) {
+        if(monster->awareOfPlayerCounter_ > 0 && !monster->isStealth) {
           TRACE << "Trap: Monster eligible for triggering trap" << endl;
 
           const bool IS_ACTOR_SEEN_BY_PLAYER =
@@ -139,7 +137,7 @@ void Trap::bump(Actor& actorBumping) {
           const AbilityRollResult result = AbilityRoll::roll(CHANCE_TO_AVOID);
 
           if(result >= successSmall) {
-            if(isHidden_ == false && IS_ACTOR_SEEN_BY_PLAYER) {
+            if(!isHidden_ && IS_ACTOR_SEEN_BY_PLAYER) {
               const string actorName = actorBumping.getNameThe();
               Log::addMsg(actorName + " avoids a " + trapName + ".");
             }
@@ -165,14 +163,14 @@ void Trap::disarm() {
   bool isAutoSucceed = false;
   if(getTrapType() == trap_spiderWeb) {
     Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
-    if(item != nullptr) {
+    if(item) {
       isAutoSucceed = item->getData().id == ItemId::machete;
     }
   }
 
   const bool IS_OCCULTIST   = PlayerBon::getBg() == Bg::occultist;
 
-  if(isMagical() && IS_OCCULTIST == false) {
+  if(isMagical() && !IS_OCCULTIST) {
     Log::addMsg("I do not know how to dispel magic traps.");
     return;
   }
@@ -264,7 +262,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   clearGore();
 
   Item* item = Map::cells[pos_.x][pos_.y].item;
-  if(item != nullptr) {
+  if(item) {
     Map::cells[pos_.x][pos_.y].item = nullptr;
     ItemDrop::dropItemOnMap(pos_, *item);
   }
@@ -293,7 +291,7 @@ void Trap::playerTrySpotHidden() {
 
 string Trap::getDescr(const bool DEFINITE_ARTICLE) const {
   if(isHidden_) {
-    return DEFINITE_ARTICLE == true ? mimicFeature_->name_the :
+    return DEFINITE_ARTICLE ? mimicFeature_->name_the :
            mimicFeature_->name_a;
   } else {
     return "a " + specificTrap_->getTitle();
@@ -654,7 +652,7 @@ void TrapSummonMonster::trigger(
   const bool IS_PLAYER = &actor == Map::player;
   TRACE_VERBOSE << "TrapSummonMonster: Is player: " << IS_PLAYER << endl;
 
-  if(IS_PLAYER == false) {
+  if(!IS_PLAYER) {
     TRACE_VERBOSE << "TrapSummonMonster: Not triggered by player" << endl;
     TRACE_FUNC_END_VERBOSE;
     return;
@@ -766,7 +764,7 @@ void TrapSpiderWeb::trigger(
     Inventory& playerInv = Map::player->getInv();
     Item* itemWielded = playerInv.getItemInSlot(SlotId::wielded);
     bool hasMachete = false;
-    if(itemWielded != nullptr) {
+    if(itemWielded) {
       hasMachete = itemWielded->getData().id == ItemId::machete;
     }
 
@@ -828,7 +826,7 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
 
         if(
           (IS_PLAYER && PLAYER_CAN_SEE) ||
-          (IS_PLAYER == false && PLAYER_CAN_SEE_ACTOR)) {
+          (!IS_PLAYER && PLAYER_CAN_SEE_ACTOR)) {
           Log::addMsg("The web is destroyed.");
         }
         FeatureFactory::mk(FeatureId::floor, pos_);

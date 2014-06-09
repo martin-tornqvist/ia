@@ -179,8 +179,8 @@ public:
     id(itemId), propAppliedOnMelee(nullptr), propAppliedOnRanged(nullptr) {}
 
   ~ItemDataT() {
-    if(propAppliedOnMelee  != nullptr) delete propAppliedOnMelee;
-    if(propAppliedOnRanged != nullptr) delete propAppliedOnRanged;
+    if(propAppliedOnMelee)  {delete propAppliedOnMelee;}
+    if(propAppliedOnRanged) {delete propAppliedOnRanged;}
   }
 
   ItemId id;

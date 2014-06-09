@@ -79,7 +79,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY,
                         Actor* const caster) const {
   int costMax = getMaxSpiCost_();
 
-  if(IS_BASE_COST_ONLY == false) {
+  if(!IS_BASE_COST_ONLY) {
     const int X0 = max(0, caster->pos.x - 1);
     const int Y0 = max(0, caster->pos.y - 1);
     const int X1 = min(MAP_W - 1, caster->pos.x + 1);
@@ -127,7 +127,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY,
     vector<PropId> props;
     propHlr.getAllActivePropIds(props);
 
-    if(propHlr.allowSee() == false) costMax--;
+    if(!propHlr.allowSee()) {costMax--;}
 
     if(find(props.begin(), props.end(), propBlessed) != props.end()) {
       costMax -= 1;
@@ -411,14 +411,14 @@ SpellCastRetData SpellDetItems::cast_(Actor* const caster) const {
   for(int y = Y0; y < Y1; y++) {
     for(int x = X0; x <= X1; x++) {
       Item* item = Map::cells[x][y].item;
-      if(item != nullptr) {
+      if(item) {
         Map::cells[x][y].isSeenByPlayer = true;
         Map::cells[x][y].isExplored = true;
         itemsRevealedPositions.push_back(Pos(x, y));
       }
     }
   }
-  if(itemsRevealedPositions.empty() == false) {
+  if(!itemsRevealedPositions.empty()) {
     Renderer::drawMapAndInterface();
     Map::player->updateFov();
     Renderer::drawBlastAnimAtPositions(
@@ -455,7 +455,7 @@ SpellCastRetData SpellDetTraps::cast_(Actor* const caster) const {
     }
   }
 
-  if(trapsRevealedPositions.empty() == false) {
+  if(!trapsRevealedPositions.empty()) {
     Renderer::drawMapAndInterface();
     Map::player->updateFov();
     Renderer::drawBlastAnimAtPositions(trapsRevealedPositions, clrWhite);
@@ -516,15 +516,15 @@ SpellCastRetData SpellOpening::cast_(
     }
   }
 
-  if(featuresOpenedPositions.empty() == false) {
+  if(featuresOpenedPositions.empty()) {
+    return SpellCastRetData(false);
+  } else {
     Renderer::drawMapAndInterface();
     Map::player->updateFov();
     Renderer::drawBlastAnimAtPositions(
       featuresOpenedPositions, clrWhite);
     Renderer::drawMapAndInterface();
     return SpellCastRetData(true);
-  } else {
-    return SpellCastRetData(false);
   }
 }
 
@@ -762,7 +762,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   if(freePositionsSeenByPlayer.empty()) {
     vector<Pos> freeCellsVector;
     Utils::mkVectorFromBoolMap(false, blocked, freeCellsVector);
-    if(freeCellsVector.empty() == false) {
+    if(!freeCellsVector.empty()) {
       sort(freeCellsVector.begin(), freeCellsVector.end(),
            IsCloserToOrigin(caster->pos));
       summonPos = freeCellsVector.at(0);

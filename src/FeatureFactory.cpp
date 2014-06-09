@@ -32,7 +32,7 @@ void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos) {
 
   FeatureStatic* const oldFeature = cell.featureStatic;
 
-  if(oldFeature != nullptr) {delete oldFeature;}
+  if(oldFeature) {delete oldFeature;}
 
   cell.featureStatic = newFeature;
 
@@ -61,13 +61,13 @@ Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
 
   //General (simple) features
   if(data->spawnType == featureSpawnType_static) {
-    assert(spawnData == nullptr);
+    assert(!spawnData);
     FeatureStatic* feature = new FeatureStatic(id, pos);
     replaceStaticFeatureAt(feature, pos);
     return feature;
   }
   if(data->spawnType == featureSpawnType_mob) {
-    assert(spawnData == nullptr);
+    assert(!spawnData);
     FeatureMob* feature = new FeatureMob(id, pos);
     GameTime::addFeatureMob(feature);
     return feature;
@@ -137,51 +137,51 @@ Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
       return proxEvent;
     }
     case FeatureId::tomb: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       Tomb* tomb = new Tomb(id, pos);
       replaceStaticFeatureAt(tomb, pos);
       return tomb;
     }
 //    case FeatureId::pillarCarved: {
-//        assert(spawnData == nullptr);
+//        assert(!spawnData);
 //        CarvedPillar* pillar = new CarvedPillar(id, pos);
 //        replaceStaticFeatureAt(pillar, pos);
 //        return pillar;
 //      }
 //      break;
 //    case FeatureId::barrel: {
-//        assert(spawnData == nullptr);
+//        assert(!spawnData);
 //        Barrel* barrel = new Barrel(id, pos);
 //        replaceStaticFeatureAt(barrel, pos);
 //        return barrel;
 //      }
 //      break;
     case FeatureId::cabinet: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       Cabinet* cabinet = new Cabinet(id, pos);
       replaceStaticFeatureAt(cabinet, pos);
       return cabinet;
     }
     case FeatureId::chest: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       Chest* chest = new Chest(id, pos);
       replaceStaticFeatureAt(chest, pos);
       return chest;
     }
     case FeatureId::fountain: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       Fountain* fountain = new Fountain(id, pos);
       replaceStaticFeatureAt(fountain, pos);
       return fountain;
     }
     case FeatureId::cocoon: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       Cocoon* cocoon = new Cocoon(id, pos);
       replaceStaticFeatureAt(cocoon, pos);
       return cocoon;
     }
 //    case FeatureId::altar: {
-//        assert(spawnData == nullptr);
+//        assert(!spawnData);
 //        Altar* altar = new Altar(id, pos);
 //        replaceStaticFeatureAt(altar, pos);
 //
@@ -191,31 +191,31 @@ Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
     case FeatureId::shallowMud:
     case FeatureId::shallowWater:
     case FeatureId::poolBlood: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       FeatureLiquidShallow* liquid = new FeatureLiquidShallow(id, pos);
       replaceStaticFeatureAt(liquid, pos);
       return liquid;
     }
     case FeatureId::deepWater: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       FeatureLiquidDeep* liquid = new FeatureLiquidDeep(id, pos);
       replaceStaticFeatureAt(liquid, pos);
       return liquid;
     }
     case FeatureId::gravestone: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       Grave* grave = new Grave(id, pos);
       replaceStaticFeatureAt(grave, pos);
       return grave;
     }
     case FeatureId::stairs: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       Stairs* stairs = new Stairs(id, pos);
       replaceStaticFeatureAt(stairs, pos);
       return stairs;
     }
     case FeatureId::wall: {
-      assert(spawnData == nullptr);
+      assert(!spawnData);
       Wall* wall = new Wall(id, pos);
       replaceStaticFeatureAt(wall, pos);
       return wall;

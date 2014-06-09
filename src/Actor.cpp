@@ -93,7 +93,7 @@ bool Actor::isSeeingActor(
     if(other.pos.y - pos.y > FOV_STD_RADI_INT) return false;
     if(pos.y - other.pos.y > FOV_STD_RADI_INT) return false;
 
-    if(visionBlockingCells != nullptr) {
+    if(visionBlockingCells) {
       const bool IS_BLOCKED_BY_DARKNESS = !data_->canSeeInDarkness;
       return Fov::checkCell(visionBlockingCells, other.pos, pos,
                             IS_BLOCKED_BY_DARKNESS);
@@ -393,7 +393,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   if(isHumanoid()) {
     Armor* armor =
       dynamic_cast<Armor*>(inv_->getItemInSlot(SlotId::armorBody));
-    if(armor != nullptr) {
+    if(armor) {
       TRACE_VERBOSE << "Actor: Has armor, running hit on armor" << endl;
 
       if(dmgType == DmgType::physical) {
@@ -501,7 +501,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     ActorDeadState::destroyed : ActorDeadState::corpse;
 
   if(this != Map::player) {
-    if(isHumanoid() == true) {
+    if(isHumanoid()) {
       Snd snd(
         "I hear agonised screaming.", SfxId::endOfSfxId,
         IgnoreMsgIfOriginSeen::yes, pos, this, SndVol::low,
@@ -516,7 +516,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   if(IS_DESTROYED) {
     glyph_ = ' ';
     tile_ = TileId::empty;
-    if(isHumanoid() == true) {
+    if(isHumanoid()) {
       if(ALLOW_GORE) {
         Map::mkGore(pos);
       }

@@ -38,7 +38,7 @@ void playerThrowLitExplosive(const Pos& aimCell) {
   for(size_t i = 1; i < path.size(); i++) {
     const Pos curPos = path.at(i);
     const auto* featureHere = Map::cells[curPos.x][curPos.y].featureStatic;
-    if(featureHere->isProjectilePassable() == false) {
+    if(!featureHere->isProjectilePassable()) {
       path.resize(i);
       break;
     }
@@ -64,13 +64,13 @@ void playerThrowLitExplosive(const Pos& aimCell) {
 
   if(DYNAMITE_FUSE != -1) {
     Log::addMsg("I throw a lit dynamite stick.");
-    if(IS_DEST_FEAT_BOTTOMLESS == false) {
+    if(!IS_DEST_FEAT_BOTTOMLESS) {
       FeatureFactory::mk(FeatureId::litDynamite, path.back(),
                          new DynamiteSpawnData(DYNAMITE_FUSE));
     }
   } else if(FLARE_FUSE != -1) {
     Log::addMsg("I throw a lit flare.");
-    if(IS_DEST_FEAT_BOTTOMLESS == false) {
+    if(!IS_DEST_FEAT_BOTTOMLESS) {
       FeatureFactory::mk(FeatureId::litFlare, path.back(),
                          new DynamiteSpawnData(FLARE_FUSE));
     }
@@ -81,7 +81,7 @@ void playerThrowLitExplosive(const Pos& aimCell) {
     Log::addMsg("I throw a lit Molotov Cocktail.");
     const int EXPL_RADI_CHANGE =
       PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
-    if(IS_DEST_FEAT_BOTTOMLESS == false) {
+    if(!IS_DEST_FEAT_BOTTOMLESS) {
       Explosion::runExplosionAt(
         path.back(), ExplType::applyProp,
         ExplSrc::playerUseMoltvIntended, EXPL_RADI_CHANGE,
@@ -134,7 +134,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
     curPos.set(path.at(i));
 
     Actor* const actorHere = Utils::getActorAtPos(curPos);
-    if(actorHere != nullptr) {
+    if(actorHere) {
       if(
         curPos == targetCell ||
         actorHere->getData().actorSize >= actorSize_humanoid) {
@@ -145,7 +145,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
 
         if(
           data->attackResult >= successSmall &&
-          data->isEtherealDefenderMissed == false) {
+          !data->isEtherealDefenderMissed) {
           if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
             Renderer::drawGlyph('*', Panel::map,
                                 curPos, clrRedLgt);
@@ -187,7 +187,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
     }
 
     const auto* featureHere = Map::cells[curPos.x][curPos.y].featureStatic;
-    if(featureHere->isProjectilePassable() == false) {
+    if(!featureHere->isProjectilePassable()) {
       blockedInElement = itemThrownData.isPotion ? i : i - 1;
       break;
     }
@@ -222,7 +222,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
       const AlertsMonsters alertsMonsters = &actorThrowing == Map::player ?
                                             AlertsMonsters::yes :
                                             AlertsMonsters::no;
-      if(isActorHit == false) {
+      if(!isActorHit) {
         Snd snd(itemThrownData.landOnHardSurfaceSoundMsg,
                 itemThrownData.landOnHardSurfaceSfx,
                 IgnoreMsgIfOriginSeen::yes, dropPos, nullptr, SndVol::low,

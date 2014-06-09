@@ -37,7 +37,7 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
   for(int y = p0.y; y <= p1.y; y++) {
     for(int x = p0.x; x <= p1.x; x++) {
       visionBlockers[x][y] =
-        Map::cells[x][y].featureStatic->isVisionPassable() == false;
+        !Map::cells[x][y].featureStatic->isVisionPassable();
     }
   }
 

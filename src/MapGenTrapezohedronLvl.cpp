@@ -39,7 +39,7 @@ bool run() {
   vector<Pos> itemPosBucket;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      if(blocked[x][y] == false && Pos(x, y) != origin) {
+      if(!blocked[x][y] && Pos(x, y) != origin) {
         itemPosBucket.push_back(Pos(x, y));
       }
     }

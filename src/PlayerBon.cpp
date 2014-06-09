@@ -519,7 +519,7 @@ void getPickableTraits(vector<Trait>& traitsRef) {
 
     const Trait trait = Trait(i);
 
-    if(hasTrait(trait) == false) {
+    if(!hasTrait(trait)) {
 
       vector<Trait> traitPrereqs;
       Bg bgPrereq = Bg::endOfBgs;
@@ -528,7 +528,7 @@ void getPickableTraits(vector<Trait>& traitsRef) {
       bool isPickable = true;
       for(Trait prereq : traitPrereqs) {
 
-        if(hasTrait(prereq) == false) {
+        if(!hasTrait(prereq)) {
           isPickable = false;
           break;
         }

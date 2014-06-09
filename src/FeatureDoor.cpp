@@ -358,7 +358,7 @@ void Door::tryClose(Actor* actorTrying) {
         break;
       }
     }
-    if(isblockedByActor || Map::cells[pos_.x][pos_.y].item != nullptr) {
+    if(isblockedByActor || Map::cells[pos_.x][pos_.y].item) {
       isClosable = false;
       if(IS_PLAYER) {
         if(!TRYER_IS_BLIND) {

@@ -33,9 +33,9 @@ void FeatureLever::pull() {
   //TODO Implement something like openByLever in the Door class
   //Others should not poke around in the doors internal variables
 
-//  if(doorLinkedTo_->isBroken_ == false) {
+//  if(!doorLinkedTo_->isBroken_) {
 //    TRACE << "FeatureLever: Door linked to is not broken" << endl;
-//    if(doorLinkedTo_->isOpen_ == false) {doorLinkedTo_->reveal(true);}
+//    if(!doorLinkedTo_->isOpen_) {doorLinkedTo_->reveal(true);}
 //    doorLinkedTo_->isOpen_  = !doorLinkedTo_->isOpen_;
 //    doorLinkedTo_->isStuck_ = false;
 //  }

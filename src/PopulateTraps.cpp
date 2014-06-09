@@ -59,7 +59,7 @@ void populateStdLvl() {
         for(int y = p0.y; y <= p1.y; y++) {
           for(int x = p0.x; x <= p1.x; x++) {
             if(
-              blocked[x][y] == false &&
+              !blocked[x][y] &&
               Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
               trapPosBucket.push_back(Pos(x, y));
             }
@@ -112,7 +112,7 @@ void populateStdLvl() {
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
         if(
-          blocked[x][y] == false &&
+          !blocked[x][y] &&
           RoomThemeMaking::themeMap[x][y] == RoomThemeId::plain &&
           Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
           trapPosBucket.push_back(Pos(x, y));

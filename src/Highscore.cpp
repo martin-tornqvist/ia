@@ -220,7 +220,7 @@ void onGameOver(const bool IS_VICTORY) {
 vector<HighScoreEntry> getEntriesSorted() {
   vector<HighScoreEntry> entries;
   readFile(entries);
-  if(entries.empty() == false) {
+  if(!entries.empty()) {
     sortEntries(entries);
   }
   return entries;

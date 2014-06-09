@@ -21,7 +21,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
 
   vector<Actor*> SpottedEnemies;
   Map::player->getSpottedEnemies(SpottedEnemies);
-  if(SpottedEnemies.empty() == false) {
+  if(SpottedEnemies.empty()) {
     Log::addMsg("Not while an enemy is near.");
     return ConsumeItem::no;
   }
@@ -153,11 +153,11 @@ void MedicalBag::finishCurAction() {
     case medicalBagAction_treatWound: {
       Prop* prop =
         Map::player->getPropHandler().getProp(propWound, PropSrc::applied);
-      if(prop == nullptr) {
+      if(prop) {
+        dynamic_cast<PropWound*>(prop)->healOneWound();
+      } else {
         TRACE << "[WARNING] No wound prop found, ";
         TRACE << "in MedicalBag::finishCurAction()" << endl;
-      } else {
-        dynamic_cast<PropWound*>(prop)->healOneWound();
       }
     } break;
 

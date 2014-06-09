@@ -167,7 +167,7 @@ int placeThemeFeatures(Room& room) {
       trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls,
                            themeFeatureData);
 
-    if(d == nullptr) {
+    if(!d) {
       TRACE << "RoomThemeMaking: Could not find any more spots ";
       TRACE << "to place feature, returning" << endl;
       return nrFeaturesPlaced;

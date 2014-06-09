@@ -51,8 +51,8 @@ void lineToLines(string line, const int MAX_W, vector<string>& linesRef) {
     linesRef.front() = "";
   }
 
-  while(curWord.empty() == false) {
-    if(isWordFit(linesRef.at(curRow), curWord, MAX_W) == false) {
+  while(!curWord.empty()) {
+    if(!isWordFit(linesRef.at(curRow), curWord, MAX_W)) {
       //Current word did not fit on current line, make a new line
       curRow++;
       linesRef.resize(curRow + 1);
@@ -61,9 +61,7 @@ void lineToLines(string line, const int MAX_W, vector<string>& linesRef) {
 
     //If this is not the first word on the current line,
     //add a space before the word
-    if(linesRef.at(curRow).empty() == false) {
-      linesRef.at(curRow) += " ";
-    }
+    if(!linesRef.at(curRow).empty()) {linesRef.at(curRow) += " ";}
 
     linesRef.at(curRow) += curWord;
 

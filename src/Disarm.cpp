@@ -66,7 +66,7 @@ void playerDisarm() {
     Actor* actorOnTrap = Utils::getActorAtPos(pos);
 
     //Abort if trap blocked by monster
-    if(actorOnTrap != nullptr) {
+    if(actorOnTrap) {
       if(Map::player->isSeeingActor(*actorOnTrap, nullptr)) {
         Log::addMsg("It's blocked.");
       } else {

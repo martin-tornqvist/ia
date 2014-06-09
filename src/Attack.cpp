@@ -185,7 +185,7 @@ RangedAttData::RangedAttData(
 
   //If aim level parameter not given, determine it now
   if(intendedAimLvl_ == actorSize_none) {
-    if(actorAimedAt != nullptr) {
+    if(actorAimedAt) {
       intendedAimLvl = actorAimedAt->getData().actorSize;
     } else {
       bool blocked[MAP_W][MAP_H];
@@ -199,7 +199,7 @@ RangedAttData::RangedAttData(
 
   curDefender = Utils::getActorAtPos(curPos_);
 
-  if(curDefender != nullptr) {
+  if(curDefender) {
     TRACE << "RangedAttData: Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
@@ -252,7 +252,7 @@ RangedAttData::RangedAttData(
       if(attacker == Map::player) {
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
-        if(prop != nullptr) {
+        if(prop) {
           playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }
       }
@@ -278,7 +278,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
 
   //If aim level parameter not given, determine it now
   if(intendedAimLvl_ == actorSize_none) {
-    if(actorAimedAt != nullptr) {
+    if(actorAimedAt) {
       intendedAimLvl = actorAimedAt->getData().actorSize;
     } else {
       bool blocked[MAP_W][MAP_H];
@@ -292,7 +292,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
 
   curDefender = Utils::getActorAtPos(curPos_);
 
-  if(curDefender != nullptr) {
+  if(curDefender) {
     TRACE << "MissileAttData: Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
@@ -336,7 +336,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
       if(attacker == Map::player) {
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
-        if(prop != nullptr) {
+        if(prop) {
           playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }
       }
@@ -663,7 +663,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
 
         //HIT ACTOR?
         if(
-          curProj->attackData->curDefender != nullptr &&
+          curProj->attackData->curDefender &&
           !curProj->isObstructed &&
           !curProj->attackData->isEtherealDefenderMissed) {
 
@@ -738,7 +738,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
           featureBlockingShot = featureStatic;
         }
 
-        if(featureBlockingShot != nullptr && !curProj->isObstructed) {
+        if(featureBlockingShot && !curProj->isObstructed) {
           curProj->obstructedInElement = projectilePathElement - 1;
           curProj->isObstructed = true;
 
@@ -888,7 +888,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     const Pos curPos(path.at(i));
 
-    if(actorArray[curPos.x][curPos.y] != nullptr) {
+    if(actorArray[curPos.x][curPos.y]) {
 
       //Only attempt hit if aiming at a level that would hit the actor
       const ActorSize sizeOfActor =
@@ -1006,7 +1006,7 @@ void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
         data.curDefender->getPropHandler().tryApplyPropFromWpn(wpn, true);
       }
       if(data.attackResult >= successNormal) {
-        if(data.curDefender->getData().canBleed == true) {
+        if(data.curDefender->getData().canBleed) {
           Map::mkBlood(data.curDefender->pos);
         }
       }

@@ -27,7 +27,7 @@ void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
   Inventory& inv = actorDropping->getInv();
   Item* itemToDrop = inv.getItemInElement(ELEMENT);
 
-  if(itemToDrop != nullptr) {
+  if(itemToDrop) {
     const bool IS_STACKABLE = itemToDrop->getData().isStackable;
     const int NR_ITEMS_BEFORE_DROP = itemToDrop->nrItems;
     const bool IS_WHOLE_STACK_DROPPED =
@@ -109,7 +109,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
       while(!isCloserToOrigin(freeCells.at(i), freeCells.at(ii))) {
         stackPos = freeCells.at(ii);
         Item* itemFoundOnFloor = Map::cells[stackPos.x][stackPos.y].item;
-        if(itemFoundOnFloor != nullptr) {
+        if(itemFoundOnFloor) {
           if(itemFoundOnFloor->getData().id == item.getData().id) {
             item.nrItems += itemFoundOnFloor->nrItems;
             delete itemFoundOnFloor;
@@ -124,10 +124,8 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
       item.appplyDropEffects();
     }
 
-    if(&item == nullptr) {break;}
-
     curPos = freeCells.at(i);
-    if(Map::cells[curPos.x][curPos.y].item == nullptr) {
+    if(!Map::cells[curPos.x][curPos.y].item) {
 
       Map::cells[curPos.x][curPos.y].item = &item;
 

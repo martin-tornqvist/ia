@@ -117,7 +117,7 @@ bool isSaveAvailable() {
   if(file.good()) {
     const bool IS_EMPTY = file.peek() == std::ifstream::traits_type::eof();
     file.close();
-    return IS_EMPTY == false;
+    return !IS_EMPTY;
   } else {
     file.close();
     return false;

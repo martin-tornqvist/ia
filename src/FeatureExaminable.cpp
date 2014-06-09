@@ -125,9 +125,7 @@ Tomb::Tomb(FeatureId id, Pos pos) :
     }
   }
 
-  const bool IS_CONTAINING_ITEMS = itemContainer_.items_.empty() == false;
-
-  if(IS_CONTAINING_ITEMS) {
+  if(!itemContainer_.items_.empty()) {
     const int RND = Rnd::percentile();
     if(RND < 15) {
       trait_ = TombTrait::forebodingCarvedSigns;
@@ -253,7 +251,7 @@ void Tomb::examine() {
   } else if(itemContainer_.items_.empty() && isContentKnown_) {
     Log::addMsg("The tomb is empty.");
   } else {
-    if(isTraitKnown_ == false && trait_ != TombTrait::endOfTombTraits) {
+    if(!isTraitKnown_ && trait_ != TombTrait::endOfTombTraits) {
       const int FIND_ONE_IN_N = PlayerBon::hasTrait(Trait::perceptive) ? 2 :
                                 (PlayerBon::hasTrait(Trait::observant) ? 3 : 6);
 
@@ -293,14 +291,14 @@ void Tomb::examine() {
 //  const Inventory& inv = Map::player->getInv();
 //  bool hasSledgehammer = false;
 //  Item* item = inv.getItemInSlot(SlotId::wielded);
-//  if(item != nullptr) {
+//  if(item) {
 //    hasSledgehammer = item->getData().id == ItemId::sledgeHammer;
 //  }
-//  if(hasSledgehammer == false) {
+//  if(!hasSledgehammer) {
 //    item = inv.getItemInSlot(SlotId::wieldedAlt);
 //    hasSledgehammer = item->getData().id == ItemId::sledgeHammer;
 //  }
-//  if(hasSledgehammer == false) {
+//  if(!hasSledgehammer) {
 //    hasSledgehammer = inv.hasItemInGeneral(ItemId::sledgeHammer);
 //  }
 //  if(hasSledgehammer) {
@@ -311,7 +309,7 @@ void Tomb::examine() {
 //  const int BREAK_N_IN_10 = IS_WEAK ? 1 : 8;
 //  if(Rnd::fraction(BREAK_N_IN_10, 10)) {
 //    Log::addMsg("The lid cracks open!");
-//    if(IS_BLESSED == false && (IS_CURSED || Rnd::oneIn(3))) {
+//    if(!IS_BLESSED && (IS_CURSED || Rnd::oneIn(3))) {
 //      itemContainer_.destroySingleFragile();
 //    }
 //    open();
@@ -325,7 +323,7 @@ void Tomb::examine() {
 //void Tomb::disarm() {
 
 //case tombAction_carveCurseWard: {
-//    if(IS_CURSED == false && (IS_BLESSED || Rnd::fraction(4, 5))) {
+//    if(!IS_CURSED && (IS_BLESSED || Rnd::fraction(4, 5))) {
 //      Log::addMsg("The curse is cleared.");
 //    } else {
 //      Log::addMsg("I make a mistake, the curse is doubled!");
@@ -349,7 +347,7 @@ void Tomb::triggerTrap(Actor& actor) {
       for(int i = 1; i < endOfActorIds; i++) {
         const ActorDataT& d = ActorData::data[i];
         if(
-          d.isGhost && d.isAutoSpawnAllowed && d.isUnique == false &&
+          d.isGhost && d.isAutoSpawnAllowed && !d.isUnique &&
           ((Map::dlvl + 5) >= d.spawnMinDLVL ||
            Map::dlvl >= MIN_DLVL_HARDER_TRAPS)) {
           actorBucket.push_back(ActorId(i));
@@ -388,7 +386,7 @@ void Tomb::triggerTrap(Actor& actor) {
           if(
             d.intrProps[propOoze] &&
             d.isAutoSpawnAllowed  &&
-            d.isUnique == false) {
+            !d.isUnique) {
             actorBucket.push_back(ActorId(i));
           }
         }
@@ -400,7 +398,7 @@ void Tomb::triggerTrap(Actor& actor) {
     default: {} break;
   }
 
-  if(actorBucket.empty() == false) {
+  if(!actorBucket.empty()) {
     const unsigned int ELEM = Rnd::range(0, actorBucket.size() - 1);
     const ActorId actorIdToSpawn = actorBucket.at(ELEM);
     Actor* const monster = ActorFactory::mk(actorIdToSpawn, pos_);
@@ -421,7 +419,7 @@ Chest::Chest(FeatureId id, Pos pos) :
   itemContainer_.setRandomItemsForFeature(
     FeatureId::chest, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
-  if(itemContainer_.items_.empty() == false) {
+  if(!itemContainer_.items_.empty()) {
     isLocked_   = Rnd::fraction(6, 10);
     isTrapped_  = Rnd::fraction(6, 10);
   }
@@ -494,7 +492,7 @@ void Chest::bash(Actor& actorTrying) {
       const bool IS_BLESSED =
         find(props.begin(), props.end(), propBlessed) != props.end();
 
-      if(IS_BLESSED == false && (IS_CURSED || Rnd::oneIn(3))) {
+      if(!IS_BLESSED && (IS_CURSED || Rnd::oneIn(3))) {
         itemContainer_.destroySingleFragile();
       }
 
@@ -518,7 +516,7 @@ void Chest::bash(Actor& actorTrying) {
 //      Inventory& inv    = Map::player->getInv();
 //      Item* const item  = inv.getItemInSlot(SlotId::wielded);
 //
-//      if(item == nullptr) {
+//      if(!item) {
 //        Log::addMsg(
 //          "I attempt to punch the lock open, nearly breaking my hand.",
 //          clrMsgBad);
@@ -879,7 +877,7 @@ void Cocoon::triggerTrap(Actor& actor) {
       const ActorDataT& d = ActorData::data[i];
       if(
         d.isSpider && d.actorSize == actorSize_floor &&
-        d.isAutoSpawnAllowed && d.isUnique == false) {
+        !d.isAutoSpawnAllowed && d.isUnique) {
         spawnBucket.push_back(d.id);
       }
     }

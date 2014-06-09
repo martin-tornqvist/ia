@@ -72,7 +72,7 @@ void run() {
   string name = "";
   draw(name);
   bool isDone = false;
-  while(isDone == false) {
+  while(!isDone) {
     if(Config::isBotPlaying()) {
       name = "AZATHOTH";
       isDone = true;
@@ -268,7 +268,7 @@ void drawPickTrait(
   vector<Trait> traitPrereqs;
   Bg bgPrereq = Bg::endOfBgs;
   PlayerBon::getTraitPrereqs(markedTrait, traitPrereqs, bgPrereq);
-  if(traitPrereqs.empty() == false || bgPrereq != Bg::endOfBgs) {
+  if(!traitPrereqs.empty() || bgPrereq != Bg::endOfBgs) {
     Renderer::drawText("This trait had the following prerequisite(s):",
                        Panel::screen, Pos(X0_DESCR, y), clrWhite);
     y++;
@@ -321,11 +321,11 @@ void createCharacter() {
 }
 
 void pickNewTrait(const bool IS_CHARACTER_CREATION) {
-  if(Config::isBotPlaying() == false) {
+  if(!Config::isBotPlaying()) {
     vector<Trait> pickableTraits;
     PlayerBon::getPickableTraits(pickableTraits);
 
-    if(pickableTraits.empty() == false) {
+    if(!pickableTraits.empty()) {
 
       const int NR_TRAITS_TOT = int(pickableTraits.size());
       const int NR_TRAITS_2   = NR_TRAITS_TOT / 2;
@@ -360,9 +360,7 @@ void pickNewTrait(const bool IS_CHARACTER_CREATION) {
             const Pos pos = browser.getPos();
             PlayerBon::pickTrait(
               pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));
-            if(IS_CHARACTER_CREATION == false) {
-              Renderer::drawMapAndInterface();
-            }
+            if(!IS_CHARACTER_CREATION) {Renderer::drawMapAndInterface();}
             return;
           } break;
 
