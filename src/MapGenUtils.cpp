@@ -42,8 +42,9 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   //(1) Is a wall cell
   //(2) Is a cell not belonging to any room
   //(3) Is not on the edge of the map
-  //(4) Is cardinally adjacent to a floor cell belonging to the room
-  //(5) Is cardinally adjacent to a cell not in the room or room outline
+  //(4) There is no adjacent floor cell not belonging to the room
+  //(5) Is cardinally adjacent to a floor cell belonging to the room
+  //(6) Is cardinally adjacent to a cell not in the room or room outline
 
   out.resize(0);
 
@@ -62,8 +63,6 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   bool roomAndOutlineCells[MAP_W][MAP_H];
   MapParse::expand(roomCells, roomAndOutlineCells, 1, true);
 
-  const vector<Pos> cardinals {Pos(1, 0), Pos(-1, 0), Pos(0, 1), Pos(0, -1)};
-
   for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; y++) {
     for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; x++) {
       //Condition (1)
@@ -80,17 +79,29 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
 
       const Pos p(x, y);
 
-      for(const Pos& d : cardinals) {
+      bool isAdjToFloorNotInRoom = false;
+
+      for(const Pos& d : DirUtils::dirList) {
         const Pos& pAdj(p + d);
 
         //Condition (4)
-        if(roomFloorCells[pAdj.x][pAdj.y])      {isAdjToFloorInRoom = true;}
+        if(Map::roomMap[pAdj.x][pAdj.y] && !roomFloorCells[pAdj.x][pAdj.y]) {
+          isAdjToFloorNotInRoom = true;
+          break;
+        }
 
-        //Condition (5)
-        if(roomAndOutlineCells[pAdj.x][pAdj.y]) {isAdjToCellOutside = true;}
+        if(DirUtils::isCardinal(d)) {
+          //Condition (5)
+          if(roomFloorCells[pAdj.x][pAdj.y])        {isAdjToFloorInRoom = true;}
+
+          //Condition (6)
+          if(!roomAndOutlineCells[pAdj.x][pAdj.y])  {isAdjToCellOutside = true;}
+        }
       }
 
-      if(isAdjToFloorInRoom && isAdjToCellOutside) {out.push_back(p);}
+      if(!isAdjToFloorNotInRoom && isAdjToFloorInRoom && isAdjToCellOutside) {
+        out.push_back(p);
+      }
     }
   }
 }
@@ -155,10 +166,10 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
   const Pos& p0 = entries.first;
   const Pos& p1 = entries.second;
 
-//#ifdef DEMO_MODE
-//  Renderer::drawBlastAnimAtPositions(vector<Pos> {p0}, clrGreenLgt);
-//  Renderer::drawBlastAnimAtPositions(vector<Pos> {p1}, clrRedLgt);
-//#endif // DEMO_MODE
+#ifdef DEMO_MODE
+  Renderer::drawBlastAnimAtPositions(vector<Pos> {p0}, clrGreenLgt);
+  Renderer::drawBlastAnimAtPositions(vector<Pos> {p1}, clrRedLgt);
+#endif // DEMO_MODE
 
   vector<Pos> path;
 
@@ -187,6 +198,13 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
   if(!path.empty()) {
     path.push_back(p0);
     for(const Pos& p : path) {FeatureFactory::mk(FeatureId::floor, p, nullptr);}
+
+//    if(path.size() >= 3) {
+//      const Pos& p(path.at(path.size() / 2));
+//      Room* junction = new Room(Rect(p, p));
+//      Map::roomList.push_back(junction);
+//      Map::roomMap[p.x][p.y] = junction;
+//    }
 
     if(doorPosProposals) {
       doorPosProposals[p0.x][p0.y] = doorPosProposals[p1.x][p1.y] = true;

@@ -47,7 +47,7 @@ void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos) {
     Renderer::drawMap();
     Renderer::drawGlyph('X', Panel::map, pos, clrYellow);
     Renderer::updateScreen();
-    SdlWrapper::sleep(30);
+    SdlWrapper::sleep(60);
   }
 #endif // DEMO_MODE
 }
@@ -86,16 +86,14 @@ Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
     case FeatureId::lever: {
       assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_lever);
       FeatureLever* lever =
-        new FeatureLever(
-        id, pos, dynamic_cast<LeverSpawnData*>(spawnData));
+        new FeatureLever(id, pos, dynamic_cast<LeverSpawnData*>(spawnData));
       replaceStaticFeatureAt(lever, pos);
       delete spawnData;
       return lever;
     }
     case FeatureId::trap: {
       assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_trap);
-      Trap* trap =
-        new Trap(id, pos, dynamic_cast<TrapSpawnData*>(spawnData));
+      Trap* trap = new Trap(id, pos, dynamic_cast<TrapSpawnData*>(spawnData));
       replaceStaticFeatureAt(trap, pos);
       delete spawnData;
       return trap;
@@ -103,8 +101,7 @@ Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
     case FeatureId::litDynamite: {
       assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
       LitDynamite* dynamite =
-        new LitDynamite(
-        id, pos, dynamic_cast<DynamiteSpawnData*>(spawnData));
+        new LitDynamite(id, pos, dynamic_cast<DynamiteSpawnData*>(spawnData));
       GameTime::addFeatureMob(dynamite);
       delete spawnData;
       return dynamite;
@@ -112,8 +109,7 @@ Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
     case FeatureId::litFlare: {
       assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
       LitFlare* flare =
-        new LitFlare(
-        id, pos, dynamic_cast<DynamiteSpawnData*>(spawnData));
+        new LitFlare(id, pos, dynamic_cast<DynamiteSpawnData*>(spawnData));
       GameTime::addFeatureMob(flare);
       delete spawnData;
       return flare;

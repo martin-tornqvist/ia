@@ -46,6 +46,7 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
+					<Add option="-Wno-unused-value" />
 					<Add directory="../include/releaseModeIncl" />
 					<Add directory="../test/UnitTest++/src" />
 				</Compiler>
@@ -69,6 +70,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-Wno-unused-value" />
 					<Add directory="../include/releaseModeIncl" />
 				</Compiler>
 				<Linker>

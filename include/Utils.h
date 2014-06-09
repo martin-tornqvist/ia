@@ -116,8 +116,13 @@ TimeData getCurTime();
 namespace DirUtils {
 
 //Useful lists to iterate over (e.g. in map generation)
-const Pos cardinalOffsets[] = {Pos(1, 0), Pos(-1, 0), Pos(0, 1), Pos(0, -1)};
-const Pos diagonalOffsets[] = {Pos(1, 1), Pos(-1, 1), Pos(1, -1), Pos(-1, -1)};
+const std::vector<Pos> cardinalList {
+  Pos(-1, 0), Pos(1, 0), Pos(0, -1), Pos(0, 1)
+};
+const std::vector<Pos> dirList {
+  Pos(-1, 0), Pos(1, 0), Pos(0, -1), Pos(0, 1),
+  Pos(-1, -1), Pos(-1, 1), Pos(1, -1), Pos(1, 1)
+};
 
 Dir getDir(const Pos& offset);
 

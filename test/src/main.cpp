@@ -794,7 +794,6 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
 
   vector<Pos> entryList;
   MapGenUtils::getValidRoomCorrEntries(room, entryList);
-
   bool entryMap[MAP_W][MAP_H];
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
@@ -808,6 +807,26 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   CHECK(entryMap[29][4]);
   CHECK(entryMap[30][4]);
   CHECK(!entryMap[31][4]);
+
+  //Check that a cell in the middle of the room is not an entry
+  Map::roomMap[25][7] = nullptr;
+  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Utils::mkBoolMapFromVector(entryList, entryMap);
+
+  CHECK(!entryMap[25][7]);
+
+  Map::roomMap[25][7] = &room;
+  FeatureFactory::mk(FeatureId::wall, Pos(25, 7));
+  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Utils::mkBoolMapFromVector(entryList, entryMap);
+
+  CHECK(!entryMap[25][7]);
+
+  Map::roomMap[25][7] = nullptr;
+  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Utils::mkBoolMapFromVector(entryList, entryMap);
+
+  CHECK(!entryMap[25][7]);
 
   //------------------------------------------------ Room with only one cell
   room = Room(Rect(60, 10, 60, 10));
@@ -858,9 +877,9 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   CHECK(!entryMap[59][9]);
   CHECK(!entryMap[60][9]);
   CHECK(!entryMap[61][9]);
-  CHECK(entryMap[59][10]);
+  CHECK(!entryMap[59][10]);
   CHECK(!entryMap[60][10]);
-  CHECK(entryMap[61][10]);
+  CHECK(!entryMap[61][10]);
   CHECK(!entryMap[59][11]);
   CHECK(entryMap[60][11]);
   CHECK(!entryMap[61][11]);
@@ -877,20 +896,20 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
   CHECK(!entryMap[58][9]);
-  CHECK(!entryMap[59][9]); //FAILS
+  CHECK(!entryMap[59][9]);
   CHECK(!entryMap[60][9]);
   CHECK(!entryMap[61][9]);
   CHECK(entryMap[58][10]);
   CHECK(!entryMap[59][10]);
   CHECK(!entryMap[60][10]);
-  CHECK(entryMap[61][10]);
+  CHECK(!entryMap[61][10]);
   CHECK(!entryMap[58][11]);
   CHECK(entryMap[59][11]);
   CHECK(entryMap[60][11]);
   CHECK(!entryMap[61][11]);
 
   //Remove the adjacent room, and check that the blocked entries are now placed
-  CHECK(false); //TODO
+  //TODO
 }
 
 TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
@@ -927,7 +946,7 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
   bool in[MAP_W][MAP_H];
   bool out[MAP_W][MAP_H];
 
-  Utils::resetArray(in, false);   //Make sure all values are 0
+  Utils::resetArray(in, false);  //Make sure all values are 0
 
   in[20][10] = true;
 

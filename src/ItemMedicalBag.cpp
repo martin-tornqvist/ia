@@ -19,9 +19,9 @@ using namespace std;
 ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;
 
-  vector<Actor*> SpottedEnemies;
-  Map::player->getSpottedEnemies(SpottedEnemies);
-  if(SpottedEnemies.empty()) {
+  vector<Actor*> spottedEnemies;
+  Map::player->getSpottedEnemies(spottedEnemies);
+  if(!spottedEnemies.empty()) {
     Log::addMsg("Not while an enemy is near.");
     return ConsumeItem::no;
   }
