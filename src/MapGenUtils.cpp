@@ -37,12 +37,13 @@ void getFloorCellsInRoom(const Room& room, const bool floor[MAP_W][MAP_H],
 
 } //namespace
 
-void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out) {
+void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   //Find all cells that meets all of the following criteria:
-  //(1) Is a cell not belonging to any room
-  //(2) Is not on the edge of the map
-  //(3) Is cardinally adjacent to a floor cell belonging to the room
-  //(4) Is cardinally adjacent to a cell not in the room or room outline
+  //(1) Is a wall cell
+  //(2) Is a cell not belonging to any room
+  //(3) Is not on the edge of the map
+  //(4) Is cardinally adjacent to a floor cell belonging to the room
+  //(5) Is cardinally adjacent to a cell not in the room or room outline
 
   out.resize(0);
 
@@ -66,9 +67,12 @@ void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out) {
   for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; y++) {
     for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; x++) {
       //Condition (1)
-      if(Map::roomMap[x][y]) {continue;}
+      if(Map::cells[x][y].featureStatic->getId() != FeatureId::wall) {continue;}
 
       //Condition (2)
+      if(Map::roomMap[x][y]) {continue;}
+
+      //Condition (3)
       if(x <= 1 || y <= 1 || x >= MAP_W - 2 || y >= MAP_H - 2) {continue;}
 
       bool isAdjToFloorInRoom = false;
@@ -79,10 +83,10 @@ void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out) {
       for(const Pos& d : cardinals) {
         const Pos& pAdj(p + d);
 
-        //Condition 3
+        //Condition (4)
         if(roomFloorCells[pAdj.x][pAdj.y])      {isAdjToFloorInRoom = true;}
 
-        //Condition 4
+        //Condition (5)
         if(roomAndOutlineCells[pAdj.x][pAdj.y]) {isAdjToCellOutside = true;}
       }
 
@@ -112,15 +116,19 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
   assert(Utils::isAreaInsideMap(r0.r_));
   assert(Utils::isAreaInsideMap(r1.r_));
 
-  bool floor[MAP_W][MAP_H];
-  MapParse::parse(CellPred::IsFeature(FeatureId::floor), floor);
-
   vector<Pos> p0Bucket;
   vector<Pos> p1Bucket;
   getValidRoomCorrEntries(r0, p0Bucket);
   getValidRoomCorrEntries(r1, p1Bucket);
-  assert(!p0Bucket.empty());
-  assert(!p1Bucket.empty());
+
+  if(p0Bucket.empty()) {
+    TRACE_FUNC_END_VERBOSE << "No entry points found in room 0" << endl;
+    return;
+  }
+  if(p1Bucket.empty()) {
+    TRACE_FUNC_END_VERBOSE << "No entry points found in room 1" << endl;
+    return;
+  }
 
   int shortestDist = INT_MAX;
 
@@ -133,8 +141,6 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
 
   vector< pair<Pos, Pos> > entriesBucket;
 
-//  for(int i = 0; i < 10; i++)  {
-
   for(const Pos& p0 : p0Bucket) {
     for(const Pos& p1 : p1Bucket) {
       const int CUR_DIST = Utils::kingDist(p0, p1);
@@ -144,21 +150,19 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
     }
   }
 
-  assert(!entriesBucket.empty());
-
   const pair<Pos, Pos>& entries =
     entriesBucket.at(Rnd::range(0, entriesBucket.size() - 1));
   const Pos& p0 = entries.first;
   const Pos& p1 = entries.second;
 
-#ifdef DEMO_MODE
-  Renderer::drawBlastAnimAtPositions(vector<Pos> {p0}, clrGreenLgt);
-  Renderer::drawBlastAnimAtPositions(vector<Pos> {p1}, clrRedLgt);
-#endif // DEMO_MODE
+//#ifdef DEMO_MODE
+//  Renderer::drawBlastAnimAtPositions(vector<Pos> {p0}, clrGreenLgt);
+//  Renderer::drawBlastAnimAtPositions(vector<Pos> {p1}, clrRedLgt);
+//#endif // DEMO_MODE
 
   vector<Pos> path;
 
-  //IS entry points same cell (rooms are adjacent)? Then simply use that
+  //Is entry points same cell (rooms are adjacent)? Then simply use that
   if(p0 == p1) {
     path.push_back(p0);
   } else {
@@ -169,8 +173,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
         blocked[x][y] =
-          Map::cells[x][y].featureStatic->getId() != FeatureId::wall ||
-          Map::roomMap[x][y];
+          Map::roomMap[x][y] ||
+          Map::cells[x][y].featureStatic->getId() != FeatureId::wall;
       }
     }
     bool blockedExpanded[MAP_W][MAP_H];
@@ -182,14 +186,17 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
 
   if(!path.empty()) {
     path.push_back(p0);
-    for(Pos& p : path) {FeatureFactory::mk(FeatureId::floor, p, nullptr);}
-    doorPosProposals[p0.x][p0.y] = doorPosProposals[p1.x][p1.y] = true;
+    for(const Pos& p : path) {FeatureFactory::mk(FeatureId::floor, p, nullptr);}
+
+    if(doorPosProposals) {
+      doorPosProposals[p0.x][p0.y] = doorPosProposals[p1.x][p1.y] = true;
+    }
     r0.roomsConTo_.push_back(&r1);
     r1.roomsConTo_.push_back(&r0);
     TRACE_FUNC_END_VERBOSE << "Successfully connected roooms" << endl;
     return;
   }
-//  }
+
   TRACE_FUNC_END_VERBOSE << "Failed to connect roooms" << endl;
 }
 

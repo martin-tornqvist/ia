@@ -32,22 +32,22 @@
     << endl \
     << "[INF] " \
     << __FILE__ << ", " \
-    << __func__ << "(), " \
-    << __LINE__ << ":" << endl
+    << __LINE__ << ", " \
+    << __func__ << "():" << endl
 
 #define TRACE_FUNC_BEGIN if (TRACE_LVL < 1) ; else cerr \
     << endl \
     << "[FN.] " \
     << __FILE__ << ", " \
-    << __func__ << "(), " \
-    << __LINE__ << endl
+    << __LINE__ << ", " \
+    << __func__ << "()..." << endl
 
 #define TRACE_FUNC_END if (TRACE_LVL < 1) ; else cerr \
     << endl \
     << "[END] " \
     << __FILE__ << ", " \
-    << __func__ << "(), " \
-    << __LINE__ << endl
+    << __LINE__ << ", " \
+    << __func__ << "()" << endl
 
 #define TRACE_VERBOSE             if (TRACE_LVL < 2) ; else TRACE
 #define TRACE_FUNC_BEGIN_VERBOSE  if (TRACE_LVL < 2) ; else TRACE_FUNC_BEGIN

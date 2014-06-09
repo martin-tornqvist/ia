@@ -783,25 +783,22 @@ TEST_FIXTURE(BasicFixture, PathFinding) {
 }
 
 TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
-  const Rect roomRect(20, 5, 30, 10);
-
+  //------------------------------------------------ Square, normal sized room
+  Rect roomRect(20, 5, 30, 10);
   Room room(roomRect);
-
-  Utils::resetArray<Room>(Map::roomMap);
 
   for(int y = roomRect.p0.y; y <= roomRect.p1.y; y++) {
     for(int x = roomRect.p0.x; x <= roomRect.p1.x; x++) {
-      Map::roomMap[x][y] = &room;
       FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+      Map::roomMap[x][y] = &room;
     }
   }
 
-  vector<Pos> antryList;
-
-  MapGenUtils::getValidRoomCorrEntries(room, antryList);
+  vector<Pos> entryList;
+  MapGenUtils::getValidRoomCorrEntries(room, entryList);
 
   bool entryMap[MAP_W][MAP_H];
-  Utils::mkBoolMapFromVector(antryList, entryMap);
+  Utils::mkBoolMapFromVector(entryList, entryMap);
 
   CHECK(!entryMap[19][4]);
   CHECK(entryMap[19][5]);
@@ -813,28 +810,119 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   CHECK(entryMap[29][4]);
   CHECK(entryMap[30][4]);
   CHECK(!entryMap[31][4]);
+
+  //------------------------------------------------ Room with only one cell
+  room = Room(Rect(60, 10, 60, 10));
+  FeatureFactory::mk(FeatureId::floor, Pos(60, 10));
+  Map::roomMap[60][10] = &room;
+  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Utils::mkBoolMapFromVector(entryList, entryMap);
+
+  // 59 60 61
+  // #  #  # 9
+  // #  .  # 10
+  // #  #  # 11
+  CHECK(!entryMap[59][9]);
+  CHECK(entryMap[60][9]);
+  CHECK(!entryMap[61][9]);
+  CHECK(entryMap[59][10]);
+  CHECK(!entryMap[60][10]);
+  CHECK(entryMap[61][10]);
+  CHECK(!entryMap[59][11]);
+  CHECK(entryMap[60][11]);
+  CHECK(!entryMap[61][11]);
+
+  //Add an adjacent floor above the room
+  // 59 60 61
+  // #  .  # 9
+  // #  .  # 10
+  // #  #  # 11
+  FeatureFactory::mk(FeatureId::floor, Pos(60, 9));
+  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Utils::mkBoolMapFromVector(entryList, entryMap);
+
+  CHECK(!entryMap[59][9]);
+  CHECK(!entryMap[60][9]);
+  CHECK(!entryMap[61][9]);
+  CHECK(entryMap[59][10]);
+  CHECK(!entryMap[60][10]);
+  CHECK(entryMap[61][10]);
+  CHECK(!entryMap[59][11]);
+  CHECK(entryMap[60][11]);
+  CHECK(!entryMap[61][11]);
+
+  //Mark the adjacent floor as a room and check again
+  Room adjRoom(Rect(60, 9, 60, 9));
+  Map::roomMap[60][9] = &adjRoom;
+  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Utils::mkBoolMapFromVector(entryList, entryMap);
+
+  CHECK(!entryMap[59][9]);
+  CHECK(!entryMap[60][9]);
+  CHECK(!entryMap[61][9]);
+  CHECK(entryMap[59][10]);
+  CHECK(!entryMap[60][10]);
+  CHECK(entryMap[61][10]);
+  CHECK(!entryMap[59][11]);
+  CHECK(entryMap[60][11]);
+  CHECK(!entryMap[61][11]);
+
+  //Make the room wider, entries should not be placed next to adjacent floor
+  // 58 59 60 61
+  // #  #  .  # 9
+  // #  .  .  # 10
+  // #  #  #  # 11
+  room.r_.p0.x = 59;
+  FeatureFactory::mk(FeatureId::floor, Pos(59, 10));
+  Map::roomMap[59][10] = &room;
+  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Utils::mkBoolMapFromVector(entryList, entryMap);
+
+  CHECK(!entryMap[58][9]);
+  CHECK(!entryMap[59][9]); //FAILS
+  CHECK(!entryMap[60][9]);
+  CHECK(!entryMap[61][9]);
+  CHECK(entryMap[58][10]);
+  CHECK(!entryMap[59][10]);
+  CHECK(!entryMap[60][10]);
+  CHECK(entryMap[61][10]);
+  CHECK(!entryMap[58][11]);
+  CHECK(entryMap[59][11]);
+  CHECK(entryMap[60][11]);
+  CHECK(!entryMap[61][11]);
+
+  //Remove the adjacent room, and check that the blocked entries are now placed
+  CHECK(false); //TODO
 }
 
 TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Rect roomArea1(Pos(1, 1), Pos(10, 10));
   Rect roomArea2(Pos(15, 4), Pos(23, 14));
 
+  Room room0(roomArea1);
+  Room room1(roomArea2);
+
   for(int y = roomArea1.p0.y; y <= roomArea1.p1.y; y++) {
     for(int x = roomArea1.p0.x; x <= roomArea1.p1.x; x++) {
       FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+      Map::roomMap[x][y] = &room0;
     }
   }
 
   for(int y = roomArea2.p0.y; y <= roomArea2.p1.y; y++) {
     for(int x = roomArea2.p0.x; x <= roomArea2.p1.x; x++) {
       FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+      Map::roomMap[x][y] = &room1;
     }
   }
 
-  Room room1(roomArea1);
-  Room room2(roomArea2);
+  MapGenUtils::mkPathFindCor(room0, room1);
 
-  MapGenUtils::mkPathFindCor(room1, room2);
+  int flood[MAP_W][MAP_H];
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  FloodFill::run(5, blocked, flood, INT_MAX, -1, true);
+  CHECK(flood[20][10] > 0);
 }
 
 TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
@@ -896,7 +984,6 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
 #undef main
 #endif
 int main() {
-  TRACE << "Running all tests" << endl;
   UnitTest::RunAllTests();
   return 0;
 }
