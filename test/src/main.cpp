@@ -828,6 +828,30 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
 
   CHECK(!entryMap[25][7]);
 
+  //Check that the room can share an antry point with a nearby room
+  roomRect = Rect(10, 5, 18, 10);
+  Room nearbyRoom(roomRect);
+
+  for(int y = roomRect.p0.y; y <= roomRect.p1.y; y++) {
+    for(int x = roomRect.p0.x; x <= roomRect.p1.x; x++) {
+      FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+      Map::roomMap[x][y] = &nearbyRoom;
+    }
+  }
+
+  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Utils::mkBoolMapFromVector(entryList, entryMap);
+
+  vector<Pos> entryListNearbyRoom;
+  MapGenUtils::getValidRoomCorrEntries(nearbyRoom, entryListNearbyRoom);
+  bool entryMapNearbyRoom[MAP_W][MAP_H];
+  Utils::mkBoolMapFromVector(entryListNearbyRoom, entryMapNearbyRoom);
+
+  for(int y = 5; y <= 10; y++) {
+    CHECK(entryMap[19][y]);
+    CHECK(entryMapNearbyRoom[19][y]);
+  }
+
   //------------------------------------------------ Room with only one cell
   room = Room(Rect(60, 10, 60, 10));
   FeatureFactory::mk(FeatureId::floor, Pos(60, 10));
@@ -877,9 +901,9 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   CHECK(!entryMap[59][9]);
   CHECK(!entryMap[60][9]);
   CHECK(!entryMap[61][9]);
-  CHECK(!entryMap[59][10]);
+  CHECK(entryMap[59][10]);
   CHECK(!entryMap[60][10]);
-  CHECK(!entryMap[61][10]);
+  CHECK(entryMap[61][10]);
   CHECK(!entryMap[59][11]);
   CHECK(entryMap[60][11]);
   CHECK(!entryMap[61][11]);
@@ -896,13 +920,13 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
   CHECK(!entryMap[58][9]);
-  CHECK(!entryMap[59][9]);
+  CHECK(entryMap[59][9]);
   CHECK(!entryMap[60][9]);
   CHECK(!entryMap[61][9]);
   CHECK(entryMap[58][10]);
   CHECK(!entryMap[59][10]);
   CHECK(!entryMap[60][10]);
-  CHECK(!entryMap[61][10]);
+  CHECK(entryMap[61][10]);
   CHECK(!entryMap[58][11]);
   CHECK(entryMap[59][11]);
   CHECK(entryMap[60][11]);

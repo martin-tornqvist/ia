@@ -154,7 +154,7 @@ void connectRooms() {
 
     MapGenUtils::mkPathFindCor(*room0, *room1, doorPosProposals);
 
-    if(isAllRoomsConnected()) {break;}
+    if(isAllRoomsConnected() && Rnd::coinToss()) {break;}
   }
   TRACE_FUNC_END;
 }

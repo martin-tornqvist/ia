@@ -42,7 +42,7 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   //(1) Is a wall cell
   //(2) Is a cell not belonging to any room
   //(3) Is not on the edge of the map
-  //(4) There is no adjacent floor cell not belonging to the room
+  //(4) There is no adjacent floor cell not belonging to the room (DEPRECATED)
   //(5) Is cardinally adjacent to a floor cell belonging to the room
   //(6) Is cardinally adjacent to a cell not in the room or room outline
 
@@ -60,8 +60,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
     }
   }
 
-  bool roomAndOutlineCells[MAP_W][MAP_H];
-  MapParse::expand(roomCells, roomAndOutlineCells, 1, true);
+  bool roomCellsExpanded[MAP_W][MAP_H];
+  MapParse::expand(roomCells, roomCellsExpanded, 1, true);
 
   for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; y++) {
     for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; x++) {
@@ -85,17 +85,17 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
         const Pos& pAdj(p + d);
 
         //Condition (4)
-        if(Map::roomMap[pAdj.x][pAdj.y] && !roomFloorCells[pAdj.x][pAdj.y]) {
-          isAdjToFloorNotInRoom = true;
-          break;
-        }
+//        if(Map::roomMap[pAdj.x][pAdj.y] && !roomFloorCells[pAdj.x][pAdj.y]) {
+//          isAdjToFloorNotInRoom = true;
+//          break;
+//        }
 
         if(DirUtils::isCardinal(d)) {
           //Condition (5)
-          if(roomFloorCells[pAdj.x][pAdj.y])        {isAdjToFloorInRoom = true;}
+          if(roomFloorCells[pAdj.x][pAdj.y])      {isAdjToFloorInRoom = true;}
 
           //Condition (6)
-          if(!roomAndOutlineCells[pAdj.x][pAdj.y])  {isAdjToCellOutside = true;}
+          if(!roomCellsExpanded[pAdj.x][pAdj.y])  {isAdjToCellOutside = true;}
         }
       }
 
@@ -188,8 +188,10 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
           Map::cells[x][y].featureStatic->getId() != FeatureId::wall;
       }
     }
+
     bool blockedExpanded[MAP_W][MAP_H];
     MapParse::expand(blocked, blockedExpanded, 1, true);
+
     blockedExpanded[p0.x][p0.y] = blockedExpanded[p1.x][p1.y] = false;
 
     PathFind::run(p0, p1, blockedExpanded, path, false);
@@ -199,12 +201,14 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
     path.push_back(p0);
     for(const Pos& p : path) {FeatureFactory::mk(FeatureId::floor, p, nullptr);}
 
-//    if(path.size() >= 3) {
-//      const Pos& p(path.at(path.size() / 2));
-//      Room* junction = new Room(Rect(p, p));
-//      Map::roomList.push_back(junction);
-//      Map::roomMap[p.x][p.y] = junction;
-//    }
+    if(path.size() >= 5) {
+      const Pos& p(path.at(path.size() / 2));
+      Room* junction = new Room(Rect(p, p));
+      Map::roomList.push_back(junction);
+      Map::roomMap[p.x][p.y] = junction;
+      junction->roomsConTo_.push_back(&r0);
+      junction->roomsConTo_.push_back(&r1);
+    }
 
     if(doorPosProposals) {
       doorPosProposals[p0.x][p0.y] = doorPosProposals[p1.x][p1.y] = true;
