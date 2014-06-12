@@ -37,6 +37,55 @@ void getFloorCellsInRoom(const Room& room, const bool floor[MAP_W][MAP_H],
 
 } //namespace
 
+void cutRoomCorners(const Room& room) {
+  const Pos& roomP0  = room.r_.p0;
+  const Pos& roomP1  = room.r_.p1;
+
+  const Pos roomDims = roomP1 - roomP0 + 1;
+  if(roomDims.x < 3 || roomDims.y < 3) {return;}
+
+  const Pos maxDims(roomDims - 1);
+
+  const Pos crossDims(Rnd::range(2, maxDims.x), Rnd::range(2, maxDims.y));
+
+  const Pos crossX0Y0(Rnd::range(roomP0.x, roomP1.x - crossDims.x + 1),
+                      Rnd::range(roomP0.y, roomP1.y - crossDims.y + 1));
+
+  const Pos crossX1Y1(crossX0Y0 + crossDims - 1);
+
+  for(int y = roomP0.y; y <= roomP1.y; y++) {
+    for(int x = roomP0.x; x <= roomP1.x; x++) {
+      if(
+        (x < crossX0Y0.x || x > crossX1Y1.x) &&
+        (y < crossX0Y0.y || y > crossX1Y1.y)) {
+        FeatureFactory::mk(FeatureId::wall, Pos(x, y), nullptr);
+        Map::roomMap[x][y] = nullptr;
+      }
+    }
+  }
+}
+
+void mkPillarsInRoom(const Room& room) {
+  //TODO Perhaps sometimes place pillars in patterns instead of randomly
+  //Also, it would be better to have a "pillarBucket", and then place a random
+  //number of those, for more control. Currently, zero pillars could get placed.
+  for(int x = room.r_.p0.x + 1; x <= room.r_.p1.x - 1; x++) {
+    for(int y = room.r_.p0.y + 1; y <= room.r_.p1.y - 1; y++) {
+      Pos c(x + Rnd::dice(1, 3) - 2, y + Rnd::dice(1, 3) - 2);
+      bool isNextToWall = false;
+      for(int dx = -1; dx <= 1; dx++) {
+        for(int dy = -1; dy <= 1; dy++) {
+          const auto* const f = Map::cells[c.x + dx][c.y + dy].featureStatic;
+          if(f->getId() == FeatureId::wall) {isNextToWall = true;}
+        }
+      }
+      if(!isNextToWall) {
+        if(Rnd::oneIn(5)) {FeatureFactory::mk(FeatureId::wall, c);}
+      }
+    }
+  }
+}
+
 void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   TRACE_FUNC_BEGIN_VERBOSE;
   //Find all cells that meets all of the following criteria:

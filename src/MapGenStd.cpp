@@ -167,7 +167,7 @@ void connectRooms() {
 
     MapGenUtils::mkPathFindCor(*room0, *room1, doorPosProposals);
 
-    if(isAllRoomsConnected() && Rnd::coinToss()) {break;}
+    if(isAllRoomsConnected() && Rnd::fraction(2, 3)) {break;}
   }
   TRACE_FUNC_END;
 }
@@ -297,80 +297,13 @@ void mkAuxRooms(Region* regions[3][3]) {
 }
 
 void reshapeRoom(const Room& room) {
-  const int ROOM_W = room.r_.p1.x - room.r_.p0.x + 1;
-  const int ROOM_H = room.r_.p1.y - room.r_.p0.y + 1;
+  const int NR_RESHAPES = 1; //Rnd::range(1, 2);
 
-  if(ROOM_W >= 4 && ROOM_H >= 4) {
-
-    vector<RoomReshapeType> reshapesToPerform;
-    while(reshapesToPerform.empty()) {
-      if(Rnd::fraction(3, 4)) {
-        reshapesToPerform.push_back(RoomReshapeType::trimCorners);
-      }
-      if(Rnd::fraction(3, 4)) {
-        reshapesToPerform.push_back(RoomReshapeType::pillarsRandom);
-      }
-    }
-
-    for(RoomReshapeType reshapeType : reshapesToPerform) {
-      switch(reshapeType) {
-        case RoomReshapeType::trimCorners: {
-          const int W_DIV = 3 + (Rnd::coinToss() ? Rnd::range(0, 1) : 0);
-          const int H_DIV = 3 + (Rnd::coinToss() ? Rnd::range(0, 1) : 0);
-
-          const int W = max(1, ROOM_W / W_DIV);
-          const int H = max(1, ROOM_H / H_DIV);
-
-          const bool TRIM_ALL = false;
-
-          if(TRIM_ALL || Rnd::coinToss()) {
-            const Pos upLeft(room.r_.p0.x + W - 1, room.r_.p0.y + H - 1);
-            Rect rect(Rect(room.r_.p0, upLeft));
-            MapGenUtils::mk(rect, FeatureId::wall);
-          }
-
-          if(TRIM_ALL || Rnd::coinToss()) {
-            const Pos upRight(room.r_.p1.x - W + 1, room.r_.p0.y + H - 1);
-            Rect rect(Pos(room.r_.p0.x + ROOM_W - 1, room.r_.p0.y), upRight);
-            MapGenUtils::mk(rect, FeatureId::wall);
-          }
-
-          if(TRIM_ALL || Rnd::coinToss()) {
-            const Pos downLeft(room.r_.p0.x + W - 1, room.r_.p1.y - H + 1);
-            Rect rect(Pos(room.r_.p0.x, room.r_.p0.y + ROOM_H - 1), downLeft);
-            MapGenUtils::mk(rect, FeatureId::wall);
-          }
-
-          if(TRIM_ALL || Rnd::coinToss()) {
-            const Pos downRight(room.r_.p1.x - W + 1, room.r_.p1.y - H + 1);
-            Rect rect(room.r_.p1, downRight);
-            MapGenUtils::mk(rect, FeatureId::wall);
-          }
-        }
-        break;
-
-        case RoomReshapeType::pillarsRandom: {
-          for(int x = room.r_.p0.x + 1; x <= room.r_.p1.x - 1; x++) {
-            for(int y = room.r_.p0.y + 1; y <= room.r_.p1.y - 1; y++) {
-              Pos c(x + Rnd::dice(1, 3) - 2, y + Rnd::dice(1, 3) - 2);
-              bool isNextToWall = false;
-              for(int dx = -1; dx <= 1; dx++) {
-                for(int dy = -1; dy <= 1; dy++) {
-                  const auto* const f =
-                    Map::cells[c.x + dx][c.y + dy].featureStatic;
-                  if(f->getId() == FeatureId::wall) {
-                    isNextToWall = true;
-                  }
-                }
-              }
-              if(!isNextToWall) {
-                if(Rnd::oneIn(5)) {FeatureFactory::mk(FeatureId::wall, c);}
-              }
-            }
-          }
-        }
-        break;
-      }
+  for(int i = 0; i < NR_RESHAPES; i++) {
+    const int RND = 1; //Rnd::range(1, 2);
+    switch(RND) {
+      case 1: MapGenUtils::cutRoomCorners(room);  break;
+      case 2: MapGenUtils::mkPillarsInRoom(room); break;
     }
   }
 }
@@ -439,10 +372,6 @@ void mkMergedRegionsAndRooms(Region* regions[3][3],
     Map::roomList.push_back(room);
 
     reg1->mainRoom_ = reg2->mainRoom_ = room;
-
-#ifdef RESHAPE_ROOMS
-    if(Rnd::oneIn(3)) {reshapeRoom(*room);}
-#endif
   }
 }
 
@@ -1140,9 +1069,6 @@ bool run() {
         auto* room = mkRoom(roomRect);
         Map::roomList.push_back(room);
         region.mainRoom_  = room;
-#ifdef RESHAPE_ROOMS
-        if(Rnd::oneIn(3)) {reshapeRoom(*room);}
-#endif
       }
     }
   }
@@ -1151,14 +1077,18 @@ bool run() {
   mkAuxRooms(regions);
 #endif
 
+#ifdef MK_SUB_ROOMS
+  mkSubRooms();
+#endif
+
+#ifdef RESHAPE_ROOMS
+  for(Room* room : Map::roomList) {/*if(Rnd::oneIn(2))*/ {reshapeRoom(*room);}}
+#endif
+
   connectRooms();
 
 #ifdef MK_CAVES
   mkCaves(regions);
-#endif
-
-#ifdef MK_SUB_ROOMS
-  mkSubRooms();
 #endif
 
 #ifdef FILL_DEAD_ENDS

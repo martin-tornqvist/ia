@@ -10,8 +10,6 @@
 
 struct Region;
 
-enum class RoomReshapeType {trimCorners, pillarsRandom};
-
 struct Room {
 public:
   Room(Rect r)  : theme_(RoomThemeId::plain), descr_(""), r_(r) {}
@@ -34,6 +32,10 @@ public:
 };
 
 namespace MapGenUtils {
+
+void cutRoomCorners(const Room& room);
+
+void mkPillarsInRoom(const Room& room);
 
 void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out);
 
