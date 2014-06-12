@@ -38,6 +38,7 @@ void getFloorCellsInRoom(const Room& room, const bool floor[MAP_W][MAP_H],
 } //namespace
 
 void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
+  TRACE_FUNC_BEGIN_VERBOSE;
   //Find all cells that meets all of the following criteria:
   //(1) Is a wall cell
   //(2) Is a cell not belonging to any room
@@ -104,6 +105,7 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
       }
     }
   }
+  TRACE_FUNC_END_VERBOSE;
 }
 
 //Note: The parameter rectangle does not have to go up-left to bottom-right,
@@ -120,9 +122,8 @@ void mk(const Rect& area, const FeatureId id) {
 }
 
 void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
-  TRACE_FUNC_BEGIN_VERBOSE;
-  TRACE_VERBOSE << "Making corridor between rooms "
-                << &r0 << " and " << &r1 << endl;
+  TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
+                           << &r0 << " and " << &r1 << endl;
 
   assert(Utils::isAreaInsideMap(r0.r_));
   assert(Utils::isAreaInsideMap(r1.r_));
@@ -143,6 +144,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
 
   int shortestDist = INT_MAX;
 
+  TRACE_VERBOSE << "Finding shortest possible dist between entries" << endl;
   for(const Pos& p0 : p0Bucket) {
     for(const Pos& p1 : p1Bucket) {
       const int CUR_DIST = Utils::kingDist(p0, p1);
@@ -150,6 +152,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
     }
   }
 
+  TRACE_VERBOSE << "Storing entry pairs with shortest dist ("
+                << shortestDist << ")" << endl;
   vector< pair<Pos, Pos> > entriesBucket;
 
   for(const Pos& p0 : p0Bucket) {
@@ -161,15 +165,11 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
     }
   }
 
+  TRACE_VERBOSE << "Picking a random stored entry pair" << endl;
   const pair<Pos, Pos>& entries =
     entriesBucket.at(Rnd::range(0, entriesBucket.size() - 1));
   const Pos& p0 = entries.first;
   const Pos& p1 = entries.second;
-
-#ifdef DEMO_MODE
-  Renderer::drawBlastAnimAtPositions(vector<Pos> {p0}, clrGreenLgt);
-  Renderer::drawBlastAnimAtPositions(vector<Pos> {p1}, clrRedLgt);
-#endif // DEMO_MODE
 
   vector<Pos> path;
 
@@ -199,15 +199,49 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
 
   if(!path.empty()) {
     path.push_back(p0);
-    for(const Pos& p : path) {FeatureFactory::mk(FeatureId::floor, p, nullptr);}
 
-    if(path.size() >= 5) {
-      const Pos& p(path.at(path.size() / 2));
-      Room* junction = new Room(Rect(p, p));
-      Map::roomList.push_back(junction);
-      Map::roomMap[p.x][p.y] = junction;
-      junction->roomsConTo_.push_back(&r0);
-      junction->roomsConTo_.push_back(&r1);
+    TRACE_VERBOSE << "Check that the path doesn't circle around the origin "
+                  << "or target room" << endl;
+    vector<Room*> rooms {&r0, &r1};
+    for(Room* room : rooms) {
+      bool isLeftOfRoom   = false;
+      bool isRightOfRoom  = false;
+      bool isAboveRoom    = false;
+      bool isBelowRoom    = false;
+      for(Pos& p : path) {
+        if(p.x < room->r_.p0.x) {isLeftOfRoom   = true;}
+        if(p.x > room->r_.p1.x) {isRightOfRoom  = true;}
+        if(p.y < room->r_.p0.y) {isAboveRoom    = true;}
+        if(p.y > room->r_.p1.y) {isBelowRoom    = true;}
+      }
+      if((isLeftOfRoom && isRightOfRoom) || (isAboveRoom && isBelowRoom)) {
+        TRACE_FUNC_END_VERBOSE
+            << "Path circled around room (looks bad), not making corridor"
+            << endl;
+        return;
+      }
+    }
+
+    vector<Room*> prevJunctions;
+
+    for(size_t i = 0; i < path.size(); i++) {
+      const Pos& p(path.at(i));
+      FeatureFactory::mk(FeatureId::floor, p, nullptr);
+
+      if(i > 1 && int(i) < int(path.size() - 3) && i % 5 == 0) {
+        Room* junction = new Room(Rect(p, p));
+        Map::roomList.push_back(junction);
+        Map::roomMap[p.x][p.y] = junction;
+        junction->roomsConTo_.push_back(&r0);
+        junction->roomsConTo_.push_back(&r1);
+        r0.roomsConTo_.push_back(junction);
+        r1.roomsConTo_.push_back(junction);
+        for(Room* prevJunction : prevJunctions) {
+          junction->roomsConTo_.push_back(prevJunction);
+          prevJunction->roomsConTo_.push_back(junction);
+        }
+        prevJunctions.push_back(junction);
+      }
     }
 
     if(doorPosProposals) {

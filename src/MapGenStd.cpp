@@ -22,7 +22,7 @@
 
 //Some options (comment out to disable)
 //#define MK_MERGED_REGIONS   1
-//#define RESHAPE_ROOMS       1
+#define RESHAPE_ROOMS       1
 #define MK_AUX_ROOMS        1
 //#define MK_CRUMBLE_ROOMS    1
 //#define MK_CAVES            1
@@ -114,20 +114,29 @@ void connectRooms() {
   TRACE_FUNC_BEGIN;
 
   while(true) {
-    const int NR_CON_ALLOWED = 4;
+//    const size_t NR_CON_ALLOWED = 4;
 
     Room* room0 = Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
 
-    if(int(room0->roomsConTo_.size()) >= NR_CON_ALLOWED) {continue;}
+//    const auto NR_CON_ROOM0 = room0->roomsConTo_.size();
+//    if(NR_CON_ROOM0 >= NR_CON_ALLOWED) {
+//      TRACE_VERBOSE << "First room picked has reached the allowed nr of "
+//                    << "connections (" << NR_CON_ROOM0 << "/" << NR_CON_ALLOWED
+//                    << ") trying other combination" << endl;
+//      continue;
+//    }
 
+    TRACE_VERBOSE << "Finding second room to connect to" << endl;
     Room* room1 = room0;
-    while(room1 == room0 || int(room1->roomsConTo_.size()) >= NR_CON_ALLOWED) {
+    while(room1 == room0 /*|| room1->roomsConTo_.size() >= NR_CON_ALLOWED*/) {
       room1 = Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
     }
 
     //Do not allow two rooms to be connected twice
     const auto& consRoom0 = room0->roomsConTo_;
     if(find(consRoom0.begin(), consRoom0.end(), room1) != consRoom0.end()) {
+      TRACE_VERBOSE << "Rooms are already connected, trying other combination"
+                    << endl;
       continue;
     }
 
@@ -150,7 +159,11 @@ void connectRooms() {
       }
       if(isOtherRoomInWay) {break;}
     }
-    if(isOtherRoomInWay) {continue;}
+    if(isOtherRoomInWay) {
+      TRACE_VERBOSE << "Blocked by room between, trying other combination"
+                    << endl;
+      continue;
+    }
 
     MapGenUtils::mkPathFindCor(*room0, *room1, doorPosProposals);
 
@@ -290,11 +303,13 @@ void reshapeRoom(const Room& room) {
   if(ROOM_W >= 4 && ROOM_H >= 4) {
 
     vector<RoomReshapeType> reshapesToPerform;
-    if(Rnd::fraction(3, 4)) {
-      reshapesToPerform.push_back(RoomReshapeType::trimCorners);
-    }
-    if(Rnd::fraction(3, 4)) {
-      reshapesToPerform.push_back(RoomReshapeType::pillarsRandom);
+    while(reshapesToPerform.empty()) {
+      if(Rnd::fraction(3, 4)) {
+        reshapesToPerform.push_back(RoomReshapeType::trimCorners);
+      }
+      if(Rnd::fraction(3, 4)) {
+        reshapesToPerform.push_back(RoomReshapeType::pillarsRandom);
+      }
     }
 
     for(RoomReshapeType reshapeType : reshapesToPerform) {
@@ -644,16 +659,14 @@ void mkSubRooms() {
               }
             }
 
-            if(
-              (X0 == roomX0Y0.x && X1 == roomX1Y1.x) ||
-              (Y0 == roomX0Y0.y && Y1 == roomX1Y1.y)) {
+            if(roomX0Y0 == Pos(X0, Y0) && roomX1Y1 == Pos(X1, Y1)) {
               isSpaceFree = false;
             }
 
             if(isSpaceFree) {
+              Rect roomRect(Pos(X0, Y0) + 1, Pos(X1, Y1) - 1);
+              Map::roomList.push_back(new Room(roomRect));
               vector<Pos> doorBucket;
-              Map::roomList.push_back(
-                new Room(Rect(Pos(X0 + 1, Y0 + 1), Pos(X1 - 1, Y1 - 1))));
               for(int y = Y0; y <= Y1; y++) {
                 for(int x = X0; x <= X1; x++) {
                   if(x == X0 || x == X1 || y == Y0 || y == Y1) {

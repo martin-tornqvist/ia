@@ -163,7 +163,7 @@ void init() {
 
     int a = 1;
     const int FIRST = int(SfxId::startOfAmbSfx) + 1;
-    const int LAST  = int(SfxId::endOfAmbSfx) - 1;
+    const int LAST  = int(SfxId::endOfAmbSfx)   - 1;
     for(int i = FIRST; i <= LAST; i++) {
       const string indexStr = toStr(a);
       const string indexStrPadded =

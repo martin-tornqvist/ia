@@ -92,12 +92,12 @@ void setDefaultVariables() {
   TRACE_FUNC_BEGIN;
   isAudioEnabled_               = true;
   isTilesMode_                  = true;
-  fontName_                      = "images/16x24_v1.png";
+  fontName_                     = "images/16x24_v2.png";
   parseFontNameAndSetCellDims();
-  isFullscreen_ = false;
-  isTilesWallFullSquare_  = false;
-  isAsciiWallFullSquare_  = true;
-  isIntroLvlSkipped_          = false;
+  isFullscreen_                 = false;
+  isTilesWallFullSquare_        = false;
+  isAsciiWallFullSquare_        = true;
+  isIntroLvlSkipped_            = false;
   isRangedWpnMeleeePrompt_      = true;
   isRangedWpnAutoReload_        = false;
   keyRepeatDelay_               = 130;
@@ -220,6 +220,7 @@ void playerSetsOption(const MenuBrowser* const browser,
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
       Renderer::init();
+      Audio::init();
     } break;
 
     default: {assert(false && "Illegal option number");} break;
@@ -545,7 +546,7 @@ void collectLinesFromVariables(vector<string>& lines) {
   lines.push_back(isFullscreen_                 ? "1" : "0");
   lines.push_back(isTilesWallFullSquare_        ? "1" : "0");
   lines.push_back(isAsciiWallFullSquare_        ? "1" : "0");
-  lines.push_back(isIntroLvlSkipped_          ? "1" : "0");
+  lines.push_back(isIntroLvlSkipped_            ? "1" : "0");
   lines.push_back(isRangedWpnMeleeePrompt_      ? "1" : "0");
   lines.push_back(isRangedWpnAutoReload_        ? "1" : "0");
   lines.push_back(toStr(keyRepeatDelay_));

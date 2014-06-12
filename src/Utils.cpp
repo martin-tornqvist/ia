@@ -105,7 +105,7 @@ void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
   }
 }
 
-void mkBoolMapFromVector(const std::vector<Pos>& positions,
+void mkBoolMapFromVector(const vector<Pos>& positions,
                          bool out[MAP_W][MAP_H]) {
   resetArray(out, false);
   for(const Pos& p : positions) {out[p.x][p.y] = true;}
@@ -172,11 +172,15 @@ bool isAreaInsideMap(const Rect& area) {
 }
 
 int kingDist(const int X0, const int Y0, const int X1, const int Y1) {
-  return max(std::abs(X1 - X0), std::abs(Y1 - Y0));
+  return max(abs(X1 - X0), abs(Y1 - Y0));
 }
 
-int kingDist(const Pos& c1, const Pos& c2) {
-  return max(std::abs(c2.x - c1.x), std::abs(c2.y - c1.y));
+int kingDist(const Pos& p0, const Pos& p1) {
+  return max(abs(p1.x - p0.x), abs(p1.y - p0.y));
+}
+
+int taxicabDist(const Pos& p0, const Pos& p1) {
+  return abs(p1.x - p0.x) + abs(p1.y - p0.y);
 }
 
 Pos getClosestPos(const Pos& c, const vector<Pos>& positions) {

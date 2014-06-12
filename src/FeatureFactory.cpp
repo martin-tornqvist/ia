@@ -40,14 +40,13 @@ void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos) {
   if(newFeature->getId() == FeatureId::floor) {
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
-        Map::cells[x][y].isSeenByPlayer = true;
-        Map::cells[x][y].isExplored     = true;
+        Map::cells[x][y].isSeenByPlayer = Map::cells[x][y].isExplored = true;
       }
     }
     Renderer::drawMap();
     Renderer::drawGlyph('X', Panel::map, pos, clrYellow);
     Renderer::updateScreen();
-    SdlWrapper::sleep(60);
+    SdlWrapper::sleep(20);
   }
 #endif // DEMO_MODE
 }

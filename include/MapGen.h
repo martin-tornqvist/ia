@@ -10,8 +10,6 @@
 
 struct Region;
 
-enum HorizontalVertical {horizontal, vertical};
-
 enum class RoomReshapeType {trimCorners, pillarsRandom};
 
 struct Room {

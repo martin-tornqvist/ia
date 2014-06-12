@@ -107,7 +107,8 @@ Pos getClosestPos(const Pos& c, const std::vector<Pos>& positions);
 Actor* getRandomClosestActor(const Pos& c, const std::vector<Actor*>& actors);
 
 int kingDist(const int X0, const int Y0, const int X1, const int Y1);
-int kingDist(const Pos& c1, const Pos& c2);
+int kingDist(const Pos& p0, const Pos& p1);
+int taxicabDist(const Pos& p0, const Pos& p1);
 
 TimeData getCurTime();
 
