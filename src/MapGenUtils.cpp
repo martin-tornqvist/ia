@@ -42,22 +42,40 @@ void cutRoomCorners(const Room& room) {
   const Pos& roomP1  = room.r_.p1;
 
   const Pos roomDims = roomP1 - roomP0 + 1;
-  if(roomDims.x < 3 || roomDims.y < 3) {return;}
 
-  const Pos maxDims(roomDims - 1);
+  if(roomDims.x < 6 || roomDims.y < 6) {return;}
+
+  const Pos maxDims(roomDims - 4);
 
   const Pos crossDims(Rnd::range(2, maxDims.x), Rnd::range(2, maxDims.y));
 
-  const Pos crossX0Y0(Rnd::range(roomP0.x, roomP1.x - crossDims.x + 1),
-                      Rnd::range(roomP0.y, roomP1.y - crossDims.y + 1));
+  const Pos crossX0Y0(Rnd::range(roomP0.x + 2, roomP1.x - crossDims.x - 1),
+                      Rnd::range(roomP0.y + 2, roomP1.y - crossDims.y - 1));
 
   const Pos crossX1Y1(crossX0Y0 + crossDims - 1);
 
+  //Which corners to place - up-left, up-right, down-left, down-right
+  bool c[4] = {true, true, true, true};
+  if(Rnd::fraction(2, 3)) {
+    while(true) {
+      int nrCorners = 0;
+      for(int i = 0; i < 4; i++) {
+        if(Rnd::coinToss()) {c[i] = true; nrCorners++;} else {c[i] = false;}
+      }
+      if(nrCorners > 0) {break;}
+    }
+  }
+
   for(int y = roomP0.y; y <= roomP1.y; y++) {
     for(int x = roomP0.x; x <= roomP1.x; x++) {
-      if(
-        (x < crossX0Y0.x || x > crossX1Y1.x) &&
-        (y < crossX0Y0.y || y > crossX1Y1.y)) {
+      const bool X0_OK = x < crossX0Y0.x && (c[0] || c[2]);
+      const bool X1_OK = x > crossX1Y1.x && (c[1] || c[3]);
+      const bool Y0_OK = y < crossX0Y0.y && (c[0] || c[1]);
+      const bool Y1_OK = y > crossX1Y1.y && (c[2] || c[3]);
+      const bool X_OK  = X0_OK || X1_OK;
+      const bool Y_OK  = Y0_OK || Y1_OK;
+
+      if(X_OK && Y_OK) {
         FeatureFactory::mk(FeatureId::wall, Pos(x, y), nullptr);
         Map::roomMap[x][y] = nullptr;
       }

@@ -44,7 +44,7 @@ string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
 }
 
 SDL_Color Wall::getClr() const {
-  if(isMossGrown)                   {return clrGreen;}
+  if(isMossGrown)                   {return clrGreenDrk;}
   if(wallType == WallType::cave)    {return clrBrownGray;}
   if(wallType == WallType::egypt)   {return clrBrownGray;}
   return data_->color;

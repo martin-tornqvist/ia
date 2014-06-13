@@ -29,7 +29,7 @@
 //#define MK_SUB_ROOMS        1
 //#define FILL_DEAD_ENDS      1
 //#define ROOM_THEMING        1
-//#define DECORATE            1
+#define DECORATE            1
 
 using namespace std;
 
@@ -167,7 +167,7 @@ void connectRooms() {
 
     MapGenUtils::mkPathFindCor(*room0, *room1, doorPosProposals);
 
-    if(isAllRoomsConnected() && Rnd::fraction(2, 3)) {break;}
+    if(isAllRoomsConnected() /*&& Rnd::fraction(2, 3)*/) {break;}
   }
   TRACE_FUNC_END;
 }
@@ -297,15 +297,8 @@ void mkAuxRooms(Region* regions[3][3]) {
 }
 
 void reshapeRoom(const Room& room) {
-  const int NR_RESHAPES = 1; //Rnd::range(1, 2);
-
-  for(int i = 0; i < NR_RESHAPES; i++) {
-    const int RND = 1; //Rnd::range(1, 2);
-    switch(RND) {
-      case 1: MapGenUtils::cutRoomCorners(room);  break;
-      case 2: MapGenUtils::mkPillarsInRoom(room); break;
-    }
-  }
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners(room);}
+  if(Rnd::fraction(3, 4)) {MapGenUtils::mkPillarsInRoom(room);}
 }
 
 void mkMergedRegionsAndRooms(Region* regions[3][3],
@@ -813,7 +806,7 @@ Pos placeStairs() {
 
   const int NR_OK_CELLS = allowedCellsList.size();
 
-  const int MIN_NR_OK_CELLS_REQ = 80;
+  const int MIN_NR_OK_CELLS_REQ = 40;
 
   if(NR_OK_CELLS < MIN_NR_OK_CELLS_REQ) {
     TRACE << "Nr available cells to place stairs too low "
