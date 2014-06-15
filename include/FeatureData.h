@@ -158,7 +158,7 @@ struct FeatureDataT {
   std::string messageOnPlayerBlockedBlind;
   int dodgeModifier;
   int shockWhenAdjacent;
-  FeatureThemeSpawnRules featureThemeSpawnRules;
+  FeatureThemeSpawnRules themeSpawnRules;
   std::vector<FeatureId> featuresOnDestroyed;
 };
 

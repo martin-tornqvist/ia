@@ -46,7 +46,7 @@ void resetData(FeatureDataT& d) {
   d.messageOnPlayerBlockedBlind = "I bump into something.";
   d.dodgeModifier = 0;
   d.shockWhenAdjacent = 0;
-  d.featureThemeSpawnRules.reset();
+  d.themeSpawnRules.reset();
   d.featuresOnDestroyed.resize(0);
 }
 
@@ -202,8 +202,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(3, PlacementRule::nextToWallsOrAwayFromWalls,
-  {RoomThemeId::ritual});
+  d.themeSpawnRules.set(3, PlacementRule::either, {RoomThemeId::ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::shallowWater;
@@ -372,8 +371,9 @@ void initDataList() {
   d.tile = TileId::rubbleLow;
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
-  d.featureThemeSpawnRules.set(4, PlacementRule::nextToWallsOrAwayFromWalls,
-  {RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::monster});
+  d.themeSpawnRules.set(4, PlacementRule::either, {
+    RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::monster
+  });
   /*---------------------------------------------*/
   d.id = FeatureId::statue;
   d.name_a = "a statue";
@@ -388,8 +388,9 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(3, PlacementRule::nextToWallsOrAwayFromWalls,
-  {RoomThemeId::plain, RoomThemeId::human});
+  d.themeSpawnRules.set(3, PlacementRule::either, {
+    RoomThemeId::plain, RoomThemeId::human
+  });
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::ghoulStatue;
@@ -406,8 +407,9 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 8;
-  d.featureThemeSpawnRules.set(3, PlacementRule::nextToWallsOrAwayFromWalls,
-  {RoomThemeId::plain, RoomThemeId::crypt});
+  d.themeSpawnRules.set(3, PlacementRule::either, {
+    RoomThemeId::plain, RoomThemeId::crypt
+  });
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::cocoon;
@@ -425,8 +427,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
-  d.featureThemeSpawnRules.set(3, PlacementRule::nextToWallsOrAwayFromWalls,
-  {RoomThemeId::spider});
+  d.themeSpawnRules.set(3, PlacementRule::either, {RoomThemeId::spider});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::chest;
@@ -441,8 +442,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(1, PlacementRule::nextToWalls,
-  {RoomThemeId::human});
+  d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomThemeId::human});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::cabinet;
@@ -459,8 +459,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(1, PlacementRule::nextToWalls,
-  {RoomThemeId::human});
+  d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomThemeId::human});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::fountain;
@@ -477,8 +476,9 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(1, PlacementRule::awayFromWalls,
-  {RoomThemeId::plain, RoomThemeId::human});
+  d.themeSpawnRules.set(1, PlacementRule::awayFromWalls, {
+    RoomThemeId::plain, RoomThemeId::human
+  });
   addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = FeatureId::pillarCarved;
@@ -496,7 +496,7 @@ void initDataList() {
 //  d.canHaveCorpse = false;
 //  d.canHaveStaticFeature = false;
 //  d.canHaveItem = false;
-////  d.featureThemeSpawnRules.set(1, PlacementRule::awayFromWalls, RoomThemeId::crypt, RoomThemeId::ritual, RoomThemeId::monster);
+////  d.themeSpawnRules.set(1, PlacementRule::awayFromWalls, RoomThemeId::crypt, RoomThemeId::ritual, RoomThemeId::monster);
 //  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::pillar;
@@ -512,7 +512,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(3, PlacementRule::awayFromWalls, {
+  d.themeSpawnRules.set(3, PlacementRule::awayFromWalls, {
     RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::ritual,
     RoomThemeId::monster
   });
@@ -531,7 +531,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featureThemeSpawnRules.set(4, PlacementRule::awayFromWalls, {
+  d.themeSpawnRules.set(4, PlacementRule::awayFromWalls, {
     RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::ritual,
     RoomThemeId::monster
   });
@@ -550,8 +550,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
-  d.featureThemeSpawnRules.set(1, PlacementRule::nextToWallsOrAwayFromWalls,
-  {RoomThemeId::ritual});
+  d.themeSpawnRules.set(1, PlacementRule::either, {RoomThemeId::ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::tomb;
@@ -569,8 +568,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
-  d.featureThemeSpawnRules.set(2, PlacementRule::nextToWallsOrAwayFromWalls,
-  {RoomThemeId::crypt});
+  d.themeSpawnRules.set(2, PlacementRule::either, {RoomThemeId::crypt});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::pit;

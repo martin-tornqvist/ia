@@ -23,6 +23,8 @@ bool coinToss();
 
 bool fraction(const int NUMERATOR, const int DENOMINATOR);
 
+bool fraction(const Fraction& fractionVals);
+
 bool oneIn(const int N);
 
 int range(const int MIN, const int MAX);

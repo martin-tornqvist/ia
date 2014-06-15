@@ -51,7 +51,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
 
   if(themeFeatureData.empty()) {return -1;}
 
-  const bool IS_NEXT_TO_WALL_AVAIL = nextToWalls.size() != 0;
+  const bool IS_NEXT_TO_WALL_AVAIL    = nextToWalls.size() != 0;
   const bool IS_AWAY_FROM_WALLS_AVAIL = awayFromWalls.size() != 0;
 
   if(!IS_NEXT_TO_WALL_AVAIL && !IS_AWAY_FROM_WALLS_AVAIL) {
@@ -68,7 +68,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
     const auto* const dTmp  = themeFeatureData.at(ELEMENT);
 
     if(
-      dTmp->featureThemeSpawnRules.getPlacementRule() ==
+      dTmp->themeSpawnRules.getPlacementRule() ==
       PlacementRule::nextToWalls) {
       if(IS_NEXT_TO_WALL_AVAIL) {
         const int POS_ELEMENT =
@@ -80,7 +80,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
     }
 
     if(
-      dTmp->featureThemeSpawnRules.getPlacementRule() ==
+      dTmp->themeSpawnRules.getPlacementRule() ==
       PlacementRule::awayFromWalls) {
       if(IS_AWAY_FROM_WALLS_AVAIL) {
         const int POS_ELEMENT =
@@ -92,8 +92,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
     }
 
     if(
-      dTmp->featureThemeSpawnRules.getPlacementRule() ==
-      PlacementRule::nextToWallsOrAwayFromWalls) {
+      dTmp->themeSpawnRules.getPlacementRule() == PlacementRule::either) {
       if(Rnd::coinToss()) {
         if(IS_NEXT_TO_WALL_AVAIL) {
           const int POS_ELEMENT =
@@ -116,16 +115,17 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
   return -1;
 }
 
-void eraseAdjacentCellsFromVectors(
-  const Pos& pos,  vector<Pos>& nextToWalls, vector<Pos>& awayFromWalls) {
+void eraseAdjacentCellsFromVectors(const Pos& pos,
+                                   vector<Pos>& nextToWalls,
+                                   vector<Pos>& awayFromWalls) {
   TRACE_FUNC_BEGIN;
-  for(unsigned int i = 0; i < nextToWalls.size(); i++) {
+  for(int i = 0; i < int(nextToWalls.size()); i++) {
     if(Utils::isPosAdj(pos, nextToWalls.at(i), true)) {
       nextToWalls.erase(nextToWalls.begin() + i);
       i--;
     }
   }
-  for(unsigned int i = 0; i < awayFromWalls.size(); i++) {
+  for(int i = 0; i < int(awayFromWalls.size()); i++) {
     if(Utils::isPosAdj(pos, awayFromWalls.at(i), true)) {
       awayFromWalls.erase(awayFromWalls.begin() + i);
       i--;
@@ -140,7 +140,7 @@ int placeThemeFeatures(Room& room) {
 
   for(int i = 0; i < int(FeatureId::endOfFeatureId); i++) {
     const auto* const d = FeatureData::getData((FeatureId)(i));
-    if(d->featureThemeSpawnRules.isBelongingToTheme(room.theme_)) {
+    if(d->themeSpawnRules.isBelongingToTheme(room.theme_)) {
       themeFeatureData.push_back(d);
     }
   }
@@ -183,7 +183,7 @@ int placeThemeFeatures(Room& room) {
       //if not, delete it from feature candidates
       if(
         featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT) >=
-        d->featureThemeSpawnRules.getMaxNrInRoom()) {
+        d->themeSpawnRules.getMaxNrInRoom()) {
         featuresSpawnCount.erase(
           featuresSpawnCount.begin() + FEATURE_CANDIDATE_ELEMENT);
         themeFeatureData.erase(

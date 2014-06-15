@@ -298,7 +298,7 @@ void mkAuxRooms(Region* regions[3][3]) {
 
 void reshapeRoom(const Room& room) {
   if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners(room);}
-  if(Rnd::fraction(3, 4)) {MapGenUtils::mkPillarsInRoom(room);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(room);}
 }
 
 void mkMergedRegionsAndRooms(Region* regions[3][3],
@@ -806,7 +806,7 @@ Pos placeStairs() {
 
   const int NR_OK_CELLS = allowedCellsList.size();
 
-  const int MIN_NR_OK_CELLS_REQ = 40;
+  const int MIN_NR_OK_CELLS_REQ = 20;
 
   if(NR_OK_CELLS < MIN_NR_OK_CELLS_REQ) {
     TRACE << "Nr available cells to place stairs too low "

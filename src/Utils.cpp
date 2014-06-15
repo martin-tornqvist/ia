@@ -41,6 +41,10 @@ bool fraction(const int NUMERATOR, const int DENOMINATOR) {
   return roll(1, DENOMINATOR) <= NUMERATOR;
 }
 
+bool fraction(const Fraction& fractionVals) {
+  return fraction(fractionVals.numerator, fractionVals.denominator);
+}
+
 bool oneIn(const int N) {return fraction(1, N);}
 
 int range(const int MIN, const int MAX) {

@@ -169,6 +169,20 @@ struct Range {
   int lower, upper;
 };
 
+struct Fraction {
+  Fraction() : numerator(-1), denominator(-1) {}
+
+  Fraction(const int NUMERATOR, const int DENOMINATOR) :
+    numerator(NUMERATOR), denominator(DENOMINATOR) {}
+
+  void set(const int NUMERATOR, const int DENOMINATOR) {
+    numerator   = NUMERATOR;
+    denominator = DENOMINATOR;
+  }
+
+  int numerator, denominator;
+};
+
 struct ItemName {
 public:
   ItemName() : name(""), name_plural(""), name_a("") {}

@@ -10,7 +10,7 @@
 //Also, most/all things in here really needs clearer purpose/naming
 
 enum class PlacementRule {
-  nextToWalls, awayFromWalls, nextToWallsOrAwayFromWalls
+  nextToWalls, awayFromWalls, either
 };
 
 namespace MapPatterns {

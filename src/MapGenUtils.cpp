@@ -68,12 +68,10 @@ void cutRoomCorners(const Room& room) {
 
   for(int y = roomP0.y; y <= roomP1.y; y++) {
     for(int x = roomP0.x; x <= roomP1.x; x++) {
-      const bool X0_OK = x < crossX0Y0.x && (c[0] || c[2]);
-      const bool X1_OK = x > crossX1Y1.x && (c[1] || c[3]);
-      const bool Y0_OK = y < crossX0Y0.y && (c[0] || c[1]);
-      const bool Y1_OK = y > crossX1Y1.y && (c[2] || c[3]);
-      const bool X_OK  = X0_OK || X1_OK;
-      const bool Y_OK  = Y0_OK || Y1_OK;
+      const bool X_OK = x < crossX0Y0.x ? (c[0] || c[2]) :
+                        x > crossX1Y1.x ? (c[1] || c[3]) : false;
+      const bool Y_OK = y < crossX0Y0.y ? (c[0] || c[1]) :
+                        y > crossX1Y1.y ? (c[2] || c[3]) : false;
 
       if(X_OK && Y_OK) {
         FeatureFactory::mk(FeatureId::wall, Pos(x, y), nullptr);
@@ -84,21 +82,39 @@ void cutRoomCorners(const Room& room) {
 }
 
 void mkPillarsInRoom(const Room& room) {
-  //TODO Perhaps sometimes place pillars in patterns instead of randomly
-  //Also, it would be better to have a "pillarBucket", and then place a random
-  //number of those, for more control. Currently, zero pillars could get placed.
-  for(int x = room.r_.p0.x + 1; x <= room.r_.p1.x - 1; x++) {
-    for(int y = room.r_.p0.y + 1; y <= room.r_.p1.y - 1; y++) {
-      Pos c(x + Rnd::dice(1, 3) - 2, y + Rnd::dice(1, 3) - 2);
-      bool isNextToWall = false;
-      for(int dx = -1; dx <= 1; dx++) {
-        for(int dy = -1; dy <= 1; dy++) {
-          const auto* const f = Map::cells[c.x + dx][c.y + dy].featureStatic;
-          if(f->getId() == FeatureId::wall) {isNextToWall = true;}
-        }
+  const Pos& roomP0(room.r_.p0);
+  const Pos& roomP1(room.r_.p1);
+
+  auto isFree = [](const Pos & p) {
+    for(int dx = -1; dx <= 1; dx++) {
+      for(int dy = -1; dy <= 1; dy++) {
+        const auto* const f = Map::cells[p.x + dx][p.y + dy].featureStatic;
+        if(f->getId() == FeatureId::wall) {return false;}
       }
-      if(!isNextToWall) {
-        if(Rnd::oneIn(5)) {FeatureFactory::mk(FeatureId::wall, c);}
+    }
+    return true;
+  };
+
+  const FeatureId pillarId = FeatureId::wall;
+
+  if(Rnd::fraction(2, 3)) {
+    //Place pillars in rows and columns (but occasionally skip a pillar)
+    auto getStepSize = []() {return Rnd::range(1, 2);};
+    const int DX = getStepSize();
+    const int DY = getStepSize();
+
+    for(int y = roomP0.y + 1; y <= roomP1.y - 1; y += DY) {
+      for(int x = roomP0.x + 1; x <= roomP1.x - 1; x += DX) {
+        const Pos p(x, y);
+        if(isFree(p) && Rnd::fraction(2, 3)) {FeatureFactory::mk(pillarId, p);}
+      }
+    }
+  } else {
+    //Scatter pillars randomly
+    for(int y = roomP0.y + 1; y <= roomP1.y - 1; y++) {
+      for(int x = roomP0.x + 1; x <= roomP1.x - 1; x++) {
+        const Pos p(x + Rnd::range(-1, 1), y + Rnd::range(-1, 1));
+        if(isFree(p) && Rnd::oneIn(5)) {FeatureFactory::mk(pillarId, p);}
       }
     }
   }
