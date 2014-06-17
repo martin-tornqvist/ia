@@ -21,15 +21,16 @@
 #include "PopulateTraps.h"
 
 //Some options (comment out to disable)
-//#define MK_MERGED_REGIONS   1
-#define RESHAPE_ROOMS       1
-#define MK_AUX_ROOMS        1
-//#define MK_CRUMBLE_ROOMS    1
-//#define MK_CAVES            1
-//#define MK_SUB_ROOMS        1
-//#define FILL_DEAD_ENDS      1
-//#define ROOM_THEMING        1
-#define DECORATE            1
+//#define MK_MERGED_REGIONS       1
+#define RANDOMLY_BLOCK_REGIONS  1
+#define RESHAPE_ROOMS           1
+#define MK_AUX_ROOMS            1
+//#define MK_CRUMBLE_ROOMS        1
+//#define MK_CAVES                1
+//#define MK_SUB_ROOMS            1
+//#define FILL_DEAD_ENDS          1
+//#define ROOM_THEMING            1
+#define DECORATE                1
 
 using namespace std;
 
@@ -196,12 +197,12 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
         Map::deleteAndRemoveRoomFromList(room); //Don't apply themes etc
         room = nullptr;
       } else {
-#endif
+#endif // MK_CRUMBLE_ROOMS
 //        FeatureFactory::mk(FeatureId::floor, doorP);
 //        doorPosProposals[doorP.x][doorP.y] = true;
 #ifdef MK_CRUMBLE_ROOMS
       }
-#endif
+#endif // MK_CRUMBLE_ROOMS
       return true;
     }
   }
@@ -366,6 +367,52 @@ void mkMergedRegionsAndRooms(Region* regions[3][3],
 
     reg1->mainRoom_ = reg2->mainRoom_ = room;
   }
+}
+
+void randomlyBlockRegions(Region* regions[3][3]) {
+  TRACE_FUNC_BEGIN << "Marking some (possibly zero) regions as built, to "
+                   << "prevent rooms there (so it's not always 3x3 rooms)"
+                   << endl;
+  //Note: The max number to try can go above the hard limit of regions that
+  //could ever be blocked (i.e five regions - blocking is only allowed if
+  //no cardinally adjacent region is already blocked). However, this will push
+  //the number of attempts towards the upper limit, and increase the chance
+  //of a higher number of attempts.
+  const int MAX_NR_TO_TRY_BLOCK = max(1, Map::dlvl / 3);
+  const int NR_TO_TRY_BLOCK     = min(Rnd::range(0, MAX_NR_TO_TRY_BLOCK), 5);
+  for(int i = 0; i < NR_TO_TRY_BLOCK; i++) {
+    TRACE_VERBOSE << "Attempting to block region " << i + 1 << "/"
+                  << NR_TO_TRY_BLOCK << endl;
+    vector<Pos> blockBucket;
+    for(int y = 0; y < 3; y++) {
+      for(int x = 0; x < 3; x++) {
+        if(!regions[x][y]->isBuilt_) {
+          bool isAllAdjFree = true;
+          const Pos p(x, y);
+          for(const Pos& d : DirUtils::cardinalList) {
+            const Pos pAdj(p + d);
+            if(pAdj >= 0 && pAdj <= 2 && pAdj != p) {
+              if(regions[pAdj.x][pAdj.y]->isBuilt_) {
+                isAllAdjFree = false;
+                break;
+              }
+            }
+          }
+          if(isAllAdjFree) {blockBucket.push_back(p);}
+        }
+      }
+    }
+    if(blockBucket.empty()) {
+      TRACE_VERBOSE << "Failed to find eligible regions to block, after "
+                    << "blocking " << i << " regions" << endl;
+      break;
+    } else {
+      const Pos& p(blockBucket.at(Rnd::range(0, blockBucket.size() - 1)));
+      TRACE_VERBOSE << "Blocking region at " << p.x << "," << p.y << endl;
+      regions[p.x][p.y]->isBuilt_ = true;
+    }
+  }
+  TRACE_FUNC_END;
 }
 
 void mkCaves(Region* regions[3][3]) {
@@ -1033,8 +1080,9 @@ bool run() {
 
 #ifdef MK_MERGED_REGIONS
   mkMergedRegionsAndRooms(regions, SPL_X0, SPL_X1, SPL_Y0, SPL_Y1);
-#endif
+#endif // MK_MERGED_REGIONS
 
+  TRACE << "Marking regions to build caves" << endl;
   const int FIRST_DUNGEON_LVL_CAVES_ALLOWED = 10;
   const int CHANCE_CAVE_AREA =
     (Map::dlvl - FIRST_DUNGEON_LVL_CAVES_ALLOWED + 1) * 20;
@@ -1053,40 +1101,45 @@ bool run() {
     }
   }
 
-  TRACE << "Making rooms" << endl;
+#ifdef RANDOMLY_BLOCK_REGIONS
+  randomlyBlockRegions(regions);
+#endif // RANDOMLY_BLOCK_REGIONS
+
+  TRACE << "Making main rooms" << endl;
   for(int y = 0; y < 3; y++) {
     for(int x = 0; x < 3; x++) {
       auto& region = *regions[x][y];
-      if(!region.mainRoom_) {
+      if(!region.mainRoom_ && !region.isBuilt_) {
         const Rect roomRect = region.getRndRoomRect();
         auto* room = mkRoom(roomRect);
         Map::roomList.push_back(room);
         region.mainRoom_  = room;
+        region.isBuilt_   = true;
       }
     }
   }
 
 #ifdef MK_AUX_ROOMS
   mkAuxRooms(regions);
-#endif
+#endif // MK_AUX_ROOMS
 
 #ifdef MK_SUB_ROOMS
   mkSubRooms();
-#endif
+#endif // MK_SUB_ROOMS
 
 #ifdef RESHAPE_ROOMS
   for(Room* room : Map::roomList) {/*if(Rnd::oneIn(2))*/ {reshapeRoom(*room);}}
-#endif
+#endif // RESHAPE_ROOMS
 
   connectRooms();
 
 #ifdef MK_CAVES
   mkCaves(regions);
-#endif
+#endif // MK_CAVES
 
 #ifdef FILL_DEAD_ENDS
   fillDeadEnds();
-#endif
+#endif // FILL_DEAD_ENDS
 
   TRACE << "Placing doors" << endl;
   for(int y = 0; y < MAP_H; y++) {
@@ -1100,7 +1153,7 @@ bool run() {
 #ifdef ROOM_THEMING
   TRACE << "Calling RoomThemeMaking::run()" << endl;
   RoomThemeMaking::run();
-#endif
+#endif // ROOM_THEMING
 
   movePlayerToNearestAllowedPos();
 
@@ -1123,7 +1176,7 @@ bool run() {
     //This must be run last, everything depends on all walls being stone walls
 #ifdef DECORATE
     decorate();
-#endif
+#endif // DECORATE
   }
 
   for(int y = 0; y < 3; y++) {

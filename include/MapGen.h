@@ -22,13 +22,14 @@ public:
 
 struct Region {
 public:
-  Region(const Rect& r) : mainRoom_(nullptr), r_(r) {}
-  Region()              : mainRoom_(nullptr), r_()  {}
+  Region(const Rect& r) : mainRoom_(nullptr), r_(r), isBuilt_(false) {}
+  Region()              : mainRoom_(nullptr), r_(),  isBuilt_(false) {}
 
   Rect  getRndRoomRect()  const;
 
   Room* mainRoom_;
   Rect  r_;
+  bool  isBuilt_;
 };
 
 namespace MapGenUtils {
