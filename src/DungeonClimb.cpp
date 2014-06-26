@@ -50,7 +50,7 @@ void mkLvl() {
     }
   }
   if(Map::dlvl > 0 && Map::dlvl <= LAST_CAVERN_LVL) {
-    TRACE << "DungeonClimb: Calling PopulateItems::mkItems()" << endl;
+    TRACE << "Calling PopulateItems::mkItems()" << endl;
     PopulateItems::mkItems();
   }
   TRACE_FUNC_END;

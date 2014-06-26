@@ -3,13 +3,13 @@
 #include <algorithm>
 
 #include "Init.h"
+#include "Room.h"
 #include "FeatureTrap.h"
 #include "Map.h"
 #include "ActorFactory.h"
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
 #include "FeatureFactory.h"
-#include "MapGen.h"
 #include "MapParsing.h"
 #include "Utils.h"
 
@@ -59,11 +59,12 @@ void mkGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
   }
 }
 
-bool mkGroupOfRandomNativeToRoomThemeAt(
-  const RoomThemeId roomTheme, const vector<Pos>& sortedFreeCellsVector,
+bool mkGroupOfRandomNativeToRoomTypeAt(
+  const RoomType roomType, const vector<Pos>& sortedFreeCellsVector,
   bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
 
-  TRACE << "PopulateMonsters::mkGroupOfRandomNativeToRoomThemeAt()" << endl;
+  TRACE_FUNC_BEGIN;
+
   const int NR_LVLS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
   vector<ActorId> idBucket;
   mkListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
@@ -72,7 +73,7 @@ bool mkGroupOfRandomNativeToRoomThemeAt(
     const ActorDataT& d = ActorData::data[idBucket.at(i)];
     bool isMonsterNativeToRoom = false;
     for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
-      if(d.nativeRooms.at(iNative) == roomTheme) {
+      if(d.nativeRooms.at(iNative) == roomType) {
         isMonsterNativeToRoom = true;
         break;
       }
@@ -85,13 +86,13 @@ bool mkGroupOfRandomNativeToRoomThemeAt(
 
   if(idBucket.empty()) {
     TRACE << "PopulateMonsters: Found no valid monsters to spawn "
-          "at room theme (" + toStr(int(roomTheme)) + ")" << endl;
+          "at room theme (" + toStr(int(roomType)) + ")" << endl;
+    TRACE_FUNC_END;
     return false;
   } else {
-    const int ELEMENT = Rnd::range(0, idBucket.size() - 1);
-    const ActorId id = idBucket.at(ELEMENT);
-    mkGroupAt(id, sortedFreeCellsVector, blocked,
-              IS_ROAMING_ALLOWED);
+    const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
+    mkGroupAt(id, sortedFreeCellsVector, blocked, IS_ROAMING_ALLOWED);
+    TRACE_FUNC_END;
     return true;
   }
 }
@@ -242,8 +243,10 @@ void populateStdLvl() {
 
   //First, attempt to populate all non-plain themed rooms
   for(Room* const room : Map::roomList) {
-    if(room->theme_ != RoomThemeId::plain) {
+    if(room->type_ != RoomType::plain) {
 
+      //TODO This is not a good method to calculate the number of room cells
+      //(the room may be irregularly shaped)
       const int ROOM_W = room->r_.p1.x - room->r_.p0.x + 1;
       const int ROOM_H = room->r_.p1.y - room->r_.p0.y + 1;
       const int NR_CELLS_IN_ROOM = ROOM_W * ROOM_H;
@@ -254,9 +257,7 @@ void populateStdLvl() {
         vector<Pos> originBucket;
         for(int y = room->r_.p0.y; y <= room->r_.p1.y; y++) {
           for(int x = room->r_.p0.x; x <= room->r_.p1.x; x++) {
-            if(
-              !blocked[x][y] &&
-              RoomThemeMaking::themeMap[x][y] == room->theme_) {
+            if(Map::roomMap[x][y] == room && !blocked[x][y]) {
               originBucket.push_back(Pos(x, y));
             }
           }
@@ -274,8 +275,8 @@ void populateStdLvl() {
           vector<Pos> sortedFreeCellsVector;
           mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
 
-          if(mkGroupOfRandomNativeToRoomThemeAt(
-                room->theme_, sortedFreeCellsVector, blocked, false)) {
+          if(mkGroupOfRandomNativeToRoomTypeAt(
+                room->type_, sortedFreeCellsVector, blocked, false)) {
             nrGroupsSpawned++;
             if(nrGroupsSpawned >= NR_GROUPS_ALLOWED_ON_MAP) {return;}
           }
@@ -298,10 +299,12 @@ void populateStdLvl() {
     vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
-        if(
-          !blocked[x][y] &&
-          RoomThemeMaking::themeMap[x][y] == RoomThemeId::plain) {
-          originBucket.push_back(Pos(x, y));
+        if(Map::roomMap[x][y]) {
+          if(
+            !blocked[x][y] &&
+            Map::roomMap[x][y]->type_ == RoomType::plain) {
+            originBucket.push_back(Pos(x, y));
+          }
         }
       }
     }
@@ -309,8 +312,8 @@ void populateStdLvl() {
     const Pos origin  = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
-    if(mkGroupOfRandomNativeToRoomThemeAt(
-          RoomThemeId::plain, sortedFreeCellsVector, blocked, true)) {
+    if(mkGroupOfRandomNativeToRoomTypeAt(
+          RoomType::plain, sortedFreeCellsVector, blocked, true)) {
       nrGroupsSpawned++;
     }
   }

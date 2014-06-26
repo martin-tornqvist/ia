@@ -4,32 +4,20 @@
 #include <vector>
 
 #include "CmnTypes.h"
-#include "RoomTheme.h"
-#include "Feature.h"
 #include "MapTemplates.h"
 
-struct Region;
-
-struct Room {
-public:
-  Room(Rect r)  : theme_(RoomThemeId::plain), descr_(""), r_(r) {}
-  Room()        : theme_(RoomThemeId::plain), descr_(""), r_()  {}
-  RoomThemeId theme_;
-  std::string descr_;
-  Rect        r_;
-  std::vector<Room*> roomsConTo_;
-};
+class Room;
 
 struct Region {
 public:
-  Region(const Rect& r) : mainRoom_(nullptr), r_(r), isBuilt_(false) {}
-  Region()              : mainRoom_(nullptr), r_(),  isBuilt_(false) {}
+  Region(const Rect& r) : mainRoom_(nullptr), r_(r), isFree_(true) {}
+  Region()              : mainRoom_(nullptr), r_(),  isFree_(true) {}
 
-  Rect  getRndRoomRect()  const;
+  Rect getRndRoomRect() const;
 
   Room* mainRoom_;
   Rect  r_;
-  bool  isBuilt_;
+  bool  isFree_;
 };
 
 namespace MapGenUtils {
@@ -40,7 +28,7 @@ void mkPillarsInRoom(const Room& room);
 
 void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out);
 
-void mk(const Rect& area, const FeatureId id);
+//void mk(const Rect& area, const FeatureId id);
 
 void mkPathFindCor(Room& r0, Room& r1,
                    bool doorPosProposals[MAP_W][MAP_H] = nullptr);
@@ -64,6 +52,11 @@ void mkWithPathfinder(const Pos& p0, const Pos& p1,
 } //MapGenUtils
 
 namespace MapGen {
+
+//This variable is checked at certain points to see if the current map
+//has been flagged as "failed". Setting isMapValid to false will generally
+//stop map generation, discard the map, and trigger generation of a new map.
+extern bool isMapValid;
 
 namespace Std               {bool run();} //Std
 

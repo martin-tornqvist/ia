@@ -202,7 +202,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themeSpawnRules.set(3, PlacementRule::either, {RoomThemeId::ritual});
+  d.themeSpawnRules.set(3, PlacementRule::either, {RoomType::ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::shallowWater;
@@ -372,7 +372,7 @@ void initDataList() {
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   d.themeSpawnRules.set(4, PlacementRule::either, {
-    RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::monster
+    RoomType::plain, RoomType::crypt, RoomType::monster
   });
   /*---------------------------------------------*/
   d.id = FeatureId::statue;
@@ -389,7 +389,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.themeSpawnRules.set(3, PlacementRule::either, {
-    RoomThemeId::plain, RoomThemeId::human
+    RoomType::plain, RoomType::human
   });
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -408,7 +408,7 @@ void initDataList() {
   d.canHaveItem = false;
   d.shockWhenAdjacent = 8;
   d.themeSpawnRules.set(3, PlacementRule::either, {
-    RoomThemeId::plain, RoomThemeId::crypt
+    RoomType::plain, RoomType::crypt
   });
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -427,7 +427,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
-  d.themeSpawnRules.set(3, PlacementRule::either, {RoomThemeId::spider});
+  d.themeSpawnRules.set(3, PlacementRule::either, {RoomType::spider});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::chest;
@@ -442,7 +442,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomThemeId::human});
+  d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomType::human});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::cabinet;
@@ -459,7 +459,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomThemeId::human});
+  d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomType::human});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::fountain;
@@ -477,7 +477,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.themeSpawnRules.set(1, PlacementRule::awayFromWalls, {
-    RoomThemeId::plain, RoomThemeId::human
+    RoomType::plain, RoomType::human
   });
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -496,7 +496,7 @@ void initDataList() {
 //  d.canHaveCorpse = false;
 //  d.canHaveStaticFeature = false;
 //  d.canHaveItem = false;
-////  d.themeSpawnRules.set(1, PlacementRule::awayFromWalls, RoomThemeId::crypt, RoomThemeId::ritual, RoomThemeId::monster);
+////  d.themeSpawnRules.set(1, PlacementRule::awayFromWalls, RoomType::crypt, RoomType::ritual, RoomType::monster);
 //  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::pillar;
@@ -513,8 +513,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.themeSpawnRules.set(3, PlacementRule::awayFromWalls, {
-    RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::ritual,
-    RoomThemeId::monster
+    RoomType::plain, RoomType::crypt, RoomType::ritual, RoomType::monster
   });
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -532,8 +531,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.themeSpawnRules.set(4, PlacementRule::awayFromWalls, {
-    RoomThemeId::plain, RoomThemeId::crypt, RoomThemeId::ritual,
-    RoomThemeId::monster
+    RoomType::plain, RoomType::crypt, RoomType::ritual, RoomType::monster
   });
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -550,7 +548,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
-  d.themeSpawnRules.set(1, PlacementRule::either, {RoomThemeId::ritual});
+  d.themeSpawnRules.set(1, PlacementRule::either, {RoomType::ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::tomb;
@@ -568,7 +566,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
-  d.themeSpawnRules.set(2, PlacementRule::either, {RoomThemeId::crypt});
+  d.themeSpawnRules.set(2, PlacementRule::either, {RoomType::crypt});
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::pit;

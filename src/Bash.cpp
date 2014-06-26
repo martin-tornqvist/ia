@@ -16,7 +16,7 @@ using namespace std;
 namespace Bash {
 
 void playerBash() {
-  TRACE << "Bash::playerBash()" << endl;
+  TRACE_FUNC_BEGIN;
 
   Log::clearLog();
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
@@ -29,15 +29,16 @@ void playerBash() {
     Actor* livingActor =
       Utils::getActorAtPos(bashPos, ActorDeadState::alive);
     if(livingActor) {
-      TRACE << "Bash: Actor found at bash pos, attempt kicking actor" << endl;
+      TRACE << "Actor found at bash pos, attempting to kick actor" << endl;
       if(Map::player->getPropHandler().allowAttackMelee(true)) {
-        TRACE << "Bash: Player is allowed to do melee attack" << endl;
+        TRACE << "Player is allowed to do melee attack" << endl;
         bool blocked[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(), blocked);
 
-        TRACE << "Bash: Player can see actor" << endl;
+        TRACE << "Player can see actor" << endl;
         Map::player->kick(*livingActor);
       }
+      TRACE_FUNC_END;
       return;
     }
 
@@ -59,15 +60,16 @@ void playerBash() {
         ItemData::data[int(ItemId::playerKick)]->meleeDmg;
       deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, false);
       GameTime::actorDidAct();
+      TRACE_FUNC_END;
       return;
     }
 
     //Bash feature
-    TRACE << "Bash: No actor at bash pos, ";
-    TRACE << "attempting to bash feature instead" << endl;
+    TRACE << "No actor at bash pos, attempting to bash feature instead" << endl;
     Cell& cell = Map::cells[bashPos.x][bashPos.y];
     cell.featureStatic->bash(*Map::player);
   }
+  TRACE_FUNC_END;
 }
 
 } //Bash

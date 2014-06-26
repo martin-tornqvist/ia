@@ -15,8 +15,7 @@ void populateCaveLvl();
 
 void populateIntroLvl();
 
-void mkGroupAt(const ActorId id,
-               const std::vector<Pos>& sortedFreeCellsVector,
+void mkGroupAt(const ActorId id, const std::vector<Pos>& sortedFreeCellsVector,
                bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED);
 
 void mkSortedFreeCellsVector(const Pos& origin,

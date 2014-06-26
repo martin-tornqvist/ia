@@ -238,7 +238,7 @@ public:
   SfxId meleeMissSfx;
   SfxId reloadSfx;
   Prop* propAppliedOnRanged;
-  std::vector<RoomThemeId> nativeRooms;
+  std::vector<RoomType> nativeRooms;
   std::vector< std::pair<FeatureId, int> > featuresCanBeFoundIn;
 };
 

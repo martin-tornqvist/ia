@@ -255,7 +255,7 @@ void Stairs::bump(Actor& actorBumping) {
 
     if(CHOICE == 0) {
       Map::player->pos = pos_;
-      TRACE << "Stairs: Calling DungeonClimb::tryUseDownStairs()" << endl;
+      TRACE << "Calling DungeonClimb::tryUseDownStairs()" << endl;
       DungeonClimb::tryUseDownStairs();
     } else if(CHOICE == 1) {
       Map::player->pos = pos_;

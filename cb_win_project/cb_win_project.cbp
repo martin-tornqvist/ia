@@ -14,7 +14,6 @@
 				<Option object_output="../obj/debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -210,6 +209,7 @@
 		<Unit filename="../include/Reload.h" />
 		<Unit filename="../include/RenderInventory.h" />
 		<Unit filename="../include/Renderer.h" />
+		<Unit filename="../include/Room.h" />
 		<Unit filename="../include/RoomTheme.h" />
 		<Unit filename="../include/SaveHandling.h" />
 		<Unit filename="../include/SdlWrapper.h" />
@@ -308,6 +308,7 @@
 		<Unit filename="../src/Reload.cpp" />
 		<Unit filename="../src/RenderInventory.cpp" />
 		<Unit filename="../src/Renderer.cpp" />
+		<Unit filename="../src/Room.cpp" />
 		<Unit filename="../src/RoomTheme.cpp" />
 		<Unit filename="../src/SaveHandling.cpp" />
 		<Unit filename="../src/SdlWrapper.cpp" />

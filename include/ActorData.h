@@ -6,7 +6,7 @@
 
 #include "Converters.h"
 #include "AbilityValues.h"
-#include "RoomTheme.h"
+#include "MapGen.h"
 #include "CmnData.h"
 #include "Properties.h"
 #include "Audio.h"
@@ -124,7 +124,7 @@ struct ActorDataT {
   bool canBeSummoned;
   bool canBleed;
   bool canLeaveCorpse;
-  std::vector<RoomThemeId> nativeRooms;
+  std::vector<RoomType> nativeRooms;
   std::string descr;
   std::string aggroTextMonsterSeen;
   std::string aggroTextMonsterHidden;

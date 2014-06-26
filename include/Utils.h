@@ -112,6 +112,8 @@ int kingDist(const int X0, const int Y0, const int X1, const int Y1);
 int kingDist(const Pos& p0, const Pos& p1);
 int taxicabDist(const Pos& p0, const Pos& p1);
 
+bool isValInRange(const int VAL, const Range& range);
+
 TimeData getCurTime();
 
 } //Utils

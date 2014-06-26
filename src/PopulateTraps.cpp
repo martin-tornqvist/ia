@@ -31,25 +31,28 @@ void populateStdLvl() {
 
   //Put traps in non-plain rooms
   for(Room* const room : Map::roomList) {
-    const RoomThemeId theme = room->theme_;
+    const RoomType type = room->type_;
 
-    if(theme != RoomThemeId::plain) {
+    if(type != RoomType::plain) {
 
-      int chanceForTrappedRoom = 0;
+      Fraction chanceForTrappedRoom(0, 0);
 
-      switch(theme) {
-        case RoomThemeId::human:   chanceForTrappedRoom = 25; break;
-        case RoomThemeId::ritual:  chanceForTrappedRoom = 25; break;
-        case RoomThemeId::spider:  chanceForTrappedRoom = 75; break;
-        case RoomThemeId::crypt:   chanceForTrappedRoom = 75; break;
-        case RoomThemeId::monster: chanceForTrappedRoom = 25; break;
-        case RoomThemeId::plain:                              break;
-        case RoomThemeId::flooded:                            break;
-        case RoomThemeId::muddy:                              break;
-        case RoomThemeId::endOfRoomThemes:                    break;
+      switch(type) {
+        case RoomType::human:   chanceForTrappedRoom.set(1, 4); break;
+        case RoomType::ritual:  chanceForTrappedRoom.set(1, 4); break;
+        case RoomType::spider:  chanceForTrappedRoom.set(3, 4); break;
+        case RoomType::crypt:   chanceForTrappedRoom.set(3, 4); break;
+        case RoomType::monster: chanceForTrappedRoom.set(1, 4); break;
+        case RoomType::plain:                                   break;
+        case RoomType::flooded:                                 break;
+        case RoomType::muddy:                                   break;
+        case RoomType::endOfStdRooms:
+        case RoomType::river:
+        case RoomType::corridorJunction:
+        case RoomType::cave: break;
       }
 
-      if(Rnd::range(1, 100) < chanceForTrappedRoom) {
+      if(Rnd::fraction(chanceForTrappedRoom)) {
         TRACE << "PopulateTraps: Trapping non-plain room" << endl;
 
         vector<Pos> trapPosBucket;
@@ -67,8 +70,8 @@ void populateStdLvl() {
         }
 
         int nrPosCand = int(trapPosBucket.size());
-        const bool IS_SPIDER_ROOM = theme == RoomThemeId::spider;
-        const int NR_BASE_TRAPS = min(nrPosCand / 2, IS_SPIDER_ROOM ? 3 : 1);
+        const bool IS_SPIDER_ROOM = type == RoomType::spider;
+        const int NR_BASE_TRAPS   = min(nrPosCand / 2, IS_SPIDER_ROOM ? 3 : 1);
         for(int i = 0; i < NR_BASE_TRAPS; i++) {
           if(nrPosCand == 0) {break;}
 
@@ -77,7 +80,7 @@ void populateStdLvl() {
                                   TrapId(Rnd::range(0, int(endOfTraps) - 1));
 
           const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
-          const Pos& pos = trapPosBucket.at(ELEMENT);
+          const Pos& pos    = trapPosBucket.at(ELEMENT);
 
           TRACE << "PopulateTraps: Placing base trap" << endl;
           mkTrapAt(trapType, pos);
@@ -103,19 +106,20 @@ void populateStdLvl() {
     }
   }
 
-  const int CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS =
-    min(85, 30 + (Map::dlvl * 5));
-  if(Rnd::percentile() < CHANCE_FOR_ALLOW_TRAPPED_PLAIN_AREAS) {
+  const int CHANCE_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (Map::dlvl * 5));
+  if(Rnd::percentile() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS) {
     TRACE << "PopulateTraps: Trapping plain room" << endl;
 
     vector<Pos> trapPosBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
-        if(
-          !blocked[x][y] &&
-          RoomThemeMaking::themeMap[x][y] == RoomThemeId::plain &&
-          Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
-          trapPosBucket.push_back(Pos(x, y));
+        if(Map::roomMap[x][y]) {
+          if(
+            !blocked[x][y] &&
+            Map::roomMap[x][y]->type_ == RoomType::plain &&
+            Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
+            trapPosBucket.push_back(Pos(x, y));
+          }
         }
       }
     }

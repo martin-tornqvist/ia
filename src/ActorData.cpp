@@ -115,9 +115,9 @@ void initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::scary;
   d.isUndead = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::crypt);
   data[d.id] = d;
   d.reset();
 
@@ -157,9 +157,9 @@ void initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::scary;
   d.isUndead = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::crypt);
   data[d.id] = d;
   d.reset();
 
@@ -198,9 +198,9 @@ void initDataList() {
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLvl = MonsterShockLvl::scary;
   d.isUndead = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::crypt);
   data[d.id] = d;
   d.reset();
 
@@ -239,9 +239,9 @@ void initDataList() {
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 1;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::crypt);
   data[d.id] = d;
   d.reset();
 
@@ -280,9 +280,9 @@ void initDataList() {
   d.isUndead = true;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 0;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::crypt);
   data[d.id] = d;
   d.reset();
 
@@ -318,9 +318,9 @@ void initDataList() {
             "half-lost language.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::human);
-  d.nativeRooms.push_back(RoomThemeId::ritual);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::human);
+  d.nativeRooms.push_back(RoomType::ritual);
   data[d.id] = d;
   d.reset();
 
@@ -356,9 +356,9 @@ void initDataList() {
             "half-lost language. It is wielding a Tesla Cannon.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::human);
-  d.nativeRooms.push_back(RoomThemeId::ritual);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::human);
+  d.nativeRooms.push_back(RoomType::ritual);
   data[d.id] = d;
   d.reset();
 
@@ -394,9 +394,9 @@ void initDataList() {
             "half-lost language. It is wielding a Spike gun.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::human);
-  d.nativeRooms.push_back(RoomThemeId::ritual);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::human);
+  d.nativeRooms.push_back(RoomType::ritual);
   data[d.id] = d;
   d.reset();
 
@@ -442,8 +442,8 @@ void initDataList() {
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLvl = MonsterShockLvl::scary;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::ritual);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::ritual);
   data[d.id] = d;
   d.reset();
 
@@ -540,9 +540,9 @@ void initDataList() {
             "half-lost language.";
   d.spellCastMessage = "The priest makes strange gestures in the air.";
   d.erraticMovement = actorErratic_rare;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::human);
-  d.nativeRooms.push_back(RoomThemeId::ritual);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::human);
+  d.nativeRooms.push_back(RoomType::ritual);
   data[d.id] = d;
   d.reset();
 
@@ -573,8 +573,8 @@ void initDataList() {
   d.descr = "A large green spider.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::spider);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::spider);
   data[d.id] = d;
   d.reset();
 
@@ -605,8 +605,8 @@ void initDataList() {
   d.descr = "A large white spider.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::spider);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::spider);
   data[d.id] = d;
   d.reset();
 
@@ -637,8 +637,8 @@ void initDataList() {
   d.descr = "A large red spider.";
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::spider);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::spider);
   data[d.id] = d;
   d.reset();
 
@@ -673,8 +673,8 @@ void initDataList() {
   d.canLeaveCorpse = false;
   d.descr = "A faint shadow of a huge spider, lurking in my periphery.";
   d.erraticMovement = actorErratic_somewhat;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::spider);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::spider);
   data[d.id] = d;
   d.reset();
 
@@ -709,8 +709,8 @@ void initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.isSpider = true;
   d.monsterShockLvl = MonsterShockLvl::scary;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::spider);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::spider);
   data[d.id] = d;
   d.reset();
 
@@ -752,8 +752,8 @@ void initDataList() {
   d.monsterShockLvl = MonsterShockLvl::scary;
   d.isCanine = true;
   d.canBeSummoned = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
   data[d.id] = d;
   d.reset();
 
@@ -795,8 +795,8 @@ void initDataList() {
   d.monsterShockLvl = MonsterShockLvl::scary;
   d.isCanine = true;
   d.canBeSummoned = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
   data[d.id] = d;
   d.reset();
 
@@ -840,10 +840,10 @@ void initDataList() {
   d.canBeSummoned = false;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 1;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
-  d.nativeRooms.push_back(RoomThemeId::human);
-  d.nativeRooms.push_back(RoomThemeId::ritual);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::human);
+  d.nativeRooms.push_back(RoomType::ritual);
   data[d.id] = d;
   d.reset();
 
@@ -884,8 +884,8 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.deathMessageOverride = "The Ghost is put to rest.";
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::crypt);
   data[d.id] = d;
   d.reset();
 
@@ -928,8 +928,8 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.deathMessageOverride = "The Phantasm is put to rest.";
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::crypt);
   data[d.id] = d;
   d.reset();
 
@@ -971,8 +971,8 @@ void initDataList() {
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.deathMessageOverride = "The Wraith is put to rest.";
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::crypt);
   data[d.id] = d;
   d.reset();
 
@@ -1004,11 +1004,11 @@ void initDataList() {
   d.descr = "A large and aggressive rodent.";
   d.erraticMovement = actorErratic_somewhat;
   d.isRat = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
-  d.nativeRooms.push_back(RoomThemeId::human);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
-//  d.nativeRooms.push_back(RoomThemeId::chasm);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::human);
+  d.nativeRooms.push_back(RoomType::crypt);
+//  d.nativeRooms.push_back(RoomType::chasm);
   data[d.id] = d;
   d.reset();
 
@@ -1047,11 +1047,11 @@ void initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.isRat = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
-  d.nativeRooms.push_back(RoomThemeId::human);
-  d.nativeRooms.push_back(RoomThemeId::crypt);
-//  d.nativeRooms.push_back(RoomThemeId::chasm);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::human);
+  d.nativeRooms.push_back(RoomType::crypt);
+//  d.nativeRooms.push_back(RoomType::chasm);
   data[d.id] = d;
   d.reset();
 
@@ -1089,7 +1089,7 @@ void initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.isCanine = true;
   d.canBeSummoned = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1127,8 +1127,8 @@ void initDataList() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.canBeSummoned = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-//  d.nativeRooms.push_back(RoomThemeId::chasm);
+  d.nativeRooms.push_back(RoomType::plain);
+//  d.nativeRooms.push_back(RoomType::chasm);
   data[d.id] = d;
   d.reset();
 
@@ -1174,8 +1174,8 @@ void initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::scary;
   d.canBeSummoned = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-//  d.nativeRooms.push_back(RoomThemeId::chasm);
+  d.nativeRooms.push_back(RoomType::plain);
+//  d.nativeRooms.push_back(RoomType::chasm);
   data[d.id] = d;
   d.reset();
 
@@ -1209,7 +1209,7 @@ void initDataList() {
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::unsettling;
   d.canBeSummoned = false;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1243,7 +1243,7 @@ void initDataList() {
   d.erraticMovement = actorErratic_very;
   d.monsterShockLvl = MonsterShockLvl::none;
   d.canBeSummoned = false;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1297,8 +1297,8 @@ void initDataList() {
   d.aggroTextMonsterHidden = "I hear a droning voice.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLvl = MonsterShockLvl::scary;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-//  d.nativeRooms.push_back(RoomThemeId::chasm);
+  d.nativeRooms.push_back(RoomType::plain);
+//  d.nativeRooms.push_back(RoomType::chasm);
   data[d.id] = d;
   d.reset();
 
@@ -1350,7 +1350,7 @@ void initDataList() {
   d.aggroTextMonsterHidden = "I hear a shrill whistling.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::terrifying;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1394,8 +1394,8 @@ void initDataList() {
   d.aggroSfxMonsterHidden = SfxId::wolfHowl;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::terrifying;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
   data[d.id] = d;
   d.reset();
 
@@ -1438,8 +1438,8 @@ void initDataList() {
   d.isAutoDescrAllowed = false;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::scary;
-  d.nativeRooms.push_back(RoomThemeId::monster);
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1475,7 +1475,7 @@ void initDataList() {
   d.monsterShockLvl = MonsterShockLvl::scary;
   d.isUndead = true;
   d.isHumanoid = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1516,7 +1516,7 @@ void initDataList() {
   d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1559,7 +1559,7 @@ void initDataList() {
   d.monsterShockLvl = MonsterShockLvl::terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1601,8 +1601,8 @@ void initDataList() {
             "whom they regularly interbreed.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLvl = MonsterShockLvl::scary;
-  d.nativeRooms.push_back(RoomThemeId::flooded);
-  d.nativeRooms.push_back(RoomThemeId::muddy);
+  d.nativeRooms.push_back(RoomType::flooded);
+  d.nativeRooms.push_back(RoomType::muddy);
   data[d.id] = d;
   d.reset();
 
@@ -1636,8 +1636,8 @@ void initDataList() {
   d.isAutoDescrAllowed = false;
   d.erraticMovement = actorErratic_very;
   d.canBleed = false;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::monster);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::monster);
   data[d.id] = d;
   d.reset();
 
@@ -1679,7 +1679,7 @@ void initDataList() {
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLvl = MonsterShockLvl::unsettling;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1721,7 +1721,7 @@ void initDataList() {
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLvl = MonsterShockLvl::unsettling;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1763,7 +1763,7 @@ void initDataList() {
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLvl = MonsterShockLvl::unsettling;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 
@@ -1809,10 +1809,10 @@ void initDataList() {
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::unsettling;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::flooded);
-  d.nativeRooms.push_back(RoomThemeId::muddy);
-//  d.nativeRooms.push_back(RoomThemeId::chasm);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::flooded);
+  d.nativeRooms.push_back(RoomType::muddy);
+//  d.nativeRooms.push_back(RoomType::chasm);
   data[d.id] = d;
   d.reset();
 
@@ -1859,10 +1859,10 @@ void initDataList() {
   d.canLeaveCorpse = false;
   d.monsterShockLvl = MonsterShockLvl::scary;
   d.erraticMovement = actorErratic_somewhat;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::flooded);
-  d.nativeRooms.push_back(RoomThemeId::muddy);
-//  d.nativeRooms.push_back(RoomThemeId::chasm);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::flooded);
+  d.nativeRooms.push_back(RoomType::muddy);
+//  d.nativeRooms.push_back(RoomType::chasm);
   data[d.id] = d;
   d.reset();
 
@@ -1909,10 +1909,10 @@ void initDataList() {
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::scary;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::flooded);
-  d.nativeRooms.push_back(RoomThemeId::muddy);
-//  d.nativeRooms.push_back(RoomThemeId::chasm);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::flooded);
+  d.nativeRooms.push_back(RoomType::muddy);
+//  d.nativeRooms.push_back(RoomType::chasm);
   data[d.id] = d;
   d.reset();
 
@@ -1959,10 +1959,10 @@ void initDataList() {
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::scary;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::flooded);
-  d.nativeRooms.push_back(RoomThemeId::muddy);
-//  d.nativeRooms.push_back(RoomThemeId::chasm);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::flooded);
+  d.nativeRooms.push_back(RoomType::muddy);
+//  d.nativeRooms.push_back(RoomType::chasm);
   data[d.id] = d;
   d.reset();
 
@@ -2005,9 +2005,9 @@ void initDataList() {
   d.canLeaveCorpse = false;
   d.erraticMovement = actorErratic_very;
   d.monsterShockLvl = MonsterShockLvl::scary;
-  d.nativeRooms.push_back(RoomThemeId::plain);
-  d.nativeRooms.push_back(RoomThemeId::flooded);
-  d.nativeRooms.push_back(RoomThemeId::muddy);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::flooded);
+  d.nativeRooms.push_back(RoomType::muddy);
   data[d.id] = d;
   d.reset();
 
@@ -2051,7 +2051,7 @@ void initDataList() {
   d.canBeSummoned = false;
   d.monsterShockLvl = MonsterShockLvl::mindShattering;
   d.erraticMovement = actorErratic_somewhat;
-  d.nativeRooms.push_back(RoomThemeId::plain);
+  d.nativeRooms.push_back(RoomType::plain);
   data[d.id] = d;
   d.reset();
 

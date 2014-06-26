@@ -38,6 +38,7 @@ int dice(const DiceParam& p) {return roll(p.rolls, p.sides);}
 bool coinToss() {return roll(1, 2) == 2;}
 
 bool fraction(const int NUMERATOR, const int DENOMINATOR) {
+  if(NUMERATOR <= 0) {return false;}
   return roll(1, DENOMINATOR) <= NUMERATOR;
 }
 
@@ -249,6 +250,12 @@ TimeData getCurTime() {
   struct tm* now = localtime(&t);
   return TimeData(now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
                   now->tm_hour, now->tm_min, now->tm_sec);
+}
+
+bool isValInRange(const int VAL, const Range& range) {
+  if(VAL < range.lower) {return false;}
+  if(VAL > range.upper) {return false;}
+  return true;
 }
 
 } //Utils

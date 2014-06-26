@@ -2,6 +2,7 @@
 
 #include "Init.h"
 #include "MapGen.h"
+#include "Room.h"
 #include "FeatureData.h"
 #include "FeatureFactory.h"
 #include "Map.h"
@@ -16,29 +17,22 @@ using namespace std;
 
 namespace RoomThemeMaking {
 
-RoomThemeId themeMap[MAP_W][MAP_H];
-
 namespace {
 
-int getRandomNrFeaturesForTheme(const RoomThemeId theme) {
-  switch(theme) {
-    case RoomThemeId::plain:
-      return Rnd::oneIn(14) ? 2 : Rnd::oneIn(5) ? 1 : 0;
-    case RoomThemeId::human:
-      return Rnd::range(3, 6);
-    case RoomThemeId::ritual:
-      return Rnd::range(1, 5);
-    case RoomThemeId::spider:
-      return Rnd::range(0, 3);
-    case RoomThemeId::crypt:
-      return Rnd::range(3, 6);
-    case RoomThemeId::monster:
-      return Rnd::range(0, 6);
-    case RoomThemeId::flooded:
-      return 0;
-    case RoomThemeId::muddy:
-      return 0;
-    case RoomThemeId::endOfRoomThemes: {} break;
+int getRndNrFeaturesForRoomType(const RoomType type) {
+  switch(type) {
+    case RoomType::plain:   return Rnd::oneIn(14) ? 2 : Rnd::oneIn(5) ? 1 : 0;
+    case RoomType::human:   return Rnd::range(3, 6);
+    case RoomType::ritual:  return Rnd::range(1, 5);
+    case RoomType::spider:  return Rnd::range(0, 3);
+    case RoomType::crypt:   return Rnd::range(3, 6);
+    case RoomType::monster: return Rnd::range(0, 6);
+    case RoomType::flooded: return 0;
+    case RoomType::muddy:   return 0;
+    case RoomType::endOfStdRooms:
+    case RoomType::river:
+    case RoomType::cave:
+    case RoomType::corridorJunction: break;
   }
   return -1;
 }
@@ -46,35 +40,33 @@ int getRandomNrFeaturesForTheme(const RoomThemeId theme) {
 int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
                          vector<Pos>& nextToWalls,
                          vector<Pos>& awayFromWalls,
-                         vector<const FeatureDataT*> themeFeatureData) {
-  TRACE << "RoomThemeMaking::trySetFeatureToPlace()" << endl;
+                         vector<const FeatureDataT*> typeFeatureData) {
+  TRACE_FUNC_BEGIN;
 
-  if(themeFeatureData.empty()) {return -1;}
+  if(typeFeatureData.empty()) {return -1;}
 
   const bool IS_NEXT_TO_WALL_AVAIL    = nextToWalls.size() != 0;
   const bool IS_AWAY_FROM_WALLS_AVAIL = awayFromWalls.size() != 0;
 
   if(!IS_NEXT_TO_WALL_AVAIL && !IS_AWAY_FROM_WALLS_AVAIL) {
-    TRACE << "RoomThemeMaking: Neither cells next to walls or away from ";
-    TRACE << "walls found, returning" << endl;
     def = nullptr;
+    TRACE_FUNC_END << "No eligible cells found" << endl;
     return -1;
   }
 
   const int NR_ATTEMPTS_TO_FIND_POS = 100;
   for(int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; i++) {
-    const int NR_DATA       = themeFeatureData.size();
+    const int NR_DATA       = typeFeatureData.size();
     const int ELEMENT       = Rnd::range(0, NR_DATA - 1);
-    const auto* const dTmp  = themeFeatureData.at(ELEMENT);
+    const auto* const dTmp  = typeFeatureData.at(ELEMENT);
 
     if(
       dTmp->themeSpawnRules.getPlacementRule() ==
       PlacementRule::nextToWalls) {
       if(IS_NEXT_TO_WALL_AVAIL) {
-        const int POS_ELEMENT =
-          Rnd::range(0, nextToWalls.size() - 1);
-        pos = nextToWalls.at(POS_ELEMENT);
-        *def = dTmp;
+        pos   = nextToWalls.at(Rnd::range(0, nextToWalls.size() - 1));
+        *def  = dTmp;
+        TRACE_FUNC_END;
         return ELEMENT;
       }
     }
@@ -83,10 +75,9 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
       dTmp->themeSpawnRules.getPlacementRule() ==
       PlacementRule::awayFromWalls) {
       if(IS_AWAY_FROM_WALLS_AVAIL) {
-        const int POS_ELEMENT =
-          Rnd::range(0, awayFromWalls.size() - 1);
-        pos = awayFromWalls.at(POS_ELEMENT);
-        *def = dTmp;
+        pos   = awayFromWalls.at(Rnd::range(0, awayFromWalls.size() - 1));
+        *def  = dTmp;
+        TRACE_FUNC_END;
         return ELEMENT;
       }
     }
@@ -95,23 +86,22 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
       dTmp->themeSpawnRules.getPlacementRule() == PlacementRule::either) {
       if(Rnd::coinToss()) {
         if(IS_NEXT_TO_WALL_AVAIL) {
-          const int POS_ELEMENT =
-            Rnd::range(0, nextToWalls.size() - 1);
-          pos = nextToWalls.at(POS_ELEMENT);
-          *def = dTmp;
+          pos   = nextToWalls.at(Rnd::range(0, nextToWalls.size() - 1));
+          *def  = dTmp;
+          TRACE_FUNC_END;
           return ELEMENT;
         }
       } else {
         if(IS_AWAY_FROM_WALLS_AVAIL) {
-          const int POS_ELEMENT =
-            Rnd::range(0, awayFromWalls.size() - 1);
-          pos = awayFromWalls.at(POS_ELEMENT);
-          *def = dTmp;
+          pos   = awayFromWalls.at(Rnd::range(0, awayFromWalls.size() - 1));
+          *def  = dTmp;
+          TRACE_FUNC_END;
           return ELEMENT;
         }
       }
     }
   }
+  TRACE_FUNC_END;
   return -1;
 }
 
@@ -135,13 +125,13 @@ void eraseAdjacentCellsFromVectors(const Pos& pos,
 }
 
 int placeThemeFeatures(Room& room) {
-  TRACE << "RoomThemeMaking::placeThemeFeatures()" << endl;
-  vector<const FeatureDataT*> themeFeatureData;
+  TRACE_FUNC_BEGIN;
+  vector<const FeatureDataT*> featureBucket;
 
   for(int i = 0; i < int(FeatureId::endOfFeatureId); i++) {
     const auto* const d = FeatureData::getData((FeatureId)(i));
-    if(d->themeSpawnRules.isBelongingToTheme(room.theme_)) {
-      themeFeatureData.push_back(d);
+    if(d->themeSpawnRules.isBelongingToRoomType(room.type_)) {
+      featureBucket.push_back(d);
     }
   }
 
@@ -149,48 +139,44 @@ int placeThemeFeatures(Room& room) {
   vector<Pos> awayFromWalls;
   MapPatterns::setPositionsInArea(room.r_, nextToWalls, awayFromWalls);
 
-  vector<int> featuresSpawnCount(themeFeatureData.size(), 0);
+  vector<int> spawnCount(featureBucket.size(), 0);
 
-  int nrFeaturesLeftToPlace = getRandomNrFeaturesForTheme(room.theme_);
+  int nrFeaturesLeftToPlace = getRndNrFeaturesForRoomType(room.type_);
 
   int nrFeaturesPlaced = 0;
 
   while(true) {
     if(nrFeaturesLeftToPlace == 0) {
-      TRACE << "RoomThemeMaking: Placed enough features, returning" << endl;
+      TRACE_FUNC_END << "Placed enough features" << endl;
       return nrFeaturesPlaced;
     }
 
     const FeatureDataT* d = nullptr;
     Pos pos(-1, -1);
-    const int FEATURE_CANDIDATE_ELEMENT =
-      trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls,
-                           themeFeatureData);
+    const int FEATURE_ELEMENT =
+      trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls, featureBucket);
 
     if(!d) {
-      TRACE << "RoomThemeMaking: Could not find any more spots ";
-      TRACE << "to place feature, returning" << endl;
+      TRACE_FUNC_END << "No remaining positions to place feature" << endl;
       return nrFeaturesPlaced;
     } else {
-      TRACE << "RoomThemeMaking: Placing " << d->name_a << endl;
+      TRACE << "Placing " << d->name_a << endl;
       FeatureFactory::mk(d->id, pos);
-      featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT)++;
+      spawnCount.at(FEATURE_ELEMENT)++;
 
       nrFeaturesLeftToPlace--;
       nrFeaturesPlaced++;
 
-      //Check if more of this feature can be spawned,
-      //if not, delete it from feature candidates
+      //Check if more of this feature can be spawned. If not, remote it.
       if(
-        featuresSpawnCount.at(FEATURE_CANDIDATE_ELEMENT) >=
-        d->themeSpawnRules.getMaxNrInRoom()) {
-        featuresSpawnCount.erase(
-          featuresSpawnCount.begin() + FEATURE_CANDIDATE_ELEMENT);
-        themeFeatureData.erase(
-          themeFeatureData.begin() + FEATURE_CANDIDATE_ELEMENT);
+        spawnCount.at(FEATURE_ELEMENT) >= d->themeSpawnRules.getMaxNrInRoom()) {
+        spawnCount   .erase(spawnCount   .begin() + FEATURE_ELEMENT);
+        featureBucket.erase(featureBucket.begin() + FEATURE_ELEMENT);
 
-        //Are there any more features left to place at all?
-        if(themeFeatureData.empty()) {return nrFeaturesPlaced;}
+        if(featureBucket.empty()) {
+          TRACE_FUNC_END << "No more features to place" << endl;
+          return nrFeaturesPlaced;
+        }
       }
 
       eraseAdjacentCellsFromVectors(pos, nextToWalls, awayFromWalls);
@@ -202,10 +188,10 @@ void mkThemeSpecificRoomModifications(Room& room) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
-  switch(room.theme_) {
-    case RoomThemeId::flooded:
-    case RoomThemeId::muddy: {
-      const auto featureId = room.theme_ == RoomThemeId::flooded ?
+  switch(room.type_) {
+    case RoomType::flooded:
+    case RoomType::muddy: {
+      const auto featureId = room.type_ == RoomType::flooded ?
                              FeatureId::shallowWater : FeatureId::shallowMud;
       for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
         for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
@@ -216,7 +202,7 @@ void mkThemeSpecificRoomModifications(Room& room) {
       }
     } break;
 
-    case RoomThemeId::monster: {
+    case RoomType::monster: {
       int nrBloodPut = 0;
       const int NR_TRIES = 1000; //TODO Hacky, needs improving
       for(int i = 0; i < NR_TRIES; i++) {
@@ -238,7 +224,7 @@ void mkThemeSpecificRoomModifications(Room& room) {
 
     //Ritual chamber, set a random god for this level, sometimes make gore
     //at altar (or at random pos if no altar)
-    case RoomThemeId::ritual: {
+    case RoomType::ritual: {
 
       Gods::setRandomGod();
 
@@ -280,11 +266,14 @@ void mkThemeSpecificRoomModifications(Room& room) {
       }
     } break;
 
-    case RoomThemeId::plain:            {} break;
-    case RoomThemeId::human:            {} break;
-    case RoomThemeId::spider:           {} break;
-    case RoomThemeId::crypt:            {} break;
-    case RoomThemeId::endOfRoomThemes:  {} break;
+    case RoomType::plain:
+    case RoomType::human:
+    case RoomType::spider:
+    case RoomType::crypt:
+    case RoomType::endOfStdRooms:
+    case RoomType::cave:
+    case RoomType::river:
+    case RoomType::corridorJunction: break;
   }
 }
 
@@ -293,64 +282,74 @@ void applyThemeToRoom(Room& room) {
 
   mkThemeSpecificRoomModifications(room);
 
-  switch(room.theme_) {
-    case RoomThemeId::plain:   {room.descr_ = "";} break;
-    case RoomThemeId::human:   {room.descr_ = "";} break;
-    case RoomThemeId::ritual:  {room.descr_ = "";} break;
-    case RoomThemeId::spider:  {room.descr_ = "";} break;
-    case RoomThemeId::crypt:   {room.descr_ = "";} break;
-    case RoomThemeId::monster: {room.descr_ = "";} break;
-    case RoomThemeId::flooded: {room.descr_ = "";} break;
-    case RoomThemeId::muddy:   {room.descr_ = "";} break;
-    case RoomThemeId::endOfRoomThemes: {} break;
+  switch(room.type_) {
+    case RoomType::plain:   {room.descr_ = "";} break;
+    case RoomType::human:   {room.descr_ = "";} break;
+    case RoomType::ritual:  {room.descr_ = "";} break;
+    case RoomType::spider:  {room.descr_ = "";} break;
+    case RoomType::crypt:   {room.descr_ = "";} break;
+    case RoomType::monster: {room.descr_ = "";} break;
+    case RoomType::flooded: {room.descr_ = "";} break;
+    case RoomType::muddy:   {room.descr_ = "";} break;
+    case RoomType::endOfStdRooms:
+    case RoomType::cave:
+    case RoomType::river:
+    case RoomType::corridorJunction: break;
   }
 }
 
-int nrThemeInMap(const RoomThemeId theme) {
+int nrOfRoomTypeInMap(const RoomType type) {
   int nr = 0;
-  for(Room* r : Map::roomList) {if(r->theme_ == theme) nr++;}
+  for(Room* r : Map::roomList) {if(r->type_ == type) nr++;}
   return nr;
 }
 
-bool isThemeAllowed(const Room* const room, const RoomThemeId theme,
-                    const bool blocked[MAP_W][MAP_H]) {
+bool isRoomTypeAllowed(const Room& room, const RoomType type,
+                       const bool blocked[MAP_W][MAP_H]) {
   (void)blocked;
 
-  const int ROOM_W  = room->r_.p1.x - room->r_.p0.x + 1;
-  const int ROOM_H  = room->r_.p1.y - room->r_.p0.y + 1;
-  const int MIN_DIM = min(ROOM_W, ROOM_H);
-  const int MAX_DIM = max(ROOM_W, ROOM_H);
+  //Note: This is a valid method to calculate the room size, since at this
+  //point we are only dealing with rectangular rooms.
+  const int R_W  = room.r_.p1.x - room.r_.p0.x + 1;
+  const int R_H  = room.r_.p1.y - room.r_.p0.y + 1;
+  const int MIN_DIM = min(R_W, R_H);
+  const int MAX_DIM = max(R_W, R_H);
 
-  switch(theme) {
-    case RoomThemeId::plain: {return true;} break;
+  switch(type) {
+    case RoomType::plain:
+    case RoomType::flooded:
+    case RoomType::muddy: {return true;} break;
 
-    case RoomThemeId::human: {
+    case RoomType::human: {
       return MIN_DIM >= 4 && MAX_DIM <= 8 &&
-             nrThemeInMap(RoomThemeId::human) < 3;
+             nrOfRoomTypeInMap(RoomType::human) < 3;
     } break;
 
-    case RoomThemeId::ritual: {
+    case RoomType::ritual: {
       return MIN_DIM >= 4 && MAX_DIM <= 8 &&
-             nrThemeInMap(RoomThemeId::ritual) == 0;
+             nrOfRoomTypeInMap(RoomType::ritual) == 0;
     } break;
 
-    case RoomThemeId::spider: {
+    case RoomType::spider: {
       return MIN_DIM >= 3 && MAX_DIM <= 8;
     } break;
 
-    case RoomThemeId::crypt: {
+    case RoomType::crypt: {
       return MIN_DIM >= 3 && MAX_DIM <= 12 &&
-             nrThemeInMap(RoomThemeId::crypt) < 3;
+             nrOfRoomTypeInMap(RoomType::crypt) < 3;
     } break;
 
-    case RoomThemeId::monster: {
+    case RoomType::monster: {
       return MIN_DIM >= 4 && MAX_DIM <= 8 &&
-             nrThemeInMap(RoomThemeId::monster) < 3;
+             nrOfRoomTypeInMap(RoomType::monster) < 3;
     } break;
 
-    default: {} break;
+    case RoomType::endOfStdRooms:
+    case RoomType::cave:
+    case RoomType::river:
+    case RoomType::corridorJunction: break;
   }
-  return true;
+  return false;
 }
 
 void mkRoomDarkWithChance(const Room& room) {
@@ -359,15 +358,15 @@ void mkRoomDarkWithChance(const Room& room) {
   if(ROOM_W >= 4 && ROOM_H >= 4) {
     int chanceToMkDark = 0;
 
-    switch(room.theme_) {
-      case RoomThemeId::plain:     chanceToMkDark = 5;   break;
-      case RoomThemeId::human:     chanceToMkDark = 10;  break;
-      case RoomThemeId::ritual:    chanceToMkDark = 15;  break;
-      case RoomThemeId::spider:    chanceToMkDark = 33;  break;
-      case RoomThemeId::crypt:     chanceToMkDark = 75;  break;
-      case RoomThemeId::monster:   chanceToMkDark = 75;  break;
-      case RoomThemeId::flooded:   chanceToMkDark = 50;  break;
-      case RoomThemeId::muddy:     chanceToMkDark = 50;  break;
+    switch(room.type_) {
+      case RoomType::plain:     chanceToMkDark = 5;   break;
+      case RoomType::human:     chanceToMkDark = 10;  break;
+      case RoomType::ritual:    chanceToMkDark = 15;  break;
+      case RoomType::spider:    chanceToMkDark = 33;  break;
+      case RoomType::crypt:     chanceToMkDark = 75;  break;
+      case RoomType::monster:   chanceToMkDark = 75;  break;
+      case RoomType::flooded:   chanceToMkDark = 50;  break;
+      case RoomType::muddy:     chanceToMkDark = 50;  break;
       default: break;
     }
 
@@ -386,9 +385,10 @@ void mkRoomDarkWithChance(const Room& room) {
 void assignRoomThemes() {
   TRACE_FUNC_BEGIN;
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
-      themeMap[x][y] = RoomThemeId::plain;
+  TRACE << "Resetting all standard rooms to plain";
+  for(Room* r : Map::roomList) {
+    if(int(r->type_) < int(RoomType::endOfStdRooms)) {
+      r->type_ = RoomType::plain;
     }
   }
 
@@ -400,25 +400,26 @@ void assignRoomThemes() {
 
   vector<bool> isAssigned(NR_ROOMS, false);
 
-  TRACE << "RoomThemeMaking: Assigning plain theme to rooms with ";
-  TRACE << "wrong dimensions" << endl;
+  TRACE << "Marking non-standard rooms as already assigned, and standard "
+        << "rooms with wrong size permanently as plain" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
     Room* const room = Map::roomList.at(i);
-
-    // Check dimensions, assign plain if too small or too big
-    if(!isAssigned.at(i)) {
-      const int W = room->r_.p1.x - room->r_.p0.x + 1;
-      const int H = room->r_.p1.y - room->r_.p0.y + 1;
-      if(W < MIN_DIM || W > MAX_DIM || H < MIN_DIM || H > MAX_DIM) {
-        room->theme_ = RoomThemeId::plain;
-        isAssigned.at(i) = true;
-        continue;
+    if(int(room->type_) > int(RoomType::endOfStdRooms)) {
+      isAssigned.at(i) = true;
+    } else if(int(room->type_) < int(RoomType::endOfStdRooms)) {
+      // Check dimensions, keep room as plain if too small or too big
+      if(!isAssigned.at(i)) {
+        const int W = room->r_.p1.x - room->r_.p0.x + 1;
+        const int H = room->r_.p1.y - room->r_.p0.y + 1;
+        if(W < MIN_DIM || W > MAX_DIM || H < MIN_DIM || H > MAX_DIM) {
+          isAssigned.at(i) = true;
+          continue;
+        }
       }
     }
   }
 
-  TRACE << "RoomThemeMaking: Trying to set non-plain themes ";
-  TRACE << "for some rooms" << endl;
+  TRACE << "Trying to set non-plain types for some rooms" << endl;
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   const int NR_TRIES_TO_ASSIGN = 100;
@@ -426,31 +427,27 @@ void assignRoomThemes() {
     for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ii++) {
       const int ELEMENT = Rnd::range(0, NR_ROOMS - 1);
       if(!isAssigned.at(ELEMENT)) {
-        const RoomThemeId theme =
-          (RoomThemeId)(Rnd::range(1, int(RoomThemeId::endOfRoomThemes) - 1));
+        const RoomType type =
+          (RoomType)(Rnd::range(1, int(RoomType::endOfStdRooms) - 1));
         Room* const room = Map::roomList.at(ELEMENT);
 
-        if(isThemeAllowed(room, theme, blocked)) {
-          room->theme_ = theme;
-          TRACE << "RoomThemeMaking: Assigned non-plain theme";
-          TRACE << "(" << int(theme) << ") to room" << endl;
+        if(isRoomTypeAllowed(*room, type, blocked)) {
+          room->type_ = type;
+          TRACE << "Assigned non-plain type ("
+                << int(type) << ") to room" << endl;
           isAssigned.at(ELEMENT) = true;
-          for(int y = room->r_.p0.y; y < room->r_.p1.y; y++) {
-            for(int x = room->r_.p0.x; x < room->r_.p1.x; x++) {
-              themeMap[x][y] = theme;
-            }
-          }
           break;
         }
       }
     }
   }
 
-  TRACE << "RoomThemeMaking: Assigning plain theme to remaining rooms" << endl;
+  TRACE << "Assigning plain theme to remaining rooms" << endl;
   for(int i = 0; i < NR_ROOMS; i++) {
-    if(!isAssigned.at(i)) {
-      Map::roomList.at(i)->theme_ = RoomThemeId::plain;
-      isAssigned.at(i) = true;
+    Room* const room = Map::roomList.at(i);
+    if(!isAssigned.at(i) && int(room->type_) < int(RoomType::endOfStdRooms)) {
+      room->type_       = RoomType::plain;
+      isAssigned.at(i)  = true;
     }
   }
 
@@ -467,8 +464,10 @@ void run() {
   assignRoomThemes();
 
   for(Room* const room : Map::roomList) {
-    applyThemeToRoom(*room);
-    mkRoomDarkWithChance(*room);
+    if(int(room->type_) < int(RoomType::endOfStdRooms)) {
+      applyThemeToRoom(*room);
+      mkRoomDarkWithChance(*room);
+    }
   }
 
   TRACE_FUNC_END;

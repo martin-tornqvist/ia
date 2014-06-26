@@ -7,7 +7,7 @@
 
 #include "Art.h"
 #include "CmnData.h"
-#include "RoomTheme.h"
+#include "Room.h"
 #include "MapPatterns.h"
 #include "Properties.h"
 
@@ -69,43 +69,35 @@ enum MaterialType {
   materialType_empty, materialType_soft, materialType_hard, materialType_fluid
 };
 
-struct FeatureThemeSpawnRules {
+struct FeatureRoomSpawnRules {
 public:
-  FeatureThemeSpawnRules() :
+  FeatureRoomSpawnRules() :
     maxNrInRoom_(-1), placementRule_(PlacementRule::nextToWalls) {
-    themesBelongingTo_.resize(0);
+    roomTypesNative_.resize(0);
   }
 
-  void reset() {
-    maxNrInRoom_ = -1;
-    placementRule_ = PlacementRule::awayFromWalls;
-    themesBelongingTo_.resize(0);
+  void reset() {*this = FeatureRoomSpawnRules();}
+
+  void set(const int MAX_NR_IN_ROOM,  const PlacementRule placementRule,
+           std::initializer_list<RoomType> roomTypes) {
+    maxNrInRoom_    = MAX_NR_IN_ROOM;
+    placementRule_  = placementRule;
+    roomTypesNative_.resize(0);
+    for(RoomType id : roomTypes) {roomTypesNative_.push_back(id);}
   }
 
-  void set(
-    const int MAX_NR_IN_ROOM,
-    const PlacementRule placementRule,
-    std::initializer_list<RoomThemeId> roomThemes) {
-    maxNrInRoom_ = MAX_NR_IN_ROOM;
-    placementRule_ = placementRule;
-    themesBelongingTo_.resize(0);
-    for(RoomThemeId id : roomThemes) {themesBelongingTo_.push_back(id);}
-  }
-
-  bool isBelongingToTheme(const RoomThemeId theme) const {
-    for(RoomThemeId idToCheck : themesBelongingTo_) {
-      if(idToCheck == theme) return true;
-    }
+  bool isBelongingToRoomType(const RoomType type) const {
+    for(RoomType id : roomTypesNative_) {if(id == type) {return true;}}
     return false;
   }
 
-  inline PlacementRule getPlacementRule() const {return placementRule_;}
-  inline int getMaxNrInRoom() const {return maxNrInRoom_;}
+  PlacementRule getPlacementRule()  const {return placementRule_;}
+  int           getMaxNrInRoom()    const {return maxNrInRoom_;}
 
 private:
-  int maxNrInRoom_;
-  PlacementRule placementRule_;
-  std::vector<RoomThemeId> themesBelongingTo_;
+  int                   maxNrInRoom_;
+  PlacementRule         placementRule_;
+  std::vector<RoomType> roomTypesNative_;
 };
 
 class Actor;
@@ -158,7 +150,7 @@ struct FeatureDataT {
   std::string messageOnPlayerBlockedBlind;
   int dodgeModifier;
   int shockWhenAdjacent;
-  FeatureThemeSpawnRules themeSpawnRules;
+  FeatureRoomSpawnRules themeSpawnRules;
   std::vector<FeatureId> featuresOnDestroyed;
 };
 

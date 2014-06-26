@@ -18,6 +18,12 @@
 
 using namespace std;
 
+namespace MapGen {
+
+bool isMapValid = true;
+
+}
+
 namespace MapGenUtils {
 
 namespace {
@@ -126,9 +132,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   //(1) Is a wall cell
   //(2) Is a cell not belonging to any room
   //(3) Is not on the edge of the map
-  //(4) There is no adjacent floor cell not belonging to the room (DEPRECATED)
-  //(5) Is cardinally adjacent to a floor cell belonging to the room
-  //(6) Is cardinally adjacent to a cell not in the room or room outline
+  //(4) Is cardinally adjacent to a floor cell belonging to the room
+  //(5) Is cardinally adjacent to a cell not in the room or room outline
 
   out.resize(0);
 
@@ -168,17 +173,11 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
       for(const Pos& d : DirUtils::dirList) {
         const Pos& pAdj(p + d);
 
-        //Condition (4)
-//        if(Map::roomMap[pAdj.x][pAdj.y] && !roomFloorCells[pAdj.x][pAdj.y]) {
-//          isAdjToFloorNotInRoom = true;
-//          break;
-//        }
-
         if(DirUtils::isCardinal(d)) {
-          //Condition (5)
+          //Condition (4)
           if(roomFloorCells[pAdj.x][pAdj.y])      {isAdjToFloorInRoom = true;}
 
-          //Condition (6)
+          //Condition (5)
           if(!roomCellsExpanded[pAdj.x][pAdj.y])  {isAdjToCellOutside = true;}
         }
       }
@@ -193,16 +192,16 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
 
 //Note: The parameter rectangle does not have to go up-left to bottom-right,
 //the method adjusts the order
-void mk(const Rect& area, const FeatureId id) {
-  const Pos p0 = Pos(min(area.p0.x, area.p1.x), min(area.p0.y, area.p1.y));
-  const Pos p1 = Pos(max(area.p0.x, area.p1.x), max(area.p0.y, area.p1.y));
-
-  for(int x = p0.x; x <= p1.x; x++) {
-    for(int y = p0.y; y <= p1.y; y++) {
-      FeatureFactory::mk(id, Pos(x, y), nullptr);
-    }
-  }
-}
+//void mk(const Rect& area, const FeatureId id) {
+//  const Pos p0 = Pos(min(area.p0.x, area.p1.x), min(area.p0.y, area.p1.y));
+//  const Pos p1 = Pos(max(area.p0.x, area.p1.x), max(area.p0.y, area.p1.y));
+//
+//  for(int x = p0.x; x <= p1.x; x++) {
+//    for(int y = p0.y; y <= p1.y; y++) {
+//      FeatureFactory::mk(id, Pos(x, y), nullptr);
+//    }
+//  }
+//}
 
 void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
   TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
@@ -311,8 +310,9 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
       const Pos& p(path.at(i));
       FeatureFactory::mk(FeatureId::floor, p, nullptr);
 
-      if(i > 1 && int(i) < int(path.size() - 3) && i % 5 == 0) {
-        Room* junction = new Room(Rect(p, p));
+      if(i > 1 && int(i) < int(path.size() - 3) && i % 6 == 0) {
+        Room* junction  = new Room(Rect(p, p));
+        junction->type_ = RoomType::corridorJunction;
         Map::roomList.push_back(junction);
         Map::roomMap[p.x][p.y] = junction;
         junction->roomsConTo_.push_back(&r0);
