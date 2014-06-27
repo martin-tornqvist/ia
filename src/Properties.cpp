@@ -841,36 +841,77 @@ PropHandler::~PropHandler() {
 }
 
 void PropHandler::getPropsFromSources(
-  vector<Prop*>& propList, bool sources[int(PropSrc::endOfPropSrc)]) const {
+  vector<Prop*>& out, bool sources[int(PropSrc::endOfPropSrc)]) const {
 
-  propList.resize(0);
+  out.resize(0);
 
   //Get from applied properties
-  if(sources[int(PropSrc::applied)]) {propList = appliedProps_;}
+  if(sources[int(PropSrc::applied)]) {out = appliedProps_;}
 
   //Get from inventory if humanoid actor
   if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)]) {
-    vector<Item*> items;
-    owningActor_->getInv().getAllItems(items);
-    for(Item* item : items) {
-      for(Prop* prop : item->propsEnabledOnCarrier) {
+    const auto& inv     = owningActor_->getInv();
+    const auto& slots   = inv.getSlots();
+    auto addItemProps = [&](const vector<Prop*>& itemPropList) {
+      for(auto* const prop : itemPropList) {
         prop->owningActor_ = owningActor_;
-        propList.push_back(prop);
+        out.push_back(prop);
+      };
+    };
+    for(const auto& slot : slots) {
+      const auto* const item = slot.item;
+      if(item) {
+        addItemProps(item->propsEnabledOnCarrier);
       }
+    }
+    const auto& general = inv.getGeneral();
+    for(auto* const item : general) {
+      addItemProps(item->propsEnabledOnCarrier);
     }
   }
 }
 
-void PropHandler::getAllActivePropIds(vector<PropId>& idVectorRef) const {
-  vector<Prop*> propList;
+void  PropHandler::getPropIdsFromSources(
+  vector<PropId>& out, bool sources[int(PropSrc::endOfPropSrc)]) const {
+
+  const size_t NR_APPLIED = appliedProps_.size();
+  out.resize(NR_APPLIED);
+
+  //Get from applied properties
+  if(sources[int(PropSrc::applied)]) {
+    for(size_t i = 0; i < NR_APPLIED; i++) {
+      out[i] = appliedProps_[i]->getId();
+    }
+  }
+
+  //Get from inventory if humanoid actor
+  if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)]) {
+    const auto& inv     = owningActor_->getInv();
+    const auto& slots   = inv.getSlots();
+    auto addItemProps = [&](const vector<Prop*>& itemPropList) {
+      for(auto* const prop : itemPropList) {
+        prop->owningActor_ = owningActor_;
+        out.push_back(prop->getId());
+      };
+    };
+    for(const auto& slot : slots) {
+      const auto* const item = slot.item;
+      if(item) {
+        addItemProps(item->propsEnabledOnCarrier);
+      }
+    }
+    const auto& general = inv.getGeneral();
+    for(auto* const item : general) {
+      addItemProps(item->propsEnabledOnCarrier);
+    }
+  }
+}
+
+void PropHandler::getAllActivePropIds(vector<PropId>& out) const {
+  out.resize(0);
   bool sources[int(PropSrc::endOfPropSrc)];
   for(bool& v : sources) {v = true;}
-  getPropsFromSources(propList, sources);
-
-  idVectorRef.resize(0);
-  idVectorRef.reserve(propList.size());
-
-  for(Prop* p : propList) {idVectorRef.push_back(p->getId());}
+  getPropIdsFromSources(out, sources);
 }
 
 bool PropHandler::tryResistProp(

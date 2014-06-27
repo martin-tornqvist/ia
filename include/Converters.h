@@ -3,10 +3,11 @@
 
 #include <string>
 
-std::string toStr(int in);
+std::string toStr(const int IN);
 
-int toInt(std::string in);
+int toInt(const std::string& in);
 
+//Intended for enum class values, to retrieve the underlying type (e.g. int)
 template <typename T>
 typename std::underlying_type<T>::type toUnderlying(T t);
 

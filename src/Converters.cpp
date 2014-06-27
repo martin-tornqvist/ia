@@ -4,13 +4,13 @@
 #include <sstream>
 #include <iostream>
 
-std::string toStr(int in) {
+std::string toStr(const int IN) {
   std::ostringstream buffer;
-  buffer << in;
+  buffer << IN;
   return buffer.str();
 }
 
-int toInt(std::string in) {
+int toInt(const std::string& in) {
   int _nr;
   std::istringstream buffer(in);
   buffer >> _nr;

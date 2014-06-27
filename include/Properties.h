@@ -153,7 +153,7 @@ public:
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
   int getAbilityMod(const AbilityId ability) const;
 
-  void getAllActivePropIds(std::vector<PropId>& idVectorRef) const;
+  void getAllActivePropIds(std::vector<PropId>& out) const;
 
   Prop* getProp(const PropId id, const PropSrc source) const;
 
@@ -182,8 +182,18 @@ public:
                     const bool ALLOW_MSG_WHEN_TRUE) const;
 
 private:
-  void getPropsFromSources(std::vector<Prop*>& propList,
+  //Note: These two functions are responsible for collecting properties from
+  //all possible specified sources. They must be "mirrored" in that they
+  //collect information from exactly the same places - except one will return
+  //a list of Props, and the other will return a list of PropIds.
+  //This is an optimization. The reasoning is that in many cases (such as the
+  //very frequently ran Actor::addLight) it is sufficient to know the ids.
+  //It would then be wasteful to first gather all Props, then gather the ids
+  //from those. It's more efficient to just gather the ids at once.
+  void getPropsFromSources(std::vector<Prop*>& out,
                            bool sources[int(PropSrc::endOfPropSrc)]) const;
+  void getPropIdsFromSources(std::vector<PropId>& out,
+                             bool sources[int(PropSrc::endOfPropSrc)]) const;
 
   bool tryResistProp(const PropId id, const std::vector<Prop*>& propList) const;
 
@@ -204,7 +214,7 @@ public:
     (void)lines;
   }
 
-  PropId getId() {return id_;}
+  PropId getId() const {return id_;}
 
   virtual bool isFinnished() const {return turnsLeft_ == 0;}
   virtual PropAlignment getAlignment() const {return data_->alignment;}

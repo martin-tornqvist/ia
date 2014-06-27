@@ -106,13 +106,12 @@ public:
 
   void sortGeneralInventory();
 
-  std::vector<InvSlot>& getSlots() {return slots_;}
-
-  std::vector<Item*>& getGeneral() {return general_;}
+  std::vector<InvSlot>&       getSlots()          {return slots_;}
+  std::vector<Item*>&         getGeneral()        {return general_;}
+  const std::vector<InvSlot>& getSlots()    const {return slots_;}
+  const std::vector<Item*>&   getGeneral()  const {return general_;}
 
   int getTotalItemWeight() const;
-
-  void getAllItems(std::vector<Item*>& itemList) const;
 
   void storeToSaveLines(std::vector<std::string>& lines) const;
   void setupFromSaveLines(std::vector<std::string>& lines);

@@ -679,18 +679,3 @@ void Inventory::sortGeneralInventory() {
     }
   }
 }
-
-void Inventory::getAllItems(vector<Item*>& itemList) const {
-  itemList.resize(0);
-  itemList.reserve(slots_.size() + general_.size());
-
-  for(const InvSlot& slot : slots_) {
-    Item* const item = slot.item;
-    if(item) {
-      itemList.push_back(item);
-    }
-  }
-
-  for(Item* item : general_) {itemList.push_back(item);}
-}
-
