@@ -144,7 +144,7 @@ void act() {
       const Pos p(Map::player->pos + Pos(dx, dy));
       auto* const f = Map::cells[p.x][p.y].featureStatic;
       if(f->getId() == FeatureId::door) {
-        Door* const door = dynamic_cast<Door*>(f);
+        Door* const door = static_cast<Door*>(f);
         door->reveal(false);
         if(door->isStuck()) {
           f->bash(*Map::player);

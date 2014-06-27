@@ -24,7 +24,7 @@ INCLUDES=-I $(INC_DIR) -I $(INC_DIR_$(BUILD))
 #Flags
 CXXFLAGS_release=-O2
 CXXFLAGS_debug=-O0 -g
-CXXFLAGS=-std=c++11 -Wall -Wextra $(shell sdl-config --cflags) $(CXXFLAGS_$(BUILD))
+CXXFLAGS=-std=c++11 -Wall -Wextra -fno-rtti $(shell sdl-config --cflags) $(CXXFLAGS_$(BUILD))
 # For building 32-bit binaries on x86_64 platform
 # CXXFLAGS+=-m32 -march=i686
 #LDFLAGS=-L/usr/lib/i386-linux-gnu -lSDL -lSDL_image -lSDL_mixer

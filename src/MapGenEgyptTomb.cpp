@@ -28,7 +28,7 @@ bool run() {
     for(int x = 0; x < MAP_W; x++) {
       Feature* const f = Map::cells[x][y].featureStatic;
       if(f->getId() == FeatureId::wall) {
-        dynamic_cast<Wall*>(f)->wallType = WallType::egypt;
+        static_cast<Wall*>(f)->wallType = WallType::egypt;
       }
     }
   }
@@ -48,7 +48,7 @@ bool run() {
   actors.push_back(ActorFactory::mk(actor_cultist,   Pos(17, 10)));
   actors.push_back(ActorFactory::mk(actor_cultist,   Pos(17, 12)));
 
-  for(Actor* a : actors) {dynamic_cast<Monster*>(a)->isRoamingAllowed_ = true;}
+  for(Actor* a : actors) {static_cast<Monster*>(a)->isRoamingAllowed_ = true;}
 
   return true;
 }

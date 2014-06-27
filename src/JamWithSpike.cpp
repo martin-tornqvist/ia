@@ -17,7 +17,7 @@ void playerJamFeature(Feature* const feature) {
   bool jamableObjectFound = false;
 
   if(feature->getId() == FeatureId::door) {
-    Door* const door = dynamic_cast<Door*>(feature);
+    Door* const door = static_cast<Door*>(feature);
     const bool DOOR_SPIKED = door->trySpike(Map::player);
 
     if(DOOR_SPIKED) {

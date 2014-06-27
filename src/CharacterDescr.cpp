@@ -40,7 +40,7 @@ void mkLines() {
   const int BASE_DODGE_ATTACKS =
     min(100, abilities.getVal(AbilityId::dodgeAttack, true, *(Map::player)));
   Weapon* kick =
-    dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
+    static_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
   string kickStr = ItemData::getItemInterfaceRef(
                      *kick, false, PrimaryAttMode::melee);
   delete kick;
@@ -52,7 +52,7 @@ void mkLines() {
     }
   }
   Weapon* punch =
-    dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
+    static_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
   string punchStr = ItemData::getItemInterfaceRef(
                       *punch, false, PrimaryAttMode::melee);
   delete punch;

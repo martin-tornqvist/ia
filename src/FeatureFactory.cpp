@@ -75,58 +75,60 @@ Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
   //Features with specific class
   switch(id) {
     case FeatureId::door: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_door);
+      assert(spawnData->getFeatureSpawnDataType() == FeatureSpawnDataId::door);
       Door* door =
-        new Door(id, pos, dynamic_cast<DoorSpawnData*>(spawnData));
+        new Door(id, pos, static_cast<DoorSpawnData*>(spawnData));
       replaceStaticFeatureAt(door, pos);
       delete spawnData;
       return door;
     }
     case FeatureId::lever: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_lever);
+      assert(spawnData->getFeatureSpawnDataType() == FeatureSpawnDataId::lever);
       FeatureLever* lever =
-        new FeatureLever(id, pos, dynamic_cast<LeverSpawnData*>(spawnData));
+        new FeatureLever(id, pos, static_cast<LeverSpawnData*>(spawnData));
       replaceStaticFeatureAt(lever, pos);
       delete spawnData;
       return lever;
     }
     case FeatureId::trap: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_trap);
-      Trap* trap = new Trap(id, pos, dynamic_cast<TrapSpawnData*>(spawnData));
+      assert(spawnData->getFeatureSpawnDataType() == FeatureSpawnDataId::trap);
+      Trap* trap = new Trap(id, pos, static_cast<TrapSpawnData*>(spawnData));
       replaceStaticFeatureAt(trap, pos);
       delete spawnData;
       return trap;
     }
     case FeatureId::litDynamite: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
+      assert(spawnData->getFeatureSpawnDataType() ==
+             FeatureSpawnDataId::dynamite);
       LitDynamite* dynamite =
-        new LitDynamite(id, pos, dynamic_cast<DynamiteSpawnData*>(spawnData));
+        new LitDynamite(id, pos, static_cast<DynamiteSpawnData*>(spawnData));
       GameTime::addFeatureMob(dynamite);
       delete spawnData;
       return dynamite;
     }
     case FeatureId::litFlare: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_dynamite);
+      assert(spawnData->getFeatureSpawnDataType() ==
+             FeatureSpawnDataId::dynamite);
       LitFlare* flare =
-        new LitFlare(id, pos, dynamic_cast<DynamiteSpawnData*>(spawnData));
+        new LitFlare(id, pos, static_cast<DynamiteSpawnData*>(spawnData));
       GameTime::addFeatureMob(flare);
       delete spawnData;
       return flare;
     }
     case FeatureId::smoke: {
-      assert(spawnData->getFeatureSpawnDataType() == featureSpawnData_smoke);
+      assert(spawnData->getFeatureSpawnDataType() == FeatureSpawnDataId::smoke);
       Smoke* smoke =
-        new Smoke(id, pos, dynamic_cast<SmokeSpawnData*>(spawnData));
+        new Smoke(id, pos, static_cast<SmokeSpawnData*>(spawnData));
       GameTime::addFeatureMob(smoke);
       delete spawnData;
       return smoke;
     }
     case FeatureId::proxEventWallCrumble: {
       assert(spawnData->getFeatureSpawnDataType() ==
-             featureSpawnData_proxEventWallCrumble);
+             FeatureSpawnDataId::proxEventWallCrumble);
       ProxEventWallCrumble* proxEvent =
         new ProxEventWallCrumble(
-        id, pos, dynamic_cast<ProxEventWallCrumbleSpawnData*>(spawnData));
+        id, pos, static_cast<ProxEventWallCrumbleSpawnData*>(spawnData));
       GameTime::addFeatureMob(proxEvent);
       delete spawnData;
       return proxEvent;

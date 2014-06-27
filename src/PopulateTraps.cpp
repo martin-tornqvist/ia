@@ -89,7 +89,7 @@ void populateStdLvl() {
           nrPosCand--;
 
           //Spawn up to N traps in nearest cells (not necessarily adjacent)
-          IsCloserToOrigin sorter(pos);
+          IsCloserToPos sorter(pos);
           sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
           const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
           TRACE << "PopulateTraps: Placing adjacent traps" << endl;
@@ -140,7 +140,7 @@ void populateStdLvl() {
       nrPosCand--;
 
       //Spawn up to N traps in nearest cells (not necessarily adjacent)
-      IsCloserToOrigin sorter(pos);
+      IsCloserToPos sorter(pos);
       sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
       const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
       TRACE_FUNC_BEGIN;

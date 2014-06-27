@@ -326,22 +326,17 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
 }
 
 void Potion::collide(const Pos& pos, Actor* const actor) {
-  if(!Map::cells[pos.x][pos.y].featureStatic->isBottomless() ||
-      actor) {
-//    ItemDataT* const potData =
-//      ItemData::data[d.id];
+  if(!Map::cells[pos.x][pos.y].featureStatic->isBottomless() || actor) {
 
     const bool PLAYER_SEE_CELL = Map::cells[pos.x][pos.y].isSeenByPlayer;
 
     if(PLAYER_SEE_CELL) {
-      // TODO Use standard animation
+      //TODO Use standard animation
       Renderer::drawGlyph('*', Panel::map, pos, data_->clr);
 
       if(actor) {
         if(actor->deadState == ActorDeadState::alive) {
-          Log::addMsg(
-            "The potion shatters on " +
-            actor->getNameThe() + ".");
+          Log::addMsg("The potion shatters on " + actor->getNameThe() + ".");
         }
       } else {
         Feature* const f = Map::cells[pos.x][pos.y].featureStatic;

@@ -71,16 +71,16 @@ bool Actor::isSeeingActor(
 
     if(this == Map::player) {
       const bool IS_MONSTER_SNEAKING =
-        dynamic_cast<const Monster*>(&other)->isStealth;
+        static_cast<const Monster*>(&other)->isStealth;
       return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer &&
              !IS_MONSTER_SNEAKING;
     }
 
     if(
-      dynamic_cast<const Monster*>(this)->leader ==
+      static_cast<const Monster*>(this)->leader ==
       Map::player && &other != Map::player) {
       const bool IS_MONSTER_SNEAKING =
-        dynamic_cast<const Monster*>(&other)->isStealth;
+        static_cast<const Monster*>(&other)->isStealth;
       if(IS_MONSTER_SNEAKING) return false;
     }
 
@@ -117,7 +117,7 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
     if(actor != this && actor->deadState == ActorDeadState::alive) {
 
       if(IS_SELF_PLAYER) {
-        if(dynamic_cast<Monster*>(actor)->leader != this) {
+        if(static_cast<Monster*>(actor)->leader != this) {
           if(isSeeingActor(*actor, nullptr)) {
             vectorRef.push_back(actor);
           }
@@ -125,10 +125,10 @@ void Actor::getSpottedEnemies(vector<Actor*>& vectorRef) {
       } else {
         const bool IS_OTHER_PLAYER = actor == Map::player;
         const bool IS_HOSTILE_TO_PLAYER =
-          dynamic_cast<Monster*>(this)->leader != Map::player;
+          static_cast<Monster*>(this)->leader != Map::player;
         const bool IS_OTHER_HOSTILE_TO_PLAYER =
           IS_OTHER_PLAYER ? false :
-          dynamic_cast<Monster*>(actor)->leader != Map::player;
+          static_cast<Monster*>(actor)->leader != Map::player;
 
         //Note that IS_OTHER_HOSTILE_TO_PLAYER is false if other IS the player,
         //there is no need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
@@ -178,7 +178,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
     Renderer::drawMapAndInterface();
     Map::updateVisualMemory();
   } else {
-    dynamic_cast<Monster*>(this)->playerAwareOfMeCounter_ = 0;
+    static_cast<Monster*>(this)->playerAwareOfMeCounter_ = 0;
   }
 
   pos = newPos;
@@ -392,7 +392,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   //Filter damage through worn armor
   if(isHumanoid()) {
     Armor* armor =
-      dynamic_cast<Armor*>(inv_->getItemInSlot(SlotId::armorBody));
+      static_cast<Armor*>(inv_->getItemInSlot(SlotId::armorBody));
     if(armor) {
       TRACE_VERBOSE << "Actor: Has armor, running hit on armor" << endl;
 
@@ -467,7 +467,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   //Check all monsters and unset this actor as leader
   for(Actor* actor : GameTime::actors_) {
     if(actor != this && actor != Map::player) {
-      Monster* const monster = dynamic_cast<Monster*>(actor);
+      Monster* const monster = static_cast<Monster*>(actor);
       if(monster->leader == this) {monster->leader = nullptr;}
     }
   }
@@ -477,7 +477,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   //If died on a visible trap, destroy the corpse
   const auto* const f = Map::cells[pos.x][pos.y].featureStatic;
   if(f->getId() == FeatureId::trap) {
-    if(!dynamic_cast<const Trap*>(f)->isHidden()) {isOnVisibleTrap = true;}
+    if(!static_cast<const Trap*>(f)->isHidden()) {isOnVisibleTrap = true;}
   }
 
   bool isPlayerSeeDyingActor = true;
@@ -508,7 +508,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
         AlertsMonsters::no);
       SndEmit::emitSnd(snd);
     }
-    dynamic_cast<Monster*>(this)->leader = nullptr;
+    static_cast<Monster*>(this)->leader = nullptr;
   }
 
   if(ALLOW_DROP_ITEMS) {ItemDrop::dropAllCharactersItems(this, true);}

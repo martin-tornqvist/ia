@@ -120,7 +120,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
-  sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(origin));
+  sort(freeCells.begin(), freeCells.end(), IsCloserToPos(origin));
 
   const int NR_FREE_CELLS   = freeCells.size();
   const int NR_MONSTER_IDS  = monsterIds.size();
@@ -134,7 +134,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
     const ActorId id  = monsterIds.at(i);
 
     Actor*   const actor    = mk(id, pos);
-    Monster* const monster  = dynamic_cast<Monster*>(actor);
+    Monster* const monster  = static_cast<Monster*>(actor);
 
     if(monstersRet) {
       monstersRet->push_back(monster);

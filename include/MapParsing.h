@@ -197,12 +197,12 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST,
 
 } //MapParse
 
-//Function object for sorting STL containers by distance to origin
-struct IsCloserToOrigin {
+//Function object for sorting STL containers by distance to a position
+struct IsCloserToPos {
 public:
-  IsCloserToOrigin(const Pos& c) : c_(c) {}
-  bool operator()(const Pos& c1, const Pos& c2);
-  Pos c_;
+  IsCloserToPos(const Pos& p) : p_(p) {}
+  bool operator()(const Pos& p1, const Pos& p2);
+  Pos p_;
 };
 
 namespace FloodFill {

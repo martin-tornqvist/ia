@@ -20,11 +20,11 @@
 using namespace std;
 
 Entity::Entity(FeatureMob* feature_) :
-  feature(dynamic_cast<Feature*>(feature_)),
+  feature(static_cast<Feature*>(feature_)),
   entityType(entityFeatureMob) {}
 
 Entity::Entity(FeatureStatic* feature_) :
-  feature(dynamic_cast<Feature*>(feature_)),
+  feature(static_cast<Feature*>(feature_)),
   entityType(entityFeatureStatic) {}
 
 namespace AutoDescrActor {
@@ -136,7 +136,7 @@ void descrBriefActor(const Actor& actor, const MarkerTask markerTask,
     if(markerTask == MarkerTask::aimRangedWeapon) {
       Item* const item =
         Map::player->getInv().getItemInSlot(SlotId::wielded);
-      Weapon* const wpn = dynamic_cast<Weapon*>(item);
+      Weapon* const wpn = static_cast<Weapon*>(item);
       RangedAttData data(*Map::player, *wpn, actor.pos, actor.pos);
       Log::addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
     } else if(markerTask == MarkerTask::aimThrownWeapon) {

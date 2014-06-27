@@ -467,7 +467,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
 
     //Spawn a monster that can get stuck in the web
     Actor* const actor = ActorFactory::mk(actor_zombie, posL);
-    Monster* const monster = dynamic_cast<Monster*>(actor);
+    Monster* const monster = static_cast<Monster*>(actor);
 
     //Create a spider web in the right cell
     const auto mimicId = Map::cells[posR.x][posR.x].featureStatic->getId();
@@ -534,22 +534,22 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   item = ItemFactory::mk(ItemId::armorAsbSuit);
   inv.putInSlot(SlotId::armorBody, item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  dynamic_cast<ItemAmmoClip*>(item)->ammo = 1;
+  static_cast<ItemAmmoClip*>(item)->ammo = 1;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  dynamic_cast<ItemAmmoClip*>(item)->ammo = 2;
+  static_cast<ItemAmmoClip*>(item)->ammo = 2;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  dynamic_cast<ItemAmmoClip*>(item)->ammo = 3;
+  static_cast<ItemAmmoClip*>(item)->ammo = 3;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  dynamic_cast<ItemAmmoClip*>(item)->ammo = 3;
+  static_cast<ItemAmmoClip*>(item)->ammo = 3;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::deviceSentry);
-  dynamic_cast<Device*>(item)->condition_ = Condition::shoddy;
+  static_cast<Device*>(item)->condition_ = Condition::shoddy;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::electricLantern);
-  dynamic_cast<Device*>(item)->condition_ = Condition::breaking;
+  static_cast<Device*>(item)->condition_ = Condition::breaking;
   inv.putInGeneral(item);
 
   //Player
@@ -574,7 +574,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   propHlr.tryApplyProp(new PropBlessed(propTurnsStd));
   propHlr.tryApplyProp(new PropWound(propTurnsStd));
   Prop* prop      = propHlr.getProp(propWound, PropSrc::applied);
-  PropWound* wnd  = dynamic_cast<PropWound*>(prop);
+  PropWound* wnd  = static_cast<PropWound*>(prop);
   CHECK(wnd);
   CHECK_EQUAL(1, wnd->getNrWounds());
   wnd->onMore();
@@ -623,7 +623,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   for(Item* item : genInv) {
     ItemId id = item->getData().id;
     if(id == ItemId::pistolClip) {
-      switch(dynamic_cast<ItemAmmoClip*>(item)->ammo) {
+      switch(static_cast<ItemAmmoClip*>(item)->ammo) {
         case 1: nrClipWith1++; break;
         case 2: nrClipWith2++; break;
         case 3: nrClipWith3++; break;
@@ -632,11 +632,11 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
     } else if(id == ItemId::deviceSentry) {
       isSentryDeviceFound = true;
       CHECK_EQUAL(int(Condition::shoddy),
-                  int(dynamic_cast<Device*>(item)->condition_));
+                  int(static_cast<Device*>(item)->condition_));
     } else if(id == ItemId::electricLantern) {
       isElectricLanternFound = true;
       CHECK_EQUAL(int(Condition::breaking),
-                  int(dynamic_cast<DeviceLantern*>(item)->condition_));
+                  int(static_cast<DeviceLantern*>(item)->condition_));
     }
   }
   CHECK_EQUAL(1, nrClipWith1);
@@ -678,7 +678,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK(prop);
   CHECK(prop->turnsLeft_ > 0);
   prop = propHlr.getProp(propWound, PropSrc::applied);
-  PropWound* wnd = dynamic_cast<PropWound*>(prop);
+  PropWound* wnd = static_cast<PropWound*>(prop);
   CHECK(wnd);
   CHECK(wnd->turnsLeft_ == -1);
   CHECK_EQUAL(3, wnd->getNrWounds());

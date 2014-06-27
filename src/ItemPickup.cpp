@@ -87,7 +87,7 @@ void tryUnloadWeaponOrPickupAmmoFromGround() {
 
   if(item) {
     if(item->getData().isRangedWeapon) {
-      Weapon* const weapon = dynamic_cast<Weapon*>(item);
+      Weapon* const weapon = static_cast<Weapon*>(item);
       const int nrAmmoLoaded = weapon->nrAmmoLoaded;
 
       if(nrAmmoLoaded > 0 && !weapon->getData().rangedHasInfiniteAmmo) {
@@ -100,7 +100,7 @@ void tryUnloadWeaponOrPickupAmmoFromGround() {
 
         if(ammoData->isAmmoClip) {
           //Unload a clip
-          dynamic_cast<ItemAmmoClip*>(spawnedAmmo)->ammo = nrAmmoLoaded;
+          static_cast<ItemAmmoClip*>(spawnedAmmo)->ammo = nrAmmoLoaded;
         } else {
           //Unload loose ammo
           spawnedAmmo->nrItems = nrAmmoLoaded;
@@ -119,7 +119,7 @@ void tryUnloadWeaponOrPickupAmmoFromGround() {
           playerInv.putInGeneral(spawnedAmmo);
         }
 
-        dynamic_cast<Weapon*>(item)->nrAmmoLoaded = 0;
+        static_cast<Weapon*>(item)->nrAmmoLoaded = 0;
 
         GameTime::actorDidAct();
         return;

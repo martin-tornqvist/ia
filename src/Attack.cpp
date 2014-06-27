@@ -47,7 +47,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
   bool isDefenderAware = true;
   if(attacker == Map::player) {
     isDefenderAware =
-      dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ > 0;
+      static_cast<Monster*>(curDefender)->awareOfPlayerCounter_ > 0;
   } else {
     isDefenderAware =
       Map::player->isSeeingActor(*attacker, nullptr) ||
@@ -85,7 +85,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
     if(attacker == Map::player) {
       isAttackerAware = Map::player->isSeeingActor(*curDefender, nullptr);
     } else {
-      Monster* const monster = dynamic_cast<Monster*>(attacker);
+      Monster* const monster = static_cast<Monster*>(attacker);
       isAttackerAware = monster->awareOfPlayerCounter_ > 0;
     }
 
@@ -99,10 +99,10 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
 
       const auto* const f = Map::cells[defPos.x][defPos.y].featureStatic;
       if(f->getId() == FeatureId::trap) {
-        const auto* const t = dynamic_cast<const Trap*>(f);
+        const auto* const t = static_cast<const Trap*>(f);
         if(t->getTrapType() == trap_spiderWeb) {
           const auto* const web =
-            dynamic_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
+            static_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
           if(web->isHolding()) {
             isBigBon = true;
           }
@@ -221,7 +221,7 @@ RangedAttData::RangedAttData(
     int unawareDefMod = 0;
     const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
     if(attacker == Map::player && curDefender != Map::player && IS_ROGUE) {
-      if(dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ <= 0) {
+      if(static_cast<Monster*>(curDefender)->awareOfPlayerCounter_ <= 0) {
         unawareDefMod = 25;
       }
     }
@@ -253,7 +253,7 @@ RangedAttData::RangedAttData(
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
         if(prop) {
-          playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
+          playerAimX3 = static_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }
       }
 
@@ -314,7 +314,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
     int unawareDefMod = 0;
     const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
     if(attacker == Map::player && curDefender != Map::player && IS_ROGUE) {
-      if(dynamic_cast<Monster*>(curDefender)->awareOfPlayerCounter_ <= 0) {
+      if(static_cast<Monster*>(curDefender)->awareOfPlayerCounter_ <= 0) {
         unawareDefMod = 25;
       }
     }
@@ -337,7 +337,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
         if(prop) {
-          playerAimX3 = dynamic_cast<const PropAiming*>(prop)->isMaxRangedDmg();
+          playerAimX3 = static_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }
       }
 
@@ -1029,10 +1029,10 @@ void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
 
   if(data.curDefender == Map::player) {
     if(data.attackResult >= failSmall) {
-      dynamic_cast<Monster*>(data.attacker)->isStealth = false;
+      static_cast<Monster*>(data.attacker)->isStealth = false;
     }
   } else {
-    Monster* const monster = dynamic_cast<Monster*>(data.curDefender);
+    Monster* const monster = static_cast<Monster*>(data.curDefender);
     monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
   }
   GameTime::actorDidAct();

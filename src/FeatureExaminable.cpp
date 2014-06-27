@@ -402,7 +402,7 @@ void Tomb::triggerTrap(Actor& actor) {
     const unsigned int ELEM = Rnd::range(0, actorBucket.size() - 1);
     const ActorId actorIdToSpawn = actorBucket.at(ELEM);
     Actor* const monster = ActorFactory::mk(actorIdToSpawn, pos_);
-    dynamic_cast<Monster*>(monster)->becomeAware(false);
+    static_cast<Monster*>(monster)->becomeAware(false);
   }
 }
 
@@ -528,7 +528,7 @@ void Chest::bash(Actor& actorTrying) {
 //          const string wpnName = ItemData::getItemRef(
 //                                   *item, ItemRefType::plain, true);
 //
-//          Weapon* const wpn = dynamic_cast<Weapon*>(item);
+//          Weapon* const wpn = static_cast<Weapon*>(item);
 //
 //          if(wpn->meleeDmgPlus == 0) {
 //            Log::addMsg("My " + wpnName + " breaks!");

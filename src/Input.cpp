@@ -151,7 +151,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
             propHlr.getProp(propAiming, PropSrc::applied);
           if(propAimingOld) {
             nrTurnsAimingOld =
-              dynamic_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
+              static_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
           }
         }
 
@@ -256,7 +256,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
           if(!itemData.isRangedWeapon) {
             Log::addMsg("I am not wielding a firearm.");
           } else {
-            auto* wpn = dynamic_cast<Weapon*>(item);
+            auto* wpn = static_cast<Weapon*>(item);
             if(wpn->nrAmmoLoaded >= 1 || itemData.rangedHasInfiniteAmmo) {
               Marker::run(MarkerTask::aimRangedWeapon, nullptr);
             } else if(Config::isRangedWpnAutoReload()) {

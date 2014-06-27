@@ -1369,7 +1369,7 @@ string getItemRef(const Item& item, const ItemRefType itemRefForm,
       ret = itemRefForm == ItemRefType::plain ?
             d.baseName.name : d.baseName.name_a;
       if(!SKIP_EXTRA_INFO) {
-        const Condition cond = dynamic_cast<const Device*>(&item)->condition_;
+        const Condition cond = static_cast<const Device*>(&item)->condition_;
         switch(cond) {
           case Condition::breaking: ret += " {breaking}"; break;
           case Condition::shoddy:   ret += " {shoddy}";   break;
@@ -1393,13 +1393,13 @@ string getItemRef(const Item& item, const ItemRefType itemRefForm,
 
   if(d.isAmmoClip) {
     const ItemAmmoClip* const ammoItem =
-      dynamic_cast<const ItemAmmoClip*>(&item);
+      static_cast<const ItemAmmoClip*>(&item);
     return ret + " {" + toStr(ammoItem->ammo) + "}";
   }
 
   if(d.isMedicalBag) {
     const MedicalBag* const medicalBag =
-      dynamic_cast<const MedicalBag*>(&item);
+      static_cast<const MedicalBag*>(&item);
     return ret + " {" + toStr(medicalBag->getNrSupplies()) + "}";
   }
 
@@ -1407,7 +1407,7 @@ string getItemRef(const Item& item, const ItemRefType itemRefForm,
     if(d.isRangedWeapon) {
       string ammoLoadedStr = "";
       if(!d.rangedHasInfiniteAmmo) {
-        const Weapon* const w = dynamic_cast<const Weapon*>(&item);
+        const Weapon* const w = static_cast<const Weapon*>(&item);
         ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" +
                         toStr(w->ammoCapacity);
       }
@@ -1430,7 +1430,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
   if(d.isDevice && d.id != ItemId::electricLantern) {
     if(d.isIdentified) {
       string ret = ADD_A ? d.baseName.name_a : d.baseName.name;
-      const Condition cond = dynamic_cast<const Device*>(&item)->condition_;
+      const Condition cond = static_cast<const Device*>(&item)->condition_;
       switch(cond) {
         case Condition::breaking: ret += " {breaking}"; break;
         case Condition::shoddy:   ret += " {shoddy}";   break;
@@ -1461,7 +1461,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
     (attackMode == PrimaryAttMode::melee && d.isMeleeWeapon)) {
     const string rollsStr = toStr(d.meleeDmg.first);
     const string sidesStr = toStr(d.meleeDmg.second);
-    const int PLUS = dynamic_cast<const Weapon*>(&item)->meleeDmgPlus;
+    const int PLUS = static_cast<const Weapon*>(&item)->meleeDmgPlus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
                            toStr(PLUS));
     const int ITEM_SKILL = d.meleeHitChanceMod;
@@ -1494,7 +1494,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
     const string skillStr = toStr(TOTAL_SKILL) + "%";
     string ammoLoadedStr = "";
     if(!d.rangedHasInfiniteAmmo) {
-      const Weapon* const w = dynamic_cast<const Weapon*>(&item);
+      const Weapon* const w = static_cast<const Weapon*>(&item);
       ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" +
                       toStr(w->ammoCapacity);
     }
@@ -1517,18 +1517,18 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
   }
 
   if(d.isMedicalBag) {
-    const MedicalBag* const medicalBag = dynamic_cast<const MedicalBag*>(&item);
+    const MedicalBag* const medicalBag = static_cast<const MedicalBag*>(&item);
     return ret + " {" + toStr(medicalBag->getNrSupplies()) + "}";
   }
 
   if(d.isAmmoClip) {
-    const ItemAmmoClip* const clip = dynamic_cast<const ItemAmmoClip*>(&item);
+    const ItemAmmoClip* const clip = static_cast<const ItemAmmoClip*>(&item);
     return ret + " {" + toStr(clip->ammo) + "}";
   }
 
   if(d.isArmor) {
     const string armorDataLine =
-      dynamic_cast<const Armor*>(&item)->getArmorDataLine(true);
+      static_cast<const Armor*>(&item)->getArmorDataLine(true);
     return armorDataLine.empty() ? ret : ret + " " + armorDataLine;
   }
 

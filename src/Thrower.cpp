@@ -166,7 +166,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
 
           //If throwing a potion on an actor, let it make stuff happen...
           if(itemThrownData.isPotion) {
-            dynamic_cast<Potion*>(&itemThrown)->collide(curPos, actorHere);
+            static_cast<Potion*>(&itemThrown)->collide(curPos, actorHere);
             delete &itemThrown;
             delete data;
             GameTime::actorDidAct();
@@ -201,7 +201,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
   //If potion, collide it on the landscape
   if(itemThrownData.isPotion) {
     if(blockedInElement >= 0) {
-      dynamic_cast<Potion*>(&itemThrown)->collide(
+      static_cast<Potion*>(&itemThrown)->collide(
         path.at(blockedInElement), nullptr);
       delete &itemThrown;
       delete data;

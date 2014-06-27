@@ -286,10 +286,10 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST,
 } //MapParse
 
 //------------------------------------------------------------ FUNCT OBJECT
-bool IsCloserToOrigin::operator()(const Pos& c1, const Pos& c2) {
-  const int chebDist1 = Utils::kingDist(c_.x, c_.y, c1.x, c1.y);
-  const int chebDist2 = Utils::kingDist(c_.x, c_.y, c2.x, c2.y);
-  return chebDist1 < chebDist2;
+bool IsCloserToPos::operator()(const Pos& p1, const Pos& p2) {
+  const int kingDist1 = Utils::kingDist(p_.x, p_.y, p1.x, p1.y);
+  const int kingDist2 = Utils::kingDist(p_.x, p_.y, p2.x, p2.y);
+  return kingDist1 < kingDist2;
 }
 
 //------------------------------------------------------------ FLOOD FILL

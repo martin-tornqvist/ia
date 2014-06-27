@@ -16,7 +16,7 @@ void playerCloseFeature(Feature* const feature) {
   bool closeAbleObjectFound = false;
 
   if(feature->getId() == FeatureId::door) {
-    Door* const door = dynamic_cast<Door*>(feature);
+    Door* const door = static_cast<Door*>(feature);
     door->tryClose(Map::player);
     closeAbleObjectFound = true;
   }

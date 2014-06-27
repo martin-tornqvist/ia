@@ -237,7 +237,7 @@ void mkForestTrees(const Pos& stairsPos) {
     for(unsigned int i = 0; i < gravePositions.size(); i++) {
       Feature* f = FeatureFactory::mk(
                      FeatureId::gravestone, gravePositions.at(i));
-      Grave* const grave = dynamic_cast<Grave*>(f);
+      Grave* const grave = static_cast<Grave*>(f);
       HighScoreEntry curHighscore = highscoreEntries.at(i);
       const string name = curHighscore.getName();
       vector<string> dateStrVector;

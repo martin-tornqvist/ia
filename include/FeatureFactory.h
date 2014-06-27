@@ -11,13 +11,13 @@
 
 struct FeatureDataT;
 
-enum FeatureSpawnDataId {
-  featureSpawnData_dynamite,
-  featureSpawnData_trap,
-  featureSpawnData_door,
-  featureSpawnData_lever,
-  featureSpawnData_smoke,
-  featureSpawnData_proxEventWallCrumble
+enum class FeatureSpawnDataId {
+  dynamite,
+  trap,
+  door,
+  lever,
+  smoke,
+  proxEventWallCrumble
 };
 
 class FeatureSpawnData {
@@ -38,7 +38,7 @@ protected:
 class DynamiteSpawnData: public FeatureSpawnData {
 public:
   DynamiteSpawnData(int turnsLeftToExplosion) :
-    FeatureSpawnData(featureSpawnData_dynamite),
+    FeatureSpawnData(FeatureSpawnDataId::dynamite),
     turnsLeftToExplosion_(turnsLeftToExplosion) {}
   int turnsLeftToExplosion_;
 };
@@ -46,7 +46,7 @@ public:
 class SmokeSpawnData: public FeatureSpawnData {
 public:
   SmokeSpawnData(int life) :
-    FeatureSpawnData(featureSpawnData_smoke), life_(life) {}
+    FeatureSpawnData(FeatureSpawnDataId::smoke), life_(life) {}
   int life_;
 };
 
@@ -54,7 +54,7 @@ class ProxEventWallCrumbleSpawnData: public FeatureSpawnData {
 public:
   ProxEventWallCrumbleSpawnData(std::vector<Pos> wallCells,
                                 std::vector<Pos> innerCells) :
-    FeatureSpawnData(featureSpawnData_proxEventWallCrumble),
+    FeatureSpawnData(FeatureSpawnDataId::proxEventWallCrumble),
     wallCells_(wallCells), innerCells_(innerCells) {}
   std::vector<Pos> wallCells_;
   std::vector<Pos> innerCells_;
@@ -63,10 +63,10 @@ public:
 class TrapSpawnData: public FeatureSpawnData {
 public:
   TrapSpawnData(const FeatureDataT* const mimicFeature, TrapId trapType) :
-    FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
+    FeatureSpawnData(FeatureSpawnDataId::trap), mimicFeature_(mimicFeature),
     trapType_(trapType) {}
   TrapSpawnData(const FeatureDataT* const mimicFeature) :
-    FeatureSpawnData(featureSpawnData_trap), mimicFeature_(mimicFeature),
+    FeatureSpawnData(FeatureSpawnDataId::trap), mimicFeature_(mimicFeature),
     trapType_(trap_any) {}
   const FeatureDataT* const mimicFeature_;
   const TrapId trapType_;
@@ -75,14 +75,14 @@ public:
 class DoorSpawnData: public FeatureSpawnData {
 public:
   DoorSpawnData(const FeatureDataT* const mimicFeature) :
-    FeatureSpawnData(featureSpawnData_door), mimicFeature_(mimicFeature) {}
+    FeatureSpawnData(FeatureSpawnDataId::door), mimicFeature_(mimicFeature) {}
   const FeatureDataT* const mimicFeature_;
 };
 
 class LeverSpawnData: public FeatureSpawnData {
 public:
   LeverSpawnData(Door* const doorLinkedTo) :
-    FeatureSpawnData(featureSpawnData_lever), doorLinkedTo_(doorLinkedTo) {}
+    FeatureSpawnData(FeatureSpawnDataId::lever), doorLinkedTo_(doorLinkedTo) {}
   Door* const doorLinkedTo_;
 };
 

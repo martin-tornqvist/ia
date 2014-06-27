@@ -53,7 +53,7 @@ void runStandardTurnEvents() {
     actor->getPropHandler().tick(propTurnModeStandard, visionBlockers);
 
     if(actor != Map::player) {
-      Monster* const monster = dynamic_cast<Monster*>(actor);
+      Monster* const monster = static_cast<Monster*>(actor);
       if(monster->playerAwareOfMeCounter_ > 0) {
         monster->playerAwareOfMeCounter_--;
       }
@@ -221,7 +221,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
     Renderer::drawMapAndInterface();
     Map::updateVisualMemory();
   } else {
-    auto* monster = dynamic_cast<Monster*>(curActor);
+    auto* monster = static_cast<Monster*>(curActor);
     if(monster->awareOfPlayerCounter_ > 0) {
       monster->awareOfPlayerCounter_ -= 1;
     }

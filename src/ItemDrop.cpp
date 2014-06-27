@@ -92,7 +92,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
   Utils::mkVectorFromBoolMap(true, freeCellArray, freeCells);
 
   //Sort the vector according to distance to origin
-  IsCloserToOrigin isCloserToOrigin(intendedPos);
+  IsCloserToPos isCloserToOrigin(intendedPos);
   sort(freeCells.begin(), freeCells.end(), isCloserToOrigin);
 
   Pos curPos;

@@ -115,7 +115,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
     return didAct;
   }
 
-  Weapon* const wpn     = dynamic_cast<Weapon*>(wpnItem);
+  Weapon* const wpn     = static_cast<Weapon*>(wpnItem);
   ReloadResult result = ReloadResult::noAmmo;
   bool isSwiftReload    = false;
 
@@ -165,7 +165,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
             //If ammo comes in clips
             if(isClip) {
               const int previousAmmoCount = wpn->nrAmmoLoaded;
-              ItemAmmoClip* clipItem = dynamic_cast<ItemAmmoClip*>(item);
+              ItemAmmoClip* clipItem = static_cast<ItemAmmoClip*>(item);
               wpn->nrAmmoLoaded = clipItem->ammo;
 
               printMsgAndPlaySfx(actorReloading, wpn, item, result,
@@ -177,7 +177,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
               //If weapon previously contained ammo, create a new clip item
               if(previousAmmoCount > 0) {
                 item = ItemFactory::mk(ammoType);
-                clipItem = dynamic_cast<ItemAmmoClip*>(item);
+                clipItem = static_cast<ItemAmmoClip*>(item);
                 clipItem->ammo = previousAmmoCount;
                 inv.putInGeneral(clipItem);
               }

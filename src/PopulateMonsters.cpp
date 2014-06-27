@@ -341,7 +341,7 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
     const Pos& pos = sortedFreeCellsVector.at(i);
 
     Actor* const actor = ActorFactory::mk(id, pos);
-    Monster* const monster = dynamic_cast<Monster*>(actor);
+    Monster* const monster = static_cast<Monster*>(actor);
     monster->isRoamingAllowed_ = IS_ROAMING_ALLOWED;
 
     if(i == 0) {
@@ -371,7 +371,7 @@ void mkSortedFreeCellsVector(const Pos& origin,
     }
   }
 
-  IsCloserToOrigin sorter(origin);
+  IsCloserToPos sorter(origin);
   std::sort(vectorRef.begin(), vectorRef.end(), sorter);
 }
 

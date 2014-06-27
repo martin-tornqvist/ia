@@ -12,20 +12,22 @@
 // 0 : Disabled
 // 1 : Standard
 // 2 : Verbose
-#define TRACE_LVL 2
+#define TRACE_LVL 1
 
 //Enable rendering and delays during map gen for evaluation/demo purposes
 //Comment out to disable, uncomment to enable
-#define DEMO_MODE 1
+//#define DEMO_MODE 1
 //-------------------------------------------------------------------
 
 #ifdef NDEBUG
+
 #define TRACE                     if (1) ; else cerr
 #define TRACE_FUNC_BEGIN          if (1) ; else cerr
 #define TRACE_FUNC_END            if (1) ; else cerr
 #define TRACE_VERBOSE             if (1) ; else cerr
 #define TRACE_FUNC_BEGIN_VERBOSE  if (1) ; else cerr
 #define TRACE_FUNC_END_VERBOSE    if (1) ; else cerr
+
 #else
 
 #define TRACE if (TRACE_LVL < 1) ; else cerr \

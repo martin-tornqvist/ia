@@ -1117,7 +1117,7 @@ void PropHandler::tick(const PropTurnMode turnMode,
 
       if(owningActor_ != Map::player) {
         if(prop->isMakingMonsterAware()) {
-          dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter_ =
+          static_cast<Monster*>(owningActor_)->awareOfPlayerCounter_ =
             owningActor_->getData().nrTurnsAwarePlayer;
         }
       }
@@ -1145,7 +1145,7 @@ void PropHandler::tick(const PropTurnMode turnMode,
   for(Prop* prop : invProps) {
     if(owningActor_ != Map::player) {
       if(prop->isMakingMonsterAware()) {
-        dynamic_cast<Monster*>(owningActor_)->awareOfPlayerCounter_ =
+        static_cast<Monster*>(owningActor_)->awareOfPlayerCounter_ =
           owningActor_->getData().nrTurnsAwarePlayer;
       }
     }
@@ -1636,7 +1636,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
       SpottedEnemiesPositions.push_back(SpottedEnemies.at(i)->pos);
     }
     sort(SpottedEnemiesPositions.begin(), SpottedEnemiesPositions.end(),
-         IsCloserToOrigin(actorPos));
+         IsCloserToPos(actorPos));
 
     const Pos& closestMonPos = SpottedEnemiesPositions.at(0);
 

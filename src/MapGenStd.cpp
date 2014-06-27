@@ -25,7 +25,7 @@
 //-------------------------------------
 //Some options (comment out to disable)
 //-------------------------------------
-#define MK_RIVER                1
+//#define MK_RIVER                1
 //#define MK_CAVES                1
 //#define MK_MERGED_REGIONS       1
 #define RANDOMLY_BLOCK_REGIONS  1
@@ -517,7 +517,7 @@ void mkCaves(Region regions[3][3]) {
                   if(adjCell.featureStatic->getId() == FeatureId::wall) {
                     Feature* const f =
                       FeatureFactory::mk(FeatureId::wall, adjP);
-                    Wall* const wall = dynamic_cast<Wall*>(f);
+                    Wall* const wall = static_cast<Wall*>(f);
                     wall->wallType = WallType::cave;
                     wall->setRandomIsMossGrown();
                   }
@@ -846,7 +846,7 @@ void decorate() {
         }
 
         //Moss grown walls
-        Wall* const wall = dynamic_cast<Wall*>(cell.featureStatic);
+        Wall* const wall = static_cast<Wall*>(cell.featureStatic);
         wall->setRandomIsMossGrown();
 
         //Convert walls with no adjacent stone floor to cave walls
@@ -904,7 +904,7 @@ Pos placeStairs() {
 
   TRACE << "Sorting the allowed cells vector "
         << "(" << allowedCellsList.size() << " cells)" << endl;
-  IsCloserToOrigin isCloserToOrigin(Map::player->pos);
+  IsCloserToPos isCloserToOrigin(Map::player->pos);
   sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
 
   TRACE << "Picking random cell from furthest half" << endl;
@@ -932,7 +932,7 @@ void movePlayerToNearestAllowedPos() {
 
   TRACE << "Sorting the allowed cells vector "
         << "(" << allowedCellsList.size() << " cells)" << endl;
-  IsCloserToOrigin isCloserToOrigin(Map::player->pos);
+  IsCloserToPos isCloserToOrigin(Map::player->pos);
   sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
 
   Map::player->pos = allowedCellsList.front();
@@ -949,7 +949,7 @@ void movePlayerToNearestAllowedPos() {
 //    for(int x = 1; x < MAP_W - 1; x++) {
 //      Feature* const feature = Map::featuresStatic[x][y];
 //      if(feature->getId() == FeatureId::door) {
-//        Door* const door = dynamic_cast<Door*>(feature);
+//        Door* const door = static_cast<Door*>(feature);
 //        doorBucket.push_back(door);
 //      }
 //    }
@@ -1027,7 +1027,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
   for(Pos& pos : path) {
     auto* const feature = Map::cells[pos.x][pos.y].featureStatic;
     if(feature->getId() == FeatureId::door) {
-      dynamic_cast<Door*>(feature)->reveal(false);
+      static_cast<Door*>(feature)->reveal(false);
     }
   }
 

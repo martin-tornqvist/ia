@@ -78,7 +78,7 @@ void emitSnd(Snd snd) {
         Map::player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER, dirToOrigin,
                                PERCENT_DISTANCE);
       } else {
-        Monster* const monster = dynamic_cast<Monster*>(actor);
+        Monster* const monster = static_cast<Monster*>(actor);
         monster->hearSound(snd);
       }
     }

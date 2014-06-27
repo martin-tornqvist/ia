@@ -74,7 +74,7 @@ void Monster::onActorTurn() {
     } else {
       if(leader->deadState == ActorDeadState::alive) {
         if(leader != Map::player) {
-          dynamic_cast<Monster*>(leader)->awareOfPlayerCounter_ =
+          static_cast<Monster*>(leader)->awareOfPlayerCounter_ =
             leader->getData().nrTurnsAwarePlayer;
         }
       }
@@ -200,7 +200,7 @@ void Monster::moveDir(Dir dir) {
   if(dir != Dir::center) {
     auto* f = Map::cells[pos.x][pos.y].featureStatic;
     if(f->getId() == FeatureId::trap) {
-      dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
+      dir = static_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == Dir::center) {
         TRACE_VERBOSE << "Monster: Move prevented by trap" << endl;
         GameTime::actorDidAct();
@@ -261,9 +261,7 @@ void Monster::becomeAware(const bool IS_FROM_SEEING) {
         Renderer::drawMapAndInterface(true);
         Log::addMsg(getNameThe() + " sees me!");
       }
-      if(Rnd::coinToss()) {
-        speakPhrase();
-      }
+      if(Rnd::coinToss()) {speakPhrase();}
     }
   }
 }
@@ -348,7 +346,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 
         //Melee weapon in wielded slot?
         weapon =
-          dynamic_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
+          static_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
         if(weapon) {
           if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
@@ -357,7 +355,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 
         //Intrinsic melee attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
-          weapon = dynamic_cast<Weapon*>(inv_->getIntrinsicInElement(i));
+          weapon = static_cast<Weapon*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
           }
@@ -367,7 +365,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
       if(propHandler_->allowAttackRanged(false)) {
         //Ranged weapon in wielded slot?
         weapon =
-          dynamic_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
+          static_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
 
         if(weapon) {
           if(weapon->getData().isRangedWeapon) {
@@ -386,7 +384,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 
         //Intrinsic ranged attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
-          weapon = dynamic_cast<Weapon*>(inv_->getIntrinsicInElement(i));
+          weapon = static_cast<Weapon*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().isRangedWeapon) {
             opport.weapons.push_back(weapon);
           }
@@ -398,7 +396,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
   return opport;
 }
 
-// TODO Instead of using "strongest" weapon, use random
+//TODO Instead of using "strongest" weapon, use random
 BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
   BestAttack attack;
   attack.isMelee = attackOpport.isMelee;

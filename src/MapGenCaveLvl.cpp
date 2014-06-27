@@ -25,7 +25,7 @@ bool run() {
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
       Wall* const wall =
-        dynamic_cast<Wall*>(FeatureFactory::mk(FeatureId::wall, Pos(x, y)));
+        static_cast<Wall*>(FeatureFactory::mk(FeatureId::wall, Pos(x, y)));
       wall->wallType    = WallType::cave;
       wall->isMossGrown = false;
     }

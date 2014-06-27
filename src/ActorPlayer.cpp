@@ -86,22 +86,6 @@ void Player::mkStartItems() {
     inv_->putInGeneral(ItemFactory::mk(ItemId::pistolClip));
   }
 
-  //TODO Remove:
-  //--------------------------------------------------------------------------
-//  inv_->putInGeneral(
-//    ItemFactory::mk(ItemId::machineGun));
-//  for(int i = 0; i < 2; i++) {
-//    inv_->putInGeneral(
-//      ItemFactory::mk(ItemId::drumOfBullets));
-//  }
-//  inv_->putInGeneral(
-//    ItemFactory::mk(ItemId::sawedOff));
-//  inv_->putInGeneral(
-//    ItemFactory::mk(ItemId::pumpShotgun));
-//  inv_->putInGeneral(
-//    ItemFactory::mk(ItemId::shotgunShell, 80));
-  //--------------------------------------------------------------------------
-
   inv_->putInGeneral(ItemFactory::mk(ItemId::dynamite, NR_DYNAMITE));
   inv_->putInGeneral(ItemFactory::mk(ItemId::molotov, NR_MOLOTOV));
 
@@ -778,7 +762,7 @@ void Player::onStandardTurn() {
   for(Actor* actor : spottedEnemies) {
     DungeonMaster::onMonsterSpotted(*actor);
 
-    Monster* monster = dynamic_cast<Monster*>(actor);
+    Monster* monster = static_cast<Monster*>(actor);
 
     monster->playerBecomeAwareOfMe();
 
@@ -853,7 +837,7 @@ void Player::onStandardTurn() {
     if(actor != this) {
       if(actor->deadState == ActorDeadState::alive) {
 
-        Monster& monster = *dynamic_cast<Monster*>(actor);
+        Monster& monster = *static_cast<Monster*>(actor);
         const bool IS_MONSTER_SEEN = isSeeingActor(*actor, nullptr);
         if(IS_MONSTER_SEEN) {
           if(!monster.messageMonsterInViewPrinted) {
@@ -899,7 +883,7 @@ void Player::onStandardTurn() {
       int nrWounds = 0;
       Prop* const propWnd = propHandler_->getProp(propWound, PropSrc::applied);
       if(propWnd) {
-        nrWounds = dynamic_cast<PropWound*>(propWnd)->getNrWounds();
+        nrWounds = static_cast<PropWound*>(propWnd)->getNrWounds();
       }
 
       const bool IS_RAPID_REC     = PlayerBon::hasTrait(Trait::rapidRecoverer);
@@ -936,10 +920,10 @@ void Player::onStandardTurn() {
             auto* f = Map::cells[x][y].featureStatic;
 
             if(f->getId() == FeatureId::trap) {
-              dynamic_cast<Trap*>(f)->playerTrySpotHidden();
+              static_cast<Trap*>(f)->playerTrySpotHidden();
             }
             if(f->getId() == FeatureId::door) {
-              dynamic_cast<Door*>(f)->playerTrySpotHidden();
+              static_cast<Door*>(f)->playerTrySpotHidden();
             }
           }
         }
@@ -1003,7 +987,7 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   if(HAS_SND_MSG) {
     Actor* const actorWhoMadeSnd = snd.getActorWhoMadeSound();
     if(actorWhoMadeSnd && actorWhoMadeSnd != this) {
-      dynamic_cast<Monster*>(actorWhoMadeSnd)->playerBecomeAwareOfMe();
+      static_cast<Monster*>(actorWhoMadeSnd)->playerBecomeAwareOfMe();
     }
   }
 }
@@ -1018,7 +1002,7 @@ void Player::moveDir(Dir dir) {
       Feature* f = Map::cells[pos.x][pos.y].featureStatic;
       if(f->getId() == FeatureId::trap) {
         TRACE << "Player: Standing on trap, check if affects move" << endl;
-        dir = dynamic_cast<Trap*>(f)->actorTryLeave(*this, dir);
+        dir = static_cast<Trap*>(f)->actorTryLeave(*this, dir);
       }
     }
 
@@ -1034,7 +1018,7 @@ void Player::moveDir(Dir dir) {
           bool hasMeleeWeapon = false;
           Item* const item = inv_->getItemInSlot(SlotId::wielded);
           if(item) {
-            Weapon* const weapon = dynamic_cast<Weapon*>(item);
+            Weapon* const weapon = static_cast<Weapon*>(item);
             if(weapon->getData().isMeleeWeapon) {
               if(Config::isRangedWpnMeleeePrompt() &&
                   isSeeingActor(*actorAtDest, nullptr)) {
@@ -1169,10 +1153,10 @@ void Player::kick(Actor& actorToKick) {
 
   if(d.actorSize == actorSize_floor && (d.isSpider || d.isRat)) {
     kickWeapon =
-      dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerStomp));
+      static_cast<Weapon*>(ItemFactory::mk(ItemId::playerStomp));
   } else {
     kickWeapon =
-      dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
+      static_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
   }
   Attack::melee(*this, *kickWeapon, actorToKick);
   delete kickWeapon;
@@ -1181,7 +1165,7 @@ void Player::kick(Actor& actorToKick) {
 void Player::punch(Actor& actorToPunch) {
   //Spawn a temporary punch weapon to attack with
   Weapon* punchWeapon =
-    dynamic_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
+    static_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
   Attack::melee(*this, *punchWeapon, actorToPunch);
   delete punchWeapon;
 }
@@ -1193,7 +1177,7 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
   vector<Item*>& generalItems = inv_->getGeneral();
   for(Item* const item : generalItems) {
     if(item->getData().id == ItemId::electricLantern) {
-      DeviceLantern* const lantern = dynamic_cast<DeviceLantern*>(item);
+      DeviceLantern* const lantern = static_cast<DeviceLantern*>(item);
       LanternLightSize lightSize = lantern->getCurLightSize();
       if(lightSize == LanternLightSize::small) {
         isUsingLightGivingItemSmall = true;

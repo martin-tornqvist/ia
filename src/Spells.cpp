@@ -160,7 +160,7 @@ SpellCastRetData Spell::cast(Actor* const caster,
       }
     } else {
       TRACE << "Spell: Monster casting spell" << endl;
-      Monster* const monster = dynamic_cast<Monster*>(caster);
+      Monster* const monster = static_cast<Monster*>(caster);
       if(Map::cells[monster->pos.x][monster->pos.y].isSeenByPlayer) {
         const string spellStr = monster->getData().spellCastMessage;
         Log::addMsg(spellStr);
@@ -447,7 +447,7 @@ SpellCastRetData SpellDetTraps::cast_(Actor* const caster) const {
       if(Map::cells[x][y].isSeenByPlayer) {
         auto* const f = Map::cells[x][y].featureStatic;
         if(f->getId() == FeatureId::trap) {
-          auto* const trap = dynamic_cast<Trap*>(f);
+          auto* const trap = static_cast<Trap*>(f);
           trap->reveal(false);
           trapsRevealedPositions.push_back(Pos(x, y));
         }
@@ -487,7 +487,7 @@ SpellCastRetData SpellDetMon::cast_(Actor* const caster) const {
   for(Actor* actor : GameTime::actors_) {
     if(actor != Map::player) {
       if(Utils::kingDist(playerPos, actor->pos) <= MAX_DIST) {
-        dynamic_cast<Monster*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
+        static_cast<Monster*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
         didDetect = true;
       }
     }
@@ -571,7 +571,7 @@ SpellCastRetData SpellCloudMinds::cast_(
 
   for(Actor* actor : GameTime::actors_) {
     if(actor != Map::player) {
-      Monster* const monster = dynamic_cast<Monster*>(actor);
+      Monster* const monster = static_cast<Monster*>(actor);
       monster->awareOfPlayerCounter_ = 0;
     }
   }
@@ -764,7 +764,7 @@ SpellCastRetData SpellSummonRandom::cast_(
     Utils::mkVectorFromBoolMap(false, blocked, freeCellsVector);
     if(!freeCellsVector.empty()) {
       sort(freeCellsVector.begin(), freeCellsVector.end(),
-           IsCloserToOrigin(caster->pos));
+           IsCloserToPos(caster->pos));
       summonPos = freeCellsVector.at(0);
     }
   } else {
@@ -784,7 +784,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   const int ELEMENT = Rnd::range(1, summonBucket.size() - 1);
   const ActorId id = summonBucket.at(ELEMENT);
   Actor* const actor = ActorFactory::mk(id, summonPos);
-  Monster* monster = dynamic_cast<Monster*>(actor);
+  Monster* monster = static_cast<Monster*>(actor);
   monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
   if(Map::cells[summonPos.x][summonPos.y].isSeenByPlayer) {
     Log::addMsg(monster->getNameA() + " appears.");

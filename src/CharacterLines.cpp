@@ -105,7 +105,7 @@ void drawInfoLines() {
   pos.x += 4;
   const Item* const armor = player.getInv().getItemInSlot(SlotId::armorBody);
   if(armor) {
-    str = dynamic_cast<const Armor*>(armor)->getArmorDataLine(false);
+    str = static_cast<const Armor*>(armor)->getArmorDataLine(false);
     Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
     pos.x += str.length() + 1;
   } else {

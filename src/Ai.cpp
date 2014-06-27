@@ -71,7 +71,7 @@ bool handleClosedBlockingDoor(Monster& monster, vector<Pos> path) {
     const Pos& p = path.back();
     Feature* const f = Map::cells[p.x][p.y].featureStatic;
     if(f->getId() == FeatureId::door) {
-      Door* const door = dynamic_cast<Door*>(f);
+      Door* const door = static_cast<Door*>(f);
       vector<PropId> props;
       monster.getPropHandler().getAllActivePropIds(props);
       if(!door->canMove(props)) {
@@ -171,26 +171,22 @@ bool makeRoomForFriend(Monster& monster) {
       for(Actor* actor : GameTime::actors_) {
         if(actor != Map::player && actor != &monster) {
           if(actor->deadState == ActorDeadState::alive) {
-            Monster* otherMonster = dynamic_cast<Monster*>(actor);
+            Monster* otherMonster = static_cast<Monster*>(actor);
 
             bool isOtherAdjWithoutVision =
-              isAdjAndWithoutVision(
-                monster, *otherMonster, visionBlockers);
+              isAdjAndWithoutVision(monster, *otherMonster, visionBlockers);
 
-            //Other monster sees the player, or it's a neighbour that
-            //does not see the player?
+            //Other monster sees the player, or it's a neighbour that does not
+            //see the player?
             if(
               otherMonster->isSeeingActor(*Map::player, visionBlockers) ||
               isOtherAdjWithoutVision) {
 
-              // If we are indeed blocking a pal, check every neighbouring
-              //cell that is at equal or closer distance to the player,
-              //to check whether they are fine.
+              //If we are blocking a pal, check every neighbouring position
+              //that is at equal or closer distance to the player, to check
+              //whether they are fine.
 
-              // TODO Vision must be checked from the cell candidates!
-
-              // TODO If several good candidates are found,
-              //result should be picked from them at random
+              //TODO Vision must be checked from the cell candidates!
 
               if(
                 checkIfBlockingMon(monster.pos, otherMonster) ||
@@ -200,25 +196,24 @@ bool makeRoomForFriend(Monster& monster) {
                 vector<Pos> posBucket;
                 getMoveBucket(monster, posBucket);
 
-                // Sort the list by closeness to player
-                IsCloserToOrigin sorter(Map::player->pos);
-                sort(posBucket.begin(), posBucket.end(), sorter);
+                //Sort the list by closeness to player
+                IsCloserToPos cmp(Map::player->pos);
+                sort(posBucket.begin(), posBucket.end(), cmp);
 
-                // Test the candidate cells until one is found that
-                //is not also blocking someone.
-                const int NR_CANDIDATES = posBucket.size();
-                for(int ii = 0; ii < NR_CANDIDATES; ii++) {
+                //Test the positions until one is found that is not blocking
+                //another monster
+                for(const auto& targetPos : posBucket) {
 
                   bool isGoodCandidateFound = true;
 
                   for(Actor* actor2 : GameTime::actors_) {
                     if(actor2 != Map::player && actor2 != &monster) {
-                      otherMonster = dynamic_cast<Monster*>(actor2);
+                      otherMonster = static_cast<Monster*>(actor2);
                       if(
                         otherMonster->isSeeingActor(
                           *Map::player, visionBlockers)) {
                         if(
-                          checkIfBlockingMon(posBucket.at(ii), otherMonster)) {
+                          checkIfBlockingMon(targetPos, otherMonster)) {
                           isGoodCandidateFound = false;
                           break;
                         }
@@ -227,7 +222,7 @@ bool makeRoomForFriend(Monster& monster) {
                   }
 
                   if(isGoodCandidateFound) {
-                    const Pos offset = posBucket.at(ii) - monster.pos;
+                    const Pos offset = targetPos - monster.pos;
                     monster.moveDir(DirUtils::getDir(offset));
                     return true;
                   }
@@ -500,7 +495,7 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
 
             if(f->getId() == FeatureId::door) {
 
-              const Door* const door = dynamic_cast<const Door*>(f);
+              const Door* const door = static_cast<const Door*>(f);
 
               const ActorDataT& d = monster.getData();
 

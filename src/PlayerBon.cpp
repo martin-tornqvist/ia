@@ -570,7 +570,7 @@ void pickBg(const Bg bg) {
       //Player starts with a scroll of Darkbolt, and one other random scroll
       //Both are identified
       Item* scroll = ItemFactory::mk(ItemId::scrollDarkbolt);
-      dynamic_cast<Scroll*>(scroll)->identify(true);
+      static_cast<Scroll*>(scroll)->identify(true);
       Map::player->getInv().putInGeneral(scroll);
       while(true) {
         scroll = ItemFactory::mkRandomScrollOrPotion(true, false);
@@ -581,7 +581,7 @@ void pickBg(const Bg bg) {
         delete spell;
 
         if(IS_AVAIL && id != SpellId::darkbolt) {
-          dynamic_cast<Scroll*>(scroll)->identify(true);
+          static_cast<Scroll*>(scroll)->identify(true);
           Map::player->getInv().putInGeneral(scroll);
           break;
         }
@@ -592,7 +592,7 @@ void pickBg(const Bg bg) {
       for(int i = 0; i < NR_POTIONS; i++) {
         Item* const potion =
           ItemFactory::mkRandomScrollOrPotion(false, true);
-        dynamic_cast<Potion*>(potion)->identify(true);
+        static_cast<Potion*>(potion)->identify(true);
         Map::player->getInv().putInGeneral(potion);
       }
 

@@ -174,12 +174,12 @@ void setItemRandomizedProperties(Item* item) {
 
   //If it is a pure melee weapon, it may get a plus
   if(d.isMeleeWeapon && !d.isRangedWeapon) {
-    dynamic_cast<Weapon*>(item)->setRandomMeleePlus();
+    static_cast<Weapon*>(item)->setRandomMeleePlus();
   }
 
   //If firearm, spawn with random amount of ammo
   if(d.isRangedWeapon && !d.rangedHasInfiniteAmmo) {
-    Weapon* const weapon = dynamic_cast<Weapon*>(item);
+    Weapon* const weapon = static_cast<Weapon*>(item);
     if(weapon->ammoCapacity == 1) {
       weapon->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
     } else {

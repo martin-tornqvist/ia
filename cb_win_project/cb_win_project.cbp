@@ -14,6 +14,7 @@
 				<Option object_output="../obj/debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -42,6 +43,7 @@
 				<Option object_output="../test/obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -110,6 +112,7 @@
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-Wno-long-long" />
+			<Add option="-fno-rtti" />
 			<Add directory="../include" />
 			<Add directory="../API/SDL/include" />
 		</Compiler>

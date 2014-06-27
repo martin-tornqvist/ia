@@ -267,7 +267,7 @@ void Inventory::dropAllNonIntrinsic(
 }
 
 bool Inventory::hasAmmoForFirearmInInventory() {
-  Weapon* weapon = dynamic_cast<Weapon*>(getItemInSlot(SlotId::wielded));
+  Weapon* weapon = static_cast<Weapon*>(getItemInSlot(SlotId::wielded));
 
   //If weapon found
   if(weapon) {

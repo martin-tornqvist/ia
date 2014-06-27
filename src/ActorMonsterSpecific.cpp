@@ -134,7 +134,7 @@ void CultistSpikeGun::mkStartItems() {
 
 void CultistPriest::mkStartItems() {
   Item* item = ItemFactory::mk(ItemId::dagger);
-  dynamic_cast<Weapon*>(item)->meleeDmgPlus = 2;
+  static_cast<Weapon*>(item)->meleeDmgPlus = 2;
   inv_->putInSlot(SlotId::wielded, item);
 
   inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
@@ -385,7 +385,7 @@ bool Khephren::onActorTurn_() {
           vector<Pos> freeCells;
           Utils::mkVectorFromBoolMap(false, blocked, freeCells);
 
-          sort(freeCells.begin(), freeCells.end(), IsCloserToOrigin(pos));
+          sort(freeCells.begin(), freeCells.end(), IsCloserToPos(pos));
 
           const int NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
@@ -395,7 +395,7 @@ bool Khephren::onActorTurn_() {
             for(int i = 0; i < NR_OF_SPAWNS; i++) {
               Actor* const actor =
                 ActorFactory::mk(actor_locust, freeCells.at(0));
-              Monster* const monster = dynamic_cast<Monster*>(actor);
+              Monster* const monster = static_cast<Monster*>(actor);
               monster->awareOfPlayerCounter_ = 999;
               monster->leader = this;
               freeCells.erase(freeCells.begin());
@@ -462,9 +462,8 @@ bool KeziahMason::onActorTurn_() {
             if(!blocked[c.x][c.y]) {
               //TODO Make a generalized summoning functionality
               Log::addMsg("Keziah summons Brown Jenkin!");
-              Actor* const actor =
-                ActorFactory::mk(actor_brownJenkin, c);
-              Monster* jenkin = dynamic_cast<Monster*>(actor);
+              Actor* const actor = ActorFactory::mk(actor_brownJenkin, c);
+              Monster* jenkin = static_cast<Monster*>(actor);
               Renderer::drawMapAndInterface();
               hasSummonedJenkin = true;
               jenkin->awareOfPlayerCounter_ = 999;
@@ -579,7 +578,7 @@ bool WormMass::onActorTurn_() {
             if(!blocked[mkPos.x][mkPos.y]) {
               Actor* const actor =
                 ActorFactory::mk(data_->id, mkPos);
-              WormMass* const worm = dynamic_cast<WormMass*>(actor);
+              WormMass* const worm = static_cast<WormMass*>(actor);
               chanceToSpawnNew -= 4;
               worm->chanceToSpawnNew = chanceToSpawnNew;
               worm->awareOfPlayerCounter_ = awareOfPlayerCounter_;
@@ -614,7 +613,7 @@ bool GiantLocust::onActorTurn_() {
             if(!blocked[mkPos.x][mkPos.y]) {
               Actor* const actor =
                 ActorFactory::mk(data_->id, mkPos);
-              GiantLocust* const locust = dynamic_cast<GiantLocust*>(actor);
+              GiantLocust* const locust = static_cast<GiantLocust*>(actor);
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
               locust->awareOfPlayerCounter_ = awareOfPlayerCounter_;
@@ -672,7 +671,7 @@ bool LordOfSpiders::onActorTurn_() {
               auto* const f =
                 FeatureFactory::mk(FeatureId::trap, c, trapSpawnData);
 
-              dynamic_cast<Trap*>(f)->reveal(false);
+              static_cast<Trap*>(f)->reveal(false);
             }
           }
         }

@@ -192,14 +192,14 @@ void onMonsterKilled(Actor& actor) {
   }
 
   const int XP_WORTH_TOT  = getMonsterTotXpWorth(d);
-  Monster* const monster  = dynamic_cast<Monster*>(&actor);
+  Monster* const monster  = static_cast<Monster*>(&actor);
   const int XP_GAINED     = monster->hasGivenXpForSpotting_ ?
                             XP_WORTH_TOT / 2 : XP_WORTH_TOT;
   playerGainXp(XP_GAINED);
 }
 
 void onMonsterSpotted(Actor& actor) {
-  Monster* const monster = dynamic_cast<Monster*>(&actor);
+  Monster* const monster = static_cast<Monster*>(&actor);
   if(!monster->hasGivenXpForSpotting_) {
     monster->hasGivenXpForSpotting_ = true;
     playerGainXp(getMonsterTotXpWorth(monster->getData()) / 2);

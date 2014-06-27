@@ -862,7 +862,7 @@ void drawMap() {
 
         curDrw = &renderArray[xPos][yPos];
 
-        const auto* const monster = dynamic_cast<const Monster*>(actor);
+        const auto* const monster = static_cast<const Monster*>(actor);
 
         if(Map::player->isSeeingActor(*actor, nullptr)) {
 
@@ -940,7 +940,7 @@ void drawMap() {
             const auto featureId = f->getId();
             bool isHiddenDoor = false;
             if(featureId == FeatureId::door) {
-              isHiddenDoor = dynamic_cast<const Door*>(f)->isSecret();
+              isHiddenDoor = static_cast<const Door*>(f)->isSecret();
             }
             if(
               y < MAP_H - 1 &&
@@ -970,11 +970,11 @@ void drawMap() {
                   TILE_BELOW_IS_WALL_TOP    ||
                   tileBelowIsRevealedDoor) {
                   if(featureId == FeatureId::wall) {
-                    const auto* const wall = dynamic_cast<const Wall*>(f);
+                    const auto* const wall = static_cast<const Wall*>(f);
                     tmpDrw.tile = wall->getTopWallTile();
                   }
                 } else if(featureId == FeatureId::wall) {
-                  const auto* const wall = dynamic_cast<const Wall*>(f);
+                  const auto* const wall = static_cast<const Wall*>(f);
                   tmpDrw.tile = wall->getFrontWallTile();
                 } else if(isHiddenDoor) {
                   tmpDrw.tile = Config::isTilesWallFullSquare() ?

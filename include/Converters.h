@@ -7,6 +7,9 @@ std::string toStr(int in);
 
 int toInt(std::string in);
 
+template <typename T>
+typename std::underlying_type<T>::type toUnderlying(T t);
+
 void constrInRange(const int MIN, int& val, const int MAX);
 void constrInRange(const double MIN, double& val, const double MAX);
 

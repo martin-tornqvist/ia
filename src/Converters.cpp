@@ -17,6 +17,11 @@ int toInt(std::string in) {
   return _nr;
 }
 
+template <typename T>
+typename std::underlying_type<T>::type toUnderlying(T t) {
+  return static_cast<typename std::underlying_type<T>::type>(t);
+}
+
 //The following functions will first raise val to at least MIN,
 //then lower val to at most MAX
 void constrInRange(const int MIN, int& val, const int MAX) {
