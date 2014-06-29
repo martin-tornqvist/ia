@@ -25,7 +25,7 @@
 //-------------------------------------
 //Some options (comment out to disable)
 //-------------------------------------
-//#define MK_RIVER                1
+#define MK_RIVER                1
 //#define MK_CAVES                1
 //#define MK_MERGED_REGIONS       1
 #define RANDOMLY_BLOCK_REGIONS  1
@@ -44,10 +44,10 @@ namespace Std {
 
 namespace {
 
-//Used for helping build the map
 bool regionsToMkCave[3][3];
 
-bool doorPosProposals[MAP_W][MAP_H];
+//All cells marked as true in this array will be considered for door placement
+bool doorProposals[MAP_W][MAP_H];
 
 bool isAllRoomsConnected() {
   Pos c;
@@ -187,7 +187,7 @@ void connectRooms() {
       continue;
     }
 
-    MapGenUtils::mkPathFindCor(*room0, *room1, doorPosProposals);
+    MapGenUtils::mkPathFindCor(*room0, *room1, doorProposals);
 
     if(isAllRoomsConnected() /*&& Rnd::fraction(2, 3)*/) {break;}
   }
@@ -216,11 +216,6 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
         mkCrumbleRoom(auxRectWithBorder, doorP);
         Map::deleteAndRemoveRoomFromList(room); //Don't apply themes etc
         room = nullptr;
-      } else {
-#endif // MK_CRUMBLE_ROOMS
-//        FeatureFactory::mk(FeatureId::floor, doorP);
-//        doorPosProposals[doorP.x][doorP.y] = true;
-#ifdef MK_CRUMBLE_ROOMS
       }
 #endif // MK_CRUMBLE_ROOMS
       return true;
@@ -427,31 +422,63 @@ void randomlyBlockRegions(Region regions[3][3]) {
   TRACE_FUNC_END;
 }
 
-void mkRiver(Region regions[3][3]) {
+void reserveRiver(Region regions[3][3]) {
   //TODO Such placeholder, wow
-  Rect rect(regions[0][1].r_.p0, regions[2][1].r_.p1);
-  rect.p0.x--;
-  rect.p1.x++;
-  const int Y = (rect.p1.y + rect.p0.y) / 2;
-  rect.p0.y = rect.p1.y = Y;
+  const HorizontalVertical dir = hor; //Rnd::coinToss() ? hor : ver;
 
-  Region& riverRegion   = regions[0][1];
+  Rect rReserved;
 
-  RiverRoom* riverRoom  = new RiverRoom(rect);
-  riverRegion.mainRoom_ = riverRoom;
-  riverRegion.isFree_   = false;
+  const int RESERVED_PADDING = 2;
 
-  regions[1][1] = riverRegion;
-  regions[2][1] = riverRegion;
+  Region* riverRegion = nullptr;
+
+  if(dir == hor) {
+    rReserved = Rect(regions[0][1].r_.p0, regions[2][1].r_.p1);
+    rReserved.p0.x--; //Extend region to map edge
+    rReserved.p1.x++;
+    const int Y = (rReserved.p1.y + rReserved.p0.y) / 2;
+    rReserved.p0.y = Y - RESERVED_PADDING;
+    rReserved.p1.y = Y + RESERVED_PADDING;
+    riverRegion = &regions[0][1];
+    assert(rReserved.p0.y >= riverRegion->r_.p0.y);
+    assert(rReserved.p1.y <= riverRegion->r_.p1.y);
+  } else {
+    rReserved = Rect(regions[1][0].r_.p0, regions[1][2].r_.p1);
+    rReserved.p0.y--; //Extend region to map edge
+    rReserved.p1.y++;
+    const int X = (rReserved.p1.x + rReserved.p0.x) / 2;
+    rReserved.p0.x = X - RESERVED_PADDING;
+    rReserved.p1.x = X + RESERVED_PADDING;
+    riverRegion = &regions[1][0];
+    assert(rReserved.p0.x >= riverRegion->r_.p0.x);
+    assert(rReserved.p1.x <= riverRegion->r_.p1.x);
+  }
+
+  RiverRoom* riverRoom    = new RiverRoom(rReserved, dir);
+  riverRegion->mainRoom_  = riverRoom;
+  riverRegion->isFree_    = false;
+
+  if(dir == hor) {
+    regions[1][1] = regions[2][1] = *riverRegion;
+  } else {
+    regions[1][1] = regions[1][2] = *riverRegion;
+  }
 
   Map::roomList.push_back(riverRoom);
 
-  for(int y = rect.p0.y; y <= rect.p1.y; y++) {
-    for(int x = rect.p0.x + 1; x <= rect.p1.x - 1; x++) {
-      //Just put floor for now, water will be placed later
-      FeatureFactory::mk(FeatureId::floor, Pos(x, y), nullptr);
-      Map::roomMap[x][y] = riverRoom;
+  auto mk = [&](const int L_0, const int L_1, const int B_0, const int B_1) {
+    for(int y = B_0; y <= B_1; y++) {
+      for(int x = L_0 + 1; x <= L_1 - 1; x++) {
+        //Just put floor for now, water will be placed later
+        FeatureFactory::mk(FeatureId::floor, Pos(x, y), nullptr);
+        Map::roomMap[x][y] = riverRoom;
+      }
     }
+  };
+  if(dir == hor) {
+    mk(rReserved.p0.x, rReserved.p1.x, rReserved.p0.y, rReserved.p1.y);
+  } else {
+    mk(rReserved.p0.y, rReserved.p1.y, rReserved.p1.x, rReserved.p1.x);
   }
 }
 
@@ -700,7 +727,7 @@ void mkSubRooms() {
                   Rnd::range(0, doorBucket.size() - 1);
                 const Pos doorPos = doorBucket.at(DOOR_POS_ELEMENT);
                 FeatureFactory::mk(FeatureId::floor, doorPos);
-                doorPosProposals[doorPos.x][doorPos.y] = true;
+                doorProposals[doorPos.x][doorPos.y] = true;
               } else {
                 vector<Pos> positionsWithDoor;
                 const int NR_TRIES = Rnd::range(1, 10);
@@ -1034,40 +1061,6 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
   TRACE_FUNC_END;
 }
 
-//void mkNaturalArea(Region regions[3][3]) {
-//  const Pos origin(1,1);
-//  for(int y = 1; y < MAP_H - 1; y++) {
-//    for(int x = 1; x < MAP_W - 1; x++) {
-//      if(Utils::pointDist(origin.x, origin.y, x, y) < 20) {
-//        FeatureFactory::mk(FeatureId::deepWater, Pos(x,y));
-//        for(int yRegion = 0; yRegion < 3; yRegion++) {
-//          for(int xRegion = 0; xRegion < 3; xRegion++) {
-//            Region* region = regions[xRegion][yRegion];
-//            if(Utils::isPosInside(Pos(x,y), region.getP0(), region.getP1())) {
-//              region.mapArea.isSpecialRoomAllowed = false;
-//            }
-//          }
-//        }
-//      }
-//    }
-//  }
-//  mkRiver(regions);
-//}
-
-//void mkRiver(Region regions[3][3]) {
-//  (void)regions;
-//
-//  const int W = Rnd::range(4, 12);
-//  const int START_X_OFFSET_MAX = 5;
-//  const int X_POS_START = MAP_W/2 + Rnd::range(-START_X_OFFSET_MAX, START_X_OFFSET_MAX);
-//
-//  Pos leftPos(X_POS_START, 0);
-//  while(Utils::isPosInsideMap(leftPos) && Utils::isPosInsideMap(leftPos + Pos(W,0))) {
-//    MapGenUtils::mk(Rect(leftPos, leftPos + Pos(W, 0)), FeatureId::deepWater);
-//    leftPos += Pos(Rnd::range(-1,1), 1);
-//  }
-//}
-
 } //namespace
 
 bool run() {
@@ -1083,7 +1076,7 @@ bool run() {
   TRACE << "Resetting helper arrays" << endl;
   for(int y = 0; y < MAP_H; y++) {
     for(int x = 0; x < MAP_W; x++) {
-      doorPosProposals[x][y] = false;
+      doorProposals[x][y] = false;
     }
   }
 
@@ -1121,7 +1114,7 @@ bool run() {
   }
 
 #ifdef MK_RIVER
-  if(isMapValid) {mkRiver(regions);}
+  if(isMapValid) {reserveRiver(regions);}
 #endif // MK_RIVER
 
 #ifdef MK_MERGED_REGIONS
@@ -1190,11 +1183,19 @@ bool run() {
     sort(Map::roomList.begin(), Map::roomList.end(), cmp);
   }
 
-  if(isMapValid) {for(Room* room : Map::roomList) {room->onPreConnect();}}
+  if(isMapValid) {
+    for(Room* room : Map::roomList) {
+      room->onPreConnect(doorProposals);
+    }
+  }
 
   if(isMapValid) {connectRooms();}
 
-  if(isMapValid) {for(Room* room : Map::roomList) {room->onPostConnect();}}
+  if(isMapValid) {
+    for(Room* room : Map::roomList) {
+      room->onPostConnect(doorProposals);
+    }
+  }
 
 #ifdef FILL_DEAD_ENDS
   if(isMapValid) {fillDeadEnds();}
@@ -1204,7 +1205,7 @@ bool run() {
     TRACE << "Placing doors" << endl;
     for(int y = 0; y < MAP_H; y++) {
       for(int x = 0; x < MAP_W; x++) {
-        if(doorPosProposals[x][y] && Rnd::fraction(7, 10)) {
+        if(doorProposals[x][y] && Rnd::fraction(7, 10)) {
           placeDoorAtPosIfSuitable(Pos(x, y));
         }
       }

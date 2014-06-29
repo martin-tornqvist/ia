@@ -1780,7 +1780,7 @@ void initDataList() {
   d.speed = ActorSpeed::sluggish;
   d.rangedCooldownTurns = 0;
   d.glyph = 'o';
-  d.color = clrGray;
+  d.color = clrGrayDrk;
   d.tile = TileId::ooze;
   d.hp = 12;
   d.spi = 12;

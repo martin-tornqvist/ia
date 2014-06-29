@@ -46,7 +46,7 @@ void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos) {
     Renderer::drawMap();
     Renderer::drawGlyph('X', Panel::map, pos, clrYellow);
     Renderer::updateScreen();
-    SdlWrapper::sleep(5);
+    SdlWrapper::sleep(2); //Note: Delay must be >= 2 for user input to be read
   }
 #endif // DEMO_MODE
 }

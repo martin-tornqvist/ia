@@ -203,7 +203,7 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
 //  }
 //}
 
-void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
+void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
   TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
                            << &r0 << " and " << &r1 << endl;
 
@@ -327,8 +327,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorPosProposals[MAP_W][MAP_H]) {
       }
     }
 
-    if(doorPosProposals) {
-      doorPosProposals[p0.x][p0.y] = doorPosProposals[p1.x][p1.y] = true;
+    if(doorProposals) {
+      doorProposals[p0.x][p0.y] = doorProposals[p1.x][p1.y] = true;
     }
     r0.roomsConTo_.push_back(&r1);
     r1.roomsConTo_.push_back(&r0);

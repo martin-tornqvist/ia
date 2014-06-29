@@ -31,7 +31,7 @@ void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out);
 //void mk(const Rect& area, const FeatureId id);
 
 void mkPathFindCor(Room& r0, Room& r1,
-                   bool doorPosProposals[MAP_W][MAP_H] = nullptr);
+                   bool doorProposals[MAP_W][MAP_H] = nullptr);
 
 void backupMap();
 void restoreMap();

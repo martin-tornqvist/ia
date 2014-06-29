@@ -17,18 +17,19 @@ using namespace std;
 //-------------------------------------
 #define RESHAPE_STD_ROOMS 1
 
-void Room::onPreConnect() {
+void Room::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
+  (void)doorProposals;
 #ifdef RESHAPE_STD_ROOMS
   if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners(*this);}
   if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 #endif // RESHAPE_STD_ROOMS
 }
 
-void RiverRoom::onPreConnect() {
+void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
   TRACE_FUNC_BEGIN;
 
-  //The river will be expanded on both sides until closest center cell of any
-  //other room
+  //The strategy here is to expand the the river on both sides until parallel
+  //to the closest center cell of another room
 
   bool centers[MAP_W][MAP_H];
   Utils::resetArray(centers, false);
@@ -40,12 +41,12 @@ void RiverRoom::onPreConnect() {
     }
   }
 
-  const HorizontalVertical riverDir = r_.p0.x == 0 ? horizontal : vertical;
+  const HorizontalVertical riverDir = r_.p0.x == 0 ? hor : ver;
 
   int closestCenter0 = 0;
   int closestCenter1 = 0;
 
-  if(riverDir == horizontal) {
+  if(riverDir == hor) {
     const int RIVER_Y = r_.p0.y;
     bool isClosestCenterFound = false;
     for(int y = RIVER_Y - 1; y > 0; y--) {
@@ -124,33 +125,17 @@ void RiverRoom::onPreConnect() {
       }
     }
 
-//#ifdef DEMO_MODE
-//    Renderer::drawMap();
-//    for(int y = 1; y < MAP_H - 1; y++) {
-//      for(int x = 1; x < MAP_W - 1; x++) {
-//        Pos p(x, y);
-//        char g        = 0;
-//        SDL_Color clr = clrWhite;
-//        switch(sides[x][y]) {
-//          case side0:   {g = '0'; clr = clrGreenLgt ;} break;
-//          case side1:   {g = '1'; clr = clrYellow   ;} break;
-//          case inRiver: {g = 'R'; clr = clrBlueLgt  ;} break;
-//        }
-//        Renderer::drawGlyph(g, Panel::map, p, clr);
-//        Renderer::updateScreen();
-//        SdlWrapper::sleep(5);
-//      }
-//    }
-//#endif // DEMO_MODE
-
     bool validRoomEntries0[MAP_W][MAP_H];
     bool validRoomEntries1[MAP_W][MAP_H];
+    for(int y = 0; y < MAP_H; y++) {
+      for(int x = 0; x < MAP_W; x++) {
+        validRoomEntries0[x][y] = validRoomEntries1[x][y] = false;
+      }
+    }
 
     const int EDGE_D = 4;
     for(int x = EDGE_D; x < MAP_W - EDGE_D; x++) {
       for(int y = EDGE_D; y < MAP_H - EDGE_D; y++) {
-        validRoomEntries0[x][y] = false;
-        validRoomEntries1[x][y] = false;
         const FeatureId featureId = Map::cells[x][y].featureStatic->getId();
         if(featureId == FeatureId::wall && !Map::roomMap[x][y]) {
           const Pos p(x, y);
@@ -257,6 +242,8 @@ void RiverRoom::onPreConnect() {
         }
         FeatureFactory::mk(FeatureId::floor, roomCon0);
         FeatureFactory::mk(FeatureId::floor, roomCon1);
+        doorProposals[roomCon0.x][roomCon0.y] = true;
+        doorProposals[roomCon1.x][roomCon1.y] = true;
         xPositionsBuilt.push_back(X);
       }
       if(int(xPositionsBuilt.size()) >= MAX_NR_BRIDGES) {
@@ -275,7 +262,7 @@ void RiverRoom::onPreConnect() {
             if(
               find(xPositionsBuilt.begin(), xPositionsBuilt.end(), x) ==
               xPositionsBuilt.end()) {
-              if(Rnd::oneIn(3)) {
+              if(Rnd::oneIn(4)) {
                 FeatureFactory::mk(FeatureId::floor, {x, y});
                 Map::roomMap[x][y] = this;
               }

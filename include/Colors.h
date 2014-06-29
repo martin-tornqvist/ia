@@ -5,6 +5,7 @@
 
 const SDL_Color clrBlack              = {  0,   0,   0, 0};
 const SDL_Color clrGray               = {128, 128, 128, 0};
+const SDL_Color clrGrayDrk            = { 64,  64,  64, 0};
 const SDL_Color clrWhite              = {192, 192, 192, 0};
 const SDL_Color clrWhiteHigh          = {255, 255, 255, 0};
 

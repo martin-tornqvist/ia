@@ -231,6 +231,6 @@ enum EntityType {
   entityFeatureMob
 };
 
-enum HorizontalVertical {horizontal, vertical};
+enum HorizontalVertical {hor, ver};
 
 #endif
