@@ -446,17 +446,17 @@ void setupFromSaveLines(vector<string>& lines) {
     ItemDataT* const d = ItemData::data[i];
     if(d->isPotion) {
       d->baseName.name = lines.front();
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
       d->baseName.name_plural = lines.front();
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
       d->baseName.name_a = lines.front();
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
       d->clr.r = toInt(lines.front());
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
       d->clr.g = toInt(lines.front());
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
       d->clr.b = toInt(lines.front());
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
     }
   }
 }

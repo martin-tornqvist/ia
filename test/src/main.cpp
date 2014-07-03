@@ -746,7 +746,7 @@ TEST_FIXTURE(BasicFixture, PathFinding) {
   CHECK_EQUAL(20, path.front().x);
   CHECK_EQUAL(5, path.front().y);
   CHECK_EQUAL(13, int(path.size()));
-  CHECK(find(path.begin(), path.end(), Pos(10, 5)) == path.end());
+  CHECK(find(begin(path), end(path), Pos(10, 5)) == end(path));
 
   b[19][4] = b[19][5] =  b[19][6] = true;
 
@@ -757,9 +757,9 @@ TEST_FIXTURE(BasicFixture, PathFinding) {
   CHECK_EQUAL(20, path.front().x);
   CHECK_EQUAL(5, path.front().y);
   CHECK_EQUAL(14, int(path.size()));
-  CHECK(find(path.begin(), path.end(), Pos(19, 4)) == path.end());
-  CHECK(find(path.begin(), path.end(), Pos(19, 5)) == path.end());
-  CHECK(find(path.begin(), path.end(), Pos(19, 6)) == path.end());
+  CHECK(find(begin(path), end(path), Pos(19, 4)) == end(path));
+  CHECK(find(begin(path), end(path), Pos(19, 5)) == end(path));
+  CHECK(find(begin(path), end(path), Pos(19, 6)) == end(path));
 
   PathFind::run(Pos(40, 10), Pos(43, 15), b, path, false);
 

@@ -129,11 +129,11 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY,
 
     if(!propHlr.allowSee()) {costMax--;}
 
-    if(find(props.begin(), props.end(), propBlessed) != props.end()) {
+    if(find(begin(props), end(props), propBlessed) != end(props)) {
       costMax -= 1;
     }
 
-    if(find(props.begin(), props.end(), propCursed) != props.end()) {
+    if(find(begin(props), end(props), propCursed) != end(props)) {
       costMax += 3;
     }
   }
@@ -223,7 +223,7 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
     vector<PropId> props;
     Map::player->getPropHandler().getAllActivePropIds(props);
     isCharged =
-      find(props.begin(), props.end(), propWarlockCharged) != props.end();
+      find(begin(props), end(props), propWarlockCharged) != end(props);
 
   } else {
     Log::addMsg("I am" + msgCmn, clrMsgBad);
@@ -269,7 +269,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
       vector<PropId> props;
       Map::player->getPropHandler().getAllActivePropIds(props);
       const bool IS_CHARGED =
-        find(props.begin(), props.end(), propWarlockCharged) != props.end();
+        find(begin(props), end(props), propWarlockCharged) != end(props);
 
       vector<Pos> actorPositions; actorPositions.resize(0);
       for(Actor* a : targets) {actorPositions.push_back(a->pos);}
@@ -593,7 +593,7 @@ bool SpellBless::isGoodForMonsterToCastNow(
 
   vector<PropId> props;
   monster->getPropHandler().getAllActivePropIds(props);
-  return find(props.begin(), props.end(), propBlessed) == props.end();
+  return find(begin(props), end(props), propBlessed) == end(props);
 }
 
 //------------------------------------------------------------ TELEPORT

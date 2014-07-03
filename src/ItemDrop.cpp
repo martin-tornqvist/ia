@@ -93,7 +93,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
 
   //Sort the vector according to distance to origin
   IsCloserToPos isCloserToOrigin(intendedPos);
-  sort(freeCells.begin(), freeCells.end(), isCloserToOrigin);
+  sort(begin(freeCells), end(freeCells), isCloserToOrigin);
 
   Pos curPos;
   Pos stackPos;

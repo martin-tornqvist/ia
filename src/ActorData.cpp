@@ -2116,9 +2116,9 @@ void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < endOfActorIds; ++i) {
     ActorDataT& d = data[i];
     const int NR_ALLOWED_TO_SPAWN = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
     const int NR_KILLS = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
     d.nrLeftAllowedToSpawn = NR_ALLOWED_TO_SPAWN;
     d.nrKills = NR_KILLS;
   }

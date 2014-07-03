@@ -131,12 +131,12 @@ void Player::storeToSaveLines(vector<string>& lines) const {
 
 void Player::setupFromSaveLines(vector<string>& lines) {
   const int NR_PROPS = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   for(int i = 0; i < NR_PROPS; ++i) {
     const auto id = PropId(toInt(lines.front()));
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
     const int NR_TURNS = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
     auto* const prop = propHandler_->mkProp(
                          id, propTurnsSpecific, NR_TURNS);
     propHandler_->tryApplyProp(prop, true, true, true, true);
@@ -144,40 +144,40 @@ void Player::setupFromSaveLines(vector<string>& lines) {
   }
 
   insanity_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   shock_ = double(toInt(lines.front()));
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   hp_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   hpMax_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   spi_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   spiMax_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   pos.x = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   pos.y = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   dynamiteFuseTurns = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   molotovFuseTurns = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   flareFuseTurns = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   for(int i = 0; i < int(AbilityId::endOfAbilityId); ++i) {
     data_->abilityVals.setVal(AbilityId(i), toInt(lines.front()));
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
   }
 
   for(int i = 0; i < int(Phobia::endOfPhobias); ++i) {
     phobias[i] = lines.front() == "0" ? false : true;
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
   }
   for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
     obsessions[i] = lines.front() == "0" ? false : true;
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
   }
 }
 
@@ -207,7 +207,7 @@ int Player::getCarryWeightLimit() const {
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
   const bool IS_WEAKENED =
-    find(props.begin(), props.end(), propWeakened) != props.end();
+    find(begin(props), end(props), propWeakened) != end(props);
 
   const int CARRY_WEIGHT_MOD =
     (IS_TOUGH * 10) + (IS_STRONG_BACKED * 30) - (IS_WEAKENED * 15);
@@ -329,7 +329,7 @@ void Player::incrInsanity() {
           msg += "I find myself babbling incoherently.";
           Popup::showMsg(msg, true, "Babbling!", SfxId::insanityRise);
           const string playerName = getNameThe();
-          for(int i = Rnd::range(3, 5); i > 0; i--) {
+          for(int i = Rnd::range(3, 5); i > 0; --i) {
             const string phrase = Cultist::getCultistPhrase();
             Log::addMsg(playerName + ": " + phrase);
           }
@@ -359,7 +359,7 @@ void Player::incrInsanity() {
           vector<PropId> props;
           propHandler_->getAllActivePropIds(props);
 
-          if(find(props.begin(), props.end(), propRFear) != props.end()) {
+          if(find(begin(props), end(props), propRFear) != end(props)) {
 
             if(insanity_ > 5) {
               //There is a limit to the number of phobias you can have
@@ -844,7 +844,7 @@ void Player::onStandardTurn() {
   propHandler_->getAllActivePropIds(props);
 
   if(!activeMedicalBag) {
-    if(find(props.begin(), props.end(), propPoisoned) == props.end()) {
+    if(find(begin(props), end(props), propPoisoned) == end(props)) {
       int nrWounds = 0;
       Prop* const propWnd = propHandler_->getProp(propWound, PropSrc::applied);
       if(propWnd) {
@@ -869,7 +869,7 @@ void Player::onStandardTurn() {
 
     if(
       propHandler_->allowSee() &&
-      find(props.begin(), props.end(), propConfused) == props.end()) {
+      find(begin(props), end(props), propConfused) == end(props)) {
 
       const int R = PlayerBon::hasTrait(Trait::perceptive) ? 3 :
                     (PlayerBon::hasTrait(Trait::observant) ? 2 : 1);

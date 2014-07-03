@@ -232,7 +232,7 @@ void Door::bash_(Actor& actorTrying) {
     vector<PropId> props;
     actorTrying.getPropHandler().getAllActivePropIds(props);
     const bool IS_BASHER_WEAK =
-      find(props.begin(), props.end(), propWeakened) != props.end();
+      find(begin(props), end(props), propWeakened) != end(props);
 
     if(!IS_BASHER_WEAK) {
       if(IS_PLAYER) {

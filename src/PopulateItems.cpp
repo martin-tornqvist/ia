@@ -50,7 +50,7 @@ void mkItems() {
 
     ItemFactory::mkItemOnMap(id, pos);
 
-    freeCells.erase(freeCells.begin() + ELEMENT);
+    freeCells.erase(begin(freeCells) + ELEMENT);
   }
 }
 

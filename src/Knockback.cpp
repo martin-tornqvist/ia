@@ -30,8 +30,8 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
 
       const bool ACTOR_CAN_BE_KNOCKED_BACK =
-        find(props.begin(), props.end(), propEthereal)  == props.end() &&
-        find(props.begin(), props.end(), propOoze)      == props.end();
+        find(begin(props), end(props), propEthereal)  == end(props) &&
+        find(begin(props), end(props), propOoze)      == end(props);
 
       const Pos delta = (defender.pos - attackedFromPos).getSigns();
 

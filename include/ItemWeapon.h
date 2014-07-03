@@ -44,9 +44,9 @@ public:
 
   void setupFromSaveLines(std::vector<std::string>& lines) override {
     meleeDmgPlus = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
     nrAmmoLoaded = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
   }
 
   SDL_Color getClr() const {

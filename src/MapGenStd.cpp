@@ -431,28 +431,29 @@ void reserveRiver(Region regions[3][3]) {
   const int RESERVED_PADDING  = 2;
 
   auto initArea = [&](int& len0, int& len1, int& breadth0, int& breadth1,
-  const Pos & reg0, const Pos & reg1, const Pos & reg2) {
-    roomRect = Rect(regions[reg0.x][reg0.y].r_.p0,
-                    regions[reg2.x][reg2.y].r_.p1);
-
-                    TRACE_VERBOSE << "a " << roomRect.p1.y << endl;
-
-    len0--; //Extend room rectangle to map edge
-    len1++;
+  const Pos & reg0, const Pos & reg2) {
+    const Rect regionsTotRect(regions[reg0.x][reg0.y].r_.p0,
+                              regions[reg2.x][reg2.y].r_.p1);
+    roomRect    = regionsTotRect;
+    riverRegion = &regions[reg0.x][reg0.y];
     const int C = (breadth1 + breadth0) / 2;
     breadth0    = C - RESERVED_PADDING;
     breadth1    = C + RESERVED_PADDING;
-    riverRegion = &regions[reg0.x][reg1.y];
+
+    assert(Utils::isAreaInsideOther(roomRect, regionsTotRect, true));
+
+    len0--; //Extend room rectangle to map edge
+    len1++;
   };
 
-  const HorizontalVertical dir = ver; //Rnd::coinToss() ? hor : ver;
+  const HorizontalVertical dir = Rnd::coinToss() ? hor : ver;
 
   if(dir == hor) {
     initArea(roomRect.p0.x, roomRect.p1.x, roomRect.p0.y, roomRect.p1.y,
-             Pos(0, 1), Pos(1, 1), Pos(2, 1));
+             Pos(0, 1), Pos(2, 1));
   } else {
     initArea(roomRect.p0.y, roomRect.p1.y, roomRect.p0.x, roomRect.p1.x,
-             Pos(1, 0), Pos(1, 1), Pos(1, 2));
+             Pos(1, 0), Pos(1, 2));
   }
 
   RiverRoom* riverRoom    = new RiverRoom(roomRect, dir);
@@ -798,7 +799,7 @@ void fillDeadEnds() {
   [](const PosAndVal & a, const PosAndVal & b) {return a.val < b.val;});
 
   //Fill all positions with only one cardinal floor neighbour
-  for(int i = int(floodFillVector.size()) - 1; i >= 0; i--) {
+  for(int i = int(floodFillVector.size()) - 1; i >= 0; --i) {
     const Pos& pos = floodFillVector.at(i).pos;
     const int x = pos.x;
     const int y = pos.y;

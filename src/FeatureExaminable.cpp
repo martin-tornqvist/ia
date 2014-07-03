@@ -172,7 +172,7 @@ void Tomb::bump(Actor& actorBumping) {
       vector<PropId> props;
       Map::player->getPropHandler().getAllActivePropIds(props);
 
-      if(find(props.begin(), props.end(), propWeakened) != props.end()) {
+      if(find(begin(props), end(props), propWeakened) != end(props)) {
         trySprainPlayer();
         Log::addMsg("It seems futile.");
       } else {
@@ -244,7 +244,7 @@ void Tomb::examine() {
   vector<PropId> props;
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  if(find(props.begin(), props.end(), propConfused) != props.end()) {
+  if(find(begin(props), end(props), propConfused) != end(props)) {
     Log::addMsg("I start to search the tomb...");
     Log::addMsg("but I cannot grasp what for.");
     GameTime::actorDidAct();
@@ -481,16 +481,16 @@ void Chest::bash(Actor& actorTrying) {
     Map::player->getPropHandler().getAllActivePropIds(props);
 
     if(
-      find(props.begin(), props.end(), propWeakened) != props.end() ||
+      find(begin(props), end(props), propWeakened) != end(props) ||
       material == chestMtrl_iron) {
       trySprainPlayer();
       Log::addMsg("It seems futile.");
     } else {
 
       const bool IS_CURSED =
-        find(props.begin(), props.end(), propCursed)  != props.end();
+        find(begin(props), end(props), propCursed)  != end(props);
       const bool IS_BLESSED =
-        find(props.begin(), props.end(), propBlessed) != props.end();
+        find(begin(props), end(props), propBlessed) != end(props);
 
       if(!IS_BLESSED && (IS_CURSED || Rnd::oneIn(3))) {
         itemContainer_.destroySingleFragile();
@@ -559,7 +559,7 @@ void Chest::examine() {
   vector<PropId> props;
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  if(find(props.begin(), props.end(), propConfused) != props.end()) {
+  if(find(begin(props), end(props), propConfused) != end(props)) {
     Log::addMsg("I start to search the chest...");
     Log::addMsg("but I cannot grasp the purpose.");
     GameTime::actorDidAct();

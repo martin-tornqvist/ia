@@ -32,7 +32,7 @@ void Device::storeToSaveLines(vector<string>& lines) {
 
 void Device::setupFromSaveLines(vector<string>& lines) {
   condition_ = Condition(toInt(lines.front()));
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 }
 
 //---------------------------------------------------- STRANGE DEVICE BASE
@@ -58,10 +58,10 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
     int bon = 0;
     vector<PropId> props;
     actor->getPropHandler().getAllActivePropIds(props);
-    if(find(props.begin(), props.end(), propBlessed) != props.end()) {
+    if(find(begin(props), end(props), propBlessed) != end(props)) {
       bon += 2;
     }
-    if(find(props.begin(), props.end(), propCursed) != props.end()) {
+    if(find(begin(props), end(props), propCursed) != end(props)) {
       bon -= 2;
     }
     const int RND = Rnd::range(1, 8 + bon);
@@ -204,9 +204,9 @@ void DeviceLantern::storeToSaveLines(vector<string>& lines) {
 
 void DeviceLantern::setupFromSaveLines(vector<string>& lines) {
   condition_ = Condition(toInt(lines.front()));
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   isActivated_ = lines.back() == "1";
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 }
 
 void DeviceLantern::toggle() {

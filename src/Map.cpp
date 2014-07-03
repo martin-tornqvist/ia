@@ -89,7 +89,7 @@ void storeToSaveLines(vector<string>& lines) {
 
 void setupFromSaveLines(vector<string>& lines) {
   dlvl = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 }
 
 //TODO This should probably go in a virtual method in Feature instead

@@ -146,11 +146,11 @@ void storeToSaveLines(vector<string>& lines) {
 
 void setupFromSaveLines(vector<string>& lines) {
   const int NR_SPELLS = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   for(int i = 0; i < NR_SPELLS; ++i) {
     const int ID = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
     knownSpells_.push_back(SpellHandling::getSpellFromId(SpellId(ID)));
   }
 }

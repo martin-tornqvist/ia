@@ -34,7 +34,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
     Map::player->getPropHandler().getAllActivePropIds(props);
     switch(curAction_) {
       case medicalBagAction_sanitizeInfection: {
-        if(find(props.begin(), props.end(), propInfected) == props.end()) {
+        if(find(begin(props), end(props), propInfected) == end(props)) {
           Log::addMsg("I have no infections to sanitize.");
           curAction_ = endOfMedicalBagActions;
         }
@@ -48,7 +48,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
       } break;
 
       case medicalBagAction_treatWound: {
-        if(find(props.begin(), props.end(), propWound) == props.end()) {
+        if(find(begin(props), end(props), propWound) == end(props)) {
           Log::addMsg("I have no wounds to treat.");
           curAction_ = endOfMedicalBagActions;
         }

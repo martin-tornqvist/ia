@@ -1338,11 +1338,11 @@ void storeToSaveLines(vector<string>& lines) {
 void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     data[i]->isIdentified = lines.front() == "0" ? false : true;
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
 
     if(data[i]->isScroll) {
       data[i]->isTried = lines.front() == "0" ? false : true;
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
     }
   }
 }

@@ -347,7 +347,7 @@ void Mummy::mkStartItems() {
 
   spellsKnown.push_back(SpellHandling::getSpellFromId(SpellId::disease));
 
-  for(int i = Rnd::range(1, 2); i > 0; i--) {
+  for(int i = Rnd::range(1, 2); i > 0; --i) {
     spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
   }
 }
@@ -384,7 +384,7 @@ bool Khephren::onActorTurn_() {
           vector<Pos> freeCells;
           Utils::mkVectorFromBoolMap(false, blocked, freeCells);
 
-          sort(freeCells.begin(), freeCells.end(), IsCloserToPos(pos));
+          sort(begin(freeCells), end(freeCells), IsCloserToPos(pos));
 
           const int NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
@@ -397,7 +397,7 @@ bool Khephren::onActorTurn_() {
               Monster* const monster = static_cast<Monster*>(actor);
               monster->awareOfPlayerCounter_ = 999;
               monster->leader = this;
-              freeCells.erase(freeCells.begin());
+              freeCells.erase(begin(freeCells));
             }
             Renderer::drawMapAndInterface();
             hasSummonedLocusts = true;

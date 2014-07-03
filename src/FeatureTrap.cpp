@@ -97,8 +97,8 @@ void Trap::bump(Actor& actorBumping) {
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
   if(
-    find(props.begin(), props.end(), propEthereal)  == props.end() &&
-    find(props.begin(), props.end(), propFlying)    == props.end()) {
+    find(begin(props), end(props), propEthereal)  == end(props) &&
+    find(begin(props), end(props), propFlying)    == end(props)) {
     const bool IS_PLAYER      = &actorBumping == Map::player;
     const bool ACTOR_CAN_SEE  = actorBumping.getPropHandler().allowSee();
     AbilityVals& abilities    = actorBumping.getData().abilityVals;
@@ -179,9 +179,9 @@ void Trap::disarm() {
   Map::player->getPropHandler().getAllActivePropIds(props);
 
   const bool IS_BLESSED =
-    find(props.begin(), props.end(), propBlessed) != props.end();
+    find(begin(props), end(props), propBlessed) != end(props);
   const bool IS_CURSED =
-    find(props.begin(), props.end(), propCursed)  != props.end();
+    find(begin(props), end(props), propCursed)  != end(props);
 
   int       disarmNumerator     = 5;
   const int DISARM_DENOMINATOR  = 10;

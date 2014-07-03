@@ -157,7 +157,7 @@ void storeToSaveLines(vector<string>& lines) {
 
 void setupFromSaveLines(vector<string>& lines) {
   turn_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 }
 
 int getTurn() {
@@ -254,7 +254,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
       curActor->getPropHandler().getAllActivePropIds(props);
 
       const bool IS_SLOWED =
-        find(props.begin(), props.end(), propSlowed) != props.end();
+        find(begin(props), end(props), propSlowed) != end(props);
       const ActorSpeed defSpeed = curActor->getData().speed;
       const ActorSpeed realSpeed =
         !IS_SLOWED || defSpeed == ActorSpeed::sluggish ?

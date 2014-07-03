@@ -104,11 +104,11 @@ void Inventory::setupFromSaveLines(vector<string>& lines) {
     }
 
     const ItemId id = ItemId(toInt(lines.front()));
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
     if(id != ItemId::empty) {
       item = ItemFactory::mk(id);
       item->nrItems = toInt(lines.front());
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
       item->setupFromSaveLines(lines);
       slot.item = item;
       //When loading the game, wear the item to apply properties from wearing
@@ -121,13 +121,13 @@ void Inventory::setupFromSaveLines(vector<string>& lines) {
   }
 
   const int NR_OF_GENERAL = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   for(int i = 0; i < NR_OF_GENERAL; ++i) {
     const ItemId id = ItemId(toInt(lines.front()));
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
     Item* item = ItemFactory::mk(id);
     item->nrItems = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
     item->setupFromSaveLines(lines);
     general_.push_back(item);
   }
@@ -260,7 +260,7 @@ void Inventory::dropAllNonIntrinsic(
         ItemDrop::dropItemOnMap(pos, *item);
       }
 
-      general_.erase(general_.begin() + i);
+      general_.erase(begin(general_) + i);
     }
     i++;
   }
@@ -313,7 +313,7 @@ void Inventory::decrItemInSlot(SlotId slotName) {
 void Inventory::deleteItemInGeneralWithElement(const unsigned ELEMENT) {
   if(general_.size() > ELEMENT) {
     delete general_.at(ELEMENT);
-    general_.erase(general_.begin() + ELEMENT);
+    general_.erase(begin(general_) + ELEMENT);
   }
 }
 
@@ -323,7 +323,7 @@ void Inventory::removetemInGeneralWithPointer(
   for(size_t i = 0; i < general_.size(); ++i) {
     if(general_.at(i) == item) {
       if(DELETE_ITEM) {delete item;}
-      general_.erase(general_.begin() + i);
+      general_.erase(begin(general_) + i);
       return;
     }
   }
@@ -344,7 +344,7 @@ void Inventory::decrItemInGeneral(unsigned element) {
   }
 
   if(deleteItem) {
-    general_.erase(general_.begin() + element);
+    general_.erase(begin(general_) + element);
 
     delete item;
   }
@@ -373,12 +373,12 @@ void Inventory::moveItemToSlot(
 
   if(generalSlotExists && item) {
     if(slotItem) {
-      general_.erase(general_.begin() + GENERAL_INV_ELEMENT);
+      general_.erase(begin(general_) + GENERAL_INV_ELEMENT);
       general_.push_back(slotItem);
       inventorySlot->item = item;
     } else {
       inventorySlot->item = item;
-      general_.erase(general_.begin() + GENERAL_INV_ELEMENT);
+      general_.erase(begin(general_) + GENERAL_INV_ELEMENT);
     }
   }
 }
@@ -488,7 +488,7 @@ void Inventory::moveFromGeneralToIntrinsics(
 
     if(itemExistsInGeneralSlot) {
       intrinsics_.push_back(item);
-      general_.erase(general_.begin() + GENERAL_INV_ELEMENT);
+      general_.erase(begin(general_) + GENERAL_INV_ELEMENT);
     }
   }
 }
@@ -524,7 +524,7 @@ void Inventory::removeInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT)
     //If parameter element corresponds to general slot, remove that slot
     const int GENERAL_ELEMENT = GLOBAL_ELEMENT - slots_.size();
     if(GENERAL_ELEMENT >= 0 && GENERAL_ELEMENT < signed(general_.size())) {
-      general_.erase(general_.begin() + GENERAL_ELEMENT);
+      general_.erase(begin(general_) + GENERAL_ELEMENT);
     }
   }
 }

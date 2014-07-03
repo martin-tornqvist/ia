@@ -28,7 +28,7 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
       if(!monsterActing->spellsKnown.empty()) {
         vector<Spell*> spellBucket = monsterActing->spellsKnown;
 
-        std::random_shuffle(spellBucket.begin(), spellBucket.end());
+        std::random_shuffle(begin(spellBucket), end(spellBucket));
 
         while(!spellBucket.empty()) {
           Spell* const spell = spellBucket.back();

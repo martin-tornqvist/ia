@@ -47,7 +47,7 @@ void setupGameFromLines(vector<string>& lines) {
   TRACE << "SaveHandler: playerName: " << playerName << endl;
   Map::player->getData().name_a = playerName;
   Map::player->getData().name_the = playerName;
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   DungeonMaster::setupFromSaveLines(lines);
   ScrollNameHandling::setupFromSaveLines(lines);

@@ -31,6 +31,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
   //The strategy here is to expand the the river on both sides until parallel
   //to the closest center cell of another room
 
+  const bool IS_HOR = dir_ == hor;
+
   TRACE << "Finding room centers" << endl;
   bool centers[MAP_W][MAP_H];
   Utils::resetArray(centers, false);
@@ -54,8 +56,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
     //iOuter and iInner should be references to x or y.
     auto findClosestCenter0 =
     [&](const Range & rOuter, const Range & rInner, int& iOuter, int& iInner) {
-      for(iOuter = rOuter.lower; iOuter >= rOuter.upper; iOuter--) {
-        for(iInner = rInner.lower; iInner <= rInner.upper; iInner++) {
+      for(iOuter = rOuter.lower; iOuter >= rOuter.upper; --iOuter) {
+        for(iInner = rInner.lower; iInner <= rInner.upper; ++iInner) {
           if(centers[x][y]) {
             closestCenter0 = iOuter;
             break;
@@ -67,8 +69,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
 
     auto findClosestCenter1 =
     [&](const Range & rOuter, const Range & rInner, int& iOuter, int& iInner) {
-      for(iOuter = rOuter.lower; iOuter <= rOuter.upper; iOuter++) {
-        for(iInner = rInner.lower; iInner <= rInner.upper; iInner++) {
+      for(iOuter = rOuter.lower; iOuter <= rOuter.upper; ++iOuter) {
+        for(iInner = rInner.lower; iInner <= rInner.upper; ++iInner) {
           if(centers[x][y]) {
             closestCenter1 = iOuter;
             break;
@@ -78,14 +80,14 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
       }
     };
 
-    const int RIVER_C = dir_ == hor ? r_.p0.y : r_.p0.x;
-
-    if(dir_ == hor) {
-      findClosestCenter0(Range(RIVER_C - 1, 1),         Range(1, MAP_W - 2),    y, x);
-      findClosestCenter1(Range(RIVER_C + 1, MAP_H - 2), Range(1, MAP_W - 2),    y, x);
+    if(IS_HOR) {
+      const int RIVER_Y = r_.p0.y;
+      findClosestCenter0(Range(RIVER_Y - 1, 1),         Range(1, MAP_W - 2),  y, x);
+      findClosestCenter1(Range(RIVER_Y + 1, MAP_H - 2), Range(1, MAP_W - 2),  y, x);
     } else {
-      findClosestCenter0(Range(RIVER_C - 1, 1),         Range(1, MAP_H - 2),    x, y);
-      findClosestCenter1(Range(RIVER_C + 1, MAP_W - 2), Range(1, MAP_H - 2),    x, y);
+      const int RIVER_X = r_.p0.x;
+      findClosestCenter0(Range(RIVER_X - 1, 1),         Range(1, MAP_H - 2),  x, y);
+      findClosestCenter1(Range(RIVER_X + 1, MAP_W - 2), Range(1, MAP_H - 2),  x, y);
     }
   }
 
@@ -141,9 +143,9 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
     //iOuter and iInner should be references to x or y.
     auto markSides =
     [&](const Range & rOuter, const Range & rInner, int& iOuter, int& iInner) {
-      for(iOuter = rOuter.lower; iOuter <= rOuter.upper; iOuter++) {
+      for(iOuter = rOuter.lower; iOuter <= rOuter.upper; ++iOuter) {
         bool isOnSide0 = true;
-        for(iInner = rInner.lower; iInner <= rInner.upper; iInner++) {
+        for(iInner = rInner.lower; iInner <= rInner.upper; ++iInner) {
           if(Map::roomMap[x][y] == this) {
             isOnSide0 = false;
             sides[x][y] = inRiver;
@@ -213,23 +215,26 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
   }
 #endif // DEMO_MODE
 
-  vector<int> xPositions(MAP_W);
-  for(int i = 0; i < MAP_W; ++i) {xPositions.at(i) = i;}
-  random_shuffle(xPositions.begin(), xPositions.end());
+  vector<int> coordinates(IS_HOR ? MAP_W : MAP_H);
+  iota(begin(coordinates), end(coordinates), 0);
+  random_shuffle(coordinates.begin(), coordinates.end());
 
-  vector<int> xPositionsBuilt;
+  vector<int> cBuilt;
 
   const int MIN_EDGE_DIST   = 6;
   const int MAX_NR_BRIDGES  = Rnd::range(1, 3);
 
-  for(const int X : xPositions) {
-    if(X < MIN_EDGE_DIST || X > MAP_W - 1 - MIN_EDGE_DIST) {
+  for(const int BRIDGE_C : coordinates) {
+    if(
+      BRIDGE_C < MIN_EDGE_DIST ||
+      (IS_HOR  && BRIDGE_C > MAP_W - 1 - MIN_EDGE_DIST) ||
+      (!IS_HOR && BRIDGE_C > MAP_H - 1 - MIN_EDGE_DIST)) {
       continue;
     }
     bool isTooCloseToOtherBridge = false;
     const int MIN_D = 2;
-    for(int xOther : xPositionsBuilt) {
-      if(Utils::isValInRange(X, Range(xOther - MIN_D, xOther + MIN_D))) {
+    for(int cOther : cBuilt) {
+      if(Utils::isValInRange(BRIDGE_C, Range(cOther - MIN_D, cOther + MIN_D))) {
         isTooCloseToOtherBridge = true;
         break;
       }
@@ -240,19 +245,31 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
     //If so both roomCon0 and roomCon1 will be set.
     Pos roomCon0(-1, -1);
     Pos roomCon1(-1, -1);
-    for(int y = r_.p1.y; y >= r_.p0.y; y--) {
-      if(sides[X][y] == side0) {break;}
-      const Pos pAdj(X, y - 1);
-      if(validRoomEntries0[pAdj.x][pAdj.y]) {
-        roomCon0 = pAdj;
+    const int C0_0 = IS_HOR ? r_.p1.y : r_.p1.x;
+    const int C1_0 = IS_HOR ? r_.p0.y : r_.p0.x;
+    for(int c = C0_0; c != C1_0; --c) {
+      if(
+        (IS_HOR  && sides[BRIDGE_C][c] == side0) ||
+        (!IS_HOR && sides[c][BRIDGE_C] == side0)) {
+        break;
+      }
+      const Pos pNxt = IS_HOR ? Pos(BRIDGE_C, c - 1) : Pos(c - 1, BRIDGE_C);
+      if(validRoomEntries0[pNxt.x][pNxt.y]) {
+        roomCon0 = pNxt;
         break;
       }
     }
-    for(int y = r_.p0.y; y <= r_.p1.y; ++y) {
-      if(sides[X][y] == side1) {break;}
-      const Pos pAdj(X, y + 1);
-      if(validRoomEntries1[pAdj.x][pAdj.y]) {
-        roomCon1 = pAdj;
+    const int C0_1 = IS_HOR ? r_.p0.y : r_.p0.x;
+    const int C1_1 = IS_HOR ? r_.p1.y : r_.p1.x;
+    for(int c = C0_1; c != C1_1; ++c) {
+      if(
+        (IS_HOR  && sides[BRIDGE_C][c] == side1) ||
+        (!IS_HOR && sides[c][BRIDGE_C] == side1)) {
+        break;
+      }
+      const Pos pNxt = IS_HOR ? Pos(BRIDGE_C, c + 1) : Pos(c + 1, BRIDGE_C);
+      if(validRoomEntries1[pNxt.x][pNxt.y]) {
+        roomCon1 = pNxt;
         break;
       }
     }
@@ -270,34 +287,43 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
       TRACE << "Found valid connection pair at: "
             << roomCon0.x << "," << roomCon0.y << " / "
             << roomCon1.x << "," << roomCon1.y << endl
-            << "Making bridge at coord: " << X << endl;
-      for(int y = roomCon0.y; y <= roomCon1.y; ++y) {
-        if(Map::roomMap[X][y] == this) {
-          FeatureFactory::mk(FeatureId::floor, Pos(X, y), nullptr);
+            << "Making bridge at coord: " << BRIDGE_C << endl;
+      if(IS_HOR) {
+        for(int y = roomCon0.y; y <= roomCon1.y; ++y) {
+          if(Map::roomMap[BRIDGE_C][y] == this) {
+            FeatureFactory::mk(FeatureId::floor, Pos(BRIDGE_C, y));
+          }
+        }
+      } else {
+        for(int x = roomCon0.x; x <= roomCon1.x; ++x) {
+          if(Map::roomMap[x][BRIDGE_C] == this) {
+            FeatureFactory::mk(FeatureId::floor, Pos(x, BRIDGE_C));
+          }
         }
       }
       FeatureFactory::mk(FeatureId::floor, roomCon0);
       FeatureFactory::mk(FeatureId::floor, roomCon1);
       doorProposals[roomCon0.x][roomCon0.y] = true;
       doorProposals[roomCon1.x][roomCon1.y] = true;
-      xPositionsBuilt.push_back(X);
+      cBuilt.push_back(BRIDGE_C);
     }
-    if(int(xPositionsBuilt.size()) >= MAX_NR_BRIDGES) {
+    if(int(cBuilt.size()) >= MAX_NR_BRIDGES) {
       TRACE << "Enough bridges built" << endl;
       break;
     }
   }
-  TRACE << "Bridges built/attempted: " << xPositionsBuilt.size() << "/"
+  TRACE << "Bridges built/attempted: " << cBuilt.size() << "/"
         << MAX_NR_BRIDGES << endl;
 
-  if(!xPositionsBuilt.empty()) {
+  if(cBuilt.empty()) {
+    MapGen::isMapValid = false;
+  } else {
     TRACE << "Converting some remaining valid room entries to floor" << endl;
     for(int y = 0; y < MAP_H; ++y) {
       for(int x = 0; x < MAP_W; ++x) {
         if(validRoomEntries0[x][y] || validRoomEntries1[x][y]) {
           if(
-            find(xPositionsBuilt.begin(), xPositionsBuilt.end(), x) ==
-            xPositionsBuilt.end()) {
+            find(cBuilt.begin(), cBuilt.end(), x) == cBuilt.end()) {
             if(Rnd::oneIn(4)) {
               FeatureFactory::mk(FeatureId::floor, {x, y});
               Map::roomMap[x][y] = this;

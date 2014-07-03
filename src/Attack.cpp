@@ -244,7 +244,7 @@ RangedAttData::RangedAttData(
       vector<PropId> props;
       curDefender->getPropHandler().getAllActivePropIds(props);
 
-      if(find(props.begin(), props.end(), propEthereal) != props.end()) {
+      if(find(begin(props), end(props), propEthereal) != end(props)) {
         isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
 

@@ -19,8 +19,8 @@ void FeatureLiquidShallow::bump(Actor& actorBumping) {
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
   if(
-    find(props.begin(), props.end(), propEthereal)  == props.end() &&
-    find(props.begin(), props.end(), propFlying)    == props.end()) {
+    find(begin(props), end(props), propEthereal)  == end(props) &&
+    find(begin(props), end(props), propFlying)    == end(props)) {
 
     actorBumping.getPropHandler().tryApplyProp(
       new PropWaiting(propTurnsStd));

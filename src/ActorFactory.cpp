@@ -120,7 +120,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
-  sort(freeCells.begin(), freeCells.end(), IsCloserToPos(origin));
+  sort(begin(freeCells), end(freeCells), IsCloserToPos(origin));
 
   const int NR_FREE_CELLS   = freeCells.size();
   const int NR_MONSTER_IDS  = monsterIds.size();

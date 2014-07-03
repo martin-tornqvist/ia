@@ -214,11 +214,11 @@ void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     if(ItemData::data[i]->isScroll) {
       ItemData::data[i]->baseName.name        = lines.front();
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
       ItemData::data[i]->baseName.name_plural = lines.front();
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
       ItemData::data[i]->baseName.name_a      = lines.front();
-      lines.erase(lines.begin());
+      lines.erase(begin(lines));
     }
   }
 }

@@ -21,7 +21,7 @@ public:
 
   void setupFromSaveLines(std::vector<std::string>& lines) override {
     dur_ = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
   }
 
   inline bool isDestroyed() {return getAbsorptionPoints() <= 0;}

@@ -158,7 +158,7 @@ void act() {
   vector<PropId> props;
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  if(find(props.begin(), props.end(), propTerrified) != props.end()) {
+  if(find(begin(props), end(props), propTerrified) != end(props)) {
     if(walkToAdjacentCell(Map::player->pos)) {return;}
   }
 

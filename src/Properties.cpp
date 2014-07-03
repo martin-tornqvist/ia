@@ -959,7 +959,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   //and for applying props from the buffer.
   if(prop->getTurnMode() == propTurnModeActor) {
     vector<Prop*>& buffer = actorTurnPropBuffer_;
-    if(find(buffer.begin(), buffer.end(), prop) == buffer.end()) {
+    if(find(begin(buffer), end(buffer), prop) == end(buffer)) {
       buffer.push_back(prop);
       return;
     }
@@ -1109,7 +1109,7 @@ bool PropHandler::endAppliedProp(
   }
   if(index == -1) {return false;}
 
-  appliedProps_.erase(appliedProps_.begin() + index);
+  appliedProps_.erase(begin(appliedProps_) + index);
 
   if(RUN_PROP_END_EFFECTS) {
     const bool IS_VISUAL_UPDATE_NEEDED =
@@ -1394,7 +1394,7 @@ void PropHandler::endAppliedPropsByMagicHealing() {
   for(unsigned int i = 0; i < propList.size(); ++i) {
     if(propList.at(i)->isEndedByMagicHealing()) {
       endAppliedProp(appliedProps_.at(i)->getId(), visionBlockers);
-      propList.erase(propList.begin() + i);
+      propList.erase(begin(propList) + i);
       i--;
     }
   }
@@ -1666,20 +1666,20 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
 void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
   if(owningActor_ == Map::player) {
-    vector<Actor*> SpottedEnemies;
-    owningActor_->getSpottedEnemies(SpottedEnemies);
+    vector<Actor*> spottedEnemies;
+    owningActor_->getSpottedEnemies(spottedEnemies);
 
-    if(SpottedEnemies.empty()) {return;}
+    if(spottedEnemies.empty()) {return;}
 
-    vector<Pos> SpottedEnemiesPositions;
-    SpottedEnemiesPositions.resize(0);
-    for(unsigned int i = 0; i < SpottedEnemies.size(); ++i) {
-      SpottedEnemiesPositions.push_back(SpottedEnemies.at(i)->pos);
+    vector<Pos> spottedEnemiesPositions;
+    spottedEnemiesPositions.resize(0);
+    for(unsigned int i = 0; i < spottedEnemies.size(); ++i) {
+      spottedEnemiesPositions.push_back(spottedEnemies.at(i)->pos);
     }
-    sort(SpottedEnemiesPositions.begin(), SpottedEnemiesPositions.end(),
+    sort(begin(spottedEnemiesPositions), end(spottedEnemiesPositions),
          IsCloserToPos(actorPos));
 
-    const Pos& closestMonPos = SpottedEnemiesPositions.at(0);
+    const Pos& closestMonPos = spottedEnemiesPositions.at(0);
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksActor(*owningActor_, false), blocked);

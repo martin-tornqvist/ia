@@ -59,23 +59,23 @@ void parseFontNameAndSetCellDims() {
 
   char ch = 'a';
   while(ch < '0' || ch > '9') {
-    fontName.erase(fontName.begin());
+    fontName.erase(begin(fontName));
     ch = fontName.at(0);
   }
 
   string wStr = "";
   while(ch != 'x') {
-    fontName.erase(fontName.begin());
+    fontName.erase(begin(fontName));
     wStr += ch;
     ch = fontName.at(0);
   }
 
-  fontName.erase(fontName.begin());
+  fontName.erase(begin(fontName));
   ch = fontName.at(0);
 
   string hStr = "";
   while(ch != '_' && ch != '.') {
-    fontName.erase(fontName.begin());
+    fontName.erase(begin(fontName));
     hStr += ch;
     ch = fontName.at(0);
   }
@@ -459,7 +459,7 @@ void setAllVariablesFromLines(vector<string>& lines) {
 
   string curLine = lines.front();
   isAudioEnabled_ = curLine == "1";
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   if(curLine == "0") {
@@ -471,56 +471,56 @@ void setAllVariablesFromLines(vector<string>& lines) {
       parseFontNameAndSetCellDims();
     }
   }
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   fontName_ = curLine;
   parseFontNameAndSetCellDims();
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   isFullscreen_ = curLine == "1";
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   isTilesWallFullSquare_ = curLine == "1";
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   isAsciiWallFullSquare_ = curLine == "1";
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   isIntroLvlSkipped_ = curLine == "1";
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   isRangedWpnMeleeePrompt_ = curLine == "1";
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   isRangedWpnAutoReload_ = curLine == "1";
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   keyRepeatDelay_ = toInt(curLine);
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   keyRepeatInterval_ = toInt(curLine);
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   delayProjectileDraw_ = toInt(curLine);
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   delayShotgun_ = toInt(curLine);
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   curLine = lines.front();
   delayExplosion_ = toInt(curLine);
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   TRACE_FUNC_END;
 }

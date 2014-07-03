@@ -37,14 +37,14 @@ void storeToSaveLines(vector<string>& lines) {
 
 void setupFromSaveLines(vector<string>& lines) {
   bg_ = Bg(toInt(lines.front()));
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   const int NR_TRAITS = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 
   for(int i = 0; i < NR_TRAITS; ++i) {
     traitsPicked_.push_back(Trait(toInt(lines.front())));
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
   }
 }
 

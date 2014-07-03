@@ -350,7 +350,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
 
   if(
     dmgType == DmgType::light &&
-    find(props.begin(), props.end(), propLightSensitive) == props.end()) {
+    find(begin(props), end(props), propLightSensitive) == end(props)) {
     return false;
   }
 
@@ -563,7 +563,7 @@ void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const {
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
-  if(find(props.begin(), props.end(), propBurning) != props.end()) {
+  if(find(begin(props), end(props), propBurning) != end(props)) {
     for(int dy = -1; dy <= 1; dy++) {
       for(int dx = -1; dx <= 1; dx++) {
         lightMap[pos.x + dx][pos.y + dy] = true;

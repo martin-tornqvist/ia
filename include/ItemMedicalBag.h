@@ -32,7 +32,7 @@ public:
   }
   void setupFromSaveLines(std::vector<std::string>& lines) override {
     nrSupplies_ = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
   }
 
   inline int getNrSupplies() const {return nrSupplies_;}

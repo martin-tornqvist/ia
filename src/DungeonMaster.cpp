@@ -67,21 +67,21 @@ void storeToSaveLines(vector<string>& lines) {
 
 void setupFromSaveLines(vector<string>& lines) {
   clvl_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   xp_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   timeStarted_.year_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   timeStarted_.month_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   timeStarted_.day_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   timeStarted_.hour_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   timeStarted_.minute_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
   timeStarted_.second_ = toInt(lines.front());
-  lines.erase(lines.begin());
+  lines.erase(begin(lines));
 }
 
 int getCLvl()             {return clvl_;}

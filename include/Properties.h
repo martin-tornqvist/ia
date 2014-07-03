@@ -311,7 +311,7 @@ public:
   }
   void setupFromSaveLines(std::vector<std::string>& lines) override {
     nrWounds_ = toInt(lines.front());
-    lines.erase(lines.begin());
+    lines.erase(begin(lines));
   }
 
   std::string getNameShort() const override {
