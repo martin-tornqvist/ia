@@ -98,7 +98,7 @@ struct PropDataT {
     isEndedByMagicHealing(false),
     allowTestOnBot(false),
     alignment(propAlignmentBad) {
-    for(int i = 0; i < endOfPropMsg; i++) {msg[i] = "";}
+    for(int i = 0; i < endOfPropMsg; ++i) {msg[i] = "";}
   }
 
   PropId id;

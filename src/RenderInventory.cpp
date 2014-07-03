@@ -55,7 +55,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
   Inventory& inv = Map::player->getInv();
   vector<InvSlot>& slots = inv.getSlots();
 
-  for(size_t i = 0; i < slots.size(); i++) {
+  for(size_t i = 0; i < slots.size(); ++i) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     const InvSlot& slot = slots.at(i);
     str = slot.interfaceName;
@@ -125,7 +125,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
 
   Inventory& inv = Map::player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
-  for(int i = 0; i < NR_INDEXES; i++) {
+  for(int i = 0; i < NR_INDEXES; ++i) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
@@ -187,7 +187,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
 
   Inventory& inv = Map::player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
-  for(int i = 0; i < NR_INDEXES; i++) {
+  for(int i = 0; i < NR_INDEXES; ++i) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     pos.x = 0;
 
@@ -241,7 +241,7 @@ void drawUse(const MenuBrowser& browser,
 
   Inventory& inv = Map::player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
-  for(int i = 0; i < NR_INDEXES; i++) {
+  for(int i = 0; i < NR_INDEXES; ++i) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 

@@ -44,7 +44,7 @@ void mkLines() {
   string kickStr = ItemData::getItemInterfaceRef(
                      *kick, false, PrimaryAttMode::melee);
   delete kick;
-  for(unsigned int i = 0; i < kickStr.length(); i++) {
+  for(unsigned int i = 0; i < kickStr.length(); ++i) {
     if(kickStr.at(0) == ' ') {
       kickStr.erase(kickStr.begin());
     } else {
@@ -56,7 +56,7 @@ void mkLines() {
   string punchStr = ItemData::getItemInterfaceRef(
                       *punch, false, PrimaryAttMode::melee);
   delete punch;
-  for(size_t i = 0; i < punchStr.length(); i++) {
+  for(size_t i = 0; i < punchStr.length(); ++i) {
     if(punchStr.at(0) == ' ') {
       punchStr.erase(punchStr.begin());
     } else {
@@ -104,7 +104,7 @@ void mkLines() {
   lines_.push_back(StrAndClr("Potion knowledge", clrHeading));
   vector<StrAndClr> potionList;
   vector<StrAndClr> manuscriptList;
-  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     const ItemDataT* const d = ItemData::data[i];
     if(d->isPotion && (d->isTried || d->isIdentified)) {
       Item* item = ItemFactory::mk(d->id);
@@ -219,7 +219,7 @@ void run() {
     Renderer::clearScreen();
     drawInterface();
     int yPos = 1;
-    for(int i = topNr; i <= btmNr; i++) {
+    for(int i = topNr; i <= btmNr; ++i) {
       const StrAndClr& line = lines_.at(i);
       Renderer::drawText(line.str , Panel::screen, Pos(0, yPos++), line.clr);
     }

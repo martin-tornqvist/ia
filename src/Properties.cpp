@@ -703,7 +703,7 @@ PropHandler::PropHandler(Actor* owningActor) :
 
   const ActorDataT& d = owningActor->getData();
 
-  for(unsigned int i = 0; i < endOfPropIds; i++) {
+  for(unsigned int i = 0; i < endOfPropIds; ++i) {
     if(d.intrProps[i]) {
       Prop* const prop = mkProp(PropId(i), propTurnsIndefinite);
       tryApplyProp(prop, true, true, true, true);
@@ -879,7 +879,7 @@ void  PropHandler::getPropIdsFromSources(
 
   //Get from applied properties
   if(sources[int(PropSrc::applied)]) {
-    for(size_t i = 0; i < NR_APPLIED; i++) {
+    for(size_t i = 0; i < NR_APPLIED; ++i) {
       out[i] = appliedProps_[i]->getId();
     }
   }
@@ -1100,7 +1100,7 @@ bool PropHandler::endAppliedProp(
   int index   = -1;
   Prop* prop  = nullptr;
   const unsigned int NR_APPLIED_PROPS = appliedProps_.size();
-  for(unsigned int i = 0; i < NR_APPLIED_PROPS; i++) {
+  for(unsigned int i = 0; i < NR_APPLIED_PROPS; ++i) {
     prop = appliedProps_.at(i);
     if(prop->getId() == id) {
       index = i;
@@ -1306,7 +1306,7 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
+  for(unsigned int i = 0; i < NR_PROPS; ++i) {
     if(!propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE)) {
       TRACE_FUNC_END_VERBOSE;
       return false;
@@ -1322,7 +1322,7 @@ bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; i++) {
+  for(unsigned int i = 0; i < NR_PROPS; ++i) {
     if(!propList.at(i)->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE)) {
       return false;
     }
@@ -1391,7 +1391,7 @@ void PropHandler::endAppliedPropsByMagicHealing() {
   bool sources[int(PropSrc::endOfPropSrc)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(unsigned int i = 0; i < propList.size(); i++) {
+  for(unsigned int i = 0; i < propList.size(); ++i) {
     if(propList.at(i)->isEndedByMagicHealing()) {
       endAppliedProp(appliedProps_.at(i)->getId(), visionBlockers);
       propList.erase(propList.begin() + i);
@@ -1673,7 +1673,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
     vector<Pos> SpottedEnemiesPositions;
     SpottedEnemiesPositions.resize(0);
-    for(unsigned int i = 0; i < SpottedEnemies.size(); i++) {
+    for(unsigned int i = 0; i < SpottedEnemies.size(); ++i) {
       SpottedEnemiesPositions.push_back(SpottedEnemies.at(i)->pos);
     }
     sort(SpottedEnemiesPositions.begin(), SpottedEnemiesPositions.end(),

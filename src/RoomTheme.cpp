@@ -55,7 +55,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
   }
 
   const int NR_ATTEMPTS_TO_FIND_POS = 100;
-  for(int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; i++) {
+  for(int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; ++i) {
     const int NR_DATA       = typeFeatureData.size();
     const int ELEMENT       = Rnd::range(0, NR_DATA - 1);
     const auto* const dTmp  = typeFeatureData.at(ELEMENT);
@@ -109,13 +109,13 @@ void eraseAdjacentCellsFromVectors(const Pos& pos,
                                    vector<Pos>& nextToWalls,
                                    vector<Pos>& awayFromWalls) {
   TRACE_FUNC_BEGIN;
-  for(int i = 0; i < int(nextToWalls.size()); i++) {
+  for(int i = 0; i < int(nextToWalls.size()); ++i) {
     if(Utils::isPosAdj(pos, nextToWalls.at(i), true)) {
       nextToWalls.erase(nextToWalls.begin() + i);
       i--;
     }
   }
-  for(int i = 0; i < int(awayFromWalls.size()); i++) {
+  for(int i = 0; i < int(awayFromWalls.size()); ++i) {
     if(Utils::isPosAdj(pos, awayFromWalls.at(i), true)) {
       awayFromWalls.erase(awayFromWalls.begin() + i);
       i--;
@@ -128,7 +128,7 @@ int placeThemeFeatures(Room& room) {
   TRACE_FUNC_BEGIN;
   vector<const FeatureDataT*> featureBucket;
 
-  for(int i = 0; i < int(FeatureId::endOfFeatureId); i++) {
+  for(int i = 0; i < int(FeatureId::endOfFeatureId); ++i) {
     const auto* const d = FeatureData::getData((FeatureId)(i));
     if(d->themeSpawnRules.isBelongingToRoomType(room.type_)) {
       featureBucket.push_back(d);
@@ -205,7 +205,7 @@ void mkThemeSpecificRoomModifications(Room& room) {
     case RoomType::monster: {
       int nrBloodPut = 0;
       const int NR_TRIES = 1000; //TODO Hacky, needs improving
-      for(int i = 0; i < NR_TRIES; i++) {
+      for(int i = 0; i < NR_TRIES; ++i) {
         for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
           for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
             if(!blocked[x][y]) {
@@ -402,7 +402,7 @@ void assignRoomThemes() {
 
   TRACE << "Marking non-standard rooms as already assigned, and standard "
         << "rooms with wrong size permanently as plain" << endl;
-  for(int i = 0; i < NR_ROOMS; i++) {
+  for(int i = 0; i < NR_ROOMS; ++i) {
     Room* const room = Map::roomList.at(i);
     if(int(room->type_) > int(RoomType::endOfStdRooms)) {
       isAssigned.at(i) = true;
@@ -423,8 +423,8 @@ void assignRoomThemes() {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   const int NR_TRIES_TO_ASSIGN = 100;
-  for(int i = 0; i < NR_NON_PLAIN_THEMED; i++) {
-    for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ii++) {
+  for(int i = 0; i < NR_NON_PLAIN_THEMED; ++i) {
+    for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ++ii) {
       const int ELEMENT = Rnd::range(0, NR_ROOMS - 1);
       if(!isAssigned.at(ELEMENT)) {
         const RoomType type =
@@ -443,7 +443,7 @@ void assignRoomThemes() {
   }
 
   TRACE << "Assigning plain theme to remaining rooms" << endl;
-  for(int i = 0; i < NR_ROOMS; i++) {
+  for(int i = 0; i < NR_ROOMS; ++i) {
     Room* const room = Map::roomList.at(i);
     if(!isAssigned.at(i) && int(room->type_) < int(RoomType::endOfStdRooms)) {
       room->type_       = RoomType::plain;

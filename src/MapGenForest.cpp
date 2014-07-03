@@ -132,7 +132,7 @@ void mkForestTrees(const Pos& stairsPos) {
 
   bool proceed = false;
   while(!proceed) {
-    for(int i = 0; i < nrForestPatches; i++) {
+    for(int i = 0; i < nrForestPatches; ++i) {
       mkForestTreePatch();
     }
 
@@ -189,7 +189,7 @@ void mkForestTrees(const Pos& stairsPos) {
     vector<Pos> gravePositions;
 
     int pathWalkCount = 0;
-    for(unsigned int i = 0; i < path.size(); i++) {
+    for(unsigned int i = 0; i < path.size(); ++i) {
       if(pathWalkCount == TRY_PLACE_EVERY_N_STEP) {
 
         Fov::runFovOnArray(blocked, path.at(i), vision, false);
@@ -234,7 +234,7 @@ void mkForestTrees(const Pos& stairsPos) {
       }
       pathWalkCount++;
     }
-    for(unsigned int i = 0; i < gravePositions.size(); i++) {
+    for(unsigned int i = 0; i < gravePositions.size(); ++i) {
       Feature* f = FeatureFactory::mk(
                      FeatureId::gravestone, gravePositions.at(i));
       Grave* const grave = static_cast<Grave*>(f);

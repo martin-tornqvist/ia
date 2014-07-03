@@ -355,7 +355,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   FeatureFactory::mk(floorId, Pos(X0, Y0));
 
   //Check wall destruction
-  for(int i = 0; i < 2; i++) {
+  for(int i = 0; i < 2; ++i) {
     Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
 
     //Cells around the center, at a distance of 1, should be destroyed
@@ -389,13 +389,13 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //Check that corpses can be destroyed, and do not block living actors
   const int NR_CORPSES = 3;
   Actor* corpses[NR_CORPSES];
-  for(int i = 0; i < NR_CORPSES; i++) {
+  for(int i = 0; i < NR_CORPSES; ++i) {
     corpses[i] = ActorFactory::mk(actor_rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
   a1 = ActorFactory::mk(actor_rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
-  for(int i = 0; i < NR_CORPSES; i++) {
+  for(int i = 0; i < NR_CORPSES; ++i) {
     CHECK_EQUAL(int(ActorDeadState::destroyed), int(corpses[i]->deadState));
   }
   CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
@@ -403,7 +403,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //Check explosion applying Burning to living and dead actors
   a1        = ActorFactory::mk(actor_rat, Pos(X0 - 1, Y0));
   Actor* a2 = ActorFactory::mk(actor_rat, Pos(X0 + 1, Y0));
-  for(int i = 0; i < NR_CORPSES; i++) {
+  for(int i = 0; i < NR_CORPSES; ++i) {
     corpses[i] = ActorFactory::mk(actor_rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
@@ -412,7 +412,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
                             new PropBurning(propTurnsStd));
   CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied));
   CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied));
-  for(int i = 0; i < NR_CORPSES; i++) {
+  for(int i = 0; i < NR_CORPSES; ++i) {
     PropHandler& propHlr = corpses[i]->getPropHandler();
     CHECK(propHlr.getProp(propBurning, PropSrc::applied));
   }
@@ -1018,7 +1018,7 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
 // Some code exercise - Ichi! Ni! San!
 //-----------------------------------------------------------------------------
 //TEST_FIXTURE(BasicFixture, MapGenStd) {
-//  for(int i = 0; i < 100; i++) {MapGen::Std::run();}
+//  for(int i = 0; i < 100; ++i) {MapGen::Std::run();}
 //}
 
 #ifdef _WIN32

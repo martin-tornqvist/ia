@@ -22,10 +22,10 @@ void ActorDataT::reset() {
   hp = dmgMelee = dmgRanged = 1;
   spi = 12;
   speed = ActorSpeed::normal;
-  for(int i = 0; i < endOfPropIds; i++) {intrProps[i] = false;}
+  for(int i = 0; i < endOfPropIds; ++i) {intrProps[i] = false;}
   rangedCooldownTurns = spellCooldownTurns = 0;
   abilityVals.reset();
-  for(int i = 0; i < int(AiId::endOfAi); i++) {ai[i] = false;}
+  for(int i = 0; i < int(AiId::endOfAi); ++i) {ai[i] = false;}
   nrTurnsAwarePlayer = 0;
   spawnMinDLVL = spawnMaxDLVL = 999;
   actorSize = actorSize_humanoid;
@@ -2106,14 +2106,14 @@ void initDataList() {
 void init() {initDataList();}
 
 void storeToSaveLines(vector<string>& lines) {
-  for(int i = 1; i < endOfActorIds; i++) {
+  for(int i = 1; i < endOfActorIds; ++i) {
     lines.push_back(toStr(data[i].nrLeftAllowedToSpawn));
     lines.push_back(toStr(data[i].nrKills));
   }
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 1; i < endOfActorIds; i++) {
+  for(int i = 1; i < endOfActorIds; ++i) {
     ActorDataT& d = data[i];
     const int NR_ALLOWED_TO_SPAWN = toInt(lines.front());
     lines.erase(lines.begin());

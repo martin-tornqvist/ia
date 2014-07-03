@@ -42,7 +42,7 @@ void setupFromSaveLines(vector<string>& lines) {
   const int NR_TRAITS = toInt(lines.front());
   lines.erase(lines.begin());
 
-  for(int i = 0; i < NR_TRAITS; i++) {
+  for(int i = 0; i < NR_TRAITS; ++i) {
     traitsPicked_.push_back(Trait(toInt(lines.front())));
     lines.erase(lines.begin());
   }
@@ -501,7 +501,7 @@ Bg getBg() {return bg_;}
 void getPickableBgs(vector<Bg>& bgsRef) {
   bgsRef.resize(0);
 
-  for(int i = 0; i < int(Bg::endOfBgs); i++) {bgsRef.push_back(Bg(i));}
+  for(int i = 0; i < int(Bg::endOfBgs); ++i) {bgsRef.push_back(Bg(i));}
 
   //Sort lexicographically
   sort(bgsRef.begin(), bgsRef.end(),
@@ -515,7 +515,7 @@ void getPickableBgs(vector<Bg>& bgsRef) {
 void getPickableTraits(vector<Trait>& traitsRef) {
   traitsRef.resize(0);
 
-  for(int i = 0; i < int(Trait::endOfTraits); i++) {
+  for(int i = 0; i < int(Trait::endOfTraits); ++i) {
 
     const Trait trait = Trait(i);
 
@@ -589,7 +589,7 @@ void pickBg(const Bg bg) {
 
       //Potions
       const int NR_POTIONS = 2;
-      for(int i = 0; i < NR_POTIONS; i++) {
+      for(int i = 0; i < NR_POTIONS; ++i) {
         Item* const potion =
           ItemFactory::mkRandomScrollOrPotion(false, true);
         static_cast<Potion*>(potion)->identify(true);
@@ -616,7 +616,7 @@ void pickBg(const Bg bg) {
 }
 
 void setAllTraitsToPicked() {
-  for(int i = 0; i < int(Trait::endOfTraits); i++) {
+  for(int i = 0; i < int(Trait::endOfTraits); ++i) {
     traitsPicked_.push_back(Trait(i));
   }
 }

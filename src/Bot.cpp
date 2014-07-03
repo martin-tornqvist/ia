@@ -128,7 +128,7 @@ void act() {
   if(Rnd::oneIn(10)) {
     vector<PropId> propBucket;
     propBucket.resize(0);
-    for(int i = 0; i < endOfPropIds; i++) {
+    for(int i = 0; i < endOfPropIds; ++i) {
       if(PropData::data[i].allowTestOnBot) {propBucket.push_back(PropId(i));}
     }
     PropId propId = propBucket.at(Rnd::range(0, propBucket.size() - 1));

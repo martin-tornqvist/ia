@@ -106,7 +106,7 @@ void clearLog() {
 
 void drawLog(const bool SHOULD_UPDATE_SCREEN) {
   Renderer::coverArea(Panel::log, Pos(0, 0), Pos(MAP_W, 2));
-  for(int i = 0; i < 2; i++) drawLine(lines_[i], i);
+  for(int i = 0; i < 2; ++i) drawLine(lines_[i], i);
   if(SHOULD_UPDATE_SCREEN) Renderer::updateScreen();
 }
 
@@ -179,7 +179,7 @@ void displayHistory() {
     Renderer::clearScreen();
     drawHistoryInterface(topNr, btmNr);
     int yPos = 1;
-    for(int i = topNr; i <= btmNr; i++) {
+    for(int i = topNr; i <= btmNr; ++i) {
       drawLine(history_.at(i), yPos++);
     }
     Renderer::updateScreen();

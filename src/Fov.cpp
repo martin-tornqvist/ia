@@ -32,7 +32,7 @@ void checkOneCellOfMany(const bool obstructions[MAP_W][MAP_H],
   Pos prevPos;
   const unsigned int PATH_SIZE = pathDeltas->size();
 
-  for(unsigned int i = 0; i < PATH_SIZE; i++) {
+  for(unsigned int i = 0; i < PATH_SIZE; ++i) {
     curPos.set(origin + pathDeltas->at(i));
     if(i > 1) {
       prevPos.set(origin + pathDeltas->at(i - 1));
@@ -78,7 +78,7 @@ bool checkCell(const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
   Pos prevPos;
   const int PATH_SIZE = pathDeltas->size();
 
-  for(int i = 0; i < PATH_SIZE; i++) {
+  for(int i = 0; i < PATH_SIZE; ++i) {
     curPos.set(origin + pathDeltas->at(i));
     if(i > 1) {
       prevPos.set(origin + pathDeltas->at(i - 1));

@@ -65,7 +65,7 @@ void cutRoomCorners(const Room& room) {
   if(Rnd::fraction(2, 3)) {
     while(true) {
       int nrCorners = 0;
-      for(int i = 0; i < 4; i++) {
+      for(int i = 0; i < 4; ++i) {
         if(Rnd::coinToss()) {c[i] = true; nrCorners++;} else {c[i] = false;}
       }
       if(nrCorners > 0) {break;}
@@ -306,7 +306,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
 
     vector<Room*> prevJunctions;
 
-    for(size_t i = 0; i < path.size(); i++) {
+    for(size_t i = 0; i < path.size(); ++i) {
       const Pos& p(path.at(i));
       FeatureFactory::mk(FeatureId::floor, p, nullptr);
 
@@ -362,7 +362,7 @@ void mkWithPathfinder(const Pos& p0, const Pos& p1, FeatureId feature,
   vector<Pos> path;
   PathFind::run(p0, p1, blocked, path);
   const int PATH_SIZE = path.size();
-  for(int i = 0; i < PATH_SIZE; i++) {
+  for(int i = 0; i < PATH_SIZE; ++i) {
     const Pos c = path.at(i);
     const auto* const f = Map::cells[c.x][c.y].featureStatic;
     if(f->canHaveStaticFeature() || DIG_ANY_FEATURE) {
@@ -408,7 +408,7 @@ void mkByRandomWalk(const Pos& p0, int len, FeatureId featureToMk,
     }
     dirOk = false;
   }
-  for(unsigned int i = 0; i < positionsToSet.size(); i++) {
+  for(unsigned int i = 0; i < positionsToSet.size(); ++i) {
     FeatureFactory::mk(featureToMk, positionsToSet.at(i));
   }
 }

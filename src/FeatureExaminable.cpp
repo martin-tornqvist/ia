@@ -28,7 +28,7 @@ using namespace std;
 ItemContainerFeature::ItemContainerFeature() {items_.resize(0);}
 
 ItemContainerFeature::~ItemContainerFeature() {
-  for(unsigned int i = 0; i < items_.size(); i++) {
+  for(unsigned int i = 0; i < items_.size(); ++i) {
     delete items_.at(i);
   }
 }
@@ -36,7 +36,7 @@ ItemContainerFeature::~ItemContainerFeature() {
 void ItemContainerFeature::setRandomItemsForFeature(
   const FeatureId featureId,
   const int NR_ITEMS_TO_ATTEMPT) {
-  for(unsigned int i = 0; i < items_.size(); i++) {
+  for(unsigned int i = 0; i < items_.size(); ++i) {
     delete items_.at(i);
   }
   items_.resize(0);
@@ -44,7 +44,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
   if(NR_ITEMS_TO_ATTEMPT > 0) {
     while(items_.empty()) {
       vector<ItemId> itemBucket;
-      for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+      for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
         ItemDataT* const curData = ItemData::data[i];
         for(
           unsigned int ii = 0;
@@ -64,7 +64,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
 
       const int NR_CANDIDATES = int(itemBucket.size());
       if(NR_CANDIDATES > 0) {
-        for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; i++) {
+        for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; ++i) {
           const auto ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
           Item* item = ItemFactory::mk(itemBucket.at(ELEMENT));
           ItemFactory::setItemRandomizedProperties(item);
@@ -83,7 +83,7 @@ void ItemContainerFeature::dropItems(const Pos& pos) {
 void ItemContainerFeature::destroySingleFragile() {
   //TODO Generalize this function (perhaps isFragile variable in item data)
 
-  for(size_t i = 0; i < items_.size(); i++) {
+  for(size_t i = 0; i < items_.size(); ++i) {
     Item* const item = items_.at(i);
     const ItemDataT& d = item->getData();
     if(d.isPotion || d.id == ItemId::molotov) {
@@ -344,7 +344,7 @@ void Tomb::triggerTrap(Actor& actor) {
   switch(trait_) {
     case TombTrait::auraOfUnrest: {
 
-      for(int i = 1; i < endOfActorIds; i++) {
+      for(int i = 1; i < endOfActorIds; ++i) {
         const ActorDataT& d = ActorData::data[i];
         if(
           d.isGhost && d.isAutoSpawnAllowed && !d.isUnique &&
@@ -381,7 +381,7 @@ void Tomb::triggerTrap(Actor& actor) {
           pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
           prop, &fumeClr);
       } else {
-        for(int i = 1; i < endOfActorIds; i++) {
+        for(int i = 1; i < endOfActorIds; ++i) {
           const ActorDataT& d = ActorData::data[i];
           if(
             d.intrProps[propOoze] &&
@@ -873,7 +873,7 @@ void Cocoon::triggerTrap(Actor& actor) {
   } else if(RND < 50) {
     TRACE << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId> spawnBucket;
-    for(int i = 1; i < endOfActorIds; i++) {
+    for(int i = 1; i < endOfActorIds; ++i) {
       const ActorDataT& d = ActorData::data[i];
       if(
         d.isSpider && d.actorSize == actorSize_floor &&

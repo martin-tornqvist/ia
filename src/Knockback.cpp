@@ -39,7 +39,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
 //      const bool IS_NAILED = defender.getPropHandler().hasProp(propNailed);
 
-      for(int i = 0; i < KNOCK_BACK_RANGE; i++) {
+      for(int i = 0; i < KNOCK_BACK_RANGE; ++i) {
 
         const Pos newPos = defender.pos + delta;
 

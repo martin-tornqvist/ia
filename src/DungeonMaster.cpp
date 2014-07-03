@@ -106,7 +106,7 @@ int getMonsterTotXpWorth(const ActorDataT& d) {
 
 void playerGainXp(const int XP_GAINED) {
   if(Map::player->deadState == ActorDeadState::alive) {
-    for(int i = 0; i < XP_GAINED; i++) {
+    for(int i = 0; i < XP_GAINED; ++i) {
       xp_++;
       if(clvl_ < PLAYER_MAX_CLVL) {
         if(xp_ >= xpForLvl_[clvl_ + 1]) {
@@ -159,7 +159,7 @@ void winGame() {
   const unsigned int NR_OF_WIN_MESSAGE_LINES = winMsgLines.size();
   const int DELAY_BETWEEN_LINES = 40;
   SdlWrapper::sleep(DELAY_BETWEEN_LINES);
-  for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; i++) {
+  for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; ++i) {
     for(unsigned int ii = 0; ii <= i; ii++) {
       Renderer::drawTextCentered(winMsgLines.at(ii), Panel::screen,
                                  Pos(MAP_W_HALF, Y0 + ii),

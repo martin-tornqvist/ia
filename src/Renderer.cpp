@@ -282,7 +282,7 @@ void drawPlayerShockExclMarks() {
     const Pos& playerPos = Map::player->pos;
     const Pos pixelPosRight = getPixelPosForCellInPanel(Panel::map, playerPos);
 
-    for(int i = 0; i < NR_EXCL; i++) {
+    for(int i = 0; i < NR_EXCL; ++i) {
       drawExclMarkAt(pixelPosRight + Pos(i * 3, 0));
     }
   }
@@ -368,7 +368,7 @@ void drawMainMenuLogo(const int Y_POS) {
 
 void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
   if(trail.size() > 2) {
-    for(size_t i = 1; i < trail.size(); i++) {
+    for(size_t i = 1; i < trail.size(); ++i) {
       const Pos& pos = trail.at(i);
       coverCellInMap(pos);
 
@@ -507,7 +507,7 @@ void drawBlastAnimAtPositionsWithPlayerVision(
   const vector<Pos>& positions, const SDL_Color& clr) {
 
   vector<Pos> positionsWithVision;
-  for(unsigned int i = 0; i < positions.size(); i++) {
+  for(unsigned int i = 0; i < positions.size(); ++i) {
     const Pos& pos = positions.at(i);
     if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
       positionsWithVision.push_back(pos);
@@ -549,7 +549,7 @@ void drawText(const string& str, const Panel panel, const Pos& pos,
     const int LEN = str.size();
     drawRectangleSolid(pixelPos, Pos(cellDims.x * LEN, cellDims.y), bgClr);
 
-    for(int i = 0; i < LEN; i++) {
+    for(int i = 0; i < LEN; ++i) {
       if(pixelPos.x < 0 || pixelPos.x >= Config::getScreenPixelW()) {
         return;
       }
@@ -585,7 +585,7 @@ int drawTextCentered(const string& str, const Panel panel,
   SDL_FillRect(screenSurface, &sdlRect, SDL_MapRGB(screenSurface->format,
                bgClr.r, bgClr.g, bgClr.b));
 
-  for(int i = 0; i < LEN; i++) {
+  for(int i = 0; i < LEN; ++i) {
     if(pixelPos.x < 0 || pixelPos.x >= Config::getScreenPixelW()) {
       return X_POS_LEFT;
     }

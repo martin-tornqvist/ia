@@ -178,7 +178,7 @@ void init() {
   cmb.push_back("Nikto");
 
   const size_t NR_CMB_PARTS = cmb.size();
-  for(size_t i = 0; i < NR_CMB_PARTS; i++) {
+  for(size_t i = 0; i < NR_CMB_PARTS; ++i) {
     for(size_t ii = 0; ii < NR_CMB_PARTS; ii++) {
       if(i != ii) {
         falseNames_.push_back(cmb.at(i) + " " + cmb.at(ii));
@@ -201,7 +201,7 @@ void setFalseScrollName(ItemDataT& d) {
 }
 
 void storeToSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     if(ItemData::data[i]->isScroll) {
       lines.push_back(ItemData::data[i]->baseName.name);
       lines.push_back(ItemData::data[i]->baseName.name_plural);
@@ -211,7 +211,7 @@ void storeToSaveLines(vector<string>& lines) {
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     if(ItemData::data[i]->isScroll) {
       ItemData::data[i]->baseName.name        = lines.front();
       lines.erase(lines.begin());

@@ -24,7 +24,7 @@ public:
   AbilityVals() {reset();}
 
   AbilityVals& operator=(const AbilityVals& other) {
-    for(int i = 0; i < int(AbilityId::endOfAbilityId); i++) {
+    for(int i = 0; i < int(AbilityId::endOfAbilityId); ++i) {
       abilityList[i] = other.abilityList[i];
     }
     return *this;

@@ -80,7 +80,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
 }
 
 void AbilityVals::reset() {
-  for(int i = 0; i < int(AbilityId::endOfAbilityId); i++) {
+  for(int i = 0; i < int(AbilityId::endOfAbilityId); ++i) {
     abilityList[i] = 0;
   }
 }

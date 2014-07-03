@@ -47,7 +47,7 @@ void runStandardTurnEvents() {
 
   int regenSpiNTurns = 12;
 
-  for(size_t i = 0; i < actors_.size(); i++) {
+  for(size_t i = 0; i < actors_.size(); ++i) {
     Actor* const actor = actors_[i];
 
     actor->getPropHandler().tick(propTurnModeStandard, visionBlockers);
@@ -303,12 +303,12 @@ void updateLightMap() {
   Map::player->addLight(lightTmp);
 
   const int NR_ACTORS = actors_.size();
-  for(int i = 0; i < NR_ACTORS; i++) {
+  for(int i = 0; i < NR_ACTORS; ++i) {
     actors_.at(i)->addLight(lightTmp);
   }
 
   const int NR_FEATURE_MOBS = featureMobs_.size();
-  for(int i = 0; i < NR_FEATURE_MOBS; i++) {
+  for(int i = 0; i < NR_FEATURE_MOBS; ++i) {
     featureMobs_.at(i)->addLight(lightTmp);
   }
 

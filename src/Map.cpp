@@ -177,7 +177,7 @@ void mkGore(const Pos& origin) {
 }
 
 void deleteAndRemoveRoomFromList(Room* const room) {
-  for(size_t i = 0; i < roomList.size(); i++) {
+  for(size_t i = 0; i < roomList.size(); ++i) {
     if(roomList.at(i) == room) {
       delete room;
       roomList.erase(roomList.begin() + i);

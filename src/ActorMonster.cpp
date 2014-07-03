@@ -354,7 +354,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         }
 
         //Intrinsic melee attacks?
-        for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
+        for(unsigned int i = 0; i < nrOfIntrinsics; ++i) {
           weapon = static_cast<Weapon*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().isMeleeWeapon) {
             opport.weapons.push_back(weapon);
@@ -383,7 +383,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         }
 
         //Intrinsic ranged attacks?
-        for(unsigned int i = 0; i < nrOfIntrinsics; i++) {
+        for(unsigned int i = 0; i < nrOfIntrinsics; ++i) {
           weapon = static_cast<Weapon*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().isRangedWeapon) {
             opport.weapons.push_back(weapon);
@@ -413,7 +413,7 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
 
     //If there are more than one possible weapon, find strongest.
     if(nrOfWeapons > 1) {
-      for(unsigned int i = 1; i < nrOfWeapons; i++) {
+      for(unsigned int i = 1; i < nrOfWeapons; ++i) {
 
         //Found new weapon in element i.
         newWeapon = attackOpport.weapons.at(i);

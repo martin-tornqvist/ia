@@ -122,7 +122,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines) {
 
   const int NR_OF_GENERAL = toInt(lines.front());
   lines.erase(lines.begin());
-  for(int i = 0; i < NR_OF_GENERAL; i++) {
+  for(int i = 0; i < NR_OF_GENERAL; ++i) {
     const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(lines.begin());
     Item* item = ItemFactory::mk(id);
@@ -138,7 +138,7 @@ bool Inventory::hasDynamiteInGeneral() const {
 }
 
 bool Inventory::hasItemInGeneral(const ItemId id) const {
-  for(unsigned int i = 0; i < general_.size(); i++) {
+  for(unsigned int i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == id)
       return true;
   }
@@ -147,7 +147,7 @@ bool Inventory::hasItemInGeneral(const ItemId id) const {
 }
 
 int Inventory::getItemStackSizeInGeneral(const ItemId id) const {
-  for(unsigned int i = 0; i < general_.size(); i++) {
+  for(unsigned int i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == id) {
       if(general_.at(i)->getData().isStackable) {
         return general_.at(i)->nrItems;
@@ -161,7 +161,7 @@ int Inventory::getItemStackSizeInGeneral(const ItemId id) const {
 }
 
 void Inventory::decrDynamiteInGeneral() {
-  for(unsigned int i = 0; i < general_.size(); i++) {
+  for(unsigned int i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == ItemId::dynamite) {
       decrItemInGeneral(i);
       break;
@@ -172,7 +172,7 @@ void Inventory::decrDynamiteInGeneral() {
 /*
  bool Inventory::hasFirstAidInGeneral()
  {
- for(unsigned int i = 0; i < general_.size(); i++) {
+ for(unsigned int i = 0; i < general_.size(); ++i) {
  if(general_.at(i)->getInstanceDefinition().id == ItemId::firstAidKit)
  return true;
  }
@@ -182,7 +182,7 @@ void Inventory::decrDynamiteInGeneral() {
 
  void Inventory::decreaseFirstAidInGeneral()
  {
- for(unsigned int i = 0; i < general_.size(); i++) {
+ for(unsigned int i = 0; i < general_.size(); ++i) {
  if(general_.at(i)->getInstanceDefinition().id == ItemId::firstAidKit) {
  decrItemInGeneral(i);
  break;
@@ -216,7 +216,7 @@ void Inventory::putInGeneral(Item* item) {
 
 int Inventory::getElementToStackItem(Item* item) const {
   if(item->getData().isStackable) {
-    for(size_t i = 0; i < general_.size(); i++) {
+    for(size_t i = 0; i < general_.size(); ++i) {
       Item* compare = general_.at(i);
 
       if(compare->getData().id == item->getData().id) {
@@ -281,7 +281,7 @@ bool Inventory::hasAmmoForFirearmInInventory() {
       const ItemId ammoId = weapon->getData().rangedAmmoTypeUsed;
 
       //Look for that ammo type in inventory
-      for(unsigned int i = 0; i < general_.size(); i++) {
+      for(unsigned int i = 0; i < general_.size(); ++i) {
         if(general_.at(i)->getData().id == ammoId) {
           return true;
         }
@@ -320,7 +320,7 @@ void Inventory::deleteItemInGeneralWithElement(const unsigned ELEMENT) {
 void Inventory::removetemInGeneralWithPointer(
   Item* const item, const bool DELETE_ITEM) {
 
-  for(size_t i = 0; i < general_.size(); i++) {
+  for(size_t i = 0; i < general_.size(); ++i) {
     if(general_.at(i) == item) {
       if(DELETE_ITEM) {delete item;}
       general_.erase(general_.begin() + i);
@@ -351,7 +351,7 @@ void Inventory::decrItemInGeneral(unsigned element) {
 }
 
 void Inventory::decrItemTypeInGeneral(const ItemId id) {
-  for(unsigned int i = 0; i < general_.size(); i++) {
+  for(unsigned int i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == id) {
       decrItemInGeneral(i);
       return;
@@ -505,7 +505,7 @@ bool Inventory::moveToGeneral(InvSlot* inventorySlot) {
 }
 
 bool Inventory::hasItemInSlot(SlotId id) const {
-  for(unsigned int i = 0; i < slots_.size(); i++) {
+  for(unsigned int i = 0; i < slots_.size(); ++i) {
     if(slots_[i].id == id) {
       if(slots_[i].item) {
         return true;
@@ -530,7 +530,7 @@ void Inventory::removeInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT)
 }
 
 int Inventory::getElementWithItemType(const ItemId id) const {
-  for(unsigned int i = 0; i < general_.size(); i++) {
+  for(unsigned int i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == id) {
       return i;
     }
@@ -553,7 +553,7 @@ Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) const {
 
 Item* Inventory::getItemInSlot(SlotId slotName) const {
   if(hasItemInSlot(slotName)) {
-    for(unsigned int i = 0; i < slots_.size(); i++) {
+    for(unsigned int i = 0; i < slots_.size(); ++i) {
       if(slots_[i].id == slotName) {
         return slots_[i].item;
       }
@@ -587,7 +587,7 @@ Item* Inventory::getLastItemInGeneral() {
 InvSlot* Inventory::getSlot(SlotId slotName) {
   InvSlot* slot = nullptr;
 
-  for(unsigned int i = 0; i < slots_.size(); i++) {
+  for(unsigned int i = 0; i < slots_.size(); ++i) {
     if(slots_[i].id == slotName) {
       slot = &slots_[i];
     }
@@ -613,12 +613,12 @@ void Inventory::putInSlot(const SlotId id, Item* item) {
 
 int Inventory::getTotalItemWeight() const {
   int weight = 0;
-  for(unsigned int i = 0; i < slots_.size(); i++) {
+  for(unsigned int i = 0; i < slots_.size(); ++i) {
     if(slots_.at(i).item) {
       weight += slots_.at(i).item->getWeight();
     }
   }
-  for(unsigned int i = 0; i < general_.size(); i++) {
+  for(unsigned int i = 0; i < general_.size(); ++i) {
     weight += general_.at(i)->getWeight();
   }
   return weight;
@@ -673,7 +673,7 @@ void Inventory::sortGeneralInventory() {
 
   //Set the inventory from the sorting buffer
   general_.resize(0);
-  for(unsigned int i = 0; i < sortBuffer.size(); i++) {
+  for(unsigned int i = 0; i < sortBuffer.size(); ++i) {
     for(unsigned int ii = 0; ii < sortBuffer.at(i).size(); ii++) {
       general_.push_back(sortBuffer.at(i).at(ii));
     }

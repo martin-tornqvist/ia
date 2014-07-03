@@ -127,7 +127,7 @@ void playerSetsOption(const MenuBrowser* const browser,
     } break;
 
     case 2: {
-      for(unsigned int i = 0; i < fontImageNames.size(); i++) {
+      for(unsigned int i = 0; i < fontImageNames.size(); ++i) {
         if(fontName_ == fontImageNames.at(i)) {
           fontName_ = i == fontImageNames.size() - 1 ?
                       fontImageNames.front() :
@@ -139,7 +139,7 @@ void playerSetsOption(const MenuBrowser* const browser,
 
       if(isTilesMode_) {
         while(cellW_ != 16 || cellH_ != 24) {
-          for(unsigned int i = 0; i < fontImageNames.size(); i++) {
+          for(unsigned int i = 0; i < fontImageNames.size(); ++i) {
             if(fontName_ == fontImageNames.at(i)) {
               fontName_ = i == fontImageNames.size() - 1 ?
                           fontImageNames.front() :
@@ -529,7 +529,7 @@ void writeLinesToFile(vector<string>& lines) {
   ofstream file;
   file.open("config", ios::trunc);
 
-  for(size_t i = 0; i < lines.size(); i++) {
+  for(size_t i = 0; i < lines.size(); ++i) {
     file << lines.at(i);
     if(i != lines.size() - 1) {file << endl;}
   }

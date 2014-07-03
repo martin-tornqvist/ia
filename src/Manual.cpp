@@ -36,7 +36,7 @@ void readFile() {
         }
         if(shouldFormatLine) {
           TextFormatting::lineToLines(curLine, MAP_W - 3, formatted);
-          for(unsigned int i = 0; i < formatted.size(); i++) {
+          for(unsigned int i = 0; i < formatted.size(); ++i) {
             lines_.push_back(formatted.at(i));
           }
         } else {
@@ -85,7 +85,7 @@ void run() {
     Renderer::clearScreen();
     drawManualInterface();
     int yPos = 1;
-    for(int i = topNr; i <= btmNr; i++) {
+    for(int i = topNr; i <= btmNr; ++i) {
       Renderer::drawText(lines_.at(i), Panel::screen, Pos(0, yPos++),
                          clrWhite);
     }

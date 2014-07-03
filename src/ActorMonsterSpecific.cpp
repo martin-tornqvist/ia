@@ -391,7 +391,7 @@ bool Khephren::onActorTurn_() {
             Log::addMsg("Khephren calls a plague of Locusts!");
             Map::player->incrShock(ShockValue::shockValue_heavy,
                                    ShockSrc::misc);
-            for(int i = 0; i < NR_OF_SPAWNS; i++) {
+            for(int i = 0; i < NR_OF_SPAWNS; ++i) {
               Actor* const actor =
                 ActorFactory::mk(actor_locust, freeCells.at(0));
               Monster* const monster = static_cast<Monster*>(actor);
@@ -456,7 +456,7 @@ bool KeziahMason::onActorTurn_() {
                                 false, line);
 
           const int LINE_SIZE = line.size();
-          for(int i = 0; i < LINE_SIZE; i++) {
+          for(int i = 0; i < LINE_SIZE; ++i) {
             const Pos c = line.at(i);
             if(!blocked[c.x][c.y]) {
               //TODO Make a generalized summoning functionality
@@ -725,7 +725,7 @@ bool MajorClaphamLee::onActorTurn_() {
 
           const int NR_OF_EXTRA_SPAWNS = 4;
 
-          for(int i = 0; i < NR_OF_EXTRA_SPAWNS; i++) {
+          for(int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i) {
             const int ZOMBIE_TYPE = Rnd::range(1, 3);
             ActorId id = actor_zombie;
             switch(ZOMBIE_TYPE) {

@@ -109,7 +109,7 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
   const int NR_BGS = bgs.size();
 
   //------------------------------------------------------------- BACKGROUNDS
-  for(int i = 0; i < NR_BGS; i++) {
+  for(int i = 0; i < NR_BGS; ++i) {
     const Bg bg = bgs.at(i);
     string name = "";
     PlayerBon::getBgTitle(bg, name);
@@ -214,7 +214,7 @@ void drawPickTrait(
   //------------------------------------------------------------- TRAITS
   const int Y0_TRAITS = 2;
   int y = Y0_TRAITS;
-  for(int i = 0; i < NR_TRAITS_1; i++) {
+  for(int i = 0; i < NR_TRAITS_1; ++i) {
     const Trait trait = traits1.at(i);
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
@@ -226,7 +226,7 @@ void drawPickTrait(
     y++;
   }
   y = Y0_TRAITS;
-  for(int i = 0; i < NR_TRAITS_2; i++) {
+  for(int i = 0; i < NR_TRAITS_2; ++i) {
     const Trait trait = traits2.at(i);
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
@@ -334,7 +334,7 @@ void pickNewTrait(const bool IS_CHARACTER_CREATION) {
       vector<Trait> traits1; traits1.resize(0);
       vector<Trait> traits2; traits2.resize(0);
 
-      for(int i = 0; i < NR_TRAITS_TOT; i++) {
+      for(int i = 0; i < NR_TRAITS_TOT; ++i) {
         const Trait trait = pickableTraits.at(i);
         if(i < NR_TRAITS_1) {
           traits1.push_back(trait);

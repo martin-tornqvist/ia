@@ -220,7 +220,7 @@ Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS,
                              const bool ALLOW_POTIONS) {
   vector<ItemId> itemBucket;
 
-  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     const ItemDataT* const d = ItemData::data[i];
     if(
       !d->isIntrinsic &&

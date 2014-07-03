@@ -31,7 +31,7 @@ namespace SpellHandling {
 Spell* getRandomSpellForMonster() {
 
   vector<SpellId> bucket;
-  for(int i = 0; i < int(SpellId::endOfSpellId); i++) {
+  for(int i = 0; i < int(SpellId::endOfSpellId); ++i) {
     Spell* const spell = getSpellFromId(SpellId(i));
     if(spell->isAvailForAllMonsters()) {
       bucket.push_back(SpellId(i));
@@ -201,7 +201,7 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
   LineCalc::calcNewLine(caster->pos, target->pos, true, 999, false, line);
   Renderer::drawMapAndInterface();
   const int LINE_SIZE = line.size();
-  for(int i = 1; i < LINE_SIZE; i++) {
+  for(int i = 1; i < LINE_SIZE; ++i) {
     const Pos& pos = line.at(i);
     if(Config::isTilesMode()) {
       Renderer::drawTile(TileId::blast1, Panel::map, pos, clrMagenta);
@@ -330,7 +330,7 @@ SpellCastRetData SpellMayhem::cast_(
   const int X1 = min(MAP_W - 1, playerPos.x + AREA_RADI) - 1;
   const int Y1 = min(MAP_H - 1, playerPos.y + AREA_RADI) - 1;
 
-  for(int i = 0; i < NR_OF_SWEEPS; i++) {
+  for(int i = 0; i < NR_OF_SWEEPS; ++i) {
     for(int y = Y0; y <= Y1; y++) {
       for(int x = X0; x <= X1; x++) {
         const Pos c(x, y);
@@ -751,7 +751,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
-  for(int i = 0; i < int(freePositionsSeenByPlayer.size()); i++) {
+  for(int i = 0; i < int(freePositionsSeenByPlayer.size()); ++i) {
     const Pos pos(freePositionsSeenByPlayer.at(i));
     if(blocked[pos.x][pos.y]) {
       freePositionsSeenByPlayer.erase(freePositionsSeenByPlayer.begin() + i);
@@ -773,7 +773,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   }
 
   vector<ActorId> summonBucket;
-  for(int i = 1; i < endOfActorIds; i++) {
+  for(int i = 1; i < endOfActorIds; ++i) {
     const ActorDataT& data = ActorData::data[i];
     if(data.canBeSummoned) {
       if(data.spawnMinDLVL <= caster->getData().spawnMinDLVL) {

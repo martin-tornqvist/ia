@@ -25,7 +25,7 @@ void mkItems() {
 
   ItemDataT** data = ItemData::data;
 
-  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     if(
       Map::dlvl >= data[i]->spawnStandardMinDLVL &&
       Map::dlvl <= data[i]->spawnStandardMaxDLVL && !data[i]->isIntrinsic) {
@@ -40,7 +40,7 @@ void mkItems() {
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
 
-  for(int i = 0; i < nrOfSpawns; i++) {
+  for(int i = 0; i < nrOfSpawns; ++i) {
     if(freeCells.empty()) {break;}
 
     const int ELEMENT       = Rnd::dice(1, freeCells.size()) - 1;

@@ -35,7 +35,7 @@ void draw(MenuBrowser& browser) {
 
   int y = 1;
 
-  for(int i = 0; i < NR_SPELLS; i++) {
+  for(int i = 0; i < NR_SPELLS; ++i) {
     const int CURRENT_ELEMENT = i;
     Scroll scroll(nullptr);
     SDL_Color scrollClr = scroll.getInterfaceClr();
@@ -148,7 +148,7 @@ void setupFromSaveLines(vector<string>& lines) {
   const int NR_SPELLS = toInt(lines.front());
   lines.erase(lines.begin());
 
-  for(int i = 0; i < NR_SPELLS; i++) {
+  for(int i = 0; i < NR_SPELLS; ++i) {
     const int ID = toInt(lines.front());
     lines.erase(lines.begin());
     knownSpells_.push_back(SpellHandling::getSpellFromId(SpellId(ID)));

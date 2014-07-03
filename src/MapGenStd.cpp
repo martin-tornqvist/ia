@@ -248,7 +248,7 @@ void mkAuxRooms(Region regions[3][3]) {
         Utils::reverseBoolArray(floorCells);
 
         //Right
-        for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
+        for(int i = 0; i < NR_TRIES_PER_SIDE; ++i) {
           const Pos conP(mainR.r_.p1.x + 1,
                          Rnd::range(mainR.r_.p0.y + 1, mainR.r_.p1.y - 1));
           const Pos auxD(getRndAuxRoomDim());
@@ -263,7 +263,7 @@ void mkAuxRooms(Region regions[3][3]) {
         }
 
         //Up
-        for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
+        for(int i = 0; i < NR_TRIES_PER_SIDE; ++i) {
           const Pos conP(Rnd::range(mainR.r_.p0.x + 1, mainR.r_.p1.x - 1),
                          mainR.r_.p0.y - 1);
           const Pos auxD(getRndAuxRoomDim());
@@ -278,7 +278,7 @@ void mkAuxRooms(Region regions[3][3]) {
         }
 
         //Left
-        for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
+        for(int i = 0; i < NR_TRIES_PER_SIDE; ++i) {
           const Pos conP(mainR.r_.p0.x - 1,
                          Rnd::range(mainR.r_.p0.y + 1, mainR.r_.p1.y - 1));
           const Pos auxD(getRndAuxRoomDim());
@@ -293,7 +293,7 @@ void mkAuxRooms(Region regions[3][3]) {
         }
 
         //Down
-        for(int i = 0; i < NR_TRIES_PER_SIDE; i++) {
+        for(int i = 0; i < NR_TRIES_PER_SIDE; ++i) {
           const Pos conP(Rnd::range(mainR.r_.p0.x + 1, mainR.r_.p1.x - 1),
                          mainR.r_.p1.y + 1);
           const Pos auxD(getRndAuxRoomDim());
@@ -388,7 +388,7 @@ void randomlyBlockRegions(Region regions[3][3]) {
   //of a higher number of attempts.
   const int MAX_NR_TO_TRY_BLOCK = max(1, Map::dlvl / 3);
   const int NR_TO_TRY_BLOCK     = min(Rnd::range(0, MAX_NR_TO_TRY_BLOCK), 5);
-  for(int i = 0; i < NR_TO_TRY_BLOCK; i++) {
+  for(int i = 0; i < NR_TO_TRY_BLOCK; ++i) {
     TRACE_VERBOSE << "Attempting to block region " << i + 1 << "/"
                   << NR_TO_TRY_BLOCK << endl;
     vector<Pos> blockBucket;
@@ -645,7 +645,7 @@ void mkSubRooms() {
   const int MIN_DIM_W           = 4;
   const int MIN_DIM_H           = 4;
 
-  for(size_t i = 0; i < Map::roomList.size(); i++) {
+  for(size_t i = 0; i < Map::roomList.size(); ++i) {
 
     const Pos roomX0Y0 = Map::roomList.at(i)->r_.p0;
     const Pos roomX1Y1 = Map::roomList.at(i)->r_.p1;

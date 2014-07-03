@@ -42,7 +42,7 @@ void writeFile(vector<HighScoreEntry>& entries) {
   ofstream file;
   file.open("data/highscores", ios::trunc);
 
-  for(unsigned int i = 0; i < entries.size(); i++) {
+  for(unsigned int i = 0; i < entries.size(); ++i) {
     const HighScoreEntry& entry = entries.at(i);
 
     const string VICTORY_STR = entry.isVictoryGame() ? "V" : "D";

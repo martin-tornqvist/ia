@@ -21,7 +21,7 @@ int roll(const int ROLLS, const int SIDES) {
   if(SIDES == 1) {return ROLLS * SIDES;}
 
   int result = 0;
-  for(int i = 0; i < ROLLS; i++) {
+  for(int i = 0; i < ROLLS; ++i) {
     result += mtRand.randInt(SIDES - 1) + 1;
   }
   return result;
@@ -119,7 +119,7 @@ void mkBoolMapFromVector(const vector<Pos>& positions,
 void getActorPositions(const vector<Actor*>& actors, vector<Pos>& out) {
   out.resize(0);
   const unsigned int NR_ACTORS = actors.size();
-  for(unsigned int i = 0; i < NR_ACTORS; i++) {
+  for(unsigned int i = 0; i < NR_ACTORS; ++i) {
     out.push_back(actors.at(i)->pos);
   }
 }

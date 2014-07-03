@@ -101,7 +101,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
 
   int ii = 0;
   const int VEC_SIZE = freeCells.size();
-  for(int i = 0; i < VEC_SIZE; i++) {
+  for(int i = 0; i < VEC_SIZE; ++i) {
     //First look in all cells that has distance to origin equal to cell i
     //to try and merge the item if it stacks
     if(IS_STACKABLE_TYPE) {

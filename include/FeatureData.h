@@ -110,7 +110,7 @@ public:
 
   void reset() {
     canMoveCmn_ = false;
-    for(int i = 0; i < endOfPropIds; i++) {canMoveIfHaveProp_[i] = false;}
+    for(int i = 0; i < endOfPropIds; ++i) {canMoveIfHaveProp_[i] = false;}
   }
 
   void setPropCanMove(const PropId id) {canMoveIfHaveProp_[id] = true;}

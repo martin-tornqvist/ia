@@ -78,7 +78,7 @@ void menuMsgDrawingHelper(
   }
   if(!lines.empty() || !title.empty()) {y += 2;}
 
-  for(size_t i = 0; i < choices.size(); i++) {
+  for(size_t i = 0; i < choices.size(); ++i) {
     SDL_Color clr = i == curChoice ? clrNosfTealLgt : clrNosfTealDrk;
     Renderer::drawTextCentered(
       choices.at(i), Panel::map, Pos(MAP_W_HALF, y),

@@ -49,7 +49,7 @@ bool run() {
   const int EDGE_DIST_W = 10;
   const int EDGE_DIST_H = 2;
 
-  for(int i = 0; i < NR_OPEN_PLACES; i++) {
+  for(int i = 0; i < NR_OPEN_PLACES; ++i) {
     const Pos curPos(Rnd::range(EDGE_DIST_W, MAP_W - EDGE_DIST_W - 1),
                      Rnd::range(EDGE_DIST_H, MAP_H - EDGE_DIST_H - 1));
 

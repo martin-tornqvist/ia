@@ -83,7 +83,7 @@ bool setPosToTargetIfVisible() {
 
     if(!spottedEnemies.empty()) {
 
-      for(size_t i = 0; i < spottedEnemies.size(); i++) {
+      for(size_t i = 0; i < spottedEnemies.size(); ++i) {
         if(target == spottedEnemies.at(i)) {
           pos_ = spottedEnemies.at(i)->pos;
           return true;

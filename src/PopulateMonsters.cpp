@@ -34,7 +34,7 @@ void mkListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
   const int EFFECTIVE_DLVL =
     max(1, min(LAST_CAVERN_LVL, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
 
-  for(unsigned int i = actor_player + 1; i < endOfActorIds; i++) {
+  for(unsigned int i = actor_player + 1; i < endOfActorIds; ++i) {
     const ActorDataT& d = ActorData::data[i];
     if(
       d.isAutoSpawnAllowed &&
@@ -69,7 +69,7 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
   vector<ActorId> idBucket;
   mkListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
-  for(size_t i = 0; i < idBucket.size(); i++) {
+  for(size_t i = 0; i < idBucket.size(); ++i) {
     const ActorDataT& d = ActorData::data[idBucket.at(i)];
     bool isMonsterNativeToRoom = false;
     for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
@@ -164,7 +164,7 @@ void populateCaveLvl() {
     }
   }
 
-  for(int i = 0; i < NR_GROUPS_ALLOWED; i++) {
+  for(int i = 0; i < NR_GROUPS_ALLOWED; ++i) {
     vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
@@ -202,7 +202,7 @@ void populateIntroLvl() {
     }
   }
 
-  for(int i = 0; i < NR_GROUPS_ALLOWED; i++) {
+  for(int i = 0; i < NR_GROUPS_ALLOWED; ++i) {
     vector<Pos> originBucket;
     for(int y = 1; y < MAP_H - 1; y++) {
       for(int x = 1; x < MAP_W - 1; x++) {
@@ -252,7 +252,7 @@ void populateStdLvl() {
       const int NR_CELLS_IN_ROOM = ROOM_W * ROOM_H;
 
       const int MAX_NR_GROUPS_IN_ROOM = 2;
-      for(int i = 0; i < MAX_NR_GROUPS_IN_ROOM; i++) {
+      for(int i = 0; i < MAX_NR_GROUPS_IN_ROOM; ++i) {
         //Randomly pick a free position inside the room
         vector<Pos> originBucket;
         for(int y = room->r_.p0.y; y <= room->r_.p1.y; y++) {
@@ -337,7 +337,7 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
 
   const int NR_FREE_CELLS = sortedFreeCellsVector.size();
   const int NR_CAN_BE_SPAWNED = min(NR_FREE_CELLS, maxNrInGroup);
-  for(int i = 0; i < NR_CAN_BE_SPAWNED; i++) {
+  for(int i = 0; i < NR_CAN_BE_SPAWNED; ++i) {
     const Pos& pos = sortedFreeCellsVector.at(i);
 
     Actor* const actor = ActorFactory::mk(id, pos);

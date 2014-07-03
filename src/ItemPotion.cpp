@@ -132,7 +132,7 @@ void PotionFortitude::quaff_(Actor* const actor) {
 
   if(actor == Map::player) {
     bool isPhobiasCured = false;
-    for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
+    for(int i = 0; i < int(Phobia::endOfPhobias); ++i) {
       if(Map::player->phobias[i]) {
         Map::player->phobias[i] = false;
         isPhobiasCured = true;
@@ -142,7 +142,7 @@ void PotionFortitude::quaff_(Actor* const actor) {
     if(isPhobiasCured) {Log::addMsg("All my phobias are cured!");}
 
     bool isObsessionsCured = false;
-    for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+    for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
       if(Map::player->obsessions[i]) {
         Map::player->obsessions[i] = false;
         isObsessionsCured = true;
@@ -428,7 +428,7 @@ void setClrAndFalseName(ItemDataT* d) {
 }
 
 void storeToSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     ItemDataT* const d = ItemData::data[i];
     if(d->isPotion) {
       lines.push_back(d->baseName.name);
@@ -442,7 +442,7 @@ void storeToSaveLines(vector<string>& lines) {
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     ItemDataT* const d = ItemData::data[i];
     if(d->isPotion) {
       d->baseName.name = lines.front();

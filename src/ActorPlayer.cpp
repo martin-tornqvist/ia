@@ -55,8 +55,8 @@ Player::Player() :
 void Player::mkStartItems() {
   data_->abilityVals.reset();
 
-  for(int i = 0; i < int(Phobia::endOfPhobias); i++)        {phobias[i] = false;}
-  for(int i = 0; i < int(Obsession::endOfObsessions); i++)  {obsessions[i] = false;}
+  for(int i = 0; i < int(Phobia::endOfPhobias); ++i)        {phobias[i] = false;}
+  for(int i = 0; i < int(Obsession::endOfObsessions); ++i)  {obsessions[i] = false;}
 
   int NR_CARTRIDGES = Rnd::range(1, 2);
   int NR_DYNAMITE   = Rnd::range(2, 3);
@@ -78,7 +78,7 @@ void Player::mkStartItems() {
 
   inv_->putInSlot(SlotId::wieldedAlt, ItemFactory::mk(ItemId::pistol));
 
-  for(int i = 0; i < NR_CARTRIDGES; i++) {
+  for(int i = 0; i < NR_CARTRIDGES; ++i) {
     inv_->putInGeneral(ItemFactory::mk(ItemId::pistolClip));
   }
 
@@ -117,14 +117,14 @@ void Player::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(molotovFuseTurns));
   lines.push_back(toStr(flareFuseTurns));
 
-  for(int i = 0; i < int(AbilityId::endOfAbilityId); i++) {
+  for(int i = 0; i < int(AbilityId::endOfAbilityId); ++i) {
     lines.push_back(toStr(data_->abilityVals.getRawVal(AbilityId(i))));
   }
 
-  for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
+  for(int i = 0; i < int(Phobia::endOfPhobias); ++i) {
     lines.push_back(phobias[i] == 0 ? "0" : "1");
   }
-  for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+  for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
     lines.push_back(obsessions[i] == 0 ? "0" : "1");
   }
 }
@@ -132,7 +132,7 @@ void Player::storeToSaveLines(vector<string>& lines) const {
 void Player::setupFromSaveLines(vector<string>& lines) {
   const int NR_PROPS = toInt(lines.front());
   lines.erase(lines.begin());
-  for(int i = 0; i < NR_PROPS; i++) {
+  for(int i = 0; i < NR_PROPS; ++i) {
     const auto id = PropId(toInt(lines.front()));
     lines.erase(lines.begin());
     const int NR_TURNS = toInt(lines.front());
@@ -166,16 +166,16 @@ void Player::setupFromSaveLines(vector<string>& lines) {
   flareFuseTurns = toInt(lines.front());
   lines.erase(lines.begin());
 
-  for(int i = 0; i < int(AbilityId::endOfAbilityId); i++) {
+  for(int i = 0; i < int(AbilityId::endOfAbilityId); ++i) {
     data_->abilityVals.setVal(AbilityId(i), toInt(lines.front()));
     lines.erase(lines.begin());
   }
 
-  for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
+  for(int i = 0; i < int(Phobia::endOfPhobias); ++i) {
     phobias[i] = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
   }
-  for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+  for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
     obsessions[i] = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
   }
@@ -261,7 +261,7 @@ void Player::restoreShock(const int amountRestored,
                           const bool IS_TEMP_SHOCK_RESTORED) {
   // If an obsession is active, only restore to a certain min level
   bool isObsessionActive = 0;
-  for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+  for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
     if(obsessions[i]) {
       isObsessionActive = true;
       break;
@@ -364,7 +364,7 @@ void Player::incrInsanity() {
             if(insanity_ > 5) {
               //There is a limit to the number of phobias you can have
               int phobiasActive = 0;
-              for(int i = 0; i < int(Phobia::endOfPhobias); i++) {
+              for(int i = 0; i < int(Phobia::endOfPhobias); ++i) {
                 if(phobias[i]) {phobiasActive++;}
               }
               if(phobiasActive < 2) {
@@ -441,7 +441,7 @@ void Player::incrInsanity() {
         case 6: {
           if(insanity_ > 20) {
             int obsessionsActive = 0;
-            for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+            for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
               if(obsessions[i]) {obsessionsActive++;}
             }
             if(obsessionsActive == 0) {
@@ -676,7 +676,7 @@ void Player::onStandardTurn() {
     dynamiteFuseTurns--;
     if(dynamiteFuseTurns > 0) {
       string fuseMsg = "***F";
-      for(int i = 0; i < dynamiteFuseTurns; i++) {fuseMsg += "Z";}
+      for(int i = 0; i < dynamiteFuseTurns; ++i) {fuseMsg += "Z";}
       fuseMsg += "***";
       Log::addMsg(fuseMsg, clrYellow);
     }
@@ -714,7 +714,7 @@ void Player::onStandardTurn() {
   if(!activeMedicalBag) {testPhobias();}
 
   //If obsessions are active, raise shock to a minimum level
-  for(int i = 0; i < int(Obsession::endOfObsessions); i++) {
+  for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
     if(obsessions[i]) {
       shock_ = max(double(MIN_SHOCK_WHEN_OBSESSION), shock_);
       break;

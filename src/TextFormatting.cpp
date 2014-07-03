@@ -11,7 +11,7 @@ void readAndRemoveNextWord(string& line, string& nextWordToMk) {
 
   //Build a word until parameter string is empty,
   //or a a space character is found.
-  for(int i = 0; i < int(line.size()); i++) {
+  for(int i = 0; i < int(line.size()); ++i) {
     const char CURRENT_CHARACTER = line.at(0);
 
     line.erase(line.begin());

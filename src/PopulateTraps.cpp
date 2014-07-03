@@ -72,7 +72,7 @@ void populateStdLvl() {
         int nrPosCand = int(trapPosBucket.size());
         const bool IS_SPIDER_ROOM = type == RoomType::spider;
         const int NR_BASE_TRAPS   = min(nrPosCand / 2, IS_SPIDER_ROOM ? 3 : 1);
-        for(int i = 0; i < NR_BASE_TRAPS; i++) {
+        for(int i = 0; i < NR_BASE_TRAPS; ++i) {
           if(nrPosCand == 0) {break;}
 
           const TrapId trapType = IS_SPIDER_ROOM ?
@@ -126,7 +126,7 @@ void populateStdLvl() {
 
     int nrPosCand = int(trapPosBucket.size());
     const int NR_BASE_TRAPS = min(nrPosCand / 2, Rnd::range(1, 3));
-    for(int i = 0; i < NR_BASE_TRAPS; i++) {
+    for(int i = 0; i < NR_BASE_TRAPS; ++i) {
       if(nrPosCand == 0) {break;}
 
       const TrapId trapType = TrapId(Rnd::range(0, int(endOfTraps) - 1));

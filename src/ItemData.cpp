@@ -1321,12 +1321,12 @@ void init() {
 }
 
 void cleanup() {
-  for(size_t i = 1; i < int(ItemId::endOfItemIds); i++) delete data[i];
+  for(size_t i = 1; i < int(ItemId::endOfItemIds); ++i) delete data[i];
 }
 
 
 void storeToSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     lines.push_back(data[i]->isIdentified ? "1" : "0");
 
     if(data[i]->isScroll) {
@@ -1336,7 +1336,7 @@ void storeToSaveLines(vector<string>& lines) {
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
     data[i]->isIdentified = lines.front() == "0" ? false : true;
     lines.erase(lines.begin());
 

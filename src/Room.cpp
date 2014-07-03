@@ -214,7 +214,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
 #endif // DEMO_MODE
 
   vector<int> xPositions(MAP_W);
-  for(int i = 0; i < MAP_W; i++) {xPositions.at(i) = i;}
+  for(int i = 0; i < MAP_W; ++i) {xPositions.at(i) = i;}
   random_shuffle(xPositions.begin(), xPositions.end());
 
   vector<int> xPositionsBuilt;

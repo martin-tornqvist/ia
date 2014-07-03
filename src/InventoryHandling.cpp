@@ -72,7 +72,7 @@ void filterPlayerGeneralSlotButtonsEquip(
   vector<Item*>& general = Map::player->getInv().getGeneral();
   generalItemsToShow_.resize(0);
 
-  for(unsigned int i = 0; i < general.size(); i++) {
+  for(unsigned int i = 0; i < general.size(); ++i) {
     const Item* const item = general.at(i);
     const ItemDataT& data = item->getData();
 
@@ -110,7 +110,7 @@ void filterPlayerGeneralSlotButtonsUsable() {
 
   vector< vector<unsigned int> > groups;
 
-  for(unsigned int i = 0; i < general.size(); i++) {
+  for(unsigned int i = 0; i < general.size(); ++i) {
     const Item* const item = general.at(i);
     const string& label = item->getDefaultActivationLabel();
     if(!label.empty()) {
@@ -143,7 +143,7 @@ void filterPlayerGeneralSlotButtonsShowAll() {
   vector<Item*>& general = Map::player->getInv().getGeneral();
   generalItemsToShow_.resize(0);
   const int NR_GEN = general.size();
-  for(int i = 0; i < NR_GEN; i++) {generalItemsToShow_.push_back(i);}
+  for(int i = 0; i < NR_GEN; ++i) {generalItemsToShow_.push_back(i);}
 }
 
 void swapItems(Item** item1, Item** item2) {

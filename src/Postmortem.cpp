@@ -40,7 +40,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   TRACE << "Postmortem: Finding number of killed monsters" << endl;
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMonsters = 0;
-  for(int i = actor_player + 1; i < endOfActorIds; i++) {
+  for(int i = actor_player + 1; i < endOfActorIds; ++i) {
     const ActorDataT& d = ActorData::data[i];
     if(d.nrKills > 0) {
       nrKillsTotAllMonsters += d.nrKills;
@@ -118,7 +118,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   linesRef.push_back(StrAndClr(" The last messages:", clrHeading));
   const vector< vector<Msg> >& history = Log::getHistory();
   int historyElement = max(0, int(history.size()) - 20);
-  for(unsigned int i = historyElement; i < history.size(); i++) {
+  for(unsigned int i = historyElement; i < history.size(); ++i) {
     string row = "";
     for(unsigned int ii = 0; ii < history.at(i).size(); ii++) {
       string msgStr = "";
@@ -280,7 +280,7 @@ void renderMenu(const MenuBrowser& browser) {
 
   Pos pos(1, 1);
 
-  for(unsigned int i = 0; i < art.size(); i++) {
+  for(unsigned int i = 0; i < art.size(); ++i) {
     Renderer::drawText(art.at(i), Panel::screen, pos, clrWhiteHigh);
     pos.y++;
   }

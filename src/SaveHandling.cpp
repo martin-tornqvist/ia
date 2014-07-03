@@ -68,7 +68,7 @@ void writeFile(const vector<string>& lines) {
   file.open("data/save", ios::trunc);
 
   if(file.is_open()) {
-    for(unsigned int i = 0; i < lines.size(); i++) {
+    for(unsigned int i = 0; i < lines.size(); ++i) {
       file << lines.at(i);
       if(i != lines.size() - 1) {
         file << endl;

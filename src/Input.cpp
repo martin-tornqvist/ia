@@ -538,7 +538,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   //----------------------------------- DROP ITEMS AROUND PLAYER
   else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
-      for(int i = 1; i < int(ItemId::endOfItemIds); i++) {
+      for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
         const ItemDataT* const data = ItemData::data[i];
         if(
           !data->isIntrinsic &&

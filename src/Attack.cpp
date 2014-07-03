@@ -555,7 +555,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   const int NR_PROJECTILES = IS_MACHINE_GUN ?
                              NR_MG_PROJECTILES : 1;
 
-  for(int i = 0; i < NR_PROJECTILES; i++) {
+  for(int i = 0; i < NR_PROJECTILES; ++i) {
     Projectile* const p = new Projectile;
     p->setAttData(new RangedAttData(
                     attacker, wpn, aimPos, attacker.pos));
@@ -618,7 +618,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
     projectilePath.size() + (NR_PROJECTILES - 1) *
     NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES;
 
-  for(int i = 1; i < SIZE_OF_PATH_PLUS_ONE; i++) {
+  for(int i = 1; i < SIZE_OF_PATH_PLUS_ONE; ++i) {
 
     for(int p = 0; p < NR_PROJECTILES; p++) {
 
@@ -882,7 +882,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
     SndEmit::emitSnd(snd);
   }
 
-  for(size_t i = 1; i < path.size(); i++) {
+  for(size_t i = 1; i < path.size(); ++i) {
     //If travelled more than two steps after a killed monster, stop projectile.
     if(nrMonKilledInElem != -1 && int(i) > nrMonKilledInElem + 1) {break;}
 

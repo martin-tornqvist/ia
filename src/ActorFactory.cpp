@@ -101,7 +101,7 @@ Actor* mk(const ActorId id, const Pos& pos) {
 void deleteAllMonsters() {
   vector<Actor*>& actors = GameTime::actors_;
 
-  for(size_t i = 0; i < actors.size(); i++) {
+  for(size_t i = 0; i < actors.size(); ++i) {
     if(actors.at(i) != Map::player) {
       GameTime::eraseActorInElement(i);
       i--;
@@ -129,7 +129,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
   vector<Pos> positionsToAnimate;
   positionsToAnimate.resize(0);
 
-  for(int i = 0; i < NR_TO_SPAWN; i++) {
+  for(int i = 0; i < NR_TO_SPAWN; ++i) {
     const Pos&    pos = freeCells.at(i);
     const ActorId id  = monsterIds.at(i);
 

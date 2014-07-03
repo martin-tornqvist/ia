@@ -25,7 +25,7 @@ void drawLocationInfo() {
 
     if(Map::dlvl > 0 && Map::dlvl < FIRST_CAVERN_LVL) {
       const vector<Room*>& rooms = Map::roomList;
-      for(size_t i = 0; i < rooms.size(); i++) {
+      for(size_t i = 0; i < rooms.size(); ++i) {
         const Room* const room = rooms.at(i);
         const Pos& p0 = room->r_.p0;
         const Pos& p1 = room->r_.p1;
@@ -200,7 +200,7 @@ void drawInfoLines() {
   vector<StrAndClr> propsLine;
   Map::player->getPropHandler().getPropsInterfaceLine(propsLine);
   const int NR_PROPS = propsLine.size();
-  for(int i = 0; i < NR_PROPS; i++) {
+  for(int i = 0; i < NR_PROPS; ++i) {
     const StrAndClr& curPropLabel = propsLine.at(i);
     Renderer::drawText(
       curPropLabel.str, Panel::charLines, pos, curPropLabel.clr);
@@ -212,7 +212,7 @@ void drawInfoLines() {
 //  //TODO This should be collected from applied and inventory by the Property handler
 //  const vector<Prop*>& appliedProps =
 //    player->getPropHandler().appliedProps_;
-//  for(unsigned int i = 0; i < appliedProps.size(); i++) {
+//  for(unsigned int i = 0; i < appliedProps.size(); ++i) {
 //    Prop* const prop = appliedProps.at(i);
 //    const PropAlignment alignment = prop->getAlignment();
 //    const SDL_Color statusColor =

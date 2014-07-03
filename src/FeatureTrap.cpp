@@ -674,7 +674,7 @@ void TrapSummonMonster::trigger(
 
   TRACE << "TrapSummonMonster: Finding summon candidates" << endl;
   vector<ActorId> summonBucket;
-  for(int i = 1; i < endOfActorIds; i++) {
+  for(int i = 1; i < endOfActorIds; ++i) {
     const ActorDataT& data = ActorData::data[i];
     if(data.canBeSummoned && data.spawnMinDLVL <= Map::dlvl + 3) {
       summonBucket.push_back(ActorId(i));
