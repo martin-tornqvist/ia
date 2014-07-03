@@ -181,7 +181,7 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(line.at(0) == origin);
   CHECK(line.at(1) == Pos(1, 0));
   CHECK(line.at(2) == Pos(2, 0));
-  CHECK(line.at(3) ==  Pos(3, 0));
+  CHECK(line.at(3) == Pos(3, 0));
 
   LineCalc::calcNewLine(origin, Pos(-3, 0), true, 999, true, line);
   CHECK(line.size() == 4);

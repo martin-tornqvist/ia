@@ -3,7 +3,7 @@
 
 #include <string>
 
-const unsigned int PLAYER_NAME_MAX_LENGTH = 12;
+const size_t PLAYER_NAME_MAX_LENGTH = 12;
 
 const std::string gameVersionStr = "v16.0";
 
@@ -16,6 +16,7 @@ const int MAP_W               = 80;
 const int MAP_H               = 22;
 const int MAP_W_HALF          = MAP_W / 2;
 const int MAP_H_HALF          = MAP_H / 2;
+
 const int LOG_H               = 2;
 const int MAP_OFFSET_H        = LOG_H;
 const int CHAR_LINES_OFFSET_H = MAP_OFFSET_H + MAP_H;
@@ -52,8 +53,8 @@ const int     FOV_MAX_W_INT     = (FOV_MAX_RADI_INT * 2) + 1;
 const double  FOV_MAX_RADI_DB   = double(FOV_MAX_RADI_INT);
 const double  FOV_MAX_W_DB      = double(FOV_MAX_W_INT);
 
-const int SND_DIST_NORMAL = FOV_STD_RADI_INT;
-const int SND_DIST_LOUD   = SND_DIST_NORMAL * 2;
+const int SND_DIST_NORMAL       = FOV_STD_RADI_INT;
+const int SND_DIST_LOUD         = SND_DIST_NORMAL * 2;
 
 const int THROWING_RANGE_LIMIT  = FOV_STD_RADI_INT + 3;
 

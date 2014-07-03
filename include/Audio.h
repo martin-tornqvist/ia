@@ -38,7 +38,7 @@ enum class SfxId {
   electricLantern,
   potionQuaff,
   spellGeneric,
-  insanityRising,
+  insanityRise,
   glop,
   death,
 

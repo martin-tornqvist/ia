@@ -104,7 +104,7 @@ bool isAreaInsideMap(const Rect& area);
 bool isPosAdj(const Pos& pos1, const Pos& pos2,
               const bool COUNT_SAME_CELL_AS_NEIGHBOUR);
 
-Pos getClosestPos(const Pos& c, const std::vector<Pos>& positions);
+Pos getClosestPos(const Pos& p, const std::vector<Pos>& positions);
 
 Actor* getRandomClosestActor(const Pos& c, const std::vector<Actor*>& actors);
 

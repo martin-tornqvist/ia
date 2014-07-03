@@ -26,8 +26,8 @@ void draw(const string& curString) {
   const string NAME_STR =
     curString.size() < PLAYER_NAME_MAX_LENGTH ? curString + "_" :
     curString;
-  const int NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
-  const int NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
+  const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
+  const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
   Renderer::drawText(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
                      clrNosfTealLgt);
   Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));

@@ -48,7 +48,7 @@ void runStandardTurnEvents() {
   int regenSpiNTurns = 12;
 
   for(size_t i = 0; i < actors_.size(); i++) {
-    Actor* const actor = actors_.at(i);
+    Actor* const actor = actors_[i];
 
     actor->getPropHandler().tick(propTurnModeStandard, visionBlockers);
 
@@ -174,11 +174,10 @@ void addFeatureMob(FeatureMob* const feature) {
 }
 
 void eraseFeatureMob(FeatureMob* const feature, const bool DESTROY_OBJECT) {
-  const int SIZE = featureMobs_.size();
-  for(int i = 0; i < SIZE; i++) {
-    if(featureMobs_.at(i) == feature) {
+  for(auto it = featureMobs_.begin(); it != featureMobs_.end(); ++it) {
+    if(*it == feature) {
       if(DESTROY_OBJECT) {delete feature;}
-      featureMobs_.erase(featureMobs_.begin() + i);
+      featureMobs_.erase(it);
       return;
     }
   }
@@ -189,7 +188,7 @@ void eraseAllFeatureMobs() {
   featureMobs_.resize(0);
 }
 
-void eraseActorInElement(const unsigned int i) {
+void eraseActorInElement(const size_t i) {
   if(!actors_.empty()) {
     delete actors_.at(i);
     actors_.erase(actors_.begin() + i);
@@ -238,7 +237,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
 
       curActorVectorPos_++;
 
-      if((unsigned int)curActorVectorPos_ >= actors_.size()) {
+      if((size_t)curActorVectorPos_ >= actors_.size()) {
         curActorVectorPos_ = 0;
         curTurnTypePos_++;
         if(curTurnTypePos_ == int(TurnType::endOfTurnType)) {

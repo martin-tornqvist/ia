@@ -188,19 +188,18 @@ int taxicabDist(const Pos& p0, const Pos& p1) {
   return abs(p1.x - p0.x) + abs(p1.y - p0.y);
 }
 
-Pos getClosestPos(const Pos& c, const vector<Pos>& positions) {
-  int distToNearest   = INT_MAX;
-  int closestElement  = 0;
-  const int NR_POSITIONS = positions.size();
-  for(int i = 0; i < NR_POSITIONS; i++) {
-    const int CUR_DIST = kingDist(c, positions.at(i));
+Pos getClosestPos(const Pos& p, const vector<Pos>& positions) {
+  int distToNearest = INT_MAX;
+  Pos closestPos;
+  for(Pos pCmp : positions) {
+    const int CUR_DIST = kingDist(p, pCmp);
     if(CUR_DIST < distToNearest) {
       distToNearest = CUR_DIST;
-      closestElement = i;
+      closestPos    = pCmp;
     }
   }
 
-  return positions.at(closestElement);
+  return closestPos;
 }
 
 Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {

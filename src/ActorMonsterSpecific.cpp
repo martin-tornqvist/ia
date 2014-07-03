@@ -71,8 +71,7 @@ string Cultist::getCultistPhrase() {
     phraseBucket.push_back("Apigami!");
   }
 
-  return phraseBucket.at(
-           Rnd::range(0, phraseBucket.size() - 1));
+  return phraseBucket.at(Rnd::range(0, phraseBucket.size() - 1));
 }
 
 void Cultist::mkStartItems() {

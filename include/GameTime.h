@@ -29,7 +29,7 @@ int getTurn();
 
 Actor* getCurActor();
 
-void eraseActorInElement(const unsigned int i);
+void eraseActorInElement(const size_t i);
 
 void getFeatureMobsAtPos(const Pos& pos, std::vector<FeatureMob*>& vectorRef);
 

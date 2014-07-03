@@ -130,7 +130,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
   positionsToAnimate.resize(0);
 
   for(int i = 0; i < NR_TO_SPAWN; i++) {
-    const Pos&      pos = freeCells.at(i);
+    const Pos&    pos = freeCells.at(i);
     const ActorId id  = monsterIds.at(i);
 
     Actor*   const actor    = mk(id, pos);

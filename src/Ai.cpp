@@ -28,10 +28,10 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
       if(!monsterActing->spellsKnown.empty()) {
         vector<Spell*> spellBucket = monsterActing->spellsKnown;
 
-        while(!spellBucket.empty()) {
-          const unsigned int ELEMENT = Rnd::range(0, spellBucket.size() - 1);
+        std::random_shuffle(spellBucket.begin(), spellBucket.end());
 
-          Spell* const spell = spellBucket.at(ELEMENT);
+        while(!spellBucket.empty()) {
+          Spell* const spell = spellBucket.back();
 
           if(spell->isGoodForMonsterToCastNow(monsterActing)) {
             const int CUR_SPI = monsterActing->getSpi();
@@ -57,7 +57,7 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
             }
             return false;
           } else {
-            spellBucket.erase(spellBucket.begin() + ELEMENT);
+            spellBucket.pop_back();
           }
         }
       }

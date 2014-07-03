@@ -214,6 +214,7 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
 #ifdef MK_CRUMBLE_ROOMS
       if(Rnd::oneIn(5)) {
         mkCrumbleRoom(auxRectWithBorder, doorP);
+        TODO Instead of deleting the room, there should be a crumbleRoom type
         Map::deleteAndRemoveRoomFromList(room); //Don't apply themes etc
         room = nullptr;
       }
@@ -423,38 +424,38 @@ void randomlyBlockRegions(Region regions[3][3]) {
 }
 
 void reserveRiver(Region regions[3][3]) {
-  //TODO Such placeholder, wow
-  const HorizontalVertical dir = hor; //Rnd::coinToss() ? hor : ver;
+  TRACE_FUNC_BEGIN;
 
-  Rect rReserved;
+  Rect      roomRect;
+  Region*   riverRegion       = nullptr;
+  const int RESERVED_PADDING  = 2;
 
-  const int RESERVED_PADDING = 2;
+  auto initArea = [&](int& len0, int& len1, int& breadth0, int& breadth1,
+  const Pos & reg0, const Pos & reg1, const Pos & reg2) {
+    roomRect = Rect(regions[reg0.x][reg0.y].r_.p0,
+                    regions[reg2.x][reg2.y].r_.p1);
 
-  Region* riverRegion = nullptr;
+                    TRACE_VERBOSE << "a " << roomRect.p1.y << endl;
+
+    len0--; //Extend room rectangle to map edge
+    len1++;
+    const int C = (breadth1 + breadth0) / 2;
+    breadth0    = C - RESERVED_PADDING;
+    breadth1    = C + RESERVED_PADDING;
+    riverRegion = &regions[reg0.x][reg1.y];
+  };
+
+  const HorizontalVertical dir = ver; //Rnd::coinToss() ? hor : ver;
 
   if(dir == hor) {
-    rReserved = Rect(regions[0][1].r_.p0, regions[2][1].r_.p1);
-    rReserved.p0.x--; //Extend region to map edge
-    rReserved.p1.x++;
-    const int Y = (rReserved.p1.y + rReserved.p0.y) / 2;
-    rReserved.p0.y = Y - RESERVED_PADDING;
-    rReserved.p1.y = Y + RESERVED_PADDING;
-    riverRegion = &regions[0][1];
-    assert(rReserved.p0.y >= riverRegion->r_.p0.y);
-    assert(rReserved.p1.y <= riverRegion->r_.p1.y);
+    initArea(roomRect.p0.x, roomRect.p1.x, roomRect.p0.y, roomRect.p1.y,
+             Pos(0, 1), Pos(1, 1), Pos(2, 1));
   } else {
-    rReserved = Rect(regions[1][0].r_.p0, regions[1][2].r_.p1);
-    rReserved.p0.y--; //Extend region to map edge
-    rReserved.p1.y++;
-    const int X = (rReserved.p1.x + rReserved.p0.x) / 2;
-    rReserved.p0.x = X - RESERVED_PADDING;
-    rReserved.p1.x = X + RESERVED_PADDING;
-    riverRegion = &regions[1][0];
-    assert(rReserved.p0.x >= riverRegion->r_.p0.x);
-    assert(rReserved.p1.x <= riverRegion->r_.p1.x);
+    initArea(roomRect.p0.y, roomRect.p1.y, roomRect.p0.x, roomRect.p1.x,
+             Pos(1, 0), Pos(1, 1), Pos(1, 2));
   }
 
-  RiverRoom* riverRoom    = new RiverRoom(rReserved, dir);
+  RiverRoom* riverRoom    = new RiverRoom(roomRect, dir);
   riverRegion->mainRoom_  = riverRoom;
   riverRegion->isFree_    = false;
 
@@ -466,20 +467,26 @@ void reserveRiver(Region regions[3][3]) {
 
   Map::roomList.push_back(riverRoom);
 
-  auto mk = [&](const int L_0, const int L_1, const int B_0, const int B_1) {
-    for(int y = B_0; y <= B_1; y++) {
-      for(int x = L_0 + 1; x <= L_1 - 1; x++) {
+  auto mk = [&](const int X0, const int X1, const int Y0, const int Y1) {
+    TRACE_VERBOSE << "Reserving river space with floor cells "
+                  << "X0: " << X0 << " X1: " << X1 << " Y0: " << Y0 << " Y1: " << Y1
+                  << endl;
+    for(int y = Y0; y <= Y1; y++) {
+      for(int x = X0; x <= X1; x++) {
         //Just put floor for now, water will be placed later
-        FeatureFactory::mk(FeatureId::floor, Pos(x, y), nullptr);
+        FeatureFactory::mk(FeatureId::floor, Pos(x, y));
         Map::roomMap[x][y] = riverRoom;
       }
     }
   };
+
   if(dir == hor) {
-    mk(rReserved.p0.x, rReserved.p1.x, rReserved.p0.y, rReserved.p1.y);
+    mk(roomRect.p0.x + 1, roomRect.p1.x - 1,  roomRect.p0.y,      roomRect.p1.y);
   } else {
-    mk(rReserved.p0.y, rReserved.p1.y, rReserved.p1.x, rReserved.p1.x);
+    mk(roomRect.p0.x,     roomRect.p1.x,      roomRect.p0.y + 1,  roomRect.p1.y - 1);
   }
+
+  TRACE_FUNC_END;
 }
 
 void mkCaves(Region regions[3][3]) {
@@ -679,15 +686,11 @@ void mkSubRooms() {
                   if(
                     x == roomX0Y0.x - 1 || x == roomX1Y1.x + 1 ||
                     y == roomX0Y0.y - 1 || y == roomX1Y1.y + 1) {
-                    if(
-                      Map::cells[x][y].featureStatic->getId() !=
-                      FeatureId::wall) {
+                    if(Map::cells[x][y].featureStatic->getId() != FeatureId::wall) {
                       isSpaceFree = false;
                     }
                   } else {
-                    if(
-                      Map::cells[x][y].featureStatic->getId() !=
-                      FeatureId::floor) {
+                    if(Map::cells[x][y].featureStatic->getId() != FeatureId::floor) {
                       isSpaceFree = false;
                     }
                   }
