@@ -29,8 +29,8 @@ void calcFovDeltaLines() {
 }
 
 void calcfovAbsDistances_() {
-  for(int y = 0; y < FOV_MAX_W_INT; y++) {
-    for(int x = 0; x < FOV_MAX_W_INT; x++) {
+  for(int y = 0; y < FOV_MAX_W_INT; ++y) {
+    for(int x = 0; x < FOV_MAX_W_INT; ++x) {
       fovAbsDistances_[x][y] = 0;
     }
   }
@@ -44,8 +44,8 @@ void calcfovAbsDistances_() {
 
   const int R_INT = FOV_MAX_RADI_INT;
 
-  for(int x = 0; x <= R_INT * 2; x++) {
-    for(int y = 0; y <= R_INT * 2; y++) {
+  for(int x = 0; x <= R_INT * 2; ++x) {
+    for(int y = 0; y <= R_INT * 2; ++y) {
       deltaX = double(x);
       deltaX -= FOV_MAX_RADI_DB;
       deltaY = double(y);

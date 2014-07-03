@@ -124,8 +124,8 @@ void getMoveBucket(Monster& self, vector<Pos>& dirsToMk) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksActor(self, true), blocked);
 
-  for(int x = -1; x <= 1; x++) {
-    for(int y = -1; y <= 1; y++) {
+  for(int x = -1; x <= 1; ++x) {
+    for(int y = -1; y <= 1; ++y) {
       if(x != OLD_X || y != OLD_Y) {
         const int NEW_X = OLD_X + x;
         const int NEW_Y = OLD_Y + y;
@@ -488,8 +488,8 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
       vector<PropId> props;
       monster.getPropHandler().getAllActivePropIds(props);
 
-      for(int y = 1; y < MAP_H - 1; y++) {
-        for(int x = 1; x < MAP_W - 1; x++) {
+      for(int y = 1; y < MAP_H - 1; ++y) {
+        for(int x = 1; x < MAP_W - 1; ++x) {
           const auto* const f = Map::cells[x][y].featureStatic;
           if(!f->canMove(props)) {
 

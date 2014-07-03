@@ -34,8 +34,8 @@ void getFloorCellsInRoom(const Room& room, const bool floor[MAP_W][MAP_H],
                          vector<Pos>& out) {
   assert(Utils::isAreaInsideMap(room.r_));
 
-  for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
-    for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
+  for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y) {
+    for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x) {
       if(floor[x][y]) {out.push_back(Pos(x, y));}
     }
   }
@@ -72,8 +72,8 @@ void cutRoomCorners(const Room& room) {
     }
   }
 
-  for(int y = roomP0.y; y <= roomP1.y; y++) {
-    for(int x = roomP0.x; x <= roomP1.x; x++) {
+  for(int y = roomP0.y; y <= roomP1.y; ++y) {
+    for(int x = roomP0.x; x <= roomP1.x; ++x) {
       const bool X_OK = x < crossX0Y0.x ? (c[0] || c[2]) :
                         x > crossX1Y1.x ? (c[1] || c[3]) : false;
       const bool Y_OK = y < crossX0Y0.y ? (c[0] || c[1]) :
@@ -117,8 +117,8 @@ void mkPillarsInRoom(const Room& room) {
     }
   } else {
     //Scatter pillars randomly
-    for(int y = roomP0.y + 1; y <= roomP1.y - 1; y++) {
-      for(int x = roomP0.x + 1; x <= roomP1.x - 1; x++) {
+    for(int y = roomP0.y + 1; y <= roomP1.y - 1; ++y) {
+      for(int x = roomP0.x + 1; x <= roomP1.x - 1; ++x) {
         const Pos p(x + Rnd::range(-1, 1), y + Rnd::range(-1, 1));
         if(isFree(p) && Rnd::oneIn(5)) {FeatureFactory::mk(pillarId, p);}
       }
@@ -140,8 +140,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   bool roomCells[MAP_W][MAP_H];
   bool roomFloorCells[MAP_W][MAP_H];
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       const bool IS_ROOM_CELL = Map::roomMap[x][y] == &room;
       roomCells[x][y]         = IS_ROOM_CELL;
       const auto* const f     = Map::cells[x][y].featureStatic;
@@ -152,8 +152,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   bool roomCellsExpanded[MAP_W][MAP_H];
   MapParse::expand(roomCells, roomCellsExpanded, 1, true);
 
-  for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; y++) {
-    for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; x++) {
+  for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; ++y) {
+    for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; ++x) {
       //Condition (1)
       if(Map::cells[x][y].featureStatic->getId() != FeatureId::wall) {continue;}
 
@@ -196,8 +196,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
 //  const Pos p0 = Pos(min(area.p0.x, area.p1.x), min(area.p0.y, area.p1.y));
 //  const Pos p1 = Pos(max(area.p0.x, area.p1.x), max(area.p0.y, area.p1.y));
 //
-//  for(int x = p0.x; x <= p1.x; x++) {
-//    for(int y = p0.y; y <= p1.y; y++) {
+//  for(int x = p0.x; x <= p1.x; ++x) {
+//    for(int y = p0.y; y <= p1.y; ++y) {
 //      FeatureFactory::mk(id, Pos(x, y), nullptr);
 //    }
 //  }
@@ -263,8 +263,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
     bool blocked[MAP_W][MAP_H];
     Utils::resetArray(blocked, false);
 
-    for(int y = 0; y < MAP_H; y++) {
-      for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; ++y) {
+      for(int x = 0; x < MAP_W; ++x) {
         blocked[x][y] =
           Map::roomMap[x][y] ||
           Map::cells[x][y].featureStatic->getId() != FeatureId::wall;
@@ -340,16 +340,16 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
 }
 
 void backupMap() {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       backup[x][y] = Map::cells[x][y].featureStatic->getId();
     }
   }
 }
 
 void restoreMap() {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       FeatureFactory::mk(backup[x][y], Pos(x, y));
     }
   }

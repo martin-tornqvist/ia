@@ -524,8 +524,8 @@ void Player::addTmpShockFromFeatures() {
 bool Player::isStandingInOpenSpace() const {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
-  for(int y = pos.y - 1; y <= pos.y + 1; y++) {
-    for(int x = pos.x - 1; x <= pos.x + 1; x++) {
+  for(int y = pos.y - 1; y <= pos.y + 1; ++y) {
+    for(int x = pos.x - 1; x <= pos.x + 1; ++x) {
       if(blocked[x][y]) {return false;}
     }
   }
@@ -536,8 +536,8 @@ bool Player::isStandingInCrampedSpace() const {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   int blockCount = 0;
-  for(int y = pos.y - 1; y <= pos.y + 1; y++) {
-    for(int x = pos.x - 1; x <= pos.x + 1; x++) {
+  for(int y = pos.y - 1; y <= pos.y + 1; ++y) {
+    for(int x = pos.x - 1; x <= pos.x + 1; ++x) {
       if(blocked[x][y]) {
         blockCount++;
         if(blockCount >= 6) {return true;}
@@ -879,8 +879,8 @@ void Player::onStandardTurn() {
       int x1 = min(MAP_W - 1, pos.x + R);
       int y1 = min(MAP_H - 1, pos.y + R);
 
-      for(int y = y0; y <= y1; y++) {
-        for(int x = x0; x <= x1; x++) {
+      for(int y = y0; y <= y1; ++y) {
+        for(int x = x0; x <= x1; ++x) {
           if(Map::cells[x][y].isSeenByPlayer) {
             auto* f = Map::cells[x][y].featureStatic;
 
@@ -1161,24 +1161,24 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
     Pos p1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
 
     bool visionBlockers[MAP_W][MAP_H];
-    for(int y = p0.y; y <= p1.y; y++) {
-      for(int x = p0.x; x <= p1.x; x++) {
+    for(int y = p0.y; y <= p1.y; ++y) {
+      for(int x = p0.x; x <= p1.x; ++x) {
         const auto* const f = Map::cells[x][y].featureStatic;
         visionBlockers[x][y] = !f->isVisionPassable();
       }
     }
 
     Fov::runFovOnArray(visionBlockers, pos, myLight, false);
-    for(int y = p0.y; y <= p1.y; y++) {
-      for(int x = p0.x; x <= p1.x; x++) {
+    for(int y = p0.y; y <= p1.y; ++y) {
+      for(int x = p0.x; x <= p1.x; ++x) {
         if(myLight[x][y]) {
           light[x][y] = true;
         }
       }
     }
   } else if(isUsingLightGivingItemSmall) {
-    for(int y = pos.y - 1; y <= pos.y + 1; y++) {
-      for(int x = pos.x - 1; x <= pos.x + 1; x++) {
+    for(int y = pos.y - 1; y <= pos.y + 1; ++y) {
+      for(int x = pos.x - 1; x <= pos.x + 1; ++x) {
         light[x][y] = true;
       }
     }
@@ -1186,8 +1186,8 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
 }
 
 void Player::updateFov() {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       Map::cells[x][y].isSeenByPlayer = false;
     }
   }
@@ -1202,16 +1202,16 @@ void Player::updateFov() {
   if(propHandler_->allowSee()) {FOVhack();}
 
   if(Init::isCheatVisionEnabled) {
-    for(int y = 0; y < MAP_H; y++) {
-      for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; ++y) {
+      for(int x = 0; x < MAP_W; ++x) {
         Map::cells[x][y].isSeenByPlayer = true;
       }
     }
   }
 
   //Explore
-  for(int x = 0; x < MAP_W; x++) {
-    for(int y = 0; y < MAP_H; y++) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       Cell& cell = Map::cells[x][y];
       const bool IS_BLOCKING = CellPred::BlocksMoveCmn(false).check(cell);
       //Do not explore dark floor cells
@@ -1229,8 +1229,8 @@ void Player::FOVhack() {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       if(visionBlockers[x][y] && blocked[x][y]) {
         for(int dy = -1; dy <= 1; dy++) {
           for(int dx = -1; dx <= 1; dx++) {

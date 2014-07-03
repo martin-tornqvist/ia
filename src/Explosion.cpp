@@ -65,8 +65,8 @@ void getPositionsReached(const Rect& area, const Pos& origin,
                          bool blocked[MAP_W][MAP_H],
                          vector< vector<Pos> >& posListRef) {
   vector<Pos> line;
-  for(int y = area.p0.y; y <= area.p1.y; y++) {
-    for(int x = area.p0.x; x <= area.p1.x; x++) {
+  for(int y = area.p0.y; y <= area.p1.y; ++y) {
+    for(int x = area.p0.x; x <= area.p1.x; ++x) {
       const Pos pos(x, y);
       const int DIST = Utils::kingDist(pos, origin);
       bool isReached = true;
@@ -122,8 +122,8 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   Actor* livingActors[MAP_W][MAP_H];
   vector<Actor*> corpses[MAP_W][MAP_H];
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       livingActors[x][y] = nullptr;
       corpses[x][y].resize(0);
     }

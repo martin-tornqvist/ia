@@ -25,19 +25,19 @@ namespace IntroForest {
 namespace {
 
 void mkForestLimit() {
-  for(int y = 0; y < MAP_H; y++) {
+  for(int y = 0; y < MAP_H; ++y) {
     FeatureFactory::mk(FeatureId::tree, Pos(0, y));
   }
 
-  for(int x = 0; x < MAP_W; x++) {
+  for(int x = 0; x < MAP_W; ++x) {
     FeatureFactory::mk(FeatureId::tree, Pos(x, 0));
   }
 
-  for(int y = 0; y < MAP_H; y++) {
+  for(int y = 0; y < MAP_H; ++y) {
     FeatureFactory::mk(FeatureId::tree, Pos(MAP_W - 1, y));
   }
 
-  for(int x = 0; x < MAP_W; x++) {
+  for(int x = 0; x < MAP_W; ++x) {
     FeatureFactory::mk(FeatureId::tree, Pos(x, MAP_H - 1));
   }
 }
@@ -45,8 +45,8 @@ void mkForestLimit() {
 void mkForestOuterTreeline() {
   const int MAX_LEN = 2;
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x <= MAX_LEN; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x <= MAX_LEN; ++x) {
       if(Rnd::range(1, 4) > 1 || x == 0) {
         FeatureFactory::mk(FeatureId::tree, Pos(x, y));
       } else {
@@ -55,8 +55,8 @@ void mkForestOuterTreeline() {
     }
   }
 
-  for(int x = 0; x < MAP_W; x++) {
-    for(int y = 0; y < MAX_LEN; y++) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAX_LEN; ++y) {
       if(Rnd::range(1, 4) > 1 || y == 0) {
         FeatureFactory::mk(FeatureId::tree, Pos(x, y));
       } else {
@@ -65,7 +65,7 @@ void mkForestOuterTreeline() {
     }
   }
 
-  for(int y = 0; y < MAP_H; y++) {
+  for(int y = 0; y < MAP_H; ++y) {
     for(int x = MAP_W - 1; x >= MAP_W - MAX_LEN; x--) {
       if(Rnd::range(1, 4) > 1 || x == MAP_W - 1) {
         FeatureFactory::mk(FeatureId::tree, Pos(x, y));
@@ -75,7 +75,7 @@ void mkForestOuterTreeline() {
     }
   }
 
-  for(int x = 0; x < MAP_W; x++) {
+  for(int x = 0; x < MAP_W; ++x) {
     for(int y = MAP_H - 1; y >= MAP_H - MAX_LEN; y--) {
       if(Rnd::range(1, 4) > 1 || y == MAP_H - 1) {
         FeatureFactory::mk(FeatureId::tree, Pos(x, y));
@@ -255,8 +255,8 @@ void mkForestTrees(const Pos& stairsPos) {
 
 bool run() {
   int grass = 0;
-  for(int y = 1; y < MAP_H - 1; y++) {
-    for(int x = 1; x < MAP_W - 1; x++) {
+  for(int y = 1; y < MAP_H - 1; ++y) {
+    for(int x = 1; x < MAP_W - 1; ++x) {
       const Pos c(x, y);
       grass = Rnd::range(1, 12);
       auto id = FeatureId::empty;

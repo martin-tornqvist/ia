@@ -106,8 +106,8 @@ void loadFont() {
 
   Uint32 bgClr = SDL_MapRGB(fontSurfaceTmp->format, 0, 0, 0);
 
-  for(int y = 0; y < fontSurfaceTmp->h; y++) {
-    for(int x = 0; x < fontSurfaceTmp->w; x++) {
+  for(int y = 0; y < fontSurfaceTmp->h; ++y) {
+    for(int x = 0; x < fontSurfaceTmp->w; ++x) {
       fontPixelData_[x][y] = getPixel(fontSurfaceTmp, x, y) != bgClr;
     }
   }
@@ -123,8 +123,8 @@ void loadTiles() {
   SDL_Surface* tileSurfaceTmp = IMG_Load(tilesImgName.data());
 
   Uint32 imgClr = SDL_MapRGB(tileSurfaceTmp->format, 255, 255, 255);
-  for(int y = 0; y < tileSurfaceTmp->h; y++) {
-    for(int x = 0; x < tileSurfaceTmp->w; x++) {
+  for(int y = 0; y < tileSurfaceTmp->h; ++y) {
+    for(int x = 0; x < tileSurfaceTmp->w; ++x) {
       tilePixelData_[x][y] = getPixel(tileSurfaceTmp, x, y) == imgClr;
     }
   }
@@ -685,7 +685,7 @@ void drawPopupBox(const Rect& border, const Panel panel,
   //Vertical bars
   const int Y0_VERT = border.p0.y + 1;
   const int Y1_VERT = border.p1.y - 1;
-  for(int y = Y0_VERT; y <= Y1_VERT; y++) {
+  for(int y = Y0_VERT; y <= Y1_VERT; ++y) {
     if(IS_TILES) {
       drawTile(TileId::popupVerticalBar,
                panel, Pos(border.p0.x, y), clr, clrBlack);
@@ -702,7 +702,7 @@ void drawPopupBox(const Rect& border, const Panel panel,
   //Horizontal bars
   const int X0_VERT = border.p0.x + 1;
   const int X1_VERT = border.p1.x - 1;
-  for(int x = X0_VERT; x <= X1_VERT; x++) {
+  for(int x = X0_VERT; x <= X1_VERT; ++x) {
     if(IS_TILES) {
       drawTile(TileId::popupHorizontalBar,
                panel, Pos(x, border.p0.y), clr, clrBlack);
@@ -759,8 +759,8 @@ void drawMap() {
   const bool IS_TILES = Config::isTilesMode();
 
   //---------------- INSERT STATIC FEATURES AND BLOOD INTO ARRAY
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
 
       if(Map::cells[x][y].isSeenByPlayer) {
 
@@ -813,8 +813,8 @@ void drawMap() {
     }
   }
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       curDrw = &renderArray[x][y];
       if(Map::cells[x][y].isSeenByPlayer) {
         //---------------- INSERT ITEMS INTO ARRAY
@@ -896,8 +896,8 @@ void drawMap() {
   }
 
   //---------------- DRAW THE GRID
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
 
       tmpDrw = renderArray[x][y];
 

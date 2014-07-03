@@ -22,8 +22,8 @@ namespace CaveLvl {
 bool run() {
   Map::resetMap();
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       Wall* const wall =
         static_cast<Wall*>(FeatureFactory::mk(FeatureId::wall, Pos(x, y)));
       wall->wallType    = WallType::cave;
@@ -68,8 +68,8 @@ bool run() {
   int floodFill[MAP_W][MAP_H];
   FloodFill::run(origin, blocked, floodFill, 99999, Pos(-1, -1), true);
   vector<PosAndVal> floodVals;
-  for(int y = 1; y < MAP_H - 1; y++) {
-    for(int x = 1; x < MAP_W - 1; x++) {
+  for(int y = 1; y < MAP_H - 1; ++y) {
+    for(int x = 1; x < MAP_W - 1; ++x) {
       const int VAL = floodFill[x][y];
       if(VAL > 0) {floodVals.push_back(PosAndVal(Pos(x, y), VAL));}
     }

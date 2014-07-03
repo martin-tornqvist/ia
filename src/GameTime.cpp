@@ -98,8 +98,8 @@ void runStandardTurnEvents() {
   for(auto* f : mobsCpy) {f->newTurn();}
 
   //Update timed features
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       Map::cells[x][y].featureStatic->newTurn();
     }
   }
@@ -293,8 +293,8 @@ void actorDidAct(const bool IS_FREE_TURN) {
 void updateLightMap() {
   bool lightTmp[MAP_W][MAP_H];
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       Map::cells[x][y].isLight = false;
       lightTmp[x][y] = false;
     }
@@ -312,8 +312,8 @@ void updateLightMap() {
     featureMobs_.at(i)->addLight(lightTmp);
   }
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       Map::cells[x][y].featureStatic->addLight(lightTmp);
 
       //Note: Here the temporary values are copied to the map.

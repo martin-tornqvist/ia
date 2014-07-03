@@ -698,8 +698,8 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
 TEST_FIXTURE(BasicFixture, FloodFilling) {
   bool b[MAP_W][MAP_H];
   Utils::resetArray(b, false);
-  for(int y = 0; y < MAP_H; y++) {b[0][y] = b[MAP_W - 1][y] = false;}
-  for(int x = 0; x < MAP_W; x++) {b[x][0] = b[x][MAP_H - 1] = false;}
+  for(int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
+  for(int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
   int flood[MAP_W][MAP_H];
   FloodFill::run(Pos(20, 10), b, flood, 999, Pos(-1, -1), true);
   CHECK_EQUAL(0, flood[20][10]);
@@ -718,8 +718,8 @@ TEST_FIXTURE(BasicFixture, PathFinding) {
   vector<Pos> path;
   bool b[MAP_W][MAP_H];
   Utils::resetArray(b, false);
-  for(int y = 0; y < MAP_H; y++) {b[0][y] = b[MAP_W - 1][y] = false;}
-  for(int x = 0; x < MAP_W; x++) {b[x][0] = b[x][MAP_H - 1] = false;}
+  for(int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
+  for(int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
 
   PathFind::run(Pos(20, 10), Pos(25, 10), b, path);
 
@@ -785,8 +785,8 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   Rect roomRect(20, 5, 30, 10);
   Room room(roomRect);
 
-  for(int y = roomRect.p0.y; y <= roomRect.p1.y; y++) {
-    for(int x = roomRect.p0.x; x <= roomRect.p1.x; x++) {
+  for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y) {
+    for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x) {
       FeatureFactory::mk(FeatureId::floor, Pos(x, y));
       Map::roomMap[x][y] = &room;
     }
@@ -832,8 +832,8 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   roomRect = Rect(10, 5, 18, 10);
   Room nearbyRoom(roomRect);
 
-  for(int y = roomRect.p0.y; y <= roomRect.p1.y; y++) {
-    for(int x = roomRect.p0.x; x <= roomRect.p1.x; x++) {
+  for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y) {
+    for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x) {
       FeatureFactory::mk(FeatureId::floor, Pos(x, y));
       Map::roomMap[x][y] = &nearbyRoom;
     }
@@ -847,7 +847,7 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   bool entryMapNearbyRoom[MAP_W][MAP_H];
   Utils::mkBoolMapFromVector(entryListNearbyRoom, entryMapNearbyRoom);
 
-  for(int y = 5; y <= 10; y++) {
+  for(int y = 5; y <= 10; ++y) {
     CHECK(entryMap[19][y]);
     CHECK(entryMapNearbyRoom[19][y]);
   }
@@ -943,15 +943,15 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   Room room0(roomArea1);
   Room room1(roomArea2);
 
-  for(int y = roomArea1.p0.y; y <= roomArea1.p1.y; y++) {
-    for(int x = roomArea1.p0.x; x <= roomArea1.p1.x; x++) {
+  for(int y = roomArea1.p0.y; y <= roomArea1.p1.y; ++y) {
+    for(int x = roomArea1.p0.x; x <= roomArea1.p1.x; ++x) {
       FeatureFactory::mk(FeatureId::floor, Pos(x, y));
       Map::roomMap[x][y] = &room0;
     }
   }
 
-  for(int y = roomArea2.p0.y; y <= roomArea2.p1.y; y++) {
-    for(int x = roomArea2.p0.x; x <= roomArea2.p1.x; x++) {
+  for(int y = roomArea2.p0.y; y <= roomArea2.p1.y; ++y) {
+    for(int x = roomArea2.p0.x; x <= roomArea2.p1.x; ++x) {
       FeatureFactory::mk(FeatureId::floor, Pos(x, y));
       Map::roomMap[x][y] = &room1;
     }

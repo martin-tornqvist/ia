@@ -67,8 +67,8 @@ void resetArray(int a[MAP_W][MAP_H]);
 void resetArray(bool a[MAP_W][MAP_H], const bool value);
 
 template<typename T> void resetArray(T* a[MAP_W][MAP_H]) {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       a[x][y] = nullptr;
     }
   }

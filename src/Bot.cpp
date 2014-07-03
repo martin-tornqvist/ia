@@ -38,8 +38,8 @@ void findPathToStairs() {
 
   Pos stairPos(-1, -1);
 
-  for(int x = 0; x < MAP_W; x++) {
-    for(int y = 0; y < MAP_H; y++) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       const auto curId = Map::cells[x][y].featureStatic->getId();
       if(curId == FeatureId::stairs) {
         blocked[x][y] = false;

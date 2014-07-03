@@ -375,8 +375,8 @@ bool Khephren::onActorTurn_() {
 
           const int SPAWN_AFTER_X =
             Map::player->pos.x + FOV_STD_RADI_INT + 1;
-          for(int y = 0; y  < MAP_H; y++) {
-            for(int x = 0; x <= SPAWN_AFTER_X; x++) {
+          for(int y = 0; y  < MAP_H; ++y) {
+            for(int x = 0; x <= SPAWN_AFTER_X; ++x) {
               blocked[x][y] = true;
             }
           }

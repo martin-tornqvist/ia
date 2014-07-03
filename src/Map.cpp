@@ -34,8 +34,8 @@ Room*         roomMap[MAP_W][MAP_H];
 namespace {
 
 void resetCells(const bool MAKE_STONE_WALLS) {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
 
       cells[x][y].clear();
       cells[x][y].pos = Pos(x, y);
@@ -75,8 +75,8 @@ void cleanup() {
 
   resetMap();
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       delete cells[x][y].featureStatic;
       cells[x][y].featureStatic = nullptr;
     }
@@ -111,8 +111,8 @@ void switchToDestroyedFeatAt(const Pos& pos) {
       if(
         (NEW_ID == FeatureId::rubbleHigh || NEW_ID == FeatureId::rubbleLow) &&
         NEW_ID != OLD_FEATURE_ID) {
-        for(int x = pos.x - 1; x <= pos.x + 1; x++) {
-          for(int y = pos.y - 1; y <= pos.y + 1; y++) {
+        for(int x = pos.x - 1; x <= pos.x + 1; ++x) {
+          for(int y = pos.y - 1; y <= pos.y + 1; ++y) {
             if(x == 0 || y == 0) {
               const auto* const f = cells[x][y].featureStatic;
               if(f->getId() == FeatureId::door) {
@@ -144,8 +144,8 @@ void resetMap() {
 }
 
 void updateVisualMemory() {
-  for(int x = 0; x < MAP_W; x++) {
-    for(int y = 0; y < MAP_H; y++) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       cells[x][y].playerVisualMemory = Renderer::renderArrayNoActors[x][y];
     }
   }

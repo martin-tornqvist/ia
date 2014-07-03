@@ -59,8 +59,8 @@ void populateStdLvl() {
 
         const Pos& p0 = room->r_.p0;
         const Pos& p1 = room->r_.p1;
-        for(int y = p0.y; y <= p1.y; y++) {
-          for(int x = p0.x; x <= p1.x; x++) {
+        for(int y = p0.y; y <= p1.y; ++y) {
+          for(int x = p0.x; x <= p1.x; ++x) {
             if(
               !blocked[x][y] &&
               Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
@@ -111,8 +111,8 @@ void populateStdLvl() {
     TRACE << "PopulateTraps: Trapping plain room" << endl;
 
     vector<Pos> trapPosBucket;
-    for(int y = 1; y < MAP_H - 1; y++) {
-      for(int x = 1; x < MAP_W - 1; x++) {
+    for(int y = 1; y < MAP_H - 1; ++y) {
+      for(int x = 1; x < MAP_W - 1; ++x) {
         if(Map::roomMap[x][y]) {
           if(
             !blocked[x][y] &&

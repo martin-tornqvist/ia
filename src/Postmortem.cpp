@@ -131,8 +131,8 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
 
   TRACE << "Postmortem: Drawing the final map" << endl;
   linesRef.push_back(StrAndClr(" The final moment:", clrHeading));
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       for(int dx = -1; dx <= 1; dx++) {
         for(int dy = -1; dy <= 1; dy++) {
           if(Utils::isPosInsideMap(Pos(x + dx, y + dy))) {
@@ -144,9 +144,9 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
     }
   }
   Renderer::drawMap(); //To set the glyph array
-  for(int y = 0; y < MAP_H; y++) {
+  for(int y = 0; y < MAP_H; ++y) {
     string curRow = "";
-    for(int x = 0; x < MAP_W; x++) {
+    for(int x = 0; x < MAP_W; ++x) {
       if(Pos(x, y) == Map::player->pos) {
         curRow.push_back('@');
       } else {

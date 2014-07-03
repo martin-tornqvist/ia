@@ -95,8 +95,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
 
   //Within the expansion limits, mark all cells not belonging to another room as free.
   //All other cells are considered as blocking.
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       blocked[x][y] = true;
       if(
         (dir_ == hor && (y >= closestCenter0 && y <= closestCenter1)) ||
@@ -114,8 +114,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
   const Pos origin(getCenterPos());
   FloodFill::run(origin, blockedExpanded, flood, INT_MAX, Pos(-1, -1), true);
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       const Pos p(x, y);
       if(flood[x][y] > 0 || p == origin) {
         FeatureFactory::mk(FeatureId::deepWater, p, nullptr);
@@ -163,15 +163,15 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
 
   bool validRoomEntries0[MAP_W][MAP_H];
   bool validRoomEntries1[MAP_W][MAP_H];
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       validRoomEntries0[x][y] = validRoomEntries1[x][y] = false;
     }
   }
 
   const int EDGE_D = 4;
-  for(int x = EDGE_D; x < MAP_W - EDGE_D; x++) {
-    for(int y = EDGE_D; y < MAP_H - EDGE_D; y++) {
+  for(int x = EDGE_D; x < MAP_W - EDGE_D; ++x) {
+    for(int y = EDGE_D; y < MAP_H - EDGE_D; ++y) {
       const FeatureId featureId = Map::cells[x][y].featureStatic->getId();
       if(featureId == FeatureId::wall && !Map::roomMap[x][y]) {
         const Pos p(x, y);
@@ -196,8 +196,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
 
 #ifdef DEMO_MODE
   Renderer::drawMap();
-  for(int y = 1; y < MAP_H - 1; y++) {
-    for(int x = 1; x < MAP_W - 1; x++) {
+  for(int y = 1; y < MAP_H - 1; ++y) {
+    for(int x = 1; x < MAP_W - 1; ++x) {
       Pos p(x, y);
       if(validRoomEntries0[x][y]) {
         Renderer::drawGlyph('0', Panel::map, p, clrRedLgt);
@@ -248,7 +248,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
         break;
       }
     }
-    for(int y = r_.p0.y; y <= r_.p1.y; y++) {
+    for(int y = r_.p0.y; y <= r_.p1.y; ++y) {
       if(sides[X][y] == side1) {break;}
       const Pos pAdj(X, y + 1);
       if(validRoomEntries1[pAdj.x][pAdj.y]) {
@@ -271,7 +271,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
             << roomCon0.x << "," << roomCon0.y << " / "
             << roomCon1.x << "," << roomCon1.y << endl
             << "Making bridge at coord: " << X << endl;
-      for(int y = roomCon0.y; y <= roomCon1.y; y++) {
+      for(int y = roomCon0.y; y <= roomCon1.y; ++y) {
         if(Map::roomMap[X][y] == this) {
           FeatureFactory::mk(FeatureId::floor, Pos(X, y), nullptr);
         }
@@ -292,8 +292,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
 
   if(!xPositionsBuilt.empty()) {
     TRACE << "Converting some remaining valid room entries to floor" << endl;
-    for(int y = 0; y < MAP_H; y++) {
-      for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; ++y) {
+      for(int x = 0; x < MAP_W; ++x) {
         if(validRoomEntries0[x][y] || validRoomEntries1[x][y]) {
           if(
             find(xPositionsBuilt.begin(), xPositionsBuilt.end(), x) ==

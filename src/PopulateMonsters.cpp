@@ -113,15 +113,15 @@ void trySpawnDueToTimePassed() {
   const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_TO_PLAYER);
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_TO_PLAYER);
 
-  for(int x = X0; x <= X1; x++) {
-    for(int y = Y0; y <= Y1; y++) {
+  for(int x = X0; x <= X1; ++x) {
+    for(int y = Y0; y <= Y1; ++y) {
       blocked[x][y] = true;
     }
   }
 
   vector<Pos> freeCellsVector;
-  for(int y = 1; y < MAP_H - 1; y++) {
-    for(int x = 1; x < MAP_W - 1; x++) {
+  for(int y = 1; y < MAP_H - 1; ++y) {
+    for(int x = 1; x < MAP_W - 1; ++x) {
       if(!blocked[x][y]) {freeCellsVector.push_back(Pos(x, y));}
     }
   }
@@ -158,16 +158,16 @@ void populateCaveLvl() {
   const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_FROM_PLAYER) - 1;
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_FROM_PLAYER) - 1;
 
-  for(int y = Y0; y <= Y1; y++) {
-    for(int x = X0; x <= X1; x++) {
+  for(int y = Y0; y <= Y1; ++y) {
+    for(int x = X0; x <= X1; ++x) {
       blocked[x][y] = true;
     }
   }
 
   for(int i = 0; i < NR_GROUPS_ALLOWED; ++i) {
     vector<Pos> originBucket;
-    for(int y = 1; y < MAP_H - 1; y++) {
-      for(int x = 1; x < MAP_W - 1; x++) {
+    for(int y = 1; y < MAP_H - 1; ++y) {
+      for(int x = 1; x < MAP_W - 1; ++x) {
         if(!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
       }
     }
@@ -196,16 +196,16 @@ void populateIntroLvl() {
   const int Y0 = max(0, playerPos.y - MIN_DIST_FROM_PLAYER);
   const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_FROM_PLAYER) - 1;
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_FROM_PLAYER) - 1;
-  for(int y = Y0; y <= Y1; y++) {
-    for(int x = X0; x <= X1; x++) {
+  for(int y = Y0; y <= Y1; ++y) {
+    for(int x = X0; x <= X1; ++x) {
       blocked[x][y] = true;
     }
   }
 
   for(int i = 0; i < NR_GROUPS_ALLOWED; ++i) {
     vector<Pos> originBucket;
-    for(int y = 1; y < MAP_H - 1; y++) {
-      for(int x = 1; x < MAP_W - 1; x++) {
+    for(int y = 1; y < MAP_H - 1; ++y) {
+      for(int x = 1; x < MAP_W - 1; ++x) {
         if(!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
       }
     }
@@ -235,8 +235,8 @@ void populateStdLvl() {
   const int Y0 = max(0, playerPos.y - MIN_DIST_FROM_PLAYER);
   const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_FROM_PLAYER);
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_FROM_PLAYER);
-  for(int y = Y0; y <= Y1; y++) {
-    for(int x = X0; x <= X1; x++) {
+  for(int y = Y0; y <= Y1; ++y) {
+    for(int x = X0; x <= X1; ++x) {
       blocked[x][y] = true;
     }
   }
@@ -255,8 +255,8 @@ void populateStdLvl() {
       for(int i = 0; i < MAX_NR_GROUPS_IN_ROOM; ++i) {
         //Randomly pick a free position inside the room
         vector<Pos> originBucket;
-        for(int y = room->r_.p0.y; y <= room->r_.p1.y; y++) {
-          for(int x = room->r_.p0.x; x <= room->r_.p1.x; x++) {
+        for(int y = room->r_.p0.y; y <= room->r_.p1.y; ++y) {
+          for(int x = room->r_.p0.x; x <= room->r_.p1.x; ++x) {
             if(Map::roomMap[x][y] == room && !blocked[x][y]) {
               originBucket.push_back(Pos(x, y));
             }
@@ -285,8 +285,8 @@ void populateStdLvl() {
 
       //After attempting to populate a non-plain themed room,
       //mark that area as forbidden
-      for(int y = room->r_.p0.y; y <= room->r_.p1.y; y++) {
-        for(int x = room->r_.p0.x; x <= room->r_.p1.x; x++) {
+      for(int y = room->r_.p0.y; y <= room->r_.p1.y; ++y) {
+        for(int x = room->r_.p0.x; x <= room->r_.p1.x; ++x) {
           blocked[x][y] = true;
         }
       }
@@ -297,8 +297,8 @@ void populateStdLvl() {
   //no more groups to place
   while(nrGroupsSpawned < NR_GROUPS_ALLOWED_ON_MAP) {
     vector<Pos> originBucket;
-    for(int y = 1; y < MAP_H - 1; y++) {
-      for(int x = 1; x < MAP_W - 1; x++) {
+    for(int y = 1; y < MAP_H - 1; ++y) {
+      for(int x = 1; x < MAP_W - 1; ++x) {
         if(Map::roomMap[x][y]) {
           if(
             !blocked[x][y] &&
@@ -365,8 +365,8 @@ void mkSortedFreeCellsVector(const Pos& origin,
   const int X1 = getConstrInRange(1, origin.x + RADI, MAP_W - 2);
   const int Y1 = getConstrInRange(1, origin.y + RADI, MAP_H - 2);
 
-  for(int y = Y0; y <= Y1; y++) {
-    for(int x = X0; x <= X1; x++) {
+  for(int y = Y0; y <= Y1; ++y) {
+    for(int x = X0; x <= X1; ++x) {
       if(!blocked[x][y]) {vectorRef.push_back(Pos(x, y));}
     }
   }

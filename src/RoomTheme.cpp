@@ -193,8 +193,8 @@ void mkThemeSpecificRoomModifications(Room& room) {
     case RoomType::muddy: {
       const auto featureId = room.type_ == RoomType::flooded ?
                              FeatureId::shallowWater : FeatureId::shallowMud;
-      for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
-        for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
+      for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y) {
+        for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x) {
           if(!blocked[x][y]) {
             FeatureFactory::mk(featureId, Pos(x, y));
           }
@@ -206,8 +206,8 @@ void mkThemeSpecificRoomModifications(Room& room) {
       int nrBloodPut = 0;
       const int NR_TRIES = 1000; //TODO Hacky, needs improving
       for(int i = 0; i < NR_TRIES; ++i) {
-        for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
-          for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
+        for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y) {
+          for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x) {
             if(!blocked[x][y]) {
               const int CHANCE_TO_PUT_BLOOD = 40;
               if(Rnd::percentile() < CHANCE_TO_PUT_BLOOD) {
@@ -233,8 +233,8 @@ void mkThemeSpecificRoomModifications(Room& room) {
 
         Pos origin(-1, -1);
         vector<Pos> originBucket;
-        for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
-          for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
+        for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y) {
+          for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x) {
             if(Map::cells[x][y].featureStatic->getId() == FeatureId::altar) {
               origin = Pos(x, y);
               y = 999;
@@ -373,8 +373,8 @@ void mkRoomDarkWithChance(const Room& room) {
     chanceToMkDark += Map::dlvl - 1;
 
     if(Rnd::range(1, 100) < chanceToMkDark) {
-      for(int y = room.r_.p0.y; y <= room.r_.p1.y; y++) {
-        for(int x = room.r_.p0.x; x <= room.r_.p1.x; x++) {
+      for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y) {
+        for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x) {
           Map::cells[x][y].isDark = true;
         }
       }

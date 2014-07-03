@@ -125,8 +125,8 @@ void runFovOnArray(const bool obstructions[MAP_W][MAP_H], const Pos& origin,
 void runPlayerFov(const bool obstructions[MAP_W][MAP_H], const Pos& origin) {
   bool visionTmp[MAP_W][MAP_H];
 
-  for(int x = 0; x < MAP_W; x++) {
-    for(int y = 0; y < MAP_H; y++) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       Map::cells[x][y].isSeenByPlayer = false;
       visionTmp[x][y] = false;
     }
@@ -141,8 +141,8 @@ void runPlayerFov(const bool obstructions[MAP_W][MAP_H], const Pos& origin) {
   const int X1 = getConstrInRange(0, origin.x + R, MAP_W - 1);
   const int Y1 = getConstrInRange(0, origin.y + R, MAP_H - 1);
 
-  for(int y = Y0; y <= Y1; y++) {
-    for(int x = X0; x <= X1; x++) {
+  for(int y = Y0; y <= Y1; ++y) {
+    for(int x = X0; x <= X1; ++x) {
       checkOneCellOfMany(obstructions, Pos(x, y), origin, visionTmp, true);
       Map::cells[x][y].isSeenByPlayer = visionTmp[x][y];
     }

@@ -24,8 +24,8 @@ bool run() {
 
   Map::player->pos = Pos(40, 11);
 
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       Feature* const f = Map::cells[x][y].featureStatic;
       if(f->getId() == FeatureId::wall) {
         static_cast<Wall*>(f)->wallType = WallType::egypt;

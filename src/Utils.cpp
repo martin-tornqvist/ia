@@ -67,32 +67,32 @@ bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2) {
 }
 
 void resetArray(int a[MAP_W][MAP_H]) {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       a[x][y] = 0;
     }
   }
 }
 
 void resetArray(bool a[MAP_W][MAP_H], const bool value) {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       a[x][y] = value;
     }
   }
 }
 
 void reverseBoolArray(bool array[MAP_W][MAP_H]) {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       array[x][y] = !array[x][y];
     }
   }
 }
 
 void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_H; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_H; ++x) {
       out[x][y] = in[x][y];
     }
   }
@@ -101,8 +101,8 @@ void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
 void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
                          vector<Pos>& out) {
   out.resize(0);
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       if(a[x][y] == VALUE_TO_STORE) {
         out.push_back(Pos(x, y));
       }

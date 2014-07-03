@@ -34,16 +34,16 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
   Pos p1(min(MAP_W - 1, pos_.x + RADI),
          min(MAP_H - 1, pos_.y + RADI));
   bool visionBlockers[MAP_W][MAP_H];
-  for(int y = p0.y; y <= p1.y; y++) {
-    for(int x = p0.x; x <= p1.x; x++) {
+  for(int y = p0.y; y <= p1.y; ++y) {
+    for(int x = p0.x; x <= p1.x; ++x) {
       visionBlockers[x][y] =
         !Map::cells[x][y].featureStatic->isVisionPassable();
     }
   }
 
   Fov::runFovOnArray(visionBlockers, pos_, myLight, false);
-  for(int y = p0.y; y <= p1.y; y++) {
-    for(int x = p0.x; x <= p1.x; x++) {
+  for(int y = p0.y; y <= p1.y; ++y) {
+    for(int x = p0.x; x <= p1.x; ++x) {
       if(myLight[x][y]) {light[x][y] = true;}
     }
   }

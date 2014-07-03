@@ -271,8 +271,8 @@ void PotionClairv::quaff_(Actor* const actor) {
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksVision(), blocked);
-    for(int y = 0; y < MAP_H; y++) {
-      for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; ++y) {
+      for(int x = 0; x < MAP_W; ++x) {
         Cell& cell = Map::cells[x][y];
         if(!blocked[x][y] && !cell.isDark) {
           cell.isExplored = true;

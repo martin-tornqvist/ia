@@ -82,8 +82,8 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
 
   //Make a vector of all cells on map with no blocking feature
   bool freeCellArray[MAP_W][MAP_H];
-  for(int y = 0; y < MAP_H; y++) {
-    for(int x = 0; x < MAP_W; x++) {
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
       FeatureStatic* const f = Map::cells[x][y].featureStatic;
       freeCellArray[x][y] = f->canHaveItem() && !f->isBottomless();
     }

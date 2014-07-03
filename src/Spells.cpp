@@ -85,8 +85,8 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY,
     const int X1 = min(MAP_W - 1, caster->pos.x + 1);
     const int Y1 = min(MAP_H - 1, caster->pos.y + 1);
 
-    for(int y = Y0; y <= Y1; y++) {
-      for(int x = X0; x <= X1; x++) {
+    for(int y = Y0; y <= Y1; ++y) {
+      for(int x = X0; x <= X1; ++x) {
         if(Map::cells[x][y].featureStatic->getId() == FeatureId::altar) {
           costMax -= 1;
           y = 9999;
@@ -331,8 +331,8 @@ SpellCastRetData SpellMayhem::cast_(
   const int Y1 = min(MAP_H - 1, playerPos.y + AREA_RADI) - 1;
 
   for(int i = 0; i < NR_OF_SWEEPS; ++i) {
-    for(int y = Y0; y <= Y1; y++) {
-      for(int x = X0; x <= X1; x++) {
+    for(int y = Y0; y <= Y1; ++y) {
+      for(int x = X0; x <= X1; ++x) {
         const Pos c(x, y);
         bool isAdjToWalkableCell = false;
         for(int dy = -1; dy <= 1; dy++) {
@@ -351,8 +351,8 @@ SpellCastRetData SpellMayhem::cast_(
     }
   }
 
-  for(int y = Y0; y <= Y1; y++) {
-    for(int x = X0; x <= X1; x++) {
+  for(int y = Y0; y <= Y1; ++y) {
+    for(int x = X0; x <= X1; ++x) {
       auto* const f = Map::cells[x][y].featureStatic;
       if(f->canHaveBlood()) {
         if(Rnd::oneIn(10)) {f->setHasBlood(true);}
@@ -408,8 +408,8 @@ SpellCastRetData SpellDetItems::cast_(Actor* const caster) const {
 
   vector<Pos> itemsRevealedPositions;
 
-  for(int y = Y0; y < Y1; y++) {
-    for(int x = X0; x <= X1; x++) {
+  for(int y = Y0; y < Y1; ++y) {
+    for(int x = X0; x <= X1; ++x) {
       Item* item = Map::cells[x][y].item;
       if(item) {
         Map::cells[x][y].isSeenByPlayer = true;
@@ -442,8 +442,8 @@ SpellCastRetData SpellDetTraps::cast_(Actor* const caster) const {
 
   vector<Pos> trapsRevealedPositions;
 
-  for(int x = 0; x < MAP_W; x++) {
-    for(int y = 0; y < MAP_H; y++) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       if(Map::cells[x][y].isSeenByPlayer) {
         auto* const f = Map::cells[x][y].featureStatic;
         if(f->getId() == FeatureId::trap) {
@@ -506,8 +506,8 @@ SpellCastRetData SpellOpening::cast_(
 
   vector<Pos> featuresOpenedPositions;
 
-  for(int y = 1; y < MAP_H - 1; y++) {
-    for(int x = 1; x < MAP_W - 1; x++) {
+  for(int y = 1; y < MAP_H - 1; ++y) {
+    for(int x = 1; x < MAP_W - 1; ++x) {
       if(Map::cells[x][y].isSeenByPlayer) {
         if(Map::cells[x][y].featureStatic->open()) {
           featuresOpenedPositions.push_back(Pos(x, y));
@@ -740,8 +740,8 @@ SpellCastRetData SpellSummonRandom::cast_(
   const int Y0 = max(0, playerPos.y - RADI);
   const int X1 = min(MAP_W, playerPos.x + RADI) - 1;
   const int Y1 = min(MAP_H, playerPos.y + RADI) - 1;
-  for(int x = X0; x <= X1; x++) {
-    for(int y = Y0; y <= Y1; y++) {
+  for(int x = X0; x <= X1; ++x) {
+    for(int y = Y0; y <= Y1; ++y) {
       if(Map::cells[x][y].isSeenByPlayer) {
         freePositionsSeenByPlayer.push_back(Pos(x, y));
       }

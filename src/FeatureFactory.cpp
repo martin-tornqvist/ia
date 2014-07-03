@@ -38,8 +38,8 @@ void replaceStaticFeatureAt(FeatureStatic* const newFeature, const Pos& pos) {
 
 #ifdef DEMO_MODE
   if(newFeature->getId() == FeatureId::floor) {
-    for(int y = 0; y < MAP_H; y++) {
-      for(int x = 0; x < MAP_W; x++) {
+    for(int y = 0; y < MAP_H; ++y) {
+      for(int x = 0; x < MAP_W; ++x) {
         Map::cells[x][y].isSeenByPlayer = Map::cells[x][y].isExplored = true;
       }
     }
