@@ -299,12 +299,11 @@ string Trap::getDescr(const bool DEFINITE_ARTICLE) const {
 }
 
 SDL_Color Trap::getClr() const {
-  return isHidden_ ? mimicFeature_->color : specificTrap_->getClr();
+  return isHidden_ ? mimicFeature_->clr : specificTrap_->getClr();
 }
 
 char Trap::getGlyph() const {
-  return isHidden_ ? mimicFeature_->glyph :
-         specificTrap_->getGlyph();
+  return isHidden_ ? mimicFeature_->glyph : specificTrap_->getGlyph();
 }
 
 TileId Trap::getTile() const {

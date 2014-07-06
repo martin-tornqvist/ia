@@ -17,37 +17,38 @@ class FeatureSpawnData;
 
 class Feature {
 public:
+  Feature(FeatureId id, Pos pos, FeatureSpawnData* spawnData = nullptr);
+
   virtual ~Feature() {}
 
-  virtual void bump(Actor& actorBumping);
-  virtual void newTurn();
-  virtual bool canMoveCmn() const;
-  virtual bool canMove(const std::vector<PropId>& actorsProps) const;
-  virtual bool isSoundPassable() const;
-  virtual bool isVisionPassable() const;
-  virtual bool isProjectilePassable() const;
-  virtual bool isSmokePassable() const;
-  virtual bool isBottomless() const;
-  virtual std::string getDescr(const bool DEFINITE_ARTICLE) const;
-  virtual void hit(const int DMG, const DmgType dmgType);
-  virtual SDL_Color getClr() const;
-  virtual SDL_Color getClrBg() const;
-  virtual char getGlyph() const;
-  virtual TileId getTile() const;
-  virtual void addLight(bool light[MAP_W][MAP_H]) const;
-  virtual bool canHaveCorpse() const;
-  virtual bool canHaveStaticFeature() const;
-  virtual bool canHaveBlood() const;
-  virtual bool canHaveGore() const;
-  virtual bool canHaveItem() const;
-  bool hasBlood() const;
-  void setHasBlood(const bool HAS_BLOOD);
-  FeatureId getId() const;
-  virtual int getDodgeModifier() const;
-  int getShockWhenAdjacent() const;
-  virtual MaterialType getMaterialType() const;
+  virtual void          bump(Actor& actorBumping);
+  virtual void          newTurn();
+  virtual bool          canMoveCmn()                                    const;
+  virtual bool          canMove(const std::vector<PropId>& actorsProps) const;
+  virtual bool          isSoundPassable()                               const;
+  virtual bool          isVisionPassable()                              const;
+  virtual bool          isProjectilePassable()                          const;
+  virtual bool          isSmokePassable()                               const;
+  virtual bool          isBottomless()                                  const;
+  virtual std::string   getDescr(const bool DEFINITE_ARTICLE)           const;
+  virtual void          hit(const int DMG, const DmgType dmgType);
+  virtual SDL_Color     getClr()                                        const;
+  virtual SDL_Color     getClrBg()                                      const;
+  virtual char          getGlyph()                                      const;
+  virtual TileId        getTile()                                       const;
+  virtual void          addLight(bool light[MAP_W][MAP_H])              const;
+  virtual bool          canHaveCorpse()                                 const;
+  virtual bool          canHaveStaticFeature()                          const;
+  virtual bool          canHaveBlood()                                  const;
+  virtual bool          canHaveGore()                                   const;
+  virtual bool          canHaveItem()                                   const;
+  virtual int           getDodgeModifier()                              const;
+  virtual MaterialType  getMaterialType()                               const;
 
-  Feature(FeatureId id, Pos pos, FeatureSpawnData* spawnData = nullptr);
+  FeatureId getId()           const;
+  int       getShockWhenAdj() const;
+  bool      hasBlood()        const;
+  void      setHasBlood(const bool HAS_BLOOD);
 
 protected:
   Pos pos_;
@@ -83,15 +84,11 @@ public:
 
   void setGoreIfPossible();
 
-  inline TileId getGoreTile() const {return goreTile_;}
+  TileId getGoreTile() const {return goreTile_;}
 
-  inline char getGoreGlyph()  const {return goreGlyph_;}
+  char getGoreGlyph()  const {return goreGlyph_;}
 
-  inline void clearGore() {
-    goreTile_ = TileId::empty;
-    goreGlyph_ = ' ';
-    hasBlood_ = false;
-  }
+  void clearGore();
 
   virtual void bash(Actor& actorTrying);
   virtual void bash_(Actor& actorTrying);
@@ -104,6 +101,31 @@ protected:
 
   TileId goreTile_;
   char goreGlyph_;
+};
+
+enum class WallType {common, alt1, cave, egypt};
+
+class Wall: public FeatureStatic {
+public:
+  Wall(FeatureId id, Pos pos);
+  ~Wall() {}
+
+  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
+  SDL_Color getClr() const;
+  char getGlyph() const;
+
+  TileId getFrontWallTile() const;
+  TileId getTopWallTile() const;
+
+  void setRandomNormalWall();
+  void setRandomIsMossGrown();
+
+  WallType wallType_;
+  bool isMossGrown_;
+
+  static bool isTileAnyWallFront(const TileId tile);
+
+  static bool isTileAnyWallTop(const TileId tile);
 };
 
 class Grave: public FeatureStatic {
@@ -127,6 +149,21 @@ public:
   ~Stairs() {}
 
   void bump(Actor& actorBumping) override;
+};
+
+class Bridge : public FeatureStatic {
+public:
+  Bridge(FeatureId id, Pos pos) : FeatureStatic(id, pos) {}
+  ~Bridge() {}
+
+  TileId getTile()  const override {return dir_ == hor ? TileId::tomb : TileId::bat;}
+
+  char getGlyph()   const override {return dir_ == hor ? '|' : '=';}
+
+  void setDir(const HorizontalVertical dir) {dir_ = dir;}
+
+private:
+  HorizontalVertical dir_;
 };
 
 #endif

@@ -7,7 +7,6 @@
 #include "ActorFactory.h"
 #include "ActorMonster.h"
 #include "Map.h"
-#include "FeatureWall.h"
 #include "Utils.h"
 #include "ActorFactory.h"
 
@@ -28,7 +27,7 @@ bool run() {
     for(int x = 0; x < MAP_W; ++x) {
       Feature* const f = Map::cells[x][y].featureStatic;
       if(f->getId() == FeatureId::wall) {
-        static_cast<Wall*>(f)->wallType = WallType::egypt;
+        static_cast<Wall*>(f)->wallType_ = WallType::egypt;
       }
     }
   }

@@ -15,7 +15,6 @@
 #include "ItemDrop.h"
 #include "ItemFactory.h"
 #include "Map.h"
-#include "FeatureWall.h"
 #include "MapParsing.h"
 #include "Renderer.h"
 #include "Utils.h"
@@ -553,7 +552,7 @@ void mkCaves(Region regions[3][3]) {
                     Feature* const f =
                       FeatureFactory::mk(FeatureId::wall, adjP);
                     Wall* const wall = static_cast<Wall*>(f);
-                    wall->wallType = WallType::cave;
+                    wall->wallType_ = WallType::cave;
                     wall->setRandomIsMossGrown();
                   }
                 }
@@ -882,7 +881,7 @@ void decorate() {
 
         //Convert walls with no adjacent stone floor to cave walls
         if(CellPred::AllAdjIsNotFeature(FeatureId::floor).check(cell)) {
-          wall->wallType = WallType::cave;
+          wall->wallType_ = WallType::cave;
         } else {
           wall->setRandomNormalWall();
         }

@@ -115,7 +115,7 @@ bool Door::isSmokePassable() const {
 
 SDL_Color Door::getClr() const {
   if(isSecret_) {
-    return mimicFeature_->color;
+    return mimicFeature_->clr;
   }
   return material_ == doorMaterial_metal ? clrGray : clrBrownDrk;
 }

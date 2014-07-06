@@ -291,13 +291,17 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
       if(IS_HOR) {
         for(int y = roomCon0.y; y <= roomCon1.y; ++y) {
           if(Map::roomMap[BRIDGE_C][y] == this) {
-            FeatureFactory::mk(FeatureId::floor, Pos(BRIDGE_C, y));
+            Feature* const bridge =
+              FeatureFactory::mk(FeatureId::bridge, Pos(BRIDGE_C, y));
+            static_cast<Bridge*>(bridge)->setDir(ver);
           }
         }
       } else {
         for(int x = roomCon0.x; x <= roomCon1.x; ++x) {
           if(Map::roomMap[x][BRIDGE_C] == this) {
-            FeatureFactory::mk(FeatureId::floor, Pos(x, BRIDGE_C));
+            Feature* const bridge =
+              FeatureFactory::mk(FeatureId::bridge, Pos(x, BRIDGE_C));
+            static_cast<Bridge*>(bridge)->setDir(hor);
           }
         }
       }

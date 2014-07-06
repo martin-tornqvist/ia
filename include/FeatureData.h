@@ -14,6 +14,7 @@
 enum class FeatureId {
   empty,
   floor,
+  bridge,
   wall,
   tree,
   grass,
@@ -61,13 +62,9 @@ enum class FeatureId {
   endOfFeatureId
 };
 
-enum FeatureSpawnType {
-  featureSpawnType_mob, featureSpawnType_static, featureSpawnType_other
-};
+enum FeatureSpawnType {mob, staticFeature, other};
 
-enum MaterialType {
-  materialType_empty, materialType_soft, materialType_hard, materialType_fluid
-};
+enum MaterialType {empty, soft, hard, fluid};
 
 struct FeatureRoomSpawnRules {
 public:
@@ -129,8 +126,8 @@ struct FeatureDataT {
   FeatureId id;
   FeatureSpawnType spawnType;
   char glyph;
-  SDL_Color color;
-  SDL_Color colorBg;
+  SDL_Color clr;
+  SDL_Color clrBg;
   TileId tile;
   MoveRules moveRules;
   bool isSoundPassable;

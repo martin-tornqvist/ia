@@ -514,7 +514,7 @@ void Player::addTmpShockFromFeatures() {
     for(int dx = -1; dx <= 1; dx++) {
       const int X = pos.x + dx;
       if(Utils::isPosInsideMap(Pos(X, Y))) {
-        shockTmp_ += Map::cells[X][Y].featureStatic->getShockWhenAdjacent();
+        shockTmp_ += Map::cells[X][Y].featureStatic->getShockWhenAdj();
       }
     }
   }

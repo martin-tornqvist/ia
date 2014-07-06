@@ -15,7 +15,6 @@
 #include "ActorMonster.h"
 #include "Log.h"
 #include "Attack.h"
-#include "FeatureWall.h"
 #include "FeatureDoor.h"
 #include "Inventory.h"
 #include "Utils.h"

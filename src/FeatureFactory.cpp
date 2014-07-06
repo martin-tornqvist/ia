@@ -13,7 +13,6 @@
 #include "Map.h"
 #include "FeatureExaminable.h"
 #include "FeatureLiquid.h"
-#include "FeatureWall.h"
 #include "Utils.h"
 
 #ifdef DEMO_MODE
@@ -59,13 +58,13 @@ Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
   const FeatureDataT* const data = FeatureData::getData(id);
 
   //General (simple) features
-  if(data->spawnType == featureSpawnType_static) {
+  if(data->spawnType == FeatureSpawnType::staticFeature) {
     assert(!spawnData);
     FeatureStatic* feature = new FeatureStatic(id, pos);
     replaceStaticFeatureAt(feature, pos);
     return feature;
   }
-  if(data->spawnType == featureSpawnType_mob) {
+  if(data->spawnType == FeatureSpawnType::mob) {
     assert(!spawnData);
     FeatureMob* feature = new FeatureMob(id, pos);
     GameTime::addFeatureMob(feature);
@@ -210,6 +209,12 @@ Feature* mk(const FeatureId id, const Pos pos, FeatureSpawnData* spawnData) {
       Stairs* stairs = new Stairs(id, pos);
       replaceStaticFeatureAt(stairs, pos);
       return stairs;
+    }
+    case FeatureId::bridge: {
+      assert(!spawnData);
+      Bridge* bridge = new Bridge(id, pos);
+      replaceStaticFeatureAt(bridge, pos);
+      return bridge;
     }
     case FeatureId::wall: {
       assert(!spawnData);

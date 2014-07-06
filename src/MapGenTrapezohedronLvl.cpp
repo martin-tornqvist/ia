@@ -4,7 +4,6 @@
 #include "ActorPlayer.h"
 #include "ItemFactory.h"
 #include "Map.h"
-#include "FeatureWall.h"
 #include "MapParsing.h"
 #include "Utils.h"
 
@@ -21,8 +20,8 @@ bool run() {
     for(int x = 0; x < MAP_W; ++x) {
       auto* const wall =
         static_cast<Wall*>(FeatureFactory::mk(FeatureId::wall, Pos(x, y)));
-      wall->wallType    = WallType::cave;
-      wall->isMossGrown = false;
+      wall->wallType_     = WallType::cave;
+      wall->isMossGrown_  = false;
     }
   }
 
