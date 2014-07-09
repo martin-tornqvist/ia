@@ -1,6 +1,6 @@
 #include "Examine.h"
 
-#include "Feature.h"
+#include "FeatureStatic.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "Map.h"

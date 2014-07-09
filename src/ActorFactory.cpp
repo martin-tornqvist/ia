@@ -93,7 +93,7 @@ Actor* mk(const ActorId id, const Pos& pos) {
     actor->getData().nrLeftAllowedToSpawn--;
   }
 
-  GameTime::insertActorInLoop(actor);
+  GameTime::addActor(actor);
 
   return actor;
 }

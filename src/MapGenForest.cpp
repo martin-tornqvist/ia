@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "Converters.h"
-#include "FeatureFactory.h"
 #include "ActorPlayer.h"
 #include "ActorFactory.h"
 #include "ActorMonster.h"
@@ -15,6 +14,7 @@
 #include "PopulateMonsters.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 
@@ -25,21 +25,12 @@ namespace IntroForest {
 namespace {
 
 void mkForestLimit() {
-  for(int y = 0; y < MAP_H; ++y) {
-    FeatureFactory::mk(FeatureId::tree, Pos(0, y));
-  }
+  auto putTree = [](const int X, const int Y) {Map::put(new Tree(Pos(X, Y)));};
 
-  for(int x = 0; x < MAP_W; ++x) {
-    FeatureFactory::mk(FeatureId::tree, Pos(x, 0));
-  }
-
-  for(int y = 0; y < MAP_H; ++y) {
-    FeatureFactory::mk(FeatureId::tree, Pos(MAP_W - 1, y));
-  }
-
-  for(int x = 0; x < MAP_W; ++x) {
-    FeatureFactory::mk(FeatureId::tree, Pos(x, MAP_H - 1));
-  }
+  for(int y = 0; y < MAP_H; ++y) {putTree(0,          y);}
+  for(int x = 0; x < MAP_W; ++x) {putTree(x,          0);}
+  for(int y = 0; y < MAP_H; ++y) {putTree(MAP_W - 1,  y);}
+  for(int x = 0; x < MAP_W; ++x) {putTree(x,          MAP_H - 1);}
 }
 
 void mkForestOuterTreeline() {
@@ -48,7 +39,7 @@ void mkForestOuterTreeline() {
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x <= MAX_LEN; ++x) {
       if(Rnd::range(1, 4) > 1 || x == 0) {
-        FeatureFactory::mk(FeatureId::tree, Pos(x, y));
+        Map::put(new Tree(Pos(x, y)));
       } else {
         break;
       }
@@ -58,7 +49,7 @@ void mkForestOuterTreeline() {
   for(int x = 0; x < MAP_W; ++x) {
     for(int y = 0; y < MAX_LEN; ++y) {
       if(Rnd::range(1, 4) > 1 || y == 0) {
-        FeatureFactory::mk(FeatureId::tree, Pos(x, y));
+        Map::put(new Tree(Pos(x, y)));
       } else {
         break;
       }
@@ -68,7 +59,7 @@ void mkForestOuterTreeline() {
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = MAP_W - 1; x >= MAP_W - MAX_LEN; x--) {
       if(Rnd::range(1, 4) > 1 || x == MAP_W - 1) {
-        FeatureFactory::mk(FeatureId::tree, Pos(x, y));
+        Map::put(new Tree(Pos(x, y)));
       } else {
         break;
       }
@@ -78,7 +69,7 @@ void mkForestOuterTreeline() {
   for(int x = 0; x < MAP_W; ++x) {
     for(int y = MAP_H - 1; y >= MAP_H - MAX_LEN; y--) {
       if(Rnd::range(1, 4) > 1 || y == MAP_H - 1) {
-        FeatureFactory::mk(FeatureId::tree, Pos(x, y));
+        Map::put(new Tree(Pos(x, y)));
       } else {
         break;
       }
@@ -100,14 +91,13 @@ void mkForestTreePatch() {
       return;
     }
 
-    const auto treeId = FeatureId::tree;
+    Map::put(new Tree(curPos));
 
-    FeatureFactory::mk(treeId, curPos);
-    nrTreesCreated++;
+    ++nrTreesCreated;
 
     //Find next pos
     while(
-      Map::cells[curPos.x][curPos.y].featureStatic->getId() == treeId ||
+      Map::cells[curPos.x][curPos.y].featureStatic->getId() == FeatureId::tree ||
       Utils::kingDist(curPos, Map::player->pos) <= 2) {
 
       if(Rnd::coinToss()) {
@@ -143,7 +133,7 @@ void mkForestTrees(const Pos& stairsPos) {
 
     PathFind::run(Map::player->pos, stairsPos, blocked, path);
 
-    FeatureFactory::mk(FeatureId::stairs, stairsPos);
+    Map::put(new Stairs(stairsPos));
 
     size_t minPathLength = 1;
     size_t maxPathLength = 999;
@@ -161,16 +151,15 @@ void mkForestTrees(const Pos& stairsPos) {
   for(const Pos& pathPos : path) {
     for(int dx = -1; dx < 1; dx++) {
       for(int dy = -1; dy < 1; dy++) {
-        const Pos c(pathPos + Pos(dx, dy));
+        const Pos p(pathPos + Pos(dx, dy));
         if(
-          Map::cells[c.x][c.y].featureStatic->canHaveStaticFeature() &&
-          Utils::isPosInsideMap(c)) {
-          FeatureFactory::mk(FeatureId::forestPath, c);
+          Map::cells[p.x][p.y].featureStatic->canHaveStaticFeature() &&
+          Utils::isPosInsideMap(p)) {
+          Map::put(new Floor(p));
         }
       }
     }
   }
-
 
   //Place graves
   vector<HighScoreEntry> highscoreEntries = HighScore::getEntriesSorted();
@@ -202,7 +191,7 @@ void mkForestTrees(const Pos& stairsPos) {
 
             const bool IS_LEFT_OF_CHURCH = X < churchPos.x - (SEARCH_RADI) + 2;
             const bool IS_ON_STONE_PATH =
-              Map::cells[X][Y].featureStatic->getId() == FeatureId::forestPath;
+              Map::cells[X][Y].featureStatic->getId() == FeatureId::floor;
 
             bool isLeftOfPrev = true;
             if(!gravePositions.empty()) {
@@ -234,19 +223,18 @@ void mkForestTrees(const Pos& stairsPos) {
       }
       pathWalkCount++;
     }
-    for(unsigned int i = 0; i < gravePositions.size(); ++i) {
-      Feature* f = FeatureFactory::mk(
-                     FeatureId::gravestone, gravePositions.at(i));
-      Grave* const grave = static_cast<Grave*>(f);
+    for(size_t i = 0; i < gravePositions.size(); ++i) {
+      GraveStone* grave = new GraveStone(gravePositions[i]);
       HighScoreEntry curHighscore = highscoreEntries.at(i);
       const string name = curHighscore.getName();
       vector<string> dateStrVector;
       dateStrVector.resize(0);
       TextFormatting::getSpaceSeparatedList(curHighscore.getDateAndTime(),
                                             dateStrVector);
-      const string date = dateStrVector.at(0);
-      const string score = toStr(curHighscore.getScore());
+      const string date   = dateStrVector.at(0);
+      const string score  = toStr(curHighscore.getScore());
       grave->setInscription("RIP " + name + " " + date + " Score: " + score);
+      Map::put(grave);
     }
   }
 }
@@ -254,17 +242,18 @@ void mkForestTrees(const Pos& stairsPos) {
 } //namespace
 
 bool run() {
-  int grass = 0;
   for(int y = 1; y < MAP_H - 1; ++y) {
     for(int x = 1; x < MAP_W - 1; ++x) {
-      const Pos c(x, y);
-      grass = Rnd::range(1, 12);
-      auto id = FeatureId::empty;
-      if(grass == 1)                {id = FeatureId::bush;}
-      if(grass == 2)                {id = FeatureId::bushWithered;}
-      if(grass == 3 || grass == 4)  {id = FeatureId::grassWithered;}
-      if(grass >= 5)                {id = FeatureId::grass;}
-      FeatureFactory::mk(id, c);
+      const Pos p(x, y);
+      if(Rnd::oneIn(6)) {
+        Bush* const bush = new Bush(p);
+        //TODO Make bush withered with random chance
+        Map::put(bush);
+      } else {
+        Grass* const grass = new Grass(p);
+        //TODO Make bush withered with random chance
+        Map::put(grass);
+      }
     }
   }
 

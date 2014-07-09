@@ -1,8 +1,13 @@
-
 #include "FeatureData.h"
 
+#include "Init.h"
 #include "Colors.h"
 #include "Actor.h"
+#include "FeatureStatic.h"
+#include "FeatureMob.h"
+#include "FeatureExaminable.h"
+#include "FeatureTrap.h"
+#include "FeatureProxEvent.h"
 
 using namespace std;
 
@@ -22,8 +27,8 @@ FeatureDataT data[int(FeatureId::endOfFeatureId)];
 namespace {
 
 void resetData(FeatureDataT& d) {
+  d.mkObj = [](const Pos& p) {(void)p; return nullptr;};
   d.id = FeatureId::empty;
-  d.spawnType = FeatureSpawnType::staticFeature;
   d.glyph = ' ';
   d.tile = TileId::empty;
   d.clr = clrYellow;
@@ -40,8 +45,8 @@ void resetData(FeatureDataT& d) {
   d.canHaveItem = true;
   d.isBottomless = false;
   d.materialType = MaterialType::hard;
-  d.name_a = "";
-  d.name_the = "";
+  d.nameA = "";
+  d.nameThe = "";
   d.messageOnPlayerBlocked = "The way is blocked.";
   d.messageOnPlayerBlockedBlind = "I bump into something.";
   d.dodgeModifier = 0;
@@ -62,8 +67,9 @@ void initDataList() {
 
   /*---------------------------------------------*/
   d.id = FeatureId::floor;
-  d.name_a = "stone floor";
-  d.name_the = "the stone floor";
+  d.mkObj = [](const Pos& p) {return new Floor(p);};
+  d.nameA = "stone floor";
+  d.nameThe = "the stone floor";
   d.glyph = '.';
   d.clr = clrGray;
   d.tile = TileId::floor;
@@ -71,18 +77,18 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::bridge;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "bridge";
-  d.name_the = "the bridge";
+  d.mkObj = [](const Pos& p) {return new Bridge(p);};
+  d.nameA = "a bridge";
+  d.nameThe = "the bridge";
   d.clr = clrBrownDrk;
-  d.clrBg = clrNosfSepiaDrk;
+//  d.clrBg = clrBrownDrk;
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::wall;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "a stone wall";
-  d.name_the = "the stone wall";
+  d.mkObj = [](const Pos& p) {return new Wall(p);};
+  d.nameA = "a stone wall";
+  d.nameThe = "the stone wall";
   d.glyph = Config::isAsciiWallFullSquare() ? 10 : '#';
   d.clr = clrGray;
   d.tile = TileId::wallTop;
@@ -102,8 +108,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::tree;
-  d.name_a = "a tree";
-  d.name_the = "the tree";
+  d.mkObj = [](const Pos& p) {return new Tree(p);};
+  d.nameA = "a tree";
+  d.nameThe = "the tree";
   d.glyph = '|';
   d.clr = clrBrownDrk;
   d.tile = TileId::tree;
@@ -122,8 +129,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::grass;
-  d.name_a = "grass";
-  d.name_the = "the grass";
+  d.mkObj = [](const Pos& p) {return new Grass(p);};
+  d.nameA = "grass";
+  d.nameThe = "the grass";
   d.glyph = '.';
   d.tile = TileId::floor;
   d.clr = clrGreen;
@@ -131,19 +139,20 @@ void initDataList() {
   d.materialType = MaterialType::soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::grassWithered;
-  d.name_a = "withered grass";
-  d.name_the = "the withered grass";
-  d.glyph = '.';
-  d.tile = TileId::floor;
-  d.clr = clrBrownDrk;
-  d.moveRules.setCanMoveCmn();
-  d.materialType = MaterialType::soft;
-  addToListAndReset(d);
+//  d.id = FeatureId::grassWithered;
+//  d.nameA = "withered grass";
+//  d.nameThe = "the withered grass";
+//  d.glyph = '.';
+//  d.tile = TileId::floor;
+//  d.clr = clrBrownDrk;
+//  d.moveRules.setCanMoveCmn();
+//  d.materialType = MaterialType::soft;
+//  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::bush;
-  d.name_a = "a shrub";
-  d.name_the = "the shrub";
+  d.mkObj = [](const Pos& p) {return new Bush(p);};
+  d.nameA = "a shrub";
+  d.nameThe = "the shrub";
   d.glyph = '"';
   d.clr = clrGreen;
   d.tile = TileId::bush;
@@ -151,30 +160,20 @@ void initDataList() {
   d.materialType = MaterialType::soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::bushWithered;
-  d.name_a = "a withered shrub";
-  d.name_the = "the withered shrub";
-  d.glyph = '"';
-  d.clr = clrBrownDrk;
-  d.tile = TileId::bush;
-  d.moveRules.setCanMoveCmn();
-  d.materialType = MaterialType::soft;
-  addToListAndReset(d);
-  /*---------------------------------------------*/
-  d.id = FeatureId::forestPath;
-  d.name_a = "a stony path";
-  d.name_the = "the stony path";
-  d.glyph = '.';
-  d.tile = TileId::floor;
-  d.clr = clrGray;
-  d.moveRules.setCanMoveCmn();
-  d.canHaveStaticFeature = false;
-  addToListAndReset(d);
+//  d.id = FeatureId::bushWithered;
+//  d.nameA = "a withered shrub";
+//  d.nameThe = "the withered shrub";
+//  d.glyph = '"';
+//  d.clr = clrBrownDrk;
+//  d.tile = TileId::bush;
+//  d.moveRules.setCanMoveCmn();
+//  d.materialType = MaterialType::soft;
+//  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::stairs;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "a downward staircase";
-  d.name_the = "the downward staircase";
+  d.mkObj = [](const Pos& p) {return new Stairs(p);};
+  d.nameA = "a downward staircase";
+  d.nameThe = "the downward staircase";
   d.glyph = '>';
   d.clr = clrWhiteHigh;
   d.tile = TileId::stairsDown;
@@ -186,9 +185,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::lever;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "a lever";
-  d.name_the = "the lever";
+  d.mkObj = [](const Pos& p) {return new Lever(p);};
+  d.nameA = "a lever";
+  d.nameThe = "the lever";
   d.glyph = '%';
   d.clr = clrWhite;
   d.tile = TileId::leverLeft;
@@ -199,9 +198,10 @@ void initDataList() {
   d.canHaveItem = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::brazierGolden;
-  d.name_a = "a golden brazier";
-  d.name_the = "the golden brazier";
+  d.id = FeatureId::brazier;
+  d.mkObj = [](const Pos& p) {return new Brazier(p);};
+  d.nameA = "a golden brazier";
+  d.nameThe = "the golden brazier";
   d.glyph = '0';
   d.clr = clrYellow;
   d.tile = TileId::brazier;
@@ -214,12 +214,9 @@ void initDataList() {
   d.themeSpawnRules.set(3, PlacementRule::either, {RoomType::ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::shallowWater;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "shallow water";
-  d.name_the = "the shallow water";
+  d.id = FeatureId::liquidShallow;
+  d.mkObj = [](const Pos& p) {return new LiquidShallow(p);};
   d.glyph = '~';
-  d.clr = clrBlueLgt;
   d.tile = TileId::water1;
   d.moveRules.setCanMoveCmn();
   d.canHaveBlood = false;
@@ -229,58 +226,81 @@ void initDataList() {
   d.materialType = MaterialType::fluid;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::deepWater;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "deep water";
-  d.name_the = "the deep water";
+  d.id = FeatureId::liquidDeep;
+  d.mkObj = [](const Pos& p) {return new LiquidDeep(p);};
   d.glyph = '~';
-  d.clr = clrBlue;
-  d.tile = TileId::water1;
-  d.moveRules.setPropCanMove(propFlying);
-  d.moveRules.setPropCanMove(propOoze);
-  d.moveRules.setPropCanMove(propEthereal);
-  d.canHaveBlood = false;
-  d.canHaveGore = false;
-  d.canHaveStaticFeature = false;
-  d.dodgeModifier = -10;
-  d.shockWhenAdjacent = 8;
-  d.materialType = MaterialType::fluid;
-  addToListAndReset(d);
-  /*---------------------------------------------*/
-  d.id = FeatureId::shallowMud;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "shallow mud";
-  d.name_the = "the shallow mud";
-  d.glyph = '~';
-  d.clr = clrBrownDrk;
   d.tile = TileId::water1;
   d.moveRules.setCanMoveCmn();
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveStaticFeature = false;
-  d.dodgeModifier = -20;
   d.materialType = MaterialType::fluid;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::poolBlood;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "a pool of blood";
-  d.name_the = "the pool of blood";
-  d.glyph = '~';
-  d.clr = clrRed;
-  d.tile = TileId::water1;
-  d.moveRules.setCanMoveCmn();
-  d.canHaveBlood = false;
-  d.canHaveGore = false;
-  d.canHaveStaticFeature = false;
-  d.dodgeModifier = -10;
-  d.shockWhenAdjacent = 3;
-  d.materialType = MaterialType::fluid;
-  addToListAndReset(d);
+//  d.id = FeatureId::shallowWater;
+//  d.nameA = "shallow water";
+//  d.nameThe = "the shallow water";
+//  d.glyph = '~';
+//  d.clr = clrBlueLgt;
+//  d.tile = TileId::water1;
+//  d.moveRules.setCanMoveCmn();
+//  d.canHaveBlood = false;
+//  d.canHaveGore = false;
+//  d.canHaveStaticFeature = false;
+//  d.dodgeModifier = -10;
+//  d.materialType = MaterialType::fluid;
+//  addToListAndReset(d);
+  /*---------------------------------------------*/
+//  d.id = FeatureId::deepWater;
+//  d.nameA = "deep water";
+//  d.nameThe = "the deep water";
+//  d.glyph = '~';
+//  d.clr = clrBlue;
+//  d.tile = TileId::water1;
+//  d.moveRules.setPropCanMove(propFlying);
+//  d.moveRules.setPropCanMove(propOoze);
+//  d.moveRules.setPropCanMove(propEthereal);
+//  d.canHaveBlood = false;
+//  d.canHaveGore = false;
+//  d.canHaveStaticFeature = false;
+//  d.dodgeModifier = -10;
+//  d.shockWhenAdjacent = 8;
+//  d.materialType = MaterialType::fluid;
+//  addToListAndReset(d);
+  /*---------------------------------------------*/
+//  d.id = FeatureId::shallowMud;
+//  d.nameA = "shallow mud";
+//  d.nameThe = "the shallow mud";
+//  d.glyph = '~';
+//  d.clr = clrBrownDrk;
+//  d.tile = TileId::water1;
+//  d.moveRules.setCanMoveCmn();
+//  d.canHaveBlood = false;
+//  d.canHaveGore = false;
+//  d.canHaveStaticFeature = false;
+//  d.dodgeModifier = -20;
+//  d.materialType = MaterialType::fluid;
+//  addToListAndReset(d);
+  /*---------------------------------------------*/
+//  d.id = FeatureId::poolBlood;
+//  d.nameA = "a pool of blood";
+//  d.nameThe = "the pool of blood";
+//  d.glyph = '~';
+//  d.clr = clrRed;
+//  d.tile = TileId::water1;
+//  d.moveRules.setCanMoveCmn();
+//  d.canHaveBlood = false;
+//  d.canHaveGore = false;
+//  d.canHaveStaticFeature = false;
+//  d.dodgeModifier = -10;
+//  d.shockWhenAdjacent = 3;
+//  d.materialType = MaterialType::fluid;
+//  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::chasm;
-  d.name_a = "a chasm";
-  d.name_the = "the chasm";
+  d.mkObj = [](const Pos& p) {return new Chasm(p);};
+  d.nameA = "a chasm";
+  d.nameThe = "the chasm";
   d.glyph = ' ';
   d.clr = clrBlack;
   d.moveRules.setPropCanMove(propEthereal);
@@ -297,19 +317,10 @@ void initDataList() {
   d.materialType = MaterialType::empty;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::caveFloor;
-  d.name_a = "cavern floor";
-  d.name_the = "the cavern floor";
-  d.glyph = '.';
-  d.clr = clrGray;
-  d.tile = TileId::floor;
-  d.moveRules.setCanMoveCmn();
-  addToListAndReset(d);
-  /*---------------------------------------------*/
   d.id = FeatureId::gravestone;
-  d.name_a = "a gravestone";
-  d.name_the = "the gravestone";
-  d.spawnType = FeatureSpawnType::other;
+  d.mkObj = [](const Pos& p) {return new GraveStone(p);};
+  d.nameA = "a gravestone";
+  d.nameThe = "the gravestone";
   d.glyph = '&';
   d.clr = clrWhite;
   d.tile = TileId::graveStone;
@@ -324,8 +335,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::churchBench;
-  d.name_a = "a church bench";
-  d.name_the = "the church bench";
+  d.mkObj = [](const Pos& p) {return new ChurchBench(p);};
+  d.nameA = "a church bench";
+  d.nameThe = "the church bench";
   d.glyph = '[';
   d.clr = clrBrown;
   d.tile = TileId::churchBench;
@@ -341,9 +353,10 @@ void initDataList() {
   d.canHaveItem = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::churchCarpet;
-  d.name_a = "a red carpet";
-  d.name_the = "the red carpet";
+  d.id = FeatureId::carpet;
+  d.mkObj = [](const Pos& p) {return new Carpet(p);};
+  d.nameA = "a red carpet";
+  d.nameThe = "the red carpet";
   d.glyph = '.';
   d.clr = clrRed;
   d.tile = TileId::floor;
@@ -353,8 +366,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::rubbleHigh;
-  d.name_a = "a big pile of debris";
-  d.name_the = "the big pile of debris";
+  d.mkObj = [](const Pos& p) {return new RubbleHigh(p);};
+  d.nameA = "a big pile of debris";
+  d.nameThe = "the big pile of debris";
   d.glyph = 8;
   d.clr = data[int(FeatureId::wall)].clr;
   d.tile = TileId::rubbleHigh;
@@ -373,20 +387,22 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::rubbleLow;
-  d.name_a = "rubble";
-  d.name_the = "the rubble";
+  d.mkObj = [](const Pos& p) {return new RubbleLow(p);};
+  d.nameA = "rubble";
+  d.nameThe = "the rubble";
   d.glyph = ',';
   d.clr = data[int(FeatureId::wall)].clr;
   d.tile = TileId::rubbleLow;
   d.moveRules.setCanMoveCmn();
-  addToListAndReset(d);
   d.themeSpawnRules.set(4, PlacementRule::either, {
     RoomType::plain, RoomType::crypt, RoomType::monster
   });
+  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::statue;
-  d.name_a = "a statue";
-  d.name_the = "the statue";
+  d.mkObj = [](const Pos& p) {return new Statue(p);};
+  d.nameA = "a statue";
+  d.nameThe = "the statue";
   d.glyph = 5;
   d.clr = clrWhite;
   d.tile = TileId::witchOrWarlock;
@@ -402,29 +418,30 @@ void initDataList() {
   });
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::ghoulStatue;
-  d.name_a = "a statue of a ghoulish creature";
-  d.name_the = "the statue of a ghoulish creature";
-  d.glyph = 'M';
-  d.clr = clrWhite;
-  d.tile = TileId::ghoul;
-  d.isProjectilePassable = false;
-  d.isVisionPassable = false;
-  d.canHaveBlood = false;
-  d.canHaveGore = false;
-  d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
-  d.canHaveItem = false;
-  d.shockWhenAdjacent = 8;
-  d.themeSpawnRules.set(3, PlacementRule::either, {
-    RoomType::plain, RoomType::crypt
-  });
-  addToListAndReset(d);
+//  d.id = FeatureId::ghoulStatue;
+//  d.mkObj = [](const Pos& p) {return new Statue(p);};
+//  d.nameA = "a statue of a ghoulish creature";
+//  d.nameThe = "the statue of a ghoulish creature";
+//  d.glyph = 'M';
+//  d.clr = clrWhite;
+//  d.tile = TileId::ghoul;
+//  d.isProjectilePassable = false;
+//  d.isVisionPassable = false;
+//  d.canHaveBlood = false;
+//  d.canHaveGore = false;
+//  d.canHaveCorpse = false;
+//  d.canHaveStaticFeature = false;
+//  d.canHaveItem = false;
+//  d.shockWhenAdjacent = 8;
+//  d.themeSpawnRules.set(3, PlacementRule::either, {
+//    RoomType::plain, RoomType::crypt
+//  });
+//  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::cocoon;
-  d.name_a = "a cocoon";
-  d.name_the = "the cocoon";
-  d.spawnType = FeatureSpawnType::other;
+  d.mkObj = [](const Pos& p) {return new Cocoon(p);};
+  d.nameA = "a cocoon";
+  d.nameThe = "the cocoon";
   d.glyph = '8';
   d.clr = clrWhite;
   d.tile = TileId::cocoon;
@@ -440,9 +457,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::chest;
-  d.name_a = "a chest";
-  d.name_the = "the chest";
-  d.spawnType = FeatureSpawnType::other;
+  d.mkObj = [](const Pos& p) {return new Chest(p);};
+  d.nameA = "a chest";
+  d.nameThe = "the chest";
   d.glyph = '+';
   d.clr = clrBrownDrk;
   d.tile = TileId::chestClosed;
@@ -455,9 +472,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::cabinet;
-  d.name_a = "a cabinet";
-  d.name_the = "the cabinet";
-  d.spawnType = FeatureSpawnType::other;
+  d.mkObj = [](const Pos& p) {return new Cabinet(p);};
+  d.nameA = "a cabinet";
+  d.nameThe = "the cabinet";
   d.glyph = '7';
   d.clr = clrBrownDrk;
   d.tile = TileId::cabinetClosd;
@@ -472,9 +489,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::fountain;
-  d.name_a = "a fountain";
-  d.name_the = "the fountain";
-  d.spawnType = FeatureSpawnType::other;
+  d.mkObj = [](const Pos& p) {return new Fountain(p);};
+  d.nameA = "a fountain";
+  d.nameThe = "the fountain";
   d.glyph = '%';
   d.clr = clrWhiteHigh;
   d.tile = TileId::fountain;
@@ -490,27 +507,10 @@ void initDataList() {
   });
   addToListAndReset(d);
   /*---------------------------------------------*/
-//  d.id = FeatureId::pillarCarved;
-//  d.name_a = "a carved pillar";
-//  d.name_the = "the carved pillar";
-//  d.spawnType = FeatureSpawnType::other;
-//  d.glyph = '1';
-//  d.clr = clrGray;
-//  d.tile = TileId::pillarCarved;
-////  d.canBodyTypePass[bodyType_ooze] = false;
-//  d.isProjectilePassable = false;
-//  d.isVisionPassable = false;
-//  d.canHaveBlood = false;
-//  d.canHaveGore = false;
-//  d.canHaveCorpse = false;
-//  d.canHaveStaticFeature = false;
-//  d.canHaveItem = false;
-////  d.themeSpawnRules.set(1, PlacementRule::awayFromWalls, RoomType::crypt, RoomType::ritual, RoomType::monster);
-//  addToListAndReset(d);
-  /*---------------------------------------------*/
   d.id = FeatureId::pillar;
-  d.name_a = "a pillar";
-  d.name_the = "the pillar";
+  d.mkObj = [](const Pos& p) {return new Pillar(p);};
+  d.nameA = "a pillar";
+  d.nameThe = "the pillar";
   d.glyph = '|';
   d.clr = clrGray;
   d.tile = TileId::pillar;
@@ -526,28 +526,10 @@ void initDataList() {
   });
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::pillarBroken;
-  d.name_a = "a broken pillar";
-  d.name_the = "the broken pillar";
-  d.glyph = '|';
-  d.clr = clrGray;
-  d.tile = TileId::pillarBroken;
-  d.isProjectilePassable = false;
-  d.isVisionPassable = false;
-  d.canHaveBlood = false;
-  d.canHaveGore = false;
-  d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
-  d.canHaveItem = false;
-  d.themeSpawnRules.set(4, PlacementRule::awayFromWalls, {
-    RoomType::plain, RoomType::crypt, RoomType::ritual, RoomType::monster
-  });
-  addToListAndReset(d);
-  /*---------------------------------------------*/
   d.id = FeatureId::altar;
-  d.name_a = "an altar";
-  d.name_the = "the altar";
-  d.spawnType = FeatureSpawnType::staticFeature;
+  d.mkObj = [](const Pos& p) {return new Altar(p);};
+  d.nameA = "an altar";
+  d.nameThe = "the altar";
   d.glyph = '_';
   d.clr = clrWhiteHigh;
   d.tile = TileId::altar;
@@ -561,9 +543,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::tomb;
-  d.name_a = "a tomb";
-  d.name_the = "the tomb";
-  d.spawnType = FeatureSpawnType::other;
+  d.mkObj = [](const Pos& p) {return new Tomb(p);};
+  d.nameA = "a tomb";
+  d.nameThe = "the tomb";
   d.glyph = '&';
   d.clr = clrGray;
   d.tile = TileId::tomb;
@@ -578,28 +560,29 @@ void initDataList() {
   d.themeSpawnRules.set(2, PlacementRule::either, {RoomType::crypt});
   addToListAndReset(d);
   /*---------------------------------------------*/
-  d.id = FeatureId::pit;
-  d.name_a = "a pit";
-  d.name_the = "the pit";
-  d.glyph = '^';
-  d.clr = clrGray;
-  d.tile = TileId::pit;
-  d.moveRules.setPropCanMove(propEthereal);
-  d.moveRules.setPropCanMove(propFlying);
-  d.canHaveBlood = false;
-  d.canHaveGore = false;
-  d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
-  d.isBottomless = true;
-  d.canHaveItem = false;
-  d.messageOnPlayerBlocked = "A pit lies in my way.";
-  d.messageOnPlayerBlockedBlind =
-    "I realize I am standing on the edge of a pit.";
-  d.shockWhenAdjacent = 5;
-  addToListAndReset(d);
+//  d.id = FeatureId::pit;
+//  d.mkObj = [](const Pos& p) {return new Pit(p);};
+//  d.nameA = "a pit";
+//  d.nameThe = "the pit";
+//  d.glyph = '^';
+//  d.clr = clrGray;
+//  d.tile = TileId::pit;
+//  d.moveRules.setPropCanMove(propEthereal);
+//  d.moveRules.setPropCanMove(propFlying);
+//  d.canHaveBlood = false;
+//  d.canHaveGore = false;
+//  d.canHaveCorpse = false;
+//  d.canHaveStaticFeature = false;
+//  d.isBottomless = true;
+//  d.canHaveItem = false;
+//  d.messageOnPlayerBlocked = "A pit lies in my way.";
+//  d.messageOnPlayerBlockedBlind =
+//    "I realize I am standing on the edge of a pit.";
+//  d.shockWhenAdjacent = 5;
+//  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::door;
-  d.spawnType = FeatureSpawnType::other;
+  d.mkObj = [](const Pos& p) {return new Door(p);};
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -609,15 +592,15 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::trap;
-  d.spawnType = FeatureSpawnType::other;
+  d.mkObj = [](const Pos& p) {return new Trap(p);};
   d.moveRules.setCanMoveCmn();
   d.canHaveStaticFeature = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::litDynamite;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "a lit stick of dynamite";
-  d.name_the = "the lit stick of dynamite";
+  d.mkObj = [](const Pos& p) {return new LitDynamite(p);};
+  d.nameA = "a lit stick of dynamite";
+  d.nameThe = "the lit stick of dynamite";
   d.glyph = '/';
   d.clr = clrRedLgt;
   d.tile = TileId::dynamiteLit;
@@ -629,9 +612,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::litFlare;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "a lit flare";
-  d.name_the = "the lit flare";
+  d.mkObj = [](const Pos& p) {return new LitFlare(p);};
+  d.nameA = "a lit flare";
+  d.nameThe = "the lit flare";
   d.glyph = '/';
   d.clr = clrYellow;
   d.tile = TileId::flareLit;
@@ -639,9 +622,9 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::smoke;
-  d.spawnType = FeatureSpawnType::other;
-  d.name_a = "smoke";
-  d.name_the = "the smoke";
+  d.mkObj = [](const Pos& p) {return new Smoke(p);};
+  d.nameA = "smoke";
+  d.nameThe = "the smoke";
   d.glyph = '*';
   d.clr = clrGray;
   d.tile = TileId::smoke;
@@ -650,7 +633,7 @@ void initDataList() {
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::proxEventWallCrumble;
-  d.spawnType = FeatureSpawnType::other;
+  d.mkObj = [](const Pos& p) {return new ProxEventWallCrumble(p);};
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -662,8 +645,10 @@ void init() {
   initDataList();
 }
 
-const FeatureDataT* getData(const FeatureId id) {
-  return &(data[int(id)]);
+const FeatureDataT& getData(const FeatureId id) {
+  assert(id != FeatureId::empty);
+  assert(id != FeatureId::endOfFeatureId);
+  return data[int(id)];
 }
 
 } //FeatureData

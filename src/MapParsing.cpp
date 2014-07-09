@@ -7,6 +7,8 @@
 #include "ActorPlayer.h"
 #include "GameTime.h"
 #include "Utils.h"
+#include "FeatureStatic.h"
+#include "FeatureMob.h"
 
 using namespace std;
 

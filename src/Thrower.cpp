@@ -9,7 +9,6 @@
 #include "Renderer.h"
 #include "Map.h"
 #include "Log.h"
-#include "FeatureFactory.h"
 #include "Explosion.h"
 #include "ItemDrop.h"
 #include "Inventory.h"
@@ -19,6 +18,8 @@
 #include "PlayerBon.h"
 #include "Utils.h"
 #include "SdlWrapper.h"
+#include "FeatureStatic.h"
+#include "FeatureMob.h"
 
 using namespace std;
 
@@ -44,6 +45,8 @@ void playerThrowLitExplosive(const Pos& aimCell) {
     }
   }
 
+  const Pos endPos = path.empty() ? Pos() : path.back();
+
   //Render
   if(path.size() > 1) {
     const auto GLYPH = ItemData::data[int(ItemId::dynamite)]->glyph;
@@ -58,33 +61,24 @@ void playerThrowLitExplosive(const Pos& aimCell) {
     }
   }
 
-  auto* const featureAtDest =
-    Map::cells[path.back().x][path.back().y].featureStatic;
-  const bool IS_DEST_FEAT_BOTTOMLESS = featureAtDest->isBottomless();
+  auto* const featureAtDest     = Map::cells[endPos.x][endPos.y].featureStatic;
+  const bool IS_DEST_BOTTOMLESS = featureAtDest->isBottomless();
 
   if(DYNAMITE_FUSE != -1) {
     Log::addMsg("I throw a lit dynamite stick.");
-    if(!IS_DEST_FEAT_BOTTOMLESS) {
-      FeatureFactory::mk(FeatureId::litDynamite, path.back(),
-                         new DynamiteSpawnData(DYNAMITE_FUSE));
-    }
+    if(!IS_DEST_BOTTOMLESS) {GameTime::addMob(new LitDynamite(endPos, DYNAMITE_FUSE));}
   } else if(FLARE_FUSE != -1) {
     Log::addMsg("I throw a lit flare.");
-    if(!IS_DEST_FEAT_BOTTOMLESS) {
-      FeatureFactory::mk(FeatureId::litFlare, path.back(),
-                         new DynamiteSpawnData(FLARE_FUSE));
-    }
+    if(!IS_DEST_BOTTOMLESS) {GameTime::addMob(new LitFlare(endPos, FLARE_FUSE));}
     GameTime::updateLightMap();
     Map::player->updateFov();
     Renderer::drawMapAndInterface();
   } else {
     Log::addMsg("I throw a lit Molotov Cocktail.");
-    const int EXPL_RADI_CHANGE =
-      PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
-    if(!IS_DEST_FEAT_BOTTOMLESS) {
+    const int D = PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
+    if(!IS_DEST_BOTTOMLESS) {
       Explosion::runExplosionAt(
-        path.back(), ExplType::applyProp,
-        ExplSrc::playerUseMoltvIntended, EXPL_RADI_CHANGE,
+        endPos, ExplType::applyProp, ExplSrc::playerUseMoltvIntended, D,
         SfxId::explosionMolotov, new PropBurning(propTurnsStd));
     }
   }

@@ -1,6 +1,5 @@
 #include "Explosion.h"
 
-#include "FeatureSmoke.h"
 #include "Renderer.h"
 #include "Map.h"
 #include "Log.h"
@@ -11,6 +10,8 @@
 #include "Utils.h"
 #include "SdlWrapper.h"
 #include "PlayerBon.h"
+#include "FeatureStatic.h"
+#include "FeatureMob.h"
 
 using namespace std;
 
@@ -115,9 +116,6 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   draw(posLists, blocked, clrOverride);
 
   //Do damage, apply effect
-  const int DMG_ROLLS = 5;
-  const int DMG_SIDES = 6;
-  const int DMG_PLUS  = 10;
 
   Actor* livingActors[MAP_W][MAP_H];
   vector<Actor*> corpses[MAP_W][MAP_H];
@@ -151,8 +149,13 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
 
       if(explType == ExplType::expl) {
         //Damage environment
-        if(curRadi <= 1) {Map::switchToDestroyedFeatAt(pos);}
-        const int DMG = Rnd::dice(DMG_ROLLS - curRadi, DMG_SIDES) + DMG_PLUS;
+        Cell& cell = Map::cells[pos.x][pos.y];
+//        if(curRadi <= 2) {
+        cell.featureStatic->hit(DmgType::physical, DmgMethod::explosion);
+//        }
+
+        const int ROLLS = EXPL_DMG_ROLLS - curRadi;
+        const int DMG   = Rnd::dice(ROLLS, EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 
         //Damage living actor
         if(livingActor) {
@@ -167,8 +170,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         }
 
         if(Rnd::fraction(6, 10)) {
-          FeatureFactory::mk(FeatureId::smoke, pos,
-                             new SmokeSpawnData(Rnd::range(2, 4)));
+          GameTime::addMob(new Smoke(pos, Rnd::range(2, 4)));
         }
       }
 
@@ -221,8 +223,7 @@ void runSmokeExplosionAt(const Pos& origin) {
   for(const vector<Pos>& inner : posLists) {
     for(const Pos& pos : inner) {
       if(!blocked[pos.x][pos.y]) {
-        FeatureFactory::mk(FeatureId::smoke, pos,
-                           new SmokeSpawnData(Rnd::range(17, 22)));
+        GameTime::addMob(new Smoke(pos, Rnd::range(17, 22)));
       }
     }
   }

@@ -14,7 +14,6 @@
 				<Option object_output="../obj/debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -43,7 +42,6 @@
 				<Option object_output="../test/obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -154,12 +152,9 @@
 		<Unit filename="../include/FeatureData.h" />
 		<Unit filename="../include/FeatureDoor.h" />
 		<Unit filename="../include/FeatureExaminable.h" />
-		<Unit filename="../include/FeatureFactory.h" />
-		<Unit filename="../include/FeatureLever.h" />
-		<Unit filename="../include/FeatureLiquid.h" />
-		<Unit filename="../include/FeatureLitDynamite.h" />
+		<Unit filename="../include/FeatureMob.h" />
 		<Unit filename="../include/FeatureProxEvent.h" />
-		<Unit filename="../include/FeatureSmoke.h" />
+		<Unit filename="../include/FeatureStatic.h" />
 		<Unit filename="../include/FeatureTrap.h" />
 		<Unit filename="../include/Fov.h" />
 		<Unit filename="../include/GameTime.h" />
@@ -249,12 +244,9 @@
 		<Unit filename="../src/FeatureData.cpp" />
 		<Unit filename="../src/FeatureDoor.cpp" />
 		<Unit filename="../src/FeatureExaminable.cpp" />
-		<Unit filename="../src/FeatureFactory.cpp" />
-		<Unit filename="../src/FeatureLever.cpp" />
-		<Unit filename="../src/FeatureLiquid.cpp" />
-		<Unit filename="../src/FeatureLitDynamite.cpp" />
+		<Unit filename="../src/FeatureMob.cpp" />
 		<Unit filename="../src/FeatureProxEvent.cpp" />
-		<Unit filename="../src/FeatureSmoke.cpp" />
+		<Unit filename="../src/FeatureStatic.cpp" />
 		<Unit filename="../src/FeatureTrap.cpp" />
 		<Unit filename="../src/Fov.cpp" />
 		<Unit filename="../src/GameTime.cpp" />

@@ -17,10 +17,10 @@
 #include "ItemWeapon.h"
 #include "FeatureDoor.h"
 #include "Inventory.h"
-#include "FeatureFactory.h"
 #include "ActorMonster.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "GameTime.h"
 
 using namespace std;
 

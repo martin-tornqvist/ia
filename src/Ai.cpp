@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "Map.h"
 #include "Utils.h"
+#include "FeatureMob.h"
 #include "FeatureDoor.h"
 #include "ActorMonster.h"
 #include "LineCalc.h"

@@ -86,12 +86,11 @@ void initTempls() {
 
 
   translations.resize(0);
-  translations.push_back(CharAndFeatureId(',', FeatureId::grassWithered));
-  translations.push_back(CharAndFeatureId(',', FeatureId::grassWithered));
-  translations.push_back(CharAndFeatureId('v', FeatureId::brazierGolden));
+  translations.push_back(CharAndFeatureId(',', FeatureId::grass));
+  translations.push_back(CharAndFeatureId('v', FeatureId::brazier));
   translations.push_back(CharAndFeatureId('[', FeatureId::churchBench));
   translations.push_back(CharAndFeatureId('-', FeatureId::altar));
-  translations.push_back(CharAndFeatureId('*', FeatureId::churchCarpet));
+  translations.push_back(CharAndFeatureId('*', FeatureId::carpet));
 
   templates_[int(MapTemplId::church)] = strToTempl(templStr, translations);
 
@@ -125,7 +124,7 @@ void initTempls() {
   //       01234567890123456789012345678901234567890123456789012345678901234567890123456789
   //                 1         2         3         4         5         6         7
   translations.resize(0);
-  translations.push_back(CharAndFeatureId('v', FeatureId::brazierGolden));
+  translations.push_back(CharAndFeatureId('v', FeatureId::brazier));
   translations.push_back(CharAndFeatureId('1', FeatureId::pillar));
   translations.push_back(CharAndFeatureId('P', FeatureId::statue));
   templates_[int(MapTemplId::egypt)] = strToTempl(templStr, translations);

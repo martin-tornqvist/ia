@@ -1,8 +1,7 @@
 #ifndef FEATURE_PROX_EVENT_H
 #define FEATURE_PROX_EVENT_H
 
-#include "Feature.h"
-#include "FeatureFactory.h"
+#include "FeatureMob.h"
 
 class ProxEvent: public FeatureMob {
 public:
@@ -11,18 +10,20 @@ public:
   void newTurn();
 
 protected:
-  ProxEvent(FeatureId id, Pos pos) :
-    FeatureMob(id, pos) {}
+  ProxEvent(Pos pos) : FeatureMob(pos) {}
 
   virtual void playerIsNear() = 0;
 };
 
 class ProxEventWallCrumble: public ProxEvent {
 public:
-  ProxEventWallCrumble(FeatureId id, Pos pos,
-                       ProxEventWallCrumbleSpawnData* spawnData) :
-    ProxEvent(id, pos), wallCells_(spawnData->wallCells_),
-    innerCells_(spawnData->innerCells_) {}
+  ProxEventWallCrumble(Pos pos, std::vector<Pos>& walls, std::vector<Pos>& inner) :
+    ProxEvent(pos), wallCells_(walls), innerCells_(inner) {}
+
+  //Spawn by id compliant ctor (do not use for normal cases):
+  ProxEventWallCrumble(const Pos& pos) : ProxEvent(pos) {}
+
+  FeatureId getId() const override {return FeatureId::proxEventWallCrumble;}
 
 private:
   void playerIsNear();

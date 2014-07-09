@@ -1367,7 +1367,7 @@ string getItemRef(const Item& item, const ItemRefType itemRefForm,
   if(d.isDevice && d.id != ItemId::electricLantern) {
     if(d.isIdentified) {
       ret = itemRefForm == ItemRefType::plain ?
-            d.baseName.name : d.baseName.name_a;
+            d.baseName.name : d.baseName.nameA;
       if(!SKIP_EXTRA_INFO) {
         const Condition cond = static_cast<const Device*>(&item)->condition_;
         switch(cond) {
@@ -1388,7 +1388,7 @@ string getItemRef(const Item& item, const ItemRefType itemRefForm,
     ret += d.baseName.name_plural;
   } else {
     ret = itemRefForm == ItemRefType::plain ?
-          d.baseName.name : d.baseName.name_a;
+          d.baseName.name : d.baseName.nameA;
   }
 
   if(d.isAmmoClip) {
@@ -1429,7 +1429,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
 
   if(d.isDevice && d.id != ItemId::electricLantern) {
     if(d.isIdentified) {
-      string ret = ADD_A ? d.baseName.name_a : d.baseName.name;
+      string ret = ADD_A ? d.baseName.nameA : d.baseName.name;
       const Condition cond = static_cast<const Device*>(&item)->condition_;
       switch(cond) {
         case Condition::breaking: ret += " {breaking}"; break;
@@ -1448,7 +1448,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
   if(d.isStackable && item.nrItems > 1) {
     ret = toStr(item.nrItems) + " " + d.baseName.name_plural;
   } else {
-    ret = (ADD_A ? d.baseName.name_a : d.baseName.name);
+    ret = (ADD_A ? d.baseName.nameA : d.baseName.name);
   }
 
   const int PLAYER_RANGED_SKILL =

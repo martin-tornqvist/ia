@@ -12,6 +12,7 @@
 #include "Reload.h"
 #include "Inventory.h"
 #include "FeatureTrap.h"
+#include "FeatureMob.h"
 #include "Properties.h"
 #include "Renderer.h"
 #include "Sound.h"

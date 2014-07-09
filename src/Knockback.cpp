@@ -12,6 +12,8 @@
 #include "Renderer.h"
 #include "MapParsing.h"
 #include "SdlWrapper.h"
+#include "FeatureStatic.h"
+#include "FeatureMob.h"
 
 using namespace std;
 

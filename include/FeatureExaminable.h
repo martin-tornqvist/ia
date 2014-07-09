@@ -39,7 +39,11 @@ enum class TombAppearance {
 
 class Tomb: public FeatureStatic {
 public:
-  Tomb(FeatureId id, Pos pos);
+  Tomb(const Pos& pos);
+  Tomb() = delete;
+  ~Tomb() {}
+
+  FeatureId getId() const override {return FeatureId::tomb;}
 
   void bump(Actor& actorBumping)  override;
   bool open()                     override;
@@ -70,8 +74,11 @@ enum ChestMtrl {
 
 class Chest: public FeatureStatic {
 public:
-  Chest(FeatureId id, Pos pos);
+  Chest(const Pos& pos);
+  Chest() = delete;
   ~Chest() {}
+
+  FeatureId getId() const override {return FeatureId::chest;}
 
   void bump(Actor& actorBumping)  override;
   bool open()                     override;
@@ -104,8 +111,11 @@ private:
 
 class Cabinet: public FeatureStatic {
 public:
-  Cabinet(FeatureId id, Pos pos);
+  Cabinet(const Pos& pos);
+  Cabinet() = delete;
   ~Cabinet() {}
+
+  FeatureId getId() const override {return FeatureId::cabinet;}
 
   void bump(Actor& actorBumping) override;
   bool open()                     override;
@@ -141,12 +151,15 @@ enum class FountainMaterial {stone, gold};
 
 class Fountain: public FeatureStatic {
 public:
-  Fountain(FeatureId id, Pos pos);
+  Fountain(const Pos& pos);
+  Fountain() = delete;
   ~Fountain() {}
 
-  void bump(Actor& actorBumping)                override;
-  SDL_Color getClr()                            const override;
-  std::string getDescr(const bool DEFINITE_ARTICLE)  const override;
+  FeatureId getId() const override {return FeatureId::fountain;}
+
+  void bump(Actor& actorBumping)                          override;
+  SDL_Color getClr()                                const override;
+  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
 private:
   FountainType fountainType_;
@@ -155,8 +168,11 @@ private:
 
 class Cocoon: public FeatureStatic {
 public:
-  Cocoon(FeatureId id, Pos pos);
+  Cocoon(const Pos& pos);
+  Cocoon() = delete;
   ~Cocoon() {}
+
+  FeatureId getId() const override {return FeatureId::cocoon;}
 
   void bump(Actor& actorBumping)  override;
   bool open()                     override;

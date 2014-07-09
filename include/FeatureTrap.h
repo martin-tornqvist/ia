@@ -4,44 +4,50 @@
 #include "Feature.h"
 #include "AbilityValues.h"
 #include "Art.h"
-#include "Feature.h"
+#include "FeatureStatic.h"
 #include "CmnData.h"
 
 class SpecificTrapBase;
-class TrapSpawnData;
 
-enum TrapId {
-  trap_blinding,
-  trap_dart,
-  trap_gasConfusion,
-  trap_gasFear,
-  trap_gasParalyze,
-  trap_smoke,
-  trap_alarm,
-  trap_spear,
-  trap_spiderWeb,
-  trap_teleport,
-  trap_summonMonster,
+enum class TrapId {
+  blinding,
+  dart,
+  gasConfusion,
+  gasFear,
+  gasParalyze,
+  smoke,
+  alarm,
+  spear,
+  spiderWeb,
+  teleport,
+  summonMonster,
   endOfTraps,
-  trap_any
+  any
 };
 
 class Trap: public FeatureStatic {
 public:
-  Trap(FeatureId id, Pos pos, TrapSpawnData* spawnData);
+  Trap(const Pos& pos, const FeatureDataT& mimicFeature, TrapId type);
+
+  //Spawn by id compliant ctor (do not use for normal cases):
+  Trap(const Pos& pos) : FeatureStatic(pos), mimicFeature_(nullptr), isHidden_(false) {}
+
+  Trap() = delete;
 
   ~Trap();
 
-  void  bump(Actor& actorBumping) override;
-  SDL_Color getClr()                            const override;
-  char getGlyph()                               const override;
-  TileId getTile()                              const override;
-  std::string getDescr(const bool DEFINITE_ARTICLE)  const override;
-  void disarm()                                 override;
-  bool canHaveCorpse()  const override {return isHidden_;}
-  bool canHaveBlood()   const override {return isHidden_;}
-  bool canHaveGore()    const override {return isHidden_;}
-  bool canHaveItem()    const override {return isHidden_;}
+  FeatureId getId() const override {return FeatureId::trap;}
+
+  void        bump(Actor& actorBumping)                   override;
+  SDL_Color   getClr()                              const override;
+  char        getGlyph()                            const override;
+  TileId      getTile()                             const override;
+  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
+  void        disarm()                                    override;
+  bool        canHaveCorpse()                       const override {return isHidden_;}
+  bool        canHaveBlood()                        const override {return isHidden_;}
+  bool        canHaveGore()                         const override {return isHidden_;}
+  bool        canHaveItem()                         const override {return isHidden_;}
 
   bool isMagical() const;
 
@@ -59,17 +65,16 @@ public:
 
   const SpecificTrapBase* getSpecificTrap() const {return specificTrap_;}
 
+  void  playerTrySpotHidden();
+
 protected:
   void triggerTrap(Actor& actor) override;
 
   void setSpecificTrapFromId(const TrapId id);
 
-  const FeatureDataT* const mimicFeature_;
+  const FeatureDataT* mimicFeature_;
   bool isHidden_;
   SpecificTrapBase* specificTrap_;
-
-  friend class Player;
-  void playerTrySpotHidden();
 };
 
 class SpecificTrapBase {
@@ -87,12 +92,12 @@ protected:
 
   virtual void trigger(
     Actor& actor, const AbilityRollResult dodgeResult) = 0;
-  virtual std::string getTitle()     const = 0;
-  virtual SDL_Color getClr()    const = 0;
-  virtual char getGlyph()       const = 0;
-  virtual TileId getTile()      const = 0;
-  virtual bool isMagical()      const = 0;
-  virtual bool isDisarmable()   const = 0;
+  virtual std::string getTitle()  const = 0;
+  virtual SDL_Color getClr()      const = 0;
+  virtual char getGlyph()         const = 0;
+  virtual TileId getTile()        const = 0;
+  virtual bool isMagical()        const = 0;
+  virtual bool isDisarmable()     const = 0;
   virtual std::string getDisarmMsg() const {
     return isMagical() ? "I dispel a magic trap." : "I disarm a trap.";
   }
@@ -140,7 +145,7 @@ class TrapGasConfusion: public SpecificTrapBase {
 private:
   friend class Trap;
   TrapGasConfusion(Pos pos) :
-    SpecificTrapBase(pos, trap_gasConfusion) {}
+    SpecificTrapBase(pos, TrapId::gasConfusion) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrMagenta;}
   std::string      getTitle()      const override {return "Gas trap";}
@@ -154,7 +159,7 @@ class TrapGasParalyzation: public SpecificTrapBase {
 private:
   friend class Trap;
   TrapGasParalyzation(Pos pos) :
-    SpecificTrapBase(pos, trap_gasParalyze) {
+    SpecificTrapBase(pos, TrapId::gasParalyze) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrMagenta;}
@@ -169,7 +174,7 @@ class TrapGasFear: public SpecificTrapBase {
 private:
   friend class Trap;
   TrapGasFear(Pos pos) :
-    SpecificTrapBase(pos, trap_gasFear) {}
+    SpecificTrapBase(pos, TrapId::gasFear) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrMagenta;}
   std::string      getTitle()      const override {return "Gas trap";}
@@ -183,7 +188,7 @@ class TrapBlindingFlash: public SpecificTrapBase {
 private:
   friend class Trap;
   TrapBlindingFlash(Pos pos) :
-    SpecificTrapBase(pos, trap_blinding) {}
+    SpecificTrapBase(pos, TrapId::blinding) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrYellow;}
   std::string      getTitle()      const override {return "Blinding trap";}
@@ -197,7 +202,7 @@ class TrapTeleport: public SpecificTrapBase {
 private:
   friend class Trap;
   TrapTeleport(Pos pos) :
-    SpecificTrapBase(pos, trap_teleport) {
+    SpecificTrapBase(pos, TrapId::teleport) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrCyan;}
@@ -212,7 +217,7 @@ class TrapSummonMonster: public SpecificTrapBase {
 private:
   friend class Trap;
   TrapSummonMonster(Pos pos) :
-    SpecificTrapBase(pos, trap_summonMonster) {
+    SpecificTrapBase(pos, TrapId::summonMonster) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrBrownDrk;}
@@ -227,7 +232,7 @@ class TrapSmoke: public SpecificTrapBase {
 private:
   friend class Trap;
   TrapSmoke(Pos pos) :
-    SpecificTrapBase(pos, trap_smoke) {}
+    SpecificTrapBase(pos, TrapId::smoke) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrGray;}
   std::string      getTitle()      const override {return "Smoke trap";}
@@ -241,7 +246,7 @@ class TrapAlarm: public SpecificTrapBase {
 private:
   friend class Trap;
   TrapAlarm(Pos pos) :
-    SpecificTrapBase(pos, trap_alarm) {}
+    SpecificTrapBase(pos, TrapId::alarm) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrBrown;}
   std::string      getTitle()      const override {return "Alarm trap";}
@@ -261,7 +266,7 @@ public:
 private:
   friend class Trap;
   TrapSpiderWeb(Pos pos) :
-    SpecificTrapBase(pos, trap_spiderWeb), isHoldingActor(false) {}
+    SpecificTrapBase(pos, TrapId::spiderWeb), isHoldingActor(false) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   SDL_Color   getClr()        const override {return clrWhiteHigh;}
   std::string      getTitle()      const override {return "Spider web";}

@@ -16,6 +16,7 @@
 #include "DungeonClimb.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 
@@ -313,7 +314,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
 
     data_->baseName.name        = REAL_NAME;
     data_->baseName.name_plural = REAL_NAME_PLURAL;
-    data_->baseName.name_a      = REAL_NAME_A;
+    data_->baseName.nameA      = REAL_NAME_A;
 
     if(!IS_SILENT_IDENTIFY) {
       Log::addMsg("It was a " + REAL_NAME + ".");
@@ -364,7 +365,7 @@ void Potion::quaff(Actor* const actor) {
     Audio::play(SfxId::potionQuaff);
 
     if(data_->isIdentified) {
-      Log::addMsg("I drink " + data_->baseName.name_a + "...");
+      Log::addMsg("I drink " + data_->baseName.nameA + "...");
     } else {
       Log::addMsg("I drink an unknown " + data_->baseName.name + "...");
     }
@@ -421,7 +422,7 @@ void setClrAndFalseName(ItemDataT* d) {
 
   d->baseName.name        = look.namePlain + " potion";
   d->baseName.name_plural = look.namePlain + " potions";
-  d->baseName.name_a      = look.nameA     + " potion";
+  d->baseName.nameA      = look.nameA     + " potion";
   d->clr                  = look.clr;
 
   potionLooks_.erase(potionLooks_.begin() + ELEMENT);
@@ -433,7 +434,7 @@ void storeToSaveLines(vector<string>& lines) {
     if(d->isPotion) {
       lines.push_back(d->baseName.name);
       lines.push_back(d->baseName.name_plural);
-      lines.push_back(d->baseName.name_a);
+      lines.push_back(d->baseName.nameA);
       lines.push_back(toStr(d->clr.r));
       lines.push_back(toStr(d->clr.g));
       lines.push_back(toStr(d->clr.b));
@@ -449,7 +450,7 @@ void setupFromSaveLines(vector<string>& lines) {
       lines.erase(begin(lines));
       d->baseName.name_plural = lines.front();
       lines.erase(begin(lines));
-      d->baseName.name_a = lines.front();
+      d->baseName.nameA = lines.front();
       lines.erase(begin(lines));
       d->clr.r = toInt(lines.front());
       lines.erase(begin(lines));

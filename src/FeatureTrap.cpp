@@ -4,7 +4,6 @@
 #include <assert.h>
 
 #include "Init.h"
-#include "FeatureFactory.h"
 #include "FeatureData.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -24,20 +23,17 @@
 using namespace std;
 
 //------------------------------------------------------------- TRAP
-Trap::Trap(FeatureId id, Pos pos, TrapSpawnData* spawnData) :
-  FeatureStatic(id, pos), mimicFeature_(spawnData->mimicFeature_),
-  isHidden_(true) {
+Trap::Trap(const Pos& pos, const FeatureDataT& mimicFeature, TrapId type) :
+  FeatureStatic(pos), mimicFeature_(&mimicFeature), isHidden_(true) {
 
-  assert(spawnData->trapType_ != endOfTraps);
-  assert(mimicFeature_);
+  assert(type != TrapId::endOfTraps);
 
-  assert(
-    Map::cells[pos.x][pos.y].featureStatic->canHaveStaticFeature());
+  assert(Map::cells[pos.x][pos.y].featureStatic->canHaveStaticFeature());
 
-  if(spawnData->trapType_ == trap_any) {
-    setSpecificTrapFromId(TrapId(Rnd::range(0, endOfTraps - 1)));
+  if(type == TrapId::any) {
+    setSpecificTrapFromId(TrapId(Rnd::range(0, int(TrapId::endOfTraps) - 1)));
   } else {
-    setSpecificTrapFromId(spawnData->trapType_);
+    setSpecificTrapFromId(type);
   }
   assert(specificTrap_);
 }
@@ -49,27 +45,27 @@ Trap::~Trap() {
 
 void Trap::setSpecificTrapFromId(const TrapId id) {
   switch(id) {
-    case trap_dart:
+    case TrapId::dart:
       specificTrap_ = new TrapDart(pos_); break;
-    case trap_spear:
+    case TrapId::spear:
       specificTrap_ = new TrapSpear(pos_); break;
-    case trap_gasConfusion:
+    case TrapId::gasConfusion:
       specificTrap_ = new TrapGasConfusion(pos_); break;
-    case trap_gasParalyze:
+    case TrapId::gasParalyze:
       specificTrap_ = new TrapGasParalyzation(pos_); break;
-    case trap_gasFear:
+    case TrapId::gasFear:
       specificTrap_ = new TrapGasFear(pos_); break;
-    case trap_blinding:
+    case TrapId::blinding:
       specificTrap_ = new TrapBlindingFlash(pos_);   break;
-    case trap_teleport:
+    case TrapId::teleport:
       specificTrap_ = new TrapTeleport(pos_); break;
-    case trap_summonMonster:
+    case TrapId::summonMonster:
       specificTrap_ = new TrapSummonMonster(pos_); break;
-    case trap_smoke:
+    case TrapId::smoke:
       specificTrap_ = new TrapSmoke(pos_); break;
-    case trap_alarm:
+    case TrapId::alarm:
       specificTrap_ = new TrapAlarm(pos_); break;
-    case trap_spiderWeb:
+    case TrapId::spiderWeb:
       specificTrap_ = new TrapSpiderWeb(pos_); break;
     default:
       specificTrap_ = nullptr; break;
@@ -90,7 +86,7 @@ void Trap::bump(Actor& actorBumping) {
 
   const ActorDataT& d = actorBumping.getData();
 
-  TRACE << "Trap: Name of actor bumping: \"" << d.name_a << "\"" << endl;
+  TRACE << "Trap: Name of actor bumping: \"" << d.nameA << "\"" << endl;
 
 
   vector<PropId> props;
@@ -161,7 +157,7 @@ void Trap::disarm() {
 
   //Spider webs are automatically destroyed if wielding machete
   bool isAutoSucceed = false;
-  if(getTrapType() == trap_spiderWeb) {
+  if(getTrapType() == TrapId::spiderWeb) {
     Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
     if(item) {
       isAutoSucceed = item->getData().id == ItemId::machete;
@@ -201,7 +197,7 @@ void Trap::disarm() {
     Renderer::drawMapAndInterface();
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
     if(Rnd::oneIn(TRIGGER_ONE_IN_N)) {
-      if(getTrapType() == trap_spiderWeb) {
+      if(getTrapType() == TrapId::spiderWeb) {
         Map::player->pos = pos_;
       }
       triggerTrap(*Map::player);
@@ -209,7 +205,7 @@ void Trap::disarm() {
   }
   GameTime::actorDidAct();
 
-  if(IS_DISARMED) {FeatureFactory::mk(FeatureId::floor, pos_);}
+  if(IS_DISARMED) {Map::put(new Floor(pos_));}
 }
 
 void Trap::triggerTrap(Actor& actor) {
@@ -219,7 +215,7 @@ void Trap::triggerTrap(Actor& actor) {
 
   const ActorDataT& d = actor.getData();
 
-  TRACE << "Trap: Actor triggering is " << d.name_a << endl;
+  TRACE << "Trap: Actor triggering is " << d.nameA << endl;
 
   const int DODGE_SKILL =
     d.abilityVals.getVal(AbilityId::dodgeTrap, true, actor);
@@ -291,8 +287,7 @@ void Trap::playerTrySpotHidden() {
 
 string Trap::getDescr(const bool DEFINITE_ARTICLE) const {
   if(isHidden_) {
-    return DEFINITE_ARTICLE ? mimicFeature_->name_the :
-           mimicFeature_->name_a;
+    return DEFINITE_ARTICLE ? mimicFeature_->nameThe : mimicFeature_->nameA;
   } else {
     return "a " + specificTrap_->getTitle();
   }
@@ -316,12 +311,12 @@ Dir Trap::actorTryLeave(Actor& actor, const Dir dir) {
 }
 
 MaterialType Trap::getMaterialType() const {
-  return isHidden_ ? mimicFeature_->materialType : data_->materialType;
+  return isHidden_ ? mimicFeature_->materialType : getData().materialType;
 }
 
 //------------------------------------------------------------- SPECIFIC TRAPS
 TrapDart::TrapDart(Pos pos) :
-  SpecificTrapBase(pos, trap_dart), isPoisoned(false) {
+  SpecificTrapBase(pos, TrapId::dart), isPoisoned(false) {
   isPoisoned =
     Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::coinToss();
 }
@@ -394,7 +389,7 @@ void TrapDart::trigger(
 }
 
 TrapSpear::TrapSpear(Pos pos) :
-  SpecificTrapBase(pos, trap_spear), isPoisoned(false) {
+  SpecificTrapBase(pos, TrapId::spear), isPoisoned(false) {
   isPoisoned = Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::oneIn(4);
 }
 
@@ -774,7 +769,7 @@ void TrapSpiderWeb::trigger(
         Log::addMsg(
           "I cut down a sticky mass of threads with my machete.");
       }
-      FeatureFactory::mk(FeatureId::floor, pos_);
+      Map::put(new Floor(pos_));
     } else {
       if(CAN_SEE) {
         Log::addMsg("I am entangled in a spider web!");
@@ -828,7 +823,7 @@ Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
           (!IS_PLAYER && PLAYER_CAN_SEE_ACTOR)) {
           Log::addMsg("The web is destroyed.");
         }
-        FeatureFactory::mk(FeatureId::floor, pos_);
+        Map::put(new Floor(pos_));
       }
     } else {
       if(IS_PLAYER) {

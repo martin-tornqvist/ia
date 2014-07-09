@@ -9,7 +9,6 @@
 #include "ActorFactory.h"
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
-#include "FeatureFactory.h"
 #include "MapParsing.h"
 #include "Utils.h"
 

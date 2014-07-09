@@ -4,6 +4,7 @@
 
 #include "Init.h"
 #include "Map.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 

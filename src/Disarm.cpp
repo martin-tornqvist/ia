@@ -29,7 +29,7 @@ void playerDisarm() {
     Map::cells[playerPos.x][playerPos.y].featureStatic;
   if(featureAtPlayer->getId() == FeatureId::trap) {
     const Trap* const trap = static_cast<const Trap*>(featureAtPlayer);
-    if(trap->getTrapType() == trap_spiderWeb) {
+    if(trap->getTrapType() == TrapId::spiderWeb) {
       const auto* const web =
         static_cast<const TrapSpiderWeb*>(trap->getSpecificTrap());
       if(web->isHolding()) {

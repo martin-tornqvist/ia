@@ -3,12 +3,12 @@
 #include <vector>
 
 #include "ActorPlayer.h"
-#include "FeatureFactory.h"
 #include "ActorFactory.h"
 #include "ActorMonster.h"
 #include "Map.h"
 #include "Utils.h"
 #include "ActorFactory.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 
@@ -25,19 +25,18 @@ bool run() {
 
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      Feature* const f = Map::cells[x][y].featureStatic;
+      FeatureStatic* const f = Map::cells[x][y].featureStatic;
       if(f->getId() == FeatureId::wall) {
-        static_cast<Wall*>(f)->wallType_ = WallType::egypt;
+        static_cast<Wall*>(f)->type_ = WallType::egypt;
       }
     }
   }
 
   if(Rnd::coinToss()) {
-    FeatureFactory::mk(FeatureId::stairs, Pos(4, 2), nullptr);
+    Map::put(new Stairs(Pos(4, 2)));
   } else {
-    FeatureFactory::mk(FeatureId::stairs, Pos(4, 19), nullptr);
+    Map::put(new Stairs(Pos(4, 19)));
   }
-
 
   vector<Actor*> actors;
 

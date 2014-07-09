@@ -3,7 +3,6 @@
 #include "Map.h"
 
 #include "Feature.h"
-#include "FeatureFactory.h"
 #include "ActorFactory.h"
 #include "ItemFactory.h"
 #include "GameTime.h"
@@ -11,10 +10,11 @@
 #include "MapGen.h"
 #include "Item.h"
 #include "Utils.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 
-inline void Cell::clear() {
+void Cell::clear() {
   isExplored = isSeenByPlayer = isLight = isDark = false;
 
   if(featureStatic) {delete featureStatic;  featureStatic = nullptr;}
@@ -45,7 +45,7 @@ void resetCells(const bool MAKE_STONE_WALLS) {
       Renderer::renderArray[x][y].clear();
       Renderer::renderArrayNoActors[x][y].clear();
 
-      if(MAKE_STONE_WALLS) {FeatureFactory::mk(FeatureId::wall, Pos(x, y));}
+      if(MAKE_STONE_WALLS) {Map::put(new Wall(Pos(x, y)));}
     }
   }
 }
@@ -92,46 +92,6 @@ void setupFromSaveLines(vector<string>& lines) {
   lines.erase(begin(lines));
 }
 
-//TODO This should probably go in a virtual method in Feature instead
-void switchToDestroyedFeatAt(const Pos& pos) {
-  if(Utils::isPosInsideMap(pos)) {
-
-    const auto OLD_FEATURE_ID = cells[pos.x][pos.y].featureStatic->getId();
-
-    const auto convertionBucket =
-      FeatureData::getData(OLD_FEATURE_ID)->featuresOnDestroyed;
-
-    const int SIZE = convertionBucket.size();
-    if(SIZE > 0) {
-      const auto NEW_ID = convertionBucket.at(Rnd::dice(1, SIZE) - 1);
-
-      FeatureFactory::mk(NEW_ID, pos);
-
-      //Destroy adjacent doors?
-      if(
-        (NEW_ID == FeatureId::rubbleHigh || NEW_ID == FeatureId::rubbleLow) &&
-        NEW_ID != OLD_FEATURE_ID) {
-        for(int x = pos.x - 1; x <= pos.x + 1; ++x) {
-          for(int y = pos.y - 1; y <= pos.y + 1; ++y) {
-            if(x == 0 || y == 0) {
-              const auto* const f = cells[x][y].featureStatic;
-              if(f->getId() == FeatureId::door) {
-                FeatureFactory::mk(FeatureId::rubbleLow, Pos(x, y));
-              }
-            }
-          }
-        }
-      }
-
-      if(NEW_ID == FeatureId::rubbleLow && NEW_ID != OLD_FEATURE_ID) {
-        if(Rnd::percentile() < 50) {
-          ItemFactory::mkItemOnMap(ItemId::rock, pos);
-        }
-      }
-    }
-  }
-}
-
 void resetMap() {
   ActorFactory::deleteAllMonsters();
 
@@ -141,6 +101,34 @@ void resetMap() {
   resetCells(true);
   GameTime::eraseAllFeatureMobs();
   GameTime::resetTurnTypeAndActorCounters();
+}
+
+FeatureStatic* put(FeatureStatic* const f) {
+  assert(f);
+
+  const Pos             p     = f->getPos();
+  Cell&                 cell  = cells[p.x][p.y];
+  FeatureStatic* const  fOld  = cell.featureStatic;
+
+  if(fOld) {delete fOld;}
+
+  cell.featureStatic = f;
+
+#ifdef DEMO_MODE
+  if(f->getId() == FeatureId::floor) {
+    for(int y = 0; y < MAP_H; ++y) {
+      for(int x = 0; x < MAP_W; ++x) {
+        Map::cells[x][y].isSeenByPlayer = Map::cells[x][y].isExplored = true;
+      }
+    }
+    Renderer::drawMap();
+    Renderer::drawGlyph('X', Panel::map, pos, clrYellow);
+    Renderer::updateScreen();
+    SdlWrapper::sleep(2); //Note: Delay must be >= 2 for user input to be read
+  }
+#endif // DEMO_MODE
+
+  return f;
 }
 
 void updateVisualMemory() {
@@ -157,9 +145,7 @@ void mkBlood(const Pos& origin) {
       const Pos c = origin + Pos(dx, dy);
       FeatureStatic* const f  = cells[c.x][c.y].featureStatic;
       if(f->canHaveBlood()) {
-        if(Rnd::percentile() > 66) {
-          f->setHasBlood(true);
-        }
+        if(Rnd::oneIn(3)) {f->hasBlood_ = true;}
       }
     }
   }
@@ -169,9 +155,7 @@ void mkGore(const Pos& origin) {
   for(int dx = -1; dx <= 1; dx++) {
     for(int dy = -1; dy <= 1; dy++) {
       const Pos c = origin + Pos(dx, dy);
-      if(Rnd::percentile() > 66) {
-        cells[c.x][c.y].featureStatic->setGoreIfPossible();
-      }
+      if(Rnd::oneIn(3)) {cells[c.x][c.y].featureStatic->tryPutGore();}
     }
   }
 }

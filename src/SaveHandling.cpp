@@ -45,8 +45,8 @@ void setupGameFromLines(vector<string>& lines) {
   TRACE << "SaveHandler: Nr lines: " << lines.size() << endl;
   const string& playerName = lines.front();
   TRACE << "SaveHandler: playerName: " << playerName << endl;
-  Map::player->getData().name_a = playerName;
-  Map::player->getData().name_the = playerName;
+  Map::player->getData().nameA = playerName;
+  Map::player->getData().nameThe = playerName;
   lines.erase(begin(lines));
 
   DungeonMaster::setupFromSaveLines(lines);

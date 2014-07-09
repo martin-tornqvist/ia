@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <functional>
 
 #include "Art.h"
 #include "CmnData.h"
@@ -18,51 +19,38 @@ enum class FeatureId {
   wall,
   tree,
   grass,
-  grassWithered,
   bush,
-  bushWithered,
-  forestPath,
   stairs,
   lever,
-  brazierGolden,
-  caveFloor,
+  brazier,
   gravestone,
   tomb,
   churchBench,
   altar,
-  churchCarpet,
+  carpet,
   rubbleHigh,
   rubbleLow,
   statue,
-  ghoulStatue,
   cocoon,
   chest,
   cabinet,
   fountain,
 //  barrel,
   pillar,
-  pillarBroken,
-//  pillarCarved,
   chasm,
-  shallowWater,
-  deepWater,
-  poolBlood,
-  shallowMud,
-
+  liquidShallow,
+  liquidDeep,
   door,
   litDynamite,
   litFlare,
   trap,
-  gore,
+//  pit,
+//  gore,
   smoke,
   proxEventWallCrumble,
 
-  pit,
-
   endOfFeatureId
 };
-
-enum FeatureSpawnType {mob, staticFeature, other};
 
 enum MaterialType {empty, soft, hard, fluid};
 
@@ -122,9 +110,11 @@ private:
   bool canMoveIfHaveProp_[endOfPropIds];
 };
 
+class Feature;
+
 struct FeatureDataT {
+  std::function<Feature*(const Pos& p)> mkObj;
   FeatureId id;
-  FeatureSpawnType spawnType;
   char glyph;
   SDL_Color clr;
   SDL_Color clrBg;
@@ -141,8 +131,8 @@ struct FeatureDataT {
   bool canHaveItem;
   bool isBottomless;
   MaterialType materialType;
-  std::string name_a;
-  std::string name_the;
+  std::string nameA;
+  std::string nameThe;
   std::string messageOnPlayerBlocked;
   std::string messageOnPlayerBlockedBlind;
   int dodgeModifier;
@@ -155,7 +145,7 @@ namespace FeatureData {
 
 void init();
 
-const FeatureDataT* getData(const FeatureId id);
+const FeatureDataT& getData(const FeatureId id);
 
 } //FeatureData
 

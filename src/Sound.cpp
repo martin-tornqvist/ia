@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "Feature.h"
+#include "FeatureStatic.h"
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"

@@ -85,7 +85,7 @@ Room* mkRoom(const Rect& roomRect) {
 
   for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y) {
     for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x) {
-      FeatureFactory::mk(FeatureId::floor, Pos(x, y), nullptr);
+      Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = room;
     }
   }
@@ -105,14 +105,11 @@ void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos) {
       } else {
         innerCells.push_back(Pos(x, y));
       }
-      FeatureFactory::mk(FeatureId::wall, Pos(x, y));
+      Map::put(new Wall(Pos(x, y)));
     }
   }
 
-  ProxEventWallCrumbleSpawnData* const spawnData =
-    new ProxEventWallCrumbleSpawnData(wallCells, innerCells);
-  FeatureFactory::mk(
-    FeatureId::proxEventWallCrumble, proxEventPos, spawnData);
+  GameTime::addMob(new ProxEventWallCrumble(proxEventPos, wallCells, innerCells));
 }
 
 void connectRooms() {
@@ -474,7 +471,7 @@ void reserveRiver(Region regions[3][3]) {
     for(int y = Y0; y <= Y1; ++y) {
       for(int x = X0; x <= X1; ++x) {
         //Just put floor for now, water will be placed later
-        FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+        Map::put(new Floor(Pos(x, y)));
         Map::roomMap[x][y] = riverRoom;
       }
     }
@@ -516,10 +513,8 @@ void mkCaves(Region regions[3][3]) {
                 for(int dx = -1; dx <= 1; dx++) {
                   const auto featureId =
                     Map::cells[x + dx][y + dy].featureStatic->getId();
-                  const bool IS_FLOOR = featureId == FeatureId::floor ||
-                                        featureId == FeatureId::caveFloor;
                   if(
-                    IS_FLOOR &&
+                    featureId == FeatureId::floor &&
                     !Utils::isPosInside(Pos(x + dx, y + dy), region.r_)) {
                     blocked[x][y] = true;
                   }
@@ -542,18 +537,19 @@ void mkCaves(Region regions[3][3]) {
             const Pos p(x, y);
             if(p == origin || floodFillResult[x][y] > 0) {
 
-              FeatureFactory::mk(FeatureId::caveFloor, p);
+              Floor* const floor  = new Floor(p);
+              floor->type_        = FloorType::cave;
+              Map::put(floor);
 
               for(int dy = -1; dy <= 1; dy++) {
                 for(int dx = -1; dx <= 1; dx++) {
                   const Pos adjP(p + Pos(dx, dy));
                   Cell& adjCell = Map::cells[adjP.x][adjP.y];
                   if(adjCell.featureStatic->getId() == FeatureId::wall) {
-                    Feature* const f =
-                      FeatureFactory::mk(FeatureId::wall, adjP);
-                    Wall* const wall = static_cast<Wall*>(f);
-                    wall->wallType_ = WallType::cave;
+                    Wall* const wall  = new Wall(adjP);
+                    wall->type_       = WallType::cave;
                     wall->setRandomIsMossGrown();
+                    Map::put(wall);
                   }
                 }
               }
@@ -582,11 +578,9 @@ void mkCaves(Region regions[3][3]) {
 
           for(int y = 1; y < MAP_H - 1; ++y) {
             for(int x = 1; x < MAP_W - 1; ++x) {
-              const Pos c(x, y);
-              if(
-                !blocked[x][y] &&
-                (c == origin || floodFillResult[x][y] > 0)) {
-                FeatureFactory::mk(FeatureId::chasm, c);
+              const Pos p(x, y);
+              if(!blocked[x][y] && (p == origin || floodFillResult[x][y] > 0)) {
+                Map::put(new Chasm(p));
               }
             }
           }
@@ -634,8 +628,8 @@ void placeDoorAtPosIfSuitable(const Pos& p) {
   }
 
   if(isGoodHor || isGoodVer) {
-    const auto* const mimicData = FeatureData::getData(FeatureId::wall);
-    FeatureFactory::mk(FeatureId::door, p, new DoorSpawnData(mimicData));
+    const auto& mimicData = FeatureData::getData(FeatureId::wall);
+    Map::put(new Door(p, mimicData));
   }
 }
 
@@ -710,8 +704,7 @@ void mkSubRooms() {
                 for(int x = X0; x <= X1; ++x) {
                   if(x == X0 || x == X1 || y == Y0 || y == Y1) {
 
-                    FeatureFactory::mk(
-                      FeatureId::wall, Pos(x, y));
+                    Map::put(new Wall(Pos(x, y)));
 
                     if(
                       x != roomX0Y0.x - 1 && x != roomX0Y0.x      &&
@@ -726,17 +719,15 @@ void mkSubRooms() {
                 }
               }
               if(Rnd::coinToss() || doorBucket.size() <= 2) {
-                const int DOOR_POS_ELEMENT =
-                  Rnd::range(0, doorBucket.size() - 1);
-                const Pos doorPos = doorBucket.at(DOOR_POS_ELEMENT);
-                FeatureFactory::mk(FeatureId::floor, doorPos);
+                const int DOOR_POS_ELEMENT  = Rnd::range(0, doorBucket.size() - 1);
+                const Pos& doorPos          = doorBucket.at(DOOR_POS_ELEMENT);
+                Map::put(new Floor(doorPos));
                 doorProposals[doorPos.x][doorPos.y] = true;
               } else {
                 vector<Pos> positionsWithDoor;
                 const int NR_TRIES = Rnd::range(1, 10);
                 for(int j = 0; j < NR_TRIES; j++) {
-                  const int DOOR_POS_ELEMENT =
-                    Rnd::range(0, doorBucket.size() - 1);
+                  const int DOOR_POS_ELEMENT = Rnd::range(0, doorBucket.size() - 1);
                   const Pos posCand = doorBucket.at(DOOR_POS_ELEMENT);
 
                   bool isPosOk = true;
@@ -747,7 +738,7 @@ void mkSubRooms() {
                     }
                   }
                   if(isPosOk) {
-                    FeatureFactory::mk(FeatureId::floor, posCand);
+                    Map::put(new Floor(posCand));
                     positionsWithDoor.push_back(posCand);
                   }
                 }
@@ -805,7 +796,7 @@ void fillDeadEnds() {
     const int NR_ADJ_CARDINAL_WALLS = blocked[x + 1][y] + blocked[x - 1][y] +
                                       blocked[x][y + 1] + blocked[x][y - 1];
     if(NR_ADJ_CARDINAL_WALLS == 3) {
-      FeatureFactory::mk(FeatureId::wall, pos);
+      Map::put(new Wall(pos));
       blocked[x][y] = true;
     }
   }
@@ -871,7 +862,7 @@ void decorate() {
 
         //Randomly convert walls to rubble
         if(Rnd::oneIn(10)) {
-          FeatureFactory::mk(FeatureId::rubbleHigh, Pos(x, y));
+          Map::put(new RubbleHigh(Pos(x, y)));
           continue;
         }
 
@@ -881,7 +872,7 @@ void decorate() {
 
         //Convert walls with no adjacent stone floor to cave walls
         if(CellPred::AllAdjIsNotFeature(FeatureId::floor).check(cell)) {
-          wall->wallType_ = WallType::cave;
+          wall->type_ = WallType::cave;
         } else {
           wall->setRandomNormalWall();
         }
@@ -894,7 +885,7 @@ void decorate() {
       if(Map::cells[x][y].featureStatic->getId() == FeatureId::floor) {
         //Randomly convert stone floor to low rubble
         if(Rnd::oneIn(100)) {
-          FeatureFactory::mk(FeatureId::rubbleLow, Pos(x, y));
+          Map::put(new RubbleLow(Pos(x, y)));
           continue;
         }
       }
@@ -905,7 +896,7 @@ void decorate() {
 void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) {
   TRACE_FUNC_BEGIN;
 
-  vector<FeatureId> featIdsOk {FeatureId::floor, FeatureId::caveFloor};
+  vector<FeatureId> featIdsOk {FeatureId::floor, FeatureId::carpet, FeatureId::grass};
 
   MapParse::parse(CellPred::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
 
@@ -942,8 +933,7 @@ Pos placeStairs() {
   const Pos stairsPos(allowedCellsList.at(ELEMENT));
 
   TRACE << "Spawning stairs at chosen cell" << endl;
-  Feature* f = FeatureFactory::mk(FeatureId::stairs, stairsPos);
-  f->setHasBlood(false);
+  Map::put(new Stairs(stairsPos));
 
   TRACE_FUNC_END;
   return stairsPos;

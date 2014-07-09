@@ -8,6 +8,7 @@
 #include "PopulateItems.h"
 #include "Renderer.h"
 #include "Log.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 

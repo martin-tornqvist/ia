@@ -13,15 +13,12 @@
 #include "Popup.h"
 #include "Utils.h"
 #include "Map.h"
+#include "FeatureData.h"
 
 using namespace std;
 
-//------------------------------------------------------------------- FEATURE
-Feature::Feature(FeatureId id, Pos pos,
-                 FeatureSpawnData* spawnData) :
-  pos_(pos), data_(FeatureData::getData(id)),
-  hasBlood_(false) {
-  (void)spawnData;
+const FeatureDataT& Feature::getData() const {
+  return FeatureData::getData(getId());
 }
 
 void Feature::bump(Actor& actorBumping) {
@@ -31,9 +28,9 @@ void Feature::bump(Actor& actorBumping) {
   if(!canMove(props)) {
     if(&actorBumping == Map::player) {
       if(Map::player->getPropHandler().allowSee()) {
-        Log::addMsg(data_->messageOnPlayerBlocked);
+        Log::addMsg(getData().messageOnPlayerBlocked);
       } else {
-        Log::addMsg(data_->messageOnPlayerBlockedBlind);
+        Log::addMsg(getData().messageOnPlayerBlockedBlind);
       }
     }
   }
@@ -43,322 +40,94 @@ void Feature::addLight(bool light[MAP_W][MAP_H]) const {
   (void)light;
 }
 
-void Feature::newTurn() {
-
-}
-
 bool Feature::canMoveCmn() const {
-  return data_->moveRules.canMoveCmn();
+  return getData().moveRules.canMoveCmn();
 }
 
 bool Feature::canMove(const vector<PropId>& actorsProps) const {
-  return data_->moveRules.canMove(actorsProps);
+  return getData().moveRules.canMove(actorsProps);
 }
 
 bool Feature::isSoundPassable() const {
-  return data_->isSoundPassable;
+  return getData().isSoundPassable;
 }
 
 bool Feature::isVisionPassable() const {
-  return data_->isVisionPassable;
+  return getData().isVisionPassable;
 }
 
 bool Feature::isProjectilePassable() const {
-  return data_->isProjectilePassable;
+  return getData().isProjectilePassable;
 }
 
 bool Feature::isSmokePassable() const {
-  return data_->isSmokePassable;
+  return getData().isSmokePassable;
 }
 
 bool Feature::isBottomless() const {
-  return data_->isBottomless;
+  return getData().isBottomless;
 }
 
 string Feature::getDescr(const bool DEFINITE_ARTICLE) const {
-  return DEFINITE_ARTICLE ? data_->name_the : data_->name_a;
+  return DEFINITE_ARTICLE ? getData().nameThe : getData().nameA;
 }
 
-void Feature::hit(const int DMG, const DmgType dmgType) {
-  (void)DMG;
+void Feature::hit(const DmgType type, const DmgMethod method) {
+  (void)type; (void)method;
+}
+
+void Feature::destroy(const DmgType dmgType) {
   (void)dmgType;
 }
 
 SDL_Color Feature::getClr() const {
-  return data_->clr;
+  return getData().clr;
 }
 
 SDL_Color Feature::getClrBg() const {
-  return data_->clrBg;
+  return getData().clrBg;
 }
 
 char Feature::getGlyph() const {
-  return data_->glyph;
+  return getData().glyph;
 }
 
 TileId Feature::getTile() const {
-  return data_->tile;
+  return getData().tile;
 }
 
 bool Feature::canHaveCorpse() const {
-  return data_->canHaveCorpse;
+  return getData().canHaveCorpse;
 }
 
 bool Feature::canHaveStaticFeature() const {
-  return data_->canHaveStaticFeature;
+  return getData().canHaveStaticFeature;
 }
 
 bool Feature::canHaveBlood() const {
-  return data_->canHaveBlood;
+  return getData().canHaveBlood;
 }
 
 bool Feature::canHaveGore() const {
-  return data_->canHaveGore;
+  return getData().canHaveGore;
 }
 
 bool Feature::canHaveItem() const {
-  return data_->canHaveItem;
-}
-
-bool Feature::hasBlood() const {
-  return hasBlood_;
-}
-
-void Feature::setHasBlood(const bool HAS_BLOOD) {
-  hasBlood_ = HAS_BLOOD;
+  return getData().canHaveItem;
 }
 
 FeatureId Feature::getId() const {
-  return data_->id;
+  return getData().id;
 }
 
 int Feature::getDodgeModifier() const {
-  return data_->dodgeModifier;
+  return getData().dodgeModifier;
 }
 
 int Feature::getShockWhenAdj() const {
-  return data_->shockWhenAdjacent;
+  return getData().shockWhenAdjacent;
 }
 
 MaterialType Feature::getMaterialType() const {
-  return data_->materialType;
-}
-
-//------------------------------------------------------------------- STATIC FEATURE
-void FeatureStatic::examine() {
-  Log::addMsg("I find nothing specific there to examine or use.");
-}
-
-void FeatureStatic::disarm() {
-  Log::addMsg(msgDisarmNoTrap);
-  Renderer::drawMapAndInterface();
-}
-
-void FeatureStatic::bash(Actor& actorTrying) {
-  if(&actorTrying == Map::player) {
-    const bool IS_BLIND    = !Map::player->getPropHandler().allowSee();
-    const bool IS_BLOCKING = !canMoveCmn() && getId() != FeatureId::stairs;
-    if(IS_BLOCKING) {
-      Log::addMsg(
-        "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
-
-      if(Rnd::oneIn(4)) {
-        Log::addMsg("I sprain myself.", clrMsgBad);
-        const int SPRAIN_DMG = Rnd::range(1, 5);
-        actorTrying.hit(SPRAIN_DMG, DmgType::pure, false);
-      }
-
-      if(Rnd::oneIn(4)) {
-        Log::addMsg("I am off-balance.");
-
-        actorTrying.getPropHandler().tryApplyProp(
-          new PropParalyzed(propTurnsSpecific, 2));
-      }
-
-    } else {
-      Log::addMsg("I kick the air!");
-      Audio::play(SfxId::missMedium);
-    }
-  }
-
-  bash_(actorTrying);
-
-  GameTime::actorDidAct();
-
-  Map::player->updateFov();
-  Renderer::drawMapAndInterface();
-}
-
-void FeatureStatic::bash_(Actor& actorTrying) {
-  //Emitting the sound from the actor instead of the bashed object, because the
-  //sound massage should be received even if the object is seen
-  const AlertsMonsters alertsMonsters = &actorTrying == Map::player ?
-                                        AlertsMonsters::yes :
-                                        AlertsMonsters::no;
-  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
-          &actorTrying, SndVol::low, alertsMonsters);
-  SndEmit::emitSnd(snd);
-}
-
-void FeatureStatic::setGoreIfPossible() {
-  if(data_->canHaveGore) {
-    const int ROLL_GLYPH = Rnd::dice(1, 4);
-    switch(ROLL_GLYPH) {
-      case 1: {goreGlyph_ = ',';} break;
-      case 2: {goreGlyph_ = '`';} break;
-      case 3: {goreGlyph_ = 39;}  break;
-      case 4: {goreGlyph_ = ';';} break;
-    }
-
-    const int ROLL_TILE = Rnd::dice(1, 8);
-    switch(ROLL_TILE) {
-      case 1: {goreTile_ = TileId::gore1;} break;
-      case 2: {goreTile_ = TileId::gore2;} break;
-      case 3: {goreTile_ = TileId::gore3;} break;
-      case 4: {goreTile_ = TileId::gore4;} break;
-      case 5: {goreTile_ = TileId::gore5;} break;
-      case 6: {goreTile_ = TileId::gore6;} break;
-      case 7: {goreTile_ = TileId::gore7;} break;
-      case 8: {goreTile_ = TileId::gore8;} break;
-    }
-  }
-}
-
-string FeatureStatic::getDescr(const bool DEFINITE_ARTICLE) const {
-  if(goreGlyph_ == ' ') {
-    return DEFINITE_ARTICLE ? data_->name_the : data_->name_a;
-  } else {
-    return DEFINITE_ARTICLE ? "the blood and gore" : "blood and gore";
-  }
-}
-
-void FeatureStatic::clearGore() {
-  goreTile_   = TileId::empty;
-  goreGlyph_  = ' ';
-  hasBlood_   = false;
-}
-
-//------------------------------------------------------------------- WALL
-Wall::Wall(FeatureId id, Pos pos) :
-  FeatureStatic(id, pos), wallType_(WallType::common), isMossGrown_(false) {
-}
-
-bool Wall::isTileAnyWallFront(const TileId tile) {
-  return
-    tile == TileId::wallFront      ||
-    tile == TileId::wallFrontAlt1  ||
-    tile == TileId::wallFrontAlt2  ||
-    tile == TileId::caveWallFront  ||
-    tile == TileId::egyptWallFront;
-}
-
-bool Wall::isTileAnyWallTop(const TileId tile) {
-  return
-    tile == TileId::wallTop      ||
-    tile == TileId::caveWallTop  ||
-    tile == TileId::egyptWallTop ||
-    tile == TileId::rubbleHigh;
-}
-
-string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
-  const string modStr   = isMossGrown_ ? "moss-grown " : "";
-  const string article  = (DEFINITE_ARTICLE ? "the " : "a ");
-
-  switch(wallType_) {
-    case WallType::common:
-    case WallType::alt1:   {return article + modStr + "stone wall";}
-    case WallType::cave:   {return article + modStr + "cavern wall";}
-    case WallType::egypt:  {return article + modStr + "stone wall";}
-  }
-  assert(false && "Failed to get door description");
-  return "";
-}
-
-SDL_Color Wall::getClr() const {
-  if(isMossGrown_)                   {return clrGreenDrk;}
-  if(wallType_ == WallType::cave)    {return clrBrownGray;}
-  if(wallType_ == WallType::egypt)   {return clrBrownGray;}
-  return data_->clr;
-}
-
-char Wall::getGlyph() const {
-  return Config::isAsciiWallFullSquare() ? 10 : '#';
-}
-
-TileId Wall::getFrontWallTile() const {
-  if(Config::isTilesWallFullSquare()) {
-    switch(wallType_) {
-      case WallType::common:  return TileId::wallTop;         break;
-      case WallType::alt1:    return TileId::wallTop;         break;
-      case WallType::cave:    return TileId::caveWallTop;     break;
-      case WallType::egypt:   return TileId::egyptWallTop;    break;
-      default:                return TileId::wallTop;         break;
-    }
-  } else {
-    switch(wallType_) {
-      case WallType::common:  return TileId::wallFront;       break;
-      case WallType::alt1:    return TileId::wallFrontAlt1;   break;
-      case WallType::cave:    return TileId::caveWallFront;   break;
-      case WallType::egypt:   return TileId::egyptWallFront;  break;
-      default:                return TileId::wallFront;       break;
-    }
-  }
-}
-
-TileId Wall::getTopWallTile() const {
-  switch(wallType_) {
-    case WallType::common:    return TileId::wallTop;         break;
-    case WallType::alt1:      return TileId::wallTop;         break;
-    case WallType::cave:      return TileId::caveWallTop;     break;
-    case WallType::egypt:     return TileId::egyptWallTop;    break;
-    default:                  return TileId::wallTop;         break;
-  }
-}
-
-void Wall::setRandomNormalWall() {
-  const int RND = Rnd::range(1, 6);
-  switch(RND) {
-    case 1:   wallType_ = WallType::alt1;     break;
-    default:  wallType_ = WallType::common;   break;
-  }
-}
-
-void Wall::setRandomIsMossGrown() {
-  isMossGrown_ = Rnd::oneIn(40);
-}
-
-//------------------------------------------------------------------- GRAVE
-string Grave::getDescr(const bool DEFINITE_ARTICLE) const {
-  return (DEFINITE_ARTICLE ?
-          data_->name_the :
-          data_->name_a) + "; " + inscription_;
-}
-
-void Grave::bump(Actor& actorBumping) {
-  if(&actorBumping == Map::player) {
-    Log::addMsg(inscription_);
-  }
-}
-
-//------------------------------------------------------------------- STAIRS
-void Stairs::bump(Actor& actorBumping) {
-  if(&actorBumping == Map::player) {
-
-    const vector<string> choices {"Descend", "Save and quit", "Cancel"};
-    const int CHOICE =
-      Popup::showMenuMsg("", true, choices, "A staircase leading downwards");
-
-    if(CHOICE == 0) {
-      Map::player->pos = pos_;
-      TRACE << "Calling DungeonClimb::tryUseDownStairs()" << endl;
-      DungeonClimb::tryUseDownStairs();
-    } else if(CHOICE == 1) {
-      Map::player->pos = pos_;
-      SaveHandling::save();
-      Init::quitToMainMenu = true;
-    } else {
-      Log::clearLog();
-      Renderer::drawMapAndInterface();
-    }
-  }
+  return getData().materialType;
 }

@@ -1,15 +1,15 @@
 #ifndef FEATURE_DOOR_H
 #define FEATURE_DOOR_H
 
-#include "Feature.h"
+#include "FeatureStatic.h"
 
-enum DoorSpawnState {
-  doorSpawnState_open,
-  doorSpawnState_closed,
-  doorSpawnState_stuck,
-  doorSpawnState_broken,
-  doorSpawnState_secret,
-  doorSpawnState_secretAndStuck
+enum class DoorSpawnState {
+  open,
+  closed,
+  stuck,
+  broken,
+  secret,
+  secretAndStuck
 };
 
 enum DoorMaterial {
@@ -17,12 +17,18 @@ enum DoorMaterial {
   doorMaterial_metal
 };
 
-class DoorSpawnData;
-
 class Door: public FeatureStatic {
 public:
-  Door(FeatureId id, Pos pos, DoorSpawnData* spawnData);
+  Door(const Pos& pos, const FeatureDataT& mimicFeature);
+
+  //Spawn by id compliant ctor (do not use for normal cases):
+  Door(const Pos& pos) : FeatureStatic(pos), mimicFeature_(nullptr), nrSpikes_(0) {}
+
+  Door() = delete;
+
   ~Door() override {}
+
+  FeatureId getId() const override {return FeatureId::door;}
 
   void bump(Actor& actorBumping)      override;
   virtual bool canMoveCmn()           const override;
@@ -43,9 +49,7 @@ public:
   bool isOpen()   const {return isOpen_;}
   bool isSecret() const {return isSecret_;}
   bool isStuck()  const {return isStuck_;}
-  bool isOpenedAndClosedExternally() const {
-    return isOpenedAndClosedExternally_;
-  }
+  bool isOpenedAndClosedExternally() const {return isOpenedAndClosedExternally_;}
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
@@ -64,16 +68,15 @@ public:
       tile == TileId::doorOpen;
   }
 
+  void playerTrySpotHidden();
+
 protected:
-  const FeatureDataT* const mimicFeature_;
+  const FeatureDataT* mimicFeature_;
   int nrSpikes_;
 
   bool isOpen_, isBroken_, isStuck_, isSecret_, isOpenedAndClosedExternally_;
 
   DoorMaterial material_;
-
-  friend class Player;
-  void playerTrySpotHidden();
 };
 
 #endif

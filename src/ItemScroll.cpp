@@ -64,10 +64,10 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
 
     data_->baseName.name        = REAL_NAME;
     data_->baseName.name_plural = REAL_NAME_PLURAL;
-    data_->baseName.name_a      = REAL_NAME_A;
+    data_->baseName.nameA      = REAL_NAME_A;
 
     if(!IS_SILENT_IDENTIFY) {
-      Log::addMsg("It was " + data_->baseName.name_a + ".");
+      Log::addMsg("It was " + data_->baseName.nameA + ".");
       Renderer::drawMapAndInterface();
     }
 
@@ -195,7 +195,7 @@ void setFalseScrollName(ItemDataT& d) {
 
   d.baseName.name         = "Manuscript titled " + TITLE;
   d.baseName.name_plural  = "Manuscripts titled " + TITLE;
-  d.baseName.name_a       = "a Manuscript titled " + TITLE;
+  d.baseName.nameA       = "a Manuscript titled " + TITLE;
 
   falseNames_.erase(falseNames_.begin() + ELEMENT);
 }
@@ -205,7 +205,7 @@ void storeToSaveLines(vector<string>& lines) {
     if(ItemData::data[i]->isScroll) {
       lines.push_back(ItemData::data[i]->baseName.name);
       lines.push_back(ItemData::data[i]->baseName.name_plural);
-      lines.push_back(ItemData::data[i]->baseName.name_a);
+      lines.push_back(ItemData::data[i]->baseName.nameA);
     }
   }
 }
@@ -217,7 +217,7 @@ void setupFromSaveLines(vector<string>& lines) {
       lines.erase(begin(lines));
       ItemData::data[i]->baseName.name_plural = lines.front();
       lines.erase(begin(lines));
-      ItemData::data[i]->baseName.name_a      = lines.front();
+      ItemData::data[i]->baseName.nameA      = lines.front();
       lines.erase(begin(lines));
     }
   }

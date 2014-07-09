@@ -14,12 +14,12 @@
 #include "Renderer.h"
 #include "CmnData.h"
 #include "Map.h"
-#include "FeatureFactory.h"
 #include "Knockback.h"
 #include "Gods.h"
 #include "MapParsing.h"
 #include "LineCalc.h"
 #include "Utils.h"
+#include "FeatureTrap.h"
 
 using namespace std;
 
@@ -656,21 +656,14 @@ bool LordOfSpiders::onActorTurn_() {
 
           if(Rnd::fraction(3, 4)) {
 
-            const Pos c(playerPos + Pos(dx, dy));
-            const auto* const mimicFeature = Map::cells[c.x][c.y].featureStatic;
+            const Pos p(playerPos + Pos(dx, dy));
+            const auto* const mimicFeature = Map::cells[p.x][p.y].featureStatic;
 
             if(mimicFeature->canHaveStaticFeature()) {
-
-              const auto* const mimicData =
-                FeatureData::getData(mimicFeature->getId());
-
-              auto* trapSpawnData =
-                new TrapSpawnData(mimicData, trap_spiderWeb);
-
-              auto* const f =
-                FeatureFactory::mk(FeatureId::trap, c, trapSpawnData);
-
-              static_cast<Trap*>(f)->reveal(false);
+              const auto& mimicData = FeatureData::getData(mimicFeature->getId());
+              Trap* const f = new Trap(p, mimicData, TrapId::spiderWeb);
+              Map::put(f);
+              f->reveal(false);
             }
           }
         }

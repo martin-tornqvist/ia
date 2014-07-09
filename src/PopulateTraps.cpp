@@ -5,9 +5,9 @@
 #include "Init.h"
 #include "Map.h"
 #include "MapGen.h"
-#include "FeatureFactory.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "FeatureData.h"
 
 using namespace std;
 
@@ -16,9 +16,9 @@ namespace PopulateTraps {
 namespace {
 
 void mkTrapAt(const TrapId id, const Pos& pos) {
-  auto* const f       = Map::cells[pos.x][pos.y].featureStatic;
-  const auto* const d = FeatureData::getData(f->getId());
-  FeatureFactory::mk(FeatureId::trap, pos, new TrapSpawnData(d, id));
+  const auto* const f = Map::cells[pos.x][pos.y].featureStatic;
+  const auto&       d = FeatureData::getData(f->getId());
+  Map::put(new Trap(pos, d, id));
 }
 
 } //namespace
@@ -76,8 +76,8 @@ void populateStdLvl() {
           if(nrPosCand == 0) {break;}
 
           const TrapId trapType = IS_SPIDER_ROOM ?
-                                  trap_spiderWeb :
-                                  TrapId(Rnd::range(0, int(endOfTraps) - 1));
+                                  TrapId::spiderWeb :
+                                  TrapId(Rnd::range(0, int(TrapId::endOfTraps) - 1));
 
           const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
           const Pos& pos    = trapPosBucket.at(ELEMENT);
@@ -129,7 +129,7 @@ void populateStdLvl() {
     for(int i = 0; i < NR_BASE_TRAPS; ++i) {
       if(nrPosCand == 0) {break;}
 
-      const TrapId trapType = TrapId(Rnd::range(0, int(endOfTraps) - 1));
+      const TrapId trapType = TrapId(Rnd::range(0, int(TrapId::endOfTraps) - 1));
 
       const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
       const Pos& pos = trapPosBucket.at(ELEMENT);

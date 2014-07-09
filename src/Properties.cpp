@@ -14,12 +14,13 @@
 #include "Inventory.h"
 #include "Map.h"
 #include "Explosion.h"
-#include "FeatureFactory.h"
 #include "PlayerBon.h"
 #include "MapParsing.h"
 #include "LineCalc.h"
 #include "ActorFactory.h"
 #include "Utils.h"
+#include "FeatureStatic.h"
+#include "FeatureMob.h"
 
 using namespace std;
 
@@ -1462,7 +1463,7 @@ bool PropDiseased::tryResistOtherProp(const PropId id) const {
 void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   if(IS_PLAYER_SEE_OWNING_ACTOR) {
     const string& name1 = owningActor_->getNameThe();
-    const string& name2 = ActorData::data[actor_zuul].name_the;
+    const string& name2 = ActorData::data[actor_zuul].nameThe;
     Log::addMsg(name1 + " was possessed by " + name2 + "!");
   }
   owningActor_->deadState = ActorDeadState::destroyed;
@@ -1767,22 +1768,18 @@ void PropParalyzed::onStart() {
       player->dynamiteFuseTurns = -1;
       player->updateColor();
       Log::addMsg("The lit Dynamite stick falls from my hands!");
-      Feature* const f =
-        Map::cells[playerPos.x][playerPos.y].featureStatic;
+      FeatureStatic* const f = Map::cells[playerPos.x][playerPos.y].featureStatic;
       if(!f->isBottomless()) {
-        FeatureFactory::mk(FeatureId::litDynamite, playerPos,
-                           new DynamiteSpawnData(DYNAMITE_FUSE));
+        GameTime::addMob(new LitDynamite(playerPos, DYNAMITE_FUSE));
       }
     }
     if(FLARE_FUSE > 0) {
       player->flareFuseTurns = -1;
       player->updateColor();
       Log::addMsg("The lit Flare falls from my hands.");
-      Feature* const f =
-        Map::cells[playerPos.x][playerPos.y].featureStatic;
+      Feature* const f = Map::cells[playerPos.x][playerPos.y].featureStatic;
       if(!f->isBottomless()) {
-        FeatureFactory::mk(FeatureId::litFlare, playerPos,
-                           new DynamiteSpawnData(FLARE_FUSE));
+        GameTime::addMob(new LitFlare(playerPos, FLARE_FUSE));
       }
       GameTime::updateLightMap();
       player->updateFov();
@@ -1956,6 +1953,6 @@ void PropRSleep::onStart() {
 }
 
 void PropBurrowing::onNewTurn() {
-  const Pos& pos = owningActor_->pos;
-  Map::switchToDestroyedFeatAt(pos);
+  const Pos& p = owningActor_->pos;
+  Map::cells[p.x][p.y].featureStatic->destroy(DmgType::physical);
 }

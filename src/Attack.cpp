@@ -8,6 +8,7 @@
 #include "ActorMonster.h"
 #include "Map.h"
 #include "FeatureTrap.h"
+#include "FeatureMob.h"
 #include "PlayerBon.h"
 #include "MapParsing.h"
 #include "Actor.h"
@@ -100,7 +101,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
       const auto* const f = Map::cells[defPos.x][defPos.y].featureStatic;
       if(f->getId() == FeatureId::trap) {
         const auto* const t = static_cast<const Trap*>(f);
-        if(t->getTrapType() == trap_spiderWeb) {
+        if(t->getTrapType() == TrapId::spiderWeb) {
           const auto* const web =
             static_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
           if(web->isHolding()) {

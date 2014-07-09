@@ -4,7 +4,6 @@
 #include "MapGen.h"
 #include "Room.h"
 #include "FeatureData.h"
-#include "FeatureFactory.h"
 #include "Map.h"
 #include "PopulateItems.h"
 #include "PopulateMonsters.h"
@@ -128,8 +127,8 @@ int placeThemeFeatures(Room& room) {
   TRACE_FUNC_BEGIN;
   vector<const FeatureDataT*> featureBucket;
 
-  for(int i = 0; i < int(FeatureId::endOfFeatureId); ++i) {
-    const auto* const d = FeatureData::getData((FeatureId)(i));
+  for(int i = 1; i < int(FeatureId::endOfFeatureId); ++i) {
+    const auto* const d = &FeatureData::getData((FeatureId)(i));
     if(d->themeSpawnRules.isBelongingToRoomType(room.type_)) {
       featureBucket.push_back(d);
     }
@@ -156,12 +155,9 @@ int placeThemeFeatures(Room& room) {
     const int FEATURE_ELEMENT =
       trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls, featureBucket);
 
-    if(!d) {
-      TRACE_FUNC_END << "No remaining positions to place feature" << endl;
-      return nrFeaturesPlaced;
-    } else {
-      TRACE << "Placing " << d->name_a << endl;
-      FeatureFactory::mk(d->id, pos);
+    if(d) {
+      TRACE << "Placing " << d->nameA << endl;
+      Map::put(static_cast<FeatureStatic*>(d->mkObj(pos)));
       spawnCount.at(FEATURE_ELEMENT)++;
 
       nrFeaturesLeftToPlace--;
@@ -178,8 +174,10 @@ int placeThemeFeatures(Room& room) {
           return nrFeaturesPlaced;
         }
       }
-
       eraseAdjacentCellsFromVectors(pos, nextToWalls, awayFromWalls);
+    } else {
+      TRACE_FUNC_END << "No remaining positions to place feature" << endl;
+      return nrFeaturesPlaced;
     }
   }
 }
@@ -191,12 +189,13 @@ void mkThemeSpecificRoomModifications(Room& room) {
   switch(room.type_) {
     case RoomType::flooded:
     case RoomType::muddy: {
-      const auto featureId = room.type_ == RoomType::flooded ?
-                             FeatureId::shallowWater : FeatureId::shallowMud;
       for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y) {
         for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x) {
           if(!blocked[x][y]) {
-            FeatureFactory::mk(featureId, Pos(x, y));
+            LiquidShallow* const liquid = new LiquidShallow(Pos(x, y));
+            liquid->type_ =
+              room.type_ == RoomType::flooded ? LiquidType::water : LiquidType::mud;
+            Map::put(liquid);
           }
         }
       }

@@ -137,7 +137,9 @@ enum class TileId {
   popupCornerBottomLeft,
   popupCornerBottomRight,
   popupHorizontalBar,
-  popupVerticalBar
+  popupVerticalBar,
+  hangbridgeVer,
+  hangbridgeHor
 };
 
 

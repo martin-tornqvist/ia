@@ -13,7 +13,6 @@
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "Thrower.h"
-#include "FeatureFactory.h"
 #include "ItemFactory.h"
 #include "TextFormatting.h"
 #include "ActorFactory.h"
@@ -472,7 +471,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     //Create a spider web in the right cell
     const auto mimicId = Map::cells[posR.x][posR.x].featureStatic->getId();
     const auto* const mimicData = FeatureData::getData(mimicId);
-    auto* const trapSpawnData = new TrapSpawnData(mimicData, trap_spiderWeb);
+    auto* const trapSpawnData = new TrapSpawnData(mimicData, TrapId::spiderWeb);
     FeatureFactory::mk(FeatureId::trap, posR, trapSpawnData);
 
     //Move the monster into the trap, and back again
@@ -554,7 +553,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
 
   //Player
   ActorDataT& def = Map::player->getData();
-  def.name_a = def.name_the = "TEST PLAYER";
+  def.nameA = def.nameThe = "TEST PLAYER";
   Map::player->changeMaxHp(5, false);
 
   //Map
@@ -647,9 +646,9 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
 
   //Player
   ActorDataT& def = Map::player->getData();
-  def.name_a = def.name_the = "TEST PLAYER";
-  CHECK_EQUAL("TEST PLAYER", def.name_a);
-  CHECK_EQUAL("TEST PLAYER", def.name_the);
+  def.nameA = def.nameThe = "TEST PLAYER";
+  CHECK_EQUAL("TEST PLAYER", def.nameA);
+  CHECK_EQUAL("TEST PLAYER", def.nameThe);
   //Check max HP (affected by disease)
   CHECK_EQUAL((PLAYER_MAX_HP_BEFORE_LOAD + 5) / 2, Map::player->getHpMax(true));
 

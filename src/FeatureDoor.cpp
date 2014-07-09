@@ -3,7 +3,6 @@
 #include "Init.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
-#include "FeatureFactory.h"
 #include "FeatureData.h"
 #include "Map.h"
 #include "Log.h"
@@ -16,23 +15,22 @@
 using namespace std;
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(FeatureId id, Pos pos, DoorSpawnData* spawnData) :
-  FeatureStatic(id, pos), mimicFeature_(spawnData->mimicFeature_),
-  nrSpikes_(0) {
+Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
+  FeatureStatic(pos), mimicFeature_(&mimicFeature), nrSpikes_(0) {
 
   isOpenedAndClosedExternally_ = false;
 
   const int ROLL = Rnd::percentile();
   const DoorSpawnState doorState =
-    ROLL < 5 ? doorSpawnState_secretAndStuck :
-    ROLL < 40 ? doorSpawnState_secret :
-    ROLL < 50 ? doorSpawnState_stuck :
-    ROLL < 60 ? doorSpawnState_broken :
-    ROLL < 75 ? doorSpawnState_open :
-    doorSpawnState_closed;
+    ROLL < 5 ? DoorSpawnState::secretAndStuck :
+    ROLL < 40 ? DoorSpawnState::secret :
+    ROLL < 50 ? DoorSpawnState::stuck :
+    ROLL < 60 ? DoorSpawnState::broken :
+    ROLL < 75 ? DoorSpawnState::open :
+    DoorSpawnState::closed;
 
   switch(DoorSpawnState(doorState)) {
-    case doorSpawnState_broken: {
+    case DoorSpawnState::broken: {
       isOpen_ = true;
       isBroken_ = true;
       isStuck_ = false;
@@ -40,7 +38,7 @@ Door::Door(FeatureId id, Pos pos, DoorSpawnData* spawnData) :
     }
     break;
 
-    case doorSpawnState_open: {
+    case DoorSpawnState::open: {
       isOpen_ = true;
       isBroken_ = false;
       isStuck_ = false;
@@ -48,7 +46,7 @@ Door::Door(FeatureId id, Pos pos, DoorSpawnData* spawnData) :
     }
     break;
 
-    case doorSpawnState_closed: {
+    case DoorSpawnState::closed: {
       isOpen_ = false;
       isBroken_ = false;
       isStuck_ = false;
@@ -56,7 +54,7 @@ Door::Door(FeatureId id, Pos pos, DoorSpawnData* spawnData) :
     }
     break;
 
-    case doorSpawnState_stuck: {
+    case DoorSpawnState::stuck: {
       isOpen_ = false;
       isBroken_ = false;
       isStuck_ = true;
@@ -64,7 +62,7 @@ Door::Door(FeatureId id, Pos pos, DoorSpawnData* spawnData) :
     }
     break;
 
-    case doorSpawnState_secret: {
+    case DoorSpawnState::secret: {
       isOpen_ = false;
       isBroken_ = false;
       isStuck_ = false;
@@ -72,7 +70,7 @@ Door::Door(FeatureId id, Pos pos, DoorSpawnData* spawnData) :
     }
     break;
 
-    case doorSpawnState_secretAndStuck: {
+    case DoorSpawnState::secretAndStuck: {
       isOpen_ = false;
       isBroken_ = false;
       isStuck_ = true;
@@ -137,7 +135,7 @@ TileId Door::getTile() const {
 }
 
 MaterialType Door::getMaterialType() const {
-  return isSecret_ ? mimicFeature_->materialType : data_->materialType;
+  return isSecret_ ? mimicFeature_->materialType : getData().materialType;
 }
 
 void Door::bump(Actor& actorBumping) {
@@ -167,7 +165,7 @@ string Door::getDescr(const bool DEFINITE_ARTICLE) const {
     return DEFINITE_ARTICLE ? "the broken door" : "a broken door";
   }
   if(isSecret_) {
-    return (DEFINITE_ARTICLE ? mimicFeature_->name_the : mimicFeature_->name_a);
+    return (DEFINITE_ARTICLE ? mimicFeature_->nameThe : mimicFeature_->nameA);
   }
   if(!isOpen_) {return DEFINITE_ARTICLE ? "the door" : "a door";}
 

@@ -17,6 +17,7 @@
 #include "PlayerBon.h"
 #include "TextFormatting.h"
 #include "MenuBrowser.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 
@@ -45,7 +46,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
     if(d.nrKills > 0) {
       nrKillsTotAllMonsters += d.nrKills;
       if(d.isUnique) {
-        uniqueKilledNames.push_back(d.name_a);
+        uniqueKilledNames.push_back(d.nameA);
       }
     }
   }
@@ -155,13 +156,14 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
           (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1)) {
           curRow.push_back('*');
         } else {
-          if(Renderer::renderArray[x][y].glyph ==
-              FeatureData::getData(FeatureId::wall)->glyph
-              || Renderer::renderArray[x][y].glyph ==
-              FeatureData::getData(FeatureId::rubbleHigh)->glyph) {
+          const auto& wallD       = FeatureData::getData(FeatureId::wall);
+          const auto& rubbleHighD = FeatureData::getData(FeatureId::rubbleHigh);
+          const auto& statueD     = FeatureData::getData(FeatureId::statue);
+          if(
+            Renderer::renderArray[x][y].glyph == wallD.glyph ||
+            Renderer::renderArray[x][y].glyph == rubbleHighD.glyph) {
             curRow.push_back('#');
-          } else if(Renderer::renderArray[x][y].glyph ==
-                    FeatureData::getData(FeatureId::statue)->glyph) {
+          } else if(Renderer::renderArray[x][y].glyph == statueD.glyph) {
             curRow.push_back('M');
           } else {
             curRow.push_back(Renderer::renderArray[x][y].glyph);
@@ -286,7 +288,7 @@ void renderMenu(const MenuBrowser& browser) {
   }
 
   pos.set(45, 18);
-  const string NAME_STR = Map::player->getData().name_a;
+  const string NAME_STR = Map::player->getData().nameA;
   Renderer::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhiteHigh);
 
 //  pos.y += 2;

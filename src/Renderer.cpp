@@ -15,6 +15,7 @@
 #include "ActorMonster.h"
 #include "Log.h"
 #include "Attack.h"
+#include "FeatureMob.h"
 #include "FeatureDoor.h"
 #include "Inventory.h"
 #include "Utils.h"
@@ -779,7 +780,7 @@ void drawMap() {
           curDrw->glyph = f->getGlyph();
           const SDL_Color& featureClr   = f->getClr();
           const SDL_Color& featureClrBg = f->getClrBg();
-          curDrw->clr = f->hasBlood() ? clrRedLgt : featureClr;
+          curDrw->clr = f->hasBlood_ ? clrRedLgt : featureClr;
           if(!Utils::isClrEq(featureClrBg, clrBlack)) {
             curDrw->clrBg = featureClrBg;
           }
@@ -828,24 +829,21 @@ void drawMap() {
         renderArrayNoActors[x][y] = renderArray[x][y];
 
         //COLOR CELLS MARKED AS LIT YELLOW
-        if(curDrw->isMarkedAsLit) {
-          curDrw->clr = clrYellow;
-        }
+        if(curDrw->isMarkedAsLit) {curDrw->clr = clrYellow;}
       }
     }
   }
 
   //---------------- INSERT MOBILE FEATURES INTO ARRAY
   for(auto* mob : GameTime::featureMobs_) {
-    xPos = mob->getX();
-    yPos = mob->getY();
+    const Pos& p            = mob->getPos();
     const TileId  mobTile   = mob->getTile();
     const char    mobGlyph  = mob->getGlyph();
     if(
       mobTile != TileId::empty && mobGlyph != ' ' &&
-      Map::cells[xPos][yPos].isSeenByPlayer) {
+      Map::cells[p.x][p.y].isSeenByPlayer) {
       curDrw = &renderArray[xPos][yPos];
-      curDrw->clr = mob->getClr();
+      curDrw->clr   = mob->getClr();
       curDrw->tile  = mobTile;
       curDrw->glyph = mobGlyph;
     }
@@ -895,6 +893,10 @@ void drawMap() {
   }
 
   //---------------- DRAW THE GRID
+  auto divClr = []( SDL_Color& clr, const int DIV) {
+    clr.r /= DIV; clr.g /= DIV; clr.b /= DIV;
+  };
+
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
 
@@ -902,24 +904,22 @@ void drawMap() {
 
       if(Map::cells[x][y].isSeenByPlayer) {
         if(tmpDrw.isFadeEffectAllowed) {
-          const int DIST_FROM_PLAYER =
-            Utils::kingDist(Map::player->pos, Pos(x, y));
+          const int DIST_FROM_PLAYER = Utils::kingDist(Map::player->pos, Pos(x, y));
           if(DIST_FROM_PLAYER > 1) {
-            const double DIST_FADE_DIV =
-              min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
-            tmpDrw.clr.r /= DIST_FADE_DIV;
-            tmpDrw.clr.g /= DIST_FADE_DIV;
-            tmpDrw.clr.b /= DIST_FADE_DIV;
+            const double DIV = min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
+            divClr(tmpDrw.clr,    DIV);
+            divClr(tmpDrw.clrBg,  DIV);
           }
         }
       } else if(Map::cells[x][y].isExplored) {
-        bool isAwareOfMonsterHere = tmpDrw.isAwareOfMonsterHere;
-        renderArray[x][y] = Map::cells[x][y].playerVisualMemory;
-        tmpDrw = renderArray[x][y];
+        bool isAwareOfMonsterHere   = tmpDrw.isAwareOfMonsterHere;
+        renderArray[x][y]           = Map::cells[x][y].playerVisualMemory;
+        tmpDrw                      = renderArray[x][y];
         tmpDrw.isAwareOfMonsterHere = isAwareOfMonsterHere;
 
-        tmpDrw.clr.r   /= 4; tmpDrw.clr.g   /= 4; tmpDrw.clr.b   /= 4;
-        tmpDrw.clrBg.r /= 4; tmpDrw.clrBg.g /= 4; tmpDrw.clrBg.b /= 4;
+        const int DIV = 4;
+        divClr(tmpDrw.clr,    DIV);
+        divClr(tmpDrw.clrBg,  DIV);
       }
 
       if(IS_TILES) {

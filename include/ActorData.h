@@ -93,8 +93,8 @@ struct ActorDataT {
   void reset();
 
   ActorId id;
-  std::string name_a;
-  std::string name_the;
+  std::string nameA;
+  std::string nameThe;
   TileId tile;
   char glyph;
   SDL_Color color;

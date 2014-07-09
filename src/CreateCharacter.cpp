@@ -81,7 +81,7 @@ void run() {
     }
   }
   ActorDataT& def = Map::player->getData();
-  def.name_a      = def.name_the = name;
+  def.nameA      = def.nameThe = name;
 }
 
 } //EnterName

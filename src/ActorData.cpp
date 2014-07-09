@@ -13,8 +13,8 @@ using namespace std;
 
 void ActorDataT::reset() {
   id = actor_empty;
-  name_a = "";
-  name_the = "";
+  nameA = "";
+  nameThe = "";
   tile = TileId::empty;
   glyph = 'X';
   color = clrYellow;
@@ -64,8 +64,8 @@ void initDataList() {
   d.reset();
   data[d.id] = d;
 
-  d.name_a = "Player";
-  d.name_the = "Player";
+  d.nameA = "Player";
+  d.nameThe = "Player";
   d.id = actor_player;
   d.hp = PLAYER_START_HP;
   d.spi = PLAYER_START_SPI;
@@ -79,8 +79,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Reanimated Corpse";
-  d.name_the = "The Reanimated Corpse";
+  d.nameA = "A Reanimated Corpse";
+  d.nameThe = "The Reanimated Corpse";
   d.id = actor_zombie;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -108,7 +108,7 @@ void initDataList() {
   d.descr = "This rotting thing appears to have been brought back to life "
             "through some abominable process. It has grown sharp claws to "
             "attack with.";
-  d.aggroTextMonsterSeen = d.name_the + " growls at me.";
+  d.aggroTextMonsterSeen = d.nameThe + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
   d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
   d.aggroSfxMonsterHidden = SfxId::zombieGrowl;
@@ -121,8 +121,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Reanimated Corpse";
-  d.name_the = "The Reanimated Corpse";
+  d.nameA = "A Reanimated Corpse";
+  d.nameThe = "The Reanimated Corpse";
   d.id = actor_zombieAxe;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -150,7 +150,7 @@ void initDataList() {
   d.nrTurnsAwarePlayer = 10;
   d.descr = "This rotting thing appears to have been brought back to life "
             "through some abominable process. It is wielding a rusty axe.";
-  d.aggroTextMonsterSeen = d.name_the + " growls at me.";
+  d.aggroTextMonsterSeen = d.nameThe + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a growling voice.";
   d.aggroSfxMonsterSeen = SfxId::zombieGrowl;
   d.aggroSfxMonsterHidden = SfxId::zombieGrowl;
@@ -163,8 +163,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Bloated Corpse";
-  d.name_the = "The Bloated Corpse";
+  d.nameA = "A Bloated Corpse";
+  d.nameThe = "The Bloated Corpse";
   d.id = actor_bloatedZombie;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -204,8 +204,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "Major Clapham-Lee";
-  d.name_the = "Major Clapham-Lee";
+  d.nameA = "Major Clapham-Lee";
+  d.nameThe = "Major Clapham-Lee";
   d.id = actor_majorClaphamLee;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -245,8 +245,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "Dean Halsey";
-  d.name_the = "Dean Halsey";
+  d.nameA = "Dean Halsey";
+  d.nameThe = "Dean Halsey";
   d.id = actor_deanHalsey;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -286,8 +286,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Cultist";
-  d.name_the = "The Cultist";
+  d.nameA = "A Cultist";
+  d.nameThe = "The Cultist";
   d.id = actor_cultist;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -324,8 +324,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Cultist";
-  d.name_the = "The Cultist";
+  d.nameA = "A Cultist";
+  d.nameThe = "The Cultist";
   d.id = actor_cultistTeslaCannon;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -362,8 +362,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Cultist";
-  d.name_the = "The Cultist";
+  d.nameA = "A Cultist";
+  d.nameThe = "The Cultist";
   d.id = actor_cultistSpikeGun;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -400,8 +400,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "Keziah Mason";
-  d.name_the = "Keziah Mason";
+  d.nameA = "Keziah Mason";
+  d.nameThe = "Keziah Mason";
   d.id = actor_keziahMason;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -437,7 +437,7 @@ void initDataList() {
             "she trusts to carry messages between her and the devil. She feeds "
             "this creature on her blood.";
   d.spellCastMessage = "Keziah makes strange gestures in the air.";
-  d.aggroTextMonsterSeen = d.name_the + " chortles at me in a croaking voice.";
+  d.aggroTextMonsterSeen = d.nameThe + " chortles at me in a croaking voice.";
   d.aggroTextMonsterHidden = "I hear a repulsive croaking voice.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
@@ -447,8 +447,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "Brown Jenkin";
-  d.name_the = "Brown Jenkin";
+  d.nameA = "Brown Jenkin";
+  d.nameThe = "Brown Jenkin";
   d.id = actor_brownJenkin;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -484,7 +484,7 @@ void initDataList() {
             "on the witch's blood, which it sucked like a vampire. Its voice "
             "was a kind of loathsome titter, and could speak all languages.\" "
             "H.P.Lovecraft -\"Dreams in the witch house\".";
-  d.aggroTextMonsterSeen = d.name_the + " titters at me in a loathsome voice.";
+  d.aggroTextMonsterSeen = d.nameThe + " titters at me in a loathsome voice.";
   d.aggroTextMonsterHidden = "I hear a loathsome titter.";
   d.nrTurnsAwarePlayer = 999;
   d.erraticMovement = actorErratic_rare;
@@ -493,24 +493,24 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-//  d.name_a = "The Lord of Pestilence";
-//  d.name_the = "The Lord of Pestilence";
+//  d.nameA = "The Lord of Pestilence";
+//  d.nameThe = "The Lord of Pestilence";
 //  d.id = actor_lordOfPestilence;
 
-//  d.name_a = "The Lord of Shadows";
-//  d.name_the = "The Lord of Shadows";
+//  d.nameA = "The Lord of Shadows";
+//  d.nameThe = "The Lord of Shadows";
 //  d.id = actor_lordOfShadows;
 
-//  d.name_a = "The Lord of Spiders";
-//  d.name_the = "The Lord of Spiders";
+//  d.nameA = "The Lord of Spiders";
+//  d.nameThe = "The Lord of Spiders";
 //  d.id = actor_lordOfSpiders;
 
-//  d.name_a = "The Lord of Spirits";
-//  d.name_the = "The Lord of Spirits";
+//  d.nameA = "The Lord of Spirits";
+//  d.nameThe = "The Lord of Spirits";
 //  d.id = actor_lordOfSpirits;
 
-  d.name_a = "A Cultist Priest";
-  d.name_the = "The Cultist Priest";
+  d.nameA = "A Cultist Priest";
+  d.nameThe = "The Cultist Priest";
   d.id = actor_cultistPriest;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -546,8 +546,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Green Spider";
-  d.name_the = "The Green Spider";
+  d.nameA = "A Green Spider";
+  d.nameThe = "The Green Spider";
   d.id = actor_greenSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -578,8 +578,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A White Spider";
-  d.name_the = "The White Spider";
+  d.nameA = "A White Spider";
+  d.nameThe = "The White Spider";
   d.id = actor_whiteSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -610,8 +610,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Red Spider";
-  d.name_the = "The Red Spider";
+  d.nameA = "A Red Spider";
+  d.nameThe = "The Red Spider";
   d.id = actor_redSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -642,8 +642,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Shadow Spider";
-  d.name_the = "The Shadow Spider";
+  d.nameA = "A Shadow Spider";
+  d.nameThe = "The Shadow Spider";
   d.id = actor_shadowSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -678,8 +678,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Leng Spider";
-  d.name_the = "The Leng Spider";
+  d.nameA = "A Leng Spider";
+  d.nameThe = "The Leng Spider";
   d.id = actor_lengSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -714,8 +714,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Fire hound";
-  d.name_the = "The Fire hound";
+  d.nameA = "A Fire hound";
+  d.nameThe = "The Fire hound";
   d.id = actor_fireHound;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -744,7 +744,7 @@ void initDataList() {
   d.nrTurnsAwarePlayer = 25;
   d.descr = "This extremely aggressive canine seems to be part corporeal and "
             "part fire. It breathes searing flames.";
-  d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
+  d.aggroTextMonsterSeen = d.nameThe + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a snarl.";
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::dogSnarl;
@@ -757,8 +757,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Frost hound";
-  d.name_the = "The Frost hound";
+  d.nameA = "A Frost hound";
+  d.nameThe = "The Frost hound";
   d.id = actor_frostHound;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -787,7 +787,7 @@ void initDataList() {
   d.nrTurnsAwarePlayer = 25;
   d.descr = "This extremely aggressive canine seems to be part corporeal and "
             "part living ice. It breathes frost.";
-  d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
+  d.aggroTextMonsterSeen = d.nameThe + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a snarl.";
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::dogSnarl;
@@ -800,8 +800,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "Zuul the Gatekeeper";
-  d.name_the = "Zuul the Gatekeeper";
+  d.nameA = "Zuul the Gatekeeper";
+  d.nameThe = "Zuul the Gatekeeper";
   d.id = actor_zuul;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -830,7 +830,7 @@ void initDataList() {
   d.descr = "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It "
             "was worshiped by the Sumerians and Hittites in 6000 BC, along "
             "with Gozer.";
-  d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
+  d.aggroTextMonsterSeen = d.nameThe + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a snarl.";
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::dogSnarl;
@@ -847,8 +847,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Ghost";
-  d.name_the = "The Ghost";
+  d.nameA = "A Ghost";
+  d.nameThe = "The Ghost";
   d.id = actor_ghost;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -889,8 +889,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Phantasm";
-  d.name_the = "The Phantasm";
+  d.nameA = "A Phantasm";
+  d.nameThe = "The Phantasm";
   d.id = actor_phantasm;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -933,8 +933,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Wraith";
-  d.name_the = "The Wraith";
+  d.nameA = "A Wraith";
+  d.nameThe = "The Wraith";
   d.id = actor_wraith;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -976,8 +976,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Rat";
-  d.name_the = "The Rat";
+  d.nameA = "A Rat";
+  d.nameThe = "The Rat";
   d.id = actor_rat;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -1012,8 +1012,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Rat-thing";
-  d.name_the = "The Rat-thing";
+  d.nameA = "A Rat-thing";
+  d.nameThe = "The Rat-thing";
   d.id = actor_ratThing;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1055,8 +1055,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Wolf";
-  d.name_the = "The Wolf";
+  d.nameA = "A Wolf";
+  d.nameThe = "The Wolf";
   d.id = actor_wolf;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1082,7 +1082,7 @@ void initDataList() {
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 5;
   d.descr = "A large wolf with eyes full of cunning.";
-  d.aggroTextMonsterSeen = d.name_the + " snarls at me.";
+  d.aggroTextMonsterSeen = d.nameThe + " snarls at me.";
   d.aggroTextMonsterHidden = "I hear a chilling howl.";
   d.aggroSfxMonsterSeen = SfxId::dogSnarl;
   d.aggroSfxMonsterHidden = SfxId::wolfHowl;
@@ -1093,8 +1093,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Giant Bat";
-  d.name_the = "The Giant Bat";
+  d.nameA = "A Giant Bat";
+  d.nameThe = "The Giant Bat";
   d.id = actor_giantBat;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1132,8 +1132,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Byakhee";
-  d.name_the = "The Byakhee";
+  d.nameA = "A Byakhee";
+  d.nameThe = "The Byakhee";
   d.id = actor_byakhee;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1179,8 +1179,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Giant Mantis";
-  d.name_the = "The Giant Mantis";
+  d.nameA = "A Giant Mantis";
+  d.nameThe = "The Giant Mantis";
   d.id = actor_giantMantis;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1213,8 +1213,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Giant Locust";
-  d.name_the = "The Giant Locust";
+  d.nameA = "A Giant Locust";
+  d.nameThe = "The Giant Locust";
   d.id = actor_locust;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -1247,8 +1247,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Fungi from Yuggoth";
-  d.name_the = "The Fungi from Yuggoth";
+  d.nameA = "A Fungi from Yuggoth";
+  d.nameThe = "The Fungi from Yuggoth";
   d.id = actor_miGo;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1293,7 +1293,7 @@ void initDataList() {
             "superior science to subdue any primitives who stumble upon their "
             "mines and outposts.";
   d.spellCastMessage = "The Fungi makes strange gestures in the air.";
-  d.aggroTextMonsterSeen = d.name_the + " speaks at me in a droning voice.";
+  d.aggroTextMonsterSeen = d.nameThe + " speaks at me in a droning voice.";
   d.aggroTextMonsterHidden = "I hear a droning voice.";
   d.erraticMovement = actorErratic_rare;
   d.monsterShockLvl = MonsterShockLvl::scary;
@@ -1302,8 +1302,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Flying Polyp";
-  d.name_the = "The Flying Polyp";
+  d.nameA = "A Flying Polyp";
+  d.nameThe = "The Flying Polyp";
   d.id = actor_flyingPolyp;
   d.canBeSummoned = false;
   d.canBleed = false;
@@ -1346,7 +1346,7 @@ void initDataList() {
             "material obstructions. They are invulnerable to normal means of "
             "damage, though they can be destroyed by certain forms of "
             "electrical energy.";
-  d.aggroTextMonsterSeen = d.name_the + " makes shrill whistling noises.";
+  d.aggroTextMonsterSeen = d.nameThe + " makes shrill whistling noises.";
   d.aggroTextMonsterHidden = "I hear a shrill whistling.";
   d.erraticMovement = actorErratic_somewhat;
   d.monsterShockLvl = MonsterShockLvl::terrifying;
@@ -1354,8 +1354,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Ghoul";
-  d.name_the = "The Ghoul";
+  d.nameA = "A Ghoul";
+  d.nameThe = "The Ghoul";
   d.id = actor_ghoul;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1388,7 +1388,7 @@ void initDataList() {
             "rubbery, loathsome humanoids with hooflike feet, canine features, "
             "and claws. They are often encrusted with grave mold collected as "
             "they feed.";
-  d.aggroTextMonsterSeen = d.name_the + " growls at me.";
+  d.aggroTextMonsterSeen = d.nameThe + " growls at me.";
   d.aggroTextMonsterHidden = "I hear a chilling howl.";
   d.aggroSfxMonsterSeen = SfxId::ghoulGrowl;
   d.aggroSfxMonsterHidden = SfxId::wolfHowl;
@@ -1399,8 +1399,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Shadow";
-  d.name_the = "The Shadow";
+  d.nameA = "A Shadow";
+  d.nameThe = "The Shadow";
   d.id = actor_shadow;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1443,8 +1443,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Mummy";
-  d.name_the = "The Mummy";
+  d.nameA = "A Mummy";
+  d.nameThe = "The Mummy";
   d.id = actor_mummy;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1479,8 +1479,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "Khephren";
-  d.name_the = "Khephren";
+  d.nameA = "Khephren";
+  d.nameThe = "Khephren";
   d.id = actor_khephren;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1520,8 +1520,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "Nitokris";
-  d.name_the = "Nitokris";
+  d.nameA = "Nitokris";
+  d.nameThe = "Nitokris";
   d.id = actor_nitokris;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1563,8 +1563,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Deep One";
-  d.name_the = "The Deep One";
+  d.nameA = "A Deep One";
+  d.nameThe = "The Deep One";
   d.id = actor_deepOne;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1606,8 +1606,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Mass of Worms";
-  d.name_the = "The Mass of Worms";
+  d.nameA = "A Mass of Worms";
+  d.nameThe = "The Mass of Worms";
   d.id = actor_wormMass;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -1641,8 +1641,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Dust Vortex";
-  d.name_the = "The Dust Vortex";
+  d.nameA = "A Dust Vortex";
+  d.nameThe = "The Dust Vortex";
   d.id = actor_dustVortex;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1683,8 +1683,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Fire Vortex";
-  d.name_the = "The Fire Vortex";
+  d.nameA = "A Fire Vortex";
+  d.nameThe = "The Fire Vortex";
   d.id = actor_fireVortex;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1725,8 +1725,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Frost Vortex";
-  d.name_the = "The Frost Vortex";
+  d.nameA = "A Frost Vortex";
+  d.nameThe = "The Frost Vortex";
   d.id = actor_frostVortex;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1767,8 +1767,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Black Ooze";
-  d.name_the = "The Black Ooze";
+  d.nameA = "A Black Ooze";
+  d.nameThe = "The Black Ooze";
   d.id = actor_oozeBlack;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1800,7 +1800,7 @@ void initDataList() {
   d.canBashDoors = false;
   d.descr = "It's just a mass of gunk, but it seems sentient.";
   d.deathMessageOverride = "The Ooze disintegrates.";
-  d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
+  d.aggroTextMonsterSeen = d.nameThe + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
   d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
@@ -1816,8 +1816,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Clear Ooze";
-  d.name_the = "The Clear Ooze";
+  d.nameA = "A Clear Ooze";
+  d.nameThe = "The Clear Ooze";
   d.id = actor_oozeClear;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1850,7 +1850,7 @@ void initDataList() {
   d.canBashDoors = false;
   d.descr = "It's a clear mass of gunk. They can be hard to spot.";
   d.deathMessageOverride = "The Ooze disintegrates.";
-  d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
+  d.aggroTextMonsterSeen = d.nameThe + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
   d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
@@ -1866,8 +1866,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Putrid Ooze";
-  d.name_the = "The Putrid Ooze";
+  d.nameA = "A Putrid Ooze";
+  d.nameThe = "The Putrid Ooze";
   d.id = actor_oozePutrid;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1900,7 +1900,7 @@ void initDataList() {
   d.descr = "It's just a mass of gunk, but it seems sentient. It stinks like "
             "rotting cadavers.";
   d.deathMessageOverride = "The Ooze disintegrates.";
-  d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
+  d.aggroTextMonsterSeen = d.nameThe + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
   d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
@@ -1916,8 +1916,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Poison Ooze";
-  d.name_the = "The Poison Ooze";
+  d.nameA = "A Poison Ooze";
+  d.nameThe = "The Poison Ooze";
   d.id = actor_oozePoison;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1950,7 +1950,7 @@ void initDataList() {
   d.descr = "It's just a mass of gunk, but it seems sentient. It drips and "
             "sizzles with poison.";
   d.deathMessageOverride = "The Ooze disintegrates.";
-  d.aggroTextMonsterSeen = d.name_the + " makes a gurgling noise.";
+  d.aggroTextMonsterSeen = d.nameThe + " makes a gurgling noise.";
   d.aggroTextMonsterHidden = "I hear a gurgling noise.";
   d.aggroSfxMonsterSeen = SfxId::oozeGurgle;
   d.aggroSfxMonsterHidden = SfxId::oozeGurgle;
@@ -1966,8 +1966,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Colour out of space";
-  d.name_the = "The Colour out of space";
+  d.nameA = "A Colour out of space";
+  d.nameThe = "The Colour out of space";
   d.id = actor_colourOOSpace;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -2011,8 +2011,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Chthonian";
-  d.name_the = "The Chthonian";
+  d.nameA = "A Chthonian";
+  d.nameThe = "The Chthonian";
   d.id = actor_chthonian;
   d.ai[int(AiId::looks)] = false;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -2055,8 +2055,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.name_a = "A Hunting Horror";
-  d.name_the = "The Hunting Horror";
+  d.nameA = "A Hunting Horror";
+  d.nameThe = "The Hunting Horror";
   d.id = actor_huntingHorror;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;

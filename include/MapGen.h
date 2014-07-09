@@ -39,15 +39,12 @@ void restoreMap();
 void mkFromTempl(const Pos& pos, const MapTempl& t);
 void mkFromTempl(const Pos& pos, const MapTemplId templateId);
 
-void mkByRandomWalk(const Pos& p0, int len, FeatureId featureToMk,
-                    const bool DIG_ANY_FEATURE,
-                    const bool ONLY_STRAIGHT = true,
-                    const Pos& p0Lim = Pos(1, 1),
-                    const Pos& p1Lim = Pos(MAP_W - 2, MAP_H - 2));
+void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
+             const bool ALLOW_DIAGONAL = true,
+             Rect area = Rect(1, 1, MAP_W - 2, MAP_H - 2));
 
-void mkWithPathfinder(const Pos& p0, const Pos& p1,
-                      FeatureId feature, const bool SMOOTH,
-                      const bool DIG_ANY_FEATURE);
+void pathfinderWalk(const Pos& p0, const Pos& p1, std::vector<Pos>& posListRef,
+                    const bool IS_SMOOTH);
 
 } //MapGenUtils
 

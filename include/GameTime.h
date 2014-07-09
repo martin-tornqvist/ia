@@ -21,7 +21,7 @@ void cleanup();
 void storeToSaveLines(std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);
 
-void insertActorInLoop(Actor* actor);
+void addActor(Actor* actor);
 
 void actorDidAct(const bool IS_FREE_TURN = false);
 
@@ -33,9 +33,9 @@ void eraseActorInElement(const size_t i);
 
 void getFeatureMobsAtPos(const Pos& pos, std::vector<FeatureMob*>& vectorRef);
 
-void addFeatureMob(FeatureMob* const feature);
+void addMob(FeatureMob* const f);
 
-void eraseFeatureMob(FeatureMob* const feature, const bool DESTROY_OBJECT);
+void eraseFeatureMob(FeatureMob* const f, const bool DESTROY_OBJECT);
 
 void eraseAllFeatureMobs();
 

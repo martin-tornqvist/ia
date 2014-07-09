@@ -4,7 +4,8 @@
 #include <assert.h>
 
 #include "CmnTypes.h"
-#include "Feature.h"
+#include "FeatureStatic.h"
+#include "FeatureMob.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
 #include "Map.h"
@@ -169,14 +170,14 @@ void getFeatureMobsAtPos(const Pos& p, vector<FeatureMob*>& vectorRef) {
   for(auto* m : featureMobs_) {if(m->getPos() == p) {vectorRef.push_back(m);}}
 }
 
-void addFeatureMob(FeatureMob* const feature) {
-  featureMobs_.push_back(feature);
+void addMob(FeatureMob* const f) {
+  featureMobs_.push_back(f);
 }
 
-void eraseFeatureMob(FeatureMob* const feature, const bool DESTROY_OBJECT) {
+void eraseFeatureMob(FeatureMob* const f, const bool DESTROY_OBJECT) {
   for(auto it = featureMobs_.begin(); it != featureMobs_.end(); ++it) {
-    if(*it == feature) {
-      if(DESTROY_OBJECT) {delete feature;}
+    if(*it == f) {
+      if(DESTROY_OBJECT) {delete f;}
       featureMobs_.erase(it);
       return;
     }
@@ -195,7 +196,7 @@ void eraseActorInElement(const size_t i) {
   }
 }
 
-void insertActorInLoop(Actor* actor) {
+void addActor(Actor* actor) {
   //Sanity check actor inserted
   assert(Utils::isPosInsideMap(actor->pos));
   actors_.push_back(actor);

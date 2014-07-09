@@ -12,6 +12,7 @@
 #include "ItemFactory.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 

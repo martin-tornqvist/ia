@@ -21,7 +21,7 @@ struct Cell {
     playerVisualMemory.clear();
   }
 
-  inline void clear();
+  void clear();
 
   bool isExplored;
   bool isSeenByPlayer;
@@ -48,12 +48,12 @@ void setupFromSaveLines(std::vector<std::string>& lines);
 
 void resetMap();
 
+FeatureStatic* put(FeatureStatic* const staticFeature);
+
 //Makes a copy of the renderers current array
 //TODO This is weird, and it's unclear how it should be used. Remove?
 //Can it not be copied in the map drawing function instead?
 void updateVisualMemory();
-
-void switchToDestroyedFeatAt(const Pos& pos);
 
 void mkBlood(const Pos& origin);
 void mkGore(const Pos& origin);

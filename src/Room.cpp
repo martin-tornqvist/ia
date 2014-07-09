@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "Map.h"
 #include "MapParsing.h"
-#include "FeatureFactory.h"
+#include "FeatureStatic.h"
 #ifdef DEMO_MODE
 #include "Renderer.h"
 #include "SdlWrapper.h"
@@ -120,7 +120,9 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
     for(int x = 0; x < MAP_W; ++x) {
       const Pos p(x, y);
       if(flood[x][y] > 0 || p == origin) {
-        FeatureFactory::mk(FeatureId::deepWater, p, nullptr);
+        LiquidDeep* const liquid = new LiquidDeep(p);
+        liquid->type_ = LiquidType::water;
+        Map::put(liquid);
         Map::roomMap[x][y] = this;
         r_.p0.x = min(r_.p0.x, x);
         r_.p0.y = min(r_.p0.y, y);
@@ -291,22 +293,22 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
       if(IS_HOR) {
         for(int y = roomCon0.y; y <= roomCon1.y; ++y) {
           if(Map::roomMap[BRIDGE_C][y] == this) {
-            Feature* const bridge =
-              FeatureFactory::mk(FeatureId::bridge, Pos(BRIDGE_C, y));
-            static_cast<Bridge*>(bridge)->setDir(ver);
+            auto* const bridge = new Bridge(Pos(BRIDGE_C, y));
+            bridge->setDir(ver);
+            Map::put(bridge);
           }
         }
       } else {
         for(int x = roomCon0.x; x <= roomCon1.x; ++x) {
           if(Map::roomMap[x][BRIDGE_C] == this) {
-            Feature* const bridge =
-              FeatureFactory::mk(FeatureId::bridge, Pos(x, BRIDGE_C));
-            static_cast<Bridge*>(bridge)->setDir(hor);
+            auto* const bridge = new Bridge(Pos(x, BRIDGE_C));
+            bridge->setDir(hor);
+            Map::put(bridge);
           }
         }
       }
-      FeatureFactory::mk(FeatureId::floor, roomCon0);
-      FeatureFactory::mk(FeatureId::floor, roomCon1);
+      Map::put(new Floor(roomCon0));
+      Map::put(new Floor(roomCon1));
       doorProposals[roomCon0.x][roomCon0.y] = true;
       doorProposals[roomCon1.x][roomCon1.y] = true;
       cBuilt.push_back(BRIDGE_C);
@@ -329,7 +331,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
           if(
             find(cBuilt.begin(), cBuilt.end(), x) == cBuilt.end()) {
             if(Rnd::oneIn(4)) {
-              FeatureFactory::mk(FeatureId::floor, {x, y});
+              Map::put(new Floor(Pos(x, y)));
               Map::roomMap[x][y] = this;
             }
           }

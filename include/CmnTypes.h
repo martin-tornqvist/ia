@@ -20,6 +20,15 @@ enum class DmgType {
   endOfDmgTypes
 };
 
+enum class DmgMethod {
+  piercing,
+  slashing,
+  bluntMedium,
+  bluntHeavy,
+  explosion,
+  other,
+};
+
 enum class ShockValue {
   shockValue_none   = 0,
   shockValue_mild   = 2,
@@ -82,6 +91,8 @@ struct Pos {
   Pos(const Pos& p) : x(p.x), y(p.y) {}
   Pos(const int V) : x(V), y(V) {}
 
+  Pos& operator=(const Pos& p) {x = p.x; y = p.y; return *this;}
+
   Pos& operator/=(const int  V)       {x /= V;   y /= V;   return *this;}
   Pos& operator+=(const Pos& o)       {x += o.x; y += o.y; return *this;}
   Pos& operator-=(const Pos& o)       {x -= o.x; y -= o.y; return *this;}
@@ -105,10 +116,10 @@ struct Pos {
                y == 0 ? 0 : y > 0 ? 1 : -1);
   }
 
-  void set(const int x_, const int y_)  {x = x_; y = y_;}
+  void set(const int x_, const int y_)  {x = x_;  y = y_;}
   void set(const Pos& p)                {x = p.x; y = p.y;}
 
-  void swap(Pos& p) {Pos pTemp(p); p.set(*this); set(pTemp);}
+  void swap(Pos& p) {Pos pTemp(p); p = *this; set(pTemp);}
 
   int x, y;
 };
@@ -185,13 +196,13 @@ struct Fraction {
 
 struct ItemName {
 public:
-  ItemName() : name(""), name_plural(""), name_a("") {}
+  ItemName() : name(""), name_plural(""), nameA("") {}
 
   ItemName(const std::string& NAME, const std::string& NAME_PL,
            const std::string& NAME_A) :
-    name(NAME), name_plural(NAME_PL), name_a(NAME_A) {}
+    name(NAME), name_plural(NAME_PL), nameA(NAME_A) {}
 
-  std::string name, name_plural, name_a;
+  std::string name, name_plural, nameA;
 };
 
 struct ItemAttMsgs {

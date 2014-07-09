@@ -6,10 +6,10 @@
 #include <assert.h>
 
 #include "Map.h"
-#include "FeatureFactory.h"
 #include "MapParsing.h"
 #include "Utils.h"
 #include "MapTemplates.h"
+#include "FeatureStatic.h"
 
 #ifdef DEMO_MODE
 #include "SdlWrapper.h"
@@ -80,7 +80,7 @@ void cutRoomCorners(const Room& room) {
                         y > crossX1Y1.y ? (c[2] || c[3]) : false;
 
       if(X_OK && Y_OK) {
-        FeatureFactory::mk(FeatureId::wall, Pos(x, y), nullptr);
+        Map::put(new Wall(Pos(x, y)));
         Map::roomMap[x][y] = nullptr;
       }
     }
@@ -101,8 +101,6 @@ void mkPillarsInRoom(const Room& room) {
     return true;
   };
 
-  const FeatureId pillarId = FeatureId::wall;
-
   if(Rnd::fraction(2, 3)) {
     //Place pillars in rows and columns (but occasionally skip a pillar)
     auto getStepSize = []() {return Rnd::range(1, 2);};
@@ -112,7 +110,7 @@ void mkPillarsInRoom(const Room& room) {
     for(int y = roomP0.y + 1; y <= roomP1.y - 1; y += DY) {
       for(int x = roomP0.x + 1; x <= roomP1.x - 1; x += DX) {
         const Pos p(x, y);
-        if(isFree(p) && Rnd::fraction(2, 3)) {FeatureFactory::mk(pillarId, p);}
+        if(isFree(p) && Rnd::fraction(2, 3)) {Map::put(new Wall(p));}
       }
     }
   } else {
@@ -120,7 +118,7 @@ void mkPillarsInRoom(const Room& room) {
     for(int y = roomP0.y + 1; y <= roomP1.y - 1; ++y) {
       for(int x = roomP0.x + 1; x <= roomP1.x - 1; ++x) {
         const Pos p(x + Rnd::range(-1, 1), y + Rnd::range(-1, 1));
-        if(isFree(p) && Rnd::oneIn(5)) {FeatureFactory::mk(pillarId, p);}
+        if(isFree(p) && Rnd::oneIn(5)) {Map::put(new Wall(p));}
       }
     }
   }
@@ -308,7 +306,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
 
     for(size_t i = 0; i < path.size(); ++i) {
       const Pos& p(path.at(i));
-      FeatureFactory::mk(FeatureId::floor, p, nullptr);
+
+      Map::put(new Floor(p));
 
       if(i > 1 && int(i) < int(path.size() - 3) && i % 6 == 0) {
         Room* junction  = new Room(Rect(p, p));
@@ -350,75 +349,64 @@ void backupMap() {
 void restoreMap() {
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      FeatureFactory::mk(backup[x][y], Pos(x, y));
+      const auto& data = FeatureData::getData(backup[x][y]);
+      Map::put(static_cast<FeatureStatic*>(data.mkObj(Pos(x, y))));
     }
   }
 }
 
-void mkWithPathfinder(const Pos& p0, const Pos& p1, FeatureId feature,
-                      const bool IS_SMOOTH, const bool DIG_ANY_FEATURE) {
+void pathfinderWalk(const Pos& p0, const Pos& p1, std::vector<Pos>& posListRef,
+                    const bool IS_SMOOTH) {
+  posListRef.resize(0);
+
   bool blocked[MAP_W][MAP_H];
   Utils::resetArray(blocked, false);
   vector<Pos> path;
   PathFind::run(p0, p1, blocked, path);
-  const int PATH_SIZE = path.size();
-  for(int i = 0; i < PATH_SIZE; ++i) {
-    const Pos c = path.at(i);
-    const auto* const f = Map::cells[c.x][c.y].featureStatic;
-    if(f->canHaveStaticFeature() || DIG_ANY_FEATURE) {
-      FeatureFactory::mk(feature, c);
-      if(!IS_SMOOTH && Rnd::percentile() < 33) {
-        mkByRandomWalk(c, Rnd::dice(1, 6), feature, true);
-      }
+
+  vector<Pos> rndWalkBuffer;
+
+  for(const Pos& p : path) {
+    posListRef.push_back(p);
+    if(!IS_SMOOTH && Rnd::oneIn(3)) {
+      rndWalk(p, Rnd::range(1, 6), rndWalkBuffer, true);
+      posListRef.reserve(posListRef.size() + rndWalkBuffer.size());
+      move(begin(rndWalkBuffer), end(rndWalkBuffer), back_inserter(posListRef));
     }
   }
 }
 
-void mkByRandomWalk(const Pos& p0, int len, FeatureId featureToMk,
-                    const bool DIG_ANY_FEATURE,
-                    const bool ONLY_STRAIGHT, const Pos& p0Lim,
-                    const Pos& p1Lim) {
-  int dx = 0;
-  int dy = 0;
-  int xPos = p0.x;
-  int yPos = p0.y;
+void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
+             const bool ALLOW_DIAGONAL, Rect area) {
+  posListRef.resize(0);
 
-  vector<Pos> positionsToSet;
+  const vector<Pos>& dList =
+    ALLOW_DIAGONAL ? DirUtils::dirList : DirUtils::cardinalList;
+  const int D_LIST_SIZE = dList.size();
 
-  bool dirOk = false;
+  Pos p(p0);
+
   while(len > 0) {
-    while(!dirOk) {
-      dx = Rnd::dice(1, 3) - 2;
-      dy = Rnd::dice(1, 3) - 2;
-      //TODO This is really ugly!
-      dirOk =
-        !(
-          (dx == 0 && dy == 0) || xPos + dx < p0Lim.x ||
-          yPos + dy < p0Lim.y || xPos + dx > p1Lim.x ||
-          yPos + dy > p1Lim.y ||
-          (ONLY_STRAIGHT && dx != 0 && dy != 0)
-        );
+    posListRef.push_back(p);
+    len--;
+
+    while(true) {
+      const Pos nxtPos = p + dList.at(Rnd::range(0, D_LIST_SIZE - 1));
+      if(Utils::isPosInside(nxtPos, area)) {
+        p = nxtPos;
+        break;
+      }
     }
-    const auto* const f = Map::cells[xPos + dx][yPos + dy].featureStatic;
-    if(f->canHaveStaticFeature() || DIG_ANY_FEATURE) {
-      positionsToSet.push_back(Pos(xPos + dx, yPos + dy));
-      xPos += dx;
-      yPos += dy;
-      len--;
-    }
-    dirOk = false;
-  }
-  for(unsigned int i = 0; i < positionsToSet.size(); ++i) {
-    FeatureFactory::mk(featureToMk, positionsToSet.at(i));
   }
 }
 
 void mkFromTempl(const Pos& pos, const MapTempl& t) {
   for(int dy = 0; dy < t.h; dy++) {
     for(int dx = 0; dx < t.w; dx++) {
-      const auto featureId = t.featureVector[dy][dx];
-      if(featureId != FeatureId::empty) {
-        FeatureFactory::mk(featureId, pos + Pos(dx, dy));
+      const auto id = t.featureVector[dy][dx];
+      if(id != FeatureId::empty) {
+        const Pos p(pos + Pos(dx, dy));
+        Map::put(static_cast<FeatureStatic*>(FeatureData::getData(id).mkObj(p)));
       }
     }
   }

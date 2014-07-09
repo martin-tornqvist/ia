@@ -19,7 +19,6 @@
 #include "Explosion.h"
 #include "PopulateMonsters.h"
 #include "Map.h"
-#include "FeatureFactory.h"
 #include "Utils.h"
 
 using namespace std;
@@ -96,10 +95,10 @@ void ItemContainerFeature::destroySingleFragile() {
 }
 
 //--------------------------------------------------------- TOMB
-Tomb::Tomb(FeatureId id, Pos pos) :
-  FeatureStatic(id, pos), isContentKnown_(false),
-  isTraitKnown_(false), pushLidOneInN_(Rnd::range(6, 14)),
-  appearance_(TombAppearance::common), trait_(TombTrait::endOfTombTraits) {
+Tomb::Tomb(const Pos& pos) :
+  FeatureStatic(pos), isContentKnown_(false), isTraitKnown_(false),
+  pushLidOneInN_(Rnd::range(6, 14)), appearance_(TombAppearance::common),
+  trait_(TombTrait::endOfTombTraits) {
 
   //Contained items
   const int NR_ITEMS_MIN = Rnd::oneIn(3) ? 0 : 1;
@@ -407,10 +406,9 @@ void Tomb::triggerTrap(Actor& actor) {
 }
 
 //--------------------------------------------------------- CHEST
-Chest::Chest(FeatureId id, Pos pos) :
-  FeatureStatic(id, pos), isContentKnown_(false),
-  isLocked_(false), isTrapped_(false), isTrapStatusKnown_(false),
-  material(ChestMtrl(Rnd::range(0, endOfChestMaterial - 1))) {
+Chest::Chest(const Pos& pos) :
+  FeatureStatic(pos), isContentKnown_(false), isLocked_(false), isTrapped_(false),
+  isTrapStatusKnown_(false), material(ChestMtrl(Rnd::range(0, endOfChestMaterial - 1))) {
 
   const bool IS_TREASURE_HUNTER =
     PlayerBon::hasTrait(Trait::treasureHunter);
@@ -634,7 +632,7 @@ void Chest::triggerTrap(Actor& actor) {
       Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0,
                                 SfxId::explosion);
       if(Map::player->deadState == ActorDeadState::alive) {
-        FeatureFactory::mk(FeatureId::rubbleLow, pos_);
+        Map::put(new RubbleLow(pos_));
       }
     } else {
       Log::addMsg("Fumes burst out from the chest!");
@@ -658,8 +656,8 @@ void Chest::triggerTrap(Actor& actor) {
 }
 
 //--------------------------------------------------------- FOUNTAIN
-Fountain::Fountain(FeatureId id, Pos pos) :
-  FeatureStatic(id, pos), fountainType_(FountainType::tepid),
+Fountain::Fountain(const Pos& pos) :
+  FeatureStatic(pos), fountainType_(FountainType::tepid),
   fountainMaterial_(FountainMaterial::stone) {
 
   if(Rnd::oneIn(4)) {fountainMaterial_ = FountainMaterial::gold;}
@@ -800,14 +798,10 @@ void Fountain::bump(Actor& actorBumping) {
 
 
 //--------------------------------------------------------- CABINET
-Cabinet::Cabinet(FeatureId id, Pos pos) :
-  FeatureStatic(id, pos), isContentKnown_(false) {
-
-  const bool IS_TREASURE_HUNTER =
-    PlayerBon::hasTrait(Trait::treasureHunter);
-  const int IS_EMPTY_N_IN_10 = 5;
-  const int NR_ITEMS_MIN = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-  const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 2 : 1;
+Cabinet::Cabinet(const Pos& pos) : FeatureStatic(pos), isContentKnown_(false) {
+  const int IS_EMPTY_N_IN_10  = 5;
+  const int NR_ITEMS_MIN      = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
+  const int NR_ITEMS_MAX      = PlayerBon::hasTrait(Trait::treasureHunter) ? 2 : 1;
   itemContainer_.setRandomItemsForFeature(
     FeatureId::cabinet, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 }
@@ -840,14 +834,11 @@ bool Cabinet::open() {
 }
 
 //--------------------------------------------------------- COCOON
-Cocoon::Cocoon(FeatureId id, Pos pos) :
-  FeatureStatic(id, pos), isContentKnown_(false) {
-
-  const bool IS_TREASURE_HUNTER =
-    PlayerBon::hasTrait(Trait::treasureHunter);
-  const int IS_EMPTY_N_IN_10 = 6;
-  const int NR_ITEMS_MIN = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-  const int NR_ITEMS_MAX = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
+Cocoon::Cocoon(const Pos& pos) : FeatureStatic(pos), isContentKnown_(false) {
+  const bool IS_TREASURE_HUNTER = PlayerBon::hasTrait(Trait::treasureHunter);
+  const int IS_EMPTY_N_IN_10    = 6;
+  const int NR_ITEMS_MIN        = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
+  const int NR_ITEMS_MAX        = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
   itemContainer_.setRandomItemsForFeature(
     FeatureId::cocoon, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 }
@@ -912,21 +903,21 @@ bool Cocoon::open() {
 }
 
 //--------------------------------------------------------- ALTAR
-//Altar::Altar(FeatureId id, Pos pos) :
+//Altar::Altar(const Pos& pos) :
 //  FeatureStatic(id, pos) {}
 //
 //void Altar::featureSpecific_examine() {
 //}
 
 //--------------------------------------------------------- CARVED PILLAR
-//CarvedPillar::CarvedPillar(FeatureId id, Pos pos) :
+//CarvedPillar::CarvedPillar(const Pos& pos) :
 //  FeatureStatic(id, pos) {}
 //
 //void CarvedPillar::featureSpecific_examine() {
 //}
 
 //--------------------------------------------------------- BARREL
-//Barrel::Barrel(FeatureId id, Pos pos) :
+//Barrel::Barrel(const Pos& pos) :
 //  FeatureStatic(id, pos) {}
 //
 //void Barrel::featureSpecific_examine() {

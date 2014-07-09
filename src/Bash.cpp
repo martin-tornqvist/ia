@@ -2,7 +2,7 @@
 
 #include "Init.h"
 #include "GameTime.h"
-#include "Feature.h"
+#include "FeatureStatic.h"
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "Log.h"

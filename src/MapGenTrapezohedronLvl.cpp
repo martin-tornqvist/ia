@@ -1,11 +1,11 @@
 #include "MapGen.h"
 
-#include "FeatureFactory.h"
 #include "ActorPlayer.h"
 #include "ItemFactory.h"
 #include "Map.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 
@@ -18,20 +18,34 @@ bool run() {
 
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      auto* const wall =
-        static_cast<Wall*>(FeatureFactory::mk(FeatureId::wall, Pos(x, y)));
-      wall->wallType_     = WallType::cave;
-      wall->isMossGrown_  = false;
+      auto* const wall  = new Wall(Pos(x, y));
+      Map::put(wall);
+      wall->type_       = WallType::cave;
+      wall->isMossy_    = false;
     }
   }
 
   const Pos& origin     = Map::player->pos;
   const Pos  mapCenter  = Pos(MAP_W_HALF, MAP_H_HALF);
-  const auto floorId    = FeatureId::caveFloor;
 
-  MapGenUtils::mkByRandomWalk(origin, 150, floorId, true);
-  MapGenUtils::mkByRandomWalk(mapCenter, 800, floorId, true);
-  MapGenUtils::mkWithPathfinder(origin, mapCenter, floorId, false, true);
+  auto putCaveFloor = [](const vector<Pos>& positions) {
+    for(const Pos& p : positions) {
+      auto* const floor = new Floor(p);
+      Map::put(floor);
+      floor->type_      = FloorType::cave;
+    }
+  };
+
+  vector<Pos> floorPositions;
+
+  MapGenUtils::rndWalk(origin, 150, floorPositions, true);
+  putCaveFloor(floorPositions);
+
+  MapGenUtils::rndWalk(mapCenter, 800, floorPositions, true);
+  putCaveFloor(floorPositions);
+
+  MapGenUtils::pathfinderWalk(origin, mapCenter, floorPositions, false);
+  putCaveFloor(floorPositions);
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);

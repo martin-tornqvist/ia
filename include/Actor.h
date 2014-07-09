@@ -66,8 +66,8 @@ public:
   int getHpMax(const bool WITH_MODIFIERS) const;
   inline int getSpiMax()    const {return spiMax_;}
 
-  inline std::string getNameThe()   const {return data_->name_the;}
-  inline std::string getNameA()     const {return data_->name_a;}
+  inline std::string getNameThe()   const {return data_->nameThe;}
+  inline std::string getNameA()     const {return data_->nameA;}
   inline bool isHumanoid()          const {return data_->isHumanoid;}
   inline char getGlyph()            const {return glyph_;}
   virtual const SDL_Color& getClr()       {return clr_;}

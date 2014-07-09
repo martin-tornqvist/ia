@@ -16,16 +16,16 @@
 #include "GameTime.h"
 #include "Renderer.h"
 #include "Utils.h"
+#include "FeatureMob.h"
+#include "FeatureStatic.h"
 
 using namespace std;
 
 Entity::Entity(FeatureMob* feature_) :
-  feature(static_cast<Feature*>(feature_)),
-  entityType(entityFeatureMob) {}
+  feature(static_cast<Feature*>(feature_)), entityType(entityFeatureMob) {}
 
 Entity::Entity(FeatureStatic* feature_) :
-  feature(static_cast<Feature*>(feature_)),
-  entityType(entityFeatureStatic) {}
+  feature(static_cast<Feature*>(feature_)), entityType(entityFeatureStatic) {}
 
 namespace AutoDescrActor {
 
@@ -66,7 +66,7 @@ void addAutoDescriptionLines(Actor* const actor, string& line) {
 
   if(def.isUnique) {
     if(def.spawnMinDLVL < LAST_CAVERN_LVL) {
-      line += " " + def.name_the + " is normally found beneath level " +
+      line += " " + def.nameThe + " is normally found beneath level " +
               getDwellingLvlStr(def) + ". ";
     }
   } else {

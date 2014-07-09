@@ -235,7 +235,7 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
         Log::addMsg("I feel healthier!", clrMsgGood);
       } else {
         if(Map::player->isSeeingActor(*this, nullptr)) {
-          Log::addMsg(data_->name_the + " looks healthier.");
+          Log::addMsg(data_->nameThe + " looks healthier.");
         }
       }
       Renderer::drawMapAndInterface();
@@ -277,7 +277,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
         Log::addMsg("I feel more spirited!", clrMsgGood);
       } else {
         if(Map::player->isSeeingActor(*this, nullptr)) {
-          Log::addMsg(data_->name_the + " looks more spirited.");
+          Log::addMsg(data_->nameThe + " looks more spirited.");
         }
       }
       Renderer::drawMapAndInterface();
