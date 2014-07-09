@@ -76,10 +76,6 @@ void Feature::hit(const DmgType type, const DmgMethod method) {
   (void)type; (void)method;
 }
 
-void Feature::destroy(const DmgType dmgType) {
-  (void)dmgType;
-}
-
 SDL_Color Feature::getClr() const {
   return getData().clr;
 }

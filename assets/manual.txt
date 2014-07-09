@@ -19,6 +19,7 @@
    @      Display character information
    TAB    Melee attack adjacent monster
    a      Examine something on the map
+   A      Apply wielded item on something (hit, pry, dip...)
    c      Close door
    d      Disarm trap
    D      Jam door with an iron spike
@@ -28,7 +29,7 @@
    G      Unload or pick up ammunition from the ground
    i      Browse backpack
    m      Display message history
-   q      Bash or kick something
+   q      Kick
    r      Reload wielded firearm
    s      Wait and search for 5 turns
    t      Throw a missile from the missile slot

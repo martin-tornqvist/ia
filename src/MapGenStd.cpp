@@ -509,8 +509,8 @@ void mkCaves(Region regions[3][3]) {
             if(x == 0 || y == 0 || x == MAP_W - 1 || y == MAP_H - 1) {
               blocked[x][y] = true;
             } else {
-              for(int dy = -1; dy <= 1; dy++) {
-                for(int dx = -1; dx <= 1; dx++) {
+              for(int dy = -1; dy <= 1; ++dy) {
+                for(int dx = -1; dx <= 1; ++dx) {
                   const auto featureId =
                     Map::cells[x + dx][y + dy].featureStatic->getId();
                   if(
@@ -541,8 +541,8 @@ void mkCaves(Region regions[3][3]) {
               floor->type_        = FloorType::cave;
               Map::put(floor);
 
-              for(int dy = -1; dy <= 1; dy++) {
-                for(int dx = -1; dx <= 1; dx++) {
+              for(int dy = -1; dy <= 1; ++dy) {
+                for(int dx = -1; dx <= 1; ++dx) {
                   const Pos adjP(p + Pos(dx, dy));
                   Cell& adjCell = Map::cells[adjP.x][adjP.y];
                   if(adjCell.featureStatic->getId() == FeatureId::wall) {
@@ -562,8 +562,8 @@ void mkCaves(Region regions[3][3]) {
 
           for(int y = 1; y < MAP_H - 1; ++y) {
             for(int x = 1; x < MAP_W - 1; ++x) {
-              for(int dy = -1; dy <= 1; dy++) {
-                for(int dx = -1; dx <= 1; dx++) {
+              for(int dy = -1; dy <= 1; ++dy) {
+                for(int dx = -1; dx <= 1; ++dx) {
                   Cell& adjCell = Map::cells[x + dx][y + dy];
                   if(adjCell.featureStatic->getId() == FeatureId::wall) {
                     blocked[x][y] = blocked[x + dx][y + dy] = true;
@@ -594,8 +594,8 @@ void mkCaves(Region regions[3][3]) {
 void placeDoorAtPosIfSuitable(const Pos& p) {
   //Check that no other doors are within a certain distance
   const int R = 2;
-  for(int dx = -R; dx <= R; dx++) {
-    for(int dy = -R; dy <= R; dy++) {
+  for(int dx = -R; dx <= R; ++dx) {
+    for(int dy = -R; dy <= R; ++dy) {
       const Pos checkPos = p + Pos(dx, dy);
       if((dx != 0 || dy != 0) && Utils::isPosInsideMap(checkPos)) {
         const Cell& cell = Map::cells[checkPos.x][checkPos.y];
@@ -1019,7 +1019,7 @@ void movePlayerToNearestAllowedPos() {
 //  door.material_ = doorMaterial_metal;
 //  door.isOpen_ = false;
 //  door.isStuck_ = false;
-//  door.isOpenedAndClosedExternally_ = true;
+//  door.isHandledExternally_ = true;
 //}
 
 void revealDoorsOnPathToStairs(const Pos& stairsPos) {

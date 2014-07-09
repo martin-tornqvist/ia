@@ -92,8 +92,8 @@ void mkPillarsInRoom(const Room& room) {
   const Pos& roomP1(room.r_.p1);
 
   auto isFree = [](const Pos & p) {
-    for(int dx = -1; dx <= 1; dx++) {
-      for(int dy = -1; dy <= 1; dy++) {
+    for(int dx = -1; dx <= 1; ++dx) {
+      for(int dy = -1; dy <= 1; ++dy) {
         const auto* const f = Map::cells[p.x + dx][p.y + dy].featureStatic;
         if(f->getId() == FeatureId::wall) {return false;}
       }
@@ -401,8 +401,8 @@ void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
 }
 
 void mkFromTempl(const Pos& pos, const MapTempl& t) {
-  for(int dy = 0; dy < t.h; dy++) {
-    for(int dx = 0; dx < t.w; dx++) {
+  for(int dy = 0; dy < t.h; ++dy) {
+    for(int dx = 0; dx < t.w; ++dx) {
       const auto id = t.featureVector[dy][dx];
       if(id != FeatureId::empty) {
         const Pos p(pos + Pos(dx, dy));

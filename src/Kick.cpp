@@ -1,4 +1,4 @@
-#include "Bash.h"
+#include "Kick.h"
 
 #include "Init.h"
 #include "GameTime.h"
@@ -13,41 +13,39 @@
 
 using namespace std;
 
-namespace Bash {
+namespace Kick {
 
-void playerBash() {
+void playerKick() {
   TRACE_FUNC_BEGIN;
 
   Log::clearLog();
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Renderer::drawMapAndInterface();
-  Pos bashPos(Map::player->pos + Query::dir());
+  Pos kickPos(Map::player->pos + Query::dir());
   Log::clearLog();
 
-  if(bashPos != Map::player->pos) {
-    //Bash living actor?
-    Actor* livingActor =
-      Utils::getActorAtPos(bashPos, ActorDeadState::alive);
+  if(kickPos != Map::player->pos) {
+    //Kick living actor?
+    Actor* livingActor = Utils::getActorAtPos(kickPos, ActorDeadState::alive);
     if(livingActor) {
-      TRACE << "Actor found at bash pos, attempting to kick actor" << endl;
+      TRACE << "Actor found at kick pos, attempting to kick actor" << endl;
       if(Map::player->getPropHandler().allowAttackMelee(true)) {
         TRACE << "Player is allowed to do melee attack" << endl;
         bool blocked[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksVision(), blocked);
 
         TRACE << "Player can see actor" << endl;
-        Map::player->kick(*livingActor);
+        Map::player->kickMonster(*livingActor);
       }
       TRACE_FUNC_END;
       return;
     }
 
-    //Bash corpse?
-    Actor* deadActor =
-      Utils::getActorAtPos(bashPos, ActorDeadState::corpse);
+    //Kick corpse?
+    Actor* deadActor = Utils::getActorAtPos(kickPos, ActorDeadState::corpse);
     if(deadActor) {
       const bool IS_SEEING_CORPSE =
-        Map::cells[bashPos.x][bashPos.y].isSeenByPlayer;
+        Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
 
       const string actorNameA = deadActor->getNameA();
 
@@ -63,12 +61,12 @@ void playerBash() {
       return;
     }
 
-    //Bash feature
-    TRACE << "No actor at bash pos, attempting to bash feature instead" << endl;
-    Cell& cell = Map::cells[bashPos.x][bashPos.y];
-    cell.featureStatic->bash(*Map::player);
+    //Kick feature
+    TRACE << "No actor at kick pos, attempting to kick feature instead" << endl;
+    Cell& cell = Map::cells[kickPos.x][kickPos.y];
+    cell.featureStatic->kick(*Map::player);
   }
   TRACE_FUNC_END;
 }
 
-} //Bash
+} //Kick

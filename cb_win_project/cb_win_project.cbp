@@ -131,7 +131,6 @@
 		<Unit filename="../include/Art.h" />
 		<Unit filename="../include/Attack.h" />
 		<Unit filename="../include/Audio.h" />
-		<Unit filename="../include/Bash.h" />
 		<Unit filename="../include/Bot.h" />
 		<Unit filename="../include/CharacterDescr.h" />
 		<Unit filename="../include/CharacterLines.h" />
@@ -179,6 +178,7 @@
 		<Unit filename="../include/ItemScroll.h" />
 		<Unit filename="../include/ItemWeapon.h" />
 		<Unit filename="../include/JamWithSpike.h" />
+		<Unit filename="../include/Kick.h" />
 		<Unit filename="../include/Knockback.h" />
 		<Unit filename="../include/LineCalc.h" />
 		<Unit filename="../include/Log.h" />
@@ -226,7 +226,6 @@
 		<Unit filename="../src/Art.cpp" />
 		<Unit filename="../src/Attack.cpp" />
 		<Unit filename="../src/Audio.cpp" />
-		<Unit filename="../src/Bash.cpp" />
 		<Unit filename="../src/Bot.cpp" />
 		<Unit filename="../src/CharacterDescr.cpp" />
 		<Unit filename="../src/CharacterLines.cpp" />
@@ -270,6 +269,7 @@
 		<Unit filename="../src/ItemScroll.cpp" />
 		<Unit filename="../src/ItemWeapon.cpp" />
 		<Unit filename="../src/JamWithSpike.cpp" />
+		<Unit filename="../src/Kick.cpp" />
 		<Unit filename="../src/Knockback.cpp" />
 		<Unit filename="../src/LineCalc.cpp" />
 		<Unit filename="../src/Log.cpp" />

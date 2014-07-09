@@ -284,7 +284,7 @@ void Tomb::examine() {
   }
 }
 
-//void Tomb::bash(Actor& actorTrying) {
+//void Tomb::kick(Actor& actorTrying) {
 //  (void)actorTrying;
 
 //  const Inventory& inv = Map::player->getInv();
@@ -466,7 +466,7 @@ bool Chest::open() {
   return true;
 }
 
-void Chest::bash(Actor& actorTrying) {
+void Chest::kick(Actor& actorTrying) {
   (void)actorTrying;
 
   if(itemContainer_.items_.empty() && isContentKnown_) {
@@ -485,10 +485,8 @@ void Chest::bash(Actor& actorTrying) {
       Log::addMsg("It seems futile.");
     } else {
 
-      const bool IS_CURSED =
-        find(begin(props), end(props), propCursed)  != end(props);
-      const bool IS_BLESSED =
-        find(begin(props), end(props), propBlessed) != end(props);
+      const bool IS_CURSED  = find(begin(props), end(props), propCursed)  != end(props);
+      const bool IS_BLESSED = find(begin(props), end(props), propBlessed) != end(props);
 
       if(!IS_BLESSED && (IS_CURSED || Rnd::oneIn(3))) {
         itemContainer_.destroySingleFragile();

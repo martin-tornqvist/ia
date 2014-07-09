@@ -12,6 +12,7 @@
 #include "SaveHandling.h"
 #include "FeatureStatic.h"
 #include "ItemFactory.h"
+#include "MapParsing.h"
 
 using namespace std;
 
@@ -25,17 +26,16 @@ void FeatureStatic::disarm() {
   Renderer::drawMapAndInterface();
 }
 
-void FeatureStatic::bash(Actor& actorTrying) {
+void FeatureStatic::kick(Actor& actorTrying) {
   if(&actorTrying == Map::player) {
     const bool IS_BLIND    = !Map::player->getPropHandler().allowSee();
     const bool IS_BLOCKING = !canMoveCmn() && getId() != FeatureId::stairs;
     if(IS_BLOCKING) {
-      Log::addMsg("I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
+      Log::addMsg("I kick " + (IS_BLIND ? "something" : getDescr(false)) + "!");
 
       if(Rnd::oneIn(4)) {
         Log::addMsg("I sprain myself.", clrMsgBad);
-        const int SPRAIN_DMG = Rnd::range(1, 5);
-        actorTrying.hit(SPRAIN_DMG, DmgType::pure, false);
+        actorTrying.hit(Rnd::range(1, 5), DmgType::pure, false);
       }
 
       if(Rnd::oneIn(4)) {
@@ -51,7 +51,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
     }
   }
 
-  bash_(actorTrying);
+  kick_(actorTrying);
 
   GameTime::actorDidAct();
 
@@ -59,8 +59,8 @@ void FeatureStatic::bash(Actor& actorTrying) {
   Renderer::drawMapAndInterface();
 }
 
-void FeatureStatic::bash_(Actor& actorTrying) {
-  //Emitting the sound from the actor instead of the bashed object, because the
+void FeatureStatic::kick_(Actor& actorTrying) {
+  //Emitting the sound from the actor instead of the kicked object, because the
   //sound massage should be received even if the object is seen
   const AlertsMonsters alertsMonsters = &actorTrying == Map::player ?
                                         AlertsMonsters::yes :
@@ -112,35 +112,30 @@ void FeatureStatic::clearGore() {
 void Wall::hit(const DmgType dmgType, const DmgMethod dmgMethod) {
   if(dmgType == DmgType::physical) {
     if(
-      (dmgMethod == DmgMethod::explosion   && Rnd::fraction(3, 4)) ||
-      (dmgMethod == DmgMethod::bluntHeavy  && Rnd::oneIn(4))) {
-      destroy(dmgType);
-    }
-  }
-}
+      (dmgMethod == DmgMethod::burrowing)                         ||
+      (dmgMethod == DmgMethod::explosion  && Rnd::fraction(3, 4)) ||
+      (dmgMethod == DmgMethod::bluntHeavy && Rnd::oneIn(4))) {
 
-void Wall::destroy(const DmgType dmgType) {
-  (void)dmgType;
-
-  //First, destroy any cardinally adjacent doors
-  for(const Pos& d : DirUtils::cardinalList) {
-    const Pos p(pos_ + d);
-    if(Utils::isPosInsideMap(p)) {
-      if(Map::cells[p.x][p.y].featureStatic->getId() == FeatureId::door) {
-        Map::put(new RubbleLow(p));
+      //First, destroy any cardinally adjacent doors
+      for(const Pos& d : DirUtils::cardinalList) {
+        const Pos p(pos_ + d);
+        if(Utils::isPosInsideMap(p)) {
+          if(Map::cells[p.x][p.y].featureStatic->getId() == FeatureId::door) {
+            Map::put(new RubbleLow(p));
+          }
+        }
       }
-    }
-  }
 
-  if(Rnd::coinToss()) {
-    Map::put(new RubbleHigh(pos_));
-  } else {
-    const Pos pos = pos_;
+      if(Rnd::coinToss() || dmgMethod == DmgMethod::burrowing) {
+        const Pos pos = pos_;
 
-    Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
+        Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
 
-    if(Rnd::coinToss()) {
-      ItemFactory::mkItemOnMap(ItemId::rock, pos);
+        if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
+
+      } else {
+        Map::put(new RubbleHigh(pos_));
+      }
     }
   }
 }
@@ -230,19 +225,17 @@ void Wall::setRandomIsMossGrown() {
 }
 
 //------------------------------------------------------------------- HIGH RUBBLE
-void RubbleHigh::hit(const DmgType type, const DmgMethod method) {
-  if(type == DmgType::physical) {
+void RubbleHigh::hit(const DmgType dmgType, const DmgMethod dmgMethod) {
+  if(dmgType == DmgType::physical) {
     if(
-      method == DmgMethod::explosion ||
-      (method == DmgMethod::bluntHeavy  && Rnd::coinToss())) {
+      dmgMethod == DmgMethod::explosion ||
+      (dmgMethod == DmgMethod::bluntHeavy  && Rnd::coinToss())) {
 
       const Pos pos = pos_;
 
       Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
 
-      if(Rnd::coinToss()) {
-        ItemFactory::mkItemOnMap(ItemId::rock, pos);
-      }
+      if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
     }
   }
 }
@@ -254,6 +247,37 @@ string GraveStone::getDescr(const bool DEFINITE_ARTICLE) const {
 
 void GraveStone::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {Log::addMsg(inscr_);}
+}
+
+//------------------------------------------------------------------- STATUE
+void Statue::kick_(Actor& actorTrying) {
+  const AlertsMonsters alertsMonsters = &actorTrying == Map::player ?
+                                        AlertsMonsters::yes :
+                                        AlertsMonsters::no;
+  if(Rnd::coinToss()) {
+    if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {Log::addMsg("It topples over.");}
+
+    Snd snd("I hear a crash.", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes,
+            pos_, &actorTrying, SndVol::low, alertsMonsters);
+    SndEmit::emitSnd(snd);
+
+    const Pos dstPos = pos_ + (pos_ - actorTrying.pos);
+
+    if(!CellPred::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y])) {
+      Actor* const actor = Utils::getActorAtPos(dstPos);
+      if(actor) {
+        if(actor->deadState == ActorDeadState::alive) {
+          vector<PropId> propList;
+          actor->getPropHandler().getAllActivePropIds(propList);
+          if(find(begin(propList), end(propList), propEthereal) == end(propList)) {
+            actor->hit(Rnd::range(1, 6), DmgType::physical, true);
+          }
+        }
+      }
+      Map::put(new RubbleLow(dstPos));
+    }
+    Map::put(new RubbleLow(pos_));
+  }
 }
 
 //------------------------------------------------------------------- STAIRS

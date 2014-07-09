@@ -9,7 +9,7 @@
 #include "DungeonClimb.h"
 #include "Input.h"
 #include "Reload.h"
-#include "Bash.h"
+#include "Kick.h"
 #include "Renderer.h"
 #include "Close.h"
 #include "JamWithSpike.h"
@@ -196,11 +196,11 @@ void handleKeyPress(const KeyboardReadRetData& d) {
     clearEvents();
     return;
   }
-  //----------------------------------- BASH
+  //----------------------------------- KICK
   else if((d.key_ == 'q')) {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      Bash::playerBash();
+      Kick::playerKick();
       Renderer::drawMapAndInterface();
     }
     clearEvents();

@@ -140,9 +140,9 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
 
   const int NR_OUTER = posLists.size();
   for(int curRadi = 0; curRadi < NR_OUTER; curRadi++) {
-    const vector<Pos>& inner = posLists.at(curRadi);
+    const vector<Pos>& positionsAtCurRadi = posLists.at(curRadi);
 
-    for(const Pos& pos : inner) {
+    for(const Pos& pos : positionsAtCurRadi) {
 
       Actor* livingActor          = livingActors[pos.x][pos.y];
       vector<Actor*> corpsesHere  = corpses[pos.x][pos.y];
@@ -150,9 +150,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
       if(explType == ExplType::expl) {
         //Damage environment
         Cell& cell = Map::cells[pos.x][pos.y];
-//        if(curRadi <= 2) {
         cell.featureStatic->hit(DmgType::physical, DmgMethod::explosion);
-//        }
 
         const int ROLLS = EXPL_DMG_ROLLS - curRadi;
         const int DMG   = Rnd::dice(ROLLS, EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
@@ -165,13 +163,10 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
           livingActor->hit(DMG, DmgType::physical, true);
         }
         //Damage dead actors
-        for(Actor* corpse : corpsesHere) {
-          corpse->hit(DMG, DmgType::physical, true);
-        }
+        for(Actor* corpse : corpsesHere) {corpse->hit(DMG, DmgType::physical, true);}
 
-        if(Rnd::fraction(6, 10)) {
-          GameTime::addMob(new Smoke(pos, Rnd::range(2, 4)));
-        }
+        //Add smoke
+        if(Rnd::fraction(6, 10)) {GameTime::addMob(new Smoke(pos, Rnd::range(2, 4)));}
       }
 
       //Apply property

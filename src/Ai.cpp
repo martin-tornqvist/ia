@@ -81,11 +81,11 @@ bool handleClosedBlockingDoor(Monster& monster, vector<Pos> path) {
             door->tryOpen(&monster);
             return true;
           } else if(monster.getData().canBashDoors) {
-            door->bash(monster);
+            door->kick(monster);
             return true;
           }
         } else if(monster.getData().canBashDoors) {
-          door->bash(monster);
+          door->kick(monster);
           return true;
         }
       }
@@ -249,8 +249,8 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
   CellPred::BlocksActor cellPred(monster, true);
 
   const Pos& monsterPos = monster.pos;
-  for(int dy = -1; dy <= 1; dy++) {
-    for(int dx = -1; dx <= 1; dx++) {
+  for(int dy = -1; dy <= 1; ++dy) {
+    for(int dx = -1; dx <= 1; ++dx) {
       const Pos p(monsterPos.x + dx, monsterPos.y + dy);
       blocked[p.x][p.y] = cellPred.check(Map::cells[p.x][p.y]);
     }
@@ -281,8 +281,8 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
   //Attempt to find a random non-blocked adjacent cell
   vector<Dir> dirBucket;
   dirBucket.resize(0);
-  for(int dy = -1; dy <= 1; dy++) {
-    for(int dx = -1; dx <= 1; dx++) {
+  for(int dy = -1; dy <= 1; ++dy) {
+    for(int dx = -1; dx <= 1; ++dx) {
       if(dx != 0 || dy != 0) {
         const Pos offset(dx, dy);
         const Pos targetCell(monsterPos + offset);
@@ -493,19 +493,14 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
         for(int x = 1; x < MAP_W - 1; ++x) {
           const auto* const f = Map::cells[x][y].featureStatic;
           if(!f->canMove(props)) {
-
             if(f->getId() == FeatureId::door) {
-
               const Door* const door = static_cast<const Door*>(f);
 
               const ActorDataT& d = monster.getData();
 
-              if(
-                (!d.canOpenDoors && !d.canBashDoors) ||
-                door->isOpenedAndClosedExternally()) {
+              if((!d.canOpenDoors && !d.canBashDoors) || door->isHandledExternally()) {
                 blocked[x][y] = true;
               }
-
             } else {
               blocked[x][y] = true;
             }

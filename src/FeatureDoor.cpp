@@ -18,7 +18,7 @@ using namespace std;
 Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
   FeatureStatic(pos), mimicFeature_(&mimicFeature), nrSpikes_(0) {
 
-  isOpenedAndClosedExternally_ = false;
+  isHandledExternally_ = false;
 
   const int ROLL = Rnd::percentile();
   const DoorSpawnState doorState =
@@ -218,7 +218,7 @@ bool Door::trySpike(Actor* actorTrying) {
   return true;
 }
 
-void Door::bash_(Actor& actorTrying) {
+void Door::kick_(Actor& actorTrying) {
   TRACE_FUNC_BEGIN;
 
   if(!isOpen_) {
@@ -316,7 +316,7 @@ void Door::tryClose(Actor* actorTrying) {
 
   bool isClosable = true;
 
-  if(isOpenedAndClosedExternally_) {
+  if(isHandledExternally_) {
     if(IS_PLAYER) {
       Log::addMsg(
         "This door refuses to be closed, perhaps it is handled elsewhere?");
@@ -432,7 +432,7 @@ void Door::tryOpen(Actor* actorTrying) {
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true : Map::player->isSeeingActor(*actorTrying, blocked);
 
-  if(isOpenedAndClosedExternally_) {
+  if(isHandledExternally_) {
     if(IS_PLAYER) {
       Log::addMsg(
         "I see no way to open this door, perhaps it is opened elsewhere?");

@@ -40,7 +40,7 @@ public:
   char getGlyph()                     const override;
   TileId getTile()                    const override;
 
-  void bash_(Actor& actorTrying) override;
+  void kick_(Actor& actorTrying) override;
 
   void tryOpen(Actor* actorTrying);
   void tryClose(Actor* actorTrying);
@@ -49,7 +49,7 @@ public:
   bool isOpen()   const {return isOpen_;}
   bool isSecret() const {return isSecret_;}
   bool isStuck()  const {return isStuck_;}
-  bool isOpenedAndClosedExternally() const {return isOpenedAndClosedExternally_;}
+  bool isHandledExternally() const {return isHandledExternally_;}
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
@@ -74,7 +74,7 @@ protected:
   const FeatureDataT* mimicFeature_;
   int nrSpikes_;
 
-  bool isOpen_, isBroken_, isStuck_, isSecret_, isOpenedAndClosedExternally_;
+  bool isOpen_, isBroken_, isStuck_, isSecret_, isHandledExternally_;
 
   DoorMaterial material_;
 };

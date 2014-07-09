@@ -509,9 +509,9 @@ void Player::addTmpShockFromFeatures() {
 
   if(cell.isDark && !cell.isLight) {shockTmp_ += 20;}
 
-  for(int dy = -1; dy <= 1; dy++) {
+  for(int dy = -1; dy <= 1; ++dy) {
     const int Y = pos.y + dy;
-    for(int dx = -1; dx <= 1; dx++) {
+    for(int dx = -1; dx <= 1; ++dx) {
       const int X = pos.x + dx;
       if(Utils::isPosInsideMap(Pos(X, Y))) {
         shockTmp_ += Map::cells[X][Y].featureStatic->getShockWhenAdj();
@@ -1006,7 +1006,7 @@ void Player::moveDir(Dir dir) {
               return;
             }
           }
-          if(!hasMeleeWeapon) {punch(*actorAtDest);}
+          if(!hasMeleeWeapon) {punchMonster(*actorAtDest);}
         }
         return;
       }
@@ -1095,8 +1095,8 @@ void Player::autoMelee() {
   }
 
   //If this line reached, there is no adjacent cur target.
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       if(dx != 0 || dy != 0) {
         Actor* const actor = Utils::getActorAtPos(pos + Pos(dx, dy));
         if(actor) {
@@ -1111,26 +1111,23 @@ void Player::autoMelee() {
   }
 }
 
-void Player::kick(Actor& actorToKick) {
+void Player::kickMonster(Actor& actorToKick) {
   Weapon* kickWeapon = nullptr;
 
   const ActorDataT& d = actorToKick.getData();
 
   if(d.actorSize == actorSize_floor && (d.isSpider || d.isRat)) {
-    kickWeapon =
-      static_cast<Weapon*>(ItemFactory::mk(ItemId::playerStomp));
+    kickWeapon = static_cast<Weapon*>(ItemFactory::mk(ItemId::playerStomp));
   } else {
-    kickWeapon =
-      static_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
+    kickWeapon = static_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
   }
   Attack::melee(*this, *kickWeapon, actorToKick);
   delete kickWeapon;
 }
 
-void Player::punch(Actor& actorToPunch) {
+void Player::punchMonster(Actor& actorToPunch) {
   //Spawn a temporary punch weapon to attack with
-  Weapon* punchWeapon =
-    static_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
+  Weapon* punchWeapon = static_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
   Attack::melee(*this, *punchWeapon, actorToPunch);
   delete punchWeapon;
 }
@@ -1232,8 +1229,8 @@ void Player::FOVhack() {
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
       if(visionBlockers[x][y] && blocked[x][y]) {
-        for(int dy = -1; dy <= 1; dy++) {
-          for(int dx = -1; dx <= 1; dx++) {
+        for(int dy = -1; dy <= 1; ++dy) {
+          for(int dx = -1; dx <= 1; ++dx) {
             const Pos adj(x + dx, y + dy);
             if(Utils::isPosInsideMap(adj)) {
               const Cell& adjCell = Map::cells[adj.x][adj.y];

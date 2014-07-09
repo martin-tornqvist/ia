@@ -18,9 +18,7 @@ public:
   virtual FeatureId     getId()   const = 0;
   const   FeatureDataT& getData() const;
 
-  //Note: "hit()" should never directly destroy the object, only call "destroy()"
   virtual void          hit(const DmgType dmgType, const DmgMethod dmgMethod);
-  virtual void          destroy(const DmgType dmgType);
   virtual void          bump(Actor& actorBumping);
   virtual void          newTurn() {}
   virtual bool          canMoveCmn()                                    const;

@@ -139,15 +139,15 @@ void act() {
   }
 
   //Handle blocking door
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       const Pos p(Map::player->pos + Pos(dx, dy));
       auto* const f = Map::cells[p.x][p.y].featureStatic;
       if(f->getId() == FeatureId::door) {
         Door* const door = static_cast<Door*>(f);
         door->reveal(false);
         if(door->isStuck()) {
-          f->bash(*Map::player);
+          f->kick(*Map::player);
           return;
         }
       }

@@ -334,16 +334,14 @@ SpellCastRetData SpellMayhem::cast_(
     for(int y = Y0; y <= Y1; ++y) {
       for(int x = X0; x <= X1; ++x) {
         bool isAdjToWalkableCell = false;
-        for(int dy = -1; dy <= 1; dy++) {
-          for(int dx = -1; dx <= 1; dx++) {
+        for(int dy = -1; dy <= 1; ++dy) {
+          for(int dx = -1; dx <= 1; ++dx) {
             const FeatureStatic* const f = Map::cells[x + dx][y + dy].featureStatic;
             if(f->canMoveCmn()) {isAdjToWalkableCell = true;}
           }
         }
-        if(isAdjToWalkableCell) {
-          if(Rnd::oneIn(10)) {
-            Map::cells[x][y].featureStatic->destroy(DmgType::physical);
-          }
+        if(isAdjToWalkableCell && Rnd::oneIn(8)) {
+          Map::cells[x][y].featureStatic->hit(DmgType::physical, DmgMethod::explosion);
         }
       }
     }
@@ -352,7 +350,7 @@ SpellCastRetData SpellMayhem::cast_(
   for(int y = Y0; y <= Y1; ++y) {
     for(int x = X0; x <= X1; ++x) {
       auto* const f = Map::cells[x][y].featureStatic;
-      if(f->canHaveBlood()) {if(Rnd::oneIn(10)) {f->hasBlood_ = true;}}
+      if(f->canHaveBlood() && Rnd::oneIn(10)) {f->hasBlood_ = true;}
     }
   }
 

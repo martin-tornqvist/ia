@@ -1954,5 +1954,5 @@ void PropRSleep::onStart() {
 
 void PropBurrowing::onNewTurn() {
   const Pos& p = owningActor_->pos;
-  Map::cells[p.x][p.y].featureStatic->destroy(DmgType::physical);
+  Map::cells[p.x][p.y].featureStatic->hit(DmgType::physical, DmgMethod::burrowing);
 }

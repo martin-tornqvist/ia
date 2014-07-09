@@ -571,8 +571,8 @@ bool WormMass::onActorTurn_() {
         MapParse::parse(CellPred::BlocksActor(*this, true), blocked);
 
         Pos mkPos;
-        for(int dx = -1; dx <= 1; dx++) {
-          for(int dy = -1; dy <= 1; dy++) {
+        for(int dx = -1; dx <= 1; ++dx) {
+          for(int dy = -1; dy <= 1; ++dy) {
             mkPos.set(pos + Pos(dx, dy));
             if(!blocked[mkPos.x][mkPos.y]) {
               Actor* const actor =
@@ -606,8 +606,8 @@ bool GiantLocust::onActorTurn_() {
         MapParse::parse(CellPred::BlocksActor(*this, true), blocked);
 
         Pos mkPos;
-        for(int dx = -1; dx <= 1; dx++) {
-          for(int dy = -1; dy <= 1; dy++) {
+        for(int dx = -1; dx <= 1; ++dx) {
+          for(int dy = -1; dy <= 1; ++dy) {
             mkPos.set(pos + Pos(dx, dy));
             if(!blocked[mkPos.x][mkPos.y]) {
               Actor* const actor =
@@ -651,8 +651,8 @@ bool LordOfSpiders::onActorTurn_() {
         Log::addMsg(data_->spellCastMessage);
       }
 
-      for(int dy = -1; dy <= 1; dy++) {
-        for(int dx = -1; dx <= 1; dx++) {
+      for(int dy = -1; dy <= 1; ++dy) {
+        for(int dx = -1; dx <= 1; ++dx) {
 
           if(Rnd::fraction(3, 4)) {
 

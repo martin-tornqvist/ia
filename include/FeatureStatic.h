@@ -22,8 +22,8 @@ public:
 
   void clearGore();
 
-  virtual void bash(Actor& actorTrying);
-  virtual void bash_(Actor& actorTrying);
+  virtual void kick(Actor& actorTrying);
+  virtual void kick_(Actor& actorTrying);
   virtual bool open() {return false;}
   virtual void disarm();
   virtual void examine();
@@ -103,7 +103,6 @@ public:
   FeatureId getId() const override {return FeatureId::wall;}
 
   void hit(const DmgType dmgType, const DmgMethod dmgMethod) override;
-  void destroy(const DmgType dmgType) override;
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
   SDL_Color   getClr()                              const;
@@ -121,7 +120,6 @@ public:
   static bool isTileAnyWallTop(const TileId tile);
 };
 
-//TODO Consider merging RubbleLow/High into just Rubble
 class RubbleLow: public FeatureStatic {
 public:
   RubbleLow(Pos pos) : FeatureStatic(pos) {}
@@ -137,7 +135,7 @@ public:
   RubbleHigh() = delete;
   ~RubbleHigh() {}
 
-  void hit(const DmgType type, const DmgMethod method) override;
+  void hit(const DmgType dmgType, const DmgMethod dmgMethod) override;
 
   FeatureId getId() const override {return FeatureId::rubbleHigh;}
 };
@@ -176,6 +174,8 @@ public:
   ~Statue() {}
 
   FeatureId getId() const override {return FeatureId::statue;}
+
+  void kick_(Actor& actorTrying);
 };
 
 class Pillar: public FeatureStatic {

@@ -90,8 +90,8 @@ bool AllAdjIsFeature::check(const Cell& c) const {
 
   if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
 
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       if(Map::cells[X + dx][Y + dy].featureStatic->getId() != feature_) {
         return false;
       }
@@ -107,8 +107,8 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
 
   if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
 
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       const auto curId = Map::cells[X + dx][Y + dy].featureStatic->getId();
 
       bool isMatch = false;
@@ -126,8 +126,8 @@ bool AllAdjIsNotFeature::check(const Cell& c) const {
 
   if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
 
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       if(Map::cells[X + dx][Y + dy].featureStatic->getId() == feature_) {
         return false;
       }
@@ -143,8 +143,8 @@ bool AllAdjIsNoneOfFeatures::check(const Cell& c) const {
 
   if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
 
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       const auto curId = Map::cells[X + dx][Y + dy].featureStatic->getId();
       for(auto f : features_) {if(f == curId) {return false;}}
     }

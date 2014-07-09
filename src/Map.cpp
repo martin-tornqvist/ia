@@ -140,8 +140,8 @@ void updateVisualMemory() {
 }
 
 void mkBlood(const Pos& origin) {
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       const Pos c = origin + Pos(dx, dy);
       FeatureStatic* const f  = cells[c.x][c.y].featureStatic;
       if(f->canHaveBlood()) {
@@ -152,8 +152,8 @@ void mkBlood(const Pos& origin) {
 }
 
 void mkGore(const Pos& origin) {
-  for(int dx = -1; dx <= 1; dx++) {
-    for(int dy = -1; dy <= 1; dy++) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       const Pos c = origin + Pos(dx, dy);
       if(Rnd::oneIn(3)) {cells[c.x][c.y].featureStatic->tryPutGore();}
     }

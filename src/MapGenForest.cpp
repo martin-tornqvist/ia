@@ -149,8 +149,8 @@ void mkForestTrees(const Pos& stairsPos) {
 
   //Build path
   for(const Pos& pathPos : path) {
-    for(int dx = -1; dx < 1; dx++) {
-      for(int dy = -1; dy < 1; dy++) {
+    for(int dx = -1; dx < 1; ++dx) {
+      for(int dy = -1; dy < 1; ++dy) {
         const Pos p(pathPos + Pos(dx, dy));
         if(
           Map::cells[p.x][p.y].featureStatic->canHaveStaticFeature() &&
@@ -183,8 +183,8 @@ void mkForestTrees(const Pos& stairsPos) {
 
         Fov::runFovOnArray(blocked, path.at(i), vision, false);
 
-        for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; dy++) {
-          for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; dx++) {
+        for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; ++dy) {
+          for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; ++dx) {
 
             const int X = path.at(i).x + dx;
             const int Y = path.at(i).y + dy;

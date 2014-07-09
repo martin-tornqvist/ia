@@ -527,8 +527,8 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
       auto* featureHere = Map::cells[pos.x][pos.y].featureStatic;
       //TODO this should be decided with a floodfill instead
       if(!featureHere->canHaveCorpse()) {
-        for(int dx = -1; dx <= 1; dx++) {
-          for(int dy = -1; dy <= 1; dy++) {
+        for(int dx = -1; dx <= 1; ++dx) {
+          for(int dy = -1; dy <= 1; ++dy) {
             newPos = pos + Pos(dx, dy);
             featureHere =
               Map::cells[pos.x + dx][pos.y + dy].featureStatic;
@@ -564,8 +564,8 @@ void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const {
   propHandler_->getAllActivePropIds(props);
 
   if(find(begin(props), end(props), propBurning) != end(props)) {
-    for(int dy = -1; dy <= 1; dy++) {
-      for(int dx = -1; dx <= 1; dx++) {
+    for(int dy = -1; dy <= 1; ++dy) {
+      for(int dx = -1; dx <= 1; ++dx) {
         lightMap[pos.x + dx][pos.y + dy] = true;
       }
     }

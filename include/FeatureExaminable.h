@@ -83,7 +83,7 @@ public:
   void bump(Actor& actorBumping)  override;
   bool open()                     override;
   void examine()                  override;
-  void bash(Actor& actorTrying)   override;
+  void kick(Actor& actorTrying)   override;
   void disarm()                   override;
 
   SDL_Color getClr() const override {

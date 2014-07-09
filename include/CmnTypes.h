@@ -26,6 +26,7 @@ enum class DmgMethod {
   bluntMedium,
   bluntHeavy,
   explosion,
+  burrowing,
   other,
 };
 

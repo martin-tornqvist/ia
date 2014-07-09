@@ -134,8 +134,8 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   linesRef.push_back(StrAndClr(" The final moment:", clrHeading));
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      for(int dx = -1; dx <= 1; dx++) {
-        for(int dy = -1; dy <= 1; dy++) {
+      for(int dx = -1; dx <= 1; ++dx) {
+        for(int dy = -1; dy <= 1; ++dy) {
           if(Utils::isPosInsideMap(Pos(x + dx, y + dy))) {
             const auto* const f = Map::cells[x + dx][y + dy].featureStatic;
             if(f->isVisionPassable()) {Map::cells[x][y].isSeenByPlayer = true;}
