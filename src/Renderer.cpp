@@ -842,7 +842,7 @@ void drawMap() {
     if(
       mobTile != TileId::empty && mobGlyph != ' ' &&
       Map::cells[p.x][p.y].isSeenByPlayer) {
-      curDrw = &renderArray[xPos][yPos];
+      curDrw = &renderArray[p.x][p.y];
       curDrw->clr   = mob->getClr();
       curDrw->tile  = mobTile;
       curDrw->glyph = mobGlyph;
@@ -850,23 +850,19 @@ void drawMap() {
   }
 
   //---------------- INSERT LIVING ACTORS INTO ARRAY
-  for(Actor* actor : GameTime::actors_) {
+  for(auto* actor : GameTime::actors_) {
     if(actor != Map::player) {
-      xPos = actor->pos.x;
-      yPos = actor->pos.y;
 
       if(actor->deadState == ActorDeadState::alive) {
 
-        curDrw = &renderArray[xPos][yPos];
+        const Pos& p  = actor->pos;
+        curDrw        = &renderArray[p.x][p.y];
 
         const auto* const monster = static_cast<const Monster*>(actor);
 
         if(Map::player->isSeeingActor(*actor, nullptr)) {
 
-          if(
-            actor->getTile()  != TileId::empty &&
-            actor->getGlyph() != ' ') {
-
+          if(actor->getTile()  != TileId::empty && actor->getGlyph() != ' ') {
             curDrw->clr   = actor->getClr();
             curDrw->tile  = actor->getTile();
             curDrw->glyph = actor->getGlyph();

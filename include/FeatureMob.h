@@ -5,7 +5,7 @@
 
 class FeatureMob: public Feature {
 public:
-  FeatureMob(Pos pos) : Feature(pos) {}
+  FeatureMob(const Pos& pos) : Feature(pos) {}
 
   FeatureMob() = delete;
 
@@ -16,7 +16,8 @@ public:
 
 class Smoke: public FeatureMob {
 public:
-  Smoke(Pos pos, int nrTurnsLeft) : FeatureMob(pos), nrTurnsLeft_(nrTurnsLeft) {}
+  Smoke(const Pos& pos, int nrTurnsLeft) :
+    FeatureMob(pos), nrTurnsLeft_(nrTurnsLeft) {}
 
   //Spawn by id compliant ctor (do not use for normal cases):
   Smoke(const Pos& pos) : FeatureMob(pos), nrTurnsLeft_(-1) {}
@@ -35,7 +36,8 @@ protected:
 
 class LitDynamite: public FeatureMob {
 public:
-  LitDynamite(Pos pos, int nrTurnsLeft) : FeatureMob(pos), nrTurnsLeft_(nrTurnsLeft) {}
+  LitDynamite(const Pos& pos, int nrTurnsLeft) :
+    FeatureMob(pos), nrTurnsLeft_(nrTurnsLeft) {}
 
   //Spawn by id compliant ctor (do not use for normal cases):
   LitDynamite(const Pos& pos) : FeatureMob(pos), nrTurnsLeft_(-1) {}
@@ -57,7 +59,8 @@ private:
 
 class LitFlare: public FeatureMob {
 public:
-  LitFlare(Pos pos, int nrTurnsLeft) : FeatureMob(pos), nrTurnsLeft_(nrTurnsLeft) {}
+  LitFlare(const Pos& pos, int nrTurnsLeft) :
+    FeatureMob(pos), nrTurnsLeft_(nrTurnsLeft) {}
 
   //Spawn by id compliant ctor (do not use for normal cases):
   LitFlare(const Pos& pos) : FeatureMob(pos), nrTurnsLeft_(-1) {}

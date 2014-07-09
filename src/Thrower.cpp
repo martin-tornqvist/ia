@@ -51,10 +51,10 @@ void playerThrowLitExplosive(const Pos& aimCell) {
   if(path.size() > 1) {
     const auto GLYPH = ItemData::data[int(ItemId::dynamite)]->glyph;
     SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
-    for(size_t i = 1; i < path.size() - 1; ++i) {
+    for(const Pos& p : path) {
       Renderer::drawMapAndInterface(false);
-      if(Map::cells[path[i].x][path[i].y].isSeenByPlayer) {
-        Renderer::drawGlyph(GLYPH, Panel::map, path[i], clr);
+      if(Map::cells[p.x][p.y].isSeenByPlayer) {
+        Renderer::drawGlyph(GLYPH, Panel::map, p, clr);
         Renderer::updateScreen();
         SdlWrapper::sleep(Config::getDelayProjectileDraw());
       }
