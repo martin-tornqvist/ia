@@ -263,6 +263,12 @@ void Statue::kick_(Actor& actorTrying) {
 
     const Pos dstPos = pos_ + (pos_ - actorTrying.pos);
 
+    Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
+
+    Map::player->updateFov();
+    Renderer::drawMapAndInterface();
+    Map::updateVisualMemory();
+
     if(!CellPred::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y])) {
       Actor* const actor = Utils::getActorAtPos(dstPos);
       if(actor) {
@@ -270,13 +276,17 @@ void Statue::kick_(Actor& actorTrying) {
           vector<PropId> propList;
           actor->getPropHandler().getAllActivePropIds(propList);
           if(find(begin(propList), end(propList), propEthereal) == end(propList)) {
-            actor->hit(Rnd::range(1, 6), DmgType::physical, true);
+            if(actor == Map::player) {
+              Log::addMsg("It falls on me!");
+            } else if(Map::player->isSeeingActor(actorTrying, nullptr)) {
+              Log::addMsg("It falls on " + actor->getNameThe() + ".");
+            }
+            actor->hit(Rnd::dice(3, 5), DmgType::physical, true);
           }
         }
       }
       Map::put(new RubbleLow(dstPos));
     }
-    Map::put(new RubbleLow(pos_));
   }
 }
 
