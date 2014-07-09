@@ -30,8 +30,7 @@ void FeatureStatic::bash(Actor& actorTrying) {
     const bool IS_BLIND    = !Map::player->getPropHandler().allowSee();
     const bool IS_BLOCKING = !canMoveCmn() && getId() != FeatureId::stairs;
     if(IS_BLOCKING) {
-      Log::addMsg(
-        "I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
+      Log::addMsg("I smash into " + (IS_BLIND ? " something" : getDescr(false)) + "!");
 
       if(Rnd::oneIn(4)) {
         Log::addMsg("I sprain myself.", clrMsgBad);

@@ -56,8 +56,7 @@ void playerBash() {
 
       Log::addMsg("I bash " + name + ".");
 
-      pair<int, int> kickDmg =
-        ItemData::data[int(ItemId::playerKick)]->meleeDmg;
+      pair<int, int> kickDmg = ItemData::data[int(ItemId::playerKick)]->meleeDmg;
       deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, false);
       GameTime::actorDidAct();
       TRACE_FUNC_END;

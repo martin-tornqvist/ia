@@ -893,7 +893,7 @@ void drawMap() {
   }
 
   //---------------- DRAW THE GRID
-  auto divClr = []( SDL_Color& clr, const int DIV) {
+  auto divClr = [](SDL_Color & clr, const int DIV) {
     clr.r /= DIV; clr.g /= DIV; clr.b /= DIV;
   };
 
@@ -923,21 +923,20 @@ void drawMap() {
       }
 
       if(IS_TILES) {
-        //Walls are given perspective.
-        //If the tile to be set is a (top) wall tile, check the tile beneath it.
-        //If the tile beneath is not a front or top wall tile, and that cell is
-        //explored, change the current tile to wall front
+        //Walls are given perspective here. If the tile to be set is a (top) wall tile,
+        //instead place a front wall tile on any of the current conditions:
+        //(1) Cell below is explored, and its tile is not a front or top wall tile.
+        //(2) Cell below is unexplored.
         if(!tmpDrw.isLivingActorSeenHere && !tmpDrw.isAwareOfMonsterHere) {
           const auto tileSeen = renderArrayNoActors[x][y].tile;
           const auto tileMem  = Map::cells[x][y].playerVisualMemory.tile;
           const bool IS_TILE_WALL =
             Map::cells[x][y].isSeenByPlayer ?
-            Wall::isTileAnyWallTop(tileSeen) :
-            Wall::isTileAnyWallTop(tileMem);
+            Wall::isTileAnyWallTop(tileSeen) : Wall::isTileAnyWallTop(tileMem);
           if(IS_TILE_WALL) {
             const auto* const f = Map::cells[x][y].featureStatic;
-            const auto featureId = f->getId();
-            bool isHiddenDoor = false;
+            const auto featureId  = f->getId();
+            bool isHiddenDoor     = false;
             if(featureId == FeatureId::door) {
               isHiddenDoor = static_cast<const Door*>(f)->isSecret();
             }
@@ -945,12 +944,9 @@ void drawMap() {
               y < MAP_H - 1 &&
               (featureId == FeatureId::wall || isHiddenDoor)) {
               if(Map::cells[x][y + 1].isExplored) {
-                const bool IS_SEEN_BELOW = Map::cells[x][y + 1].isSeenByPlayer;
-
-                const auto tileBelowSeen = renderArrayNoActors[x][y + 1].tile;
-
-                const auto tileBelowMem =
-                  Map::cells[x][y + 1].playerVisualMemory.tile;
+                const bool IS_SEEN_BELOW  = Map::cells[x][y + 1].isSeenByPlayer;
+                const auto tileBelowSeen  = renderArrayNoActors[x][y + 1].tile;
+                const auto tileBelowMem   = Map::cells[x][y + 1].playerVisualMemory.tile;
 
                 const bool TILE_BELOW_IS_WALL_FRONT =
                   IS_SEEN_BELOW ? Wall::isTileAnyWallFront(tileBelowSeen) :
@@ -973,13 +969,16 @@ void drawMap() {
                     tmpDrw.tile = wall->getTopWallTile();
                   }
                 } else if(featureId == FeatureId::wall) {
-                  const auto* const wall = static_cast<const Wall*>(f);
-                  tmpDrw.tile = wall->getFrontWallTile();
+                  const auto* const wall  = static_cast<const Wall*>(f);
+                  tmpDrw.tile             = wall->getFrontWallTile();
                 } else if(isHiddenDoor) {
                   tmpDrw.tile = Config::isTilesWallFullSquare() ?
                                 TileId::wallTop :
                                 TileId::wallFront;
                 }
+              } else {
+                const auto* const wall = static_cast<const Wall*>(f);
+                tmpDrw.tile            = wall->getFrontWallTile();
               }
             }
           }

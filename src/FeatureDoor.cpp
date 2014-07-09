@@ -234,11 +234,10 @@ void Door::bash_(Actor& actorTrying) {
 
     if(!IS_BASHER_WEAK) {
       if(IS_PLAYER) {
-        const int BON =
-          PlayerBon::hasTrait(Trait::tough) ? 20 : 0;
-        skillValueBash = 40 + BON - min(58, nrSpikes_ * 20);
+        const int BON   = PlayerBon::hasTrait(Trait::tough) ? 20 : 0;
+        skillValueBash  = 40 + BON - min(58, nrSpikes_ * 20);
       } else {
-        skillValueBash = 10 - min(9, nrSpikes_ * 3);
+        skillValueBash  = 10 - min(9, nrSpikes_ * 3);
       }
     }
     const bool IS_DOOR_SMASHED =
