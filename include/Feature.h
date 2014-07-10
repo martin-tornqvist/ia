@@ -18,7 +18,9 @@ public:
   virtual FeatureId     getId()   const = 0;
   const   FeatureDataT& getData() const;
 
-  virtual void          hit(const DmgType dmgType, const DmgMethod dmgMethod);
+  virtual void hit(const DmgType type, const DmgMethod method, Actor* const actor);
+  virtual void hit_(const DmgType type, const DmgMethod method, Actor* const actor);
+
   virtual void          bump(Actor& actorBumping);
   virtual void          newTurn() {}
   virtual bool          canMoveCmn()                                    const;
@@ -40,7 +42,7 @@ public:
   virtual bool          canHaveGore()                                   const;
   virtual bool          canHaveItem()                                   const;
   virtual int           getDodgeModifier()                              const;
-  virtual MaterialType  getMaterialType()                               const;
+  virtual MatlType  getMatlType()                               const;
 
   int getShockWhenAdj() const;
   Pos getPos()          const {return pos_;}

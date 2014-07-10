@@ -12,18 +12,19 @@ public:
 
   virtual FeatureId getId() const override = 0;
 
+  virtual void hit(const DmgType type, const DmgMethod method, Actor* actor);
+  virtual void hit_(const DmgType type, const DmgMethod method, Actor* actor);
+
+
   virtual std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
   void tryPutGore();
 
-  TileId getGoreTile() const {return goreTile_;}
-
-  char getGoreGlyph()  const {return goreGlyph_;}
+  TileId  getGoreTile()   const {return goreTile_;}
+  char    getGoreGlyph()  const {return goreGlyph_;}
 
   void clearGore();
 
-  virtual void kick(Actor& actorTrying);
-  virtual void kick_(Actor& actorTrying);
   virtual bool open() {return false;}
   virtual void disarm();
   virtual void examine();
@@ -102,7 +103,7 @@ public:
 
   FeatureId getId() const override {return FeatureId::wall;}
 
-  void hit(const DmgType dmgType, const DmgMethod dmgMethod) override;
+  void hit_(const DmgType type, const DmgMethod method, Actor* const actor) override;
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
   SDL_Color   getClr()                              const;
@@ -135,7 +136,7 @@ public:
   RubbleHigh() = delete;
   ~RubbleHigh() {}
 
-  void hit(const DmgType dmgType, const DmgMethod dmgMethod) override;
+  void hit_(const DmgType type, const DmgMethod method, Actor* const actor) override;
 
   FeatureId getId() const override {return FeatureId::rubbleHigh;}
 };

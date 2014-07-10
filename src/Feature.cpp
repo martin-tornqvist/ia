@@ -72,8 +72,12 @@ string Feature::getDescr(const bool DEFINITE_ARTICLE) const {
   return DEFINITE_ARTICLE ? getData().nameThe : getData().nameA;
 }
 
-void Feature::hit(const DmgType type, const DmgMethod method) {
-  (void)type; (void)method;
+void Feature::hit(const DmgType type, const DmgMethod method, Actor* const actor) {
+  (void)type; (void)method; (void)actor;
+}
+
+void Feature::hit_(const DmgType type, const DmgMethod method, Actor* const actor) {
+  (void)type; (void)method; (void)actor;
 }
 
 SDL_Color Feature::getClr() const {
@@ -124,6 +128,6 @@ int Feature::getShockWhenAdj() const {
   return getData().shockWhenAdjacent;
 }
 
-MaterialType Feature::getMaterialType() const {
-  return getData().materialType;
+MatlType Feature::getMatlType() const {
+  return getData().matlType;
 }

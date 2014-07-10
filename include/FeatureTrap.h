@@ -57,7 +57,7 @@ public:
 
   bool isHidden() const {return isHidden_;}
 
-  MaterialType getMaterialType() const;
+  MatlType getMatlType() const;
 
   Dir actorTryLeave(Actor& actor, const Dir dir);
 

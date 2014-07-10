@@ -25,7 +25,9 @@ enum class DmgMethod {
   slashing,
   bluntMedium,
   bluntHeavy,
+  kick,
   explosion,
+  shotgun,
   burrowing,
   other,
 };

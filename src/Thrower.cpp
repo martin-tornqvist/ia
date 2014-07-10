@@ -210,9 +210,9 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
     const int DROP_ELEMENT = blockedInElement == -1 ?
                              path.size() - 1 : blockedInElement;
     const Pos dropPos = path.at(DROP_ELEMENT);
-    const MaterialType materialAtDropPos =
-      Map::cells[dropPos.x][dropPos.y].featureStatic->getMaterialType();
-    if(materialAtDropPos == MaterialType::hard) {
+    const MatlType matlAtDropPos =
+      Map::cells[dropPos.x][dropPos.y].featureStatic->getMatlType();
+    if(matlAtDropPos == MatlType::hard) {
       const AlertsMonsters alertsMonsters = &actorThrowing == Map::player ?
                                             AlertsMonsters::yes :
                                             AlertsMonsters::no;

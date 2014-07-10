@@ -147,7 +147,7 @@ void act() {
         Door* const door = static_cast<Door*>(f);
         door->reveal(false);
         if(door->isStuck()) {
-          f->kick(*Map::player);
+          f->hit(DmgType::physical, DmgMethod::kick, Map::player);
           return;
         }
       }

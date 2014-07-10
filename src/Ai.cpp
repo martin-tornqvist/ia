@@ -81,11 +81,11 @@ bool handleClosedBlockingDoor(Monster& monster, vector<Pos> path) {
             door->tryOpen(&monster);
             return true;
           } else if(monster.getData().canBashDoors) {
-            door->kick(monster);
+            door->hit(DmgType::physical, DmgMethod::kick, &monster);
             return true;
           }
         } else if(monster.getData().canBashDoors) {
-          door->kick(monster);
+          door->hit(DmgType::physical, DmgMethod::kick, &monster);
           return true;
         }
       }

@@ -150,7 +150,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
       if(explType == ExplType::expl) {
         //Damage environment
         Cell& cell = Map::cells[pos.x][pos.y];
-        cell.featureStatic->hit(DmgType::physical, DmgMethod::explosion);
+        cell.featureStatic->hit(DmgType::physical, DmgMethod::explosion, nullptr);
 
         const int ROLLS = EXPL_DMG_ROLLS - curRadi;
         const int DMG   = Rnd::dice(ROLLS, EXPL_DMG_SIDES) + EXPL_DMG_PLUS;

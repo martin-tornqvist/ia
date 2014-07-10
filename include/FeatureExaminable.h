@@ -66,11 +66,7 @@ private:
   TombTrait trait_;
 };
 
-enum ChestMtrl {
-  chestMtrl_wood,
-  chestMtrl_iron,
-  endOfChestMaterial
-};
+enum class ChestMatl {wood, iron, endOfChestMatl};
 
 class Chest: public FeatureStatic {
 public:
@@ -80,21 +76,21 @@ public:
 
   FeatureId getId() const override {return FeatureId::chest;}
 
+  void hit_(const DmgType type, const DmgMethod method, Actor* const actor) override;
   void bump(Actor& actorBumping)  override;
   bool open()                     override;
   void examine()                  override;
-  void kick(Actor& actorTrying)   override;
   void disarm()                   override;
 
   SDL_Color getClr() const override {
-    return material == chestMtrl_wood ? clrBrownDrk : clrGray;
+    return matl == ChestMatl::wood ? clrBrownDrk : clrGray;
   }
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override {
     const std::string a = DEFINITE_ARTICLE ?
-                          "the " : (material == chestMtrl_wood ? "a " : "an ");
+                          "the " : (matl == ChestMatl::wood ? "a " : "an ");
 
-    return a + (material == chestMtrl_wood ? "wooden " : "iron ") + "chest";
+    return a + (matl == ChestMatl::wood ? "wooden " : "iron ") + "chest";
   }
 
 private:
@@ -106,7 +102,7 @@ private:
 
   bool isContentKnown_;
   bool isLocked_, isTrapped_, isTrapStatusKnown_;
-  ChestMtrl material;
+  ChestMatl matl;
 };
 
 class Cabinet: public FeatureStatic {
@@ -147,7 +143,7 @@ enum class FountainType {
   endOfFountainTypes
 };
 
-enum class FountainMaterial {stone, gold};
+enum class FountainMatl {stone, gold};
 
 class Fountain: public FeatureStatic {
 public:
@@ -163,7 +159,7 @@ public:
 
 private:
   FountainType fountainType_;
-  FountainMaterial fountainMaterial_;
+  FountainMatl fountainMatl_;
 };
 
 class Cocoon: public FeatureStatic {

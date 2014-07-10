@@ -12,10 +12,7 @@ enum class DoorSpawnState {
   secretAndStuck
 };
 
-enum DoorMaterial {
-  doorMaterial_wood,
-  doorMaterial_metal
-};
+enum class DoorMatl {wood, metal};
 
 class Door: public FeatureStatic {
 public:
@@ -40,7 +37,7 @@ public:
   char getGlyph()                     const override;
   TileId getTile()                    const override;
 
-  void kick_(Actor& actorTrying) override;
+  void hit_(const DmgType type, const DmgMethod method, Actor* const actor) override;
 
   void tryOpen(Actor* actorTrying);
   void tryClose(Actor* actorTrying);
@@ -53,7 +50,7 @@ public:
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
-  MaterialType getMaterialType() const;
+  MatlType getMatlType() const;
 
   void reveal(const bool ALLOW_MESSAGE);
 
@@ -76,7 +73,7 @@ protected:
 
   bool isOpen_, isBroken_, isStuck_, isSecret_, isHandledExternally_;
 
-  DoorMaterial material_;
+  DoorMatl matl_;
 };
 
 #endif

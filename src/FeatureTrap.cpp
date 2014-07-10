@@ -310,8 +310,8 @@ Dir Trap::actorTryLeave(Actor& actor, const Dir dir) {
   return specificTrap_->actorTryLeave(actor, dir);
 }
 
-MaterialType Trap::getMaterialType() const {
-  return isHidden_ ? mimicFeature_->materialType : getData().materialType;
+MatlType Trap::getMatlType() const {
+  return isHidden_ ? mimicFeature_->matlType : getData().matlType;
 }
 
 //------------------------------------------------------------- SPECIFIC TRAPS

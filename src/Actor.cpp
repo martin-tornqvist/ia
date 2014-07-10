@@ -337,7 +337,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   }
 }
 
-bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
+bool Actor::hit(int dmg, const DmgType type, const bool ALLOW_WOUNDS) {
   TRACE_FUNC_BEGIN_VERBOSE;
   TRACE_VERBOSE << "Actor: Damage from parameter: " << dmg << endl;
 
@@ -349,7 +349,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   propHandler_->getAllActivePropIds(props);
 
   if(
-    dmgType == DmgType::light &&
+    type == DmgType::light &&
     find(begin(props), end(props), propLightSensitive) == end(props)) {
     return false;
   }
@@ -374,13 +374,13 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
     return false;
   }
 
-  if(dmgType == DmgType::spirit) {
+  if(type == DmgType::spirit) {
     return hitSpi(dmg, true);
   }
 
   //Property resists?
   const bool ALLOW_DMG_RES_MSG = deadState == ActorDeadState::alive;
-  if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {
+  if(propHandler_->tryResistDmg(type, ALLOW_DMG_RES_MSG)) {
     return false;
   }
 
@@ -396,7 +396,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
     if(armor) {
       TRACE_VERBOSE << "Actor: Has armor, running hit on armor" << endl;
 
-      if(dmgType == DmgType::physical) {
+      if(type == DmgType::physical) {
         dmg = armor->takeDurHitAndGetReducedDmg(dmg);
 
         if(armor->isDestroyed()) {

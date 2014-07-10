@@ -408,7 +408,7 @@ void Tomb::triggerTrap(Actor& actor) {
 //--------------------------------------------------------- CHEST
 Chest::Chest(const Pos& pos) :
   FeatureStatic(pos), isContentKnown_(false), isLocked_(false), isTrapped_(false),
-  isTrapStatusKnown_(false), material(ChestMtrl(Rnd::range(0, endOfChestMaterial - 1))) {
+  isTrapStatusKnown_(false), matl(ChestMatl(Rnd::range(0, endOfChestMatl - 1))) {
 
   const bool IS_TREASURE_HUNTER =
     PlayerBon::hasTrait(Trait::treasureHunter);
@@ -480,7 +480,7 @@ void Chest::kick(Actor& actorTrying) {
 
     if(
       find(begin(props), end(props), propWeakened) != end(props) ||
-      material == chestMtrl_iron) {
+      matl == ChestMatl::iron) {
       trySprainPlayer();
       Log::addMsg("It seems futile.");
     } else {
@@ -656,17 +656,17 @@ void Chest::triggerTrap(Actor& actor) {
 //--------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(const Pos& pos) :
   FeatureStatic(pos), fountainType_(FountainType::tepid),
-  fountainMaterial_(FountainMaterial::stone) {
+  fountainMatl_(FountainMatl::stone) {
 
-  if(Rnd::oneIn(4)) {fountainMaterial_ = FountainMaterial::gold;}
+  if(Rnd::oneIn(4)) {fountainMatl_ = FountainMatl::gold;}
 
-  switch(fountainMaterial_) {
-    case FountainMaterial::stone: {
+  switch(fountainMatl_) {
+    case FountainMatl::stone: {
       const int NR_TYPES = int(FountainType::endOfFountainTypes);
       fountainType_ = FountainType(Rnd::range(1, NR_TYPES - 1));
     } break;
 
-    case FountainMaterial::gold: {
+    case FountainMatl::gold: {
       vector<FountainType> typeBucket {
         FountainType::bless, FountainType::refreshing, FountainType::spirit,
         FountainType::vitality, FountainType::rFire, FountainType::rCold,
@@ -679,9 +679,9 @@ Fountain::Fountain(const Pos& pos) :
 }
 
 SDL_Color Fountain::getClr() const {
-  switch(fountainMaterial_) {
-    case FountainMaterial::stone: return clrGray;
-    case FountainMaterial::gold:  return clrYellow;
+  switch(fountainMatl_) {
+    case FountainMatl::stone: return clrGray;
+    case FountainMatl::gold:  return clrYellow;
   }
   assert("Failed to get fountain color" && false);
   return clrBlack;
@@ -690,9 +690,9 @@ SDL_Color Fountain::getClr() const {
 string Fountain::getDescr(const bool DEFINITE_ARTICLE) const {
   string article = DEFINITE_ARTICLE ? "the" : "a";
 
-  switch(fountainMaterial_) {
-    case FountainMaterial::stone: return article + " stone fountain";
-    case FountainMaterial::gold:  return article + " golden fountain";
+  switch(fountainMatl_) {
+    case FountainMatl::stone: return article + " stone fountain";
+    case FountainMatl::gold:  return article + " golden fountain";
   }
   assert("Failed to get fountain description" && false);
   return "";

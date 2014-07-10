@@ -26,7 +26,7 @@ void FeatureStatic::disarm() {
   Renderer::drawMapAndInterface();
 }
 
-void FeatureStatic::kick(Actor& actorTrying) {
+void FeatureStatic::hit(const DmgType type, const DmgMethod method, Actor* actor) {
   if(&actorTrying == Map::player) {
     const bool IS_BLIND    = !Map::player->getPropHandler().allowSee();
     const bool IS_BLOCKING = !canMoveCmn() && getId() != FeatureId::stairs;
@@ -59,14 +59,16 @@ void FeatureStatic::kick(Actor& actorTrying) {
   Renderer::drawMapAndInterface();
 }
 
-void FeatureStatic::kick_(Actor& actorTrying) {
-  //Emitting the sound from the actor instead of the kicked object, because the
-  //sound massage should be received even if the object is seen
-  const AlertsMonsters alertsMonsters = &actorTrying == Map::player ?
+void FeatureStatic::hit_(const DmgType type, const DmgMethod method, Actor* actor) {
+  (void)type; (void)method;
+
+  const AlertsMonsters alertsMonsters = actorTrying == Map::player ?
                                         AlertsMonsters::yes :
                                         AlertsMonsters::no;
-  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actorTrying.pos,
-          &actorTrying, SndVol::low, alertsMonsters);
+
+  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor ? actor->pos : pos_,
+          actorTrying, SndVol::low, alertsMonsters);
+
   SndEmit::emitSnd(snd);
 }
 
@@ -109,12 +111,12 @@ void FeatureStatic::clearGore() {
 }
 
 //------------------------------------------------------------------- WALL
-void Wall::hit(const DmgType dmgType, const DmgMethod dmgMethod) {
-  if(dmgType == DmgType::physical) {
+void Wall::hit(const DmgType type, const DmgMethod method) {
+  if(type == DmgType::physical) {
     if(
-      (dmgMethod == DmgMethod::burrowing)                         ||
-      (dmgMethod == DmgMethod::explosion  && Rnd::fraction(3, 4)) ||
-      (dmgMethod == DmgMethod::bluntHeavy && Rnd::oneIn(4))) {
+      (method == DmgMethod::burrowing)                         ||
+      (method == DmgMethod::explosion  && Rnd::fraction(3, 4)) ||
+      (method == DmgMethod::bluntHeavy && Rnd::oneIn(4))) {
 
       //First, destroy any cardinally adjacent doors
       for(const Pos& d : DirUtils::cardinalList) {
@@ -126,7 +128,7 @@ void Wall::hit(const DmgType dmgType, const DmgMethod dmgMethod) {
         }
       }
 
-      if(Rnd::coinToss() || dmgMethod == DmgMethod::burrowing) {
+      if(Rnd::coinToss() || method == DmgMethod::burrowing) {
         const Pos pos = pos_;
 
         Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
@@ -225,11 +227,11 @@ void Wall::setRandomIsMossGrown() {
 }
 
 //------------------------------------------------------------------- HIGH RUBBLE
-void RubbleHigh::hit(const DmgType dmgType, const DmgMethod dmgMethod) {
-  if(dmgType == DmgType::physical) {
+void RubbleHigh::hit(const DmgType type, const DmgMethod method) {
+  if(type == DmgType::physical) {
     if(
-      dmgMethod == DmgMethod::explosion ||
-      (dmgMethod == DmgMethod::bluntHeavy  && Rnd::coinToss())) {
+      method == DmgMethod::explosion ||
+      (method == DmgMethod::bluntHeavy  && Rnd::coinToss())) {
 
       const Pos pos = pos_;
 

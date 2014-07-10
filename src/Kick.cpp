@@ -63,8 +63,8 @@ void playerKick() {
 
     //Kick feature
     TRACE << "No actor at kick pos, attempting to kick feature instead" << endl;
-    Cell& cell = Map::cells[kickPos.x][kickPos.y];
-    cell.featureStatic->kick(*Map::player);
+    auto* const f = Map::cells[kickPos.x][kickPos.y].featureStatic;
+    f->hit(DmgType::physical, DmgMethod::kick, Map::player);
   }
   TRACE_FUNC_END;
 }
