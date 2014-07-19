@@ -42,7 +42,7 @@ public:
   virtual bool          canHaveGore()                                   const;
   virtual bool          canHaveItem()                                   const;
   virtual int           getDodgeModifier()                              const;
-  virtual MatlType  getMatlType()                               const;
+  virtual Matl          getMatl()                                       const;
 
   int getShockWhenAdj() const;
   Pos getPos()          const {return pos_;}

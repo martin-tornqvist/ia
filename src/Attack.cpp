@@ -8,6 +8,7 @@
 #include "ActorMonster.h"
 #include "Map.h"
 #include "FeatureTrap.h"
+#include "FeatureStatic.h"
 #include "FeatureMob.h"
 #include "PlayerBon.h"
 #include "MapParsing.h"
@@ -884,7 +885,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
   }
 
   for(size_t i = 1; i < path.size(); ++i) {
-    //If travelled more than two steps after a killed monster, stop projectile.
+    //If traveled more than two steps after a killed monster, stop projectile.
     if(nrMonKilledInElem != -1 && int(i) > nrMonKilledInElem + 1) {break;}
 
     const Pos curPos(path.at(i));
@@ -898,14 +899,13 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
         //Actor hit?
         delete data;
-        data = new RangedAttData(
-          attacker, wpn, aimPos, curPos, intendedAimLvl);
+        data = new RangedAttData(attacker, wpn, aimPos, curPos, intendedAimLvl);
         const bool IS_WITHIN_RANGE_LMT =
           Utils::kingDist(origin, curPos) <= wpn.effectiveRangeLimit;
         if(
-          IS_WITHIN_RANGE_LMT &&
-          data->attackResult >= successSmall &&
-          !data->isEtherealDefenderMissed) {
+           IS_WITHIN_RANGE_LMT &&
+           data->attackResult >= successSmall &&
+           !data->isEtherealDefenderMissed) {
           if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
             Renderer::drawMapAndInterface(false);
             Renderer::coverCellInMap(curPos);
@@ -922,8 +922,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
           printProjAtActorMsgs(*data, true);
 
           //Damage
-          data->curDefender->hit(
-            data->dmg, wpn.getData().rangedDmgType, true);
+          data->curDefender->hit(data->dmg, wpn.getData().rangedDmgType, true);
 
           nrActorsHit++;
 
@@ -949,11 +948,16 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
     //Wall hit?
     if(featureBlockers[curPos.x][curPos.y]) {
+
+      //TODO Check hit material (soft and wood should not cause ricochet)
+
       Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
               curPos, nullptr, SndVol::low, AlertsMonsters::yes);
       SndEmit::emitSnd(snd);
 
-      if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
+      Cell& cell = Map::cells[curPos.x][curPos.y];
+
+      if(cell.isSeenByPlayer) {
         Renderer::drawMapAndInterface(false);
         Renderer::coverCellInMap(curPos);
         if(Config::isTilesMode()) {
@@ -965,6 +969,9 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         SdlWrapper::sleep(Config::getDelayShotgun());
         Renderer::drawMapAndInterface();
       }
+
+      cell.featureStatic->hit(DmgType::physical, DmgMethod::shotgun, nullptr);
+
       break;
     }
 

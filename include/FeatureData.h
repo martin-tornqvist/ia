@@ -52,7 +52,7 @@ enum class FeatureId {
   endOfFeatureId
 };
 
-enum MatlType {empty, soft, hard, fluid};
+enum Matl {empty, soft, hard, fluid};
 
 struct FeatureRoomSpawnRules {
 public:
@@ -130,7 +130,7 @@ struct FeatureDataT {
   bool canHaveStaticFeature;
   bool canHaveItem;
   bool isBottomless;
-  MatlType matlType;
+  Matl matlType;
   std::string nameA;
   std::string nameThe;
   std::string messageOnPlayerBlocked;

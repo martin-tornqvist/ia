@@ -57,7 +57,7 @@ public:
 
   bool isHidden() const {return isHidden_;}
 
-  MatlType getMatlType() const;
+  Matl getMatl() const;
 
   Dir actorTryLeave(Actor& actor, const Dir dir);
 

@@ -128,6 +128,6 @@ int Feature::getShockWhenAdj() const {
   return getData().shockWhenAdjacent;
 }
 
-MatlType Feature::getMatlType() const {
+Matl Feature::getMatl() const {
   return getData().matlType;
 }

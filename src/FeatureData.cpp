@@ -44,7 +44,7 @@ void resetData(FeatureDataT& d) {
   d.canHaveStaticFeature = true;
   d.canHaveItem = true;
   d.isBottomless = false;
-  d.matlType = MatlType::hard;
+  d.matlType = Matl::hard;
   d.nameA = "";
   d.nameThe = "";
   d.messageOnPlayerBlocked = "The way is blocked.";
@@ -136,7 +136,7 @@ void initDataList() {
   d.tile = TileId::floor;
   d.clr = clrGreen;
   d.moveRules.setCanMoveCmn();
-  d.matlType = MatlType::soft;
+  d.matlType = Matl::soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = FeatureId::grassWithered;
@@ -146,7 +146,7 @@ void initDataList() {
 //  d.tile = TileId::floor;
 //  d.clr = clrBrownDrk;
 //  d.moveRules.setCanMoveCmn();
-//  d.matlType = MatlType::soft;
+//  d.matlType = Matl::soft;
 //  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::bush;
@@ -157,7 +157,7 @@ void initDataList() {
   d.clr = clrGreen;
   d.tile = TileId::bush;
   d.moveRules.setCanMoveCmn();
-  d.matlType = MatlType::soft;
+  d.matlType = Matl::soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = FeatureId::bushWithered;
@@ -167,7 +167,7 @@ void initDataList() {
 //  d.clr = clrBrownDrk;
 //  d.tile = TileId::bush;
 //  d.moveRules.setCanMoveCmn();
-//  d.matlType = MatlType::soft;
+//  d.matlType = Matl::soft;
 //  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::stairs;
@@ -223,7 +223,7 @@ void initDataList() {
   d.canHaveGore = false;
   d.canHaveStaticFeature = false;
   d.dodgeModifier = -10;
-  d.matlType = MatlType::fluid;
+  d.matlType = Matl::fluid;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::liquidDeep;
@@ -234,7 +234,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveStaticFeature = false;
-  d.matlType = MatlType::fluid;
+  d.matlType = Matl::fluid;
   addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = FeatureId::shallowWater;
@@ -248,7 +248,7 @@ void initDataList() {
 //  d.canHaveGore = false;
 //  d.canHaveStaticFeature = false;
 //  d.dodgeModifier = -10;
-//  d.matlType = MatlType::fluid;
+//  d.matlType = Matl::fluid;
 //  addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = FeatureId::deepWater;
@@ -265,7 +265,7 @@ void initDataList() {
 //  d.canHaveStaticFeature = false;
 //  d.dodgeModifier = -10;
 //  d.shockWhenAdjacent = 8;
-//  d.matlType = MatlType::fluid;
+//  d.matlType = Matl::fluid;
 //  addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = FeatureId::shallowMud;
@@ -279,7 +279,7 @@ void initDataList() {
 //  d.canHaveGore = false;
 //  d.canHaveStaticFeature = false;
 //  d.dodgeModifier = -20;
-//  d.matlType = MatlType::fluid;
+//  d.matlType = Matl::fluid;
 //  addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = FeatureId::poolBlood;
@@ -294,7 +294,7 @@ void initDataList() {
 //  d.canHaveStaticFeature = false;
 //  d.dodgeModifier = -10;
 //  d.shockWhenAdjacent = 3;
-//  d.matlType = MatlType::fluid;
+//  d.matlType = Matl::fluid;
 //  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::chasm;
@@ -314,7 +314,7 @@ void initDataList() {
   d.messageOnPlayerBlockedBlind =
     "I realize I am standing on the edge of a chasm.";
   d.shockWhenAdjacent = 3;
-  d.matlType = MatlType::empty;
+  d.matlType = Matl::empty;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::gravestone;
@@ -362,7 +362,7 @@ void initDataList() {
   d.tile = TileId::floor;
   d.canHaveStaticFeature = false;
   d.moveRules.setCanMoveCmn();
-  d.matlType = MatlType::soft;
+  d.matlType = Matl::soft;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::rubbleHigh;

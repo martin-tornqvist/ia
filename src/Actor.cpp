@@ -65,9 +65,7 @@ bool Actor::isSeeingActor(
   const Actor& other, const bool visionBlockingCells[MAP_W][MAP_H]) const {
 
   if(other.deadState == ActorDeadState::alive) {
-    if(this == &other) {
-      return true;
-    }
+    if(this == &other) {return true;}
 
     if(this == Map::player) {
       const bool IS_MONSTER_SNEAKING =

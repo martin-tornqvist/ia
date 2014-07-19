@@ -12,7 +12,7 @@ enum class DoorSpawnState {
   secretAndStuck
 };
 
-enum class DoorMatl {wood, metal};
+enum class DoorType {wood, metal};
 
 class Door: public FeatureStatic {
 public:
@@ -50,7 +50,7 @@ public:
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
-  MatlType getMatlType() const;
+  Matl getMatl() const;
 
   void reveal(const bool ALLOW_MESSAGE);
 
@@ -73,7 +73,7 @@ protected:
 
   bool isOpen_, isBroken_, isStuck_, isSecret_, isHandledExternally_;
 
-  DoorMatl matl_;
+  DoorType type_;
 };
 
 #endif

@@ -1016,7 +1016,7 @@ void movePlayerToNearestAllowedPos() {
 //  FeatureFactory::mk(FeatureId::lever, leverPos, new LeverSpawnData(&door));
 //
 //  TRACE << "Changing door properties" << endl;
-//  door.matl_ = DoorMatl::metal;
+//  door.matl_ = DoorType::metal;
 //  door.isOpen_ = false;
 //  door.isStuck_ = false;
 //  door.isHandledExternally_ = true;

@@ -80,42 +80,36 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
 
   }
 
-  matl_ = DoorMatl::wood;
+  type_ = DoorType::wood;
 }
 
-bool Door::canMoveCmn() const {
-  return isOpen_;
-}
+bool Door::canMoveCmn() const {return isOpen_;}
 
 bool Door::canMove(const vector<PropId>& actorsProps) const {
-  if(isOpen_) return true;
+  if(isOpen_) {return true;}
 
   for(PropId propId : actorsProps) {
-    if(propId == propEthereal || propId == propOoze) {
-      return true;
-    }
+    if(propId == propEthereal || propId == propOoze) {return true;}
   }
 
   return isOpen_;
 }
 
-bool Door::isVisionPassable() const {
-  return isOpen_;
-}
-
-bool Door::isProjectilePassable() const {
-  return isOpen_;
-}
-
-bool Door::isSmokePassable() const {
-  return isOpen_;
-}
+bool Door::isVisionPassable()     const {return isOpen_;}
+bool Door::isProjectilePassable() const {return isOpen_;}
+bool Door::isSmokePassable()      const {return isOpen_;}
 
 SDL_Color Door::getClr() const {
   if(isSecret_) {
     return mimicFeature_->clr;
+  } else {
+    switch(type_) {
+      case DoorType::wood:  return clrBrownDrk; break;
+      case DoorType::metal: return clrGray;     break;
+    }
   }
-  return matl_ == DoorMatl::metal ? clrGray : clrBrownDrk;
+  assert(false && "Failed to get door color");
+  return clrGray;
 }
 
 char Door::getGlyph() const {
@@ -134,8 +128,12 @@ TileId Door::getTile() const {
   }
 }
 
-MatlType Door::getMatlType() const {
-  return isSecret_ ? mimicFeature_->matlType : getData().matlType;
+Matl Door::getMatl() const {
+  if(isSecret()) {
+    return mimicFeature_->matlType;
+  } else {
+    return Matl::hard;
+  }
 }
 
 void Door::bump(Actor& actorBumping) {
@@ -191,9 +189,7 @@ void Door::playerTrySpotHidden() {
   if(isSecret_) {
     const int PLAYER_SKILL = Map::player->getData().abilityVals.getVal(
                                AbilityId::searching, true, *(Map::player));
-    if(AbilityRoll::roll(PLAYER_SKILL) >= successSmall) {
-      reveal(true);
-    }
+    if(AbilityRoll::roll(PLAYER_SKILL) >= successSmall) {reveal(true);}
   }
 }
 
@@ -223,49 +219,100 @@ void Door::hit_(const DmgType type, const DmgMethod method, Actor* const actor) 
 
   if(!isOpen_) {
 
-    //Find chance to break
-    const bool IS_PLAYER = actor == Map::player;
+    const bool IS_PLAYER          = actor == Map::player;
+    const bool IS_PLAYER_SEE_CELL = Map::canPlayerSeePos(pos_);
 
     Fraction chanceToDestr(0, 10);
 
     vector<PropId> props;
     if(actor) {actor->getPropHandler().getAllActivePropIds(props);}
 
-    if(find(begin(props), end(props), propWeakened) != end(props) != end(props)) {
-      switch(method) {
-        case DmgMethod::bluntMedium:
-        case DmgMethod::burrowing:
-        case DmgMethod::piercing:
-        case DmgMethod::slashing: {
-          return;
-        } break;
+    const bool IS_WEAK = find(begin(props), end(props), propWeakened) != end(props);
 
-        case DmgMethod::other: {
-          return;
-        } break;
+    switch(method) {
+      case DmgMethod::elemental:
+      case DmgMethod::burrowing:
+      case DmgMethod::bluntMedium:
+      case DmgMethod::piercing:
+      case DmgMethod::slashing: {} break;
 
-        case DmgMethod::shotgun:    chanceToDestr.set(7,  10);  break;
-        case DmgMethod::explosion:  chanceToDestr.set(10, 10);  break;
-
-        case DmgMethod::bluntHeavy: {
-          chanceToDestr.set(6, 10);
-          if(IS_PLAYER) {
-            if(PlayerBon::hasTrait(Trait::tough))   {chanceToDestr.numerator += 2;}
-            if(PlayerBon::hasTrait(Trait::rugged))  {chanceToDestr.numerator += 2;}
+      case DmgMethod::shotgun: {
+        switch(type_) {
+          case DoorType::wood: {chanceToDestr.set(7,  10);} break;
+          case DoorType::metal: {} break;
+        }
+        if(Rnd::fraction(chanceToDestr)) {
+          if(IS_PLAYER_SEE_CELL) {
+            Log::addMsg("A door is blown to splinters!");
           }
-        } break;
+          Map::put(new RubbleLow(pos_));
+        }
+      } break;
 
-        case DmgMethod::kick: {
-          assert(actor);
-          chanceToDestr.set(4, 10);
-          chanceToDestr.numerator -= nrSpikes_;
-          if(IS_PLAYER) {
-            if(PlayerBon::hasTrait(Trait::tough))   {chanceToDestr.numerator += 2;}
-            if(PlayerBon::hasTrait(Trait::rugged))  {chanceToDestr.numerator += 2;}
-          }
-        } break;
-      }
+      case DmgMethod::explosion: {chanceToDestr.set(10, 10);} break;
+
+      case DmgMethod::bluntHeavy: {
+        assert(actor);
+        switch(type_) {
+          case DoorType::wood: {
+            chanceToDestr.set(6, 10);
+            if(IS_PLAYER) {
+              if(PlayerBon::hasTrait(Trait::tough))   {chanceToDestr.numerator += 2;}
+              if(PlayerBon::hasTrait(Trait::rugged))  {chanceToDestr.numerator += 2;}
+
+              if(Rnd::fraction(chanceToDestr)) {
+
+              }
+            } else {
+              if(Rnd::fraction(chanceToDestr)) {
+
+              }
+            }
+          } break;
+
+          case DoorType::metal: {} break;
+        }
+      } break;
+
+      case DmgMethod::kick: {
+        assert(actor);
+        switch(type_) {
+          case DoorType::wood: {
+            if(IS_PLAYER) {
+              chanceToDestr.set(4 - nrSpikes_, 10);
+              if(PlayerBon::hasTrait(Trait::tough))   {chanceToDestr.numerator += 2;}
+              if(PlayerBon::hasTrait(Trait::rugged))  {chanceToDestr.numerator += 2;}
+              chanceToDestr.numerator = max(1, chanceToDestr.numerator);
+
+              if(chanceToDestr.numerator > 0) {
+                Log::addMsg("It seems futile.");
+                if(Rnd::fraction(chanceToDestr)) {
+
+                }
+              }
+            } else {
+              chanceToDestr.set(10 - (nrSpikes_ * 3), 100);
+              chanceToDestr.numerator = max(1, chanceToDestr.numerator);
+              if(Rnd::fraction(chanceToDestr)) {
+
+              }
+            }
+
+          } break;
+
+          case DoorType::metal: {
+
+          } break;
+        }
+      } break;
     }
+
+    } else (IS_PLAYER && !isSecret_)  {
+      Log::addMsg("It seems futile.");
+    }
+
+
+    //-------------------------------------- OLD
 
     if(method == DmgMethod::kick) {
       int skillValueBash = 0;
@@ -279,10 +326,10 @@ void Door::hit_(const DmgType type, const DmgMethod method, Actor* const actor) 
         }
       }
       const bool IS_DOOR_SMASHED =
-        (matl_ == DoorMatl::metal || IS_BASHER_WEAK) ? false :
+        (type_ == DoorType::metal || IS_BASHER_WEAK) ? false :
         Rnd::percentile() < skillValueBash;
 
-      if(IS_PLAYER && !isSecret_ && (matl_ == DoorMatl::metal || IS_BASHER_WEAK)) {
+      if(IS_PLAYER && !isSecret_ && (type_ == DoorType::metal || IS_BASHER_WEAK)) {
         Log::addMsg("It seems futile.");
       }
     }

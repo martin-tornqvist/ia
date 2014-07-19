@@ -60,6 +60,8 @@ void mkGore(const Pos& origin);
 
 void deleteAndRemoveRoomFromList(Room* const room);
 
+bool canPlayerSeePos(const Pos& p);
+
 } //Map
 
 #endif

@@ -28,8 +28,8 @@ enum class DmgMethod {
   kick,
   explosion,
   shotgun,
-  burrowing,
-  other,
+  elemental,
+  burrowing
 };
 
 enum class ShockValue {

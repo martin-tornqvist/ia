@@ -310,7 +310,7 @@ Dir Trap::actorTryLeave(Actor& actor, const Dir dir) {
   return specificTrap_->actorTryLeave(actor, dir);
 }
 
-MatlType Trap::getMatlType() const {
+Matl Trap::getMatl() const {
   return isHidden_ ? mimicFeature_->matlType : getData().matlType;
 }
 
