@@ -46,7 +46,7 @@ void ProxEventWallCrumble::playerIsNear() {
       for(const Pos& p : wallCells_) {
         if(Utils::isPosInside(p, Rect(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2)))) {
           auto* const f = Map::cells[p.x][p.y].featureStatic;
-          f->hit(DmgType::physical, DmgMethod::explosion);
+          f->hit(DmgType::physical, DmgMethod::forced, nullptr);
         }
       }
 

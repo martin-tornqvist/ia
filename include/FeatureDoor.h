@@ -7,7 +7,6 @@ enum class DoorSpawnState {
   open,
   closed,
   stuck,
-  broken,
   secret,
   secretAndStuck
 };
@@ -37,7 +36,7 @@ public:
   char getGlyph()                     const override;
   TileId getTile()                    const override;
 
-  void hit_(const DmgType type, const DmgMethod method, Actor* const actor) override;
+  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) override;
 
   void tryOpen(Actor* actorTrying);
   void tryClose(Actor* actorTrying);
@@ -59,10 +58,7 @@ public:
   virtual bool open() override;
 
   static bool isTileAnyDoor(const TileId tile) {
-    return
-      tile == TileId::doorBroken ||
-      tile == TileId::doorClosed ||
-      tile == TileId::doorOpen;
+    return tile == TileId::doorClosed || tile == TileId::doorOpen;
   }
 
   void playerTrySpotHidden();
@@ -71,7 +67,7 @@ protected:
   const FeatureDataT* mimicFeature_;
   int nrSpikes_;
 
-  bool isOpen_, isBroken_, isStuck_, isSecret_, isHandledExternally_;
+  bool isOpen_, isStuck_, isSecret_, isHandledExternally_;
 
   DoorType type_;
 };

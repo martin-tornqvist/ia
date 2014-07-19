@@ -407,8 +407,12 @@ void Tomb::triggerTrap(Actor& actor) {
 
 //--------------------------------------------------------- CHEST
 Chest::Chest(const Pos& pos) :
-  FeatureStatic(pos), isContentKnown_(false), isLocked_(false), isTrapped_(false),
-  isTrapStatusKnown_(false), matl(ChestMatl(Rnd::range(0, endOfChestMatl - 1))) {
+  FeatureStatic(pos),
+  isContentKnown_(false),
+  isLocked_(false),
+  isTrapped_(false),
+  isTrapStatusKnown_(false),
+  matl(ChestMatl(Rnd::range(0, int(ChestMatl::endOfChestMatl) - 1))) {
 
   const bool IS_TREASURE_HUNTER =
     PlayerBon::hasTrait(Trait::treasureHunter);
@@ -466,49 +470,67 @@ bool Chest::open() {
   return true;
 }
 
-void Chest::kick(Actor& actorTrying) {
-  (void)actorTrying;
+void Chest::hit_(const DmgType dmgType, const DmgMethod dmgMethod,
+                 Actor* const actor) {
+  (void)actor;
 
-  if(itemContainer_.items_.empty() && isContentKnown_) {
-    Log::addMsg("The chest is empty.");
-  } else {
+  switch(dmgType) {
+    case DmgType::physical: {
+      switch(dmgMethod) {
+        case DmgMethod::kick: {
+          if(itemContainer_.items_.empty() && isContentKnown_) {
+            Log::addMsg("The chest is empty.");
+          } else {
 
-    Log::addMsg("I kick the lid.");
+            Log::addMsg("I kick the lid.");
 
-    vector<PropId> props;
-    Map::player->getPropHandler().getAllActivePropIds(props);
+            vector<PropId> props;
+            Map::player->getPropHandler().getAllActivePropIds(props);
 
-    if(
-      find(begin(props), end(props), propWeakened) != end(props) ||
-      matl == ChestMatl::iron) {
-      trySprainPlayer();
-      Log::addMsg("It seems futile.");
-    } else {
+            if(
+              find(begin(props), end(props), propWeakened) != end(props) ||
+              matl == ChestMatl::iron) {
+              trySprainPlayer();
+              Log::addMsg("It seems futile.");
+            } else {
 
-      const bool IS_CURSED  = find(begin(props), end(props), propCursed)  != end(props);
-      const bool IS_BLESSED = find(begin(props), end(props), propBlessed) != end(props);
+              const bool IS_CURSED
+                = find(begin(props), end(props), propCursed)  != end(props);
+              const bool IS_BLESSED
+                = find(begin(props), end(props), propBlessed) != end(props);
 
-      if(!IS_BLESSED && (IS_CURSED || Rnd::oneIn(3))) {
-        itemContainer_.destroySingleFragile();
-      }
+              if(!IS_BLESSED && (IS_CURSED || Rnd::oneIn(3))) {
+                itemContainer_.destroySingleFragile();
+              }
 
-      const bool IS_TOUGH     = PlayerBon::hasTrait(Trait::tough);
-      const bool IS_RUGGED    = PlayerBon::hasTrait(Trait::rugged);
+              const bool IS_TOUGH   = PlayerBon::hasTrait(Trait::tough);
+              const bool IS_RUGGED  = PlayerBon::hasTrait(Trait::rugged);
 
-      const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
+              const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
 
-      if(Rnd::oneIn(OPEN_ONE_IN_N)) {
-        Log::addMsg("I kick the lid open!");
-        open();
-      } else {
-        Log::addMsg("The lock resists.");
-        trySprainPlayer();
-      }
-    }
-    GameTime::actorDidAct();
-  }
+              if(Rnd::oneIn(OPEN_ONE_IN_N)) {
+                Log::addMsg("I kick the lid open!");
+                open();
+              } else {
+                Log::addMsg("The lock resists.");
+                trySprainPlayer();
+              }
+            }
+            GameTime::actorDidAct();
+          }
+        } break;
 
-  //TODO Force lock with weapon - remove or reimplement - how?
+        default: {} break;
+
+      } //dmgMethod
+
+    } break;
+
+    default: {} break;
+
+  } //dmgType
+
+  //TODO Force lock with weapon
 //      Inventory& inv    = Map::player->getInv();
 //      Item* const item  = inv.getItemInSlot(SlotId::wielded);
 //

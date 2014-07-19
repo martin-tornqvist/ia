@@ -76,7 +76,9 @@ public:
 
   FeatureId getId() const override {return FeatureId::chest;}
 
-  void hit_(const DmgType type, const DmgMethod method, Actor* const actor) override;
+  void hit_(const DmgType dmgType, const DmgMethod dmgMethod,
+            Actor* const actor) override;
+
   void bump(Actor& actorBumping)  override;
   bool open()                     override;
   void examine()                  override;

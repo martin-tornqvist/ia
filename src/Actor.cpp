@@ -335,19 +335,17 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   }
 }
 
-bool Actor::hit(int dmg, const DmgType type, const bool ALLOW_WOUNDS) {
+bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   TRACE_FUNC_BEGIN_VERBOSE;
   TRACE_VERBOSE << "Actor: Damage from parameter: " << dmg << endl;
 
-  if(this == Map::player) {
-    Map::player->interruptActions();
-  }
+  if(this == Map::player) {Map::player->interruptActions();}
 
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
   if(
-    type == DmgType::light &&
+    dmgType == DmgType::light &&
     find(begin(props), end(props), propLightSensitive) == end(props)) {
     return false;
   }
@@ -372,15 +370,11 @@ bool Actor::hit(int dmg, const DmgType type, const bool ALLOW_WOUNDS) {
     return false;
   }
 
-  if(type == DmgType::spirit) {
-    return hitSpi(dmg, true);
-  }
+  if(dmgType == DmgType::spirit) {return hitSpi(dmg, true);}
 
   //Property resists?
   const bool ALLOW_DMG_RES_MSG = deadState == ActorDeadState::alive;
-  if(propHandler_->tryResistDmg(type, ALLOW_DMG_RES_MSG)) {
-    return false;
-  }
+  if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {return false;}
 
   hit_(dmg, ALLOW_WOUNDS);
   TRACE_VERBOSE << "Actor: Damage after hit_(): " << dmg << endl;
@@ -389,21 +383,18 @@ bool Actor::hit(int dmg, const DmgType type, const bool ALLOW_WOUNDS) {
 
   //Filter damage through worn armor
   if(isHumanoid()) {
-    Armor* armor =
-      static_cast<Armor*>(inv_->getItemInSlot(SlotId::armorBody));
+    Armor* armor = static_cast<Armor*>(inv_->getItemInSlot(SlotId::armorBody));
     if(armor) {
       TRACE_VERBOSE << "Actor: Has armor, running hit on armor" << endl;
 
-      if(type == DmgType::physical) {
+      if(dmgType == DmgType::physical) {
         dmg = armor->takeDurHitAndGetReducedDmg(dmg);
 
         if(armor->isDestroyed()) {
           TRACE << "Actor: Armor was destroyed" << endl;
           if(this == Map::player) {
-            const string armorName =
-              ItemData::getItemRef(*armor, ItemRefType::plain);
-            Log::addMsg("My " + armorName + " is torn apart!",
-                        clrMsgWarning);
+            const string armorName = ItemData::getItemRef(*armor, ItemRefType::plain);
+            Log::addMsg("My " + armorName + " is torn apart!", clrMsgWarning);
           }
           delete armor;
           armor = nullptr;

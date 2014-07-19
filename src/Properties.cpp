@@ -922,14 +922,15 @@ bool PropHandler::tryResistProp(
   return false;
 }
 
-bool PropHandler::tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const {
+bool PropHandler::tryResistDmg(const DmgType dmgType,
+                               const bool ALLOW_MSG_WHEN_TRUE) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
 
   for(Prop* p : propList) {
-    if(p->tryResistDmg(type, ALLOW_MSG_WHEN_TRUE)) return true;
+    if(p->tryResistDmg(dmgType, ALLOW_MSG_WHEN_TRUE)) return true;
   }
   return false;
 }
@@ -1080,8 +1081,8 @@ void PropHandler::tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE) {
 
     //If weapon damage type is resisted by the defender, the property is
     //automatically resisted
-    DmgType type = IS_MELEE ? wpnData.meleeDmgType : wpnData.rangedDmgType;
-    if(!tryResistDmg(type, false)) {
+    DmgType dmgType = IS_MELEE ? wpnData.meleeDmgType : wpnData.rangedDmgType;
+    if(!tryResistDmg(dmgType, false)) {
       //Make a copy of the weapon effect
       Prop* const prop = mkProp(
                            propAppliedFromWpn->getId(), propTurnsSpecific,
@@ -1436,11 +1437,8 @@ void PropInfected::onNewTurn() {
 }
 
 int PropDiseased::getChangedMaxHp(const int HP_MAX) const {
-  if(
-    owningActor_ == Map::player &&
-    PlayerBon::hasTrait(Trait::survivalist)) {
-    //Survavlist halves HP lost - i.e. you only lose 25% instead of 50%
-    return (HP_MAX * 3) / 4;
+  if(owningActor_ == Map::player && PlayerBon::hasTrait(Trait::survivalist)) {
+    return (HP_MAX * 3) / 4; //Survavlist makes you lose only 25% instead of 50%
   } else {
     return HP_MAX / 2;
   }
@@ -1811,8 +1809,9 @@ void PropFlared::onNewTurn() {
   }
 }
 
-bool PropRAcid::tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(type == DmgType::acid) {
+bool PropRAcid::tryResistDmg(const DmgType dmgType,
+                             const bool ALLOW_MSG_WHEN_TRUE) const {
+  if(dmgType == DmgType::acid) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I feel a faint burning sensation.");
@@ -1825,8 +1824,8 @@ bool PropRAcid::tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE)
   return false;
 }
 
-bool PropRCold::tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(type == DmgType::cold) {
+bool PropRCold::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+  if(dmgType == DmgType::cold) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I feel chilly.");
@@ -1839,8 +1838,9 @@ bool PropRCold::tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE)
   return false;
 }
 
-bool PropRElec::tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(type == DmgType::electric) {
+bool PropRElec::tryResistDmg(const DmgType dmgType,
+                             const bool ALLOW_MSG_WHEN_TRUE) const {
+  if(dmgType == DmgType::electric) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I feel a faint tingle.");
@@ -1882,8 +1882,9 @@ void PropRPhys::onStart() {
   return;
 }
 
-bool PropRPhys::tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(type == DmgType::physical) {
+bool PropRPhys::tryResistDmg(const DmgType dmgType,
+                             const bool ALLOW_MSG_WHEN_TRUE) const {
+  if(dmgType == DmgType::physical) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I resist harm.");
@@ -1906,8 +1907,9 @@ void PropRFire::onStart() {
   owningActor_->getPropHandler().endAppliedProp(propBurning, visionBlockers);
 }
 
-bool PropRFire::tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(type == DmgType::fire) {
+bool PropRFire::tryResistDmg(const DmgType dmgType,
+                             const bool ALLOW_MSG_WHEN_TRUE) const {
+  if(dmgType == DmgType::fire) {
     if(ALLOW_MSG_WHEN_TRUE) {
       if(owningActor_ == Map::player) {
         Log::addMsg("I feel hot.");
@@ -1942,5 +1944,5 @@ void PropRSleep::onStart() {
 
 void PropBurrowing::onNewTurn() {
   const Pos& p = owningActor_->pos;
-  Map::cells[p.x][p.y].featureStatic->hit(DmgType::physical, DmgMethod::burrowing);
+  Map::cells[p.x][p.y].featureStatic->hit(DmgType::physical, DmgMethod::forced);
 }

@@ -25,58 +25,39 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
     ROLL < 5 ? DoorSpawnState::secretAndStuck :
     ROLL < 40 ? DoorSpawnState::secret :
     ROLL < 50 ? DoorSpawnState::stuck :
-    ROLL < 60 ? DoorSpawnState::broken :
     ROLL < 75 ? DoorSpawnState::open :
     DoorSpawnState::closed;
 
   switch(DoorSpawnState(doorState)) {
-    case DoorSpawnState::broken: {
-      isOpen_ = true;
-      isBroken_ = true;
-      isStuck_ = false;
-      isSecret_ = false;
-    }
-    break;
-
     case DoorSpawnState::open: {
-      isOpen_ = true;
-      isBroken_ = false;
-      isStuck_ = false;
+      isOpen_   = true;
+      isStuck_  = false;
       isSecret_ = false;
-    }
-    break;
+    } break;
 
     case DoorSpawnState::closed: {
-      isOpen_ = false;
-      isBroken_ = false;
-      isStuck_ = false;
+      isOpen_   = false;
+      isStuck_  = false;
       isSecret_ = false;
-    }
-    break;
+    } break;
 
     case DoorSpawnState::stuck: {
-      isOpen_ = false;
-      isBroken_ = false;
-      isStuck_ = true;
+      isOpen_   = false;
+      isStuck_  = true;
       isSecret_ = false;
-    }
-    break;
+    } break;
 
     case DoorSpawnState::secret: {
-      isOpen_ = false;
-      isBroken_ = false;
-      isStuck_ = false;
+      isOpen_   = false;
+      isStuck_  = false;
       isSecret_ = true;
-    }
-    break;
+    } break;
 
     case DoorSpawnState::secretAndStuck: {
-      isOpen_ = false;
-      isBroken_ = false;
-      isStuck_ = true;
+      isOpen_   = false;
+      isStuck_  = true;
       isSecret_ = true;
-    }
-    break;
+    } break;
 
   }
 
@@ -120,11 +101,7 @@ TileId Door::getTile() const {
   if(isSecret_) {
     return mimicFeature_->tile;
   } else {
-    if(isOpen_) {
-      return isBroken_ ? TileId::doorBroken : TileId::doorOpen;
-    } else {
-      return TileId::doorClosed;
-    }
+    return isOpen_ ? TileId::doorOpen : TileId::doorClosed;
   }
 }
 
@@ -156,19 +133,14 @@ void Door::bump(Actor& actorBumping) {
 }
 
 string Door::getDescr(const bool DEFINITE_ARTICLE) const {
-  if(isOpen_ && !isBroken_) {
-    return DEFINITE_ARTICLE ? "the open door" : "an open door";
-  }
-  if(isBroken_) {
-    return DEFINITE_ARTICLE ? "the broken door" : "a broken door";
-  }
   if(isSecret_) {
     return (DEFINITE_ARTICLE ? mimicFeature_->nameThe : mimicFeature_->nameA);
   }
-  if(!isOpen_) {return DEFINITE_ARTICLE ? "the door" : "a door";}
-
-  assert(false && "Failed to get door description");
-  return "";
+  if(isOpen_) {
+    return DEFINITE_ARTICLE ? "the open door" : "an open door";
+  } else {
+    return DEFINITE_ARTICLE ? "the door" : "a door";
+  }
 }
 //----------------------------------------------------------------------
 
@@ -214,176 +186,223 @@ bool Door::trySpike(Actor* actorTrying) {
   return true;
 }
 
-void Door::hit_(const DmgType type, const DmgMethod method, Actor* const actor) {
+void Door::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
   TRACE_FUNC_BEGIN;
 
   if(!isOpen_) {
 
-    const bool IS_PLAYER          = actor == Map::player;
-    const bool IS_PLAYER_SEE_CELL = Map::canPlayerSeePos(pos_);
-
-    Fraction chanceToDestr(0, 10);
+    const bool IS_PLAYER    = actor == Map::player;
+    const bool IS_CELL_SEEN = Map::canPlayerSeePos(pos_);
 
     vector<PropId> props;
     if(actor) {actor->getPropHandler().getAllActivePropIds(props);}
 
     const bool IS_WEAK = find(begin(props), end(props), propWeakened) != end(props);
 
-    switch(method) {
-      case DmgMethod::elemental:
-      case DmgMethod::burrowing:
-      case DmgMethod::bluntMedium:
-      case DmgMethod::piercing:
-      case DmgMethod::slashing: {} break;
+    switch(dmgType) {
 
-      case DmgMethod::shotgun: {
-        switch(type_) {
-          case DoorType::wood: {chanceToDestr.set(7,  10);} break;
-          case DoorType::metal: {} break;
-        }
-        if(Rnd::fraction(chanceToDestr)) {
-          if(IS_PLAYER_SEE_CELL) {
-            Log::addMsg("A door is blown to splinters!");
-          }
-          Map::put(new RubbleLow(pos_));
-        }
-      } break;
+      case DmgType::acid:
+      case DmgType::cold:
+      case DmgType::electric:
+      case DmgType::fire:
+      case DmgType::light:
+      case DmgType::pure:
+      case DmgType::spirit:
+      case DmgType::endOfDmgTypes: {} break;
 
-      case DmgMethod::explosion: {chanceToDestr.set(10, 10);} break;
+      case DmgType::physical: {
+        switch(dmgMethod) {
+          case DmgMethod::forced: {Map::put(new RubbleLow(pos_));} break;
 
-      case DmgMethod::bluntHeavy: {
-        assert(actor);
-        switch(type_) {
-          case DoorType::wood: {
-            chanceToDestr.set(6, 10);
-            if(IS_PLAYER) {
-              if(PlayerBon::hasTrait(Trait::tough))   {chanceToDestr.numerator += 2;}
-              if(PlayerBon::hasTrait(Trait::rugged))  {chanceToDestr.numerator += 2;}
+          case DmgMethod::elemental:
+          case DmgMethod::bluntMedium:
+          case DmgMethod::piercing:
+          case DmgMethod::slashing: {} break;
 
-              if(Rnd::fraction(chanceToDestr)) {
-
-              }
-            } else {
-              if(Rnd::fraction(chanceToDestr)) {
-
-              }
-            }
-          } break;
-
-          case DoorType::metal: {} break;
-        }
-      } break;
-
-      case DmgMethod::kick: {
-        assert(actor);
-        switch(type_) {
-          case DoorType::wood: {
-            if(IS_PLAYER) {
-              chanceToDestr.set(4 - nrSpikes_, 10);
-              if(PlayerBon::hasTrait(Trait::tough))   {chanceToDestr.numerator += 2;}
-              if(PlayerBon::hasTrait(Trait::rugged))  {chanceToDestr.numerator += 2;}
-              chanceToDestr.numerator = max(1, chanceToDestr.numerator);
-
-              if(chanceToDestr.numerator > 0) {
-                Log::addMsg("It seems futile.");
-                if(Rnd::fraction(chanceToDestr)) {
-
+          case DmgMethod::shotgun: {
+            switch(type_) {
+              case DoorType::wood: {
+                if(Rnd::fraction(7, 10)) {
+                  if(IS_CELL_SEEN) {
+                    const string a = isSecret_ ? "A" : "The";
+                    Log::addMsg(a + " door is blown to splinters!");
+                  }
+                  Map::put(new RubbleLow(pos_));
                 }
-              }
-            } else {
-              chanceToDestr.set(10 - (nrSpikes_ * 3), 100);
-              chanceToDestr.numerator = max(1, chanceToDestr.numerator);
-              if(Rnd::fraction(chanceToDestr)) {
+              } break;
 
-              }
+              case DoorType::metal: {} break;
             }
+          } break;
+
+          case DmgMethod::explosion: {
 
           } break;
 
-          case DoorType::metal: {
+          case DmgMethod::bluntHeavy: {
+            assert(actor);
+            switch(type_) {
+              case DoorType::wood: {
+                Fraction destrChance(6, 10);
+                if(IS_PLAYER) {
+                  if(PlayerBon::hasTrait(Trait::tough))   {destrChance.numerator += 2;}
+                  if(PlayerBon::hasTrait(Trait::rugged))  {destrChance.numerator += 2;}
 
+                  if(Rnd::fraction(destrChance)) {
+
+                  }
+                } else {
+                  if(Rnd::fraction(destrChance)) {
+
+                  }
+                }
+              } break;
+
+              case DoorType::metal: {} break;
+            }
           } break;
-        }
-      } break;
-    }
 
-    } else (IS_PLAYER && !isSecret_)  {
-      Log::addMsg("It seems futile.");
-    }
+          case DmgMethod::kick: {
+            assert(actor);
+            switch(type_) {
+              case DoorType::wood: {
+                if(IS_PLAYER) {
+                  Fraction destrChance(4 - nrSpikes_, 10);
+                  destrChance.numerator = max(1, destrChance.numerator);
 
+                  if(PlayerBon::hasTrait(Trait::tough))   {destrChance.numerator += 2;}
+                  if(PlayerBon::hasTrait(Trait::rugged))  {destrChance.numerator += 2;}
 
-    //-------------------------------------- OLD
+                  if(IS_WEAK) {destrChance.numerator = 0;}
 
-    if(method == DmgMethod::kick) {
-      int skillValueBash = 0;
+                  if(destrChance.numerator > 0) {
+                    if(Rnd::fraction(destrChance)) {
+                      Snd snd("", SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_,
+                              actor, SndVol::low, AlertsMonsters::yes);
+                      SndEmit::emitSnd(snd);
+                      if(IS_CELL_SEEN) {
+                        if(isSecret_) {
+                          Log::addMsg("A door crashes open!");
+                        } else {
+                          Log::addMsg("The door crashes open!");
+                        }
+                      } else {
+                        Log::addMsg("I feel a door crashing open!");
+                      }
+                      Map::put(new RubbleLow(pos_));
+                    }
+                  } else {
+                    if(IS_CELL_SEEN && !isSecret_) {Log::addMsg("It seems futile.");}
+                  }
+                } else { //Not player
+                  Fraction destrChance(10 - (nrSpikes_ * 3), 100);
+                  destrChance.numerator = max(1, destrChance.numerator);
 
-      if(!IS_BASHER_WEAK) {
-        if(IS_PLAYER) {
-          const int BON   = PlayerBon::hasTrait(Trait::tough) ? 20 : 0;
-          skillValueBash  = 40 + BON - min(58, nrSpikes_ * 20);
-        } else {
-          skillValueBash  = 10 - min(9, nrSpikes_ * 3);
-        }
-      }
-      const bool IS_DOOR_SMASHED =
-        (type_ == DoorType::metal || IS_BASHER_WEAK) ? false :
-        Rnd::percentile() < skillValueBash;
+                  if(IS_WEAK) {destrChance.numerator = 0;}
 
-      if(IS_PLAYER && !isSecret_ && (type_ == DoorType::metal || IS_BASHER_WEAK)) {
-        Log::addMsg("It seems futile.");
-      }
-    }
+                  if(Rnd::fraction(destrChance)) {
+                    Snd snd("I hear a door crashing open!",
+                            SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, actor,
+                            SndVol::high, AlertsMonsters::no);
+                    SndEmit::emitSnd(snd);
+                    if(Map::player->isSeeingActor(*actor, nullptr)) {
+                      Log::addMsg("The door crashes open!");
+                    } else if(IS_CELL_SEEN) {
+                      Log::addMsg("A door crashes open!");
+                    }
+                    Map::put(new RubbleLow(pos_));
+                  }
+                }
 
-    if(IS_DOOR_SMASHED) {
-      TRACE << "Door: Bash successful" << endl;
-      const bool IS_SECRET_BEFORE = isSecret_;
-      isBroken_ = true;
-      isStuck_  = false;
-      isSecret_ = false;
-      isOpen_   = true;
-      if(IS_PLAYER) {
-        Snd snd("", SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_,
-                &actor, SndVol::low, AlertsMonsters::yes);
-        SndEmit::emitSnd(snd);
-        if(!actor.getPropHandler().allowSee()) {
-          Log::addMsg("I feel a door crashing open!");
-        } else {
-          if(IS_SECRET_BEFORE) {
-            Log::addMsg("A door crashes open!");
-          } else {
-            Log::addMsg("The door crashes open!");
-          }
-        }
-      } else {
-        Snd snd("I hear a door crashing open!",
-                SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, &actor,
-                SndVol::high, AlertsMonsters::no);
-        SndEmit::emitSnd(snd);
-        if(Map::player->isSeeingActor(actor, nullptr)) {
-          Log::addMsg("The door crashes open!");
-        } else if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
-          Log::addMsg("A door crashes open!");
-        }
-      }
-    } else {
-      if(IS_PLAYER) {
-        const SfxId sfx = isSecret_ ? SfxId::endOfSfxId : SfxId::doorBang;
-        Snd snd("", sfx, IgnoreMsgIfOriginSeen::yes, actor.pos,
-                &actor, SndVol::low, AlertsMonsters::yes);
-        SndEmit::emitSnd(snd);
-      } else {
-        //Emitting the sound from the actor instead of the door, because the
-        //sound message should be received even if the door is seen
-        Snd snd("I hear a loud banging on a door.",
-                SfxId::doorBang, IgnoreMsgIfOriginSeen::yes, actor.pos,
-                &actor, SndVol::low, AlertsMonsters::no);
-        SndEmit::emitSnd(snd);
-        if(Map::player->isSeeingActor(actor, nullptr)) {
-          Log::addMsg(actor.getNameThe() + " bashes at a door!");
-        }
-      }
-    }
+              } break;
+
+              case DoorType::metal: {
+                if(IS_PLAYER && IS_CELL_SEEN && !isSecret_) {
+                  Log::addMsg("It seems futile.");
+                }
+              } break;
+            }
+          } break; //kick
+
+        } //dmgMethod
+
+      } break; //Physical dmg
+
+    } //dmgType
   }
+
+
+  //-------------------------------------- OLD
+
+//    if(method == DmgMethod::kick) {
+//      int skillValueBash = 0;
+//
+//      if(!IS_BASHER_WEAK) {
+//        if(IS_PLAYER) {
+//          const int BON   = PlayerBon::hasTrait(Trait::tough) ? 20 : 0;
+//          skillValueBash  = 40 + BON - min(58, nrSpikes_ * 20);
+//        } else {
+//          skillValueBash  = 10 - min(9, nrSpikes_ * 3);
+//        }
+//      }
+//      const bool IS_DOOR_SMASHED =
+//        (type_ == DoorType::metal || IS_BASHER_WEAK) ? false :
+//        Rnd::percentile() < skillValueBash;
+//
+//      if(IS_PLAYER && !isSecret_ && (type_ == DoorType::metal || IS_BASHER_WEAK)) {
+//        Log::addMsg("It seems futile.");
+//      }
+//    }
+//
+//    if(IS_DOOR_SMASHED) {
+//      TRACE << "Door: Bash successful" << endl;
+//      const bool IS_SECRET_BEFORE = isSecret_;
+//      isStuck_  = false;
+//      isSecret_ = false;
+//      isOpen_   = true;
+//      if(IS_PLAYER) {
+//        Snd snd("", SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_,
+//                &actor, SndVol::low, AlertsMonsters::yes);
+//        SndEmit::emitSnd(snd);
+//        if(!actor.getPropHandler().allowSee()) {
+//          Log::addMsg("I feel a door crashing open!");
+//        } else {
+//          if(IS_SECRET_BEFORE) {
+//            Log::addMsg("A door crashes open!");
+//          } else {
+//            Log::addMsg("The door crashes open!");
+//          }
+//        }
+//      } else {
+//        Snd snd("I hear a door crashing open!",
+//                SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, &actor,
+//                SndVol::high, AlertsMonsters::no);
+//        SndEmit::emitSnd(snd);
+//        if(Map::player->isSeeingActor(actor, nullptr)) {
+//          Log::addMsg("The door crashes open!");
+//        } else if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
+//          Log::addMsg("A door crashes open!");
+//        }
+//      }
+//    } else {
+//      if(IS_PLAYER) {
+//        const SfxId sfx = isSecret_ ? SfxId::endOfSfxId : SfxId::doorBang;
+//        Snd snd("", sfx, IgnoreMsgIfOriginSeen::yes, actor.pos,
+//                &actor, SndVol::low, AlertsMonsters::yes);
+//        SndEmit::emitSnd(snd);
+//      } else {
+//        //Emitting the sound from the actor instead of the door, because the
+//        //sound message should be received even if the door is seen
+//        Snd snd("I hear a loud banging on a door.",
+//                SfxId::doorBang, IgnoreMsgIfOriginSeen::yes, actor.pos,
+//                &actor, SndVol::low, AlertsMonsters::no);
+//        SndEmit::emitSnd(snd);
+//        if(Map::player->isSeeingActor(actor, nullptr)) {
+//          Log::addMsg(actor.getNameThe() + " bashes at a door!");
+//        }
+//      }
+//    }
+//  }
   TRACE_FUNC_END;
 }
 
@@ -407,15 +426,6 @@ void Door::tryClose(Actor* actorTrying) {
       Renderer::drawMapAndInterface();
     }
     return;
-  }
-
-  //Broken?
-  if(isBroken_) {
-    isClosable = false;
-    if(IS_PLAYER) {
-      if(IS_PLAYER)
-        Log::addMsg("The door appears to be broken.");
-    }
   }
 
   //Already closed?

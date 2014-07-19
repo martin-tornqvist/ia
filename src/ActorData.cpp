@@ -1606,8 +1606,8 @@ void initDataList() {
   data[d.id] = d;
   d.reset();
 
-  d.nameA = "A Mass of Worms";
-  d.nameThe = "The Mass of Worms";
+  d.nameA = "A Worm Mass";
+  d.nameThe = "The Worm Mass";
   d.id = actor_wormMass;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;

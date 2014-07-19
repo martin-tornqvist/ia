@@ -178,7 +178,7 @@ public:
   Prop* mkProp(const PropId id, PropTurns turnsInit,
                const int NR_TURNS = -1) const;
 
-  bool tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const;
 
 private:
   //Note: These two functions are responsible for collecting properties from
@@ -280,8 +280,8 @@ public:
     return false;
   }
   virtual bool tryResistDmg(
-    const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const {
-    (void)type;
+    const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
+    (void)dmgType;
     (void)ALLOW_MSG_WHEN_TRUE;
     return false;
   }
@@ -765,7 +765,7 @@ public:
     Prop(propRAcid, turnsInit, turns) {}
   ~PropRAcid() override {}
 
-  bool tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRCold: public Prop {
@@ -774,7 +774,7 @@ public:
     Prop(propRCold, turnsInit, turns) {}
   ~PropRCold() override {}
 
-  bool tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRConfusion: public Prop {
@@ -794,7 +794,7 @@ public:
     Prop(propRElec, turnsInit, turns) {}
   ~PropRElec() override {}
 
-  bool tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRFear: public Prop {
@@ -818,7 +818,7 @@ public:
 
   bool tryResistOtherProp(const PropId id) const override;
 
-  bool tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRFire: public Prop {
@@ -831,7 +831,7 @@ public:
 
   bool tryResistOtherProp(const PropId id) const override;
 
-  bool tryResistDmg(const DmgType type, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
 
 class PropRPoison: public Prop {

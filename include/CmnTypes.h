@@ -29,7 +29,7 @@ enum class DmgMethod {
   explosion,
   shotgun,
   elemental,
-  burrowing
+  forced, //Guaranteed to detroy the feature (silently - no messages)
 };
 
 enum class ShockValue {

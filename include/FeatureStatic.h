@@ -12,8 +12,10 @@ public:
 
   virtual FeatureId getId() const override = 0;
 
-  virtual void hit(const DmgType type, const DmgMethod method, Actor* actor);
-  virtual void hit_(const DmgType type, const DmgMethod method, Actor* actor);
+  virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod,
+                   Actor* actor = nullptr);
+  virtual void hit_(const DmgType dmgType, const DmgMethod dmgMethod,
+                    Actor* actor = nullptr);
 
 
   virtual std::string getDescr(const bool DEFINITE_ARTICLE) const override;
@@ -103,7 +105,8 @@ public:
 
   FeatureId getId() const override {return FeatureId::wall;}
 
-  void hit_(const DmgType type, const DmgMethod method, Actor* const actor) override;
+  void hit_(const DmgType dmgType, const DmgMethod dmgMethod,
+            Actor* const actor) override;
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
   SDL_Color   getClr()                              const;
@@ -136,7 +139,8 @@ public:
   RubbleHigh() = delete;
   ~RubbleHigh() {}
 
-  void hit_(const DmgType type, const DmgMethod method, Actor* const actor) override;
+  void hit_(const DmgType dmgType, const DmgMethod dmgMethod,
+            Actor* const actor) override;
 
   FeatureId getId() const override {return FeatureId::rubbleHigh;}
 };
@@ -176,7 +180,7 @@ public:
 
   FeatureId getId() const override {return FeatureId::statue;}
 
-  void kick_(Actor& actorTrying);
+  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) override;
 };
 
 class Pillar: public FeatureStatic {

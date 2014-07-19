@@ -72,12 +72,12 @@ string Feature::getDescr(const bool DEFINITE_ARTICLE) const {
   return DEFINITE_ARTICLE ? getData().nameThe : getData().nameA;
 }
 
-void Feature::hit(const DmgType type, const DmgMethod method, Actor* const actor) {
-  (void)type; (void)method; (void)actor;
+void Feature::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-void Feature::hit_(const DmgType type, const DmgMethod method, Actor* const actor) {
-  (void)type; (void)method; (void)actor;
+void Feature::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 SDL_Color Feature::getClr() const {
