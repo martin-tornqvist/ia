@@ -135,7 +135,7 @@ void loadTiles() {
 }
 
 void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
-                              const SDL_Color& clr) {
+                              const Clr& clr) {
   if(isInited()) {
     const int CLR_TO = SDL_MapRGB(screenSurface->format, clr.r, clr.g, clr.b);
 
@@ -171,7 +171,7 @@ void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
 }
 
 void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
-                               const SDL_Color& clr) {
+                               const Clr& clr) {
   const int CLR_TO = SDL_MapRGB(screenSurface->format, clr.r, clr.g, clr.b);
 
   SDL_LockSurface(screenSurface);
@@ -205,8 +205,8 @@ void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
 }
 
 void drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos,
-                      const SDL_Color& clr, const bool DRAW_BG_CLR,
-                      const SDL_Color& bgClr = clrBlack) {
+                      const Clr& clr, const bool DRAW_BG_CLR,
+                      const Clr& bgClr = clrBlack) {
   if(DRAW_BG_CLR) {
     const Pos cellDims(Config::getCellW(), Config::getCellH());
     drawRectangleSolid(pixelPos, cellDims, bgClr);
@@ -372,7 +372,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
       const Pos& pos = trail.at(i);
       coverCellInMap(pos);
 
-      SDL_Color clr = clrGreenLgt;
+      Clr clr = clrGreenLgt;
 
       if(EFFECTIVE_RANGE != -1) {
         const int CHEB_DIST = Utils::kingDist(trail.at(0), pos);
@@ -388,7 +388,7 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
 
   const Pos& headPos = Marker::getPos();
 
-  SDL_Color clr = clrGreenLgt;
+  Clr clr = clrGreenLgt;
 
   if(trail.size() > 2) {
     if(EFFECTIVE_RANGE != -1) {
@@ -408,8 +408,8 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
 
 void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                           bool forbiddenCells[MAP_W][MAP_H],
-                          const SDL_Color& colorInner,
-                          const SDL_Color& colorOuter) {
+                          const Clr& colorInner,
+                          const Clr& colorOuter) {
   TRACE_FUNC_BEGIN;
   if(isInited()) {
     drawMapAndInterface();
@@ -431,7 +431,7 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                                 pos.x == centerPos.x + RADIUS ||
                                 pos.y == centerPos.y - RADIUS ||
                                 pos.y == centerPos.y + RADIUS;
-          const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
+          const Clr color = IS_OUTER ? colorOuter : colorInner;
           if(Config::isTilesMode()) {
             drawTile(TileId::blast1, Panel::map, pos, color, clrBlack);
           } else {
@@ -457,7 +457,7 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                                 pos.x == centerPos.x + RADIUS ||
                                 pos.y == centerPos.y - RADIUS ||
                                 pos.y == centerPos.y + RADIUS;
-          const SDL_Color color = IS_OUTER ? colorOuter : colorInner;
+          const Clr color = IS_OUTER ? colorOuter : colorInner;
           if(Config::isTilesMode()) {
             drawTile(TileId::blast2, Panel::map, pos, color, clrBlack);
           } else {
@@ -474,7 +474,7 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
 }
 
 void drawBlastAnimAtPositions(const vector<Pos>& positions,
-                              const SDL_Color& color) {
+                              const Clr& color) {
   TRACE_FUNC_BEGIN;
   if(isInited()) {
     drawMapAndInterface();
@@ -504,7 +504,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
 }
 
 void drawBlastAnimAtPositionsWithPlayerVision(
-  const vector<Pos>& positions, const SDL_Color& clr) {
+  const vector<Pos>& positions, const Clr& clr) {
 
   vector<Pos> positionsWithVision;
   for(unsigned int i = 0; i < positions.size(); ++i) {
@@ -518,7 +518,7 @@ void drawBlastAnimAtPositionsWithPlayerVision(
 }
 
 void drawTile(const TileId tile, const Panel panel, const Pos& pos,
-              const SDL_Color& clr, const SDL_Color& bgClr) {
+              const Clr& clr, const Clr& bgClr) {
   if(isInited()) {
     const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
     const Pos cellDims(Config::getCellW(), Config::getCellH());
@@ -528,8 +528,8 @@ void drawTile(const TileId tile, const Panel panel, const Pos& pos,
 }
 
 void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos,
-               const SDL_Color& clr, const bool DRAW_BG_CLR,
-               const SDL_Color& bgClr) {
+               const Clr& clr, const bool DRAW_BG_CLR,
+               const Clr& bgClr) {
   if(isInited()) {
     const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
     drawGlyphAtPixel(GLYPH, pixelPos, clr, DRAW_BG_CLR, bgClr);
@@ -537,7 +537,7 @@ void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos,
 }
 
 void drawText(const string& str, const Panel panel, const Pos& pos,
-              const SDL_Color& clr, const SDL_Color& bgClr) {
+              const Clr& clr, const Clr& bgClr) {
   if(isInited()) {
     Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
 
@@ -560,8 +560,8 @@ void drawText(const string& str, const Panel panel, const Pos& pos,
 }
 
 int drawTextCentered(const string& str, const Panel panel,
-                     const Pos& pos, const SDL_Color& clr,
-                     const SDL_Color& bgClr,
+                     const Pos& pos, const Clr& clr,
+                     const Clr& bgClr,
                      const bool IS_PIXEL_POS_ADJ_ALLOWED) {
   const int LEN         = str.size();
   const int LEN_HALF    = LEN / 2;
@@ -635,17 +635,17 @@ void coverCellInMap(const Pos& pos) {
 }
 
 void drawLineHor(const Pos& pixelPos, const int W,
-                 const SDL_Color& clr) {
+                 const Clr& clr) {
   drawRectangleSolid(pixelPos, Pos(W, 2), clr);
 }
 
 void drawLineVer(const Pos& pixelPos, const int H,
-                 const SDL_Color& clr) {
+                 const Clr& clr) {
   drawRectangleSolid(pixelPos, Pos(1, H), clr);
 }
 
 void drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
-                        const SDL_Color& clr) {
+                        const Clr& clr) {
   if(isInited()) {
     SDL_Rect sdlRect = {(Sint16)pixelPos.x, (Sint16)pixelPos.y,
                         (Uint16)pixelDims.x, (Uint16)pixelDims.y
@@ -679,7 +679,7 @@ void drawProjectiles(vector<Projectile*>& projectiles,
 }
 
 void drawPopupBox(const Rect& border, const Panel panel,
-                  const SDL_Color& clr) {
+                  const Clr& clr) {
   const bool IS_TILES = Config::isTilesMode();
 
   //Vertical bars
@@ -770,7 +770,7 @@ void drawMap() {
         const auto* const f = Map::cells[x][y].featureStatic;
 
         TileId  goreTile  = TileId::empty;
-        char    goreGlyph = ' ';
+        char    goreGlyph = 0;
         if(f->canHaveGore()) {
           goreTile  = f->getGoreTile();
           goreGlyph = f->getGoreGlyph();
@@ -778,8 +778,8 @@ void drawMap() {
         if(goreTile == TileId::empty) {
           curDrw->tile  = f->getTile();
           curDrw->glyph = f->getGlyph();
-          const SDL_Color& featureClr   = f->getClr();
-          const SDL_Color& featureClrBg = f->getClrBg();
+          const Clr& featureClr   = f->getClr();
+          const Clr& featureClrBg = f->getClrBg();
           curDrw->clr = f->hasBlood_ ? clrRedLgt : featureClr;
           if(!Utils::isClrEq(featureClrBg, clrBlack)) {
             curDrw->clrBg = featureClrBg;
@@ -789,9 +789,7 @@ void drawMap() {
           curDrw->glyph = goreGlyph;
           curDrw->clr   = clrRed;
         }
-        if(Map::cells[x][y].isLight && f->canMoveCmn()) {
-          curDrw->isMarkedAsLit = true;
-        }
+        if(Map::cells[x][y].isLight && f->canMoveCmn()) {curDrw->isMarkedAsLit = true;}
       }
     }
   }
@@ -889,7 +887,7 @@ void drawMap() {
   }
 
   //---------------- DRAW THE GRID
-  auto divClr = [](SDL_Color & clr, const int DIV) {
+  auto divClr = [](Clr & clr, const int DIV) {
     clr.r /= DIV; clr.g /= DIV; clr.b /= DIV;
   };
 

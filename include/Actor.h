@@ -70,7 +70,7 @@ public:
   inline std::string getNameA()     const {return data_->nameA;}
   inline bool isHumanoid()          const {return data_->isHumanoid;}
   inline char getGlyph()            const {return glyph_;}
-  virtual const SDL_Color& getClr()       {return clr_;}
+  virtual const Clr& getClr()       {return clr_;}
   inline const TileId& getTile()    const {return tile_;}
 
   void addLight(bool lightMap[MAP_W][MAP_H]) const;
@@ -97,7 +97,7 @@ protected:
   }
   virtual void mkStartItems() = 0;
 
-  SDL_Color clr_;
+  Clr clr_;
   char glyph_;
   TileId tile_;
 

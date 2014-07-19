@@ -97,7 +97,7 @@ struct ActorDataT {
   std::string nameThe;
   TileId tile;
   char glyph;
-  SDL_Color color;
+  Clr color;
   MonsterGroupSize groupSize;
   int hp, spi, dmgMelee, dmgRanged;
   ActorSpeed speed;

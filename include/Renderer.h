@@ -32,17 +32,17 @@ void updateScreen();
 void clearScreen();
 
 void drawTile(const TileId tile, const Panel panel, const Pos& pos,
-              const SDL_Color& clr, const SDL_Color& bgClr = clrBlack);
+              const Clr& clr, const Clr& bgClr = clrBlack);
 
 void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos,
-               const SDL_Color& clr, const bool DRAW_BG_CLR = true,
-               const SDL_Color& bgClr = clrBlack);
+               const Clr& clr, const bool DRAW_BG_CLR = true,
+               const Clr& bgClr = clrBlack);
 
 void drawText(const std::string& str, const Panel panel, const Pos& pos,
-              const SDL_Color& clr, const SDL_Color& bgClr = clrBlack);
+              const Clr& clr, const Clr& bgClr = clrBlack);
 
 int drawTextCentered(const std::string& str, const Panel panel, const Pos& pos,
-                     const SDL_Color& clr, const SDL_Color& bgClr = clrBlack,
+                     const Clr& clr, const Clr& bgClr = clrBlack,
                      const bool IS_PIXEL_POS_ADJ_ALLOWED = true);
 
 void coverCellInMap(const Pos& pos);
@@ -54,24 +54,24 @@ void coverArea(const Panel panel, const Pos& pos, const Pos& dims);
 void coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims);
 
 void drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims,
-                        const SDL_Color& clr);
+                        const Clr& clr);
 
-void drawLineHor(const Pos& pixelPos, const int W, const SDL_Color& clr);
+void drawLineHor(const Pos& pixelPos, const int W, const Clr& clr);
 
-void drawLineVer(const Pos& pixelPos, const int H, const SDL_Color& clr);
+void drawLineVer(const Pos& pixelPos, const int H, const Clr& clr);
 
 void drawMarker(const std::vector<Pos>& trail, const int EFFECTIVE_RANGE = -1);
 
 void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                           bool forbiddenCells[MAP_W][MAP_H],
-                          const SDL_Color& colorInner,
-                          const SDL_Color& colorOuter);
+                          const Clr& colorInner,
+                          const Clr& colorOuter);
 
 void drawBlastAnimAtPositions(const std::vector<Pos>& positions,
-                              const SDL_Color& color);
+                              const Clr& color);
 
 void drawBlastAnimAtPositionsWithPlayerVision(const std::vector<Pos>& positions,
-    const SDL_Color& clr);
+    const Clr& clr);
 
 void drawMainMenuLogo(const int Y_POS);
 
@@ -79,7 +79,7 @@ void drawProjectiles(std::vector<Projectile*>& projectiles,
                      const bool SHOULD_DRAW_MAP_BEFORE);
 
 void drawPopupBox(const Rect& area, const Panel panel = Panel::screen,
-                  const SDL_Color& clr = clrGray);
+                  const Clr& clr = clrGray);
 
 void applySurface(const Pos& pixelPos, SDL_Surface* const src,
                   SDL_Rect* clip = nullptr);

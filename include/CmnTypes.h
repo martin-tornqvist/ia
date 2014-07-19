@@ -60,8 +60,8 @@ struct CellRenderData {
     isAwareOfMonsterHere  = false;
   }
 
-  SDL_Color clr;
-  SDL_Color clrBg;
+  Clr clr;
+  Clr clrBg;
   TileId tile;
   char glyph;
   int lifebarLength;
@@ -75,7 +75,7 @@ struct CellRenderData {
 struct StrAndClr {
   StrAndClr() : str(""), clr(clrBlack) {}
 
-  StrAndClr(const std::string& text, const SDL_Color& color) :
+  StrAndClr(const std::string& text, const Clr& color) :
     str(text), clr(color) {}
 
   StrAndClr& operator=(const StrAndClr& other) {
@@ -85,7 +85,7 @@ struct StrAndClr {
   }
 
   std::string str;
-  SDL_Color clr;
+  Clr clr;
 };
 
 struct Pos {

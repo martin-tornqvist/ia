@@ -116,8 +116,8 @@ struct FeatureDataT {
   std::function<Feature*(const Pos& p)> mkObj;
   FeatureId id;
   char glyph;
-  SDL_Color clr;
-  SDL_Color clrBg;
+  Clr clr;
+  Clr clrBg;
   TileId tile;
   MoveRules moveRules;
   bool isSoundPassable;

@@ -150,7 +150,7 @@ string Tomb::getDescr(const bool DEFINITE_ARTICLE) const {
   return "";
 }
 
-SDL_Color Tomb::getClr() const {
+Clr Tomb::getClr() const {
   switch(appearance_) {
     case TombAppearance::common:    return clrGray;
     case TombAppearance::ornate:    return clrWhite;
@@ -364,7 +364,7 @@ void Tomb::triggerTrap(Actor& actor) {
       if(Rnd::coinToss()) {
         Log::addMsg("Fumes burst out from the tomb!");
         Prop* prop = nullptr;
-        SDL_Color fumeClr = clrMagenta;
+        Clr fumeClr = clrMagenta;
         const int RND = Rnd::percentile();
         if(RND < 20) {
           prop = new PropPoisoned(propTurnsStd);
@@ -657,7 +657,7 @@ void Chest::triggerTrap(Actor& actor) {
     } else {
       Log::addMsg("Fumes burst out from the chest!");
       Prop* prop = nullptr;
-      SDL_Color fumeClr = clrMagenta;
+      Clr fumeClr = clrMagenta;
       const int RND = Rnd::percentile();
       if(RND < 20) {
         prop = new PropPoisoned(propTurnsStd);
@@ -700,7 +700,7 @@ Fountain::Fountain(const Pos& pos) :
   }
 }
 
-SDL_Color Fountain::getClr() const {
+Clr Fountain::getClr() const {
   switch(fountainMatl_) {
     case FountainMatl::stone: return clrGray;
     case FountainMatl::gold:  return clrYellow;

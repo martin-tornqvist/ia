@@ -100,12 +100,28 @@ void FeatureStatic::tryPutGore() {
   }
 }
 
-string FeatureStatic::getDescr(const bool DEFINITE_ARTICLE) const {
-  if(goreGlyph_ == ' ') {
-    return DEFINITE_ARTICLE ? getData().nameThe : getData().nameA;
-  } else {
-    return DEFINITE_ARTICLE ? "the blood and gore" : "blood and gore";
+Clr FeatureStatic::getClr() const {
+  switch(burnState_) {
+    case BurnState::none:       return getData().clr; break;
+    case BurnState::burning:    return clrOrange;     break;
+    case BurnState::hasBurned:  return clrGray;       break;
   }
+  assert(false && "Failed to set color");
+  return clrYellow;
+}
+
+Clr FeatureStatic::getClrBg() const {
+  switch(burnState_) {
+    case BurnState::none:       return clrBlack;  break;
+    case BurnState::burning:    return Clr {Uint8(Rnd::range(32, 255)), 0, 0, 0}; break;
+    case BurnState::hasBurned:  return clrBlack;  break;
+  }
+  assert(false && "Failed to set color");
+  return clrYellow;
+}
+
+string FeatureStatic::getDescr(const bool DEFINITE_ARTICLE) const {
+  return DEFINITE_ARTICLE ? getData().nameThe : getData().nameA;
 }
 
 void FeatureStatic::clearGore() {
@@ -187,7 +203,7 @@ string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
   return "";
 }
 
-SDL_Color Wall::getClr() const {
+Clr Wall::getClr() const {
   if(isMossy_)                  {return clrGreenDrk;}
   if(type_ == WallType::cave)   {return clrBrownGray;}
   if(type_ == WallType::egypt)  {return clrBrownGray;}
@@ -376,7 +392,7 @@ void LiquidDeep::bump(Actor& actorBumping) {
 }
 
 //------------------------------------------------------------------- LEVER
-SDL_Color Lever::getClr() const {
+Clr Lever::getClr() const {
   return isPositionLeft_ ? clrGray : clrWhite;
 }
 
@@ -404,4 +420,43 @@ void Lever::pull() {
   Map::player->updateFov();
   Renderer::drawMapAndInterface();
   TRACE_FUNC_END;
+}
+
+//------------------------------------------------------------------- GRASS
+void Grass::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
+  (void)dmgMethod; (void)actor;
+
+  switch(dmgType) {
+    case DmgType::fire: {
+      burnState_ = BurnState::burning;
+    } break;
+
+    default: {} break;
+  }
+}
+
+//------------------------------------------------------------------- BUSH
+void Bush::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
+  (void)dmgMethod; (void)actor;
+
+  switch(dmgType) {
+    case DmgType::fire: {
+      burnState_ = BurnState::burning;
+    } break;
+
+    default: {} break;
+  }
+}
+
+//------------------------------------------------------------------- TREE
+void Tree::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
+  (void)dmgMethod; (void)actor;
+
+  switch(dmgType) {
+    case DmgType::fire: {
+      burnState_ = BurnState::burning;
+    } break;
+
+    default: {} break;
+  }
 }

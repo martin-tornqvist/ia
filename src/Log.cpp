@@ -110,7 +110,7 @@ void drawLog(const bool SHOULD_UPDATE_SCREEN) {
   if(SHOULD_UPDATE_SCREEN) Renderer::updateScreen();
 }
 
-void addMsg(const string& text, const SDL_Color& clr,
+void addMsg(const string& text, const Clr& clr,
             const bool INTERRUPT_PLAYER_ACTIONS,
             const bool ADD_MORE_PROMPT_AFTER_MSG) {
 

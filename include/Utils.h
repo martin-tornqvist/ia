@@ -61,7 +61,7 @@ struct TimeData {
 
 namespace Utils {
 
-bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2);
+bool isClrEq(const Clr& clr1, const Clr& clr2);
 
 void resetArray(int a[MAP_W][MAP_H]);
 void resetArray(bool a[MAP_W][MAP_H], const bool value);

@@ -236,7 +236,7 @@ void draw(const MenuBrowser& browser) {
       pos.x = LOGO_X_POS_LEFT;
       for(const char& glyph : row) {
         if(glyph != ' ') {
-          SDL_Color clr = clrGreenLgt;
+          Clr clr = clrGreenLgt;
           clr.g += Rnd::range(-50, 100);
           clr.g = max(0, min(254, int(clr.g)));
           Renderer::drawGlyph(glyph, Panel::screen, pos, clr);
@@ -254,7 +254,7 @@ void draw(const MenuBrowser& browser) {
   }
 
   TRACE << "MainMenu: Drawing HPL quote" << endl;
-  SDL_Color quoteClr = clrGray;
+  Clr quoteClr = clrGray;
   quoteClr.r /= 7;
   quoteClr.g /= 7;
   quoteClr.b /= 7;
@@ -268,10 +268,10 @@ void draw(const MenuBrowser& browser) {
   }
 
   TRACE << "MainMenu: Drawing main menu" << endl;
-  SDL_Color clrActive     = clrNosfTealLgt;
-  SDL_Color clrInactive   = clrNosfTealDrk;
-  SDL_Color clrActiveBg   = clrBlack;
-  SDL_Color clrInactiveBg = clrBlack;
+  Clr clrActive     = clrNosfTealLgt;
+  Clr clrInactive   = clrNosfTealDrk;
+  Clr clrActiveBg   = clrBlack;
+  Clr clrInactiveBg = clrBlack;
 
   pos.x = MAP_W_HALF;
 

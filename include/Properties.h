@@ -163,7 +163,7 @@ public:
 
   void endAppliedPropsByMagicHealing();
 
-  bool changeActorClr(SDL_Color& clr) const;
+  bool changeActorClr(Clr& clr) const;
 
   std::vector<Prop*> appliedProps_;
   std::vector<Prop*> actorTurnPropBuffer_;
@@ -249,7 +249,7 @@ public:
 
   virtual int getChangedMaxHp(const int HP_MAX) const {return HP_MAX;}
 
-  virtual bool changeActorClr(SDL_Color& clr) const {(void)clr; return false;}
+  virtual bool changeActorClr(Clr& clr) const {(void)clr; return false;}
 
   virtual bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
@@ -517,7 +517,7 @@ public:
 
   bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
 
-  bool changeActorClr(SDL_Color& clr) const override {
+  bool changeActorClr(Clr& clr) const override {
     clr = clrRedLgt;
     return true;
   }

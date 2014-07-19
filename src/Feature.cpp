@@ -80,11 +80,11 @@ void Feature::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-SDL_Color Feature::getClr() const {
+Clr Feature::getClr() const {
   return getData().clr;
 }
 
-SDL_Color Feature::getClrBg() const {
+Clr Feature::getClrBg() const {
   return getData().clrBg;
 }
 

@@ -464,7 +464,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Weapon& wpn) {
           const string ATTACK_MOD_STR =
             data.isWeakAttack  ? "feebly "    :
             data.isBackstab    ? "covertly "  : "";
-          const SDL_Color clr =
+          const Clr clr =
             data.isBackstab ? clrBlueLgt : clrMsgGood;
           const string wpnName_a =
             ItemData::getItemRef(wpn, ItemRefType::a, true);
@@ -580,7 +580,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   LineCalc::calcNewLine(origin, aimPos, stopAtTarget, chebTrvlLim, false,
                         projectilePath);
 
-  const SDL_Color projectileColor = wpn.getData().rangedMissileClr;
+  const Clr projectileColor = wpn.getData().rangedMissileClr;
   char projectileGlyph = wpn.getData().rangedMissileGlyph;
   if(projectileGlyph == '/') {
     const int i = projectilePath.size() > 2 ? 2 : 1;

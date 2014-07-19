@@ -25,7 +25,7 @@ public:
   virtual void reset() {nrItems = 1;}
 
   const ItemDataT& getData()  const {return *data_;}
-  virtual SDL_Color getClr()  const {return data_->clr;}
+  virtual Clr getClr()  const {return data_->clr;}
   char getGlyph()             const {return data_->glyph;}
   TileId getTile()            const {return data_->tile;}
 
@@ -54,7 +54,7 @@ public:
     return ConsumeItem::no;
   }
   virtual std::string getDefaultActivationLabel() const  {return "";}
-  virtual SDL_Color getInterfaceClr() const         {return clrBrown;}
+  virtual Clr getInterfaceClr() const         {return clrBrown;}
 
   virtual void newTurnInInventory() {}
 

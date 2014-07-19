@@ -16,7 +16,7 @@ public:
 
   std::string getDefaultActivationLabel() const {return "Read";}
 
-  SDL_Color getInterfaceClr() const {return clrMagenta;}
+  Clr getInterfaceClr() const {return clrMagenta;}
 
   ConsumeItem read();
 

@@ -25,7 +25,7 @@ public:
 
   virtual std::string getDefaultActivationLabel() const {return "Apply";}
 
-  virtual SDL_Color getInterfaceClr() const {return clrGreen;}
+  virtual Clr getInterfaceClr() const {return clrGreen;}
 
   void storeToSaveLines(std::vector<std::string>& lines) override {
     lines.push_back(toStr(nrSupplies_));

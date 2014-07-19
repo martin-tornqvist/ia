@@ -26,9 +26,9 @@ void mkLines() {
   lines_.resize(0);
 
   const string offset = "   ";
-  const SDL_Color clrHeading  = clrWhiteHigh;
-  const SDL_Color clrText     = clrWhite;
-  const SDL_Color clrTextDark = clrGray;
+  const Clr clrHeading  = clrWhiteHigh;
+  const Clr clrText     = clrWhite;
+  const Clr clrTextDark = clrGray;
 
   const AbilityVals& abilities = Map::player->getData().abilityVals;
 

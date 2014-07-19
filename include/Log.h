@@ -11,7 +11,7 @@
 
 class Msg {
 public:
-  Msg(const std::string& text, const SDL_Color& clr, const int X_POS) :
+  Msg(const std::string& text, const Clr& clr, const int X_POS) :
     clr_(clr), xPos_(X_POS), str_(text), repeatsStr_(""),
     nr_(1) {}
 
@@ -28,7 +28,7 @@ public:
     repeatsStr_ = "(x" + toStr(nr_) + ")";
   }
 
-  SDL_Color clr_;
+  Clr clr_;
   int xPos_;
 
 private:
@@ -41,7 +41,7 @@ namespace Log {
 
 void init();
 
-void addMsg(const std::string& text, const SDL_Color& clr = clrWhite,
+void addMsg(const std::string& text, const Clr& clr = clrWhite,
             const bool INTERRUPT_PLAYER_ACTIONS = false,
             const bool ADD_MORE_PROMPT_AFTER_MSG = false);
 

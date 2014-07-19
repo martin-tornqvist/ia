@@ -647,7 +647,7 @@ void Inventory::sortGeneralInventory() {
 
     //Check if item should be added to any existing color group
     for(vector<Item*>& group : sortBuffer) {
-      const SDL_Color clrCurGroup = group.at(0)->getInterfaceClr();
+      const Clr clrCurGroup = group.at(0)->getInterfaceClr();
       if(Utils::isClrEq(item->getInterfaceClr(), clrCurGroup)) {
         group.push_back(item);
         isAddedToBuffer = true;

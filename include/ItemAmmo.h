@@ -10,7 +10,7 @@ public:
   ItemAmmo(ItemDataT* const itemData) :
     Item(itemData) {}
   virtual ~ItemAmmo() {}
-  virtual SDL_Color getInterfaceClr() const {return clrWhite;}
+  virtual Clr getInterfaceClr() const {return clrWhite;}
 
 private:
 };

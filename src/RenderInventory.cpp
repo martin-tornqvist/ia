@@ -15,18 +15,18 @@ const int X_POS_WEIGHT = 62;
 namespace {
 
 void drawDots(const int X_PREV, const int W_PREV, const int X_NEW, const int Y,
-              const SDL_Color& clr) {
+              const Clr& clr) {
 
   const int X_DOTS = X_PREV + W_PREV;
   const int W_DOTS = X_NEW - X_DOTS;
   const string dots(W_DOTS, '.');
-  SDL_Color realColorDots = clr;
+  Clr realColorDots = clr;
   realColorDots.r /= 3; realColorDots.g /= 3; realColorDots.b /= 3;
   Renderer::drawText(dots, Panel::screen, Pos(X_DOTS, Y), realColorDots);
 }
 
 void drawItemSymbol(const Item& item, const Pos& pos) {
-  const SDL_Color itemClr = item.getClr();
+  const Clr itemClr = item.getClr();
   if(Config::isTilesMode()) {
     Renderer::drawTile(item.getTile(), Panel::screen, pos, itemClr);
   } else {
@@ -72,7 +72,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
       drawItemSymbol(*item, pos);
       pos.x += 2;
 
-      const SDL_Color itemInterfClr =
+      const Clr itemInterfClr =
         IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
 
       const ItemDataT& d = item->getData();
@@ -129,7 +129,7 @@ void drawBrowseInventory(const MenuBrowser& browser,
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
-    const SDL_Color itemInterfClr = IS_CUR_POS ?
+    const Clr itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
     pos.x = 0;
@@ -196,7 +196,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
     drawItemSymbol(*item, pos);
     pos.x += 2;
 
-    const SDL_Color itemInterfClr = IS_CUR_POS ?
+    const Clr itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
 
@@ -245,7 +245,7 @@ void drawUse(const MenuBrowser& browser,
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
-    const SDL_Color itemInterfClr = IS_CUR_POS ?
+    const Clr itemInterfClr = IS_CUR_POS ?
                                     clrWhiteHigh :
                                     item->getInterfaceClr();
 

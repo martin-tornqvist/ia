@@ -511,7 +511,7 @@ void ColourOOSpace::mkStartItems() {
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::colourOOSpaceTouch));
 }
 
-const SDL_Color& ColourOOSpace::getClr() {
+const Clr& ColourOOSpace::getClr() {
   return curColor;
 }
 

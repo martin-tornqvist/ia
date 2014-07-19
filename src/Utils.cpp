@@ -62,7 +62,7 @@ int percentile() {return roll(1, 100);}
 
 namespace Utils {
 
-bool isClrEq(const SDL_Color& clr1, const SDL_Color& clr2) {
+bool isClrEq(const Clr& clr1, const Clr& clr2) {
   return clr1.r == clr2.r && clr1.g == clr2.g && clr1.b == clr2.b;
 }
 

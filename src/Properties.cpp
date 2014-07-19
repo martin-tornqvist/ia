@@ -1375,7 +1375,7 @@ Prop* PropHandler::getProp(const PropId id, const PropSrc source) const {
   return nullptr;
 }
 
-bool PropHandler::changeActorClr(SDL_Color& clr) const {
+bool PropHandler::changeActorClr(Clr& clr) const {
   vector<Prop*> propList;
   bool sources[int(PropSrc::endOfPropSrc)];
   for(bool& v : sources) {v = true;}

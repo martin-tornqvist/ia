@@ -18,11 +18,11 @@ using namespace std;
 namespace {
 
 void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
-          const SDL_Color* const clrOverride) {
+          const Clr* const clrOverride) {
   Renderer::drawMapAndInterface();
 
-  const SDL_Color& clrInner = clrOverride ? *clrOverride : clrYellow;
-  const SDL_Color& clrOuter = clrOverride ? *clrOverride : clrRedLgt;
+  const Clr& clrInner = clrOverride ? *clrOverride : clrYellow;
+  const Clr& clrOuter = clrOverride ? *clrOverride : clrRedLgt;
 
   const bool IS_TILES     = Config::isTilesMode();
   const int NR_ANIM_STEPS = IS_TILES ? 2 : 1;
@@ -35,7 +35,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
 
     const int NR_OUTER = posLists.size();
     for(int iOuter = 0; iOuter < NR_OUTER; iOuter++) {
-      const SDL_Color& clr = iOuter == NR_OUTER - 1 ? clrOuter : clrInner;
+      const Clr& clr = iOuter == NR_OUTER - 1 ? clrOuter : clrInner;
       const vector<Pos>& inner = posLists.at(iOuter);
       for(const Pos& pos : inner) {
         if(
@@ -95,8 +95,7 @@ namespace Explosion {
 
 void runExplosionAt(const Pos& origin, const ExplType explType,
                     const ExplSrc explSrc, const int RADI_CHANGE,
-                    const SfxId sfx, Prop* const prop,
-                    const SDL_Color* const clrOverride) {
+                    const SfxId sfx, Prop* const prop, const Clr* const clrOverride) {
   Rect area;
   const int RADI = EXPLOSION_STD_RADI + RADI_CHANGE;
   getArea(origin, RADI, area);
@@ -171,17 +170,30 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
 
       //Apply property
       if(prop) {
+        bool shouldApplyOnLivingActor = livingActor;
+
+        //Do not apply burning if actor is player with the demolition expert trait, and
+        //intentionally throwing a Molotov
         if(
-          livingActor &&
-          (livingActor != Map::player || !IS_DEM_EXP ||
-           explSrc != ExplSrc::playerUseMoltvIntended)) {
+          livingActor    == Map::player &&
+          prop->getId()  == propBurning &&
+          IS_DEM_EXP                    &&
+          explSrc        == ExplSrc::playerUseMoltvIntended) {
+          shouldApplyOnLivingActor = false;
+        }
+
+        if(shouldApplyOnLivingActor) {
           PropHandler& propHlr = livingActor->getPropHandler();
           Prop* propCpy = propHlr.mkProp(prop->getId(), propTurnsSpecific,
                                          prop->turnsLeft_);
           propHlr.tryApplyProp(propCpy);
         }
-        //If property is burning, also apply it to corpses
+
+        //If property is burning, also apply it to corpses and environment
         if(prop->getId() == propBurning) {
+          Cell& cell = Map::cells[pos.x][pos.y];
+          cell.featureStatic->hit(DmgType::fire, DmgMethod::elemental, nullptr);
+
           for(Actor* corpse : corpsesHere) {
             PropHandler& propHlr = corpse->getPropHandler();
             Prop* propCpy = propHlr.mkProp(prop->getId(), propTurnsSpecific,

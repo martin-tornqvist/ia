@@ -26,7 +26,7 @@ public:
 
   inline bool isDestroyed() {return getAbsorptionPoints() <= 0;}
 
-  SDL_Color getInterfaceClr() const {return clrGray;}
+  Clr getInterfaceClr() const {return clrGray;}
 
   void setMaxDurability() {dur_ = 100;}
 

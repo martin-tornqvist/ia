@@ -49,10 +49,10 @@ public:
     lines.erase(begin(lines));
   }
 
-  SDL_Color getClr() const {
+  Clr getClr() const {
     if(!data_->isRangedWeapon && data_->rangedHasInfiniteAmmo) {
       if(nrAmmoLoaded == 0) {
-        SDL_Color ret = data_->clr;
+        Clr ret = data_->clr;
         ret.r /= 2; ret.g /= 2; ret.b /= 2;
         return ret;
       }
@@ -60,7 +60,7 @@ public:
     return data_->clr;
   }
 
-  SDL_Color getInterfaceClr() const {return clrGray;}
+  Clr getInterfaceClr() const {return clrGray;}
 
 
 protected:

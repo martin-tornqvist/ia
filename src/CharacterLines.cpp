@@ -55,9 +55,9 @@ void drawInfoLines() {
 
   Pos pos(CHARACTER_LINE_X0, CHARACTER_LINE_Y0);
 
-  const SDL_Color clrGenDrk = clrNosfTealDrk;
-  const SDL_Color clrGenLgt = clrNosfTealLgt;
-  const SDL_Color clrGenMed = clrNosfTeal;
+  const Clr clrGenDrk = clrNosfTealDrk;
+  const Clr clrGenLgt = clrNosfTealLgt;
+  const Clr clrGenMed = clrNosfTeal;
 
   Player& player = *Map::player;
 
@@ -89,7 +89,7 @@ void drawInfoLines() {
   const int INS = player.getInsanity();
   Renderer::drawText("INS:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
-  const SDL_Color shortSanClr =
+  const Clr shortSanClr =
     SHOCK < 50  ? clrGreenLgt :
     SHOCK < 75  ? clrYellow   :
     SHOCK < 100 ? clrMagenta  : clrRedLgt;
@@ -119,7 +119,7 @@ void drawInfoLines() {
 
   Item* itemWielded = Map::player->getInv().getItemInSlot(SlotId::wielded);
   if(itemWielded) {
-    const SDL_Color itemClr = itemWielded->getClr();
+    const Clr itemClr = itemWielded->getClr();
     if(Config::isTilesMode()) {
       Renderer::drawTile(
         itemWielded->getTile(), Panel::charLines, pos, itemClr);
@@ -164,7 +164,7 @@ void drawInfoLines() {
   pos.x += 4;
   const int ENC = Map::player->getEncPercent();
   str = toStr(ENC) + "%";
-  const SDL_Color encClr = ENC < 100 ? clrGreenLgt :
+  const Clr encClr = ENC < 100 ? clrGreenLgt :
                            ENC < ENC_IMMOBILE_LVL ? clrYellow : clrRedLgt;
   Renderer::drawText(str, Panel::charLines, pos, encClr);
   pos.x += str.length() + 1;
@@ -176,7 +176,7 @@ void drawInfoLines() {
     Map::player->getInv().getItemInSlot(SlotId::missiles);
 
   if(itemMissiles) {
-    const SDL_Color itemClr = itemMissiles->getClr();
+    const Clr itemClr = itemMissiles->getClr();
     if(Config::isTilesMode()) {
       Renderer::drawTile(
         itemMissiles->getTile(), Panel::charLines, pos, itemClr);
@@ -215,7 +215,7 @@ void drawInfoLines() {
 //  for(unsigned int i = 0; i < appliedProps.size(); ++i) {
 //    Prop* const prop = appliedProps.at(i);
 //    const PropAlignment alignment = prop->getAlignment();
-//    const SDL_Color statusColor =
+//    const Clr statusColor =
 //      alignment == propAlignmentGood ? clrMsgGood :
 //      alignment == propAlignmentBad  ? clrMsgBad  : clrWhite;
 //    string propText = prop->getNameShort();

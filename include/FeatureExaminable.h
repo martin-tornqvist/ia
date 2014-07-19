@@ -50,7 +50,7 @@ public:
   void examine()                  override;
 
   std::string getDescr(const bool DEFINITE_ARTICLE)  const override;
-  SDL_Color getClr()                            const override;
+  Clr getClr()                            const override;
 
 private:
   void triggerTrap(Actor& actor) override;
@@ -84,7 +84,7 @@ public:
   void examine()                  override;
   void disarm()                   override;
 
-  SDL_Color getClr() const override {
+  Clr getClr() const override {
     return matl == ChestMatl::wood ? clrBrownDrk : clrGray;
   }
 
@@ -156,7 +156,7 @@ public:
   FeatureId getId() const override {return FeatureId::fountain;}
 
   void bump(Actor& actorBumping)                          override;
-  SDL_Color getClr()                                const override;
+  Clr getClr()                                const override;
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
 private:

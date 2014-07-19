@@ -39,7 +39,7 @@ public:
   FeatureId getId() const override {return FeatureId::trap;}
 
   void        bump(Actor& actorBumping)                   override;
-  SDL_Color   getClr()                              const override;
+  Clr   getClr()                              const override;
   char        getGlyph()                            const override;
   TileId      getTile()                             const override;
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
@@ -93,7 +93,7 @@ protected:
   virtual void trigger(
     Actor& actor, const AbilityRollResult dodgeResult) = 0;
   virtual std::string getTitle()  const = 0;
-  virtual SDL_Color getClr()      const = 0;
+  virtual Clr getClr()      const = 0;
   virtual char getGlyph()         const = 0;
   virtual TileId getTile()        const = 0;
   virtual bool isMagical()        const = 0;
@@ -116,7 +116,7 @@ private:
   friend class Trap;
   TrapDart(Pos pos);
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrWhiteHigh;}
+  Clr   getClr()        const override {return clrWhiteHigh;}
   std::string      getTitle()      const override {return "Dart trap";}
   TileId      getTile()       const override {return TileId::trapGeneral;}
   char        getGlyph()      const override {return '^';}
@@ -131,7 +131,7 @@ private:
   friend class Trap;
   TrapSpear(Pos pos);
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrWhiteHigh;}
+  Clr   getClr()        const override {return clrWhiteHigh;}
   std::string      getTitle()      const override {return "Spear trap";}
   TileId      getTile()       const override {return TileId::trapGeneral;}
   char        getGlyph()      const override {return '^';}
@@ -147,7 +147,7 @@ private:
   TrapGasConfusion(Pos pos) :
     SpecificTrapBase(pos, TrapId::gasConfusion) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrMagenta;}
+  Clr   getClr()        const override {return clrMagenta;}
   std::string      getTitle()      const override {return "Gas trap";}
   TileId      getTile()       const override {return TileId::trapGeneral;}
   char        getGlyph()      const override {return '^';}
@@ -162,7 +162,7 @@ private:
     SpecificTrapBase(pos, TrapId::gasParalyze) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrMagenta;}
+  Clr   getClr()        const override {return clrMagenta;}
   std::string      getTitle()      const override {return "Gas trap";}
   TileId      getTile()       const override {return TileId::trapGeneral;}
   char        getGlyph()      const override {return '^';}
@@ -176,7 +176,7 @@ private:
   TrapGasFear(Pos pos) :
     SpecificTrapBase(pos, TrapId::gasFear) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrMagenta;}
+  Clr   getClr()        const override {return clrMagenta;}
   std::string      getTitle()      const override {return "Gas trap";}
   char        getGlyph()      const override {return '^';}
   bool        isMagical()     const override {return false;}
@@ -190,7 +190,7 @@ private:
   TrapBlindingFlash(Pos pos) :
     SpecificTrapBase(pos, TrapId::blinding) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrYellow;}
+  Clr   getClr()        const override {return clrYellow;}
   std::string      getTitle()      const override {return "Blinding trap";}
   char        getGlyph()      const override {return '^';}
   bool        isMagical()     const override {return false;}
@@ -205,7 +205,7 @@ private:
     SpecificTrapBase(pos, TrapId::teleport) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrCyan;}
+  Clr   getClr()        const override {return clrCyan;}
   std::string      getTitle()      const override {return "Teleporter trap";}
   char        getGlyph()      const override {return '^';}
   bool        isMagical()     const override {return true;}
@@ -220,7 +220,7 @@ private:
     SpecificTrapBase(pos, TrapId::summonMonster) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrBrownDrk;}
+  Clr   getClr()        const override {return clrBrownDrk;}
   std::string      getTitle()      const override {return "Monster summoning trap";}
   char        getGlyph()      const override {return '^';}
   bool        isMagical()     const override {return true;}
@@ -234,7 +234,7 @@ private:
   TrapSmoke(Pos pos) :
     SpecificTrapBase(pos, TrapId::smoke) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrGray;}
+  Clr   getClr()        const override {return clrGray;}
   std::string      getTitle()      const override {return "Smoke trap";}
   char        getGlyph()      const override {return '^';}
   bool        isMagical()     const override {return false;}
@@ -248,7 +248,7 @@ private:
   TrapAlarm(Pos pos) :
     SpecificTrapBase(pos, TrapId::alarm) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrBrown;}
+  Clr   getClr()        const override {return clrBrown;}
   std::string      getTitle()      const override {return "Alarm trap";}
   char        getGlyph()      const override {return '^';}
   bool        isMagical()     const override {return false;}
@@ -268,7 +268,7 @@ private:
   TrapSpiderWeb(Pos pos) :
     SpecificTrapBase(pos, TrapId::spiderWeb), isHoldingActor(false) {}
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  SDL_Color   getClr()        const override {return clrWhiteHigh;}
+  Clr   getClr()        const override {return clrWhiteHigh;}
   std::string      getTitle()      const override {return "Spider web";}
   char        getGlyph()      const override {return '*';}
   bool        isMagical()     const override {return false;}

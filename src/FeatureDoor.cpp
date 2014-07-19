@@ -80,7 +80,7 @@ bool Door::isVisionPassable()     const {return isOpen_;}
 bool Door::isProjectilePassable() const {return isOpen_;}
 bool Door::isSmokePassable()      const {return isOpen_;}
 
-SDL_Color Door::getClr() const {
+Clr Door::getClr() const {
   if(isSecret_) {
     return mimicFeature_->clr;
   } else {

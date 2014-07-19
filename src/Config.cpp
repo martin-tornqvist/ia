@@ -228,8 +228,8 @@ void playerSetsOption(const MenuBrowser* const browser,
 }
 
 void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
-  const SDL_Color clrActive     = clrNosfTealLgt;
-  const SDL_Color clrInactive   = clrNosfTealDrk;
+  const Clr clrActive     = clrNosfTealLgt;
+  const Clr clrInactive   = clrNosfTealDrk;
 
   Renderer::clearScreen();
 

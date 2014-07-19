@@ -134,7 +134,7 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) {
     const string dlvl         = toStr(entries.at(i).getDlvl());
     const string ins          = toStr(entries.at(i).getInsanity());
 
-    const SDL_Color& clr = clrNosfTeal;
+    const Clr& clr = clrNosfTeal;
     Renderer::drawText(
       dateAndTime, Panel::screen, Pos(X_POS_DATE,      yPos), clr);
     Renderer::drawText(

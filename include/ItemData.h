@@ -195,7 +195,7 @@ public:
   bool isTried;
   ItemName baseName;
   char glyph;
-  SDL_Color clr;
+  Clr clr;
   TileId tile;
   PrimaryAttMode primaryAttackMode;
   bool isExplosive, isScroll, isPotion, isDevice, isEatable;
@@ -222,7 +222,7 @@ public:
   bool rangedHasInfiniteAmmo;
   char rangedMissileGlyph;
   TileId rangedMissileTile;
-  SDL_Color rangedMissileClr;
+  Clr rangedMissileClr;
   bool rangedMissileLeavesTrail;
   bool rangedMissileLeavesSmoke;
   ItemAttMsgs rangedAttMsgs;

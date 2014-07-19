@@ -18,7 +18,7 @@ public:
 
   std::string getDefaultActivationLabel() const {return "Drink";}
 
-  SDL_Color getInterfaceClr() const {return clrBlueLgt;}
+  Clr getInterfaceClr() const {return clrBlueLgt;}
 
   void quaff(Actor* const actor);
 
@@ -227,7 +227,7 @@ private:
 struct PotionLook {
   std::string namePlain;
   std::string nameA;
-  SDL_Color clr;
+  Clr clr;
 };
 
 namespace PotionNameHandling {

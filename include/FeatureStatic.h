@@ -3,10 +3,12 @@
 
 #include "Feature.h"
 
+enum class BurnState {none, burning, hasBurned};
+
 class FeatureStatic: public Feature {
 public:
   FeatureStatic(Pos pos) :
-    Feature(pos), goreTile_(TileId::empty), goreGlyph_(' ') {}
+    Feature(pos), goreTile_(TileId::empty), goreGlyph_(0), burnState_(BurnState::none) {}
 
   FeatureStatic() = delete;
 
@@ -17,7 +19,8 @@ public:
   virtual void hit_(const DmgType dmgType, const DmgMethod dmgMethod,
                     Actor* actor = nullptr);
 
-
+  virtual Clr   getClr()                                    const override;
+  virtual Clr   getClrBg()                                  const override;
   virtual std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
   void tryPutGore();
@@ -36,6 +39,8 @@ protected:
 
   TileId goreTile_;
   char goreGlyph_;
+
+  BurnState burnState_;
 };
 
 enum class FloorType {cmn, cave};
@@ -70,6 +75,8 @@ public:
 
   FeatureId getId() const override {return FeatureId::grass;}
 
+  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) override;
+
   GrassType type_;
 };
 
@@ -82,6 +89,8 @@ public:
   ~Bush() {}
 
   FeatureId getId() const override {return FeatureId::bush;}
+
+  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) override;
 
   BushType type_;
 };
@@ -109,7 +118,7 @@ public:
             Actor* const actor) override;
 
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
-  SDL_Color   getClr()                              const;
+  Clr   getClr()                              const;
   char        getGlyph()                            const;
   TileId      getFrontWallTile()                    const;
   TileId      getTopWallTile()                      const;
@@ -270,7 +279,7 @@ public:
 
   FeatureId getId() const override {return FeatureId::lever;}
 
-  SDL_Color getClr()  const;
+  Clr getClr()  const;
   TileId    getTile() const;
   void      examine() override;
 
@@ -299,6 +308,8 @@ public:
   ~Tree() {}
 
   FeatureId getId() const override {return FeatureId::tree;}
+
+  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) override;
 };
 
 #endif

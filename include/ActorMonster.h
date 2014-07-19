@@ -554,9 +554,9 @@ public:
 //  bool onActorTurn_() override;
   void onStandardTurn() override;
   void mkStartItems() override;
-  const SDL_Color& getClr();
+  const Clr& getClr();
 private:
-  SDL_Color curColor;
+  Clr curColor;
 };
 
 #endif

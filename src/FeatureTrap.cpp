@@ -293,7 +293,7 @@ string Trap::getDescr(const bool DEFINITE_ARTICLE) const {
   }
 }
 
-SDL_Color Trap::getClr() const {
+Clr Trap::getClr() const {
   return isHidden_ ? mimicFeature_->clr : specificTrap_->getClr();
 }
 
@@ -489,7 +489,7 @@ void TrapGasConfusion::trigger(
     }
   }
 
-  SDL_Color clr = getClr();
+  Clr clr = getClr();
 
   Explosion::runExplosionAt(
     pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
@@ -521,7 +521,7 @@ void TrapGasParalyzation::trigger(
     }
   }
 
-  SDL_Color clr = getClr();
+  Clr clr = getClr();
   Explosion::runExplosionAt(
     pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
     new PropParalyzed(propTurnsStd), &clr) ;
@@ -552,7 +552,7 @@ void TrapGasFear::trigger(Actor& actor,
     }
   }
 
-  SDL_Color clr = getClr();
+  Clr clr = getClr();
   Explosion::runExplosionAt(
     pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
     new PropTerrified(propTurnsStd), &clr);

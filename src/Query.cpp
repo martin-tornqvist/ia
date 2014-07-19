@@ -37,7 +37,7 @@ YesNoAnswer yesOrNo(char keyForSpecialEvent) {
   return YesNoAnswer::no;
 }
 
-int number(const Pos& pos, const SDL_Color clr, const int MIN,
+int number(const Pos& pos, const Clr clr, const int MIN,
            const int MAX_NR_DIGITS, const int DEFAULT,
            const bool CANCEL_RETURNS_DEFAULT) {
   int retNum = max(MIN, DEFAULT);

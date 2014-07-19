@@ -31,8 +31,8 @@ public:
   virtual bool          isSmokePassable()                               const;
   virtual bool          isBottomless()                                  const;
   virtual std::string   getDescr(const bool DEFINITE_ARTICLE)           const;
-  virtual SDL_Color     getClr()                                        const;
-  virtual SDL_Color     getClrBg()                                      const;
+  virtual Clr           getClr()                                        const;
+  virtual Clr           getClrBg()                                      const;
   virtual char          getGlyph()                                      const;
   virtual TileId        getTile()                                       const;
   virtual void          addLight(bool light[MAP_W][MAP_H])              const;

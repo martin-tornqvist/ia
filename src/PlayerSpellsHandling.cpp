@@ -38,8 +38,8 @@ void draw(MenuBrowser& browser) {
   for(int i = 0; i < NR_SPELLS; ++i) {
     const int CURRENT_ELEMENT = i;
     Scroll scroll(nullptr);
-    SDL_Color scrollClr = scroll.getInterfaceClr();
-    const SDL_Color clr =
+    Clr scrollClr = scroll.getInterfaceClr();
+    const Clr clr =
       browser.isPosAtElement(CURRENT_ELEMENT) ? clrWhite : scrollClr;
     Spell* const spell = knownSpells_.at(i);
     string str = spell->getName();
@@ -49,7 +49,7 @@ void draw(MenuBrowser& browser) {
     string fillStr = "";
     const int FILL_SIZE = 28 - str.size();
     for(int ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
-    SDL_Color fillClr = clrGray;
+    Clr fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
     Renderer::drawText(fillStr, Panel::screen, Pos(str.size(), y), fillClr);
 

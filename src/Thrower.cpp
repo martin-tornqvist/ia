@@ -50,7 +50,7 @@ void playerThrowLitExplosive(const Pos& aimCell) {
   //Render
   if(path.size() > 1) {
     const auto GLYPH = ItemData::data[int(ItemId::dynamite)]->glyph;
-    SDL_Color clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
+    Clr clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
     for(const Pos& p : path) {
       Renderer::drawMapAndInterface(false);
       if(Map::cells[p.x][p.y].isSeenByPlayer) {
@@ -116,7 +116,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
   bool isActorHit = false;
 
   const char      glyph = itemThrown.getGlyph();
-  const SDL_Color clr   = itemThrown.getClr();
+  const Clr clr   = itemThrown.getClr();
 
   int chanceToDestroyItem = 0;
 
@@ -146,7 +146,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
             Renderer::updateScreen();
             SdlWrapper::sleep(Config::getDelayProjectileDraw() * 4);
           }
-          const SDL_Color hitMessageClr =
+          const Clr hitMessageClr =
             actorHere == Map::player ? clrMsgBad : clrMsgGood;
 
           const bool CAN_SEE_ACTOR =

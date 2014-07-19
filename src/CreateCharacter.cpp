@@ -95,10 +95,10 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
 
   const Pos& browserPos = browser.getPos();
 
-  const SDL_Color& clrActive      = clrNosfTealLgt;
-  const SDL_Color& clrInactive    = clrNosfTealDrk;
-  const SDL_Color& clrActiveBg    = clrBlack;
-  const SDL_Color& clrInactiveBg  = clrBlack;
+  const Clr& clrActive      = clrNosfTealLgt;
+  const Clr& clrInactive    = clrNosfTealDrk;
+  const Clr& clrActiveBg    = clrBlack;
+  const Clr& clrInactiveBg  = clrBlack;
 
   const int Y0_BGS = 2;
 
@@ -114,8 +114,8 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
     string name = "";
     PlayerBon::getBgTitle(bg, name);
     const bool IS_MARKED = bg == markedBg;
-    const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
-    const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
+    const Clr& drwClr   = IS_MARKED ? clrActive : clrInactive;
+    const Clr& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
     Renderer::drawTextCentered(name, Panel::screen, Pos(MAP_W_HALF, y),
                                drwClr, drwClrBg);
     y++;
@@ -206,10 +206,10 @@ void drawPickTrait(
 
   const Pos& browserPos = browser.getPos();
 
-  const SDL_Color& clrActive      = clrNosfTealLgt;
-  const SDL_Color& clrInactive    = clrNosfTealDrk;
-  const SDL_Color& clrActiveBg    = clrBlack;
-  const SDL_Color& clrInactiveBg  = clrBlack;
+  const Clr& clrActive      = clrNosfTealLgt;
+  const Clr& clrInactive    = clrNosfTealDrk;
+  const Clr& clrActiveBg    = clrBlack;
+  const Clr& clrInactiveBg  = clrBlack;
 
   //------------------------------------------------------------- TRAITS
   const int Y0_TRAITS = 2;
@@ -219,8 +219,8 @@ void drawPickTrait(
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
     const bool IS_MARKED = browserPos.x == 0 && browserPos.y == int(i);
-    const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
-    const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
+    const Clr& drwClr   = IS_MARKED ? clrActive : clrInactive;
+    const Clr& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
     Renderer::drawText(
       name, Panel::screen, Pos(X_COL_ONE, y), drwClr, drwClrBg);
     y++;
@@ -231,8 +231,8 @@ void drawPickTrait(
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
     const bool IS_MARKED = browserPos.x == 1 && browserPos.y == int(i);
-    const SDL_Color& drwClr   = IS_MARKED ? clrActive : clrInactive;
-    const SDL_Color& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
+    const Clr& drwClr   = IS_MARKED ? clrActive : clrInactive;
+    const Clr& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
     Renderer::drawText(
       name, Panel::screen, Pos(X_COL_TWO, y), drwClr, drwClrBg);
     y++;

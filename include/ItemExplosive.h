@@ -19,7 +19,7 @@ public:
     return "Ignite";
   }
 
-  virtual SDL_Color getInterfaceClr() const {return clrRedLgt;}
+  virtual Clr getInterfaceClr() const {return clrRedLgt;}
 
   virtual void setPlayerExplosive() const {}
 

@@ -72,12 +72,12 @@ struct Projectile {
     attackData = attackData_;
   }
 
-  void setTile(const TileId tileToRender, const SDL_Color clrToRender) {
+  void setTile(const TileId tileToRender, const Clr clrToRender) {
     tile = tileToRender;
     clr = clrToRender;
   }
 
-  void setGlyph(const char GLYPH_TO_RENDER, const SDL_Color clrToRender) {
+  void setGlyph(const char GLYPH_TO_RENDER, const Clr clrToRender) {
     glyph = GLYPH_TO_RENDER;
     clr = clrToRender;
   }
@@ -90,7 +90,7 @@ struct Projectile {
   bool isDoneRendering;
   char glyph;
   TileId tile;
-  SDL_Color clr;
+  Clr clr;
   RangedAttData* attackData;
 };
 

@@ -26,17 +26,17 @@ namespace Postmortem {
 namespace {
 
 struct StrAndClr {
-  StrAndClr(const string str_, const SDL_Color clr_) : str(str_), clr(clr_) {}
+  StrAndClr(const string str_, const Clr clr_) : str(str_), clr(clr_) {}
   StrAndClr() {}
   std::string str;
-  SDL_Color   clr;
+  Clr   clr;
 };
 
 void mkInfoLines(vector<StrAndClr>& linesRef) {
   TRACE_FUNC_BEGIN;
 
-  const SDL_Color clrHeading  = clrWhiteHigh;
-  const SDL_Color clrInfo     = clrWhite;
+  const Clr clrHeading  = clrWhiteHigh;
+  const Clr clrInfo     = clrWhite;
 
   TRACE << "Postmortem: Finding number of killed monsters" << endl;
   vector<string> uniqueKilledNames;
