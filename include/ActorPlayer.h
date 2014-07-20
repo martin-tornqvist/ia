@@ -14,13 +14,13 @@ enum class Phobia {
   openPlace,
   closedPlace,
   deepPlaces,
-  endOfPhobias
+  END
 };
 
 enum class Obsession {
   sadism,
   masochism,
-  endOfObsessions
+  END
 };
 
 enum class ShockSrc {
@@ -29,7 +29,7 @@ enum class ShockSrc {
   castIntrSpell,
   time,
   misc,
-  endOfShockSrc
+  END
 };
 
 class Monster;
@@ -77,8 +77,8 @@ public:
   void storeToSaveLines(std::vector<std::string>& lines) const;
   void setupFromSaveLines(std::vector<std::string>& lines);
 
-  bool phobias[int(Phobia::endOfPhobias)];
-  bool obsessions[int(Obsession::endOfObsessions)];
+  bool phobias[int(Phobia::END)];
+  bool obsessions[int(Obsession::END)];
 
   void autoMelee();
 

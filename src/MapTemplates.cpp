@@ -9,7 +9,7 @@ namespace MapTemplHandling {
 
 namespace {
 
-MapTempl templates_[int(MapTemplId::endOfMapTemplId)];
+MapTempl templates_[int(MapTemplId::END)];
 
 struct CharAndFeatureId {
   CharAndFeatureId(char cha_, FeatureId featureId_) :
@@ -137,7 +137,7 @@ void init() {
 }
 
 const MapTempl& getTempl(const MapTemplId id) {
-  assert(id != MapTemplId::endOfMapTemplId);
+  assert(id != MapTemplId::END);
   return templates_[int(id)];
 }
 

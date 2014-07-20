@@ -25,7 +25,7 @@ void mkItems() {
 
   ItemDataT** data = ItemData::data;
 
-  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
+  for(int i = 1; i < int(ItemId::END); ++i) {
     if(
       Map::dlvl >= data[i]->spawnStandardMinDLVL &&
       Map::dlvl <= data[i]->spawnStandardMaxDLVL && !data[i]->isIntrinsic) {

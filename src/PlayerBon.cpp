@@ -20,13 +20,13 @@ vector<Trait> traitsPicked_;
 
 namespace {
 
-Bg bg_ = Bg::endOfBgs;
+Bg bg_ = Bg::END;
 
 } //Namespace
 
 void init() {
   traitsPicked_.resize(0);
-  bg_ = Bg::endOfBgs;
+  bg_ = Bg::END;
 }
 
 void storeToSaveLines(vector<string>& lines) {
@@ -54,7 +54,7 @@ void getBgTitle(const Bg id, string& strRef) {
     case Bg::occultist: strRef = "Occultist";   break;
     case Bg::rogue:     strRef = "Rogue";       break;
     case Bg::warVet:    strRef = "War Veteran"; break;
-    case Bg::endOfBgs: {} break;
+    case Bg::END: {} break;
   }
 }
 
@@ -97,7 +97,7 @@ void getTraitTitle(const Trait id, string& strRef) {
     case Trait::rugged:               strRef = "Rugged";                break;
     case Trait::treasureHunter:       strRef = "Treasure Hunter";       break;
     case Trait::demolitionExpert:     strRef = "Demolition Expert";     break;
-    case Trait::endOfTraits: break;
+    case Trait::END: break;
   }
 }
 
@@ -162,7 +162,7 @@ void getBgDescr(const Bg id, vector<string>& linesRef) {
       getTraitDescr(Trait::tough, s);             linesRef.push_back(s);
     } break;
 
-    case Bg::endOfBgs: {} break;
+    case Bg::END: {} break;
   }
 }
 
@@ -334,13 +334,13 @@ void getTraitDescr(const Trait id, string& strRef) {
       strRef = "You tend to find more items";
     } break;
 
-    case Trait::endOfTraits: {} break;
+    case Trait::END: {} break;
   }
 }
 
 void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef) {
   traitsRef.resize(0);
-  bgRef = Bg::endOfBgs;
+  bgRef = Bg::END;
 
   switch(id) {
     case Trait::adeptMeleeFighter: {
@@ -484,7 +484,7 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef) {
       traitsRef.push_back(Trait::observant);
     } break;
 
-    case Trait::endOfTraits: {} break;
+    case Trait::END: {} break;
   }
 
   //Sort lexicographically
@@ -501,7 +501,7 @@ Bg getBg() {return bg_;}
 void getPickableBgs(vector<Bg>& bgsRef) {
   bgsRef.resize(0);
 
-  for(int i = 0; i < int(Bg::endOfBgs); ++i) {bgsRef.push_back(Bg(i));}
+  for(int i = 0; i < int(Bg::END); ++i) {bgsRef.push_back(Bg(i));}
 
   //Sort lexicographically
   sort(bgsRef.begin(), bgsRef.end(),
@@ -515,14 +515,14 @@ void getPickableBgs(vector<Bg>& bgsRef) {
 void getPickableTraits(vector<Trait>& traitsRef) {
   traitsRef.resize(0);
 
-  for(int i = 0; i < int(Trait::endOfTraits); ++i) {
+  for(int i = 0; i < int(Trait::END); ++i) {
 
     const Trait trait = Trait(i);
 
     if(!hasTrait(trait)) {
 
       vector<Trait> traitPrereqs;
-      Bg bgPrereq = Bg::endOfBgs;
+      Bg bgPrereq = Bg::END;
       getTraitPrereqs(Trait(i), traitPrereqs, bgPrereq);
 
       bool isPickable = true;
@@ -534,7 +534,7 @@ void getPickableTraits(vector<Trait>& traitsRef) {
         }
       }
 
-      isPickable = isPickable && (bg_ == bgPrereq || bgPrereq == Bg::endOfBgs);
+      isPickable = isPickable && (bg_ == bgPrereq || bgPrereq == Bg::END);
 
       if(isPickable) {
         traitsRef.push_back(Trait(i));
@@ -557,7 +557,7 @@ void getPickableTraits(vector<Trait>& traitsRef) {
 }
 
 void pickBg(const Bg bg) {
-  assert(bg != Bg::endOfBgs);
+  assert(bg != Bg::END);
 
   bg_ = bg;
 
@@ -611,18 +611,18 @@ void pickBg(const Bg bg) {
       Map::player->insanity_ += 10;
     } break;
 
-    case Bg::endOfBgs: {} break;
+    case Bg::END: {} break;
   }
 }
 
 void setAllTraitsToPicked() {
-  for(int i = 0; i < int(Trait::endOfTraits); ++i) {
+  for(int i = 0; i < int(Trait::END); ++i) {
     traitsPicked_.push_back(Trait(i));
   }
 }
 
 void pickTrait(const Trait id) {
-  assert(id != Trait::endOfTraits);
+  assert(id != Trait::END);
 
   traitsPicked_.push_back(id);
 

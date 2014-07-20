@@ -7,8 +7,7 @@ enum class BurnState {none, burning, hasBurned};
 
 class FeatureStatic: public Feature {
 public:
-  FeatureStatic(Pos pos) :
-    Feature(pos), goreTile_(TileId::empty), goreGlyph_(0), burnState_(BurnState::none) {}
+  FeatureStatic(Pos pos);
 
   FeatureStatic() = delete;
 
@@ -16,11 +15,9 @@ public:
 
   virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* actor = nullptr);
-  virtual void hit_(const DmgType dmgType, const DmgMethod dmgMethod,
-                    Actor* actor = nullptr);
 
-  virtual Clr   getClr()                                    const override;
-  virtual Clr   getClrBg()                                  const override;
+  virtual Clr         getClr()                              const override;
+  virtual Clr         getClrBg()                            const override;
   virtual std::string getDescr(const bool DEFINITE_ARTICLE) const override;
 
   void tryPutGore();
@@ -36,6 +33,8 @@ public:
 
 protected:
   virtual void triggerTrap(Actor& actor) {(void)actor;}
+
+  std::function<void(Actor* const actor)>onHit[int(DmgType::END)][int(DmgMethod::END)];
 
   TileId goreTile_;
   char goreGlyph_;
@@ -69,13 +68,11 @@ enum class GrassType {cmn, withered};
 
 class Grass: public FeatureStatic {
 public:
-  Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {}
+  Grass(Pos pos);
   Grass() = delete;
   ~Grass() {}
 
   FeatureId getId() const override {return FeatureId::grass;}
-
-  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) override;
 
   GrassType type_;
 };
@@ -89,8 +86,6 @@ public:
   ~Bush() {}
 
   FeatureId getId() const override {return FeatureId::bush;}
-
-  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) override;
 
   BushType type_;
 };
@@ -108,17 +103,14 @@ enum class WallType {cmn, cmnAlt, cave, egypt};
 
 class Wall: public FeatureStatic {
 public:
-  Wall(Pos pos) : FeatureStatic(pos), type_(WallType::cmn), isMossy_(false) {}
+  Wall(Pos pos);
   Wall() = delete;
   ~Wall() {}
 
   FeatureId getId() const override {return FeatureId::wall;}
 
-  void hit_(const DmgType dmgType, const DmgMethod dmgMethod,
-            Actor* const actor) override;
-
   std::string getDescr(const bool DEFINITE_ARTICLE) const override;
-  Clr   getClr()                              const;
+  Clr   getClr()                                    const;
   char        getGlyph()                            const;
   TileId      getFrontWallTile()                    const;
   TileId      getTopWallTile()                      const;
@@ -131,6 +123,9 @@ public:
 
   static bool isTileAnyWallFront(const TileId tile);
   static bool isTileAnyWallTop(const TileId tile);
+
+private:
+  void destrAdjDoors() const;
 };
 
 class RubbleLow: public FeatureStatic {
@@ -147,9 +142,6 @@ public:
   RubbleHigh(Pos pos) : FeatureStatic(pos) {}
   RubbleHigh() = delete;
   ~RubbleHigh() {}
-
-  void hit_(const DmgType dmgType, const DmgMethod dmgMethod,
-            Actor* const actor) override;
 
   FeatureId getId() const override {return FeatureId::rubbleHigh;}
 };
@@ -188,8 +180,6 @@ public:
   ~Statue() {}
 
   FeatureId getId() const override {return FeatureId::statue;}
-
-  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) override;
 };
 
 class Pillar: public FeatureStatic {
@@ -308,8 +298,6 @@ public:
   ~Tree() {}
 
   FeatureId getId() const override {return FeatureId::tree;}
-
-  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) override;
 };
 
 #endif

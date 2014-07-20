@@ -46,7 +46,7 @@ void populateStdLvl() {
         case RoomType::plain:                                   break;
         case RoomType::flooded:                                 break;
         case RoomType::muddy:                                   break;
-        case RoomType::endOfStdRooms:
+        case RoomType::END_OF_STD_ROOMS:
         case RoomType::river:
         case RoomType::corridorJunction:
         case RoomType::cave: break;
@@ -77,7 +77,7 @@ void populateStdLvl() {
 
           const TrapId trapType = IS_SPIDER_ROOM ?
                                   TrapId::spiderWeb :
-                                  TrapId(Rnd::range(0, int(TrapId::endOfTraps) - 1));
+                                  TrapId(Rnd::range(0, int(TrapId::END) - 1));
 
           const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
           const Pos& pos    = trapPosBucket.at(ELEMENT);
@@ -129,7 +129,7 @@ void populateStdLvl() {
     for(int i = 0; i < NR_BASE_TRAPS; ++i) {
       if(nrPosCand == 0) {break;}
 
-      const TrapId trapType = TrapId(Rnd::range(0, int(TrapId::endOfTraps) - 1));
+      const TrapId trapType = TrapId(Rnd::range(0, int(TrapId::END) - 1));
 
       const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
       const Pos& pos = trapPosBucket.at(ELEMENT);

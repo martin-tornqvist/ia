@@ -43,7 +43,7 @@ void ItemContainerFeature::setRandomItemsForFeature(
   if(NR_ITEMS_TO_ATTEMPT > 0) {
     while(items_.empty()) {
       vector<ItemId> itemBucket;
-      for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
+      for(int i = 1; i < int(ItemId::END); ++i) {
         ItemDataT* const curData = ItemData::data[i];
         for(
           unsigned int ii = 0;
@@ -98,7 +98,7 @@ void ItemContainerFeature::destroySingleFragile() {
 Tomb::Tomb(const Pos& pos) :
   FeatureStatic(pos), isContentKnown_(false), isTraitKnown_(false),
   pushLidOneInN_(Rnd::range(6, 14)), appearance_(TombAppearance::common),
-  trait_(TombTrait::endOfTombTraits) {
+  trait_(TombTrait::END) {
 
   //Contained items
   const int NR_ITEMS_MIN = Rnd::oneIn(3) ? 0 : 1;
@@ -110,7 +110,7 @@ Tomb::Tomb(const Pos& pos) :
 
   //Appearance
   if(Rnd::oneIn(5)) {
-    const TombAppearance lastAppearance = TombAppearance::endOfTombAppearance;
+    const TombAppearance lastAppearance = TombAppearance::END;
     appearance_ = TombAppearance(Rnd::range(0, int(lastAppearance) - 1));
   } else {
     for(Item* item : itemContainer_.items_) {
@@ -144,7 +144,7 @@ string Tomb::getDescr(const bool DEFINITE_ARTICLE) const {
       return string(DEFINITE_ARTICLE ? "the" : "an") + " ornate tomb";
     case TombAppearance::marvelous:
       return string(DEFINITE_ARTICLE ? "the" : "a")  + " marvelous tomb";
-    case TombAppearance::endOfTombAppearance: {} break;
+    case TombAppearance::END: {} break;
   }
   assert("Failed to set Tomb description" && false);
   return "";
@@ -155,7 +155,7 @@ Clr Tomb::getClr() const {
     case TombAppearance::common:    return clrGray;
     case TombAppearance::ornate:    return clrWhite;
     case TombAppearance::marvelous: return clrYellow;
-    case TombAppearance::endOfTombAppearance: {} break;
+    case TombAppearance::END: {} break;
   }
   assert("Failed to set Tomb color" && false);
   return clrBlack;
@@ -250,7 +250,7 @@ void Tomb::examine() {
   } else if(itemContainer_.items_.empty() && isContentKnown_) {
     Log::addMsg("The tomb is empty.");
   } else {
-    if(!isTraitKnown_ && trait_ != TombTrait::endOfTombTraits) {
+    if(!isTraitKnown_ && trait_ != TombTrait::END) {
       const int FIND_ONE_IN_N = PlayerBon::hasTrait(Trait::perceptive) ? 2 :
                                 (PlayerBon::hasTrait(Trait::observant) ? 3 : 6);
 
@@ -275,7 +275,7 @@ void Tomb::examine() {
           Log::addMsg("There is a pungent stench.");
         } break;
 
-        case TombTrait::endOfTombTraits: {} break;
+        case TombTrait::END: {} break;
       }
     } else {
       Log::addMsg("I find nothing significant.");
@@ -377,7 +377,7 @@ void Tomb::triggerTrap(Actor& actor) {
           prop->turnsLeft_ *= 2;
         }
         Explosion::runExplosionAt(
-          pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+          pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
           prop, &fumeClr);
       } else {
         for(int i = 1; i < endOfActorIds; ++i) {
@@ -412,7 +412,7 @@ Chest::Chest(const Pos& pos) :
   isLocked_(false),
   isTrapped_(false),
   isTrapStatusKnown_(false),
-  matl(ChestMatl(Rnd::range(0, int(ChestMatl::endOfChestMatl) - 1))) {
+  matl(ChestMatl(Rnd::range(0, int(ChestMatl::END) - 1))) {
 
   const bool IS_TREASURE_HUNTER =
     PlayerBon::hasTrait(Trait::treasureHunter);
@@ -470,108 +470,108 @@ bool Chest::open() {
   return true;
 }
 
-void Chest::hit_(const DmgType dmgType, const DmgMethod dmgMethod,
-                 Actor* const actor) {
-  (void)actor;
-
-  switch(dmgType) {
-    case DmgType::physical: {
-      switch(dmgMethod) {
-        case DmgMethod::kick: {
-          if(itemContainer_.items_.empty() && isContentKnown_) {
-            Log::addMsg("The chest is empty.");
-          } else {
-
-            Log::addMsg("I kick the lid.");
-
-            vector<PropId> props;
-            Map::player->getPropHandler().getAllActivePropIds(props);
-
-            if(
-              find(begin(props), end(props), propWeakened) != end(props) ||
-              matl == ChestMatl::iron) {
-              trySprainPlayer();
-              Log::addMsg("It seems futile.");
-            } else {
-
-              const bool IS_CURSED
-                = find(begin(props), end(props), propCursed)  != end(props);
-              const bool IS_BLESSED
-                = find(begin(props), end(props), propBlessed) != end(props);
-
-              if(!IS_BLESSED && (IS_CURSED || Rnd::oneIn(3))) {
-                itemContainer_.destroySingleFragile();
-              }
-
-              const bool IS_TOUGH   = PlayerBon::hasTrait(Trait::tough);
-              const bool IS_RUGGED  = PlayerBon::hasTrait(Trait::rugged);
-
-              const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
-
-              if(Rnd::oneIn(OPEN_ONE_IN_N)) {
-                Log::addMsg("I kick the lid open!");
-                open();
-              } else {
-                Log::addMsg("The lock resists.");
-                trySprainPlayer();
-              }
-            }
-            GameTime::actorDidAct();
-          }
-        } break;
-
-        default: {} break;
-
-      } //dmgMethod
-
-    } break;
-
-    default: {} break;
-
-  } //dmgType
-
-  //TODO Force lock with weapon
-//      Inventory& inv    = Map::player->getInv();
-//      Item* const item  = inv.getItemInSlot(SlotId::wielded);
+//void Chest::hit_(const DmgType dmgType, const DmgMethod dmgMethod,
+//                 Actor* const actor) {
+//  (void)actor;
 //
-//      if(!item) {
-//        Log::addMsg(
-//          "I attempt to punch the lock open, nearly breaking my hand.",
-//          clrMsgBad);
-//        Map::player->hit(1, DmgType::pure, false);
-//      } else {
-//        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
-//
-//        if(Rnd::percentile() < CHANCE_TO_DMG_WPN) {
-//          const string wpnName = ItemData::getItemRef(
-//                                   *item, ItemRefType::plain, true);
-//
-//          Weapon* const wpn = static_cast<Weapon*>(item);
-//
-//          if(wpn->meleeDmgPlus == 0) {
-//            Log::addMsg("My " + wpnName + " breaks!");
-//            delete wpn;
-//            inv.getSlot(SlotId::wielded)->item = nullptr;
+//  switch(dmgType) {
+//    case DmgType::physical: {
+//      switch(dmgMethod) {
+//        case DmgMethod::kick: {
+//          if(itemContainer_.items_.empty() && isContentKnown_) {
+//            Log::addMsg("The chest is empty.");
 //          } else {
-//            Log::addMsg("My " + wpnName + " is damaged!");
-//            wpn->meleeDmgPlus--;
-//          }
-//          return;
-//        }
 //
-//        if(IS_WEAK) {
-//          Log::addMsg("It seems futile.");
-//        } else {
-//          const int CHANCE_TO_OPEN = 40;
-//          if(Rnd::percentile() < CHANCE_TO_OPEN) {
-//            Log::addMsg("I force the lock open!");
-//            open();
-//          } else {
-//            Log::addMsg("The lock resists.");
+//            Log::addMsg("I kick the lid.");
+//
+//            vector<PropId> props;
+//            Map::player->getPropHandler().getAllActivePropIds(props);
+//
+//            if(
+//              find(begin(props), end(props), propWeakened) != end(props) ||
+//              matl == ChestMatl::iron) {
+//              trySprainPlayer();
+//              Log::addMsg("It seems futile.");
+//            } else {
+//
+//              const bool IS_CURSED
+//                = find(begin(props), end(props), propCursed)  != end(props);
+//              const bool IS_BLESSED
+//                = find(begin(props), end(props), propBlessed) != end(props);
+//
+//              if(!IS_BLESSED && (IS_CURSED || Rnd::oneIn(3))) {
+//                itemContainer_.destroySingleFragile();
+//              }
+//
+//              const bool IS_TOUGH   = PlayerBon::hasTrait(Trait::tough);
+//              const bool IS_RUGGED  = PlayerBon::hasTrait(Trait::rugged);
+//
+//              const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
+//
+//              if(Rnd::oneIn(OPEN_ONE_IN_N)) {
+//                Log::addMsg("I kick the lid open!");
+//                open();
+//              } else {
+//                Log::addMsg("The lock resists.");
+//                trySprainPlayer();
+//              }
+//            }
+//            GameTime::actorDidAct();
 //          }
-//        }
-//      }
-}
+//        } break;
+//
+//        default: {} break;
+//
+//      } //dmgMethod
+//
+//    } break;
+//
+//    default: {} break;
+//
+//  } //dmgType
+//
+//  //TODO Force lock with weapon
+////      Inventory& inv    = Map::player->getInv();
+////      Item* const item  = inv.getItemInSlot(SlotId::wielded);
+////
+////      if(!item) {
+////        Log::addMsg(
+////          "I attempt to punch the lock open, nearly breaking my hand.",
+////          clrMsgBad);
+////        Map::player->hit(1, DmgType::pure, false);
+////      } else {
+////        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
+////
+////        if(Rnd::percentile() < CHANCE_TO_DMG_WPN) {
+////          const string wpnName = ItemData::getItemRef(
+////                                   *item, ItemRefType::plain, true);
+////
+////          Weapon* const wpn = static_cast<Weapon*>(item);
+////
+////          if(wpn->meleeDmgPlus == 0) {
+////            Log::addMsg("My " + wpnName + " breaks!");
+////            delete wpn;
+////            inv.getSlot(SlotId::wielded)->item = nullptr;
+////          } else {
+////            Log::addMsg("My " + wpnName + " is damaged!");
+////            wpn->meleeDmgPlus--;
+////          }
+////          return;
+////        }
+////
+////        if(IS_WEAK) {
+////          Log::addMsg("It seems futile.");
+////        } else {
+////          const int CHANCE_TO_OPEN = 40;
+////          if(Rnd::percentile() < CHANCE_TO_OPEN) {
+////            Log::addMsg("I force the lock open!");
+////            open();
+////          } else {
+////            Log::addMsg("The lock resists.");
+////          }
+////        }
+////      }
+//}
 
 void Chest::examine() {
   vector<PropId> props;
@@ -670,7 +670,7 @@ void Chest::triggerTrap(Actor& actor) {
         prop->turnsLeft_ *= 2;
       }
       Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc,
-                                0, SfxId::endOfSfxId, prop, &fumeClr);
+                                0, SfxId::END, prop, &fumeClr);
     }
   }
 }
@@ -684,7 +684,7 @@ Fountain::Fountain(const Pos& pos) :
 
   switch(fountainMatl_) {
     case FountainMatl::stone: {
-      const int NR_TYPES = int(FountainType::endOfFountainTypes);
+      const int NR_TYPES = int(FountainType::END);
       fountainType_ = FountainType(Rnd::range(1, NR_TYPES - 1));
     } break;
 
@@ -804,7 +804,7 @@ void Fountain::bump(Actor& actorBumping) {
           propHlr.tryApplyProp(new PropRFear(propTurnsStd));
         } break;
 
-        case FountainType::endOfFountainTypes: {} break;
+        case FountainType::END: {} break;
       }
 
       if(Rnd::oneIn(5)) {

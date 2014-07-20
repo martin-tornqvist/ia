@@ -223,7 +223,7 @@ void runSmokeExplosionAt(const Pos& origin) {
   getPositionsReached(area, origin, blocked, posLists);
 
   //TODO Sound message?
-  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, origin, nullptr,
+  Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, origin, nullptr,
           SndVol::low, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 

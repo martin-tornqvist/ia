@@ -83,7 +83,7 @@ enum PropAlignment {
   propAlignmentGood, propAlignmentBad, propAlignmentNeutral
 };
 
-enum class PropSrc {applied, inv, endOfPropSrc};
+enum class PropSrc {applied, inv, END};
 
 struct PropDataT {
   PropDataT() :
@@ -190,9 +190,9 @@ private:
   //It would then be wasteful to first gather all Props, then gather the ids
   //from those. It's more efficient to just gather the ids at once.
   void getPropsFromSources(std::vector<Prop*>& out,
-                           bool sources[int(PropSrc::endOfPropSrc)]) const;
+                           bool sources[int(PropSrc::END)]) const;
   void getPropIdsFromSources(std::vector<PropId>& out,
-                             bool sources[int(PropSrc::endOfPropSrc)]) const;
+                             bool sources[int(PropSrc::END)]) const;
 
   bool tryResistProp(const PropId id, const std::vector<Prop*>& propList) const;
 

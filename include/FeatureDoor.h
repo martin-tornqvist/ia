@@ -32,11 +32,9 @@ public:
   bool isVisionPassable()             const override;
   bool isProjectilePassable()         const override;
   bool isSmokePassable()              const override;
-  Clr getClr()                  const override;
+  Clr getClr()                        const override;
   char getGlyph()                     const override;
   TileId getTile()                    const override;
-
-  void hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) override;
 
   void tryOpen(Actor* actorTrying);
   void tryClose(Actor* actorTrying);

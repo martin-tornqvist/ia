@@ -15,7 +15,7 @@ enum class AbilityId {
   dodgeTrap,
   dodgeAttack,
   stealth,
-  endOfAbilityId
+  END
 };
 
 //Each actor has an instance of this class
@@ -24,7 +24,7 @@ public:
   AbilityVals() {reset();}
 
   AbilityVals& operator=(const AbilityVals& other) {
-    for(int i = 0; i < int(AbilityId::endOfAbilityId); ++i) {
+    for(int i = 0; i < int(AbilityId::END); ++i) {
       abilityList[i] = other.abilityList[i];
     }
     return *this;
@@ -43,7 +43,7 @@ public:
 
   void changeVal(const AbilityId ability, const int CHANGE);
 private:
-  int abilityList[int(AbilityId::endOfAbilityId)];
+  int abilityList[int(AbilityId::END)];
 };
 
 //TODO Is this necessary to have? Most functionality nowadays just roll their

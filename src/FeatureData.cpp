@@ -22,7 +22,7 @@ bool MoveRules::canMove(const vector<PropId>& actorsProps) const {
 
 namespace FeatureData {
 
-FeatureDataT data[int(FeatureId::endOfFeatureId)];
+FeatureDataT data[int(FeatureId::END)];
 
 namespace {
 
@@ -647,7 +647,7 @@ void init() {
 
 const FeatureDataT& getData(const FeatureId id) {
   assert(id != FeatureId::empty);
-  assert(id != FeatureId::endOfFeatureId);
+  assert(id != FeatureId::END);
   return data[int(id)];
 }
 

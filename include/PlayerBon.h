@@ -46,12 +46,10 @@ enum class Trait {
   tough,
   rugged,
   strongBacked,
-  endOfTraits
+  END
 };
 
-enum class Bg {
-  occultist, rogue, warVet, endOfBgs
-};
+enum class Bg {occultist, rogue, warVet, END};
 
 namespace PlayerBon {
 

@@ -241,9 +241,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
       if((size_t)curActorVectorPos_ >= actors_.size()) {
         curActorVectorPos_ = 0;
         curTurnTypePos_++;
-        if(curTurnTypePos_ == int(TurnType::endOfTurnType)) {
-          curTurnTypePos_ = 0;
-        }
+        if(curTurnTypePos_ == int(TurnType::END)) {curTurnTypePos_ = 0;}
 
         if(curTurnType != TurnType::fast && curTurnType != TurnType::fastest) {
           runStandardTurnEvents();
@@ -285,7 +283,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
           actorWhoCanActThisTurnFound = true;
         } break;
 
-        case ActorSpeed::endOfActorSpeed: {} break;
+        case ActorSpeed::END: {} break;
       }
     }
   }

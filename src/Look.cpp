@@ -49,7 +49,7 @@ string getSpeedStr(const ActorDataT& def) {
     case ActorSpeed::normal:     {return "at normal speed";}
     case ActorSpeed::fast:       {return "fast";}
     case ActorSpeed::fastest:    {return "very fast";}
-    case ActorSpeed::endOfActorSpeed: {} break;
+    case ActorSpeed::END: {} break;
   }
   return "";
 }

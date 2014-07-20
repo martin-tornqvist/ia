@@ -28,7 +28,7 @@ int getRndNrFeaturesForRoomType(const RoomType type) {
     case RoomType::monster: return Rnd::range(0, 6);
     case RoomType::flooded: return 0;
     case RoomType::muddy:   return 0;
-    case RoomType::endOfStdRooms:
+    case RoomType::END_OF_STD_ROOMS:
     case RoomType::river:
     case RoomType::cave:
     case RoomType::corridorJunction: break;
@@ -127,7 +127,7 @@ int placeThemeFeatures(Room& room) {
   TRACE_FUNC_BEGIN;
   vector<const FeatureDataT*> featureBucket;
 
-  for(int i = 1; i < int(FeatureId::endOfFeatureId); ++i) {
+  for(int i = 1; i < int(FeatureId::END); ++i) {
     const auto* const d = &FeatureData::getData((FeatureId)(i));
     if(d->themeSpawnRules.isBelongingToRoomType(room.type_)) {
       featureBucket.push_back(d);
@@ -269,7 +269,7 @@ void mkThemeSpecificRoomModifications(Room& room) {
     case RoomType::human:
     case RoomType::spider:
     case RoomType::crypt:
-    case RoomType::endOfStdRooms:
+    case RoomType::END_OF_STD_ROOMS:
     case RoomType::cave:
     case RoomType::river:
     case RoomType::corridorJunction: break;
@@ -290,7 +290,7 @@ void applyThemeToRoom(Room& room) {
     case RoomType::monster: {room.descr_ = "";} break;
     case RoomType::flooded: {room.descr_ = "";} break;
     case RoomType::muddy:   {room.descr_ = "";} break;
-    case RoomType::endOfStdRooms:
+    case RoomType::END_OF_STD_ROOMS:
     case RoomType::cave:
     case RoomType::river:
     case RoomType::corridorJunction: break;
@@ -343,7 +343,7 @@ bool isRoomTypeAllowed(const Room& room, const RoomType type,
              nrOfRoomTypeInMap(RoomType::monster) < 3;
     } break;
 
-    case RoomType::endOfStdRooms:
+    case RoomType::END_OF_STD_ROOMS:
     case RoomType::cave:
     case RoomType::river:
     case RoomType::corridorJunction: break;
@@ -386,7 +386,7 @@ void assignRoomThemes() {
 
   TRACE << "Resetting all standard rooms to plain";
   for(Room* r : Map::roomList) {
-    if(int(r->type_) < int(RoomType::endOfStdRooms)) {
+    if(int(r->type_) < int(RoomType::END_OF_STD_ROOMS)) {
       r->type_ = RoomType::plain;
     }
   }
@@ -403,9 +403,9 @@ void assignRoomThemes() {
         << "rooms with wrong size permanently as plain" << endl;
   for(int i = 0; i < NR_ROOMS; ++i) {
     Room* const room = Map::roomList.at(i);
-    if(int(room->type_) > int(RoomType::endOfStdRooms)) {
+    if(int(room->type_) > int(RoomType::END_OF_STD_ROOMS)) {
       isAssigned.at(i) = true;
-    } else if(int(room->type_) < int(RoomType::endOfStdRooms)) {
+    } else if(int(room->type_) < int(RoomType::END_OF_STD_ROOMS)) {
       // Check dimensions, keep room as plain if too small or too big
       if(!isAssigned.at(i)) {
         const int W = room->r_.p1.x - room->r_.p0.x + 1;
@@ -427,7 +427,7 @@ void assignRoomThemes() {
       const int ELEMENT = Rnd::range(0, NR_ROOMS - 1);
       if(!isAssigned.at(ELEMENT)) {
         const RoomType type =
-          (RoomType)(Rnd::range(1, int(RoomType::endOfStdRooms) - 1));
+          (RoomType)(Rnd::range(1, int(RoomType::END_OF_STD_ROOMS) - 1));
         Room* const room = Map::roomList.at(ELEMENT);
 
         if(isRoomTypeAllowed(*room, type, blocked)) {
@@ -444,7 +444,7 @@ void assignRoomThemes() {
   TRACE << "Assigning plain theme to remaining rooms" << endl;
   for(int i = 0; i < NR_ROOMS; ++i) {
     Room* const room = Map::roomList.at(i);
-    if(!isAssigned.at(i) && int(room->type_) < int(RoomType::endOfStdRooms)) {
+    if(!isAssigned.at(i) && int(room->type_) < int(RoomType::END_OF_STD_ROOMS)) {
       room->type_       = RoomType::plain;
       isAssigned.at(i)  = true;
     }
@@ -463,7 +463,7 @@ void run() {
   assignRoomThemes();
 
   for(Room* const room : Map::roomList) {
-    if(int(room->type_) < int(RoomType::endOfStdRooms)) {
+    if(int(room->type_) < int(RoomType::END_OF_STD_ROOMS)) {
       applyThemeToRoom(*room);
       mkRoomDarkWithChance(*room);
     }

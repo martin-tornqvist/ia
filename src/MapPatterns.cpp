@@ -102,7 +102,7 @@ int getWalkBlockersInDir(const Dir dir, const Pos& pos) {
     case Dir::upLeft:
     case Dir::upRight:
     case Dir::center:
-    case Dir::endOfDirs: {} break;
+    case Dir::END: {} break;
   }
   return nrBlockers;
 }

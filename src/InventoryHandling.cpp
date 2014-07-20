@@ -23,7 +23,7 @@ using namespace std;
 
 namespace InvHandling {
 
-InvScrId  screenToOpenAfterDrop     = InvScrId::endOfInventoryScreens;
+InvScrId  screenToOpenAfterDrop     = InvScrId::END;
 InvSlot*  equipSlotToOpenAfterDrop  = nullptr;
 int       browserPosToSetAfterDrop  = 0;
 
@@ -155,7 +155,7 @@ void swapItems(Item** item1, Item** item2) {
 } //namespace
 
 void init() {
-  screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
+  screenToOpenAfterDrop = InvScrId::END;
   equipSlotToOpenAfterDrop = nullptr;
   browserPosToSetAfterDrop = 0;
 }
@@ -171,7 +171,7 @@ void activateDefault(
 }
 
 void runSlotsScreen() {
-  screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
+  screenToOpenAfterDrop = InvScrId::END;
   Renderer::drawMapAndInterface();
 
   Inventory& inv                = Map::player->getInv();
@@ -249,7 +249,7 @@ void runSlotsScreen() {
 }
 
 bool runUseScreen() {
-  screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
+  screenToOpenAfterDrop = InvScrId::END;
   Renderer::drawMapAndInterface();
 
   Map::player->getInv().sortGeneralInventory();
@@ -299,7 +299,7 @@ bool runUseScreen() {
 }
 
 bool runEquipScreen(InvSlot* const slotToEquip) {
-  screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
+  screenToOpenAfterDrop = InvScrId::END;
   equipSlotToOpenAfterDrop = slotToEquip;
   Renderer::drawMapAndInterface();
 
@@ -354,7 +354,7 @@ bool runEquipScreen(InvSlot* const slotToEquip) {
 }
 
 void runBrowseInventory() {
-  screenToOpenAfterDrop = InvScrId::endOfInventoryScreens;
+  screenToOpenAfterDrop = InvScrId::END;
   Renderer::drawMapAndInterface();
 
   Map::player->getInv().sortGeneralInventory();

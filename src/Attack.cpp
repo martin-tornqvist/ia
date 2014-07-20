@@ -486,7 +486,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Weapon& wpn) {
                     clrMsgBad, true);
       }
 
-      SfxId hitSfx = SfxId::endOfSfxId;
+      SfxId hitSfx = SfxId::END;
       switch(hitSize) {
         case MeleeHitSize::small: {
           hitSfx = wpn.getData().meleeHitSmallSfx;
@@ -1028,7 +1028,7 @@ void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
       }
       const ItemDataT& itemData = wpn.getData();
       if(itemData.itemWeight > itemWeight_light && !itemData.isIntrinsic) {
-        Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes,
+        Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes,
                 data.curDefender->pos, nullptr, SndVol::low, AlertsMonsters::yes);
         SndEmit::emitSnd(snd);
       }

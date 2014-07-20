@@ -192,7 +192,7 @@ void Monster::hit_(int& dmg, const bool ALLOW_WOUNDS) {
 }
 
 void Monster::moveDir(Dir dir) {
-  assert(dir != Dir::endOfDirs);
+  assert(dir != Dir::END);
   assert(Utils::isPosInsideMap(pos));
 
   getPropHandler().changeMoveDir(pos, dir);

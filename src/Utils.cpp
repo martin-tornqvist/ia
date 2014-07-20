@@ -309,26 +309,26 @@ Dir getDir(const Pos& offset) {
     return offset.x == -1 ? Dir::upLeft :
            offset.x ==  0 ? Dir::up :
            offset.x ==  1 ? Dir::upRight :
-           Dir::endOfDirs;
+           Dir::END;
   }
 
   if(offset.y == 0) {
     return offset.x == -1 ? Dir::left :
            offset.x ==  0 ? Dir::center :
            offset.x ==  1 ? Dir::right :
-           Dir::endOfDirs;
+           Dir::END;
   }
   if(offset.y == 1) {
     return offset.x == -1 ? Dir::downLeft :
            offset.x ==  0 ? Dir::down :
            offset.x ==  1 ? Dir::downRight :
-           Dir::endOfDirs;
+           Dir::END;
   }
-  return Dir::endOfDirs;
+  return Dir::END;
 }
 
 Pos getOffset(const Dir dir) {
-  assert(dir != Dir::endOfDirs);
+  assert(dir != Dir::END);
 
   switch(dir) {
     case Dir::downLeft:   return Pos(-1, 1);
@@ -340,7 +340,7 @@ Pos getOffset(const Dir dir) {
     case Dir::upLeft:     return Pos(-1, -1);
     case Dir::up:         return Pos(0, -1);
     case Dir::upRight:    return Pos(1, -1);
-    case Dir::endOfDirs:  return Pos(0, 0);
+    case Dir::END:        return Pos(0, 0);
   }
   return Pos(0, 0);
 }

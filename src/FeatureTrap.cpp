@@ -26,12 +26,12 @@ using namespace std;
 Trap::Trap(const Pos& pos, const FeatureDataT& mimicFeature, TrapId type) :
   FeatureStatic(pos), mimicFeature_(&mimicFeature), isHidden_(true) {
 
-  assert(type != TrapId::endOfTraps);
+  assert(type != TrapId::END);
 
   assert(Map::cells[pos.x][pos.y].featureStatic->canHaveStaticFeature());
 
   if(type == TrapId::any) {
-    setSpecificTrapFromId(TrapId(Rnd::range(0, int(TrapId::endOfTraps) - 1)));
+    setSpecificTrapFromId(TrapId(Rnd::range(0, int(TrapId::END) - 1)));
   } else {
     setSpecificTrapFromId(type);
   }
@@ -492,7 +492,7 @@ void TrapGasConfusion::trigger(
   Clr clr = getClr();
 
   Explosion::runExplosionAt(
-    pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
     new PropConfused(propTurnsStd), &clr);
   TRACE_FUNC_END_VERBOSE;
 }
@@ -523,7 +523,7 @@ void TrapGasParalyzation::trigger(
 
   Clr clr = getClr();
   Explosion::runExplosionAt(
-    pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
     new PropParalyzed(propTurnsStd), &clr) ;
   TRACE_FUNC_END_VERBOSE;
 }
@@ -554,7 +554,7 @@ void TrapGasFear::trigger(Actor& actor,
 
   Clr clr = getClr();
   Explosion::runExplosionAt(
-    pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::endOfSfxId,
+    pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
     new PropTerrified(propTurnsStd), &clr);
   TRACE_FUNC_END_VERBOSE;
 }
@@ -734,7 +734,7 @@ void TrapAlarm::trigger(
     msgIgnoreRule = IgnoreMsgIfOriginSeen::no;
   }
 
-  Snd snd("I hear an alarm sounding!", SfxId::endOfSfxId, msgIgnoreRule, pos_,
+  Snd snd("I hear an alarm sounding!", SfxId::END, msgIgnoreRule, pos_,
           &actor, SndVol::high, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
   TRACE_FUNC_END_VERBOSE;

@@ -156,7 +156,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::medicalBag:          r = new MedicalBag(d);            break;
 
     case ItemId::empty:
-    case ItemId::endOfItemIds: return nullptr;
+    case ItemId::END: return nullptr;
   }
 
   if(!r->getData().isStackable && NR_ITEMS != 1) {
@@ -220,7 +220,7 @@ Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS,
                              const bool ALLOW_POTIONS) {
   vector<ItemId> itemBucket;
 
-  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
+  for(int i = 1; i < int(ItemId::END); ++i) {
     const ItemDataT* const d = ItemData::data[i];
     if(
       !d->isIntrinsic &&

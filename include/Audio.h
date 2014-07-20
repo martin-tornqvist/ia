@@ -53,7 +53,7 @@ enum class SfxId {
 
   musCthulhiana_Madness,
 
-  endOfSfxId
+  END
 };
 
 namespace Audio {

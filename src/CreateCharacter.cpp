@@ -147,7 +147,7 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
 
 void pickBg() {
   if(Config::isBotPlaying()) {
-    PlayerBon::pickBg(Bg(Rnd::range(0, int(Bg::endOfBgs) - 1)));
+    PlayerBon::pickBg(Bg(Rnd::range(0, int(Bg::END) - 1)));
   } else {
     vector<Bg> bgs;
     PlayerBon::getPickableBgs(bgs);
@@ -266,16 +266,16 @@ void drawPickTrait(
   const int Y0_PREREQS = 17;
   y = Y0_PREREQS;
   vector<Trait> traitPrereqs;
-  Bg bgPrereq = Bg::endOfBgs;
+  Bg bgPrereq = Bg::END;
   PlayerBon::getTraitPrereqs(markedTrait, traitPrereqs, bgPrereq);
-  if(!traitPrereqs.empty() || bgPrereq != Bg::endOfBgs) {
+  if(!traitPrereqs.empty() || bgPrereq != Bg::END) {
     Renderer::drawText("This trait had the following prerequisite(s):",
                        Panel::screen, Pos(X0_DESCR, y), clrWhite);
     y++;
 
     string prereqStr = "";
 
-    if(bgPrereq != Bg::endOfBgs) {
+    if(bgPrereq != Bg::END) {
       PlayerBon::getBgTitle(bgPrereq, prereqStr);
     }
 

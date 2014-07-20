@@ -41,7 +41,7 @@ enum class SpellId {
   miGoHypnosis,
   immolation,
 
-  endOfSpellId
+  END
 };
 
 enum class IntrSpellShock {mild, disturbing, severe};

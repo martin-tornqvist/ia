@@ -17,7 +17,7 @@ enum class DmgType {
   spirit,
   light,
   pure,
-  endOfDmgTypes
+  END
 };
 
 enum class DmgMethod {
@@ -30,6 +30,7 @@ enum class DmgMethod {
   shotgun,
   elemental,
   forced, //Guaranteed to detroy the feature (silently - no messages)
+  END
 };
 
 enum class ShockValue {
@@ -233,7 +234,7 @@ enum class Dir {
   upLeft     = 7,
   up         = 8,
   upRight    = 9,
-  endOfDirs
+  END
 };
 
 enum class ActorDeadState {alive, corpse, destroyed};

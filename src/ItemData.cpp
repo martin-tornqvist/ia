@@ -21,7 +21,7 @@ using namespace std;
 
 namespace ItemData {
 
-ItemDataT* data[int(ItemId::endOfItemIds)];
+ItemDataT* data[int(ItemId::END)];
 
 namespace {
 
@@ -53,7 +53,7 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->isIntrinsic = d->isMeleeWeapon = d->isRangedWeapon = false;
       d->isMissileWeapon = d->isShotgun = d->isMachineGun = false;
       d->isAmmo = d->isAmmoClip = d->isDevice = d->isMedicalBag = false;
-      d->spellCastFromScroll = SpellId::endOfSpellId;
+      d->spellCastFromScroll = SpellId::END;
       d->ammoContainedInClip = 0;
       d->meleeHitChanceMod = 0;
       d->propAppliedOnMelee = nullptr;
@@ -75,13 +75,13 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->rangedSndVol = SndVol::low;
       d->rangedMakesRicochetSound = false;
       d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
-      d->landOnHardSurfaceSfx = SfxId::endOfSfxId;
-      d->rangedAttackSfx = SfxId::endOfSfxId;
-      d->meleeHitSmallSfx = SfxId::endOfSfxId;
-      d->meleeHitMediumSfx = SfxId::endOfSfxId;
-      d->meleeHitHardSfx = SfxId::endOfSfxId;
-      d->meleeMissSfx = SfxId::endOfSfxId;
-      d->reloadSfx = SfxId::endOfSfxId;
+      d->landOnHardSurfaceSfx = SfxId::END;
+      d->rangedAttackSfx = SfxId::END;
+      d->meleeHitSmallSfx = SfxId::END;
+      d->meleeHitMediumSfx = SfxId::END;
+      d->meleeHitHardSfx = SfxId::END;
+      d->meleeMissSfx = SfxId::END;
+      d->reloadSfx = SfxId::END;
       d->propAppliedOnRanged = nullptr;
       d->isExplosive = false;
       d->armorData = ArmorData();
@@ -1321,12 +1321,12 @@ void init() {
 }
 
 void cleanup() {
-  for(size_t i = 1; i < int(ItemId::endOfItemIds); ++i) delete data[i];
+  for(size_t i = 1; i < int(ItemId::END); ++i) delete data[i];
 }
 
 
 void storeToSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
+  for(int i = 1; i < int(ItemId::END); ++i) {
     lines.push_back(data[i]->isIdentified ? "1" : "0");
 
     if(data[i]->isScroll) {
@@ -1336,7 +1336,7 @@ void storeToSaveLines(vector<string>& lines) {
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
+  for(int i = 1; i < int(ItemId::END); ++i) {
     data[i]->isIdentified = lines.front() == "0" ? false : true;
     lines.erase(begin(lines));
 

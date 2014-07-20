@@ -8,12 +8,10 @@ enum class InvScrId {
   equip,
   use,
   backpack,
-  endOfInventoryScreens
+  END
 };
 
-enum class ConsumeItem {
-  yes, no
-};
+enum class ConsumeItem {yes, no};
 
 namespace InvHandling {
 

@@ -163,7 +163,7 @@ enum class ItemId {
 
   medicalBag,
 
-  endOfItemIds
+  END
 };
 
 struct ArmorData {
@@ -248,7 +248,7 @@ enum class ItemRefType {plain, a, plural};
 
 namespace ItemData {
 
-extern ItemDataT* data[int(ItemId::endOfItemIds)];
+extern ItemDataT* data[int(ItemId::END)];
 
 void init();
 void cleanup();

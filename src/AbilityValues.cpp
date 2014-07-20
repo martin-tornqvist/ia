@@ -64,7 +64,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
       } break;
 
       case AbilityId::empty:
-      case AbilityId::endOfAbilityId: {} break;
+      case AbilityId::END: {} break;
     }
 
     if(abilityId == AbilityId::searching) {
@@ -80,7 +80,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
 }
 
 void AbilityVals::reset() {
-  for(int i = 0; i < int(AbilityId::endOfAbilityId); ++i) {
+  for(int i = 0; i < int(AbilityId::END); ++i) {
     abilityList[i] = 0;
   }
 }

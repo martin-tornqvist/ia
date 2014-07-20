@@ -18,7 +18,7 @@ enum class RoomType {
   monster,
   flooded,
   muddy,
-  endOfStdRooms,
+  END_OF_STD_ROOMS,
 
   //Exceptional areas
   //Note: Keep these after the standard rooms in this list! The room list gets
@@ -32,15 +32,12 @@ enum class RoomType {
 
 class Room {
 public:
-  Room(Rect r, RoomType type = RoomType::plain) :
-    descr_(""), r_(r), type_(type) {}
+  Room(Rect r, RoomType type = RoomType::plain) : descr_(""), r_(r), type_(type) {}
 
   virtual ~Room() {}
 
   virtual void onPreConnect(bool doorProposals[MAP_W][MAP_H]);
-  virtual void onPostConnect(bool doorProposals[MAP_W][MAP_H]) {
-    (void)doorProposals;
-  }
+  virtual void onPostConnect(bool doorProposals[MAP_W][MAP_H]) {(void)doorProposals;}
 
   Pos getCenterPos() const {return (r_.p1 + r_.p0) / 2;}
 
@@ -55,8 +52,7 @@ private:
 
 class RiverRoom: public Room {
 public:
-  RiverRoom(Rect r, HorizontalVertical dir) :
-    Room(r, RoomType::river), dir_(dir) {}
+  RiverRoom(Rect r, HorizontalVertical dir) : Room(r, RoomType::river), dir_(dir) {}
 
   void onPreConnect(bool doorProposals[MAP_W][MAP_H]) override;
 

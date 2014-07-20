@@ -39,7 +39,7 @@ const string Scroll::getRealTypeName() {
     case SpellId::cloudMinds:         return "";
     case SpellId::miGoHypnosis:       return "";
     case SpellId::immolation:         return "";
-    case SpellId::endOfSpellId: {} break;
+    case SpellId::END: {} break;
   }
   assert(false && "No spell found for scroll");
   return "";
@@ -201,7 +201,7 @@ void setFalseScrollName(ItemDataT& d) {
 }
 
 void storeToSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
+  for(int i = 1; i < int(ItemId::END); ++i) {
     if(ItemData::data[i]->isScroll) {
       lines.push_back(ItemData::data[i]->baseName.name);
       lines.push_back(ItemData::data[i]->baseName.name_plural);
@@ -211,7 +211,7 @@ void storeToSaveLines(vector<string>& lines) {
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::endOfItemIds); ++i) {
+  for(int i = 1; i < int(ItemId::END); ++i) {
     if(ItemData::data[i]->isScroll) {
       ItemData::data[i]->baseName.name        = lines.front();
       lines.erase(begin(lines));

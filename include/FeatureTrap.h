@@ -21,7 +21,7 @@ enum class TrapId {
   spiderWeb,
   teleport,
   summonMonster,
-  endOfTraps,
+  END,
   any
 };
 

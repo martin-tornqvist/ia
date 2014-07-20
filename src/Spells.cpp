@@ -31,7 +31,7 @@ namespace SpellHandling {
 Spell* getRandomSpellForMonster() {
 
   vector<SpellId> bucket;
-  for(int i = 0; i < int(SpellId::endOfSpellId); ++i) {
+  for(int i = 0; i < int(SpellId::END); ++i) {
     Spell* const spell = getSpellFromId(SpellId(i));
     if(spell->isAvailForAllMonsters()) {
       bucket.push_back(SpellId(i));
@@ -67,7 +67,7 @@ Spell* getSpellFromId(const SpellId spellId) {
     case SpellId::miGoHypnosis:       return new SpellMiGoHypnosis; break;
     case SpellId::immolation:         return new SpellImmolation; break;
     case SpellId::elemRes:            return new SpellElemRes; break;
-    case SpellId::endOfSpellId: {} break;
+    case SpellId::END: {} break;
   }
   assert(false && "No spell found for ID");
   return nullptr;
@@ -237,7 +237,7 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
 
   target->hit(DMG, DmgType::physical, true);
 
-  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, target->pos,
+  Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, target->pos,
           nullptr, SndVol::low, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 
@@ -286,7 +286,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
 
         actor->hit(DMG, DmgType::physical, false);
 
-        Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor->pos,
+        Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, actor->pos,
                 nullptr, SndVol::high, AlertsMonsters::yes);
         SndEmit::emitSnd(snd);
       }
@@ -299,7 +299,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     Map::player->getPropHandler().tryApplyProp(
       new PropParalyzed(propTurnsSpecific, 1));
     Map::player->hit(Rnd::range(dmgRange), DmgType::physical, false);
-    Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, Map::player->pos,
+    Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, Map::player->pos,
             nullptr, SndVol::high, AlertsMonsters::yes);
     SndEmit::emitSnd(snd);
   }
@@ -362,7 +362,7 @@ SpellCastRetData SpellMayhem::cast_(
     }
   }
 
-  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, Map::player->pos,
+  Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, Map::player->pos,
           nullptr, SndVol::high, AlertsMonsters::yes);
   SndEmit::emitSnd(snd);
 

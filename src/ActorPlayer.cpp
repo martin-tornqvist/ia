@@ -55,8 +55,8 @@ Player::Player() :
 void Player::mkStartItems() {
   data_->abilityVals.reset();
 
-  for(int i = 0; i < int(Phobia::endOfPhobias); ++i)        {phobias[i] = false;}
-  for(int i = 0; i < int(Obsession::endOfObsessions); ++i)  {obsessions[i] = false;}
+  for(int i = 0; i < int(Phobia::END); ++i)        {phobias[i] = false;}
+  for(int i = 0; i < int(Obsession::END); ++i)  {obsessions[i] = false;}
 
   int NR_CARTRIDGES = Rnd::range(1, 2);
   int NR_DYNAMITE   = Rnd::range(2, 3);
@@ -117,14 +117,14 @@ void Player::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(molotovFuseTurns));
   lines.push_back(toStr(flareFuseTurns));
 
-  for(int i = 0; i < int(AbilityId::endOfAbilityId); ++i) {
+  for(int i = 0; i < int(AbilityId::END); ++i) {
     lines.push_back(toStr(data_->abilityVals.getRawVal(AbilityId(i))));
   }
 
-  for(int i = 0; i < int(Phobia::endOfPhobias); ++i) {
+  for(int i = 0; i < int(Phobia::END); ++i) {
     lines.push_back(phobias[i] == 0 ? "0" : "1");
   }
-  for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
+  for(int i = 0; i < int(Obsession::END); ++i) {
     lines.push_back(obsessions[i] == 0 ? "0" : "1");
   }
 }
@@ -166,16 +166,16 @@ void Player::setupFromSaveLines(vector<string>& lines) {
   flareFuseTurns = toInt(lines.front());
   lines.erase(begin(lines));
 
-  for(int i = 0; i < int(AbilityId::endOfAbilityId); ++i) {
+  for(int i = 0; i < int(AbilityId::END); ++i) {
     data_->abilityVals.setVal(AbilityId(i), toInt(lines.front()));
     lines.erase(begin(lines));
   }
 
-  for(int i = 0; i < int(Phobia::endOfPhobias); ++i) {
+  for(int i = 0; i < int(Phobia::END); ++i) {
     phobias[i] = lines.front() == "0" ? false : true;
     lines.erase(begin(lines));
   }
-  for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
+  for(int i = 0; i < int(Obsession::END); ++i) {
     obsessions[i] = lines.front() == "0" ? false : true;
     lines.erase(begin(lines));
   }
@@ -231,7 +231,7 @@ int Player::getShockResistance(const ShockSrc shockSrc) const {
     case ShockSrc::seeMonster:
     case ShockSrc::time:
     case ShockSrc::misc:
-    case ShockSrc::endOfShockSrc: {} break;
+    case ShockSrc::END: {} break;
   }
 
   return getConstrInRange(0, res, 100);
@@ -261,7 +261,7 @@ void Player::restoreShock(const int amountRestored,
                           const bool IS_TEMP_SHOCK_RESTORED) {
   // If an obsession is active, only restore to a certain min level
   bool isObsessionActive = 0;
-  for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
+  for(int i = 0; i < int(Obsession::END); ++i) {
     if(obsessions[i]) {
       isObsessionActive = true;
       break;
@@ -318,7 +318,7 @@ void Player::incrInsanity() {
               msg += "I scream in terror.";
             }
             Popup::showMsg(msg, true, "Screaming!", SfxId::insanityRise);
-            Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
+            Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
                     SndVol::high, AlertsMonsters::yes);
             SndEmit::emitSnd(snd);
             return;
@@ -333,7 +333,7 @@ void Player::incrInsanity() {
             const string phrase = Cultist::getCultistPhrase();
             Log::addMsg(playerName + ": " + phrase);
           }
-          Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
+          Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMonsters::yes);
           SndEmit::emitSnd(snd);
           return;
@@ -349,7 +349,7 @@ void Player::incrInsanity() {
         case 4: {
           msg += "I laugh nervously.";
           Popup::showMsg(msg, true, "HAHAHA!", SfxId::insanityRise);
-          Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, pos, this,
+          Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMonsters::yes);
           SndEmit::emitSnd(snd);
           return;
@@ -364,7 +364,7 @@ void Player::incrInsanity() {
             if(insanity_ > 5) {
               //There is a limit to the number of phobias you can have
               int phobiasActive = 0;
-              for(int i = 0; i < int(Phobia::endOfPhobias); ++i) {
+              for(int i = 0; i < int(Phobia::END); ++i) {
                 if(phobias[i]) {phobiasActive++;}
               }
               if(phobiasActive < 2) {
@@ -441,12 +441,12 @@ void Player::incrInsanity() {
         case 6: {
           if(insanity_ > 20) {
             int obsessionsActive = 0;
-            for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
+            for(int i = 0; i < int(Obsession::END); ++i) {
               if(obsessions[i]) {obsessionsActive++;}
             }
             if(obsessionsActive == 0) {
               const Obsession obsession =
-                (Obsession)(Rnd::range(0, int(Obsession::endOfObsessions) - 1));
+                (Obsession)(Rnd::range(0, int(Obsession::END) - 1));
               switch(obsession) {
                 case Obsession::masochism: {
                   msg +=
@@ -632,7 +632,7 @@ void Player::onActorTurn() {
   getSpottedEnemies(spottedEnemies);
   if(spottedEnemies.empty()) {
     const InvScrId invScreen = InvHandling::screenToOpenAfterDrop;
-    if(invScreen != InvScrId::endOfInventoryScreens) {
+    if(invScreen != InvScrId::END) {
       switch(invScreen) {
         case InvScrId::backpack: {
           InvHandling::runBrowseInventory();
@@ -650,12 +650,12 @@ void Player::onActorTurn() {
           InvHandling::runSlotsScreen();
         } break;
 
-        case InvScrId::endOfInventoryScreens: {} break;
+        case InvScrId::END: {} break;
       }
       return;
     }
   } else {
-    InvHandling::screenToOpenAfterDrop    = InvScrId::endOfInventoryScreens;
+    InvHandling::screenToOpenAfterDrop    = InvScrId::END;
     InvHandling::browserPosToSetAfterDrop = 0;
   }
 
@@ -714,7 +714,7 @@ void Player::onStandardTurn() {
   if(!activeMedicalBag) {testPhobias();}
 
   //If obsessions are active, raise shock to a minimum level
-  for(int i = 0; i < int(Obsession::endOfObsessions); ++i) {
+  for(int i = 0; i < int(Obsession::END); ++i) {
     if(obsessions[i]) {
       shock_ = max(double(MIN_SHOCK_WHEN_OBSESSION), shock_);
       break;
@@ -909,7 +909,7 @@ void Player::onStandardTurn() {
 void Player::interruptActions() {
   Renderer::drawMapAndInterface();
 
-  InvHandling::screenToOpenAfterDrop    = InvScrId::endOfInventoryScreens;
+  InvHandling::screenToOpenAfterDrop    = InvScrId::END;
   InvHandling::browserPosToSetAfterDrop = 0;
 
   //Abort searching

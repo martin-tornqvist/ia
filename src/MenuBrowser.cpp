@@ -47,7 +47,7 @@ void MenuBrowser::navigate(const Dir dir) {
     case Dir::downLeft:
     case Dir::downRight:
     case Dir::center:
-    case Dir::endOfDirs: {} break;
+    case Dir::END: {} break;
   }
 }
 

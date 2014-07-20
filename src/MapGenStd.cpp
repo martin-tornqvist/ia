@@ -127,7 +127,7 @@ void connectRooms() {
 
     Room* room0 = Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
 
-    if(int(room0->type_) >= int(RoomType::endOfStdRooms)) {continue;}
+    if(int(room0->type_) >= int(RoomType::END_OF_STD_ROOMS)) {continue;}
 
 //    const auto NR_CON_ROOM0 = room0->roomsConTo_.size();
 //    if(NR_CON_ROOM0 >= NR_CON_ALLOWED) {
@@ -139,7 +139,7 @@ void connectRooms() {
 
     TRACE_VERBOSE << "Finding second room to connect to" << endl;
     Room* room1 = room0;
-    while(room1 == room0 || int(room1->type_) >= int(RoomType::endOfStdRooms)) {
+    while(room1 == room0 || int(room1->type_) >= int(RoomType::END_OF_STD_ROOMS)) {
       room1 = Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
     }
 
@@ -168,7 +168,7 @@ void connectRooms() {
         if(roomHere && roomHere != room0 && roomHere != room1) {
           const RoomType roomType = roomHere->type_;
           if(
-            int(roomType) < int(RoomType::endOfStdRooms) ||
+            int(roomType) < int(RoomType::END_OF_STD_ROOMS) ||
             roomType == RoomType::corridorJunction) {
             isOtherRoomInWay = true;
             break;

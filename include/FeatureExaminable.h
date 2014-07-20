@@ -27,14 +27,14 @@ enum class TombTrait {
   stench,                 //Fumes, Ooze-type monster
   auraOfUnrest,           //Ghost-type monster
   forebodingCarvedSigns,  //Cursed
-  endOfTombTraits
+  END
 };
 
 enum class TombAppearance {
   common,
   ornate,     //Good items
   marvelous,  //Excellent items
-  endOfTombAppearance
+  END
 };
 
 class Tomb: public FeatureStatic {
@@ -66,7 +66,7 @@ private:
   TombTrait trait_;
 };
 
-enum class ChestMatl {wood, iron, endOfChestMatl};
+enum class ChestMatl {wood, iron, END};
 
 class Chest: public FeatureStatic {
 public:
@@ -75,9 +75,6 @@ public:
   ~Chest() {}
 
   FeatureId getId() const override {return FeatureId::chest;}
-
-  void hit_(const DmgType dmgType, const DmgMethod dmgMethod,
-            Actor* const actor) override;
 
   void bump(Actor& actorBumping)  override;
   bool open()                     override;
@@ -142,7 +139,7 @@ enum class FountainType {
   rElec,
   rFear,
   rConfusion,
-  endOfFountainTypes
+  END
 };
 
 enum class FountainMatl {stone, gold};

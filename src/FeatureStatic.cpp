@@ -17,6 +17,15 @@
 using namespace std;
 
 //------------------------------------------------------------------- STATIC FEATURE
+FeatureStatic::FeatureStatic(Pos pos) :
+  Feature(pos), goreTile_(TileId::empty), goreGlyph_(0), burnState_(BurnState::none) {
+  for(int dmgType = 0; dmgType < int(DmgType::END); ++dmgType) {
+    for(int dmgMethod = 0; dmgMethod < int(DmgMethod::END); ++dmgMethod) {
+      onHit[dmgType][dmgMethod] = [](Actor * const actor) {(void)actor;};
+    }
+  }
+}
+
 void FeatureStatic::examine() {
   Log::addMsg("I find nothing specific there to examine or use.");
 }
@@ -55,25 +64,12 @@ void FeatureStatic::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor*
     }
   }
 
-  hit_(dmgType, dmgMethod, actor);
+  onHit[int(dmgType)][int(dmgMethod)](actor);
 
   if(actor) {GameTime::actorDidAct();}
 
   Map::player->updateFov();
   Renderer::drawMapAndInterface();
-}
-
-void FeatureStatic::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
-  (void)dmgType; (void)dmgMethod;
-
-  const AlertsMonsters alertsMonsters = actor == Map::player ?
-                                        AlertsMonsters::yes :
-                                        AlertsMonsters::no;
-
-  Snd snd("", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes, actor ? actor->pos : pos_,
-          actor, SndVol::low, alertsMonsters);
-
-  SndEmit::emitSnd(snd);
 }
 
 void FeatureStatic::tryPutGore() {
@@ -131,44 +127,59 @@ void FeatureStatic::clearGore() {
 }
 
 //------------------------------------------------------------------- WALL
-void Wall::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
-  (void)actor;
+Wall::Wall(Pos pos) : FeatureStatic(pos), type_(WallType::cmn), isMossy_(false) {
 
-  auto destrPhys = [&]() {
-    //First, destroy any cardinally adjacent doors
-    for(const Pos& d : DirUtils::cardinalList) {
-      const Pos p(pos_ + d);
-      if(Utils::isPosInsideMap(p)) {
-        if(Map::cells[p.x][p.y].featureStatic->getId() == FeatureId::door) {
-          Map::put(new RubbleLow(p));
-        }
+  TODO //Really ugly repeated code, fix it
+
+  onHit[int(DmgType::physical)][int(DmgMethod::forced)] = [&](Actor * const actor) {
+    (void)actor;
+
+    destrAdjDoors();
+
+    const Pos pos(pos_);
+    Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
+    if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
+  };
+
+  onHit[int(DmgType::physical)][int(DmgMethod::explosion)] = [&](Actor * const actor) {
+    if(Rnd::fraction(3, 4)) {
+
+      destrAdjDoors();
+
+      if(Rnd::coinToss()) {
+        const Pos pos(pos_);
+        Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
+        if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
+      } else {
+        Map::put(new RubbleHigh(pos_));
       }
-    }
-
-    if(Rnd::coinToss() || dmgMethod == DmgMethod::forced) {
-      const Pos pos(pos_);
-
-      Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
-
-      if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
-
-    } else {
-      Map::put(new RubbleHigh(pos_));
     }
   };
 
-  if(dmgMethod == DmgMethod::forced) {destrPhys(); return;}
+  onHit[int(DmgType::physical)][int(DmgMethod::bluntHeavy)] = [&](Actor * const actor) {
+    if(Rnd::fraction(1, 4)) {
 
-  switch(dmgType) {
-    case DmgType::physical: {
-      switch(dmgMethod) {
-        case DmgMethod::explosion:  {if(Rnd::fraction(3, 4)) {destrPhys();}} break;
-        case DmgMethod::bluntHeavy: {if(Rnd::fraction(1, 4)) {destrPhys();}} break;
-        default: {} break;
+      destrAdjDoors();
+
+      if(Rnd::coinToss()) {
+        const Pos pos(pos_);
+        Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
+        if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
+      } else {
+        Map::put(new RubbleHigh(pos_));
       }
-    } break;
+    }
+  };
+}
 
-    default: {} break;
+void Wall::destrAdjDoors() const {
+  for(const Pos& d : DirUtils::cardinalList) {
+    const Pos p(pos_ + d);
+    if(Utils::isPosInsideMap(p)) {
+      if(Map::cells[p.x][p.y].featureStatic->getId() == FeatureId::door) {
+        Map::put(new RubbleLow(p));
+      }
+    }
   }
 }
 
@@ -304,7 +315,7 @@ void Statue::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor
     if(Rnd::coinToss()) {
       if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {Log::addMsg("It topples over.");}
 
-      Snd snd("I hear a crash.", SfxId::endOfSfxId, IgnoreMsgIfOriginSeen::yes,
+      Snd snd("I hear a crash.", SfxId::END, IgnoreMsgIfOriginSeen::yes,
               pos_, actor, SndVol::low, alertsMonsters);
       SndEmit::emitSnd(snd);
 
@@ -423,6 +434,13 @@ void Lever::pull() {
 }
 
 //------------------------------------------------------------------- GRASS
+Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
+  onHit[int(DmgType::fire)][int(DmgMethod::elemental)] = [&](Actor * const actor) {
+    (void)actor;
+    burnState_ = BurnState::burning;
+  };
+}
+
 void Grass::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
   (void)dmgMethod; (void)actor;
 

@@ -93,9 +93,9 @@ int getMonsterTotXpWorth(const ActorDataT& d) {
   const double K          = 0.6;
   const double HP         = d.hp;
   const double SPEED      = double(d.speed);
-  const double SPEED_MAX  = double(ActorSpeed::endOfActorSpeed);
+  const double SPEED_MAX  = double(ActorSpeed::END);
   const double SHOCK      = double(d.monsterShockLvl);
-  const double SHOCK_MAX  = double(MonsterShockLvl::endOfMonsterShockLvl);
+  const double SHOCK_MAX  = double(MonsterShockLvl::END);
 
   const double SPEED_FACTOR   = (1.0 + ((SPEED / SPEED_MAX) * 0.50));
   const double SHOCK_FACTOR   = (1.0 + ((SHOCK / SHOCK_MAX) * 0.75));
@@ -118,9 +118,7 @@ void playerGainXp(const int XP_GAINED) {
 }
 
 int getXpToNextLvl() {
-  if(clvl_ == PLAYER_MAX_CLVL) {
-    return -1;
-  }
+  if(clvl_ == PLAYER_MAX_CLVL) {return -1;}
   return xpForLvl_[clvl_ + 1] - xp_;
 }
 

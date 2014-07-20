@@ -49,7 +49,7 @@ enum class FeatureId {
   smoke,
   proxEventWallCrumble,
 
-  endOfFeatureId
+  END
 };
 
 enum Matl {empty, soft, hard, fluid};

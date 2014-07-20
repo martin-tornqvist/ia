@@ -492,7 +492,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   if(this != Map::player) {
     if(isHumanoid()) {
       Snd snd(
-        "I hear agonised screaming.", SfxId::endOfSfxId,
+        "I hear agonised screaming.", SfxId::END,
         IgnoreMsgIfOriginSeen::yes, pos, this, SndVol::low,
         AlertsMonsters::no);
       SndEmit::emitSnd(snd);

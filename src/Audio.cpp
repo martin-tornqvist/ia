@@ -84,7 +84,7 @@ SfxId getAmbSfxSuitableForDlvl() {
     sfxBucket.push_back(SfxId::amb037);
   }
 
-  if(sfxBucket.empty()) {return SfxId::endOfSfxId;}
+  if(sfxBucket.empty()) {return SfxId::END;}
 
   const int ELEMENT = Rnd::range(0, sfxBucket.size() - 1);
   return sfxBucket.at(ELEMENT);
@@ -114,7 +114,7 @@ void init() {
 
   if(Config::isAudioEnabled()) {
 
-    audioChunks.resize(int(SfxId::endOfSfxId));
+    audioChunks.resize(int(SfxId::END));
 
     //Monster sounds
     loadAudioFile(SfxId::dogSnarl,                "sfx_dogSnarl.ogg");
@@ -163,7 +163,7 @@ void init() {
 
     int a = 1;
     const int FIRST = int(SfxId::startOfAmbSfx) + 1;
-    const int LAST  = int(SfxId::endOfAmbSfx)   - 1;
+    const int LAST  = int(SfxId::END)   - 1;
     for(int i = FIRST; i <= LAST; ++i) {
       const string indexStr = toStr(a);
       const string indexStrPadded =
@@ -191,9 +191,9 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
 
   if(
     !audioChunks.empty()          &&
-    sfx != SfxId::endOfSfxId      &&
+    sfx != SfxId::END      &&
     sfx != SfxId::startOfAmbSfx   &&
-    sfx != SfxId::endOfAmbSfx     &&
+    sfx != SfxId::END     &&
     !Config::isBotPlaying()) {
 
     const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
@@ -217,7 +217,7 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
 }
 
 void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT) {
-  if(!audioChunks.empty() && dir != Dir::endOfDirs) {
+  if(!audioChunks.empty() && dir != Dir::END) {
     //The distance value is scaled down to avoid too much volume degradation
     const int VOL_PERCENT_TOT = 100 - ((DISTANCE_PERCENT * 2) / 3);
 
@@ -232,7 +232,7 @@ void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT) {
       case Dir::upRight:    volPercentL = 25;  break;
       case Dir::downRight:  volPercentL = 25;  break;
       case Dir::right:      volPercentL = 15;  break;
-      case Dir::endOfDirs:  volPercentL = 50;  break;
+      case Dir::END:  volPercentL = 50;  break;
     }
     play(sfx, VOL_PERCENT_TOT, volPercentL);
   }

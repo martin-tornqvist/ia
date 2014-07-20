@@ -54,9 +54,7 @@ enum MonsterGroupSize {
   monsterGroupSizeSwarm
 };
 
-enum class ActorSpeed {
-  sluggish, slow, normal, fast, fastest, endOfActorSpeed
-};
+enum class ActorSpeed {sluggish, slow, normal, fast, fastest, END};
 
 enum ActorErraticFreq {
   actorErratic_never    = 0,
@@ -72,9 +70,7 @@ enum ActorSize {
   actorSize_giant
 };
 
-enum class MonsterShockLvl {
-  none, unsettling, scary, terrifying, mindShattering, endOfMonsterShockLvl,
-};
+enum class MonsterShockLvl {none, unsettling, scary, terrifying, mindShattering, END};
 
 enum class AiId {
   looks,
@@ -84,7 +80,7 @@ enum class AiId {
   movesTowardTargetWhenVision,
   movesTowardLair,
   movesTowardLeader,
-  endOfAi
+  END
 };
 
 struct ActorDataT {
@@ -104,7 +100,7 @@ struct ActorDataT {
   AbilityVals abilityVals;
   bool intrProps[endOfPropIds];
   int rangedCooldownTurns, spellCooldownTurns;
-  bool ai[int(AiId::endOfAi)];
+  bool ai[int(AiId::END)];
   int nrTurnsAwarePlayer;
   int spawnMinDLVL, spawnMaxDLVL;
   ActorSize actorSize;

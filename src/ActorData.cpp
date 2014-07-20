@@ -25,7 +25,7 @@ void ActorDataT::reset() {
   for(int i = 0; i < endOfPropIds; ++i) {intrProps[i] = false;}
   rangedCooldownTurns = spellCooldownTurns = 0;
   abilityVals.reset();
-  for(int i = 0; i < int(AiId::endOfAi); ++i) {ai[i] = false;}
+  for(int i = 0; i < int(AiId::END); ++i) {ai[i] = false;}
   nrTurnsAwarePlayer = 0;
   spawnMinDLVL = spawnMaxDLVL = 999;
   actorSize = actorSize_humanoid;
@@ -49,8 +49,8 @@ void ActorDataT::reset() {
   descr = "";
   aggroTextMonsterSeen = "";
   aggroTextMonsterHidden = "";
-  aggroSfxMonsterSeen = SfxId::endOfSfxId;
-  aggroSfxMonsterHidden = SfxId::endOfSfxId;
+  aggroSfxMonsterSeen = SfxId::END;
+  aggroSfxMonsterHidden = SfxId::END;
 }
 
 namespace ActorData {
@@ -2045,8 +2045,8 @@ void initDataList() {
             "burrowers, and live for more than a thousand years.";
   d.aggroTextMonsterSeen = "";
   d.aggroTextMonsterHidden = "";
-  d.aggroSfxMonsterSeen = SfxId::endOfSfxId;
-  d.aggroSfxMonsterHidden = SfxId::endOfSfxId;
+  d.aggroSfxMonsterSeen = SfxId::END;
+  d.aggroSfxMonsterHidden = SfxId::END;
   d.canBleed = true;
   d.canBeSummoned = false;
   d.monsterShockLvl = MonsterShockLvl::mindShattering;
