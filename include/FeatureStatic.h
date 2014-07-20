@@ -32,14 +32,18 @@ public:
   virtual void examine();
 
 protected:
-  virtual void triggerTrap(Actor& actor) {(void)actor;}
+  void setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
+                    const std::function<void (Actor* const actor)>& effect);
 
-  std::function<void(Actor* const actor)>onHit[int(DmgType::END)][int(DmgMethod::END)];
+  virtual void triggerTrap(Actor& actor) {(void)actor;}
 
   TileId goreTile_;
   char goreGlyph_;
 
   BurnState burnState_;
+
+private:
+  std::function<void(Actor* const actor)>onHit[int(DmgType::END)][int(DmgMethod::END)];
 };
 
 enum class FloorType {cmn, cave};
@@ -81,7 +85,7 @@ enum class BushType {cmn, withered};
 
 class Bush: public FeatureStatic {
 public:
-  Bush(Pos pos) : FeatureStatic(pos), type_(BushType::cmn) {}
+  Bush(Pos pos);
   Bush() = delete;
   ~Bush() {}
 
@@ -126,6 +130,7 @@ public:
 
 private:
   void destrAdjDoors() const;
+  void mkLowRubbleAndRocks(); //Note: Will destroy object
 };
 
 class RubbleLow: public FeatureStatic {
@@ -139,11 +144,14 @@ public:
 
 class RubbleHigh: public FeatureStatic {
 public:
-  RubbleHigh(Pos pos) : FeatureStatic(pos) {}
+  RubbleHigh(Pos pos);
   RubbleHigh() = delete;
   ~RubbleHigh() {}
 
   FeatureId getId() const override {return FeatureId::rubbleHigh;}
+
+private:
+  void mkLowRubbleAndRocks(); //Note: Will destroy object
 };
 
 class GraveStone: public FeatureStatic {
@@ -167,15 +175,14 @@ private:
 class ChurchBench: public FeatureStatic {
 public:
   ChurchBench(Pos pos) : FeatureStatic(pos) {}
-  ChurchBench() = delete;
-  ~ChurchBench() {}
+  ChurchBench() = delete;  ~ChurchBench() {}
 
   FeatureId getId() const override {return FeatureId::churchBench;}
 };
 
 class Statue: public FeatureStatic {
 public:
-  Statue(Pos pos) : FeatureStatic(pos) {}
+  Statue(Pos pos);
   Statue() = delete;
   ~Statue() {}
 
@@ -293,7 +300,7 @@ public:
 
 class Tree: public FeatureStatic {
 public:
-  Tree(Pos pos) : FeatureStatic(pos) {}
+  Tree(Pos pos);
   Tree() = delete;
   ~Tree() {}
 

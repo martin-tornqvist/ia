@@ -63,12 +63,14 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
 
   type_ = DoorType::wood;
 
-  onHit[int(DmgType::physical)][int(DmgMethod::forced)] = [&](Actor * const actor) {
+  //---------------------------------------------------------------------- FORCED
+  setHitEffect(DmgType::physical, DmgMethod::forced, [&](Actor * const actor) {
     (void)actor;
     Map::put(new RubbleLow(pos_));
-  };
+  });
 
-  onHit[int(DmgType::physical)][int(DmgMethod::shotgun)] = [&](Actor * const actor) {
+  //---------------------------------------------------------------------- SHOTGUN
+  setHitEffect(DmgType::physical, DmgMethod::shotgun, [&](Actor * const actor) {
     (void)actor;
     if(!isOpen_) {
       switch(type_) {
@@ -85,14 +87,16 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
         case DoorType::metal: {} break;
       }
     }
-  };
+  });
 
-  onHit[int(DmgType::physical)][int(DmgMethod::explosion)] = [&](Actor * const actor) {
+  //---------------------------------------------------------------------- EXPLOSION
+  setHitEffect(DmgType::physical, DmgMethod::explosion, [&](Actor * const actor) {
     (void)actor;
     //TODO
-  };
+  });
 
-  onHit[int(DmgType::physical)][int(DmgMethod::bluntHeavy)] = [&](Actor * const actor) {
+  //---------------------------------------------------------------------- HEAVY BLUNT
+  setHitEffect(DmgType::physical, DmgMethod::bluntHeavy, [&](Actor * const actor) {
     assert(actor);
     switch(type_) {
       case DoorType::wood: {
@@ -113,9 +117,10 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
 
       case DoorType::metal: {} break;
     }
-  };
+  });
 
-  onHit[int(DmgType::physical)][int(DmgMethod::kick)] = [&](Actor * const actor) {
+  //---------------------------------------------------------------------- KICK
+  setHitEffect(DmgType::physical, DmgMethod::kick, [&](Actor * const actor) {
     assert(actor);
 
     const bool IS_PLAYER    = actor == Map::player;
@@ -184,7 +189,7 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
         }
       } break;
     }
-  };
+  });
 
   //-------------------------------------- OLD
 

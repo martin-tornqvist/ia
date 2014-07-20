@@ -26,6 +26,11 @@ FeatureStatic::FeatureStatic(Pos pos) :
   }
 }
 
+void FeatureStatic::setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
+                                 const function<void (Actor* const actor)>& effect) {
+  onHit[int(dmgType)][int(dmgMethod)] = effect;
+}
+
 void FeatureStatic::examine() {
   Log::addMsg("I find nothing specific there to examine or use.");
 }
@@ -129,47 +134,41 @@ void FeatureStatic::clearGore() {
 //------------------------------------------------------------------- WALL
 Wall::Wall(Pos pos) : FeatureStatic(pos), type_(WallType::cmn), isMossy_(false) {
 
-  TODO //Really ugly repeated code, fix it
+  setHitEffect(DmgType::physical, DmgMethod::forced, [&](Actor * const actor) {
+    (void)actor;
+    destrAdjDoors();
+    mkLowRubbleAndRocks();
+  });
 
-  onHit[int(DmgType::physical)][int(DmgMethod::forced)] = [&](Actor * const actor) {
+  setHitEffect(DmgType::physical, DmgMethod::explosion, [&](Actor * const actor) {
     (void)actor;
 
-    destrAdjDoors();
-
-    const Pos pos(pos_);
-    Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
-    if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
-  };
-
-  onHit[int(DmgType::physical)][int(DmgMethod::explosion)] = [&](Actor * const actor) {
     if(Rnd::fraction(3, 4)) {
 
       destrAdjDoors();
 
       if(Rnd::coinToss()) {
-        const Pos pos(pos_);
-        Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
-        if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
+        mkLowRubbleAndRocks();
       } else {
         Map::put(new RubbleHigh(pos_));
       }
     }
-  };
+  });
 
-  onHit[int(DmgType::physical)][int(DmgMethod::bluntHeavy)] = [&](Actor * const actor) {
+  setHitEffect(DmgType::physical, DmgMethod::bluntHeavy, [&](Actor * const actor) {
+    (void)actor;
+
     if(Rnd::fraction(1, 4)) {
 
       destrAdjDoors();
 
       if(Rnd::coinToss()) {
-        const Pos pos(pos_);
-        Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
-        if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
+        mkLowRubbleAndRocks();
       } else {
         Map::put(new RubbleHigh(pos_));
       }
     }
-  };
+  });
 }
 
 void Wall::destrAdjDoors() const {
@@ -181,6 +180,12 @@ void Wall::destrAdjDoors() const {
       }
     }
   }
+}
+
+void Wall::mkLowRubbleAndRocks() {
+  const Pos pos(pos_);
+  Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
+  if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
 }
 
 bool Wall::isTileAnyWallFront(const TileId tile) {
@@ -268,29 +273,27 @@ void Wall::setRandomIsMossGrown() {
 }
 
 //------------------------------------------------------------------- HIGH RUBBLE
-void RubbleHigh::hit_(const DmgType dmgType, const DmgMethod dmgMethod,
-                      Actor* const actor) {
-  (void)actor;
+RubbleHigh::RubbleHigh(Pos pos) : FeatureStatic(pos) {
+  setHitEffect(DmgType::physical, DmgMethod::forced, [&](Actor * const actor) {
+    (void)actor;
+    mkLowRubbleAndRocks();
+  });
 
-  auto destrPhys = [&]() {
-    const Pos pos(pos_);
-    Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
-    if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
-  };
+  setHitEffect(DmgType::physical, DmgMethod::explosion, [&](Actor * const actor) {
+    (void)actor;
+    mkLowRubbleAndRocks();
+  });
 
-  if(dmgMethod == DmgMethod::forced) {destrPhys(); return;}
+  setHitEffect(DmgType::physical, DmgMethod::bluntHeavy, [&](Actor * const actor) {
+    (void)actor;
+    if(Rnd::fraction(2, 4)) {mkLowRubbleAndRocks();}
+  });
+}
 
-  switch(dmgType) {
-    case DmgType::physical: {
-      switch(dmgMethod) {
-        case DmgMethod::explosion:  {destrPhys();} break;
-        case DmgMethod::bluntHeavy: {if(Rnd::fraction(2, 4)) {destrPhys();}} break;
-        default: {} break;
-      }
-    } break;
-
-    default: {} break;
-  }
+void RubbleHigh::mkLowRubbleAndRocks() {
+  const Pos pos(pos_);
+  Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
+  if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
 }
 
 //------------------------------------------------------------------- GRAVE
@@ -303,10 +306,9 @@ void GraveStone::bump(Actor& actorBumping) {
 }
 
 //------------------------------------------------------------------- STATUE
-void Statue::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
-  (void)dmgType;
+Statue::Statue(Pos pos) : FeatureStatic(pos) {
 
-  if(dmgMethod == DmgMethod::kick) {
+  setHitEffect(DmgType::physical, DmgMethod::kick, [&](Actor * const actor) {
     assert(actor);
 
     const AlertsMonsters alertsMonsters = actor == Map::player ?
@@ -346,7 +348,7 @@ void Statue::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor
         Map::put(new RubbleLow(dstPos));
       }
     }
-  }
+  });
 }
 
 //------------------------------------------------------------------- STAIRS
@@ -435,46 +437,24 @@ void Lever::pull() {
 
 //------------------------------------------------------------------- GRASS
 Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
-  onHit[int(DmgType::fire)][int(DmgMethod::elemental)] = [&](Actor * const actor) {
+  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
     burnState_ = BurnState::burning;
-  };
-}
-
-void Grass::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
-  (void)dmgMethod; (void)actor;
-
-  switch(dmgType) {
-    case DmgType::fire: {
-      burnState_ = BurnState::burning;
-    } break;
-
-    default: {} break;
-  }
+  });
 }
 
 //------------------------------------------------------------------- BUSH
-void Bush::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
-  (void)dmgMethod; (void)actor;
-
-  switch(dmgType) {
-    case DmgType::fire: {
-      burnState_ = BurnState::burning;
-    } break;
-
-    default: {} break;
-  }
+Bush::Bush(Pos pos) : FeatureStatic(pos), type_(BushType::cmn) {
+  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+    (void)actor;
+    burnState_ = BurnState::burning;
+  });
 }
 
 //------------------------------------------------------------------- TREE
-void Tree::hit_(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
-  (void)dmgMethod; (void)actor;
-
-  switch(dmgType) {
-    case DmgType::fire: {
-      burnState_ = BurnState::burning;
-    } break;
-
-    default: {} break;
-  }
+Tree::Tree(Pos pos) : FeatureStatic(pos) {
+  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+    (void)actor;
+    burnState_ = BurnState::burning;
+  });
 }

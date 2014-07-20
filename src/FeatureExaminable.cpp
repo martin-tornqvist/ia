@@ -178,8 +178,7 @@ void Tomb::bump(Actor& actorBumping) {
         const int BON = PlayerBon::hasTrait(Trait::rugged) ? 8 :
                         PlayerBon::hasTrait(Trait::tough)  ? 4 : 0;
 
-        TRACE << "Tomb: Base chance to push lid is: 1 in ";
-        TRACE << pushLidOneInN_ << endl;
+        TRACE << "Tomb: Base chance to push lid is: 1 in " << pushLidOneInN_ << endl;
 
         TRACE << "Tomb: Bonus to roll: " << BON << endl;
 
