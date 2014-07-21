@@ -11,8 +11,6 @@ enum class DoorSpawnState {
   secretAndStuck
 };
 
-enum class DoorType {wood, metal};
-
 class Door: public FeatureStatic {
 public:
   Door(const Pos& pos, const FeatureDataT& mimicFeature);
@@ -67,7 +65,7 @@ protected:
 
   bool isOpen_, isStuck_, isSecret_, isHandledExternally_;
 
-  DoorType type_;
+  Matl matl_;
 };
 
 #endif

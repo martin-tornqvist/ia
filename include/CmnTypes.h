@@ -6,6 +6,16 @@
 #include "Colors.h"
 #include "Art.h"
 
+enum class Matl {
+  empty,
+  stone,
+  metal,
+  plant,  //Grass, bushes, reeds, vines, fungi
+  wood,   //Trees, doors, benches
+  cloth,  //Carpet, silk (cocoons)
+  fluid
+};
+
 enum class Condition {breaking, shoddy, fine};
 
 enum class DmgType {

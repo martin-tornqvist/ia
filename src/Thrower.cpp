@@ -212,7 +212,20 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
     const Pos dropPos = path.at(DROP_ELEMENT);
     const Matl matlAtDropPos =
       Map::cells[dropPos.x][dropPos.y].featureStatic->getMatl();
-    if(matlAtDropPos == Matl::hard) {
+
+    bool isMakingNoise = false;
+
+    switch(matlAtDropPos) {
+      case Matl::empty:   isMakingNoise = false;  break;
+      case Matl::stone:   isMakingNoise = true;   break;
+      case Matl::metal:   isMakingNoise = true;   break;
+      case Matl::plant:   isMakingNoise = false;  break;
+      case Matl::wood:    isMakingNoise = true;   break;
+      case Matl::cloth:   isMakingNoise = false;  break;
+      case Matl::fluid:   isMakingNoise = false;  break;
+    }
+
+    if(isMakingNoise) {
       const AlertsMonsters alertsMonsters = &actorThrowing == Map::player ?
                                             AlertsMonsters::yes :
                                             AlertsMonsters::no;

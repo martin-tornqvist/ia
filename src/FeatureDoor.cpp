@@ -61,7 +61,7 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
 
   }
 
-  type_ = DoorType::wood;
+  matl_ = Matl::wood;
 
   //---------------------------------------------------------------------- FORCED
   setHitEffect(DmgType::physical, DmgMethod::forced, [&](Actor * const actor) {
@@ -73,8 +73,8 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
   setHitEffect(DmgType::physical, DmgMethod::shotgun, [&](Actor * const actor) {
     (void)actor;
     if(!isOpen_) {
-      switch(type_) {
-        case DoorType::wood: {
+      switch(matl_) {
+        case Matl::wood: {
           if(Rnd::fraction(7, 10)) {
             if(Map::canPlayerSeePos(pos_)) {
               const string a = isSecret_ ? "A" : "The";
@@ -84,7 +84,12 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
           }
         } break;
 
-        case DoorType::metal: {} break;
+        case Matl::empty:
+        case Matl::cloth:
+        case Matl::fluid:
+        case Matl::plant:
+        case Matl::stone:
+        case Matl::metal: {} break;
       }
     }
   });
@@ -98,8 +103,8 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
   //---------------------------------------------------------------------- HEAVY BLUNT
   setHitEffect(DmgType::physical, DmgMethod::bluntHeavy, [&](Actor * const actor) {
     assert(actor);
-    switch(type_) {
-      case DoorType::wood: {
+    switch(matl_) {
+      case Matl::wood: {
         Fraction destrChance(6, 10);
         if(actor == Map::player) {
           if(PlayerBon::hasTrait(Trait::tough))   {destrChance.numerator += 2;}
@@ -115,7 +120,12 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
         }
       } break;
 
-      case DoorType::metal: {} break;
+      case Matl::empty:
+      case Matl::cloth:
+      case Matl::fluid:
+      case Matl::plant:
+      case Matl::stone:
+      case Matl::metal: {} break;
     }
   });
 
@@ -131,8 +141,8 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
 
     const bool IS_WEAK = find(begin(props), end(props), propWeakened) != end(props);
 
-    switch(type_) {
-      case DoorType::wood: {
+    switch(matl_) {
+      case Matl::wood: {
         if(IS_PLAYER) {
           Fraction destrChance(4 - nrSpikes_, 10);
           destrChance.numerator = max(1, destrChance.numerator);
@@ -183,11 +193,17 @@ Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
 
       } break;
 
-      case DoorType::metal: {
+      case Matl::metal: {
         if(IS_PLAYER && IS_CELL_SEEN && !isSecret_) {
           Log::addMsg("It seems futile.");
         }
       } break;
+
+      case Matl::empty:
+      case Matl::cloth:
+      case Matl::fluid:
+      case Matl::plant:
+      case Matl::stone: {} break;
     }
   });
 
@@ -284,9 +300,14 @@ Clr Door::getClr() const {
   if(isSecret_) {
     return mimicFeature_->clr;
   } else {
-    switch(type_) {
-      case DoorType::wood:  return clrBrownDrk; break;
-      case DoorType::metal: return clrGray;     break;
+    switch(matl_) {
+      case Matl::wood:      return clrBrownDrk; break;
+      case Matl::metal:     return clrGray;     break;
+      case Matl::empty:
+      case Matl::cloth:
+      case Matl::fluid:
+      case Matl::plant:
+      case Matl::stone:     return clrYellow;   break;
     }
   }
   assert(false && "Failed to get door color");
@@ -303,7 +324,7 @@ TileId Door::getTile() const {
 }
 
 Matl Door::getMatl() const {
-  return isSecret_ ? mimicFeature_->matlType : Matl::hard;
+  return isSecret_ ? mimicFeature_->matlType : matl_;
 }
 
 void Door::bump(Actor& actorBumping) {

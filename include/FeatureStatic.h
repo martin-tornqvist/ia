@@ -53,7 +53,7 @@ enum class FloorType {cmn, cave};
 
 class Floor: public FeatureStatic {
 public:
-  Floor(Pos pos) : FeatureStatic(pos), type_(FloorType::cmn) {}
+  Floor(Pos pos);
   Floor() = delete;
   ~Floor() {}
 

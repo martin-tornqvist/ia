@@ -36,7 +36,7 @@ void FeatureStatic::onNewTurn() {
     auto* actor = Utils::getActorAtPos(pos_);
     if(actor) {
       //Occasionally try to set actor on fire, otherwise just do small fire damage
-      if(Rnd::oneIn(8)) {
+      if(Rnd::oneIn(4)) {
         auto& propHandler = actor->getPropHandler();
         propHandler.tryApplyProp(new PropBurning(PropTurns::standard));
       } else {
@@ -45,12 +45,48 @@ void FeatureStatic::onNewTurn() {
     }
 
     //Finished burning?
-    if(Rnd::oneIn(30)) {
+    int finishBurningOneInN = 1;
+    int hitAdjacentOneInN   = 1;
+
+    switch(getMatl()) {
+      case Matl::fluid:
+      case Matl::empty: {
+        finishBurningOneInN = 1;
+        hitAdjacentOneInN   = 1;
+      } break;
+
+      case Matl::stone: {
+        finishBurningOneInN = 12;
+        hitAdjacentOneInN   = 12;
+      } break;
+
+      case Matl::metal: {
+        finishBurningOneInN = 12;
+        hitAdjacentOneInN   = 6;
+      } break;
+
+      case Matl::plant: {
+        finishBurningOneInN = 20;
+        hitAdjacentOneInN   = 6;
+      } break;
+
+      case Matl::wood: {
+        finishBurningOneInN = 60;
+        hitAdjacentOneInN   = 4;
+      } break;
+
+      case Matl::cloth: {
+        finishBurningOneInN = 20;
+        hitAdjacentOneInN   = 6;
+      } break;
+    }
+
+    if(Rnd::oneIn(finishBurningOneInN)) {
       burnState_ = BurnState::hasBurned;
     }
 
     //Hit adjacent features and actors?
-    if(Rnd::oneIn(6)) {
+    if(Rnd::oneIn(hitAdjacentOneInN)) {
       const Pos p(DirUtils::getRndAdjPos(pos_, false));
       if(Utils::isPosInsideMap(p)) {
         Map::cells[p.x][p.y].featureStatic->hit(DmgType::fire, DmgMethod::elemental);
@@ -66,7 +102,9 @@ void FeatureStatic::onNewTurn() {
     if(Rnd::oneIn(20)) {
       const Pos p(DirUtils::getRndAdjPos(pos_, true));
       if(Utils::isPosInsideMap(p)) {
-        GameTime::addMob(new Smoke(p, 10));
+        if(!CellPred::BlocksMoveCmn(false).check(Map::cells[p.x][p.y])) {
+          GameTime::addMob(new Smoke(p, 10));
+        }
       }
     }
   }
@@ -183,6 +221,14 @@ void FeatureStatic::clearGore() {
   goreTile_   = TileId::empty;
   goreGlyph_  = ' ';
   hasBlood_   = false;
+}
+
+//------------------------------------------------------------------- FLOOR
+Floor::Floor(Pos pos) : FeatureStatic(pos), type_(FloorType::cmn) {
+  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+    (void)actor;
+    if(Rnd::oneIn(3)) {tryStartBurning(false);}
+  });
 }
 
 //------------------------------------------------------------------- WALL

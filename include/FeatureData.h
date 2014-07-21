@@ -52,8 +52,6 @@ enum class FeatureId {
   END
 };
 
-enum Matl {empty, soft, hard, fluid};
-
 struct FeatureRoomSpawnRules {
 public:
   FeatureRoomSpawnRules() :
@@ -138,7 +136,6 @@ struct FeatureDataT {
   int dodgeModifier;
   int shockWhenAdjacent;
   FeatureRoomSpawnRules themeSpawnRules;
-  std::vector<FeatureId> featuresOnDestroyed;
 };
 
 namespace FeatureData {

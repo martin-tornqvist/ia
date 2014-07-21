@@ -44,7 +44,7 @@ void resetData(FeatureDataT& d) {
   d.canHaveStaticFeature = true;
   d.canHaveItem = true;
   d.isBottomless = false;
-  d.matlType = Matl::hard;
+  d.matlType = Matl::stone;
   d.nameA = "";
   d.nameThe = "";
   d.messageOnPlayerBlocked = "The way is blocked.";
@@ -52,7 +52,6 @@ void resetData(FeatureDataT& d) {
   d.dodgeModifier = 0;
   d.shockWhenAdjacent = 0;
   d.themeSpawnRules.reset();
-  d.featuresOnDestroyed.resize(0);
 }
 
 void addToListAndReset(FeatureDataT& d) {
@@ -74,6 +73,7 @@ void initDataList() {
   d.clr = clrGray;
   d.tile = TileId::floor;
   d.moveRules.setCanMoveCmn();
+  d.matlType = Matl::stone;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::bridge;
@@ -81,8 +81,8 @@ void initDataList() {
   d.nameA = "a bridge";
   d.nameThe = "the bridge";
   d.clr = clrBrownDrk;
-//  d.clrBg = clrBrownDrk;
   d.moveRules.setCanMoveCmn();
+  d.matlType = Matl::wood;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::wall;
@@ -102,9 +102,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featuresOnDestroyed.push_back(FeatureId::rubbleHigh);
-  d.featuresOnDestroyed.push_back(FeatureId::rubbleLow);
-  d.featuresOnDestroyed.push_back(FeatureId::floor);
+  d.matlType = Matl::stone;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::tree;
@@ -126,6 +124,7 @@ void initDataList() {
   d.canHaveItem = false;
   d.shockWhenAdjacent = 1;
   d.messageOnPlayerBlocked = "There is a tree in the way.";
+  d.matlType = Matl::wood;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::grass;
@@ -136,7 +135,7 @@ void initDataList() {
   d.tile = TileId::floor;
   d.clr = clrGreen;
   d.moveRules.setCanMoveCmn();
-  d.matlType = Matl::soft;
+  d.matlType = Matl::plant;
   addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = FeatureId::grassWithered;
@@ -146,7 +145,7 @@ void initDataList() {
 //  d.tile = TileId::floor;
 //  d.clr = clrBrownDrk;
 //  d.moveRules.setCanMoveCmn();
-//  d.matlType = Matl::soft;
+//  d.matlType = Matl::plant;
 //  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::bush;
@@ -157,7 +156,7 @@ void initDataList() {
   d.clr = clrGreen;
   d.tile = TileId::bush;
   d.moveRules.setCanMoveCmn();
-  d.matlType = Matl::soft;
+  d.matlType = Matl::plant;
   addToListAndReset(d);
   /*---------------------------------------------*/
 //  d.id = FeatureId::bushWithered;
@@ -167,7 +166,7 @@ void initDataList() {
 //  d.clr = clrBrownDrk;
 //  d.tile = TileId::bush;
 //  d.moveRules.setCanMoveCmn();
-//  d.matlType = Matl::soft;
+//  d.matlType = Matl::plant;
 //  addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::stairs;
@@ -182,6 +181,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.matlType = Matl::stone;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::lever;
@@ -196,6 +196,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.matlType = Matl::metal;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::brazier;
@@ -211,6 +212,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.matlType = Matl::metal;
   d.themeSpawnRules.set(3, PlacementRule::either, {RoomType::ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -332,6 +334,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 2;
+  d.matlType = Matl::stone;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::churchBench;
@@ -351,6 +354,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.matlType = Matl::wood;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::carpet;
@@ -362,7 +366,7 @@ void initDataList() {
   d.tile = TileId::floor;
   d.canHaveStaticFeature = false;
   d.moveRules.setCanMoveCmn();
-  d.matlType = Matl::soft;
+  d.matlType = Matl::cloth;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::rubbleHigh;
@@ -383,7 +387,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featuresOnDestroyed.push_back(FeatureId::rubbleLow);
+  d.matlType = Matl::stone;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::rubbleLow;
@@ -394,6 +398,7 @@ void initDataList() {
   d.clr = data[int(FeatureId::wall)].clr;
   d.tile = TileId::rubbleLow;
   d.moveRules.setCanMoveCmn();
+  d.matlType = Matl::stone;
   d.themeSpawnRules.set(4, PlacementRule::either, {
     RoomType::plain, RoomType::crypt, RoomType::monster
   });
@@ -413,6 +418,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.matlType = Matl::stone;
   d.themeSpawnRules.set(3, PlacementRule::either, {
     RoomType::plain, RoomType::human
   });
@@ -453,6 +459,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
+  d.matlType = Matl::cloth;
   d.themeSpawnRules.set(3, PlacementRule::either, {RoomType::spider});
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -485,6 +492,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.matlType = Matl::wood;
   d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomType::human});
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -502,6 +510,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.matlType = Matl::stone;
   d.themeSpawnRules.set(1, PlacementRule::awayFromWalls, {
     RoomType::plain, RoomType::human
   });
@@ -521,6 +530,7 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
+  d.matlType = Matl::stone;
   d.themeSpawnRules.set(3, PlacementRule::awayFromWalls, {
     RoomType::plain, RoomType::crypt, RoomType::ritual, RoomType::monster
   });
@@ -539,6 +549,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
+  d.matlType = Matl::stone;
   d.themeSpawnRules.set(1, PlacementRule::either, {RoomType::ritual});
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -557,6 +568,7 @@ void initDataList() {
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
+  d.matlType = Matl::stone;
   d.themeSpawnRules.set(2, PlacementRule::either, {RoomType::crypt});
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -588,7 +600,6 @@ void initDataList() {
   d.canHaveCorpse = false;
   d.canHaveStaticFeature = false;
   d.canHaveItem = false;
-  d.featuresOnDestroyed.push_back(FeatureId::rubbleLow);
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::trap;
