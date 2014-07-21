@@ -186,7 +186,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
     Renderer::drawMapAndInterface();
     Map::updateVisualMemory();
     Log::addMsg("I suddenly find myself in a different location!");
-    propHandler_->tryApplyProp(new PropConfused(propTurnsSpecific, 8));
+    propHandler_->tryApplyProp(new PropConfused(PropTurns::specific, 8));
   }
 }
 

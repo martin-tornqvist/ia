@@ -138,7 +138,7 @@ void Player::setupFromSaveLines(vector<string>& lines) {
     const int NR_TURNS = toInt(lines.front());
     lines.erase(begin(lines));
     auto* const prop = propHandler_->mkProp(
-                         id, propTurnsSpecific, NR_TURNS);
+                         id, PropTurns::specific, NR_TURNS);
     propHandler_->tryApplyProp(prop, true, true, true, true);
     prop->setupFromSaveLines(lines);
   }
@@ -186,7 +186,7 @@ void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
 
   if(ALLOW_WOUNDS && !Config::isBotPlaying()) {
     if(dmg >= 5) {
-      Prop* const prop = new PropWound(propTurnsIndefinite);
+      Prop* const prop = new PropWound(PropTurns::indefinite);
       propHandler_->tryApplyProp(prop);
     }
   }
@@ -342,7 +342,7 @@ void Player::incrInsanity() {
         case 3: {
           msg += "I struggle to not fall into a stupor.";
           Popup::showMsg(msg, true, "Fainting!", SfxId::insanityRise);
-          propHandler_->tryApplyProp(new PropFainted(propTurnsStd));
+          propHandler_->tryApplyProp(new PropFainted(PropTurns::standard));
           return;
         } break;
 
@@ -494,7 +494,7 @@ void Player::incrInsanity() {
                  "a tranced state of mind. I struggle to recall "
                  "where I am, or what I'm doing.";
           Popup::showMsg(msg, true, "Confusion!", SfxId::insanityRise);
-          propHandler_->tryApplyProp(new PropConfused(propTurnsStd));
+          propHandler_->tryApplyProp(new PropConfused(PropTurns::standard));
           return;
         } break;
 
@@ -559,22 +559,22 @@ void Player::testPhobias() {
       const ActorDataT& monsterData = actor->getData();
       if(monsterData.isCanine && phobias[int(Phobia::dog)]) {
         Log::addMsg("I am plagued by my canine phobia!");
-        propHandler_->tryApplyProp(new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
       if(monsterData.isRat && phobias[int(Phobia::rat)]) {
         Log::addMsg("I am plagued by my rat phobia!");
-        propHandler_->tryApplyProp(new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
       if(monsterData.isUndead && phobias[int(Phobia::undead)]) {
         Log::addMsg("I am plagued by my phobia of the dead!");
-        propHandler_->tryApplyProp(new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
       if(monsterData.isSpider && phobias[int(Phobia::spider)]) {
         Log::addMsg("I am plagued by my spider phobia!");
-        propHandler_->tryApplyProp(new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
     }
@@ -583,7 +583,7 @@ void Player::testPhobias() {
     if(phobias[int(Phobia::openPlace)]) {
       if(isStandingInOpenSpace()) {
         Log::addMsg("I am plagued by my phobia of open places!");
-        propHandler_->tryApplyProp(new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
     }
@@ -591,7 +591,7 @@ void Player::testPhobias() {
     if(phobias[int(Phobia::closedPlace)]) {
       if(isStandingInCrampedSpace()) {
         Log::addMsg("I am plagued by my phobia of closed places!");
-        propHandler_->tryApplyProp(new PropTerrified(propTurnsSpecific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
     }
@@ -698,7 +698,7 @@ void Player::onStandardTurn() {
     updateColor();
     Explosion::runExplosionAt(
       pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::explosionMolotov,
-      new PropBurning(propTurnsStd));
+      new PropBurning(PropTurns::standard));
   }
 
   //Flare
@@ -1040,7 +1040,7 @@ void Player::moveDir(Dir dir) {
           return;
         } else if(ENC >= 100) {
           Log::addMsg("I stagger.", clrMsgWarning);
-          propHandler_->tryApplyProp(new PropWaiting(propTurnsStd));
+          propHandler_->tryApplyProp(new PropWaiting(PropTurns::standard));
         }
 
         pos = dest;

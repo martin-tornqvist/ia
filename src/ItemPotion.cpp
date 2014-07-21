@@ -60,7 +60,7 @@ void PotionSpirit::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionBlindness::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropBlind(propTurnsStd));
+  actor->getPropHandler().tryApplyProp(new PropBlind(PropTurns::standard));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -72,7 +72,7 @@ void PotionBlindness::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionParal::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropParalyzed(propTurnsStd));
+  actor->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::standard));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -86,7 +86,7 @@ void PotionParal::collide_(const Pos& pos, Actor* const actor) {
 
 void PotionDisease::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropDiseased(propTurnsStd));
+    new PropDiseased(PropTurns::standard));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -94,7 +94,7 @@ void PotionDisease::quaff_(Actor* const actor) {
 
 void PotionConf::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropConfused(propTurnsStd));
+    new PropConfused(PropTurns::standard));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -107,7 +107,7 @@ void PotionConf::collide_(const Pos& pos, Actor* const actor) {
 
 void PotionFrenzy::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropFrenzied(propTurnsStd));
+    new PropFrenzied(PropTurns::standard));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -121,11 +121,11 @@ void PotionFrenzy::collide_(const Pos& pos, Actor* const actor) {
 void PotionFortitude::quaff_(Actor* const actor) {
   PropHandler& propHandler = actor->getPropHandler();
 
-  PropRFear*      const rFear   = new PropRFear(propTurnsStd);
+  PropRFear*      const rFear   = new PropRFear(PropTurns::standard);
   PropRConfusion* const rConf   = new PropRConfusion(
-    propTurnsSpecific, rFear->turnsLeft_);
+    PropTurns::specific, rFear->turnsLeft_);
   PropRSleep*     const rSleep  = new PropRSleep(
-    propTurnsSpecific, rFear->turnsLeft_);
+    PropTurns::specific, rFear->turnsLeft_);
 
   propHandler.tryApplyProp(rFear);
   propHandler.tryApplyProp(rConf);
@@ -164,7 +164,7 @@ void PotionFortitude::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionPoison::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropPoisoned(propTurnsStd));
+  actor->getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::standard));
   if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
@@ -174,7 +174,7 @@ void PotionPoison::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionRFire::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropRFire(propTurnsStd));
+  actor->getPropHandler().tryApplyProp(new PropRFire(PropTurns::standard));
   if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
@@ -200,7 +200,7 @@ void PotionAntidote::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionRElec::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropRElec(propTurnsStd));
+  actor->getPropHandler().tryApplyProp(new PropRElec(PropTurns::standard));
   if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
@@ -210,7 +210,7 @@ void PotionRElec::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionRAcid::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropRAcid(propTurnsStd));
+  actor->getPropHandler().tryApplyProp(new PropRAcid(PropTurns::standard));
   if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
@@ -341,7 +341,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
         }
       } else {
         Feature* const f = Map::cells[pos.x][pos.y].featureStatic;
-        Log::addMsg("The potion shatters on " + f->getDescr(true) + ".");
+        Log::addMsg("The potion shatters on " + f->getName(true) + ".");
       }
     }
     //If the blow from the bottle didn't kill the actor, apply what's inside

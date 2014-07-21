@@ -19,7 +19,7 @@ public:
   virtual void        onNewTurn()                                 override;
   virtual Clr         getClr()                              const override;
   virtual Clr         getClrBg()                            const override;
-  virtual std::string getDescr(const bool DEFINITE_ARTICLE) const override;
+  virtual std::string getName(const bool DEFINITE_ARTICLE) const override;
 
   void tryPutGore();
 
@@ -36,7 +36,7 @@ protected:
   void setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
                     const std::function<void (Actor* const actor)>& effect);
 
-  void tryStartBurning();
+  void tryStartBurning(const bool IS_MSG_ALLOWED);
 
   virtual void triggerTrap(Actor& actor) {(void)actor;}
 
@@ -116,7 +116,7 @@ public:
 
   FeatureId getId() const override {return FeatureId::wall;}
 
-  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
+  std::string getName(const bool DEFINITE_ARTICLE) const override;
   Clr   getClr()                                    const;
   char        getGlyph()                            const;
   TileId      getFrontWallTile()                    const;
@@ -165,7 +165,7 @@ public:
 
   FeatureId getId() const override {return FeatureId::gravestone;}
 
-  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
+  std::string getName(const bool DEFINITE_ARTICLE) const override;
 
   void setInscription(const std::string& str) {inscr_ = str;}
 

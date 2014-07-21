@@ -184,7 +184,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
 
         if(shouldApplyOnLivingActor) {
           PropHandler& propHlr = livingActor->getPropHandler();
-          Prop* propCpy = propHlr.mkProp(prop->getId(), propTurnsSpecific,
+          Prop* propCpy = propHlr.mkProp(prop->getId(), PropTurns::specific,
                                          prop->turnsLeft_);
           propHlr.tryApplyProp(propCpy);
         }
@@ -196,7 +196,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
 
           for(Actor* corpse : corpsesHere) {
             PropHandler& propHlr = corpse->getPropHandler();
-            Prop* propCpy = propHlr.mkProp(prop->getId(), propTurnsSpecific,
+            Prop* propCpy = propHlr.mkProp(prop->getId(), PropTurns::specific,
                                            prop->turnsLeft_);
             propHlr.tryApplyProp(propCpy);
           }

@@ -70,7 +70,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
               }
             }
             defender.getPropHandler().tryApplyProp(
-              new PropParalyzed(propTurnsSpecific, 1), false, false);
+              new PropParalyzed(PropTurns::specific, 1), false, false);
           }
 
           defender.pos = newPos;
@@ -119,7 +119,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
               Map::cells[newPos.x][newPos.y].featureStatic;
             if(!f->isVisionPassable()) {
               defender.getPropHandler().tryApplyProp(
-                new PropNailed(propTurnsIndefinite));
+                new PropNailed(PropTurns::indefinite));
             }
           }
           return;

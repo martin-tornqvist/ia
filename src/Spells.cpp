@@ -230,7 +230,7 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
   }
 
   target->getPropHandler().tryApplyProp(
-    new PropParalyzed(propTurnsSpecific, 2));
+    new PropParalyzed(PropTurns::specific, 2));
 
   Range dmgRange(4, 10);
   const int DMG = isCharged ? dmgRange.upper : Rnd::range(dmgRange);
@@ -280,7 +280,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
       for(Actor* actor : targets) {
         Log::addMsg(actor->getNameThe() + " is " + msgEnd, clrMsgGood);
         actor->getPropHandler().tryApplyProp(
-          new PropParalyzed(propTurnsSpecific, 2));
+          new PropParalyzed(PropTurns::specific, 2));
 
         const int DMG = IS_CHARGED ? dmgRange.upper : Rnd::range(dmgRange);
 
@@ -297,7 +297,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     Renderer::drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos> {Map::player->pos}, clrRedLgt);
     Map::player->getPropHandler().tryApplyProp(
-      new PropParalyzed(propTurnsSpecific, 1));
+      new PropParalyzed(PropTurns::specific, 1));
     Map::player->hit(Rnd::range(dmgRange), DmgType::physical, false);
     Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, Map::player->pos,
             nullptr, SndVol::high, AlertsMonsters::yes);
@@ -357,7 +357,7 @@ SpellCastRetData SpellMayhem::cast_(
   for(auto* actor : GameTime::actors_) {
     if(actor != Map::player) {
       if(Map::player->isSeeingActor(*actor, nullptr)) {
-        actor->getPropHandler().tryApplyProp(new PropBurning(propTurnsStd));
+        actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::standard));
       }
     }
   }
@@ -577,7 +577,7 @@ SpellCastRetData SpellBless::cast_(
   Actor* const caster) const {
 
   caster->getPropHandler().tryApplyProp(
-    new PropBlessed(propTurnsStd));
+    new PropBlessed(PropTurns::standard));
 
   return SpellCastRetData(true);
 }
@@ -617,9 +617,9 @@ bool SpellTeleport::isGoodForMonsterToCastNow(
 //------------------------------------------------------------ ELEMENTAL RES
 SpellCastRetData SpellElemRes::cast_(Actor* const caster) const {
   const int DURATION = 20;
-  PropRCold* rCold = new PropRCold(propTurnsSpecific, DURATION);
-  PropRElec* rElec = new PropRElec(propTurnsSpecific, DURATION);
-  PropRFire* rFire = new PropRFire(propTurnsSpecific, DURATION);
+  PropRCold* rCold = new PropRCold(PropTurns::specific, DURATION);
+  PropRElec* rElec = new PropRElec(PropTurns::specific, DURATION);
+  PropRFire* rFire = new PropRFire(PropTurns::specific, DURATION);
   PropHandler& propHlr = caster->getPropHandler();
   propHlr.tryApplyProp(rCold);
   propHlr.tryApplyProp(rElec);
@@ -676,7 +676,7 @@ SpellCastRetData SpellPropOnEnemies::cast_(
 
       for(Actor* actor : targets) {
         PropHandler& propHlr = actor->getPropHandler();
-        Prop* const prop = propHlr.mkProp(propId, propTurnsStd);
+        Prop* const prop = propHlr.mkProp(propId, PropTurns::standard);
         propHlr.tryApplyProp(prop);
       }
       return SpellCastRetData(true);
@@ -687,7 +687,7 @@ SpellCastRetData SpellPropOnEnemies::cast_(
 
     PropHandler& propHandler = Map::player->getPropHandler();
     Prop* const prop = propHandler.mkProp(
-                         propId, propTurnsStd);
+                         propId, PropTurns::standard);
     propHandler.tryApplyProp(prop);
 
     return SpellCastRetData(false);
@@ -709,7 +709,7 @@ SpellCastRetData SpellDisease::cast_(
   } else {
     Log::addMsg("A disease is starting to afflict my body!", clrMsgBad);
     Map::player->getPropHandler().tryApplyProp(
-      new PropDiseased(propTurnsSpecific, 50));
+      new PropDiseased(PropTurns::specific, 50));
     return SpellCastRetData(false);
   }
 }
@@ -812,7 +812,7 @@ SpellCastRetData SpellMiGoHypnosis::cast_(Actor* const caster) const {
 
   if(Rnd::coinToss()) {
     Map::player->getPropHandler().tryApplyProp(
-      new PropFainted(propTurnsSpecific, Rnd::range(2, 10)));
+      new PropFainted(PropTurns::specific, Rnd::range(2, 10)));
   } else {
     Log::addMsg("I feel dizzy.");
   }
@@ -838,7 +838,7 @@ SpellCastRetData SpellImmolation::cast_(
   Log::addMsg("Flames are rising around me!");
 
   Map::player->getPropHandler().tryApplyProp(
-    new PropBurning(propTurnsSpecific, Rnd::range(3, 4)));
+    new PropBurning(PropTurns::specific, Rnd::range(3, 4)));
 
   return true;
 }

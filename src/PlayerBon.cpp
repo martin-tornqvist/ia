@@ -649,12 +649,12 @@ void pickTrait(const Trait id) {
 
     case Trait::selfAware: {
       Map::player->getPropHandler().tryApplyProp(
-        new PropRConfusion(propTurnsIndefinite), true, true, true, false);
+        new PropRConfusion(PropTurns::indefinite), true, true, true, false);
     } break;
 
     case Trait::fearless: {
       Map::player->getPropHandler().tryApplyProp(
-        new PropRFear(propTurnsIndefinite), true, true, true, false);
+        new PropRFear(PropTurns::indefinite), true, true, true, false);
     } break;
 
     default: {} break;

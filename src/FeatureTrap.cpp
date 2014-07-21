@@ -285,7 +285,7 @@ void Trap::playerTrySpotHidden() {
   }
 }
 
-string Trap::getDescr(const bool DEFINITE_ARTICLE) const {
+string Trap::getName(const bool DEFINITE_ARTICLE) const {
   if(isHidden_) {
     return DEFINITE_ARTICLE ? mimicFeature_->nameThe : mimicFeature_->nameA;
   } else {
@@ -381,7 +381,7 @@ void TrapDart::trigger(
           Log::addMsg("It was poisoned!");
         }
         actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(propTurnsStd));
+          new PropPoisoned(PropTurns::standard));
       }
     }
   }
@@ -458,7 +458,7 @@ void TrapSpear::trigger(
           Log::addMsg("It was poisoned!");
         }
         actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(propTurnsStd));
+          new PropPoisoned(PropTurns::standard));
       }
     }
   }
@@ -493,7 +493,7 @@ void TrapGasConfusion::trigger(
 
   Explosion::runExplosionAt(
     pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropConfused(propTurnsStd), &clr);
+    new PropConfused(PropTurns::standard), &clr);
   TRACE_FUNC_END_VERBOSE;
 }
 
@@ -524,7 +524,7 @@ void TrapGasParalyzation::trigger(
   Clr clr = getClr();
   Explosion::runExplosionAt(
     pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropParalyzed(propTurnsStd), &clr) ;
+    new PropParalyzed(PropTurns::standard), &clr) ;
   TRACE_FUNC_END_VERBOSE;
 }
 
@@ -555,7 +555,7 @@ void TrapGasFear::trigger(Actor& actor,
   Clr clr = getClr();
   Explosion::runExplosionAt(
     pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropTerrified(propTurnsStd), &clr);
+    new PropTerrified(PropTurns::standard), &clr);
   TRACE_FUNC_END_VERBOSE;
 }
 
@@ -591,7 +591,7 @@ void TrapBlindingFlash::trigger(
         Log::addMsg(
           "A sharp flash of light pierces my eyes!", clrWhite);
         actor.getPropHandler().tryApplyProp(
-          new PropBlind(propTurnsStd));
+          new PropBlind(PropTurns::standard));
       } else {
         Log::addMsg("I feel a mechanism trigger!", clrWhite);
       }
@@ -600,7 +600,7 @@ void TrapBlindingFlash::trigger(
         Log::addMsg(
           actorName + " is hit by a flash of blinding light!");
         actor.getPropHandler().tryApplyProp(
-          new PropBlind(propTurnsStd));
+          new PropBlind(PropTurns::standard));
       }
     }
   }

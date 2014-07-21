@@ -42,7 +42,7 @@ public:
   Clr   getClr()                              const override;
   char        getGlyph()                            const override;
   TileId      getTile()                             const override;
-  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
+  std::string getName(const bool DEFINITE_ARTICLE) const override;
   void        disarm()                                    override;
   bool        canHaveCorpse()                       const override {return isHidden_;}
   bool        canHaveBlood()                        const override {return isHidden_;}

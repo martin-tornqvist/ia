@@ -31,26 +31,56 @@ FeatureStatic::FeatureStatic(Pos pos) :
 
 void FeatureStatic::onNewTurn() {
   if(burnState_ == BurnState::burning) {
+
+    //Hit actor standing on feature
+    auto* actor = Utils::getActorAtPos(pos_);
+    if(actor) {
+      //Occasionally try to set actor on fire, otherwise just do small fire damage
+      if(Rnd::oneIn(8)) {
+        auto& propHandler = actor->getPropHandler();
+        propHandler.tryApplyProp(new PropBurning(PropTurns::standard));
+      } else {
+        actor->hit(1, DmgType::fire, true);
+      }
+    }
+
+    //Finished burning?
+    if(Rnd::oneIn(30)) {
+      burnState_ = BurnState::hasBurned;
+    }
+
+    //Hit adjacent features and actors?
     if(Rnd::oneIn(6)) {
       const Pos p(DirUtils::getRndAdjPos(pos_, false));
       if(Utils::isPosInsideMap(p)) {
         Map::cells[p.x][p.y].featureStatic->hit(DmgType::fire, DmgMethod::elemental);
+
+        actor = Utils::getActorAtPos(p);
+        if(actor) {
+          actor->hit(1, DmgType::fire, true);
+        }
       }
     }
+
+    //Create smoke?
     if(Rnd::oneIn(20)) {
       const Pos p(DirUtils::getRndAdjPos(pos_, true));
       if(Utils::isPosInsideMap(p)) {
         GameTime::addMob(new Smoke(p, 10));
       }
     }
-    if(Rnd::oneIn(40)) {
-      burnState_ = BurnState::hasBurned;
-    }
   }
 }
 
-void FeatureStatic::tryStartBurning() {
-  if(burnState_ == BurnState::notBurned) {burnState_ = BurnState::burning;}
+void FeatureStatic::tryStartBurning(const bool IS_MSG_ALLOWED) {
+  if(burnState_ == BurnState::notBurned) {
+    if(Map::canPlayerSeePos(pos_) && IS_MSG_ALLOWED) {
+      string str = getName(true) + " catches fire.";
+      str[0] = toupper(str[0]);
+      Log::addMsg(str);
+    }
+    burnState_ = BurnState::burning;
+  }
 }
 
 void FeatureStatic::setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
@@ -76,7 +106,7 @@ void FeatureStatic::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor*
       assert(actor);
 
       if(IS_BLOCKING) {
-        Log::addMsg("I kick " + (IS_BLIND ? "something" : getDescr(false)) + "!");
+        Log::addMsg("I kick " + (IS_BLIND ? "something" : getName(false)) + "!");
 
         if(Rnd::oneIn(4)) {
           Log::addMsg("I sprain myself.", clrMsgBad);
@@ -86,7 +116,7 @@ void FeatureStatic::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor*
         if(Rnd::oneIn(4)) {
           Log::addMsg("I am off-balance.");
 
-          actor->getPropHandler().tryApplyProp(new PropParalyzed(propTurnsSpecific, 2));
+          actor->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::specific, 2));
         }
 
       } else {
@@ -145,7 +175,7 @@ Clr FeatureStatic::getClrBg() const {
   return clrYellow;
 }
 
-string FeatureStatic::getDescr(const bool DEFINITE_ARTICLE) const {
+string FeatureStatic::getName(const bool DEFINITE_ARTICLE) const {
   return DEFINITE_ARTICLE ? getData().nameThe : getData().nameA;
 }
 
@@ -229,7 +259,7 @@ bool Wall::isTileAnyWallTop(const TileId tile) {
     tile == TileId::rubbleHigh;
 }
 
-string Wall::getDescr(const bool DEFINITE_ARTICLE) const {
+string Wall::getName(const bool DEFINITE_ARTICLE) const {
   const string modStr   = isMossy_ ? "moss-grown " : "";
   const string article  = (DEFINITE_ARTICLE ? "the " : "a ");
 
@@ -321,7 +351,7 @@ void RubbleHigh::mkLowRubbleAndRocks() {
 }
 
 //------------------------------------------------------------------- GRAVE
-string GraveStone::getDescr(const bool DEFINITE_ARTICLE) const {
+string GraveStone::getName(const bool DEFINITE_ARTICLE) const {
   return (DEFINITE_ARTICLE ? getData().nameThe : getData().nameA) + "; " + inscr_;
 }
 
@@ -416,7 +446,7 @@ void LiquidShallow::bump(Actor& actorBumping) {
     find(begin(props), end(props), propEthereal)  == end(props) &&
     find(begin(props), end(props), propFlying)    == end(props)) {
 
-    actorBumping.getPropHandler().tryApplyProp(new PropWaiting(propTurnsStd));
+    actorBumping.getPropHandler().tryApplyProp(new PropWaiting(PropTurns::standard));
 
     if(&actorBumping == Map::player) Log::addMsg("*glop*");
   }
@@ -462,7 +492,7 @@ void Lever::pull() {
 Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
-    tryStartBurning();
+    tryStartBurning(false);
   });
 }
 
@@ -470,7 +500,7 @@ Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
 Bush::Bush(Pos pos) : FeatureStatic(pos), type_(BushType::cmn) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
-    tryStartBurning();
+    tryStartBurning(false);
   });
 }
 
@@ -478,6 +508,6 @@ Bush::Bush(Pos pos) : FeatureStatic(pos), type_(BushType::cmn) {
 Tree::Tree(Pos pos) : FeatureStatic(pos) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
-    if(Rnd::oneIn(3)) {tryStartBurning();}
+    if(Rnd::oneIn(3)) {tryStartBurning(false);}
   });
 }

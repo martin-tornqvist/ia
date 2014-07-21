@@ -49,7 +49,7 @@ public:
   bool open()                     override;
   void examine()                  override;
 
-  std::string getDescr(const bool DEFINITE_ARTICLE)  const override;
+  std::string getName(const bool DEFINITE_ARTICLE)  const override;
   Clr getClr()                            const override;
 
 private:
@@ -85,7 +85,7 @@ public:
     return matl == ChestMatl::wood ? clrBrownDrk : clrGray;
   }
 
-  std::string getDescr(const bool DEFINITE_ARTICLE) const override {
+  std::string getName(const bool DEFINITE_ARTICLE) const override {
     const std::string a = DEFINITE_ARTICLE ?
                           "the " : (matl == ChestMatl::wood ? "a " : "an ");
 
@@ -154,7 +154,7 @@ public:
 
   void bump(Actor& actorBumping)                          override;
   Clr getClr()                                const override;
-  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
+  std::string getName(const bool DEFINITE_ARTICLE) const override;
 
 private:
   FountainType fountainType_;

@@ -79,9 +79,9 @@ int Armor::getAbsorptionPoints() const {
 }
 
 void ArmorAsbSuit::onWear() {
-  propsEnabledOnCarrier.push_back(new PropRFire(propTurnsIndefinite));
-  propsEnabledOnCarrier.push_back(new PropRAcid(propTurnsIndefinite));
-  propsEnabledOnCarrier.push_back(new PropRElec(propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRFire(PropTurns::indefinite));
+  propsEnabledOnCarrier.push_back(new PropRAcid(PropTurns::indefinite));
+  propsEnabledOnCarrier.push_back(new PropRElec(PropTurns::indefinite));
 }
 
 void ArmorAsbSuit::onTakeOff() {
@@ -89,7 +89,7 @@ void ArmorAsbSuit::onTakeOff() {
 }
 
 void ArmorHeavyCoat::onWear() {
-  propsEnabledOnCarrier.push_back(new PropRCold(propTurnsIndefinite));
+  propsEnabledOnCarrier.push_back(new PropRCold(PropTurns::indefinite));
 }
 
 void ArmorHeavyCoat::onTakeOff() {

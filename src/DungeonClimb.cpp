@@ -99,7 +99,7 @@ void tryUseDownStairs() {
     if(Map::player->phobias[int(Phobia::deepPlaces)]) {
       Log::addMsg("I am plagued by my phobia of deep places!");
       Map::player->getPropHandler().tryApplyProp(
-        new PropTerrified(propTurnsStd));
+        new PropTerrified(PropTurns::standard));
       return;
     }
   } else {

@@ -164,8 +164,7 @@ void Zuul::place_() {
     deadState = ActorDeadState::destroyed;
     Actor* actor = ActorFactory::mk(actor_cultistPriest, pos);
     PropHandler& propHandler = actor->getPropHandler();
-    propHandler.tryApplyProp(
-      new PropPossessedByZuul(propTurnsIndefinite), true);
+    propHandler.tryApplyProp(new PropPossessedByZuul(PropTurns::indefinite), true);
     actor->restoreHp(999, false);
   }
 }
@@ -232,7 +231,7 @@ bool Vortex::onActorTurn_() {
 void DustVortex::die_() {
   Explosion::runExplosionAt(
     pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropBlind(propTurnsStd), &clrGray);
+    new PropBlind(PropTurns::standard), &clrGray);
 }
 
 void DustVortex::mkStartItems() {
@@ -242,7 +241,7 @@ void DustVortex::mkStartItems() {
 void FireVortex::die_() {
   Explosion::runExplosionAt(
     pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropBurning(propTurnsStd), &clrRedLgt);
+    new PropBurning(PropTurns::standard), &clrRedLgt);
 }
 
 void FireVortex::mkStartItems() {
@@ -278,7 +277,7 @@ bool Ghost::onActorTurn_() {
             Log::addMsg("I dodge!", clrMsgGood);
           } else {
             Map::player->getPropHandler().tryApplyProp(
-              new PropSlowed(propTurnsStd));
+              new PropSlowed(PropTurns::standard));
           }
           GameTime::actorDidAct();
           return true;
@@ -524,7 +523,7 @@ void ColourOOSpace::onStandardTurn() {
 
   if(Map::player->isSeeingActor(*this, nullptr)) {
     Map::player->getPropHandler().tryApplyProp(
-      new PropConfused(propTurnsStd));
+      new PropConfused(PropTurns::standard));
   }
 }
 

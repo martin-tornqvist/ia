@@ -325,7 +325,7 @@ void Door::bump(Actor& actorBumping) {
   }
 }
 
-string Door::getDescr(const bool DEFINITE_ARTICLE) const {
+string Door::getName(const bool DEFINITE_ARTICLE) const {
   if(isSecret_) {
     return (DEFINITE_ARTICLE ? mimicFeature_->nameThe : mimicFeature_->nameA);
   }

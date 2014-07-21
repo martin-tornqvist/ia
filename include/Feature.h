@@ -29,7 +29,7 @@ public:
   virtual bool          isProjectilePassable()                          const;
   virtual bool          isSmokePassable()                               const;
   virtual bool          isBottomless()                                  const;
-  virtual std::string   getDescr(const bool DEFINITE_ARTICLE)           const;
+  virtual std::string   getName(const bool DEFINITE_ARTICLE)            const;
   virtual Clr           getClr()                                        const;
   virtual Clr           getClrBg()                                      const;
   virtual char          getGlyph()                                      const;

@@ -61,11 +61,8 @@ enum PropId {
   endOfPropIds
 };
 
-enum PropTurnMode {propTurnModeStandard, propTurnModeActor};
-
-enum PropTurns {
-  propTurnsSpecific, propTurnsIndefinite, propTurnsStd
-};
+enum class PropTurnMode {standard, actor};
+enum class PropTurns    {standard, specific, indefinite};
 
 enum PropMsgType {
   propMsgOnStartPlayer,
@@ -286,7 +283,7 @@ public:
     return false;
   }
 
-  virtual PropTurnMode getTurnMode() const {return propTurnModeStandard;}
+  virtual PropTurnMode getTurnMode() const {return PropTurnMode::standard;}
 
   int turnsLeft_;
 
@@ -441,7 +438,7 @@ public:
 
   ~PropAiming() override {}
 
-  PropTurnMode getTurnMode() const override {return propTurnModeActor;}
+  PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   std::string getNameShort() const override {
     return data_->nameShort + (nrTurnsAiming >= 3 ? "(3)" : "");
@@ -544,7 +541,7 @@ public:
     Prop(propWarlockCharged, turnsInit, turns) {}
   ~PropWarlockCharged() override {}
 
-  PropTurnMode getTurnMode() const override {return propTurnModeActor;}
+  PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 };
 
 class PropConfused: public Prop {
@@ -596,7 +593,7 @@ public:
 
   ~PropWaiting() override {}
 
-  PropTurnMode getTurnMode() const override {return propTurnModeActor;}
+  PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   bool allowMove() const override  {return false;}
   bool allowAct() const override   {return false;}
@@ -617,7 +614,7 @@ public:
 
   ~PropDisabledAttack() override {}
 
-  PropTurnMode getTurnMode() const override {return propTurnModeActor;}
+  PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
@@ -636,7 +633,7 @@ public:
 
   ~PropDisabledMelee() override {}
 
-  PropTurnMode getTurnMode() const override {return propTurnModeActor;}
+  PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
@@ -651,7 +648,7 @@ public:
 
   ~PropDisabledRanged() override {}
 
-  PropTurnMode getTurnMode() const override {return propTurnModeActor;}
+  PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
     (void)ALLOW_MESSAGE_WHEN_FALSE;
@@ -666,7 +663,7 @@ public:
 
   ~PropParalyzed() override {}
 
-  PropTurnMode getTurnMode() const override {return propTurnModeActor;}
+  PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   void onStart() override;
 

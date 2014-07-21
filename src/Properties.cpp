@@ -706,7 +706,7 @@ PropHandler::PropHandler(Actor* owningActor) :
 
   for(unsigned int i = 0; i < endOfPropIds; ++i) {
     if(d.intrProps[i]) {
-      Prop* const prop = mkProp(PropId(i), propTurnsIndefinite);
+      Prop* const prop = mkProp(PropId(i), PropTurns::indefinite);
       tryApplyProp(prop, true, true, true, true);
     }
   }
@@ -957,7 +957,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   //applied from the buffer to the applied props.
   //This way, this function can be used both for requesting to apply props,
   //and for applying props from the buffer.
-  if(prop->getTurnMode() == propTurnModeActor) {
+  if(prop->getTurnMode() == PropTurnMode::actor) {
     vector<Prop*>& buffer = actorTurnPropBuffer_;
     if(find(begin(buffer), end(buffer), prop) == end(buffer)) {
       buffer.push_back(prop);
@@ -1085,7 +1085,7 @@ void PropHandler::tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE) {
     if(!tryResistDmg(dmgType, false)) {
       //Make a copy of the weapon effect
       Prop* const prop = mkProp(
-                           propAppliedFromWpn->getId(), propTurnsSpecific,
+                           propAppliedFromWpn->getId(), PropTurns::specific,
                            propAppliedFromWpn->turnsLeft_);
       tryApplyProp(prop);
     }
@@ -1404,10 +1404,10 @@ Prop::Prop(PropId id, PropTurns turnsInit, int turns) :
   turnsLeft_(turns), owningActor_(nullptr), id_(id),
   data_(&(PropData::data[id])) {
 
-  if(turnsInit == propTurnsStd) {
+  if(turnsInit == PropTurns::standard) {
     turnsLeft_ = Rnd::range(data_->stdRndTurns);
   }
-  if(turnsInit == propTurnsIndefinite) {
+  if(turnsInit == PropTurns::indefinite) {
     turnsLeft_ = -1;
   }
 }
@@ -1429,7 +1429,7 @@ void PropCursed::onStart() {
 void PropInfected::onNewTurn() {
   if(Rnd::oneIn(250)) {
     PropHandler& propHlr = owningActor_->getPropHandler();
-    propHlr.tryApplyProp(new PropDiseased(propTurnsStd));
+    propHlr.tryApplyProp(new PropDiseased(PropTurns::standard));
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksVision(), blocked);
     propHlr.endAppliedProp(propInfected, blocked, false);
@@ -1706,7 +1706,7 @@ void PropFrenzied::onStart() {
 
 void PropFrenzied::onEnd() {
   owningActor_->getPropHandler().tryApplyProp(
-    new PropWeakened(propTurnsStd));
+    new PropWeakened(PropTurns::standard));
 }
 
 bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
@@ -1787,7 +1787,7 @@ void PropParalyzed::onStart() {
       Log::addMsg("The lit Molotov Cocktail falls from my hands!");
       Explosion::runExplosionAt(
         player->pos, ExplType::applyProp, ExplSrc::misc, 0,
-        SfxId::explosionMolotov, new PropBurning(propTurnsStd));
+        SfxId::explosionMolotov, new PropBurning(PropTurns::standard));
     }
   }
 }
@@ -1803,7 +1803,7 @@ void PropFlared::onNewTurn() {
     bool visionBlockers[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksVision(), visionBlockers);
     owningActor_->getPropHandler().tryApplyProp(
-      new PropBurning(propTurnsStd));
+      new PropBurning(PropTurns::standard));
     owningActor_->getPropHandler().endAppliedProp(
       propFlared, visionBlockers);
   }

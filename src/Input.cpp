@@ -155,7 +155,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
           }
         }
 
-        PropAiming* const aiming = new PropAiming(propTurnsSpecific, 1);
+        PropAiming* const aiming = new PropAiming(PropTurns::specific, 1);
         aiming->nrTurnsAiming += nrTurnsAimingOld;
         propHlr.tryApplyProp(aiming);
       }
@@ -563,7 +563,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if(d.sdlKey_ == SDLK_F8) {
     if(IS_DEBUG_MODE) {
       Map::player->getPropHandler().tryApplyProp(
-        new PropInfected(propTurnsStd));
+        new PropInfected(PropTurns::standard));
       clearEvents();
     }
     return;
@@ -574,7 +574,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
     if(IS_DEBUG_MODE) {
       for(Actor* actor : GameTime::actors_) {
         actor->getPropHandler().tryApplyProp(
-          new PropPossessedByZuul(propTurnsIndefinite), true);
+          new PropPossessedByZuul(PropTurns::indefinite), true);
       }
     }
     return;

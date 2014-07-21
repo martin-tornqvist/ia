@@ -79,7 +79,7 @@ void playerThrowLitExplosive(const Pos& aimCell) {
     if(!IS_DEST_BOTTOMLESS) {
       Explosion::runExplosionAt(
         endPos, ExplType::applyProp, ExplSrc::playerUseMoltvIntended, D,
-        SfxId::explosionMolotov, new PropBurning(propTurnsStd));
+        SfxId::explosionMolotov, new PropBurning(PropTurns::standard));
     }
   }
 

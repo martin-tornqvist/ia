@@ -48,7 +48,7 @@ bool Feature::isProjectilePassable()      const {return getData().isProjectilePa
 bool Feature::isSmokePassable()           const {return getData().isSmokePassable;}
 bool Feature::isBottomless()              const {return getData().isBottomless;}
 
-string Feature::getDescr(const bool DEFINITE_ARTICLE) const {
+string Feature::getName(const bool DEFINITE_ARTICLE) const {
   return DEFINITE_ARTICLE ? getData().nameThe : getData().nameA;
 }
 

@@ -101,7 +101,7 @@ void act() {
 
   //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)
   if(Rnd::oneIn(7)) {
-    propHandler.tryApplyProp(new PropRFear(propTurnsSpecific, 4), true);
+    propHandler.tryApplyProp(new PropRFear(PropTurns::specific, 4), true);
   }
 
   //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
@@ -109,7 +109,7 @@ void act() {
     const int ELEMENT = Rnd::range(0, GameTime::actors_.size() - 1);
     Actor* const actor = GameTime::actors_.at(ELEMENT);
     if(actor != Map::player) {
-      actor->getPropHandler().tryApplyProp(new PropBurning(propTurnsStd), true);
+      actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::standard), true);
     }
   }
 
@@ -133,7 +133,7 @@ void act() {
     }
     PropId propId = propBucket.at(Rnd::range(0, propBucket.size() - 1));
 
-    Prop* const prop = propHandler.mkProp(propId, propTurnsSpecific, 5);
+    Prop* const prop = propHandler.mkProp(propId, PropTurns::specific, 5);
 
     propHandler.tryApplyProp(prop, true);
   }

@@ -51,7 +51,7 @@ void runStandardTurnEvents() {
   for(size_t i = 0; i < actors_.size(); ++i) {
     Actor* const actor = actors_[i];
 
-    actor->getPropHandler().tick(propTurnModeStandard, visionBlockers);
+    actor->getPropHandler().tick(PropTurnMode::standard, visionBlockers);
 
     if(actor != Map::player) {
       Monster* const monster = static_cast<Monster*>(actor);
@@ -227,7 +227,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
   }
 
   //Tick properties running on actor turns
-  curActor->getPropHandler().tick(propTurnModeActor, nullptr);
+  curActor->getPropHandler().tick(PropTurnMode::actor, nullptr);
 
   if(!IS_FREE_TURN) {
 

@@ -45,7 +45,7 @@ public:
   bool isStuck()  const {return isStuck_;}
   bool isHandledExternally() const {return isHandledExternally_;}
 
-  std::string getDescr(const bool DEFINITE_ARTICLE) const override;
+  std::string getName(const bool DEFINITE_ARTICLE) const override;
 
   Matl getMatl() const;
 

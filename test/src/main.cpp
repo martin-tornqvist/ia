@@ -408,7 +408,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   }
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
                             ExplSrc::misc, 0, SfxId::endOfSfxId,
-                            new PropBurning(propTurnsStd));
+                            new PropBurning(PropTurns::standard));
   CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied));
   CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied));
   for(int i = 0; i < NR_CORPSES; ++i) {
@@ -568,10 +568,10 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
 
   //Applied properties
   PropHandler& propHlr = Map::player->getPropHandler();
-  propHlr.tryApplyProp(new PropDiseased(propTurnsIndefinite));
-  propHlr.tryApplyProp(new PropRSleep(propTurnsSpecific, 3));
-  propHlr.tryApplyProp(new PropBlessed(propTurnsStd));
-  propHlr.tryApplyProp(new PropWound(propTurnsStd));
+  propHlr.tryApplyProp(new PropDiseased(PropTurns::indefinite));
+  propHlr.tryApplyProp(new PropRSleep(PropTurns::specific, 3));
+  propHlr.tryApplyProp(new PropBlessed(PropTurns::standard));
+  propHlr.tryApplyProp(new PropWound(PropTurns::standard));
   Prop* prop      = propHlr.getProp(propWound, PropSrc::applied);
   PropWound* wnd  = static_cast<PropWound*>(prop);
   CHECK(wnd);
