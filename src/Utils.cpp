@@ -345,6 +345,15 @@ Pos getOffset(const Dir dir) {
   return Pos(0, 0);
 }
 
+Pos getRndAdjPos(const Pos& origin, const bool IS_ORIGIN_ALLOWED) {
+  if(IS_ORIGIN_ALLOWED) {
+    const int ELEMENT = Rnd::range(0, dirList.size()); //Treat origin as extra element
+    return ELEMENT == int(dirList.size()) ? origin : (origin + dirList[ELEMENT]);
+  } else {
+    return origin + dirList[Rnd::range(0, dirList.size() - 1)];
+  }
+}
+
 void getCompassDirName(const Pos& fromPos, const Pos& toPos, string& strRef) {
 
   strRef = "";

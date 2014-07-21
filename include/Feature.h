@@ -21,7 +21,7 @@ public:
   virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor);
 
   virtual void          bump(Actor& actorBumping);
-  virtual void          newTurn() {}
+  virtual void          onNewTurn() {}
   virtual bool          canMoveCmn()                                    const;
   virtual bool          canMove(const std::vector<PropId>& actorsProps) const;
   virtual bool          isSoundPassable()                               const;

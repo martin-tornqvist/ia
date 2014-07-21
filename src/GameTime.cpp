@@ -94,20 +94,19 @@ void runStandardTurnEvents() {
     }
   }
 
-  //Update mobile features
-  const vector<FeatureMob*> mobsCpy = featureMobs_;
-  for(auto* f : mobsCpy) {f->newTurn();}
-
-  //Update timed features
+  //New turn for static features
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      Map::cells[x][y].featureStatic->newTurn();
+      Map::cells[x][y].featureStatic->onNewTurn();
     }
   }
 
-  //Spawn more monsters?
-  //(If an unexplored cell is selected, the spawn is aborted)
+  //New turn for mobs (using a copied vector, since mobs may get destroyed)
+  const vector<FeatureMob*> mobsCpy = featureMobs_;
+  for(auto* f : mobsCpy) {f->onNewTurn();}
 
+  //Spawn more monsters?
+  //(If an unexplored cell is selected, the spawn is canceled)
   if(Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LVL) {
     const int SPAWN_N_TURN = 125;
     if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {

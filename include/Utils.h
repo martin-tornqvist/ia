@@ -133,6 +133,8 @@ Dir getDir(const Pos& offset);
 
 Pos getOffset(const Dir dir);
 
+Pos getRndAdjPos(const Pos& origin, const bool IS_ORIGIN_ALLOWED);
+
 void getCompassDirName(const Pos& fromPos, const Pos& toPos,
                        std::string& strRef);
 

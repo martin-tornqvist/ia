@@ -16,19 +16,18 @@ public:
 
 class Smoke: public FeatureMob {
 public:
-  Smoke(const Pos& pos, int nrTurnsLeft) :
-    FeatureMob(pos), nrTurnsLeft_(nrTurnsLeft) {}
+  Smoke(const Pos& pos, const int NR_TURNS) :
+    FeatureMob(pos), nrTurnsLeft_(NR_TURNS) {}
 
   //Spawn by id compliant ctor (do not use for normal cases):
   Smoke(const Pos& pos) : FeatureMob(pos), nrTurnsLeft_(-1) {}
 
   Smoke() = delete;
-
   ~Smoke() {}
 
   FeatureId getId() const override {return FeatureId::smoke;}
 
-  void newTurn();
+  void onNewTurn() override;
 
 protected:
   int nrTurnsLeft_;
@@ -36,8 +35,8 @@ protected:
 
 class LitDynamite: public FeatureMob {
 public:
-  LitDynamite(const Pos& pos, int nrTurnsLeft) :
-    FeatureMob(pos), nrTurnsLeft_(nrTurnsLeft) {}
+  LitDynamite(const Pos& pos, const int NR_TURNS) :
+    FeatureMob(pos), nrTurnsLeft_(NR_TURNS) {}
 
   //Spawn by id compliant ctor (do not use for normal cases):
   LitDynamite(const Pos& pos) : FeatureMob(pos), nrTurnsLeft_(-1) {}
@@ -51,7 +50,7 @@ public:
   //TODO Lit dynamite should add light on their own cell (just one cell)
   //void addLight(bool light[MAP_W][MAP_H]) const;
 
-  void newTurn();
+  void onNewTurn() override;
 
 private:
   int nrTurnsLeft_;
@@ -59,8 +58,8 @@ private:
 
 class LitFlare: public FeatureMob {
 public:
-  LitFlare(const Pos& pos, int nrTurnsLeft) :
-    FeatureMob(pos), nrTurnsLeft_(nrTurnsLeft) {}
+  LitFlare(const Pos& pos, const int NR_TURNS) :
+    FeatureMob(pos), nrTurnsLeft_(NR_TURNS) {}
 
   //Spawn by id compliant ctor (do not use for normal cases):
   LitFlare(const Pos& pos) : FeatureMob(pos), nrTurnsLeft_(-1) {}
@@ -71,7 +70,7 @@ public:
 
   FeatureId getId() const override {return FeatureId::litFlare;}
 
-  void newTurn();
+  void onNewTurn() override;
 
   void addLight(bool light[MAP_W][MAP_H]) const;
 

@@ -7,7 +7,7 @@ class ProxEvent: public FeatureMob {
 public:
   ~ProxEvent() {}
 
-  void newTurn();
+  void onNewTurn() override;
 
 protected:
   ProxEvent(Pos pos) : FeatureMob(pos) {}

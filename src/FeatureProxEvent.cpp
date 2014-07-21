@@ -10,7 +10,7 @@
 #include "FeatureStatic.h"
 
 //-------------------------------------------PROX EVENT
-void ProxEvent::newTurn() {
+void ProxEvent::onNewTurn() {
   if(Utils::isPosAdj(pos_, Map::player->pos, true)) {
     playerIsNear();
   }

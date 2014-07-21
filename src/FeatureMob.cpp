@@ -14,14 +14,14 @@
 using namespace std;
 
 //------------------------------------------------------------------- SMOKE
-void Smoke::newTurn() {
+void Smoke::onNewTurn() {
   if(nrTurnsLeft_ > -1) {
     if(--nrTurnsLeft_ <= 0) {GameTime::eraseFeatureMob(this, true);}
   }
 }
 
 //------------------------------------------------------------------- DYNAMITE
-void LitDynamite::newTurn() {
+void LitDynamite::onNewTurn() {
   nrTurnsLeft_--;
   if(nrTurnsLeft_ <= 0) {
     const int D = PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
@@ -31,7 +31,7 @@ void LitDynamite::newTurn() {
 }
 
 //------------------------------------------------------------------- FLARE
-void LitFlare::newTurn() {
+void LitFlare::onNewTurn() {
   nrTurnsLeft_--;
   if(nrTurnsLeft_ <= 0) {GameTime::eraseFeatureMob(this, true);}
 }

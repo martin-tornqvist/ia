@@ -3,7 +3,7 @@
 
 #include "Feature.h"
 
-enum class BurnState {none, burning, hasBurned};
+enum class BurnState {notBurned, burning, hasBurned};
 
 class FeatureStatic: public Feature {
 public:
@@ -16,6 +16,7 @@ public:
   virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* actor = nullptr);
 
+  virtual void        onNewTurn()                                 override;
   virtual Clr         getClr()                              const override;
   virtual Clr         getClrBg()                            const override;
   virtual std::string getDescr(const bool DEFINITE_ARTICLE) const override;
@@ -35,15 +36,17 @@ protected:
   void setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
                     const std::function<void (Actor* const actor)>& effect);
 
+  void tryStartBurning();
+
   virtual void triggerTrap(Actor& actor) {(void)actor;}
 
   TileId goreTile_;
   char goreGlyph_;
 
-  BurnState burnState_;
-
 private:
   std::function<void(Actor* const actor)>onHit[int(DmgType::END)][int(DmgMethod::END)];
+
+  BurnState burnState_;
 };
 
 enum class FloorType {cmn, cave};

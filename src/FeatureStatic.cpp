@@ -10,20 +10,47 @@
 #include "Popup.h"
 #include "DungeonClimb.h"
 #include "SaveHandling.h"
-#include "FeatureStatic.h"
 #include "ItemFactory.h"
 #include "MapParsing.h"
+#include "FeatureMob.h"
 
 using namespace std;
 
 //------------------------------------------------------------------- STATIC FEATURE
 FeatureStatic::FeatureStatic(Pos pos) :
-  Feature(pos), goreTile_(TileId::empty), goreGlyph_(0), burnState_(BurnState::none) {
+  Feature(pos),
+  goreTile_(TileId::empty),
+  goreGlyph_(0),
+  burnState_(BurnState::notBurned) {
   for(int dmgType = 0; dmgType < int(DmgType::END); ++dmgType) {
     for(int dmgMethod = 0; dmgMethod < int(DmgMethod::END); ++dmgMethod) {
       onHit[dmgType][dmgMethod] = [](Actor * const actor) {(void)actor;};
     }
   }
+}
+
+void FeatureStatic::onNewTurn() {
+  if(burnState_ == BurnState::burning) {
+    if(Rnd::oneIn(6)) {
+      const Pos p(DirUtils::getRndAdjPos(pos_, false));
+      if(Utils::isPosInsideMap(p)) {
+        Map::cells[p.x][p.y].featureStatic->hit(DmgType::fire, DmgMethod::elemental);
+      }
+    }
+    if(Rnd::oneIn(20)) {
+      const Pos p(DirUtils::getRndAdjPos(pos_, true));
+      if(Utils::isPosInsideMap(p)) {
+        GameTime::addMob(new Smoke(p, 10));
+      }
+    }
+    if(Rnd::oneIn(40)) {
+      burnState_ = BurnState::hasBurned;
+    }
+  }
+}
+
+void FeatureStatic::tryStartBurning() {
+  if(burnState_ == BurnState::notBurned) {burnState_ = BurnState::burning;}
 }
 
 void FeatureStatic::setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
@@ -72,9 +99,6 @@ void FeatureStatic::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor*
   onHit[int(dmgType)][int(dmgMethod)](actor);
 
   if(actor) {GameTime::actorDidAct();}
-
-  Map::player->updateFov();
-  Renderer::drawMapAndInterface();
 }
 
 void FeatureStatic::tryPutGore() {
@@ -103,7 +127,7 @@ void FeatureStatic::tryPutGore() {
 
 Clr FeatureStatic::getClr() const {
   switch(burnState_) {
-    case BurnState::none:       return getData().clr; break;
+    case BurnState::notBurned:  return getData().clr; break;
     case BurnState::burning:    return clrOrange;     break;
     case BurnState::hasBurned:  return clrGray;       break;
   }
@@ -113,7 +137,7 @@ Clr FeatureStatic::getClr() const {
 
 Clr FeatureStatic::getClrBg() const {
   switch(burnState_) {
-    case BurnState::none:       return clrBlack;  break;
+    case BurnState::notBurned:  return clrBlack;  break;
     case BurnState::burning:    return Clr {Uint8(Rnd::range(32, 255)), 0, 0, 0}; break;
     case BurnState::hasBurned:  return clrBlack;  break;
   }
@@ -392,8 +416,7 @@ void LiquidShallow::bump(Actor& actorBumping) {
     find(begin(props), end(props), propEthereal)  == end(props) &&
     find(begin(props), end(props), propFlying)    == end(props)) {
 
-    actorBumping.getPropHandler().tryApplyProp(
-      new PropWaiting(propTurnsStd));
+    actorBumping.getPropHandler().tryApplyProp(new PropWaiting(propTurnsStd));
 
     if(&actorBumping == Map::player) Log::addMsg("*glop*");
   }
@@ -439,7 +462,7 @@ void Lever::pull() {
 Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
-    burnState_ = BurnState::burning;
+    tryStartBurning();
   });
 }
 
@@ -447,7 +470,7 @@ Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
 Bush::Bush(Pos pos) : FeatureStatic(pos), type_(BushType::cmn) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
-    burnState_ = BurnState::burning;
+    tryStartBurning();
   });
 }
 
@@ -455,6 +478,6 @@ Bush::Bush(Pos pos) : FeatureStatic(pos), type_(BushType::cmn) {
 Tree::Tree(Pos pos) : FeatureStatic(pos) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
-    burnState_ = BurnState::burning;
+    if(Rnd::oneIn(3)) {tryStartBurning();}
   });
 }

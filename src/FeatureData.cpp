@@ -626,7 +626,7 @@ void initDataList() {
   d.nameA = "smoke";
   d.nameThe = "the smoke";
   d.glyph = '*';
-  d.clr = clrGray;
+  d.clr = clrGrayDrk;
   d.tile = TileId::smoke;
   d.moveRules.setCanMoveCmn();
   d.isVisionPassable = false;
