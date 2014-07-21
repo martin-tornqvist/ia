@@ -81,18 +81,24 @@ void getSpaceSeparatedList(const string& line, vector<string>& linesRef) {
   }
 }
 
-void replaceAll(const std::string& line, const std::string& from,
-                const std::string& to, std::string& resultRef) {
+void replaceAll(const string& line, const string& from,
+                const string& to, string& resultRef) {
   if(from.empty()) {return;}
 
   resultRef = line;
 
   size_t startPos = 0;
-  while((startPos = resultRef.find(from, startPos)) != std::string::npos) {
+  while((startPos = resultRef.find(from, startPos)) != string::npos) {
     resultRef.replace(startPos, from.length(), to);
     //In case 'to' contains 'from', like replacing 'x' with 'yx'
     startPos += to.length();
   }
+}
+
+string firstToUpper(const string str) {
+  string ret = str;
+  if(!ret.empty()) {ret[0] = toupper(ret[0]);}
+  return ret;
 }
 
 } //TextFormatting

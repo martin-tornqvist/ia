@@ -285,8 +285,8 @@ void initDataList() {
   d.msg[propMsgOnStartMonster] = "is burning.";
   d.msg[propMsgOnEndPlayer] = "The flames are put out.";
   d.msg[propMsgOnEndMonster] = "is no longer burning.";
-  d.msg[propMsgOnMorePlayer] = "I am further engulfed by flames!";
-  d.msg[propMsgOnMoreMonster] = "is further engulfed by flames.";
+  d.msg[propMsgOnMorePlayer] = "";
+  d.msg[propMsgOnMoreMonster] = "";
   d.msg[propMsgOnResPlayer] = "I resist burning.";
   d.msg[propMsgOnResMonster] = "resists burning.";
   d.isMakingMonsterAware = true;

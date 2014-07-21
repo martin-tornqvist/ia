@@ -15,6 +15,8 @@ void getSpaceSeparatedList(const std::string& line,
 void replaceAll(const std::string& line, const std::string& from,
                 const std::string& to, std::string& resultRef);
 
+std::string firstToUpper(const std::string str);
+
 } //TextFormatting
 
 #endif

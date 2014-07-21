@@ -12,38 +12,46 @@
 #include "MapGen.h"
 #include "PlayerBon.h"
 #include "Inventory.h"
+#include "FeatureStatic.h"
+#include "TextFormatting.h"
 
 using namespace std;
 
 namespace CharacterLines {
 
 void drawLocationInfo() {
+  string str = "";
+
   if(Map::player->getPropHandler().allowSee()) {
-    string str = "";
+    const Pos& p = Map::player->pos;
 
-    const Pos& playerPos = Map::player->pos;
+//    if(Map::dlvl > 0 && Map::dlvl < FIRST_CAVERN_LVL) {
+//      const vector<Room*>& rooms = Map::roomList;
+//      for(size_t i = 0; i < rooms.size(); ++i) {
+//        const Room* const room = rooms.at(i);
+//        const Pos& p0 = room->r_.p0;
+//        const Pos& p1 = room->r_.p1;
+//        if(Utils::isPosInside(p, Rect(p0, p1))) {
+//          const string& roomDescr = room->descr_;
+//          if(!roomDescr.empty()) {str += roomDescr + " ";}
+//        }
+//      }
+//    }
 
-    if(Map::dlvl > 0 && Map::dlvl < FIRST_CAVERN_LVL) {
-      const vector<Room*>& rooms = Map::roomList;
-      for(size_t i = 0; i < rooms.size(); ++i) {
-        const Room* const room = rooms.at(i);
-        const Pos& p0 = room->r_.p0;
-        const Pos& p1 = room->r_.p1;
-        if(Utils::isPosInside(playerPos, Rect(p0, p1))) {
-          const string& roomDescr = room->descr_;
-          if(!roomDescr.empty()) {str += roomDescr + " ";}
-        }
-      }
+    const string featureName = Map::cells[p.x][p.y].featureStatic->getName(false);
+    if(!featureName.empty()) {
+      str += TextFormatting::firstToUpper(featureName) + ". ";
     }
 
-    const auto& cell = Map::cells[playerPos.x][playerPos.y];
+    const auto& cell = Map::cells[p.x][p.y];
     if(cell.isDark) {
       str += cell.isLight ? "The darkness is lit up. " : "It is dark here. ";
     }
 
-    if(!str.empty()) {
-      Renderer::drawText(str, Panel::charLines, Pos(0, -1), clrWhite);
-    }
+  }
+
+  if(!str.empty()) {
+    Renderer::drawText(str, Panel::charLines, Pos(0, -1), clrWhite);
   }
 }
 
