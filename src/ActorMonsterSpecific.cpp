@@ -661,7 +661,7 @@ bool LordOfSpiders::onActorTurn_() {
 
             if(featureHere->canHaveStaticFeature()) {
               auto& d = FeatureData::getData(featureHere->getId());
-              const FeatureStatic* const mimic = static_cast<FeatureStatic*>(d.mkObj(p));
+              const auto* const mimic = static_cast<FeatureStatic*>(d.mkObj(p));
               Trap* const f = new Trap(p, mimic, TrapId::spiderWeb);
               Map::put(f);
               f->reveal(false);

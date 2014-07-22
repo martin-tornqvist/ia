@@ -155,7 +155,7 @@ private:
 
 class RubbleLow: public FeatureStatic {
 public:
-  RubbleLow(Pos pos) : FeatureStatic(pos) {}
+  RubbleLow(Pos pos);
   RubbleLow() = delete;
   ~RubbleLow() {}
 
@@ -182,7 +182,7 @@ private:
 
 class GraveStone: public FeatureStatic {
 public:
-  GraveStone(Pos pos) : FeatureStatic(pos) {}
+  GraveStone(Pos pos);
   GraveStone() = delete;
   ~GraveStone() {}
 
@@ -201,7 +201,7 @@ private:
 
 class ChurchBench: public FeatureStatic {
 public:
-  ChurchBench(Pos pos) : FeatureStatic(pos) {}
+  ChurchBench(Pos pos);
   ChurchBench() = delete;  ~ChurchBench() {}
 
   FeatureId getId() const override {return FeatureId::churchBench;}
@@ -224,7 +224,7 @@ public:
 
 class Pillar: public FeatureStatic {
 public:
-  Pillar(Pos pos) : FeatureStatic(pos) {}
+  Pillar(Pos pos);
   Pillar() = delete;
   ~Pillar() {}
 
@@ -236,7 +236,7 @@ public:
 
 class Stairs: public FeatureStatic {
 public:
-  Stairs(Pos pos) : FeatureStatic(pos) {}
+  Stairs(Pos pos);
   Stairs() = delete;
   ~Stairs() {}
 
@@ -271,7 +271,7 @@ enum class LiquidType {water, mud, blood, acid, lava};
 
 class LiquidShallow: public FeatureStatic {
 public:
-  LiquidShallow(Pos pos) : FeatureStatic(pos), type_(LiquidType::water) {}
+  LiquidShallow(Pos pos);
   LiquidShallow() = delete;
   ~LiquidShallow() {}
 
@@ -287,7 +287,7 @@ public:
 
 class LiquidDeep: public FeatureStatic {
 public:
-  LiquidDeep(Pos pos) : FeatureStatic(pos), type_(LiquidType::water) {}
+  LiquidDeep(Pos pos);
   LiquidDeep() = delete;
   ~LiquidDeep() {}
 
@@ -303,7 +303,7 @@ public:
 
 class Chasm: public FeatureStatic {
 public:
-  Chasm(Pos pos) : FeatureStatic(pos) {}
+  Chasm(Pos pos);
   Chasm() = delete;
   ~Chasm() {}
 
@@ -317,8 +317,7 @@ class Door;
 
 class Lever: public FeatureStatic {
 public:
-  Lever(Pos pos) :
-    FeatureStatic(pos), isPositionLeft_(true), doorLinkedTo_(nullptr)  {}
+  Lever(Pos pos);
 
   Lever() = delete;
 
@@ -342,7 +341,7 @@ protected:
 
 class Altar: public FeatureStatic {
 public:
-  Altar(Pos pos) : FeatureStatic(pos) {}
+  Altar(Pos pos);
   Altar() = delete;
   ~Altar() {}
 
@@ -450,7 +449,7 @@ private:
 
   bool isContentKnown_;
   bool isLocked_, isTrapped_, isTrapStatusKnown_;
-  ChestMatl matl;
+  ChestMatl matl_;
 };
 
 class Cabinet: public FeatureStatic {

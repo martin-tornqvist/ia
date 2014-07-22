@@ -628,8 +628,9 @@ void placeDoorAtPosIfSuitable(const Pos& p) {
   }
 
   if(isGoodHor || isGoodVer) {
-    const auto& mimicData = FeatureData::getData(FeatureId::wall);
-    Map::put(new Door(p, mimicData));
+    const auto& d = FeatureData::getData(FeatureId::wall);
+    const auto* const mimic = static_cast<const FeatureStatic*>(d.mkObj(p));
+    Map::put(new Door(p, mimic));
   }
 }
 

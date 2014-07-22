@@ -16,9 +16,10 @@ namespace PopulateTraps {
 namespace {
 
 void mkTrapAt(const TrapId id, const Pos& pos) {
-  const auto* const f = Map::cells[pos.x][pos.y].featureStatic;
-  const auto&       d = FeatureData::getData(f->getId());
-  Map::put(new Trap(pos, d, id));
+  const auto* const f     = Map::cells[pos.x][pos.y].featureStatic;
+  const auto&       d     = FeatureData::getData(f->getId());
+  const auto* const mimic = static_cast<FeatureStatic*>(d.mkObj(pos));
+  Map::put(new Trap(pos, mimic, id));
 }
 
 } //namespace

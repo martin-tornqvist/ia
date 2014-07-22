@@ -18,6 +18,7 @@ public:
   virtual FeatureId     getId()                         const = 0;
   virtual std::string   getName(const Article article)  const = 0;
   virtual Clr           getClr()                        const = 0;
+  virtual Clr           getClrBg()                      const = 0;
 
   const   FeatureDataT& getData() const;
 
@@ -32,7 +33,6 @@ public:
   virtual bool          isProjectilePassable()                          const;
   virtual bool          isSmokePassable()                               const;
   virtual bool          isBottomless()                                  const;
-  virtual Clr           getClrBg()                                      const;
   virtual char          getGlyph()                                      const;
   virtual TileId        getTile()                                       const;
   virtual void          addLight(bool light[MAP_W][MAP_H])              const;

@@ -14,6 +14,9 @@
 #include "MapParsing.h"
 #include "FeatureMob.h"
 #include "ItemDrop.h"
+#include "Explosion.h"
+#include "ActorFactory.h"
+#include "ActorMonster.h"
 
 using namespace std;
 
@@ -239,7 +242,7 @@ Floor::Floor(Pos pos) : FeatureStatic(pos), type_(FloorType::cmn) {
   });
 }
 
-string Floor::getName(const Article article)  const {
+string Floor::getName(const Article article) const {
 
 }
 
@@ -322,17 +325,17 @@ bool Wall::isTileAnyWallTop(const TileId tile) {
 }
 
 string Wall::getName(const Article article) const {
-  const string descrStr = isMossy_ ? "moss-grown " : "";
-  const string a        = (article == Article::a ? "a " : "the ");
+  string ret = article == Article::a ? "a " : "the ";
+
+  if(isMossy_) {ret += "moss-grown ";}
 
   switch(type_) {
     case WallType::cmn:
-    case WallType::cmnAlt: {return a + descrStr + "stone wall";}
-    case WallType::cave:   {return a + descrStr + "cavern wall";}
-    case WallType::egypt:  {return a + descrStr + "stone wall";}
+    case WallType::cmnAlt:
+    case WallType::egypt:   ret += "stone ";  break;
+    case WallType::cave:    ret += "cavern "; break;
   }
-  assert(false && "Failed to get door description");
-  return "";
+  return ret + "wall";
 }
 
 Clr Wall::getClr_() const {
@@ -417,7 +420,7 @@ void RubbleHigh::mkLowRubbleAndRocks() {
   if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
 }
 
-string RubbleHigh::getName(const Article article)  const {
+string RubbleHigh::getName(const Article article) const {
 
 }
 
@@ -425,7 +428,27 @@ Clr RubbleHigh::getClr_() const {
 
 }
 
+//--------------------------------------------------------------------- LOW RUBBLE
+RubbleLow::RubbleLow(Pos pos) : FeatureStatic(pos) {
+  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+    (void)actor;
+    tryStartBurning(false);
+  });
+}
+
+string RubbleLow::getName(const Article article) const {
+
+}
+
+Clr RubbleLow::getClr_() const {
+
+}
+
 //--------------------------------------------------------------------- GRAVE
+GraveStone::GraveStone(Pos pos) : FeatureStatic(pos) {
+
+}
+
 void GraveStone::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {Log::addMsg(inscr_);}
 }
@@ -436,6 +459,20 @@ string GraveStone::getName(const Article article) const {
 }
 
 Clr GraveStone::getClr_() const {
+
+}
+
+//--------------------------------------------------------------------- CHURCH BENCH
+ChurchBench::ChurchBench(Pos pos) : FeatureStatic(pos) {
+
+}
+
+string ChurchBench::getName(const Article article) const {
+  const string a = article == Article::a ? "a " : "the ";
+  return a + "church bench";
+}
+
+Clr ChurchBench::getClr_() const {
 
 }
 
@@ -485,7 +522,7 @@ Statue::Statue(Pos pos) : FeatureStatic(pos) {
   });
 }
 
-string Statue::getName(const Article article)  const {
+string Statue::getName(const Article article) const {
 
 }
 
@@ -493,7 +530,24 @@ Clr Statue::getClr_() const {
 
 }
 
+//--------------------------------------------------------------------- STATUE
+Pillar::Pillar(Pos pos) : FeatureStatic(pos) {
+
+}
+
+string Pillar::getName(const Article article) const {
+
+}
+
+Clr Pillar::getClr_() const {
+
+}
+
 //--------------------------------------------------------------------- STAIRS
+Stairs::Stairs(Pos pos) : FeatureStatic(pos) {
+
+}
+
 void Stairs::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {
 
@@ -516,7 +570,7 @@ void Stairs::bump(Actor& actorBumping) {
   }
 }
 
-string Stairs::getName(const Article article)  const {
+string Stairs::getName(const Article article) const {
 
 }
 
@@ -533,7 +587,7 @@ char Bridge::getGlyph() const {
   return dir_ == hor ? '|' : '=';
 }
 
-string Bridge::getName(const Article article)  const {
+string Bridge::getName(const Article article) const {
 
 }
 
@@ -542,6 +596,10 @@ Clr Bridge::getClr_() const {
 }
 
 //--------------------------------------------------------------------- SHALLOW LIQUID
+LiquidShallow::LiquidShallow(Pos pos) : FeatureStatic(pos), type_(LiquidType::water) {
+
+}
+
 void LiquidShallow::bump(Actor& actorBumping) {
   vector<PropId> props;
   actorBumping.getPropHandler().getAllActivePropIds(props);
@@ -556,7 +614,7 @@ void LiquidShallow::bump(Actor& actorBumping) {
   }
 }
 
-string LiquidShallow::getName(const Article article)  const {
+string LiquidShallow::getName(const Article article) const {
 
 }
 
@@ -565,11 +623,15 @@ Clr LiquidShallow::getClr_() const {
 }
 
 //--------------------------------------------------------------------- DEEP LIQUID
+LiquidDeep::LiquidDeep(Pos pos) : FeatureStatic(pos), type_(LiquidType::water) {
+
+}
+
 void LiquidDeep::bump(Actor& actorBumping) {
   (void)actorBumping;
 }
 
-string LiquidDeep::getName(const Article article)  const {
+string LiquidDeep::getName(const Article article) const {
 
 }
 
@@ -577,8 +639,26 @@ Clr LiquidDeep::getClr_() const {
 
 }
 
+//--------------------------------------------------------------------- CHASM
+Chasm::Chasm(Pos pos) : FeatureStatic(pos) {
+
+}
+
+string Chasm::getName(const Article article) const {
+
+}
+
+Clr Chasm::getClr_() const {
+
+}
+
 //--------------------------------------------------------------------- LEVER
-string Lever::getName(const Article article)  const {
+Lever::Lever(Pos pos) :
+  FeatureStatic(pos), isPositionLeft_(true), doorLinkedTo_(nullptr)  {
+
+}
+
+string Lever::getName(const Article article) const {
 
 }
 
@@ -612,6 +692,19 @@ void Lever::pull() {
   TRACE_FUNC_END;
 }
 
+//--------------------------------------------------------------------- ALTAR
+Altar::Altar(Pos pos) : FeatureStatic(pos) {
+
+}
+
+string Altar::getName(const Article article) const {
+
+}
+
+Clr Altar::getClr_() const {
+
+}
+
 //--------------------------------------------------------------------- CARPET
 Carpet::Carpet(Pos pos) : FeatureStatic(pos) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
@@ -620,7 +713,7 @@ Carpet::Carpet(Pos pos) : FeatureStatic(pos) {
   });
 }
 
-string Carpet::getName(const Article article)  const {
+string Carpet::getName(const Article article) const {
 
 }
 
@@ -636,7 +729,7 @@ Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
   });
 }
 
-string Grass::getName(const Article article)  const {
+string Grass::getName(const Article article) const {
 
 }
 
@@ -652,6 +745,14 @@ Bush::Bush(Pos pos) : FeatureStatic(pos), type_(BushType::cmn) {
   });
 }
 
+string Bush::getName(const Article article) const {
+
+}
+
+Clr Bush::getClr_() const {
+
+}
+
 //--------------------------------------------------------------------- TREE
 Tree::Tree(Pos pos) : FeatureStatic(pos) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
@@ -660,11 +761,20 @@ Tree::Tree(Pos pos) : FeatureStatic(pos) {
   });
 }
 
-string Tree::getName(const Article article)  const {
+string Tree::getName(const Article article) const {
 
 }
 
 Clr Tree::getClr_() const {
+
+}
+
+//--------------------------------------------------------------------- BRAZIER
+string Brazier::getName(const Article article) const {
+
+}
+
+Clr Brazier::getClr_() const {
 
 }
 
@@ -782,20 +892,18 @@ Tomb::Tomb(const Pos& pos) :
 }
 
 string Tomb::getName(const Article article) const {
+  string ret = article == Article::a ? "a " : "the ";
+
   switch(appearance_) {
     case TombAppearance::common:
-      return string(DEFINITE_ARTICLE ? "the" : "a")  + " tomb";
-    case TombAppearance::ornate:
-      return string(DEFINITE_ARTICLE ? "the" : "an") + " ornate tomb";
-    case TombAppearance::marvelous:
-      return string(DEFINITE_ARTICLE ? "the" : "a")  + " marvelous tomb";
     case TombAppearance::END: {} break;
+    case TombAppearance::ornate:    ret += "ornate ";    break;
+    case TombAppearance::marvelous: ret += "marvelous "; break;
   }
-  assert("Failed to set Tomb description" && false);
-  return "";
+  return ret + "tomb";
 }
 
-Clr Tomb::getClr() const {
+Clr Tomb::getClr_() const {
   switch(appearance_) {
     case TombAppearance::common:    return clrGray;
     case TombAppearance::ornate:    return clrWhite;
@@ -1042,8 +1150,8 @@ void Tomb::triggerTrap(Actor& actor) {
   }
 
   if(!actorBucket.empty()) {
-    const unsigned int ELEM = Rnd::range(0, actorBucket.size() - 1);
-    const ActorId actorIdToSpawn = actorBucket.at(ELEM);
+    const size_t ELEMENT = Rnd::range(0, actorBucket.size() - 1);
+    const ActorId actorIdToSpawn = actorBucket[ELEMENT];
     Actor* const monster = ActorFactory::mk(actorIdToSpawn, pos_);
     static_cast<Monster*>(monster)->becomeAware(false);
   }
@@ -1056,7 +1164,7 @@ Chest::Chest(const Pos& pos) :
   isLocked_(false),
   isTrapped_(false),
   isTrapStatusKnown_(false),
-  matl(ChestMatl(Rnd::range(0, int(ChestMatl::END) - 1))) {
+  matl_(ChestMatl(Rnd::range(0, int(ChestMatl::END) - 1))) {
 
   const bool IS_TREASURE_HUNTER =
     PlayerBon::hasTrait(Trait::treasureHunter);
@@ -1320,14 +1428,17 @@ void Chest::triggerTrap(Actor& actor) {
 }
 
 string Chest::getName(const Article article) const {
-  const string a = DEFINITE_ARTICLE ?
-                   "the " : (matl == ChestMatl::wood ? "a " : "an ");
 
-  return a + (matl == ChestMatl::wood ? "wooden " : "iron ") + "chest";
+  string ret = article == Article::a ?
+               "the " : (matl_ == ChestMatl::wood ? "a " : "an ");
+
+  ret += matl_ == ChestMatl::wood ? "wooden " : "iron ";
+
+  return ret + "chest";
 }
 
 Clr Chest::getClr_() const {
-  return matl == ChestMatl::wood ? clrBrownDrk : clrGray;
+  return matl_ == ChestMatl::wood ? clrBrownDrk : clrGray;
 }
 
 //--------------------------------------------------------------------- FOUNTAIN
@@ -1355,7 +1466,7 @@ Fountain::Fountain(const Pos& pos) :
   }
 }
 
-Clr Fountain::getClr() const {
+Clr Fountain::getClr_() const {
   switch(fountainMatl_) {
     case FountainMatl::stone: return clrGray;
     case FountainMatl::gold:  return clrYellow;
@@ -1365,14 +1476,13 @@ Clr Fountain::getClr() const {
 }
 
 string Fountain::getName(const Article article) const {
-  string article = DEFINITE_ARTICLE ? "the" : "a";
+  string ret = article == Article::a ? "a " : "the ";
 
   switch(fountainMatl_) {
-    case FountainMatl::stone: return article + " stone fountain";
-    case FountainMatl::gold:  return article + " golden fountain";
+    case FountainMatl::stone: ret += "stone ";  break;
+    case FountainMatl::gold:  ret += "golden "; break;
   }
-  assert("Failed to get fountain description" && false);
-  return "";
+  return ret + "fountain";
 }
 
 void Fountain::bump(Actor& actorBumping) {
@@ -1508,6 +1618,14 @@ bool Cabinet::open() {
   return true;
 }
 
+string Cabinet::getName(const Article article) const {
+
+}
+
+Clr Cabinet::getClr_() const {
+
+}
+
 //--------------------------------------------------------------------- COCOON
 Cocoon::Cocoon(const Pos& pos) : FeatureStatic(pos), isContentKnown_(false) {
   const bool IS_TREASURE_HUNTER = PlayerBon::hasTrait(Trait::treasureHunter);
@@ -1575,5 +1693,13 @@ bool Cocoon::open() {
   Renderer::drawMapAndInterface(true);
 
   return true;
+}
+
+string Cocoon::getName(const Article article) const {
+
+}
+
+Clr Cocoon::getClr_() const {
+
 }
 

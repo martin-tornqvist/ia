@@ -156,7 +156,7 @@ int placeThemeFeatures(Room& room) {
       trySetFeatureToPlace(&d, pos, nextToWalls, awayFromWalls, featureBucket);
 
     if(d) {
-      TRACE << "Placing " << d->nameA << endl;
+      TRACE << "Placing feature" << endl;
       Map::put(static_cast<FeatureStatic*>(d->mkObj(pos)));
       spawnCount.at(FEATURE_ELEMENT)++;
 
