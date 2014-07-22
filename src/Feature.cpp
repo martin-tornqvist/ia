@@ -26,9 +26,9 @@ void Feature::bump(Actor& actorBumping) {
   if(!canMove(props)) {
     if(&actorBumping == Map::player) {
       if(Map::player->getPropHandler().allowSee()) {
-        Log::addMsg(getData().messageOnPlayerBlocked);
+        Log::addMsg(getData().msgOnPlayerBlocked);
       } else {
-        Log::addMsg(getData().messageOnPlayerBlockedBlind);
+        Log::addMsg(getData().msgOnPlayerBlockedBlind);
       }
     }
   }
@@ -48,16 +48,10 @@ bool Feature::isProjectilePassable()      const {return getData().isProjectilePa
 bool Feature::isSmokePassable()           const {return getData().isSmokePassable;}
 bool Feature::isBottomless()              const {return getData().isBottomless;}
 
-string Feature::getName(const bool DEFINITE_ARTICLE) const {
-  return DEFINITE_ARTICLE ? getData().nameThe : getData().nameA;
-}
-
 void Feature::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-Clr       Feature::getClr()               const {return getData().clr;}
-Clr       Feature::getClrBg()             const {return getData().clrBg;}
 char      Feature::getGlyph()             const {return getData().glyph;}
 TileId    Feature::getTile()              const {return getData().tile;}
 bool      Feature::canHaveCorpse()        const {return getData().canHaveCorpse;}

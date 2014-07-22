@@ -23,8 +23,8 @@
 using namespace std;
 
 //------------------------------------------------------------- TRAP
-Trap::Trap(const Pos& pos, const FeatureDataT& mimicFeature, TrapId type) :
-  FeatureStatic(pos), mimicFeature_(&mimicFeature), isHidden_(true) {
+Trap::Trap(const Pos& pos, const FeatureStatic* const mimicFeature, TrapId type) :
+  FeatureStatic(pos), mimicFeature_(mimicFeature), isHidden_(true) {
 
   assert(type != TrapId::END);
 
@@ -285,24 +285,24 @@ void Trap::playerTrySpotHidden() {
   }
 }
 
-string Trap::getName(const bool DEFINITE_ARTICLE) const {
+string Trap::getName(const Article article) const {
   if(isHidden_) {
-    return DEFINITE_ARTICLE ? mimicFeature_->nameThe : mimicFeature_->nameA;
+    return mimicFeature_->getName(article);
   } else {
-    return "a " + specificTrap_->getTitle();
+    return (article == Article::a ? "a " : "the ") + specificTrap_->getTitle();
   }
 }
 
-Clr Trap::getClr() const {
-  return isHidden_ ? mimicFeature_->clr : specificTrap_->getClr();
+Clr Trap::getClr_() const {
+  return isHidden_ ? mimicFeature_->getClr() : specificTrap_->getClr();
 }
 
 char Trap::getGlyph() const {
-  return isHidden_ ? mimicFeature_->glyph : specificTrap_->getGlyph();
+  return isHidden_ ? mimicFeature_->getGlyph() : specificTrap_->getGlyph();
 }
 
 TileId Trap::getTile() const {
-  return isHidden_ ? mimicFeature_->tile : specificTrap_->getTile();
+  return isHidden_ ? mimicFeature_->getTile() : specificTrap_->getTile();
 }
 
 Dir Trap::actorTryLeave(Actor& actor, const Dir dir) {
@@ -311,7 +311,7 @@ Dir Trap::actorTryLeave(Actor& actor, const Dir dir) {
 }
 
 Matl Trap::getMatl() const {
-  return isHidden_ ? mimicFeature_->matlType : getData().matlType;
+  return isHidden_ ? mimicFeature_->getMatl() : getData().matlType;
 }
 
 //------------------------------------------------------------- SPECIFIC TRAPS

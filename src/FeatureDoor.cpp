@@ -15,8 +15,8 @@
 using namespace std;
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(const Pos& pos, const FeatureDataT& mimicFeature) :
-  FeatureStatic(pos), mimicFeature_(&mimicFeature), nrSpikes_(0) {
+Door::Door(const Pos& pos, const FeatureStatic* const mimicFeature) :
+  FeatureStatic(pos), mimicFeature_(mimicFeature), nrSpikes_(0) {
 
   isHandledExternally_ = false;
 
@@ -296,9 +296,24 @@ bool Door::isVisionPassable()     const {return isOpen_;}
 bool Door::isProjectilePassable() const {return isOpen_;}
 bool Door::isSmokePassable()      const {return isOpen_;}
 
-Clr Door::getClr() const {
+string Door::getName(const Article article) const {
+  if(isSecret_) {return mimicFeature_->getName(article);}
+
+  string descrStr = "";
+
+  if(getBurnState() == BurnState::burning) {
+    descrStr = " burning ";
+  } else {
+    descrStr += isOpen_ ? "open " : "closed ";
+    descrStr += matl_ == Matl::wood ? "wooden " : "metal ";
+  }
+
+  return (article == Article::a ? "a " : "the ") + descrStr + "door";
+}
+
+Clr Door::getClr_() const {
   if(isSecret_) {
-    return mimicFeature_->clr;
+    return mimicFeature_->getClr();
   } else {
     switch(matl_) {
       case Matl::wood:      return clrBrownDrk; break;
@@ -315,28 +330,26 @@ Clr Door::getClr() const {
 }
 
 char Door::getGlyph() const {
-  return isSecret_ ? mimicFeature_->glyph : (isOpen_ ? 39 : '+');
+  return isSecret_ ? mimicFeature_->getGlyph() : (isOpen_ ? 39 : '+');
 }
 
 TileId Door::getTile() const {
-  return isSecret_ ? mimicFeature_->tile :
+  return isSecret_ ? mimicFeature_->getTile() :
          (isOpen_ ? TileId::doorOpen : TileId::doorClosed);
 }
 
 Matl Door::getMatl() const {
-  return isSecret_ ? mimicFeature_->matlType : matl_;
+  return isSecret_ ? mimicFeature_->getMatl() : matl_;
 }
 
 void Door::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {
     if(isSecret_) {
       if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
-        TRACE << "Door: Player bumped into secret door, ";
-        TRACE << "with vision in cell" << endl;
+        TRACE << "Player bumped into secret door, with vision in cell" << endl;
         Log::addMsg("That way is blocked.");
       } else {
-        TRACE << "Door: Player bumped into secret door, ";
-        TRACE << "without vision in cell" << endl;
+        TRACE << "Player bumped into secret door, without vision in cell" << endl;
         Log::addMsg("I bump into something.");
       }
       return;
@@ -345,18 +358,6 @@ void Door::bump(Actor& actorBumping) {
     if(!isOpen_) {tryOpen(&actorBumping);}
   }
 }
-
-string Door::getName(const bool DEFINITE_ARTICLE) const {
-  if(isSecret_) {
-    return (DEFINITE_ARTICLE ? mimicFeature_->nameThe : mimicFeature_->nameA);
-  }
-  if(isOpen_) {
-    return DEFINITE_ARTICLE ? "the open door" : "an open door";
-  } else {
-    return DEFINITE_ARTICLE ? "the door" : "a door";
-  }
-}
-//----------------------------------------------------------------------
 
 void Door::reveal(const bool ALLOW_MESSAGE) {
   if(isSecret_) {

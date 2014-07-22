@@ -15,7 +15,10 @@ public:
 
   virtual ~Feature() {}
 
-  virtual FeatureId     getId()   const = 0;
+  virtual FeatureId     getId()                         const = 0;
+  virtual std::string   getName(const Article article)  const = 0;
+  virtual Clr           getClr()                        const = 0;
+
   const   FeatureDataT& getData() const;
 
   virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor);
@@ -29,8 +32,6 @@ public:
   virtual bool          isProjectilePassable()                          const;
   virtual bool          isSmokePassable()                               const;
   virtual bool          isBottomless()                                  const;
-  virtual std::string   getName(const bool DEFINITE_ARTICLE)            const;
-  virtual Clr           getClr()                                        const;
   virtual Clr           getClrBg()                                      const;
   virtual char          getGlyph()                                      const;
   virtual TileId        getTile()                                       const;

@@ -13,7 +13,7 @@ enum class DoorSpawnState {
 
 class Door: public FeatureStatic {
 public:
-  Door(const Pos& pos, const FeatureDataT& mimicFeature);
+  Door(const Pos& pos, const FeatureStatic* const mimicFeature);
 
   //Spawn by id compliant ctor (do not use for normal cases):
   Door(const Pos& pos) : FeatureStatic(pos), mimicFeature_(nullptr), nrSpikes_(0) {}
@@ -24,15 +24,16 @@ public:
 
   FeatureId getId() const override {return FeatureId::door;}
 
-  void bump(Actor& actorBumping)      override;
-  virtual bool canMoveCmn()           const override;
-  virtual bool canMove(const std::vector<PropId>& actorsProps) const override;
-  bool isVisionPassable()             const override;
-  bool isProjectilePassable()         const override;
-  bool isSmokePassable()              const override;
-  Clr getClr()                        const override;
-  char getGlyph()                     const override;
-  TileId getTile()                    const override;
+  std::string getName(const Article article)                  const override;
+  Clr         getClr_()                                       const override;
+  char        getGlyph()                                      const override;
+  TileId      getTile()                                       const override;
+  void        bump(Actor& actorBumping)                             override;
+  bool        canMoveCmn()                                    const override;
+  bool        canMove(const std::vector<PropId>& actorsProps) const override;
+  bool        isVisionPassable()                              const override;
+  bool        isProjectilePassable()                          const override;
+  bool        isSmokePassable()                               const override;
 
   void tryOpen(Actor* actorTrying);
   void tryClose(Actor* actorTrying);
@@ -42,8 +43,6 @@ public:
   bool isSecret() const {return isSecret_;}
   bool isStuck()  const {return isStuck_;}
   bool isHandledExternally() const {return isHandledExternally_;}
-
-  std::string getName(const bool DEFINITE_ARTICLE) const override;
 
   Matl getMatl() const;
 
@@ -60,7 +59,7 @@ public:
   void playerTrySpotHidden();
 
 protected:
-  const FeatureDataT* mimicFeature_;
+  const FeatureStatic* const mimicFeature_;
   int nrSpikes_;
 
   bool isOpen_, isStuck_, isSecret_, isHandledExternally_;

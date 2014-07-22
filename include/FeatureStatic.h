@@ -11,15 +11,15 @@ public:
 
   FeatureStatic() = delete;
 
-  virtual FeatureId getId() const override = 0;
+  virtual FeatureId   getId()                         const override = 0;
+  virtual std::string getName(const Article article)  const override = 0;
+  virtual void        onNewTurn()                           override;
+  Clr                 getClr()                        const override final;
+  virtual Clr         getClr_()                       const = 0;
+  virtual Clr         getClrBg()                      const override final;
 
   virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* actor = nullptr);
-
-  virtual void        onNewTurn()                                 override;
-  virtual Clr         getClr()                              const override;
-  virtual Clr         getClrBg()                            const override;
-  virtual std::string getName(const bool DEFINITE_ARTICLE) const override;
 
   void tryPutGore();
 
@@ -37,6 +37,8 @@ protected:
                     const std::function<void (Actor* const actor)>& effect);
 
   void tryStartBurning(const bool IS_MSG_ALLOWED);
+
+  BurnState getBurnState() const {return burnState_;}
 
   virtual void triggerTrap(Actor& actor) {(void)actor;}
 
@@ -59,16 +61,22 @@ public:
 
   FeatureId getId() const override {return FeatureId::floor;}
 
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+
   FloorType type_;
 };
 
 class Carpet: public FeatureStatic {
 public:
-  Carpet(Pos pos) : FeatureStatic(pos) {}
+  Carpet(Pos pos);
   Carpet() = delete;
   ~Carpet() {}
 
   FeatureId getId() const override {return FeatureId::carpet;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 };
 
 enum class GrassType {cmn, withered};
@@ -80,6 +88,9 @@ public:
   ~Grass() {}
 
   FeatureId getId() const override {return FeatureId::grass;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 
   GrassType type_;
 };
@@ -94,6 +105,9 @@ public:
 
   FeatureId getId() const override {return FeatureId::bush;}
 
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+
   BushType type_;
 };
 
@@ -104,6 +118,9 @@ public:
   ~Brazier() {}
 
   FeatureId getId() const override {return FeatureId::brazier;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 };
 
 enum class WallType {cmn, cmnAlt, cave, egypt};
@@ -116,11 +133,11 @@ public:
 
   FeatureId getId() const override {return FeatureId::wall;}
 
-  std::string getName(const bool DEFINITE_ARTICLE) const override;
-  Clr   getClr()                                    const;
-  char        getGlyph()                            const;
-  TileId      getFrontWallTile()                    const;
-  TileId      getTopWallTile()                      const;
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+  char        getGlyph()                      const override;
+  TileId      getFrontWallTile()              const;
+  TileId      getTopWallTile()                const;
 
   void setRandomNormalWall();
   void setRandomIsMossGrown();
@@ -143,6 +160,9 @@ public:
   ~RubbleLow() {}
 
   FeatureId getId() const override {return FeatureId::rubbleLow;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 };
 
 class RubbleHigh: public FeatureStatic {
@@ -152,6 +172,9 @@ public:
   ~RubbleHigh() {}
 
   FeatureId getId() const override {return FeatureId::rubbleHigh;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 
 private:
   void mkLowRubbleAndRocks(); //Note: Will destroy object
@@ -165,7 +188,8 @@ public:
 
   FeatureId getId() const override {return FeatureId::gravestone;}
 
-  std::string getName(const bool DEFINITE_ARTICLE) const override;
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 
   void setInscription(const std::string& str) {inscr_ = str;}
 
@@ -181,6 +205,9 @@ public:
   ChurchBench() = delete;  ~ChurchBench() {}
 
   FeatureId getId() const override {return FeatureId::churchBench;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 };
 
 class Statue: public FeatureStatic {
@@ -190,6 +217,9 @@ public:
   ~Statue() {}
 
   FeatureId getId() const override {return FeatureId::statue;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 };
 
 class Pillar: public FeatureStatic {
@@ -199,6 +229,9 @@ public:
   ~Pillar() {}
 
   FeatureId getId() const override {return FeatureId::pillar;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 };
 
 class Stairs: public FeatureStatic {
@@ -208,6 +241,9 @@ public:
   ~Stairs() {}
 
   FeatureId getId() const override {return FeatureId::stairs;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 
   void bump(Actor& actorBumping) override;
 };
@@ -220,8 +256,10 @@ public:
 
   FeatureId getId() const override {return FeatureId::bridge;}
 
-  TileId  getTile()   const override;
-  char    getGlyph()  const override;
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+  TileId      getTile()                       const override;
+  char        getGlyph()                      const override;
 
   void setDir(const HorizontalVertical dir) {dir_ = dir;}
 
@@ -239,6 +277,9 @@ public:
 
   FeatureId getId() const override {return FeatureId::liquidShallow;}
 
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+
   void bump(Actor& actorBumping) override;
 
   LiquidType type_;
@@ -252,6 +293,9 @@ public:
 
   FeatureId getId() const override {return FeatureId::liquidDeep;}
 
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+
   void bump(Actor& actorBumping) override;
 
   LiquidType type_;
@@ -264,6 +308,9 @@ public:
   ~Chasm() {}
 
   FeatureId getId() const override {return FeatureId::chasm;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 };
 
 class Door;
@@ -279,9 +326,10 @@ public:
 
   FeatureId getId() const override {return FeatureId::lever;}
 
-  Clr getClr()  const;
-  TileId    getTile() const;
-  void      examine() override;
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+  TileId      getTile()                       const override;
+  void        examine()                             override;
 
   void setLinkedDoor(Door* const door) {doorLinkedTo_ = door;}
 
@@ -299,6 +347,9 @@ public:
   ~Altar() {}
 
   FeatureId getId() const override {return FeatureId::altar;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
 };
 
 class Tree: public FeatureStatic {
@@ -308,6 +359,178 @@ public:
   ~Tree() {}
 
   FeatureId getId() const override {return FeatureId::tree;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+};
+
+class Item;
+
+class ItemContainer {
+public:
+  ItemContainer();
+
+  ~ItemContainer();
+
+  void setRandomItemsForFeature(const FeatureId featureId,
+                                const int NR_ITEMS_TO_ATTEMPT);
+
+  void dropItems(const Pos& pos);
+
+  void destroySingleFragile();
+
+  std::vector<Item*> items_;
+};
+
+enum class TombTrait {
+  stench,                 //Fumes, Ooze-type monster
+  auraOfUnrest,           //Ghost-type monster
+  forebodingCarvedSigns,  //Cursed
+  END
+};
+
+enum class TombAppearance {
+  common,
+  ornate,     //Good items
+  marvelous,  //Excellent items
+  END
+};
+
+class Tomb: public FeatureStatic {
+public:
+  Tomb(const Pos& pos);
+  Tomb() = delete;
+  ~Tomb() {}
+
+  FeatureId getId() const override {return FeatureId::tomb;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+  void        bump(Actor& actorBumping)             override;
+  bool        open()                                override;
+  void        examine()                             override;
+
+private:
+  void triggerTrap(Actor& actor) override;
+
+  void trySprainPlayer();
+
+  bool isContentKnown_, isTraitKnown_;
+
+  ItemContainer itemContainer_;
+
+  int pushLidOneInN_;
+  TombAppearance appearance_;
+  TombTrait trait_;
+};
+
+enum class ChestMatl {wood, iron, END};
+
+class Chest: public FeatureStatic {
+public:
+  Chest(const Pos& pos);
+  Chest() = delete;
+  ~Chest() {}
+
+  FeatureId getId() const override {return FeatureId::chest;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+  void        bump(Actor& actorBumping)             override;
+  bool        open()                                override;
+  void        examine()                             override;
+  void        disarm()                              override;
+
+private:
+  void triggerTrap(Actor& actor) override;
+
+  void trySprainPlayer();
+
+  ItemContainer itemContainer_;
+
+  bool isContentKnown_;
+  bool isLocked_, isTrapped_, isTrapStatusKnown_;
+  ChestMatl matl;
+};
+
+class Cabinet: public FeatureStatic {
+public:
+  Cabinet(const Pos& pos);
+  Cabinet() = delete;
+  ~Cabinet() {}
+
+  FeatureId getId() const override {return FeatureId::cabinet;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+  void        bump(Actor& actorBumping)             override;
+  bool        open()                                override;
+
+private:
+  ItemContainer itemContainer_;
+  bool isContentKnown_;
+};
+
+enum class FountainType {
+  dry, //This must be at first position!
+  tepid,
+  refreshing,
+  bless,
+  curse,
+  spirit,
+  vitality,
+  disease,
+  poison,
+  frenzy,
+  paralyze,
+  blind,
+  faint,
+  rFire,
+  rCold,
+  rElec,
+  rFear,
+  rConfusion,
+  END
+};
+
+enum class FountainMatl {stone, gold};
+
+class Fountain: public FeatureStatic {
+public:
+  Fountain(const Pos& pos);
+  Fountain() = delete;
+  ~Fountain() {}
+
+  FeatureId getId() const override {return FeatureId::fountain;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+  void bump(Actor& actorBumping)                    override;
+
+private:
+  FountainType fountainType_;
+  FountainMatl fountainMatl_;
+};
+
+class Cocoon: public FeatureStatic {
+public:
+  Cocoon(const Pos& pos);
+  Cocoon() = delete;
+  ~Cocoon() {}
+
+  FeatureId getId() const override {return FeatureId::cocoon;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr_()                       const override;
+  void        bump(Actor& actorBumping)             override;
+  bool        open()                                override;
+
+private:
+  void triggerTrap(Actor& actor) override;
+
+  bool isContentKnown_;
+
+  ItemContainer itemContainer_;
 };
 
 #endif

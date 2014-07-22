@@ -115,11 +115,11 @@ Entity getEntityToDescribe(const Pos pos) {
 }
 
 void descrBriefFeatureMob(const Feature& feature) {
-  Log::addMsg(feature.getName(false) + ".");
+  Log::addMsg(feature.getName(Article::a) + ".");
 }
 
 void descrBriefFeatureStatic(const Feature& feature) {
-  Log::addMsg(feature.getName(false) + ".");
+  Log::addMsg(feature.getName(Article::a) + ".");
 }
 
 void descrBriefItem(const Item& item) {

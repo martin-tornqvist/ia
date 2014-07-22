@@ -20,6 +20,7 @@
 #include "LineCalc.h"
 #include "Utils.h"
 #include "FeatureTrap.h"
+#include "FeatureData.h"
 
 using namespace std;
 
@@ -656,11 +657,12 @@ bool LordOfSpiders::onActorTurn_() {
           if(Rnd::fraction(3, 4)) {
 
             const Pos p(playerPos + Pos(dx, dy));
-            const auto* const mimicFeature = Map::cells[p.x][p.y].featureStatic;
+            const auto* const featureHere = Map::cells[p.x][p.y].featureStatic;
 
-            if(mimicFeature->canHaveStaticFeature()) {
-              const auto& mimicData = FeatureData::getData(mimicFeature->getId());
-              Trap* const f = new Trap(p, mimicData, TrapId::spiderWeb);
+            if(featureHere->canHaveStaticFeature()) {
+              auto& d = FeatureData::getData(featureHere->getId());
+              const FeatureStatic* const mimic = static_cast<FeatureStatic*>(d.mkObj(p));
+              Trap* const f = new Trap(p, mimic, TrapId::spiderWeb);
               Map::put(f);
               f->reveal(false);
             }

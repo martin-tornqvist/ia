@@ -38,7 +38,7 @@ void drawLocationInfo() {
 //      }
 //    }
 
-    const string featureName = Map::cells[p.x][p.y].featureStatic->getName(false);
+    const string featureName = Map::cells[p.x][p.y].featureStatic->getName(Article::a);
     if(!featureName.empty()) {
       str += TextFormatting::firstToUpper(featureName) + ". ";
     }

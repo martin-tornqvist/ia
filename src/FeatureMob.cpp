@@ -20,6 +20,14 @@ void Smoke::onNewTurn() {
   }
 }
 
+string Smoke::getName(const Article article)  const {
+
+}
+
+Clr Smoke::getClr() const {
+
+}
+
 //------------------------------------------------------------------- DYNAMITE
 void LitDynamite::onNewTurn() {
   nrTurnsLeft_--;
@@ -28,6 +36,14 @@ void LitDynamite::onNewTurn() {
     Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, D);
     GameTime::eraseFeatureMob(this, true);
   }
+}
+
+string LitDynamite::getName(const Article article)  const {
+
+}
+
+Clr LitDynamite::getClr() const {
+
 }
 
 //------------------------------------------------------------------- FLARE
@@ -55,4 +71,12 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
       if(myLight[x][y]) {light[x][y] = true;}
     }
   }
+}
+
+string LitFlare::getName(const Article article)  const {
+
+}
+
+Clr LitFlare::getClr() const {
+
 }

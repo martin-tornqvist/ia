@@ -114,8 +114,6 @@ struct FeatureDataT {
   std::function<Feature*(const Pos& p)> mkObj;
   FeatureId id;
   char glyph;
-  Clr clr;
-  Clr clrBg;
   TileId tile;
   MoveRules moveRules;
   bool isSoundPassable;
@@ -129,10 +127,8 @@ struct FeatureDataT {
   bool canHaveItem;
   bool isBottomless;
   Matl matlType;
-  std::string nameA;
-  std::string nameThe;
-  std::string messageOnPlayerBlocked;
-  std::string messageOnPlayerBlockedBlind;
+  std::string msgOnPlayerBlocked;
+  std::string msgOnPlayerBlockedBlind;
   int dodgeModifier;
   int shockWhenAdjacent;
   FeatureRoomSpawnRules themeSpawnRules;

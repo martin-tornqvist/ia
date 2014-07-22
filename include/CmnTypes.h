@@ -6,6 +6,8 @@
 #include "Colors.h"
 #include "Art.h"
 
+enum class Article {a, the};
+
 enum class Matl {
   empty,
   stone,

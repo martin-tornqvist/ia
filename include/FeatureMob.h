@@ -9,7 +9,9 @@ public:
 
   FeatureMob() = delete;
 
-  virtual FeatureId getId() const override = 0;
+  virtual FeatureId   getId()                         const override = 0;
+  virtual std::string getName(const Article article)  const override = 0;
+  Clr                 getClr()                        const override = 0;
 
   virtual ~FeatureMob() {}
 };
@@ -26,6 +28,9 @@ public:
   ~Smoke() {}
 
   FeatureId getId() const override {return FeatureId::smoke;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr()                        const override;
 
   void onNewTurn() override;
 
@@ -46,6 +51,9 @@ public:
   ~LitDynamite() {}
 
   FeatureId getId() const override {return FeatureId::litDynamite;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr()                        const override;
 
   //TODO Lit dynamite should add light on their own cell (just one cell)
   //void addLight(bool light[MAP_W][MAP_H]) const;
@@ -69,6 +77,9 @@ public:
   ~LitFlare() {}
 
   FeatureId getId() const override {return FeatureId::litFlare;}
+
+  std::string getName(const Article article)  const override;
+  Clr         getClr()                        const override;
 
   void onNewTurn() override;
 

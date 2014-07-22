@@ -25,6 +25,12 @@ public:
 
   FeatureId getId() const override {return FeatureId::proxEventWallCrumble;}
 
+  std::string getName(const Article article) const override {
+    (void)article;
+    return "";
+  }
+  Clr getClr() const override {return clrBlack;}
+
 private:
   void playerIsNear();
 

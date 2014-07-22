@@ -341,7 +341,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
         }
       } else {
         Feature* const f = Map::cells[pos.x][pos.y].featureStatic;
-        Log::addMsg("The potion shatters on " + f->getName(true) + ".");
+        Log::addMsg("The potion shatters on " + f->getName(Article::the) + ".");
       }
     }
     //If the blow from the bottle didn't kill the actor, apply what's inside

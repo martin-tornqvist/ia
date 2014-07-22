@@ -27,7 +27,7 @@ enum class TrapId {
 
 class Trap: public FeatureStatic {
 public:
-  Trap(const Pos& pos, const FeatureDataT& mimicFeature, TrapId type);
+  Trap(const Pos& pos, const FeatureStatic* const mimicFeature, TrapId type);
 
   //Spawn by id compliant ctor (do not use for normal cases):
   Trap(const Pos& pos) : FeatureStatic(pos), mimicFeature_(nullptr), isHidden_(false) {}
@@ -38,16 +38,16 @@ public:
 
   FeatureId getId() const override {return FeatureId::trap;}
 
-  void        bump(Actor& actorBumping)                   override;
-  Clr   getClr()                              const override;
-  char        getGlyph()                            const override;
-  TileId      getTile()                             const override;
-  std::string getName(const bool DEFINITE_ARTICLE) const override;
-  void        disarm()                                    override;
-  bool        canHaveCorpse()                       const override {return isHidden_;}
-  bool        canHaveBlood()                        const override {return isHidden_;}
-  bool        canHaveGore()                         const override {return isHidden_;}
-  bool        canHaveItem()                         const override {return isHidden_;}
+  void        bump(Actor& actorBumping)             override;
+  Clr         getClr_()                       const override;
+  char        getGlyph()                      const override;
+  TileId      getTile()                       const override;
+  std::string getName(const Article article)  const override;
+  void        disarm()                              override;
+  bool        canHaveCorpse()                 const override {return isHidden_;}
+  bool        canHaveBlood()                  const override {return isHidden_;}
+  bool        canHaveGore()                   const override {return isHidden_;}
+  bool        canHaveItem()                   const override {return isHidden_;}
 
   bool isMagical() const;
 
@@ -72,7 +72,7 @@ protected:
 
   void setSpecificTrapFromId(const TrapId id);
 
-  const FeatureDataT* mimicFeature_;
+  const FeatureStatic* const mimicFeature_;
   bool isHidden_;
   SpecificTrapBase* specificTrap_;
 };
