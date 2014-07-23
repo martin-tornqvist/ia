@@ -1060,15 +1060,6 @@ void Player::moveDir(Dir dir) {
             nrMovesUntilFreeAction_--;
           }
         }
-
-        //Print message if walking on item
-        Item* const item = Map::cells[pos.x][pos.y].item;
-        if(item) {
-          string message = propHandler_->allowSee() ?
-                           "I see here: " : "I feel here: ";
-          message += ItemData::getItemInterfaceRef(*item, true);
-          Log::addMsg(message + ".");
-        }
       }
 
       //Note: bump() prints block messages.

@@ -41,6 +41,7 @@ void drawLocationInfo() {
 
     string featureName = "";
 
+    //Describe mobile feature
     const FeatureMob* const mob = Utils::getFirstMobAtPos(p);
     if(mob) {
       featureName = mob->getName(Article::a);
@@ -49,20 +50,33 @@ void drawLocationInfo() {
       }
     }
 
+    //Describe static feature
     featureName = Map::cells[p.x][p.y].featureStatic->getName(Article::a);
     if(!featureName.empty()) {
       str += TextFormatting::firstToUpper(featureName) + ". ";
     }
 
+    //Describe item
+    Item* const item = Map::cells[p.x][p.y].item;
+    if(item) {
+      string itemName = ItemData::getItemInterfaceRef(*item, true);
+      str += TextFormatting::firstToUpper(itemName) + ". ";
+    }
+
+    //Light/darkness
     const auto& cell = Map::cells[p.x][p.y];
     if(cell.isDark) {
       str += cell.isLight ? "The darkness is lit up. " : "It is dark here. ";
     }
-
   }
 
   if(!str.empty()) {
+    str.pop_back(); //Erase trailing space character
     Renderer::drawText(str, Panel::charLines, Pos(0, -1), clrWhite);
+
+    if(str.size() > MAP_W) {
+      Renderer::drawText("(...)", Panel::charLines, Pos(MAP_W - 5, -1), clrWhite);
+    }
   }
 }
 
