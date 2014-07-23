@@ -156,6 +156,9 @@ void FeatureStatic::disarm() {
 }
 
 void FeatureStatic::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
+
+  bool isFeatureHit = true;
+
   if(actor == Map::player && dmgMethod == DmgMethod::kick) {
     const bool IS_BLIND    = !Map::player->getPropHandler().allowSee();
     const bool IS_BLOCKING = !canMoveCmn() && getId() != FeatureId::stairs;
@@ -175,14 +178,15 @@ void FeatureStatic::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor*
       }
 
     } else {
+      isFeatureHit = false;
       Log::addMsg("I kick the air!");
       Audio::play(SfxId::missMedium);
     }
   }
 
-  onHit[int(dmgType)][int(dmgMethod)](actor);
+  if(isFeatureHit) {onHit[int(dmgType)][int(dmgMethod)](actor);}
 
-  if(actor) {GameTime::actorDidAct();}
+  if(actor) {GameTime::actorDidAct();} //TODO This should probably be done elsewhere.
 }
 
 void FeatureStatic::tryPutGore() {

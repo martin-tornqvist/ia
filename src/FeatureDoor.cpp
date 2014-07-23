@@ -316,9 +316,14 @@ bool Door::isSmokePassable()      const {return isOpen_;}
 string Door::getName(const Article article) const {
   if(isSecret_) {return mimicFeature_->getName(article);}
 
-  string ret = article == Article::a ? (isOpen_ ? "an " : "a ") : "the ";
+  string ret = "";
 
- if(getBurnState() == BurnState::burning) {ret += "burning ";}
+  if(getBurnState() == BurnState::burning) {
+    ret = article == Article::a ? "a " : "the ";
+    ret += "burning ";
+  } else {
+    ret = article == Article::a ? (isOpen_ ? "an " : "a ") : "the ";
+  }
 
   ret += isOpen_ ? "open " : "closed ";
   ret += matl_ == Matl::wood ? "wooden " : "metal ";
