@@ -155,7 +155,9 @@ void mkForestTrees(const Pos& stairsPos) {
         if(
           Map::cells[p.x][p.y].featureStatic->canHaveStaticFeature() &&
           Utils::isPosInsideMap(p)) {
-          Map::put(new Floor(p));
+          Floor* const floor = new Floor(p);
+          floor->type_ = FloorType::stonePath;
+          Map::put(floor);
         }
       }
     }
@@ -246,13 +248,9 @@ bool run() {
     for(int x = 1; x < MAP_W - 1; ++x) {
       const Pos p(x, y);
       if(Rnd::oneIn(6)) {
-        Bush* const bush = new Bush(p);
-        //TODO Make bush withered with random chance
-        Map::put(bush);
+        Map::put(new Bush(p));
       } else {
-        Grass* const grass = new Grass(p);
-        //TODO Make bush withered with random chance
-        Map::put(grass);
+        Map::put(new Grass(p));
       }
     }
   }

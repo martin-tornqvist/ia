@@ -311,7 +311,7 @@ string Door::getName(const Article article) const {
   return (article == Article::a ? "a " : "the ") + descrStr + "door";
 }
 
-Clr Door::getClr_() const {
+Clr Door::getDefClr() const {
   if(isSecret_) {
     return mimicFeature_->getClr();
   } else {

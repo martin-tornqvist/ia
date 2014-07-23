@@ -39,7 +39,7 @@ public:
   FeatureId getId() const override {return FeatureId::trap;}
 
   void        bump(Actor& actorBumping)             override;
-  Clr         getClr_()                       const override;
+  Clr         getDefClr()                     const override;
   char        getGlyph()                      const override;
   TileId      getTile()                       const override;
   std::string getName(const Article article)  const override;

@@ -7,6 +7,8 @@
 #include "Converters.h"
 #include "GameTime.h"
 #include "MersenneTwister.h"
+#include "Actor.h"
+#include "FeatureMob.h"
 
 using namespace std;
 
@@ -118,18 +120,21 @@ void mkBoolMapFromVector(const vector<Pos>& positions,
 
 void getActorPositions(const vector<Actor*>& actors, vector<Pos>& out) {
   out.resize(0);
-  const unsigned int NR_ACTORS = actors.size();
-  for(unsigned int i = 0; i < NR_ACTORS; ++i) {
-    out.push_back(actors.at(i)->pos);
-  }
+  for(const auto* const a : actors) {out.push_back(a->pos);}
 }
 
-
-Actor* getActorAtPos(const Pos& pos, ActorDeadState deadState) {
-  for(Actor* actor : GameTime::actors_) {
+Actor* getFirstActorAtPos(const Pos& pos, ActorDeadState deadState) {
+  for(auto* const actor : GameTime::actors_) {
     if(actor->pos == pos && actor->deadState == deadState) {
       return actor;
     }
+  }
+  return nullptr;
+}
+
+FeatureMob* getFirstMobAtPos(const Pos& pos) {
+  for(auto* const mob : GameTime::featureMobs_) {
+    if(mob->getPos() == pos) {return mob;}
   }
   return nullptr;
 }

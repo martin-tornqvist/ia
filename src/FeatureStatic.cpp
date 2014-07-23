@@ -25,6 +25,7 @@ FeatureStatic::FeatureStatic(Pos pos) :
   Feature(pos),
   goreTile_(TileId::empty),
   goreGlyph_(0),
+  isBloody_(false),
   burnState_(BurnState::notBurned) {
   for(int dmgType = 0; dmgType < int(DmgType::END); ++dmgType) {
     for(int dmgMethod = 0; dmgMethod < int(DmgMethod::END); ++dmgMethod) {
@@ -35,6 +36,7 @@ FeatureStatic::FeatureStatic(Pos pos) :
 
 void FeatureStatic::onNewTurn() {
   if(burnState_ == BurnState::burning) {
+    clearGore();
 
     auto scorchActor = [](Actor & actor) {
       if(&actor == Map::player) {
@@ -50,7 +52,7 @@ void FeatureStatic::onNewTurn() {
     //TODO Hit dead actors
 
     //Hit actor standing on feature
-    auto* actor = Utils::getActorAtPos(pos_);
+    auto* actor = Utils::getFirstActorAtPos(pos_);
     if(actor) {
       //Occasionally try to set actor on fire, otherwise just do small fire damage
       if(Rnd::oneIn(4)) {
@@ -100,6 +102,7 @@ void FeatureStatic::onNewTurn() {
 
     if(Rnd::oneIn(finishBurningOneInN)) {
       burnState_ = BurnState::hasBurned;
+      onFinishedBurning();
     }
 
     //Hit adjacent features and actors?
@@ -108,7 +111,7 @@ void FeatureStatic::onNewTurn() {
       if(Utils::isPosInsideMap(p)) {
         Map::cells[p.x][p.y].featureStatic->hit(DmgType::fire, DmgMethod::elemental);
 
-        actor = Utils::getActorAtPos(p);
+        actor = Utils::getFirstActorAtPos(p);
         if(actor) {scorchActor(*actor);}
       }
     }
@@ -126,6 +129,8 @@ void FeatureStatic::onNewTurn() {
 }
 
 void FeatureStatic::tryStartBurning(const bool IS_MSG_ALLOWED) {
+  clearGore();
+
   if(burnState_ == BurnState::notBurned) {
     if(Map::canPlayerSeePos(pos_) && IS_MSG_ALLOWED) {
       string str = getName(Article::the) + " catches fire.";
@@ -151,31 +156,27 @@ void FeatureStatic::disarm() {
 }
 
 void FeatureStatic::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
-  if(actor == Map::player) {
+  if(actor == Map::player && dmgMethod == DmgMethod::kick) {
     const bool IS_BLIND    = !Map::player->getPropHandler().allowSee();
     const bool IS_BLOCKING = !canMoveCmn() && getId() != FeatureId::stairs;
 
-    if(dmgMethod == DmgMethod::kick) {
-      assert(actor);
+    if(IS_BLOCKING) {
+      Log::addMsg("I kick " + (IS_BLIND ? "something" : getName(Article::a)) + "!");
 
-      if(IS_BLOCKING) {
-        Log::addMsg("I kick " + (IS_BLIND ? "something" : getName(Article::a)) + "!");
-
-        if(Rnd::oneIn(4)) {
-          Log::addMsg("I sprain myself.", clrMsgBad);
-          actor->hit(Rnd::range(1, 5), DmgType::pure, false);
-        }
-
-        if(Rnd::oneIn(4)) {
-          Log::addMsg("I am off-balance.");
-
-          actor->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::specific, 2));
-        }
-
-      } else {
-        Log::addMsg("I kick the air!");
-        Audio::play(SfxId::missMedium);
+      if(Rnd::oneIn(4)) {
+        Log::addMsg("I sprain myself.", clrMsgBad);
+        actor->hit(Rnd::range(1, 5), DmgType::pure, false);
       }
+
+      if(Rnd::oneIn(4)) {
+        Log::addMsg("I am off-balance.");
+
+        actor->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::specific, 2));
+      }
+
+    } else {
+      Log::addMsg("I kick the air!");
+      Audio::play(SfxId::missMedium);
     }
   }
 
@@ -209,13 +210,15 @@ void FeatureStatic::tryPutGore() {
 }
 
 Clr FeatureStatic::getClr() const {
-  switch(burnState_) {
-    case BurnState::notBurned:  return getClr_();   break;
-    case BurnState::burning:    return clrOrange;   break;
-    case BurnState::hasBurned:  return clrGray;     break;
+  if(burnState_ == BurnState::burning) {
+    return clrOrange;
+  } else {
+    if(isBloody_) {
+      return clrRedLgt;
+    } else {
+      return burnState_ == BurnState::notBurned ? getDefClr() : clrGrayDrk;
+    }
   }
-  assert(false && "Failed to set color");
-  return clrYellow;
 }
 
 Clr FeatureStatic::getClrBg() const {
@@ -231,7 +234,7 @@ Clr FeatureStatic::getClrBg() const {
 void FeatureStatic::clearGore() {
   goreTile_   = TileId::empty;
   goreGlyph_  = ' ';
-  hasBlood_   = false;
+  isBloody_   = false;
 }
 
 //--------------------------------------------------------------------- FLOOR
@@ -243,11 +246,25 @@ Floor::Floor(Pos pos) : FeatureStatic(pos), type_(FloorType::cmn) {
 }
 
 string Floor::getName(const Article article) const {
+  string ret = article == Article::a ? "" : "the ";
 
+  if(getBurnState() == BurnState::burning) {
+    ret += "flames";
+  } else {
+    if(getBurnState() == BurnState::hasBurned) {ret += "scorched";}
+
+    switch(type_) {
+      case FloorType::cmn:        ret += "stone floor";   break;
+      case FloorType::cave:       ret += "cavern floor";  break;
+      case FloorType::stonePath:  ret += "stone path";    break;
+    }
+  }
+
+  return ret;
 }
 
-Clr Floor::getClr_() const {
-
+Clr Floor::getDefClr() const {
+  return clrGray;
 }
 
 //--------------------------------------------------------------------- WALL
@@ -338,7 +355,7 @@ string Wall::getName(const Article article) const {
   return ret + "wall";
 }
 
-Clr Wall::getClr_() const {
+Clr Wall::getDefClr() const {
   if(isMossy_) {return clrGreenDrk;}
   switch(type_) {
     case WallType::egypt:
@@ -421,11 +438,12 @@ void RubbleHigh::mkLowRubbleAndRocks() {
 }
 
 string RubbleHigh::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "big pile of debris";
 }
 
-Clr RubbleHigh::getClr_() const {
-
+Clr RubbleHigh::getDefClr() const {
+  return clrGray;
 }
 
 //--------------------------------------------------------------------- LOW RUBBLE
@@ -437,11 +455,13 @@ RubbleLow::RubbleLow(Pos pos) : FeatureStatic(pos) {
 }
 
 string RubbleLow::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  if(getBurnState() == BurnState::burning) {ret += "burning ";}
+  return ret + "rubble";
 }
 
-Clr RubbleLow::getClr_() const {
-
+Clr RubbleLow::getDefClr() const {
+  return clrGray;
 }
 
 //--------------------------------------------------------------------- GRAVE
@@ -454,12 +474,12 @@ void GraveStone::bump(Actor& actorBumping) {
 }
 
 string GraveStone::getName(const Article article) const {
-  const string a = article == Article::a ? "a " : "the ";
-  return a + "gravestone; " + inscr_;
+  const string ret = article == Article::a ? "a " : "the ";
+  return ret + "gravestone; " + inscr_;
 }
 
-Clr GraveStone::getClr_() const {
-
+Clr GraveStone::getDefClr() const {
+  return clrWhite;
 }
 
 //--------------------------------------------------------------------- CHURCH BENCH
@@ -468,16 +488,18 @@ ChurchBench::ChurchBench(Pos pos) : FeatureStatic(pos) {
 }
 
 string ChurchBench::getName(const Article article) const {
-  const string a = article == Article::a ? "a " : "the ";
-  return a + "church bench";
+  const string ret = article == Article::a ? "a " : "the ";
+  return ret + "church bench";
 }
 
-Clr ChurchBench::getClr_() const {
-
+Clr ChurchBench::getDefClr() const {
+  return clrBrown;
 }
 
 //--------------------------------------------------------------------- STATUE
 Statue::Statue(Pos pos) : FeatureStatic(pos) {
+
+  type_ = Rnd::oneIn(8) ? StatueType::ghoul : StatueType::cmn;
 
   setHitEffect(DmgType::physical, DmgMethod::kick, [&](Actor * const actor) {
     assert(actor);
@@ -501,7 +523,7 @@ Statue::Statue(Pos pos) : FeatureStatic(pos) {
       Map::updateVisualMemory();
 
       if(!CellPred::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y])) {
-        Actor* const actorBehind = Utils::getActorAtPos(dstPos);
+        Actor* const actorBehind = Utils::getFirstActorAtPos(dstPos);
         if(actorBehind) {
           if(actorBehind->deadState == ActorDeadState::alive) {
             vector<PropId> propList;
@@ -523,11 +545,18 @@ Statue::Statue(Pos pos) : FeatureStatic(pos) {
 }
 
 string Statue::getName(const Article article) const {
+  string ret = article == Article::a ? "a " : "the ";
 
+  switch(type_) {
+    case StatueType::cmn:   ret += "statue"; break;
+    case StatueType::ghoul: ret += "statue of a ghoulish creature"; break;
+  }
+
+  return ret;
 }
 
-Clr Statue::getClr_() const {
-
+Clr Statue::getDefClr() const {
+  return clrWhite;
 }
 
 //--------------------------------------------------------------------- STATUE
@@ -536,11 +565,12 @@ Pillar::Pillar(Pos pos) : FeatureStatic(pos) {
 }
 
 string Pillar::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "pillar";
 }
 
-Clr Pillar::getClr_() const {
-
+Clr Pillar::getDefClr() const {
+  return clrWhite;
 }
 
 //--------------------------------------------------------------------- STAIRS
@@ -571,11 +601,12 @@ void Stairs::bump(Actor& actorBumping) {
 }
 
 string Stairs::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "downward staircase";
 }
 
-Clr Stairs::getClr_() const {
-
+Clr Stairs::getDefClr() const {
+  return clrYellow;
 }
 
 //--------------------------------------------------------------------- BRIDGE
@@ -588,11 +619,12 @@ char Bridge::getGlyph() const {
 }
 
 string Bridge::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "bridge";
 }
 
-Clr Bridge::getClr_() const {
-
+Clr Bridge::getDefClr() const {
+  return clrBrownDrk;
 }
 
 //--------------------------------------------------------------------- SHALLOW LIQUID
@@ -615,11 +647,32 @@ void LiquidShallow::bump(Actor& actorBumping) {
 }
 
 string LiquidShallow::getName(const Article article) const {
+  string ret = "";
+  if(article == Article::the) {ret += "the ";}
 
+  ret += "shallow ";
+
+  switch(type_) {
+    case LiquidType::water:   ret += "water"; break;
+    case LiquidType::acid:    ret += "acid";  break;
+    case LiquidType::blood:   ret += "blood"; break;
+    case LiquidType::lava:    ret += "lava";  break;
+    case LiquidType::mud:     ret += "mud";   break;
+  }
+
+  return ret;
 }
 
-Clr LiquidShallow::getClr_() const {
-
+Clr LiquidShallow::getDefClr() const {
+  switch(type_) {
+    case LiquidType::water:   return clrBlueLgt;  break;
+    case LiquidType::acid:    return clrGreenLgt; break;
+    case LiquidType::blood:   return clrRedLgt;   break;
+    case LiquidType::lava:    return clrOrange;   break;
+    case LiquidType::mud:     return clrBrown;    break;
+  }
+  assert(false && "Failed to set color");
+  return clrYellow;
 }
 
 //--------------------------------------------------------------------- DEEP LIQUID
@@ -632,11 +685,32 @@ void LiquidDeep::bump(Actor& actorBumping) {
 }
 
 string LiquidDeep::getName(const Article article) const {
+  string ret = "";
+  if(article == Article::the) {ret += "the ";}
 
+  ret += "deep ";
+
+  switch(type_) {
+    case LiquidType::water:   ret += "water"; break;
+    case LiquidType::acid:    ret += "acid";  break;
+    case LiquidType::blood:   ret += "blood"; break;
+    case LiquidType::lava:    ret += "lava";  break;
+    case LiquidType::mud:     ret += "mud";   break;
+  }
+
+  return ret;
 }
 
-Clr LiquidDeep::getClr_() const {
-
+Clr LiquidDeep::getDefClr() const {
+  switch(type_) {
+    case LiquidType::water:   return clrBlue;     break;
+    case LiquidType::acid:    return clrGreen;    break;
+    case LiquidType::blood:   return clrRed;      break;
+    case LiquidType::lava:    return clrOrange;   break;
+    case LiquidType::mud:     return clrBrownDrk; break;
+  }
+  assert(false && "Failed to set color");
+  return clrYellow;
 }
 
 //--------------------------------------------------------------------- CHASM
@@ -645,11 +719,12 @@ Chasm::Chasm(Pos pos) : FeatureStatic(pos) {
 }
 
 string Chasm::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "chasm";
 }
 
-Clr Chasm::getClr_() const {
-
+Clr Chasm::getDefClr() const {
+  return clrBlack;
 }
 
 //--------------------------------------------------------------------- LEVER
@@ -659,10 +734,11 @@ Lever::Lever(Pos pos) :
 }
 
 string Lever::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "lever";
 }
 
-Clr Lever::getClr_() const {
+Clr Lever::getDefClr() const {
   return isPositionLeft_ ? clrGray : clrWhite;
 }
 
@@ -698,11 +774,12 @@ Altar::Altar(Pos pos) : FeatureStatic(pos) {
 }
 
 string Altar::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "altar";
 }
 
-Clr Altar::getClr_() const {
-
+Clr Altar::getDefClr() const {
+  return clrWhite;
 }
 
 //--------------------------------------------------------------------- CARPET
@@ -714,15 +791,19 @@ Carpet::Carpet(Pos pos) : FeatureStatic(pos) {
 }
 
 string Carpet::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "carpet";
 }
 
-Clr Carpet::getClr_() const {
-
+Clr Carpet::getDefClr() const {
+  return clrRed;
 }
 
 //--------------------------------------------------------------------- GRASS
 Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
+
+  if(Rnd::oneIn(6)) {type_ = GrassType::withered;}
+
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
     tryStartBurning(false);
@@ -730,27 +811,75 @@ Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
 }
 
 string Grass::getName(const Article article) const {
+  string ret = "";
+  if(article == Article::the) {ret += "the ";}
 
+  switch(getBurnState()) {
+    case BurnState::notBurned: {
+      switch(type_) {
+        case GrassType::cmn:      return ret + "grass";           break;
+        case GrassType::withered: return ret + "withered grass";  break;
+      }
+    } break;
+    case BurnState::burning:    return ret + "burning grass";   break;
+    case BurnState::hasBurned:  return ret + "scorched ground"; break;
+  }
+
+  assert("Failed to set name" && false);
+  return "";
 }
 
-Clr Grass::getClr_() const {
-
+Clr Grass::getDefClr() const {
+  switch(type_) {
+    case GrassType::cmn:      return clrGreen;    break;
+    case GrassType::withered: return clrBrownDrk; break;
+  }
+  assert(false && "Failed to set color");
+  return clrYellow;
 }
 
 //--------------------------------------------------------------------- BUSH
-Bush::Bush(Pos pos) : FeatureStatic(pos), type_(BushType::cmn) {
+Bush::Bush(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
+
+  if(Rnd::oneIn(6)) {type_ = GrassType::withered;}
+
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
     tryStartBurning(false);
   });
 }
 
-string Bush::getName(const Article article) const {
-
+void Bush::onFinishedBurning() {
+  Grass* const grass = new Grass(pos_);
+  grass->setHasBurned();
+  Map::put(grass);
 }
 
-Clr Bush::getClr_() const {
+string Bush::getName(const Article article) const {
+  string ret = article == Article::a ? "a " : "the ";
 
+  switch(getBurnState()) {
+    case BurnState::notBurned: {
+      switch(type_) {
+        case GrassType::cmn:      return ret + "shrub";           break;
+        case GrassType::withered: return ret + "withered shrub";  break;
+      }
+    } break;
+    case BurnState::burning:    return ret + "burning shrub";   break;
+    case BurnState::hasBurned:  {/*Should not happen*/}         break;
+  }
+
+  assert("Failed to set name" && false);
+  return "";
+}
+
+Clr Bush::getDefClr() const {
+  switch(type_) {
+    case GrassType::cmn:      return clrGreen;    break;
+    case GrassType::withered: return clrBrownDrk; break;
+  }
+  assert(false && "Failed to set color");
+  return clrYellow;
 }
 
 //--------------------------------------------------------------------- TREE
@@ -762,20 +891,29 @@ Tree::Tree(Pos pos) : FeatureStatic(pos) {
 }
 
 string Tree::getName(const Article article) const {
+  string ret = article == Article::a ? "a " : "the ";
 
+  switch(getBurnState()) {
+    case BurnState::notBurned:  {}                  break;
+    case BurnState::burning:    ret += "burning ";  break;
+    case BurnState::hasBurned:  ret += "scorched "; break;
+  }
+
+  return ret + "tree";
 }
 
-Clr Tree::getClr_() const {
-
+Clr Tree::getDefClr() const {
+  return clrBrownDrk;
 }
 
 //--------------------------------------------------------------------- BRAZIER
 string Brazier::getName(const Article article) const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "brazier";
 }
 
-Clr Brazier::getClr_() const {
-
+Clr Brazier::getDefClr() const {
+  return clrYellow;
 }
 
 //--------------------------------------------------------------------- ITEM CONTAINER
@@ -903,7 +1041,7 @@ string Tomb::getName(const Article article) const {
   return ret + "tomb";
 }
 
-Clr Tomb::getClr_() const {
+Clr Tomb::getDefClr() const {
   switch(appearance_) {
     case TombAppearance::common:    return clrGray;
     case TombAppearance::ornate:    return clrWhite;
@@ -1428,7 +1566,6 @@ void Chest::triggerTrap(Actor& actor) {
 }
 
 string Chest::getName(const Article article) const {
-
   string ret = article == Article::a ?
                "the " : (matl_ == ChestMatl::wood ? "a " : "an ");
 
@@ -1437,7 +1574,7 @@ string Chest::getName(const Article article) const {
   return ret + "chest";
 }
 
-Clr Chest::getClr_() const {
+Clr Chest::getDefClr() const {
   return matl_ == ChestMatl::wood ? clrBrownDrk : clrGray;
 }
 
@@ -1466,7 +1603,7 @@ Fountain::Fountain(const Pos& pos) :
   }
 }
 
-Clr Fountain::getClr_() const {
+Clr Fountain::getDefClr() const {
   switch(fountainMatl_) {
     case FountainMatl::stone: return clrGray;
     case FountainMatl::gold:  return clrYellow;
@@ -1619,11 +1756,15 @@ bool Cabinet::open() {
 }
 
 string Cabinet::getName(const Article article) const {
+  string ret = article == Article::a ? "a " : "the ";
 
+  if(getBurnState() == BurnState::burning) {ret += "burning ";}
+
+  return ret + "cabinet";
 }
 
-Clr Cabinet::getClr_() const {
-
+Clr Cabinet::getDefClr() const {
+  return clrBrownDrk;
 }
 
 //--------------------------------------------------------------------- COCOON
@@ -1696,10 +1837,14 @@ bool Cocoon::open() {
 }
 
 string Cocoon::getName(const Article article) const {
+  string ret = article == Article::a ? "a " : "the ";
 
+  if(getBurnState() == BurnState::burning) {ret += "burning ";}
+
+  return ret + "cocoon";
 }
 
-Clr Cocoon::getClr_() const {
-
+Clr Cocoon::getDefClr() const {
+  return clrWhite;
 }
 

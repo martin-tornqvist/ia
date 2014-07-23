@@ -49,7 +49,7 @@ void setPosToClosestEnemyIfVisible() {
   if(!spottedEnemiesPositions.empty()) {
     pos_ = Utils::getClosestPos(Map::player->pos, spottedEnemiesPositions);
 
-    Map::player->target = Utils::getActorAtPos(pos_);
+    Map::player->target = Utils::getFirstActorAtPos(pos_);
   }
 }
 
@@ -142,7 +142,7 @@ void readKeys(const MarkerTask markerTask, MarkerRetData& data,
         Log::clearLog();
         Renderer::drawMapAndInterface();
 
-        Actor* const actor = Utils::getActorAtPos(pos_);
+        Actor* const actor = Utils::getFirstActorAtPos(pos_);
         if(actor) {Map::player->target = actor;}
 
         Item* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
@@ -170,7 +170,7 @@ void readKeys(const MarkerTask markerTask, MarkerRetData& data,
         Log::addMsg("I should throw this somewhere else.");
       } else {
         Renderer::drawMapAndInterface();
-        Actor* const actor = Utils::getActorAtPos(pos_);
+        Actor* const actor = Utils::getFirstActorAtPos(pos_);
         if(actor) {Map::player->target = actor;}
         Throwing::throwItem(*Map::player, pos_, *itemThrown);
         data.didThrowMissile = true;

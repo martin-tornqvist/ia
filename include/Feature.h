@@ -11,7 +11,7 @@ class Actor;
 
 class Feature {
 public:
-  Feature(const Pos& pos) : hasBlood_(false), pos_(pos) {}
+  Feature(const Pos& pos) : pos_(pos) {}
 
   virtual ~Feature() {}
 
@@ -46,8 +46,6 @@ public:
 
   int getShockWhenAdj() const;
   Pos getPos()          const {return pos_;}
-
-  bool hasBlood_;
 
 protected:
   Pos pos_;

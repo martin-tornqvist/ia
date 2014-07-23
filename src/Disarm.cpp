@@ -63,7 +63,7 @@ void playerDisarm() {
 
     Log::clearLog();
 
-    Actor* actorOnTrap = Utils::getActorAtPos(pos);
+    Actor* actorOnTrap = Utils::getFirstActorAtPos(pos);
 
     //Abort if trap blocked by monster
     if(actorOnTrap) {

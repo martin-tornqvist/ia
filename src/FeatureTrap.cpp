@@ -293,7 +293,7 @@ string Trap::getName(const Article article) const {
   }
 }
 
-Clr Trap::getClr_() const {
+Clr Trap::getDefClr() const {
   return isHidden_ ? mimicFeature_->getClr() : specificTrap_->getClr();
 }
 

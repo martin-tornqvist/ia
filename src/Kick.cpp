@@ -26,7 +26,7 @@ void playerKick() {
 
   if(kickPos != Map::player->pos) {
     //Kick living actor?
-    Actor* livingActor = Utils::getActorAtPos(kickPos, ActorDeadState::alive);
+    Actor* livingActor = Utils::getFirstActorAtPos(kickPos, ActorDeadState::alive);
     if(livingActor) {
       TRACE << "Actor found at kick pos, attempting to kick actor" << endl;
       if(Map::player->getPropHandler().allowAttackMelee(true)) {
@@ -42,7 +42,7 @@ void playerKick() {
     }
 
     //Kick corpse?
-    Actor* deadActor = Utils::getActorAtPos(kickPos, ActorDeadState::corpse);
+    Actor* deadActor = Utils::getFirstActorAtPos(kickPos, ActorDeadState::corpse);
     if(deadActor) {
       const bool IS_SEEING_CORPSE =
         Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;

@@ -367,10 +367,7 @@ void initDataList() {
   /*---------------------------------------------*/
   d.id = FeatureId::rubbleHigh;
   d.mkObj = [](const Pos& p) {return new RubbleHigh(p);};
-//  d.nameA = "a big pile of debris";
-//  d.nameThe = "the big pile of debris";
   d.glyph = 8;
-//  d.clr = data[int(FeatureId::wall)].clr;
   d.tile = TileId::rubbleHigh;
   d.moveRules.setPropCanMove(propEthereal);
   d.moveRules.setPropCanMove(propOoze);

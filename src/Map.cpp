@@ -145,7 +145,7 @@ void mkBlood(const Pos& origin) {
       const Pos c = origin + Pos(dx, dy);
       FeatureStatic* const f  = cells[c.x][c.y].featureStatic;
       if(f->canHaveBlood()) {
-        if(Rnd::oneIn(3)) {f->hasBlood_ = true;}
+        if(Rnd::oneIn(3)) {f->mkBloody();}
       }
     }
   }

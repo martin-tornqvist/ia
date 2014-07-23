@@ -13,6 +13,7 @@
 #include "PlayerBon.h"
 #include "Inventory.h"
 #include "FeatureStatic.h"
+#include "FeatureMob.h"
 #include "TextFormatting.h"
 
 using namespace std;
@@ -38,7 +39,17 @@ void drawLocationInfo() {
 //      }
 //    }
 
-    const string featureName = Map::cells[p.x][p.y].featureStatic->getName(Article::a);
+    string featureName = "";
+
+    const FeatureMob* const mob = Utils::getFirstMobAtPos(p);
+    if(mob) {
+      featureName = mob->getName(Article::a);
+      if(!featureName.empty()) {
+        str += TextFormatting::firstToUpper(featureName) + ". ";
+      }
+    }
+
+    featureName = Map::cells[p.x][p.y].featureStatic->getName(Article::a);
     if(!featureName.empty()) {
       str += TextFormatting::firstToUpper(featureName) + ". ";
     }

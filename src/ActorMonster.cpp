@@ -312,7 +312,7 @@ bool Monster::tryAttack(Actor& defender) {
       LineCalc::calcNewLine(pos, defender.pos, true, 9999, false, line);
       for(Pos& linePos : line) {
         if(linePos != pos && linePos != defender.pos) {
-          Actor* const actorHere = Utils::getActorAtPos(linePos);
+          Actor* const actorHere = Utils::getFirstActorAtPos(linePos);
           if(actorHere) {
             isBlockedByFriend = true;
             break;

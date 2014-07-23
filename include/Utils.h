@@ -4,8 +4,11 @@
 #include <vector>
 
 #include "CmnData.h"
-#include "Actor.h"
+#include "CmnTypes.h"
 #include "MersenneTwister.h"
+
+class Actor;
+class FeatureMob;
 
 namespace Rnd {
 
@@ -84,8 +87,9 @@ void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
 void mkBoolMapFromVector(const std::vector<Pos>& positions,
                          bool out[MAP_W][MAP_H]);
 
-Actor* getActorAtPos(const Pos& pos,
-                     ActorDeadState deadState = ActorDeadState::alive);
+Actor* getFirstActorAtPos(const Pos& pos, ActorDeadState deadState = ActorDeadState::alive);
+
+FeatureMob* getFirstMobAtPos(const Pos& pos);
 
 void getActorPositions(const std::vector<Actor*>& actors,
                        std::vector<Pos>& out);

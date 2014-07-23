@@ -21,11 +21,13 @@ void Smoke::onNewTurn() {
 }
 
 string Smoke::getName(const Article article)  const {
-
+  string ret = "";
+  if(article == Article::the) {ret += "the ";}
+  return ret + "smoke";
 }
 
 Clr Smoke::getClr() const {
-
+  return clrGray;
 }
 
 //------------------------------------------------------------------- DYNAMITE
@@ -39,11 +41,12 @@ void LitDynamite::onNewTurn() {
 }
 
 string LitDynamite::getName(const Article article)  const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "lit stick of dynamite";
 }
 
 Clr LitDynamite::getClr() const {
-
+  return clrRedLgt;
 }
 
 //------------------------------------------------------------------- FLARE
@@ -74,9 +77,10 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
 }
 
 string LitFlare::getName(const Article article)  const {
-
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "lit flare";
 }
 
 Clr LitFlare::getClr() const {
-
+  return clrYellow;
 }

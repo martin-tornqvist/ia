@@ -778,12 +778,9 @@ void drawMap() {
         if(goreTile == TileId::empty) {
           curDrw->tile  = f->getTile();
           curDrw->glyph = f->getGlyph();
-          const Clr& featureClr   = f->getClr();
+          curDrw->clr   = f->getClr();
           const Clr& featureClrBg = f->getClrBg();
-          curDrw->clr = f->hasBlood_ ? clrRedLgt : featureClr;
-          if(!Utils::isClrEq(featureClrBg, clrBlack)) {
-            curDrw->clrBg = featureClrBg;
-          }
+          if(!Utils::isClrEq(featureClrBg, clrBlack)) {curDrw->clrBg = featureClrBg;}
         } else {
           curDrw->tile  = goreTile;
           curDrw->glyph = goreGlyph;

@@ -977,7 +977,7 @@ void Player::moveDir(Dir dir) {
 
     if(dir != Dir::center) {
       //Attack?
-      Actor* const actorAtDest = Utils::getActorAtPos(dest);
+      Actor* const actorAtDest = Utils::getFirstActorAtPos(dest);
       if(actorAtDest) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWeapon = false;
@@ -1098,7 +1098,7 @@ void Player::autoMelee() {
   for(int dx = -1; dx <= 1; ++dx) {
     for(int dy = -1; dy <= 1; ++dy) {
       if(dx != 0 || dy != 0) {
-        Actor* const actor = Utils::getActorAtPos(pos + Pos(dx, dy));
+        Actor* const actor = Utils::getFirstActorAtPos(pos + Pos(dx, dy));
         if(actor) {
           if(isSeeingActor(*actor, nullptr)) {
             target = actor;

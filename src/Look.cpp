@@ -87,7 +87,7 @@ Entity getEntityToDescribe(const Pos pos) {
 
   //TODO this method is a little wonky
 
-  Actor* actor = Utils::getActorAtPos(pos);
+  Actor* actor = Utils::getFirstActorAtPos(pos);
 
   //If there is a living actor there, describe the actor.
   if(actor && actor != Map::player) {
@@ -194,7 +194,7 @@ void onMarkerAtPos(const Pos& pos, const MarkerTask markerTask,
 }
 
 void printExtraActorDescription(const Pos& pos) {
-  Actor* actor = Utils::getActorAtPos(pos);
+  Actor* actor = Utils::getFirstActorAtPos(pos);
   if(actor) {
     if(actor != Map::player) {
       //Add written description.

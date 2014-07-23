@@ -183,7 +183,7 @@ RangedAttData::RangedAttData(
   verbPlayerAttacks = wpn_.getData().rangedAttMsgs.player;
   verbOtherAttacks  = wpn_.getData().rangedAttMsgs.other;
 
-  Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
+  Actor* const actorAimedAt = Utils::getFirstActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLvl_ == actorSize_none) {
@@ -199,7 +199,7 @@ RangedAttData::RangedAttData(
     intendedAimLvl = intendedAimLvl_;
   }
 
-  curDefender = Utils::getActorAtPos(curPos_);
+  curDefender = Utils::getFirstActorAtPos(curPos_);
 
   if(curDefender) {
     TRACE << "RangedAttData: Defender found" << endl;
@@ -276,7 +276,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
   AttData(attacker_, item_), hitChanceTot(0),
   intendedAimLvl(actorSize_none), curDefenderSize(actorSize_none) {
 
-  Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
+  Actor* const actorAimedAt = Utils::getFirstActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLvl_ == actorSize_none) {
@@ -292,7 +292,7 @@ MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
     intendedAimLvl = intendedAimLvl_;
   }
 
-  curDefender = Utils::getActorAtPos(curPos_);
+  curDefender = Utils::getFirstActorAtPos(curPos_);
 
   if(curDefender) {
     TRACE << "MissileAttData: Defender found" << endl;
