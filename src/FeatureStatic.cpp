@@ -251,7 +251,7 @@ string Floor::getName(const Article article) const {
   if(getBurnState() == BurnState::burning) {
     ret += "flames";
   } else {
-    if(getBurnState() == BurnState::hasBurned) {ret += "scorched";}
+    if(getBurnState() == BurnState::hasBurned) {ret += "scorched ";}
 
     switch(type_) {
       case FloorType::cmn:        ret += "stone floor";   break;
@@ -455,8 +455,9 @@ RubbleLow::RubbleLow(Pos pos) : FeatureStatic(pos) {
 }
 
 string RubbleLow::getName(const Article article) const {
-  string ret = article == Article::a ? "a " : "the ";
-  if(getBurnState() == BurnState::burning) {ret += "burning ";}
+  string ret = "";
+  if(article == Article::the)               {ret += "the ";}
+  if(getBurnState() == BurnState::burning)  {ret += "burning ";}
   return ret + "rubble";
 }
 

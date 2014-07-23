@@ -120,8 +120,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
     for(int x = 0; x < MAP_W; ++x) {
       const Pos p(x, y);
       if(flood[x][y] > 0 || p == origin) {
-        LiquidDeep* const liquid = new LiquidDeep(p);
-        liquid->type_ = LiquidType::water;
+        LiquidDeep* const liquid  = new LiquidDeep(p);
+        liquid->type_             = LiquidType::water;
         Map::put(liquid);
         Map::roomMap[x][y] = this;
         r_.p0.x = min(r_.p0.x, x);
