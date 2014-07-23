@@ -76,7 +76,7 @@ Door::Door(const Pos& pos, const FeatureStatic* const mimicFeature) :
       switch(matl_) {
         case Matl::wood: {
           if(Rnd::fraction(7, 10)) {
-            if(Map::canPlayerSeePos(pos_)) {
+            if(Map::isPosSeenByPlayer(pos_)) {
               const string a = isSecret_ ? "A" : "The";
               Log::addMsg(a + " door is blown to splinters!");
             }
@@ -98,6 +98,14 @@ Door::Door(const Pos& pos, const FeatureStatic* const mimicFeature) :
   setHitEffect(DmgType::physical, DmgMethod::explosion, [&](Actor * const actor) {
     (void)actor;
     //TODO
+  });
+
+  //---------------------------------------------------------------------- FIRE
+  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+    (void)actor;
+    if(matl_ == Matl::wood) {
+      tryStartBurning(true);
+    }
   });
 
   //---------------------------------------------------------------------- HEAVY BLUNT
@@ -134,7 +142,7 @@ Door::Door(const Pos& pos, const FeatureStatic* const mimicFeature) :
     assert(actor);
 
     const bool IS_PLAYER    = actor == Map::player;
-    const bool IS_CELL_SEEN = Map::canPlayerSeePos(pos_);
+    const bool IS_CELL_SEEN = Map::isPosSeenByPlayer(pos_);
 
     vector<PropId> props;
     if(actor) {actor->getPropHandler().getAllActivePropIds(props);}
@@ -280,6 +288,15 @@ Door::Door(const Pos& pos, const FeatureStatic* const mimicFeature) :
 //  }
 }
 
+void Door::onFinishedBurning() {
+  if(Map::isPosSeenByPlayer(pos_)) {
+    Log::addMsg("The door burns down.");
+  }
+  RubbleLow* const rubble = new RubbleLow(pos_);
+  rubble->setHasBurned();
+  Map::put(rubble);
+}
+
 bool Door::canMoveCmn() const {return isOpen_;}
 
 bool Door::canMove(const vector<PropId>& actorsProps) const {
@@ -299,16 +316,14 @@ bool Door::isSmokePassable()      const {return isOpen_;}
 string Door::getName(const Article article) const {
   if(isSecret_) {return mimicFeature_->getName(article);}
 
-  string descrStr = "";
+ string ret = article == Article::a ? "a " : "the ";
 
-  if(getBurnState() == BurnState::burning) {
-    descrStr = " burning ";
-  } else {
-    descrStr += isOpen_ ? "open " : "closed ";
-    descrStr += matl_ == Matl::wood ? "wooden " : "metal ";
-  }
+  if(getBurnState() == BurnState::burning) {ret += "burning ";}
 
-  return (article == Article::a ? "a " : "the ") + descrStr + "door";
+  ret += isOpen_ ? "open " : "closed ";
+  ret += matl_ == Matl::wood ? "wooden " : "metal ";
+
+  return ret + "door";
 }
 
 Clr Door::getDefClr() const {

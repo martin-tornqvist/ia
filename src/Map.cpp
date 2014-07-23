@@ -171,7 +171,7 @@ void deleteAndRemoveRoomFromList(Room* const room) {
   assert(false && "Tried to remove non-existing room");
 }
 
-bool canPlayerSeePos(const Pos& p) {
+bool isPosSeenByPlayer(const Pos& p) {
   assert(Utils::isPosInsideMap(p));
   return cells[p.x][p.y].isSeenByPlayer;
 }

@@ -132,7 +132,7 @@ void FeatureStatic::tryStartBurning(const bool IS_MSG_ALLOWED) {
   clearGore();
 
   if(burnState_ == BurnState::notBurned) {
-    if(Map::canPlayerSeePos(pos_) && IS_MSG_ALLOWED) {
+    if(Map::isPosSeenByPlayer(pos_) && IS_MSG_ALLOWED) {
       string str = getName(Article::the) + " catches fire.";
       str[0] = toupper(str[0]);
       Log::addMsg(str);

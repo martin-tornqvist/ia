@@ -26,6 +26,7 @@ public:
 
   std::string getName(const Article article)                  const override;
   Clr         getDefClr()                                     const override;
+  void        onFinishedBurning()                                   override;
   char        getGlyph()                                      const override;
   TileId      getTile()                                       const override;
   void        bump(Actor& actorBumping)                             override;

@@ -30,8 +30,8 @@ string Cultist::getCultistPhrase() {
   const God* const god = Gods::getCurGod();
 
   if(god && Rnd::coinToss()) {
-    const string name = god->getName();
-    const string descr = god->getDescr();
+    const string name   = god->getName();
+    const string descr  = god->getDescr();
     phraseBucket.push_back(name + " save us!");
     phraseBucket.push_back(descr + " will save us!");
     phraseBucket.push_back(name + ", guide us!");
