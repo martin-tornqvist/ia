@@ -16,7 +16,7 @@
 
 //Enable rendering and delays during map gen for evaluation/demo purposes
 //Comment out to disable, uncomment to enable
-//#define DEMO_MODE 1
+#define DEMO_MODE 1
 //-------------------------------------------------------------------
 
 #ifdef NDEBUG

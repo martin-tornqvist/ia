@@ -283,15 +283,12 @@ Wall::Wall(Pos pos) : FeatureStatic(pos), type_(WallType::cmn), isMossy_(false) 
   setHitEffect(DmgType::physical, DmgMethod::explosion, [&](Actor * const actor) {
     (void)actor;
 
-    if(Rnd::fraction(3, 4)) {
+    destrAdjDoors();
 
-      destrAdjDoors();
-
-      if(Rnd::coinToss()) {
-        mkLowRubbleAndRocks();
-      } else {
-        Map::put(new RubbleHigh(pos_));
-      }
+    if(Rnd::coinToss()) {
+      mkLowRubbleAndRocks();
+    } else {
+      Map::put(new RubbleHigh(pos_));
     }
   });
 

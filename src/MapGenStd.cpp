@@ -24,7 +24,7 @@
 //-------------------------------------
 //Some options (comment out to disable)
 //-------------------------------------
-#define MK_RIVER                1
+//#define MK_RIVER                1
 //#define MK_CAVES                1
 //#define MK_MERGED_REGIONS       1
 #define RANDOMLY_BLOCK_REGIONS  1

@@ -884,7 +884,7 @@ void drawMap() {
   }
 
   //---------------- DRAW THE GRID
-  auto divClr = [](Clr & clr, const int DIV) {
+  auto divClr = [](Clr & clr, const double DIV) {
     clr.r /= DIV; clr.g /= DIV; clr.b /= DIV;
   };
 
@@ -908,7 +908,7 @@ void drawMap() {
         tmpDrw                      = renderArray[x][y];
         tmpDrw.isAwareOfMonsterHere = isAwareOfMonsterHere;
 
-        const int DIV = 4;
+        const double DIV = 5.0;
         divClr(tmpDrw.clr,    DIV);
         divClr(tmpDrw.clrBg,  DIV);
       }

@@ -11,6 +11,9 @@
 #include "Item.h"
 #include "Utils.h"
 #include "FeatureStatic.h"
+#ifdef DEMO_MODE
+#include "SdlWrapper.h"
+#endif // DEMO_MODE
 
 using namespace std;
 
@@ -122,7 +125,7 @@ FeatureStatic* put(FeatureStatic* const f) {
       }
     }
     Renderer::drawMap();
-    Renderer::drawGlyph('X', Panel::map, pos, clrYellow);
+    Renderer::drawGlyph('X', Panel::map, p, clrYellow);
     Renderer::updateScreen();
     SdlWrapper::sleep(2); //Note: Delay must be >= 2 for user input to be read
   }

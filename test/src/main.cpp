@@ -30,6 +30,8 @@
 #include "Explosion.h"
 #include "ItemAmmo.h"
 #include "ItemDevice.h"
+#include "FeatureStatic.h"
+#include "FeatureTrap.h"
 
 using namespace std;
 
@@ -334,9 +336,9 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   // @ <- Player position (5, 10).
   //-----------------------------------------------------------------
 
-  FeatureFactory::mk(FeatureId::floor, Pos(5, 7));
-  FeatureFactory::mk(FeatureId::floor, Pos(5, 9));
-  FeatureFactory::mk(FeatureId::floor, Pos(5, 10));
+  Map::put(new Floor(Pos(5, 7)));
+  Map::put(new Floor(Pos(5, 9)));
+  Map::put(new Floor(Pos(5, 10)));
   Map::player->pos = Pos(5, 10);
   Pos target(5, 8);
   Item* item = ItemFactory::mk(ItemId::throwingKnife);
@@ -348,10 +350,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   const int X0 = 5;
   const int Y0 = 7;
 
-  const auto wallId   = FeatureId::wall;
-  const auto floorId  = FeatureId::floor;
-
-  FeatureFactory::mk(floorId, Pos(X0, Y0));
+  auto* const floor = new Floor(Pos(X0, Y0));
+  Map::put(new Floor(Pos(X0, Y0)));
 
   //Check wall destruction
   for(int i = 0; i < 2; ++i) {
@@ -359,25 +359,25 @@ TEST_FIXTURE(BasicFixture, Explosions) {
 
     //Cells around the center, at a distance of 1, should be destroyed
     int r = 1;
-    CHECK(Map::cells[X0 + r][Y0    ].featureStatic->getId() != wallId);
-    CHECK(Map::cells[X0 - r][Y0    ].featureStatic->getId() != wallId);
-    CHECK(Map::cells[X0    ][Y0 + r].featureStatic->getId() != wallId);
-    CHECK(Map::cells[X0    ][Y0 - r].featureStatic->getId() != wallId);
-    CHECK(Map::cells[X0 + r][Y0 + r].featureStatic->getId() != wallId);
-    CHECK(Map::cells[X0 + r][Y0 - r].featureStatic->getId() != wallId);
-    CHECK(Map::cells[X0 - r][Y0 + r].featureStatic->getId() != wallId);
-    CHECK(Map::cells[X0 - r][Y0 - r].featureStatic->getId() != wallId);
+    CHECK(Map::cells[X0 + r][Y0    ].featureStatic->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0    ].featureStatic->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0    ][Y0 + r].featureStatic->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0    ][Y0 - r].featureStatic->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0 + r].featureStatic->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0 - r].featureStatic->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0 + r].featureStatic->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0 - r].featureStatic->getId() != FeatureId::wall);
 
     //Cells around the center, at a distance of 2, should NOT be destroyed
     r = 2;
-    CHECK(Map::cells[X0 + r][Y0    ].featureStatic->getId() == wallId);
-    CHECK(Map::cells[X0 - r][Y0    ].featureStatic->getId() == wallId);
-    CHECK(Map::cells[X0    ][Y0 + r].featureStatic->getId() == wallId);
-    CHECK(Map::cells[X0    ][Y0 - r].featureStatic->getId() == wallId);
-    CHECK(Map::cells[X0 + r][Y0 + r].featureStatic->getId() == wallId);
-    CHECK(Map::cells[X0 + r][Y0 - r].featureStatic->getId() == wallId);
-    CHECK(Map::cells[X0 - r][Y0 + r].featureStatic->getId() == wallId);
-    CHECK(Map::cells[X0 - r][Y0 - r].featureStatic->getId() == wallId);
+    CHECK(Map::cells[X0 + r][Y0    ].featureStatic->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0    ].featureStatic->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0    ][Y0 + r].featureStatic->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0    ][Y0 - r].featureStatic->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0 + r].featureStatic->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0 - r].featureStatic->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0 + r].featureStatic->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0 - r].featureStatic->getId() == FeatureId::wall);
   }
 
   //Check damage to actors
@@ -407,7 +407,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
     corpses[i]->deadState = ActorDeadState::corpse;
   }
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
-                            ExplSrc::misc, 0, SfxId::endOfSfxId,
+                            ExplSrc::misc, 0, SfxId::END,
                             new PropBurning(PropTurns::standard));
   CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied));
   CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied));
@@ -422,22 +422,22 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //North-west edge
   int x = 1;
   int y = 1;
-  FeatureFactory::mk(floorId, Pos(x, y));
+  Map::put(new Floor(Pos(x, y)));
   Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
-  CHECK(Map::cells[x + 1][y    ].featureStatic->getId() != wallId);
-  CHECK(Map::cells[x    ][y + 1].featureStatic->getId() != wallId);
-  CHECK(Map::cells[x - 1][y    ].featureStatic->getId() == wallId);
-  CHECK(Map::cells[x    ][y - 1].featureStatic->getId() == wallId);
+  CHECK(Map::cells[x + 1][y    ].featureStatic->getId() != FeatureId::wall);
+  CHECK(Map::cells[x    ][y + 1].featureStatic->getId() != FeatureId::wall);
+  CHECK(Map::cells[x - 1][y    ].featureStatic->getId() == FeatureId::wall);
+  CHECK(Map::cells[x    ][y - 1].featureStatic->getId() == FeatureId::wall);
 
   //South-east edge
   x = MAP_W - 2;
   y = MAP_H - 2;
-  FeatureFactory::mk(floorId, Pos(x, y));
+  Map::put(new Floor(Pos(x, y)));
   Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
-  CHECK(Map::cells[x - 1][y    ].featureStatic->getId() != wallId);
-  CHECK(Map::cells[x    ][y - 1].featureStatic->getId() != wallId);
-  CHECK(Map::cells[x + 1][y    ].featureStatic->getId() == wallId);
-  CHECK(Map::cells[x    ][y + 1].featureStatic->getId() == wallId);
+  CHECK(Map::cells[x - 1][y    ].featureStatic->getId() != FeatureId::wall);
+  CHECK(Map::cells[x    ][y - 1].featureStatic->getId() != FeatureId::wall);
+  CHECK(Map::cells[x + 1][y    ].featureStatic->getId() == FeatureId::wall);
+  CHECK(Map::cells[x    ][y + 1].featureStatic->getId() == FeatureId::wall);
 }
 
 TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
@@ -452,7 +452,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   const Pos posR(2, 4);
 
   //Spawn left floor cell
-  FeatureFactory::mk(FeatureId::floor, posL);
+  Map::put(new Floor(posL));
 
   //Conditions for finished test
   bool testedStuck              = false;
@@ -462,17 +462,17 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   while(!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed) {
 
     //Spawn right floor cell
-    FeatureFactory::mk(FeatureId::floor, posR);
+    Map::put(new Floor(posR));
 
     //Spawn a monster that can get stuck in the web
     Actor* const actor = ActorFactory::mk(actor_zombie, posL);
     Monster* const monster = static_cast<Monster*>(actor);
 
     //Create a spider web in the right cell
-    const auto mimicId = Map::cells[posR.x][posR.x].featureStatic->getId();
-    const auto* const mimicData = FeatureData::getData(mimicId);
-    auto* const trapSpawnData = new TrapSpawnData(mimicData, TrapId::spiderWeb);
-    FeatureFactory::mk(FeatureId::trap, posR, trapSpawnData);
+    const auto  mimicId     = Map::cells[posR.x][posR.x].featureStatic->getId();
+    const auto& mimicData   = FeatureData::getData(mimicId);
+    const auto* const mimic = static_cast<const FeatureStatic*>(mimicData.mkObj(posR));
+    Map::put(new Trap(posR, mimic, TrapId::spiderWeb));
 
     //Move the monster into the trap, and back again
     monster->awareOfPlayerCounter_ = INT_MAX; // > 0 req. for triggering trap
@@ -786,7 +786,7 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
 
   for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y) {
     for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x) {
-      FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+      Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = &room;
     }
   }
@@ -815,7 +815,7 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   CHECK(!entryMap[25][7]);
 
   Map::roomMap[25][7] = &room;
-  FeatureFactory::mk(FeatureId::wall, Pos(25, 7));
+  Map::put(new Wall(Pos(25, 7)));
   MapGenUtils::getValidRoomCorrEntries(room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
@@ -833,7 +833,7 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
 
   for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y) {
     for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x) {
-      FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+      Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = &nearbyRoom;
     }
   }
@@ -853,7 +853,7 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
 
   //------------------------------------------------ Room with only one cell
   room = Room(Rect(60, 10, 60, 10));
-  FeatureFactory::mk(FeatureId::floor, Pos(60, 10));
+  Map::put(new Floor(Pos(60, 10)));
   Map::roomMap[60][10] = &room;
   MapGenUtils::getValidRoomCorrEntries(room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
@@ -877,7 +877,7 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   // #  .  # 9
   // #  .  # 10
   // #  #  # 11
-  FeatureFactory::mk(FeatureId::floor, Pos(60, 9));
+  Map::put(new Floor(Pos(60, 9)));
   MapGenUtils::getValidRoomCorrEntries(room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
@@ -913,7 +913,7 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   // #  .  .  # 10
   // #  #  #  # 11
   room.r_.p0.x = 59;
-  FeatureFactory::mk(FeatureId::floor, Pos(59, 10));
+  Map::put(new Floor(Pos(59, 10)));
   Map::roomMap[59][10] = &room;
   MapGenUtils::getValidRoomCorrEntries(room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
@@ -944,14 +944,14 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
 
   for(int y = roomArea1.p0.y; y <= roomArea1.p1.y; ++y) {
     for(int x = roomArea1.p0.x; x <= roomArea1.p1.x; ++x) {
-      FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+      Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = &room0;
     }
   }
 
   for(int y = roomArea2.p0.y; y <= roomArea2.p1.y; ++y) {
     for(int x = roomArea2.p0.x; x <= roomArea2.p1.x; ++x) {
-      FeatureFactory::mk(FeatureId::floor, Pos(x, y));
+      Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = &room1;
     }
   }

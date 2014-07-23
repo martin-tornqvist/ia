@@ -569,17 +569,6 @@ void handleKeyPress(const KeyboardReadRetData& d) {
     return;
   }
 
-  //----------------------------------- POSSESSED BY ZUUL
-  else if(d.sdlKey_ == SDLK_F9) {
-    if(IS_DEBUG_MODE) {
-      for(Actor* actor : GameTime::actors_) {
-        actor->getPropHandler().tryApplyProp(
-          new PropPossessedByZuul(PropTurns::indefinite), true);
-      }
-    }
-    return;
-  }
-
   //----------------------------------- UNDEFINED COMMANDS
   else if(d.key_ != -1) {
     string cmdTried = " ";
