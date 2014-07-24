@@ -1459,14 +1459,14 @@ bool PropDiseased::tryResistOtherProp(const PropId id) const {
 void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   if(IS_PLAYER_SEE_OWNING_ACTOR) {
     const string& name1 = owningActor_->getNameThe();
-    const string& name2 = ActorData::data[actor_zuul].nameThe;
+    const string& name2 = ActorData::data[ActorId::zuul].nameThe;
     Log::addMsg(name1 + " was possessed by " + name2 + "!");
   }
   owningActor_->deadState = ActorDeadState::destroyed;
   const Pos& pos = owningActor_->pos;
   Map::mkGore(pos);
   Map::mkBlood(pos);
-  ActorFactory::summonMonsters(pos, vector<ActorId> {actor_zuul}, true);
+  ActorFactory::summonMonsters(pos, vector<ActorId> {ActorId::zuul}, true);
 }
 
 void PropPoisoned::onNewTurn() {

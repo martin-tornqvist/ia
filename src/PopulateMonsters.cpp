@@ -33,7 +33,7 @@ void mkListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
   const int EFFECTIVE_DLVL =
     max(1, min(LAST_CAVERN_LVL, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
 
-  for(unsigned int i = actor_player + 1; i < endOfActorIds; ++i) {
+  for(unsigned int i = ActorId::player + 1; i < endOfActorIds; ++i) {
     const ActorDataT& d = ActorData::data[i];
     if(
       d.isAutoSpawnAllowed &&
@@ -213,7 +213,7 @@ void populateIntroLvl() {
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
     if(!sortedFreeCellsVector.empty()) {
-      mkGroupAt(actor_wolf, sortedFreeCellsVector, blocked, true);
+      mkGroupAt(ActorId::wolf, sortedFreeCellsVector, blocked, true);
     }
   }
 }

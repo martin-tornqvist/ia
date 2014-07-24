@@ -74,7 +74,7 @@ void drawLocationInfo() {
     str.pop_back(); //Erase trailing space character
     Renderer::drawText(str, Panel::charLines, Pos(0, -1), clrWhite);
 
-    if(str.size() > MAP_W) {
+    if(int(str.size()) > MAP_W) {
       Renderer::drawText("(...)", Panel::charLines, Pos(MAP_W - 5, -1), clrWhite);
     }
   }

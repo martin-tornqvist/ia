@@ -484,7 +484,7 @@ void Player::incrInsanity() {
             const int NR_SHADOWS_LOWER  = 1;
             const int NR_SHADOWS_UPPER  = getConstrInRange(2, (Map::dlvl + 1) / 2, 6);
             const int NR                = Rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
-            ActorFactory::summonMonsters(pos, vector<ActorId>(NR, actor_shadow), true);
+            ActorFactory::summonMonsters(pos, vector<ActorId>(NR, ActorId::shadow), true);
             return;
           }
         } break;

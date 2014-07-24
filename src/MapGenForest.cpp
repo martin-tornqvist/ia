@@ -111,10 +111,10 @@ void mkForestTreePatch() {
   }
 }
 
-void mkForestTrees(const Pos& stairsPos) {
+void mkForestTrees() {
   MapGenUtils::backupMap();
 
-  const Pos churchPos = stairsPos - Pos(26, 7);
+  const Pos churchPos(MAP_W - 33, 2);
 
   int nrForestPatches = Rnd::range(40, 55);
 
@@ -126,14 +126,38 @@ void mkForestTrees(const Pos& stairsPos) {
       mkForestTreePatch();
     }
 
-    MapGenUtils::mkFromTempl(churchPos, MapTemplId::church);
+    const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::church);
+    const Pos       templDims = templ.getDims();
+
+    for(int y = 0; y < templDims.y; ++y) {
+      for(int x = 0; x < templDims.x; ++x) {
+        const auto id = templ.getCell(x, y).featureId;
+        if(id != FeatureId::empty) {
+          const Pos p(churchPos + Pos(x, y));
+          Map::put(static_cast<FeatureStatic*>(FeatureData::getData(id).mkObj(p)));
+        }
+      }
+    }
+
+    Pos stairsPos;
+    for(int y = 0; y < MAP_H; ++y) {
+      bool isStairsFound = false;
+      for(int x = 0; x < MAP_W; ++x) {
+        if(Map::cells[x][y].featureStatic->getId() == FeatureId::stairs) {
+          stairsPos.set(x, y);
+          isStairsFound = true;
+          break;
+        }
+      }
+      if(isStairsFound) {break;}
+    }
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
-    PathFind::run(Map::player->pos, stairsPos, blocked, path);
+    blocked[stairsPos.x][stairsPos.y] = false;
 
-    Map::put(new Stairs(stairsPos));
+    PathFind::run(Map::player->pos, stairsPos, blocked, path);
 
     size_t minPathLength = 1;
     size_t maxPathLength = 999;
@@ -255,9 +279,8 @@ bool run() {
     }
   }
 
-  Pos stairCell(MAP_W - 6, 9);
   mkForestOuterTreeline();
-  mkForestTrees(stairCell);
+  mkForestTrees();
   mkForestLimit();
 
   PopulateMonsters::populateIntroLvl();

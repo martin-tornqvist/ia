@@ -11,61 +11,46 @@ namespace {
 
 MapTempl templates_[int(MapTemplId::END)];
 
-struct CharAndFeatureId {
-  CharAndFeatureId(char cha_, FeatureId featureId_) :
-    cha(cha_), featureId(featureId_) {}
+struct Translation {
+  Translation(const char CH_, const MapTemplCell& mapTemplCell) :
+    CH(CH_), cell(mapTemplCell) {}
 
-  CharAndFeatureId() : cha(0), featureId(FeatureId::empty) {}
-
-  char      cha;
-  FeatureId featureId;
+  const char          CH;
+  const MapTemplCell  cell;
 };
 
-FeatureId translate(const char cha,
-                    const vector<CharAndFeatureId>& translations) {
-  for(const CharAndFeatureId& translation : translations) {
-    if(cha == translation.cha) {return translation.featureId;}
+MapTemplCell chToCell(const char CH, const vector<Translation>& translations) {
+  for(const Translation& translation : translations) {
+    if(translation.CH == CH) {return translation.cell;}
   }
-  return FeatureId::empty;
+  assert(false && "Failed to translate char");
+  return MapTemplCell();
 }
 
-MapTempl strToTempl(const string& str,
-                    const vector<CharAndFeatureId>& translations) {
-  MapTempl                    result;
-  int                         strPos = 0;
-  const int                   STR_SIZE = str.size();
-  vector< vector<FeatureId> > resultVector;
-  vector<FeatureId>           curInnerVector;
+void mkTempl(const string& str, const MapTemplId id,
+             const vector<Translation>& translations) {
+  MapTempl& templ = templates_[int(id)];
 
-  while(strPos != STR_SIZE) {
-    //If delim character found push inner vector to outer
-    if(str[strPos] == ';') {
-      resultVector.push_back(curInnerVector);
-      curInnerVector.resize(0);
-    } else if(str[strPos] == '#') {
-      curInnerVector.push_back(FeatureId::wall);
-    } else if(str[strPos] == '.') {
-      curInnerVector.push_back(FeatureId::floor);
-    } else if(str[strPos] == ' ') {
-      curInnerVector.push_back(FeatureId::empty);
-    } else {
-      curInnerVector.push_back(translate(str[strPos], translations));
+  vector<MapTemplCell> inner;
+
+  for(const auto ch : str) {
+    switch(ch) {
+      case ';': {
+        //Delimiting character (";") found, inner vector is pushed to outer
+        templ.addRow(inner);
+        inner.resize(0);
+      } break;
+      case '#': inner.push_back({FeatureId::wall});           break;
+      case '.': inner.push_back({FeatureId::floor});          break;
+      case ' ': inner.push_back({});                          break;
+      default:  inner.push_back(chToCell(ch, translations));  break;
     }
-    strPos++;
   }
-
-  result.featureVector.swap(resultVector);
-  result.w  = result.featureVector.back().size();
-  result.h  = result.featureVector.size();
-
-  return result;
 }
 
 void initTempls() {
-  vector<CharAndFeatureId> translations;
-
-  //---------------------------------------------------- CHURCH
-  string templStr =
+  //--------------------------------------------------------------------- CHURCH
+  string str =
     "             ,,,,,,,,,,,     ;"
     "          ,,,,,######,,,,    ;"
     " ,,,,,,,,,,,,,,#v..v#,,,,,   ;"
@@ -73,7 +58,7 @@ void initTempls() {
     ",,#####,#,,#,#.#....#.#,,,,, ;"
     ",,#v.v########.#....#.######,;"
     "..#...#v.................v##,;"
-    ".,#.#.#..[.[.[.[...[.[.....#,;"
+    ".,#.#.#..[.[.[.[...[.[....>#,;"
     ".......*****************-..#,;"
     ".,#.#.#..[.[.[.[...[.[.....#,;"
     ".,#...#v.................v##,;"
@@ -84,50 +69,53 @@ void initTempls() {
     "         ,,,,,,######,,,,    ;"
     "            ,,,,,,,,,,,,     ;";
 
+  mkTempl(str, MapTemplId::church, vector<Translation> {
+    {',', {FeatureId::grass}},
+    {'v', {FeatureId::brazier}},
+    {'[', {FeatureId::churchBench}},
+    {'-', {FeatureId::altar}},
+    {'*', {FeatureId::carpet}},
+    {'>', {FeatureId::stairs}}
+  });
 
-  translations.resize(0);
-  translations.push_back(CharAndFeatureId(',', FeatureId::grass));
-  translations.push_back(CharAndFeatureId('v', FeatureId::brazier));
-  translations.push_back(CharAndFeatureId('[', FeatureId::churchBench));
-  translations.push_back(CharAndFeatureId('-', FeatureId::altar));
-  translations.push_back(CharAndFeatureId('*', FeatureId::carpet));
+  //--------------------------------------------------------------------- EGYPT
+  str =
+    "################################################################################;"
+    "###...################################........................##################;"
+    "###.1.###############################..######################..#################;"
+    "###...##############################..#########################.################;"
+    "####.##############################..####¤....################|....|############;"
+    "####.#############################..####..###¤..##############......############;"
+    "####.##########################.....####..######.¤############|....|############;"
+    "#####.########################..######¤..#######..###############.##############;"
+    "######.##|.........|#########.#######..##########..############..###############;"
+    "#######.#.....S.....#########.#####...############¤.##########..################;"
+    "########....M....C..##¤#¤##¤#.####..###....########..########..#################;"
+    "#########..P..................####.####.@...........¤#######..##################;"
+    "########....M....C..##¤#¤##¤#.##|..|###...#################.¤###################;"
+    "#######.#.....S.....#########.##....######################...###################;"
+    "######.##|.........|#########.##|..|########......#######.¤##.##################;"
+    "#####.#######################.####.########..###¤..#####..####.#################;"
+    "####.########################.####...#####..#####¤..###..######.################;"
+    "####.########################..#####..###..#######¤.....########.###############;"
+    "###...########################...####.....#############.#########.###|...|######;"
+    "###.2.##########################...##################¤..##########........######;"
+    "###...############################¤....................##############|...|######;"
+    "################################################################################;";
 
-  templates_[int(MapTemplId::church)] = strToTempl(templStr, translations);
+  //Note: There are two stairs in the template, but only one of them will be placed
 
-  //---------------------------------------------------- PHARAOH CHAMBER
-
-  templStr =
-    //               1         2         3         4         5         6         7
-    //     01234567890123456789012345678901234567890123456789012345678901234567890123456789
-    /* 0*/"################################################################################;"/* 0*/
-    /* 1*/"###...################################........................##################;"/* 1*/
-    /* 2*/"###...###############################..######################..#################;"/* 2*/
-    /* 3*/"###...##############################..#########################.################;"/* 3*/
-    /* 4*/"####.##############################..####v....################1....1############;"/* 4*/
-    /* 5*/"####.#############################..####..###v..##############......############;"/* 5*/
-    /* 6*/"####.##########################.....####..######.v############1....1############;"/* 6*/
-    /* 7*/"#####.########################..######v..#######..###############.##############;"/* 7*/
-    /* 8*/"######.##1.........1#########.#######..##########..############..###############;"/* 8*/
-    /* 9*/"#######.#.....P.....#########.#####...############v.##########..################;"/* 9*/
-    /*10*/"########............##v#v##v#.####..###....########..########..#################;"/*10*/
-    /*11*/"#########.....................####.####.............v#######..##################;"/*11*/
-    /*12*/"########............##v#v##v#.##1..1###...#################.v###################;"/*12*/
-    /*13*/"#######.#.....P.....#########.##....######################...###################;"/*13*/
-    /*14*/"######.##1.........1#########.##1..1########......#######.v##.##################;"/*14*/
-    /*15*/"#####.#######################.####.########..###v..#####..####.#################;"/*15*/
-    /*16*/"####.########################.####...#####..#####v..###..######.################;"/*16*/
-    /*17*/"####.########################..#####..###..#######v.....########.###############;"/*17*/
-    /*18*/"###...########################...####.....#############.#########.###1...1######;"/*18*/
-    /*19*/"###...##########################...##################v..##########........######;"/*19*/
-    /*20*/"###...############################v....................##############1...1######;"/*20*/
-    /*21*/"################################################################################;"/*21*/;
-  //       01234567890123456789012345678901234567890123456789012345678901234567890123456789
-  //                 1         2         3         4         5         6         7
-  translations.resize(0);
-  translations.push_back(CharAndFeatureId('v', FeatureId::brazier));
-  translations.push_back(CharAndFeatureId('1', FeatureId::pillar));
-  translations.push_back(CharAndFeatureId('P', FeatureId::statue));
-  templates_[int(MapTemplId::egypt)] = strToTempl(templStr, translations);
+  mkTempl(str, MapTemplId::egypt, vector<Translation> {
+    {'¤', {FeatureId::brazier}},
+    {'|', {FeatureId::pillar}},
+    {'S', {FeatureId::statue}},
+    {'P', {FeatureId::floor, ActorId::khephren}},
+    {'M', {FeatureId::floor, ActorId::mummy}},
+    {'C', {FeatureId::floor, ActorId::cultist}},
+    {'1', {FeatureId::floor, ActorId::empty, ItemId::empty, 1}},  //Stair candidate #1
+    {'2', {FeatureId::floor, ActorId::empty, ItemId::empty, 2}},  //Stair candidate #2
+    {'@', {FeatureId::floor, ActorId::empty, ItemId::empty, 3}}   //Player start pos
+  });
 }
 
 } //namespace

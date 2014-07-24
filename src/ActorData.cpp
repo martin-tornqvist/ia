@@ -12,7 +12,7 @@
 using namespace std;
 
 void ActorDataT::reset() {
-  id = actor_empty;
+  id = ActorId::empty;
   nameA = "";
   nameThe = "";
   tile = TileId::empty;
@@ -66,7 +66,7 @@ void initDataList() {
 
   d.nameA = "Player";
   d.nameThe = "Player";
-  d.id = actor_player;
+  d.id = ActorId::player;
   d.hp = PLAYER_START_HP;
   d.spi = PLAYER_START_SPI;
   d.speed = ActorSpeed::normal;
@@ -81,7 +81,7 @@ void initDataList() {
 
   d.nameA = "A Reanimated Corpse";
   d.nameThe = "The Reanimated Corpse";
-  d.id = actor_zombie;
+  d.id = ActorId::zombie;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -123,7 +123,7 @@ void initDataList() {
 
   d.nameA = "A Reanimated Corpse";
   d.nameThe = "The Reanimated Corpse";
-  d.id = actor_zombieAxe;
+  d.id = ActorId::zombieAxe;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -165,7 +165,7 @@ void initDataList() {
 
   d.nameA = "A Bloated Corpse";
   d.nameThe = "The Bloated Corpse";
-  d.id = actor_bloatedZombie;
+  d.id = ActorId::bloatedZombie;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -206,7 +206,7 @@ void initDataList() {
 
   d.nameA = "Major Clapham-Lee";
   d.nameThe = "Major Clapham-Lee";
-  d.id = actor_majorClaphamLee;
+  d.id = ActorId::majorClaphamLee;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;
@@ -247,7 +247,7 @@ void initDataList() {
 
   d.nameA = "Dean Halsey";
   d.nameThe = "Dean Halsey";
-  d.id = actor_deanHalsey;
+  d.id = ActorId::deanHalsey;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;
@@ -288,7 +288,7 @@ void initDataList() {
 
   d.nameA = "A Cultist";
   d.nameThe = "The Cultist";
-  d.id = actor_cultist;
+  d.id = ActorId::cultist;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -326,7 +326,7 @@ void initDataList() {
 
   d.nameA = "A Cultist";
   d.nameThe = "The Cultist";
-  d.id = actor_cultistTeslaCannon;
+  d.id = ActorId::cultistTeslaCannon;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -364,7 +364,7 @@ void initDataList() {
 
   d.nameA = "A Cultist";
   d.nameThe = "The Cultist";
-  d.id = actor_cultistSpikeGun;
+  d.id = ActorId::cultistSpikeGun;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -402,7 +402,7 @@ void initDataList() {
 
   d.nameA = "Keziah Mason";
   d.nameThe = "Keziah Mason";
-  d.id = actor_keziahMason;
+  d.id = ActorId::keziahMason;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::pathsToTargetWhenAware)] = true;
@@ -449,7 +449,7 @@ void initDataList() {
 
   d.nameA = "Brown Jenkin";
   d.nameThe = "Brown Jenkin";
-  d.id = actor_brownJenkin;
+  d.id = ActorId::brownJenkin;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;
@@ -469,7 +469,7 @@ void initDataList() {
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
   d.canSeeInDarkness = true;
-  d.spawnMinDLVL = data[actor_keziahMason].spawnMinDLVL;
+  d.spawnMinDLVL = data[ActorId::keziahMason].spawnMinDLVL;
   d.groupSize = monsterGroupSize_alone;
   d.actorSize = actorSize_floor;
   d.descr = "\"That object - no larger than a good sized rat and quaintly "
@@ -495,23 +495,23 @@ void initDataList() {
 
 //  d.nameA = "The Lord of Pestilence";
 //  d.nameThe = "The Lord of Pestilence";
-//  d.id = actor_lordOfPestilence;
+//  d.id = ActorId::lordOfPestilence;
 
 //  d.nameA = "The Lord of Shadows";
 //  d.nameThe = "The Lord of Shadows";
-//  d.id = actor_lordOfShadows;
+//  d.id = ActorId::lordOfShadows;
 
 //  d.nameA = "The Lord of Spiders";
 //  d.nameThe = "The Lord of Spiders";
-//  d.id = actor_lordOfSpiders;
+//  d.id = ActorId::lordOfSpiders;
 
 //  d.nameA = "The Lord of Spirits";
 //  d.nameThe = "The Lord of Spirits";
-//  d.id = actor_lordOfSpirits;
+//  d.id = ActorId::lordOfSpirits;
 
   d.nameA = "A Cultist Priest";
   d.nameThe = "The Cultist Priest";
-  d.id = actor_cultistPriest;
+  d.id = ActorId::cultistPriest;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -548,7 +548,7 @@ void initDataList() {
 
   d.nameA = "A Green Spider";
   d.nameThe = "The Green Spider";
-  d.id = actor_greenSpider;
+  d.id = ActorId::greenSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -580,7 +580,7 @@ void initDataList() {
 
   d.nameA = "A White Spider";
   d.nameThe = "The White Spider";
-  d.id = actor_whiteSpider;
+  d.id = ActorId::whiteSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -612,7 +612,7 @@ void initDataList() {
 
   d.nameA = "A Red Spider";
   d.nameThe = "The Red Spider";
-  d.id = actor_redSpider;
+  d.id = ActorId::redSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -644,7 +644,7 @@ void initDataList() {
 
   d.nameA = "A Shadow Spider";
   d.nameThe = "The Shadow Spider";
-  d.id = actor_shadowSpider;
+  d.id = ActorId::shadowSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -680,7 +680,7 @@ void initDataList() {
 
   d.nameA = "A Leng Spider";
   d.nameThe = "The Leng Spider";
-  d.id = actor_lengSpider;
+  d.id = ActorId::lengSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -716,7 +716,7 @@ void initDataList() {
 
   d.nameA = "A Fire hound";
   d.nameThe = "The Fire hound";
-  d.id = actor_fireHound;
+  d.id = ActorId::fireHound;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -759,7 +759,7 @@ void initDataList() {
 
   d.nameA = "A Frost hound";
   d.nameThe = "The Frost hound";
-  d.id = actor_frostHound;
+  d.id = ActorId::frostHound;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -802,7 +802,7 @@ void initDataList() {
 
   d.nameA = "Zuul the Gatekeeper";
   d.nameThe = "Zuul the Gatekeeper";
-  d.id = actor_zuul;
+  d.id = ActorId::zuul;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;
@@ -849,7 +849,7 @@ void initDataList() {
 
   d.nameA = "A Ghost";
   d.nameThe = "The Ghost";
-  d.id = actor_ghost;
+  d.id = ActorId::ghost;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -891,7 +891,7 @@ void initDataList() {
 
   d.nameA = "A Phantasm";
   d.nameThe = "The Phantasm";
-  d.id = actor_phantasm;
+  d.id = ActorId::phantasm;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -935,7 +935,7 @@ void initDataList() {
 
   d.nameA = "A Wraith";
   d.nameThe = "The Wraith";
-  d.id = actor_wraith;
+  d.id = ActorId::wraith;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -978,7 +978,7 @@ void initDataList() {
 
   d.nameA = "A Rat";
   d.nameThe = "The Rat";
-  d.id = actor_rat;
+  d.id = ActorId::rat;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;
@@ -1014,7 +1014,7 @@ void initDataList() {
 
   d.nameA = "A Rat-thing";
   d.nameThe = "The Rat-thing";
-  d.id = actor_ratThing;
+  d.id = ActorId::ratThing;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1057,7 +1057,7 @@ void initDataList() {
 
   d.nameA = "A Wolf";
   d.nameThe = "The Wolf";
-  d.id = actor_wolf;
+  d.id = ActorId::wolf;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1095,7 +1095,7 @@ void initDataList() {
 
   d.nameA = "A Giant Bat";
   d.nameThe = "The Giant Bat";
-  d.id = actor_giantBat;
+  d.id = ActorId::giantBat;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1134,7 +1134,7 @@ void initDataList() {
 
   d.nameA = "A Byakhee";
   d.nameThe = "The Byakhee";
-  d.id = actor_byakhee;
+  d.id = ActorId::byakhee;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1181,7 +1181,7 @@ void initDataList() {
 
   d.nameA = "A Giant Mantis";
   d.nameThe = "The Giant Mantis";
-  d.id = actor_giantMantis;
+  d.id = ActorId::giantMantis;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1215,7 +1215,7 @@ void initDataList() {
 
   d.nameA = "A Giant Locust";
   d.nameThe = "The Giant Locust";
-  d.id = actor_locust;
+  d.id = ActorId::locust;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;
@@ -1249,7 +1249,7 @@ void initDataList() {
 
   d.nameA = "A Fungi from Yuggoth";
   d.nameThe = "The Fungi from Yuggoth";
-  d.id = actor_miGo;
+  d.id = ActorId::miGo;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1304,7 +1304,7 @@ void initDataList() {
 
   d.nameA = "A Flying Polyp";
   d.nameThe = "The Flying Polyp";
-  d.id = actor_flyingPolyp;
+  d.id = ActorId::flyingPolyp;
   d.canBeSummoned = false;
   d.canBleed = false;
   d.ai[int(AiId::looks)] = false;
@@ -1356,7 +1356,7 @@ void initDataList() {
 
   d.nameA = "A Ghoul";
   d.nameThe = "The Ghoul";
-  d.id = actor_ghoul;
+  d.id = ActorId::ghoul;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1401,7 +1401,7 @@ void initDataList() {
 
   d.nameA = "A Shadow";
   d.nameThe = "The Shadow";
-  d.id = actor_shadow;
+  d.id = ActorId::shadow;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1445,7 +1445,7 @@ void initDataList() {
 
   d.nameA = "A Mummy";
   d.nameThe = "The Mummy";
-  d.id = actor_mummy;
+  d.id = ActorId::mummy;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1481,7 +1481,7 @@ void initDataList() {
 
   d.nameA = "Khephren";
   d.nameThe = "Khephren";
-  d.id = actor_khephren;
+  d.id = ActorId::khephren;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1522,7 +1522,7 @@ void initDataList() {
 
   d.nameA = "Nitokris";
   d.nameThe = "Nitokris";
-  d.id = actor_nitokris;
+  d.id = ActorId::nitokris;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1565,7 +1565,7 @@ void initDataList() {
 
   d.nameA = "A Deep One";
   d.nameThe = "The Deep One";
-  d.id = actor_deepOne;
+  d.id = ActorId::deepOne;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1608,7 +1608,7 @@ void initDataList() {
 
   d.nameA = "A Worm Mass";
   d.nameThe = "The Worm Mass";
-  d.id = actor_wormMass;
+  d.id = ActorId::wormMass;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;
@@ -1643,7 +1643,7 @@ void initDataList() {
 
   d.nameA = "A Dust Vortex";
   d.nameThe = "The Dust Vortex";
-  d.id = actor_dustVortex;
+  d.id = ActorId::dustVortex;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1685,7 +1685,7 @@ void initDataList() {
 
   d.nameA = "A Fire Vortex";
   d.nameThe = "The Fire Vortex";
-  d.id = actor_fireVortex;
+  d.id = ActorId::fireVortex;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1727,7 +1727,7 @@ void initDataList() {
 
   d.nameA = "A Frost Vortex";
   d.nameThe = "The Frost Vortex";
-  d.id = actor_frostVortex;
+  d.id = ActorId::frostVortex;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1769,7 +1769,7 @@ void initDataList() {
 
   d.nameA = "A Black Ooze";
   d.nameThe = "The Black Ooze";
-  d.id = actor_oozeBlack;
+  d.id = ActorId::oozeBlack;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1818,7 +1818,7 @@ void initDataList() {
 
   d.nameA = "A Clear Ooze";
   d.nameThe = "The Clear Ooze";
-  d.id = actor_oozeClear;
+  d.id = ActorId::oozeClear;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1868,7 +1868,7 @@ void initDataList() {
 
   d.nameA = "A Putrid Ooze";
   d.nameThe = "The Putrid Ooze";
-  d.id = actor_oozePutrid;
+  d.id = ActorId::oozePutrid;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1918,7 +1918,7 @@ void initDataList() {
 
   d.nameA = "A Poison Ooze";
   d.nameThe = "The Poison Ooze";
-  d.id = actor_oozePoison;
+  d.id = ActorId::oozePoison;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -1968,7 +1968,7 @@ void initDataList() {
 
   d.nameA = "A Colour out of space";
   d.nameThe = "The Colour out of space";
-  d.id = actor_colourOOSpace;
+  d.id = ActorId::colourOOSpace;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -2013,7 +2013,7 @@ void initDataList() {
 
   d.nameA = "A Chthonian";
   d.nameThe = "The Chthonian";
-  d.id = actor_chthonian;
+  d.id = ActorId::chthonian;
   d.ai[int(AiId::looks)] = false;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;
@@ -2057,7 +2057,7 @@ void initDataList() {
 
   d.nameA = "A Hunting Horror";
   d.nameThe = "The Hunting Horror";
-  d.id = actor_huntingHorror;
+  d.id = ActorId::huntingHorror;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = true;

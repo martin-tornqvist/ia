@@ -66,31 +66,31 @@ void ProxEventWallCrumble::playerIsNear() {
 
     //Spawn things
     int nrMonsterLimitExceptAdjToEntry = 9999;
-    ActorId monsterType = actor_zombie;
+    ActorId monsterType = ActorId::zombie;
     const int RND = Rnd::range(1, 5);
     switch(RND) {
       case 1: {
-        monsterType = actor_zombie;
+        monsterType = ActorId::zombie;
         nrMonsterLimitExceptAdjToEntry = 4;
       } break;
 
       case 2: {
-        monsterType = actor_zombieAxe;
+        monsterType = ActorId::zombieAxe;
         nrMonsterLimitExceptAdjToEntry = 3;
       } break;
 
       case 3: {
-        monsterType = actor_bloatedZombie;
+        monsterType = ActorId::bloatedZombie;
         nrMonsterLimitExceptAdjToEntry = 1;
       } break;
 
       case 4: {
-        monsterType = actor_rat;
+        monsterType = ActorId::rat;
         nrMonsterLimitExceptAdjToEntry = 30;
       } break;
 
       case 5: {
-        monsterType = actor_ratThing;
+        monsterType = ActorId::ratThing;
         nrMonsterLimitExceptAdjToEntry = 20;
       } break;
 

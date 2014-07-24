@@ -41,7 +41,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   TRACE << "Postmortem: Finding number of killed monsters" << endl;
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMonsters = 0;
-  for(int i = actor_player + 1; i < endOfActorIds; ++i) {
+  for(int i = ActorId::player + 1; i < endOfActorIds; ++i) {
     const ActorDataT& d = ActorData::data[i];
     if(d.nrKills > 0) {
       nrKillsTotAllMonsters += d.nrKills;

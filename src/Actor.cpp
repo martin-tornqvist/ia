@@ -155,7 +155,7 @@ void Actor::place(const Pos& pos_, ActorDataT& data) {
   spi_            = spiMax_ = data_->spi;
   lairCell_       = pos;
 
-  if(data_->id != actor_player) {mkStartItems();}
+  if(data_->id != ActorId::player) {mkStartItems();}
 
   place_();
 

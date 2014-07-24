@@ -6,42 +6,42 @@
 
 #include "Converters.h"
 #include "AbilityValues.h"
-#include "MapGen.h"
 #include "CmnData.h"
 #include "Properties.h"
 #include "Audio.h"
+#include "Room.h"
 
 enum ActorId {
-  actor_empty, //TODO Is it really necessary to have an "empty"(?) actor?
-  actor_player,
-  actor_zombie, actor_zombieAxe, actor_bloatedZombie,
-  actor_cultist, actor_cultistTeslaCannon, actor_cultistSpikeGun,
-  actor_cultistPriest,
-  actor_rat, actor_ratThing,
-  actor_greenSpider, actor_whiteSpider, actor_redSpider, actor_shadowSpider,
-  actor_lengSpider,
-  actor_miGo,
-  actor_flyingPolyp,
-  actor_ghoul,
-  actor_shadow,
-  actor_wolf, actor_fireHound, actor_frostHound, actor_zuul,
-  actor_ghost, actor_phantasm, actor_wraith,
-  actor_giantBat, actor_byakhee,
-  actor_giantMantis, actor_locust,
-  actor_mummy, actor_khephren, actor_nitokris,
-  actor_deepOne,
-  actor_keziahMason, actor_brownJenkin,
-//  actor_lordOfPestilence,
-//  actor_lordOfShadows,
-//  actor_lordOfSpiders,
-//  actor_lordOfSpirits,
-  actor_majorClaphamLee, actor_deanHalsey,
-  actor_wormMass,
-  actor_dustVortex, actor_fireVortex, actor_frostVortex,
-  actor_oozeBlack, actor_oozeClear, actor_oozePutrid, actor_oozePoison,
-  actor_colourOOSpace,
-  actor_chthonian,
-  actor_huntingHorror,
+  empty, //TODO Is it really necessary to have an "empty"(?) actor?
+  player,
+  zombie, zombieAxe, bloatedZombie,
+  cultist, cultistTeslaCannon, cultistSpikeGun,
+  cultistPriest,
+  rat, ratThing,
+  greenSpider, whiteSpider, redSpider, shadowSpider,
+  lengSpider,
+  miGo,
+  flyingPolyp,
+  ghoul,
+  shadow,
+  wolf, fireHound, frostHound, zuul,
+  ghost, phantasm, wraith,
+  giantBat, byakhee,
+  giantMantis, locust,
+  mummy, khephren, nitokris,
+  deepOne,
+  keziahMason, brownJenkin,
+//  lordOfPestilence,
+//  lordOfShadows,
+//  lordOfSpiders,
+//  lordOfSpirits,
+  majorClaphamLee, deanHalsey,
+  wormMass,
+  dustVortex, fireVortex, frostVortex,
+  oozeBlack, oozeClear, oozePutrid, oozePoison,
+  colourOOSpace,
+  chthonian,
+  huntingHorror,
 
   endOfActorIds
 };

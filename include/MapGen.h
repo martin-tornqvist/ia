@@ -28,16 +28,11 @@ void mkPillarsInRoom(const Room& room);
 
 void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out);
 
-//void mk(const Rect& area, const FeatureId id);
-
 void mkPathFindCor(Room& r0, Room& r1,
                    bool doorProposals[MAP_W][MAP_H] = nullptr);
 
 void backupMap();
 void restoreMap();
-
-void mkFromTempl(const Pos& pos, const MapTempl& t);
-void mkFromTempl(const Pos& pos, const MapTemplId templateId);
 
 void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
              const bool ALLOW_DIAGONAL = true,
@@ -55,15 +50,11 @@ namespace MapGen {
 //stop map generation, discard the map, and trigger generation of a new map.
 extern bool isMapValid;
 
-namespace Std               {bool run();} //Std
-
-namespace IntroForest       {bool run();} //IntroForest
-
-namespace EgyptTomb         {bool run();} //EgyptTomb
-
-namespace CaveLvl           {bool run();} //CaveLvl
-
-namespace TrapezohedronLvl  {bool run();} //TrapezohedronLvl
+namespace Std               {bool run();}
+namespace IntroForest       {bool run();}
+namespace Egypt             {bool run();}
+namespace CaveLvl           {bool run();}
+namespace TrapezohedronLvl  {bool run();}
 
 } //MapGen
 

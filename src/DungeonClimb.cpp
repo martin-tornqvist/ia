@@ -32,7 +32,7 @@ void mkLvl() {
   //------------------------------------- KINGS TOMB
   if(!levelBuilt) {
     if(Map::dlvl == LAST_ROOM_AND_CORRIDOR_LVL + 1) {
-      while(!MapGen::EgyptTomb::run()) {}
+      while(!MapGen::Egypt::run()) {}
       levelBuilt = true;
     }
   }

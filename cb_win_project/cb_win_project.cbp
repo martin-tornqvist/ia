@@ -276,7 +276,7 @@
 		<Unit filename="../src/Manual.cpp" />
 		<Unit filename="../src/Map.cpp" />
 		<Unit filename="../src/MapGenCaveLvl.cpp" />
-		<Unit filename="../src/MapGenEgyptTomb.cpp" />
+		<Unit filename="../src/MapGenEgypt.cpp" />
 		<Unit filename="../src/MapGenForest.cpp" />
 		<Unit filename="../src/MapGenStd.cpp" />
 		<Unit filename="../src/MapGenTrapezohedronLvl.cpp" />

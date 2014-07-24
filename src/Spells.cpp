@@ -374,9 +374,9 @@ SpellCastRetData SpellPestilence::cast_(Actor* const caster) const {
   (void)caster;
 
   const int RND = Rnd::range(1, 4);
-  const ActorId monsterId = RND == 1 ? actor_greenSpider  :
-                            RND == 2 ? actor_redSpider    :
-                            RND == 3 ? actor_rat          : actor_wormMass;
+  const ActorId monsterId = RND == 1 ? ActorId::greenSpider  :
+                            RND == 2 ? ActorId::redSpider    :
+                            RND == 3 ? ActorId::rat          : ActorId::wormMass;
 
   const size_t NR_MON = Rnd::range(7, 10);
 

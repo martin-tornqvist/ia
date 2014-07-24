@@ -159,11 +159,11 @@ void FrostHound::mkStartItems() {
 }
 
 void Zuul::place_() {
-  if(ActorData::data[actor_zuul].nrLeftAllowedToSpawn > 0) {
+  if(ActorData::data[ActorId::zuul].nrLeftAllowedToSpawn > 0) {
     //Note: Do not call die() here, that would have side effects such as
     //player getting XP. Instead, simply set the dead state to destroyed.
     deadState = ActorDeadState::destroyed;
-    Actor* actor = ActorFactory::mk(actor_cultistPriest, pos);
+    Actor* actor = ActorFactory::mk(ActorId::cultistPriest, pos);
     PropHandler& propHandler = actor->getPropHandler();
     propHandler.tryApplyProp(new PropPossessedByZuul(PropTurns::indefinite), true);
     actor->restoreHp(999, false);
@@ -393,7 +393,7 @@ bool Khephren::onActorTurn_() {
                                    ShockSrc::misc);
             for(int i = 0; i < NR_OF_SPAWNS; ++i) {
               Actor* const actor =
-                ActorFactory::mk(actor_locust, freeCells.at(0));
+                ActorFactory::mk(ActorId::locust, freeCells.at(0));
               Monster* const monster = static_cast<Monster*>(actor);
               monster->awareOfPlayerCounter_ = 999;
               monster->leader = this;
@@ -461,7 +461,7 @@ bool KeziahMason::onActorTurn_() {
             if(!blocked[c.x][c.y]) {
               //TODO Make a generalized summoning functionality
               Log::addMsg("Keziah summons Brown Jenkin!");
-              Actor* const actor = ActorFactory::mk(actor_brownJenkin, c);
+              Actor* const actor = ActorFactory::mk(ActorId::brownJenkin, c);
               Monster* jenkin = static_cast<Monster*>(actor);
               Renderer::drawMapAndInterface();
               hasSummonedJenkin = true;
@@ -715,17 +715,17 @@ bool MajorClaphamLee::onActorTurn_() {
           vector<ActorId> monsterIds;
           monsterIds.resize(0);
 
-          monsterIds.push_back(actor_deanHalsey);
+          monsterIds.push_back(ActorId::deanHalsey);
 
           const int NR_OF_EXTRA_SPAWNS = 4;
 
           for(int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i) {
             const int ZOMBIE_TYPE = Rnd::range(1, 3);
-            ActorId id = actor_zombie;
+            ActorId id = ActorId::zombie;
             switch(ZOMBIE_TYPE) {
-              case 1: id = actor_zombie;        break;
-              case 2: id = actor_zombieAxe;     break;
-              case 3: id = actor_bloatedZombie; break;
+              case 1: id = ActorId::zombie;        break;
+              case 2: id = ActorId::zombieAxe;     break;
+              case 3: id = ActorId::bloatedZombie; break;
             }
             monsterIds.push_back(id);
           }

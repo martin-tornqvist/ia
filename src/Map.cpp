@@ -65,7 +65,7 @@ void init() {
   if(player) {delete player; player = nullptr;}
 
   const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
-  player = static_cast<Player*>(ActorFactory::mk(actor_player, playerPos));
+  player = static_cast<Player*>(ActorFactory::mk(ActorId::player, playerPos));
 
   ActorFactory::deleteAllMonsters();
 

@@ -381,7 +381,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   }
 
   //Check damage to actors
-  Actor* a1 = ActorFactory::mk(actor_rat, Pos(X0 + 1, Y0));
+  Actor* a1 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
   CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
 
@@ -389,10 +389,10 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   const int NR_CORPSES = 3;
   Actor* corpses[NR_CORPSES];
   for(int i = 0; i < NR_CORPSES; ++i) {
-    corpses[i] = ActorFactory::mk(actor_rat, Pos(X0 + 1, Y0));
+    corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
-  a1 = ActorFactory::mk(actor_rat, Pos(X0 + 1, Y0));
+  a1 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
   for(int i = 0; i < NR_CORPSES; ++i) {
     CHECK_EQUAL(int(ActorDeadState::destroyed), int(corpses[i]->deadState));
@@ -400,10 +400,10 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
 
   //Check explosion applying Burning to living and dead actors
-  a1        = ActorFactory::mk(actor_rat, Pos(X0 - 1, Y0));
-  Actor* a2 = ActorFactory::mk(actor_rat, Pos(X0 + 1, Y0));
+  a1        = ActorFactory::mk(ActorId::rat, Pos(X0 - 1, Y0));
+  Actor* a2 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
   for(int i = 0; i < NR_CORPSES; ++i) {
-    corpses[i] = ActorFactory::mk(actor_rat, Pos(X0 + 1, Y0));
+    corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
@@ -465,7 +465,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     Map::put(new Floor(posR));
 
     //Spawn a monster that can get stuck in the web
-    Actor* const actor = ActorFactory::mk(actor_zombie, posL);
+    Actor* const actor = ActorFactory::mk(ActorId::zombie, posL);
     Monster* const monster = static_cast<Monster*>(actor);
 
     //Create a spider web in the right cell

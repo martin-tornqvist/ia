@@ -188,19 +188,6 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   TRACE_FUNC_END_VERBOSE;
 }
 
-//Note: The parameter rectangle does not have to go up-left to bottom-right,
-//the method adjusts the order
-//void mk(const Rect& area, const FeatureId id) {
-//  const Pos p0 = Pos(min(area.p0.x, area.p1.x), min(area.p0.y, area.p1.y));
-//  const Pos p1 = Pos(max(area.p0.x, area.p1.x), max(area.p0.y, area.p1.y));
-//
-//  for(int x = p0.x; x <= p1.x; ++x) {
-//    for(int y = p0.y; y <= p1.y; ++y) {
-//      FeatureFactory::mk(id, Pos(x, y), nullptr);
-//    }
-//  }
-//}
-
 void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
   TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
                            << &r0 << " and " << &r1 << endl;
@@ -398,22 +385,6 @@ void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
       }
     }
   }
-}
-
-void mkFromTempl(const Pos& pos, const MapTempl& t) {
-  for(int dy = 0; dy < t.h; ++dy) {
-    for(int dx = 0; dx < t.w; ++dx) {
-      const auto id = t.featureVector[dy][dx];
-      if(id != FeatureId::empty) {
-        const Pos p(pos + Pos(dx, dy));
-        Map::put(static_cast<FeatureStatic*>(FeatureData::getData(id).mkObj(p)));
-      }
-    }
-  }
-}
-
-void mkFromTempl(const Pos& pos, MapTemplId templateId) {
-  mkFromTempl(pos, MapTemplHandling::getTempl(templateId));
 }
 
 } //MapGenUtils

@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "MapParsing.h"
 #include "FeatureStatic.h"
+#include "MapGen.h"
 #ifdef DEMO_MODE
 #include "Renderer.h"
 #include "SdlWrapper.h"
