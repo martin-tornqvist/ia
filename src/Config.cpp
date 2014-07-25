@@ -28,11 +28,11 @@ const int OPT_Y0      = 1;
 
 string  fontName_                     = "";
 bool    isFullscreen_                 = false;
-bool    isTilesWallFullSquare_  = false;
-bool    isAsciiWallFullSquare_  = false;
+bool    isTilesWallFullSquare_        = false;
+bool    isAsciiWallFullSquare_        = false;
 bool    isRangedWpnMeleeePrompt_      = false;
 bool    isRangedWpnAutoReload_        = false;
-bool    isIntroLvlSkipped_          = false;
+bool    isIntroLvlSkipped_            = false;
 int     mapPixelH_                    = -1;
 int     logPixelH_                    = -1;
 int     mapPixelOffsetH_              = -1;

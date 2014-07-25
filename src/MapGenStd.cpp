@@ -20,6 +20,7 @@
 #include "Utils.h"
 #include "PopulateMonsters.h"
 #include "PopulateTraps.h"
+#include "PopulateItems.h"
 
 //-------------------------------------
 //Some options (comment out to disable)
@@ -38,8 +39,6 @@
 using namespace std;
 
 namespace MapGen {
-
-namespace Std {
 
 namespace {
 
@@ -1005,7 +1004,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 
 } //namespace
 
-bool run() {
+bool mkStdLvl() {
   TRACE_FUNC_BEGIN;
 
   isMapValid = true;
@@ -1165,6 +1164,7 @@ bool run() {
 
   if(isMapValid) {PopulateMonsters::populateStdLvl();}
   if(isMapValid) {PopulateTraps::populateStdLvl();}
+  if(isMapValid) {PopulateItems::mkItems();}
 
   Pos stairsPos;
   if(isMapValid) {stairsPos = placeStairs();}
@@ -1183,8 +1183,6 @@ bool run() {
   TRACE_FUNC_END;
   return isMapValid;
 }
-
-} //Std
 
 } //MapGen
 

@@ -49,7 +49,7 @@ void mkTempl(const string& str, const MapTemplId id,
 }
 
 void initTempls() {
-  //--------------------------------------------------------------------- CHURCH
+  //------------------------------------------------------------------------- CHURCH
   string str =
     "             ,,,,,,,,,,,     ;"
     "          ,,,,,######,,,,    ;"
@@ -78,7 +78,7 @@ void initTempls() {
     {'>', {FeatureId::stairs}}
   });
 
-  //--------------------------------------------------------------------- EGYPT
+  //------------------------------------------------------------------------- EGYPT
   str =
     "################################################################################;"
     "###...################################........................##################;"
@@ -104,15 +104,48 @@ void initTempls() {
     "################################################################################;";
 
   mkTempl(str, MapTemplId::egypt, vector<Translation> {
+    {'@', {FeatureId::floor, ActorId::empty, ItemId::empty, 1}},  //Player starting pos
     {'¤', {FeatureId::brazier}},
     {'|', {FeatureId::pillar}},
     {'S', {FeatureId::statue}},
     {'P', {FeatureId::floor, ActorId::khephren}},
     {'M', {FeatureId::floor, ActorId::mummy}},
     {'C', {FeatureId::floor, ActorId::cultist}},
-    {'1', {FeatureId::floor, ActorId::empty, ItemId::empty, 1}},  //Stair candidate #1
-    {'2', {FeatureId::floor, ActorId::empty, ItemId::empty, 2}},  //Stair candidate #2
-    {'@', {FeatureId::floor, ActorId::empty, ItemId::empty, 3}}   //Player start pos
+    {'1', {FeatureId::floor, ActorId::empty, ItemId::empty, 2}},  //Stair candidate #1
+    {'2', {FeatureId::floor, ActorId::empty, ItemId::empty, 3}}   //Stair candidate #2
+  });
+
+  //------------------------------------------------------------------------- LENG
+  str =
+    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX;"
+    "%%%%%%%%%%'%%''%''%%''%%%''%%''%%'%'%%%''%'%%'X,,X,,X,,X,,X,,X,,X,,,,,,,,,,,,,,X;"
+    "%@''''%''''''''%'''%'''%''''''''%''''%'''''%''X,,X,,X,,X,,X,,X,,X,,,,,,,,,,,,,,X;"
+    "%%''''''''''''''''''''''''''''''''''''''''''''XX,XX,XX,XX,XX,XX,XXX,,,,,,,,,,,,X;"
+    "%'''''''''''''%'''''''%''''%'''''''''''''%''''XX,,,,,,,,,,,,,,,,,,X,,,,,,,,,,,,X;"
+    "%%''''''''''''%'''''''''%'''''''''''''''''''''X,,,X,XX,XX,XXX,,,,,,,,,,,,,,,,,,X;"
+    "%%'''''''''''''''''''''%%%''''''''''''''%'''''XX,,X,,X,,X,,X,,,,,,X,,,,,,,,,,,,X;"
+    "%%%''''%%''''''''''''''''%''''''''''''''''''''',,,X,,X,,X''XX,,XXXXXXXXXXXXXXXXX;"
+    "%%%''''''''''''''''''%%''%'''''''%''''''''''''X,XXXXXXXXXXXXX,,X,,X,,,,,,,,,,,XX;"
+    "%%%%'''''''''''''''''%''%%'%''''%%''''''''''''X,,,X,,X,,X,,,X,,X,,,,,,X,X,X,,,XX;"
+    "%%%''''''''''''''''''''%%''''%'''''''%''''''''XX,XXX,X,,X,X,X,,XXXX,,,,,,,,,,,XX;"
+    "%%''''''''''''''''''%'%%''''''''''''''''''''''',,,,,,XX,X,X,X,,,,,,,,,,,X,,,,XXX;"
+    "%%%''''''''''''''''''''%%''%''%'''''''''''''''XX,XXX,,,,,,X,X,,XXXX,,,,,,,,,,,XX;"
+    "%%'''''''''''''''''''%''%%'%''''%'''''''''''''X,,,X,,XXXXXX,X,,X,,,,,,X,X,X,,,XX;"
+    "%%''''''''''''''''''''''%%''''''''''''''''''''X,XXX,,,X,,,X,X,,X,,X,,,,,,,,,,,XX;"
+    "%%%''''''''''''''''''%'%%'''''''''''''''%'''''',,,X,X,XX,XX,XXXXXXXXXXXXXXXXXXXX;"
+    "%%'''''%''''''''''''''''%''''''''''%''''''''''XX,,X,,,,,,,,,,,,,,,,,,,,X,,,,,,,X;"
+    "%%%'''''''''%''''''''''%%%%'''''''''''''''''''X,,,X,X,X,X,X,X,X,X,X,X,,X,X,X,X,X;"
+    "%%''%'''''''''''''''%'''''''''''''''''''''''''XXX,X,XXXXXXX'XXXXXXXXX,,,,,,,,,,X;"
+    "%%%''''''''''''''%''''''''''''''''%'''%'''''%'X,X,X,X,X,X,X,X,X,X,X,X,,X,X,X,X,X;"
+    "%%%%%%''%'''%''%%%'%''%%%%%%%'%'%%%''%%''%'%%%X,,,,,,,,,,,,,,,,,,,,,,,,X,,,,,,,X;"
+    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX;";
+
+  mkTempl(str, MapTemplId::leng, vector<Translation> {
+    {'@',   {FeatureId::floor,  ActorId::empty, ItemId::empty, 1}}, //Player starting pos
+    {'%',   {FeatureId::wall,   ActorId::empty, ItemId::empty, 2}},
+    {'X',   {FeatureId::wall,   ActorId::empty, ItemId::empty, 3}},
+    {',',   {FeatureId::floor,  ActorId::empty, ItemId::empty, 3}},
+    {'\'',  {FeatureId::grass}}
   });
 }
 

@@ -33,6 +33,8 @@ struct Cell {
   Pos pos;
 };
 
+enum class MapType {intro, std, egypt, leng, caves, trapezohedron};
+
 namespace Map {
 
 extern Player*            player;

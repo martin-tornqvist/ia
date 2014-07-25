@@ -7,7 +7,7 @@
 #include "Renderer.h"
 #include "MapParsing.h"
 #include "GameTime.h"
-#include "DungeonClimb.h"
+#include "MapTravel.h"
 #include "Query.h"
 #include "SaveHandling.h"
 #include "Popup.h"

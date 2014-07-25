@@ -12,7 +12,7 @@
 #include "ItemPotion.h"
 #include "PlayerBon.h"
 #include "Map.h"
-#include "DungeonClimb.h"
+#include "MapTravel.h"
 #include "Inventory.h"
 #include "GameTime.h"
 #include "PlayerSpellsHandling.h"
@@ -34,6 +34,7 @@ void collectLinesFromGame(vector<string>& lines) {
   Map::player->getInv().storeToSaveLines(lines);
   Map::player->storeToSaveLines(lines);
   PlayerBon::storeToSaveLines(lines);
+  MapTravel::storeToSaveLines(lines);
   Map::storeToSaveLines(lines);
   ActorData::storeToSaveLines(lines);
   GameTime::storeToSaveLines(lines);
@@ -56,6 +57,7 @@ void setupGameFromLines(vector<string>& lines) {
   Map::player->getInv().setupFromSaveLines(lines);
   Map::player->setupFromSaveLines(lines);
   PlayerBon::setupFromSaveLines(lines);
+  MapTravel::setupFromSaveLines(lines);
   Map::setupFromSaveLines(lines);
   ActorData::setupFromSaveLines(lines);
   GameTime::setupFromSaveLines(lines);

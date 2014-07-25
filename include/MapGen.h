@@ -50,11 +50,12 @@ namespace MapGen {
 //stop map generation, discard the map, and trigger generation of a new map.
 extern bool isMapValid;
 
-namespace Std               {bool run();}
-namespace IntroForest       {bool run();}
-namespace Egypt             {bool run();}
-namespace CaveLvl           {bool run();}
-namespace TrapezohedronLvl  {bool run();}
+bool mkIntroLvl();
+bool mkStdLvl();
+bool mkEgyptLvl();
+bool mkLengLvl();
+bool mkCaveLvl();
+bool mkTrapezohedronLvl();
 
 } //MapGen
 

@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "Utils.h"
 #include "Popup.h"
-#include "DungeonClimb.h"
+#include "MapTravel.h"
 #include "SaveHandling.h"
 #include "ItemFactory.h"
 #include "MapParsing.h"
@@ -589,8 +589,7 @@ void Stairs::bump(Actor& actorBumping) {
 
     if(CHOICE == 0) {
       Map::player->pos = pos_;
-      TRACE << "Calling DungeonClimb::tryUseDownStairs()" << endl;
-      DungeonClimb::tryUseDownStairs();
+      MapTravel::goToNxt();
     } else if(CHOICE == 1) {
       Map::player->pos = pos_;
       SaveHandling::save();

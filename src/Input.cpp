@@ -6,7 +6,7 @@
 #include "ItemWeapon.h"
 #include "ActorPlayer.h"
 #include "Log.h"
-#include "DungeonClimb.h"
+#include "MapTravel.h"
 #include "Input.h"
 #include "Reload.h"
 #include "Kick.h"
@@ -495,7 +495,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   //----------------------------------- DESCEND CHEAT
   else if(d.sdlKey_ == SDLK_F2) {
     if(IS_DEBUG_MODE) {
-      DungeonClimb::travelDown(1);
+      MapTravel::goToNxt();
       clearEvents();
     }
     return;

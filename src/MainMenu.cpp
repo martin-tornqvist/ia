@@ -14,7 +14,7 @@
 #include "Credits.h"
 #include "Audio.h"
 #include "GameTime.h"
-#include "DungeonClimb.h"
+#include "MapTravel.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "Utils.h"
@@ -377,7 +377,7 @@ GameEntryMode run(bool& quit, int& introMusChannel) {
         if(browser.isPosAtElement(1)) {
           if(SaveHandling::isSaveAvailable()) {
             SaveHandling::load();
-            DungeonClimb::travelDown();
+            MapTravel::goToNxt();
             return GameEntryMode::loadGame;
           } else {
             Popup::showMsg("Starting a new character instead.", false,

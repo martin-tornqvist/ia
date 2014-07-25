@@ -143,7 +143,6 @@
 		<Unit filename="../include/CreateCharacter.h" />
 		<Unit filename="../include/Credits.h" />
 		<Unit filename="../include/Disarm.h" />
-		<Unit filename="../include/DungeonClimb.h" />
 		<Unit filename="../include/DungeonMaster.h" />
 		<Unit filename="../include/Examine.h" />
 		<Unit filename="../include/Explosion.h" />
@@ -189,6 +188,7 @@
 		<Unit filename="../include/MapParsing.h" />
 		<Unit filename="../include/MapPatterns.h" />
 		<Unit filename="../include/MapTemplates.h" />
+		<Unit filename="../include/MapTravel.h" />
 		<Unit filename="../include/Marker.h" />
 		<Unit filename="../include/MenuBrowser.h" />
 		<Unit filename="../include/MenuInputHandling.h" />
@@ -234,7 +234,6 @@
 		<Unit filename="../src/CreateCharacter.cpp" />
 		<Unit filename="../src/Credits.cpp" />
 		<Unit filename="../src/Disarm.cpp" />
-		<Unit filename="../src/DungeonClimb.cpp" />
 		<Unit filename="../src/DungeonMaster.cpp" />
 		<Unit filename="../src/Examine.cpp" />
 		<Unit filename="../src/Explosion.cpp" />
@@ -276,14 +275,13 @@
 		<Unit filename="../src/Manual.cpp" />
 		<Unit filename="../src/Map.cpp" />
 		<Unit filename="../src/MapGenCaveLvl.cpp" />
-		<Unit filename="../src/MapGenEgypt.cpp" />
-		<Unit filename="../src/MapGenForest.cpp" />
+		<Unit filename="../src/MapGenSpecial.cpp" />
 		<Unit filename="../src/MapGenStd.cpp" />
-		<Unit filename="../src/MapGenTrapezohedronLvl.cpp" />
 		<Unit filename="../src/MapGenUtils.cpp" />
 		<Unit filename="../src/MapParsing.cpp" />
 		<Unit filename="../src/MapPatterns.cpp" />
 		<Unit filename="../src/MapTemplates.cpp" />
+		<Unit filename="../src/MapTravel.cpp" />
 		<Unit filename="../src/Marker.cpp" />
 		<Unit filename="../src/MenuBrowser.cpp" />
 		<Unit filename="../src/MenuInputHandling.cpp" />

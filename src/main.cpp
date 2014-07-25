@@ -14,7 +14,7 @@
 #include "CreateCharacter.h"
 #include "ActorPlayer.h"
 #include "MapGen.h"
-#include "DungeonClimb.h"
+#include "MapTravel.h"
 #include "DungeonMaster.h"
 #include "Popup.h"
 #include "Log.h"
@@ -57,12 +57,12 @@ int main(int argc, char* argv[]) {
 
         if(Config::isIntroLvlSkipped()) {
           //Build first dungeon level
-          DungeonClimb::travelDown();
+          MapTravel::goToNxt();
         } else {
           //Build forest.
           Renderer::coverPanel(Panel::screen);
           Renderer::updateScreen();
-          MapGen::IntroForest::run();
+          MapGen::mkIntroLvl();
         }
         DungeonMaster::setTimeStartedToNow();
         const TimeData& t = DungeonMaster::getTimeStarted();

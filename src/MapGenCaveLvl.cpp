@@ -8,6 +8,7 @@
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "PopulateMonsters.h"
+#include "PopulateItems.h"
 #include "MapParsing.h"
 #include "Utils.h"
 #include "FeatureRigid.h"
@@ -16,9 +17,7 @@ using namespace std;
 
 namespace MapGen {
 
-namespace CaveLvl {
-
-bool run() {
+bool mkCaveLvl() {
   Map::resetMap();
 
   for(int y = 0; y < MAP_H; ++y) {
@@ -38,7 +37,7 @@ bool run() {
 
   vector<Pos> prevCenters(1, origin);
 
-  auto putCaveFloor = [](const vector<Pos>& positions){
+  auto putCaveFloor = [](const vector<Pos>& positions) {
     for(const Pos& p : positions) {
       auto* const f = new Floor(p);
       Map::put(f);
@@ -100,9 +99,9 @@ bool run() {
 
   PopulateMonsters::populateCaveLvl();
 
+  PopulateItems::mkItems();
+
   return true;
 }
-
-} //CaveLvl
 
 } //MapGen

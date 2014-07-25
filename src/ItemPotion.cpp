@@ -13,7 +13,7 @@
 #include "Audio.h"
 #include "Renderer.h"
 #include "Inventory.h"
-#include "DungeonClimb.h"
+#include "MapTravel.h"
 #include "MapParsing.h"
 #include "Utils.h"
 #include "FeatureRigid.h"
@@ -295,7 +295,7 @@ void PotionClairv::quaff_(Actor* const actor) {
 void PotionDescent::quaff_(Actor* const actor) {
   (void)actor;
   if(Map::dlvl < LAST_CAVERN_LVL) {
-    DungeonClimb::travelDown(1);
+    MapTravel::goToNxt();
     Log::addMsg("I sink downwards!");
   } else {
     Log::addMsg("I feel a faint sinking sensation.");

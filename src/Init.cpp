@@ -18,6 +18,7 @@
 #include "PlayerSpellsHandling.h"
 #include "Credits.h"
 #include "MapTemplates.h"
+#include "MapTravel.h"
 
 using namespace std;
 
@@ -74,6 +75,7 @@ void initSession() {
   PropData::init();
   InvHandling::init();
   GameTime::init();
+  MapTravel::init();
   Map::init();
   PlayerBon::init();
   Log::init();

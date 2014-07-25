@@ -9,7 +9,7 @@
 #include "ItemData.h"
 #include "ActorData.h"
 
-enum class MapTemplId {church, egypt, END};
+enum class MapTemplId {church, egypt, leng, END};
 
 struct MapTemplCell {
   MapTemplCell(FeatureId featureId_ = FeatureId::empty,

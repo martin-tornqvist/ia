@@ -1,27 +1,27 @@
 #include "MapGen.h"
 
-#include <iostream>
 #include <vector>
 
-#include "Converters.h"
 #include "ActorPlayer.h"
 #include "ActorFactory.h"
 #include "ActorMonster.h"
 #include "Map.h"
-#include "Highscore.h"
+#include "Utils.h"
+#include "ActorFactory.h"
+#include "FeatureRigid.h"
+#include "MapParsing.h"
+#include "HighScore.h"
 #include "Fov.h"
 #include "TextFormatting.h"
 #include "PopulateMonsters.h"
-#include "MapParsing.h"
-#include "Utils.h"
-#include "FeatureRigid.h"
+#include "PopulateItems.h"
+#include "ItemFactory.h"
 
 using namespace std;
 
 namespace MapGen {
 
-namespace IntroForest {
-
+//------------------------------------------------------------------------- FOREST
 namespace {
 
 void mkForestLimit() {
@@ -134,7 +134,11 @@ void mkForestTrees() {
         const auto id = templ.getCell(x, y).featureId;
         if(id != FeatureId::empty) {
           const Pos p(churchPos + Pos(x, y));
-          Map::put(static_cast<Rigid*>(FeatureData::getData(id).mkObj(p)));
+          Rigid* const f =
+            Map::put(static_cast<Rigid*>(FeatureData::getData(id).mkObj(p)));
+          if(id == FeatureId::grass) {
+            static_cast<Grass*>(f)->type_ = GrassType::withered;
+          }
         }
       }
     }
@@ -267,7 +271,7 @@ void mkForestTrees() {
 
 } //namespace
 
-bool run() {
+bool mkIntroLvl() {
   for(int y = 1; y < MAP_H - 1; ++y) {
     for(int x = 1; x < MAP_W - 1; ++x) {
       const Pos p(x, y);
@@ -288,6 +292,131 @@ bool run() {
   return true;
 }
 
-} //IntroForest
+//------------------------------------------------------------------------- EGYPT
+bool mkEgyptLvl() {
+  Map::resetMap();
+
+  const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::egypt);
+  const Pos       templDims = templ.getDims();
+  const int       STAIR_VAL = Rnd::range(2, 3);
+
+  for(int y = 0; y < templDims.y; ++y) {
+    for(int x = 0; x < templDims.x; ++x) {
+      const auto& templCell = templ.getCell(x, y);
+      const Pos p(x, y);
+      if(templCell.featureId != FeatureId::empty) {
+        if(templCell.val == STAIR_VAL) {
+          Map::put(new Stairs(p));
+        } else {
+          const auto& d = FeatureData::getData(templCell.featureId);
+          Map::put(static_cast<Rigid*>(d.mkObj(p)));
+        }
+      }
+      if(templCell.actorId != ActorId::empty) {ActorFactory::mk(templCell.actorId, p);}
+      if(templCell.val == 1) {Map::player->pos = p;}
+    }
+  }
+
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
+      Rigid* const f = Map::cells[x][y].rigid;
+      if(f->getId() == FeatureId::wall) {
+        static_cast<Wall*>(f)->type_ = WallType::egypt;
+      }
+    }
+  }
+
+  PopulateItems::mkItems();
+
+  return true;
+}
+
+//------------------------------------------------------------------------- LENG
+bool mkLengLvl() {
+  Map::resetMap();
+
+  const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::leng);
+  const Pos       templDims = templ.getDims();
+
+  for(int y = 0; y < templDims.y; ++y) {
+    for(int x = 0; x < templDims.x; ++x) {
+      const auto& templCell = templ.getCell(x, y);
+      const auto  fId       = templCell.featureId;
+      const Pos p(x, y);
+      if(fId != FeatureId::empty) {
+        const auto& d = FeatureData::getData(fId);
+        auto* const f = Map::put(static_cast<Rigid*>(d.mkObj(p)));
+        if(fId == FeatureId::grass) {
+          if(Rnd::oneIn(50)) {
+            auto* const bush = static_cast<Bush*>(Map::put(new Bush(p)));
+            bush->type_ = Rnd::oneIn(5) ? GrassType::cmn : GrassType::withered;
+          } else {
+            auto* const grass = static_cast<Grass*>(f);
+            grass->type_ = Rnd::oneIn(5) ? GrassType::cmn : GrassType::withered;
+          }
+        }
+      }
+      if(templCell.actorId != ActorId::empty) {ActorFactory::mk(templCell.actorId, p);}
+      if(templCell.val == 1) {Map::player->pos = p;}
+      if(templCell.val == 3) {Map::cells[x][y].isDark = true;}
+    }
+  }
+
+//  PopulateItems::mkItems();
+
+  return true;
+}
+
+
+//------------------------------------------------------------------------- TRAPEZOHEDRON
+bool mkTrapezohedronLvl() {
+  Map::resetMap();
+
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
+      auto* const wall  = new Wall(Pos(x, y));
+      Map::put(wall);
+      wall->type_       = WallType::cave;
+      wall->isMossy_    = false;
+    }
+  }
+
+  const Pos& origin     = Map::player->pos;
+  const Pos  mapCenter  = Pos(MAP_W_HALF, MAP_H_HALF);
+
+  auto putCaveFloor = [](const vector<Pos>& positions) {
+    for(const Pos& p : positions) {
+      auto* const floor = new Floor(p);
+      Map::put(floor);
+      floor->type_      = FloorType::cave;
+    }
+  };
+
+  vector<Pos> floorPositions;
+
+  MapGenUtils::rndWalk(origin, 150, floorPositions, true);
+  putCaveFloor(floorPositions);
+
+  MapGenUtils::rndWalk(mapCenter, 800, floorPositions, true);
+  putCaveFloor(floorPositions);
+
+  MapGenUtils::pathfinderWalk(origin, mapCenter, floorPositions, false);
+  putCaveFloor(floorPositions);
+
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  vector<Pos> itemPosBucket;
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
+      if(!blocked[x][y] && Pos(x, y) != origin) {
+        itemPosBucket.push_back(Pos(x, y));
+      }
+    }
+  }
+
+  const int ELEMENT = Rnd::range(0, itemPosBucket.size() - 1);
+  ItemFactory::mkItemOnMap(ItemId::trapezohedron, itemPosBucket.at(ELEMENT));
+  return true;
+}
 
 } //MapGen
