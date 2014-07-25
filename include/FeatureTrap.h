@@ -4,7 +4,7 @@
 #include "Feature.h"
 #include "AbilityValues.h"
 #include "Art.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "CmnData.h"
 
 class SpecificTrapBase;
@@ -25,12 +25,12 @@ enum class TrapId {
   any
 };
 
-class Trap: public FeatureStatic {
+class Trap: public Rigid {
 public:
-  Trap(const Pos& pos, const FeatureStatic* const mimicFeature, TrapId type);
+  Trap(const Pos& pos, const Rigid* const mimicFeature, TrapId type);
 
   //Spawn by id compliant ctor (do not use for normal cases):
-  Trap(const Pos& pos) : FeatureStatic(pos), mimicFeature_(nullptr), isHidden_(false) {}
+  Trap(const Pos& pos) : Rigid(pos), mimicFeature_(nullptr), isHidden_(false) {}
 
   Trap() = delete;
 
@@ -72,7 +72,7 @@ protected:
 
   void setSpecificTrapFromId(const TrapId id);
 
-  const FeatureStatic* const mimicFeature_;
+  const Rigid* const mimicFeature_;
   bool isHidden_;
   SpecificTrapBase* specificTrap_;
 };

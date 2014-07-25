@@ -12,7 +12,7 @@
 #include "ItemFactory.h"
 #include "MapParsing.h"
 #include "Utils.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
@@ -75,7 +75,7 @@ void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
 Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
   //If target cell is bottomless, just destroy the item
   const auto* const targetFeature =
-    Map::cells[intendedPos.x][intendedPos.y].featureStatic;
+    Map::cells[intendedPos.x][intendedPos.y].rigid;
   if(targetFeature->isBottomless()) {
     delete &item;
     return nullptr;
@@ -85,7 +85,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
   bool freeCellArray[MAP_W][MAP_H];
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      FeatureStatic* const f = Map::cells[x][y].featureStatic;
+      Rigid* const f = Map::cells[x][y].rigid;
       freeCellArray[x][y] = f->canHaveItem() && !f->isBottomless();
     }
   }

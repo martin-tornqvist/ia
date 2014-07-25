@@ -23,12 +23,12 @@
 using namespace std;
 
 //------------------------------------------------------------- TRAP
-Trap::Trap(const Pos& pos, const FeatureStatic* const mimicFeature, TrapId type) :
-  FeatureStatic(pos), mimicFeature_(mimicFeature), isHidden_(true) {
+Trap::Trap(const Pos& pos, const Rigid* const mimicFeature, TrapId type) :
+  Rigid(pos), mimicFeature_(mimicFeature), isHidden_(true) {
 
   assert(type != TrapId::END);
 
-  assert(Map::cells[pos.x][pos.y].featureStatic->canHaveStaticFeature());
+  assert(Map::cells[pos.x][pos.y].rigid->canHaveRigid());
 
   if(type == TrapId::any) {
     setSpecificTrapFromId(TrapId(Rnd::range(0, int(TrapId::END) - 1)));

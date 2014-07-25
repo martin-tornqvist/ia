@@ -8,7 +8,7 @@
 #include "PopulateItems.h"
 #include "Renderer.h"
 #include "Log.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
@@ -84,7 +84,7 @@ void tryUseDownStairs() {
   const Pos& playerPos = Map::player->pos;
 
   const auto featureIdAtPlayer =
-    Map::cells[playerPos.x][playerPos.y].featureStatic->getId();
+    Map::cells[playerPos.x][playerPos.y].rigid->getId();
 
   if(featureIdAtPlayer == FeatureId::stairs) {
     TRACE << "DungeonClimb: Player is on stairs" << endl;

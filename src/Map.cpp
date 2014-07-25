@@ -10,7 +10,7 @@
 #include "MapGen.h"
 #include "Item.h"
 #include "Utils.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #ifdef DEMO_MODE
 #include "SdlWrapper.h"
 #endif // DEMO_MODE
@@ -20,7 +20,7 @@ using namespace std;
 void Cell::clear() {
   isExplored = isSeenByPlayer = isLight = isDark = false;
 
-  if(featureStatic) {delete featureStatic;  featureStatic = nullptr;}
+  if(rigid) {delete rigid;  rigid = nullptr;}
   if(item)          {delete item;           item = nullptr;}
 
   playerVisualMemory.clear();
@@ -69,7 +69,7 @@ void init() {
 
   ActorFactory::deleteAllMonsters();
 
-  GameTime::eraseAllFeatureMobs();
+  GameTime::eraseAllMobs();
   GameTime::resetTurnTypeAndActorCounters();
 }
 
@@ -80,8 +80,8 @@ void cleanup() {
 
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      delete cells[x][y].featureStatic;
-      cells[x][y].featureStatic = nullptr;
+      delete cells[x][y].rigid;
+      cells[x][y].rigid = nullptr;
     }
   }
 }
@@ -102,20 +102,20 @@ void resetMap() {
   roomList.resize(0);
 
   resetCells(true);
-  GameTime::eraseAllFeatureMobs();
+  GameTime::eraseAllMobs();
   GameTime::resetTurnTypeAndActorCounters();
 }
 
-FeatureStatic* put(FeatureStatic* const f) {
+Rigid* put(Rigid* const f) {
   assert(f);
 
   const Pos             p     = f->getPos();
   Cell&                 cell  = cells[p.x][p.y];
-  FeatureStatic* const  fOld  = cell.featureStatic;
+  Rigid* const  fOld  = cell.rigid;
 
   if(fOld) {delete fOld;}
 
-  cell.featureStatic = f;
+  cell.rigid = f;
 
 #ifdef DEMO_MODE
   if(f->getId() == FeatureId::floor) {
@@ -146,7 +146,7 @@ void mkBlood(const Pos& origin) {
   for(int dx = -1; dx <= 1; ++dx) {
     for(int dy = -1; dy <= 1; ++dy) {
       const Pos c = origin + Pos(dx, dy);
-      FeatureStatic* const f  = cells[c.x][c.y].featureStatic;
+      Rigid* const f  = cells[c.x][c.y].rigid;
       if(f->canHaveBlood()) {
         if(Rnd::oneIn(3)) {f->mkBloody();}
       }
@@ -158,7 +158,7 @@ void mkGore(const Pos& origin) {
   for(int dx = -1; dx <= 1; ++dx) {
     for(int dy = -1; dy <= 1; ++dy) {
       const Pos c = origin + Pos(dx, dy);
-      if(Rnd::oneIn(3)) {cells[c.x][c.y].featureStatic->tryPutGore();}
+      if(Rnd::oneIn(3)) {cells[c.x][c.y].rigid->tryPutGore();}
     }
   }
 }

@@ -9,7 +9,7 @@
 #include "MapParsing.h"
 #include "Utils.h"
 #include "MapTemplates.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 #ifdef DEMO_MODE
 #include "SdlWrapper.h"
@@ -94,7 +94,7 @@ void mkPillarsInRoom(const Room& room) {
   auto isFree = [](const Pos & p) {
     for(int dx = -1; dx <= 1; ++dx) {
       for(int dy = -1; dy <= 1; ++dy) {
-        const auto* const f = Map::cells[p.x + dx][p.y + dy].featureStatic;
+        const auto* const f = Map::cells[p.x + dx][p.y + dy].rigid;
         if(f->getId() == FeatureId::wall) {return false;}
       }
     }
@@ -142,7 +142,7 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
     for(int x = 0; x < MAP_W; ++x) {
       const bool IS_ROOM_CELL = Map::roomMap[x][y] == &room;
       roomCells[x][y]         = IS_ROOM_CELL;
-      const auto* const f     = Map::cells[x][y].featureStatic;
+      const auto* const f     = Map::cells[x][y].rigid;
       roomFloorCells[x][y]    = IS_ROOM_CELL && f->getId() == FeatureId::floor;
     }
   }
@@ -153,7 +153,7 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; ++y) {
     for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; ++x) {
       //Condition (1)
-      if(Map::cells[x][y].featureStatic->getId() != FeatureId::wall) {continue;}
+      if(Map::cells[x][y].rigid->getId() != FeatureId::wall) {continue;}
 
       //Condition (2)
       if(Map::roomMap[x][y]) {continue;}
@@ -252,7 +252,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
       for(int x = 0; x < MAP_W; ++x) {
         blocked[x][y] =
           Map::roomMap[x][y] ||
-          Map::cells[x][y].featureStatic->getId() != FeatureId::wall;
+          Map::cells[x][y].rigid->getId() != FeatureId::wall;
       }
     }
 
@@ -328,7 +328,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
 void backupMap() {
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      backup[x][y] = Map::cells[x][y].featureStatic->getId();
+      backup[x][y] = Map::cells[x][y].rigid->getId();
     }
   }
 }
@@ -337,7 +337,7 @@ void restoreMap() {
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
       const auto& data = FeatureData::getData(backup[x][y]);
-      Map::put(static_cast<FeatureStatic*>(data.mkObj(Pos(x, y))));
+      Map::put(static_cast<Rigid*>(data.mkObj(Pos(x, y))));
     }
   }
 }

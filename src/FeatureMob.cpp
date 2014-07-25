@@ -8,7 +8,7 @@
 #include "Explosion.h"
 #include "Utils.h"
 #include "Map.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "Fov.h"
 
 using namespace std;
@@ -16,7 +16,7 @@ using namespace std;
 //------------------------------------------------------------------- SMOKE
 void Smoke::onNewTurn() {
   if(nrTurnsLeft_ > -1) {
-    if(--nrTurnsLeft_ <= 0) {GameTime::eraseFeatureMob(this, true);}
+    if(--nrTurnsLeft_ <= 0) {GameTime::eraseMob(this, true);}
   }
 }
 
@@ -36,7 +36,7 @@ void LitDynamite::onNewTurn() {
   if(nrTurnsLeft_ <= 0) {
     const int D = PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
     Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, D);
-    GameTime::eraseFeatureMob(this, true);
+    GameTime::eraseMob(this, true);
   }
 }
 
@@ -52,7 +52,7 @@ Clr LitDynamite::getClr() const {
 //------------------------------------------------------------------- FLARE
 void LitFlare::onNewTurn() {
   nrTurnsLeft_--;
-  if(nrTurnsLeft_ <= 0) {GameTime::eraseFeatureMob(this, true);}
+  if(nrTurnsLeft_ <= 0) {GameTime::eraseMob(this, true);}
 }
 
 void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
@@ -64,7 +64,7 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
   bool visionBlockers[MAP_W][MAP_H];
   for(int y = p0.y; y <= p1.y; ++y) {
     for(int x = p0.x; x <= p1.x; ++x) {
-      visionBlockers[x][y] = !Map::cells[x][y].featureStatic->isVisionPassable();
+      visionBlockers[x][y] = !Map::cells[x][y].rigid->isVisionPassable();
     }
   }
 

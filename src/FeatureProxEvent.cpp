@@ -7,7 +7,7 @@
 #include "Log.h"
 #include "Renderer.h"
 #include "Utils.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 //-------------------------------------------PROX EVENT
 void ProxEvent::onNewTurn() {
@@ -21,7 +21,7 @@ void ProxEventWallCrumble::playerIsNear() {
   //Check that it still makes sense to run the crumbling
   bool isCrumbleOk = true;
   for(const Pos& p : wallCells_) {
-    FeatureStatic* const f = Map::cells[p.x][p.y].featureStatic;
+    Rigid* const f = Map::cells[p.x][p.y].rigid;
     const bool IS_VISION_PASSABLE = f->isVisionPassable();
     const bool IS_WALK_PASSABLE   = f->canMoveCmn();
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
@@ -30,7 +30,7 @@ void ProxEventWallCrumble::playerIsNear() {
     }
   }
   for(const Pos& p : innerCells_) {
-    FeatureStatic* const f  = Map::cells[p.x][p.y].featureStatic;
+    Rigid* const f  = Map::cells[p.x][p.y].rigid;
     const bool IS_VISION_PASSABLE = f->isVisionPassable();
     const bool IS_WALK_PASSABLE   = f->canMoveCmn();
     if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
@@ -45,7 +45,7 @@ void ProxEventWallCrumble::playerIsNear() {
     while(!done) {
       for(const Pos& p : wallCells_) {
         if(Utils::isPosInside(p, Rect(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2)))) {
-          auto* const f = Map::cells[p.x][p.y].featureStatic;
+          auto* const f = Map::cells[p.x][p.y].rigid;
           f->hit(DmgType::physical, DmgMethod::forced, nullptr);
         }
       }
@@ -53,7 +53,7 @@ void ProxEventWallCrumble::playerIsNear() {
       bool isOpeningMade = true;
       for(const Pos& p : wallCells_) {
         if(Utils::isPosAdj(Map::player->pos, p, true)) {
-          FeatureStatic* const f = Map::cells[p.x][p.y].featureStatic;
+          Rigid* const f = Map::cells[p.x][p.y].rigid;
           if(!f->canMoveCmn()) {isOpeningMade = false;}
         }
       }
@@ -119,7 +119,7 @@ void ProxEventWallCrumble::playerIsNear() {
     Log::addMsg("The walls suddenly crumbles!");
     Map::player->updateFov();
     Renderer::drawMapAndInterface();
-    GameTime::eraseFeatureMob(this, true);
+    GameTime::eraseMob(this, true);
   }
 }
 

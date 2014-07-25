@@ -4,7 +4,7 @@
 #include <assert.h>
 
 #include "CmnTypes.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureMob.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
@@ -24,7 +24,7 @@ using namespace std;
 namespace GameTime {
 
 vector<Actor*>      actors_;
-vector<FeatureMob*> featureMobs_;
+vector<Mob*> mobs_;
 
 namespace {
 
@@ -94,15 +94,15 @@ void runStandardTurnEvents() {
     }
   }
 
-  //New turn for static features
+  //New turn for rigids
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      Map::cells[x][y].featureStatic->onNewTurn();
+      Map::cells[x][y].rigid->onNewTurn();
     }
   }
 
   //New turn for mobs (using a copied vector, since mobs may get destroyed)
-  const vector<FeatureMob*> mobsCpy = featureMobs_;
+  const vector<Mob*> mobsCpy = mobs_;
   for(auto* f : mobsCpy) {f->onNewTurn();}
 
   //Spawn more monsters?
@@ -140,15 +140,15 @@ void init() {
   curActorVectorPos_  = 0;
   turn_               = 0;
   actors_.resize(0);
-  featureMobs_.resize(0);
+  mobs_.resize(0);
 }
 
 void cleanup() {
   for(Actor* a : actors_) {delete a;}
   actors_.resize(0);
 
-  for(auto* f : featureMobs_) {delete f;}
-  featureMobs_.resize(0);
+  for(auto* f : mobs_) {delete f;}
+  mobs_.resize(0);
 }
 
 void storeToSaveLines(vector<string>& lines) {
@@ -164,28 +164,28 @@ int getTurn() {
   return turn_;
 }
 
-void getFeatureMobsAtPos(const Pos& p, vector<FeatureMob*>& vectorRef) {
+void getMobsAtPos(const Pos& p, vector<Mob*>& vectorRef) {
   vectorRef.resize(0);
-  for(auto* m : featureMobs_) {if(m->getPos() == p) {vectorRef.push_back(m);}}
+  for(auto* m : mobs_) {if(m->getPos() == p) {vectorRef.push_back(m);}}
 }
 
-void addMob(FeatureMob* const f) {
-  featureMobs_.push_back(f);
+void addMob(Mob* const f) {
+  mobs_.push_back(f);
 }
 
-void eraseFeatureMob(FeatureMob* const f, const bool DESTROY_OBJECT) {
-  for(auto it = featureMobs_.begin(); it != featureMobs_.end(); ++it) {
+void eraseMob(Mob* const f, const bool DESTROY_OBJECT) {
+  for(auto it = mobs_.begin(); it != mobs_.end(); ++it) {
     if(*it == f) {
       if(DESTROY_OBJECT) {delete f;}
-      featureMobs_.erase(it);
+      mobs_.erase(it);
       return;
     }
   }
 }
 
-void eraseAllFeatureMobs() {
-  for(auto* m : featureMobs_) {delete m;}
-  featureMobs_.resize(0);
+void eraseAllMobs() {
+  for(auto* m : mobs_) {delete m;}
+  mobs_.resize(0);
 }
 
 void eraseActorInElement(const size_t i) {
@@ -305,14 +305,14 @@ void updateLightMap() {
     actors_.at(i)->addLight(lightTmp);
   }
 
-  const int NR_FEATURE_MOBS = featureMobs_.size();
+  const int NR_FEATURE_MOBS = mobs_.size();
   for(int i = 0; i < NR_FEATURE_MOBS; ++i) {
-    featureMobs_.at(i)->addLight(lightTmp);
+    mobs_.at(i)->addLight(lightTmp);
   }
 
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      Map::cells[x][y].featureStatic->addLight(lightTmp);
+      Map::cells[x][y].rigid->addLight(lightTmp);
 
       //Note: Here the temporary values are copied to the map.
       //This must of course be done last!

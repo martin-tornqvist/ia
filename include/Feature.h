@@ -37,7 +37,7 @@ public:
   virtual TileId        getTile()                                       const;
   virtual void          addLight(bool light[MAP_W][MAP_H])              const;
   virtual bool          canHaveCorpse()                                 const;
-  virtual bool          canHaveStaticFeature()                          const;
+  virtual bool          canHaveRigid()                          const;
   virtual bool          canHaveBlood()                                  const;
   virtual bool          canHaveGore()                                   const;
   virtual bool          canHaveItem()                                   const;

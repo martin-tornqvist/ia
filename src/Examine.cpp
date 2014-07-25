@@ -1,6 +1,6 @@
 #include "Examine.h"
 
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "Map.h"
@@ -22,7 +22,7 @@ void playerExamine() {
     Log::clearLog();
 
     if(examinePos != Map::player->pos) {
-      Map::cells[examinePos.x][examinePos.y].featureStatic->examine();
+      Map::cells[examinePos.x][examinePos.y].rigid->examine();
     }
   } else {
     Log::addMsg("Not while blind.");

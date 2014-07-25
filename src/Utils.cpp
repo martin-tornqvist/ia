@@ -132,8 +132,8 @@ Actor* getFirstActorAtPos(const Pos& pos, ActorDeadState deadState) {
   return nullptr;
 }
 
-FeatureMob* getFirstMobAtPos(const Pos& pos) {
-  for(auto* const mob : GameTime::featureMobs_) {
+Mob* getFirstMobAtPos(const Pos& pos) {
+  for(auto* const mob : GameTime::mobs_) {
     if(mob->getPos() == pos) {return mob;}
   }
   return nullptr;

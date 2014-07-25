@@ -17,7 +17,7 @@
 #include "PlayerBon.h"
 #include "TextFormatting.h"
 #include "MenuBrowser.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
@@ -137,7 +137,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
       for(int dx = -1; dx <= 1; ++dx) {
         for(int dy = -1; dy <= 1; ++dy) {
           if(Utils::isPosInsideMap(Pos(x + dx, y + dy))) {
-            const auto* const f = Map::cells[x + dx][y + dy].featureStatic;
+            const auto* const f = Map::cells[x + dx][y + dy].rigid;
             if(f->isVisionPassable()) {Map::cells[x][y].isSeenByPlayer = true;}
           }
         }

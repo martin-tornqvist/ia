@@ -70,7 +70,7 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
 bool handleClosedBlockingDoor(Monster& monster, vector<Pos> path) {
   if(monster.deadState == ActorDeadState::alive && !path.empty()) {
     const Pos& p = path.back();
-    Feature* const f = Map::cells[p.x][p.y].featureStatic;
+    Feature* const f = Map::cells[p.x][p.y].rigid;
     if(f->getId() == FeatureId::door) {
       Door* const door = static_cast<Door*>(f);
       vector<PropId> props;
@@ -260,7 +260,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
     const Pos& p = actor->pos;
     blocked[p.x][p.y] = true;
   }
-  for(FeatureMob* mob : GameTime::featureMobs_) {
+  for(Mob* mob : GameTime::mobs_) {
     const Pos& p = mob->getPos();
     blocked[p.x][p.y] = cellPred.check(*mob);
   }
@@ -491,7 +491,7 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
 
       for(int y = 1; y < MAP_H - 1; ++y) {
         for(int x = 1; x < MAP_W - 1; ++x) {
-          const auto* const f = Map::cells[x][y].featureStatic;
+          const auto* const f = Map::cells[x][y].rigid;
           if(!f->canMove(props)) {
             if(f->getId() == FeatureId::door) {
               const Door* const door = static_cast<const Door*>(f);

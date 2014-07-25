@@ -16,9 +16,9 @@ namespace PopulateTraps {
 namespace {
 
 void mkTrapAt(const TrapId id, const Pos& pos) {
-  const auto* const f     = Map::cells[pos.x][pos.y].featureStatic;
+  const auto* const f     = Map::cells[pos.x][pos.y].rigid;
   const auto&       d     = FeatureData::getData(f->getId());
-  const auto* const mimic = static_cast<FeatureStatic*>(d.mkObj(pos));
+  const auto* const mimic = static_cast<Rigid*>(d.mkObj(pos));
   Map::put(new Trap(pos, mimic, id));
 }
 
@@ -64,7 +64,7 @@ void populateStdLvl() {
           for(int x = p0.x; x <= p1.x; ++x) {
             if(
               !blocked[x][y] &&
-              Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
+              Map::cells[x][y].rigid->canHaveRigid()) {
               trapPosBucket.push_back(Pos(x, y));
             }
           }
@@ -118,7 +118,7 @@ void populateStdLvl() {
           if(
             !blocked[x][y] &&
             Map::roomMap[x][y]->type_ == RoomType::plain &&
-            Map::cells[x][y].featureStatic->canHaveStaticFeature()) {
+            Map::cells[x][y].rigid->canHaveRigid()) {
             trapPosBucket.push_back(Pos(x, y));
           }
         }

@@ -59,7 +59,7 @@ void playerJam() {
   const Pos jamPos(Map::player->pos + Query::dir());
   Log::clearLog();
 
-  playerJamFeature(Map::cells[jamPos.x][jamPos.y].featureStatic);
+  playerJamFeature(Map::cells[jamPos.x][jamPos.y].rigid);
 
   Renderer::drawMapAndInterface();
 }

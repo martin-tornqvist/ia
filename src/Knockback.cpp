@@ -12,7 +12,7 @@
 #include "Renderer.h"
 #include "MapParsing.h"
 #include "SdlWrapper.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureMob.h"
 
 using namespace std;
@@ -49,7 +49,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
         MapParse::parse(CellPred::BlocksActor(defender, true), blocked);
         const bool CELL_BLOCKED = blocked[newPos.x][newPos.y];
         const bool CELL_IS_BOTTOMLESS =
-          Map::cells[newPos.x][newPos.y].featureStatic->isBottomless();
+          Map::cells[newPos.x][newPos.y].rigid->isBottomless();
 
         if(
           (ACTOR_CAN_BE_KNOCKED_BACK) &&
@@ -92,21 +92,21 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           }
 
           // Bump features (e.g. so monsters can be knocked back into traps)
-          vector<FeatureMob*> featureMobs;
-          GameTime::getFeatureMobsAtPos(defender.pos, featureMobs);
+          vector<Mob*> mobs;
+          GameTime::getMobsAtPos(defender.pos, mobs);
           for(
-            unsigned int featureMobIndex = 0;
-            featureMobIndex < featureMobs.size();
-            featureMobIndex++) {
-            featureMobs.at(featureMobIndex)->bump(defender);
+            unsigned int mobIndex = 0;
+            mobIndex < mobs.size();
+            mobIndex++) {
+            mobs.at(mobIndex)->bump(defender);
           }
 
           if(defender.deadState != ActorDeadState::alive) {
             return;
           }
 
-          FeatureStatic* const f =
-            Map::cells[defender.pos.x][defender.pos.y].featureStatic;
+          Rigid* const f =
+            Map::cells[defender.pos.x][defender.pos.y].rigid;
           f->bump(defender);
 
           if(defender.deadState != ActorDeadState::alive) {
@@ -115,8 +115,8 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
         } else {
           // Defender nailed to a wall from a spike gun?
           if(IS_SPIKE_GUN) {
-            FeatureStatic* const f =
-              Map::cells[newPos.x][newPos.y].featureStatic;
+            Rigid* const f =
+              Map::cells[newPos.x][newPos.y].rigid;
             if(!f->isVisionPassable()) {
               defender.getPropHandler().tryApplyProp(
                 new PropNailed(PropTurns::indefinite));

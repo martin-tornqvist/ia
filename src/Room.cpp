@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "Map.h"
 #include "MapParsing.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "MapGen.h"
 #ifdef DEMO_MODE
 #include "Renderer.h"
@@ -177,14 +177,14 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
   const int EDGE_D = 4;
   for(int x = EDGE_D; x < MAP_W - EDGE_D; ++x) {
     for(int y = EDGE_D; y < MAP_H - EDGE_D; ++y) {
-      const FeatureId featureId = Map::cells[x][y].featureStatic->getId();
+      const FeatureId featureId = Map::cells[x][y].rigid->getId();
       if(featureId == FeatureId::wall && !Map::roomMap[x][y]) {
         const Pos p(x, y);
         int nrCardinalFloor  = 0;
         int nrCardinalRiver  = 0;
         for(const auto& d : DirUtils::cardinalList) {
           const auto pAdj(p + d);
-          const auto* const f = Map::cells[pAdj.x][pAdj.y].featureStatic;
+          const auto* const f = Map::cells[pAdj.x][pAdj.y].rigid;
           if(f->getId() == FeatureId::floor)        {nrCardinalFloor++;}
           if(Map::roomMap[pAdj.x][pAdj.y] == this)  {nrCardinalRiver++;}
         }

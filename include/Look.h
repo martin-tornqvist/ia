@@ -5,22 +5,22 @@
 
 class Actor;
 class Item;
-class FeatureMob;
-class FeatureStatic;
+class Mob;
+class Rigid;
 class Feature;
 
 struct Entity {
 public:
   Entity() :
     actor(nullptr), item(nullptr), feature(nullptr),
-    entityType(entityFeatureStatic) {}
+    entityType(entityRigid) {}
 
   Entity(Actor* actor_) : actor(actor_), entityType(entityActor) {}
 
   Entity(Item* item_) : item(item_), entityType(entityItem) {}
 
-  Entity(FeatureMob* feature_);
-  Entity(FeatureStatic* feature_);
+  Entity(Mob* feature_);
+  Entity(Rigid* feature_);
 
   const Actor* actor;
   Item* item;

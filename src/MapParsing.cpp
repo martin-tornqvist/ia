@@ -7,7 +7,7 @@
 #include "ActorPlayer.h"
 #include "GameTime.h"
 #include "Utils.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureMob.h"
 
 using namespace std;
@@ -16,18 +16,18 @@ using namespace std;
 namespace CellPred {
 
 bool BlocksVision::check(const Cell& c)  const {
-  return !c.featureStatic->isVisionPassable();
+  return !c.rigid->isVisionPassable();
 }
 
-bool BlocksVision::check(const FeatureMob& f) const {
+bool BlocksVision::check(const Mob& f) const {
   return !f.isVisionPassable();
 }
 
 bool BlocksMoveCmn::check(const Cell& c) const {
-  return !c.featureStatic->canMoveCmn();
+  return !c.rigid->canMoveCmn();
 }
 
-bool BlocksMoveCmn::check(const FeatureMob& f) const {
+bool BlocksMoveCmn::check(const Mob& f) const {
   return !f.canMoveCmn();
 }
 
@@ -41,10 +41,10 @@ BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking) :
 }
 
 bool BlocksActor::check(const Cell& c) const {
-  return !c.featureStatic->canMove(actorsProps_);
+  return !c.rigid->canMove(actorsProps_);
 }
 
-bool BlocksActor::check(const FeatureMob& f) const {
+bool BlocksActor::check(const Mob& f) const {
   return !f.canMove(actorsProps_);
 }
 
@@ -53,10 +53,10 @@ bool BlocksActor::check(const Actor& a) const {
 }
 
 bool BlocksProjectiles::check(const Cell& c)  const {
-  return !c.featureStatic->isProjectilePassable();
+  return !c.rigid->isProjectilePassable();
 }
 
-bool BlocksProjectiles::check(const FeatureMob& f)  const {
+bool BlocksProjectiles::check(const Mob& f)  const {
   return !f.isProjectilePassable();
 }
 
@@ -68,19 +68,19 @@ bool LivingActorsAdjToPos::check(const Actor& a) const {
 }
 
 bool BlocksItems::check(const Cell& c)  const {
-  return !c.featureStatic->canHaveItem();
+  return !c.rigid->canHaveItem();
 }
 
-bool BlocksItems::check(const FeatureMob& f) const {
+bool BlocksItems::check(const Mob& f) const {
   return !f.canHaveItem();
 }
 
 bool IsFeature::check(const Cell& c) const {
-  return c.featureStatic->getId() == feature_;
+  return c.rigid->getId() == feature_;
 }
 
 bool IsAnyOfFeatures::check(const Cell& c) const {
-  for(auto f : features_) {if(f == c.featureStatic->getId()) return true;}
+  for(auto f : features_) {if(f == c.rigid->getId()) return true;}
   return false;
 }
 
@@ -92,7 +92,7 @@ bool AllAdjIsFeature::check(const Cell& c) const {
 
   for(int dx = -1; dx <= 1; ++dx) {
     for(int dy = -1; dy <= 1; ++dy) {
-      if(Map::cells[X + dx][Y + dy].featureStatic->getId() != feature_) {
+      if(Map::cells[X + dx][Y + dy].rigid->getId() != feature_) {
         return false;
       }
     }
@@ -109,7 +109,7 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
 
   for(int dx = -1; dx <= 1; ++dx) {
     for(int dy = -1; dy <= 1; ++dy) {
-      const auto curId = Map::cells[X + dx][Y + dy].featureStatic->getId();
+      const auto curId = Map::cells[X + dx][Y + dy].rigid->getId();
 
       bool isMatch = false;
       for(auto f : features_) {if(f == curId) {isMatch = true; break;}}
@@ -128,7 +128,7 @@ bool AllAdjIsNotFeature::check(const Cell& c) const {
 
   for(int dx = -1; dx <= 1; ++dx) {
     for(int dy = -1; dy <= 1; ++dy) {
-      if(Map::cells[X + dx][Y + dy].featureStatic->getId() == feature_) {
+      if(Map::cells[X + dx][Y + dy].rigid->getId() == feature_) {
         return false;
       }
     }
@@ -145,7 +145,7 @@ bool AllAdjIsNoneOfFeatures::check(const Cell& c) const {
 
   for(int dx = -1; dx <= 1; ++dx) {
     for(int dy = -1; dy <= 1; ++dy) {
-      const auto curId = Map::cells[X + dx][Y + dy].featureStatic->getId();
+      const auto curId = Map::cells[X + dx][Y + dy].rigid->getId();
       for(auto f : features_) {if(f == curId) {return false;}}
     }
   }
@@ -162,7 +162,7 @@ void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
            const MapParseWriteRule writeRule) {
 
   assert(pred.isCheckingCells()       ||
-         pred.isCheckingMobFeatures() ||
+         pred.isCheckingMobs() ||
          pred.isCheckingActors());
 
   const bool ALLOW_WRITE_FALSE = writeRule == MapParseWriteRule::always;
@@ -177,8 +177,8 @@ void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
     }
   }
 
-  if(pred.isCheckingMobFeatures()) {
-    for(FeatureMob* mob : GameTime::featureMobs_) {
+  if(pred.isCheckingMobs()) {
+    for(Mob* mob : GameTime::mobs_) {
       const Pos& p = mob->getPos();
       const bool IS_MATCH = pred.check(*mob);
       if(IS_MATCH || ALLOW_WRITE_FALSE) {

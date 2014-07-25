@@ -1,7 +1,7 @@
 #ifndef FEATURE_DOOR_H
 #define FEATURE_DOOR_H
 
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 enum class DoorSpawnState {
   open,
@@ -11,12 +11,12 @@ enum class DoorSpawnState {
   secretAndStuck
 };
 
-class Door: public FeatureStatic {
+class Door: public Rigid {
 public:
-  Door(const Pos& pos, const FeatureStatic* const mimicFeature);
+  Door(const Pos& pos, const Rigid* const mimicFeature);
 
   //Spawn by id compliant ctor (do not use for normal cases):
-  Door(const Pos& pos) : FeatureStatic(pos), mimicFeature_(nullptr), nrSpikes_(0) {}
+  Door(const Pos& pos) : Rigid(pos), mimicFeature_(nullptr), nrSpikes_(0) {}
 
   Door() = delete;
 
@@ -60,7 +60,7 @@ public:
   void playerTrySpotHidden();
 
 protected:
-  const FeatureStatic* const mimicFeature_;
+  const Rigid* const mimicFeature_;
   int nrSpikes_;
 
   bool isOpen_, isStuck_, isSecret_, isHandledExternally_;

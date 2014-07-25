@@ -103,8 +103,6 @@ void initTempls() {
     "###...############################¤....................##############|...|######;"
     "################################################################################;";
 
-  //Note: There are two stairs in the template, but only one of them will be placed
-
   mkTempl(str, MapTemplId::egypt, vector<Translation> {
     {'¤', {FeatureId::brazier}},
     {'|', {FeatureId::pillar}},

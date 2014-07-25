@@ -123,7 +123,7 @@ struct FeatureDataT {
   bool canHaveBlood;
   bool canHaveGore;
   bool canHaveCorpse;
-  bool canHaveStaticFeature;
+  bool canHaveRigid;
   bool canHaveItem;
   bool isBottomless;
   Matl matlType;

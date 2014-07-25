@@ -1,4 +1,4 @@
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 #include <string>
 
@@ -20,8 +20,8 @@
 
 using namespace std;
 
-//--------------------------------------------------------------------- STATIC FEATURE
-FeatureStatic::FeatureStatic(Pos pos) :
+//--------------------------------------------------------------------- RIGID
+Rigid::Rigid(Pos pos) :
   Feature(pos),
   goreTile_(TileId::empty),
   goreGlyph_(0),
@@ -34,7 +34,7 @@ FeatureStatic::FeatureStatic(Pos pos) :
   }
 }
 
-void FeatureStatic::onNewTurn() {
+void Rigid::onNewTurn() {
   if(burnState_ == BurnState::burning) {
     clearGore();
 
@@ -109,7 +109,7 @@ void FeatureStatic::onNewTurn() {
     if(Rnd::oneIn(hitAdjacentOneInN)) {
       const Pos p(DirUtils::getRndAdjPos(pos_, false));
       if(Utils::isPosInsideMap(p)) {
-        Map::cells[p.x][p.y].featureStatic->hit(DmgType::fire, DmgMethod::elemental);
+        Map::cells[p.x][p.y].rigid->hit(DmgType::fire, DmgMethod::elemental);
 
         actor = Utils::getFirstActorAtPos(p);
         if(actor) {scorchActor(*actor);}
@@ -128,7 +128,7 @@ void FeatureStatic::onNewTurn() {
   }
 }
 
-void FeatureStatic::tryStartBurning(const bool IS_MSG_ALLOWED) {
+void Rigid::tryStartBurning(const bool IS_MSG_ALLOWED) {
   clearGore();
 
   if(burnState_ == BurnState::notBurned) {
@@ -141,21 +141,21 @@ void FeatureStatic::tryStartBurning(const bool IS_MSG_ALLOWED) {
   }
 }
 
-void FeatureStatic::setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
-                                 const function<void (Actor* const actor)>& effect) {
+void Rigid::setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
+                         const function<void (Actor* const actor)>& effect) {
   onHit[int(dmgType)][int(dmgMethod)] = effect;
 }
 
-void FeatureStatic::examine() {
+void Rigid::examine() {
   Log::addMsg("I find nothing specific there to examine or use.");
 }
 
-void FeatureStatic::disarm() {
+void Rigid::disarm() {
   Log::addMsg(msgDisarmNoTrap);
   Renderer::drawMapAndInterface();
 }
 
-void FeatureStatic::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
+void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
 
   bool isFeatureHit = true;
 
@@ -189,7 +189,7 @@ void FeatureStatic::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor*
   if(actor) {GameTime::actorDidAct();} //TODO This should probably be done elsewhere.
 }
 
-void FeatureStatic::tryPutGore() {
+void Rigid::tryPutGore() {
   if(getData().canHaveGore) {
     const int ROLL_GLYPH = Rnd::dice(1, 4);
     switch(ROLL_GLYPH) {
@@ -213,7 +213,7 @@ void FeatureStatic::tryPutGore() {
   }
 }
 
-Clr FeatureStatic::getClr() const {
+Clr Rigid::getClr() const {
   if(burnState_ == BurnState::burning) {
     return clrOrange;
   } else {
@@ -225,7 +225,7 @@ Clr FeatureStatic::getClr() const {
   }
 }
 
-Clr FeatureStatic::getClrBg() const {
+Clr Rigid::getClrBg() const {
   switch(burnState_) {
     case BurnState::notBurned:  return clrBlack;  break;
     case BurnState::burning:    return Clr {Uint8(Rnd::range(32, 255)), 0, 0, 0}; break;
@@ -235,14 +235,14 @@ Clr FeatureStatic::getClrBg() const {
   return clrYellow;
 }
 
-void FeatureStatic::clearGore() {
+void Rigid::clearGore() {
   goreTile_   = TileId::empty;
   goreGlyph_  = ' ';
   isBloody_   = false;
 }
 
 //--------------------------------------------------------------------- FLOOR
-Floor::Floor(Pos pos) : FeatureStatic(pos), type_(FloorType::cmn) {
+Floor::Floor(Pos pos) : Rigid(pos), type_(FloorType::cmn) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
     if(Rnd::oneIn(3)) {tryStartBurning(false);}
@@ -272,7 +272,7 @@ Clr Floor::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- WALL
-Wall::Wall(Pos pos) : FeatureStatic(pos), type_(WallType::cmn), isMossy_(false) {
+Wall::Wall(Pos pos) : Rigid(pos), type_(WallType::cmn), isMossy_(false) {
 
   setHitEffect(DmgType::physical, DmgMethod::forced, [&](Actor * const actor) {
     (void)actor;
@@ -312,7 +312,7 @@ void Wall::destrAdjDoors() const {
   for(const Pos& d : DirUtils::cardinalList) {
     const Pos p(pos_ + d);
     if(Utils::isPosInsideMap(p)) {
-      if(Map::cells[p.x][p.y].featureStatic->getId() == FeatureId::door) {
+      if(Map::cells[p.x][p.y].rigid->getId() == FeatureId::door) {
         Map::put(new RubbleLow(p));
       }
     }
@@ -415,7 +415,7 @@ void Wall::setRandomIsMossGrown() {
 }
 
 //--------------------------------------------------------------------- HIGH RUBBLE
-RubbleHigh::RubbleHigh(Pos pos) : FeatureStatic(pos) {
+RubbleHigh::RubbleHigh(Pos pos) : Rigid(pos) {
   setHitEffect(DmgType::physical, DmgMethod::forced, [&](Actor * const actor) {
     (void)actor;
     mkLowRubbleAndRocks();
@@ -448,7 +448,7 @@ Clr RubbleHigh::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- LOW RUBBLE
-RubbleLow::RubbleLow(Pos pos) : FeatureStatic(pos) {
+RubbleLow::RubbleLow(Pos pos) : Rigid(pos) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
     tryStartBurning(false);
@@ -467,7 +467,7 @@ Clr RubbleLow::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- GRAVE
-GraveStone::GraveStone(Pos pos) : FeatureStatic(pos) {
+GraveStone::GraveStone(Pos pos) : Rigid(pos) {
 
 }
 
@@ -485,7 +485,7 @@ Clr GraveStone::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- CHURCH BENCH
-ChurchBench::ChurchBench(Pos pos) : FeatureStatic(pos) {
+ChurchBench::ChurchBench(Pos pos) : Rigid(pos) {
 
 }
 
@@ -499,7 +499,7 @@ Clr ChurchBench::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- STATUE
-Statue::Statue(Pos pos) : FeatureStatic(pos) {
+Statue::Statue(Pos pos) : Rigid(pos) {
 
   type_ = Rnd::oneIn(8) ? StatueType::ghoul : StatueType::cmn;
 
@@ -562,7 +562,7 @@ Clr Statue::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- STATUE
-Pillar::Pillar(Pos pos) : FeatureStatic(pos) {
+Pillar::Pillar(Pos pos) : Rigid(pos) {
 
 }
 
@@ -576,7 +576,7 @@ Clr Pillar::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- STAIRS
-Stairs::Stairs(Pos pos) : FeatureStatic(pos) {
+Stairs::Stairs(Pos pos) : Rigid(pos) {
 
 }
 
@@ -630,7 +630,7 @@ Clr Bridge::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- SHALLOW LIQUID
-LiquidShallow::LiquidShallow(Pos pos) : FeatureStatic(pos), type_(LiquidType::water) {
+LiquidShallow::LiquidShallow(Pos pos) : Rigid(pos), type_(LiquidType::water) {
 
 }
 
@@ -678,7 +678,7 @@ Clr LiquidShallow::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- DEEP LIQUID
-LiquidDeep::LiquidDeep(Pos pos) : FeatureStatic(pos), type_(LiquidType::water) {
+LiquidDeep::LiquidDeep(Pos pos) : Rigid(pos), type_(LiquidType::water) {
 
 }
 
@@ -716,7 +716,7 @@ Clr LiquidDeep::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- CHASM
-Chasm::Chasm(Pos pos) : FeatureStatic(pos) {
+Chasm::Chasm(Pos pos) : Rigid(pos) {
 
 }
 
@@ -731,7 +731,7 @@ Clr Chasm::getDefClr() const {
 
 //--------------------------------------------------------------------- LEVER
 Lever::Lever(Pos pos) :
-  FeatureStatic(pos), isPositionLeft_(true), doorLinkedTo_(nullptr)  {
+  Rigid(pos), isPositionLeft_(true), doorLinkedTo_(nullptr)  {
 
 }
 
@@ -771,7 +771,7 @@ void Lever::pull() {
 }
 
 //--------------------------------------------------------------------- ALTAR
-Altar::Altar(Pos pos) : FeatureStatic(pos) {
+Altar::Altar(Pos pos) : Rigid(pos) {
 
 }
 
@@ -785,7 +785,7 @@ Clr Altar::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- CARPET
-Carpet::Carpet(Pos pos) : FeatureStatic(pos) {
+Carpet::Carpet(Pos pos) : Rigid(pos) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
     tryStartBurning(false);
@@ -802,7 +802,7 @@ Clr Carpet::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- GRASS
-Grass::Grass(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
+Grass::Grass(Pos pos) : Rigid(pos), type_(GrassType::cmn) {
 
   if(Rnd::oneIn(6)) {type_ = GrassType::withered;}
 
@@ -841,7 +841,7 @@ Clr Grass::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- BUSH
-Bush::Bush(Pos pos) : FeatureStatic(pos), type_(GrassType::cmn) {
+Bush::Bush(Pos pos) : Rigid(pos), type_(GrassType::cmn) {
 
   if(Rnd::oneIn(6)) {type_ = GrassType::withered;}
 
@@ -885,7 +885,7 @@ Clr Bush::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- TREE
-Tree::Tree(Pos pos) : FeatureStatic(pos) {
+Tree::Tree(Pos pos) : Rigid(pos) {
   setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
     (void)actor;
     if(Rnd::oneIn(3)) {tryStartBurning(false);}
@@ -991,7 +991,7 @@ void ItemContainer::destroySingleFragile() {
 
 //--------------------------------------------------------------------- TOMB
 Tomb::Tomb(const Pos& pos) :
-  FeatureStatic(pos), isContentKnown_(false), isTraitKnown_(false),
+  Rigid(pos), isContentKnown_(false), isTraitKnown_(false),
   pushLidOneInN_(Rnd::range(6, 14)), appearance_(TombAppearance::common),
   trait_(TombTrait::END) {
 
@@ -1299,7 +1299,7 @@ void Tomb::triggerTrap(Actor& actor) {
 
 //--------------------------------------------------------------------- CHEST
 Chest::Chest(const Pos& pos) :
-  FeatureStatic(pos),
+  Rigid(pos),
   isContentKnown_(false),
   isLocked_(false),
   isTrapped_(false),
@@ -1582,7 +1582,7 @@ Clr Chest::getDefClr() const {
 
 //--------------------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(const Pos& pos) :
-  FeatureStatic(pos), fountainType_(FountainType::tepid),
+  Rigid(pos), fountainType_(FountainType::tepid),
   fountainMatl_(FountainMatl::stone) {
 
   if(Rnd::oneIn(4)) {fountainMatl_ = FountainMatl::gold;}
@@ -1722,7 +1722,7 @@ void Fountain::bump(Actor& actorBumping) {
 
 
 //--------------------------------------------------------------------- CABINET
-Cabinet::Cabinet(const Pos& pos) : FeatureStatic(pos), isContentKnown_(false) {
+Cabinet::Cabinet(const Pos& pos) : Rigid(pos), isContentKnown_(false) {
   const int IS_EMPTY_N_IN_10  = 5;
   const int NR_ITEMS_MIN      = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX      = PlayerBon::hasTrait(Trait::treasureHunter) ? 2 : 1;
@@ -1770,7 +1770,7 @@ Clr Cabinet::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- COCOON
-Cocoon::Cocoon(const Pos& pos) : FeatureStatic(pos), isContentKnown_(false) {
+Cocoon::Cocoon(const Pos& pos) : Rigid(pos), isContentKnown_(false) {
   const bool IS_TREASURE_HUNTER = PlayerBon::hasTrait(Trait::treasureHunter);
   const int IS_EMPTY_N_IN_10    = 6;
   const int NR_ITEMS_MIN        = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;

@@ -15,8 +15,8 @@
 using namespace std;
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(const Pos& pos, const FeatureStatic* const mimicFeature) :
-  FeatureStatic(pos), mimicFeature_(mimicFeature), nrSpikes_(0) {
+Door::Door(const Pos& pos, const Rigid* const mimicFeature) :
+  Rigid(pos), mimicFeature_(mimicFeature), nrSpikes_(0) {
 
   isHandledExternally_ = false;
 

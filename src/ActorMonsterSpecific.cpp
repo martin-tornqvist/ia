@@ -657,11 +657,11 @@ bool LordOfSpiders::onActorTurn_() {
           if(Rnd::fraction(3, 4)) {
 
             const Pos p(playerPos + Pos(dx, dy));
-            const auto* const featureHere = Map::cells[p.x][p.y].featureStatic;
+            const auto* const featureHere = Map::cells[p.x][p.y].rigid;
 
-            if(featureHere->canHaveStaticFeature()) {
+            if(featureHere->canHaveRigid()) {
               auto& d = FeatureData::getData(featureHere->getId());
-              const auto* const mimic = static_cast<FeatureStatic*>(d.mkObj(p));
+              const auto* const mimic = static_cast<Rigid*>(d.mkObj(p));
               Trap* const f = new Trap(p, mimic, TrapId::spiderWeb);
               Map::put(f);
               f->reveal(false);

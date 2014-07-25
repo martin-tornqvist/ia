@@ -2,7 +2,7 @@
 
 #include "Init.h"
 #include "GameTime.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "Log.h"
@@ -63,7 +63,7 @@ void playerKick() {
 
     //Kick feature
     TRACE << "No actor at kick pos, attempting to kick feature instead" << endl;
-    auto* const f = Map::cells[kickPos.x][kickPos.y].featureStatic;
+    auto* const f = Map::cells[kickPos.x][kickPos.y].rigid;
     f->hit(DmgType::physical, DmgMethod::kick, Map::player);
   }
   TRACE_FUNC_END;

@@ -3,7 +3,7 @@
 #include "Init.h"
 #include "Colors.h"
 #include "Actor.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureMob.h"
 #include "FeatureTrap.h"
 #include "FeatureProxEvent.h"
@@ -39,7 +39,7 @@ void resetData(FeatureDataT& d) {
   d.canHaveBlood = true;
   d.canHaveGore = true;
   d.canHaveCorpse = true;
-  d.canHaveStaticFeature = true;
+  d.canHaveRigid = true;
   d.canHaveItem = true;
   d.isBottomless = false;
   d.matlType = Matl::stone;
@@ -87,7 +87,7 @@ void initDataList() {
   d.isSmokePassable = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
   addToListAndReset(d);
@@ -104,7 +104,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 1;
   d.msgOnPlayerBlocked = "There is a tree in the way.";
@@ -134,7 +134,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
   addToListAndReset(d);
@@ -146,7 +146,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::metal;
   addToListAndReset(d);
@@ -159,7 +159,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::metal;
   d.themeSpawnRules.set(3, PlacementRule::either, {RoomType::ritual});
@@ -172,7 +172,7 @@ void initDataList() {
   d.moveRules.setCanMoveCmn();
   d.canHaveBlood = false;
   d.canHaveGore = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.dodgeModifier = -10;
   d.matlType = Matl::fluid;
   addToListAndReset(d);
@@ -185,7 +185,7 @@ void initDataList() {
   d.moveRules.setPropCanMove(propFlying);
   d.canHaveBlood = false;
   d.canHaveGore = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.matlType = Matl::fluid;
   addToListAndReset(d);
   /*---------------------------------------------*/
@@ -197,7 +197,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.isBottomless = true;
   d.msgOnPlayerBlocked = "A chasm lies in my way.";
   d.msgOnPlayerBlockedBlind =
@@ -215,7 +215,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 2;
   d.matlType = Matl::stone;
@@ -233,7 +233,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::wood;
   addToListAndReset(d);
@@ -242,7 +242,7 @@ void initDataList() {
   d.mkObj = [](const Pos& p) {return new Carpet(p);};
   d.glyph = '.';
   d.tile = TileId::floor;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.moveRules.setCanMoveCmn();
   d.matlType = Matl::cloth;
   addToListAndReset(d);
@@ -260,7 +260,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
   addToListAndReset(d);
@@ -285,7 +285,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
   d.themeSpawnRules.set(3, PlacementRule::either, {
@@ -302,7 +302,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
   d.matlType = Matl::cloth;
@@ -316,7 +316,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomType::human});
   addToListAndReset(d);
@@ -330,7 +330,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::wood;
   d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomType::human});
@@ -345,7 +345,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
   d.themeSpawnRules.set(1, PlacementRule::awayFromWalls, {
@@ -362,7 +362,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
   d.themeSpawnRules.set(3, PlacementRule::awayFromWalls, {
@@ -377,7 +377,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
   d.matlType = Matl::stone;
@@ -393,7 +393,7 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
   d.matlType = Matl::stone;
@@ -405,14 +405,14 @@ void initDataList() {
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   d.canHaveItem = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::trap;
   d.mkObj = [](const Pos& p) {return new Trap(p);};
   d.moveRules.setCanMoveCmn();
-  d.canHaveStaticFeature = false;
+  d.canHaveRigid = false;
   addToListAndReset(d);
   /*---------------------------------------------*/
   d.id = FeatureId::litDynamite;

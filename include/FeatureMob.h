@@ -3,30 +3,28 @@
 
 #include "Feature.h"
 
-class FeatureMob: public Feature {
+class Mob: public Feature {
 public:
-  FeatureMob(const Pos& pos) : Feature(pos) {}
+  Mob(const Pos& pos) : Feature(pos) {}
 
-  FeatureMob() = delete;
+  Mob() = delete;
 
   virtual FeatureId   getId()                         const override = 0;
   virtual std::string getName(const Article article)  const override = 0;
   Clr                 getClr()                        const override = 0;
 
-  Clr getClrBg() const override final {
-    return clrBlack;
-  }
+  Clr getClrBg() const override final {return clrBlack;}
 
-  virtual ~FeatureMob() {}
+  virtual ~Mob() {}
 };
 
-class Smoke: public FeatureMob {
+class Smoke: public Mob {
 public:
   Smoke(const Pos& pos, const int NR_TURNS) :
-    FeatureMob(pos), nrTurnsLeft_(NR_TURNS) {}
+    Mob(pos), nrTurnsLeft_(NR_TURNS) {}
 
   //Spawn by id compliant ctor (do not use for normal cases):
-  Smoke(const Pos& pos) : FeatureMob(pos), nrTurnsLeft_(-1) {}
+  Smoke(const Pos& pos) : Mob(pos), nrTurnsLeft_(-1) {}
 
   Smoke() = delete;
   ~Smoke() {}
@@ -42,13 +40,13 @@ protected:
   int nrTurnsLeft_;
 };
 
-class LitDynamite: public FeatureMob {
+class LitDynamite: public Mob {
 public:
   LitDynamite(const Pos& pos, const int NR_TURNS) :
-    FeatureMob(pos), nrTurnsLeft_(NR_TURNS) {}
+    Mob(pos), nrTurnsLeft_(NR_TURNS) {}
 
   //Spawn by id compliant ctor (do not use for normal cases):
-  LitDynamite(const Pos& pos) : FeatureMob(pos), nrTurnsLeft_(-1) {}
+  LitDynamite(const Pos& pos) : Mob(pos), nrTurnsLeft_(-1) {}
 
   LitDynamite() = delete;
 
@@ -68,13 +66,13 @@ private:
   int nrTurnsLeft_;
 };
 
-class LitFlare: public FeatureMob {
+class LitFlare: public Mob {
 public:
   LitFlare(const Pos& pos, const int NR_TURNS) :
-    FeatureMob(pos), nrTurnsLeft_(NR_TURNS) {}
+    Mob(pos), nrTurnsLeft_(NR_TURNS) {}
 
   //Spawn by id compliant ctor (do not use for normal cases):
-  LitFlare(const Pos& pos) : FeatureMob(pos), nrTurnsLeft_(-1) {}
+  LitFlare(const Pos& pos) : Mob(pos), nrTurnsLeft_(-1) {}
 
   LitFlare() = delete;
 

@@ -30,7 +30,7 @@
 #include "Explosion.h"
 #include "ItemAmmo.h"
 #include "ItemDevice.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureTrap.h"
 
 using namespace std;
@@ -359,25 +359,25 @@ TEST_FIXTURE(BasicFixture, Explosions) {
 
     //Cells around the center, at a distance of 1, should be destroyed
     int r = 1;
-    CHECK(Map::cells[X0 + r][Y0    ].featureStatic->getId() != FeatureId::wall);
-    CHECK(Map::cells[X0 - r][Y0    ].featureStatic->getId() != FeatureId::wall);
-    CHECK(Map::cells[X0    ][Y0 + r].featureStatic->getId() != FeatureId::wall);
-    CHECK(Map::cells[X0    ][Y0 - r].featureStatic->getId() != FeatureId::wall);
-    CHECK(Map::cells[X0 + r][Y0 + r].featureStatic->getId() != FeatureId::wall);
-    CHECK(Map::cells[X0 + r][Y0 - r].featureStatic->getId() != FeatureId::wall);
-    CHECK(Map::cells[X0 - r][Y0 + r].featureStatic->getId() != FeatureId::wall);
-    CHECK(Map::cells[X0 - r][Y0 - r].featureStatic->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0    ].rigid->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0    ].rigid->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0    ][Y0 + r].rigid->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0    ][Y0 - r].rigid->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0 + r].rigid->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0 - r].rigid->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0 + r].rigid->getId() != FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0 - r].rigid->getId() != FeatureId::wall);
 
     //Cells around the center, at a distance of 2, should NOT be destroyed
     r = 2;
-    CHECK(Map::cells[X0 + r][Y0    ].featureStatic->getId() == FeatureId::wall);
-    CHECK(Map::cells[X0 - r][Y0    ].featureStatic->getId() == FeatureId::wall);
-    CHECK(Map::cells[X0    ][Y0 + r].featureStatic->getId() == FeatureId::wall);
-    CHECK(Map::cells[X0    ][Y0 - r].featureStatic->getId() == FeatureId::wall);
-    CHECK(Map::cells[X0 + r][Y0 + r].featureStatic->getId() == FeatureId::wall);
-    CHECK(Map::cells[X0 + r][Y0 - r].featureStatic->getId() == FeatureId::wall);
-    CHECK(Map::cells[X0 - r][Y0 + r].featureStatic->getId() == FeatureId::wall);
-    CHECK(Map::cells[X0 - r][Y0 - r].featureStatic->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0    ].rigid->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0    ].rigid->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0    ][Y0 + r].rigid->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0    ][Y0 - r].rigid->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0 + r].rigid->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 + r][Y0 - r].rigid->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0 + r].rigid->getId() == FeatureId::wall);
+    CHECK(Map::cells[X0 - r][Y0 - r].rigid->getId() == FeatureId::wall);
   }
 
   //Check damage to actors
@@ -424,20 +424,20 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   int y = 1;
   Map::put(new Floor(Pos(x, y)));
   Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
-  CHECK(Map::cells[x + 1][y    ].featureStatic->getId() != FeatureId::wall);
-  CHECK(Map::cells[x    ][y + 1].featureStatic->getId() != FeatureId::wall);
-  CHECK(Map::cells[x - 1][y    ].featureStatic->getId() == FeatureId::wall);
-  CHECK(Map::cells[x    ][y - 1].featureStatic->getId() == FeatureId::wall);
+  CHECK(Map::cells[x + 1][y    ].rigid->getId() != FeatureId::wall);
+  CHECK(Map::cells[x    ][y + 1].rigid->getId() != FeatureId::wall);
+  CHECK(Map::cells[x - 1][y    ].rigid->getId() == FeatureId::wall);
+  CHECK(Map::cells[x    ][y - 1].rigid->getId() == FeatureId::wall);
 
   //South-east edge
   x = MAP_W - 2;
   y = MAP_H - 2;
   Map::put(new Floor(Pos(x, y)));
   Explosion::runExplosionAt(Pos(x, y), ExplType::expl);
-  CHECK(Map::cells[x - 1][y    ].featureStatic->getId() != FeatureId::wall);
-  CHECK(Map::cells[x    ][y - 1].featureStatic->getId() != FeatureId::wall);
-  CHECK(Map::cells[x + 1][y    ].featureStatic->getId() == FeatureId::wall);
-  CHECK(Map::cells[x    ][y + 1].featureStatic->getId() == FeatureId::wall);
+  CHECK(Map::cells[x - 1][y    ].rigid->getId() != FeatureId::wall);
+  CHECK(Map::cells[x    ][y - 1].rigid->getId() != FeatureId::wall);
+  CHECK(Map::cells[x + 1][y    ].rigid->getId() == FeatureId::wall);
+  CHECK(Map::cells[x    ][y + 1].rigid->getId() == FeatureId::wall);
 }
 
 TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
@@ -469,9 +469,9 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     Monster* const monster = static_cast<Monster*>(actor);
 
     //Create a spider web in the right cell
-    const auto  mimicId     = Map::cells[posR.x][posR.x].featureStatic->getId();
+    const auto  mimicId     = Map::cells[posR.x][posR.x].rigid->getId();
     const auto& mimicData   = FeatureData::getData(mimicId);
-    const auto* const mimic = static_cast<const FeatureStatic*>(mimicData.mkObj(posR));
+    const auto* const mimic = static_cast<const Rigid*>(mimicData.mkObj(posR));
     Map::put(new Trap(posR, mimic, TrapId::spiderWeb));
 
     //Move the monster into the trap, and back again
@@ -486,7 +486,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     if(monster->pos == posR) {
       testedStuck = true;
     } else if(monster->pos == posL) {
-      const auto featureId = Map::cells[posR.x][posR.y].featureStatic->getId();
+      const auto featureId = Map::cells[posR.x][posR.y].rigid->getId();
       if(featureId == FeatureId::floor) {
         testedLooseWebDestroyed = true;
       } else {

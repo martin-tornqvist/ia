@@ -54,7 +54,7 @@ bool isAllRoomsConnected() {
     bool isFound = false;
     for(int x = 1; x < MAP_W - 1; ++x) {
       c.set(x, y);
-      const auto* const f = Map::cells[c.x][c.y].featureStatic;
+      const auto* const f = Map::cells[c.x][c.y].rigid;
       if(f->getId() == FeatureId::floor) {
         isFound = true;
         break;
@@ -70,7 +70,7 @@ bool isAllRoomsConnected() {
 
   for(int y = 1; y < MAP_H - 1; ++y) {
     for(int x = 1; x < MAP_W - 1; ++x) {
-      if(Map::cells[x][y].featureStatic->getId() == FeatureId::floor) {
+      if(Map::cells[x][y].rigid->getId() == FeatureId::floor) {
         if(Pos(x, y) != c && floodFill[x][y] == 0) {return false;}
       }
     }
@@ -512,7 +512,7 @@ void mkCaves(Region regions[3][3]) {
               for(int dy = -1; dy <= 1; ++dy) {
                 for(int dx = -1; dx <= 1; ++dx) {
                   const auto featureId =
-                    Map::cells[x + dx][y + dy].featureStatic->getId();
+                    Map::cells[x + dx][y + dy].rigid->getId();
                   if(
                     featureId == FeatureId::floor &&
                     !Utils::isPosInside(Pos(x + dx, y + dy), region.r_)) {
@@ -545,7 +545,7 @@ void mkCaves(Region regions[3][3]) {
                 for(int dx = -1; dx <= 1; ++dx) {
                   const Pos adjP(p + Pos(dx, dy));
                   Cell& adjCell = Map::cells[adjP.x][adjP.y];
-                  if(adjCell.featureStatic->getId() == FeatureId::wall) {
+                  if(adjCell.rigid->getId() == FeatureId::wall) {
                     Wall* const wall  = new Wall(adjP);
                     wall->type_       = WallType::cave;
                     wall->setRandomIsMossGrown();
@@ -565,7 +565,7 @@ void mkCaves(Region regions[3][3]) {
               for(int dy = -1; dy <= 1; ++dy) {
                 for(int dx = -1; dx <= 1; ++dx) {
                   Cell& adjCell = Map::cells[x + dx][y + dy];
-                  if(adjCell.featureStatic->getId() == FeatureId::wall) {
+                  if(adjCell.rigid->getId() == FeatureId::wall) {
                     blocked[x][y] = blocked[x + dx][y + dy] = true;
                   }
                 }
@@ -599,7 +599,7 @@ void placeDoorAtPosIfSuitable(const Pos& p) {
       const Pos checkPos = p + Pos(dx, dy);
       if((dx != 0 || dy != 0) && Utils::isPosInsideMap(checkPos)) {
         const Cell& cell = Map::cells[checkPos.x][checkPos.y];
-        if(cell.featureStatic->getId() == FeatureId::door) {return;}
+        if(cell.rigid->getId() == FeatureId::door) {return;}
       }
     }
   }
@@ -608,20 +608,20 @@ void placeDoorAtPosIfSuitable(const Pos& p) {
   bool isGoodHor = true;
 
   for(int d = -1; d <= 1; d++) {
-    if(Map::cells[p.x + d][p.y].featureStatic->getId() == FeatureId::wall) {
+    if(Map::cells[p.x + d][p.y].rigid->getId() == FeatureId::wall) {
       isGoodHor = false;
     }
 
-    if(Map::cells[p.x][p.y + d].featureStatic->getId() == FeatureId::wall) {
+    if(Map::cells[p.x][p.y + d].rigid->getId() == FeatureId::wall) {
       isGoodVer = false;
     }
 
     if(d != 0) {
-      if(Map::cells[p.x][p.y + d].featureStatic->getId() != FeatureId::wall) {
+      if(Map::cells[p.x][p.y + d].rigid->getId() != FeatureId::wall) {
         isGoodHor = false;
       }
 
-      if(Map::cells[p.x + d][p.y].featureStatic->getId() != FeatureId::wall) {
+      if(Map::cells[p.x + d][p.y].rigid->getId() != FeatureId::wall) {
         isGoodVer = false;
       }
     }
@@ -629,7 +629,7 @@ void placeDoorAtPosIfSuitable(const Pos& p) {
 
   if(isGoodHor || isGoodVer) {
     const auto& d = FeatureData::getData(FeatureId::wall);
-    const auto* const mimic = static_cast<const FeatureStatic*>(d.mkObj(p));
+    const auto* const mimic = static_cast<const Rigid*>(d.mkObj(p));
     Map::put(new Door(p, mimic));
   }
 }
@@ -681,11 +681,11 @@ void mkSubRooms() {
                   if(
                     x == roomX0Y0.x - 1 || x == roomX1Y1.x + 1 ||
                     y == roomX0Y0.y - 1 || y == roomX1Y1.y + 1) {
-                    if(Map::cells[x][y].featureStatic->getId() != FeatureId::wall) {
+                    if(Map::cells[x][y].rigid->getId() != FeatureId::wall) {
                       isSpaceFree = false;
                     }
                   } else {
-                    if(Map::cells[x][y].featureStatic->getId() != FeatureId::floor) {
+                    if(Map::cells[x][y].rigid->getId() != FeatureId::floor) {
                       isSpaceFree = false;
                     }
                   }
@@ -803,63 +803,11 @@ void fillDeadEnds() {
   }
 }
 
-//void findEdgesOfRoom(const Rect roomRect, vector<Pos>& vectorRef) {
-//  bool PossToAdd[MAP_W][MAP_H];
-//  Utils::resetArray(PossToAdd, false);
-//
-//  Pos c;
-//
-//  //Top to bottom
-//  for(c.x = roomRect.p0.x; c.x <= roomRect.p1.x; c.x++) {
-//    for(c.y = roomRect.p0.y; c.y <= roomRect.p1.y; c.y++) {
-//      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::floor) {
-//        PossToAdd[c.x][c.y] = true;
-//        c.y = INT_MAX;
-//      }
-//    }
-//  }
-//  //Left to right
-//  for(c.y = roomRect.p0.y; c.y <= roomRect.p1.y; c.y++) {
-//    for(c.x = roomRect.p0.x; c.x <= roomRect.p1.x; c.x++) {
-//      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::floor) {
-//        PossToAdd[c.x][c.y] = true;
-//        c.x = INT_MAX;
-//      }
-//    }
-//  }
-//  //Bottom to top
-//  for(c.x = roomRect.p0.x; c.x <= roomRect.p1.x; c.x++) {
-//    for(c.y = roomRect.p1.y; c.y >= roomRect.p0.y; c.y--) {
-//      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::floor) {
-//        PossToAdd[c.x][c.y] = true;
-//        c.y = INT_MIN;
-//      }
-//    }
-//  }
-//  //Right to left
-//  for(c.y = roomRect.p0.y; c.y <= roomRect.p1.y; c.y++) {
-//    for(c.x = roomRect.p1.x; c.x >= roomRect.p0.x; c.x--) {
-//      if(Map::featuresStatic[c.x][c.y]->getId() == FeatureId::floor) {
-//        PossToAdd[c.x][c.y] = true;
-//        c.x = INT_MIN;
-//      }
-//    }
-//  }
-//
-//  for(c.x = roomRect.p0.x; c.x <= roomRect.p1.x; c.x++) {
-//    for(c.y = roomRect.p0.y; c.y <= roomRect.p1.y; c.y++) {
-//      if(PossToAdd[c.x][c.y]) {
-//        vectorRef.push_back(c);
-//      }
-//    }
-//  }
-//}
-
 void decorate() {
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
       Cell& cell = Map::cells[x][y];
-      if(cell.featureStatic->getId() == FeatureId::wall) {
+      if(cell.rigid->getId() == FeatureId::wall) {
 
         //Randomly convert walls to rubble
         if(Rnd::oneIn(10)) {
@@ -868,7 +816,7 @@ void decorate() {
         }
 
         //Moss grown walls
-        Wall* const wall = static_cast<Wall*>(cell.featureStatic);
+        Wall* const wall = static_cast<Wall*>(cell.rigid);
         wall->setRandomIsMossGrown();
 
         //Convert walls with no adjacent stone floor to cave walls
@@ -883,7 +831,7 @@ void decorate() {
 
   for(int y = 1; y < MAP_H - 1; ++y) {
     for(int x = 1; x < MAP_W - 1; ++x) {
-      if(Map::cells[x][y].featureStatic->getId() == FeatureId::floor) {
+      if(Map::cells[x][y].rigid->getId() == FeatureId::floor) {
         //Randomly convert stone floor to low rubble
         if(Rnd::oneIn(100)) {
           Map::put(new RubbleLow(Pos(x, y)));
@@ -995,7 +943,7 @@ void movePlayerToNearestAllowedPos() {
 //  for(int y = 1; y < MAP_H - 1; ++y) {
 //    for(int x = 1; x < MAP_W - 1; ++x) {
 //      if(floodFill[x][y] < FLOOD_VALUE_AT_DOOR) {
-//        if(Map::featuresStatic[x][y]->canHaveStaticFeature()) {
+//        if(Map::featuresStatic[x][y]->canHaveRigid()) {
 //          leverPosBucket.push_back(Pos(x, y));
 //        }
 //      }
@@ -1033,7 +981,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      if(Map::cells[x][y].featureStatic->getId() == FeatureId::door) {
+      if(Map::cells[x][y].rigid->getId() == FeatureId::door) {
         blocked[x][y] = false;
       }
     }
@@ -1046,7 +994,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 
   TRACE << "Travelling along path and revealing all doors" << endl;
   for(Pos& pos : path) {
-    auto* const feature = Map::cells[pos.x][pos.y].featureStatic;
+    auto* const feature = Map::cells[pos.x][pos.y].rigid;
     if(feature->getId() == FeatureId::door) {
       static_cast<Door*>(feature)->reveal(false);
     }

@@ -514,7 +514,7 @@ void Player::addTmpShockFromFeatures() {
     for(int dx = -1; dx <= 1; ++dx) {
       const int X = pos.x + dx;
       if(Utils::isPosInsideMap(Pos(X, Y))) {
-        shockTmp_ += Map::cells[X][Y].featureStatic->getShockWhenAdj();
+        shockTmp_ += Map::cells[X][Y].rigid->getShockWhenAdj();
       }
     }
   }
@@ -882,7 +882,7 @@ void Player::onStandardTurn() {
       for(int y = y0; y <= y1; ++y) {
         for(int x = x0; x <= x1; ++x) {
           if(Map::cells[x][y].isSeenByPlayer) {
-            auto* f = Map::cells[x][y].featureStatic;
+            auto* f = Map::cells[x][y].rigid;
 
             if(f->getId() == FeatureId::trap) {
               static_cast<Trap*>(f)->playerTrySpotHidden();
@@ -964,7 +964,7 @@ void Player::moveDir(Dir dir) {
 
     //Trap affects leaving?
     if(dir != Dir::center) {
-      Feature* f = Map::cells[pos.x][pos.y].featureStatic;
+      Feature* f = Map::cells[pos.x][pos.y].rigid;
       if(f->getId() == FeatureId::trap) {
         TRACE << "Player: Standing on trap, check if affects move" << endl;
         dir = static_cast<Trap*>(f)->actorTryLeave(*this, dir);
@@ -1013,17 +1013,17 @@ void Player::moveDir(Dir dir) {
 
       //This point reached means no actor in the destination cell.
 
-      //Blocking mobile or static features?
+      //Blocking mobile or rigid?
       vector<PropId> props;
       getPropHandler().getAllActivePropIds(props);
       Cell& cell = Map::cells[dest.x][dest.y];
-      bool isFeaturesAllowMove = cell.featureStatic->canMove(props);
+      bool isFeaturesAllowMove = cell.rigid->canMove(props);
 
-      vector<FeatureMob*> featureMobs;
-      GameTime::getFeatureMobsAtPos(dest, featureMobs);
+      vector<Mob*> mobs;
+      GameTime::getMobsAtPos(dest, mobs);
 
       if(isFeaturesAllowMove) {
-        for(auto* m : featureMobs) {
+        for(auto* m : mobs) {
           if(!m->canMove(props)) {
             isFeaturesAllowMove = false;
             break;
@@ -1063,9 +1063,9 @@ void Player::moveDir(Dir dir) {
       }
 
       //Note: bump() prints block messages.
-      for(auto* m : featureMobs) {m->bump(*this);}
+      for(auto* m : mobs) {m->bump(*this);}
 
-      Map::cells[dest.x][dest.y].featureStatic->bump(*this);
+      Map::cells[dest.x][dest.y].rigid->bump(*this);
     }
 
     if(pos == dest) {
@@ -1151,7 +1151,7 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
     bool visionBlockers[MAP_W][MAP_H];
     for(int y = p0.y; y <= p1.y; ++y) {
       for(int x = p0.x; x <= p1.x; ++x) {
-        const auto* const f = Map::cells[x][y].featureStatic;
+        const auto* const f = Map::cells[x][y].rigid;
         visionBlockers[x][y] = !f->isVisionPassable();
       }
     }

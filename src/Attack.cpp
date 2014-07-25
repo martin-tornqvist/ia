@@ -8,7 +8,7 @@
 #include "ActorMonster.h"
 #include "Map.h"
 #include "FeatureTrap.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureMob.h"
 #include "PlayerBon.h"
 #include "MapParsing.h"
@@ -63,7 +63,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
         AbilityId::dodgeAttack, true, *curDefender);
 
     const int DODGE_MOD_AT_FEATURE =
-      Map::cells[defPos.x][defPos.y].featureStatic->getDodgeModifier();
+      Map::cells[defPos.x][defPos.y].rigid->getDodgeModifier();
 
     const int DODGE_CHANCE_TOT = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;
 
@@ -99,7 +99,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
       bool isBigBon   = false;
       bool isSmallBon = false;
 
-      const auto* const f = Map::cells[defPos.x][defPos.y].featureStatic;
+      const auto* const f = Map::cells[defPos.x][defPos.y].rigid;
       if(f->getId() == FeatureId::trap) {
         const auto* const t = static_cast<const Trap*>(f);
         if(t->getTrapType() == TrapId::spiderWeb) {
@@ -728,16 +728,16 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
         }
 
         //PROJECTILE HIT FEATURE?
-        vector<FeatureMob*> featureMobs;
-        GameTime::getFeatureMobsAtPos(curProj->pos, featureMobs);
+        vector<Mob*> mobs;
+        GameTime::getMobsAtPos(curProj->pos, mobs);
         Feature* featureBlockingShot = nullptr;
-        for(auto* mob : featureMobs) {
+        for(auto* mob : mobs) {
           if(!mob->isProjectilePassable()) {featureBlockingShot = mob;}
         }
-        FeatureStatic* featureStatic =
-          Map::cells[curProj->pos.x][curProj->pos.y].featureStatic;
-        if(!featureStatic->isProjectilePassable()) {
-          featureBlockingShot = featureStatic;
+        Rigid* rigid =
+          Map::cells[curProj->pos.x][curProj->pos.y].rigid;
+        if(!rigid->isProjectilePassable()) {
+          featureBlockingShot = rigid;
         }
 
         if(featureBlockingShot && !curProj->isObstructed) {
@@ -970,7 +970,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
         Renderer::drawMapAndInterface();
       }
 
-      cell.featureStatic->hit(DmgType::physical, DmgMethod::shotgun, nullptr);
+      cell.rigid->hit(DmgType::physical, DmgMethod::shotgun, nullptr);
 
       break;
     }

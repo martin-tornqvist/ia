@@ -199,7 +199,7 @@ void Monster::moveDir(Dir dir) {
 
   //Trap affects leaving?
   if(dir != Dir::center) {
-    auto* f = Map::cells[pos.x][pos.y].featureStatic;
+    auto* f = Map::cells[pos.x][pos.y].rigid;
     if(f->getId() == FeatureId::trap) {
       dir = static_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == Dir::center) {
@@ -221,10 +221,10 @@ void Monster::moveDir(Dir dir) {
     pos = targetCell;
 
     //Bump features in target cell (i.e. to trigger traps)
-    vector<FeatureMob*> featureMobs;
-    GameTime::getFeatureMobsAtPos(pos, featureMobs);
-    for(auto* m : featureMobs) {m->bump(*this);}
-    Map::cells[pos.x][pos.y].featureStatic->bump(*this);
+    vector<Mob*> mobs;
+    GameTime::getMobsAtPos(pos, mobs);
+    for(auto* m : mobs) {m->bump(*this);}
+    Map::cells[pos.x][pos.y].rigid->bump(*this);
   }
 
   GameTime::actorDidAct();

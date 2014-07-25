@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
@@ -31,7 +31,7 @@ void emitSnd(Snd snd) {
   bool blocked[MAP_W][MAP_H];
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      const auto f = Map::cells[x][y].featureStatic;
+      const auto f = Map::cells[x][y].rigid;
       blocked[x][y] = !f->isSoundPassable();
     }
   }

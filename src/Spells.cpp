@@ -87,7 +87,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY,
 
     for(int y = Y0; y <= Y1; ++y) {
       for(int x = X0; x <= X1; ++x) {
-        if(Map::cells[x][y].featureStatic->getId() == FeatureId::altar) {
+        if(Map::cells[x][y].rigid->getId() == FeatureId::altar) {
           costMax -= 1;
           y = 9999;
           x = 9999;
@@ -336,12 +336,12 @@ SpellCastRetData SpellMayhem::cast_(
         bool isAdjToWalkableCell = false;
         for(int dy = -1; dy <= 1; ++dy) {
           for(int dx = -1; dx <= 1; ++dx) {
-            const FeatureStatic* const f = Map::cells[x + dx][y + dy].featureStatic;
+            const Rigid* const f = Map::cells[x + dx][y + dy].rigid;
             if(f->canMoveCmn()) {isAdjToWalkableCell = true;}
           }
         }
         if(isAdjToWalkableCell && Rnd::oneIn(8)) {
-          Map::cells[x][y].featureStatic->hit(DmgType::physical, DmgMethod::explosion);
+          Map::cells[x][y].rigid->hit(DmgType::physical, DmgMethod::explosion);
         }
       }
     }
@@ -349,7 +349,7 @@ SpellCastRetData SpellMayhem::cast_(
 
   for(int y = Y0; y <= Y1; ++y) {
     for(int x = X0; x <= X1; ++x) {
-      auto* const f = Map::cells[x][y].featureStatic;
+      auto* const f = Map::cells[x][y].rigid;
       if(f->canHaveBlood() && Rnd::oneIn(10)) {f->mkBloody();}
     }
   }
@@ -439,7 +439,7 @@ SpellCastRetData SpellDetTraps::cast_(Actor* const caster) const {
   for(int x = 0; x < MAP_W; ++x) {
     for(int y = 0; y < MAP_H; ++y) {
       if(Map::cells[x][y].isSeenByPlayer) {
-        auto* const f = Map::cells[x][y].featureStatic;
+        auto* const f = Map::cells[x][y].rigid;
         if(f->getId() == FeatureId::trap) {
           auto* const trap = static_cast<Trap*>(f);
           trap->reveal(false);
@@ -503,7 +503,7 @@ SpellCastRetData SpellOpening::cast_(
   for(int y = 1; y < MAP_H - 1; ++y) {
     for(int x = 1; x < MAP_W - 1; ++x) {
       if(Map::cells[x][y].isSeenByPlayer) {
-        if(Map::cells[x][y].featureStatic->open()) {
+        if(Map::cells[x][y].rigid->open()) {
           featuresOpenedPositions.push_back(Pos(x, y));
         }
       }

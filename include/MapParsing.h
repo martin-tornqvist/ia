@@ -8,7 +8,7 @@
 #include "FeatureData.h"
 
 struct Cell;
-class FeatureMob;
+class Mob;
 class Actor;
 
 namespace CellPred {
@@ -17,10 +17,10 @@ class Pred {
 public:
   virtual ~Pred() {}
   virtual bool isCheckingCells()          const {return false;}
-  virtual bool isCheckingMobFeatures()    const {return false;}
+  virtual bool isCheckingMobs()           const {return false;}
   virtual bool isCheckingActors()         const {return false;}
   virtual bool check(const Cell& c)       const {(void)c; return false;}
-  virtual bool check(const FeatureMob& f) const {(void)f; return false;}
+  virtual bool check(const Mob& f)        const {(void)f; return false;}
   virtual bool check(const Actor& a)      const {(void)a; return false;}
 protected:
   Pred() {}
@@ -30,9 +30,9 @@ class BlocksVision : public Pred {
 public:
   BlocksVision() : Pred() {}
   bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingMobs()           const override {return true;}
   bool check(const Cell& c)       const override;
-  bool check(const FeatureMob& f) const override;
+  bool check(const Mob& f)        const override;
 };
 
 class BlocksMoveCmn : public Pred {
@@ -40,10 +40,10 @@ public:
   BlocksMoveCmn(bool isActorsBlocking) :
     Pred(), IS_ACTORS_BLOCKING_(isActorsBlocking) {}
   bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingMobs()           const override {return true;}
   bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
   bool check(const Cell& c)       const override;
-  bool check(const FeatureMob& f) const override;
+  bool check(const Mob& f)        const override;
   bool check(const Actor& a)      const override;
 private:
   const bool IS_ACTORS_BLOCKING_;
@@ -53,10 +53,10 @@ class BlocksActor : public Pred {
 public:
   BlocksActor(Actor& actor, bool isActorsBlocking);
   bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingMobs()           const override {return true;}
   bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
   bool check(const Cell& c)       const override;
-  bool check(const FeatureMob& f) const override;
+  bool check(const Mob& f)        const override;
   bool check(const Actor& a)      const override;
 private:
   const bool IS_ACTORS_BLOCKING_;
@@ -67,9 +67,9 @@ class BlocksProjectiles : public Pred {
 public:
   BlocksProjectiles() : Pred() {}
   bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingMobs()           const override {return true;}
   bool check(const Cell& c)       const override;
-  bool check(const FeatureMob& f) const override;
+  bool check(const Mob& f)        const override;
 };
 
 class LivingActorsAdjToPos : public Pred {
@@ -85,9 +85,9 @@ class BlocksItems : public Pred {
 public:
   BlocksItems() : Pred() {}
   bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobFeatures()    const override {return true;}
+  bool isCheckingMobs()           const override {return true;}
   bool check(const Cell& c)       const override;
-  bool check(const FeatureMob& f) const override;
+  bool check(const Mob& f)        const override;
 };
 
 //class Corridor : public Pred {

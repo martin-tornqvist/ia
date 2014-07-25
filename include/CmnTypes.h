@@ -254,8 +254,8 @@ enum class ActorDeadState {alive, corpse, destroyed};
 enum EntityType {
   entityActor,
   entityItem,
-  entityFeatureStatic,
-  entityFeatureMob
+  entityRigid,
+  entityMob
 };
 
 enum HorizontalVertical {hor, ver};

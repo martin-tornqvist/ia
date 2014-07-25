@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "Utils.h"
 #include "ActorFactory.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
@@ -32,7 +32,7 @@ bool run() {
           Map::put(new Stairs(p));
         } else {
           const auto& d = FeatureData::getData(templCell.featureId);
-          Map::put(static_cast<FeatureStatic*>(d.mkObj(p)));
+          Map::put(static_cast<Rigid*>(d.mkObj(p)));
         }
       }
       if(templCell.actorId != ActorId::empty) {
@@ -46,7 +46,7 @@ bool run() {
 
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      FeatureStatic* const f = Map::cells[x][y].featureStatic;
+      Rigid* const f = Map::cells[x][y].rigid;
       if(f->getId() == FeatureId::wall) {
         static_cast<Wall*>(f)->type_ = WallType::egypt;
       }

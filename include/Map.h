@@ -13,11 +13,11 @@
 #include "ActorPlayer.h"
 
 class SaveHandler;
-class FeatureStatic;
+class Rigid;
 
 struct Cell {
   Cell() : isExplored(false), isSeenByPlayer(false), isLight(false),
-    isDark(false), item(nullptr), featureStatic(nullptr), pos(Pos(-1, -1)) {
+    isDark(false), item(nullptr), rigid(nullptr), pos(Pos(-1, -1)) {
     playerVisualMemory.clear();
   }
 
@@ -28,7 +28,7 @@ struct Cell {
   bool isLight;
   bool isDark;
   Item* item;
-  FeatureStatic* featureStatic;
+  Rigid* rigid;
   CellRenderData playerVisualMemory;
   Pos pos;
 };
@@ -48,7 +48,7 @@ void setupFromSaveLines(std::vector<std::string>& lines);
 
 void resetMap();
 
-FeatureStatic* put(FeatureStatic* const staticFeature);
+Rigid* put(Rigid* const rigid);
 
 //Makes a copy of the renderers current array
 //TODO This is weird, and it's unclear how it should be used. Remove?

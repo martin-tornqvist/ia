@@ -758,7 +758,7 @@ void drawMap() {
 
   const bool IS_TILES = Config::isTilesMode();
 
-  //---------------- INSERT STATIC FEATURES AND BLOOD INTO ARRAY
+  //---------------- INSERT RIGIDS AND BLOOD INTO ARRAY
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
 
@@ -767,7 +767,7 @@ void drawMap() {
         curDrw = &renderArray[x][y];
         curDrw->clear();
 
-        const auto* const f = Map::cells[x][y].featureStatic;
+        const auto* const f = Map::cells[x][y].rigid;
 
         TileId  goreTile  = TileId::empty;
         char    goreGlyph = 0;
@@ -830,7 +830,7 @@ void drawMap() {
   }
 
   //---------------- INSERT MOBILE FEATURES INTO ARRAY
-  for(auto* mob : GameTime::featureMobs_) {
+  for(auto* mob : GameTime::mobs_) {
     const Pos& p            = mob->getPos();
     const TileId  mobTile   = mob->getTile();
     const char    mobGlyph  = mob->getGlyph();
@@ -925,7 +925,7 @@ void drawMap() {
             Map::cells[x][y].isSeenByPlayer ?
             Wall::isTileAnyWallTop(tileSeen) : Wall::isTileAnyWallTop(tileMem);
           if(IS_TILE_WALL) {
-            const auto* const f = Map::cells[x][y].featureStatic;
+            const auto* const f = Map::cells[x][y].rigid;
             const auto featureId  = f->getId();
             bool isHiddenDoor     = false;
             if(featureId == FeatureId::door) {

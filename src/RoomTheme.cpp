@@ -157,7 +157,7 @@ int placeThemeFeatures(Room& room) {
 
     if(d) {
       TRACE << "Placing feature" << endl;
-      Map::put(static_cast<FeatureStatic*>(d->mkObj(pos)));
+      Map::put(static_cast<Rigid*>(d->mkObj(pos)));
       spawnCount.at(FEATURE_ELEMENT)++;
 
       nrFeaturesLeftToPlace--;
@@ -234,7 +234,7 @@ void mkThemeSpecificRoomModifications(Room& room) {
         vector<Pos> originBucket;
         for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y) {
           for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x) {
-            if(Map::cells[x][y].featureStatic->getId() == FeatureId::altar) {
+            if(Map::cells[x][y].rigid->getId() == FeatureId::altar) {
               origin = Pos(x, y);
               y = 999;
               x = 999;

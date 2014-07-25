@@ -17,15 +17,15 @@
 #include "Renderer.h"
 #include "Utils.h"
 #include "FeatureMob.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
-Entity::Entity(FeatureMob* feature_) :
-  feature(static_cast<Feature*>(feature_)), entityType(entityFeatureMob) {}
+Entity::Entity(Mob* feature_) :
+  feature(static_cast<Feature*>(feature_)), entityType(entityMob) {}
 
-Entity::Entity(FeatureStatic* feature_) :
-  feature(static_cast<Feature*>(feature_)), entityType(entityFeatureStatic) {}
+Entity::Entity(Rigid* feature_) :
+  feature(static_cast<Feature*>(feature_)), entityType(entityRigid) {}
 
 namespace AutoDescrActor {
 
@@ -99,7 +99,7 @@ Entity getEntityToDescribe(const Pos pos) {
   }
 
   //Describe mob feature
-  for(auto* mob : GameTime::featureMobs_) {
+  for(auto* mob : GameTime::mobs_) {
     if(mob->getPos() == pos) {return Entity(mob);}
   }
 
@@ -108,17 +108,17 @@ Entity getEntityToDescribe(const Pos pos) {
   if(item)
     return Entity(item);
 
-  //If static feature, describe that.
-  return Entity(Map::cells[pos.x][pos.y].featureStatic);
+  //If rigid, describe that.
+  return Entity(Map::cells[pos.x][pos.y].rigid);
 
   return Entity();
 }
 
-void descrBriefFeatureMob(const Feature& feature) {
+void descrBriefMob(const Feature& feature) {
   Log::addMsg(feature.getName(Article::a) + ".");
 }
 
-void descrBriefFeatureStatic(const Feature& feature) {
+void descrBriefRigid(const Feature& feature) {
   Log::addMsg(feature.getName(Article::a) + ".");
 }
 
@@ -164,11 +164,11 @@ void onMarkerAtPos(const Pos& pos, const MarkerTask markerTask,
       case entityActor:
         descrBriefActor(*entityDescribed.actor, markerTask, itemThrown);
         break;
-      case entityFeatureStatic:
-        descrBriefFeatureStatic(*entityDescribed.feature);
+      case entityRigid:
+        descrBriefRigid(*entityDescribed.feature);
         break;
-      case entityFeatureMob:
-        descrBriefFeatureMob(*entityDescribed.feature);
+      case entityMob:
+        descrBriefMob(*entityDescribed.feature);
         break;
       case entityItem:
         descrBriefItem(*entityDescribed.item);

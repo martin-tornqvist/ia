@@ -14,7 +14,7 @@
 #include "PopulateMonsters.h"
 #include "MapParsing.h"
 #include "Utils.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
@@ -97,7 +97,7 @@ void mkForestTreePatch() {
 
     //Find next pos
     while(
-      Map::cells[curPos.x][curPos.y].featureStatic->getId() == FeatureId::tree ||
+      Map::cells[curPos.x][curPos.y].rigid->getId() == FeatureId::tree ||
       Utils::kingDist(curPos, Map::player->pos) <= 2) {
 
       if(Rnd::coinToss()) {
@@ -134,7 +134,7 @@ void mkForestTrees() {
         const auto id = templ.getCell(x, y).featureId;
         if(id != FeatureId::empty) {
           const Pos p(churchPos + Pos(x, y));
-          Map::put(static_cast<FeatureStatic*>(FeatureData::getData(id).mkObj(p)));
+          Map::put(static_cast<Rigid*>(FeatureData::getData(id).mkObj(p)));
         }
       }
     }
@@ -143,7 +143,7 @@ void mkForestTrees() {
     for(int y = 0; y < MAP_H; ++y) {
       bool isStairsFound = false;
       for(int x = 0; x < MAP_W; ++x) {
-        if(Map::cells[x][y].featureStatic->getId() == FeatureId::stairs) {
+        if(Map::cells[x][y].rigid->getId() == FeatureId::stairs) {
           stairsPos.set(x, y);
           isStairsFound = true;
           break;
@@ -177,7 +177,7 @@ void mkForestTrees() {
       for(int dy = -1; dy < 1; ++dy) {
         const Pos p(pathPos + Pos(dx, dy));
         if(
-          Map::cells[p.x][p.y].featureStatic->canHaveStaticFeature() &&
+          Map::cells[p.x][p.y].rigid->canHaveRigid() &&
           Utils::isPosInsideMap(p)) {
           Floor* const floor = new Floor(p);
           floor->type_ = FloorType::stonePath;
@@ -217,7 +217,7 @@ void mkForestTrees() {
 
             const bool IS_LEFT_OF_CHURCH = X < churchPos.x - (SEARCH_RADI) + 2;
             const bool IS_ON_STONE_PATH =
-              Map::cells[X][Y].featureStatic->getId() == FeatureId::floor;
+              Map::cells[X][Y].rigid->getId() == FeatureId::floor;
 
             bool isLeftOfPrev = true;
             if(!gravePositions.empty()) {

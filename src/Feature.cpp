@@ -55,7 +55,7 @@ void Feature::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const
 char      Feature::getGlyph()             const {return getData().glyph;}
 TileId    Feature::getTile()              const {return getData().tile;}
 bool      Feature::canHaveCorpse()        const {return getData().canHaveCorpse;}
-bool      Feature::canHaveStaticFeature() const {return getData().canHaveStaticFeature;}
+bool      Feature::canHaveRigid() const {return getData().canHaveRigid;}
 bool      Feature::canHaveBlood()         const {return getData().canHaveBlood;}
 bool      Feature::canHaveGore()          const {return getData().canHaveGore;}
 bool      Feature::canHaveItem()          const {return getData().canHaveItem;}

@@ -40,7 +40,7 @@ void findPathToStairs() {
 
   for(int x = 0; x < MAP_W; ++x) {
     for(int y = 0; y < MAP_H; ++y) {
-      const auto curId = Map::cells[x][y].featureStatic->getId();
+      const auto curId = Map::cells[x][y].rigid->getId();
       if(curId == FeatureId::stairs) {
         blocked[x][y] = false;
         stairPos.set(x, y);
@@ -142,7 +142,7 @@ void act() {
   for(int dx = -1; dx <= 1; ++dx) {
     for(int dy = -1; dy <= 1; ++dy) {
       const Pos p(Map::player->pos + Pos(dx, dy));
-      auto* const f = Map::cells[p.x][p.y].featureStatic;
+      auto* const f = Map::cells[p.x][p.y].rigid;
       if(f->getId() == FeatureId::door) {
         Door* const door = static_cast<Door*>(f);
         door->reveal(false);

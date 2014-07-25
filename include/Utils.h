@@ -8,7 +8,7 @@
 #include "MersenneTwister.h"
 
 class Actor;
-class FeatureMob;
+class Mob;
 
 namespace Rnd {
 
@@ -89,7 +89,7 @@ void mkBoolMapFromVector(const std::vector<Pos>& positions,
 
 Actor* getFirstActorAtPos(const Pos& pos, ActorDeadState deadState = ActorDeadState::alive);
 
-FeatureMob* getFirstMobAtPos(const Pos& pos);
+Mob* getFirstMobAtPos(const Pos& pos);
 
 void getActorPositions(const std::vector<Actor*>& actors,
                        std::vector<Pos>& out);

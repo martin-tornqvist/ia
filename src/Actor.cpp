@@ -410,7 +410,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
 
   if(getHp() <= 0) {
     const bool IS_ON_BOTTOMLESS =
-      Map::cells[pos.x][pos.y].featureStatic->isBottomless();
+      Map::cells[pos.x][pos.y].rigid->isBottomless();
     const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((getHpMax(true) * 5) / 4);
     const bool IS_DESTROYED = !data_->canLeaveCorpse || IS_ON_BOTTOMLESS ||
                               IS_DMG_ENOUGH_TO_DESTROY;
@@ -464,7 +464,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   bool isOnVisibleTrap = false;
 
   //If died on a visible trap, destroy the corpse
-  const auto* const f = Map::cells[pos.x][pos.y].featureStatic;
+  const auto* const f = Map::cells[pos.x][pos.y].rigid;
   if(f->getId() == FeatureId::trap) {
     if(!static_cast<const Trap*>(f)->isHidden()) {isOnVisibleTrap = true;}
   }
@@ -513,14 +513,14 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   } else {
     if(this != Map::player) {
       Pos newPos;
-      auto* featureHere = Map::cells[pos.x][pos.y].featureStatic;
+      auto* featureHere = Map::cells[pos.x][pos.y].rigid;
       //TODO this should be decided with a floodfill instead
       if(!featureHere->canHaveCorpse()) {
         for(int dx = -1; dx <= 1; ++dx) {
           for(int dy = -1; dy <= 1; ++dy) {
             newPos = pos + Pos(dx, dy);
             featureHere =
-              Map::cells[pos.x + dx][pos.y + dy].featureStatic;
+              Map::cells[pos.x + dx][pos.y + dy].rigid;
             if(featureHere->canHaveCorpse()) {
               pos.set(newPos);
               dx = 9999;

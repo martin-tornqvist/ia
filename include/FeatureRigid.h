@@ -1,15 +1,15 @@
-#ifndef FEATURE_STATIC_H
-#define FEATURE_STATIC_H
+#ifndef FEATURE_RIGID_H
+#define FEATURE_RIGID_H
 
 #include "Feature.h"
 
 enum class BurnState {notBurned, burning, hasBurned};
 
-class FeatureStatic: public Feature {
+class Rigid: public Feature {
 public:
-  FeatureStatic(Pos pos);
+  Rigid(Pos pos);
 
-  FeatureStatic() = delete;
+  Rigid() = delete;
 
   virtual FeatureId   getId()                         const override = 0;
   virtual std::string getName(const Article article)  const override = 0;
@@ -61,7 +61,7 @@ private:
 
 enum class FloorType {cmn, cave, stonePath};
 
-class Floor: public FeatureStatic {
+class Floor: public Rigid {
 public:
   Floor(Pos pos);
   Floor() = delete;
@@ -75,7 +75,7 @@ public:
   FloorType type_;
 };
 
-class Carpet: public FeatureStatic {
+class Carpet: public Rigid {
 public:
   Carpet(Pos pos);
   Carpet() = delete;
@@ -89,7 +89,7 @@ public:
 
 enum class GrassType {cmn, withered};
 
-class Grass: public FeatureStatic {
+class Grass: public Rigid {
 public:
   Grass(Pos pos);
   Grass() = delete;
@@ -103,7 +103,7 @@ public:
   GrassType type_;
 };
 
-class Bush: public FeatureStatic {
+class Bush: public Rigid {
 public:
   Bush(Pos pos);
   Bush() = delete;
@@ -118,9 +118,9 @@ public:
   GrassType type_;
 };
 
-class Brazier: public FeatureStatic {
+class Brazier: public Rigid {
 public:
-  Brazier(Pos pos) : FeatureStatic(pos) {}
+  Brazier(Pos pos) : Rigid(pos) {}
   Brazier() = delete;
   ~Brazier() {}
 
@@ -132,7 +132,7 @@ public:
 
 enum class WallType {cmn, cmnAlt, cave, egypt};
 
-class Wall: public FeatureStatic {
+class Wall: public Rigid {
 public:
   Wall(Pos pos);
   Wall() = delete;
@@ -160,7 +160,7 @@ private:
   void mkLowRubbleAndRocks(); //Note: Will destroy object
 };
 
-class RubbleLow: public FeatureStatic {
+class RubbleLow: public Rigid {
 public:
   RubbleLow(Pos pos);
   RubbleLow() = delete;
@@ -172,7 +172,7 @@ public:
   Clr         getDefClr()                     const override;
 };
 
-class RubbleHigh: public FeatureStatic {
+class RubbleHigh: public Rigid {
 public:
   RubbleHigh(Pos pos);
   RubbleHigh() = delete;
@@ -187,7 +187,7 @@ private:
   void mkLowRubbleAndRocks(); //Note: Will destroy object
 };
 
-class GraveStone: public FeatureStatic {
+class GraveStone: public Rigid {
 public:
   GraveStone(Pos pos);
   GraveStone() = delete;
@@ -206,7 +206,7 @@ private:
   std::string inscr_;
 };
 
-class ChurchBench: public FeatureStatic {
+class ChurchBench: public Rigid {
 public:
   ChurchBench(Pos pos);
   ChurchBench() = delete;  ~ChurchBench() {}
@@ -219,7 +219,7 @@ public:
 
 enum class StatueType {cmn, ghoul};
 
-class Statue: public FeatureStatic {
+class Statue: public Rigid {
 public:
   Statue(Pos pos);
   Statue() = delete;
@@ -233,7 +233,7 @@ public:
   StatueType type_;
 };
 
-class Pillar: public FeatureStatic {
+class Pillar: public Rigid {
 public:
   Pillar(Pos pos);
   Pillar() = delete;
@@ -245,7 +245,7 @@ public:
   Clr         getDefClr()                     const override;
 };
 
-class Stairs: public FeatureStatic {
+class Stairs: public Rigid {
 public:
   Stairs(Pos pos);
   Stairs() = delete;
@@ -259,9 +259,9 @@ public:
   void bump(Actor& actorBumping) override;
 };
 
-class Bridge : public FeatureStatic {
+class Bridge : public Rigid {
 public:
-  Bridge(Pos pos) : FeatureStatic(pos) {}
+  Bridge(Pos pos) : Rigid(pos) {}
   Bridge() = delete;
   ~Bridge() {}
 
@@ -280,7 +280,7 @@ private:
 
 enum class LiquidType {water, mud, blood, acid, lava};
 
-class LiquidShallow: public FeatureStatic {
+class LiquidShallow: public Rigid {
 public:
   LiquidShallow(Pos pos);
   LiquidShallow() = delete;
@@ -296,7 +296,7 @@ public:
   LiquidType type_;
 };
 
-class LiquidDeep: public FeatureStatic {
+class LiquidDeep: public Rigid {
 public:
   LiquidDeep(Pos pos);
   LiquidDeep() = delete;
@@ -312,7 +312,7 @@ public:
   LiquidType type_;
 };
 
-class Chasm: public FeatureStatic {
+class Chasm: public Rigid {
 public:
   Chasm(Pos pos);
   Chasm() = delete;
@@ -326,7 +326,7 @@ public:
 
 class Door;
 
-class Lever: public FeatureStatic {
+class Lever: public Rigid {
 public:
   Lever(Pos pos);
 
@@ -350,7 +350,7 @@ protected:
   Door* doorLinkedTo_;
 };
 
-class Altar: public FeatureStatic {
+class Altar: public Rigid {
 public:
   Altar(Pos pos);
   Altar() = delete;
@@ -362,7 +362,7 @@ public:
   Clr         getDefClr()                     const override;
 };
 
-class Tree: public FeatureStatic {
+class Tree: public Rigid {
 public:
   Tree(Pos pos);
   Tree() = delete;
@@ -406,7 +406,7 @@ enum class TombAppearance {
   END
 };
 
-class Tomb: public FeatureStatic {
+class Tomb: public Rigid {
 public:
   Tomb(const Pos& pos);
   Tomb() = delete;
@@ -436,7 +436,7 @@ private:
 
 enum class ChestMatl {wood, iron, END};
 
-class Chest: public FeatureStatic {
+class Chest: public Rigid {
 public:
   Chest(const Pos& pos);
   Chest() = delete;
@@ -463,7 +463,7 @@ private:
   ChestMatl matl_;
 };
 
-class Cabinet: public FeatureStatic {
+class Cabinet: public Rigid {
 public:
   Cabinet(const Pos& pos);
   Cabinet() = delete;
@@ -505,7 +505,7 @@ enum class FountainType {
 
 enum class FountainMatl {stone, gold};
 
-class Fountain: public FeatureStatic {
+class Fountain: public Rigid {
 public:
   Fountain(const Pos& pos);
   Fountain() = delete;
@@ -522,7 +522,7 @@ private:
   FountainMatl fountainMatl_;
 };
 
-class Cocoon: public FeatureStatic {
+class Cocoon: public Rigid {
 public:
   Cocoon(const Pos& pos);
   Cocoon() = delete;

@@ -39,7 +39,7 @@ void playerClose() {
   Log::clearLog();
 
   if(closePos != Map::player->pos) {
-    playerCloseFeature(Map::cells[closePos.x][closePos.y].featureStatic);
+    playerCloseFeature(Map::cells[closePos.x][closePos.y].rigid);
   }
 
   Renderer::drawMapAndInterface();

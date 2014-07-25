@@ -10,7 +10,7 @@
 #include "Utils.h"
 #include "SdlWrapper.h"
 #include "PlayerBon.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureMob.h"
 
 using namespace std;
@@ -149,7 +149,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
       if(explType == ExplType::expl) {
         //Damage environment
         Cell& cell = Map::cells[pos.x][pos.y];
-        cell.featureStatic->hit(DmgType::physical, DmgMethod::explosion, nullptr);
+        cell.rigid->hit(DmgType::physical, DmgMethod::explosion, nullptr);
 
         const int ROLLS = EXPL_DMG_ROLLS - curRadi;
         const int DMG   = Rnd::dice(ROLLS, EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
@@ -192,7 +192,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         //If property is burning, also apply it to corpses and environment
         if(prop->getId() == propBurning) {
           Cell& cell = Map::cells[pos.x][pos.y];
-          cell.featureStatic->hit(DmgType::fire, DmgMethod::elemental, nullptr);
+          cell.rigid->hit(DmgType::fire, DmgMethod::elemental, nullptr);
 
           for(Actor* corpse : corpsesHere) {
             PropHandler& propHlr = corpse->getPropHandler();

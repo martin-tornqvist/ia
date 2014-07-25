@@ -10,7 +10,7 @@
 #include "PopulateMonsters.h"
 #include "MapParsing.h"
 #include "Utils.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 

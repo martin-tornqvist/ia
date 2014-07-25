@@ -3,14 +3,14 @@
 
 #include "FeatureMob.h"
 
-class ProxEvent: public FeatureMob {
+class ProxEvent: public Mob {
 public:
   ~ProxEvent() {}
 
   void onNewTurn() override;
 
 protected:
-  ProxEvent(Pos pos) : FeatureMob(pos) {}
+  ProxEvent(Pos pos) : Mob(pos) {}
 
   virtual void playerIsNear() = 0;
 };

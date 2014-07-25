@@ -26,12 +26,11 @@ void playerDisarm() {
   //Abort if held by spider web
   const Pos playerPos = Map::player->pos;
   const auto* const featureAtPlayer =
-    Map::cells[playerPos.x][playerPos.y].featureStatic;
+    Map::cells[playerPos.x][playerPos.y].rigid;
   if(featureAtPlayer->getId() == FeatureId::trap) {
     const Trap* const trap = static_cast<const Trap*>(featureAtPlayer);
     if(trap->getTrapType() == TrapId::spiderWeb) {
-      const auto* const web =
-        static_cast<const TrapSpiderWeb*>(trap->getSpecificTrap());
+      const auto* const web = static_cast<const TrapSpiderWeb*>(trap->getSpecificTrap());
       if(web->isHolding()) {
         Log::addMsg("Not while entangled in a spider web.");
         Renderer::drawMapAndInterface();
@@ -77,7 +76,7 @@ void playerDisarm() {
     }
 
     Log::clearLog();
-    Map::cells[pos.x][pos.y].featureStatic->disarm();
+    Map::cells[pos.x][pos.y].rigid->disarm();
     Renderer::drawMapAndInterface();
   }
 }

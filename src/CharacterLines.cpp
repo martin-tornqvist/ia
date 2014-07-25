@@ -12,7 +12,7 @@
 #include "MapGen.h"
 #include "PlayerBon.h"
 #include "Inventory.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureMob.h"
 #include "TextFormatting.h"
 
@@ -41,8 +41,8 @@ void drawLocationInfo() {
 
     string featureName = "";
 
-    //Describe mobile feature
-    const FeatureMob* const mob = Utils::getFirstMobAtPos(p);
+    //Describe mob
+    const Mob* const mob = Utils::getFirstMobAtPos(p);
     if(mob) {
       featureName = mob->getName(Article::a);
       if(!featureName.empty()) {
@@ -50,8 +50,8 @@ void drawLocationInfo() {
       }
     }
 
-    //Describe static feature
-    featureName = Map::cells[p.x][p.y].featureStatic->getName(Article::a);
+    //Describe rigid
+    featureName = Map::cells[p.x][p.y].rigid->getName(Article::a);
     if(!featureName.empty()) {
       str += TextFormatting::firstToUpper(featureName) + ". ";
     }

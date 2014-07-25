@@ -18,7 +18,7 @@
 #include "PlayerBon.h"
 #include "Utils.h"
 #include "SdlWrapper.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureMob.h"
 
 using namespace std;
@@ -38,7 +38,7 @@ void playerThrowLitExplosive(const Pos& aimCell) {
   //Remove cells after blocked cells
   for(size_t i = 1; i < path.size(); ++i) {
     const Pos curPos = path.at(i);
-    const auto* featureHere = Map::cells[curPos.x][curPos.y].featureStatic;
+    const auto* featureHere = Map::cells[curPos.x][curPos.y].rigid;
     if(!featureHere->isProjectilePassable()) {
       path.resize(i);
       break;
@@ -61,7 +61,7 @@ void playerThrowLitExplosive(const Pos& aimCell) {
     }
   }
 
-  auto* const featureAtDest     = Map::cells[endPos.x][endPos.y].featureStatic;
+  auto* const featureAtDest     = Map::cells[endPos.x][endPos.y].rigid;
   const bool IS_DEST_BOTTOMLESS = featureAtDest->isBottomless();
 
   if(DYNAMITE_FUSE != -1) {
@@ -180,7 +180,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
       SdlWrapper::sleep(Config::getDelayProjectileDraw());
     }
 
-    const auto* featureHere = Map::cells[curPos.x][curPos.y].featureStatic;
+    const auto* featureHere = Map::cells[curPos.x][curPos.y].rigid;
     if(!featureHere->isProjectilePassable()) {
       blockedInElement = itemThrownData.isPotion ? i : i - 1;
       break;
@@ -211,7 +211,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
                              path.size() - 1 : blockedInElement;
     const Pos dropPos = path.at(DROP_ELEMENT);
     const Matl matlAtDropPos =
-      Map::cells[dropPos.x][dropPos.y].featureStatic->getMatl();
+      Map::cells[dropPos.x][dropPos.y].rigid->getMatl();
 
     bool isMakingNoise = false;
 

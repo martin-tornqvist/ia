@@ -16,7 +16,7 @@
 #include "DungeonClimb.h"
 #include "MapParsing.h"
 #include "Utils.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
@@ -327,7 +327,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
 }
 
 void Potion::collide(const Pos& pos, Actor* const actor) {
-  if(!Map::cells[pos.x][pos.y].featureStatic->isBottomless() || actor) {
+  if(!Map::cells[pos.x][pos.y].rigid->isBottomless() || actor) {
 
     const bool PLAYER_SEE_CELL = Map::cells[pos.x][pos.y].isSeenByPlayer;
 
@@ -340,7 +340,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
           Log::addMsg("The potion shatters on " + actor->getNameThe() + ".");
         }
       } else {
-        Feature* const f = Map::cells[pos.x][pos.y].featureStatic;
+        Feature* const f = Map::cells[pos.x][pos.y].rigid;
         Log::addMsg("The potion shatters on " + f->getName(Article::the) + ".");
       }
     }

@@ -19,7 +19,7 @@
 #include "LineCalc.h"
 #include "ActorFactory.h"
 #include "Utils.h"
-#include "FeatureStatic.h"
+#include "FeatureRigid.h"
 #include "FeatureMob.h"
 
 using namespace std;
@@ -1764,7 +1764,7 @@ void PropParalyzed::onStart() {
       player->dynamiteFuseTurns = -1;
       player->updateColor();
       Log::addMsg("The lit Dynamite stick falls from my hands!");
-      FeatureStatic* const f = Map::cells[playerPos.x][playerPos.y].featureStatic;
+      Rigid* const f = Map::cells[playerPos.x][playerPos.y].rigid;
       if(!f->isBottomless()) {
         GameTime::addMob(new LitDynamite(playerPos, DYNAMITE_FUSE));
       }
@@ -1773,7 +1773,7 @@ void PropParalyzed::onStart() {
       player->flareFuseTurns = -1;
       player->updateColor();
       Log::addMsg("The lit Flare falls from my hands.");
-      Feature* const f = Map::cells[playerPos.x][playerPos.y].featureStatic;
+      Feature* const f = Map::cells[playerPos.x][playerPos.y].rigid;
       if(!f->isBottomless()) {
         GameTime::addMob(new LitFlare(playerPos, FLARE_FUSE));
       }
@@ -1944,5 +1944,5 @@ void PropRSleep::onStart() {
 
 void PropBurrowing::onNewTurn() {
   const Pos& p = owningActor_->pos;
-  Map::cells[p.x][p.y].featureStatic->hit(DmgType::physical, DmgMethod::forced);
+  Map::cells[p.x][p.y].rigid->hit(DmgType::physical, DmgMethod::forced);
 }
