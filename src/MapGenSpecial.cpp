@@ -16,6 +16,7 @@
 #include "PopulateMonsters.h"
 #include "PopulateItems.h"
 #include "ItemFactory.h"
+#include "FeatureDoor.h"
 
 using namespace std;
 
@@ -122,44 +123,44 @@ void mkForestTrees() {
 
   bool proceed = false;
   while(!proceed) {
-    for(int i = 0; i < nrForestPatches; ++i) {
-      mkForestTreePatch();
-    }
+    for(int i = 0; i < nrForestPatches; ++i) {mkForestTreePatch();}
 
     const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::church);
     const Pos       templDims = templ.getDims();
 
     for(int y = 0; y < templDims.y; ++y) {
       for(int x = 0; x < templDims.x; ++x) {
-        const auto id = templ.getCell(x, y).featureId;
-        if(id != FeatureId::empty) {
-          const Pos p(churchPos + Pos(x, y));
+        const auto& templCell = templ.getCell(x, y);
+        const auto  fId       = templCell.featureId;
+        const Pos p(churchPos + Pos(x, y));
+        if(fId != FeatureId::empty) {
           Rigid* const f =
-            Map::put(static_cast<Rigid*>(FeatureData::getData(id).mkObj(p)));
-          if(id == FeatureId::grass) {
+            Map::put(static_cast<Rigid*>(FeatureData::getData(fId).mkObj(p)));
+          if(fId == FeatureId::grass) {
             static_cast<Grass*>(f)->type_ = GrassType::withered;
           }
         }
-      }
-    }
-
-    Pos stairsPos;
-    for(int y = 0; y < MAP_H; ++y) {
-      bool isStairsFound = false;
-      for(int x = 0; x < MAP_W; ++x) {
-        if(Map::cells[x][y].rigid->getId() == FeatureId::stairs) {
-          stairsPos.set(x, y);
-          isStairsFound = true;
-          break;
+        if(templCell.val == 1) {
+          Map::put(new Door(p, new Wall(p), DoorSpawnState::closed));
         }
       }
-      if(isStairsFound) {break;}
     }
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
-    blocked[stairsPos.x][stairsPos.y] = false;
+    Pos stairsPos;
+    for(int y = 0; y < MAP_H; ++y) {
+      for(int x = 0; x < MAP_W; ++x) {
+        const auto id = Map::cells[x][y].rigid->getId();
+        if(id == FeatureId::stairs) {
+          stairsPos.set(x, y);
+          blocked[x][y] = false;
+        } else if(id == FeatureId::door) {
+          blocked[x][y] = false;
+        }
+      }
+    }
 
     PathFind::run(Map::player->pos, stairsPos, blocked, path);
 
@@ -354,11 +355,23 @@ bool mkLengLvl() {
             auto* const grass = static_cast<Grass*>(f);
             grass->type_ = Rnd::oneIn(5) ? GrassType::cmn : GrassType::withered;
           }
+        } else if(fId == FeatureId::wall) {
+          auto* const wall = static_cast<Wall*>(f);
+          if(templCell.val == 2) {
+            wall->type_ = WallType::cliff;
+          } else if(templCell.val == 3 || templCell.val == 5) {
+            wall->type_ = WallType::lengMonestary;
+          }
         }
       }
       if(templCell.actorId != ActorId::empty) {ActorFactory::mk(templCell.actorId, p);}
       if(templCell.val == 1) {Map::player->pos = p;}
       if(templCell.val == 3) {Map::cells[x][y].isDark = true;}
+      if(templCell.val == 6) {
+        Wall* mimic   = new Wall(p);
+        mimic->type_  = WallType::lengMonestary;
+        Map::put(new Door(p, mimic, DoorSpawnState::closed));
+      }
     }
   }
 

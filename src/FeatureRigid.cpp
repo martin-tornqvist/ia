@@ -350,19 +350,23 @@ string Wall::getName(const Article article) const {
   switch(type_) {
     case WallType::cmn:
     case WallType::cmnAlt:
-    case WallType::egypt:   ret += "stone ";  break;
-    case WallType::cave:    ret += "cavern "; break;
+    case WallType::lengMonestary:
+    case WallType::egypt:   ret += "stone wall";  break;
+    case WallType::cave:    ret += "cavern wall"; break;
+    case WallType::cliff:   ret += "cliff";       break;
   }
-  return ret + "wall";
+  return ret;
 }
 
 Clr Wall::getDefClr() const {
   if(isMossy_) {return clrGreenDrk;}
   switch(type_) {
+    case WallType::cliff:         return clrGrayDrk;    break;
     case WallType::egypt:
-    case WallType::cave:    return clrBrownGray;  break;
+    case WallType::cave:          return clrBrownGray;  break;
     case WallType::cmn:
-    case WallType::cmnAlt:  return clrGray;       break;
+    case WallType::cmnAlt:        return clrGray;       break;
+    case WallType::lengMonestary: return clrRed;        break;
   }
   assert(false && "Failed to set color");
   return clrYellow;
@@ -375,34 +379,41 @@ char Wall::getGlyph() const {
 TileId Wall::getFrontWallTile() const {
   if(Config::isTilesWallFullSquare()) {
     switch(type_) {
-      case WallType::cmn:     return TileId::wallTop;         break;
-      case WallType::cmnAlt:  return TileId::wallTop;         break;
-      case WallType::cave:    return TileId::caveWallTop;     break;
-      case WallType::egypt:   return TileId::egyptWallTop;    break;
-      default:                return TileId::wallTop;         break;
+      case WallType::cmn:
+      case WallType::cmnAlt:        return TileId::wallTop;         break;
+      case WallType::cliff:
+      case WallType::cave:          return TileId::caveWallTop;     break;
+      case WallType::lengMonestary:
+      case WallType::egypt:         return TileId::egyptWallTop;    break;
     }
   } else {
     switch(type_) {
-      case WallType::cmn:     return TileId::wallFront;       break;
-      case WallType::cmnAlt:  return TileId::wallFrontAlt1;   break;
-      case WallType::cave:    return TileId::caveWallFront;   break;
-      case WallType::egypt:   return TileId::egyptWallFront;  break;
-      default:                return TileId::wallFront;       break;
+      case WallType::cmn:           return TileId::wallFront;       break;
+      case WallType::cmnAlt:        return TileId::wallFrontAlt1;   break;
+      case WallType::cliff:
+      case WallType::cave:          return TileId::caveWallFront;   break;
+      case WallType::lengMonestary:
+      case WallType::egypt:         return TileId::egyptWallFront;  break;
     }
   }
+  assert(false && "Failed to set front wall tile");
+  return TileId::empty;
 }
 
 TileId Wall::getTopWallTile() const {
   switch(type_) {
-    case WallType::cmn:       return TileId::wallTop;         break;
-    case WallType::cmnAlt:    return TileId::wallTop;         break;
-    case WallType::cave:      return TileId::caveWallTop;     break;
-    case WallType::egypt:     return TileId::egyptWallTop;    break;
-    default:                  return TileId::wallTop;         break;
+    case WallType::cmn:
+    case WallType::cmnAlt:        return TileId::wallTop;           break;
+    case WallType::cliff:
+    case WallType::cave:          return TileId::caveWallTop;       break;
+    case WallType::lengMonestary:
+    case WallType::egypt:         return TileId::egyptWallTop;      break;
   }
+  assert(false && "Failed to set top wall tile");
+  return TileId::empty;
 }
 
-void Wall::setRandomNormalWall() {
+void Wall::setRndCmnWall() {
   const int RND = Rnd::range(1, 6);
   switch(RND) {
     case 1:   type_ = WallType::cmnAlt; break;

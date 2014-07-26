@@ -15,18 +15,20 @@
 using namespace std;
 
 //---------------------------------------------------INHERITED FUNCTIONS
-Door::Door(const Pos& pos, const Rigid* const mimicFeature) :
+Door::Door(const Pos& pos, const Rigid* const mimicFeature, DoorSpawnState spawnState) :
   Rigid(pos), mimicFeature_(mimicFeature), nrSpikes_(0) {
 
   isHandledExternally_ = false;
 
   const int ROLL = Rnd::percentile();
-  const DoorSpawnState doorState =
-    ROLL < 5 ? DoorSpawnState::secretAndStuck :
-    ROLL < 40 ? DoorSpawnState::secret :
-    ROLL < 50 ? DoorSpawnState::stuck :
-    ROLL < 75 ? DoorSpawnState::open :
-    DoorSpawnState::closed;
+
+  const DoorSpawnState doorState = spawnState == DoorSpawnState::any ?
+                                   (ROLL < 5  ? DoorSpawnState::secretAndStuck :
+                                    ROLL < 40 ? DoorSpawnState::secret :
+                                    ROLL < 50 ? DoorSpawnState::stuck :
+                                    ROLL < 75 ? DoorSpawnState::open :
+                                    DoorSpawnState::closed) :
+                                   spawnState;
 
   switch(DoorSpawnState(doorState)) {
     case DoorSpawnState::open: {

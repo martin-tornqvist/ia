@@ -130,7 +130,7 @@ public:
   Clr         getDefClr()                     const override;
 };
 
-enum class WallType {cmn, cmnAlt, cave, egypt};
+enum class WallType {cmn, cmnAlt, cave, egypt, cliff, lengMonestary};
 
 class Wall: public Rigid {
 public:
@@ -146,7 +146,7 @@ public:
   TileId      getFrontWallTile()              const;
   TileId      getTopWallTile()                const;
 
-  void setRandomNormalWall();
+  void setRndCmnWall();
   void setRandomIsMossGrown();
 
   WallType type_;

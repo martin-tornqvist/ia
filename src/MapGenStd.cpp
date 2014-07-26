@@ -822,7 +822,7 @@ void decorate() {
         if(CellPred::AllAdjIsNotFeature(FeatureId::floor).check(cell)) {
           wall->type_ = WallType::cave;
         } else {
-          wall->setRandomNormalWall();
+          wall->setRndCmnWall();
         }
       }
     }
