@@ -61,6 +61,8 @@ public:
 
   void playerTrySpotHidden();
 
+  const Rigid* getMimic() const {return mimicFeature_;}
+
 protected:
   const Rigid* const mimicFeature_;
   int nrSpikes_;

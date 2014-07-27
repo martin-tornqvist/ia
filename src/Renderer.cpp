@@ -931,9 +931,7 @@ void drawMap() {
             if(featureId == FeatureId::door) {
               isHiddenDoor = static_cast<const Door*>(f)->isSecret();
             }
-            if(
-              y < MAP_H - 1 &&
-              (featureId == FeatureId::wall || isHiddenDoor)) {
+            if(y < MAP_H - 1 && (featureId == FeatureId::wall || isHiddenDoor)) {
               if(Map::cells[x][y + 1].isExplored) {
                 const bool IS_SEEN_BELOW  = Map::cells[x][y + 1].isSeenByPlayer;
                 const auto tileBelowSeen  = renderArrayNoActors[x][y + 1].tile;
@@ -967,9 +965,14 @@ void drawMap() {
                                 TileId::wallTop :
                                 TileId::wallFront;
                 }
-              } else {
-                const auto* const wall = static_cast<const Wall*>(f);
-                tmpDrw.tile            = wall->getFrontWallTile();
+              } else { //Cell below is not explored
+                const Rigid* wall = nullptr;
+                if(isHiddenDoor) {
+                  wall = static_cast<const Door*>(f)->getMimic();
+                } else {
+                  wall = f;
+                }
+                tmpDrw.tile = static_cast<const Wall*>(wall)->getFrontWallTile();
               }
             }
           }

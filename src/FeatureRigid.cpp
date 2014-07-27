@@ -1617,7 +1617,7 @@ Fountain::Fountain(const Pos& pos) :
 
 Clr Fountain::getDefClr() const {
   switch(fountainMatl_) {
-    case FountainMatl::stone: return clrGray;
+    case FountainMatl::stone: return clrCyan;
     case FountainMatl::gold:  return clrYellow;
   }
   assert("Failed to get fountain color" && false);
