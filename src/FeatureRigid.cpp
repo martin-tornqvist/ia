@@ -249,6 +249,11 @@ Floor::Floor(Pos pos) : Rigid(pos), type_(FloorType::cmn) {
   });
 }
 
+TileId Floor::getTile() const {
+  return getBurnState() ==
+         BurnState::hasBurned ? TileId::scorchedGround : getData().tile;
+}
+
 string Floor::getName(const Article article) const {
   string ret = article == Article::a ? "" : "the ";
 
@@ -820,6 +825,11 @@ Grass::Grass(Pos pos) : Rigid(pos), type_(GrassType::cmn) {
     (void)actor;
     tryStartBurning(false);
   });
+}
+
+TileId Grass::getTile() const {
+  return getBurnState() ==
+         BurnState::hasBurned ? TileId::scorchedGround : getData().tile;
 }
 
 string Grass::getName(const Article article) const {

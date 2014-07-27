@@ -250,6 +250,7 @@ Pos getColumnAndRowTile(const TileId tile) {
     case TileId::popupVerticalBar: return Pos(5, 10); break;
     case TileId::hangbridgeVer: return Pos(6, 10); break;
     case TileId::hangbridgeHor: return Pos(7, 10); break;
+    case TileId::scorchedGround: return Pos(8, 10); break;
     case TileId::empty:
     default: return Pos(18, 10); break;
   }

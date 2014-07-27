@@ -139,7 +139,8 @@ enum class TileId {
   popupHorizontalBar,
   popupVerticalBar,
   hangbridgeVer,
-  hangbridgeHor
+  hangbridgeHor,
+  scorchedGround
 };
 
 

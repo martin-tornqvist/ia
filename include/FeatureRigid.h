@@ -69,6 +69,7 @@ public:
 
   FeatureId getId() const override {return FeatureId::floor;}
 
+  TileId      getTile()                       const override;
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
 
@@ -97,6 +98,7 @@ public:
 
   FeatureId getId() const override {return FeatureId::grass;}
 
+  TileId      getTile()                       const override;
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
 
