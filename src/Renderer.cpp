@@ -885,7 +885,9 @@ void drawMap() {
 
   //---------------- DRAW THE GRID
   auto divClr = [](Clr & clr, const double DIV) {
-    clr.r /= DIV; clr.g /= DIV; clr.b /= DIV;
+    clr.r = double(clr.r) / DIV;
+    clr.g = double(clr.g) / DIV;
+    clr.b = double(clr.b) / DIV;
   };
 
   for(int y = 0; y < MAP_H; ++y) {
@@ -905,7 +907,7 @@ void drawMap() {
           }
 
           if(cell.isDark && !cell.isLight) {
-            const double DRK_DIV = 2.0;
+            const double DRK_DIV = 1.75;
             divClr(tmpDrw.clr,    DRK_DIV);
             divClr(tmpDrw.clrBg,  DRK_DIV);
           }

@@ -30,6 +30,11 @@ void ProxEventWallCrumble::onPlayerAdj() {
   };
 
   if(checkCellsHaveWall(wallCells_) && checkCellsHaveWall(innerCells_)) {
+
+    if(Map::player->getPropHandler().allowSee()) {
+      Log::addMsg("Suddenly, the walls collapse!", clrWhite, false, true);
+    }
+
     //Crumble
     bool done = false;
     while(!done) {
@@ -108,9 +113,6 @@ void ProxEventWallCrumble::onPlayerAdj() {
       }
     }
 
-    if(Map::player->getPropHandler().allowSee()) {
-      Log::addMsg("Suddenly, the walls collapse!", clrWhite, false, true);
-    }
     Map::player->updateFov();
     Renderer::drawMapAndInterface();
   }
