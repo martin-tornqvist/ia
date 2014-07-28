@@ -27,7 +27,7 @@
 //-------------------------------------
 //#define MK_RIVER                1
 //#define MK_CAVES                1
-//#define MK_MERGED_REGIONS       1
+#define MK_MERGED_REGIONS       1
 #define RANDOMLY_BLOCK_REGIONS  1
 #define MK_AUX_ROOMS            1
 #define MK_CRUMBLE_ROOMS        1
@@ -304,16 +304,11 @@ void mkAuxRooms(Region regions[3][3]) {
   TRACE_FUNC_END;
 }
 
-void mkMergedRegionsAndRooms(Region regions[3][3],
-                             const int SPL_X0, const int SPL_X1,
-                             const int SPL_Y0, const int SPL_Y1) {
+void mkMergedRegionsAndRooms(Region regions[3][3]) {
 
-  const int NR_OF_MERGED_REGIONS_TO_ATTEMPT = Rnd::range(0, 2);
+  const int NR_ATTEMPTS = Rnd::range(0, 2);
 
-  for(
-    int attemptCount = 0;
-    attemptCount < NR_OF_MERGED_REGIONS_TO_ATTEMPT;
-    attemptCount++) {
+  for(int attemptCnt = 0; attemptCnt < NR_ATTEMPTS; ++attemptCnt) {
 
     Pos regI1, regI2;
 
@@ -321,50 +316,30 @@ void mkMergedRegionsAndRooms(Region regions[3][3],
     int nrTriesToFindRegions = 100;
     bool isGoodRegionsFound = false;
     while(!isGoodRegionsFound) {
-      nrTriesToFindRegions--;
+      --nrTriesToFindRegions;
       if(nrTriesToFindRegions <= 0) {return;}
 
       regI1 = Pos(Rnd::range(0, 2), Rnd::range(0, 1));
       regI2 = Pos(regI1 + Pos(0, 1));
-      isGoodRegionsFound =
-        !regions[regI1.x][regI1.y].mainRoom_ &&
-        !regions[regI2.x][regI2.y].mainRoom_;
+      isGoodRegionsFound = !regions[regI1.x][regI1.y].mainRoom_ &&
+                           !regions[regI2.x][regI2.y].mainRoom_;
     }
 
-    const int MERGED_X0 = regI1.x == 0 ? 0 : regI1.x == 1 ? SPL_X0 : SPL_X1;
-    const int MERGED_Y0 = regI1.y == 0 ? 0 : regI1.y == 1 ? SPL_Y0 : SPL_Y1;
-    const int MERGED_X1 = regI2.x == 0 ? SPL_X0 - 1 :
-                          regI2.x == 1 ? SPL_X1 - 1 : MAP_W - 1;
-    const int MERGED_Y1 = regI2.y == 0 ? SPL_Y0 - 1 :
-                          regI2.y == 1 ? SPL_Y1 - 1 : MAP_H - 1;
+    //Expand region 1 over both areas
+    auto& reg1    = regions[regI1.x][regI1.y];
+    auto& reg2    = regions[regI2.x][regI2.y];
 
-    const int AREA_2_X0 = regI2.x == 0 ? 0 : regI2.x == 1 ? SPL_X0 : SPL_X1;
-    const int AREA_2_Y0 = regI2.y == 0 ? 0 : regI2.y == 1 ? SPL_Y0 : SPL_Y1;
-    const int AREA_2_X1 = MERGED_X1;
-    const int AREA_2_Y1 = MERGED_Y1;
+    reg1.r_       = Rect(reg1.r_.p0, reg2.r_.p1);
 
-    const bool AREA_2_IS_BELOW = regI2.y > regI1.y;
+    reg2.r_       = Rect(-1, -1, -1, -1);
 
-    const int AREA_1_X0 = MERGED_X0;
-    const int AREA_1_X1 = AREA_2_IS_BELOW ? MERGED_X1 - 1 : AREA_2_X0 - 1;
-    const int AREA_1_Y0 = MERGED_Y0;
-    const int AREA_1_Y1 = AREA_2_IS_BELOW ? AREA_2_Y0 - 1 : MERGED_Y1;
+    reg1.isFree_  = reg2.isFree_ = false;
 
-    const Rect rect1(Pos(AREA_1_X0, AREA_1_Y0), Pos(AREA_1_X1, AREA_1_Y1));
-    const Rect rect2(Pos(AREA_2_X0, AREA_2_Y0), Pos(AREA_2_X1, AREA_2_Y1));
+    //Make a room for region 1
+    auto rndPadding = []() {return Rnd::range(0, 4);};
+    const Rect padding(rndPadding(), rndPadding(), rndPadding(), rndPadding());
 
-    regions[regI1.x][regI1.y] = Region(rect1);
-    regions[regI2.x][regI2.y] = Region(rect2);
-
-    const int OFFSET_X0 = Rnd::range(1, 4);
-    const int OFFSET_Y0 = Rnd::range(1, 4);
-    const int OFFSET_X1 = Rnd::range(1, 4);
-    const int OFFSET_Y1 = Rnd::range(1, 4);
-    Rect roomRect(rect1.p0 + Pos(OFFSET_X0, OFFSET_Y0),
-                  rect2.p1 - Pos(OFFSET_X1, OFFSET_Y1));
-    Room* const room  = mkRoom(roomRect);
-    regions[regI1.x][regI1.y].mainRoom_ = room;
-    regions[regI2.x][regI2.y].mainRoom_ = room;
+    reg1.mainRoom_ = mkRoom(Rect(reg1.r_.p0 + padding.p0, reg1.r_.p1 - padding.p1));
   }
 }
 
@@ -1055,9 +1030,7 @@ bool mkStdLvl() {
 #endif // MK_RIVER
 
 #ifdef MK_MERGED_REGIONS
-  if(isMapValid) {
-    mkMergedRegionsAndRooms(regions, SPL_X0, SPL_X1, SPL_Y0, SPL_Y1);
-  }
+  if(isMapValid) {mkMergedRegionsAndRooms(regions);}
 #endif // MK_MERGED_REGIONS
 
 //  TRACE << "Marking regions to build caves" << endl;
