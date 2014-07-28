@@ -21,6 +21,7 @@
 #include "Utils.h"
 #include "FeatureTrap.h"
 #include "FeatureData.h"
+#include "Popup.h"
 
 using namespace std;
 
@@ -485,6 +486,49 @@ void KeziahMason::mkStartItems() {
   spellsKnown.push_back(new SpellSummonRandom);
   spellsKnown.push_back(new SpellAzathothsWrath);
   spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+}
+
+void LengElder::onStandardTurn() {
+  if(deadState == ActorDeadState::alive) {
+
+    awareOfPlayerCounter_ = 100;
+
+    if(hasGivenItemToPlayer_) {
+      bool visionBlockers[MAP_W][MAP_H];
+      MapParse::parse(CellPred::BlocksVision(), visionBlockers);
+      if(isSeeingActor(*Map::player, visionBlockers)) {
+        if(nrTurnsToHostile_ <= 0) {
+          Log::addMsg("I am ripped to pieces!!!", clrMsgBad);
+          Map::player->hit(999, DmgType::pure, false);
+        } else {
+          --nrTurnsToHostile_;
+        }
+      }
+    } else {
+      const bool IS_PLAYER_SEE_ME = Map::player->isSeeingActor(*this, nullptr);
+      const bool IS_PLAYER_ADJ    = Utils::isPosAdj(pos, Map::player->pos, false);
+      if(IS_PLAYER_SEE_ME && IS_PLAYER_ADJ) {
+        Log::addMsg("I perceive a cloaked figure standing before me...");
+        Log::addMsg("This must be the Elder Hierophant of the Leng monastery, ");
+        Log::addMsg("the High Priest Not to Be Described.", clrWhite, false, true);
+
+        Popup::showMsg("", true, "");
+
+        //TODO Handle full inventory. Perhaps allow "infinite" number of items in
+        //backpack, and make the list scrollable? (The "powers"/spells list ('x') will
+        //probably also neeed to be scrollable eventually.)
+        auto& inv = Map::player->getInv();
+        inv.putInGeneral(ItemFactory::mk(ItemId::dagger));
+
+        hasGivenItemToPlayer_ = true;
+        nrTurnsToHostile_     = Rnd::range(9, 11);
+      }
+    }
+  }
+}
+
+void LengElder::mkStartItems() {
+
 }
 
 void Ooze::onStandardTurn() {

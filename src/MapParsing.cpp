@@ -242,10 +242,10 @@ bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
 
   for(int y = area.p0.y; y <= area.p1.y; ++y) {
     for(int x = area.p0.x; x <= area.p1.x; ++x) {
-      if(in[x][y] == VAL) {return false;}
+      if(in[x][y] == VAL) {return true;}
     }
   }
-  return true;
+  return false;
 }
 
 void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {

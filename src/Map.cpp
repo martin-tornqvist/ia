@@ -21,7 +21,7 @@ void Cell::clear() {
   isExplored = isSeenByPlayer = isLight = isDark = false;
 
   if(rigid) {delete rigid;  rigid = nullptr;}
-  if(item)          {delete item;           item = nullptr;}
+  if(item)  {delete item;   item  = nullptr;}
 
   playerVisualMemory.clear();
 }
@@ -127,7 +127,7 @@ Rigid* put(Rigid* const f) {
     Renderer::drawMap();
     Renderer::drawGlyph('X', Panel::map, p, clrYellow);
     Renderer::updateScreen();
-    SdlWrapper::sleep(2); //Note: Delay must be >= 2 for user input to be read
+    SdlWrapper::sleep(20); //Note: Delay must be >= 2 for user input to be read
   }
 #endif // DEMO_MODE
 

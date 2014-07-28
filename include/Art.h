@@ -20,6 +20,7 @@ enum class TileId {
   mummy,
   deepOne,
   shadow,
+  lengElder,
   armor,
   potion,
   ammo,

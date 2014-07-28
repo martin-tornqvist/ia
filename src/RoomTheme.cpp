@@ -31,7 +31,8 @@ int getRndNrFeaturesForRoomType(const RoomType type) {
     case RoomType::END_OF_STD_ROOMS:
     case RoomType::river:
     case RoomType::cave:
-    case RoomType::corridorJunction: break;
+    case RoomType::corridorJunction:
+    case RoomType::crumbleRoom: break;
   }
   return -1;
 }
@@ -272,7 +273,8 @@ void mkThemeSpecificRoomModifications(Room& room) {
     case RoomType::END_OF_STD_ROOMS:
     case RoomType::cave:
     case RoomType::river:
-    case RoomType::corridorJunction: break;
+    case RoomType::corridorJunction:
+    case RoomType::crumbleRoom: break;
   }
 }
 
@@ -293,7 +295,8 @@ void applyThemeToRoom(Room& room) {
     case RoomType::END_OF_STD_ROOMS:
     case RoomType::cave:
     case RoomType::river:
-    case RoomType::corridorJunction: break;
+    case RoomType::corridorJunction:
+    case RoomType::crumbleRoom: break;
   }
 }
 
@@ -346,7 +349,8 @@ bool isRoomTypeAllowed(const Room& room, const RoomType type,
     case RoomType::END_OF_STD_ROOMS:
     case RoomType::cave:
     case RoomType::river:
-    case RoomType::corridorJunction: break;
+    case RoomType::corridorJunction:
+    case RoomType::crumbleRoom: break;
   }
   return false;
 }

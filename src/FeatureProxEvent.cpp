@@ -1,5 +1,7 @@
 #include "FeatureProxEvent.h"
 
+#include <assert.h>
+
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
 #include "Map.h"
@@ -9,37 +11,25 @@
 #include "Utils.h"
 #include "FeatureRigid.h"
 
+using namespace std;
+
 //-------------------------------------------PROX EVENT
 void ProxEvent::onNewTurn() {
-  if(Utils::isPosAdj(pos_, Map::player->pos, true)) {
-    playerIsNear();
-  }
+  if(Utils::isPosAdj(pos_, Map::player->pos, true)) {onPlayerAdj();}
 }
 
 //-------------------------------------------WALL CRUMBLE
-void ProxEventWallCrumble::playerIsNear() {
+void ProxEventWallCrumble::onPlayerAdj() {
   //Check that it still makes sense to run the crumbling
-  bool isCrumbleOk = true;
-  for(const Pos& p : wallCells_) {
-    Rigid* const f = Map::cells[p.x][p.y].rigid;
-    const bool IS_VISION_PASSABLE = f->isVisionPassable();
-    const bool IS_WALK_PASSABLE   = f->canMoveCmn();
-    if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
-      isCrumbleOk = false;
-      break;
+  auto checkCellsHaveWall = [](const vector<Pos>& cells) {
+    for(const Pos& p : cells) {
+      const auto fId = Map::cells[p.x][p.y].rigid->getId();
+      if(fId != FeatureId::wall && fId != FeatureId::rubbleHigh) {return false;}
     }
-  }
-  for(const Pos& p : innerCells_) {
-    Rigid* const f  = Map::cells[p.x][p.y].rigid;
-    const bool IS_VISION_PASSABLE = f->isVisionPassable();
-    const bool IS_WALK_PASSABLE   = f->canMoveCmn();
-    if(IS_VISION_PASSABLE || IS_WALK_PASSABLE) {
-      isCrumbleOk = false;
-      break;
-    }
-  }
+    return true;
+  };
 
-  if(isCrumbleOk) {
+  if(checkCellsHaveWall(wallCells_) && checkCellsHaveWall(innerCells_)) {
     //Crumble
     bool done = false;
     while(!done) {
@@ -98,6 +88,8 @@ void ProxEventWallCrumble::playerIsNear() {
     }
     int nrMonstersSpawned = 0;
 
+    random_shuffle(begin(innerCells_), end(innerCells_));
+
     for(const Pos& p : innerCells_) {
       Map::put(new Floor(p));
 
@@ -112,14 +104,16 @@ void ProxEventWallCrumble::playerIsNear() {
         Actor* const actor              = ActorFactory::mk(monsterType, p);
         Monster* const monster          = static_cast<Monster*>(actor);
         monster->awareOfPlayerCounter_  = monster->getData().nrTurnsAwarePlayer;
-        nrMonstersSpawned++;
+        ++nrMonstersSpawned;
       }
     }
 
-    Log::addMsg("The walls suddenly crumbles!");
+    if(Map::player->getPropHandler().allowSee()) {
+      Log::addMsg("Suddenly, the walls collapse!", clrWhite, false, true);
+    }
     Map::player->updateFov();
     Renderer::drawMapAndInterface();
-    GameTime::eraseMob(this, true);
   }
+  GameTime::eraseMob(this, true);
 }
 

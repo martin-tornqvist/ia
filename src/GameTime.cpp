@@ -18,6 +18,7 @@
 #include "MapParsing.h"
 #include "Renderer.h"
 #include "Utils.h"
+#include "MapTravel.h"
 
 using namespace std;
 
@@ -29,19 +30,17 @@ vector<Mob*> mobs_;
 namespace {
 
 vector<ActorSpeed>  turnTypeVector_;
-int                 curTurnTypePos_         = 0;
-int                 curActorVectorPos_  = 0;
-int                 turn_                   = 0;
+int                 curTurnTypePos_   = 0;
+size_t              curActorIndex_    = 0;
+int                 turnNr_             = 0;
 
 bool isSpiRegenThisTurn(const int REGEN_N_TURNS) {
   assert(REGEN_N_TURNS != 0);
-  return turn_ == (turn_ / REGEN_N_TURNS) * REGEN_N_TURNS;
+  return turnNr_ == (turnNr_ / REGEN_N_TURNS) * REGEN_N_TURNS;
 }
 
 void runStandardTurnEvents() {
-  turn_++;
-
-//  TRACE_VERBOSE << "GameTime: Cur turn: " << turn_ << endl;
+  ++turnNr_;
 
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), visionBlockers);
@@ -90,7 +89,7 @@ void runStandardTurnEvents() {
       if(Map::player->target == actor) {Map::player->target = nullptr;}
       actors_.erase(actors_.begin() + i);
       i--;
-      if(curActorVectorPos_ >= int(actors_.size())) {curActorVectorPos_ = 0;}
+      if(curActorIndex_ >= actors_.size()) {curActorIndex_ = 0;}
     }
   }
 
@@ -109,7 +108,7 @@ void runStandardTurnEvents() {
   //(If an unexplored cell is selected, the spawn is canceled)
   if(Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LVL) {
     const int SPAWN_N_TURN = 125;
-    if(turn_ == (turn_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
+    if(turnNr_ == (turnNr_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
       PopulateMonsters::trySpawnDueToTimePassed();
     }
   }
@@ -136,9 +135,7 @@ void runAtomicTurnEvents() {
 } //namespace
 
 void init() {
-  curTurnTypePos_     = 0;
-  curActorVectorPos_  = 0;
-  turn_               = 0;
+  curTurnTypePos_ = curActorIndex_ = turnNr_ = 0;
   actors_.resize(0);
   mobs_.resize(0);
 }
@@ -152,16 +149,16 @@ void cleanup() {
 }
 
 void storeToSaveLines(vector<string>& lines) {
-  lines.push_back(toStr(turn_));
+  lines.push_back(toStr(turnNr_));
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  turn_ = toInt(lines.front());
+  turnNr_ = toInt(lines.front());
   lines.erase(begin(lines));
 }
 
 int getTurn() {
-  return turn_;
+  return turnNr_;
 }
 
 void getMobsAtPos(const Pos& p, vector<Mob*>& vectorRef) {
@@ -202,8 +199,7 @@ void addActor(Actor* actor) {
 }
 
 void resetTurnTypeAndActorCounters() {
-  curTurnTypePos_         = 0;
-  curActorVectorPos_  = 0;
+  curTurnTypePos_ = curActorIndex_ = 0;
 }
 
 //For every turn type step, run through all actors and let those who can act
@@ -235,11 +231,11 @@ void actorDidAct(const bool IS_FREE_TURN) {
     while(!actorWhoCanActThisTurnFound) {
       auto curTurnType = (TurnType)(curTurnTypePos_);
 
-      curActorVectorPos_++;
+      ++curActorIndex_;
 
-      if((size_t)curActorVectorPos_ >= actors_.size()) {
-        curActorVectorPos_ = 0;
-        curTurnTypePos_++;
+      if(curActorIndex_ >= actors_.size()) {
+        curActorIndex_ = 0;
+        ++curTurnTypePos_;
         if(curTurnTypePos_ == int(TurnType::END)) {curTurnTypePos_ = 0;}
 
         if(curTurnType != TurnType::fast && curTurnType != TurnType::fastest) {
@@ -293,22 +289,18 @@ void updateLightMap() {
 
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      Map::cells[x][y].isLight = false;
-      lightTmp[x][y] = false;
+      Map::cells[x][y].isLight = lightTmp[x][y] = false;
     }
   }
 
+  //Do not add light on Leng
+  if(MapTravel::getMapType() == MapType::leng) {return;}
+
   Map::player->addLight(lightTmp);
 
-  const int NR_ACTORS = actors_.size();
-  for(int i = 0; i < NR_ACTORS; ++i) {
-    actors_.at(i)->addLight(lightTmp);
-  }
+  for(const auto* const a : actors_)  {a->addLight(lightTmp);}
 
-  const int NR_FEATURE_MOBS = mobs_.size();
-  for(int i = 0; i < NR_FEATURE_MOBS; ++i) {
-    mobs_.at(i)->addLight(lightTmp);
-  }
+  for(const auto* const m : mobs_)    {m->addLight(lightTmp);}
 
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
@@ -322,7 +314,7 @@ void updateLightMap() {
 }
 
 Actor* getCurActor() {
-  Actor* const actor = actors_.at(curActorVectorPos_);
+  Actor* const actor = actors_.at(curActorIndex_);
 
   //Sanity check actor retrieved
   assert(Utils::isPosInsideMap(actor->pos));

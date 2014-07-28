@@ -31,6 +31,7 @@ enum ActorId {
   mummy, khephren, nitokris,
   deepOne,
   keziahMason, brownJenkin,
+  lengElder,
 //  lordOfPestilence,
 //  lordOfShadows,
 //  lordOfSpiders,

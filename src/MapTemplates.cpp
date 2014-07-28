@@ -105,7 +105,7 @@ void initTempls() {
     "################################################################################;";
 
   mkTempl(str, MapTemplId::egypt, vector<Translation> {
-    {'@', {FeatureId::floor, ActorId::empty, ItemId::empty, 1}},  //Player starting pos
+    {'@', {FeatureId::floor, ActorId::empty, ItemId::empty, 1}},  //Start
     {'¤', {FeatureId::brazier}},
     {'|', {FeatureId::pillar}},
     {'S', {FeatureId::statue}},
@@ -129,7 +129,7 @@ void initTempls() {
     "%%%------------------%%-S%S------%------------x,,,xxxxxxxxxxxxxxxx,,,,,,,,,,,,xx;"
     "%%%%-----------------%--%%-%----%%------------x,,,,,,x,,,x,,,,,,xx,,,,,$,,,,,,xx;"
     "%%%--------------------%%S--------------------xx,xxx,x,,,x,,,,,,xxx,$,,,,,$,,,xx;"
-    "%%------------------%-%%S---------------------+,,,,,,x,,,xxxxxx,,,4,,,,,,,,,,,xx;"
+    "%%------------------%-%%S---------------------+,,,,,,x,,,xxxxxx,,,4,,,,,,,,,E,xx;"
     "%%%-------------------S%%S-%------------------xx,xxx,x,,,x,,,,,,xxx,$,,,,,$,,,xx;"
     "%%-------------------%-S%%-%----%-------------x,,,x,,xxx,x,xxxxxxx,,,,,$,,,,,,xx;"
     "%%---------------------S%%S-------------------x,,,x,,,,,,x,,,,,,xx,,,,,,,,,,,,xx;"
@@ -142,15 +142,16 @@ void initTempls() {
     "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;";
 
   mkTempl(str, MapTemplId::leng, vector<Translation> {
-    {'@', {FeatureId::floor,  ActorId::empty, ItemId::empty, 1}}, //Player starting pos
-    {'%', {FeatureId::wall,   ActorId::empty, ItemId::empty, 2}},
-    {'x', {FeatureId::wall,   ActorId::empty, ItemId::empty, 3}},
-    {',', {FeatureId::floor,  ActorId::empty, ItemId::empty, 3}},
-    {'4', {FeatureId::floor,  ActorId::empty, ItemId::empty, 4}},
-    {'5', {FeatureId::wall,   ActorId::empty, ItemId::empty, 5}},
+    {'@', {FeatureId::floor,  ActorId::empty,     ItemId::empty, 1}}, //Start
+    {'%', {FeatureId::wall,   ActorId::empty,     ItemId::empty, 2}},
+    {'x', {FeatureId::wall,   ActorId::empty,     ItemId::empty, 3}},
+    {',', {FeatureId::floor,  ActorId::empty,     ItemId::empty, 3}},
+    {'E', {FeatureId::floor,  ActorId::lengElder, ItemId::empty, 3}},
+    {'4', {FeatureId::floor,  ActorId::empty,     ItemId::empty, 4}},
+    {'5', {FeatureId::wall,   ActorId::empty,     ItemId::empty, 5}},
     {'$', {FeatureId::altar}},
     {'-', {FeatureId::grass}},
-    {'+', {FeatureId::floor,  ActorId::empty, ItemId::empty, 6}}, //Door
+    {'+', {FeatureId::floor,  ActorId::empty,     ItemId::empty, 6}}, //Door
     {'S', {FeatureId::grass,  ActorId::lengSpider}}
   });
 }

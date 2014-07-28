@@ -27,7 +27,8 @@ enum class RoomType {
   //their generic reshaping runs (called from "onPreConnect").
   river,
   cave,
-  corridorJunction
+  corridorJunction,
+  crumbleRoom
 };
 
 class Room {

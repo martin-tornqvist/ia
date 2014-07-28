@@ -136,4 +136,8 @@ void goToNxt() {
   TRACE_FUNC_END;
 }
 
+MapType getMapType() {
+  return mapList_.front().type;
+}
+
 } //MapTravel

@@ -234,6 +234,17 @@ private:
   bool hasSummonedJenkin;
 };
 
+class LengElder: public Monster {
+public:
+  LengElder() : Monster() {}
+  ~LengElder() {}
+  void onStandardTurn() override;
+  void mkStartItems()   override;
+private:
+  bool  hasGivenItemToPlayer_;
+  int   nrTurnsToHostile_;
+};
+
 class Cultist: public Monster {
 public:
   Cultist() : Monster() {}

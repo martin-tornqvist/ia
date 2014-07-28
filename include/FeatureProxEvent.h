@@ -1,6 +1,8 @@
 #ifndef FEATURE_PROX_EVENT_H
 #define FEATURE_PROX_EVENT_H
 
+#include <vector>
+
 #include "FeatureMob.h"
 
 class ProxEvent: public Mob {
@@ -12,7 +14,7 @@ public:
 protected:
   ProxEvent(Pos pos) : Mob(pos) {}
 
-  virtual void playerIsNear() = 0;
+  virtual void onPlayerAdj() = 0;
 };
 
 class ProxEventWallCrumble: public ProxEvent {
@@ -32,7 +34,7 @@ public:
   Clr getClr() const override {return clrBlack;}
 
 private:
-  void playerIsNear();
+  void onPlayerAdj();
 
   std::vector<Pos> wallCells_;
   std::vector<Pos> innerCells_;

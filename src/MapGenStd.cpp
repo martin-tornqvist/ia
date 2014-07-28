@@ -30,7 +30,7 @@
 //#define MK_MERGED_REGIONS       1
 #define RANDOMLY_BLOCK_REGIONS  1
 #define MK_AUX_ROOMS            1
-//#define MK_CRUMBLE_ROOMS        1
+#define MK_CRUMBLE_ROOMS        1
 //#define MK_SUB_ROOMS            1
 //#define FILL_DEAD_ENDS          1
 #define ROOM_THEMING            1
@@ -91,26 +91,6 @@ Room* mkRoom(const Rect& roomRect) {
   return room;
 }
 
-void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos) {
-  vector<Pos> wallCells;
-  vector<Pos> innerCells;
-
-  const Rect& a = roomAreaInclWalls; //abbreviation
-
-  for(int y = a.p0.y; y <= a.p1.y; ++y) {
-    for(int x = a.p0.x; x <= a.p1.x; ++x) {
-      if(x == a.p0.x || x == a.p1.x || y == a.p0.y || y == a.p1.y) {
-        wallCells.push_back(Pos(x, y));
-      } else {
-        innerCells.push_back(Pos(x, y));
-      }
-      Map::put(new Wall(Pos(x, y)));
-    }
-  }
-
-  GameTime::addMob(new ProxEventWallCrumble(proxEventPos, wallCells, innerCells));
-}
-
 void connectRooms() {
   TRACE_FUNC_BEGIN;
 
@@ -165,13 +145,13 @@ void connectRooms() {
       for(int x = X0; x <= X1; ++x) {
         const Room* const roomHere = Map::roomMap[x][y];
         if(roomHere && roomHere != room0 && roomHere != room1) {
-          const RoomType roomType = roomHere->type_;
-          if(
-            int(roomType) < int(RoomType::END_OF_STD_ROOMS) ||
-            roomType == RoomType::corridorJunction) {
-            isOtherRoomInWay = true;
-            break;
-          }
+//          const RoomType roomType = roomHere->type_;
+//          if(
+//            int(roomType) < int(RoomType::END_OF_STD_ROOMS) ||
+//            roomType == RoomType::corridorJunction) {
+          isOtherRoomInWay = true;
+//            break;
+//          }
         }
       }
       if(isOtherRoomInWay) {break;}
@@ -189,15 +169,38 @@ void connectRooms() {
   TRACE_FUNC_END;
 }
 
+void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos) {
+  vector<Pos> wallCells;
+  vector<Pos> innerCells;
+
+  const Rect& a = roomAreaInclWalls; //abbreviation
+
+  for(int y = a.p0.y; y <= a.p1.y; ++y) {
+    for(int x = a.p0.x; x <= a.p1.x; ++x) {
+      const Pos p(x, y);
+      if(x == a.p0.x || x == a.p1.x || y == a.p0.y || y == a.p1.y) {
+        wallCells.push_back(p);
+      } else {
+        innerCells.push_back(p);
+      }
+      Map::put(new Wall(p));
+    }
+  }
+
+  GameTime::addMob(new ProxEventWallCrumble(proxEventPos, wallCells, innerCells));
+}
+
 //Note: The positions and size can be outside map (e.g. negative positions).
-//This function should handle that, and simply return false in that case.
+//This function just returns false in that case.
 bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
                   const Pos& doorP) {
   Rect auxRect(p, p + d - 1);
   Rect auxRectWithBorder(auxRect.p0 - 1, auxRect.p1 + 1);
 
+  assert(Utils::isPosInside(doorP, auxRectWithBorder));
+
   if(Utils::isAreaInsideMap(auxRectWithBorder)) {
-    if(MapParse::isValInArea(auxRectWithBorder, blocked)) {
+    if(!MapParse::isValInArea(auxRectWithBorder, blocked)) {
       for(int y = auxRect.p0.y; y <= auxRect.p1.y; ++y) {
         for(int x = auxRect.p0.x; x <= auxRect.p1.x; ++x) {
           blocked[x][y] = true;
@@ -209,9 +212,7 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
 #ifdef MK_CRUMBLE_ROOMS
       if(Rnd::oneIn(5)) {
         mkCrumbleRoom(auxRectWithBorder, doorP);
-        TODO Instead of deleting the room, there should be a crumbleRoom type
-        Map::deleteAndRemoveRoomFromList(room); //Don't apply themes etc
-        room = nullptr;
+        room->type_ = RoomType::crumbleRoom;
       }
 #endif // MK_CRUMBLE_ROOMS
       return true;
@@ -228,6 +229,10 @@ void mkAuxRooms(Region regions[3][3]) {
     return Pos(Rnd::range(3, 7), Rnd::range(3, 7));
   };
 
+  bool floorCells[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), floorCells);
+  Utils::reverseBoolArray(floorCells);
+
   for(int regionY = 0; regionY < 3; regionY++) {
     for(int regionX = 0; regionX < 3; regionX++) {
 
@@ -237,18 +242,12 @@ void mkAuxRooms(Region regions[3][3]) {
 
         Room& mainR = *region.mainRoom_;
 
-        bool floorCells[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksMoveCmn(false), floorCells);
-
-        Utils::reverseBoolArray(floorCells);
-
         //Right
         for(int i = 0; i < NR_TRIES_PER_SIDE; ++i) {
           const Pos conP(mainR.r_.p1.x + 1,
                          Rnd::range(mainR.r_.p0.y + 1, mainR.r_.p1.y - 1));
           const Pos auxD(getRndAuxRoomDim());
-          const Pos auxP(conP +
-                         Pos(1, Rnd::range(conP.y - auxD.y + 1, auxD.y)));
+          const Pos auxP(conP.x + 1, Rnd::range(conP.y - auxD.y + 1, conP.y));
           if(floorCells[conP.x - 1][conP.y]) {
             if(tryMkAuxRoom(auxP, auxD, floorCells, conP)) {
               TRACE_VERBOSE << "Aux room placed right" << endl;
@@ -262,8 +261,7 @@ void mkAuxRooms(Region regions[3][3]) {
           const Pos conP(Rnd::range(mainR.r_.p0.x + 1, mainR.r_.p1.x - 1),
                          mainR.r_.p0.y - 1);
           const Pos auxD(getRndAuxRoomDim());
-          const Pos auxP(conP +
-                         Pos(Rnd::range(conP.x - auxD.x + 1, conP.x), -auxD.y));
+          const Pos auxP(Rnd::range(conP.x - auxD.x + 1, conP.x), conP.y - 1);
           if(floorCells[conP.x][conP.y + 1]) {
             if(tryMkAuxRoom(auxP, auxD, floorCells, conP)) {
               TRACE_VERBOSE << "Aux room placed up" << endl;
@@ -277,8 +275,7 @@ void mkAuxRooms(Region regions[3][3]) {
           const Pos conP(mainR.r_.p0.x - 1,
                          Rnd::range(mainR.r_.p0.y + 1, mainR.r_.p1.y - 1));
           const Pos auxD(getRndAuxRoomDim());
-          const Pos auxP(conP +
-                         Pos(-auxD.x, Rnd::range(conP.y - auxD.y + 1, conP.y)));
+          const Pos auxP(conP.x - 1, Rnd::range(conP.y - auxD.y + 1, conP.y));
           if(floorCells[conP.x + 1][conP.y]) {
             if(tryMkAuxRoom(auxP, auxD, floorCells, conP)) {
               TRACE_VERBOSE << "Aux room placed left" << endl;
@@ -292,8 +289,7 @@ void mkAuxRooms(Region regions[3][3]) {
           const Pos conP(Rnd::range(mainR.r_.p0.x + 1, mainR.r_.p1.x - 1),
                          mainR.r_.p1.y + 1);
           const Pos auxD(getRndAuxRoomDim());
-          const Pos auxP(conP +
-                         Pos(Rnd::range(conP.x - auxD.x + 1, conP.x), 1));
+          const Pos auxP(Rnd::range(conP.x - auxD.x + 1, conP.x), conP.y + 1);
           if(floorCells[conP.x][conP.y - 1]) {
             if(tryMkAuxRoom(auxP, auxD, floorCells, conP)) {
               TRACE_VERBOSE << "Aux room placed down" << endl;
@@ -1179,6 +1175,10 @@ bool mkStdLvl() {
 #ifdef DECORATE
   if(isMapValid) {decorate();}
 #endif // DECORATE
+
+  for(auto* r : Map::roomList) {delete r;}
+  Map::roomList.resize(0);
+  Utils::resetArray(Map::roomMap);
 
   TRACE_FUNC_END;
   return isMapValid;

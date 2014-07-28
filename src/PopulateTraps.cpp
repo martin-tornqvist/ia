@@ -50,7 +50,8 @@ void populateStdLvl() {
         case RoomType::END_OF_STD_ROOMS:
         case RoomType::river:
         case RoomType::corridorJunction:
-        case RoomType::cave: break;
+        case RoomType::cave:
+        case RoomType::crumbleRoom: break;
       }
 
       if(Rnd::fraction(chanceForTrappedRoom)) {

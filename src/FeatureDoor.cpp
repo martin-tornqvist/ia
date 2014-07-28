@@ -23,11 +23,11 @@ Door::Door(const Pos& pos, const Rigid* const mimicFeature, DoorSpawnState spawn
   const int ROLL = Rnd::percentile();
 
   const DoorSpawnState doorState = spawnState == DoorSpawnState::any ?
-                                   (ROLL < 5  ? DoorSpawnState::secretAndStuck :
-                                    ROLL < 40 ? DoorSpawnState::secret :
-                                    ROLL < 50 ? DoorSpawnState::stuck :
-                                    ROLL < 75 ? DoorSpawnState::open :
-                                    DoorSpawnState::closed) :
+                                   (ROLL < 5  ? DoorSpawnState::secretAndStuck  :
+                                    ROLL < 40 ? DoorSpawnState::secret          :
+                                    ROLL < 50 ? DoorSpawnState::stuck           :
+                                    ROLL < 75 ? DoorSpawnState::open            :
+                                    DoorSpawnState::closed)                     :
                                    spawnState;
 
   switch(DoorSpawnState(doorState)) {
@@ -61,6 +61,12 @@ Door::Door(const Pos& pos, const Rigid* const mimicFeature, DoorSpawnState spawn
       isSecret_ = true;
     } break;
 
+    case DoorSpawnState::any: {
+      assert(false && "Should not happen");
+      isOpen_   = false;
+      isStuck_  = false;
+      isSecret_ = false;
+    }
   }
 
   matl_ = Matl::wood;

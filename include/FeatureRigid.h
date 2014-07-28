@@ -86,6 +86,7 @@ public:
 
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
+  void        onFinishedBurning()                   override;
 };
 
 enum class GrassType {cmn, withered};

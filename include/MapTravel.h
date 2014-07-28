@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "Map.h"
+
 using namespace std;
 
 namespace MapTravel {
@@ -16,6 +18,8 @@ void setupFromSaveLines(std::vector<std::string>& lines);
 void tryUseDownStairs();
 
 void goToNxt();
+
+MapType getMapType();
 
 } //MapTravel
 

@@ -807,6 +807,12 @@ Carpet::Carpet(Pos pos) : Rigid(pos) {
   });
 }
 
+void Carpet::onFinishedBurning() {
+  Floor* const floor = new Floor(pos_);
+  floor->setHasBurned();
+  Map::put(floor);
+}
+
 string Carpet::getName(const Article article) const {
   string ret = article == Article::a ? "a " : "the ";
   return ret + "carpet";
@@ -1627,7 +1633,7 @@ Fountain::Fountain(const Pos& pos) :
 
 Clr Fountain::getDefClr() const {
   switch(fountainMatl_) {
-    case FountainMatl::stone: return clrCyan;
+    case FountainMatl::stone: return clrWhite;
     case FountainMatl::gold:  return clrYellow;
   }
   assert("Failed to get fountain color" && false);
