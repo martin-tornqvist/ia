@@ -31,7 +31,7 @@
 #define RANDOMLY_BLOCK_REGIONS  1
 #define MK_AUX_ROOMS            1
 #define MK_CRUMBLE_ROOMS        1
-//#define MK_SUB_ROOMS            1
+#define MK_SUB_ROOMS            1
 //#define FILL_DEAD_ENDS          1
 #define ROOM_THEMING            1
 #define DECORATE                1
@@ -645,9 +645,8 @@ void mkSubRooms() {
             for(int y = Y0 - 1; y <= Y1 + 1; ++y) {
               for(int x = X0 - 1; x <= X1 + 1; ++x) {
                 if(
-                  Utils::isPosInside(
-                    Pos(x, y), Rect(roomX0Y0 - Pos(1, 1),
-                                    roomX1Y1 + Pos(1, 1)))) {
+                  Utils::isPosInside(Pos(x, y), Rect(roomX0Y0 - Pos(1, 1),
+                                                     roomX1Y1 + Pos(1, 1)))) {
                   if(
                     x == roomX0Y0.x - 1 || x == roomX1Y1.x + 1 ||
                     y == roomX0Y0.y - 1 || y == roomX1Y1.y + 1) {

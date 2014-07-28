@@ -864,7 +864,7 @@ void drawMap() {
 
             curDrw->lifebarLength = getLifebarLength(*actor);
             curDrw->isLivingActorSeenHere = true;
-            curDrw->isFadeEffectAllowed = false;
+            curDrw->isFadeEffectAllowed   = false;
 
             if(monster->leader == Map::player) {
               // TODO reimplement allied indicator
@@ -893,7 +893,9 @@ void drawMap() {
 
       tmpDrw = renderArray[x][y];
 
-      if(Map::cells[x][y].isSeenByPlayer) {
+      const Cell& cell = Map::cells[x][y];
+
+      if(cell.isSeenByPlayer) {
         if(tmpDrw.isFadeEffectAllowed) {
           const int DIST_FROM_PLAYER = Utils::kingDist(Map::player->pos, Pos(x, y));
           if(DIST_FROM_PLAYER > 1) {
@@ -901,10 +903,16 @@ void drawMap() {
             divClr(tmpDrw.clr,    DIV);
             divClr(tmpDrw.clrBg,  DIV);
           }
+
+          if(cell.isDark && !cell.isLight) {
+            const double DRK_DIV = 2.0;
+            divClr(tmpDrw.clr,    DRK_DIV);
+            divClr(tmpDrw.clrBg,  DRK_DIV);
+          }
         }
-      } else if(Map::cells[x][y].isExplored) {
+      } else if(cell.isExplored) {
         bool isAwareOfMonsterHere   = tmpDrw.isAwareOfMonsterHere;
-        renderArray[x][y]           = Map::cells[x][y].playerVisualMemory;
+        renderArray[x][y]           = cell.playerVisualMemory;
         tmpDrw                      = renderArray[x][y];
         tmpDrw.isAwareOfMonsterHere = isAwareOfMonsterHere;
 
@@ -920,12 +928,12 @@ void drawMap() {
         //(2) Cell below is unexplored.
         if(!tmpDrw.isLivingActorSeenHere && !tmpDrw.isAwareOfMonsterHere) {
           const auto tileSeen = renderArrayNoActors[x][y].tile;
-          const auto tileMem  = Map::cells[x][y].playerVisualMemory.tile;
+          const auto tileMem  = cell.playerVisualMemory.tile;
           const bool IS_TILE_WALL =
-            Map::cells[x][y].isSeenByPlayer ?
+            cell.isSeenByPlayer ?
             Wall::isTileAnyWallTop(tileSeen) : Wall::isTileAnyWallTop(tileMem);
           if(IS_TILE_WALL) {
-            const auto* const f = Map::cells[x][y].rigid;
+            const auto* const f = cell.rigid;
             const auto featureId  = f->getId();
             bool isHiddenDoor     = false;
             if(featureId == FeatureId::door) {
@@ -996,7 +1004,7 @@ void drawMap() {
         }
       }
 
-      if(!Map::cells[x][y].isExplored) {renderArray[x][y].clear();}
+      if(!cell.isExplored) {renderArray[x][y].clear();}
     }
   }
 
