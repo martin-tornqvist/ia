@@ -193,7 +193,7 @@ void Monster::hit_(int& dmg, const bool ALLOW_WOUNDS) {
 
 void Monster::moveDir(Dir dir) {
   assert(dir != Dir::END);
-  assert(Utils::isPosInsideMap(pos));
+  assert(Utils::isPosInsideMap(pos, false));
 
   getPropHandler().changeMoveDir(pos, dir);
 
@@ -215,7 +215,7 @@ void Monster::moveDir(Dir dir) {
 
   const Pos targetCell(pos + DirUtils::getOffset(dir));
 
-  assert(Utils::isPosInsideMap(targetCell));
+  assert(Utils::isPosInsideMap(targetCell, false));
 
   if(dir != Dir::center) {
     pos = targetCell;

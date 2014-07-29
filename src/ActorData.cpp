@@ -768,7 +768,7 @@ void initDataList() {
   d.dmgMelee = 4;
   d.dmgRanged = 4;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.abilityVals.setVal(AbilityId::ranged, 60);
+  d.abilityVals.setVal(AbilityId::ranged, 65);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 35);
   d.intrProps[propRFire] = true;
   d.spawnMinDLVL = 9;
@@ -811,7 +811,7 @@ void initDataList() {
   d.dmgMelee = 6;
   d.dmgRanged = 6;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.abilityVals.setVal(AbilityId::ranged, 60);
+  d.abilityVals.setVal(AbilityId::ranged, 65);
   d.abilityVals.setVal(AbilityId::dodgeAttack, 35);
   d.intrProps[propRCold] = true;
   d.spawnMinDLVL = 9;

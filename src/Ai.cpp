@@ -238,7 +238,7 @@ bool makeRoomForFriend(Monster& monster) {
   return false;
 }
 
-//Helper functions for moveToRandomAdjacentCell()
+//Helper function for moveToRandomAdjacentCell()
 namespace {
 
 Dir getDirToRndAdjFreeCell(Monster& monster) {

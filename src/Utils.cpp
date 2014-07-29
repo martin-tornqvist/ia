@@ -148,8 +148,12 @@ void mkActorArray(Actor* a[MAP_W][MAP_H]) {
   }
 }
 
-bool isPosInsideMap(const Pos& pos) {
-  return pos.x >= 0 && pos.y >= 0 && pos.x < MAP_W && pos.y < MAP_H;
+bool isPosInsideMap(const Pos& pos, const bool COUNT_EDGE_AS_INSIDE) {
+  if(COUNT_EDGE_AS_INSIDE) {
+    return pos.x >= 0 && pos.y >= 0 && pos.x < MAP_W && pos.y < MAP_H;
+  } else {
+    return pos.x > 0 && pos.y > 0 && pos.x < MAP_W - 1 && pos.y < MAP_H - 1;
+  }
 }
 
 bool isPosInside(const Pos& pos, const Rect& area) {

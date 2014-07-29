@@ -87,7 +87,8 @@ void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
 void mkBoolMapFromVector(const std::vector<Pos>& positions,
                          bool out[MAP_W][MAP_H]);
 
-Actor* getFirstActorAtPos(const Pos& pos, ActorDeadState deadState = ActorDeadState::alive);
+Actor* getFirstActorAtPos(const Pos& pos,
+                          ActorDeadState deadState = ActorDeadState::alive);
 
 Mob* getFirstMobAtPos(const Pos& pos);
 
@@ -96,7 +97,7 @@ void getActorPositions(const std::vector<Actor*>& actors,
 
 void mkActorArray(Actor* a[MAP_W][MAP_H]);
 
-bool isPosInsideMap(const Pos& pos);
+bool isPosInsideMap(const Pos& pos, const bool COUNT_EDGE_AS_INSIDE = true);
 
 bool isPosInside(const Pos& pos, const Rect& area);
 

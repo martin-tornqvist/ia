@@ -78,7 +78,7 @@ void mkLvl(const MapType& mapType) {
 void init() {
   mapList_    = vector<MapData>(30, {MapType::std, true});
   mapList_[0] = {MapType::intro,  true};
-  mapList_[2] = {MapType::leng,   false};
+//  mapList_[2] = {MapType::leng,   false};
 }
 
 void storeToSaveLines(std::vector<std::string>& lines) {
