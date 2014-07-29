@@ -63,7 +63,10 @@ public:
 
   const Rigid* getMimic() const {return mimicFeature_;}
 
-protected:
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   const Rigid* const mimicFeature_;
   int nrSpikes_;
 

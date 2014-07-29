@@ -29,7 +29,14 @@ void mkLvl(const MapType& mapType) {
 
   bool isLvlBuilt = false;
 
+#ifndef NDEBUG
+  int nrAttempts = 0;
+#endif
+
   while(!isLvlBuilt) {
+#ifndef NDEBUG
+    nrAttempts++;
+#endif
     switch(mapType) {
       case MapType::intro:          isLvlBuilt = MapGen::mkIntroLvl();          break;
       case MapType::std:            isLvlBuilt = MapGen::mkStdLvl();            break;
@@ -39,6 +46,10 @@ void mkLvl(const MapType& mapType) {
       case MapType::trapezohedron:  isLvlBuilt = MapGen::mkTrapezohedronLvl();  break;
     }
   }
+
+#ifndef NDEBUG
+  TRACE << "Map built after " << nrAttempts << " attempt(s)" << endl;
+#endif
 
 //  //------------------------------------- TRAPEZOHEDRON LEVEL
 //  if(!isLvlBuilt) {

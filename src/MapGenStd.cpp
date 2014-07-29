@@ -104,9 +104,17 @@ void connectRooms() {
 
 //    const size_t NR_CON_ALLOWED = 4;
 
-    Room* room0 = Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
+    auto getRndRoom = []() {
+      return Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
+    };
 
-    if(int(room0->type_) >= int(RoomType::END_OF_STD_ROOMS)) {continue;}
+    auto isStdRoom = [](const Room & r) {
+      return int(r.type_) < int(RoomType::END_OF_STD_ROOMS);
+    };
+
+    Room* room0 = getRndRoom();
+
+    if(room0->isSubRoom_ || !isStdRoom(*room0)) {continue;}
 
 //    const auto NR_CON_ROOM0 = room0->roomsConTo_.size();
 //    if(NR_CON_ROOM0 >= NR_CON_ALLOWED) {
@@ -117,9 +125,9 @@ void connectRooms() {
 //    }
 
     TRACE_VERBOSE << "Finding second room to connect to" << endl;
-    Room* room1 = room0;
-    while(room1 == room0 || int(room1->type_) >= int(RoomType::END_OF_STD_ROOMS)) {
-      room1 = Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
+    Room* room1 = getRndRoom();
+    while(room1 == room0 || room1->isSubRoom_ || !isStdRoom(*room1)) {
+      room1 = getRndRoom();
     }
 
     //Do not allow two rooms to be connected twice
@@ -322,8 +330,8 @@ void mkMergedRegionsAndRooms(Region regions[3][3]) {
 
       regI1 = Pos(Rnd::range(0, 2), Rnd::range(0, 1));
       regI2 = Pos(regI1 + Pos(0, 1));
-      isGoodRegionsFound = !regions[regI1.x][regI1.y].mainRoom_ &&
-                           !regions[regI2.x][regI2.y].mainRoom_;
+      isGoodRegionsFound = regions[regI1.x][regI1.y].isFree_ &&
+                           regions[regI2.x][regI2.y].isFree_;
     }
 
     //Expand region 1 over both areas
@@ -669,7 +677,10 @@ void mkSubRooms() {
 
             if(!isAreaFree) {continue;}
 
-            Map::roomList.push_back(new Room(r));
+            auto* room = new Room(r);
+            room->isSubRoom_ = true;
+
+            Map::roomList.push_back(room);
 
             vector<Pos> doorBucket;
             for(int y = p0.y; y <= p1.y; ++y) {
@@ -730,7 +741,7 @@ void fillDeadEnds() {
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   bool expandedBlockers[MAP_W][MAP_H];
-  MapParse::expand(blocked, expandedBlockers, 1);
+  MapParse::expand(blocked, expandedBlockers);
 
   Pos origin;
   bool isDone = false;

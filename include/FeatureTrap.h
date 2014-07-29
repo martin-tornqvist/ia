@@ -67,7 +67,10 @@ public:
 
   void  playerTrySpotHidden();
 
-protected:
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   void triggerTrap(Actor& actor) override;
 
   void setSpecificTrapFromId(const TrapId id);

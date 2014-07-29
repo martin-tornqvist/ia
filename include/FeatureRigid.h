@@ -19,7 +19,7 @@ public:
   virtual Clr         getClrBg()                      const override final;
 
   virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod,
-                   Actor* actor = nullptr);
+                   Actor* const actor = nullptr);
 
   void tryPutGore();
 
@@ -37,8 +37,8 @@ public:
   void setHasBurned() {burnState_ = BurnState::hasBurned;}
 
 protected:
-  void setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
-                    const std::function<void (Actor* const actor)>& effect);
+  virtual void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                     Actor* const actor) = 0;
 
   void tryStartBurning(const bool IS_MSG_ALLOWED);
 
@@ -52,8 +52,6 @@ protected:
   char goreGlyph_;
 
 private:
-  std::function<void(Actor* const actor)>onHit[int(DmgType::END)][int(DmgMethod::END)];
-
   bool isBloody_;
 
   BurnState burnState_;
@@ -74,6 +72,10 @@ public:
   Clr         getDefClr()                     const override;
 
   FloorType type_;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Carpet: public Rigid {
@@ -87,6 +89,10 @@ public:
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
   void        onFinishedBurning()                   override;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 enum class GrassType {cmn, withered};
@@ -104,6 +110,10 @@ public:
   Clr         getDefClr()                     const override;
 
   GrassType type_;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Bush: public Rigid {
@@ -119,6 +129,10 @@ public:
   void        onFinishedBurning()                   override;
 
   GrassType type_;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Brazier: public Rigid {
@@ -131,6 +145,10 @@ public:
 
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 enum class WallType {cmn, cmnAlt, cave, egypt, cliff, lengMonestary};
@@ -159,8 +177,8 @@ public:
   static bool isTileAnyWallTop(const TileId tile);
 
 private:
-  void destrAdjDoors() const;
-  void mkLowRubbleAndRocks(); //Note: Will destroy object
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class RubbleLow: public Rigid {
@@ -173,6 +191,10 @@ public:
 
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class RubbleHigh: public Rigid {
@@ -187,7 +209,8 @@ public:
   Clr         getDefClr()                     const override;
 
 private:
-  void mkLowRubbleAndRocks(); //Note: Will destroy object
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class GraveStone: public Rigid {
@@ -206,6 +229,9 @@ public:
   void bump(Actor& actorBumping) override;
 
 private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   std::string inscr_;
 };
 
@@ -218,6 +244,10 @@ public:
 
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 enum class StatueType {cmn, ghoul};
@@ -234,6 +264,10 @@ public:
   Clr         getDefClr()                     const override;
 
   StatueType type_;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Pillar: public Rigid {
@@ -246,6 +280,10 @@ public:
 
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Stairs: public Rigid {
@@ -260,6 +298,10 @@ public:
   Clr         getDefClr()                     const override;
 
   void bump(Actor& actorBumping) override;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Bridge : public Rigid {
@@ -278,6 +320,9 @@ public:
   void setDir(const HorizontalVertical dir) {dir_ = dir;}
 
 private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   HorizontalVertical dir_;
 };
 
@@ -297,6 +342,10 @@ public:
   void bump(Actor& actorBumping) override;
 
   LiquidType type_;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class LiquidDeep: public Rigid {
@@ -313,6 +362,10 @@ public:
   void bump(Actor& actorBumping) override;
 
   LiquidType type_;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Chasm: public Rigid {
@@ -325,6 +378,10 @@ public:
 
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Door;
@@ -346,7 +403,10 @@ public:
 
   void setLinkedDoor(Door* const door) {doorLinkedTo_ = door;}
 
-protected:
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   void pull();
 
   bool isPositionLeft_;
@@ -363,6 +423,10 @@ public:
 
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Tree: public Rigid {
@@ -375,6 +439,10 @@ public:
 
   std::string getName(const Article article)  const override;
   Clr         getDefClr()                     const override;
+
+private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 };
 
 class Item;
@@ -424,6 +492,9 @@ public:
   void        examine()                             override;
 
 private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   void triggerTrap(Actor& actor) override;
 
   void trySprainPlayer();
@@ -455,6 +526,9 @@ public:
   void        disarm()                              override;
 
 private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   void triggerTrap(Actor& actor) override;
 
   void trySprainPlayer();
@@ -480,6 +554,9 @@ public:
   bool        open()                                override;
 
 private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   ItemContainer itemContainer_;
   bool isContentKnown_;
 };
@@ -521,6 +598,9 @@ public:
   void        bump(Actor& actorBumping)             override;
 
 private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   FountainType fountainType_;
   FountainMatl fountainMatl_;
 };
@@ -539,6 +619,9 @@ public:
   bool        open()                                override;
 
 private:
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+
   void triggerTrap(Actor& actor) override;
 
   bool isContentKnown_;

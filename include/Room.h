@@ -33,7 +33,8 @@ enum class RoomType {
 
 class Room {
 public:
-  Room(Rect r, RoomType type = RoomType::plain) : descr_(""), r_(r), type_(type) {}
+  Room(Rect r, RoomType type = RoomType::plain) :
+    descr_(""), r_(r), type_(type), isSubRoom_(false) {}
 
   virtual ~Room() {}
 
@@ -46,6 +47,7 @@ public:
   Rect        r_;
   std::vector<Room*> roomsConTo_;
   RoomType    type_;
+  bool        isSubRoom_;
 
 private:
   Room() : descr_(""), r_(),  type_(RoomType::plain) {}

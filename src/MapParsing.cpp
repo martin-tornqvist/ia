@@ -256,26 +256,60 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
   }
 }
 
-void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST,
-            const bool VAL_TO_EXPAND) {
+void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
+
+  int checkX0, checkY0, checkX1, checkY1;
+
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
 
-      out[x][y] = !VAL_TO_EXPAND;
+      out[x][y] = false;
 
-      const int CHECK_X0 = max(x - DIST, 0);
-      const int CHECK_Y0 = max(y - DIST, 0);
-      const int CHECK_X1 = min(x + DIST, MAP_W - 1);
-      const int CHECK_Y1 = min(y + DIST, MAP_H - 1);
+      if(x == 0)          {checkX0 = 0;}          else {checkX0 = x - 1;}
+      if(y == 0)          {checkY0 = 0;}          else {checkY0 = x - 1;}
+      if(x == MAP_W - 1)  {checkX1 = MAP_W - 1;}  else {checkX1 = x + 1;}
+      if(y == MAP_H - 1)  {checkY1 = MAP_H - 1;}  else {checkY1 = y + 1;}
 
-      for(int checkY = CHECK_Y0; checkY <= CHECK_Y1; checkY++) {
+      for(int checkY = checkY0; checkY <= checkY1; ++checkY) {
 
         bool isFound = false;
 
-        for(int checkX = CHECK_X0; checkX <= CHECK_X1; checkX++) {
-          if(in[checkX][checkY] == VAL_TO_EXPAND) {
-            out[x][y] = VAL_TO_EXPAND;
-            isFound = true;
+        for(int checkX = checkX0; checkX <= checkX1; ++checkX) {
+          if(in[checkX][checkY]) {
+            isFound = out[x][y] = true;
+            break;
+          }
+          if(isFound) {break;}
+        }
+      }
+    }
+  }
+}
+
+void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST) {
+
+  for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x) {
+
+      out[x][y] = false;
+
+      const int X0 = x - DIST;
+      const int Y0 = y - DIST;
+      const int X1 = x + DIST;
+      const int Y1 = y + DIST;
+
+      const int CHECK_X0 = X0 < 0 ? 0 : X0;
+      const int CHECK_Y0 = Y0 < 0 ? 0 : Y0;
+      const int CHECK_X1 = X1 > MAP_W - 1 ? MAP_W - 1 : X1;
+      const int CHECK_Y1 = Y1 > MAP_H - 1 ? MAP_H - 1 : Y1;
+
+      for(int checkY = CHECK_Y0; checkY <= CHECK_Y1; ++checkY) {
+
+        bool isFound = false;
+
+        for(int checkX = CHECK_X0; checkX <= CHECK_X1; ++checkX) {
+          if(in[checkX][checkY]) {
+            isFound = out[x][y] = true;
             break;
           }
           if(isFound) {break;}

@@ -43,6 +43,11 @@ Trap::~Trap() {
   delete specificTrap_;
 }
 
+void Trap::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                 Actor* const actor) {
+
+}
+
 void Trap::setSpecificTrapFromId(const TrapId id) {
   switch(id) {
     case TrapId::dart:

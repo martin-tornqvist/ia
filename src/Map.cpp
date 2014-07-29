@@ -127,7 +127,7 @@ Rigid* put(Rigid* const f) {
     Renderer::drawMap();
     Renderer::drawGlyph('X', Panel::map, p, clrYellow);
     Renderer::updateScreen();
-    SdlWrapper::sleep(20); //Note: Delay must be >= 2 for user input to be read
+    SdlWrapper::sleep(10); //Note: Delay must be >= 2 for user input to be read
   }
 #endif // DEMO_MODE
 

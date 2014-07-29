@@ -21,6 +21,7 @@
 #include "MapParsing.h"
 #include "Utils.h"
 #include "GameTime.h"
+#include "MapTravel.h"
 
 using namespace std;
 
@@ -94,6 +95,7 @@ void act() {
   if(Map::dlvl >= LAST_CAVERN_LVL) {
     TRACE << "Bot: Starting new run on first dungeon level" << endl;
     Map::dlvl = 1;
+    MapTravel::init();
     return;
   }
 

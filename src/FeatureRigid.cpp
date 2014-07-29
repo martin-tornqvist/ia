@@ -26,13 +26,7 @@ Rigid::Rigid(Pos pos) :
   goreTile_(TileId::empty),
   goreGlyph_(0),
   isBloody_(false),
-  burnState_(BurnState::notBurned) {
-  for(int dmgType = 0; dmgType < int(DmgType::END); ++dmgType) {
-    for(int dmgMethod = 0; dmgMethod < int(DmgMethod::END); ++dmgMethod) {
-      onHit[dmgType][dmgMethod] = [](Actor * const actor) {(void)actor;};
-    }
-  }
-}
+  burnState_(BurnState::notBurned) {}
 
 void Rigid::onNewTurn() {
   if(burnState_ == BurnState::burning) {
@@ -141,11 +135,6 @@ void Rigid::tryStartBurning(const bool IS_MSG_ALLOWED) {
   }
 }
 
-void Rigid::setHitEffect(const DmgType dmgType, const DmgMethod dmgMethod,
-                         const function<void (Actor* const actor)>& effect) {
-  onHit[int(dmgType)][int(dmgMethod)] = effect;
-}
-
 void Rigid::examine() {
   Log::addMsg("I find nothing specific there to examine or use.");
 }
@@ -184,7 +173,7 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) 
     }
   }
 
-  if(isFeatureHit) {onHit[int(dmgType)][int(dmgMethod)](actor);}
+  if(isFeatureHit) {onHit(dmgType, dmgMethod, actor);}
 
   if(actor) {GameTime::actorDidAct();} //TODO This should probably be done elsewhere.
 }
@@ -242,11 +231,13 @@ void Rigid::clearGore() {
 }
 
 //--------------------------------------------------------------------- FLOOR
-Floor::Floor(Pos pos) : Rigid(pos), type_(FloorType::cmn) {
-  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+Floor::Floor(Pos pos) : Rigid(pos), type_(FloorType::cmn) {}
+
+void Floor::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
+  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental) {
     (void)actor;
     if(Rnd::oneIn(3)) {tryStartBurning(false);}
-  });
+  }
 }
 
 TileId Floor::getTile() const {
@@ -277,30 +268,37 @@ Clr Floor::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- WALL
-Wall::Wall(Pos pos) : Rigid(pos), type_(WallType::cmn), isMossy_(false) {
+Wall::Wall(Pos pos) : Rigid(pos), type_(WallType::cmn), isMossy_(false) {}
 
-  setHitEffect(DmgType::physical, DmgMethod::forced, [&](Actor * const actor) {
-    (void)actor;
-    destrAdjDoors();
-    mkLowRubbleAndRocks();
-  });
+void Wall::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
 
-  setHitEffect(DmgType::physical, DmgMethod::explosion, [&](Actor * const actor) {
-    (void)actor;
-
-    destrAdjDoors();
-
-    if(Rnd::coinToss()) {
-      mkLowRubbleAndRocks();
-    } else {
-      Map::put(new RubbleHigh(pos_));
+  auto destrAdjDoors = [&]() {
+    for(const Pos& d : DirUtils::cardinalList) {
+      const Pos p(pos_ + d);
+      if(Utils::isPosInsideMap(p)) {
+        if(Map::cells[p.x][p.y].rigid->getId() == FeatureId::door) {
+          Map::put(new RubbleLow(p));
+        }
+      }
     }
-  });
+  };
 
-  setHitEffect(DmgType::physical, DmgMethod::bluntHeavy, [&](Actor * const actor) {
-    (void)actor;
+  auto mkLowRubbleAndRocks = [&]() {
+    const Pos p(pos_);
+    Map::put(new RubbleLow(p)); //Note: "this" is now deleted!
+    if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, p);}
+  };
 
-    if(Rnd::fraction(1, 4)) {
+  if(dmgType == DmgType::physical) {
+
+    if(dmgMethod == DmgMethod::forced) {
+      (void)actor;
+      destrAdjDoors();
+      mkLowRubbleAndRocks();
+    }
+
+    if(dmgMethod == DmgMethod::explosion) {
+      (void)actor;
 
       destrAdjDoors();
 
@@ -310,24 +308,22 @@ Wall::Wall(Pos pos) : Rigid(pos), type_(WallType::cmn), isMossy_(false) {
         Map::put(new RubbleHigh(pos_));
       }
     }
-  });
-}
 
-void Wall::destrAdjDoors() const {
-  for(const Pos& d : DirUtils::cardinalList) {
-    const Pos p(pos_ + d);
-    if(Utils::isPosInsideMap(p)) {
-      if(Map::cells[p.x][p.y].rigid->getId() == FeatureId::door) {
-        Map::put(new RubbleLow(p));
+    if(dmgMethod == DmgMethod::bluntHeavy) {
+      (void)actor;
+
+      if(Rnd::fraction(1, 4)) {
+
+        destrAdjDoors();
+
+        if(Rnd::coinToss()) {
+          mkLowRubbleAndRocks();
+        } else {
+          Map::put(new RubbleHigh(pos_));
+        }
       }
     }
   }
-}
-
-void Wall::mkLowRubbleAndRocks() {
-  const Pos pos(pos_);
-  Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
-  if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
 }
 
 bool Wall::isTileAnyWallFront(const TileId tile) {
@@ -431,27 +427,34 @@ void Wall::setRandomIsMossGrown() {
 }
 
 //--------------------------------------------------------------------- HIGH RUBBLE
-RubbleHigh::RubbleHigh(Pos pos) : Rigid(pos) {
-  setHitEffect(DmgType::physical, DmgMethod::forced, [&](Actor * const actor) {
-    (void)actor;
-    mkLowRubbleAndRocks();
-  });
+RubbleHigh::RubbleHigh(Pos pos) : Rigid(pos) {}
 
-  setHitEffect(DmgType::physical, DmgMethod::explosion, [&](Actor * const actor) {
-    (void)actor;
-    mkLowRubbleAndRocks();
-  });
+void RubbleHigh::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                       Actor* const actor) {
 
-  setHitEffect(DmgType::physical, DmgMethod::bluntHeavy, [&](Actor * const actor) {
-    (void)actor;
-    if(Rnd::fraction(2, 4)) {mkLowRubbleAndRocks();}
-  });
-}
+  auto mkLowRubbleAndRocks = [&]() {
+    const Pos p(pos_);
+    Map::put(new RubbleLow(p)); //Note: "this" is now deleted!
+    if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, p);}
+  };
 
-void RubbleHigh::mkLowRubbleAndRocks() {
-  const Pos pos(pos_);
-  Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
-  if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, pos);}
+  if(dmgType == DmgType::physical) {
+
+    if(dmgMethod == DmgMethod::forced) {
+      (void)actor;
+      mkLowRubbleAndRocks();
+    }
+
+    if(dmgMethod == DmgMethod::explosion) {
+      (void)actor;
+      mkLowRubbleAndRocks();
+    }
+
+    if(dmgMethod == DmgMethod::bluntHeavy) {
+      (void)actor;
+      if(Rnd::fraction(2, 4)) {mkLowRubbleAndRocks();}
+    }
+  }
 }
 
 string RubbleHigh::getName(const Article article) const {
@@ -464,11 +467,14 @@ Clr RubbleHigh::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- LOW RUBBLE
-RubbleLow::RubbleLow(Pos pos) : Rigid(pos) {
-  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+RubbleLow::RubbleLow(Pos pos) : Rigid(pos) {}
+
+void RubbleLow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                      Actor* const actor) {
+  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental) {
     (void)actor;
     tryStartBurning(false);
-  });
+  }
 }
 
 string RubbleLow::getName(const Article article) const {
@@ -484,6 +490,11 @@ Clr RubbleLow::getDefClr() const {
 
 //--------------------------------------------------------------------- GRAVE
 GraveStone::GraveStone(Pos pos) : Rigid(pos) {
+
+}
+
+void GraveStone::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                       Actor* const actor) {
 
 }
 
@@ -505,6 +516,11 @@ ChurchBench::ChurchBench(Pos pos) : Rigid(pos) {
 
 }
 
+void ChurchBench::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                        Actor* const actor) {
+
+}
+
 string ChurchBench::getName(const Article article) const {
   const string ret = article == Article::a ? "a " : "the ";
   return ret + "church bench";
@@ -515,11 +531,12 @@ Clr ChurchBench::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- STATUE
-Statue::Statue(Pos pos) : Rigid(pos) {
+Statue::Statue(Pos pos) :
+  Rigid(pos), type_(Rnd::oneIn(8) ? StatueType::ghoul : StatueType::cmn) {}
 
-  type_ = Rnd::oneIn(8) ? StatueType::ghoul : StatueType::cmn;
-
-  setHitEffect(DmgType::physical, DmgMethod::kick, [&](Actor * const actor) {
+void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                   Actor* const actor) {
+  if(dmgType == DmgType::physical && dmgMethod == DmgMethod::kick) {
     assert(actor);
 
     const AlertsMonsters alertsMonsters = actor == Map::player ?
@@ -559,7 +576,7 @@ Statue::Statue(Pos pos) : Rigid(pos) {
         Map::put(new RubbleLow(dstPos));
       }
     }
-  });
+  }
 }
 
 string Statue::getName(const Article article) const {
@@ -577,8 +594,13 @@ Clr Statue::getDefClr() const {
   return clrWhite;
 }
 
-//--------------------------------------------------------------------- STATUE
+//--------------------------------------------------------------------- PILLAR
 Pillar::Pillar(Pos pos) : Rigid(pos) {
+
+}
+
+void Pillar::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                   Actor* const actor) {
 
 }
 
@@ -593,6 +615,11 @@ Clr Pillar::getDefClr() const {
 
 //--------------------------------------------------------------------- STAIRS
 Stairs::Stairs(Pos pos) : Rigid(pos) {
+
+}
+
+void Stairs::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                   Actor* const actor) {
 
 }
 
@@ -631,6 +658,11 @@ TileId Bridge::getTile() const {
   return dir_ == hor ? TileId::hangbridgeHor : TileId::hangbridgeVer;
 }
 
+void Bridge::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                   Actor* const actor) {
+
+}
+
 char Bridge::getGlyph() const {
   return dir_ == hor ? '|' : '=';
 }
@@ -646,6 +678,11 @@ Clr Bridge::getDefClr() const {
 
 //--------------------------------------------------------------------- SHALLOW LIQUID
 LiquidShallow::LiquidShallow(Pos pos) : Rigid(pos), type_(LiquidType::water) {
+
+}
+
+void LiquidShallow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                          Actor* const actor) {
 
 }
 
@@ -697,6 +734,11 @@ LiquidDeep::LiquidDeep(Pos pos) : Rigid(pos), type_(LiquidType::water) {
 
 }
 
+void LiquidDeep::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                       Actor* const actor) {
+
+}
+
 void LiquidDeep::bump(Actor& actorBumping) {
   (void)actorBumping;
 }
@@ -735,6 +777,12 @@ Chasm::Chasm(Pos pos) : Rigid(pos) {
 
 }
 
+void Chasm::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                  Actor* const actor) {
+
+}
+
+
 string Chasm::getName(const Article article) const {
   string ret = article == Article::a ? "a " : "the ";
   return ret + "chasm";
@@ -747,6 +795,11 @@ Clr Chasm::getDefClr() const {
 //--------------------------------------------------------------------- LEVER
 Lever::Lever(Pos pos) :
   Rigid(pos), isPositionLeft_(true), doorLinkedTo_(nullptr)  {
+
+}
+
+void Lever::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                  Actor* const actor) {
 
 }
 
@@ -790,6 +843,11 @@ Altar::Altar(Pos pos) : Rigid(pos) {
 
 }
 
+void Altar::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                  Actor* const actor) {
+
+}
+
 string Altar::getName(const Article article) const {
   string ret = article == Article::a ? "a " : "the ";
   return ret + "altar";
@@ -800,11 +858,14 @@ Clr Altar::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- CARPET
-Carpet::Carpet(Pos pos) : Rigid(pos) {
-  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+Carpet::Carpet(Pos pos) : Rigid(pos) {}
+
+void Carpet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                   Actor* const actor) {
+  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental) {
     (void)actor;
     tryStartBurning(false);
-  });
+  }
 }
 
 void Carpet::onFinishedBurning() {
@@ -824,14 +885,17 @@ Clr Carpet::getDefClr() const {
 
 //--------------------------------------------------------------------- GRASS
 Grass::Grass(Pos pos) : Rigid(pos), type_(GrassType::cmn) {
-
   if(Rnd::oneIn(6)) {type_ = GrassType::withered;}
+}
 
-  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+void Grass::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                  Actor* const actor) {
+  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental) {
     (void)actor;
     tryStartBurning(false);
-  });
+  }
 }
+
 
 TileId Grass::getTile() const {
   return getBurnState() ==
@@ -868,13 +932,15 @@ Clr Grass::getDefClr() const {
 
 //--------------------------------------------------------------------- BUSH
 Bush::Bush(Pos pos) : Rigid(pos), type_(GrassType::cmn) {
-
   if(Rnd::oneIn(6)) {type_ = GrassType::withered;}
+}
 
-  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+void Bush::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                 Actor* const actor) {
+  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental) {
     (void)actor;
     tryStartBurning(false);
-  });
+  }
 }
 
 void Bush::onFinishedBurning() {
@@ -911,12 +977,16 @@ Clr Bush::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- TREE
-Tree::Tree(Pos pos) : Rigid(pos) {
-  setHitEffect(DmgType::fire, DmgMethod::elemental, [&](Actor * const actor) {
+Tree::Tree(Pos pos) : Rigid(pos) {}
+
+void Tree::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                 Actor* const actor) {
+  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental) {
     (void)actor;
     if(Rnd::oneIn(3)) {tryStartBurning(false);}
-  });
+  }
 }
+
 
 string Tree::getName(const Article article) const {
   string ret = article == Article::a ? "a " : "the ";
@@ -938,6 +1008,11 @@ Clr Tree::getDefClr() const {
 string Brazier::getName(const Article article) const {
   string ret = article == Article::a ? "a " : "the ";
   return ret + "brazier";
+}
+
+void Brazier::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                    Actor* const actor) {
+
 }
 
 Clr Brazier::getDefClr() const {
@@ -1055,6 +1130,11 @@ Tomb::Tomb(const Pos& pos) :
       trait_ = TombTrait::auraOfUnrest;
     }
   }
+}
+
+void Tomb::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                 Actor* const actor) {
+
 }
 
 string Tomb::getName(const Article article) const {
@@ -1345,6 +1425,11 @@ Chest::Chest(const Pos& pos) :
   }
 }
 
+void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                  Actor* const actor) {
+
+}
+
 void Chest::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {
     if(itemContainer_.items_.empty() && isContentKnown_) {
@@ -1631,6 +1716,11 @@ Fountain::Fountain(const Pos& pos) :
   }
 }
 
+void Fountain::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                     Actor* const actor) {
+
+}
+
 Clr Fountain::getDefClr() const {
   switch(fountainMatl_) {
     case FountainMatl::stone: return clrWhite;
@@ -1756,6 +1846,11 @@ Cabinet::Cabinet(const Pos& pos) : Rigid(pos), isContentKnown_(false) {
     FeatureId::cabinet, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 }
 
+void Cabinet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                    Actor* const actor) {
+
+}
+
 void Cabinet::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {
 
@@ -1803,6 +1898,11 @@ Cocoon::Cocoon(const Pos& pos) : Rigid(pos), isContentKnown_(false) {
   const int NR_ITEMS_MAX        = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
   itemContainer_.setRandomItemsForFeature(
     FeatureId::cocoon, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+}
+
+void Cocoon::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                   Actor* const actor) {
+
 }
 
 void Cocoon::bump(Actor& actorBumping) {

@@ -111,7 +111,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
     }
   }
   bool blockedExpanded[MAP_W][MAP_H];
-  MapParse::expand(blocked, blockedExpanded, 1, true);
+  MapParse::expand(blocked, blockedExpanded);
 
   int flood[MAP_W][MAP_H];
   const Pos origin(getCenterPos());

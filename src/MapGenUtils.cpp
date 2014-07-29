@@ -148,7 +148,7 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   }
 
   bool roomCellsExpanded[MAP_W][MAP_H];
-  MapParse::expand(roomCells, roomCellsExpanded, 1, true);
+  MapParse::expand(roomCells, roomCellsExpanded);
 
   for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; ++y) {
     for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; ++x) {
@@ -257,7 +257,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
     }
 
     bool blockedExpanded[MAP_W][MAP_H];
-    MapParse::expand(blocked, blockedExpanded, 1, true);
+    MapParse::expand(blocked, blockedExpanded);
 
     blockedExpanded[p0.x][p0.y] = blockedExpanded[p1.x][p1.y] = false;
 
