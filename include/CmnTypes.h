@@ -53,7 +53,7 @@ enum class ShockValue {
 };
 
 enum class MarkerTask  {
-  look, aimRangedWeapon, aimThrownWeapon, aimLitExplosive
+  look, aimRangedWpn, aimThrownWpn, aimLitExplosive
 };
 
 enum class GameEntryMode {newGame, loadGame};

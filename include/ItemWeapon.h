@@ -4,10 +4,10 @@
 #include "Item.h"
 #include "Converters.h"
 
-class Weapon: public Item {
+class Wpn: public Item {
 public:
-  Weapon(ItemDataT* const itemData, ItemDataT* const ammoData);
-  virtual ~Weapon() {}
+  Wpn(ItemDataT* const itemData, ItemDataT* const ammoData);
+  virtual ~Wpn() {}
 
   int nrAmmoLoaded;
   int effectiveRangeLimit;
@@ -50,7 +50,7 @@ public:
   }
 
   Clr getClr() const {
-    if(!data_->isRangedWeapon && data_->rangedHasInfiniteAmmo) {
+    if(!data_->isRangedWpn && data_->rangedHasInfiniteAmmo) {
       if(nrAmmoLoaded == 0) {
         Clr ret = data_->clr;
         ret.r /= 2; ret.g /= 2; ret.b /= 2;
@@ -64,7 +64,7 @@ public:
 
 
 protected:
-  Weapon& operator=(const Weapon& other) {
+  Wpn& operator=(const Wpn& other) {
     (void) other;
     return *this;
   }
@@ -72,23 +72,21 @@ protected:
   ItemDataT* const ammoData_;
 };
 
-class SawedOff: public Weapon {
+class SawedOff: public Wpn {
 public:
   SawedOff(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Weapon(itemData, ammoData) {
+    Wpn(itemData, ammoData) {
     ammoCapacity = 2;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
   }
   ~SawedOff() {}
-
-private:
 };
 
-class PumpShotgun: public Weapon {
+class PumpShotgun: public Wpn {
 public:
   PumpShotgun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Weapon(itemData, ammoData) {
+    Wpn(itemData, ammoData) {
     ammoCapacity = 8;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;
@@ -98,10 +96,10 @@ public:
 private:
 };
 
-class Pistol: public Weapon {
+class Pistol: public Wpn {
 public:
   Pistol(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Weapon(itemData, ammoData) {
+    Wpn(itemData, ammoData) {
     ammoCapacity = 7;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 6;
@@ -111,10 +109,10 @@ public:
 private:
 };
 
-class FlareGun: public Weapon {
+class FlareGun: public Wpn {
 public:
   FlareGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Weapon(itemData, ammoData) {
+    Wpn(itemData, ammoData) {
     nrAmmoLoaded = 1;
     ammoCapacity = 1;
     effectiveRangeLimit = 6;
@@ -124,10 +122,10 @@ public:
 private:
 };
 
-class MachineGun: public Weapon {
+class MachineGun: public Wpn {
 public:
   MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Weapon(itemData, ammoData) {
+    Wpn(itemData, ammoData) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
@@ -138,10 +136,10 @@ public:
 private:
 };
 
-class Incinerator: public Weapon {
+class Incinerator: public Wpn {
 public:
   Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Weapon(itemData, ammoData) {
+    Wpn(itemData, ammoData) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
@@ -153,10 +151,10 @@ public:
 private:
 };
 
-class TeslaCannon: public Weapon {
+class TeslaCannon: public Wpn {
 public:
   TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Weapon(itemData, ammoData) {
+    Wpn(itemData, ammoData) {
     ammoCapacity = ammoData->ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
@@ -166,10 +164,10 @@ public:
 private:
 };
 
-class SpikeGun: public Weapon {
+class SpikeGun: public Wpn {
 public:
   SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Weapon(itemData, ammoData) {
+    Wpn(itemData, ammoData) {
     ammoCapacity = 12;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 3;

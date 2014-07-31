@@ -65,8 +65,8 @@ void move(const int DX, const int DY, const MarkerTask markerTask,
   if(isMoved) {
     if(
       markerTask == MarkerTask::look             ||
-      markerTask == MarkerTask::aimRangedWeapon  ||
-      markerTask == MarkerTask::aimThrownWeapon) {
+      markerTask == MarkerTask::aimRangedWpn  ||
+      markerTask == MarkerTask::aimThrownWpn) {
       Look::onMarkerAtPos(pos_, markerTask, itemThrown);
     }
   }
@@ -136,7 +136,7 @@ void readKeys(const MarkerTask markerTask, MarkerRetData& data,
   }
   // ------------------------------------------------------- AIM RANGED WEAPON
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'f') {
-    if(markerTask == MarkerTask::aimRangedWeapon) {
+    if(markerTask == MarkerTask::aimRangedWpn) {
       if(pos_ != Map::player->pos) {
 
         Log::clearLog();
@@ -146,7 +146,7 @@ void readKeys(const MarkerTask markerTask, MarkerRetData& data,
         if(actor) {Map::player->target = actor;}
 
         Item* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
-        Weapon* const weapon = static_cast<Weapon*>(item);
+        Wpn* const weapon = static_cast<Wpn*>(item);
         if(!Attack::ranged(*Map::player, *weapon, pos_)) {
           Log::addMsg("No ammunition loaded.");
         }
@@ -165,7 +165,7 @@ void readKeys(const MarkerTask markerTask, MarkerRetData& data,
   }
   // ------------------------------------------------------- THROW
   if(d.sdlKey_ == SDLK_RETURN || d.key_ == 't') {
-    if(markerTask == MarkerTask::aimThrownWeapon) {
+    if(markerTask == MarkerTask::aimThrownWpn) {
       if(pos_ == Map::player->pos) {
         Log::addMsg("I should throw this somewhere else.");
       } else {
@@ -206,10 +206,10 @@ void draw(const MarkerTask markerTask) {
   const Pos playerPos = Map::player->pos;
   LineCalc::calcNewLine(playerPos, pos_, true, 9999, false, trail);
 
-  if(markerTask == MarkerTask::aimRangedWeapon) {
+  if(markerTask == MarkerTask::aimRangedWpn) {
     Item* const item =
       Map::player->getInv().getItemInSlot(SlotId::wielded);
-    Weapon* const weapon = static_cast<Weapon*>(item);
+    Wpn* const weapon = static_cast<Wpn*>(item);
     effectiveRange = weapon->effectiveRangeLimit;
   }
 
@@ -223,9 +223,9 @@ MarkerRetData run(const MarkerTask markerTask, Item* itemThrown) {
   MarkerRetData data;
 
   if(
-    markerTask == MarkerTask::aimRangedWeapon  ||
+    markerTask == MarkerTask::aimRangedWpn  ||
     markerTask == MarkerTask::look             ||
-    markerTask == MarkerTask::aimThrownWeapon) {
+    markerTask == MarkerTask::aimThrownWpn) {
     //Attempt to place marker at target.
     if(!setPosToTargetIfVisible()) {
       //Else attempt to place marker at closest visible enemy.
@@ -237,8 +237,8 @@ MarkerRetData run(const MarkerTask markerTask, Item* itemThrown) {
 
   if(
     markerTask == MarkerTask::look ||
-    markerTask == MarkerTask::aimRangedWeapon ||
-    markerTask == MarkerTask::aimThrownWeapon) {
+    markerTask == MarkerTask::aimRangedWpn ||
+    markerTask == MarkerTask::aimThrownWpn) {
     Look::onMarkerAtPos(pos_, markerTask, itemThrown);
   }
 

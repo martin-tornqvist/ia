@@ -135,7 +135,7 @@ void CultistSpikeGun::mkStartItems() {
 
 void CultistPriest::mkStartItems() {
   Item* item = ItemFactory::mk(ItemId::dagger);
-  static_cast<Weapon*>(item)->meleeDmgPlus = 2;
+  static_cast<Wpn*>(item)->meleeDmgPlus = 2;
   inv_->putInSlot(SlotId::wielded, item);
 
   inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));

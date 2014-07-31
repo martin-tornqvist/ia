@@ -292,14 +292,14 @@ bool Monster::tryAttack(Actor& defender) {
   if(!attack.weapon) {return false;}
 
   if(attack.isMelee) {
-    if(attack.weapon->getData().isMeleeWeapon) {
+    if(attack.weapon->getData().isMeleeWpn) {
       Attack::melee(*this, *attack.weapon, defender);
       return true;
     }
     return false;
   }
 
-  if(attack.weapon->getData().isRangedWeapon) {
+  if(attack.weapon->getData().isRangedWpn) {
     if(opport.isTimeToReload) {
       Reload::reloadWieldedWpn(*this);
       return true;
@@ -340,24 +340,24 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
     opport.isMelee =
       Utils::isPosAdj(pos, defender.pos, false);
 
-    Weapon* weapon = nullptr;
+    Wpn* weapon = nullptr;
     const unsigned nrOfIntrinsics = inv_->getIntrinsicsSize();
     if(opport.isMelee) {
       if(propHandler_->allowAttackMelee(false)) {
 
         //Melee weapon in wielded slot?
         weapon =
-          static_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
+          static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
         if(weapon) {
-          if(weapon->getData().isMeleeWeapon) {
+          if(weapon->getData().isMeleeWpn) {
             opport.weapons.push_back(weapon);
           }
         }
 
         //Intrinsic melee attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; ++i) {
-          weapon = static_cast<Weapon*>(inv_->getIntrinsicInElement(i));
-          if(weapon->getData().isMeleeWeapon) {
+          weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
+          if(weapon->getData().isMeleeWpn) {
             opport.weapons.push_back(weapon);
           }
         }
@@ -366,10 +366,10 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
       if(propHandler_->allowAttackRanged(false)) {
         //Ranged weapon in wielded slot?
         weapon =
-          static_cast<Weapon*>(inv_->getItemInSlot(SlotId::wielded));
+          static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
 
         if(weapon) {
-          if(weapon->getData().isRangedWeapon) {
+          if(weapon->getData().isRangedWpn) {
             opport.weapons.push_back(weapon);
 
             //Check if reload time instead
@@ -385,8 +385,8 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 
         //Intrinsic ranged attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; ++i) {
-          weapon = static_cast<Weapon*>(inv_->getIntrinsicInElement(i));
-          if(weapon->getData().isRangedWeapon) {
+          weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
+          if(weapon->getData().isRangedWpn) {
             opport.weapons.push_back(weapon);
           }
         }
@@ -402,29 +402,29 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
   BestAttack attack;
   attack.isMelee = attackOpport.isMelee;
 
-  Weapon* newWeapon = nullptr;
+  Wpn* newWpn = nullptr;
 
-  const unsigned int nrOfWeapons = attackOpport.weapons.size();
+  const unsigned int nrOfWpns = attackOpport.weapons.size();
 
   //If any possible attacks found
-  if(nrOfWeapons > 0) {
+  if(nrOfWpns > 0) {
     attack.weapon = attackOpport.weapons.at(0);
 
     const ItemDataT* data = &(attack.weapon->getData());
 
     //If there are more than one possible weapon, find strongest.
-    if(nrOfWeapons > 1) {
-      for(unsigned int i = 1; i < nrOfWeapons; ++i) {
+    if(nrOfWpns > 1) {
+      for(unsigned int i = 1; i < nrOfWpns; ++i) {
 
         //Found new weapon in element i.
-        newWeapon = attackOpport.weapons.at(i);
-        const ItemDataT* newData = &(newWeapon->getData());
+        newWpn = attackOpport.weapons.at(i);
+        const ItemDataT* newData = &(newWpn->getData());
 
         //Compare definitions.
         //If weapon i is stronger -
-        if(ItemData::isWeaponStronger(*data, *newData, attack.isMelee)) {
+        if(ItemData::isWpnStronger(*data, *newData, attack.isMelee)) {
           // - use new weapon instead.
-          attack.weapon = newWeapon;
+          attack.weapon = newWpn;
           data = newData;
         }
       }

@@ -11,7 +11,7 @@
 struct BestAttack {
   BestAttack() : weapon(nullptr), isMelee(true) {}
 
-  Weapon* weapon;
+  Wpn* weapon;
   bool isMelee;
 };
 
@@ -33,12 +33,12 @@ struct AttackOpport {
     return *this;
   }
 
-  std::vector<Weapon*> weapons;
+  std::vector<Wpn*> weapons;
   bool isTimeToReload;
   bool isMelee;
 };
 
-class Weapon;
+class Wpn;
 
 class Monster: public Actor {
 public:

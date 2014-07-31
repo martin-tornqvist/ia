@@ -39,8 +39,8 @@ void mkLines() {
     min(100, abilities.getVal(AbilityId::ranged, true, *(Map::player)));
   const int BASE_DODGE_ATTACKS =
     min(100, abilities.getVal(AbilityId::dodgeAttack, true, *(Map::player)));
-  Weapon* kick =
-    static_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
+  Wpn* kick =
+    static_cast<Wpn*>(ItemFactory::mk(ItemId::playerKick));
   string kickStr = ItemData::getItemInterfaceRef(
                      *kick, false, PrimaryAttMode::melee);
   delete kick;
@@ -51,8 +51,7 @@ void mkLines() {
       break;
     }
   }
-  Weapon* punch =
-    static_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
+  Wpn* punch = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerPunch));
   string punchStr = ItemData::getItemInterfaceRef(
                       *punch, false, PrimaryAttMode::melee);
   delete punch;

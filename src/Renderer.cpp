@@ -1015,7 +1015,7 @@ void drawMap() {
   const Pos& pos = Map::player->pos;
   Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
   if(item) {
-    isRangedWpn = item->getData().isRangedWeapon;
+    isRangedWpn = item->getData().isRangedWpn;
   }
   if(IS_TILES) {
     const TileId tile = isRangedWpn ?

@@ -18,7 +18,7 @@ struct InvSlot {
   InvSlot() {reset();}
 
   void reset() {
-    allowWieldedWeapon  = false;
+    allowWieldedWpn  = false;
     allowMissile        = false;
     allowArmor          = false;
     allowCloak          = false;
@@ -28,7 +28,7 @@ struct InvSlot {
     id                  = SlotId::wielded;
     item                = nullptr;
   }
-  bool allowWieldedWeapon;
+  bool allowWieldedWpn;
   bool allowMissile;
   bool allowArmor;
   bool allowCloak;

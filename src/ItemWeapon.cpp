@@ -3,7 +3,7 @@
 #include "Explosion.h"
 #include "Utils.h"
 
-Weapon::Weapon(ItemDataT* const itemData, ItemDataT* const ammoData) :
+Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData) :
   Item(itemData), ammoData_(ammoData) {
   nrAmmoLoaded = 0;
   ammoCapacity = 0;
@@ -12,7 +12,7 @@ Weapon::Weapon(ItemDataT* const itemData, ItemDataT* const ammoData) :
   meleeDmgPlus = 0;
 }
 
-void Weapon::setRandomMeleePlus() {
+void Wpn::setRandomMeleePlus() {
   meleeDmgPlus = 0;
 
   int chance = 45;

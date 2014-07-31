@@ -45,7 +45,7 @@ Trap::~Trap() {
 
 void Trap::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                  Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 void Trap::setSpecificTrapFromId(const TrapId id) {

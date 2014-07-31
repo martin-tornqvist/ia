@@ -133,13 +133,13 @@ void descrBriefActor(const Actor& actor, const MarkerTask markerTask,
   if(markerTask == MarkerTask::look) {
     Log::addMsg("| v for description");
   } else if(actor.pos != Map::player->pos) {
-    if(markerTask == MarkerTask::aimRangedWeapon) {
+    if(markerTask == MarkerTask::aimRangedWpn) {
       Item* const item =
         Map::player->getInv().getItemInSlot(SlotId::wielded);
-      Weapon* const wpn = static_cast<Weapon*>(item);
+      Wpn* const wpn = static_cast<Wpn*>(item);
       RangedAttData data(*Map::player, *wpn, actor.pos, actor.pos);
       Log::addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
-    } else if(markerTask == MarkerTask::aimThrownWeapon) {
+    } else if(markerTask == MarkerTask::aimThrownWpn) {
       MissileAttData data(
         *Map::player, *itemThrown, actor.pos, actor.pos);
       Log::addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
@@ -177,13 +177,13 @@ void onMarkerAtPos(const Pos& pos, const MarkerTask markerTask,
   }
 
   if(pos != Map::player->pos) {
-    if(markerTask == MarkerTask::aimRangedWeapon) {
+    if(markerTask == MarkerTask::aimRangedWpn) {
       if(IS_VISION) {
         Log::addMsg("| f to fire");
       } else {
         Log::addMsg("f to fire");
       }
-    } else if(markerTask == MarkerTask::aimThrownWeapon) {
+    } else if(markerTask == MarkerTask::aimThrownWpn) {
       if(IS_VISION) {
         Log::addMsg("| t to throw");
       } else {

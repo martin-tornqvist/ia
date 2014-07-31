@@ -37,7 +37,7 @@ AttData::AttData(Actor& attacker_, const Item& itemAttackedWith_) :
   isIntrinsicAttack = itemAttackedWith_.getData().isIntrinsic;
 }
 
-MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
+MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_,
                            Actor& defender_) :
   AttData(attacker_, wpn_), isDefenderDodging(false),
   isBackstab(false), isWeakAttack(false) {
@@ -174,7 +174,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Weapon& wpn_,
 }
 
 RangedAttData::RangedAttData(
-  Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
+  Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
   const Pos& curPos_, ActorSize intendedAimLvl_) :
   AttData(attacker_, wpn_), hitChanceTot(0),
   intendedAimLvl(actorSize_none), curDefenderSize(actorSize_none),
@@ -358,7 +358,7 @@ namespace Attack {
 
 namespace {
 
-void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Weapon& wpn) {
+void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn) {
   string otherName = "";
 
   if(data.isDefenderDodging) {
@@ -547,7 +547,7 @@ void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT) {
   }
 }
 
-void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
+void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
   const bool IS_ATTACKER_PLAYER = &attacker == Map::player;
 
   vector<Projectile*> projectiles;
@@ -850,7 +850,7 @@ void projectileFire(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
   Renderer::drawMapAndInterface();
 }
 
-void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
+void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos) {
   RangedAttData* data = new RangedAttData(
     attacker, wpn, aimPos, attacker.pos);
 
@@ -1000,7 +1000,7 @@ void shotgun(Actor& attacker, const Weapon& wpn, const Pos& aimPos) {
 
 } //namespace
 
-void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
+void melee(Actor& attacker, const Wpn& wpn, Actor& defender) {
   MeleeAttData data(attacker, wpn, defender);
 
   printMeleeMsgAndPlaySfx(data, wpn);
@@ -1046,7 +1046,7 @@ void melee(Actor& attacker, const Weapon& wpn, Actor& defender) {
   GameTime::actorDidAct();
 }
 
-bool ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos) {
+bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
   bool didAttack = false;
 
   const bool WPN_HAS_INF_AMMO = wpn.getData().rangedHasInfiniteAmmo;

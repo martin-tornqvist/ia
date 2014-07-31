@@ -50,8 +50,8 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->primaryAttackMode = PrimaryAttMode::none;
       d->isScroll = d->isPotion = d->isEatable = false;
       d->isArmor = d->isCloak = d->isRing = d->isAmulet = false;
-      d->isIntrinsic = d->isMeleeWeapon = d->isRangedWeapon = false;
-      d->isMissileWeapon = d->isShotgun = d->isMachineGun = false;
+      d->isIntrinsic = d->isMeleeWpn = d->isRangedWpn = false;
+      d->isMissileWpn = d->isShotgun = d->isMachineGun = false;
       d->isAmmo = d->isAmmoClip = d->isDevice = d->isMedicalBag = false;
       d->spellCastFromScroll = SpellId::END;
       d->ammoContainedInClip = 0;
@@ -96,7 +96,7 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->glyph = '(';
       d->clr = clrWhite;
       d->primaryAttackMode = PrimaryAttMode::melee;
-      d->isMeleeWeapon = true;
+      d->isMeleeWpn = true;
       d->meleeHitSmallSfx = SfxId::hitSmall;
       d->meleeHitMediumSfx = SfxId::hitMedium;
       d->meleeHitHardSfx = SfxId::hitHard;
@@ -119,10 +119,10 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->itemWeight = itemWeight_medium;
       d->glyph = '}';
       d->clr = clrWhite;
-      d->isMeleeWeapon = true;
+      d->isMeleeWpn = true;
       d->meleeDmg = pair<int, int>(1, 6);
       d->primaryAttackMode = PrimaryAttMode::ranged;
-      d->isRangedWeapon = true;
+      d->isRangedWpn = true;
       d->rangedMissileGlyph = '/';
       d->rangedMissileClr = clrWhite;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LVL - 1;
@@ -139,16 +139,16 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->rangedHasInfiniteAmmo = true;
       d->spawnStandardMinDLVL = -1;
       d->spawnStandardMaxDLVL = -1;
-      d->isMeleeWeapon = false;
+      d->isMeleeWpn = false;
       d->rangedMissileGlyph = '*';
       d->rangedSndVol = SndVol::low;
     } break;
 
-    case ItemType::missileWeapon: {
+    case ItemType::missileWpn: {
       resetData(d, ItemType::general);
       d->itemWeight = itemWeight_extraLight;
       d->isStackable = true;
-      d->isMissileWeapon = true;
+      d->isMissileWpn = true;
       d->spawnStandardMaxDLVL = FIRST_CAVERN_LVL - 1;
       d->rangedSndVol = SndVol::low;
     } break;
@@ -199,7 +199,7 @@ void resetData(ItemDataT* const d, ItemType const itemType) {
       d->glyph = '!';
       d->tile = TileId::potion;
       d->isPotion = true;
-      d->isMissileWeapon = true;
+      d->isMissileWpn = true;
       d->missileHitChanceMod = 15;
       d->missileDmg = DiceParam(1, 3, 0);
       d->maxStackSizeAtSpawn = 2;
@@ -518,7 +518,7 @@ void initDataList() {
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::throwingKnife);
-  resetData(d, ItemType::missileWeapon);
+  resetData(d, ItemType::missileWpn);
   d->baseName = ItemName("Throwing Knife", "Throwing Knives",
                          "a Throwing Knife");
   d->itemWeight = itemWeight_extraLight;
@@ -537,7 +537,7 @@ void initDataList() {
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::rock);
-  resetData(d, ItemType::missileWeapon);
+  resetData(d, ItemType::missileWpn);
   d->baseName = ItemName("Rock", "Rocks", "a Rock");
   d->itemWeight = itemWeight_extraLight;
   d->tile = TileId::rock;
@@ -578,7 +578,7 @@ void initDataList() {
   d->meleeHitChanceMod = 15;
   d->missileHitChanceMod = -5;
   d->missileDmg = DiceParam(1, 10);
-  d->isMissileWeapon = false;
+  d->isMissileWpn = false;
   d->meleeHitMediumSfx = SfxId::hitSharp;
   d->meleeHitHardSfx = SfxId::hitSharp;
   d->meleeMissSfx = SfxId::missLight;
@@ -676,7 +676,7 @@ void initDataList() {
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::ironSpike);
-  resetData(d, ItemType::missileWeapon);
+  resetData(d, ItemType::missileWpn);
   d->baseName = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
   d->isAmmo = true;
   d->itemWeight = itemWeight_extraLight;
@@ -1348,7 +1348,7 @@ void setupFromSaveLines(vector<string>& lines) {
 }
 
 //TODO Remove this function
-bool isWeaponStronger(const ItemDataT& data1, const ItemDataT& data2,
+bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
                       const bool IS_MELEE) {
   (void)data1;
   (void)data2;
@@ -1404,10 +1404,10 @@ string getItemRef(const Item& item, const ItemRefType itemRefForm,
   }
 
   if(!SKIP_EXTRA_INFO) {
-    if(d.isRangedWeapon) {
+    if(d.isRangedWpn) {
       string ammoLoadedStr = "";
       if(!d.rangedHasInfiniteAmmo) {
-        const Weapon* const w = static_cast<const Weapon*>(&item);
+        const Wpn* const w = static_cast<const Wpn*>(&item);
         ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" +
                         toStr(w->ammoCapacity);
       }
@@ -1458,10 +1458,10 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
   if(
     (attackMode == PrimaryAttMode::none &&
      d.primaryAttackMode == PrimaryAttMode::melee) ||
-    (attackMode == PrimaryAttMode::melee && d.isMeleeWeapon)) {
+    (attackMode == PrimaryAttMode::melee && d.isMeleeWpn)) {
     const string rollsStr = toStr(d.meleeDmg.first);
     const string sidesStr = toStr(d.meleeDmg.second);
-    const int PLUS = static_cast<const Weapon*>(&item)->meleeDmgPlus;
+    const int PLUS = static_cast<const Wpn*>(&item)->meleeDmgPlus;
     const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
                            toStr(PLUS));
     const int ITEM_SKILL = d.meleeHitChanceMod;
@@ -1475,7 +1475,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
   if(
     (attackMode == PrimaryAttMode::none &&
      d.primaryAttackMode == PrimaryAttMode::ranged) ||
-    (attackMode == PrimaryAttMode::ranged && d.isRangedWeapon)) {
+    (attackMode == PrimaryAttMode::ranged && d.isRangedWpn)) {
 
     string dmgStr = d.rangedDmgInfoOverride;
 
@@ -1494,7 +1494,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
     const string skillStr = toStr(TOTAL_SKILL) + "%";
     string ammoLoadedStr = "";
     if(!d.rangedHasInfiniteAmmo) {
-      const Weapon* const w = static_cast<const Weapon*>(&item);
+      const Wpn* const w = static_cast<const Wpn*>(&item);
       ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" +
                       toStr(w->ammoCapacity);
     }
@@ -1504,7 +1504,7 @@ string getItemInterfaceRef(const Item& item, const bool ADD_A,
   if(
     (attackMode == PrimaryAttMode::none &&
      d.primaryAttackMode == PrimaryAttMode::missile) ||
-    (attackMode == PrimaryAttMode::missile && d.isMissileWeapon)) {
+    (attackMode == PrimaryAttMode::missile && d.isMissileWpn)) {
     const string rollsStr = toStr(d.missileDmg.rolls);
     const string sidesStr = toStr(d.missileDmg.sides);
     const int PLUS = d.missileDmg.plus;

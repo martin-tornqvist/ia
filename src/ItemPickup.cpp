@@ -45,7 +45,7 @@ void tryPick() {
     const string ITEM_NAME = ItemData::getItemInterfaceRef(*item, true);
 
     //If picked up item is missile weapon, try to add it to carried stack.
-    if(item->getData().isMissileWeapon) {
+    if(item->getData().isMissileWpn) {
       Item* const carriedMissile = playerInv.getItemInSlot(SlotId::missiles);
       if(carriedMissile) {
         if(item->getData().id == carriedMissile->getData().id) {
@@ -82,12 +82,12 @@ void tryPick() {
   }
 }
 
-void tryUnloadWeaponOrPickupAmmoFromGround() {
+void tryUnloadWpnOrPickupAmmoFromGround() {
   Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
 
   if(item) {
-    if(item->getData().isRangedWeapon) {
-      Weapon* const weapon = static_cast<Weapon*>(item);
+    if(item->getData().isRangedWpn) {
+      Wpn* const weapon = static_cast<Wpn*>(item);
       const int nrAmmoLoaded = weapon->nrAmmoLoaded;
 
       if(nrAmmoLoaded > 0 && !weapon->getData().rangedHasInfiniteAmmo) {
@@ -119,7 +119,7 @@ void tryUnloadWeaponOrPickupAmmoFromGround() {
           playerInv.putInGeneral(spawnedAmmo);
         }
 
-        static_cast<Weapon*>(item)->nrAmmoLoaded = 0;
+        static_cast<Wpn*>(item)->nrAmmoLoaded = 0;
 
         GameTime::actorDidAct();
         return;

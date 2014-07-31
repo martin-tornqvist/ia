@@ -489,13 +489,11 @@ Clr RubbleLow::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- GRAVE
-GraveStone::GraveStone(Pos pos) : Rigid(pos) {
-
-}
+GraveStone::GraveStone(Pos pos) : Rigid(pos) {}
 
 void GraveStone::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                        Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 void GraveStone::bump(Actor& actorBumping) {
@@ -512,13 +510,11 @@ Clr GraveStone::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- CHURCH BENCH
-ChurchBench::ChurchBench(Pos pos) : Rigid(pos) {
-
-}
+ChurchBench::ChurchBench(Pos pos) : Rigid(pos) {}
 
 void ChurchBench::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                         Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 string ChurchBench::getName(const Article article) const {
@@ -595,13 +591,11 @@ Clr Statue::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- PILLAR
-Pillar::Pillar(Pos pos) : Rigid(pos) {
-
-}
+Pillar::Pillar(Pos pos) : Rigid(pos) {}
 
 void Pillar::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 string Pillar::getName(const Article article) const {
@@ -614,13 +608,11 @@ Clr Pillar::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- STAIRS
-Stairs::Stairs(Pos pos) : Rigid(pos) {
-
-}
+Stairs::Stairs(Pos pos) : Rigid(pos) {}
 
 void Stairs::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 void Stairs::bump(Actor& actorBumping) {
@@ -660,7 +652,7 @@ TileId Bridge::getTile() const {
 
 void Bridge::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 char Bridge::getGlyph() const {
@@ -677,13 +669,11 @@ Clr Bridge::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- SHALLOW LIQUID
-LiquidShallow::LiquidShallow(Pos pos) : Rigid(pos), type_(LiquidType::water) {
-
-}
+LiquidShallow::LiquidShallow(Pos pos) : Rigid(pos), type_(LiquidType::water) {}
 
 void LiquidShallow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                           Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 void LiquidShallow::bump(Actor& actorBumping) {
@@ -730,13 +720,11 @@ Clr LiquidShallow::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- DEEP LIQUID
-LiquidDeep::LiquidDeep(Pos pos) : Rigid(pos), type_(LiquidType::water) {
-
-}
+LiquidDeep::LiquidDeep(Pos pos) : Rigid(pos), type_(LiquidType::water) {}
 
 void LiquidDeep::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                        Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 void LiquidDeep::bump(Actor& actorBumping) {
@@ -773,13 +761,11 @@ Clr LiquidDeep::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- CHASM
-Chasm::Chasm(Pos pos) : Rigid(pos) {
-
-}
+Chasm::Chasm(Pos pos) : Rigid(pos) {}
 
 void Chasm::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                   Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 
@@ -793,14 +779,11 @@ Clr Chasm::getDefClr() const {
 }
 
 //--------------------------------------------------------------------- LEVER
-Lever::Lever(Pos pos) :
-  Rigid(pos), isPositionLeft_(true), doorLinkedTo_(nullptr)  {
-
-}
+Lever::Lever(Pos pos) : Rigid(pos), isPositionLeft_(true), doorLinkedTo_(nullptr)  {}
 
 void Lever::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                   Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 string Lever::getName(const Article article) const {
@@ -839,13 +822,11 @@ void Lever::pull() {
 }
 
 //--------------------------------------------------------------------- ALTAR
-Altar::Altar(Pos pos) : Rigid(pos) {
-
-}
+Altar::Altar(Pos pos) : Rigid(pos) {}
 
 void Altar::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                   Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 string Altar::getName(const Article article) const {
@@ -1012,7 +993,7 @@ string Brazier::getName(const Article article) const {
 
 void Brazier::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                     Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 Clr Brazier::getDefClr() const {
@@ -1134,7 +1115,7 @@ Tomb::Tomb(const Pos& pos) :
 
 void Tomb::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                  Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 string Tomb::getName(const Article article) const {
@@ -1427,7 +1408,7 @@ Chest::Chest(const Pos& pos) :
 
 void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                   Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 void Chest::bump(Actor& actorBumping) {
@@ -1549,7 +1530,7 @@ bool Chest::open() {
 ////          const string wpnName = ItemData::getItemRef(
 ////                                   *item, ItemRefType::plain, true);
 ////
-////          Weapon* const wpn = static_cast<Weapon*>(item);
+////          Wpn* const wpn = static_cast<Wpn*>(item);
 ////
 ////          if(wpn->meleeDmgPlus == 0) {
 ////            Log::addMsg("My " + wpnName + " breaks!");
@@ -1718,7 +1699,7 @@ Fountain::Fountain(const Pos& pos) :
 
 void Fountain::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                      Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 Clr Fountain::getDefClr() const {
@@ -1848,7 +1829,7 @@ Cabinet::Cabinet(const Pos& pos) : Rigid(pos), isContentKnown_(false) {
 
 void Cabinet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                     Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 void Cabinet::bump(Actor& actorBumping) {
@@ -1902,7 +1883,7 @@ Cocoon::Cocoon(const Pos& pos) : Rigid(pos), isContentKnown_(false) {
 
 void Cocoon::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* const actor) {
-
+  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 void Cocoon::bump(Actor& actorBumping) {

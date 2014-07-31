@@ -11,7 +11,7 @@
 #include "Art.h"
 
 class Actor;
-class Weapon;
+class Wpn;
 
 class AttData {
 public:
@@ -29,7 +29,7 @@ protected:
 
 class MeleeAttData: public AttData {
 public:
-  MeleeAttData(Actor& attacker_, const Weapon& wpn_,
+  MeleeAttData(Actor& attacker_, const Wpn& wpn_,
                Actor& defender_);
   bool isDefenderDodging;
   bool isBackstab;
@@ -39,7 +39,7 @@ public:
 
 class RangedAttData: public AttData {
 public:
-  RangedAttData(Actor& attacker_, const Weapon& wpn_, const Pos& aimPos_,
+  RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
                 const Pos& curPos_,
                 ActorSize intendedAimLvl_ = actorSize_none);
   int           hitChanceTot;
@@ -98,12 +98,12 @@ enum class MeleeHitSize {small, medium, hard};
 
 namespace Attack {
 
-void melee(Actor& attacker, const Weapon& wpn, Actor& defender);
+void melee(Actor& attacker, const Wpn& wpn, Actor& defender);
 
-bool ranged(Actor& attacker, Weapon& wpn, const Pos& aimPos);
+bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos);
 
 void getRangedHitChance(const Actor& attacker, const Actor& defender,
-                        const Weapon& wpn);
+                        const Wpn& wpn);
 
 } //Attack
 

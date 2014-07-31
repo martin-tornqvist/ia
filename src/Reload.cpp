@@ -23,7 +23,7 @@ namespace Reload {
 
 namespace {
 
-void printMsgAndPlaySfx(Actor& actorReloading, Weapon* const wpn,
+void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
                         Item* const ammo, const ReloadResult result,
                         const bool IS_SWIFT_RELOAD) {
   string ammoName = "";
@@ -115,7 +115,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
     return didAct;
   }
 
-  Weapon* const wpn     = static_cast<Weapon*>(wpnItem);
+  Wpn* const wpn     = static_cast<Wpn*>(wpnItem);
   ReloadResult result = ReloadResult::noAmmo;
   bool isSwiftReload    = false;
 

@@ -25,13 +25,13 @@ Inventory::Inventory(bool humanoid) {
   if(humanoid) {
     invSlot.id = SlotId::wielded;
     invSlot.interfaceName       = "Wielding";
-    invSlot.allowWieldedWeapon  = true;
+    invSlot.allowWieldedWpn  = true;
     slots_.push_back(invSlot);
     invSlot.reset();
 
     invSlot.id = SlotId::wieldedAlt;
     invSlot.interfaceName       = "Prepared";
-    invSlot.allowWieldedWeapon  = true;
+    invSlot.allowWieldedWpn  = true;
     slots_.push_back(invSlot);
     invSlot.reset();
 
@@ -267,7 +267,7 @@ void Inventory::dropAllNonIntrinsic(
 }
 
 bool Inventory::hasAmmoForFirearmInInventory() {
-  Weapon* weapon = static_cast<Weapon*>(getItemInSlot(SlotId::wielded));
+  Wpn* weapon = static_cast<Wpn*>(getItemInSlot(SlotId::wielded));
 
   //If weapon found
   if(weapon) {
@@ -275,7 +275,7 @@ bool Inventory::hasAmmoForFirearmInInventory() {
     assert(!weapon->getData().rangedHasInfiniteAmmo); //Should not happen
 
     //If weapon is a firearm
-    if(weapon->getData().isRangedWeapon) {
+    if(weapon->getData().isRangedWpn) {
 
       //Get weapon ammo type
       const ItemId ammoId = weapon->getData().rangedAmmoTypeUsed;

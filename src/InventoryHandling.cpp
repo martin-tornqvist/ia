@@ -84,19 +84,19 @@ void filterPlayerGeneralSlotButtonsEquip(
       }
       break;
       case SlotId::wielded: {
-        if(data.isMeleeWeapon || data.isRangedWeapon) {
+        if(data.isMeleeWpn || data.isRangedWpn) {
           generalItemsToShow_.push_back(i);
         }
       }
       break;
       case SlotId::wieldedAlt: {
-        if(data.isMeleeWeapon || data.isRangedWeapon) {
+        if(data.isMeleeWpn || data.isRangedWpn) {
           generalItemsToShow_.push_back(i);
         }
       }
       break;
       case SlotId::missiles: {
-        if(data.isMissileWeapon) {
+        if(data.isMissileWpn) {
           generalItemsToShow_.push_back(i);
         }
       }

@@ -980,14 +980,14 @@ void Player::moveDir(Dir dir) {
       Actor* const actorAtDest = Utils::getFirstActorAtPos(dest);
       if(actorAtDest) {
         if(propHandler_->allowAttackMelee(true)) {
-          bool hasMeleeWeapon = false;
+          bool hasMeleeWpn = false;
           Item* const item = inv_->getItemInSlot(SlotId::wielded);
           if(item) {
-            Weapon* const weapon = static_cast<Weapon*>(item);
-            if(weapon->getData().isMeleeWeapon) {
+            Wpn* const weapon = static_cast<Wpn*>(item);
+            if(weapon->getData().isMeleeWpn) {
               if(Config::isRangedWpnMeleeePrompt() &&
                   isSeeingActor(*actorAtDest, nullptr)) {
-                if(weapon->getData().isRangedWeapon) {
+                if(weapon->getData().isRangedWpn) {
                   const string wpnName =
                     ItemData::getItemRef(*weapon, ItemRefType::a);
                   Log::addMsg(
@@ -1006,7 +1006,7 @@ void Player::moveDir(Dir dir) {
               return;
             }
           }
-          if(!hasMeleeWeapon) {punchMonster(*actorAtDest);}
+          if(!hasMeleeWpn) {punchMonster(*actorAtDest);}
         }
         return;
       }
@@ -1103,24 +1103,24 @@ void Player::autoMelee() {
 }
 
 void Player::kickMonster(Actor& actorToKick) {
-  Weapon* kickWeapon = nullptr;
+  Wpn* kickWpn = nullptr;
 
   const ActorDataT& d = actorToKick.getData();
 
   if(d.actorSize == actorSize_floor && (d.isSpider || d.isRat)) {
-    kickWeapon = static_cast<Weapon*>(ItemFactory::mk(ItemId::playerStomp));
+    kickWpn = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerStomp));
   } else {
-    kickWeapon = static_cast<Weapon*>(ItemFactory::mk(ItemId::playerKick));
+    kickWpn = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerKick));
   }
-  Attack::melee(*this, *kickWeapon, actorToKick);
-  delete kickWeapon;
+  Attack::melee(*this, *kickWpn, actorToKick);
+  delete kickWpn;
 }
 
 void Player::punchMonster(Actor& actorToPunch) {
   //Spawn a temporary punch weapon to attack with
-  Weapon* punchWeapon = static_cast<Weapon*>(ItemFactory::mk(ItemId::playerPunch));
-  Attack::melee(*this, *punchWeapon, actorToPunch);
-  delete punchWeapon;
+  Wpn* punchWpn = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerPunch));
+  Attack::melee(*this, *punchWpn, actorToPunch);
+  delete punchWpn;
 }
 
 void Player::addLight_(bool light[MAP_W][MAP_H]) const {

@@ -30,17 +30,17 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
   switch(itemId) {
     case ItemId::trapezohedron:       r = new Item(d);                  break;
 
-    case ItemId::rock:                r = new Weapon(d, ammoD);         break;
-    case ItemId::throwingKnife:       r = new Weapon(d, ammoD);         break;
-    case ItemId::ironSpike:           r = new Weapon(d, ammoD);         break;
-    case ItemId::dagger:              r = new Weapon(d, ammoD);         break;
-    case ItemId::hatchet:             r = new Weapon(d, ammoD);         break;
-    case ItemId::club:                r = new Weapon(d, ammoD);         break;
-    case ItemId::hammer:              r = new Weapon(d, ammoD);         break;
-    case ItemId::machete:             r = new Weapon(d, ammoD);         break;
-    case ItemId::axe:                 r = new Weapon(d, ammoD);         break;
-    case ItemId::pitchFork:           r = new Weapon(d, ammoD);         break;
-    case ItemId::sledgeHammer:        r = new Weapon(d, ammoD);         break;
+    case ItemId::rock:                r = new Wpn(d, ammoD);         break;
+    case ItemId::throwingKnife:       r = new Wpn(d, ammoD);         break;
+    case ItemId::ironSpike:           r = new Wpn(d, ammoD);         break;
+    case ItemId::dagger:              r = new Wpn(d, ammoD);         break;
+    case ItemId::hatchet:             r = new Wpn(d, ammoD);         break;
+    case ItemId::club:                r = new Wpn(d, ammoD);         break;
+    case ItemId::hammer:              r = new Wpn(d, ammoD);         break;
+    case ItemId::machete:             r = new Wpn(d, ammoD);         break;
+    case ItemId::axe:                 r = new Wpn(d, ammoD);         break;
+    case ItemId::pitchFork:           r = new Wpn(d, ammoD);         break;
+    case ItemId::sledgeHammer:        r = new Wpn(d, ammoD);         break;
 
     case ItemId::dynamite:            r = new Dynamite(d);              break;
     case ItemId::flare:               r = new Flare(d);                 break;
@@ -60,9 +60,9 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::teslaCanister:       r = new ItemAmmoClip(d);          break;
     case ItemId::napalmCartridge:     r = new ItemAmmoClip(d);          break;
 
-    case ItemId::playerKick:          r = new Weapon(d, ammoD);         break;
-    case ItemId::playerStomp:         r = new Weapon(d, ammoD);         break;
-    case ItemId::playerPunch:         r = new Weapon(d, ammoD);         break;
+    case ItemId::playerKick:          r = new Wpn(d, ammoD);         break;
+    case ItemId::playerStomp:         r = new Wpn(d, ammoD);         break;
+    case ItemId::playerPunch:         r = new Wpn(d, ammoD);         break;
 
     case ItemId::armorFlackJacket:    r = new Armor(d);                 break;
     case ItemId::armorLeatherJacket:  r = new Armor(d);                 break;
@@ -70,50 +70,50 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::armorAsbSuit:        r = new ArmorAsbSuit(d);          break;
     case ItemId::armorHeavyCoat:      r = new ArmorHeavyCoat(d);        break;
 
-    case ItemId::zombieAxe:           r = new Weapon(d, ammoD);         break;
-    case ItemId::zombieClaw:          r = new Weapon(d, ammoD);         break;
-    case ItemId::zombieClawDiseased:  r = new Weapon(d, ammoD);         break;
-    case ItemId::bloatedZombiePunch:  r = new Weapon(d, ammoD);         break;
-    case ItemId::bloatedZombieSpit:   r = new Weapon(d, ammoD);         break;
-    case ItemId::ratBite:             r = new Weapon(d, ammoD);         break;
-    case ItemId::ratBiteDiseased:     r = new Weapon(d, ammoD);         break;
-    case ItemId::ratThingBite:        r = new Weapon(d, ammoD);         break;
-    case ItemId::wormMassBite:        r = new Weapon(d, ammoD);         break;
-    case ItemId::greenSpiderBite:     r = new Weapon(d, ammoD);         break;
-    case ItemId::whiteSpiderBite:     r = new Weapon(d, ammoD);         break;
-    case ItemId::redSpiderBite:       r = new Weapon(d, ammoD);         break;
-    case ItemId::shadowSpiderBite:    r = new Weapon(d, ammoD);         break;
-    case ItemId::lengSpiderBite:      r = new Weapon(d, ammoD);         break;
-    case ItemId::fireHoundBreath:     r = new Weapon(d, ammoD);         break;
-    case ItemId::frostHoundBreath:    r = new Weapon(d, ammoD);         break;
-    case ItemId::fireHoundBite:       r = new Weapon(d, ammoD);         break;
-    case ItemId::frostHoundBite:      r = new Weapon(d, ammoD);         break;
-    case ItemId::zuulBite:            r = new Weapon(d, ammoD);         break;
-    case ItemId::giantBatBite:        r = new Weapon(d, ammoD);         break;
-    case ItemId::wolfBite:            r = new Weapon(d, ammoD);         break;
-    case ItemId::ghostClaw:           r = new Weapon(d, ammoD);         break;
-    case ItemId::phantasmSickle:      r = new Weapon(d, ammoD);         break;
-    case ItemId::wraithClaw:          r = new Weapon(d, ammoD);         break;
-    case ItemId::polypTentacle:       r = new Weapon(d, ammoD);         break;
-    case ItemId::miGoElectricGun:     r = new Weapon(d, ammoD);         break;
-    case ItemId::ghoulClaw:           r = new Weapon(d, ammoD);         break;
-    case ItemId::shadowClaw:          r = new Weapon(d, ammoD);         break;
-    case ItemId::byakheeClaw:         r = new Weapon(d, ammoD);         break;
-    case ItemId::giantMantisClaw:     r = new Weapon(d, ammoD);         break;
-    case ItemId::giantLocustBite:     r = new Weapon(d, ammoD);         break;
-    case ItemId::mummyMaul:           r = new Weapon(d, ammoD);         break;
-    case ItemId::deepOneJavelinAtt:   r = new Weapon(d, ammoD);         break;
-    case ItemId::deepOneSpearAtt:     r = new Weapon(d, ammoD);         break;
-    case ItemId::oozeBlackSpewPus:    r = new Weapon(d, ammoD);         break;
-    case ItemId::oozeClearSpewPus:    r = new Weapon(d, ammoD);         break;
-    case ItemId::oozePutridSpewPus:   r = new Weapon(d, ammoD);         break;
-    case ItemId::oozePoisonSpewPus:   r = new Weapon(d, ammoD);         break;
-    case ItemId::colourOOSpaceTouch:  r = new Weapon(d, ammoD);         break;
-    case ItemId::chthonianBite:       r = new Weapon(d, ammoD);         break;
-    case ItemId::huntingHorrorBite:   r = new Weapon(d, ammoD);         break;
-    case ItemId::dustVortexEngulf:    r = new Weapon(d, ammoD);         break;
-    case ItemId::fireVortexEngulf:    r = new Weapon(d, ammoD);         break;
-    case ItemId::frostVortexEngulf:   r = new Weapon(d, ammoD);         break;
+    case ItemId::zombieAxe:           r = new Wpn(d, ammoD);         break;
+    case ItemId::zombieClaw:          r = new Wpn(d, ammoD);         break;
+    case ItemId::zombieClawDiseased:  r = new Wpn(d, ammoD);         break;
+    case ItemId::bloatedZombiePunch:  r = new Wpn(d, ammoD);         break;
+    case ItemId::bloatedZombieSpit:   r = new Wpn(d, ammoD);         break;
+    case ItemId::ratBite:             r = new Wpn(d, ammoD);         break;
+    case ItemId::ratBiteDiseased:     r = new Wpn(d, ammoD);         break;
+    case ItemId::ratThingBite:        r = new Wpn(d, ammoD);         break;
+    case ItemId::wormMassBite:        r = new Wpn(d, ammoD);         break;
+    case ItemId::greenSpiderBite:     r = new Wpn(d, ammoD);         break;
+    case ItemId::whiteSpiderBite:     r = new Wpn(d, ammoD);         break;
+    case ItemId::redSpiderBite:       r = new Wpn(d, ammoD);         break;
+    case ItemId::shadowSpiderBite:    r = new Wpn(d, ammoD);         break;
+    case ItemId::lengSpiderBite:      r = new Wpn(d, ammoD);         break;
+    case ItemId::fireHoundBreath:     r = new Wpn(d, ammoD);         break;
+    case ItemId::frostHoundBreath:    r = new Wpn(d, ammoD);         break;
+    case ItemId::fireHoundBite:       r = new Wpn(d, ammoD);         break;
+    case ItemId::frostHoundBite:      r = new Wpn(d, ammoD);         break;
+    case ItemId::zuulBite:            r = new Wpn(d, ammoD);         break;
+    case ItemId::giantBatBite:        r = new Wpn(d, ammoD);         break;
+    case ItemId::wolfBite:            r = new Wpn(d, ammoD);         break;
+    case ItemId::ghostClaw:           r = new Wpn(d, ammoD);         break;
+    case ItemId::phantasmSickle:      r = new Wpn(d, ammoD);         break;
+    case ItemId::wraithClaw:          r = new Wpn(d, ammoD);         break;
+    case ItemId::polypTentacle:       r = new Wpn(d, ammoD);         break;
+    case ItemId::miGoElectricGun:     r = new Wpn(d, ammoD);         break;
+    case ItemId::ghoulClaw:           r = new Wpn(d, ammoD);         break;
+    case ItemId::shadowClaw:          r = new Wpn(d, ammoD);         break;
+    case ItemId::byakheeClaw:         r = new Wpn(d, ammoD);         break;
+    case ItemId::giantMantisClaw:     r = new Wpn(d, ammoD);         break;
+    case ItemId::giantLocustBite:     r = new Wpn(d, ammoD);         break;
+    case ItemId::mummyMaul:           r = new Wpn(d, ammoD);         break;
+    case ItemId::deepOneJavelinAtt:   r = new Wpn(d, ammoD);         break;
+    case ItemId::deepOneSpearAtt:     r = new Wpn(d, ammoD);         break;
+    case ItemId::oozeBlackSpewPus:    r = new Wpn(d, ammoD);         break;
+    case ItemId::oozeClearSpewPus:    r = new Wpn(d, ammoD);         break;
+    case ItemId::oozePutridSpewPus:   r = new Wpn(d, ammoD);         break;
+    case ItemId::oozePoisonSpewPus:   r = new Wpn(d, ammoD);         break;
+    case ItemId::colourOOSpaceTouch:  r = new Wpn(d, ammoD);         break;
+    case ItemId::chthonianBite:       r = new Wpn(d, ammoD);         break;
+    case ItemId::huntingHorrorBite:   r = new Wpn(d, ammoD);         break;
+    case ItemId::dustVortexEngulf:    r = new Wpn(d, ammoD);         break;
+    case ItemId::fireVortexEngulf:    r = new Wpn(d, ammoD);         break;
+    case ItemId::frostVortexEngulf:   r = new Wpn(d, ammoD);         break;
 
     case ItemId::scrollMayhem:        r = new Scroll(d);                break;
     case ItemId::scrollTelep:         r = new Scroll(d);                break;
@@ -173,13 +173,13 @@ void setItemRandomizedProperties(Item* item) {
   const ItemDataT& d = item->getData();
 
   //If it is a pure melee weapon, it may get a plus
-  if(d.isMeleeWeapon && !d.isRangedWeapon) {
-    static_cast<Weapon*>(item)->setRandomMeleePlus();
+  if(d.isMeleeWpn && !d.isRangedWpn) {
+    static_cast<Wpn*>(item)->setRandomMeleePlus();
   }
 
   //If firearm, spawn with random amount of ammo
-  if(d.isRangedWeapon && !d.rangedHasInfiniteAmmo) {
-    Weapon* const weapon = static_cast<Weapon*>(item);
+  if(d.isRangedWpn && !d.rangedHasInfiniteAmmo) {
+    Wpn* const weapon = static_cast<Wpn*>(item);
     if(weapon->ammoCapacity == 1) {
       weapon->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
     } else {

@@ -28,7 +28,7 @@ enum class ItemType {
   meleeWpnIntr,
   rangedWpn,
   rangedWpnIntr,
-  missileWeapon,
+  missileWpn,
   ammo,
   ammoClip,
   scroll,
@@ -200,7 +200,7 @@ public:
   PrimaryAttMode primaryAttackMode;
   bool isExplosive, isScroll, isPotion, isDevice, isEatable;
   bool isArmor, isCloak, isRing, isAmulet;
-  bool isIntrinsic, isMeleeWeapon, isRangedWeapon, isMissileWeapon, isShotgun;
+  bool isIntrinsic, isMeleeWpn, isRangedWpn, isMissileWpn, isShotgun;
   bool isMachineGun, isAmmo, isAmmoClip, isMedicalBag;
   SpellId spellCastFromScroll;
   ArmorData armorData;
@@ -263,7 +263,7 @@ std::string getItemInterfaceRef(
   const Item& item, const bool ADD_A,
   const PrimaryAttMode attMode = PrimaryAttMode::none);
 
-bool isWeaponStronger(const ItemDataT& data1, const ItemDataT& data2,
+bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
                       const bool IS_MELEE);
 
 } //ItemData

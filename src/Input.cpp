@@ -237,7 +237,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if(d.key_ == 'G')  {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      ItemPickup::tryUnloadWeaponOrPickupAmmoFromGround();
+      ItemPickup::tryUnloadWpnOrPickupAmmoFromGround();
     }
     clearEvents();
     return;
@@ -253,12 +253,12 @@ void handleKeyPress(const KeyboardReadRetData& d) {
 
         if(item) {
           const ItemDataT& itemData = item->getData();
-          if(!itemData.isRangedWeapon) {
+          if(!itemData.isRangedWpn) {
             Log::addMsg("I am not wielding a firearm.");
           } else {
-            auto* wpn = static_cast<Weapon*>(item);
+            auto* wpn = static_cast<Wpn*>(item);
             if(wpn->nrAmmoLoaded >= 1 || itemData.rangedHasInfiniteAmmo) {
-              Marker::run(MarkerTask::aimRangedWeapon, nullptr);
+              Marker::run(MarkerTask::aimRangedWpn, nullptr);
             } else if(Config::isRangedWpnAutoReload()) {
               Reload::reloadWieldedWpn(*(Map::player));
             } else {
@@ -394,7 +394,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
           itemToThrow->nrItems  = 1;
 
           const MarkerRetData markerReturnData =
-            Marker::run(MarkerTask::aimThrownWeapon, itemToThrow);
+            Marker::run(MarkerTask::aimThrownWpn, itemToThrow);
 
           if(markerReturnData.didThrowMissile) {
             playerInv.decrItemInSlot(SlotId::missiles);

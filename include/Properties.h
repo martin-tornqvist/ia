@@ -9,7 +9,7 @@
 #include "CmnTypes.h"
 
 class Actor;
-class Weapon;
+class Wpn;
 
 enum PropId {
   propRPhys,
@@ -134,7 +134,7 @@ public:
                     const bool DISABLE_REDRAW = false,
                     const bool DISABLE_PROP_START_EFFECTS = false);
 
-  void tryApplyPropFromWpn(const Weapon& wpn, const bool IS_MELEE);
+  void tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE);
 
   void changeMoveDir(const Pos& actorPos, Dir& dir) const;
   int getChangedMaxHp(const int HP_MAX) const;
