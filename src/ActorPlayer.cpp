@@ -984,10 +984,10 @@ void Player::moveDir(Dir dir) {
           Item* const item = inv_->getItemInSlot(SlotId::wielded);
           if(item) {
             Wpn* const weapon = static_cast<Wpn*>(item);
-            if(weapon->getData().isMeleeWpn) {
+            if(weapon->getData().melee.isMeleeWpn) {
               if(Config::isRangedWpnMeleeePrompt() &&
                   isSeeingActor(*actorAtDest, nullptr)) {
-                if(weapon->getData().isRangedWpn) {
+                if(weapon->getData().ranged.isRangedWpn) {
                   const string wpnName =
                     ItemData::getItemRef(*weapon, ItemRefType::a);
                   Log::addMsg(

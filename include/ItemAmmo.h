@@ -26,7 +26,7 @@ public:
 
   int ammo;
 
-  void setFullAmmo() {ammo = data_->ammoContainedInClip;}
+  void setFullAmmo() {ammo = data_->ranged.ammoContainedInClip;}
 
   void storeToSaveLines(std::vector<std::string>& lines) override {
     lines.push_back(toStr(ammo));

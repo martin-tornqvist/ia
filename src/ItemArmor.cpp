@@ -37,7 +37,7 @@ int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE) {
 
   const int AP_BEFORE = getAbsorptionPoints();
 
-  const double DDF_BASE         = data_->armorData.dmgToDurabilityFactor;
+  const double DDF_BASE         = data_->armor.dmgToDurabilityFactor;
   //TODO Add check for if wearer is player
   const double DDF_WAR_VET_MOD  = PlayerBon::getBg() == Bg::warVet ?
                                   0.5 : 1.0;
@@ -68,7 +68,7 @@ int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE) {
 }
 
 int Armor::getAbsorptionPoints() const {
-  const int AP_MAX = data_->armorData.absorptionPoints;
+  const int AP_MAX = data_->armor.absorptionPoints;
 
   if(dur_ > 60) {return AP_MAX;}
   if(dur_ > 40) {return max(0, AP_MAX - 1);}

@@ -211,10 +211,10 @@ Pos getColumnAndRowTile(const TileId tile) {
     case TileId::blast2: return Pos(12, 7); break;
     case TileId::corpse: return Pos(13, 7); break;
     case TileId::corpse2: return Pos(14, 7); break;
-    case TileId::projectileStandardFrontSlash: return Pos(15, 7); break;
-    case TileId::projectileStandardBackSlash: return Pos(16, 7); break;
-    case TileId::projectileStandardDash: return Pos(17, 7); break;
-    case TileId::projectileStandardVerticalBar: return Pos(18, 7); break;
+    case TileId::projectileStdFrontSlash: return Pos(15, 7); break;
+    case TileId::projectileStdBackSlash: return Pos(16, 7); break;
+    case TileId::projectileStdDash: return Pos(17, 7); break;
+    case TileId::projectileStdVerticalBar: return Pos(18, 7); break;
     case TileId::gore1: return Pos(0, 8); break;
     case TileId::gore2: return Pos(1, 8); break;
     case TileId::gore3: return Pos(2, 8); break;

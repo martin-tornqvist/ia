@@ -66,7 +66,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
       const string swiftStr = IS_SWIFT_RELOAD ? " swiftly" : "";
       if(IS_PLAYER) {
 
-        Audio::play(wpn->getData().reloadSfx);
+        Audio::play(wpn->getData().ranged.reloadSfx);
 
         if(isClip) {
           const string wpnName =
@@ -130,7 +130,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
     printMsgAndPlaySfx(actorReloading, wpn, nullptr,
                        ReloadResult::wpnNotUsingAmmo, false);
   } else {
-    const ItemId ammoType = wpn->getData().rangedAmmoTypeUsed;
+    const ItemId ammoType = wpn->getData().ranged.ammoItemId;
     Item* item = nullptr;
 
     if(wpn->nrAmmoLoaded < wpnAmmoCapacity) {

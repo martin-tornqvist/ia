@@ -292,14 +292,14 @@ bool Monster::tryAttack(Actor& defender) {
   if(!attack.weapon) {return false;}
 
   if(attack.isMelee) {
-    if(attack.weapon->getData().isMeleeWpn) {
+    if(attack.weapon->getData().melee.isMeleeWpn) {
       Attack::melee(*this, *attack.weapon, defender);
       return true;
     }
     return false;
   }
 
-  if(attack.weapon->getData().isRangedWpn) {
+  if(attack.weapon->getData().ranged.isRangedWpn) {
     if(opport.isTimeToReload) {
       Reload::reloadWieldedWpn(*this);
       return true;
@@ -349,7 +349,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         weapon =
           static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
         if(weapon) {
-          if(weapon->getData().isMeleeWpn) {
+          if(weapon->getData().melee.isMeleeWpn) {
             opport.weapons.push_back(weapon);
           }
         }
@@ -357,9 +357,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         //Intrinsic melee attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; ++i) {
           weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
-          if(weapon->getData().isMeleeWpn) {
-            opport.weapons.push_back(weapon);
-          }
+          if(weapon->getData().melee.isMeleeWpn) {opport.weapons.push_back(weapon);}
         }
       }
     } else {
@@ -369,13 +367,13 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
           static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
 
         if(weapon) {
-          if(weapon->getData().isRangedWpn) {
+          if(weapon->getData().ranged.isRangedWpn) {
             opport.weapons.push_back(weapon);
 
             //Check if reload time instead
             if(
               weapon->nrAmmoLoaded == 0 &&
-              !weapon->getData().rangedHasInfiniteAmmo) {
+              !weapon->getData().ranged.hasInfiniteAmmo) {
               if(inv_->hasAmmoForFirearmInInventory()) {
                 opport.isTimeToReload = true;
               }
@@ -386,9 +384,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         //Intrinsic ranged attacks?
         for(unsigned int i = 0; i < nrOfIntrinsics; ++i) {
           weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
-          if(weapon->getData().isRangedWpn) {
-            opport.weapons.push_back(weapon);
-          }
+          if(weapon->getData().ranged.isRangedWpn) {opport.weapons.push_back(weapon);}
         }
       }
     }

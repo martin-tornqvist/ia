@@ -50,7 +50,7 @@ public:
   }
 
   Clr getClr() const {
-    if(!data_->isRangedWpn && data_->rangedHasInfiniteAmmo) {
+    if(!data_->ranged.isRangedWpn && data_->ranged.hasInfiniteAmmo) {
       if(nrAmmoLoaded == 0) {
         Clr ret = data_->clr;
         ret.r /= 2; ret.g /= 2; ret.b /= 2;
@@ -126,7 +126,7 @@ class MachineGun: public Wpn {
 public:
   MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
     Wpn(itemData, ammoData) {
-    ammoCapacity = ammoData->ammoContainedInClip;
+    ammoCapacity = ammoData->ranged.ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = true;
@@ -140,7 +140,7 @@ class Incinerator: public Wpn {
 public:
   Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
     Wpn(itemData, ammoData) {
-    ammoCapacity = ammoData->ammoContainedInClip;
+    ammoCapacity = ammoData->ranged.ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = false;
@@ -155,7 +155,7 @@ class TeslaCannon: public Wpn {
 public:
   TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData) :
     Wpn(itemData, ammoData) {
-    ammoCapacity = ammoData->ammoContainedInClip;
+    ammoCapacity = ammoData->ranged.ammoContainedInClip;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLimit = 8;
     clip = true;

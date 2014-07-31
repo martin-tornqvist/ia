@@ -313,7 +313,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
     const string REAL_NAME_A      = "a potion of " + REAL_TYPE_NAME;
 
     data_->baseName.name        = REAL_NAME;
-    data_->baseName.name_plural = REAL_NAME_PLURAL;
+    data_->baseName.namePlural = REAL_NAME_PLURAL;
     data_->baseName.nameA      = REAL_NAME_A;
 
     if(!IS_SILENT_IDENTIFY) {
@@ -415,15 +415,15 @@ void init() {
   potionLooks_.push_back(PotionLook {"Frothy",   "a Frothy",   clrWhite});
 }
 
-void setClrAndFalseName(ItemDataT* d) {
+void setClrAndFalseName(ItemDataT& d) {
   const int ELEMENT = Rnd::range(0, potionLooks_.size() - 1);
 
   PotionLook& look = potionLooks_.at(ELEMENT);
 
-  d->baseName.name        = look.namePlain + " potion";
-  d->baseName.name_plural = look.namePlain + " potions";
-  d->baseName.nameA      = look.nameA     + " potion";
-  d->clr                  = look.clr;
+  d.baseName.name         = look.namePlain + " potion";
+  d.baseName.namePlural  = look.namePlain + " potions";
+  d.baseName.nameA        = look.nameA     + " potion";
+  d.clr                   = look.clr;
 
   potionLooks_.erase(potionLooks_.begin() + ELEMENT);
 }
@@ -433,7 +433,7 @@ void storeToSaveLines(vector<string>& lines) {
     ItemDataT* const d = ItemData::data[i];
     if(d->isPotion) {
       lines.push_back(d->baseName.name);
-      lines.push_back(d->baseName.name_plural);
+      lines.push_back(d->baseName.namePlural);
       lines.push_back(d->baseName.nameA);
       lines.push_back(toStr(d->clr.r));
       lines.push_back(toStr(d->clr.g));
@@ -448,7 +448,7 @@ void setupFromSaveLines(vector<string>& lines) {
     if(d->isPotion) {
       d->baseName.name = lines.front();
       lines.erase(begin(lines));
-      d->baseName.name_plural = lines.front();
+      d->baseName.namePlural = lines.front();
       lines.erase(begin(lines));
       d->baseName.nameA = lines.front();
       lines.erase(begin(lines));

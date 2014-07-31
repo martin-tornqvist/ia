@@ -19,52 +19,32 @@
 
 using namespace std;
 
-Inventory::Inventory(bool humanoid) {
-  InvSlot invSlot;
+Inventory::Inventory(const bool IS_HUMANOID) {
+  if(IS_HUMANOID) {
+    InvSlot invSlot;
 
-  if(humanoid) {
-    invSlot.id = SlotId::wielded;
-    invSlot.interfaceName       = "Wielding";
-    invSlot.allowWieldedWpn  = true;
+    invSlot.id                = SlotId::wielded;
+    invSlot.name              = "Wielding";
+//    invSlot.allowWieldedWpn   = true;
     slots_.push_back(invSlot);
-    invSlot.reset();
 
+    invSlot = InvSlot();
     invSlot.id = SlotId::wieldedAlt;
-    invSlot.interfaceName       = "Prepared";
-    invSlot.allowWieldedWpn  = true;
+    invSlot.name              = "Prepared";
+//    invSlot.allowWieldedWpn   = true;
     slots_.push_back(invSlot);
-    invSlot.reset();
 
+    invSlot = InvSlot();
     invSlot.id = SlotId::missiles;
-    invSlot.interfaceName       = "Missiles";
-    invSlot.allowMissile        = true;
+    invSlot.name              = "Missiles";
+//    invSlot.allowMissile      = true;
     slots_.push_back(invSlot);
-    invSlot.reset();
 
+    invSlot = InvSlot();
     invSlot.id = SlotId::armorBody;
-    invSlot.interfaceName       = "On body";
-    invSlot.allowArmor          = true;
+    invSlot.name              = "On body";
+//    invSlot.allowArmor        = true;
     slots_.push_back(invSlot);
-
-    //    invSlot.id = SlotId::cloak;
-    //    invSlot.interfaceName = "Cloak";
-    //    invSlot.allowCloak = true;
-    //    slots_.push_back(invSlot);
-    //    invSlot.allowCloak = false;
-
-    //    invSlot.id = SlotId::amulet;
-    //    invSlot.interfaceName = "Amulet";
-    //    invSlot.allowAmulet = true;
-    //    slots_.push_back(invSlot);
-    //    invSlot.allowAmulet = false;
-
-    //    invSlot.id = SlotId::ringLeft;
-    //    invSlot.interfaceName = "Left ring";
-    //    invSlot.allowRing = true;
-    //    slots_.push_back(invSlot);
-    //    invSlot.id = SlotId::ringRight;
-    //    invSlot.interfaceName = "Right ring";
-    //    slots_.push_back(invSlot);
   }
 }
 
@@ -272,13 +252,13 @@ bool Inventory::hasAmmoForFirearmInInventory() {
   //If weapon found
   if(weapon) {
 
-    assert(!weapon->getData().rangedHasInfiniteAmmo); //Should not happen
+    assert(!weapon->getData().ranged.hasInfiniteAmmo); //Should not happen
 
     //If weapon is a firearm
-    if(weapon->getData().isRangedWpn) {
+    if(weapon->getData().ranged.isRangedWpn) {
 
       //Get weapon ammo type
-      const ItemId ammoId = weapon->getData().rangedAmmoTypeUsed;
+      const ItemId ammoId = weapon->getData().ranged.ammoItemId;
 
       //Look for that ammo type in inventory
       for(unsigned int i = 0; i < general_.size(); ++i) {

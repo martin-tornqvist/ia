@@ -58,7 +58,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
   for(size_t i = 0; i < slots.size(); ++i) {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     const InvSlot& slot = slots.at(i);
-    str = slot.interfaceName;
+    str = slot.name;
     pos.x = 0;
     Renderer::drawText(
       str, Panel::screen, pos, IS_CUR_POS ? clrWhiteHigh : clrNosfTealDrk);
@@ -130,8 +130,8 @@ void drawBrowseInventory(const MenuBrowser& browser,
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
     const Clr itemInterfClr = IS_CUR_POS ?
-                                    clrWhiteHigh :
-                                    item->getInterfaceClr();
+                              clrWhiteHigh :
+                              item->getInterfaceClr();
     pos.x = 0;
 
     drawItemSymbol(*item, pos);
@@ -197,8 +197,8 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
     pos.x += 2;
 
     const Clr itemInterfClr = IS_CUR_POS ?
-                                    clrWhiteHigh :
-                                    item->getInterfaceClr();
+                              clrWhiteHigh :
+                              item->getInterfaceClr();
 
     const ItemDataT& d = item->getData();
     PrimaryAttMode attackMode = PrimaryAttMode::none;
@@ -246,8 +246,8 @@ void drawUse(const MenuBrowser& browser,
     Item* const item = inv.getGeneral().at(genInvIndexes.at(i));
 
     const Clr itemInterfClr = IS_CUR_POS ?
-                                    clrWhiteHigh :
-                                    item->getInterfaceClr();
+                              clrWhiteHigh :
+                              item->getInterfaceClr();
 
     //Draw label
     const string& label = item->getDefaultActivationLabel();

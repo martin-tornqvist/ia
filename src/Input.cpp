@@ -253,11 +253,11 @@ void handleKeyPress(const KeyboardReadRetData& d) {
 
         if(item) {
           const ItemDataT& itemData = item->getData();
-          if(!itemData.isRangedWpn) {
+          if(!itemData.ranged.isRangedWpn) {
             Log::addMsg("I am not wielding a firearm.");
           } else {
             auto* wpn = static_cast<Wpn*>(item);
-            if(wpn->nrAmmoLoaded >= 1 || itemData.rangedHasInfiniteAmmo) {
+            if(wpn->nrAmmoLoaded >= 1 || itemData.ranged.hasInfiniteAmmo) {
               Marker::run(MarkerTask::aimRangedWpn, nullptr);
             } else if(Config::isRangedWpnAutoReload()) {
               Reload::reloadWieldedWpn(*(Map::player));

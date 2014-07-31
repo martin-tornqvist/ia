@@ -237,7 +237,7 @@ void init();
 void storeToSaveLines(std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);
 
-void setClrAndFalseName(ItemDataT* d);
+void setClrAndFalseName(ItemDataT& d);
 
 } //PotionNameHandling
 

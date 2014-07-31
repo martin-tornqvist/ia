@@ -171,7 +171,7 @@ struct PosAndVal {
 
 struct DiceParam {
 public:
-  DiceParam() : rolls(1), sides(100), plus(0) {}
+  DiceParam() : rolls(0), sides(0), plus(0) {}
 
   DiceParam(const int ROLLS, const int SIDES, const int PLUS = 0) :
     rolls(ROLLS), sides(SIDES), plus(PLUS) {}
@@ -194,8 +194,9 @@ public:
 struct Range {
   Range() : lower(-1), upper(-1) {}
 
-  Range(const int LOWER, const int UPPER) :
-    lower(LOWER), upper(UPPER) {}
+  Range(const int LOWER, const int UPPER) : lower(LOWER), upper(UPPER) {}
+
+  Range(const Range& other) : lower(other.lower), upper(other.upper) {}
 
   int lower, upper;
 };
@@ -216,13 +217,13 @@ struct Fraction {
 
 struct ItemName {
 public:
-  ItemName() : name(""), name_plural(""), nameA("") {}
+  ItemName() : name(""), namePlural(""), nameA("") {}
 
   ItemName(const std::string& NAME, const std::string& NAME_PL,
            const std::string& NAME_A) :
-    name(NAME), name_plural(NAME_PL), nameA(NAME_A) {}
+    name(NAME), namePlural(NAME_PL), nameA(NAME_A) {}
 
-  std::string name, name_plural, nameA;
+  std::string name, namePlural          , nameA;
 };
 
 struct ItemAttMsgs {

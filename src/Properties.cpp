@@ -1073,21 +1073,17 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 }
 
 void PropHandler::tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE) {
-  const ItemDataT& wpnData = wpn.getData();
-  Prop* propAppliedFromWpn =
-    IS_MELEE ? wpnData.propAppliedOnMelee : wpnData.propAppliedOnRanged;
+  const ItemDataT& d = wpn.getData();
+  auto* prop = IS_MELEE ? d.melee.propApplied : d.ranged.propApplied;
 
-  if(propAppliedFromWpn) {
-
+  if(prop) {
     //If weapon damage type is resisted by the defender, the property is
     //automatically resisted
-    DmgType dmgType = IS_MELEE ? wpnData.meleeDmgType : wpnData.rangedDmgType;
+    DmgType dmgType = IS_MELEE ? d.melee.dmgType : d.ranged.dmgType;
     if(!tryResistDmg(dmgType, false)) {
       //Make a copy of the weapon effect
-      Prop* const prop = mkProp(
-                           propAppliedFromWpn->getId(), PropTurns::specific,
-                           propAppliedFromWpn->turnsLeft_);
-      tryApplyProp(prop);
+      auto* const propCpy = mkProp(prop->getId(), PropTurns::specific, prop->turnsLeft_);
+      tryApplyProp(propCpy);
     }
   }
 }

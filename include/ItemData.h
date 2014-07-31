@@ -28,7 +28,7 @@ enum class ItemType {
   meleeWpnIntr,
   rangedWpn,
   rangedWpnIntr,
-  missileWpn,
+  throwingWpn,
   ammo,
   ammoClip,
   scroll,
@@ -166,29 +166,19 @@ enum class ItemId {
   END
 };
 
-struct ArmorData {
-  ArmorData() : absorptionPoints(0), dmgToDurabilityFactor(0.0) {}
-
-  int absorptionPoints;
-  double dmgToDurabilityFactor;
-};
-
 class ItemDataT {
 public:
-  ItemDataT(const ItemId itemId) :
-    id(itemId), propAppliedOnMelee(nullptr), propAppliedOnRanged(nullptr) {}
+  ItemDataT(const ItemId id);
 
-  ~ItemDataT() {
-    if(propAppliedOnMelee)  {delete propAppliedOnMelee;}
-    if(propAppliedOnRanged) {delete propAppliedOnRanged;}
-  }
+  ItemDataT() = default;
+
+  ~ItemDataT() {}
 
   ItemId id;
   ItemValue itemValue;
   ItemWeight itemWeight;
-  int spawnStandardMinDLVL;
-  int spawnStandardMaxDLVL;
-  int maxStackSizeAtSpawn;
+  Range spawnStdRange;
+  int maxStackAtSpawn;
   int chanceToIncludeInSpawnList;
   bool isStackable;
   bool isIdentified;
@@ -198,48 +188,68 @@ public:
   Clr clr;
   TileId tile;
   PrimaryAttMode primaryAttackMode;
-  bool isExplosive, isScroll, isPotion, isDevice, isEatable;
+  bool isExplosive, isScroll, isPotion, isDevice;
   bool isArmor, isCloak, isRing, isAmulet;
-  bool isIntrinsic, isMeleeWpn, isRangedWpn, isMissileWpn, isShotgun;
-  bool isMachineGun, isAmmo, isAmmoClip, isMedicalBag;
+  bool isIntrinsic;
+  bool isAmmo, isAmmoClip, isMedicalBag;
   SpellId spellCastFromScroll;
-  ArmorData armorData;
-  int ammoContainedInClip;
-  DiceParam missileDmg;
-  int missileHitChanceMod;
-  std::pair<int, int> meleeDmg;
-  int meleeHitChanceMod;
-  ItemAttMsgs meleeAttMsgs;
-  Prop* propAppliedOnMelee; //TODO This requires deep copy of items
-  DmgType meleeDmgType;
-  bool meleeCausesKnockBack;
-  bool rangedCausesKnockBack;
-  DiceParam rangedDmg;
-  std::string rangedDmgInfoOverride;
-  int rangedHitChanceMod;
-  ItemId rangedAmmoTypeUsed;
-  DmgType rangedDmgType;
-  bool rangedHasInfiniteAmmo;
-  char rangedMissileGlyph;
-  TileId rangedMissileTile;
-  Clr rangedMissileClr;
-  bool rangedMissileLeavesTrail;
-  bool rangedMissileLeavesSmoke;
-  ItemAttMsgs rangedAttMsgs;
-  std::string rangedSndMsg;
-  SndVol rangedSndVol;
-  bool rangedMakesRicochetSound;
   std::string landOnHardSurfaceSoundMsg;
   SfxId landOnHardSurfaceSfx;
-  SfxId rangedAttackSfx;
-  SfxId meleeHitSmallSfx;
-  SfxId meleeHitMediumSfx;
-  SfxId meleeHitHardSfx;
-  SfxId meleeMissSfx;
-  SfxId reloadSfx;
-  Prop* propAppliedOnRanged;
   std::vector<RoomType> nativeRooms;
   std::vector< std::pair<FeatureId, int> > featuresCanBeFoundIn;
+
+  struct MeleeItemData {
+    MeleeItemData();
+    ~MeleeItemData();
+
+    bool isMeleeWpn;
+    std::pair<int, int> dmg;
+    int hitChanceMod;
+    ItemAttMsgs attMsgs;
+    Prop* propApplied;
+    DmgType dmgType;
+    bool isKnockback;
+    SfxId hitSmallSfx;
+    SfxId hitMediumSfx;
+    SfxId hitHardSfx;
+    SfxId missSfx;
+  } melee;
+
+  struct RangedItemData {
+    RangedItemData();
+    ~RangedItemData();
+
+    bool isRangedWpn, isThrowingWpn, isMachineGun, isShotgun;
+    int ammoContainedInClip;
+    DiceParam dmg;
+    DiceParam throwDmg;
+    int hitChanceMod;
+    int throwHitChanceMod;
+    bool isKnockback;
+    std::string dmgInfoOverride;
+    ItemId ammoItemId;
+    DmgType dmgType;
+    bool hasInfiniteAmmo;
+    char missileGlyph;
+    TileId missileTile;
+    Clr missileClr;
+    bool missileLeavesTrail;
+    bool missileLeavesSmoke;
+    ItemAttMsgs attMsgs;
+    std::string sndMsg;
+    SndVol sndVol;
+    bool makesRicochetSnd;
+    SfxId attSfx;
+    SfxId reloadSfx;
+    Prop* propApplied;
+  } ranged;
+
+  struct ArmorItemData {
+    ArmorItemData();
+
+    int absorptionPoints;
+    double dmgToDurabilityFactor;
+  } armor;
 };
 
 class Item;
@@ -264,7 +274,7 @@ std::string getItemInterfaceRef(
   const PrimaryAttMode attMode = PrimaryAttMode::none);
 
 bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
-                      const bool IS_MELEE);
+                   const bool IS_MELEE);
 
 } //ItemData
 

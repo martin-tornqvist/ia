@@ -30,7 +30,7 @@ int       browserPosToSetAfterDrop  = 0;
 namespace {
 
 //The values in this vector refer to general inventory elements
-vector<unsigned int> generalItemsToShow_;
+vector<size_t> generalItemsToShow_;
 
 bool runDropScreen(const int GLOBAL_ELEMENT_NR) {
   TRACE << "InventoryHandler::runDropScreen()" << endl;
@@ -72,7 +72,7 @@ void filterPlayerGeneralSlotButtonsEquip(
   vector<Item*>& general = Map::player->getInv().getGeneral();
   generalItemsToShow_.resize(0);
 
-  for(unsigned int i = 0; i < general.size(); ++i) {
+  for(size_t i = 0; i < general.size(); ++i) {
     const Item* const item = general.at(i);
     const ItemDataT& data = item->getData();
 
@@ -81,26 +81,25 @@ void filterPlayerGeneralSlotButtonsEquip(
         if(data.isArmor) {
           generalItemsToShow_.push_back(i);
         }
-      }
-      break;
+      } break;
+
       case SlotId::wielded: {
-        if(data.isMeleeWpn || data.isRangedWpn) {
+        if(data.melee.isMeleeWpn || data.ranged.isRangedWpn) {
           generalItemsToShow_.push_back(i);
         }
-      }
-      break;
+      } break;
+
       case SlotId::wieldedAlt: {
-        if(data.isMeleeWpn || data.isRangedWpn) {
+        if(data.melee.isMeleeWpn || data.ranged.isRangedWpn) {
           generalItemsToShow_.push_back(i);
         }
-      }
-      break;
+      } break;
+
       case SlotId::missiles: {
-        if(data.isMissileWpn) {
+        if(data.ranged.isThrowingWpn) {
           generalItemsToShow_.push_back(i);
         }
-      }
-      break;
+      } break;
     }
   }
 }
@@ -108,14 +107,14 @@ void filterPlayerGeneralSlotButtonsEquip(
 void filterPlayerGeneralSlotButtonsUsable() {
   vector<Item*>& general = Map::player->getInv().getGeneral();
 
-  vector< vector<unsigned int> > groups;
+  vector< vector<size_t> > groups;
 
-  for(unsigned int i = 0; i < general.size(); ++i) {
+  for(size_t i = 0; i < general.size(); ++i) {
     const Item* const item = general.at(i);
     const string& label = item->getDefaultActivationLabel();
     if(!label.empty()) {
       bool isExistingGroupFound = false;
-      for(vector<unsigned int>& group : groups) {
+      for(vector<size_t>& group : groups) {
         if(label == general.at(group.front())->getDefaultActivationLabel()) {
           group.push_back(i);
           isExistingGroupFound = true;
@@ -132,8 +131,8 @@ void filterPlayerGeneralSlotButtonsUsable() {
 
   generalItemsToShow_.resize(0);
 
-  for(vector<unsigned int>& group : groups) {
-    for(unsigned int itemIndex : group) {
+  for(vector<size_t>& group : groups) {
+    for(size_t itemIndex : group) {
       generalItemsToShow_.push_back(itemIndex);
     }
   }
@@ -161,7 +160,7 @@ void init() {
 }
 
 void activateDefault(
-  const unsigned int GENERAL_ITEMS_ELEMENT) {
+  const size_t GENERAL_ITEMS_ELEMENT) {
 
   Inventory& playerInv = Map::player->getInv();
   Item* item = playerInv.getGeneral().at(GENERAL_ITEMS_ELEMENT);

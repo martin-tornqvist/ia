@@ -7,41 +7,27 @@
 
 #include "ItemData.h"
 
-enum class SlotId {
-  wielded,
-  wieldedAlt,
-  missiles,
-  armorBody
-};
+enum class SlotId {wielded, wieldedAlt, missiles, armorBody};
 
 struct InvSlot {
-  InvSlot() {reset();}
+  InvSlot() :
+//    allowWieldedWpn(false),
+//    allowMissile(false),
+//    allowArmor(false),
+//    allowHeadwear(false),
+    name(""),
+    id(SlotId::wielded),
+    item(nullptr) {}
 
-  void reset() {
-    allowWieldedWpn  = false;
-    allowMissile        = false;
-    allowArmor          = false;
-    allowCloak          = false;
-    allowAmulet         = false;
-    allowRing           = false;
-    interfaceName       = "";
-    id                  = SlotId::wielded;
-    item                = nullptr;
-  }
-  bool allowWieldedWpn;
-  bool allowMissile;
-  bool allowArmor;
-  bool allowCloak;
-  bool allowAmulet;
-  bool allowRing;
-  std::string interfaceName;
+//  bool allowWieldedWpn, allowMissile, allowArmor, allowHeadwear;
+  std::string name;
   SlotId id;
   Item* item;
 };
 
 class Inventory {
 public:
-  Inventory(bool humanoid);
+  Inventory(bool IS_HUMANOID);
 
   ~Inventory();
 
@@ -60,13 +46,12 @@ public:
 
   bool moveToGeneral(InvSlot* inventorySlot);
 
-  void moveFromGeneralToIntrinsics(const unsigned int GENERAL_INV_ELEMENT);
+  void moveFromGeneralToIntrinsics(const size_t GENERAL_INV_ELEMENT);
 
-  void moveItemToSlot(InvSlot* inventoryslot,
-                      const unsigned int GENERAL_INV_ELEMENT);
+  void moveItemToSlot(InvSlot* inventoryslot, const size_t GENERAL_INV_ELEMENT);
 
   void equipGeneralItemAndPossiblyEndTurn(
-    const unsigned int GENERAL_INV_ELEMENT, const SlotId slotToEquip);
+    const size_t GENERAL_INV_ELEMENT, const SlotId slotToEquip);
 
   void swapWieldedAndPrepared(const bool IS_FREE_TURN);
 

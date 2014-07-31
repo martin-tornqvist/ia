@@ -23,8 +23,8 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
 
   ItemDataT* ammoD = nullptr;
 
-  if(d->rangedAmmoTypeUsed != ItemId::empty) {
-    ammoD = ItemData::data[int(d->rangedAmmoTypeUsed)];
+  if(d->ranged.ammoItemId != ItemId::empty) {
+    ammoD = ItemData::data[int(d->ranged.ammoItemId)];
   }
 
   switch(itemId) {
@@ -173,17 +173,17 @@ void setItemRandomizedProperties(Item* item) {
   const ItemDataT& d = item->getData();
 
   //If it is a pure melee weapon, it may get a plus
-  if(d.isMeleeWpn && !d.isRangedWpn) {
+  if(d.melee.isMeleeWpn && !d.ranged.isRangedWpn) {
     static_cast<Wpn*>(item)->setRandomMeleePlus();
   }
 
   //If firearm, spawn with random amount of ammo
-  if(d.isRangedWpn && !d.rangedHasInfiniteAmmo) {
+  if(d.ranged.isRangedWpn && !d.ranged.hasInfiniteAmmo) {
     Wpn* const weapon = static_cast<Wpn*>(item);
     if(weapon->ammoCapacity == 1) {
       weapon->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
     } else {
-      if(d.isMachineGun) {
+      if(d.ranged.isMachineGun) {
         const int CAP = weapon->ammoCapacity;
         const int MIN = CAP / 2;
         const int CAP_SCALED = CAP / NR_MG_PROJECTILES;
@@ -198,9 +198,7 @@ void setItemRandomizedProperties(Item* item) {
     }
   }
 
-  if(d.isStackable) {
-    item->nrItems = Rnd::range(1, d.maxStackSizeAtSpawn);
-  }
+  if(d.isStackable) {item->nrItems = Rnd::range(1, d.maxStackAtSpawn);}
 }
 
 Item* mkItemOnMap(const ItemId itemId, const Pos& pos) {

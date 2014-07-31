@@ -27,8 +27,8 @@ void mkItems() {
 
   for(int i = 1; i < int(ItemId::END); ++i) {
     if(
-      Map::dlvl >= data[i]->spawnStandardMinDLVL &&
-      Map::dlvl <= data[i]->spawnStandardMaxDLVL && !data[i]->isIntrinsic) {
+      Map::dlvl >= data[i]->spawnStdRange.lower &&
+      Map::dlvl <= data[i]->spawnStdRange.upper && !data[i]->isIntrinsic) {
       if(Rnd::percentile() < data[i]->chanceToIncludeInSpawnList) {
         candidates.push_back(ItemId(i));
       }
