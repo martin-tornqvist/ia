@@ -1137,8 +1137,8 @@ void initDataList() {
   d = new ItemDataT(ItemId::gasMask);
   resetData(*d, ItemType::general);
   d->baseName = ItemName("Gas Mask", "", "A Gas Mask");
-  d->clr = clrGray;
-  d->tile = TileId::armor;
+  d->clr = clrBrown;
+  d->tile = TileId::mask;
   d->glyph = '[';
   d->isHeadwear = true;
   d->spawnStdRange = Range(1, LAST_ROOM_AND_CORRIDOR_LVL);
@@ -1151,7 +1151,7 @@ void initDataList() {
   resetData(*d, ItemType::general);
   d->baseName = ItemName("Hideous Mask", "", "The Hideous Mask");
   d->clr = clrMagenta;
-  d->tile = TileId::armor;
+  d->tile = TileId::mask;
   d->glyph = '[';
   d->isHeadwear = true;
   d->spawnStdRange = Range(-1, -1);

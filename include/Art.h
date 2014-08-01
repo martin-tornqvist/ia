@@ -30,6 +30,7 @@ enum class TileId {
   chestOpen,
   electricLantern,
   medicalBag,
+  mask,
   rat,
   spider,
   wolf,

@@ -82,6 +82,7 @@ void ArmorAsbSuit::onWear() {
   propsEnabledOnCarrier.push_back(new PropRFire(PropTurns::indefinite));
   propsEnabledOnCarrier.push_back(new PropRAcid(PropTurns::indefinite));
   propsEnabledOnCarrier.push_back(new PropRElec(PropTurns::indefinite));
+  propsEnabledOnCarrier.push_back(new PropRBreath(PropTurns::indefinite));
 }
 
 void ArmorAsbSuit::onTakeOff() {

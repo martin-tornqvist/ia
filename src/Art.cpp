@@ -140,6 +140,7 @@ Pos getColumnAndRowTile(const TileId tile) {
     case TileId::chestOpen: return Pos(12, 1); break;
     case TileId::electricLantern: return Pos(16, 1); break;
     case TileId::medicalBag: return Pos(17, 1); break;
+    case TileId::mask: return Pos(18, 1); break;
     case TileId::rat: return Pos(1, 2); break;
     case TileId::spider: return Pos(2, 2); break;
     case TileId::wolf: return Pos(3, 2); break;

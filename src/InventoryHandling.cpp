@@ -217,17 +217,26 @@ void runSlotsScreen() {
 
             inv.moveToGeneral(&slot);
 
-            if(slot.id == SlotId::body) {
-              screenToOpenAfterDrop = InvScrId::slots;
-              browserPosToSetAfterDrop = browser.getPos().y;
+            switch(slot.id) {
+              case SlotId::wielded:
+              case SlotId::wieldedAlt:
+              case SlotId::thrown: {
+                RenderInventory::drawBrowseSlots(browser);
+              } break;
+              case SlotId::body: {
+                screenToOpenAfterDrop = InvScrId::slots;
+                browserPosToSetAfterDrop = browser.getPos().y;
 
-              Log::addMsg("I take off my " + itemName + ".", clrWhite, true, true);
-              item->onTakeOff();
-              Renderer::drawMapAndInterface();
-              GameTime::actorDidAct();
-              return;
-            } else {
-              RenderInventory::drawBrowseSlots(browser);
+                Log::addMsg("I take off my " + itemName + ".", clrWhite, true, true);
+                item->onTakeOff();
+                Renderer::drawMapAndInterface();
+                GameTime::actorDidAct();
+                return;
+              }
+              case SlotId::head: {
+                item->onTakeOff();
+                RenderInventory::drawBrowseSlots(browser);
+              } break;
             }
           } else {
             if(runEquipScreen(slot)) {
