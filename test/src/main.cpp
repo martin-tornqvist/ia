@@ -408,7 +408,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   }
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
                             ExplSrc::misc, 0, SfxId::END,
-                            new PropBurning(PropTurns::standard));
+                            new PropBurning(PropTurns::std));
   CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied));
   CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied));
   for(int i = 0; i < NR_CORPSES; ++i) {
@@ -531,7 +531,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   inv.putInSlot(SlotId::wielded, item);
   //Wear asbestos suit to test properties from wearing items
   item = ItemFactory::mk(ItemId::armorAsbSuit);
-  inv.putInSlot(SlotId::armorBody, item);
+  inv.putInSlot(SlotId::body, item);
   item = ItemFactory::mk(ItemId::pistolClip);
   static_cast<ItemAmmoClip*>(item)->ammo = 1;
   inv.putInGeneral(item);
@@ -570,8 +570,8 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   PropHandler& propHlr = Map::player->getPropHandler();
   propHlr.tryApplyProp(new PropDiseased(PropTurns::indefinite));
   propHlr.tryApplyProp(new PropRSleep(PropTurns::specific, 3));
-  propHlr.tryApplyProp(new PropBlessed(PropTurns::standard));
-  propHlr.tryApplyProp(new PropWound(PropTurns::standard));
+  propHlr.tryApplyProp(new PropBlessed(PropTurns::std));
+  propHlr.tryApplyProp(new PropWound(PropTurns::std));
   Prop* prop      = propHlr.getProp(propWound, PropSrc::applied);
   PropWound* wnd  = static_cast<PropWound*>(prop);
   CHECK(wnd);
@@ -613,7 +613,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(int(ItemId::teslaCannon),
               int(inv.getItemInSlot(SlotId::wielded)->getData().id));
   CHECK_EQUAL(int(ItemId::armorAsbSuit),
-              int(inv.getItemInSlot(SlotId::armorBody)->getData().id));
+              int(inv.getItemInSlot(SlotId::body)->getData().id));
   int nrClipWith1 = 0;
   int nrClipWith2 = 0;
   int nrClipWith3 = 0;

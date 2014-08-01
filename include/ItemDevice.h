@@ -11,7 +11,7 @@ public:
 
   virtual ConsumeItem activateDefault(Actor* const actor) override = 0;
 
-  virtual Clr getInterfaceClr() const {return clrCyan;}
+  virtual Clr getInterfaceClr() const override {return clrCyan;}
 
   virtual void newTurnInInventory() override {}
 

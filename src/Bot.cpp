@@ -111,7 +111,7 @@ void act() {
     const int ELEMENT = Rnd::range(0, GameTime::actors_.size() - 1);
     Actor* const actor = GameTime::actors_.at(ELEMENT);
     if(actor != Map::player) {
-      actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::standard), true);
+      actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std), true);
     }
   }
 

@@ -16,9 +16,9 @@ public:
     return ConsumeItem::yes;
   }
 
-  std::string getDefaultActivationLabel() const {return "Drink";}
+  std::string getDefaultActivationLabel() const override {return "Drink";}
 
-  Clr getInterfaceClr() const {return clrBlueLgt;}
+  Clr getInterfaceClr() const override {return clrBlueLgt;}
 
   void quaff(Actor* const actor);
 

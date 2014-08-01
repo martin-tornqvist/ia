@@ -233,7 +233,7 @@ bool Vortex::onActorTurn_() {
 void DustVortex::die_() {
   Explosion::runExplosionAt(
     pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropBlind(PropTurns::standard), &clrGray);
+    new PropBlind(PropTurns::std), &clrGray);
 }
 
 void DustVortex::mkStartItems() {
@@ -243,7 +243,7 @@ void DustVortex::mkStartItems() {
 void FireVortex::die_() {
   Explosion::runExplosionAt(
     pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropBurning(PropTurns::standard), &clrRedLgt);
+    new PropBurning(PropTurns::std), &clrRedLgt);
 }
 
 void FireVortex::mkStartItems() {
@@ -279,7 +279,7 @@ bool Ghost::onActorTurn_() {
             Log::addMsg("I dodge!", clrMsgGood);
           } else {
             Map::player->getPropHandler().tryApplyProp(
-              new PropSlowed(PropTurns::standard));
+              new PropSlowed(PropTurns::std));
           }
           GameTime::actorDidAct();
           return true;
@@ -568,7 +568,7 @@ void ColourOOSpace::onStandardTurn() {
 
   if(Map::player->isSeeingActor(*this, nullptr)) {
     Map::player->getPropHandler().tryApplyProp(
-      new PropConfused(PropTurns::standard));
+      new PropConfused(PropTurns::std));
   }
 }
 

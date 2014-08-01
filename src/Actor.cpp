@@ -62,14 +62,13 @@ int Actor::getHpMax(const bool WITH_MODIFIERS) const {
 }
 
 bool Actor::isSeeingActor(
-  const Actor& other, const bool visionBlockingCells[MAP_W][MAP_H]) const {
+  const Actor& other, const bool visionBlockers[MAP_W][MAP_H]) const {
 
   if(other.deadState == ActorDeadState::alive) {
     if(this == &other) {return true;}
 
     if(this == Map::player) {
-      const bool IS_MONSTER_SNEAKING =
-        static_cast<const Monster*>(&other)->isStealth;
+      const bool IS_MONSTER_SNEAKING = static_cast<const Monster*>(&other)->isStealth;
       return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer &&
              !IS_MONSTER_SNEAKING;
     }
@@ -77,8 +76,7 @@ bool Actor::isSeeingActor(
     if(
       static_cast<const Monster*>(this)->leader ==
       Map::player && &other != Map::player) {
-      const bool IS_MONSTER_SNEAKING =
-        static_cast<const Monster*>(&other)->isStealth;
+      const bool IS_MONSTER_SNEAKING = static_cast<const Monster*>(&other)->isStealth;
       if(IS_MONSTER_SNEAKING) return false;
     }
 
@@ -91,10 +89,9 @@ bool Actor::isSeeingActor(
     if(other.pos.y - pos.y > FOV_STD_RADI_INT) return false;
     if(pos.y - other.pos.y > FOV_STD_RADI_INT) return false;
 
-    if(visionBlockingCells) {
+    if(visionBlockers) {
       const bool IS_BLOCKED_BY_DARKNESS = !data_->canSeeInDarkness;
-      return Fov::checkCell(visionBlockingCells, other.pos, pos,
-                            IS_BLOCKED_BY_DARKNESS);
+      return Fov::checkCell(visionBlockers, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
     }
   }
   return false;
@@ -383,7 +380,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
 
   //Filter damage through worn armor
   if(isHumanoid()) {
-    Armor* armor = static_cast<Armor*>(inv_->getItemInSlot(SlotId::armorBody));
+    Armor* armor = static_cast<Armor*>(inv_->getItemInSlot(SlotId::body));
     if(armor) {
       TRACE_VERBOSE << "Actor: Has armor, running hit on armor" << endl;
 
@@ -398,7 +395,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
           }
           delete armor;
           armor = nullptr;
-          inv_->getSlot(SlotId::armorBody)->item = nullptr;
+          inv_->getSlot(SlotId::body)->item = nullptr;
         }
       }
     }

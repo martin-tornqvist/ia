@@ -10,7 +10,7 @@ public:
   ItemAmmo(ItemDataT* const itemData) :
     Item(itemData) {}
   virtual ~ItemAmmo() {}
-  virtual Clr getInterfaceClr() const {return clrWhite;}
+  Clr getInterfaceClr() const override {return clrWhite;}
 
 private:
 };

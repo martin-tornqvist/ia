@@ -123,6 +123,9 @@ enum class ItemId {
   armorAsbSuit,
   armorHeavyCoat,
 
+  gasMask,
+  hideousMask,
+
   scrollPestilence,
   scrollTelep,
   scrollSlowMon,
@@ -189,7 +192,7 @@ public:
   TileId tile;
   PrimaryAttMode primaryAttackMode;
   bool isExplosive, isScroll, isPotion, isDevice;
-  bool isArmor, isCloak, isRing, isAmulet;
+  bool isArmor, isHeadwear;
   bool isIntrinsic;
   bool isAmmo, isAmmoClip, isMedicalBag;
   SpellId spellCastFromScroll;

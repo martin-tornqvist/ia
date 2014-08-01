@@ -81,7 +81,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
         attackMode =
           d.primaryAttackMode == PrimaryAttMode::missile ?
           PrimaryAttMode::melee : d.primaryAttackMode;
-      } else if(slot.id == SlotId::missiles) {
+      } else if(slot.id == SlotId::thrown) {
         attackMode = PrimaryAttMode::missile;
       }
 
@@ -157,30 +157,31 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
   Renderer::coverArea(
     Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
-  const bool IS_ANY_ITEM_AVAILABLE = !genInvIndexes.empty();
+  const bool HAS_ITEM = !genInvIndexes.empty();
 
   string str = "";
   switch(slotToEquip) {
-    case SlotId::armorBody:
-      str = IS_ANY_ITEM_AVAILABLE ? "Wear which armor?" :
-            "I carry no armor.";
-      break;
-    case SlotId::missiles:
-      str = IS_ANY_ITEM_AVAILABLE ? "Use which item as missiles?" :
-            "I carry no weapon to throw." ;
-      break;
-    case SlotId::wielded:
-      str = IS_ANY_ITEM_AVAILABLE ? "Wield which item?" :
-            "I carry no weapon to wield.";
-      break;
-    case SlotId::wieldedAlt:
-      str = IS_ANY_ITEM_AVAILABLE ? "Prepare which weapon?" :
-            "I carry no weapon to wield.";
-      break;
+    case SlotId::wielded: {
+      str = HAS_ITEM ? "Wield which item?"            : "I carry no weapon to wield.";
+    } break;
+
+    case SlotId::wieldedAlt: {
+      str = HAS_ITEM ? "Prepare which weapon?"        : "I carry no weapon to wield.";
+    } break;
+
+    case SlotId::thrown: {
+      str = HAS_ITEM ? "Use which item as missiles?"  : "I carry no weapon to throw." ;
+    } break;
+
+    case SlotId::body: {
+      str = HAS_ITEM ? "Wear which armor?"            : "I carry no armor.";
+    } break;
+
+    case SlotId::head: {
+      str = HAS_ITEM ? "Wear what on head?"           : "I carry no headwear.";
+    } break;
   }
-  if(IS_ANY_ITEM_AVAILABLE) {
-    str += " | shift+select to drop";
-  }
+  if(HAS_ITEM) {str += " | shift+select to drop";}
   str += cancelInfoStr;
   Renderer::drawText(str, Panel::screen, pos, clrWhiteHigh);
   pos.y++;
@@ -206,7 +207,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
       attackMode =
         d.primaryAttackMode == PrimaryAttMode::missile ?
         PrimaryAttMode::melee : d.primaryAttackMode;
-    } else if(slotToEquip == SlotId::missiles) {
+    } else if(slotToEquip == SlotId::thrown) {
       attackMode = PrimaryAttMode::missile;
     }
 

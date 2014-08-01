@@ -86,11 +86,11 @@ void Player::mkStartItems() {
   inv_->putInGeneral(ItemFactory::mk(ItemId::molotov, NR_MOLOTOV));
 
   if(NR_THR_KNIVES > 0) {
-    inv_->putInSlot(SlotId::missiles,
+    inv_->putInSlot(SlotId::thrown,
                     ItemFactory::mk(ItemId::throwingKnife, NR_THR_KNIVES));
   }
 
-  inv_->putInSlot(SlotId::armorBody,
+  inv_->putInSlot(SlotId::body,
                   ItemFactory::mk(ItemId::armorLeatherJacket));
 
   inv_->putInGeneral(ItemFactory::mk(ItemId::electricLantern));
@@ -342,7 +342,7 @@ void Player::incrInsanity() {
         case 3: {
           msg += "I struggle to not fall into a stupor.";
           Popup::showMsg(msg, true, "Fainting!", SfxId::insanityRise);
-          propHandler_->tryApplyProp(new PropFainted(PropTurns::standard));
+          propHandler_->tryApplyProp(new PropFainted(PropTurns::std));
           return;
         } break;
 
@@ -494,7 +494,7 @@ void Player::incrInsanity() {
                  "a tranced state of mind. I struggle to recall "
                  "where I am, or what I'm doing.";
           Popup::showMsg(msg, true, "Confusion!", SfxId::insanityRise);
-          propHandler_->tryApplyProp(new PropConfused(PropTurns::standard));
+          propHandler_->tryApplyProp(new PropConfused(PropTurns::std));
           return;
         } break;
 
@@ -643,7 +643,7 @@ void Player::onActorTurn() {
         } break;
 
         case InvScrId::equip: {
-          InvHandling::runEquipScreen(InvHandling::equipSlotToOpenAfterDrop);
+          InvHandling::runEquipScreen(*InvHandling::equipSlotToOpenAfterDrop);
         } break;
 
         case InvScrId::slots: {
@@ -698,7 +698,7 @@ void Player::onStandardTurn() {
     updateColor();
     Explosion::runExplosionAt(
       pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::explosionMolotov,
-      new PropBurning(PropTurns::standard));
+      new PropBurning(PropTurns::std));
   }
 
   //Flare
@@ -1040,7 +1040,7 @@ void Player::moveDir(Dir dir) {
           return;
         } else if(ENC >= 100) {
           Log::addMsg("I stagger.", clrMsgWarning);
-          propHandler_->tryApplyProp(new PropWaiting(PropTurns::standard));
+          propHandler_->tryApplyProp(new PropWaiting(PropTurns::std));
         }
 
         pos = dest;

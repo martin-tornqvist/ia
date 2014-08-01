@@ -121,7 +121,7 @@ void tryCast(const Spell* const spell) {
       prevSpellCast_ = spell;
       if(isWarlock && Rnd::oneIn(2)) {
         Map::player->getPropHandler().tryApplyProp(
-          new PropWarlockCharged(PropTurns::standard));
+          new PropWarlockCharged(PropTurns::std));
       }
     }
   }

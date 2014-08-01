@@ -60,7 +60,7 @@ public:
     return data_->clr;
   }
 
-  Clr getInterfaceClr() const {return clrGray;}
+  Clr getInterfaceClr() const override {return clrGray;}
 
 
 protected:

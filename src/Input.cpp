@@ -387,7 +387,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
 
       if(Map::player->getPropHandler().allowAttackRanged(true)) {
         Inventory& playerInv = Map::player->getInv();
-        Item* itemStack = playerInv.getItemInSlot(SlotId::missiles);
+        Item* itemStack = playerInv.getItemInSlot(SlotId::thrown);
 
         if(itemStack) {
           Item* itemToThrow     = ItemFactory::copyItem(itemStack);
@@ -397,7 +397,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
             Marker::run(MarkerTask::aimThrownWpn, itemToThrow);
 
           if(markerReturnData.didThrowMissile) {
-            playerInv.decrItemInSlot(SlotId::missiles);
+            playerInv.decrItemInSlot(SlotId::thrown);
           } else {
             delete itemToThrow;
           }
@@ -538,11 +538,11 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   //----------------------------------- DROP ITEMS AROUND PLAYER
   else if(d.sdlKey_ == SDLK_F6) {
     if(IS_DEBUG_MODE) {
+      ItemFactory::mkItemOnMap(ItemId::hideousMask, Map::player->pos);
+      ItemFactory::mkItemOnMap(ItemId::gasMask, Map::player->pos);
       for(int i = 1; i < int(ItemId::END); ++i) {
         const ItemDataT* const data = ItemData::data[i];
-        if(
-          !data->isIntrinsic &&
-          (data->isPotion || data->isScroll || data->isDevice)) {
+        if(!data->isIntrinsic && (data->isPotion || data->isScroll || data->isDevice)) {
           ItemFactory::mkItemOnMap((ItemId)(i), Map::player->pos);
         }
       }
@@ -563,7 +563,7 @@ void handleKeyPress(const KeyboardReadRetData& d) {
   else if(d.sdlKey_ == SDLK_F8) {
     if(IS_DEBUG_MODE) {
       Map::player->getPropHandler().tryApplyProp(
-        new PropInfected(PropTurns::standard));
+        new PropInfected(PropTurns::std));
       clearEvents();
     }
     return;

@@ -240,16 +240,12 @@ Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {
   return closestActors.at(ELEMENT);
 }
 
-bool isPosAdj(const Pos& pos1, const Pos& pos2,
-              const bool COUNT_SAME_CELL_AS_NEIGHBOUR) {
-
-  if(pos1.x == pos2.x && pos1.y == pos2.y) {
-    return COUNT_SAME_CELL_AS_NEIGHBOUR;
-  }
-  if(pos1.x < pos2.x - 1) {return false;}
-  if(pos1.x > pos2.x + 1) {return false;}
-  if(pos1.y < pos2.y - 1) {return false;}
-  if(pos1.y > pos2.y + 1) {return false;}
+bool isPosAdj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ) {
+  if(pos1.x == pos2.x && pos1.y == pos2.y)  {return COUNT_SAME_CELL_AS_ADJ;}
+  if(pos1.x < pos2.x - 1)                   {return false;}
+  if(pos1.x > pos2.x + 1)                   {return false;}
+  if(pos1.y < pos2.y - 1)                   {return false;}
+  if(pos1.y > pos2.y + 1)                   {return false;}
   return true;
 }
 

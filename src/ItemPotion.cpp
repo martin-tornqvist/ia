@@ -60,7 +60,7 @@ void PotionSpirit::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionBlindness::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropBlind(PropTurns::standard));
+  actor->getPropHandler().tryApplyProp(new PropBlind(PropTurns::std));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -72,7 +72,7 @@ void PotionBlindness::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionParal::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::standard));
+  actor->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::std));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -86,7 +86,7 @@ void PotionParal::collide_(const Pos& pos, Actor* const actor) {
 
 void PotionDisease::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropDiseased(PropTurns::standard));
+    new PropDiseased(PropTurns::std));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -94,7 +94,7 @@ void PotionDisease::quaff_(Actor* const actor) {
 
 void PotionConf::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropConfused(PropTurns::standard));
+    new PropConfused(PropTurns::std));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -107,7 +107,7 @@ void PotionConf::collide_(const Pos& pos, Actor* const actor) {
 
 void PotionFrenzy::quaff_(Actor* const actor) {
   actor->getPropHandler().tryApplyProp(
-    new PropFrenzied(PropTurns::standard));
+    new PropFrenzied(PropTurns::std));
   if(Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
   }
@@ -121,7 +121,7 @@ void PotionFrenzy::collide_(const Pos& pos, Actor* const actor) {
 void PotionFortitude::quaff_(Actor* const actor) {
   PropHandler& propHandler = actor->getPropHandler();
 
-  PropRFear*      const rFear   = new PropRFear(PropTurns::standard);
+  PropRFear*      const rFear   = new PropRFear(PropTurns::std);
   PropRConfusion* const rConf   = new PropRConfusion(
     PropTurns::specific, rFear->turnsLeft_);
   PropRSleep*     const rSleep  = new PropRSleep(
@@ -164,7 +164,7 @@ void PotionFortitude::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionPoison::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::standard));
+  actor->getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::std));
   if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
@@ -174,7 +174,7 @@ void PotionPoison::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionRFire::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropRFire(PropTurns::standard));
+  actor->getPropHandler().tryApplyProp(new PropRFire(PropTurns::std));
   if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
@@ -200,7 +200,7 @@ void PotionAntidote::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionRElec::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropRElec(PropTurns::standard));
+  actor->getPropHandler().tryApplyProp(new PropRElec(PropTurns::std));
   if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 
@@ -210,7 +210,7 @@ void PotionRElec::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionRAcid::quaff_(Actor* const actor) {
-  actor->getPropHandler().tryApplyProp(new PropRAcid(PropTurns::standard));
+  actor->getPropHandler().tryApplyProp(new PropRAcid(PropTurns::std));
   if(Map::player->isSeeingActor(*actor, nullptr)) {identify(false);}
 }
 

@@ -20,31 +20,16 @@
 using namespace std;
 
 Inventory::Inventory(const bool IS_HUMANOID) {
+  slots_.resize(0);
+
   if(IS_HUMANOID) {
-    InvSlot invSlot;
-
-    invSlot.id                = SlotId::wielded;
-    invSlot.name              = "Wielding";
-//    invSlot.allowWieldedWpn   = true;
-    slots_.push_back(invSlot);
-
-    invSlot = InvSlot();
-    invSlot.id = SlotId::wieldedAlt;
-    invSlot.name              = "Prepared";
-//    invSlot.allowWieldedWpn   = true;
-    slots_.push_back(invSlot);
-
-    invSlot = InvSlot();
-    invSlot.id = SlotId::missiles;
-    invSlot.name              = "Missiles";
-//    invSlot.allowMissile      = true;
-    slots_.push_back(invSlot);
-
-    invSlot = InvSlot();
-    invSlot.id = SlotId::armorBody;
-    invSlot.name              = "On body";
-//    invSlot.allowArmor        = true;
-    slots_.push_back(invSlot);
+    slots_ = vector<InvSlot> {
+      {SlotId::wielded,     "Wielding"},
+      {SlotId::wieldedAlt,  "Prepared"},
+      {SlotId::thrown,      "Thrown"},
+      {SlotId::body,        "On body"},
+      {SlotId::head,        "On head"}
+    };
   }
 }
 
@@ -118,7 +103,7 @@ bool Inventory::hasDynamiteInGeneral() const {
 }
 
 bool Inventory::hasItemInGeneral(const ItemId id) const {
-  for(unsigned int i = 0; i < general_.size(); ++i) {
+  for(size_t i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == id)
       return true;
   }
@@ -127,7 +112,7 @@ bool Inventory::hasItemInGeneral(const ItemId id) const {
 }
 
 int Inventory::getItemStackSizeInGeneral(const ItemId id) const {
-  for(unsigned int i = 0; i < general_.size(); ++i) {
+  for(size_t i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == id) {
       if(general_.at(i)->getData().isStackable) {
         return general_.at(i)->nrItems;
@@ -141,7 +126,7 @@ int Inventory::getItemStackSizeInGeneral(const ItemId id) const {
 }
 
 void Inventory::decrDynamiteInGeneral() {
-  for(unsigned int i = 0; i < general_.size(); ++i) {
+  for(size_t i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == ItemId::dynamite) {
       decrItemInGeneral(i);
       break;
@@ -152,7 +137,7 @@ void Inventory::decrDynamiteInGeneral() {
 /*
  bool Inventory::hasFirstAidInGeneral()
  {
- for(unsigned int i = 0; i < general_.size(); ++i) {
+ for(size_t i = 0; i < general_.size(); ++i) {
  if(general_.at(i)->getInstanceDefinition().id == ItemId::firstAidKit)
  return true;
  }
@@ -162,7 +147,7 @@ void Inventory::decrDynamiteInGeneral() {
 
  void Inventory::decreaseFirstAidInGeneral()
  {
- for(unsigned int i = 0; i < general_.size(); ++i) {
+ for(size_t i = 0; i < general_.size(); ++i) {
  if(general_.at(i)->getInstanceDefinition().id == ItemId::firstAidKit) {
  decrItemInGeneral(i);
  break;
@@ -229,7 +214,7 @@ void Inventory::dropAllNonIntrinsic(
   }
 
   //Drop from general
-  unsigned int i = 0;
+  size_t i = 0;
   while(i < general_.size()) {
     item = general_.at(i);
     if(item) {
@@ -261,7 +246,7 @@ bool Inventory::hasAmmoForFirearmInInventory() {
       const ItemId ammoId = weapon->getData().ranged.ammoItemId;
 
       //Look for that ammo type in inventory
-      for(unsigned int i = 0; i < general_.size(); ++i) {
+      for(size_t i = 0; i < general_.size(); ++i) {
         if(general_.at(i)->getData().id == ammoId) {
           return true;
         }
@@ -331,7 +316,7 @@ void Inventory::decrItemInGeneral(unsigned element) {
 }
 
 void Inventory::decrItemTypeInGeneral(const ItemId id) {
-  for(unsigned int i = 0; i < general_.size(); ++i) {
+  for(size_t i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == id) {
       decrItemInGeneral(i);
       return;
@@ -341,7 +326,7 @@ void Inventory::decrItemTypeInGeneral(const ItemId id) {
 
 void Inventory::moveItemToSlot(
   InvSlot* inventorySlot,
-  const unsigned int GENERAL_INV_ELEMENT) {
+  const size_t GENERAL_INV_ELEMENT) {
 
   bool generalSlotExists = GENERAL_INV_ELEMENT < general_.size();
   Item* item = nullptr;
@@ -364,82 +349,56 @@ void Inventory::moveItemToSlot(
 }
 
 void Inventory::equipGeneralItemAndPossiblyEndTurn(
-  const unsigned int GENERAL_INV_ELEMENT,
-  const SlotId slotToEquip) {
+  const size_t GENERAL_INV_ELEMENT, const SlotId slot) {
 
-  const bool IS_PLAYER = this == &Map::player->getInv();
-
-  bool isFreeTurn = false;
-
-  Item* item = general_.at(GENERAL_INV_ELEMENT);
-  const ItemDataT& d = item->getData();
+  const bool IS_PLAYER  = this == &Map::player->getInv();
+  bool isFreeTurn       = false;
+  Item* item            = general_.at(GENERAL_INV_ELEMENT);
+  const ItemDataT& d    = item->getData();
 
   if(IS_PLAYER && !d.isArmor) {isFreeTurn = false;}
 
-  if(slotToEquip == SlotId::wielded) {
-    Item* const itemBefore = getItemInSlot(SlotId::wielded);
-    moveItemToSlot(getSlot(SlotId::wielded), GENERAL_INV_ELEMENT);
-    Item* const itemAfter = getItemInSlot(SlotId::wielded);
-    if(IS_PLAYER) {
-      if(itemBefore) {
-        const string nameBefore =
-          ItemData::getItemRef(*itemBefore, ItemRefType::a);
-        Log::addMsg("I was wielding " + nameBefore + ".");
+  moveItemToSlot(getSlot(slot), GENERAL_INV_ELEMENT);
+  Item* const itemAfter = getItemInSlot(slot);
+
+  switch(slot) {
+    case SlotId::wielded: {
+      if(IS_PLAYER) {
+        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::a);
+        Log::addMsg("I am now wielding " + name + ".");
       }
-      const string nameAfter =
-        ItemData::getItemRef(*itemAfter, ItemRefType::a);
-      Log::addMsg("I am now wielding " + nameAfter + ".");
-    }
+    } break;
+
+    case SlotId::wieldedAlt: {
+      if(IS_PLAYER) {
+        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::a);
+        Log::addMsg("I am now wielding " + name + " as a prepared weapon.");
+      }
+    } break;
+
+    case SlotId::thrown: {
+      if(IS_PLAYER) {
+        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::plural);
+        Log::addMsg("I am now using " + name + " as missile weapon.");
+      }
+    } break;
+
+    case SlotId::body: {
+      if(IS_PLAYER) {
+        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::a);
+        Log::addMsg("I am now wearing " + name + ".");
+      }
+      isFreeTurn = false;
+    } break;
+
+    case SlotId::head: {
+      if(IS_PLAYER) {
+        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::a);
+        Log::addMsg("I am now wearing " + name + ".");
+      }
+    } break;
   }
 
-  if(slotToEquip == SlotId::wieldedAlt) {
-    Item* const itemBefore = getItemInSlot(SlotId::wieldedAlt);
-    moveItemToSlot(getSlot(SlotId::wieldedAlt), GENERAL_INV_ELEMENT);
-    Item* const itemAfter = getItemInSlot(SlotId::wieldedAlt);
-    if(IS_PLAYER) {
-      if(itemBefore) {
-        const string nameBefore =
-          ItemData::getItemRef(*itemBefore, ItemRefType::a);
-        Log::addMsg("I was wielding " + nameBefore + " as a prepared weapon.");
-      }
-      const string nameAfter =
-        ItemData::getItemRef(*itemAfter, ItemRefType::a);
-      Log::addMsg("I am now wielding " + nameAfter + " as a prepared weapon.");
-    }
-  }
-
-  if(slotToEquip == SlotId::armorBody) {
-    Item* const itemBefore = getItemInSlot(SlotId::armorBody);
-    moveItemToSlot(getSlot(SlotId::armorBody), GENERAL_INV_ELEMENT);
-    Item* const itemAfter = getItemInSlot(SlotId::armorBody);
-    if(IS_PLAYER) {
-      if(itemBefore) {
-        const string nameBefore =
-          ItemData::getItemRef(*itemBefore, ItemRefType::a);
-        Log::addMsg("I wore " + nameBefore + ".");
-      }
-      const string nameAfter =
-        ItemData::getItemRef(*itemAfter, ItemRefType::plural);
-      Log::addMsg("I am now wearing " + nameAfter + ".");
-    }
-    isFreeTurn = false;
-  }
-
-  if(slotToEquip == SlotId::missiles) {
-    Item* const itemBefore = getItemInSlot(SlotId::missiles);
-    moveItemToSlot(getSlot(SlotId::missiles), GENERAL_INV_ELEMENT);
-    Item* const itemAfter = getItemInSlot(SlotId::missiles);
-    if(IS_PLAYER) {
-      if(itemBefore) {
-        const string nameBefore =
-          ItemData::getItemRef(*itemBefore, ItemRefType::plural);
-        Log::addMsg("I was using " + nameBefore + " as missile weapon.");
-      }
-      const string nameAfter =
-        ItemData::getItemRef(*itemAfter, ItemRefType::plural);
-      Log::addMsg("I am now using " + nameAfter + " as missile weapon.");
-    }
-  }
   GameTime::actorDidAct(isFreeTurn);
 }
 
@@ -459,7 +418,7 @@ void Inventory::swapWieldedAndPrepared(
 }
 
 void Inventory::moveFromGeneralToIntrinsics(
-  const unsigned int GENERAL_INV_ELEMENT) {
+  const size_t GENERAL_INV_ELEMENT) {
   bool generalSlotExists = GENERAL_INV_ELEMENT < general_.size();
 
   if(generalSlotExists) {
@@ -485,7 +444,7 @@ bool Inventory::moveToGeneral(InvSlot* inventorySlot) {
 }
 
 bool Inventory::hasItemInSlot(SlotId id) const {
-  for(unsigned int i = 0; i < slots_.size(); ++i) {
+  for(size_t i = 0; i < slots_.size(); ++i) {
     if(slots_[i].id == id) {
       if(slots_[i].item) {
         return true;
@@ -510,7 +469,7 @@ void Inventory::removeInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT)
 }
 
 int Inventory::getElementWithItemType(const ItemId id) const {
-  for(unsigned int i = 0; i < general_.size(); ++i) {
+  for(size_t i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == id) {
       return i;
     }
@@ -533,7 +492,7 @@ Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) const {
 
 Item* Inventory::getItemInSlot(SlotId slotName) const {
   if(hasItemInSlot(slotName)) {
-    for(unsigned int i = 0; i < slots_.size(); ++i) {
+    for(size_t i = 0; i < slots_.size(); ++i) {
       if(slots_[i].id == slotName) {
         return slots_[i].item;
       }
@@ -567,7 +526,7 @@ Item* Inventory::getLastItemInGeneral() {
 InvSlot* Inventory::getSlot(SlotId slotName) {
   InvSlot* slot = nullptr;
 
-  for(unsigned int i = 0; i < slots_.size(); ++i) {
+  for(size_t i = 0; i < slots_.size(); ++i) {
     if(slots_[i].id == slotName) {
       slot = &slots_[i];
     }
@@ -593,12 +552,12 @@ void Inventory::putInSlot(const SlotId id, Item* item) {
 
 int Inventory::getTotalItemWeight() const {
   int weight = 0;
-  for(unsigned int i = 0; i < slots_.size(); ++i) {
+  for(size_t i = 0; i < slots_.size(); ++i) {
     if(slots_.at(i).item) {
       weight += slots_.at(i).item->getWeight();
     }
   }
-  for(unsigned int i = 0; i < general_.size(); ++i) {
+  for(size_t i = 0; i < general_.size(); ++i) {
     weight += general_.at(i)->getWeight();
   }
   return weight;
@@ -653,8 +612,8 @@ void Inventory::sortGeneralInventory() {
 
   //Set the inventory from the sorting buffer
   general_.resize(0);
-  for(unsigned int i = 0; i < sortBuffer.size(); ++i) {
-    for(unsigned int ii = 0; ii < sortBuffer.at(i).size(); ii++) {
+  for(size_t i = 0; i < sortBuffer.size(); ++i) {
+    for(size_t ii = 0; ii < sortBuffer.at(i).size(); ii++) {
       general_.push_back(sortBuffer.at(i).at(ii));
     }
   }

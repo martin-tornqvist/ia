@@ -66,7 +66,7 @@ bool runDropScreen(const int GLOBAL_ELEMENT_NR) {
   return false;
 }
 
-void filterPlayerGeneralSlotButtonsEquip(
+void filterPlayerGeneralEquip(
   const SlotId slotToEquip) {
 
   vector<Item*>& general = Map::player->getInv().getGeneral();
@@ -77,12 +77,6 @@ void filterPlayerGeneralSlotButtonsEquip(
     const ItemDataT& data = item->getData();
 
     switch(slotToEquip) {
-      case SlotId::armorBody: {
-        if(data.isArmor) {
-          generalItemsToShow_.push_back(i);
-        }
-      } break;
-
       case SlotId::wielded: {
         if(data.melee.isMeleeWpn || data.ranged.isRangedWpn) {
           generalItemsToShow_.push_back(i);
@@ -95,8 +89,20 @@ void filterPlayerGeneralSlotButtonsEquip(
         }
       } break;
 
-      case SlotId::missiles: {
+      case SlotId::thrown: {
         if(data.ranged.isThrowingWpn) {
+          generalItemsToShow_.push_back(i);
+        }
+      } break;
+
+      case SlotId::body: {
+        if(data.isArmor) {
+          generalItemsToShow_.push_back(i);
+        }
+      } break;
+
+      case SlotId::head: {
+        if(data.isHeadwear) {
           generalItemsToShow_.push_back(i);
         }
       } break;
@@ -104,7 +110,7 @@ void filterPlayerGeneralSlotButtonsEquip(
   }
 }
 
-void filterPlayerGeneralSlotButtonsUsable() {
+void filterPlayerGeneralUsable() {
   vector<Item*>& general = Map::player->getInv().getGeneral();
 
   vector< vector<size_t> > groups;
@@ -138,7 +144,7 @@ void filterPlayerGeneralSlotButtonsUsable() {
   }
 }
 
-void filterPlayerGeneralSlotButtonsShowAll() {
+void filterPlayerGeneralShowAll() {
   vector<Item*>& general = Map::player->getInv().getGeneral();
   generalItemsToShow_.resize(0);
   const int NR_GEN = general.size();
@@ -146,17 +152,17 @@ void filterPlayerGeneralSlotButtonsShowAll() {
 }
 
 void swapItems(Item** item1, Item** item2) {
-  Item* buffer = *item1;
-  *item1 = *item2;
-  *item2 = buffer;
+  Item* buffer  = *item1;
+  *item1        = *item2;
+  *item2        = buffer;
 }
 
 } //namespace
 
 void init() {
-  screenToOpenAfterDrop = InvScrId::END;
-  equipSlotToOpenAfterDrop = nullptr;
-  browserPosToSetAfterDrop = 0;
+  screenToOpenAfterDrop     = InvScrId::END;
+  equipSlotToOpenAfterDrop  = nullptr;
+  browserPosToSetAfterDrop  = 0;
 }
 
 void activateDefault(
@@ -200,8 +206,8 @@ void runSlotsScreen() {
       } break;
 
       case MenuAction::selected: {
-        const int elementSelected = browser.getElement();
-        if(elementSelected < int(slots.size())) {
+        const size_t elementSelected = browser.getElement();
+        if(elementSelected < slots.size()) {
           InvSlot& slot = slots.at(elementSelected);
           if(slot.item) {
             Item* const item = slot.item;
@@ -211,12 +217,11 @@ void runSlotsScreen() {
 
             inv.moveToGeneral(&slot);
 
-            if(slot.id == SlotId::armorBody) {
+            if(slot.id == SlotId::body) {
               screenToOpenAfterDrop = InvScrId::slots;
               browserPosToSetAfterDrop = browser.getPos().y;
 
-              Log::addMsg(
-                "I take off my " + itemName + ".", clrWhite, true, true);
+              Log::addMsg("I take off my " + itemName + ".", clrWhite, true, true);
               item->onTakeOff();
               Renderer::drawMapAndInterface();
               GameTime::actorDidAct();
@@ -225,7 +230,7 @@ void runSlotsScreen() {
               RenderInventory::drawBrowseSlots(browser);
             }
           } else {
-            if(runEquipScreen(&slot)) {
+            if(runEquipScreen(slot)) {
               Renderer::drawMapAndInterface();
               return;
             } else {
@@ -253,7 +258,7 @@ bool runUseScreen() {
 
   Map::player->getInv().sortGeneralInventory();
 
-  filterPlayerGeneralSlotButtonsUsable();
+  filterPlayerGeneralUsable();
   MenuBrowser browser(generalItemsToShow_.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;
@@ -297,14 +302,14 @@ bool runUseScreen() {
   }
 }
 
-bool runEquipScreen(InvSlot* const slotToEquip) {
-  screenToOpenAfterDrop = InvScrId::END;
-  equipSlotToOpenAfterDrop = slotToEquip;
+bool runEquipScreen(InvSlot& slotToEquip) {
+  screenToOpenAfterDrop     = InvScrId::END;
+  equipSlotToOpenAfterDrop  = &slotToEquip;
   Renderer::drawMapAndInterface();
 
   Map::player->getInv().sortGeneralInventory();
 
-  filterPlayerGeneralSlotButtonsEquip(slotToEquip->id);
+  filterPlayerGeneralEquip(slotToEquip.id);
 
   MenuBrowser browser(generalItemsToShow_.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
@@ -312,38 +317,39 @@ bool runEquipScreen(InvSlot* const slotToEquip) {
 
   Audio::play(SfxId::backpack);
 
-  RenderInventory::drawEquip(
-    browser, slotToEquip->id, generalItemsToShow_);
+  RenderInventory::drawEquip(browser, slotToEquip.id, generalItemsToShow_);
 
   while(true) {
     const MenuAction action = MenuInputHandling::getAction(browser);
     switch(action) {
       case MenuAction::browsed: {
-        RenderInventory::drawEquip(
-          browser, slotToEquip->id, generalItemsToShow_);
+        RenderInventory::drawEquip(browser, slotToEquip.id, generalItemsToShow_);
       } break;
 
       case MenuAction::selected: {
         const int INV_ELEM = generalItemsToShow_.at(browser.getPos().y);
         Map::player->getInv().equipGeneralItemAndPossiblyEndTurn(
-          INV_ELEM, slotToEquip->id);
-        if(slotToEquip->id == SlotId::armorBody) {
-          slotToEquip->item->onWear();
+          INV_ELEM, slotToEquip.id);
+        bool applyWearEffect = false;
+        switch(slotToEquip.id) {
+          case SlotId::wielded:
+          case SlotId::wieldedAlt:
+          case SlotId::thrown: {} break;
+          case SlotId::body:
+          case SlotId::head: applyWearEffect = true; break;
         }
+        if(applyWearEffect) {slotToEquip.item->onWear();}
         return true;
       } break;
 
       case MenuAction::selectedShift: {
         const int SLOTS_SIZE = Map::player->getInv().getSlots().size();
-        if(
-          runDropScreen(
-            SLOTS_SIZE + generalItemsToShow_.at(browser.getPos().y))) {
+        if(runDropScreen(SLOTS_SIZE + generalItemsToShow_.at(browser.getPos().y))) {
           screenToOpenAfterDrop = InvScrId::equip;
           browserPosToSetAfterDrop = browser.getPos().y;
           return true;
         }
-        RenderInventory::drawEquip(
-          browser, slotToEquip->id, generalItemsToShow_);
+        RenderInventory::drawEquip(browser, slotToEquip.id, generalItemsToShow_);
       } break;
 
       case MenuAction::esc:
@@ -358,7 +364,7 @@ void runBrowseInventory() {
 
   Map::player->getInv().sortGeneralInventory();
 
-  filterPlayerGeneralSlotButtonsShowAll();
+  filterPlayerGeneralShowAll();
   MenuBrowser browser(generalItemsToShow_.size(), 0);
   browser.setY(browserPosToSetAfterDrop);
   browserPosToSetAfterDrop = 0;

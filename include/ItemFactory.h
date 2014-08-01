@@ -13,8 +13,7 @@ void setItemRandomizedProperties(Item* item);
 
 //TODO Ugly function, refactor. Perhaps use a vector of ItemType as parameter?
 //(Then ItemDataT must store ItemType)
-Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS,
-                             const bool ALLOW_POTIONS);
+Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS);
 
 Item* mkItemOnMap(const ItemId itemId, const Pos& pos);
 

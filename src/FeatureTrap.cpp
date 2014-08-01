@@ -386,7 +386,7 @@ void TrapDart::trigger(
           Log::addMsg("It was poisoned!");
         }
         actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(PropTurns::standard));
+          new PropPoisoned(PropTurns::std));
       }
     }
   }
@@ -463,7 +463,7 @@ void TrapSpear::trigger(
           Log::addMsg("It was poisoned!");
         }
         actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(PropTurns::standard));
+          new PropPoisoned(PropTurns::std));
       }
     }
   }
@@ -498,7 +498,7 @@ void TrapGasConfusion::trigger(
 
   Explosion::runExplosionAt(
     pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropConfused(PropTurns::standard), &clr);
+    new PropConfused(PropTurns::std), &clr);
   TRACE_FUNC_END_VERBOSE;
 }
 
@@ -529,7 +529,7 @@ void TrapGasParalyzation::trigger(
   Clr clr = getClr();
   Explosion::runExplosionAt(
     pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropParalyzed(PropTurns::standard), &clr) ;
+    new PropParalyzed(PropTurns::std), &clr) ;
   TRACE_FUNC_END_VERBOSE;
 }
 
@@ -560,7 +560,7 @@ void TrapGasFear::trigger(Actor& actor,
   Clr clr = getClr();
   Explosion::runExplosionAt(
     pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-    new PropTerrified(PropTurns::standard), &clr);
+    new PropTerrified(PropTurns::std), &clr);
   TRACE_FUNC_END_VERBOSE;
 }
 
@@ -596,7 +596,7 @@ void TrapBlindingFlash::trigger(
         Log::addMsg(
           "A sharp flash of light pierces my eyes!", clrWhite);
         actor.getPropHandler().tryApplyProp(
-          new PropBlind(PropTurns::standard));
+          new PropBlind(PropTurns::std));
       } else {
         Log::addMsg("I feel a mechanism trigger!", clrWhite);
       }
@@ -605,7 +605,7 @@ void TrapBlindingFlash::trigger(
         Log::addMsg(
           actorName + " is hit by a flash of blinding light!");
         actor.getPropHandler().tryApplyProp(
-          new PropBlind(PropTurns::standard));
+          new PropBlind(PropTurns::std));
       }
     }
   }

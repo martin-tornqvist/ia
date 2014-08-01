@@ -106,8 +106,7 @@ bool isAreaInsideOther(const Rect& inner, const Rect& outer,
 
 bool isAreaInsideMap(const Rect& area);
 
-bool isPosAdj(const Pos& pos1, const Pos& pos2,
-              const bool COUNT_SAME_CELL_AS_NEIGHBOUR);
+bool isPosAdj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ);
 
 Pos getClosestPos(const Pos& p, const std::vector<Pos>& positions);
 

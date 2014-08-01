@@ -140,7 +140,7 @@ void goToNxt() {
 
   if(Map::player->phobias[int(Phobia::deepPlaces)]) {
     Log::addMsg("I am plagued by my phobia of deep places!");
-    Map::player->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::standard));
+    Map::player->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
     return;
   }
 

@@ -15,11 +15,11 @@ public:
     setPlayerExplosive();
     return ConsumeItem::yes;
   }
-  virtual std::string getDefaultActivationLabel() const {
+  virtual std::string getDefaultActivationLabel() const override {
     return "Ignite";
   }
 
-  virtual Clr getInterfaceClr() const {return clrRedLgt;}
+  virtual Clr getInterfaceClr() const override {return clrRedLgt;}
 
   virtual void setPlayerExplosive() const {}
 

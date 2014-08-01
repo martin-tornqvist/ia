@@ -46,7 +46,7 @@ void tryPick() {
 
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getData().ranged.isThrowingWpn) {
-      Item* const carriedMissile = playerInv.getItemInSlot(SlotId::missiles);
+      Item* const carriedMissile = playerInv.getItemInSlot(SlotId::thrown);
       if(carriedMissile) {
         if(item->getData().id == carriedMissile->getData().id) {
           Audio::play(SfxId::pickup);

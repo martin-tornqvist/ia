@@ -39,7 +39,7 @@ bool isSpiRegenThisTurn(const int REGEN_N_TURNS) {
   return turnNr_ == (turnNr_ / REGEN_N_TURNS) * REGEN_N_TURNS;
 }
 
-void runStandardTurnEvents() {
+void runStdTurnEvents() {
   ++turnNr_;
 
   bool visionBlockers[MAP_W][MAP_H];
@@ -50,7 +50,7 @@ void runStandardTurnEvents() {
   for(size_t i = 0; i < actors_.size(); ++i) {
     Actor* const actor = actors_[i];
 
-    actor->getPropHandler().tick(PropTurnMode::standard, visionBlockers);
+    actor->getPropHandler().tick(PropTurnMode::std, visionBlockers);
 
     if(actor != Map::player) {
       Monster* const monster = static_cast<Monster*>(actor);
@@ -239,7 +239,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
         if(curTurnTypePos_ == int(TurnType::END)) {curTurnTypePos_ = 0;}
 
         if(curTurnType != TurnType::fast && curTurnType != TurnType::fastest) {
-          runStandardTurnEvents();
+          runStdTurnEvents();
         }
       }
 

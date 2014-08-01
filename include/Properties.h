@@ -21,6 +21,7 @@ enum PropId {
   propRSleep,
   propRFear,
   propRConfusion,
+  propRBreath,
   propLightSensitive,
   propBlind,
   propFainted,
@@ -61,8 +62,8 @@ enum PropId {
   endOfPropIds
 };
 
-enum class PropTurnMode {standard, actor};
-enum class PropTurns    {standard, specific, indefinite};
+enum class PropTurnMode {std, actor};
+enum class PropTurns    {std, specific, indefinite};
 
 enum PropMsgType {
   propMsgOnStartPlayer,
@@ -283,7 +284,7 @@ public:
     return false;
   }
 
-  virtual PropTurnMode getTurnMode() const {return PropTurnMode::standard;}
+  virtual PropTurnMode getTurnMode() const {return PropTurnMode::std;}
 
   int turnsLeft_;
 
@@ -299,8 +300,6 @@ class PropWound: public Prop {
 public:
   PropWound(PropTurns turnsInit, int turns = -1) :
     Prop(propWound, turnsInit, turns), nrWounds_(1) {}
-
-  ~PropWound() override {}
 
   void storeToSaveLines(std::vector<std::string>& lines) const override {
     lines.push_back(toStr(nrWounds_));
@@ -333,8 +332,6 @@ public:
   PropTerrified(PropTurns turnsInit, int turns = -1) :
     Prop(propTerrified, turnsInit, turns) {}
 
-  ~PropTerrified() override {}
-
   int getAbilityMod(const AbilityId ability) const override {
     if(ability == AbilityId::dodgeAttack)      return 20;
     if(ability == AbilityId::ranged)   return -20;
@@ -350,15 +347,12 @@ class PropWeakened: public Prop {
 public:
   PropWeakened(PropTurns turnsInit, int turns = -1) :
     Prop(propWeakened, turnsInit, turns) {}
-  ~PropWeakened() override {}
 };
 
 class PropInfected: public Prop {
 public:
   PropInfected(PropTurns turnsInit, int turns = -1) :
     Prop(propInfected, turnsInit, turns) {}
-
-  ~PropInfected() override {}
 
   void onNewTurn() override;
 };
@@ -367,8 +361,6 @@ class PropDiseased: public Prop {
 public:
   PropDiseased(PropTurns turnsInit, int turns = -1) :
     Prop(propDiseased, turnsInit, turns) {}
-
-  ~PropDiseased() override {}
 
   int getChangedMaxHp(const int HP_MAX) const override;
 
@@ -381,28 +373,24 @@ class PropFlying: public Prop {
 public:
   PropFlying(PropTurns turnsInit, int turns = -1) :
     Prop(propFlying, turnsInit, turns) {}
-  ~PropFlying() override {}
 };
 
 class PropEthereal: public Prop {
 public:
   PropEthereal(PropTurns turnsInit, int turns = -1) :
     Prop(propEthereal, turnsInit, turns) {}
-  ~PropEthereal() override {}
 };
 
 class PropOoze: public Prop {
 public:
   PropOoze(PropTurns turnsInit, int turns = -1) :
     Prop(propOoze, turnsInit, turns) {}
-  ~PropOoze() override {}
 };
 
 class PropBurrowing: public Prop {
 public:
   PropBurrowing(PropTurns turnsInit, int turns = -1) :
     Prop(propBurrowing, turnsInit, turns) {}
-  ~PropBurrowing() override {}
 
   void onNewTurn() override;
 };
@@ -411,8 +399,6 @@ class PropPossessedByZuul: public Prop {
 public:
   PropPossessedByZuul(PropTurns turnsInit, int turns = -1) :
     Prop(propPossessedByZuul, turnsInit, turns) {}
-
-  ~PropPossessedByZuul() override {}
 
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) override;
 
@@ -426,8 +412,6 @@ public:
   PropPoisoned(PropTurns turnsInit, int turns = -1) :
     Prop(propPoisoned, turnsInit, turns) {}
 
-  ~PropPoisoned() override {}
-
   void onNewTurn() override;
 };
 
@@ -435,8 +419,6 @@ class PropAiming: public Prop {
 public:
   PropAiming(PropTurns turnsInit, int turns = -1) :
     Prop(propAiming, turnsInit, turns), nrTurnsAiming(1) {}
-
-  ~PropAiming() override {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
@@ -459,8 +441,6 @@ public:
   PropBlind(PropTurns turnsInit, int turns = -1) :
     Prop(propBlind, turnsInit, turns) {}
 
-  ~PropBlind() override {}
-
   bool shouldUpdatePlayerVisualWhenStartOrEnd() const override;
 
   bool allowSee() const override {return false;}
@@ -480,8 +460,6 @@ public:
   PropBlessed(PropTurns turnsInit, int turns = -1) :
     Prop(propBlessed, turnsInit, turns) {}
 
-  ~PropBlessed() override {}
-
   void onStart() override;
 
   int getAbilityMod(const AbilityId ability) const override {
@@ -495,8 +473,6 @@ public:
   PropCursed(PropTurns turnsInit, int turns = -1) :
     Prop(propCursed, turnsInit, turns) {}
 
-  ~PropCursed() override {}
-
   void onStart() override;
 
   int getAbilityMod(const AbilityId ability) const override {
@@ -509,8 +485,6 @@ class PropBurning: public Prop {
 public:
   PropBurning(PropTurns turnsInit, int turns = -1) :
     Prop(propBurning, turnsInit, turns) {}
-
-  ~PropBurning() override {}
 
   bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
 
@@ -530,8 +504,6 @@ public:
   PropFlared(PropTurns turnsInit, int turns = -1) :
     Prop(propFlared, turnsInit, turns) {}
 
-  ~PropFlared() override {}
-
   void onNewTurn() override;
 };
 
@@ -539,7 +511,6 @@ class PropWarlockCharged: public Prop {
 public:
   PropWarlockCharged(PropTurns turnsInit, int turns = -1) :
     Prop(propWarlockCharged, turnsInit, turns) {}
-  ~PropWarlockCharged() override {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 };
@@ -548,8 +519,6 @@ class PropConfused: public Prop {
 public:
   PropConfused(PropTurns turnsInit, int turns = -1) :
     Prop(propConfused, turnsInit, turns) {}
-
-  ~PropConfused() override {}
 
   void changeMoveDir(const Pos& actorPos, Dir& dir) override;
 
@@ -563,14 +532,12 @@ class PropStunned: public Prop {
 public:
   PropStunned(PropTurns turnsInit, int turns = -1) :
     Prop(propStunned, turnsInit, turns) {}
-  ~PropStunned() override {}
 };
 
 class PropNailed: public Prop {
 public:
   PropNailed(PropTurns turnsInit, int turns = -1) :
     Prop(propNailed, turnsInit, turns), nrSpikes_(1) {}
-  ~PropNailed() override {}
 
   std::string getNameShort() const override {
     return "Nailed(" + toStr(nrSpikes_) + ")";
@@ -591,8 +558,6 @@ public:
   PropWaiting(PropTurns turnsInit, int turns = -1) :
     Prop(propWaiting, turnsInit, turns) {}
 
-  ~PropWaiting() override {}
-
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   bool allowMove() const override  {return false;}
@@ -612,8 +577,6 @@ public:
   PropDisabledAttack(PropTurns turnsInit, int turns = -1) :
     Prop(propDisabledAttack, turnsInit, turns) {}
 
-  ~PropDisabledAttack() override {}
-
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
@@ -631,8 +594,6 @@ public:
   PropDisabledMelee(PropTurns turnsInit, int turns = -1) :
     Prop(propDisabledMelee, turnsInit, turns) {}
 
-  ~PropDisabledMelee() override {}
-
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
@@ -646,8 +607,6 @@ public:
   PropDisabledRanged(PropTurns turnsInit, int turns = -1) :
     Prop(propDisabledRanged, turnsInit, turns) {}
 
-  ~PropDisabledRanged() override {}
-
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override {
@@ -660,8 +619,6 @@ class PropParalyzed: public Prop {
 public:
   PropParalyzed(PropTurns turnsInit, int turns = -1) :
     Prop(propParalyzed, turnsInit, turns) {}
-
-  ~PropParalyzed() override {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
@@ -688,8 +645,6 @@ class PropFainted: public Prop {
 public:
   PropFainted(PropTurns turnsInit, int turns = -1) :
     Prop(propFainted, turnsInit, turns) {}
-
-  ~PropFainted() override {}
 
   bool shouldUpdatePlayerVisualWhenStartOrEnd() const override;
 
@@ -723,8 +678,6 @@ public:
              int turns = -1) :
     Prop(propSlowed, turnsInit, turns) {}
 
-  ~PropSlowed() override {}
-
   int getAbilityMod(const AbilityId ability) const override {
     if(ability == AbilityId::dodgeAttack)    return -30;
     if(ability == AbilityId::ranged) return -10;
@@ -737,8 +690,6 @@ class PropFrenzied: public Prop {
 public:
   PropFrenzied(PropTurns turnsInit, int turns = -1) :
     Prop(propFrenzied, turnsInit, turns) {}
-
-  ~PropFrenzied() override {}
 
   void onStart() override;
   void onEnd() override;
@@ -760,7 +711,6 @@ class PropRAcid: public Prop {
 public:
   PropRAcid(PropTurns turnsInit, int turns = -1) :
     Prop(propRAcid, turnsInit, turns) {}
-  ~PropRAcid() override {}
 
   bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
@@ -769,7 +719,6 @@ class PropRCold: public Prop {
 public:
   PropRCold(PropTurns turnsInit, int turns = -1) :
     Prop(propRCold, turnsInit, turns) {}
-  ~PropRCold() override {}
 
   bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
@@ -778,7 +727,6 @@ class PropRConfusion: public Prop {
 public:
   PropRConfusion(PropTurns turnsInit, int turns = -1) :
     Prop(propRConfusion, turnsInit, turns) {}
-  ~PropRConfusion() override {}
 
   void onStart() override;
 
@@ -789,7 +737,6 @@ class PropRElec: public Prop {
 public:
   PropRElec(PropTurns turnsInit, int turns = -1) :
     Prop(propRElec, turnsInit, turns) {}
-  ~PropRElec() override {}
 
   bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
@@ -798,7 +745,6 @@ class PropRFear: public Prop {
 public:
   PropRFear(PropTurns turnsInit, int turns = -1) :
     Prop(propRFear, turnsInit, turns) {}
-  ~PropRFear() override {}
 
   void onStart() override;
 
@@ -809,7 +755,6 @@ class PropRPhys: public Prop {
 public:
   PropRPhys(PropTurns turnsInit, int turns = -1) :
     Prop(propRPhys, turnsInit, turns) {}
-  ~PropRPhys() override {}
 
   void onStart() override;
 
@@ -822,7 +767,6 @@ class PropRFire: public Prop {
 public:
   PropRFire(PropTurns turnsInit, int turns = -1) :
     Prop(propRFire, turnsInit, turns) {}
-  ~PropRFire() override {}
 
   void onStart() override;
 
@@ -835,7 +779,6 @@ class PropRPoison: public Prop {
 public:
   PropRPoison(PropTurns turnsInit, int turns = -1) :
     Prop(propRPoison, turnsInit, turns) {}
-  ~PropRPoison() override {}
 
   void onStart() override;
 
@@ -846,11 +789,16 @@ class PropRSleep: public Prop {
 public:
   PropRSleep(PropTurns turnsInit, int turns = -1) :
     Prop(propRSleep, turnsInit, turns) {}
-  ~PropRSleep() override {}
 
   void onStart() override;
 
   bool tryResistOtherProp(const PropId id) const override;
+};
+
+class PropRBreath: public Prop {
+public:
+  PropRBreath(PropTurns turnsInit, int turns = -1) :
+    Prop(propRBreath, turnsInit, turns) {}
 };
 
 class PropLightSensitive: public Prop {

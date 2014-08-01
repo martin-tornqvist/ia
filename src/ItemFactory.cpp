@@ -70,6 +70,9 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::armorAsbSuit:        r = new ArmorAsbSuit(d);          break;
     case ItemId::armorHeavyCoat:      r = new ArmorHeavyCoat(d);        break;
 
+    case ItemId::gasMask:             r = new GasMask(d);             break;
+    case ItemId::hideousMask:         r = new HideousMask(d);         break;
+
     case ItemId::zombieAxe:           r = new Wpn(d, ammoD);         break;
     case ItemId::zombieClaw:          r = new Wpn(d, ammoD);         break;
     case ItemId::zombieClawDiseased:  r = new Wpn(d, ammoD);         break;

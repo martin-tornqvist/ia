@@ -40,9 +40,7 @@ ItemDataT::ItemDataT(const ItemId id_) :
   isPotion(false),
   isDevice(false),
   isArmor(false),
-  isCloak(false),
-  isRing(false),
-  isAmulet(false),
+  isHeadwear(false),
   isIntrinsic(false),
   isAmmo(false),
   isAmmoClip(false),
@@ -445,7 +443,7 @@ void initDataList() {
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a flare gun");
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires a flare gun");
   d->ranged.sndMsg = "I hear a flare gun being fired.";
-  d->ranged.propApplied = new PropFlared(PropTurns::standard);
+  d->ranged.propApplied = new PropFlared(PropTurns::std);
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
@@ -764,7 +762,7 @@ void initDataList() {
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "claws me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::zombie]);
-  d->melee.propApplied = new PropInfected(PropTurns::standard);
+  d->melee.propApplied = new PropInfected(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::zombieAxe);
@@ -803,7 +801,7 @@ void initDataList() {
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "bites me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::rat]);
-  d->melee.propApplied = new PropInfected(PropTurns::standard);
+  d->melee.propApplied = new PropInfected(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::ratThingBite);
@@ -842,7 +840,7 @@ void initDataList() {
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "bites me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::redSpider]);
-  d->melee.propApplied = new PropWeakened(PropTurns::standard);
+  d->melee.propApplied = new PropWeakened(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::shadowSpiderBite);
@@ -863,7 +861,7 @@ void initDataList() {
   d->ranged.attMsgs = ItemAttMsgs("", "breaths fire at me");
   d->ranged.sndMsg = "I hear a burst of flames.";
   setDmgFromMonsterData(*d, ActorData::data[ActorId::fireHound]);
-  d->ranged.propApplied = new PropBurning(PropTurns::standard);
+  d->ranged.propApplied = new PropBurning(PropTurns::std);
   d->ranged.missileClr = clrRedLgt;
   d->ranged.missileGlyph = '*';
   d->ranged.missileLeavesTrail = true;
@@ -908,14 +906,14 @@ void initDataList() {
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "engulfs me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::dustVortex]);
-  d->melee.propApplied = new PropBlind(PropTurns::standard);
+  d->melee.propApplied = new PropBlind(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::fireVortexEngulf);
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "engulfs me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::fireVortex]);
-  d->melee.propApplied = new PropBurning(PropTurns::standard);
+  d->melee.propApplied = new PropBurning(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::frostVortexEngulf);
@@ -978,7 +976,7 @@ void initDataList() {
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "claws me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::ghoul]);
-  d->melee.propApplied = new PropInfected(PropTurns::standard);
+  d->melee.propApplied = new PropInfected(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::shadowClaw);
@@ -1009,7 +1007,7 @@ void initDataList() {
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "mauls me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::mummy]);
-  d->melee.propApplied = new PropCursed(PropTurns::standard);
+  d->melee.propApplied = new PropCursed(PropTurns::std);
   d->melee.isKnockback = true;
   data[int(d->id)] = d;
 
@@ -1045,14 +1043,14 @@ void initDataList() {
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "spews infected pus on me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::oozePutrid]);
-  d->melee.propApplied = new PropInfected(PropTurns::standard);
+  d->melee.propApplied = new PropInfected(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::oozePoisonSpewPus);
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "spews poisonous pus on me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::oozePoison]);
-  d->melee.propApplied = new PropPoisoned(PropTurns::standard);
+  d->melee.propApplied = new PropPoisoned(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::colourOOSpaceTouch);
@@ -1072,7 +1070,7 @@ void initDataList() {
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "bites me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::huntingHorror]);
-  d->melee.propApplied = new PropParalyzed(PropTurns::standard);
+  d->melee.propApplied = new PropParalyzed(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::armorLeatherJacket);
@@ -1134,6 +1132,32 @@ void initDataList() {
   d->armor.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMsg = "";
   addFeatureFoundIn(*d, FeatureId::cabinet);
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::gasMask);
+  resetData(*d, ItemType::general);
+  d->baseName = ItemName("Gas Mask", "", "A Gas Mask");
+  d->clr = clrGray;
+  d->tile = TileId::armor;
+  d->glyph = '[';
+  d->isHeadwear = true;
+  d->spawnStdRange = Range(1, LAST_ROOM_AND_CORRIDOR_LVL);
+  d->chanceToIncludeInSpawnList = 50;
+  d->itemWeight = itemWeight_light;
+  d->landOnHardSurfaceSoundMsg = "";
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::hideousMask);
+  resetData(*d, ItemType::general);
+  d->baseName = ItemName("Hideous Mask", "", "The Hideous Mask");
+  d->clr = clrMagenta;
+  d->tile = TileId::armor;
+  d->glyph = '[';
+  d->isHeadwear = true;
+  d->spawnStdRange = Range(-1, -1);
+  d->chanceToIncludeInSpawnList = 0;
+  d->itemWeight = itemWeight_light;
+  d->landOnHardSurfaceSoundMsg = "";
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::scrollMayhem);
@@ -1344,7 +1368,6 @@ void initDataList() {
   d->glyph = '~';
   d->clr = clrBrownDrk;
   d->tile = TileId::medicalBag;
-//  d->nativeRooms.resize(0);
   data[int(d->id)] = d;
 }
 

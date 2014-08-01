@@ -223,7 +223,7 @@ public:
            const std::string& NAME_A) :
     name(NAME), namePlural(NAME_PL), nameA(NAME_A) {}
 
-  std::string name, namePlural          , nameA;
+  std::string name, namePlural, nameA;
 };
 
 struct ItemAttMsgs {

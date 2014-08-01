@@ -136,7 +136,7 @@ void drawInfoLines() {
   //Armor
   Renderer::drawText("ARM:", Panel::charLines, pos, clrGenDrk);
   pos.x += 4;
-  const Item* const armor = player.getInv().getItemInSlot(SlotId::armorBody);
+  const Item* const armor = player.getInv().getItemInSlot(SlotId::body);
   if(armor) {
     str = static_cast<const Armor*>(armor)->getArmorDataLine(false);
     Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
@@ -206,7 +206,7 @@ void drawInfoLines() {
   pos.x = X_POS_MISSILE;
 
   auto* const itemMissiles =
-    Map::player->getInv().getItemInSlot(SlotId::missiles);
+    Map::player->getInv().getItemInSlot(SlotId::thrown);
 
   if(itemMissiles) {
     const Clr itemClr = itemMissiles->getClr();

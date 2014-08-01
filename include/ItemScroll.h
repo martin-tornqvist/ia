@@ -14,9 +14,9 @@ public:
 
   ConsumeItem activateDefault(Actor* const actor) override;
 
-  std::string getDefaultActivationLabel() const {return "Read";}
+  std::string getDefaultActivationLabel() const override {return "Read";}
 
-  Clr getInterfaceClr() const {return clrMagenta;}
+  Clr getInterfaceClr() const override {return clrMagenta;}
 
   ConsumeItem read();
 

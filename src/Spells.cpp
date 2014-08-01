@@ -357,7 +357,7 @@ SpellCastRetData SpellMayhem::cast_(
   for(auto* actor : GameTime::actors_) {
     if(actor != Map::player) {
       if(Map::player->isSeeingActor(*actor, nullptr)) {
-        actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::standard));
+        actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
       }
     }
   }
@@ -577,7 +577,7 @@ SpellCastRetData SpellBless::cast_(
   Actor* const caster) const {
 
   caster->getPropHandler().tryApplyProp(
-    new PropBlessed(PropTurns::standard));
+    new PropBlessed(PropTurns::std));
 
   return SpellCastRetData(true);
 }
@@ -676,7 +676,7 @@ SpellCastRetData SpellPropOnEnemies::cast_(
 
       for(Actor* actor : targets) {
         PropHandler& propHlr = actor->getPropHandler();
-        Prop* const prop = propHlr.mkProp(propId, PropTurns::standard);
+        Prop* const prop = propHlr.mkProp(propId, PropTurns::std);
         propHlr.tryApplyProp(prop);
       }
       return SpellCastRetData(true);
@@ -687,7 +687,7 @@ SpellCastRetData SpellPropOnEnemies::cast_(
 
     PropHandler& propHandler = Map::player->getPropHandler();
     Prop* const prop = propHandler.mkProp(
-                         propId, PropTurns::standard);
+                         propId, PropTurns::std);
     propHandler.tryApplyProp(prop);
 
     return SpellCastRetData(false);

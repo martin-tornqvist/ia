@@ -7,21 +7,15 @@
 
 #include "ItemData.h"
 
-enum class SlotId {wielded, wieldedAlt, missiles, armorBody};
+enum class SlotId {wielded, wieldedAlt, thrown, body, head};
 
 struct InvSlot {
-  InvSlot() :
-//    allowWieldedWpn(false),
-//    allowMissile(false),
-//    allowArmor(false),
-//    allowHeadwear(false),
-    name(""),
-    id(SlotId::wielded),
-    item(nullptr) {}
+  InvSlot(SlotId id_, std::string name_) : id(id_), name(name_), item(nullptr) {}
 
-//  bool allowWieldedWpn, allowMissile, allowArmor, allowHeadwear;
-  std::string name;
+  InvSlot() : id(SlotId::wielded), name(""), item(nullptr) {}
+
   SlotId id;
+  std::string name;
   Item* item;
 };
 
@@ -51,7 +45,7 @@ public:
   void moveItemToSlot(InvSlot* inventoryslot, const size_t GENERAL_INV_ELEMENT);
 
   void equipGeneralItemAndPossiblyEndTurn(
-    const size_t GENERAL_INV_ELEMENT, const SlotId slotToEquip);
+    const size_t GENERAL_INV_ELEMENT, const SlotId slot);
 
   void swapWieldedAndPrepared(const bool IS_FREE_TURN);
 

@@ -15,7 +15,7 @@ public:
   MedicalBag(ItemDataT* const itemData) :
     Item(itemData), nrSupplies_(60), nrTurnsLeft_(-1) {}
 
-  virtual ~MedicalBag() {}
+  ~MedicalBag() {}
 
   ConsumeItem activateDefault(Actor* const actor) override;
 
@@ -23,9 +23,9 @@ public:
   void interrupted();
   void finishCurAction();
 
-  virtual std::string getDefaultActivationLabel() const {return "Apply";}
+  std::string getDefaultActivationLabel() const override {return "Apply";}
 
-  virtual Clr getInterfaceClr() const {return clrGreen;}
+  Clr getInterfaceClr() const override {return clrGreen;}
 
   void storeToSaveLines(std::vector<std::string>& lines) override {
     lines.push_back(toStr(nrSupplies_));

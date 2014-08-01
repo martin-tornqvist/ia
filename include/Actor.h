@@ -55,8 +55,7 @@ public:
   //Function taking into account FOV, invisibility, status, etc
   //This is the final word on whether an actor can visually perceive
   //another actor.
-  bool isSeeingActor(
-    const Actor& other, const bool visionBlockingCells[MAP_W][MAP_H]) const;
+  bool isSeeingActor(const Actor& other, const bool visionBlockers[MAP_W][MAP_H]) const;
 
   void getSpottedEnemies(std::vector<Actor*>& vectorRef);
 
