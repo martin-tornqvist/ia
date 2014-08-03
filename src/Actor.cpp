@@ -156,7 +156,7 @@ void Actor::place(const Pos& pos_, ActorDataT& data) {
 
   place_();
 
-  updateColor();
+  updateClr();
 }
 
 void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
@@ -187,13 +187,18 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   }
 }
 
-void Actor::updateColor() {
+void Actor::updateClr() {
   if(deadState != ActorDeadState::alive) {
     clr_ = clrRed;
     return;
   }
 
   if(propHandler_->changeActorClr(clr_)) {
+    return;
+  }
+
+  if(this == Map::player && Map::player->activeExplosive) {
+    clr_ = clrYellow;
     return;
   }
 
@@ -222,7 +227,7 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
     isHpGained = true;
   }
 
-  updateColor();
+  updateClr();
 
   if(ALLOW_MSG) {
     if(isHpGained) {

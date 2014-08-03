@@ -45,6 +45,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::dynamite:            r = new Dynamite(d);              break;
     case ItemId::flare:               r = new Flare(d);                 break;
     case ItemId::molotov:             r = new Molotov(d);               break;
+    case ItemId::smokeGrenade:        r = new SmokeGrenade(d);           break;
 
     case ItemId::sawedOff:            r = new SawedOff(d, ammoD);       break;
     case ItemId::pumpShotgun:         r = new PumpShotgun(d, ammoD);    break;

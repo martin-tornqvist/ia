@@ -36,9 +36,9 @@ void draw(const string& curString) {
 }
 
 void readKeys(string& curString, bool& isDone) {
-  const KeyboardReadRetData& d = Input::readKeysUntilFound(false);
+  const KeyData& d = Input::readKeysUntilFound(false);
 
-  if(d.sdlKey_ == SDLK_RETURN) {
+  if(d.sdlKey == SDLK_RETURN) {
     isDone = true;
     curString = curString.empty() ? "Player" : curString;
     return;
@@ -46,14 +46,14 @@ void readKeys(string& curString, bool& isDone) {
 
   if(curString.size() < PLAYER_NAME_MAX_LENGTH) {
     if(
-      d.sdlKey_ == SDLK_SPACE ||
-      (d.key_ >= int('a') && d.key_ <= int('z')) ||
-      (d.key_ >= int('A') && d.key_ <= int('Z')) ||
-      (d.key_ >= int('0') && d.key_ <= int('9'))) {
-      if(d.sdlKey_ == SDLK_SPACE) {
+      d.sdlKey == SDLK_SPACE ||
+      (d.key >= int('a') && d.key <= int('z')) ||
+      (d.key >= int('A') && d.key <= int('Z')) ||
+      (d.key >= int('0') && d.key <= int('9'))) {
+      if(d.sdlKey == SDLK_SPACE) {
         curString.push_back(' ');
       } else {
-        curString.push_back(char(d.key_));
+        curString.push_back(char(d.key));
       }
       draw(curString);
       return;
@@ -61,7 +61,7 @@ void readKeys(string& curString, bool& isDone) {
   }
 
   if(curString.size() > 0) {
-    if(d.sdlKey_ == SDLK_BACKSPACE) {
+    if(d.sdlKey == SDLK_BACKSPACE) {
       curString.erase(curString.end() - 1);
       draw(curString);
     }

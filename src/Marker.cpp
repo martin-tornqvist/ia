@@ -10,7 +10,7 @@
 #include "Attack.h"
 #include "Log.h"
 #include "Look.h"
-#include "Thrower.h"
+#include "Throwing.h"
 #include "Renderer.h"
 #include "Map.h"
 #include "ItemFactory.h"
@@ -24,19 +24,7 @@ namespace Marker {
 
 namespace {
 
-Pos   pos_;
-bool  isDone_ = false;
-
-void done() {
-  Renderer::drawMapAndInterface();
-  isDone_ = true;
-}
-
-void cancel() {
-  Log::clearLog();
-  Renderer::drawMapAndInterface();
-  isDone_ = true;
-}
+Pos pos_;
 
 void setPosToClosestEnemyIfVisible() {
   vector<Actor*> spottedEnemies;
@@ -53,25 +41,9 @@ void setPosToClosestEnemyIfVisible() {
   }
 }
 
-void move(const int DX, const int DY, const MarkerTask markerTask,
-          const Item* itemThrown) {
-  bool isMoved = false;
-  const Pos newPos = pos_ + Pos(DX, DY);
-  if(Utils::isPosInsideMap(newPos)) {
-    pos_ = newPos;
-    isMoved = true;
-  }
-
-  if(isMoved) {
-    if(
-      markerTask == MarkerTask::look             ||
-      markerTask == MarkerTask::aimRangedWpn  ||
-      markerTask == MarkerTask::aimThrownWpn) {
-      Look::onMarkerAtPos(pos_, markerTask, itemThrown);
-    }
-  }
-
-  draw(markerTask);
+void tryMove(const Dir dir) {
+  const Pos newPos(pos_ + DirUtils::getOffset(dir));
+  if(Utils::isPosInsideMap(newPos)) {pos_ = newPos;}
 }
 
 bool setPosToTargetIfVisible() {
@@ -82,10 +54,9 @@ bool setPosToTargetIfVisible() {
     Map::player->getSpottedEnemies(spottedEnemies);
 
     if(!spottedEnemies.empty()) {
-
-      for(size_t i = 0; i < spottedEnemies.size(); ++i) {
-        if(target == spottedEnemies.at(i)) {
-          pos_ = spottedEnemies.at(i)->pos;
+      for(auto* const actor : spottedEnemies) {
+        if(target == actor) {
+          pos_ = actor->pos;
           return true;
         }
       }
@@ -94,160 +65,97 @@ bool setPosToTargetIfVisible() {
   return false;
 }
 
-void readKeys(const MarkerTask markerTask, MarkerRetData& data,
-              Item* itemThrown) {
-  const KeyboardReadRetData& d = Input::readKeysUntilFound();
-
-  if(d.sdlKey_ == SDLK_RIGHT    || d.key_ == '6' || d.key_ == 'l') {
-    if(d.isShiftHeld_) {
-      move(1, -1, markerTask, itemThrown);
-    } else if(d.isCtrlHeld_) {
-      move(1, 1, markerTask, itemThrown);
-    } else {
-      move(1, 0, markerTask, itemThrown);
-    }
-  }
-  if(d.sdlKey_ == SDLK_UP       || d.key_ == '8' || d.key_ == 'k') {
-    move(0, -1, markerTask, itemThrown);
-  }
-  if(d.sdlKey_ == SDLK_LEFT     || d.key_ == '4' || d.key_ == 'h') {
-    if(d.isShiftHeld_) {
-      move(-1, -1, markerTask, itemThrown);
-    } else if(d.isCtrlHeld_) {
-      move(-1, 1, markerTask, itemThrown);
-    } else {
-      move(-1, 0, markerTask, itemThrown);
-    }
-  }
-  if(d.sdlKey_ == SDLK_DOWN     || d.key_ == '2' || d.key_ == 'j') {
-    move(0, 1, markerTask, itemThrown);
-  }
-  if(d.sdlKey_ == SDLK_PAGEUP   || d.key_ == '9' || d.key_ == 'u') {
-    move(1, -1, markerTask, itemThrown);
-  }
-  if(d.sdlKey_ == SDLK_HOME     || d.key_ == '7' || d.key_ == 'y') {
-    move(-1, -1, markerTask, itemThrown);
-  }
-  if(d.sdlKey_ == SDLK_END      || d.key_ == '1' || d.key_ == 'b') {
-    move(-1, 1, markerTask, itemThrown);
-  }
-  if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3' || d.key_ == 'n') {
-    move(1, 1, markerTask, itemThrown);
-  }
-  // ------------------------------------------------------- AIM RANGED WEAPON
-  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'f') {
-    if(markerTask == MarkerTask::aimRangedWpn) {
-      if(pos_ != Map::player->pos) {
-
-        Log::clearLog();
-        Renderer::drawMapAndInterface();
-
-        Actor* const actor = Utils::getFirstActorAtPos(pos_);
-        if(actor) {Map::player->target = actor;}
-
-        Item* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
-        Wpn* const weapon = static_cast<Wpn*>(item);
-        if(!Attack::ranged(*Map::player, *weapon, pos_)) {
-          Log::addMsg("No ammunition loaded.");
-        }
-      } else {
-        Log::addMsg("I think I can persevere a little longer.");
-      }
-      done();
-    }
-  }
-  // ------------------------------------------------------- LOOK
-  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'v') {
-    if(markerTask == MarkerTask::look) {
-      Look::printExtraActorDescription(pos_);
-      move(0, 0, MarkerTask::look, itemThrown);
-    }
-  }
-  // ------------------------------------------------------- THROW
-  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 't') {
-    if(markerTask == MarkerTask::aimThrownWpn) {
-      if(pos_ == Map::player->pos) {
-        Log::addMsg("I should throw this somewhere else.");
-      } else {
-        Renderer::drawMapAndInterface();
-        Actor* const actor = Utils::getFirstActorAtPos(pos_);
-        if(actor) {Map::player->target = actor;}
-        Throwing::throwItem(*Map::player, pos_, *itemThrown);
-        data.didThrowMissile = true;
-      }
-
-      done();
-    }
-  }
-  // ------------------------------------------------------- THROW EXPLOSIVE
-  if(d.sdlKey_ == SDLK_RETURN || d.key_ == 'e') {
-    if(markerTask == MarkerTask::aimLitExplosive) {
-      Renderer::drawMapAndInterface();
-      Throwing::playerThrowLitExplosive(pos_);
-      done();
-    }
-  }
-  if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
-    cancel();
-  }
-}
-
 } //namespace
 
-const Pos& getPos() {return pos_;}
+void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
+         function<void(const Pos&)> onMarkerAtPos,
+         function<MarkerDone(const Pos&, const KeyData&)> onKeyPress) {
 
-void draw(const MarkerTask markerTask) {
-  Renderer::drawMapAndInterface(false);
-
-  vector<Pos> trail;
-
-  int effectiveRange = -1;
-
-  const Pos playerPos = Map::player->pos;
-  LineCalc::calcNewLine(playerPos, pos_, true, 9999, false, trail);
-
-  if(markerTask == MarkerTask::aimRangedWpn) {
-    Item* const item =
-      Map::player->getInv().getItemInSlot(SlotId::wielded);
-    Wpn* const weapon = static_cast<Wpn*>(item);
-    effectiveRange = weapon->effectiveRangeLimit;
-  }
-
-  Renderer::drawMarker(trail, effectiveRange);
-  Renderer::updateScreen();
-}
-
-MarkerRetData run(const MarkerTask markerTask, Item* itemThrown) {
   pos_ = Map::player->pos;
 
-  MarkerRetData data;
-
-  if(
-    markerTask == MarkerTask::aimRangedWpn  ||
-    markerTask == MarkerTask::look             ||
-    markerTask == MarkerTask::aimThrownWpn) {
-    //Attempt to place marker at target.
+  if(useTarget == MarkerUsePlayerTarget::yes) {
+    //First, attempt to place marker at target.
     if(!setPosToTargetIfVisible()) {
-      //Else attempt to place marker at closest visible enemy.
+      //If no target available, attempt to place marker at closest visible monster.
       //This sets a new target if successful.
       Map::player->target = nullptr;
       setPosToClosestEnemyIfVisible();
     }
   }
 
-  if(
-    markerTask == MarkerTask::look ||
-    markerTask == MarkerTask::aimRangedWpn ||
-    markerTask == MarkerTask::aimThrownWpn) {
-    Look::onMarkerAtPos(pos_, markerTask, itemThrown);
+  MarkerDone isDone = MarkerDone::no;
+
+  while(isDone == MarkerDone::no) {
+    Log::clearLog();
+
+    //Print info such as name of actor at current position, etc.
+    onMarkerAtPos(pos_);
+
+    Renderer::drawMapAndInterface(false);
+
+    vector<Pos> trail;
+
+    if(drawTrail == MarkerDrawTail::yes) {
+      const Pos origin(Map::player->pos);
+      LineCalc::calcNewLine(origin, pos_, true, INT_MAX, false, trail);
+    }
+
+    Renderer::drawMarker(pos_, trail, INT_MAX);
+
+    Renderer::updateScreen();
+
+    const KeyData& d = Input::readKeysUntilFound();
+
+    if(d.sdlKey == SDLK_RIGHT    || d.key == '6' || d.key == 'l') {
+      if(d.isShiftHeld) {
+        tryMove(Dir::upRight);
+      } else if(d.isCtrlHeld) {
+        tryMove(Dir::downRight);
+      } else {
+        tryMove(Dir::right);
+      }
+      continue;
+    }
+    if(d.sdlKey == SDLK_UP       || d.key == '8' || d.key == 'k') {
+      tryMove(Dir::up);
+      continue;
+    }
+    if(d.sdlKey == SDLK_LEFT     || d.key == '4' || d.key == 'h') {
+      if(d.isShiftHeld) {
+        tryMove(Dir::upLeft);
+      } else if(d.isCtrlHeld) {
+        tryMove(Dir::downLeft);
+      } else {tryMove(Dir::left);}
+      continue;
+    }
+    if(d.sdlKey == SDLK_DOWN     || d.key == '2' || d.key == 'j') {
+      tryMove(Dir::down);
+      continue;
+    }
+    if(d.sdlKey == SDLK_PAGEUP   || d.key == '9' || d.key == 'u') {
+      tryMove(Dir::upRight);
+      continue;
+    }
+    if(d.sdlKey == SDLK_HOME     || d.key == '7' || d.key == 'y') {
+      tryMove(Dir::upLeft);
+      continue;
+    }
+    if(d.sdlKey == SDLK_END      || d.key == '1' || d.key == 'b') {
+      tryMove(Dir::downLeft);
+      continue;
+    }
+    if(d.sdlKey == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n') {
+      tryMove(Dir::downRight);
+      continue;
+    }
+
+    //Run custom keypress events (firing ranged weapon, casting spell, etc)
+    isDone = onKeyPress(pos_, d);
+
+    if(isDone == MarkerDone::yes) {
+      Renderer::drawMapAndInterface();
+    }
   }
-
-  draw(markerTask);
-
-  isDone_ = false;
-  while(!isDone_) {readKeys(markerTask, data, itemThrown);}
-
-  return data;
 }
 
 } //Marker

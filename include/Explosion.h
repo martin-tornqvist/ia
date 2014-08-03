@@ -24,7 +24,7 @@ void runExplosionAt(
   Prop* const prop                    = nullptr,
   const Clr* const clrOverride  = nullptr);
 
-void runSmokeExplosionAt(const Pos& origin);
+void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION = -1*/);
 
 } //Explosion
 

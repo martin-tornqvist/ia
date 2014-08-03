@@ -46,11 +46,11 @@ public:
            const bool ALLOW_DROP_ITEMS);
 
   virtual void onActorTurn() {}
-  virtual void onStandardTurn() {}
+  virtual void onStdTurn() {}
 
   virtual void moveDir(Dir dir) = 0;
 
-  virtual void updateColor();
+  virtual void updateClr();
 
   //Function taking into account FOV, invisibility, status, etc
   //This is the final word on whether an actor can visually perceive
@@ -84,9 +84,6 @@ public:
 protected:
   //TODO Try to get rid of these friend declarations
   friend class AbilityVals;
-  friend class Dynamite;
-  friend class Molotov;
-  friend class Flare;
   friend class PropDiseased;
 
   virtual void die_() {}

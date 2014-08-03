@@ -1,22 +1,21 @@
 #ifndef MARKER_H
 #define MARKER_H
 
+#include <functional>
+
 #include "CmnTypes.h"
 
-class Item;
+struct KeyData;
 
-struct MarkerRetData {
-  MarkerRetData() : didThrowMissile(false) {}
-  bool didThrowMissile;
-};
+enum class MarkerDone             {no, yes};
+enum class MarkerDrawTail         {no, yes};
+enum class MarkerUsePlayerTarget  {no, yes};
 
 namespace Marker {
 
-MarkerRetData run(const MarkerTask markerTask, Item* itemThrown);
-
-const Pos& getPos();
-
-void draw(const MarkerTask markerTask);
+void run(const MarkerDrawTail drawTail, const MarkerUsePlayerTarget useTarget,
+         std::function<void(const Pos&)> onMarkerAtPos,
+         std::function<MarkerDone(const Pos&, const KeyData&)> onKeyPress);
 
 } //Marker
 

@@ -21,7 +21,7 @@ enum class Trait {
   sharpShooter,
   coolHeaded,
   courageous,
-  demolitionExpert,
+  demExpert,
   dexterous,
   fearless,
   imperceptible,

@@ -22,10 +22,10 @@
 using namespace std;
 
 Entity::Entity(Mob* feature_) :
-  feature(static_cast<Feature*>(feature_)), entityType(entityMob) {}
+  feature(static_cast<Feature*>(feature_)), entityType(EntityType::mob) {}
 
 Entity::Entity(Rigid* feature_) :
-  feature(static_cast<Feature*>(feature_)), entityType(entityRigid) {}
+  feature(static_cast<Feature*>(feature_)), entityType(EntityType::rigid) {}
 
 namespace AutoDescrActor {
 
@@ -126,104 +126,61 @@ void descrBriefItem(const Item& item) {
   Log::addMsg(ItemData::getItemInterfaceRef(item, true) + ".");
 }
 
-void descrBriefActor(const Actor& actor, const MarkerTask markerTask,
-                     const Item* const itemThrown) {
-  Log::addMsg(actor.getNameA() + ".");
-
-  if(markerTask == MarkerTask::look) {
-    Log::addMsg("| v for description");
-  } else if(actor.pos != Map::player->pos) {
-    if(markerTask == MarkerTask::aimRangedWpn) {
-      Item* const item =
-        Map::player->getInv().getItemInSlot(SlotId::wielded);
-      Wpn* const wpn = static_cast<Wpn*>(item);
-      RangedAttData data(*Map::player, *wpn, actor.pos, actor.pos);
-      Log::addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
-    } else if(markerTask == MarkerTask::aimThrownWpn) {
-      MissileAttData data(
-        *Map::player, *itemThrown, actor.pos, actor.pos);
-      Log::addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
-    }
-  }
+void descrBriefActor(const Actor& actor) {
+  Log::addMsg(actor.getNameA());
 }
 
 } //namespace
 
-void onMarkerAtPos(const Pos& pos, const MarkerTask markerTask,
-                   const Item* const itemThrown) {
-  const bool IS_VISION = Map::cells[pos.x][pos.y].isSeenByPlayer;
+void printLocationInfoMsgs(const Pos& pos) {
 
   Log::clearLog();
 
-  if(IS_VISION) {
+  if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
     Log::addMsg("I see here:");
 
     Entity entityDescribed = getEntityToDescribe(pos);
 
     switch(entityDescribed.entityType) {
-      case entityActor:
-        descrBriefActor(*entityDescribed.actor, markerTask, itemThrown);
-        break;
-      case entityRigid:
-        descrBriefRigid(*entityDescribed.feature);
-        break;
-      case entityMob:
-        descrBriefMob(*entityDescribed.feature);
-        break;
-      case entityItem:
-        descrBriefItem(*entityDescribed.item);
-        break;
+      case EntityType::actor: {descrBriefActor(*entityDescribed.actor);}    break;
+      case EntityType::rigid: {descrBriefRigid(*entityDescribed.feature);}  break;
+      case EntityType::mob:   {descrBriefMob(*entityDescribed.feature);}    break;
+      case EntityType::item:  {descrBriefItem(*entityDescribed.item);}      break;
     }
-  }
-
-  if(pos != Map::player->pos) {
-    if(markerTask == MarkerTask::aimRangedWpn) {
-      if(IS_VISION) {
-        Log::addMsg("| f to fire");
-      } else {
-        Log::addMsg("f to fire");
-      }
-    } else if(markerTask == MarkerTask::aimThrownWpn) {
-      if(IS_VISION) {
-        Log::addMsg("| t to throw");
-      } else {
-        Log::addMsg("t to throw");
-      }
-    }
+  } else {
+    Log::addMsg("I have no vision here.");
   }
 }
 
-void printExtraActorDescription(const Pos& pos) {
+void printDetailedActorDescr(const Pos& pos) {
   Actor* actor = Utils::getFirstActorAtPos(pos);
-  if(actor) {
-    if(actor != Map::player) {
-      //Add written description.
-      string descr = actor->getData().descr;
+  if(actor && actor != Map::player) {
+    //Add written description.
+    string descr = actor->getData().descr;
 
-      //Add auto-description.
-      if(actor->getData().isAutoDescrAllowed) {
-        AutoDescrActor::addAutoDescriptionLines(actor, descr);
-      }
-
-      vector<string> formattedText;
-      TextFormatting::lineToLines(descr, MAP_W - 1, formattedText);
-
-      const unsigned int NR_OF_LINES = formattedText.size();
-
-      Renderer::drawMapAndInterface(false);
-      Marker::draw(MarkerTask::look);
-      Renderer::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
-
-      int y = 1;
-      for(string& s : formattedText) {
-        Renderer::drawText(s, Panel::screen, Pos(0, y), clrWhiteHigh);
-        y++;
-      }
-
-      Renderer::updateScreen();
-
-      Query::waitForKeyPress();
+    //Add auto-description.
+    if(actor->getData().isAutoDescrAllowed) {
+      AutoDescrActor::addAutoDescriptionLines(actor, descr);
     }
+
+    vector<string> formattedText;
+    TextFormatting::lineToLines(descr, MAP_W - 1, formattedText);
+
+    const size_t NR_OF_LINES = formattedText.size();
+
+//      Renderer::drawMapAndInterface(false);
+
+    Renderer::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
+
+    int y = 1;
+    for(string& s : formattedText) {
+      Renderer::drawText(s, Panel::screen, Pos(0, y), clrWhiteHigh);
+      y++;
+    }
+
+    Renderer::updateScreen();
+
+    Query::waitForKeyPress();
   }
 }
 

@@ -373,8 +373,7 @@ void initDataList() {
 
   d = new ItemDataT(ItemId::napalmCartridge);
   resetData(*d, ItemType::ammoClip);
-  d->baseName = ItemName("Napalm Cartridge", "Napalm Cartridges",
-                         "a Napalm Cartridge");
+  d->baseName = ItemName("Napalm Cartridge", "Napalm Cartridges", "a Napalm Cartridge");
   d->itemWeight = itemWeight_light;
   d->ranged.ammoContainedInClip = 3;
   d->spawnStdRange.lower = 5;
@@ -542,8 +541,7 @@ void initDataList() {
 
   d = new ItemDataT(ItemId::molotov);
   resetData(*d, ItemType::explosive);
-  d->baseName = ItemName("Molotov Cocktail", "Molotov Cocktails",
-                         "a Molotov Cocktail");
+  d->baseName = ItemName("Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail");
   d->itemWeight = itemWeight_light;
   d->tile = TileId::molotov;
   d->clr = clrWhite;
@@ -552,10 +550,19 @@ void initDataList() {
   addFeatureFoundIn(*d, FeatureId::cocoon);
   data[int(d->id)] = d;
 
+  d = new ItemDataT(ItemId::smokeGrenade);
+  resetData(*d, ItemType::explosive);
+  d->baseName = ItemName("Smoke Grenade", "Smoke Grenades", "a Smoke Grenade");
+  d->itemWeight = itemWeight_light;
+  d->tile = TileId::flare;
+  d->clr = clrGreen;
+  addFeatureFoundIn(*d, FeatureId::chest);
+  addFeatureFoundIn(*d, FeatureId::cabinet);
+  data[int(d->id)] = d;
+
   d = new ItemDataT(ItemId::throwingKnife);
   resetData(*d, ItemType::throwingWpn);
-  d->baseName = ItemName("Throwing Knife", "Throwing Knives",
-                         "a Throwing Knife");
+  d->baseName = ItemName("Throwing Knife", "Throwing Knives", "a Throwing Knife");
   d->itemWeight = itemWeight_extraLight;
   d->tile = TileId::dagger;
   d->glyph = '/';

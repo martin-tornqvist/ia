@@ -12,7 +12,7 @@
 #include "Renderer.h"
 #include "Map.h"
 #include "ActorPlayer.h"
-#include "Thrower.h"
+#include "Throwing.h"
 #include "ItemFactory.h"
 #include "TextFormatting.h"
 #include "ActorFactory.h"

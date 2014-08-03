@@ -7,25 +7,25 @@ namespace MenuInputHandling {
 
 MenuAction getAction(MenuBrowser& browser) {
   while(true) {
-    KeyboardReadRetData d = Input::readKeysUntilFound();
+    KeyData d = Input::readKeysUntilFound();
 
-    if(d.sdlKey_ == SDLK_RIGHT        || d.key_ == '6' || d.key_ == 'l') {
+    if(d.sdlKey == SDLK_RIGHT        || d.key == '6' || d.key == 'l') {
       browser.navigate(Dir::right);
       return MenuAction::browsed;
-    } else if(d.sdlKey_ == SDLK_LEFT  || d.key_ == '4' || d.key_ == 'h') {
+    } else if(d.sdlKey == SDLK_LEFT  || d.key == '4' || d.key == 'h') {
       browser.navigate(Dir::left);
       return MenuAction::browsed;
-    } else if(d.sdlKey_ == SDLK_UP    || d.key_ == '8' || d.key_ == 'k') {
+    } else if(d.sdlKey == SDLK_UP    || d.key == '8' || d.key == 'k') {
       browser.navigate(Dir::up);
       return MenuAction::browsed;
-    } else if(d.sdlKey_ == SDLK_DOWN  || d.key_ == '2' || d.key_ == 'j') {
+    } else if(d.sdlKey == SDLK_DOWN  || d.key == '2' || d.key == 'j') {
       browser.navigate(Dir::down);
       return MenuAction::browsed;
-    } else if(d.sdlKey_ == SDLK_RETURN) {
-      return d.isShiftHeld_ ? MenuAction::selectedShift : MenuAction::selected;
-    } else if(d.sdlKey_ == SDLK_SPACE) {
+    } else if(d.sdlKey == SDLK_RETURN) {
+      return d.isShiftHeld ? MenuAction::selectedShift : MenuAction::selected;
+    } else if(d.sdlKey == SDLK_SPACE) {
       return MenuAction::space;
-    } else if(d.sdlKey_ == SDLK_ESCAPE) {
+    } else if(d.sdlKey == SDLK_ESCAPE) {
       return MenuAction::esc;
     }
   }

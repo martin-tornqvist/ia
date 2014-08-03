@@ -31,6 +31,7 @@
 #include "MapParsing.h"
 #include "Properties.h"
 #include "ItemDevice.h"
+#include "ItemExplosive.h"
 
 using namespace std;
 
@@ -40,9 +41,7 @@ Player::Player() :
   Actor(),
   activeMedicalBag(nullptr),
   waitTurnsLeft(-1),
-  dynamiteFuseTurns(-1),
-  molotovFuseTurns(-1),
-  flareFuseTurns(-1),
+  activeExplosive(nullptr),
   target(nullptr),
   insanity_(0),
   shock_(0.0),
@@ -52,11 +51,15 @@ Player::Player() :
   nrTurnsUntilIns_(-1),
   CARRY_WEIGHT_BASE_(450) {}
 
+Player::~Player() {
+  if(activeExplosive) {delete activeExplosive;}
+}
+
 void Player::mkStartItems() {
   data_->abilityVals.reset();
 
-  for(int i = 0; i < int(Phobia::END); ++i)        {phobias[i] = false;}
-  for(int i = 0; i < int(Obsession::END); ++i)  {obsessions[i] = false;}
+  for(int i = 0; i < int(Phobia::END); ++i)     {phobias[i]     = false;}
+  for(int i = 0; i < int(Obsession::END); ++i)  {obsessions[i]  = false;}
 
   int NR_CARTRIDGES = Rnd::range(1, 2);
   int NR_DYNAMITE   = Rnd::range(2, 3);
@@ -113,9 +116,6 @@ void Player::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(spiMax_));
   lines.push_back(toStr(pos.x));
   lines.push_back(toStr(pos.y));
-  lines.push_back(toStr(dynamiteFuseTurns));
-  lines.push_back(toStr(molotovFuseTurns));
-  lines.push_back(toStr(flareFuseTurns));
 
   for(int i = 0; i < int(AbilityId::END); ++i) {
     lines.push_back(toStr(data_->abilityVals.getRawVal(AbilityId(i))));
@@ -158,12 +158,6 @@ void Player::setupFromSaveLines(vector<string>& lines) {
   pos.x = toInt(lines.front());
   lines.erase(begin(lines));
   pos.y = toInt(lines.front());
-  lines.erase(begin(lines));
-  dynamiteFuseTurns = toInt(lines.front());
-  lines.erase(begin(lines));
-  molotovFuseTurns = toInt(lines.front());
-  lines.erase(begin(lines));
-  flareFuseTurns = toInt(lines.front());
   lines.erase(begin(lines));
 
   for(int i = 0; i < int(AbilityId::END); ++i) {
@@ -286,7 +280,7 @@ void Player::incrInsanity() {
 
   restoreShock(70, false);
 
-  updateColor();
+  updateClr();
   Renderer::drawMapAndInterface();
 
   if(getInsanity() >= 100) {
@@ -598,7 +592,7 @@ void Player::testPhobias() {
   }
 }
 
-void Player::updateColor() {
+void Player::updateClr() {
   if(deadState != ActorDeadState::alive) {
     clr_ = clrRed;
     return;
@@ -606,7 +600,7 @@ void Player::updateColor() {
 
   if(propHandler_->changeActorClr(clr_)) {return; }
 
-  if(dynamiteFuseTurns > 0 || molotovFuseTurns > 0 || flareFuseTurns > 0) {
+  if(activeExplosive) {
     clr_ = clrYellow;
     return;
   }
@@ -667,49 +661,11 @@ void Player::onActorTurn() {
   }
 }
 
-void Player::onStandardTurn() {
+void Player::onStdTurn() {
   shockTmp_ = 0.0;
   addTmpShockFromFeatures();
 
-  // Dynamite
-  if(dynamiteFuseTurns > 0) {
-    dynamiteFuseTurns--;
-    if(dynamiteFuseTurns > 0) {
-      string fuseMsg = "***F";
-      for(int i = 0; i < dynamiteFuseTurns; ++i) {fuseMsg += "Z";}
-      fuseMsg += "***";
-      Log::addMsg(fuseMsg, clrYellow);
-    }
-  }
-  if(dynamiteFuseTurns == 0) {
-    Log::addMsg("The dynamite explodes in my hands!");
-    Explosion::runExplosionAt(pos, ExplType::expl);
-    updateColor();
-    dynamiteFuseTurns = -1;
-  }
-
-  //Molotovs
-  if(molotovFuseTurns > 0) {
-    molotovFuseTurns--;
-  }
-  if(molotovFuseTurns == 0) {
-    Log::addMsg("The Molotov Cocktail explodes in my hands!");
-    molotovFuseTurns = -1;
-    updateColor();
-    Explosion::runExplosionAt(
-      pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::explosionMolotov,
-      new PropBurning(PropTurns::std));
-  }
-
-  //Flare
-  if(flareFuseTurns > 0) {
-    flareFuseTurns--;
-  }
-  if(flareFuseTurns == 0) {
-    Log::addMsg("The flare is extinguished.");
-    updateColor();
-    flareFuseTurns = -1;
-  }
+  if(activeExplosive)   {activeExplosive->onStdTurnPlayerHoldIgnited();}
 
   if(!activeMedicalBag) {testPhobias();}
 
@@ -807,8 +763,7 @@ void Player::onStandardTurn() {
         if(IS_MONSTER_SEEN) {
           if(!monster.messageMonsterInViewPrinted) {
             if(activeMedicalBag || waitTurnsLeft > 0) {
-              Log::addMsg(actor->getNameA() + " comes into my view.",
-                          clrWhite, true);
+              Log::addMsg(actor->getNameA() + " comes into my view.", clrWhite, true);
             }
             monster.messageMonsterInViewPrinted = true;
           }
@@ -923,14 +878,6 @@ void Player::interruptActions() {
     activeMedicalBag->interrupted();
     activeMedicalBag = nullptr;
   }
-}
-
-void Player::explosiveThrown() {
-  dynamiteFuseTurns = -1;
-  molotovFuseTurns = -1;
-  flareFuseTurns = -1;
-  updateColor();
-  Renderer::drawMapAndInterface();
 }
 
 void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
@@ -1124,8 +1071,13 @@ void Player::punchMonster(Actor& actorToPunch) {
 }
 
 void Player::addLight_(bool light[MAP_W][MAP_H]) const {
-  bool isUsingLightGivingItemSmall  = false;              //3x3 cells
-  bool isUsingLightGivingItemNormal = flareFuseTurns > 0;
+  bool isUsingLightGivingItemSmall  = false; //3x3 cells
+  bool isUsingLightGivingItemNormal = false;
+  if(activeExplosive) {
+    if(activeExplosive->getData().id == ItemId::flare) {
+      isUsingLightGivingItemNormal = true;
+    }
+  }
 
   vector<Item*>& generalItems = inv_->getGeneral();
   for(Item* const item : generalItems) {

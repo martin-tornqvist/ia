@@ -12,12 +12,10 @@ class Feature;
 struct Entity {
 public:
   Entity() :
-    actor(nullptr), item(nullptr), feature(nullptr),
-    entityType(entityRigid) {}
+    actor(nullptr), item(nullptr), feature(nullptr), entityType(EntityType::rigid) {}
 
-  Entity(Actor* actor_) : actor(actor_), entityType(entityActor) {}
-
-  Entity(Item* item_) : item(item_), entityType(entityItem) {}
+  Entity(Actor* actor_) : actor(actor_),  entityType(EntityType::actor) {}
+  Entity(Item* item_)   : item(item_),    entityType(EntityType::item)  {}
 
   Entity(Mob* feature_);
   Entity(Rigid* feature_);
@@ -37,10 +35,9 @@ void addAutoDescriptionLines(Actor* const actor, std::string& line);
 
 namespace Look {
 
-void onMarkerAtPos(const Pos& pos, const MarkerTask markerTask,
-                   const Item* const itemThrown);
+void printLocationInfoMsgs(const Pos& pos);
 
-void printExtraActorDescription(const Pos& pos);
+void printDetailedActorDescr(const Pos& pos);
 
 } //Look
 

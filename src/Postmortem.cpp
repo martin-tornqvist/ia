@@ -222,18 +222,18 @@ void runInfo(const vector<StrAndClr>& lines) {
   while(true) {
     render(lines, topNr);
 
-    const KeyboardReadRetData& d = Input::readKeysUntilFound();
+    const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.sdlKey_ == SDLK_DOWN || d.key_ == '2' || d.key_ == 'j') {
+    if(d.sdlKey == SDLK_DOWN || d.key == '2' || d.key == 'j') {
       topNr += LINE_JUMP;
       if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
         topNr = 0;
       } else {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
-    } else if(d.sdlKey_ == SDLK_UP || d.key_ == '8' || d.key_ == 'k') {
+    } else if(d.sdlKey == SDLK_UP || d.key == '8' || d.key == 'k') {
       topNr = max(0, topNr - LINE_JUMP);
-    } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
+    } else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
       break;
     }
   }

@@ -21,6 +21,7 @@
 #include "Utils.h"
 #include "FeatureRigid.h"
 #include "FeatureMob.h"
+#include "ItemExplosive.h"
 
 using namespace std;
 
@@ -990,7 +991,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 
   if(!DISABLE_REDRAW) {
     if(prop->shouldUpdatePlayerVisualWhenStartOrEnd()) {
-      prop->owningActor_->updateColor();
+      prop->owningActor_->updateClr();
       Map::player->updateFov();
       Renderer::drawMapAndInterface();
     }
@@ -1055,7 +1056,7 @@ bool PropHandler::endAppliedProp(
       prop->shouldUpdatePlayerVisualWhenStartOrEnd();
 
     if(IS_VISUAL_UPDATE_NEEDED) {
-      prop->owningActor_->updateColor();
+      prop->owningActor_->updateClr();
       Map::player->updateFov();
       Renderer::drawMapAndInterface();
     }
@@ -1692,42 +1693,10 @@ bool PropBlind::shouldUpdatePlayerVisualWhenStartOrEnd() const {
 }
 
 void PropParalyzed::onStart() {
-  Player* const player = Map::player;
+  auto* const player = Map::player;
   if(owningActor_ == player) {
-    const Pos& playerPos = player->pos;
-    const int DYNAMITE_FUSE = Map::player->dynamiteFuseTurns;
-    const int FLARE_FUSE = Map::player->flareFuseTurns;
-    const int MOLOTOV_FUSE = Map::player->molotovFuseTurns;
-
-    if(DYNAMITE_FUSE > 0) {
-      player->dynamiteFuseTurns = -1;
-      player->updateColor();
-      Log::addMsg("The lit Dynamite stick falls from my hands!");
-      Rigid* const f = Map::cells[playerPos.x][playerPos.y].rigid;
-      if(!f->isBottomless()) {
-        GameTime::addMob(new LitDynamite(playerPos, DYNAMITE_FUSE));
-      }
-    }
-    if(FLARE_FUSE > 0) {
-      player->flareFuseTurns = -1;
-      player->updateColor();
-      Log::addMsg("The lit Flare falls from my hands.");
-      Feature* const f = Map::cells[playerPos.x][playerPos.y].rigid;
-      if(!f->isBottomless()) {
-        GameTime::addMob(new LitFlare(playerPos, FLARE_FUSE));
-      }
-      GameTime::updateLightMap();
-      player->updateFov();
-      Renderer::drawMapAndInterface();
-    }
-    if(MOLOTOV_FUSE > 0) {
-      player->molotovFuseTurns = -1;
-      player->updateColor();
-      Log::addMsg("The lit Molotov Cocktail falls from my hands!");
-      Explosion::runExplosionAt(
-        player->pos, ExplType::applyProp, ExplSrc::misc, 0,
-        SfxId::explosionMolotov, new PropBurning(PropTurns::std));
-    }
+    auto* const activeExplosive = player->activeExplosive;
+    if(activeExplosive) {activeExplosive->onPlayerParalyzed();}
   }
 }
 

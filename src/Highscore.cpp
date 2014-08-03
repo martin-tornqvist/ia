@@ -179,9 +179,9 @@ void runHighScoreScreen() {
   while(true) {
     draw(entries, topNr);
 
-    const KeyboardReadRetData& d = Input::readKeysUntilFound();
+    const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN || d.key_ == 'j') {
+    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j') {
       topNr += LINE_JUMP;
       if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
         topNr = 0;
@@ -189,10 +189,10 @@ void runHighScoreScreen() {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
     }
-    if(d.key_ == '8' || d.sdlKey_ == SDLK_UP || d.key_ == 'k') {
+    if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k') {
       topNr = max(0, topNr - LINE_JUMP);
     }
-    if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
+    if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
       break;
     }
   }

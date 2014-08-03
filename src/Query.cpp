@@ -18,19 +18,19 @@ void waitForKeyPress() {
 YesNoAnswer yesOrNo(char keyForSpecialEvent) {
   if(Config::isBotPlaying()) {return YesNoAnswer::yes;}
 
-  KeyboardReadRetData d = Input::readKeysUntilFound();
+  KeyData d = Input::readKeysUntilFound();
   while(
-    d.key_    != 'y'          &&
-    d.key_    != 'n'          &&
-    d.sdlKey_ != SDLK_ESCAPE  &&
-    d.sdlKey_ != SDLK_SPACE   &&
-    (d.key_ != keyForSpecialEvent || keyForSpecialEvent == -1)) {
+    d.key    != 'y'          &&
+    d.key    != 'n'          &&
+    d.sdlKey != SDLK_ESCAPE  &&
+    d.sdlKey != SDLK_SPACE   &&
+    (d.key != keyForSpecialEvent || keyForSpecialEvent == -1)) {
     d = Input::readKeysUntilFound();
   }
-  if(d.key_ == keyForSpecialEvent && keyForSpecialEvent != -1) {
+  if(d.key == keyForSpecialEvent && keyForSpecialEvent != -1) {
     return YesNoAnswer::special;
   }
-  if(d.key_ == 'y') {
+  if(d.key == 'y') {
     return YesNoAnswer::yes;
   }
 
@@ -47,25 +47,25 @@ int number(const Pos& pos, const Clr clr, const int MIN,
   Renderer::updateScreen();
 
   while(true) {
-    KeyboardReadRetData d;
-    while((d.key_ < '0' || d.key_ > '9') && d.sdlKey_ != SDLK_RETURN &&
-          d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE &&
-          d.sdlKey_ != SDLK_BACKSPACE) {
+    KeyData d;
+    while((d.key < '0' || d.key > '9') && d.sdlKey != SDLK_RETURN &&
+          d.sdlKey != SDLK_SPACE && d.sdlKey != SDLK_ESCAPE &&
+          d.sdlKey != SDLK_BACKSPACE) {
       d = Input::readKeysUntilFound();
     }
 
-    if(d.sdlKey_ == SDLK_RETURN) {
+    if(d.sdlKey == SDLK_RETURN) {
       return max(MIN, retNum);
     }
 
-    if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
+    if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
       return CANCEL_RETURNS_DEFAULT ? DEFAULT : -1;
     }
 
     const string retNumStr = toStr(retNum);
     const int CUR_NUM_DIGITS = retNumStr.size();
 
-    if(d.sdlKey_ == SDLK_BACKSPACE) {
+    if(d.sdlKey == SDLK_BACKSPACE) {
       retNum = retNum / 10;
       Renderer::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
       Renderer::drawText((retNum == 0 ? "" : toStr(retNum)) + "_",
@@ -75,7 +75,7 @@ int number(const Pos& pos, const Clr clr, const int MIN,
     }
 
     if(CUR_NUM_DIGITS < MAX_NR_DIGITS) {
-      int curDigit = d.key_ - '0';
+      int curDigit = d.key - '0';
       retNum = max(MIN, retNum * 10 + curDigit);
       Renderer::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
       Renderer::drawText((retNum == 0 ? "" : toStr(retNum)) + "_",
@@ -88,64 +88,64 @@ int number(const Pos& pos, const Clr clr, const int MIN,
 
 void waitForEscOrSpace() {
   if(!Config::isBotPlaying()) {
-    KeyboardReadRetData d = Input::readKeysUntilFound();
-    while(d.sdlKey_ != SDLK_SPACE && d.sdlKey_ != SDLK_ESCAPE) {
+    KeyData d = Input::readKeysUntilFound();
+    while(d.sdlKey != SDLK_SPACE && d.sdlKey != SDLK_ESCAPE) {
       d = Input::readKeysUntilFound();
     }
   }
 }
 
 Pos dir() {
-  KeyboardReadRetData d = Input::readKeysUntilFound();
+  KeyData d = Input::readKeysUntilFound();
 
-  while(d.sdlKey_ != SDLK_RIGHT   && d.sdlKey_ != SDLK_UP       &&
-        d.sdlKey_ != SDLK_LEFT    && d.sdlKey_ != SDLK_DOWN     &&
-        d.sdlKey_ != SDLK_ESCAPE  && d.sdlKey_ != SDLK_SPACE    &&
-        d.sdlKey_ != SDLK_PAGEUP  && d.sdlKey_ != SDLK_HOME     &&
-        d.sdlKey_ != SDLK_END     && d.sdlKey_ != SDLK_PAGEDOWN &&
-        d.key_ != 'h' && d.key_ != 'j' && d.key_ != 'k' && d.key_ != 'l' &&
-        d.key_ != 'y' && d.key_ != 'u' && d.key_ != 'b' && d.key_ != 'n' &&
-        (d.key_ < '1' || d.key_ > '9' || d.key_ == '5')) {
+  while(d.sdlKey != SDLK_RIGHT   && d.sdlKey != SDLK_UP       &&
+        d.sdlKey != SDLK_LEFT    && d.sdlKey != SDLK_DOWN     &&
+        d.sdlKey != SDLK_ESCAPE  && d.sdlKey != SDLK_SPACE    &&
+        d.sdlKey != SDLK_PAGEUP  && d.sdlKey != SDLK_HOME     &&
+        d.sdlKey != SDLK_END     && d.sdlKey != SDLK_PAGEDOWN &&
+        d.key != 'h' && d.key != 'j' && d.key != 'k' && d.key != 'l' &&
+        d.key != 'y' && d.key != 'u' && d.key != 'b' && d.key != 'n' &&
+        (d.key < '1' || d.key > '9' || d.key == '5')) {
     d = Input::readKeysUntilFound();
   }
 
-  if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
+  if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
     return Pos(0, 0);
   }
-  if(d.sdlKey_ == SDLK_RIGHT    || d.key_ == '6' || d.key_ == 'l') {
-    if(d.isShiftHeld_) {
+  if(d.sdlKey == SDLK_RIGHT    || d.key == '6' || d.key == 'l') {
+    if(d.isShiftHeld) {
       return Pos(1, -1);
-    } else if(d.isCtrlHeld_) {
+    } else if(d.isCtrlHeld) {
       return Pos(1, 1);
     } else {
       return Pos(1, 0);
     }
   }
-  if(d.sdlKey_ == SDLK_PAGEUP   || d.key_ == '9' || d.key_ == 'u') {
+  if(d.sdlKey == SDLK_PAGEUP   || d.key == '9' || d.key == 'u') {
     return Pos(1, -1);
   }
-  if(d.sdlKey_ == SDLK_UP       || d.key_ == '8' || d.key_ == 'k') {
+  if(d.sdlKey == SDLK_UP       || d.key == '8' || d.key == 'k') {
     return Pos(0, -1);
   }
-  if(d.sdlKey_ == SDLK_END      || d.key_ == '7' || d.key_ == 'y') {
+  if(d.sdlKey == SDLK_END      || d.key == '7' || d.key == 'y') {
     return Pos(-1, -1);
   }
-  if(d.sdlKey_ == SDLK_LEFT     || d.key_ == '4' || d.key_ == 'h') {
-    if(d.isShiftHeld_) {
+  if(d.sdlKey == SDLK_LEFT     || d.key == '4' || d.key == 'h') {
+    if(d.isShiftHeld) {
       return Pos(-1, -1);
-    } else if(d.isCtrlHeld_) {
+    } else if(d.isCtrlHeld) {
       return Pos(-1, 1);
     } else {
       return Pos(-1, 0);
     }
   }
-  if(d.sdlKey_ == SDLK_END      || d.key_ == '1' || d.key_ == 'b') {
+  if(d.sdlKey == SDLK_END      || d.key == '1' || d.key == 'b') {
     return Pos(-1, 1);
   }
-  if(d.sdlKey_ == SDLK_DOWN     || d.key_ == '2' || d.key_ == 'j') {
+  if(d.sdlKey == SDLK_DOWN     || d.key == '2' || d.key == 'j') {
     return Pos(0, 1);
   }
-  if(d.sdlKey_ == SDLK_PAGEDOWN || d.key_ == '3' || d.key_ == 'n') {
+  if(d.sdlKey == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n') {
     return Pos(1, 1);
   }
 

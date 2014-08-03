@@ -366,7 +366,7 @@ void drawMainMenuLogo(const int Y_POS) {
   applySurface(pos, mainMenuLogoSurface);
 }
 
-void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
+void drawMarker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
   if(trail.size() > 2) {
     for(size_t i = 1; i < trail.size(); ++i) {
       const Pos& pos = trail.at(i);
@@ -386,13 +386,11 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
     }
   }
 
-  const Pos& headPos = Marker::getPos();
-
   Clr clr = clrGreenLgt;
 
   if(trail.size() > 2) {
     if(EFFECTIVE_RANGE != -1) {
-      const int CHEB_DIST = Utils::kingDist(trail.at(0), headPos);
+      const int CHEB_DIST = Utils::kingDist(trail.at(0), p);
       if(CHEB_DIST > EFFECTIVE_RANGE) {
         clr = clrYellow;
       }
@@ -400,9 +398,9 @@ void drawMarker(const vector<Pos>& trail, const int EFFECTIVE_RANGE) {
   }
 
   if(Config::isTilesMode()) {
-    drawTile(TileId::aimMarkerHead, Panel::map, headPos, clr, clrBlack);
+    drawTile(TileId::aimMarkerHead, Panel::map, p, clr, clrBlack);
   } else {
-    drawGlyph('X', Panel::map, headPos, clr, true, clrBlack);
+    drawGlyph('X', Panel::map, p, clr, true, clrBlack);
   }
 }
 

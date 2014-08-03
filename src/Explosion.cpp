@@ -135,7 +135,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
     }
   }
 
-  const bool IS_DEM_EXP = PlayerBon::hasTrait(Trait::demolitionExpert);
+  const bool IS_DEM_EXP = PlayerBon::hasTrait(Trait::demExpert);
 
   const int NR_OUTER = posLists.size();
   for(int curRadi = 0; curRadi < NR_OUTER; curRadi++) {
@@ -211,7 +211,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   if(prop) {delete prop;}
 }
 
-void runSmokeExplosionAt(const Pos& origin) {
+void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION*/) {
   Rect area;
   const int RADI = EXPLOSION_STD_RADI;
   getArea(origin, RADI, area);
@@ -230,7 +230,7 @@ void runSmokeExplosionAt(const Pos& origin) {
   for(const vector<Pos>& inner : posLists) {
     for(const Pos& pos : inner) {
       if(!blocked[pos.x][pos.y]) {
-        GameTime::addMob(new Smoke(pos, Rnd::range(17, 22)));
+        GameTime::addMob(new Smoke(pos, Rnd::range(25, 30)));
       }
     }
   }

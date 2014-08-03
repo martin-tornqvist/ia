@@ -60,7 +60,8 @@ void drawLineHor(const Pos& pixelPos, const int W, const Clr& clr);
 
 void drawLineVer(const Pos& pixelPos, const int H, const Clr& clr);
 
-void drawMarker(const std::vector<Pos>& trail, const int EFFECTIVE_RANGE = -1);
+void drawMarker(const Pos& p, const std::vector<Pos>& trail,
+                const int EFFECTIVE_RANGE = -1);
 
 void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
                           bool forbiddenCells[MAP_W][MAP_H],

@@ -212,7 +212,7 @@
 		<Unit filename="../include/Sound.h" />
 		<Unit filename="../include/Spells.h" />
 		<Unit filename="../include/TextFormatting.h" />
-		<Unit filename="../include/Thrower.h" />
+		<Unit filename="../include/Throwing.h" />
 		<Unit filename="../include/Utils.h" />
 		<Unit filename="../src/AbilityValues.cpp" />
 		<Unit filename="../src/Actor.cpp" />
@@ -304,7 +304,7 @@
 		<Unit filename="../src/Sound.cpp" />
 		<Unit filename="../src/Spells.cpp" />
 		<Unit filename="../src/TextFormatting.cpp" />
-		<Unit filename="../src/Thrower.cpp" />
+		<Unit filename="../src/Throwing.cpp" />
 		<Unit filename="../src/Utils.cpp" />
 		<Unit filename="../src/main.cpp">
 			<Option target="Debug" />

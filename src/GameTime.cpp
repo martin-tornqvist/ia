@@ -77,7 +77,7 @@ void runStdTurnEvents() {
 
       if(isSpiRegenThisTurn(regenSpiNTurns)) {actor->restoreSpi(1, false);}
 
-      actor->onStandardTurn();
+      actor->onStdTurn();
     }
 
     //Delete destroyed actors

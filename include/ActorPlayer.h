@@ -34,25 +34,24 @@ enum class ShockSrc {
 
 class Monster;
 class MedicalBag;
+class Explosive;
 
 class Player: public Actor {
 public:
   Player();
-  virtual ~Player() {}
+  ~Player();
 
   void updateFov();
 
   void moveDir(Dir dir);
 
-  void mkStartItems()  override;
-  void onActorTurn()      override;
-  void onStandardTurn()   override;
+  void mkStartItems() override;
+  void onActorTurn()  override;
+  void onStdTurn()    override;
 
   void hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
                  const Dir dirToOrigin,
                  const int PERCENT_AUDIBLE_DISTANCE);
-
-  void explosiveThrown();
 
   void incrShock(const ShockValue shockValue, ShockSrc shockSrc);
   void incrShock(const int SHOCK, ShockSrc shockSrc);
@@ -85,7 +84,7 @@ public:
   void kickMonster(Actor& actorToKick);
   void punchMonster(Actor& actorToPunch);
 
-  void updateColor();
+  void updateClr();
 
   void addLight_(bool light[MAP_W][MAP_H]) const;
 
@@ -94,11 +93,10 @@ public:
   int getEncPercent() const;
 
   MedicalBag* activeMedicalBag;
+
   int waitTurnsLeft;
 
-  int dynamiteFuseTurns;
-  int molotovFuseTurns;
-  int flareFuseTurns;
+  Explosive* activeExplosive;
 
   Actor* target;
 

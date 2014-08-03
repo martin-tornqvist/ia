@@ -134,7 +134,7 @@ void goToNxt() {
 
   Map::player->target = nullptr;
   Map::player->updateFov();
-  Map::player->updateColor();
+  Map::player->updateClr();
   Renderer::drawMapAndInterface();
   Audio::tryPlayAmb(1);
 

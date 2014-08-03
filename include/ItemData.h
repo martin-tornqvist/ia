@@ -69,9 +69,11 @@ enum class ItemId {
   pistol,
   pistolClip,
   flareGun,
+
   dynamite,
   flare,
   molotov,
+  smokeGrenade,
 
   playerKick,
   playerStomp,

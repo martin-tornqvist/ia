@@ -224,18 +224,18 @@ void run() {
     }
     Renderer::updateScreen();
 
-    const KeyboardReadRetData& d = Input::readKeysUntilFound();
+    const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.key_ == '2' || d.sdlKey_ == SDLK_DOWN || d.key_ == 'j') {
+    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j') {
       topNr += LINE_JUMP;
       if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
         topNr = 0;
       } else {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
-    } else if(d.key_ == '8' || d.sdlKey_ == SDLK_UP || d.key_ == 'k') {
+    } else if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k') {
       topNr = max(0, topNr - LINE_JUMP);
-    } else if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
+    } else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
       break;
     }
     btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);

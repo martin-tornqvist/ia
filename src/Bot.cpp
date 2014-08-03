@@ -66,7 +66,7 @@ bool walkToAdjacentCell(const Pos& p) {
   //Occasionally randomize movement
   if(Rnd::oneIn(3)) {key = '0' + Rnd::range(1, 9);}
 
-  Input::handleKeyPress(KeyboardReadRetData(key));
+  Input::handleKeyPress(KeyData(key));
 
   return Map::player->pos == p;
 }
@@ -122,7 +122,7 @@ void act() {
 
   //Occasionally send a TAB command to attack nearby monsters
   if(Rnd::coinToss()) {
-    Input::handleKeyPress(KeyboardReadRetData(SDLK_TAB));
+    Input::handleKeyPress(KeyData(SDLK_TAB));
     return;
   }
 

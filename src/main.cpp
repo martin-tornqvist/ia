@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
           //The contents of the buffer are moved to the applied properties here
           actor->getPropHandler().applyActorTurnPropBuffer();
 
-          actor->updateColor();
+          actor->updateClr();
 
           if(
             actor->getPropHandler().allowAct() &&

@@ -40,8 +40,7 @@ public:
 class RangedAttData: public AttData {
 public:
   RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
-                const Pos& curPos_,
-                ActorSize intendedAimLvl_ = actorSize_none);
+                const Pos& curPos_, ActorSize intendedAimLvl_ = actorSize_none);
   int           hitChanceTot;
   ActorSize  intendedAimLvl;
   ActorSize  curDefenderSize;
@@ -49,11 +48,10 @@ public:
   std::string        verbOtherAttacks;
 };
 
-class MissileAttData: public AttData {
+class ThrowAttData: public AttData {
 public:
-  MissileAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
-                 const Pos& curPos_,
-                 ActorSize intendedAimLvl_ = actorSize_none);
+  ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
+               const Pos& curPos_, ActorSize intendedAimLvl_ = actorSize_none);
   int       hitChanceTot;
   ActorSize intendedAimLvl;
   ActorSize curDefenderSize;

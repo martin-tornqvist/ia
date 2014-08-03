@@ -1,6 +1,7 @@
-#include "Thrower.h"
+#include "Throwing.h"
 
 #include <vector>
+#include <assert.h>
 
 #include "Item.h"
 #include "ItemPotion.h"
@@ -20,109 +21,95 @@
 #include "SdlWrapper.h"
 #include "FeatureRigid.h"
 #include "FeatureMob.h"
+#include "ItemExplosive.h"
 
 using namespace std;
 
 namespace Throwing {
 
 void playerThrowLitExplosive(const Pos& aimCell) {
-  const int DYNAMITE_FUSE = Map::player->dynamiteFuseTurns;
-  const int FLARE_FUSE = Map::player->flareFuseTurns;
-
-  Map::player->explosiveThrown();
+  assert(Map::player->activeExplosive);
 
   vector<Pos> path;
-  LineCalc::calcNewLine(Map::player->pos, aimCell, true,
-                        THROWING_RANGE_LIMIT, false, path);
+  LineCalc::calcNewLine(Map::player->pos, aimCell, true, THROW_RANGE_LMT, false, path);
 
   //Remove cells after blocked cells
   for(size_t i = 1; i < path.size(); ++i) {
-    const Pos curPos = path.at(i);
-    const auto* featureHere = Map::cells[curPos.x][curPos.y].rigid;
-    if(!featureHere->isProjectilePassable()) {
+    const Pos   p = path.at(i);
+    const auto* f = Map::cells[p.x][p.y].rigid;
+    if(!f->isProjectilePassable()) {
       path.resize(i);
       break;
     }
   }
 
-  const Pos endPos = path.empty() ? Pos() : path.back();
+  const Pos endPos(path.empty() ? Pos() : path.back());
+
+  auto* const explosive = Map::player->activeExplosive;
+
+  Log::addMsg(explosive->getStrOnPlayerThrow());
 
   //Render
   if(path.size() > 1) {
-    const auto GLYPH = ItemData::data[int(ItemId::dynamite)]->glyph;
-    Clr clr = DYNAMITE_FUSE != -1 ? clrRedLgt : clrYellow;
+    const auto  clr = explosive->getIgnitedProjectileClr();
+
     for(const Pos& p : path) {
       Renderer::drawMapAndInterface(false);
       if(Map::cells[p.x][p.y].isSeenByPlayer) {
-        Renderer::drawGlyph(GLYPH, Panel::map, p, clr);
+        if(Config::isTilesMode()) {
+          Renderer::drawTile(explosive->getTile(),    Panel::map, p, clr);
+        } else {
+          Renderer::drawGlyph(explosive->getGlyph(),  Panel::map, p, clr);
+        }
         Renderer::updateScreen();
         SdlWrapper::sleep(Config::getDelayProjectileDraw());
       }
     }
   }
 
-  auto* const featureAtDest     = Map::cells[endPos.x][endPos.y].rigid;
-  const bool IS_DEST_BOTTOMLESS = featureAtDest->isBottomless();
-
-  if(DYNAMITE_FUSE != -1) {
-    Log::addMsg("I throw a lit dynamite stick.");
-    if(!IS_DEST_BOTTOMLESS) {GameTime::addMob(new LitDynamite(endPos, DYNAMITE_FUSE));}
-  } else if(FLARE_FUSE != -1) {
-    Log::addMsg("I throw a lit flare.");
-    if(!IS_DEST_BOTTOMLESS) {GameTime::addMob(new LitFlare(endPos, FLARE_FUSE));}
-    GameTime::updateLightMap();
-    Map::player->updateFov();
-    Renderer::drawMapAndInterface();
-  } else {
-    Log::addMsg("I throw a lit Molotov Cocktail.");
-    const int D = PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
-    if(!IS_DEST_BOTTOMLESS) {
-      Explosion::runExplosionAt(
-        endPos, ExplType::applyProp, ExplSrc::playerUseMoltvIntended, D,
-        SfxId::explosionMolotov, new PropBurning(PropTurns::std));
-    }
+  if(!Map::cells[endPos.x][endPos.y].rigid->isBottomless()) {
+    explosive->onThrownIgnitedLanding(endPos);
   }
+
+  delete explosive;
+  Map::player->activeExplosive = nullptr;
 
   GameTime::actorDidAct();
 }
 
 void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
-  MissileAttData* data = new MissileAttData(
-    actorThrowing, itemThrown, targetCell, actorThrowing.pos);
+  ThrowAttData* data =
+    new ThrowAttData(actorThrowing, itemThrown, targetCell, actorThrowing.pos);
 
   const ActorSize aimLvl = data->intendedAimLvl;
 
   vector<Pos> path;
-  LineCalc::calcNewLine(actorThrowing.pos, targetCell, false,
-                        THROWING_RANGE_LIMIT, false, path);
+  LineCalc::calcNewLine(actorThrowing.pos, targetCell, false, THROW_RANGE_LMT,
+                        false, path);
 
   const ItemDataT& itemThrownData = itemThrown.getData();
 
-  const string itemName_a =
-    ItemData::getItemRef(itemThrown, ItemRefType::a, true);
+  const string itemName_a = ItemData::getItemRef(itemThrown, ItemRefType::a, true);
   if(&actorThrowing == Map::player) {
     Log::clearLog();
     Log::addMsg("I throw " + itemName_a + ".");
   } else {
     const Pos& p = path.front();
     if(Map::cells[p.x][p.y].isSeenByPlayer) {
-      Log::addMsg(
-        actorThrowing.getNameThe() + " throws " + itemName_a + ".");
+      Log::addMsg(actorThrowing.getNameThe() + " throws " + itemName_a + ".");
     }
   }
   Renderer::drawMapAndInterface(true);
 
-  int blockedInElement = -1;
-  bool isActorHit = false;
-
-  const char      glyph = itemThrown.getGlyph();
-  const Clr clr   = itemThrown.getClr();
-
-  int chanceToDestroyItem = 0;
+  int       blockedInElement      = -1;
+  bool        isActorHit          = false;
+  const char  glyph               = itemThrown.getGlyph();
+  const Clr   clr                 = itemThrown.getClr();
+  int         chanceToDestroyItem = 0;
 
   Pos curPos(-1, -1);
 
-  for(unsigned int i = 1; i < path.size(); ++i) {
+  for(size_t i = 1; i < path.size(); ++i) {
     Renderer::drawMapAndInterface(false);
 
     curPos.set(path.at(i));
@@ -134,24 +121,19 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
         actorHere->getData().actorSize >= actorSize_humanoid) {
 
         delete data;
-        data = new MissileAttData(actorThrowing, itemThrown, targetCell,
-                                  curPos, aimLvl);
+        data = new ThrowAttData(actorThrowing, itemThrown, targetCell, curPos, aimLvl);
 
         if(
           data->attackResult >= successSmall &&
           !data->isEtherealDefenderMissed) {
           if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
-            Renderer::drawGlyph('*', Panel::map,
-                                curPos, clrRedLgt);
+            Renderer::drawGlyph('*', Panel::map, curPos, clrRedLgt);
             Renderer::updateScreen();
             SdlWrapper::sleep(Config::getDelayProjectileDraw() * 4);
           }
-          const Clr hitMessageClr =
-            actorHere == Map::player ? clrMsgBad : clrMsgGood;
-
-          const bool CAN_SEE_ACTOR =
-            Map::player->isSeeingActor(*actorHere, nullptr);
-          string defenderName = CAN_SEE_ACTOR ? actorHere->getNameThe() : "It";
+          const Clr hitMessageClr   = actorHere == Map::player ? clrMsgBad : clrMsgGood;
+          const bool CAN_SEE_ACTOR  = Map::player->isSeeingActor(*actorHere, nullptr);
+          string defenderName       = CAN_SEE_ACTOR ? actorHere->getNameThe() : "It";
 
           Log::addMsg(defenderName + " is hit.", hitMessageClr);
 

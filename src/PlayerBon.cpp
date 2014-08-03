@@ -96,7 +96,7 @@ void getTraitTitle(const Trait id, string& strRef) {
     case Trait::tough:                strRef = "Tough";                 break;
     case Trait::rugged:               strRef = "Rugged";                break;
     case Trait::treasureHunter:       strRef = "Treasure Hunter";       break;
-    case Trait::demolitionExpert:     strRef = "Demolition Expert";     break;
+    case Trait::demExpert:     strRef = "Demolition Expert";     break;
     case Trait::END: break;
   }
 }
@@ -205,7 +205,7 @@ void getTraitDescr(const Trait id, string& strRef) {
                "hit chance and damage on the following turn";
     } break;
 
-    case Trait::demolitionExpert: {
+    case Trait::demExpert: {
       strRef = "+1 radius for explosives (be careful), you are not harmed "
                "by your own Molotov Cocktails, you occasionally light "
                "explosives instantly";
@@ -375,7 +375,7 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef) {
       bgRef = Bg::warVet;
     } break;
 
-    case Trait::demolitionExpert: {
+    case Trait::demExpert: {
     } break;
 
     case Trait::coolHeaded: {
@@ -575,8 +575,8 @@ void pickBg(const Bg bg) {
       while(true) {
         scroll = ItemFactory::mkRandomScrollOrPotion(true, false);
 
-        SpellId id = scroll->getData().spellCastFromScroll;
-        Spell* const spell = SpellHandling::getSpellFromId(id);
+        SpellId id          = scroll->getData().spellCastFromScroll;
+        Spell* const spell  = SpellHandling::getSpellFromId(id);
         const bool IS_AVAIL = spell->isAvailForPlayer();
         delete spell;
 
@@ -590,8 +590,7 @@ void pickBg(const Bg bg) {
       //Potions
       const int NR_POTIONS = 2;
       for(int i = 0; i < NR_POTIONS; ++i) {
-        Item* const potion =
-          ItemFactory::mkRandomScrollOrPotion(false, true);
+        Item* const potion = ItemFactory::mkRandomScrollOrPotion(false, true);
         static_cast<Potion*>(potion)->identify(true);
         Map::player->getInv().putInGeneral(potion);
       }
@@ -609,6 +608,7 @@ void pickBg(const Bg bg) {
       pickTrait(Trait::adeptMarksman);
       pickTrait(Trait::tough);
       Map::player->insanity_ += 10;
+      Map::player->getInv().putInGeneral(ItemFactory::mk(ItemId::smokeGrenade, 4));
     } break;
 
     case Bg::END: {} break;

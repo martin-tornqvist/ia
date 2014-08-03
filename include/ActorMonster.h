@@ -63,7 +63,7 @@ public:
 
   void onActorTurn() override;
   virtual bool onActorTurn_() {return false;}
-  virtual void onStandardTurn() override {}
+  virtual void onStdTurn() override {}
 
   virtual std::string getAggroPhraseMonsterSeen() const {
     return data_->aggroTextMonsterSeen;
@@ -238,7 +238,7 @@ class LengElder: public Monster {
 public:
   LengElder() : Monster() {}
   ~LengElder() {}
-  void onStandardTurn() override;
+  void onStdTurn() override;
   void mkStartItems()   override;
 private:
   bool  hasGivenItemToPlayer_;
@@ -525,7 +525,7 @@ class Ooze: public Monster {
 public:
   Ooze() : Monster() {}
   ~Ooze() {}
-  virtual void onStandardTurn() override;
+  virtual void onStdTurn() override;
   virtual void mkStartItems() = 0;
 };
 
@@ -563,7 +563,7 @@ public:
     curColor(clrMagentaLgt) {}
   ~ColourOOSpace() {}
 //  bool onActorTurn_() override;
-  void onStandardTurn() override;
+  void onStdTurn() override;
   void mkStartItems() override;
   const Clr& getClr();
 private:

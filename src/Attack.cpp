@@ -270,11 +270,10 @@ RangedAttData::RangedAttData(
   }
 }
 
-MissileAttData::MissileAttData(Actor& attacker_, const Item& item_,
-                               const Pos& aimPos_, const Pos& curPos_,
-                               ActorSize intendedAimLvl_) :
-  AttData(attacker_, item_), hitChanceTot(0),
-  intendedAimLvl(actorSize_none), curDefenderSize(actorSize_none) {
+ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
+                           const Pos& curPos_, ActorSize intendedAimLvl_) :
+  AttData(attacker_, item_), hitChanceTot(0), intendedAimLvl(actorSize_none),
+  curDefenderSize(actorSize_none) {
 
   Actor* const actorAimedAt = Utils::getFirstActorAtPos(aimPos_);
 

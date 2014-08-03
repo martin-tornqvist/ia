@@ -52,10 +52,6 @@ enum class ShockValue {
   shockValue_heavy  = 12
 };
 
-enum class MarkerTask  {
-  look, aimRangedWpn, aimThrownWpn, aimLitExplosive
-};
-
 enum class GameEntryMode {newGame, loadGame};
 
 struct CellRenderData {
@@ -256,12 +252,7 @@ enum class Dir {
 
 enum class ActorDeadState {alive, corpse, destroyed};
 
-enum EntityType {
-  entityActor,
-  entityItem,
-  entityRigid,
-  entityMob
-};
+enum class EntityType {actor, item, rigid, mob};
 
 enum HorizontalVertical {hor, ver};
 

@@ -34,7 +34,7 @@ Clr Smoke::getClr() const {
 void LitDynamite::onNewTurn() {
   nrTurnsLeft_--;
   if(nrTurnsLeft_ <= 0) {
-    const int D = PlayerBon::hasTrait(Trait::demolitionExpert) ? 1 : 0;
+    const int D = PlayerBon::hasTrait(Trait::demExpert) ? 1 : 0;
     Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, D);
     GameTime::eraseMob(this, true);
   }

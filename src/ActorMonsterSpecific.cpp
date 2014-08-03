@@ -488,7 +488,7 @@ void KeziahMason::mkStartItems() {
   spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
 }
 
-void LengElder::onStandardTurn() {
+void LengElder::onStdTurn() {
   if(deadState == ActorDeadState::alive) {
 
     awareOfPlayerCounter_ = 100;
@@ -531,7 +531,7 @@ void LengElder::mkStartItems() {
 
 }
 
-void Ooze::onStandardTurn() {
+void Ooze::onStdTurn() {
   restoreHp(1, false);
 }
 
@@ -559,7 +559,7 @@ const Clr& ColourOOSpace::getClr() {
   return curColor;
 }
 
-void ColourOOSpace::onStandardTurn() {
+void ColourOOSpace::onStdTurn() {
   curColor.r = Rnd::range(40, 255);
   curColor.g = Rnd::range(40, 255);
   curColor.b = Rnd::range(40, 255);

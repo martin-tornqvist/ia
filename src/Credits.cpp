@@ -74,8 +74,8 @@ void run() {
 
   //Read keys
   while(true) {
-    const KeyboardReadRetData& d = Input::readKeysUntilFound();
-    if(d.sdlKey_ == SDLK_SPACE || d.sdlKey_ == SDLK_ESCAPE) {
+    const KeyData& d = Input::readKeysUntilFound();
+    if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
       break;
     }
   }
