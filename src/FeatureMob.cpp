@@ -1,6 +1,7 @@
 #include "Init.h"
 
 #include <algorithm>
+#include <vector>
 
 #include "FeatureMob.h"
 #include "GameTime.h"
@@ -10,11 +11,55 @@
 #include "Map.h"
 #include "FeatureRigid.h"
 #include "Fov.h"
+#include "Inventory.h"
+#include "Item.h"
+#include "Log.h"
 
 using namespace std;
 
 //------------------------------------------------------------------- SMOKE
 void Smoke::onNewTurn() {
+  auto* actor = Utils::getFirstActorAtPos(pos_);
+
+  if(actor) {
+
+    const bool IS_PLAYER = actor == Map::player;
+
+    //Blinded by smoke?
+    if(Rnd::coinToss()) {
+      //TODO There needs to be some criteria here, so that e.g. a statue-monster or a
+      //very alien monster can't get blinded by smoke (but do not use isHumanoid - rats,
+      //wolves etc should definitely be blinded by smoke.
+      bool playerWearsGasMask = false;
+      auto* playerHeadItem    = Map::player->getInv().getSlot(SlotId::head)->item;
+      if(playerHeadItem) {
+        playerWearsGasMask = playerHeadItem->getData().id == ItemId::gasMask;
+      }
+
+      if(!IS_PLAYER || !playerWearsGasMask) {
+        if(IS_PLAYER) {Log::addMsg("I am getting smoke in my eyes.");}
+        actor->getPropHandler().tryApplyProp(
+          new PropBlind(PropTurns::specific, Rnd::range(1, 3)));
+      }
+    }
+
+    //Player choking?
+    if(Rnd::oneIn(5)) {
+      vector<PropId> propIds;
+      actor->getPropHandler().getAllActivePropIds(propIds);
+      if(find(begin(propIds), end(propIds), propRBreath) == end(propIds)) {
+        const string sndMsg =
+          (IS_PLAYER || !actor->isHumanoid()) ? "" : "I hear choking.";
+        if(IS_PLAYER) {Log::addMsg("I am choking!", clrMsgBad);}
+        const auto alerts = IS_PLAYER ? AlertsMonsters::yes : AlertsMonsters::no;
+        SndEmit::emitSnd(Snd(sndMsg, SfxId::END, IgnoreMsgIfOriginSeen::yes, actor->pos,
+                             actor, SndVol::low, alerts));
+        actor->hit(1, DmgType::pure, true);
+      }
+    }
+  }
+
+  //If not permanent, count down turns left and possibly erase self
   if(nrTurnsLeft_ > -1) {
     if(--nrTurnsLeft_ <= 0) {GameTime::eraseMob(this, true);}
   }

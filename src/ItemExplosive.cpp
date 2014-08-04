@@ -166,7 +166,7 @@ void SmokeGrenade::onPlayerIgnite() const {
 }
 
 void SmokeGrenade::onStdTurnPlayerHoldIgnited() {
-  if(fuseTurns_ < getStdFuseTurns()) {
+  if(fuseTurns_ < getStdFuseTurns() && Rnd::coinToss()) {
     Explosion::runSmokeExplosionAt(Map::player->pos);
   }
   fuseTurns_--;

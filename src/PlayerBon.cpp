@@ -609,6 +609,7 @@ void pickBg(const Bg bg) {
       pickTrait(Trait::tough);
       Map::player->insanity_ += 10;
       Map::player->getInv().putInGeneral(ItemFactory::mk(ItemId::smokeGrenade, 4));
+      Map::player->getInv().putInGeneral(ItemFactory::mk(ItemId::gasMask));
     } break;
 
     case Bg::END: {} break;
