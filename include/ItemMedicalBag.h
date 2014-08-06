@@ -3,17 +3,20 @@
 
 #include "Item.h"
 
-enum MedicalBagAction {
-  medicalBagAction_sanitizeInfection,
-  medicalBagAction_takeMorphine,
-  medicalBagAction_treatWound,
-  endOfMedicalBagActions
+enum class MedBagAction {
+  sanitizeInfection,
+//  takeMorphine,
+  treatWounds,
+  END
 };
 
 class MedicalBag: public Item {
 public:
   MedicalBag(ItemDataT* const itemData) :
-    Item(itemData), nrSupplies_(60), nrTurnsLeft_(-1) {}
+    Item(itemData),
+    nrSupplies_(60),
+    nrTurnsUntilHealWounds_(-1),
+    nrTurnsLeftSanitize_(-1) {}
 
   ~MedicalBag() {}
 
@@ -38,15 +41,17 @@ public:
   inline int getNrSupplies() const {return nrSupplies_;}
 
 protected:
-  MedicalBagAction playerChooseAction() const;
+  MedBagAction playerChooseAction() const;
+
+  int getTotTurnsForSanitize() const;
+  int getTotSupplForSanitize() const;
 
   int nrSupplies_;
-  int nrTurnsLeft_;
-  MedicalBagAction curAction_;
 
-  int getTotTurnsForAction(const MedicalBagAction action) const;
+  int nrTurnsUntilHealWounds_;
+  int nrTurnsLeftSanitize_;
 
-  int getNrSuppliesNeededForAction(const MedicalBagAction action) const;
+  MedBagAction curAction_;
 };
 
 #endif

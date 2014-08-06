@@ -202,7 +202,7 @@ RangedAttData::RangedAttData(
   curDefender = Utils::getFirstActorAtPos(curPos_);
 
   if(curDefender) {
-    TRACE << "RangedAttData: Defender found" << endl;
+    TRACE << "Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
     const int WPN_MOD           = wpn_.getData().ranged.hitChanceMod;
@@ -241,7 +241,7 @@ RangedAttData::RangedAttData(
     attackResult = AbilityRoll::roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
-      TRACE << "RangedAttData: Attack roll succeeded" << endl;
+      TRACE << "Attack roll succeeded" << endl;
 
       vector<PropId> props;
       curDefender->getPropHandler().getAllActivePropIds(props);
@@ -671,18 +671,17 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
                 Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
               }
 
-              curProj->isDoneRendering = true;
-              curProj->isObstructed = true;
-              curProj->actorHit = curProj->attackData->curDefender;
-              curProj->obstructedInElement = pathElement;
+              curProj->isDoneRendering      = true;
+              curProj->isObstructed         = true;
+              curProj->actorHit             = curProj->attackData->curDefender;
+              curProj->obstructedInElement  = pathElement;
 
-              const bool DIED = curProj->attackData->curDefender->hit(
-                                  curProj->attackData->dmg,
-                                  wpn.getData().ranged.dmgType, true);
+              const bool DIED = curProj->actorHit->hit(curProj->attackData->dmg,
+                                wpn.getData().ranged.dmgType);
+
               if(!DIED) {
                 //Hit properties
-                PropHandler& defenderPropHandler =
-                  curProj->attackData->curDefender->getPropHandler();
+                PropHandler& defenderPropHandler = curProj->actorHit->getPropHandler();
                 defenderPropHandler.tryApplyPropFromWpn(wpn, false);
 
                 //Knock-back?
@@ -808,11 +807,11 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
   //Must be changed if something like an assault-incinerator is added
   const Projectile* const firstProjectile = projectiles.at(0);
   if(!firstProjectile->isObstructed) {
-    wpn.weaponSpecific_projectileObstructed(aimPos, firstProjectile->actorHit);
+    wpn.projectileObstructed(aimPos, firstProjectile->actorHit);
   } else {
     const int element = firstProjectile->obstructedInElement;
     const Pos& pos = path.at(element);
-    wpn.weaponSpecific_projectileObstructed(pos, firstProjectile->actorHit);
+    wpn.projectileObstructed(pos, firstProjectile->actorHit);
   }
   //Cleanup
   for(Projectile* projectile : projectiles) {delete projectile;}
@@ -892,7 +891,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos) {
           printProjAtActorMsgs(*data, true);
 
           //Damage
-          data->curDefender->hit(data->dmg, wpn.getData().ranged.dmgType, true);
+          data->curDefender->hit(data->dmg, wpn.getData().ranged.dmgType);
 
           nrActorsHit++;
 
@@ -978,7 +977,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender) {
   if(!data.isEtherealDefenderMissed) {
     if(data.attackResult >= successSmall && !data.isDefenderDodging) {
       const bool IS_DEFENDER_KILLED =
-        data.curDefender->hit(data.dmg, wpn.getData().melee.dmgType, true);
+        data.curDefender->hit(data.dmg, wpn.getData().melee.dmgType);
 
       if(!IS_DEFENDER_KILLED) {
         data.curDefender->getPropHandler().tryApplyPropFromWpn(wpn, true);

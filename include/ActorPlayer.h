@@ -110,7 +110,7 @@ private:
 
   void testPhobias();
 
-  void hit_(int& dmg, const bool ALLOW_WOUNDS) override;
+  void hit_(int& dmg) override;
 
   void FOVhack();
 

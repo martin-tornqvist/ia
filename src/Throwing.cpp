@@ -137,7 +137,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
 
           Log::addMsg(defenderName + " is hit.", hitMessageClr);
 
-          actorHere->hit(data->dmg, DmgType::physical, true);
+          actorHere->hit(data->dmg, DmgType::physical);
           isActorHit = true;
 
           //If throwing a potion on an actor, let it make stuff happen...

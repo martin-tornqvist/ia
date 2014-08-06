@@ -44,7 +44,7 @@ bool runDropScreen(const int GLOBAL_ELEMENT_NR) {
     Renderer::drawMapAndInterface(false);
     const string nrStr = "1-" + toStr(item->nrItems);
     const string dropStr = "Drop how many (" + nrStr + ")?:      " +
-                           "| enter to drop" + cancelInfoStr;
+                           "[enter] to drop" + cancelInfoStr;
     Renderer::drawText(dropStr, Panel::screen, Pos(0, 0), clrWhiteHigh);
     Renderer::updateScreen();
     const Pos nrQueryPos(20 + nrStr.size(), 0);

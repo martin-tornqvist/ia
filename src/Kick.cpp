@@ -44,18 +44,16 @@ void playerKick() {
     //Kick corpse?
     Actor* deadActor = Utils::getFirstActorAtPos(kickPos, ActorDeadState::corpse);
     if(deadActor) {
-      const bool IS_SEEING_CORPSE =
-        Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
+      const bool IS_SEEING_CORPSE = Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
 
       const string actorNameA = deadActor->getNameA();
 
-      const string name =
-        IS_SEEING_CORPSE ? ("the body of " + actorNameA) : "a corpse";
+      const string name = IS_SEEING_CORPSE ? ("the body of " + actorNameA) : "a corpse";
 
       Log::addMsg("I bash " + name + ".");
 
       pair<int, int> kickDmg = ItemData::data[int(ItemId::playerKick)]->melee.dmg;
-      deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, false);
+      deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical);
       GameTime::actorDidAct();
       TRACE_FUNC_END;
       return;

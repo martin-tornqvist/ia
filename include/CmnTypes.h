@@ -46,10 +46,10 @@ enum class DmgMethod {
 };
 
 enum class ShockValue {
-  shockValue_none   = 0,
-  shockValue_mild   = 2,
-  shockValue_some   = 4,
-  shockValue_heavy  = 12
+  none   = 0,
+  mild   = 2,
+  some   = 4,
+  heavy  = 12
 };
 
 enum class GameEntryMode {newGame, loadGame};

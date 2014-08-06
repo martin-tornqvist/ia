@@ -104,7 +104,7 @@ public:
   bool hasGivenXpForSpotting_;
 
 protected:
-  virtual void hit_(int& dmg, const bool ALLOW_WOUNDS) override;
+  virtual void hit_(int& dmg) override;
 };
 
 class Rat: public Monster {

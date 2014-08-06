@@ -65,7 +65,7 @@ public:
   void decrItemTypeInGeneral(const ItemId itemId);
 
   void deleteItemInGeneralWithElement(const unsigned ELEMENT);
-  void removetemInGeneralWithPointer(Item* const item, const bool DELETE_ITEM);
+  void removeItemInGeneralWithPointer(Item* const item, const bool DELETE_ITEM);
 
   int getIntrinsicsSize() const {return intrinsics_.size();}
 

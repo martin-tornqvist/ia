@@ -22,7 +22,7 @@ void Wpn::setRandomMeleePlus() {
   }
 }
 
-void Incinerator::weaponSpecific_projectileObstructed(
+void Incinerator::projectileObstructed(
   const Pos& pos, Actor* actorHit) {
   (void)actorHit;
   Explosion::runExplosionAt(pos, ExplType::expl);

@@ -29,8 +29,7 @@ public:
   }
 
   //actorHit may be nullptr
-  virtual void weaponSpecific_projectileObstructed(
-    const Pos& pos, Actor* actor) {
+  virtual void projectileObstructed(const Pos& pos, Actor* actor) {
     (void) pos;
     (void) actor;
   }
@@ -49,8 +48,8 @@ public:
     lines.erase(begin(lines));
   }
 
-  Clr getClr() const {
-    if(!data_->ranged.isRangedWpn && data_->ranged.hasInfiniteAmmo) {
+  Clr getClr() const override {
+    if(data_->ranged.isRangedWpn && !data_->ranged.hasInfiniteAmmo) {
       if(nrAmmoLoaded == 0) {
         Clr ret = data_->clr;
         ret.r /= 2; ret.g /= 2; ret.b /= 2;
@@ -146,7 +145,7 @@ public:
     clip = false;
   }
 
-  void weaponSpecific_projectileObstructed(const Pos& pos, Actor* actorHit);
+  void projectileObstructed(const Pos& pos, Actor* actorHit);
   ~Incinerator() {}
 private:
 };

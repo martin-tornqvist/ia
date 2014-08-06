@@ -69,7 +69,7 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
       case Condition::breaking: {
         if(RND == 5 || RND == 6) {
           Log::addMsg(hurtMsg, clrMsgBad);
-          actor->hit(Rnd::dice(2, 4), DmgType::electric, true);
+          actor->hit(Rnd::dice(2, 4), DmgType::electric);
         }
         isEffectFailed  = RND == 3 || RND == 4;
         isCondDegrade   = RND <= 2;
@@ -79,7 +79,7 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
       case Condition::shoddy: {
         if(RND == 4) {
           Log::addMsg(hurtMsg, clrMsgBad);
-          actor->hit(Rnd::dice(1, 4), DmgType::electric, true);
+          actor->hit(Rnd::dice(1, 4), DmgType::electric);
         }
         isEffectFailed  = RND == 3;
         isCondDegrade   = RND <= 2;
@@ -149,7 +149,7 @@ void DeviceRepeller::triggerEffect() {
     if(actor != Map::player && actor->deadState == ActorDeadState::alive) {
       const Pos& otherPos = actor->pos;
       if(Utils::isPosAdj(playerPos, otherPos, false)) {
-        actor->hit(Rnd::dice(1, 8), DmgType::physical, true);
+        actor->hit(Rnd::dice(1, 8), DmgType::physical);
         if(actor->deadState == ActorDeadState::alive) {
           KnockBack::tryKnockBack(*actor, playerPos, false, true);
         }
@@ -240,7 +240,7 @@ void DeviceLantern::newTurnInInventory() {
       if(RND <= 6) {
         Log::addMsg("My Electric Lantern breaks!", clrMsgWarning,
                     false, true);
-        Map::player->getInv().removetemInGeneralWithPointer(this, false);
+        Map::player->getInv().removeItemInGeneralWithPointer(this, false);
         malfState_ = LanternMalfState::destroyed;
       } else if(RND <= 10) {
         Log::addMsg("My Electric Lantern malfunctions.");

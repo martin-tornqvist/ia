@@ -54,7 +54,7 @@ void Smoke::onNewTurn() {
         const auto alerts = IS_PLAYER ? AlertsMonsters::yes : AlertsMonsters::no;
         SndEmit::emitSnd(Snd(sndMsg, SfxId::END, IgnoreMsgIfOriginSeen::yes, actor->pos,
                              actor, SndVol::low, alerts));
-        actor->hit(1, DmgType::pure, true);
+        actor->hit(1, DmgType::pure);
       }
     }
   }

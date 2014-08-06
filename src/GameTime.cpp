@@ -61,9 +61,7 @@ void runStdTurnEvents() {
 
     //Do light damage if actor in lit cell
     const Pos& pos = actor->pos;
-    if(Map::cells[pos.x][pos.y].isLight) {
-      actor->hit(1, DmgType::light, false);
-    }
+    if(Map::cells[pos.x][pos.y].isLight) {actor->hit(1, DmgType::light);}
 
     if(actor->deadState == ActorDeadState::alive) {
       //Regen Spi

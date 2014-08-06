@@ -269,10 +269,10 @@ void handleKeyPress(const KeyData& d) {
 
                 if(actor && actor != Map::player) {
                   RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
-                  Log::addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
+                  Log::addMsg(", " + toStr(data.hitChanceTot) + "% hit chance");
                 }
 
-                Log::addMsg("| f to fire");
+                Log::addMsg("[f] to fire");
               };
 
               auto onKeyPress = [&](const Pos & p, const KeyData & d_) {
@@ -356,7 +356,7 @@ void handleKeyPress(const KeyData& d) {
 
         auto onMarkerAtPos = [](const Pos & p) {
           Look::printLocationInfoMsgs(p);
-          Log::addMsg("| e to throw.");
+          Log::addMsg("[e] to throw.");
         };
 
         auto onKeyPress = [](const Pos & p, const KeyData & d_) {
@@ -458,10 +458,10 @@ void handleKeyPress(const KeyData& d) {
 
             if(actor && actor != Map::player) {
               ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
-              Log::addMsg("| " + toStr(data.hitChanceTot) + "% hit chance");
+              Log::addMsg(", " + toStr(data.hitChanceTot) + "% hit chance");
             }
 
-            Log::addMsg("| t to throw");
+            Log::addMsg("[t] to throw");
           };
 
           auto onKeyPress = [&](const Pos & p, const KeyData & d_) {
@@ -510,7 +510,7 @@ void handleKeyPress(const KeyData& d) {
 
           auto* const actor = Utils::getFirstActorAtPos(p);
           if(actor && actor != Map::player) {
-            Log::addMsg("| v for description");
+            Log::addMsg("[v] for description");
           }
         };
 

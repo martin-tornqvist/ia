@@ -74,7 +74,7 @@ const int EXPL_MAX_DMG    = (EXPL_DMG_ROLLS * EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 
 const int CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP = 50;
 
-const std::string cancelInfoStr   = " | space/esc to cancel";
+const std::string cancelInfoStr   = " [space/esc] to cancel";
 const std::string msgDisarmNoTrap = "I find nothing there to disarm.";
 
 #endif

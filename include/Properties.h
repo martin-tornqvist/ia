@@ -53,7 +53,6 @@ enum PropId {
 
   //Special (mostly for aiding other game mechanics)
   propPossessedByZuul,
-  propWound,
   propAiming,
   propNailed,
   propFlared,
@@ -294,37 +293,6 @@ protected:
   const PropId id_;
 
   const PropDataT* const data_;
-};
-
-class PropWound: public Prop {
-public:
-  PropWound(PropTurns turnsInit, int turns = -1) :
-    Prop(propWound, turnsInit, turns), nrWounds_(1) {}
-
-  void storeToSaveLines(std::vector<std::string>& lines) const override {
-    lines.push_back(toStr(nrWounds_));
-  }
-  void setupFromSaveLines(std::vector<std::string>& lines) override {
-    nrWounds_ = toInt(lines.front());
-    lines.erase(begin(lines));
-  }
-
-  std::string getNameShort() const override {
-    return "Wound(" + toStr(nrWounds_) + ")";
-  }
-
-  int getAbilityMod(const AbilityId ability) const override;
-
-  void getMsg(const PropMsgType msgType, std::string& msgRef) const override;
-
-  void onMore() override;
-
-  void healOneWound();
-
-  inline int getNrWounds() const {return nrWounds_;}
-
-private:
-  int nrWounds_;
 };
 
 class PropTerrified: public Prop {

@@ -37,6 +37,24 @@ YesNoAnswer yesOrNo(char keyForSpecialEvent) {
   return YesNoAnswer::no;
 }
 
+KeyData letter(const bool ACCEPT_ENTER) {
+  if(Config::isBotPlaying()) {return 'a';}
+
+  while(true) {
+    KeyData d = Input::readKeysUntilFound();
+
+    if(
+      (ACCEPT_ENTER && d.sdlKey == SDLK_RETURN) ||
+      d.sdlKey == SDLK_ESCAPE ||
+      d.sdlKey == SDLK_SPACE  ||
+      (d.key >= 'a' && d.key <= 'z') || (d.key >= 'A' && d.key <= 'Z')) {
+      return d;
+    }
+  }
+
+  return KeyData();
+}
+
 int number(const Pos& pos, const Clr clr, const int MIN,
            const int MAX_NR_DIGITS, const int DEFAULT,
            const bool CANCEL_RETURNS_DEFAULT) {

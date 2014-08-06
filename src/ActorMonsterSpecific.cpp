@@ -390,7 +390,7 @@ bool Khephren::onActorTurn_() {
           const int NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
             Log::addMsg("Khephren calls a plague of Locusts!");
-            Map::player->incrShock(ShockValue::shockValue_heavy,
+            Map::player->incrShock(ShockValue::heavy,
                                    ShockSrc::misc);
             for(int i = 0; i < NR_OF_SPAWNS; ++i) {
               Actor* const actor =
@@ -499,7 +499,7 @@ void LengElder::onStdTurn() {
       if(isSeeingActor(*Map::player, visionBlockers)) {
         if(nrTurnsToHostile_ <= 0) {
           Log::addMsg("I am ripped to pieces!!!", clrMsgBad);
-          Map::player->hit(999, DmgType::pure, false);
+          Map::player->hit(999, DmgType::pure);
         } else {
           --nrTurnsToHostile_;
         }
@@ -776,7 +776,7 @@ bool MajorClaphamLee::onActorTurn_() {
           ActorFactory::summonMonsters(pos, monsterIds, true, this);
           Renderer::drawMapAndInterface();
           hasSummonedTombLegions = true;
-          Map::player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
+          Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
           GameTime::actorDidAct();
           return true;
         }
@@ -790,20 +790,22 @@ bool MajorClaphamLee::onActorTurn_() {
 bool Zombie::tryResurrect() {
   if(deadState == ActorDeadState::corpse) {
     if(!hasResurrected) {
-      deadTurnCounter += 1;
-      if(deadTurnCounter > 5) {
-        if(pos != Map::player->pos && Rnd::percentile() < 7) {
+      const int NR_TURNS_TO_CAN_RISE = 5;
+      if(deadTurnCounter < NR_TURNS_TO_CAN_RISE) {
+        ++deadTurnCounter;
+      }
+      if(deadTurnCounter >= NR_TURNS_TO_CAN_RISE) {
+        if(pos != Map::player->pos && Rnd::oneIn(14)) {
           deadState = ActorDeadState::alive;
-          hp_ = (getHpMax(true) * 3) / 4;
-          glyph_ = data_->glyph;
-          tile_ = data_->tile;
-          clr_ = data_->color;
+          hp_     = (getHpMax(true) * 3) / 4;
+          glyph_  = data_->glyph;
+          tile_   = data_->tile;
+          clr_    = data_->color;
           hasResurrected = true;
           data_->nrKills--;
           if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
-            Log::addMsg(
-              getNameThe() + " rises again!!", clrWhite, true);
-            Map::player->incrShock(ShockValue::shockValue_some, ShockSrc::misc);
+            Log::addMsg(getNameThe() + " rises again!!", clrWhite, true);
+            Map::player->incrShock(ShockValue::some, ShockSrc::misc);
           }
 
           awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer * 2;

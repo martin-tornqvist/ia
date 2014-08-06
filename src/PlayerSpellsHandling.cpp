@@ -114,7 +114,7 @@ void tryCast(const Spell* const spell) {
     Log::addMsg("I cast " + spell->getName() + "!");
 
     if(isBloodSorc) {
-      Map::player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure, false);
+      Map::player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure);
     }
     if(Map::player->deadState == ActorDeadState::alive) {
       spell->cast(Map::player, true);

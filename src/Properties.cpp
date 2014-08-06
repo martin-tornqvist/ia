@@ -609,20 +609,6 @@ void initDataList() {
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propWound;
-  d.stdRndTurns = Range(-1, -1);
-  d.name = "Wound";
-  d.msg[propMsgOnStartPlayer] = "I am wounded!";
-  d.msg[propMsgOnMorePlayer] = "I am more wounded!";
-  d.msg[propMsgOnResPlayer] = "I resist wounding!";
-  d.isMakingMonsterAware = false;
-  d.allowDisplayTurns = false;
-  d.allowApplyMoreWhileActive = true;
-  d.updatePlayerVisualWhenStartOrEnd = false;
-  d.isEndedByMagicHealing = true;
-  d.alignment = propAlignmentBad;
-  addPropData(d);
-
   d.id = propPossessedByZuul;
   d.isMakingMonsterAware = false;
   d.allowDisplayTurns = false;
@@ -736,7 +722,6 @@ PropHandler::PropHandler(Actor* owningActor) :
 Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
                           const int NR_TURNS) const {
   switch(id) {
-    case propWound:             return new PropWound(turnsInit,             NR_TURNS);
     case propNailed:            return new PropNailed(turnsInit,            NR_TURNS);
     case propWarlockCharged:    return new PropWarlockCharged(turnsInit,    NR_TURNS);
     case propBlind:             return new PropBlind(turnsInit,             NR_TURNS);
@@ -1403,7 +1388,7 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
     Log::addMsg(name1 + " was possessed by " + name2 + "!");
   }
   owningActor_->deadState = ActorDeadState::destroyed;
-  const Pos& pos = owningActor_->pos;
+  const Pos& pos          = owningActor_->pos;
   Map::mkGore(pos);
   Map::mkBlood(pos);
   ActorFactory::summonMonsters(pos, vector<ActorId> {ActorId::zuul}, true);
@@ -1419,12 +1404,11 @@ void PropPoisoned::onNewTurn() {
         Log::addMsg("I am suffering from the poison!", clrMsgBad, true);
       } else {
         if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
-          Log::addMsg(
-            owningActor_->getNameThe() + " suffers from poisoning!");
+          Log::addMsg( owningActor_->getNameThe() + " suffers from poisoning!");
         }
       }
 
-      owningActor_->hit(1, DmgType::pure, false);
+      owningActor_->hit(1, DmgType::pure);
     }
   }
 }
@@ -1433,8 +1417,7 @@ bool PropTerrified::allowAttackMelee(
   const bool ALLOW_MESSAGE_WHEN_FALSE) const {
 
   if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
-    Log::addMsg(
-      "I am too terrified to engage in close combat!");
+    Log::addMsg("I am too terrified to engage in close combat!");
   }
   return false;
 }
@@ -1444,70 +1427,6 @@ bool PropTerrified::allowAttackRanged(
 
   (void)ALLOW_MESSAGE_WHEN_FALSE;
   return true;
-}
-
-int PropWound::getAbilityMod(const AbilityId ability) const {
-  const bool IS_SURVIVALIST = owningActor_ == Map::player &&
-                              PlayerBon::hasTrait(Trait::survivalist);
-
-  const int DIV = IS_SURVIVALIST ? 2 : 1;
-
-  if(ability == AbilityId::melee)  return (nrWounds_ * -10)  / DIV;
-  if(ability == AbilityId::ranged) return (nrWounds_ * -5)   / DIV;
-  if(ability == AbilityId::dodgeAttack)    return (nrWounds_ * -10)  / DIV;
-  if(ability == AbilityId::dodgeTrap)      return (nrWounds_ * -10)  / DIV;
-  return 0;
-}
-
-void PropWound::getMsg(const PropMsgType msgType, string& msgRef) const {
-  switch(msgType) {
-    case propMsgOnStartPlayer:
-      msgRef = data_->msg[propMsgOnStartPlayer];
-      break;
-
-    case propMsgOnStartMonster:
-      msgRef = ""; break;
-
-    case propMsgOnEndPlayer:
-      msgRef = nrWounds_ > 1 ?
-               "All my wounds are healed!" :
-               "A wound is healed!";
-      break;
-
-    case propMsgOnEndMonster: msgRef = ""; break;
-
-    case propMsgOnMorePlayer: msgRef = data_->msg[propMsgOnMorePlayer]; break;
-
-    case propMsgOnMoreMonster: msgRef = ""; break;
-
-    case propMsgOnResPlayer: msgRef = data_->msg[propMsgOnResPlayer]; break;
-
-    case propMsgOnResMonster: msgRef = ""; break;
-    case endOfPropMsg: msgRef = ""; break;
-  }
-}
-
-void PropWound::healOneWound() {
-  TRACE << "StatusWound: Nr wounds before healing one: " << nrWounds_ << endl;
-  if(--nrWounds_ > 0) {
-    Log::addMsg("A wound is healed!");
-  } else {
-    bool visionBlockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(), visionBlockers);
-    owningActor_->getPropHandler().endAppliedProp(
-      propWound, visionBlockers);
-  }
-}
-
-void PropWound::onMore() {
-  nrWounds_++;
-
-  if(nrWounds_ >= 5) {
-    if(owningActor_ == Map::player) {
-      Log::addMsg("I die from my wounds!");
-    }
-    owningActor_->die(false, false, true);
-  }
 }
 
 void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
@@ -1524,7 +1443,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
       }
     }
 
-    owningActor_->hit(Rnd::dice(1, 3), DmgType::physical, false);
+    owningActor_->hit(Rnd::dice(1, 3), DmgType::physical);
 
     if(owningActor_->deadState == ActorDeadState::alive) {
 
@@ -1671,7 +1590,7 @@ void PropBurning::onNewTurn() {
   if(owningActor_ == Map::player) {
     Log::addMsg("AAAARGH IT BURNS!!!", clrRedLgt);
   }
-  owningActor_->hit(Rnd::dice(1, 2), DmgType::fire, false);
+  owningActor_->hit(Rnd::dice(1, 2), DmgType::fire);
 }
 
 bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
@@ -1705,7 +1624,7 @@ bool PropFainted::shouldUpdatePlayerVisualWhenStartOrEnd() const {
 }
 
 void PropFlared::onNewTurn() {
-  owningActor_->hit(1, DmgType::fire, false);
+  owningActor_->hit(1, DmgType::fire);
 
   if(turnsLeft_ == 0) {
     bool visionBlockers[MAP_W][MAP_H];

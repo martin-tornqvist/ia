@@ -175,15 +175,10 @@ void Player::setupFromSaveLines(vector<string>& lines) {
   }
 }
 
-void Player::hit_(int& dmg, const bool ALLOW_WOUNDS) {
-  if(!obsessions[int(Obsession::masochism)]) {incrShock(1, ShockSrc::misc);}
+void Player::hit_(int& dmg) {
+  (void)dmg;
 
-  if(ALLOW_WOUNDS && !Config::isBotPlaying()) {
-    if(dmg >= 5) {
-      Prop* const prop = new PropWound(PropTurns::indefinite);
-      propHandler_->tryApplyProp(prop);
-    }
-  }
+  if(!obsessions[int(Obsession::masochism)]) {incrShock(1, ShockSrc::misc);}
 
   Renderer::drawMapAndInterface();
 }
@@ -709,8 +704,7 @@ void Player::onStdTurn() {
         default: {} break;
       }
       if(shockFromMonstersCurPlayerTurn < 2.5) {
-        incrShock(int(floor(monster->shockCausedCur_)),
-                  ShockSrc::seeMonster);
+        incrShock(int(floor(monster->shockCausedCur_)), ShockSrc::seeMonster);
         shockFromMonstersCurPlayerTurn += monster->shockCausedCur_;
       }
     }
@@ -727,7 +721,7 @@ void Player::onStdTurn() {
       } else {
         Popup::showMsg("A chill runs down my spine...", true);
       }
-      incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
+      incrShock(ShockValue::heavy, ShockSrc::misc);
       Renderer::drawMapAndInterface();
     } else {
       if(Map::dlvl != 0) {
@@ -740,8 +734,7 @@ void Player::onStdTurn() {
   if(getShockTotal() >= 100) {
     nrTurnsUntilIns_ = nrTurnsUntilIns_ < 0 ? 3 : nrTurnsUntilIns_ - 1;
     if(nrTurnsUntilIns_ > 0) {
-      Log::addMsg("I feel my sanity slipping...", clrMsgWarning, true,
-                  true);
+      Log::addMsg("I feel my sanity slipping...", clrMsgWarning, true, true);
     } else {
       nrTurnsUntilIns_ = -1;
       incrInsanity();
@@ -777,8 +770,8 @@ void Player::onStdTurn() {
                 monster.isStealth = false;
                 updateFov();
                 Renderer::drawMapAndInterface();
-                Log::addMsg("I spot " + monster.getNameA() + "!",
-                            clrMsgWarning, true, true);
+                const string monName = monster.getNameA();
+                Log::addMsg("I spot " + monName + "!", clrMsgWarning, true, true);
               }
             }
           }
@@ -800,26 +793,13 @@ void Player::onStdTurn() {
 
   if(!activeMedicalBag) {
     if(find(begin(props), end(props), propPoisoned) == end(props)) {
-      int nrWounds = 0;
-      Prop* const propWnd = propHandler_->getProp(propWound, PropSrc::applied);
-      if(propWnd) {
-        nrWounds = static_cast<PropWound*>(propWnd)->getNrWounds();
-      }
 
-      const bool IS_RAPID_REC     = PlayerBon::hasTrait(Trait::rapidRecoverer);
-      const bool IS_SURVIVALIST   = PlayerBon::hasTrait(Trait::survivalist);
+      const bool IS_RAPID_REC   = PlayerBon::hasTrait(Trait::rapidRecoverer);
+      const bool IS_SURVIVALIST = PlayerBon::hasTrait(Trait::survivalist);
 
-      //Survivalist trait halves the penalty form wounds
-      const int WOUND_TURNS_DIV  = IS_SURVIVALIST ? 2 : 1;
+      const int REGEN_N_TURNS   = (IS_SURVIVALIST ? 20 : (IS_RAPID_REC ? 30 : 40));
 
-      const int REGEN_N_TURN = (IS_SURVIVALIST ? 4 : (IS_RAPID_REC ? 7 : 10))
-                               + ((nrWounds * 5) / WOUND_TURNS_DIV);
-
-      if((TURN / REGEN_N_TURN) * REGEN_N_TURN == TURN && TURN > 1) {
-        if(getHp() < getHpMax(true)) {
-          hp_++;
-        }
-      }
+      if(TURN % REGEN_N_TURNS == 0 && TURN > 1 && getHp() < getHpMax(true)) {++hp_;}
     }
 
     if(

@@ -159,10 +159,10 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
           if(livingActor == Map::player) {
             Log::addMsg("I am hit by an explosion!", clrMsgBad);
           }
-          livingActor->hit(DMG, DmgType::physical, true);
+          livingActor->hit(DMG, DmgType::physical);
         }
         //Damage dead actors
-        for(Actor* corpse : corpsesHere) {corpse->hit(DMG, DmgType::physical, true);}
+        for(Actor* corpse : corpsesHere) {corpse->hit(DMG, DmgType::physical);}
 
         //Add smoke
         if(Rnd::fraction(6, 10)) {GameTime::addMob(new Smoke(pos, Rnd::range(2, 4)));}

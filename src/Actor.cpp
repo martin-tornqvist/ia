@@ -337,7 +337,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   }
 }
 
-bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
+bool Actor::hit(int dmg, const DmgType dmgType) {
   TRACE_FUNC_BEGIN_VERBOSE;
   TRACE_VERBOSE << "Actor: Damage from parameter: " << dmg << endl;
 
@@ -378,7 +378,7 @@ bool Actor::hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS) {
   const bool ALLOW_DMG_RES_MSG = deadState == ActorDeadState::alive;
   if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {return false;}
 
-  hit_(dmg, ALLOW_WOUNDS);
+  hit_(dmg);
   TRACE_VERBOSE << "Actor: Damage after hit_(): " << dmg << endl;
 
   dmg = max(1, dmg);

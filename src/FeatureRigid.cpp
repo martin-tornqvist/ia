@@ -40,7 +40,7 @@ void Rigid::onNewTurn() {
           Log::addMsg(actor.getNameThe() + " is scorched by flames.", clrMsgGood);
         }
       }
-      actor.hit(1, DmgType::fire, true);
+      actor.hit(1, DmgType::fire);
     };
 
     //TODO Hit dead actors
@@ -157,7 +157,7 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) 
 
       if(Rnd::oneIn(4)) {
         Log::addMsg("I sprain myself.", clrMsgBad);
-        actor->hit(Rnd::range(1, 5), DmgType::pure, false);
+        actor->hit(Rnd::range(1, 5), DmgType::pure);
       }
 
       if(Rnd::oneIn(4)) {
@@ -565,7 +565,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
               } else if(Map::player->isSeeingActor(*actorBehind, nullptr)) {
                 Log::addMsg("It falls on " + actorBehind->getNameThe() + ".");
               }
-              actorBehind->hit(Rnd::dice(3, 5), DmgType::physical, true);
+              actorBehind->hit(Rnd::dice(3, 5), DmgType::physical);
             }
           }
         }
@@ -1191,7 +1191,7 @@ void Tomb::trySprainPlayer() {
                               PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
   if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     Log::addMsg("I sprain myself.", clrMsgBad);
-    Map::player->hit(Rnd::range(1, 5), DmgType::pure, false);
+    Map::player->hit(Rnd::range(1, 5), DmgType::pure);
   }
 }
 
@@ -1427,7 +1427,7 @@ void Chest::trySprainPlayer() {
                               PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
   if(Rnd::oneIn(SPRAIN_ONE_IN_N)) {
     Log::addMsg("I sprain myself.", clrMsgBad);
-    Map::player->hit(Rnd::range(1, 5), DmgType::pure, false);
+    Map::player->hit(Rnd::range(1, 5), DmgType::pure);
   }
 }
 
@@ -1903,7 +1903,7 @@ void Cocoon::triggerTrap(Actor& actor) {
 
   if(RND < 15) {
     Log::addMsg("There is a half-dissolved human body inside!");
-    Map::player->incrShock(ShockValue::shockValue_heavy, ShockSrc::misc);
+    Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
   } else if(RND < 50) {
     TRACE << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId> spawnBucket;

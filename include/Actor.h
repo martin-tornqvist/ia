@@ -32,7 +32,7 @@ public:
   void place(const Pos& pos_, ActorDataT& data);
   virtual void place_() {}
 
-  bool hit(int dmg, const DmgType dmgType, const bool ALLOW_WOUNDS);
+  bool hit(int dmg, const DmgType dmgType);
   bool hitSpi(const int DMG, const bool ALLOW_MSG);
 
   bool restoreHp(const int HP_RESTORED, const bool ALLOW_MSG = true,
@@ -87,10 +87,7 @@ protected:
   friend class PropDiseased;
 
   virtual void die_() {}
-  virtual void hit_(int& dmg, const bool ALLOW_WOUNDS) {
-    (void)dmg;
-    (void)ALLOW_WOUNDS;
-  }
+  virtual void hit_(int& dmg) {(void)dmg;}
   virtual void mkStartItems() = 0;
 
   Clr clr_;

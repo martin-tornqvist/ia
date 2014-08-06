@@ -380,7 +380,7 @@ void TrapDart::trigger(
       }
 
       const int DMG = Rnd::dice(1, 8);
-      actor.hit(DMG, DmgType::physical, true);
+      actor.hit(DMG, DmgType::physical);
       if(actor.deadState == ActorDeadState::alive && isPoisoned) {
         if(IS_PLAYER) {
           Log::addMsg("It was poisoned!");
@@ -457,7 +457,7 @@ void TrapSpear::trigger(
       }
 
       const int DMG = Rnd::dice(2, 6);
-      actor.hit(DMG, DmgType::physical, true);
+      actor.hit(DMG, DmgType::physical);
       if(actor.deadState == ActorDeadState::alive && isPoisoned) {
         if(IS_PLAYER) {
           Log::addMsg("It was poisoned!");

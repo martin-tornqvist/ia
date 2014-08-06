@@ -45,7 +45,7 @@ void drawBrowseSlots(const MenuBrowser& browser) {
   Renderer::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 2));
 
   string str =
-    "Select slot to equip/unequip. | shift+select to drop | space/esc to exit";
+    "Select slot to equip/unequip. [shift+select] to drop [space/esc] to exit";
   Renderer::drawText(str, Panel::screen, pos, clrWhiteHigh);
 
   const int X_POS_ITEM_NAME = 12;
@@ -115,9 +115,9 @@ void drawBrowseInventory(const MenuBrowser& browser,
   Renderer::coverArea(Panel::screen, Pos(0, 0), Pos(MAP_W, NR_ITEMS + 1));
 
   string str = NR_ITEMS > 0 ?
-               "Browsing backpack. | shift+select to drop" :
+               "Browsing backpack. [shift+select] to drop" :
                "I carry no items.";
-  str += " | space/esc to exit";
+  str += " [space/esc] to exit";
 
   Pos pos(0, 0);
   Renderer::drawText(str, Panel::screen, pos, clrWhiteHigh);
@@ -181,7 +181,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
       str = HAS_ITEM ? "Wear what on head?"           : "I carry no headwear.";
     } break;
   }
-  if(HAS_ITEM) {str += " | shift+select to drop";}
+  if(HAS_ITEM) {str += " [shift+select] to drop";}
   str += cancelInfoStr;
   Renderer::drawText(str, Panel::screen, pos, clrWhiteHigh);
   pos.y++;
@@ -233,7 +233,7 @@ void drawUse(const MenuBrowser& browser,
 
   const bool IS_ANY_ITEM_AVAILABLE = !genInvIndexes.empty();
   string str =
-    IS_ANY_ITEM_AVAILABLE ? "Use which item? | shift+select to drop" :
+    IS_ANY_ITEM_AVAILABLE ? "Use which item? [shift+select] to drop" :
     "I carry no item to use.";
   str += cancelInfoStr;
 

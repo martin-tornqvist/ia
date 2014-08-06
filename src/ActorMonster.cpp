@@ -184,10 +184,8 @@ void Monster::onActorTurn() {
   GameTime::actorDidAct();
 }
 
-void Monster::hit_(int& dmg, const bool ALLOW_WOUNDS) {
-  (void)ALLOW_WOUNDS;
+void Monster::hit_(int& dmg) {
   (void)dmg;
-
   awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
 }
 
