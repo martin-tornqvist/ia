@@ -189,7 +189,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
 
 void Actor::updateClr() {
   if(deadState != ActorDeadState::alive) {
-    clr_ = clrRed;
+    clr_ = data_->color;
     return;
   }
 

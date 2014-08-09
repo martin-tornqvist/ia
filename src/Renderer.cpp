@@ -800,7 +800,7 @@ void drawMap() {
       actor->getData().tile != TileId::empty &&
       Map::cells[xPos][yPos].isSeenByPlayer) {
       curDrw = &renderArray[xPos][yPos];
-      curDrw->clr   = clrRed;
+      curDrw->clr   = actor->getClr();
       curDrw->tile  = actor->getTile();
       curDrw->glyph = actor->getGlyph();
     }
