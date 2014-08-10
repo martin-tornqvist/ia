@@ -516,10 +516,10 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   //Player inventory
   Inventory& inv = Map::player->getInv();
   //First, remove all present items (to have a known state)
-  vector<Item*>& gen = inv.getGeneral();
+  vector<Item*>& gen = inv.general_;
   for(Item* item : gen) {delete item;}
   gen.resize(0);
-  vector<InvSlot>& slots = inv.getSlots();
+  vector<InvSlot>& slots = inv.slots_;
   for(InvSlot& slot : slots) {
     if(slot.item) {
       delete slot.item;
@@ -607,8 +607,8 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   PlayerBon::traitsPicked_.push_back(Trait::healer);
 
   //Player inventory
-  Inventory& inv = Map::player->getInv();
-  vector<Item*> genInv = inv.getGeneral();
+  Inventory& inv  = Map::player->getInv();
+  auto& genInv    = inv.general_;
   CHECK_EQUAL(6, int(genInv.size()));
   CHECK_EQUAL(int(ItemId::teslaCannon),
               int(inv.getItemInSlot(SlotId::wielded)->getData().id));

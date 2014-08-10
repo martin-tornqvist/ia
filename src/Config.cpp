@@ -429,7 +429,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
                      browser->getPos().y == optNr ?
                      clrActive : clrInactive);
 
-  str = "space/esc to confirm changes";
+  str = "[space/esc] to confirm changes";
   Renderer::drawText(str, Panel::screen, Pos(X0, OPT_Y0 + optNr + 4),
                      clrWhite);
 

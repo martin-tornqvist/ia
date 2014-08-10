@@ -72,11 +72,9 @@ void drawHistoryInterface(const int TOP_LINE_NR, const int BTM_LINE_NR) {
       toStr(history_.size()) + " ", Panel::screen, Pos(X_LABEL, 0), clrGray);
   }
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
-                     clrGray);
+  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
 
-  Renderer::drawText(" 2/8, down/up, j/k to navigate | space/esc to exit ",
-                     Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+  Renderer::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 
 //Used by normal log and history viewer

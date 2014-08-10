@@ -28,7 +28,7 @@ void pickupEffects(Actor* actor, Item* item) {
 bool isInvFull(Inventory& inv, Item& item) {
   //If item can be stacked, the inventory is not considered full.
   if(inv.getElementToStackItem(&item) != -1) {return false;}
-  const int INV_SIZE = inv.getGeneral().size();
+  const int INV_SIZE = inv.general_.size();
   return INV_SIZE >= (SCREEN_H - 1);
 }
 

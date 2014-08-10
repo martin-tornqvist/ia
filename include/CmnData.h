@@ -70,10 +70,12 @@ const int NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES  = 2;
 const int EXPL_DMG_ROLLS  = 5;
 const int EXPL_DMG_SIDES  = 6;
 const int EXPL_DMG_PLUS   = 10;
-const int EXPL_MAX_DMG    = (EXPL_DMG_ROLLS * EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
+const int EXPL_MAX_DMG    = (EXPL_DMG_ROLLS* EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 
 const int CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP = 50;
 
+const std::string infoScrCmdInfo  = " [2/8 down/up j/k] to navigate "
+                                    "[space/esc] to exit ";
 const std::string cancelInfoStr   = " [space/esc] to cancel";
 const std::string msgDisarmNoTrap = "I find nothing there to disarm.";
 

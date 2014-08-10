@@ -23,18 +23,16 @@
    c      Close door
    d      Disarm trap
    D      Jam door with an iron spike
-   e      Use item or throw held explosive
    f      Aim/fire wielded firearm
    g      Pick up item
    G      Unload or pick up ammunition from the ground
-   i      Browse backpack
    m      Display message history
    q      Kick
    r      Reload wielded firearm
    s      Wait and search for 5 turns
-   t      Throw a missile from the missile slot
+   t      Throw something from the "Thrown" slot, or throw held explosive
    v      View descriptions of things on the map
-   w      Handle equipment (wear or wield items)
+   w      Inventory (use items or handle equipment)
    x      Cast previous spell
    X      Select and cast any memorized spell
    z      Swap to alternative weapon

@@ -35,10 +35,7 @@ public:
 
   std::string getWeightLabel() const;
 
-  virtual ConsumeItem activateDefault(Actor* const actor) {
-    (void)actor;
-    return ConsumeItem::no;
-  }
+  virtual ConsumeItem activateDefault(Actor* const actor);
   virtual std::string getDefaultActivationLabel() const {return "";}
   virtual Clr getInterfaceClr()                   const {return clrBrown;}
 

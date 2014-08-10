@@ -194,8 +194,7 @@ void render(const vector<StrAndClr>& linesAndClr,
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                      clrGray);
 
-  Renderer::drawText(" 2/8, down/up, j/k to navigate | space/esc to exit  ",
-                     Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+  Renderer::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   const int NR_LINES_TOT = int(linesAndClr.size());
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;

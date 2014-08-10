@@ -135,10 +135,9 @@ bool reloadWieldedWpn(Actor& actorReloading) {
 
     if(wpn->nrAmmoLoaded < wpnAmmoCapacity) {
 
-      const vector<Item*>& general = inv.getGeneral();
-      const int NR_ITEMS = general.size();
+      const int NR_ITEMS = inv.general_.size();
       for(int i = 0; i < NR_ITEMS; ++i) {
-        item = general.at(i);
+        item = inv.general_.at(i);
 
         if(item->getData().id == ammoType) {
           PropHandler& propHlr = actorReloading.getPropHandler();

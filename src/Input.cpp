@@ -330,54 +330,10 @@ void handleKeyPress(const KeyData& d) {
     clearEvents();
     return;
   }
-  //----------------------------------- SLOTS SCREEN
+  //----------------------------------- INVENTORY SCREEN
   else if(d.key == 'w') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
-      InvHandling::runSlotsScreen();
-    }
-    clearEvents();
-    return;
-  }
-  //----------------------------------- INVENTORY
-  else if(d.key == 'i') {
-    Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
-      InvHandling::runBrowseInventory();
-    }
-    clearEvents();
-    return;
-  }
-  //----------------------------------- USE
-  else if(d.key == 'e') {
-    Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
-      if(Map::player->activeExplosive) {
-
-        auto onMarkerAtPos = [](const Pos & p) {
-          Look::printLocationInfoMsgs(p);
-          Log::addMsg("[e] to throw.");
-        };
-
-        auto onKeyPress = [](const Pos & p, const KeyData & d_) {
-          if(d_.sdlKey == SDLK_RETURN || d_.key == 'e') {
-            Log::clearLog();
-            Renderer::drawMapAndInterface();
-            Throwing::playerThrowLitExplosive(p);
-            return MarkerDone::yes;
-          } else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE) {
-            Log::clearLog();
-            return MarkerDone::yes;
-          }
-          return MarkerDone::no;
-        };
-
-        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::no,
-                    onMarkerAtPos, onKeyPress);
-      } else {
-        InvHandling::runUseScreen();
-      }
-    }
+    if(Map::player->deadState == ActorDeadState::alive) {InvHandling::runInvScreen();}
     clearEvents();
     return;
   }
@@ -442,56 +398,79 @@ void handleKeyPress(const KeyData& d) {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
 
-      if(Map::player->getPropHandler().allowAttackRanged(true)) {
-        Inventory& playerInv  = Map::player->getInv();
-        Item* itemStack       = playerInv.getItemInSlot(SlotId::thrown);
+      if(Map::player->activeExplosive) {
+        auto onMarkerAtPos = [](const Pos & p) {
+          Look::printLocationInfoMsgs(p);
+          Log::addMsg("[t] to throw.");
+        };
 
-        if(itemStack) {
-          Item* itemToThrow     = ItemFactory::copyItem(itemStack);
-          itemToThrow->nrItems  = 1;
+        auto onKeyPress = [](const Pos & p, const KeyData & d_) {
+          if(d_.sdlKey == SDLK_RETURN || d_.key == 't') {
+            Log::clearLog();
+            Renderer::drawMapAndInterface();
+            Throwing::playerThrowLitExplosive(p);
+            return MarkerDone::yes;
+          } else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE) {
+            Log::clearLog();
+            return MarkerDone::yes;
+          }
+          return MarkerDone::no;
+        };
 
-          auto onMarkerAtPos = [&](const Pos & p) {
+        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::no,
+                    onMarkerAtPos, onKeyPress);
+      } else {
+        if(Map::player->getPropHandler().allowAttackRanged(true)) {
+          Inventory& playerInv  = Map::player->getInv();
+          Item* itemStack       = playerInv.getItemInSlot(SlotId::thrown);
 
-            Look::printLocationInfoMsgs(p);
+          if(itemStack) {
+            Item* itemToThrow     = ItemFactory::copyItem(itemStack);
+            itemToThrow->nrItems  = 1;
 
-            auto* const actor = Utils::getFirstActorAtPos(p);
+            auto onMarkerAtPos = [&](const Pos & p) {
 
-            if(actor && actor != Map::player) {
-              ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
-              Log::addMsg(", " + toStr(data.hitChanceTot) + "% hit chance");
-            }
+              Look::printLocationInfoMsgs(p);
 
-            Log::addMsg("[t] to throw");
-          };
+              auto* const actor = Utils::getFirstActorAtPos(p);
 
-          auto onKeyPress = [&](const Pos & p, const KeyData & d_) {
-            if(d_.sdlKey == SDLK_RETURN || d_.key == 't') {
-              if(p == Map::player->pos) {
-                Log::addMsg("I think I can persevere a little longer.");
-              } else {
-                Log::clearLog();
-                Renderer::drawMapAndInterface();
-
-                Actor* const actor = Utils::getFirstActorAtPos(p);
-                if(actor) {Map::player->target = actor;}
-
-                Throwing::throwItem(*Map::player, p, *itemToThrow);
-                playerInv.decrItemInSlot(SlotId::thrown);
+              if(actor && actor != Map::player) {
+                ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
+                Log::addMsg(", " + toStr(data.hitChanceTot) + "% hit chance");
               }
-              return MarkerDone::yes;
-            } else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE) {
-              delete itemToThrow;
-              itemToThrow = nullptr;
-              Log::clearLog();
-              return MarkerDone::yes;
-            }
-            return MarkerDone::no;
-          };
 
-          Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
-                      onMarkerAtPos, onKeyPress);
-        } else {
-          Log::addMsg("I have no missiles chosen for throwing (press 'w').");
+              Log::addMsg("[t] to throw");
+            };
+
+            auto onKeyPress = [&](const Pos & p, const KeyData & d_) {
+              if(d_.sdlKey == SDLK_RETURN || d_.key == 't') {
+                if(p == Map::player->pos) {
+                  Log::addMsg("I think I can persevere a little longer.");
+                } else {
+                  Log::clearLog();
+                  Renderer::drawMapAndInterface();
+
+                  Actor* const actor = Utils::getFirstActorAtPos(p);
+                  if(actor) {Map::player->target = actor;}
+
+                  Throwing::throwItem(*Map::player, p, *itemToThrow);
+                  playerInv.decrItemInSlot(SlotId::thrown);
+                }
+                return MarkerDone::yes;
+              } else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE) {
+                delete itemToThrow;
+                itemToThrow = nullptr;
+                Log::clearLog();
+                return MarkerDone::yes;
+              }
+              return MarkerDone::no;
+            };
+
+            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
+                        onMarkerAtPos, onKeyPress);
+          } else {
+            Log::addMsg("I have no missiles chosen for throwing (press 'w').");
+          }
         }
       }
     }

@@ -222,11 +222,11 @@ void PotionRAcid::collide_(const Pos& pos, Actor* const actor) {
 void PotionInsight::quaff_(Actor* const actor) {
   (void)actor;
 
-  Inventory& inv = Map::player->getInv();
+  auto& inv = Map::player->getInv();
 
   vector<Item*> identifyBucket;
 
-  vector<InvSlot>& slots = inv.getSlots();
+  auto& slots = inv.slots_;
   for(InvSlot& slot : slots) {
     Item* const item = slot.item;
     if(item) {
@@ -234,7 +234,7 @@ void PotionInsight::quaff_(Actor* const actor) {
       if(!d.isIdentified) {identifyBucket.push_back(item);}
     }
   }
-  vector<Item*>& general = inv.getGeneral();
+  vector<Item*>& general = inv.general_;
   for(Item* item : general) {
     if(item->getData().id != ItemId::potionInsight) {
       const ItemDataT& d = item->getData();

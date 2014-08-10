@@ -6,6 +6,8 @@
 #include "Colors.h"
 #include "Art.h"
 
+enum class InvList {slots, general};
+
 enum class Article {a, the};
 
 enum class Matl {

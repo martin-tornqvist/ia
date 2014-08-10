@@ -123,7 +123,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   }
   y += 2;
 
-  Renderer::drawTextCentered("space/esc to close", Panel::map,
+  Renderer::drawTextCentered("[space/esc] to close", Panel::map,
                              Pos(MAP_W_HALF, y), clrNosfTeal);
 
   Renderer::updateScreen();

@@ -616,6 +616,10 @@ void coverPanel(const Panel panel) {
   }
 }
 
+void coverArea(const Panel panel, const Rect& area) {
+  coverArea(panel, area.p0, area.p1 - area.p0 + 1);
+}
+
 void coverArea(const Panel panel, const Pos& pos, const Pos& dims) {
   const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
   const Pos cellDims(Config::getCellW(), Config::getCellH());
@@ -676,8 +680,11 @@ void drawProjectiles(vector<Projectile*>& projectiles,
   updateScreen();
 }
 
-void drawPopupBox(const Rect& border, const Panel panel,
-                  const Clr& clr) {
+void drawPopupBox(const Rect& border, const Panel panel, const Clr& clr,
+                  const bool COVER_AREA) {
+
+  if(COVER_AREA) {coverArea(panel, border);}
+
   const bool IS_TILES = Config::isTilesMode();
 
   //Vertical bars
@@ -685,15 +692,11 @@ void drawPopupBox(const Rect& border, const Panel panel,
   const int Y1_VERT = border.p1.y - 1;
   for(int y = Y0_VERT; y <= Y1_VERT; ++y) {
     if(IS_TILES) {
-      drawTile(TileId::popupVerticalBar,
-               panel, Pos(border.p0.x, y), clr, clrBlack);
-      drawTile(TileId::popupVerticalBar,
-               panel, Pos(border.p1.x, y), clr, clrBlack);
+      drawTile(TileId::popupVerticalBar, panel, Pos(border.p0.x, y), clr, clrBlack);
+      drawTile(TileId::popupVerticalBar, panel, Pos(border.p1.x, y), clr, clrBlack);
     } else {
-      drawGlyph('|',
-                panel, Pos(border.p0.x, y), clr, true, clrBlack);
-      drawGlyph('|',
-                panel, Pos(border.p1.x, y), clr, true, clrBlack);
+      drawGlyph('|', panel, Pos(border.p0.x, y), clr, true, clrBlack);
+      drawGlyph('|', panel, Pos(border.p1.x, y), clr, true, clrBlack);
     }
   }
 
@@ -702,35 +705,32 @@ void drawPopupBox(const Rect& border, const Panel panel,
   const int X1_VERT = border.p1.x - 1;
   for(int x = X0_VERT; x <= X1_VERT; ++x) {
     if(IS_TILES) {
-      drawTile(TileId::popupHorizontalBar,
-               panel, Pos(x, border.p0.y), clr, clrBlack);
-      drawTile(TileId::popupHorizontalBar,
-               panel, Pos(x, border.p1.y), clr, clrBlack);
+      drawTile(TileId::popupHorizontalBar, panel, Pos(x, border.p0.y), clr, clrBlack);
+      drawTile(TileId::popupHorizontalBar, panel, Pos(x, border.p1.y), clr, clrBlack);
     } else {
       drawGlyph('-', panel, Pos(x, border.p0.y), clr, true, clrBlack);
       drawGlyph('-', panel, Pos(x, border.p1.y), clr, true, clrBlack);
     }
   }
 
+  const vector<Pos> corners {
+    {border.p0.x, border.p0.y}, //Top left
+    {border.p1.x, border.p0.y}, //Top right
+    {border.p0.x, border.p1.y}, //Btm left
+    {border.p1.x, border.p1.y}  //Brm right
+  };
+
   //Corners
   if(IS_TILES) {
-    drawTile(TileId::popupCornerTopLeft,
-             panel, Pos(border.p0.x, border.p0.y), clr, clrBlack);
-    drawTile(TileId::popupCornerTopRight,
-             panel, Pos(border.p1.x, border.p0.y), clr, clrBlack);
-    drawTile(TileId::popupCornerBottomLeft,
-             panel, Pos(border.p0.x, border.p1.y), clr, clrBlack);
-    drawTile(TileId::popupCornerBottomRight,
-             panel, Pos(border.p1.x, border.p1.y), clr, clrBlack);
+    drawTile(TileId::popupTopL, panel, corners[0], clr, clrBlack);
+    drawTile(TileId::popupTopR, panel, corners[1], clr, clrBlack);
+    drawTile(TileId::popupBtmL, panel, corners[2], clr, clrBlack);
+    drawTile(TileId::popupBtmR, panel, corners[3], clr, clrBlack);
   } else {
-    drawGlyph(
-      '+', panel, Pos(border.p0.x, border.p0.y), clr, true, clrBlack);
-    drawGlyph(
-      '+', panel, Pos(border.p1.x, border.p0.y), clr, true, clrBlack);
-    drawGlyph(
-      '+', panel, Pos(border.p0.x, border.p1.y), clr, true, clrBlack);
-    drawGlyph(
-      '+', panel, Pos(border.p1.x, border.p1.y), clr, true, clrBlack);
+    drawGlyph('+', panel, corners[0], clr, true, clrBlack);
+    drawGlyph('+', panel, corners[1], clr, true, clrBlack);
+    drawGlyph('+', panel, corners[2], clr, true, clrBlack);
+    drawGlyph('+', panel, corners[3], clr, true, clrBlack);
   }
 }
 

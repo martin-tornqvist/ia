@@ -103,8 +103,8 @@ void Trap::bump(Actor& actorBumping) {
     const bool IS_PLAYER      = &actorBumping == Map::player;
     const bool ACTOR_CAN_SEE  = actorBumping.getPropHandler().allowSee();
     AbilityVals& abilities    = actorBumping.getData().abilityVals;
-    const int DODGE_SKILL =
-      abilities.getVal(AbilityId::dodgeTrap, true, actorBumping);
+    const int DODGE_SKILL     = abilities.getVal(AbilityId::dodgeTrap, true,
+                                actorBumping);
     const int BASE_CHANCE_TO_AVOID = 30;
 
     const string trapName = specificTrap_->getTitle();

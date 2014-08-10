@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include "MapParsing.h"
 #include "Properties.h"
+#include "Log.h"
 
 using namespace std;
 
@@ -23,6 +24,11 @@ string Item::getWeightLabel() const {
   return "Heavy";
 }
 
+ConsumeItem Item::activateDefault(Actor* const actor) {
+  (void)actor;
+  Log::addMsg("I cannot apply that.");
+  return ConsumeItem::no;
+}
 
 //------------------------------------------------------------------- HIDEOUS MASK
 void HideousMask::newTurnInInventory() {

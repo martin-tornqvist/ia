@@ -198,8 +198,7 @@ void drawInterface() {
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                      clrGray);
 
-  Renderer::drawText(" 2/8, down/up, j/k to navigate | space/esc to exit ",
-                     Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
+  Renderer::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
 }
 
 } //namespace

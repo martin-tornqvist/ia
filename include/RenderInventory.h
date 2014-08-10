@@ -8,16 +8,10 @@
 
 namespace RenderInventory {
 
-void drawBrowseSlots(const MenuBrowser& browser);
-
-void drawBrowseInventory(const MenuBrowser& browser,
-                         const std::vector<unsigned int>& genInvIndexes);
+void drawBrowseInv(const MenuBrowser& browser);
 
 void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
-               const std::vector<unsigned int>& genInvIndexes);
-
-void drawUse(const MenuBrowser& browser,
-             const std::vector<unsigned int>& genInvIndexes);
+               const std::vector<size_t>& genInvIndexes);
 
 } //RenderInventory
 

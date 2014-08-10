@@ -24,7 +24,10 @@ public:
 
   bool isPosAtElement(const int ELEMENT) const;
 
-  void setY(const int Y);
+  int   getY() const {return pos_.y;}
+  void  setY(const int Y);
+
+  void setPos(const Pos& p) {pos_ = p;}
 
 private:
   Pos upLeft_;

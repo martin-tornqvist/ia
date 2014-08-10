@@ -54,9 +54,8 @@ public:
   int getElementWithItemType(const ItemId itemId) const;
 
   Item* getItemInSlot(SlotId slotName) const;
-  Item* getItemInElement(const int GLOBAL_ELEMENT_NR) const;
 
-  void removeInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT);
+  void removeWithoutDestroying(const InvList invList, const size_t ELEMENT);
 
   void decrItemInSlot(SlotId slotName);
 
@@ -85,17 +84,11 @@ public:
 
   void sortGeneralInventory();
 
-  std::vector<InvSlot>&       getSlots()          {return slots_;}
-  std::vector<Item*>&         getGeneral()        {return general_;}
-  const std::vector<InvSlot>& getSlots()    const {return slots_;}
-  const std::vector<Item*>&   getGeneral()  const {return general_;}
-
   int getTotalItemWeight() const;
 
   void storeToSaveLines(std::vector<std::string>& lines) const;
   void setupFromSaveLines(std::vector<std::string>& lines);
 
-private:
   std::vector<InvSlot> slots_;
   std::vector<Item*> general_;
   std::vector<Item*> intrinsics_;

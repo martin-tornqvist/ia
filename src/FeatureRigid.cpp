@@ -136,7 +136,7 @@ void Rigid::tryStartBurning(const bool IS_MSG_ALLOWED) {
 }
 
 void Rigid::examine() {
-  Log::addMsg("I find nothing specific there to examine or use.");
+  Log::addMsg("I find nothing specific there to examine.");
 }
 
 void Rigid::disarm() {

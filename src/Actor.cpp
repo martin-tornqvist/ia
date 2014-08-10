@@ -487,9 +487,8 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     }
   }
 
-  deadState =
-    (IS_DESTROYED || (isOnVisibleTrap && this != Map::player)) ?
-    ActorDeadState::destroyed : ActorDeadState::corpse;
+  deadState = (IS_DESTROYED || (isOnVisibleTrap && this != Map::player)) ?
+              ActorDeadState::destroyed : ActorDeadState::corpse;
 
   if(this != Map::player) {
     if(isHumanoid()) {
@@ -502,7 +501,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     static_cast<Monster*>(this)->leader = nullptr;
   }
 
-  if(ALLOW_DROP_ITEMS) {ItemDrop::dropAllCharactersItems(this, true);}
+  if(ALLOW_DROP_ITEMS) {ItemDrop::dropAllCharactersItems(*this);}
 
   if(IS_DESTROYED) {
     glyph_ = ' ';

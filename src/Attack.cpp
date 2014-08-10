@@ -48,19 +48,16 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_,
 
   bool isDefenderAware = true;
   if(attacker == Map::player) {
-    isDefenderAware =
-      static_cast<Monster*>(curDefender)->awareOfPlayerCounter_ > 0;
+    isDefenderAware = static_cast<Monster*>(curDefender)->awareOfPlayerCounter_ > 0;
   } else {
-    isDefenderAware =
-      Map::player->isSeeingActor(*attacker, nullptr) ||
-      PlayerBon::hasTrait(Trait::vigilant);
+    isDefenderAware = Map::player->isSeeingActor(*attacker, nullptr) ||
+                      PlayerBon::hasTrait(Trait::vigilant);
   }
 
   isDefenderDodging = false;
   if(isDefenderAware) {
-    const int DEFENDER_DODGE_SKILL =
-      curDefender->getData().abilityVals.getVal(
-        AbilityId::dodgeAttack, true, *curDefender);
+    const int DEFENDER_DODGE_SKILL = curDefender->getData().abilityVals.getVal(
+                                       AbilityId::dodgeAttack, true, *curDefender);
 
     const int DODGE_MOD_AT_FEATURE =
       Map::cells[defPos.x][defPos.y].rigid->getDodgeModifier();

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <string>
+#include <assert.h>
 
 #include "CmnTypes.h"
 #include "GameTime.h"
@@ -18,15 +19,22 @@ using namespace std;
 
 namespace ItemDrop {
 
-void dropAllCharactersItems(Actor* actor, bool died) {
-  (void)died;
-  actor->getInv().dropAllNonIntrinsic(actor->pos, true);
+void dropAllCharactersItems(Actor& actor) {
+  actor.getInv().dropAllNonIntrinsic(actor.pos, true);
 }
 
-void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
+void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
                      const int NR_ITEMS_TO_DROP) {
-  Inventory& inv = actorDropping->getInv();
-  Item* itemToDrop = inv.getItemInElement(ELEMENT);
+  Inventory& inv    = actor.getInv();
+  Item* itemToDrop  = nullptr;
+
+  if(invList == InvList::slots) {
+    assert(ELEMENT < inv.slots_.size());
+    itemToDrop = inv.slots_.at(ELEMENT).item;
+  } else {
+    assert(ELEMENT < inv.general_.size());
+    itemToDrop = inv.general_.at(ELEMENT);
+  }
 
   if(itemToDrop) {
     const bool IS_STACKABLE = itemToDrop->getData().isStackable;
@@ -39,15 +47,15 @@ void dropItemFromInv(Actor* actorDropping, const int ELEMENT,
 
     if(IS_WHOLE_STACK_DROPPED) {
       itemRef = ItemData::getItemRef(*itemToDrop, ItemRefType::plural);
-      inv.removeInElementWithoutDeletingInstance(ELEMENT);
-      dropItemOnMap(actorDropping->pos, *itemToDrop);
+      inv.removeWithoutDestroying(invList, ELEMENT);
+      dropItemOnMap(actor.pos, *itemToDrop);
     } else {
       Item* itemToKeep = itemToDrop;
       itemToDrop = ItemFactory::copyItem(itemToKeep);
       itemToDrop->nrItems = NR_ITEMS_TO_DROP;
       itemRef = ItemData::getItemRef(*itemToDrop, ItemRefType::plural);
       itemToKeep->nrItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
-      dropItemOnMap(actorDropping->pos, *itemToDrop);
+      dropItemOnMap(actor.pos, *itemToDrop);
     }
 
     //Messages

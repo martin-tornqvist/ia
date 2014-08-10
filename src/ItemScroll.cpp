@@ -99,18 +99,21 @@ ConsumeItem Scroll::read() {
 
   Spell* const spell = getSpell();
 
+  const string crumbleStr = "It crumbles to dust.";
+
   if(data_->isIdentified) {
-    Log::addMsg(
-      "I read a scroll of " + getRealTypeName() + "...");
+    Log::addMsg("I read a manuscript of " + getRealTypeName() + "...");
     spell->cast(Map::player, false);
+    Log::addMsg(crumbleStr);
     tryLearn();
   } else {
-    Log::addMsg("I recite forbidden incantations...");
+    Log::addMsg("I recite the forbidden incantations on the manuscript...");
     data_->isTried = true;
-    if(spell->cast(Map::player, false).isCastIdenifying) {
-      identify(false);
-    }
+    const auto spellCastRet = spell->cast(Map::player, false);
+    Log::addMsg(crumbleStr);
+    if(spellCastRet.isCastIdenifying) {identify(false);}
   }
+
   delete spell;
 
   return ConsumeItem::yes;

@@ -112,12 +112,10 @@ void runStdTurnEvents() {
   }
 
   //Run new turn events on all player items
-  Inventory& playerInv = Map::player->getInv();
-  auto& playerBackpack = playerInv.getGeneral();
-  for(Item* const item : playerBackpack) {item->newTurnInInventory();}
+  auto& playerInv = Map::player->getInv();
+  for(Item* const item : playerInv.general_) {item->newTurnInInventory();}
 
-  auto& playerSlots = playerInv.getSlots();
-  for(InvSlot& slot : playerSlots) {
+  for(InvSlot& slot : playerInv.slots_) {
     if(slot.item) {slot.item->newTurnInInventory();}
   }
 

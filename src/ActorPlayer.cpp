@@ -623,20 +623,12 @@ void Player::onActorTurn() {
     const InvScrId invScreen = InvHandling::screenToOpenAfterDrop;
     if(invScreen != InvScrId::END) {
       switch(invScreen) {
-        case InvScrId::backpack: {
-          InvHandling::runBrowseInventory();
-        } break;
-
-        case InvScrId::use: {
-          InvHandling::runUseScreen();
+        case InvScrId::inv: {
+          InvHandling::runInvScreen();
         } break;
 
         case InvScrId::equip: {
           InvHandling::runEquipScreen(*InvHandling::equipSlotToOpenAfterDrop);
-        } break;
-
-        case InvScrId::slots: {
-          InvHandling::runSlotsScreen();
         } break;
 
         case InvScrId::END: {} break;
@@ -1059,8 +1051,7 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
     }
   }
 
-  vector<Item*>& generalItems = inv_->getGeneral();
-  for(Item* const item : generalItems) {
+  for(Item* const item : inv_->general_) {
     if(item->getData().id == ItemId::electricLantern) {
       DeviceLantern* const lantern = static_cast<DeviceLantern*>(item);
       LanternLightSize lightSize = lantern->getCurLightSize();

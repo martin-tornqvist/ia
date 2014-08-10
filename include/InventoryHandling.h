@@ -3,13 +3,7 @@
 
 #include "Inventory.h"
 
-enum class InvScrId {
-  slots,
-  equip,
-  use,
-  backpack,
-  END
-};
+enum class InvScrId {inv, equip, END};
 
 enum class ConsumeItem {yes, no};
 
@@ -17,17 +11,14 @@ namespace InvHandling {
 
 extern InvScrId screenToOpenAfterDrop;
 extern InvSlot* equipSlotToOpenAfterDrop;
-extern int      browserPosToSetAfterDrop;
+extern Pos      browserPosToSetAfterDrop;
 
 void init();
 
-void runSlotsScreen();
-bool runUseScreen();
-
-void runBrowseInventory();
+void runInvScreen();
 bool runEquipScreen(InvSlot& slotToEquip);
 
-void activateDefault(const unsigned int GENERAL_ITEMS_ELEMENT);
+void activateDefault(const size_t GENERAL_ITEMS_ELEMENT);
 
 } //InvHandling
 

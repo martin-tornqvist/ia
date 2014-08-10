@@ -781,7 +781,7 @@ void PropHandler::getPropsFromSources(
   //Get from inventory if humanoid actor
   if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)]) {
     const auto& inv     = owningActor_->getInv();
-    const auto& slots   = inv.getSlots();
+    const auto& slots   = inv.slots_;
     auto addItemProps = [&](const vector<Prop*>& itemPropList) {
       for(auto* const prop : itemPropList) {
         prop->owningActor_ = owningActor_;
@@ -794,7 +794,7 @@ void PropHandler::getPropsFromSources(
         addItemProps(item->propsEnabledOnCarrier);
       }
     }
-    const auto& general = inv.getGeneral();
+    const auto& general = inv.general_;
     for(auto* const item : general) {
       addItemProps(item->propsEnabledOnCarrier);
     }
@@ -817,7 +817,7 @@ void  PropHandler::getPropIdsFromSources(
   //Get from inventory if humanoid actor
   if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)]) {
     const auto& inv     = owningActor_->getInv();
-    const auto& slots   = inv.getSlots();
+    const auto& slots   = inv.slots_;
     auto addItemProps = [&](const vector<Prop*>& itemPropList) {
       for(auto* const prop : itemPropList) {
         prop->owningActor_ = owningActor_;
@@ -830,7 +830,7 @@ void  PropHandler::getPropIdsFromSources(
         addItemProps(item->propsEnabledOnCarrier);
       }
     }
-    const auto& general = inv.getGeneral();
+    const auto& general = inv.general_;
     for(auto* const item : general) {
       addItemProps(item->propsEnabledOnCarrier);
     }

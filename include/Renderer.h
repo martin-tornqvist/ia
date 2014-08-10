@@ -49,6 +49,7 @@ void coverCellInMap(const Pos& pos);
 
 void coverPanel(const Panel panel);
 
+void coverArea(const Panel panel, const Rect& area);
 void coverArea(const Panel panel, const Pos& pos, const Pos& dims);
 
 void coverAreaPixel(const Pos& pixelPos, const Pos& pixelDims);
@@ -80,7 +81,7 @@ void drawProjectiles(std::vector<Projectile*>& projectiles,
                      const bool SHOULD_DRAW_MAP_BEFORE);
 
 void drawPopupBox(const Rect& area, const Panel panel = Panel::screen,
-                  const Clr& clr = clrGray);
+                  const Clr& clr = clrGray, const bool COVER_AREA = false);
 
 void applySurface(const Pos& pixelPos, SDL_Surface* const src,
                   SDL_Rect* clip = nullptr);

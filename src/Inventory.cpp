@@ -455,16 +455,13 @@ bool Inventory::hasItemInSlot(SlotId id) const {
   return false;
 }
 
-void Inventory::removeInElementWithoutDeletingInstance(const int GLOBAL_ELEMENT) {
-  //If parameter element corresponds to equipped slots, remove item in that slot
-  if(GLOBAL_ELEMENT >= 0 && GLOBAL_ELEMENT < signed(slots_.size())) {
-    slots_.at(GLOBAL_ELEMENT).item = nullptr;
+void Inventory::removeWithoutDestroying(const InvList invList, const size_t ELEMENT) {
+  if(invList == InvList::slots) {
+    assert(ELEMENT < slots_.size());
+    slots_.at(ELEMENT).item = nullptr;
   } else {
-    //If parameter element corresponds to general slot, remove that slot
-    const int GENERAL_ELEMENT = GLOBAL_ELEMENT - slots_.size();
-    if(GENERAL_ELEMENT >= 0 && GENERAL_ELEMENT < signed(general_.size())) {
-      general_.erase(begin(general_) + GENERAL_ELEMENT);
-    }
+    assert(ELEMENT < general_.size());
+    general_.erase(begin(general_) + ELEMENT);
   }
 }
 
@@ -475,19 +472,6 @@ int Inventory::getElementWithItemType(const ItemId id) const {
     }
   }
   return -1;
-}
-
-Item* Inventory::getItemInElement(const int GLOBAL_ELEMENT_NR) const {
-  if(GLOBAL_ELEMENT_NR >= 0 && GLOBAL_ELEMENT_NR < signed(slots_.size())) {
-    return slots_.at(GLOBAL_ELEMENT_NR).item;
-  }
-
-  const int GENERAL_ELEMENT_NR = GLOBAL_ELEMENT_NR - slots_.size();
-  if(GENERAL_ELEMENT_NR >= 0 && GENERAL_ELEMENT_NR < signed(general_.size())) {
-    return general_.at(GENERAL_ELEMENT_NR);
-  }
-
-  return nullptr;
 }
 
 Item* Inventory::getItemInSlot(SlotId slotName) const {

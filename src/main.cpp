@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
         } else {
           //Player is dead, run postmortem, then return to main menu
           static_cast<Player*>(Map::player)->waitTurnsLeft = -1;
-          Log::addMsg("I am dead... (press space/esc)", clrMsgBad);
+          Log::addMsg("I am dead...", clrMsgBad);
           Audio::play(SfxId::death);
           Renderer::drawMapAndInterface();
           Log::clearLog();

@@ -62,7 +62,7 @@ void run() {
   Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                      clrGray);
 
-  Renderer::drawText(" space/esc to exit ", Panel::screen,
+  Renderer::drawText(" [space/esc] to exit ", Panel::screen,
                      Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;

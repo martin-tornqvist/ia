@@ -164,7 +164,7 @@ void winGame() {
                                  clrMsgBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
         const string CMD_LABEL =
-          "Space/Esc to record high-score and return to main menu";
+          "[space/esc] to record high-score and return to main menu";
         Renderer::drawTextCentered(
           CMD_LABEL, Panel::screen,
           Pos(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),
