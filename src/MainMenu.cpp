@@ -290,7 +290,7 @@ void draw(const MenuBrowser& browser) {
   pos.y++;
 
   Renderer::drawTextCentered(
-    "Manual", Panel::screen, pos,
+    "Tome of Wisdom", Panel::screen, pos,
     browser.isPosAtElement(2) ? clrActive : clrInactive,
     browser.isPosAtElement(2) ? clrActiveBg : clrInactiveBg);
   pos.y++;
