@@ -10,7 +10,7 @@ namespace ItemPickup {
 
 void tryPick();
 
-void tryUnloadWpnOrPickupAmmoFromGround();
+void tryUnloadWpnOrPickupAmmo();
 
 } //ItemPickup
 

@@ -240,7 +240,7 @@ void handleKeyPress(const KeyData& d) {
   else if(d.key == 'G')  {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      ItemPickup::tryUnloadWpnOrPickupAmmoFromGround();
+      ItemPickup::tryUnloadWpnOrPickupAmmo ();
     }
     clearEvents();
     return;

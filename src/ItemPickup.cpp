@@ -25,13 +25,6 @@ void pickupEffects(Actor* actor, Item* item) {
   (void)item;
 }
 
-bool isInvFull(Inventory& inv, Item& item) {
-  //If item can be stacked, the inventory is not considered full.
-  if(inv.getElementToStackItem(&item) != -1) {return false;}
-  const int INV_SIZE = inv.general_.size();
-  return INV_SIZE >= (SCREEN_H - 1);
-}
-
 } //namespace
 
 //Can always be called, to check if something is there to be picked up.
@@ -61,28 +54,24 @@ void tryPick() {
       }
     }
 
-    if(isInvFull(playerInv, *item)) {
-      Log::clearLog();
-      Log::addMsg("I cannot carry more.");
-    } else {
-      Audio::play(SfxId::pickup);
+    Audio::play(SfxId::pickup);
 
-      Log::clearLog();
-      Log::addMsg("I pick up " + ITEM_NAME + ".");
+    Log::clearLog();
+    Log::addMsg("I pick up " + ITEM_NAME + ".");
 
-      playerInv.putInGeneral(item);
+    playerInv.putInGeneral(item);
 
-      Map::cells[pos.x][pos.y].item = nullptr;
+    Map::cells[pos.x][pos.y].item = nullptr;
 
-      GameTime::actorDidAct();
-    }
+    GameTime::actorDidAct();
+
   } else {
     Log::clearLog();
     Log::addMsg("I see nothing to pick up here.");
   }
 }
 
-void tryUnloadWpnOrPickupAmmoFromGround() {
+void tryUnloadWpnOrPickupAmmo() {
   Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
 
   if(item) {
@@ -109,15 +98,9 @@ void tryUnloadWpnOrPickupAmmoFromGround() {
           ItemData::getItemRef(*weapon, ItemRefType::a);
         Log::addMsg("I unload " + WEAPON_REF_A);
 
-        if(isInvFull(playerInv, *spawnedAmmo)) {
-          Audio::play(SfxId::pickup);
-          ItemDrop::dropItemOnMap(Map::player->pos, *spawnedAmmo);
-          string str =  "I have no room to keep the unloaded ammunition.";
-          Log::addMsg(str);
-        } else {
-          Audio::play(SfxId::pickup);
-          playerInv.putInGeneral(spawnedAmmo);
-        }
+        Audio::play(SfxId::pickup);
+
+        playerInv.putInGeneral(spawnedAmmo);
 
         static_cast<Wpn*>(item)->nrAmmoLoaded = 0;
 
