@@ -637,7 +637,7 @@ void Player::onActorTurn() {
     }
   } else {
     InvHandling::screenToOpenAfterDrop    = InvScrId::END;
-    InvHandling::browserPosToSetAfterDrop = 0;
+    InvHandling::browserPosToSetAfterDrop = Pos(0, 0);
   }
 
   if(Config::isBotPlaying()) {
@@ -837,7 +837,7 @@ void Player::interruptActions() {
   Renderer::drawMapAndInterface();
 
   InvHandling::screenToOpenAfterDrop    = InvScrId::END;
-  InvHandling::browserPosToSetAfterDrop = 0;
+  InvHandling::browserPosToSetAfterDrop = Pos(0, 0);
 
   //Abort searching
   if(waitTurnsLeft > 0) {

@@ -30,6 +30,10 @@ void drawDetailedItemDescr(const Item* const item, const int BOX_Y0) {
 
   const Pos p(descrRect.p0 + 1);
   Renderer::drawText("Stuff goes here", Panel::screen, p, clrWhite);
+  if(item) {
+    Renderer::drawText(ItemData::getItemRef(*item, ItemRefType::plural, true),
+                       Panel::screen, p + Pos(0, 1), clrWhite);
+  }
 }
 
 } //Namespace
@@ -45,14 +49,15 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
   Renderer::coverArea(Panel::screen, Pos(0, 0), Pos(MAP_W, CHAR_LINES_OFFSET_H - 1));
 
-  const bool IS_IN_INV = browserPos.x == 0;
+  const bool        IS_IN_INV   = browserPos.x == 0;
+  const auto* const item        = IS_IN_INV ?
+                                  inv.general_.at(BROWSER_Y) :
+                                  inv.slots_.at(BROWSER_Y).item;
 
-  const auto* const curSlotItem = IS_IN_INV ? nullptr : inv.slots_.at(BROWSER_Y).item;
-
-  const string queryEqStr   = curSlotItem ? "unequip" : "equip";
+  const string queryEqStr   = item ? "unequip" : "equip";
   const string queryBaseStr = "[enter] to " + (IS_IN_INV ? "use item" : queryEqStr);
 
-  const string queryDropStr = IS_IN_INV || curSlotItem ? " [shift+enter] to drop" : "";
+  const string queryDropStr = item ? " [shift+enter] to drop" : "";
 
   string str                = queryBaseStr + queryDropStr + " [space/esc] to exit";
   Renderer::drawText(str, Panel::screen, Pos(0, 0), clrWhiteHigh);
@@ -62,26 +67,94 @@ void drawBrowseInv(const MenuBrowser& browser) {
   const Rect invRect(Pos(0,         1), Pos(EQ_BOX_X0,  CHAR_LINES_OFFSET_H - 1));
   const Rect eqpRect(Pos(EQ_BOX_X0, 1), Pos(MAP_W - 1,  EQ_BOX_Y1));
 
+  const int MAX_NR_ITEMS_ON_SCR   = invRect.p1.y - invRect.p0.y - 1;
+  const size_t NR_INV_ITEMS       = inv.general_.size();
+
+  size_t invTopIdx = 0;
+
+  if(browserPos.x == 0) {
+
+    const int BROWESR_Y = browserPos.y;
+
+    auto isBrowserPosOnScr = [&](const bool IS_FIRST_SCR) {
+      return BROWESR_Y < int(invTopIdx + MAX_NR_ITEMS_ON_SCR) - (IS_FIRST_SCR ? 1 : 2);
+    };
+
+    if(int(NR_INV_ITEMS) > MAX_NR_ITEMS_ON_SCR && !isBrowserPosOnScr(true)) {
+
+      invTopIdx = MAX_NR_ITEMS_ON_SCR - 1;
+
+      while(true) {
+        //Check if this is the bottom screen
+        if(int(NR_INV_ITEMS - invTopIdx + 1) <= MAX_NR_ITEMS_ON_SCR) {
+          break;
+        }
+
+        //Check if current browser pos is currently on screen
+        if(isBrowserPosOnScr(false)) {break;}
+
+        invTopIdx += MAX_NR_ITEMS_ON_SCR - 2;
+      }
+    }
+  }
+
+  Pos p(invRect.p0 + Pos(1, 1));
+
+  const int INV_ITEM_SYM_X  = invRect.p0.x + 1;
+  const int INV_ITEM_NAME_X = INV_ITEM_SYM_X + 2;
+
+  for(size_t i = invTopIdx; i < NR_INV_ITEMS; ++i) {
+    const bool IS_CUR_POS = IS_IN_INV && BROWSER_Y == i;
+    Item* const curItem = inv.general_.at(i);
+
+    const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : curItem->getInterfaceClr();
+
+    p.x = INV_ITEM_NAME_X;
+
+    if(i == invTopIdx && invTopIdx > 0) {
+      Renderer::drawText("(more)", Panel::screen, p, clrBlack, clrGray);
+      ++p.y;
+    }
+
+    p.x = INV_ITEM_SYM_X;
+
+    drawItemSymbol(*curItem, p);
+
+    p.x = INV_ITEM_NAME_X;
+
+    str = ItemData::getItemInterfaceRef(*curItem, false);
+    Renderer::drawText(str, Panel::screen, p, itemInterfClr);
+
+    p.y++;
+
+    if(p.y == invRect.p1.y - 1 && i + 1 < NR_INV_ITEMS - 1) {
+      Renderer::drawText("(more)", Panel::screen, p, clrBlack, clrGray);
+      break;
+    }
+  }
+
+  p = Pos(eqpRect.p0 + Pos(1, 1));
+
   for(size_t i = 0; i < NR_SLOTS; ++i) {
     const bool IS_CUR_POS = !IS_IN_INV && BROWSER_Y == i;
     const InvSlot& slot   = inv.slots_.at(i);
     str                   = slot.name;
 
-    Pos p(eqpRect.p0 + Pos(1, i + 1));
+    p.x = eqpRect.p0.x + 1;
 
     Renderer::drawText(str, Panel::screen, p,
                        IS_CUR_POS ? clrWhiteHigh : clrNosfTealDrk);
 
     p.x += 9; //Offset to leave room for slot label
 
-    const auto* const item = slot.item;
-    if(item) {
-      drawItemSymbol(*item, p);
+    const auto* const curItem = slot.item;
+    if(curItem) {
+      drawItemSymbol(*curItem, p);
       p.x += 2;
 
-      const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
+      const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : curItem->getInterfaceClr();
 
-      const ItemDataT& d = item->getData();
+      const ItemDataT& d = curItem->getData();
       PrimaryAttMode attackMode = PrimaryAttMode::none;
       if(slot.id == SlotId::wielded || slot.id == SlotId::wieldedAlt) {
         attackMode = d.primaryAttackMode == PrimaryAttMode::missile ?
@@ -90,7 +163,7 @@ void drawBrowseInv(const MenuBrowser& browser) {
         attackMode = PrimaryAttMode::missile;
       }
 
-      str = ItemData::getItemInterfaceRef(*item, false, attackMode);
+      str = ItemData::getItemInterfaceRef(*curItem, false, attackMode);
       Renderer::drawText(str, Panel::screen, p, itemInterfClr);
     } else {
       p.x += 2;
@@ -101,30 +174,13 @@ void drawBrowseInv(const MenuBrowser& browser) {
     ++p.y;
   }
 
-  for(size_t i = 0; i < inv.general_.size(); ++i) {
-    const bool IS_CUR_POS = IS_IN_INV && BROWSER_Y == i;
-    Item* const item = inv.general_.at(i);
-
-    const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
-
-    Pos p(invRect.p0 + Pos(1, i + 1));
-
-    drawItemSymbol(*item, p);
-
-    p.x += 2;
-
-    str = ItemData::getItemInterfaceRef(*item, false);
-    Renderer::drawText(str, Panel::screen, p, itemInterfClr);
-    p.y++;
-  }
-
   Renderer::drawPopupBox(invRect, Panel::screen, clrGray, false);
   Renderer::drawText("Inventory", Panel::screen, invRect.p0 + Pos(1, 0), clrWhite);
 
   Renderer::drawPopupBox(eqpRect, Panel::screen, clrGray, false);
   Renderer::drawText("Equiped items", Panel::screen, eqpRect.p0 + Pos(1, 0), clrWhite);
 
-  drawDetailedItemDescr(nullptr, eqpRect.p1.y);
+  drawDetailedItemDescr(item, eqpRect.p1.y);
 
   Renderer::updateScreen();
 }

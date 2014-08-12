@@ -219,8 +219,16 @@ void runInvScreen() {
 
       case MenuAction::selectedShift: {
         if(runDropScreen(invList, browser.getPos().y)) {
+          const Pos browserPos      = browser.getPos();
           screenToOpenAfterDrop     = InvScrId::inv;
-          browserPosToSetAfterDrop  = browser.getPos().y;
+          browserPosToSetAfterDrop  = browserPos;
+          if(browserPos.x == 0 && browserPos.y >= int(inv.general_.size())) {
+            if(browserPosToSetAfterDrop.y == 0) {     //No more items in inventory
+              browserPosToSetAfterDrop = Pos(1, 0);   //Go to equipped items instead
+            } else {
+              --browserPosToSetAfterDrop.y;
+            }
+          }
           return;
         }
         RenderInventory::drawBrowseInv(browser);
@@ -245,7 +253,7 @@ void runInvScreen() {
               } break;
               case SlotId::body: {
                 screenToOpenAfterDrop     = InvScrId::inv;
-                browserPosToSetAfterDrop  = browser.getPos().y;
+                browserPosToSetAfterDrop  = browser.getPos();
 
                 Log::addMsg("I take off my " + itemName + ".", clrWhite, true, true);
                 item->onTakeOff();
@@ -345,7 +353,7 @@ bool runEquipScreen(InvSlot& slotToEquip) {
 
   MenuBrowser browser(generalItemsToShow_.size(), 0);
   browser.setPos(browserPosToSetAfterDrop);
-  browserPosToSetAfterDrop = 0;
+  browserPosToSetAfterDrop = Pos(0, 0);
 
   Audio::play(SfxId::backpack);
 
