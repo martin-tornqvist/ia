@@ -219,16 +219,16 @@ void runInvScreen() {
 
       case MenuAction::selectedShift: {
         if(runDropScreen(invList, browser.getPos().y)) {
-          const Pos browserPos      = browser.getPos();
+          browser.setGoodPos();
+          browserPosToSetAfterDrop  = browser.getPos();
           screenToOpenAfterDrop     = InvScrId::inv;
-          browserPosToSetAfterDrop  = browserPos;
-          if(browserPos.x == 0 && browserPos.y >= int(inv.general_.size())) {
-            if(browserPosToSetAfterDrop.y == 0) {     //No more items in inventory
-              browserPosToSetAfterDrop = Pos(1, 0);   //Go to equipped items instead
-            } else {
-              --browserPosToSetAfterDrop.y;
-            }
-          }
+//          if(browserPos.x == 0 && browserPos.y >= int(inv.general_.size())) {
+//            if(browserPosToSetAfterDrop.y == 0) {     //No more items in inventory
+//              browserPosToSetAfterDrop = Pos(1, 0);   //Go to equipped items instead
+//            } else {
+//              --browserPosToSetAfterDrop.y;
+//            }
+//          }
           return;
         }
         RenderInventory::drawBrowseInv(browser);
@@ -385,8 +385,9 @@ bool runEquipScreen(InvSlot& slotToEquip) {
 
       case MenuAction::selectedShift: {
         if(runDropScreen(InvList::general, generalItemsToShow_.at(browser.getY()))) {
-          screenToOpenAfterDrop     = InvScrId::equip;
+          browser.setGoodPos();
           browserPosToSetAfterDrop  = browser.getPos();
+          screenToOpenAfterDrop     = InvScrId::equip;
           return true;
         }
         RenderInventory::drawEquip(browser, slotToEquip.id, generalItemsToShow_);

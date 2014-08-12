@@ -279,51 +279,51 @@ void draw(const MenuBrowser& browser) {
 
   Renderer::drawTextCentered(
     "New journey", Panel::screen, pos,
-    browser.isPosAtElement(0) ? clrActive : clrInactive,
-    browser.isPosAtElement(0) ? clrActiveBg : clrInactiveBg);
+    browser.isAtIdx(0) ? clrActive : clrInactive,
+    browser.isAtIdx(0) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Resurrect", Panel::screen, pos,
-    browser.isPosAtElement(1) ? clrActive : clrInactive,
-    browser.isPosAtElement(1) ? clrActiveBg : clrInactiveBg);
+    browser.isAtIdx(1) ? clrActive : clrInactive,
+    browser.isAtIdx(1) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Tome of Wisdom", Panel::screen, pos,
-    browser.isPosAtElement(2) ? clrActive : clrInactive,
-    browser.isPosAtElement(2) ? clrActiveBg : clrInactiveBg);
+    browser.isAtIdx(2) ? clrActive : clrInactive,
+    browser.isAtIdx(2) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Options", Panel::screen, pos,
-    browser.isPosAtElement(3) ? clrActive : clrInactive,
-    browser.isPosAtElement(3) ? clrActiveBg : clrInactiveBg);
+    browser.isAtIdx(3) ? clrActive : clrInactive,
+    browser.isAtIdx(3) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Credits", Panel::screen, pos,
-    browser.isPosAtElement(4) ? clrActive : clrInactive,
-    browser.isPosAtElement(4) ? clrActiveBg : clrInactiveBg);
+    browser.isAtIdx(4) ? clrActive : clrInactive,
+    browser.isAtIdx(4) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Graveyard", Panel::screen, pos,
-    browser.isPosAtElement(5) ? clrActive : clrInactive,
-    browser.isPosAtElement(5) ? clrActiveBg : clrInactiveBg);
+    browser.isAtIdx(5) ? clrActive : clrInactive,
+    browser.isAtIdx(5) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   Renderer::drawTextCentered(
     "Escape to reality", Panel::screen, pos,
-    browser.isPosAtElement(6) ? clrActive : clrInactive,
-    browser.isPosAtElement(6) ? clrActiveBg : clrInactiveBg);
+    browser.isAtIdx(6) ? clrActive : clrInactive,
+    browser.isAtIdx(6) ? clrActiveBg : clrInactiveBg);
   pos.y++;
 
   if(IS_DEBUG_MODE) {
     Renderer::drawTextCentered(
       "DEBUG: RUN BOT", Panel::screen, pos,
-      browser.isPosAtElement(7) ? clrActive : clrInactive,
-      browser.isPosAtElement(8) ? clrActiveBg : clrInactiveBg);
+      browser.isAtIdx(7) ? clrActive : clrInactive,
+      browser.isAtIdx(8) ? clrActiveBg : clrInactiveBg);
     pos.y++;
   }
 
@@ -373,8 +373,8 @@ GameEntryMode run(bool& quit, int& introMusChannel) {
       case MenuAction::selectedShift: {} break;
 
       case MenuAction::selected: {
-        if(browser.isPosAtElement(0)) {return GameEntryMode::newGame;}
-        if(browser.isPosAtElement(1)) {
+        if(browser.isAtIdx(0)) {return GameEntryMode::newGame;}
+        if(browser.isAtIdx(1)) {
           if(SaveHandling::isSaveAvailable()) {
             SaveHandling::load();
             MapTravel::goToNxt();
@@ -385,28 +385,28 @@ GameEntryMode run(bool& quit, int& introMusChannel) {
             return GameEntryMode::newGame;
           }
         }
-        if(browser.isPosAtElement(2)) {
+        if(browser.isAtIdx(2)) {
           Manual::run();
           draw(browser);
         }
-        if(browser.isPosAtElement(3)) {
+        if(browser.isAtIdx(3)) {
           Config::runOptionsMenu();
           draw(browser);
         }
-        if(browser.isPosAtElement(4)) {
+        if(browser.isAtIdx(4)) {
           Credits::run();
           draw(browser);
         }
-        if(browser.isPosAtElement(5)) {
+        if(browser.isAtIdx(5)) {
           HighScore::runHighScoreScreen();
           draw(browser);
         }
-        if(browser.isPosAtElement(6)) {
+        if(browser.isAtIdx(6)) {
           quit    = true;
           return GameEntryMode::newGame;
         }
         if(IS_DEBUG_MODE) {
-          if(browser.isPosAtElement(7)) {
+          if(browser.isAtIdx(7)) {
             Config::setBotPlaying();
             return GameEntryMode::newGame;
           }

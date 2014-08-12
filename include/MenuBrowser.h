@@ -5,37 +5,40 @@
 
 class MenuBrowser {
 public:
-  MenuBrowser(int nrItemsA, int nrItemsB) :
-    upLeft_(Pos(0, 0)),
-    upRight_(nrItemsB == 0 ? Pos(0, 0) : Pos(1, 0)),
-    btmLeft_(Pos(0, nrItemsA - 1)),
-    btmRight_(nrItemsB == 0 ? Pos(0, nrItemsA - 1) : Pos(1, nrItemsB - 1)),
-    nrItemsA_(nrItemsA),
-    nrItemsB_(nrItemsB),
-    pos_(upLeft_) {}
+  MenuBrowser(const int NR_ITEMS_A, const int NR_ITEMS_B) :
+    x0y0_(NR_ITEMS_A > 0 ? Pos(0, 0) : Pos(1, 0)),
+    x1y0_(NR_ITEMS_B > 0 ? Pos(1, 0) : Pos(0, 0)),
+    x0y1_(NR_ITEMS_A > 0 ? Pos(0, NR_ITEMS_A - 1) : Pos(1, NR_ITEMS_B - 1)),
+    x1y1_(NR_ITEMS_B > 0 ? Pos(1, NR_ITEMS_B - 1) : Pos(0, NR_ITEMS_A - 1)),
+    NR_A_(NR_ITEMS_A),
+    NR_B_(NR_ITEMS_B),
+    pos_(NR_ITEMS_A > 0 ? x0y0_ : x1y0_) {}
+
+  MenuBrowser() = delete;
 
   void navigate(const Dir dir);
 
   int getElement() const;
 
-  int getNrOfItemsInFirstList()   const {return nrItemsA_;}
-  int getNrOfItemsInSecondList()  const {return nrItemsB_;}
+  int getNrOfItemsInFirstList()   const {return NR_A_;}
+  int getNrOfItemsInSecondList()  const {return NR_B_;}
   Pos getPos()                    const {return pos_;}
 
-  bool isPosAtElement(const int ELEMENT) const;
+  bool isAtIdx(const int ELEMENT) const;
 
-  int   getY() const {return pos_.y;}
-  void  setY(const int Y);
+  int getY() const {return pos_.y;}
 
-  void setPos(const Pos& p) {pos_ = p;}
+  void setPos(const Pos& p);
+
+  void setGoodPos();
 
 private:
-  Pos upLeft_;
-  Pos upRight_;
-  Pos btmLeft_;
-  Pos btmRight_;
-  int nrItemsA_;
-  int nrItemsB_;
+  const Pos x0y0_;
+  const Pos x1y0_;
+  const Pos x0y1_;
+  const Pos x1y1_;
+  int NR_A_;
+  int NR_B_;
   Pos pos_;
 };
 

@@ -40,7 +40,7 @@ void draw(MenuBrowser& browser) {
     Scroll scroll(nullptr);
     Clr scrollClr = scroll.getInterfaceClr();
     const Clr clr =
-      browser.isPosAtElement(CURRENT_ELEMENT) ? clrWhite : scrollClr;
+      browser.isAtIdx(CURRENT_ELEMENT) ? clrWhite : scrollClr;
     Spell* const spell = knownSpells_.at(i);
     string str = spell->getName();
 

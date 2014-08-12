@@ -72,7 +72,7 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
   size_t invTopIdx = 0;
 
-  if(browserPos.x == 0) {
+  if(browserPos.x == 0 && NR_INV_ITEMS > 0) {
 
     const int BROWESR_Y = browserPos.y;
 

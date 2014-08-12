@@ -297,23 +297,23 @@ void renderMenu(const MenuBrowser& browser) {
   //Draw command labels
   pos.set(55, 14);
   Renderer::drawText("Information", Panel::screen, pos,
-                     browser.isPosAtElement(0) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(0) ? clrWhite : clrRedLgt);
   pos.y++;
 
   Renderer::drawText("View the High Score", Panel::screen, pos,
-                     browser.isPosAtElement(1) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(1) ? clrWhite : clrRedLgt);
   pos.y++;
 
   Renderer::drawText("View messages", Panel::screen, pos,
-                     browser.isPosAtElement(2) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(2) ? clrWhite : clrRedLgt);
   pos.y++;
 
   Renderer::drawText("Return to main menu", Panel::screen, pos,
-                     browser.isPosAtElement(3) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(3) ? clrWhite : clrRedLgt);
   pos.y++;
 
   Renderer::drawText("Quit the game", Panel::screen, pos,
-                     browser.isPosAtElement(4) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(4) ? clrWhite : clrRedLgt);
   pos.y++;
 
   Renderer::updateScreen();
@@ -341,22 +341,22 @@ void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame) {
       case MenuAction::selectedShift: {} break;
 
       case MenuAction::selected: {
-        if(browser.isPosAtElement(0)) {
+        if(browser.isAtIdx(0)) {
           runInfo(linesAndClr);
           renderMenu(browser);
         }
-        if(browser.isPosAtElement(1)) {
+        if(browser.isAtIdx(1)) {
           HighScore::runHighScoreScreen();
           renderMenu(browser);
         }
-        if(browser.isPosAtElement(2)) {
+        if(browser.isAtIdx(2)) {
           Log::displayHistory();
           renderMenu(browser);
         }
-        if(browser.isPosAtElement(3)) {
+        if(browser.isAtIdx(3)) {
           done = true;
         }
-        if(browser.isPosAtElement(4)) {
+        if(browser.isAtIdx(4)) {
           *quitGame = true;
           done      = true;
         }
