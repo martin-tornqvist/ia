@@ -295,8 +295,8 @@ void PotionClairv::quaff_(Actor* const actor) {
 void PotionDescent::quaff_(Actor* const actor) {
   (void)actor;
   if(Map::dlvl < LAST_CAVERN_LVL) {
+    Log::addMsg("I sink downwards!", clrWhite, false, true);
     MapTravel::goToNxt();
-    Log::addMsg("I sink downwards!");
   } else {
     Log::addMsg("I feel a faint sinking sensation.");
   }

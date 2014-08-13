@@ -692,8 +692,8 @@ void drawPopupBox(const Rect& border, const Panel panel, const Clr& clr,
   const int Y1_VERT = border.p1.y - 1;
   for(int y = Y0_VERT; y <= Y1_VERT; ++y) {
     if(IS_TILES) {
-      drawTile(TileId::popupVerticalBar, panel, Pos(border.p0.x, y), clr, clrBlack);
-      drawTile(TileId::popupVerticalBar, panel, Pos(border.p1.x, y), clr, clrBlack);
+      drawTile(TileId::popupVer, panel, Pos(border.p0.x, y), clr, clrBlack);
+      drawTile(TileId::popupVer, panel, Pos(border.p1.x, y), clr, clrBlack);
     } else {
       drawGlyph('|', panel, Pos(border.p0.x, y), clr, true, clrBlack);
       drawGlyph('|', panel, Pos(border.p1.x, y), clr, true, clrBlack);
@@ -705,8 +705,8 @@ void drawPopupBox(const Rect& border, const Panel panel, const Clr& clr,
   const int X1_VERT = border.p1.x - 1;
   for(int x = X0_VERT; x <= X1_VERT; ++x) {
     if(IS_TILES) {
-      drawTile(TileId::popupHorizontalBar, panel, Pos(x, border.p0.y), clr, clrBlack);
-      drawTile(TileId::popupHorizontalBar, panel, Pos(x, border.p1.y), clr, clrBlack);
+      drawTile(TileId::popupHor, panel, Pos(x, border.p0.y), clr, clrBlack);
+      drawTile(TileId::popupHor, panel, Pos(x, border.p1.y), clr, clrBlack);
     } else {
       drawGlyph('-', panel, Pos(x, border.p0.y), clr, true, clrBlack);
       drawGlyph('-', panel, Pos(x, border.p1.y), clr, true, clrBlack);

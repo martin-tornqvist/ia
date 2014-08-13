@@ -248,8 +248,12 @@ Pos getColumnAndRowTile(const TileId tile) {
     case TileId::popupTopR: return Pos(1, 10); break;
     case TileId::popupBtmL: return Pos(2, 10); break;
     case TileId::popupBtmR: return Pos(3, 10); break;
-    case TileId::popupHorizontalBar: return Pos(4, 10); break;
-    case TileId::popupVerticalBar: return Pos(5, 10); break;
+    case TileId::popupHor: return Pos(4, 10); break;
+    case TileId::popupVer: return Pos(5, 10); break;
+    case TileId::popupHorDown: return Pos(9, 10); break;
+    case TileId::popupHorUp: return Pos(10, 10); break;
+    case TileId::popupVerR: return Pos(11, 10); break;
+    case TileId::popupVerL: return Pos(12, 10); break;
     case TileId::hangbridgeVer: return Pos(6, 10); break;
     case TileId::hangbridgeHor: return Pos(7, 10); break;
     case TileId::scorchedGround: return Pos(8, 10); break;

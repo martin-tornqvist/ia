@@ -127,7 +127,7 @@ void descrBriefItem(const Item& item) {
 }
 
 void descrBriefActor(const Actor& actor) {
-  Log::addMsg(actor.getNameA());
+  Log::addMsg(actor.getNameA() + ".");
 }
 
 } //namespace

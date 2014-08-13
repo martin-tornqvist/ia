@@ -269,7 +269,7 @@ void handleKeyPress(const KeyData& d) {
 
                 if(actor && actor != Map::player) {
                   RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
-                  Log::addMsg(", " + toStr(data.hitChanceTot) + "% hit chance");
+                  Log::addMsg(toStr(data.hitChanceTot) + "% hit chance");
                 }
 
                 Log::addMsg("[f] to fire");

@@ -24,11 +24,19 @@ void drawItemSymbol(const Item& item, const Pos& p) {
 }
 
 void drawDetailedItemDescr(const Item* const item, const int BOX_Y0) {
-  const Rect descrRect(EQ_BOX_X0, BOX_Y0, MAP_W - 1, CHAR_LINES_OFFSET_H - 1);
+  const Rect box(EQ_BOX_X0, BOX_Y0, MAP_W - 1, CHAR_LINES_OFFSET_H - 1);
 
-  Renderer::drawPopupBox(descrRect, Panel::screen, clrGray, true);
+  const Panel panel = Panel::screen;
 
-  const Pos p(descrRect.p0 + 1);
+  Renderer::drawPopupBox(box, panel, clrGray, true);
+
+  if(Config::isTilesMode()) {
+    Renderer::drawTile(TileId::popupVerR,   panel, box.p0, clrGray);
+    Renderer::drawTile(TileId::popupVerL,   panel, Pos(box.p1.x, box.p0.y), clrGray);
+    Renderer::drawTile(TileId::popupHorUp,  panel, Pos(box.p0.x, box.p1.y), clrGray);
+  }
+
+  const Pos p(box.p0 + 1);
   Renderer::drawText("Stuff goes here", Panel::screen, p, clrWhite);
   if(item) {
     Renderer::drawText(ItemData::getItemRef(*item, ItemRefType::plural, true),
@@ -67,8 +75,8 @@ void drawBrowseInv(const MenuBrowser& browser) {
   const Rect invRect(Pos(0,         1), Pos(EQ_BOX_X0,  CHAR_LINES_OFFSET_H - 1));
   const Rect eqpRect(Pos(EQ_BOX_X0, 1), Pos(MAP_W - 1,  EQ_BOX_Y1));
 
-  const int MAX_NR_ITEMS_ON_SCR   = invRect.p1.y - invRect.p0.y - 1;
-  const size_t NR_INV_ITEMS       = inv.general_.size();
+  const size_t MAX_NR_ITEMS_ON_SCR  = invRect.p1.y - invRect.p0.y - 1;
+  const size_t NR_INV_ITEMS         = inv.general_.size();
 
   size_t invTopIdx = 0;
 
@@ -80,13 +88,13 @@ void drawBrowseInv(const MenuBrowser& browser) {
       return BROWESR_Y < int(invTopIdx + MAX_NR_ITEMS_ON_SCR) - (IS_FIRST_SCR ? 1 : 2);
     };
 
-    if(int(NR_INV_ITEMS) > MAX_NR_ITEMS_ON_SCR && !isBrowserPosOnScr(true)) {
+    if(NR_INV_ITEMS > MAX_NR_ITEMS_ON_SCR && !isBrowserPosOnScr(true)) {
 
       invTopIdx = MAX_NR_ITEMS_ON_SCR - 1;
 
       while(true) {
         //Check if this is the bottom screen
-        if(int(NR_INV_ITEMS - invTopIdx + 1) <= MAX_NR_ITEMS_ON_SCR) {
+        if(NR_INV_ITEMS - invTopIdx + 1 <= MAX_NR_ITEMS_ON_SCR) {
           break;
         }
 
@@ -179,6 +187,10 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
   Renderer::drawPopupBox(eqpRect, Panel::screen, clrGray, false);
   Renderer::drawText("Equiped items", Panel::screen, eqpRect.p0 + Pos(1, 0), clrWhite);
+
+  if(Config::isTilesMode()) {
+    Renderer::drawTile(TileId::popupHorDown, Panel::screen, eqpRect.p0, clrGray);
+  }
 
   drawDetailedItemDescr(item, eqpRect.p1.y);
 
