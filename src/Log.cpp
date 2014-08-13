@@ -47,11 +47,10 @@ void promptAndClearLog() {
     }
   }
 
-  Renderer::drawText(
-    moreStr, Panel::log, Pos(xPos, lineNr), clrBlack, clrGray);
+  Renderer::drawText(moreStr, Panel::log, Pos(xPos, lineNr), clrBlack, clrGray);
 
   Renderer::updateScreen();
-  Query::waitForKeyPress();
+  Query::waitForEscOrSpace();
   clearLog();
 }
 
