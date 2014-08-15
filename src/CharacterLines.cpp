@@ -157,7 +157,12 @@ void drawInfoLines() {
     }
     pos.x += 2;
 
-    str = itemWielded->getName(ItemRefType::plain);
+    const auto& data = itemWielded->getData();
+    //If thrown weapon, force melee info - otherwise use weapon context.
+    const ItemRefAttInf attInf = data.mainAttMode == MainAttMode::thrown ?
+                                 ItemRefAttInf::melee : ItemRefAttInf::wpnContext;
+
+    str = itemWielded->getName(ItemRefType::plain, ItemRefInf::yes, attInf);
     Renderer::drawText(str, Panel::charLines, pos, clrMenuMedium);
     pos.x += str.length() + 1;
   } else {
@@ -193,11 +198,11 @@ void drawInfoLines() {
   const int ENC = Map::player->getEncPercent();
   str = toStr(ENC) + "%";
   const Clr encClr = ENC < 100 ? clrGreenLgt :
-                           ENC < ENC_IMMOBILE_LVL ? clrYellow : clrRedLgt;
+                     ENC < ENC_IMMOBILE_LVL ? clrYellow : clrRedLgt;
   Renderer::drawText(str, Panel::charLines, pos, encClr);
   pos.x += str.length() + 1;
 
-  //Missile weapon
+  //Thrown weapon
   pos.x = X_POS_MISSILE;
 
   auto* const itemMissiles =
@@ -214,11 +219,12 @@ void drawInfoLines() {
     }
     pos.x += 2;
 
-    str = itemMissiles->getName(ItemRefType::plain);
+    str = itemMissiles->getName(ItemRefType::plural, ItemRefInf::yes,
+                                ItemRefAttInf::thrown);
     Renderer::drawText(str, Panel::charLines, pos, clrMenuMedium);
     pos.x += str.length() + 1;
   } else {
-    Renderer::drawText("No missile weapon", Panel::charLines, pos, clrMenuMedium);
+    Renderer::drawText("No thrown weapon", Panel::charLines, pos, clrMenuMedium);
   }
 
   pos.y += 1;

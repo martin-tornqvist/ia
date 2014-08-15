@@ -171,7 +171,12 @@ void drawBrowseInv(const MenuBrowser& browser) {
         attInf = ItemRefAttInf::thrown;
       }
 
-      str = curItem->getName(ItemRefType::plain, ItemRefInf::yes, attInf);
+      ItemRefType refType = ItemRefType::plain;
+      if(slot.id == SlotId::thrown) {
+        refType = ItemRefType::plural;
+      }
+
+      str = curItem->getName(refType, ItemRefInf::yes, attInf);
       Renderer::drawText(str, Panel::screen, p, itemInterfClr);
     } else {
       p.x += 2;
