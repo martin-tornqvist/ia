@@ -61,7 +61,7 @@ void menuMsgDrawingHelper(
 
   if(!title.empty()) {
     Renderer::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y),
-                               clrCyanLgt, clrBlack, true);
+                               clrWhite, clrBlack, true);
   }
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
@@ -79,7 +79,7 @@ void menuMsgDrawingHelper(
   if(!lines.empty() || !title.empty()) {y += 2;}
 
   for(size_t i = 0; i < choices.size(); ++i) {
-    Clr clr = i == curChoice ? clrNosfTealLgt : clrNosfTealDrk;
+    Clr clr = i == curChoice ? clrMenuHighlight : clrMenuDrk;
     Renderer::drawTextCentered(
       choices.at(i), Panel::map, Pos(MAP_W_HALF, y),
       clr, clrBlack, true);
@@ -104,9 +104,8 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   if(sfx != SfxId::END) {Audio::play(sfx);}
 
   if(!title.empty()) {
-    Renderer::drawTextCentered(
-      title, Panel::map, Pos(MAP_W_HALF, y),
-      /*clrNosfTealLgt*/ clrWhite, clrBlack, true);
+    Renderer::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y), clrWhite,
+                               clrBlack, true);
   }
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
@@ -124,7 +123,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   y += 2;
 
   Renderer::drawTextCentered("[space/esc] to close", Panel::map,
-                             Pos(MAP_W_HALF, y), clrNosfTeal);
+                             Pos(MAP_W_HALF, y), clrMenuMedium);
 
   Renderer::updateScreen();
 

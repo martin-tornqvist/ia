@@ -34,11 +34,12 @@ const Clr clrBrownDrk         = { 96,  64,  32, 0};
 const Clr clrBrownGray        = { 92,  84,  78, 0};
 
 const Clr clrViolet           = {128,   0, 255, 0};
+const Clr clrVioletDrk        = { 64,   0, 128, 0};
 
 const Clr clrOrange           = {255, 128,   0, 0};
 
 //Colors taken from Nosferatu movie screen shots
-//===========================================================
+//-----------------------------------------------------------
 const Clr clrNosfSepia        = {139, 114,  57, 0};
 const Clr clrNosfSepiaLgt     = {225, 205, 154, 0};
 const Clr clrNosfSepiaDrk     = { 81,  72,  43, 0};
@@ -48,9 +49,17 @@ const Clr clrNosfTealLgt      = { 88, 226, 228, 0};
 const Clr clrNosfTealDrk      = { 20,  54,  51, 0};
 
 //Message colors
-//===========================================================
+//-----------------------------------------------------------
 const Clr clrMsgGood          = clrGreenLgt;
 const Clr clrMsgBad           = clrRedLgt;
 const Clr clrMsgWarning       = clrOrange;
+
+//Standard menu colors
+//-----------------------------------------------------------
+const Clr clrMenuHighlight    = clrViolet;
+const Clr clrMenuMedium       = clrVioletDrk;
+const Clr clrMenuDrk          = clrGrayDrk;
+
+const Clr clrPopupBox         = clrGrayDrk;
 
 #endif

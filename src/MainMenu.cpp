@@ -268,62 +268,42 @@ void draw(const MenuBrowser& browser) {
   }
 
   TRACE << "MainMenu: Drawing main menu" << endl;
-  Clr clrActive     = clrNosfTealLgt;
-  Clr clrInactive   = clrNosfTealDrk;
-  Clr clrActiveBg   = clrBlack;
-  Clr clrInactiveBg = clrBlack;
 
   pos.x = MAP_W_HALF;
 
   const int BOX_Y0 = pos.y - 1;
 
-  Renderer::drawTextCentered(
-    "New journey", Panel::screen, pos,
-    browser.isAtIdx(0) ? clrActive : clrInactive,
-    browser.isAtIdx(0) ? clrActiveBg : clrInactiveBg);
+  Renderer::drawTextCentered("New journey", Panel::screen, pos,
+                             browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered(
-    "Resurrect", Panel::screen, pos,
-    browser.isAtIdx(1) ? clrActive : clrInactive,
-    browser.isAtIdx(1) ? clrActiveBg : clrInactiveBg);
+  Renderer::drawTextCentered("Resurrect", Panel::screen, pos,
+                             browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered(
-    "Tome of Wisdom", Panel::screen, pos,
-    browser.isAtIdx(2) ? clrActive : clrInactive,
-    browser.isAtIdx(2) ? clrActiveBg : clrInactiveBg);
+  Renderer::drawTextCentered("Tome of Wisdom", Panel::screen, pos,
+                             browser.isAtIdx(2) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered(
-    "Options", Panel::screen, pos,
-    browser.isAtIdx(3) ? clrActive : clrInactive,
-    browser.isAtIdx(3) ? clrActiveBg : clrInactiveBg);
+  Renderer::drawTextCentered("Options", Panel::screen, pos,
+                             browser.isAtIdx(3) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered(
-    "Credits", Panel::screen, pos,
-    browser.isAtIdx(4) ? clrActive : clrInactive,
-    browser.isAtIdx(4) ? clrActiveBg : clrInactiveBg);
+  Renderer::drawTextCentered("Credits", Panel::screen, pos,
+                             browser.isAtIdx(4) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered(
-    "Graveyard", Panel::screen, pos,
-    browser.isAtIdx(5) ? clrActive : clrInactive,
-    browser.isAtIdx(5) ? clrActiveBg : clrInactiveBg);
+  Renderer::drawTextCentered("Graveyard", Panel::screen, pos,
+                             browser.isAtIdx(5) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered(
-    "Escape to reality", Panel::screen, pos,
-    browser.isAtIdx(6) ? clrActive : clrInactive,
-    browser.isAtIdx(6) ? clrActiveBg : clrInactiveBg);
+  Renderer::drawTextCentered("Escape to reality", Panel::screen, pos,
+                             browser.isAtIdx(6) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   if(IS_DEBUG_MODE) {
-    Renderer::drawTextCentered(
-      "DEBUG: RUN BOT", Panel::screen, pos,
-      browser.isAtIdx(7) ? clrActive : clrInactive,
-      browser.isAtIdx(8) ? clrActiveBg : clrInactiveBg);
+    Renderer::drawTextCentered("DEBUG: RUN BOT", Panel::screen, pos,
+                               browser.isAtIdx(7) ? clrMenuHighlight : clrMenuDrk);
     pos.y++;
   }
 
@@ -336,7 +316,7 @@ void draw(const MenuBrowser& browser) {
 
   Renderer::drawTextCentered(
     gameVersionStr + " - " + __DATE__ + " (c) 2011-2014 Martin Tornqvist",
-    Panel::screen, Pos(MAP_W_HALF, SCREEN_H - 1), clrWhite);
+    Panel::screen, Pos(MAP_W_HALF, SCREEN_H - 1), clrGrayDrk);
 
   Renderer::updateScreen();
 

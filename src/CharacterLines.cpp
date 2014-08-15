@@ -87,10 +87,6 @@ void drawInfoLines() {
 
   Pos pos(CHARACTER_LINE_X0, CHARACTER_LINE_Y0);
 
-  const Clr clrGenDrk = clrNosfTealDrk;
-  const Clr clrGenLgt = clrNosfTealLgt;
-  const Clr clrGenMed = clrNosfTeal;
-
   Player& player = *Map::player;
 
   //Name
@@ -101,7 +97,7 @@ void drawInfoLines() {
   //Health
   const string hp = toStr(player.getHp());
   const string hpMax = toStr(player.getHpMax(true));
-  Renderer::drawText("HP:", Panel::charLines, pos, clrGenDrk);
+  Renderer::drawText("HP:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 3;
   string str = hp + "/" + hpMax;
   Renderer::drawText(str, Panel::charLines, pos, clrRedLgt);
@@ -110,7 +106,7 @@ void drawInfoLines() {
   //Spirit
   const string spi    = toStr(player.getSpi());
   const string spiMax = toStr(player.getSpiMax());
-  Renderer::drawText("SPI:", Panel::charLines, pos, clrGenDrk);
+  Renderer::drawText("SPI:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
   str = spi + "/" + spiMax;
   Renderer::drawText(str, Panel::charLines, pos, clrBlueLgt);
@@ -119,7 +115,7 @@ void drawInfoLines() {
   //Sanity
   const int SHOCK = player.getShockTotal();
   const int INS = player.getInsanity();
-  Renderer::drawText("INS:", Panel::charLines, pos, clrGenDrk);
+  Renderer::drawText("INS:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
   const Clr shortSanClr =
     SHOCK < 50  ? clrGreenLgt :
@@ -133,15 +129,15 @@ void drawInfoLines() {
   pos.x += str.length() + 1;
 
   //Armor
-  Renderer::drawText("ARM:", Panel::charLines, pos, clrGenDrk);
+  Renderer::drawText("ARM:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
   const Item* const armor = player.getInv().getItemInSlot(SlotId::body);
   if(armor) {
     str = static_cast<const Armor*>(armor)->getArmorDataLine(false);
-    Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
+    Renderer::drawText(str, Panel::charLines, pos, clrWhiteHigh);
     pos.x += str.length() + 1;
   } else {
-    Renderer::drawText("N/A", Panel::charLines, pos, clrGenLgt);
+    Renderer::drawText("N/A", Panel::charLines, pos, clrWhiteHigh);
     pos.x += 4;
   }
 
@@ -162,37 +158,37 @@ void drawInfoLines() {
     pos.x += 2;
 
     str = itemWielded->getName(ItemRefType::plain);
-    Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
+    Renderer::drawText(str, Panel::charLines, pos, clrMenuMedium);
     pos.x += str.length() + 1;
   } else {
-    Renderer::drawText("Unarmed", Panel::charLines, pos, clrGenMed);
+    Renderer::drawText("Unarmed", Panel::charLines, pos, clrMenuMedium);
   }
 
   pos.x = CHARACTER_LINE_X0;
   pos.y += 1;
 
   // Level and xp
-  Renderer::drawText("LVL:", Panel::charLines, pos, clrGenDrk);
+  Renderer::drawText("LVL:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
   str = toStr(DungeonMaster::getCLvl());
-  Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
+  Renderer::drawText(str, Panel::charLines, pos, clrWhiteHigh);
   pos.x += str.length() + 1;
-  Renderer::drawText("NXT:", Panel::charLines, pos, clrGenDrk);
+  Renderer::drawText("NXT:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
   str = DungeonMaster::getCLvl() >= PLAYER_MAX_CLVL ? "-" :
         toStr(DungeonMaster::getXpToNextLvl());
-  Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
+  Renderer::drawText(str, Panel::charLines, pos, clrWhiteHigh);
   pos.x += str.length() + 1;
 
   //Dungeon level
-  Renderer::drawText("DLVL:", Panel::charLines, pos, clrGenDrk);
+  Renderer::drawText("DLVL:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 5;
   str = Map::dlvl >= 0 ? toStr(Map::dlvl) : "?";
-  Renderer::drawText(str, Panel::charLines, pos, clrGenLgt);
+  Renderer::drawText(str, Panel::charLines, pos, clrWhiteHigh);
   pos.x += str.length() + 1;
 
   //Encumbrance
-  Renderer::drawText("ENC:", Panel::charLines, pos, clrGenDrk);
+  Renderer::drawText("ENC:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
   const int ENC = Map::player->getEncPercent();
   str = toStr(ENC) + "%";
@@ -219,10 +215,10 @@ void drawInfoLines() {
     pos.x += 2;
 
     str = itemMissiles->getName(ItemRefType::plain);
-    Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
+    Renderer::drawText(str, Panel::charLines, pos, clrMenuMedium);
     pos.x += str.length() + 1;
   } else {
-    Renderer::drawText("No missile weapon", Panel::charLines, pos, clrGenMed);
+    Renderer::drawText("No missile weapon", Panel::charLines, pos, clrMenuMedium);
   }
 
   pos.y += 1;
@@ -261,7 +257,7 @@ void drawInfoLines() {
 // Turn number
   str = "T:" + toStr(GameTime::getTurn());
   pos.x = MAP_W - str.length() - 1;
-  Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
+  Renderer::drawText(str, Panel::charLines, pos, clrMenuMedium);
 }
 
 } //CharacterLines

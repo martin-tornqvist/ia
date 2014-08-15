@@ -28,12 +28,12 @@ void drawDetailedItemDescr(const Item* const item, const int BOX_Y0) {
 
   const Panel panel = Panel::screen;
 
-  Renderer::drawPopupBox(box, panel, clrGray, true);
+  Renderer::drawPopupBox(box, panel, clrPopupBox, true);
 
   if(Config::isTilesMode()) {
-    Renderer::drawTile(TileId::popupVerR,   panel, box.p0, clrGray);
-    Renderer::drawTile(TileId::popupVerL,   panel, Pos(box.p1.x, box.p0.y), clrGray);
-    Renderer::drawTile(TileId::popupHorUp,  panel, Pos(box.p0.x, box.p1.y), clrGray);
+    Renderer::drawTile(TileId::popupVerR,   panel, box.p0, clrPopupBox);
+    Renderer::drawTile(TileId::popupVerL,   panel, Pos(box.p1.x, box.p0.y), clrPopupBox);
+    Renderer::drawTile(TileId::popupHorUp,  panel, Pos(box.p0.x, box.p1.y), clrPopupBox);
   }
 
   const Pos p(box.p0 + 1);
@@ -149,7 +149,7 @@ void drawBrowseInv(const MenuBrowser& browser) {
     p.x = eqpRect.p0.x + 1;
 
     Renderer::drawText(str, Panel::screen, p,
-                       IS_CUR_POS ? clrWhiteHigh : clrNosfTealDrk);
+                       IS_CUR_POS ? clrWhiteHigh : clrMenuDrk);
 
     p.x += 9; //Offset to leave room for slot label
 
@@ -158,7 +158,8 @@ void drawBrowseInv(const MenuBrowser& browser) {
       drawItemSymbol(*curItem, p);
       p.x += 2;
 
-      const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : curItem->getInterfaceClr();
+      const Clr itemInterfClr =
+        IS_CUR_POS ? clrWhiteHigh : curItem->getInterfaceClr();
 
       const ItemDataT& d    = curItem->getData();
       ItemRefAttInf attInf  = ItemRefAttInf::none;
@@ -175,20 +176,20 @@ void drawBrowseInv(const MenuBrowser& browser) {
     } else {
       p.x += 2;
       Renderer::drawText("<empty>", Panel::screen, p,
-                         IS_CUR_POS ? clrWhite : clrNosfTealDrk);
+                         IS_CUR_POS ? clrWhiteHigh : clrMenuDrk);
     }
 
     ++p.y;
   }
 
-  Renderer::drawPopupBox(invRect, Panel::screen, clrGray, false);
+  Renderer::drawPopupBox(invRect, Panel::screen, clrPopupBox, false);
   Renderer::drawText("Inventory", Panel::screen, invRect.p0 + Pos(1, 0), clrWhite);
 
-  Renderer::drawPopupBox(eqpRect, Panel::screen, clrGray, false);
+  Renderer::drawPopupBox(eqpRect, Panel::screen, clrPopupBox, false);
   Renderer::drawText("Equiped items", Panel::screen, eqpRect.p0 + Pos(1, 0), clrWhite);
 
   if(Config::isTilesMode()) {
-    Renderer::drawTile(TileId::popupHorDown, Panel::screen, eqpRect.p0, clrGray);
+    Renderer::drawTile(TileId::popupHorDown, Panel::screen, eqpRect.p0, clrPopupBox);
   }
 
   drawDetailedItemDescr(item, eqpRect.p1.y);

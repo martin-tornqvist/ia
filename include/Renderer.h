@@ -72,8 +72,8 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
 void drawBlastAnimAtPositions(const std::vector<Pos>& positions,
                               const Clr& color);
 
-void drawBlastAnimAtPositionsWithPlayerVision(const std::vector<Pos>& positions,
-    const Clr& clr);
+void drawBlastAnimAtPositionsWithPlayerVision(
+  const std::vector<Pos>& positions, const Clr& clr);
 
 void drawMainMenuLogo(const int Y_POS);
 
@@ -81,7 +81,7 @@ void drawProjectiles(std::vector<Projectile*>& projectiles,
                      const bool SHOULD_DRAW_MAP_BEFORE);
 
 void drawPopupBox(const Rect& area, const Panel panel = Panel::screen,
-                  const Clr& clr = clrGray, const bool COVER_AREA = false);
+                  const Clr& clr = clrPopupBox, const bool COVER_AREA = false);
 
 void applySurface(const Pos& pixelPos, SDL_Surface* const src,
                   SDL_Rect* clip = nullptr);

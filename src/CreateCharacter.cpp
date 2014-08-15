@@ -29,7 +29,7 @@ void draw(const string& curString) {
   const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
   Renderer::drawText(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
-                     clrNosfTealLgt);
+                     clrMenuHighlight);
   Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
   Renderer::drawPopupBox(boxRect);
   Renderer::updateScreen();
@@ -95,11 +95,6 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
 
   const Pos& browserPos = browser.getPos();
 
-  const Clr& clrActive      = clrNosfTealLgt;
-  const Clr& clrInactive    = clrNosfTealDrk;
-  const Clr& clrActiveBg    = clrBlack;
-  const Clr& clrInactiveBg  = clrBlack;
-
   const int Y0_BGS = 2;
 
   int y = Y0_BGS;
@@ -113,11 +108,9 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
     const Bg bg = bgs.at(i);
     string name = "";
     PlayerBon::getBgTitle(bg, name);
-    const bool IS_MARKED = bg == markedBg;
-    const Clr& drwClr   = IS_MARKED ? clrActive : clrInactive;
-    const Clr& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
-    Renderer::drawTextCentered(name, Panel::screen, Pos(MAP_W_HALF, y),
-                               drwClr, drwClrBg);
+    const bool IS_MARKED  = bg == markedBg;
+    const Clr& drwClr     = IS_MARKED ? clrMenuHighlight : clrMenuDrk;
+    Renderer::drawTextCentered(name, Panel::screen, Pos(MAP_W_HALF, y), drwClr);
     y++;
   }
   y++;
@@ -206,11 +199,6 @@ void drawPickTrait(
 
   const Pos& browserPos = browser.getPos();
 
-  const Clr& clrActive      = clrNosfTealLgt;
-  const Clr& clrInactive    = clrNosfTealDrk;
-  const Clr& clrActiveBg    = clrBlack;
-  const Clr& clrInactiveBg  = clrBlack;
-
   //------------------------------------------------------------- TRAITS
   const int Y0_TRAITS = 2;
   int y = Y0_TRAITS;
@@ -218,11 +206,9 @@ void drawPickTrait(
     const Trait trait = traits1.at(i);
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
-    const bool IS_MARKED = browserPos.x == 0 && browserPos.y == int(i);
-    const Clr& drwClr   = IS_MARKED ? clrActive : clrInactive;
-    const Clr& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
-    Renderer::drawText(
-      name, Panel::screen, Pos(X_COL_ONE, y), drwClr, drwClrBg);
+    const bool IS_MARKED  = browserPos.x == 0 && browserPos.y == int(i);
+    const Clr& drwClr     = IS_MARKED ? clrMenuHighlight : clrMenuDrk;
+    Renderer::drawText(name, Panel::screen, Pos(X_COL_ONE, y), drwClr);
     y++;
   }
   y = Y0_TRAITS;
@@ -230,11 +216,9 @@ void drawPickTrait(
     const Trait trait = traits2.at(i);
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
-    const bool IS_MARKED = browserPos.x == 1 && browserPos.y == int(i);
-    const Clr& drwClr   = IS_MARKED ? clrActive : clrInactive;
-    const Clr& drwClrBg = IS_MARKED ? clrActiveBg : clrInactiveBg;
-    Renderer::drawText(
-      name, Panel::screen, Pos(X_COL_TWO, y), drwClr, drwClrBg);
+    const bool IS_MARKED  = browserPos.x == 1 && browserPos.y == int(i);
+    const Clr& drwClr     = IS_MARKED ? clrMenuHighlight : clrMenuDrk;
+    Renderer::drawText(name, Panel::screen, Pos(X_COL_TWO, y), drwClr);
     y++;
   }
 
