@@ -5,15 +5,11 @@
 
 #include "Colors.h"
 #include "Item.h"
-#include "ItemWeapon.h"
-#include "ItemAmmo.h"
 #include "CmnData.h"
 #include "ActorData.h"
-#include "ItemArmor.h"
 #include "ItemScroll.h"
 #include "ItemPotion.h"
 #include "ActorPlayer.h"
-#include "ItemMedicalBag.h"
 #include "Sound.h"
 #include "ItemDevice.h"
 #include "Map.h"
@@ -34,7 +30,7 @@ ItemDataT::ItemDataT(const ItemId id_) :
   glyph('X'),
   clr(clrWhite),
   tile(TileId::empty),
-  primaryAttackMode(PrimaryAttMode::none),
+  mainAttMode(MainAttMode::none),
   isExplosive(false),
   isScroll(false),
   isPotion(false),
@@ -134,7 +130,7 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.itemWeight = itemWeight_medium;
       d.glyph = '(';
       d.clr = clrWhite;
-      d.primaryAttackMode = PrimaryAttMode::melee;
+      d.mainAttMode = MainAttMode::melee;
       d.melee.isMeleeWpn = true;
       d.melee.hitSmallSfx = SfxId::hitSmall;
       d.melee.hitMediumSfx = SfxId::hitMedium;
@@ -159,7 +155,7 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.clr = clrWhite;
       d.melee.isMeleeWpn = true;
       d.melee.dmg = pair<int, int>(1, 6);
-      d.primaryAttackMode = PrimaryAttMode::ranged;
+      d.mainAttMode = MainAttMode::ranged;
       d.ranged.isRangedWpn = true;
       d.ranged.missileGlyph = '/';
       d.ranged.missileClr = clrWhite;
@@ -572,7 +568,7 @@ void initDataList() {
   d->maxStackAtSpawn = 8;
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
   d->landOnHardSurfaceSfx = SfxId::metalClank;
-  d->primaryAttackMode = PrimaryAttMode::missile;
+  d->mainAttMode = MainAttMode::thrown;
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
@@ -588,7 +584,7 @@ void initDataList() {
   d->ranged.throwHitChanceMod = 10;
   d->ranged.throwDmg = DiceParam(1, 3);
   d->maxStackAtSpawn = 6;
-  d->primaryAttackMode = PrimaryAttMode::missile;
+  d->mainAttMode = MainAttMode::thrown;
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
   data[int(d->id)] = d;
@@ -730,7 +726,7 @@ void initDataList() {
   d->maxStackAtSpawn = 12;
   d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
   d->landOnHardSurfaceSfx = SfxId::metalClank;
-  d->primaryAttackMode = PrimaryAttMode::missile;
+  d->mainAttMode = MainAttMode::thrown;
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
   data[int(d->id)] = d;
@@ -1422,180 +1418,176 @@ bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
 }
 
 //TODO Remove this function and make getName() function in Item instead
-string getItemRef(const Item& item, const ItemRefType itemRefForm,
-                  const bool SKIP_EXTRA_INFO) {
-
-  const ItemDataT& d = item.getData();
-  string ret = "";
-
-  if(d.isDevice && d.id != ItemId::electricLantern) {
-    if(d.isIdentified) {
-      ret = itemRefForm == ItemRefType::plain ?
-            d.baseName.name : d.baseName.nameA;
-      if(!SKIP_EXTRA_INFO) {
-        const Condition cond = static_cast<const Device*>(&item)->condition_;
-        switch(cond) {
-          case Condition::breaking: ret += " {breaking}"; break;
-          case Condition::shoddy:   ret += " {shoddy}";   break;
-          case Condition::fine:     ret += " {fine}";     break;
-        }
-      }
-      return ret;
-    } else {
-      ret = itemRefForm == ItemRefType::plain ? "" : "a ";
-      return ret + "Strange Device";
-    }
-  }
-
-  if(d.isStackable && item.nrItems > 1 && itemRefForm == ItemRefType::plural) {
-    ret = toStr(item.nrItems) + " ";
-    ret += d.baseName.namePlural;
-  } else {
-    ret = itemRefForm == ItemRefType::plain ?
-          d.baseName.name : d.baseName.nameA;
-  }
-
-  if(d.isAmmoClip) {
-    const ItemAmmoClip* const ammoItem = static_cast<const ItemAmmoClip*>(&item);
-    return ret + " {" + toStr(ammoItem->ammo) + "}";
-  }
-
-  if(d.isMedicalBag) {
-    const MedicalBag* const medicalBag =
-      static_cast<const MedicalBag*>(&item);
-    return ret + " {" + toStr(medicalBag->getNrSupplies()) + "}";
-  }
-
-  if(!SKIP_EXTRA_INFO) {
-    if(d.ranged.isRangedWpn) {
-      string ammoLoadedStr = "";
-      if(!d.ranged.hasInfiniteAmmo) {
-        const Wpn* const w = static_cast<const Wpn*>(&item);
-        ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" +
-                        toStr(w->ammoCapacity);
-      }
-      return ret + ammoLoadedStr;
-    }
-
-    if((d.isScroll || d.isPotion) && d.isTried && !d.isIdentified) {
-      return ret + " {tried}";
-    }
-  }
-
-  return ret;
-}
-
-//TODO Remove this function and make getName() function in Item instead
-string getItemInterfaceRef(const Item& item, const bool ADD_A,
-                           const PrimaryAttMode attackMode) {
-  const ItemDataT& d = item.getData();
-
-  if(d.isDevice && d.id != ItemId::electricLantern) {
-    if(d.isIdentified) {
-      string ret = ADD_A ? d.baseName.nameA : d.baseName.name;
-      const Condition cond = static_cast<const Device*>(&item)->condition_;
-      switch(cond) {
-        case Condition::breaking: ret += " {breaking}"; break;
-        case Condition::shoddy:   ret += " {shoddy}";   break;
-        case Condition::fine:     ret += " {fine}";     break;
-      }
-      return ret;
-    } else {
-      string ret = ADD_A ? "a " : "";
-      return ret + "Strange Device";
-    }
-  }
-
-  string ret = "";
-
-  if(d.isStackable && item.nrItems > 1) {
-    ret = toStr(item.nrItems) + " " + d.baseName.namePlural;
-  } else {
-    ret = (ADD_A ? d.baseName.nameA : d.baseName.name);
-  }
-
-  const int PLAYER_RANGED_SKILL =
-    Map::player->getData().abilityVals.getVal(
-      AbilityId::ranged, true, *(Map::player));
-
-  if(
-    (attackMode == PrimaryAttMode::none &&
-     d.primaryAttackMode == PrimaryAttMode::melee) ||
-    (attackMode == PrimaryAttMode::melee && d.melee.isMeleeWpn)) {
-    const string rollsStr = toStr(d.melee.dmg.first);
-    const string sidesStr = toStr(d.melee.dmg.second);
-    const int PLUS = static_cast<const Wpn*>(&item)->meleeDmgPlus;
-    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
-                           toStr(PLUS));
-    const int ITEM_SKILL = d.melee.hitChanceMod;
-    const int PLAYER_MELEE_SKILL = Map::player->getData().abilityVals.getVal(
-                                     AbilityId::melee, true, *(Map::player));
-    const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
-    const string skillStr = toStr(TOTAL_SKILL) + "%";
-    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
-  }
-
-  if(
-    (attackMode == PrimaryAttMode::none &&
-     d.primaryAttackMode == PrimaryAttMode::ranged) ||
-    (attackMode == PrimaryAttMode::ranged && d.ranged.isRangedWpn)) {
-
-    string dmgStr = d.ranged.dmgInfoOverride;
-
-    if(dmgStr.empty()) {
-      const int MULTIPL     = d.ranged.isMachineGun ? NR_MG_PROJECTILES : 1;
-      const string rollsStr = toStr(d.ranged.dmg.rolls * MULTIPL);
-      const string sidesStr = toStr(d.ranged.dmg.sides);
-      const int PLUS        = d.ranged.dmg.plus * MULTIPL;
-      const string plusStr  = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + toStr(PLUS));
-      dmgStr                = rollsStr + "d" + sidesStr + plusStr;
-    }
-    const int ITEM_SKILL    = d.ranged.hitChanceMod;
-    const int TOTAL_SKILL   = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
-    const string skillStr   = toStr(TOTAL_SKILL) + "%";
-    string ammoLoadedStr    = "";
-    if(!d.ranged.hasInfiniteAmmo) {
-      const Wpn* const w    = static_cast<const Wpn*>(&item);
-      ammoLoadedStr         = " " + toStr(w->nrAmmoLoaded) + "/" + toStr(w->ammoCapacity);
-    }
-    return ret + " " + dmgStr + " " + skillStr + ammoLoadedStr;
-  }
-
-  if(
-    (attackMode == PrimaryAttMode::none &&
-     d.primaryAttackMode == PrimaryAttMode::missile) ||
-    (attackMode == PrimaryAttMode::missile && d.ranged.isThrowingWpn)) {
-    const string rollsStr = toStr(d.ranged.throwDmg.rolls);
-    const string sidesStr = toStr(d.ranged.throwDmg.sides);
-    const int PLUS        = d.ranged.throwDmg.plus;
-    const string plusStr  = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + toStr(PLUS));
-    const int ITEM_SKILL  = d.ranged.throwHitChanceMod;
-    const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
-    const string skillStr = toStr(TOTAL_SKILL) + "%";
-    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
-  }
-
-  if(d.isMedicalBag) {
-    const MedicalBag* const medicalBag = static_cast<const MedicalBag*>(&item);
-    return ret + " {" + toStr(medicalBag->getNrSupplies()) + "}";
-  }
-
-  if(d.isAmmoClip) {
-    const ItemAmmoClip* const clip = static_cast<const ItemAmmoClip*>(&item);
-    return ret + " {" + toStr(clip->ammo) + "}";
-  }
-
-  if(d.isArmor) {
-    const string armorDataLine =
-      static_cast<const Armor*>(&item)->getArmorDataLine(true);
-    return armorDataLine.empty() ? ret : ret + " " + armorDataLine;
-  }
-
-  if((d.isScroll || d.isPotion) && d.isTried && !d.isIdentified) {
-    return ret + " {tried}";
-  }
-
-  return ret;
-}
+//string getItemRef(const Item& item, const ItemRefType itemRefForm,
+//                  const bool SKIP_EXTRA_INFO) {
+//
+//  const ItemDataT& d = item.getData();
+//  string ret = "";
+//
+//  if(d.isDevice && d.id != ItemId::electricLantern) {
+//    if(d.isIdentified) {
+//      ret = itemRefForm == ItemRefType::plain ? d.baseName.name : d.baseName.nameA;
+//      if(!SKIP_EXTRA_INFO) {
+//        const Condition cond = static_cast<const Device*>(&item)->condition_;
+//        switch(cond) {
+//          case Condition::breaking: ret += " {breaking}"; break;
+//          case Condition::shoddy:   ret += " {shoddy}";   break;
+//          case Condition::fine:     ret += " {fine}";     break;
+//        }
+//      }
+//      return ret;
+//    } else {
+//      ret = itemRefForm == ItemRefType::plain ? "" : "a ";
+//      return ret + "Strange Device";
+//    }
+//  }
+//
+//  if(d.isStackable && item.nrItems_ > 1 && itemRefForm == ItemRefType::plural) {
+//    ret = toStr(item.nrItems) + " ";
+//    ret += d.baseName.namePlural;
+//  } else {
+//    ret = itemRefForm == ItemRefType::plain ? d.baseName.name : d.baseName.nameA;
+//  }
+//
+//  if(d.isAmmoClip) {
+//    const AmmoClip* const ammoItem = static_cast<const AmmoClip*>(&item);
+//    return ret + " {" + toStr(ammoItem->ammo) + "}";
+//  }
+//
+//  if(d.isMedicalBag) {
+//    const MedicalBag* const medicalBag = static_cast<const MedicalBag*>(&item);
+//    return ret + " {" + toStr(medicalBag->getNrSupplies()) + "}";
+//  }
+//
+//  if(!SKIP_EXTRA_INFO) {
+//    if(d.ranged.isRangedWpn) {
+//      string ammoLoadedStr = "";
+//      if(!d.ranged.hasInfiniteAmmo) {
+//        const Wpn* const w = static_cast<const Wpn*>(&item);
+//        ammoLoadedStr = " " + toStr(w->nrAmmoLoaded) + "/" + toStr(w->ammoCapacity);
+//      }
+//      return ret + ammoLoadedStr;
+//    }
+//
+//    if((d.isScroll || d.isPotion) && d.isTried && !d.isIdentified) {
+//      return ret + " {tried}";
+//    }
+//  }
+//
+//  return ret;
+//}
+//
+////TODO Remove this function and make getName() function in Item instead
+//string getItemInterfaceRef(const Item& item, const bool ADD_A,
+//                           const MainAttMode attackMode) {
+//  const ItemDataT& d = item.getData();
+//
+//  if(d.isDevice && d.id != ItemId::electricLantern) {
+//    if(d.isIdentified) {
+//      string ret = ADD_A ? d.baseName.nameA : d.baseName.name;
+//      const Condition cond = static_cast<const Device*>(&item)->condition_;
+//      switch(cond) {
+//        case Condition::breaking: ret += " {breaking}"; break;
+//        case Condition::shoddy:   ret += " {shoddy}";   break;
+//        case Condition::fine:     ret += " {fine}";     break;
+//      }
+//      return ret;
+//    } else {
+//      string ret = ADD_A ? "a " : "";
+//      return ret + "Strange Device";
+//    }
+//  }
+//
+//  string ret = "";
+//
+//  if(d.isStackable && item.nrItems_ > 1) {
+//    ret = toStr(item.nrItems) + " " + d.baseName.namePlural;
+//  } else {
+//    ret = (ADD_A ? d.baseName.nameA : d.baseName.name);
+//  }
+//
+//  const int PLAYER_RANGED_SKILL =
+//    Map::player->getData().abilityVals.getVal(
+//      AbilityId::ranged, true, *(Map::player));
+//
+//  if(
+//    (attackMode == MainAttMode::none &&
+//     d.mainAttMode == MainAttMode::melee) ||
+//    (attackMode == MainAttMode::melee && d.melee.isMeleeWpn)) {
+//    const string rollsStr = toStr(d.melee.dmg.first);
+//    const string sidesStr = toStr(d.melee.dmg.second);
+//    const int PLUS = static_cast<const Wpn*>(&item)->meleeDmgPlus;
+//    const string plusStr = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") +
+//                           toStr(PLUS));
+//    const int ITEM_SKILL = d.melee.hitChanceMod;
+//    const int PLAYER_MELEE_SKILL = Map::player->getData().abilityVals.getVal(
+//                                     AbilityId::melee, true, *(Map::player));
+//    const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
+//    const string skillStr = toStr(TOTAL_SKILL) + "%";
+//    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
+//  }
+//
+//  if(
+//    (attackMode == MainAttMode::none &&
+//     d.mainAttMode == MainAttMode::ranged) ||
+//    (attackMode == MainAttMode::ranged && d.ranged.isRangedWpn)) {
+//
+//    string dmgStr = d.ranged.dmgInfoOverride;
+//
+//    if(dmgStr.empty()) {
+//      const int MULTIPL     = d.ranged.isMachineGun ? NR_MG_PROJECTILES : 1;
+//      const string rollsStr = toStr(d.ranged.dmg.rolls * MULTIPL);
+//      const string sidesStr = toStr(d.ranged.dmg.sides);
+//      const int PLUS        = d.ranged.dmg.plus * MULTIPL;
+//      const string plusStr  = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + toStr(PLUS));
+//      dmgStr                = rollsStr + "d" + sidesStr + plusStr;
+//    }
+//    const int ITEM_SKILL    = d.ranged.hitChanceMod;
+//    const int TOTAL_SKILL   = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
+//    const string skillStr   = toStr(TOTAL_SKILL) + "%";
+//    string ammoLoadedStr    = "";
+//    if(!d.ranged.hasInfiniteAmmo) {
+//      const Wpn* const w    = static_cast<const Wpn*>(&item);
+//      ammoLoadedStr         = " " + toStr(w->nrAmmoLoaded) + "/" + toStr(w->ammoCapacity);
+//    }
+//    return ret + " " + dmgStr + " " + skillStr + ammoLoadedStr;
+//  }
+//
+//  if(
+//    (attackMode == MainAttMode::none &&
+//     d.mainAttMode == MainAttMode::thrown) ||
+//    (attackMode == MainAttMode::thrown && d.ranged.isThrowingWpn)) {
+//    const string rollsStr = toStr(d.ranged.throwDmg.rolls);
+//    const string sidesStr = toStr(d.ranged.throwDmg.sides);
+//    const int PLUS        = d.ranged.throwDmg.plus;
+//    const string plusStr  = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + toStr(PLUS));
+//    const int ITEM_SKILL  = d.ranged.throwHitChanceMod;
+//    const int TOTAL_SKILL = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
+//    const string skillStr = toStr(TOTAL_SKILL) + "%";
+//    return ret + " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
+//  }
+//
+//  if(d.isMedicalBag) {
+//    const MedicalBag* const medicalBag = static_cast<const MedicalBag*>(&item);
+//    return ret + " {" + toStr(medicalBag->getNrSupplies()) + "}";
+//  }
+//
+//  if(d.isAmmoClip) {
+//    const AmmoClip* const clip = static_cast<const AmmoClip*>(&item);
+//    return ret + " {" + toStr(clip->ammo) + "}";
+//  }
+//
+//  if(d.isArmor) {
+//    const string armorDataLine =
+//      static_cast<const Armor*>(&item)->getArmorDataLine(true);
+//    return armorDataLine.empty() ? ret : ret + " " + armorDataLine;
+//  }
+//
+//  if((d.isScroll || d.isPotion) && d.isTried && !d.isIdentified) {
+//    return ret + " {tried}";
+//  }
+//
+//  return ret;
+//}
 
 } //ItemData

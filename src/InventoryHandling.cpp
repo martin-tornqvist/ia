@@ -4,7 +4,6 @@
 
 #include "Init.h"
 #include "ItemScroll.h"
-#include "ItemExplosive.h"
 #include "ActorPlayer.h"
 #include "ItemPotion.h"
 #include "MenuBrowser.h"
@@ -54,17 +53,17 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT) {
   const ItemDataT& data = item->getData();
 
   Log::clearLog();
-  if(data.isStackable && item->nrItems > 1) {
+  if(data.isStackable && item->nrItems_ > 1) {
     TRACE << "Item is stackable and more than one" << endl;
     Renderer::drawMapAndInterface(false);
-    const string nrStr = "1-" + toStr(item->nrItems);
+    const string nrStr = "1-" + toStr(item->nrItems_);
     const string dropStr = "Drop how many (" + nrStr + ")?:      " +
                            "[enter] to drop" + cancelInfoStr;
     Renderer::drawText(dropStr, Panel::screen, Pos(0, 0), clrWhiteHigh);
     Renderer::updateScreen();
     const Pos nrQueryPos(20 + nrStr.size(), 0);
     const int NR_TO_DROP = Query::number(nrQueryPos, clrWhiteHigh, 0, 3,
-                                         item->nrItems, false);
+                                         item->nrItems_, false);
     if(NR_TO_DROP <= 0) {
       TRACE << "Nr to drop <= 0, nothing to be done" << endl;
       TRACE_FUNC_END;
@@ -241,7 +240,7 @@ void runInvScreen() {
           if(slot.item) {
             Item* const item = slot.item;
 
-            const string itemName = ItemData::getItemRef(*item, ItemRefType::plain);
+            const string itemName = item->getName(ItemRefType::plain);
 
             inv.moveToGeneral(&slot);
 

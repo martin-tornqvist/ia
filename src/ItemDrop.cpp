@@ -38,7 +38,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
 
   if(itemToDrop) {
     const bool IS_STACKABLE = itemToDrop->getData().isStackable;
-    const int NR_ITEMS_BEFORE_DROP = itemToDrop->nrItems;
+    const int NR_ITEMS_BEFORE_DROP = itemToDrop->nrItems_;
     const bool IS_WHOLE_STACK_DROPPED =
       !IS_STACKABLE || NR_ITEMS_TO_DROP == -1 ||
       (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
@@ -46,15 +46,15 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     string itemRef = "";
 
     if(IS_WHOLE_STACK_DROPPED) {
-      itemRef = ItemData::getItemRef(*itemToDrop, ItemRefType::plural);
+      itemRef = itemToDrop->getName(ItemRefType::plural);
       inv.removeWithoutDestroying(invList, ELEMENT);
       dropItemOnMap(actor.pos, *itemToDrop);
     } else {
-      Item* itemToKeep = itemToDrop;
-      itemToDrop = ItemFactory::copyItem(itemToKeep);
-      itemToDrop->nrItems = NR_ITEMS_TO_DROP;
-      itemRef = ItemData::getItemRef(*itemToDrop, ItemRefType::plural);
-      itemToKeep->nrItems = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
+      Item* itemToKeep      = itemToDrop;
+      itemToDrop            = ItemFactory::copyItem(itemToKeep);
+      itemToDrop->nrItems_  = NR_ITEMS_TO_DROP;
+      itemRef               = itemToDrop->getName(ItemRefType::plural);
+      itemToKeep->nrItems_  = NR_ITEMS_BEFORE_DROP - NR_ITEMS_TO_DROP;
       dropItemOnMap(actor.pos, *itemToDrop);
     }
 
@@ -62,8 +62,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     const Actor* const curActor = GameTime::getCurActor();
     if(curActor == Map::player) {
       Log::clearLog();
-      Log::addMsg(
-        "I drop " + itemRef + ".", clrWhite, false, true);
+      Log::addMsg("I drop " + itemRef + ".", clrWhite, false, true);
     } else {
       bool blocked[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksVision(), blocked);
@@ -120,7 +119,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
         Item* itemFoundOnFloor = Map::cells[stackPos.x][stackPos.y].item;
         if(itemFoundOnFloor) {
           if(itemFoundOnFloor->getData().id == item.getData().id) {
-            item.nrItems += itemFoundOnFloor->nrItems;
+            item.nrItems_ += itemFoundOnFloor->nrItems_;
             delete itemFoundOnFloor;
             Map::cells[stackPos.x][stackPos.y].item = &item;
             return &item;

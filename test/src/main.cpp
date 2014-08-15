@@ -533,16 +533,16 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   item = ItemFactory::mk(ItemId::armorAsbSuit);
   inv.putInSlot(SlotId::body, item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  static_cast<ItemAmmoClip*>(item)->ammo = 1;
+  static_cast<AmmoClip*>(item)->ammo = 1;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  static_cast<ItemAmmoClip*>(item)->ammo = 2;
+  static_cast<AmmoClip*>(item)->ammo = 2;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  static_cast<ItemAmmoClip*>(item)->ammo = 3;
+  static_cast<AmmoClip*>(item)->ammo = 3;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  static_cast<ItemAmmoClip*>(item)->ammo = 3;
+  static_cast<AmmoClip*>(item)->ammo = 3;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::deviceSentry);
   static_cast<Device*>(item)->condition_ = Condition::shoddy;
@@ -622,7 +622,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   for(Item* item : genInv) {
     ItemId id = item->getData().id;
     if(id == ItemId::pistolClip) {
-      switch(static_cast<ItemAmmoClip*>(item)->ammo) {
+      switch(static_cast<AmmoClip*>(item)->ammo) {
         case 1: nrClipWith1++; break;
         case 2: nrClipWith2++; break;
         case 3: nrClipWith3++; break;

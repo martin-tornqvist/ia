@@ -21,7 +21,6 @@
 #include "SdlWrapper.h"
 #include "FeatureRigid.h"
 #include "FeatureMob.h"
-#include "ItemExplosive.h"
 
 using namespace std;
 
@@ -89,14 +88,14 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
 
   const ItemDataT& itemThrownData = itemThrown.getData();
 
-  const string itemName_a = ItemData::getItemRef(itemThrown, ItemRefType::a, true);
+  const string itemNameA = itemThrown.getName(ItemRefType::a);
   if(&actorThrowing == Map::player) {
     Log::clearLog();
-    Log::addMsg("I throw " + itemName_a + ".");
+    Log::addMsg("I throw " + itemNameA + ".");
   } else {
     const Pos& p = path.front();
     if(Map::cells[p.x][p.y].isSeenByPlayer) {
-      Log::addMsg(actorThrowing.getNameThe() + " throws " + itemName_a + ".");
+      Log::addMsg(actorThrowing.getNameThe() + " throws " + itemNameA + ".");
     }
   }
   Renderer::drawMapAndInterface(true);

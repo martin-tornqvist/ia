@@ -5,7 +5,6 @@
 
 #include "Init.h"
 #include "Item.h"
-#include "ItemWeapon.h"
 #include "ActorPlayer.h"
 #include "GameTime.h"
 #include "Attack.h"

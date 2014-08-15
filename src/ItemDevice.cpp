@@ -43,10 +43,8 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
   (void)actor;
 
   if(data_->isIdentified) {
-    const string itemName =
-      ItemData::getItemRef(*this, ItemRefType::plain, true);
-    const string itemNameA =
-      ItemData::getItemRef(*this, ItemRefType::a, true);
+    const string itemName   = getName(ItemRefType::plain);
+    const string itemNameA  = getName(ItemRefType::a);
 
     Log::addMsg("I activate " + itemNameA + "...");
 

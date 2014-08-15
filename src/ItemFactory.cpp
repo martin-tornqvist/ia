@@ -1,15 +1,10 @@
 #include "ItemFactory.h"
 
 #include "Init.h"
-#include "ItemWeapon.h"
-#include "ItemAmmo.h"
-#include "ItemExplosive.h"
-#include "ItemArmor.h"
 #include "ItemScroll.h"
 #include "ItemPotion.h"
 #include "ItemDrop.h"
 #include "ItemDevice.h"
-#include "ItemMedicalBag.h"
 #include "Utils.h"
 
 using namespace std;
@@ -49,17 +44,17 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
 
     case ItemId::sawedOff:            r = new SawedOff(d, ammoD);       break;
     case ItemId::pumpShotgun:         r = new PumpShotgun(d, ammoD);    break;
-    case ItemId::shotgunShell:        r = new ItemAmmo(d);              break;
+    case ItemId::shotgunShell:        r = new Ammo(d);              break;
     case ItemId::machineGun:          r = new MachineGun(d, ammoD);     break;
-    case ItemId::drumOfBullets:       r = new ItemAmmoClip(d);          break;
+    case ItemId::drumOfBullets:       r = new AmmoClip(d);          break;
     case ItemId::pistol:              r = new Pistol(d, ammoD);         break;
     case ItemId::flareGun:            r = new FlareGun(d, ammoD);       break;
-    case ItemId::pistolClip:          r = new ItemAmmoClip(d);          break;
+    case ItemId::pistolClip:          r = new AmmoClip(d);          break;
     case ItemId::incinerator:         r = new Incinerator(d, ammoD);    break;
     case ItemId::teslaCannon:         r = new TeslaCannon(d, ammoD);    break;
     case ItemId::spikeGun:            r = new SpikeGun(d, ammoD);       break;
-    case ItemId::teslaCanister:       r = new ItemAmmoClip(d);          break;
-    case ItemId::napalmCartridge:     r = new ItemAmmoClip(d);          break;
+    case ItemId::teslaCanister:       r = new AmmoClip(d);          break;
+    case ItemId::napalmCartridge:     r = new AmmoClip(d);          break;
 
     case ItemId::playerKick:          r = new Wpn(d, ammoD);         break;
     case ItemId::playerStomp:         r = new Wpn(d, ammoD);         break;
@@ -167,7 +162,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     TRACE << "Warning, Specified " + toStr(NR_ITEMS) + " nr items"
           << " for non-stackable item";
   } else {
-    r->nrItems = NR_ITEMS;
+    r->nrItems_ = NR_ITEMS;
   }
 
   return r;
@@ -202,7 +197,7 @@ void setItemRandomizedProperties(Item* item) {
     }
   }
 
-  if(d.isStackable) {item->nrItems = Rnd::range(1, d.maxStackAtSpawn);}
+  if(d.isStackable) {item->nrItems_ = Rnd::range(1, d.maxStackAtSpawn);}
 }
 
 Item* mkItemOnMap(const ItemId itemId, const Pos& pos) {
@@ -213,8 +208,8 @@ Item* mkItemOnMap(const ItemId itemId, const Pos& pos) {
 }
 
 Item* copyItem(Item* oldItem) {
-  Item* newItem = mk(oldItem->getData().id);
-  *newItem = *oldItem;
+  Item* newItem     = mk(oldItem->getData().id);
+  newItem->nrItems_ = oldItem->nrItems_;
   return newItem;
 }
 

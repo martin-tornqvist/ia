@@ -11,7 +11,6 @@
 #include "ItemScroll.h"
 #include "ItemFactory.h"
 #include "Item.h"
-#include "ItemWeapon.h"
 #include "Map.h"
 
 using namespace std;
@@ -39,10 +38,8 @@ void mkLines() {
     min(100, abilities.getVal(AbilityId::ranged, true, *(Map::player)));
   const int BASE_DODGE_ATTACKS =
     min(100, abilities.getVal(AbilityId::dodgeAttack, true, *(Map::player)));
-  Wpn* kick =
-    static_cast<Wpn*>(ItemFactory::mk(ItemId::playerKick));
-  string kickStr = ItemData::getItemInterfaceRef(
-                     *kick, false, PrimaryAttMode::melee);
+  Wpn* kick = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerKick));
+  string kickStr = kick->getName(ItemRefType::plain);
   delete kick;
   for(unsigned int i = 0; i < kickStr.length(); ++i) {
     if(kickStr.at(0) == ' ') {
@@ -52,8 +49,7 @@ void mkLines() {
     }
   }
   Wpn* punch = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerPunch));
-  string punchStr = ItemData::getItemInterfaceRef(
-                      *punch, false, PrimaryAttMode::melee);
+  string punchStr = punch->getName(ItemRefType::plain);
   delete punch;
   for(size_t i = 0; i < punchStr.length(); ++i) {
     if(punchStr.at(0) == ' ') {
@@ -107,18 +103,14 @@ void mkLines() {
     const ItemDataT* const d = ItemData::data[i];
     if(d->isPotion && (d->isTried || d->isIdentified)) {
       Item* item = ItemFactory::mk(d->id);
-      potionList.push_back(
-        StrAndClr(
-          offset + ItemData::getItemRef(*item, ItemRefType::plain),
-          d->clr));
+      potionList.push_back(StrAndClr(offset + item->getName(ItemRefType::plain),
+                                     d->clr));
       delete item;
     } else {
       if(d->isScroll && (d->isTried || d->isIdentified)) {
         Item* item = ItemFactory::mk(d->id);
-        manuscriptList.push_back(
-          StrAndClr(
-            offset + ItemData::getItemRef(*item, ItemRefType::plain),
-            item->getInterfaceClr()));
+        manuscriptList.push_back(StrAndClr(offset + item->getName(ItemRefType::plain),
+                                           item->getInterfaceClr()));
         delete item;
       }
     }

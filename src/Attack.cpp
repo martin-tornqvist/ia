@@ -3,7 +3,6 @@
 #include "Init.h"
 
 #include "Item.h"
-#include "ItemWeapon.h"
 #include "GameTime.h"
 #include "ActorMonster.h"
 #include "Map.h"
@@ -460,14 +459,11 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn) {
           const string ATTACK_MOD_STR =
             data.isWeakAttack  ? "feebly "    :
             data.isBackstab    ? "covertly "  : "";
-          const Clr clr =
-            data.isBackstab ? clrBlueLgt : clrMsgGood;
-          const string wpnName_a =
-            ItemData::getItemRef(wpn, ItemRefType::a, true);
+          const Clr     clr       = data.isBackstab ? clrBlueLgt : clrMsgGood;
+          const string  wpnNameA  = wpn.getName(ItemRefType::a);
           Log::addMsg(
             "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_STR +
-            "with " + wpnName_a + dmgPunct,
-            clr);
+            "with " + wpnNameA + dmgPunct, clr);
         }
       } else {
         const string wpnVerb = wpn.getData().melee.attMsgs.other;
@@ -867,7 +863,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos) {
         delete data;
         data = new RangedAttData(attacker, wpn, aimPos, curPos, intendedAimLvl);
         const bool IS_WITHIN_RANGE_LMT =
-          Utils::kingDist(origin, curPos) <= wpn.effectiveRangeLimit;
+          Utils::kingDist(origin, curPos) <= wpn.effectiveRangeLmt;
         if(
           IS_WITHIN_RANGE_LMT &&
           data->attackResult >= successSmall &&

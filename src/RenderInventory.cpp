@@ -2,11 +2,11 @@
 
 #include <string>
 
-#include "ItemWeapon.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "Map.h"
+#include "Item.h"
 
 using namespace std;
 
@@ -37,10 +37,8 @@ void drawDetailedItemDescr(const Item* const item, const int BOX_Y0) {
   }
 
   const Pos p(box.p0 + 1);
-  Renderer::drawText("Stuff goes here", Panel::screen, p, clrWhite);
   if(item) {
-    Renderer::drawText(ItemData::getItemRef(*item, ItemRefType::plural, true),
-                       Panel::screen, p + Pos(0, 1), clrWhite);
+    Renderer::drawText(item->getName(ItemRefType::a), Panel::screen, p, clrWhite);
   }
 }
 
@@ -130,7 +128,7 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
     p.x = INV_ITEM_NAME_X;
 
-    str = ItemData::getItemInterfaceRef(*curItem, false);
+    str = curItem->getName(ItemRefType::plural);
     Renderer::drawText(str, Panel::screen, p, itemInterfClr);
 
     p.y++;
@@ -162,16 +160,17 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
       const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : curItem->getInterfaceClr();
 
-      const ItemDataT& d = curItem->getData();
-      PrimaryAttMode attackMode = PrimaryAttMode::none;
+      const ItemDataT& d    = curItem->getData();
+      ItemRefAttInf attInf  = ItemRefAttInf::none;
       if(slot.id == SlotId::wielded || slot.id == SlotId::wieldedAlt) {
-        attackMode = d.primaryAttackMode == PrimaryAttMode::missile ?
-                     PrimaryAttMode::melee : d.primaryAttackMode;
+        //Thrown weapons are forced to show melee info instead
+        attInf = d.mainAttMode == MainAttMode::thrown ? ItemRefAttInf::melee :
+                 ItemRefAttInf::wpnContext;
       } else if(slot.id == SlotId::thrown) {
-        attackMode = PrimaryAttMode::missile;
+        attInf = ItemRefAttInf::thrown;
       }
 
-      str = ItemData::getItemInterfaceRef(*curItem, false, attackMode);
+      str = curItem->getName(ItemRefType::plain, ItemRefInf::yes, attInf);
       Renderer::drawText(str, Panel::screen, p, itemInterfClr);
     } else {
       p.x += 2;
@@ -196,42 +195,6 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
   Renderer::updateScreen();
 }
-
-//void drawBrowseInventory(const MenuBrowser& browser,
-//                         const vector<size_t>& genInvIndexes) {
-//
-//  const int NR_ITEMS = browser.getNrOfItemsInFirstList();
-//
-//  Renderer::coverArea(Panel::screen, Pos(0, 0), Pos(MAP_W, NR_ITEMS + 1));
-//
-//  string str = NR_ITEMS > 0 ? "Browsing backpack. [shift+enter] to drop" :
-//               "I carry no items.";
-//
-//  str += " [space/esc] to exit";
-//
-//  Pos p(0, 0);
-//  Renderer::drawText(str, Panel::screen, p, clrWhiteHigh);
-//  p.y++;
-//
-//  Inventory& inv = Map::player->getInv();
-//  const int NR_INDEXES = genInvIndexes.size();
-//  for(int i = 0; i < NR_INDEXES; ++i) {
-//    const bool IS_CUR_POS = browser.getPos().y == int(i);
-//    Item* const item = inv.general_.at(genInvIndexes.at(i));
-//
-//    const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
-//    p.x = 0;
-//
-//    drawItemSymbol(*item, p);
-//    p.x += 2;
-//
-//    str = ItemData::getItemInterfaceRef(*item, false);
-//    Renderer::drawText(str, Panel::screen, p, itemInterfClr);
-//    p.y++;
-//  }
-//
-//  Renderer::updateScreen();
-//}
 
 void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
                const vector<size_t>& genInvIndexes) {
@@ -283,77 +246,22 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
 
     const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
 
-    const ItemDataT& d = item->getData();
-    PrimaryAttMode attackMode = PrimaryAttMode::none;
+    const ItemDataT& d    = item->getData();
+    ItemRefAttInf attInf  = ItemRefAttInf::none;
     if(slotToEquip == SlotId::wielded || slotToEquip == SlotId::wieldedAlt) {
-      attackMode = d.primaryAttackMode == PrimaryAttMode::missile ?
-                   PrimaryAttMode::melee : d.primaryAttackMode;
+      //Thrown weapons are forced to show melee info instead
+      attInf = d.mainAttMode == MainAttMode::thrown ? ItemRefAttInf::melee :
+               ItemRefAttInf::wpnContext;
     } else if(slotToEquip == SlotId::thrown) {
-      attackMode = PrimaryAttMode::missile;
+      attInf = ItemRefAttInf::thrown;
     }
 
-    str = ItemData::getItemInterfaceRef(*item, false, attackMode);
+    str = item->getName(ItemRefType::plural, ItemRefInf::yes, attInf);
     Renderer::drawText(str, Panel::screen, p, itemInterfClr);
     p.y++;
   }
 
   Renderer::updateScreen();
 }
-
-//void drawUse(const MenuBrowser& browser, const vector<size_t>& genInvIndexes) {
-//  Pos p(0, 0);
-//
-////  Renderer::clearScreen();
-//  const int NR_ITEMS = browser.getNrOfItemsInFirstList();
-//  Renderer::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
-//
-//  const bool IS_ANY_ITEM_AVAILABLE = !genInvIndexes.empty();
-//  string str = IS_ANY_ITEM_AVAILABLE ? "Use which item? [shift+enter] to drop" :
-//               "I carry no item to use.";
-//  str += cancelInfoStr;
-//
-//  Renderer::drawText(str, Panel::screen, p, clrWhiteHigh);
-//  p.y++;
-//
-//  Inventory& inv = Map::player->getInv();
-//  const int NR_INDEXES = genInvIndexes.size();
-//  for(int i = 0; i < NR_INDEXES; ++i) {
-//    const bool IS_CUR_POS = browser.getPos().y == int(i);
-//    Item* const item = inv.general_.at(genInvIndexes.at(i));
-//
-//    const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : item->getInterfaceClr();
-//
-//    //Draw label
-//    const string& label = item->getDefaultActivationLabel();
-//    bool isNewLabel = false;
-//    if(i == 0) {
-//      isNewLabel = true;
-//    } else {
-//      Item* const itemPrev = inv.general_.at(genInvIndexes.at(i - 1));
-//      const string& labelPrev = itemPrev->getDefaultActivationLabel();
-//      isNewLabel = label != labelPrev;
-//    }
-//    if(isNewLabel) {
-//      p.x = 0;
-//      Renderer::drawText(label, Panel::screen, p, clrNosfTealDrk);
-//    }
-//
-//    p.x = 11;
-//
-//    //Draw item symbol
-//    drawItemSymbol(*item, p);
-//    p.x += 2;
-//
-//    str = ItemData::getItemRef(*item, ItemRefType::plain, false);
-//    if(item->nrItems > 1 && item->getData().isStackable) {
-//      str += " (" + toStr(item->nrItems) + ")";
-//    }
-//
-//    Renderer::drawText(str, Panel::screen, p, itemInterfClr);
-//    p.y++;
-//  }
-//
-//  Renderer::updateScreen();
-//}
 
 } //RenderInventory

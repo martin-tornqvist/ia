@@ -14,7 +14,6 @@
 #include "ActorPlayer.h"
 #include "ActorFactory.h"
 #include "Attack.h"
-#include "ItemWeapon.h"
 #include "FeatureDoor.h"
 #include "Inventory.h"
 #include "ActorMonster.h"

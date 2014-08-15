@@ -8,6 +8,10 @@
 
 enum class InvList {slots, general};
 
+enum class ItemRefType    {plain, a, plural, END};
+enum class ItemRefInf     {none, yes};
+enum class ItemRefAttInf  {none, wpnContext, melee, ranged, thrown};
+
 enum class Article {a, the};
 
 enum class Matl {
@@ -215,13 +219,16 @@ struct Fraction {
 
 struct ItemName {
 public:
-  ItemName() : name(""), namePlural(""), nameA("") {}
-
   ItemName(const std::string& NAME, const std::string& NAME_PL,
-           const std::string& NAME_A) :
-    name(NAME), namePlural(NAME_PL), nameA(NAME_A) {}
+           const std::string& NAME_A) {
+    names[int(ItemRefType::plain)]   = NAME;
+    names[int(ItemRefType::plural)]  = NAME_PL;
+    names[int(ItemRefType::a)]       = NAME_A;
+  }
 
-  std::string name, namePlural, nameA;
+  ItemName() {for(int i = 0; i < int(ItemRefType::END); i++) {names[i] == "";}}
+
+  std::string names[int(ItemRefType::END)];
 };
 
 struct ItemAttMsgs {

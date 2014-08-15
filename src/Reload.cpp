@@ -4,8 +4,6 @@
 
 #include "Converters.h"
 #include "Item.h"
-#include "ItemWeapon.h"
-#include "ItemAmmo.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Map.h"
@@ -30,8 +28,8 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
   bool isClip = false;
 
   if(ammo) {
-    ammoName = ItemData::getItemRef(*ammo, ItemRefType::a);
-    isClip = ammo->getData().isAmmoClip;
+    ammoName  = ammo->getName(ItemRefType::a);
+    isClip    = ammo->getData().isAmmoClip;
   }
 
   const bool IS_PLAYER    = &actorReloading == Map::player;
@@ -69,8 +67,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
         Audio::play(wpn->getData().ranged.reloadSfx);
 
         if(isClip) {
-          const string wpnName =
-            ItemData::getItemRef(*wpn, ItemRefType::plain, true);
+          const string wpnName = wpn->getName(ItemRefType::plain);
           Log::addMsg(
             "I" + swiftStr + " reload the " + wpnName +
             " (" + toStr(wpn->nrAmmoLoaded) + "/" +
@@ -164,7 +161,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
             //If ammo comes in clips
             if(isClip) {
               const int previousAmmoCount = wpn->nrAmmoLoaded;
-              ItemAmmoClip* clipItem = static_cast<ItemAmmoClip*>(item);
+              AmmoClip* clipItem = static_cast<AmmoClip*>(item);
               wpn->nrAmmoLoaded = clipItem->ammo;
 
               printMsgAndPlaySfx(actorReloading, wpn, item, result,
@@ -176,7 +173,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
               //If weapon previously contained ammo, create a new clip item
               if(previousAmmoCount > 0) {
                 item = ItemFactory::mk(ammoType);
-                clipItem = static_cast<ItemAmmoClip*>(item);
+                clipItem = static_cast<AmmoClip*>(item);
                 clipItem->ammo = previousAmmoCount;
                 inv.putInGeneral(clipItem);
               }

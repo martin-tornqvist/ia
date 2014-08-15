@@ -16,7 +16,6 @@
 #include "FeatureTrap.h"
 #include "PlayerSpellsHandling.h"
 #include "ItemScroll.h"
-#include "ItemArmor.h"
 #include "Inventory.h"
 #include "MapParsing.h"
 #include "LineCalc.h"

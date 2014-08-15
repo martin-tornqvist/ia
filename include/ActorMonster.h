@@ -4,7 +4,6 @@
 #include "CmnData.h"
 
 #include "Actor.h"
-#include "ItemWeapon.h"
 #include "Sound.h"
 #include "Spells.h"
 

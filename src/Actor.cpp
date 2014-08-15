@@ -3,7 +3,6 @@
 #include "Init.h"
 
 #include "Renderer.h"
-#include "ItemArmor.h"
 #include "GameTime.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
@@ -16,6 +15,7 @@
 #include "DungeonMaster.h"
 #include "Inventory.h"
 #include "MapParsing.h"
+#include "Item.h"
 
 using namespace std;
 
@@ -395,7 +395,7 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
         if(armor->isDestroyed()) {
           TRACE << "Actor: Armor was destroyed" << endl;
           if(this == Map::player) {
-            const string armorName = ItemData::getItemRef(*armor, ItemRefType::plain);
+            const string armorName = armor->getName(ItemRefType::plain);
             Log::addMsg("My " + armorName + " is torn apart!", clrMsgWarning);
           }
           delete armor;

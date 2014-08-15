@@ -20,7 +20,7 @@ enum ItemWeight {
   itemWeight_heavy      = 110 //E.g. heavy armor, heavy weapons
 };
 
-enum class PrimaryAttMode {none, melee, missile, ranged};
+enum class MainAttMode {none, melee, thrown, ranged};
 
 enum class ItemType {
   general,
@@ -192,7 +192,7 @@ public:
   char glyph;
   Clr clr;
   TileId tile;
-  PrimaryAttMode primaryAttackMode;
+  MainAttMode mainAttMode;
   bool isExplosive, isScroll, isPotion, isDevice;
   bool isArmor, isHeadwear;
   bool isIntrinsic;
@@ -259,8 +259,6 @@ public:
 
 class Item;
 
-enum class ItemRefType {plain, a, plural};
-
 namespace ItemData {
 
 extern ItemDataT* data[int(ItemId::END)];
@@ -270,13 +268,6 @@ void cleanup();
 
 void storeToSaveLines(std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);
-
-std::string getItemRef(const Item& item, const ItemRefType itemRefForm,
-                       const bool SKIP_EXTRA_INFO = false);
-
-std::string getItemInterfaceRef(
-  const Item& item, const bool ADD_A,
-  const PrimaryAttMode attMode = PrimaryAttMode::none);
 
 bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
                    const bool IS_MELEE);

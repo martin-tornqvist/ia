@@ -8,6 +8,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Map.h"
+#include "Item.h"
 #include "ItemDrop.h"
 #include "Postmortem.h"
 #include "Explosion.h"

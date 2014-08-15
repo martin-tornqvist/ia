@@ -3,8 +3,7 @@
 #include <string>
 
 #include "Item.h"
-#include "ItemWeapon.h"
-#include "ItemAmmo.h"
+
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -35,7 +34,7 @@ void tryPick() {
   if(item) {
     Inventory& playerInv = Map::player->getInv();
 
-    const string ITEM_NAME = ItemData::getItemInterfaceRef(*item, true);
+    const string ITEM_NAME = item->getName(ItemRefType::plain);
 
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getData().ranged.isThrowingWpn) {
@@ -45,7 +44,7 @@ void tryPick() {
           Audio::play(SfxId::pickup);
 
           Log::addMsg("I add " + ITEM_NAME + " to my missile stack.");
-          carriedMissile->nrItems += item->nrItems;
+          carriedMissile->nrItems_ += item->nrItems_;
           delete item;
           Map::cells[pos.x][pos.y].item = nullptr;
           GameTime::actorDidAct();
@@ -76,12 +75,12 @@ void tryUnloadWpnOrPickupAmmo() {
 
   if(item) {
     if(item->getData().ranged.isRangedWpn) {
-      Wpn* const weapon = static_cast<Wpn*>(item);
-      const int nrAmmoLoaded = weapon->nrAmmoLoaded;
+      Wpn* const wpn = static_cast<Wpn*>(item);
+      const int nrAmmoLoaded = wpn->nrAmmoLoaded;
 
-      if(nrAmmoLoaded > 0 && !weapon->getData().ranged.hasInfiniteAmmo) {
+      if(nrAmmoLoaded > 0 && !wpn->getData().ranged.hasInfiniteAmmo) {
         Inventory& playerInv = Map::player->getInv();
-        const ItemId ammoType = weapon->getData().ranged.ammoItemId;
+        const ItemId ammoType = wpn->getData().ranged.ammoItemId;
 
         ItemDataT* const ammoData = ItemData::data[int(ammoType)];
 
@@ -89,14 +88,12 @@ void tryUnloadWpnOrPickupAmmo() {
 
         if(ammoData->isAmmoClip) {
           //Unload a clip
-          static_cast<ItemAmmoClip*>(spawnedAmmo)->ammo = nrAmmoLoaded;
+          static_cast<AmmoClip*>(spawnedAmmo)->ammo = nrAmmoLoaded;
         } else {
           //Unload loose ammo
-          spawnedAmmo->nrItems = nrAmmoLoaded;
+          spawnedAmmo->nrItems_ = nrAmmoLoaded;
         }
-        const string WEAPON_REF_A =
-          ItemData::getItemRef(*weapon, ItemRefType::a);
-        Log::addMsg("I unload " + WEAPON_REF_A);
+        Log::addMsg("I unload " + wpn->getName(ItemRefType::a));
 
         Audio::play(SfxId::pickup);
 

@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "Init.h"
-#include "ItemWeapon.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "MapTravel.h"
@@ -240,7 +239,7 @@ void handleKeyPress(const KeyData& d) {
   else if(d.key == 'G')  {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
-      ItemPickup::tryUnloadWpnOrPickupAmmo ();
+      ItemPickup::tryUnloadWpnOrPickupAmmo();
     }
     clearEvents();
     return;
@@ -269,7 +268,7 @@ void handleKeyPress(const KeyData& d) {
 
                 if(actor && actor != Map::player) {
                   RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
-                  Log::addMsg(toStr(data.hitChanceTot) + "% hit chance");
+                  Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
                 }
 
                 Log::addMsg("[f] to fire");
@@ -350,20 +349,18 @@ void handleKeyPress(const KeyData& d) {
 
       Item* const wielded   = inv.getItemInSlot(SlotId::wielded);
       Item* const alt       = inv.getItemInSlot(SlotId::wieldedAlt);
-      const string ALT_NAME =
-        alt ? ItemData::getItemRef(*alt, ItemRefType::a) : "";
+      const string ALT_NAME = alt ? alt->getName(ItemRefType::a) : "";
       if(wielded || alt) {
         if(wielded) {
           if(alt) {
-            Log::addMsg("I" + swiftStr + " swap to my prepared weapon (" +
-                        ALT_NAME + ").");
+            Log::addMsg(
+              "I" + swiftStr + " swap to my prepared weapon (" + ALT_NAME + ").");
           } else {
-            const string NAME = ItemData::getItemRef(*wielded, ItemRefType::a);
+            const string NAME = wielded->getName(ItemRefType::a);
             Log::addMsg("I" + swiftStr + " put away my weapon (" + NAME + ").");
           }
         } else {
-          Log::addMsg("I" + swiftStr + " wield my prepared weapon (" +
-                      ALT_NAME + ").");
+          Log::addMsg("I" + swiftStr + " wield my prepared weapon (" + ALT_NAME + ").");
         }
         inv.swapWieldedAndPrepared(IS_FREE_TURN);
       } else {
@@ -426,7 +423,7 @@ void handleKeyPress(const KeyData& d) {
 
           if(itemStack) {
             Item* itemToThrow     = ItemFactory::copyItem(itemStack);
-            itemToThrow->nrItems  = 1;
+            itemToThrow->nrItems_ = 1;
 
             auto onMarkerAtPos = [&](const Pos & p) {
 
@@ -436,7 +433,7 @@ void handleKeyPress(const KeyData& d) {
 
               if(actor && actor != Map::player) {
                 ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
-                Log::addMsg(", " + toStr(data.hitChanceTot) + "% hit chance");
+                Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
               }
 
               Log::addMsg("[t] to throw");

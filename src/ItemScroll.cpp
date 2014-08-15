@@ -58,16 +58,15 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
   if(!data_->isIdentified) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
-    const string REAL_NAME        = "Manuscript of " + REAL_TYPE_NAME;
-    const string REAL_NAME_PLURAL = "Manuscripts of " + REAL_TYPE_NAME;
-    const string REAL_NAME_A      = "a Manuscript of " + REAL_TYPE_NAME;
+    const string REAL_NAME        = "Manuscript of "    + REAL_TYPE_NAME;
+    const string REAL_NAME_PLURAL = "Manuscripts of "   + REAL_TYPE_NAME;
+    const string REAL_NAME_A      = "a Manuscript of "  + REAL_TYPE_NAME;
 
-    data_->baseName.name        = REAL_NAME;
-    data_->baseName.namePlural = REAL_NAME_PLURAL;
-    data_->baseName.nameA      = REAL_NAME_A;
-
+    data_->baseName.names[int(ItemRefType::plain)]  = REAL_NAME;
+    data_->baseName.names[int(ItemRefType::plural)] = REAL_NAME_PLURAL;
+    data_->baseName.names[int(ItemRefType::a)]      = REAL_NAME_A;
     if(!IS_SILENT_IDENTIFY) {
-      Log::addMsg("It was " + data_->baseName.nameA + ".");
+      Log::addMsg("It was " + getName(ItemRefType::a) + ".");
       Renderer::drawMapAndInterface();
     }
 
@@ -196,9 +195,9 @@ void setFalseScrollName(ItemDataT& d) {
 
   const string& TITLE = "\"" + falseNames_.at(ELEMENT) + "\"";
 
-  d.baseName.name         = "Manuscript titled " + TITLE;
-  d.baseName.namePlural  = "Manuscripts titled " + TITLE;
-  d.baseName.nameA       = "a Manuscript titled " + TITLE;
+  d.baseName.names[int(ItemRefType::plain)]   = "Manuscript titled "    + TITLE;
+  d.baseName.names[int(ItemRefType::plural)]  = "Manuscripts titled "   + TITLE;
+  d.baseName.names[int(ItemRefType::a)]       = "a Manuscript titled "  + TITLE;
 
   falseNames_.erase(falseNames_.begin() + ELEMENT);
 }
@@ -206,9 +205,9 @@ void setFalseScrollName(ItemDataT& d) {
 void storeToSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::END); ++i) {
     if(ItemData::data[i]->isScroll) {
-      lines.push_back(ItemData::data[i]->baseName.name);
-      lines.push_back(ItemData::data[i]->baseName.namePlural);
-      lines.push_back(ItemData::data[i]->baseName.nameA);
+      lines.push_back(ItemData::data[i]->baseName.names[int(ItemRefType::plain)]);
+      lines.push_back(ItemData::data[i]->baseName.names[int(ItemRefType::plural)]);
+      lines.push_back(ItemData::data[i]->baseName.names[int(ItemRefType::a)]);
     }
   }
 }
@@ -216,11 +215,11 @@ void storeToSaveLines(vector<string>& lines) {
 void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::END); ++i) {
     if(ItemData::data[i]->isScroll) {
-      ItemData::data[i]->baseName.name        = lines.front();
+      ItemData::data[i]->baseName.names[int(ItemRefType::plain)]  = lines.front();
       lines.erase(begin(lines));
-      ItemData::data[i]->baseName.namePlural = lines.front();
+      ItemData::data[i]->baseName.names[int(ItemRefType::plural)] = lines.front();
       lines.erase(begin(lines));
-      ItemData::data[i]->baseName.nameA      = lines.front();
+      ItemData::data[i]->baseName.names[int(ItemRefType::a)]      = lines.front();
       lines.erase(begin(lines));
     }
   }

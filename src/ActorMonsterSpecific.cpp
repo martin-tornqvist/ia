@@ -93,12 +93,12 @@ void Cultist::mkStartItems() {
   } else if(RND <= PUMP_SHOTGUN) {
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::pumpShotgun));
     Item* item = ItemFactory::mk(ItemId::shotgunShell);
-    item->nrItems = Rnd::range(5, 9);
+    item->nrItems_ = Rnd::range(5, 9);
     inv_->putInGeneral(item);
   } else if(RND <= SAWN_SHOTGUN) {
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::sawedOff));
     Item* item = ItemFactory::mk(ItemId::shotgunShell);
-    item->nrItems = Rnd::range(6, 12);
+    item->nrItems_ = Rnd::range(6, 12);
     inv_->putInGeneral(item);
   } else {
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::machineGun));
@@ -129,7 +129,7 @@ void CultistTeslaCannon::mkStartItems() {
 void CultistSpikeGun::mkStartItems() {
   inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::spikeGun));
   Item* item = ItemFactory::mk(ItemId::ironSpike);
-  item->nrItems = 8 + Rnd::dice(1, 8);
+  item->nrItems_ = 8 + Rnd::dice(1, 8);
   inv_->putInGeneral(item);
 }
 

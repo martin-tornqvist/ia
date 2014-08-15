@@ -5,7 +5,6 @@
 
 #include "Init.h"
 #include "Item.h"
-#include "ItemWeapon.h"
 #include "ItemDrop.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -44,7 +43,7 @@ void Inventory::storeToSaveLines(vector<string>& lines) const {
     Item* const item = slot.item;
     if(item) {
       lines.push_back(toStr(int(item->getData().id)));
-      lines.push_back(toStr(item->nrItems));
+      lines.push_back(toStr(item->nrItems_));
       item->storeToSaveLines(lines);
     } else {
       lines.push_back("0");
@@ -54,7 +53,7 @@ void Inventory::storeToSaveLines(vector<string>& lines) const {
   lines.push_back(toStr(general_.size()));
   for(Item* item : general_) {
     lines.push_back(toStr(int(item->getData().id)));
-    lines.push_back(toStr(item->nrItems));
+    lines.push_back(toStr(item->nrItems_));
     item->storeToSaveLines(lines);
   }
 }
@@ -72,7 +71,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines) {
     lines.erase(begin(lines));
     if(id != ItemId::empty) {
       item = ItemFactory::mk(id);
-      item->nrItems = toInt(lines.front());
+      item->nrItems_ = toInt(lines.front());
       lines.erase(begin(lines));
       item->setupFromSaveLines(lines);
       slot.item = item;
@@ -91,7 +90,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines) {
     const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(begin(lines));
     Item* item = ItemFactory::mk(id);
-    item->nrItems = toInt(lines.front());
+    item->nrItems_ = toInt(lines.front());
     lines.erase(begin(lines));
     item->setupFromSaveLines(lines);
     general_.push_back(item);
@@ -115,7 +114,7 @@ int Inventory::getItemStackSizeInGeneral(const ItemId id) const {
   for(size_t i = 0; i < general_.size(); ++i) {
     if(general_.at(i)->getData().id == id) {
       if(general_.at(i)->getData().isStackable) {
-        return general_.at(i)->nrItems;
+        return general_.at(i)->nrItems_;
       } else {
         return 1;
       }
@@ -169,7 +168,7 @@ void Inventory::putInGeneral(Item* item) {
 
       //Keeping picked up item and destroying the one in the inventory,
       //to keep the parameter pointer valid.
-      item->nrItems += compareItem->nrItems;
+      item->nrItems_ += compareItem->nrItems_;
       delete compareItem;
       general_.at(stackIndex) = item;
       isStacked = true;
@@ -262,9 +261,9 @@ void Inventory::decrItemInSlot(SlotId slotName) {
   bool deleteItem = true;
 
   if(stack) {
-    item->nrItems -= 1;
+    item->nrItems_ -= 1;
 
-    if(item->nrItems > 0) {
+    if(item->nrItems_ > 0) {
       deleteItem = false;
     }
   }
@@ -301,9 +300,9 @@ void Inventory::decrItemInGeneral(unsigned element) {
   bool deleteItem = true;
 
   if(stack) {
-    item->nrItems -= 1;
+    item->nrItems_ -= 1;
 
-    if(item->nrItems > 0) {
+    if(item->nrItems_ > 0) {
       deleteItem = false;
     }
   }
@@ -364,28 +363,28 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
   switch(slot) {
     case SlotId::wielded: {
       if(IS_PLAYER) {
-        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::a);
+        const string name = itemAfter->getName(ItemRefType::a);
         Log::addMsg("I am now wielding " + name + ".");
       }
     } break;
 
     case SlotId::wieldedAlt: {
       if(IS_PLAYER) {
-        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::a);
+        const string name = itemAfter->getName(ItemRefType::a);
         Log::addMsg("I am now wielding " + name + " as a prepared weapon.");
       }
     } break;
 
     case SlotId::thrown: {
       if(IS_PLAYER) {
-        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::plural);
+        const string name = itemAfter->getName(ItemRefType::plural);
         Log::addMsg("I am now using " + name + " as missile weapon.");
       }
     } break;
 
     case SlotId::body: {
       if(IS_PLAYER) {
-        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::a);
+        const string name = itemAfter->getName(ItemRefType::a);
         Log::addMsg("I am now wearing " + name + ".");
       }
       isFreeTurn = false;
@@ -393,7 +392,7 @@ void Inventory::equipGeneralItemAndPossiblyEndTurn(
 
     case SlotId::head: {
       if(IS_PLAYER) {
-        const string name = ItemData::getItemRef(*itemAfter, ItemRefType::a);
+        const string name = itemAfter->getName(ItemRefType::a);
         Log::addMsg("I am now wearing " + name + ".");
       }
     } break;
@@ -551,10 +550,8 @@ int Inventory::getTotalItemWeight() const {
 struct LexicograhicalCompareItems {
 public:
   bool operator()(const Item* const item1, const Item* const item2) {
-    const string& itemName1 =
-      ItemData::getItemRef(*item1, ItemRefType::plain, true);
-    const string& itemName2 =
-      ItemData::getItemRef(*item2, ItemRefType::plain, true);
+    const string& itemName1 = item1->getName(ItemRefType::plain);
+    const string& itemName2 = item2->getName(ItemRefType::plain);
     return lexicographical_compare(itemName1.begin(), itemName1.end(),
                                    itemName2.begin(), itemName2.end());
   }

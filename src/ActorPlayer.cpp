@@ -3,7 +3,6 @@
 #include "Init.h"
 #include "Renderer.h"
 #include "Audio.h"
-#include "ItemWeapon.h"
 #include "FeatureTrap.h"
 #include "CreateCharacter.h"
 #include "Log.h"
@@ -24,14 +23,12 @@
 #include "PlayerBon.h"
 #include "Inventory.h"
 #include "InventoryHandling.h"
-#include "ItemMedicalBag.h"
 #include "PlayerSpellsHandling.h"
 #include "Bot.h"
 #include "Input.h"
 #include "MapParsing.h"
 #include "Properties.h"
 #include "ItemDevice.h"
-#include "ItemExplosive.h"
 
 using namespace std;
 
@@ -902,13 +899,12 @@ void Player::moveDir(Dir dir) {
           bool hasMeleeWpn = false;
           Item* const item = inv_->getItemInSlot(SlotId::wielded);
           if(item) {
-            Wpn* const weapon = static_cast<Wpn*>(item);
-            if(weapon->getData().melee.isMeleeWpn) {
+            Wpn* const wpn = static_cast<Wpn*>(item);
+            if(wpn->getData().melee.isMeleeWpn) {
               if(Config::isRangedWpnMeleeePrompt() &&
                   isSeeingActor(*actorAtDest, nullptr)) {
-                if(weapon->getData().ranged.isRangedWpn) {
-                  const string wpnName =
-                    ItemData::getItemRef(*weapon, ItemRefType::a);
+                if(wpn->getData().ranged.isRangedWpn) {
+                  const string wpnName = wpn->getName(ItemRefType::a);
                   Log::addMsg(
                     "Attack " + actorAtDest->getNameThe() +
                     " with " + wpnName + "? (y/n)", clrWhiteHigh);
@@ -920,7 +916,7 @@ void Player::moveDir(Dir dir) {
                   }
                 }
               }
-              Attack::melee(*this, *weapon, *actorAtDest);
+              Attack::melee(*this, *wpn, *actorAtDest);
               target = actorAtDest;
               return;
             }

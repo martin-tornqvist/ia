@@ -3,8 +3,6 @@
 #include "CmnTypes.h"
 #include "GameTime.h"
 #include "Colors.h"
-#include "ItemWeapon.h"
-#include "ItemArmor.h"
 #include "Renderer.h"
 #include "ActorPlayer.h"
 #include "Map.h"
@@ -15,6 +13,7 @@
 #include "FeatureRigid.h"
 #include "FeatureMob.h"
 #include "TextFormatting.h"
+#include "Item.h"
 
 using namespace std;
 
@@ -59,7 +58,7 @@ void drawLocationInfo() {
     //Describe item
     Item* const item = Map::cells[p.x][p.y].item;
     if(item) {
-      string itemName = ItemData::getItemInterfaceRef(*item, true);
+      string itemName = item->getName(ItemRefType::a);
       str += TextFormatting::firstToUpper(itemName) + ". ";
     }
 
@@ -162,7 +161,7 @@ void drawInfoLines() {
     }
     pos.x += 2;
 
-    str = ItemData::getItemInterfaceRef(*itemWielded, false);
+    str = itemWielded->getName(ItemRefType::plain);
     Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
     pos.x += str.length() + 1;
   } else {
@@ -219,8 +218,7 @@ void drawInfoLines() {
     }
     pos.x += 2;
 
-    str = ItemData::getItemInterfaceRef(
-            *itemMissiles, false, PrimaryAttMode::missile);
+    str = itemMissiles->getName(ItemRefType::plain);
     Renderer::drawText(str, Panel::charLines, pos, clrGenMed);
     pos.x += str.length() + 1;
   } else {

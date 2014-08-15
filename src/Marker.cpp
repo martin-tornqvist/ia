@@ -4,7 +4,6 @@
 
 #include "Input.h"
 #include "InventoryHandling.h"
-#include "ItemWeapon.h"
 #include "Input.h"
 #include "ActorPlayer.h"
 #include "Attack.h"

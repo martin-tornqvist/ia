@@ -4,12 +4,10 @@
 #include <assert.h>
 
 #include "Init.h"
-#include "ItemArmor.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Postmortem.h"
 #include "Renderer.h"
-#include "ItemWeapon.h"
 #include "ActorMonster.h"
 #include "Inventory.h"
 #include "Map.h"
@@ -21,7 +19,7 @@
 #include "Utils.h"
 #include "FeatureRigid.h"
 #include "FeatureMob.h"
-#include "ItemExplosive.h"
+#include "Item.h"
 
 using namespace std;
 
@@ -790,9 +788,7 @@ void PropHandler::getPropsFromSources(
     };
     for(const auto& slot : slots) {
       const auto* const item = slot.item;
-      if(item) {
-        addItemProps(item->propsEnabledOnCarrier);
-      }
+      if(item) {addItemProps(item->propsEnabledOnCarrier);}
     }
     const auto& general = inv.general_;
     for(auto* const item : general) {

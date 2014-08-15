@@ -242,19 +242,17 @@ void PotionInsight::quaff_(Actor* const actor) {
     }
   }
 
-  const unsigned int NR_ELEMENTS = identifyBucket.size();
+  const size_t NR_ELEMENTS = identifyBucket.size();
   if(NR_ELEMENTS > 0) {
     const int ELEMENT = Rnd::range(0, NR_ELEMENTS - 1);
 
     Item* const item = identifyBucket.at(ELEMENT);
 
-    const string itemNameBefore =
-      ItemData::getItemRef(*item, ItemRefType::a, true);
+    const string itemNameBefore = item->getName(ItemRefType::a);
 
     item->identify(true);
 
-    const string itemNameAfter =
-      ItemData::getItemRef(*item, ItemRefType::a, true);
+    const string itemNameAfter = item->getName(ItemRefType::a);
 
     Log::addMsg("I gain intuitions about " + itemNameBefore + "...");
     Log::addMsg("It is identified as " + itemNameAfter + "!");
@@ -308,13 +306,13 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
   if(!data_->isIdentified) {
     const string REAL_TYPE_NAME = getRealTypeName();
 
-    const string REAL_NAME        = "Potion of " + REAL_TYPE_NAME;
-    const string REAL_NAME_PLURAL = "Potions of " + REAL_TYPE_NAME;
-    const string REAL_NAME_A      = "a potion of " + REAL_TYPE_NAME;
+    const string REAL_NAME        = "Potion of "    + REAL_TYPE_NAME;
+    const string REAL_NAME_PLURAL = "Potions of "   + REAL_TYPE_NAME;
+    const string REAL_NAME_A      = "a potion of "  + REAL_TYPE_NAME;
 
-    data_->baseName.name        = REAL_NAME;
-    data_->baseName.namePlural = REAL_NAME_PLURAL;
-    data_->baseName.nameA      = REAL_NAME_A;
+    data_->baseName.names[int(ItemRefType::plain)]  = REAL_NAME;
+    data_->baseName.names[int(ItemRefType::plural)] = REAL_NAME_PLURAL;
+    data_->baseName.names[int(ItemRefType::a)]      = REAL_NAME_A;
 
     if(!IS_SILENT_IDENTIFY) {
       Log::addMsg("It was a " + REAL_NAME + ".");
@@ -365,9 +363,9 @@ void Potion::quaff(Actor* const actor) {
     Audio::play(SfxId::potionQuaff);
 
     if(data_->isIdentified) {
-      Log::addMsg("I drink " + data_->baseName.nameA + "...");
+      Log::addMsg("I drink " + getName(ItemRefType::a) + "...");
     } else {
-      Log::addMsg("I drink an unknown " + data_->baseName.name + "...");
+      Log::addMsg("I drink an unknown " + getName(ItemRefType::plain) + "...");
     }
     Map::player->incrShock(ShockValue::heavy,
                            ShockSrc::useStrangeItem);
@@ -420,10 +418,10 @@ void setClrAndFalseName(ItemDataT& d) {
 
   PotionLook& look = potionLooks_.at(ELEMENT);
 
-  d.baseName.name         = look.namePlain + " potion";
-  d.baseName.namePlural  = look.namePlain + " potions";
-  d.baseName.nameA        = look.nameA     + " potion";
-  d.clr                   = look.clr;
+  d.baseName.names[int(ItemRefType::plain)]   = look.namePlain + " potion";
+  d.baseName.names[int(ItemRefType::plural)]  = look.namePlain + " potions";
+  d.baseName.names[int(ItemRefType::a)]       = look.nameA     + " potion";
+  d.clr = look.clr;
 
   potionLooks_.erase(potionLooks_.begin() + ELEMENT);
 }
@@ -432,9 +430,9 @@ void storeToSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::END); ++i) {
     ItemDataT* const d = ItemData::data[i];
     if(d->isPotion) {
-      lines.push_back(d->baseName.name);
-      lines.push_back(d->baseName.namePlural);
-      lines.push_back(d->baseName.nameA);
+      lines.push_back(d->baseName.names[int(ItemRefType::plain)]);
+      lines.push_back(d->baseName.names[int(ItemRefType::plural)]);
+      lines.push_back(d->baseName.names[int(ItemRefType::a)]);
       lines.push_back(toStr(d->clr.r));
       lines.push_back(toStr(d->clr.g));
       lines.push_back(toStr(d->clr.b));
@@ -446,11 +444,11 @@ void setupFromSaveLines(vector<string>& lines) {
   for(int i = 1; i < int(ItemId::END); ++i) {
     ItemDataT* const d = ItemData::data[i];
     if(d->isPotion) {
-      d->baseName.name = lines.front();
+      d->baseName.names[int(ItemRefType::plain)]  = lines.front();
       lines.erase(begin(lines));
-      d->baseName.namePlural = lines.front();
+      d->baseName.names[int(ItemRefType::plural)] = lines.front();
       lines.erase(begin(lines));
-      d->baseName.nameA = lines.front();
+      d->baseName.names[int(ItemRefType::a)]      = lines.front();
       lines.erase(begin(lines));
       d->clr.r = toInt(lines.front());
       lines.erase(begin(lines));

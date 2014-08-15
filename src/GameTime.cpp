@@ -19,6 +19,7 @@
 #include "Renderer.h"
 #include "Utils.h"
 #include "MapTravel.h"
+#include "Item.h"
 
 using namespace std;
 
