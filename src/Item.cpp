@@ -41,8 +41,8 @@ ConsumeItem Item::activateDefault(Actor* const actor) {
   return ConsumeItem::no;
 }
 
-std::string Item::getName(const ItemRefType refType, const ItemRefInf inf,
-                          const ItemRefAttInf attInf) const {
+string Item::getName(const ItemRefType refType, const ItemRefInf inf,
+                     const ItemRefAttInf attInf) const {
 
   ItemRefType refTypeUsed = refType;
   if(refType == ItemRefType::plural && (!data_->isStackable || nrItems_ == 1)) {
@@ -70,7 +70,7 @@ std::string Item::getName(const ItemRefType refType, const ItemRefInf inf,
   if(attInfUsed == ItemRefAttInf::melee) {
     const string rollsStr = toStr(data_->melee.dmg.first);
     const string sidesStr = toStr(data_->melee.dmg.second);
-    const int PLUS        = static_cast<const Wpn*>(this)->meleeDmgPlus; //Aw hell no!!
+    const int PLUS        = meleeDmgPlus_;
     const string plusStr  = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + toStr(PLUS));
     const int ITEM_SKILL  = data_->melee.hitChanceMod;
     const int PLAYER_MELEE_SKILL = Map::player->getData().abilityVals.getVal(
@@ -97,12 +97,7 @@ std::string Item::getName(const ItemRefType refType, const ItemRefInf inf,
     const int ITEM_SKILL    = data_->ranged.hitChanceMod;
     const int SKILL_TOT     = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
     const string skillStr   = toStr(SKILL_TOT) + "%";
-    string ammoLoadedStr    = "";
-    if(!data_->ranged.hasInfiniteAmmo) {
-      const Wpn* const w    = static_cast<const Wpn*>(this); //Aw hell no!!
-      ammoLoadedStr         = " " + toStr(w->nrAmmoLoaded) + "/" + toStr(w->ammoCapacity);
-    }
-    attStr = " " + dmgStr + " " + skillStr + ammoLoadedStr;
+    attStr = " " + dmgStr + " " + skillStr;
   }
 
   if(attInfUsed == ItemRefAttInf::thrown) {
@@ -116,7 +111,14 @@ std::string Item::getName(const ItemRefType refType, const ItemRefInf inf,
     attStr = " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
   }
 
-  return nrStr + data_->baseName.names[int(refTypeUsed)] + attStr;
+  string infStr = "";
+
+  if(inf == ItemRefInf::yes) {
+    infStr = getNameInf();
+    if(!infStr.empty()) {infStr.insert(0, " ");}
+  }
+
+  return nrStr + data_->baseName.names[int(refTypeUsed)] + attStr + infStr;
 }
 
 //------------------------------------------------------------------- ARMOR
@@ -215,17 +217,23 @@ Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData) :
   ammoCapacity = 0;
   effectiveRangeLmt = 3;
   clip = false;
-  meleeDmgPlus = 0;
 }
 
 void Wpn::setRandomMeleePlus() {
-  meleeDmgPlus = 0;
+  meleeDmgPlus_ = 0;
 
   int chance = 45;
-  while(Rnd::percentile() < chance && meleeDmgPlus < 3) {
-    meleeDmgPlus++;
+  while(Rnd::percentile() < chance && meleeDmgPlus_ < 3) {
+    meleeDmgPlus_++;
     chance -= 5;
   }
+}
+
+string Wpn::getNameInf() const {
+  if(data_->ranged.isRangedWpn && !data_->ranged.hasInfiniteAmmo) {
+    return toStr(nrAmmoLoaded) + "/" + toStr(ammoCapacity);
+  }
+  return "";
 }
 
 //------------------------------------------------------------------- INCINERATOR

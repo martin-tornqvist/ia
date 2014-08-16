@@ -141,7 +141,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_,
     //--------------------------------------- DETERMINE DAMAGE
     dmgRolls  = wpn_.getData().melee.dmg.first;
     dmgSides  = wpn_.getData().melee.dmg.second;
-    dmgPlus   = wpn_.meleeDmgPlus;
+    dmgPlus   = wpn_.meleeDmgPlus_;
 
     vector<PropId> attProps;
     attacker->getPropHandler().getAllActivePropIds(attProps);

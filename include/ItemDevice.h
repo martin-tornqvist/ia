@@ -15,8 +15,6 @@ public:
 
   virtual void newTurnInInventory() override {}
 
-  virtual std::string getDefaultActivationLabel() const override = 0;
-
   virtual void storeToSaveLines(std::vector<std::string>& lines)    override;
   virtual void setupFromSaveLines(std::vector<std::string>& lines)  override;
 
@@ -31,7 +29,7 @@ public:
 
   ConsumeItem activateDefault(Actor* const actor) override;
 
-  std::string getDefaultActivationLabel() const override {return "Use";}
+  virtual std::string getNameInf() const override;
 
 private:
   virtual void triggerEffect() = 0;
@@ -94,10 +92,6 @@ public:
 
   LanternLightSize getCurLightSize() const;
 
-  std::string getDefaultActivationLabel() const override {
-    return isActivated_ ? "Turn off" : "Turn on";
-  }
-
   void storeToSaveLines(std::vector<std::string>& lines)    override;
   void setupFromSaveLines(std::vector<std::string>& lines)  override;
 
@@ -105,6 +99,8 @@ private:
   void toggle();
 
   int getRandomNrTurnsToNextBadEffect() const;
+
+  std::string getNameInf() const override {return isActivated_ ? "{Lit}" : "";}
 
   int malfunctCooldown_;
   LanternMalfState malfState_;

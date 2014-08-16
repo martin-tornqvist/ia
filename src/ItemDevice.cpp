@@ -15,7 +15,7 @@
 
 using namespace std;
 
-//---------------------------------------------------- BASE CLASS
+//---------------------------------------------------- DEVICE
 Device::Device(ItemDataT* const itemData) :
   Item(itemData),
   condition_(Rnd::coinToss() ? Condition::fine : Condition::shoddy) {}
@@ -35,7 +35,7 @@ void Device::setupFromSaveLines(vector<string>& lines) {
   lines.erase(begin(lines));
 }
 
-//---------------------------------------------------- STRANGE DEVICE BASE
+//---------------------------------------------------- STRANGE DEVICE
 StrangeDevice::StrangeDevice(ItemDataT* const itemData) :
   Device(itemData) {}
 
@@ -123,6 +123,17 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
     Log::addMsg("I could never understand it through normal means.");
     return ConsumeItem::no;
   }
+}
+
+std::string StrangeDevice::getNameInf() const {
+  if(data_->isIdentified) {
+    switch(condition_) {
+      case Condition::breaking: return "{breaking}";
+      case Condition::shoddy:   return "{shoddy}";
+      case Condition::fine:     return "{fine}";
+    }
+  }
+  return "";
 }
 
 //---------------------------------------------------- SENTRY

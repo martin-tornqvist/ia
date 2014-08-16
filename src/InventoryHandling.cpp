@@ -127,40 +127,6 @@ void filterPlayerGeneralEquip(
   }
 }
 
-void filterPlayerGeneralUsable() {
-  auto& general = Map::player->getInv().general_;
-
-  vector< vector<size_t> > groups;
-
-  for(size_t i = 0; i < general.size(); ++i) {
-    const Item* const item = general.at(i);
-    const string& label = item->getDefaultActivationLabel();
-    if(!label.empty()) {
-      bool isExistingGroupFound = false;
-      for(vector<size_t>& group : groups) {
-        if(label == general.at(group.front())->getDefaultActivationLabel()) {
-          group.push_back(i);
-          isExistingGroupFound = true;
-          break;
-        }
-      }
-      if(!isExistingGroupFound) {
-        groups.resize(groups.size() + 1);
-        groups.back().resize(0);
-        groups.back().push_back(i);
-      }
-    }
-  }
-
-  generalItemsToShow_.resize(0);
-
-  for(vector<size_t>& group : groups) {
-    for(size_t itemIndex : group) {
-      generalItemsToShow_.push_back(itemIndex);
-    }
-  }
-}
-
 void filterPlayerGeneralShowAll() {
   auto& general = Map::player->getInv().general_;
   generalItemsToShow_.resize(0);
@@ -288,56 +254,6 @@ void runInvScreen() {
     }
   }
 }
-
-//bool runUseScreen() {
-//  screenToOpenAfterDrop = InvScrId::END;
-//  Renderer::drawMapAndInterface();
-//
-//  Map::player->getInv().sortGeneralInventory();
-//
-//  filterPlayerGeneralUsable();
-//  MenuBrowser browser(generalItemsToShow_.size(), 0);
-//  browser.setY(browserPosToSetAfterDrop);
-//  browserPosToSetAfterDrop = 0;
-//
-//  Audio::play(SfxId::backpack);
-//
-//  RenderInventory::drawUse(browser, generalItemsToShow_);
-//
-//  while(true) {
-//    const MenuAction action = MenuInputHandling::getAction(browser);
-//    switch(action) {
-//      case MenuAction::browsed: {
-//        RenderInventory::drawUse(browser, generalItemsToShow_);
-//      } break;
-//
-//      case MenuAction::selected: {
-//        const int INV_ELEM = generalItemsToShow_.at(browser.getPos().y);
-//        activateDefault(INV_ELEM);
-//        Renderer::drawMapAndInterface();
-//        return true;
-//      } break;
-//
-//      case MenuAction::selectedShift: {
-//        const int SLOTS_SIZE = Map::player->getInv().slots_.size();
-//        if(
-//          runDropScreen(
-//            SLOTS_SIZE + generalItemsToShow_.at(browser.getPos().y))) {
-//          screenToOpenAfterDrop = InvScrId::use;
-//          browserPosToSetAfterDrop = browser.getPos().y;
-//          return true;
-//        }
-//        RenderInventory::drawUse(browser, generalItemsToShow_);
-//      } break;
-//
-//      case MenuAction::esc:
-//      case MenuAction::space: {
-//        Renderer::drawMapAndInterface();
-//        return false;
-//      } break;
-//    }
-//  }
-//}
 
 bool runEquipScreen(InvSlot& slotToEquip) {
   screenToOpenAfterDrop     = InvScrId::END;

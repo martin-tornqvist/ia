@@ -192,8 +192,7 @@ int Player::getCarryWeightLimit() const {
 
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
-  const bool IS_WEAKENED =
-    find(begin(props), end(props), propWeakened) != end(props);
+  const bool IS_WEAKENED = find(begin(props), end(props), propWeakened) != end(props);
 
   const int CARRY_WEIGHT_MOD =
     (IS_TOUGH * 10) + (IS_STRONG_BACKED * 30) - (IS_WEAKENED * 15);

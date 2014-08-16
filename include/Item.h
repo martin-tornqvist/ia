@@ -13,7 +13,7 @@ enum ItemActivateReturnType {
 
 class Item {
 public:
-  Item(ItemDataT* itemData) : nrItems_(1), data_(itemData) {}
+  Item(ItemDataT* itemData) : nrItems_(1), meleeDmgPlus_(0), data_(itemData) {}
 
 //  Item& operator=(Item& other) {(void)other; return *this;}
 
@@ -39,8 +39,8 @@ public:
   std::string getWeightLabel() const;
 
   virtual ConsumeItem activateDefault(Actor* const actor);
-  virtual std::string getDefaultActivationLabel() const {return "";}
-  virtual Clr getInterfaceClr()                   const {return clrBrown;}
+
+  virtual Clr getInterfaceClr() const {return clrBrown;}
 
   virtual void newTurnInInventory() {}
 
@@ -55,11 +55,16 @@ public:
   //Called by the ItemDrop class to make noise etc
   virtual void appplyDropEffects() {}
 
+  int meleeDmgPlus_;
+
 protected:
   void clearPropsEnabledOnCarrier() {
     for(Prop* prop : propsEnabledOnCarrier) {delete prop;}
     propsEnabledOnCarrier.resize(0);
   }
+
+  //E.g. "{Off}" for Lanterns, "{60}" for Medical Bags, or "4/7" for Pistols
+  virtual std::string getNameInf() const {return "";}
 
   ItemDataT* data_;
 };
@@ -130,8 +135,6 @@ public:
   int ammoCapacity;
   bool clip;
 
-  int meleeDmgPlus;
-
   void setRandomMeleePlus();
 
   virtual std::vector<std::string> itemSpecificWriteToFile() {
@@ -153,12 +156,12 @@ public:
   const ItemDataT& getAmmoData() {return *ammoData_;}
 
   void storeToSaveLines(std::vector<std::string>& lines) override {
-    lines.push_back(toStr(meleeDmgPlus));
+    lines.push_back(toStr(meleeDmgPlus_));
     lines.push_back(toStr(nrAmmoLoaded));
   }
 
   void setupFromSaveLines(std::vector<std::string>& lines) override {
-    meleeDmgPlus = toInt(lines.front());
+    meleeDmgPlus_ = toInt(lines.front());
     lines.erase(begin(lines));
     nrAmmoLoaded = toInt(lines.front());
     lines.erase(begin(lines));
@@ -177,12 +180,13 @@ public:
 
   Clr getInterfaceClr() const override {return clrGray;}
 
-
 protected:
   Wpn& operator=(const Wpn& other) {
     (void) other;
     return *this;
   }
+
+  std::string getNameInf() const override;
 
   ItemDataT* const ammoData_;
 };
@@ -343,8 +347,6 @@ public:
   void interrupted();
   void finishCurAction();
 
-  std::string getDefaultActivationLabel() const override {return "Apply";}
-
   Clr getInterfaceClr() const override {return clrGreen;}
 
   void storeToSaveLines(std::vector<std::string>& lines) override {
@@ -362,6 +364,8 @@ protected:
 
   int getTotTurnsForSanitize() const;
   int getTotSupplForSanitize() const;
+
+  std::string getNameInf() const override {return "{" + toStr(nrSupplies_) + "}";}
 
   int nrSupplies_;
 
@@ -400,8 +404,7 @@ public:
   Explosive() = delete;
 
   ConsumeItem activateDefault(Actor* const actor) override final;
-  std::string getDefaultActivationLabel()   const override final {return "Ignite";}
-  Clr getInterfaceClr()                     const override final {return clrRedLgt;}
+  Clr getInterfaceClr() const override final {return clrRedLgt;}
 
   virtual void        onStdTurnPlayerHoldIgnited()          = 0;
   virtual void        onThrownIgnitedLanding(const Pos& p)  = 0;
