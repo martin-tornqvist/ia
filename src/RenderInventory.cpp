@@ -28,17 +28,19 @@ void drawDetailedItemDescr(const Item* const item, const int BOX_Y0) {
 
   const Panel panel = Panel::screen;
 
-  Renderer::drawPopupBox(box, panel, clrPopupBox, true);
+  Renderer::coverArea(panel, box);
+
+  const Pos p(box.p0 + 1);
+  if(item) {
+    Renderer::drawText(item->getName(ItemRefType::a), Panel::screen, p, clrWhite);
+  }
+
+  Renderer::drawPopupBox(box, panel, clrPopupBox, false);
 
   if(Config::isTilesMode()) {
     Renderer::drawTile(TileId::popupVerR,   panel, box.p0, clrPopupBox);
     Renderer::drawTile(TileId::popupVerL,   panel, Pos(box.p1.x, box.p0.y), clrPopupBox);
     Renderer::drawTile(TileId::popupHorUp,  panel, Pos(box.p0.x, box.p1.y), clrPopupBox);
-  }
-
-  const Pos p(box.p0 + 1);
-  if(item) {
-    Renderer::drawText(item->getName(ItemRefType::a), Panel::screen, p, clrWhite);
   }
 }
 
@@ -128,7 +130,8 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
     p.x = INV_ITEM_NAME_X;
 
-    str = curItem->getName(ItemRefType::plural);
+    str = curItem->getName(ItemRefType::plural, ItemRefInf::yes,
+                           ItemRefAttInf::wpnContext);
     Renderer::drawText(str, Panel::screen, p, itemInterfClr);
 
     p.y++;

@@ -102,6 +102,8 @@ public:
 protected:
   int getAbsorptionPoints() const;
 
+  std::string getNameInf() const override {return getArmorDataLine(true);}
+
   int dur_;
 };
 

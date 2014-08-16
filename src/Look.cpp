@@ -123,7 +123,8 @@ void descrBriefRigid(const Feature& feature) {
 }
 
 void descrBriefItem(const Item& item) {
-  Log::addMsg(item.getName(ItemRefType::a) + ".");
+  Log::addMsg(item.getName(ItemRefType::plural, ItemRefInf::yes,
+                           ItemRefAttInf::wpnContext) + ".");
 }
 
 void descrBriefActor(const Actor& actor) {

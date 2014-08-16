@@ -395,7 +395,7 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
         if(armor->isDestroyed()) {
           TRACE << "Actor: Armor was destroyed" << endl;
           if(this == Map::player) {
-            const string armorName = armor->getName(ItemRefType::plain);
+            const string armorName = armor->getName(ItemRefType::plain, ItemRefInf::none);
             Log::addMsg("My " + armorName + " is torn apart!", clrMsgWarning);
           }
           delete armor;

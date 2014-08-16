@@ -974,6 +974,15 @@ void Player::moveDir(Dir dir) {
             nrMovesUntilFreeAction_--;
           }
         }
+
+        //Print message if walking on item
+        Item* const item = Map::cells[pos.x][pos.y].item;
+        if(item) {
+          const bool CAN_SEE = propHandler_->allowSee();
+          Log::addMsg(CAN_SEE ? "I see here:" : "I try to feel what is lying here...");
+          Log::addMsg(item->getName(ItemRefType::plural, ItemRefInf::yes,
+                                    ItemRefAttInf::wpnContext) + ".");
+        }
       }
 
       //Note: bump() prints block messages.

@@ -25,6 +25,8 @@ public:
   Spell* getSpell();
 protected:
   void tryLearn();
+
+  std::string getNameInf() const override;
 };
 
 namespace ScrollNameHandling {

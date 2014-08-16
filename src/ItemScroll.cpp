@@ -66,7 +66,8 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
     data_->baseName.names[int(ItemRefType::plural)] = REAL_NAME_PLURAL;
     data_->baseName.names[int(ItemRefType::a)]      = REAL_NAME_A;
     if(!IS_SILENT_IDENTIFY) {
-      Log::addMsg("It was " + getName(ItemRefType::a) + ".");
+      const string name = getName(ItemRefType::a, ItemRefInf::none);
+      Log::addMsg("It was " + name + ".");
       Renderer::drawMapAndInterface();
     }
 
@@ -101,7 +102,8 @@ ConsumeItem Scroll::read() {
   const string crumbleStr = "It crumbles to dust.";
 
   if(data_->isIdentified) {
-    Log::addMsg("I read a manuscript of " + getRealTypeName() + "...");
+    const string name = getName(ItemRefType::a, ItemRefInf::none);
+    Log::addMsg("I read " + name + "...");
     spell->cast(Map::player, false);
     Log::addMsg(crumbleStr);
     tryLearn();
@@ -116,6 +118,10 @@ ConsumeItem Scroll::read() {
   delete spell;
 
   return ConsumeItem::yes;
+}
+
+std::string Scroll::getNameInf() const {
+  return (data_->isTried && !data_->isIdentified) ? "{Tried}" : "";
 }
 
 namespace ScrollNameHandling {

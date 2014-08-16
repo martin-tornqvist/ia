@@ -20,6 +20,90 @@
 
 using namespace std;
 
+void Potion::identify(const bool IS_SILENT_IDENTIFY) {
+  if(!data_->isIdentified) {
+    const string REAL_TYPE_NAME = getRealTypeName();
+
+    const string REAL_NAME        = "Potion of "    + REAL_TYPE_NAME;
+    const string REAL_NAME_PLURAL = "Potions of "   + REAL_TYPE_NAME;
+    const string REAL_NAME_A      = "a potion of "  + REAL_TYPE_NAME;
+
+    data_->baseName.names[int(ItemRefType::plain)]  = REAL_NAME;
+    data_->baseName.names[int(ItemRefType::plural)] = REAL_NAME_PLURAL;
+    data_->baseName.names[int(ItemRefType::a)]      = REAL_NAME_A;
+
+    data_->isIdentified = true;
+
+    if(!IS_SILENT_IDENTIFY) {
+      const string name = getName(ItemRefType::a, ItemRefInf::none);
+      Log::addMsg("It was " + name + ".");
+      Map::player->incrShock(ShockValue::heavy, ShockSrc::useStrangeItem);
+    }
+  }
+}
+
+void Potion::collide(const Pos& pos, Actor* const actor) {
+  if(!Map::cells[pos.x][pos.y].rigid->isBottomless() || actor) {
+
+    const bool PLAYER_SEE_CELL = Map::cells[pos.x][pos.y].isSeenByPlayer;
+
+    if(PLAYER_SEE_CELL) {
+      //TODO Use standard animation
+      Renderer::drawGlyph('*', Panel::map, pos, data_->clr);
+
+      if(actor) {
+        if(actor->deadState == ActorDeadState::alive) {
+          Log::addMsg("The potion shatters on " + actor->getNameThe() + ".");
+        }
+      } else {
+        Feature* const f = Map::cells[pos.x][pos.y].rigid;
+        Log::addMsg("The potion shatters on " + f->getName(Article::the) + ".");
+      }
+    }
+    //If the blow from the bottle didn't kill the actor, apply what's inside
+    if(actor) {
+      if(actor->deadState == ActorDeadState::alive) {
+        collide_(pos, actor);
+        if(
+          actor->deadState == ActorDeadState::alive &&
+          !data_->isIdentified && PLAYER_SEE_CELL) {
+          Log::addMsg("It had no apparent effect...");
+        }
+      }
+    }
+  }
+}
+
+void Potion::quaff(Actor* const actor) {
+  if(actor == Map::player) {
+    data_->isTried = true;
+
+    Audio::play(SfxId::potionQuaff);
+
+
+
+    if(data_->isIdentified) {
+      const string name = getName(ItemRefType::a, ItemRefInf::none);
+      Log::addMsg("I drink " + name + "...");
+    } else {
+      const string name = getName(ItemRefType::plain, ItemRefInf::none);
+      Log::addMsg("I drink an unknown " + name + "...");
+    }
+    Map::player->incrShock(ShockValue::heavy,
+                           ShockSrc::useStrangeItem);
+  }
+
+  quaff_(actor);
+
+  if(Map::player->deadState == ActorDeadState::alive) {
+    GameTime::actorDidAct();
+  }
+}
+
+std::string Potion::getNameInf() const {
+  return (data_->isTried && !data_->isIdentified) ? "{Tried}" : "";
+}
+
 void PotionVitality::quaff_(Actor* const actor) {
   actor->getPropHandler().endAppliedPropsByMagicHealing();
 
@@ -300,82 +384,6 @@ void PotionDescent::quaff_(Actor* const actor) {
   }
 
   identify(false);
-}
-
-void Potion::identify(const bool IS_SILENT_IDENTIFY) {
-  if(!data_->isIdentified) {
-    const string REAL_TYPE_NAME = getRealTypeName();
-
-    const string REAL_NAME        = "Potion of "    + REAL_TYPE_NAME;
-    const string REAL_NAME_PLURAL = "Potions of "   + REAL_TYPE_NAME;
-    const string REAL_NAME_A      = "a potion of "  + REAL_TYPE_NAME;
-
-    data_->baseName.names[int(ItemRefType::plain)]  = REAL_NAME;
-    data_->baseName.names[int(ItemRefType::plural)] = REAL_NAME_PLURAL;
-    data_->baseName.names[int(ItemRefType::a)]      = REAL_NAME_A;
-
-    if(!IS_SILENT_IDENTIFY) {
-      Log::addMsg("It was a " + REAL_NAME + ".");
-      Map::player->incrShock(ShockValue::heavy,
-                             ShockSrc::useStrangeItem);
-    }
-
-    data_->isIdentified = true;
-  }
-}
-
-void Potion::collide(const Pos& pos, Actor* const actor) {
-  if(!Map::cells[pos.x][pos.y].rigid->isBottomless() || actor) {
-
-    const bool PLAYER_SEE_CELL = Map::cells[pos.x][pos.y].isSeenByPlayer;
-
-    if(PLAYER_SEE_CELL) {
-      //TODO Use standard animation
-      Renderer::drawGlyph('*', Panel::map, pos, data_->clr);
-
-      if(actor) {
-        if(actor->deadState == ActorDeadState::alive) {
-          Log::addMsg("The potion shatters on " + actor->getNameThe() + ".");
-        }
-      } else {
-        Feature* const f = Map::cells[pos.x][pos.y].rigid;
-        Log::addMsg("The potion shatters on " + f->getName(Article::the) + ".");
-      }
-    }
-    //If the blow from the bottle didn't kill the actor, apply what's inside
-    if(actor) {
-      if(actor->deadState == ActorDeadState::alive) {
-        collide_(pos, actor);
-        if(
-          actor->deadState == ActorDeadState::alive &&
-          !data_->isIdentified && PLAYER_SEE_CELL) {
-          Log::addMsg("It had no apparent effect...");
-        }
-      }
-    }
-  }
-}
-
-void Potion::quaff(Actor* const actor) {
-  if(actor == Map::player) {
-    data_->isTried = true;
-
-    Audio::play(SfxId::potionQuaff);
-
-    if(data_->isIdentified) {
-      Log::addMsg("I drink " + getName(ItemRefType::a) + "...");
-    } else {
-      Log::addMsg("I drink an unknown " + getName(ItemRefType::plain) + "...");
-    }
-    Map::player->incrShock(ShockValue::heavy,
-                           ShockSrc::useStrangeItem);
-  }
-
-  quaff_(actor);
-
-  if(Map::player->deadState == ActorDeadState::alive) {
-    GameTime::actorDidAct();
-  }
 }
 
 namespace PotionNameHandling {

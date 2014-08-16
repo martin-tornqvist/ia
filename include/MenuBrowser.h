@@ -16,6 +16,8 @@ public:
 
   MenuBrowser() = delete;
 
+  MenuBrowser& operator=(const MenuBrowser&) = default;
+
   void navigate(const Dir dir);
 
   int getElement() const;
@@ -33,10 +35,10 @@ public:
   void setGoodPos();
 
 private:
-  const Pos x0y0_;
-  const Pos x1y0_;
-  const Pos x0y1_;
-  const Pos x1y1_;
+  Pos x0y0_;
+  Pos x1y0_;
+  Pos x0y1_;
+  Pos x1y1_;
   int NR_A_;
   int NR_B_;
   Pos pos_;

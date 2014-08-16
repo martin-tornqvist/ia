@@ -34,7 +34,7 @@ void tryPick() {
   if(item) {
     Inventory& playerInv = Map::player->getInv();
 
-    const string ITEM_NAME = item->getName(ItemRefType::plain);
+    const string ITEM_NAME = item->getName(ItemRefType::plural);
 
     //If picked up item is missile weapon, try to add it to carried stack.
     if(item->getData().ranged.isThrowingWpn) {

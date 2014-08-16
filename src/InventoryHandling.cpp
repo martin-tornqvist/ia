@@ -173,8 +173,7 @@ void runInvScreen() {
   while(true) {
     inv.sortGeneralInventory();
 
-    const InvList invList = browser.getPos().x == 0 ?
-                            InvList::general : InvList::slots;
+    const InvList invList = browser.getPos().x == 0 ? InvList::general : InvList::slots;
 
     const MenuAction action = MenuInputHandling::getAction(browser);
     switch(action) {
@@ -187,13 +186,6 @@ void runInvScreen() {
           browser.setGoodPos();
           browserPosToSetAfterDrop  = browser.getPos();
           screenToOpenAfterDrop     = InvScrId::inv;
-//          if(browserPos.x == 0 && browserPos.y >= int(inv.general_.size())) {
-//            if(browserPosToSetAfterDrop.y == 0) {     //No more items in inventory
-//              browserPosToSetAfterDrop = Pos(1, 0);   //Go to equipped items instead
-//            } else {
-//              --browserPosToSetAfterDrop.y;
-//            }
-//          }
           return;
         }
         RenderInventory::drawBrowseInv(browser);
@@ -231,6 +223,10 @@ void runInvScreen() {
                 RenderInventory::drawBrowseInv(browser);
               } break;
             }
+            //Create a new browser to ajust for changed inventory size
+            const Pos p = browser.getPos();
+            browser = MenuBrowser(inv.general_.size(), inv.slots_.size());
+            browser.setPos(p);
           } else { //No item in slot
             if(runEquipScreen(slot)) {
               Renderer::drawMapAndInterface();

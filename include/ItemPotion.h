@@ -30,6 +30,8 @@ protected:
   virtual void quaff_(Actor* const actor) {(void) actor;}
 
   virtual const std::string getRealTypeName() {return "[WARNING]";}
+
+  std::string getNameInf() const override;
 };
 
 class PotionVitality: public Potion {

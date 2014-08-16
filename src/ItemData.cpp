@@ -1140,6 +1140,7 @@ void initDataList() {
   d = new ItemDataT(ItemId::gasMask);
   resetData(*d, ItemType::general);
   d->baseName = ItemName("Gas Mask", "", "A Gas Mask");
+  d->isStackable = false;
   d->clr = clrBrown;
   d->tile = TileId::mask;
   d->glyph = '[';
@@ -1153,6 +1154,7 @@ void initDataList() {
   d = new ItemDataT(ItemId::hideousMask);
   resetData(*d, ItemType::general);
   d->baseName = ItemName("Hideous Mask", "", "The Hideous Mask");
+  d->isStackable = false;
   d->clr = clrMagenta;
   d->tile = TileId::mask;
   d->glyph = '[';
@@ -1470,7 +1472,7 @@ bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
 //    }
 //
 //    if((d.isScroll || d.isPotion) && d.isTried && !d.isIdentified) {
-//      return ret + " {tried}";
+//      return ret + " {Tried}";
 //    }
 //  }
 //
@@ -1584,7 +1586,7 @@ bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
 //  }
 //
 //  if((d.isScroll || d.isPotion) && d.isTried && !d.isIdentified) {
-//    return ret + " {tried}";
+//    return ret + " {Tried}";
 //  }
 //
 //  return ret;
