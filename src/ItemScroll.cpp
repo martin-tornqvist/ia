@@ -199,7 +199,7 @@ void setFalseScrollName(ItemDataT& d) {
   const int NR_ELEMENTS = falseNames_.size();
   const int ELEMENT     = Rnd::range(0, NR_ELEMENTS - 1);
 
-  const string& TITLE = "\"" + falseNames_.at(ELEMENT) + "\"";
+  const string& TITLE = falseNames_.at(ELEMENT);
 
   d.baseName.names[int(ItemRefType::plain)]   = "Manuscript titled "    + TITLE;
   d.baseName.names[int(ItemRefType::plural)]  = "Manuscripts titled "   + TITLE;

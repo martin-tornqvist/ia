@@ -89,9 +89,9 @@ public:
   void storeToSaveLines(std::vector<std::string>& lines) const;
   void setupFromSaveLines(std::vector<std::string>& lines);
 
-  std::vector<InvSlot> slots_;
-  std::vector<Item*> general_;
-  std::vector<Item*> intrinsics_;
+  std::vector<InvSlot>  slots_;
+  std::vector<Item*>    general_;
+  std::vector<Item*>    intrinsics_;
 };
 
 #endif

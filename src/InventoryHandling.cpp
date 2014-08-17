@@ -24,7 +24,7 @@ namespace InvHandling {
 
 InvScrId  screenToOpenAfterDrop     = InvScrId::END;
 InvSlot*  equipSlotToOpenAfterDrop  = nullptr;
-Pos       browserPosToSetAfterDrop  = Pos(0, 0);
+int       browserIdxToSetAfterDrop  = 0;
 
 namespace {
 
@@ -57,11 +57,14 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT) {
     TRACE << "Item is stackable and more than one" << endl;
     Renderer::drawMapAndInterface(false);
     const string nrStr = "1-" + toStr(item->nrItems_);
-    const string dropStr = "Drop how many (" + nrStr + ")?:      " +
-                           "[enter] to drop" + cancelInfoStr;
+    string dropStr = "Drop how many (" + nrStr + ")?:";
     Renderer::drawText(dropStr, Panel::screen, Pos(0, 0), clrWhiteHigh);
     Renderer::updateScreen();
-    const Pos nrQueryPos(20 + nrStr.size(), 0);
+    const Pos nrQueryPos(dropStr.size() + 1, 0);
+    const int MAX_DIGITS = 3;
+    const Pos doneInfPos = nrQueryPos + Pos(MAX_DIGITS + 2, 0);
+    Renderer::drawText("[enter] to drop" + cancelInfoStr, Panel::screen, doneInfPos,
+                       clrWhiteHigh);
     const int NR_TO_DROP = Query::number(nrQueryPos, clrWhiteHigh, 0, 3,
                                          item->nrItems_, false);
     if(NR_TO_DROP <= 0) {
@@ -145,7 +148,7 @@ void swapItems(Item** item1, Item** item2) {
 void init() {
   screenToOpenAfterDrop     = InvScrId::END;
   equipSlotToOpenAfterDrop  = nullptr;
-  browserPosToSetAfterDrop  = Pos(0, 0);
+  browserIdxToSetAfterDrop  = 0;
 }
 
 void activateDefault(const size_t GENERAL_ITEMS_ELEMENT) {
@@ -164,16 +167,17 @@ void runInvScreen() {
 
   inv.sortGeneralInventory();
 
-  MenuBrowser browser(inv.general_.size(), inv.slots_.size());
+  MenuBrowser browser(inv.slots_.size() + inv.general_.size(), 0);
 
-  browser.setPos(browserPosToSetAfterDrop);
-  browserPosToSetAfterDrop = Pos(0, 0);
+  browser.setPos(Pos(0, browserIdxToSetAfterDrop));
+  browserIdxToSetAfterDrop = 0;
   RenderInventory::drawBrowseInv(browser);
 
   while(true) {
     inv.sortGeneralInventory();
 
-    const InvList invList = browser.getPos().x == 0 ? InvList::general : InvList::slots;
+    const InvList invList = browser.getPos().y < int(inv.slots_.size()) ?
+                            InvList::slots : InvList::general;
 
     const MenuAction action = MenuInputHandling::getAction(browser);
     switch(action) {
@@ -182,9 +186,12 @@ void runInvScreen() {
       } break;
 
       case MenuAction::selectedShift: {
-        if(runDropScreen(invList, browser.getPos().y)) {
+        const int BROWSER_Y = browser.getPos().y;
+        const size_t ELEMENT =
+          invList == InvList::slots ? BROWSER_Y : (BROWSER_Y - inv.slots_.size());
+        if(runDropScreen(invList, ELEMENT)) {
           browser.setGoodPos();
-          browserPosToSetAfterDrop  = browser.getPos();
+          browserIdxToSetAfterDrop  = browser.getY();
           screenToOpenAfterDrop     = InvScrId::inv;
           return;
         }
@@ -192,8 +199,8 @@ void runInvScreen() {
       } break;
 
       case MenuAction::selected: {
-        const size_t ELEMENT = browser.getY();
         if(invList == InvList::slots) {
+          const size_t ELEMENT = browser.getY();
           InvSlot& slot = inv.slots_.at(ELEMENT);
           if(slot.item) {
             Item* const item = slot.item;
@@ -210,7 +217,7 @@ void runInvScreen() {
               } break;
               case SlotId::body: {
                 screenToOpenAfterDrop     = InvScrId::inv;
-                browserPosToSetAfterDrop  = browser.getPos();
+                browserIdxToSetAfterDrop  = browser.getY();
 
                 Log::addMsg("I take off my " + itemName + ".", clrWhite, true, true);
                 item->onTakeOff();
@@ -225,7 +232,7 @@ void runInvScreen() {
             }
             //Create a new browser to ajust for changed inventory size
             const Pos p = browser.getPos();
-            browser = MenuBrowser(inv.general_.size(), inv.slots_.size());
+            browser = MenuBrowser(inv.slots_.size() + inv.general_.size(), 0);
             browser.setPos(p);
           } else { //No item in slot
             if(runEquipScreen(slot)) {
@@ -236,6 +243,7 @@ void runInvScreen() {
             }
           }
         } else { //In general inventory
+          const size_t ELEMENT = browser.getY() - inv.slots_.size();
           activateDefault(ELEMENT);
           Renderer::drawMapAndInterface();
           return;
@@ -263,8 +271,8 @@ bool runEquipScreen(InvSlot& slotToEquip) {
   filterPlayerGeneralEquip(slotToEquip.id);
 
   MenuBrowser browser(generalItemsToShow_.size(), 0);
-  browser.setPos(browserPosToSetAfterDrop);
-  browserPosToSetAfterDrop = Pos(0, 0);
+  browser.setPos(Pos(0, browserIdxToSetAfterDrop));
+  browserIdxToSetAfterDrop = 0;
 
   Audio::play(SfxId::backpack);
 
@@ -297,7 +305,7 @@ bool runEquipScreen(InvSlot& slotToEquip) {
       case MenuAction::selectedShift: {
         if(runDropScreen(InvList::general, generalItemsToShow_.at(browser.getY()))) {
           browser.setGoodPos();
-          browserPosToSetAfterDrop  = browser.getPos();
+          browserIdxToSetAfterDrop  = browser.getY();
           screenToOpenAfterDrop     = InvScrId::equip;
           return true;
         }
@@ -309,48 +317,5 @@ bool runEquipScreen(InvSlot& slotToEquip) {
     }
   }
 }
-
-//void runBrowseInventory() {
-//  screenToOpenAfterDrop = InvScrId::END;
-//  Renderer::drawMapAndInterface();
-//
-//  Map::player->getInv().sortGeneralInventory();
-//
-//  filterPlayerGeneralShowAll();
-//  MenuBrowser browser(generalItemsToShow_.size(), 0);
-//  browser.setY(browserPosToSetAfterDrop);
-//  browserPosToSetAfterDrop = 0;
-//
-//  Audio::play(SfxId::backpack);
-//
-//  RenderInventory::drawBrowseInventory(browser, generalItemsToShow_);
-//
-//  while(true) {
-//    const MenuAction action = MenuInputHandling::getAction(browser);
-//    switch(action) {
-//      case MenuAction::browsed: {
-//        RenderInventory::drawBrowseInventory(browser, generalItemsToShow_);
-//      } break;
-//
-//      case MenuAction::selected: {} break;
-//
-//      case MenuAction::selectedShift: {
-//        const int SLOTS_SIZE = Map::player->getInv().slots_.size();
-//        if(
-//          runDropScreen(SLOTS_SIZE + generalItemsToShow_.at(browser.getPos().y))) {
-//          screenToOpenAfterDrop     = InvScrId::backpack;
-//          browserPosToSetAfterDrop  = browser.getPos().y;
-//          return;
-//        }
-//        RenderInventory::drawBrowseInventory(browser, generalItemsToShow_);
-//      } break;
-//
-//      case MenuAction::esc:
-//      case MenuAction::space: {
-//        return;
-//      } break;
-//    }
-//  }
-//}
 
 } //InvHandling

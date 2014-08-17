@@ -10,7 +10,7 @@
 
 using namespace std;
 
-const int EQ_BOX_X0 = MAP_W_HALF - 1;
+const int INV_BOX_X1 = MAP_W_HALF + 6;
 
 namespace {
 
@@ -23,8 +23,8 @@ void drawItemSymbol(const Item& item, const Pos& p) {
   }
 }
 
-void drawDetailedItemDescr(const Item* const item, const int BOX_Y0) {
-  const Rect box(EQ_BOX_X0, BOX_Y0, MAP_W - 1, CHAR_LINES_OFFSET_H - 1);
+void drawDetailedItemDescr(const Item* const item) {
+  const Rect box(INV_BOX_X1, 1, MAP_W - 1, SCREEN_H - 1);
 
   const Panel panel = Panel::screen;
 
@@ -38,9 +38,8 @@ void drawDetailedItemDescr(const Item* const item, const int BOX_Y0) {
   Renderer::drawPopupBox(box, panel, clrPopupBox, false);
 
   if(Config::isTilesMode()) {
-    Renderer::drawTile(TileId::popupVerR,   panel, box.p0, clrPopupBox);
-    Renderer::drawTile(TileId::popupVerL,   panel, Pos(box.p1.x, box.p0.y), clrPopupBox);
-    Renderer::drawTile(TileId::popupHorUp,  panel, Pos(box.p0.x, box.p1.y), clrPopupBox);
+    Renderer::drawTile(TileId::popupHorDown, panel, box.p0, clrPopupBox);
+    Renderer::drawTile(TileId::popupHorUp, panel, Pos(box.p0.x, box.p1.y), clrPopupBox);
   }
 }
 
@@ -50,42 +49,41 @@ namespace RenderInventory {
 
 void drawBrowseInv(const MenuBrowser& browser) {
 
-  const Pos     browserPos  = browser.getPos();
-  const size_t  BROWSER_Y   = browser.getPos().y;
+  const int     BROWSER_Y   = browser.getY();
   const auto&   inv         = Map::player->getInv();
   const size_t  NR_SLOTS    = inv.slots_.size();
 
-  Renderer::coverArea(Panel::screen, Pos(0, 0), Pos(MAP_W, CHAR_LINES_OFFSET_H - 1));
+  Renderer::clearScreen();
 
-  const bool        IS_IN_INV   = browserPos.x == 0;
-  const auto* const item        = IS_IN_INV ?
-                                  inv.general_.at(BROWSER_Y) :
-                                  inv.slots_.at(BROWSER_Y).item;
+  const bool    IS_IN_EQP   = BROWSER_Y < int(NR_SLOTS);
+  const size_t  INV_ELEMENT = IS_IN_EQP ? 0 : (size_t(BROWSER_Y) - NR_SLOTS);
+
+  const auto* const item =
+    IS_IN_EQP ? inv.slots_.at(BROWSER_Y).item : inv.general_.at(INV_ELEMENT);
 
   const string queryEqStr   = item ? "unequip" : "equip";
-  const string queryBaseStr = "[enter] to " + (IS_IN_INV ? "use item" : queryEqStr);
+  const string queryBaseStr = "[enter] to " + (IS_IN_EQP ? queryEqStr : "Apply item");
 
   const string queryDropStr = item ? " [shift+enter] to drop" : "";
 
   string str                = queryBaseStr + queryDropStr + " [space/esc] to exit";
   Renderer::drawText(str, Panel::screen, Pos(0, 0), clrWhiteHigh);
 
-  const int EQ_BOX_Y1 = inv.slots_.size() + 2;
+  const int EQP_BOX_Y1 = inv.slots_.size() + 2;
 
-  const Rect invRect(Pos(0,         1), Pos(EQ_BOX_X0,  CHAR_LINES_OFFSET_H - 1));
-  const Rect eqpRect(Pos(EQ_BOX_X0, 1), Pos(MAP_W - 1,  EQ_BOX_Y1));
+  const Rect eqpRect(Pos(0, 1),           Pos(INV_BOX_X1, EQP_BOX_Y1));
+  const Rect invRect(Pos(0, EQP_BOX_Y1),  Pos(INV_BOX_X1, SCREEN_H - 1));
 
   const size_t MAX_NR_ITEMS_ON_SCR  = invRect.p1.y - invRect.p0.y - 1;
   const size_t NR_INV_ITEMS         = inv.general_.size();
 
   size_t invTopIdx = 0;
 
-  if(browserPos.x == 0 && NR_INV_ITEMS > 0) {
-
-    const int BROWESR_Y = browserPos.y;
+  if(!IS_IN_EQP && NR_INV_ITEMS > 0) {
 
     auto isBrowserPosOnScr = [&](const bool IS_FIRST_SCR) {
-      return BROWESR_Y < int(invTopIdx + MAX_NR_ITEMS_ON_SCR) - (IS_FIRST_SCR ? 1 : 2);
+      const int MORE_LABEL_H = IS_FIRST_SCR ? 1 : 2;
+      return int(INV_ELEMENT) < (int(invTopIdx + MAX_NR_ITEMS_ON_SCR) - MORE_LABEL_H);
     };
 
     if(NR_INV_ITEMS > MAX_NR_ITEMS_ON_SCR && !isBrowserPosOnScr(true)) {
@@ -111,9 +109,11 @@ void drawBrowseInv(const MenuBrowser& browser) {
   const int INV_ITEM_SYM_X  = invRect.p0.x + 1;
   const int INV_ITEM_NAME_X = INV_ITEM_SYM_X + 2;
 
+  p.x = invRect.p0.x + 1;
+
   for(size_t i = invTopIdx; i < NR_INV_ITEMS; ++i) {
-    const bool IS_CUR_POS = IS_IN_INV && BROWSER_Y == i;
-    Item* const curItem = inv.general_.at(i);
+    const bool IS_CUR_POS = !IS_IN_EQP && INV_ELEMENT == i;
+    Item* const curItem   = inv.general_.at(i);
 
     const Clr itemInterfClr = IS_CUR_POS ? clrWhiteHigh : curItem->getInterfaceClr();
 
@@ -145,7 +145,7 @@ void drawBrowseInv(const MenuBrowser& browser) {
   p = Pos(eqpRect.p0 + Pos(1, 1));
 
   for(size_t i = 0; i < NR_SLOTS; ++i) {
-    const bool IS_CUR_POS = !IS_IN_INV && BROWSER_Y == i;
+    const bool IS_CUR_POS = IS_IN_EQP && BROWSER_Y == int(i);
     const InvSlot& slot   = inv.slots_.at(i);
     str                   = slot.name;
 
@@ -190,17 +190,17 @@ void drawBrowseInv(const MenuBrowser& browser) {
     ++p.y;
   }
 
+  Renderer::drawPopupBox(eqpRect, Panel::screen, clrPopupBox, false);
   Renderer::drawPopupBox(invRect, Panel::screen, clrPopupBox, false);
+  Renderer::drawText("Equiped items", Panel::screen, eqpRect.p0 + Pos(1, 0), clrWhite);
   Renderer::drawText("Inventory", Panel::screen, invRect.p0 + Pos(1, 0), clrWhite);
 
-  Renderer::drawPopupBox(eqpRect, Panel::screen, clrPopupBox, false);
-  Renderer::drawText("Equiped items", Panel::screen, eqpRect.p0 + Pos(1, 0), clrWhite);
+  drawDetailedItemDescr(item);
 
   if(Config::isTilesMode()) {
-    Renderer::drawTile(TileId::popupHorDown, Panel::screen, eqpRect.p0, clrPopupBox);
+    Renderer::drawTile(TileId::popupVerL, Panel::screen, eqpRect.p1, clrPopupBox);
+    Renderer::drawTile(TileId::popupVerR, Panel::screen, invRect.p0, clrPopupBox);
   }
-
-  drawDetailedItemDescr(item, eqpRect.p1.y);
 
   Renderer::updateScreen();
 }

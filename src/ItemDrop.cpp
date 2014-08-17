@@ -14,6 +14,7 @@
 #include "MapParsing.h"
 #include "Utils.h"
 #include "FeatureRigid.h"
+#include "Renderer.h"
 
 using namespace std;
 
@@ -37,8 +38,8 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
   }
 
   if(itemToDrop) {
-    const bool IS_STACKABLE = itemToDrop->getData().isStackable;
-    const int NR_ITEMS_BEFORE_DROP = itemToDrop->nrItems_;
+    const bool IS_STACKABLE         = itemToDrop->getData().isStackable;
+    const int NR_ITEMS_BEFORE_DROP  = itemToDrop->nrItems_;
     const bool IS_WHOLE_STACK_DROPPED =
       !IS_STACKABLE || NR_ITEMS_TO_DROP == -1 ||
       (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
@@ -59,16 +60,15 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     }
 
     //Messages
-    const Actor* const curActor = GameTime::getCurActor();
-    if(curActor == Map::player) {
+    if(&actor == Map::player) {
       Log::clearLog();
+      Renderer::drawMapAndInterface();
       Log::addMsg("I drop " + itemRef + ".", clrWhite, false, true);
     } else {
       bool blocked[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksVision(), blocked);
-      if(Map::player->isSeeingActor(*curActor, blocked)) {
-        Log::addMsg(
-          "I see " + curActor->getNameThe() + " drop " + itemRef + ".");
+      if(Map::player->isSeeingActor(actor, blocked)) {
+        Log::addMsg(actor.getNameThe() + " drops " + itemRef + ".");
       }
     }
 

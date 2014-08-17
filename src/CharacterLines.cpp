@@ -55,13 +55,6 @@ void drawLocationInfo() {
       str += TextFormatting::firstToUpper(featureName) + ". ";
     }
 
-    //Describe item
-    Item* const item = Map::cells[p.x][p.y].item;
-    if(item) {
-      string itemName = item->getName(ItemRefType::a);
-      str += TextFormatting::firstToUpper(itemName) + ". ";
-    }
-
     //Light/darkness
     const auto& cell = Map::cells[p.x][p.y];
     if(cell.isDark) {
@@ -211,11 +204,9 @@ void drawInfoLines() {
   if(itemMissiles) {
     const Clr itemClr = itemMissiles->getClr();
     if(Config::isTilesMode()) {
-      Renderer::drawTile(
-        itemMissiles->getTile(), Panel::charLines, pos, itemClr);
+      Renderer::drawTile(itemMissiles->getTile(), Panel::charLines, pos, itemClr);
     } else {
-      Renderer::drawGlyph(
-        itemMissiles->getGlyph(), Panel::charLines, pos, itemClr);
+      Renderer::drawGlyph(itemMissiles->getGlyph(), Panel::charLines, pos, itemClr);
     }
     pos.x += 2;
 
@@ -235,8 +226,7 @@ void drawInfoLines() {
   const int NR_PROPS = propsLine.size();
   for(int i = 0; i < NR_PROPS; ++i) {
     const StrAndClr& curPropLabel = propsLine.at(i);
-    Renderer::drawText(
-      curPropLabel.str, Panel::charLines, pos, curPropLabel.clr);
+    Renderer::drawText(curPropLabel.str, Panel::charLines, pos, curPropLabel.clr);
     pos.x += curPropLabel.str.length() + 1;
   }
 

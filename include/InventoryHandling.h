@@ -11,7 +11,7 @@ namespace InvHandling {
 
 extern InvScrId screenToOpenAfterDrop;
 extern InvSlot* equipSlotToOpenAfterDrop;
-extern Pos      browserPosToSetAfterDrop;
+extern int      browserIdxToSetAfterDrop;
 
 void init();
 
