@@ -300,8 +300,7 @@ private:
 
 class Ammo: public Item {
 public:
-  Ammo(ItemDataT* const itemData) :
-    Item(itemData) {}
+  Ammo(ItemDataT* const itemData) : Item(itemData) {}
   virtual ~Ammo() {}
   Clr getInterfaceClr() const override {return clrWhite;}
 };
@@ -312,18 +311,21 @@ public:
 
   ~AmmoClip() {}
 
-  int ammo;
+  int ammo_;
 
-  void setFullAmmo() {ammo = data_->ranged.ammoContainedInClip;}
+  void setFullAmmo() {ammo_ = data_->ranged.ammoContainedInClip;}
 
   void storeToSaveLines(std::vector<std::string>& lines) override {
-    lines.push_back(toStr(ammo));
+    lines.push_back(toStr(ammo_));
   }
 
   void setupFromSaveLines(std::vector<std::string>& lines) {
-    ammo = toInt(lines.front());
+    ammo_ = toInt(lines.front());
     lines.erase(begin(lines));
   }
+
+protected:
+  std::string getNameInf() const override {return "{" + toStr(ammo_) + "}";}
 };
 
 enum class MedBagAction {

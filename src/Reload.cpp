@@ -67,16 +67,14 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
         Audio::play(wpn->getData().ranged.reloadSfx);
 
         if(isClip) {
-          const string wpnName = wpn->getName(ItemRefType::plain);
+          const string wpnName = wpn->getName(ItemRefType::plain, ItemRefInf::none);
           Log::addMsg(
             "I" + swiftStr + " reload the " + wpnName +
-            " (" + toStr(wpn->nrAmmoLoaded) + "/" +
-            toStr(wpn->ammoCapacity) + ").");
+            " (" + toStr(wpn->nrAmmoLoaded) + "/" + toStr(wpn->ammoCapacity) + ").");
         } else {
           Log::addMsg(
-            "I" + swiftStr + " load " + ammoName +
-            " (" + toStr(wpn->nrAmmoLoaded) + "/" +
-            toStr(wpn->ammoCapacity) + ").");
+            "I" + swiftStr + " load " + ammoName + " (" + toStr(wpn->nrAmmoLoaded) +
+            "/" + toStr(wpn->ammoCapacity) + ").");
         }
         Renderer::drawMapAndInterface();
       } else {
@@ -162,7 +160,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
             if(isClip) {
               const int previousAmmoCount = wpn->nrAmmoLoaded;
               AmmoClip* clipItem = static_cast<AmmoClip*>(item);
-              wpn->nrAmmoLoaded = clipItem->ammo;
+              wpn->nrAmmoLoaded = clipItem->ammo_;
 
               printMsgAndPlaySfx(actorReloading, wpn, item, result,
                                  isSwiftReload);
@@ -174,7 +172,7 @@ bool reloadWieldedWpn(Actor& actorReloading) {
               if(previousAmmoCount > 0) {
                 item = ItemFactory::mk(ammoType);
                 clipItem = static_cast<AmmoClip*>(item);
-                clipItem->ammo = previousAmmoCount;
+                clipItem->ammo_ = previousAmmoCount;
                 inv.putInGeneral(clipItem);
               }
             }

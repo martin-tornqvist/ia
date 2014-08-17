@@ -88,7 +88,7 @@ void tryUnloadWpnOrPickupAmmo() {
 
         if(ammoData->isAmmoClip) {
           //Unload a clip
-          static_cast<AmmoClip*>(spawnedAmmo)->ammo = nrAmmoLoaded;
+          static_cast<AmmoClip*>(spawnedAmmo)->ammo_ = nrAmmoLoaded;
         } else {
           //Unload loose ammo
           spawnedAmmo->nrItems_ = nrAmmoLoaded;
