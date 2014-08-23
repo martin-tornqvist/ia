@@ -15,8 +15,6 @@ class Item {
 public:
   Item(ItemDataT* itemData) : nrItems_(1), meleeDmgPlus_(0), data_(itemData) {}
 
-//  Item& operator=(Item& other) {(void)other; return *this;}
-
   Item& operator=(Item& other) = delete;
 
   virtual ~Item() {}
@@ -36,7 +34,7 @@ public:
 
   int getWeight() const {return data_->itemWeight * nrItems_;}
 
-  std::string getWeightLabel() const;
+  std::string getWeightStr() const;
 
   virtual ConsumeItem activateDefault(Actor* const actor);
 

@@ -21,18 +21,18 @@
 using namespace std;
 
 //------------------------------------------------------------------- ITEM
-string Item::getWeightLabel() const {
+string Item::getWeightStr() const {
   const int WEIGHT = getWeight();
   if(WEIGHT <= (itemWeight_extraLight + itemWeight_light) / 2) {
-    return "Very light";
+    return "very light";
   }
   if(WEIGHT <= (itemWeight_light + itemWeight_medium) / 2) {
-    return "Light";
+    return "light";
   }
   if(WEIGHT <= (itemWeight_medium + itemWeight_heavy) / 2) {
-    return "Medium";
+    return "a bit heavy";
   }
-  return "Heavy";
+  return "heavy";
 }
 
 ConsumeItem Item::activateDefault(Actor* const actor) {

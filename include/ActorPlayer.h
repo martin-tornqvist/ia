@@ -58,7 +58,7 @@ public:
   void restoreShock(const int amountRestored,
                     const bool IS_TEMP_SHOCK_RESTORED);
   inline int getShockTotal()  const {return int(floor(shock_ + shockTmp_));}
-  inline int getInsanity()    const {return std::min(100, insanity_);}
+  inline int getInsanity()    const {return std::min(100, ins_);}
 
   //The following is used for determining if '!'-marks should be drawn on the
   //player map symbol
@@ -76,9 +76,6 @@ public:
   void storeToSaveLines(std::vector<std::string>& lines) const;
   void setupFromSaveLines(std::vector<std::string>& lines);
 
-  bool phobias[int(Phobia::END)];
-  bool obsessions[int(Obsession::END)];
-
   void autoMelee();
 
   void kickMonster(Actor& actorToKick);
@@ -92,20 +89,19 @@ public:
 
   int getEncPercent() const;
 
+  int getCarryWeightLmt() const;
+
+  bool phobias[int(Phobia::END)];
+  bool obsessions[int(Obsession::END)];
+
   MedicalBag* activeMedicalBag;
-
-  int waitTurnsLeft;
-
-  Explosive* activeExplosive;
-
-  Actor* target;
-
-  int insanity_;
-  double shock_, shockTmp_, permShockTakenCurTurn_;
+  int         waitTurnsLeft;
+  Explosive*  activeExplosive;
+  Actor*      target;
+  int         ins_;
+  double      shock_, shockTmp_, permShockTakenCurTurn_;
 
 private:
-  int getCarryWeightLimit() const;
-
   void incrInsanity();
 
   void testPhobias();
@@ -118,10 +114,8 @@ private:
 
   bool isStandingInCrampedSpace() const;
 
-  int nrMovesUntilFreeAction_;
-
-  int nrTurnsUntilIns_;
-
+  int       nrMovesUntilFreeAction_;
+  int       nrTurnsUntilIns_;
   const int CARRY_WEIGHT_BASE_;
 };
 

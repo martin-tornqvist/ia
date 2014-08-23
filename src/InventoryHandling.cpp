@@ -86,9 +86,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT) {
   return false;
 }
 
-void filterPlayerGeneralEquip(
-  const SlotId slotToEquip) {
-
+void filterPlayerGeneralEquip(const SlotId slotToEquip) {
   auto& general = Map::player->getInv().general_;
   generalItemsToShow_.resize(0);
 
@@ -219,9 +217,9 @@ void runInvScreen() {
                 screenToOpenAfterDrop     = InvScrId::inv;
                 browserIdxToSetAfterDrop  = browser.getY();
 
-                Log::addMsg("I take off my " + itemName + ".", clrWhite, true, true);
-                item->onTakeOff();
                 Renderer::drawMapAndInterface();
+                Log::addMsg("I take off my " + itemName + ".", clrWhite, false, true);
+                item->onTakeOff();
                 GameTime::actorDidAct();
                 return;
               }
@@ -288,7 +286,8 @@ bool runEquipScreen(InvSlot& slotToEquip) {
       case MenuAction::selected: {
         if(!generalItemsToShow_.empty()) {
           const int ELEMENT = generalItemsToShow_.at(browser.getY());
-          inv.equipGeneralItemAndPossiblyEndTurn(ELEMENT, slotToEquip.id);
+          Renderer::drawMapAndInterface();
+          inv.equipGeneralItemAndEndTurn(ELEMENT, slotToEquip.id);
           bool applyWearEffect = false;
           switch(slotToEquip.id) {
             case SlotId::wielded:
@@ -298,6 +297,8 @@ bool runEquipScreen(InvSlot& slotToEquip) {
             case SlotId::head: applyWearEffect = true; break;
           }
           if(applyWearEffect) {slotToEquip.item->onWear();}
+          browserIdxToSetAfterDrop  = int(slotToEquip.id);
+          screenToOpenAfterDrop     = InvScrId::inv;
           return true;
         }
       } break;

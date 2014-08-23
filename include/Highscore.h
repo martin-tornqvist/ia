@@ -15,7 +15,7 @@ public:
     xp_(xp),
     lvl_(lvl),
     dlvl_(dlvl),
-    insanity_(insanity),
+    ins_(insanity),
     isVictory_(isVictory) {}
 
   ~HighScoreEntry() {}
@@ -28,14 +28,14 @@ public:
     xp_           = XP;
     lvl_          = LVL;
     dlvl_         = DLVL;
-    insanity_     = INSANITY;
+    ins_          = INSANITY;
     isVictory_    = IS_VICTORY;
   }
 
   inline int getScore() const {
     const double DLVL_DB  = double(dlvl_);
     const double XP_DB    = double(xp_);
-    const double INS_DB   = double(insanity_);
+    const double INS_DB   = double(ins_);
     const double SCORE_DB =
       (XP_DB + (isVictory_ * XP_DB / 5.0)) *
       ((((DLVL_DB + 1.0) / LAST_CAVERN_LVL) / 3.0) + 1.0) *
@@ -48,13 +48,13 @@ public:
   inline int          getXp()           const {return xp_;}
   inline int          getLvl()          const {return lvl_;}
   inline int          getDlvl()         const {return dlvl_;}
-  inline int          getInsanity()     const {return insanity_;}
+  inline int          getInsanity()     const {return ins_;}
   inline bool         isVictoryGame()   const {return isVictory_;}
 
 private:
   std::string dateAndTime_;
   std::string name_;
-  int xp_, lvl_, dlvl_, insanity_;
+  int xp_, lvl_, dlvl_, ins_;
   bool isVictory_;
 };
 

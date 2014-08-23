@@ -259,7 +259,7 @@ void mkMemorialFile(const vector<StrAndClr>& lines) {
 }
 
 void renderMenu(const MenuBrowser& browser) {
-  vector<string> art;
+  vector<string> asciiGraveyard;
 
   string curLine;
   ifstream file("data/ascii_graveyard");
@@ -267,7 +267,7 @@ void renderMenu(const MenuBrowser& browser) {
   if(file.is_open()) {
     while(getline(file, curLine)) {
       if(curLine.size() > 0) {
-        art.push_back(curLine);
+        asciiGraveyard.push_back(curLine);
       }
     }
   } else {
@@ -279,41 +279,43 @@ void renderMenu(const MenuBrowser& browser) {
 
   Renderer::coverPanel(Panel::screen);
 
-  Pos pos(1, 1);
+  Pos pos(1, SCREEN_H - asciiGraveyard.size());
 
-  for(unsigned int i = 0; i < art.size(); ++i) {
-    Renderer::drawText(art.at(i), Panel::screen, pos, clrWhiteHigh);
+  for(const string& line : asciiGraveyard) {
+    const Uint8 K = Uint8(16 + (180 * ((pos.y * 100) / SCREEN_H) / 100));
+    const Clr clr = {K, K, K, 0};
+    Renderer::drawText(line, Panel::screen, pos, clr);
     pos.y++;
   }
 
-  pos.set(45, 18);
+  pos.set(45, 20);
   const string NAME_STR = Map::player->getData().nameA;
-  Renderer::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhiteHigh);
+  Renderer::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhite);
 
 //  pos.y += 2;
 //  const string LVL_STR = "LVL " + toStr(DungeonMaster::getLvl());
 //  Renderer::drawTextCentered(LVL_STR, Panel::screen, pos, clrWhiteHigh);
 
   //Draw command labels
-  pos.set(55, 14);
+  pos.set(55, 13);
   Renderer::drawText("Information", Panel::screen, pos,
-                     browser.isAtIdx(0) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Renderer::drawText("View the High Score", Panel::screen, pos,
-                     browser.isAtIdx(1) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Renderer::drawText("View messages", Panel::screen, pos,
-                     browser.isAtIdx(2) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(2) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Renderer::drawText("Return to main menu", Panel::screen, pos,
-                     browser.isAtIdx(3) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(3) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Renderer::drawText("Quit the game", Panel::screen, pos,
-                     browser.isAtIdx(4) ? clrWhite : clrRedLgt);
+                     browser.isAtIdx(4) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Renderer::updateScreen();

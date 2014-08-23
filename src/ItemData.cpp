@@ -48,6 +48,7 @@ ItemDataT::ItemDataT(const ItemId id_) :
   ranged(RangedItemData()),
   armor(ArmorItemData()) {
 
+  baseDescr.resize(0);
   nativeRooms.resize(0);
   featuresCanBeFoundIn.resize(0);
 }
@@ -111,10 +112,9 @@ ItemDataT* data[int(ItemId::END)];
 
 namespace {
 
-void addFeatureFoundIn(ItemDataT& itemData, const FeatureId featureId,
-                       const int CHANCE_TO_INCLUDE = 100) {
-  itemData.featuresCanBeFoundIn.push_back(
-    pair<FeatureId, int>(featureId, CHANCE_TO_INCLUDE));
+void addFeatureFoundIn(ItemDataT& data, const FeatureId featureId,
+                       const int CHANCE_TO_INCL = 100) {
+  data.featuresCanBeFoundIn.push_back(pair<FeatureId, int>(featureId, CHANCE_TO_INCL));
 }
 
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
@@ -304,6 +304,10 @@ void initDataList() {
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Sawed-off Shotgun", "Sawed-off shotguns",
                          "a Sawed-off Shotgun");
+  d->baseDescr = {"Compared to a standard shotgun, the sawed-off has a shorter "
+                  "effective range. At close range it is more devastating however. It "
+                  "holds two barrels, and needs to be reloaded after both are discharged"
+                 };
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::shotgun;
   d->ranged.isShotgun = true;
@@ -323,6 +327,11 @@ void initDataList() {
   d = new ItemDataT(ItemId::pumpShotgun);
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Pump Shotgun", "Pump shotguns", "a Pump Shotgun");
+  d->baseDescr = {"A pump-action shotgun has a handgrip that can be pumped back and "
+                  "forth in order to eject a spent round of ammunition and to chamber a "
+                  "fresh one. It has a single barrel above a tube magazine into which "
+                  "shells are inserted. The magazine has a capacity of 8 shells."
+                 };
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::shotgun;
   d->ranged.isShotgun = true;
@@ -342,6 +351,7 @@ void initDataList() {
   d = new ItemDataT(ItemId::shotgunShell);
   resetData(*d, ItemType::ammo);
   d->baseName = ItemName("Shotgun shell", "Shotgun shells", "a shotgun shell");
+  d->baseDescr = {"A cartridge designed to be fired from a shotgun"};
   d->maxStackAtSpawn = 10;
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -351,12 +361,15 @@ void initDataList() {
   d = new ItemDataT(ItemId::incinerator);
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Incinerator", "Incinerators", "an Incinerator");
+  d->baseDescr = {"This hellish, experimental weapon launches an explosive fireball. "
+                  "Best used with extreme caution."
+                 };
   d->itemWeight = itemWeight_heavy;
   d->tile = TileId::incinerator;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with an Incinerator");
   d->ranged.dmg = DiceParam(1, 3);
   d->ranged.dmgInfoOverride = "*";
-  d->ranged.ammoItemId = ItemId::napalmCartridge;
+  d->ranged.ammoItemId = ItemId::incineratorCartridge;
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires an incinerator");
   d->ranged.sndMsg = "I hear the blast of a launched missile.";
   d->ranged.missileGlyph = '*';
@@ -367,9 +380,11 @@ void initDataList() {
   addFeatureFoundIn(*d, FeatureId::cocoon, 25);
   data[int(d->id)] = d;
 
-  d = new ItemDataT(ItemId::napalmCartridge);
+  d = new ItemDataT(ItemId::incineratorCartridge);
   resetData(*d, ItemType::ammoClip);
-  d->baseName = ItemName("Napalm Cartridge", "Napalm Cartridges", "a Napalm Cartridge");
+  d->baseName = ItemName("Incinerator Cartridge", "Incinerator Cartridges",
+                         "an Incinerator Cartridge");
+  d->baseDescr = {"Ammunition designed for Incinerators."};
   d->itemWeight = itemWeight_light;
   d->ranged.ammoContainedInClip = 3;
   d->spawnStdRange.lower = 5;
@@ -382,6 +397,10 @@ void initDataList() {
   d = new ItemDataT(ItemId::machineGun);
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Tommy Gun", "Tommy Guns", "a Tommy Gun");
+  d->baseDescr = {"\"Tommy Gun\" is a nickname for the Thompson submachine gun - an "
+                  "automatic firearm with a drum magazine and verical foregrip. It fires "
+                  ".45 ACP ammunition. The drum magazine has a capacity of 50 rounds."
+                 };
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::tommyGun;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Tommy Gun");
@@ -403,6 +422,7 @@ void initDataList() {
   resetData(*d, ItemType::ammoClip);
   d->baseName = ItemName("Drum of .45 ACP", "Drums of .45 ACP",
                          "a Drum of .45 ACP");
+  d->baseDescr = {"Ammunition used by Tommy Guns."};
   d->ranged.ammoContainedInClip = 50;
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -412,6 +432,9 @@ void initDataList() {
   d = new ItemDataT(ItemId::pistol);
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("M1911 Colt", "M1911 Colt", "an M1911 Colt");
+  d->baseDescr = {"A semi-automatic, magazine-fed pistol chambered for the .45 ACP "
+                  "cartridge."
+                 };
   d->itemWeight = itemWeight_light;
   d->tile = TileId::pistol;
   d->ranged.dmg = DiceParam(1, 8, 4);
@@ -427,9 +450,21 @@ void initDataList() {
   addFeatureFoundIn(*d, FeatureId::cocoon);
   data[int(d->id)] = d;
 
+  d = new ItemDataT(ItemId::pistolClip);
+  resetData(*d, ItemType::ammoClip);
+  d->baseName = ItemName(".45ACP Colt cartridge", ".45ACP Colt cartridges",
+                         "a .45ACP Colt cartridge");
+  d->baseDescr = {"Ammunition used by Colt pistols."};
+  d->ranged.ammoContainedInClip = 7;
+  addFeatureFoundIn(*d, FeatureId::chest);
+  addFeatureFoundIn(*d, FeatureId::cabinet);
+  addFeatureFoundIn(*d, FeatureId::cocoon);
+  data[int(d->id)] = d;
+
   d = new ItemDataT(ItemId::flareGun);
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Flare Gun", "Flare Gun", "a Flare Gun");
+  d->baseDescr = {"Launches flares. Not designed to function as a weapon."};
   d->itemWeight = itemWeight_light;
   d->tile = TileId::flareGun;
   d->ranged.dmg = DiceParam(1, 3, 0);
@@ -444,21 +479,15 @@ void initDataList() {
   addFeatureFoundIn(*d, FeatureId::cocoon);
   data[int(d->id)] = d;
 
-  d = new ItemDataT(ItemId::pistolClip);
-  resetData(*d, ItemType::ammoClip);
-  d->baseName = ItemName(".45ACP Colt cartridge", ".45ACP Colt cartridges",
-                         "a .45ACP Colt cartridge");
-  d->ranged.ammoContainedInClip = 7;
-  addFeatureFoundIn(*d, FeatureId::chest);
-  addFeatureFoundIn(*d, FeatureId::cabinet);
-  addFeatureFoundIn(*d, FeatureId::cocoon);
-  data[int(d->id)] = d;
-
   d = new ItemDataT(ItemId::teslaCannon);
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Tesla Cannon", "Tesla Cannons", "a Tesla Cannon");
+  d->baseDescr = {"A strange weapon seemingly based on technology pioneered by "
+                  "Nikola Tesla. It fires electric bolts."
+                 };
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::teslaCannon;
+  d->clr = clrYellow;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Tesla Cannon");
   d->ranged.isMachineGun = true;
   d->ranged.hitChanceMod = -15;
@@ -479,6 +508,8 @@ void initDataList() {
   resetData(*d, ItemType::ammoClip);
   d->baseName = ItemName("Nuclear battery", "Nuclear batteries",
                          "a Nuclear battery");
+  d->baseDescr = {"Ammunition used by Tesla Cannons."};
+  d->clr = clrYellow;
   d->ranged.ammoContainedInClip = 30;
   d->spawnStdRange.lower = 6;
   addFeatureFoundIn(*d, FeatureId::chest, 50);
@@ -489,6 +520,11 @@ void initDataList() {
   d = new ItemDataT(ItemId::spikeGun);
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Spike Gun", "Spike Guns", "a Spike Gun");
+  d->baseDescr = {"A very strange and crude weapon capable of launching iron spikes "
+                  "with enough force to pierce flesh (or even rock). It seems almost to "
+                  "be deliberately designed for cruelty, rather than pure stopping "
+                  "power."
+                 };
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::tommyGun;
   d->clr = clrBlueLgt;
@@ -500,7 +536,7 @@ void initDataList() {
   d->ranged.isKnockback = true;
   d->ranged.ammoItemId = ItemId::ironSpike;
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Spike Gun");
-  d->ranged.sndMsg = "I hear a very crude gun being fired.";
+  d->ranged.sndMsg = "I hear a very crude weapon being fired.";
   d->ranged.makesRicochetSnd = true;
   d->ranged.missileGlyph = '/';
   d->ranged.missileClr = clrGray;
@@ -513,8 +549,10 @@ void initDataList() {
 
   d = new ItemDataT(ItemId::dynamite);
   resetData(*d, ItemType::explosive);
-  d->baseName = ItemName("Dynamite", "Sticks of Dynamite",
-                         "a Stick of Dynamite");
+  d->baseName = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
+  d->baseDescr = {"An explosive material based on nitroglycerin. The name comes from the "
+                  "ancient Greek word dynamis, meaning \"power\"."
+                 };
   d->itemWeight = itemWeight_light;
   d->tile = TileId::dynamite;
   d->clr = clrRedLgt;
@@ -526,6 +564,9 @@ void initDataList() {
   d = new ItemDataT(ItemId::flare);
   resetData(*d, ItemType::explosive);
   d->baseName = ItemName("Flare", "Flares", "a Flare");
+  d->baseDescr = {"A type of pyrotechnic that produces a brilliant light or intense "
+                  "heat without an explosion."
+                 };
   d->itemWeight = itemWeight_light;
   d->tile = TileId::flare;
   d->clr = clrGray;
@@ -538,6 +579,11 @@ void initDataList() {
   d = new ItemDataT(ItemId::molotov);
   resetData(*d, ItemType::explosive);
   d->baseName = ItemName("Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail");
+  d->baseDescr = {"An improvised incendiary weapon made of a glass bottle containing "
+                  "flammable liquid and some cloth for ignition. In action, the cloth "
+                  "is lit and the bottle hurled at a target, causing an immediate "
+                  "fireball followed by a raging fire."
+                 };
   d->itemWeight = itemWeight_light;
   d->tile = TileId::molotov;
   d->clr = clrWhite;
@@ -549,6 +595,11 @@ void initDataList() {
   d = new ItemDataT(ItemId::smokeGrenade);
   resetData(*d, ItemType::explosive);
   d->baseName = ItemName("Smoke Grenade", "Smoke Grenades", "a Smoke Grenade");
+  d->baseDescr = {"A sheet steel cylinder with emission holes releasing smoke when the "
+                  "grenade is ignited. Their primary use is to create smoke screens for "
+                  "concealment. The fumes produced can harm the eyes, throat and lungs "
+                  "- so it is recommended to wear a protective mask."
+                 };
   d->itemWeight = itemWeight_light;
   d->tile = TileId::flare;
   d->clr = clrGreen;
@@ -559,6 +610,9 @@ void initDataList() {
   d = new ItemDataT(ItemId::throwingKnife);
   resetData(*d, ItemType::throwingWpn);
   d->baseName = ItemName("Throwing Knife", "Throwing Knives", "a Throwing Knife");
+  d->baseDescr = {"A knife specially designed and weighted so that it can be thrown "
+                  "effectively."
+                 };
   d->itemWeight = itemWeight_extraLight;
   d->tile = TileId::dagger;
   d->glyph = '/';
@@ -577,6 +631,10 @@ void initDataList() {
   d = new ItemDataT(ItemId::rock);
   resetData(*d, ItemType::throwingWpn);
   d->baseName = ItemName("Rock", "Rocks", "a Rock");
+  d->baseDescr = {"Although not a very impressive weapon, with skill they can be used "
+                  "with some result. Shooting them with a sling instead of throwing "
+                  "will increase the range and cause more damage."
+                 };
   d->itemWeight = itemWeight_extraLight;
   d->tile = TileId::rock;
   d->glyph = '*';
@@ -592,9 +650,17 @@ void initDataList() {
   d = new ItemDataT(ItemId::dagger);
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Dagger", "Daggers", "a Dagger");
+  d->baseDescr = {"Commonly associated with deception, stealth, and treachery. Many "
+                  "assassinations have been carried out with the use of a dagger.",
+
+                  "Attacking an unaware opponent with a dagger does 3x damage (instead "
+                  "of the normal 1,5x damage from stealth attacks).",
+
+                  "Melee attacks with daggers are silent."
+                 };
   d->itemWeight = itemWeight_light;
   d->tile = TileId::dagger;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Dagger");
+  d->melee.attMsgs = ItemAttMsgs("stab", "stabs me with a Dagger");
   d->melee.dmg = pair<int, int>(1, 4);
   d->melee.hitChanceMod = 20;
   d->melee.hitMediumSfx = SfxId::hitSharp;
@@ -609,6 +675,12 @@ void initDataList() {
   d = new ItemDataT(ItemId::hatchet);
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Hatchet", "Hatchets", "a Hatchet");
+  d->baseDescr = {"A small axe with a short handle. Hatchets are reliable weapons - "
+                  "they are easy to use, and cause decent damage for their low weight. "
+                  "They can also serve well as thrown weapons.",
+
+                  "Melee attacks with hatchets are silent."
+                 };
   d->itemWeight = itemWeight_light;
   d->tile = TileId::axe;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Hatchet");
@@ -628,6 +700,10 @@ void initDataList() {
   d = new ItemDataT(ItemId::club);
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Club", "Clubs", "a Club");
+  d->baseDescr = {"Wielded since prehistoric times.",
+
+                  "Melee attacks with clubs are noisy."
+                 };
   d->spawnStdRange = Range(FIRST_CAVERN_LVL, INT_MAX);
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::club;
@@ -641,6 +717,11 @@ void initDataList() {
   d = new ItemDataT(ItemId::hammer);
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Hammer", "Hammers", "a Hammer");
+  d->baseDescr = {"Typically used for construction, but can be quite devastating when "
+                  "wielded as a weapon.",
+
+                  "Melee attacks with hammers are noisy."
+                 };
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::hammer;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Hammer");
@@ -654,6 +735,11 @@ void initDataList() {
   d = new ItemDataT(ItemId::machete);
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Machete", "Machetes", "a Machete");
+  d->baseDescr = {"A large cleaver-like knife. It serves well both as a cutting tool "
+                  "and weapon.",
+
+                  "Melee attacks with machetes are noisy."
+                 };
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::machete;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Machete");
@@ -669,6 +755,12 @@ void initDataList() {
   d = new ItemDataT(ItemId::axe);
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Axe", "Axes", "an Axe");
+  d->baseDescr = {"A tool intended for felling trees, splitting timber, etc. Used as a "
+                  "weapon it can deliver devastating blows, although it requires some "
+                  "skill to use effectively. Also effective for breaching wooden doors.",
+
+                  "Melee attacks with axes are noisy."
+                 };
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::axe;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with an axe");

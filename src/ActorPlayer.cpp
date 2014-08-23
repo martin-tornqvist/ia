@@ -40,7 +40,7 @@ Player::Player() :
   waitTurnsLeft(-1),
   activeExplosive(nullptr),
   target(nullptr),
-  insanity_(0),
+  ins_(0),
   shock_(0.0),
   shockTmp_(0.0),
   permShockTakenCurTurn_(0.0),
@@ -105,7 +105,7 @@ void Player::storeToSaveLines(vector<string>& lines) const {
     prop->storeToSaveLines(lines);
   }
 
-  lines.push_back(toStr(insanity_));
+  lines.push_back(toStr(ins_));
   lines.push_back(toStr(int(shock_)));
   lines.push_back(toStr(hp_));
   lines.push_back(toStr(hpMax_));
@@ -140,7 +140,7 @@ void Player::setupFromSaveLines(vector<string>& lines) {
     prop->setupFromSaveLines(lines);
   }
 
-  insanity_ = toInt(lines.front());
+  ins_ = toInt(lines.front());
   lines.erase(begin(lines));
   shock_ = double(toInt(lines.front()));
   lines.erase(begin(lines));
@@ -182,11 +182,11 @@ void Player::hit_(int& dmg) {
 
 int Player::getEncPercent() const {
   const int TOTAL_W = inv_->getTotalItemWeight();
-  const int MAX_W   = getCarryWeightLimit();
+  const int MAX_W   = getCarryWeightLmt();
   return int((double(TOTAL_W) / double(MAX_W)) * 100.0);
 }
 
-int Player::getCarryWeightLimit() const {
+int Player::getCarryWeightLmt() const {
   const bool IS_TOUGH         = PlayerBon::hasTrait(Trait::tough);
   const bool IS_STRONG_BACKED = PlayerBon::hasTrait(Trait::strongBacked);
 
@@ -266,7 +266,7 @@ void Player::incrInsanity() {
 
   if(!Config::isBotPlaying()) {
     const int INS_INCR = 6;
-    insanity_ += INS_INCR;
+    ins_ += INS_INCR;
   }
 
   restoreShock(70, false);
@@ -346,7 +346,7 @@ void Player::incrInsanity() {
 
           if(find(begin(props), end(props), propRFear) != end(props)) {
 
-            if(insanity_ > 5) {
+            if(ins_ > 5) {
               //There is a limit to the number of phobias you can have
               int phobiasActive = 0;
               for(int i = 0; i < int(Phobia::END); ++i) {
@@ -424,7 +424,7 @@ void Player::incrInsanity() {
         } break;
 
         case 6: {
-          if(insanity_ > 20) {
+          if(ins_ > 20) {
             int obsessionsActive = 0;
             for(int i = 0; i < int(Obsession::END); ++i) {
               if(obsessions[i]) {obsessionsActive++;}
@@ -463,7 +463,7 @@ void Player::incrInsanity() {
         } break;
 
         case 7: {
-          if(insanity_ > 8) {
+          if(ins_ > 8) {
             msg += "The shadows are closing in on me!";
             Popup::showMsg(msg, true, "Haunted by shadows!", SfxId::insanityRise);
             const int NR_SHADOWS_LOWER  = 1;
@@ -616,7 +616,7 @@ void Player::onActorTurn() {
   vector<Actor*> spottedEnemies;
   getSpottedEnemies(spottedEnemies);
   if(spottedEnemies.empty()) {
-    const InvScrId invScreen = InvHandling::screenToOpenAfterDrop;
+    const auto invScreen = InvHandling::screenToOpenAfterDrop;
     if(invScreen != InvScrId::END) {
       switch(invScreen) {
         case InvScrId::inv: {
@@ -726,9 +726,7 @@ void Player::onStdTurn() {
     } else {
       nrTurnsUntilIns_ = -1;
       incrInsanity();
-      if(deadState == ActorDeadState::alive) {
-        GameTime::actorDidAct();
-      }
+      if(deadState == ActorDeadState::alive) {GameTime::actorDidAct();}
       return;
     }
   } else {

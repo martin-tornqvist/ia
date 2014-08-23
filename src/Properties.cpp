@@ -261,7 +261,7 @@ void initDataList() {
   d.stdRndTurns = Range(20, 30);
   d.name = "Blind";
   d.nameShort = "Blind";
-  d.msg[propMsgOnStartPlayer] = "I am blind!";
+  d.msg[propMsgOnStartPlayer] = "I am blinded!";
   d.msg[propMsgOnStartMonster] = "is blinded.";
   d.msg[propMsgOnEndPlayer] = "I can see again!";
   d.msg[propMsgOnEndMonster] = "can see again.";

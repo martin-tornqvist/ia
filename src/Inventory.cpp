@@ -274,10 +274,10 @@ void Inventory::decrItemInSlot(SlotId slotName) {
   }
 }
 
-void Inventory::deleteItemInGeneralWithElement(const unsigned ELEMENT) {
-  if(general_.size() > ELEMENT) {
-    delete general_.at(ELEMENT);
-    general_.erase(begin(general_) + ELEMENT);
+void Inventory::deleteItemInGeneralWithElement(const size_t IDX) {
+  if(general_.size() > IDX) {
+    delete general_.at(IDX);
+    general_.erase(begin(general_) + IDX);
   }
 }
 
@@ -294,8 +294,8 @@ void Inventory::removeItemInGeneralWithPointer(
   assert(false && "Parameter item not in general inventory");
 }
 
-void Inventory::decrItemInGeneral(unsigned element) {
-  Item* item = general_.at(element);
+void Inventory::decrItemInGeneral(size_t idx) {
+  Item* item = general_.at(idx);
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
 
@@ -308,7 +308,7 @@ void Inventory::decrItemInGeneral(unsigned element) {
   }
 
   if(deleteItem) {
-    general_.erase(begin(general_) + element);
+    general_.erase(begin(general_) + idx);
 
     delete item;
   }
@@ -323,79 +323,64 @@ void Inventory::decrItemTypeInGeneral(const ItemId id) {
   }
 }
 
-void Inventory::moveItemToSlot(
-  InvSlot* inventorySlot,
-  const size_t GENERAL_INV_ELEMENT) {
-
-  bool generalSlotExists = GENERAL_INV_ELEMENT < general_.size();
+void Inventory::moveItemToSlot(InvSlot* inventorySlot, const size_t GEN_IDX) {
+  bool generalSlotExists = GEN_IDX < general_.size();
   Item* item = nullptr;
   Item* slotItem = inventorySlot->item;
 
   if(generalSlotExists) {
-    item = general_.at(GENERAL_INV_ELEMENT);
+    item = general_.at(GEN_IDX);
   }
 
   if(generalSlotExists && item) {
     if(slotItem) {
-      general_.erase(begin(general_) + GENERAL_INV_ELEMENT);
+      general_.erase(begin(general_) + GEN_IDX);
       general_.push_back(slotItem);
       inventorySlot->item = item;
     } else {
       inventorySlot->item = item;
-      general_.erase(begin(general_) + GENERAL_INV_ELEMENT);
+      general_.erase(begin(general_) + GEN_IDX);
     }
   }
 }
 
-void Inventory::equipGeneralItemAndPossiblyEndTurn(
-  const size_t GENERAL_INV_ELEMENT, const SlotId slot) {
+void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId slot) {
+  moveItemToSlot(getSlot(slot), GEN_IDX);
+
+  bool isFreeTurn = false;
 
   const bool IS_PLAYER  = this == &Map::player->getInv();
-  bool isFreeTurn       = false;
-  Item* item            = general_.at(GENERAL_INV_ELEMENT);
-  const ItemDataT& d    = item->getData();
 
-  if(IS_PLAYER && !d.isArmor) {isFreeTurn = false;}
+  if(IS_PLAYER) {
+    Item* const itemAfter = getItemInSlot(slot);
+    const string name     = itemAfter->getName(ItemRefType::plural);
 
-  moveItemToSlot(getSlot(slot), GENERAL_INV_ELEMENT);
-  Item* const itemAfter = getItemInSlot(slot);
+    string  msg     = "";
 
-  switch(slot) {
-    case SlotId::wielded: {
-      if(IS_PLAYER) {
-        const string name = itemAfter->getName(ItemRefType::a);
-        Log::addMsg("I am now wielding " + name + ".");
-      }
-    } break;
+    switch(slot) {
+      case SlotId::wielded: {
+        msg = "I am now wielding " + name + ".";
+      } break;
 
-    case SlotId::wieldedAlt: {
-      if(IS_PLAYER) {
-        const string name = itemAfter->getName(ItemRefType::a);
-        Log::addMsg("I am now wielding " + name + " as a prepared weapon.");
-      }
-    } break;
+      case SlotId::wieldedAlt: {
+        msg = "I am now wielding " + name + " as a prepared weapon.";
+      } break;
 
-    case SlotId::thrown: {
-      if(IS_PLAYER) {
-        const string name = itemAfter->getName(ItemRefType::plural);
-        Log::addMsg("I am now using " + name + " as missile weapon.");
-      }
-    } break;
+      case SlotId::thrown: {
+        msg = "I am now using " + name + " as missile weapon.";
+      } break;
 
-    case SlotId::body: {
-      if(IS_PLAYER) {
-        const string name = itemAfter->getName(ItemRefType::a);
-        Log::addMsg("I am now wearing " + name + ".");
-      }
-      isFreeTurn = false;
-    } break;
+      case SlotId::body: {
+        msg = "I am now wearing " + name + ".";
+        isFreeTurn = false;
+      } break;
 
-    case SlotId::head: {
-      if(IS_PLAYER) {
-        const string name = itemAfter->getName(ItemRefType::a);
-        Log::addMsg("I am now wearing " + name + ".");
-      }
-    } break;
+      case SlotId::head: {
+        msg = "I am now wearing " + name + ".";
+      } break;
+    }
+
+    Log::addMsg(msg, clrWhite, false, true);
   }
 
   GameTime::actorDidAct(isFreeTurn);
@@ -416,17 +401,16 @@ void Inventory::swapWieldedAndPrepared(
   GameTime::actorDidAct(IS_FREE_TURN);
 }
 
-void Inventory::moveFromGeneralToIntrinsics(
-  const size_t GENERAL_INV_ELEMENT) {
-  bool generalSlotExists = GENERAL_INV_ELEMENT < general_.size();
+void Inventory::moveFromGeneralToIntrinsics(const size_t GEN_IDX) {
+  bool generalSlotExists = GEN_IDX < general_.size();
 
   if(generalSlotExists) {
-    Item* item = general_.at(GENERAL_INV_ELEMENT);
+    Item* item = general_.at(GEN_IDX);
     bool itemExistsInGeneralSlot = item;
 
     if(itemExistsInGeneralSlot) {
       intrinsics_.push_back(item);
-      general_.erase(begin(general_) + GENERAL_INV_ELEMENT);
+      general_.erase(begin(general_) + GEN_IDX);
     }
   }
 }
@@ -454,13 +438,13 @@ bool Inventory::hasItemInSlot(SlotId id) const {
   return false;
 }
 
-void Inventory::removeWithoutDestroying(const InvList invList, const size_t ELEMENT) {
+void Inventory::removeWithoutDestroying(const InvList invList, const size_t IDX) {
   if(invList == InvList::slots) {
-    assert(ELEMENT < slots_.size());
-    slots_.at(ELEMENT).item = nullptr;
+    assert(IDX < slots_.size());
+    slots_.at(IDX).item = nullptr;
   } else {
-    assert(ELEMENT < general_.size());
-    general_.erase(begin(general_) + ELEMENT);
+    assert(IDX < general_.size());
+    general_.erase(begin(general_) + IDX);
   }
 }
 
@@ -485,9 +469,9 @@ Item* Inventory::getItemInSlot(SlotId slotName) const {
   return nullptr;
 }
 
-Item* Inventory::getIntrinsicInElement(int element) const {
-  if(getIntrinsicsSize() > element)
-    return intrinsics_[element];
+Item* Inventory::getIntrinsicInElement(int idx) const {
+  if(getIntrinsicsSize() > idx)
+    return intrinsics_[idx];
 
   return nullptr;
 }

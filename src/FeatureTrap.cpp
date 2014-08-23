@@ -383,11 +383,10 @@ void TrapDart::trigger(
       const int DMG = Rnd::dice(1, 8);
       actor.hit(DMG, DmgType::physical);
       if(actor.deadState == ActorDeadState::alive && isPoisoned) {
-        if(IS_PLAYER) {
-          Log::addMsg("It was poisoned!");
-        }
-        actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(PropTurns::std));
+//        if(IS_PLAYER) {
+//          Log::addMsg("It was poisoned!");
+//        }
+        actor.getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::std));
       }
     }
   }
@@ -460,11 +459,10 @@ void TrapSpear::trigger(
       const int DMG = Rnd::dice(2, 6);
       actor.hit(DMG, DmgType::physical);
       if(actor.deadState == ActorDeadState::alive && isPoisoned) {
-        if(IS_PLAYER) {
-          Log::addMsg("It was poisoned!");
-        }
-        actor.getPropHandler().tryApplyProp(
-          new PropPoisoned(PropTurns::std));
+//        if(IS_PLAYER) {
+//          Log::addMsg("It was poisoned!");
+//        }
+        actor.getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::std));
       }
     }
   }

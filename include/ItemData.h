@@ -64,7 +64,7 @@ enum class ItemId {
   spikeGun,
   shotgunShell,
   drumOfBullets,
-  napalmCartridge,
+  incineratorCartridge,
   teslaCanister,
   pistol,
   pistolClip,
@@ -189,6 +189,7 @@ public:
   bool isIdentified;
   bool isTried;
   ItemName baseName;
+  std::vector<std::string> baseDescr;
   char glyph;
   Clr clr;
   TileId tile;

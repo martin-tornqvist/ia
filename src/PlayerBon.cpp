@@ -607,7 +607,7 @@ void pickBg(const Bg bg) {
       pickTrait(Trait::adeptMeleeFighter);
       pickTrait(Trait::adeptMarksman);
       pickTrait(Trait::tough);
-      Map::player->insanity_ += 10;
+      Map::player->ins_ += 10;
       Map::player->getInv().putInGeneral(ItemFactory::mk(ItemId::smokeGrenade, 4));
       Map::player->getInv().putInGeneral(ItemFactory::mk(ItemId::gasMask));
     } break;

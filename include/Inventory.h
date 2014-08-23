@@ -40,12 +40,11 @@ public:
 
   bool moveToGeneral(InvSlot* inventorySlot);
 
-  void moveFromGeneralToIntrinsics(const size_t GENERAL_INV_ELEMENT);
+  void moveFromGeneralToIntrinsics(const size_t GEN_IDX);
 
-  void moveItemToSlot(InvSlot* inventoryslot, const size_t GENERAL_INV_ELEMENT);
+  void moveItemToSlot(InvSlot* inventoryslot, const size_t GEN_IDX);
 
-  void equipGeneralItemAndPossiblyEndTurn(
-    const size_t GENERAL_INV_ELEMENT, const SlotId slot);
+  void equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId slot);
 
   void swapWieldedAndPrepared(const bool IS_FREE_TURN);
 
@@ -55,20 +54,20 @@ public:
 
   Item* getItemInSlot(SlotId slotName) const;
 
-  void removeWithoutDestroying(const InvList invList, const size_t ELEMENT);
+  void removeWithoutDestroying(const InvList invList, const size_t IDX);
 
   void decrItemInSlot(SlotId slotName);
 
-  void decrItemInGeneral(unsigned element);
+  void decrItemInGeneral(size_t idx);
 
   void decrItemTypeInGeneral(const ItemId itemId);
 
-  void deleteItemInGeneralWithElement(const unsigned ELEMENT);
+  void deleteItemInGeneralWithElement(const size_t IDX);
   void removeItemInGeneralWithPointer(Item* const item, const bool DELETE_ITEM);
 
   int getIntrinsicsSize() const {return intrinsics_.size();}
 
-  Item* getIntrinsicInElement(const int ELEMENT) const;
+  Item* getIntrinsicInElement(const int IDX) const;
 
   Item* getLastItemInGeneral();
 

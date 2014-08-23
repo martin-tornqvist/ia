@@ -567,8 +567,7 @@ void ColourOOSpace::onStdTurn() {
   restoreHp(1, false);
 
   if(Map::player->isSeeingActor(*this, nullptr)) {
-    Map::player->getPropHandler().tryApplyProp(
-      new PropConfused(PropTurns::std));
+    Map::player->getPropHandler().tryApplyProp(new PropConfused(PropTurns::std));
   }
 }
 

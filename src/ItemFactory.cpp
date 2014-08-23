@@ -54,7 +54,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::teslaCannon:         r = new TeslaCannon(d, ammoD);    break;
     case ItemId::spikeGun:            r = new SpikeGun(d, ammoD);       break;
     case ItemId::teslaCanister:       r = new AmmoClip(d);          break;
-    case ItemId::napalmCartridge:     r = new AmmoClip(d);          break;
+    case ItemId::incineratorCartridge:     r = new AmmoClip(d);          break;
 
     case ItemId::playerKick:          r = new Wpn(d, ammoD);         break;
     case ItemId::playerStomp:         r = new Wpn(d, ammoD);         break;

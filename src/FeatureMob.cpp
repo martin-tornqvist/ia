@@ -26,7 +26,7 @@ void Smoke::onNewTurn() {
     const bool IS_PLAYER = actor == Map::player;
 
     //Blinded by smoke?
-    if(Rnd::coinToss()) {
+    if(Rnd::oneIn(3)) {
       //TODO There needs to be some criteria here, so that e.g. a statue-monster or a
       //very alien monster can't get blinded by smoke (but do not use isHumanoid - rats,
       //wolves etc should definitely be blinded by smoke.
