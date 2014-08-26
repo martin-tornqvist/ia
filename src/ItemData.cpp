@@ -778,6 +778,8 @@ void initDataList() {
   d = new ItemDataT(ItemId::pitchFork);
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Pitchfork", "Pitchforks", "a Pitchfork");
+  d->baseDescr = {"A long staff with a forked, four-pronged end. Victims can be pushed "
+                  "away when stabbed, to keep them at bay."};
   d->itemWeight = itemWeight_heavy;
   d->tile = TileId::pitchfork;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Pitchfork");
@@ -794,6 +796,9 @@ void initDataList() {
   d = new ItemDataT(ItemId::sledgeHammer);
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Sledgehammer", "Sledgehammers", "a Sledgehammer");
+  d->baseDescr = {"Often used in destruction work for breaking through walls. "
+                  "It can deal a great amount of damage, although it is cumbersome to "
+                  "carry, and it requires some skill to use effectively."};
   d->itemWeight = itemWeight_heavy;
   d->tile = TileId::sledgeHammer;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Sledgehammer");
