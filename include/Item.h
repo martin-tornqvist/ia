@@ -27,6 +27,8 @@ public:
   std::string getName(const ItemRefType refType, const ItemRefInf inf = ItemRefInf::yes,
                       const ItemRefAttInf attInf = ItemRefAttInf::none) const;
 
+  virtual std::vector<std::string> getDescr() const {return data_->baseDescr;}
+
   virtual void identify(const bool IS_SILENT_IDENTIFY) {(void)IS_SILENT_IDENTIFY;}
 
   virtual void storeToSaveLines(std::vector<std::string>& lines)    {(void)lines;}

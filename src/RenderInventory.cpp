@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const int DESCR_X0 = MAP_W - 30;
+const int DESCR_X0 = MAP_W - 31;
 
 namespace {
 
@@ -63,9 +63,7 @@ void drawDetailedItemDescr(const Item* const item) {
 
     vector<string> lines;
 
-    const auto& data = item->getData();
-
-    const auto baseDescr = data.baseDescr;
+    const auto baseDescr = item->getDescr();
 
     if(!baseDescr.empty()) {
       for(const string& paragraph : baseDescr) {
@@ -78,7 +76,7 @@ void drawDetailedItemDescr(const Item* const item) {
 //    p.y = max(p.y, 10);
 //    p.y = SCREEN_H - 2;
 
-    const bool  IS_PLURAL = item->nrItems_ > 1 && data.isStackable;
+    const bool  IS_PLURAL = item->nrItems_ > 1 && item->getData().isStackable;
     const string weightStr =
       (IS_PLURAL ? "They are " : "It is ") + item->getWeightStr() + " to carry.";
 
