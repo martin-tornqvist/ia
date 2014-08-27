@@ -225,6 +225,7 @@ void resetData(ItemDataT& d, ItemType const itemType) {
 
     case ItemType::potion: {
       resetData(d, ItemType::general);
+      d.baseDescr = {"A small glass bottle containing a mysterious concoction."};
       d.itemValue = ItemValue::minorTreasure;
       d.chanceToIncludeInSpawnList = 55;
       d.itemWeight = itemWeight_light;
@@ -779,7 +780,8 @@ void initDataList() {
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Pitchfork", "Pitchforks", "a Pitchfork");
   d->baseDescr = {"A long staff with a forked, four-pronged end. Victims can be pushed "
-                  "away when stabbed, to keep them at bay."};
+                  "away when stabbed, to keep them at bay."
+                 };
   d->itemWeight = itemWeight_heavy;
   d->tile = TileId::pitchfork;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Pitchfork");
@@ -798,7 +800,8 @@ void initDataList() {
   d->baseName = ItemName("Sledgehammer", "Sledgehammers", "a Sledgehammer");
   d->baseDescr = {"Often used in destruction work for breaking through walls. "
                   "It can deal a great amount of damage, although it is cumbersome to "
-                  "carry, and it requires some skill to use effectively."};
+                  "carry, and it requires some skill to use effectively."
+                 };
   d->itemWeight = itemWeight_heavy;
   d->tile = TileId::sledgeHammer;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Sledgehammer");
