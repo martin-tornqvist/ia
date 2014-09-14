@@ -10,7 +10,7 @@
 #include "ActorFactory.h"
 #include "FeatureRigid.h"
 #include "MapParsing.h"
-#include "HighScore.h"
+#include "Highscore.h"
 #include "Fov.h"
 #include "TextFormatting.h"
 #include "PopulateMonsters.h"
