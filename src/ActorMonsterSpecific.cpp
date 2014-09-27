@@ -346,7 +346,7 @@ void Ghoul::mkStartItems() {
 void Mummy::mkStartItems() {
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::mummyMaul));
 
-  spellsKnown.push_back(SpellHandling::getSpellFromId(SpellId::disease));
+  spellsKnown.push_back(SpellHandling::mkSpellFromId(SpellId::disease));
 
   for(int i = Rnd::range(1, 2); i > 0; --i) {
     spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
@@ -356,7 +356,7 @@ void Mummy::mkStartItems() {
 void MummyUnique::mkStartItems() {
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::mummyMaul));
 
-  spellsKnown.push_back(SpellHandling::getSpellFromId(SpellId::disease));
+  spellsKnown.push_back(SpellHandling::mkSpellFromId(SpellId::disease));
 
   spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
   spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());

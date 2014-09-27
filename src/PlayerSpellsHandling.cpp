@@ -38,38 +38,44 @@ void draw(MenuBrowser& browser) {
   for(int i = 0; i < NR_SPELLS; ++i) {
     const int CURRENT_ELEMENT = i;
     Scroll scroll(nullptr);
-    Clr scrollClr = scroll.getInterfaceClr();
-    const Clr clr =
-      browser.isAtIdx(CURRENT_ELEMENT) ? clrWhite : scrollClr;
-    Spell* const spell = knownSpells_.at(i);
-    string str = spell->getName();
+    Clr scrollClr           = scroll.getInterfaceClr();
+    const bool IS_SELECTED  = browser.isAtIdx(CURRENT_ELEMENT);
+    const Clr clr           = IS_SELECTED ? clrWhite : scrollClr;
+    Spell* const spell      = knownSpells_.at(i);
+    string name             = spell->getName();
 
-    Renderer::drawText(str, Panel::screen, Pos(0, y), clr);
+    Renderer::drawText(name, Panel::screen, Pos(0, y), clr);
 
     string fillStr = "";
-    const int FILL_SIZE = 28 - str.size();
+    const int FILL_SIZE = 28 - name.size();
     for(int ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
     Clr fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
-    Renderer::drawText(fillStr, Panel::screen, Pos(str.size(), y), fillClr);
+    Renderer::drawText(fillStr, Panel::screen, Pos(name.size(), y), fillClr);
 
-    int x = 28;
-    str = "SPI:";
+    int x = 21;
+    string infoStr = "SPI:";
     const Range spiCost = spell->getSpiCost(false, Map::player);
     const string lowerStr = toStr(spiCost.lower);
     const string upperStr = toStr(spiCost.upper);
-    str += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
-    Renderer::drawText(str, Panel::screen, Pos(x, y), clrWhite);
+    infoStr += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
+    Renderer::drawText(infoStr, Panel::screen, Pos(x, y), clrWhite);
 
     x += 10;
-    str = "SHOCK: ";
     const IntrSpellShock shockType = spell->getShockTypeIntrCast();
     switch(shockType) {
-      case IntrSpellShock::mild:        str += "Mild";       break;
-      case IntrSpellShock::disturbing:  str += "Disturbing"; break;
-      case IntrSpellShock::severe:      str += "Severe";     break;
+      case IntrSpellShock::mild:        infoStr = "Mild";       break;
+      case IntrSpellShock::disturbing:  infoStr = "Disturbing"; break;
+      case IntrSpellShock::severe:      infoStr = "Severe";     break;
     }
-    Renderer::drawText(str, Panel::screen, Pos(x, y), clrWhite);
+    Renderer::drawText(infoStr, Panel::screen, Pos(x, y), clrWhite);
+
+    const auto descr = spell->getDescr();
+    if(!descr.empty()) {
+      vector<StrAndClr> lines;
+      for(const auto& line : descr) {lines.push_back({line, clrWhiteHigh});}
+      Renderer::drawDescrBox(lines);
+    }
 
     y++;
   }
@@ -153,7 +159,7 @@ void setupFromSaveLines(vector<string>& lines) {
   for(int i = 0; i < NR_SPELLS; ++i) {
     const int ID = toInt(lines.front());
     lines.erase(begin(lines));
-    knownSpells_.push_back(SpellHandling::getSpellFromId(SpellId(ID)));
+    knownSpells_.push_back(SpellHandling::mkSpellFromId(SpellId(ID)));
   }
 }
 
@@ -219,7 +225,7 @@ bool isSpellLearned(const SpellId id) {
 }
 
 void learnSpellIfNotKnown(const SpellId id) {
-  learnSpellIfNotKnown(SpellHandling::getSpellFromId(id));
+  learnSpellIfNotKnown(SpellHandling::mkSpellFromId(id));
 }
 
 void learnSpellIfNotKnown(Spell* const spell) {

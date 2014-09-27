@@ -18,9 +18,9 @@ const string Scroll::getRealTypeName() {
   switch(data_->spellCastFromScroll) {
     case SpellId::darkbolt:           return "Darkbolt";
     case SpellId::azathothsWrath:     return "Azathoths Wrath";
-    case SpellId::slowEnemies:        return "Slow Enemies";
-    case SpellId::terrifyEnemies:     return "Terrify Enemies";
-    case SpellId::paralyzeEnemies:    return "Paralyze Enemies";
+    case SpellId::slowMon:            return "Slow Enemies";
+    case SpellId::terrifyMon:         return "Terrify Enemies";
+    case SpellId::paralyzeMon:        return "Paralyze Enemies";
     case SpellId::teleport:           return "Teleportation";
     case SpellId::bless:              return "Blessing";
     case SpellId::mayhem:             return "Mayhem";
@@ -29,7 +29,7 @@ const string Scroll::getRealTypeName() {
     case SpellId::detTraps:           return "Detect Traps";
     case SpellId::detMon:             return "Detect Monsters";
     case SpellId::opening:            return "Opening";
-    case SpellId::sacrLife:           return "Sacrifice Life Force";
+    case SpellId::sacrLife:           return "Sacrifice Life";
     case SpellId::sacrSpi:            return "Sacrifice Spirit";
     case SpellId::elemRes:            return "Elemental Resistance";
     case SpellId::disease:            return "";
@@ -45,13 +45,24 @@ const string Scroll::getRealTypeName() {
   return "";
 }
 
+vector<string> Scroll::getDescr() const {
+  if(data_->isIdentified) {
+    const auto* const spell = mkSpell();
+    const auto descr = spell->getDescr();
+    delete spell;
+    return descr;
+  } else {
+    return data_->baseDescr;
+  }
+}
+
 ConsumeItem Scroll::activateDefault(Actor* const actor) {
   if(actor->getPropHandler().allowRead(true)) {return read();}
   return ConsumeItem::no;
 }
 
-Spell* Scroll::getSpell() {
-  return SpellHandling::getSpellFromId(data_->spellCastFromScroll);
+Spell* Scroll::mkSpell() const {
+  return SpellHandling::mkSpellFromId(data_->spellCastFromScroll);
 }
 
 void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
@@ -77,7 +88,7 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
 
 void Scroll::tryLearn() {
   if(PlayerBon::getBg() == Bg::occultist) {
-    Spell* const spell = getSpell();
+    Spell* const spell = mkSpell();
     if(
       spell->isAvailForPlayer() &&
       !PlayerSpellsHandling::isSpellLearned(spell->getId())) {
@@ -97,7 +108,7 @@ ConsumeItem Scroll::read() {
     return ConsumeItem::no;
   }
 
-  Spell* const spell = getSpell();
+  auto* const spell = mkSpell();
 
   const string crumbleStr = "It crumbles to dust.";
 
@@ -120,7 +131,7 @@ ConsumeItem Scroll::read() {
   return ConsumeItem::yes;
 }
 
-std::string Scroll::getNameInf() const {
+string Scroll::getNameInf() const {
   return (data_->isTried && !data_->isIdentified) ? "{Tried}" : "";
 }
 

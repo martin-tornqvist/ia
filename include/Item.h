@@ -3,9 +3,13 @@
 
 #include <iostream>
 
-#include "ItemData.h"
 #include "Art.h"
 #include "InventoryHandling.h"
+#include "Converters.h"
+
+class ItemDataT;
+class Prop;
+class Actor;
 
 enum ItemActivateReturnType {
   itemActivate_keep, itemActivate_destroyed
@@ -13,28 +17,28 @@ enum ItemActivateReturnType {
 
 class Item {
 public:
-  Item(ItemDataT* itemData) : nrItems_(1), meleeDmgPlus_(0), data_(itemData) {}
+  Item(ItemDataT* itemData);
 
   Item& operator=(Item& other) = delete;
 
   virtual ~Item() {}
 
-  const ItemDataT&  getData()   const {return *data_;}
-  virtual Clr       getClr()    const {return data_->clr;}
-  char              getGlyph()  const {return data_->glyph;}
-  TileId            getTile()   const {return data_->tile;}
+  const ItemDataT&  getData()   const;
+  virtual Clr       getClr()    const;
+  char              getGlyph()  const;
+  TileId            getTile()   const;
 
   std::string getName(const ItemRefType refType, const ItemRefInf inf = ItemRefInf::yes,
                       const ItemRefAttInf attInf = ItemRefAttInf::none) const;
 
-  virtual std::vector<std::string> getDescr() const {return data_->baseDescr;}
+  virtual std::vector<std::string> getDescr() const;
 
   virtual void identify(const bool IS_SILENT_IDENTIFY) {(void)IS_SILENT_IDENTIFY;}
 
   virtual void storeToSaveLines(std::vector<std::string>& lines)    {(void)lines;}
   virtual void setupFromSaveLines(std::vector<std::string>& lines)  {(void)lines;}
 
-  int getWeight() const {return data_->itemWeight * nrItems_;}
+  int getWeight() const;
 
   std::string getWeightStr() const;
 
@@ -58,10 +62,7 @@ public:
   int meleeDmgPlus_;
 
 protected:
-  void clearPropsEnabledOnCarrier() {
-    for(Prop* prop : propsEnabledOnCarrier) {delete prop;}
-    propsEnabledOnCarrier.resize(0);
-  }
+  void clearPropsEnabledOnCarrier();
 
   //E.g. "{Off}" for Lanterns, "{60}" for Medical Bags, or "4/7" for Pistols
   virtual std::string getNameInf() const {return "";}
@@ -169,16 +170,7 @@ public:
     lines.erase(begin(lines));
   }
 
-  Clr getClr() const override {
-    if(data_->ranged.isRangedWpn && !data_->ranged.hasInfiniteAmmo) {
-      if(nrAmmoLoaded == 0) {
-        Clr ret = data_->clr;
-        ret.r /= 2; ret.g /= 2; ret.b /= 2;
-        return ret;
-      }
-    }
-    return data_->clr;
-  }
+  Clr getClr() const override;
 
   Clr getInterfaceClr() const override {return clrGray;}
 
@@ -245,28 +237,14 @@ private:
 
 class MachineGun: public Wpn {
 public:
-  MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData) {
-    ammoCapacity = ammoData->ranged.ammoContainedInClip;
-    nrAmmoLoaded = ammoCapacity;
-    effectiveRangeLmt = 8;
-    clip = true;
-  }
+  MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData);
   ~MachineGun() {}
-
 private:
 };
 
 class Incinerator: public Wpn {
 public:
-  Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData) {
-    ammoCapacity = ammoData->ranged.ammoContainedInClip;
-    nrAmmoLoaded = ammoCapacity;
-    effectiveRangeLmt = 8;
-    clip = false;
-  }
-
+  Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData);
   void projectileObstructed(const Pos& pos, Actor* actorHit);
   ~Incinerator() {}
 private:
@@ -274,26 +252,14 @@ private:
 
 class TeslaCannon: public Wpn {
 public:
-  TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData) {
-    ammoCapacity = ammoData->ranged.ammoContainedInClip;
-    nrAmmoLoaded = ammoCapacity;
-    effectiveRangeLmt = 8;
-    clip = true;
-  }
+  TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData);
   ~TeslaCannon() {}
 private:
 };
 
 class SpikeGun: public Wpn {
 public:
-  SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData) {
-    ammoCapacity = 12;
-    nrAmmoLoaded = ammoCapacity;
-    effectiveRangeLmt = 3;
-    clip = true;
-  }
+  SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData);
   ~SpikeGun() {}
 private:
 };
@@ -307,13 +273,13 @@ public:
 
 class AmmoClip: public Ammo {
 public:
-  AmmoClip(ItemDataT* const itemData) : Ammo(itemData) {setFullAmmo();}
+  AmmoClip(ItemDataT* const itemData);
 
   ~AmmoClip() {}
 
   int ammo_;
 
-  void setFullAmmo() {ammo_ = data_->ranged.ammoContainedInClip;}
+  void setFullAmmo();
 
   void storeToSaveLines(std::vector<std::string>& lines) override {
     lines.push_back(toStr(ammo_));
@@ -483,7 +449,7 @@ public:
   void        onThrownIgnitedLanding(const Pos& p)  override;
   void        onStdTurnPlayerHoldIgnited()          override;
   void        onPlayerParalyzed()                   override;
-  Clr         getIgnitedProjectileClr()       const override {return getData().clr;}
+  Clr         getIgnitedProjectileClr()       const override;
   std::string getStrOnPlayerThrow()           const override {
     return "I throw a smoke grenade.";
   }

@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <string>
-#include "CmnData.h"
 
+#include "CmnData.h"
 #include "AbilityValues.h"
 #include "Spells.h"
 #include "FeatureData.h"

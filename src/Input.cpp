@@ -375,7 +375,7 @@ void handleKeyPress(const KeyData& d) {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
       vector<Actor*> SpottedEnemies;
-      Map::player->getSpottedEnemies(SpottedEnemies);
+      Map::player->getSeenFoes(SpottedEnemies);
       if(SpottedEnemies.empty()) {
         const int TURNS_TO_APPLY = 5;
         const string TURNS_STR = toStr(TURNS_TO_APPLY);

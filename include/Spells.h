@@ -2,7 +2,9 @@
 #define SPELLS_H
 
 #include <vector>
+#include <string>
 
+#include "Item.h"
 #include "CmnTypes.h"
 #include "Properties.h"
 #include "PlayerBon.h"
@@ -14,9 +16,9 @@ enum class SpellId {
   //Player and monster available spells
   darkbolt,
   azathothsWrath,
-  slowEnemies,
-  terrifyEnemies,
-  paralyzeEnemies,
+  slowMon,
+  terrifyMon,
+  paralyzeMon,
   teleport,
   bless,
 
@@ -51,7 +53,7 @@ class Spell;
 namespace SpellHandling {
 
 Spell* getRandomSpellForMonster();
-Spell* getSpellFromId(const SpellId spellId);
+Spell* mkSpellFromId(const SpellId spellId);
 
 } //SpellHandling
 
@@ -77,6 +79,8 @@ public:
   virtual bool isAvailForPlayer()       const = 0;
   virtual std::string getName()         const = 0;
   virtual SpellId getId()               const = 0;
+
+  virtual std::vector<std::string> getDescr() const = 0;
 
   Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const;
 
@@ -109,6 +113,11 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::mild;
   }
+  std::vector<std::string> getDescr() const override {
+    return {"Siphons power from some hellish mystic source, which is focused into a "
+            "bolt cast towards a target with great force."
+           };
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -127,6 +136,14 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {"Briefly exposes all visible enemies to the destruction and malice of "
+            "Azathoth, the ultimate chaos at the center of the universe. This spell "
+            "will generally inflict damage, but due to the chaotic nature of its "
+            "source, it can occasionally have other effects, and may affect the caster "
+            "as well."
+           };
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -143,6 +160,11 @@ public:
   SpellId getId()               const override {return SpellId::mayhem;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::severe;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {"Engulfs all visible enemies in flames, and causes terrible destruction on "
+            "the surrounding area."
+           };
   }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
@@ -161,6 +183,12 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {"Summons spiders, rats, worms, or other loathsome critters that immediately "
+            "attacks the caster. The purpose of this spell is unclear - it almost seems "
+            "like a trap created by an evil wizard as a cruel joke on the uninitiated."
+           };
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -177,6 +205,9 @@ public:
   SpellId getId()               const override {return SpellId::detItems;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {"Reveals the presence of all items in the surrounding area."};
   }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
@@ -195,6 +226,9 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {"Reveals the presence of all traps in the surrounding area."};
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -211,6 +245,9 @@ public:
   SpellId getId()               const override {return SpellId::detMon;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {"Reveals the presence of all monsters in the surrounding area."};
   }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
@@ -229,6 +266,9 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {"Opens all locks, lids and doors in the surrounding area."};
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -241,10 +281,15 @@ public:
   SpellSacrLife() : Spell() {}
   bool isAvailForAllMonsters()  const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
-  std::string getName()         const override {return "Sacrifice Life Force";}
+  std::string getName()         const override {return "Sacrifice Life";}
   SpellId getId()               const override {return SpellId::sacrLife;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {"Brings the caster to the brink of death in order to restore the spirit. "
+            "The amount restored is proportional to the life sacrificed."
+           };
   }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
@@ -263,6 +308,11 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {"Brings the caster to the brink of spiritual death in order to restore "
+            "health. The amount restored is proportional to the spirit sacrificed."
+           };
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -279,6 +329,9 @@ public:
   SpellId getId()               const override {return SpellId::cloudMinds;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::mild;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {"All enemies forget your presence."};
   }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
@@ -298,6 +351,9 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {"Causes the universe to bend slightly in the casters favor."};
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -316,6 +372,9 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {""};
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_()          const override {return PLAYER_START_SPI + 2;}
@@ -331,6 +390,9 @@ public:
   SpellId getId()               const override {return SpellId::teleport;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {"Instantly moves the caster to a different position."};
   }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
@@ -350,6 +412,11 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {"For a brief time, the caster is completely shielded from fire, cold and "
+            "electricity."
+           };
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -357,9 +424,9 @@ private:
   }
 };
 
-class SpellPropOnEnemies: public Spell {
+class SpellPropOnMon: public Spell {
 public:
-  SpellPropOnEnemies() : Spell() {}
+  SpellPropOnMon() : Spell() {}
   bool isGoodForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
@@ -372,13 +439,16 @@ protected:
   virtual int getMaxSpiCost_()  const override  = 0;
 };
 
-class SpellSlowEnemies: public SpellPropOnEnemies {
+class SpellSlowMon: public SpellPropOnMon {
 public:
-  SpellSlowEnemies() : SpellPropOnEnemies() {}
+  SpellSlowMon() : SpellPropOnMon() {}
   std::string getName() const override {return "Slow Enemies";}
-  SpellId getId()       const override {return SpellId::slowEnemies;}
+  SpellId getId()       const override {return SpellId::slowMon;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {"Causes all visible enemies to move slower."};
   }
 private:
   PropId getPropId() const override {return propSlowed;}
@@ -387,13 +457,16 @@ private:
   }
 };
 
-class SpellTerrifyMon: public SpellPropOnEnemies {
+class SpellTerrifyMon: public SpellPropOnMon {
 public:
-  SpellTerrifyMon() : SpellPropOnEnemies() {}
+  SpellTerrifyMon() : SpellPropOnMon() {}
   std::string getName() const override {return "Terrify Enemies";}
-  SpellId getId()       const override {return SpellId::terrifyEnemies;}
+  SpellId getId()       const override {return SpellId::terrifyMon;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::severe;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {"Causes terror in the minds of all visible enemies."};
   }
 private:
   PropId getPropId() const override {return propTerrified;}
@@ -402,13 +475,16 @@ private:
   }
 };
 
-class SpellParalyzeEnemies: public SpellPropOnEnemies {
+class SpellParalyzeMon: public SpellPropOnMon {
 public:
-  SpellParalyzeEnemies() : SpellPropOnEnemies() {}
+  SpellParalyzeMon() : SpellPropOnMon() {}
   std::string getName() const override {return "Paralyze Enemies";}
-  SpellId getId()       const override {return SpellId::paralyzeEnemies;}
+  SpellId getId()       const override {return SpellId::paralyzeMon;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {"All visible enemies are paralyzed for a brief moment."};
   }
 private:
   PropId getPropId() const override {return propParalyzed;}
@@ -428,6 +504,9 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {""};
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -445,6 +524,9 @@ public:
   SpellId getId()               const override {return SpellId::summonRandom;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {""};
   }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
@@ -464,6 +546,9 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {""};
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -482,6 +567,9 @@ public:
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
   }
+  std::vector<std::string> getDescr() const override {
+    return {""};
+  }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
@@ -499,6 +587,9 @@ public:
   SpellId getId()               const override {return SpellId::immolation;}
   IntrSpellShock getShockTypeIntrCast() const override {
     return IntrSpellShock::disturbing;
+  }
+  std::vector<std::string> getDescr() const override {
+    return {""};
   }
 private:
   SpellCastRetData cast_(Actor* const caster) const override;

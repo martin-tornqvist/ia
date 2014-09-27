@@ -139,11 +139,11 @@ std::string StrangeDevice::getNameInf() const {
 //---------------------------------------------------- SENTRY
 void DeviceSentry::triggerEffect() {
   vector<Actor*> targetBucket;
-  Map::player->getSpottedEnemies(targetBucket);
+  Map::player->getSeenFoes(targetBucket);
   if(targetBucket.empty()) {
     Log::addMsg("It seems to peruse area.");
   } else {
-    Spell* const spell = SpellHandling::getSpellFromId(SpellId::azathothsWrath);
+    Spell* const spell = SpellHandling::mkSpellFromId(SpellId::azathothsWrath);
     spell->cast(Map::player, false);
     delete spell;
   }
@@ -177,13 +177,13 @@ void DeviceRejuvenator::triggerEffect() {
 //---------------------------------------------------- TRANSLOCATOR
 void DeviceTranslocator::triggerEffect() {
   Player* const player = Map::player;
-  vector<Actor*> spottedEnemies;
-  player->getSpottedEnemies(spottedEnemies);
+  vector<Actor*> seenFoes;
+  player->getSeenFoes(seenFoes);
 
-  if(spottedEnemies.empty()) {
+  if(seenFoes.empty()) {
     Log::addMsg("It seems to peruse area.");
   } else {
-    for(Actor* actor : spottedEnemies) {
+    for(Actor* actor : seenFoes) {
       Log::addMsg(actor->getNameThe() + " is teleported.");
       Renderer::drawBlastAnimAtPositions(vector<Pos> {actor->pos}, clrYellow);
       actor->teleport(false);

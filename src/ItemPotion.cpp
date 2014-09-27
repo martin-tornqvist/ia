@@ -42,6 +42,14 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY) {
   }
 }
 
+vector<string> Potion::getDescr() const {
+  if(data_->isIdentified) {
+    return getDescrIdentified();
+  } else {
+    return data_->baseDescr;
+  }
+}
+
 void Potion::collide(const Pos& pos, Actor* const actor) {
   if(!Map::cells[pos.x][pos.y].rigid->isBottomless() || actor) {
 
@@ -100,7 +108,7 @@ void Potion::quaff(Actor* const actor) {
   }
 }
 
-std::string Potion::getNameInf() const {
+string Potion::getNameInf() const {
   return (data_->isTried && !data_->isIdentified) ? "{Tried}" : "";
 }
 

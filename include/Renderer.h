@@ -83,6 +83,9 @@ void drawProjectiles(std::vector<Projectile*>& projectiles,
 void drawPopupBox(const Rect& area, const Panel panel = Panel::screen,
                   const Clr& clr = clrPopupBox, const bool COVER_AREA = false);
 
+//E.g. item and spell descriptions
+void drawDescrBox(const std::vector<StrAndClr>& lines);
+
 void applySurface(const Pos& pixelPos, SDL_Surface* const src,
                   SDL_Rect* clip = nullptr);
 

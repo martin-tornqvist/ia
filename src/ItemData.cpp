@@ -206,6 +206,11 @@ void resetData(ItemDataT& d, ItemType const itemType) {
 
     case ItemType::scroll: {
       resetData(d, ItemType::general);
+      d.baseDescr = {"A short transcription of some eldritch incantation. There is a "
+                     "strange aura about it, as if some power was imbued in the paper "
+                     "itself. It should be possible to pronounce it correctly, but the "
+                     "purpse is unclear."
+                    };
       d.itemValue = ItemValue::minorTreasure;
       d.chanceToIncludeInSpawnList = 40;
       d.itemWeight = itemWeight_none;
@@ -369,7 +374,7 @@ void initDataList() {
   d->tile = TileId::incinerator;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with an Incinerator");
   d->ranged.dmg = DiceParam(1, 3);
-  d->ranged.dmgInfoOverride = "*";
+  d->ranged.dmgInfoOverride = "* ";
   d->ranged.ammoItemId = ItemId::incineratorCartridge;
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires an incinerator");
   d->ranged.sndMsg = "I hear the blast of a launched missile.";
@@ -1282,17 +1287,17 @@ void initDataList() {
 
   d = new ItemDataT(ItemId::scrollSlowMon);
   resetData(*d, ItemType::scroll);
-  d->spellCastFromScroll = SpellId::slowEnemies;
+  d->spellCastFromScroll = SpellId::slowMon;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::scrollTerrifyMon);
   resetData(*d, ItemType::scroll);
-  d->spellCastFromScroll = SpellId::terrifyEnemies;
+  d->spellCastFromScroll = SpellId::terrifyMon;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::scrollParalMon);
   resetData(*d, ItemType::scroll);
-  d->spellCastFromScroll = SpellId::paralyzeEnemies;
+  d->spellCastFromScroll = SpellId::paralyzeMon;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::scrollDetItems);

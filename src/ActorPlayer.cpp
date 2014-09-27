@@ -281,9 +281,9 @@ void Player::incrInsanity() {
     die(true, false, false);
   } else {
     bool playerSeeShockingMonster = false;
-    vector<Actor*> spottedEnemies;
-    getSpottedEnemies(spottedEnemies);
-    for(Actor* actor : spottedEnemies) {
+    vector<Actor*> seenFoes;
+    getSeenFoes(seenFoes);
+    for(Actor* actor : seenFoes) {
       const ActorDataT& def = actor->getData();
       if(def.monsterShockLvl != MonsterShockLvl::none) {
         playerSeeShockingMonster = true;
@@ -354,9 +354,9 @@ void Player::incrInsanity() {
               }
               if(phobiasActive < 2) {
                 if(Rnd::coinToss()) {
-                  if(!spottedEnemies.empty()) {
-                    const int M_ROLL = Rnd::range(0, spottedEnemies.size() - 1);
-                    const ActorDataT& monsterData = spottedEnemies.at(M_ROLL)->getData();
+                  if(!seenFoes.empty()) {
+                    const int M_ROLL = Rnd::range(0, seenFoes.size() - 1);
+                    const ActorDataT& monsterData = seenFoes.at(M_ROLL)->getData();
                     if(monsterData.isRat && !phobias[int(Phobia::rat)]) {
                       msg += "I am afflicted by Murophobia. "
                              "Rats suddenly seem terrifying.";
@@ -534,13 +534,13 @@ bool Player::isStandingInCrampedSpace() const {
 }
 
 void Player::testPhobias() {
-  vector<Actor*> spottedEnemies;
-  getSpottedEnemies(spottedEnemies);
+  vector<Actor*> seenFoes;
+  getSeenFoes(seenFoes);
 
   const int ROLL = Rnd::percentile();
   //Phobia vs creature type?
   if(ROLL < 10) {
-    for(Actor* const actor : spottedEnemies) {
+    for(Actor* const actor : seenFoes) {
       const ActorDataT& monsterData = actor->getData();
       if(monsterData.isCanine && phobias[int(Phobia::dog)]) {
         Log::addMsg("I am plagued by my canine phobia!");
@@ -613,9 +613,9 @@ void Player::onActorTurn() {
   if(deadState != ActorDeadState::alive) {return;}
 
   //If player dropped item, check if should go back to inventory screen
-  vector<Actor*> spottedEnemies;
-  getSpottedEnemies(spottedEnemies);
-  if(spottedEnemies.empty()) {
+  vector<Actor*> seenFoes;
+  getSeenFoes(seenFoes);
+  if(seenFoes.empty()) {
     const auto invScreen = InvHandling::screenToOpenAfterDrop;
     if(invScreen != InvScrId::END) {
       switch(invScreen) {
@@ -660,10 +660,10 @@ void Player::onStdTurn() {
     }
   }
 
-  vector<Actor*> spottedEnemies;
-  getSpottedEnemies(spottedEnemies);
+  vector<Actor*> seenFoes;
+  getSeenFoes(seenFoes);
   double shockFromMonstersCurPlayerTurn = 0.0;
-  for(Actor* actor : spottedEnemies) {
+  for(Actor* actor : seenFoes) {
     DungeonMaster::onMonsterSpotted(*actor);
 
     Monster* monster = static_cast<Monster*>(actor);

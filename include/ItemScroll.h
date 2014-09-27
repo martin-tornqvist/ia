@@ -2,9 +2,9 @@
 #define ITEM_SCROLL_H
 
 #include "Item.h"
-#include "Spells.h"
 
 class Actor;
+class Spell;
 
 class Scroll: public Item {
 public:
@@ -20,9 +20,12 @@ public:
 
   const std::string getRealTypeName();
 
+  std::vector<std::string> getDescr() const override final;
+
   void identify(const bool IS_SILENT_IDENTIFY) override;
 
-  Spell* getSpell();
+  Spell* mkSpell() const;
+
 protected:
   void tryLearn();
 

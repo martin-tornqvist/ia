@@ -394,15 +394,15 @@ bool lookBecomePlayerAware(Monster& monster) {
 
     const bool WAS_AWARE_BEFORE = monster.awareOfPlayerCounter_ > 0;
 
-    vector<Actor*> spottedEnemies;
-    monster.getSpottedEnemies(spottedEnemies);
+    vector<Actor*> seenFoes;
+    monster.getSeenFoes(seenFoes);
 
-    if(!spottedEnemies.empty() && WAS_AWARE_BEFORE) {
+    if(!seenFoes.empty() && WAS_AWARE_BEFORE) {
       monster.becomeAware(false);
       return false;
     }
 
-    for(Actor* actor : spottedEnemies) {
+    for(Actor* actor : seenFoes) {
       if(actor == Map::player) {
         if(monster.isSpottingHiddenActor(*actor)) {
           monster.becomeAware(true);

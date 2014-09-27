@@ -26,15 +26,15 @@ namespace {
 Pos pos_;
 
 void setPosToClosestEnemyIfVisible() {
-  vector<Actor*> spottedEnemies;
-  Map::player->getSpottedEnemies(spottedEnemies);
-  vector<Pos> spottedEnemiesPositions;
+  vector<Actor*> seenFoes;
+  Map::player->getSeenFoes(seenFoes);
+  vector<Pos> seenFoesPositions;
 
-  Utils::getActorPositions(spottedEnemies, spottedEnemiesPositions);
+  Utils::getActorPositions(seenFoes, seenFoesPositions);
 
   //If player sees enemies, suggest one for targeting
-  if(!spottedEnemiesPositions.empty()) {
-    pos_ = Utils::getClosestPos(Map::player->pos, spottedEnemiesPositions);
+  if(!seenFoesPositions.empty()) {
+    pos_ = Utils::getClosestPos(Map::player->pos, seenFoesPositions);
 
     Map::player->target = Utils::getFirstActorAtPos(pos_);
   }
@@ -49,11 +49,11 @@ bool setPosToTargetIfVisible() {
   const Actor* const target = Map::player->target;
 
   if(target) {
-    vector<Actor*> spottedEnemies;
-    Map::player->getSpottedEnemies(spottedEnemies);
+    vector<Actor*> seenFoes;
+    Map::player->getSeenFoes(seenFoes);
 
-    if(!spottedEnemies.empty()) {
-      for(auto* const actor : spottedEnemies) {
+    if(!seenFoes.empty()) {
+      for(auto* const actor : seenFoes) {
         if(target == actor) {
           pos_ = actor->pos;
           return true;

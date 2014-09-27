@@ -205,7 +205,7 @@ string getHplQuote() {
     "the piling-up of unbroken time-accumulations; a region where old, "
     "strange things have had a chance to grow and linger because they have "
     "never been stirred up.");
-  return "\"" + quotes.at(Rnd::range(0, quotes.size() - 1)) + "\"";
+  return quotes.at(Rnd::range(0, quotes.size() - 1));
 }
 
 void draw(const MenuBrowser& browser) {

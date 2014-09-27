@@ -6,6 +6,7 @@
 #include "ItemDrop.h"
 #include "ItemDevice.h"
 #include "Utils.h"
+#include "ItemData.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
   }
 
   switch(itemId) {
-    case ItemId::trapezohedron:       r = new Item(d);                  break;
+    case ItemId::trapezohedron:       r = new Item(d);               break;
 
     case ItemId::rock:                r = new Wpn(d, ammoD);         break;
     case ItemId::throwingKnife:       r = new Wpn(d, ammoD);         break;
@@ -40,31 +41,31 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::dynamite:            r = new Dynamite(d);              break;
     case ItemId::flare:               r = new Flare(d);                 break;
     case ItemId::molotov:             r = new Molotov(d);               break;
-    case ItemId::smokeGrenade:        r = new SmokeGrenade(d);           break;
+    case ItemId::smokeGrenade:        r = new SmokeGrenade(d);          break;
 
     case ItemId::sawedOff:            r = new SawedOff(d, ammoD);       break;
     case ItemId::pumpShotgun:         r = new PumpShotgun(d, ammoD);    break;
-    case ItemId::shotgunShell:        r = new Ammo(d);              break;
+    case ItemId::shotgunShell:        r = new Ammo(d);                  break;
     case ItemId::machineGun:          r = new MachineGun(d, ammoD);     break;
-    case ItemId::drumOfBullets:       r = new AmmoClip(d);          break;
+    case ItemId::drumOfBullets:       r = new AmmoClip(d);              break;
     case ItemId::pistol:              r = new Pistol(d, ammoD);         break;
     case ItemId::flareGun:            r = new FlareGun(d, ammoD);       break;
-    case ItemId::pistolClip:          r = new AmmoClip(d);          break;
+    case ItemId::pistolClip:          r = new AmmoClip(d);              break;
     case ItemId::incinerator:         r = new Incinerator(d, ammoD);    break;
     case ItemId::teslaCannon:         r = new TeslaCannon(d, ammoD);    break;
     case ItemId::spikeGun:            r = new SpikeGun(d, ammoD);       break;
-    case ItemId::teslaCanister:       r = new AmmoClip(d);          break;
-    case ItemId::incineratorCartridge:     r = new AmmoClip(d);          break;
+    case ItemId::teslaCanister:       r = new AmmoClip(d);              break;
+    case ItemId::incineratorCartridge:     r = new AmmoClip(d);         break;
 
     case ItemId::playerKick:          r = new Wpn(d, ammoD);         break;
     case ItemId::playerStomp:         r = new Wpn(d, ammoD);         break;
     case ItemId::playerPunch:         r = new Wpn(d, ammoD);         break;
 
-    case ItemId::armorFlackJacket:    r = new Armor(d);                 break;
-    case ItemId::armorLeatherJacket:  r = new Armor(d);                 break;
-    case ItemId::armorIronSuit:       r = new Armor(d);                 break;
-    case ItemId::armorAsbSuit:        r = new ArmorAsbSuit(d);          break;
-    case ItemId::armorHeavyCoat:      r = new ArmorHeavyCoat(d);        break;
+    case ItemId::armorFlackJacket:    r = new Armor(d);               break;
+    case ItemId::armorLeatherJacket:  r = new Armor(d);               break;
+    case ItemId::armorIronSuit:       r = new Armor(d);               break;
+    case ItemId::armorAsbSuit:        r = new ArmorAsbSuit(d);        break;
+    case ItemId::armorHeavyCoat:      r = new ArmorHeavyCoat(d);      break;
 
     case ItemId::gasMask:             r = new GasMask(d);             break;
     case ItemId::hideousMask:         r = new HideousMask(d);         break;

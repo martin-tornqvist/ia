@@ -11,8 +11,6 @@
 
 using namespace std;
 
-const int DESCR_X0 = MAP_W - 31;
-
 namespace {
 
 void drawItemSymbol(const Item& item, const Pos& p) {
@@ -46,59 +44,33 @@ void drawWeightPct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_LE
 }
 
 void drawDetailedItemDescr(const Item* const item) {
-  const Panel panel   = Panel::screen;
-  const int DESCR_Y0  = 1;
-  const int DESCR_X1  = MAP_W - 1;
-  Renderer::coverArea(panel, Rect(DESCR_X0, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
-
-  const int MAX_W = DESCR_X1 - DESCR_X0 + 1;
-
-  Pos p(DESCR_X0, DESCR_Y0);
-
   if(item) {
-    auto printLineAndIncrY = [&](const string & line, const Clr & clr) {
-      Renderer::drawText(line, panel, p, clr);
-      ++p.y;
-    };
-
-    vector<string> lines;
+    vector<StrAndClr> lines;
 
     const auto baseDescr = item->getDescr();
 
     if(!baseDescr.empty()) {
       for(const string& paragraph : baseDescr) {
-        TextFormatting::lineToLines(paragraph, MAX_W, lines);
-        for(const string& line : lines) {printLineAndIncrY(line, clrWhiteHigh);}
-        ++p.y;
+        lines.push_back({paragraph, clrWhiteHigh});
       }
     }
-
-//    p.y = max(p.y, 10);
-//    p.y = SCREEN_H - 2;
 
     const bool  IS_PLURAL = item->nrItems_ > 1 && item->getData().isStackable;
     const string weightStr =
       (IS_PLURAL ? "They are " : "It is ") + item->getWeightStr() + " to carry.";
 
-    printLineAndIncrY(weightStr, clrGreen);
+    lines.push_back({weightStr, clrGreen});
 
     const int WEIGHT_CARRIED_TOT = Map::player->getInv().getTotalItemWeight();
     const int WEIGHT_PCT         = (item->getWeight() * 100) / WEIGHT_CARRIED_TOT;
 
     if(WEIGHT_PCT > 0 && WEIGHT_PCT < 100) {
       const string pctStr = "(" + toStr(WEIGHT_PCT) + "% of total carried weight)";
-      printLineAndIncrY(pctStr, clrGreen);
+      lines.push_back({pctStr, clrGreen});
     }
+
+    Renderer::drawDescrBox(lines);
   }
-
-//  Renderer::drawPopupBox(box, panel, clrPopupBox, false);
-
-//  Renderer::drawText("Description", panel, box.p0 + Pos(1, 0), clrWhite);
-
-//  if(Config::isTilesMode()) {
-//    Renderer::drawTile(TileId::popupHorDown, panel, box.p0, clrPopupBox);
-//    Renderer::drawTile(TileId::popupHorUp, panel, Pos(box.p0.x, box.p1.y), clrPopupBox);
-//  }
 }
 
 } //Namespace

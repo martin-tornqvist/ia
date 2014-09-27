@@ -17,10 +17,22 @@
 #include "ItemFactory.h"
 #include "FeatureMob.h"
 #include "FeatureRigid.h"
+#include "ItemData.h"
 
 using namespace std;
 
 //------------------------------------------------------------------- ITEM
+Item::Item(ItemDataT* itemData) : nrItems_(1), meleeDmgPlus_(0), data_(itemData) {}
+
+const ItemDataT&  Item::getData()   const {return *data_;}
+Clr               Item::getClr()    const {return data_->clr;}
+char              Item::getGlyph()  const {return data_->glyph;}
+TileId            Item::getTile()   const {return data_->tile;}
+
+vector<string> Item::getDescr() const {return data_->baseDescr;}
+
+int Item::getWeight() const {return data_->itemWeight * nrItems_;}
+
 string Item::getWeightStr() const {
   const int WEIGHT = getWeight();
   if(WEIGHT <= (itemWeight_extraLight + itemWeight_light) / 2) {
@@ -121,6 +133,11 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
   return nrStr + data_->baseName.names[int(refTypeUsed)] + attStr + infStr;
 }
 
+void Item::clearPropsEnabledOnCarrier() {
+  for(Prop* prop : propsEnabledOnCarrier) {delete prop;}
+  propsEnabledOnCarrier.resize(0);
+}
+
 //------------------------------------------------------------------- ARMOR
 Armor::Armor(ItemDataT* const itemData) :
   Item(itemData), dur_(Rnd::range(80, 100)) {}
@@ -219,6 +236,17 @@ Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData) :
   clip = false;
 }
 
+Clr Wpn::getClr() const {
+  if(data_->ranged.isRangedWpn && !data_->ranged.hasInfiniteAmmo) {
+    if(nrAmmoLoaded == 0) {
+      Clr ret = data_->clr;
+      ret.r /= 2; ret.g /= 2; ret.b /= 2;
+      return ret;
+    }
+  }
+  return data_->clr;
+}
+
 void Wpn::setRandomMeleePlus() {
   meleeDmgPlus_ = 0;
 
@@ -236,11 +264,55 @@ string Wpn::getNameInf() const {
   return "";
 }
 
+//------------------------------------------------------------------- MACHINE GUN
+MachineGun::MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
+  Wpn(itemData, ammoData) {
+  ammoCapacity = ammoData->ranged.ammoContainedInClip;
+  nrAmmoLoaded = ammoCapacity;
+  effectiveRangeLmt = 8;
+  clip = true;
+}
+
+//------------------------------------------------------------------- TESLA CANNON
+TeslaCannon::TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData) :
+  Wpn(itemData, ammoData) {
+  ammoCapacity = ammoData->ranged.ammoContainedInClip;
+  nrAmmoLoaded = ammoCapacity;
+  effectiveRangeLmt = 8;
+  clip = true;
+}
+
+//------------------------------------------------------------------- SPIKE GUN
+SpikeGun::SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
+  Wpn(itemData, ammoData) {
+  ammoCapacity = 12;
+  nrAmmoLoaded = ammoCapacity;
+  effectiveRangeLmt = 3;
+  clip = true;
+}
+
 //------------------------------------------------------------------- INCINERATOR
+Incinerator::Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
+  Wpn(itemData, ammoData) {
+  ammoCapacity = ammoData->ranged.ammoContainedInClip;
+  nrAmmoLoaded = ammoCapacity;
+  effectiveRangeLmt = 8;
+  clip = false;
+}
+
 void Incinerator::projectileObstructed(
   const Pos& pos, Actor* actorHit) {
   (void)actorHit;
   Explosion::runExplosionAt(pos, ExplType::expl);
+}
+
+//------------------------------------------------------------------- MEDICAL BAG
+AmmoClip::AmmoClip(ItemDataT* const itemData) : Ammo(itemData) {
+  setFullAmmo();
+}
+
+void AmmoClip::setFullAmmo() {
+  ammo_ = data_->ranged.ammoContainedInClip;
 }
 
 //------------------------------------------------------------------- MEDICAL BAG
@@ -250,9 +322,9 @@ const int NR_TRN_PER_HP       = 2;
 ConsumeItem MedicalBag::activateDefault(Actor* const actor) {
   (void)actor;
 
-  vector<Actor*> spottedEnemies;
-  Map::player->getSpottedEnemies(spottedEnemies);
-  if(!spottedEnemies.empty()) {
+  vector<Actor*> seenFoes;
+  Map::player->getSeenFoes(seenFoes);
+  if(!seenFoes.empty()) {
     Log::addMsg("Not while an enemy is near.");
     curAction_ = MedBagAction::END;
     return ConsumeItem::no;
@@ -678,5 +750,9 @@ void SmokeGrenade::onPlayerParalyzed() {
   Map::player->updateFov();
   Renderer::drawMapAndInterface();
   delete this;
+}
+
+Clr SmokeGrenade::getIgnitedProjectileClr() const {
+  return getData().clr;
 }
 

@@ -576,7 +576,7 @@ void pickBg(const Bg bg) {
         scroll = ItemFactory::mkRandomScrollOrPotion(true, false);
 
         SpellId id          = scroll->getData().spellCastFromScroll;
-        Spell* const spell  = SpellHandling::getSpellFromId(id);
+        Spell* const spell  = SpellHandling::mkSpellFromId(id);
         const bool IS_AVAIL = spell->isAvailForPlayer();
         delete spell;
 

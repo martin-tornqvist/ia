@@ -29,7 +29,6 @@ bool MenuBrowser::isAtIdx(const int IDX) const {
 }
 
 void MenuBrowser::navigate(const Dir dir) {
-  const int NR_ITEMS        = pos_.x == 0 ? NR_A_ : NR_B_;
   const int NR_ITEMS_OTHER  = pos_.x == 0 ? NR_B_ : NR_A_;
 
   switch(dir) {

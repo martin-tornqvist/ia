@@ -21,19 +21,13 @@ public:
 
   Clr getInterfaceClr() const override {return clrBlueLgt;}
 
+  std::vector<std::string> getDescr() const override final;
+
   void quaff(Actor* const actor);
 
   void collide(const Pos& pos, Actor* actor);
 
   void identify(const bool IS_SILENT_IDENTIFY) override;
-
-  std::vector<std::string> getDescr() const override final {
-    if(data_->isIdentified) {
-      return getDescrIdentified();
-    } else {
-      return data_->baseDescr;
-    }
-  }
 
 protected:
   virtual const std::string getRealTypeName() = 0;

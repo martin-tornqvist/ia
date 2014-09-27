@@ -57,7 +57,7 @@ public:
   //another actor.
   bool isSeeingActor(const Actor& other, const bool visionBlockers[MAP_W][MAP_H]) const;
 
-  void getSpottedEnemies(std::vector<Actor*>& vectorRef);
+  void getSeenFoes(std::vector<Actor*>& vectorRef);
 
   inline ActorId getId()    const {return data_->id;}
   inline int getHp()        const {return hp_;}

@@ -5,7 +5,11 @@
 #include <string>
 #include <iostream>
 
-#include "ItemData.h"
+#include "CmnTypes.h"
+
+class Item;
+
+enum class ItemId;
 
 enum class SlotId {wielded, wieldedAlt, thrown, body, head};
 

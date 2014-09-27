@@ -127,10 +127,10 @@ void drawInfoLines() {
   const Item* const armor = player.getInv().getItemInSlot(SlotId::body);
   if(armor) {
     str = static_cast<const Armor*>(armor)->getArmorDataLine(false);
-    Renderer::drawText(str, Panel::charLines, pos, clrWhiteHigh);
+    Renderer::drawText(str, Panel::charLines, pos, clrWhite);
     pos.x += str.length() + 1;
   } else {
-    Renderer::drawText("N/A", Panel::charLines, pos, clrWhiteHigh);
+    Renderer::drawText("N/A", Panel::charLines, pos, clrWhite);
     pos.x += 4;
   }
 
@@ -156,10 +156,10 @@ void drawInfoLines() {
                                  ItemRefAttInf::melee : ItemRefAttInf::wpnContext;
 
     str = itemWielded->getName(ItemRefType::plain, ItemRefInf::yes, attInf);
-    Renderer::drawText(str, Panel::charLines, pos, clrMenuMedium);
+    Renderer::drawText(str, Panel::charLines, pos, clrWhite);
     pos.x += str.length() + 1;
   } else {
-    Renderer::drawText("Unarmed", Panel::charLines, pos, clrMenuMedium);
+    Renderer::drawText("Unarmed", Panel::charLines, pos, clrWhite);
   }
 
   pos.x = CHARACTER_LINE_X0;
@@ -169,20 +169,20 @@ void drawInfoLines() {
   Renderer::drawText("LVL:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
   str = toStr(DungeonMaster::getCLvl());
-  Renderer::drawText(str, Panel::charLines, pos, clrWhiteHigh);
+  Renderer::drawText(str, Panel::charLines, pos, clrWhite);
   pos.x += str.length() + 1;
   Renderer::drawText("NXT:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
   str = DungeonMaster::getCLvl() >= PLAYER_MAX_CLVL ? "-" :
         toStr(DungeonMaster::getXpToNextLvl());
-  Renderer::drawText(str, Panel::charLines, pos, clrWhiteHigh);
+  Renderer::drawText(str, Panel::charLines, pos, clrWhite);
   pos.x += str.length() + 1;
 
   //Dungeon level
   Renderer::drawText("DLVL:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 5;
   str = Map::dlvl >= 0 ? toStr(Map::dlvl) : "?";
-  Renderer::drawText(str, Panel::charLines, pos, clrWhiteHigh);
+  Renderer::drawText(str, Panel::charLines, pos, clrWhite);
   pos.x += str.length() + 1;
 
   //Encumbrance
@@ -212,10 +212,10 @@ void drawInfoLines() {
 
     str = itemMissiles->getName(ItemRefType::plural, ItemRefInf::yes,
                                 ItemRefAttInf::thrown);
-    Renderer::drawText(str, Panel::charLines, pos, clrMenuMedium);
+    Renderer::drawText(str, Panel::charLines, pos, clrWhite);
     pos.x += str.length() + 1;
   } else {
-    Renderer::drawText("No thrown weapon", Panel::charLines, pos, clrMenuMedium);
+    Renderer::drawText("No thrown weapon", Panel::charLines, pos, clrWhite);
   }
 
   pos.y += 1;
@@ -230,30 +230,10 @@ void drawInfoLines() {
     pos.x += curPropLabel.str.length() + 1;
   }
 
-//  const bool IS_SELF_AWARE =
-//    playerBonHandler->hasTrait(Trait::traitselfAware);
-//  //TODO This should be collected from applied and inventory by the Property handler
-//  const vector<Prop*>& appliedProps =
-//    player->getPropHandler().appliedProps_;
-//  for(unsigned int i = 0; i < appliedProps.size(); ++i) {
-//    Prop* const prop = appliedProps.at(i);
-//    const PropAlignment alignment = prop->getAlignment();
-//    const Clr statusColor =
-//      alignment == propAlignmentGood ? clrMsgGood :
-//      alignment == propAlignmentBad  ? clrMsgBad  : clrWhite;
-//    string propText = prop->getNameShort();
-//    if(IS_SELF_AWARE && prop->allowDisplayTurns()) {
-//      // +1 to offset that the turn is also active on turn 0
-//      propText += "(" + toStr(prop->turnsLeft_ + 1) + ")";
-//    }
-//    Renderer::drawText(propText, Panel::charLines, pos, statusColor);
-//    pos.x += propText.length() + 1;
-//  }
-
-// Turn number
+  //Turn number
   str = "T:" + toStr(GameTime::getTurn());
   pos.x = MAP_W - str.length() - 1;
-  Renderer::drawText(str, Panel::charLines, pos, clrMenuMedium);
+  Renderer::drawText(str, Panel::charLines, pos, clrWhite);
 }
 
 } //CharacterLines

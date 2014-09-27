@@ -1518,20 +1518,20 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
 void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
   if(owningActor_ == Map::player) {
-    vector<Actor*> spottedEnemies;
-    owningActor_->getSpottedEnemies(spottedEnemies);
+    vector<Actor*> seenFoes;
+    owningActor_->getSeenFoes(seenFoes);
 
-    if(spottedEnemies.empty()) {return;}
+    if(seenFoes.empty()) {return;}
 
-    vector<Pos> spottedEnemiesPositions;
-    spottedEnemiesPositions.resize(0);
-    for(unsigned int i = 0; i < spottedEnemies.size(); ++i) {
-      spottedEnemiesPositions.push_back(spottedEnemies.at(i)->pos);
+    vector<Pos> seenFoesPositions;
+    seenFoesPositions.resize(0);
+    for(unsigned int i = 0; i < seenFoes.size(); ++i) {
+      seenFoesPositions.push_back(seenFoes.at(i)->pos);
     }
-    sort(begin(spottedEnemiesPositions), end(spottedEnemiesPositions),
+    sort(begin(seenFoesPositions), end(seenFoesPositions),
          IsCloserToPos(actorPos));
 
-    const Pos& closestMonPos = spottedEnemiesPositions.at(0);
+    const Pos& closestMonPos = seenFoesPositions.at(0);
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksActor(*owningActor_, false), blocked);

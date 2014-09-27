@@ -31,21 +31,21 @@ Spell* getRandomSpellForMonster() {
 
   vector<SpellId> bucket;
   for(int i = 0; i < int(SpellId::END); ++i) {
-    Spell* const spell = getSpellFromId(SpellId(i));
+    Spell* const spell = mkSpellFromId(SpellId(i));
     if(spell->isAvailForAllMonsters()) {
       bucket.push_back(SpellId(i));
     }
     delete spell;
   }
   const int ELEMENT = Rnd::range(0, bucket.size() - 1);
-  return getSpellFromId(bucket.at(ELEMENT));
+  return mkSpellFromId(bucket.at(ELEMENT));
 }
 
-Spell* getSpellFromId(const SpellId spellId) {
+Spell* mkSpellFromId(const SpellId spellId) {
   switch(spellId) {
-    case SpellId::slowEnemies:        return new SpellSlowEnemies; break;
-    case SpellId::terrifyEnemies:     return new SpellTerrifyMon; break;
-    case SpellId::paralyzeEnemies:    return new SpellParalyzeEnemies; break;
+    case SpellId::slowMon:            return new SpellSlowMon; break;
+    case SpellId::terrifyMon:         return new SpellTerrifyMon; break;
+    case SpellId::paralyzeMon:        return new SpellParalyzeMon; break;
     case SpellId::disease:            return new SpellDisease; break;
     case SpellId::darkbolt:           return new SpellDarkbolt; break;
     case SpellId::azathothsWrath:     return new SpellAzathothsWrath; break;
@@ -189,7 +189,7 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
   Actor* target = nullptr;
 
   vector<Actor*> spottedActors;
-  caster->getSpottedEnemies(spottedActors);
+  caster->getSeenFoes(spottedActors);
   if(spottedActors.empty()) {
     return SpellCastRetData(false);
   } else {
@@ -260,7 +260,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
 
   if(caster == Map::player) {
     vector<Actor*> targets;
-    Map::player->getSpottedEnemies(targets);
+    Map::player->getSeenFoes(targets);
 
     if(targets.empty()) {
       return SpellCastRetData(false);
@@ -616,13 +616,10 @@ bool SpellTeleport::isGoodForMonsterToCastNow(
 //------------------------------------------------------------ ELEMENTAL RES
 SpellCastRetData SpellElemRes::cast_(Actor* const caster) const {
   const int DURATION = 20;
-  PropRCold* rCold = new PropRCold(PropTurns::specific, DURATION);
-  PropRElec* rElec = new PropRElec(PropTurns::specific, DURATION);
-  PropRFire* rFire = new PropRFire(PropTurns::specific, DURATION);
   PropHandler& propHlr = caster->getPropHandler();
-  propHlr.tryApplyProp(rCold);
-  propHlr.tryApplyProp(rElec);
-  propHlr.tryApplyProp(rFire);
+  propHlr.tryApplyProp(new PropRFire(PropTurns::specific, DURATION));
+  propHlr.tryApplyProp(new PropRElec(PropTurns::specific, DURATION));
+  propHlr.tryApplyProp(new PropRCold(PropTurns::specific, DURATION));
   return SpellCastRetData(true);
 }
 
@@ -653,14 +650,14 @@ bool SpellKnockBack::isGoodForMonsterToCastNow(
 }
 
 //------------------------------------------------------------ PROP ON OTHERS
-SpellCastRetData SpellPropOnEnemies::cast_(
+SpellCastRetData SpellPropOnMon::cast_(
   Actor* const caster) const {
 
   const PropId propId = getPropId();
 
   if(caster == Map::player) {
     vector<Actor*> targets;
-    Map::player->getSpottedEnemies(targets);
+    Map::player->getSeenFoes(targets);
 
     if(targets.empty()) {
       return SpellCastRetData(false);
@@ -693,7 +690,7 @@ SpellCastRetData SpellPropOnEnemies::cast_(
   }
 }
 
-bool SpellPropOnEnemies::isGoodForMonsterToCastNow(
+bool SpellPropOnMon::isGoodForMonsterToCastNow(
   Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);

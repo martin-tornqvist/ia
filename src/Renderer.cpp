@@ -21,6 +21,7 @@
 #include "Utils.h"
 #include "CmnData.h"
 #include "SdlWrapper.h"
+#include "TextFormatting.h"
 
 using namespace std;
 
@@ -52,8 +53,7 @@ void loadMainMenuLogo() {
   TRACE_FUNC_END;
 }
 
-Uint32 getPixel(SDL_Surface* const surface,
-                const int PIXEL_X, const int PIXEL_Y) {
+Uint32 getPixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y) {
   int bpp = surface->format->BytesPerPixel;
   /* Here p is the address to the pixel we want to retrieve */
   Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
@@ -134,8 +134,7 @@ void loadTiles() {
   TRACE_FUNC_END;
 }
 
-void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
-                              const Clr& clr) {
+void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos, const Clr& clr) {
   if(isInited()) {
     const int CLR_TO = SDL_MapRGB(screenSurface->format, clr.r, clr.g, clr.b);
 
@@ -170,8 +169,7 @@ void putPixelsOnScreenForTile(const TileId tile, const Pos& pixelPos,
   }
 }
 
-void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos,
-                               const Clr& clr) {
+void putPixelsOnScreenForGlyph(const char GLYPH, const Pos& pixelPos, const Clr& clr) {
   const int CLR_TO = SDL_MapRGB(screenSurface->format, clr.r, clr.g, clr.b);
 
   SDL_LockSurface(screenSurface);
@@ -682,7 +680,6 @@ void drawProjectiles(vector<Projectile*>& projectiles,
 
 void drawPopupBox(const Rect& border, const Panel panel, const Clr& clr,
                   const bool COVER_AREA) {
-
   if(COVER_AREA) {coverArea(panel, border);}
 
   const bool IS_TILES = Config::isTilesMode();
@@ -731,6 +728,26 @@ void drawPopupBox(const Rect& border, const Panel panel, const Clr& clr,
     drawGlyph('+', panel, corners[1], clr, true, clrBlack);
     drawGlyph('+', panel, corners[2], clr, true, clrBlack);
     drawGlyph('+', panel, corners[3], clr, true, clrBlack);
+  }
+}
+
+void drawDescrBox(const std::vector<StrAndClr>& lines) {
+  const int DESCR_Y0  = 1;
+  const int DESCR_X1  = MAP_W - 1;
+  coverArea(Panel::screen, Rect(DESCR_X0, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
+
+  const int MAX_W = DESCR_X1 - DESCR_X0 + 1;
+
+  Pos p(DESCR_X0, DESCR_Y0);
+
+  for(const auto& line : lines) {
+    vector<string> formatted;
+    TextFormatting::lineToLines(line.str, MAX_W, formatted);
+    for(const auto& lineInFormatted : formatted) {
+      drawText(lineInFormatted, Panel::screen, p, line.clr);
+      ++p.y;
+    }
+    ++p.y;
   }
 }
 
