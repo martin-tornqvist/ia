@@ -18,7 +18,7 @@
 #include "LineCalc.h"
 #include "Renderer.h"
 #include "SdlWrapper.h"
-#include "KnockBack.h"
+#include "Knockback.h"
 
 using namespace std;
 

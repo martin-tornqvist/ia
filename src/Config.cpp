@@ -14,7 +14,7 @@
 #include "Audio.h"
 #include "TextFormatting.h"
 #include "Utils.h"
-#include "init.h"
+#include "Init.h"
 
 
 using namespace std;

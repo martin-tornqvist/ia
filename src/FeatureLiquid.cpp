@@ -6,7 +6,7 @@
 #include "Renderer.h"
 #include "PlayerBon.h"
 #include "Audio.h"
-#include "Map.H"
+#include "Map.h"
 
 using namespace std;
 
