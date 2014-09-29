@@ -1,5 +1,5 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef RENDER_H
+#define RENDER_H
 
 #include <vector>
 #include <iostream>
@@ -15,7 +15,7 @@ struct Projectile;
 
 enum class Panel {screen, map, charLines, log};
 
-namespace Renderer {
+namespace Render {
 
 extern CellRenderData renderArray[MAP_W][MAP_H];
 extern CellRenderData renderArrayNoActors[MAP_W][MAP_H];

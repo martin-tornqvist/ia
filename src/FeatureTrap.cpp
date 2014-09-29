@@ -17,7 +17,7 @@
 #include "Inventory.h"
 #include "Sound.h"
 #include "ActorFactory.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Utils.h"
 #include "PlayerBon.h"
 
@@ -157,7 +157,7 @@ void Trap::disarm() {
   //Abort if trap is hidden
   if(isHidden()) {
     Log::addMsg(msgDisarmNoTrap);
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     return;
   }
 
@@ -200,7 +200,7 @@ void Trap::disarm() {
   } else {
     Log::addMsg(specificTrap_->getDisarmFailMsg());
 
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
     if(Rnd::oneIn(TRIGGER_ONE_IN_N)) {
       if(getTrapType() == TrapId::spiderWeb) {
@@ -270,7 +270,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   }
 
   if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
 
     if(PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
       const string name = specificTrap_->getTitle();

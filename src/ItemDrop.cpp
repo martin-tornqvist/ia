@@ -14,7 +14,7 @@
 #include "MapParsing.h"
 #include "Utils.h"
 #include "FeatureRigid.h"
-#include "Renderer.h"
+#include "Render.h"
 
 using namespace std;
 
@@ -62,7 +62,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     //Messages
     if(&actor == Map::player) {
       Log::clearLog();
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
       Log::addMsg("I drop " + itemRef + ".", clrWhite, false, true);
     } else {
       bool blocked[MAP_W][MAP_H];

@@ -9,7 +9,7 @@
 #include "Log.h"
 #include "Config.h"
 #include "GameTime.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "MapParsing.h"
 #include "SdlWrapper.h"
 #include "FeatureRigid.h"
@@ -75,7 +75,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           defender.pos = newPos;
 
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
 
           SdlWrapper::sleep(Config::getDelayProjectileDraw());
 

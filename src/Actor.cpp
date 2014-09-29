@@ -2,7 +2,7 @@
 
 #include "Init.h"
 
-#include "Renderer.h"
+#include "Render.h"
 #include "GameTime.h"
 #include "ActorPlayer.h"
 #include "ActorMonster.h"
@@ -170,7 +170,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
 
   if(this == Map::player) {
     Map::player->updateFov();
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     Map::updateVisualMemory();
   } else {
     static_cast<Monster*>(this)->playerAwareOfMeCounter_ = 0;
@@ -180,7 +180,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
 
   if(this == Map::player) {
     Map::player->updateFov();
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     Map::updateVisualMemory();
     Log::addMsg("I suddenly find myself in a different location!");
     propHandler_->tryApplyProp(new PropConfused(PropTurns::specific, 8));
@@ -238,7 +238,7 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
           Log::addMsg(data_->nameThe + " looks healthier.");
         }
       }
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
   }
 
@@ -280,7 +280,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
           Log::addMsg(data_->nameThe + " looks more spirited.");
         }
       }
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
   }
 
@@ -546,7 +546,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     DungeonMaster::onMonsterKilled(*this);
   }
 
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const {

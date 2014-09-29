@@ -9,7 +9,7 @@
 #include "Log.h"
 #include "Inventory.h"
 #include "PlayerSpellsHandling.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Utils.h"
 
 using namespace std;
@@ -79,7 +79,7 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
     if(!IS_SILENT_IDENTIFY) {
       const string name = getName(ItemRefType::a, ItemRefInf::none);
       Log::addMsg("It was " + name + ".");
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
 
     data_->isIdentified = true;
@@ -101,7 +101,7 @@ void Scroll::tryLearn() {
 }
 
 ConsumeItem Scroll::read() {
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   if(!Map::player->getPropHandler().allowSee()) {
     Log::addMsg("I cannot read while blind.");

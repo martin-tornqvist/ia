@@ -7,7 +7,7 @@
 
 #include "Input.h"
 #include "Converters.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Query.h"
 #include "ActorPlayer.h"
 #include "Map.h"
@@ -47,9 +47,9 @@ void promptAndClearLog() {
     }
   }
 
-  Renderer::drawText(moreStr, Panel::log, Pos(xPos, lineNr), clrBlack, clrGray);
+  Render::drawText(moreStr, Panel::log, Pos(xPos, lineNr), clrBlack, clrGray);
 
-  Renderer::updateScreen();
+  Render::updateScreen();
   Query::waitForEscOrSpace();
   clearLog();
 }
@@ -57,23 +57,23 @@ void promptAndClearLog() {
 void drawHistoryInterface(const int TOP_LINE_NR, const int BTM_LINE_NR) {
   const string decorationLine(MAP_W, '-');
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
+  Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
   const int X_LABEL = 3;
 
   if(history_.empty()) {
-    Renderer::drawText(" No message history ", Panel::screen,
+    Render::drawText(" No message history ", Panel::screen,
                        Pos(X_LABEL, 0), clrGray);
   } else {
-    Renderer::drawText(
+    Render::drawText(
       " Displaying messages " + toStr(TOP_LINE_NR + 1) + "-" +
       toStr(BTM_LINE_NR + 1) + " of " +
       toStr(history_.size()) + " ", Panel::screen, Pos(X_LABEL, 0), clrGray);
   }
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
+  Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
 
-  Renderer::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+  Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 
 //Used by normal log and history viewer
@@ -81,7 +81,7 @@ void drawLine(const vector<Msg>& lineToDraw, const int Y_POS) {
   for(const Msg& msg : lineToDraw) {
     string str = "";
     msg.getStrWithRepeats(str);
-    Renderer::drawText(str, Panel::log, Pos(msg.xPos_, Y_POS), msg.clr_);
+    Render::drawText(str, Panel::log, Pos(msg.xPos_, Y_POS), msg.clr_);
   }
 }
 
@@ -102,9 +102,9 @@ void clearLog() {
 }
 
 void drawLog(const bool SHOULD_UPDATE_SCREEN) {
-  Renderer::coverArea(Panel::log, Pos(0, 0), Pos(MAP_W, 2));
+  Render::coverArea(Panel::log, Pos(0, 0), Pos(MAP_W, 2));
   for(int i = 0; i < 2; ++i) drawLine(lines_[i], i);
-  if(SHOULD_UPDATE_SCREEN) Renderer::updateScreen();
+  if(SHOULD_UPDATE_SCREEN) Render::updateScreen();
 }
 
 void addMsg(const string& text, const Clr& clr,
@@ -173,13 +173,13 @@ void displayHistory() {
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
   while(true) {
-    Renderer::clearScreen();
+    Render::clearScreen();
     drawHistoryInterface(topNr, btmNr);
     int yPos = 1;
     for(int i = topNr; i <= btmNr; ++i) {
       drawLine(history_.at(i), yPos++);
     }
-    Renderer::updateScreen();
+    Render::updateScreen();
 
     const KeyData& d = Input::readKeysUntilFound();
     if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j') {
@@ -197,7 +197,7 @@ void displayHistory() {
     btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
   }
 
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 void addLineToHistory(const string& lineToAdd) {

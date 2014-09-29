@@ -7,7 +7,7 @@
 
 #include "Input.h"
 #include "TextFormatting.h"
-#include "Renderer.h"
+#include "Render.h"
 
 using namespace std;
 
@@ -46,7 +46,7 @@ void init() {
 }
 
 void run() {
-  Renderer::clearScreen();
+  Render::clearScreen();
 
   string str;
 
@@ -54,23 +54,23 @@ void run() {
 
   const int X_LABEL = 3;
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
+  Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
-  Renderer::drawText(" Displaying credits.txt ", Panel::screen,
+  Render::drawText(" Displaying credits.txt ", Panel::screen,
                      Pos(X_LABEL, 0), clrGray);
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
+  Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                      clrGray);
 
-  Renderer::drawText(" [space/esc] to exit ", Panel::screen,
+  Render::drawText(" [space/esc] to exit ", Panel::screen,
                      Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
   for(string& line : lines_) {
-    Renderer::drawText(line, Panel::screen, Pos(0, yPos++), clrWhite);
+    Render::drawText(line, Panel::screen, Pos(0, yPos++), clrWhite);
   }
 
-  Renderer::updateScreen();
+  Render::updateScreen();
 
   //Read keys
   while(true) {

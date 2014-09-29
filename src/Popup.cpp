@@ -1,7 +1,7 @@
 #include "Popup.h"
 
 #include "Config.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "TextFormatting.h"
 #include "Log.h"
 #include "Query.h"
@@ -32,8 +32,8 @@ int printBoxAndGetTitleYPos(const int TEXT_H_TOT,
   const int X1          = X0 + BOX_W - 1;
   const int Y1          = Y0 + BOX_H - 1;
 
-  Renderer::coverArea(Panel::map, Pos(X0, Y0), Pos(BOX_W, BOX_H));
-  Renderer::drawPopupBox(Rect(X0, Y0, X1, Y1), Panel::map);
+  Render::coverArea(Panel::map, Pos(X0, Y0), Pos(BOX_W, BOX_H));
+  Render::drawPopupBox(Rect(X0, Y0, X1, Y1), Panel::map);
 
   return Y0 + 1;
 }
@@ -44,7 +44,7 @@ void menuMsgDrawingHelper(
   const int TEXT_H_TOT, const string& title) {
 
   if(DRAW_MAP_AND_INTERFACE) {
-    Renderer::drawMapAndInterface(false);
+    Render::drawMapAndInterface(false);
   }
 
   //If no message lines, set width to widest menu option or title with
@@ -60,7 +60,7 @@ void menuMsgDrawingHelper(
   int y = printBoxAndGetTitleYPos(TEXT_H_TOT, textWidthOverride);
 
   if(!title.empty()) {
-    Renderer::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y),
+    Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y),
                                clrWhite, clrBlack, true);
   }
 
@@ -69,10 +69,10 @@ void menuMsgDrawingHelper(
   for(const string& line : lines) {
     y++;
     if(SHOW_MSG_CENTERED) {
-      Renderer::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
+      Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
                                  clrWhite, clrBlack, true);
     } else {
-      Renderer::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
+      Render::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
     }
     Log::addLineToHistory(line);
   }
@@ -80,12 +80,12 @@ void menuMsgDrawingHelper(
 
   for(size_t i = 0; i < choices.size(); ++i) {
     Clr clr = i == curChoice ? clrMenuHighlight : clrMenuDrk;
-    Renderer::drawTextCentered(
+    Render::drawTextCentered(
       choices.at(i), Panel::map, Pos(MAP_W_HALF, y),
       clr, clrBlack, true);
     y++;
   }
-  Renderer::updateScreen();
+  Render::updateScreen();
 }
 
 } //namespace
@@ -93,7 +93,7 @@ void menuMsgDrawingHelper(
 void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
              const string& title, const SfxId sfx) {
 
-  if(DRAW_MAP_AND_INTERFACE) {Renderer::drawMapAndInterface(false);}
+  if(DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface(false);}
 
   vector<string> lines;
   TextFormatting::lineToLines(msg, TEXT_W, lines);
@@ -104,7 +104,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   if(sfx != SfxId::END) {Audio::play(sfx);}
 
   if(!title.empty()) {
-    Renderer::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y), clrWhite,
+    Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y), clrWhite,
                                clrBlack, true);
   }
 
@@ -113,23 +113,23 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   for(string& line : lines) {
     y++;
     if(SHOW_MSG_CENTERED) {
-      Renderer::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
+      Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
                                  clrWhite, clrBlack, true);
     } else {
-      Renderer::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
+      Render::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
     }
     Log::addLineToHistory(line);
   }
   y += 2;
 
-  Renderer::drawTextCentered("[space/esc] to close", Panel::map,
+  Render::drawTextCentered("[space/esc] to close", Panel::map,
                              Pos(MAP_W_HALF, y), clrMenuMedium);
 
-  Renderer::updateScreen();
+  Render::updateScreen();
 
   Query::waitForEscOrSpace();
 
-  if(DRAW_MAP_AND_INTERFACE) {Renderer::drawMapAndInterface();}
+  if(DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface();}
 }
 
 int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
@@ -168,7 +168,7 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
       case MenuAction::esc:
       case MenuAction::space: {
         if(DRAW_MAP_AND_INTERFACE) {
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
         }
         return NR_CHOICES - 1;
       } break;
@@ -177,7 +177,7 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
       case MenuAction::selected: {
         if(DRAW_MAP_AND_INTERFACE) {
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
         }
         return browser.getPos().y;
       } break;

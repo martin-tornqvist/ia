@@ -14,7 +14,7 @@
 #include "Inventory.h"
 #include "Attack.h"
 #include "GameTime.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Utils.h"
 #include "FeatureMob.h"
 #include "FeatureRigid.h"
@@ -169,17 +169,17 @@ void printDetailedActorDescr(const Pos& pos) {
 
     const size_t NR_OF_LINES = formattedText.size();
 
-//      Renderer::drawMapAndInterface(false);
+//      Render::drawMapAndInterface(false);
 
-    Renderer::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
+    Render::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
 
     int y = 1;
     for(string& s : formattedText) {
-      Renderer::drawText(s, Panel::screen, Pos(0, y), clrWhiteHigh);
+      Render::drawText(s, Panel::screen, Pos(0, y), clrWhiteHigh);
       y++;
     }
 
-    Renderer::updateScreen();
+    Render::updateScreen();
 
     Query::waitForKeyPress();
   }

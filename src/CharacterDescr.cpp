@@ -4,7 +4,7 @@
 
 #include "PlayerBon.h"
 #include "ActorPlayer.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "TextFormatting.h"
 #include "Input.h"
 #include "ItemPotion.h"
@@ -182,15 +182,15 @@ void drawInterface() {
 
   const int X_LABEL = 3;
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
+  Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
-  Renderer::drawText(" Displaying character description ", Panel::screen,
+  Render::drawText(" Displaying character description ", Panel::screen,
                      Pos(X_LABEL, 0), clrWhite);
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
+  Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                      clrGray);
 
-  Renderer::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
+  Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
 }
 
 } //namespace
@@ -206,14 +206,14 @@ void run() {
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
   while(true) {
-    Renderer::clearScreen();
+    Render::clearScreen();
     drawInterface();
     int yPos = 1;
     for(int i = topNr; i <= btmNr; ++i) {
       const StrAndClr& line = lines_.at(i);
-      Renderer::drawText(line.str , Panel::screen, Pos(0, yPos++), line.clr);
+      Render::drawText(line.str , Panel::screen, Pos(0, yPos++), line.clr);
     }
-    Renderer::updateScreen();
+    Render::updateScreen();
 
     const KeyData& d = Input::readKeysUntilFound();
 
@@ -231,7 +231,7 @@ void run() {
     }
     btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
   }
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 } //CharacterDescr

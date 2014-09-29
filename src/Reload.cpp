@@ -13,7 +13,7 @@
 #include "PlayerBon.h"
 #include "GameTime.h"
 #include "Audio.h"
-#include "Renderer.h"
+#include "Render.h"
 
 using namespace std;
 
@@ -76,7 +76,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
             "I" + swiftStr + " load " + ammoName + " (" + toStr(wpn->nrAmmoLoaded) +
             "/" + toStr(wpn->ammoCapacity) + ").");
         }
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
       } else {
         if(Map::player->isSeeingActor(actorReloading, nullptr)) {
           Log::addMsg(actorName + swiftStr + " reloads.");

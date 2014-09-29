@@ -5,7 +5,7 @@
 
 #include "Init.h"
 #include "Log.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
 #include "ItemScroll.h"

@@ -13,7 +13,7 @@
 #include "FeatureTrap.h"
 #include "FeatureMob.h"
 #include "Properties.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Sound.h"
 #include "Utils.h"
 #include "Map.h"
@@ -256,7 +256,7 @@ void Monster::becomeAware(const bool IS_FROM_SEEING) {
     if(AWARENESS_CNT_BEFORE <= 0) {
       if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr)) {
         Map::player->updateFov();
-        Renderer::drawMapAndInterface(true);
+        Render::drawMapAndInterface(true);
         Log::addMsg(getNameThe() + " sees me!");
       }
       if(Rnd::coinToss()) {speakPhrase();}

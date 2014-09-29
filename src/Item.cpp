@@ -11,7 +11,7 @@
 #include "Properties.h"
 #include "Log.h"
 #include "Explosion.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Input.h"
 #include "Query.h"
 #include "ItemFactory.h"
@@ -426,7 +426,7 @@ MedBagAction MedicalBag::playerChooseAction() const {
 //  Log::addMsg("[s] Sanitize infection (" + toStr(suppl) + "," + toStr(turns) + ")",
 //              clrWhiteHigh);
 
-  Renderer::drawMapAndInterface(true);
+  Render::drawMapAndInterface(true);
 
   while(true) {
     const KeyData d = Query::letter(true);
@@ -595,7 +595,7 @@ void Dynamite::onPlayerIgnite() const {
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Log::addMsg("I " + swiftStr + "light a dynamite stick.");
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   GameTime::actorDidAct(IS_SWIFT);
 }
 
@@ -636,7 +636,7 @@ void Molotov::onPlayerIgnite() const {
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Log::addMsg("I " + swiftStr + "light a Molotov Cocktail.");
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   GameTime::actorDidAct(IS_SWIFT);
 }
 
@@ -677,7 +677,7 @@ void Flare::onPlayerIgnite() const {
   Log::addMsg("I " + swiftStr + "light a Flare.");
   GameTime::updateLightMap();
   Map::player->updateFov();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   GameTime::actorDidAct(IS_SWIFT);
 }
 
@@ -695,7 +695,7 @@ void Flare::onThrownIgnitedLanding(const Pos& p) {
   GameTime::addMob(new LitFlare(p, fuseTurns_));
   GameTime::updateLightMap();
   Map::player->updateFov();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 void Flare::onPlayerParalyzed() {
@@ -707,7 +707,7 @@ void Flare::onPlayerParalyzed() {
   if(!f->isBottomless()) {GameTime::addMob(new LitFlare(p, fuseTurns_));}
   GameTime::updateLightMap();
   Map::player->updateFov();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   delete this;
 }
 
@@ -717,7 +717,7 @@ void SmokeGrenade::onPlayerIgnite() const {
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Log::addMsg("I " + swiftStr + "ignite a smoke grenade.");
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   GameTime::actorDidAct(IS_SWIFT);
 }
 
@@ -737,7 +737,7 @@ void SmokeGrenade::onStdTurnPlayerHoldIgnited() {
 void SmokeGrenade::onThrownIgnitedLanding(const Pos& p) {
   Explosion::runSmokeExplosionAt(p);
   Map::player->updateFov();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 void SmokeGrenade::onPlayerParalyzed() {
@@ -748,7 +748,7 @@ void SmokeGrenade::onPlayerParalyzed() {
   auto* const f = Map::cells[p.x][p.y].rigid;
   if(!f->isBottomless()) {Explosion::runSmokeExplosionAt(Map::player->pos);}
   Map::player->updateFov();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   delete this;
 }
 

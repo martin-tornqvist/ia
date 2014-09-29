@@ -16,7 +16,7 @@
 #include "PlayerBon.h"
 #include "Audio.h"
 #include "MapParsing.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Utils.h"
 #include "MapTravel.h"
 #include "Item.h"
@@ -210,7 +210,7 @@ void actorDidAct(const bool IS_FREE_TURN) {
 
   if(curActor == Map::player) {
     Map::player->updateFov();
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     Map::updateVisualMemory();
   } else {
     auto* monster = static_cast<Monster*>(curActor);

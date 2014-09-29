@@ -13,7 +13,7 @@
 
 #ifdef DEMO_MODE
 #include "SdlWrapper.h"
-#include "Renderer.h"
+#include "Render.h"
 #endif // DEMO_MODE
 
 using namespace std;

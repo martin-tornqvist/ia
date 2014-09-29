@@ -4,7 +4,7 @@
 
 #include "Highscore.h"
 #include "TextFormatting.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Query.h"
 #include "ActorPlayer.h"
 #include "CharacterLines.h"
@@ -150,8 +150,8 @@ void winGame() {
   vector<string> winMsgLines;
   TextFormatting::lineToLines(winMsg, 68, winMsgLines);
 
-  Renderer::coverPanel(Panel::screen);
-  Renderer::updateScreen();
+  Render::coverPanel(Panel::screen);
+  Render::updateScreen();
 
   const int Y0 = 2;
   const unsigned int NR_OF_WIN_MESSAGE_LINES = winMsgLines.size();
@@ -159,19 +159,19 @@ void winGame() {
   SdlWrapper::sleep(DELAY_BETWEEN_LINES);
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; ++i) {
     for(unsigned int ii = 0; ii <= i; ii++) {
-      Renderer::drawTextCentered(winMsgLines.at(ii), Panel::screen,
+      Render::drawTextCentered(winMsgLines.at(ii), Panel::screen,
                                  Pos(MAP_W_HALF, Y0 + ii),
                                  clrMsgBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
         const string CMD_LABEL =
           "[space/esc] to record high-score and return to main menu";
-        Renderer::drawTextCentered(
+        Render::drawTextCentered(
           CMD_LABEL, Panel::screen,
           Pos(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),
           clrWhite, clrBlack, true);
       }
     }
-    Renderer::updateScreen();
+    Render::updateScreen();
     SdlWrapper::sleep(DELAY_BETWEEN_LINES);
   }
 

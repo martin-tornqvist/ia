@@ -1,6 +1,6 @@
 #include "CreateCharacter.h"
 
-#include "Renderer.h"
+#include "Render.h"
 #include "ActorPlayer.h"
 #include "Input.h"
 #include "MenuInputHandling.h"
@@ -17,10 +17,10 @@ namespace {
 namespace EnterName {
 
 void draw(const string& curString) {
-  Renderer::clearScreen();
-  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+  Render::clearScreen();
+  Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-  Renderer::drawTextCentered("What is your name?", Panel::screen,
+  Render::drawTextCentered("What is your name?", Panel::screen,
                              Pos(MAP_W_HALF, 0), clrWhite);
   const int Y_NAME = 2;
   const string NAME_STR =
@@ -28,11 +28,11 @@ void draw(const string& curString) {
     curString;
   const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
-  Renderer::drawText(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
+  Render::drawText(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
                      clrMenuHighlight);
   Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
-  Renderer::drawPopupBox(boxRect);
-  Renderer::updateScreen();
+  Render::drawPopupBox(boxRect);
+  Render::updateScreen();
 }
 
 void readKeys(string& curString, bool& isDone) {
@@ -87,10 +87,10 @@ void run() {
 } //EnterName
 
 void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
-  Renderer::clearScreen();
-  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+  Render::clearScreen();
+  Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-  Renderer::drawTextCentered("Choose your background", Panel::screen,
+  Render::drawTextCentered("Choose your background", Panel::screen,
                              Pos(MAP_W_HALF, 0), clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
@@ -110,7 +110,7 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
     PlayerBon::getBgTitle(bg, name);
     const bool IS_MARKED  = bg == markedBg;
     const Clr& drwClr     = IS_MARKED ? clrMenuHighlight : clrMenuDrk;
-    Renderer::drawTextCentered(name, Panel::screen, Pos(MAP_W_HALF, y), drwClr);
+    Render::drawTextCentered(name, Panel::screen, Pos(MAP_W_HALF, y), drwClr);
     y++;
   }
   y++;
@@ -118,7 +118,7 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
   const int BGS_BOX_W_HALF = 7;
   Rect boxRect(Pos(MAP_W_HALF - BGS_BOX_W_HALF, Y0_BGS - 1),
                Pos(MAP_W_HALF + BGS_BOX_W_HALF, Y0_BGS + NR_BGS));
-  Renderer::drawPopupBox(boxRect);
+  Render::drawPopupBox(boxRect);
 
   //------------------------------------------------------------- DESCRIPTION
   const int MARGIN_W_DESCR  = 12;
@@ -131,11 +131,11 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
     vector<string> formattedLines;
     TextFormatting::lineToLines(rawLine, MAX_W_DESCR, formattedLines);
     for(string& line : formattedLines) {
-      Renderer::drawText(line, Panel::screen, Pos(X0_DESCR, y), clrWhite);
+      Render::drawText(line, Panel::screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
   }
-  Renderer::updateScreen();
+  Render::updateScreen();
 }
 
 void pickBg() {
@@ -171,8 +171,8 @@ void drawPickTrait(
   const vector<Trait>& traits1, const vector<Trait>& traits2,
   const MenuBrowser& browser, const bool IS_CHARACTER_CREATION) {
 
-  Renderer::clearScreen();
-  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+  Render::clearScreen();
+  Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   const int NR_TRAITS_1 = traits1.size();
   const int NR_TRAITS_2 = traits2.size();
@@ -194,7 +194,7 @@ void drawPickTrait(
                  "Which additional trait do you start with?" :
                  "You have reached a new level! Which trait do you gain?";
 
-  Renderer::drawTextCentered(title, Panel::screen, Pos(MAP_W_HALF, 0),
+  Render::drawTextCentered(title, Panel::screen, Pos(MAP_W_HALF, 0),
                              clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
@@ -208,7 +208,7 @@ void drawPickTrait(
     PlayerBon::getTraitTitle(trait, name);
     const bool IS_MARKED  = browserPos.x == 0 && browserPos.y == int(i);
     const Clr& drwClr     = IS_MARKED ? clrMenuHighlight : clrMenuDrk;
-    Renderer::drawText(name, Panel::screen, Pos(X_COL_ONE, y), drwClr);
+    Render::drawText(name, Panel::screen, Pos(X_COL_ONE, y), drwClr);
     y++;
   }
   y = Y0_TRAITS;
@@ -218,7 +218,7 @@ void drawPickTrait(
     PlayerBon::getTraitTitle(trait, name);
     const bool IS_MARKED  = browserPos.x == 1 && browserPos.y == int(i);
     const Clr& drwClr     = IS_MARKED ? clrMenuHighlight : clrMenuDrk;
-    Renderer::drawText(name, Panel::screen, Pos(X_COL_TWO, y), drwClr);
+    Render::drawText(name, Panel::screen, Pos(X_COL_TWO, y), drwClr);
     y++;
   }
 
@@ -226,7 +226,7 @@ void drawPickTrait(
   Rect boxRect(
     Pos(MARGIN_W - 2, Y0_TRAITS - 1),
     Pos(X_COL_TWO_RIGHT + 2, Y0_TRAITS + traits1.size()));
-  Renderer::drawPopupBox(boxRect);
+  Render::drawPopupBox(boxRect);
 
   //------------------------------------------------------------- DESCRIPTION
   const int Y0_DESCR = Y0_TRAITS + NR_TRAITS_1 + 1;
@@ -242,7 +242,7 @@ void drawPickTrait(
   TextFormatting::lineToLines(
     "Effect(s): " + descr, MAX_W_DESCR, descrLines);
   for(const string& str : descrLines) {
-    Renderer::drawText(str, Panel::screen, Pos(X0_DESCR, y), clrWhite);
+    Render::drawText(str, Panel::screen, Pos(X0_DESCR, y), clrWhite);
     y++;
   }
 
@@ -253,7 +253,7 @@ void drawPickTrait(
   Bg bgPrereq = Bg::END;
   PlayerBon::getTraitPrereqs(markedTrait, traitPrereqs, bgPrereq);
   if(!traitPrereqs.empty() || bgPrereq != Bg::END) {
-    Renderer::drawText("This trait had the following prerequisite(s):",
+    Render::drawText("This trait had the following prerequisite(s):",
                        Panel::screen, Pos(X0_DESCR, y), clrWhite);
     y++;
 
@@ -272,7 +272,7 @@ void drawPickTrait(
     vector<string> prereqLines;
     TextFormatting::lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
     for(const string& str : prereqLines) {
-      Renderer::drawText(str, Panel::screen, Pos(X0_DESCR, y), clrWhite);
+      Render::drawText(str, Panel::screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
   }
@@ -287,13 +287,13 @@ void drawPickTrait(
     vector<string> pickedLines;
     TextFormatting::lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
     for(const string& str : pickedLines) {
-      Renderer::drawText(
+      Render::drawText(
         str, Panel::screen, Pos(1, y), clrWhite);
       y++;
     }
   }
 
-  Renderer::updateScreen();
+  Render::updateScreen();
 }
 
 } //namespace
@@ -344,7 +344,7 @@ void pickNewTrait(const bool IS_CHARACTER_CREATION) {
             const Pos pos = browser.getPos();
             PlayerBon::pickTrait(
               pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));
-            if(!IS_CHARACTER_CREATION) {Renderer::drawMapAndInterface();}
+            if(!IS_CHARACTER_CREATION) {Render::drawMapAndInterface();}
             return;
           } break;
 

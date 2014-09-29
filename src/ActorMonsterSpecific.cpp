@@ -11,7 +11,7 @@
 #include "Log.h"
 #include "GameTime.h"
 #include "ActorFactory.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "CmnData.h"
 #include "Map.h"
 #include "Knockback.h"
@@ -400,7 +400,7 @@ bool Khephren::onActorTurn_() {
               monster->leader = this;
               freeCells.erase(begin(freeCells));
             }
-            Renderer::drawMapAndInterface();
+            Render::drawMapAndInterface();
             hasSummonedLocusts = true;
             GameTime::actorDidAct();
             return true;
@@ -464,7 +464,7 @@ bool KeziahMason::onActorTurn_() {
               Log::addMsg("Keziah summons Brown Jenkin!");
               Actor* const actor = ActorFactory::mk(ActorId::brownJenkin, c);
               Monster* jenkin = static_cast<Monster*>(actor);
-              Renderer::drawMapAndInterface();
+              Render::drawMapAndInterface();
               hasSummonedJenkin = true;
               jenkin->awareOfPlayerCounter_ = 999;
               jenkin->leader = this;
@@ -773,7 +773,7 @@ bool MajorClaphamLee::onActorTurn_() {
             monsterIds.push_back(id);
           }
           ActorFactory::summonMonsters(pos, monsterIds, true, this);
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
           hasSummonedTombLegions = true;
           Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
           GameTime::actorDidAct();

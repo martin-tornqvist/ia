@@ -7,7 +7,7 @@
 #include "Map.h"
 #include "ActorFactory.h"
 #include "Log.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Utils.h"
 #include "FeatureRigid.h"
 
@@ -54,7 +54,7 @@ void ProxEventWallCrumble::onPlayerAdj() {
       }
 
       Map::player->updateFov();
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
 
       done = isOpeningMade;
     }
@@ -114,7 +114,7 @@ void ProxEventWallCrumble::onPlayerAdj() {
     }
 
     Map::player->updateFov();
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
   }
   GameTime::eraseMob(this, true);
 }

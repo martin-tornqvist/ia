@@ -97,7 +97,6 @@
 			<Add option="-Wcast-align" />
 			<Add option="-Wundef" />
 			<Add option="-Wfloat-equal" />
-			<Add option="-Winline" />
 			<Add option="-Wunreachable-code" />
 			<Add option="-Wmissing-declarations" />
 			<Add option="-Wmissing-include-dirs" />
@@ -111,6 +110,7 @@
 			<Add option="-Wall" />
 			<Add option="-Wno-long-long" />
 			<Add option="-fno-rtti" />
+			<Add option="-fno-exceptions" />
 			<Add directory="../include" />
 			<Add directory="../API/SDL/include" />
 		</Compiler>
@@ -197,8 +197,8 @@
 		<Unit filename="../include/Properties.h" />
 		<Unit filename="../include/Query.h" />
 		<Unit filename="../include/Reload.h" />
+		<Unit filename="../include/Render.h" />
 		<Unit filename="../include/RenderInventory.h" />
-		<Unit filename="../include/Renderer.h" />
 		<Unit filename="../include/Room.h" />
 		<Unit filename="../include/RoomTheme.h" />
 		<Unit filename="../include/SaveHandling.h" />
@@ -284,8 +284,8 @@
 		<Unit filename="../src/Properties.cpp" />
 		<Unit filename="../src/Query.cpp" />
 		<Unit filename="../src/Reload.cpp" />
+		<Unit filename="../src/Render.cpp" />
 		<Unit filename="../src/RenderInventory.cpp" />
-		<Unit filename="../src/Renderer.cpp" />
 		<Unit filename="../src/Room.cpp" />
 		<Unit filename="../src/RoomTheme.cpp" />
 		<Unit filename="../src/SaveHandling.cpp" />

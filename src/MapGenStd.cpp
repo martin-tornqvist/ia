@@ -16,7 +16,7 @@
 #include "ItemFactory.h"
 #include "Map.h"
 #include "MapParsing.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Utils.h"
 #include "PopulateMonsters.h"
 #include "PopulateTraps.h"
@@ -992,8 +992,8 @@ bool mkStdLvl() {
 
   isMapValid = true;
 
-  Renderer::clearScreen();
-  Renderer::updateScreen();
+  Render::clearScreen();
+  Render::updateScreen();
 
   Map::resetMap();
 

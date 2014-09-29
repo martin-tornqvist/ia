@@ -10,7 +10,7 @@
 #include "Log.h"
 #include "RenderInventory.h"
 #include "MenuInputHandling.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "ItemDrop.h"
 #include "Query.h"
 #include "ItemFactory.h"
@@ -55,15 +55,15 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT) {
   Log::clearLog();
   if(data.isStackable && item->nrItems_ > 1) {
     TRACE << "Item is stackable and more than one" << endl;
-    Renderer::drawMapAndInterface(false);
+    Render::drawMapAndInterface(false);
     const string nrStr = "1-" + toStr(item->nrItems_);
     string dropStr = "Drop how many (" + nrStr + ")?:";
-    Renderer::drawText(dropStr, Panel::screen, Pos(0, 0), clrWhiteHigh);
-    Renderer::updateScreen();
+    Render::drawText(dropStr, Panel::screen, Pos(0, 0), clrWhiteHigh);
+    Render::updateScreen();
     const Pos nrQueryPos(dropStr.size() + 1, 0);
     const int MAX_DIGITS = 3;
     const Pos doneInfPos = nrQueryPos + Pos(MAX_DIGITS + 2, 0);
-    Renderer::drawText("[enter] to drop" + cancelInfoStr, Panel::screen, doneInfPos,
+    Render::drawText("[enter] to drop" + cancelInfoStr, Panel::screen, doneInfPos,
                        clrWhiteHigh);
     const int NR_TO_DROP = Query::number(nrQueryPos, clrWhiteHigh, 0, 3,
                                          item->nrItems_, false);
@@ -159,7 +159,7 @@ void activateDefault(const size_t GENERAL_ITEMS_ELEMENT) {
 
 void runInvScreen() {
   screenToOpenAfterDrop = InvScrId::END;
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   Inventory& inv = Map::player->getInv();
 
@@ -217,7 +217,7 @@ void runInvScreen() {
                 screenToOpenAfterDrop     = InvScrId::inv;
                 browserIdxToSetAfterDrop  = browser.getY();
 
-                Renderer::drawMapAndInterface();
+                Render::drawMapAndInterface();
                 Log::addMsg("I take off my " + itemName + ".", clrWhite, false, true);
                 item->onTakeOff();
                 GameTime::actorDidAct();
@@ -234,7 +234,7 @@ void runInvScreen() {
             browser.setPos(p);
           } else { //No item in slot
             if(runEquipScreen(slot)) {
-              Renderer::drawMapAndInterface();
+              Render::drawMapAndInterface();
               return;
             } else {
               RenderInventory::drawBrowseInv(browser);
@@ -243,14 +243,14 @@ void runInvScreen() {
         } else { //In general inventory
           const size_t ELEMENT = browser.getY() - inv.slots_.size();
           activateDefault(ELEMENT);
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
           return;
         }
       } break;
 
       case MenuAction::esc:
       case MenuAction::space: {
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
         return;
       } break;
     }
@@ -260,7 +260,7 @@ void runInvScreen() {
 bool runEquipScreen(InvSlot& slotToEquip) {
   screenToOpenAfterDrop     = InvScrId::END;
   equipSlotToOpenAfterDrop  = &slotToEquip;
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   auto& inv = Map::player->getInv();
 
@@ -286,7 +286,7 @@ bool runEquipScreen(InvSlot& slotToEquip) {
       case MenuAction::selected: {
         if(!generalItemsToShow_.empty()) {
           const int ELEMENT = generalItemsToShow_.at(browser.getY());
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
           inv.equipGeneralItemAndEndTurn(ELEMENT, slotToEquip.id);
           bool applyWearEffect = false;
           switch(slotToEquip.id) {

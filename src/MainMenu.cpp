@@ -4,7 +4,7 @@
 
 #include "Init.h"
 #include "Colors.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "MenuInputHandling.h"
 #include "SaveHandling.h"
 #include "Highscore.h"
@@ -213,14 +213,14 @@ void draw(const MenuBrowser& browser) {
 
   Pos pos(MAP_W_HALF, 3);
 
-  TRACE << "MainMenu: Calling clearWindow()" << endl;
-  Renderer::clearScreen();
+  TRACE << "Calling clearWindow()" << endl;
+  Render::clearScreen();
 
-  Renderer::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
+  Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   if(Config::isTilesMode()) {
-    TRACE << "MainMenu: Calling drawMainMenuLogo()" << endl;
-    Renderer::drawMainMenuLogo(0);
+    TRACE << "Calling drawMainMenuLogo()" << endl;
+    Render::drawMainMenuLogo(0);
     pos.y += 10;
   } else {
     vector<string> logo;
@@ -239,7 +239,7 @@ void draw(const MenuBrowser& browser) {
           Clr clr = clrGreenLgt;
           clr.g += Rnd::range(-50, 100);
           clr.g = max(0, min(254, int(clr.g)));
-          Renderer::drawGlyph(glyph, Panel::screen, pos, clr);
+          Render::drawGlyph(glyph, Panel::screen, pos, clr);
         }
         pos.x++;
       }
@@ -249,11 +249,11 @@ void draw(const MenuBrowser& browser) {
   }
 
   if(IS_DEBUG_MODE) {
-    Renderer::drawText(
+    Render::drawText(
       "## DEBUG MODE ##", Panel::screen, Pos(1, 1), clrYellow);
   }
 
-  TRACE << "MainMenu: Drawing HPL quote" << endl;
+  TRACE << "Drawing HPL quote" << endl;
   Clr quoteClr = clrGray;
   quoteClr.r /= 7;
   quoteClr.g /= 7;
@@ -263,46 +263,46 @@ void draw(const MenuBrowser& browser) {
   TextFormatting::lineToLines(quote, 28, quoteLines);
   Pos quotePos(15, pos.y - 1);
   for(string& quoteLine : quoteLines) {
-    Renderer::drawTextCentered(quoteLine, Panel::screen, quotePos, quoteClr);
+    Render::drawTextCentered(quoteLine, Panel::screen, quotePos, quoteClr);
     quotePos.y++;
   }
 
-  TRACE << "MainMenu: Drawing main menu" << endl;
+  TRACE << "Drawing main menu" << endl;
 
   pos.x = MAP_W_HALF;
 
   const int BOX_Y0 = pos.y - 1;
 
-  Renderer::drawTextCentered("New journey", Panel::screen, pos,
+  Render::drawTextCentered("New journey", Panel::screen, pos,
                              browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered("Resurrect", Panel::screen, pos,
+  Render::drawTextCentered("Resurrect", Panel::screen, pos,
                              browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered("Tome of Wisdom", Panel::screen, pos,
+  Render::drawTextCentered("Tome of Wisdom", Panel::screen, pos,
                              browser.isAtIdx(2) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered("Options", Panel::screen, pos,
+  Render::drawTextCentered("Options", Panel::screen, pos,
                              browser.isAtIdx(3) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered("Credits", Panel::screen, pos,
+  Render::drawTextCentered("Credits", Panel::screen, pos,
                              browser.isAtIdx(4) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered("Graveyard", Panel::screen, pos,
+  Render::drawTextCentered("Graveyard", Panel::screen, pos,
                              browser.isAtIdx(5) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawTextCentered("Escape to reality", Panel::screen, pos,
+  Render::drawTextCentered("Escape to reality", Panel::screen, pos,
                              browser.isAtIdx(6) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   if(IS_DEBUG_MODE) {
-    Renderer::drawTextCentered("DEBUG: RUN BOT", Panel::screen, pos,
+    Render::drawTextCentered("DEBUG: RUN BOT", Panel::screen, pos,
                                browser.isAtIdx(7) ? clrMenuHighlight : clrMenuDrk);
     pos.y++;
   }
@@ -311,14 +311,14 @@ void draw(const MenuBrowser& browser) {
   const int BOX_W_HALF  = 10;
   const int BOX_X0      = pos.x - BOX_W_HALF;
   const int BOX_X1      = pos.x + BOX_W_HALF;
-  Renderer::drawPopupBox(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
+  Render::drawPopupBox(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
                          Panel::screen);
 
-  Renderer::drawTextCentered(
+  Render::drawTextCentered(
     gameVersionStr + " - " + __DATE__ + " (c) 2011-2014 Martin Tornqvist",
     Panel::screen, Pos(MAP_W_HALF, SCREEN_H - 1), clrGrayDrk);
 
-  Renderer::updateScreen();
+  Render::updateScreen();
 
   TRACE_FUNC_END;
 }
@@ -326,7 +326,7 @@ void draw(const MenuBrowser& browser) {
 } //namespace
 
 GameEntryMode run(bool& quit, int& introMusChannel) {
-  TRACE << "MainMenu::run()" << endl;
+  TRACE_FUNC_BEGIN;
 
   quote = getHplQuote();
 
@@ -346,6 +346,7 @@ GameEntryMode run(bool& quit, int& introMusChannel) {
 
       case MenuAction::esc: {
         quit    = true;
+        TRACE_FUNC_END;
         return GameEntryMode::newGame;
       } break;
 
@@ -353,15 +354,20 @@ GameEntryMode run(bool& quit, int& introMusChannel) {
       case MenuAction::selectedShift: {} break;
 
       case MenuAction::selected: {
-        if(browser.isAtIdx(0)) {return GameEntryMode::newGame;}
+        if(browser.isAtIdx(0)) {
+          TRACE_FUNC_END;
+          return GameEntryMode::newGame;
+        }
         if(browser.isAtIdx(1)) {
           if(SaveHandling::isSaveAvailable()) {
             SaveHandling::load();
             MapTravel::goToNxt();
+            TRACE_FUNC_END;
             return GameEntryMode::loadGame;
           } else {
             Popup::showMsg("Starting a new character instead.", false,
                            "No save available");
+            TRACE_FUNC_END;
             return GameEntryMode::newGame;
           }
         }
@@ -383,17 +389,20 @@ GameEntryMode run(bool& quit, int& introMusChannel) {
         }
         if(browser.isAtIdx(6)) {
           quit    = true;
+          TRACE_FUNC_END;
           return GameEntryMode::newGame;
         }
         if(IS_DEBUG_MODE) {
           if(browser.isAtIdx(7)) {
             Config::setBotPlaying();
+            TRACE_FUNC_END;
             return GameEntryMode::newGame;
           }
         }
       } break;
     }
   }
+  TRACE_FUNC_END;
   return GameEntryMode::newGame;
 }
 

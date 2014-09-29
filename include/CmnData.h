@@ -24,7 +24,7 @@ const int CHAR_LINES_H        = 3;
 const int SCREEN_W            = MAP_W;
 const int SCREEN_H            = CHAR_LINES_OFFSET_H + CHAR_LINES_H;
 
-const int DESCR_X0 = MAP_W - 31;
+const int DESCR_X0            = MAP_W - 31;
 
 const int PLAYER_START_X      = 10;
 const int PLAYER_START_Y      = MAP_H_HALF;

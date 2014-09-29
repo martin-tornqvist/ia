@@ -4,7 +4,7 @@
 #include "Actor.h"
 #include "ActorPlayer.h"
 #include "Log.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "MapParsing.h"
 #include "GameTime.h"
 #include "MapTravel.h"

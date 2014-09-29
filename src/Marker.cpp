@@ -10,7 +10,7 @@
 #include "Log.h"
 #include "Look.h"
 #include "Throwing.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Map.h"
 #include "ItemFactory.h"
 #include "LineCalc.h"
@@ -90,7 +90,7 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
     //Print info such as name of actor at current position, etc.
     onMarkerAtPos(pos_);
 
-    Renderer::drawMapAndInterface(false);
+    Render::drawMapAndInterface(false);
 
     vector<Pos> trail;
 
@@ -99,9 +99,9 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
       LineCalc::calcNewLine(origin, pos_, true, INT_MAX, false, trail);
     }
 
-    Renderer::drawMarker(pos_, trail, INT_MAX);
+    Render::drawMarker(pos_, trail, INT_MAX);
 
-    Renderer::updateScreen();
+    Render::updateScreen();
 
     const KeyData& d = Input::readKeysUntilFound();
 
@@ -152,7 +152,7 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
     isDone = onKeyPress(pos_, d);
 
     if(isDone == MarkerDone::yes) {
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
   }
 }

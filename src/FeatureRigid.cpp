@@ -4,7 +4,7 @@
 
 #include "Init.h"
 #include "Log.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Map.h"
 #include "Utils.h"
 #include "Popup.h"
@@ -141,7 +141,7 @@ void Rigid::examine() {
 
 void Rigid::disarm() {
   Log::addMsg(msgDisarmNoTrap);
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) {
@@ -550,7 +550,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
       Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
 
       Map::player->updateFov();
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
       Map::updateVisualMemory();
 
       if(!CellPred::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y])) {
@@ -631,7 +631,7 @@ void Stairs::bump(Actor& actorBumping) {
       Init::quitToMainMenu = true;
     } else {
       Log::clearLog();
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
   }
 }
@@ -817,7 +817,7 @@ void Lever::pull() {
 //    doorLinkedTo_->isStuck_ = false;
 //  }
   Map::player->updateFov();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   TRACE_FUNC_END;
 }
 
@@ -1214,7 +1214,7 @@ bool Tomb::open() {
     if(IS_SEEN)Log::addMsg("There is nothing of value inside.");
   }
   if(IS_SEEN) {isContentKnown_ = isTraitKnown_ = true;}
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   return true;
 }
 
@@ -1450,7 +1450,7 @@ bool Chest::open() {
     isTrapStatusKnown_  = true;
   }
   isLocked_ = false;
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   return true;
 }
 
@@ -1855,7 +1855,7 @@ bool Cabinet::open() {
     if(IS_SEEN) Log::addMsg("There is nothing of value inside.");
   }
   if(IS_SEEN) isContentKnown_ = true;
-  Renderer::drawMapAndInterface(true);
+  Render::drawMapAndInterface(true);
   return true;
 }
 
@@ -1940,7 +1940,7 @@ bool Cocoon::open() {
     if(IS_SEEN) Log::addMsg("There is nothing of value inside.");
   }
   if(IS_SEEN) isContentKnown_ = true;
-  Renderer::drawMapAndInterface(true);
+  Render::drawMapAndInterface(true);
 
   return true;
 }

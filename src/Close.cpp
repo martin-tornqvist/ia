@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Query.h"
-#include "Renderer.h"
+#include "Render.h"
 
 namespace Close {
 
@@ -34,7 +34,7 @@ void playerCloseFeature(Feature* const feature) {
 void playerClose() {
   Log::clearLog();
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   Pos closePos(Map::player->pos + Query::dir());
   Log::clearLog();
 
@@ -42,7 +42,7 @@ void playerClose() {
     playerCloseFeature(Map::cells[closePos.x][closePos.y].rigid);
   }
 
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 } //Close

@@ -9,7 +9,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "GameTime.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "ItemFactory.h"
 #include "CreateCharacter.h"
 #include "DungeonMaster.h"
@@ -396,7 +396,7 @@ void Inventory::swapWieldedAndPrepared(
   slot1->item = item2;
   slot2->item = item1;
 
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   GameTime::actorDidAct(IS_FREE_TURN);
 }

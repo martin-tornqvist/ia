@@ -6,7 +6,7 @@
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
 #include "Map.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "MapParsing.h"
 #include "Utils.h"
 #include "Actor.h"
@@ -152,7 +152,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
     }
   }
 
-  Renderer::drawBlastAnimAtPositions(positionsToAnimate, clrMagenta);
+  Render::drawBlastAnimAtPositions(positionsToAnimate, clrMagenta);
 }
 
 } //ActorFactory

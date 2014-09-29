@@ -4,7 +4,7 @@
 #include "SdlWrapper.h"
 #include "Config.h"
 #include "Input.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Audio.h"
 #include "LineCalc.h"
 #include "Gods.h"
@@ -33,7 +33,7 @@ void initIO() {
   SdlWrapper::init();
   Config::init();
   Input::init();
-  Renderer::init();
+  Render::init();
   Audio::init();
   TRACE_FUNC_END;
 }
@@ -41,7 +41,7 @@ void initIO() {
 void cleanupIO() {
   TRACE_FUNC_BEGIN;
   Audio::cleanup();
-  Renderer::cleanup();
+  Render::cleanup();
   Input::cleanup();
   SdlWrapper::cleanup();
   TRACE_FUNC_END;

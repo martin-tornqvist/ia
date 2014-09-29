@@ -11,7 +11,7 @@
 #include "ItemScroll.h"
 #include "GameTime.h"
 #include "Audio.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Inventory.h"
 #include "MapTravel.h"
 #include "MapParsing.h"
@@ -57,7 +57,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
 
     if(PLAYER_SEE_CELL) {
       //TODO Use standard animation
-      Renderer::drawGlyph('*', Panel::map, pos, data_->clr);
+      Render::drawGlyph('*', Panel::map, pos, data_->clr);
 
       if(actor) {
         if(actor->deadState == ActorDeadState::alive) {
@@ -373,11 +373,11 @@ void PotionClairv::quaff_(Actor* const actor) {
       }
     }
 
-    Renderer::drawMapAndInterface(false);
+    Render::drawMapAndInterface(false);
 //    Map::updateVisualMemory();
     Map::player->updateFov();
 
-    Renderer::drawBlastAnimAtPositions(animPositions, clrWhite);
+    Render::drawBlastAnimAtPositions(animPositions, clrWhite);
   }
   identify(false);
 }

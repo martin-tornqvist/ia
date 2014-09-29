@@ -7,7 +7,7 @@
 #include "Map.h"
 #include "MapGen.h"
 #include "PopulateItems.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Log.h"
 #include "FeatureRigid.h"
 
@@ -135,7 +135,7 @@ void goToNxt() {
   Map::player->target = nullptr;
   Map::player->updateFov();
   Map::player->updateClr();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   Audio::tryPlayAmb(1);
 
   if(Map::player->phobias[int(Phobia::deepPlaces)]) {

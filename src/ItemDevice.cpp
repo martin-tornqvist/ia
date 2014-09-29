@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "ActorPlayer.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "GameTime.h"
 #include "Log.h"
 #include "Knockback.h"
@@ -185,7 +185,7 @@ void DeviceTranslocator::triggerEffect() {
   } else {
     for(Actor* actor : seenFoes) {
       Log::addMsg(actor->getNameThe() + " is teleported.");
-      Renderer::drawBlastAnimAtPositions(vector<Pos> {actor->pos}, clrYellow);
+      Render::drawBlastAnimAtPositions(vector<Pos> {actor->pos}, clrYellow);
       actor->teleport(false);
     }
   }
@@ -227,7 +227,7 @@ void DeviceLantern::toggle() {
   Audio::play(SfxId::electricLantern);
   GameTime::updateLightMap();
   Map::player->updateFov();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 void DeviceLantern::newTurnInInventory() {
@@ -239,7 +239,7 @@ void DeviceLantern::newTurnInInventory() {
         malfState_ = LanternMalfState::working;
         GameTime::updateLightMap();
         Map::player->updateFov();
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
       }
     } else {
       //No malfunction active, check if new should be applied
@@ -266,7 +266,7 @@ void DeviceLantern::newTurnInInventory() {
       if(malfState_ != LanternMalfState::working) {
         GameTime::updateLightMap();
         Map::player->updateFov();
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
       }
       if(malfState_ == LanternMalfState::destroyed) {delete this;}
     }

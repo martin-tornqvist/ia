@@ -6,7 +6,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Query.h"
-#include "Renderer.h"
+#include "Render.h"
 
 namespace Examine {
 
@@ -15,7 +15,7 @@ void playerExamine() {
   //with some potentially horrible results
   if(Map::player->getPropHandler().allowSee()) {
     Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
 
     Pos examinePos = Map::player->pos + Query::dir();
 
@@ -27,7 +27,7 @@ void playerExamine() {
   } else {
     Log::addMsg("Not while blind.");
   }
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 } //Examine

@@ -6,7 +6,7 @@
 
 #include "Input.h"
 #include "TextFormatting.h"
-#include "Renderer.h"
+#include "Render.h"
 
 using namespace std;
 
@@ -55,13 +55,13 @@ void drawManualInterface() {
 
   const int X_LABEL = 3;
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
+  Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
-  Renderer::drawText(" Displaying manual ", Panel::screen, Pos(X_LABEL, 0), clrGray);
+  Render::drawText(" Displaying manual ", Panel::screen, Pos(X_LABEL, 0), clrGray);
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
+  Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
 
-  Renderer::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+  Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 }
 
 } //namespace
@@ -79,14 +79,14 @@ void run() {
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
   while(true) {
-    Renderer::clearScreen();
+    Render::clearScreen();
     drawManualInterface();
     int yPos = 1;
     for(int i = topNr; i <= btmNr; ++i) {
-      Renderer::drawText(lines_.at(i), Panel::screen, Pos(0, yPos++),
+      Render::drawText(lines_.at(i), Panel::screen, Pos(0, yPos++),
                          clrWhite);
     }
-    Renderer::updateScreen();
+    Render::updateScreen();
 
     const KeyData& d = Input::readKeysUntilFound();
 

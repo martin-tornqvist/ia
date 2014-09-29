@@ -7,7 +7,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Postmortem.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "ActorMonster.h"
 #include "Inventory.h"
 #include "Map.h"
@@ -974,7 +974,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
     if(prop->shouldUpdatePlayerVisualWhenStartOrEnd()) {
       prop->owningActor_->updateClr();
       Map::player->updateFov();
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
   }
 
@@ -1039,7 +1039,7 @@ bool PropHandler::endAppliedProp(
     if(IS_VISUAL_UPDATE_NEEDED) {
       prop->owningActor_->updateClr();
       Map::player->updateFov();
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
 
     if(owningActor_ == Map::player) {

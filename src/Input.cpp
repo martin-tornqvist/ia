@@ -9,7 +9,7 @@
 #include "Input.h"
 #include "Reload.h"
 #include "Kick.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Close.h"
 #include "JamWithSpike.h"
 #include "ItemPickup.h"
@@ -50,8 +50,8 @@ void queryQuit() {
                             false, quitChoices, "Quit the current game?");
   if(QUIT_CHOICE == 0) {
     Init::quitToMainMenu = true;
-    Renderer::clearScreen();
-    Renderer::updateScreen();
+    Render::clearScreen();
+    Render::updateScreen();
   }
 }
 
@@ -203,7 +203,7 @@ void handleKeyPress(const KeyData& d) {
     Log::clearLog();
     if(Map::player->deadState == ActorDeadState::alive) {
       Kick::playerKick();
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
     clearEvents();
     return;
@@ -280,7 +280,7 @@ void handleKeyPress(const KeyData& d) {
                     Log::addMsg("I think I can persevere a little longer.");
                   } else {
                     Log::clearLog();
-                    Renderer::drawMapAndInterface();
+                    Render::drawMapAndInterface();
 
                     Actor* const actor = Utils::getFirstActorAtPos(p);
                     if(actor) {Map::player->target = actor;}
@@ -384,7 +384,7 @@ void handleKeyPress(const KeyData& d) {
         GameTime::actorDidAct();
       } else {
         Log::addMsg("Not while an enemy is near.");
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
       }
     }
     clearEvents();
@@ -404,7 +404,7 @@ void handleKeyPress(const KeyData& d) {
         auto onKeyPress = [](const Pos & p, const KeyData & d_) {
           if(d_.sdlKey == SDLK_RETURN || d_.key == 't') {
             Log::clearLog();
-            Renderer::drawMapAndInterface();
+            Render::drawMapAndInterface();
             Throwing::playerThrowLitExplosive(p);
             return MarkerDone::yes;
           } else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE) {
@@ -445,7 +445,7 @@ void handleKeyPress(const KeyData& d) {
                   Log::addMsg("I think I can persevere a little longer.");
                 } else {
                   Log::clearLog();
-                  Renderer::drawMapAndInterface();
+                  Render::drawMapAndInterface();
 
                   Actor* const actor = Utils::getFirstActorAtPos(p);
                   if(actor) {Map::player->target = actor;}
@@ -496,7 +496,7 @@ void handleKeyPress(const KeyData& d) {
 
             Look::printDetailedActorDescr(p);
 
-            Renderer::drawMapAndInterface();
+            Render::drawMapAndInterface();
 
             onMarkerAtPos(p);
 
@@ -567,11 +567,11 @@ void handleKeyPress(const KeyData& d) {
       if(CHOICE == 0) {
         //---------------------------- Options
         Config::runOptionsMenu();
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
       } else if(CHOICE == 1) {
         //---------------------------- Manual
         Manual::run();
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
       } else if(CHOICE == 2) {
         //---------------------------- Quit
         queryQuit();
@@ -618,7 +618,7 @@ void handleKeyPress(const KeyData& d) {
         Init::isCheatVisionEnabled = true;
       }
       Map::player->updateFov();
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
     clearEvents();
   }

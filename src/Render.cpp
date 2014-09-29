@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "Render.h"
 
 #include <vector>
 #include <iostream>
@@ -25,7 +25,7 @@
 
 using namespace std;
 
-namespace Renderer {
+namespace Render {
 
 CellRenderData  renderArray[MAP_W][MAP_H];
 CellRenderData  renderArrayNoActors[MAP_W][MAP_H];
@@ -292,7 +292,7 @@ void init() {
   TRACE_FUNC_BEGIN;
   cleanup();
 
-  TRACE << "Renderer: Setting up rendering window" << endl;
+  TRACE << "Setting up rendering window" << endl;
   const string title = "IA " + gameVersionStr;
   SDL_WM_SetCaption(title.data(), nullptr);
 
@@ -307,8 +307,8 @@ void init() {
   }
 
   if(!screenSurface) {
-    TRACE << "[WARNING] Failed to create screen surface, ";
-    TRACE << "in Renderer::init()" << endl;
+    TRACE << "Failed to create screen surface" << endl;
+    assert(false);
   }
 
   loadFont();
@@ -510,7 +510,7 @@ void drawBlastAnimAtPositionsWithPlayerVision(
     }
   }
 
-  Renderer::drawBlastAnimAtPositions(positionsWithVision, clr);
+  Render::drawBlastAnimAtPositions(positionsWithVision, clr);
 }
 
 void drawTile(const TileId tile, const Panel panel, const Pos& pos,
@@ -732,7 +732,7 @@ void drawPopupBox(const Rect& border, const Panel panel, const Clr& clr,
 }
 
 void drawDescrBox(const std::vector<StrAndClr>& lines) {
-  const int DESCR_Y0  = 1;
+  const int DESCR_Y0  = 2;
   const int DESCR_X1  = MAP_W - 1;
   coverArea(Panel::screen, Rect(DESCR_X0, DESCR_Y0, DESCR_X1, SCREEN_H - 1));
 

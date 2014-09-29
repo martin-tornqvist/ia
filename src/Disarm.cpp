@@ -2,7 +2,7 @@
 
 #include "GameTime.h"
 #include "Log.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "ActorPlayer.h"
 #include "Query.h"
 #include "Map.h"
@@ -19,7 +19,7 @@ void playerDisarm() {
   //Abort if blind
   if(!Map::player->getPropHandler().allowSee()) {
     Log::addMsg("Not while blind.");
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     return;
   }
 
@@ -33,7 +33,7 @@ void playerDisarm() {
       const auto* const web = static_cast<const TrapSpiderWeb*>(trap->getSpecificTrap());
       if(web->isHolding()) {
         Log::addMsg("Not while entangled in a spider web.");
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
         return;
       }
     }
@@ -42,12 +42,12 @@ void playerDisarm() {
   //Abort if encumbered
   if(Map::player->getEncPercent() >= 100) {
     Log::addMsg("Not while encumbered.");
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     return;
   }
 
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   const Pos pos(Map::player->pos + Query::dir());
 
@@ -56,7 +56,7 @@ void playerDisarm() {
     //Abort if cell is unseen
     if(!Map::cells[pos.x][pos.y].isSeenByPlayer) {
       Log::addMsg("I cannot see there.");
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
       return;
     }
 
@@ -71,13 +71,13 @@ void playerDisarm() {
       } else {
         Log::addMsg("Something is blocking it.");
       }
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
       return;
     }
 
     Log::clearLog();
     Map::cells[pos.x][pos.y].rigid->disarm();
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
   }
 }
 

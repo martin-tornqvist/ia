@@ -8,7 +8,7 @@
 #include "Log.h"
 #include "Postmortem.h"
 #include "PlayerBon.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "MapParsing.h"
 #include "Utils.h"
 
@@ -397,10 +397,10 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
   if(isSecret_) {
     isSecret_ = false;
     if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
       if(ALLOW_MESSAGE) {
         Log::addMsg("A secret is revealed.");
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
       }
     }
   }
@@ -452,7 +452,7 @@ void Door::tryClose(Actor* actorTrying) {
     if(IS_PLAYER) {
       Log::addMsg(
         "This door refuses to be closed, perhaps it is handled elsewhere?");
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
     return;
   }
@@ -559,7 +559,7 @@ void Door::tryOpen(Actor* actorTrying) {
     if(IS_PLAYER) {
       Log::addMsg(
         "I see no way to open this door, perhaps it is opened elsewhere?");
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     }
     return;
   }

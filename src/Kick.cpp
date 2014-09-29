@@ -7,7 +7,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Query.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "MapParsing.h"
 #include "Utils.h"
 
@@ -20,7 +20,7 @@ void playerKick() {
 
   Log::clearLog();
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   Pos kickPos(Map::player->pos + Query::dir());
   Log::clearLog();
 

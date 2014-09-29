@@ -16,7 +16,7 @@
 #include "Utils.h"
 #include "Log.h"
 #include "LineCalc.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "SdlWrapper.h"
 #include "Knockback.h"
 
@@ -647,21 +647,21 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
               if(curProj->isVisibleToPlayer) {
                 if(Config::isTilesMode()) {
                   curProj->setTile(TileId::blast1, clrRedLgt);
-                  Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+                  Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
                   SdlWrapper::sleep(DELAY / 2);
                   curProj->setTile(TileId::blast2, clrRedLgt);
-                  Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+                  Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
                   SdlWrapper::sleep(DELAY / 2);
                 } else {
                   curProj->setGlyph('*', clrRedLgt);
-                  Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+                  Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
                   SdlWrapper::sleep(DELAY);
                 }
 
                 //MESSAGES FOR ACTOR HIT
                 printProjAtActorMsgs(*curProj->attackData, true);
                 //Need to draw again here to show log message
-                Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+                Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
               }
 
               curProj->isDoneRendering      = true;
@@ -719,14 +719,14 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
           if(curProj->isVisibleToPlayer) {
             if(Config::isTilesMode()) {
               curProj->setTile(TileId::blast1, clrYellow);
-              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+              Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY / 2);
               curProj->setTile(TileId::blast2, clrYellow);
-              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+              Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+              Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY);
             }
           }
@@ -750,14 +750,14 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
           if(curProj->isVisibleToPlayer) {
             if(Config::isTilesMode()) {
               curProj->setTile(TileId::blast1, clrYellow);
-              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+              Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY / 2);
               curProj->setTile(TileId::blast2, clrYellow);
-              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+              Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY / 2);
             } else {
               curProj->setGlyph('*', clrYellow);
-              Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+              Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
               SdlWrapper::sleep(DELAY);
             }
           }
@@ -767,10 +767,10 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
         if(!curProj->isObstructed && curProj->isVisibleToPlayer) {
           if(Config::isTilesMode()) {
             curProj->setTile(projectileTile, projectileClr);
-            Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+            Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
           } else {
             curProj->setGlyph(projectileGlyph, projectileClr);
-            Renderer::drawProjectiles(projectiles, !LEAVE_TRAIL);
+            Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
           }
         }
       }
@@ -809,7 +809,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
   //Cleanup
   for(Projectile* projectile : projectiles) {delete projectile;}
 
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos) {
@@ -869,14 +869,14 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos) {
           data->attackResult >= successSmall &&
           !data->isEtherealDefenderMissed) {
           if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
-            Renderer::drawMapAndInterface(false);
-            Renderer::coverCellInMap(curPos);
+            Render::drawMapAndInterface(false);
+            Render::coverCellInMap(curPos);
             if(Config::isTilesMode()) {
-              Renderer::drawTile(TileId::blast2, Panel::map, curPos, clrRedLgt);
+              Render::drawTile(TileId::blast2, Panel::map, curPos, clrRedLgt);
             } else {
-              Renderer::drawGlyph('*', Panel::map, curPos, clrRedLgt);
+              Render::drawGlyph('*', Panel::map, curPos, clrRedLgt);
             }
-            Renderer::updateScreen();
+            Render::updateScreen();
             SdlWrapper::sleep(Config::getDelayShotgun());
           }
 
@@ -888,7 +888,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos) {
 
           nrActorsHit++;
 
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
 
           //Special shotgun behavior:
           //If current defender was killed, and player aimed at humanoid level,
@@ -920,16 +920,16 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos) {
       Cell& cell = Map::cells[curPos.x][curPos.y];
 
       if(cell.isSeenByPlayer) {
-        Renderer::drawMapAndInterface(false);
-        Renderer::coverCellInMap(curPos);
+        Render::drawMapAndInterface(false);
+        Render::coverCellInMap(curPos);
         if(Config::isTilesMode()) {
-          Renderer::drawTile(TileId::blast2, Panel::map, curPos, clrYellow);
+          Render::drawTile(TileId::blast2, Panel::map, curPos, clrYellow);
         } else {
-          Renderer::drawGlyph('*', Panel::map, curPos, clrYellow);
+          Render::drawGlyph('*', Panel::map, curPos, clrYellow);
         }
-        Renderer::updateScreen();
+        Render::updateScreen();
         SdlWrapper::sleep(Config::getDelayShotgun());
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
       }
 
       cell.rigid->hit(DmgType::physical, DmgMethod::shotgun, nullptr);
@@ -944,16 +944,16 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos) {
       SndEmit::emitSnd(snd);
 
       if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
-        Renderer::drawMapAndInterface(false);
-        Renderer::coverCellInMap(curPos);
+        Render::drawMapAndInterface(false);
+        Render::coverCellInMap(curPos);
         if(Config::isTilesMode()) {
-          Renderer::drawTile(TileId::blast2, Panel::map, curPos, clrYellow);
+          Render::drawTile(TileId::blast2, Panel::map, curPos, clrYellow);
         } else {
-          Renderer::drawGlyph('*', Panel::map, curPos, clrYellow);
+          Render::drawGlyph('*', Panel::map, curPos, clrYellow);
         }
-        Renderer::updateScreen();
+        Render::updateScreen();
         SdlWrapper::sleep(Config::getDelayShotgun());
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
       }
       break;
     }
@@ -1039,7 +1039,7 @@ bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
     }
   }
 
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   if(didAttack) {GameTime::actorDidAct();}
 

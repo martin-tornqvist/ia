@@ -6,7 +6,7 @@
 
 #include "Init.h"
 #include "Map.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Utils.h"
 
 using namespace std;
@@ -93,11 +93,11 @@ SfxId getAmbSfxSuitableForDlvl() {
 void loadAudioFile(const SfxId sfx, const string& filename) {
   const string fileRelPath = "audio/" + filename;
 
-  Renderer::clearScreen();
-  Renderer::drawText("Loading " + fileRelPath + "...", Panel::screen,
+  Render::clearScreen();
+  Render::drawText("Loading " + fileRelPath + "...", Panel::screen,
                      Pos(0), clrWhite);
 
-  Renderer::updateScreen();
+  Render::updateScreen();
 
   audioChunks.at(int(sfx)) = Mix_LoadWAV((fileRelPath).data());
 

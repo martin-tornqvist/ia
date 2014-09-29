@@ -7,7 +7,7 @@
 #include "SdlWrapper.h"
 #include "Config.h"
 #include "Input.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "MainMenu.h"
 #include "PlayerBon.h"
 #include "Bot.h"
@@ -60,8 +60,8 @@ int main(int argc, char* argv[]) {
           MapTravel::goToNxt();
         } else {
           //Build forest.
-          Renderer::coverPanel(Panel::screen);
-          Renderer::updateScreen();
+          Render::coverPanel(Panel::screen);
+          Render::updateScreen();
           MapGen::mkIntroLvl();
         }
         DungeonMaster::setTimeStartedToNow();
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
       Audio::fadeOutChannel(introMusChan);
 
       Map::player->updateFov();
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
 
       if(gameEntryType == GameEntryMode::newGame) {
         if(Config::isIntroLvlSkipped() == 0) {
@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
           static_cast<Player*>(Map::player)->waitTurnsLeft = -1;
           Log::addMsg("I am dead...", clrMsgBad);
           Audio::play(SfxId::death);
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
           Log::clearLog();
           Query::waitForEscOrSpace();
           HighScore::onGameOver(false);

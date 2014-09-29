@@ -557,7 +557,7 @@ void initDataList() {
   resetData(*d, ItemType::explosive);
   d->baseName = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
   d->baseDescr = {"An explosive material based on nitroglycerin. The name comes from the "
-                  "ancient Greek word dynamis, meaning \"power\"."
+                  "ancient Greek word for \"power\"."
                  };
   d->itemWeight = itemWeight_light;
   d->tile = TileId::dynamite;

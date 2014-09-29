@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "Query.h"
 #include "Inventory.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "FeatureDoor.h"
 
 namespace JamWithSpike {
@@ -50,18 +50,18 @@ void playerJam() {
 
   if(!Map::player->getInv().hasItemInGeneral(ItemId::ironSpike)) {
     Log::addMsg("I have no spikes to jam with.", clrWhite);
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     return;
   }
 
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   const Pos jamPos(Map::player->pos + Query::dir());
   Log::clearLog();
 
   playerJamFeature(Map::cells[jamPos.x][jamPos.y].rigid);
 
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 } //JamWithSpike

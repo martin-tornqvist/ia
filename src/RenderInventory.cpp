@@ -4,7 +4,7 @@
 
 #include "ActorPlayer.h"
 #include "Log.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Map.h"
 #include "Item.h"
 #include "TextFormatting.h"
@@ -16,9 +16,9 @@ namespace {
 void drawItemSymbol(const Item& item, const Pos& p) {
   const Clr itemClr = item.getClr();
   if(Config::isTilesMode()) {
-    Renderer::drawTile(item.getTile(), Panel::screen, p, itemClr);
+    Render::drawTile(item.getTile(), Panel::screen, p, itemClr);
   } else {
-    Renderer::drawGlyph(item.getGlyph(), Panel::screen, p, itemClr);
+    Render::drawGlyph(item.getGlyph(), Panel::screen, p, itemClr);
   }
 }
 
@@ -32,14 +32,14 @@ void drawWeightPct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_LE
     const int     WEIGHT_X = DESCR_X0 - weightStr.size() - 1;
     const Pos     weightPos(WEIGHT_X, Y);
     const Clr     weightClr = IS_SELECTED ? clrWhite : clrGrayDrk;
-    Renderer::drawText(weightStr, Panel::screen, weightPos, weightClr);
+    Render::drawText(weightStr, Panel::screen, weightPos, weightClr);
 
     const int DOTS_X  = ITEM_NAME_X + ITEM_NAME_LEN;
     const int DOTS_W  = WEIGHT_X - DOTS_X;
     const string dotsStr(DOTS_W, '.');
     Clr dotsClr       = IS_SELECTED ? clrWhite : itemNameClr;
     if(!IS_SELECTED) {dotsClr.r /= 2; dotsClr.g /= 2; dotsClr.b /= 2;}
-    Renderer::drawText(dotsStr, Panel::screen, Pos(DOTS_X, Y), dotsClr);
+    Render::drawText(dotsStr, Panel::screen, Pos(DOTS_X, Y), dotsClr);
   }
 }
 
@@ -69,7 +69,7 @@ void drawDetailedItemDescr(const Item* const item) {
       lines.push_back({pctStr, clrGreen});
     }
 
-    Renderer::drawDescrBox(lines);
+    Render::drawDescrBox(lines);
   }
 }
 
@@ -79,7 +79,7 @@ namespace RenderInventory {
 
 void drawBrowseInv(const MenuBrowser& browser) {
 
-  Renderer::clearScreen();
+  Render::clearScreen();
 
   const int     BROWSER_Y   = browser.getY();
   const auto&   inv         = Map::player->getInv();
@@ -97,11 +97,11 @@ void drawBrowseInv(const MenuBrowser& browser) {
   const string queryDropStr = item ? " [shift+enter] to drop" : "";
 
   string str                = queryBaseStr + queryDropStr + " [space/esc] to exit";
-  Renderer::drawText(str, Panel::screen, Pos(0, 0), clrWhiteHigh);
+  Render::drawText(str, Panel::screen, Pos(0, 0), clrWhiteHigh);
 
-  const int EQP_Y0  = 1;
+  const int EQP_Y0  = 2;
 
-  Pos p(0, EQP_Y0);
+  Pos p(1, EQP_Y0);
 
   const Panel panel = Panel::screen;
 
@@ -110,9 +110,9 @@ void drawBrowseInv(const MenuBrowser& browser) {
     const InvSlot& slot   = inv.slots_.at(i);
     const string slotName = slot.name;
 
-    p.x = 0;
+    p.x = 1;
 
-    Renderer::drawText(slotName, panel, p, IS_CUR_POS ? clrWhiteHigh : clrMenuDrk);
+    Render::drawText(slotName, panel, p, IS_CUR_POS ? clrWhiteHigh : clrMenuDrk);
 
     p.x += 9; //Offset to leave room for slot label
 
@@ -137,19 +137,20 @@ void drawBrowseInv(const MenuBrowser& browser) {
       if(slot.id == SlotId::thrown) {refType = ItemRefType::plural;}
 
       const string itemName = curItem->getName(refType, ItemRefInf::yes, attInf);
-      Renderer::drawText(itemName, panel, p, clr);
+      Render::drawText(itemName, panel, p, clr);
 
       drawWeightPct(p.y, p.x, itemName.size(), *curItem, clr, IS_CUR_POS);
     } else {
       p.x += 2;
-      Renderer::drawText("<empty>", panel, p, IS_CUR_POS ? clrWhiteHigh : clrMenuDrk);
+      Render::drawText("<empty>", panel, p, IS_CUR_POS ? clrWhiteHigh : clrMenuDrk);
     }
 
     ++p.y;
   }
 
-  const int INV_Y0          = EQP_Y0 + inv.slots_.size();
-  const int INV_Y1          = SCREEN_H - 1;
+  const int INV_X0          = 1;
+  const int INV_Y0          = EQP_Y0 + inv.slots_.size() + 1;
+  const int INV_Y1          = SCREEN_H - 2;
   const int INV_H           = INV_Y1 - INV_Y0 + 1;
   const size_t NR_INV_ITEMS = inv.general_.size();
 
@@ -178,9 +179,9 @@ void drawBrowseInv(const MenuBrowser& browser) {
     }
   }
 
-  p = Pos(0, INV_Y0);
+  p = Pos(INV_X0, INV_Y0);
 
-  const int INV_ITEM_NAME_X = 2;
+  const int INV_ITEM_NAME_X = INV_X0 + 2;
 
   for(size_t i = invTopIdx; i < NR_INV_ITEMS; ++i) {
     const bool IS_CUR_POS = !IS_IN_EQP && INV_ELEMENT == i;
@@ -190,11 +191,11 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
     if(i == invTopIdx && invTopIdx > 0) {
       p.x = INV_ITEM_NAME_X;
-      Renderer::drawText("(more)", panel, p, clrBlack, clrGray);
+      Render::drawText("(more)", panel, p, clrBlack, clrGray);
       ++p.y;
     }
 
-    p.x = 0;
+    p.x = INV_X0;
 
     drawItemSymbol(*curItem, p);
 
@@ -202,41 +203,38 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
     const string itemName = curItem->getName(ItemRefType::plural, ItemRefInf::yes,
                             ItemRefAttInf::wpnContext);
-    Renderer::drawText(itemName, panel, p, clr);
+    Render::drawText(itemName, panel, p, clr);
 
     drawWeightPct(p.y, INV_ITEM_NAME_X, itemName.size(), *curItem, clr, IS_CUR_POS);
 
     ++p.y;
 
     if(p.y == INV_Y1 && ((i + 1) < (NR_INV_ITEMS - 1))) {
-      Renderer::drawText("(more)", panel, p, clrBlack, clrGray);
+      Render::drawText("(more)", panel, p, clrBlack, clrGray);
       break;
     }
   }
 
-//  Renderer::drawPopupBox(eqpRect, panel, clrPopupBox, false);
-//  Renderer::drawPopupBox(invRect, panel, clrPopupBox, false);
+//  Render::drawPopupBox(eqpRect, panel, clrPopupBox, false);
 
-//  for(int x = 0; x < eqpRect.p1.x; x++) {
-//    if(Config::isTilesMode()) {
-//      Renderer::drawTile(TileId::popupHor, panel, Pos(x, eqpRect.p0.y), clrPopupBox);
-//      Renderer::drawTile(TileId::popupHor, panel, Pos(x, invRect.p0.y), clrPopupBox);
-//    } else {
-  //TODO
-//    }
-//  }
+  const Rect eqpRect(0, EQP_Y0 - 1, DESCR_X0 - 1, INV_Y1 + 1);
+  const Rect invRect(0, INV_Y0 - 1, DESCR_X0 - 1, INV_Y1 + 1);
 
-//  Renderer::drawText("Equiped items", panel, eqpRect.p0 + Pos(1, 0), clrWhite);
-//  Renderer::drawText("Inventory", panel, invRect.p0 + Pos(1, 0), clrWhite);
+  Render::drawPopupBox(eqpRect, panel, clrPopupBox, false);
+  Render::drawPopupBox(invRect, panel, clrPopupBox, false);
+
+  if(Config::isTilesMode()) {
+    Render::drawTile(TileId::popupVerR, panel, invRect.p0, clrPopupBox);
+    Render::drawTile(TileId::popupVerL, panel, Pos(invRect.p1.x, invRect.p0.y),
+                     clrPopupBox);
+  }
+
+//  Render::drawText("Equiped items", panel, eqpRect.p0 + Pos(1, 0), clrWhite);
+//  Render::drawText("Inventory",     panel, invRect.p0 + Pos(1, 0), clrWhite);
 
   drawDetailedItemDescr(item);
 
-//  if(Config::isTilesMode()) {
-//    Renderer::drawTile(TileId::popupVerL, panel, eqpRect.p1, clrPopupBox);
-//    Renderer::drawTile(TileId::popupVerR, panel, invRect.p0, clrPopupBox);
-//  }
-
-  Renderer::updateScreen();
+  Render::updateScreen();
 }
 
 void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
@@ -245,7 +243,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
   Pos p(0, 0);
 
   const int NR_ITEMS = browser.getNrOfItemsInFirstList();
-  Renderer::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
+  Render::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_ITEMS + 1));
 
   const bool HAS_ITEM = !genInvIndexes.empty();
 
@@ -273,7 +271,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
   }
   if(HAS_ITEM) {str += " [shift+enter] to drop";}
   str += cancelInfoStr;
-  Renderer::drawText(str, Panel::screen, p, clrWhiteHigh);
+  Render::drawText(str, Panel::screen, p, clrWhiteHigh);
   ++p.y;
 
   Inventory& inv = Map::player->getInv();
@@ -300,11 +298,11 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
     }
 
     str = item->getName(ItemRefType::plural, ItemRefInf::yes, attInf);
-    Renderer::drawText(str, Panel::screen, p, itemInterfClr);
+    Render::drawText(str, Panel::screen, p, itemInterfClr);
     ++p.y;
   }
 
-  Renderer::updateScreen();
+  Render::updateScreen();
 }
 
 } //RenderInventory

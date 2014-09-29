@@ -7,7 +7,7 @@
 #include "ItemPotion.h"
 #include "ActorData.h"
 #include "ActorPlayer.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Map.h"
 #include "Log.h"
 #include "Explosion.h"
@@ -53,14 +53,14 @@ void playerThrowLitExplosive(const Pos& aimCell) {
     const auto  clr = explosive->getIgnitedProjectileClr();
 
     for(const Pos& p : path) {
-      Renderer::drawMapAndInterface(false);
+      Render::drawMapAndInterface(false);
       if(Map::cells[p.x][p.y].isSeenByPlayer) {
         if(Config::isTilesMode()) {
-          Renderer::drawTile(explosive->getTile(),    Panel::map, p, clr);
+          Render::drawTile(explosive->getTile(),    Panel::map, p, clr);
         } else {
-          Renderer::drawGlyph(explosive->getGlyph(),  Panel::map, p, clr);
+          Render::drawGlyph(explosive->getGlyph(),  Panel::map, p, clr);
         }
-        Renderer::updateScreen();
+        Render::updateScreen();
         SdlWrapper::sleep(Config::getDelayProjectileDraw());
       }
     }
@@ -98,7 +98,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
       Log::addMsg(actorThrowing.getNameThe() + " throws " + itemNameA + ".");
     }
   }
-  Renderer::drawMapAndInterface(true);
+  Render::drawMapAndInterface(true);
 
   int       blockedInElement      = -1;
   bool        isActorHit          = false;
@@ -109,7 +109,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
   Pos curPos(-1, -1);
 
   for(size_t i = 1; i < path.size(); ++i) {
-    Renderer::drawMapAndInterface(false);
+    Render::drawMapAndInterface(false);
 
     curPos.set(path.at(i));
 
@@ -126,8 +126,8 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
           data->attackResult >= successSmall &&
           !data->isEtherealDefenderMissed) {
           if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
-            Renderer::drawGlyph('*', Panel::map, curPos, clrRedLgt);
-            Renderer::updateScreen();
+            Render::drawGlyph('*', Panel::map, curPos, clrRedLgt);
+            Render::updateScreen();
             SdlWrapper::sleep(Config::getDelayProjectileDraw() * 4);
           }
           const Clr hitMessageClr   = actorHere == Map::player ? clrMsgBad : clrMsgGood;
@@ -156,8 +156,8 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
     }
 
     if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
-      Renderer::drawGlyph(glyph, Panel::map, curPos, clr);
-      Renderer::updateScreen();
+      Render::drawGlyph(glyph, Panel::map, curPos, clr);
+      Render::updateScreen();
       SdlWrapper::sleep(Config::getDelayProjectileDraw());
     }
 
@@ -222,7 +222,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
   }
 
   delete data;
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   GameTime::actorDidAct();
 }
 

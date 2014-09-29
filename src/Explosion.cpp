@@ -1,6 +1,6 @@
 #include "Explosion.h"
 
-#include "Renderer.h"
+#include "Render.h"
 #include "Map.h"
 #include "Log.h"
 #include "MapParsing.h"
@@ -19,7 +19,7 @@ namespace {
 
 void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
           const Clr* const clrOverride) {
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   const Clr& clrInner = clrOverride ? *clrOverride : clrYellow;
   const Clr& clrOuter = clrOverride ? *clrOverride : clrRedLgt;
@@ -43,15 +43,15 @@ void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
           !blocked[pos.x][pos.y]) {
           isAnyCellSeenByPlayer = true;
           if(IS_TILES) {
-            Renderer::drawTile(tile, Panel::map, pos, clr, clrBlack);
+            Render::drawTile(tile, Panel::map, pos, clr, clrBlack);
           } else {
-            Renderer::drawGlyph('*', Panel::map, pos, clr, true, clrBlack);
+            Render::drawGlyph('*', Panel::map, pos, clr, true, clrBlack);
           }
         }
       }
     }
     if(isAnyCellSeenByPlayer) {
-      Renderer::updateScreen();
+      Render::updateScreen();
       SdlWrapper::sleep(Config::getDelayExplosion() / NR_ANIM_STEPS);
     }
   }
@@ -206,7 +206,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   }
 
   Map::player->updateFov();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   if(prop) {delete prop;}
 }
@@ -236,7 +236,7 @@ void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION*/) {
   }
 
   Map::player->updateFov();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 } //Explosion

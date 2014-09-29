@@ -7,7 +7,7 @@
 #include "FeatureRigid.h"
 #include "MapGen.h"
 #ifdef DEMO_MODE
-#include "Renderer.h"
+#include "Render.h"
 #include "SdlWrapper.h"
 #endif // DEMO_MODE
 
@@ -200,18 +200,18 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
   }
 
 #ifdef DEMO_MODE
-  Renderer::drawMap();
+  Render::drawMap();
   for(int y = 1; y < MAP_H - 1; ++y) {
     for(int x = 1; x < MAP_W - 1; ++x) {
       Pos p(x, y);
       if(validRoomEntries0[x][y]) {
-        Renderer::drawGlyph('0', Panel::map, p, clrRedLgt);
+        Render::drawGlyph('0', Panel::map, p, clrRedLgt);
       }
       if(validRoomEntries1[x][y]) {
-        Renderer::drawGlyph('1', Panel::map, p, clrRedLgt);
+        Render::drawGlyph('1', Panel::map, p, clrRedLgt);
       }
       if(validRoomEntries0[x][y] || validRoomEntries1[x][y]) {
-        Renderer::updateScreen();
+        Render::updateScreen();
         SdlWrapper::sleep(100);
       }
     }
@@ -280,10 +280,10 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
     //Make the bridge if valid connection pairs found
     if(roomCon0.x != -1 && roomCon1.x != -1) {
 #ifdef DEMO_MODE
-      Renderer::drawMap();
-      Renderer::drawGlyph('0', Panel::map, roomCon0, clrGreenLgt);
-      Renderer::drawGlyph('1', Panel::map, roomCon1, clrYellow);
-      Renderer::updateScreen();
+      Render::drawMap();
+      Render::drawGlyph('0', Panel::map, roomCon0, clrGreenLgt);
+      Render::drawGlyph('1', Panel::map, roomCon1, clrYellow);
+      Render::updateScreen();
       SdlWrapper::sleep(2000);
 #endif // DEMO_MODE
 

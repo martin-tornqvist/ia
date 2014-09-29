@@ -13,7 +13,7 @@
 #include "Map.h"
 #include "Popup.h"
 #include "Input.h"
-#include "Renderer.h"
+#include "Render.h"
 
 using namespace std;
 
@@ -87,33 +87,33 @@ void readFile(vector<HighScoreEntry>& entries) {
 void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) {
   TRACE_FUNC_BEGIN;
 
-  Renderer::clearScreen();
+  Render::clearScreen();
 
   const int X_LABEL = 3;
 
   const string decorationLine(MAP_W, '-');
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
+  Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
-  Renderer::drawText(" Displaying High Scores ", Panel::screen, Pos(X_LABEL, 0), clrGray);
+  Render::drawText(" Displaying High Scores ", Panel::screen, Pos(X_LABEL, 0), clrGray);
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
+  Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
 
-  Renderer::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+  Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
 
-  Renderer::drawText(
+  Render::drawText(
     "Ended",    Panel::screen, Pos(X_POS_DATE,     yPos), clrGray);
-  Renderer::drawText(
+  Render::drawText(
     "Name",     Panel::screen, Pos(X_POS_NAME,     yPos), clrGray);
-  Renderer::drawText(
+  Render::drawText(
     "Score",    Panel::screen, Pos(X_POS_SCORE,    yPos), clrGray);
-  Renderer::drawText(
+  Render::drawText(
     "Level",    Panel::screen, Pos(X_POS_LVL,      yPos), clrGray);
-  Renderer::drawText(
+  Render::drawText(
     "Depth",    Panel::screen, Pos(X_POS_DLVL,     yPos), clrGray);
-  Renderer::drawText(
+  Render::drawText(
     "Insanity", Panel::screen, Pos(X_POS_INSANITY, yPos), clrGray);
 
   yPos++;
@@ -132,22 +132,22 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) {
     const string ins          = toStr(entries.at(i).getInsanity());
 
     const Clr& clr = clrNosfTeal;
-    Renderer::drawText(
+    Render::drawText(
       dateAndTime, Panel::screen, Pos(X_POS_DATE,      yPos), clr);
-    Renderer::drawText(
+    Render::drawText(
       name,        Panel::screen, Pos(X_POS_NAME,      yPos), clr);
-    Renderer::drawText(
+    Render::drawText(
       score,       Panel::screen, Pos(X_POS_SCORE,     yPos), clr);
-    Renderer::drawText(
+    Render::drawText(
       lvl,         Panel::screen, Pos(X_POS_LVL,       yPos), clr);
-    Renderer::drawText(
+    Render::drawText(
       dlvl,        Panel::screen, Pos(X_POS_DLVL,      yPos), clr);
-    Renderer::drawText(
+    Render::drawText(
       ins + "%",   Panel::screen, Pos(X_POS_INSANITY,  yPos), clr);
     yPos++;
   }
 
-  Renderer::updateScreen();
+  Render::updateScreen();
 
   TRACE_FUNC_END;
 }

@@ -4,7 +4,7 @@
 
 #include "Config.h"
 #include "Input.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Converters.h"
 
 using namespace std;
@@ -59,10 +59,10 @@ int number(const Pos& pos, const Clr clr, const int MIN,
            const int MAX_NR_DIGITS, const int DEFAULT,
            const bool CANCEL_RETURNS_DEFAULT) {
   int retNum = max(MIN, DEFAULT);
-  Renderer::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+  Render::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
   const string str = (retNum == 0 ? "" : toStr(retNum)) + "_";
-  Renderer::drawText(str, Panel::screen, pos, clr);
-  Renderer::updateScreen();
+  Render::drawText(str, Panel::screen, pos, clr);
+  Render::updateScreen();
 
   while(true) {
     KeyData d;
@@ -85,20 +85,20 @@ int number(const Pos& pos, const Clr clr, const int MIN,
 
     if(d.sdlKey == SDLK_BACKSPACE) {
       retNum = retNum / 10;
-      Renderer::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
-      Renderer::drawText((retNum == 0 ? "" : toStr(retNum)) + "_",
+      Render::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+      Render::drawText((retNum == 0 ? "" : toStr(retNum)) + "_",
                          Panel::screen, pos, clr);
-      Renderer::updateScreen();
+      Render::updateScreen();
       continue;
     }
 
     if(CUR_NUM_DIGITS < MAX_NR_DIGITS) {
       int curDigit = d.key - '0';
       retNum = max(MIN, retNum * 10 + curDigit);
-      Renderer::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
-      Renderer::drawText((retNum == 0 ? "" : toStr(retNum)) + "_",
+      Render::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
+      Render::drawText((retNum == 0 ? "" : toStr(retNum)) + "_",
                          Panel::screen, pos, clr);
-      Renderer::updateScreen();
+      Render::updateScreen();
     }
   }
   return -1;

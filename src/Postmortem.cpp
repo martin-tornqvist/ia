@@ -6,7 +6,7 @@
 #include <string>
 
 #include "Init.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Input.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
@@ -144,7 +144,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
       }
     }
   }
-  Renderer::drawMap(); //To set the glyph array
+  Render::drawMap(); //To set the glyph array
   for(int y = 0; y < MAP_H; ++y) {
     string curRow = "";
     for(int x = 0; x < MAP_W; ++x) {
@@ -152,7 +152,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
         curRow.push_back('@');
       } else {
         if(
-          Renderer::renderArray[x][y].glyph == ' ' &&
+          Render::renderArray[x][y].glyph == ' ' &&
           (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1)) {
           curRow.push_back('*');
         } else {
@@ -160,13 +160,13 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
           const auto& rubbleHighD = FeatureData::getData(FeatureId::rubbleHigh);
           const auto& statueD     = FeatureData::getData(FeatureId::statue);
           if(
-            Renderer::renderArray[x][y].glyph == wallD.glyph ||
-            Renderer::renderArray[x][y].glyph == rubbleHighD.glyph) {
+            Render::renderArray[x][y].glyph == wallD.glyph ||
+            Render::renderArray[x][y].glyph == rubbleHighD.glyph) {
             curRow.push_back('#');
-          } else if(Renderer::renderArray[x][y].glyph == statueD.glyph) {
+          } else if(Render::renderArray[x][y].glyph == statueD.glyph) {
             curRow.push_back('M');
           } else {
-            curRow.push_back(Renderer::renderArray[x][y].glyph);
+            curRow.push_back(Render::renderArray[x][y].glyph);
           }
         }
       }
@@ -181,20 +181,20 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
 
 void render(const vector<StrAndClr>& linesAndClr,
             const int TOP_ELEMENT) {
-  Renderer::clearScreen();
+  Render::clearScreen();
 
   const string decorationLine(MAP_W, '-');
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
+  Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
   const int X_LABEL = 3;
 
-  Renderer::drawText(" Displaying postmortem information ", Panel::screen,
+  Render::drawText(" Displaying postmortem information ", Panel::screen,
                      Pos(X_LABEL, 0), clrGray);
 
-  Renderer::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
+  Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
                      clrGray);
 
-  Renderer::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+  Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   const int NR_LINES_TOT = int(linesAndClr.size());
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
@@ -204,11 +204,11 @@ void render(const vector<StrAndClr>& linesAndClr,
     int i = TOP_ELEMENT;
     i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++) {
-    Renderer::drawText(linesAndClr.at(i).str, Panel::screen, Pos(0, yPos++),
+    Render::drawText(linesAndClr.at(i).str, Panel::screen, Pos(0, yPos++),
                        linesAndClr.at(i).clr);
   }
 
-  Renderer::updateScreen();
+  Render::updateScreen();
 }
 
 void runInfo(const vector<StrAndClr>& lines) {
@@ -277,48 +277,48 @@ void renderMenu(const MenuBrowser& browser) {
 
   file.close();
 
-  Renderer::coverPanel(Panel::screen);
+  Render::coverPanel(Panel::screen);
 
   Pos pos(1, SCREEN_H - asciiGraveyard.size());
 
   for(const string& line : asciiGraveyard) {
     const Uint8 K = Uint8(16 + (180 * ((pos.y * 100) / SCREEN_H) / 100));
     const Clr clr = {K, K, K, 0};
-    Renderer::drawText(line, Panel::screen, pos, clr);
+    Render::drawText(line, Panel::screen, pos, clr);
     pos.y++;
   }
 
   pos.set(45, 20);
   const string NAME_STR = Map::player->getData().nameA;
-  Renderer::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhite);
+  Render::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhite);
 
 //  pos.y += 2;
 //  const string LVL_STR = "LVL " + toStr(DungeonMaster::getLvl());
-//  Renderer::drawTextCentered(LVL_STR, Panel::screen, pos, clrWhiteHigh);
+//  Render::drawTextCentered(LVL_STR, Panel::screen, pos, clrWhiteHigh);
 
   //Draw command labels
   pos.set(55, 13);
-  Renderer::drawText("Information", Panel::screen, pos,
+  Render::drawText("Information", Panel::screen, pos,
                      browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawText("View the High Score", Panel::screen, pos,
+  Render::drawText("View the High Score", Panel::screen, pos,
                      browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawText("View messages", Panel::screen, pos,
+  Render::drawText("View messages", Panel::screen, pos,
                      browser.isAtIdx(2) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawText("Return to main menu", Panel::screen, pos,
+  Render::drawText("Return to main menu", Panel::screen, pos,
                      browser.isAtIdx(3) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::drawText("Quit the game", Panel::screen, pos,
+  Render::drawText("Quit the game", Panel::screen, pos,
                      browser.isAtIdx(4) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Renderer::updateScreen();
+  Render::updateScreen();
 }
 
 void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame) {

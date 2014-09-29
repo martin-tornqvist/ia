@@ -6,7 +6,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "MenuInputHandling.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Inventory.h"
 #include "ItemFactory.h"
 #include "PlayerBon.h"
@@ -25,41 +25,40 @@ const Spell*    prevSpellCast_;
 
 void draw(MenuBrowser& browser) {
   const int NR_SPELLS = knownSpells_.size();
-  string endLetter = "a";
-  endLetter[0] += char(NR_SPELLS - 1);
 
-  Renderer::coverArea(Panel::screen, Pos(0, 0), Pos(MAP_W, NR_SPELLS + 1));
+  Render::clearScreen();
 
-  const string label = "Evoke which power? | space/esc to cancel";
-  Renderer::drawText(label, Panel::screen, Pos(0, 0), clrWhiteHigh);
-
-  int y = 1;
+  const string label = "Invoke which power? [enter] to cast " + cancelInfoStr;
+  Render::drawText(label, Panel::screen, Pos(0, 0), clrWhiteHigh);
 
   for(int i = 0; i < NR_SPELLS; ++i) {
-    const int CURRENT_ELEMENT = i;
-    Scroll scroll(nullptr);
-    Clr scrollClr           = scroll.getInterfaceClr();
-    const bool IS_SELECTED  = browser.isAtIdx(CURRENT_ELEMENT);
-    const Clr clr           = IS_SELECTED ? clrWhite : scrollClr;
-    Spell* const spell      = knownSpells_.at(i);
-    string name             = spell->getName();
+    const int     CURRENT_ELEMENT = i;
+    Scroll        scroll(nullptr);
+    Clr           scrollClr           = scroll.getInterfaceClr();
+    const bool    IS_SELECTED         = browser.isAtIdx(CURRENT_ELEMENT);
+    const Clr     clr                 = IS_SELECTED ? clrWhite : scrollClr;
+    Spell* const  spell               = knownSpells_.at(i);
+    string        name                = spell->getName();
+    const int     NAME_X              = 1;
+    const int     SPI_X               = 26;
+    const int     Y                   = 2 + i;
 
-    Renderer::drawText(name, Panel::screen, Pos(0, y), clr);
+    Render::drawText(name, Panel::screen, Pos(NAME_X, Y), clr);
 
     string fillStr = "";
-    const int FILL_SIZE = 28 - name.size();
-    for(int ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
+    const size_t FILL_SIZE = SPI_X - NAME_X - name.size();
+    for(size_t ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
     Clr fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
-    Renderer::drawText(fillStr, Panel::screen, Pos(name.size(), y), fillClr);
+    Render::drawText(fillStr, Panel::screen, Pos(NAME_X + name.size(), Y), fillClr);
 
-    int x = 21;
+    int x = SPI_X;
     string infoStr = "SPI:";
     const Range spiCost = spell->getSpiCost(false, Map::player);
     const string lowerStr = toStr(spiCost.lower);
     const string upperStr = toStr(spiCost.upper);
     infoStr += spiCost.upper == 1 ? "1" : (lowerStr +  "-" + upperStr);
-    Renderer::drawText(infoStr, Panel::screen, Pos(x, y), clrWhite);
+    Render::drawText(infoStr, Panel::screen, Pos(x, Y), clrWhite);
 
     x += 10;
     const IntrSpellShock shockType = spell->getShockTypeIntrCast();
@@ -68,34 +67,36 @@ void draw(MenuBrowser& browser) {
       case IntrSpellShock::disturbing:  infoStr = "Disturbing"; break;
       case IntrSpellShock::severe:      infoStr = "Severe";     break;
     }
-    Renderer::drawText(infoStr, Panel::screen, Pos(x, y), clrWhite);
+    Render::drawText(infoStr, Panel::screen, Pos(x, Y), clrWhite);
 
-    const auto descr = spell->getDescr();
-    if(!descr.empty()) {
-      vector<StrAndClr> lines;
-      for(const auto& line : descr) {lines.push_back({line, clrWhiteHigh});}
-      Renderer::drawDescrBox(lines);
+    if(IS_SELECTED) {
+      const auto descr = spell->getDescr();
+      if(!descr.empty()) {
+        vector<StrAndClr> lines;
+        for(const auto& line : descr) {lines.push_back({line, clrWhiteHigh});}
+        Render::drawDescrBox(lines);
+      }
     }
-
-    y++;
   }
 
-  Renderer::updateScreen();
+  Render::drawPopupBox(Rect(Pos(0, 1), Pos(DESCR_X0 - 1, SCREEN_H - 1)));
+
+  Render::updateScreen();
 }
 
 void tryCast(const Spell* const spell) {
   if(Map::player->getPropHandler().allowRead(true)) {
     Log::clearLog();
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
 
     const Range spiCost = spell->getSpiCost(false, Map::player);
     if(spiCost.upper >= Map::player->getSpi()) {
       Log::addMsg("Cast spell and risk depleting your spirit (y/n)?",
                   clrWhiteHigh);
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
       if(Query::yesOrNo() == YesNoAnswer::no) {
         Log::clearLog();
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
         return;
       }
       Log::clearLog();
@@ -112,7 +113,7 @@ void tryCast(const Spell* const spell) {
     if(isBloodSorc) {
       if(Map::player->getHp() <= BLOOD_SORC_HP_DRAINED) {
         Log::addMsg("I do not have enough life force to cast this spell.");
-        Renderer::drawMapAndInterface();
+        Render::drawMapAndInterface();
         return;
       }
     }
@@ -182,7 +183,7 @@ void playerSelectSpellToCast() {
 
     MenuBrowser browser(knownSpells_.size(), 0);
 
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
 
     draw(browser);
 
@@ -196,7 +197,7 @@ void playerSelectSpellToCast() {
         case MenuAction::esc:
         case MenuAction::space: {
           Log::clearLog();
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
           return;
         } break;
 

@@ -6,7 +6,7 @@
 #include "ActorFactory.h"
 #include "ItemFactory.h"
 #include "GameTime.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "MapGen.h"
 #include "Item.h"
 #include "Utils.h"
@@ -45,8 +45,8 @@ void resetCells(const bool MAKE_STONE_WALLS) {
 
       roomMap[x][y] = nullptr;
 
-      Renderer::renderArray[x][y].clear();
-      Renderer::renderArrayNoActors[x][y].clear();
+      Render::renderArray[x][y].clear();
+      Render::renderArrayNoActors[x][y].clear();
 
       if(MAKE_STONE_WALLS) {Map::put(new Wall(Pos(x, y)));}
     }
@@ -124,9 +124,9 @@ Rigid* put(Rigid* const f) {
         Map::cells[x][y].isSeenByPlayer = Map::cells[x][y].isExplored = true;
       }
     }
-    Renderer::drawMap();
-    Renderer::drawGlyph('X', Panel::map, p, clrYellow);
-    Renderer::updateScreen();
+    Render::drawMap();
+    Render::drawGlyph('X', Panel::map, p, clrYellow);
+    Render::updateScreen();
     SdlWrapper::sleep(10); //Note: Delay must be >= 2 for user input to be read
   }
 #endif // DEMO_MODE
@@ -137,7 +137,7 @@ Rigid* put(Rigid* const f) {
 void updateVisualMemory() {
   for(int x = 0; x < MAP_W; ++x) {
     for(int y = 0; y < MAP_H; ++y) {
-      cells[x][y].playerVisualMemory = Renderer::renderArrayNoActors[x][y];
+      cells[x][y].playerVisualMemory = Render::renderArrayNoActors[x][y];
     }
   }
 }

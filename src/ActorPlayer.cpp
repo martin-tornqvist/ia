@@ -1,7 +1,7 @@
 #include "ActorPlayer.h"
 
 #include "Init.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Audio.h"
 #include "FeatureTrap.h"
 #include "CreateCharacter.h"
@@ -177,7 +177,7 @@ void Player::hit_(int& dmg) {
 
   if(!obsessions[int(Obsession::masochism)]) {incrShock(1, ShockSrc::misc);}
 
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 }
 
 int Player::getEncPercent() const {
@@ -272,7 +272,7 @@ void Player::incrInsanity() {
   restoreShock(70, false);
 
   updateClr();
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   if(getInsanity() >= 100) {
     msg += "My mind can no longer withstand what it has grasped. "
@@ -606,7 +606,7 @@ void Player::updateClr() {
 }
 
 void Player::onActorTurn() {
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   resetPermShockTakenCurTurn();
 
@@ -710,7 +710,7 @@ void Player::onStdTurn() {
         Popup::showMsg("A chill runs down my spine...", true);
       }
       incrShock(ShockValue::heavy, ShockSrc::misc);
-      Renderer::drawMapAndInterface();
+      Render::drawMapAndInterface();
     } else {
       if(Map::dlvl != 0) {
         incrShock(1, ShockSrc::time);
@@ -755,7 +755,7 @@ void Player::onStdTurn() {
               if(isSpottingHiddenActor(monster)) {
                 monster.isStealth = false;
                 updateFov();
-                Renderer::drawMapAndInterface();
+                Render::drawMapAndInterface();
                 const string monName = monster.getNameA();
                 Log::addMsg("I spot " + monName + "!", clrMsgWarning, true, true);
               }
@@ -828,7 +828,7 @@ void Player::onStdTurn() {
 }
 
 void Player::interruptActions() {
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
 
   InvHandling::screenToOpenAfterDrop    = InvScrId::END;
   InvHandling::browserIdxToSetAfterDrop = 0;
@@ -836,7 +836,7 @@ void Player::interruptActions() {
   //Abort searching
   if(waitTurnsLeft > 0) {
     Log::addMsg("I stop waiting.", clrWhite);
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
   }
   waitTurnsLeft = -1;
 
@@ -905,10 +905,10 @@ void Player::moveDir(Dir dir) {
                   Log::addMsg(
                     "Attack " + actorAtDest->getNameThe() +
                     " with " + wpnName + "? (y/n)", clrWhiteHigh);
-                  Renderer::drawMapAndInterface();
+                  Render::drawMapAndInterface();
                   if(Query::yesOrNo() == YesNoAnswer::no) {
                     Log::clearLog();
-                    Renderer::drawMapAndInterface();
+                    Render::drawMapAndInterface();
                     return;
                   }
                 }
@@ -948,7 +948,7 @@ void Player::moveDir(Dir dir) {
         const int ENC = getEncPercent();
         if(ENC >= ENC_IMMOBILE_LVL) {
           Log::addMsg("I am too encumbered to move!");
-          Renderer::drawMapAndInterface();
+          Render::drawMapAndInterface();
           return;
         } else if(ENC >= 100) {
           Log::addMsg("I stagger.", clrMsgWarning);

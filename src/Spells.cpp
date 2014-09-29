@@ -5,7 +5,7 @@
 #include <assert.h>
 
 #include "Init.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "ActorMonster.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -198,20 +198,20 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
 
   vector<Pos> line;
   LineCalc::calcNewLine(caster->pos, target->pos, true, 999, false, line);
-  Renderer::drawMapAndInterface();
+  Render::drawMapAndInterface();
   const int LINE_SIZE = line.size();
   for(int i = 1; i < LINE_SIZE; ++i) {
     const Pos& pos = line.at(i);
     if(Config::isTilesMode()) {
-      Renderer::drawTile(TileId::blast1, Panel::map, pos, clrMagenta);
+      Render::drawTile(TileId::blast1, Panel::map, pos, clrMagenta);
     } else {
-      Renderer::drawGlyph('*', Panel::map, pos, clrMagenta);
+      Render::drawGlyph('*', Panel::map, pos, clrMagenta);
     }
-    Renderer::updateScreen();
+    Render::updateScreen();
     SdlWrapper::sleep(Config::getDelayProjectileDraw());
   }
 
-  Renderer::drawBlastAnimAtPositions(
+  Render::drawBlastAnimAtPositions(
     vector<Pos> {target->pos}, clrMagenta);
 
   const string msgCmn = " struck by a blast!";
@@ -273,7 +273,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
       vector<Pos> actorPositions; actorPositions.resize(0);
       for(Actor* a : targets) {actorPositions.push_back(a->pos);}
 
-      Renderer::drawBlastAnimAtPositionsWithPlayerVision(
+      Render::drawBlastAnimAtPositionsWithPlayerVision(
         actorPositions, clrRedLgt);
 
       for(Actor* actor : targets) {
@@ -293,7 +293,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     }
   } else {
     Log::addMsg("I am " + msgEnd, clrMsgBad);
-    Renderer::drawBlastAnimAtPositionsWithPlayerVision(
+    Render::drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos> {Map::player->pos}, clrRedLgt);
     Map::player->getPropHandler().tryApplyProp(
       new PropParalyzed(PropTurns::specific, 1));
@@ -412,11 +412,11 @@ SpellCastRetData SpellDetItems::cast_(Actor* const caster) const {
     }
   }
   if(!itemsRevealedPositions.empty()) {
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     Map::player->updateFov();
-    Renderer::drawBlastAnimAtPositions(
+    Render::drawBlastAnimAtPositions(
       itemsRevealedPositions, clrWhite);
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
 
     if(itemsRevealedPositions.size() == 1) {
       Log::addMsg("An item is revealed to me.");
@@ -449,10 +449,10 @@ SpellCastRetData SpellDetTraps::cast_(Actor* const caster) const {
   }
 
   if(!trapsRevealedPositions.empty()) {
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     Map::player->updateFov();
-    Renderer::drawBlastAnimAtPositions(trapsRevealedPositions, clrWhite);
-    Renderer::drawMapAndInterface();
+    Render::drawBlastAnimAtPositions(trapsRevealedPositions, clrWhite);
+    Render::drawMapAndInterface();
     if(trapsRevealedPositions.size() == 1) {
       Log::addMsg("A hidden trap is revealed to me.");
     }
@@ -512,11 +512,11 @@ SpellCastRetData SpellOpening::cast_(
   if(featuresOpenedPositions.empty()) {
     return SpellCastRetData(false);
   } else {
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     Map::player->updateFov();
-    Renderer::drawBlastAnimAtPositions(
+    Render::drawBlastAnimAtPositions(
       featuresOpenedPositions, clrWhite);
-    Renderer::drawMapAndInterface();
+    Render::drawMapAndInterface();
     return SpellCastRetData(true);
   }
 }
@@ -667,7 +667,7 @@ SpellCastRetData SpellPropOnMon::cast_(
 
       for(Actor* a : targets) {actorPositions.push_back(a->pos);}
 
-      Renderer::drawBlastAnimAtPositionsWithPlayerVision(
+      Render::drawBlastAnimAtPositionsWithPlayerVision(
         actorPositions, clrMagenta);
 
       for(Actor* actor : targets) {
@@ -678,7 +678,7 @@ SpellCastRetData SpellPropOnMon::cast_(
       return SpellCastRetData(true);
     }
   } else {
-    Renderer::drawBlastAnimAtPositionsWithPlayerVision(
+    Render::drawBlastAnimAtPositionsWithPlayerVision(
       vector<Pos>(1, Map::player->pos), clrMagenta);
 
     PropHandler& propHandler = Map::player->getPropHandler();
