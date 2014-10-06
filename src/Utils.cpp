@@ -112,8 +112,7 @@ void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
   }
 }
 
-void mkBoolMapFromVector(const vector<Pos>& positions,
-                         bool out[MAP_W][MAP_H]) {
+void mkBoolMapFromVector(const vector<Pos>& positions, bool out[MAP_W][MAP_H]) {
   resetArray(out, false);
   for(const Pos& p : positions) {out[p.x][p.y] = true;}
 }

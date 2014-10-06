@@ -17,6 +17,7 @@
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
+					<Add option="-fno-exceptions" />
 					<Add directory="../include/debugModeIncl" />
 				</Compiler>
 				<Linker>
@@ -70,6 +71,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wno-unused-value" />
+					<Add option="-fno-exceptions" />
 					<Add directory="../include/releaseModeIncl" />
 				</Compiler>
 				<Linker>
@@ -110,7 +112,6 @@
 			<Add option="-Wall" />
 			<Add option="-Wno-long-long" />
 			<Add option="-fno-rtti" />
-			<Add option="-fno-exceptions" />
 			<Add directory="../include" />
 			<Add directory="../API/SDL/include" />
 		</Compiler>

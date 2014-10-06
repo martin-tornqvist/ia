@@ -264,27 +264,30 @@ class TrapSpiderWeb: public SpecificTrapBase {
 public:
   Dir actorTryLeave(Actor& actor, const Dir dir);
 
-  bool isHolding() const {return isHoldingActor;}
+  bool isHolding() const {return isHoldingActor_;}
 
 private:
   friend class Trap;
   TrapSpiderWeb(Pos pos) :
-    SpecificTrapBase(pos, TrapId::spiderWeb), isHoldingActor(false) {}
+    SpecificTrapBase(pos, TrapId::spiderWeb), isHoldingActor_(false) {}
+
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
-  Clr   getClr()        const override {return clrWhiteHigh;}
-  std::string      getTitle()      const override {return "Spider web";}
+
+  Clr         getClr()        const override {return clrWhiteHigh;}
+  std::string getTitle()      const override {return "Spider web";}
   char        getGlyph()      const override {return '*';}
   bool        isMagical()     const override {return false;}
   TileId      getTile()       const override {return TileId::spiderWeb;}
   bool        isDisarmable()  const override {return true;}
-  std::string      getDisarmMsg()  const override {
+
+  std::string getDisarmMsg() const override {
     return "I tear down a spider web.";
   }
-  std::string      getDisarmFailMsg() const override {
+  std::string getDisarmFailMsg() const override {
     return "I fail to tear down a spider web.";
   }
 
-  bool isHoldingActor;
+  bool isHoldingActor_;
 };
 
 #endif

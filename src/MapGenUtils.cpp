@@ -168,16 +168,13 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
 
       bool isAdjToFloorNotInRoom = false;
 
-      for(const Pos& d : DirUtils::dirList) {
+      for(const Pos& d : DirUtils::cardinalList) {
         const Pos& pAdj(p + d);
+        //Condition (4)
+        if(roomFloorCells[pAdj.x][pAdj.y])      {isAdjToFloorInRoom = true;}
 
-        if(DirUtils::isCardinal(d)) {
-          //Condition (4)
-          if(roomFloorCells[pAdj.x][pAdj.y])      {isAdjToFloorInRoom = true;}
-
-          //Condition (5)
-          if(!roomCellsExpanded[pAdj.x][pAdj.y])  {isAdjToCellOutside = true;}
-        }
+        //Condition (5)
+        if(!roomCellsExpanded[pAdj.x][pAdj.y])  {isAdjToCellOutside = true;}
       }
 
       if(!isAdjToFloorNotInRoom && isAdjToFloorInRoom && isAdjToCellOutside) {

@@ -9,7 +9,7 @@
 
 #include "Config.h"
 #include "Utils.h"
-#include "Renderer.h"
+#include "Render.h"
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "Throwing.h"
@@ -28,7 +28,6 @@
 #include "PlayerSpellsHandling.h"
 #include "PlayerBon.h"
 #include "Explosion.h"
-#include "ItemAmmo.h"
 #include "ItemDevice.h"
 #include "FeatureRigid.h"
 #include "FeatureTrap.h"
@@ -350,7 +349,7 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   const int X0 = 5;
   const int Y0 = 7;
 
-  auto* const floor = new Floor(Pos(X0, Y0));
+  //auto* const floor = new Floor(Pos(X0, Y0));
   Map::put(new Floor(Pos(X0, Y0)));
 
   //Check wall destruction
@@ -475,7 +474,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     Map::put(new Trap(posR, mimic, TrapId::spiderWeb));
 
     //Move the monster into the trap, and back again
-    monster->awareOfPlayerCounter_ = INT_MAX; // > 0 req. for triggering trap
+    monster->awareOfPlayerCounter_ = 20000; // > 0 req. for triggering trap
     monster->pos = posL;
     monster->moveDir(Dir::right);
     CHECK(monster->pos == posR);
@@ -533,16 +532,16 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   item = ItemFactory::mk(ItemId::armorAsbSuit);
   inv.putInSlot(SlotId::body, item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  static_cast<AmmoClip*>(item)->ammo = 1;
+  static_cast<AmmoClip*>(item)->ammo_ = 1;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  static_cast<AmmoClip*>(item)->ammo = 2;
+  static_cast<AmmoClip*>(item)->ammo_ = 2;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  static_cast<AmmoClip*>(item)->ammo = 3;
+  static_cast<AmmoClip*>(item)->ammo_ = 3;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::pistolClip);
-  static_cast<AmmoClip*>(item)->ammo = 3;
+  static_cast<AmmoClip*>(item)->ammo_ = 3;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::deviceSentry);
   static_cast<Device*>(item)->condition_ = Condition::shoddy;
@@ -568,18 +567,20 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
 
   //Applied properties
   PropHandler& propHlr = Map::player->getPropHandler();
-  propHlr.tryApplyProp(new PropDiseased(PropTurns::indefinite));
   propHlr.tryApplyProp(new PropRSleep(PropTurns::specific, 3));
+  propHlr.tryApplyProp(new PropDiseased(PropTurns::indefinite));
   propHlr.tryApplyProp(new PropBlessed(PropTurns::std));
-  propHlr.tryApplyProp(new PropWound(PropTurns::std));
-  Prop* prop      = propHlr.getProp(propWound, PropSrc::applied);
-  PropWound* wnd  = static_cast<PropWound*>(prop);
-  CHECK(wnd);
-  CHECK_EQUAL(1, wnd->getNrWounds());
-  wnd->onMore();
-  CHECK_EQUAL(2, wnd->getNrWounds());
-  wnd->onMore();
-  CHECK_EQUAL(3, wnd->getNrWounds());
+
+  //Check a a few of the props applied
+  Prop* prop = propHlr.getProp(propDiseased, PropSrc::applied);
+  CHECK(prop);
+
+  prop = propHlr.getProp(propBlessed, PropSrc::applied);
+  CHECK(prop);
+
+  //Check a prop that was NOT applied
+  prop = propHlr.getProp(propConfused, PropSrc::applied);
+  CHECK(!prop);
 
   SaveHandling::save();
   CHECK(SaveHandling::isSaveAvailable());
@@ -622,7 +623,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   for(Item* item : genInv) {
     ItemId id = item->getData().id;
     if(id == ItemId::pistolClip) {
-      switch(static_cast<AmmoClip*>(item)->ammo) {
+      switch(static_cast<AmmoClip*>(item)->ammo_) {
         case 1: nrClipWith1++; break;
         case 2: nrClipWith2++; break;
         case 3: nrClipWith3++; break;
@@ -667,20 +668,21 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   PropHandler& propHlr = Map::player->getPropHandler();
   Prop* prop = propHlr.getProp(propDiseased, PropSrc::applied);
   CHECK(prop);
-  CHECK(prop->turnsLeft_ == -1);
+  CHECK_EQUAL(-1, prop->turnsLeft_);
   //Check currrent HP (affected by disease)
   CHECK_EQUAL((Map::player->getData().hp + 5) / 2, Map::player->getHp());
+
   prop = propHlr.getProp(propRSleep, PropSrc::applied);
   CHECK(prop);
-  CHECK(prop->turnsLeft_ == 3);
+  CHECK_EQUAL(3, prop->turnsLeft_);
+
+  prop = propHlr.getProp(propDiseased, PropSrc::applied);
+  CHECK(prop);
+  CHECK_EQUAL(-1, prop->turnsLeft_);
+
   prop = propHlr.getProp(propBlessed, PropSrc::applied);
   CHECK(prop);
   CHECK(prop->turnsLeft_ > 0);
-  prop = propHlr.getProp(propWound, PropSrc::applied);
-  PropWound* wnd = static_cast<PropWound*>(prop);
-  CHECK(wnd);
-  CHECK(wnd->turnsLeft_ == -1);
-  CHECK_EQUAL(3, wnd->getNrWounds());
 
   //Properties from worn item
   prop = propHlr.getProp(propRAcid, PropSrc::inv);
@@ -779,6 +781,54 @@ TEST_FIXTURE(BasicFixture, PathFinding) {
   CHECK_EQUAL(10, int(path.size()));
 }
 
+TEST_FIXTURE(BasicFixture, MapParseExpandOne) {
+  bool in[MAP_W][MAP_H];
+  Utils::resetArray(in, false);
+
+  in[10][5] = true;
+
+  bool out[MAP_W][MAP_H];
+  MapParse::expand(in, out);
+
+  CHECK(!out[8][5]);
+  CHECK(out[9][5]);
+  CHECK(out[10][5]);
+  CHECK(out[11][5]);
+  CHECK(!out[12][5]);
+
+  CHECK(!out[8][4]);
+  CHECK(out[9][4]);
+  CHECK(out[10][4]);
+  CHECK(out[11][4]);
+  CHECK(!out[12][4]);
+
+  in[14][5] = true;
+  MapParse::expand(in, out);
+
+  CHECK(out[10][5]);
+  CHECK(out[11][5]);
+  CHECK(!out[12][5]);
+  CHECK(out[13][5]);
+  CHECK(out[14][5]);
+
+  in[12][5] = true;
+  MapParse::expand(in, out);
+  CHECK(out[12][4]);
+  CHECK(out[12][5]);
+  CHECK(out[12][6]);
+
+  //Check that old values are cleared
+  Utils::resetArray(in, false);
+  in[40][10] = true;
+  MapParse::expand(in, out);
+  CHECK(out[39][10]);
+  CHECK(out[40][10]);
+  CHECK(out[41][10]);
+  CHECK(!out[10][5]);
+  CHECK(!out[12][5]);
+  CHECK(!out[14][5]);
+}
+
 TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   //------------------------------------------------ Square, normal sized room
   Rect roomRect(20, 5, 30, 10);
@@ -807,13 +857,15 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   CHECK(entryMap[30][4]);
   CHECK(!entryMap[31][4]);
 
-  //Check that a cell in the middle of the room is not an entry
+  //Check that a cell in the middle of the room is not an entry, even if it's not
+  //belonging to the room
   Map::roomMap[25][7] = nullptr;
   MapGenUtils::getValidRoomCorrEntries(room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
   CHECK(!entryMap[25][7]);
 
+  //The cell should also not be an entry if it's a wall and belonging to the room
   Map::roomMap[25][7] = &room;
   Map::put(new Wall(Pos(25, 7)));
   MapGenUtils::getValidRoomCorrEntries(room, entryList);
@@ -821,11 +873,16 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
 
   CHECK(!entryMap[25][7]);
 
+  //The cell should also not be an entry if it's a wall and not belonging to the room
   Map::roomMap[25][7] = nullptr;
   MapGenUtils::getValidRoomCorrEntries(room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
-  CHECK(!entryMap[25][7]);
+  //This test fails!
+  //It seems like it has to do with MapParse::expand, called from
+  //MapGenUtils::getValidRoomCorrEntries()
+  //Write tests for MapParse::expand()
+  CHECK(!entryMap[25][7]); //<-- Fails
 
   //Check that the room can share an antry point with a nearby room
   roomRect = Rect(10, 5, 18, 10);

@@ -290,7 +290,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
   curDefender = Utils::getFirstActorAtPos(curPos_);
 
   if(curDefender) {
-    TRACE << "MissileAttData: Defender found" << endl;
+    TRACE << "Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
     const int WPN_MOD           = item_.getData().ranged.throwHitChanceMod;
@@ -327,7 +327,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
     attackResult = AbilityRoll::roll(hitChanceTot);
 
     if(attackResult >= successSmall) {
-      TRACE << "MissileAttData: Attack roll succeeded" << endl;
+      TRACE << "Attack roll succeeded" << endl;
 
       bool playerAimX3 = false;
       if(attacker == Map::player) {

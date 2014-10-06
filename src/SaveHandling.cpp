@@ -43,9 +43,7 @@ void collectLinesFromGame(vector<string>& lines) {
 
 void setupGameFromLines(vector<string>& lines) {
   TRACE_FUNC_BEGIN;
-  TRACE << "SaveHandler: Nr lines: " << lines.size() << endl;
   const string& playerName = lines.front();
-  TRACE << "SaveHandler: playerName: " << playerName << endl;
   Map::player->getData().nameA = playerName;
   Map::player->getData().nameThe = playerName;
   lines.erase(begin(lines));
@@ -95,8 +93,7 @@ void readFile(vector<string>& lines) {
     emptyLines.resize(0);
     writeFile(emptyLines);
   } else {
-    TRACE << "[WARNING] Could not open save file, ";
-    TRACE << "in SaveHandler::readFile()" << endl;
+    assert(false && "Failed to open save file");
   }
 }
 

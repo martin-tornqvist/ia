@@ -200,7 +200,7 @@ void Monster::moveDir(Dir dir) {
     if(f->getId() == FeatureId::trap) {
       dir = static_cast<Trap*>(f)->actorTryLeave(*this, dir);
       if(dir == Dir::center) {
-        TRACE_VERBOSE << "Monster: Move prevented by trap" << endl;
+        TRACE_VERBOSE << "Monster move prevented by trap" << endl;
         GameTime::actorDidAct();
         return;
       }
@@ -212,9 +212,7 @@ void Monster::moveDir(Dir dir) {
 
   const Pos targetCell(pos + DirUtils::getOffset(dir));
 
-  assert(Utils::isPosInsideMap(targetCell, false));
-
-  if(dir != Dir::center) {
+  if(dir != Dir::center && Utils::isPosInsideMap(targetCell, false)) {
     pos = targetCell;
 
     //Bump features in target cell (i.e. to trigger traps)

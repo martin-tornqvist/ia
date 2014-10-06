@@ -257,7 +257,6 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
 }
 
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
-
   int checkX0, checkY0, checkX1, checkY1;
 
   for(int y = 0; y < MAP_H; ++y) {
@@ -266,7 +265,7 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
       out[x][y] = false;
 
       if(x == 0)          {checkX0 = 0;}          else {checkX0 = x - 1;}
-      if(y == 0)          {checkY0 = 0;}          else {checkY0 = x - 1;}
+      if(y == 0)          {checkY0 = 0;}          else {checkY0 = y - 1;}
       if(x == MAP_W - 1)  {checkX1 = MAP_W - 1;}  else {checkX1 = x + 1;}
       if(y == MAP_H - 1)  {checkY1 = MAP_H - 1;}  else {checkY1 = y + 1;}
 
@@ -287,7 +286,6 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
 }
 
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST) {
-
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
 

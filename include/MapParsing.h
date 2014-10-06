@@ -192,9 +192,9 @@ bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
 
 void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]);
 
-//Optimized version
+//Optimized for expanding with a distance of one
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]);
-//Slower version
+//Slower version that can expand any distance
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST);
 
 } //MapParse
