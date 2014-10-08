@@ -639,7 +639,7 @@ void initDataList() {
   d->baseName = ItemName("Rock", "Rocks", "a Rock");
   d->baseDescr = {"Although not a very impressive weapon, with skill they can be used "
                   "with some result. Shooting them with a sling instead of throwing "
-                  "will increase the range and cause more damage."
+                  "them increases the range and causes more damage."
                  };
   d->itemWeight = itemWeight_extraLight;
   d->tile = TileId::rock;
@@ -820,6 +820,9 @@ void initDataList() {
   d = new ItemDataT(ItemId::ironSpike);
   resetData(*d, ItemType::throwingWpn);
   d->baseName = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
+  d->baseDescr = {"These can come in handy for wedging things closed or prying things "
+                  "open."
+                 };
   d->isAmmo = true;
   d->itemWeight = itemWeight_extraLight;
   d->tile = TileId::ironSpike;
@@ -1121,7 +1124,7 @@ void initDataList() {
 
   d = new ItemDataT(ItemId::deepOneJavelinAtt);
   resetData(*d, ItemType::rangedWpnIntr);
-  d->ranged.attMsgs = ItemAttMsgs("", "throws a Javelin at me");
+  d->ranged.attMsgs = ItemAttMsgs("", "throws a javelin at me");
   setDmgFromMonsterData(*d, ActorData::data[ActorId::deepOne]);
   d->ranged.sndMsg = "";
   d->ranged.missileClr = clrBrown;
@@ -1184,6 +1187,7 @@ void initDataList() {
   d = new ItemDataT(ItemId::armorLeatherJacket);
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Leather Jacket", "", "a Leather Jacket");
+  d->baseDescr = {"It offers some protection."};
   d->itemWeight = itemWeight_light;
   d->clr = clrBrown;
   d->spawnStdRange.lower = 1;
@@ -1196,11 +1200,17 @@ void initDataList() {
   d = new ItemDataT(ItemId::armorIronSuit);
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Iron Suit", "", "an Iron Suit");
+  d->baseDescr = {"A crude armour constructed from metal plates, bolts, and leather "
+                  "straps. It can absorb a high amount of damage, but it makes sneaking "
+                  "and dodging very difficult. Also, due to the narrow slit of the "
+                  "helmet, aiming is slightly more difficult, and it is harder to "
+                  "detect sneaking enemies and hidden objects."
+                 };
   d->itemWeight = itemWeight_heavy;
   d->clr = clrWhite;
   d->spawnStdRange.lower = 2;
   d->armor.absorptionPoints = 4;
-  d->armor.dmgToDurabilityFactor = 0.5;
+  d->armor.dmgToDurabilityFactor = 0.3;
   d->landOnHardSurfaceSoundMsg = "I hear a crashing sound.";
   addFeatureFoundIn(*d, FeatureId::cabinet);
   data[int(d->id)] = d;
@@ -1208,6 +1218,10 @@ void initDataList() {
   d = new ItemDataT(ItemId::armorFlackJacket);
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Flak Jacket", "", "a Flak Jacket");
+  d->baseDescr = {"An armour consisting of steel plates sewn into a waistcoat. It "
+                  "offers very good protection for its weight. Sneaking and dodging is "
+                  "slightly more difficult."
+                 };
   d->itemWeight = itemWeight_medium;
   d->clr = clrGreen;
   d->spawnStdRange.lower = 3;
@@ -1220,6 +1234,13 @@ void initDataList() {
   d = new ItemDataT(ItemId::armorAsbSuit);
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Asbestos Suit", "", "an Asbestos Suit");
+  d->baseDescr = {"A one piece overall of asbestos fabric, including a hood, "
+                  "furnace mask, gloves and shoes. It protects the wearer against fire, "
+                  "acid and electricity, and also against smoke, fumes and gas. "
+                  "It is a bit bulky, so sneaking and dodging is slightly more "
+                  "difficult. Also, because of the hood and mask, aiming and detecting "
+                  "hidden enemies and objects is somewhat harder."
+                 };
   d->itemWeight = itemWeight_medium;
   d->clr = clrRedLgt;
   d->spawnStdRange.lower = 3;
@@ -1233,10 +1254,15 @@ void initDataList() {
   d = new ItemDataT(ItemId::armorHeavyCoat);
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Heavy Coat", "", "a Heavy Coat");
+  d->baseDescr = {"A very thick coat. It gives more protection against physical harm "
+                  "than a leather jacket, and it also protects against cold. Sneaking "
+                  "and dodging is slightly more difficult due to its higher weight "
+                  "however."
+                 };
   d->itemWeight = itemWeight_medium;
   d->clr = clrBlueLgt;
   d->spawnStdRange.lower = 3;
-  d->armor.absorptionPoints = 1;
+  d->armor.absorptionPoints = 2;
   d->armor.dmgToDurabilityFactor = 1.0;
   d->landOnHardSurfaceSoundMsg = "";
   addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -1245,6 +1271,12 @@ void initDataList() {
   d = new ItemDataT(ItemId::gasMask);
   resetData(*d, ItemType::general);
   d->baseName = ItemName("Gas Mask", "", "A Gas Mask");
+  d->baseDescr = {"Protects the eyes, throat and lungs from smoke and fumes. It has a "
+                  "limited useful lifespan that is related to the absorbent capacity of "
+                  "the filter. Due to the small eye windows, aiming is slightly more "
+                  "difficult, and it is harder to detect sneaking enemies and hidden "
+                  "objects."
+                 };
   d->isStackable = false;
   d->clr = clrBrown;
   d->tile = TileId::mask;

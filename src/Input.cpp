@@ -507,7 +507,7 @@ void handleKeyPress(const KeyData& d) {
           return MarkerDone::no;
         };
 
-        Marker::run(MarkerDrawTail::no, MarkerUsePlayerTarget::yes,
+        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
                     onMarkerAtPos, onKeyPress);
 
       } else {

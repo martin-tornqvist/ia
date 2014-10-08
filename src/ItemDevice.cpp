@@ -36,8 +36,7 @@ void Device::setupFromSaveLines(vector<string>& lines) {
 }
 
 //---------------------------------------------------- STRANGE DEVICE
-StrangeDevice::StrangeDevice(ItemDataT* const itemData) :
-  Device(itemData) {}
+StrangeDevice::StrangeDevice(ItemDataT* const itemData) : Device(itemData) {}
 
 ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
   (void)actor;

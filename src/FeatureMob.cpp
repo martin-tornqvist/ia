@@ -30,13 +30,23 @@ void Smoke::onNewTurn() {
       //TODO There needs to be some criteria here, so that e.g. a statue-monster or a
       //very alien monster can't get blinded by smoke (but do not use isHumanoid - rats,
       //wolves etc should definitely be blinded by smoke.
-      bool playerWearsGasMask = false;
-      auto* playerHeadItem    = Map::player->getInv().getSlot(SlotId::head)->item;
+      //Perhaps add some property like "hasEyes"?
+      bool playerWearsProtectiveItem = false;
+      auto inv = Map::player->getInv();
+      const auto* const playerHeadItem  = inv.getSlot(SlotId::head)->item;
+      const auto* const playerBodyItem  = inv.getSlot(SlotId::body)->item;
       if(playerHeadItem) {
-        playerWearsGasMask = playerHeadItem->getData().id == ItemId::gasMask;
+        if(playerHeadItem->getData().id == ItemId::gasMask) {
+          playerWearsProtectiveItem = true;
+        }
+      }
+      if(playerBodyItem) {
+        if(playerBodyItem->getData().id == ItemId::armorAsbSuit) {
+          playerWearsProtectiveItem = true;
+        }
       }
 
-      if(!IS_PLAYER || !playerWearsGasMask) {
+      if(!IS_PLAYER || !playerWearsProtectiveItem) {
         if(IS_PLAYER) {Log::addMsg("I am getting smoke in my eyes.");}
         actor->getPropHandler().tryApplyProp(
           new PropBlind(PropTurns::specific, Rnd::range(1, 3)));

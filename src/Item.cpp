@@ -55,7 +55,6 @@ ConsumeItem Item::activateDefault(Actor* const actor) {
 
 string Item::getName(const ItemRefType refType, const ItemRefInf inf,
                      const ItemRefAttInf attInf) const {
-
   ItemRefType refTypeUsed = refType;
   if(refType == ItemRefType::plural && (!data_->isStackable || nrItems_ == 1)) {
     refTypeUsed = ItemRefType::a;
@@ -146,7 +145,10 @@ string Armor::getArmorDataLine(const bool WITH_BRACKETS) const {
 
   const int AP = getAbsorptionPoints();
 
-  if(AP <= 0) {assert(false && "Armor AP less than 1"); return "";}
+  if(AP <= 0) {
+    assert(false && "Armor AP less than 1");
+    return "";
+  }
 
   const string absorptionPointsStr = toStr(AP);
 
@@ -185,11 +187,11 @@ int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE) {
     Log::addMsg("My " + armorName + " is damaged!", clrMsgWarning);
   }
 
-  TRACE << "Armor: Damage before: " + toStr(DMG_BEFORE) << endl;
+  TRACE << "Damage before: " + toStr(DMG_BEFORE) << endl;
 
   const int DMG_AFTER = max(1, DMG_BEFORE - AP_BEFORE);
 
-  TRACE << "Armor: Damage after: " + toStr(DMG_AFTER) << endl;
+  TRACE << "Damage after: " + toStr(DMG_AFTER) << endl;
 
   TRACE_FUNC_END;
   return DMG_AFTER;
@@ -206,7 +208,6 @@ int Armor::getAbsorptionPoints() const {
   return 0;
 }
 
-//------------------------------------------------------------------- ASB SUIT
 void ArmorAsbSuit::onWear() {
   propsEnabledOnCarrier.push_back(new PropRFire(PropTurns::indefinite));
   propsEnabledOnCarrier.push_back(new PropRAcid(PropTurns::indefinite));
@@ -218,7 +219,6 @@ void ArmorAsbSuit::onTakeOff() {
   clearPropsEnabledOnCarrier();
 }
 
-//------------------------------------------------------------------- HEAVY COAT
 void ArmorHeavyCoat::onWear() {
   propsEnabledOnCarrier.push_back(new PropRCold(PropTurns::indefinite));
 }
