@@ -14,12 +14,12 @@ public:
 
   virtual ~Potion() {}
 
-  ConsumeItem activateDefault(Actor* const actor) override {
+  ConsumeItem activateDefault(Actor* const actor) override final {
     quaff(actor);
     return ConsumeItem::yes;
   }
 
-  Clr getInterfaceClr() const override {return clrBlueLgt;}
+  Clr getInterfaceClr() const override final {return clrBlueLgt;}
 
   std::vector<std::string> getDescr() const override final;
 
@@ -27,16 +27,16 @@ public:
 
   void collide(const Pos& pos, Actor* actor);
 
-  void identify(const bool IS_SILENT_IDENTIFY) override;
+  void identify(const bool IS_SILENT_IDENTIFY) override final;
+
+  virtual const std::string getRealName() const = 0;
 
 protected:
-  virtual const std::string getRealTypeName() = 0;
-
   virtual std::vector<std::string> getDescrIdentified() const = 0;
 
   virtual void collide_(const Pos& pos, Actor* const actor) = 0;
 
-  virtual void quaff_(Actor* const actor) {(void) actor;}
+  virtual void quaff_(Actor* const actor) = 0;
 
   std::string getNameInf() const override final;
 };
@@ -46,10 +46,12 @@ public:
   PotionVitality(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionVitality() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Vitality";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Vitality";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"This elixir heals all wounds and physical maladies."};
   }
@@ -62,10 +64,12 @@ public:
   PotionSpirit(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionSpirit() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Spirit";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Spirit";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Restores the spirit."};
   }
@@ -78,10 +82,12 @@ public:
   PotionBlindness(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionBlindness() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Blindness";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Blindness";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Causes temporary loss of vision."};
   }
@@ -94,10 +100,12 @@ public:
   PotionParal(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionParal() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Paralyzation";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Paralyzation";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Causes paralysis."};
   }
@@ -110,10 +118,12 @@ public:
   PotionDisease(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionDisease() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Disease";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Disease";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"This foul liquid causes a horrible disease."};
   }
@@ -130,9 +140,10 @@ public:
     Potion(itemData) {}
   ~PotionConf() {}
   void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Confusion";}
 
+  const std::string getRealName() const override {return "Confusion";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Causes confusion."};
   }
@@ -145,10 +156,12 @@ public:
   PotionFrenzy(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionFrenzy() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Frenzy";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Frenzy";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Causes uncontrollable fury."};
   }
@@ -161,10 +174,12 @@ public:
   PotionFortitude(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionFortitude() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Fortitude";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Fortitude";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Gives the consumer complete peace of mind."};
   }
@@ -177,10 +192,12 @@ public:
   PotionPoison(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionPoison() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Poison";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Poison";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"A deadly brew."};
   }
@@ -193,10 +210,12 @@ public:
   PotionInsight(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionInsight() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Insight";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Insight";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"This strange concoction causes a sudden flash of intuition."};
   }
@@ -212,10 +231,12 @@ public:
   PotionClairv(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionClairv() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Clairvoyance";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Clairvoyance";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Bestows visions of the surrounding area."};
   }
@@ -231,10 +252,12 @@ public:
   PotionRFire(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionRFire() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Fire Resistance";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Fire Resistance";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Protects the consumer from fire."};
   }
@@ -247,10 +270,12 @@ public:
   PotionAntidote(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionAntidote() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Antidote";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Antidote";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Cures poisoning."};
   }
@@ -263,10 +288,12 @@ public:
   PotionRElec(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionRElec() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Insulation";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Insulation";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Protects the consumer from electricity."};
   }
@@ -279,10 +306,12 @@ public:
   PotionRAcid(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionRAcid() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Acid Resistance";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Acid Resistance";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"Protects the consumer from acid."};
   }
@@ -295,10 +324,12 @@ public:
   PotionDescent(ItemDataT* const itemData) :
     Potion(itemData) {}
   ~PotionDescent() {}
-  void quaff_(Actor* const actor) override;
-private:
-  const std::string getRealTypeName() override {return "Descent";}
 
+  void quaff_(Actor* const actor) override;
+
+  const std::string getRealName() const override {return "Descent";}
+
+private:
   std::vector<std::string> getDescrIdentified() const override {
     return {"A bizarre liquid that causes the consumer to dematerialize and sink "
             "through the ground."
@@ -323,8 +354,6 @@ void init();
 
 void storeToSaveLines(std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);
-
-void setClrAndFalseName(ItemDataT& d);
 
 } //PotionNameHandling
 

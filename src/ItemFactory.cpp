@@ -19,7 +19,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
 
   ItemDataT* ammoD = nullptr;
 
-  if(d->ranged.ammoItemId != ItemId::empty) {
+  if(d->ranged.ammoItemId != ItemId::END) {
     ammoD = ItemData::data[int(d->ranged.ammoItemId)];
   }
 
@@ -155,7 +155,6 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
 
     case ItemId::medicalBag:          r = new MedicalBag(d);            break;
 
-    case ItemId::empty:
     case ItemId::END: return nullptr;
   }
 
@@ -218,7 +217,7 @@ Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS,
                              const bool ALLOW_POTIONS) {
   vector<ItemId> itemBucket;
 
-  for(int i = 1; i < int(ItemId::END); ++i) {
+  for(int i = 0; i < int(ItemId::END); ++i) {
     const ItemDataT* const d = ItemData::data[i];
     if(
       !d->isIntrinsic &&

@@ -18,8 +18,6 @@ namespace ActorFactory {
 namespace {
 
 Actor* mkActorFromId(const ActorId id) {
-  assert(id >= 1 && id < endOfActorIds);
-
   switch(id) {
     case ActorId::player:               return new Player();
     case ActorId::zombie:               return new ZombieClaw();
@@ -77,8 +75,7 @@ Actor* mkActorFromId(const ActorId id) {
 //  case ActorId::lordOfSpiders:    return new LordOfSpiders;
 //  case ActorId::lordOfSpirits:    return new LordOfSpirits;
 
-    case ActorId::empty:
-    case endOfActorIds: {} break;
+    case ActorId::END: {} break;
   }
   return nullptr;
 }
@@ -88,7 +85,7 @@ Actor* mkActorFromId(const ActorId id) {
 Actor* mk(const ActorId id, const Pos& pos) {
   Actor* const actor = mkActorFromId(id);
 
-  actor->place(pos, ActorData::data[id]);
+  actor->place(pos, ActorData::data[int(id)]);
 
   if(actor->getData().nrLeftAllowedToSpawn != -1) {
     actor->getData().nrLeftAllowedToSpawn--;

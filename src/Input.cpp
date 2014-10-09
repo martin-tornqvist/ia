@@ -635,7 +635,7 @@ void handleKeyPress(const KeyData& d) {
     if(IS_DEBUG_MODE) {
       ItemFactory::mkItemOnMap(ItemId::hideousMask, Map::player->pos);
       ItemFactory::mkItemOnMap(ItemId::gasMask, Map::player->pos);
-      for(int i = 1; i < int(ItemId::END); ++i) {
+      for(int i = 0; i < int(ItemId::END); ++i) {
         const ItemDataT* const data = ItemData::data[i];
         if(!data->isIntrinsic && (data->isPotion || data->isScroll || data->isDevice)) {
           ItemFactory::mkItemOnMap((ItemId)(i), Map::player->pos);

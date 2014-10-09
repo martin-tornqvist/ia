@@ -46,7 +46,7 @@ void Inventory::storeToSaveLines(vector<string>& lines) const {
       lines.push_back(toStr(item->nrItems_));
       item->storeToSaveLines(lines);
     } else {
-      lines.push_back("0");
+      lines.push_back(toStr(int(ItemId::END)));
     }
   }
 
@@ -69,7 +69,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines) {
 
     const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(begin(lines));
-    if(id != ItemId::empty) {
+    if(id != ItemId::END) {
       item = ItemFactory::mk(id);
       item->nrItems_ = toInt(lines.front());
       lines.erase(begin(lines));

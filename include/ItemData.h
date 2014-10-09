@@ -41,8 +41,6 @@ enum class ItemType {
 enum class ItemValue {normal, minorTreasure, majorTreasure};
 
 enum class ItemId {
-  empty,
-
   trapezohedron,
 
   throwingKnife,
@@ -189,6 +187,7 @@ public:
   bool isIdentified;
   bool isTried;
   ItemName baseName;
+  ItemName baseNameUnid;
   std::vector<std::string> baseDescr;
   char glyph;
   Clr clr;

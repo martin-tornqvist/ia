@@ -41,12 +41,13 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   TRACE << "Postmortem: Finding number of killed monsters" << endl;
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMonsters = 0;
-  for(int i = ActorId::player + 1; i < endOfActorIds; ++i) {
-    const ActorDataT& d = ActorData::data[i];
-    if(d.nrKills > 0) {
-      nrKillsTotAllMonsters += d.nrKills;
-      if(d.isUnique) {
-        uniqueKilledNames.push_back(d.nameA);
+  for(const auto& d : ActorData::data) {
+    if(d.id != ActorId::player) {
+      if(d.nrKills > 0) {
+        nrKillsTotAllMonsters += d.nrKills;
+        if(d.isUnique) {
+          uniqueKilledNames.push_back(d.nameA);
+        }
       }
     }
   }
@@ -189,10 +190,10 @@ void render(const vector<StrAndClr>& linesAndClr,
   const int X_LABEL = 3;
 
   Render::drawText(" Displaying postmortem information ", Panel::screen,
-                     Pos(X_LABEL, 0), clrGray);
+                   Pos(X_LABEL, 0), clrGray);
 
   Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
-                     clrGray);
+                   clrGray);
 
   Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
@@ -205,7 +206,7 @@ void render(const vector<StrAndClr>& linesAndClr,
     i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++) {
     Render::drawText(linesAndClr.at(i).str, Panel::screen, Pos(0, yPos++),
-                       linesAndClr.at(i).clr);
+                     linesAndClr.at(i).clr);
   }
 
   Render::updateScreen();
@@ -299,23 +300,23 @@ void renderMenu(const MenuBrowser& browser) {
   //Draw command labels
   pos.set(55, 13);
   Render::drawText("Information", Panel::screen, pos,
-                     browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
+                   browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawText("View the High Score", Panel::screen, pos,
-                     browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
+                   browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawText("View messages", Panel::screen, pos,
-                     browser.isAtIdx(2) ? clrMenuHighlight : clrMenuDrk);
+                   browser.isAtIdx(2) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawText("Return to main menu", Panel::screen, pos,
-                     browser.isAtIdx(3) ? clrMenuHighlight : clrMenuDrk);
+                   browser.isAtIdx(3) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawText("Quit the game", Panel::screen, pos,
-                     browser.isAtIdx(4) ? clrMenuHighlight : clrMenuDrk);
+                   browser.isAtIdx(4) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::updateScreen();

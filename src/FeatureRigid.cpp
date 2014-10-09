@@ -1020,7 +1020,7 @@ void ItemContainer::setRandomItemsForFeature(
   if(NR_ITEMS_TO_ATTEMPT > 0) {
     while(items_.empty()) {
       vector<ItemId> itemBucket;
-      for(int i = 1; i < int(ItemId::END); ++i) {
+      for(int i = 0; i < int(ItemId::END); ++i) {
         ItemDataT* const curData = ItemData::data[i];
         for(
           unsigned int ii = 0;
@@ -1322,7 +1322,7 @@ void Tomb::triggerTrap(Actor& actor) {
   switch(trait_) {
     case TombTrait::auraOfUnrest: {
 
-      for(int i = 1; i < endOfActorIds; ++i) {
+      for(int i = 0; i < int(ActorId::END); ++i) {
         const ActorDataT& d = ActorData::data[i];
         if(
           d.isGhost && d.isAutoSpawnAllowed && !d.isUnique &&
@@ -1359,7 +1359,7 @@ void Tomb::triggerTrap(Actor& actor) {
           pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
           prop, &fumeClr);
       } else {
-        for(int i = 1; i < endOfActorIds; ++i) {
+        for(int i = 0; i < int(ActorId::END); ++i) {
           const ActorDataT& d = ActorData::data[i];
           if(
             d.intrProps[propOoze] &&
@@ -1907,7 +1907,7 @@ void Cocoon::triggerTrap(Actor& actor) {
   } else if(RND < 50) {
     TRACE << "Cocoon: Attempting to spawn spiders" << endl;
     vector<ActorId> spawnBucket;
-    for(int i = 1; i < endOfActorIds; ++i) {
+    for(int i = 0; i < int(ActorId::END); ++i) {
       const ActorDataT& d = ActorData::data[i];
       if(
         d.isSpider && d.actorSize == actorSize_floor &&

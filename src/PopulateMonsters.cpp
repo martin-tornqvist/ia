@@ -33,14 +33,14 @@ void mkListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
   const int EFFECTIVE_DLVL =
     max(1, min(LAST_CAVERN_LVL, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
 
-  for(unsigned int i = ActorId::player + 1; i < endOfActorIds; ++i) {
-    const ActorDataT& d = ActorData::data[i];
+  for(const auto& d : ActorData::data) {
     if(
-      d.isAutoSpawnAllowed &&
-      d.nrLeftAllowedToSpawn != 0 &&
-      EFFECTIVE_DLVL >= d.spawnMinDLVL &&
+      d.id != ActorId::player           &&
+      d.isAutoSpawnAllowed              &&
+      d.nrLeftAllowedToSpawn != 0       &&
+      EFFECTIVE_DLVL >= d.spawnMinDLVL  &&
       EFFECTIVE_DLVL <= d.spawnMaxDLVL) {
-      listRef.push_back((ActorId)(i));
+      listRef.push_back(d.id);
     }
   }
 }
@@ -69,7 +69,7 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
   mkListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
   for(size_t i = 0; i < idBucket.size(); ++i) {
-    const ActorDataT& d = ActorData::data[idBucket.at(i)];
+    const ActorDataT& d = ActorData::data[int(idBucket.at(i))];
     bool isMonsterNativeToRoom = false;
     for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
       if(d.nativeRooms.at(iNative) == roomType) {
@@ -320,7 +320,7 @@ void populateStdLvl() {
 
 void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
                bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
-  const ActorDataT& d = ActorData::data[id];
+  const ActorDataT& d = ActorData::data[int(id)];
 
   int maxNrInGroup = 1;
 

@@ -99,7 +99,7 @@ void mkLines() {
   lines_.push_back(StrAndClr("Potion knowledge", clrHeading));
   vector<StrAndClr> potionList;
   vector<StrAndClr> manuscriptList;
-  for(int i = 1; i < int(ItemId::END); ++i) {
+  for(int i = 0; i < int(ItemId::END); ++i) {
     const ItemDataT* const d = ItemData::data[i];
     if(d->isPotion && (d->isTried || d->isIdentified)) {
       Item* item = ItemFactory::mk(d->id);

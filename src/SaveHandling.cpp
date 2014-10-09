@@ -68,11 +68,9 @@ void writeFile(const vector<string>& lines) {
   file.open("data/save", ios::trunc);
 
   if(file.is_open()) {
-    for(unsigned int i = 0; i < lines.size(); ++i) {
+    for(size_t i = 0; i < lines.size(); ++i) {
       file << lines.at(i);
-      if(i != lines.size() - 1) {
-        file << endl;
-      }
+      if(i != lines.size() - 1) {file << endl;}
     }
     file.close();
   }
@@ -84,9 +82,7 @@ void readFile(vector<string>& lines) {
   string curLine;
   ifstream file("data/save");
   if(file.is_open()) {
-    while(getline(file, curLine)) {
-      lines.push_back(curLine);
-    }
+    while(getline(file, curLine)) {lines.push_back(curLine);}
     file.close();
 
     vector<string> emptyLines;

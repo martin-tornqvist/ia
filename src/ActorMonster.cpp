@@ -336,7 +336,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
       Utils::isPosAdj(pos, defender.pos, false);
 
     Wpn* weapon = nullptr;
-    const unsigned nrOfIntrinsics = inv_->getIntrinsicsSize();
+    const size_t nrIntrinsics = inv_->getIntrinsicsSize();
     if(opport.isMelee) {
       if(propHandler_->allowAttackMelee(false)) {
 
@@ -350,7 +350,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         }
 
         //Intrinsic melee attacks?
-        for(unsigned int i = 0; i < nrOfIntrinsics; ++i) {
+        for(size_t i = 0; i < nrIntrinsics; ++i) {
           weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().melee.isMeleeWpn) {opport.weapons.push_back(weapon);}
         }
@@ -377,7 +377,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
         }
 
         //Intrinsic ranged attacks?
-        for(unsigned int i = 0; i < nrOfIntrinsics; ++i) {
+        for(size_t i = 0; i < nrIntrinsics; ++i) {
           weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().ranged.isRangedWpn) {opport.weapons.push_back(weapon);}
         }
@@ -395,17 +395,17 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
 
   Wpn* newWpn = nullptr;
 
-  const unsigned int nrOfWpns = attackOpport.weapons.size();
+  const size_t nrWpns = attackOpport.weapons.size();
 
   //If any possible attacks found
-  if(nrOfWpns > 0) {
+  if(nrWpns > 0) {
     attack.weapon = attackOpport.weapons.at(0);
 
     const ItemDataT* data = &(attack.weapon->getData());
 
     //If there are more than one possible weapon, find strongest.
-    if(nrOfWpns > 1) {
-      for(unsigned int i = 1; i < nrOfWpns; ++i) {
+    if(nrWpns > 1) {
+      for(size_t i = 1; i < nrWpns; ++i) {
 
         //Found new weapon in element i.
         newWpn = attackOpport.weapons.at(i);

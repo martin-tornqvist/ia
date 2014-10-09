@@ -160,7 +160,7 @@ void FrostHound::mkStartItems() {
 }
 
 void Zuul::place_() {
-  if(ActorData::data[ActorId::zuul].nrLeftAllowedToSpawn > 0) {
+  if(ActorData::data[int(ActorId::zuul)].nrLeftAllowedToSpawn > 0) {
     //Note: Do not call die() here, that would have side effects such as
     //player getting XP. Instead, simply set the dead state to destroyed.
     deadState = ActorDeadState::destroyed;

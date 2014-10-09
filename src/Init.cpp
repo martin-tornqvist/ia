@@ -69,9 +69,9 @@ void initSession() {
   TRACE_FUNC_BEGIN;
   ActorData::init();
   FeatureData::init();
+  ItemData::init();
   ScrollNameHandling::init();
   PotionNameHandling::init();
-  ItemData::init();
   PropData::init();
   InvHandling::init();
   GameTime::init();

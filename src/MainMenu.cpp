@@ -156,7 +156,7 @@ string getHplQuote() {
     "who knows must strike before reckoning the consequences.");
   quotes.push_back(
     "Non-Euclidean calculus and quantum physics are enough to stretch any "
-    "brain; and when one mixes them with folklore, and tries to TRACE a "
+    "brain; and when one mixes them with folklore, and tries to trace a "
     "strange background of multi-dimensional reality behind the ghoulish "
     "hints of Gothic tales and the wild whispers of the chimney-corner, one "
     "can hardly expect to be wholly free from mental tension.");

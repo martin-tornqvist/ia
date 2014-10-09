@@ -3,6 +3,7 @@
 #include <string>
 #include <assert.h>
 
+#include "Init.h"
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "PlayerBon.h"
@@ -11,10 +12,11 @@
 #include "PlayerSpellsHandling.h"
 #include "Render.h"
 #include "Utils.h"
+#include "ItemFactory.h"
 
 using namespace std;
 
-const string Scroll::getRealTypeName() {
+const string Scroll::getRealName() const {
   switch(data_->spellCastFromScroll) {
     case SpellId::darkbolt:           return "Darkbolt";
     case SpellId::azathothsWrath:     return "Azathoths Wrath";
@@ -67,22 +69,14 @@ Spell* Scroll::mkSpell() const {
 
 void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
   if(!data_->isIdentified) {
-    const string REAL_TYPE_NAME = getRealTypeName();
 
-    const string REAL_NAME        = "Manuscript of "    + REAL_TYPE_NAME;
-    const string REAL_NAME_PLURAL = "Manuscripts of "   + REAL_TYPE_NAME;
-    const string REAL_NAME_A      = "a Manuscript of "  + REAL_TYPE_NAME;
+    data_->isIdentified = true;
 
-    data_->baseName.names[int(ItemRefType::plain)]  = REAL_NAME;
-    data_->baseName.names[int(ItemRefType::plural)] = REAL_NAME_PLURAL;
-    data_->baseName.names[int(ItemRefType::a)]      = REAL_NAME_A;
     if(!IS_SILENT_IDENTIFY) {
       const string name = getName(ItemRefType::a, ItemRefInf::none);
       Log::addMsg("It was " + name + ".");
       Render::drawMapAndInterface();
     }
-
-    data_->isIdentified = true;
   }
 }
 
@@ -144,6 +138,9 @@ vector<string> falseNames_;
 } //namespace
 
 void init() {
+  TRACE_FUNC_BEGIN;
+
+  //Init possible fake names
   falseNames_.resize(0);
   falseNames_.push_back("Cruensseasrjit");
   falseNames_.push_back("Rudsceleratus");
@@ -204,39 +201,61 @@ void init() {
       }
     }
   }
-}
 
-void setFalseScrollName(ItemDataT& d) {
-  const int NR_ELEMENTS = falseNames_.size();
-  const int ELEMENT     = Rnd::range(0, NR_ELEMENTS - 1);
+  TRACE << "Init scroll names" << endl;
+  for(auto* const d : ItemData::data) {
+    if(d->isScroll) {
+      //False name
+      const int NR_ELEMENTS = falseNames_.size();
+      const int ELEMENT     = Rnd::range(0, NR_ELEMENTS - 1);
 
-  const string& TITLE = falseNames_.at(ELEMENT);
+      const string& TITLE = falseNames_.at(ELEMENT);
 
-  d.baseName.names[int(ItemRefType::plain)]   = "Manuscript titled "    + TITLE;
-  d.baseName.names[int(ItemRefType::plural)]  = "Manuscripts titled "   + TITLE;
-  d.baseName.names[int(ItemRefType::a)]       = "a Manuscript titled "  + TITLE;
+      d->baseNameUnid.names[int(ItemRefType::plain)]   = "Manuscript titled "    + TITLE;
+      d->baseNameUnid.names[int(ItemRefType::plural)]  = "Manuscripts titled "   + TITLE;
+      d->baseNameUnid.names[int(ItemRefType::a)]       = "a Manuscript titled "  + TITLE;
 
-  falseNames_.erase(falseNames_.begin() + ELEMENT);
+      falseNames_.erase(falseNames_.begin() + ELEMENT);
+
+      //True name
+      const Scroll* const scroll =
+        static_cast<const Scroll*>(ItemFactory::mk(d->id, 1));
+
+      const string REAL_TYPE_NAME = scroll->getRealName();
+
+      delete scroll;
+
+      const string REAL_NAME        = "Manuscript of "    + REAL_TYPE_NAME;
+      const string REAL_NAME_PLURAL = "Manuscripts of "   + REAL_TYPE_NAME;
+      const string REAL_NAME_A      = "a Manuscript of "  + REAL_TYPE_NAME;
+
+      d->baseName.names[int(ItemRefType::plain)]  = REAL_NAME;
+      d->baseName.names[int(ItemRefType::plural)] = REAL_NAME_PLURAL;
+      d->baseName.names[int(ItemRefType::a)]      = REAL_NAME_A;
+    }
+  }
+
+  TRACE_FUNC_END;
 }
 
 void storeToSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::END); ++i) {
+  for(int i = 0; i < int(ItemId::END); ++i) {
     if(ItemData::data[i]->isScroll) {
-      lines.push_back(ItemData::data[i]->baseName.names[int(ItemRefType::plain)]);
-      lines.push_back(ItemData::data[i]->baseName.names[int(ItemRefType::plural)]);
-      lines.push_back(ItemData::data[i]->baseName.names[int(ItemRefType::a)]);
+      lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]);
+      lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plural)]);
+      lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::a)]);
     }
   }
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::END); ++i) {
+  for(int i = 0; i < int(ItemId::END); ++i) {
     if(ItemData::data[i]->isScroll) {
-      ItemData::data[i]->baseName.names[int(ItemRefType::plain)]  = lines.front();
+      ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]  = lines.front();
       lines.erase(begin(lines));
-      ItemData::data[i]->baseName.names[int(ItemRefType::plural)] = lines.front();
+      ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plural)] = lines.front();
       lines.erase(begin(lines));
-      ItemData::data[i]->baseName.names[int(ItemRefType::a)]      = lines.front();
+      ItemData::data[i]->baseNameUnid.names[int(ItemRefType::a)]      = lines.front();
       lines.erase(begin(lines));
     }
   }

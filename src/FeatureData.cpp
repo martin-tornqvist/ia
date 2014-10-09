@@ -28,7 +28,7 @@ namespace {
 
 void resetData(FeatureDataT& d) {
   d.mkObj = [](const Pos& p) {(void)p; return nullptr;};
-  d.id = FeatureId::empty;
+  d.id = FeatureId::END;
   d.glyph = ' ';
   d.tile = TileId::empty;
   d.moveRules.reset();
@@ -58,7 +58,6 @@ void addToListAndReset(FeatureDataT& d) {
 void initDataList() {
   FeatureDataT d;
   resetData(d);
-  addToListAndReset(d);
 
   /*---------------------------------------------*/
   d.id = FeatureId::floor;
@@ -451,11 +450,13 @@ void initDataList() {
 } //namespace
 
 void init() {
+  TRACE_FUNC_BEGIN;
   initDataList();
+  TRACE_FUNC_END;
 }
 
 const FeatureDataT& getData(const FeatureId id) {
-  assert(id != FeatureId::empty);
+  assert(id != FeatureId::END);
   assert(id != FeatureId::END);
   return data[int(id)];
 }

@@ -12,15 +12,17 @@ public:
 
   ~Scroll() {}
 
-  ConsumeItem activateDefault(Actor* const actor) override;
+  Clr getInterfaceClr() const override {
+    return clrMagenta;
+  }
 
-  Clr getInterfaceClr() const override {return clrMagenta;}
+  ConsumeItem activateDefault(Actor* const actor) override;
 
   ConsumeItem read();
 
-  const std::string getRealTypeName();
+  const std::string getRealName() const;
 
-  std::vector<std::string> getDescr() const override final;
+  std::vector<std::string> getDescr() const override;
 
   void identify(const bool IS_SILENT_IDENTIFY) override;
 
@@ -35,8 +37,6 @@ protected:
 namespace ScrollNameHandling {
 
 void init();
-
-void setFalseScrollName(ItemDataT& d);
 
 void storeToSaveLines(std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);

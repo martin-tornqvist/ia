@@ -25,7 +25,7 @@ void mkItems() {
 
   ItemDataT** data = ItemData::data;
 
-  for(int i = 1; i < int(ItemId::END); ++i) {
+  for(int i = 0; i < int(ItemId::END); ++i) {
     if(
       Map::dlvl >= data[i]->spawnStdRange.lower &&
       Map::dlvl <= data[i]->spawnStdRange.upper && !data[i]->isIntrinsic) {

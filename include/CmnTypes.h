@@ -226,7 +226,11 @@ public:
     names[int(ItemRefType::a)]       = NAME_A;
   }
 
-  ItemName() {for(int i = 0; i < int(ItemRefType::END); i++) {names[i] == "";}}
+  ItemName() {
+    for(int i = 0; i < int(ItemRefType::END); i++) {
+      names[i] = "";
+    }
+  }
 
   std::string names[int(ItemRefType::END)];
 };

@@ -2,6 +2,7 @@
 
 #include <climits>
 
+#include "Init.h"
 #include "Properties.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -17,21 +18,12 @@
 #include "MapParsing.h"
 #include "Utils.h"
 #include "FeatureRigid.h"
+#include "ItemFactory.h"
 
 using namespace std;
 
 void Potion::identify(const bool IS_SILENT_IDENTIFY) {
   if(!data_->isIdentified) {
-    const string REAL_TYPE_NAME = getRealTypeName();
-
-    const string REAL_NAME        = "Potion of "    + REAL_TYPE_NAME;
-    const string REAL_NAME_PLURAL = "Potions of "   + REAL_TYPE_NAME;
-    const string REAL_NAME_A      = "a potion of "  + REAL_TYPE_NAME;
-
-    data_->baseName.names[int(ItemRefType::plain)]  = REAL_NAME;
-    data_->baseName.names[int(ItemRefType::plural)] = REAL_NAME_PLURAL;
-    data_->baseName.names[int(ItemRefType::a)]      = REAL_NAME_A;
-
     data_->isIdentified = true;
 
     if(!IS_SILENT_IDENTIFY) {
@@ -87,8 +79,6 @@ void Potion::quaff(Actor* const actor) {
     data_->isTried = true;
 
     Audio::play(SfxId::potionQuaff);
-
-
 
     if(data_->isIdentified) {
       const string name = getName(ItemRefType::a, ItemRefInf::none);
@@ -403,8 +393,10 @@ vector<PotionLook> potionLooks_;
 } //namespace
 
 void init() {
-  potionLooks_.resize(0);
+  TRACE_FUNC_BEGIN;
 
+  //Init possible potion colors and fake names
+  potionLooks_.resize(0);
   potionLooks_.push_back(PotionLook {"Golden",   "a Golden",   clrYellow});
   potionLooks_.push_back(PotionLook {"Yellow",   "a Yellow",   clrYellow});
   potionLooks_.push_back(PotionLook {"Dark",     "a Dark",     clrGray});
@@ -427,28 +419,50 @@ void init() {
   potionLooks_.push_back(PotionLook {"Clotted",  "a Clotted",  clrGreen});
   potionLooks_.push_back(PotionLook {"Moldy",    "a Moldy",    clrBrown});
   potionLooks_.push_back(PotionLook {"Frothy",   "a Frothy",   clrWhite});
-}
 
-void setClrAndFalseName(ItemDataT& d) {
-  const int ELEMENT = Rnd::range(0, potionLooks_.size() - 1);
+  TRACE << "Init potion names" << endl;
+  for(auto* const d : ItemData::data) {
+    if(d->isPotion) {
+      //Color and false name
+      const int ELEMENT = Rnd::range(0, potionLooks_.size() - 1);
 
-  PotionLook& look = potionLooks_.at(ELEMENT);
+      PotionLook& look = potionLooks_.at(ELEMENT);
 
-  d.baseName.names[int(ItemRefType::plain)]   = look.namePlain + " potion";
-  d.baseName.names[int(ItemRefType::plural)]  = look.namePlain + " potions";
-  d.baseName.names[int(ItemRefType::a)]       = look.nameA     + " potion";
-  d.clr = look.clr;
+      d->baseNameUnid.names[int(ItemRefType::plain)]   = look.namePlain + " potion";
+      d->baseNameUnid.names[int(ItemRefType::plural)]  = look.namePlain + " potions";
+      d->baseNameUnid.names[int(ItemRefType::a)]       = look.nameA     + " potion";
+      d->clr = look.clr;
 
-  potionLooks_.erase(potionLooks_.begin() + ELEMENT);
+      potionLooks_.erase(potionLooks_.begin() + ELEMENT);
+
+      //True name
+      const Potion* const potion =
+        static_cast<const Potion*>(ItemFactory::mk(d->id, 1));
+
+      const string REAL_TYPE_NAME = potion->getRealName();
+
+      delete potion;
+
+      const string REAL_NAME        = "Potion of "    + REAL_TYPE_NAME;
+      const string REAL_NAME_PLURAL = "Potions of "   + REAL_TYPE_NAME;
+      const string REAL_NAME_A      = "a potion of "  + REAL_TYPE_NAME;
+
+      d->baseName.names[int(ItemRefType::plain)]  = REAL_NAME;
+      d->baseName.names[int(ItemRefType::plural)] = REAL_NAME_PLURAL;
+      d->baseName.names[int(ItemRefType::a)]      = REAL_NAME_A;
+    }
+  }
+
+  TRACE_FUNC_END;
 }
 
 void storeToSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::END); ++i) {
+  for(int i = 0; i < int(ItemId::END); ++i) {
     ItemDataT* const d = ItemData::data[i];
     if(d->isPotion) {
-      lines.push_back(d->baseName.names[int(ItemRefType::plain)]);
-      lines.push_back(d->baseName.names[int(ItemRefType::plural)]);
-      lines.push_back(d->baseName.names[int(ItemRefType::a)]);
+      lines.push_back(d->baseNameUnid.names[int(ItemRefType::plain)]);
+      lines.push_back(d->baseNameUnid.names[int(ItemRefType::plural)]);
+      lines.push_back(d->baseNameUnid.names[int(ItemRefType::a)]);
       lines.push_back(toStr(d->clr.r));
       lines.push_back(toStr(d->clr.g));
       lines.push_back(toStr(d->clr.b));
@@ -457,14 +471,14 @@ void storeToSaveLines(vector<string>& lines) {
 }
 
 void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 1; i < int(ItemId::END); ++i) {
+  for(int i = 0; i < int(ItemId::END); ++i) {
     ItemDataT* const d = ItemData::data[i];
     if(d->isPotion) {
-      d->baseName.names[int(ItemRefType::plain)]  = lines.front();
+      d->baseNameUnid.names[int(ItemRefType::plain)]  = lines.front();
       lines.erase(begin(lines));
-      d->baseName.names[int(ItemRefType::plural)] = lines.front();
+      d->baseNameUnid.names[int(ItemRefType::plural)] = lines.front();
       lines.erase(begin(lines));
-      d->baseName.names[int(ItemRefType::a)]      = lines.front();
+      d->baseNameUnid.names[int(ItemRefType::a)]      = lines.front();
       lines.erase(begin(lines));
       d->clr.r = toInt(lines.front());
       lines.erase(begin(lines));

@@ -763,7 +763,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   }
 
   vector<ActorId> summonBucket;
-  for(int i = 1; i < endOfActorIds; ++i) {
+  for(int i = 0; i < int(ActorId::END); ++i) {
     const ActorDataT& data = ActorData::data[i];
     if(data.canBeSummoned) {
       if(data.spawnMinDLVL <= caster->getData().spawnMinDLVL) {

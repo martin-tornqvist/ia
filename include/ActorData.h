@@ -11,8 +11,7 @@
 #include "Audio.h"
 #include "Room.h"
 
-enum ActorId {
-  empty, //TODO Is it really necessary to have an "empty"(?) actor?
+enum class ActorId {
   player,
   zombie, zombieAxe, bloatedZombie,
   cultist, cultistTeslaCannon, cultistSpikeGun,
@@ -44,7 +43,7 @@ enum ActorId {
   chthonian,
   huntingHorror,
 
-  endOfActorIds
+  END
 };
 
 enum MonsterGroupSize {
@@ -131,7 +130,7 @@ struct ActorDataT {
 
 namespace ActorData {
 
-extern ActorDataT data[endOfActorIds];
+extern ActorDataT data[int(ActorId::END)];
 
 void init();
 

@@ -12,9 +12,9 @@
 enum class MapTemplId {church, egypt, leng, END};
 
 struct MapTemplCell {
-  MapTemplCell(FeatureId featureId_ = FeatureId::empty,
-               ActorId actorId_     = ActorId::empty,
-               ItemId itemId_       = ItemId::empty,
+  MapTemplCell(FeatureId featureId_ = FeatureId::END,
+               ActorId actorId_     = ActorId::END,
+               ItemId itemId_       = ItemId::END,
                int val_             = 0) :
     featureId(featureId_),
     actorId(actorId_),

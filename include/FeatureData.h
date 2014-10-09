@@ -13,7 +13,6 @@
 #include "Properties.h"
 
 enum class FeatureId {
-  empty,
   floor,
   bridge,
   wall,

@@ -129,7 +129,9 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
     if(!infStr.empty()) {infStr.insert(0, " ");}
   }
 
-  return nrStr + data_->baseName.names[int(refTypeUsed)] + attStr + infStr;
+  const auto& namesUsed = data_->isIdentified ? data_->baseName : data_->baseNameUnid;
+
+  return nrStr + namesUsed.names[int(refTypeUsed)] + attStr + infStr;
 }
 
 void Item::clearPropsEnabledOnCarrier() {

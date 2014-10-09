@@ -128,7 +128,7 @@ int placeThemeFeatures(Room& room) {
   TRACE_FUNC_BEGIN;
   vector<const FeatureDataT*> featureBucket;
 
-  for(int i = 1; i < int(FeatureId::END); ++i) {
+  for(int i = 0; i < int(FeatureId::END); ++i) {
     const auto* const d = &FeatureData::getData((FeatureId)(i));
     if(d->themeSpawnRules.isBelongingToRoomType(room.type_)) {
       featureBucket.push_back(d);

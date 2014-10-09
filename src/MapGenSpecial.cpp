@@ -133,7 +133,7 @@ void mkForestTrees() {
         const auto& templCell = templ.getCell(x, y);
         const auto  fId       = templCell.featureId;
         const Pos p(churchPos + Pos(x, y));
-        if(fId != FeatureId::empty) {
+        if(fId != FeatureId::END) {
           Rigid* const f =
             Map::put(static_cast<Rigid*>(FeatureData::getData(fId).mkObj(p)));
           if(fId == FeatureId::grass) {
@@ -305,7 +305,7 @@ bool mkEgyptLvl() {
     for(int x = 0; x < templDims.x; ++x) {
       const auto& templCell = templ.getCell(x, y);
       const Pos p(x, y);
-      if(templCell.featureId != FeatureId::empty) {
+      if(templCell.featureId != FeatureId::END) {
         if(templCell.val == STAIR_VAL) {
           Map::put(new Stairs(p));
         } else {
@@ -313,7 +313,7 @@ bool mkEgyptLvl() {
           Map::put(static_cast<Rigid*>(d.mkObj(p)));
         }
       }
-      if(templCell.actorId != ActorId::empty) {ActorFactory::mk(templCell.actorId, p);}
+      if(templCell.actorId != ActorId::END) {ActorFactory::mk(templCell.actorId, p);}
       if(templCell.val == 1) {Map::player->pos = p;}
     }
   }
@@ -344,7 +344,7 @@ bool mkLengLvl() {
       const auto& templCell = templ.getCell(x, y);
       const auto  fId       = templCell.featureId;
       const Pos p(x, y);
-      if(fId != FeatureId::empty) {
+      if(fId != FeatureId::END) {
         const auto& d = FeatureData::getData(fId);
         auto* const f = Map::put(static_cast<Rigid*>(d.mkObj(p)));
         if(fId == FeatureId::grass) {
@@ -364,7 +364,7 @@ bool mkLengLvl() {
           }
         }
       }
-      if(templCell.actorId != ActorId::empty) {ActorFactory::mk(templCell.actorId, p);}
+      if(templCell.actorId != ActorId::END) {ActorFactory::mk(templCell.actorId, p);}
       if(templCell.val == 1) {Map::player->pos = p;}
       if(templCell.val == 3) {Map::cells[x][y].isDark = true;}
       if(templCell.val == 6) {

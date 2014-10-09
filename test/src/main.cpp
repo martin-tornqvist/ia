@@ -559,7 +559,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   Map::dlvl = 7;
 
   //Actor data
-  ActorData::data[endOfActorIds - 1].nrKills = 123;
+  ActorData::data[int(ActorId::END) - 1].nrKills = 123;
 
   //Learned spells
   PlayerSpellsHandling::learnSpellIfNotKnown(SpellId::bless);
@@ -657,7 +657,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(7, Map::dlvl);
 
   //Actor data
-  CHECK_EQUAL(123, ActorData::data[endOfActorIds - 1].nrKills);
+  CHECK_EQUAL(123, ActorData::data[int(ActorId::END) - 1].nrKills);
 
   //Learned spells
   CHECK(PlayerSpellsHandling::isSpellLearned(SpellId::bless));
