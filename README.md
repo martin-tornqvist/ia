@@ -1,8 +1,18 @@
-# Guide for building Infra Arcana
+﻿# Guide for building Infra Arcana
+
+## Which branch	should I build?
+**master**
+If you want to try out new features in a relatively stable and bug free state.
+
+**tags (v15.0, v16.0, etc)**
+If you want to build
+
+**develop**
+No guarantees. It may not even compile.
 
 ## Fetching source
 
-If you aren't familiar with using Git, you can download whole source code directly [as compressed archive](https://github.com/InfraArcana/ia/archive/develop.zip).
+If you aren't familiar with using Git, you can download whole source code directly [as compressed archive](https://github.com/InfraArcana/ia/archive/master.zip).
 
 ## Windows
 
