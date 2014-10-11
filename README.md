@@ -1,14 +1,11 @@
 ﻿# Guide for building Infra Arcana
 
 ## Which branch	should I build?
-**master**
-If you want to try out new features in a relatively stable and bug free state.
+**master** - If you want to try out new features in a relatively stable and bug free state.
 
-**tags (v15.0, v16.0, etc)**
-If you want to build
+**tags (v15.0, v16.0, etc)** - If you want to build one of the official releases.
 
-**develop**
-No guarantees. It may not even compile.
+**develop** - No guarantees. It may not even compile.
 
 ## Fetching source
 
