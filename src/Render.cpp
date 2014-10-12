@@ -402,10 +402,9 @@ void drawMarker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANG
   }
 }
 
-void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
-                          bool forbiddenCells[MAP_W][MAP_H],
-                          const Clr& colorInner,
-                          const Clr& colorOuter) {
+void drawBlastAtField(const Pos& centerPos, const int RADIUS,
+                      bool forbiddenCells[MAP_W][MAP_H], const Clr& colorInner,
+                      const Clr& colorOuter) {
   TRACE_FUNC_BEGIN;
   if(isInited()) {
     drawMapAndInterface();
@@ -469,8 +468,8 @@ void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
   TRACE_FUNC_END;
 }
 
-void drawBlastAnimAtPositions(const vector<Pos>& positions,
-                              const Clr& color) {
+void drawBlastAtCells(const vector<Pos>& positions,
+                      const Clr& color) {
   TRACE_FUNC_BEGIN;
   if(isInited()) {
     drawMapAndInterface();
@@ -499,8 +498,7 @@ void drawBlastAnimAtPositions(const vector<Pos>& positions,
   TRACE_FUNC_END;
 }
 
-void drawBlastAnimAtPositionsWithPlayerVision(
-  const vector<Pos>& positions, const Clr& clr) {
+void drawBlastAtCellsWithVision(const vector<Pos>& positions, const Clr& clr) {
 
   vector<Pos> positionsWithVision;
   for(unsigned int i = 0; i < positions.size(); ++i) {
@@ -510,7 +508,7 @@ void drawBlastAnimAtPositionsWithPlayerVision(
     }
   }
 
-  Render::drawBlastAnimAtPositions(positionsWithVision, clr);
+  Render::drawBlastAtCells(positionsWithVision, clr);
 }
 
 void drawTile(const TileId tile, const Panel panel, const Pos& pos,

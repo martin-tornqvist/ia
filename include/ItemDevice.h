@@ -1,6 +1,9 @@
 #ifndef ITEM_DEVICE_H
 #define ITEM_DEVICE_H
 
+#include <vector>
+#include <string>
+
 #include "Item.h"
 
 class Device: public Item {
@@ -15,43 +18,59 @@ public:
 
   virtual void newTurnInInventory() override {}
 
-  virtual void storeToSaveLines(std::vector<std::string>& lines)    override;
-  virtual void setupFromSaveLines(std::vector<std::string>& lines)  override;
-
   void identify(const bool IS_SILENT_IDENTIFY) override;
-
-  Condition condition_;
 };
 
 class StrangeDevice : public Device {
 public:
   StrangeDevice(ItemDataT* const itemData);
 
+  virtual std::vector<std::string> getDescr() const override final;
+
   ConsumeItem activateDefault(Actor* const actor) override;
 
   virtual std::string getNameInf() const override;
 
+  virtual void storeToSaveLines(std::vector<std::string>& lines)    override;
+  virtual void setupFromSaveLines(std::vector<std::string>& lines)  override;
+
+  Condition condition_;
+
 private:
+  virtual std::vector<std::string> getDescrIdentified() const = 0;
+
   virtual void triggerEffect() = 0;
 };
 
-class DeviceSentry: public StrangeDevice {
+class DeviceBlaster: public StrangeDevice {
 public:
-  DeviceSentry(ItemDataT* const itemData) : StrangeDevice(itemData) {}
+  DeviceBlaster(ItemDataT* const itemData) : StrangeDevice(itemData) {}
 
-  ~DeviceSentry() override {}
+  ~DeviceBlaster() override {}
 
 private:
+  std::vector<std::string> getDescrIdentified() const {
+    return {"When activated, this strange device blasts all visible enemies with "
+            "infernal power."
+           };
+  }
+
   void triggerEffect() override;
 };
 
-class DeviceRepeller: public StrangeDevice {
+class DeviceShockwave: public StrangeDevice {
 public:
-  DeviceRepeller(ItemDataT* const itemData) : StrangeDevice(itemData) {}
+  DeviceShockwave(ItemDataT* const itemData) : StrangeDevice(itemData) {}
 
-  ~DeviceRepeller() override {}
+  ~DeviceShockwave() override {}
 
 private:
+  std::vector<std::string> getDescrIdentified() const {
+    return {"When activated, this strange device generates a shock wave which violently "
+            "pushes away any adjacent creatures and destroys structures."
+           };
+  }
+
   void triggerEffect() override;
 };
 
@@ -63,6 +82,12 @@ public:
   ~DeviceRejuvenator() override {}
 
 private:
+  std::vector<std::string> getDescrIdentified() const {
+    return {"When activated, this strange device heals all wounds and physical "
+            "maladies."
+           };
+  }
+
   void triggerEffect() override;
 };
 
@@ -74,10 +99,16 @@ public:
   ~DeviceTranslocator() override {}
 
 private:
+  std::vector<std::string> getDescrIdentified() const {
+    return {"When activated, this strange device teleports all visible enemies to "
+            "different locations."
+           };
+  }
+
   void triggerEffect() override;
 };
 
-enum class LanternMalfState {working, flicker, malfunction, destroyed};
+enum class LanternMalfState {working, flicker, malfunction};
 enum class LanternLightSize {none, small, normal};
 
 class DeviceLantern: public Device {
@@ -95,17 +126,17 @@ public:
   void storeToSaveLines(std::vector<std::string>& lines)    override;
   void setupFromSaveLines(std::vector<std::string>& lines)  override;
 
+  int               nrTurnsLeft_;
+  int               nrMalfunctTurnsLeft_;
+  LanternMalfState  malfState_;
+  bool              isActivated_;
+
 private:
   void toggle();
 
   int getRandomNrTurnsToNextBadEffect() const;
 
-  std::string getNameInf() const override {return isActivated_ ? "{Lit}" : "";}
-
-  int malfunctCooldown_;
-  LanternMalfState malfState_;
-  bool isActivated_;
-  int nrTurnsToNextBadEffect_;
+  std::string getNameInf() const override;
 };
 
 #endif

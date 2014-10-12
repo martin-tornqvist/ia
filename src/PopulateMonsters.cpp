@@ -84,8 +84,8 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
   }
 
   if(idBucket.empty()) {
-    TRACE << "PopulateMonsters: Found no valid monsters to spawn "
-          "at room theme (" + toStr(int(roomType)) + ")" << endl;
+    TRACE << "Found no valid monsters to spawn at room theme ("
+          << toStr(int(roomType)) + ")" << endl;
     TRACE_FUNC_END;
     return false;
   } else {

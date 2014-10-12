@@ -64,16 +64,14 @@ void drawLineVer(const Pos& pixelPos, const int H, const Clr& clr);
 void drawMarker(const Pos& p, const std::vector<Pos>& trail,
                 const int EFFECTIVE_RANGE = -1);
 
-void drawBlastAnimAtField(const Pos& centerPos, const int RADIUS,
-                          bool forbiddenCells[MAP_W][MAP_H],
-                          const Clr& colorInner,
-                          const Clr& colorOuter);
+void drawBlastAtField(const Pos& centerPos, const int RADIUS,
+                      bool forbiddenCells[MAP_W][MAP_H], const Clr& colorInner,
+                      const Clr& colorOuter);
 
-void drawBlastAnimAtPositions(const std::vector<Pos>& positions,
-                              const Clr& color);
+void drawBlastAtCells(const std::vector<Pos>& positions,
+                      const Clr& color);
 
-void drawBlastAnimAtPositionsWithPlayerVision(
-  const std::vector<Pos>& positions, const Clr& clr);
+void drawBlastAtCellsWithVision(const std::vector<Pos>& positions, const Clr& clr);
 
 void drawMainMenuLogo(const int Y_POS);
 

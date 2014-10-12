@@ -1523,15 +1523,15 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
     if(seenFoes.empty()) {return;}
 
-    vector<Pos> seenFoesPositions;
-    seenFoesPositions.resize(0);
+    vector<Pos> seenFoesCells;
+    seenFoesCells.resize(0);
     for(unsigned int i = 0; i < seenFoes.size(); ++i) {
-      seenFoesPositions.push_back(seenFoes.at(i)->pos);
+      seenFoesCells.push_back(seenFoes.at(i)->pos);
     }
-    sort(begin(seenFoesPositions), end(seenFoesPositions),
+    sort(begin(seenFoesCells), end(seenFoesCells),
          IsCloserToPos(actorPos));
 
-    const Pos& closestMonPos = seenFoesPositions.at(0);
+    const Pos& closestMonPos = seenFoesCells.at(0);
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksActor(*owningActor_, false), blocked);

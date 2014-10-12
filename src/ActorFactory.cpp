@@ -149,7 +149,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
     }
   }
 
-  Render::drawBlastAnimAtPositions(positionsToAnimate, clrMagenta);
+  Render::drawBlastAtCells(positionsToAnimate, clrMagenta);
 }
 
 } //ActorFactory

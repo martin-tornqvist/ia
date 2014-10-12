@@ -1158,13 +1158,13 @@ void Tomb::bump(Actor& actorBumping) {
         const int BON = PlayerBon::hasTrait(Trait::rugged) ? 8 :
                         PlayerBon::hasTrait(Trait::tough)  ? 4 : 0;
 
-        TRACE << "Tomb: Base chance to push lid is: 1 in " << pushLidOneInN_ << endl;
+        TRACE << "Base chance to push lid is: 1 in " << pushLidOneInN_ << endl;
 
-        TRACE << "Tomb: Bonus to roll: " << BON << endl;
+        TRACE << "Bonus to roll: " << BON << endl;
 
         const int ROLL_TOT = Rnd::range(1, pushLidOneInN_) + BON;
 
-        TRACE << "Tomb: Roll + bonus = " << ROLL_TOT << endl;
+        TRACE << "Roll + bonus = " << ROLL_TOT << endl;
 
         bool isSuccess = false;
 
@@ -1905,7 +1905,7 @@ void Cocoon::triggerTrap(Actor& actor) {
     Log::addMsg("There is a half-dissolved human body inside!");
     Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
   } else if(RND < 50) {
-    TRACE << "Cocoon: Attempting to spawn spiders" << endl;
+    TRACE << "Attempting to spawn spiders" << endl;
     vector<ActorId> spawnBucket;
     for(int i = 0; i < int(ActorId::END); ++i) {
       const ActorDataT& d = ActorData::data[i];
@@ -1918,7 +1918,7 @@ void Cocoon::triggerTrap(Actor& actor) {
 
     const int NR_CANDIDATES = spawnBucket.size();
     if(NR_CANDIDATES > 0) {
-      TRACE << "Cocoon: Spawn candidates found, attempting to place" << endl;
+      TRACE << "Spawn candidates found, attempting to place" << endl;
       Log::addMsg("There are spiders inside!");
       const int NR_SPIDERS = Rnd::range(2, 5);
       const int ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);

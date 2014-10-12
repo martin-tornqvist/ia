@@ -29,7 +29,9 @@ Clr               Item::getClr()    const {return data_->clr;}
 char              Item::getGlyph()  const {return data_->glyph;}
 TileId            Item::getTile()   const {return data_->tile;}
 
-vector<string> Item::getDescr() const {return data_->baseDescr;}
+vector<string> Item::getDescr() const {
+  return data_->baseDescr;
+}
 
 int Item::getWeight() const {return data_->itemWeight * nrItems_;}
 
@@ -526,7 +528,7 @@ void MedicalBag::finishCurAction() {
   curAction_ = MedBagAction::END;
 
   if(nrSupplies_ <= 0) {
-    Map::player->getInv().removeItemInGeneralWithPointer(this, true);
+    Map::player->getInv().removeItemInGeneralWithPtr(this, true);
   }
 }
 

@@ -206,7 +206,7 @@ void mkForestTrees() {
     const int SEARCH_RADI = FOV_STD_RADI_INT - 2;
     const int TRY_PLACE_EVERY_N_STEP = 2;
 
-    vector<Pos> gravePositions;
+    vector<Pos> graveCells;
 
     int pathWalkCount = 0;
     for(unsigned int i = 0; i < path.size(); ++i) {
@@ -225,8 +225,8 @@ void mkForestTrees() {
               Map::cells[X][Y].rigid->getId() == FeatureId::floor;
 
             bool isLeftOfPrev = true;
-            if(!gravePositions.empty()) {
-              isLeftOfPrev = X < gravePositions.back().x;
+            if(!graveCells.empty()) {
+              isLeftOfPrev = X < graveCells.back().x;
             }
 
             bool isPosOk = vision[X][Y] && IS_LEFT_OF_CHURCH &&
@@ -241,9 +241,9 @@ void mkForestTrees() {
                 }
               }
               if(isPosOk) {
-                gravePositions.push_back(Pos(X, Y));
+                graveCells.push_back(Pos(X, Y));
                 blocked[X][Y] = true;
-                if(int(gravePositions.size()) == NR_HIGHSCORES) {i = 9999;}
+                if(int(graveCells.size()) == NR_HIGHSCORES) {i = 9999;}
                 dy = 99999;
                 dx = 99999;
               }
@@ -254,8 +254,8 @@ void mkForestTrees() {
       }
       pathWalkCount++;
     }
-    for(size_t i = 0; i < gravePositions.size(); ++i) {
-      GraveStone* grave = new GraveStone(gravePositions[i]);
+    for(size_t i = 0; i < graveCells.size(); ++i) {
+      GraveStone* grave = new GraveStone(graveCells[i]);
       HighScoreEntry curHighscore = highscoreEntries.at(i);
       const string name = curHighscore.getName();
       vector<string> dateStrVector;
@@ -405,16 +405,16 @@ bool mkTrapezohedronLvl() {
     }
   };
 
-  vector<Pos> floorPositions;
+  vector<Pos> floorCells;
 
-  MapGenUtils::rndWalk(origin, 150, floorPositions, true);
-  putCaveFloor(floorPositions);
+  MapGenUtils::rndWalk(origin, 150, floorCells, true);
+  putCaveFloor(floorCells);
 
-  MapGenUtils::rndWalk(mapCenter, 800, floorPositions, true);
-  putCaveFloor(floorPositions);
+  MapGenUtils::rndWalk(mapCenter, 800, floorCells, true);
+  putCaveFloor(floorCells);
 
-  MapGenUtils::pathfinderWalk(origin, mapCenter, floorPositions, false);
-  putCaveFloor(floorPositions);
+  MapGenUtils::pathfinderWalk(origin, mapCenter, floorCells, false);
+  putCaveFloor(floorCells);
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);

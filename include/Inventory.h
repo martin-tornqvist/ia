@@ -11,21 +11,21 @@ class Item;
 
 enum class ItemId;
 
-enum class SlotId {wielded, wieldedAlt, thrown, body, head};
+enum class SlotId {wielded, wieldedAlt, thrown, body, head, END};
 
 struct InvSlot {
   InvSlot(SlotId id_, std::string name_) : id(id_), name(name_), item(nullptr) {}
 
   InvSlot() : id(SlotId::wielded), name(""), item(nullptr) {}
 
-  SlotId id;
+  SlotId      id;
   std::string name;
-  Item* item;
+  Item*       item;
 };
 
 class Inventory {
 public:
-  Inventory(bool IS_HUMANOID);
+  Inventory();
 
   ~Inventory();
 
@@ -56,7 +56,7 @@ public:
 
   int getElementWithItemType(const ItemId itemId) const;
 
-  Item* getItemInSlot(SlotId slotName) const;
+  Item* getItemInSlot(SlotId id) const;
 
   void removeWithoutDestroying(const InvList invList, const size_t IDX);
 
@@ -67,7 +67,7 @@ public:
   void decrItemTypeInGeneral(const ItemId itemId);
 
   void deleteItemInGeneralWithElement(const size_t IDX);
-  void removeItemInGeneralWithPointer(Item* const item, const bool DELETE_ITEM);
+  void removeItemInGeneralWithPtr(Item* const item, const bool DELETE_ITEM);
 
   int getIntrinsicsSize() const {return intrinsics_.size();}
 
@@ -83,7 +83,7 @@ public:
 
   void decrDynamiteInGeneral();
 
-  InvSlot* getSlot(SlotId slotName);
+  InvSlot* getSlot(SlotId id);
 
   void sortGeneralInventory();
 
@@ -92,7 +92,7 @@ public:
   void storeToSaveLines(std::vector<std::string>& lines) const;
   void setupFromSaveLines(std::vector<std::string>& lines);
 
-  std::vector<InvSlot>  slots_;
+  InvSlot               slots_[int(SlotId::END)];
   std::vector<Item*>    general_;
   std::vector<Item*>    intrinsics_;
 };

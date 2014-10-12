@@ -148,7 +148,7 @@ SpellCastRetData Spell::cast(Actor* const caster,
   TRACE_FUNC_BEGIN;
   if(caster->getPropHandler().allowCastSpells(true)) {
     if(caster == Map::player) {
-      TRACE << "Spell: Player casting spell" << endl;
+      TRACE << "Player casting spell" << endl;
       const ShockSrc shockSrc = IS_INTRINSIC ?
                                 ShockSrc::castIntrSpell :
                                 ShockSrc::useStrangeItem;
@@ -158,7 +158,7 @@ SpellCastRetData Spell::cast(Actor* const caster,
         Audio::play(SfxId::spellGeneric);
       }
     } else {
-      TRACE << "Spell: Monster casting spell" << endl;
+      TRACE << "Monster casting spell" << endl;
       Monster* const monster = static_cast<Monster*>(caster);
       if(Map::cells[monster->pos.x][monster->pos.y].isSeenByPlayer) {
         const string spellStr = monster->getData().spellCastMessage;
@@ -211,8 +211,7 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
     SdlWrapper::sleep(Config::getDelayProjectileDraw());
   }
 
-  Render::drawBlastAnimAtPositions(
-    vector<Pos> {target->pos}, clrMagenta);
+  Render::drawBlastAtCells(vector<Pos> {target->pos}, clrMagenta);
 
   const string msgCmn = " struck by a blast!";
   bool isCharged = false;
@@ -254,7 +253,7 @@ bool SpellDarkbolt::isGoodForMonsterToCastNow(
 SpellCastRetData SpellAzathothsWrath::cast_(
   Actor* const caster) const {
 
-  Range dmgRange(2, 8);
+  Range dmgRange(4, 8);
 
   const string msgEnd = "struck by a roaring blast!";
 
@@ -267,14 +266,14 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     } else {
       vector<PropId> props;
       Map::player->getPropHandler().getAllActivePropIds(props);
+
       const bool IS_CHARGED =
         find(begin(props), end(props), propWarlockCharged) != end(props);
 
-      vector<Pos> actorPositions; actorPositions.resize(0);
-      for(Actor* a : targets) {actorPositions.push_back(a->pos);}
+      vector<Pos> actorCells; actorCells.resize(0);
+      for(Actor* a : targets) {actorCells.push_back(a->pos);}
 
-      Render::drawBlastAnimAtPositionsWithPlayerVision(
-        actorPositions, clrRedLgt);
+      Render::drawBlastAtCellsWithVision(actorCells, clrRedLgt);
 
       for(Actor* actor : targets) {
         Log::addMsg(actor->getNameThe() + " is " + msgEnd, clrMsgGood);
@@ -293,8 +292,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
     }
   } else {
     Log::addMsg("I am " + msgEnd, clrMsgBad);
-    Render::drawBlastAnimAtPositionsWithPlayerVision(
-      vector<Pos> {Map::player->pos}, clrRedLgt);
+    Render::drawBlastAtCellsWithVision(vector<Pos> {Map::player->pos}, clrRedLgt);
     Map::player->getPropHandler().tryApplyProp(
       new PropParalyzed(PropTurns::specific, 1));
     Map::player->hit(Rnd::range(dmgRange), DmgType::physical);
@@ -399,7 +397,7 @@ SpellCastRetData SpellDetItems::cast_(Actor* const caster) const {
   const int X1      = min(MAP_W - 1, ORIG_X + RADI);
   const int Y1      = min(MAP_H - 1, ORIG_Y + RADI);
 
-  vector<Pos> itemsRevealedPositions;
+  vector<Pos> itemsRevealedCells;
 
   for(int y = Y0; y < Y1; ++y) {
     for(int x = X0; x <= X1; ++x) {
@@ -407,21 +405,20 @@ SpellCastRetData SpellDetItems::cast_(Actor* const caster) const {
       if(item) {
         Map::cells[x][y].isSeenByPlayer = true;
         Map::cells[x][y].isExplored = true;
-        itemsRevealedPositions.push_back(Pos(x, y));
+        itemsRevealedCells.push_back(Pos(x, y));
       }
     }
   }
-  if(!itemsRevealedPositions.empty()) {
+  if(!itemsRevealedCells.empty()) {
     Render::drawMapAndInterface();
     Map::player->updateFov();
-    Render::drawBlastAnimAtPositions(
-      itemsRevealedPositions, clrWhite);
+    Render::drawBlastAtCells(itemsRevealedCells, clrWhite);
     Render::drawMapAndInterface();
 
-    if(itemsRevealedPositions.size() == 1) {
+    if(itemsRevealedCells.size() == 1) {
       Log::addMsg("An item is revealed to me.");
     }
-    if(itemsRevealedPositions.size() > 1) {
+    if(itemsRevealedCells.size() > 1) {
       Log::addMsg("Some items are revealed to me.");
     }
     return SpellCastRetData(true);
@@ -433,7 +430,7 @@ SpellCastRetData SpellDetItems::cast_(Actor* const caster) const {
 SpellCastRetData SpellDetTraps::cast_(Actor* const caster) const {
   (void)caster;
 
-  vector<Pos> trapsRevealedPositions;
+  vector<Pos> trapsRevealedCells;
 
   for(int x = 0; x < MAP_W; ++x) {
     for(int y = 0; y < MAP_H; ++y) {
@@ -442,21 +439,21 @@ SpellCastRetData SpellDetTraps::cast_(Actor* const caster) const {
         if(f->getId() == FeatureId::trap) {
           auto* const trap = static_cast<Trap*>(f);
           trap->reveal(false);
-          trapsRevealedPositions.push_back(Pos(x, y));
+          trapsRevealedCells.push_back(Pos(x, y));
         }
       }
     }
   }
 
-  if(!trapsRevealedPositions.empty()) {
+  if(!trapsRevealedCells.empty()) {
     Render::drawMapAndInterface();
     Map::player->updateFov();
-    Render::drawBlastAnimAtPositions(trapsRevealedPositions, clrWhite);
+    Render::drawBlastAtCells(trapsRevealedCells, clrWhite);
     Render::drawMapAndInterface();
-    if(trapsRevealedPositions.size() == 1) {
+    if(trapsRevealedCells.size() == 1) {
       Log::addMsg("A hidden trap is revealed to me.");
     }
-    if(trapsRevealedPositions.size() > 1) {
+    if(trapsRevealedCells.size() > 1) {
       Log::addMsg("Some hidden traps are revealed to me.");
     }
     return SpellCastRetData(true);
@@ -497,25 +494,24 @@ SpellCastRetData SpellOpening::cast_(
 
   (void)caster;
 
-  vector<Pos> featuresOpenedPositions;
+  vector<Pos> featuresOpenedCells;
 
   for(int y = 1; y < MAP_H - 1; ++y) {
     for(int x = 1; x < MAP_W - 1; ++x) {
       if(Map::cells[x][y].isSeenByPlayer) {
         if(Map::cells[x][y].rigid->open()) {
-          featuresOpenedPositions.push_back(Pos(x, y));
+          featuresOpenedCells.push_back(Pos(x, y));
         }
       }
     }
   }
 
-  if(featuresOpenedPositions.empty()) {
+  if(featuresOpenedCells.empty()) {
     return SpellCastRetData(false);
   } else {
     Render::drawMapAndInterface();
     Map::player->updateFov();
-    Render::drawBlastAnimAtPositions(
-      featuresOpenedPositions, clrWhite);
+    Render::drawBlastAtCells(featuresOpenedCells, clrWhite);
     Render::drawMapAndInterface();
     return SpellCastRetData(true);
   }
@@ -595,8 +591,7 @@ SpellCastRetData SpellTeleport::cast_(
 
   if(caster != Map::player) {
     if(Map::player->isSeeingActor(*caster, nullptr)) {
-      Log::addMsg(
-        caster->getNameThe() + " disappears in a blast of smoke!");
+      Log::addMsg(caster->getNameThe() + " disappears in a blast of smoke!");
     }
   }
 
@@ -662,13 +657,12 @@ SpellCastRetData SpellPropOnMon::cast_(
     if(targets.empty()) {
       return SpellCastRetData(false);
     } else {
-      vector<Pos> actorPositions;
-      actorPositions.resize(0);
+      vector<Pos> actorCells;
+      actorCells.resize(0);
 
-      for(Actor* a : targets) {actorPositions.push_back(a->pos);}
+      for(Actor* a : targets) {actorCells.push_back(a->pos);}
 
-      Render::drawBlastAnimAtPositionsWithPlayerVision(
-        actorPositions, clrMagenta);
+      Render::drawBlastAtCellsWithVision(actorCells, clrMagenta);
 
       for(Actor* actor : targets) {
         PropHandler& propHlr = actor->getPropHandler();
@@ -678,12 +672,10 @@ SpellCastRetData SpellPropOnMon::cast_(
       return SpellCastRetData(true);
     }
   } else {
-    Render::drawBlastAnimAtPositionsWithPlayerVision(
-      vector<Pos>(1, Map::player->pos), clrMagenta);
+    Render::drawBlastAtCellsWithVision(vector<Pos>(1, Map::player->pos), clrMagenta);
 
     PropHandler& propHandler = Map::player->getPropHandler();
-    Prop* const prop = propHandler.mkProp(
-                         propId, PropTurns::std);
+    Prop* const prop = propHandler.mkProp(propId, PropTurns::std);
     propHandler.tryApplyProp(prop);
 
     return SpellCastRetData(false);
@@ -723,7 +715,7 @@ SpellCastRetData SpellSummonRandom::cast_(
 
   Pos summonPos(caster->pos);
 
-  vector<Pos> freePositionsSeenByPlayer;
+  vector<Pos> freeCellsSeenByPlayer;
   const int RADI = FOV_STD_RADI_INT;
   const Pos playerPos(Map::player->pos);
   const int X0 = max(0, playerPos.x - RADI);
@@ -733,7 +725,7 @@ SpellCastRetData SpellSummonRandom::cast_(
   for(int x = X0; x <= X1; ++x) {
     for(int y = Y0; y <= Y1; ++y) {
       if(Map::cells[x][y].isSeenByPlayer) {
-        freePositionsSeenByPlayer.push_back(Pos(x, y));
+        freeCellsSeenByPlayer.push_back(Pos(x, y));
       }
     }
   }
@@ -741,25 +733,24 @@ SpellCastRetData SpellSummonRandom::cast_(
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
-  for(int i = 0; i < int(freePositionsSeenByPlayer.size()); ++i) {
-    const Pos pos(freePositionsSeenByPlayer.at(i));
+  for(int i = 0; i < int(freeCellsSeenByPlayer.size()); ++i) {
+    const Pos pos(freeCellsSeenByPlayer.at(i));
     if(blocked[pos.x][pos.y]) {
-      freePositionsSeenByPlayer.erase(freePositionsSeenByPlayer.begin() + i);
+      freeCellsSeenByPlayer.erase(freeCellsSeenByPlayer.begin() + i);
       i--;
     }
   }
 
-  if(freePositionsSeenByPlayer.empty()) {
+  if(freeCellsSeenByPlayer.empty()) {
     vector<Pos> freeCellsVector;
     Utils::mkVectorFromBoolMap(false, blocked, freeCellsVector);
     if(!freeCellsVector.empty()) {
-      sort(freeCellsVector.begin(), freeCellsVector.end(),
-           IsCloserToPos(caster->pos));
+      sort(freeCellsVector.begin(), freeCellsVector.end(), IsCloserToPos(caster->pos));
       summonPos = freeCellsVector.at(0);
     }
   } else {
-    const int ELEMENT = Rnd::range(0, freePositionsSeenByPlayer.size() - 1);
-    summonPos = freePositionsSeenByPlayer.at(ELEMENT);
+    const int ELEMENT = Rnd::range(0, freeCellsSeenByPlayer.size() - 1);
+    summonPos = freeCellsSeenByPlayer.at(ELEMENT);
   }
 
   vector<ActorId> summonBucket;

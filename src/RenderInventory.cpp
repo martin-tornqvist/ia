@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "Init.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Render.h"
@@ -83,13 +84,13 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
   const int     BROWSER_Y   = browser.getY();
   const auto&   inv         = Map::player->getInv();
-  const size_t  NR_SLOTS    = inv.slots_.size();
+  const size_t  NR_SLOTS    = size_t(SlotId::END);
 
   const bool    IS_IN_EQP   = BROWSER_Y < int(NR_SLOTS);
   const size_t  INV_ELEMENT = IS_IN_EQP ? 0 : (size_t(BROWSER_Y) - NR_SLOTS);
 
   const auto* const item =
-    IS_IN_EQP ? inv.slots_.at(BROWSER_Y).item : inv.general_.at(INV_ELEMENT);
+    IS_IN_EQP ? inv.slots_[BROWSER_Y].item : inv.general_.at(INV_ELEMENT);
 
   const string queryEqStr   = item ? "unequip" : "equip";
   const string queryBaseStr = "[enter] to " + (IS_IN_EQP ? queryEqStr : "apply item");
@@ -107,7 +108,7 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
   for(size_t i = 0; i < NR_SLOTS; ++i) {
     const bool IS_CUR_POS = IS_IN_EQP && BROWSER_Y == int(i);
-    const InvSlot& slot   = inv.slots_.at(i);
+    const InvSlot& slot   = inv.slots_[i];
     const string slotName = slot.name;
 
     p.x = 1;
@@ -149,7 +150,7 @@ void drawBrowseInv(const MenuBrowser& browser) {
   }
 
   const int INV_X0          = 1;
-  const int INV_Y0          = EQP_Y0 + inv.slots_.size() + 1;
+  const int INV_Y0          = EQP_Y0 + int(SlotId::END) + 1;
   const int INV_Y1          = SCREEN_H - 2;
   const int INV_H           = INV_Y1 - INV_Y0 + 1;
   const size_t NR_INV_ITEMS = inv.general_.size();
@@ -237,7 +238,7 @@ void drawBrowseInv(const MenuBrowser& browser) {
   Render::updateScreen();
 }
 
-void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
+void drawEquip(const MenuBrowser& browser, const SlotId slotIdToEquip,
                const vector<size_t>& genInvIndexes) {
 
   Pos p(0, 0);
@@ -248,7 +249,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
   const bool HAS_ITEM = !genInvIndexes.empty();
 
   string str = "";
-  switch(slotToEquip) {
+  switch(slotIdToEquip) {
     case SlotId::wielded: {
       str = HAS_ITEM ? "Wield which item?"            : "I carry no weapon to wield.";
     } break;
@@ -268,6 +269,11 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
     case SlotId::head: {
       str = HAS_ITEM ? "Wear what on head?"           : "I carry no headwear.";
     } break;
+
+    case SlotId::END: {
+      TRACE << "Illegal slot id: " << int(slotIdToEquip) << endl;
+      assert(false);
+    }
   }
   if(HAS_ITEM) {str += " [shift+enter] to drop";}
   str += cancelInfoStr;
@@ -289,11 +295,11 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotToEquip,
 
     const ItemDataT& d    = item->getData();
     ItemRefAttInf attInf  = ItemRefAttInf::none;
-    if(slotToEquip == SlotId::wielded || slotToEquip == SlotId::wieldedAlt) {
+    if(slotIdToEquip == SlotId::wielded || slotIdToEquip == SlotId::wieldedAlt) {
       //Thrown weapons are forced to show melee info instead
       attInf = d.mainAttMode == MainAttMode::thrown ? ItemRefAttInf::melee :
                ItemRefAttInf::wpnContext;
-    } else if(slotToEquip == SlotId::thrown) {
+    } else if(slotIdToEquip == SlotId::thrown) {
       attInf = ItemRefAttInf::thrown;
     }
 

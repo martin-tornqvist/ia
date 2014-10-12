@@ -30,8 +30,8 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
   Item* itemToDrop  = nullptr;
 
   if(invList == InvList::slots) {
-    assert(ELEMENT < inv.slots_.size());
-    itemToDrop = inv.slots_.at(ELEMENT).item;
+    assert(ELEMENT != int(SlotId::END));
+    itemToDrop = inv.slots_[ELEMENT].item;
   } else {
     assert(ELEMENT < inv.general_.size());
     itemToDrop = inv.general_.at(ELEMENT);

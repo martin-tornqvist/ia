@@ -332,8 +332,7 @@ bool Monster::tryAttack(Actor& defender) {
 AttackOpport Monster::getAttackOpport(Actor& defender) {
   AttackOpport opport;
   if(propHandler_->allowAttack(false)) {
-    opport.isMelee =
-      Utils::isPosAdj(pos, defender.pos, false);
+    opport.isMelee = Utils::isPosAdj(pos, defender.pos, false);
 
     Wpn* weapon = nullptr;
     const size_t nrIntrinsics = inv_->getIntrinsicsSize();
@@ -341,8 +340,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
       if(propHandler_->allowAttackMelee(false)) {
 
         //Melee weapon in wielded slot?
-        weapon =
-          static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
+        weapon = static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
         if(weapon) {
           if(weapon->getData().melee.isMeleeWpn) {
             opport.weapons.push_back(weapon);

@@ -117,7 +117,7 @@ void mkBoolMapFromVector(const vector<Pos>& positions, bool out[MAP_W][MAP_H]) {
   for(const Pos& p : positions) {out[p.x][p.y] = true;}
 }
 
-void getActorPositions(const vector<Actor*>& actors, vector<Pos>& out) {
+void getActorCells(const vector<Actor*>& actors, vector<Pos>& out) {
   out.resize(0);
   for(const auto* const a : actors) {out.push_back(a->pos);}
 }

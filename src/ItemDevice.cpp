@@ -12,13 +12,12 @@
 #include "Map.h"
 #include "Audio.h"
 #include "Utils.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
 //---------------------------------------------------- DEVICE
-Device::Device(ItemDataT* const itemData) :
-  Item(itemData),
-  condition_(Rnd::coinToss() ? Condition::fine : Condition::shoddy) {}
+Device::Device(ItemDataT* const itemData) : Item(itemData) {}
 
 void Device::identify(const bool IS_SILENT_IDENTIFY) {
   (void)IS_SILENT_IDENTIFY;
@@ -26,24 +25,46 @@ void Device::identify(const bool IS_SILENT_IDENTIFY) {
   data_->isIdentified = true;
 }
 
-void Device::storeToSaveLines(vector<string>& lines) {
+//---------------------------------------------------- STRANGE DEVICE
+StrangeDevice::StrangeDevice(ItemDataT* const itemData) :
+  Device(itemData),
+  condition_(Rnd::coinToss() ? Condition::fine : Condition::shoddy) {}
+
+void StrangeDevice::storeToSaveLines(vector<string>& lines) {
   lines.push_back(toStr(int(condition_)));
 }
 
-void Device::setupFromSaveLines(vector<string>& lines) {
+void StrangeDevice::setupFromSaveLines(vector<string>& lines) {
   condition_ = Condition(toInt(lines.front()));
   lines.erase(begin(lines));
 }
 
-//---------------------------------------------------- STRANGE DEVICE
-StrangeDevice::StrangeDevice(ItemDataT* const itemData) : Device(itemData) {}
+vector<string> StrangeDevice::getDescr() const {
+  if(data_->isIdentified) {
+    auto descr = getDescrIdentified();
+
+    string condStr = "It seems ";
+
+    switch(condition_) {
+      case Condition::fine:     condStr += "to be in fine condition.";    break;
+      case Condition::shoddy:   condStr += "to be in shoddy condition.";  break;
+      case Condition::breaking: condStr += "almost broken.";              break;
+    }
+
+    descr.push_back(condStr);
+
+    return descr;
+  } else {
+    return data_->baseDescr;
+  }
+}
 
 ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
   (void)actor;
 
   if(data_->isIdentified) {
-    const string itemName   = getName(ItemRefType::plain);
-    const string itemNameA  = getName(ItemRefType::a);
+    const string itemName   = getName(ItemRefType::plain, ItemRefInf::none);
+    const string itemNameA  = getName(ItemRefType::a, ItemRefInf::none);
 
     Log::addMsg("I activate " + itemNameA + "...");
 
@@ -104,8 +125,7 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
         Log::addMsg("The " + itemName + " breaks!");
         isDestroyed = true;
       } else {
-        Log::addMsg("The " + itemName + " makes a terrible grinding "
-                    "noise.");
+        Log::addMsg("The " + itemName + " makes a terrible grinding noise.");
         Log::addMsg("I seem to have damaged it.");
         condition_ = Condition(int(condition_) - 1);
       }
@@ -135,8 +155,8 @@ std::string StrangeDevice::getNameInf() const {
   return "";
 }
 
-//---------------------------------------------------- SENTRY
-void DeviceSentry::triggerEffect() {
+//---------------------------------------------------- BLASTER
+void DeviceBlaster::triggerEffect() {
   vector<Actor*> targetBucket;
   Map::player->getSeenFoes(targetBucket);
   if(targetBucket.empty()) {
@@ -148,11 +168,24 @@ void DeviceSentry::triggerEffect() {
   }
 }
 
-//---------------------------------------------------- REPELLER
-void DeviceRepeller::triggerEffect() {
-  Log::addMsg("It triggers a shockwave around me.");
+//---------------------------------------------------- SHOCK WAVE
+void DeviceShockwave::triggerEffect() {
+  Log::addMsg("It triggers a shock wave around me.");
 
   const Pos& playerPos = Map::player->pos;
+
+  for(int dy = -1; dy <= 1; ++dy) {
+    for(int dx = -1; dx <= 1; ++dx) {
+      const Pos p(playerPos + Pos(dx, dy));
+      Rigid* const rigid = Map::cells[p.x][p.y].rigid;
+      rigid->hit(DmgType::physical, DmgMethod::explosion);
+
+      //GameTime::updateLightMap();
+      Map::player->updateFov();
+      Render::drawMapAndInterface();
+    }
+  }
+
   for(Actor* actor : GameTime::actors_) {
     if(actor != Map::player && actor->deadState == ActorDeadState::alive) {
       const Pos& otherPos = actor->pos;
@@ -184,7 +217,7 @@ void DeviceTranslocator::triggerEffect() {
   } else {
     for(Actor* actor : seenFoes) {
       Log::addMsg(actor->getNameThe() + " is teleported.");
-      Render::drawBlastAnimAtPositions(vector<Pos> {actor->pos}, clrYellow);
+      Render::drawBlastAtCells(vector<Pos> {actor->pos}, clrYellow);
       actor->teleport(false);
     }
   }
@@ -193,10 +226,16 @@ void DeviceTranslocator::triggerEffect() {
 //---------------------------------------------------- ELECTRIC LANTERN
 DeviceLantern::DeviceLantern(ItemDataT* const itemData) :
   Device(itemData),
-  malfunctCooldown_(-1),
+  nrTurnsLeft_(Rnd::range(100, 200)),
+  nrMalfunctTurnsLeft_(-1),
   malfState_(LanternMalfState::working),
-  isActivated_(false),
-  nrTurnsToNextBadEffect_(-1) {}
+  isActivated_(false) {}
+
+std::string DeviceLantern::getNameInf() const {
+  string inf = "{" + toStr(nrTurnsLeft_);
+  if(isActivated_) {inf += ", Lit";}
+  return inf + "}";
+}
 
 ConsumeItem DeviceLantern::activateDefault(Actor* const actor) {
   (void)actor;
@@ -206,14 +245,20 @@ ConsumeItem DeviceLantern::activateDefault(Actor* const actor) {
 }
 
 void DeviceLantern::storeToSaveLines(vector<string>& lines) {
-  lines.push_back(toStr(int(condition_)));
+  lines.push_back(toStr(nrTurnsLeft_));
+  lines.push_back(toStr(nrMalfunctTurnsLeft_));
+  lines.push_back(toStr(int(malfState_)));
   lines.push_back(isActivated_ ? "1" : "0");
 }
 
 void DeviceLantern::setupFromSaveLines(vector<string>& lines) {
-  condition_ = Condition(toInt(lines.front()));
+  nrTurnsLeft_          = toInt(lines.front());
   lines.erase(begin(lines));
-  isActivated_ = lines.back() == "1";
+  nrMalfunctTurnsLeft_  = toInt(lines.front());
+  lines.erase(begin(lines));
+  malfState_            = LanternMalfState(toInt(lines.front()));
+  lines.erase(begin(lines));
+  isActivated_          = lines.front() == "1";
   lines.erase(begin(lines));
 }
 
@@ -231,10 +276,30 @@ void DeviceLantern::toggle() {
 
 void DeviceLantern::newTurnInInventory() {
   if(isActivated_) {
-    if(malfunctCooldown_ > 0) {
-      //A malfunction is active, count down on effect
-      malfunctCooldown_--;
-      if(malfunctCooldown_ <= 0) {
+
+    --nrTurnsLeft_;
+
+    if(nrTurnsLeft_ <= 0) {
+      Log::addMsg("My Electric Lantern breaks!", clrMsgWarning, true, true);
+
+      malfState_ = LanternMalfState::malfunction;
+      GameTime::updateLightMap();
+      Map::player->updateFov();
+      Render::drawMapAndInterface();
+
+      //Note: The following line deletes the object
+      Map::player->getInv().removeItemInGeneralWithPtr(this, true);
+
+      return;
+    } else if(nrTurnsLeft_ <= 3) {
+      Log::addMsg("My Electric Lantern is breaking.", clrMsgWarning, true, true);
+    }
+
+    //The lantern is not destroyed. Check malfunctions.
+    if(nrMalfunctTurnsLeft_ > 0) {
+      //A malfunction is already active, count down on effect instead
+      nrMalfunctTurnsLeft_--;
+      if(nrMalfunctTurnsLeft_ <= 0) {
         malfState_ = LanternMalfState::working;
         GameTime::updateLightMap();
         Map::player->updateFov();
@@ -242,24 +307,18 @@ void DeviceLantern::newTurnInInventory() {
       }
     } else {
       //No malfunction active, check if new should be applied
-
       const int RND = Rnd::range(1, 1000);
 
-      if(RND <= 6) {
-        Log::addMsg("My Electric Lantern breaks!", clrMsgWarning,
-                    false, true);
-        Map::player->getInv().removeItemInGeneralWithPointer(this, false);
-        malfState_ = LanternMalfState::destroyed;
-      } else if(RND <= 10) {
+      if(RND <= 10) {
         Log::addMsg("My Electric Lantern malfunctions.");
-        malfState_        = LanternMalfState::malfunction;
-        malfunctCooldown_ = Rnd::range(3, 4);
-      } else if(RND <= 40) {
+        malfState_            = LanternMalfState::malfunction;
+        nrMalfunctTurnsLeft_  = Rnd::range(3, 4);
+      } else if(RND <= 60) {
         Log::addMsg("My Electric Lantern starts to flicker.");
-        malfState_        = LanternMalfState::flicker;
-        malfunctCooldown_ = Rnd::range(4, 12);
+        malfState_            = LanternMalfState::flicker;
+        nrMalfunctTurnsLeft_  = Rnd::range(4, 12);
       } else {
-        malfState_        = LanternMalfState::working;
+        malfState_            = LanternMalfState::working;
       }
 
       if(malfState_ != LanternMalfState::working) {
@@ -267,7 +326,6 @@ void DeviceLantern::newTurnInInventory() {
         Map::player->updateFov();
         Render::drawMapAndInterface();
       }
-      if(malfState_ == LanternMalfState::destroyed) {delete this;}
     }
   }
 }
@@ -278,7 +336,6 @@ LanternLightSize DeviceLantern::getCurLightSize() const {
       case LanternMalfState::working:     return LanternLightSize::normal;
       case LanternMalfState::flicker:     return LanternLightSize::small;
       case LanternMalfState::malfunction: return LanternLightSize::none;
-      case LanternMalfState::destroyed:   return LanternLightSize::none;
     }
   }
   return LanternLightSize::none;

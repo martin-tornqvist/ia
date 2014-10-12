@@ -518,8 +518,9 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   vector<Item*>& gen = inv.general_;
   for(Item* item : gen) {delete item;}
   gen.resize(0);
-  vector<InvSlot>& slots = inv.slots_;
-  for(InvSlot& slot : slots) {
+
+  for(size_t i = 0; i < size_t(SlotId::END); ++i) {
+    auto& slot = inv.slots_[i];
     if(slot.item) {
       delete slot.item;
       slot.item = nullptr;
@@ -543,11 +544,15 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   item = ItemFactory::mk(ItemId::pistolClip);
   static_cast<AmmoClip*>(item)->ammo_ = 3;
   inv.putInGeneral(item);
-  item = ItemFactory::mk(ItemId::deviceSentry);
-  static_cast<Device*>(item)->condition_ = Condition::shoddy;
+  item = ItemFactory::mk(ItemId::deviceBlaster);
+  static_cast<StrangeDevice*>(item)->condition_ = Condition::shoddy;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::electricLantern);
-  static_cast<Device*>(item)->condition_ = Condition::breaking;
+  DeviceLantern* lantern = static_cast<DeviceLantern*>(item);
+  lantern->nrTurnsLeft_         = 789;
+  lantern->nrMalfunctTurnsLeft_ = 456;
+  lantern->malfState_           = LanternMalfState::flicker;
+  lantern->isActivated_         = true;
   inv.putInGeneral(item);
 
   //Player
@@ -629,14 +634,17 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
         case 3: nrClipWith3++; break;
         default: {} break;
       }
-    } else if(id == ItemId::deviceSentry) {
+    } else if(id == ItemId::deviceBlaster) {
       isSentryDeviceFound = true;
       CHECK_EQUAL(int(Condition::shoddy),
-                  int(static_cast<Device*>(item)->condition_));
+                  int(static_cast<StrangeDevice*>(item)->condition_));
     } else if(id == ItemId::electricLantern) {
       isElectricLanternFound = true;
-      CHECK_EQUAL(int(Condition::breaking),
-                  int(static_cast<DeviceLantern*>(item)->condition_));
+      DeviceLantern* lantern = static_cast<DeviceLantern*>(item);
+      CHECK_EQUAL(789, lantern->nrTurnsLeft_);
+      CHECK_EQUAL(456, lantern->nrMalfunctTurnsLeft_);
+      CHECK_EQUAL(int(LanternMalfState::flicker), int(lantern->malfState_));
+      CHECK(lantern->isActivated_);
     }
   }
   CHECK_EQUAL(1, nrClipWith1);

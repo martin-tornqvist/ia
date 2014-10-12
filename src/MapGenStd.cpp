@@ -937,7 +937,7 @@ void movePlayerToNearestAllowedPos() {
 //    const Pos leverPos(leverPosBucket.at(ELEMENT));
 //    spawnLeverAdaptAndLinkDoor(leverPos, *doorToLink);
 //  } else {
-//    TRACE << "[WARNING] Could not find position to place lever, in mkLeverPuzzle()" << endl;
+//    TRACE << "Failed to find position to place lever" << endl;
 //  }
 //  TRACE_FUNC_END;
 //}

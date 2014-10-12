@@ -62,7 +62,7 @@ void getArea(const Pos& c, const int RADI, Rect& rectRef) {
                  Pos(min(c.x + RADI, MAP_W - 2), min(c.y + RADI, MAP_H - 2)));
 }
 
-void getPositionsReached(const Rect& area, const Pos& origin,
+void getCellsReached(const Rect& area, const Pos& origin,
                          bool blocked[MAP_W][MAP_H],
                          vector< vector<Pos> >& posListRef) {
   vector<Pos> line;
@@ -104,7 +104,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   MapParse::parse(CellPred::BlocksProjectiles(), blocked);
 
   vector< vector<Pos> > posLists;
-  getPositionsReached(area, origin, blocked, posLists);
+  getCellsReached(area, origin, blocked, posLists);
 
   SndVol vol = explType == ExplType::expl ? SndVol::high : SndVol::low;
 
@@ -220,7 +220,7 @@ void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION*/) {
   MapParse::parse(CellPred::BlocksProjectiles(), blocked);
 
   vector< vector<Pos> > posLists;
-  getPositionsReached(area, origin, blocked, posLists);
+  getCellsReached(area, origin, blocked, posLists);
 
   //TODO Sound message?
   Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, origin, nullptr,

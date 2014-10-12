@@ -38,7 +38,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   const Clr clrHeading  = clrWhiteHigh;
   const Clr clrInfo     = clrWhite;
 
-  TRACE << "Postmortem: Finding number of killed monsters" << endl;
+  TRACE << "Finding number of killed monsters" << endl;
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMonsters = 0;
   for(const auto& d : ActorData::data) {
@@ -92,7 +92,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
 
   linesRef.push_back(StrAndClr(" ", clrInfo));
 
-  TRACE << "Postmortem: Finding traits gained" << endl;
+  TRACE << "Finding traits gained" << endl;
   linesRef.push_back(StrAndClr(" Traits gained:", clrHeading));
   string traitsLine;
   PlayerBon::getAllPickedTraitsTitlesLine(traitsLine);
@@ -131,7 +131,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   }
   linesRef.push_back(StrAndClr(" ", clrInfo));
 
-  TRACE << "Postmortem: Drawing the final map" << endl;
+  TRACE << "Drawing the final map" << endl;
   linesRef.push_back(StrAndClr(" The final moment:", clrHeading));
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {

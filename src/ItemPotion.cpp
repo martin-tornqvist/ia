@@ -330,11 +330,11 @@ void PotionInsight::quaff_(Actor* const actor) {
 
     Item* const item = identifyBucket.at(ELEMENT);
 
-    const string itemNameBefore = item->getName(ItemRefType::a);
+    const string itemNameBefore = item->getName(ItemRefType::a, ItemRefInf::none);
 
     item->identify(true);
 
-    const string itemNameAfter = item->getName(ItemRefType::a);
+    const string itemNameAfter = item->getName(ItemRefType::a, ItemRefInf::none);
 
     Log::addMsg("I gain intuitions about " + itemNameBefore + "...");
     Log::addMsg("It is identified as " + itemNameAfter + "!");
@@ -347,8 +347,8 @@ void PotionClairv::quaff_(Actor* const actor) {
   if(actor == Map::player) {
     Log::addMsg("I see far and wide!");
 
-    vector<Pos> animPositions;
-    animPositions.resize(0);
+    vector<Pos> animCells;
+    animCells.resize(0);
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksVision(), blocked);
@@ -358,7 +358,7 @@ void PotionClairv::quaff_(Actor* const actor) {
         if(!blocked[x][y] && !cell.isDark) {
           cell.isExplored = true;
           cell.isSeenByPlayer = true;
-          animPositions.push_back(Pos(x, y));
+          animCells.push_back(Pos(x, y));
         }
       }
     }
@@ -367,7 +367,7 @@ void PotionClairv::quaff_(Actor* const actor) {
 //    Map::updateVisualMemory();
     Map::player->updateFov();
 
-    Render::drawBlastAnimAtPositions(animPositions, clrWhite);
+    Render::drawBlastAtCells(animCells, clrWhite);
   }
   identify(false);
 }

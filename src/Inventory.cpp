@@ -18,24 +18,21 @@
 
 using namespace std;
 
-Inventory::Inventory(const bool IS_HUMANOID) {
-  slots_.resize(0);
-
-  if(IS_HUMANOID) {
-    slots_ = vector<InvSlot> {
-      {SlotId::wielded,     "Wielding"},
-      {SlotId::wieldedAlt,  "Prepared"},
-      {SlotId::thrown,      "Thrown"},
-      {SlotId::body,        "On body"},
-      {SlotId::head,        "On head"}
-    };
-  }
+Inventory::Inventory() {
+  slots_[int(SlotId::wielded)]    = InvSlot(SlotId::wielded,    "Wielding");
+  slots_[int(SlotId::wieldedAlt)] = InvSlot(SlotId::wieldedAlt, "Prepared");
+  slots_[int(SlotId::thrown)]     = InvSlot(SlotId::thrown,     "Thrown");
+  slots_[int(SlotId::body)]       = InvSlot(SlotId::body,       "On body");
+  slots_[int(SlotId::head)]       = InvSlot(SlotId::head,       "On head");
 }
 
 Inventory::~Inventory() {
-  for(InvSlot& slot : slots_)  {if(slot.item) {delete slot.item;}}
-  for(Item* item : general_)         {delete item;}
-  for(Item* item : intrinsics_)      {delete item;}
+  for(size_t i = 0; i < int(SlotId::END); ++i) {
+    auto& slot = slots_[i];
+    if(slot.item) {delete slot.item;}
+  }
+  for(Item* item : general_)    {delete item;}
+  for(Item* item : intrinsics_) {delete item;}
 }
 
 void Inventory::storeToSaveLines(vector<string>& lines) const {
@@ -281,7 +278,7 @@ void Inventory::deleteItemInGeneralWithElement(const size_t IDX) {
   }
 }
 
-void Inventory::removeItemInGeneralWithPointer(
+void Inventory::removeItemInGeneralWithPtr(
   Item* const item, const bool DELETE_ITEM) {
 
   for(size_t i = 0; i < general_.size(); ++i) {
@@ -427,21 +424,14 @@ bool Inventory::moveToGeneral(InvSlot* inventorySlot) {
 }
 
 bool Inventory::hasItemInSlot(SlotId id) const {
-  for(size_t i = 0; i < slots_.size(); ++i) {
-    if(slots_[i].id == id) {
-      if(slots_[i].item) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  assert(id != SlotId::END && "Illegal slot id");
+  return slots_[int(id)].item;
 }
 
 void Inventory::removeWithoutDestroying(const InvList invList, const size_t IDX) {
   if(invList == InvList::slots) {
-    assert(IDX < slots_.size());
-    slots_.at(IDX).item = nullptr;
+    assert(IDX != int(SlotId::END));
+    slots_[IDX].item = nullptr;
   } else {
     assert(IDX < general_.size());
     general_.erase(begin(general_) + IDX);
@@ -457,21 +447,15 @@ int Inventory::getElementWithItemType(const ItemId id) const {
   return -1;
 }
 
-Item* Inventory::getItemInSlot(SlotId slotName) const {
-  if(hasItemInSlot(slotName)) {
-    for(size_t i = 0; i < slots_.size(); ++i) {
-      if(slots_[i].id == slotName) {
-        return slots_[i].item;
-      }
-    }
-  }
-
-  return nullptr;
+Item* Inventory::getItemInSlot(SlotId id) const {
+  assert(id != SlotId::END && "Illegal slot id");
+  return slots_[int(id)].item;
 }
 
 Item* Inventory::getIntrinsicInElement(int idx) const {
-  if(getIntrinsicsSize() > idx)
+  if(getIntrinsicsSize() > idx) {
     return intrinsics_[idx];
+  }
 
   return nullptr;
 }
@@ -490,15 +474,15 @@ Item* Inventory::getLastItemInGeneral() {
   return nullptr;
 }
 
-InvSlot* Inventory::getSlot(SlotId slotName) {
-  InvSlot* slot = nullptr;
-
-  for(size_t i = 0; i < slots_.size(); ++i) {
-    if(slots_[i].id == slotName) {
-      slot = &slots_[i];
-    }
+InvSlot* Inventory::getSlot(SlotId id) {
+  for(auto& slot : slots_) {
+    if(slot.id == id) {return &slot;}
   }
-  return slot;
+
+  TRACE << "Failed to find slot with id: " << int(id) << endl;
+  assert(false);
+
+  return nullptr;
 }
 
 void Inventory::putInSlot(const SlotId id, Item* item) {
@@ -519,10 +503,8 @@ void Inventory::putInSlot(const SlotId id, Item* item) {
 
 int Inventory::getTotalItemWeight() const {
   int weight = 0;
-  for(size_t i = 0; i < slots_.size(); ++i) {
-    if(slots_.at(i).item) {
-      weight += slots_.at(i).item->getWeight();
-    }
+  for(size_t i = 0; i < size_t(SlotId::END); ++i) {
+    if(slots_[i].item) {weight += slots_[i].item->getWeight();}
   }
   for(size_t i = 0; i < general_.size(); ++i) {
     weight += general_.at(i)->getWeight();

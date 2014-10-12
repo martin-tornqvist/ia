@@ -10,7 +10,7 @@ using namespace std;
 
 namespace MapPatterns {
 
-void setPositionsInArea(const Rect& area, vector<Pos>& nextToWalls,
+void setCellsInArea(const Rect& area, vector<Pos>& nextToWalls,
                         vector<Pos>& awayFromWalls) {
   TRACE_FUNC_BEGIN;
   vector<Pos> posBucket;

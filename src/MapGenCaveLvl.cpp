@@ -47,10 +47,10 @@ bool mkCaveLvl() {
 
   //Make a random walk path from player
   int length = 40 + Rnd::range(0, 40);
-  vector<Pos> floorPositions;
-  MapGenUtils::rndWalk(origin, length, floorPositions, true);
+  vector<Pos> floorCells;
+  MapGenUtils::rndWalk(origin, length, floorCells, true);
 
-  putCaveFloor(floorPositions);
+  putCaveFloor(floorCells);
 
   //Make some more at random places, connect them to each other.
   const bool  IS_TUNNEL_CAVE = Rnd::coinToss();
@@ -65,13 +65,13 @@ bool mkCaveLvl() {
 
     length = IS_TUNNEL_CAVE ? 30 + Rnd::range(0, 50) : 650;
 
-    MapGenUtils::rndWalk(curPos, length, floorPositions, true);
-    putCaveFloor(floorPositions);
+    MapGenUtils::rndWalk(curPos, length, floorCells, true);
+    putCaveFloor(floorCells);
 
     const Pos prevPos = prevCenters.at(Rnd::range(0, prevCenters.size() - 1));
 
-    MapGenUtils::pathfinderWalk(prevPos, curPos, floorPositions, false);
-    putCaveFloor(floorPositions);
+    MapGenUtils::pathfinderWalk(prevPos, curPos, floorCells, false);
+    putCaveFloor(floorCells);
 
     prevCenters.push_back(curPos);
   }

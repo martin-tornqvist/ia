@@ -183,14 +183,14 @@ bool Vortex::onActorTurn_() {
 
     if(pullCooldown <= 0) {
       if(awareOfPlayerCounter_ > 0) {
-        TRACE << "Vortex: pullCooldown: " << pullCooldown << endl;
-        TRACE << "Vortex: Is player aware" << endl;
+        TRACE << "pullCooldown: " << pullCooldown << endl;
+        TRACE << "Is aware of player" << endl;
         const Pos& playerPos = Map::player->pos;
         if(!Utils::isPosAdj(pos, playerPos, true)) {
 
           const int CHANCE_TO_KNOCK = 25;
           if(Rnd::percentile() < CHANCE_TO_KNOCK) {
-            TRACE << "Vortex: Passed random chance to pull" << endl;
+            TRACE << "Passed random chance to pull" << endl;
 
             const Pos playerDelta = playerPos - pos;
             Pos knockBackFromPos = playerPos;
@@ -200,21 +200,21 @@ bool Vortex::onActorTurn_() {
             if(playerDelta.y < -1)  {knockBackFromPos.y--;}
 
             if(knockBackFromPos != playerPos) {
-              TRACE << "Vortex: Good pos found to knockback player from (";
+              TRACE << "Good pos found to knockback player from (";
               TRACE << knockBackFromPos.x << ",";
               TRACE << knockBackFromPos.y << ")" << endl;
-              TRACE << "Vortex: Player position: ";
+              TRACE << "Player position: ";
               TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
               bool visionBlockers[MAP_W][MAP_H];
               MapParse::parse(CellPred::BlocksVision(), visionBlockers);
               if(isSeeingActor(*(Map::player), visionBlockers)) {
-                TRACE << "Vortex: I am seeing the player" << endl;
+                TRACE << "I am seeing the player" << endl;
                 if(Map::player->isSeeingActor(*this, nullptr)) {
                   Log::addMsg("The Vortex attempts to pull me in!");
                 } else {
                   Log::addMsg("A powerful wind is pulling me!");
                 }
-                TRACE << "Vortex: Attempt pull (knockback)" << endl;
+                TRACE << "Attempt pull (knockback)" << endl;
                 KnockBack::tryKnockBack(
                   *(Map::player), knockBackFromPos, false, false);
                 pullCooldown = 5;

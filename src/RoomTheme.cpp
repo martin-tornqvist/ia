@@ -137,7 +137,7 @@ int placeThemeFeatures(Room& room) {
 
   vector<Pos> nextToWalls;
   vector<Pos> awayFromWalls;
-  MapPatterns::setPositionsInArea(room.r_, nextToWalls, awayFromWalls);
+  MapPatterns::setCellsInArea(room.r_, nextToWalls, awayFromWalls);
 
   vector<int> spawnCount(featureBucket.size(), 0);
 

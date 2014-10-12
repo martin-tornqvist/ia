@@ -92,7 +92,7 @@ Actor* getFirstActorAtPos(const Pos& pos,
 
 Mob* getFirstMobAtPos(const Pos& pos);
 
-void getActorPositions(const std::vector<Actor*>& actors,
+void getActorCells(const std::vector<Actor*>& actors,
                        std::vector<Pos>& out);
 
 void mkActorArray(Actor* a[MAP_W][MAP_H]);

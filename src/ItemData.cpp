@@ -38,10 +38,9 @@ ItemDataT::ItemDataT(const ItemId id_) :
   isDevice(false),
   isArmor(false),
   isHeadwear(false),
-  isIntrinsic(false),
   isAmmo(false),
   isAmmoClip(false),
-  isMedicalBag(false),
+  isIntrinsic(false),
   spellCastFromScroll(SpellId::END),
   landOnHardSurfaceSoundMsg("I hear a thudding sound."),
   landOnHardSurfaceSfx(),
@@ -253,6 +252,11 @@ void resetData(ItemDataT& d, ItemType const itemType) {
     case ItemType::device: {
       resetData(d, ItemType::general);
       d.baseNameUnid = ItemName("Strange Device", "Strange Devices", "A Strange Device");
+      d.baseDescr = {"A small piece of machinery. It could not possibly have been "
+                     "designed by a human mind. Even for its small size, it seems "
+                     "incredibly complex. There is no hope of understanding the purpose "
+                     "or function of it through normal means."
+                    };
       d.isDevice = true;
       d.chanceToIncludeInSpawnList = 12;
       d.itemWeight = itemWeight_light;
@@ -310,9 +314,9 @@ void initDataList() {
 
   d = new ItemDataT(ItemId::sawedOff);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Sawed-off Shotgun", "Sawed-off shotguns",
-                         "a Sawed-off Shotgun");
-  d->baseDescr = {"Compared to a standard shotgun, the sawed-off has a shorter "
+  d->baseName = ItemName("Sawed - off Shotgun", "Sawed - off shotguns",
+                         "a Sawed - off Shotgun");
+  d->baseDescr = {"Compared to a standard shotgun, the sawed - off has a shorter "
                   "effective range. At close range it is more devastating however. It "
                   "holds two barrels, and needs to be reloaded after both are discharged"
                  };
@@ -335,7 +339,7 @@ void initDataList() {
   d = new ItemDataT(ItemId::pumpShotgun);
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Pump Shotgun", "Pump shotguns", "a Pump Shotgun");
-  d->baseDescr = {"A pump-action shotgun has a handgrip that can be pumped back and "
+  d->baseDescr = {"A pump - action shotgun has a handgrip that can be pumped back and "
                   "forth in order to eject a spent round of ammunition and to chamber a "
                   "fresh one. It has a single barrel above a tube magazine into which "
                   "shells are inserted. The magazine has a capacity of 8 shells."
@@ -1235,12 +1239,12 @@ void initDataList() {
   d = new ItemDataT(ItemId::armorAsbSuit);
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Asbestos Suit", "", "an Asbestos Suit");
-  d->baseDescr = {"A one piece overall of asbestos fabric, including a hood, "
-                  "furnace mask, gloves and shoes. It protects the wearer against fire, "
-                  "acid and electricity, and also against smoke, fumes and gas. "
-                  "It is a bit bulky, so sneaking and dodging is slightly more "
-                  "difficult. Also, because of the hood and mask, aiming and detecting "
-                  "hidden enemies and objects is somewhat harder."
+  d->baseDescr = {"A one piece overall of asbestos fabric, including a hood, furnace "
+                  "mask, gloves and shoes. It protects the wearer against fire, acid "
+                  "and electricity, and also against smoke, fumes and gas. It is a bit "
+                  "bulky, so sneaking and dodging is slightly more difficult. Also, "
+                  "because of the hood and mask, aiming and detecting hidden enemies "
+                  "and objects is somewhat harder."
                  };
   d->itemWeight = itemWeight_medium;
   d->clr = clrRedLgt;
@@ -1439,9 +1443,9 @@ void initDataList() {
   resetData(*d, ItemType::potion);
   data[int(d->id)] = d;
 
-  d = new ItemDataT(ItemId::deviceSentry);
+  d = new ItemDataT(ItemId::deviceBlaster);
   resetData(*d, ItemType::device);
-  d->baseName = ItemName("Sentry Device", "Sentry Devices", "a Sentry Device");
+  d->baseName = ItemName("Blaster Device", "Blaster Devices", "a Blaster Device");
   d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
@@ -1450,10 +1454,10 @@ void initDataList() {
   addFeatureFoundIn(*d, FeatureId::cocoon, 10);
   data[int(d->id)] = d;
 
-  d = new ItemDataT(ItemId::deviceRepeller);
+  d = new ItemDataT(ItemId::deviceShockwave);
   resetData(*d, ItemType::device);
-  d->baseName = ItemName("Repeller Device", "Repeller Devices",
-                         "a Repeller Device");
+  d->baseName = ItemName("Shock Wave Device", "Shock Wave Devices",
+                         "a Shock Wave Device");
   d->itemValue = ItemValue::majorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
@@ -1490,6 +1494,9 @@ void initDataList() {
   resetData(*d, ItemType::device);
   d->baseName = ItemName("Electric Lantern", "Electric Lanterns",
                          "an Electric Lantern");
+  d->baseDescr = {"A portable light source. It is somewhat unreliable as it tends to "
+                  "flicker and malfunction often."
+                 };
   d->spawnStdRange = Range(1, 10);
   d->chanceToIncludeInSpawnList = 50;
   d->isIdentified = true;
@@ -1502,8 +1509,8 @@ void initDataList() {
 
   d = new ItemDataT(ItemId::medicalBag);
   resetData(*d, ItemType::general);
-  d->isMedicalBag = true;
   d->baseName = ItemName("Medical Bag", "Medical Bags", "a Medical Bag");
+  d->baseDescr = {"A portable bag of medical supplies."};
   d->itemValue = ItemValue::normal;
   d->itemWeight = itemWeight_medium;
   d->spawnStdRange = Range(1, LAST_ROOM_AND_CORRIDOR_LVL);

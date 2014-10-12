@@ -158,8 +158,8 @@ enum class ItemId {
   potionAntidote,
   potionDescent,
 
-  deviceSentry,
-  deviceRepeller,
+  deviceBlaster,
+  deviceShockwave,
   deviceRejuvenator,
   deviceTranslocator,
   electricLantern,
@@ -195,8 +195,8 @@ public:
   MainAttMode mainAttMode;
   bool isExplosive, isScroll, isPotion, isDevice;
   bool isArmor, isHeadwear;
+  bool isAmmo, isAmmoClip;
   bool isIntrinsic;
-  bool isAmmo, isAmmoClip, isMedicalBag;
   SpellId spellCastFromScroll;
   std::string landOnHardSurfaceSoundMsg;
   SfxId landOnHardSurfaceSfx;

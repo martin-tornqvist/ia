@@ -147,8 +147,8 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::potionAntidote:      r = new PotionAntidote(d);        break;
     case ItemId::potionDescent:       r = new PotionDescent(d);         break;
 
-    case ItemId::deviceSentry:        r = new DeviceSentry(d);          break;
-    case ItemId::deviceRepeller:      r = new DeviceRepeller(d);        break;
+    case ItemId::deviceBlaster:        r = new DeviceBlaster(d);          break;
+    case ItemId::deviceShockwave:      r = new DeviceShockwave(d);        break;
     case ItemId::deviceRejuvenator:   r = new DeviceRejuvenator(d);     break;
     case ItemId::deviceTranslocator:  r = new DeviceTranslocator(d);    break;
     case ItemId::electricLantern:     r = new DeviceLantern(d);         break;

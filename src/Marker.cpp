@@ -28,13 +28,13 @@ Pos pos_;
 void setPosToClosestEnemyIfVisible() {
   vector<Actor*> seenFoes;
   Map::player->getSeenFoes(seenFoes);
-  vector<Pos> seenFoesPositions;
+  vector<Pos> seenFoesCells;
 
-  Utils::getActorPositions(seenFoes, seenFoesPositions);
+  Utils::getActorCells(seenFoes, seenFoesCells);
 
   //If player sees enemies, suggest one for targeting
-  if(!seenFoesPositions.empty()) {
-    pos_ = Utils::getClosestPos(Map::player->pos, seenFoesPositions);
+  if(!seenFoesCells.empty()) {
+    pos_ = Utils::getClosestPos(Map::player->pos, seenFoesCells);
 
     Map::player->target = Utils::getFirstActorAtPos(pos_);
   }

@@ -26,42 +26,52 @@ void Smoke::onNewTurn() {
     const bool IS_PLAYER = actor == Map::player;
 
     //Blinded by smoke?
-    if(Rnd::oneIn(3)) {
+    if(Rnd::oneIn(4)) {
       //TODO There needs to be some criteria here, so that e.g. a statue-monster or a
       //very alien monster can't get blinded by smoke (but do not use isHumanoid - rats,
       //wolves etc should definitely be blinded by smoke.
       //Perhaps add some property like "hasEyes"?
-      bool playerWearsProtectiveItem = false;
-      auto inv = Map::player->getInv();
-      const auto* const playerHeadItem  = inv.getSlot(SlotId::head)->item;
-      const auto* const playerBodyItem  = inv.getSlot(SlotId::body)->item;
-      if(playerHeadItem) {
-        if(playerHeadItem->getData().id == ItemId::gasMask) {
-          playerWearsProtectiveItem = true;
+      bool actorIsProtected = false;
+
+      if(IS_PLAYER) {
+        auto& inv = Map::player->getInv();
+        const auto* const playerHeadItem  = inv.getSlot(SlotId::head)->item;
+        const auto* const playerBodyItem  = inv.getSlot(SlotId::body)->item;
+        if(playerHeadItem) {
+          if(playerHeadItem->getData().id == ItemId::gasMask) {
+            actorIsProtected = true;
+          }
         }
-      }
-      if(playerBodyItem) {
-        if(playerBodyItem->getData().id == ItemId::armorAsbSuit) {
-          playerWearsProtectiveItem = true;
+        if(playerBodyItem) {
+          if(playerBodyItem->getData().id == ItemId::armorAsbSuit) {
+            actorIsProtected = true;
+          }
         }
       }
 
-      if(!IS_PLAYER || !playerWearsProtectiveItem) {
+      if(!actorIsProtected) {
         if(IS_PLAYER) {Log::addMsg("I am getting smoke in my eyes.");}
         actor->getPropHandler().tryApplyProp(
           new PropBlind(PropTurns::specific, Rnd::range(1, 3)));
       }
     }
 
-    //Player choking?
-    if(Rnd::oneIn(5)) {
+    //Choking?
+    if(Rnd::oneIn(4)) {
       vector<PropId> propIds;
       actor->getPropHandler().getAllActivePropIds(propIds);
       if(find(begin(propIds), end(propIds), propRBreath) == end(propIds)) {
-        const string sndMsg =
-          (IS_PLAYER || !actor->isHumanoid()) ? "" : "I hear choking.";
-        if(IS_PLAYER) {Log::addMsg("I am choking!", clrMsgBad);}
+
+        string sndMsg = "";
+
+        if(IS_PLAYER) {
+          Log::addMsg("I am choking!", clrMsgBad);
+        } else {
+          if(actor->isHumanoid()) {sndMsg = "I hear choking.";}
+        }
+
         const auto alerts = IS_PLAYER ? AlertsMonsters::yes : AlertsMonsters::no;
+
         SndEmit::emitSnd(Snd(sndMsg, SfxId::END, IgnoreMsgIfOriginSeen::yes, actor->pos,
                              actor, SndVol::low, alerts));
         actor->hit(1, DmgType::pure);

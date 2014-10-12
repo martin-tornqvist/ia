@@ -55,7 +55,7 @@ void populateStdLvl() {
       }
 
       if(Rnd::fraction(chanceForTrappedRoom)) {
-        TRACE << "PopulateTraps: Trapping non-plain room" << endl;
+        TRACE << "Trapping non-plain room" << endl;
 
         vector<Pos> trapPosBucket;
 
@@ -84,7 +84,7 @@ void populateStdLvl() {
           const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
           const Pos& pos    = trapPosBucket.at(ELEMENT);
 
-          TRACE << "PopulateTraps: Placing base trap" << endl;
+          TRACE << "Placing base trap" << endl;
           mkTrapAt(trapType, pos);
           blocked[pos.x][pos.y] = true;
           trapPosBucket.erase(trapPosBucket.begin() + ELEMENT);
@@ -94,7 +94,7 @@ void populateStdLvl() {
           IsCloserToPos sorter(pos);
           sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
           const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
-          TRACE << "PopulateTraps: Placing adjacent traps" << endl;
+          TRACE << "Placing adjacent traps" << endl;
           for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
             const Pos& adjPos = trapPosBucket.front();
             mkTrapAt(trapType, adjPos);
@@ -110,7 +110,7 @@ void populateStdLvl() {
 
   const int CHANCE_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (Map::dlvl * 5));
   if(Rnd::percentile() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS) {
-    TRACE << "PopulateTraps: Trapping plain room" << endl;
+    TRACE << "Trapping plain room" << endl;
 
     vector<Pos> trapPosBucket;
     for(int y = 1; y < MAP_H - 1; ++y) {
@@ -136,7 +136,7 @@ void populateStdLvl() {
       const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
       const Pos& pos = trapPosBucket.at(ELEMENT);
 
-      TRACE << "PopulateTraps: Placing base trap" << endl;
+      TRACE << "Placing base trap" << endl;
       mkTrapAt(trapType, pos);
       trapPosBucket.erase(trapPosBucket.begin() + ELEMENT);
       nrPosCand--;

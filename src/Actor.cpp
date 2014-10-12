@@ -142,7 +142,7 @@ void Actor::getSeenFoes(vector<Actor*>& vectorRef) {
 void Actor::place(const Pos& pos_, ActorDataT& data) {
   pos             = pos_;
   data_           = &data;
-  inv_            = new Inventory(data_->isHumanoid);
+  inv_            = new Inventory();
   propHandler_    = new PropHandler(this);
   deadState       = ActorDeadState::alive;
   clr_            = data_->color;
@@ -339,9 +339,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
 
 bool Actor::hit(int dmg, const DmgType dmgType) {
   TRACE_FUNC_BEGIN_VERBOSE;
-  TRACE_VERBOSE << "Actor: Damage from parameter: " << dmg << endl;
-
-  if(this == Map::player) {Map::player->interruptActions();}
+  TRACE_VERBOSE << "Damage from parameter: " << dmg << endl;
 
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
@@ -351,6 +349,8 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
     find(begin(props), end(props), propLightSensitive) == end(props)) {
     return false;
   }
+
+  if(this == Map::player) {Map::player->interruptActions();}
 
   //Damage to corpses
   //Note: corpse is automatically destroyed if damage is high enough,
@@ -379,7 +379,7 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
   if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {return false;}
 
   hit_(dmg);
-  TRACE_VERBOSE << "Actor: Damage after hit_(): " << dmg << endl;
+  TRACE_VERBOSE << "Damage after hit_(): " << dmg << endl;
 
   dmg = max(1, dmg);
 
@@ -387,13 +387,13 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
   if(isHumanoid()) {
     Armor* armor = static_cast<Armor*>(inv_->getItemInSlot(SlotId::body));
     if(armor) {
-      TRACE_VERBOSE << "Actor: Has armor, running hit on armor" << endl;
+      TRACE_VERBOSE << "Has armor, running hit on armor" << endl;
 
       if(dmgType == DmgType::physical) {
         dmg = armor->takeDurHitAndGetReducedDmg(dmg);
 
         if(armor->isDestroyed()) {
-          TRACE << "Actor: Armor was destroyed" << endl;
+          TRACE << "Armor was destroyed" << endl;
           if(this == Map::player) {
             const string armorName = armor->getName(ItemRefType::plain, ItemRefInf::none);
             Log::addMsg("My " + armorName + " is torn apart!", clrMsgWarning);

@@ -15,7 +15,7 @@ enum class PlacementRule {
 
 namespace MapPatterns {
 
-void setPositionsInArea(const Rect& area, std::vector<Pos>& nextToWalls,
+void setCellsInArea(const Rect& area, std::vector<Pos>& nextToWalls,
                         std::vector<Pos>& awayFromWalls);
 
 int getWalkBlockersInDir(const Dir dir, const Pos& pos);

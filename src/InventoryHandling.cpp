@@ -38,8 +38,8 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT) {
   Item* item      = nullptr;
 
   if(invList == InvList::slots) {
-    assert(ELEMENT < inv.slots_.size());
-    item = inv.slots_.at(ELEMENT).item;
+    assert(ELEMENT != int(SlotId::END));
+    item = inv.slots_[ELEMENT].item;
   } else {
     assert(ELEMENT < inv.general_.size());
     item = inv.general_.at(ELEMENT);
@@ -64,7 +64,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT) {
     const int MAX_DIGITS = 3;
     const Pos doneInfPos = nrQueryPos + Pos(MAX_DIGITS + 2, 0);
     Render::drawText("[enter] to drop" + cancelInfoStr, Panel::screen, doneInfPos,
-                       clrWhiteHigh);
+                     clrWhiteHigh);
     const int NR_TO_DROP = Query::number(nrQueryPos, clrWhiteHigh, 0, 3,
                                          item->nrItems_, false);
     if(NR_TO_DROP <= 0) {
@@ -165,7 +165,7 @@ void runInvScreen() {
 
   inv.sortGeneralInventory();
 
-  MenuBrowser browser(inv.slots_.size() + inv.general_.size(), 0);
+  MenuBrowser browser(int(SlotId::END) + inv.general_.size(), 0);
 
   browser.setPos(Pos(0, browserIdxToSetAfterDrop));
   browserIdxToSetAfterDrop = 0;
@@ -174,7 +174,7 @@ void runInvScreen() {
   while(true) {
     inv.sortGeneralInventory();
 
-    const InvList invList = browser.getPos().y < int(inv.slots_.size()) ?
+    const InvList invList = browser.getPos().y < int(SlotId::END) ?
                             InvList::slots : InvList::general;
 
     const MenuAction action = MenuInputHandling::getAction(browser);
@@ -186,7 +186,7 @@ void runInvScreen() {
       case MenuAction::selectedShift: {
         const int BROWSER_Y = browser.getPos().y;
         const size_t ELEMENT =
-          invList == InvList::slots ? BROWSER_Y : (BROWSER_Y - inv.slots_.size());
+          invList == InvList::slots ? BROWSER_Y : (BROWSER_Y - int(SlotId::END));
         if(runDropScreen(invList, ELEMENT)) {
           browser.setGoodPos();
           browserIdxToSetAfterDrop  = browser.getY();
@@ -199,7 +199,7 @@ void runInvScreen() {
       case MenuAction::selected: {
         if(invList == InvList::slots) {
           const size_t ELEMENT = browser.getY();
-          InvSlot& slot = inv.slots_.at(ELEMENT);
+          InvSlot& slot = inv.slots_[ELEMENT];
           if(slot.item) {
             Item* const item = slot.item;
 
@@ -207,7 +207,7 @@ void runInvScreen() {
 
             inv.moveToGeneral(&slot);
 
-            switch(slot.id) {
+            switch(SlotId(ELEMENT)) {
               case SlotId::wielded:
               case SlotId::wieldedAlt:
               case SlotId::thrown: {
@@ -230,7 +230,7 @@ void runInvScreen() {
             }
             //Create a new browser to ajust for changed inventory size
             const Pos p = browser.getPos();
-            browser = MenuBrowser(inv.slots_.size() + inv.general_.size(), 0);
+            browser = MenuBrowser(int(SlotId::END) + inv.general_.size(), 0);
             browser.setPos(p);
           } else { //No item in slot
             if(runEquipScreen(slot)) {
@@ -241,7 +241,7 @@ void runInvScreen() {
             }
           }
         } else { //In general inventory
-          const size_t ELEMENT = browser.getY() - inv.slots_.size();
+          const size_t ELEMENT = browser.getY() - int(SlotId::END);
           activateDefault(ELEMENT);
           Render::drawMapAndInterface();
           return;
