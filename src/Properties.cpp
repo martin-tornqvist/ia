@@ -1348,7 +1348,7 @@ void PropCursed::onStart() {
 }
 
 void PropInfected::onNewTurn() {
-  if(Rnd::oneIn(250)) {
+  if(Rnd::oneIn(175)) {
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(PropTurns::std));
     bool blocked[MAP_W][MAP_H];
@@ -1400,7 +1400,7 @@ void PropPoisoned::onNewTurn() {
         Log::addMsg("I am suffering from the poison!", clrMsgBad, true);
       } else {
         if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
-          Log::addMsg( owningActor_->getNameThe() + " suffers from poisoning!");
+          Log::addMsg(owningActor_->getNameThe() + " suffers from poisoning!");
         }
       }
 

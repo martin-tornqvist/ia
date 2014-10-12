@@ -375,6 +375,11 @@ void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId sl
       case SlotId::head: {
         msg = "I am now wearing " + name + ".";
       } break;
+
+      case SlotId::END: {
+        TRACE << "Illegal slot id: " << int(slot) << endl;
+        assert(false);
+      } break;
     }
 
     Log::addMsg(msg, clrWhite, false, true);

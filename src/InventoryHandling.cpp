@@ -124,6 +124,11 @@ void filterPlayerGeneralEquip(const SlotId slotToEquip) {
           generalItemsToShow_.push_back(i);
         }
       } break;
+
+      case SlotId::END: {
+        TRACE << "Illegal slot id: " << int(slotToEquip) << endl;
+        assert(false);
+      } break;
     }
   }
 }
@@ -227,6 +232,11 @@ void runInvScreen() {
                 item->onTakeOff();
                 RenderInventory::drawBrowseInv(browser);
               } break;
+
+              case SlotId::END: {
+                TRACE << "Illegal slot id: " << ELEMENT << endl;
+                assert(false);
+              } break;
             }
             //Create a new browser to ajust for changed inventory size
             const Pos p = browser.getPos();
@@ -294,7 +304,11 @@ bool runEquipScreen(InvSlot& slotToEquip) {
             case SlotId::wieldedAlt:
             case SlotId::thrown: {} break;
             case SlotId::body:
-            case SlotId::head: applyWearEffect = true; break;
+            case SlotId::head: {applyWearEffect = true;} break;
+            case SlotId::END: {
+              TRACE << "Illegal slot id: " << int(slotToEquip.id) << endl;
+              assert(false);
+            } break;
           }
           if(applyWearEffect) {slotToEquip.item->onWear();}
           browserIdxToSetAfterDrop  = int(slotToEquip.id);
