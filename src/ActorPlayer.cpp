@@ -188,14 +188,17 @@ int Player::getEncPercent() const {
 
 int Player::getCarryWeightLmt() const {
   const bool IS_TOUGH         = PlayerBon::hasTrait(Trait::tough);
+  const bool IS_RUGGED        = PlayerBon::hasTrait(Trait::rugged);
   const bool IS_STRONG_BACKED = PlayerBon::hasTrait(Trait::strongBacked);
 
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
   const bool IS_WEAKENED = find(begin(props), end(props), propWeakened) != end(props);
 
-  const int CARRY_WEIGHT_MOD =
-    (IS_TOUGH * 10) + (IS_STRONG_BACKED * 30) - (IS_WEAKENED * 15);
+  const int CARRY_WEIGHT_MOD = (IS_TOUGH         * 10) +
+                               (IS_RUGGED        * 10) +
+                               (IS_STRONG_BACKED * 30) -
+                               (IS_WEAKENED      * 15);
 
   return (CARRY_WEIGHT_BASE_ * (CARRY_WEIGHT_MOD + 100)) / 100;
 }
