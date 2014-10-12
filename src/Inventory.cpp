@@ -266,7 +266,7 @@ void Inventory::decrItemInSlot(SlotId slotName) {
   }
 
   if(deleteItem) {
-    getSlot(slotName)->item = nullptr;
+    slots_[int(slotName)].item = nullptr;
     delete item;
   }
 }
@@ -320,29 +320,27 @@ void Inventory::decrItemTypeInGeneral(const ItemId id) {
   }
 }
 
-void Inventory::moveItemToSlot(InvSlot* inventorySlot, const size_t GEN_IDX) {
-  bool generalSlotExists = GEN_IDX < general_.size();
-  Item* item = nullptr;
-  Item* slotItem = inventorySlot->item;
+void Inventory::moveItemToSlot(InvSlot& slot, const size_t GEN_IDX) {
+  bool generalSlotExists  = GEN_IDX < general_.size();
+  Item* item              = nullptr;
+  Item* slotItem          = slot.item;
 
-  if(generalSlotExists) {
-    item = general_.at(GEN_IDX);
-  }
+  if(generalSlotExists) {item = general_.at(GEN_IDX);}
 
   if(generalSlotExists && item) {
     if(slotItem) {
       general_.erase(begin(general_) + GEN_IDX);
       general_.push_back(slotItem);
-      inventorySlot->item = item;
+      slot.item = item;
     } else {
-      inventorySlot->item = item;
+      slot.item = item;
       general_.erase(begin(general_) + GEN_IDX);
     }
   }
 }
 
 void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId slot) {
-  moveItemToSlot(getSlot(slot), GEN_IDX);
+  moveItemToSlot(slots_[int(slot)], GEN_IDX);
 
   bool isFreeTurn = false;
 
@@ -391,12 +389,12 @@ void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId sl
 void Inventory::swapWieldedAndPrepared(
   const bool IS_FREE_TURN) {
 
-  InvSlot* slot1 = getSlot(SlotId::wielded);
-  InvSlot* slot2 = getSlot(SlotId::wieldedAlt);
-  Item* item1 = slot1->item;
-  Item* item2 = slot2->item;
-  slot1->item = item2;
-  slot2->item = item1;
+  auto& slot1 = slots_[int(SlotId::wielded)];
+  auto& slot2 = slots_[int(SlotId::wieldedAlt)];
+  Item* item1 = slot1.item;
+  Item* item2 = slot2.item;
+  slot1.item  = item2;
+  slot2.item  = item1;
 
   Render::drawMapAndInterface();
 
@@ -469,24 +467,13 @@ void Inventory::putInIntrinsics(Item* item) {
   if(item->getData().isIntrinsic) {
     intrinsics_.push_back(item);
   } else {
-    TRACE << "[WARNING] Tried to put non-intrinsic weapon in intrinsics, ";
-    TRACE << "in putInIntrinsics()" << endl;
+    TRACE << "Tried to put non-intrinsic weapon in intrinsics" << endl;
+    assert(false);
   }
 }
 
 Item* Inventory::getLastItemInGeneral() {
   if(!general_.empty()) {return general_.at(general_.size() - 1);}
-  return nullptr;
-}
-
-InvSlot* Inventory::getSlot(SlotId id) {
-  for(auto& slot : slots_) {
-    if(slot.id == id) {return &slot;}
-  }
-
-  TRACE << "Failed to find slot with id: " << int(id) << endl;
-  assert(false);
-
   return nullptr;
 }
 

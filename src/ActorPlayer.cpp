@@ -29,6 +29,8 @@
 #include "MapParsing.h"
 #include "Properties.h"
 #include "ItemDevice.h"
+#include "ItemScroll.h"
+#include "ItemPotion.h"
 
 using namespace std;
 
@@ -58,40 +60,102 @@ void Player::mkStartItems() {
   for(int i = 0; i < int(Phobia::END); ++i)     {phobias[i]     = false;}
   for(int i = 0; i < int(Obsession::END); ++i)  {obsessions[i]  = false;}
 
-  int NR_CARTRIDGES = Rnd::range(1, 2);
-  int NR_DYNAMITE   = Rnd::range(2, 3);
-  int NR_MOLOTOV    = Rnd::range(2, 3);
-  int NR_THR_KNIVES = Rnd::range(7, 12);
+  int nrCartridges  = 2;
+  int nrDynamite    = 2;
+  int nrMolotov     = 2;
+  int nrThrKnives   = 6;
 
-  const int WEAPON_CHOICE = Rnd::range(1, 5);
-  auto weaponId = ItemId::dagger;
-  switch(WEAPON_CHOICE) {
-    case 1:   weaponId = ItemId::dagger;   break;
-    case 2:   weaponId = ItemId::hatchet;  break;
-    case 3:   weaponId = ItemId::hammer;   break;
-    case 4:   weaponId = ItemId::machete;  break;
-    case 5:   weaponId = ItemId::axe;      break;
-    default:  weaponId = ItemId::dagger;   break;
+  //------------------------------------------------------- BACKGROUND SPECIFIC SETUP
+  const auto bg = PlayerBon::getBg();
+
+  if(bg == Bg::occultist) {
+
+    //Occultist starts with zero explosives and throwing knives.
+    //(They are not so thematically fitting for this background.)
+    nrDynamite    = 0;
+    nrMolotov     = 0;
+    nrThrKnives   = 0;
+
+    //Occultist starts with a scroll of Darkbolt, and one other random scroll.
+    //(Both are identified.)
+    Item* scroll = ItemFactory::mk(ItemId::scrollDarkbolt);
+    static_cast<Scroll*>(scroll)->identify(true);
+    inv_->putInGeneral(scroll);
+    while(true) {
+      scroll = ItemFactory::mkRandomScrollOrPotion(true, false);
+
+      SpellId id          = scroll->getData().spellCastFromScroll;
+      Spell* const spell  = SpellHandling::mkSpellFromId(id);
+      const bool IS_AVAIL = spell->isAvailForPlayer();
+      delete spell;
+
+      if(IS_AVAIL && id != SpellId::darkbolt) {
+        static_cast<Scroll*>(scroll)->identify(true);
+        inv_->putInGeneral(scroll);
+        break;
+      }
+    }
+
+    //Occultist starts with a few potions (identified).
+    const int NR_POTIONS = 2;
+    for(int i = 0; i < NR_POTIONS; ++i) {
+      Item* const potion = ItemFactory::mkRandomScrollOrPotion(false, true);
+      static_cast<Potion*>(potion)->identify(true);
+      inv_->putInGeneral(potion);
+    }
   }
 
-  inv_->putInSlot(SlotId::wielded, ItemFactory::mk(weaponId));
+  if(bg == Bg::rogue) {
+    //Rogue starts with extra throwing knives
+    nrThrKnives += 6;
+
+    //Rogue starts with a dagger
+    inv_->slots_[int(SlotId::wielded)].item = ItemFactory::mk(ItemId::dagger);
+
+    //Rogue starts with some iron spikes (useful tool)
+    inv_->putInGeneral(ItemFactory::mk(ItemId::ironSpike, 8));
+  }
+
+  if(bg == Bg::warVet) {
+    //War Veteran starts with some smoke grenades and a gas mask
+    inv_->putInGeneral(ItemFactory::mk(ItemId::smokeGrenade, 4));
+    inv_->putInGeneral(ItemFactory::mk(ItemId::gasMask));
+  }
+
+  //------------------------------------------------------- GENERAL SETUP
+  //Randomize a melee weapon if not already wielding one.
+  if(!inv_->slots_[int(SlotId::wielded)].item) {
+    const int WEAPON_CHOICE = Rnd::range(1, 5);
+    auto weaponId = ItemId::dagger;
+    switch(WEAPON_CHOICE) {
+      case 1:   weaponId = ItemId::dagger;   break;
+      case 2:   weaponId = ItemId::hatchet;  break;
+      case 3:   weaponId = ItemId::hammer;   break;
+      case 4:   weaponId = ItemId::machete;  break;
+      case 5:   weaponId = ItemId::axe;      break;
+      default:  weaponId = ItemId::dagger;   break;
+    }
+    inv_->putInSlot(SlotId::wielded, ItemFactory::mk(weaponId));
+  }
 
   inv_->putInSlot(SlotId::wieldedAlt, ItemFactory::mk(ItemId::pistol));
 
-  for(int i = 0; i < NR_CARTRIDGES; ++i) {
+  for(int i = 0; i < nrCartridges; ++i) {
     inv_->putInGeneral(ItemFactory::mk(ItemId::pistolClip));
   }
 
-  inv_->putInGeneral(ItemFactory::mk(ItemId::dynamite, NR_DYNAMITE));
-  inv_->putInGeneral(ItemFactory::mk(ItemId::molotov, NR_MOLOTOV));
-
-  if(NR_THR_KNIVES > 0) {
-    inv_->putInSlot(SlotId::thrown,
-                    ItemFactory::mk(ItemId::throwingKnife, NR_THR_KNIVES));
+  if(nrDynamite > 0) {
+    inv_->putInGeneral(ItemFactory::mk(ItemId::dynamite,  nrDynamite));
+  }
+  if(nrMolotov > 0) {
+    inv_->putInGeneral(ItemFactory::mk(ItemId::molotov,   nrMolotov));
   }
 
-  inv_->putInSlot(SlotId::body,
-                  ItemFactory::mk(ItemId::armorLeatherJacket));
+  if(nrThrKnives > 0) {
+    inv_->putInSlot(SlotId::thrown, ItemFactory::mk(ItemId::throwingKnife, nrThrKnives));
+  }
+
+  inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorLeatherJacket));
 
   inv_->putInGeneral(ItemFactory::mk(ItemId::electricLantern));
   inv_->putInGeneral(ItemFactory::mk(ItemId::medicalBag));

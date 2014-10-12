@@ -400,7 +400,7 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
           }
           delete armor;
           armor = nullptr;
-          inv_->getSlot(SlotId::body)->item = nullptr;
+          inv_->slots_[int(SlotId::body)].item = nullptr;
         }
       }
     }

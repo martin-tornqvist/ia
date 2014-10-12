@@ -35,8 +35,8 @@ void Smoke::onNewTurn() {
 
       if(IS_PLAYER) {
         auto& inv = Map::player->getInv();
-        const auto* const playerHeadItem  = inv.getSlot(SlotId::head)->item;
-        const auto* const playerBodyItem  = inv.getSlot(SlotId::body)->item;
+        const auto* const playerHeadItem  = inv.slots_[int(SlotId::head)].item;
+        const auto* const playerBodyItem  = inv.slots_[int(SlotId::body)].item;
         if(playerHeadItem) {
           if(playerHeadItem->getData().id == ItemId::gasMask) {
             actorIsProtected = true;

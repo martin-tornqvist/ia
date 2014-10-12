@@ -226,7 +226,7 @@ void DeviceTranslocator::triggerEffect() {
 //---------------------------------------------------- ELECTRIC LANTERN
 DeviceLantern::DeviceLantern(ItemDataT* const itemData) :
   Device(itemData),
-  nrTurnsLeft_(Rnd::range(100, 200)),
+  nrTurnsLeft_(Rnd::range(150, 175)),
   nrMalfunctTurnsLeft_(-1),
   malfState_(LanternMalfState::working),
   isActivated_(false) {}

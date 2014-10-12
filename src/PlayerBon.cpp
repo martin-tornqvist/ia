@@ -5,8 +5,6 @@
 #include "TextFormatting.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
-#include "ItemScroll.h"
-#include "ItemPotion.h"
 #include "ItemFactory.h"
 #include "Inventory.h"
 #include "PlayerSpellsHandling.h"
@@ -561,40 +559,12 @@ void pickBg(const Bg bg) {
 
   bg_ = bg;
 
+  auto& inv = Map::player->getInv();
+
   switch(bg_) {
     case Bg::occultist: {
       pickTrait(Trait::stoutSpirit);
-
-      Map::player->changeMaxHp(-2, false);
-
-      //Player starts with a scroll of Darkbolt, and one other random scroll
-      //Both are identified
-      Item* scroll = ItemFactory::mk(ItemId::scrollDarkbolt);
-      static_cast<Scroll*>(scroll)->identify(true);
-      Map::player->getInv().putInGeneral(scroll);
-      while(true) {
-        scroll = ItemFactory::mkRandomScrollOrPotion(true, false);
-
-        SpellId id          = scroll->getData().spellCastFromScroll;
-        Spell* const spell  = SpellHandling::mkSpellFromId(id);
-        const bool IS_AVAIL = spell->isAvailForPlayer();
-        delete spell;
-
-        if(IS_AVAIL && id != SpellId::darkbolt) {
-          static_cast<Scroll*>(scroll)->identify(true);
-          Map::player->getInv().putInGeneral(scroll);
-          break;
-        }
-      }
-
-      //Potions
-      const int NR_POTIONS = 2;
-      for(int i = 0; i < NR_POTIONS; ++i) {
-        Item* const potion = ItemFactory::mkRandomScrollOrPotion(false, true);
-        static_cast<Potion*>(potion)->identify(true);
-        Map::player->getInv().putInGeneral(potion);
-      }
-
+      Map::player->changeMaxHp(-2, false); //Occultist starts with fewer HP
     } break;
 
     case Bg::rogue: {
@@ -607,9 +577,7 @@ void pickBg(const Bg bg) {
       pickTrait(Trait::adeptMeleeFighter);
       pickTrait(Trait::adeptMarksman);
       pickTrait(Trait::tough);
-      Map::player->ins_ += 10;
-      Map::player->getInv().putInGeneral(ItemFactory::mk(ItemId::smokeGrenade, 4));
-      Map::player->getInv().putInGeneral(ItemFactory::mk(ItemId::gasMask));
+      Map::player->ins_ += 10; //War Veteran starts a little bit insane
     } break;
 
     case Bg::END: {} break;

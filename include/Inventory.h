@@ -46,7 +46,7 @@ public:
 
   void moveFromGeneralToIntrinsics(const size_t GEN_IDX);
 
-  void moveItemToSlot(InvSlot* inventoryslot, const size_t GEN_IDX);
+  void moveItemToSlot(InvSlot& slot, const size_t GEN_IDX);
 
   void equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId slot);
 
@@ -82,8 +82,6 @@ public:
   bool hasDynamiteInGeneral() const;
 
   void decrDynamiteInGeneral();
-
-  InvSlot* getSlot(SlotId id);
 
   void sortGeneralInventory();
 

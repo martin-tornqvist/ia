@@ -826,9 +826,7 @@ void initDataList() {
   d = new ItemDataT(ItemId::ironSpike);
   resetData(*d, ItemType::throwingWpn);
   d->baseName = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
-  d->baseDescr = {"These can come in handy for wedging things closed or prying things "
-                  "open [TODO]."
-                 };
+  d->baseDescr = {"Can be useful for wedging things closed or prying thing open [TODO]."};
   d->isAmmo = true;
   d->itemWeight = itemWeight_extraLight;
   d->tile = TileId::ironSpike;
