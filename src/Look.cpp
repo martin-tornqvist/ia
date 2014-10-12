@@ -35,16 +35,15 @@ string getNormalGroupSizeStr(const ActorDataT& def) {
   const MonsterGroupSize s = def.groupSize;
 
   return
-    s == monsterGroupSize_alone ? "alone" :
+    s == monsterGroupSize_alone ? "alone"           :
     s == monsterGroupSizeFew    ? "in small groups" :
-    s == monsterGroupSizeGroup  ? "in groups" :
-    s == monsterGroupSizeHorde  ? "in hordes" :
-    "in swarms";
+    s == monsterGroupSizeGroup  ? "in groups"       :
+    s == monsterGroupSizeHorde  ? "in hordes"       : "in swarms";
 }
 
 string getSpeedStr(const ActorDataT& def) {
   switch(def.speed) {
-    case ActorSpeed::sluggish:   {return "at sluggishly";}
+    case ActorSpeed::sluggish:   {return "sluggishly";}
     case ActorSpeed::slow:       {return "slowly";}
     case ActorSpeed::normal:     {return "at normal speed";}
     case ActorSpeed::fast:       {return "fast";}
