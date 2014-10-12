@@ -168,17 +168,23 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     } else {
       if(attackResult == successCritical) {
         //Critical hit (max damage)
-        dmgRoll       = nrDmgRolls * nrDmgSides;
-        dmg           = max(0, dmgRoll + dmgPlus);
+        dmgRoll = nrDmgRolls * nrDmgSides;
+        dmg     = max(0, dmgRoll + dmgPlus);
       } else {
         //Normal hit
-        dmgRoll       = Rnd::dice(nrDmgRolls, nrDmgSides);
-        dmg           = max(0, dmgRoll + dmgPlus);
+        dmgRoll = Rnd::dice(nrDmgRolls, nrDmgSides);
+        dmg     = max(0, dmgRoll + dmgPlus);
       }
 
       if(isAttackerAware && !isDefenderAware) {
-        //Backstab (150% damage)
-        dmg           = ((dmgRoll + dmgPlus) * 3) / 2;
+        //Backstab (extra damage)
+        if(wpn_.getData().id == ItemId::dagger) {
+          //Dagger does 300% damage on backstab
+          dmg = ((dmgRoll + dmgPlus) * 3);
+        } else {
+          //Other weapons do 150% damage
+          dmg = ((dmgRoll + dmgPlus) * 3) / 2;
+        }
         isBackstab    = true;
       }
     }

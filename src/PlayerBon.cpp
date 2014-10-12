@@ -559,8 +559,6 @@ void pickBg(const Bg bg) {
 
   bg_ = bg;
 
-  auto& inv = Map::player->getInv();
-
   switch(bg_) {
     case Bg::occultist: {
       pickTrait(Trait::stoutSpirit);

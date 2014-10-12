@@ -666,7 +666,7 @@ void initDataList() {
                   "assassinations have been carried out with the use of a dagger.",
 
                   "Attacking an unaware opponent with a dagger does 3x damage (instead "
-                  "of the normal 1,5x damage from stealth attacks) [TODO].",
+                  "of the normal 1,5x damage from stealth attacks).",
 
                   "Melee attacks with daggers are silent."
                  };

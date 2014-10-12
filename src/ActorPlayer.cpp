@@ -109,8 +109,10 @@ void Player::mkStartItems() {
     //Rogue starts with extra throwing knives
     nrThrKnives += 6;
 
-    //Rogue starts with a dagger
-    inv_->slots_[int(SlotId::wielded)].item = ItemFactory::mk(ItemId::dagger);
+    //Rogue starts with a +1 dagger
+    auto* const dagger = ItemFactory::mk(ItemId::dagger);
+    static_cast<Wpn*>(dagger)->meleeDmgPlus_ = 1;
+    inv_->slots_[int(SlotId::wielded)].item = dagger;
 
     //Rogue starts with some iron spikes (useful tool)
     inv_->putInGeneral(ItemFactory::mk(ItemId::ironSpike, 8));
