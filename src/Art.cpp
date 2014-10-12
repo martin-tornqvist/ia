@@ -194,7 +194,7 @@ Pos getColumnAndRowTile(const TileId tile) {
     case TileId::stairsDown: return Pos(9, 6); break;
     case TileId::brazier: return Pos(11, 6); break;
     case TileId::altar: return Pos(12, 6); break;
-    case TileId::spiderWeb: return Pos(13, 6); break;
+    case TileId::web: return Pos(13, 6); break;
     case TileId::doorClosed: return Pos(14, 6); break;
     case TileId::doorOpen: return Pos(15, 6); break;
     case TileId::doorBroken: return Pos(16, 6); break;

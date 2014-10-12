@@ -29,8 +29,8 @@ void playerDisarm() {
     Map::cells[playerPos.x][playerPos.y].rigid;
   if(featureAtPlayer->getId() == FeatureId::trap) {
     const Trap* const trap = static_cast<const Trap*>(featureAtPlayer);
-    if(trap->getTrapType() == TrapId::spiderWeb) {
-      const auto* const web = static_cast<const TrapSpiderWeb*>(trap->getSpecificTrap());
+    if(trap->getTrapType() == TrapId::web) {
+      const auto* const web = static_cast<const TrapWeb*>(trap->getSpecificTrap());
       if(web->isHolding()) {
         Log::addMsg("Not while entangled in a spider web.");
         Render::drawMapAndInterface();

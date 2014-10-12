@@ -18,7 +18,7 @@ enum class TrapId {
   smoke,
   alarm,
   spear,
-  spiderWeb,
+  web,
   teleport,
   summonMonster,
   END,
@@ -260,7 +260,7 @@ private:
 };
 
 
-class TrapSpiderWeb: public SpecificTrapBase {
+class TrapWeb: public SpecificTrapBase {
 public:
   Dir actorTryLeave(Actor& actor, const Dir dir);
 
@@ -268,8 +268,7 @@ public:
 
 private:
   friend class Trap;
-  TrapSpiderWeb(Pos pos) :
-    SpecificTrapBase(pos, TrapId::spiderWeb), isHoldingActor_(false) {}
+  TrapWeb(Pos pos) : SpecificTrapBase(pos, TrapId::web), isHoldingActor_(false) {}
 
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
 
@@ -277,7 +276,7 @@ private:
   std::string getTitle()      const override {return "Spider web";}
   char        getGlyph()      const override {return '*';}
   bool        isMagical()     const override {return false;}
-  TileId      getTile()       const override {return TileId::spiderWeb;}
+  TileId      getTile()       const override {return TileId::web;}
   bool        isDisarmable()  const override {return true;}
 
   std::string getDisarmMsg() const override {

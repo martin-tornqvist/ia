@@ -101,7 +101,7 @@ enum class TileId {
   egyptWallTop,
   brazier,
   altar,
-  spiderWeb,
+  web,
   doorClosed,
   doorOpen,
   doorBroken,

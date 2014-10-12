@@ -78,7 +78,7 @@ void populateStdLvl() {
           if(nrPosCand == 0) {break;}
 
           const TrapId trapType = IS_SPIDER_ROOM ?
-                                  TrapId::spiderWeb :
+                                  TrapId::web :
                                   TrapId(Rnd::range(0, int(TrapId::END) - 1));
 
           const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);

@@ -26,8 +26,8 @@ AttData::AttData(Actor& attacker_, const Item& itemAttackedWith_) :
   attacker(&attacker_),
   curDefender(nullptr),
   attackResult(failSmall),
-  dmgRolls(0),
-  dmgSides(0),
+  nrDmgRolls(0),
+  nrDmgSides(0),
   dmgPlus(0),
   dmgRoll(0),
   dmg(0),
@@ -36,10 +36,11 @@ AttData::AttData(Actor& attacker_, const Item& itemAttackedWith_) :
   isIntrinsicAttack = itemAttackedWith_.getData().isIntrinsic;
 }
 
-MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_,
-                           Actor& defender_) :
-  AttData(attacker_, wpn_), isDefenderDodging(false),
-  isBackstab(false), isWeakAttack(false) {
+MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) :
+  AttData(attacker_, wpn_),
+  isDefenderDodging(false),
+  isBackstab(false),
+  isWeakAttack(false) {
 
   curDefender = &defender_;
 
@@ -53,7 +54,6 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_,
                       PlayerBon::hasTrait(Trait::vigilant);
   }
 
-  isDefenderDodging = false;
   if(isDefenderAware) {
     const int DEFENDER_DODGE_SKILL = curDefender->getData().abilityVals.getVal(
                                        AbilityId::dodgeAttack, true, *curDefender);
@@ -71,8 +71,6 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_,
 
   if(!isDefenderDodging) {
     //--------------------------------------- DETERMINE ATTACK RESULT
-    isBackstab = false;
-
     const int ATTACKER_SKILL      = attacker->getData().abilityVals.getVal(
                                       AbilityId::melee, true, *attacker);
     const int WPN_HIT_CHANCE_MOD  = wpn_.getData().melee.hitChanceMod;
@@ -91,44 +89,60 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_,
     vector<PropId> defProps;
     defPropHlr.getAllActivePropIds(defProps);
 
+    //If attacker is aware of the defender, check
     if(isAttackerAware) {
-      bool isBigBon   = false;
-      bool isSmallBon = false;
+      bool isBigAttBon    = false;
+      bool isSmallAttBon  = false;
 
-      const auto* const f = Map::cells[defPos.x][defPos.y].rigid;
-      if(f->getId() == FeatureId::trap) {
-        const auto* const t = static_cast<const Trap*>(f);
-        if(t->getTrapType() == TrapId::spiderWeb) {
-          const auto* const web =
-            static_cast<const TrapSpiderWeb*>(t->getSpecificTrap());
-          if(web->isHolding()) {
-            isBigBon = true;
+      if(!isDefenderAware) {
+        //Give big attack bonus if defender is unaware of the attacker.
+        isBigAttBon = true;
+      }
+
+      if(!isBigAttBon) {
+        //Give big attack bonus if defender is stuck in trap (web).
+        const auto* const f = Map::cells[defPos.x][defPos.y].rigid;
+        if(f->getId() == FeatureId::trap) {
+          const auto* const t = static_cast<const Trap*>(f);
+          if(t->getTrapType() == TrapId::web) {
+            const auto* const web = static_cast<const TrapWeb*>(t->getSpecificTrap());
+            if(web->isHolding()) {
+              isBigAttBon = true;
+            }
           }
         }
       }
 
-      for(PropId propId : defProps) {
-        if(
-          !isDefenderAware        ||
-          propId == propParalyzed ||
-          propId == propNailed    ||
-          propId == propFainted) {
-          isBigBon = true;
-          break;
+      if(!isBigAttBon) {
+        //Check if attacker gets a bonus due to a defender property.
+
+        //Give big attack bonus if defender is completely unable to fight.
+        for(PropId propId : defProps) {
+          if(
+            propId == propParalyzed ||
+            propId == propNailed    ||
+            propId == propFainted) {
+            isBigAttBon = true;
+            break;
+          }
+
+          //Give small attack bonus if defender has problems fighting.
+          if(
+            propId == propConfused  ||
+            propId == propSlowed    ||
+            propId == propBurning) {
+            isSmallAttBon = true;
+          }
         }
-        if(
-          propId == propBlind     ||
-          propId == propConfused  ||
-          propId == propSlowed    ||
-          propId == propBurning) {
-          isSmallBon = true;
-        }
-      }
-      if(!isBigBon && !isSmallBon && !defPropHlr.allowSee()) {
-        isSmallBon = true;
       }
 
-      hitChanceTot += isBigBon ? 50 : isSmallBon ? 20 : 0;
+      //Give small attack bonus if defender cannot see.
+      if(!isBigAttBon && !isSmallAttBon) {
+        if(!defPropHlr.allowSee()) {isSmallAttBon = true;}
+      }
+
+      //Apply the hit chance bonus (if any)
+      hitChanceTot += isBigAttBon ? 50 : (isSmallAttBon ? 20 : 0);
     }
 
     attackResult = AbilityRoll::roll(hitChanceTot);
@@ -139,32 +153,34 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_,
     }
 
     //--------------------------------------- DETERMINE DAMAGE
-    dmgRolls  = wpn_.getData().melee.dmg.first;
-    dmgSides  = wpn_.getData().melee.dmg.second;
-    dmgPlus   = wpn_.meleeDmgPlus_;
+    nrDmgRolls  = wpn_.getData().melee.dmg.first;
+    nrDmgSides  = wpn_.getData().melee.dmg.second;
+    dmgPlus     = wpn_.meleeDmgPlus_;
 
     vector<PropId> attProps;
     attacker->getPropHandler().getAllActivePropIds(attProps);
 
-    isWeakAttack = false;
     if(find(attProps.begin(), attProps.end(), propWeakened) != attProps.end()) {
       //Weak attack (min damage)
-      dmgRoll = dmgRolls;
-      dmg = dmgRoll + dmgPlus;
-      isWeakAttack = true;
-    } else if(isAttackerAware && !isDefenderAware) {
-      //Backstab (Above max damage)
-      dmgRoll = dmgRolls * dmgSides;
-      dmg = ((dmgRoll + dmgPlus) * 3) / 2;
-      isBackstab = true;
-    } else if(attackResult == successCritical) {
-      //Critical hit (max damage)
-      dmgRoll = dmgRolls * dmgSides;
-      dmg = max(0, dmgRoll + dmgPlus);
-    } else if(attackResult >= successSmall) {
-      //Normal hit
-      dmgRoll = Rnd::dice(dmgRolls, dmgSides);
-      dmg = max(0, dmgRoll + dmgPlus);
+      dmgRoll       = nrDmgRolls;
+      dmg           = dmgRoll + dmgPlus;
+      isWeakAttack  = true;
+    } else {
+      if(attackResult == successCritical) {
+        //Critical hit (max damage)
+        dmgRoll       = nrDmgRolls * nrDmgSides;
+        dmg           = max(0, dmgRoll + dmgPlus);
+      } else {
+        //Normal hit
+        dmgRoll       = Rnd::dice(nrDmgRolls, nrDmgSides);
+        dmg           = max(0, dmgRoll + dmgPlus);
+      }
+
+      if(isAttackerAware && !isDefenderAware) {
+        //Backstab (150% damage)
+        dmg           = ((dmgRoll + dmgPlus) * 3) / 2;
+        isBackstab    = true;
+      }
     }
   }
 }
@@ -255,13 +271,13 @@ RangedAttData::RangedAttData(
         }
       }
 
-      dmgRolls  = wpn_.getData().ranged.dmg.rolls;
-      dmgSides  = wpn_.getData().ranged.dmg.sides;
-      dmgPlus   = wpn_.getData().ranged.dmg.plus;
+      nrDmgRolls  = wpn_.getData().ranged.dmg.rolls;
+      nrDmgSides  = wpn_.getData().ranged.dmg.sides;
+      dmgPlus     = wpn_.getData().ranged.dmg.plus;
 
-      dmgRoll   = playerAimX3 ? dmgRolls * dmgSides :
-                  Rnd::dice(dmgRolls, dmgSides);
-      dmg       = dmgRoll + dmgPlus;
+      dmgRoll     = playerAimX3 ? (nrDmgRolls * nrDmgSides) :
+                    Rnd::dice(nrDmgRolls, nrDmgSides);
+      dmg         = dmgRoll + dmgPlus;
     }
   }
 }
@@ -338,13 +354,13 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
         }
       }
 
-      dmgRolls  = item_.getData().ranged.throwDmg.rolls;
-      dmgSides  = item_.getData().ranged.throwDmg.sides;
-      dmgPlus   = item_.getData().ranged.throwDmg.plus;
+      nrDmgRolls  = item_.getData().ranged.throwDmg.rolls;
+      nrDmgSides  = item_.getData().ranged.throwDmg.sides;
+      dmgPlus     = item_.getData().ranged.throwDmg.plus;
 
-      dmgRoll   = playerAimX3 ? dmgRolls * dmgSides :
-                  Rnd::dice(dmgRolls, dmgSides);
-      dmg       = dmgRoll + dmgPlus;
+      dmgRoll     = playerAimX3 ? (nrDmgRolls * nrDmgSides) :
+                    Rnd::dice(nrDmgRolls, nrDmgSides);
+      dmg         = dmgRoll + dmgPlus;
     }
   }
 }
@@ -424,7 +440,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn) {
       //----- ATTACK CONNECTS WITH DEFENDER --------
       //Determine the relative "size" of the hit
       MeleeHitSize hitSize = MeleeHitSize::small;
-      const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
+      const int MAX_DMG_ROLL = data.nrDmgRolls * data.nrDmgSides;
       if(MAX_DMG_ROLL >= 4) {
         if(data.dmgRoll > (MAX_DMG_ROLL * 5) / 6) {
           hitSize = MeleeHitSize::hard;
@@ -510,7 +526,7 @@ void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT) {
     //Punctuation or exclamation marks depending on attack strength
     if(IS_HIT) {
       string dmgPunctuation = ".";
-      const int MAX_DMG_ROLL = data.dmgRolls * data.dmgSides;
+      const int MAX_DMG_ROLL = data.nrDmgRolls * data.nrDmgSides;
       if(MAX_DMG_ROLL >= 4) {
         dmgPunctuation =
           data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :

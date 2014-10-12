@@ -705,7 +705,7 @@ bool LordOfSpiders::onActorTurn_() {
             if(featureHere->canHaveRigid()) {
               auto& d = FeatureData::getData(featureHere->getId());
               const auto* const mimic = static_cast<Rigid*>(d.mkObj(p));
-              Trap* const f = new Trap(p, mimic, TrapId::spiderWeb);
+              Trap* const f = new Trap(p, mimic, TrapId::web);
               Map::put(f);
               f->reveal(false);
             }

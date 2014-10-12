@@ -71,8 +71,8 @@ void Trap::setSpecificTrapFromId(const TrapId id) {
       specificTrap_ = new TrapSmoke(pos_); break;
     case TrapId::alarm:
       specificTrap_ = new TrapAlarm(pos_); break;
-    case TrapId::spiderWeb:
-      specificTrap_ = new TrapSpiderWeb(pos_); break;
+    case TrapId::web:
+      specificTrap_ = new TrapWeb(pos_); break;
     default:
       specificTrap_ = nullptr; break;
   }
@@ -163,7 +163,7 @@ void Trap::disarm() {
 
   //Spider webs are automatically destroyed if wielding machete
   bool isAutoSucceed = false;
-  if(getTrapType() == TrapId::spiderWeb) {
+  if(getTrapType() == TrapId::web) {
     Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
     if(item) {
       isAutoSucceed = item->getData().id == ItemId::machete;
@@ -203,7 +203,7 @@ void Trap::disarm() {
     Render::drawMapAndInterface();
     const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
     if(Rnd::oneIn(TRIGGER_ONE_IN_N)) {
-      if(getTrapType() == TrapId::spiderWeb) {
+      if(getTrapType() == TrapId::web) {
         Map::player->pos = pos_;
       }
       triggerTrap(*Map::player);
@@ -721,7 +721,7 @@ void TrapAlarm::trigger(
   TRACE_FUNC_END_VERBOSE;
 }
 
-void TrapSpiderWeb::trigger(Actor& actor, const AbilityRollResult dodgeResult) {
+void TrapWeb::trigger(Actor& actor, const AbilityRollResult dodgeResult) {
   TRACE_FUNC_BEGIN_VERBOSE;
 
   (void)dodgeResult;
@@ -764,7 +764,7 @@ void TrapSpiderWeb::trigger(Actor& actor, const AbilityRollResult dodgeResult) {
   TRACE_FUNC_END_VERBOSE;
 }
 
-Dir TrapSpiderWeb::actorTryLeave(Actor& actor, const Dir dir) {
+Dir TrapWeb::actorTryLeave(Actor& actor, const Dir dir) {
   if(!isHoldingActor_) {
     TRACE << "Not holding actor, returning current direction" << endl;
     return dir;

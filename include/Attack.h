@@ -18,7 +18,7 @@ public:
   Actor* attacker;
   Actor* curDefender;
   AbilityRollResult attackResult;
-  int dmgRolls, dmgSides, dmgPlus;
+  int nrDmgRolls, nrDmgSides, dmgPlus;
   int dmgRoll, dmg;
   bool isIntrinsicAttack;
   bool isEtherealDefenderMissed;
@@ -29,12 +29,10 @@ protected:
 
 class MeleeAttData: public AttData {
 public:
-  MeleeAttData(Actor& attacker_, const Wpn& wpn_,
-               Actor& defender_);
+  MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_);
   bool isDefenderDodging;
   bool isBackstab;
   bool isWeakAttack;
-
 };
 
 class RangedAttData: public AttData {
