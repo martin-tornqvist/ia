@@ -317,7 +317,7 @@ void initDataList() {
   d->baseName = ItemName("Sawed - off Shotgun", "Sawed - off shotguns",
                          "a Sawed - off Shotgun");
   d->baseDescr = {"Compared to a standard shotgun, the sawed - off has a shorter "
-                  "effective range. At close range it is more devastating however. It "
+                  "effective range [TODO]. At close range it is more devastating however. It "
                   "holds two barrels, and needs to be reloaded after both are discharged"
                  };
   d->itemWeight = itemWeight_medium;
@@ -410,8 +410,9 @@ void initDataList() {
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Tommy Gun", "Tommy Guns", "a Tommy Gun");
   d->baseDescr = {"\"Tommy Gun\" is a nickname for the Thompson submachine gun - an "
-                  "automatic firearm with a drum magazine and verical foregrip. It fires "
-                  ".45 ACP ammunition. The drum magazine has a capacity of 50 rounds."
+                  "automatic firearm with a drum magazine and verical foregrip. It "
+                  "fires .45 ACP ammunition. The drum magazine has a capacity of 50 "
+                  "rounds."
                  };
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::tommyGun;
@@ -562,8 +563,8 @@ void initDataList() {
   d = new ItemDataT(ItemId::dynamite);
   resetData(*d, ItemType::explosive);
   d->baseName = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
-  d->baseDescr = {"An explosive material based on nitroglycerin. The name comes from the "
-                  "ancient Greek word for \"power\"."
+  d->baseDescr = {"An explosive material based on nitroglycerin. The name comes from "
+                  "the ancient Greek word for \"power\"."
                  };
   d->itemWeight = itemWeight_light;
   d->tile = TileId::dynamite;
@@ -644,8 +645,7 @@ void initDataList() {
   resetData(*d, ItemType::throwingWpn);
   d->baseName = ItemName("Rock", "Rocks", "a Rock");
   d->baseDescr = {"Although not a very impressive weapon, with skill they can be used "
-                  "with some result. Shooting them with a sling instead of throwing "
-                  "them increases the range and causes more damage."
+                  "with some result."
                  };
   d->itemWeight = itemWeight_extraLight;
   d->tile = TileId::rock;
@@ -666,7 +666,7 @@ void initDataList() {
                   "assassinations have been carried out with the use of a dagger.",
 
                   "Attacking an unaware opponent with a dagger does 3x damage (instead "
-                  "of the normal 1,5x damage from stealth attacks).",
+                  "of the normal 1,5x damage from stealth attacks) [TODO].",
 
                   "Melee attacks with daggers are silent."
                  };
@@ -689,7 +689,7 @@ void initDataList() {
   d->baseName = ItemName("Hatchet", "Hatchets", "a Hatchet");
   d->baseDescr = {"A small axe with a short handle. Hatchets are reliable weapons - "
                   "they are easy to use, and cause decent damage for their low weight. "
-                  "They can also serve well as thrown weapons.",
+                  "They can also serve well as thrown weapons [TODO].",
 
                   "Melee attacks with hatchets are silent."
                  };
@@ -827,7 +827,7 @@ void initDataList() {
   resetData(*d, ItemType::throwingWpn);
   d->baseName = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
   d->baseDescr = {"These can come in handy for wedging things closed or prying things "
-                  "open."
+                  "open [TODO]."
                  };
   d->isAmmo = true;
   d->itemWeight = itemWeight_extraLight;
@@ -1207,9 +1207,9 @@ void initDataList() {
   d->baseName = ItemName("Iron Suit", "", "an Iron Suit");
   d->baseDescr = {"A crude armour constructed from metal plates, bolts, and leather "
                   "straps. It can absorb a high amount of damage, but it makes sneaking "
-                  "and dodging very difficult. Also, due to the narrow slit of the "
+                  "and dodging very difficult [TODO]. Also, due to the narrow slit of the "
                   "helmet, aiming is slightly more difficult, and it is harder to "
-                  "detect sneaking enemies and hidden objects."
+                  "detect sneaking enemies and hidden objects [TODO]."
                  };
   d->itemWeight = itemWeight_heavy;
   d->clr = clrWhite;
@@ -1225,7 +1225,7 @@ void initDataList() {
   d->baseName = ItemName("Flak Jacket", "", "a Flak Jacket");
   d->baseDescr = {"An armour consisting of steel plates sewn into a waistcoat. It "
                   "offers very good protection for its weight. Sneaking and dodging is "
-                  "slightly more difficult."
+                  "slightly more difficult [TODO]."
                  };
   d->itemWeight = itemWeight_medium;
   d->clr = clrGreen;
@@ -1242,9 +1242,9 @@ void initDataList() {
   d->baseDescr = {"A one piece overall of asbestos fabric, including a hood, furnace "
                   "mask, gloves and shoes. It protects the wearer against fire, acid "
                   "and electricity, and also against smoke, fumes and gas. It is a bit "
-                  "bulky, so sneaking and dodging is slightly more difficult. Also, "
+                  "bulky, so sneaking and dodging is slightly more difficult [TODO]. Also, "
                   "because of the hood and mask, aiming and detecting hidden enemies "
-                  "and objects is somewhat harder."
+                  "and objects is somewhat harder [TODO]."
                  };
   d->itemWeight = itemWeight_medium;
   d->clr = clrRedLgt;
@@ -1262,7 +1262,7 @@ void initDataList() {
   d->baseDescr = {"A very thick coat. It gives more protection against physical harm "
                   "than a leather jacket, and it also protects against cold. Sneaking "
                   "and dodging is slightly more difficult due to its higher weight "
-                  "however."
+                  "however [TODO]."
                  };
   d->itemWeight = itemWeight_medium;
   d->clr = clrBlueLgt;
@@ -1280,7 +1280,7 @@ void initDataList() {
                   "limited useful lifespan that is related to the absorbent capacity of "
                   "the filter. Due to the small eye windows, aiming is slightly more "
                   "difficult, and it is harder to detect sneaking enemies and hidden "
-                  "objects."
+                  "objects [TODO]."
                  };
   d->isStackable = false;
   d->clr = clrBrown;

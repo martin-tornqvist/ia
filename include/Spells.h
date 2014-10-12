@@ -141,7 +141,7 @@ public:
             "Azathoth, the ultimate chaos at the center of the universe. This spell "
             "will generally inflict damage, but due to the chaotic nature of its "
             "source, it can occasionally have other effects, and may affect the caster "
-            "as well."
+            "as well [TODO]."
            };
   }
 private:
