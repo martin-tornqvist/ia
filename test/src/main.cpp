@@ -471,7 +471,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     const auto  mimicId     = Map::cells[posR.x][posR.x].rigid->getId();
     const auto& mimicData   = FeatureData::getData(mimicId);
     const auto* const mimic = static_cast<const Rigid*>(mimicData.mkObj(posR));
-    Map::put(new Trap(posR, mimic, TrapId::spiderWeb));
+    Map::put(new Trap(posR, mimic, TrapId::web));
 
     //Move the monster into the trap, and back again
     monster->awareOfPlayerCounter_ = 20000; // > 0 req. for triggering trap

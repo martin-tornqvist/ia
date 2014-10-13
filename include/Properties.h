@@ -178,14 +178,13 @@ public:
   bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const;
 
 private:
-  //Note: These two functions are responsible for collecting properties from
-  //all possible specified sources. They must be "mirrored" in that they
-  //collect information from exactly the same places - except one will return
-  //a list of Props, and the other will return a list of PropIds.
-  //This is an optimization. The reasoning is that in many cases (such as the
-  //very frequently ran Actor::addLight) it is sufficient to know the ids.
-  //It would then be wasteful to first gather all Props, then gather the ids
-  //from those. It's more efficient to just gather the ids at once.
+  //Note: These two functions are responsible for collecting properties from all possible
+  //specified sources. They must be "mirrored" in that they collect information from
+  //exactly the same places - except one will return a list of Props, and the other will
+  //return a list of PropIds. This is an optimization. The reasoning is that in many
+  //cases (such as the very frequent Actor::addLight) it is sufficient to know the ids.
+  //It would then be wasteful to first gather all Props, then gather the ids from those.
+  //It's more efficient to just gather the ids at once.
   void getPropsFromSources(std::vector<Prop*>& out,
                            bool sources[int(PropSrc::END)]) const;
   void getPropIdsFromSources(std::vector<PropId>& out,
@@ -193,8 +192,7 @@ private:
 
   bool tryResistProp(const PropId id, const std::vector<Prop*>& propList) const;
 
-  Actor* owningActor_;
-
+  Actor*    owningActor_;
 };
 
 class Prop {
@@ -285,6 +283,8 @@ public:
 
   virtual PropTurnMode getTurnMode() const {return PropTurnMode::std;}
 
+  PropTurns getTurnsInitType() const {return turnsInitType_;}
+
   int turnsLeft_;
 
   Actor* owningActor_;
@@ -293,6 +293,10 @@ protected:
   const PropId id_;
 
   const PropDataT* const data_;
+
+  //How the prop turns was inited (std, specific, indefinite). This is used for example
+  //to make copies of a property to apply on melee attacks.
+  PropTurns turnsInitType_;
 };
 
 class PropTerrified: public Prop {

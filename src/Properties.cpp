@@ -709,7 +709,7 @@ PropHandler::PropHandler(Actor* owningActor) :
 
   const ActorDataT& d = owningActor->getData();
 
-  for(unsigned int i = 0; i < endOfPropIds; ++i) {
+  for(size_t i = 0; i < endOfPropIds; ++i) {
     if(d.intrProps[i]) {
       Prop* const prop = mkProp(PropId(i), PropTurns::indefinite);
       tryApplyProp(prop, true, true, true, true);
@@ -998,16 +998,17 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 }
 
 void PropHandler::tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE) {
-  const ItemDataT& d = wpn.getData();
-  auto* prop = IS_MELEE ? d.melee.propApplied : d.ranged.propApplied;
+  const ItemDataT& d            = wpn.getData();
+  const auto* const originProp  = IS_MELEE ? d.melee.propApplied : d.ranged.propApplied;
 
-  if(prop) {
+  if(originProp) {
     //If weapon damage type is resisted by the defender, the property is
     //automatically resisted
     DmgType dmgType = IS_MELEE ? d.melee.dmgType : d.ranged.dmgType;
     if(!tryResistDmg(dmgType, false)) {
       //Make a copy of the weapon effect
-      auto* const propCpy = mkProp(prop->getId(), PropTurns::specific, prop->turnsLeft_);
+      auto* const propCpy = mkProp(originProp->getId(), originProp->getTurnsInitType(),
+                                   originProp->turnsLeft_);
       tryApplyProp(propCpy);
     }
   }
@@ -1020,8 +1021,8 @@ bool PropHandler::endAppliedProp(
 
   int index   = -1;
   Prop* prop  = nullptr;
-  const unsigned int NR_APPLIED_PROPS = appliedProps_.size();
-  for(unsigned int i = 0; i < NR_APPLIED_PROPS; ++i) {
+  const size_t NR_APPLIED_PROPS = appliedProps_.size();
+  for(size_t i = 0; i < NR_APPLIED_PROPS; ++i) {
     prop = appliedProps_.at(i);
     if(prop->getId() == id) {
       index = i;
@@ -1070,7 +1071,7 @@ void PropHandler::applyActorTurnPropBuffer() {
 void PropHandler::tick(const PropTurnMode turnMode,
                        const bool visionBlockers[MAP_W][MAP_H]) {
 
-  for(unsigned int i = 0; i < appliedProps_.size();) {
+  for(size_t i = 0; i < appliedProps_.size();) {
     Prop* const prop = appliedProps_.at(i);
 
     //Only tick property if it runs on the given turn mode
@@ -1226,8 +1227,8 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; ++i) {
+  const size_t NR_PROPS = propList.size();
+  for(size_t i = 0; i < NR_PROPS; ++i) {
     if(!propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE)) {
       TRACE_FUNC_END_VERBOSE;
       return false;
@@ -1242,8 +1243,8 @@ bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  const unsigned int NR_PROPS = propList.size();
-  for(unsigned int i = 0; i < NR_PROPS; ++i) {
+  const size_t NR_PROPS = propList.size();
+  for(size_t i = 0; i < NR_PROPS; ++i) {
     if(!propList.at(i)->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE)) {
       return false;
     }
@@ -1312,7 +1313,7 @@ void PropHandler::endAppliedPropsByMagicHealing() {
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(unsigned int i = 0; i < propList.size(); ++i) {
+  for(size_t i = 0; i < propList.size(); ++i) {
     if(propList.at(i)->isEndedByMagicHealing()) {
       endAppliedProp(appliedProps_.at(i)->getId(), visionBlockers);
       propList.erase(begin(propList) + i);
@@ -1322,15 +1323,14 @@ void PropHandler::endAppliedPropsByMagicHealing() {
 }
 
 Prop::Prop(PropId id, PropTurns turnsInit, int turns) :
-  turnsLeft_(turns), owningActor_(nullptr), id_(id),
-  data_(&(PropData::data[id])) {
+  turnsLeft_(turns),
+  owningActor_(nullptr),
+  id_(id),
+  data_(&(PropData::data[id])),
+  turnsInitType_(turnsInit) {
 
-  if(turnsInit == PropTurns::std) {
-    turnsLeft_ = Rnd::range(data_->stdRndTurns);
-  }
-  if(turnsInit == PropTurns::indefinite) {
-    turnsLeft_ = -1;
-  }
+  if(turnsInit == PropTurns::std)         {turnsLeft_ = Rnd::range(data_->stdRndTurns);}
+  if(turnsInit == PropTurns::indefinite)  {turnsLeft_ = -1;}
 }
 
 void PropBlessed::onStart() {
@@ -1343,8 +1343,7 @@ void PropBlessed::onStart() {
 void PropCursed::onStart() {
   bool visionBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), visionBlockers);
-  owningActor_->getPropHandler().endAppliedProp(
-    propBlessed, visionBlockers, false);
+  owningActor_->getPropHandler().endAppliedProp(propBlessed, visionBlockers, false);
 }
 
 void PropInfected::onNewTurn() {
@@ -1525,7 +1524,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
     vector<Pos> seenFoesCells;
     seenFoesCells.resize(0);
-    for(unsigned int i = 0; i < seenFoes.size(); ++i) {
+    for(size_t i = 0; i < seenFoes.size(); ++i) {
       seenFoesCells.push_back(seenFoes.at(i)->pos);
     }
     sort(begin(seenFoesCells), end(seenFoesCells),

@@ -69,10 +69,10 @@ void initSession() {
   TRACE_FUNC_BEGIN;
   ActorData::init();
   FeatureData::init();
+  PropData::init(); //Must init before ItemData
   ItemData::init();
   ScrollNameHandling::init();
   PotionNameHandling::init();
-  PropData::init();
   InvHandling::init();
   GameTime::init();
   MapTravel::init();
