@@ -192,7 +192,7 @@ private:
 
   bool tryResistProp(const PropId id, const std::vector<Prop*>& propList) const;
 
-  Actor*    owningActor_;
+  Actor* owningActor_;
 };
 
 class Prop {

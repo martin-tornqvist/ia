@@ -665,8 +665,8 @@ void initDataList() {
   d->baseDescr = {"Commonly associated with deception, stealth, and treachery. Many "
                   "assassinations have been carried out with the use of a dagger.",
 
-                  "Attacking an unaware opponent with a dagger does 3x damage (instead "
-                  "of the normal 1,5x damage from stealth attacks).",
+                  "Attacking an unaware opponent with a dagger does 300% damage "
+                  "(instead of the normal 150% damage from stealth attacks).",
 
                   "Melee attacks with daggers are silent."
                  };

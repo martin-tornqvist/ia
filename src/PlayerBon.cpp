@@ -90,11 +90,12 @@ void getTraitTitle(const Trait id, string& strRef) {
     case Trait::mightySpirit:         strRef = "Mighty Spirit";         break;
     case Trait::stealthy:             strRef = "Stealthy";              break;
     case Trait::imperceptible:        strRef = "Imperceptible";         break;
+    case Trait::vicious:              strRef = "Vicious";               break;
     case Trait::strongBacked:         strRef = "Strong-backed";         break;
     case Trait::tough:                strRef = "Tough";                 break;
     case Trait::rugged:               strRef = "Rugged";                break;
     case Trait::treasureHunter:       strRef = "Treasure Hunter";       break;
-    case Trait::demExpert:     strRef = "Demolition Expert";     break;
+    case Trait::demExpert:            strRef = "Demolition Expert";     break;
     case Trait::END: break;
   }
 }
@@ -328,6 +329,10 @@ void getTraitDescr(const Trait id, string& strRef) {
       strRef = "You are more likely to avoid detection";
     } break;
 
+    case Trait::vicious: {
+      strRef = "+50% backstab damage (for a total of 200%, or 350% with daggers)";
+    } break;
+
     case Trait::treasureHunter: {
       strRef = "You tend to find more items";
     } break;
@@ -478,6 +483,11 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef) {
       traitsRef.push_back(Trait::dexterous);
     } break;
 
+    case Trait::vicious: {
+      traitsRef.push_back(Trait::stealthy);
+      traitsRef.push_back(Trait::dexterous);
+    } break;
+
     case Trait::treasureHunter: {
       traitsRef.push_back(Trait::observant);
     } break;
@@ -525,7 +535,6 @@ void getPickableTraits(vector<Trait>& traitsRef) {
 
       bool isPickable = true;
       for(Trait prereq : traitPrereqs) {
-
         if(!hasTrait(prereq)) {
           isPickable = false;
           break;
@@ -534,9 +543,7 @@ void getPickableTraits(vector<Trait>& traitsRef) {
 
       isPickable = isPickable && (bg_ == bgPrereq || bgPrereq == Bg::END);
 
-      if(isPickable) {
-        traitsRef.push_back(Trait(i));
-      }
+      if(isPickable) {traitsRef.push_back(Trait(i));}
     }
   }
 

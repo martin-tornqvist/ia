@@ -25,6 +25,7 @@ enum class Trait {
   dexterous,
   fearless,
   imperceptible,
+  vicious,
   stealthy,
   mobile,
   lithe,

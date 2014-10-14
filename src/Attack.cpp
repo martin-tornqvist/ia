@@ -178,14 +178,22 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
 
       if(isAttackerAware && !isDefenderAware) {
         //Backstab (extra damage)
-        if(wpn_.getData().id == ItemId::dagger) {
-          //Dagger does 300% damage on backstab
-          dmg = ((dmgRoll + dmgPlus) * 3);
-        } else {
-          //Other weapons do 150% damage
-          dmg = ((dmgRoll + dmgPlus) * 3) / 2;
+
+        int dmgPct = 150;
+
+        //Double damage percent if attacking with a dagger.
+        if(wpn_.getData().id == ItemId::dagger) {dmgPct *= 2;}
+
+        //+50% if player and has the "Vicious" trait.
+        if(attacker == Map::player) {
+          if(PlayerBon::hasTrait(Trait::vicious)) {
+            dmgPct += 50;
+          }
         }
-        isBackstab    = true;
+
+        dmg = ((dmgRoll + dmgPlus) * dmgPct) / 100;
+
+        isBackstab = true;
       }
     }
   }
