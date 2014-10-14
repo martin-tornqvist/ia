@@ -38,6 +38,8 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::pitchFork:           r = new Wpn(d, ammoD);         break;
     case ItemId::sledgeHammer:        r = new Wpn(d, ammoD);         break;
 
+    case ItemId::pharaohStaff:        r = new PharaohStaff(d);       break;
+
     case ItemId::dynamite:            r = new Dynamite(d);              break;
     case ItemId::flare:               r = new Flare(d);                 break;
     case ItemId::molotov:             r = new Molotov(d);               break;

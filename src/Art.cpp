@@ -178,6 +178,7 @@ Pos getColumnAndRowTile(const TileId tile) {
     case TileId::sledgeHammer: return Pos(14, 4); break;
     case TileId::rock: return Pos(15, 4); break;
     case TileId::ironSpike: return Pos(16, 4); break;
+    case TileId::pharaohStaff: return Pos(17, 4); break;
     case TileId::lockpick: return Pos(17, 4); break;
     case TileId::huntingHorror: return Pos(4, 5); break;
     case TileId::spiderLeng: return Pos(10, 5); break;

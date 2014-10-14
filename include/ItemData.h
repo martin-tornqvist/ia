@@ -54,6 +54,9 @@ enum class ItemId {
   axe,
   pitchFork,
   sledgeHammer,
+
+  pharaohStaff,
+
   sawedOff,
   pumpShotgun,
   machineGun,

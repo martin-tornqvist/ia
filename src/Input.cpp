@@ -633,12 +633,11 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- DROP ITEMS AROUND PLAYER
   else if(d.sdlKey == SDLK_F6) {
     if(IS_DEBUG_MODE) {
-      ItemFactory::mkItemOnMap(ItemId::hideousMask, Map::player->pos);
       ItemFactory::mkItemOnMap(ItemId::gasMask, Map::player->pos);
       for(int i = 0; i < int(ItemId::END); ++i) {
-        const ItemDataT* const data = ItemData::data[i];
-        if(!data->isIntrinsic && (data->isPotion || data->isScroll || data->isDevice)) {
-          ItemFactory::mkItemOnMap((ItemId)(i), Map::player->pos);
+        const auto* const data = ItemData::data[i];
+        if(!data->isIntrinsic && (data->itemValue != ItemValue::normal)) {
+          ItemFactory::mkItemOnMap(static_cast<ItemId>(i), Map::player->pos);
         }
       }
       clearEvents();

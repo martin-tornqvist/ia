@@ -185,6 +185,12 @@ protected:
   ItemDataT* const ammoData_;
 };
 
+class PharaohStaff: public Wpn {
+public:
+  PharaohStaff(ItemDataT* const itemData) :
+    Wpn(itemData, nullptr) {}
+};
+
 class SawedOff: public Wpn {
 public:
   SawedOff(ItemDataT* const itemData, ItemDataT* const ammoData) :

@@ -68,6 +68,7 @@ enum class TileId {
   sledgeHammer,
   rock,
   ironSpike,
+  pharaohStaff,
   lockpick,
   huntingHorror,
   spiderLeng,

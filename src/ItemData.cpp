@@ -823,6 +823,23 @@ void initDataList() {
   addFeatureFoundIn(*d, FeatureId::cabinet);
   data[int(d->id)] = d;
 
+  d = new ItemDataT(ItemId::pharaohStaff);
+  resetData(*d, ItemType::meleeWpn);
+  d->baseName = ItemName("Staff of the Pharaohs", "Staff of the Pharaohs",
+                         "the Staff of the Pharaohs");
+  d->baseDescr = {"[TODO]"};
+  d->clr = clrMagenta;
+  d->itemWeight = itemWeight_medium;
+  d->tile = TileId::pharaohStaff;
+  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with the Staff of the Pharaohs");
+  d->melee.dmg = pair<int, int>(2, 4);
+  d->melee.hitChanceMod = 0;
+  d->melee.hitSmallSfx = SfxId::hitSmall;
+  d->melee.hitMediumSfx = SfxId::hitSharp;
+  d->melee.missSfx = SfxId::missHeavy;
+  d->itemValue = ItemValue::majorTreasure;
+  data[int(d->id)] = d;
+
   d = new ItemDataT(ItemId::ironSpike);
   resetData(*d, ItemType::throwingWpn);
   d->baseName = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
@@ -1294,6 +1311,7 @@ void initDataList() {
   d = new ItemDataT(ItemId::hideousMask);
   resetData(*d, ItemType::general);
   d->baseName = ItemName("Hideous Mask", "", "The Hideous Mask");
+  d->baseDescr = {"[TODO]"};
   d->isStackable = false;
   d->clr = clrMagenta;
   d->tile = TileId::mask;
@@ -1303,6 +1321,7 @@ void initDataList() {
   d->chanceToIncludeInSpawnList = 0;
   d->itemWeight = itemWeight_light;
   d->landOnHardSurfaceSoundMsg = "";
+  d->itemValue = ItemValue::majorTreasure;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::scrollMayhem);
