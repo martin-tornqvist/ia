@@ -25,7 +25,7 @@ bool isSndHeardAtRange(const int RANGE, const Snd& snd) {
 
 } //namespace
 
-void resetNrSoundMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
+void resetNrSndMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
 
 void emitSnd(Snd snd) {
   bool blocked[MAP_W][MAP_H];

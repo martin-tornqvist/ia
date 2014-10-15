@@ -63,7 +63,7 @@ namespace SndEmit {
 
 void emitSnd(Snd snd);
 
-void resetNrSoundMsgPrintedCurTurn();
+void resetNrSndMsgPrintedCurTurn();
 
 } //SndEmit
 

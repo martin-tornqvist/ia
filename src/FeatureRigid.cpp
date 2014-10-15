@@ -543,6 +543,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
       Snd snd("I hear a crash.", SfxId::END, IgnoreMsgIfOriginSeen::yes,
               pos_, actor, SndVol::low, alertsMonsters);
+
       SndEmit::emitSnd(snd);
 
       const Pos dstPos = pos_ + (pos_ - actor->pos);
@@ -563,7 +564,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
               if(actorBehind == Map::player) {
                 Log::addMsg("It falls on me!");
               } else if(Map::player->isSeeingActor(*actorBehind, nullptr)) {
-                Log::addMsg("It falls on " + actorBehind->getNameThe() + ".");
+                Log::addMsg("It falls on " + actorBehind->getNameA() + ".");
               }
               actorBehind->hit(Rnd::dice(3, 5), DmgType::physical);
             }

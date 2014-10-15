@@ -42,8 +42,8 @@ ItemDataT::ItemDataT(const ItemId id_) :
   isAmmoClip(false),
   isIntrinsic(false),
   spellCastFromScroll(SpellId::END),
-  landOnHardSurfaceSoundMsg("I hear a thudding sound."),
-  landOnHardSurfaceSfx(),
+  landOnHardSndMsg("I hear a thudding sound."),
+  landOnHardSfx(),
   melee(MeleeItemData()),
   ranged(RangedItemData()),
   armor(ArmorItemData()) {
@@ -221,7 +221,7 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.tile = TileId::scroll;
       d.isScroll = true;
       d.maxStackAtSpawn = 1;
-      d.landOnHardSurfaceSoundMsg = "";
+      d.landOnHardSndMsg = "";
       addFeatureFoundIn(d, FeatureId::chest);
       addFeatureFoundIn(d, FeatureId::tomb);
       addFeatureFoundIn(d, FeatureId::cabinet, 25);
@@ -242,7 +242,7 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.ranged.throwHitChanceMod = 15;
       d.ranged.throwDmg = DiceParam(1, 3, 0);
       d.maxStackAtSpawn = 2;
-      d.landOnHardSurfaceSoundMsg = "";
+      d.landOnHardSndMsg = "";
       addFeatureFoundIn(d, FeatureId::chest);
       addFeatureFoundIn(d, FeatureId::tomb);
       addFeatureFoundIn(d, FeatureId::cabinet, 25);
@@ -264,8 +264,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.glyph = '~';
       d.tile = TileId::device1;
       d.isStackable = false;
-      d.landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
-      d.landOnHardSurfaceSfx = SfxId::metalClank;
+      d.landOnHardSndMsg = "I hear a clanking sound.";
+      d.landOnHardSfx = SfxId::metalClank;
     } break;
 
     case ItemType::armor: {
@@ -283,7 +283,7 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.isExplosive = true;
       d.glyph = '-';
       d.maxStackAtSpawn = 2;
-      d.landOnHardSurfaceSoundMsg = "";
+      d.landOnHardSndMsg = "";
     } break;
 
     default: {} break;
@@ -633,8 +633,8 @@ void initDataList() {
   d->ranged.throwHitChanceMod = 0;
   d->ranged.throwDmg = DiceParam(2, 4);
   d->maxStackAtSpawn = 8;
-  d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
-  d->landOnHardSurfaceSfx = SfxId::metalClank;
+  d->landOnHardSndMsg = "I hear a clanking sound.";
+  d->landOnHardSfx = SfxId::metalClank;
   d->mainAttMode = MainAttMode::thrown;
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -853,8 +853,8 @@ void initDataList() {
   d->ranged.throwHitChanceMod = -5;
   d->ranged.throwDmg = DiceParam(1, 3);
   d->maxStackAtSpawn = 12;
-  d->landOnHardSurfaceSoundMsg = "I hear a clanking sound.";
-  d->landOnHardSurfaceSfx = SfxId::metalClank;
+  d->landOnHardSndMsg = "I hear a clanking sound.";
+  d->landOnHardSfx = SfxId::metalClank;
   d->mainAttMode = MainAttMode::thrown;
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
@@ -1213,7 +1213,7 @@ void initDataList() {
   d->spawnStdRange.lower = 1;
   d->armor.absorptionPoints = 1;
   d->armor.dmgToDurabilityFactor = 1.0;
-  d->landOnHardSurfaceSoundMsg = "";
+  d->landOnHardSndMsg = "";
   addFeatureFoundIn(*d, FeatureId::cabinet);
   data[int(d->id)] = d;
 
@@ -1231,7 +1231,7 @@ void initDataList() {
   d->spawnStdRange.lower = 2;
   d->armor.absorptionPoints = 4;
   d->armor.dmgToDurabilityFactor = 0.3;
-  d->landOnHardSurfaceSoundMsg = "I hear a crashing sound.";
+  d->landOnHardSndMsg = "I hear a crashing sound.";
   addFeatureFoundIn(*d, FeatureId::cabinet);
   data[int(d->id)] = d;
 
@@ -1247,7 +1247,7 @@ void initDataList() {
   d->spawnStdRange.lower = 3;
   d->armor.absorptionPoints = 3;
   d->armor.dmgToDurabilityFactor = 0.5;
-  d->landOnHardSurfaceSoundMsg = "I hear a thudding sound.";
+  d->landOnHardSndMsg = "I hear a thudding sound.";
   addFeatureFoundIn(*d, FeatureId::cabinet);
   data[int(d->id)] = d;
 
@@ -1266,7 +1266,7 @@ void initDataList() {
   d->spawnStdRange.lower = 3;
   d->armor.absorptionPoints = 1;
   d->armor.dmgToDurabilityFactor = 1.0;
-  d->landOnHardSurfaceSoundMsg = "";
+  d->landOnHardSndMsg = "";
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::chest);
   data[int(d->id)] = d;
@@ -1284,7 +1284,7 @@ void initDataList() {
   d->spawnStdRange.lower = 3;
   d->armor.absorptionPoints = 2;
   d->armor.dmgToDurabilityFactor = 1.0;
-  d->landOnHardSurfaceSoundMsg = "";
+  d->landOnHardSndMsg = "";
   addFeatureFoundIn(*d, FeatureId::cabinet);
   data[int(d->id)] = d;
 
@@ -1305,7 +1305,7 @@ void initDataList() {
   d->spawnStdRange = Range(1, LAST_ROOM_AND_CORRIDOR_LVL);
   d->chanceToIncludeInSpawnList = 50;
   d->itemWeight = itemWeight_light;
-  d->landOnHardSurfaceSoundMsg = "";
+  d->landOnHardSndMsg = "";
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::hideousMask);
@@ -1320,7 +1320,7 @@ void initDataList() {
   d->spawnStdRange = Range(-1, -1);
   d->chanceToIncludeInSpawnList = 0;
   d->itemWeight = itemWeight_light;
-  d->landOnHardSurfaceSoundMsg = "";
+  d->landOnHardSndMsg = "";
   d->itemValue = ItemValue::majorTreasure;
   data[int(d->id)] = d;
 

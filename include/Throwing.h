@@ -8,7 +8,7 @@ struct Pos;
 
 namespace Throwing {
 
-void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown);
+void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown);
 
 void playerThrowLitExplosive(const Pos& aimCell);
 

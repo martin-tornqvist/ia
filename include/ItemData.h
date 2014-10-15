@@ -201,8 +201,8 @@ public:
   bool isAmmo, isAmmoClip;
   bool isIntrinsic;
   SpellId spellCastFromScroll;
-  std::string landOnHardSurfaceSoundMsg;
-  SfxId landOnHardSurfaceSfx;
+  std::string landOnHardSndMsg;
+  SfxId landOnHardSfx;
   std::vector<RoomType> nativeRooms;
   std::vector< std::pair<FeatureId, int> > featuresCanBeFoundIn;
 

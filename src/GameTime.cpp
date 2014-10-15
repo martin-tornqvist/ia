@@ -120,7 +120,7 @@ void runStdTurnEvents() {
     if(slot.item) {slot.item->newTurnInInventory();}
   }
 
-  SndEmit::resetNrSoundMsgPrintedCurTurn();
+  SndEmit::resetNrSndMsgPrintedCurTurn();
 
   Audio::tryPlayAmb(75);
 }

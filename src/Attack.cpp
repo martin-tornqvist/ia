@@ -199,12 +199,14 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
   }
 }
 
-RangedAttData::RangedAttData(
-  Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
-  const Pos& curPos_, ActorSize intendedAimLvl_) :
-  AttData(attacker_, wpn_), hitChanceTot(0),
-  intendedAimLvl(actorSize_none), curDefenderSize(actorSize_none),
-  verbPlayerAttacks(""), verbOtherAttacks("")  {
+RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
+                             const Pos& curPos_, ActorSize intendedAimLvl_) :
+  AttData(attacker_, wpn_),
+  hitChanceTot(0),
+  intendedAimLvl(actorSize_none),
+  curDefenderSize(actorSize_none),
+  verbPlayerAttacks(""),
+  verbOtherAttacks("")  {
 
   verbPlayerAttacks = wpn_.getData().ranged.attMsgs.player;
   verbOtherAttacks  = wpn_.getData().ranged.attMsgs.other;
@@ -298,7 +300,9 @@ RangedAttData::RangedAttData(
 
 ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
                            const Pos& curPos_, ActorSize intendedAimLvl_) :
-  AttData(attacker_, item_), hitChanceTot(0), intendedAimLvl(actorSize_none),
+  AttData(attacker_, item_),
+  hitChanceTot(0),
+  intendedAimLvl(actorSize_none),
   curDefenderSize(actorSize_none) {
 
   Actor* const actorAimedAt = Utils::getFirstActorAtPos(aimPos_);
@@ -358,6 +362,13 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
 
     if(attackResult >= successSmall) {
       TRACE << "Attack roll succeeded" << endl;
+
+      vector<PropId> props;
+      curDefender->getPropHandler().getAllActivePropIds(props);
+
+      if(find(begin(props), end(props), propEthereal) != end(props)) {
+        isEtherealDefenderMissed = Rnd::fraction(2, 3);
+      }
 
       bool playerAimX3 = false;
       if(attacker == Map::player) {
@@ -544,8 +555,7 @@ void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT) {
       if(MAX_DMG_ROLL >= 4) {
         dmgPunctuation =
           data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :
-          data.dmgRoll > MAX_DMG_ROLL / 2 ? "!" :
-          dmgPunctuation;
+          data.dmgRoll > MAX_DMG_ROLL / 2     ? "!"   : dmgPunctuation;
       }
 
       if(data.curDefender == Map::player) {
@@ -553,8 +563,9 @@ void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT) {
       } else {
         string otherName = "It";
 
-        if(Map::cells[defX][defY].isSeenByPlayer)
+        if(Map::cells[defX][defY].isSeenByPlayer) {
           otherName = data.curDefender->getNameThe();
+        }
 
         Log::addMsg(otherName + " is hit" + dmgPunctuation, clrMsgGood);
       }
@@ -898,6 +909,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos) {
           IS_WITHIN_RANGE_LMT &&
           data->attackResult >= successSmall &&
           !data->isEtherealDefenderMissed) {
+
           if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
             Render::drawMapAndInterface(false);
             Render::coverCellInMap(curPos);

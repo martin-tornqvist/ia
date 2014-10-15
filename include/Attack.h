@@ -40,10 +40,10 @@ public:
   RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
                 const Pos& curPos_, ActorSize intendedAimLvl_ = actorSize_none);
   int           hitChanceTot;
-  ActorSize  intendedAimLvl;
-  ActorSize  curDefenderSize;
-  std::string        verbPlayerAttacks;
-  std::string        verbOtherAttacks;
+  ActorSize   intendedAimLvl;
+  ActorSize   curDefenderSize;
+  std::string verbPlayerAttacks;
+  std::string verbOtherAttacks;
 };
 
 class ThrowAttData: public AttData {

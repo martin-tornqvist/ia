@@ -76,19 +76,18 @@ void playerThrowLitExplosive(const Pos& aimCell) {
   GameTime::actorDidAct();
 }
 
-void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
-  ThrowAttData* data =
-    new ThrowAttData(actorThrowing, itemThrown, targetCell, actorThrowing.pos);
+void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown) {
+  ThrowAttData data(actorThrowing, itemThrown, tgtCell, actorThrowing.pos);
 
-  const ActorSize aimLvl = data->intendedAimLvl;
+  const ActorSize aimLvl = data.intendedAimLvl;
 
   vector<Pos> path;
-  LineCalc::calcNewLine(actorThrowing.pos, targetCell, false, THROW_RANGE_LMT,
-                        false, path);
+  LineCalc::calcNewLine(actorThrowing.pos, tgtCell, false, THROW_RANGE_LMT, false, path);
 
-  const ItemDataT& itemThrownData = itemThrown.getData();
+  const auto& itemThrownData = itemThrown.getData();
 
   const string itemNameA = itemThrown.getName(ItemRefType::a);
+
   if(&actorThrowing == Map::player) {
     Log::clearLog();
     Log::addMsg("I throw " + itemNameA + ".");
@@ -100,7 +99,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
   }
   Render::drawMapAndInterface(true);
 
-  int       blockedInElement      = -1;
+  int         blockedInElement    = -1;
   bool        isActorHit          = false;
   const char  glyph               = itemThrown.getGlyph();
   const Clr   clr                 = itemThrown.getClr();
@@ -115,16 +114,12 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
 
     Actor* const actorHere = Utils::getFirstActorAtPos(curPos);
     if(actorHere) {
-      if(
-        curPos == targetCell ||
-        actorHere->getData().actorSize >= actorSize_humanoid) {
+      if(curPos == tgtCell || actorHere->getData().actorSize >= actorSize_humanoid) {
 
-        delete data;
-        data = new ThrowAttData(actorThrowing, itemThrown, targetCell, curPos, aimLvl);
+        data = ThrowAttData(actorThrowing, itemThrown, tgtCell, curPos, aimLvl);
 
-        if(
-          data->attackResult >= successSmall &&
-          !data->isEtherealDefenderMissed) {
+        if(data.attackResult >= successSmall && !data.isEtherealDefenderMissed) {
+
           if(Map::cells[curPos.x][curPos.y].isSeenByPlayer) {
             Render::drawGlyph('*', Panel::map, curPos, clrRedLgt);
             Render::updateScreen();
@@ -136,14 +131,13 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
 
           Log::addMsg(defenderName + " is hit.", hitMessageClr);
 
-          actorHere->hit(data->dmg, DmgType::physical);
+          actorHere->hit(data.dmg, DmgType::physical);
           isActorHit = true;
 
           //If throwing a potion on an actor, let it make stuff happen...
           if(itemThrownData.isPotion) {
             static_cast<Potion*>(&itemThrown)->collide(curPos, actorHere);
             delete &itemThrown;
-            delete data;
             GameTime::actorDidAct();
             return;
           }
@@ -167,7 +161,7 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
       break;
     }
 
-    if(curPos == targetCell) {
+    if(curPos == tgtCell && data.intendedAimLvl == ActorSize::actorSize_floor) {
       blockedInElement = i;
       break;
     }
@@ -176,10 +170,8 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
   //If potion, collide it on the landscape
   if(itemThrownData.isPotion) {
     if(blockedInElement >= 0) {
-      static_cast<Potion*>(&itemThrown)->collide(
-        path.at(blockedInElement), nullptr);
+      static_cast<Potion*>(&itemThrown)->collide(path.at(blockedInElement), nullptr);
       delete &itemThrown;
-      delete data;
       GameTime::actorDidAct();
       return;
     }
@@ -194,34 +186,32 @@ void throwItem(Actor& actorThrowing, const Pos& targetCell, Item& itemThrown) {
     const Matl matlAtDropPos =
       Map::cells[dropPos.x][dropPos.y].rigid->getMatl();
 
-    bool isMakingNoise = false;
+    bool isNoisy = false;
 
     switch(matlAtDropPos) {
-      case Matl::empty:   isMakingNoise = false;  break;
-      case Matl::stone:   isMakingNoise = true;   break;
-      case Matl::metal:   isMakingNoise = true;   break;
-      case Matl::plant:   isMakingNoise = false;  break;
-      case Matl::wood:    isMakingNoise = true;   break;
-      case Matl::cloth:   isMakingNoise = false;  break;
-      case Matl::fluid:   isMakingNoise = false;  break;
+      case Matl::empty:   isNoisy = false;  break;
+      case Matl::stone:   isNoisy = true;   break;
+      case Matl::metal:   isNoisy = true;   break;
+      case Matl::plant:   isNoisy = false;  break;
+      case Matl::wood:    isNoisy = true;   break;
+      case Matl::cloth:   isNoisy = false;  break;
+      case Matl::fluid:   isNoisy = false;  break;
     }
 
-    if(isMakingNoise) {
-      const AlertsMonsters alertsMonsters = &actorThrowing == Map::player ?
-                                            AlertsMonsters::yes :
-                                            AlertsMonsters::no;
+    if(isNoisy) {
+      const AlertsMonsters alerts = &actorThrowing == Map::player ?
+                                    AlertsMonsters::yes :
+                                    AlertsMonsters::no;
       if(!isActorHit) {
-        Snd snd(itemThrownData.landOnHardSurfaceSoundMsg,
-                itemThrownData.landOnHardSurfaceSfx,
-                IgnoreMsgIfOriginSeen::yes, dropPos, nullptr, SndVol::low,
-                alertsMonsters);
+        Snd snd(itemThrownData.landOnHardSndMsg, itemThrownData.landOnHardSfx,
+                IgnoreMsgIfOriginSeen::yes, dropPos, nullptr, SndVol::low, alerts);
+
         SndEmit::emitSnd(snd);
       }
     }
     ItemDrop::dropItemOnMap(dropPos, itemThrown);
   }
 
-  delete data;
   Render::drawMapAndInterface();
   GameTime::actorDidAct();
 }
