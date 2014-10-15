@@ -178,6 +178,11 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
                   Log::addMsg("I feel a door crashing open!");
                 }
                 Map::put(new RubbleLow(pos_));
+              } else { //Not broken
+                const SfxId sfx = isSecret_ ? SfxId::END : SfxId::doorBang;
+                Snd snd("", sfx, IgnoreMsgIfOriginSeen::no, pos_,
+                        actor, SndVol::low, AlertsMonsters::yes);
+                SndEmit::emitSnd(snd);
               }
             } else {
               if(IS_CELL_SEEN && !isSecret_) {Log::addMsg("It seems futile.");}
@@ -199,6 +204,11 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
                 Log::addMsg("A door crashes open!");
               }
               Map::put(new RubbleLow(pos_));
+            } else { //Not broken
+              Snd snd("I hear a loud banging on a door.",
+                      SfxId::doorBang, IgnoreMsgIfOriginSeen::no, pos_,
+                      actor, SndVol::low, AlertsMonsters::no);
+              SndEmit::emitSnd(snd);
             }
           }
 
