@@ -100,8 +100,6 @@ void drawBrowseInv(const MenuBrowser& browser) {
   string str                = queryBaseStr + queryDropStr + " [space/esc] to exit";
   Render::drawText(str, Panel::screen, Pos(0, 0), clrWhiteHigh);
 
-  const int EQP_Y0  = 2;
-
   Pos p(1, EQP_Y0);
 
   const Panel panel = Panel::screen;
@@ -149,11 +147,8 @@ void drawBrowseInv(const MenuBrowser& browser) {
     ++p.y;
   }
 
-  const int INV_X0          = 1;
-  const int INV_Y0          = EQP_Y0 + int(SlotId::END) + 1;
-  const int INV_Y1          = SCREEN_H - 2;
-  const int INV_H           = INV_Y1 - INV_Y0 + 1;
-  const size_t NR_INV_ITEMS = inv.general_.size();
+
+  const size_t  NR_INV_ITEMS  = inv.general_.size();
 
   size_t invTopIdx = 0;
 
@@ -179,6 +174,8 @@ void drawBrowseInv(const MenuBrowser& browser) {
       }
     }
   }
+
+  const int INV_X0  = 1;
 
   p = Pos(INV_X0, INV_Y0);
 
@@ -218,7 +215,7 @@ void drawBrowseInv(const MenuBrowser& browser) {
 
 //  Render::drawPopupBox(eqpRect, panel, clrPopupBox, false);
 
-  const Rect eqpRect(0, EQP_Y0 - 1, DESCR_X0 - 1, INV_Y1 + 1);
+  const Rect eqpRect(0, EQP_Y0 - 1, DESCR_X0 - 1, EQP_Y1 + 1);
   const Rect invRect(0, INV_Y0 - 1, DESCR_X0 - 1, INV_Y1 + 1);
 
   Render::drawPopupBox(eqpRect, panel, clrPopupBox, false);

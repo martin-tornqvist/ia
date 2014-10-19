@@ -157,7 +157,7 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor) 
 
       if(Rnd::oneIn(4)) {
         Log::addMsg("I sprain myself.", clrMsgBad);
-        actor->hit(Rnd::range(1, 5), DmgType::pure);
+        actor->hit(Rnd::range(1, 2), DmgType::pure);
       }
 
       if(Rnd::oneIn(4)) {
@@ -209,16 +209,16 @@ Clr Rigid::getClr() const {
     if(isBloody_) {
       return clrRedLgt;
     } else {
-      return burnState_ == BurnState::notBurned ? getDefClr() : clrGrayDrk;
+      return burnState_ == BurnState::notBurned ? getClr_() : clrGrayDrk;
     }
   }
 }
 
 Clr Rigid::getClrBg() const {
   switch(burnState_) {
-    case BurnState::notBurned:  return clrBlack;  break;
+    case BurnState::notBurned:  return getClrBg_();  break;
     case BurnState::burning:    return Clr {Uint8(Rnd::range(32, 255)), 0, 0, 0}; break;
-    case BurnState::hasBurned:  return clrBlack;  break;
+    case BurnState::hasBurned:  return getClrBg_();  break;
   }
   assert(false && "Failed to set color");
   return clrYellow;
@@ -263,7 +263,7 @@ string Floor::getName(const Article article) const {
   return ret;
 }
 
-Clr Floor::getDefClr() const {
+Clr Floor::getClr_() const {
   return clrGray;
 }
 
@@ -359,7 +359,7 @@ string Wall::getName(const Article article) const {
   return ret;
 }
 
-Clr Wall::getDefClr() const {
+Clr Wall::getClr_() const {
   if(isMossy_) {return clrGreenDrk;}
   switch(type_) {
     case WallType::cliff:         return clrGrayDrk;    break;
@@ -462,7 +462,7 @@ string RubbleHigh::getName(const Article article) const {
   return ret + "big pile of debris";
 }
 
-Clr RubbleHigh::getDefClr() const {
+Clr RubbleHigh::getClr_() const {
   return clrGray;
 }
 
@@ -484,7 +484,7 @@ string RubbleLow::getName(const Article article) const {
   return ret + "rubble";
 }
 
-Clr RubbleLow::getDefClr() const {
+Clr RubbleLow::getClr_() const {
   return clrGray;
 }
 
@@ -505,7 +505,7 @@ string GraveStone::getName(const Article article) const {
   return ret + "gravestone; " + inscr_;
 }
 
-Clr GraveStone::getDefClr() const {
+Clr GraveStone::getClr_() const {
   return clrWhite;
 }
 
@@ -522,7 +522,7 @@ string ChurchBench::getName(const Article article) const {
   return ret + "church bench";
 }
 
-Clr ChurchBench::getDefClr() const {
+Clr ChurchBench::getClr_() const {
   return clrBrown;
 }
 
@@ -587,7 +587,7 @@ string Statue::getName(const Article article) const {
   return ret;
 }
 
-Clr Statue::getDefClr() const {
+Clr Statue::getClr_() const {
   return clrWhite;
 }
 
@@ -604,7 +604,7 @@ string Pillar::getName(const Article article) const {
   return ret + "pillar";
 }
 
-Clr Pillar::getDefClr() const {
+Clr Pillar::getClr_() const {
   return clrWhite;
 }
 
@@ -642,7 +642,7 @@ string Stairs::getName(const Article article) const {
   return ret + "downward staircase";
 }
 
-Clr Stairs::getDefClr() const {
+Clr Stairs::getClr_() const {
   return clrYellow;
 }
 
@@ -665,7 +665,7 @@ string Bridge::getName(const Article article) const {
   return ret + "bridge";
 }
 
-Clr Bridge::getDefClr() const {
+Clr Bridge::getClr_() const {
   return clrBrownDrk;
 }
 
@@ -708,7 +708,7 @@ string LiquidShallow::getName(const Article article) const {
   return ret;
 }
 
-Clr LiquidShallow::getDefClr() const {
+Clr LiquidShallow::getClr_() const {
   switch(type_) {
     case LiquidType::water:   return clrBlueLgt;  break;
     case LiquidType::acid:    return clrGreenLgt; break;
@@ -749,7 +749,7 @@ string LiquidDeep::getName(const Article article) const {
   return ret;
 }
 
-Clr LiquidDeep::getDefClr() const {
+Clr LiquidDeep::getClr_() const {
   switch(type_) {
     case LiquidType::water:   return clrBlue;     break;
     case LiquidType::acid:    return clrGreen;    break;
@@ -775,7 +775,7 @@ string Chasm::getName(const Article article) const {
   return ret + "chasm";
 }
 
-Clr Chasm::getDefClr() const {
+Clr Chasm::getClr_() const {
   return clrBlack;
 }
 
@@ -792,7 +792,7 @@ string Lever::getName(const Article article) const {
   return ret + "lever";
 }
 
-Clr Lever::getDefClr() const {
+Clr Lever::getClr_() const {
   return isPositionLeft_ ? clrGray : clrWhite;
 }
 
@@ -835,7 +835,7 @@ string Altar::getName(const Article article) const {
   return ret + "altar";
 }
 
-Clr Altar::getDefClr() const {
+Clr Altar::getClr_() const {
   return clrWhite;
 }
 
@@ -861,7 +861,7 @@ string Carpet::getName(const Article article) const {
   return ret + "carpet";
 }
 
-Clr Carpet::getDefClr() const {
+Clr Carpet::getClr_() const {
   return clrRed;
 }
 
@@ -903,7 +903,7 @@ string Grass::getName(const Article article) const {
   return "";
 }
 
-Clr Grass::getDefClr() const {
+Clr Grass::getClr_() const {
   switch(type_) {
     case GrassType::cmn:      return clrGreen;    break;
     case GrassType::withered: return clrBrownDrk; break;
@@ -949,7 +949,7 @@ string Bush::getName(const Article article) const {
   return "";
 }
 
-Clr Bush::getDefClr() const {
+Clr Bush::getClr_() const {
   switch(type_) {
     case GrassType::cmn:      return clrGreen;    break;
     case GrassType::withered: return clrBrownDrk; break;
@@ -982,7 +982,7 @@ string Tree::getName(const Article article) const {
   return ret + "tree";
 }
 
-Clr Tree::getDefClr() const {
+Clr Tree::getClr_() const {
   return clrBrownDrk;
 }
 
@@ -997,7 +997,7 @@ void Brazier::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-Clr Brazier::getDefClr() const {
+Clr Brazier::getClr_() const {
   return clrYellow;
 }
 
@@ -1131,7 +1131,7 @@ string Tomb::getName(const Article article) const {
   return ret + "tomb";
 }
 
-Clr Tomb::getDefClr() const {
+Clr Tomb::getClr_() const {
   switch(appearance_) {
     case TombAppearance::common:    return clrGray;
     case TombAppearance::ornate:    return clrWhite;
@@ -1669,7 +1669,7 @@ string Chest::getName(const Article article) const {
   return ret + "chest";
 }
 
-Clr Chest::getDefClr() const {
+Clr Chest::getClr_() const {
   return matl_ == ChestMatl::wood ? clrBrownDrk : clrGray;
 }
 
@@ -1703,7 +1703,7 @@ void Fountain::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-Clr Fountain::getDefClr() const {
+Clr Fountain::getClr_() const {
   switch(fountainMatl_) {
     case FountainMatl::stone: return clrWhite;
     case FountainMatl::gold:  return clrYellow;
@@ -1868,7 +1868,7 @@ string Cabinet::getName(const Article article) const {
   return ret + "cabinet";
 }
 
-Clr Cabinet::getDefClr() const {
+Clr Cabinet::getClr_() const {
   return clrBrownDrk;
 }
 
@@ -1954,7 +1954,7 @@ string Cocoon::getName(const Article article) const {
   return ret + "cocoon";
 }
 
-Clr Cocoon::getDefClr() const {
+Clr Cocoon::getClr_() const {
   return clrWhite;
 }
 

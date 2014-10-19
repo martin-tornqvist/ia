@@ -36,10 +36,9 @@ public:
 
   ~Trap();
 
-  FeatureId getId() const override {return FeatureId::trap;}
+  FeatureId   getId() const override {return FeatureId::trap;}
 
   void        bump(Actor& actorBumping)             override;
-  Clr         getDefClr()                     const override;
   char        getGlyph()                      const override;
   TileId      getTile()                       const override;
   std::string getName(const Article article)  const override;
@@ -47,7 +46,6 @@ public:
   bool        canHaveCorpse()                 const override {return isHidden_;}
   bool        canHaveBlood()                  const override {return isHidden_;}
   bool        canHaveGore()                   const override {return isHidden_;}
-  bool        canHaveItem()                   const override {return isHidden_;}
 
   bool isMagical() const;
 
@@ -68,6 +66,9 @@ public:
   void  playerTrySpotHidden();
 
 private:
+  Clr getClr_()   const override;
+  Clr getClrBg_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 

@@ -16,21 +16,14 @@ class SaveHandler;
 class Rigid;
 
 struct Cell {
-  Cell() : isExplored(false), isSeenByPlayer(false), isLight(false),
-    isDark(false), item(nullptr), rigid(nullptr), pos(Pos(-1, -1)) {
-    playerVisualMemory.clear();
-  }
+  Cell();
+  ~Cell();
 
-  void clear();
-
-  bool isExplored;
-  bool isSeenByPlayer;
-  bool isLight;
-  bool isDark;
-  Item* item;
-  Rigid* rigid;
-  CellRenderData playerVisualMemory;
-  Pos pos;
+  bool            isExplored, isSeenByPlayer, isLight, isDark;
+  Item*           item;
+  Rigid*          rigid;
+  CellRenderData  playerVisualMemory;
+  Pos             pos;
 };
 
 enum class MapType {intro, std, egypt, leng, caves, trapezohedron};

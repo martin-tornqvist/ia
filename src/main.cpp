@@ -23,12 +23,11 @@
 #include "Postmortem.h"
 #include "Map.h"
 
+using namespace std;
+
 #ifdef _WIN32
 #undef main
 #endif
-
-using namespace std;
-
 int main(int argc, char* argv[]) {
   TRACE_FUNC_BEGIN;
 

@@ -132,6 +132,7 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.clr = clrWhite;
       d.mainAttMode = MainAttMode::melee;
       d.melee.isMeleeWpn = true;
+      d.melee.missSfx = SfxId::missMedium;
       d.melee.hitSmallSfx = SfxId::hitSmall;
       d.melee.hitMediumSfx = SfxId::hitMedium;
       d.melee.hitHardSfx = SfxId::hitHard;
@@ -314,9 +315,9 @@ void initDataList() {
 
   d = new ItemDataT(ItemId::sawedOff);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Sawed - off Shotgun", "Sawed - off shotguns",
-                         "a Sawed - off Shotgun");
-  d->baseDescr = {"Compared to a standard shotgun, the sawed - off has a shorter "
+  d->baseName = ItemName("Sawed-off Shotgun", "Sawed-off shotguns",
+                         "a Sawed-off Shotgun");
+  d->baseDescr = {"Compared to a standard shotgun, the sawed-off has a shorter "
                   "effective range [TODO]. At close range it is more devastating however. It "
                   "holds two barrels, and needs to be reloaded after both are discharged"
                  };
@@ -834,9 +835,7 @@ void initDataList() {
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with the Staff of the Pharaohs");
   d->melee.dmg = pair<int, int>(2, 4);
   d->melee.hitChanceMod = 0;
-  d->melee.hitSmallSfx = SfxId::hitSmall;
-  d->melee.hitMediumSfx = SfxId::hitSharp;
-  d->melee.missSfx = SfxId::missHeavy;
+  d->melee.missSfx = SfxId::missMedium;
   d->itemValue = ItemValue::majorTreasure;
   data[int(d->id)] = d;
 

@@ -61,29 +61,23 @@ enum class ShockValue {
 enum class GameEntryMode {newGame, loadGame};
 
 struct CellRenderData {
-  CellRenderData() {clear();}
+  CellRenderData() :
+    clr(clrBlack),
+    clrBg(clrBlack),
+    tile(TileId::empty),
+    glyph(' '),
+    lifebarLength(-1),
+    isLightFadeAllowed(true),
+    isMarkedLit(false),
+    isLivingActorSeenHere(false),
+    isAwareOfMonsterHere(false) {}
 
-  inline void clear() {
-    clr                   = clrBlack;
-    clrBg                 = clrBlack;
-    tile                  = TileId::empty;
-    glyph                 = ' ';
-    lifebarLength         = -1;
-    isFadeEffectAllowed   = true;
-    isMarkedAsLit         = false;
-    isLivingActorSeenHere = false;
-    isAwareOfMonsterHere  = false;
-  }
-
-  Clr clr;
-  Clr clrBg;
-  TileId tile;
-  char glyph;
-  int lifebarLength;
-  bool isFadeEffectAllowed;
-  bool isMarkedAsLit;
-  bool isLivingActorSeenHere;
-  bool isAwareOfMonsterHere;
+  Clr     clr;
+  Clr     clrBg;
+  TileId  tile;
+  char    glyph;
+  int     lifebarLength;
+  bool    isLightFadeAllowed, isMarkedLit, isLivingActorSeenHere, isAwareOfMonsterHere;
 };
 
 
@@ -119,6 +113,7 @@ struct Pos {
   Pos operator-(const Pos& p)     const {return Pos(x - p.x,  y - p.y);}
   Pos operator-(const int V)      const {return Pos(x - V,    y - V);}
   Pos operator/(const int V)      const {return Pos(x / V,    y / V);}
+  Pos operator/(const Pos& p)     const {return Pos(x / p.x,  y / p.y);}
   Pos operator*(const int V)      const {return Pos(x * V,    y * V);}
   Pos operator*(const Pos& p)     const {return Pos(x * p.x,  y * p.y);}
   bool operator==(const Pos& p)   const {return x == p.x  && y == p.y;}
@@ -172,7 +167,6 @@ struct PosAndVal {
 };
 
 struct DiceParam {
-public:
   DiceParam() : rolls(0), sides(0), plus(0) {}
 
   DiceParam(const int ROLLS, const int SIDES, const int PLUS = 0) :
@@ -218,7 +212,6 @@ struct Fraction {
 };
 
 struct ItemName {
-public:
   ItemName(const std::string& NAME, const std::string& NAME_PL,
            const std::string& NAME_A) {
     names[int(ItemRefType::plain)]   = NAME;
@@ -239,8 +232,8 @@ struct ItemAttMsgs {
 public:
   ItemAttMsgs() : player(""), other("") {}
 
-  ItemAttMsgs(const std::string& PLAYER, const std::string& OTHER) :
-    player(PLAYER), other(OTHER) {}
+  ItemAttMsgs(const std::string& player_, const std::string& other_) :
+    player(player_), other(other_) {}
 
   std::string player, other;
 };

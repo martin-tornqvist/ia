@@ -25,7 +25,7 @@ using namespace std;
 
 //------------------------------------------------------------- TRAP
 Trap::Trap(const Pos& pos, const Rigid* const mimicFeature, TrapId type) :
-  Rigid(pos), mimicFeature_(mimicFeature), isHidden_(true) {
+  Rigid(pos), mimicFeature_(mimicFeature), isHidden_(true), specificTrap_(nullptr) {
 
   assert(type != TrapId::END);
 
@@ -223,15 +223,13 @@ void Trap::triggerTrap(Actor& actor) {
 
   TRACE << "Actor triggering is " << d.nameA << endl;
 
-  const int DODGE_SKILL =
-    d.abilityVals.getVal(AbilityId::dodgeTrap, true, actor);
+  const int DODGE_SKILL = d.abilityVals.getVal(AbilityId::dodgeTrap, true, actor);
 
   TRACE << "Actor dodge skill is " << DODGE_SKILL << endl;
 
   if(&actor == Map::player) {
     TRACE_VERBOSE << "Player triggering trap" << endl;
-    const AbilityRollResult DODGE_RESULT =
-      AbilityRoll::roll(DODGE_SKILL);
+    const AbilityRollResult DODGE_RESULT = AbilityRoll::roll(DODGE_SKILL);
     reveal(false);
     TRACE_VERBOSE << "Calling trigger" << endl;
     specificTrap_->trigger(actor, DODGE_RESULT);
@@ -240,9 +238,7 @@ void Trap::triggerTrap(Actor& actor) {
     const bool IS_ACTOR_SEEN_BY_PLAYER =
       Map::player->isSeeingActor(actor, nullptr);
     const AbilityRollResult dodgeResult = AbilityRoll::roll(DODGE_SKILL);
-    if(IS_ACTOR_SEEN_BY_PLAYER) {
-      reveal(false);
-    }
+    if(IS_ACTOR_SEEN_BY_PLAYER) {reveal(false);}
     TRACE_VERBOSE << "Calling trigger" << endl;
     specificTrap_->trigger(actor, dodgeResult);
   }
@@ -262,12 +258,6 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
   }
 
   clearGore();
-
-  Item* item = Map::cells[pos_.x][pos_.y].item;
-  if(item) {
-    Map::cells[pos_.x][pos_.y].item = nullptr;
-    ItemDrop::dropItemOnMap(pos_, *item);
-  }
 
   if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
     Render::drawMapAndInterface();
@@ -299,8 +289,18 @@ string Trap::getName(const Article article) const {
   }
 }
 
-Clr Trap::getDefClr() const {
+Clr Trap::getClr_() const {
   return isHidden_ ? mimicFeature_->getClr() : specificTrap_->getClr();
+}
+
+Clr Trap::getClrBg_() const {
+  const auto* const item = Map::cells[pos_.x][pos_.y].item;
+
+  if(isHidden_ || !item) {
+    return clrBlack;
+  } else {
+    return specificTrap_->getClr();
+  }
 }
 
 char Trap::getGlyph() const {

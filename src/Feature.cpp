@@ -42,20 +42,19 @@ bool Feature::canMove(const vector<PropId>& actorsProps) const {
   return getData().moveRules.canMove(actorsProps);
 }
 
-bool Feature::isSoundPassable()           const {return getData().isSoundPassable;}
-bool Feature::isVisionPassable()          const {return getData().isVisionPassable;}
-bool Feature::isProjectilePassable()      const {return getData().isProjectilePassable;}
-bool Feature::isSmokePassable()           const {return getData().isSmokePassable;}
-bool Feature::isBottomless()              const {return getData().isBottomless;}
-
 void Feature::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
+bool      Feature::isSoundPassable()      const {return getData().isSoundPassable;}
+bool      Feature::isVisionPassable()     const {return getData().isVisionPassable;}
+bool      Feature::isProjectilePassable() const {return getData().isProjectilePassable;}
+bool      Feature::isSmokePassable()      const {return getData().isSmokePassable;}
+bool      Feature::isBottomless()         const {return getData().isBottomless;}
 char      Feature::getGlyph()             const {return getData().glyph;}
 TileId    Feature::getTile()              const {return getData().tile;}
 bool      Feature::canHaveCorpse()        const {return getData().canHaveCorpse;}
-bool      Feature::canHaveRigid() const {return getData().canHaveRigid;}
+bool      Feature::canHaveRigid()         const {return getData().canHaveRigid;}
 bool      Feature::canHaveBlood()         const {return getData().canHaveBlood;}
 bool      Feature::canHaveGore()          const {return getData().canHaveGore;}
 bool      Feature::canHaveItem()          const {return getData().canHaveItem;}

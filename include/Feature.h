@@ -20,7 +20,7 @@ public:
   virtual Clr           getClr()                        const = 0;
   virtual Clr           getClrBg()                      const = 0;
 
-  const   FeatureDataT& getData() const;
+  const FeatureDataT&   getData() const;
 
   virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor);
 
@@ -37,7 +37,7 @@ public:
   virtual TileId        getTile()                                       const;
   virtual void          addLight(bool light[MAP_W][MAP_H])              const;
   virtual bool          canHaveCorpse()                                 const;
-  virtual bool          canHaveRigid()                          const;
+  virtual bool          canHaveRigid()                                  const;
   virtual bool          canHaveBlood()                                  const;
   virtual bool          canHaveGore()                                   const;
   virtual bool          canHaveItem()                                   const;

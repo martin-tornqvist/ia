@@ -47,6 +47,39 @@ struct BasicFixture {
   }
 };
 
+TEST(IsValInRange) {
+  //Check in range
+  CHECK(Utils::isValInRange(5,    Range(3,  7)));
+  CHECK(Utils::isValInRange(3,    Range(3,  7)));
+  CHECK(Utils::isValInRange(7,    Range(3,  7)));
+  CHECK(Utils::isValInRange(10,   Range(-5, 12)));
+  CHECK(Utils::isValInRange(-5,   Range(-5, 12)));
+  CHECK(Utils::isValInRange(12,   Range(-5, 12)));
+
+  CHECK(Utils::isValInRange(0,    Range(-1,  1)));
+  CHECK(Utils::isValInRange(-1,   Range(-1,  1)));
+  CHECK(Utils::isValInRange(1,    Range(-1,  1)));
+
+  CHECK(Utils::isValInRange(5,    Range(5,  5)));
+
+  //Check NOT in range
+  CHECK(!Utils::isValInRange(2,   Range(3,  7)));
+  CHECK(!Utils::isValInRange(8,   Range(3,  7)));
+  CHECK(!Utils::isValInRange(-1,  Range(3,  7)));
+
+  CHECK(!Utils::isValInRange(-9,  Range(-5, 12)));
+  CHECK(!Utils::isValInRange(13,  Range(-5, 12)));
+
+  CHECK(!Utils::isValInRange(0,   Range(1,  2)));
+
+  CHECK(!Utils::isValInRange(4,   Range(5,  5)));
+  CHECK(!Utils::isValInRange(6,   Range(5,  5)));
+
+  //Note: Reversed range settings (e.g. Range(7, 3)) will fail an assert on debug builds.
+  //For release builds, this will reverse the result - i.e. isValInRange(1, Range(7, 3))
+  //will return true.
+}
+
 TEST(RollDice) {
   int val = Rnd::range(100, 200);
   CHECK(val >= 100 && val <= 200);
@@ -440,67 +473,69 @@ TEST_FIXTURE(BasicFixture, Explosions) {
 }
 
 TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
-  //-----------------------------------------------------------------
-  // Test that-
-  // * a monster can get stuck in a spider web,
-  // * the monster can get loose, and
-  // * the web can get destroyed
-  //-----------------------------------------------------------------
-
-  const Pos posL(1, 4);
-  const Pos posR(2, 4);
-
-  //Spawn left floor cell
-  Map::put(new Floor(posL));
-
-  //Conditions for finished test
-  bool testedStuck              = false;
-  bool testedLooseWebIntact     = false;
-  bool testedLooseWebDestroyed  = false;
-
-  while(!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed) {
-
-    //Spawn right floor cell
-    Map::put(new Floor(posR));
-
-    //Spawn a monster that can get stuck in the web
-    Actor* const actor = ActorFactory::mk(ActorId::zombie, posL);
-    Monster* const monster = static_cast<Monster*>(actor);
-
-    //Create a spider web in the right cell
-    const auto  mimicId     = Map::cells[posR.x][posR.x].rigid->getId();
-    const auto& mimicData   = FeatureData::getData(mimicId);
-    const auto* const mimic = static_cast<const Rigid*>(mimicData.mkObj(posR));
-    Map::put(new Trap(posR, mimic, TrapId::web));
-
-    //Move the monster into the trap, and back again
-    monster->awareOfPlayerCounter_ = 20000; // > 0 req. for triggering trap
-    monster->pos = posL;
-    monster->moveDir(Dir::right);
-    CHECK(monster->pos == posR);
-    monster->moveDir(Dir::left);
-    monster->moveDir(Dir::left);
-
-    //Check conditions
-    if(monster->pos == posR) {
-      testedStuck = true;
-    } else if(monster->pos == posL) {
-      const auto featureId = Map::cells[posR.x][posR.y].rigid->getId();
-      if(featureId == FeatureId::floor) {
-        testedLooseWebDestroyed = true;
-      } else {
-        testedLooseWebIntact = true;
-      }
-    }
-
-    //Remove the monster
-    ActorFactory::deleteAllMonsters();
-  }
-  //Check that all cases have been triggered (not really necessary, it just
-  //verifies that the loop above is correctly written).
-  CHECK(testedStuck);
-  CHECK(testedLooseWebIntact);
-  CHECK(testedLooseWebDestroyed);
+  //Something is wrong with this test. It frequently gets stuck in an endless loop.
+  CHECK(false);
+//  //-----------------------------------------------------------------
+//  // Test that-
+//  // * a monster can get stuck in a spider web,
+//  // * the monster can get loose, and
+//  // * the web can get destroyed
+//  //-----------------------------------------------------------------
+//
+//  const Pos posL(1, 4);
+//  const Pos posR(2, 4);
+//
+//  //Spawn left floor cell
+//  Map::put(new Floor(posL));
+//
+//  //Conditions for finished test
+//  bool testedStuck              = false;
+//  bool testedLooseWebIntact     = false;
+//  bool testedLooseWebDestroyed  = false;
+//
+//  while(!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed) {
+//
+//    //Spawn right floor cell
+//    Map::put(new Floor(posR));
+//
+//    //Spawn a monster that can get stuck in the web
+//    Actor* const actor = ActorFactory::mk(ActorId::zombie, posL);
+//    Monster* const monster = static_cast<Monster*>(actor);
+//
+//    //Create a spider web in the right cell
+//    const auto  mimicId     = Map::cells[posR.x][posR.x].rigid->getId();
+//    const auto& mimicData   = FeatureData::getData(mimicId);
+//    const auto* const mimic = static_cast<const Rigid*>(mimicData.mkObj(posR));
+//    Map::put(new Trap(posR, mimic, TrapId::web));
+//
+//    //Move the monster into the trap, and back again
+//    monster->awareOfPlayerCounter_ = 20000; // > 0 req. for triggering trap
+//    monster->pos = posL;
+//    monster->moveDir(Dir::right);
+//    CHECK(monster->pos == posR);
+//    monster->moveDir(Dir::left);
+//    monster->moveDir(Dir::left);
+//
+//    //Check conditions
+//    if(monster->pos == posR) {
+//      testedStuck = true;
+//    } else if(monster->pos == posL) {
+//      const auto featureId = Map::cells[posR.x][posR.y].rigid->getId();
+//      if(featureId == FeatureId::floor) {
+//        testedLooseWebDestroyed = true;
+//      } else {
+//        testedLooseWebIntact = true;
+//      }
+//    }
+//
+//    //Remove the monster
+//    ActorFactory::deleteAllMonsters();
+//  }
+//  //Check that all cases have been triggered (not really necessary, it just
+//  //verifies that the loop above is correctly written).
+//  CHECK(testedStuck);
+//  CHECK(testedLooseWebIntact);
+//  CHECK(testedLooseWebDestroyed);
 }
 
 TEST_FIXTURE(BasicFixture, SavingGame) {

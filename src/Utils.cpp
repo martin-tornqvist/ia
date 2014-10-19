@@ -240,25 +240,24 @@ Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {
 }
 
 bool isPosAdj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ) {
-  if(pos1.x == pos2.x && pos1.y == pos2.y)  {return COUNT_SAME_CELL_AS_ADJ;}
   if(pos1.x < pos2.x - 1)                   {return false;}
   if(pos1.x > pos2.x + 1)                   {return false;}
   if(pos1.y < pos2.y - 1)                   {return false;}
   if(pos1.y > pos2.y + 1)                   {return false;}
+  if(pos1.x == pos2.x && pos1.y == pos2.y)  {return COUNT_SAME_CELL_AS_ADJ;}
   return true;
 }
 
 TimeData getCurTime() {
-  time_t t = time(nullptr);
-  struct tm* now = localtime(&t);
+  time_t      t   = time(nullptr);
+  struct tm*  now = localtime(&t);
   return TimeData(now->tm_year + 1900, now->tm_mon + 1, now->tm_mday,
                   now->tm_hour, now->tm_min, now->tm_sec);
 }
 
 bool isValInRange(const int VAL, const Range& range) {
-  if(VAL < range.lower) {return false;}
-  if(VAL > range.upper) {return false;}
-  return true;
+  assert(range.upper >= range.lower);
+  return (unsigned int)(VAL - range.lower) <= (unsigned int)(range.upper - range.lower);
 }
 
 } //Utils

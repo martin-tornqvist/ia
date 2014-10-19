@@ -26,8 +26,7 @@ void readAndRemoveNextWord(string& line, string& nextWordToMk) {
   }
 }
 
-bool isWordFit(const string& curString, const string& wordToFit,
-               const int MAX_W) {
+bool isWordFit(const string& curString, const string& wordToFit, const int MAX_W) {
   return int(curString.size() + wordToFit.size() + 1) <= MAX_W;
 }
 
@@ -81,8 +80,8 @@ void getSpaceSeparatedList(const string& line, vector<string>& linesRef) {
   }
 }
 
-void replaceAll(const string& line, const string& from,
-                const string& to, string& resultRef) {
+void replaceAll(const string& line, const string& from, const string& to,
+                string& resultRef) {
   if(from.empty()) {return;}
 
   resultRef = line;
@@ -95,9 +94,11 @@ void replaceAll(const string& line, const string& from,
   }
 }
 
-string firstToUpper(const string str) {
-  string ret = str;
-  if(!ret.empty()) {ret[0] = toupper(ret[0]);}
+string firstToUpper(const string& str) {
+  if(str.empty()) {return "";}
+
+  string ret  = str;
+  ret[0]      = toupper(ret[0]);
   return ret;
 }
 

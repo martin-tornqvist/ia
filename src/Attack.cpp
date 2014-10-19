@@ -205,11 +205,8 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
   hitChanceTot(0),
   intendedAimLvl(actorSize_none),
   curDefenderSize(actorSize_none),
-  verbPlayerAttacks(""),
-  verbOtherAttacks("")  {
-
-  verbPlayerAttacks = wpn_.getData().ranged.attMsgs.player;
-  verbOtherAttacks  = wpn_.getData().ranged.attMsgs.other;
+  verbPlayerAttacks(wpn_.getData().ranged.attMsgs.player),
+  verbOtherAttacks(wpn_.getData().ranged.attMsgs.other)  {
 
   Actor* const actorAimedAt = Utils::getFirstActorAtPos(aimPos_);
 

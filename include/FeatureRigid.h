@@ -15,7 +15,6 @@ public:
   virtual std::string getName(const Article article)  const override = 0;
   virtual void        onNewTurn()                           override;
   Clr                 getClr()                        const override final;
-  virtual Clr         getDefClr()                     const = 0;
   virtual Clr         getClrBg()                      const override final;
 
   virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod,
@@ -40,20 +39,19 @@ protected:
   virtual void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                      Actor* const actor) = 0;
 
-  void tryStartBurning(const bool IS_MSG_ALLOWED);
+  virtual Clr   getClr_()   const = 0;
+  virtual Clr   getClrBg_() const {return clrBlack;}
 
-  virtual void onFinishedBurning() {}
+  void          tryStartBurning(const bool IS_MSG_ALLOWED);
+  virtual void  onFinishedBurning() {}
+  BurnState     getBurnState() const {return burnState_;}
+  virtual void  triggerTrap(Actor& actor) {(void)actor;}
 
-  BurnState getBurnState() const {return burnState_;}
-
-  virtual void triggerTrap(Actor& actor) {(void)actor;}
-
-  TileId goreTile_;
-  char goreGlyph_;
+  TileId  goreTile_;
+  char    goreGlyph_;
 
 private:
-  bool isBloody_;
-
+  bool      isBloody_;
   BurnState burnState_;
 };
 
@@ -69,11 +67,12 @@ public:
 
   TileId      getTile()                       const override;
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
   FloorType type_;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -87,10 +86,11 @@ public:
   FeatureId getId() const override {return FeatureId::carpet;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   void        onFinishedBurning()                   override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -107,11 +107,12 @@ public:
 
   TileId      getTile()                       const override;
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
   GrassType type_;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -125,12 +126,13 @@ public:
   FeatureId getId() const override {return FeatureId::bush;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   void        onFinishedBurning()                   override;
 
   GrassType type_;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -144,9 +146,10 @@ public:
   FeatureId getId() const override {return FeatureId::brazier;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -162,7 +165,6 @@ public:
   FeatureId getId() const override {return FeatureId::wall;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   char        getGlyph()                      const override;
   TileId      getFrontWallTile()              const;
   TileId      getTopWallTile()                const;
@@ -177,6 +179,8 @@ public:
   static bool isTileAnyWallTop(const TileId tile);
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -190,9 +194,10 @@ public:
   FeatureId getId() const override {return FeatureId::rubbleLow;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -206,9 +211,10 @@ public:
   FeatureId getId() const override {return FeatureId::rubbleHigh;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -222,13 +228,14 @@ public:
   FeatureId getId() const override {return FeatureId::gravestone;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
   void setInscription(const std::string& str) {inscr_ = str;}
 
   void bump(Actor& actorBumping) override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
@@ -243,9 +250,10 @@ public:
   FeatureId getId() const override {return FeatureId::churchBench;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -261,11 +269,12 @@ public:
   FeatureId getId() const override {return FeatureId::statue;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
   StatueType type_;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -279,9 +288,10 @@ public:
   FeatureId getId() const override {return FeatureId::pillar;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -295,11 +305,12 @@ public:
   FeatureId getId() const override {return FeatureId::stairs;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
   void bump(Actor& actorBumping) override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -313,13 +324,14 @@ public:
   FeatureId getId() const override {return FeatureId::bridge;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   TileId      getTile()                       const override;
   char        getGlyph()                      const override;
 
   void setDir(const HorizontalVertical dir) {dir_ = dir;}
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
@@ -337,13 +349,14 @@ public:
   FeatureId getId() const override {return FeatureId::liquidShallow;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
   void bump(Actor& actorBumping) override;
 
   LiquidType type_;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -357,13 +370,14 @@ public:
   FeatureId getId() const override {return FeatureId::liquidDeep;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
   void bump(Actor& actorBumping) override;
 
   LiquidType type_;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -377,9 +391,10 @@ public:
   FeatureId getId() const override {return FeatureId::chasm;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -397,13 +412,14 @@ public:
   FeatureId getId() const override {return FeatureId::lever;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   TileId      getTile()                       const override;
   void        examine()                             override;
 
   void setLinkedDoor(Door* const door) {doorLinkedTo_ = door;}
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
@@ -422,9 +438,10 @@ public:
   FeatureId getId() const override {return FeatureId::altar;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -438,9 +455,10 @@ public:
   FeatureId getId() const override {return FeatureId::tree;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 };
@@ -486,12 +504,13 @@ public:
   FeatureId getId() const override {return FeatureId::tomb;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   void        bump(Actor& actorBumping)             override;
   bool        open()                                override;
   void        examine()                             override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
@@ -519,13 +538,14 @@ public:
   FeatureId getId() const override {return FeatureId::chest;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   void        bump(Actor& actorBumping)             override;
   bool        open()                                override;
   void        examine()                             override;
   void        disarm()                              override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
@@ -549,11 +569,12 @@ public:
   FeatureId getId() const override {return FeatureId::cabinet;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   void        bump(Actor& actorBumping)             override;
   bool        open()                                override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
@@ -594,10 +615,11 @@ public:
   FeatureId getId() const override {return FeatureId::fountain;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   void        bump(Actor& actorBumping)             override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
@@ -614,11 +636,12 @@ public:
   FeatureId getId() const override {return FeatureId::cocoon;}
 
   std::string getName(const Article article)  const override;
-  Clr         getDefClr()                     const override;
   void        bump(Actor& actorBumping)             override;
   bool        open()                                override;
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 

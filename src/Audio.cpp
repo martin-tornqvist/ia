@@ -95,7 +95,7 @@ void loadAudioFile(const SfxId sfx, const string& filename) {
 
   Render::clearScreen();
   Render::drawText("Loading " + fileRelPath + "...", Panel::screen,
-                     Pos(0), clrWhite);
+                   Pos(0), clrWhite);
 
   Render::updateScreen();
 
@@ -181,7 +181,7 @@ void cleanup() {
   for(Mix_Chunk* chunk : audioChunks) {Mix_FreeChunk(chunk);}
   audioChunks.resize(0);
 
-  curChannel    = 0;
+  curChannel    =  0;
   timeAtLastAmb = -1;
 }
 
@@ -190,13 +190,13 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
   int ret = -1;
 
   if(
-    !audioChunks.empty()          &&
-    sfx != SfxId::END      &&
-    sfx != SfxId::startOfAmbSfx   &&
-    sfx != SfxId::END     &&
+    !audioChunks.empty()        &&
+    sfx != SfxId::endOfAmbSfx   &&
+    sfx != SfxId::startOfAmbSfx &&
+    sfx != SfxId::END           &&
     !Config::isBotPlaying()) {
 
-    const int VOL_TOT = (255 * VOL_PERCENT_TOT) / 100;
+    const int VOL_TOT = (255 * VOL_PERCENT_TOT)   / 100;
     const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;
     const int VOL_R   = VOL_TOT - VOL_L;
 
@@ -206,11 +206,9 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
 
     ret = curChannel;
 
-    curChannel++;
+    ++curChannel;
 
-    if(curChannel >= AUDIO_ALLOCATED_CHANNELS) {
-      curChannel = 0;
-    }
+    if(curChannel >= AUDIO_ALLOCATED_CHANNELS) {curChannel = 0;}
   }
 
   return ret;
@@ -232,7 +230,7 @@ void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT) {
       case Dir::upRight:    volPercentL = 25;  break;
       case Dir::downRight:  volPercentL = 25;  break;
       case Dir::right:      volPercentL = 15;  break;
-      case Dir::END:  volPercentL = 50;  break;
+      case Dir::END:        volPercentL = 50;  break;
     }
     play(sfx, VOL_PERCENT_TOT, volPercentL);
   }

@@ -17,13 +17,19 @@
 
 using namespace std;
 
-void Cell::clear() {
-  isExplored = isSeenByPlayer = isLight = isDark = false;
+Cell::Cell() :
+  isExplored(false),
+  isSeenByPlayer(false),
+  isLight(false),
+  isDark(false),
+  item(nullptr),
+  rigid(nullptr),
+  playerVisualMemory(CellRenderData()),
+  pos(Pos(-1, -1)) {}
 
-  if(rigid) {delete rigid;  rigid = nullptr;}
-  if(item)  {delete item;   item  = nullptr;}
-
-  playerVisualMemory.clear();
+Cell::~Cell() {
+  if(rigid) {delete rigid;}
+  if(item)  {delete item;}
 }
 
 namespace Map {
@@ -40,13 +46,13 @@ void resetCells(const bool MAKE_STONE_WALLS) {
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
 
-      cells[x][y].clear();
+      cells[x][y]     = Cell();
       cells[x][y].pos = Pos(x, y);
 
-      roomMap[x][y] = nullptr;
+      roomMap[x][y]   = nullptr;
 
-      Render::renderArray[x][y].clear();
-      Render::renderArrayNoActors[x][y].clear();
+      Render::renderArray[x][y]         = CellRenderData();
+      Render::renderArrayNoActors[x][y] = CellRenderData();
 
       if(MAKE_STONE_WALLS) {Map::put(new Wall(Pos(x, y)));}
     }

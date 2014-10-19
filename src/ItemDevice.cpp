@@ -277,7 +277,7 @@ void DeviceLantern::toggle() {
 void DeviceLantern::newTurnInInventory() {
   if(isActivated_) {
 
-    --nrTurnsLeft_;
+    if(malfState_ == LanternMalfState::working) {--nrTurnsLeft_;}
 
     if(nrTurnsLeft_ <= 0) {
       Log::addMsg("My Electric Lantern breaks!", clrMsgWarning, true, true);
@@ -309,11 +309,11 @@ void DeviceLantern::newTurnInInventory() {
       //No malfunction active, check if new should be applied
       const int RND = Rnd::range(1, 1000);
 
-      if(RND <= 10) {
+      if(RND <= 7) {
         Log::addMsg("My Electric Lantern malfunctions.");
         malfState_            = LanternMalfState::malfunction;
         nrMalfunctTurnsLeft_  = Rnd::range(3, 4);
-      } else if(RND <= 60) {
+      } else if(RND <= 40) {
         Log::addMsg("My Electric Lantern starts to flicker.");
         malfState_            = LanternMalfState::flicker;
         nrMalfunctTurnsLeft_  = Rnd::range(4, 12);

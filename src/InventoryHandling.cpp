@@ -170,7 +170,16 @@ void runInvScreen() {
 
   inv.sortGeneralInventory();
 
-  MenuBrowser browser(int(SlotId::END) + inv.general_.size(), 0);
+  const int SLOTS_SIZE  = int(SlotId::END);
+  const int INV_H       = RenderInventory::INV_H;
+
+  auto getBrowser = [](const Inventory& inventory) {
+    const int GEN_SIZE = int(inventory.general_.size());
+    const int ELEM_ON_WRAP_UP = GEN_SIZE > INV_H ? (SLOTS_SIZE + INV_H - 2) : -1;
+    return MenuBrowser(int(SlotId::END) + GEN_SIZE, 0, ELEM_ON_WRAP_UP);
+  };
+
+  MenuBrowser browser = getBrowser(inv);
 
   browser.setPos(Pos(0, browserIdxToSetAfterDrop));
   browserIdxToSetAfterDrop = 0;
@@ -240,7 +249,7 @@ void runInvScreen() {
             }
             //Create a new browser to ajust for changed inventory size
             const Pos p = browser.getPos();
-            browser = MenuBrowser(int(SlotId::END) + inv.general_.size(), 0);
+            browser = getBrowser(inv);
             browser.setPos(p);
           } else { //No item in slot
             if(runEquipScreen(slot)) {

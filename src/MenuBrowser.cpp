@@ -8,7 +8,7 @@ void MenuBrowser::setPos(const Pos& p) {
 }
 
 void MenuBrowser::setGoodPos() {
-  const int NR_ITEMS = pos_.x == 0 ? NR_A_ : NR_B_;
+  const int NR_ITEMS = pos_.x == 0 ? nrA_ : nrB_;
 
   if(NR_ITEMS == 0) {
     pos_.x = pos_.x == 0 ? 1 : 0;
@@ -19,22 +19,27 @@ void MenuBrowser::setGoodPos() {
 }
 
 int MenuBrowser::getElement() const {
-  return pos_.y + (pos_.x * NR_A_);
+  return pos_.y + (pos_.x * nrA_);
 }
 
 bool MenuBrowser::isAtIdx(const int IDX) const {
-  const Pos idxPos(IDX < NR_A_ ? 0 : 1, IDX < NR_A_ ? IDX : IDX - NR_A_);
+  const Pos idxPos(IDX < nrA_ ? 0 : 1, IDX < nrA_ ? IDX : IDX - nrA_);
 
   return pos_ == idxPos;
 }
 
 void MenuBrowser::navigate(const Dir dir) {
-  const int NR_ITEMS_OTHER  = pos_.x == 0 ? NR_B_ : NR_A_;
+  const int NR_ITEMS_OTHER  = pos_.x == 0 ? nrB_ : nrA_;
 
   switch(dir) {
     case Dir::up: {
       pos_.y--;
-      if(pos_.y < 0) {pos_ = pos_.x == 0 ? x1y1_ : x0y1_;}
+      if(pos_.y < 0) {
+        pos_ = pos_.x == 0 ? x1y1_ : x0y1_;
+
+        //Special wrap element set for A list
+        if(pos_.x == 0 && elemOnWrapUpA_ >= 0) {pos_.y = elemOnWrapUpA_;}
+      }
     } break;
 
     case Dir::down: {

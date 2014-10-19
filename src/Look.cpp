@@ -82,7 +82,7 @@ namespace Look {
 
 namespace {
 
-Entity getEntityToDescribe(const Pos pos) {
+Entity getEntityToDescribe(const Pos& pos) {
 
   //TODO this method is a little wonky
 

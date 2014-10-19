@@ -27,7 +27,6 @@ public:
   FeatureId getId() const override {return FeatureId::door;}
 
   std::string getName(const Article article)                  const override;
-  Clr         getDefClr()                                     const override;
   void        onFinishedBurning()                                   override;
   char        getGlyph()                                      const override;
   TileId      getTile()                                       const override;
@@ -64,6 +63,8 @@ public:
   const Rigid* getMimic() const {return mimicFeature_;}
 
 private:
+  Clr getClr_() const override;
+
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
