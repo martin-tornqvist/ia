@@ -258,8 +258,6 @@ enum class Dir {
 
 enum class ActorDeadState {alive, corpse, destroyed};
 
-enum class EntityType {actor, item, rigid, mob};
-
 enum HorizontalVertical {hor, ver};
 
 #endif

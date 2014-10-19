@@ -31,6 +31,7 @@
 #include "ItemDevice.h"
 #include "ItemScroll.h"
 #include "ItemPotion.h"
+#include "TextFormatting.h"
 
 using namespace std;
 
@@ -1047,8 +1048,9 @@ void Player::moveDir(Dir dir) {
         if(item) {
           const bool CAN_SEE = propHandler_->allowSee();
           Log::addMsg(CAN_SEE ? "I see here:" : "I try to feel what is lying here...");
-          Log::addMsg(item->getName(ItemRefType::plural, ItemRefInf::yes,
-                                    ItemRefAttInf::wpnContext) + ".");
+          const string itemName = item->getName(ItemRefType::plural, ItemRefInf::yes,
+                                                ItemRefAttInf::wpnContext);
+          Log::addMsg(TextFormatting::firstToUpper(itemName) + ".");
         }
       }
 

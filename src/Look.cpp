@@ -21,12 +21,6 @@
 
 using namespace std;
 
-Entity::Entity(Mob* feature_) :
-  feature(static_cast<Feature*>(feature_)), entityType(EntityType::mob) {}
-
-Entity::Entity(Rigid* feature_) :
-  feature(static_cast<Feature*>(feature_)), entityType(EntityType::rigid) {}
-
 namespace AutoDescrActor {
 
 namespace {
@@ -82,52 +76,29 @@ namespace Look {
 
 namespace {
 
-Entity getEntityToDescribe(const Pos& pos) {
-
-  //TODO this method is a little wonky
-
-  Actor* actor = Utils::getFirstActorAtPos(pos);
-
-  //If there is a living actor there, describe the actor.
-  if(actor && actor != Map::player) {
-    if(actor->deadState == ActorDeadState::alive) {
-      if(Map::player->isSeeingActor(*actor, nullptr)) {
-        return Entity(actor);
-      }
-    }
-  }
-
-  //Describe mob feature
-  for(auto* mob : GameTime::mobs_) {
-    if(mob->getPos() == pos) {return Entity(mob);}
-  }
-
-  //If item there, describe that.
-  Item* item = Map::cells[pos.x][pos.y].item;
-  if(item)
-    return Entity(item);
-
-  //If rigid, describe that.
-  return Entity(Map::cells[pos.x][pos.y].rigid);
-
-  return Entity();
-}
-
 void descrBriefMob(const Feature& feature) {
-  Log::addMsg(feature.getName(Article::a) + ".");
+  string str = feature.getName(Article::a);
+
+  Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
 }
 
 void descrBriefRigid(const Feature& feature) {
-  Log::addMsg(feature.getName(Article::a) + ".");
+  string str = feature.getName(Article::a);
+
+  Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
 }
 
 void descrBriefItem(const Item& item) {
-  Log::addMsg(item.getName(ItemRefType::plural, ItemRefInf::yes,
-                           ItemRefAttInf::wpnContext) + ".");
+  string str = item.getName(ItemRefType::plural, ItemRefInf::yes,
+                            ItemRefAttInf::wpnContext);
+
+  Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
 }
 
 void descrBriefActor(const Actor& actor) {
-  Log::addMsg(actor.getNameA() + ".");
+  string str = actor.getNameA();
+
+  Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
 }
 
 } //namespace
@@ -139,14 +110,34 @@ void printLocationInfoMsgs(const Pos& pos) {
   if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
     Log::addMsg("I see here:");
 
-    Entity entityDescribed = getEntityToDescribe(pos);
+    Actor* actor = Utils::getFirstActorAtPos(pos);
 
-    switch(entityDescribed.entityType) {
-      case EntityType::actor: {descrBriefActor(*entityDescribed.actor);}    break;
-      case EntityType::rigid: {descrBriefRigid(*entityDescribed.feature);}  break;
-      case EntityType::mob:   {descrBriefMob(*entityDescribed.feature);}    break;
-      case EntityType::item:  {descrBriefItem(*entityDescribed.item);}      break;
+    //If there is a living actor there, describe the actor.
+    if(actor && actor != Map::player) {
+      if(actor->deadState == ActorDeadState::alive) {
+        if(Map::player->isSeeingActor(*actor, nullptr)) {
+          descrBriefActor(*actor);
+          return;
+        }
+      }
     }
+
+    //Describe rigid.
+    descrBriefRigid(*Map::cells[pos.x][pos.y].rigid);
+
+    //Describe mobile features.
+    for(auto* mob : GameTime::mobs_) {
+      if(mob->getPos() == pos) {
+        descrBriefMob(*mob);
+      }
+    }
+
+    //Describe item.
+    Item* item = Map::cells[pos.x][pos.y].item;
+    if(item) {
+      descrBriefItem(*item);
+    }
+
   } else {
     Log::addMsg("I have no vision here.");
   }
