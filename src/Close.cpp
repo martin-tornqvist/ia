@@ -9,6 +9,7 @@
 #include "Log.h"
 #include "Query.h"
 #include "Render.h"
+#include "Utils.h"
 
 namespace Close {
 
@@ -35,7 +36,7 @@ void playerClose() {
   Log::clearLog();
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Render::drawMapAndInterface();
-  Pos closePos(Map::player->pos + Query::dir());
+  Pos closePos(Map::player->pos + DirUtils::getOffset(Query::dir()));
   Log::clearLog();
 
   if(closePos != Map::player->pos) {

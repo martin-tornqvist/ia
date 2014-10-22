@@ -23,6 +23,7 @@
    c      Close door
    d      Disarm trap
    D      Jam door with an iron spike
+   e      Quick move (automatically move in some direction until interrupted)
    f      Aim/fire wielded firearm
    g      Pick up item
    G      Unload or pick up ammunition from the ground
@@ -58,7 +59,7 @@ You can also use the arrow keys for movement. To move diagonally using the arrow
 
 Page up, Page down, Home, and End can also be used for diagonal movement.
 
-Vi keys are also supported:
+Vi keys (or "Rogue keys") are also supported:
 
    y k u
     \|/

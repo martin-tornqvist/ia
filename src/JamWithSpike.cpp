@@ -10,6 +10,7 @@
 #include "Inventory.h"
 #include "Render.h"
 #include "FeatureDoor.h"
+#include "Utils.h"
 
 namespace JamWithSpike {
 
@@ -56,7 +57,7 @@ void playerJam() {
 
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Render::drawMapAndInterface();
-  const Pos jamPos(Map::player->pos + Query::dir());
+  const Pos jamPos(Map::player->pos + DirUtils::getOffset(Query::dir()));
   Log::clearLog();
 
   playerJamFeature(Map::cells[jamPos.x][jamPos.y].rigid);

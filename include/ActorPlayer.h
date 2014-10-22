@@ -91,6 +91,8 @@ public:
 
   int getCarryWeightLmt() const;
 
+  void setQuickMove(const Dir dir);
+
   bool phobias[int(Phobia::END)];
   bool obsessions[int(Obsession::END)];
 
@@ -116,6 +118,10 @@ private:
 
   int       nrMovesUntilFreeAction_;
   int       nrTurnsUntilIns_;
+
+  int       nrQuickMoveStepsLeft_;
+  Dir       quickMoveDir_;
+
   const int CARRY_WEIGHT_BASE_;
 };
 

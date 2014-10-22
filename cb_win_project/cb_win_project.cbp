@@ -296,7 +296,10 @@
 		<Unit filename="../src/TextFormatting.cpp" />
 		<Unit filename="../src/Throwing.cpp" />
 		<Unit filename="../src/Utils.cpp" />
-		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/main.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="../test/src/main.cpp">
 			<Option target="UT" />
 		</Unit>

@@ -21,7 +21,7 @@ void playerKick() {
   Log::clearLog();
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Render::drawMapAndInterface();
-  Pos kickPos(Map::player->pos + Query::dir());
+  Pos kickPos(Map::player->pos + DirUtils::getOffset(Query::dir()));
   Log::clearLog();
 
   if(kickPos != Map::player->pos) {

@@ -49,6 +49,8 @@ Player::Player() :
   permShockTakenCurTurn_(0.0),
   nrMovesUntilFreeAction_(-1),
   nrTurnsUntilIns_(-1),
+  nrQuickMoveStepsLeft_(-1),
+  quickMoveDir_(Dir::END),
   CARRY_WEIGHT_BASE_(450) {}
 
 Player::~Player() {
@@ -614,22 +616,26 @@ void Player::testPhobias() {
       const ActorDataT& monsterData = actor->getData();
       if(monsterData.isCanine && phobias[int(Phobia::dog)]) {
         Log::addMsg("I am plagued by my canine phobia!");
-        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(
+          new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
       if(monsterData.isRat && phobias[int(Phobia::rat)]) {
         Log::addMsg("I am plagued by my rat phobia!");
-        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(
+          new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
       if(monsterData.isUndead && phobias[int(Phobia::undead)]) {
         Log::addMsg("I am plagued by my phobia of the dead!");
-        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(
+          new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
       if(monsterData.isSpider && phobias[int(Phobia::spider)]) {
         Log::addMsg("I am plagued by my spider phobia!");
-        propHandler_->tryApplyProp(new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(
+          new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
     }
@@ -675,6 +681,11 @@ void Player::updateClr() {
   clr_ = data_->color;
 }
 
+void Player::setQuickMove(const Dir dir) {
+  nrQuickMoveStepsLeft_ = 10;
+  quickMoveDir_         = dir;
+}
+
 void Player::onActorTurn() {
   Render::drawMapAndInterface();
 
@@ -706,6 +717,32 @@ void Player::onActorTurn() {
     InvHandling::browserIdxToSetAfterDrop = 0;
   }
 
+  //Quick move
+  if(nrQuickMoveStepsLeft_ > 0) {
+    //TODO Check if should abort quick move due to corners etc
+
+    //Note: There is no need to check for items here, since the message from stepping
+    //on an item will interrupt player actions.
+
+    const Pos destPos(pos + DirUtils::getOffset(quickMoveDir_));
+
+    bool abort = false;
+
+    if(!Map::cells[destPos.x][destPos.y].rigid->canMoveCmn()) {
+      abort = true;
+    }
+
+    if(abort) {
+      nrQuickMoveStepsLeft_ = -1;
+      quickMoveDir_         = Dir::END;
+    } else {
+      --nrQuickMoveStepsLeft_;
+      moveDir(quickMoveDir_);
+      return;
+    }
+  }
+
+  //If this point is reached - read input from player
   if(Config::isBotPlaying()) {
     Bot::act();
   } else {
@@ -811,7 +848,7 @@ void Player::onStdTurn() {
         const bool IS_MONSTER_SEEN = isSeeingActor(*actor, nullptr);
         if(IS_MONSTER_SEEN) {
           if(!monster.messageMonsterInViewPrinted) {
-            if(activeMedicalBag || waitTurnsLeft > 0) {
+            if(activeMedicalBag || waitTurnsLeft > 0 || nrQuickMoveStepsLeft_ > 0) {
               Log::addMsg(actor->getNameA() + " comes into my view.", clrWhite, true);
             }
             monster.messageMonsterInViewPrinted = true;
@@ -900,6 +937,7 @@ void Player::onStdTurn() {
 void Player::interruptActions() {
   Render::drawMapAndInterface();
 
+  //Abort browsing inventory
   InvHandling::screenToOpenAfterDrop    = InvScrId::END;
   InvHandling::browserIdxToSetAfterDrop = 0;
 
@@ -910,10 +948,15 @@ void Player::interruptActions() {
   }
   waitTurnsLeft = -1;
 
+  //Abort healing
   if(activeMedicalBag) {
     activeMedicalBag->interrupted();
     activeMedicalBag = nullptr;
   }
+
+  //Abort quick move
+  nrQuickMoveStepsLeft_ = -1;
+  quickMoveDir_         = Dir::END;
 }
 
 void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
@@ -1047,7 +1090,8 @@ void Player::moveDir(Dir dir) {
         Item* const item = Map::cells[pos.x][pos.y].item;
         if(item) {
           const bool CAN_SEE = propHandler_->allowSee();
-          Log::addMsg(CAN_SEE ? "I see here:" : "I try to feel what is lying here...");
+          Log::addMsg(CAN_SEE ? "I see here:" : "I try to feel what is lying here...",
+                      clrWhite, true);
           const string itemName = item->getName(ItemRefType::plural, ItemRefInf::yes,
                                                 ItemRefAttInf::wpnContext);
           Log::addMsg(TextFormatting::firstToUpper(itemName) + ".");

@@ -103,9 +103,10 @@ int main(int argc, char* argv[]) {
 
           actor->updateClr();
 
-          if(
-            actor->getPropHandler().allowAct() &&
-            actor->deadState != ActorDeadState::destroyed) {
+          const bool ALLOW_ACT  = actor->getPropHandler().allowAct();
+          const bool IS_GIBBED  = actor->deadState == ActorDeadState::destroyed;
+
+          if(ALLOW_ACT && !IS_GIBBED) {
             actor->onActorTurn();
           } else {
             if(actor == Map::player) {

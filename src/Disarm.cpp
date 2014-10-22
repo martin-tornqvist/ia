@@ -49,7 +49,7 @@ void playerDisarm() {
   Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
   Render::drawMapAndInterface();
 
-  const Pos pos(Map::player->pos + Query::dir());
+  const Pos pos(Map::player->pos + DirUtils::getOffset(Query::dir()));
 
   if(pos != Map::player->pos) {
 

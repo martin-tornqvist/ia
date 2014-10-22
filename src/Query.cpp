@@ -87,7 +87,7 @@ int number(const Pos& pos, const Clr clr, const int MIN,
       retNum = retNum / 10;
       Render::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
       Render::drawText((retNum == 0 ? "" : toStr(retNum)) + "_",
-                         Panel::screen, pos, clr);
+                       Panel::screen, pos, clr);
       Render::updateScreen();
       continue;
     }
@@ -97,7 +97,7 @@ int number(const Pos& pos, const Clr clr, const int MIN,
       retNum = max(MIN, retNum * 10 + curDigit);
       Render::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
       Render::drawText((retNum == 0 ? "" : toStr(retNum)) + "_",
-                         Panel::screen, pos, clr);
+                       Panel::screen, pos, clr);
       Render::updateScreen();
     }
   }
@@ -113,7 +113,7 @@ void waitForEscOrSpace() {
   }
 }
 
-Pos dir() {
+Dir dir() {
   KeyData d = Input::readKeysUntilFound();
 
   while(d.sdlKey != SDLK_RIGHT   && d.sdlKey != SDLK_UP       &&
@@ -128,46 +128,46 @@ Pos dir() {
   }
 
   if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
-    return Pos(0, 0);
+    return Dir::center;
   }
   if(d.sdlKey == SDLK_RIGHT    || d.key == '6' || d.key == 'l') {
     if(d.isShiftHeld) {
-      return Pos(1, -1);
+      return Dir::upRight;
     } else if(d.isCtrlHeld) {
-      return Pos(1, 1);
+      return Dir::downRight;
     } else {
-      return Pos(1, 0);
+      return Dir::right;
     }
   }
   if(d.sdlKey == SDLK_PAGEUP   || d.key == '9' || d.key == 'u') {
-    return Pos(1, -1);
+    return Dir::upRight;
   }
   if(d.sdlKey == SDLK_UP       || d.key == '8' || d.key == 'k') {
-    return Pos(0, -1);
+    return Dir::up;
   }
   if(d.sdlKey == SDLK_END      || d.key == '7' || d.key == 'y') {
-    return Pos(-1, -1);
+    return Dir::upLeft;
   }
   if(d.sdlKey == SDLK_LEFT     || d.key == '4' || d.key == 'h') {
     if(d.isShiftHeld) {
-      return Pos(-1, -1);
+      return Dir::upLeft;
     } else if(d.isCtrlHeld) {
-      return Pos(-1, 1);
+      return Dir::downLeft;
     } else {
-      return Pos(-1, 0);
+      return Dir::left;
     }
   }
   if(d.sdlKey == SDLK_END      || d.key == '1' || d.key == 'b') {
-    return Pos(-1, 1);
+    return Dir::downLeft;
   }
   if(d.sdlKey == SDLK_DOWN     || d.key == '2' || d.key == 'j') {
-    return Pos(0, 1);
+    return Dir::down;
   }
   if(d.sdlKey == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n') {
-    return Pos(1, 1);
+    return Dir::downRight;
   }
 
-  return Pos(0, 0);
+  return Dir::center;
 }
 
 } //Query

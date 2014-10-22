@@ -7,6 +7,7 @@
 #include "Log.h"
 #include "Query.h"
 #include "Render.h"
+#include "Utils.h"
 
 namespace Examine {
 
@@ -17,7 +18,7 @@ void playerExamine() {
     Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
     Render::drawMapAndInterface();
 
-    Pos examinePos = Map::player->pos + Query::dir();
+    Pos examinePos = Map::player->pos + DirUtils::getOffset(Query::dir());
 
     Log::clearLog();
 

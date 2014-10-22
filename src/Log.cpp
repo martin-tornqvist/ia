@@ -63,7 +63,7 @@ void drawHistoryInterface(const int TOP_LINE_NR, const int BTM_LINE_NR) {
 
   if(history_.empty()) {
     Render::drawText(" No message history ", Panel::screen,
-                       Pos(X_LABEL, 0), clrGray);
+                     Pos(X_LABEL, 0), clrGray);
   } else {
     Render::drawText(
       " Displaying messages " + toStr(TOP_LINE_NR + 1) + "-" +
@@ -107,8 +107,7 @@ void drawLog(const bool SHOULD_UPDATE_SCREEN) {
   if(SHOULD_UPDATE_SCREEN) Render::updateScreen();
 }
 
-void addMsg(const string& text, const Clr& clr,
-            const bool INTERRUPT_PLAYER_ACTIONS,
+void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTIONS,
             const bool ADD_MORE_PROMPT_AFTER_MSG) {
 
   assert(!text.empty());
@@ -134,8 +133,7 @@ void addMsg(const string& text, const Clr& clr,
   if(!isRepeated) {
     const int REPEAT_STR_LEN = 4;
 
-    const int PADDING_LEN = REPEAT_STR_LEN +
-                            (curLineNr == 0 ? 0 : (moreStr.size() + 1));
+    const int PADDING_LEN = REPEAT_STR_LEN + (curLineNr == 0 ? 0 : (moreStr.size() + 1));
 
     int xPos = getXAfterMsg(lastMsg);
 

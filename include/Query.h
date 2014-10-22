@@ -13,7 +13,7 @@ void waitForKeyPress();
 
 YesNoAnswer yesOrNo(char keyForSpecialEvent = -1);
 
-Pos dir();
+Dir dir();
 
 void waitForEscOrSpace();
 
