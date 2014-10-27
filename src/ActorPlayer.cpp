@@ -564,7 +564,7 @@ void Player::incrInsanity() {
 void Player::addTmpShockFromFeatures() {
   Cell& cell = Map::cells[pos.x][pos.y];
 
-  if(cell.isDark && !cell.isLight) {shockTmp_ += 20;}
+  if(cell.isDark && !cell.isLit) {shockTmp_ += 20;}
 
   for(int dy = -1; dy <= 1; ++dy) {
     const int Y = pos.y + dy;
@@ -719,8 +719,6 @@ void Player::onActorTurn() {
 
   //Quick move
   if(nrQuickMoveStepsLeft_ > 0) {
-    //TODO Check if should abort quick move due to corners etc
-
     //Note: There is no need to check for items here, since the message from stepping
     //on an item will interrupt player actions.
 
@@ -728,7 +726,8 @@ void Player::onActorTurn() {
 
     bool abort = false;
 
-    if(!Map::cells[destPos.x][destPos.y].rigid->canMoveCmn()) {
+    Cell& tgtCell = Map::cells[destPos.x][destPos.y];
+    if(!tgtCell.rigid->canMoveCmn() || (tgtCell.isDark && !tgtCell.isLit)) {
       abort = true;
     }
 
@@ -1267,7 +1266,7 @@ void Player::FOVhack() {
               const Cell& adjCell = Map::cells[adj.x][adj.y];
               if(
                 adjCell.isSeenByPlayer &&
-                (!adjCell.isDark || adjCell.isLight) &&
+                (!adjCell.isDark || adjCell.isLit) &&
                 !blocked[adj.x][adj.y]) {
                 Map::cells[x][y].isSeenByPlayer = true;
                 dx = 999;

@@ -58,7 +58,7 @@ void drawLocationInfo() {
     //Light/darkness
     const auto& cell = Map::cells[p.x][p.y];
     if(cell.isDark) {
-      str += cell.isLight ? "The darkness is lit up. " : "It is dark here. ";
+      str += cell.isLit ? "The darkness is lit up. " : "It is dark here. ";
     }
   }
 

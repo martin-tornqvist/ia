@@ -62,7 +62,7 @@ void runStdTurnEvents() {
 
     //Do light damage if actor in lit cell
     const Pos& pos = actor->pos;
-    if(Map::cells[pos.x][pos.y].isLight) {actor->hit(1, DmgType::light);}
+    if(Map::cells[pos.x][pos.y].isLit) {actor->hit(1, DmgType::light);}
 
     if(actor->deadState == ActorDeadState::alive) {
       //Regen Spi
@@ -286,7 +286,7 @@ void updateLightMap() {
 
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
-      Map::cells[x][y].isLight = lightTmp[x][y] = false;
+      Map::cells[x][y].isLit = lightTmp[x][y] = false;
     }
   }
 
@@ -305,7 +305,7 @@ void updateLightMap() {
 
       //Note: Here the temporary values are copied to the map.
       //This must of course be done last!
-      Map::cells[x][y].isLight = lightTmp[x][y];
+      Map::cells[x][y].isLit = lightTmp[x][y];
     }
   }
 }

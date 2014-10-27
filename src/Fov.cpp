@@ -26,7 +26,7 @@ void checkOneCellOfMany(const bool obstructions[MAP_W][MAP_H],
 
   if(!pathDeltas) {return;}
 
-  const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLight;
+  const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLit;
 
   Pos curPos;
   Pos prevPos;
@@ -38,7 +38,7 @@ void checkOneCellOfMany(const bool obstructions[MAP_W][MAP_H],
       prevPos.set(origin + pathDeltas->at(i - 1));
       const bool PRE_CELL_IS_DRK = Map::cells[prevPos.x][prevPos.y].isDark;
       const bool CUR_CELL_IS_DRK = Map::cells[curPos.x][curPos.y].isDark;
-      const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLight;
+      const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLit;
       if(
         !CUR_CELL_IS_LGT && !TGT_IS_LGT &&
         (PRE_CELL_IS_DRK || CUR_CELL_IS_DRK) && IS_AFFECTED_BY_DARKNESS) {
@@ -72,7 +72,7 @@ bool checkCell(const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
 
   if(!pathDeltas) {return false;}
 
-  const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLight;
+  const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLit;
 
   Pos curPos;
   Pos prevPos;
@@ -84,7 +84,7 @@ bool checkCell(const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
       prevPos.set(origin + pathDeltas->at(i - 1));
       const bool PRE_CELL_IS_DRK = Map::cells[prevPos.x][prevPos.y].isDark;
       const bool CUR_CELL_IS_DRK = Map::cells[curPos.x][curPos.y].isDark;
-      const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLight;
+      const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLit;
       if(
         !CUR_CELL_IS_LGT && !TGT_IS_LGT &&
         (PRE_CELL_IS_DRK || CUR_CELL_IS_DRK) && IS_AFFECTED_BY_DARKNESS) {

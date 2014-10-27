@@ -20,7 +20,7 @@ using namespace std;
 Cell::Cell() :
   isExplored(false),
   isSeenByPlayer(false),
-  isLight(false),
+  isLit(false),
   isDark(false),
   item(nullptr),
   rigid(nullptr),

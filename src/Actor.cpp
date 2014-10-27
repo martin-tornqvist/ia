@@ -50,7 +50,7 @@ bool Actor::isSpottingHiddenActor(Actor& other) {
 
   const int  DIST     = Utils::kingDist(pos, otherPos);
   const int  DIST_BON = getConstrInRange(0, (DIST - 1) * 10, 60);
-  const int  LGT_DIV  = Map::cells[otherPos.x][otherPos.y].isLight ? 2 : 1;
+  const int  LGT_DIV  = Map::cells[otherPos.x][otherPos.y].isLit ? 2 : 1;
   const int  SKILL =
     getConstrInRange(0, (SNEAK_BASE + DIST_BON - playerBon) / LGT_DIV, 90);
 

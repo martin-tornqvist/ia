@@ -811,7 +811,7 @@ void drawMap() {
           curDrw->glyph = goreGlyph;
           curDrw->clr   = clrRed;
         }
-        if(Map::cells[x][y].isLight && f->canMoveCmn()) {curDrw->isMarkedLit = true;}
+        if(Map::cells[x][y].isLit && f->canMoveCmn()) {curDrw->isMarkedLit = true;}
       }
     }
   }
@@ -931,7 +931,7 @@ void drawMap() {
             divClr(tmpDrw.clrBg,  DIV);
           }
 
-          if(cell.isDark && !cell.isLight) {
+          if(cell.isDark && !cell.isLit) {
             const double DRK_DIV = 1.75;
             divClr(tmpDrw.clr,    DRK_DIV);
             divClr(tmpDrw.clrBg,  DRK_DIV);

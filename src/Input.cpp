@@ -431,6 +431,10 @@ void handleKeyPress(const KeyData& d) {
           //Player is poisoned
           Log::addMsg("Not while poisoned.");
           Render::drawMapAndInterface();
+        } else if(find(begin(propIds), end(propIds), propConfused) != end(propIds)) {
+          //Player is confused
+          Log::addMsg("Not while confused.");
+          Render::drawMapAndInterface();
         } else {
           Log::addMsg("Which direction?" + cancelInfoStr);
           Render::drawMapAndInterface();

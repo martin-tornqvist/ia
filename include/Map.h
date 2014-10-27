@@ -19,7 +19,7 @@ struct Cell {
   Cell();
   ~Cell();
 
-  bool            isExplored, isSeenByPlayer, isLight, isDark;
+  bool            isExplored, isSeenByPlayer, isLit, isDark;
   Item*           item;
   Rigid*          rigid;
   CellRenderData  playerVisualMemory;
