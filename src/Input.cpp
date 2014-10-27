@@ -566,8 +566,8 @@ void handleKeyPress(const KeyData& d) {
           return MarkerDone::no;
         };
 
-        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
-                    onMarkerAtPos, onKeyPress);
+        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes, onMarkerAtPos,
+                    onKeyPress);
 
       } else {
         Log::addMsg("Not while blind.");

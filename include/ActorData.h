@@ -91,6 +91,8 @@ struct ActorDataT {
   ActorId id;
   std::string nameA;
   std::string nameThe;
+  std::string corpseNameA;
+  std::string corpseNameThe;
   TileId tile;
   char glyph;
   Clr color;

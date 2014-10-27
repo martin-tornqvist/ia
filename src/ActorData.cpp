@@ -16,6 +16,8 @@ void ActorDataT::reset() {
   id = ActorId::END;
   nameA = "";
   nameThe = "";
+  corpseNameA = "";
+  corpseNameThe = "";
   tile = TileId::empty;
   glyph = 'X';
   color = clrYellow;
@@ -81,6 +83,8 @@ void initDataList() {
 
   d.nameA = "A Reanimated Corpse";
   d.nameThe = "The Reanimated Corpse";
+  d.corpseNameA = "A lifeless gruesome corpse";
+  d.corpseNameThe = "The lifeless gruesome corpse";
   d.id = ActorId::zombie;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -123,6 +127,8 @@ void initDataList() {
 
   d.nameA = "A Reanimated Corpse";
   d.nameThe = "The Reanimated Corpse";
+  d.corpseNameA = "A lifeless gruesome corpse";
+  d.corpseNameThe = "The lifeless gruesome corpse";
   d.id = ActorId::zombieAxe;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -165,6 +171,8 @@ void initDataList() {
 
   d.nameA = "A Bloated Corpse";
   d.nameThe = "The Bloated Corpse";
+  d.corpseNameA = "A very large lifeless gruesome corpse";
+  d.corpseNameThe = "The very large lifeless gruesome corpse";
   d.id = ActorId::bloatedZombie;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -206,6 +214,8 @@ void initDataList() {
 
   d.nameA = "Major Clapham-Lee";
   d.nameThe = "Major Clapham-Lee";
+  d.corpseNameA = "The corpse of Major Clapham-Lee";
+  d.corpseNameThe = d.corpseNameA;
   d.id = ActorId::majorClaphamLee;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -247,6 +257,8 @@ void initDataList() {
 
   d.nameA = "Dean Halsey";
   d.nameThe = "Dean Halsey";
+  d.corpseNameA = "The corpse of Dean Halsey";
+  d.corpseNameThe = d.corpseNameA;
   d.id = ActorId::deanHalsey;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -288,6 +300,8 @@ void initDataList() {
 
   d.nameA = "A Cultist";
   d.nameThe = "The Cultist";
+  d.corpseNameA = "A Cultist corpse";
+  d.corpseNameThe = "The Cultist corpse";
   d.id = ActorId::cultist;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -326,6 +340,8 @@ void initDataList() {
 
   d.nameA = "A Cultist";
   d.nameThe = "The Cultist";
+  d.corpseNameA = "A Cultist corpse";
+  d.corpseNameThe = "The Cultist corpse";
   d.id = ActorId::cultistTeslaCannon;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -364,6 +380,8 @@ void initDataList() {
 
   d.nameA = "A Cultist";
   d.nameThe = "The Cultist";
+  d.corpseNameA = "A Cultist corpse";
+  d.corpseNameThe = "The Cultist corpse";
   d.id = ActorId::cultistSpikeGun;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -402,6 +420,8 @@ void initDataList() {
 
   d.nameA = "Keziah Mason";
   d.nameThe = "Keziah Mason";
+  d.corpseNameA = "The corpse of Keziah Mason";
+  d.corpseNameThe = d.corpseNameA;
   d.id = ActorId::keziahMason;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -449,6 +469,8 @@ void initDataList() {
 
   d.nameA = "Brown Jenkin";
   d.nameThe = "Brown Jenkin";
+  d.corpseNameA = "The corpse of Brown Jenkin";
+  d.corpseNameThe = d.corpseNameA;
   d.id = ActorId::brownJenkin;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -495,6 +517,8 @@ void initDataList() {
 
   d.nameA = "Elder Hierophant";
   d.nameThe = "The " + d.nameA;
+  d.corpseNameA = "The corpse of The Elder Hierophant";
+  d.corpseNameThe = d.corpseNameA;
   d.id = ActorId::lengElder;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -546,6 +570,8 @@ void initDataList() {
 
   d.nameA = "A Cultist Priest";
   d.nameThe = "The Cultist Priest";
+  d.corpseNameA = "A Cultist Priest corpse";
+  d.corpseNameThe = "The Cultist Priest corpse";
   d.id = ActorId::cultistPriest;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -583,6 +609,8 @@ void initDataList() {
 
   d.nameA = "A Green Spider";
   d.nameThe = "The Green Spider";
+  d.corpseNameA = "A Green Spider corpse";
+  d.corpseNameThe = "The Green Spider corpse";
   d.id = ActorId::greenSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -615,6 +643,8 @@ void initDataList() {
 
   d.nameA = "A White Spider";
   d.nameThe = "The White Spider";
+  d.corpseNameA = "A White Spider corpse";
+  d.corpseNameThe = "The White Spider corpse";
   d.id = ActorId::whiteSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -647,6 +677,8 @@ void initDataList() {
 
   d.nameA = "A Red Spider";
   d.nameThe = "The Red Spider";
+  d.corpseNameA = "A Red Spider corpse";
+  d.corpseNameThe = "The Red Spider corpse";
   d.id = ActorId::redSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -715,6 +747,8 @@ void initDataList() {
 
   d.nameA = "A Leng Spider";
   d.nameThe = "The Leng Spider";
+  d.corpseNameA = "A Leng Spider corpse";
+  d.corpseNameThe = "The Leng Spider corpse";
   d.id = ActorId::lengSpider;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -751,6 +785,8 @@ void initDataList() {
 
   d.nameA = "A Fire hound";
   d.nameThe = "The Fire hound";
+  d.corpseNameA = "A Fire Hound corpse";
+  d.corpseNameThe = "The Fire Hound corpse";
   d.id = ActorId::fireHound;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -794,6 +830,8 @@ void initDataList() {
 
   d.nameA = "A Frost hound";
   d.nameThe = "The Frost hound";
+  d.corpseNameA = "A Frost Hound corpse";
+  d.corpseNameThe = "The Frost Hound corpse";
   d.id = ActorId::frostHound;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -837,6 +875,8 @@ void initDataList() {
 
   d.nameA = "Zuul the Gatekeeper";
   d.nameThe = "Zuul the Gatekeeper";
+  d.corpseNameA = "The corpse of Zuul the Gatekeeper";
+  d.corpseNameThe = d.corpseNameA;
   d.id = ActorId::zuul;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -1013,6 +1053,8 @@ void initDataList() {
 
   d.nameA = "A Rat";
   d.nameThe = "The Rat";
+  d.corpseNameA = "A Rat corpse";
+  d.corpseNameThe = "The Rat corpse";
   d.id = ActorId::rat;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -1049,6 +1091,8 @@ void initDataList() {
 
   d.nameA = "A Rat-thing";
   d.nameThe = "The Rat-thing";
+  d.corpseNameA = "A Rat-thing corpse";
+  d.corpseNameThe = "The Rat-thing corpse";
   d.id = ActorId::ratThing;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1092,6 +1136,8 @@ void initDataList() {
 
   d.nameA = "A Wolf";
   d.nameThe = "The Wolf";
+  d.corpseNameA = "A Wolf corpse";
+  d.corpseNameThe = "The Wolf corpse";
   d.id = ActorId::wolf;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1130,6 +1176,8 @@ void initDataList() {
 
   d.nameA = "A Giant Bat";
   d.nameThe = "The Giant Bat";
+  d.corpseNameA = "A Giant Bat corpse";
+  d.corpseNameThe = "The Giant Bat corpse";
   d.id = ActorId::giantBat;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1169,6 +1217,8 @@ void initDataList() {
 
   d.nameA = "A Byakhee";
   d.nameThe = "The Byakhee";
+  d.corpseNameA = "A Byakhee corpse";
+  d.corpseNameThe = "The Byakhee corpse";
   d.id = ActorId::byakhee;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1216,6 +1266,8 @@ void initDataList() {
 
   d.nameA = "A Giant Mantis";
   d.nameThe = "The Giant Mantis";
+  d.corpseNameA = "A Giant Mantis corpse";
+  d.corpseNameThe = "The Giant Mantis corpse";
   d.id = ActorId::giantMantis;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1250,6 +1302,8 @@ void initDataList() {
 
   d.nameA = "A Giant Locust";
   d.nameThe = "The Giant Locust";
+  d.corpseNameA = "A Giant Locust corpse";
+  d.corpseNameThe = "The Giant Locust corpse";
   d.id = ActorId::locust;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -1284,6 +1338,8 @@ void initDataList() {
 
   d.nameA = "A Fungi from Yuggoth";
   d.nameThe = "The Fungi from Yuggoth";
+  d.corpseNameA = "A dead Fungi from Yuggoth";
+  d.corpseNameThe = "The dead Fungi from Yuggoth";
   d.id = ActorId::miGo;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1339,6 +1395,8 @@ void initDataList() {
 
   d.nameA = "A Flying Polyp";
   d.nameThe = "The Flying Polyp";
+  d.corpseNameA = "A dead Polyp";
+  d.corpseNameThe = "The dead Polyp";
   d.id = ActorId::flyingPolyp;
   d.canBeSummoned = false;
   d.canBleed = false;
@@ -1391,6 +1449,8 @@ void initDataList() {
 
   d.nameA = "A Ghoul";
   d.nameThe = "The Ghoul";
+  d.corpseNameA = "A Ghoul corpse";
+  d.corpseNameThe = "The Ghoul corpse";
   d.id = ActorId::ghoul;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1480,6 +1540,8 @@ void initDataList() {
 
   d.nameA = "A Mummy";
   d.nameThe = "The Mummy";
+  d.corpseNameA = "A lifeless Mummy";
+  d.corpseNameThe = "The lifeless Mummy";
   d.id = ActorId::mummy;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1516,6 +1578,8 @@ void initDataList() {
 
   d.nameA = "Khephren";
   d.nameThe = "Khephren";
+  d.corpseNameA = "The lifeless Mummy of Khephren";
+  d.corpseNameThe = d.corpseNameA;
   d.id = ActorId::khephren;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1557,6 +1621,8 @@ void initDataList() {
 
   d.nameA = "Nitokris";
   d.nameThe = "Nitokris";
+  d.corpseNameA = "The lifeless Mummy of Nitokris";
+  d.corpseNameThe = d.corpseNameA;
   d.id = ActorId::nitokris;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1600,6 +1666,8 @@ void initDataList() {
 
   d.nameA = "A Deep One";
   d.nameThe = "The Deep One";
+  d.corpseNameA = "A corpse of a Deep One";
+  d.corpseNameThe = "The corpse of a Deep One";
   d.id = ActorId::deepOne;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1666,11 +1734,12 @@ void initDataList() {
   d.groupSize = monsterGroupSizeGroup;
   d.actorSize = actorSize_floor;
   d.nrTurnsAwarePlayer = 10;
-  d.descr = "A slithering conglomeration of carnivorous worms. They multiply "
-            "rapidly.";
+  d.descr = "A slithering conglomeration of carnivorous worms. They multiply rapidly.";
+  d.canBeSummoned = true;
   d.isAutoDescrAllowed = false;
   d.erraticMovement = actorErratic_very;
   d.canBleed = false;
+  d.canLeaveCorpse = false;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::monster);
   data[int(d.id)] = d;
@@ -2048,6 +2117,8 @@ void initDataList() {
 
   d.nameA = "A Chthonian";
   d.nameThe = "The Chthonian";
+  d.corpseNameA = "A Chthonian corpse";
+  d.corpseNameThe = "The Chthonian corpse";
   d.id = ActorId::chthonian;
   d.ai[int(AiId::looks)] = false;
   d.ai[int(AiId::makesRoomForFriend)] = false;
@@ -2092,6 +2163,8 @@ void initDataList() {
 
   d.nameA = "A Hunting Horror";
   d.nameThe = "The Hunting Horror";
+  d.corpseNameA = "A Hunting Horror corpse";
+  d.corpseNameThe = "The Hunting Horror corpse";
   d.id = ActorId::huntingHorror;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;

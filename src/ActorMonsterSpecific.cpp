@@ -803,7 +803,7 @@ bool Zombie::tryResurrect() {
           hasResurrected = true;
           data_->nrKills--;
           if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
-            Log::addMsg(getNameThe() + " rises again!!", clrWhite, true);
+            Log::addMsg(getCorpseNameThe() + " rises again!!", clrWhite, true);
             Map::player->incrShock(ShockValue::some, ShockSrc::misc);
           }
 

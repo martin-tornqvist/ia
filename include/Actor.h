@@ -59,18 +59,20 @@ public:
 
   void getSeenFoes(std::vector<Actor*>& vectorRef);
 
-  inline ActorId getId()    const {return data_->id;}
-  inline int getHp()        const {return hp_;}
-  inline int getSpi()       const {return spi_;}
+  inline ActorId getId()                  const {return data_->id;}
+  inline int getHp()                      const {return hp_;}
+  inline int getSpi()                     const {return spi_;}
   int getHpMax(const bool WITH_MODIFIERS) const;
-  inline int getSpiMax()    const {return spiMax_;}
+  inline int getSpiMax()                  const {return spiMax_;}
 
-  inline std::string getNameThe()   const {return data_->nameThe;}
-  inline std::string getNameA()     const {return data_->nameA;}
-  inline bool isHumanoid()          const {return data_->isHumanoid;}
-  inline char getGlyph()            const {return glyph_;}
-  virtual const Clr& getClr()       {return clr_;}
-  inline const TileId& getTile()    const {return tile_;}
+  inline std::string getNameThe()         const {return data_->nameThe;}
+  inline std::string getNameA()           const {return data_->nameA;}
+  inline std::string getCorpseNameA()     const {return data_->corpseNameA;}
+  inline std::string getCorpseNameThe()   const {return data_->corpseNameThe;}
+  inline bool isHumanoid()                const {return data_->isHumanoid;}
+  inline char getGlyph()                  const {return glyph_;}
+  virtual const Clr& getClr()                   {return clr_;}
+  inline const TileId& getTile()          const {return tile_;}
 
   void addLight(bool lightMap[MAP_W][MAP_H]) const;
 

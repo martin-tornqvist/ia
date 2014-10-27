@@ -13,6 +13,8 @@ void getSpaceSeparatedList(const std::string& line, std::vector<std::string>& li
 void replaceAll(const std::string& line, const std::string& from, const std::string& to,
                 std::string& resultRef);
 
+std::string firstToLower(const std::string& str);
+
 std::string firstToUpper(const std::string& str);
 
 } //TextFormatting

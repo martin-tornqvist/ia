@@ -94,6 +94,14 @@ void replaceAll(const string& line, const string& from, const string& to,
   }
 }
 
+string firstToLower(const std::string& str) {
+  if(str.empty()) {return "";}
+
+  string ret  = str;
+  ret[0]      = tolower(ret[0]);
+  return ret;
+}
+
 string firstToUpper(const string& str) {
   if(str.empty()) {return "";}
 

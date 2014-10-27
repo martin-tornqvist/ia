@@ -54,7 +54,6 @@ string getDwellingLvlStr(const ActorDataT& def) {
 } //namespace
 
 void addAutoDescriptionLines(Actor* const actor, string& line) {
-
   const ActorDataT& def = actor->getData();
 
   if(def.isUnique) {
@@ -74,71 +73,57 @@ void addAutoDescriptionLines(Actor* const actor, string& line) {
 
 namespace Look {
 
-namespace {
-
-void descrBriefMob(const Feature& feature) {
-  string str = feature.getName(Article::a);
-
-  Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
-}
-
-void descrBriefRigid(const Feature& feature) {
-  string str = feature.getName(Article::a);
-
-  Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
-}
-
-void descrBriefItem(const Item& item) {
-  string str = item.getName(ItemRefType::plural, ItemRefInf::yes,
-                            ItemRefAttInf::wpnContext);
-
-  Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
-}
-
-void descrBriefActor(const Actor& actor) {
-  string str = actor.getNameA();
-
-  Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
-}
-
-} //namespace
-
 void printLocationInfoMsgs(const Pos& pos) {
 
   Log::clearLog();
 
+  const Cell& cell = Map::cells[pos.x][pos.y];
+
   if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
     Log::addMsg("I see here:");
 
-    Actor* actor = Utils::getFirstActorAtPos(pos);
-
-    //If there is a living actor there, describe the actor.
-    if(actor && actor != Map::player) {
-      if(actor->deadState == ActorDeadState::alive) {
-        if(Map::player->isSeeingActor(*actor, nullptr)) {
-          descrBriefActor(*actor);
-          return;
-        }
-      }
-    }
+    string str = "";
 
     //Describe rigid.
-    descrBriefRigid(*Map::cells[pos.x][pos.y].rigid);
+    str = cell.rigid->getName(Article::a);
+    Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
 
     //Describe mobile features.
     for(auto* mob : GameTime::mobs_) {
       if(mob->getPos() == pos) {
-        descrBriefMob(*mob);
+        str = mob->getName(Article::a);
+        Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
       }
     }
 
     //Describe item.
-    Item* item = Map::cells[pos.x][pos.y].item;
+    Item* item = cell.item;
     if(item) {
-      descrBriefItem(*item);
+      str = item->getName(ItemRefType::plural, ItemRefInf::yes,
+                          ItemRefAttInf::wpnContext);
+      Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
     }
 
-  } else {
+    //Describe dead actors.
+    for(Actor* actor : GameTime::actors_) {
+      if(actor->deadState == ActorDeadState::corpse && actor->pos == pos) {
+        str = actor->getCorpseNameA();
+        Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
+      }
+    }
+
+    //Describe living actor.
+    Actor* actor = Utils::getFirstActorAtPos(pos);
+    if(actor && actor != Map::player) {
+      if(actor->deadState == ActorDeadState::alive) {
+        if(Map::player->isSeeingActor(*actor, nullptr)) {
+          str = actor->getNameA();
+          Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
+        }
+      }
+    }
+
+  } else { //Cell not seen
     Log::addMsg("I have no vision here.");
   }
 }

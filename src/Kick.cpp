@@ -10,6 +10,7 @@
 #include "Render.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "TextFormatting.h"
 
 using namespace std;
 
@@ -44,13 +45,11 @@ void playerKick() {
     //Kick corpse?
     Actor* deadActor = Utils::getFirstActorAtPos(kickPos, ActorDeadState::corpse);
     if(deadActor) {
-      const bool IS_SEEING_CORPSE = Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
+      const bool IS_SEEING_CELL = Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
+      const string corpseName   = IS_SEEING_CELL ? deadActor->getCorpseNameA() :
+                                  "a corpse";
 
-      const string actorNameA = deadActor->getNameA();
-
-      const string name = IS_SEEING_CORPSE ? ("the body of " + actorNameA) : "a corpse";
-
-      Log::addMsg("I bash " + name + ".");
+      Log::addMsg("I bash " + TextFormatting::firstToLower(corpseName) + ".");
 
       pair<int, int> kickDmg = ItemData::data[int(ItemId::playerKick)]->melee.dmg;
       deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical);

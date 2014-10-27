@@ -360,7 +360,7 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
 
       if(this != Map::player) {
         if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
-          Log::addMsg("The body of " + getNameA() + " is destroyed.");
+          Log::addMsg(getCorpseNameThe() + " is destroyed.");
         }
       }
 
