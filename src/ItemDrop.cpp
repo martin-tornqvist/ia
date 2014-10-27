@@ -38,13 +38,16 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
   }
 
   if(itemToDrop) {
-    const bool IS_STACKABLE         = itemToDrop->getData().isStackable;
-    const int NR_ITEMS_BEFORE_DROP  = itemToDrop->nrItems_;
-    const bool IS_WHOLE_STACK_DROPPED =
-      !IS_STACKABLE || NR_ITEMS_TO_DROP == -1 ||
-      (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
+    const bool  IS_STACKABLE            = itemToDrop->getData().isStackable;
+    const int   NR_ITEMS_BEFORE_DROP    = itemToDrop->nrItems_;
+    const bool  IS_WHOLE_STACK_DROPPED  = !IS_STACKABLE || NR_ITEMS_TO_DROP == -1 ||
+                                          (NR_ITEMS_TO_DROP >= NR_ITEMS_BEFORE_DROP);
 
     string itemRef = "";
+
+    if(invList == InvList::slots && IS_WHOLE_STACK_DROPPED) {
+      itemToDrop->onTakeOff();
+    }
 
     if(IS_WHOLE_STACK_DROPPED) {
       itemRef = itemToDrop->getName(ItemRefType::plural);
@@ -81,9 +84,8 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
 //wrong things. It should be refactored.
 Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
   //If target cell is bottomless, just destroy the item
-  const auto* const targetFeature =
-    Map::cells[intendedPos.x][intendedPos.y].rigid;
-  if(targetFeature->isBottomless()) {
+  const auto* const tgtRigid = Map::cells[intendedPos.x][intendedPos.y].rigid;
+  if(tgtRigid->isBottomless()) {
     delete &item;
     return nullptr;
   }
@@ -110,8 +112,8 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
   int ii = 0;
   const int VEC_SIZE = freeCells.size();
   for(int i = 0; i < VEC_SIZE; ++i) {
-    //First look in all cells that has distance to origin equal to cell i
-    //to try and merge the item if it stacks
+    //First look in all cells that has distance to origin equal to cell i to try and
+    //merge the item if it stacks
     if(IS_STACKABLE_TYPE) {
       //While ii cell is not further away than i cell
       while(!isCloserToOrigin(freeCells.at(i), freeCells.at(ii))) {

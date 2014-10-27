@@ -136,9 +136,9 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
   return nrStr + namesUsed.names[int(refTypeUsed)] + attStr + infStr;
 }
 
-void Item::clearPropsEnabledOnCarrier() {
-  for(Prop* prop : propsEnabledOnCarrier) {delete prop;}
-  propsEnabledOnCarrier.resize(0);
+void Item::clearMyPropsOnCarrier() {
+  for(Prop* prop : myPropsOnCarrier) {delete prop;}
+  myPropsOnCarrier.resize(0);
 }
 
 //------------------------------------------------------------------- ARMOR
@@ -213,22 +213,22 @@ int Armor::getAbsorptionPoints() const {
 }
 
 void ArmorAsbSuit::onWear() {
-  propsEnabledOnCarrier.push_back(new PropRFire(PropTurns::indefinite));
-  propsEnabledOnCarrier.push_back(new PropRAcid(PropTurns::indefinite));
-  propsEnabledOnCarrier.push_back(new PropRElec(PropTurns::indefinite));
-  propsEnabledOnCarrier.push_back(new PropRBreath(PropTurns::indefinite));
+  myPropsOnCarrier.push_back(new PropRFire(PropTurns::indefinite));
+  myPropsOnCarrier.push_back(new PropRAcid(PropTurns::indefinite));
+  myPropsOnCarrier.push_back(new PropRElec(PropTurns::indefinite));
+  myPropsOnCarrier.push_back(new PropRBreath(PropTurns::indefinite));
 }
 
 void ArmorAsbSuit::onTakeOff() {
-  clearPropsEnabledOnCarrier();
+  clearMyPropsOnCarrier();
 }
 
 void ArmorHeavyCoat::onWear() {
-  propsEnabledOnCarrier.push_back(new PropRCold(PropTurns::indefinite));
+  myPropsOnCarrier.push_back(new PropRCold(PropTurns::indefinite));
 }
 
 void ArmorHeavyCoat::onTakeOff() {
-  clearPropsEnabledOnCarrier();
+  clearMyPropsOnCarrier();
 }
 
 //------------------------------------------------------------------- WEAPON
@@ -573,11 +573,11 @@ void HideousMask::newTurnInInventory() {
 
 //------------------------------------------------------------------- GAS MASK
 void GasMask::onTakeOff() {
-  clearPropsEnabledOnCarrier();
+  clearMyPropsOnCarrier();
 }
 
 void GasMask::onWear() {
-  propsEnabledOnCarrier.push_back(new PropRBreath(PropTurns::indefinite));
+  myPropsOnCarrier .push_back(new PropRBreath(PropTurns::indefinite));
 }
 
 //------------------------------------------------------------------- EXPLOSIVE

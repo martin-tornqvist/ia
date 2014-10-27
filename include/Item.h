@@ -54,7 +54,7 @@ public:
   virtual void onTakeOff() {}
 
   //Properties to apply e.g. when wearing something like a ring of fire resistance
-  std::vector<Prop*> propsEnabledOnCarrier;
+  std::vector<Prop*> myPropsOnCarrier;
 
   //Called by the ItemDrop class to make noise etc
   virtual void appplyDropEffects() {}
@@ -62,7 +62,7 @@ public:
   int meleeDmgPlus_;
 
 protected:
-  void clearPropsEnabledOnCarrier();
+  void clearMyPropsOnCarrier();
 
   //E.g. "{Off}" for Lanterns, "{60}" for Medical Bags, or "4/7" for Pistols
   virtual std::string getNameInf() const {return "";}

@@ -788,11 +788,11 @@ void PropHandler::getPropsFromSources(
     };
     for(const auto& slot : slots) {
       const auto* const item = slot.item;
-      if(item) {addItemProps(item->propsEnabledOnCarrier);}
+      if(item) {addItemProps(item->myPropsOnCarrier);}
     }
     const auto& general = inv.general_;
     for(auto* const item : general) {
-      addItemProps(item->propsEnabledOnCarrier);
+      addItemProps(item->myPropsOnCarrier);
     }
   }
 }
@@ -823,12 +823,12 @@ void  PropHandler::getPropIdsFromSources(
     for(const auto& slot : slots) {
       const auto* const item = slot.item;
       if(item) {
-        addItemProps(item->propsEnabledOnCarrier);
+        addItemProps(item->myPropsOnCarrier);
       }
     }
     const auto& general = inv.general_;
     for(auto* const item : general) {
-      addItemProps(item->propsEnabledOnCarrier);
+      addItemProps(item->myPropsOnCarrier);
     }
   }
 }
