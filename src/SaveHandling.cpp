@@ -24,7 +24,7 @@ namespace SaveHandling {
 namespace {
 
 void collectLinesFromGame(vector<string>& lines) {
-  lines.resize(0);
+  lines.clear();
   lines.push_back(Map::player->getNameA());
 
   DungeonMaster::storeToSaveLines(lines);
@@ -77,7 +77,7 @@ void writeFile(const vector<string>& lines) {
 }
 
 void readFile(vector<string>& lines) {
-  lines.resize(0);
+  lines.clear();
 
   string curLine;
   ifstream file("data/save");
@@ -86,7 +86,7 @@ void readFile(vector<string>& lines) {
     file.close();
 
     vector<string> emptyLines;
-    emptyLines.resize(0);
+    emptyLines.clear();
     writeFile(emptyLines);
   } else {
     assert(false && "Failed to open save file");

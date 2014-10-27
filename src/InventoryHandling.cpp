@@ -88,7 +88,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT) {
 
 void filterPlayerGeneralEquip(const SlotId slotToEquip) {
   auto& general = Map::player->getInv().general_;
-  generalItemsToShow_.resize(0);
+  generalItemsToShow_.clear();
 
   for(size_t i = 0; i < general.size(); ++i) {
     const Item* const item = general.at(i);
@@ -135,7 +135,7 @@ void filterPlayerGeneralEquip(const SlotId slotToEquip) {
 
 void filterPlayerGeneralShowAll() {
   auto& general = Map::player->getInv().general_;
-  generalItemsToShow_.resize(0);
+  generalItemsToShow_.clear();
   const int NR_GEN = general.size();
   for(int i = 0; i < NR_GEN; ++i) {generalItemsToShow_.push_back(i);}
 }
@@ -173,7 +173,7 @@ void runInvScreen() {
   const int SLOTS_SIZE  = int(SlotId::END);
   const int INV_H       = RenderInventory::INV_H;
 
-  auto getBrowser = [](const Inventory& inventory) {
+  auto getBrowser = [](const Inventory & inventory) {
     const int GEN_SIZE = int(inventory.general_.size());
     const int ELEM_ON_WRAP_UP = GEN_SIZE > INV_H ? (SLOTS_SIZE + INV_H - 2) : -1;
     return MenuBrowser(int(SlotId::END) + GEN_SIZE, 0, ELEM_ON_WRAP_UP);
@@ -219,7 +219,7 @@ void runInvScreen() {
 
             const string itemName = item->getName(ItemRefType::plain);
 
-            inv.moveToGeneral(&slot);
+            inv.moveToGeneral(slot);
 
             switch(SlotId(ELEMENT)) {
               case SlotId::wielded:
@@ -233,11 +233,13 @@ void runInvScreen() {
 
                 Render::drawMapAndInterface();
                 Log::addMsg("I take off my " + itemName + ".", clrWhite, false, true);
+                //TODO This should probably be called from the Inventory instead
                 item->onTakeOff();
                 GameTime::actorDidAct();
                 return;
               }
               case SlotId::head: {
+                //TODO This should probably be called from the Inventory instead
                 item->onTakeOff();
                 RenderInventory::drawBrowseInv(browser);
               } break;
@@ -309,17 +311,20 @@ bool runEquipScreen(InvSlot& slotToEquip) {
           inv.equipGeneralItemAndEndTurn(ELEMENT, slotToEquip.id);
           bool applyWearEffect = false;
           switch(slotToEquip.id) {
-            case SlotId::wielded:
-            case SlotId::wieldedAlt:
-            case SlotId::thrown: {} break;
-            case SlotId::body:
-            case SlotId::head: {applyWearEffect = true;} break;
+            case SlotId::wielded:     {} break;
+            case SlotId::wieldedAlt:  {} break;
+            case SlotId::thrown:      {} break;
+            case SlotId::body:        {applyWearEffect = true;} break;
+            case SlotId::head:        {applyWearEffect = true;} break;
             case SlotId::END: {
               TRACE << "Illegal slot id: " << int(slotToEquip.id) << endl;
               assert(false);
             } break;
           }
-          if(applyWearEffect) {slotToEquip.item->onWear();}
+          if(applyWearEffect) {
+            //TODO This should probably be called from the Inventory instead
+            slotToEquip.item->onWear();
+          }
           browserIdxToSetAfterDrop  = int(slotToEquip.id);
           screenToOpenAfterDrop     = InvScrId::inv;
           return true;

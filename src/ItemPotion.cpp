@@ -348,7 +348,7 @@ void PotionClairv::quaff_(Actor* const actor) {
     Log::addMsg("I see far and wide!");
 
     vector<Pos> animCells;
-    animCells.resize(0);
+    animCells.clear();
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksVision(), blocked);
@@ -396,7 +396,7 @@ void init() {
   TRACE_FUNC_BEGIN;
 
   //Init possible potion colors and fake names
-  potionLooks_.resize(0);
+  potionLooks_.clear();
   potionLooks_.push_back(PotionLook {"Golden",   "a Golden",   clrYellow});
   potionLooks_.push_back(PotionLook {"Yellow",   "a Yellow",   clrYellow});
   potionLooks_.push_back(PotionLook {"Dark",     "a Dark",     clrGray});

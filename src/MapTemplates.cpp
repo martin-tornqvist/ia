@@ -38,7 +38,7 @@ void mkTempl(const string& str, const MapTemplId id,
       case ';': {
         //Delimiting character (";") found, inner vector is pushed to outer
         templ.addRow(inner);
-        inner.resize(0);
+        inner.clear();
       } break;
       case '#': inner.push_back({FeatureId::wall});           break;
       case '.': inner.push_back({FeatureId::floor});          break;

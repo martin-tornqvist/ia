@@ -29,7 +29,7 @@ struct MapTemplCell {
 
 struct MapTempl {
 public:
-  MapTempl() {cells_.resize(0);}
+  MapTempl() {cells_.clear();}
 
   const MapTemplCell& getCell(const int X, const int Y) const {return cells_[Y][X];}
 

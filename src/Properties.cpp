@@ -704,8 +704,8 @@ void init() {
 
 PropHandler::PropHandler(Actor* owningActor) :
   owningActor_(owningActor) {
-  appliedProps_.resize(0);
-  actorTurnPropBuffer_.resize(0);
+  appliedProps_.clear();
+  actorTurnPropBuffer_.clear();
 
   const ActorDataT& d = owningActor->getData();
 
@@ -771,7 +771,7 @@ PropHandler::~PropHandler() {
 void PropHandler::getPropsFromSources(
   vector<Prop*>& out, bool sources[int(PropSrc::END)]) const {
 
-  out.resize(0);
+  out.clear();
 
   //Get from applied properties
   if(sources[int(PropSrc::applied)]) {out = appliedProps_;}
@@ -834,7 +834,7 @@ void  PropHandler::getPropIdsFromSources(
 }
 
 void PropHandler::getAllActivePropIds(vector<PropId>& out) const {
-  out.resize(0);
+  out.clear();
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropIdsFromSources(out, sources);
@@ -1065,7 +1065,7 @@ bool PropHandler::endAppliedProp(
 
 void PropHandler::applyActorTurnPropBuffer() {
   for(Prop* prop : actorTurnPropBuffer_) {tryApplyProp(prop);}
-  actorTurnPropBuffer_.resize(0);
+  actorTurnPropBuffer_.clear();
 }
 
 void PropHandler::tick(const PropTurnMode turnMode,
@@ -1117,7 +1117,7 @@ void PropHandler::tick(const PropTurnMode turnMode,
 }
 
 void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
-  line.resize(0);
+  line.clear();
 
   const bool IS_SELF_AWARE =
     PlayerBon::hasTrait(Trait::selfAware);
@@ -1523,7 +1523,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
     if(seenFoes.empty()) {return;}
 
     vector<Pos> seenFoesCells;
-    seenFoesCells.resize(0);
+    seenFoesCells.clear();
     for(size_t i = 0; i < seenFoes.size(); ++i) {
       seenFoesCells.push_back(seenFoes.at(i)->pos);
     }

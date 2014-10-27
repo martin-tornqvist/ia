@@ -64,7 +64,7 @@ void resetCells(const bool MAKE_STONE_WALLS) {
 void init() {
   dlvl = 0;
 
-  roomList.resize(0);
+  roomList.clear();
 
   resetCells(false);
 
@@ -105,7 +105,7 @@ void resetMap() {
   ActorFactory::deleteAllMonsters();
 
   for(auto* room : roomList) {delete room;}
-  roomList.resize(0);
+  roomList.clear();
 
   resetCells(true);
   GameTime::eraseAllMobs();
@@ -115,11 +115,10 @@ void resetMap() {
 Rigid* put(Rigid* const f) {
   assert(f);
 
-  const Pos             p     = f->getPos();
-  Cell&                 cell  = cells[p.x][p.y];
-  Rigid* const  fOld  = cell.rigid;
+  const Pos p     = f->getPos();
+  Cell&     cell  = cells[p.x][p.y];
 
-  if(fOld) {delete fOld;}
+  delete cell.rigid;
 
   cell.rigid = f;
 

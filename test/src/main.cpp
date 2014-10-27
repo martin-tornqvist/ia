@@ -31,6 +31,7 @@
 #include "ItemDevice.h"
 #include "FeatureRigid.h"
 #include "FeatureTrap.h"
+#include "ItemDrop.h"
 
 using namespace std;
 
@@ -473,69 +474,153 @@ TEST_FIXTURE(BasicFixture, Explosions) {
 }
 
 TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
-  //Something is wrong with this test. It frequently gets stuck in an endless loop.
-  CHECK(false);
-//  //-----------------------------------------------------------------
-//  // Test that-
-//  // * a monster can get stuck in a spider web,
-//  // * the monster can get loose, and
-//  // * the web can get destroyed
-//  //-----------------------------------------------------------------
-//
-//  const Pos posL(1, 4);
-//  const Pos posR(2, 4);
-//
-//  //Spawn left floor cell
-//  Map::put(new Floor(posL));
-//
-//  //Conditions for finished test
-//  bool testedStuck              = false;
-//  bool testedLooseWebIntact     = false;
-//  bool testedLooseWebDestroyed  = false;
-//
-//  while(!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed) {
-//
-//    //Spawn right floor cell
-//    Map::put(new Floor(posR));
-//
-//    //Spawn a monster that can get stuck in the web
-//    Actor* const actor = ActorFactory::mk(ActorId::zombie, posL);
-//    Monster* const monster = static_cast<Monster*>(actor);
-//
-//    //Create a spider web in the right cell
-//    const auto  mimicId     = Map::cells[posR.x][posR.x].rigid->getId();
-//    const auto& mimicData   = FeatureData::getData(mimicId);
-//    const auto* const mimic = static_cast<const Rigid*>(mimicData.mkObj(posR));
-//    Map::put(new Trap(posR, mimic, TrapId::web));
-//
-//    //Move the monster into the trap, and back again
-//    monster->awareOfPlayerCounter_ = 20000; // > 0 req. for triggering trap
-//    monster->pos = posL;
-//    monster->moveDir(Dir::right);
-//    CHECK(monster->pos == posR);
-//    monster->moveDir(Dir::left);
-//    monster->moveDir(Dir::left);
-//
-//    //Check conditions
-//    if(monster->pos == posR) {
-//      testedStuck = true;
-//    } else if(monster->pos == posL) {
-//      const auto featureId = Map::cells[posR.x][posR.y].rigid->getId();
-//      if(featureId == FeatureId::floor) {
-//        testedLooseWebDestroyed = true;
-//      } else {
-//        testedLooseWebIntact = true;
-//      }
-//    }
-//
-//    //Remove the monster
-//    ActorFactory::deleteAllMonsters();
-//  }
-//  //Check that all cases have been triggered (not really necessary, it just
-//  //verifies that the loop above is correctly written).
-//  CHECK(testedStuck);
-//  CHECK(testedLooseWebIntact);
-//  CHECK(testedLooseWebDestroyed);
+  //-----------------------------------------------------------------
+  // Test that-
+  // * a monster can get stuck in a spider web,
+  // * the monster can get loose, and
+  // * the web can get destroyed
+  //-----------------------------------------------------------------
+
+  const Pos posL(1, 4);
+  const Pos posR(2, 4);
+
+  //Spawn left floor cell
+  Map::put(new Floor(posL));
+
+  //Conditions for finished test
+  bool testedStuck              = false;
+  bool testedLooseWebIntact     = false;
+  bool testedLooseWebDestroyed  = false;
+
+  while(!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed) {
+
+    //Spawn right floor cell
+    Map::put(new Floor(posR));
+
+    //Spawn a monster that can get stuck in the web
+    Actor* const actor = ActorFactory::mk(ActorId::zombie, posL);
+    Monster* const monster = static_cast<Monster*>(actor);
+
+    //Create a spider web in the right cell
+    const auto  mimicId     = Map::cells[posR.x][posR.x].rigid->getId();
+    const auto& mimicData   = FeatureData::getData(mimicId);
+    const auto* const mimic = static_cast<const Rigid*>(mimicData.mkObj(posR));
+    Map::put(new Trap(posR, mimic, TrapId::web));
+
+    //Move the monster into the trap, and back again
+    monster->awareOfPlayerCounter_ = 20000; // > 0 req. for triggering trap
+    monster->pos = posL;
+    monster->moveDir(Dir::right);
+    CHECK(monster->pos == posR);
+    monster->moveDir(Dir::left);
+    monster->moveDir(Dir::left);
+
+    //Check conditions
+    if(monster->pos == posR) {
+      testedStuck = true;
+    } else if(monster->pos == posL) {
+      const auto featureId = Map::cells[posR.x][posR.y].rigid->getId();
+      if(featureId == FeatureId::floor) {
+        testedLooseWebDestroyed = true;
+      } else {
+        testedLooseWebIntact = true;
+      }
+    }
+
+    //Remove the monster
+    ActorFactory::deleteAllMonsters();
+  }
+  //Check that all cases have been triggered (not really necessary, it just
+  //verifies that the loop above is correctly written).
+  CHECK(testedStuck);
+  CHECK(testedLooseWebIntact);
+  CHECK(testedLooseWebDestroyed);
+}
+
+//TODO This test shows some weakness in the inventory handling functionality. Notice how
+//onWear() and onTakeOff() has to be called manually here. This is because they
+//are called from stupid places in the game code - They SHOULD be called by Inventory!
+TEST_FIXTURE(BasicFixture, InventoryHandling) {
+  const Pos p(10, 10);
+  Map::put(new Floor(p));
+  Map::player->pos = p;
+
+  Inventory&  inv       = Map::player->getInv();
+  InvSlot&    bodySlot  = inv.slots_[int(SlotId::body)];
+
+  delete bodySlot.item;
+  bodySlot.item = nullptr;
+
+  vector<PropId> props;
+  PropHandler& propHandler = Map::player->getPropHandler();
+
+  //Check that no props are enabled
+  propHandler.getAllActivePropIds(props);
+  CHECK(props.empty());
+
+  //Wear asbesthos suit
+  Item* item = ItemFactory::mk(ItemId::armorAsbSuit);
+  inv.putInSlot(SlotId::body, item);
+
+  item->onWear();
+
+  //Check that the props are applied
+  propHandler.getAllActivePropIds(props);
+  CHECK_EQUAL(4, int(props.size()));
+  CHECK(find(begin(props), end(props), propRFire)   != end(props));
+  CHECK(find(begin(props), end(props), propRElec)   != end(props));
+  CHECK(find(begin(props), end(props), propRAcid)   != end(props));
+  CHECK(find(begin(props), end(props), propRBreath) != end(props));
+
+  //Take off asbeshos suit
+  inv.moveToGeneral(bodySlot);
+  item->onTakeOff();
+  CHECK_EQUAL(item, inv.general_.back());
+
+  //Check that the properties are cleared
+  propHandler.getAllActivePropIds(props);
+  CHECK(props.empty());
+
+  //Wear the asbeshos suit again
+  inv.equipGeneralItemAndEndTurn(inv.general_.size() - 1, SlotId::body);
+
+  item->onWear();
+
+  //Check that the props are applied
+  propHandler.getAllActivePropIds(props);
+  CHECK_EQUAL(4, int(props.size()));
+  CHECK(find(begin(props), end(props), propRFire)   != end(props));
+  CHECK(find(begin(props), end(props), propRElec)   != end(props));
+  CHECK(find(begin(props), end(props), propRAcid)   != end(props));
+  CHECK(find(begin(props), end(props), propRBreath) != end(props));
+
+  //Drop the asbeshos suit on the ground
+  ItemDrop::dropItemFromInv(*Map::player, InvList::slots, int(SlotId::body), 1);
+
+  //Check that no item exists in body slot
+  CHECK(!bodySlot.item);
+
+  //Check that the item is on the ground
+  Cell& cell = Map::cells[p.x][p.y];
+  CHECK(cell.item);
+
+  //Check that the properties are cleared
+  propHandler.getAllActivePropIds(props);
+  CHECK(props.empty());
+
+  //Wear the same dropped asbesthos suit again
+  inv.putInSlot(SlotId::body, cell.item);
+  cell.item = nullptr;
+
+  item->onWear();
+
+  //Check that the props are applied
+  propHandler.getAllActivePropIds(props);
+  CHECK_EQUAL(4, int(props.size()));
+  CHECK(find(begin(props), end(props), propRFire)   != end(props));
+  CHECK(find(begin(props), end(props), propRElec)   != end(props));
+  CHECK(find(begin(props), end(props), propRAcid)   != end(props));
+  CHECK(find(begin(props), end(props), propRBreath) != end(props));
 }
 
 TEST_FIXTURE(BasicFixture, SavingGame) {
@@ -552,7 +637,7 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   //First, remove all present items (to have a known state)
   vector<Item*>& gen = inv.general_;
   for(Item* item : gen) {delete item;}
-  gen.resize(0);
+  gen.clear();
 
   for(size_t i = 0; i < size_t(SlotId::END); ++i) {
     auto& slot = inv.slots_[i];

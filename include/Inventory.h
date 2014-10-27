@@ -42,7 +42,7 @@ public:
 
   void putInIntrinsics(Item* item);
 
-  bool moveToGeneral(InvSlot* inventorySlot);
+  bool moveToGeneral(InvSlot& slot);
 
   void moveFromGeneralToIntrinsics(const size_t GEN_IDX);
 

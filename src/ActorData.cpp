@@ -46,7 +46,7 @@ void ActorDataT::reset() {
   canBeSummoned = false;
   canBleed = true;
   canLeaveCorpse = true;
-  nativeRooms.resize(0);
+  nativeRooms.clear();
   descr = "";
   aggroTextMonsterSeen = "";
   aggroTextMonsterHidden = "";

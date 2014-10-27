@@ -46,6 +46,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     string itemRef = "";
 
     if(invList == InvList::slots && IS_WHOLE_STACK_DROPPED) {
+      //TODO This should be called from the Inventory instead.
       itemToDrop->onTakeOff();
     }
 

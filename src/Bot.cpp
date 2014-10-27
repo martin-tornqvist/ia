@@ -31,7 +31,7 @@ namespace {
 std::vector<Pos> curPath_;
 
 void findPathToStairs() {
-  curPath_.resize(0);
+  curPath_.clear();
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
@@ -73,7 +73,7 @@ bool walkToAdjacentCell(const Pos& p) {
 } //namespace
 
 void init() {
-  curPath_.resize(0);
+  curPath_.clear();
 }
 
 void act() {
@@ -128,7 +128,7 @@ void act() {
   //Occasionally apply a random property to exercise the prop code
   if(Rnd::oneIn(10)) {
     vector<PropId> propBucket;
-    propBucket.resize(0);
+    propBucket.clear();
     for(int i = 0; i < endOfPropIds; ++i) {
       if(PropData::data[i].allowTestOnBot) {propBucket.push_back(PropId(i));}
     }

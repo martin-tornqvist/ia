@@ -259,7 +259,7 @@ void mkForestTrees() {
       HighScoreEntry curHighscore = highscoreEntries.at(i);
       const string name = curHighscore.getName();
       vector<string> dateStrVector;
-      dateStrVector.resize(0);
+      dateStrVector.clear();
       TextFormatting::getSpaceSeparatedList(curHighscore.getDateAndTime(),
                                             dateStrVector);
       const string date   = dateStrVector.at(0);

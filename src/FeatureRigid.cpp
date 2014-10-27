@@ -1002,7 +1002,7 @@ Clr Brazier::getClr_() const {
 }
 
 //--------------------------------------------------------------------- ITEM CONTAINER
-ItemContainer::ItemContainer() {items_.resize(0);}
+ItemContainer::ItemContainer() {items_.clear();}
 
 ItemContainer::~ItemContainer() {
   for(unsigned int i = 0; i < items_.size(); ++i) {
@@ -1016,7 +1016,7 @@ void ItemContainer::setRandomItemsForFeature(
   for(unsigned int i = 0; i < items_.size(); ++i) {
     delete items_.at(i);
   }
-  items_.resize(0);
+  items_.clear();
 
   if(NR_ITEMS_TO_ATTEMPT > 0) {
     while(items_.empty()) {
@@ -1054,7 +1054,7 @@ void ItemContainer::setRandomItemsForFeature(
 
 void ItemContainer::dropItems(const Pos& pos) {
   for(auto* item : items_) {ItemDrop::dropItemOnMap(pos, *item);}
-  items_.resize(0);
+  items_.clear();
 }
 
 void ItemContainer::destroySingleFragile() {

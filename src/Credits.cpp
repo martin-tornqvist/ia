@@ -18,7 +18,7 @@ namespace {
 vector<string> lines_;
 
 void readFile() {
-  lines_.resize(0);
+  lines_.clear();
 
   string curLine;
   ifstream file("credits.txt");

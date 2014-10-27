@@ -133,16 +133,16 @@ void runAtomicTurnEvents() {
 
 void init() {
   curTurnTypePos_ = curActorIndex_ = turnNr_ = 0;
-  actors_.resize(0);
-  mobs_.resize(0);
+  actors_.clear();
+  mobs_.clear();
 }
 
 void cleanup() {
   for(Actor* a : actors_) {delete a;}
-  actors_.resize(0);
+  actors_.clear();
 
   for(auto* f : mobs_) {delete f;}
-  mobs_.resize(0);
+  mobs_.clear();
 }
 
 void storeToSaveLines(vector<string>& lines) {
@@ -159,7 +159,7 @@ int getTurn() {
 }
 
 void getMobsAtPos(const Pos& p, vector<Mob*>& vectorRef) {
-  vectorRef.resize(0);
+  vectorRef.clear();
   for(auto* m : mobs_) {if(m->getPos() == p) {vectorRef.push_back(m);}}
 }
 
@@ -179,7 +179,7 @@ void eraseMob(Mob* const f, const bool DESTROY_OBJECT) {
 
 void eraseAllMobs() {
   for(auto* m : mobs_) {delete m;}
-  mobs_.resize(0);
+  mobs_.clear();
 }
 
 void eraseActorInElement(const size_t i) {

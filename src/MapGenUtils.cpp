@@ -133,7 +133,7 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   //(4) Is cardinally adjacent to a floor cell belonging to the room
   //(5) Is cardinally adjacent to a cell not in the room or room outline
 
-  out.resize(0);
+  out.clear();
 
   bool roomCells[MAP_W][MAP_H];
   bool roomFloorCells[MAP_W][MAP_H];
@@ -341,7 +341,7 @@ void restoreMap() {
 
 void pathfinderWalk(const Pos& p0, const Pos& p1, std::vector<Pos>& posListRef,
                     const bool IS_SMOOTH) {
-  posListRef.resize(0);
+  posListRef.clear();
 
   bool blocked[MAP_W][MAP_H];
   Utils::resetArray(blocked, false);
@@ -362,7 +362,7 @@ void pathfinderWalk(const Pos& p0, const Pos& p1, std::vector<Pos>& posListRef,
 
 void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
              const bool ALLOW_DIAGONAL, Rect area) {
-  posListRef.resize(0);
+  posListRef.clear();
 
   const vector<Pos>& dList =
     ALLOW_DIAGONAL ? DirUtils::dirList : DirUtils::cardinalList;

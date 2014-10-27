@@ -138,13 +138,13 @@ void tryCast(const Spell* const spell) {
 
 void init() {
   for(Spell* spell : knownSpells_) {delete spell;}
-  knownSpells_.resize(0);
+  knownSpells_.clear();
   prevSpellCast_ = nullptr;
 }
 
 void cleanup() {
   for(Spell* spell : knownSpells_) {delete spell;}
-  knownSpells_.resize(0);
+  knownSpells_.clear();
   prevSpellCast_ = nullptr;
 }
 

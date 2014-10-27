@@ -19,6 +19,7 @@
 #include "Credits.h"
 #include "MapTemplates.h"
 #include "MapTravel.h"
+#include "Query.h"
 
 using namespace std;
 
@@ -33,6 +34,7 @@ void initIO() {
   SdlWrapper::init();
   Config::init();
   Input::init();
+  Query::init();
   Render::init();
   Audio::init();
   TRACE_FUNC_END;

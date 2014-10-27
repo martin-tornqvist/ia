@@ -28,7 +28,7 @@ int getRandomOutOfDepth() {
 
 void mkListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
                                   vector<ActorId>& listRef) {
-  listRef.resize(0);
+  listRef.clear();
 
   const int EFFECTIVE_DLVL =
     max(1, min(LAST_CAVERN_LVL, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
@@ -356,7 +356,7 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
 void mkSortedFreeCellsVector(const Pos& origin,
                              const bool blocked[MAP_W][MAP_H],
                              vector<Pos>& vectorRef) {
-  vectorRef.resize(0);
+  vectorRef.clear();
 
   const int RADI = 10;
   const int X0 = getConstrInRange(1, origin.x - RADI, MAP_W - 2);

@@ -315,8 +315,8 @@ void pickNewTrait(const bool IS_CHARACTER_CREATION) {
       const int NR_TRAITS_2   = NR_TRAITS_TOT / 2;
       const int NR_TRAITS_1   = NR_TRAITS_TOT - NR_TRAITS_2;
 
-      vector<Trait> traits1; traits1.resize(0);
-      vector<Trait> traits2; traits2.resize(0);
+      vector<Trait> traits1; traits1.clear();
+      vector<Trait> traits2; traits2.clear();
 
       for(int i = 0; i < NR_TRAITS_TOT; ++i) {
         const Trait trait = pickableTraits.at(i);

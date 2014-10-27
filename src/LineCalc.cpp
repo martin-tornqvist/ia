@@ -78,7 +78,7 @@ const vector<Pos>* getFovDeltaLine(const Pos& delta,
 void calcNewLine(const Pos& origin, const Pos& target,
                  const bool SHOULD_STOP_AT_TARGET, const int CHEB_TRAVEL_LIMIT,
                  const bool ALLOW_OUTSIDE_MAP, vector<Pos>& lineRef) {
-  lineRef.resize(0);
+  lineRef.clear();
 
   if(target == origin) {
     lineRef.push_back(origin);

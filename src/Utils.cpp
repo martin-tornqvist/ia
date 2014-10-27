@@ -102,7 +102,7 @@ void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
 
 void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
                          vector<Pos>& out) {
-  out.resize(0);
+  out.clear();
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
       if(a[x][y] == VALUE_TO_STORE) {
@@ -118,7 +118,7 @@ void mkBoolMapFromVector(const vector<Pos>& positions, bool out[MAP_W][MAP_H]) {
 }
 
 void getActorCells(const vector<Actor*>& actors, vector<Pos>& out) {
-  out.resize(0);
+  out.clear();
   for(const auto* const a : actors) {out.push_back(a->pos);}
 }
 

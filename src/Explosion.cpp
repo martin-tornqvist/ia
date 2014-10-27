@@ -122,7 +122,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   for(int y = 0; y < MAP_H; ++y) {
     for(int x = 0; x < MAP_W; ++x) {
       livingActors[x][y] = nullptr;
-      corpses[x][y].resize(0);
+      corpses[x][y].clear();
     }
   }
 

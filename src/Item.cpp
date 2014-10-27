@@ -138,7 +138,7 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
 
 void Item::clearMyPropsOnCarrier() {
   for(Prop* prop : myPropsOnCarrier) {delete prop;}
-  myPropsOnCarrier.resize(0);
+  myPropsOnCarrier.clear();
 }
 
 //------------------------------------------------------------------- ARMOR

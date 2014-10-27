@@ -1162,7 +1162,7 @@ bool mkStdLvl() {
 #endif // DECORATE
 
   for(auto* r : Map::roomList) {delete r;}
-  Map::roomList.resize(0);
+  Map::roomList.clear();
   Utils::resetArray(Map::roomMap);
 
   TRACE_FUNC_END;

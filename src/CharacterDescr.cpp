@@ -22,7 +22,7 @@ namespace {
 vector<StrAndClr> lines_;
 
 void mkLines() {
-  lines_.resize(0);
+  lines_.clear();
 
   const string offset = "   ";
   const Clr clrHeading  = clrWhiteHigh;

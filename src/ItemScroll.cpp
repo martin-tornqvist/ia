@@ -141,7 +141,7 @@ void init() {
   TRACE_FUNC_BEGIN;
 
   //Init possible fake names
-  falseNames_.resize(0);
+  falseNames_.clear();
   falseNames_.push_back("Cruensseasrjit");
   falseNames_.push_back("Rudsceleratus");
   falseNames_.push_back("Rudminuox");
@@ -167,7 +167,7 @@ void init() {
   falseNames_.push_back("Infirmux");
 
   vector<string> cmb;
-  cmb.resize(0);
+  cmb.clear();
   cmb.push_back("Cruo");
   cmb.push_back("Cruonit");
   cmb.push_back("Cruentu");

@@ -30,7 +30,7 @@ string quote = "";
 
 string getHplQuote() {
   vector<string> quotes;
-  quotes.resize(0);
+  quotes.clear();
   quotes.push_back(
     "Happy is the tomb where no wizard hath lain and happy the town at night "
     "whose wizards are all ashes.");

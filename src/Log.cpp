@@ -96,7 +96,7 @@ void clearLog() {
     if(!line.empty()) {
       history_.push_back(line);
       while(history_.size() > 300) {history_.erase(history_.begin());}
-      line.resize(0);
+      line.clear();
     }
   }
 }

@@ -98,7 +98,7 @@ bool Actor::isSeeingActor(
 }
 
 void Actor::getSeenFoes(vector<Actor*>& vectorRef) {
-  vectorRef.resize(0);
+  vectorRef.clear();
 
   const bool IS_SELF_PLAYER = this == Map::player;
 

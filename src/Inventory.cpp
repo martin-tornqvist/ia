@@ -415,10 +415,10 @@ void Inventory::moveFromGeneralToIntrinsics(const size_t GEN_IDX) {
   }
 }
 
-bool Inventory::moveToGeneral(InvSlot* inventorySlot) {
-  Item* const item = inventorySlot->item;
+bool Inventory::moveToGeneral(InvSlot& slot) {
+  Item* const item = slot.item;
   if(item) {
-    inventorySlot->item = nullptr;
+    slot.item = nullptr;
     putInGeneral(item);
     return true;
   } else {
@@ -550,7 +550,7 @@ void Inventory::sortGeneralInventory() {
   }
 
   //Set the inventory from the sorting buffer
-  general_.resize(0);
+  general_.clear();
   for(size_t i = 0; i < sortBuffer.size(); ++i) {
     for(size_t ii = 0; ii < sortBuffer.at(i).size(); ii++) {
       general_.push_back(sortBuffer.at(i).at(ii));

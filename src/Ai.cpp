@@ -115,7 +115,7 @@ bool checkIfBlockingMon(const Pos& pos, Monster* other) {
 //from the player than the monster's current position
 void getMoveBucket(Monster& self, vector<Pos>& dirsToMk) {
 
-  dirsToMk.resize(0);
+  dirsToMk.clear();
 
   const int PLAYER_X = Map::player->pos.x;
   const int PLAYER_Y = Map::player->pos.y;
@@ -280,7 +280,7 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
 
   //Attempt to find a random non-blocked adjacent cell
   vector<Dir> dirBucket;
-  dirBucket.resize(0);
+  dirBucket.clear();
   for(int dy = -1; dy <= 1; ++dy) {
     for(int dx = -1; dx <= 1; ++dx) {
       if(dx != 0 || dy != 0) {
@@ -435,7 +435,7 @@ void setPathToLairIfNoLos(Monster& monster, vector<Pos>& path,
     MapParse::parse(CellPred::BlocksVision(), blocked);
 
     if(Fov::checkCell(blocked, lairCell, monster.pos, true)) {
-      path.resize(0);
+      path.clear();
       return;
     }
 
@@ -448,7 +448,7 @@ void setPathToLairIfNoLos(Monster& monster, vector<Pos>& path,
     return;
   }
 
-  path.resize(0);
+  path.clear();
 }
 
 void setPathToLeaderIfNoLosToleader(Monster& monster, vector<Pos>& path) {
@@ -461,7 +461,7 @@ void setPathToLeaderIfNoLosToleader(Monster& monster, vector<Pos>& path) {
 
         if(
           Fov::checkCell(blocked, leader->pos, monster.pos, true)) {
-          path.resize(0);
+          path.clear();
           return;
         }
 
@@ -476,7 +476,7 @@ void setPathToLeaderIfNoLosToleader(Monster& monster, vector<Pos>& path) {
     }
   }
 
-  path.resize(0);
+  path.clear();
 }
 
 void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
@@ -514,10 +514,10 @@ void setPathToPlayerIfAware(Monster& monster, vector<Pos>& path) {
 
       PathFind::run(monster.pos, Map::player->pos, blocked, path);
     } else {
-      path.resize(0);
+      path.clear();
     }
   } else {
-    path.resize(0);
+    path.clear();
   }
 }
 

@@ -756,7 +756,7 @@ bool MajorClaphamLee::onActorTurn_() {
         if(isSeeingActor(*(Map::player), visionBlockers)) {
           Log::addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
           vector<ActorId> monsterIds;
-          monsterIds.resize(0);
+          monsterIds.clear();
 
           monsterIds.push_back(ActorId::deanHalsey);
 

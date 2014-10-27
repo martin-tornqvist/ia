@@ -48,9 +48,9 @@ ItemDataT::ItemDataT(const ItemId id_) :
   ranged(RangedItemData()),
   armor(ArmorItemData()) {
 
-  baseDescr.resize(0);
-  nativeRooms.resize(0);
-  featuresCanBeFoundIn.resize(0);
+  baseDescr.clear();
+  nativeRooms.clear();
+  featuresCanBeFoundIn.clear();
 }
 
 ItemDataT::MeleeItemData::MeleeItemData() :

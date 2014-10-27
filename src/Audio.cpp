@@ -22,7 +22,7 @@ int timeAtLastAmb = -1;
 
 SfxId getAmbSfxSuitableForDlvl() {
   vector<SfxId> sfxBucket;
-  sfxBucket.resize(0);
+  sfxBucket.clear();
 
   if(Map::dlvl >= 1 && Map::dlvl < LAST_ROOM_AND_CORRIDOR_LVL) {
     sfxBucket.push_back(SfxId::amb002);
@@ -179,7 +179,7 @@ void init() {
 
 void cleanup() {
   for(Mix_Chunk* chunk : audioChunks) {Mix_FreeChunk(chunk);}
-  audioChunks.resize(0);
+  audioChunks.clear();
 
   curChannel    =  0;
   timeAtLastAmb = -1;

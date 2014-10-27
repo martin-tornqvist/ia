@@ -536,7 +536,7 @@ void writeLinesToFile(vector<string>& lines) {
 
 void collectLinesFromVariables(vector<string>& lines) {
   TRACE_FUNC_BEGIN;
-  lines.resize(0);
+  lines.clear();
   lines.push_back(isAudioEnabled_               ? "1" : "0");
   lines.push_back(isTilesMode_                  ? "1" : "0");
   lines.push_back(fontName_);
@@ -560,7 +560,7 @@ void init() {
   fontName_ = "";
   isBotPlaying_ = false;
 
-  fontImageNames.resize(0);
+  fontImageNames.clear();
   fontImageNames.push_back("images/8x12_DOS.png");
   fontImageNames.push_back("images/11x19.png");
   fontImageNames.push_back("images/11x22.png");

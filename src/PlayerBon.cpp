@@ -23,7 +23,7 @@ Bg bg_ = Bg::END;
 } //Namespace
 
 void init() {
-  traitsPicked_.resize(0);
+  traitsPicked_.clear();
   bg_ = Bg::END;
 }
 
@@ -101,7 +101,7 @@ void getTraitTitle(const Trait id, string& strRef) {
 }
 
 void getBgDescr(const Bg id, vector<string>& linesRef) {
-  linesRef.resize(0);
+  linesRef.clear();
   string s = "";
 
   switch(id) {
@@ -342,7 +342,7 @@ void getTraitDescr(const Trait id, string& strRef) {
 }
 
 void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef) {
-  traitsRef.resize(0);
+  traitsRef.clear();
   bgRef = Bg::END;
 
   switch(id) {
@@ -507,7 +507,7 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef) {
 Bg getBg() {return bg_;}
 
 void getPickableBgs(vector<Bg>& bgsRef) {
-  bgsRef.resize(0);
+  bgsRef.clear();
 
   for(int i = 0; i < int(Bg::END); ++i) {bgsRef.push_back(Bg(i));}
 
@@ -521,7 +521,7 @@ void getPickableBgs(vector<Bg>& bgsRef) {
 }
 
 void getPickableTraits(vector<Trait>& traitsRef) {
-  traitsRef.resize(0);
+  traitsRef.clear();
 
   for(int i = 0; i < int(Trait::END); ++i) {
 

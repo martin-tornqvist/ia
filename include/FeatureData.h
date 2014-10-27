@@ -55,7 +55,7 @@ struct FeatureRoomSpawnRules {
 public:
   FeatureRoomSpawnRules() :
     maxNrInRoom_(-1), placementRule_(PlacementRule::nextToWalls) {
-    roomTypesNative_.resize(0);
+    roomTypesNative_.clear();
   }
 
   void reset() {*this = FeatureRoomSpawnRules();}
@@ -64,7 +64,7 @@ public:
            std::initializer_list<RoomType> roomTypes) {
     maxNrInRoom_    = MAX_NR_IN_ROOM;
     placementRule_  = placementRule;
-    roomTypesNative_.resize(0);
+    roomTypesNative_.clear();
     for(RoomType id : roomTypes) {roomTypesNative_.push_back(id);}
   }
 

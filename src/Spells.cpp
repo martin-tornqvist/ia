@@ -270,7 +270,7 @@ SpellCastRetData SpellAzathothsWrath::cast_(
       const bool IS_CHARGED =
         find(begin(props), end(props), propWarlockCharged) != end(props);
 
-      vector<Pos> actorCells; actorCells.resize(0);
+      vector<Pos> actorCells; actorCells.clear();
       for(Actor* a : targets) {actorCells.push_back(a->pos);}
 
       Render::drawBlastAtCellsWithVision(actorCells, clrRedLgt);
@@ -658,7 +658,7 @@ SpellCastRetData SpellPropOnMon::cast_(
       return SpellCastRetData(false);
     } else {
       vector<Pos> actorCells;
-      actorCells.resize(0);
+      actorCells.clear();
 
       for(Actor* a : targets) {actorCells.push_back(a->pos);}
 

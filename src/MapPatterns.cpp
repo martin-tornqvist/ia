@@ -14,7 +14,7 @@ void setCellsInArea(const Rect& area, vector<Pos>& nextToWalls,
                         vector<Pos>& awayFromWalls) {
   TRACE_FUNC_BEGIN;
   vector<Pos> posBucket;
-  posBucket.resize(0);
+  posBucket.clear();
 
   for(int y = area.p0.y; y <= area.p1.y; ++y) {
     for(int x = area.p0.x; x <= area.p1.x; ++x) {
@@ -25,8 +25,8 @@ void setCellsInArea(const Rect& area, vector<Pos>& nextToWalls,
     }
   }
 
-  nextToWalls.resize(0);
-  awayFromWalls.resize(0);
+  nextToWalls.clear();
+  awayFromWalls.clear();
 
   for(Pos& pos : posBucket) {
     const int NR_BLK_R = getWalkBlockersInDir(Dir::right, pos);

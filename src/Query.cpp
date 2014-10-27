@@ -11,12 +11,24 @@ using namespace std;
 
 namespace Query {
 
+namespace {
+
+bool isInited_ = false;
+
+} //namespace
+
+void init() {
+  isInited_ = true;
+}
+
 void waitForKeyPress() {
-  if(!Config::isBotPlaying()) {Input::readKeysUntilFound();}
+  if(isInited_ && !Config::isBotPlaying()) {
+    Input::readKeysUntilFound();
+  }
 }
 
 YesNoAnswer yesOrNo(char keyForSpecialEvent) {
-  if(Config::isBotPlaying()) {return YesNoAnswer::yes;}
+  if(!isInited_ || Config::isBotPlaying()) {return YesNoAnswer::yes;}
 
   KeyData d = Input::readKeysUntilFound();
   while(
@@ -38,7 +50,7 @@ YesNoAnswer yesOrNo(char keyForSpecialEvent) {
 }
 
 KeyData letter(const bool ACCEPT_ENTER) {
-  if(Config::isBotPlaying()) {return 'a';}
+  if(!isInited_ || Config::isBotPlaying()) {return 'a';}
 
   while(true) {
     KeyData d = Input::readKeysUntilFound();
@@ -55,9 +67,10 @@ KeyData letter(const bool ACCEPT_ENTER) {
   return KeyData();
 }
 
-int number(const Pos& pos, const Clr clr, const int MIN,
-           const int MAX_NR_DIGITS, const int DEFAULT,
-           const bool CANCEL_RETURNS_DEFAULT) {
+int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS,
+           const int DEFAULT, const bool CANCEL_RETURNS_DEFAULT) {
+  if(!isInited_ || Config::isBotPlaying()) {return 0;}
+
   int retNum = max(MIN, DEFAULT);
   Render::coverArea(Panel::screen, pos, Pos(MAX_NR_DIGITS + 1, 1));
   const string str = (retNum == 0 ? "" : toStr(retNum)) + "_";
@@ -105,7 +118,7 @@ int number(const Pos& pos, const Clr clr, const int MIN,
 }
 
 void waitForEscOrSpace() {
-  if(!Config::isBotPlaying()) {
+  if(isInited_ && !Config::isBotPlaying()) {
     KeyData d = Input::readKeysUntilFound();
     while(d.sdlKey != SDLK_SPACE && d.sdlKey != SDLK_ESCAPE) {
       d = Input::readKeysUntilFound();
@@ -114,6 +127,8 @@ void waitForEscOrSpace() {
 }
 
 Dir dir() {
+  if(!isInited_ || Config::isBotPlaying()) {return Dir::END;}
+
   KeyData d = Input::readKeysUntilFound();
 
   while(d.sdlKey != SDLK_RIGHT   && d.sdlKey != SDLK_UP       &&

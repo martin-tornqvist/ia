@@ -112,7 +112,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
                     Actor* const actorToSetAsLeader,
                     vector<Monster*>* monstersRet) {
 
-  if(monstersRet) {monstersRet->resize(0);}
+  if(monstersRet) {monstersRet->clear();}
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
@@ -125,7 +125,7 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
   const int NR_TO_SPAWN     = min(NR_FREE_CELLS, NR_MONSTER_IDS);
 
   vector<Pos> positionsToAnimate;
-  positionsToAnimate.resize(0);
+  positionsToAnimate.clear();
 
   for(int i = 0; i < NR_TO_SPAWN; ++i) {
     const Pos&    pos = freeCells.at(i);

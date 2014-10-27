@@ -336,7 +336,7 @@ void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
   Utils::resetArray(out);
 
   vector<Pos> positions;
-  positions.resize(0);
+  positions.clear();
 
   unsigned int  nrElementsToSkip  = 0;
   int           curVal            = 0;
@@ -406,7 +406,7 @@ namespace PathFind {
 void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
          vector<Pos>& out, const bool ALLOW_DIAGONAL) {
 
-  out.resize(0);
+  out.clear();
 
   int flood[MAP_W][MAP_H];
   FloodFill::run(p0, blocked, flood, 1000, p1, ALLOW_DIAGONAL);

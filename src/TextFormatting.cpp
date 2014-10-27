@@ -36,7 +36,7 @@ bool isWordFit(const string& curString, const string& wordToFit, const int MAX_W
 namespace TextFormatting {
 
 void lineToLines(string line, const int MAX_W, vector<string>& linesRef) {
-  linesRef.resize(0);
+  linesRef.clear();
 
   if(line.empty()) return;
 

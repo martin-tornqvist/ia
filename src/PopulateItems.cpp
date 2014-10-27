@@ -21,7 +21,7 @@ void mkItems() {
   }
 
   vector<ItemId> candidates;
-  candidates.resize(0);
+  candidates.clear();
 
   ItemDataT** data = ItemData::data;
 

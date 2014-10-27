@@ -17,7 +17,7 @@ struct BestAttack {
 struct AttackOpport {
   AttackOpport() :
     isTimeToReload(false), isMelee(true) {
-    weapons.resize(0);
+    weapons.clear();
   }
 
   AttackOpport(const AttackOpport& other) :
