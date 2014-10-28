@@ -148,7 +148,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   }
 
   bool roomCellsExpanded[MAP_W][MAP_H];
-  MapParse::expand(roomCells, roomCellsExpanded);
+  MapParse::expand(roomCells, roomCellsExpanded,
+                   Rect(Pos(room.r_.p0 - 2), Pos(room.r_.p1 + 2)));
 
   for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; ++y) {
     for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; ++x) {

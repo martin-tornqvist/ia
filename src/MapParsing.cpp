@@ -256,25 +256,34 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
   }
 }
 
-void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
-  int checkX0, checkY0, checkX1, checkY1;
+void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
+            const Rect& areaAllowedToModify) {
+  int cmpX0 = 0;
+  int cmpY0 = 0;
+  int cmpX1 = 0;
+  int cmpY1 = 0;
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  const int X0 = max(0,     areaAllowedToModify.p0.x);
+  const int Y0 = max(0,     areaAllowedToModify.p0.y);
+  const int X1 = min(MAP_W, areaAllowedToModify.p1.x);
+  const int Y1 = min(MAP_H, areaAllowedToModify.p1.y);
+
+  for(int x = X0; x <= X1; ++x) {
+    for(int y = Y0; y <= Y1; ++y) {
 
       out[x][y] = false;
 
-      if(x == 0)          {checkX0 = 0;}          else {checkX0 = x - 1;}
-      if(y == 0)          {checkY0 = 0;}          else {checkY0 = y - 1;}
-      if(x == MAP_W - 1)  {checkX1 = MAP_W - 1;}  else {checkX1 = x + 1;}
-      if(y == MAP_H - 1)  {checkY1 = MAP_H - 1;}  else {checkY1 = y + 1;}
+      if(x == 0)          {cmpX0 = 0;}  else {cmpX0 = x - 1;}
+      if(y == 0)          {cmpY0 = 0;}  else {cmpY0 = y - 1;}
+      if(x == MAP_W - 1)  {cmpX1 = x;}  else {cmpX1 = x + 1;}
+      if(y == MAP_H - 1)  {cmpY1 = y;}  else {cmpY1 = y + 1;}
 
-      for(int checkY = checkY0; checkY <= checkY1; ++checkY) {
+      for(int cmpY = cmpY0; cmpY <= cmpY1; ++cmpY) {
 
         bool isFound = false;
 
-        for(int checkX = checkX0; checkX <= checkX1; ++checkX) {
-          if(in[checkX][checkY]) {
+        for(int cmpX = cmpX0; cmpX <= cmpX1; ++cmpX) {
+          if(in[cmpX][cmpY]) {
             isFound = out[x][y] = true;
             break;
           }
@@ -296,17 +305,17 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
       const int X1 = x + DIST;
       const int Y1 = y + DIST;
 
-      const int CHECK_X0 = X0 < 0 ? 0 : X0;
-      const int CHECK_Y0 = Y0 < 0 ? 0 : Y0;
-      const int CHECK_X1 = X1 > MAP_W - 1 ? MAP_W - 1 : X1;
-      const int CHECK_Y1 = Y1 > MAP_H - 1 ? MAP_H - 1 : Y1;
+      const int CMP_X0 = X0 < 0 ? 0 : X0;
+      const int CMP_Y0 = Y0 < 0 ? 0 : Y0;
+      const int CMP_X1 = X1 > MAP_W - 1 ? MAP_W - 1 : X1;
+      const int CMP_Y1 = Y1 > MAP_H - 1 ? MAP_H - 1 : Y1;
 
-      for(int checkY = CHECK_Y0; checkY <= CHECK_Y1; ++checkY) {
+      for(int cmpY = CMP_Y0; cmpY <= CMP_Y1; ++cmpY) {
 
         bool isFound = false;
 
-        for(int checkX = CHECK_X0; checkX <= CHECK_X1; ++checkX) {
-          if(in[checkX][checkY]) {
+        for(int cmpX = CMP_X0; cmpX <= CMP_X1; ++cmpX) {
+          if(in[cmpX][cmpY]) {
             isFound = out[x][y] = true;
             break;
           }
