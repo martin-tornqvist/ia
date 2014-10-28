@@ -249,8 +249,8 @@ void mkThemeSpecificRoomModifications(Room& room) {
             const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
             origin = originBucket.at(ELEMENT);
           }
-          for(int dy = -1; dy <= 1; ++dy) {
-            for(int dx = -1; dx <= 1; ++dx) {
+          for(int dx = -1; dx <= 1; ++dx) {
+            for(int dy = -1; dy <= 1; ++dy) {
               if(
                 (dx == 0 && dy == 0) ||
                 (Rnd::percentile() < CHANCE_FOR_BLOODY_CHAMBER / 2)) {

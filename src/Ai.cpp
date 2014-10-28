@@ -249,8 +249,8 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
   CellPred::BlocksActor cellPred(monster, true);
 
   const Pos& monsterPos = monster.pos;
-  for(int dy = -1; dy <= 1; ++dy) {
-    for(int dx = -1; dx <= 1; ++dx) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       const Pos p(monsterPos.x + dx, monsterPos.y + dy);
       blocked[p.x][p.y] = cellPred.check(Map::cells[p.x][p.y]);
     }
@@ -281,8 +281,8 @@ Dir getDirToRndAdjFreeCell(Monster& monster) {
   //Attempt to find a random non-blocked adjacent cell
   vector<Dir> dirBucket;
   dirBucket.clear();
-  for(int dy = -1; dy <= 1; ++dy) {
-    for(int dx = -1; dx <= 1; ++dx) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       if(dx != 0 || dy != 0) {
         const Pos offset(dx, dy);
         const Pos targetCell(monsterPos + offset);

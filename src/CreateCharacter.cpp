@@ -21,7 +21,7 @@ void draw(const string& curString) {
   Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   Render::drawTextCentered("What is your name?", Panel::screen,
-                             Pos(MAP_W_HALF, 0), clrWhite);
+                           Pos(MAP_W_HALF, 0), clrWhite);
   const int Y_NAME = 2;
   const string NAME_STR =
     curString.size() < PLAYER_NAME_MAX_LENGTH ? curString + "_" :
@@ -29,7 +29,7 @@ void draw(const string& curString) {
   const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
   const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
   Render::drawText(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
-                     clrMenuHighlight);
+                   clrMenuHighlight);
   Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
   Render::drawPopupBox(boxRect);
   Render::updateScreen();
@@ -91,7 +91,7 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
   Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
   Render::drawTextCentered("Choose your background", Panel::screen,
-                             Pos(MAP_W_HALF, 0), clrWhite, clrBlack, true);
+                           Pos(MAP_W_HALF, 0), clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
@@ -195,7 +195,7 @@ void drawPickTrait(
                  "You have reached a new level! Which trait do you gain?";
 
   Render::drawTextCentered(title, Panel::screen, Pos(MAP_W_HALF, 0),
-                             clrWhite, clrBlack, true);
+                           clrWhite, clrBlack, true);
 
   const Pos& browserPos = browser.getPos();
 
@@ -254,7 +254,7 @@ void drawPickTrait(
   PlayerBon::getTraitPrereqs(markedTrait, traitPrereqs, bgPrereq);
   if(!traitPrereqs.empty() || bgPrereq != Bg::END) {
     Render::drawText("This trait had the following prerequisite(s):",
-                       Panel::screen, Pos(X0_DESCR, y), clrWhite);
+                     Panel::screen, Pos(X0_DESCR, y), clrWhite);
     y++;
 
     string prereqStr = "";

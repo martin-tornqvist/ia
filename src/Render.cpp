@@ -78,10 +78,10 @@ Uint32 getPixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y
   return -1;
 }
 
-void putPixel(SDL_Surface* const surface,
-              const int PIXEL_X, const int PIXEL_Y, Uint32 pixel) {
+inline void putPixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y,
+                     Uint32 pixel) {
   int bpp = surface->format->BytesPerPixel;
-  /* Here p is the address to the pixel we want to set */
+  //Here p is the address to the pixel we want to set
   Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
 
   switch(bpp) {
@@ -90,11 +90,11 @@ void putPixel(SDL_Surface* const surface,
     case 3: {
       if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
         p[0] = (pixel >> 16) & 0xff;
-        p[1] = (pixel >> 8) & 0xff;
+        p[1] = (pixel >> 8)  & 0xff;
         p[2] = pixel & 0xff;
       } else {
         p[0] = pixel & 0xff;
-        p[1] = (pixel >> 8) & 0xff;
+        p[1] = (pixel >> 8)  & 0xff;
         p[2] = (pixel >> 16) & 0xff;
       }
     } break;
@@ -110,8 +110,8 @@ void loadFont() {
 
   Uint32 bgClr = SDL_MapRGB(fontSurfaceTmp->format, 0, 0, 0);
 
-  for(int y = 0; y < fontSurfaceTmp->h; ++y) {
-    for(int x = 0; x < fontSurfaceTmp->w; ++x) {
+  for(int x = 0; x < fontSurfaceTmp->w; ++x) {
+    for(int y = 0; y < fontSurfaceTmp->h; ++y) {
       fontPixelData_[x][y] = getPixel(fontSurfaceTmp, x, y) != bgClr;
     }
   }
@@ -127,8 +127,8 @@ void loadTiles() {
   SDL_Surface* tileSurfaceTmp = IMG_Load(tilesImgName.data());
 
   Uint32 imgClr = SDL_MapRGB(tileSurfaceTmp->format, 255, 255, 255);
-  for(int y = 0; y < tileSurfaceTmp->h; ++y) {
-    for(int x = 0; x < tileSurfaceTmp->w; ++x) {
+  for(int x = 0; x < tileSurfaceTmp->w; ++x) {
+    for(int y = 0; y < tileSurfaceTmp->h; ++y) {
       tilePixelData_[x][y] = getPixel(tileSurfaceTmp, x, y) == imgClr;
     }
   }
@@ -141,8 +141,8 @@ void loadTiles() {
 void loadContour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H]) {
   const Pos cellDims(Config::getCellW(), Config::getCellH());
 
-  for(size_t pxY = 0; pxY < PIXEL_DATA_H; ++pxY) {
-    for(size_t pxX = 0; pxX < PIXEL_DATA_W; ++pxX) {
+  for(size_t pxX = 0; pxX < PIXEL_DATA_W; ++pxX) {
+    for(size_t pxY = 0; pxY < PIXEL_DATA_H; ++pxY) {
 
       bool& curVal  = contourPixelData_[pxX][pxY];
       curVal        = false;
@@ -155,8 +155,8 @@ void loadContour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H]) {
         const Pos pxP0(max(curImgPxP0.x, int(pxX - 1)), max(curImgPxP0.y, int(pxY - 1)));
         const Pos pxP1(min(curImgPxP1.x, int(pxX + 1)), min(curImgPxP1.y, int(pxY + 1)));
 
-        for(int pxCheckY = pxP0.y; pxCheckY <= pxP1.y; ++pxCheckY) {
-          for(int pxCheckX = pxP0.x; pxCheckX <= pxP1.x; ++pxCheckX) {
+        for(int pxCheckX = pxP0.x; pxCheckX <= pxP1.x; ++pxCheckX) {
+          for(int pxCheckY = pxP0.y; pxCheckY <= pxP1.y; ++pxCheckY) {
             if(base[pxCheckX][pxCheckY]) {
               curVal = true;
               break;
@@ -188,15 +188,15 @@ void putPixelsOnScr(const bool pixelData[PIXEL_DATA_W][PIXEL_DATA_H],
     int scrPxX = SCR_PX_X0;
     int scrPxY = SCR_PX_Y0;
 
-    for(int sheetPxY = SHEET_PX_Y0; sheetPxY <= SHEET_PX_Y1; sheetPxY++) {
-      scrPxX = SCR_PX_X0;
-      for(int sheetPxX = SHEET_PX_X0; sheetPxX <= SHEET_PX_X1; sheetPxX++) {
+    for(int sheetPxX = SHEET_PX_X0; sheetPxX <= SHEET_PX_X1; sheetPxX++) {
+      scrPxY = SCR_PX_Y0;
+      for(int sheetPxY = SHEET_PX_Y0; sheetPxY <= SHEET_PX_Y1; sheetPxY++) {
         if(pixelData[sheetPxX][sheetPxY]) {
           putPixel(screenSurface, scrPxX, scrPxY, CLR_TO);
         }
-        ++scrPxX;
+        ++scrPxY;
       }
-      ++scrPxY;
+      ++scrPxX;
     }
 
     SDL_UnlockSurface(screenSurface);
@@ -359,8 +359,7 @@ void updateScreen() {
 
 void clearScreen() {
   if(isInited()) {
-    SDL_FillRect(screenSurface, nullptr,
-                 SDL_MapRGB(screenSurface->format, 0, 0, 0));
+    SDL_FillRect(screenSurface, nullptr, SDL_MapRGB(screenSurface->format, 0, 0, 0));
   }
 }
 
@@ -785,8 +784,8 @@ void drawMap() {
   const bool IS_TILES = Config::isTilesMode();
 
   //---------------- INSERT RIGIDS AND BLOOD INTO ARRAY
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
 
       if(Map::cells[x][y].isSeenByPlayer) {
 
@@ -833,8 +832,8 @@ void drawMap() {
     }
   }
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       curDrw = &renderArray[x][y];
       if(Map::cells[x][y].isSeenByPlayer) {
         //---------------- INSERT ITEMS INTO ARRAY
@@ -915,8 +914,8 @@ void drawMap() {
     clr.b = double(clr.b) / DIV;
   };
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
 
       tmpDrw = renderArray[x][y];
 

@@ -11,7 +11,7 @@ using namespace std;
 namespace MapPatterns {
 
 void setCellsInArea(const Rect& area, vector<Pos>& nextToWalls,
-                        vector<Pos>& awayFromWalls) {
+                    vector<Pos>& awayFromWalls) {
   TRACE_FUNC_BEGIN;
   vector<Pos> posBucket;
   posBucket.clear();
@@ -43,8 +43,8 @@ void setCellsInArea(const Rect& area, vector<Pos>& nextToWalls,
     }
 
     bool isDoorAdjacent = false;
-    for(int dy = -1; dy <= 1; ++dy) {
-      for(int dx = -1; dx <= 1; ++dx) {
+    for(int dx = -1; dx <= 1; ++dx) {
+      for(int dy = -1; dy <= 1; ++dy) {
         const auto* const f = Map::cells[pos.x + dx][pos.y + dy].rigid;
         if(f->getId() == FeatureId::door) {isDoorAdjacent = true;}
       }

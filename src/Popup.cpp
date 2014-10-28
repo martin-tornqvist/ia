@@ -61,7 +61,7 @@ void menuMsgDrawingHelper(
 
   if(!title.empty()) {
     Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y),
-                               clrWhite, clrBlack, true);
+                             clrWhite, clrBlack, true);
   }
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
@@ -70,7 +70,7 @@ void menuMsgDrawingHelper(
     y++;
     if(SHOW_MSG_CENTERED) {
       Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
-                                 clrWhite, clrBlack, true);
+                               clrWhite, clrBlack, true);
     } else {
       Render::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
     }
@@ -105,7 +105,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   if(!title.empty()) {
     Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y), clrWhite,
-                               clrBlack, true);
+                             clrBlack, true);
   }
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
@@ -114,7 +114,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
     y++;
     if(SHOW_MSG_CENTERED) {
       Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
-                                 clrWhite, clrBlack, true);
+                               clrWhite, clrBlack, true);
     } else {
       Render::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
     }
@@ -123,7 +123,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   y += 2;
 
   Render::drawTextCentered("[space/esc] to close", Panel::map,
-                             Pos(MAP_W_HALF, y), clrMenuMedium);
+                           Pos(MAP_W_HALF, y), clrMenuMedium);
 
   Render::updateScreen();
 

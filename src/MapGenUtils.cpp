@@ -138,8 +138,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   bool roomCells[MAP_W][MAP_H];
   bool roomFloorCells[MAP_W][MAP_H];
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       const bool IS_ROOM_CELL = Map::roomMap[x][y] == &room;
       roomCells[x][y]         = IS_ROOM_CELL;
       const auto* const f     = Map::cells[x][y].rigid;
@@ -245,8 +245,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
     bool blocked[MAP_W][MAP_H];
     Utils::resetArray(blocked, false);
 
-    for(int y = 0; y < MAP_H; ++y) {
-      for(int x = 0; x < MAP_W; ++x) {
+    for(int x = 0; x < MAP_W; ++x) {
+      for(int y = 0; y < MAP_H; ++y) {
         blocked[x][y] =
           Map::roomMap[x][y] ||
           Map::cells[x][y].rigid->getId() != FeatureId::wall;
@@ -323,16 +323,16 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
 }
 
 void backupMap() {
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       backup[x][y] = Map::cells[x][y].rigid->getId();
     }
   }
 }
 
 void restoreMap() {
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       const auto& data = FeatureData::getData(backup[x][y]);
       Map::put(static_cast<Rigid*>(data.mkObj(Pos(x, y))));
     }

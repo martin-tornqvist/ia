@@ -174,8 +174,8 @@ void DeviceShockwave::triggerEffect() {
 
   const Pos& playerPos = Map::player->pos;
 
-  for(int dy = -1; dy <= 1; ++dy) {
-    for(int dx = -1; dx <= 1; ++dx) {
+  for(int dx = -1; dx <= 1; ++dx) {
+    for(int dy = -1; dy <= 1; ++dy) {
       const Pos p(playerPos + Pos(dx, dy));
       Rigid* const rigid = Map::cells[p.x][p.y].rigid;
       rigid->hit(DmgType::physical, DmgMethod::explosion);

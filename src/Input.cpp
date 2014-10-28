@@ -674,8 +674,8 @@ void handleKeyPress(const KeyData& d) {
   else if(d.sdlKey == SDLK_F4) {
     if(IS_DEBUG_MODE) {
       if(Init::isCheatVisionEnabled) {
-        for(int y = 0; y < MAP_H; ++y) {
-          for(int x = 0; x < MAP_W; ++x) {
+        for(int x = 0; x < MAP_W; ++x) {
+          for(int y = 0; y < MAP_H; ++y) {
             Map::cells[x][y].isSeenByPlayer = false;
             Map::cells[x][y].isExplored     = false;
           }

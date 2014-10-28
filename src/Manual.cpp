@@ -84,7 +84,7 @@ void run() {
     int yPos = 1;
     for(int i = topNr; i <= btmNr; ++i) {
       Render::drawText(lines_.at(i), Panel::screen, Pos(0, yPos++),
-                         clrWhite);
+                       clrWhite);
     }
     Render::updateScreen();
 

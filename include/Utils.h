@@ -12,10 +12,9 @@ class Mob;
 
 namespace Rnd {
 
-//Note: If MTRand is not provided any parameters to the constructor, it will be
-//seeded with current time. So seeding it manually is not necessary for normal
-//gameplay purposes - only if seed should be controlled for testing purposes,
-//or recreating a certain level, etc.
+//Note: If MTRand is not provided any parameters to the constructor, it will be seeded
+//with current time. So seeding it manually is not necessary for normal gameplay
+//purposes - only if seed should be controlled.
 void seed(const unsigned long val);
 
 int dice(const int ROLLS, const int SIDES);
@@ -56,8 +55,7 @@ struct TimeData {
     year_(year), month_(month), day_(day), hour_(hour), minute_(minute),
     second_(second) {}
 
-  std::string getTimeStr(const TimeType lowest,
-                         const bool ADD_SEPARATORS) const;
+  std::string getTimeStr(const TimeType lowest, const bool ADD_SEPARATORS) const;
 
   int year_, month_, day_, hour_, minute_, second_;
 };
@@ -70,8 +68,8 @@ void resetArray(int a[MAP_W][MAP_H]);
 void resetArray(bool a[MAP_W][MAP_H], const bool value);
 
 template<typename T> void resetArray(T* a[MAP_W][MAP_H]) {
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       a[x][y] = nullptr;
     }
   }
@@ -84,16 +82,14 @@ void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]);
 void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
                          std::vector<Pos>& out);
 
-void mkBoolMapFromVector(const std::vector<Pos>& positions,
-                         bool out[MAP_W][MAP_H]);
+void mkBoolMapFromVector(const std::vector<Pos>& positions, bool out[MAP_W][MAP_H]);
 
 Actor* getFirstActorAtPos(const Pos& pos,
                           ActorDeadState deadState = ActorDeadState::alive);
 
 Mob* getFirstMobAtPos(const Pos& pos);
 
-void getActorCells(const std::vector<Actor*>& actors,
-                       std::vector<Pos>& out);
+void getActorCells(const std::vector<Actor*>& actors, std::vector<Pos>& out);
 
 void mkActorArray(Actor* a[MAP_W][MAP_H]);
 
@@ -139,8 +135,7 @@ Pos getOffset(const Dir dir);
 
 Pos getRndAdjPos(const Pos& origin, const bool IS_ORIGIN_ALLOWED);
 
-void getCompassDirName(const Pos& fromPos, const Pos& toPos,
-                       std::string& strRef);
+void getCompassDirName(const Pos& fromPos, const Pos& toPos, std::string& strRef);
 
 void getCompassDirName(const Dir dir, std::string& strRef);
 

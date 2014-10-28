@@ -554,8 +554,8 @@ void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const {
   propHandler_->getAllActivePropIds(props);
 
   if(find(begin(props), end(props), propBurning) != end(props)) {
-    for(int dy = -1; dy <= 1; ++dy) {
-      for(int dx = -1; dx <= 1; ++dx) {
+    for(int dx = -1; dx <= 1; ++dx) {
+      for(int dy = -1; dy <= 1; ++dy) {
         lightMap[pos.x + dx][pos.y + dy] = true;
       }
     }

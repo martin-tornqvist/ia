@@ -98,8 +98,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
 
   //Within the expansion limits, mark all cells not belonging to another room as free.
   //All other cells are considered as blocking.
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       blocked[x][y] = true;
       if(
         (dir_ == hor && (y >= closestCenter0 && y <= closestCenter1)) ||
@@ -117,8 +117,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
   const Pos origin(getCenterPos());
   FloodFill::run(origin, blockedExpanded, flood, INT_MAX, Pos(-1, -1), true);
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       const Pos p(x, y);
       if(flood[x][y] > 0 || p == origin) {
         LiquidDeep* const liquid  = new LiquidDeep(p);
@@ -168,8 +168,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
 
   bool validRoomEntries0[MAP_W][MAP_H];
   bool validRoomEntries1[MAP_W][MAP_H];
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       validRoomEntries0[x][y] = validRoomEntries1[x][y] = false;
     }
   }
@@ -326,8 +326,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H]) {
     MapGen::isMapValid = false;
   } else {
     TRACE << "Converting some remaining valid room entries to floor" << endl;
-    for(int y = 0; y < MAP_H; ++y) {
-      for(int x = 0; x < MAP_W; ++x) {
+    for(int x = 0; x < MAP_W; ++x) {
+      for(int y = 0; y < MAP_H; ++y) {
         if(validRoomEntries0[x][y] || validRoomEntries1[x][y]) {
           if(
             find(cBuilt.begin(), cBuilt.end(), x) == cBuilt.end()) {

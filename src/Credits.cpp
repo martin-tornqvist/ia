@@ -57,13 +57,13 @@ void run() {
   Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
   Render::drawText(" Displaying credits.txt ", Panel::screen,
-                     Pos(X_LABEL, 0), clrGray);
+                   Pos(X_LABEL, 0), clrGray);
 
   Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
-                     clrGray);
+                   clrGray);
 
   Render::drawText(" [space/esc] to exit ", Panel::screen,
-                     Pos(X_LABEL, SCREEN_H - 1), clrGray);
+                   Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
   for(string& line : lines_) {

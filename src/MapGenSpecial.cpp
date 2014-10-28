@@ -150,8 +150,8 @@ void mkForestTrees() {
     MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
     Pos stairsPos;
-    for(int y = 0; y < MAP_H; ++y) {
-      for(int x = 0; x < MAP_W; ++x) {
+    for(int x = 0; x < MAP_W; ++x) {
+      for(int y = 0; y < MAP_H; ++y) {
         const auto id = Map::cells[x][y].rigid->getId();
         if(id == FeatureId::stairs) {
           stairsPos.set(x, y);
@@ -209,7 +209,7 @@ void mkForestTrees() {
     vector<Pos> graveCells;
 
     int pathWalkCount = 0;
-    for(unsigned int i = 0; i < path.size(); ++i) {
+    for(size_t i = 0; i < path.size(); ++i) {
       if(pathWalkCount == TRY_PLACE_EVERY_N_STEP) {
 
         Fov::runFovOnArray(blocked, path.at(i), vision, false);
@@ -318,8 +318,8 @@ bool mkEgyptLvl() {
     }
   }
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       Rigid* const f = Map::cells[x][y].rigid;
       if(f->getId() == FeatureId::wall) {
         static_cast<Wall*>(f)->type_ = WallType::egypt;
@@ -385,8 +385,8 @@ bool mkLengLvl() {
 bool mkTrapezohedronLvl() {
   Map::resetMap();
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       auto* const wall  = new Wall(Pos(x, y));
       Map::put(wall);
       wall->type_       = WallType::cave;
@@ -419,8 +419,8 @@ bool mkTrapezohedronLvl() {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   vector<Pos> itemPosBucket;
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       if(!blocked[x][y] && Pos(x, y) != origin) {
         itemPosBucket.push_back(Pos(x, y));
       }

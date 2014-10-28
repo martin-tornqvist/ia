@@ -43,8 +43,8 @@ Room*         roomMap[MAP_W][MAP_H];
 namespace {
 
 void resetCells(const bool MAKE_STONE_WALLS) {
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
 
       cells[x][y]     = Cell();
       cells[x][y].pos = Pos(x, y);
@@ -84,8 +84,8 @@ void cleanup() {
 
   resetMap();
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       delete cells[x][y].rigid;
       cells[x][y].rigid = nullptr;
     }
@@ -124,8 +124,8 @@ Rigid* put(Rigid* const f) {
 
 #ifdef DEMO_MODE
   if(f->getId() == FeatureId::floor) {
-    for(int y = 0; y < MAP_H; ++y) {
-      for(int x = 0; x < MAP_W; ++x) {
+    for(int x = 0; x < MAP_W; ++x) {
+      for(int y = 0; y < MAP_H; ++y) {
         Map::cells[x][y].isSeenByPlayer = Map::cells[x][y].isExplored = true;
       }
     }

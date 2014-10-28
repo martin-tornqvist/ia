@@ -636,8 +636,7 @@ bool WormMass::onActorTurn_() {
 }
 
 void WormMass::mkStartItems() {
-  inv_->putInIntrinsics(
-    ItemFactory::mk(ItemId::wormMassBite));
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::wormMassBite));
 }
 
 bool GiantLocust::onActorTurn_() {
@@ -694,8 +693,8 @@ bool LordOfSpiders::onActorTurn_() {
         Log::addMsg(data_->spellCastMessage);
       }
 
-      for(int dy = -1; dy <= 1; ++dy) {
-        for(int dx = -1; dx <= 1; ++dx) {
+      for(int dx = -1; dx <= 1; ++dx) {
+        for(int dy = -1; dy <= 1; ++dy) {
 
           if(Rnd::fraction(3, 4)) {
 

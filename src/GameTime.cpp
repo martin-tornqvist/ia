@@ -93,8 +93,8 @@ void runStdTurnEvents() {
   }
 
   //New turn for rigids
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       Map::cells[x][y].rigid->onNewTurn();
     }
   }
@@ -284,8 +284,8 @@ void actorDidAct(const bool IS_FREE_TURN) {
 void updateLightMap() {
   bool lightTmp[MAP_W][MAP_H];
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       Map::cells[x][y].isLit = lightTmp[x][y] = false;
     }
   }
@@ -299,8 +299,8 @@ void updateLightMap() {
 
   for(const auto* const m : mobs_)    {m->addLight(lightTmp);}
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       Map::cells[x][y].rigid->addLight(lightTmp);
 
       //Note: Here the temporary values are copied to the map.

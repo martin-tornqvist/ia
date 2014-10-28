@@ -20,8 +20,8 @@ namespace MapGen {
 bool mkCaveLvl() {
   Map::resetMap();
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       auto* const wall  = new Wall(Pos(x, y));
       Map::put(wall);
       wall->type_     = WallType::cave;

@@ -133,8 +133,8 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
 
   TRACE << "Drawing the final map" << endl;
   linesRef.push_back(StrAndClr(" The final moment:", clrHeading));
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       for(int dx = -1; dx <= 1; ++dx) {
         for(int dy = -1; dy <= 1; ++dy) {
           if(Utils::isPosInsideMap(Pos(x + dx, y + dy))) {

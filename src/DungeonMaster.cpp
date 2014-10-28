@@ -160,8 +160,8 @@ void winGame() {
   for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; ++i) {
     for(unsigned int ii = 0; ii <= i; ii++) {
       Render::drawTextCentered(winMsgLines.at(ii), Panel::screen,
-                                 Pos(MAP_W_HALF, Y0 + ii),
-                                 clrMsgBad, clrBlack, true);
+                               Pos(MAP_W_HALF, Y0 + ii),
+                               clrMsgBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
         const string CMD_LABEL =
           "[space/esc] to record high-score and return to main menu";

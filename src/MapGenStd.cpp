@@ -481,16 +481,16 @@ void mkCaves(Region regions[3][3]) {
 
         bool blocked[MAP_W][MAP_H];
 
-        for(int y = 0; y < MAP_H; ++y) {
-          for(int x = 0; x < MAP_W; ++x) {
+        for(int x = 0; x < MAP_W; ++x) {
+          for(int y = 0; y < MAP_H; ++y) {
 
             blocked[x][y] = false;
 
             if(x == 0 || y == 0 || x == MAP_W - 1 || y == MAP_H - 1) {
               blocked[x][y] = true;
             } else {
-              for(int dy = -1; dy <= 1; ++dy) {
-                for(int dx = -1; dx <= 1; ++dx) {
+              for(int dx = -1; dx <= 1; ++dx) {
+                for(int dy = -1; dy <= 1; ++dy) {
                   const auto featureId =
                     Map::cells[x + dx][y + dy].rigid->getId();
                   if(
@@ -521,8 +521,8 @@ void mkCaves(Region regions[3][3]) {
               floor->type_        = FloorType::cave;
               Map::put(floor);
 
-              for(int dy = -1; dy <= 1; ++dy) {
-                for(int dx = -1; dx <= 1; ++dx) {
+              for(int dx = -1; dx <= 1; ++dx) {
+                for(int dy = -1; dy <= 1; ++dy) {
                   const Pos adjP(p + Pos(dx, dy));
                   Cell& adjCell = Map::cells[adjP.x][adjP.y];
                   if(adjCell.rigid->getId() == FeatureId::wall) {
@@ -542,8 +542,8 @@ void mkCaves(Region regions[3][3]) {
 
           for(int y = 1; y < MAP_H - 1; ++y) {
             for(int x = 1; x < MAP_W - 1; ++x) {
-              for(int dy = -1; dy <= 1; ++dy) {
-                for(int dx = -1; dx <= 1; ++dx) {
+              for(int dx = -1; dx <= 1; ++dx) {
+                for(int dy = -1; dy <= 1; ++dy) {
                   Cell& adjCell = Map::cells[x + dx][y + dy];
                   if(adjCell.rigid->getId() == FeatureId::wall) {
                     blocked[x][y] = blocked[x + dx][y + dy] = true;
@@ -786,8 +786,8 @@ void fillDeadEnds() {
 }
 
 void decorate() {
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       Cell& cell = Map::cells[x][y];
       if(cell.rigid->getId() == FeatureId::wall) {
 
@@ -969,8 +969,8 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos) {
 
   blocked[stairsPos.x][stairsPos.y] = false;
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       if(Map::cells[x][y].rigid->getId() == FeatureId::door) {
         blocked[x][y] = false;
       }
@@ -1006,8 +1006,8 @@ bool mkStdLvl() {
   Map::resetMap();
 
   TRACE << "Resetting helper arrays" << endl;
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       doorProposals[x][y] = false;
     }
   }
@@ -1078,8 +1078,8 @@ bool mkStdLvl() {
 
   if(isMapValid) {
     TRACE << "Making main rooms" << endl;
-    for(int y = 0; y < 3; ++y) {
-      for(int x = 0; x < 3; ++x) {
+    for(int x = 0; x < 3; ++x) {
+      for(int y = 0; y < 3; ++y) {
         auto& region = regions[x][y];
         if(!region.mainRoom_ && region.isFree_) {
           const Rect roomRect = region.getRndRoomRect();
@@ -1133,8 +1133,8 @@ bool mkStdLvl() {
 
   if(isMapValid) {
     TRACE << "Placing doors" << endl;
-    for(int y = 0; y < MAP_H; ++y) {
-      for(int x = 0; x < MAP_W; ++x) {
+    for(int x = 0; x < MAP_W; ++x) {
+      for(int y = 0; y < MAP_H; ++y) {
         if(doorProposals[x][y] && Rnd::fraction(7, 10)) {
           placeDoorAtPosIfSuitable(Pos(x, y));
         }

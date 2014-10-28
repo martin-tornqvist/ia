@@ -274,36 +274,36 @@ void draw(const MenuBrowser& browser) {
   const int BOX_Y0 = pos.y - 1;
 
   Render::drawTextCentered("New journey", Panel::screen, pos,
-                             browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
+                           browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawTextCentered("Resurrect", Panel::screen, pos,
-                             browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
+                           browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawTextCentered("Tome of Wisdom", Panel::screen, pos,
-                             browser.isAtIdx(2) ? clrMenuHighlight : clrMenuDrk);
+                           browser.isAtIdx(2) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawTextCentered("Options", Panel::screen, pos,
-                             browser.isAtIdx(3) ? clrMenuHighlight : clrMenuDrk);
+                           browser.isAtIdx(3) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawTextCentered("Credits", Panel::screen, pos,
-                             browser.isAtIdx(4) ? clrMenuHighlight : clrMenuDrk);
+                           browser.isAtIdx(4) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawTextCentered("Graveyard", Panel::screen, pos,
-                             browser.isAtIdx(5) ? clrMenuHighlight : clrMenuDrk);
+                           browser.isAtIdx(5) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   Render::drawTextCentered("Escape to reality", Panel::screen, pos,
-                             browser.isAtIdx(6) ? clrMenuHighlight : clrMenuDrk);
+                           browser.isAtIdx(6) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
   if(IS_DEBUG_MODE) {
     Render::drawTextCentered("DEBUG: RUN BOT", Panel::screen, pos,
-                               browser.isAtIdx(7) ? clrMenuHighlight : clrMenuDrk);
+                             browser.isAtIdx(7) ? clrMenuHighlight : clrMenuDrk);
     pos.y++;
   }
 
@@ -312,7 +312,7 @@ void draw(const MenuBrowser& browser) {
   const int BOX_X0      = pos.x - BOX_W_HALF;
   const int BOX_X1      = pos.x + BOX_W_HALF;
   Render::drawPopupBox(Rect(Pos(BOX_X0, BOX_Y0), Pos(BOX_X1, BOX_Y1)),
-                         Panel::screen);
+                       Panel::screen);
 
   Render::drawTextCentered(
     gameVersionStr + " - " + __DATE__ + " (c) 2011-2014 Martin Tornqvist",

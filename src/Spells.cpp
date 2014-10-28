@@ -331,8 +331,8 @@ SpellCastRetData SpellMayhem::cast_(
     for(int y = Y0; y <= Y1; ++y) {
       for(int x = X0; x <= X1; ++x) {
         bool isAdjToWalkableCell = false;
-        for(int dy = -1; dy <= 1; ++dy) {
-          for(int dx = -1; dx <= 1; ++dx) {
+        for(int dx = -1; dx <= 1; ++dx) {
+          for(int dy = -1; dy <= 1; ++dy) {
             const Rigid* const f = Map::cells[x + dx][y + dy].rigid;
             if(f->canMoveCmn()) {isAdjToWalkableCell = true;}
           }

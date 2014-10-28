@@ -29,8 +29,8 @@ void resetNrSndMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
 
 void emitSnd(Snd snd) {
   bool blocked[MAP_W][MAP_H];
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       const auto f = Map::cells[x][y].rigid;
       blocked[x][y] = !f->isSoundPassable();
     }

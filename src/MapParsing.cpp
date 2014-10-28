@@ -168,8 +168,8 @@ void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
   const bool ALLOW_WRITE_FALSE = writeRule == MapParseWriteRule::always;
 
   if(pred.isCheckingCells()) {
-    for(int y = 0; y < MAP_H; ++y) {
-      for(int x = 0; x < MAP_W; ++x) {
+    for(int x = 0; x < MAP_W; ++x) {
+      for(int y = 0; y < MAP_H; ++y) {
         const auto& c = Map::cells[x][y];
         const bool IS_MATCH = pred.check(c);
         if(IS_MATCH || ALLOW_WRITE_FALSE) {out[x][y] = IS_MATCH;}
@@ -205,8 +205,8 @@ void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
                                 const Range& distInterval) {
   assert(in != out);
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       out[x][y] = false;
     }
   }
@@ -249,8 +249,8 @@ bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
 }
 
 void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
       if(append[x][y]) {base[x][y] = true;}
     }
   }
@@ -259,8 +259,8 @@ void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
   int checkX0, checkY0, checkX1, checkY1;
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
 
       out[x][y] = false;
 
@@ -286,8 +286,8 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H]) {
 }
 
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST) {
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x < MAP_W; ++x) {
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
 
       out[x][y] = false;
 

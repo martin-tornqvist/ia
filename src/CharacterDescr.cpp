@@ -185,10 +185,10 @@ void drawInterface() {
   Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
   Render::drawText(" Displaying character description ", Panel::screen,
-                     Pos(X_LABEL, 0), clrWhite);
+                   Pos(X_LABEL, 0), clrWhite);
 
   Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
-                     clrGray);
+                   clrGray);
 
   Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrWhite);
 }
