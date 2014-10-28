@@ -96,7 +96,9 @@ void Rigid::onNewTurn() {
 
     if(Rnd::oneIn(finishBurningOneInN)) {
       burnState_ = BurnState::hasBurned;
-      onFinishedBurning();
+      if(onFinishedBurning() == IsDestroyed::yes) {
+        return;
+      }
     }
 
     //Hit adjacent features and actors?
@@ -120,6 +122,9 @@ void Rigid::onNewTurn() {
       }
     }
   }
+
+  //Run specialized new turn actions
+  onNewTurn_();
 }
 
 void Rigid::tryStartBurning(const bool IS_MSG_ALLOWED) {
@@ -616,6 +621,10 @@ void Stairs::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
+void Stairs::onNewTurn_() {
+  assert(!Map::cells[pos_.x][pos_.y].item);
+}
+
 void Stairs::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {
 
@@ -850,10 +859,11 @@ void Carpet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
   }
 }
 
-void Carpet::onFinishedBurning() {
+IsDestroyed Carpet::onFinishedBurning() {
   Floor* const floor = new Floor(pos_);
   floor->setHasBurned();
   Map::put(floor);
+  return IsDestroyed::yes;
 }
 
 string Carpet::getName(const Article article) const {
@@ -925,10 +935,11 @@ void Bush::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
   }
 }
 
-void Bush::onFinishedBurning() {
+IsDestroyed Bush::onFinishedBurning() {
   Grass* const grass = new Grass(pos_);
   grass->setHasBurned();
   Map::put(grass);
+  return IsDestroyed::yes;
 }
 
 string Bush::getName(const Article article) const {

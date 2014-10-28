@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <list>
+#include <chrono>
 
 #include "Init.h"
 #include "Map.h"
@@ -30,7 +31,8 @@ void mkLvl(const MapType& mapType) {
   bool isLvlBuilt = false;
 
 #ifndef NDEBUG
-  int nrAttempts = 0;
+  int   nrAttempts  = 0;
+  auto  startTime   = chrono::steady_clock::now();
 #endif
 
   while(!isLvlBuilt) {
@@ -48,7 +50,11 @@ void mkLvl(const MapType& mapType) {
   }
 
 #ifndef NDEBUG
-  TRACE << "Map built after " << nrAttempts << " attempt(s)" << endl;
+  auto diffTime = chrono::steady_clock::now() - startTime;
+
+  TRACE << "Map built after   " << nrAttempts << " attempt(s). " << endl
+        << "Total time taken: "
+        << chrono::duration <double, milli> (diffTime).count() << " ms" << endl;
 #endif
 
 //  //------------------------------------- TRAPEZOHEDRON LEVEL
@@ -128,7 +134,7 @@ void goToNxt() {
   mapList_.erase(mapList_.begin());
   const auto& mapData = mapList_.front();
 
-  if(mapData.isInMainDungeon) {Map::dlvl++;}
+  if(mapData.isInMainDungeon) {++Map::dlvl;}
 
   mkLvl(mapData.type);
 

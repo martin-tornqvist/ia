@@ -312,13 +312,14 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //  }
 }
 
-void Door::onFinishedBurning() {
+IsDestroyed Door::onFinishedBurning() {
   if(Map::isPosSeenByPlayer(pos_)) {
     Log::addMsg("The door burns down.");
   }
   RubbleLow* const rubble = new RubbleLow(pos_);
   rubble->setHasBurned();
   Map::put(rubble);
+  return IsDestroyed::yes;
 }
 
 bool Door::canMoveCmn() const {return isOpen_;}

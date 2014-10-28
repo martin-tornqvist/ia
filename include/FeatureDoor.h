@@ -27,7 +27,7 @@ public:
   FeatureId getId() const override {return FeatureId::door;}
 
   std::string getName(const Article article)                  const override;
-  void        onFinishedBurning()                                   override;
+  IsDestroyed onFinishedBurning()                                   override;
   char        getGlyph()                                      const override;
   TileId      getTile()                                       const override;
   void        bump(Actor& actorBumping)                             override;

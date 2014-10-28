@@ -831,6 +831,14 @@ void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H]) {
 
   MapParse::parse(CellPred::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
 
+  for(int x = 0; x < MAP_W; ++x) {
+    for(int y = 0; y < MAP_H; ++y) {
+      if(Map::cells[x][y].item) {
+        cellsToSet[x][y] = false;
+      }
+    }
+  }
+
   TRACE_FUNC_END;
 }
 
@@ -1135,10 +1143,7 @@ bool mkStdLvl() {
   }
 
 #ifdef ROOM_THEMING
-  if(isMapValid) {
-    TRACE << "Calling RoomThemeMaking::run()" << endl;
-    RoomThemeMaking::run();
-  }
+  if(isMapValid) {RoomThemeMaking::run();}
 #endif // ROOM_THEMING
 
   if(isMapValid) {movePlayerToNearestAllowedPos();}

@@ -5,6 +5,8 @@
 
 enum class BurnState {notBurned, burning, hasBurned};
 
+enum class IsDestroyed {no, yes};
+
 class Rigid: public Feature {
 public:
   Rigid(Pos pos);
@@ -13,7 +15,7 @@ public:
 
   virtual FeatureId   getId()                         const override = 0;
   virtual std::string getName(const Article article)  const override = 0;
-  virtual void        onNewTurn()                           override;
+  virtual void        onNewTurn()                           override final;
   Clr                 getClr()                        const override final;
   virtual Clr         getClrBg()                      const override final;
 
@@ -36,16 +38,18 @@ public:
   void setHasBurned() {burnState_ = BurnState::hasBurned;}
 
 protected:
-  virtual void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                     Actor* const actor) = 0;
+  virtual void        onNewTurn_() {}
 
-  virtual Clr   getClr_()   const = 0;
-  virtual Clr   getClrBg_() const {return clrBlack;}
+  virtual void        onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                            Actor* const actor) = 0;
 
-  void          tryStartBurning(const bool IS_MSG_ALLOWED);
-  virtual void  onFinishedBurning() {}
-  BurnState     getBurnState() const {return burnState_;}
-  virtual void  triggerTrap(Actor& actor) {(void)actor;}
+  virtual Clr         getClr_()   const = 0;
+  virtual Clr         getClrBg_() const {return clrBlack;}
+
+  void                tryStartBurning(const bool IS_MSG_ALLOWED);
+  virtual IsDestroyed onFinishedBurning() {return IsDestroyed::no;}
+  BurnState           getBurnState() const {return burnState_;}
+  virtual void        triggerTrap(Actor& actor) {(void)actor;}
 
   TileId  goreTile_;
   char    goreGlyph_;
@@ -86,7 +90,7 @@ public:
   FeatureId getId() const override {return FeatureId::carpet;}
 
   std::string getName(const Article article)  const override;
-  void        onFinishedBurning()                   override;
+  IsDestroyed onFinishedBurning()                   override;
 
 private:
   Clr getClr_() const override;
@@ -126,7 +130,7 @@ public:
   FeatureId getId() const override {return FeatureId::bush;}
 
   std::string getName(const Article article)  const override;
-  void        onFinishedBurning()                   override;
+  IsDestroyed onFinishedBurning()                   override;
 
   GrassType type_;
 
@@ -307,6 +311,8 @@ public:
   std::string getName(const Article article)  const override;
 
   void bump(Actor& actorBumping) override;
+
+  void onNewTurn_() override;
 
 private:
   Clr getClr_() const override;
