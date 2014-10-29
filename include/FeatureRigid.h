@@ -588,8 +588,7 @@ private:
   bool isContentKnown_;
 };
 
-enum class FountainType {
-  dry, //This must be at first position!
+enum class FountainEffect {
   tepid,
   refreshing,
   bless,
@@ -629,8 +628,9 @@ private:
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
-  FountainType fountainType_;
-  FountainMatl fountainMatl_;
+  bool                        isDried_;
+  std::vector<FountainEffect> fountainEffects_;
+  FountainMatl                fountainMatl_;
 };
 
 class Cocoon: public Rigid {

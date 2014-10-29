@@ -25,9 +25,9 @@ void mkLines() {
   lines_.clear();
 
   const string offset = "   ";
-  const Clr clrHeading  = clrWhiteHigh;
-  const Clr clrText     = clrWhite;
-  const Clr clrTextDark = clrGray;
+  const Clr& clrHeading   = clrWhiteHigh;
+  const Clr& clrText      = clrWhite;
+  const Clr& clrTextDark  = clrGray;
 
   const AbilityVals& abilities = Map::player->getData().abilityVals;
 

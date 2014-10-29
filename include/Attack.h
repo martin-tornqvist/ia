@@ -68,14 +68,14 @@ struct Projectile {
     attackData = attackData_;
   }
 
-  void setTile(const TileId tileToRender, const Clr clrToRender) {
-    tile = tileToRender;
-    clr = clrToRender;
+  void setTile(const TileId tileToRender, const Clr& clrToRender) {
+    tile  = tileToRender;
+    clr   = clrToRender;
   }
 
-  void setGlyph(const char GLYPH_TO_RENDER, const Clr clrToRender) {
+  void setGlyph(const char GLYPH_TO_RENDER, const Clr& clrToRender) {
     glyph = GLYPH_TO_RENDER;
-    clr = clrToRender;
+    clr   = clrToRender;
   }
 
   Pos pos;

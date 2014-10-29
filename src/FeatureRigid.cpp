@@ -1686,25 +1686,38 @@ Clr Chest::getClr_() const {
 
 //--------------------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(const Pos& pos) :
-  Rigid(pos), fountainType_(FountainType::tepid),
+  Rigid(pos),
+  isDried_(false),
+  fountainEffects_(vector<FountainEffect>()),
   fountainMatl_(FountainMatl::stone) {
 
-  if(Rnd::oneIn(4)) {fountainMatl_ = FountainMatl::gold;}
+  if(Rnd::oneIn(14)) {fountainMatl_ = FountainMatl::gold;}
 
   switch(fountainMatl_) {
     case FountainMatl::stone: {
-      const int NR_TYPES = int(FountainType::END);
-      fountainType_ = FountainType(Rnd::range(1, NR_TYPES - 1));
+      if(Rnd::fraction(6, 7)) {
+        fountainEffects_.push_back(FountainEffect::refreshing);
+      } else {
+        const int   NR_TYPES  = int(FountainEffect::END);
+        const auto  effect    = FountainEffect(Rnd::range(0, NR_TYPES - 1));
+        fountainEffects_.push_back(effect);
+      }
     } break;
 
     case FountainMatl::gold: {
-      vector<FountainType> typeBucket {
-        FountainType::bless, FountainType::refreshing, FountainType::spirit,
-        FountainType::vitality, FountainType::rFire, FountainType::rCold,
-        FountainType::rElec, FountainType::rFear, FountainType::rConfusion
+      vector<FountainEffect> effectBucket {
+        FountainEffect::bless, FountainEffect::refreshing, FountainEffect::spirit,
+        FountainEffect::vitality, FountainEffect::rFire, FountainEffect::rCold,
+        FountainEffect::rElec, FountainEffect::rFear, FountainEffect::rConfusion
       };
-      const int ELEMENT = Rnd::range(0, typeBucket.size() - 1);
-      fountainType_ = typeBucket.at(ELEMENT);
+
+      std::random_shuffle(begin(effectBucket), end(effectBucket));
+
+      const int NR_EFFECTS = 3;
+
+      for(int i = 0; i < NR_EFFECTS; ++i) {
+        fountainEffects_.push_back(effectBucket.at(i));
+      }
     } break;
   }
 }
@@ -1715,9 +1728,13 @@ void Fountain::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 }
 
 Clr Fountain::getClr_() const {
-  switch(fountainMatl_) {
-    case FountainMatl::stone: return clrWhite;
-    case FountainMatl::gold:  return clrYellow;
+  if(isDried_) {
+    return clrGray;
+  } else {
+    switch(fountainMatl_) {
+      case FountainMatl::stone: return clrBlueLgt;
+      case FountainMatl::gold:  return clrYellow;
+    }
   }
   assert("Failed to get fountain color" && false);
   return clrBlack;
@@ -1727,7 +1744,7 @@ string Fountain::getName(const Article article) const {
   string ret = article == Article::a ? "a " : "the ";
 
   switch(fountainMatl_) {
-    case FountainMatl::stone: ret += "stone ";  break;
+    case FountainMatl::stone: {}                break;
     case FountainMatl::gold:  ret += "golden "; break;
   }
   return ret + "fountain";
@@ -1736,93 +1753,103 @@ string Fountain::getName(const Article article) const {
 void Fountain::bump(Actor& actorBumping) {
   if(&actorBumping == Map::player) {
 
-    if(fountainType_ == FountainType::dry) {
+    if(isDried_) {
       Log::addMsg("The fountain is dried out.");
     } else {
       PropHandler& propHlr = Map::player->getPropHandler();
 
       Log::addMsg("I drink from the fountain...");
 
-      switch(fountainType_) {
-        case FountainType::dry: {} break;
+      for(auto effect : fountainEffects_) {
+        switch(effect) {
+          case FountainEffect::tepid: {
+            Log::addMsg("The water is tepid.");
+          } break;
 
-        case FountainType::tepid: {
-          Log::addMsg("The water is tepid.");
-        } break;
+          case FountainEffect::refreshing: {
+            Log::addMsg("It's very refreshing.");
+            Map::player->restoreHp(1, false);
+            Map::player->restoreSpi(1, false);
+            Map::player->restoreShock(5, false);
+          } break;
 
-        case FountainType::refreshing: {
-          Log::addMsg("It's very refreshing.");
-          Map::player->restoreHp(1, false);
-          Map::player->restoreSpi(1, false);
-          Map::player->restoreShock(5, false);
-        } break;
+          case FountainEffect::bless: {
+            propHlr.tryApplyProp(new PropBlessed(PropTurns::std));
+          } break;
 
-        case FountainType::bless: {
-          propHlr.tryApplyProp(new PropBlessed(PropTurns::std));
-        } break;
+          case FountainEffect::curse: {
+            propHlr.tryApplyProp(new PropCursed(PropTurns::std));
+          } break;
 
-        case FountainType::curse: {
-          propHlr.tryApplyProp(new PropCursed(PropTurns::std));
-        } break;
+          case FountainEffect::spirit: {
+            Map::player->restoreSpi(2, true, true);
+          } break;
 
-        case FountainType::spirit: {
-          Map::player->restoreSpi(2, true, true);
-        } break;
+          case FountainEffect::vitality: {
+            Map::player->restoreHp(2, true, true);
+          } break;
 
-        case FountainType::vitality: {
-          Map::player->restoreHp(2, true, true);
-        } break;
+          case FountainEffect::disease: {
+            propHlr.tryApplyProp(new PropDiseased(PropTurns::specific, 50));
+          } break;
 
-        case FountainType::disease: {
-          propHlr.tryApplyProp(new PropDiseased(PropTurns::specific, 50));
-        } break;
+          case FountainEffect::poison: {
+            propHlr.tryApplyProp(new PropPoisoned(PropTurns::std));
+          } break;
 
-        case FountainType::poison: {
-          propHlr.tryApplyProp(new PropPoisoned(PropTurns::std));
-        } break;
+          case FountainEffect::frenzy: {
+            propHlr.tryApplyProp(new PropFrenzied(PropTurns::std));
+          } break;
 
-        case FountainType::frenzy: {
-          propHlr.tryApplyProp(new PropFrenzied(PropTurns::std));
-        } break;
+          case FountainEffect::paralyze: {
+            propHlr.tryApplyProp(new PropParalyzed(PropTurns::std));
+          } break;
 
-        case FountainType::paralyze: {
-          propHlr.tryApplyProp(new PropParalyzed(PropTurns::std));
-        } break;
+          case FountainEffect::blind: {
+            propHlr.tryApplyProp(new PropBlind(PropTurns::std));
+          } break;
 
-        case FountainType::blind: {
-          propHlr.tryApplyProp(new PropBlind(PropTurns::std));
-        } break;
+          case FountainEffect::faint: {
+            propHlr.tryApplyProp(new PropFainted(PropTurns::specific, 10));
+          } break;
 
-        case FountainType::faint: {
-          propHlr.tryApplyProp(new PropFainted(PropTurns::specific, 10));
-        } break;
+          case FountainEffect::rFire: {
+            Prop* const prop = new PropRFire(PropTurns::std);
+            prop->turnsLeft_ *= 2;
+            propHlr.tryApplyProp(prop);
+          } break;
 
-        case FountainType::rFire: {
-          propHlr.tryApplyProp(new PropRFire(PropTurns::std));
-        } break;
+          case FountainEffect::rCold: {
+            Prop* const prop = new PropRCold(PropTurns::std);
+            prop->turnsLeft_ *= 2;
+            propHlr.tryApplyProp(prop);
+          } break;
 
-        case FountainType::rCold: {
-          propHlr.tryApplyProp(new PropRCold(PropTurns::std));
-        } break;
+          case FountainEffect::rElec: {
+            Prop* const prop = new PropRElec(PropTurns::std);
+            prop->turnsLeft_ *= 2;
+            propHlr.tryApplyProp(prop);
+          } break;
 
-        case FountainType::rElec: {
-          propHlr.tryApplyProp(new PropRElec(PropTurns::std));
-        } break;
+          case FountainEffect::rConfusion: {
+            Prop* const prop = new PropRConfusion(PropTurns::std);
+            prop->turnsLeft_ *= 2;
+            propHlr.tryApplyProp(prop);
+          } break;
 
-        case FountainType::rConfusion: {
-          propHlr.tryApplyProp(new PropRConfusion(PropTurns::std));
-        } break;
+          case FountainEffect::rFear: {
+            Prop* const prop = new PropRFear(PropTurns::std);
+            prop->turnsLeft_ *= 2;
+            propHlr.tryApplyProp(prop);
+          } break;
 
-        case FountainType::rFear: {
-          propHlr.tryApplyProp(new PropRFear(PropTurns::std));
-        } break;
-
-        case FountainType::END: {} break;
+          case FountainEffect::END: {} break;
+        }
       }
 
       if(Rnd::oneIn(5)) {
         Log::addMsg("The fountain dries out.");
-        fountainType_ = FountainType::dry;
+        isDried_ = true;
       }
     }
   }

@@ -20,8 +20,8 @@ const Clr clrGreenDrk         = {  0, 64,    0, 0};
 
 const Clr clrYellow           = {255, 255,   0, 0};
 
-const Clr clrBlue             = {  0,   0, 139, 0};
-const Clr clrBlueLgt          = { 92,  92, 255, 0};
+const Clr clrBlue             = {  0,   0, 168, 0};
+const Clr clrBlueLgt          = { 30, 144, 255, 0};
 
 const Clr clrMagenta          = {139,   0, 139, 0};
 const Clr clrMagentaLgt       = {255,   0, 255, 0};
