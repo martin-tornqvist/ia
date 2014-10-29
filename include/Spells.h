@@ -43,6 +43,9 @@ enum class SpellId {
   miGoHypnosis,
   immolation,
 
+  //Spells from special sources
+  pharaohStaffLocusts, //From the Staff of the Pharaohs artifact
+
   END
 };
 
@@ -70,8 +73,7 @@ public:
   virtual ~Spell() {}
   SpellCastRetData cast(Actor* const caster, const bool IS_INTRINSIC) const;
 
-  virtual bool isGoodForMonsterToCastNow(
-    Monster* const monster) {
+  virtual bool isOkForMonsterToCastNow(Monster* const monster) {
     (void)monster;
     return false;
   }
@@ -105,7 +107,7 @@ protected:
 class SpellDarkbolt: public Spell {
 public:
   SpellDarkbolt() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Darkbolt";}
@@ -128,7 +130,7 @@ private:
 class SpellAzathothsWrath: public Spell {
 public:
   SpellAzathothsWrath() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Azathoths Wrath";}
@@ -193,6 +195,35 @@ private:
   SpellCastRetData cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override {
     return PlayerBon::getSpiOccultistCanCastAtLvl(4);
+  }
+};
+
+class SpellPharaohStaffLocusts : public Spell {
+public:
+  SpellPharaohStaffLocusts() {}
+  ~SpellPharaohStaffLocusts() {}
+
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
+
+  virtual bool isAvailForAllMonsters()  const override {return false;}
+  virtual bool isAvailForPlayer()       const override {return false;}
+  virtual std::string getName()         const override {return "Summon Locusts";}
+  virtual SpellId getId()               const override {
+    return SpellId::pharaohStaffLocusts;
+  }
+
+  virtual std::vector<std::string> getDescr() const override {
+    return {"TODO"};
+  }
+
+  virtual IntrSpellShock getShockTypeIntrCast() const {
+    return IntrSpellShock::disturbing;
+  }
+protected:
+  virtual SpellCastRetData cast_(Actor* const caster) const override;
+
+  virtual int getMaxSpiCost_() const override {
+    return PlayerBon::getSpiOccultistCanCastAtLvl(3);
   }
 };
 
@@ -343,7 +374,7 @@ private:
 class SpellBless: public Spell {
 public:
   SpellBless() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Bless";}
@@ -364,7 +395,7 @@ private:
 class SpellKnockBack: public Spell {
 public:
   SpellKnockBack() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "Knockback";}
@@ -383,7 +414,7 @@ private:
 class SpellTeleport: public Spell {
 public:
   SpellTeleport() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Teleport";}
@@ -404,7 +435,7 @@ private:
 class SpellElemRes: public Spell {
 public:
   SpellElemRes() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Elemental Resistance";}
@@ -427,7 +458,7 @@ private:
 class SpellPropOnMon: public Spell {
 public:
   SpellPropOnMon() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   virtual std::string getName() const override = 0;
@@ -496,7 +527,7 @@ private:
 class SpellDisease: public Spell {
 public:
   SpellDisease() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "Disease";}
@@ -517,7 +548,7 @@ private:
 class SpellSummonRandom: public Spell {
 public:
   SpellSummonRandom() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "Summon monster";}
@@ -538,7 +569,7 @@ private:
 class SpellHealSelf: public Spell {
 public:
   SpellHealSelf() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "Healing";}
@@ -559,7 +590,7 @@ private:
 class SpellMiGoHypnosis: public Spell {
 public:
   SpellMiGoHypnosis() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "MiGo Hypnosis";}
@@ -580,7 +611,7 @@ private:
 class SpellImmolation: public Spell {
 public:
   SpellImmolation() : Spell() {}
-  bool isGoodForMonsterToCastNow(Monster* const monster) override;
+  bool isOkForMonsterToCastNow(Monster* const monster) override;
   bool isAvailForAllMonsters()  const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "Immolation";}

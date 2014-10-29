@@ -34,7 +34,7 @@ bool castRandomSpellIfAware(Monster* monsterActing) {
         while(!spellBucket.empty()) {
           Spell* const spell = spellBucket.back();
 
-          if(spell->isGoodForMonsterToCastNow(monsterActing)) {
+          if(spell->isOkForMonsterToCastNow(monsterActing)) {
             const int CUR_SPI = monsterActing->getSpi();
             const int SPELL_MAX_SPI =
               spell->getSpiCost(false, monsterActing).upper;

@@ -10,6 +10,7 @@
 class ItemDataT;
 class Prop;
 class Actor;
+class Spell;
 
 enum ItemActivateReturnType {
   itemActivate_keep, itemActivate_destroyed
@@ -21,7 +22,7 @@ public:
 
   Item& operator=(Item& other) = delete;
 
-  virtual ~Item() {}
+  virtual ~Item();
 
   const ItemDataT&  getData()   const;
   virtual Clr       getClr()    const;
@@ -53,8 +54,11 @@ public:
   virtual void onWear() {}
   virtual void onTakeOff() {}
 
-  //Properties to apply e.g. when wearing something like a ring of fire resistance
-  std::vector<Prop*> myPropsOnCarrier;
+  //Properties to apply when wearing something like a ring of fire resistance
+  std::vector<Prop*>  carrierProps_;
+
+  //Spells granted to the carrier
+  std::vector<Spell*> carrierSpells_;
 
   //Called by the ItemDrop class to make noise etc
   virtual void appplyDropEffects() {}
@@ -62,7 +66,7 @@ public:
   int meleeDmgPlus_;
 
 protected:
-  void clearMyPropsOnCarrier();
+  void clearCarrierProps();
 
   //E.g. "{Off}" for Lanterns, "{60}" for Medical Bags, or "4/7" for Pistols
   virtual std::string getNameInf() const {return "";}
@@ -187,8 +191,7 @@ protected:
 
 class PharaohStaff: public Wpn {
 public:
-  PharaohStaff(ItemDataT* const itemData) :
-    Wpn(itemData, nullptr) {}
+  PharaohStaff(ItemDataT* const itemData);
 };
 
 class SawedOff: public Wpn {

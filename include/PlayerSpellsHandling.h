@@ -16,10 +16,6 @@ void cleanup();
 void storeToSaveLines(std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);
 
-int getNrSpells();
-
-Spell* getSpellAt(const int ELEMENT);
-
 void playerSelectSpellToCast();
 
 void tryCastPrevSpell();

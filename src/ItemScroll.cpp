@@ -18,29 +18,30 @@ using namespace std;
 
 const string Scroll::getRealName() const {
   switch(data_->spellCastFromScroll) {
-    case SpellId::darkbolt:           return "Darkbolt";
-    case SpellId::azathothsWrath:     return "Azathoths Wrath";
-    case SpellId::slowMon:            return "Slow Enemies";
-    case SpellId::terrifyMon:         return "Terrify Enemies";
-    case SpellId::paralyzeMon:        return "Paralyze Enemies";
-    case SpellId::teleport:           return "Teleportation";
-    case SpellId::bless:              return "Blessing";
-    case SpellId::mayhem:             return "Mayhem";
-    case SpellId::pestilence:         return "Pestilence";
-    case SpellId::detItems:           return "Detect Items";
-    case SpellId::detTraps:           return "Detect Traps";
-    case SpellId::detMon:             return "Detect Monsters";
-    case SpellId::opening:            return "Opening";
-    case SpellId::sacrLife:           return "Sacrifice Life";
-    case SpellId::sacrSpi:            return "Sacrifice Spirit";
-    case SpellId::elemRes:            return "Elemental Resistance";
-    case SpellId::disease:            return "";
-    case SpellId::summonRandom:       return "";
-    case SpellId::healSelf:           return "";
-    case SpellId::knockBack:          return "";
-    case SpellId::cloudMinds:         return "";
-    case SpellId::miGoHypnosis:       return "";
-    case SpellId::immolation:         return "";
+    case SpellId::darkbolt:             return "Darkbolt";
+    case SpellId::azathothsWrath:       return "Azathoths Wrath";
+    case SpellId::slowMon:              return "Slow Enemies";
+    case SpellId::terrifyMon:           return "Terrify Enemies";
+    case SpellId::paralyzeMon:          return "Paralyze Enemies";
+    case SpellId::teleport:             return "Teleportation";
+    case SpellId::bless:                return "Blessing";
+    case SpellId::mayhem:               return "Mayhem";
+    case SpellId::pestilence:           return "Pestilence";
+    case SpellId::detItems:             return "Detect Items";
+    case SpellId::detTraps:             return "Detect Traps";
+    case SpellId::detMon:               return "Detect Monsters";
+    case SpellId::opening:              return "Opening";
+    case SpellId::sacrLife:             return "Sacrifice Life";
+    case SpellId::sacrSpi:              return "Sacrifice Spirit";
+    case SpellId::elemRes:              return "Elemental Resistance";
+    case SpellId::disease:              return "";
+    case SpellId::summonRandom:         return "";
+    case SpellId::healSelf:             return "";
+    case SpellId::knockBack:            return "";
+    case SpellId::cloudMinds:           return "";
+    case SpellId::miGoHypnosis:         return "";
+    case SpellId::immolation:           return "";
+    case SpellId::pharaohStaffLocusts:
     case SpellId::END: {} break;
   }
   assert(false && "No spell found for scroll");

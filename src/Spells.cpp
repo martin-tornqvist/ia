@@ -43,29 +43,30 @@ Spell* getRandomSpellForMonster() {
 
 Spell* mkSpellFromId(const SpellId spellId) {
   switch(spellId) {
-    case SpellId::slowMon:            return new SpellSlowMon; break;
-    case SpellId::terrifyMon:         return new SpellTerrifyMon; break;
-    case SpellId::paralyzeMon:        return new SpellParalyzeMon; break;
-    case SpellId::disease:            return new SpellDisease; break;
-    case SpellId::darkbolt:           return new SpellDarkbolt; break;
-    case SpellId::azathothsWrath:     return new SpellAzathothsWrath; break;
-    case SpellId::summonRandom:       return new SpellSummonRandom; break;
-    case SpellId::healSelf:           return new SpellHealSelf; break;
-    case SpellId::knockBack:          return new SpellKnockBack; break;
-    case SpellId::teleport:           return new SpellTeleport; break;
-    case SpellId::mayhem:             return new SpellMayhem; break;
-    case SpellId::pestilence:         return new SpellPestilence; break;
-    case SpellId::detItems:           return new SpellDetItems; break;
-    case SpellId::detTraps:           return new SpellDetTraps; break;
-    case SpellId::detMon:             return new SpellDetMon; break;
-    case SpellId::opening:            return new SpellOpening; break;
-    case SpellId::sacrLife:           return new SpellSacrLife; break;
-    case SpellId::sacrSpi:            return new SpellSacrSpi; break;
-    case SpellId::cloudMinds:         return new SpellCloudMinds; break;
-    case SpellId::bless:              return new SpellBless; break;
-    case SpellId::miGoHypnosis:       return new SpellMiGoHypnosis; break;
-    case SpellId::immolation:         return new SpellImmolation; break;
-    case SpellId::elemRes:            return new SpellElemRes; break;
+    case SpellId::slowMon:              return new SpellSlowMon; break;
+    case SpellId::terrifyMon:           return new SpellTerrifyMon; break;
+    case SpellId::paralyzeMon:          return new SpellParalyzeMon; break;
+    case SpellId::disease:              return new SpellDisease; break;
+    case SpellId::darkbolt:             return new SpellDarkbolt; break;
+    case SpellId::azathothsWrath:       return new SpellAzathothsWrath; break;
+    case SpellId::summonRandom:         return new SpellSummonRandom; break;
+    case SpellId::healSelf:             return new SpellHealSelf; break;
+    case SpellId::knockBack:            return new SpellKnockBack; break;
+    case SpellId::teleport:             return new SpellTeleport; break;
+    case SpellId::mayhem:               return new SpellMayhem; break;
+    case SpellId::pestilence:           return new SpellPestilence; break;
+    case SpellId::detItems:             return new SpellDetItems; break;
+    case SpellId::detTraps:             return new SpellDetTraps; break;
+    case SpellId::detMon:               return new SpellDetMon; break;
+    case SpellId::opening:              return new SpellOpening; break;
+    case SpellId::sacrLife:             return new SpellSacrLife; break;
+    case SpellId::sacrSpi:              return new SpellSacrSpi; break;
+    case SpellId::cloudMinds:           return new SpellCloudMinds; break;
+    case SpellId::bless:                return new SpellBless; break;
+    case SpellId::miGoHypnosis:         return new SpellMiGoHypnosis; break;
+    case SpellId::immolation:           return new SpellImmolation; break;
+    case SpellId::elemRes:              return new SpellElemRes; break;
+    case SpellId::pharaohStaffLocusts:  return new SpellPharaohStaffLocusts; break;
     case SpellId::END: {} break;
   }
   assert(false && "No spell found for ID");
@@ -242,16 +243,14 @@ SpellCastRetData SpellDarkbolt::cast_(Actor* const caster) const {
   return SpellCastRetData(true);
 }
 
-bool SpellDarkbolt::isGoodForMonsterToCastNow(
-  Monster* const monster) {
+bool SpellDarkbolt::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
   return monster->isSeeingActor(*(Map::player), blocked) && Rnd::oneIn(2);
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH
-SpellCastRetData SpellAzathothsWrath::cast_(
-  Actor* const caster) const {
+SpellCastRetData SpellAzathothsWrath::cast_(Actor* const caster) const {
 
   Range dmgRange(4, 8);
 
@@ -303,16 +302,14 @@ SpellCastRetData SpellAzathothsWrath::cast_(
   return SpellCastRetData(false);
 }
 
-bool SpellAzathothsWrath::isGoodForMonsterToCastNow(
-  Monster* const monster) {
+bool SpellAzathothsWrath::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
   return monster->isSeeingActor(*(Map::player), blocked);
 }
 
 //------------------------------------------------------------ MAYHEM
-SpellCastRetData SpellMayhem::cast_(
-  Actor* const caster) const {
+SpellCastRetData SpellMayhem::cast_(Actor* const caster) const {
   (void)caster;
 
   Log::addMsg("Destruction rages around me!");
@@ -371,9 +368,10 @@ SpellCastRetData SpellPestilence::cast_(Actor* const caster) const {
   (void)caster;
 
   const int RND = Rnd::range(1, 4);
-  const ActorId monsterId = RND == 1 ? ActorId::greenSpider  :
-                            RND == 2 ? ActorId::redSpider    :
-                            RND == 3 ? ActorId::rat          : ActorId::wormMass;
+  const ActorId monsterId = RND == 1 ? ActorId::greenSpider :
+                            RND == 2 ? ActorId::redSpider   :
+                            RND == 3 ? ActorId::rat         :
+                            ActorId::wormMass;
 
   const size_t NR_MON = Rnd::range(7, 10);
 
@@ -382,6 +380,20 @@ SpellCastRetData SpellPestilence::cast_(Actor* const caster) const {
   ActorFactory::summonMonsters(
     Map::player->pos, vector<ActorId> {NR_MON, monsterId}, true);
 
+  return SpellCastRetData(true);
+}
+
+//------------------------------------------------------------ PHARAOH STAFF LOCUSTS
+bool SpellPharaohStaffLocusts::isOkForMonsterToCastNow(Monster* const monster) {
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksVision(), blocked);
+  return monster->isSeeingActor(*(Map::player), blocked) && Rnd::oneIn(4);
+}
+
+SpellCastRetData SpellPharaohStaffLocusts::cast_(Actor* const caster) const {
+  const int       NR_SUMMONED = Rnd::range(2, 3);
+  vector<ActorId> actorIds(NR_SUMMONED, ActorId::locust);
+  ActorFactory::summonMonsters(caster->pos, actorIds, false, caster);
   return SpellCastRetData(true);
 }
 
@@ -489,8 +501,7 @@ SpellCastRetData SpellDetMon::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ OPENING
-SpellCastRetData SpellOpening::cast_(
-  Actor* const caster) const {
+SpellCastRetData SpellOpening::cast_(Actor* const caster) const {
 
   (void)caster;
 
@@ -552,8 +563,7 @@ SpellCastRetData SpellSacrSpi::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ ROGUE HIDE
-SpellCastRetData SpellCloudMinds::cast_(
-  Actor* const caster) const {
+SpellCastRetData SpellCloudMinds::cast_(Actor* const caster) const {
 
   (void)caster;
   Log::addMsg("I vanish from the minds of my enemies.");
@@ -568,26 +578,20 @@ SpellCastRetData SpellCloudMinds::cast_(
 }
 
 //------------------------------------------------------------ BLESS
-SpellCastRetData SpellBless::cast_(
-  Actor* const caster) const {
-
-  caster->getPropHandler().tryApplyProp(
-    new PropBlessed(PropTurns::std));
+SpellCastRetData SpellBless::cast_(Actor* const caster) const {
+  caster->getPropHandler().tryApplyProp(new PropBlessed(PropTurns::std));
 
   return SpellCastRetData(true);
 }
 
-bool SpellBless::isGoodForMonsterToCastNow(
-  Monster* const monster) {
-
+bool SpellBless::isOkForMonsterToCastNow(Monster* const monster) {
   vector<PropId> props;
   monster->getPropHandler().getAllActivePropIds(props);
   return find(begin(props), end(props), propBlessed) == end(props);
 }
 
 //------------------------------------------------------------ TELEPORT
-SpellCastRetData SpellTeleport::cast_(
-  Actor* const caster) const {
+SpellCastRetData SpellTeleport::cast_(Actor* const caster) const {
 
   if(caster != Map::player) {
     if(Map::player->isSeeingActor(*caster, nullptr)) {
@@ -599,8 +603,7 @@ SpellCastRetData SpellTeleport::cast_(
   return SpellCastRetData(true);
 }
 
-bool SpellTeleport::isGoodForMonsterToCastNow(
-  Monster* const monster) {
+bool SpellTeleport::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
   return monster->isSeeingActor(*(Map::player), blocked) &&
@@ -618,16 +621,14 @@ SpellCastRetData SpellElemRes::cast_(Actor* const caster) const {
   return SpellCastRetData(true);
 }
 
-bool SpellElemRes::isGoodForMonsterToCastNow(
-  Monster* const monster) {
+bool SpellElemRes::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
   return monster->isSeeingActor(*(Map::player), blocked) && Rnd::oneIn(3);
 }
 
 //------------------------------------------------------------ KNOCKBACK
-SpellCastRetData SpellKnockBack::cast_(
-  Actor* const caster) const {
+SpellCastRetData SpellKnockBack::cast_(Actor* const caster) const {
   if(caster == Map::player) {
 
   } else {
@@ -637,16 +638,14 @@ SpellCastRetData SpellKnockBack::cast_(
   return SpellCastRetData(false);
 }
 
-bool SpellKnockBack::isGoodForMonsterToCastNow(
-  Monster* const monster) {
+bool SpellKnockBack::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
   return monster->isSeeingActor(*(Map::player), blocked);
 }
 
 //------------------------------------------------------------ PROP ON OTHERS
-SpellCastRetData SpellPropOnMon::cast_(
-  Actor* const caster) const {
+SpellCastRetData SpellPropOnMon::cast_(Actor* const caster) const {
 
   const PropId propId = getPropId();
 
@@ -682,16 +681,14 @@ SpellCastRetData SpellPropOnMon::cast_(
   }
 }
 
-bool SpellPropOnMon::isGoodForMonsterToCastNow(
-  Monster* const monster) {
+bool SpellPropOnMon::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
   return monster->isSeeingActor(*(Map::player), blocked);
 }
 
 //------------------------------------------------------------ DISEASE
-SpellCastRetData SpellDisease::cast_(
-  Actor* const caster) const {
+SpellCastRetData SpellDisease::cast_(Actor* const caster) const {
   if(caster == Map::player) {
     return SpellCastRetData(true);
   } else {
@@ -702,17 +699,14 @@ SpellCastRetData SpellDisease::cast_(
   }
 }
 
-bool SpellDisease::isGoodForMonsterToCastNow(
-  Monster* const monster) {
+bool SpellDisease::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
   return Rnd::coinToss() && monster->isSeeingActor(*Map::player, blocked);
 }
 
 //------------------------------------------------------------ SUMMON RANDOM
-SpellCastRetData SpellSummonRandom::cast_(
-  Actor* const caster) const {
-
+SpellCastRetData SpellSummonRandom::cast_(Actor* const caster) const {
   Pos summonPos(caster->pos);
 
   vector<Pos> freeCellsSeenByPlayer;
@@ -773,13 +767,10 @@ SpellCastRetData SpellSummonRandom::cast_(
   return SpellCastRetData(false);
 }
 
-bool SpellSummonRandom::isGoodForMonsterToCastNow(
-  Monster* const monster) {
-
+bool SpellSummonRandom::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
-  return monster->isSeeingActor(*(Map::player), blocked) ||
-         (Rnd::oneIn(20));
+  return monster->isSeeingActor(*(Map::player), blocked) || Rnd::oneIn(20);
 }
 
 //------------------------------------------------------------ HEAL SELF
@@ -787,8 +778,7 @@ SpellCastRetData SpellHealSelf::cast_(Actor* const caster) const {
   return SpellCastRetData(caster->restoreHp(999, true));
 }
 
-bool SpellHealSelf::isGoodForMonsterToCastNow(
-  Monster* const monster) {
+bool SpellHealSelf::isOkForMonsterToCastNow(Monster* const monster) {
   return monster->getHp() < monster->getHpMax(true);
 }
 
@@ -807,19 +797,14 @@ SpellCastRetData SpellMiGoHypnosis::cast_(Actor* const caster) const {
   return true;
 }
 
-bool SpellMiGoHypnosis::isGoodForMonsterToCastNow(
-  Monster* const monster) {
-
+bool SpellMiGoHypnosis::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
-  return monster->isSeeingActor(*(Map::player), blocked) &&
-         Rnd::oneIn(4);
+  return monster->isSeeingActor(*(Map::player), blocked) && Rnd::oneIn(4);
 }
 
 //------------------------------------------------------------ IMMOLATION
-SpellCastRetData SpellImmolation::cast_(
-  Actor* const caster) const {
-
+SpellCastRetData SpellImmolation::cast_(Actor* const caster) const {
   (void)caster;
 
   Log::addMsg("Flames are rising around me!");
@@ -830,11 +815,8 @@ SpellCastRetData SpellImmolation::cast_(
   return true;
 }
 
-bool SpellImmolation::isGoodForMonsterToCastNow(
-  Monster* const monster) {
-
+bool SpellImmolation::isOkForMonsterToCastNow(Monster* const monster) {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksVision(), blocked);
-  return monster->isSeeingActor(*(Map::player), blocked) &&
-         Rnd::oneIn(4);
+  return monster->isSeeingActor(*(Map::player), blocked) && Rnd::oneIn(4);
 }

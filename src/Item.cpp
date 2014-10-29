@@ -21,8 +21,20 @@
 
 using namespace std;
 
-//------------------------------------------------------------------- ITEM
-Item::Item(ItemDataT* itemData) : nrItems_(1), meleeDmgPlus_(0), data_(itemData) {}
+//--------------------------------------------------------- ITEM
+Item::Item(ItemDataT* itemData) :
+  nrItems_(1),
+  carrierProps_(vector<Prop*>()),
+  carrierSpells_(vector<Spell*>()),
+  meleeDmgPlus_(0),
+  data_(itemData) {
+
+}
+
+Item::~Item() {
+  for(auto prop   : carrierProps_)   {delete prop;}
+  for(auto spell  : carrierSpells_)  {delete spell;}
+}
 
 const ItemDataT&  Item::getData()   const {return *data_;}
 Clr               Item::getClr()    const {return data_->clr;}
@@ -136,12 +148,12 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
   return nrStr + namesUsed.names[int(refTypeUsed)] + attStr + infStr;
 }
 
-void Item::clearMyPropsOnCarrier() {
-  for(Prop* prop : myPropsOnCarrier) {delete prop;}
-  myPropsOnCarrier.clear();
+void Item::clearCarrierProps() {
+  for(Prop* prop : carrierProps_) {delete prop;}
+  carrierProps_.clear();
 }
 
-//------------------------------------------------------------------- ARMOR
+//--------------------------------------------------------- ARMOR
 Armor::Armor(ItemDataT* const itemData) :
   Item(itemData), dur_(Rnd::range(80, 100)) {}
 
@@ -213,25 +225,25 @@ int Armor::getAbsorptionPoints() const {
 }
 
 void ArmorAsbSuit::onWear() {
-  myPropsOnCarrier.push_back(new PropRFire(PropTurns::indefinite));
-  myPropsOnCarrier.push_back(new PropRAcid(PropTurns::indefinite));
-  myPropsOnCarrier.push_back(new PropRElec(PropTurns::indefinite));
-  myPropsOnCarrier.push_back(new PropRBreath(PropTurns::indefinite));
+  carrierProps_.push_back(new PropRFire(PropTurns::indefinite));
+  carrierProps_.push_back(new PropRAcid(PropTurns::indefinite));
+  carrierProps_.push_back(new PropRElec(PropTurns::indefinite));
+  carrierProps_.push_back(new PropRBreath(PropTurns::indefinite));
 }
 
 void ArmorAsbSuit::onTakeOff() {
-  clearMyPropsOnCarrier();
+  clearCarrierProps();
 }
 
 void ArmorHeavyCoat::onWear() {
-  myPropsOnCarrier.push_back(new PropRCold(PropTurns::indefinite));
+  carrierProps_.push_back(new PropRCold(PropTurns::indefinite));
 }
 
 void ArmorHeavyCoat::onTakeOff() {
-  clearMyPropsOnCarrier();
+  clearCarrierProps();
 }
 
-//------------------------------------------------------------------- WEAPON
+//--------------------------------------------------------- WEAPON
 Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData) :
   Item(itemData), ammoData_(ammoData) {
   nrAmmoLoaded = 0;
@@ -268,7 +280,12 @@ string Wpn::getNameInf() const {
   return "";
 }
 
-//------------------------------------------------------------------- MACHINE GUN
+//--------------------------------------------------------- STAFF OF THE PHARAOHS
+PharaohStaff::PharaohStaff(ItemDataT* const itemData) : Wpn(itemData, nullptr) {
+  carrierSpells_.push_back(new SpellPharaohStaffLocusts);
+}
+
+//--------------------------------------------------------- MACHINE GUN
 MachineGun::MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
   Wpn(itemData, ammoData) {
   ammoCapacity = ammoData->ranged.ammoContainedInClip;
@@ -277,7 +294,7 @@ MachineGun::MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
   clip = true;
 }
 
-//------------------------------------------------------------------- TESLA CANNON
+//--------------------------------------------------------- TESLA CANNON
 TeslaCannon::TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData) :
   Wpn(itemData, ammoData) {
   ammoCapacity = ammoData->ranged.ammoContainedInClip;
@@ -286,7 +303,7 @@ TeslaCannon::TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData) :
   clip = true;
 }
 
-//------------------------------------------------------------------- SPIKE GUN
+//--------------------------------------------------------- SPIKE GUN
 SpikeGun::SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
   Wpn(itemData, ammoData) {
   ammoCapacity = 12;
@@ -295,7 +312,7 @@ SpikeGun::SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
   clip = true;
 }
 
-//------------------------------------------------------------------- INCINERATOR
+//--------------------------------------------------------- INCINERATOR
 Incinerator::Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
   Wpn(itemData, ammoData) {
   ammoCapacity = ammoData->ranged.ammoContainedInClip;
@@ -310,7 +327,7 @@ void Incinerator::projectileObstructed(
   Explosion::runExplosionAt(pos, ExplType::expl);
 }
 
-//------------------------------------------------------------------- MEDICAL BAG
+//--------------------------------------------------------- MEDICAL BAG
 AmmoClip::AmmoClip(ItemDataT* const itemData) : Ammo(itemData) {
   setFullAmmo();
 }
@@ -319,7 +336,7 @@ void AmmoClip::setFullAmmo() {
   ammo_ = data_->ranged.ammoContainedInClip;
 }
 
-//------------------------------------------------------------------- MEDICAL BAG
+//--------------------------------------------------------- MEDICAL BAG
 const int NR_TRN_BEFORE_HEAL  = 10;
 const int NR_TRN_PER_HP       = 2;
 
@@ -549,7 +566,7 @@ int MedicalBag::getTotSupplForSanitize() const {
   return PlayerBon::hasTrait(Trait::healer) ? 5 : 10;
 }
 
-//------------------------------------------------------------------- HIDEOUS MASK
+//--------------------------------------------------------- HIDEOUS MASK
 void HideousMask::newTurnInInventory() {
   vector<Actor*> adjActors;
   const Pos p(Map::player->pos);
@@ -571,16 +588,16 @@ void HideousMask::newTurnInInventory() {
   }
 }
 
-//------------------------------------------------------------------- GAS MASK
+//--------------------------------------------------------- GAS MASK
 void GasMask::onTakeOff() {
-  clearMyPropsOnCarrier();
+  clearCarrierProps();
 }
 
 void GasMask::onWear() {
-  myPropsOnCarrier .push_back(new PropRBreath(PropTurns::indefinite));
+  carrierProps_.push_back(new PropRBreath(PropTurns::indefinite));
 }
 
-//------------------------------------------------------------------- EXPLOSIVE
+//--------------------------------------------------------- EXPLOSIVE
 ConsumeItem Explosive::activateDefault(Actor* const actor) {
   (void)actor;
   //Make a copy to use as the held ignited explosive.
@@ -593,7 +610,7 @@ ConsumeItem Explosive::activateDefault(Actor* const actor) {
   return ConsumeItem::yes;
 }
 
-//------------------------------------------------------------------- DYNAMITE
+//--------------------------------------------------------- DYNAMITE
 void Dynamite::onPlayerIgnite() const {
   const bool IS_SWIFT   = PlayerBon::hasTrait(Trait::demExpert) && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
@@ -634,7 +651,7 @@ void Dynamite::onPlayerParalyzed() {
   delete this;
 }
 
-//------------------------------------------------------------------- MOLOTOV
+//--------------------------------------------------------- MOLOTOV
 void Molotov::onPlayerIgnite() const {
   const bool IS_SWIFT   = PlayerBon::hasTrait(Trait::demExpert) && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
@@ -673,7 +690,7 @@ void Molotov::onPlayerParalyzed() {
   delete this;
 }
 
-//------------------------------------------------------------------- FLARE
+//--------------------------------------------------------- FLARE
 void Flare::onPlayerIgnite() const {
   const bool IS_SWIFT   = PlayerBon::hasTrait(Trait::demExpert) && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
@@ -715,7 +732,7 @@ void Flare::onPlayerParalyzed() {
   delete this;
 }
 
-//------------------------------------------------------------------- SMOKE GRENADE
+//--------------------------------------------------------- SMOKE GRENADE
 void SmokeGrenade::onPlayerIgnite() const {
   const bool IS_SWIFT   = PlayerBon::hasTrait(Trait::demExpert) && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
