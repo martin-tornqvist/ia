@@ -707,10 +707,10 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos) {
               curProj->actorHit             = curProj->attackData->curDefender;
               curProj->obstructedInElement  = pathElement;
 
-              const bool DIED = curProj->actorHit->hit(curProj->attackData->dmg,
-                                wpn.getData().ranged.dmgType);
+              const ActorDied died = curProj->actorHit->hit(curProj->attackData->dmg,
+                                     wpn.getData().ranged.dmgType);
 
-              if(!DIED) {
+              if(died == ActorDied::no) {
                 //Hit properties
                 PropHandler& defenderPropHandler = curProj->actorHit->getPropHandler();
                 defenderPropHandler.tryApplyPropFromWpn(wpn, false);
@@ -1008,10 +1008,10 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender) {
 
   if(!data.isEtherealDefenderMissed) {
     if(data.attackResult >= successSmall && !data.isDefenderDodging) {
-      const bool IS_DEFENDER_KILLED =
+      const ActorDied died =
         data.curDefender->hit(data.dmg, wpn.getData().melee.dmgType);
 
-      if(!IS_DEFENDER_KILLED) {
+      if(died == ActorDied::no) {
         data.curDefender->getPropHandler().tryApplyPropFromWpn(wpn, true);
       }
       if(data.attackResult >= successNormal) {
@@ -1019,7 +1019,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender) {
           Map::mkBlood(data.curDefender->pos);
         }
       }
-      if(!IS_DEFENDER_KILLED) {
+      if(died == ActorDied::no) {
         if(wpn.getData().melee.isKnockback) {
           if(data.attackResult > successSmall) {
             KnockBack::tryKnockBack(*(data.curDefender), data.attacker->pos, false);

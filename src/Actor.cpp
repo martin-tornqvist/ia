@@ -337,8 +337,14 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   }
 }
 
-bool Actor::hit(int dmg, const DmgType dmgType) {
+ActorDied Actor::hit(int dmg, const DmgType dmgType) {
   TRACE_FUNC_BEGIN_VERBOSE;
+
+  if(deadState == ActorDeadState::destroyed) {
+    TRACE_FUNC_END_VERBOSE;
+    return ActorDied::no;
+  }
+
   TRACE_VERBOSE << "Damage from parameter: " << dmg << endl;
 
   vector<PropId> props;
@@ -347,7 +353,7 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
   if(
     dmgType == DmgType::light &&
     find(begin(props), end(props), propLightSensitive) == end(props)) {
-    return false;
+    return ActorDied::no;
   }
 
   if(this == Map::player) {Map::player->interruptActions();}
@@ -369,14 +375,17 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
       if(isHumanoid()) {Map::mkGore(pos);}
     }
     TRACE_FUNC_END_VERBOSE;
-    return false;
+    return ActorDied::no;
   }
 
   if(dmgType == DmgType::spirit) {return hitSpi(dmg, true);}
 
   //Property resists?
   const bool ALLOW_DMG_RES_MSG = deadState == ActorDeadState::alive;
-  if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {return false;}
+  if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {
+    TRACE_FUNC_END_VERBOSE;
+    return ActorDied::no;
+  }
 
   hit_(dmg);
   TRACE_VERBOSE << "Damage after hit_(): " << dmg << endl;
@@ -411,22 +420,21 @@ bool Actor::hit(int dmg, const DmgType dmgType) {
   if(this != Map::player || !Config::isBotPlaying()) {hp_ -= dmg;}
 
   if(getHp() <= 0) {
-    const bool IS_ON_BOTTOMLESS =
-      Map::cells[pos.x][pos.y].rigid->isBottomless();
+    const bool IS_ON_BOTTOMLESS = Map::cells[pos.x][pos.y].rigid->isBottomless();
     const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((getHpMax(true) * 5) / 4);
     const bool IS_DESTROYED = !data_->canLeaveCorpse || IS_ON_BOTTOMLESS ||
                               IS_DMG_ENOUGH_TO_DESTROY;
 
     die(IS_DESTROYED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
     TRACE_FUNC_END_VERBOSE;
-    return true;
+    return ActorDied::yes;
   } else {
     TRACE_FUNC_END_VERBOSE;
-    return false;
+    return ActorDied::no;
   }
 }
 
-bool Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
+ActorDied Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
   if(ALLOW_MSG) {
     if(this == Map::player) {
       Log::addMsg("My spirit is drained!", clrMsgBad);
@@ -448,9 +456,9 @@ bool Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
       }
     }
     die(false, false, true);
-    return true;
+    return ActorDied::yes;
   }
-  return false;
+  return ActorDied::no;
 }
 
 void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,

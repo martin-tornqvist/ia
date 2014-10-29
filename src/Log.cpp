@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <vector>
 #include <string>
-#include <assert.h>
 
+#include "Init.h"
 #include "Input.h"
 #include "Converters.h"
 #include "Render.h"
@@ -111,7 +111,12 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
             const bool ADD_MORE_PROMPT_AFTER_MSG) {
 
   assert(!text.empty());
-  assert(text.at(0) != ' ');
+#ifndef NDEBUG
+  if(text.at(0) == ' ') {
+    TRACE << "Message starts with space: \"" << text << "\"" << endl;
+    assert(false);
+  }
+#endif
 
   int curLineNr = lines_[1].empty() ? 0 : 1;
 
@@ -154,7 +159,7 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
 
   if(ADD_MORE_PROMPT_AFTER_MSG) {promptAndClearLog();}
 
-  //Messages may stop long actions like first aid and auto travel.
+  //Messages may stop long actions like first aid and quick walk
   if(INTERRUPT_PLAYER_ACTIONS) {
     Map::player->interruptActions();
   }

@@ -51,37 +51,9 @@ void runStdTurnEvents() {
   for(size_t i = 0; i < actors_.size(); ++i) {
     Actor* const actor = actors_[i];
 
-    actor->getPropHandler().tick(PropTurnMode::std, visionBlockers);
-
-    if(actor != Map::player) {
-      Monster* const monster = static_cast<Monster*>(actor);
-      if(monster->playerAwareOfMeCounter_ > 0) {
-        monster->playerAwareOfMeCounter_--;
-      }
-    }
-
-    //Do light damage if actor in lit cell
-    const Pos& pos = actor->pos;
-    if(Map::cells[pos.x][pos.y].isLit) {actor->hit(1, DmgType::light);}
-
-    if(actor->deadState == ActorDeadState::alive) {
-      //Regen Spi
-      if(actor == Map::player) {
-        if(PlayerBon::hasTrait(Trait::stoutSpirit))   regenSpiNTurns -= 2;
-        if(PlayerBon::hasTrait(Trait::strongSpirit))  regenSpiNTurns -= 2;
-        if(PlayerBon::hasTrait(Trait::mightySpirit))  regenSpiNTurns -= 2;
-      }
-
-      regenSpiNTurns = max(2, regenSpiNTurns);
-
-      if(isSpiRegenThisTurn(regenSpiNTurns)) {actor->restoreSpi(1, false);}
-
-      actor->onStdTurn();
-    }
-
     //Delete destroyed actors
     if(actor->deadState == ActorDeadState::destroyed) {
-      //Do not delete player if player died, just exit the function
+      //Do not delete player if player died, just return
       if(actor == Map::player) {return;}
 
       delete actor;
@@ -89,6 +61,34 @@ void runStdTurnEvents() {
       actors_.erase(actors_.begin() + i);
       i--;
       if(curActorIndex_ >= actors_.size()) {curActorIndex_ = 0;}
+    } else { //Monster is alive or is a corpse
+      actor->getPropHandler().tick(PropTurnMode::std, visionBlockers);
+
+      if(actor != Map::player) {
+        Monster* const monster = static_cast<Monster*>(actor);
+        if(monster->playerAwareOfMeCounter_ > 0) {
+          monster->playerAwareOfMeCounter_--;
+        }
+      }
+
+      //Do light damage if actor in lit cell
+      const Pos& pos = actor->pos;
+      if(Map::cells[pos.x][pos.y].isLit) {actor->hit(1, DmgType::light);}
+
+      if(actor->deadState == ActorDeadState::alive) {
+        //Regen Spi
+        if(actor == Map::player) {
+          if(PlayerBon::hasTrait(Trait::stoutSpirit))   regenSpiNTurns -= 2;
+          if(PlayerBon::hasTrait(Trait::strongSpirit))  regenSpiNTurns -= 2;
+          if(PlayerBon::hasTrait(Trait::mightySpirit))  regenSpiNTurns -= 2;
+        }
+
+        regenSpiNTurns = max(2, regenSpiNTurns);
+
+        if(isSpiRegenThisTurn(regenSpiNTurns)) {actor->restoreSpi(1, false);}
+
+        actor->onStdTurn();
+      }
     }
   }
 
