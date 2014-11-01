@@ -1,0 +1,83 @@
+# Infra Arcana Makefile
+
+# optimized build
+# RELEASE = 1
+
+# clang
+# CC ?= cc
+# CXX ?= c++
+
+# gcc
+# CC ?= gcc
+# CXX ?= g++
+
+SHELL = /bin/sh
+INSTALL = /usr/bin/install
+
+SRCDIR = ./src
+INCDIR = ./include
+OSXDIR = ./API/SDL_osx
+DEBUGDIR = $(INCDIR)/debugModeIncl
+RELEASEDIR = $(INCDIR)/releaseModeIncl
+ASSETSDIR = ./assets
+BINDIR = ./target
+
+PROG = ia
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+OBJ = $(SRC:.cpp=.o) $(SRCDIR)/SDLMain.o
+
+WARNINGS = -Wall -Wextra
+OPTFLAGS = -O0 -g -pipe
+CXXFLAGS += -std=c++11
+COBJFLAGS = -x objective-c++
+
+DEF = -DMACOSX
+INC =	-I$(INCDIR) \
+	-F/Library/Frameworks \
+	-I/Library/Frameworks/SDL.framework/Headers \
+	-I/Library/Frameworks/SDL_image.framework/Headers \
+	-I/Library/Frameworks/SDL_mixer.framework/Headers
+LIB =	-F/Library/Frameworks \
+	-framework SDL -framework SDL_image -framework SDL_mixer \
+	-framework Cocoa
+
+# supress clang warnings
+ifeq ($(CXX),c++)
+WARNINGS += -Wno-mismatched-tags -Wno-deprecated-register
+endif
+
+ifdef RELEASE
+OPTFLAGS = -Os -pipe
+INC += -I$(RELEASEDIR)
+else
+INC += -I$(DEBUGDIR)
+endif
+
+CPPFLAGS += $(WARNINGS) $(OPTFLAGS) $(DEF) $(INC)
+LDFLAGS += $(LIB)
+
+all: $(PROG)
+
+$(PROG): $(OBJ)
+	$(CXX) $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
+
+%.o: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c -o $@ $<
+
+$(SRCDIR)/%.o: $(OSXDIR)/%.m
+	$(CXX) $(CPPFLAGS) $(COBJFLAGS) -c -o $@ $<
+
+clean:
+	rm -f $(SRCDIR)/*.o
+	rm -f ./$(PROG)
+
+install: $(PROG)
+	rm -rf $(BINDIR)/*
+	mkdir -p $(BINDIR)
+	cp -R $(ASSETSDIR)/ $(BINDIR)
+	cp ./$(PROG) $(BINDIR)
+
+uninstall:
+	rm -rf $(BINDIR)
+
+.PHONY: all clean install uninstall
