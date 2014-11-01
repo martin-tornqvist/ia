@@ -79,3 +79,23 @@ If you want, you can copy the “target” folder somewhere and rename it
 
 Some people have successfully built IA on OSX by using the Linux Makefile as it is. Although building on OSX is not “officially supported”, the goal is to keep the project as portable as possible. It should require little extra effort (or no extra effort at all) to build IA on OSX. So go ahead and try ;)
 Please tell of your problems or success at the IA webpage, or email me (Martin) - see contact.txt in the game folder (or assets/contact.txt in the IA repository).
+
+### Building on OS X
+I'm using 10.10, ymmv.
+
+Install Xcode command line tools.
+
+Install SDL.framework, SDL\_image.framework, SDL\_mixer.framework in /Library/Frameworks.
+
+Use Makefile\_osx to build:
+
+    $ make -f Makefile_osx install
+
+or, for a "release" build:
+
+    $ make -f Makefile_osx RELEASE=1 install
+
+Run:
+
+    $ cd ./target
+    $ ./ia
