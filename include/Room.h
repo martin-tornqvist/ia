@@ -4,6 +4,9 @@
 #define ROOM_CLASS_H
 
 #include <vector>
+#ifdef MACOSX
+#include <numeric>
+#endif
 
 #include "CmnTypes.h"
 #include "CmnData.h"
