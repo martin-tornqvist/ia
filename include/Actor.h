@@ -16,7 +16,8 @@ class Inventory;
 
 enum class ActorDied {no, yes};
 
-class Actor {
+class Actor
+{
 public:
   Actor();
   virtual ~Actor();

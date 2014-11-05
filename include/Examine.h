@@ -1,7 +1,8 @@
 #ifndef EXAMINE_H
 #define EXAMINE_H
 
-namespace Examine {
+namespace Examine
+{
 
 void playerExamine();
 

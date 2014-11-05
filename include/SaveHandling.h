@@ -1,7 +1,8 @@
 #ifndef SAVE_HANDLING
 #define SAVE_HANDLING
 
-namespace SaveHandling {
+namespace SaveHandling
+{
 
 void save();
 void load();

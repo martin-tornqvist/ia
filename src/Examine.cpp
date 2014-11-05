@@ -9,12 +9,15 @@
 #include "Render.h"
 #include "Utils.h"
 
-namespace Examine {
+namespace Examine
+{
 
-void playerExamine() {
+void playerExamine()
+{
   //TODO It would probably be more fun if examine were allowed while blind,
   //with some potentially horrible results
-  if(Map::player->getPropHandler().allowSee()) {
+  if(Map::player->getPropHandler().allowSee())
+  {
     Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
     Render::drawMapAndInterface();
 
@@ -22,10 +25,13 @@ void playerExamine() {
 
     Log::clearLog();
 
-    if(examinePos != Map::player->pos) {
+    if(examinePos != Map::player->pos)
+    {
       Map::cells[examinePos.x][examinePos.y].rigid->examine();
     }
-  } else {
+  }
+  else
+  {
     Log::addMsg("Not while blind.");
   }
   Render::drawMapAndInterface();

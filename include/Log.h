@@ -9,7 +9,8 @@
 #include "Converters.h"
 #include "CmnTypes.h"
 
-class Msg {
+class Msg
+{
 public:
   Msg(const std::string& text, const Clr& clr, const int X_POS) :
     clr_(clr), xPos_(X_POS), str_(text), repeatsStr_(""),
@@ -17,13 +18,15 @@ public:
 
   Msg() : Msg("", clrWhite, 0) {}
 
-  inline void getStrWithRepeats(std::string& strRef) const {
+  inline void getStrWithRepeats(std::string& strRef) const
+  {
     strRef = str_ + (nr_ > 1 ? repeatsStr_ : "");
   }
 
   inline void getStrRaw(std::string& strRef) const {strRef = str_;}
 
-  inline void incrRepeat() {
+  inline void incrRepeat()
+  {
     nr_++;
     repeatsStr_ = "(x" + toStr(nr_) + ")";
   }
@@ -37,7 +40,8 @@ private:
   int nr_;
 };
 
-namespace Log {
+namespace Log
+{
 
 void init();
 

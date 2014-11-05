@@ -6,7 +6,8 @@
 #include "ItemData.h"
 #include "MenuBrowser.h"
 
-namespace RenderInventory {
+namespace RenderInventory
+{
 
 const int EQP_Y0  = 2;
 const int EQP_Y1  = EQP_Y0 + int(SlotId::END) - 1;

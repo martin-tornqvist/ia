@@ -37,18 +37,22 @@
 
 using namespace std;
 
-namespace Input {
+namespace Input
+{
 
-namespace {
+namespace
+{
 
 SDL_Event* sdlEvent_ = nullptr;
 
-void queryQuit() {
+void queryQuit()
+{
   const vector<string> quitChoices = vector<string> {"yes", "no"};
   const int QUIT_CHOICE = Popup::showMenuMsg(
                             "Save and highscore are not kept.",
                             false, quitChoices, "Quit the current game?");
-  if(QUIT_CHOICE == 0) {
+  if(QUIT_CHOICE == 0)
+  {
     Init::quitToMainMenu = true;
     Render::clearScreen();
     Render::updateScreen();
@@ -57,104 +61,147 @@ void queryQuit() {
 
 } //Namespace
 
-void init() {
+void init()
+{
   if(!sdlEvent_) {sdlEvent_ = new SDL_Event;}
   setKeyRepeatDelays();
 }
 
-void cleanup() {
-  if(sdlEvent_) {
+void cleanup()
+{
+  if(sdlEvent_)
+  {
     delete sdlEvent_;
     sdlEvent_ = nullptr;
   }
 }
 
-void handleKeyPress(const KeyData& d) {
+void handleKeyPress(const KeyData& d)
+{
 
   //TODO Shouldn't this be a switch?
 
   //----------------------------------- MOVEMENT
-  if(d.sdlKey == SDLK_RIGHT            || d.key == '6' || d.key == 'l') {
-    if(Map::player->isAlive()) {
+  if(d.sdlKey == SDLK_RIGHT            || d.key == '6' || d.key == 'l')
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
-      if(d.isShiftHeld) {
+      if(d.isShiftHeld)
+      {
         Map::player->moveDir(Dir::upRight);
-      } else if(d.isCtrlHeld) {
+      }
+      else if(d.isCtrlHeld)
+      {
         Map::player->moveDir(Dir::downRight);
-      } else {
+      }
+      else
+      {
         Map::player->moveDir(Dir::right);
       }
     }
     clearEvents();
     return;
-  } else if(d.sdlKey == SDLK_DOWN      || d.key == '2' || d.key == 'j') {
-    if(Map::player->isAlive()) {
+  }
+  else if(d.sdlKey == SDLK_DOWN      || d.key == '2' || d.key == 'j')
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
       Map::player->moveDir(Dir::down);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey == SDLK_LEFT      || d.key == '4' || d.key == 'h') {
-    if(Map::player->isAlive()) {
+  }
+  else if(d.sdlKey == SDLK_LEFT      || d.key == '4' || d.key == 'h')
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
-      if(d.isShiftHeld) {
+      if(d.isShiftHeld)
+      {
         Map::player->moveDir(Dir::upLeft);
-      } else if(d.isCtrlHeld) {
+      }
+      else if(d.isCtrlHeld)
+      {
         Map::player->moveDir(Dir::downLeft);
-      } else {
+      }
+      else
+      {
         Map::player->moveDir(Dir::left);
       }
     }
     clearEvents();
     return;
-  } else if(d.sdlKey == SDLK_UP        || d.key == '8' || d.key == 'k') {
-    if(Map::player->isAlive()) {
+  }
+  else if(d.sdlKey == SDLK_UP        || d.key == '8' || d.key == 'k')
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
       Map::player->moveDir(Dir::up);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey == SDLK_PAGEUP    || d.key == '9' || d.key == 'u') {
-    if(Map::player->isAlive()) {
+  }
+  else if(d.sdlKey == SDLK_PAGEUP    || d.key == '9' || d.key == 'u')
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
       Map::player->moveDir(Dir::upRight);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey == SDLK_PAGEDOWN  || d.key == '3' || d.key == 'n') {
-    if(Map::player->isAlive()) {
+  }
+  else if(d.sdlKey == SDLK_PAGEDOWN  || d.key == '3' || d.key == 'n')
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
       Map::player->moveDir(Dir::downRight);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey == SDLK_END       || d.key == '1' || d.key == 'b') {
-    if(Map::player->isAlive()) {
+  }
+  else if(d.sdlKey == SDLK_END       || d.key == '1' || d.key == 'b')
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
       Map::player->moveDir(Dir::downLeft);
     }
     clearEvents();
     return;
-  } else if(d.sdlKey == SDLK_HOME      || d.key == '7' || d.key == 'y') {
-    if(Map::player->isAlive()) {
+  }
+  else if(d.sdlKey == SDLK_HOME      || d.key == '7' || d.key == 'y')
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
       Map::player->moveDir(Dir::upLeft);
     }
     clearEvents();
     return;
-  } else if(d.key == '5' || d.key == '.') {
-    if(Map::player->isAlive()) {
+  }
+  else if(d.key == '5' || d.key == '.')
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
 
-      if(PlayerBon::hasTrait(Trait::steadyAimer)) {
+      if(PlayerBon::hasTrait(Trait::steadyAimer))
+      {
         PropHandler& propHlr = Map::player->getPropHandler();
 
         int nrTurnsAimingOld = 0;
 
-        if(PlayerBon::hasTrait(Trait::sharpShooter)) {
+        if(PlayerBon::hasTrait(Trait::sharpShooter))
+        {
           Prop* const propAimingOld =
             propHlr.getProp(propAiming, PropSrc::applied);
-          if(propAimingOld) {
+          if(propAimingOld)
+          {
             nrTurnsAimingOld =
               static_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
           }
@@ -171,7 +218,8 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- MANUAL
-  else if(d.key == '?') {
+  else if(d.key == '?')
+  {
     Log::clearLog();
     Manual::run();
     clearEvents();
@@ -179,7 +227,8 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- OPTIONS
-  else if(d.key == '=') {
+  else if(d.key == '=')
+  {
     Log::clearLog();
     Config::runOptionsMenu();
     clearEvents();
@@ -187,9 +236,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- EXAMINE
-  else if(d.key == 'a') {
+  else if(d.key == 'a')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       Examine::playerExamine();
     }
     clearEvents();
@@ -197,9 +248,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- RELOAD
-  else if(d.key == 'r') {
+  else if(d.key == 'r')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       Reload::reloadWieldedWpn(*(Map::player));
     }
     clearEvents();
@@ -207,9 +260,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- KICK
-  else if((d.key == 'q')) {
+  else if((d.key == 'q'))
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       Kick::playerKick();
       Render::drawMapAndInterface();
     }
@@ -218,9 +273,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- CLOSE
-  else if(d.key == 'c') {
+  else if(d.key == 'c')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       Close::playerClose();
     }
     clearEvents();
@@ -228,9 +285,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- JAM
-  else if(d.key == 'D') {
+  else if(d.key == 'D')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       JamWithSpike::playerJam();
     }
     clearEvents();
@@ -238,9 +297,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- DISARM
-  else if(d.key == 'd') {
+  else if(d.key == 'd')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       Disarm::playerDisarm();
     }
     clearEvents();
@@ -248,9 +309,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- UNLOAD AMMO FROM GROUND
-  else if(d.key == 'G')  {
+  else if(d.key == 'G')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       ItemPickup::tryUnloadWpnOrPickupAmmo();
     }
     clearEvents();
@@ -258,28 +321,38 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- AIM/FIRE FIREARM
-  else if(d.key == 'f') {
+  else if(d.key == 'f')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
 
-      if(Map::player->getPropHandler().allowAttackRanged(true)) {
+      if(Map::player->getPropHandler().allowAttackRanged(true))
+      {
 
         auto* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
 
-        if(item) {
+        if(item)
+        {
           const ItemDataT& itemData = item->getData();
-          if(!itemData.ranged.isRangedWpn) {
+          if(!itemData.ranged.isRangedWpn)
+          {
             Log::addMsg("I am not wielding a firearm.");
-          } else {
+          }
+          else
+          {
             auto* wpn = static_cast<Wpn*>(item);
-            if(wpn->nrAmmoLoaded >= 1 || itemData.ranged.hasInfiniteAmmo) {
+            if(wpn->nrAmmoLoaded >= 1 || itemData.ranged.hasInfiniteAmmo)
+            {
 
-              auto onMarkerAtPos = [&](const Pos & p) {
+              auto onMarkerAtPos = [&](const Pos & p)
+              {
                 Look::printLocationInfoMsgs(p);
 
                 auto* const actor = Utils::getFirstActorAtPos(p);
 
-                if(actor && actor != Map::player) {
+                if(actor && actor != Map::player)
+                {
                   RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
                   Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
                 }
@@ -287,11 +360,16 @@ void handleKeyPress(const KeyData& d) {
                 Log::addMsg("[f] to fire");
               };
 
-              auto onKeyPress = [&](const Pos & p, const KeyData & d_) {
-                if(d_.key == 'f') {
-                  if(p == Map::player->pos) {
+              auto onKeyPress = [&](const Pos & p, const KeyData & d_)
+              {
+                if(d_.key == 'f')
+                {
+                  if(p == Map::player->pos)
+                  {
                     Log::addMsg("I think I can persevere a little longer.");
-                  } else {
+                  }
+                  else
+                  {
                     Log::clearLog();
                     Render::drawMapAndInterface();
 
@@ -301,7 +379,9 @@ void handleKeyPress(const KeyData& d) {
                     Attack::ranged(*Map::player, *wpn, p);
                   }
                   return MarkerDone::yes;
-                } else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE) {
+                }
+                else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE)
+                {
                   Log::clearLog();
                   return MarkerDone::yes;
                 }
@@ -311,13 +391,19 @@ void handleKeyPress(const KeyData& d) {
               Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
                           onMarkerAtPos, onKeyPress);
 
-            } else if(Config::isRangedWpnAutoReload()) {
+            }
+            else if(Config::isRangedWpnAutoReload())
+            {
               Reload::reloadWieldedWpn(*(Map::player));
-            } else {
+            }
+            else
+            {
               Log::addMsg("There is no ammo loaded.");
             }
           }
-        } else {
+        }
+        else
+        {
           Log::addMsg("I am not wielding a weapon.");
         }
       }
@@ -327,13 +413,17 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- GET
-  else if(d.key == 'g') {
+  else if(d.key == 'g')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       const Pos& p = Map::player->pos;
       Item* const itemAtPlayer = Map::cells[p.x][p.y].item;
-      if(itemAtPlayer) {
-        if(itemAtPlayer->getData().id == ItemId::trapezohedron) {
+      if(itemAtPlayer)
+      {
+        if(itemAtPlayer->getData().id == ItemId::trapezohedron)
+        {
           DungeonMaster::winGame();
           Init::quitToMainMenu = true;
         }
@@ -345,7 +435,8 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- INVENTORY SCREEN
-  else if(d.key == 'w') {
+  else if(d.key == 'w')
+  {
     Log::clearLog();
     if(Map::player->isAlive()) {InvHandling::runInvScreen();}
     clearEvents();
@@ -353,9 +444,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- SWAP TO PREPARED ITEM
-  else if(d.key == 'z') {
+  else if(d.key == 'z')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
 
       const bool IS_FREE_TURN = PlayerBon::getBg() == Bg::warVet;
 
@@ -366,20 +459,29 @@ void handleKeyPress(const KeyData& d) {
       Item* const wielded   = inv.getItemInSlot(SlotId::wielded);
       Item* const alt       = inv.getItemInSlot(SlotId::wieldedAlt);
       const string ALT_NAME = alt ? alt->getName(ItemRefType::a) : "";
-      if(wielded || alt) {
-        if(wielded) {
-          if(alt) {
+      if(wielded || alt)
+      {
+        if(wielded)
+        {
+          if(alt)
+          {
             Log::addMsg(
               "I" + swiftStr + " swap to my prepared weapon (" + ALT_NAME + ").");
-          } else {
+          }
+          else
+          {
             const string NAME = wielded->getName(ItemRefType::a);
             Log::addMsg("I" + swiftStr + " put away my weapon (" + NAME + ").");
           }
-        } else {
+        }
+        else
+        {
           Log::addMsg("I" + swiftStr + " wield my prepared weapon (" + ALT_NAME + ").");
         }
         inv.swapWieldedAndPrepared(IS_FREE_TURN);
-      } else {
+      }
+      else
+      {
         Log::addMsg("I have neither a wielded nor a prepared weapon.");
       }
     }
@@ -388,18 +490,23 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- SEARCH (REALLY JUST A WAIT BUTTON)
-  else if(d.key == 's') {
+  else if(d.key == 's')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       vector<Actor*> seenMon;
       Map::player->getSeenFoes(seenMon);
-      if(seenMon.empty()) {
+      if(seenMon.empty())
+      {
         const int TURNS_TO_APPLY = 5;
         const string TURNS_STR = toStr(TURNS_TO_APPLY);
         Log::addMsg("I pause for a while (" + TURNS_STR + " turns)...");
         Map::player->waitTurnsLeft = TURNS_TO_APPLY - 1;
         GameTime::actorDidAct();
-      } else {
+      }
+      else
+      {
         Log::addMsg(msgMonPreventCmd);
         Render::drawMapAndInterface();
       }
@@ -409,33 +516,45 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- QUICK WALK
-  else if(d.key == 'e') {
+  else if(d.key == 'e')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
 
       vector<Actor*> seenMon;
       Map::player->getSeenFoes(seenMon);
 
-      if(!seenMon.empty()) {
+      if(!seenMon.empty())
+      {
         //Monster is seen, prevent quick move
         Log::addMsg(msgMonPreventCmd);
         Render::drawMapAndInterface();
-      } else if(!Map::player->getPropHandler().allowSee()) {
+      }
+      else if(!Map::player->getPropHandler().allowSee())
+      {
         //Player is blinded
         Log::addMsg("Not while blind.");
         Render::drawMapAndInterface();
-      } else {
+      }
+      else
+      {
         vector<PropId> propIds;
         Map::player->getPropHandler().getAllActivePropIds(propIds);
-        if(find(begin(propIds), end(propIds), propPoisoned) != end(propIds)) {
+        if(find(begin(propIds), end(propIds), propPoisoned) != end(propIds))
+        {
           //Player is poisoned
           Log::addMsg("Not while poisoned.");
           Render::drawMapAndInterface();
-        } else if(find(begin(propIds), end(propIds), propConfused) != end(propIds)) {
+        }
+        else if(find(begin(propIds), end(propIds), propConfused) != end(propIds))
+        {
           //Player is confused
           Log::addMsg("Not while confused.");
           Render::drawMapAndInterface();
-        } else {
+        }
+        else
+        {
           Log::addMsg("Which direction?" + cancelInfoStr);
           Render::drawMapAndInterface();
           const Dir dir = Query::dir();
@@ -449,23 +568,31 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- THROW ITEM
-  else if(d.key == 't') {
+  else if(d.key == 't')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
 
-      if(Map::player->activeExplosive) {
-        auto onMarkerAtPos = [](const Pos & p) {
+      if(Map::player->activeExplosive)
+      {
+        auto onMarkerAtPos = [](const Pos & p)
+        {
           Look::printLocationInfoMsgs(p);
           Log::addMsg("[t] to throw.");
         };
 
-        auto onKeyPress = [](const Pos & p, const KeyData & d_) {
-          if(d_.sdlKey == SDLK_RETURN || d_.key == 't') {
+        auto onKeyPress = [](const Pos & p, const KeyData & d_)
+        {
+          if(d_.sdlKey == SDLK_RETURN || d_.key == 't')
+          {
             Log::clearLog();
             Render::drawMapAndInterface();
             Throwing::playerThrowLitExplosive(p);
             return MarkerDone::yes;
-          } else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE) {
+          }
+          else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE)
+          {
             Log::clearLog();
             return MarkerDone::yes;
           }
@@ -474,22 +601,28 @@ void handleKeyPress(const KeyData& d) {
 
         Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::no,
                     onMarkerAtPos, onKeyPress);
-      } else {
-        if(Map::player->getPropHandler().allowAttackRanged(true)) {
+      }
+      else
+      {
+        if(Map::player->getPropHandler().allowAttackRanged(true))
+        {
           Inventory& playerInv  = Map::player->getInv();
           Item* itemStack       = playerInv.getItemInSlot(SlotId::thrown);
 
-          if(itemStack) {
+          if(itemStack)
+          {
             Item* itemToThrow     = ItemFactory::copyItem(itemStack);
             itemToThrow->nrItems_ = 1;
 
-            auto onMarkerAtPos = [&](const Pos & p) {
+            auto onMarkerAtPos = [&](const Pos & p)
+            {
 
               Look::printLocationInfoMsgs(p);
 
               auto* const actor = Utils::getFirstActorAtPos(p);
 
-              if(actor && actor != Map::player) {
+              if(actor && actor != Map::player)
+              {
                 ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
                 Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
               }
@@ -497,11 +630,16 @@ void handleKeyPress(const KeyData& d) {
               Log::addMsg("[t] to throw");
             };
 
-            auto onKeyPress = [&](const Pos & p, const KeyData & d_) {
-              if(d_.sdlKey == SDLK_RETURN || d_.key == 't') {
-                if(p == Map::player->pos) {
+            auto onKeyPress = [&](const Pos & p, const KeyData & d_)
+            {
+              if(d_.sdlKey == SDLK_RETURN || d_.key == 't')
+              {
+                if(p == Map::player->pos)
+                {
                   Log::addMsg("I think I can persevere a little longer.");
-                } else {
+                }
+                else
+                {
                   Log::clearLog();
                   Render::drawMapAndInterface();
 
@@ -512,7 +650,9 @@ void handleKeyPress(const KeyData& d) {
                   playerInv.decrItemInSlot(SlotId::thrown);
                 }
                 return MarkerDone::yes;
-              } else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE) {
+              }
+              else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE)
+              {
                 delete itemToThrow;
                 itemToThrow = nullptr;
                 Log::clearLog();
@@ -523,7 +663,9 @@ void handleKeyPress(const KeyData& d) {
 
             Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
                         onMarkerAtPos, onKeyPress);
-          } else {
+          }
+          else
+          {
             Log::addMsg("I have no missiles chosen for throwing (press 'w').");
           }
         }
@@ -534,23 +676,30 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //-----------------------------------  VIEW DESCRIPTIONS
-  else if(d.key == 'v') {
+  else if(d.key == 'v')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
-      if(Map::player->getPropHandler().allowSee()) {
+    if(Map::player->isAlive())
+    {
+      if(Map::player->getPropHandler().allowSee())
+      {
 
 
-        auto onMarkerAtPos = [&](const Pos & p) {
+        auto onMarkerAtPos = [&](const Pos & p)
+        {
           Look::printLocationInfoMsgs(p);
 
           auto* const actor = Utils::getFirstActorAtPos(p);
-          if(actor && actor != Map::player) {
+          if(actor && actor != Map::player)
+          {
             Log::addMsg("[v] for description");
           }
         };
 
-        auto onKeyPress = [&](const Pos & p, const KeyData & d_) {
-          if(d_.key == 'v') {
+        auto onKeyPress = [&](const Pos & p, const KeyData & d_)
+        {
+          if(d_.key == 'v')
+          {
             Log::clearLog();
 
             Look::printDetailedActorDescr(p);
@@ -559,7 +708,9 @@ void handleKeyPress(const KeyData& d) {
 
             onMarkerAtPos(p);
 
-          } else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE) {
+          }
+          else if(d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE)
+          {
             Log::clearLog();
             return MarkerDone::yes;
           }
@@ -569,7 +720,9 @@ void handleKeyPress(const KeyData& d) {
         Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes, onMarkerAtPos,
                     onKeyPress);
 
-      } else {
+      }
+      else
+      {
         Log::addMsg("Not while blind.");
       }
     }
@@ -578,9 +731,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- AUTO MELEE
-  else if(d.sdlKey == SDLK_TAB) {
+  else if(d.sdlKey == SDLK_TAB)
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       Map::player->autoMelee();
     }
     clearEvents();
@@ -588,9 +743,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- RE-CAST PREVIOUS MEMORIZED SPELL
-  else if(d.key == 'x') {
+  else if(d.key == 'x')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       PlayerSpellsHandling::tryCastPrevSpell();
     }
     clearEvents();
@@ -598,9 +755,11 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- MEMORIZED SPELLS
-  else if(d.key == 'X') {
+  else if(d.key == 'X')
+  {
     Log::clearLog();
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       PlayerSpellsHandling::playerSelectSpellToCast();
     }
     clearEvents();
@@ -608,44 +767,57 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- CHARACTER INFO
-  else if(d.key == '@') {
+  else if(d.key == '@')
+  {
     CharacterDescr::run();
     clearEvents();
     return;
   }
   //----------------------------------- LOG HISTORY
-  else if(d.key == 'm') {
+  else if(d.key == 'm')
+  {
     Log::displayHistory();
     clearEvents();
     return;
   }
 
   //----------------------------------- MENU
-  else if(d.sdlKey == SDLK_ESCAPE) {
-    if(Map::player->isAlive()) {
+  else if(d.sdlKey == SDLK_ESCAPE)
+  {
+    if(Map::player->isAlive())
+    {
       Log::clearLog();
 
       const vector<string> choices {"Options", "Manual", "Quit", "Cancel"};
       const int CHOICE = Popup::showMenuMsg("", true, choices);
 
-      if(CHOICE == 0) {
+      if(CHOICE == 0)
+      {
         //---------------------------- Options
         Config::runOptionsMenu();
         Render::drawMapAndInterface();
-      } else if(CHOICE == 1) {
+      }
+      else if(CHOICE == 1)
+      {
         //---------------------------- Manual
         Manual::run();
         Render::drawMapAndInterface();
-      } else if(CHOICE == 2) {
+      }
+      else if(CHOICE == 2)
+      {
         //---------------------------- Quit
         queryQuit();
       }
-    } else {
+    }
+    else
+    {
       Init::quitToMainMenu = true;
     }
     clearEvents();
     return;
-  } else if(d.key == 'Q' /*&& IS_DEBUG_MODE*/) {
+  }
+  else if(d.key == 'Q' /*&& IS_DEBUG_MODE*/)
+  {
     //----------------------------------- MENU
     queryQuit();
     clearEvents();
@@ -653,8 +825,10 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- DESCEND CHEAT
-  else if(d.sdlKey == SDLK_F2) {
-    if(IS_DEBUG_MODE) {
+  else if(d.sdlKey == SDLK_F2)
+  {
+    if(IS_DEBUG_MODE)
+    {
       MapTravel::goToNxt();
       clearEvents();
     }
@@ -662,8 +836,10 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- XP CHEAT
-  else if(d.sdlKey == SDLK_F3) {
-    if(IS_DEBUG_MODE) {
+  else if(d.sdlKey == SDLK_F3)
+  {
+    if(IS_DEBUG_MODE)
+    {
       DungeonMaster::playerGainXp(100);
       clearEvents();
     }
@@ -671,17 +847,24 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- VISION CHEAT
-  else if(d.sdlKey == SDLK_F4) {
-    if(IS_DEBUG_MODE) {
-      if(Init::isCheatVisionEnabled) {
-        for(int x = 0; x < MAP_W; ++x) {
-          for(int y = 0; y < MAP_H; ++y) {
+  else if(d.sdlKey == SDLK_F4)
+  {
+    if(IS_DEBUG_MODE)
+    {
+      if(Init::isCheatVisionEnabled)
+      {
+        for(int x = 0; x < MAP_W; ++x)
+        {
+          for(int y = 0; y < MAP_H; ++y)
+          {
             Map::cells[x][y].isSeenByPlayer = false;
             Map::cells[x][y].isExplored     = false;
           }
         }
         Init::isCheatVisionEnabled = false;
-      } else {
+      }
+      else
+      {
         Init::isCheatVisionEnabled = true;
       }
       Map::player->updateFov();
@@ -691,8 +874,10 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- INSANITY CHEAT
-  else if(d.sdlKey == SDLK_F5) {
-    if(IS_DEBUG_MODE) {
+  else if(d.sdlKey == SDLK_F5)
+  {
+    if(IS_DEBUG_MODE)
+    {
       Map::player->incrShock(50, ShockSrc::misc);
       clearEvents();
     }
@@ -700,12 +885,16 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- DROP ITEMS AROUND PLAYER
-  else if(d.sdlKey == SDLK_F6) {
-    if(IS_DEBUG_MODE) {
+  else if(d.sdlKey == SDLK_F6)
+  {
+    if(IS_DEBUG_MODE)
+    {
       ItemFactory::mkItemOnMap(ItemId::gasMask, Map::player->pos);
-      for(int i = 0; i < int(ItemId::END); ++i) {
+      for(int i = 0; i < int(ItemId::END); ++i)
+      {
         const auto* const data = ItemData::data[i];
-        if(!data->isIntrinsic && (data->itemValue != ItemValue::normal)) {
+        if(!data->isIntrinsic && (data->itemValue != ItemValue::normal))
+        {
           ItemFactory::mkItemOnMap(static_cast<ItemId>(i), Map::player->pos);
         }
       }
@@ -715,8 +904,10 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- TELEPORT
-  else if(d.sdlKey == SDLK_F7) {
-    if(IS_DEBUG_MODE) {
+  else if(d.sdlKey == SDLK_F7)
+  {
+    if(IS_DEBUG_MODE)
+    {
       Map::player->teleport(false);
       Log::clearLog();
       clearEvents();
@@ -725,8 +916,10 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- INFECTED
-  else if(d.sdlKey == SDLK_F8) {
-    if(IS_DEBUG_MODE) {
+  else if(d.sdlKey == SDLK_F8)
+  {
+    if(IS_DEBUG_MODE)
+    {
       Map::player->getPropHandler().tryApplyProp(
         new PropInfected(PropTurns::std));
       clearEvents();
@@ -735,7 +928,8 @@ void handleKeyPress(const KeyData& d) {
   }
 
   //----------------------------------- UNDEFINED COMMANDS
-  else if(d.key != -1) {
+  else if(d.key != -1)
+  {
     string cmdTried = " ";
     cmdTried.at(0) = d.key;
     Log::clearLog();
@@ -745,7 +939,8 @@ void handleKeyPress(const KeyData& d) {
   }
 }
 
-void setKeyRepeatDelays() {
+void setKeyRepeatDelays()
+{
   TRACE_FUNC_BEGIN;
   const int DELAY     = Config::getKeyRepeatDelay();
   const int INTERVAL  = Config::getKeyRepeatInterval();
@@ -753,38 +948,52 @@ void setKeyRepeatDelays() {
   TRACE_FUNC_END;
 }
 
-void handleMapModeInputUntilFound() {
-  if(sdlEvent_) {
+void handleMapModeInputUntilFound()
+{
+  if(sdlEvent_)
+  {
     const KeyData& d = readKeysUntilFound();
     if(!Init::quitToMainMenu) {handleKeyPress(d);}
   }
 }
 
-void clearEvents() {
+void clearEvents()
+{
   if(sdlEvent_) {while(SDL_PollEvent(sdlEvent_)) {}}
 }
 
-KeyData readKeysUntilFound(const bool IS_O_RETURN) {
+KeyData readKeysUntilFound(const bool IS_O_RETURN)
+{
   if(!sdlEvent_) {return KeyData();}
 
-  while(true) {
+  while(true)
+  {
     SdlWrapper::sleep(1);
 
-    while(SDL_PollEvent(sdlEvent_)) {
-      if(sdlEvent_->type == SDL_QUIT) {
+    while(SDL_PollEvent(sdlEvent_))
+    {
+      if(sdlEvent_->type == SDL_QUIT)
+      {
         return KeyData(SDLK_ESCAPE);
-      } else if(sdlEvent_->type == SDL_KEYDOWN) {
+      }
+      else if(sdlEvent_->type == SDL_KEYDOWN)
+      {
         // ASCII char entered?
         // Decimal unicode:
         // '!' = 33
         // '~' = 126
         Uint16 unicode = sdlEvent_->key.keysym.unicode;
-        if((unicode == 'o' || unicode == 'O') && IS_O_RETURN) {
+        if((unicode == 'o' || unicode == 'O') && IS_O_RETURN)
+        {
           return KeyData(-1, SDLK_RETURN, unicode == 'O', false);
-        } else if(unicode >= 33 && unicode < 126) {
+        }
+        else if(unicode >= 33 && unicode < 126)
+        {
           clearEvents();
           return KeyData(char(unicode));
-        } else {
+        }
+        else
+        {
           //Other key pressed? (escape, return, space, etc)
           const SDLKey sdlKey = sdlEvent_->key.keysym.sym;
 
@@ -795,7 +1004,8 @@ KeyData readKeysUntilFound(const bool IS_O_RETURN) {
             sdlKey == SDLK_LCTRL  ||
             sdlKey == SDLK_RCTRL  ||
             sdlKey == SDLK_LALT   ||
-            sdlKey == SDLK_RALT) {
+            sdlKey == SDLK_RALT)
+          {
             continue;
           }
 
@@ -806,18 +1016,26 @@ KeyData readKeysUntilFound(const bool IS_O_RETURN) {
 
           KeyData ret(-1, sdlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
 
-          if(sdlKey >= SDLK_F1 && sdlKey <= SDLK_F15) {
+          if(sdlKey >= SDLK_F1 && sdlKey <= SDLK_F15)
+          {
             //F-keys
             return ret;
-          } else {
-            switch(sdlKey) {
+          }
+          else
+          {
+            switch(sdlKey)
+            {
               case SDLK_RETURN:
-              case SDLK_KP_ENTER: {
-                if(IS_ALT_HELD) {
+              case SDLK_KP_ENTER:
+              {
+                if(IS_ALT_HELD)
+                {
                   Config::toggleFullscreen();
                   clearEvents();
                   continue;
-                } else {
+                }
+                else
+                {
                   ret.sdlKey = SDLK_RETURN;
                   return ret;
                 }

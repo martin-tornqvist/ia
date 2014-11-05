@@ -4,7 +4,8 @@
 #include "CmnData.h"
 #include "CmnTypes.h"
 
-namespace Fov {
+namespace Fov
+{
 
 bool checkCell(const bool obstructions[MAP_W][MAP_H],
                const Pos& cellToCheck,

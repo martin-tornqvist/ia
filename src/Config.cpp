@@ -19,9 +19,11 @@
 
 using namespace std;
 
-namespace Config {
+namespace Config
+{
 
-namespace {
+namespace
+{
 
 const int NR_OPTIONS  = 15;
 const int OPT_Y0      = 1;
@@ -53,18 +55,21 @@ int     cellH_                        = -1;
 
 vector<string> fontImageNames;
 
-void parseFontNameAndSetCellDims() {
+void parseFontNameAndSetCellDims()
+{
   TRACE_FUNC_BEGIN;
   string fontName = fontName_;
 
   char ch = 'a';
-  while(ch < '0' || ch > '9') {
+  while(ch < '0' || ch > '9')
+  {
     fontName.erase(begin(fontName));
     ch = fontName.at(0);
   }
 
   string wStr = "";
-  while(ch != 'x') {
+  while(ch != 'x')
+  {
     fontName.erase(begin(fontName));
     wStr += ch;
     ch = fontName.at(0);
@@ -74,7 +79,8 @@ void parseFontNameAndSetCellDims() {
   ch = fontName.at(0);
 
   string hStr = "";
-  while(ch != '_' && ch != '.') {
+  while(ch != '_' && ch != '.')
+  {
     fontName.erase(begin(fontName));
     hStr += ch;
     ch = fontName.at(0);
@@ -88,7 +94,8 @@ void parseFontNameAndSetCellDims() {
   TRACE_FUNC_END;
 }
 
-void setDefaultVariables() {
+void setDefaultVariables()
+{
   TRACE_FUNC_BEGIN;
   isAudioEnabled_               = true;
   isTilesMode_                  = true;
@@ -109,16 +116,21 @@ void setDefaultVariables() {
 }
 
 void playerSetsOption(const MenuBrowser* const browser,
-                      const int OPTION_VALUES_X_POS) {
-  switch(browser->getPos().y) {
-    case 0: {
+                      const int OPTION_VALUES_X_POS)
+{
+  switch(browser->getPos().y)
+  {
+    case 0:
+    {
       isAudioEnabled_ = !isAudioEnabled_;
       Audio::init();
     } break;
 
-    case 1: {
+    case 1:
+    {
       isTilesMode_ = !isTilesMode_;
-      if(isTilesMode_ && (cellW_ != 16 || cellH_ != 24)) {
+      if(isTilesMode_ && (cellW_ != 16 || cellH_ != 24))
+      {
         fontName_ = "images/16x24_v1.png";
       }
       parseFontNameAndSetCellDims();
@@ -126,9 +138,12 @@ void playerSetsOption(const MenuBrowser* const browser,
       Render::init();
     } break;
 
-    case 2: {
-      for(unsigned int i = 0; i < fontImageNames.size(); ++i) {
-        if(fontName_ == fontImageNames.at(i)) {
+    case 2:
+    {
+      for(unsigned int i = 0; i < fontImageNames.size(); ++i)
+      {
+        if(fontName_ == fontImageNames.at(i))
+        {
           fontName_ = i == fontImageNames.size() - 1 ?
                       fontImageNames.front() :
                       fontImageNames.at(i + 1);
@@ -137,10 +152,14 @@ void playerSetsOption(const MenuBrowser* const browser,
       }
       parseFontNameAndSetCellDims();
 
-      if(isTilesMode_) {
-        while(cellW_ != 16 || cellH_ != 24) {
-          for(unsigned int i = 0; i < fontImageNames.size(); ++i) {
-            if(fontName_ == fontImageNames.at(i)) {
+      if(isTilesMode_)
+      {
+        while(cellW_ != 16 || cellH_ != 24)
+        {
+          for(unsigned int i = 0; i < fontImageNames.size(); ++i)
+          {
+            if(fontName_ == fontImageNames.at(i))
+            {
               fontName_ = i == fontImageNames.size() - 1 ?
                           fontImageNames.front() :
                           fontImageNames.at(i + 1);
@@ -155,16 +174,19 @@ void playerSetsOption(const MenuBrowser* const browser,
       Render::init();
     } break;
 
-    case 3: {
+    case 3:
+    {
       isFullscreen_ = !isFullscreen_;
       Render::init();
     } break;
 
-    case 4: {
+    case 4:
+    {
       isTilesWallFullSquare_ = !isTilesWallFullSquare_;
     } break;
 
-    case 5: {
+    case 5:
+    {
       isAsciiWallFullSquare_ = !isAsciiWallFullSquare_;
     } break;
 
@@ -174,48 +196,56 @@ void playerSetsOption(const MenuBrowser* const browser,
 
     case 8: {isRangedWpnAutoReload_ = !isRangedWpnAutoReload_;} break;
 
-    case 9: {
+    case 9:
+    {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, keyRepeatDelay_, true);
-      if(NR != -1) {
+      if(NR != -1)
+      {
         keyRepeatDelay_ = NR;
         Input::setKeyRepeatDelays();
       }
     } break;
 
-    case 10: {
+    case 10:
+    {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, keyRepeatInterval_, true);
-      if(NR != -1) {
+      if(NR != -1)
+      {
         keyRepeatInterval_ = NR;
         Input::setKeyRepeatDelays();
       }
     } break;
 
-    case 11: {
+    case 11:
+    {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, delayProjectileDraw_, true);
       if(NR != -1) {delayProjectileDraw_ = NR;}
     } break;
 
-    case 12: {
+    case 12:
+    {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, delayShotgun_, true);
       if(NR != -1) {delayShotgun_ = NR;}
     } break;
 
-    case 13: {
+    case 13:
+    {
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, delayExplosion_, true);
       if(NR != -1) {delayExplosion_ = NR;}
     } break;
 
-    case 14: {
+    case 14:
+    {
       setDefaultVariables();
       parseFontNameAndSetCellDims();
       setCellDimDependentVariables();
@@ -227,7 +257,8 @@ void playerSetsOption(const MenuBrowser* const browser,
   }
 }
 
-void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
+void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS)
+{
   Render::clearScreen();
 
   int optNr = 0;
@@ -439,19 +470,23 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS) {
   Render::updateScreen();
 }
 
-void readFile(vector<string>& lines) {
+void readFile(vector<string>& lines)
+{
   ifstream file;
   file.open("config");
-  if(file.is_open()) {
+  if(file.is_open())
+  {
     string line;
-    while(getline(file, line)) {
+    while(getline(file, line))
+    {
       lines.push_back(line);
     }
     file.close();
   }
 }
 
-void setAllVariablesFromLines(vector<string>& lines) {
+void setAllVariablesFromLines(vector<string>& lines)
+{
   TRACE_FUNC_BEGIN;
 
   string curLine = lines.front();
@@ -459,11 +494,15 @@ void setAllVariablesFromLines(vector<string>& lines) {
   lines.erase(begin(lines));
 
   curLine = lines.front();
-  if(curLine == "0") {
+  if(curLine == "0")
+  {
     isTilesMode_ = false;
-  } else {
+  }
+  else
+  {
     isTilesMode_ = true;
-    if(cellW_ != 16 || cellH_ != 24) {
+    if(cellW_ != 16 || cellH_ != 24)
+    {
       fontName_ = "images/16x24_v1.png";
       parseFontNameAndSetCellDims();
     }
@@ -522,11 +561,13 @@ void setAllVariablesFromLines(vector<string>& lines) {
   TRACE_FUNC_END;
 }
 
-void writeLinesToFile(vector<string>& lines) {
+void writeLinesToFile(vector<string>& lines)
+{
   ofstream file;
   file.open("config", ios::trunc);
 
-  for(size_t i = 0; i < lines.size(); ++i) {
+  for(size_t i = 0; i < lines.size(); ++i)
+  {
     file << lines.at(i);
     if(i != lines.size() - 1) {file << endl;}
   }
@@ -534,7 +575,8 @@ void writeLinesToFile(vector<string>& lines) {
   file.close();
 }
 
-void collectLinesFromVariables(vector<string>& lines) {
+void collectLinesFromVariables(vector<string>& lines)
+{
   TRACE_FUNC_BEGIN;
   lines.clear();
   lines.push_back(isAudioEnabled_               ? "1" : "0");
@@ -556,7 +598,8 @@ void collectLinesFromVariables(vector<string>& lines) {
 
 } //Namespace
 
-void init() {
+void init()
+{
   fontName_ = "";
   isBotPlaying_ = false;
 
@@ -575,9 +618,12 @@ void init() {
 
   vector<string> lines;
   readFile(lines);
-  if(lines.empty()) {
+  if(lines.empty())
+  {
     collectLinesFromVariables(lines);
-  } else {
+  }
+  else
+  {
     setAllVariablesFromLines(lines);
   }
   setCellDimDependentVariables();
@@ -609,7 +655,8 @@ int     getDelayExplosion()           {return delayExplosion_;}
 int     getKeyRepeatDelay()           {return keyRepeatDelay_;}
 int     getKeyRepeatInterval()        {return keyRepeatInterval_;}
 
-void runOptionsMenu() {
+void runOptionsMenu()
+{
   MenuBrowser browser(NR_OPTIONS, 0);
   vector<string> lines;
 
@@ -617,22 +664,27 @@ void runOptionsMenu() {
 
   draw(&browser, OPTION_VALUES_X_POS);
 
-  while(true) {
+  while(true)
+  {
     const MenuAction action = MenuInputHandling::getAction(browser);
-    switch(action) {
-      case MenuAction::browsed: {
+    switch(action)
+    {
+      case MenuAction::browsed:
+      {
         draw(&browser, OPTION_VALUES_X_POS);
       } break;
 
       case MenuAction::esc:
-      case MenuAction::space: {
+      case MenuAction::space:
+      {
         //Since ASCII mode wall symbol may have changed,
         //we need to redefine the feature data list
         FeatureData::init();
         return;
       } break;
 
-      case MenuAction::selected: {
+      case MenuAction::selected:
+      {
         draw(&browser, OPTION_VALUES_X_POS);
         playerSetsOption(&browser, OPTION_VALUES_X_POS);
         collectLinesFromVariables(lines);
@@ -645,7 +697,8 @@ void runOptionsMenu() {
   }
 }
 
-void setCellDimDependentVariables() {
+void setCellDimDependentVariables()
+{
   mapPixelH_              = cellH_ * MAP_H;
   mapPixelOffsetH_        = cellH_ * MAP_OFFSET_H;
   logPixelH_              = cellH_ * LOG_H;
@@ -655,7 +708,8 @@ void setCellDimDependentVariables() {
   screenPixelH_           = cellH_ * SCREEN_H;
 }
 
-void toggleFullscreen() {
+void toggleFullscreen()
+{
   SDL_Surface* screenCpy = SDL_DisplayFormat(Render::screenSurface);
 
   isFullscreen_ = !isFullscreen_;

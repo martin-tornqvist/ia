@@ -11,24 +11,30 @@
 using namespace std;
 
 int AbilityVals::getVal(const AbilityId abilityId,
-                        const bool IS_AFFECTED_BY_PROPS, Actor& actor) const {
+                        const bool IS_AFFECTED_BY_PROPS, Actor& actor) const
+{
   int val = abilityList[int(abilityId)];
 
-  if(IS_AFFECTED_BY_PROPS) {
+  if(IS_AFFECTED_BY_PROPS)
+  {
     val += actor.getPropHandler().getAbilityMod(abilityId);
   }
 
-  if(&actor == Map::player) {
+  if(&actor == Map::player)
+  {
     const int HP_PCT  = (actor.getHp() * 100) / actor.getHpMax(true);
 
-    switch(abilityId) {
-      case AbilityId::searching: {
+    switch(abilityId)
+    {
+      case AbilityId::searching:
+      {
         val += 8;
         if(PlayerBon::hasTrait(Trait::observant))   val += 4;
         if(PlayerBon::hasTrait(Trait::perceptive))  val += 4;
       } break;
 
-      case AbilityId::melee: {
+      case AbilityId::melee:
+      {
         val += 45;
         if(PlayerBon::hasTrait(Trait::adeptMeleeFighter))   val += 10;
         if(PlayerBon::hasTrait(Trait::expertMeleeFighter))  val += 10;
@@ -36,7 +42,8 @@ int AbilityVals::getVal(const AbilityId abilityId,
         if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
       } break;
 
-      case AbilityId::ranged: {
+      case AbilityId::ranged:
+      {
         val += 50;
         if(PlayerBon::hasTrait(Trait::adeptMarksman))   val += 10;
         if(PlayerBon::hasTrait(Trait::expertMarksman))  val += 10;
@@ -44,20 +51,23 @@ int AbilityVals::getVal(const AbilityId abilityId,
         if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
       } break;
 
-      case AbilityId::dodgeTrap: {
+      case AbilityId::dodgeTrap:
+      {
         val += 5;
         if(PlayerBon::hasTrait(Trait::dexterous)) val += 20;
         if(PlayerBon::hasTrait(Trait::lithe))     val += 20;
       } break;
 
-      case AbilityId::dodgeAttack: {
+      case AbilityId::dodgeAttack:
+      {
         val += 10;
         if(PlayerBon::hasTrait(Trait::dexterous)) val += 20;
         if(PlayerBon::hasTrait(Trait::lithe))     val += 20;
         if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 50;
       } break;
 
-      case AbilityId::stealth: {
+      case AbilityId::stealth:
+      {
         val += 10;
         if(PlayerBon::hasTrait(Trait::stealthy))      val += 50;
         if(PlayerBon::hasTrait(Trait::imperceptible)) val += 30;
@@ -67,9 +77,12 @@ int AbilityVals::getVal(const AbilityId abilityId,
       case AbilityId::END: {} break;
     }
 
-    if(abilityId == AbilityId::searching) {
+    if(abilityId == AbilityId::searching)
+    {
       val = max(val, 1);
-    } else if(abilityId == AbilityId::dodgeAttack) {
+    }
+    else if(abilityId == AbilityId::dodgeAttack)
+    {
       val = min(val, 95);
     }
   }
@@ -79,23 +92,29 @@ int AbilityVals::getVal(const AbilityId abilityId,
   return val;
 }
 
-void AbilityVals::reset() {
-  for(int i = 0; i < int(AbilityId::END); ++i) {
+void AbilityVals::reset()
+{
+  for(int i = 0; i < int(AbilityId::END); ++i)
+  {
     abilityList[i] = 0;
   }
 }
 
-void AbilityVals::setVal(const AbilityId ability, const int VAL) {
+void AbilityVals::setVal(const AbilityId ability, const int VAL)
+{
   abilityList[int(ability)] = VAL;
 }
 
-void AbilityVals::changeVal(const AbilityId ability, const int CHANGE) {
+void AbilityVals::changeVal(const AbilityId ability, const int CHANGE)
+{
   abilityList[int(ability)] += CHANGE;
 }
 
-namespace AbilityRoll {
+namespace AbilityRoll
+{
 
-AbilityRollResult roll(const int TOT_SKILL_VALUE) {
+AbilityRollResult roll(const int TOT_SKILL_VALUE)
+{
   const int ROLL = Rnd::percentile();
 
   const int SUCC_CRI_LMT = int(ceil(float(TOT_SKILL_VALUE) / 20.0));

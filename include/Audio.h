@@ -3,7 +3,8 @@
 
 #include "CmnTypes.h"
 
-enum class SfxId {
+enum class SfxId
+{
   //Monster sounds
   dogSnarl,
   wolfHowl,
@@ -56,7 +57,8 @@ enum class SfxId {
   END
 };
 
-namespace Audio {
+namespace Audio
+{
 
 void init();
 void cleanup();

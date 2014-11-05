@@ -15,7 +15,8 @@
 class SaveHandler;
 class Rigid;
 
-struct Cell {
+struct Cell
+{
   Cell();
   ~Cell();
 
@@ -28,7 +29,8 @@ struct Cell {
 
 enum class MapType {intro, std, egypt, leng, caves, trapezohedron};
 
-namespace Map {
+namespace Map
+{
 
 extern Player*            player;
 extern int                dlvl;

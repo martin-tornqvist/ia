@@ -6,7 +6,8 @@
 
 #include "CmnTypes.h"
 
-namespace Bot {
+namespace Bot
+{
 
 void init();
 

@@ -32,16 +32,19 @@ Actor::Actor() :
   data_(nullptr),
   inv_(nullptr) {}
 
-Actor::~Actor() {
+Actor::~Actor()
+{
   delete propHandler_;
   delete inv_;
 }
 
-bool Actor::isSpottingHiddenActor(Actor& other) {
+bool Actor::isSpottingHiddenActor(Actor& other)
+{
   const Pos& otherPos = other.pos;
 
   int playerBon = 0;
-  if(this == Map::player) {
+  if(isPlayer())
+  {
     playerBon = data_->abilityVals.getVal(AbilityId::searching, true, *this) / 3;
   }
 
@@ -57,39 +60,44 @@ bool Actor::isSpottingHiddenActor(Actor& other) {
   return AbilityRoll::roll(SKILL) <= failSmall;
 }
 
-int Actor::getHpMax(const bool WITH_MODIFIERS) const {
+int Actor::getHpMax(const bool WITH_MODIFIERS) const
+{
   return WITH_MODIFIERS ? propHandler_->getChangedMaxHp(hpMax_) : hpMax_;
 }
 
-bool Actor::isSeeingActor(
-  const Actor& other, const bool losBlockers[MAP_W][MAP_H]) const {
+bool Actor::isSeeingActor(const Actor& other, const bool losBlockers[MAP_W][MAP_H]) const
+{
+  if(this == &other)
+  {
+    return true;
+  }
 
-  if(other.isAlive()) {
-    if(this == &other) {return true;}
-
-    if(this == Map::player) {
+  if(other.isAlive())
+  {
+    if(isPlayer())
+    {
       const bool IS_MONSTER_SNEAKING = static_cast<const Mon*>(&other)->isStealth;
-      return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer &&
-             !IS_MONSTER_SNEAKING;
+      return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer && !IS_MONSTER_SNEAKING;
     }
 
-    if(
-      static_cast<const Mon*>(this)->leader ==
-      Map::player && &other != Map::player) {
+    if(static_cast<const Mon*>(this)->leader == Map::player && &other != Map::player)
+    {
       const bool IS_MONSTER_SNEAKING = static_cast<const Mon*>(&other)->isStealth;
       if(IS_MONSTER_SNEAKING) return false;
     }
 
-    if(!propHandler_->allowSee()) {
+    if(!propHandler_->allowSee())
+    {
       return false;
     }
 
-    if(pos.x - other.pos.x > FOV_STD_RADI_INT) return false;
-    if(other.pos.x - pos.x > FOV_STD_RADI_INT) return false;
-    if(other.pos.y - pos.y > FOV_STD_RADI_INT) return false;
-    if(pos.y - other.pos.y > FOV_STD_RADI_INT) return false;
+    if(pos.x - other.pos.x > FOV_STD_RADI_INT) {return false;}
+    if(other.pos.x - pos.x > FOV_STD_RADI_INT) {return false;}
+    if(other.pos.y - pos.y > FOV_STD_RADI_INT) {return false;}
+    if(pos.y - other.pos.y > FOV_STD_RADI_INT) {return false;}
 
-    if(losBlockers) {
+    if(losBlockers)
+    {
       const bool IS_BLOCKED_BY_DARKNESS = !data_->canSeeInDarkness;
       return Fov::checkCell(losBlockers, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
     }
@@ -97,39 +105,46 @@ bool Actor::isSeeingActor(
   return false;
 }
 
-void Actor::getSeenFoes(vector<Actor*>& vectorRef) {
+void Actor::getSeenFoes(vector<Actor*>& vectorRef)
+{
   vectorRef.clear();
-
-  const bool IS_SELF_PLAYER = this == Map::player;
 
   bool losBlockers[MAP_W][MAP_H];
 
-  if(!IS_SELF_PLAYER) {
+  if(!isPlayer())
+  {
     MapParse::parse(CellPred::BlocksLos(), losBlockers);
   }
 
-  for(Actor* actor : GameTime::actors_) {
-    if(actor != this && actor->isAlive()) {
+  for(Actor* actor : GameTime::actors_)
+  {
+    if(actor != this && actor->isAlive())
+    {
 
-      if(IS_SELF_PLAYER) {
-        if(static_cast<Mon*>(actor)->leader != this) {
-          if(isSeeingActor(*actor, nullptr)) {
+      if(isPlayer())
+      {
+        if(static_cast<Mon*>(actor)->leader != this)
+        {
+          if(isSeeingActor(*actor, nullptr))
+          {
             vectorRef.push_back(actor);
           }
         }
-      } else {
-        const bool IS_OTHER_PLAYER = actor == Map::player;
-        const bool IS_HOSTILE_TO_PLAYER =
-          static_cast<Mon*>(this)->leader != Map::player;
+      }
+      else //Not player
+      {
+        const bool IS_HOSTILE_TO_PLAYER = static_cast<Mon*>(this)->leader != Map::player;
         const bool IS_OTHER_HOSTILE_TO_PLAYER =
-          IS_OTHER_PLAYER ? false : static_cast<Mon*>(actor)->leader != Map::player;
+          actor->isPlayer() ? false : static_cast<Mon*>(actor)->leader != Map::player;
 
         //Note: IS_OTHER_HOSTILE_TO_PLAYER is false if other IS the player, there is no
         //need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
         if(
           (IS_HOSTILE_TO_PLAYER && !IS_OTHER_HOSTILE_TO_PLAYER) ||
-          (!IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER)) {
-          if(isSeeingActor(*actor, losBlockers)) {
+          (!IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER))
+        {
+          if(isSeeingActor(*actor, losBlockers))
+          {
             vectorRef.push_back(actor);
           }
         }
@@ -138,7 +153,8 @@ void Actor::getSeenFoes(vector<Actor*>& vectorRef) {
   }
 }
 
-void Actor::place(const Pos& pos_, ActorDataT& data) {
+void Actor::place(const Pos& pos_, ActorDataT& data)
+{
   pos             = pos_;
   data_           = &data;
   inv_            = new Inventory();
@@ -158,7 +174,8 @@ void Actor::place(const Pos& pos_, ActorDataT& data) {
   updateClr();
 }
 
-void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
+void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS)
+{
   (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
 
   bool blocked[MAP_W][MAP_H];
@@ -167,17 +184,21 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
   const Pos newPos = freeCells.at(Rnd::range(0, freeCells.size() - 1));
 
-  if(this == Map::player) {
+  if(isPlayer())
+  {
     Map::player->updateFov();
     Render::drawMapAndInterface();
     Map::updateVisualMemory();
-  } else {
+  }
+  else
+  {
     static_cast<Mon*>(this)->playerAwareOfMeCounter_ = 0;
   }
 
   pos = newPos;
 
-  if(this == Map::player) {
+  if(isPlayer())
+  {
     Map::player->updateFov();
     Render::drawMapAndInterface();
     Map::updateVisualMemory();
@@ -186,17 +207,21 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS) {
   }
 }
 
-void Actor::updateClr() {
-  if(state != ActorState::alive) {
+void Actor::updateClr()
+{
+  if(state != ActorState::alive)
+  {
     clr_ = data_->color;
     return;
   }
 
-  if(propHandler_->changeActorClr(clr_)) {
+  if(propHandler_->changeActorClr(clr_))
+  {
     return;
   }
 
-  if(this == Map::player && Map::player->activeExplosive) {
+  if(isPlayer() && Map::player->activeExplosive)
+  {
     clr_ = clrYellow;
     return;
   }
@@ -205,7 +230,8 @@ void Actor::updateClr() {
 }
 
 bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
-                      const bool IS_ALLOWED_ABOVE_MAX) {
+                      const bool IS_ALLOWED_ABOVE_MAX)
+{
   bool isHpGained = IS_ALLOWED_ABOVE_MAX;
 
   const int DIF_FROM_MAX = getHpMax(true) - HP_RESTORED;
@@ -214,26 +240,34 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
   //hp is set to max.
   if(
     !IS_ALLOWED_ABOVE_MAX && getHp() > DIF_FROM_MAX &&
-    getHp() < getHpMax(true)) {
+    getHp() < getHpMax(true))
+  {
     hp_ = getHpMax(true);
     isHpGained = true;
   }
 
   //If hp is below limit, and restored hp will NOT push it
   //over the limit - restored hp is added to current.
-  if(IS_ALLOWED_ABOVE_MAX || getHp() <= DIF_FROM_MAX) {
+  if(IS_ALLOWED_ABOVE_MAX || getHp() <= DIF_FROM_MAX)
+  {
     hp_ += HP_RESTORED;
     isHpGained = true;
   }
 
   updateClr();
 
-  if(ALLOW_MSG) {
-    if(isHpGained) {
-      if(this == Map::player) {
+  if(ALLOW_MSG)
+  {
+    if(isHpGained)
+    {
+      if(isPlayer())
+      {
         Log::addMsg("I feel healthier!", clrMsgGood);
-      } else {
-        if(Map::player->isSeeingActor(*this, nullptr)) {
+      }
+      else
+      {
+        if(Map::player->isSeeingActor(*this, nullptr))
+        {
           Log::addMsg(data_->nameThe + " looks healthier.");
         }
       }
@@ -245,7 +279,8 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
 }
 
 bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
-                       const bool IS_ALLOWED_ABOVE_MAX) {
+                       const bool IS_ALLOWED_ABOVE_MAX)
+{
   bool isSpiGained = IS_ALLOWED_ABOVE_MAX;
 
   const int DIF_FROM_MAX = getSpiMax() - SPI_RESTORED;
@@ -254,7 +289,8 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
   //spi is set to max.
   if(
     !IS_ALLOWED_ABOVE_MAX && getSpi() > DIF_FROM_MAX &&
-    getSpi() < getSpiMax()) {
+    getSpi() < getSpiMax())
+  {
 
     spi_ = getSpiMax();
     isSpiGained = true;
@@ -264,18 +300,25 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
   //over the limit - restored spi is added to current.
   if(
     IS_ALLOWED_ABOVE_MAX ||
-    getSpi() <= DIF_FROM_MAX) {
+    getSpi() <= DIF_FROM_MAX)
+  {
 
     spi_ += SPI_RESTORED;
     isSpiGained = true;
   }
 
-  if(ALLOW_MSG) {
-    if(isSpiGained) {
-      if(this == Map::player) {
+  if(ALLOW_MSG)
+  {
+    if(isSpiGained)
+    {
+      if(isPlayer())
+      {
         Log::addMsg("I feel more spirited!", clrMsgGood);
-      } else {
-        if(Map::player->isSeeingActor(*this, nullptr)) {
+      }
+      else
+      {
+        if(Map::player->isSeeingActor(*this, nullptr))
+        {
           Log::addMsg(data_->nameThe + " looks more spirited.");
         }
       }
@@ -286,24 +329,34 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
   return isSpiGained;
 }
 
-void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG) {
+void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG)
+{
   hpMax_  = max(1, hpMax_ + CHANGE);
   hp_     = max(1, hp_ + CHANGE);
 
-  if(ALLOW_MSG) {
-    if(this == Map::player) {
-      if(CHANGE > 0) {
+  if(ALLOW_MSG)
+  {
+    if(isPlayer())
+    {
+      if(CHANGE > 0)
+      {
         Log::addMsg("I feel more vigorous!");
       }
-      if(CHANGE < 0) {
+      if(CHANGE < 0)
+      {
         Log::addMsg("I feel frailer!");
       }
-    } else {
-      if(Map::player->isSeeingActor(*this, nullptr)) {
-        if(CHANGE > 0) {
+    }
+    else
+    {
+      if(Map::player->isSeeingActor(*this, nullptr))
+      {
+        if(CHANGE > 0)
+        {
           Log::addMsg(getNameThe() + " looks more vigorous.");
         }
-        if(CHANGE < 0) {
+        if(CHANGE < 0)
+        {
           Log::addMsg(getNameThe() + " looks frailer.");
         }
       }
@@ -311,24 +364,34 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG) {
   }
 }
 
-void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
+void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES)
+{
   spiMax_ = max(1, spiMax_ + CHANGE);
   spi_    = max(1, spi_ + CHANGE);
 
-  if(ALLOW_MESSAGES) {
-    if(this == Map::player) {
-      if(CHANGE > 0) {
+  if(ALLOW_MESSAGES)
+  {
+    if(isPlayer())
+    {
+      if(CHANGE > 0)
+      {
         Log::addMsg("My spirit is stronger!");
       }
-      if(CHANGE < 0) {
+      if(CHANGE < 0)
+      {
         Log::addMsg("My spirit is weaker!");
       }
-    } else {
-      if(Map::player->isSeeingActor(*this, nullptr)) {
-        if(CHANGE > 0) {
+    }
+    else
+    {
+      if(Map::player->isSeeingActor(*this, nullptr))
+      {
+        if(CHANGE > 0)
+        {
           Log::addMsg(getNameThe() + " appears to grow in spirit.");
         }
-        if(CHANGE < 0) {
+        if(CHANGE < 0)
+        {
           Log::addMsg(getNameThe() + " appears to shrink in spirit.");
         }
       }
@@ -336,10 +399,12 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES) {
   }
 }
 
-ActorDied Actor::hit(int dmg, const DmgType dmgType) {
+ActorDied Actor::hit(int dmg, const DmgType dmgType)
+{
   TRACE_FUNC_BEGIN_VERBOSE;
 
-  if(state == ActorState::destroyed) {
+  if(state == ActorState::destroyed)
+  {
     TRACE_FUNC_END_VERBOSE;
     return ActorDied::no;
   }
@@ -351,20 +416,25 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType) {
 
   if(
     dmgType == DmgType::light &&
-    find(begin(props), end(props), propLightSensitive) == end(props)) {
+    find(begin(props), end(props), propLightSensitive) == end(props))
+  {
     return ActorDied::no;
   }
 
-  if(this == Map::player) {Map::player->interruptActions();}
+  if(isPlayer()) {Map::player->interruptActions();}
 
   //Damage to corpses
   //Note: corpse is automatically destroyed if damage is high enough, otherwise it is
   //destroyed with a random chance
-  if(isCorpse()) {
-    if(Rnd::oneIn(3) || dmg >= ((getHpMax(true) * 2) / 3)) {
+  if(isCorpse())
+  {
+    if(Rnd::oneIn(3) || dmg >= ((getHpMax(true) * 2) / 3))
+    {
 
-      if(this != Map::player) {
-        if(Map::cells[pos.x][pos.y].isSeenByPlayer) {
+      if(this != Map::player)
+      {
+        if(Map::cells[pos.x][pos.y].isSeenByPlayer)
+        {
           Log::addMsg(getCorpseNameThe() + " is destroyed.");
         }
       }
@@ -381,7 +451,8 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType) {
 
   //Property resists?
   const bool ALLOW_DMG_RES_MSG = isAlive();
-  if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG)) {
+  if(propHandler_->tryResistDmg(dmgType, ALLOW_DMG_RES_MSG))
+  {
     TRACE_FUNC_END_VERBOSE;
     return ActorDied::no;
   }
@@ -392,17 +463,22 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType) {
   dmg = max(1, dmg);
 
   //Filter damage through worn armor
-  if(isHumanoid()) {
+  if(isHumanoid())
+  {
     Armor* armor = static_cast<Armor*>(inv_->getItemInSlot(SlotId::body));
-    if(armor) {
+    if(armor)
+    {
       TRACE_VERBOSE << "Has armor, running hit on armor" << endl;
 
-      if(dmgType == DmgType::physical) {
+      if(dmgType == DmgType::physical)
+      {
         dmg = armor->takeDurHitAndGetReducedDmg(dmg);
 
-        if(armor->isDestroyed()) {
+        if(armor->isDestroyed())
+        {
           TRACE << "Armor was destroyed" << endl;
-          if(this == Map::player) {
+          if(isPlayer())
+          {
             const string armorName = armor->getName(ItemRefType::plain, ItemRefInf::none);
             Log::addMsg("My " + armorName + " is torn apart!", clrMsgWarning);
           }
@@ -418,7 +494,8 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType) {
 
   if(this != Map::player || !Config::isBotPlaying()) {hp_ -= dmg;}
 
-  if(getHp() <= 0) {
+  if(getHp() <= 0)
+  {
     const bool IS_ON_BOTTOMLESS = Map::cells[pos.x][pos.y].rigid->isBottomless();
     const bool IS_DMG_ENOUGH_TO_DESTROY = dmg > ((getHpMax(true) * 5) / 4);
     const bool IS_DESTROYED = !data_->canLeaveCorpse  ||
@@ -428,29 +505,40 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType) {
     die(IS_DESTROYED, !IS_ON_BOTTOMLESS, !IS_ON_BOTTOMLESS);
     TRACE_FUNC_END_VERBOSE;
     return ActorDied::yes;
-  } else {
+  }
+  else
+  {
     TRACE_FUNC_END_VERBOSE;
     return ActorDied::no;
   }
 }
 
-ActorDied Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
-  if(ALLOW_MSG) {
-    if(this == Map::player) {
+ActorDied Actor::hitSpi(const int DMG, const bool ALLOW_MSG)
+{
+  if(ALLOW_MSG)
+  {
+    if(isPlayer())
+    {
       Log::addMsg("My spirit is drained!", clrMsgBad);
     }
   }
 
   propHandler_->onHit();
 
-  if(this != Map::player || !Config::isBotPlaying()) {
+  if(this != Map::player || !Config::isBotPlaying())
+  {
     spi_ = max(0, spi_ - DMG);
   }
-  if(getSpi() <= 0) {
-    if(this == Map::player) {
+  if(getSpi() <= 0)
+  {
+    if(isPlayer())
+    {
       Log::addMsg("All my spirit is depleted, I am devoid of life!", clrMsgBad);
-    } else {
-      if(Map::player->isSeeingActor(*this, nullptr)) {
+    }
+    else
+    {
+      if(Map::player->isSeeingActor(*this, nullptr))
+      {
         Log::addMsg(getNameThe() + " has no spirit left!");
       }
     }
@@ -465,13 +553,16 @@ ActorDied Actor::hitSpi(const int DMG, const bool ALLOW_MSG) {
 }
 
 void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
-                const bool ALLOW_DROP_ITEMS) {
+                const bool ALLOW_DROP_ITEMS)
+{
 
   assert(data_->canLeaveCorpse || IS_DESTROYED);
 
   //Check all monsters and unset this actor as leader
-  for(Actor* actor : GameTime::actors_) {
-    if(actor != this && actor != Map::player) {
+  for(Actor* actor : GameTime::actors_)
+  {
+    if(actor != this && actor != Map::player)
+    {
       Mon* const mon = static_cast<Mon*>(actor);
       if(mon->leader == this) {mon->leader = nullptr;}
     }
@@ -481,34 +572,45 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
   //If died on a visible trap, destroy the corpse
   const auto* const f = Map::cells[pos.x][pos.y].rigid;
-  if(f->getId() == FeatureId::trap) {
+  if(f->getId() == FeatureId::trap)
+  {
     if(!static_cast<const Trap*>(f)->isHidden()) {isOnVisibleTrap = true;}
   }
 
   bool isPlayerSeeDyingActor = true;
 
   //Print death messages
-  if(this != Map::player) {
+  if(this != Map::player)
+  {
     //Only print if visible
-    if(Map::player->isSeeingActor(*this, nullptr)) {
+    if(Map::player->isSeeingActor(*this, nullptr))
+    {
       isPlayerSeeDyingActor = true;
       const string deathMessageOverride = data_->deathMessageOverride;
-      if(!deathMessageOverride.empty()) {
+      if(!deathMessageOverride.empty())
+      {
         Log::addMsg(deathMessageOverride);
-      } else {
+      }
+      else
+      {
         Log::addMsg(getNameThe() + " dies.");
       }
     }
   }
 
-  if(IS_DESTROYED || (isOnVisibleTrap && this != Map::player)) {
+  if(IS_DESTROYED || (isOnVisibleTrap && this != Map::player))
+  {
     state = ActorState::destroyed;
-  } else {
+  }
+  else
+  {
     state = ActorState::corpse;
   }
 
-  if(this != Map::player) {
-    if(isHumanoid()) {
+  if(this != Map::player)
+  {
+    if(isHumanoid())
+    {
       Snd snd("I hear agonised screaming.", SfxId::END, IgnoreMsgIfOriginSeen::yes,
               pos, this, SndVol::low, AlertsMon::no);
       SndEmit::emitSnd(snd);
@@ -518,26 +620,36 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
   if(ALLOW_DROP_ITEMS) {ItemDrop::dropAllCharactersItems(*this);}
 
-  if(IS_DESTROYED) {
+  if(IS_DESTROYED)
+  {
     glyph_ = ' ';
     tile_ = TileId::empty;
-    if(isHumanoid()) {
-      if(ALLOW_GORE) {
+    if(isHumanoid())
+    {
+      if(ALLOW_GORE)
+      {
         Map::mkGore(pos);
       }
     }
-  } else {
-    if(this != Map::player) {
+  }
+  else
+  {
+    if(this != Map::player)
+    {
       Pos newPos;
       auto* featureHere = Map::cells[pos.x][pos.y].rigid;
       //TODO this should be decided with a floodfill instead
-      if(!featureHere->canHaveCorpse()) {
-        for(int dx = -1; dx <= 1; ++dx) {
-          for(int dy = -1; dy <= 1; ++dy) {
+      if(!featureHere->canHaveCorpse())
+      {
+        for(int dx = -1; dx <= 1; ++dx)
+        {
+          for(int dy = -1; dy <= 1; ++dy)
+          {
             newPos = pos + Pos(dx, dy);
             featureHere =
               Map::cells[pos.x + dx][pos.y + dy].rigid;
-            if(featureHere->canHaveCorpse()) {
+            if(featureHere->canHaveCorpse())
+            {
               pos.set(newPos);
               dx = 9999;
               dy = 9999;
@@ -557,20 +669,25 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   propHandler_->onDeath(isPlayerSeeDyingActor);
 
   //Give exp if monster, and count up nr of kills.
-  if(this != Map::player) {
+  if(this != Map::player)
+  {
     DungeonMaster::onMonKilled(*this);
   }
 
   Render::drawMapAndInterface();
 }
 
-void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const {
+void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const
+{
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
-  if(find(begin(props), end(props), propBurning) != end(props)) {
-    for(int dx = -1; dx <= 1; ++dx) {
-      for(int dy = -1; dy <= 1; ++dy) {
+  if(find(begin(props), end(props), propBurning) != end(props))
+  {
+    for(int dx = -1; dx <= 1; ++dx)
+    {
+      for(int dy = -1; dy <= 1; ++dy)
+      {
         lightMap[pos.x + dx][pos.y + dy] = true;
       }
     }
@@ -578,6 +695,7 @@ void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const {
   addLight_(lightMap);
 }
 
-bool Actor::isPlayer() const {
+bool Actor::isPlayer() const
+{
   return this == Map::player;
 }

@@ -8,7 +8,8 @@
 
 using namespace std;
 
-namespace MapTravel {
+namespace MapTravel
+{
 
 void init();
 

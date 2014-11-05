@@ -13,7 +13,8 @@ class Prop;
 enum class ExplType {expl, applyProp};
 enum class ExplSrc  {misc, playerUseMoltvIntended};
 
-namespace Explosion {
+namespace Explosion
+{
 
 void runExplosionAt(
   const Pos& origin,

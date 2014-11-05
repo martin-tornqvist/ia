@@ -7,7 +7,8 @@ struct KeyData;
 
 enum class YesNoAnswer {yes, no, special};
 
-namespace Query {
+namespace Query
+{
 
 void init();
 

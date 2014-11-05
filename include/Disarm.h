@@ -1,7 +1,8 @@
 #ifndef DISARM_H
 #define DISARM_H
 
-namespace Disarm {
+namespace Disarm
+{
 
 void playerDisarm();
 

@@ -11,7 +11,8 @@
 #include "CmnTypes.h"
 #include "CmnData.h"
 
-enum class RoomType {
+enum class RoomType
+{
   //Standard rooms (standardized feature spawning and reshaping)
   plain,
   human,
@@ -34,7 +35,8 @@ enum class RoomType {
   crumbleRoom
 };
 
-class Room {
+class Room
+{
 public:
   Room(Rect r, RoomType type = RoomType::plain) :
     descr_(""), r_(r), type_(type), isSubRoom_(false) {}
@@ -56,7 +58,8 @@ private:
   Room() : descr_(""), r_(),  type_(RoomType::plain) {}
 };
 
-class RiverRoom: public Room {
+class RiverRoom: public Room
+{
 public:
   RiverRoom(Rect r, HorizontalVertical dir) : Room(r, RoomType::river), dir_(dir) {}
 

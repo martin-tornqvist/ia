@@ -18,26 +18,33 @@
 
 using namespace std;
 
-namespace ItemDrop {
+namespace ItemDrop
+{
 
-void dropAllCharactersItems(Actor& actor) {
+void dropAllCharactersItems(Actor& actor)
+{
   actor.getInv().dropAllNonIntrinsic(actor.pos, true);
 }
 
 void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
-                     const int NR_ITEMS_TO_DROP) {
+                     const int NR_ITEMS_TO_DROP)
+{
   Inventory& inv    = actor.getInv();
   Item* itemToDrop  = nullptr;
 
-  if(invList == InvList::slots) {
+  if(invList == InvList::slots)
+  {
     assert(ELEMENT != int(SlotId::END));
     itemToDrop = inv.slots_[ELEMENT].item;
-  } else {
+  }
+  else
+  {
     assert(ELEMENT < inv.general_.size());
     itemToDrop = inv.general_.at(ELEMENT);
   }
 
-  if(itemToDrop) {
+  if(itemToDrop)
+  {
     const bool  IS_STACKABLE            = itemToDrop->getData().isStackable;
     const int   NR_ITEMS_BEFORE_DROP    = itemToDrop->nrItems_;
     const bool  IS_WHOLE_STACK_DROPPED  = !IS_STACKABLE || NR_ITEMS_TO_DROP == -1 ||
@@ -45,16 +52,20 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
 
     string itemRef = "";
 
-    if(invList == InvList::slots && IS_WHOLE_STACK_DROPPED) {
+    if(invList == InvList::slots && IS_WHOLE_STACK_DROPPED)
+    {
       //TODO This should be called from the Inventory instead.
       itemToDrop->onTakeOff();
     }
 
-    if(IS_WHOLE_STACK_DROPPED) {
+    if(IS_WHOLE_STACK_DROPPED)
+    {
       itemRef = itemToDrop->getName(ItemRefType::plural);
       inv.removeWithoutDestroying(invList, ELEMENT);
       dropItemOnMap(actor.pos, *itemToDrop);
-    } else {
+    }
+    else
+    {
       Item* itemToKeep      = itemToDrop;
       itemToDrop            = ItemFactory::copyItem(itemToKeep);
       itemToDrop->nrItems_  = NR_ITEMS_TO_DROP;
@@ -64,14 +75,18 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     }
 
     //Messages
-    if(&actor == Map::player) {
+    if(&actor == Map::player)
+    {
       Log::clearLog();
       Render::drawMapAndInterface();
       Log::addMsg("I drop " + itemRef + ".", clrWhite, false, true);
-    } else {
+    }
+    else
+    {
       bool blocked[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksLos(), blocked);
-      if(Map::player->isSeeingActor(actor, blocked)) {
+      if(Map::player->isSeeingActor(actor, blocked))
+      {
         Log::addMsg(actor.getNameThe() + " drops " + itemRef + ".");
       }
     }
@@ -83,18 +98,22 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
 
 //TODO This function is really weirdly written, and seems to even be doing
 //wrong things. It should be refactored.
-Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
+Item* dropItemOnMap(const Pos& intendedPos, Item& item)
+{
   //If target cell is bottomless, just destroy the item
   const auto* const tgtRigid = Map::cells[intendedPos.x][intendedPos.y].rigid;
-  if(tgtRigid->isBottomless()) {
+  if(tgtRigid->isBottomless())
+  {
     delete &item;
     return nullptr;
   }
 
   //Make a vector of all cells on map with no blocking feature
   bool freeCellArray[MAP_W][MAP_H];
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       Rigid* const f = Map::cells[x][y].rigid;
       freeCellArray[x][y] = f->canHaveItem() && !f->isBottomless();
     }
@@ -112,16 +131,21 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
 
   int ii = 0;
   const int VEC_SIZE = freeCells.size();
-  for(int i = 0; i < VEC_SIZE; ++i) {
+  for(int i = 0; i < VEC_SIZE; ++i)
+  {
     //First look in all cells that has distance to origin equal to cell i to try and
     //merge the item if it stacks
-    if(IS_STACKABLE_TYPE) {
+    if(IS_STACKABLE_TYPE)
+    {
       //While ii cell is not further away than i cell
-      while(!isCloserToOrigin(freeCells.at(i), freeCells.at(ii))) {
+      while(!isCloserToOrigin(freeCells.at(i), freeCells.at(ii)))
+      {
         stackPos = freeCells.at(ii);
         Item* itemFoundOnFloor = Map::cells[stackPos.x][stackPos.y].item;
-        if(itemFoundOnFloor) {
-          if(itemFoundOnFloor->getData().id == item.getData().id) {
+        if(itemFoundOnFloor)
+        {
+          if(itemFoundOnFloor->getData().id == item.getData().id)
+          {
             item.nrItems_ += itemFoundOnFloor->nrItems_;
             delete itemFoundOnFloor;
             Map::cells[stackPos.x][stackPos.y].item = &item;
@@ -130,19 +154,23 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
         }
         ii++;
       }
-    } else {
+    }
+    else
+    {
       //TODO Why is this called here? It doesn't seem right.
       item.appplyDropEffects();
     }
 
     curPos = freeCells.at(i);
-    if(!Map::cells[curPos.x][curPos.y].item) {
+    if(!Map::cells[curPos.x][curPos.y].item)
+    {
 
       Map::cells[curPos.x][curPos.y].item = &item;
 
       const bool IS_PLAYER_POS    = Map::player->pos == curPos;
       const bool IS_INTENDED_POS  = curPos == intendedPos;
-      if(IS_PLAYER_POS && !IS_INTENDED_POS) {
+      if(IS_PLAYER_POS && !IS_INTENDED_POS)
+      {
         Log::addMsg("I feel something by my feet.");
       }
 
@@ -151,7 +179,8 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item) {
       break;
     }
 
-    if(i == VEC_SIZE - 1) {
+    if(i == VEC_SIZE - 1)
+    {
       delete &item;
       return nullptr;
     }

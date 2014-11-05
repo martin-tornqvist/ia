@@ -16,8 +16,10 @@
 
 using namespace std;
 
-const string Scroll::getRealName() const {
-  switch(data_->spellCastFromScroll) {
+const string Scroll::getRealName() const
+{
+  switch(data_->spellCastFromScroll)
+  {
     case SpellId::darkbolt:             return "Darkbolt";
     case SpellId::azathothsWrath:       return "Azathoths Wrath";
     case SpellId::slowMon:              return "Slow Enemies";
@@ -48,32 +50,41 @@ const string Scroll::getRealName() const {
   return "";
 }
 
-vector<string> Scroll::getDescr() const {
-  if(data_->isIdentified) {
+vector<string> Scroll::getDescr() const
+{
+  if(data_->isIdentified)
+  {
     const auto* const spell = mkSpell();
     const auto descr = spell->getDescr();
     delete spell;
     return descr;
-  } else {
+  }
+  else
+  {
     return data_->baseDescr;
   }
 }
 
-ConsumeItem Scroll::activateDefault(Actor* const actor) {
+ConsumeItem Scroll::activateDefault(Actor* const actor)
+{
   if(actor->getPropHandler().allowRead(true)) {return read();}
   return ConsumeItem::no;
 }
 
-Spell* Scroll::mkSpell() const {
+Spell* Scroll::mkSpell() const
+{
   return SpellHandling::mkSpellFromId(data_->spellCastFromScroll);
 }
 
-void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
-  if(!data_->isIdentified) {
+void Scroll::identify(const bool IS_SILENT_IDENTIFY)
+{
+  if(!data_->isIdentified)
+  {
 
     data_->isIdentified = true;
 
-    if(!IS_SILENT_IDENTIFY) {
+    if(!IS_SILENT_IDENTIFY)
+    {
       const string name = getName(ItemRefType::a, ItemRefInf::none);
       Log::addMsg("It was " + name + ".");
       Render::drawMapAndInterface();
@@ -81,24 +92,31 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY) {
   }
 }
 
-void Scroll::tryLearn() {
-  if(PlayerBon::getBg() == Bg::occultist) {
+void Scroll::tryLearn()
+{
+  if(PlayerBon::getBg() == Bg::occultist)
+  {
     Spell* const spell = mkSpell();
     if(
       spell->isAvailForPlayer() &&
-      !PlayerSpellsHandling::isSpellLearned(spell->getId())) {
+      !PlayerSpellsHandling::isSpellLearned(spell->getId()))
+    {
       Log::addMsg("I learn to cast this incantation by heart!");
       PlayerSpellsHandling::learnSpellIfNotKnown(spell);
-    } else {
+    }
+    else
+    {
       delete spell;
     }
   }
 }
 
-ConsumeItem Scroll::read() {
+ConsumeItem Scroll::read()
+{
   Render::drawMapAndInterface();
 
-  if(!Map::player->getPropHandler().allowSee()) {
+  if(!Map::player->getPropHandler().allowSee())
+  {
     Log::addMsg("I cannot read while blind.");
     return ConsumeItem::no;
   }
@@ -107,13 +125,16 @@ ConsumeItem Scroll::read() {
 
   const string crumbleStr = "It crumbles to dust.";
 
-  if(data_->isIdentified) {
+  if(data_->isIdentified)
+  {
     const string name = getName(ItemRefType::a, ItemRefInf::none);
     Log::addMsg("I read " + name + "...");
     spell->cast(Map::player, false);
     Log::addMsg(crumbleStr);
     tryLearn();
-  } else {
+  }
+  else
+  {
     Log::addMsg("I recite the forbidden incantations on the manuscript...");
     data_->isTried = true;
     const auto isNoticed = spell->cast(Map::player, false);
@@ -126,19 +147,23 @@ ConsumeItem Scroll::read() {
   return ConsumeItem::yes;
 }
 
-string Scroll::getNameInf() const {
+string Scroll::getNameInf() const
+{
   return (data_->isTried && !data_->isIdentified) ? "{Tried}" : "";
 }
 
-namespace ScrollNameHandling {
+namespace ScrollNameHandling
+{
 
-namespace {
+namespace
+{
 
 vector<string> falseNames_;
 
 } //namespace
 
-void init() {
+void init()
+{
   TRACE_FUNC_BEGIN;
 
   //Init possible fake names
@@ -195,17 +220,22 @@ void init() {
   cmb.push_back("Nikto");
 
   const size_t NR_CMB_PARTS = cmb.size();
-  for(size_t i = 0; i < NR_CMB_PARTS; ++i) {
-    for(size_t ii = 0; ii < NR_CMB_PARTS; ii++) {
-      if(i != ii) {
+  for(size_t i = 0; i < NR_CMB_PARTS; ++i)
+  {
+    for(size_t ii = 0; ii < NR_CMB_PARTS; ii++)
+    {
+      if(i != ii)
+      {
         falseNames_.push_back(cmb.at(i) + " " + cmb.at(ii));
       }
     }
   }
 
   TRACE << "Init scroll names" << endl;
-  for(auto* const d : ItemData::data) {
-    if(d->isScroll) {
+  for(auto* const d : ItemData::data)
+  {
+    if(d->isScroll)
+    {
       //False name
       const int NR_ELEMENTS = falseNames_.size();
       const int ELEMENT     = Rnd::range(0, NR_ELEMENTS - 1);
@@ -239,9 +269,12 @@ void init() {
   TRACE_FUNC_END;
 }
 
-void storeToSaveLines(vector<string>& lines) {
-  for(int i = 0; i < int(ItemId::END); ++i) {
-    if(ItemData::data[i]->isScroll) {
+void storeToSaveLines(vector<string>& lines)
+{
+  for(int i = 0; i < int(ItemId::END); ++i)
+  {
+    if(ItemData::data[i]->isScroll)
+    {
       lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]);
       lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plural)]);
       lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::a)]);
@@ -249,9 +282,12 @@ void storeToSaveLines(vector<string>& lines) {
   }
 }
 
-void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 0; i < int(ItemId::END); ++i) {
-    if(ItemData::data[i]->isScroll) {
+void setupFromSaveLines(vector<string>& lines)
+{
+  for(int i = 0; i < int(ItemId::END); ++i)
+  {
+    if(ItemData::data[i]->isScroll)
+    {
       ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]  = lines.front();
       lines.erase(begin(lines));
       ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plural)] = lines.front();

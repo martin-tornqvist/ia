@@ -6,7 +6,8 @@
 #include "CmnData.h"
 #include "CmnTypes.h"
 
-namespace RoomThemeMaking {
+namespace RoomThemeMaking
+{
 
 void run();
 

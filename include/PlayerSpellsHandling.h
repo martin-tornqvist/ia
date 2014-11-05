@@ -8,7 +8,8 @@
 
 class Spell;
 
-namespace PlayerSpellsHandling {
+namespace PlayerSpellsHandling
+{
 
 void init();
 void cleanup();

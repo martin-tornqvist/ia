@@ -7,7 +7,8 @@ enum class BurnState {notBurned, burning, hasBurned};
 
 enum class IsDestroyed {no, yes};
 
-class Rigid: public Feature {
+class Rigid: public Feature
+{
 public:
   Rigid(Pos pos);
 
@@ -61,7 +62,8 @@ private:
 
 enum class FloorType {cmn, cave, stonePath};
 
-class Floor: public Rigid {
+class Floor: public Rigid
+{
 public:
   Floor(Pos pos);
   Floor() = delete;
@@ -81,7 +83,8 @@ private:
              Actor* const actor) override;
 };
 
-class Carpet: public Rigid {
+class Carpet: public Rigid
+{
 public:
   Carpet(Pos pos);
   Carpet() = delete;
@@ -101,7 +104,8 @@ private:
 
 enum class GrassType {cmn, withered};
 
-class Grass: public Rigid {
+class Grass: public Rigid
+{
 public:
   Grass(Pos pos);
   Grass() = delete;
@@ -121,7 +125,8 @@ private:
              Actor* const actor) override;
 };
 
-class Bush: public Rigid {
+class Bush: public Rigid
+{
 public:
   Bush(Pos pos);
   Bush() = delete;
@@ -141,7 +146,8 @@ private:
              Actor* const actor) override;
 };
 
-class Brazier: public Rigid {
+class Brazier: public Rigid
+{
 public:
   Brazier(Pos pos) : Rigid(pos) {}
   Brazier() = delete;
@@ -160,7 +166,8 @@ private:
 
 enum class WallType {cmn, cmnAlt, cave, egypt, cliff, lengMonestary};
 
-class Wall: public Rigid {
+class Wall: public Rigid
+{
 public:
   Wall(Pos pos);
   Wall() = delete;
@@ -189,7 +196,8 @@ private:
              Actor* const actor) override;
 };
 
-class RubbleLow: public Rigid {
+class RubbleLow: public Rigid
+{
 public:
   RubbleLow(Pos pos);
   RubbleLow() = delete;
@@ -206,7 +214,8 @@ private:
              Actor* const actor) override;
 };
 
-class RubbleHigh: public Rigid {
+class RubbleHigh: public Rigid
+{
 public:
   RubbleHigh(Pos pos);
   RubbleHigh() = delete;
@@ -223,7 +232,8 @@ private:
              Actor* const actor) override;
 };
 
-class GraveStone: public Rigid {
+class GraveStone: public Rigid
+{
 public:
   GraveStone(Pos pos);
   GraveStone() = delete;
@@ -246,7 +256,8 @@ private:
   std::string inscr_;
 };
 
-class ChurchBench: public Rigid {
+class ChurchBench: public Rigid
+{
 public:
   ChurchBench(Pos pos);
   ChurchBench() = delete;  ~ChurchBench() {}
@@ -264,7 +275,8 @@ private:
 
 enum class StatueType {cmn, ghoul};
 
-class Statue: public Rigid {
+class Statue: public Rigid
+{
 public:
   Statue(Pos pos);
   Statue() = delete;
@@ -283,7 +295,8 @@ private:
              Actor* const actor) override;
 };
 
-class Pillar: public Rigid {
+class Pillar: public Rigid
+{
 public:
   Pillar(Pos pos);
   Pillar() = delete;
@@ -300,7 +313,8 @@ private:
              Actor* const actor) override;
 };
 
-class Stairs: public Rigid {
+class Stairs: public Rigid
+{
 public:
   Stairs(Pos pos);
   Stairs() = delete;
@@ -321,7 +335,8 @@ private:
              Actor* const actor) override;
 };
 
-class Bridge : public Rigid {
+class Bridge : public Rigid
+{
 public:
   Bridge(Pos pos) : Rigid(pos) {}
   Bridge() = delete;
@@ -346,7 +361,8 @@ private:
 
 enum class LiquidType {water, mud, blood, acid, lava};
 
-class LiquidShallow: public Rigid {
+class LiquidShallow: public Rigid
+{
 public:
   LiquidShallow(Pos pos);
   LiquidShallow() = delete;
@@ -367,7 +383,8 @@ private:
              Actor* const actor) override;
 };
 
-class LiquidDeep: public Rigid {
+class LiquidDeep: public Rigid
+{
 public:
   LiquidDeep(Pos pos);
   LiquidDeep() = delete;
@@ -388,7 +405,8 @@ private:
              Actor* const actor) override;
 };
 
-class Chasm: public Rigid {
+class Chasm: public Rigid
+{
 public:
   Chasm(Pos pos);
   Chasm() = delete;
@@ -407,7 +425,8 @@ private:
 
 class Door;
 
-class Lever: public Rigid {
+class Lever: public Rigid
+{
 public:
   Lever(Pos pos);
 
@@ -435,7 +454,8 @@ private:
   Door* doorLinkedTo_;
 };
 
-class Altar: public Rigid {
+class Altar: public Rigid
+{
 public:
   Altar(Pos pos);
   Altar() = delete;
@@ -452,7 +472,8 @@ private:
              Actor* const actor) override;
 };
 
-class Tree: public Rigid {
+class Tree: public Rigid
+{
 public:
   Tree(Pos pos);
   Tree() = delete;
@@ -471,7 +492,8 @@ private:
 
 class Item;
 
-class ItemContainer {
+class ItemContainer
+{
 public:
   ItemContainer();
 
@@ -487,21 +509,24 @@ public:
   std::vector<Item*> items_;
 };
 
-enum class TombTrait {
+enum class TombTrait
+{
   stench,                 //Fumes, Ooze-type monster
   auraOfUnrest,           //Ghost-type monster
   forebodingCarvedSigns,  //Cursed
   END
 };
 
-enum class TombAppearance {
+enum class TombAppearance
+{
   common,
   ornate,     //Good items
   marvelous,  //Excellent items
   END
 };
 
-class Tomb: public Rigid {
+class Tomb: public Rigid
+{
 public:
   Tomb(const Pos& pos);
   Tomb() = delete;
@@ -535,7 +560,8 @@ private:
 
 enum class ChestMatl {wood, iron, END};
 
-class Chest: public Rigid {
+class Chest: public Rigid
+{
 public:
   Chest(const Pos& pos);
   Chest() = delete;
@@ -566,7 +592,8 @@ private:
   ChestMatl matl_;
 };
 
-class Cabinet: public Rigid {
+class Cabinet: public Rigid
+{
 public:
   Cabinet(const Pos& pos);
   Cabinet() = delete;
@@ -588,7 +615,8 @@ private:
   bool isContentKnown_;
 };
 
-enum class FountainEffect {
+enum class FountainEffect
+{
   tepid,
   refreshing,
   bless,
@@ -611,7 +639,8 @@ enum class FountainEffect {
 
 enum class FountainMatl {stone, gold};
 
-class Fountain: public Rigid {
+class Fountain: public Rigid
+{
 public:
   Fountain(const Pos& pos);
   Fountain() = delete;
@@ -633,7 +662,8 @@ private:
   FountainMatl                fountainMatl_;
 };
 
-class Cocoon: public Rigid {
+class Cocoon: public Rigid
+{
 public:
   Cocoon(const Pos& pos);
   Cocoon() = delete;

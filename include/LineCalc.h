@@ -7,7 +7,8 @@
 #include "CmnData.h"
 #include "CmnTypes.h"
 
-namespace LineCalc {
+namespace LineCalc
+{
 
 void init();
 

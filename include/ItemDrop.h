@@ -8,7 +8,8 @@
 class Item;
 class Actor;
 
-namespace ItemDrop {
+namespace ItemDrop
+{
 
 void dropAllCharactersItems(Actor& actor);
 

@@ -12,7 +12,8 @@
 #include "MapPatterns.h"
 #include "Properties.h"
 
-enum class FeatureId {
+enum class FeatureId
+{
   floor,
   bridge,
   wall,
@@ -51,24 +52,28 @@ enum class FeatureId {
   END
 };
 
-struct FeatureRoomSpawnRules {
+struct FeatureRoomSpawnRules
+{
 public:
   FeatureRoomSpawnRules() :
-    maxNrInRoom_(-1), placementRule_(PlacementRule::nextToWalls) {
+    maxNrInRoom_(-1), placementRule_(PlacementRule::nextToWalls)
+  {
     roomTypesNative_.clear();
   }
 
   void reset() {*this = FeatureRoomSpawnRules();}
 
   void set(const int MAX_NR_IN_ROOM,  const PlacementRule placementRule,
-           std::initializer_list<RoomType> roomTypes) {
+           std::initializer_list<RoomType> roomTypes)
+  {
     maxNrInRoom_    = MAX_NR_IN_ROOM;
     placementRule_  = placementRule;
     roomTypesNative_.clear();
     for(RoomType id : roomTypes) {roomTypesNative_.push_back(id);}
   }
 
-  bool isBelongingToRoomType(const RoomType type) const {
+  bool isBelongingToRoomType(const RoomType type) const
+  {
     for(RoomType id : roomTypesNative_) {if(id == type) {return true;}}
     return false;
   }
@@ -84,13 +89,15 @@ private:
 
 class Actor;
 
-class MoveRules {
+class MoveRules
+{
 public:
   MoveRules() {reset();}
 
   ~MoveRules() {}
 
-  void reset() {
+  void reset()
+  {
     canMoveCmn_ = false;
     for(int i = 0; i < endOfPropIds; ++i) {canMoveIfHaveProp_[i] = false;}
   }
@@ -109,7 +116,8 @@ private:
 
 class Feature;
 
-struct FeatureDataT {
+struct FeatureDataT
+{
   std::function<Feature*(const Pos& p)> mkObj;
   FeatureId id;
   char glyph;
@@ -133,7 +141,8 @@ struct FeatureDataT {
   FeatureRoomSpawnRules themeSpawnRules;
 };
 
-namespace FeatureData {
+namespace FeatureData
+{
 
 void init();
 

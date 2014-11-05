@@ -20,12 +20,15 @@
 
 using namespace std;
 
-namespace MapGen {
+namespace MapGen
+{
 
 //------------------------------------------------------------------------- FOREST
-namespace {
+namespace
+{
 
-void mkForestLimit() {
+void mkForestLimit()
+{
   auto putTree = [](const int X, const int Y) {Map::put(new Tree(Pos(X, Y)));};
 
   for(int y = 0; y < MAP_H; ++y) {putTree(0,          y);}
@@ -34,61 +37,85 @@ void mkForestLimit() {
   for(int x = 0; x < MAP_W; ++x) {putTree(x,          MAP_H - 1);}
 }
 
-void mkForestOuterTreeline() {
+void mkForestOuterTreeline()
+{
   const int MAX_LEN = 2;
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = 0; x <= MAX_LEN; ++x) {
-      if(Rnd::range(1, 4) > 1 || x == 0) {
+  for(int y = 0; y < MAP_H; ++y)
+  {
+    for(int x = 0; x <= MAX_LEN; ++x)
+    {
+      if(Rnd::range(1, 4) > 1 || x == 0)
+      {
         Map::put(new Tree(Pos(x, y)));
-      } else {
+      }
+      else
+      {
         break;
       }
     }
   }
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAX_LEN; ++y) {
-      if(Rnd::range(1, 4) > 1 || y == 0) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAX_LEN; ++y)
+    {
+      if(Rnd::range(1, 4) > 1 || y == 0)
+      {
         Map::put(new Tree(Pos(x, y)));
-      } else {
+      }
+      else
+      {
         break;
       }
     }
   }
 
-  for(int y = 0; y < MAP_H; ++y) {
-    for(int x = MAP_W - 1; x >= MAP_W - MAX_LEN; x--) {
-      if(Rnd::range(1, 4) > 1 || x == MAP_W - 1) {
+  for(int y = 0; y < MAP_H; ++y)
+  {
+    for(int x = MAP_W - 1; x >= MAP_W - MAX_LEN; x--)
+    {
+      if(Rnd::range(1, 4) > 1 || x == MAP_W - 1)
+      {
         Map::put(new Tree(Pos(x, y)));
-      } else {
+      }
+      else
+      {
         break;
       }
     }
   }
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = MAP_H - 1; y >= MAP_H - MAX_LEN; y--) {
-      if(Rnd::range(1, 4) > 1 || y == MAP_H - 1) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = MAP_H - 1; y >= MAP_H - MAX_LEN; y--)
+    {
+      if(Rnd::range(1, 4) > 1 || y == MAP_H - 1)
+      {
         Map::put(new Tree(Pos(x, y)));
-      } else {
+      }
+      else
+      {
         break;
       }
     }
   }
 }
 
-void mkForestTreePatch() {
+void mkForestTreePatch()
+{
   const int NR_TREES_TO_PUT = Rnd::range(5, 17);
 
   Pos curPos(Rnd::range(1, MAP_W - 2), Rnd::range(1, MAP_H - 2));
 
   int nrTreesCreated = 0;
 
-  while(nrTreesCreated < NR_TREES_TO_PUT) {
+  while(nrTreesCreated < NR_TREES_TO_PUT)
+  {
     if(
       !Utils::isPosInsideMap(curPos) ||
-      Utils::kingDist(curPos, Map::player->pos) <= 1) {
+      Utils::kingDist(curPos, Map::player->pos) <= 1)
+    {
       return;
     }
 
@@ -99,11 +126,15 @@ void mkForestTreePatch() {
     //Find next pos
     while(
       Map::cells[curPos.x][curPos.y].rigid->getId() == FeatureId::tree ||
-      Utils::kingDist(curPos, Map::player->pos) <= 2) {
+      Utils::kingDist(curPos, Map::player->pos) <= 2)
+    {
 
-      if(Rnd::coinToss()) {
+      if(Rnd::coinToss())
+      {
         curPos.x += Rnd::coinToss() ? -1 : 1;
-      } else {
+      }
+      else
+      {
         curPos.y += Rnd::coinToss() ? -1 : 1;
       }
 
@@ -112,7 +143,8 @@ void mkForestTreePatch() {
   }
 }
 
-void mkForestTrees() {
+void mkForestTrees()
+{
   MapGenUtils::backupMap();
 
   const Pos churchPos(MAP_W - 33, 2);
@@ -122,25 +154,31 @@ void mkForestTrees() {
   vector<Pos> path;
 
   bool proceed = false;
-  while(!proceed) {
+  while(!proceed)
+  {
     for(int i = 0; i < nrForestPatches; ++i) {mkForestTreePatch();}
 
     const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::church);
     const Pos       templDims = templ.getDims();
 
-    for(int y = 0; y < templDims.y; ++y) {
-      for(int x = 0; x < templDims.x; ++x) {
+    for(int y = 0; y < templDims.y; ++y)
+    {
+      for(int x = 0; x < templDims.x; ++x)
+      {
         const auto& templCell = templ.getCell(x, y);
         const auto  fId       = templCell.featureId;
         const Pos p(churchPos + Pos(x, y));
-        if(fId != FeatureId::END) {
+        if(fId != FeatureId::END)
+        {
           Rigid* const f =
             Map::put(static_cast<Rigid*>(FeatureData::getData(fId).mkObj(p)));
-          if(fId == FeatureId::grass) {
+          if(fId == FeatureId::grass)
+          {
             static_cast<Grass*>(f)->type_ = GrassType::withered;
           }
         }
-        if(templCell.val == 1) {
+        if(templCell.val == 1)
+        {
           Map::put(new Door(p, new Wall(p), DoorSpawnState::closed));
         }
       }
@@ -150,13 +188,18 @@ void mkForestTrees() {
     MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
     Pos stairsPos;
-    for(int x = 0; x < MAP_W; ++x) {
-      for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x)
+    {
+      for(int y = 0; y < MAP_H; ++y)
+      {
         const auto id = Map::cells[x][y].rigid->getId();
-        if(id == FeatureId::stairs) {
+        if(id == FeatureId::stairs)
+        {
           stairsPos.set(x, y);
           blocked[x][y] = false;
-        } else if(id == FeatureId::door) {
+        }
+        else if(id == FeatureId::door)
+        {
           blocked[x][y] = false;
         }
       }
@@ -167,9 +210,12 @@ void mkForestTrees() {
     size_t minPathLength = 1;
     size_t maxPathLength = 999;
 
-    if(path.size() >= minPathLength && path.size() <= maxPathLength) {
+    if(path.size() >= minPathLength && path.size() <= maxPathLength)
+    {
       proceed = true;
-    } else {
+    }
+    else
+    {
       MapGenUtils::restoreMap();
     }
 
@@ -177,13 +223,17 @@ void mkForestTrees() {
   }
 
   //Build path
-  for(const Pos& pathPos : path) {
-    for(int dx = -1; dx < 1; ++dx) {
-      for(int dy = -1; dy < 1; ++dy) {
+  for(const Pos& pathPos : path)
+  {
+    for(int dx = -1; dx < 1; ++dx)
+    {
+      for(int dy = -1; dy < 1; ++dy)
+      {
         const Pos p(pathPos + Pos(dx, dy));
         if(
           Map::cells[p.x][p.y].rigid->canHaveRigid() &&
-          Utils::isPosInsideMap(p)) {
+          Utils::isPosInsideMap(p))
+        {
           Floor* const floor = new Floor(p);
           floor->type_ = FloorType::stonePath;
           Map::put(floor);
@@ -197,7 +247,8 @@ void mkForestTrees() {
   const int PLACE_TOP_N_HIGHSCORES = 7;
   const int NR_HIGHSCORES =
     min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
-  if(NR_HIGHSCORES > 0) {
+  if(NR_HIGHSCORES > 0)
+  {
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
@@ -209,13 +260,17 @@ void mkForestTrees() {
     vector<Pos> graveCells;
 
     int pathWalkCount = 0;
-    for(size_t i = 0; i < path.size(); ++i) {
-      if(pathWalkCount == TRY_PLACE_EVERY_N_STEP) {
+    for(size_t i = 0; i < path.size(); ++i)
+    {
+      if(pathWalkCount == TRY_PLACE_EVERY_N_STEP)
+      {
 
         Fov::runFovOnArray(blocked, path.at(i), fov, false);
 
-        for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; ++dy) {
-          for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; ++dx) {
+        for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; ++dy)
+        {
+          for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; ++dx)
+          {
 
             const int X = path.at(i).x + dx;
             const int Y = path.at(i).y + dy;
@@ -232,15 +287,20 @@ void mkForestTrees() {
                            !IS_ON_STONE_PATH &&
                            isLeftOfPrev;
 
-            if(isPosOk) {
-              for(int dy_small = -1; dy_small <= 1; dy_small++) {
-                for(int dx_small = -1; dx_small <= 1; dx_small++) {
-                  if(blocked[X + dx_small][Y + dy_small]) {
+            if(isPosOk)
+            {
+              for(int dy_small = -1; dy_small <= 1; dy_small++)
+              {
+                for(int dx_small = -1; dx_small <= 1; dx_small++)
+                {
+                  if(blocked[X + dx_small][Y + dy_small])
+                  {
                     isPosOk = false;
                   }
                 }
               }
-              if(isPosOk) {
+              if(isPosOk)
+              {
                 graveCells.push_back(Pos(X, Y));
                 blocked[X][Y] = true;
                 if(int(graveCells.size()) == NR_HIGHSCORES) {i = 9999;}
@@ -254,7 +314,8 @@ void mkForestTrees() {
       }
       pathWalkCount++;
     }
-    for(size_t i = 0; i < graveCells.size(); ++i) {
+    for(size_t i = 0; i < graveCells.size(); ++i)
+    {
       GraveStone* grave = new GraveStone(graveCells[i]);
       HighScoreEntry curHighscore = highscoreEntries.at(i);
       const string name = curHighscore.getName();
@@ -272,13 +333,19 @@ void mkForestTrees() {
 
 } //namespace
 
-bool mkIntroLvl() {
-  for(int y = 1; y < MAP_H - 1; ++y) {
-    for(int x = 1; x < MAP_W - 1; ++x) {
+bool mkIntroLvl()
+{
+  for(int y = 1; y < MAP_H - 1; ++y)
+  {
+    for(int x = 1; x < MAP_W - 1; ++x)
+    {
       const Pos p(x, y);
-      if(Rnd::oneIn(6)) {
+      if(Rnd::oneIn(6))
+      {
         Map::put(new Bush(p));
-      } else {
+      }
+      else
+      {
         Map::put(new Grass(p));
       }
     }
@@ -294,21 +361,28 @@ bool mkIntroLvl() {
 }
 
 //------------------------------------------------------------------------- EGYPT
-bool mkEgyptLvl() {
+bool mkEgyptLvl()
+{
   Map::resetMap();
 
   const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::egypt);
   const Pos       templDims = templ.getDims();
   const int       STAIR_VAL = Rnd::range(2, 3);
 
-  for(int y = 0; y < templDims.y; ++y) {
-    for(int x = 0; x < templDims.x; ++x) {
+  for(int y = 0; y < templDims.y; ++y)
+  {
+    for(int x = 0; x < templDims.x; ++x)
+    {
       const auto& templCell = templ.getCell(x, y);
       const Pos p(x, y);
-      if(templCell.featureId != FeatureId::END) {
-        if(templCell.val == STAIR_VAL) {
+      if(templCell.featureId != FeatureId::END)
+      {
+        if(templCell.val == STAIR_VAL)
+        {
           Map::put(new Stairs(p));
-        } else {
+        }
+        else
+        {
           const auto& d = FeatureData::getData(templCell.featureId);
           Map::put(static_cast<Rigid*>(d.mkObj(p)));
         }
@@ -318,10 +392,13 @@ bool mkEgyptLvl() {
     }
   }
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       Rigid* const f = Map::cells[x][y].rigid;
-      if(f->getId() == FeatureId::wall) {
+      if(f->getId() == FeatureId::wall)
+      {
         static_cast<Wall*>(f)->type_ = WallType::egypt;
       }
     }
@@ -333,33 +410,46 @@ bool mkEgyptLvl() {
 }
 
 //------------------------------------------------------------------------- LENG
-bool mkLengLvl() {
+bool mkLengLvl()
+{
   Map::resetMap();
 
   const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::leng);
   const Pos       templDims = templ.getDims();
 
-  for(int y = 0; y < templDims.y; ++y) {
-    for(int x = 0; x < templDims.x; ++x) {
+  for(int y = 0; y < templDims.y; ++y)
+  {
+    for(int x = 0; x < templDims.x; ++x)
+    {
       const auto& templCell = templ.getCell(x, y);
       const auto  fId       = templCell.featureId;
       const Pos p(x, y);
-      if(fId != FeatureId::END) {
+      if(fId != FeatureId::END)
+      {
         const auto& d = FeatureData::getData(fId);
         auto* const f = Map::put(static_cast<Rigid*>(d.mkObj(p)));
-        if(fId == FeatureId::grass) {
-          if(Rnd::oneIn(50)) {
+        if(fId == FeatureId::grass)
+        {
+          if(Rnd::oneIn(50))
+          {
             auto* const bush = static_cast<Bush*>(Map::put(new Bush(p)));
             bush->type_ = Rnd::oneIn(5) ? GrassType::cmn : GrassType::withered;
-          } else {
+          }
+          else
+          {
             auto* const grass = static_cast<Grass*>(f);
             grass->type_ = Rnd::oneIn(5) ? GrassType::cmn : GrassType::withered;
           }
-        } else if(fId == FeatureId::wall) {
+        }
+        else if(fId == FeatureId::wall)
+        {
           auto* const wall = static_cast<Wall*>(f);
-          if(templCell.val == 2) {
+          if(templCell.val == 2)
+          {
             wall->type_ = WallType::cliff;
-          } else if(templCell.val == 3 || templCell.val == 5) {
+          }
+          else if(templCell.val == 3 || templCell.val == 5)
+          {
             wall->type_ = WallType::lengMonestary;
           }
         }
@@ -367,7 +457,8 @@ bool mkLengLvl() {
       if(templCell.actorId != ActorId::END) {ActorFactory::mk(templCell.actorId, p);}
       if(templCell.val == 1) {Map::player->pos = p;}
       if(templCell.val == 3) {Map::cells[x][y].isDark = true;}
-      if(templCell.val == 6) {
+      if(templCell.val == 6)
+      {
         Wall* mimic   = new Wall(p);
         mimic->type_  = WallType::lengMonestary;
         Map::put(new Door(p, mimic, DoorSpawnState::closed));
@@ -382,11 +473,14 @@ bool mkLengLvl() {
 
 
 //------------------------------------------------------------------------- TRAPEZOHEDRON
-bool mkTrapezohedronLvl() {
+bool mkTrapezohedronLvl()
+{
   Map::resetMap();
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       auto* const wall  = new Wall(Pos(x, y));
       Map::put(wall);
       wall->type_       = WallType::cave;
@@ -397,8 +491,10 @@ bool mkTrapezohedronLvl() {
   const Pos& origin     = Map::player->pos;
   const Pos  mapCenter  = Pos(MAP_W_HALF, MAP_H_HALF);
 
-  auto putCaveFloor = [](const vector<Pos>& positions) {
-    for(const Pos& p : positions) {
+  auto putCaveFloor = [](const vector<Pos>& positions)
+  {
+    for(const Pos& p : positions)
+    {
       auto* const floor = new Floor(p);
       Map::put(floor);
       floor->type_      = FloorType::cave;
@@ -419,9 +515,12 @@ bool mkTrapezohedronLvl() {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   vector<Pos> itemPosBucket;
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
-      if(!blocked[x][y] && Pos(x, y) != origin) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
+      if(!blocked[x][y] && Pos(x, y) != origin)
+      {
         itemPosBucket.push_back(Pos(x, y));
       }
     }

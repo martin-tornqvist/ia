@@ -11,11 +11,14 @@
 
 using namespace std;
 
-namespace PopulateTraps {
+namespace PopulateTraps
+{
 
-namespace {
+namespace
+{
 
-void mkTrapAt(const TrapId id, const Pos& pos) {
+void mkTrapAt(const TrapId id, const Pos& pos)
+{
   const auto* const f     = Map::cells[pos.x][pos.y].rigid;
   const auto&       d     = FeatureData::getData(f->getId());
   const auto* const mimic = static_cast<Rigid*>(d.mkObj(pos));
@@ -24,21 +27,25 @@ void mkTrapAt(const TrapId id, const Pos& pos) {
 
 } //namespace
 
-void populateStdLvl() {
+void populateStdLvl()
+{
   TRACE_FUNC_BEGIN;
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   //Put traps in non-plain rooms
-  for(Room* const room : Map::roomList) {
+  for(Room* const room : Map::roomList)
+  {
     const RoomType type = room->type_;
 
-    if(type != RoomType::plain) {
+    if(type != RoomType::plain)
+    {
 
       Fraction chanceForTrappedRoom(0, 0);
 
-      switch(type) {
+      switch(type)
+      {
         case RoomType::human:   chanceForTrappedRoom.set(1, 4); break;
         case RoomType::ritual:  chanceForTrappedRoom.set(1, 4); break;
         case RoomType::spider:  chanceForTrappedRoom.set(3, 4); break;
@@ -54,18 +61,22 @@ void populateStdLvl() {
         case RoomType::crumbleRoom: break;
       }
 
-      if(Rnd::fraction(chanceForTrappedRoom)) {
+      if(Rnd::fraction(chanceForTrappedRoom))
+      {
         TRACE << "Trapping non-plain room" << endl;
 
         vector<Pos> trapPosBucket;
 
         const Pos& p0 = room->r_.p0;
         const Pos& p1 = room->r_.p1;
-        for(int y = p0.y; y <= p1.y; ++y) {
-          for(int x = p0.x; x <= p1.x; ++x) {
+        for(int y = p0.y; y <= p1.y; ++y)
+        {
+          for(int x = p0.x; x <= p1.x; ++x)
+          {
             if(
               !blocked[x][y] &&
-              Map::cells[x][y].rigid->canHaveRigid()) {
+              Map::cells[x][y].rigid->canHaveRigid())
+            {
               trapPosBucket.push_back(Pos(x, y));
             }
           }
@@ -74,7 +85,8 @@ void populateStdLvl() {
         int nrPosCand = int(trapPosBucket.size());
         const bool IS_SPIDER_ROOM = type == RoomType::spider;
         const int NR_BASE_TRAPS   = min(nrPosCand / 2, IS_SPIDER_ROOM ? 3 : 1);
-        for(int i = 0; i < NR_BASE_TRAPS; ++i) {
+        for(int i = 0; i < NR_BASE_TRAPS; ++i)
+        {
           if(nrPosCand == 0) {break;}
 
           const TrapId trapType = IS_SPIDER_ROOM ?
@@ -95,7 +107,8 @@ void populateStdLvl() {
           sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
           const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
           TRACE << "Placing adjacent traps" << endl;
-          for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
+          for(int i_adj = 0; i_adj < NR_ADJ; i_adj++)
+          {
             const Pos& adjPos = trapPosBucket.front();
             mkTrapAt(trapType, adjPos);
             blocked[adjPos.x][adjPos.y] = true;
@@ -109,17 +122,22 @@ void populateStdLvl() {
   }
 
   const int CHANCE_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (Map::dlvl * 5));
-  if(Rnd::percentile() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS) {
+  if(Rnd::percentile() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS)
+  {
     TRACE << "Trapping plain room" << endl;
 
     vector<Pos> trapPosBucket;
-    for(int y = 1; y < MAP_H - 1; ++y) {
-      for(int x = 1; x < MAP_W - 1; ++x) {
-        if(Map::roomMap[x][y]) {
+    for(int y = 1; y < MAP_H - 1; ++y)
+    {
+      for(int x = 1; x < MAP_W - 1; ++x)
+      {
+        if(Map::roomMap[x][y])
+        {
           if(
             !blocked[x][y] &&
             Map::roomMap[x][y]->type_ == RoomType::plain &&
-            Map::cells[x][y].rigid->canHaveRigid()) {
+            Map::cells[x][y].rigid->canHaveRigid())
+          {
             trapPosBucket.push_back(Pos(x, y));
           }
         }
@@ -128,7 +146,8 @@ void populateStdLvl() {
 
     int nrPosCand = int(trapPosBucket.size());
     const int NR_BASE_TRAPS = min(nrPosCand / 2, Rnd::range(1, 3));
-    for(int i = 0; i < NR_BASE_TRAPS; ++i) {
+    for(int i = 0; i < NR_BASE_TRAPS; ++i)
+    {
       if(nrPosCand == 0) {break;}
 
       const TrapId trapType = TrapId(Rnd::range(0, int(TrapId::END) - 1));
@@ -146,7 +165,8 @@ void populateStdLvl() {
       sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
       const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
       TRACE_FUNC_BEGIN;
-      for(int i_adj = 0; i_adj < NR_ADJ; i_adj++) {
+      for(int i_adj = 0; i_adj < NR_ADJ; i_adj++)
+      {
         const Pos& adjPos = trapPosBucket.front();
         mkTrapAt(trapType, adjPos);
         trapPosBucket.erase(trapPosBucket.begin());

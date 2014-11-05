@@ -12,7 +12,8 @@
 #include "Utils.h"
 #include "ActorMonster.h"
 
-namespace  DungeonMaster {
+namespace  DungeonMaster
+{
 
 void init();
 

@@ -39,28 +39,35 @@ Mon::Mon() :
   shockCausedCur_(0.0),
   hasGivenXpForSpotting_(false) {}
 
-Mon::~Mon() {
+Mon::~Mon()
+{
   for(Spell* const spell : spellsKnown) {delete spell;}
 }
 
-void Mon::onActorTurn() {
+void Mon::onActorTurn()
+{
   //Test that monster is inside map
   assert(Utils::isPosInsideMap(pos));
 
   //Test that monster's leader does not have a leader (never allowed)
-  if(leader && leader != Map::player && static_cast<Mon*>(leader)->leader) {
+  if(leader && leader != Map::player && static_cast<Mon*>(leader)->leader)
+  {
     TRACE << "Two (or more) steps of leader is never allowed" << endl;
     assert(false);
   }
 
-  if(awareCounter_ <= 0 && leader != Map::player) {
+  if(awareCounter_ <= 0 && leader != Map::player)
+  {
     waiting_ = !waiting_;
 
-    if(waiting_) {
+    if(waiting_)
+    {
       GameTime::actorDidAct();
       return;
     }
-  } else {
+  }
+  else
+  {
     waiting_ = false;
   }
 
@@ -70,15 +77,18 @@ void Mon::onActorTurn() {
 
   if(spellCoolDownCur != 0) {spellCoolDownCur--;}
 
-  if(awareCounter_ > 0) {
+  if(awareCounter_ > 0)
+  {
     isRoamingAllowed_ = true;
-    if(leader) {
-      //Monster has a leader
-      if(leader->isAlive() && leader != Map::player) {
-        static_cast<Mon*>(leader)->awareCounter_ =
-          leader->getData().nrTurnsAwarePlayer;
+    if(leader)
+    {
+      if(leader->isAlive() && leader != Map::player)
+      {
+        static_cast<Mon*>(leader)->awareCounter_ = leader->getData().nrTurnsAwarePlayer;
       }
-    } else { //Monster does not have a leader
+    }
+    else //Monster does not have a leader
+    {
       if(isAlive() && Rnd::oneIn(14)) {speakPhrase();}
     }
   }
@@ -96,7 +106,8 @@ void Mon::onActorTurn() {
 
   //------------------------------ SPECIAL MONSTER ACTIONS
   //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-  if(leader != Map::player/*TODO temporary restriction, allow this later(?)*/) {
+  if(leader != Map::player/*TODO temporary restriction, allow this later(?)*/)
+  {
     if(onActorTurn_()) {return;}
   }
 
@@ -104,63 +115,69 @@ void Mon::onActorTurn() {
   //                               (MOVING, ATTACKING, CASTING SPELLS...)
   //Looking is as an action if monster not aware before, and became aware from looking.
   //(This is to give the monsters some reaction time, and not instantly attack)
-  if(data_->ai[int(AiId::looks)] && leader != Map::player) {
+  if(data_->ai[int(AiId::looks)] && leader != Map::player)
+  {
     if(Ai::Info::lookBecomePlayerAware(*this)) {return;}
   }
 
-  if(data_->ai[int(AiId::makesRoomForFriend)] && leader != Map::player) {
+  if(data_->ai[int(AiId::makesRoomForFriend)] && leader != Map::player)
+  {
     if(Ai::Action::makeRoomForFriend(*this)) {return;}
   }
 
-  if(target && Rnd::oneIn(6)) {
+  if(target && Rnd::oneIn(6))
+  {
     if(Ai::Action::castRandomSpellIfAware(*this)) {return;}
   }
 
-  if(data_->ai[int(AiId::attacks)] && target) {
-    if(tryAttack(*target)) {
-      return;
-    }
+  if(data_->ai[int(AiId::attacks)] && target)
+  {
+    if(tryAttack(*target)) {return;}
   }
 
-  if(target) {
-    if(Ai::Action::castRandomSpellIfAware(*this)) {
-      return;
-    }
+  if(target)
+  {
+    if(Ai::Action::castRandomSpellIfAware(*this)) {return;}
   }
 
-  if(Rnd::percentile() < data_->erraticMovement) {
-    if(Ai::Action::moveToRandomAdjCell(*this)) {
-      return;
-    }
+  if(Rnd::percentile() < data_->erraticMovement)
+  {
+    if(Ai::Action::moveToRandomAdjCell(*this)) {return;}
   }
 
-  if(data_->ai[int(AiId::movesToTgtWhenLos)]) {
+  if(data_->ai[int(AiId::movesToTgtWhenLos)])
+  {
     if(Ai::Action::moveToTgtSimple(*this)) {return;}
   }
 
   vector<Pos> path;
 
-  if(data_->ai[int(AiId::pathsToTgtWhenAware)] && leader != Map::player) {
+  if(data_->ai[int(AiId::pathsToTgtWhenAware)] && leader != Map::player)
+  {
     Ai::Info::setPathToPlayerIfAware(*this, path);
   }
 
-  if(leader != Map::player) {
-    if(Ai::Action::handleClosedBlockingDoor(*this, path)) {
-      return;
-    }
+  if(leader != Map::player)
+  {
+    if(Ai::Action::handleClosedBlockingDoor(*this, path)) {return;}
   }
 
   if(Ai::Action::stepPath(*this, path)) {return;}
 
-  if(data_->ai[int(AiId::movesToLeader)]) {
+  if(data_->ai[int(AiId::movesToLeader)])
+  {
     Ai::Info::setPathToLeaderIfNoLosToleader(*this, path);
     if(Ai::Action::stepPath(*this, path)) {return;}
   }
 
-  if(data_->ai[int(AiId::movesToLair)] && leader != Map::player) {
-    if(Ai::Action::stepToLairIfLos(*this, lairCell_)) {
+  if(data_->ai[int(AiId::movesToLair)] && leader != Map::player)
+  {
+    if(Ai::Action::stepToLairIfLos(*this, lairCell_))
+    {
       return;
-    } else {
+    }
+    else
+    {
       Ai::Info::setPathToLairIfNoLos(*this, path, lairCell_);
       if(Ai::Action::stepPath(*this, path)) {return;}
     }
@@ -171,23 +188,28 @@ void Mon::onActorTurn() {
   GameTime::actorDidAct();
 }
 
-void Mon::hit_(int& dmg) {
+void Mon::hit_(int& dmg)
+{
   (void)dmg;
   awareCounter_ = data_->nrTurnsAwarePlayer;
 }
 
-void Mon::moveDir(Dir dir) {
+void Mon::moveDir(Dir dir)
+{
   assert(dir != Dir::END);
   assert(Utils::isPosInsideMap(pos, false));
 
   getPropHandler().changeMoveDir(pos, dir);
 
   //Trap affects leaving?
-  if(dir != Dir::center) {
+  if(dir != Dir::center)
+  {
     auto* f = Map::cells[pos.x][pos.y].rigid;
-    if(f->getId() == FeatureId::trap) {
+    if(f->getId() == FeatureId::trap)
+    {
       dir = static_cast<Trap*>(f)->actorTryLeave(*this, dir);
-      if(dir == Dir::center) {
+      if(dir == Dir::center)
+      {
         TRACE_VERBOSE << "Monster move prevented by trap" << endl;
         GameTime::actorDidAct();
         return;
@@ -200,7 +222,8 @@ void Mon::moveDir(Dir dir) {
 
   const Pos targetCell(pos + DirUtils::getOffset(dir));
 
-  if(dir != Dir::center && Utils::isPosInsideMap(targetCell, false)) {
+  if(dir != Dir::center && Utils::isPosInsideMap(targetCell, false))
+  {
     pos = targetCell;
 
     //Bump features in target cell (i.e. to trigger traps)
@@ -213,15 +236,19 @@ void Mon::moveDir(Dir dir) {
   GameTime::actorDidAct();
 }
 
-void Mon::hearSound(const Snd& snd) {
-  if(isAlive()) {
-    if(snd.isAlertingMon()) {
+void Mon::hearSound(const Snd& snd)
+{
+  if(isAlive())
+  {
+    if(snd.isAlertingMon())
+    {
       becomeAware(false);
     }
   }
 }
 
-void Mon::speakPhrase() {
+void Mon::speakPhrase()
+{
   const bool IS_SEEN_BY_PLAYER = Map::player->isSeeingActor(*this, nullptr);
   const string msg = IS_SEEN_BY_PLAYER ?
                      getAggroPhraseMonSeen() :
@@ -235,12 +262,16 @@ void Mon::speakPhrase() {
   SndEmit::emitSnd(snd);
 }
 
-void Mon::becomeAware(const bool IS_FROM_SEEING) {
-  if(isAlive()) {
+void Mon::becomeAware(const bool IS_FROM_SEEING)
+{
+  if(isAlive())
+  {
     const int AWARENESS_CNT_BEFORE = awareCounter_;
     awareCounter_ = data_->nrTurnsAwarePlayer;
-    if(AWARENESS_CNT_BEFORE <= 0) {
-      if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr)) {
+    if(AWARENESS_CNT_BEFORE <= 0)
+    {
+      if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr))
+      {
         Map::player->updateFov();
         Render::drawMapAndInterface(true);
         Log::addMsg(getNameThe() + " sees me!");
@@ -250,15 +281,18 @@ void Mon::becomeAware(const bool IS_FROM_SEEING) {
   }
 }
 
-void Mon::playerBecomeAwareOfMe(const int DURATION_FACTOR) {
+void Mon::playerBecomeAwareOfMe(const int DURATION_FACTOR)
+{
   const int LOWER         = 4 * DURATION_FACTOR;
   const int UPPER         = 6 * DURATION_FACTOR;
   const int ROLL          = Rnd::range(LOWER, UPPER);
   playerAwareOfMeCounter_ = max(playerAwareOfMeCounter_, ROLL);
 }
 
-bool Mon::tryAttack(Actor& defender) {
-  if(state != ActorState::alive || (awareCounter_ <= 0 && leader != Map::player)) {
+bool Mon::tryAttack(Actor& defender)
+{
+  if(state != ActorState::alive || (awareCounter_ <= 0 && leader != Map::player))
+  {
     return false;
   }
 
@@ -267,29 +301,37 @@ bool Mon::tryAttack(Actor& defender) {
 
   if(!attack.weapon) {return false;}
 
-  if(attack.isMelee) {
-    if(attack.weapon->getData().melee.isMeleeWpn) {
+  if(attack.isMelee)
+  {
+    if(attack.weapon->getData().melee.isMeleeWpn)
+    {
       Attack::melee(*this, *attack.weapon, defender);
       return true;
     }
     return false;
   }
 
-  if(attack.weapon->getData().ranged.isRangedWpn) {
-    if(opport.isTimeToReload) {
+  if(attack.weapon->getData().ranged.isRangedWpn)
+  {
+    if(opport.isTimeToReload)
+    {
       Reload::reloadWieldedWpn(*this);
       return true;
     }
 
     //Check if friend is in the way (with a small chance to ignore this)
     bool isBlockedByFriend = false;
-    if(Rnd::fraction(4, 5)) {
+    if(Rnd::fraction(4, 5))
+    {
       vector<Pos> line;
       LineCalc::calcNewLine(pos, defender.pos, true, 9999, false, line);
-      for(Pos& linePos : line) {
-        if(linePos != pos && linePos != defender.pos) {
+      for(Pos& linePos : line)
+      {
+        if(linePos != pos && linePos != defender.pos)
+        {
           Actor* const actorHere = Utils::getFirstActorAtPos(linePos);
-          if(actorHere) {
+          if(actorHere)
+          {
             isBlockedByFriend = true;
             break;
           }
@@ -310,45 +352,59 @@ bool Mon::tryAttack(Actor& defender) {
   return false;
 }
 
-AttackOpport Mon::getAttackOpport(Actor& defender) {
+AttackOpport Mon::getAttackOpport(Actor& defender)
+{
   AttackOpport opport;
-  if(propHandler_->allowAttack(false)) {
+  if(propHandler_->allowAttack(false))
+  {
     opport.isMelee = Utils::isPosAdj(pos, defender.pos, false);
 
     Wpn* weapon = nullptr;
     const size_t nrIntrinsics = inv_->getIntrinsicsSize();
-    if(opport.isMelee) {
-      if(propHandler_->allowAttackMelee(false)) {
+    if(opport.isMelee)
+    {
+      if(propHandler_->allowAttackMelee(false))
+      {
 
         //Melee weapon in wielded slot?
         weapon = static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
-        if(weapon) {
-          if(weapon->getData().melee.isMeleeWpn) {
+        if(weapon)
+        {
+          if(weapon->getData().melee.isMeleeWpn)
+          {
             opport.weapons.push_back(weapon);
           }
         }
 
         //Intrinsic melee attacks?
-        for(size_t i = 0; i < nrIntrinsics; ++i) {
+        for(size_t i = 0; i < nrIntrinsics; ++i)
+        {
           weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().melee.isMeleeWpn) {opport.weapons.push_back(weapon);}
         }
       }
-    } else {
-      if(propHandler_->allowAttackRanged(false)) {
+    }
+    else
+    {
+      if(propHandler_->allowAttackRanged(false))
+      {
         //Ranged weapon in wielded slot?
         weapon =
           static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
 
-        if(weapon) {
-          if(weapon->getData().ranged.isRangedWpn) {
+        if(weapon)
+        {
+          if(weapon->getData().ranged.isRangedWpn)
+          {
             opport.weapons.push_back(weapon);
 
             //Check if reload time instead
             if(
               weapon->nrAmmoLoaded == 0 &&
-              !weapon->getData().ranged.hasInfiniteAmmo) {
-              if(inv_->hasAmmoForFirearmInInventory()) {
+              !weapon->getData().ranged.hasInfiniteAmmo)
+            {
+              if(inv_->hasAmmoForFirearmInInventory())
+              {
                 opport.isTimeToReload = true;
               }
             }
@@ -356,7 +412,8 @@ AttackOpport Mon::getAttackOpport(Actor& defender) {
         }
 
         //Intrinsic ranged attacks?
-        for(size_t i = 0; i < nrIntrinsics; ++i) {
+        for(size_t i = 0; i < nrIntrinsics; ++i)
+        {
           weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
           if(weapon->getData().ranged.isRangedWpn) {opport.weapons.push_back(weapon);}
         }
@@ -368,7 +425,8 @@ AttackOpport Mon::getAttackOpport(Actor& defender) {
 }
 
 //TODO Instead of using "strongest" weapon, use random
-BestAttack Mon::getBestAttack(const AttackOpport& attackOpport) {
+BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
+{
   BestAttack attack;
   attack.isMelee = attackOpport.isMelee;
 
@@ -377,14 +435,17 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport) {
   const size_t nrWpns = attackOpport.weapons.size();
 
   //If any possible attacks found
-  if(nrWpns > 0) {
+  if(nrWpns > 0)
+  {
     attack.weapon = attackOpport.weapons.at(0);
 
     const ItemDataT* data = &(attack.weapon->getData());
 
     //If there are more than one possible weapon, find strongest.
-    if(nrWpns > 1) {
-      for(size_t i = 1; i < nrWpns; ++i) {
+    if(nrWpns > 1)
+    {
+      for(size_t i = 1; i < nrWpns; ++i)
+      {
 
         //Found new weapon in element i.
         newWpn = attackOpport.weapons.at(i);
@@ -392,7 +453,8 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport) {
 
         //Compare definitions.
         //If weapon i is stronger -
-        if(ItemData::isWpnStronger(*data, *newData, attack.isMelee)) {
+        if(ItemData::isWpnStronger(*data, *newData, attack.isMelee))
+        {
           // - use new weapon instead.
           attack.weapon = newWpn;
           data = newData;
@@ -403,14 +465,19 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport) {
   return attack;
 }
 
-bool Mon::isLeaderOf(const Actor& actor) const {
-  if(actor.isPlayer()) {
+bool Mon::isLeaderOf(const Actor& actor) const
+{
+  if(actor.isPlayer())
+  {
     return false;
-  } else {
+  }
+  else
+  {
     return static_cast<const Mon*>(&actor)->leader == this;
   }
 }
 
-bool Mon::isActorMyLeader(const Actor& actor) const {
+bool Mon::isActorMyLeader(const Actor& actor) const
+{
   return leader == &actor;
 }

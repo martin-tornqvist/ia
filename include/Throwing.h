@@ -6,7 +6,8 @@ class Item;
 class Actor;
 struct Pos;
 
-namespace Throwing {
+namespace Throwing
+{
 
 void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown);
 

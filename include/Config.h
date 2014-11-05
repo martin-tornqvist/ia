@@ -3,7 +3,8 @@
 
 #include <string>
 
-namespace Config {
+namespace Config
+{
 
 void init();
 void runOptionsMenu();

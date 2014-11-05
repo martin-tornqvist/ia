@@ -25,14 +25,18 @@
 
 using namespace std;
 
-namespace SpellHandling {
+namespace SpellHandling
+{
 
-Spell* getRandomSpellForMon() {
+Spell* getRandomSpellForMon()
+{
 
   vector<SpellId> bucket;
-  for(int i = 0; i < int(SpellId::END); ++i) {
+  for(int i = 0; i < int(SpellId::END); ++i)
+  {
     Spell* const spell = mkSpellFromId(SpellId(i));
-    if(spell->isAvailForAllMon()) {
+    if(spell->isAvailForAllMon())
+    {
       bucket.push_back(SpellId(i));
     }
     delete spell;
@@ -41,8 +45,10 @@ Spell* getRandomSpellForMon() {
   return mkSpellFromId(bucket.at(ELEMENT));
 }
 
-Spell* mkSpellFromId(const SpellId spellId) {
-  switch(spellId) {
+Spell* mkSpellFromId(const SpellId spellId)
+{
+  switch(spellId)
+  {
     case SpellId::slowMon:              return new SpellSlowMon; break;
     case SpellId::terrifyMon:           return new SpellTerrifyMon; break;
     case SpellId::paralyzeMon:          return new SpellParalyzeMon; break;
@@ -75,18 +81,23 @@ Spell* mkSpellFromId(const SpellId spellId) {
 
 } //SpellHandling
 
-Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const {
+Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
+{
   int costMax = getMaxSpiCost_();
 
-  if(!IS_BASE_COST_ONLY) {
+  if(!IS_BASE_COST_ONLY)
+  {
     const int X0 = max(0, caster->pos.x - 1);
     const int Y0 = max(0, caster->pos.y - 1);
     const int X1 = min(MAP_W - 1, caster->pos.x + 1);
     const int Y1 = min(MAP_H - 1, caster->pos.y + 1);
 
-    for(int y = Y0; y <= Y1; ++y) {
-      for(int x = X0; x <= X1; ++x) {
-        if(Map::cells[x][y].rigid->getId() == FeatureId::altar) {
+    for(int y = Y0; y <= Y1; ++y)
+    {
+      for(int x = X0; x <= X1; ++x)
+      {
+        if(Map::cells[x][y].rigid->getId() == FeatureId::altar)
+        {
           costMax -= 1;
           y = 9999;
           x = 9999;
@@ -94,13 +105,16 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
       }
     }
 
-    if(caster == Map::player) {
+    if(caster->isPlayer())
+    {
       bool isWarlock      = false;
       bool isBloodSorc    = false;
       bool isSeer         = false;
 
-      for(Trait id : PlayerBon::traitsPicked_) {
-        switch(id) {
+      for(Trait id : PlayerBon::traitsPicked_)
+      {
+        switch(id)
+        {
           case Trait::warlock:        isWarlock     = true; break;
           case Trait::bloodSorcerer:  isBloodSorc   = true; break;
           case Trait::seer:           isSeer        = true; break;
@@ -108,9 +122,11 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
         }
       }
 
-      if(isBloodSorc) costMax--;
+      if(isBloodSorc)
+        costMax--;
 
-      switch(getId()) {
+      switch(getId())
+      {
         case SpellId::darkbolt:       {if(isWarlock)  costMax--;}    break;
         case SpellId::azathothsWrath: {if(isWarlock)  costMax--;}    break;
         case SpellId::mayhem:         {if(isWarlock)  costMax--;}    break;
@@ -126,15 +142,14 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
     vector<PropId> props;
     propHlr.getAllActivePropIds(props);
 
-    if(!propHlr.allowSee()) {costMax--;}
+    if(!propHlr.allowSee())
+      --costMax;
 
-    if(find(begin(props), end(props), propBlessed) != end(props)) {
-      costMax -= 1;
-    }
+    if(find(begin(props), end(props), propBlessed) != end(props))
+      --costMax;
 
-    if(find(begin(props), end(props), propCursed) != end(props)) {
+    if(find(begin(props), end(props), propCursed) != end(props))
       costMax += 3;
-    }
   }
 
   costMax             = max(1, costMax);
@@ -143,37 +158,46 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
   return Range(COST_MIN, costMax);
 }
 
-SpellEffectNoticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) const {
+SpellEffectNoticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) const
+{
   TRACE_FUNC_BEGIN;
-  if(caster->getPropHandler().allowCastSpells(true)) {
-    if(caster == Map::player) {
+  if(caster->getPropHandler().allowCastSpells(true))
+  {
+    if(caster->isPlayer())
+    {
       TRACE << "Player casting spell" << endl;
       const ShockSrc shockSrc = IS_INTRINSIC ?
                                 ShockSrc::castIntrSpell :
                                 ShockSrc::useStrangeItem;
       const int SHOCK_VALUE = IS_INTRINSIC ? getShockValueIntrCast() : 10;
       Map::player->incrShock(SHOCK_VALUE, shockSrc);
-      if(Map::player->isAlive()) {
+      if(Map::player->isAlive())
+      {
         Audio::play(SfxId::spellGeneric);
       }
-    } else {
+    }
+    else //Caster is not player
+    {
       TRACE << "Monster casting spell" << endl;
       Mon* const mon = static_cast<Mon*>(caster);
-      if(Map::cells[mon->pos.x][mon->pos.y].isSeenByPlayer) {
+      if(Map::cells[mon->pos.x][mon->pos.y].isSeenByPlayer)
+      {
         const string spellStr = mon->getData().spellCastMessage;
         Log::addMsg(spellStr);
       }
       mon->spellCoolDownCur = mon->getData().spellCooldownTurns;
     }
 
-    if(IS_INTRINSIC) {
+    if(IS_INTRINSIC)
+    {
       const Range cost = getSpiCost(false, caster);
       caster->hitSpi(Rnd::range(cost), false);
     }
+
     SpellEffectNoticed isNoticed = SpellEffectNoticed::no;
-    if(caster->isAlive()) {
+
+    if(caster->isAlive())
       isNoticed = cast_(caster);
-    }
 
     GameTime::actorDidAct();
     TRACE_FUNC_END;
@@ -184,14 +208,18 @@ SpellEffectNoticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) con
 }
 
 //------------------------------------------------------------ DARKBOLT
-SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
+{
   Actor* tgt = nullptr;
 
   vector<Actor*> spottedActors;
   caster->getSeenFoes(spottedActors);
-  if(spottedActors.empty()) {
+  if(spottedActors.empty())
+  {
     return SpellEffectNoticed::no;
-  } else {
+  }
+  else
+  {
     tgt = Utils::getRandomClosestActor(caster->pos, spottedActors);
   }
 
@@ -199,11 +227,15 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const {
   LineCalc::calcNewLine(caster->pos, tgt->pos, true, 999, false, line);
   Render::drawMapAndInterface();
   const size_t LINE_SIZE = line.size();
-  for(size_t i = 1; i < LINE_SIZE; ++i) {
+  for(size_t i = 1; i < LINE_SIZE; ++i)
+  {
     const Pos& p = line.at(i);
-    if(Config::isTilesMode()) {
+    if(Config::isTilesMode())
+    {
       Render::drawTile(TileId::blast1, Panel::map, p, clrMagenta);
-    } else {
+    }
+    else
+    {
       Render::drawGlyph('*', Panel::map, p, clrMagenta);
     }
     Render::updateScreen();
@@ -215,8 +247,10 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const {
   bool    isPlayerSeeingTgt = true;
   bool    isCharged         = false;
   Clr     msgClr            = clrMsgGood;
-  if(caster->isPlayer()) {
-    if(caster->isLeaderOf(*tgt)) {
+  if(caster->isPlayer())
+  {
+    if(caster->isLeaderOf(*tgt))
+    {
       msgClr = clrMsgBad;
     }
 
@@ -224,16 +258,22 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const {
     Map::player->getPropHandler().getAllActivePropIds(props);
     isCharged = find(begin(props), end(props), propWarlockCharged) != end(props);
 
-  } else { //Caster is not player
-    if(tgt->isPlayer() || Map::player->isLeaderOf(*tgt)) {
+  }
+  else //Caster is not player
+  {
+    if(tgt->isPlayer() || Map::player->isLeaderOf(*tgt))
+    {
       msgClr = clrMsgBad;
     }
+
     isPlayerSeeingTgt = Map::player->isSeeingActor(*tgt, nullptr);
   }
 
-  if(isPlayerSeeingTgt) {
+  if(isPlayerSeeingTgt)
+  {
     string tgtRefStr = "I am";
-    if(!tgt->isPlayer()) {
+    if(!tgt->isPlayer())
+    {
       tgtRefStr = tgt->getNameThe() + " is";
     }
     Log::addMsg(tgtRefStr + " struck by a blast!", clrMsgBad);
@@ -253,25 +293,32 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const {
   return SpellEffectNoticed::yes;
 }
 
-bool SpellDarkbolt::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellDarkbolt::allowMonCastNow(Mon& mon,
+                                    const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target                                   &&
          mon.isSeeingActor(*mon.target, losBlockers)  &&
          Rnd::oneIn(2);
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH
-SpellEffectNoticed SpellAzathothsWrath::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellAzathothsWrath::cast_(Actor* const caster) const
+{
   Range dmgRange(4, 8);
 
   const string msgEnd = "struck by a roaring blast!";
 
-  if(caster == Map::player) {
+  if(caster->isPlayer())
+  {
     vector<Actor*> targets;
     Map::player->getSeenFoes(targets);
 
-    if(targets.empty()) {
+    if(targets.empty())
+    {
       return SpellEffectNoticed::no;
-    } else {
+    }
+    else
+    {
       vector<PropId> props;
       Map::player->getPropHandler().getAllActivePropIds(props);
 
@@ -283,10 +330,10 @@ SpellEffectNoticed SpellAzathothsWrath::cast_(Actor* const caster) const {
 
       Render::drawBlastAtCellsWithVision(actorCells, clrRedLgt);
 
-      for(Actor* actor : targets) {
+      for(Actor* actor : targets)
+      {
         Log::addMsg(actor->getNameThe() + " is " + msgEnd, clrMsgGood);
-        actor->getPropHandler().tryApplyProp(
-          new PropParalyzed(PropTurns::specific, 2));
+        actor->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::specific, 2));
 
         const int DMG = IS_CHARGED ? dmgRange.upper : Rnd::range(dmgRange);
 
@@ -298,11 +345,17 @@ SpellEffectNoticed SpellAzathothsWrath::cast_(Actor* const caster) const {
       }
       return SpellEffectNoticed::yes;
     }
-  } else {
+  }
+  else //Caster is not player
+  {
     Log::addMsg("I am " + msgEnd, clrMsgBad);
+
     Render::drawBlastAtCellsWithVision(vector<Pos> {Map::player->pos}, clrRedLgt);
+
     Map::player->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::specific, 1));
+
     Map::player->hit(Rnd::range(dmgRange), DmgType::physical);
+
     SndEmit::emitSnd({"", SfxId::END, IgnoreMsgIfOriginSeen::yes, Map::player->pos,
                       nullptr, SndVol::high, AlertsMon::yes
                      });
@@ -310,12 +363,15 @@ SpellEffectNoticed SpellAzathothsWrath::cast_(Actor* const caster) const {
   return SpellEffectNoticed::no;
 }
 
-bool SpellAzathothsWrath::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellAzathothsWrath::allowMonCastNow(Mon& mon,
+    const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target && mon.isSeeingActor(*mon.target, losBlockers);
 }
 
 //------------------------------------------------------------ MAYHEM
-SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const
+{
   (void)caster;
 
   Log::addMsg("Destruction rages around me!");
@@ -330,33 +386,44 @@ SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const {
   const int X1 = min(MAP_W - 1, playerPos.x + AREA_RADI) - 1;
   const int Y1 = min(MAP_H - 1, playerPos.y + AREA_RADI) - 1;
 
-  for(int i = 0; i < NR_OF_SWEEPS; ++i) {
-    for(int y = Y0; y <= Y1; ++y) {
-      for(int x = X0; x <= X1; ++x) {
+  for(int i = 0; i < NR_OF_SWEEPS; ++i)
+  {
+    for(int y = Y0; y <= Y1; ++y)
+    {
+      for(int x = X0; x <= X1; ++x)
+      {
         bool isAdjToWalkableCell = false;
-        for(int dx = -1; dx <= 1; ++dx) {
-          for(int dy = -1; dy <= 1; ++dy) {
+        for(int dx = -1; dx <= 1; ++dx)
+        {
+          for(int dy = -1; dy <= 1; ++dy)
+          {
             const Rigid* const f = Map::cells[x + dx][y + dy].rigid;
             if(f->canMoveCmn()) {isAdjToWalkableCell = true;}
           }
         }
-        if(isAdjToWalkableCell && Rnd::oneIn(8)) {
+        if(isAdjToWalkableCell && Rnd::oneIn(8))
+        {
           Map::cells[x][y].rigid->hit(DmgType::physical, DmgMethod::explosion);
         }
       }
     }
   }
 
-  for(int y = Y0; y <= Y1; ++y) {
-    for(int x = X0; x <= X1; ++x) {
+  for(int y = Y0; y <= Y1; ++y)
+  {
+    for(int x = X0; x <= X1; ++x)
+    {
       auto* const f = Map::cells[x][y].rigid;
       if(f->canHaveBlood() && Rnd::oneIn(10)) {f->mkBloody();}
     }
   }
 
-  for(auto* actor : GameTime::actors_) {
-    if(actor != Map::player) {
-      if(Map::player->isSeeingActor(*actor, nullptr)) {
+  for(auto* actor : GameTime::actors_)
+  {
+    if(actor != Map::player)
+    {
+      if(Map::player->isSeeingActor(*actor, nullptr))
+      {
         actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
       }
     }
@@ -370,7 +437,8 @@ SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ PESTILENCE
-SpellEffectNoticed SpellPestilence::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellPestilence::cast_(Actor* const caster) const
+{
   (void)caster;
 
   const int RND = Rnd::range(1, 4);
@@ -389,17 +457,23 @@ SpellEffectNoticed SpellPestilence::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ PHARAOH STAFF LOCUSTS
-bool SpellPharaohStaff::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellPharaohStaff::allowMonCastNow(Mon& mon,
+                                        const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target                                   &&
          mon.isSeeingActor(*mon.target, losBlockers)  &&
          Rnd::oneIn(4);
 }
 
-SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
+{
   //First check for a friendly mummy and heal it (as per the spell description)
-  for(Actor* const actor : GameTime::actors_) {
-    if(actor->getData().id == ActorId::mummy) {
-      if(static_cast<Mon*>(actor)->leader == Map::player) {
+  for(Actor* const actor : GameTime::actors_)
+  {
+    if(actor->getData().id == ActorId::mummy)
+    {
+      if(static_cast<Mon*>(actor)->leader == Map::player)
+      {
         actor->restoreHp(999);
         return SpellEffectNoticed::yes;
       }
@@ -412,7 +486,8 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ DETECT ITEMS
-SpellEffectNoticed SpellDetItems::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellDetItems::cast_(Actor* const caster) const
+{
   (void)caster;
 
   const int RADI    = FOV_STD_RADI_INT + 3;
@@ -425,26 +500,32 @@ SpellEffectNoticed SpellDetItems::cast_(Actor* const caster) const {
 
   vector<Pos> itemsRevealedCells;
 
-  for(int y = Y0; y < Y1; ++y) {
-    for(int x = X0; x <= X1; ++x) {
+  for(int y = Y0; y < Y1; ++y)
+  {
+    for(int x = X0; x <= X1; ++x)
+    {
       Item* item = Map::cells[x][y].item;
-      if(item) {
+      if(item)
+      {
         Map::cells[x][y].isSeenByPlayer = true;
         Map::cells[x][y].isExplored = true;
         itemsRevealedCells.push_back(Pos(x, y));
       }
     }
   }
-  if(!itemsRevealedCells.empty()) {
+  if(!itemsRevealedCells.empty())
+  {
     Render::drawMapAndInterface();
     Map::player->updateFov();
     Render::drawBlastAtCells(itemsRevealedCells, clrWhite);
     Render::drawMapAndInterface();
 
-    if(itemsRevealedCells.size() == 1) {
+    if(itemsRevealedCells.size() == 1)
+    {
       Log::addMsg("An item is revealed to me.");
     }
-    if(itemsRevealedCells.size() > 1) {
+    if(itemsRevealedCells.size() > 1)
+    {
       Log::addMsg("Some items are revealed to me.");
     }
     return SpellEffectNoticed::yes;
@@ -453,16 +534,21 @@ SpellEffectNoticed SpellDetItems::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ DETECT TRAPS
-SpellEffectNoticed SpellDetTraps::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellDetTraps::cast_(Actor* const caster) const
+{
   (void)caster;
 
   vector<Pos> trapsRevealedCells;
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
-      if(Map::cells[x][y].isSeenByPlayer) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
+      if(Map::cells[x][y].isSeenByPlayer)
+      {
         auto* const f = Map::cells[x][y].rigid;
-        if(f->getId() == FeatureId::trap) {
+        if(f->getId() == FeatureId::trap)
+        {
           auto* const trap = static_cast<Trap*>(f);
           trap->reveal(false);
           trapsRevealedCells.push_back(Pos(x, y));
@@ -471,15 +557,18 @@ SpellEffectNoticed SpellDetTraps::cast_(Actor* const caster) const {
     }
   }
 
-  if(!trapsRevealedCells.empty()) {
+  if(!trapsRevealedCells.empty())
+  {
     Render::drawMapAndInterface();
     Map::player->updateFov();
     Render::drawBlastAtCells(trapsRevealedCells, clrWhite);
     Render::drawMapAndInterface();
-    if(trapsRevealedCells.size() == 1) {
+    if(trapsRevealedCells.size() == 1)
+    {
       Log::addMsg("A hidden trap is revealed to me.");
     }
-    if(trapsRevealedCells.size() > 1) {
+    if(trapsRevealedCells.size() > 1)
+    {
       Log::addMsg("Some hidden traps are revealed to me.");
     }
     return SpellEffectNoticed::yes;
@@ -488,7 +577,8 @@ SpellEffectNoticed SpellDetTraps::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ DETECT MONSTERS
-SpellEffectNoticed SpellDetMon::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellDetMon::cast_(Actor* const caster) const
+{
   (void)caster;
 
   bool                isSeer      = PlayerBon::hasTrait(Trait::seer);
@@ -497,9 +587,12 @@ SpellEffectNoticed SpellDetMon::cast_(Actor* const caster) const {
   const Pos           playerPos   = Map::player->pos;
   SpellEffectNoticed  isNoticed   = SpellEffectNoticed::no;
 
-  for(Actor* actor : GameTime::actors_) {
-    if(actor != Map::player) {
-      if(Utils::kingDist(playerPos, actor->pos) <= MAX_DIST) {
+  for(Actor* actor : GameTime::actors_)
+  {
+    if(actor != Map::player)
+    {
+      if(Utils::kingDist(playerPos, actor->pos) <= MAX_DIST)
+      {
         static_cast<Mon*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
         isNoticed = SpellEffectNoticed::yes;
       }
@@ -512,25 +605,33 @@ SpellEffectNoticed SpellDetMon::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ OPENING
-SpellEffectNoticed SpellOpening::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellOpening::cast_(Actor* const caster) const
+{
 
   (void)caster;
 
   vector<Pos> featuresOpenedCells;
 
-  for(int y = 1; y < MAP_H - 1; ++y) {
-    for(int x = 1; x < MAP_W - 1; ++x) {
-      if(Map::cells[x][y].isSeenByPlayer) {
-        if(Map::cells[x][y].rigid->open()) {
+  for(int y = 1; y < MAP_H - 1; ++y)
+  {
+    for(int x = 1; x < MAP_W - 1; ++x)
+    {
+      if(Map::cells[x][y].isSeenByPlayer)
+      {
+        if(Map::cells[x][y].rigid->open())
+        {
           featuresOpenedCells.push_back(Pos(x, y));
         }
       }
     }
   }
 
-  if(featuresOpenedCells.empty()) {
+  if(featuresOpenedCells.empty())
+  {
     return SpellEffectNoticed::no;
-  } else {
+  }
+  else
+  {
     Render::drawMapAndInterface();
     Map::player->updateFov();
     Render::drawBlastAtCells(featuresOpenedCells, clrWhite);
@@ -540,14 +641,16 @@ SpellEffectNoticed SpellOpening::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ SACRIFICE LIFE
-SpellEffectNoticed SpellSacrLife::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellSacrLife::cast_(Actor* const caster) const
+{
   (void)caster;
 
   //Convert every 2 HP to 1 SPI
 
   const int PLAYER_HP_CUR = Map::player->getHp();
 
-  if(PLAYER_HP_CUR > 2) {
+  if(PLAYER_HP_CUR > 2)
+  {
     const int HP_DRAINED = ((PLAYER_HP_CUR - 1) / 2) * 2;
     Map::player->hit(HP_DRAINED, DmgType::pure);
     Map::player->restoreSpi(HP_DRAINED, true, true);
@@ -557,14 +660,16 @@ SpellEffectNoticed SpellSacrLife::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ SACRIFICE SPIRIT
-SpellEffectNoticed SpellSacrSpi::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellSacrSpi::cast_(Actor* const caster) const
+{
   (void)caster;
 
   //Convert every SPI to HP
 
   const int PLAYER_SPI_CUR = Map::player->getSpi();
 
-  if(PLAYER_SPI_CUR > 0) {
+  if(PLAYER_SPI_CUR > 0)
+  {
     const int HP_DRAINED = PLAYER_SPI_CUR - 1;
     Map::player->hitSpi(HP_DRAINED, true);
     Map::player->restoreHp(HP_DRAINED, true, true);
@@ -574,13 +679,16 @@ SpellEffectNoticed SpellSacrSpi::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ ROGUE HIDE
-SpellEffectNoticed SpellCloudMinds::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellCloudMinds::cast_(Actor* const caster) const
+{
 
   (void)caster;
   Log::addMsg("I vanish from the minds of my enemies.");
 
-  for(Actor* actor : GameTime::actors_) {
-    if(actor != Map::player) {
+  for(Actor* actor : GameTime::actors_)
+  {
+    if(actor != Map::player)
+    {
       Mon* const mon = static_cast<Mon*>(actor);
       mon->awareCounter_ = 0;
     }
@@ -589,13 +697,16 @@ SpellEffectNoticed SpellCloudMinds::cast_(Actor* const caster) const {
 }
 
 //------------------------------------------------------------ BLESS
-SpellEffectNoticed SpellBless::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellBless::cast_(Actor* const caster) const
+{
   caster->getPropHandler().tryApplyProp(new PropBlessed(PropTurns::std));
 
   return SpellEffectNoticed::yes;
 }
 
-bool SpellBless::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellBless::allowMonCastNow(Mon& mon,
+                                 const bool losBlockers[MAP_W][MAP_H]) const
+{
   (void)losBlockers;
   vector<PropId> props;
   mon.getPropHandler().getAllActivePropIds(props);
@@ -604,10 +715,13 @@ bool SpellBless::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H])
 }
 
 //------------------------------------------------------------ TELEPORT
-SpellEffectNoticed SpellTeleport::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellTeleport::cast_(Actor* const caster) const
+{
 
-  if(caster != Map::player) {
-    if(Map::player->isSeeingActor(*caster, nullptr)) {
+  if(caster != Map::player)
+  {
+    if(Map::player->isSeeingActor(*caster, nullptr))
+    {
       Log::addMsg(caster->getNameThe() + " disappears in a blast of smoke!");
     }
   }
@@ -616,7 +730,9 @@ SpellEffectNoticed SpellTeleport::cast_(Actor* const caster) const {
   return SpellEffectNoticed::yes;
 }
 
-bool SpellTeleport::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellTeleport::allowMonCastNow(Mon& mon,
+                                    const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target                                   &&
          mon.isSeeingActor(*mon.target, losBlockers)  &&
          mon.getHp() <= (mon.getHpMax(true) / 2)      &&
@@ -624,7 +740,8 @@ bool SpellTeleport::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_
 }
 
 //------------------------------------------------------------ ELEMENTAL RES
-SpellEffectNoticed SpellElemRes::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellElemRes::cast_(Actor* const caster) const
+{
   const int DURATION = 20;
   PropHandler& propHlr = caster->getPropHandler();
   propHlr.tryApplyProp(new PropRFire(PropTurns::specific, DURATION));
@@ -633,39 +750,71 @@ SpellEffectNoticed SpellElemRes::cast_(Actor* const caster) const {
   return SpellEffectNoticed::yes;
 }
 
-bool SpellElemRes::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellElemRes::allowMonCastNow(Mon& mon,
+                                   const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target                                   &&
          mon.isSeeingActor(*mon.target, losBlockers)  &&
          Rnd::oneIn(3);
 }
 
 //------------------------------------------------------------ KNOCKBACK
-SpellEffectNoticed SpellKnockBack::cast_(Actor* const caster) const {
-  if(caster == Map::player) {
+SpellEffectNoticed SpellKnockBack::cast_(Actor* const caster) const
+{
+  Clr     msgClr            = clrMsgGood;
+  bool    isPlayerSeeingTgt = true;
+  string  tgtRefStr         = "me";
 
-  } else {
-    Log::addMsg("A force pushes me!", clrMsgBad);
-    KnockBack::tryKnockBack(*(Map::player), caster->pos, false);
+  if(caster->isPlayer())
+  {
+    //TODO Allow for player
   }
+  else //Caster is not player
+  {
+    Mon*    casterMon = static_cast<Mon*>(caster);
+    Actor*  tgt       = casterMon->target;
+    assert(tgt);
+
+    tgtRefStr         = tgt->getNameThe();
+
+    if(Map::player->isLeaderOf(*tgt))
+    {
+      msgClr = clrMsgBad;
+    }
+
+    isPlayerSeeingTgt = Map::player->isSeeingActor(*tgt, nullptr);
+  }
+
+  if(isPlayerSeeingTgt) {Log::addMsg("A force pushes " + tgtRefStr + "!", msgClr);}
+
+  KnockBack::tryKnockBack(*(Map::player), caster->pos, false);
+
   return SpellEffectNoticed::no;
 }
 
-bool SpellKnockBack::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellKnockBack::allowMonCastNow(Mon& mon,
+                                     const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target && mon.isSeeingActor(*mon.target, losBlockers);
 }
 
 //------------------------------------------------------------ PROP ON OTHERS
-SpellEffectNoticed SpellPropOnMon::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellPropOnMon::cast_(Actor* const caster) const
+{
 
   const PropId propId = getPropId();
 
-  if(caster == Map::player) {
+  if(caster->isPlayer())
+  {
     vector<Actor*> targets;
     Map::player->getSeenFoes(targets);
 
-    if(targets.empty()) {
+    if(targets.empty())
+    {
       return SpellEffectNoticed::no;
-    } else {
+    }
+    else
+    {
       vector<Pos> actorCells;
       actorCells.clear();
 
@@ -673,14 +822,17 @@ SpellEffectNoticed SpellPropOnMon::cast_(Actor* const caster) const {
 
       Render::drawBlastAtCellsWithVision(actorCells, clrMagenta);
 
-      for(Actor* actor : targets) {
+      for(Actor* actor : targets)
+      {
         PropHandler& propHlr = actor->getPropHandler();
         Prop* const prop = propHlr.mkProp(propId, PropTurns::std);
         propHlr.tryApplyProp(prop);
       }
       return SpellEffectNoticed::yes;
     }
-  } else {
+  }
+  else
+  {
     Render::drawBlastAtCellsWithVision(vector<Pos>(1, Map::player->pos), clrMagenta);
 
     PropHandler& propHandler = Map::player->getPropHandler();
@@ -691,27 +843,38 @@ SpellEffectNoticed SpellPropOnMon::cast_(Actor* const caster) const {
   }
 }
 
-bool SpellPropOnMon::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellPropOnMon::allowMonCastNow(Mon& mon,
+                                     const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target && mon.isSeeingActor(*mon.target, losBlockers);
 }
 
 //------------------------------------------------------------ DISEASE
-SpellEffectNoticed SpellDisease::cast_(Actor* const caster) const {
-  if(caster == Map::player) {
+SpellEffectNoticed SpellDisease::cast_(Actor* const caster) const
+{
+  if(caster->isPlayer())
+  {
     return SpellEffectNoticed::yes;
-  } else {
+  }
+  else
+  {
     auto* const tgt = static_cast<Mon*>(caster)->target;
     string actorName       = "me";
     bool isPlayerSeeingTgt = true;
-    if(tgt != Map::player) {
-      if(Map::player->isSeeingActor(*tgt, nullptr)) {
+    if(tgt != Map::player)
+    {
+      if(Map::player->isSeeingActor(*tgt, nullptr))
+      {
         isPlayerSeeingTgt = true;
         actorName         = tgt->getNameThe();
-      } else {
+      }
+      else
+      {
         isPlayerSeeingTgt = false;
       }
     }
-    if(isPlayerSeeingTgt) {
+    if(isPlayerSeeingTgt)
+    {
       Log::addMsg("A disease is starting to afflict " + actorName + "!", clrMsgBad);
     }
     tgt->getPropHandler().tryApplyProp(new PropDiseased(PropTurns::specific, 50));
@@ -719,14 +882,17 @@ SpellEffectNoticed SpellDisease::cast_(Actor* const caster) const {
   }
 }
 
-bool SpellDisease::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellDisease::allowMonCastNow(Mon& mon,
+                                   const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target                                   &&
          mon.isSeeingActor(*mon.target, losBlockers)  &&
          Rnd::coinToss();
 }
 
 //------------------------------------------------------------ SUMMON RANDOM
-SpellEffectNoticed SpellSummonRandom::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellSummonRandom::cast_(Actor* const caster) const
+{
   Pos summonPos(caster->pos);
 
   vector<Pos> freeCellsSeenByPlayer;
@@ -736,9 +902,12 @@ SpellEffectNoticed SpellSummonRandom::cast_(Actor* const caster) const {
   const int Y0 = max(0, playerPos.y - RADI);
   const int X1 = min(MAP_W, playerPos.x + RADI) - 1;
   const int Y1 = min(MAP_H, playerPos.y + RADI) - 1;
-  for(int x = X0; x <= X1; ++x) {
-    for(int y = Y0; y <= Y1; ++y) {
-      if(Map::cells[x][y].isSeenByPlayer) {
+  for(int x = X0; x <= X1; ++x)
+  {
+    for(int y = Y0; y <= Y1; ++y)
+    {
+      if(Map::cells[x][y].isSeenByPlayer)
+      {
         freeCellsSeenByPlayer.push_back(Pos(x, y));
       }
     }
@@ -747,31 +916,40 @@ SpellEffectNoticed SpellSummonRandom::cast_(Actor* const caster) const {
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
-  for(int i = 0; i < int(freeCellsSeenByPlayer.size()); ++i) {
+  for(int i = 0; i < int(freeCellsSeenByPlayer.size()); ++i)
+  {
     const Pos pos(freeCellsSeenByPlayer.at(i));
-    if(blocked[pos.x][pos.y]) {
+    if(blocked[pos.x][pos.y])
+    {
       freeCellsSeenByPlayer.erase(freeCellsSeenByPlayer.begin() + i);
       i--;
     }
   }
 
-  if(freeCellsSeenByPlayer.empty()) {
+  if(freeCellsSeenByPlayer.empty())
+  {
     vector<Pos> freeCellsVector;
     Utils::mkVectorFromBoolMap(false, blocked, freeCellsVector);
-    if(!freeCellsVector.empty()) {
+    if(!freeCellsVector.empty())
+    {
       sort(freeCellsVector.begin(), freeCellsVector.end(), IsCloserToPos(caster->pos));
       summonPos = freeCellsVector.at(0);
     }
-  } else {
+  }
+  else
+  {
     const int ELEMENT = Rnd::range(0, freeCellsSeenByPlayer.size() - 1);
     summonPos = freeCellsSeenByPlayer.at(ELEMENT);
   }
 
   vector<ActorId> summonBucket;
-  for(int i = 0; i < int(ActorId::END); ++i) {
+  for(int i = 0; i < int(ActorId::END); ++i)
+  {
     const ActorDataT& data = ActorData::data[i];
-    if(data.canBeSummoned) {
-      if(data.spawnMinDLVL <= caster->getData().spawnMinDLVL) {
+    if(data.canBeSummoned)
+    {
+      if(data.spawnMinDLVL <= caster->getData().spawnMinDLVL)
+      {
         summonBucket.push_back(ActorId(i));
       }
     }
@@ -781,60 +959,76 @@ SpellEffectNoticed SpellSummonRandom::cast_(Actor* const caster) const {
   Actor* const actor  = ActorFactory::mk(id, summonPos);
   Mon* mon        = static_cast<Mon*>(actor);
   mon->awareCounter_  = mon->getData().nrTurnsAwarePlayer;
-  if(caster == Map::player) {
+  if(caster->isPlayer())
+  {
     //Caster is player, set player as leader
     mon->leader = caster;
-  } else {
+  }
+  else
+  {
     //Caster is a monster, set monster or monster's leader as leader
     Actor* const casterLeader = static_cast<Mon*>(caster)->leader;
     mon->leader = casterLeader ? casterLeader : caster;
   }
-  if(Map::cells[summonPos.x][summonPos.y].isSeenByPlayer) {
+  if(Map::cells[summonPos.x][summonPos.y].isSeenByPlayer)
+  {
     Log::addMsg(mon->getNameA() + " appears.");
   }
   return SpellEffectNoticed::no;
 }
 
-bool SpellSummonRandom::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellSummonRandom::allowMonCastNow(Mon& mon,
+                                        const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target && (mon.isSeeingActor(*mon.target, losBlockers) || Rnd::oneIn(20));
 }
 
 //------------------------------------------------------------ HEAL SELF
-SpellEffectNoticed SpellHealSelf::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellHealSelf::cast_(Actor* const caster) const
+{
   //The spell effect is noticed if any hit points were restored
   return caster->restoreHp(999, true) ?
          SpellEffectNoticed::yes :
          SpellEffectNoticed::no;
 }
 
-bool SpellHealSelf::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellHealSelf::allowMonCastNow(Mon& mon,
+                                    const bool losBlockers[MAP_W][MAP_H]) const
+{
   (void)losBlockers;
   return mon.getHp() < mon.getHpMax(true);
 }
 
 //------------------------------------------------------------ MI-GO HYPNOSIS
-SpellEffectNoticed SpellMiGoHypnosis::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellMiGoHypnosis::cast_(Actor* const caster) const
+{
   (void)caster;
   Log::addMsg("There is a sharp droning in my head!");
 
-  if(Rnd::coinToss()) {
+  if(Rnd::coinToss())
+  {
     Map::player->getPropHandler().tryApplyProp(
       new PropFainted(PropTurns::specific, Rnd::range(2, 10)));
-  } else {
+  }
+  else
+  {
     Log::addMsg("I feel dizzy.");
   }
 
   return SpellEffectNoticed::yes;
 }
 
-bool SpellMiGoHypnosis::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellMiGoHypnosis::allowMonCastNow(Mon& mon,
+                                        const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target                                     &&
          mon.isSeeingActor(*(Map::player), losBlockers) &&
          Rnd::oneIn(4);
 }
 
 //------------------------------------------------------------ IMMOLATION
-SpellEffectNoticed SpellImmolation::cast_(Actor* const caster) const {
+SpellEffectNoticed SpellImmolation::cast_(Actor* const caster) const
+{
   (void)caster;
 
   Log::addMsg("Flames are rising around me!");
@@ -845,7 +1039,9 @@ SpellEffectNoticed SpellImmolation::cast_(Actor* const caster) const {
   return SpellEffectNoticed::yes;
 }
 
-bool SpellImmolation::allowMonCastNow(Mon& mon, const bool losBlockers[MAP_W][MAP_H]) const {
+bool SpellImmolation::allowMonCastNow(Mon& mon,
+                                      const bool losBlockers[MAP_W][MAP_H]) const
+{
   return mon.target                                   &&
          mon.isSeeingActor(*mon.target, losBlockers)  &&
          Rnd::oneIn(4);

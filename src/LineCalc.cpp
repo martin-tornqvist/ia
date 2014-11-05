@@ -7,18 +7,23 @@
 
 using namespace std;
 
-namespace LineCalc {
+namespace LineCalc
+{
 
-namespace {
+namespace
+{
 
 double      fovAbsDistances_[FOV_MAX_W_INT][FOV_MAX_W_INT];
 vector<Pos> fovDeltaLines_[FOV_MAX_W_INT][FOV_MAX_W_INT];
 
-void calcFovDeltaLines() {
+void calcFovDeltaLines()
+{
   const int R_INT = FOV_MAX_RADI_INT;
 
-  for(int deltaX = -R_INT; deltaX <= R_INT; deltaX++) {
-    for(int deltaY = -R_INT; deltaY <= R_INT; deltaY++) {
+  for(int deltaX = -R_INT; deltaX <= R_INT; deltaX++)
+  {
+    for(int deltaY = -R_INT; deltaY <= R_INT; deltaY++)
+    {
       const Pos origin(0, 0);
       const Pos target(Pos(deltaX, deltaY));
       vector<Pos> curLine;
@@ -28,9 +33,12 @@ void calcFovDeltaLines() {
   }
 }
 
-void calcfovAbsDistances_() {
-  for(int y = 0; y < FOV_MAX_W_INT; ++y) {
-    for(int x = 0; x < FOV_MAX_W_INT; ++x) {
+void calcfovAbsDistances_()
+{
+  for(int y = 0; y < FOV_MAX_W_INT; ++y)
+  {
+    for(int x = 0; x < FOV_MAX_W_INT; ++x)
+    {
       fovAbsDistances_[x][y] = 0;
     }
   }
@@ -44,8 +52,10 @@ void calcfovAbsDistances_() {
 
   const int R_INT = FOV_MAX_RADI_INT;
 
-  for(int x = 0; x <= R_INT * 2; ++x) {
-    for(int y = 0; y <= R_INT * 2; ++y) {
+  for(int x = 0; x <= R_INT * 2; ++x)
+  {
+    for(int y = 0; y <= R_INT * 2; ++y)
+    {
       deltaX = double(x);
       deltaX -= FOV_MAX_RADI_DB;
       deltaY = double(y);
@@ -58,17 +68,21 @@ void calcfovAbsDistances_() {
 
 } //Namespace
 
-void init() {
+void init()
+{
   calcfovAbsDistances_();
   calcFovDeltaLines();
 }
 
 const vector<Pos>* getFovDeltaLine(const Pos& delta,
-                                   const double& MAX_DIST_ABS) {
+                                   const double& MAX_DIST_ABS)
+{
   const int X = delta.x + FOV_MAX_RADI_INT;
   const int Y = delta.y + FOV_MAX_RADI_INT;
-  if(X >= 0 && Y >= 0 && X < FOV_MAX_W_INT && Y < FOV_MAX_W_INT) {
-    if(fovAbsDistances_[X][Y] <= MAX_DIST_ABS) {
+  if(X >= 0 && Y >= 0 && X < FOV_MAX_W_INT && Y < FOV_MAX_W_INT)
+  {
+    if(fovAbsDistances_[X][Y] <= MAX_DIST_ABS)
+    {
       return &(fovDeltaLines_[X][Y]);
     }
   }
@@ -77,10 +91,12 @@ const vector<Pos>* getFovDeltaLine(const Pos& delta,
 
 void calcNewLine(const Pos& origin, const Pos& target,
                  const bool SHOULD_STOP_AT_TARGET, const int CHEB_TRAVEL_LIMIT,
-                 const bool ALLOW_OUTSIDE_MAP, vector<Pos>& lineRef) {
+                 const bool ALLOW_OUTSIDE_MAP, vector<Pos>& lineRef)
+{
   lineRef.clear();
 
-  if(target == origin) {
+  if(target == origin)
+  {
     lineRef.push_back(origin);
     return;
   }
@@ -101,7 +117,8 @@ void calcNewLine(const Pos& origin, const Pos& target,
 
   const double STEP_SIZE_DB = 0.04;
 
-  for(double i = 0.0; i <= 9999.0; i += STEP_SIZE_DB) {
+  for(double i = 0.0; i <= 9999.0; i += STEP_SIZE_DB)
+  {
     curX_db += X_INCR_DB * STEP_SIZE_DB;
     curY_db += Y_INCR_DB * STEP_SIZE_DB;
 
@@ -110,13 +127,17 @@ void calcNewLine(const Pos& origin, const Pos& target,
     if(!ALLOW_OUTSIDE_MAP && !Utils::isPosInsideMap(curPos)) {return;}
 
     bool isPosOkToAdd = false;
-    if(lineRef.empty()) {
+    if(lineRef.empty())
+    {
       isPosOkToAdd = true;
-    } else {
+    }
+    else
+    {
       isPosOkToAdd = lineRef.back() != curPos;
     }
 
-    if(isPosOkToAdd) {
+    if(isPosOkToAdd)
+    {
       lineRef.push_back(curPos);
     }
 

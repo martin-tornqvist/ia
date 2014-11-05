@@ -16,7 +16,8 @@ using namespace std;
 
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(const Pos& pos, const Rigid* const mimicFeature, DoorSpawnState spawnState) :
-  Rigid(pos), mimicFeature_(mimicFeature), nrSpikes_(0) {
+  Rigid(pos), mimicFeature_(mimicFeature), nrSpikes_(0)
+{
 
   isHandledExternally_ = false;
 
@@ -30,38 +31,45 @@ Door::Door(const Pos& pos, const Rigid* const mimicFeature, DoorSpawnState spawn
                                     DoorSpawnState::closed)                     :
                                    spawnState;
 
-  switch(DoorSpawnState(doorState)) {
-    case DoorSpawnState::open: {
+  switch(DoorSpawnState(doorState))
+  {
+    case DoorSpawnState::open:
+    {
       isOpen_   = true;
       isStuck_  = false;
       isSecret_ = false;
     } break;
 
-    case DoorSpawnState::closed: {
+    case DoorSpawnState::closed:
+    {
       isOpen_   = false;
       isStuck_  = false;
       isSecret_ = false;
     } break;
 
-    case DoorSpawnState::stuck: {
+    case DoorSpawnState::stuck:
+    {
       isOpen_   = false;
       isStuck_  = true;
       isSecret_ = false;
     } break;
 
-    case DoorSpawnState::secret: {
+    case DoorSpawnState::secret:
+    {
       isOpen_   = false;
       isStuck_  = false;
       isSecret_ = true;
     } break;
 
-    case DoorSpawnState::secretAndStuck: {
+    case DoorSpawnState::secretAndStuck:
+    {
       isOpen_   = false;
       isStuck_  = true;
       isSecret_ = true;
     } break;
 
-    case DoorSpawnState::any: {
+    case DoorSpawnState::any:
+    {
       assert(false && "Should not happen");
       isOpen_   = false;
       isStuck_  = false;
@@ -72,22 +80,31 @@ Door::Door(const Pos& pos, const Rigid* const mimicFeature, DoorSpawnState spawn
   matl_ = Matl::wood;
 }
 
-void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
-  if(dmgType == DmgType::physical) {
-    if(dmgMethod == DmgMethod::forced) {
+void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
+{
+  if(dmgType == DmgType::physical)
+  {
+    if(dmgMethod == DmgMethod::forced)
+    {
       //---------------------------------------------------------------------- FORCED
       (void)actor;
       Map::put(new RubbleLow(pos_));
     }
 
     //---------------------------------------------------------------------- SHOTGUN
-    if(dmgMethod == DmgMethod::shotgun) {
+    if(dmgMethod == DmgMethod::shotgun)
+    {
       (void)actor;
-      if(!isOpen_) {
-        switch(matl_) {
-          case Matl::wood: {
-            if(Rnd::fraction(7, 10)) {
-              if(Map::isPosSeenByPlayer(pos_)) {
+      if(!isOpen_)
+      {
+        switch(matl_)
+        {
+          case Matl::wood:
+          {
+            if(Rnd::fraction(7, 10))
+            {
+              if(Map::isPosSeenByPlayer(pos_))
+              {
                 const string a = isSecret_ ? "A" : "The";
                 Log::addMsg(a + " door is blown to splinters!");
               }
@@ -106,26 +123,35 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
     }
 
     //---------------------------------------------------------------------- EXPLOSION
-    if(dmgMethod == DmgMethod::explosion) {
+    if(dmgMethod == DmgMethod::explosion)
+    {
       (void)actor;
       //TODO
     }
 
     //---------------------------------------------------------------------- HEAVY BLUNT
-    if(dmgMethod == DmgMethod::bluntHeavy) {
+    if(dmgMethod == DmgMethod::bluntHeavy)
+    {
       assert(actor);
-      switch(matl_) {
-        case Matl::wood: {
+      switch(matl_)
+      {
+        case Matl::wood:
+        {
           Fraction destrChance(6, 10);
-          if(actor == Map::player) {
+          if(actor == Map::player)
+          {
             if(PlayerBon::hasTrait(Trait::tough))   {destrChance.numerator += 2;}
             if(PlayerBon::hasTrait(Trait::rugged))  {destrChance.numerator += 2;}
 
-            if(Rnd::fraction(destrChance)) {
+            if(Rnd::fraction(destrChance))
+            {
 
             }
-          } else {
-            if(Rnd::fraction(destrChance)) {
+          }
+          else
+          {
+            if(Rnd::fraction(destrChance))
+            {
 
             }
           }
@@ -141,7 +167,8 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
     }
 
     //---------------------------------------------------------------------- KICK
-    if(dmgMethod == DmgMethod::kick) {
+    if(dmgMethod == DmgMethod::kick)
+    {
       assert(actor);
 
       const bool IS_PLAYER    = actor == Map::player;
@@ -152,9 +179,12 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 
       const bool IS_WEAK = find(begin(props), end(props), propWeakened) != end(props);
 
-      switch(matl_) {
-        case Matl::wood: {
-          if(IS_PLAYER) {
+      switch(matl_)
+      {
+        case Matl::wood:
+        {
+          if(IS_PLAYER)
+          {
             Fraction destrChance(4 - nrSpikes_, 10);
             destrChance.numerator = max(1, destrChance.numerator);
 
@@ -163,48 +193,68 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 
             if(IS_WEAK) {destrChance.numerator = 0;}
 
-            if(destrChance.numerator > 0) {
-              if(Rnd::fraction(destrChance)) {
+            if(destrChance.numerator > 0)
+            {
+              if(Rnd::fraction(destrChance))
+              {
                 Snd snd("", SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_,
                         actor, SndVol::low, AlertsMon::yes);
                 SndEmit::emitSnd(snd);
-                if(IS_CELL_SEEN) {
-                  if(isSecret_) {
+                if(IS_CELL_SEEN)
+                {
+                  if(isSecret_)
+                  {
                     Log::addMsg("A door crashes open!");
-                  } else {
+                  }
+                  else
+                  {
                     Log::addMsg("The door crashes open!");
                   }
-                } else {
+                }
+                else
+                {
                   Log::addMsg("I feel a door crashing open!");
                 }
                 Map::put(new RubbleLow(pos_));
-              } else { //Not broken
+              }
+              else     //Not broken
+              {
                 const SfxId sfx = isSecret_ ? SfxId::END : SfxId::doorBang;
                 Snd snd("", sfx, IgnoreMsgIfOriginSeen::no, pos_,
                         actor, SndVol::low, AlertsMon::yes);
                 SndEmit::emitSnd(snd);
               }
-            } else {
+            }
+            else
+            {
               if(IS_CELL_SEEN && !isSecret_) {Log::addMsg("It seems futile.");}
             }
-          } else { //Not player
+          }
+          else     //Not player
+          {
             Fraction destrChance(10 - (nrSpikes_ * 3), 100);
             destrChance.numerator = max(1, destrChance.numerator);
 
             if(IS_WEAK) {destrChance.numerator = 0;}
 
-            if(Rnd::fraction(destrChance)) {
+            if(Rnd::fraction(destrChance))
+            {
               Snd snd("I hear a door crashing open!",
                       SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, actor,
                       SndVol::high, AlertsMon::no);
               SndEmit::emitSnd(snd);
-              if(Map::player->isSeeingActor(*actor, nullptr)) {
+              if(Map::player->isSeeingActor(*actor, nullptr))
+              {
                 Log::addMsg("The door crashes open!");
-              } else if(IS_CELL_SEEN) {
+              }
+              else if(IS_CELL_SEEN)
+              {
                 Log::addMsg("A door crashes open!");
               }
               Map::put(new RubbleLow(pos_));
-            } else { //Not broken
+            }
+            else     //Not broken
+            {
               Snd snd("I hear a loud banging on a door.",
                       SfxId::doorBang, IgnoreMsgIfOriginSeen::no, pos_,
                       actor, SndVol::low, AlertsMon::no);
@@ -214,8 +264,10 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 
         } break;
 
-        case Matl::metal: {
-          if(IS_PLAYER && IS_CELL_SEEN && !isSecret_) {
+        case Matl::metal:
+        {
+          if(IS_PLAYER && IS_CELL_SEEN && !isSecret_)
+          {
             Log::addMsg("It seems futile.");
           }
         } break;
@@ -230,10 +282,13 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
   }
 
   //---------------------------------------------------------------------- FIRE
-  if(dmgMethod == DmgMethod::elemental) {
-    if(dmgType == DmgType::fire) {
+  if(dmgMethod == DmgMethod::elemental)
+  {
+    if(dmgType == DmgType::fire)
+    {
       (void)actor;
-      if(matl_ == Matl::wood) {
+      if(matl_ == Matl::wood)
+      {
         tryStartBurning(true);
       }
     }
@@ -312,8 +367,10 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //  }
 }
 
-IsDestroyed Door::onFinishedBurning() {
-  if(Map::isPosSeenByPlayer(pos_)) {
+IsDestroyed Door::onFinishedBurning()
+{
+  if(Map::isPosSeenByPlayer(pos_))
+  {
     Log::addMsg("The door burns down.");
   }
   RubbleLow* const rubble = new RubbleLow(pos_);
@@ -324,10 +381,12 @@ IsDestroyed Door::onFinishedBurning() {
 
 bool Door::canMoveCmn() const {return isOpen_;}
 
-bool Door::canMove(const vector<PropId>& actorsProps) const {
+bool Door::canMove(const vector<PropId>& actorsProps) const
+{
   if(isOpen_) {return true;}
 
-  for(PropId propId : actorsProps) {
+  for(PropId propId : actorsProps)
+  {
     if(propId == propEthereal || propId == propOoze) {return true;}
   }
 
@@ -338,15 +397,19 @@ bool Door::isLosPassable()     const {return isOpen_;}
 bool Door::isProjectilePassable() const {return isOpen_;}
 bool Door::isSmokePassable()      const {return isOpen_;}
 
-string Door::getName(const Article article) const {
+string Door::getName(const Article article) const
+{
   if(isSecret_) {return mimicFeature_->getName(article);}
 
   string ret = "";
 
-  if(getBurnState() == BurnState::burning) {
+  if(getBurnState() == BurnState::burning)
+  {
     ret = article == Article::a ? "a " : "the ";
     ret += "burning ";
-  } else {
+  }
+  else
+  {
     ret = article == Article::a ? (isOpen_ ? "an " : "a ") : "the ";
   }
 
@@ -356,11 +419,16 @@ string Door::getName(const Article article) const {
   return ret + "door";
 }
 
-Clr Door::getClr_() const {
-  if(isSecret_) {
+Clr Door::getClr_() const
+{
+  if(isSecret_)
+  {
     return mimicFeature_->getClr();
-  } else {
-    switch(matl_) {
+  }
+  else
+  {
+    switch(matl_)
+    {
       case Matl::wood:      return clrBrownDrk; break;
       case Matl::metal:     return clrGray;     break;
       case Matl::empty:
@@ -374,26 +442,35 @@ Clr Door::getClr_() const {
   return clrGray;
 }
 
-char Door::getGlyph() const {
+char Door::getGlyph() const
+{
   return isSecret_ ? mimicFeature_->getGlyph() : (isOpen_ ? 39 : '+');
 }
 
-TileId Door::getTile() const {
+TileId Door::getTile() const
+{
   return isSecret_ ? mimicFeature_->getTile() :
          (isOpen_ ? TileId::doorOpen : TileId::doorClosed);
 }
 
-Matl Door::getMatl() const {
+Matl Door::getMatl() const
+{
   return isSecret_ ? mimicFeature_->getMatl() : matl_;
 }
 
-void Door::bump(Actor& actorBumping) {
-  if(&actorBumping == Map::player) {
-    if(isSecret_) {
-      if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
+void Door::bump(Actor& actorBumping)
+{
+  if(&actorBumping == Map::player)
+  {
+    if(isSecret_)
+    {
+      if(Map::cells[pos_.x][pos_.y].isSeenByPlayer)
+      {
         TRACE << "Player bumped into secret door, with vision in cell" << endl;
         Log::addMsg("That way is blocked.");
-      } else {
+      }
+      else
+      {
         TRACE << "Player bumped into secret door, without vision in cell" << endl;
         Log::addMsg("I bump into something.");
       }
@@ -404,12 +481,16 @@ void Door::bump(Actor& actorBumping) {
   }
 }
 
-void Door::reveal(const bool ALLOW_MESSAGE) {
-  if(isSecret_) {
+void Door::reveal(const bool ALLOW_MESSAGE)
+{
+  if(isSecret_)
+  {
     isSecret_ = false;
-    if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
+    if(Map::cells[pos_.x][pos_.y].isSeenByPlayer)
+    {
       Render::drawMapAndInterface();
-      if(ALLOW_MESSAGE) {
+      if(ALLOW_MESSAGE)
+      {
         Log::addMsg("A secret is revealed.");
         Render::drawMapAndInterface();
       }
@@ -417,15 +498,18 @@ void Door::reveal(const bool ALLOW_MESSAGE) {
   }
 }
 
-void Door::playerTrySpotHidden() {
-  if(isSecret_) {
+void Door::playerTrySpotHidden()
+{
+  if(isSecret_)
+  {
     const int PLAYER_SKILL = Map::player->getData().abilityVals.getVal(
                                AbilityId::searching, true, *(Map::player));
     if(AbilityRoll::roll(PLAYER_SKILL) >= successSmall) {reveal(true);}
   }
 }
 
-bool Door::trySpike(Actor* actorTrying) {
+bool Door::trySpike(Actor* actorTrying)
+{
   const bool IS_PLAYER = actorTrying == Map::player;
   const bool TRYER_IS_BLIND = !actorTrying->getPropHandler().allowSee();
 
@@ -435,10 +519,14 @@ bool Door::trySpike(Actor* actorTrying) {
   nrSpikes_++;
   isStuck_ = true;
 
-  if(IS_PLAYER) {
-    if(!TRYER_IS_BLIND) {
+  if(IS_PLAYER)
+  {
+    if(!TRYER_IS_BLIND)
+    {
       Log::addMsg("I jam the door with a spike.");
-    } else {
+    }
+    else
+    {
       Log::addMsg("I jam a door with a spike.");
     }
   }
@@ -446,7 +534,8 @@ bool Door::trySpike(Actor* actorTrying) {
   return true;
 }
 
-void Door::tryClose(Actor* actorTrying) {
+void Door::tryClose(Actor* actorTrying)
+{
   const bool IS_PLAYER = actorTrying == Map::player;
   const bool TRYER_IS_BLIND = !actorTrying->getPropHandler().allowSee();
   //const bool PLAYER_SEE_DOOR    = Map::playerVision[pos_.x][pos_.y];
@@ -459,8 +548,10 @@ void Door::tryClose(Actor* actorTrying) {
 
   bool isClosable = true;
 
-  if(isHandledExternally_) {
-    if(IS_PLAYER) {
+  if(isHandledExternally_)
+  {
+    if(IS_PLAYER)
+    {
       Log::addMsg(
         "This door refuses to be closed, perhaps it is handled elsewhere?");
       Render::drawMapAndInterface();
@@ -469,10 +560,13 @@ void Door::tryClose(Actor* actorTrying) {
   }
 
   //Already closed?
-  if(isClosable) {
-    if(!isOpen_) {
+  if(isClosable)
+  {
+    if(!isOpen_)
+    {
       isClosable = false;
-      if(IS_PLAYER) {
+      if(IS_PLAYER)
+      {
         if(!TRYER_IS_BLIND)
           Log::addMsg("I see nothing there to close.");
         else Log::addMsg("I find nothing there to close.");
@@ -481,69 +575,96 @@ void Door::tryClose(Actor* actorTrying) {
   }
 
   //Blocked?
-  if(isClosable) {
+  if(isClosable)
+  {
     bool isblockedByActor = false;
-    for(Actor* actor : GameTime::actors_) {
-      if(actor->pos == pos_) {
+    for(Actor* actor : GameTime::actors_)
+    {
+      if(actor->pos == pos_)
+      {
         isblockedByActor = true;
         break;
       }
     }
-    if(isblockedByActor || Map::cells[pos_.x][pos_.y].item) {
+    if(isblockedByActor || Map::cells[pos_.x][pos_.y].item)
+    {
       isClosable = false;
-      if(IS_PLAYER) {
-        if(!TRYER_IS_BLIND) {
+      if(IS_PLAYER)
+      {
+        if(!TRYER_IS_BLIND)
+        {
           Log::addMsg("The door is blocked.");
-        } else {
+        }
+        else
+        {
           Log::addMsg("Something is blocking the door.");
         }
       }
     }
   }
 
-  if(isClosable) {
+  if(isClosable)
+  {
     //Door is in correct state for closing (open, working, not blocked)
 
-    if(!TRYER_IS_BLIND) {
+    if(!TRYER_IS_BLIND)
+    {
       isOpen_ = false;
-      if(IS_PLAYER) {
+      if(IS_PLAYER)
+      {
         Snd snd("", SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_,
                 actorTrying, SndVol::low, AlertsMon::yes);
         SndEmit::emitSnd(snd);
         Log::addMsg("I close the door.");
-      } else {
+      }
+      else
+      {
         Snd snd("I hear a door closing.",
                 SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
                 SndVol::low, AlertsMon::no);
         SndEmit::emitSnd(snd);
-        if(PLAYER_SEE_TRYER) {
+        if(PLAYER_SEE_TRYER)
+        {
           Log::addMsg(actorTrying->getNameThe() + " closes a door.");
         }
       }
-    } else {
-      if(Rnd::percentile() < 50) {
+    }
+    else
+    {
+      if(Rnd::percentile() < 50)
+      {
         isOpen_ = false;
-        if(IS_PLAYER) {
+        if(IS_PLAYER)
+        {
           Snd snd("", SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMon::yes);
           SndEmit::emitSnd(snd);
           Log::addMsg("I fumble with a door and succeed to close it.");
-        } else {
+        }
+        else
+        {
           Snd snd("I hear a door closing.",
                   SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
                   SndVol::low, AlertsMon::no);
           SndEmit::emitSnd(snd);
-          if(PLAYER_SEE_TRYER) {
+          if(PLAYER_SEE_TRYER)
+          {
             Log::addMsg(actorTrying->getNameThe() +
                         "fumbles about and succeeds to close a door.");
           }
         }
-      } else {
-        if(IS_PLAYER) {
+      }
+      else
+      {
+        if(IS_PLAYER)
+        {
           Log::addMsg(
             "I fumble blindly with a door and fail to close it.");
-        } else {
-          if(PLAYER_SEE_TRYER) {
+        }
+        else
+        {
+          if(PLAYER_SEE_TRYER)
+          {
             Log::addMsg(actorTrying->getNameThe() +
                         " fumbles blindly and fails to close a door.");
           }
@@ -555,7 +676,8 @@ void Door::tryClose(Actor* actorTrying) {
   if(!isOpen_ && isClosable) {GameTime::actorDidAct();}
 }
 
-void Door::tryOpen(Actor* actorTrying) {
+void Door::tryOpen(Actor* actorTrying)
+{
   TRACE_FUNC_BEGIN;
   const bool IS_PLAYER        = actorTrying == Map::player;
   const bool TRYER_IS_BLIND   = !actorTrying->getPropHandler().allowSee();
@@ -566,8 +688,10 @@ void Door::tryOpen(Actor* actorTrying) {
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true : Map::player->isSeeingActor(*actorTrying, blocked);
 
-  if(isHandledExternally_) {
-    if(IS_PLAYER) {
+  if(isHandledExternally_)
+  {
+    if(IS_PLAYER)
+    {
       Log::addMsg(
         "I see no way to open this door, perhaps it is opened elsewhere?");
       Render::drawMapAndInterface();
@@ -575,70 +699,96 @@ void Door::tryOpen(Actor* actorTrying) {
     return;
   }
 
-  if(isStuck_) {
+  if(isStuck_)
+  {
     TRACE << "Is stuck" << endl;
 
-    if(IS_PLAYER) {
+    if(IS_PLAYER)
+    {
       Log::addMsg("The door seems to be stuck.");
     }
 
-  } else {
+  }
+  else
+  {
     TRACE << "Is not stuck" << endl;
-    if(!TRYER_IS_BLIND) {
+    if(!TRYER_IS_BLIND)
+    {
       TRACE << "Tryer can see, opening" << endl;
       isOpen_ = true;
-      if(IS_PLAYER) {
+      if(IS_PLAYER)
+      {
         Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_,
                 actorTrying, SndVol::low, AlertsMon::yes);
         SndEmit::emitSnd(snd);
         Log::addMsg("I open the door.");
-      } else {
+      }
+      else
+      {
         Snd snd("I hear a door open.", SfxId::doorOpen,
                 IgnoreMsgIfOriginSeen::yes, pos_, actorTrying, SndVol::low,
                 AlertsMon::no);
         SndEmit::emitSnd(snd);
-        if(PLAYER_SEE_TRYER) {
+        if(PLAYER_SEE_TRYER)
+        {
           Log::addMsg(actorTrying->getNameThe() + " opens a door.");
-        } else if(PLAYER_SEE_DOOR) {
+        }
+        else if(PLAYER_SEE_DOOR)
+        {
           Log::addMsg("I see a door opening.");
         }
       }
-    } else {
-      if(Rnd::percentile() < 50) {
+    }
+    else
+    {
+      if(Rnd::percentile() < 50)
+      {
         TRACE << "Tryer is blind, but open succeeded anyway" << endl;
         isOpen_ = true;
-        if(IS_PLAYER) {
+        if(IS_PLAYER)
+        {
           Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMon::yes);
           SndEmit::emitSnd(snd);
           Log::addMsg("I fumble with a door and succeed to open it.");
-        } else {
+        }
+        else
+        {
           Snd snd("I hear something open a door clumsily.", SfxId::doorOpen,
                   IgnoreMsgIfOriginSeen::yes, pos_, actorTrying, SndVol::low,
                   AlertsMon::no);
           SndEmit::emitSnd(snd);
-          if(PLAYER_SEE_TRYER) {
+          if(PLAYER_SEE_TRYER)
+          {
             Log::addMsg(actorTrying->getNameThe() +
                         "fumbles about and succeeds to open a door.");
-          } else if(PLAYER_SEE_DOOR) {
+          }
+          else if(PLAYER_SEE_DOOR)
+          {
             Log::addMsg("I see a door open clumsily.");
           }
         }
-      } else {
+      }
+      else
+      {
         TRACE << "Tryer is blind, and open failed" << endl;
-        if(IS_PLAYER) {
+        if(IS_PLAYER)
+        {
           Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos_,
                   actorTrying, SndVol::low, AlertsMon::yes);
           SndEmit::emitSnd(snd);
           Log::addMsg("I fumble blindly with a door and fail to open it.");
-        } else {
+        }
+        else
+        {
           //Emitting the sound from the actor instead of the door, because the
           //sound message should be received even if the door is seen
           Snd snd("I hear something attempting to open a door.", SfxId::END,
                   IgnoreMsgIfOriginSeen::yes, actorTrying->pos, actorTrying,
                   SndVol::low, AlertsMon::no);
           SndEmit::emitSnd(snd);
-          if(PLAYER_SEE_TRYER) {
+          if(PLAYER_SEE_TRYER)
+          {
             Log::addMsg(actorTrying->getNameThe() +
                         " fumbles blindly and fails to open a door.");
           }
@@ -648,9 +798,11 @@ void Door::tryOpen(Actor* actorTrying) {
     }
   }
 
-  if(isOpen_) {
+  if(isOpen_)
+  {
     TRACE << "Open was successful" << endl;
-    if(isSecret_) {
+    if(isSecret_)
+    {
       TRACE << "Was secret, now revealing" << endl;
       reveal(true);
     }
@@ -659,7 +811,8 @@ void Door::tryOpen(Actor* actorTrying) {
   }
 }
 
-bool Door::open() {
+bool Door::open()
+{
   isOpen_   = true;
   isSecret_ = false;
   isStuck_  = false;

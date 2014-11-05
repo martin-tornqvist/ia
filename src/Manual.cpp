@@ -10,36 +10,50 @@
 
 using namespace std;
 
-namespace Manual {
+namespace Manual
+{
 
-namespace {
+namespace
+{
 
 vector<string> lines_;
 
-void readFile() {
+void readFile()
+{
   string curLine;
   ifstream file("manual.txt");
 
   vector<string> formatted;
 
-  if(file.is_open()) {
-    while(getline(file, curLine)) {
-      if(curLine.empty()) {
+  if(file.is_open())
+  {
+    while(getline(file, curLine))
+    {
+      if(curLine.empty())
+      {
         lines_.push_back(curLine);
-      } else {
+      }
+      else
+      {
         //Do not format lines that start with two spaces
         bool shouldFormatLine = true;
-        if(curLine.size() > 1) {
-          if(curLine.at(0) == ' ' && curLine.at(1) == ' ') {
+        if(curLine.size() > 1)
+        {
+          if(curLine.at(0) == ' ' && curLine.at(1) == ' ')
+          {
             shouldFormatLine = false;
           }
         }
-        if(shouldFormatLine) {
+        if(shouldFormatLine)
+        {
           TextFormatting::lineToLines(curLine, MAP_W - 3, formatted);
-          for(unsigned int i = 0; i < formatted.size(); ++i) {
+          for(unsigned int i = 0; i < formatted.size(); ++i)
+          {
             lines_.push_back(formatted.at(i));
           }
-        } else {
+        }
+        else
+        {
           curLine.erase(curLine.begin());
           lines_.push_back(curLine);
         }
@@ -50,7 +64,8 @@ void readFile() {
   file.close();
 }
 
-void drawManualInterface() {
+void drawManualInterface()
+{
   const string decorationLine(MAP_W, '-');
 
   const int X_LABEL = 3;
@@ -66,11 +81,13 @@ void drawManualInterface() {
 
 } //namespace
 
-void init() {
+void init()
+{
   readFile();
 }
 
-void run() {
+void run()
+{
   const int LINE_JUMP           = 3;
   const int NR_LINES_TOT        = lines_.size();
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
@@ -78,11 +95,13 @@ void run() {
   int topNr = 0;
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
-  while(true) {
+  while(true)
+  {
     Render::clearScreen();
     drawManualInterface();
     int yPos = 1;
-    for(int i = topNr; i <= btmNr; ++i) {
+    for(int i = topNr; i <= btmNr; ++i)
+    {
       Render::drawText(lines_.at(i), Panel::screen, Pos(0, yPos++),
                        clrWhite);
     }
@@ -90,16 +109,24 @@ void run() {
 
     const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j') {
+    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
+    {
       topNr += LINE_JUMP;
-      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
+      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+      {
         topNr = 0;
-      } else {
+      }
+      else
+      {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
-    } else if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k') {
+    }
+    else if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
+    {
       topNr = max(0, topNr - LINE_JUMP);
-    } else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
+    }
+    else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    {
       break;
     }
     btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);

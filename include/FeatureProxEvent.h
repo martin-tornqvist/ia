@@ -5,7 +5,8 @@
 
 #include "FeatureMob.h"
 
-class ProxEvent: public Mob {
+class ProxEvent: public Mob
+{
 public:
   ~ProxEvent() {}
 
@@ -17,7 +18,8 @@ protected:
   virtual void onPlayerAdj() = 0;
 };
 
-class ProxEventWallCrumble: public ProxEvent {
+class ProxEventWallCrumble: public ProxEvent
+{
 public:
   ProxEventWallCrumble(Pos pos, std::vector<Pos>& walls, std::vector<Pos>& inner) :
     ProxEvent(pos), wallCells_(walls), innerCells_(inner) {}
@@ -27,7 +29,8 @@ public:
 
   FeatureId getId() const override {return FeatureId::proxEventWallCrumble;}
 
-  std::string getName(const Article article) const override {
+  std::string getName(const Article article) const override
+  {
     (void)article;
     return "";
   }

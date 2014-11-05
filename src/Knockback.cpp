@@ -17,15 +17,19 @@
 
 using namespace std;
 
-namespace KnockBack {
+namespace KnockBack
+{
 
 void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
-                  const bool IS_SPIKE_GUN, const bool IS_MSG_ALLOWED) {
+                  const bool IS_SPIKE_GUN, const bool IS_MSG_ALLOWED)
+{
 
   const bool DEFENDER_IS_MON = &defender != Map::player;
 
-  if(DEFENDER_IS_MON || !Config::isBotPlaying()) {
-    if(defender.getData().actorSize <= actorSize_giant) {
+  if(DEFENDER_IS_MON || !Config::isBotPlaying())
+  {
+    if(defender.getData().actorSize <= actorSize_giant)
+    {
 
       vector<PropId> props;
       defender.getPropHandler().getAllActivePropIds(props);
@@ -41,7 +45,8 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
 //      const bool IS_NAILED = defender.getPropHandler().hasProp(propNailed);
 
-      for(int i = 0; i < KNOCK_BACK_RANGE; ++i) {
+      for(int i = 0; i < KNOCK_BACK_RANGE; ++i)
+      {
 
         const Pos newPos = defender.pos + delta;
 
@@ -53,7 +58,8 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
         if(
           (ACTOR_CAN_BE_KNOCKED_BACK) &&
-          (!CELL_BLOCKED || CELL_IS_BOTTOMLESS)) {
+          (!CELL_BLOCKED || CELL_IS_BOTTOMLESS))
+        {
 
           bool losBlockers[MAP_W][MAP_H];
           MapParse::parse(CellPred::BlocksLos(), losBlockers);
@@ -61,11 +67,16 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
             DEFENDER_IS_MON ? Map::player->isSeeingActor(defender, blocked) :
             true;
 
-          if(i == 0) {
-            if(IS_MSG_ALLOWED) {
-              if(DEFENDER_IS_MON && PLAYER_SEE_DEFENDER) {
+          if(i == 0)
+          {
+            if(IS_MSG_ALLOWED)
+            {
+              if(DEFENDER_IS_MON && PLAYER_SEE_DEFENDER)
+              {
                 Log::addMsg(defender.getNameThe() + " is knocked back!");
-              } else {
+              }
+              else
+              {
                 Log::addMsg("I am knocked back!");
               }
             }
@@ -79,12 +90,16 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           SdlWrapper::sleep(Config::getDelayProjectileDraw());
 
-          if(CELL_IS_BOTTOMLESS) {
-            if(DEFENDER_IS_MON && PLAYER_SEE_DEFENDER) {
+          if(CELL_IS_BOTTOMLESS)
+          {
+            if(DEFENDER_IS_MON && PLAYER_SEE_DEFENDER)
+            {
               Log::addMsg(
                 defender.getNameThe() + " plummets down the depths.",
                 clrMsgGood);
-            } else {
+            }
+            else
+            {
               Log::addMsg("I plummet down the depths!", clrMsgBad);
             }
             defender.die(true, false, false);
@@ -97,25 +112,32 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           for(
             unsigned int mobIndex = 0;
             mobIndex < mobs.size();
-            mobIndex++) {
+            mobIndex++)
+          {
             mobs.at(mobIndex)->bump(defender);
           }
 
-          if(!defender.isAlive()) {
+          if(!defender.isAlive())
+          {
             return;
           }
 
           Rigid* const f = Map::cells[defender.pos.x][defender.pos.y].rigid;
           f->bump(defender);
 
-          if(!defender.isAlive()) {
+          if(!defender.isAlive())
+          {
             return;
           }
-        } else {
+        }
+        else
+        {
           // Defender nailed to a wall from a spike gun?
-          if(IS_SPIKE_GUN) {
+          if(IS_SPIKE_GUN)
+          {
             Rigid* const f = Map::cells[newPos.x][newPos.y].rigid;
-            if(!f->isLosPassable()) {
+            if(!f->isLosPassable())
+            {
               defender.getPropHandler().tryApplyProp(
                 new PropNailed(PropTurns::indefinite));
             }

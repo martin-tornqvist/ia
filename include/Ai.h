@@ -8,9 +8,11 @@
 
 class Mon;
 
-namespace Ai {
+namespace Ai
+{
 
-namespace Action {
+namespace Action
+{
 
 bool castRandomSpellIfAware(Mon& mon);
 
@@ -30,7 +32,8 @@ bool stepToLairIfLos(Mon& mon, const Pos& lairCell);
 
 } //Action
 
-namespace Info {
+namespace Info
+{
 
 bool lookBecomePlayerAware(Mon& mon);
 

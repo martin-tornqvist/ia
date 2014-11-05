@@ -13,7 +13,8 @@ enum class ItemId;
 
 enum class SlotId {wielded, wieldedAlt, thrown, body, head, END};
 
-struct InvSlot {
+struct InvSlot
+{
   InvSlot(SlotId id_, std::string name_) : id(id_), name(name_), item(nullptr) {}
 
   InvSlot() : id(SlotId::wielded), name(""), item(nullptr) {}
@@ -23,7 +24,8 @@ struct InvSlot {
   Item*       item;
 };
 
-class Inventory {
+class Inventory
+{
 public:
   Inventory();
 

@@ -14,9 +14,11 @@
 
 using namespace std;
 
-namespace Kick {
+namespace Kick
+{
 
-void playerKick() {
+void playerKick()
+{
   TRACE_FUNC_BEGIN;
 
   Log::clearLog();
@@ -25,12 +27,15 @@ void playerKick() {
   Pos kickPos(Map::player->pos + DirUtils::getOffset(Query::dir()));
   Log::clearLog();
 
-  if(kickPos != Map::player->pos) {
+  if(kickPos != Map::player->pos)
+  {
     //Kick living actor?
     Actor* livingActor = Utils::getFirstActorAtPos(kickPos, ActorState::alive);
-    if(livingActor) {
+    if(livingActor)
+    {
       TRACE << "Actor found at kick pos, attempting to kick actor" << endl;
-      if(Map::player->getPropHandler().allowAttackMelee(true)) {
+      if(Map::player->getPropHandler().allowAttackMelee(true))
+      {
         TRACE << "Player is allowed to do melee attack" << endl;
         bool blocked[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksLos(), blocked);
@@ -44,7 +49,8 @@ void playerKick() {
 
     //Kick corpse?
     Actor* deadActor = Utils::getFirstActorAtPos(kickPos, ActorState::corpse);
-    if(deadActor) {
+    if(deadActor)
+    {
       const bool IS_SEEING_CELL = Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
       const string corpseName   = IS_SEEING_CELL ? deadActor->getCorpseNameA() :
                                   "a corpse";

@@ -13,7 +13,8 @@ enum class SndVol                 {low, high};
 enum class AlertsMon         {no, yes};
 enum class IgnoreMsgIfOriginSeen  {no, yes};
 
-class Snd {
+class Snd
+{
 public:
   Snd(
     const std::string& msg,
@@ -34,10 +35,12 @@ public:
   inline SfxId getSfx() const {return sfx_;}
   inline void clearMsg() {msg_ = "";}
 
-  inline bool isMsgIgnoredIfOriginSeen() const {
+  inline bool isMsgIgnoredIfOriginSeen() const
+  {
     return isMsgIgnoredIfOriginSeen_ == IgnoreMsgIfOriginSeen::yes;
   }
-  inline bool isAlertingMon() const {
+  inline bool isAlertingMon() const
+  {
     return isAlertingMon_ == AlertsMon::yes;
   }
 
@@ -45,7 +48,8 @@ public:
   inline Actor* getActorWhoMadeSound()  const {return actorWhoMadeSound_;}
   inline int isLoud()                   const {return vol_ == SndVol::high;}
 
-  inline void addString(const std::string& str) {
+  inline void addString(const std::string& str)
+  {
     msg_ += str;
   }
 
@@ -59,7 +63,8 @@ private:
   AlertsMon isAlertingMon_;
 };
 
-namespace SndEmit {
+namespace SndEmit
+{
 
 void emitSnd(Snd snd);
 

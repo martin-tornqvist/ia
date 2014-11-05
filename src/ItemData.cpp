@@ -46,7 +46,8 @@ ItemDataT::ItemDataT(const ItemId id_) :
   landOnHardSfx(),
   melee(MeleeItemData()),
   ranged(RangedItemData()),
-  armor(ArmorItemData()) {
+  armor(ArmorItemData())
+{
 
   baseDescr.clear();
   nativeRooms.clear();
@@ -66,7 +67,8 @@ ItemDataT::MeleeItemData::MeleeItemData() :
   hitHardSfx(SfxId::END),
   missSfx(SfxId::END) {}
 
-ItemDataT::MeleeItemData::~MeleeItemData() {
+ItemDataT::MeleeItemData::~MeleeItemData()
+{
   if(propApplied) {delete propApplied;}
 }
 
@@ -98,7 +100,8 @@ ItemDataT::RangedItemData::RangedItemData() :
   reloadSfx(SfxId::END),
   propApplied(nullptr) {}
 
-ItemDataT::RangedItemData::~RangedItemData() {
+ItemDataT::RangedItemData::~RangedItemData()
+{
   if(propApplied) {delete propApplied;}
 }
 
@@ -106,25 +109,32 @@ ItemDataT::ArmorItemData::ArmorItemData() :
   absorptionPoints(0),
   dmgToDurabilityFactor(0.0) {}
 
-namespace ItemData {
+namespace ItemData
+{
 
 ItemDataT* data[int(ItemId::END)];
 
-namespace {
+namespace
+{
 
 void addFeatureFoundIn(ItemDataT& data, const FeatureId featureId,
-                       const int CHANCE_TO_INCL = 100) {
+                       const int CHANCE_TO_INCL = 100)
+{
   data.featuresCanBeFoundIn.push_back(pair<FeatureId, int>(featureId, CHANCE_TO_INCL));
 }
 
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
-void resetData(ItemDataT& d, ItemType const itemType) {
-  switch(itemType) {
-    case ItemType::general: {
+void resetData(ItemDataT& d, ItemType const itemType)
+{
+  switch(itemType)
+  {
+    case ItemType::general:
+    {
       d = ItemDataT(d.id);
     } break;
 
-    case ItemType::meleeWpn: {
+    case ItemType::meleeWpn:
+    {
       resetData(d, ItemType::general);
       d.isStackable = false;
       d.itemWeight = itemWeight_medium;
@@ -138,7 +148,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.melee.hitHardSfx = SfxId::hitHard;
     } break;
 
-    case ItemType::meleeWpnIntr: {
+    case ItemType::meleeWpnIntr:
+    {
       resetData(d, ItemType::meleeWpn);
       d.isIntrinsic = true;
       d.spawnStdRange = Range(-1, -1);
@@ -148,7 +159,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.melee.missSfx = SfxId::missMedium;
     } break;
 
-    case ItemType::rangedWpn: {
+    case ItemType::rangedWpn:
+    {
       resetData(d, ItemType::general);
       d.isStackable = false;
       d.itemWeight = itemWeight_medium;
@@ -168,7 +180,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.ranged.sndVol = SndVol::high;
     } break;
 
-    case ItemType::rangedWpnIntr: {
+    case ItemType::rangedWpnIntr:
+    {
       resetData(d, ItemType::rangedWpn);
       d.isIntrinsic = true;
       d.ranged.hasInfiniteAmmo = true;
@@ -178,7 +191,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.ranged.sndVol = SndVol::low;
     } break;
 
-    case ItemType::throwingWpn: {
+    case ItemType::throwingWpn:
+    {
       resetData(d, ItemType::general);
       d.itemWeight = itemWeight_extraLight;
       d.isStackable = true;
@@ -187,7 +201,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.ranged.sndVol = SndVol::low;
     } break;
 
-    case ItemType::ammo: {
+    case ItemType::ammo:
+    {
       resetData(d, ItemType::general);
       d.itemWeight = itemWeight_extraLight;
       d.glyph = '{';
@@ -197,7 +212,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.spawnStdRange.upper = FIRST_CAVERN_LVL - 1;
     } break;
 
-    case ItemType::ammoClip: {
+    case ItemType::ammoClip:
+    {
       resetData(d, ItemType::ammo);
       d.itemWeight = itemWeight_light;
       d.isStackable = false;
@@ -205,7 +221,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.spawnStdRange.upper = FIRST_CAVERN_LVL - 1;
     } break;
 
-    case ItemType::scroll: {
+    case ItemType::scroll:
+    {
       resetData(d, ItemType::general);
       d.baseDescr = {"A short transcription of an eldritch incantation. There is a "
                      "strange aura about it, as if some power was imbued in the paper "
@@ -229,7 +246,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       addFeatureFoundIn(d, FeatureId::cocoon, 25);
     } break;
 
-    case ItemType::potion: {
+    case ItemType::potion:
+    {
       resetData(d, ItemType::general);
       d.baseDescr = {"A small glass bottle containing a mysterious concoction."};
       d.itemValue = ItemValue::minorTreasure;
@@ -250,7 +268,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       addFeatureFoundIn(d, FeatureId::cocoon, 25);
     } break;
 
-    case ItemType::device: {
+    case ItemType::device:
+    {
       resetData(d, ItemType::general);
       d.baseNameUnid = ItemName("Strange Device", "Strange Devices", "A Strange Device");
       d.baseDescr = {"A small piece of machinery. It could not possibly have been "
@@ -269,7 +288,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.landOnHardSfx = SfxId::metalClank;
     } break;
 
-    case ItemType::armor: {
+    case ItemType::armor:
+    {
       resetData(d, ItemType::general);
       d.itemWeight = itemWeight_heavy;
       d.glyph = '[';
@@ -278,7 +298,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
       d.isStackable = false;
     } break;
 
-    case ItemType::explosive: {
+    case ItemType::explosive:
+    {
       resetData(d, ItemType::general);
       d.itemWeight = itemWeight_light;
       d.isExplosive = true;
@@ -291,7 +312,8 @@ void resetData(ItemDataT& d, ItemType const itemType) {
   }
 }
 
-void setDmgFromMonId(ItemDataT& itemData, const ActorId id)  {
+void setDmgFromMonId(ItemDataT& itemData, const ActorId id)
+{
   const auto& actorData     = ActorData::data[int(id)];
   itemData.melee.dmg        = pair<int, int>(1, actorData.dmgMelee);
   itemData.ranged.dmg       = DiceParam(1, actorData.dmgRanged, 0);
@@ -299,7 +321,8 @@ void setDmgFromMonId(ItemDataT& itemData, const ActorId id)  {
 }
 
 //------------------------------- LIST OF ITEMS
-void initDataList() {
+void initDataList()
+{
   ItemDataT* d = nullptr;
 
   d = new ItemDataT(ItemId::trapezohedron);
@@ -1539,35 +1562,43 @@ void initDataList() {
 
 } //namespace
 
-void init() {
+void init()
+{
   TRACE_FUNC_BEGIN;
   initDataList();
   TRACE_FUNC_END;
 }
 
-void cleanup() {
+void cleanup()
+{
   TRACE_FUNC_BEGIN;
   for(size_t i = 0; i < int(ItemId::END); ++i) delete data[i];
   TRACE_FUNC_END;
 }
 
 
-void storeToSaveLines(vector<string>& lines) {
-  for(int i = 0; i < int(ItemId::END); ++i) {
+void storeToSaveLines(vector<string>& lines)
+{
+  for(int i = 0; i < int(ItemId::END); ++i)
+  {
     lines.push_back(data[i]->isIdentified ? "1" : "0");
 
-    if(data[i]->isScroll) {
+    if(data[i]->isScroll)
+    {
       lines.push_back(data[i]->isTried ? "1" : "0");
     }
   }
 }
 
-void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 0; i < int(ItemId::END); ++i) {
+void setupFromSaveLines(vector<string>& lines)
+{
+  for(int i = 0; i < int(ItemId::END); ++i)
+  {
     data[i]->isIdentified = lines.front() == "0" ? false : true;
     lines.erase(begin(lines));
 
-    if(data[i]->isScroll) {
+    if(data[i]->isScroll)
+    {
       data[i]->isTried = lines.front() == "0" ? false : true;
       lines.erase(begin(lines));
     }
@@ -1576,7 +1607,8 @@ void setupFromSaveLines(vector<string>& lines) {
 
 //TODO Remove this function
 bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
-                   const bool IS_MELEE) {
+                   const bool IS_MELEE)
+{
   (void)data1;
   (void)data2;
   (void)IS_MELEE;

@@ -11,7 +11,8 @@
 
 enum class MapTemplId {church, egypt, leng, END};
 
-struct MapTemplCell {
+struct MapTemplCell
+{
   MapTemplCell(FeatureId featureId_ = FeatureId::END,
                ActorId actorId_     = ActorId::END,
                ItemId itemId_       = ItemId::END,
@@ -27,7 +28,8 @@ struct MapTemplCell {
   int       val; //Can be used for different things depending on context
 };
 
-struct MapTempl {
+struct MapTempl
+{
 public:
   MapTempl() {cells_.clear();}
 
@@ -41,7 +43,8 @@ private:
   std::vector< std::vector<MapTemplCell> > cells_;
 };
 
-namespace MapTemplHandling {
+namespace MapTemplHandling
+{
 
 void init();
 

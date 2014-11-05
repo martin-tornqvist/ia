@@ -14,17 +14,21 @@
 
 using namespace std;
 
-namespace DungeonMaster {
+namespace DungeonMaster
+{
 
-namespace {
+namespace
+{
 
 int       xpForLvl_[PLAYER_MAX_CLVL + 1];
 int       clvl_  = 0;
 int       xp_    = 0;
 TimeData  timeStarted_;
 
-void playerGainLvl() {
-  if(Map::player->isAlive()) {
+void playerGainLvl()
+{
+  if(Map::player->isAlive())
+  {
     clvl_++;
 
     Log::addMsg("Welcome to level " + toStr(clvl_) + "!", clrGreen,
@@ -38,23 +42,27 @@ void playerGainLvl() {
   }
 }
 
-void initXpArray() {
+void initXpArray()
+{
   xpForLvl_[0] = 0;
   xpForLvl_[1] = 0;
-  for(int lvl = 2; lvl <= PLAYER_MAX_CLVL; lvl++) {
+  for(int lvl = 2; lvl <= PLAYER_MAX_CLVL; lvl++)
+  {
     xpForLvl_[lvl] = xpForLvl_[lvl - 1] + (100 * lvl);
   }
 }
 
 } //namespace
 
-void init() {
+void init()
+{
   clvl_ = 1;
   xp_   = 0;
   initXpArray();
 }
 
-void storeToSaveLines(vector<string>& lines) {
+void storeToSaveLines(vector<string>& lines)
+{
   lines.push_back(toStr(clvl_));
   lines.push_back(toStr(xp_));
   lines.push_back(toStr(timeStarted_.year_));
@@ -65,7 +73,8 @@ void storeToSaveLines(vector<string>& lines) {
   lines.push_back(toStr(timeStarted_.second_));
 }
 
-void setupFromSaveLines(vector<string>& lines) {
+void setupFromSaveLines(vector<string>& lines)
+{
   clvl_ = toInt(lines.front());
   lines.erase(begin(lines));
   xp_ = toInt(lines.front());
@@ -88,7 +97,8 @@ int getCLvl()             {return clvl_;}
 int getXp()               {return xp_;}
 TimeData getTimeStarted() {return timeStarted_;}
 
-int getMonTotXpWorth(const ActorDataT& d) {
+int getMonTotXpWorth(const ActorDataT& d)
+{
   //K regulates player XP rate, higher -> more XP per monster
   const double K          = 0.6;
   const double HP         = d.hp;
@@ -104,12 +114,17 @@ int getMonTotXpWorth(const ActorDataT& d) {
   return ceil(K * HP * SPEED_FACTOR * SHOCK_FACTOR * UNIQUE_FACTOR);
 }
 
-void playerGainXp(const int XP_GAINED) {
-  if(Map::player->isAlive()) {
-    for(int i = 0; i < XP_GAINED; ++i) {
+void playerGainXp(const int XP_GAINED)
+{
+  if(Map::player->isAlive())
+  {
+    for(int i = 0; i < XP_GAINED; ++i)
+    {
       xp_++;
-      if(clvl_ < PLAYER_MAX_CLVL) {
-        if(xp_ >= xpForLvl_[clvl_ + 1]) {
+      if(clvl_ < PLAYER_MAX_CLVL)
+      {
+        if(xp_ >= xpForLvl_[clvl_ + 1])
+        {
           playerGainLvl();
         }
       }
@@ -117,16 +132,19 @@ void playerGainXp(const int XP_GAINED) {
   }
 }
 
-int getXpToNextLvl() {
+int getXpToNextLvl()
+{
   if(clvl_ == PLAYER_MAX_CLVL) {return -1;}
   return xpForLvl_[clvl_ + 1] - xp_;
 }
 
-void playerLoseXpPercent(const int PERCENT) {
+void playerLoseXpPercent(const int PERCENT)
+{
   xp_ = (xp_ * (100 - PERCENT)) / 100;
 }
 
-void winGame() {
+void winGame()
+{
   HighScore::onGameOver(true);
 
   const string winMsg =
@@ -157,12 +175,15 @@ void winGame() {
   const unsigned int NR_OF_WIN_MESSAGE_LINES = winMsgLines.size();
   const int DELAY_BETWEEN_LINES = 40;
   SdlWrapper::sleep(DELAY_BETWEEN_LINES);
-  for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; ++i) {
-    for(unsigned int ii = 0; ii <= i; ii++) {
+  for(unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; ++i)
+  {
+    for(unsigned int ii = 0; ii <= i; ii++)
+    {
       Render::drawTextCentered(winMsgLines.at(ii), Panel::screen,
                                Pos(MAP_W_HALF, Y0 + ii),
                                clrMsgBad, clrBlack, true);
-      if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1) {
+      if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1)
+      {
         const string CMD_LABEL =
           "[space/esc] to record high-score and return to main menu";
         Render::drawTextCentered(
@@ -178,13 +199,16 @@ void winGame() {
   Query::waitForEscOrSpace();
 }
 
-void onMonKilled(Actor& actor) {
+void onMonKilled(Actor& actor)
+{
   ActorDataT& d = actor.getData();
 
   d.nrKills += 1;
 
-  if(d.hp >= 3) {
-    if(Map::player->obsessions[int(Obsession::sadism)]) {
+  if(d.hp >= 3)
+  {
+    if(Map::player->obsessions[int(Obsession::sadism)])
+    {
       Map::player->shock_ = max(0.0, Map::player->shock_ - 3.0);
     }
   }
@@ -196,15 +220,18 @@ void onMonKilled(Actor& actor) {
   playerGainXp(XP_GAINED);
 }
 
-void onMonSpotted(Actor& actor) {
+void onMonSpotted(Actor& actor)
+{
   Mon* const mon = static_cast<Mon*>(&actor);
-  if(!mon->hasGivenXpForSpotting_) {
+  if(!mon->hasGivenXpForSpotting_)
+  {
     mon->hasGivenXpForSpotting_ = true;
     playerGainXp(getMonTotXpWorth(mon->getData()) / 2);
   }
 }
 
-void setTimeStartedToNow() {
+void setTimeStartedToNow()
+{
   timeStarted_ = Utils::getCurTime();
 }
 

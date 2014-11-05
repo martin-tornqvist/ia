@@ -14,7 +14,8 @@ enum class ItemRefAttInf  {none, wpnContext, melee, ranged, thrown};
 
 enum class Article {a, the};
 
-enum class Matl {
+enum class Matl
+{
   empty,
   stone,
   metal,
@@ -26,7 +27,8 @@ enum class Matl {
 
 enum class Condition {breaking, shoddy, fine};
 
-enum class DmgType {
+enum class DmgType
+{
   physical,
   fire,
   cold,
@@ -38,7 +40,8 @@ enum class DmgType {
   END
 };
 
-enum class DmgMethod {
+enum class DmgMethod
+{
   piercing,
   slashing,
   bluntMedium,
@@ -51,7 +54,8 @@ enum class DmgMethod {
   END
 };
 
-enum class ShockValue {
+enum class ShockValue
+{
   none   = 0,
   mild   = 2,
   some   = 4,
@@ -60,7 +64,8 @@ enum class ShockValue {
 
 enum class GameEntryMode {newGame, loadGame};
 
-struct CellRenderData {
+struct CellRenderData
+{
   CellRenderData() :
     clr(clrBlack),
     clrBg(clrBlack),
@@ -81,13 +86,15 @@ struct CellRenderData {
 };
 
 
-struct StrAndClr {
+struct StrAndClr
+{
   StrAndClr() : str(""), clr(clrBlack) {}
 
   StrAndClr(const std::string& text, const Clr& color) :
     str(text), clr(color) {}
 
-  StrAndClr& operator=(const StrAndClr& other) {
+  StrAndClr& operator=(const StrAndClr& other)
+  {
     str = other.str;
     clr = other.clr;
     return *this;
@@ -97,7 +104,8 @@ struct StrAndClr {
   Clr clr;
 };
 
-struct Pos {
+struct Pos
+{
   Pos() : x(0), y(0) {}
   Pos(const int X, const int Y) : x(X), y(Y) {}
   Pos(const Pos& p) : x(p.x), y(p.y) {}
@@ -128,7 +136,8 @@ struct Pos {
   bool operator<=(const Pos&  p)  const {return x <= p.x  && y <= p.y;}
   bool operator<=(const int   V)  const {return x <= V    && y <= V;}
 
-  inline Pos getSigns() const {
+  inline Pos getSigns() const
+  {
     return Pos(x == 0 ? 0 : x > 0 ? 1 : -1,
                y == 0 ? 0 : y > 0 ? 1 : -1);
   }
@@ -141,7 +150,8 @@ struct Pos {
   int x, y;
 };
 
-struct Rect {
+struct Rect
+{
   Rect() : p0(Pos()), p1(Pos()) {}
 
   Rect(const Pos& p0_, const Pos& p1_) :  p0(p0_), p1(p1_) {}
@@ -155,7 +165,8 @@ struct Rect {
   Pos p1;
 };
 
-struct PosAndVal {
+struct PosAndVal
+{
   PosAndVal() : pos(Pos()), val(-1) {}
 
   PosAndVal(const Pos& pos_, const int val_) : pos(pos_), val(val_) {}
@@ -166,7 +177,8 @@ struct PosAndVal {
   int val;
 };
 
-struct DiceParam {
+struct DiceParam
+{
   DiceParam() : rolls(0), sides(0), plus(0) {}
 
   DiceParam(const int ROLLS, const int SIDES, const int PLUS = 0) :
@@ -175,7 +187,8 @@ struct DiceParam {
   DiceParam(const DiceParam& other) :
     rolls(other.rolls), sides(other.sides), plus(other.plus) {}
 
-  DiceParam& operator=(const DiceParam& other) {
+  DiceParam& operator=(const DiceParam& other)
+  {
     rolls = other.rolls;
     sides = other.sides;
     plus  = other.plus;
@@ -187,7 +200,8 @@ struct DiceParam {
   int rolls, sides, plus;
 };
 
-struct Range {
+struct Range
+{
   Range() : lower(-1), upper(-1) {}
 
   Range(const int LOWER, const int UPPER) : lower(LOWER), upper(UPPER) {}
@@ -197,13 +211,15 @@ struct Range {
   int lower, upper;
 };
 
-struct Fraction {
+struct Fraction
+{
   Fraction() : numerator(-1), denominator(-1) {}
 
   Fraction(const int NUMERATOR, const int DENOMINATOR) :
     numerator(NUMERATOR), denominator(DENOMINATOR) {}
 
-  void set(const int NUMERATOR, const int DENOMINATOR) {
+  void set(const int NUMERATOR, const int DENOMINATOR)
+  {
     numerator   = NUMERATOR;
     denominator = DENOMINATOR;
   }
@@ -211,16 +227,20 @@ struct Fraction {
   int numerator, denominator;
 };
 
-struct ItemName {
+struct ItemName
+{
   ItemName(const std::string& NAME, const std::string& NAME_PL,
-           const std::string& NAME_A) {
+           const std::string& NAME_A)
+  {
     names[int(ItemRefType::plain)]   = NAME;
     names[int(ItemRefType::plural)]  = NAME_PL;
     names[int(ItemRefType::a)]       = NAME_A;
   }
 
-  ItemName() {
-    for(int i = 0; i < int(ItemRefType::END); i++) {
+  ItemName()
+  {
+    for(int i = 0; i < int(ItemRefType::END); i++)
+    {
       names[i] = "";
     }
   }
@@ -228,7 +248,8 @@ struct ItemName {
   std::string names[int(ItemRefType::END)];
 };
 
-struct ItemAttMsgs {
+struct ItemAttMsgs
+{
 public:
   ItemAttMsgs() : player(""), other("") {}
 
@@ -238,12 +259,14 @@ public:
   std::string player, other;
 };
 
-enum SpawnRate {
+enum SpawnRate
+{
   spawnNever, spawnExtremelyRare, spawnVeryRare,
   spawnRare, spawnCommon, spawnVeryCommon
 };
 
-enum class Dir {
+enum class Dir
+{
   downLeft   = 1,
   down       = 2,
   downRight  = 3,

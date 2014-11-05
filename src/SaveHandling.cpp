@@ -19,11 +19,14 @@
 
 using namespace std;
 
-namespace SaveHandling {
+namespace SaveHandling
+{
 
-namespace {
+namespace
+{
 
-void collectLinesFromGame(vector<string>& lines) {
+void collectLinesFromGame(vector<string>& lines)
+{
   lines.clear();
   lines.push_back(Map::player->getNameA());
 
@@ -41,7 +44,8 @@ void collectLinesFromGame(vector<string>& lines) {
   PlayerSpellsHandling::storeToSaveLines(lines);
 }
 
-void setupGameFromLines(vector<string>& lines) {
+void setupGameFromLines(vector<string>& lines)
+{
   TRACE_FUNC_BEGIN;
   const string& playerName = lines.front();
   Map::player->getData().nameA = playerName;
@@ -63,12 +67,15 @@ void setupGameFromLines(vector<string>& lines) {
   TRACE_FUNC_END;
 }
 
-void writeFile(const vector<string>& lines) {
+void writeFile(const vector<string>& lines)
+{
   ofstream file;
   file.open("data/save", ios::trunc);
 
-  if(file.is_open()) {
-    for(size_t i = 0; i < lines.size(); ++i) {
+  if(file.is_open())
+  {
+    for(size_t i = 0; i < lines.size(); ++i)
+    {
       file << lines.at(i);
       if(i != lines.size() - 1) {file << endl;}
     }
@@ -76,44 +83,54 @@ void writeFile(const vector<string>& lines) {
   }
 }
 
-void readFile(vector<string>& lines) {
+void readFile(vector<string>& lines)
+{
   lines.clear();
 
   string curLine;
   ifstream file("data/save");
-  if(file.is_open()) {
+  if(file.is_open())
+  {
     while(getline(file, curLine)) {lines.push_back(curLine);}
     file.close();
 
     vector<string> emptyLines;
     emptyLines.clear();
     writeFile(emptyLines);
-  } else {
+  }
+  else
+  {
     assert(false && "Failed to open save file");
   }
 }
 
 } //namespace
 
-void save() {
+void save()
+{
   vector<string> lines;
   collectLinesFromGame(lines);
   writeFile(lines);
 }
 
-void load() {
+void load()
+{
   vector<string> lines;
   readFile(lines);
   setupGameFromLines(lines);
 }
 
-bool isSaveAvailable() {
+bool isSaveAvailable()
+{
   ifstream file("data/save");
-  if(file.good()) {
+  if(file.good())
+  {
     const bool IS_EMPTY = file.peek() == std::ifstream::traits_type::eof();
     file.close();
     return !IS_EMPTY;
-  } else {
+  }
+  else
+  {
     file.close();
     return false;
   }

@@ -6,13 +6,15 @@
 class Actor;
 class Spell;
 
-class Scroll: public Item {
+class Scroll: public Item
+{
 public:
   Scroll(ItemDataT* const itemData) : Item(itemData) {}
 
   ~Scroll() {}
 
-  Clr getInterfaceClr() const override {
+  Clr getInterfaceClr() const override
+  {
     return clrMagenta;
   }
 
@@ -34,7 +36,8 @@ protected:
   std::string getNameInf() const override;
 };
 
-namespace ScrollNameHandling {
+namespace ScrollNameHandling
+{
 
 void init();
 

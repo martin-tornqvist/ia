@@ -13,13 +13,16 @@
 
 using namespace std;
 
-namespace SndEmit {
+namespace SndEmit
+{
 
-namespace {
+namespace
+{
 
 int nrSndMsgPrintedCurTurn_;
 
-bool isSndHeardAtRange(const int RANGE, const Snd& snd) {
+bool isSndHeardAtRange(const int RANGE, const Snd& snd)
+{
   return snd.isLoud() ? (RANGE <= SND_DIST_LOUD) : (RANGE <= SND_DIST_NORMAL);
 }
 
@@ -27,10 +30,13 @@ bool isSndHeardAtRange(const int RANGE, const Snd& snd) {
 
 void resetNrSndMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
 
-void emitSnd(Snd snd) {
+void emitSnd(Snd snd)
+{
   bool blocked[MAP_W][MAP_H];
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       const auto f = Map::cells[x][y].rigid;
       blocked[x][y] = !f->isSoundPassable();
     }
@@ -40,27 +46,33 @@ void emitSnd(Snd snd) {
   FloodFill::run(origin, blocked, floodFill, 999, Pos(-1, -1), true);
   floodFill[origin.x][origin.y] = 0;
 
-  for(Actor* actor : GameTime::actors_) {
+  for(Actor* actor : GameTime::actors_)
+  {
     const int FLOOD_VALUE_AT_ACTOR = floodFill[actor->pos.x][actor->pos.y];
 
     const bool IS_ORIGIN_SEEN_BY_PLAYER =
       Map::cells[origin.x][origin.y].isSeenByPlayer;
 
-    if(isSndHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd)) {
-      if(actor == Map::player) {
+    if(isSndHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd))
+    {
+      if(actor == Map::player)
+      {
 
         //Various conditions may clear the sound message
         if(
           nrSndMsgPrintedCurTurn_ >= 1 ||
-          (IS_ORIGIN_SEEN_BY_PLAYER && snd.isMsgIgnoredIfOriginSeen())) {
+          (IS_ORIGIN_SEEN_BY_PLAYER && snd.isMsgIgnoredIfOriginSeen()))
+        {
           snd.clearMsg();
         }
 
         const Pos& playerPos = Map::player->pos;
 
-        if(!snd.getMsg().empty()) {
+        if(!snd.getMsg().empty())
+        {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
-          if(playerPos != origin) {
+          if(playerPos != origin)
+          {
             string dirStr;
             DirUtils::getCompassDirName(playerPos, origin, dirStr);
             snd.addString("(" + dirStr + ")");
@@ -77,7 +89,9 @@ void emitSnd(Snd snd) {
         const Dir dirToOrigin = DirUtils::getDir(offset);
         Map::player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER, dirToOrigin,
                                PERCENT_DISTANCE);
-      } else {
+      }
+      else
+      {
         Mon* const mon = static_cast<Mon*>(actor);
         mon->hearSound(snd);
       }

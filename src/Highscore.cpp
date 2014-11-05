@@ -17,9 +17,11 @@
 
 using namespace std;
 
-namespace HighScore {
+namespace HighScore
+{
 
-namespace {
+namespace
+{
 
 const int X_POS_DATE      = 1;
 const int X_POS_NAME      = X_POS_DATE + 19;
@@ -30,19 +32,23 @@ const int X_POS_INSANITY  = X_POS_DLVL + 8;
 const int X_POS_RANK      = X_POS_INSANITY + 10;
 
 bool isEntryHigher(const HighScoreEntry& cur,
-                   const HighScoreEntry& other) {
+                   const HighScoreEntry& other)
+{
   return other.getScore() < cur.getScore();
 }
 
-void sortEntries(vector<HighScoreEntry>& entries) {
+void sortEntries(vector<HighScoreEntry>& entries)
+{
   sort(entries.begin(), entries.end(), isEntryHigher);
 }
 
-void writeFile(vector<HighScoreEntry>& entries) {
+void writeFile(vector<HighScoreEntry>& entries)
+{
   ofstream file;
   file.open("data/highscores", ios::trunc);
 
-  for(unsigned int i = 0; i < entries.size(); ++i) {
+  for(unsigned int i = 0; i < entries.size(); ++i)
+  {
     const HighScoreEntry& entry = entries.at(i);
 
     const string VICTORY_STR = entry.isVictoryGame() ? "V" : "D";
@@ -56,14 +62,17 @@ void writeFile(vector<HighScoreEntry>& entries) {
   }
 }
 
-void readFile(vector<HighScoreEntry>& entries) {
+void readFile(vector<HighScoreEntry>& entries)
+{
   ifstream file;
   file.open("data/highscores");
 
-  if(file.is_open()) {
+  if(file.is_open())
+  {
     string line = "";
 
-    while(getline(file, line)) {
+    while(getline(file, line))
+    {
       bool isVictory = line.at(0) == 'V';
       getline(file, line);
       const string dateAndTime = line;
@@ -84,7 +93,8 @@ void readFile(vector<HighScoreEntry>& entries) {
   }
 }
 
-void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) {
+void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
+{
   TRACE_FUNC_BEGIN;
 
   Render::clearScreen();
@@ -123,7 +133,8 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) {
   for(
     int i = TOP_ELEMENT;
     i < int(entries.size()) && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
-    i++) {
+    i++)
+  {
     const string dateAndTime  = entries.at(i).getDateAndTime();
     const string name         = entries.at(i).getName();
     const string score        = toStr(entries.at(i).getScore());
@@ -154,11 +165,13 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT) {
 
 } //namespace
 
-void runHighScoreScreen() {
+void runHighScoreScreen()
+{
   vector<HighScoreEntry> entries;
   readFile(entries);
 
-  if(entries.empty()) {
+  if(entries.empty())
+  {
     Popup::showMsg("No High Score entries found.", false);
     return;
   }
@@ -173,29 +186,37 @@ void runHighScoreScreen() {
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 3;
 
   //Read keys
-  while(true) {
+  while(true)
+  {
     draw(entries, topNr);
 
     const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j') {
+    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
+    {
       topNr += LINE_JUMP;
-      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
+      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+      {
         topNr = 0;
-      } else {
+      }
+      else
+      {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
     }
-    if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k') {
+    if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
+    {
       topNr = max(0, topNr - LINE_JUMP);
     }
-    if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
+    if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    {
       break;
     }
   }
 }
 
-void onGameOver(const bool IS_VICTORY) {
+void onGameOver(const bool IS_VICTORY)
+{
   vector<HighScoreEntry> entries = getEntriesSorted();
 
   HighScoreEntry curPlayer(
@@ -214,10 +235,12 @@ void onGameOver(const bool IS_VICTORY) {
   writeFile(entries);
 }
 
-vector<HighScoreEntry> getEntriesSorted() {
+vector<HighScoreEntry> getEntriesSorted()
+{
   vector<HighScoreEntry> entries;
   readFile(entries);
-  if(!entries.empty()) {
+  if(!entries.empty())
+  {
     sortEntries(entries);
   }
   return entries;

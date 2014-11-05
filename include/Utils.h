@@ -10,7 +10,8 @@
 class Actor;
 class Mob;
 
-namespace Rnd {
+namespace Rnd
+{
 
 //Note: If MTRand is not provided any parameters to the constructor, it will be seeded
 //with current time. So seeding it manually is not necessary for normal gameplay
@@ -37,7 +38,8 @@ int percentile();
 
 } //Rnd
 
-enum TimeType {
+enum TimeType
+{
   time_year,
   time_month,
   time_day,
@@ -46,9 +48,11 @@ enum TimeType {
   time_second
 };
 
-struct TimeData {
+struct TimeData
+{
   TimeData() :
-    year_(0), month_(0), day_(0), hour_(0), minute_(0), second_(0) {
+    year_(0), month_(0), day_(0), hour_(0), minute_(0), second_(0)
+  {
   }
 
   TimeData(int year, int month, int day, int hour, int minute, int second) :
@@ -60,16 +64,20 @@ struct TimeData {
   int year_, month_, day_, hour_, minute_, second_;
 };
 
-namespace Utils {
+namespace Utils
+{
 
 bool isClrEq(const Clr& clr1, const Clr& clr2);
 
 void resetArray(int a[MAP_W][MAP_H]);
 void resetArray(bool a[MAP_W][MAP_H], const bool value);
 
-template<typename T> void resetArray(T* a[MAP_W][MAP_H]) {
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+template<typename T> void resetArray(T* a[MAP_W][MAP_H])
+{
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       a[x][y] = nullptr;
     }
   }
@@ -117,13 +125,16 @@ TimeData getCurTime();
 
 } //Utils
 
-namespace DirUtils {
+namespace DirUtils
+{
 
 //Useful lists to iterate over (e.g. in map generation)
-const std::vector<Pos> cardinalList {
+const std::vector<Pos> cardinalList
+{
   Pos(-1, 0), Pos(1, 0), Pos(0, -1), Pos(0, 1)
 };
-const std::vector<Pos> dirList {
+const std::vector<Pos> dirList
+{
   Pos(-1, 0), Pos(1, 0), Pos(0, -1), Pos(0, 1),
   Pos(-1, -1), Pos(-1, 1), Pos(1, -1), Pos(1, 1)
 };

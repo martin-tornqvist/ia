@@ -6,7 +6,8 @@
 class Item;
 class Actor;
 
-namespace ItemPickup {
+namespace ItemPickup
+{
 
 void tryPick();
 

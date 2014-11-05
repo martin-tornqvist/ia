@@ -5,7 +5,8 @@
 
 #include "Item.h"
 
-namespace ItemFactory {
+namespace ItemFactory
+{
 
 Item* mk(const ItemId itemId, const int NR_ITEMS = 1);
 

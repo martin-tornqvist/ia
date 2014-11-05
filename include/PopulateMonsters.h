@@ -5,7 +5,8 @@
 
 #include "ActorData.h"
 
-namespace PopulateMon {
+namespace PopulateMon
+{
 
 void trySpawnDueToTimePassed();
 

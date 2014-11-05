@@ -15,13 +15,16 @@
 
 using namespace std;
 
-namespace CharacterDescr {
+namespace CharacterDescr
+{
 
-namespace {
+namespace
+{
 
 vector<StrAndClr> lines_;
 
-void mkLines() {
+void mkLines()
+{
   lines_.clear();
 
   const string offset = "   ";
@@ -41,20 +44,28 @@ void mkLines() {
   Wpn* kick = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerKick));
   string kickStr = kick->getName(ItemRefType::plain);
   delete kick;
-  for(unsigned int i = 0; i < kickStr.length(); ++i) {
-    if(kickStr.at(0) == ' ') {
+  for(unsigned int i = 0; i < kickStr.length(); ++i)
+  {
+    if(kickStr.at(0) == ' ')
+    {
       kickStr.erase(kickStr.begin());
-    } else {
+    }
+    else
+    {
       break;
     }
   }
   Wpn* punch = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerPunch));
   string punchStr = punch->getName(ItemRefType::plain);
   delete punch;
-  for(size_t i = 0; i < punchStr.length(); ++i) {
-    if(punchStr.at(0) == ' ') {
+  for(size_t i = 0; i < punchStr.length(); ++i)
+  {
+    if(punchStr.at(0) == ' ')
+    {
       punchStr.erase(punchStr.begin());
-    } else {
+    }
+    else
+    {
       break;
     }
   }
@@ -91,7 +102,8 @@ void mkLines() {
     lines_.push_back(StrAndClr(offset + "Sadistic obsession", clrText));
   const int NR_LINES_AFTER_MENTAL = lines_.size();
 
-  if(NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL) {
+  if(NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL)
+  {
     lines_.push_back(StrAndClr(offset + "No special symptoms", clrText));
   }
   lines_.push_back(StrAndClr(" ", clrText));
@@ -99,15 +111,20 @@ void mkLines() {
   lines_.push_back(StrAndClr("Potion knowledge", clrHeading));
   vector<StrAndClr> potionList;
   vector<StrAndClr> manuscriptList;
-  for(int i = 0; i < int(ItemId::END); ++i) {
+  for(int i = 0; i < int(ItemId::END); ++i)
+  {
     const ItemDataT* const d = ItemData::data[i];
-    if(d->isPotion && (d->isTried || d->isIdentified)) {
+    if(d->isPotion && (d->isTried || d->isIdentified))
+    {
       Item* item = ItemFactory::mk(d->id);
       potionList.push_back(StrAndClr(offset + item->getName(ItemRefType::plain),
                                      d->clr));
       delete item;
-    } else {
-      if(d->isScroll && (d->isTried || d->isIdentified)) {
+    }
+    else
+    {
+      if(d->isScroll && (d->isTried || d->isIdentified))
+      {
         Item* item = ItemFactory::mk(d->id);
         manuscriptList.push_back(StrAndClr(offset + item->getName(ItemRefType::plain),
                                            item->getInterfaceClr()));
@@ -116,13 +133,17 @@ void mkLines() {
     }
   }
 
-  auto strAndClrSort = [](const StrAndClr & e1, const StrAndClr & e2) {
+  auto strAndClrSort = [](const StrAndClr & e1, const StrAndClr & e2)
+  {
     return e1.str < e2.str;
   };
 
-  if(potionList.empty()) {
+  if(potionList.empty())
+  {
     lines_.push_back(StrAndClr(offset + "No known potions", clrText));
-  } else {
+  }
+  else
+  {
     sort(potionList.begin(), potionList.end(), strAndClrSort);
     for(StrAndClr& e : potionList) {lines_.push_back(e);}
   }
@@ -130,9 +151,12 @@ void mkLines() {
 
 
   lines_.push_back(StrAndClr("Manuscript knowledge", clrHeading));
-  if(manuscriptList.size() == 0) {
+  if(manuscriptList.size() == 0)
+  {
     lines_.push_back(StrAndClr(offset + "No known manuscripts", clrText));
-  } else {
+  }
+  else
+  {
     sort(manuscriptList.begin(), manuscriptList.end(), strAndClrSort);
     for(StrAndClr& e : manuscriptList) {lines_.push_back(e);}
   }
@@ -141,13 +165,17 @@ void mkLines() {
   lines_.push_back(StrAndClr("Traits gained", clrHeading));
   string abilitiesLine = "";
   vector<Trait>& traits = PlayerBon::traitsPicked_;
-  if(traits.empty()) {
+  if(traits.empty())
+  {
     lines_.push_back(StrAndClr(offset + "None", clrText));
     lines_.push_back(StrAndClr(" ", clrText));
-  } else {
+  }
+  else
+  {
     const int MAX_W_DESCR = (MAP_W * 2) / 3;
 
-    for(Trait trait : traits) {
+    for(Trait trait : traits)
+    {
       string title = "";
       PlayerBon::getTraitTitle(trait, title);
       lines_.push_back(StrAndClr(offset + title, clrText));
@@ -155,7 +183,8 @@ void mkLines() {
       PlayerBon::getTraitDescr(trait, descr);
       vector<string> descrLines;
       TextFormatting::lineToLines(descr, MAX_W_DESCR, descrLines);
-      for(string& descrLine : descrLines) {
+      for(string& descrLine : descrLines)
+      {
         lines_.push_back(StrAndClr(offset + descrLine, clrTextDark));
       }
       lines_.push_back(StrAndClr(" ", clrText));
@@ -164,10 +193,12 @@ void mkLines() {
 }
 
 void getShockResSrcTitle(
-  const ShockSrc shockSrc, string& strRef) {
+  const ShockSrc shockSrc, string& strRef)
+{
 
   strRef = "";
-  switch(shockSrc) {
+  switch(shockSrc)
+  {
     case ShockSrc::time:           strRef = "Time";                    break;
     case ShockSrc::castIntrSpell:  strRef = "Casting learned spells";  break;
     case ShockSrc::seeMon:     strRef = "Seeing monsters";         break;
@@ -177,7 +208,8 @@ void getShockResSrcTitle(
   }
 }
 
-void drawInterface() {
+void drawInterface()
+{
   const string decorationLine(MAP_W, '-');
 
   const int X_LABEL = 3;
@@ -195,7 +227,8 @@ void drawInterface() {
 
 } //namespace
 
-void run() {
+void run()
+{
   mkLines();
 
   const int LINE_JUMP           = 3;
@@ -205,11 +238,13 @@ void run() {
   int topNr = 0;
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
-  while(true) {
+  while(true)
+  {
     Render::clearScreen();
     drawInterface();
     int yPos = 1;
-    for(int i = topNr; i <= btmNr; ++i) {
+    for(int i = topNr; i <= btmNr; ++i)
+    {
       const StrAndClr& line = lines_.at(i);
       Render::drawText(line.str , Panel::screen, Pos(0, yPos++), line.clr);
     }
@@ -217,16 +252,24 @@ void run() {
 
     const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j') {
+    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
+    {
       topNr += LINE_JUMP;
-      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
+      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+      {
         topNr = 0;
-      } else {
+      }
+      else
+      {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
-    } else if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k') {
+    }
+    else if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
+    {
       topNr = max(0, topNr - LINE_JUMP);
-    } else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
+    }
+    else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    {
       break;
     }
     btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);

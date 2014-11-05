@@ -14,18 +14,22 @@
 
 using namespace std;
 
-namespace MapTravel {
+namespace MapTravel
+{
 
-namespace {
+namespace
+{
 
-struct MapData {
+struct MapData
+{
   MapType type;
   bool    isInMainDungeon;
 };
 
 vector<MapData> mapList_;
 
-void mkLvl(const MapType& mapType) {
+void mkLvl(const MapType& mapType)
+{
   TRACE_FUNC_BEGIN;
 
   bool isLvlBuilt = false;
@@ -35,11 +39,13 @@ void mkLvl(const MapType& mapType) {
   auto  startTime   = chrono::steady_clock::now();
 #endif
 
-  while(!isLvlBuilt) {
+  while(!isLvlBuilt)
+  {
 #ifndef NDEBUG
     nrAttempts++;
 #endif
-    switch(mapType) {
+    switch(mapType)
+    {
       case MapType::intro:          isLvlBuilt = MapGen::mkIntroLvl();          break;
       case MapType::std:            isLvlBuilt = MapGen::mkStdLvl();            break;
       case MapType::caves:          isLvlBuilt = MapGen::mkCaveLvl();           break;
@@ -92,24 +98,29 @@ void mkLvl(const MapType& mapType) {
 
 } //namespace
 
-void init() {
+void init()
+{
   mapList_    = vector<MapData>(30, {MapType::std, true});
   mapList_[0] = {MapType::intro,  true};
 //  mapList_[2] = {MapType::leng,   false};
 }
 
-void storeToSaveLines(std::vector<std::string>& lines) {
+void storeToSaveLines(std::vector<std::string>& lines)
+{
   lines.push_back(toStr(mapList_.size()));
-  for(const MapData& entry : mapList_) {
+  for(const MapData& entry : mapList_)
+  {
     lines.push_back(toStr(int(entry.type)));
     lines.push_back(entry.isInMainDungeon ? "1" : "0");
   }
 }
 
-void setupFromSaveLines(std::vector<std::string>& lines) {
+void setupFromSaveLines(std::vector<std::string>& lines)
+{
   const int SIZE = toInt(lines.front());
   lines.erase(begin(lines));
-  for(int i = 0; i < SIZE; ++i) {
+  for(int i = 0; i < SIZE; ++i)
+  {
     const MapType type        = MapType(toInt(lines.front()));
     lines.erase(begin(lines));
     const bool    IS_IN_MAIN  = lines.front() == "1";
@@ -118,14 +129,18 @@ void setupFromSaveLines(std::vector<std::string>& lines) {
   }
 }
 
-void goToNxt() {
+void goToNxt()
+{
   TRACE_FUNC_BEGIN;
 
   Log::clearLog();
 
-  if(Map::dlvl >= FIRST_CAVERN_LVL && Map::dlvl <= LAST_CAVERN_LVL) {
+  if(Map::dlvl >= FIRST_CAVERN_LVL && Map::dlvl <= LAST_CAVERN_LVL)
+  {
     Log::addMsg("I climb downwards.");
-  } else {
+  }
+  else
+  {
     Log::addMsg("I descend the stairs.");
   }
 
@@ -144,7 +159,8 @@ void goToNxt() {
   Render::drawMapAndInterface();
   Audio::tryPlayAmb(1);
 
-  if(Map::player->phobias[int(Phobia::deepPlaces)]) {
+  if(Map::player->phobias[int(Phobia::deepPlaces)])
+  {
     Log::addMsg("I am plagued by my phobia of deep places!");
     Map::player->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
     return;
@@ -153,7 +169,8 @@ void goToNxt() {
   TRACE_FUNC_END;
 }
 
-MapType getMapType() {
+MapType getMapType()
+{
   return mapList_.front().type;
 }
 

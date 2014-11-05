@@ -23,19 +23,23 @@
 
 using namespace std;
 
-namespace PropData {
+namespace PropData
+{
 
 PropDataT data[endOfPropIds];
 
-namespace {
+namespace
+{
 
-void addPropData(PropDataT& d) {
+void addPropData(PropDataT& d)
+{
   data[d.id] = d;
   PropDataT blank;
   d = blank;
 }
 
-void initDataList() {
+void initDataList()
+{
   PropDataT d;
 
   d.id = propRPhys;
@@ -696,21 +700,25 @@ void initDataList() {
 
 } //namespace
 
-void init() {
+void init()
+{
   initDataList();
 }
 
 } //PropData
 
 PropHandler::PropHandler(Actor* owningActor) :
-  owningActor_(owningActor) {
+  owningActor_(owningActor)
+{
   appliedProps_.clear();
   actorTurnPropBuffer_.clear();
 
   const ActorDataT& d = owningActor->getData();
 
-  for(size_t i = 0; i < endOfPropIds; ++i) {
-    if(d.intrProps[i]) {
+  for(size_t i = 0; i < endOfPropIds; ++i)
+  {
+    if(d.intrProps[i])
+    {
       Prop* const prop = mkProp(PropId(i), PropTurns::indefinite);
       tryApplyProp(prop, true, true, true, true);
     }
@@ -718,8 +726,10 @@ PropHandler::PropHandler(Actor* owningActor) :
 }
 
 Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
-                          const int NR_TURNS) const {
-  switch(id) {
+                          const int NR_TURNS) const
+{
+  switch(id)
+  {
     case propNailed:            return new PropNailed(turnsInit,            NR_TURNS);
     case propWarlockCharged:    return new PropWarlockCharged(turnsInit,    NR_TURNS);
     case propBlind:             return new PropBlind(turnsInit,             NR_TURNS);
@@ -764,12 +774,14 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
   return nullptr;
 }
 
-PropHandler::~PropHandler() {
+PropHandler::~PropHandler()
+{
   for(Prop* prop : appliedProps_) {delete prop;}
 }
 
 void PropHandler::getPropsFromSources(
-  vector<Prop*>& out, bool sources[int(PropSrc::END)]) const {
+  vector<Prop*>& out, bool sources[int(PropSrc::END)]) const
+{
 
   out.clear();
 
@@ -777,50 +789,62 @@ void PropHandler::getPropsFromSources(
   if(sources[int(PropSrc::applied)]) {out = appliedProps_;}
 
   //Get from inventory if humanoid actor
-  if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)]) {
+  if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)])
+  {
     const auto& inv     = owningActor_->getInv();
     const auto& slots   = inv.slots_;
-    auto addItemProps = [&](const vector<Prop*>& itemPropList) {
-      for(auto* const prop : itemPropList) {
+    auto addItemProps = [&](const vector<Prop*>& itemPropList)
+    {
+      for(auto* const prop : itemPropList)
+      {
         prop->owningActor_ = owningActor_;
         out.push_back(prop);
       };
     };
-    for(const auto& slot : slots) {
+    for(const auto& slot : slots)
+    {
       const auto* const item = slot.item;
       if(item) {addItemProps(item->carrierProps_);}
     }
     const auto& general = inv.general_;
-    for(auto* const item : general) {
+    for(auto* const item : general)
+    {
       addItemProps(item->carrierProps_);
     }
   }
 }
 
 void  PropHandler::getPropIdsFromSources(
-  vector<PropId>& out, bool sources[int(PropSrc::END)]) const {
+  vector<PropId>& out, bool sources[int(PropSrc::END)]) const
+{
 
   const size_t NR_APPLIED = appliedProps_.size();
   out.resize(NR_APPLIED);
 
   //Get from applied properties
-  if(sources[int(PropSrc::applied)]) {
-    for(size_t i = 0; i < NR_APPLIED; ++i) {
+  if(sources[int(PropSrc::applied)])
+  {
+    for(size_t i = 0; i < NR_APPLIED; ++i)
+    {
       out[i] = appliedProps_[i]->getId();
     }
   }
 
   //Get from inventory if humanoid actor
-  if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)]) {
+  if(owningActor_->isHumanoid() && sources[int(PropSrc::inv)])
+  {
     const auto& inv     = owningActor_->getInv();
     const auto& slots   = inv.slots_;
-    auto addItemProps = [&](const vector<Prop*>& itemPropList) {
-      for(auto* const prop : itemPropList) {
+    auto addItemProps = [&](const vector<Prop*>& itemPropList)
+    {
+      for(auto* const prop : itemPropList)
+      {
         prop->owningActor_ = owningActor_;
         out.push_back(prop->getId());
       };
     };
-    for(const auto& slot : slots) {
+    for(const auto& slot : slots)
+    {
       const auto* const item = slot.item;
       if(item) {addItemProps(item->carrierProps_);}
     }
@@ -829,7 +853,8 @@ void  PropHandler::getPropIdsFromSources(
   }
 }
 
-void PropHandler::getAllActivePropIds(vector<PropId>& out) const {
+void PropHandler::getAllActivePropIds(vector<PropId>& out) const
+{
   out.clear();
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
@@ -837,26 +862,30 @@ void PropHandler::getAllActivePropIds(vector<PropId>& out) const {
 }
 
 bool PropHandler::tryResistProp(
-  const PropId id, const vector<Prop*>& propList) const {
+  const PropId id, const vector<Prop*>& propList) const
+{
 
   for(Prop* p : propList) {if(p->tryResistOtherProp(id)) return true;}
   return false;
 }
 
 bool PropHandler::tryResistDmg(const DmgType dmgType,
-                               const bool ALLOW_MSG_WHEN_TRUE) const {
+                               const bool ALLOW_MSG_WHEN_TRUE) const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
 
-  for(Prop* p : propList) {
+  for(Prop* p : propList)
+  {
     if(p->tryResistDmg(dmgType, ALLOW_MSG_WHEN_TRUE)) return true;
   }
   return false;
 }
 
-bool PropHandler::allowSee() const {
+bool PropHandler::allowSee() const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
@@ -869,7 +898,8 @@ bool PropHandler::allowSee() const {
 void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
                                const bool NO_MESSAGES,
                                const bool DISABLE_REDRAW,
-                               const bool DISABLE_PROP_START_EFFECTS) {
+                               const bool DISABLE_PROP_START_EFFECTS)
+{
 
   //First, if this is a prop that runs on actor turns, check if the actor-turn
   //prop buffer does not already contain the prop.
@@ -878,9 +908,11 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   //applied from the buffer to the applied props.
   //This way, this function can be used both for requesting to apply props,
   //and for applying props from the buffer.
-  if(prop->getTurnMode() == PropTurnMode::actor) {
+  if(prop->getTurnMode() == PropTurnMode::actor)
+  {
     vector<Prop*>& buffer = actorTurnPropBuffer_;
-    if(find(begin(buffer), end(buffer), prop) == end(buffer)) {
+    if(find(begin(buffer), end(buffer), prop) == end(buffer))
+    {
       buffer.push_back(prop);
       return;
     }
@@ -891,22 +923,30 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   const bool IS_PLAYER  = owningActor_ == Map::player;
   bool playerSeeOwner   = Map::player->isSeeingActor(*owningActor_, nullptr);
 
-  if(!FORCE_EFFECT) {
+  if(!FORCE_EFFECT)
+  {
     vector<Prop*> allProps;
     bool sources[int(PropSrc::END)];
     for(bool& v : sources) {v = true;}
     getPropsFromSources(allProps, sources);
-    if(tryResistProp(prop->getId(), allProps)) {
-      if(!NO_MESSAGES) {
-        if(IS_PLAYER) {
+    if(tryResistProp(prop->getId(), allProps))
+    {
+      if(!NO_MESSAGES)
+      {
+        if(IS_PLAYER)
+        {
           string msg = "";
           prop->getMsg(propMsgOnResPlayer, msg);
           if(!msg.empty()) {Log::addMsg(msg, clrWhite, true);}
-        } else {
-          if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
+        }
+        else
+        {
+          if(Map::player->isSeeingActor(*owningActor_, nullptr))
+          {
             string msg = "";
             prop->getMsg(propMsgOnResMon, msg);
-            if(!msg.empty()) {
+            if(!msg.empty())
+            {
               const string monsterName = owningActor_->getNameThe();
               Log::addMsg(monsterName + " " + msg, clrWhite, true);
             }
@@ -920,10 +960,13 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   //This point reached means nothing is blocking the property.
 
   //Actor already has property applied?
-  for(Prop* oldProp : appliedProps_) {
-    if(prop->getId() == oldProp->getId()) {
+  for(Prop* oldProp : appliedProps_)
+  {
+    if(prop->getId() == oldProp->getId())
+    {
 
-      if(!prop->allowApplyMoreWhileActive()) {
+      if(!prop->allowApplyMoreWhileActive())
+      {
         delete prop;
         return;
       }
@@ -934,18 +977,25 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
       if(
         TURNS_LEFT_OLD != -1 &&
         TURNS_LEFT_NEW >= TURNS_LEFT_OLD &&
-        !NO_MESSAGES) {
-        if(IS_PLAYER) {
+        !NO_MESSAGES)
+      {
+        if(IS_PLAYER)
+        {
           string msg = "";
           prop->getMsg(propMsgOnMorePlayer, msg);
-          if(!msg.empty()) {
+          if(!msg.empty())
+          {
             Log::addMsg(msg, clrWhite, true);
           }
-        } else {
-          if(playerSeeOwner) {
+        }
+        else
+        {
+          if(playerSeeOwner)
+          {
             string msg = "";
             prop->getMsg(propMsgOnMoreMon, msg);
-            if(!msg.empty()) {
+            if(!msg.empty())
+            {
               Log::addMsg(owningActor_->getNameThe() + " " + msg);
             }
           }
@@ -966,26 +1016,35 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 
   if(!DISABLE_PROP_START_EFFECTS) {prop->onStart();}
 
-  if(!DISABLE_REDRAW) {
-    if(prop->shouldUpdatePlayerVisualWhenStartOrEnd()) {
+  if(!DISABLE_REDRAW)
+  {
+    if(prop->shouldUpdatePlayerVisualWhenStartOrEnd())
+    {
       prop->owningActor_->updateClr();
       Map::player->updateFov();
       Render::drawMapAndInterface();
     }
   }
 
-  if(!NO_MESSAGES) {
-    if(IS_PLAYER) {
+  if(!NO_MESSAGES)
+  {
+    if(IS_PLAYER)
+    {
       string msg = "";
       prop->getMsg(propMsgOnStartPlayer, msg);
-      if(!msg.empty()) {
+      if(!msg.empty())
+      {
         Log::addMsg(msg, clrWhite, true);
       }
-    } else {
-      if(playerSeeOwner) {
+    }
+    else
+    {
+      if(playerSeeOwner)
+      {
         string msg = "";
         prop->getMsg(propMsgOnStartMon, msg);
-        if(!msg.empty()) {
+        if(!msg.empty())
+        {
           Log::addMsg(owningActor_->getNameThe() + " " + msg);
         }
       }
@@ -993,15 +1052,18 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   }
 }
 
-void PropHandler::tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE) {
+void PropHandler::tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE)
+{
   const ItemDataT& d            = wpn.getData();
   const auto* const originProp  = IS_MELEE ? d.melee.propApplied : d.ranged.propApplied;
 
-  if(originProp) {
+  if(originProp)
+  {
     //If weapon damage type is resisted by the defender, the property is
     //automatically resisted
     DmgType dmgType = IS_MELEE ? d.melee.dmgType : d.ranged.dmgType;
-    if(!tryResistDmg(dmgType, false)) {
+    if(!tryResistDmg(dmgType, false))
+    {
       //Make a copy of the weapon effect
       auto* const propCpy = mkProp(originProp->getId(), originProp->getTurnsInitType(),
                                    originProp->turnsLeft_);
@@ -1013,14 +1075,17 @@ void PropHandler::tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE) {
 bool PropHandler::endAppliedProp(
   const PropId id,
   const bool losBlockers[MAP_W][MAP_H],
-  const bool RUN_PROP_END_EFFECTS) {
+  const bool RUN_PROP_END_EFFECTS)
+{
 
   int index   = -1;
   Prop* prop  = nullptr;
   const size_t NR_APPLIED_PROPS = appliedProps_.size();
-  for(size_t i = 0; i < NR_APPLIED_PROPS; ++i) {
+  for(size_t i = 0; i < NR_APPLIED_PROPS; ++i)
+  {
     prop = appliedProps_.at(i);
-    if(prop->getId() == id) {
+    if(prop->getId() == id)
+    {
       index = i;
       break;
     }
@@ -1029,25 +1094,32 @@ bool PropHandler::endAppliedProp(
 
   appliedProps_.erase(begin(appliedProps_) + index);
 
-  if(RUN_PROP_END_EFFECTS) {
+  if(RUN_PROP_END_EFFECTS)
+  {
     const bool IS_VISUAL_UPDATE_NEEDED =
       prop->shouldUpdatePlayerVisualWhenStartOrEnd();
 
-    if(IS_VISUAL_UPDATE_NEEDED) {
+    if(IS_VISUAL_UPDATE_NEEDED)
+    {
       prop->owningActor_->updateClr();
       Map::player->updateFov();
       Render::drawMapAndInterface();
     }
 
-    if(owningActor_ == Map::player) {
+    if(owningActor_ == Map::player)
+    {
       string msg = "";
       prop->getMsg(propMsgOnEndPlayer, msg);
       if(!msg.empty()) {Log::addMsg(msg, clrWhite);}
-    } else {
-      if(Map::player->isSeeingActor(*owningActor_, losBlockers)) {
+    }
+    else
+    {
+      if(Map::player->isSeeingActor(*owningActor_, losBlockers))
+      {
         string msg = "";
         prop->getMsg(propMsgOnEndMon, msg);
-        if(!msg.empty()) {
+        if(!msg.empty())
+        {
           Log::addMsg(owningActor_->getNameThe() + " " + msg);
         }
       }
@@ -1059,39 +1131,51 @@ bool PropHandler::endAppliedProp(
   return true;
 }
 
-void PropHandler::applyActorTurnPropBuffer() {
+void PropHandler::applyActorTurnPropBuffer()
+{
   for(Prop* prop : actorTurnPropBuffer_) {tryApplyProp(prop);}
   actorTurnPropBuffer_.clear();
 }
 
 void PropHandler::tick(const PropTurnMode turnMode,
-                       const bool losBlockers[MAP_W][MAP_H]) {
+                       const bool losBlockers[MAP_W][MAP_H])
+{
 
-  for(size_t i = 0; i < appliedProps_.size();) {
+  for(size_t i = 0; i < appliedProps_.size();)
+  {
     Prop* const prop = appliedProps_.at(i);
 
     //Only tick property if it runs on the given turn mode
     //(standard turns or actor turns)
-    if(prop->getTurnMode() == turnMode) {
+    if(prop->getTurnMode() == turnMode)
+    {
 
-      if(owningActor_ != Map::player) {
-        if(prop->isMakingMonAware()) {
+      if(owningActor_ != Map::player)
+      {
+        if(prop->isMakingMonAware())
+        {
           static_cast<Mon*>(owningActor_)->awareCounter_ =
             owningActor_->getData().nrTurnsAwarePlayer;
         }
       }
 
-      if(prop->turnsLeft_ > 0) {
+      if(prop->turnsLeft_ > 0)
+      {
         prop->turnsLeft_--;
       }
 
-      if(prop->isFinnished()) {
+      if(prop->isFinnished())
+      {
         endAppliedProp(prop->getId(), losBlockers);
-      } else {
+      }
+      else
+      {
         prop->onNewTurn();
         i++;
       }
-    } else {
+    }
+    else
+    {
       i++;
     }
   }
@@ -1101,9 +1185,12 @@ void PropHandler::tick(const PropTurnMode turnMode,
   for(bool& v : sources) {v = false;}
   sources[int(PropSrc::inv)] = true;
   getPropsFromSources(invProps, sources);
-  for(Prop* prop : invProps) {
-    if(owningActor_ != Map::player) {
-      if(prop->isMakingMonAware()) {
+  for(Prop* prop : invProps)
+  {
+    if(owningActor_ != Map::player)
+    {
+      if(prop->isMakingMonAware())
+      {
         static_cast<Mon*>(owningActor_)->awareCounter_ =
           owningActor_->getData().nrTurnsAwarePlayer;
       }
@@ -1112,7 +1199,8 @@ void PropHandler::tick(const PropTurnMode turnMode,
   }
 }
 
-void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
+void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const
+{
   line.clear();
 
   const bool IS_SELF_AWARE =
@@ -1122,9 +1210,11 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop* prop : propList) {
+  for(Prop* prop : propList)
+  {
     const string propName = prop->getNameShort();
-    if(!propName.empty()) {
+    if(!propName.empty())
+    {
       const PropAlignment alignment = prop->getAlignment();
       const int TURNS_LEFT = prop->turnsLeft_;
       const string turnsStr = TURNS_LEFT > 0 && IS_SELF_AWARE ?
@@ -1138,7 +1228,8 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const {
   }
 }
 
-int PropHandler::getChangedMaxHp(const int HP_MAX) const {
+int PropHandler::getChangedMaxHp(const int HP_MAX) const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
@@ -1148,7 +1239,8 @@ int PropHandler::getChangedMaxHp(const int HP_MAX) const {
   return newHpMax;
 }
 
-void PropHandler::changeMoveDir(const Pos& actorPos, Dir& dir) const {
+void PropHandler::changeMoveDir(const Pos& actorPos, Dir& dir) const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
@@ -1156,76 +1248,91 @@ void PropHandler::changeMoveDir(const Pos& actorPos, Dir& dir) const {
   for(Prop* prop : propList) {prop->changeMoveDir(actorPos, dir);}
 }
 
-bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop* prop : propList) {
+  for(Prop* prop : propList)
+  {
     if(
       !prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) &&
-      !prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE)) {
+      !prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE))
+    {
       return false;
     }
   }
   return true;
 }
 
-bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop* prop : propList) {
-    if(!prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE)) {
+  for(Prop* prop : propList)
+  {
+    if(!prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE))
+    {
       return false;
     }
   }
   return true;
 }
 
-bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop* prop : propList) {
+  for(Prop* prop : propList)
+  {
     if(!prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE)) {return false;}
   }
   return true;
 }
 
-bool PropHandler::allowMove() const {
+bool PropHandler::allowMove() const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop* prop : propList) {
+  for(Prop* prop : propList)
+  {
     if(!prop->allowMove()) {return false;}
   }
   return true;
 }
 
-bool PropHandler::allowAct() const {
+bool PropHandler::allowAct() const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(Prop* prop : propList) {
+  for(Prop* prop : propList)
+  {
     if(!prop->allowAct()) {return false;}
   }
   return true;
 }
 
-bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
   TRACE_FUNC_BEGIN_VERBOSE;
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   const size_t NR_PROPS = propList.size();
-  for(size_t i = 0; i < NR_PROPS; ++i) {
-    if(!propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE)) {
+  for(size_t i = 0; i < NR_PROPS; ++i)
+  {
+    if(!propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE))
+    {
       TRACE_FUNC_END_VERBOSE;
       return false;
     }
@@ -1234,21 +1341,25 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
   return true;
 }
 
-bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   const size_t NR_PROPS = propList.size();
-  for(size_t i = 0; i < NR_PROPS; ++i) {
-    if(!propList.at(i)->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE)) {
+  for(size_t i = 0; i < NR_PROPS; ++i)
+  {
+    if(!propList.at(i)->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE))
+    {
       return false;
     }
   }
   return true;
 }
 
-void PropHandler::onHit() {
+void PropHandler::onHit()
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
@@ -1256,7 +1367,8 @@ void PropHandler::onHit() {
   for(Prop* prop : propList) {prop->onHit();}
 }
 
-void PropHandler::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
+void PropHandler::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR)
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
@@ -1264,25 +1376,31 @@ void PropHandler::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   for(Prop* prop : propList) {prop->onDeath(IS_PLAYER_SEE_OWNING_ACTOR);}
 }
 
-int PropHandler::getAbilityMod(const AbilityId ability) const {
+int PropHandler::getAbilityMod(const AbilityId ability) const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
   int modifier = 0;
-  for(Prop* prop : propList) {
+  for(Prop* prop : propList)
+  {
     modifier += prop->getAbilityMod(ability);
   }
   return modifier;
 }
 
-Prop* PropHandler::getProp(const PropId id, const PropSrc source) const {
+Prop* PropHandler::getProp(const PropId id, const PropSrc source) const
+{
 
   assert(source != PropSrc::END);
 
-  if(source == PropSrc::applied) {
+  if(source == PropSrc::applied)
+  {
     for(Prop* prop : appliedProps_) {if(prop->getId() == id) {return prop;}}
-  } else if(source == PropSrc::inv) {
+  }
+  else if(source == PropSrc::inv)
+  {
     vector<Prop*> invProps;
     bool sources[int(PropSrc::END)];
     for(bool& v : sources) {v = false;}
@@ -1293,7 +1411,8 @@ Prop* PropHandler::getProp(const PropId id, const PropSrc source) const {
   return nullptr;
 }
 
-bool PropHandler::changeActorClr(Clr& clr) const {
+bool PropHandler::changeActorClr(Clr& clr) const
+{
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
@@ -1302,15 +1421,18 @@ bool PropHandler::changeActorClr(Clr& clr) const {
   return false;
 }
 
-void PropHandler::endAppliedPropsByMagicHealing() {
+void PropHandler::endAppliedPropsByMagicHealing()
+{
   bool losBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), losBlockers);
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for(size_t i = 0; i < propList.size(); ++i) {
-    if(propList.at(i)->isEndedByMagicHealing()) {
+  for(size_t i = 0; i < propList.size(); ++i)
+  {
+    if(propList.at(i)->isEndedByMagicHealing())
+    {
       endAppliedProp(appliedProps_.at(i)->getId(), losBlockers);
       propList.erase(begin(propList) + i);
       i--;
@@ -1323,27 +1445,32 @@ Prop::Prop(PropId id, PropTurns turnsInit, int turns) :
   owningActor_(nullptr),
   id_(id),
   data_(&(PropData::data[id])),
-  turnsInitType_(turnsInit) {
+  turnsInitType_(turnsInit)
+{
 
   if(turnsInit == PropTurns::std)         {turnsLeft_ = Rnd::range(data_->stdRndTurns);}
   if(turnsInit == PropTurns::indefinite)  {turnsLeft_ = -1;}
 }
 
-void PropBlessed::onStart() {
+void PropBlessed::onStart()
+{
   bool losBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), losBlockers);
   owningActor_->getPropHandler().endAppliedProp(
     propCursed, losBlockers, false);
 }
 
-void PropCursed::onStart() {
+void PropCursed::onStart()
+{
   bool losBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), losBlockers);
   owningActor_->getPropHandler().endAppliedProp(propBlessed, losBlockers, false);
 }
 
-void PropInfected::onNewTurn() {
-  if(Rnd::oneIn(175)) {
+void PropInfected::onNewTurn()
+{
+  if(Rnd::oneIn(175))
+  {
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(PropTurns::std));
     bool blocked[MAP_W][MAP_H];
@@ -1352,28 +1479,36 @@ void PropInfected::onNewTurn() {
   }
 }
 
-int PropDiseased::getChangedMaxHp(const int HP_MAX) const {
-  if(owningActor_ == Map::player && PlayerBon::hasTrait(Trait::survivalist)) {
+int PropDiseased::getChangedMaxHp(const int HP_MAX) const
+{
+  if(owningActor_ == Map::player && PlayerBon::hasTrait(Trait::survivalist))
+  {
     return (HP_MAX * 3) / 4; //Survavlist makes you lose only 25% instead of 50%
-  } else {
+  }
+  else
+  {
     return HP_MAX / 2;
   }
 }
 
-void PropDiseased::onStart() {
+void PropDiseased::onStart()
+{
   //Actor::getHpMax() will now return a decreased value
   //cap current HP to the new, lower, maximum
   int& hp = owningActor_->hp_;
   hp = min(Map::player->getHpMax(true), hp);
 }
 
-bool PropDiseased::tryResistOtherProp(const PropId id) const {
+bool PropDiseased::tryResistOtherProp(const PropId id) const
+{
   //Getting infected while already diseased is just annoying
   return id == propInfected;
 }
 
-void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
-  if(IS_PLAYER_SEE_OWNING_ACTOR) {
+void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR)
+{
+  if(IS_PLAYER_SEE_OWNING_ACTOR)
+  {
     const string& name1 = owningActor_->getNameThe();
     const string& name2 = ActorData::data[int(ActorId::zuul)].nameThe;
     Log::addMsg(name1 + " was possessed by " + name2 + "!");
@@ -1385,16 +1520,23 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) {
   ActorFactory::summonMon(pos, vector<ActorId> {ActorId::zuul}, true);
 }
 
-void PropPoisoned::onNewTurn() {
-  if(owningActor_->isAlive()) {
+void PropPoisoned::onNewTurn()
+{
+  if(owningActor_->isAlive())
+  {
     const int DMG_N_TURN = 3;
     const int TURN = GameTime::getTurn();
-    if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN) {
+    if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN)
+    {
 
-      if(owningActor_ == Map::player) {
+      if(owningActor_ == Map::player)
+      {
         Log::addMsg("I am suffering from the poison!", clrMsgBad, true);
-      } else {
-        if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
+      }
+      else
+      {
+        if(Map::player->isSeeingActor(*owningActor_, nullptr))
+        {
           Log::addMsg(owningActor_->getNameThe() + " suffers from poisoning!");
         }
       }
@@ -1405,30 +1547,39 @@ void PropPoisoned::onNewTurn() {
 }
 
 bool PropTerrified::allowAttackMelee(
-  const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+  const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
 
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  {
     Log::addMsg("I am too terrified to engage in close combat!");
   }
   return false;
 }
 
 bool PropTerrified::allowAttackRanged(
-  const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+  const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
 
   (void)ALLOW_MESSAGE_WHEN_FALSE;
   return true;
 }
 
-void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
+void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
+{
   (void)actorPos;
 
-  if(dir != Dir::center) {
+  if(dir != Dir::center)
+  {
 
-    if(owningActor_ == Map::player) {
+    if(owningActor_ == Map::player)
+    {
       Log::addMsg("I struggle to tear out the spike!", clrMsgBad);
-    } else {
-      if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
+    }
+    else
+    {
+      if(Map::player->isSeeingActor(*owningActor_, nullptr))
+      {
         Log::addMsg(owningActor_->getNameThe() +  " struggles in pain!",
                     clrMsgGood);
       }
@@ -1436,17 +1587,24 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
     owningActor_->hit(Rnd::dice(1, 3), DmgType::physical);
 
-    if(owningActor_->isAlive()) {
+    if(owningActor_->isAlive())
+    {
 
       //TODO reimplement something affecting chance of success?
 
-      if(Rnd::oneIn(4)) {
+      if(Rnd::oneIn(4))
+      {
         nrSpikes_--;
-        if(nrSpikes_ > 0) {
-          if(owningActor_ == Map::player) {
+        if(nrSpikes_ > 0)
+        {
+          if(owningActor_ == Map::player)
+          {
             Log::addMsg("I rip out a spike from my flesh!");
-          } else {
-            if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
+          }
+          else
+          {
+            if(Map::player->isSeeingActor(*owningActor_, nullptr))
+            {
               Log::addMsg(
                 owningActor_->getNameThe() + " tears out a spike!");
             }
@@ -1459,49 +1617,60 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir) {
   }
 }
 
-bool PropConfused::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropConfused::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  {
     Log::addMsg("I'm too confused.");
   }
   return false;
 }
 
 bool PropConfused::allowAttackMelee(
-  const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+  const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
 
   (void)ALLOW_MESSAGE_WHEN_FALSE;
 
-  if(owningActor_ != Map::player) {
+  if(owningActor_ != Map::player)
+  {
     return Rnd::coinToss();
   }
   return true;
 }
 
 bool PropConfused::allowAttackRanged(
-  const bool ALLOW_MESSAGE_WHEN_FALSE) const {
+  const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
 
   (void)ALLOW_MESSAGE_WHEN_FALSE;
 
 
-  if(owningActor_ != Map::player) {
+  if(owningActor_ != Map::player)
+  {
     return Rnd::coinToss();
   }
   return true;
 }
 
-void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
-  if(dir != Dir::center) {
+void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir)
+{
+  if(dir != Dir::center)
+  {
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksActor(*owningActor_, true),
                     blocked);
 
-    if(Rnd::oneIn(8)) {
+    if(Rnd::oneIn(8))
+    {
       int triesLeft = 100;
-      while(triesLeft != 0) {
+      while(triesLeft != 0)
+      {
         //-1 to 1 for x and y
         const Pos delta(Rnd::range(-1, 1), Rnd::range(-1, 1));
-        if(delta.x != 0 || delta.y != 0) {
+        if(delta.x != 0 || delta.y != 0)
+        {
           const Pos c = actorPos + delta;
           if(!blocked[c.x][c.y]) {dir = DirUtils::getDir(delta);}
         }
@@ -1511,8 +1680,10 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir) {
   }
 }
 
-void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
-  if(owningActor_ == Map::player) {
+void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
+{
+  if(owningActor_ == Map::player)
+  {
     vector<Actor*> seenFoes;
     owningActor_->getSeenFoes(seenFoes);
 
@@ -1520,7 +1691,8 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
 
     vector<Pos> seenFoesCells;
     seenFoesCells.clear();
-    for(size_t i = 0; i < seenFoes.size(); ++i) {
+    for(size_t i = 0; i < seenFoes.size(); ++i)
+    {
       seenFoesCells.push_back(seenFoes.at(i)->pos);
     }
     sort(begin(seenFoesCells), end(seenFoesCells),
@@ -1534,19 +1706,22 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir) {
     vector<Pos> line;
     LineCalc::calcNewLine(actorPos, closestMonPos, true, 999, false, line);
 
-    if(line.size() > 1) {
+    if(line.size() > 1)
+    {
       for(Pos& pos : line) {if(blocked[pos.x][pos.y]) {return;}}
       dir = DirUtils::getDir(line.at(1) - actorPos);
     }
   }
 }
 
-bool PropFrenzied::tryResistOtherProp(const PropId id) const {
+bool PropFrenzied::tryResistOtherProp(const PropId id) const
+{
   return id == propConfused || id == propFainted ||
          id == propTerrified || id == propWeakened;
 }
 
-void PropFrenzied::onStart() {
+void PropFrenzied::onStart()
+{
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), blocked);
   owningActor_->getPropHandler().endAppliedProp(propConfused,  blocked);
@@ -1554,70 +1729,88 @@ void PropFrenzied::onStart() {
   owningActor_->getPropHandler().endAppliedProp(propWeakened,  blocked);
 }
 
-void PropFrenzied::onEnd() {
+void PropFrenzied::onEnd()
+{
   owningActor_->getPropHandler().tryApplyProp(
     new PropWeakened(PropTurns::std));
 }
 
-bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  {
     Log::addMsg("I'm too enraged to concentrate!");
   }
   return false;
 }
 
-bool PropFrenzied::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropFrenzied::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  {
     Log::addMsg("I'm too enraged to concentrate!");
   }
   return false;
 }
 
-void PropBurning::onStart() {
+void PropBurning::onStart()
+{
 //  owningActor_->addLight(Map::light);
 }
 
-void PropBurning::onNewTurn() {
-  if(owningActor_ == Map::player) {
+void PropBurning::onNewTurn()
+{
+  if(owningActor_ == Map::player)
+  {
     Log::addMsg("AAAARGH IT BURNS!!!", clrRedLgt);
   }
   owningActor_->hit(Rnd::dice(1, 2), DmgType::fire);
 }
 
-bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  {
     Log::addMsg("Not while burning.");
   }
   return false;
 }
 
-bool PropBurning::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE) {
+bool PropBurning::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+{
+  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  {
     Log::addMsg("Not while burning.");
   }
   return false;
 }
 
-bool PropBlind::shouldUpdatePlayerVisualWhenStartOrEnd() const {
+bool PropBlind::shouldUpdatePlayerVisualWhenStartOrEnd() const
+{
   return owningActor_ == Map::player;
 }
 
-void PropParalyzed::onStart() {
+void PropParalyzed::onStart()
+{
   auto* const player = Map::player;
-  if(owningActor_ == player) {
+  if(owningActor_ == player)
+  {
     auto* const activeExplosive = player->activeExplosive;
     if(activeExplosive) {activeExplosive->onPlayerParalyzed();}
   }
 }
 
-bool PropFainted::shouldUpdatePlayerVisualWhenStartOrEnd() const {
+bool PropFainted::shouldUpdatePlayerVisualWhenStartOrEnd() const
+{
   return owningActor_ == Map::player;
 }
 
-void PropFlared::onNewTurn() {
+void PropFlared::onNewTurn()
+{
   owningActor_->hit(1, DmgType::fire);
 
-  if(turnsLeft_ == 0) {
+  if(turnsLeft_ == 0)
+  {
     bool losBlockers[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksLos(), losBlockers);
     owningActor_->getPropHandler().tryApplyProp(
@@ -1628,12 +1821,18 @@ void PropFlared::onNewTurn() {
 }
 
 bool PropRAcid::tryResistDmg(const DmgType dmgType,
-                             const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(dmgType == DmgType::acid) {
-    if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == Map::player) {
+                             const bool ALLOW_MSG_WHEN_TRUE) const
+{
+  if(dmgType == DmgType::acid)
+  {
+    if(ALLOW_MSG_WHEN_TRUE)
+    {
+      if(owningActor_ == Map::player)
+      {
         Log::addMsg("I feel a faint burning sensation.");
-      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
+      }
+      else if(Map::player->isSeeingActor(*owningActor_, nullptr))
+      {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1642,12 +1841,18 @@ bool PropRAcid::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRCold::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(dmgType == DmgType::cold) {
-    if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == Map::player) {
+bool PropRCold::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const
+{
+  if(dmgType == DmgType::cold)
+  {
+    if(ALLOW_MSG_WHEN_TRUE)
+    {
+      if(owningActor_ == Map::player)
+      {
         Log::addMsg("I feel chilly.");
-      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
+      }
+      else if(Map::player->isSeeingActor(*owningActor_, nullptr))
+      {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1657,12 +1862,18 @@ bool PropRCold::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TR
 }
 
 bool PropRElec::tryResistDmg(const DmgType dmgType,
-                             const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(dmgType == DmgType::electric) {
-    if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == Map::player) {
+                             const bool ALLOW_MSG_WHEN_TRUE) const
+{
+  if(dmgType == DmgType::electric)
+  {
+    if(ALLOW_MSG_WHEN_TRUE)
+    {
+      if(owningActor_ == Map::player)
+      {
         Log::addMsg("I feel a faint tingle.");
-      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
+      }
+      else if(Map::player->isSeeingActor(*owningActor_, nullptr))
+      {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1671,42 +1882,54 @@ bool PropRElec::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRConfusion::tryResistOtherProp(const PropId id) const {
+bool PropRConfusion::tryResistOtherProp(const PropId id) const
+{
   return id == propConfused;
 }
 
-void PropRConfusion::onStart() {
+void PropRConfusion::onStart()
+{
   bool losBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), losBlockers);
   owningActor_->getPropHandler().endAppliedProp(propConfused, losBlockers);
 }
 
-bool PropRFear::tryResistOtherProp(const PropId id) const {
+bool PropRFear::tryResistOtherProp(const PropId id) const
+{
   return id == propTerrified;
 }
 
-void PropRFear::onStart() {
+void PropRFear::onStart()
+{
   bool losBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), losBlockers);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, losBlockers);
 }
 
-bool PropRPhys::tryResistOtherProp(const PropId id) const {
+bool PropRPhys::tryResistOtherProp(const PropId id) const
+{
   (void)id;
   return false;
 }
 
-void PropRPhys::onStart() {
+void PropRPhys::onStart()
+{
   return;
 }
 
 bool PropRPhys::tryResistDmg(const DmgType dmgType,
-                             const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(dmgType == DmgType::physical) {
-    if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == Map::player) {
+                             const bool ALLOW_MSG_WHEN_TRUE) const
+{
+  if(dmgType == DmgType::physical)
+  {
+    if(ALLOW_MSG_WHEN_TRUE)
+    {
+      if(owningActor_ == Map::player)
+      {
         Log::addMsg("I resist harm.");
-      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
+      }
+      else if(Map::player->isSeeingActor(*owningActor_, nullptr))
+      {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1715,23 +1938,31 @@ bool PropRPhys::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRFire::tryResistOtherProp(const PropId id) const {
+bool PropRFire::tryResistOtherProp(const PropId id) const
+{
   return id == propBurning;
 }
 
-void PropRFire::onStart() {
+void PropRFire::onStart()
+{
   bool losBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), losBlockers);
   owningActor_->getPropHandler().endAppliedProp(propBurning, losBlockers);
 }
 
 bool PropRFire::tryResistDmg(const DmgType dmgType,
-                             const bool ALLOW_MSG_WHEN_TRUE) const {
-  if(dmgType == DmgType::fire) {
-    if(ALLOW_MSG_WHEN_TRUE) {
-      if(owningActor_ == Map::player) {
+                             const bool ALLOW_MSG_WHEN_TRUE) const
+{
+  if(dmgType == DmgType::fire)
+  {
+    if(ALLOW_MSG_WHEN_TRUE)
+    {
+      if(owningActor_ == Map::player)
+      {
         Log::addMsg("I feel hot.");
-      } else if(Map::player->isSeeingActor(*owningActor_, nullptr)) {
+      }
+      else if(Map::player->isSeeingActor(*owningActor_, nullptr))
+      {
         Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
       }
     }
@@ -1740,27 +1971,32 @@ bool PropRFire::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRPoison::tryResistOtherProp(const PropId id) const {
+bool PropRPoison::tryResistOtherProp(const PropId id) const
+{
   return id == propPoisoned;
 }
 
-void PropRPoison::onStart() {
+void PropRPoison::onStart()
+{
   bool losBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), losBlockers);
   owningActor_->getPropHandler().endAppliedProp(propPoisoned, losBlockers);
 }
 
-bool PropRSleep::tryResistOtherProp(const PropId id) const {
+bool PropRSleep::tryResistOtherProp(const PropId id) const
+{
   return id == propFainted;
 }
 
-void PropRSleep::onStart() {
+void PropRSleep::onStart()
+{
   bool losBlockers[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), losBlockers);
   owningActor_->getPropHandler().endAppliedProp(propFainted, losBlockers);
 }
 
-void PropBurrowing::onNewTurn() {
+void PropBurrowing::onNewTurn()
+{
   const Pos& p = owningActor_->pos;
   Map::cells[p.x][p.y].rigid->hit(DmgType::physical, DmgMethod::forced);
 }

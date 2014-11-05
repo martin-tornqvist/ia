@@ -15,11 +15,14 @@
 
 using namespace std;
 
-namespace ItemPickup {
+namespace ItemPickup
+{
 
-namespace {
+namespace
+{
 
-void pickupEffects(Actor* actor, Item* item) {
+void pickupEffects(Actor* actor, Item* item)
+{
   (void)actor;
   (void)item;
 }
@@ -27,20 +30,25 @@ void pickupEffects(Actor* actor, Item* item) {
 } //namespace
 
 //Can always be called, to check if something is there to be picked up.
-void tryPick() {
+void tryPick()
+{
   const Pos& pos = Map::player->pos;
   Item* const item = Map::cells[pos.x][pos.y].item;
 
-  if(item) {
+  if(item)
+  {
     Inventory& playerInv = Map::player->getInv();
 
     const string ITEM_NAME = item->getName(ItemRefType::plural);
 
     //If picked up item is missile weapon, try to add it to carried stack.
-    if(item->getData().ranged.isThrowingWpn) {
+    if(item->getData().ranged.isThrowingWpn)
+    {
       Item* const carriedMissile = playerInv.getItemInSlot(SlotId::thrown);
-      if(carriedMissile) {
-        if(item->getData().id == carriedMissile->getData().id) {
+      if(carriedMissile)
+      {
+        if(item->getData().id == carriedMissile->getData().id)
+        {
           Audio::play(SfxId::pickup);
 
           Log::addMsg("I add " + ITEM_NAME + " to my missile stack.");
@@ -64,21 +72,27 @@ void tryPick() {
 
     GameTime::actorDidAct();
 
-  } else {
+  }
+  else
+  {
     Log::clearLog();
     Log::addMsg("I see nothing to pick up here.");
   }
 }
 
-void tryUnloadWpnOrPickupAmmo() {
+void tryUnloadWpnOrPickupAmmo()
+{
   Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
 
-  if(item) {
-    if(item->getData().ranged.isRangedWpn) {
+  if(item)
+  {
+    if(item->getData().ranged.isRangedWpn)
+    {
       Wpn* const wpn = static_cast<Wpn*>(item);
       const int nrAmmoLoaded = wpn->nrAmmoLoaded;
 
-      if(nrAmmoLoaded > 0 && !wpn->getData().ranged.hasInfiniteAmmo) {
+      if(nrAmmoLoaded > 0 && !wpn->getData().ranged.hasInfiniteAmmo)
+      {
         Inventory& playerInv = Map::player->getInv();
         const ItemId ammoType = wpn->getData().ranged.ammoItemId;
 
@@ -86,10 +100,13 @@ void tryUnloadWpnOrPickupAmmo() {
 
         Item* spawnedAmmo = ItemFactory::mk(ammoType);
 
-        if(ammoData->isAmmoClip) {
+        if(ammoData->isAmmoClip)
+        {
           //Unload a clip
           static_cast<AmmoClip*>(spawnedAmmo)->ammo_ = nrAmmoLoaded;
-        } else {
+        }
+        else
+        {
           //Unload loose ammo
           spawnedAmmo->nrItems_ = nrAmmoLoaded;
         }
@@ -104,8 +121,11 @@ void tryUnloadWpnOrPickupAmmo() {
         GameTime::actorDidAct();
         return;
       }
-    } else {
-      if(item->getData().isAmmo) {
+    }
+    else
+    {
+      if(item->getData().isAmmo)
+      {
         tryPick();
         return;
       }

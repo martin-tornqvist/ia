@@ -9,11 +9,13 @@
 //TODO This should be merged into MapParsing
 //Also, most/all things in here really needs clearer purpose/naming
 
-enum class PlacementRule {
+enum class PlacementRule
+{
   nextToWalls, awayFromWalls, either
 };
 
-namespace MapPatterns {
+namespace MapPatterns
+{
 
 void setCellsInArea(const Rect& area, std::vector<Pos>& nextToWalls,
                     std::vector<Pos>& awayFromWalls);

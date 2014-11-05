@@ -5,7 +5,8 @@
 
 class Actor;
 
-namespace KnockBack {
+namespace KnockBack
+{
 
 void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                   const bool IS_SPIKE_GUN,

@@ -14,11 +14,14 @@
 
 using namespace std;
 
-namespace PopulateMon {
+namespace PopulateMon
+{
 
-namespace {
+namespace
+{
 
-int getRandomOutOfDepth() {
+int getRandomOutOfDepth()
+{
   if(Map::dlvl == 0)                  {return 0;}
   if(Rnd::oneIn(40) && Map::dlvl > 1) {return 5;}
   if(Rnd::oneIn(5))                   {return 2;}
@@ -27,19 +30,22 @@ int getRandomOutOfDepth() {
 }
 
 void mkListOfMonCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
-                                  vector<ActorId>& listRef) {
+                             vector<ActorId>& listRef)
+{
   listRef.clear();
 
   const int EFFECTIVE_DLVL =
     max(1, min(LAST_CAVERN_LVL, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
 
-  for(const auto& d : ActorData::data) {
+  for(const auto& d : ActorData::data)
+  {
     if(
       d.id != ActorId::player           &&
       d.isAutoSpawnAllowed              &&
       d.nrLeftAllowedToSpawn != 0       &&
       EFFECTIVE_DLVL >= d.spawnMinDLVL  &&
-      EFFECTIVE_DLVL <= d.spawnMaxDLVL) {
+      EFFECTIVE_DLVL <= d.spawnMaxDLVL)
+    {
       listRef.push_back(d.id);
     }
   }
@@ -48,11 +54,13 @@ void mkListOfMonCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
 void mkGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
                        bool blocked[MAP_W][MAP_H],
                        const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
-                       const bool IS_ROAMING_ALLOWED) {
+                       const bool IS_ROAMING_ALLOWED)
+{
   vector<ActorId> idBucket;
   mkListOfMonCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
-  if(!idBucket.empty()) {
+  if(!idBucket.empty())
+  {
     const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
     mkGroupAt(id, sortedFreeCellsVector, blocked, IS_ROAMING_ALLOWED);
   }
@@ -60,7 +68,8 @@ void mkGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
 
 bool mkGroupOfRandomNativeToRoomTypeAt(
   const RoomType roomType, const vector<Pos>& sortedFreeCellsVector,
-  bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
+  bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED)
+{
 
   TRACE_FUNC_BEGIN;
 
@@ -68,27 +77,34 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
   vector<ActorId> idBucket;
   mkListOfMonCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
-  for(size_t i = 0; i < idBucket.size(); ++i) {
+  for(size_t i = 0; i < idBucket.size(); ++i)
+  {
     const ActorDataT& d = ActorData::data[int(idBucket.at(i))];
     bool isMonNativeToRoom = false;
-    for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
-      if(d.nativeRooms.at(iNative) == roomType) {
+    for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++)
+    {
+      if(d.nativeRooms.at(iNative) == roomType)
+      {
         isMonNativeToRoom = true;
         break;
       }
     }
-    if(!isMonNativeToRoom) {
+    if(!isMonNativeToRoom)
+    {
       idBucket.erase(idBucket.begin() + i);
       i--;
     }
   }
 
-  if(idBucket.empty()) {
+  if(idBucket.empty())
+  {
     TRACE << "Found no valid monsters to spawn at room theme ("
           << toStr(int(roomType)) + ")" << endl;
     TRACE_FUNC_END;
     return false;
-  } else {
+  }
+  else
+  {
     const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
     mkGroupAt(id, sortedFreeCellsVector, blocked, IS_ROAMING_ALLOWED);
     TRACE_FUNC_END;
@@ -98,7 +114,8 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
 
 } //namespace
 
-void trySpawnDueToTimePassed() {
+void trySpawnDueToTimePassed()
+{
   TRACE_FUNC_BEGIN;
 
   bool blocked[MAP_W][MAP_H];
@@ -112,28 +129,35 @@ void trySpawnDueToTimePassed() {
   const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_TO_PLAYER);
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_TO_PLAYER);
 
-  for(int x = X0; x <= X1; ++x) {
-    for(int y = Y0; y <= Y1; ++y) {
+  for(int x = X0; x <= X1; ++x)
+  {
+    for(int y = Y0; y <= Y1; ++y)
+    {
       blocked[x][y] = true;
     }
   }
 
   vector<Pos> freeCellsVector;
-  for(int y = 1; y < MAP_H - 1; ++y) {
-    for(int x = 1; x < MAP_W - 1; ++x) {
+  for(int y = 1; y < MAP_H - 1; ++y)
+  {
+    for(int x = 1; x < MAP_W - 1; ++x)
+    {
       if(!blocked[x][y]) {freeCellsVector.push_back(Pos(x, y));}
     }
   }
 
-  if(!freeCellsVector.empty()) {
+  if(!freeCellsVector.empty())
+  {
 
     const int ELEMENT = Rnd::range(0, freeCellsVector.size() - 1);
     const Pos& origin = freeCellsVector.at(ELEMENT);
 
     mkSortedFreeCellsVector(origin, blocked, freeCellsVector);
 
-    if(!freeCellsVector.empty()) {
-      if(Map::cells[origin.x][origin.y].isExplored) {
+    if(!freeCellsVector.empty())
+    {
+      if(Map::cells[origin.x][origin.y].isExplored)
+      {
         const int NR_OOD = getRandomOutOfDepth();
         mkGroupOfRandomAt(freeCellsVector, blocked, NR_OOD, true);
       }
@@ -142,7 +166,8 @@ void trySpawnDueToTimePassed() {
   TRACE_FUNC_END;
 }
 
-void populateCaveLvl() {
+void populateCaveLvl()
+{
   const int NR_GROUPS_ALLOWED = Rnd::range(6, 7);
 
   bool blocked[MAP_W][MAP_H];
@@ -157,16 +182,21 @@ void populateCaveLvl() {
   const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_FROM_PLAYER) - 1;
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_FROM_PLAYER) - 1;
 
-  for(int y = Y0; y <= Y1; ++y) {
-    for(int x = X0; x <= X1; ++x) {
+  for(int y = Y0; y <= Y1; ++y)
+  {
+    for(int x = X0; x <= X1; ++x)
+    {
       blocked[x][y] = true;
     }
   }
 
-  for(int i = 0; i < NR_GROUPS_ALLOWED; ++i) {
+  for(int i = 0; i < NR_GROUPS_ALLOWED; ++i)
+  {
     vector<Pos> originBucket;
-    for(int y = 1; y < MAP_H - 1; ++y) {
-      for(int x = 1; x < MAP_W - 1; ++x) {
+    for(int y = 1; y < MAP_H - 1; ++y)
+    {
+      for(int x = 1; x < MAP_W - 1; ++x)
+      {
         if(!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
       }
     }
@@ -174,14 +204,16 @@ void populateCaveLvl() {
     const Pos origin = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
-    if(!sortedFreeCellsVector.empty()) {
+    if(!sortedFreeCellsVector.empty())
+    {
       mkGroupOfRandomAt(sortedFreeCellsVector, blocked,
                         getRandomOutOfDepth(), true);
     }
   }
 }
 
-void populateIntroLvl() {
+void populateIntroLvl()
+{
   const int NR_GROUPS_ALLOWED = 2; //Rnd::range(2, 3);
 
   bool blocked[MAP_W][MAP_H];
@@ -195,16 +227,21 @@ void populateIntroLvl() {
   const int Y0 = max(0, playerPos.y - MIN_DIST_FROM_PLAYER);
   const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_FROM_PLAYER) - 1;
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_FROM_PLAYER) - 1;
-  for(int y = Y0; y <= Y1; ++y) {
-    for(int x = X0; x <= X1; ++x) {
+  for(int y = Y0; y <= Y1; ++y)
+  {
+    for(int x = X0; x <= X1; ++x)
+    {
       blocked[x][y] = true;
     }
   }
 
-  for(int i = 0; i < NR_GROUPS_ALLOWED; ++i) {
+  for(int i = 0; i < NR_GROUPS_ALLOWED; ++i)
+  {
     vector<Pos> originBucket;
-    for(int y = 1; y < MAP_H - 1; ++y) {
-      for(int x = 1; x < MAP_W - 1; ++x) {
+    for(int y = 1; y < MAP_H - 1; ++y)
+    {
+      for(int x = 1; x < MAP_W - 1; ++x)
+      {
         if(!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
       }
     }
@@ -212,13 +249,15 @@ void populateIntroLvl() {
     const Pos origin = originBucket.at(ELEMENT);
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
-    if(!sortedFreeCellsVector.empty()) {
+    if(!sortedFreeCellsVector.empty())
+    {
       mkGroupAt(ActorId::wolf, sortedFreeCellsVector, blocked, true);
     }
   }
 }
 
-void populateStdLvl() {
+void populateStdLvl()
+{
   const int NR_GROUPS_ALLOWED_ON_MAP = Rnd::range(5, 9);
   int nrGroupsSpawned = 0;
 
@@ -234,15 +273,19 @@ void populateStdLvl() {
   const int Y0 = max(0, playerPos.y - MIN_DIST_FROM_PLAYER);
   const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_FROM_PLAYER);
   const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_FROM_PLAYER);
-  for(int y = Y0; y <= Y1; ++y) {
-    for(int x = X0; x <= X1; ++x) {
+  for(int y = Y0; y <= Y1; ++y)
+  {
+    for(int x = X0; x <= X1; ++x)
+    {
       blocked[x][y] = true;
     }
   }
 
   //First, attempt to populate all non-plain themed rooms
-  for(Room* const room : Map::roomList) {
-    if(room->type_ != RoomType::plain) {
+  for(Room* const room : Map::roomList)
+  {
+    if(room->type_ != RoomType::plain)
+    {
 
       //TODO This is not a good method to calculate the number of room cells
       //(the room may be irregularly shaped)
@@ -251,12 +294,16 @@ void populateStdLvl() {
       const int NR_CELLS_IN_ROOM = ROOM_W * ROOM_H;
 
       const int MAX_NR_GROUPS_IN_ROOM = 2;
-      for(int i = 0; i < MAX_NR_GROUPS_IN_ROOM; ++i) {
+      for(int i = 0; i < MAX_NR_GROUPS_IN_ROOM; ++i)
+      {
         //Randomly pick a free position inside the room
         vector<Pos> originBucket;
-        for(int y = room->r_.p0.y; y <= room->r_.p1.y; ++y) {
-          for(int x = room->r_.p0.x; x <= room->r_.p1.x; ++x) {
-            if(Map::roomMap[x][y] == room && !blocked[x][y]) {
+        for(int y = room->r_.p0.y; y <= room->r_.p1.y; ++y)
+        {
+          for(int x = room->r_.p0.x; x <= room->r_.p1.x; ++x)
+          {
+            if(Map::roomMap[x][y] == room && !blocked[x][y])
+            {
               originBucket.push_back(Pos(x, y));
             }
           }
@@ -268,14 +315,16 @@ void populateStdLvl() {
         if(NR_ORIGIN_CANDIDATES < (NR_CELLS_IN_ROOM / 3)) {break;}
 
         //Spawn monsters in room
-        if(NR_ORIGIN_CANDIDATES > 0) {
+        if(NR_ORIGIN_CANDIDATES > 0)
+        {
           const int ELEMENT = Rnd::range(0, NR_ORIGIN_CANDIDATES - 1);
           const Pos& origin = originBucket.at(ELEMENT);
           vector<Pos> sortedFreeCellsVector;
           mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
 
           if(mkGroupOfRandomNativeToRoomTypeAt(
-                room->type_, sortedFreeCellsVector, blocked, false)) {
+                room->type_, sortedFreeCellsVector, blocked, false))
+          {
             nrGroupsSpawned++;
             if(nrGroupsSpawned >= NR_GROUPS_ALLOWED_ON_MAP) {return;}
           }
@@ -284,8 +333,10 @@ void populateStdLvl() {
 
       //After attempting to populate a non-plain themed room,
       //mark that area as forbidden
-      for(int y = room->r_.p0.y; y <= room->r_.p1.y; ++y) {
-        for(int x = room->r_.p0.x; x <= room->r_.p1.x; ++x) {
+      for(int y = room->r_.p0.y; y <= room->r_.p1.y; ++y)
+      {
+        for(int x = room->r_.p0.x; x <= room->r_.p1.x; ++x)
+        {
           blocked[x][y] = true;
         }
       }
@@ -294,14 +345,19 @@ void populateStdLvl() {
 
   //Second, place groups randomly in plain-themed areas until
   //no more groups to place
-  while(nrGroupsSpawned < NR_GROUPS_ALLOWED_ON_MAP) {
+  while(nrGroupsSpawned < NR_GROUPS_ALLOWED_ON_MAP)
+  {
     vector<Pos> originBucket;
-    for(int y = 1; y < MAP_H - 1; ++y) {
-      for(int x = 1; x < MAP_W - 1; ++x) {
-        if(Map::roomMap[x][y]) {
+    for(int y = 1; y < MAP_H - 1; ++y)
+    {
+      for(int x = 1; x < MAP_W - 1; ++x)
+      {
+        if(Map::roomMap[x][y])
+        {
           if(
             !blocked[x][y] &&
-            Map::roomMap[x][y]->type_ == RoomType::plain) {
+            Map::roomMap[x][y]->type_ == RoomType::plain)
+          {
             originBucket.push_back(Pos(x, y));
           }
         }
@@ -312,19 +368,22 @@ void populateStdLvl() {
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
     if(mkGroupOfRandomNativeToRoomTypeAt(
-          RoomType::plain, sortedFreeCellsVector, blocked, true)) {
+          RoomType::plain, sortedFreeCellsVector, blocked, true))
+    {
       nrGroupsSpawned++;
     }
   }
 }
 
 void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
-               bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED) {
+               bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED)
+{
   const ActorDataT& d = ActorData::data[int(id)];
 
   int maxNrInGroup = 1;
 
-  switch(d.groupSize) {
+  switch(d.groupSize)
+  {
     case MonGroupSize::few:    maxNrInGroup = Rnd::range(1, 2);    break;
     case MonGroupSize::group:  maxNrInGroup = Rnd::range(3, 4);    break;
     case MonGroupSize::horde:  maxNrInGroup = Rnd::range(6, 7);    break;
@@ -336,16 +395,20 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
 
   const int NR_FREE_CELLS = sortedFreeCellsVector.size();
   const int NR_CAN_BE_SPAWNED = min(NR_FREE_CELLS, maxNrInGroup);
-  for(int i = 0; i < NR_CAN_BE_SPAWNED; ++i) {
+  for(int i = 0; i < NR_CAN_BE_SPAWNED; ++i)
+  {
     const Pos& pos = sortedFreeCellsVector.at(i);
 
     Actor* const actor = ActorFactory::mk(id, pos);
     Mon* const mon = static_cast<Mon*>(actor);
     mon->isRoamingAllowed_ = IS_ROAMING_ALLOWED;
 
-    if(i == 0) {
+    if(i == 0)
+    {
       originActor = actor;
-    } else {
+    }
+    else
+    {
       mon->leader = originActor;
     }
 
@@ -355,7 +418,8 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
 
 void mkSortedFreeCellsVector(const Pos& origin,
                              const bool blocked[MAP_W][MAP_H],
-                             vector<Pos>& vectorRef) {
+                             vector<Pos>& vectorRef)
+{
   vectorRef.clear();
 
   const int RADI = 10;
@@ -364,8 +428,10 @@ void mkSortedFreeCellsVector(const Pos& origin,
   const int X1 = getConstrInRange(1, origin.x + RADI, MAP_W - 2);
   const int Y1 = getConstrInRange(1, origin.y + RADI, MAP_H - 2);
 
-  for(int y = Y0; y <= Y1; ++y) {
-    for(int x = X0; x <= X1; ++x) {
+  for(int y = Y0; y <= Y1; ++y)
+  {
+    for(int x = X0; x <= X1; ++x)
+    {
       if(!blocked[x][y]) {vectorRef.push_back(Pos(x, y));}
     }
   }

@@ -35,20 +35,24 @@
 
 using namespace std;
 
-struct BasicFixture {
-  BasicFixture() {
+struct BasicFixture
+{
+  BasicFixture()
+  {
     Init::initGame();
     Init::initSession();
     Map::player->pos = Pos(1, 1);
     Map::resetMap(); //Because map generation is not run
   }
-  ~BasicFixture() {
+  ~BasicFixture()
+  {
     Init::cleanupSession();
     Init::cleanupGame();
   }
 };
 
-TEST(IsValInRange) {
+TEST(IsValInRange)
+{
   //Check in range
   CHECK(Utils::isValInRange(5,    Range(3,  7)));
   CHECK(Utils::isValInRange(3,    Range(3,  7)));
@@ -81,14 +85,16 @@ TEST(IsValInRange) {
   //will return true.
 }
 
-TEST(RollDice) {
+TEST(RollDice)
+{
   int val = Rnd::range(100, 200);
   CHECK(val >= 100 && val <= 200);
   val = Rnd::range(-1, 1);
   CHECK(val >= -1 && val <= 1);
 }
 
-TEST(ConstrainValInRange) {
+TEST(ConstrainValInRange)
+{
   int val = getConstrInRange(5, 9, 10);
   CHECK_EQUAL(val, 9);
   val = getConstrInRange(5, 11, 10);
@@ -111,14 +117,16 @@ TEST(ConstrainValInRange) {
   CHECK_EQUAL(val, 10);
 }
 
-TEST(CalculateDistances) {
+TEST(CalculateDistances)
+{
   CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 3)), 1);
   CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(2, 4)), 2);
   CHECK_EQUAL(Utils::kingDist(Pos(1, 2), Pos(1, 2)), 0);
   CHECK_EQUAL(Utils::kingDist(Pos(10, 3), Pos(1, 4)), 9);
 }
 
-TEST(Directions) {
+TEST(Directions)
+{
   const int X0 = 20;
   const int Y0 = 20;
   const Pos fromPos(X0, Y0);
@@ -175,7 +183,8 @@ TEST(Directions) {
   CHECK_EQUAL("NE", str);
 }
 
-TEST(FormatText) {
+TEST(FormatText)
+{
   string str = "one two three four";
   int lineMaxW = 100;
   vector<string> formattedLines;
@@ -206,7 +215,8 @@ TEST(FormatText) {
   CHECK(formattedLines.empty());
 }
 
-TEST_FIXTURE(BasicFixture, LineCalculation) {
+TEST_FIXTURE(BasicFixture, LineCalculation)
+{
   Pos origin(0, 0);
   vector<Pos> line;
 
@@ -328,7 +338,8 @@ TEST_FIXTURE(BasicFixture, LineCalculation) {
   CHECK(!deltaLine);
 }
 
-TEST_FIXTURE(BasicFixture, Fov) {
+TEST_FIXTURE(BasicFixture, Fov)
+{
   bool blocked[MAP_W][MAP_H];
 
   Utils::resetArray(blocked, false);   //Nothing blocking sight
@@ -357,7 +368,8 @@ TEST_FIXTURE(BasicFixture, Fov) {
   CHECK(Map::cells[X    ][Y - R].isSeenByPlayer);
 }
 
-TEST_FIXTURE(BasicFixture, ThrowItems) {
+TEST_FIXTURE(BasicFixture, ThrowItems)
+{
   //-----------------------------------------------------------------
   // Throwing a throwing knife at a wall should make it land
   // in front of the wall - i.e. the cell it travelled through
@@ -379,7 +391,8 @@ TEST_FIXTURE(BasicFixture, ThrowItems) {
   CHECK(Map::cells[5][9].item);
 }
 
-TEST_FIXTURE(BasicFixture, Explosions) {
+TEST_FIXTURE(BasicFixture, Explosions)
+{
   const int X0 = 5;
   const int Y0 = 7;
 
@@ -387,7 +400,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   Map::put(new Floor(Pos(X0, Y0)));
 
   //Check wall destruction
-  for(int i = 0; i < 2; ++i) {
+  for(int i = 0; i < 2; ++i)
+  {
     Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
 
     //Cells around the center, at a distance of 1, should be destroyed
@@ -421,13 +435,15 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //Check that corpses can be destroyed, and do not block living actors
   const int NR_CORPSES = 3;
   Actor* corpses[NR_CORPSES];
-  for(int i = 0; i < NR_CORPSES; ++i) {
+  for(int i = 0; i < NR_CORPSES; ++i)
+  {
     corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
   a1 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
-  for(int i = 0; i < NR_CORPSES; ++i) {
+  for(int i = 0; i < NR_CORPSES; ++i)
+  {
     CHECK_EQUAL(int(ActorDeadState::destroyed), int(corpses[i]->deadState));
   }
   CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
@@ -435,7 +451,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   //Check explosion applying Burning to living and dead actors
   a1        = ActorFactory::mk(ActorId::rat, Pos(X0 - 1, Y0));
   Actor* a2 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
-  for(int i = 0; i < NR_CORPSES; ++i) {
+  for(int i = 0; i < NR_CORPSES; ++i)
+  {
     corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
     corpses[i]->deadState = ActorDeadState::corpse;
   }
@@ -444,7 +461,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
                             new PropBurning(PropTurns::std));
   CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied));
   CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied));
-  for(int i = 0; i < NR_CORPSES; ++i) {
+  for(int i = 0; i < NR_CORPSES; ++i)
+  {
     PropHandler& propHlr = corpses[i]->getPropHandler();
     CHECK(propHlr.getProp(propBurning, PropSrc::applied));
   }
@@ -473,7 +491,8 @@ TEST_FIXTURE(BasicFixture, Explosions) {
   CHECK(Map::cells[x    ][y + 1].rigid->getId() == FeatureId::wall);
 }
 
-TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
+TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
+{
   //-----------------------------------------------------------------
   // Test that-
   // * a monster can get stuck in a spider web,
@@ -492,7 +511,8 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
   bool testedLooseWebIntact     = false;
   bool testedLooseWebDestroyed  = false;
 
-  while(!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed) {
+  while(!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed)
+  {
 
     //Spawn right floor cell
     Map::put(new Floor(posR));
@@ -516,13 +536,19 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
     monster->moveDir(Dir::left);
 
     //Check conditions
-    if(monster->pos == posR) {
+    if(monster->pos == posR)
+    {
       testedStuck = true;
-    } else if(monster->pos == posL) {
+    }
+    else if(monster->pos == posL)
+    {
       const auto featureId = Map::cells[posR.x][posR.y].rigid->getId();
-      if(featureId == FeatureId::floor) {
+      if(featureId == FeatureId::floor)
+      {
         testedLooseWebDestroyed = true;
-      } else {
+      }
+      else
+      {
         testedLooseWebIntact = true;
       }
     }
@@ -540,7 +566,8 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb) {
 //TODO This test shows some weakness in the inventory handling functionality. Notice how
 //onWear() and onTakeOff() has to be called manually here. This is because they
 //are called from stupid places in the game code - They SHOULD be called by Inventory!
-TEST_FIXTURE(BasicFixture, InventoryHandling) {
+TEST_FIXTURE(BasicFixture, InventoryHandling)
+{
   const Pos p(10, 10);
   Map::put(new Floor(p));
   Map::player->pos = p;
@@ -623,7 +650,8 @@ TEST_FIXTURE(BasicFixture, InventoryHandling) {
   CHECK(find(begin(props), end(props), propRBreath) != end(props));
 }
 
-TEST_FIXTURE(BasicFixture, SavingGame) {
+TEST_FIXTURE(BasicFixture, SavingGame)
+{
   //Item data
   ItemData::data[int(ItemId::scrollTelep)]->isTried = true;
   ItemData::data[int(ItemId::scrollOpening)]->isIdentified = true;
@@ -639,9 +667,11 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   for(Item* item : gen) {delete item;}
   gen.clear();
 
-  for(size_t i = 0; i < size_t(SlotId::END); ++i) {
+  for(size_t i = 0; i < size_t(SlotId::END); ++i)
+  {
     auto& slot = inv.slots_[i];
-    if(slot.item) {
+    if(slot.item)
+    {
       delete slot.item;
       slot.item = nullptr;
     }
@@ -711,7 +741,8 @@ TEST_FIXTURE(BasicFixture, SavingGame) {
   CHECK(SaveHandling::isSaveAvailable());
 }
 
-TEST_FIXTURE(BasicFixture, LoadingGame) {
+TEST_FIXTURE(BasicFixture, LoadingGame)
+{
   CHECK(SaveHandling::isSaveAvailable());
 
   const int PLAYER_MAX_HP_BEFORE_LOAD = Map::player->getHpMax(true);
@@ -745,20 +776,27 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   int nrClipWith3 = 0;
   bool isSentryDeviceFound    = false;
   bool isElectricLanternFound = false;
-  for(Item* item : genInv) {
+  for(Item* item : genInv)
+  {
     ItemId id = item->getData().id;
-    if(id == ItemId::pistolClip) {
-      switch(static_cast<AmmoClip*>(item)->ammo_) {
+    if(id == ItemId::pistolClip)
+    {
+      switch(static_cast<AmmoClip*>(item)->ammo_)
+      {
         case 1: nrClipWith1++; break;
         case 2: nrClipWith2++; break;
         case 3: nrClipWith3++; break;
         default: {} break;
       }
-    } else if(id == ItemId::deviceBlaster) {
+    }
+    else if(id == ItemId::deviceBlaster)
+    {
       isSentryDeviceFound = true;
       CHECK_EQUAL(int(Condition::shoddy),
                   int(static_cast<StrangeDevice*>(item)->condition_));
-    } else if(id == ItemId::electricLantern) {
+    }
+    else if(id == ItemId::electricLantern)
+    {
       isElectricLanternFound = true;
       DeviceLantern* lantern = static_cast<DeviceLantern*>(item);
       CHECK_EQUAL(789, lantern->nrTurnsLeft_);
@@ -824,7 +862,8 @@ TEST_FIXTURE(BasicFixture, LoadingGame) {
   CHECK_EQUAL(0, GameTime::getTurn());
 }
 
-TEST_FIXTURE(BasicFixture, FloodFilling) {
+TEST_FIXTURE(BasicFixture, FloodFilling)
+{
   bool b[MAP_W][MAP_H];
   Utils::resetArray(b, false);
   for(int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
@@ -843,7 +882,8 @@ TEST_FIXTURE(BasicFixture, FloodFilling) {
   CHECK_EQUAL(0, flood[MAP_W - 1][MAP_H - 1]);
 }
 
-TEST_FIXTURE(BasicFixture, PathFinding) {
+TEST_FIXTURE(BasicFixture, PathFinding)
+{
   vector<Pos> path;
   bool b[MAP_W][MAP_H];
   Utils::resetArray(b, false);
@@ -909,7 +949,8 @@ TEST_FIXTURE(BasicFixture, PathFinding) {
   CHECK_EQUAL(10, int(path.size()));
 }
 
-TEST_FIXTURE(BasicFixture, MapParseExpandOne) {
+TEST_FIXTURE(BasicFixture, MapParseExpandOne)
+{
   bool in[MAP_W][MAP_H];
   Utils::resetArray(in, false);
 
@@ -957,13 +998,16 @@ TEST_FIXTURE(BasicFixture, MapParseExpandOne) {
   CHECK(!out[14][5]);
 }
 
-TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
+TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
+{
   //------------------------------------------------ Square, normal sized room
   Rect roomRect(20, 5, 30, 10);
   Room room(roomRect);
 
-  for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y) {
-    for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x) {
+  for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
+  {
+    for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
+    {
       Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = &room;
     }
@@ -1016,8 +1060,10 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   roomRect = Rect(10, 5, 18, 10);
   Room nearbyRoom(roomRect);
 
-  for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y) {
-    for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x) {
+  for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
+  {
+    for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
+    {
       Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = &nearbyRoom;
     }
@@ -1031,7 +1077,8 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   bool entryMapNearbyRoom[MAP_W][MAP_H];
   Utils::mkBoolMapFromVector(entryListNearbyRoom, entryMapNearbyRoom);
 
-  for(int y = 5; y <= 10; ++y) {
+  for(int y = 5; y <= 10; ++y)
+  {
     CHECK(entryMap[19][y]);
     CHECK(entryMapNearbyRoom[19][y]);
   }
@@ -1120,22 +1167,27 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries) {
   //TODO
 }
 
-TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
+TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
+{
   Rect roomArea1(Pos(1, 1), Pos(10, 10));
   Rect roomArea2(Pos(15, 4), Pos(23, 14));
 
   Room room0(roomArea1);
   Room room1(roomArea2);
 
-  for(int y = roomArea1.p0.y; y <= roomArea1.p1.y; ++y) {
-    for(int x = roomArea1.p0.x; x <= roomArea1.p1.x; ++x) {
+  for(int y = roomArea1.p0.y; y <= roomArea1.p1.y; ++y)
+  {
+    for(int x = roomArea1.p0.x; x <= roomArea1.p1.x; ++x)
+    {
       Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = &room0;
     }
   }
 
-  for(int y = roomArea2.p0.y; y <= roomArea2.p1.y; ++y) {
-    for(int x = roomArea2.p0.x; x <= roomArea2.p1.x; ++x) {
+  for(int y = roomArea2.p0.y; y <= roomArea2.p1.y; ++y)
+  {
+    for(int x = roomArea2.p0.x; x <= roomArea2.p1.x; ++x)
+    {
       Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = &room1;
     }
@@ -1150,7 +1202,8 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor) {
   CHECK(flood[20][10] > 0);
 }
 
-TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
+TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers)
+{
   bool in[MAP_W][MAP_H];
   bool out[MAP_W][MAP_H];
 
@@ -1208,7 +1261,8 @@ TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers) {
 #ifdef _WIN32
 #undef main
 #endif
-int main() {
+int main()
+{
   UnitTest::RunAllTests();
   return 0;
 }

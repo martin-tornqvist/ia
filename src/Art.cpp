@@ -2,12 +2,16 @@
 
 #include "Utils.h"
 
-namespace Art {
+namespace Art
+{
 
-namespace {
+namespace
+{
 
-Pos getColumnAndRowGlyph(const char glyph) {
-  switch(glyph) {
+Pos getColumnAndRowGlyph(const char glyph)
+{
+  switch(glyph)
+  {
     default:  return Pos(-1, -1);  break;
     case ' ': return Pos(0, 0);  break;
     case '!': return Pos(1, 0); break;
@@ -116,8 +120,10 @@ Pos getColumnAndRowGlyph(const char glyph) {
   }
 }
 
-Pos getColumnAndRowTile(const TileId tile) {
-  switch(tile) {
+Pos getColumnAndRowTile(const TileId tile)
+{
+  switch(tile)
+  {
     case TileId::playerFirearm: return Pos(0, 0); break;
     case TileId::playerMelee: return Pos(1, 0); break;
     case TileId::zombieUnarmed: return Pos(2, 0); break;
@@ -265,11 +271,13 @@ Pos getColumnAndRowTile(const TileId tile) {
 
 }
 
-Pos getGlyphPos(const char glyph) {
+Pos getGlyphPos(const char glyph)
+{
   return getColumnAndRowGlyph(glyph);
 }
 
-Pos getTilePos(const TileId tile) {
+Pos getTilePos(const TileId tile)
+{
   return getColumnAndRowTile(tile);
 }
 

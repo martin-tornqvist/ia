@@ -12,7 +12,8 @@
 
 enum class SndVol;
 
-enum ItemWeight {
+enum ItemWeight
+{
   itemWeight_none       = 0,
   itemWeight_extraLight = 1,  //E.g. ammo
   itemWeight_light      = 10, //E.g. dynamite, daggers
@@ -22,7 +23,8 @@ enum ItemWeight {
 
 enum class MainAttMode {none, melee, thrown, ranged};
 
-enum class ItemType {
+enum class ItemType
+{
   general,
   meleeWpn,
   meleeWpnIntr,
@@ -40,7 +42,8 @@ enum class ItemType {
 
 enum class ItemValue {normal, minorTreasure, majorTreasure};
 
-enum class ItemId {
+enum class ItemId
+{
   trapezohedron,
 
   throwingKnife,
@@ -172,7 +175,8 @@ enum class ItemId {
   END
 };
 
-class ItemDataT {
+class ItemDataT
+{
 public:
   ItemDataT(const ItemId id);
 
@@ -206,7 +210,8 @@ public:
   std::vector<RoomType> nativeRooms;
   std::vector< std::pair<FeatureId, int> > featuresCanBeFoundIn;
 
-  struct MeleeItemData {
+  struct MeleeItemData
+  {
     MeleeItemData();
     ~MeleeItemData();
 
@@ -223,7 +228,8 @@ public:
     SfxId missSfx;
   } melee;
 
-  struct RangedItemData {
+  struct RangedItemData
+  {
     RangedItemData();
     ~RangedItemData();
 
@@ -252,7 +258,8 @@ public:
     Prop* propApplied;
   } ranged;
 
-  struct ArmorItemData {
+  struct ArmorItemData
+  {
     ArmorItemData();
 
     int absorptionPoints;
@@ -262,7 +269,8 @@ public:
 
 class Item;
 
-namespace ItemData {
+namespace ItemData
+{
 
 extern ItemDataT* data[int(ItemId::END)];
 

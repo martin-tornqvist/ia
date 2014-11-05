@@ -6,14 +6,17 @@
 
 using namespace std;
 
-namespace Gods {
+namespace Gods
+{
 
-namespace {
+namespace
+{
 
 vector<God> godList;
 int         curGodElem_;
 
-void initGodList() {
+void initGodList()
+{
   godList.push_back(God("Abholos", "The Devourer in the Mist"));
   godList.push_back(God("Alala", "The Herald of S'glhuo"));
   godList.push_back(God("Ammutseba", "The Devourer of Stars"));
@@ -115,25 +118,30 @@ void initGodList() {
 
 } //namespace
 
-void init() {
+void init()
+{
   initGodList();
 }
 
-bool isGodLvl() {
+bool isGodLvl()
+{
   return curGodElem_ >= 0;
 }
 
-const God* getCurGod() {
+const God* getCurGod()
+{
   if(curGodElem_ >= 0) {return &(godList.at(curGodElem_));}
   return nullptr;
 }
 
-void setRandomGod() {
+void setRandomGod()
+{
   const int NR_GODS = int(godList.size());
   curGodElem_ = Rnd::range(0, NR_GODS - 1);
 }
 
-void setNoGod() {
+void setNoGod()
+{
   curGodElem_ = -1;
 }
 

@@ -23,13 +23,15 @@
 
 using namespace std;
 
-namespace Init {
+namespace Init
+{
 
 bool isCheatVisionEnabled = false;
 bool quitToMainMenu       = false;
 
 //Note: Initialization order matters in some cases
-void initIO() {
+void initIO()
+{
   TRACE_FUNC_BEGIN;
   SdlWrapper::init();
   Config::init();
@@ -40,7 +42,8 @@ void initIO() {
   TRACE_FUNC_END;
 }
 
-void cleanupIO() {
+void cleanupIO()
+{
   TRACE_FUNC_BEGIN;
   Audio::cleanup();
   Render::cleanup();
@@ -50,7 +53,8 @@ void cleanupIO() {
 }
 
 //Note: Initialization order matters in some cases
-void initGame() {
+void initGame()
+{
   TRACE_FUNC_BEGIN;
   LineCalc::init();
   Gods::init();
@@ -60,14 +64,16 @@ void initGame() {
   TRACE_FUNC_END;
 }
 
-void cleanupGame() {
+void cleanupGame()
+{
   TRACE_FUNC_BEGIN;
 
   TRACE_FUNC_END;
 }
 
 //Note: Initialization order matters in some cases
-void initSession() {
+void initSession()
+{
   TRACE_FUNC_BEGIN;
   ActorData::init();
   FeatureData::init();
@@ -87,7 +93,8 @@ void initSession() {
   TRACE_FUNC_END;
 }
 
-void cleanupSession() {
+void cleanupSession()
+{
   TRACE_FUNC_BEGIN;
   PlayerSpellsHandling::cleanup();
   Map::cleanup();

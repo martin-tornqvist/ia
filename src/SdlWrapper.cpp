@@ -11,27 +11,32 @@
 
 using namespace std;
 
-namespace SdlWrapper {
+namespace SdlWrapper
+{
 
-namespace {
+namespace
+{
 
 bool isInited = false;
 
 }
 
-void init() {
+void init()
+{
   TRACE_FUNC_BEGIN;
 
   isInited = true;
 
-  if(SDL_Init(SDL_INIT_EVERYTHING) == -1) {
+  if(SDL_Init(SDL_INIT_EVERYTHING) == -1)
+  {
     TRACE << "Failed to init SDL" << endl;
     assert(false);
   }
 
   SDL_EnableUNICODE(1);
 
-  if(IMG_Init(IMG_INIT_PNG) == -1) {
+  if(IMG_Init(IMG_INIT_PNG) == -1)
+  {
     TRACE << "Failed to init SDL_image" << endl;
     assert(false);
   }
@@ -41,7 +46,8 @@ void init() {
   const int     AUDIO_CHANNELS  = 2;
   const int     AUDIO_BUFFERS   = 1024;
 
-  if(Mix_OpenAudio(AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1) {
+  if(Mix_OpenAudio(AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1)
+  {
     TRACE << "Failed to init SDL_mixer" << endl;
     assert(false);
   }
@@ -51,7 +57,8 @@ void init() {
   TRACE_FUNC_END;
 }
 
-void cleanup() {
+void cleanup()
+{
   isInited = false;
   IMG_Quit();
   Mix_AllocateChannels(0);
@@ -59,11 +66,16 @@ void cleanup() {
   SDL_Quit();
 }
 
-void sleep(const Uint32 DURATION) {
-  if(isInited && !Config::isBotPlaying()) {
-    if(DURATION == 1) {
+void sleep(const Uint32 DURATION)
+{
+  if(isInited && !Config::isBotPlaying())
+  {
+    if(DURATION == 1)
+    {
       SDL_Delay(DURATION);
-    } else {
+    }
+    else
+    {
       const Uint32 WAIT_UNTIL = SDL_GetTicks() + DURATION;
       while(SDL_GetTicks() < WAIT_UNTIL) {SDL_PumpEvents();}
     }

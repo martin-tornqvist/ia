@@ -6,7 +6,8 @@
 
 #include "Item.h"
 
-class Device: public Item {
+class Device: public Item
+{
 public:
   Device(ItemDataT* const itemData);
 
@@ -21,7 +22,8 @@ public:
   void identify(const bool IS_SILENT_IDENTIFY) override;
 };
 
-class StrangeDevice : public Device {
+class StrangeDevice : public Device
+{
 public:
   StrangeDevice(ItemDataT* const itemData);
 
@@ -42,14 +44,16 @@ private:
   virtual void triggerEffect() = 0;
 };
 
-class DeviceBlaster: public StrangeDevice {
+class DeviceBlaster: public StrangeDevice
+{
 public:
   DeviceBlaster(ItemDataT* const itemData) : StrangeDevice(itemData) {}
 
   ~DeviceBlaster() override {}
 
 private:
-  std::vector<std::string> getDescrIdentified() const {
+  std::vector<std::string> getDescrIdentified() const
+  {
     return {"When activated, this strange device blasts all visible enemies with "
             "infernal power."
            };
@@ -58,14 +62,16 @@ private:
   void triggerEffect() override;
 };
 
-class DeviceShockwave: public StrangeDevice {
+class DeviceShockwave: public StrangeDevice
+{
 public:
   DeviceShockwave(ItemDataT* const itemData) : StrangeDevice(itemData) {}
 
   ~DeviceShockwave() override {}
 
 private:
-  std::vector<std::string> getDescrIdentified() const {
+  std::vector<std::string> getDescrIdentified() const
+  {
     return {"When activated, this strange device generates a shock wave which violently "
             "pushes away any adjacent creatures and destroys structures."
            };
@@ -74,7 +80,8 @@ private:
   void triggerEffect() override;
 };
 
-class DeviceRejuvenator: public StrangeDevice {
+class DeviceRejuvenator: public StrangeDevice
+{
 public:
   DeviceRejuvenator(ItemDataT* const itemData) :
     StrangeDevice(itemData) {}
@@ -82,7 +89,8 @@ public:
   ~DeviceRejuvenator() override {}
 
 private:
-  std::vector<std::string> getDescrIdentified() const {
+  std::vector<std::string> getDescrIdentified() const
+  {
     return {"When activated, this strange device heals all wounds and physical "
             "maladies."
            };
@@ -91,7 +99,8 @@ private:
   void triggerEffect() override;
 };
 
-class DeviceTranslocator: public StrangeDevice {
+class DeviceTranslocator: public StrangeDevice
+{
 public:
   DeviceTranslocator(ItemDataT* const itemData) :
     StrangeDevice(itemData) {}
@@ -99,7 +108,8 @@ public:
   ~DeviceTranslocator() override {}
 
 private:
-  std::vector<std::string> getDescrIdentified() const {
+  std::vector<std::string> getDescrIdentified() const
+  {
     return {"When activated, this strange device teleports all visible enemies to "
             "different locations."
            };
@@ -111,7 +121,8 @@ private:
 enum class LanternMalfState {working, flicker, malfunction};
 enum class LanternLightSize {none, small, normal};
 
-class DeviceLantern: public Device {
+class DeviceLantern: public Device
+{
 public:
   DeviceLantern(ItemDataT* const itemData);
 

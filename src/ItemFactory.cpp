@@ -10,20 +10,24 @@
 
 using namespace std;
 
-namespace ItemFactory {
+namespace ItemFactory
+{
 
-Item* mk(const ItemId itemId, const int NR_ITEMS) {
+Item* mk(const ItemId itemId, const int NR_ITEMS)
+{
   Item* r = nullptr;
 
   ItemDataT* const d = ItemData::data[int(itemId)];
 
   ItemDataT* ammoD = nullptr;
 
-  if(d->ranged.ammoItemId != ItemId::END) {
+  if(d->ranged.ammoItemId != ItemId::END)
+  {
     ammoD = ItemData::data[int(d->ranged.ammoItemId)];
   }
 
-  switch(itemId) {
+  switch(itemId)
+  {
     case ItemId::trapezohedron:       r = new Item(d);               break;
 
     case ItemId::rock:                r = new Wpn(d, ammoD);         break;
@@ -160,31 +164,41 @@ Item* mk(const ItemId itemId, const int NR_ITEMS) {
     case ItemId::END: return nullptr;
   }
 
-  if(!r->getData().isStackable && NR_ITEMS != 1) {
+  if(!r->getData().isStackable && NR_ITEMS != 1)
+  {
     TRACE << "Warning, Specified " + toStr(NR_ITEMS) + " nr items"
           << " for non-stackable item";
-  } else {
+  }
+  else
+  {
     r->nrItems_ = NR_ITEMS;
   }
 
   return r;
 }
 
-void setItemRandomizedProperties(Item* item) {
+void setItemRandomizedProperties(Item* item)
+{
   const ItemDataT& d = item->getData();
 
   //If it is a pure melee weapon, it may get a plus
-  if(d.melee.isMeleeWpn && !d.ranged.isRangedWpn) {
+  if(d.melee.isMeleeWpn && !d.ranged.isRangedWpn)
+  {
     static_cast<Wpn*>(item)->setRandomMeleePlus();
   }
 
   //If firearm, spawn with random amount of ammo
-  if(d.ranged.isRangedWpn && !d.ranged.hasInfiniteAmmo) {
+  if(d.ranged.isRangedWpn && !d.ranged.hasInfiniteAmmo)
+  {
     Wpn* const weapon = static_cast<Wpn*>(item);
-    if(weapon->ammoCapacity == 1) {
+    if(weapon->ammoCapacity == 1)
+    {
       weapon->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
-    } else {
-      if(d.ranged.isMachineGun) {
+    }
+    else
+    {
+      if(d.ranged.isMachineGun)
+      {
         const int CAP = weapon->ammoCapacity;
         const int MIN = CAP / 2;
         const int CAP_SCALED = CAP / NR_MG_PROJECTILES;
@@ -192,7 +206,9 @@ void setItemRandomizedProperties(Item* item) {
         weapon->nrAmmoLoaded =
           Rnd::range(MIN_SCALED, CAP_SCALED) *
           NR_MG_PROJECTILES;
-      } else {
+      }
+      else
+      {
         weapon->nrAmmoLoaded =
           Rnd::range(weapon->ammoCapacity / 4, weapon->ammoCapacity);
       }
@@ -202,34 +218,40 @@ void setItemRandomizedProperties(Item* item) {
   if(d.isStackable) {item->nrItems_ = Rnd::range(1, d.maxStackAtSpawn);}
 }
 
-Item* mkItemOnMap(const ItemId itemId, const Pos& pos) {
+Item* mkItemOnMap(const ItemId itemId, const Pos& pos)
+{
   Item* item = mk(itemId);
   setItemRandomizedProperties(item);
   ItemDrop::dropItemOnMap(pos, *item);
   return item;
 }
 
-Item* copyItem(Item* oldItem) {
+Item* copyItem(Item* oldItem)
+{
   Item* newItem     = mk(oldItem->getData().id);
   newItem->nrItems_ = oldItem->nrItems_;
   return newItem;
 }
 
 Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS,
-                             const bool ALLOW_POTIONS) {
+                             const bool ALLOW_POTIONS)
+{
   vector<ItemId> itemBucket;
 
-  for(int i = 0; i < int(ItemId::END); ++i) {
+  for(int i = 0; i < int(ItemId::END); ++i)
+  {
     const ItemDataT* const d = ItemData::data[i];
     if(
       !d->isIntrinsic &&
       ((d->isScroll && ALLOW_SCROLLS) ||
-       (d->isPotion && ALLOW_POTIONS))) {
+       (d->isPotion && ALLOW_POTIONS)))
+    {
       itemBucket.push_back(static_cast<ItemId>(i));
     }
   }
 
-  if(!itemBucket.empty()) {
+  if(!itemBucket.empty())
+  {
     const int ELEMENT = Rnd::range(0, itemBucket.size() - 1);
     return mk(itemBucket.at(ELEMENT));
   }

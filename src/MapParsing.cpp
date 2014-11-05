@@ -13,86 +13,108 @@
 using namespace std;
 
 //------------------------------------------------------------ CELL PREDICATES
-namespace CellPred {
+namespace CellPred
+{
 
-bool BlocksLos::check(const Cell& c)  const {
+bool BlocksLos::check(const Cell& c)  const
+{
   return !c.rigid->isLosPassable();
 }
 
-bool BlocksLos::check(const Mob& f) const {
+bool BlocksLos::check(const Mob& f) const
+{
   return !f.isLosPassable();
 }
 
-bool BlocksMoveCmn::check(const Cell& c) const {
+bool BlocksMoveCmn::check(const Cell& c) const
+{
   return !c.rigid->canMoveCmn();
 }
 
-bool BlocksMoveCmn::check(const Mob& f) const {
+bool BlocksMoveCmn::check(const Mob& f) const
+{
   return !f.canMoveCmn();
 }
 
-bool BlocksMoveCmn::check(const Actor& a) const {
+bool BlocksMoveCmn::check(const Actor& a) const
+{
   return a.isAlive();
 }
 
 BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking) :
-  Pred(), IS_ACTORS_BLOCKING_(isActorsBlocking) {
+  Pred(), IS_ACTORS_BLOCKING_(isActorsBlocking)
+{
   actor.getPropHandler().getAllActivePropIds(actorsProps_);
 }
 
-bool BlocksActor::check(const Cell& c) const {
+bool BlocksActor::check(const Cell& c) const
+{
   return !c.rigid->canMove(actorsProps_);
 }
 
-bool BlocksActor::check(const Mob& f) const {
+bool BlocksActor::check(const Mob& f) const
+{
   return !f.canMove(actorsProps_);
 }
 
-bool BlocksActor::check(const Actor& a) const {
+bool BlocksActor::check(const Actor& a) const
+{
   return a.isAlive();
 }
 
-bool BlocksProjectiles::check(const Cell& c)  const {
+bool BlocksProjectiles::check(const Cell& c)  const
+{
   return !c.rigid->isProjectilePassable();
 }
 
-bool BlocksProjectiles::check(const Mob& f)  const {
+bool BlocksProjectiles::check(const Mob& f)  const
+{
   return !f.isProjectilePassable();
 }
 
-bool LivingActorsAdjToPos::check(const Actor& a) const {
-  if(!a.isAlive()) {
+bool LivingActorsAdjToPos::check(const Actor& a) const
+{
+  if(!a.isAlive())
+  {
     return false;
   }
   return Utils::isPosAdj(pos_, a.pos, true);
 }
 
-bool BlocksItems::check(const Cell& c)  const {
+bool BlocksItems::check(const Cell& c)  const
+{
   return !c.rigid->canHaveItem();
 }
 
-bool BlocksItems::check(const Mob& f) const {
+bool BlocksItems::check(const Mob& f) const
+{
   return !f.canHaveItem();
 }
 
-bool IsFeature::check(const Cell& c) const {
+bool IsFeature::check(const Cell& c) const
+{
   return c.rigid->getId() == feature_;
 }
 
-bool IsAnyOfFeatures::check(const Cell& c) const {
+bool IsAnyOfFeatures::check(const Cell& c) const
+{
   for(auto f : features_) {if(f == c.rigid->getId()) return true;}
   return false;
 }
 
-bool AllAdjIsFeature::check(const Cell& c) const {
+bool AllAdjIsFeature::check(const Cell& c) const
+{
   const int X = c.pos.x;
   const int Y = c.pos.y;
 
   if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
 
-  for(int dx = -1; dx <= 1; ++dx) {
-    for(int dy = -1; dy <= 1; ++dy) {
-      if(Map::cells[X + dx][Y + dy].rigid->getId() != feature_) {
+  for(int dx = -1; dx <= 1; ++dx)
+  {
+    for(int dy = -1; dy <= 1; ++dy)
+    {
+      if(Map::cells[X + dx][Y + dy].rigid->getId() != feature_)
+      {
         return false;
       }
     }
@@ -101,14 +123,17 @@ bool AllAdjIsFeature::check(const Cell& c) const {
   return true;
 }
 
-bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
+bool AllAdjIsAnyOfFeatures::check(const Cell& c) const
+{
   const int X = c.pos.x;
   const int Y = c.pos.y;
 
   if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
 
-  for(int dx = -1; dx <= 1; ++dx) {
-    for(int dy = -1; dy <= 1; ++dy) {
+  for(int dx = -1; dx <= 1; ++dx)
+  {
+    for(int dy = -1; dy <= 1; ++dy)
+    {
       const auto curId = Map::cells[X + dx][Y + dy].rigid->getId();
 
       bool isMatch = false;
@@ -120,15 +145,19 @@ bool AllAdjIsAnyOfFeatures::check(const Cell& c) const {
   return true;
 }
 
-bool AllAdjIsNotFeature::check(const Cell& c) const {
+bool AllAdjIsNotFeature::check(const Cell& c) const
+{
   const int X = c.pos.x;
   const int Y = c.pos.y;
 
   if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
 
-  for(int dx = -1; dx <= 1; ++dx) {
-    for(int dy = -1; dy <= 1; ++dy) {
-      if(Map::cells[X + dx][Y + dy].rigid->getId() == feature_) {
+  for(int dx = -1; dx <= 1; ++dx)
+  {
+    for(int dy = -1; dy <= 1; ++dy)
+    {
+      if(Map::cells[X + dx][Y + dy].rigid->getId() == feature_)
+      {
         return false;
       }
     }
@@ -137,14 +166,17 @@ bool AllAdjIsNotFeature::check(const Cell& c) const {
   return true;
 }
 
-bool AllAdjIsNoneOfFeatures::check(const Cell& c) const {
+bool AllAdjIsNoneOfFeatures::check(const Cell& c) const
+{
   const int X = c.pos.x;
   const int Y = c.pos.y;
 
   if(X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
 
-  for(int dx = -1; dx <= 1; ++dx) {
-    for(int dy = -1; dy <= 1; ++dy) {
+  for(int dx = -1; dx <= 1; ++dx)
+  {
+    for(int dy = -1; dy <= 1; ++dy)
+    {
       const auto curId = Map::cells[X + dx][Y + dy].rigid->getId();
       for(auto f : features_) {if(f == curId) {return false;}}
     }
@@ -156,10 +188,12 @@ bool AllAdjIsNoneOfFeatures::check(const Cell& c) const {
 } //CellPred
 
 //------------------------------------------------------------ MAP PARSE
-namespace MapParse {
+namespace MapParse
+{
 
 void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
-           const MapParseWriteRule writeRule) {
+           const MapParseWriteRule writeRule)
+{
 
   assert(pred.isCheckingCells()       ||
          pred.isCheckingMobs() ||
@@ -167,9 +201,12 @@ void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
 
   const bool ALLOW_WRITE_FALSE = writeRule == MapParseWriteRule::always;
 
-  if(pred.isCheckingCells()) {
-    for(int x = 0; x < MAP_W; ++x) {
-      for(int y = 0; y < MAP_H; ++y) {
+  if(pred.isCheckingCells())
+  {
+    for(int x = 0; x < MAP_W; ++x)
+    {
+      for(int y = 0; y < MAP_H; ++y)
+      {
         const auto& c = Map::cells[x][y];
         const bool IS_MATCH = pred.check(c);
         if(IS_MATCH || ALLOW_WRITE_FALSE) {out[x][y] = IS_MATCH;}
@@ -177,22 +214,28 @@ void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
     }
   }
 
-  if(pred.isCheckingMobs()) {
-    for(Mob* mob : GameTime::mobs_) {
+  if(pred.isCheckingMobs())
+  {
+    for(Mob* mob : GameTime::mobs_)
+    {
       const Pos& p = mob->getPos();
       const bool IS_MATCH = pred.check(*mob);
-      if(IS_MATCH || ALLOW_WRITE_FALSE) {
+      if(IS_MATCH || ALLOW_WRITE_FALSE)
+      {
         bool& v = out[p.x][p.y];
         if(!v) {v = IS_MATCH;}
       }
     }
   }
 
-  if(pred.isCheckingActors()) {
-    for(Actor* actor : GameTime::actors_) {
+  if(pred.isCheckingActors())
+  {
+    for(Actor* actor : GameTime::actors_)
+    {
       const Pos& p = actor->pos;
       const bool IS_MATCH = pred.check(*actor);
-      if(IS_MATCH || ALLOW_WRITE_FALSE) {
+      if(IS_MATCH || ALLOW_WRITE_FALSE)
+      {
         bool& v = out[p.x][p.y];
         if(!v) {v = IS_MATCH;}
       }
@@ -202,30 +245,41 @@ void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
 
 void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
                                 bool out[MAP_W][MAP_H],
-                                const Range& distInterval) {
+                                const Range& distInterval)
+{
   assert(in != out);
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       out[x][y] = false;
     }
   }
 
-  for(int yOuter = 0; yOuter < MAP_H; yOuter++) {
-    for(int xOuter = 0; xOuter < MAP_W; xOuter++) {
-      if(!out[xOuter][yOuter]) {
-        for(int d = distInterval.lower; d <= distInterval.upper; d++) {
+  for(int yOuter = 0; yOuter < MAP_H; yOuter++)
+  {
+    for(int xOuter = 0; xOuter < MAP_W; xOuter++)
+    {
+      if(!out[xOuter][yOuter])
+      {
+        for(int d = distInterval.lower; d <= distInterval.upper; d++)
+        {
           Pos p0(max(0,         xOuter - d), max(0,         yOuter - d));
           Pos p1(min(MAP_W - 1, xOuter + d), min(MAP_H - 1, yOuter + d));
 
-          for(int x = p0.x; x <= p1.x; ++x) {
-            if(in[x][p0.y] || in[x][p1.y]) {
+          for(int x = p0.x; x <= p1.x; ++x)
+          {
+            if(in[x][p0.y] || in[x][p1.y])
+            {
               out[xOuter][yOuter] = true;
               break;
             }
           }
-          for(int y = p0.y; y <= p1.y; ++y) {
-            if(in[p0.x][y] || in[p1.x][y]) {
+          for(int y = p0.y; y <= p1.y; ++y)
+          {
+            if(in[p0.x][y] || in[p1.x][y])
+            {
               out[xOuter][yOuter] = true;
               break;
             }
@@ -237,27 +291,34 @@ void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
 }
 
 bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
-                 const bool VAL) {
+                 const bool VAL)
+{
   assert(Utils::isAreaInsideMap(area));
 
-  for(int y = area.p0.y; y <= area.p1.y; ++y) {
-    for(int x = area.p0.x; x <= area.p1.x; ++x) {
+  for(int y = area.p0.y; y <= area.p1.y; ++y)
+  {
+    for(int x = area.p0.x; x <= area.p1.x; ++x)
+    {
       if(in[x][y] == VAL) {return true;}
     }
   }
   return false;
 }
 
-void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]) {
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H])
+{
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       if(append[x][y]) {base[x][y] = true;}
     }
   }
 }
 
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
-            const Rect& areaAllowedToModify) {
+            const Rect& areaAllowedToModify)
+{
   int cmpX0 = 0;
   int cmpY0 = 0;
   int cmpX1 = 0;
@@ -268,22 +329,31 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
   const int X1 = min(MAP_W, areaAllowedToModify.p1.x);
   const int Y1 = min(MAP_H, areaAllowedToModify.p1.y);
 
-  for(int x = X0; x <= X1; ++x) {
-    for(int y = Y0; y <= Y1; ++y) {
+  for(int x = X0; x <= X1; ++x)
+  {
+    for(int y = Y0; y <= Y1; ++y)
+    {
 
       out[x][y] = false;
 
-      if(x == 0)          {cmpX0 = 0;}  else {cmpX0 = x - 1;}
-      if(y == 0)          {cmpY0 = 0;}  else {cmpY0 = y - 1;}
-      if(x == MAP_W - 1)  {cmpX1 = x;}  else {cmpX1 = x + 1;}
-      if(y == MAP_H - 1)  {cmpY1 = y;}  else {cmpY1 = y + 1;}
+      if(x == 0)          {cmpX0 = 0;}
+      else {cmpX0 = x - 1;}
+      if(y == 0)          {cmpY0 = 0;}
+      else {cmpY0 = y - 1;}
+      if(x == MAP_W - 1)  {cmpX1 = x;}
+      else {cmpX1 = x + 1;}
+      if(y == MAP_H - 1)  {cmpY1 = y;}
+      else {cmpY1 = y + 1;}
 
-      for(int cmpY = cmpY0; cmpY <= cmpY1; ++cmpY) {
+      for(int cmpY = cmpY0; cmpY <= cmpY1; ++cmpY)
+      {
 
         bool isFound = false;
 
-        for(int cmpX = cmpX0; cmpX <= cmpX1; ++cmpX) {
-          if(in[cmpX][cmpY]) {
+        for(int cmpX = cmpX0; cmpX <= cmpX1; ++cmpX)
+        {
+          if(in[cmpX][cmpY])
+          {
             isFound = out[x][y] = true;
             break;
           }
@@ -294,9 +364,12 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
   }
 }
 
-void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST) {
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
+{
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
 
       out[x][y] = false;
 
@@ -310,12 +383,15 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
       const int CMP_X1 = X1 > MAP_W - 1 ? MAP_W - 1 : X1;
       const int CMP_Y1 = Y1 > MAP_H - 1 ? MAP_H - 1 : Y1;
 
-      for(int cmpY = CMP_Y0; cmpY <= CMP_Y1; ++cmpY) {
+      for(int cmpY = CMP_Y0; cmpY <= CMP_Y1; ++cmpY)
+      {
 
         bool isFound = false;
 
-        for(int cmpX = CMP_X0; cmpX <= CMP_X1; ++cmpX) {
-          if(in[cmpX][cmpY]) {
+        for(int cmpX = CMP_X0; cmpX <= CMP_X1; ++cmpX)
+        {
+          if(in[cmpX][cmpY])
+          {
             isFound = out[x][y] = true;
             break;
           }
@@ -329,18 +405,21 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
 } //MapParse
 
 //------------------------------------------------------------ FUNCT OBJECT
-bool IsCloserToPos::operator()(const Pos& p1, const Pos& p2) {
+bool IsCloserToPos::operator()(const Pos& p1, const Pos& p2)
+{
   const int kingDist1 = Utils::kingDist(p_.x, p_.y, p1.x, p1.y);
   const int kingDist2 = Utils::kingDist(p_.x, p_.y, p2.x, p2.y);
   return kingDist1 < kingDist2;
 }
 
 //------------------------------------------------------------ FLOOD FILL
-namespace FloodFill {
+namespace FloodFill
+{
 
 void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
          int out[MAP_W][MAP_H], int travelLimit, const Pos& p1,
-         const bool ALLOW_DIAGONAL) {
+         const bool ALLOW_DIAGONAL)
+{
 
   Utils::resetArray(out);
 
@@ -356,7 +435,8 @@ void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
   Pos           curPos(p0);
 
   vector<Pos> dirs {Pos(0, -1), Pos(-1, 0), Pos(0, 1), Pos(1, 0)};
-  if(ALLOW_DIAGONAL) {
+  if(ALLOW_DIAGONAL)
+  {
     dirs.push_back(Pos(-1, -1));
     dirs.push_back(Pos(-1, 1));
     dirs.push_back(Pos(1, -1));
@@ -364,21 +444,26 @@ void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
   }
 
   bool done = false;
-  while(!done) {
+  while(!done)
+  {
 
-    for(const Pos& d : dirs) {
-      if((d != 0)) {
+    for(const Pos& d : dirs)
+    {
+      if((d != 0))
+      {
         const Pos newPos(curPos + d);
         if(
           !blocked[newPos.x][newPos.y]        &&
           Utils::isPosInside(newPos, bounds)  &&
           out[newPos.x][newPos.y] == 0        &&
-          newPos != p0) {
+          newPos != p0)
+        {
           curVal = out[curPos.x][curPos.y];
 
           if(curVal < travelLimit) {out[newPos.x][newPos.y] = curVal + 1;}
 
-          if(isStoppingAtP1 && curPos == p1 - d) {
+          if(isStoppingAtP1 && curPos == p1 - d)
+          {
             isAtTarget = true;
             break;
           }
@@ -387,19 +472,26 @@ void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
       }
     }
 
-    if(isStoppingAtP1) {
+    if(isStoppingAtP1)
+    {
       if(positions.size() == nrElementsToSkip)  {pathExists = false;}
       if(isAtTarget || !pathExists)             {done = true;}
-    } else if(positions.size() == nrElementsToSkip) {
+    }
+    else if(positions.size() == nrElementsToSkip)
+    {
       done = true;
     }
 
     if(curVal == travelLimit) {done = true;}
 
-    if(!isStoppingAtP1 || !isAtTarget) {
-      if(positions.size() == nrElementsToSkip) {
+    if(!isStoppingAtP1 || !isAtTarget)
+    {
+      if(positions.size() == nrElementsToSkip)
+      {
         pathExists = false;
-      } else {
+      }
+      else
+      {
         curPos = positions.at(nrElementsToSkip);
         nrElementsToSkip++;
       }
@@ -410,10 +502,12 @@ void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
 } //FloodFill
 
 //------------------------------------------------------------ PATHFINDER
-namespace PathFind {
+namespace PathFind
+{
 
 void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
-         vector<Pos>& out, const bool ALLOW_DIAGONAL) {
+         vector<Pos>& out, const bool ALLOW_DIAGONAL)
+{
 
   out.clear();
 
@@ -426,24 +520,29 @@ void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
   out.push_back(curPos);
 
   vector<Pos> dirs {Pos(0, -1), Pos(-1, 0), Pos(0, 1), Pos(1, 0)};
-  if(ALLOW_DIAGONAL) {
+  if(ALLOW_DIAGONAL)
+  {
     dirs.push_back(Pos(-1, -1));
     dirs.push_back(Pos(-1, 1));
     dirs.push_back(Pos(1, -1));
     dirs.push_back(Pos(1, 1));
   }
 
-  while(true) {
-    for(const Pos& d : dirs) {
+  while(true)
+  {
+    for(const Pos& d : dirs)
+    {
 
       const Pos adjPos(curPos + d);
 
-      if(Utils::isPosInsideMap(adjPos)) {
+      if(Utils::isPosInsideMap(adjPos))
+      {
         const int VAL_AT_ADJ = flood[adjPos.x][adjPos.y];
         const int VAL_AT_CUR = flood[curPos.x][curPos.y];
         if(
           (VAL_AT_ADJ < VAL_AT_CUR && VAL_AT_ADJ != 0) ||
-          (adjPos == p0)) {
+          (adjPos == p0))
+        {
 
           if(adjPos == p0) {return;} //Origin reached
 

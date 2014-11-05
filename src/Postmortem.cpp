@@ -21,18 +21,22 @@
 
 using namespace std;
 
-namespace Postmortem {
+namespace Postmortem
+{
 
-namespace {
+namespace
+{
 
-struct StrAndClr {
+struct StrAndClr
+{
   StrAndClr(const string str_, const Clr clr_) : str(str_), clr(clr_) {}
   StrAndClr() {}
   std::string str;
   Clr   clr;
 };
 
-void mkInfoLines(vector<StrAndClr>& linesRef) {
+void mkInfoLines(vector<StrAndClr>& linesRef)
+{
   TRACE_FUNC_BEGIN;
 
   const Clr clrHeading  = clrWhiteHigh;
@@ -41,11 +45,15 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   TRACE << "Finding number of killed monsters" << endl;
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMon = 0;
-  for(const auto& d : ActorData::data) {
-    if(d.id != ActorId::player) {
-      if(d.nrKills > 0) {
+  for(const auto& d : ActorData::data)
+  {
+    if(d.id != ActorId::player)
+    {
+      if(d.nrKills > 0)
+      {
         nrKillsTotAllMon += d.nrKills;
-        if(d.isUnique) {
+        if(d.isUnique)
+        {
           uniqueKilledNames.push_back(d.nameA);
         }
       }
@@ -96,22 +104,30 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   linesRef.push_back(StrAndClr(" Traits gained:", clrHeading));
   string traitsLine;
   PlayerBon::getAllPickedTraitsTitlesLine(traitsLine);
-  if(traitsLine.empty()) {
+  if(traitsLine.empty())
+  {
     linesRef.push_back(StrAndClr("   * None", clrInfo));
-  } else {
+  }
+  else
+  {
     vector<string> abilitiesLines;
     TextFormatting::lineToLines(traitsLine, 60, abilitiesLines);
-    for(string& str : abilitiesLines) {
+    for(string& str : abilitiesLines)
+    {
       linesRef.push_back(StrAndClr("   " + str, clrInfo));
     }
   }
   linesRef.push_back(StrAndClr(" ", clrInfo));
 
   linesRef.push_back(StrAndClr(" Unique monsters killed:", clrHeading));
-  if(uniqueKilledNames.empty()) {
+  if(uniqueKilledNames.empty())
+  {
     linesRef.push_back(StrAndClr("   * None", clrInfo));
-  } else {
-    for(string& monsterName : uniqueKilledNames) {
+  }
+  else
+  {
+    for(string& monsterName : uniqueKilledNames)
+    {
       linesRef.push_back(StrAndClr("   * " + monsterName, clrInfo));
     }
   }
@@ -120,9 +136,11 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   linesRef.push_back(StrAndClr(" The last messages:", clrHeading));
   const vector< vector<Msg> >& history = Log::getHistory();
   int historyElement = max(0, int(history.size()) - 20);
-  for(unsigned int i = historyElement; i < history.size(); ++i) {
+  for(unsigned int i = historyElement; i < history.size(); ++i)
+  {
     string row = "";
-    for(unsigned int ii = 0; ii < history.at(i).size(); ii++) {
+    for(unsigned int ii = 0; ii < history.at(i).size(); ii++)
+    {
       string msgStr = "";
       history.at(i).at(ii).getStrWithRepeats(msgStr);
       row += msgStr + " ";
@@ -133,11 +151,16 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
 
   TRACE << "Drawing the final map" << endl;
   linesRef.push_back(StrAndClr(" The final moment:", clrHeading));
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
-      for(int dx = -1; dx <= 1; ++dx) {
-        for(int dy = -1; dy <= 1; ++dy) {
-          if(Utils::isPosInsideMap(Pos(x + dx, y + dy))) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
+      for(int dx = -1; dx <= 1; ++dx)
+      {
+        for(int dy = -1; dy <= 1; ++dy)
+        {
+          if(Utils::isPosInsideMap(Pos(x + dx, y + dy)))
+          {
             const auto* const f = Map::cells[x + dx][y + dy].rigid;
             if(f->isLosPassable()) {Map::cells[x][y].isSeenByPlayer = true;}
           }
@@ -146,27 +169,40 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
     }
   }
   Render::drawMap(); //To set the glyph array
-  for(int y = 0; y < MAP_H; ++y) {
+  for(int y = 0; y < MAP_H; ++y)
+  {
     string curRow = "";
-    for(int x = 0; x < MAP_W; ++x) {
-      if(Pos(x, y) == Map::player->pos) {
+    for(int x = 0; x < MAP_W; ++x)
+    {
+      if(Pos(x, y) == Map::player->pos)
+      {
         curRow.push_back('@');
-      } else {
+      }
+      else
+      {
         if(
           Render::renderArray[x][y].glyph == ' ' &&
-          (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1)) {
+          (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1))
+        {
           curRow.push_back('*');
-        } else {
+        }
+        else
+        {
           const auto& wallD       = FeatureData::getData(FeatureId::wall);
           const auto& rubbleHighD = FeatureData::getData(FeatureId::rubbleHigh);
           const auto& statueD     = FeatureData::getData(FeatureId::statue);
           if(
             Render::renderArray[x][y].glyph == wallD.glyph ||
-            Render::renderArray[x][y].glyph == rubbleHighD.glyph) {
+            Render::renderArray[x][y].glyph == rubbleHighD.glyph)
+          {
             curRow.push_back('#');
-          } else if(Render::renderArray[x][y].glyph == statueD.glyph) {
+          }
+          else if(Render::renderArray[x][y].glyph == statueD.glyph)
+          {
             curRow.push_back('M');
-          } else {
+          }
+          else
+          {
             curRow.push_back(Render::renderArray[x][y].glyph);
           }
         }
@@ -181,7 +217,8 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
 }
 
 void render(const vector<StrAndClr>& linesAndClr,
-            const int TOP_ELEMENT) {
+            const int TOP_ELEMENT)
+{
   Render::clearScreen();
 
   const string decorationLine(MAP_W, '-');
@@ -204,7 +241,8 @@ void render(const vector<StrAndClr>& linesAndClr,
   for(
     int i = TOP_ELEMENT;
     i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
-    i++) {
+    i++)
+  {
     Render::drawText(linesAndClr.at(i).str, Panel::screen, Pos(0, yPos++),
                      linesAndClr.at(i).clr);
   }
@@ -212,34 +250,45 @@ void render(const vector<StrAndClr>& linesAndClr,
   Render::updateScreen();
 }
 
-void runInfo(const vector<StrAndClr>& lines) {
+void runInfo(const vector<StrAndClr>& lines)
+{
   const int LINE_JUMP           = 3;
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
   const int NR_LINES_TOT        = lines.size();
 
   int topNr = 0;
 
-  while(true) {
+  while(true)
+  {
     render(lines, topNr);
 
     const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.sdlKey == SDLK_DOWN || d.key == '2' || d.key == 'j') {
+    if(d.sdlKey == SDLK_DOWN || d.key == '2' || d.key == 'j')
+    {
       topNr += LINE_JUMP;
-      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR) {
+      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+      {
         topNr = 0;
-      } else {
+      }
+      else
+      {
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
-    } else if(d.sdlKey == SDLK_UP || d.key == '8' || d.key == 'k') {
+    }
+    else if(d.sdlKey == SDLK_UP || d.key == '8' || d.key == 'k')
+    {
       topNr = max(0, topNr - LINE_JUMP);
-    } else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE) {
+    }
+    else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    {
       break;
     }
   }
 }
 
-void mkMemorialFile(const vector<StrAndClr>& lines) {
+void mkMemorialFile(const vector<StrAndClr>& lines)
+{
   const string timeStamp =
     DungeonMaster::getTimeStarted().getTimeStr(time_second, false);
   const string memorialFileName =
@@ -259,19 +308,25 @@ void mkMemorialFile(const vector<StrAndClr>& lines) {
   file.close();
 }
 
-void renderMenu(const MenuBrowser& browser) {
+void renderMenu(const MenuBrowser& browser)
+{
   vector<string> asciiGraveyard;
 
   string curLine;
   ifstream file("data/ascii_graveyard");
 
-  if(file.is_open()) {
-    while(getline(file, curLine)) {
-      if(curLine.size() > 0) {
+  if(file.is_open())
+  {
+    while(getline(file, curLine))
+    {
+      if(curLine.size() > 0)
+      {
         asciiGraveyard.push_back(curLine);
       }
     }
-  } else {
+  }
+  else
+  {
     TRACE << "[WARNING] Could not open ascii graveyard file, "
           "in Postmortem::renderMenu()" << endl;
   }
@@ -282,7 +337,8 @@ void renderMenu(const MenuBrowser& browser) {
 
   Pos pos(1, SCREEN_H - asciiGraveyard.size());
 
-  for(const string& line : asciiGraveyard) {
+  for(const string& line : asciiGraveyard)
+  {
     const Uint8 K = Uint8(16 + (180 * ((pos.y * 100) / SCREEN_H) / 100));
     const Clr clr = {K, K, K, 0};
     Render::drawText(line, Panel::screen, pos, clr);
@@ -322,20 +378,25 @@ void renderMenu(const MenuBrowser& browser) {
   Render::updateScreen();
 }
 
-void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame) {
+void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame)
+{
   MenuBrowser browser(5, 0);
 
   renderMenu(browser);
 
   bool done = false;
-  while(!done) {
+  while(!done)
+  {
     const MenuAction action = MenuInputHandling::getAction(browser);
-    switch(action) {
-      case MenuAction::browsed: {
+    switch(action)
+    {
+      case MenuAction::browsed:
+      {
         renderMenu(browser);
       } break;
 
-      case MenuAction::esc: {
+      case MenuAction::esc:
+      {
         *quitGame = true;
         done      = true;
       } break;
@@ -343,23 +404,29 @@ void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame) {
       case MenuAction::space:
       case MenuAction::selectedShift: {} break;
 
-      case MenuAction::selected: {
-        if(browser.isAtIdx(0)) {
+      case MenuAction::selected:
+      {
+        if(browser.isAtIdx(0))
+        {
           runInfo(linesAndClr);
           renderMenu(browser);
         }
-        if(browser.isAtIdx(1)) {
+        if(browser.isAtIdx(1))
+        {
           HighScore::runHighScoreScreen();
           renderMenu(browser);
         }
-        if(browser.isAtIdx(2)) {
+        if(browser.isAtIdx(2))
+        {
           Log::displayHistory();
           renderMenu(browser);
         }
-        if(browser.isAtIdx(3)) {
+        if(browser.isAtIdx(3))
+        {
           done = true;
         }
-        if(browser.isAtIdx(4)) {
+        if(browser.isAtIdx(4))
+        {
           *quitGame = true;
           done      = true;
         }
@@ -370,7 +437,8 @@ void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame) {
 
 } //namespace
 
-void run(bool* const quitGame) {
+void run(bool* const quitGame)
+{
   vector<StrAndClr> lines;
   mkInfoLines(lines);
   mkMemorialFile(lines);

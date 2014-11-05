@@ -6,7 +6,8 @@
 
 #include "CmnData.h"
 
-struct HighScoreEntry {
+struct HighScoreEntry
+{
 public:
   HighScoreEntry(std::string dateAndTime, std::string name, int xp, int lvl,
                  int dlvl, int insanity, bool isVictory) :
@@ -22,7 +23,8 @@ public:
 
   void set(const std::string& dateAndTime, const std::string& name,
            const int XP, const int LVL, const int DLVL, const int INSANITY,
-           const bool IS_VICTORY) {
+           const bool IS_VICTORY)
+  {
     dateAndTime_  = dateAndTime;
     name_         = name;
     xp_           = XP;
@@ -32,7 +34,8 @@ public:
     isVictory_    = IS_VICTORY;
   }
 
-  inline int getScore() const {
+  inline int getScore() const
+  {
     const double DLVL_DB  = double(dlvl_);
     const double XP_DB    = double(xp_);
     const double INS_DB   = double(ins_);
@@ -58,7 +61,8 @@ private:
   bool isVictory_;
 };
 
-namespace HighScore {
+namespace HighScore
+{
 
 void runHighScoreScreen();
 

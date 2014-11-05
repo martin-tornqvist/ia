@@ -11,7 +11,8 @@ enum class MarkerDone             {no, yes};
 enum class MarkerDrawTail         {no, yes};
 enum class MarkerUsePlayerTarget  {no, yes};
 
-namespace Marker {
+namespace Marker
+{
 
 void run(const MarkerDrawTail drawTail, const MarkerUsePlayerTarget useTarget,
          std::function<void(const Pos&)> onMarkerAtPos,

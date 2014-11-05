@@ -5,7 +5,8 @@
 
 enum class MenuAction {browsed, selected, selectedShift, space, esc};
 
-namespace MenuInputHandling {
+namespace MenuInputHandling
+{
 
 MenuAction getAction(MenuBrowser& browser);
 

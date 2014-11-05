@@ -4,7 +4,8 @@
 #include "MenuBrowser.h"
 #include "CmnData.h"
 
-namespace MainMenu {
+namespace MainMenu
+{
 
 GameEntryMode run(bool& quit, int& introMusChannel);
 

@@ -11,7 +11,8 @@
 #include "Audio.h"
 #include "Room.h"
 
-enum class ActorId {
+enum class ActorId
+{
   player,
   zombie, zombieAxe, bloatedZombie,
   cultist, cultistTeslaCannon, cultistSpikeGun,
@@ -50,14 +51,16 @@ enum class MonGroupSize {alone, few, group, horde, swarm};
 
 enum class ActorSpeed   {sluggish, slow, normal, fast, fastest, END};
 
-enum ActorErraticFreq {
+enum ActorErraticFreq
+{
   actorErratic_never    = 0,
   actorErratic_rare     = 8,
   actorErratic_somewhat = 25,
   actorErratic_very     = 50
 };
 
-enum ActorSize {
+enum ActorSize
+{
   actorSize_none,
   actorSize_floor,
   actorSize_humanoid,
@@ -66,7 +69,8 @@ enum ActorSize {
 
 enum class MonShockLvl {none, unsettling, scary, terrifying, mindShattering, END};
 
-enum class AiId {
+enum class AiId
+{
   looks,
   makesRoomForFriend,
   attacks,
@@ -77,7 +81,8 @@ enum class AiId {
   END
 };
 
-struct ActorDataT {
+struct ActorDataT
+{
   ActorDataT() {reset();}
 
   void reset();
@@ -124,7 +129,8 @@ struct ActorDataT {
   SfxId aggroSfxMonHidden;
 };
 
-namespace ActorData {
+namespace ActorData
+{
 
 extern ActorDataT data[int(ActorId::END)];
 

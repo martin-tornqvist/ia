@@ -12,7 +12,8 @@
 
 using namespace std;
 
-void ActorDataT::reset() {
+void ActorDataT::reset()
+{
   id = ActorId::END;
   nameA = "";
   nameThe = "";
@@ -56,13 +57,16 @@ void ActorDataT::reset() {
   aggroSfxMonHidden = SfxId::END;
 }
 
-namespace ActorData {
+namespace ActorData
+{
 
 ActorDataT data[int(ActorId::END)];
 
-namespace {
+namespace
+{
 
-void initDataList() {
+void initDataList()
+{
   ActorDataT d;
   d.reset();
 
@@ -2211,21 +2215,26 @@ void initDataList() {
 
 } //namespace
 
-void init() {
+void init()
+{
   TRACE_FUNC_BEGIN;
   initDataList();
   TRACE_FUNC_END;
 }
 
-void storeToSaveLines(vector<string>& lines) {
-  for(int i = 0; i < int(ActorId::END); ++i) {
+void storeToSaveLines(vector<string>& lines)
+{
+  for(int i = 0; i < int(ActorId::END); ++i)
+  {
     lines.push_back(toStr(data[i].nrLeftAllowedToSpawn));
     lines.push_back(toStr(data[i].nrKills));
   }
 }
 
-void setupFromSaveLines(vector<string>& lines) {
-  for(int i = 0; i < int(ActorId::END); ++i) {
+void setupFromSaveLines(vector<string>& lines)
+{
+  for(int i = 0; i < int(ActorId::END); ++i)
+  {
     ActorDataT& d = data[i];
     const int NR_ALLOWED_TO_SPAWN = toInt(lines.front());
     lines.erase(begin(lines));

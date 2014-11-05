@@ -5,7 +5,8 @@
 
 #include "CmnData.h"
 
-struct KeyData {
+struct KeyData
+{
   KeyData() : key(-1), sdlKey(SDLK_LAST), isShiftHeld(false), isCtrlHeld(false) {}
 
   KeyData(char key_, SDLKey sdlKey_, bool isShiftHeld_,  bool isCtrlHeld_) :
@@ -22,7 +23,8 @@ struct KeyData {
   bool isShiftHeld, isCtrlHeld;
 };
 
-namespace Input {
+namespace Input
+{
 
 void init();
 void cleanup();

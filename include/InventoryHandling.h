@@ -7,7 +7,8 @@ enum class InvScrId {inv, equip, END};
 
 enum class ConsumeItem {yes, no};
 
-namespace InvHandling {
+namespace InvHandling
+{
 
 extern InvScrId screenToOpenAfterDrop;
 extern InvSlot* equipSlotToOpenAfterDrop;

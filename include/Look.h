@@ -9,13 +9,15 @@ class Mob;
 class Rigid;
 class Feature;
 
-namespace AutoDescrActor {
+namespace AutoDescrActor
+{
 
 void addAutoDescriptionLines(Actor* const actor, std::string& line);
 
 } //AutoDescrActor
 
-namespace Look {
+namespace Look
+{
 
 void printLocationInfoMsgs(const Pos& pos);
 

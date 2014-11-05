@@ -10,7 +10,8 @@ class Mob;
 
 enum class TurnType {fast, normal1, slow, fastest, normal2, END};
 
-namespace GameTime {
+namespace GameTime
+{
 
 extern std::vector<Actor*>       actors_;
 extern std::vector<Mob*>  mobs_;

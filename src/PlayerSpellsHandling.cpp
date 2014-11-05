@@ -18,11 +18,14 @@
 
 using namespace std;
 
-namespace PlayerSpellsHandling {
+namespace PlayerSpellsHandling
+{
 
-namespace {
+namespace
+{
 
-struct SpellOpt {
+struct SpellOpt
+{
   SpellOpt() :
     spell(nullptr),
     srcItem(nullptr) {}
@@ -38,7 +41,8 @@ struct SpellOpt {
 vector<Spell*>  knownSpells_;
 SpellOpt        prevCast_;
 
-void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts) {
+void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts)
+{
   const int NR_SPELLS = spellOpts.size();
 
   Render::clearScreen();
@@ -46,7 +50,8 @@ void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts) {
   const string label = "Invoke which power? [enter] to cast " + cancelInfoStr;
   Render::drawText(label, Panel::screen, Pos(0, 0), clrWhiteHigh);
 
-  for(int i = 0; i < NR_SPELLS; ++i) {
+  for(int i = 0; i < NR_SPELLS; ++i)
+  {
     const int     CURRENT_ELEMENT = i;
     Scroll        scroll(nullptr);
     Clr           scrollClr   = scroll.getInterfaceClr();
@@ -81,28 +86,34 @@ void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts) {
 
     x = SHOCK_X;
     const IntrSpellShock shockType = spell->getShockTypeIntrCast();
-    switch(shockType) {
+    switch(shockType)
+    {
       case IntrSpellShock::mild:        infoStr = "Mild";       break;
       case IntrSpellShock::disturbing:  infoStr = "Disturbing"; break;
       case IntrSpellShock::severe:      infoStr = "Severe";     break;
     }
     Render::drawText(infoStr, Panel::screen, Pos(x, Y), clrWhite);
 
-    if(IS_SELECTED) {
+    if(IS_SELECTED)
+    {
       const auto descr = spell->getDescr();
       vector<StrAndClr> lines;
-      if(!descr.empty()) {
-        for(const auto& line : descr) {
+      if(!descr.empty())
+      {
+        for(const auto& line : descr)
+        {
           lines.push_back({line, clrWhiteHigh});
         }
       }
       //If spell source is an item, add info about this
-      if(spellOpt.srcItem) {
+      if(spellOpt.srcItem)
+      {
         const string itemName =
           spellOpt.srcItem->getName(ItemRefType::plain, ItemRefInf::none);
         lines.push_back({"Spell granted by " + itemName + ".", clrGreen});
       }
-      if(!lines.empty()) {
+      if(!lines.empty())
+      {
         Render::drawDescrBox(lines);
       }
     }
@@ -113,47 +124,58 @@ void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts) {
   Render::updateScreen();
 }
 
-void getSpellsAvail(vector<SpellOpt>& out) {
+void getSpellsAvail(vector<SpellOpt>& out)
+{
   out.clear();
 
-  for(Spell* const spell : knownSpells_) {
+  for(Spell* const spell : knownSpells_)
+  {
     out.push_back(SpellOpt(spell, nullptr));
   }
 
   Inventory& inv = Map::player->getInv();
 
-  for(auto slot : inv.slots_) {
+  for(auto slot : inv.slots_)
+  {
     Item* item = slot.item;
-    if(item) {
-      for(Spell* spell : item->carrierSpells_) {
+    if(item)
+    {
+      for(Spell* spell : item->carrierSpells_)
+      {
         out.push_back(SpellOpt(spell, item));
       }
     }
   }
 
-  for(Item* item : inv.general_) {
-    for(Spell* spell : item->carrierSpells_) {
+  for(Item* item : inv.general_)
+  {
+    for(Spell* spell : item->carrierSpells_)
+    {
       out.push_back(SpellOpt(spell, item));
     }
   }
 }
 
-void tryCast(const SpellOpt& spellOpt) {
+void tryCast(const SpellOpt& spellOpt)
+{
   assert(spellOpt.spell);
 
   //TODO It should be allowed to cast non-read spells while blind etc.
   //There should be something like "allowRead()" and allowCastSpells()".
-  if(Map::player->getPropHandler().allowRead(true)) {
+  if(Map::player->getPropHandler().allowRead(true))
+  {
     Log::clearLog();
     Render::drawMapAndInterface();
 
     Spell* const spell = spellOpt.spell;
 
     const Range spiCost = spell->getSpiCost(false, Map::player);
-    if(spiCost.upper >= Map::player->getSpi()) {
+    if(spiCost.upper >= Map::player->getSpi())
+    {
       Log::addMsg("Cast spell and risk depleting your spirit (y/n)?", clrWhiteHigh);
       Render::drawMapAndInterface();
-      if(Query::yesOrNo() == YesNoAnswer::no) {
+      if(Query::yesOrNo() == YesNoAnswer::no)
+      {
         Log::clearLog();
         Render::drawMapAndInterface();
         return;
@@ -163,14 +185,17 @@ void tryCast(const SpellOpt& spellOpt) {
 
     bool isBloodSorc  = false;
     bool isWarlock    = false;
-    for(Trait id : PlayerBon::traitsPicked_) {
+    for(Trait id : PlayerBon::traitsPicked_)
+    {
       if(id == Trait::bloodSorcerer)  isBloodSorc = true;
       if(id == Trait::warlock)        isWarlock   = true;
     }
 
     const int BLOOD_SORC_HP_DRAINED = 2;
-    if(isBloodSorc) {
-      if(Map::player->getHp() <= BLOOD_SORC_HP_DRAINED) {
+    if(isBloodSorc)
+    {
+      if(Map::player->getHp() <= BLOOD_SORC_HP_DRAINED)
+      {
         Log::addMsg("I do not have enough life force to cast this spell.");
         Render::drawMapAndInterface();
         return;
@@ -179,13 +204,16 @@ void tryCast(const SpellOpt& spellOpt) {
 
     Log::addMsg("I cast " + spell->getName() + "!");
 
-    if(isBloodSorc) {
+    if(isBloodSorc)
+    {
       Map::player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure);
     }
-    if(Map::player->isAlive()) {
+    if(Map::player->isAlive())
+    {
       spell->cast(Map::player, true);
       prevCast_ = spellOpt;
-      if(isWarlock && Rnd::oneIn(2)) {
+      if(isWarlock && Rnd::oneIn(2))
+      {
         Map::player->getPropHandler().tryApplyProp(
           new PropWarlockCharged(PropTurns::std));
       }
@@ -195,40 +223,50 @@ void tryCast(const SpellOpt& spellOpt) {
 
 } //PlayerSpellsHandling
 
-void init() {
+void init()
+{
   cleanup();
 }
 
-void cleanup() {
+void cleanup()
+{
   for(Spell* spell : knownSpells_) {delete spell;}
   knownSpells_.clear();
   prevCast_ = SpellOpt();
 }
 
-void storeToSaveLines(vector<string>& lines) {
+void storeToSaveLines(vector<string>& lines)
+{
   lines.push_back(toStr(knownSpells_.size()));
   for(Spell* s : knownSpells_) {lines.push_back(toStr(int(s->getId())));}
 }
 
-void setupFromSaveLines(vector<string>& lines) {
+void setupFromSaveLines(vector<string>& lines)
+{
   const int NR_SPELLS = toInt(lines.front());
   lines.erase(begin(lines));
 
-  for(int i = 0; i < NR_SPELLS; ++i) {
+  for(int i = 0; i < NR_SPELLS; ++i)
+  {
     const int ID = toInt(lines.front());
     lines.erase(begin(lines));
     knownSpells_.push_back(SpellHandling::mkSpellFromId(SpellId(ID)));
   }
 }
 
-void playerSelectSpellToCast() {
+void playerSelectSpellToCast()
+{
   vector<SpellOpt> spellOpts;
   getSpellsAvail(spellOpts);
 
-  if(spellOpts.empty()) {
+  if(spellOpts.empty())
+  {
     Log::addMsg("I do not know any spells to invoke.");
-  } else {
-    auto spellOptSort = [](const SpellOpt & opt1, const SpellOpt & opt2) {
+  }
+  else
+  {
+    auto spellOptSort = [](const SpellOpt & opt1, const SpellOpt & opt2)
+    {
       return opt1.spell->getName() < opt2.spell->getName();
     };
 
@@ -240,21 +278,26 @@ void playerSelectSpellToCast() {
 
     draw(browser, spellOpts);
 
-    while(true) {
+    while(true)
+    {
       const MenuAction action = MenuInputHandling::getAction(browser);
-      switch(action) {
-        case MenuAction::browsed: {
+      switch(action)
+      {
+        case MenuAction::browsed:
+        {
           draw(browser, spellOpts);
         } break;
 
         case MenuAction::esc:
-        case MenuAction::space: {
+        case MenuAction::space:
+        {
           Log::clearLog();
           Render::drawMapAndInterface();
           return;
         } break;
 
-        case MenuAction::selected: {
+        case MenuAction::selected:
+        {
           tryCast(spellOpts.at(browser.getPos().y));
           return;
         } break;
@@ -265,12 +308,14 @@ void playerSelectSpellToCast() {
   }
 }
 
-void tryCastPrevSpell() {
+void tryCastPrevSpell()
+{
   TRACE_FUNC_BEGIN;
 
   bool isPrevSpellOk = false;
 
-  if(prevCast_.spell) {
+  if(prevCast_.spell)
+  {
     //Checking if previous spell is still available (it could for example have been
     //granted by an item that was dropped)
     vector<SpellOpt> spellOpts;
@@ -282,10 +327,13 @@ void tryCastPrevSpell() {
                     end(spellOpts);
   }
 
-  if(isPrevSpellOk) {
+  if(isPrevSpellOk)
+  {
     TRACE << "Previous spell is available, casting" << endl;
     tryCast(prevCast_);
-  } else {
+  }
+  else
+  {
     TRACE << "No previous spell set, player picks spell instead" << endl;
     playerSelectSpellToCast();
   }
@@ -293,26 +341,34 @@ void tryCastPrevSpell() {
   TRACE_FUNC_END;
 }
 
-bool isSpellLearned(const SpellId id) {
+bool isSpellLearned(const SpellId id)
+{
   for(auto* s : knownSpells_) {if(s->getId() == id) {return true;}}
   return false;
 }
 
-void learnSpellIfNotKnown(const SpellId id) {
+void learnSpellIfNotKnown(const SpellId id)
+{
   learnSpellIfNotKnown(SpellHandling::mkSpellFromId(id));
 }
 
-void learnSpellIfNotKnown(Spell* const spell) {
+void learnSpellIfNotKnown(Spell* const spell)
+{
   bool isAlreadyLearned = false;
-  for(Spell* spellCmpr : knownSpells_) {
-    if(spellCmpr->getId() == spell->getId()) {
+  for(Spell* spellCmpr : knownSpells_)
+  {
+    if(spellCmpr->getId() == spell->getId())
+    {
       isAlreadyLearned = true;
       break;
     }
   }
-  if(isAlreadyLearned) {
+  if(isAlreadyLearned)
+  {
     delete spell;
-  } else {
+  }
+  else
+  {
     knownSpells_.push_back(spell);
   }
 }

@@ -18,24 +18,30 @@
 
 using namespace std;
 
-namespace MapGen {
+namespace MapGen
+{
 
 bool isMapValid = true;
 
 }
 
-namespace MapGenUtils {
+namespace MapGenUtils
+{
 
-namespace {
+namespace
+{
 
 FeatureId backup[MAP_W][MAP_H];
 
 void getFloorCellsInRoom(const Room& room, const bool floor[MAP_W][MAP_H],
-                         vector<Pos>& out) {
+                         vector<Pos>& out)
+{
   assert(Utils::isAreaInsideMap(room.r_));
 
-  for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y) {
-    for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x) {
+  for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+  {
+    for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
+    {
       if(floor[x][y]) {out.push_back(Pos(x, y));}
     }
   }
@@ -43,7 +49,8 @@ void getFloorCellsInRoom(const Room& room, const bool floor[MAP_W][MAP_H],
 
 } //namespace
 
-void cutRoomCorners(const Room& room) {
+void cutRoomCorners(const Room& room)
+{
   const Pos& roomP0  = room.r_.p0;
   const Pos& roomP1  = room.r_.p1;
 
@@ -62,24 +69,31 @@ void cutRoomCorners(const Room& room) {
 
   //Which corners to place - up-left, up-right, down-left, down-right
   bool c[4] = {true, true, true, true};
-  if(Rnd::fraction(2, 3)) {
-    while(true) {
+  if(Rnd::fraction(2, 3))
+  {
+    while(true)
+    {
       int nrCorners = 0;
-      for(int i = 0; i < 4; ++i) {
-        if(Rnd::coinToss()) {c[i] = true; nrCorners++;} else {c[i] = false;}
+      for(int i = 0; i < 4; ++i)
+      {
+        if(Rnd::coinToss()) {c[i] = true; nrCorners++;}
+        else {c[i] = false;}
       }
       if(nrCorners > 0) {break;}
     }
   }
 
-  for(int y = roomP0.y; y <= roomP1.y; ++y) {
-    for(int x = roomP0.x; x <= roomP1.x; ++x) {
+  for(int y = roomP0.y; y <= roomP1.y; ++y)
+  {
+    for(int x = roomP0.x; x <= roomP1.x; ++x)
+    {
       const bool X_OK = x < crossX0Y0.x ? (c[0] || c[2]) :
                         x > crossX1Y1.x ? (c[1] || c[3]) : false;
       const bool Y_OK = y < crossX0Y0.y ? (c[0] || c[1]) :
                         y > crossX1Y1.y ? (c[2] || c[3]) : false;
 
-      if(X_OK && Y_OK) {
+      if(X_OK && Y_OK)
+      {
         Map::put(new Wall(Pos(x, y)));
         Map::roomMap[x][y] = nullptr;
       }
@@ -87,13 +101,17 @@ void cutRoomCorners(const Room& room) {
   }
 }
 
-void mkPillarsInRoom(const Room& room) {
+void mkPillarsInRoom(const Room& room)
+{
   const Pos& roomP0(room.r_.p0);
   const Pos& roomP1(room.r_.p1);
 
-  auto isFree = [](const Pos & p) {
-    for(int dx = -1; dx <= 1; ++dx) {
-      for(int dy = -1; dy <= 1; ++dy) {
+  auto isFree = [](const Pos & p)
+  {
+    for(int dx = -1; dx <= 1; ++dx)
+    {
+      for(int dy = -1; dy <= 1; ++dy)
+      {
         const auto* const f = Map::cells[p.x + dx][p.y + dy].rigid;
         if(f->getId() == FeatureId::wall) {return false;}
       }
@@ -101,22 +119,29 @@ void mkPillarsInRoom(const Room& room) {
     return true;
   };
 
-  if(Rnd::fraction(2, 3)) {
+  if(Rnd::fraction(2, 3))
+  {
     //Place pillars in rows and columns (but occasionally skip a pillar)
     auto getStepSize = []() {return Rnd::range(1, 2);};
     const int DX = getStepSize();
     const int DY = getStepSize();
 
-    for(int y = roomP0.y + 1; y <= roomP1.y - 1; y += DY) {
-      for(int x = roomP0.x + 1; x <= roomP1.x - 1; x += DX) {
+    for(int y = roomP0.y + 1; y <= roomP1.y - 1; y += DY)
+    {
+      for(int x = roomP0.x + 1; x <= roomP1.x - 1; x += DX)
+      {
         const Pos p(x, y);
         if(isFree(p) && Rnd::fraction(2, 3)) {Map::put(new Wall(p));}
       }
     }
-  } else {
+  }
+  else
+  {
     //Scatter pillars randomly
-    for(int y = roomP0.y + 1; y <= roomP1.y - 1; ++y) {
-      for(int x = roomP0.x + 1; x <= roomP1.x - 1; ++x) {
+    for(int y = roomP0.y + 1; y <= roomP1.y - 1; ++y)
+    {
+      for(int x = roomP0.x + 1; x <= roomP1.x - 1; ++x)
+      {
         const Pos p(x + Rnd::range(-1, 1), y + Rnd::range(-1, 1));
         if(isFree(p) && Rnd::oneIn(5)) {Map::put(new Wall(p));}
       }
@@ -124,7 +149,8 @@ void mkPillarsInRoom(const Room& room) {
   }
 }
 
-void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
+void getValidRoomCorrEntries(const Room& room, vector<Pos>& out)
+{
   TRACE_FUNC_BEGIN_VERBOSE;
   //Find all cells that meets all of the following criteria:
   //(1) Is a wall cell
@@ -138,8 +164,10 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   bool roomCells[MAP_W][MAP_H];
   bool roomFloorCells[MAP_W][MAP_H];
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       const bool IS_ROOM_CELL = Map::roomMap[x][y] == &room;
       roomCells[x][y]         = IS_ROOM_CELL;
       const auto* const f     = Map::cells[x][y].rigid;
@@ -151,8 +179,10 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   MapParse::expand(roomCells, roomCellsExpanded,
                    Rect(Pos(room.r_.p0 - 2), Pos(room.r_.p1 + 2)));
 
-  for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; ++y) {
-    for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; ++x) {
+  for(int y = room.r_.p0.y - 1; y <= room.r_.p1.y + 1; ++y)
+  {
+    for(int x = room.r_.p0.x - 1; x <= room.r_.p1.x + 1; ++x)
+    {
       //Condition (1)
       if(Map::cells[x][y].rigid->getId() != FeatureId::wall) {continue;}
 
@@ -169,7 +199,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
 
       bool isAdjToFloorNotInRoom = false;
 
-      for(const Pos& d : DirUtils::cardinalList) {
+      for(const Pos& d : DirUtils::cardinalList)
+      {
         const Pos& pAdj(p + d);
         //Condition (4)
         if(roomFloorCells[pAdj.x][pAdj.y])      {isAdjToFloorInRoom = true;}
@@ -178,7 +209,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
         if(!roomCellsExpanded[pAdj.x][pAdj.y])  {isAdjToCellOutside = true;}
       }
 
-      if(!isAdjToFloorNotInRoom && isAdjToFloorInRoom && isAdjToCellOutside) {
+      if(!isAdjToFloorNotInRoom && isAdjToFloorInRoom && isAdjToCellOutside)
+      {
         out.push_back(p);
       }
     }
@@ -186,7 +218,8 @@ void getValidRoomCorrEntries(const Room& room, vector<Pos>& out) {
   TRACE_FUNC_END_VERBOSE;
 }
 
-void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
+void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
+{
   TRACE_FUNC_BEGIN_VERBOSE << "Making corridor between rooms "
                            << &r0 << " and " << &r1 << endl;
 
@@ -198,11 +231,13 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
   getValidRoomCorrEntries(r0, p0Bucket);
   getValidRoomCorrEntries(r1, p1Bucket);
 
-  if(p0Bucket.empty()) {
+  if(p0Bucket.empty())
+  {
     TRACE_FUNC_END_VERBOSE << "No entry points found in room 0" << endl;
     return;
   }
-  if(p1Bucket.empty()) {
+  if(p1Bucket.empty())
+  {
     TRACE_FUNC_END_VERBOSE << "No entry points found in room 1" << endl;
     return;
   }
@@ -210,8 +245,10 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
   int shortestDist = INT_MAX;
 
   TRACE_VERBOSE << "Finding shortest possible dist between entries" << endl;
-  for(const Pos& p0 : p0Bucket) {
-    for(const Pos& p1 : p1Bucket) {
+  for(const Pos& p0 : p0Bucket)
+  {
+    for(const Pos& p1 : p1Bucket)
+    {
       const int CUR_DIST = Utils::kingDist(p0, p1);
       if(CUR_DIST < shortestDist) {shortestDist = CUR_DIST;}
     }
@@ -221,10 +258,13 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
                 << shortestDist << ")" << endl;
   vector< pair<Pos, Pos> > entriesBucket;
 
-  for(const Pos& p0 : p0Bucket) {
-    for(const Pos& p1 : p1Bucket) {
+  for(const Pos& p0 : p0Bucket)
+  {
+    for(const Pos& p1 : p1Bucket)
+    {
       const int CUR_DIST = Utils::kingDist(p0, p1);
-      if(CUR_DIST == shortestDist) {
+      if(CUR_DIST == shortestDist)
+      {
         entriesBucket.push_back(pair<Pos, Pos>(p0, p1));
       }
     }
@@ -239,15 +279,20 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
   vector<Pos> path;
 
   //Is entry points same cell (rooms are adjacent)? Then simply use that
-  if(p0 == p1) {
+  if(p0 == p1)
+  {
     path.push_back(p0);
-  } else {
+  }
+  else
+  {
     //Else, try to find a path to the other entry point
     bool blocked[MAP_W][MAP_H];
     Utils::resetArray(blocked, false);
 
-    for(int x = 0; x < MAP_W; ++x) {
-      for(int y = 0; y < MAP_H; ++y) {
+    for(int x = 0; x < MAP_W; ++x)
+    {
+      for(int y = 0; y < MAP_H; ++y)
+      {
         blocked[x][y] =
           Map::roomMap[x][y] ||
           Map::cells[x][y].rigid->getId() != FeatureId::wall;
@@ -262,24 +307,28 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
     PathFind::run(p0, p1, blockedExpanded, path, false);
   }
 
-  if(!path.empty()) {
+  if(!path.empty())
+  {
     path.push_back(p0);
 
     TRACE_VERBOSE << "Check that the path doesn't circle around the origin "
                   << "or target room" << endl;
     vector<Room*> rooms {&r0, &r1};
-    for(Room* room : rooms) {
+    for(Room* room : rooms)
+    {
       bool isLeftOfRoom   = false;
       bool isRightOfRoom  = false;
       bool isAboveRoom    = false;
       bool isBelowRoom    = false;
-      for(Pos& p : path) {
+      for(Pos& p : path)
+      {
         if(p.x < room->r_.p0.x) {isLeftOfRoom   = true;}
         if(p.x > room->r_.p1.x) {isRightOfRoom  = true;}
         if(p.y < room->r_.p0.y) {isAboveRoom    = true;}
         if(p.y > room->r_.p1.y) {isBelowRoom    = true;}
       }
-      if((isLeftOfRoom && isRightOfRoom) || (isAboveRoom && isBelowRoom)) {
+      if((isLeftOfRoom && isRightOfRoom) || (isAboveRoom && isBelowRoom))
+      {
         TRACE_FUNC_END_VERBOSE
             << "Path circled around room (looks bad), not making corridor"
             << endl;
@@ -289,12 +338,14 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
 
     vector<Room*> prevJunctions;
 
-    for(size_t i = 0; i < path.size(); ++i) {
+    for(size_t i = 0; i < path.size(); ++i)
+    {
       const Pos& p(path.at(i));
 
       Map::put(new Floor(p));
 
-      if(i > 1 && int(i) < int(path.size() - 3) && i % 6 == 0) {
+      if(i > 1 && int(i) < int(path.size() - 3) && i % 6 == 0)
+      {
         Room* junction  = new Room(Rect(p, p));
         junction->type_ = RoomType::corridorJunction;
         Map::roomList.push_back(junction);
@@ -303,7 +354,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
         junction->roomsConTo_.push_back(&r1);
         r0.roomsConTo_.push_back(junction);
         r1.roomsConTo_.push_back(junction);
-        for(Room* prevJunction : prevJunctions) {
+        for(Room* prevJunction : prevJunctions)
+        {
           junction->roomsConTo_.push_back(prevJunction);
           prevJunction->roomsConTo_.push_back(junction);
         }
@@ -311,7 +363,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
       }
     }
 
-    if(doorProposals) {
+    if(doorProposals)
+    {
       doorProposals[p0.x][p0.y] = doorProposals[p1.x][p1.y] = true;
     }
     r0.roomsConTo_.push_back(&r1);
@@ -323,17 +376,23 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H]) {
   TRACE_FUNC_END_VERBOSE << "Failed to connect roooms" << endl;
 }
 
-void backupMap() {
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+void backupMap()
+{
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       backup[x][y] = Map::cells[x][y].rigid->getId();
     }
   }
 }
 
-void restoreMap() {
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+void restoreMap()
+{
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       const auto& data = FeatureData::getData(backup[x][y]);
       Map::put(static_cast<Rigid*>(data.mkObj(Pos(x, y))));
     }
@@ -341,7 +400,8 @@ void restoreMap() {
 }
 
 void pathfinderWalk(const Pos& p0, const Pos& p1, std::vector<Pos>& posListRef,
-                    const bool IS_SMOOTH) {
+                    const bool IS_SMOOTH)
+{
   posListRef.clear();
 
   bool blocked[MAP_W][MAP_H];
@@ -351,9 +411,11 @@ void pathfinderWalk(const Pos& p0, const Pos& p1, std::vector<Pos>& posListRef,
 
   vector<Pos> rndWalkBuffer;
 
-  for(const Pos& p : path) {
+  for(const Pos& p : path)
+  {
     posListRef.push_back(p);
-    if(!IS_SMOOTH && Rnd::oneIn(3)) {
+    if(!IS_SMOOTH && Rnd::oneIn(3))
+    {
       rndWalk(p, Rnd::range(1, 6), rndWalkBuffer, true);
       posListRef.reserve(posListRef.size() + rndWalkBuffer.size());
       move(begin(rndWalkBuffer), end(rndWalkBuffer), back_inserter(posListRef));
@@ -362,7 +424,8 @@ void pathfinderWalk(const Pos& p0, const Pos& p1, std::vector<Pos>& posListRef,
 }
 
 void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
-             const bool ALLOW_DIAGONAL, Rect area) {
+             const bool ALLOW_DIAGONAL, Rect area)
+{
   posListRef.clear();
 
   const vector<Pos>& dList =
@@ -371,13 +434,16 @@ void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
 
   Pos p(p0);
 
-  while(len > 0) {
+  while(len > 0)
+  {
     posListRef.push_back(p);
     len--;
 
-    while(true) {
+    while(true)
+    {
       const Pos nxtPos = p + dList.at(Rnd::range(0, D_LIST_SIZE - 1));
-      if(Utils::isPosInside(nxtPos, area)) {
+      if(Utils::isPosInside(nxtPos, area))
+      {
         p = nxtPos;
         break;
       }

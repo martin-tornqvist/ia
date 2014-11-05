@@ -1,7 +1,8 @@
 #ifndef CREDITS_SCR_H
 #define CREDITS_SCR_H
 
-namespace Credits {
+namespace Credits
+{
 
 void init();
 

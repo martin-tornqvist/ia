@@ -54,7 +54,8 @@
 
 #endif
 
-namespace Init {
+namespace Init
+{
 
 extern bool isCheatVisionEnabled;
 extern bool quitToMainMenu;

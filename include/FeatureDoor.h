@@ -3,7 +3,8 @@
 
 #include "FeatureRigid.h"
 
-enum class DoorSpawnState {
+enum class DoorSpawnState
+{
   open,
   closed,
   stuck,
@@ -12,7 +13,8 @@ enum class DoorSpawnState {
   any
 };
 
-class Door: public Rigid {
+class Door: public Rigid
+{
 public:
   Door(const Pos& pos, const Rigid* const mimicFeature,
        DoorSpawnState spawnState = DoorSpawnState::any);
@@ -54,7 +56,8 @@ public:
 
   virtual bool open() override;
 
-  static bool isTileAnyDoor(const TileId tile) {
+  static bool isTileAnyDoor(const TileId tile)
+  {
     return tile == TileId::doorClosed || tile == TileId::doorOpen;
   }
 

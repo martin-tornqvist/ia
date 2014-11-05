@@ -4,7 +4,8 @@
 #include "RoomTheme.h"
 #include "FeatureTrap.h"
 
-namespace PopulateTraps {
+namespace PopulateTraps
+{
 
 void populateStdLvl();
 

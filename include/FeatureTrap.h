@@ -9,7 +9,8 @@
 
 class SpecificTrapBase;
 
-enum class TrapId {
+enum class TrapId
+{
   blinding,
   dart,
   gasConfusion,
@@ -25,7 +26,8 @@ enum class TrapId {
   any
 };
 
-class Trap: public Rigid {
+class Trap: public Rigid
+{
 public:
   Trap(const Pos& pos, const Rigid* const mimicFeature, TrapId type);
 
@@ -81,7 +83,8 @@ private:
   SpecificTrapBase* specificTrap_;
 };
 
-class SpecificTrapBase {
+class SpecificTrapBase
+{
 protected:
   friend class Trap;
   SpecificTrapBase(Pos pos, TrapId trapType) :
@@ -89,7 +92,8 @@ protected:
 
   virtual ~SpecificTrapBase() {}
 
-  virtual Dir actorTryLeave(Actor& actor, const Dir dir) {
+  virtual Dir actorTryLeave(Actor& actor, const Dir dir)
+  {
     (void)actor;
     return dir;
   }
@@ -102,10 +106,12 @@ protected:
   virtual TileId getTile()        const = 0;
   virtual bool isMagical()        const = 0;
   virtual bool isDisarmable()     const = 0;
-  virtual std::string getDisarmMsg() const {
+  virtual std::string getDisarmMsg() const
+  {
     return isMagical() ? "I dispel a magic trap." : "I disarm a trap.";
   }
-  virtual std::string getDisarmFailMsg() const {
+  virtual std::string getDisarmFailMsg() const
+  {
     return isMagical() ?
            "I fail to dispel a magic trap." :
            "I fail to disarm a trap.";
@@ -115,7 +121,8 @@ protected:
   TrapId trapType_;
 };
 
-class TrapDart: public SpecificTrapBase {
+class TrapDart: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapDart(Pos pos);
@@ -130,7 +137,8 @@ private:
   bool        isPoisoned;
 };
 
-class TrapSpear: public SpecificTrapBase {
+class TrapSpear: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapSpear(Pos pos);
@@ -145,7 +153,8 @@ private:
   bool isPoisoned;
 };
 
-class TrapGasConfusion: public SpecificTrapBase {
+class TrapGasConfusion: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapGasConfusion(Pos pos) :
@@ -159,11 +168,13 @@ private:
   bool        isDisarmable()  const override {return true;}
 };
 
-class TrapGasParalyzation: public SpecificTrapBase {
+class TrapGasParalyzation: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapGasParalyzation(Pos pos) :
-    SpecificTrapBase(pos, TrapId::gasParalyze) {
+    SpecificTrapBase(pos, TrapId::gasParalyze)
+  {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   Clr   getClr()        const override {return clrMagenta;}
@@ -174,7 +185,8 @@ private:
   bool        isDisarmable()  const override {return true;}
 };
 
-class TrapGasFear: public SpecificTrapBase {
+class TrapGasFear: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapGasFear(Pos pos) :
@@ -188,7 +200,8 @@ private:
   bool        isDisarmable()  const override {return true;}
 };
 
-class TrapBlindingFlash: public SpecificTrapBase {
+class TrapBlindingFlash: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapBlindingFlash(Pos pos) :
@@ -202,11 +215,13 @@ private:
   bool        isDisarmable()  const override {return true;}
 };
 
-class TrapTeleport: public SpecificTrapBase {
+class TrapTeleport: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapTeleport(Pos pos) :
-    SpecificTrapBase(pos, TrapId::teleport) {
+    SpecificTrapBase(pos, TrapId::teleport)
+  {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   Clr   getClr()        const override {return clrCyan;}
@@ -217,11 +232,13 @@ private:
   bool        isDisarmable()  const override {return true;}
 };
 
-class TrapSummonMon: public SpecificTrapBase {
+class TrapSummonMon: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapSummonMon(Pos pos) :
-    SpecificTrapBase(pos, TrapId::summonMon) {
+    SpecificTrapBase(pos, TrapId::summonMon)
+  {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   Clr   getClr()        const override {return clrBrownDrk;}
@@ -232,7 +249,8 @@ private:
   bool        isDisarmable()  const override {return true;}
 };
 
-class TrapSmoke: public SpecificTrapBase {
+class TrapSmoke: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapSmoke(Pos pos) :
@@ -246,7 +264,8 @@ private:
   bool        isDisarmable()  const override {return true;}
 };
 
-class TrapAlarm: public SpecificTrapBase {
+class TrapAlarm: public SpecificTrapBase
+{
 private:
   friend class Trap;
   TrapAlarm(Pos pos) :
@@ -261,7 +280,8 @@ private:
 };
 
 
-class TrapWeb: public SpecificTrapBase {
+class TrapWeb: public SpecificTrapBase
+{
 public:
   Dir actorTryLeave(Actor& actor, const Dir dir);
 
@@ -280,10 +300,12 @@ private:
   TileId      getTile()       const override {return TileId::web;}
   bool        isDisarmable()  const override {return true;}
 
-  std::string getDisarmMsg() const override {
+  std::string getDisarmMsg() const override
+  {
     return "I tear down a spider web.";
   }
-  std::string getDisarmFailMsg() const override {
+  std::string getDisarmFailMsg() const override
+  {
     return "I fail to tear down a spider web.";
   }
 

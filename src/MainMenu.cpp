@@ -22,13 +22,16 @@
 
 using namespace std;
 
-namespace MainMenu {
+namespace MainMenu
+{
 
-namespace {
+namespace
+{
 
 string quote = "";
 
-string getHplQuote() {
+string getHplQuote()
+{
   vector<string> quotes;
   quotes.clear();
   quotes.push_back(
@@ -208,7 +211,8 @@ string getHplQuote() {
   return quotes.at(Rnd::range(0, quotes.size() - 1));
 }
 
-void draw(const MenuBrowser& browser) {
+void draw(const MenuBrowser& browser)
+{
   TRACE_FUNC_BEGIN;
 
   Pos pos(MAP_W_HALF, 3);
@@ -218,13 +222,17 @@ void draw(const MenuBrowser& browser) {
 
   Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-  if(Config::isTilesMode()) {
+  if(Config::isTilesMode())
+  {
     TRACE << "Calling drawMainMenuLogo()" << endl;
     Render::drawMainMenuLogo(0);
     pos.y += 10;
-  } else {
+  }
+  else
+  {
     vector<string> logo;
-    if(!Config::isTilesMode()) {
+    if(!Config::isTilesMode())
+    {
       logo.push_back("        ___  __                __  __                  ");
       logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
       logo.push_back("+ | \\ | +-- +--  ____    ____ +-- -   ____ | \\ | ____  ");
@@ -232,10 +240,13 @@ void draw(const MenuBrowser& browser) {
       logo.push_back("               \\                 \\                      ");
     }
     const int LOGO_X_POS_LEFT = (MAP_W - logo.at(0).size()) / 2;
-    for(const string& row : logo) {
+    for(const string& row : logo)
+    {
       pos.x = LOGO_X_POS_LEFT;
-      for(const char& glyph : row) {
-        if(glyph != ' ') {
+      for(const char& glyph : row)
+      {
+        if(glyph != ' ')
+        {
           Clr clr = clrGreenLgt;
           clr.g += Rnd::range(-50, 100);
           clr.g = max(0, min(254, int(clr.g)));
@@ -248,7 +259,8 @@ void draw(const MenuBrowser& browser) {
     pos.y += 3;
   }
 
-  if(IS_DEBUG_MODE) {
+  if(IS_DEBUG_MODE)
+  {
     Render::drawText(
       "## DEBUG MODE ##", Panel::screen, Pos(1, 1), clrYellow);
   }
@@ -262,7 +274,8 @@ void draw(const MenuBrowser& browser) {
   vector<string> quoteLines;
   TextFormatting::lineToLines(quote, 28, quoteLines);
   Pos quotePos(15, pos.y - 1);
-  for(string& quoteLine : quoteLines) {
+  for(string& quoteLine : quoteLines)
+  {
     Render::drawTextCentered(quoteLine, Panel::screen, quotePos, quoteClr);
     quotePos.y++;
   }
@@ -301,7 +314,8 @@ void draw(const MenuBrowser& browser) {
                            browser.isAtIdx(6) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  if(IS_DEBUG_MODE) {
+  if(IS_DEBUG_MODE)
+  {
     Render::drawTextCentered("DEBUG: RUN BOT", Panel::screen, pos,
                              browser.isAtIdx(7) ? clrMenuHighlight : clrMenuDrk);
     pos.y++;
@@ -325,7 +339,8 @@ void draw(const MenuBrowser& browser) {
 
 } //namespace
 
-GameEntryMode run(bool& quit, int& introMusChannel) {
+GameEntryMode run(bool& quit, int& introMusChannel)
+{
   TRACE_FUNC_BEGIN;
 
   quote = getHplQuote();
@@ -336,15 +351,19 @@ GameEntryMode run(bool& quit, int& introMusChannel) {
 
   draw(browser);
 
-  while(true) {
+  while(true)
+  {
     const MenuAction action = MenuInputHandling::getAction(browser);
 
-    switch(action) {
-      case MenuAction::browsed: {
+    switch(action)
+    {
+      case MenuAction::browsed:
+      {
         draw(browser);
       } break;
 
-      case MenuAction::esc: {
+      case MenuAction::esc:
+      {
         quit    = true;
         TRACE_FUNC_END;
         return GameEntryMode::newGame;
@@ -353,47 +372,60 @@ GameEntryMode run(bool& quit, int& introMusChannel) {
       case MenuAction::space:
       case MenuAction::selectedShift: {} break;
 
-      case MenuAction::selected: {
-        if(browser.isAtIdx(0)) {
+      case MenuAction::selected:
+      {
+        if(browser.isAtIdx(0))
+        {
           TRACE_FUNC_END;
           return GameEntryMode::newGame;
         }
-        if(browser.isAtIdx(1)) {
-          if(SaveHandling::isSaveAvailable()) {
+        if(browser.isAtIdx(1))
+        {
+          if(SaveHandling::isSaveAvailable())
+          {
             SaveHandling::load();
             MapTravel::goToNxt();
             TRACE_FUNC_END;
             return GameEntryMode::loadGame;
-          } else {
+          }
+          else
+          {
             Popup::showMsg("Starting a new character instead.", false,
                            "No save available");
             TRACE_FUNC_END;
             return GameEntryMode::newGame;
           }
         }
-        if(browser.isAtIdx(2)) {
+        if(browser.isAtIdx(2))
+        {
           Manual::run();
           draw(browser);
         }
-        if(browser.isAtIdx(3)) {
+        if(browser.isAtIdx(3))
+        {
           Config::runOptionsMenu();
           draw(browser);
         }
-        if(browser.isAtIdx(4)) {
+        if(browser.isAtIdx(4))
+        {
           Credits::run();
           draw(browser);
         }
-        if(browser.isAtIdx(5)) {
+        if(browser.isAtIdx(5))
+        {
           HighScore::runHighScoreScreen();
           draw(browser);
         }
-        if(browser.isAtIdx(6)) {
+        if(browser.isAtIdx(6))
+        {
           quit    = true;
           TRACE_FUNC_END;
           return GameEntryMode::newGame;
         }
-        if(IS_DEBUG_MODE) {
-          if(browser.isAtIdx(7)) {
+        if(IS_DEBUG_MODE)
+        {
+          if(browser.isAtIdx(7))
+          {
             Config::setBotPlaying();
             TRACE_FUNC_END;
             return GameEntryMode::newGame;

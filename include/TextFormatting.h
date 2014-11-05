@@ -4,7 +4,8 @@
 #include <vector>
 #include <string>
 
-namespace TextFormatting {
+namespace TextFormatting
+{
 
 void lineToLines(std::string line, const int MAX_W, std::vector<std::string>& linesRef);
 

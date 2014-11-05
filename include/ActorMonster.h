@@ -7,16 +7,19 @@
 #include "Sound.h"
 #include "Spells.h"
 
-struct BestAttack {
+struct BestAttack
+{
   BestAttack() : weapon(nullptr), isMelee(true) {}
 
   Wpn* weapon;
   bool isMelee;
 };
 
-struct AttackOpport {
+struct AttackOpport
+{
   AttackOpport() :
-    isTimeToReload(false), isMelee(true) {
+    isTimeToReload(false), isMelee(true)
+  {
     weapons.clear();
   }
 
@@ -24,7 +27,8 @@ struct AttackOpport {
     weapons(other.weapons), isTimeToReload(other.isTimeToReload),
     isMelee(other.isMelee) {}
 
-  AttackOpport& operator=(const AttackOpport& other) {
+  AttackOpport& operator=(const AttackOpport& other)
+  {
     weapons = other.weapons;
     isTimeToReload = other.isTimeToReload;
     isMelee = other.isMelee;
@@ -39,7 +43,8 @@ struct AttackOpport {
 
 class Wpn;
 
-class Mon: public Actor {
+class Mon: public Actor
+{
 public:
   Mon();
   virtual ~Mon();
@@ -64,16 +69,20 @@ public:
   virtual bool onActorTurn_() {return false;}
   virtual void onStdTurn() override {}
 
-  virtual std::string getAggroPhraseMonSeen() const {
+  virtual std::string getAggroPhraseMonSeen() const
+  {
     return data_->aggroTextMonSeen;
   }
-  virtual std::string getAggroPhraseMonHidden() const {
+  virtual std::string getAggroPhraseMonHidden() const
+  {
     return data_->aggroTextMonHidden;
   }
-  virtual SfxId getAggroSfxMonSeen() const {
+  virtual SfxId getAggroSfxMonSeen() const
+  {
     return data_->aggroSfxMonSeen;
   }
-  virtual SfxId getAggroSfxMonHidden() const {
+  virtual SfxId getAggroSfxMonHidden() const
+  {
     return data_->aggroSfxMonHidden;
   }
 
@@ -99,71 +108,82 @@ protected:
   virtual void hit_(int& dmg) override;
 };
 
-class Rat: public Mon {
+class Rat: public Mon
+{
 public:
   Rat() : Mon() {}
   ~Rat() {}
   virtual void mkStartItems() override;
 };
 
-class RatThing: public Rat {
+class RatThing: public Rat
+{
 public:
   RatThing() : Rat() {}
   ~RatThing() {}
   void mkStartItems() override;
 };
 
-class BrownJenkin: public RatThing {
+class BrownJenkin: public RatThing
+{
 public:
   BrownJenkin() : RatThing() {}
   ~BrownJenkin() {}
 };
 
-class Spider: public Mon {
+class Spider: public Mon
+{
 public:
   Spider() : Mon() {}
   virtual ~Spider() {}
   bool onActorTurn_() override;
 };
 
-class GreenSpider: public Spider {
+class GreenSpider: public Spider
+{
 public:
   GreenSpider() : Spider() {}
   ~GreenSpider() {}
   void mkStartItems() override;
 };
 
-class WhiteSpider: public Spider {
+class WhiteSpider: public Spider
+{
 public:
   WhiteSpider() : Spider() {}
   ~WhiteSpider() {}
   void mkStartItems() override;
 };
 
-class RedSpider: public Spider {
+class RedSpider: public Spider
+{
 public:
   RedSpider() : Spider() {}
   ~RedSpider() {}
   void mkStartItems() override;
 };
 
-class ShadowSpider: public Spider {
+class ShadowSpider: public Spider
+{
 public:
   ShadowSpider() : Spider() {}
   ~ShadowSpider() {}
   void mkStartItems() override;
 };
 
-class LengSpider: public Spider {
+class LengSpider: public Spider
+{
 public:
   LengSpider() : Spider() {}
   ~LengSpider() {}
   void mkStartItems() override;
 };
 
-class Zombie: public Mon {
+class Zombie: public Mon
+{
 public:
-  Zombie() : Mon() {
+  Zombie() : Mon()
+  {
     deadTurnCounter = 0;
     hasResurrected = false;
   }
@@ -176,21 +196,24 @@ protected:
   bool hasResurrected;
 };
 
-class ZombieClaw: public Zombie {
+class ZombieClaw: public Zombie
+{
 public:
   ZombieClaw() : Zombie() {}
   ~ZombieClaw() {}
   void mkStartItems() override;
 };
 
-class ZombieAxe: public Zombie {
+class ZombieAxe: public Zombie
+{
 public:
   ZombieAxe() : Zombie() {}
   ~ZombieAxe() {}
   void mkStartItems() override;
 };
 
-class BloatedZombie: public Zombie {
+class BloatedZombie: public Zombie
+{
 public:
   BloatedZombie() : Zombie() {}
   ~BloatedZombie() {}
@@ -198,10 +221,12 @@ public:
   void mkStartItems() override;
 };
 
-class MajorClaphamLee: public ZombieClaw {
+class MajorClaphamLee: public ZombieClaw
+{
 public:
   MajorClaphamLee() :
-    ZombieClaw(), hasSummonedTombLegions(false) {
+    ZombieClaw(), hasSummonedTombLegions(false)
+  {
   }
   ~MajorClaphamLee() {}
 
@@ -210,13 +235,15 @@ private:
   bool hasSummonedTombLegions;
 };
 
-class DeanHalsey: public ZombieClaw {
+class DeanHalsey: public ZombieClaw
+{
 public:
   DeanHalsey() : ZombieClaw() {}
   ~DeanHalsey() {}
 };
 
-class KeziahMason: public Mon {
+class KeziahMason: public Mon
+{
 public:
   KeziahMason() : Mon(), hasSummonedJenkin(false) {}
   ~KeziahMason() {}
@@ -226,7 +253,8 @@ private:
   bool hasSummonedJenkin;
 };
 
-class LengElder: public Mon {
+class LengElder: public Mon
+{
 public:
   LengElder() : Mon() {}
   ~LengElder() {}
@@ -237,7 +265,8 @@ private:
   int   nrTurnsToHostile_;
 };
 
-class Cultist: public Mon {
+class Cultist: public Mon
+{
 public:
   Cultist() : Mon() {}
 
@@ -245,38 +274,44 @@ public:
 
   static std::string getCultistPhrase();
 
-  std::string getAggroPhraseMonSeen() const {
+  std::string getAggroPhraseMonSeen() const
+  {
     return getNameThe() + ": " + getCultistPhrase();
   }
-  std::string getAggroPhraseMonHidden() const {
+  std::string getAggroPhraseMonHidden() const
+  {
     return "Voice: " + getCultistPhrase();
   }
 
   virtual ~Cultist() {}
 };
 
-class CultistTeslaCannon: public Cultist {
+class CultistTeslaCannon: public Cultist
+{
 public:
   CultistTeslaCannon() : Cultist() {}
   ~CultistTeslaCannon() {}
   void mkStartItems() override;
 };
 
-class CultistSpikeGun: public Cultist {
+class CultistSpikeGun: public Cultist
+{
 public:
   CultistSpikeGun() : Cultist() {}
   ~CultistSpikeGun() {}
   void mkStartItems() override;
 };
 
-class CultistPriest: public Cultist {
+class CultistPriest: public Cultist
+{
 public:
   CultistPriest() : Cultist() {}
   ~CultistPriest() {}
   void mkStartItems() override;
 };
 
-class LordOfShadows: public Mon {
+class LordOfShadows: public Mon
+{
 public:
   LordOfShadows() : Mon() {}
   ~LordOfShadows() {}
@@ -284,7 +319,8 @@ public:
   void mkStartItems() override;
 };
 
-class LordOfSpiders: public Mon {
+class LordOfSpiders: public Mon
+{
 public:
   LordOfSpiders() : Mon() {}
   ~LordOfSpiders() {}
@@ -292,7 +328,8 @@ public:
   void mkStartItems() override;
 };
 
-class LordOfSpirits: public Mon {
+class LordOfSpirits: public Mon
+{
 public:
   LordOfSpirits() : Mon() {}
   ~LordOfSpirits() {}
@@ -300,7 +337,8 @@ public:
   void mkStartItems() override;
 };
 
-class LordOfPestilence: public Mon {
+class LordOfPestilence: public Mon
+{
 public:
   LordOfPestilence() : Mon() {}
   ~LordOfPestilence() {}
@@ -308,21 +346,24 @@ public:
   void mkStartItems() override;
 };
 
-class FireHound: public Mon {
+class FireHound: public Mon
+{
 public:
   FireHound() : Mon() {}
   ~FireHound() {}
   void mkStartItems() override;
 };
 
-class FrostHound: public Mon {
+class FrostHound: public Mon
+{
 public:
   FrostHound() : Mon() {}
   ~FrostHound() {}
   void mkStartItems() override;
 };
 
-class Zuul: public Mon {
+class Zuul: public Mon
+{
 public:
   Zuul() : Mon() {}
   ~Zuul() {}
@@ -332,7 +373,8 @@ public:
   void mkStartItems() override;
 };
 
-class Ghost: public Mon {
+class Ghost: public Mon
+{
 public:
   Ghost() : Mon() {}
   ~Ghost() {}
@@ -340,105 +382,120 @@ public:
   virtual void mkStartItems() override;
 };
 
-class Phantasm: public Ghost {
+class Phantasm: public Ghost
+{
 public:
   Phantasm() : Ghost() {}
   ~Phantasm() {}
   void mkStartItems() override;
 };
 
-class Wraith: public Ghost {
+class Wraith: public Ghost
+{
 public:
   Wraith() : Ghost() {}
   ~Wraith() {}
   void mkStartItems() override;
 };
 
-class GiantBat: public Mon {
+class GiantBat: public Mon
+{
 public:
   GiantBat() : Mon() {}
   ~GiantBat() {}
   void mkStartItems() override;
 };
 
-class Byakhee: public GiantBat {
+class Byakhee: public GiantBat
+{
 public:
   Byakhee() : GiantBat() {}
   ~Byakhee() {}
   void mkStartItems() override;
 };
 
-class GiantMantis: public Mon {
+class GiantMantis: public Mon
+{
 public:
   GiantMantis() : Mon() {}
   ~GiantMantis() {}
   void mkStartItems() override;
 };
 
-class Chthonian: public Mon {
+class Chthonian: public Mon
+{
 public:
   Chthonian() : Mon() {}
   ~Chthonian() {}
   void mkStartItems() override;
 };
 
-class HuntingHorror: public GiantBat {
+class HuntingHorror: public GiantBat
+{
 public:
   HuntingHorror() : GiantBat() {}
   ~HuntingHorror() {}
   void mkStartItems() override;
 };
 
-class Wolf: public Mon {
+class Wolf: public Mon
+{
 public:
   Wolf() : Mon() {}
   ~Wolf() {}
   void mkStartItems() override;
 };
 
-class MiGo: public Mon {
+class MiGo: public Mon
+{
 public:
   MiGo() : Mon() {}
   ~MiGo() {}
   void mkStartItems() override;
 };
 
-class FlyingPolyp: public Mon {
+class FlyingPolyp: public Mon
+{
 public:
   FlyingPolyp() : Mon() {}
   ~FlyingPolyp() {}
   void mkStartItems() override;
 };
 
-class Ghoul: public Mon {
+class Ghoul: public Mon
+{
 public:
   Ghoul() : Mon() {}
   ~Ghoul() {}
   virtual void mkStartItems() override;
 };
 
-class DeepOne: public Mon {
+class DeepOne: public Mon
+{
 public:
   DeepOne() : Mon() {}
   ~DeepOne() {}
   void mkStartItems() override;
 };
 
-class Mummy: public Mon {
+class Mummy: public Mon
+{
 public:
   Mummy() : Mon() {}
   ~Mummy() {}
   virtual void mkStartItems() override;
 };
 
-class MummyUnique: public Mummy {
+class MummyUnique: public Mummy
+{
 public:
   MummyUnique() : Mummy() {}
   ~MummyUnique() {}
   void mkStartItems() override;
 };
 
-class Khephren: public MummyUnique {
+class Khephren: public MummyUnique
+{
 public:
   Khephren() : MummyUnique() {}
   ~Khephren() {}
@@ -448,7 +505,8 @@ private:
   bool hasSummonedLocusts;
 };
 
-class Shadow: public Mon {
+class Shadow: public Mon
+{
 public:
   Shadow() : Mon() {}
   ~Shadow() {}
@@ -456,7 +514,8 @@ public:
   virtual void mkStartItems() override;
 };
 
-class WormMass: public Mon {
+class WormMass: public Mon
+{
 public:
   WormMass() : Mon(), chanceToSpawnNew(12) {}
   ~WormMass() {}
@@ -466,7 +525,8 @@ private:
   int chanceToSpawnNew;
 };
 
-class GiantLocust: public Mon {
+class GiantLocust: public Mon
+{
 public:
   GiantLocust() : Mon(), chanceToSpawnNew(5) {}
   ~GiantLocust() {}
@@ -476,7 +536,8 @@ private:
   int chanceToSpawnNew;
 };
 
-class Vortex: public Mon {
+class Vortex: public Mon
+{
 public:
   Vortex() : Mon(), pullCooldown(0) {}
   virtual ~Vortex() {}
@@ -489,7 +550,8 @@ private:
   int pullCooldown;
 };
 
-class DustVortex: public Vortex {
+class DustVortex: public Vortex
+{
 public:
   DustVortex() : Vortex() {}
   ~DustVortex() {}
@@ -497,7 +559,8 @@ public:
   void die_();
 };
 
-class FireVortex: public Vortex {
+class FireVortex: public Vortex
+{
 public:
   FireVortex() : Vortex() {}
   ~FireVortex() {}
@@ -505,7 +568,8 @@ public:
   void die_();
 };
 
-class FrostVortex: public Vortex {
+class FrostVortex: public Vortex
+{
 public:
   FrostVortex() : Vortex() {}
   ~FrostVortex() {}
@@ -513,7 +577,8 @@ public:
   void die_();
 };
 
-class Ooze: public Mon {
+class Ooze: public Mon
+{
 public:
   Ooze() : Mon() {}
   ~Ooze() {}
@@ -521,35 +586,40 @@ public:
   virtual void mkStartItems() = 0;
 };
 
-class OozeBlack: public Ooze {
+class OozeBlack: public Ooze
+{
 public:
   OozeBlack() : Ooze() {}
   ~OozeBlack() {}
   void mkStartItems() override;
 };
 
-class OozeClear: public Ooze {
+class OozeClear: public Ooze
+{
 public:
   OozeClear() : Ooze() {}
   ~OozeClear() {}
   void mkStartItems() override;
 };
 
-class OozePutrid: public Ooze {
+class OozePutrid: public Ooze
+{
 public:
   OozePutrid() : Ooze() {}
   ~OozePutrid() {}
   void mkStartItems() override;
 };
 
-class OozePoison: public Ooze {
+class OozePoison: public Ooze
+{
 public:
   OozePoison() : Ooze() {}
   ~OozePoison() {}
   void mkStartItems() override;
 };
 
-class ColourOOSpace: public Ooze {
+class ColourOOSpace: public Ooze
+{
 public:
   ColourOOSpace() : Ooze(),
     curColor(clrMagentaLgt) {}

@@ -14,7 +14,8 @@
 //If "ELEM_ON_WRAP_UP_A" is set to 2, then when "Element 0" is marked and the user
 //presses up, the browser will jump to "Element 2".
 
-class MenuBrowser {
+class MenuBrowser
+{
 public:
   MenuBrowser(const int NR_ITEMS_A, const int NR_ITEMS_B,
               const int ELEM_ON_WRAP_UP_A = -1) :

@@ -10,13 +10,17 @@
 
 using namespace std;
 
-namespace CreateCharacter {
+namespace CreateCharacter
+{
 
-namespace {
+namespace
+{
 
-namespace EnterName {
+namespace EnterName
+{
 
-void draw(const string& curString) {
+void draw(const string& curString)
+{
   Render::clearScreen();
   Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
@@ -35,24 +39,31 @@ void draw(const string& curString) {
   Render::updateScreen();
 }
 
-void readKeys(string& curString, bool& isDone) {
+void readKeys(string& curString, bool& isDone)
+{
   const KeyData& d = Input::readKeysUntilFound(false);
 
-  if(d.sdlKey == SDLK_RETURN) {
+  if(d.sdlKey == SDLK_RETURN)
+  {
     isDone = true;
     curString = curString.empty() ? "Player" : curString;
     return;
   }
 
-  if(curString.size() < PLAYER_NAME_MAX_LENGTH) {
+  if(curString.size() < PLAYER_NAME_MAX_LENGTH)
+  {
     if(
       d.sdlKey == SDLK_SPACE ||
       (d.key >= int('a') && d.key <= int('z')) ||
       (d.key >= int('A') && d.key <= int('Z')) ||
-      (d.key >= int('0') && d.key <= int('9'))) {
-      if(d.sdlKey == SDLK_SPACE) {
+      (d.key >= int('0') && d.key <= int('9')))
+    {
+      if(d.sdlKey == SDLK_SPACE)
+      {
         curString.push_back(' ');
-      } else {
+      }
+      else
+      {
         curString.push_back(char(d.key));
       }
       draw(curString);
@@ -60,23 +71,30 @@ void readKeys(string& curString, bool& isDone) {
     }
   }
 
-  if(curString.size() > 0) {
-    if(d.sdlKey == SDLK_BACKSPACE) {
+  if(curString.size() > 0)
+  {
+    if(d.sdlKey == SDLK_BACKSPACE)
+    {
       curString.erase(curString.end() - 1);
       draw(curString);
     }
   }
 }
 
-void run() {
+void run()
+{
   string name = "";
   draw(name);
   bool isDone = false;
-  while(!isDone) {
-    if(Config::isBotPlaying()) {
+  while(!isDone)
+  {
+    if(Config::isBotPlaying())
+    {
       name = "AZATHOTH";
       isDone = true;
-    } else {
+    }
+    else
+    {
       readKeys(name, isDone);
     }
   }
@@ -86,7 +104,8 @@ void run() {
 
 } //EnterName
 
-void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
+void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser)
+{
   Render::clearScreen();
   Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
@@ -104,7 +123,8 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
   const int NR_BGS = bgs.size();
 
   //------------------------------------------------------------- BACKGROUNDS
-  for(int i = 0; i < NR_BGS; ++i) {
+  for(int i = 0; i < NR_BGS; ++i)
+  {
     const Bg bg = bgs.at(i);
     string name = "";
     PlayerBon::getBgTitle(bg, name);
@@ -127,10 +147,12 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
 
   vector<string> rawDescrLines;
   PlayerBon::getBgDescr(markedBg, rawDescrLines);
-  for(string& rawLine : rawDescrLines) {
+  for(string& rawLine : rawDescrLines)
+  {
     vector<string> formattedLines;
     TextFormatting::lineToLines(rawLine, MAX_W_DESCR, formattedLines);
-    for(string& line : formattedLines) {
+    for(string& line : formattedLines)
+    {
       Render::drawText(line, Panel::screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
@@ -138,25 +160,32 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser) {
   Render::updateScreen();
 }
 
-void pickBg() {
-  if(Config::isBotPlaying()) {
+void pickBg()
+{
+  if(Config::isBotPlaying())
+  {
     PlayerBon::pickBg(Bg(Rnd::range(0, int(Bg::END) - 1)));
-  } else {
+  }
+  else
+  {
     vector<Bg> bgs;
     PlayerBon::getPickableBgs(bgs);
 
     MenuBrowser browser(bgs.size(), 0);
     drawPickBg(bgs, browser);
 
-    while(true) {
+    while(true)
+    {
       const MenuAction action = MenuInputHandling::getAction(browser);
-      switch(action) {
+      switch(action)
+      {
         case MenuAction::browsed: {drawPickBg(bgs, browser);} break;
 
         case MenuAction::esc:
         case MenuAction::space: {} break;
 
-        case MenuAction::selected: {
+        case MenuAction::selected:
+        {
           PlayerBon::pickBg(bgs.at(browser.getPos().y));
           return;
         } break;
@@ -169,7 +198,8 @@ void pickBg() {
 
 void drawPickTrait(
   const vector<Trait>& traits1, const vector<Trait>& traits2,
-  const MenuBrowser& browser, const bool IS_CHARACTER_CREATION) {
+  const MenuBrowser& browser, const bool IS_CHARACTER_CREATION)
+{
 
   Render::clearScreen();
   Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
@@ -178,7 +208,8 @@ void drawPickTrait(
   const int NR_TRAITS_2 = traits2.size();
 
   int lenOfLongestInCol2 = -1;
-  for(const Trait& id : traits2) {
+  for(const Trait& id : traits2)
+  {
     string title = "";
     PlayerBon::getTraitTitle(id, title);
     const int CUR_LEN = title.length();
@@ -202,7 +233,8 @@ void drawPickTrait(
   //------------------------------------------------------------- TRAITS
   const int Y0_TRAITS = 2;
   int y = Y0_TRAITS;
-  for(int i = 0; i < NR_TRAITS_1; ++i) {
+  for(int i = 0; i < NR_TRAITS_1; ++i)
+  {
     const Trait trait = traits1.at(i);
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
@@ -212,7 +244,8 @@ void drawPickTrait(
     y++;
   }
   y = Y0_TRAITS;
-  for(int i = 0; i < NR_TRAITS_2; ++i) {
+  for(int i = 0; i < NR_TRAITS_2; ++i)
+  {
     const Trait trait = traits2.at(i);
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
@@ -241,7 +274,8 @@ void drawPickTrait(
   vector<string> descrLines;
   TextFormatting::lineToLines(
     "Effect(s): " + descr, MAX_W_DESCR, descrLines);
-  for(const string& str : descrLines) {
+  for(const string& str : descrLines)
+  {
     Render::drawText(str, Panel::screen, Pos(X0_DESCR, y), clrWhite);
     y++;
   }
@@ -252,18 +286,21 @@ void drawPickTrait(
   vector<Trait> traitPrereqs;
   Bg bgPrereq = Bg::END;
   PlayerBon::getTraitPrereqs(markedTrait, traitPrereqs, bgPrereq);
-  if(!traitPrereqs.empty() || bgPrereq != Bg::END) {
+  if(!traitPrereqs.empty() || bgPrereq != Bg::END)
+  {
     Render::drawText("This trait had the following prerequisite(s):",
                      Panel::screen, Pos(X0_DESCR, y), clrWhite);
     y++;
 
     string prereqStr = "";
 
-    if(bgPrereq != Bg::END) {
+    if(bgPrereq != Bg::END)
+    {
       PlayerBon::getBgTitle(bgPrereq, prereqStr);
     }
 
-    for(Trait prereqTrait : traitPrereqs) {
+    for(Trait prereqTrait : traitPrereqs)
+    {
       string prereqTitle = "";
       PlayerBon::getTraitTitle(prereqTrait, prereqTitle);
       prereqStr += (prereqStr.empty() ? "" : ", ") + prereqTitle;
@@ -271,7 +308,8 @@ void drawPickTrait(
 
     vector<string> prereqLines;
     TextFormatting::lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
-    for(const string& str : prereqLines) {
+    for(const string& str : prereqLines)
+    {
       Render::drawText(str, Panel::screen, Pos(X0_DESCR, y), clrWhite);
       y++;
     }
@@ -282,11 +320,13 @@ void drawPickTrait(
   const int MAX_W_PREV_PICKS  = SCREEN_W - 2;
   string pickedStr = "";
   PlayerBon::getAllPickedTraitsTitlesLine(pickedStr);
-  if(pickedStr != "") {
+  if(pickedStr != "")
+  {
     pickedStr = "Trait(s) gained: " + pickedStr;
     vector<string> pickedLines;
     TextFormatting::lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
-    for(const string& str : pickedLines) {
+    for(const string& str : pickedLines)
+    {
       Render::drawText(
         str, Panel::screen, Pos(1, y), clrWhite);
       y++;
@@ -298,18 +338,22 @@ void drawPickTrait(
 
 } //namespace
 
-void createCharacter() {
+void createCharacter()
+{
   pickBg();
   pickNewTrait(true);
   EnterName::run();
 }
 
-void pickNewTrait(const bool IS_CHARACTER_CREATION) {
-  if(!Config::isBotPlaying()) {
+void pickNewTrait(const bool IS_CHARACTER_CREATION)
+{
+  if(!Config::isBotPlaying())
+  {
     vector<Trait> pickableTraits;
     PlayerBon::getPickableTraits(pickableTraits);
 
-    if(!pickableTraits.empty()) {
+    if(!pickableTraits.empty())
+    {
 
       const int NR_TRAITS_TOT = int(pickableTraits.size());
       const int NR_TRAITS_2   = NR_TRAITS_TOT / 2;
@@ -318,11 +362,15 @@ void pickNewTrait(const bool IS_CHARACTER_CREATION) {
       vector<Trait> traits1; traits1.clear();
       vector<Trait> traits2; traits2.clear();
 
-      for(int i = 0; i < NR_TRAITS_TOT; ++i) {
+      for(int i = 0; i < NR_TRAITS_TOT; ++i)
+      {
         const Trait trait = pickableTraits.at(i);
-        if(i < NR_TRAITS_1) {
+        if(i < NR_TRAITS_1)
+        {
           traits1.push_back(trait);
-        } else {
+        }
+        else
+        {
           traits2.push_back(trait);
         }
       }
@@ -330,17 +378,21 @@ void pickNewTrait(const bool IS_CHARACTER_CREATION) {
       MenuBrowser browser(traits1.size(), traits2.size());
       drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
 
-      while(true) {
+      while(true)
+      {
         const MenuAction action = MenuInputHandling::getAction(browser);
-        switch(action) {
-          case MenuAction::browsed: {
+        switch(action)
+        {
+          case MenuAction::browsed:
+          {
             drawPickTrait(traits1, traits2, browser, IS_CHARACTER_CREATION);
           } break;
 
           case MenuAction::esc:
           case MenuAction::space: {} break;
 
-          case MenuAction::selected: {
+          case MenuAction::selected:
+          {
             const Pos pos = browser.getPos();
             PlayerBon::pickTrait(
               pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));

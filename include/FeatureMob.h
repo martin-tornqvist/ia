@@ -3,7 +3,8 @@
 
 #include "Feature.h"
 
-class Mob: public Feature {
+class Mob: public Feature
+{
 public:
   Mob(const Pos& pos) : Feature(pos) {}
 
@@ -18,7 +19,8 @@ public:
   virtual ~Mob() {}
 };
 
-class Smoke: public Mob {
+class Smoke: public Mob
+{
 public:
   Smoke(const Pos& pos, const int NR_TURNS) :
     Mob(pos), nrTurnsLeft_(NR_TURNS) {}
@@ -40,7 +42,8 @@ protected:
   int nrTurnsLeft_;
 };
 
-class LitDynamite: public Mob {
+class LitDynamite: public Mob
+{
 public:
   LitDynamite(const Pos& pos, const int NR_TURNS) :
     Mob(pos), nrTurnsLeft_(NR_TURNS) {}
@@ -66,7 +69,8 @@ private:
   int nrTurnsLeft_;
 };
 
-class LitFlare: public Mob {
+class LitFlare: public Mob
+{
 public:
   LitFlare(const Pos& pos, const int NR_TURNS) :
     Mob(pos), nrTurnsLeft_(NR_TURNS) {}

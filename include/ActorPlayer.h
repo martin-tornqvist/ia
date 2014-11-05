@@ -6,7 +6,8 @@
 #include "Actor.h"
 #include "CmnData.h"
 
-enum class Phobia {
+enum class Phobia
+{
   rat,
   spider,
   dog,
@@ -17,13 +18,15 @@ enum class Phobia {
   END
 };
 
-enum class Obsession {
+enum class Obsession
+{
   sadism,
   masochism,
   END
 };
 
-enum class ShockSrc {
+enum class ShockSrc
+{
   seeMon,
   useStrangeItem,
   castIntrSpell,
@@ -36,7 +39,8 @@ class Mon;
 class MedicalBag;
 class Explosive;
 
-class Player: public Actor {
+class Player: public Actor
+{
 public:
   Player();
   ~Player();
@@ -62,7 +66,8 @@ public:
 
   //The following is used for determining if '!'-marks should be drawn on the
   //player map symbol
-  inline double getPermShockTakenCurTurn() const {
+  inline double getPermShockTakenCurTurn() const
+  {
     return permShockTakenCurTurn_;
   }
   void resetPermShockTakenCurTurn() {permShockTakenCurTurn_ = 0.0;}

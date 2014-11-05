@@ -13,7 +13,8 @@
 class Actor;
 class Wpn;
 
-class AttData {
+class AttData
+{
 public:
   Actor* attacker;
   Actor* defender;
@@ -27,7 +28,8 @@ protected:
   AttData(Actor& attacker_, const Item& itemAttackedWith_);
 };
 
-class MeleeAttData: public AttData {
+class MeleeAttData: public AttData
+{
 public:
   MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_);
   bool isDefenderDodging;
@@ -35,7 +37,8 @@ public:
   bool isWeakAttack;
 };
 
-class RangedAttData: public AttData {
+class RangedAttData: public AttData
+{
 public:
   RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
                 const Pos& curPos_, ActorSize intendedAimLvl_ = actorSize_none);
@@ -46,7 +49,8 @@ public:
   std::string verbOtherAttacks;
 };
 
-class ThrowAttData: public AttData {
+class ThrowAttData: public AttData
+{
 public:
   ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
                const Pos& curPos_, ActorSize intendedAimLvl_ = actorSize_none);
@@ -55,7 +59,8 @@ public:
   ActorSize defenderSize;
 };
 
-struct Projectile {
+struct Projectile
+{
   Projectile() : pos(Pos(-1, -1)), isObstructed(false),
     isVisibleToPlayer(true), actorHit(nullptr), obstructedInElement(-1),
     isDoneRendering(false), glyph(-1), tile(TileId::empty), clr(clrWhite),
@@ -63,17 +68,20 @@ struct Projectile {
 
   ~Projectile() {if(attackData) {delete attackData;}}
 
-  void setAttData(RangedAttData* attackData_) {
+  void setAttData(RangedAttData* attackData_)
+  {
     if(attackData) {delete attackData;}
     attackData = attackData_;
   }
 
-  void setTile(const TileId tileToRender, const Clr& clrToRender) {
+  void setTile(const TileId tileToRender, const Clr& clrToRender)
+  {
     tile  = tileToRender;
     clr   = clrToRender;
   }
 
-  void setGlyph(const char GLYPH_TO_RENDER, const Clr& clrToRender) {
+  void setGlyph(const char GLYPH_TO_RENDER, const Clr& clrToRender)
+  {
     glyph = GLYPH_TO_RENDER;
     clr   = clrToRender;
   }
@@ -92,7 +100,8 @@ struct Projectile {
 
 enum class MeleeHitSize {small, medium, hard};
 
-namespace Attack {
+namespace Attack
+{
 
 void melee(Actor& attacker, const Wpn& wpn, Actor& defender);
 

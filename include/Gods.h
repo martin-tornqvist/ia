@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 
-struct God {
+struct God
+{
 public:
   God(const std::string& name, const std::string& descr) :
     name_(name), descr_(descr) {}
@@ -17,7 +18,8 @@ private:
   std::string descr_;
 };
 
-namespace Gods {
+namespace Gods
+{
 
 void init();
 

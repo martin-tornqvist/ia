@@ -11,7 +11,8 @@
 
 using namespace std;
 
-bool MoveRules::canMove(const vector<PropId>& actorsProps) const {
+bool MoveRules::canMove(const vector<PropId>& actorsProps) const
+{
   if(canMoveCmn_) return true;
 
   //If not allowing normal move, check if any property overrides this
@@ -20,13 +21,16 @@ bool MoveRules::canMove(const vector<PropId>& actorsProps) const {
   return false;
 }
 
-namespace FeatureData {
+namespace FeatureData
+{
 
 FeatureDataT data[int(FeatureId::END)];
 
-namespace {
+namespace
+{
 
-void resetData(FeatureDataT& d) {
+void resetData(FeatureDataT& d)
+{
   d.mkObj = [](const Pos & p) {(void)p; return nullptr;};
   d.id = FeatureId::END;
   d.glyph = ' ';
@@ -50,12 +54,14 @@ void resetData(FeatureDataT& d) {
   d.themeSpawnRules.reset();
 }
 
-void addToListAndReset(FeatureDataT& d) {
+void addToListAndReset(FeatureDataT& d)
+{
   data[int(d.id)] = d;
   resetData(d);
 }
 
-void initDataList() {
+void initDataList()
+{
   FeatureDataT d;
   resetData(d);
 
@@ -270,7 +276,8 @@ void initDataList() {
   d.tile = TileId::rubbleLow;
   d.moveRules.setCanMoveCmn();
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(4, PlacementRule::either, {
+  d.themeSpawnRules.set(4, PlacementRule::either,
+  {
     RoomType::plain, RoomType::crypt, RoomType::monster
   });
   addToListAndReset(d);
@@ -287,7 +294,8 @@ void initDataList() {
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(3, PlacementRule::either, {
+  d.themeSpawnRules.set(3, PlacementRule::either,
+  {
     RoomType::plain, RoomType::human
   });
   addToListAndReset(d);
@@ -347,7 +355,8 @@ void initDataList() {
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(1, PlacementRule::awayFromWalls, {
+  d.themeSpawnRules.set(1, PlacementRule::awayFromWalls,
+  {
     RoomType::plain, RoomType::human
   });
   addToListAndReset(d);
@@ -364,7 +373,8 @@ void initDataList() {
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(3, PlacementRule::awayFromWalls, {
+  d.themeSpawnRules.set(3, PlacementRule::awayFromWalls,
+  {
     RoomType::plain, RoomType::crypt, RoomType::ritual, RoomType::monster
   });
   addToListAndReset(d);
@@ -449,13 +459,15 @@ void initDataList() {
 
 } //namespace
 
-void init() {
+void init()
+{
   TRACE_FUNC_BEGIN;
   initDataList();
   TRACE_FUNC_END;
 }
 
-const FeatureDataT& getData(const FeatureId id) {
+const FeatureDataT& getData(const FeatureId id)
+{
   assert(id != FeatureId::END);
   assert(id != FeatureId::END);
   return data[int(id)];

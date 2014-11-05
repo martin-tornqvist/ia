@@ -23,24 +23,28 @@
 
 using namespace std;
 
-namespace GameTime {
+namespace GameTime
+{
 
 vector<Actor*>      actors_;
 vector<Mob*> mobs_;
 
-namespace {
+namespace
+{
 
 vector<ActorSpeed>  turnTypeVector_;
 int                 curTurnTypePos_   = 0;
 size_t              curActorIndex_    = 0;
 int                 turnNr_             = 0;
 
-bool isSpiRegenThisTurn(const int REGEN_N_TURNS) {
+bool isSpiRegenThisTurn(const int REGEN_N_TURNS)
+{
   assert(REGEN_N_TURNS != 0);
   return turnNr_ == (turnNr_ / REGEN_N_TURNS) * REGEN_N_TURNS;
 }
 
-void runStdTurnEvents() {
+void runStdTurnEvents()
+{
   ++turnNr_;
 
   bool losBlockers[MAP_W][MAP_H];
@@ -48,11 +52,13 @@ void runStdTurnEvents() {
 
   int regenSpiNTurns = 12;
 
-  for(size_t i = 0; i < actors_.size(); ++i) {
+  for(size_t i = 0; i < actors_.size(); ++i)
+  {
     Actor* const actor = actors_[i];
 
     //Delete destroyed actors
-    if(actor->getState() == ActorState::destroyed) {
+    if(actor->getState() == ActorState::destroyed)
+    {
       //Do not delete player if player died, just return
       if(actor == Map::player) {return;}
 
@@ -61,12 +67,16 @@ void runStdTurnEvents() {
       actors_.erase(actors_.begin() + i);
       i--;
       if(curActorIndex_ >= actors_.size()) {curActorIndex_ = 0;}
-    } else { //Monster is alive or is a corpse
+    }
+    else     //Monster is alive or is a corpse
+    {
       actor->getPropHandler().tick(PropTurnMode::std, losBlockers);
 
-      if(actor != Map::player) {
+      if(actor != Map::player)
+      {
         Mon* const mon = static_cast<Mon*>(actor);
-        if(mon->playerAwareOfMeCounter_ > 0) {
+        if(mon->playerAwareOfMeCounter_ > 0)
+        {
           mon->playerAwareOfMeCounter_--;
         }
       }
@@ -75,9 +85,11 @@ void runStdTurnEvents() {
       const Pos& pos = actor->pos;
       if(Map::cells[pos.x][pos.y].isLit) {actor->hit(1, DmgType::light);}
 
-      if(actor->isAlive()) {
+      if(actor->isAlive())
+      {
         //Regen Spi
-        if(actor == Map::player) {
+        if(actor == Map::player)
+        {
           if(PlayerBon::hasTrait(Trait::stoutSpirit))   regenSpiNTurns -= 2;
           if(PlayerBon::hasTrait(Trait::strongSpirit))  regenSpiNTurns -= 2;
           if(PlayerBon::hasTrait(Trait::mightySpirit))  regenSpiNTurns -= 2;
@@ -93,8 +105,10 @@ void runStdTurnEvents() {
   }
 
   //New turn for rigids
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       Map::cells[x][y].rigid->onNewTurn();
     }
   }
@@ -105,9 +119,11 @@ void runStdTurnEvents() {
 
   //Spawn more monsters?
   //(If an unexplored cell is selected, the spawn is canceled)
-  if(Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LVL) {
+  if(Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LVL)
+  {
     const int SPAWN_N_TURN = 125;
-    if(turnNr_ == (turnNr_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
+    if(turnNr_ == (turnNr_ / SPAWN_N_TURN) * SPAWN_N_TURN)
+    {
       PopulateMon::trySpawnDueToTimePassed();
     }
   }
@@ -116,7 +132,8 @@ void runStdTurnEvents() {
   auto& playerInv = Map::player->getInv();
   for(Item* const item : playerInv.general_) {item->newTurnInInventory();}
 
-  for(InvSlot& slot : playerInv.slots_) {
+  for(InvSlot& slot : playerInv.slots_)
+  {
     if(slot.item) {slot.item->newTurnInInventory();}
   }
 
@@ -125,19 +142,22 @@ void runStdTurnEvents() {
   Audio::tryPlayAmb(75);
 }
 
-void runAtomicTurnEvents() {
+void runAtomicTurnEvents()
+{
   updateLightMap();
 }
 
 } //namespace
 
-void init() {
+void init()
+{
   curTurnTypePos_ = curActorIndex_ = turnNr_ = 0;
   actors_.clear();
   mobs_.clear();
 }
 
-void cleanup() {
+void cleanup()
+{
   for(Actor* a : actors_) {delete a;}
   actors_.clear();
 
@@ -145,31 +165,39 @@ void cleanup() {
   mobs_.clear();
 }
 
-void storeToSaveLines(vector<string>& lines) {
+void storeToSaveLines(vector<string>& lines)
+{
   lines.push_back(toStr(turnNr_));
 }
 
-void setupFromSaveLines(vector<string>& lines) {
+void setupFromSaveLines(vector<string>& lines)
+{
   turnNr_ = toInt(lines.front());
   lines.erase(begin(lines));
 }
 
-int getTurn() {
+int getTurn()
+{
   return turnNr_;
 }
 
-void getMobsAtPos(const Pos& p, vector<Mob*>& vectorRef) {
+void getMobsAtPos(const Pos& p, vector<Mob*>& vectorRef)
+{
   vectorRef.clear();
   for(auto* m : mobs_) {if(m->getPos() == p) {vectorRef.push_back(m);}}
 }
 
-void addMob(Mob* const f) {
+void addMob(Mob* const f)
+{
   mobs_.push_back(f);
 }
 
-void eraseMob(Mob* const f, const bool DESTROY_OBJECT) {
-  for(auto it = mobs_.begin(); it != mobs_.end(); ++it) {
-    if(*it == f) {
+void eraseMob(Mob* const f, const bool DESTROY_OBJECT)
+{
+  for(auto it = mobs_.begin(); it != mobs_.end(); ++it)
+  {
+    if(*it == f)
+    {
       if(DESTROY_OBJECT) {delete f;}
       mobs_.erase(it);
       return;
@@ -177,25 +205,30 @@ void eraseMob(Mob* const f, const bool DESTROY_OBJECT) {
   }
 }
 
-void eraseAllMobs() {
+void eraseAllMobs()
+{
   for(auto* m : mobs_) {delete m;}
   mobs_.clear();
 }
 
-void eraseActorInElement(const size_t i) {
-  if(!actors_.empty()) {
+void eraseActorInElement(const size_t i)
+{
+  if(!actors_.empty())
+  {
     delete actors_.at(i);
     actors_.erase(actors_.begin() + i);
   }
 }
 
-void addActor(Actor* actor) {
+void addActor(Actor* actor)
+{
   //Sanity check actor inserted
   assert(Utils::isPosInsideMap(actor->pos));
   actors_.push_back(actor);
 }
 
-void resetTurnTypeAndActorCounters() {
+void resetTurnTypeAndActorCounters()
+{
   curTurnTypePos_ = curActorIndex_ = 0;
 }
 
@@ -203,18 +236,23 @@ void resetTurnTypeAndActorCounters() {
 //during this type of turn act. When all actors who can act on this phase have
 //acted, and if this is a normal speed phase - consider it a standard turn;
 //update status effects, update timed features, spawn more monsters etc.
-void actorDidAct(const bool IS_FREE_TURN) {
+void actorDidAct(const bool IS_FREE_TURN)
+{
   runAtomicTurnEvents();
 
   auto* curActor = getCurActor();
 
-  if(curActor == Map::player) {
+  if(curActor == Map::player)
+  {
     Map::player->updateFov();
     Render::drawMapAndInterface();
     Map::updateVisualMemory();
-  } else {
+  }
+  else
+  {
     auto* mon = static_cast<Mon*>(curActor);
-    if(mon->awareCounter_ > 0) {
+    if(mon->awareCounter_ > 0)
+    {
       mon->awareCounter_ -= 1;
     }
   }
@@ -222,20 +260,24 @@ void actorDidAct(const bool IS_FREE_TURN) {
   //Tick properties running on actor turns
   curActor->getPropHandler().tick(PropTurnMode::actor, nullptr);
 
-  if(!IS_FREE_TURN) {
+  if(!IS_FREE_TURN)
+  {
 
     bool actorWhoCanActThisTurnFound = false;
-    while(!actorWhoCanActThisTurnFound) {
+    while(!actorWhoCanActThisTurnFound)
+    {
       auto curTurnType = (TurnType)(curTurnTypePos_);
 
       ++curActorIndex_;
 
-      if(curActorIndex_ >= actors_.size()) {
+      if(curActorIndex_ >= actors_.size())
+      {
         curActorIndex_ = 0;
         ++curTurnTypePos_;
         if(curTurnTypePos_ == int(TurnType::END)) {curTurnTypePos_ = 0;}
 
-        if(curTurnType != TurnType::fast && curTurnType != TurnType::fastest) {
+        if(curTurnType != TurnType::fast && curTurnType != TurnType::fastest)
+        {
           runStdTurnEvents();
         }
       }
@@ -250,28 +292,34 @@ void actorDidAct(const bool IS_FREE_TURN) {
       const ActorSpeed realSpeed =
         !IS_SLOWED || defSpeed == ActorSpeed::sluggish ?
         defSpeed : ActorSpeed(int(defSpeed) - 1);
-      switch(realSpeed) {
-        case ActorSpeed::sluggish: {
+      switch(realSpeed)
+      {
+        case ActorSpeed::sluggish:
+        {
           actorWhoCanActThisTurnFound = (curTurnType == TurnType::slow ||
                                          curTurnType == TurnType::normal2)
                                         && Rnd::fraction(2, 3);
         } break;
 
-        case ActorSpeed::slow: {
+        case ActorSpeed::slow:
+        {
           actorWhoCanActThisTurnFound = curTurnType == TurnType::slow ||
                                         curTurnType == TurnType::normal2;
         } break;
 
-        case ActorSpeed::normal: {
+        case ActorSpeed::normal:
+        {
           actorWhoCanActThisTurnFound = curTurnType != TurnType::fast &&
                                         curTurnType != TurnType::fastest;
         } break;
 
-        case ActorSpeed::fast: {
+        case ActorSpeed::fast:
+        {
           actorWhoCanActThisTurnFound = curTurnType != TurnType::fastest;
         } break;
 
-        case ActorSpeed::fastest: {
+        case ActorSpeed::fastest:
+        {
           actorWhoCanActThisTurnFound = true;
         } break;
 
@@ -281,11 +329,14 @@ void actorDidAct(const bool IS_FREE_TURN) {
   }
 }
 
-void updateLightMap() {
+void updateLightMap()
+{
   bool lightTmp[MAP_W][MAP_H];
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       Map::cells[x][y].isLit = lightTmp[x][y] = false;
     }
   }
@@ -299,8 +350,10 @@ void updateLightMap() {
 
   for(const auto* const m : mobs_)    {m->addLight(lightTmp);}
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       Map::cells[x][y].rigid->addLight(lightTmp);
 
       //Note: Here the temporary values are copied to the map.
@@ -310,7 +363,8 @@ void updateLightMap() {
   }
 }
 
-Actor* getCurActor() {
+Actor* getCurActor()
+{
   Actor* const actor = actors_.at(curActorIndex_);
 
   //Sanity check actor retrieved

@@ -12,44 +12,57 @@
 #include "FeatureDoor.h"
 #include "Utils.h"
 
-namespace JamWithSpike {
+namespace JamWithSpike
+{
 
-void playerJamFeature(Feature* const feature) {
+void playerJamFeature(Feature* const feature)
+{
   bool jamableObjectFound = false;
 
-  if(feature->getId() == FeatureId::door) {
+  if(feature->getId() == FeatureId::door)
+  {
     Door* const door = static_cast<Door*>(feature);
     const bool DOOR_SPIKED = door->trySpike(Map::player);
 
-    if(DOOR_SPIKED) {
+    if(DOOR_SPIKED)
+    {
 
       jamableObjectFound = true;
 
       Map::player->getInv().decrItemTypeInGeneral(ItemId::ironSpike);
       const int SPIKES_LEFT =
         Map::player->getInv().getItemStackSizeInGeneral(ItemId::ironSpike);
-      if(SPIKES_LEFT == 0) {
+      if(SPIKES_LEFT == 0)
+      {
         Log::addMsg("I have no iron spikes left.");
-      } else {
+      }
+      else
+      {
         Log::addMsg("I have " + toStr(SPIKES_LEFT) + " iron spikes left.");
       }
     }
   }
 
-  if(!jamableObjectFound) {
+  if(!jamableObjectFound)
+  {
     const bool PLAYER_IS_BLIND = Map::player->getPropHandler().allowSee();
-    if(!PLAYER_IS_BLIND) {
+    if(!PLAYER_IS_BLIND)
+    {
       Log::addMsg("I see nothing there to jam with a spike.");
-    } else {
+    }
+    else
+    {
       Log::addMsg("I find nothing there to jam with a spike.");
     }
   }
 }
 
-void playerJam() {
+void playerJam()
+{
   Log::clearLog();
 
-  if(!Map::player->getInv().hasItemInGeneral(ItemId::ironSpike)) {
+  if(!Map::player->getInv().hasItemInGeneral(ItemId::ironSpike))
+  {
     Log::addMsg("I have no spikes to jam with.", clrWhite);
     Render::drawMapAndInterface();
     return;

@@ -12,11 +12,13 @@ class Prop;
 class Actor;
 class Spell;
 
-enum ItemActivateReturnType {
+enum ItemActivateReturnType
+{
   itemActivate_keep, itemActivate_destroyed
 };
 
-class Item {
+class Item
+{
 public:
   Item(ItemDataT* itemData);
 
@@ -74,7 +76,8 @@ protected:
   ItemDataT* data_;
 };
 
-class Armor: public Item {
+class Armor: public Item
+{
 public:
   Armor(ItemDataT* const itemData);
 
@@ -86,11 +89,13 @@ public:
 
   int takeDurHitAndGetReducedDmg(const int DMG_BEFORE);
 
-  void storeToSaveLines(std::vector<std::string>& lines) override {
+  void storeToSaveLines(std::vector<std::string>& lines) override
+  {
     lines.push_back(toStr(dur_));
   }
 
-  void setupFromSaveLines(std::vector<std::string>& lines) override {
+  void setupFromSaveLines(std::vector<std::string>& lines) override
+  {
     dur_ = toInt(lines.front());
     lines.erase(begin(lines));
   }
@@ -112,7 +117,8 @@ protected:
   int dur_;
 };
 
-class ArmorAsbSuit: public Armor {
+class ArmorAsbSuit: public Armor
+{
 public:
   ArmorAsbSuit(ItemDataT* const itemData) :
     Armor(itemData) {}
@@ -122,7 +128,8 @@ public:
   void onTakeOff()  override;
 };
 
-class ArmorHeavyCoat: public Armor {
+class ArmorHeavyCoat: public Armor
+{
 public:
   ArmorHeavyCoat(ItemDataT* const itemData) :
     Armor(itemData) {}
@@ -132,7 +139,8 @@ public:
   void onTakeOff()  override;
 };
 
-class Wpn: public Item {
+class Wpn: public Item
+{
 public:
   Wpn(ItemDataT* const itemData, ItemDataT* const ammoData);
   virtual ~Wpn() {}
@@ -144,30 +152,35 @@ public:
 
   void setRandomMeleePlus();
 
-  virtual std::vector<std::string> itemSpecificWriteToFile() {
+  virtual std::vector<std::string> itemSpecificWriteToFile()
+  {
     std::vector<std::string> lines;
     lines.push_back(toStr(nrAmmoLoaded));
     return lines;
   }
 
-  virtual void itemSpecificReadFromFile(std::vector<std::string> lines) {
+  virtual void itemSpecificReadFromFile(std::vector<std::string> lines)
+  {
     nrAmmoLoaded = toInt(lines.at(0));
   }
 
   //actorHit may be nullptr
-  virtual void projectileObstructed(const Pos& pos, Actor* actor) {
+  virtual void projectileObstructed(const Pos& pos, Actor* actor)
+  {
     (void) pos;
     (void) actor;
   }
 
   const ItemDataT& getAmmoData() {return *ammoData_;}
 
-  void storeToSaveLines(std::vector<std::string>& lines) override {
+  void storeToSaveLines(std::vector<std::string>& lines) override
+  {
     lines.push_back(toStr(meleeDmgPlus_));
     lines.push_back(toStr(nrAmmoLoaded));
   }
 
-  void setupFromSaveLines(std::vector<std::string>& lines) override {
+  void setupFromSaveLines(std::vector<std::string>& lines) override
+  {
     meleeDmgPlus_ = toInt(lines.front());
     lines.erase(begin(lines));
     nrAmmoLoaded = toInt(lines.front());
@@ -179,7 +192,8 @@ public:
   Clr getInterfaceClr() const override {return clrGray;}
 
 protected:
-  Wpn& operator=(const Wpn& other) {
+  Wpn& operator=(const Wpn& other)
+  {
     (void) other;
     return *this;
   }
@@ -189,15 +203,18 @@ protected:
   ItemDataT* const ammoData_;
 };
 
-class PharaohStaff: public Wpn {
+class PharaohStaff: public Wpn
+{
 public:
   PharaohStaff(ItemDataT* const itemData);
 };
 
-class SawedOff: public Wpn {
+class SawedOff: public Wpn
+{
 public:
   SawedOff(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData) {
+    Wpn(itemData, ammoData)
+  {
     ammoCapacity = 2;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLmt = 3;
@@ -205,10 +222,12 @@ public:
   ~SawedOff() {}
 };
 
-class PumpShotgun: public Wpn {
+class PumpShotgun: public Wpn
+{
 public:
   PumpShotgun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData) {
+    Wpn(itemData, ammoData)
+  {
     ammoCapacity = 8;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLmt = 3;
@@ -218,10 +237,12 @@ public:
 private:
 };
 
-class Pistol: public Wpn {
+class Pistol: public Wpn
+{
 public:
   Pistol(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData) {
+    Wpn(itemData, ammoData)
+  {
     ammoCapacity = 7;
     nrAmmoLoaded = ammoCapacity;
     effectiveRangeLmt = 6;
@@ -231,10 +252,12 @@ public:
 private:
 };
 
-class FlareGun: public Wpn {
+class FlareGun: public Wpn
+{
 public:
   FlareGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData) {
+    Wpn(itemData, ammoData)
+  {
     nrAmmoLoaded = 1;
     ammoCapacity = 1;
     effectiveRangeLmt = 6;
@@ -244,14 +267,16 @@ public:
 private:
 };
 
-class MachineGun: public Wpn {
+class MachineGun: public Wpn
+{
 public:
   MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData);
   ~MachineGun() {}
 private:
 };
 
-class Incinerator: public Wpn {
+class Incinerator: public Wpn
+{
 public:
   Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData);
   void projectileObstructed(const Pos& pos, Actor* actorHit);
@@ -259,28 +284,32 @@ public:
 private:
 };
 
-class TeslaCannon: public Wpn {
+class TeslaCannon: public Wpn
+{
 public:
   TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData);
   ~TeslaCannon() {}
 private:
 };
 
-class SpikeGun: public Wpn {
+class SpikeGun: public Wpn
+{
 public:
   SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData);
   ~SpikeGun() {}
 private:
 };
 
-class Ammo: public Item {
+class Ammo: public Item
+{
 public:
   Ammo(ItemDataT* const itemData) : Item(itemData) {}
   virtual ~Ammo() {}
   Clr getInterfaceClr() const override {return clrWhite;}
 };
 
-class AmmoClip: public Ammo {
+class AmmoClip: public Ammo
+{
 public:
   AmmoClip(ItemDataT* const itemData);
 
@@ -290,11 +319,13 @@ public:
 
   void setFullAmmo();
 
-  void storeToSaveLines(std::vector<std::string>& lines) override {
+  void storeToSaveLines(std::vector<std::string>& lines) override
+  {
     lines.push_back(toStr(ammo_));
   }
 
-  void setupFromSaveLines(std::vector<std::string>& lines) {
+  void setupFromSaveLines(std::vector<std::string>& lines)
+  {
     ammo_ = toInt(lines.front());
     lines.erase(begin(lines));
   }
@@ -303,14 +334,16 @@ protected:
   std::string getNameInf() const override {return "{" + toStr(ammo_) + "}";}
 };
 
-enum class MedBagAction {
+enum class MedBagAction
+{
   sanitizeInfection,
 //  takeMorphine,
   treatWounds,
   END
 };
 
-class MedicalBag: public Item {
+class MedicalBag: public Item
+{
 public:
   MedicalBag(ItemDataT* const itemData) :
     Item(itemData),
@@ -328,10 +361,12 @@ public:
 
   Clr getInterfaceClr() const override {return clrGreen;}
 
-  void storeToSaveLines(std::vector<std::string>& lines) override {
+  void storeToSaveLines(std::vector<std::string>& lines) override
+  {
     lines.push_back(toStr(nrSupplies_));
   }
-  void setupFromSaveLines(std::vector<std::string>& lines) override {
+  void setupFromSaveLines(std::vector<std::string>& lines) override
+  {
     nrSupplies_ = toInt(lines.front());
     lines.erase(begin(lines));
   }
@@ -354,21 +389,24 @@ protected:
   MedBagAction curAction_;
 };
 
-class Headwear: public Item {
+class Headwear: public Item
+{
 public:
   Headwear(ItemDataT* itemData) : Item(itemData) {}
 
   Clr getInterfaceClr() const override {return clrBrown;}
 };
 
-class HideousMask: public Headwear {
+class HideousMask: public Headwear
+{
 public:
   HideousMask(ItemDataT* itemData) : Headwear(itemData) {}
 
   void  newTurnInInventory() override;
 };
 
-class GasMask: public Headwear {
+class GasMask: public Headwear
+{
 public:
   GasMask(ItemDataT* itemData) : Headwear(itemData) {}
 
@@ -376,7 +414,8 @@ public:
   void onTakeOff()  override;
 };
 
-class Explosive : public Item {
+class Explosive : public Item
+{
 public:
   virtual ~Explosive() {}
 
@@ -400,7 +439,8 @@ protected:
   int fuseTurns_;
 };
 
-class Dynamite: public Explosive {
+class Dynamite: public Explosive
+{
 public:
   Dynamite(ItemDataT* const itemData) : Explosive(itemData) {}
 
@@ -408,7 +448,8 @@ public:
   void        onStdTurnPlayerHoldIgnited()          override;
   void        onPlayerParalyzed()                   override;
   Clr         getIgnitedProjectileClr()       const override {return clrRedLgt;}
-  std::string getStrOnPlayerThrow()           const override {
+  std::string getStrOnPlayerThrow()           const override
+  {
     return "I throw a lit dynamite stick.";
   }
 
@@ -417,7 +458,8 @@ protected:
   void onPlayerIgnite() const override;
 };
 
-class Molotov: public Explosive {
+class Molotov: public Explosive
+{
 public:
   Molotov(ItemDataT* const itemData) : Explosive(itemData) {}
 
@@ -425,7 +467,8 @@ public:
   void        onStdTurnPlayerHoldIgnited()          override;
   void        onPlayerParalyzed()                   override;
   Clr         getIgnitedProjectileClr()       const override {return clrYellow;}
-  std::string getStrOnPlayerThrow()           const override {
+  std::string getStrOnPlayerThrow()           const override
+  {
     return "I throw a lit Molotov Cocktail.";
   }
 
@@ -434,7 +477,8 @@ protected:
   void onPlayerIgnite() const override;
 };
 
-class Flare: public Explosive {
+class Flare: public Explosive
+{
 public:
   Flare(ItemDataT* const itemData) : Explosive(itemData) {}
 
@@ -442,7 +486,8 @@ public:
   void        onStdTurnPlayerHoldIgnited()          override;
   void        onPlayerParalyzed()                   override;
   Clr getIgnitedProjectileClr()               const override {return clrYellow;}
-  std::string getStrOnPlayerThrow()           const override {
+  std::string getStrOnPlayerThrow()           const override
+  {
     return "I throw a lit flare.";
   }
 
@@ -451,7 +496,8 @@ protected:
   void onPlayerIgnite() const override;
 };
 
-class SmokeGrenade: public Explosive {
+class SmokeGrenade: public Explosive
+{
 public:
   SmokeGrenade(ItemDataT* const itemData) : Explosive(itemData) {}
 
@@ -459,7 +505,8 @@ public:
   void        onStdTurnPlayerHoldIgnited()          override;
   void        onPlayerParalyzed()                   override;
   Clr         getIgnitedProjectileClr()       const override;
-  std::string getStrOnPlayerThrow()           const override {
+  std::string getStrOnPlayerThrow()           const override
+  {
     return "I throw a smoke grenade.";
   }
 

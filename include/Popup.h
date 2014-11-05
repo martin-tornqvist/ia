@@ -6,7 +6,8 @@
 
 #include "Audio.h"
 
-namespace Popup {
+namespace Popup
+{
 
 void showMsg(const std::string& msg, const bool DRAW_MAP_AND_INTERFACE,
              const std::string& title = "",

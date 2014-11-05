@@ -7,7 +7,8 @@
 
 class Actor;
 
-enum class AbilityId {
+enum class AbilityId
+{
   empty,
   searching,
   ranged,
@@ -19,12 +20,15 @@ enum class AbilityId {
 };
 
 //Each actor has an instance of this class
-class AbilityVals {
+class AbilityVals
+{
 public:
   AbilityVals() {reset();}
 
-  AbilityVals& operator=(const AbilityVals& other) {
-    for(int i = 0; i < int(AbilityId::END); ++i) {
+  AbilityVals& operator=(const AbilityVals& other)
+  {
+    for(int i = 0; i < int(AbilityId::END); ++i)
+    {
       abilityList[i] = other.abilityList[i];
     }
     return *this;
@@ -35,7 +39,8 @@ public:
   int getVal(const AbilityId abilityId, const bool IS_AFFECTED_BY_PROPS,
              Actor& actor) const;
 
-  inline int getRawVal(const AbilityId ability) {
+  inline int getRawVal(const AbilityId ability)
+  {
     return abilityList[int(ability)];
   }
 
@@ -51,13 +56,15 @@ private:
 //for melee attack messages. It seems simpler and more transparent to just use
 //the Rnd functions for rolling, together with AbilityVals::getVal() for
 //retrieving abilities to roll against.
-enum AbilityRollResult {
+enum AbilityRollResult
+{
   failCritical, failBig, failNormal, failSmall,
   successSmall, successNormal, successBig, successCritical
 };
 
 //TODO See comment above for AbilityRollResult
-namespace AbilityRoll {
+namespace AbilityRoll
+{
 
 AbilityRollResult roll(const int TOT_SKILL_VALUE);
 

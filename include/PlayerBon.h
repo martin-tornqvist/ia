@@ -10,7 +10,8 @@
 
 #include <math.h>
 
-enum class Trait {
+enum class Trait
+{
   adeptMeleeFighter,
   expertMeleeFighter,
   masterMeleeFighter,
@@ -52,7 +53,8 @@ enum class Trait {
 
 enum class Bg {occultist, rogue, warVet, END};
 
-namespace PlayerBon {
+namespace PlayerBon
+{
 
 extern std::vector<Trait> traitsPicked_;
 

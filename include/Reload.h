@@ -3,7 +3,8 @@
 
 class Actor;
 
-enum class ReloadResult {
+enum class ReloadResult
+{
   success,
   noAmmo,
   notCarryingWpn,
@@ -12,7 +13,8 @@ enum class ReloadResult {
   fumble
 };
 
-namespace Reload {
+namespace Reload
+{
 
 bool reloadWieldedWpn(Actor& actorReloading);
 

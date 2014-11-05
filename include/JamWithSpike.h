@@ -3,7 +3,8 @@
 
 class Feature;
 
-namespace JamWithSpike {
+namespace JamWithSpike
+{
 
 void playerJam();
 

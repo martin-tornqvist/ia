@@ -9,7 +9,8 @@
 
 class Actor;
 
-class Feature {
+class Feature
+{
 public:
   Feature(const Pos& pos) : pos_(pos) {}
 

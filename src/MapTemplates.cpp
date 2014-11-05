@@ -5,13 +5,16 @@
 
 using namespace std;
 
-namespace MapTemplHandling {
+namespace MapTemplHandling
+{
 
-namespace {
+namespace
+{
 
 MapTempl templates_[int(MapTemplId::END)];
 
-struct Translation {
+struct Translation
+{
   Translation(const char CH_, const MapTemplCell& mapTemplCell) :
     CH(CH_), cell(mapTemplCell) {}
 
@@ -19,8 +22,10 @@ struct Translation {
   const MapTemplCell  cell;
 };
 
-MapTemplCell chToCell(const char CH, const vector<Translation>& translations) {
-  for(const Translation& translation : translations) {
+MapTemplCell chToCell(const char CH, const vector<Translation>& translations)
+{
+  for(const Translation& translation : translations)
+  {
     if(translation.CH == CH) {return translation.cell;}
   }
   assert(false && "Failed to translate char");
@@ -28,14 +33,18 @@ MapTemplCell chToCell(const char CH, const vector<Translation>& translations) {
 }
 
 void mkTempl(const string& str, const MapTemplId id,
-             const vector<Translation>& translations) {
+             const vector<Translation>& translations)
+{
   MapTempl& templ = templates_[int(id)];
 
   vector<MapTemplCell> inner;
 
-  for(const auto ch : str) {
-    switch(ch) {
-      case ';': {
+  for(const auto ch : str)
+  {
+    switch(ch)
+    {
+      case ';':
+      {
         //Delimiting character (";") found, inner vector is pushed to outer
         templ.addRow(inner);
         inner.clear();
@@ -48,7 +57,8 @@ void mkTempl(const string& str, const MapTemplId id,
   }
 }
 
-void initTempls() {
+void initTempls()
+{
   //------------------------------------------------------------------------- CHURCH
   string str =
     "             ,,,,,,,,,,,     ;"
@@ -69,7 +79,8 @@ void initTempls() {
     "         ,,,,,,######,,,,    ;"
     "            ,,,,,,,,,,,,     ;";
 
-  mkTempl(str, MapTemplId::church, vector<Translation> {
+  mkTempl(str, MapTemplId::church, vector<Translation>
+  {
     {',', {FeatureId::grass}},
     {'v', {FeatureId::brazier}},
     {'[', {FeatureId::churchBench}},
@@ -104,7 +115,8 @@ void initTempls() {
     "###...############################¤....................##############|...|######;"
     "################################################################################;";
 
-  mkTempl(str, MapTemplId::egypt, vector<Translation> {
+  mkTempl(str, MapTemplId::egypt, vector<Translation>
+  {
     {'@', {FeatureId::floor, ActorId::END, ItemId::END, 1}},  //Start
     {'¤', {FeatureId::brazier}},
     {'|', {FeatureId::pillar}},
@@ -141,7 +153,8 @@ void initTempls() {
     "%%%%%%--%---%--%%%-%--%%%%%%%-%-%%%--%%--%-%%%x,,,,,,,,,,,,,,,x,,,xxxxxxxxxx,,,x;"
     "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;";
 
-  mkTempl(str, MapTemplId::leng, vector<Translation> {
+  mkTempl(str, MapTemplId::leng, vector<Translation>
+  {
     {'@', {FeatureId::floor,  ActorId::END,     ItemId::END, 1}}, //Start
     {'%', {FeatureId::wall,   ActorId::END,     ItemId::END, 2}},
     {'x', {FeatureId::wall,   ActorId::END,     ItemId::END, 3}},
@@ -158,11 +171,13 @@ void initTempls() {
 
 } //namespace
 
-void init() {
+void init()
+{
   initTempls();
 }
 
-const MapTempl& getTempl(const MapTemplId id) {
+const MapTempl& getTempl(const MapTemplId id)
+{
   assert(id != MapTemplId::END);
   return templates_[int(id)];
 }

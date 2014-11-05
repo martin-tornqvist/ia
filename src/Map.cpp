@@ -27,12 +27,14 @@ Cell::Cell() :
   playerVisualMemory(CellRenderData()),
   pos(Pos(-1, -1)) {}
 
-Cell::~Cell() {
+Cell::~Cell()
+{
   if(rigid) {delete rigid;}
   if(item)  {delete item;}
 }
 
-namespace Map {
+namespace Map
+{
 
 Player*       player  = nullptr;
 int           dlvl    = 0;
@@ -40,11 +42,15 @@ Cell          cells[MAP_W][MAP_H];
 vector<Room*> roomList;
 Room*         roomMap[MAP_W][MAP_H];
 
-namespace {
+namespace
+{
 
-void resetCells(const bool MAKE_STONE_WALLS) {
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+void resetCells(const bool MAKE_STONE_WALLS)
+{
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
 
       cells[x][y]     = Cell();
       cells[x][y].pos = Pos(x, y);
@@ -61,7 +67,8 @@ void resetCells(const bool MAKE_STONE_WALLS) {
 
 } //Namespace
 
-void init() {
+void init()
+{
   dlvl = 0;
 
   roomList.clear();
@@ -79,29 +86,35 @@ void init() {
   GameTime::resetTurnTypeAndActorCounters();
 }
 
-void cleanup() {
+void cleanup()
+{
   player = nullptr; //Note: GameTime has deleted player at this point
 
   resetMap();
 
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       delete cells[x][y].rigid;
       cells[x][y].rigid = nullptr;
     }
   }
 }
 
-void storeToSaveLines(vector<string>& lines) {
+void storeToSaveLines(vector<string>& lines)
+{
   lines.push_back(toStr(dlvl));
 }
 
-void setupFromSaveLines(vector<string>& lines) {
+void setupFromSaveLines(vector<string>& lines)
+{
   dlvl = toInt(lines.front());
   lines.erase(begin(lines));
 }
 
-void resetMap() {
+void resetMap()
+{
   ActorFactory::deleteAllMon();
 
   for(auto* room : roomList) {delete room;}
@@ -112,7 +125,8 @@ void resetMap() {
   GameTime::resetTurnTypeAndActorCounters();
 }
 
-Rigid* put(Rigid* const f) {
+Rigid* put(Rigid* const f)
+{
   assert(f);
 
   const Pos p     = f->getPos();
@@ -123,9 +137,12 @@ Rigid* put(Rigid* const f) {
   cell.rigid = f;
 
 #ifdef DEMO_MODE
-  if(f->getId() == FeatureId::floor) {
-    for(int x = 0; x < MAP_W; ++x) {
-      for(int y = 0; y < MAP_H; ++y) {
+  if(f->getId() == FeatureId::floor)
+  {
+    for(int x = 0; x < MAP_W; ++x)
+    {
+      for(int y = 0; y < MAP_H; ++y)
+      {
         Map::cells[x][y].isSeenByPlayer = Map::cells[x][y].isExplored = true;
       }
     }
@@ -139,38 +156,51 @@ Rigid* put(Rigid* const f) {
   return f;
 }
 
-void updateVisualMemory() {
-  for(int x = 0; x < MAP_W; ++x) {
-    for(int y = 0; y < MAP_H; ++y) {
+void updateVisualMemory()
+{
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
       cells[x][y].playerVisualMemory = Render::renderArrayNoActors[x][y];
     }
   }
 }
 
-void mkBlood(const Pos& origin) {
-  for(int dx = -1; dx <= 1; ++dx) {
-    for(int dy = -1; dy <= 1; ++dy) {
+void mkBlood(const Pos& origin)
+{
+  for(int dx = -1; dx <= 1; ++dx)
+  {
+    for(int dy = -1; dy <= 1; ++dy)
+    {
       const Pos c = origin + Pos(dx, dy);
       Rigid* const f  = cells[c.x][c.y].rigid;
-      if(f->canHaveBlood()) {
+      if(f->canHaveBlood())
+      {
         if(Rnd::oneIn(3)) {f->mkBloody();}
       }
     }
   }
 }
 
-void mkGore(const Pos& origin) {
-  for(int dx = -1; dx <= 1; ++dx) {
-    for(int dy = -1; dy <= 1; ++dy) {
+void mkGore(const Pos& origin)
+{
+  for(int dx = -1; dx <= 1; ++dx)
+  {
+    for(int dy = -1; dy <= 1; ++dy)
+    {
       const Pos c = origin + Pos(dx, dy);
       if(Rnd::oneIn(3)) {cells[c.x][c.y].rigid->tryPutGore();}
     }
   }
 }
 
-void deleteAndRemoveRoomFromList(Room* const room) {
-  for(size_t i = 0; i < roomList.size(); ++i) {
-    if(roomList.at(i) == room) {
+void deleteAndRemoveRoomFromList(Room* const room)
+{
+  for(size_t i = 0; i < roomList.size(); ++i)
+  {
+    if(roomList.at(i) == room)
+    {
       delete room;
       roomList.erase(roomList.begin() + i);
       return;
@@ -179,7 +209,8 @@ void deleteAndRemoveRoomFromList(Room* const room) {
   assert(false && "Tried to remove non-existing room");
 }
 
-bool isPosSeenByPlayer(const Pos& p) {
+bool isPosSeenByPlayer(const Pos& p)
+{
   assert(Utils::isPosInsideMap(p));
   return cells[p.x][p.y].isSeenByPlayer;
 }

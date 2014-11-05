@@ -8,7 +8,8 @@
 
 class Room;
 
-struct Region {
+struct Region
+{
 public:
   Region(const Rect& r) : mainRoom_(nullptr), r_(r), isFree_(true) {}
   Region()              : mainRoom_(nullptr), r_(),  isFree_(true) {}
@@ -20,7 +21,8 @@ public:
   bool  isFree_;
 };
 
-namespace MapGenUtils {
+namespace MapGenUtils
+{
 
 void cutRoomCorners(const Room& room);
 
@@ -43,7 +45,8 @@ void pathfinderWalk(const Pos& p0, const Pos& p1, std::vector<Pos>& posListRef,
 
 } //MapGenUtils
 
-namespace MapGen {
+namespace MapGen
+{
 
 //This variable is checked at certain points to see if the current map
 //has been flagged as "failed". Setting isMapValid to false will generally

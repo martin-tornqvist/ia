@@ -19,15 +19,21 @@ using namespace std;
 
 const FeatureDataT& Feature::getData() const {return FeatureData::getData(getId());}
 
-void Feature::bump(Actor& actorBumping) {
+void Feature::bump(Actor& actorBumping)
+{
   vector<PropId> props;
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
-  if(!canMove(props)) {
-    if(&actorBumping == Map::player) {
-      if(Map::player->getPropHandler().allowSee()) {
+  if(!canMove(props))
+  {
+    if(&actorBumping == Map::player)
+    {
+      if(Map::player->getPropHandler().allowSee())
+      {
         Log::addMsg(getData().msgOnPlayerBlocked);
-      } else {
+      }
+      else
+      {
         Log::addMsg(getData().msgOnPlayerBlockedBlind);
       }
     }
@@ -38,11 +44,13 @@ void Feature::addLight(bool light[MAP_W][MAP_H]) const {(void)light;}
 
 bool Feature::canMoveCmn() const {return getData().moveRules.canMoveCmn();}
 
-bool Feature::canMove(const vector<PropId>& actorsProps) const {
+bool Feature::canMove(const vector<PropId>& actorsProps) const
+{
   return getData().moveRules.canMove(actorsProps);
 }
 
-void Feature::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor) {
+void Feature::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
+{
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 

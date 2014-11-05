@@ -13,11 +13,14 @@
 
 using namespace std;
 
-namespace ActorFactory {
+namespace ActorFactory
+{
 
-namespace {
+namespace
+{
 
-Actor* mkActorFromId(const ActorId id) {
+Actor* mkActorFromId(const ActorId id)
+{
   switch(id) {
     case ActorId::player:               return new Player();
     case ActorId::zombie:               return new ZombieClaw();
@@ -82,7 +85,8 @@ Actor* mkActorFromId(const ActorId id) {
 
 } //namespace
 
-Actor* mk(const ActorId id, const Pos& pos) {
+Actor* mk(const ActorId id, const Pos& pos)
+{
   Actor* const actor = mkActorFromId(id);
 
   actor->place(pos, ActorData::data[int(id)]);
@@ -96,7 +100,8 @@ Actor* mk(const ActorId id, const Pos& pos) {
   return actor;
 }
 
-void deleteAllMon() {
+void deleteAllMon()
+{
   vector<Actor*>& actors = GameTime::actors_;
 
   for(size_t i = 0; i < actors.size(); ++i) {
@@ -109,8 +114,8 @@ void deleteAllMon() {
 
 void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
                const bool MAKE_MONSTERS_AWARE, Actor* const actorToSetAsLeader,
-               vector<Mon*>* monstersRet) {
-
+               vector<Mon*>* monstersRet)
+{
   if(monstersRet) {monstersRet->clear();}
 
   bool blocked[MAP_W][MAP_H];
@@ -127,11 +132,10 @@ void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
   positionsToAnimate.clear();
 
   for(int i = 0; i < NR_TO_SPAWN; ++i) {
-    const Pos&    pos = freeCells.at(i);
-    const ActorId id  = monsterIds.at(i);
-
-    Actor*   const actor    = mk(id, pos);
-    Mon* const mon  = static_cast<Mon*>(actor);
+    const Pos&    pos   = freeCells.at(i);
+    const ActorId id    = monsterIds.at(i);
+    Actor* const  actor = mk(id, pos);
+    Mon* const    mon   = static_cast<Mon*>(actor);
 
     if(monstersRet) {
       monstersRet->push_back(mon);
