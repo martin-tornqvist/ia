@@ -73,7 +73,7 @@ void init() {
   const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
   player = static_cast<Player*>(ActorFactory::mk(ActorId::player, playerPos));
 
-  ActorFactory::deleteAllMonsters();
+  ActorFactory::deleteAllMon();
 
   GameTime::eraseAllMobs();
   GameTime::resetTurnTypeAndActorCounters();
@@ -102,7 +102,7 @@ void setupFromSaveLines(vector<string>& lines) {
 }
 
 void resetMap() {
-  ActorFactory::deleteAllMonsters();
+  ActorFactory::deleteAllMon();
 
   for(auto* room : roomList) {delete room;}
   roomList.clear();

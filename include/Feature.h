@@ -29,7 +29,7 @@ public:
   virtual bool          canMoveCmn()                                    const;
   virtual bool          canMove(const std::vector<PropId>& actorsProps) const;
   virtual bool          isSoundPassable()                               const;
-  virtual bool          isVisionPassable()                              const;
+  virtual bool          isLosPassable()                              const;
   virtual bool          isProjectilePassable()                          const;
   virtual bool          isSmokePassable()                               const;
   virtual bool          isBottomless()                                  const;

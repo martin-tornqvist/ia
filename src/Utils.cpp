@@ -122,9 +122,9 @@ void getActorCells(const vector<Actor*>& actors, vector<Pos>& out) {
   for(const auto* const a : actors) {out.push_back(a->pos);}
 }
 
-Actor* getFirstActorAtPos(const Pos& pos, ActorDeadState deadState) {
+Actor* getFirstActorAtPos(const Pos& pos, ActorState state) {
   for(auto* const actor : GameTime::actors_) {
-    if(actor->pos == pos && actor->deadState == deadState) {
+    if(actor->pos == pos && actor->getState() == state) {
       return actor;
     }
   }
@@ -211,7 +211,8 @@ Pos getClosestPos(const Pos& p, const vector<Pos>& positions) {
 }
 
 Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors) {
-  if(actors.empty()) return nullptr;
+  if(actors.empty())      {return nullptr;}
+  if(actors.size() == 1)  {return actors[0];}
 
   //Find distance to nearest actor(s)
   int distToNearest = INT_MAX;

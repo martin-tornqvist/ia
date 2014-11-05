@@ -39,10 +39,10 @@ struct AttackOpport {
 
 class Wpn;
 
-class Monster: public Actor {
+class Mon: public Actor {
 public:
-  Monster();
-  virtual ~Monster();
+  Mon();
+  virtual ~Mon();
 
   virtual void place_() override {}
 
@@ -64,51 +64,44 @@ public:
   virtual bool onActorTurn_() {return false;}
   virtual void onStdTurn() override {}
 
-  virtual std::string getAggroPhraseMonsterSeen() const {
-    return data_->aggroTextMonsterSeen;
+  virtual std::string getAggroPhraseMonSeen() const {
+    return data_->aggroTextMonSeen;
   }
-  virtual std::string getAggroPhraseMonsterHidden() const {
-    return data_->aggroTextMonsterHidden;
+  virtual std::string getAggroPhraseMonHidden() const {
+    return data_->aggroTextMonHidden;
   }
-  virtual SfxId getAggroSfxMonsterSeen() const {
-    return data_->aggroSfxMonsterSeen;
+  virtual SfxId getAggroSfxMonSeen() const {
+    return data_->aggroSfxMonSeen;
   }
-  virtual SfxId getAggroSfxMonsterHidden() const {
-    return data_->aggroSfxMonsterHidden;
+  virtual SfxId getAggroSfxMonHidden() const {
+    return data_->aggroSfxMonHidden;
   }
-
-  int awareOfPlayerCounter_;
-  int playerAwareOfMeCounter_;
-
-  bool messageMonsterInViewPrinted;
-
-  Dir lastDirTravelled_;
-
-  std::vector<Spell*> spellsKnown;
-  int spellCoolDownCur;
-
-  bool isRoamingAllowed_;
-
-  bool isStealth;
-
-  Actor* leader;
-  Actor* target;
-
-  bool waiting_;
 
   void speakPhrase();
 
-  double shockCausedCur_;
+  bool isLeaderOf(const Actor& actor)       const override;
+  bool isActorMyLeader(const Actor& actor)  const override;
 
-  bool hasGivenXpForSpotting_;
+  int                 awareCounter_, playerAwareOfMeCounter_;
+  bool                isMsgMonInViewPrinted;
+  Dir                 lastDirTravelled_;
+  std::vector<Spell*> spellsKnown;
+  int                 spellCoolDownCur;
+  bool                isRoamingAllowed_;
+  bool                isStealth;
+  Actor*              leader;
+  Actor*              target;
+  bool                waiting_;
+  double              shockCausedCur_;
+  bool                hasGivenXpForSpotting_;
 
 protected:
   virtual void hit_(int& dmg) override;
 };
 
-class Rat: public Monster {
+class Rat: public Mon {
 public:
-  Rat() : Monster() {}
+  Rat() : Mon() {}
   ~Rat() {}
   virtual void mkStartItems() override;
 };
@@ -126,9 +119,9 @@ public:
   ~BrownJenkin() {}
 };
 
-class Spider: public Monster {
+class Spider: public Mon {
 public:
-  Spider() : Monster() {}
+  Spider() : Mon() {}
   virtual ~Spider() {}
   bool onActorTurn_() override;
 };
@@ -168,9 +161,9 @@ public:
   void mkStartItems() override;
 };
 
-class Zombie: public Monster {
+class Zombie: public Mon {
 public:
-  Zombie() : Monster() {
+  Zombie() : Mon() {
     deadTurnCounter = 0;
     hasResurrected = false;
   }
@@ -223,9 +216,9 @@ public:
   ~DeanHalsey() {}
 };
 
-class KeziahMason: public Monster {
+class KeziahMason: public Mon {
 public:
-  KeziahMason() : Monster(), hasSummonedJenkin(false) {}
+  KeziahMason() : Mon(), hasSummonedJenkin(false) {}
   ~KeziahMason() {}
   bool onActorTurn_() override;
   void mkStartItems() override;
@@ -233,9 +226,9 @@ private:
   bool hasSummonedJenkin;
 };
 
-class LengElder: public Monster {
+class LengElder: public Mon {
 public:
-  LengElder() : Monster() {}
+  LengElder() : Mon() {}
   ~LengElder() {}
   void onStdTurn() override;
   void mkStartItems()   override;
@@ -244,18 +237,18 @@ private:
   int   nrTurnsToHostile_;
 };
 
-class Cultist: public Monster {
+class Cultist: public Mon {
 public:
-  Cultist() : Monster() {}
+  Cultist() : Mon() {}
 
   virtual void mkStartItems() override;
 
   static std::string getCultistPhrase();
 
-  std::string getAggroPhraseMonsterSeen() const {
+  std::string getAggroPhraseMonSeen() const {
     return getNameThe() + ": " + getCultistPhrase();
   }
-  std::string getAggroPhraseMonsterHidden() const {
+  std::string getAggroPhraseMonHidden() const {
     return "Voice: " + getCultistPhrase();
   }
 
@@ -283,55 +276,55 @@ public:
   void mkStartItems() override;
 };
 
-class LordOfShadows: public Monster {
+class LordOfShadows: public Mon {
 public:
-  LordOfShadows() : Monster() {}
+  LordOfShadows() : Mon() {}
   ~LordOfShadows() {}
   bool onActorTurn_() override;
   void mkStartItems() override;
 };
 
-class LordOfSpiders: public Monster {
+class LordOfSpiders: public Mon {
 public:
-  LordOfSpiders() : Monster() {}
+  LordOfSpiders() : Mon() {}
   ~LordOfSpiders() {}
   bool onActorTurn_() override;
   void mkStartItems() override;
 };
 
-class LordOfSpirits: public Monster {
+class LordOfSpirits: public Mon {
 public:
-  LordOfSpirits() : Monster() {}
+  LordOfSpirits() : Mon() {}
   ~LordOfSpirits() {}
   bool onActorTurn_() override;
   void mkStartItems() override;
 };
 
-class LordOfPestilence: public Monster {
+class LordOfPestilence: public Mon {
 public:
-  LordOfPestilence() : Monster() {}
+  LordOfPestilence() : Mon() {}
   ~LordOfPestilence() {}
   bool onActorTurn_() override;
   void mkStartItems() override;
 };
 
-class FireHound: public Monster {
+class FireHound: public Mon {
 public:
-  FireHound() : Monster() {}
+  FireHound() : Mon() {}
   ~FireHound() {}
   void mkStartItems() override;
 };
 
-class FrostHound: public Monster {
+class FrostHound: public Mon {
 public:
-  FrostHound() : Monster() {}
+  FrostHound() : Mon() {}
   ~FrostHound() {}
   void mkStartItems() override;
 };
 
-class Zuul: public Monster {
+class Zuul: public Mon {
 public:
-  Zuul() : Monster() {}
+  Zuul() : Mon() {}
   ~Zuul() {}
 
   void place_() override;
@@ -339,9 +332,9 @@ public:
   void mkStartItems() override;
 };
 
-class Ghost: public Monster {
+class Ghost: public Mon {
 public:
-  Ghost() : Monster() {}
+  Ghost() : Mon() {}
   ~Ghost() {}
   bool onActorTurn_() override;
   virtual void mkStartItems() override;
@@ -361,9 +354,9 @@ public:
   void mkStartItems() override;
 };
 
-class GiantBat: public Monster {
+class GiantBat: public Mon {
 public:
-  GiantBat() : Monster() {}
+  GiantBat() : Mon() {}
   ~GiantBat() {}
   void mkStartItems() override;
 };
@@ -375,16 +368,16 @@ public:
   void mkStartItems() override;
 };
 
-class GiantMantis: public Monster {
+class GiantMantis: public Mon {
 public:
-  GiantMantis() : Monster() {}
+  GiantMantis() : Mon() {}
   ~GiantMantis() {}
   void mkStartItems() override;
 };
 
-class Chthonian: public Monster {
+class Chthonian: public Mon {
 public:
-  Chthonian() : Monster() {}
+  Chthonian() : Mon() {}
   ~Chthonian() {}
   void mkStartItems() override;
 };
@@ -396,44 +389,44 @@ public:
   void mkStartItems() override;
 };
 
-class Wolf: public Monster {
+class Wolf: public Mon {
 public:
-  Wolf() : Monster() {}
+  Wolf() : Mon() {}
   ~Wolf() {}
   void mkStartItems() override;
 };
 
-class MiGo: public Monster {
+class MiGo: public Mon {
 public:
-  MiGo() : Monster() {}
+  MiGo() : Mon() {}
   ~MiGo() {}
   void mkStartItems() override;
 };
 
-class FlyingPolyp: public Monster {
+class FlyingPolyp: public Mon {
 public:
-  FlyingPolyp() : Monster() {}
+  FlyingPolyp() : Mon() {}
   ~FlyingPolyp() {}
   void mkStartItems() override;
 };
 
-class Ghoul: public Monster {
+class Ghoul: public Mon {
 public:
-  Ghoul() : Monster() {}
+  Ghoul() : Mon() {}
   ~Ghoul() {}
   virtual void mkStartItems() override;
 };
 
-class DeepOne: public Monster {
+class DeepOne: public Mon {
 public:
-  DeepOne() : Monster() {}
+  DeepOne() : Mon() {}
   ~DeepOne() {}
   void mkStartItems() override;
 };
 
-class Mummy: public Monster {
+class Mummy: public Mon {
 public:
-  Mummy() : Monster() {}
+  Mummy() : Mon() {}
   ~Mummy() {}
   virtual void mkStartItems() override;
 };
@@ -455,17 +448,17 @@ private:
   bool hasSummonedLocusts;
 };
 
-class Shadow: public Monster {
+class Shadow: public Mon {
 public:
-  Shadow() : Monster() {}
+  Shadow() : Mon() {}
   ~Shadow() {}
 
   virtual void mkStartItems() override;
 };
 
-class WormMass: public Monster {
+class WormMass: public Mon {
 public:
-  WormMass() : Monster(), chanceToSpawnNew(12) {}
+  WormMass() : Mon(), chanceToSpawnNew(12) {}
   ~WormMass() {}
   bool onActorTurn_() override;
   virtual void mkStartItems() override;
@@ -473,9 +466,9 @@ private:
   int chanceToSpawnNew;
 };
 
-class GiantLocust: public Monster {
+class GiantLocust: public Mon {
 public:
-  GiantLocust() : Monster(), chanceToSpawnNew(5) {}
+  GiantLocust() : Mon(), chanceToSpawnNew(5) {}
   ~GiantLocust() {}
   bool onActorTurn_() override;
   virtual void mkStartItems() override;
@@ -483,9 +476,9 @@ private:
   int chanceToSpawnNew;
 };
 
-class Vortex: public Monster {
+class Vortex: public Mon {
 public:
-  Vortex() : Monster(), pullCooldown(0) {}
+  Vortex() : Mon(), pullCooldown(0) {}
   virtual ~Vortex() {}
 
   bool onActorTurn_() override;
@@ -520,9 +513,9 @@ public:
   void die_();
 };
 
-class Ooze: public Monster {
+class Ooze: public Mon {
 public:
-  Ooze() : Monster() {}
+  Ooze() : Mon() {}
   ~Ooze() {}
   virtual void onStdTurn() override;
   virtual void mkStartItems() = 0;

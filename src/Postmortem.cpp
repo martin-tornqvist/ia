@@ -40,11 +40,11 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
 
   TRACE << "Finding number of killed monsters" << endl;
   vector<string> uniqueKilledNames;
-  int nrKillsTotAllMonsters = 0;
+  int nrKillsTotAllMon = 0;
   for(const auto& d : ActorData::data) {
     if(d.id != ActorId::player) {
       if(d.nrKills > 0) {
-        nrKillsTotAllMonsters += d.nrKills;
+        nrKillsTotAllMon += d.nrKills;
         if(d.isUnique) {
           uniqueKilledNames.push_back(d.nameA);
         }
@@ -59,7 +59,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
   linesRef.push_back(StrAndClr("   * Was " +
                                toStr(min(100, Map::player->getInsanity())) + "% "
                                "insane", clrInfo));
-  linesRef.push_back(StrAndClr("   * Killed " + toStr(nrKillsTotAllMonsters) +
+  linesRef.push_back(StrAndClr("   * Killed " + toStr(nrKillsTotAllMon) +
                                " monsters ", clrInfo));
 
   //TODO This is ugly as hell
@@ -139,7 +139,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef) {
         for(int dy = -1; dy <= 1; ++dy) {
           if(Utils::isPosInsideMap(Pos(x + dx, y + dy))) {
             const auto* const f = Map::cells[x + dx][y + dy].rigid;
-            if(f->isVisionPassable()) {Map::cells[x][y].isSeenByPlayer = true;}
+            if(f->isLosPassable()) {Map::cells[x][y].isSeenByPlayer = true;}
           }
         }
       }

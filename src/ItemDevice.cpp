@@ -110,7 +110,7 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor) {
       } break;
     }
 
-    if(Map::player->deadState != ActorDeadState::alive) {
+    if(!Map::player->isAlive()) {
       return ConsumeItem::no;
     }
     if(isEffectFailed) {
@@ -187,11 +187,11 @@ void DeviceShockwave::triggerEffect() {
   }
 
   for(Actor* actor : GameTime::actors_) {
-    if(actor != Map::player && actor->deadState == ActorDeadState::alive) {
+    if(actor != Map::player && actor->isAlive()) {
       const Pos& otherPos = actor->pos;
       if(Utils::isPosAdj(playerPos, otherPos, false)) {
         actor->hit(Rnd::dice(1, 8), DmgType::physical);
-        if(actor->deadState == ActorDeadState::alive) {
+        if(actor->isAlive()) {
           KnockBack::tryKnockBack(*actor, playerPos, false, true);
         }
       }

@@ -46,15 +46,9 @@ enum class ActorId {
   END
 };
 
-enum MonsterGroupSize {
-  monsterGroupSize_alone,
-  monsterGroupSizeFew,
-  monsterGroupSizeGroup,
-  monsterGroupSizeHorde,
-  monsterGroupSizeSwarm
-};
+enum class MonGroupSize {alone, few, group, horde, swarm};
 
-enum class ActorSpeed {sluggish, slow, normal, fast, fastest, END};
+enum class ActorSpeed   {sluggish, slow, normal, fast, fastest, END};
 
 enum ActorErraticFreq {
   actorErratic_never    = 0,
@@ -70,16 +64,16 @@ enum ActorSize {
   actorSize_giant
 };
 
-enum class MonsterShockLvl {none, unsettling, scary, terrifying, mindShattering, END};
+enum class MonShockLvl {none, unsettling, scary, terrifying, mindShattering, END};
 
 enum class AiId {
   looks,
   makesRoomForFriend,
   attacks,
-  pathsToTargetWhenAware,
-  movesTowardTargetWhenVision,
-  movesTowardLair,
-  movesTowardLeader,
+  pathsToTgtWhenAware,
+  movesToTgtWhenLos,
+  movesToLair,
+  movesToLeader,
   END
 };
 
@@ -96,7 +90,7 @@ struct ActorDataT {
   TileId tile;
   char glyph;
   Clr color;
-  MonsterGroupSize groupSize;
+  MonGroupSize groupSize;
   int hp, spi, dmgMelee, dmgRanged;
   ActorSpeed speed;
   AbilityVals abilityVals;
@@ -117,17 +111,17 @@ struct ActorDataT {
   bool isAutoSpawnAllowed;
   std::string spellCastMessage;
   ActorErraticFreq erraticMovement;
-  MonsterShockLvl monsterShockLvl;
+  MonShockLvl monShockLvl;
   bool isRat, isCanine, isSpider, isUndead, isGhost;
   bool canBeSummoned;
   bool canBleed;
   bool canLeaveCorpse;
   std::vector<RoomType> nativeRooms;
   std::string descr;
-  std::string aggroTextMonsterSeen;
-  std::string aggroTextMonsterHidden;
-  SfxId aggroSfxMonsterSeen;
-  SfxId aggroSfxMonsterHidden;
+  std::string aggroTextMonSeen;
+  std::string aggroTextMonHidden;
+  SfxId aggroSfxMonSeen;
+  SfxId aggroSfxMonHidden;
 };
 
 namespace ActorData {

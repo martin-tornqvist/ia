@@ -41,7 +41,7 @@ const string Scroll::getRealName() const {
     case SpellId::cloudMinds:           return "";
     case SpellId::miGoHypnosis:         return "";
     case SpellId::immolation:           return "";
-    case SpellId::pharaohStaffLocusts:
+    case SpellId::pharaohStaff:         return "";
     case SpellId::END: {} break;
   }
   assert(false && "No spell found for scroll");
@@ -116,9 +116,9 @@ ConsumeItem Scroll::read() {
   } else {
     Log::addMsg("I recite the forbidden incantations on the manuscript...");
     data_->isTried = true;
-    const auto spellCastRet = spell->cast(Map::player, false);
+    const auto isNoticed = spell->cast(Map::player, false);
     Log::addMsg(crumbleStr);
-    if(spellCastRet.isCastIdenifying) {identify(false);}
+    if(isNoticed == SpellEffectNoticed::yes) {identify(false);}
   }
 
   delete spell;

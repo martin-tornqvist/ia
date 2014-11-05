@@ -24,7 +24,7 @@ enum class Obsession {
 };
 
 enum class ShockSrc {
-  seeMonster,
+  seeMon,
   useStrangeItem,
   castIntrSpell,
   time,
@@ -32,7 +32,7 @@ enum class ShockSrc {
   END
 };
 
-class Monster;
+class Mon;
 class MedicalBag;
 class Explosive;
 
@@ -78,8 +78,8 @@ public:
 
   void autoMelee();
 
-  void kickMonster(Actor& actorToKick);
-  void punchMonster(Actor& actorToPunch);
+  void kickMon(Actor& actorToKick);
+  void punchMon(Actor& actorToPunch);
 
   void updateClr();
 
@@ -95,6 +95,9 @@ public:
 
   bool phobias[int(Phobia::END)];
   bool obsessions[int(Obsession::END)];
+
+  bool isLeaderOf(const Actor& actor)       const override;
+  bool isActorMyLeader(const Actor& actor)  const override;
 
   MedicalBag* activeMedicalBag;
   int         waitTurnsLeft;

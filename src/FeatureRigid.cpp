@@ -540,14 +540,14 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
   if(dmgType == DmgType::physical && dmgMethod == DmgMethod::kick) {
     assert(actor);
 
-    const AlertsMonsters alertsMonsters = actor == Map::player ?
-                                          AlertsMonsters::yes :
-                                          AlertsMonsters::no;
+    const AlertsMon alertsMon = actor == Map::player ?
+                                AlertsMon::yes :
+                                AlertsMon::no;
     if(Rnd::coinToss()) {
       if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {Log::addMsg("It topples over.");}
 
       Snd snd("I hear a crash.", SfxId::END, IgnoreMsgIfOriginSeen::yes,
-              pos_, actor, SndVol::low, alertsMonsters);
+              pos_, actor, SndVol::low, alertsMon);
 
       SndEmit::emitSnd(snd);
 
@@ -562,7 +562,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
       if(!CellPred::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y])) {
         Actor* const actorBehind = Utils::getFirstActorAtPos(dstPos);
         if(actorBehind) {
-          if(actorBehind->deadState == ActorDeadState::alive) {
+          if(actorBehind->isAlive()) {
             vector<PropId> propList;
             actorBehind->getPropHandler().getAllActivePropIds(propList);
             if(find(begin(propList), end(propList), propEthereal) == end(propList)) {
@@ -1215,7 +1215,7 @@ bool Tomb::open() {
   }
   Snd snd("I hear heavy stone sliding.", SfxId::tombOpen,
           IgnoreMsgIfOriginSeen::yes, pos_, nullptr, SndVol::high,
-          AlertsMonsters::yes);
+          AlertsMon::yes);
   SndEmit::emitSnd(snd);
 
   triggerTrap(*Map::player);
@@ -1389,10 +1389,10 @@ void Tomb::triggerTrap(Actor& actor) {
   }
 
   if(!actorBucket.empty()) {
-    const size_t ELEMENT = Rnd::range(0, actorBucket.size() - 1);
-    const ActorId actorIdToSpawn = actorBucket[ELEMENT];
-    Actor* const monster = ActorFactory::mk(actorIdToSpawn, pos_);
-    static_cast<Monster*>(monster)->becomeAware(false);
+    const size_t  ELEMENT         = Rnd::range(0, actorBucket.size() - 1);
+    const ActorId actorIdToSpawn  = actorBucket[ELEMENT];
+    Actor* const  mon             = ActorFactory::mk(actorIdToSpawn, pos_);
+    static_cast<Mon*>(mon)->becomeAware(false);
   }
 }
 
@@ -1409,8 +1409,8 @@ Chest::Chest(const Pos& pos) :
     PlayerBon::hasTrait(Trait::treasureHunter);
   const int NR_ITEMS_MIN = Rnd::oneIn(10) ? 0 : 1;
   const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 3 : 2;
-  itemContainer_.setRandomItemsForFeature(
-    FeatureId::chest, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+  itemContainer_.setRandomItemsForFeature(FeatureId::chest,
+                                          Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
   if(!itemContainer_.items_.empty()) {
     isLocked_   = Rnd::fraction(6, 10);
@@ -1449,7 +1449,7 @@ bool Chest::open() {
   if(IS_SEEN) Log::addMsg("The chest opens.");
   triggerTrap(*Map::player);
 
-  if(Map::player->deadState == ActorDeadState::alive) {
+  if(Map::player->isAlive()) {
     if(itemContainer_.items_.empty()) {
       if(IS_SEEN) Log::addMsg("There is nothing of value inside.");
     } else {
@@ -1647,7 +1647,7 @@ void Chest::triggerTrap(Actor& actor) {
       Log::addMsg("The trap explodes!");
       Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0,
                                 SfxId::explosion);
-      if(Map::player->deadState == ActorDeadState::alive) {
+      if(Map::player->isAlive()) {
         Map::put(new RubbleLow(pos_));
       }
     } else {
@@ -1695,7 +1695,7 @@ Fountain::Fountain(const Pos& pos) :
 
   switch(fountainMatl_) {
     case FountainMatl::stone: {
-      if(Rnd::fraction(6, 7)) {
+      if(Rnd::fraction(5, 6)) {
         fountainEffects_.push_back(FountainEffect::refreshing);
       } else {
         const int   NR_TYPES  = int(FountainEffect::END);
@@ -1962,7 +1962,7 @@ void Cocoon::triggerTrap(Actor& actor) {
       const int NR_SPIDERS = Rnd::range(2, 5);
       const int ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
       const ActorId actorIdToSummon = spawnBucket.at(ELEMENT);
-      ActorFactory::summonMonsters(
+      ActorFactory::summonMon(
         pos_, vector<ActorId>(NR_SPIDERS, actorIdToSummon), true);
     }
   }

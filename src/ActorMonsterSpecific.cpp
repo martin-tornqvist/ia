@@ -109,7 +109,7 @@ void Cultist::mkStartItems() {
   }
 
   if(Rnd::percentile() < 8) {
-    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
   }
 }
 
@@ -122,7 +122,7 @@ void CultistTeslaCannon::mkStartItems() {
   }
 
   if(Rnd::oneIn(10)) {
-    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
   }
 }
 
@@ -141,11 +141,11 @@ void CultistPriest::mkStartItems() {
   inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
   inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
 
-  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
-  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
 
   if(Rnd::percentile() < 33) {
-    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
   }
 }
 
@@ -163,7 +163,7 @@ void Zuul::place_() {
   if(ActorData::data[int(ActorId::zuul)].nrLeftAllowedToSpawn > 0) {
     //Note: Do not call die() here, that would have side effects such as
     //player getting XP. Instead, simply set the dead state to destroyed.
-    deadState = ActorDeadState::destroyed;
+    state = ActorState::destroyed;
     Actor* actor = ActorFactory::mk(ActorId::cultistPriest, pos);
     PropHandler& propHandler = actor->getPropHandler();
     propHandler.tryApplyProp(new PropPossessedByZuul(PropTurns::indefinite), true);
@@ -176,13 +176,13 @@ void Zuul::mkStartItems() {
 }
 
 bool Vortex::onActorTurn_() {
-  if(deadState == ActorDeadState::alive) {
+  if(isAlive()) {
     if(pullCooldown > 0) {
       pullCooldown--;
     }
 
     if(pullCooldown <= 0) {
-      if(awareOfPlayerCounter_ > 0) {
+      if(awareCounter_ > 0) {
         TRACE << "pullCooldown: " << pullCooldown << endl;
         TRACE << "Is aware of player" << endl;
         const Pos& playerPos = Map::player->pos;
@@ -205,9 +205,9 @@ bool Vortex::onActorTurn_() {
               TRACE << knockBackFromPos.y << ")" << endl;
               TRACE << "Player position: ";
               TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
-              bool visionBlockers[MAP_W][MAP_H];
-              MapParse::parse(CellPred::BlocksVision(), visionBlockers);
-              if(isSeeingActor(*(Map::player), visionBlockers)) {
+              bool losBlockers[MAP_W][MAP_H];
+              MapParse::parse(CellPred::BlocksLos(), losBlockers);
+              if(isSeeingActor(*(Map::player), losBlockers)) {
                 TRACE << "I am seeing the player" << endl;
                 if(Map::player->isSeeingActor(*this, nullptr)) {
                   Log::addMsg("The Vortex attempts to pull me in!");
@@ -259,14 +259,14 @@ void FrostVortex::mkStartItems() {
 }
 
 bool Ghost::onActorTurn_() {
-  if(deadState == ActorDeadState::alive) {
-    if(awareOfPlayerCounter_ > 0) {
+  if(isAlive()) {
+    if(awareCounter_ > 0) {
 
       if(Utils::isPosAdj(pos, Map::player->pos, false)) {
         if(Rnd::percentile() < 30) {
 
           bool blocked[MAP_W][MAP_H];
-          MapParse::parse(CellPred::BlocksVision(), blocked);
+          MapParse::parse(CellPred::BlocksLos(), blocked);
           const bool PLAYER_SEES_ME =
             Map::player->isSeeingActor(*this, blocked);
           const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
@@ -300,8 +300,8 @@ void Phantasm::mkStartItems() {
 
 void Wraith::mkStartItems() {
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::wraithClaw));
-  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
-  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
 }
 
 void MiGo::mkStartItems() {
@@ -313,7 +313,7 @@ void MiGo::mkStartItems() {
   spellsKnown.push_back(new SpellHealSelf);
 
   if(Rnd::coinToss()) {
-    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
   }
 }
 
@@ -349,7 +349,7 @@ void Mummy::mkStartItems() {
   spellsKnown.push_back(SpellHandling::mkSpellFromId(SpellId::disease));
 
   for(int i = Rnd::range(1, 2); i > 0; --i) {
-    spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+    spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
   }
 }
 
@@ -358,18 +358,18 @@ void MummyUnique::mkStartItems() {
 
   spellsKnown.push_back(SpellHandling::mkSpellFromId(SpellId::disease));
 
-  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
-  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
-  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
 }
 
 bool Khephren::onActorTurn_() {
-  if(deadState == ActorDeadState::alive) {
-    if(awareOfPlayerCounter_ > 0) {
+  if(isAlive()) {
+    if(awareCounter_ > 0) {
       if(!hasSummonedLocusts) {
 
         bool blocked[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksVision(), blocked);
+        MapParse::parse(CellPred::BlocksLos(), blocked);
 
         if(isSeeingActor(*(Map::player), blocked)) {
           MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
@@ -387,17 +387,15 @@ bool Khephren::onActorTurn_() {
 
           sort(begin(freeCells), end(freeCells), IsCloserToPos(pos));
 
-          const int NR_OF_SPAWNS = 15;
+          const size_t NR_OF_SPAWNS = 15;
           if(freeCells.size() >= NR_OF_SPAWNS + 1) {
             Log::addMsg("Khephren calls a plague of Locusts!");
-            Map::player->incrShock(ShockValue::heavy,
-                                   ShockSrc::misc);
-            for(int i = 0; i < NR_OF_SPAWNS; ++i) {
-              Actor* const actor =
-                ActorFactory::mk(ActorId::locust, freeCells.at(0));
-              Monster* const monster = static_cast<Monster*>(actor);
-              monster->awareOfPlayerCounter_ = 999;
-              monster->leader = this;
+            Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
+            for(size_t i = 0; i < NR_OF_SPAWNS; ++i) {
+              Actor* const actor = ActorFactory::mk(ActorId::locust, freeCells.at(0));
+              Mon* const mon = static_cast<Mon*>(actor);
+              mon->awareCounter_ = 999;
+              mon->leader = this;
               freeCells.erase(begin(freeCells));
             }
             Render::drawMapAndInterface();
@@ -441,12 +439,12 @@ void HuntingHorror::mkStartItems() {
 }
 
 bool KeziahMason::onActorTurn_() {
-  if(deadState == ActorDeadState::alive) {
-    if(awareOfPlayerCounter_ > 0) {
+  if(isAlive()) {
+    if(awareCounter_ > 0) {
       if(!hasSummonedJenkin) {
 
         bool blocked[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksVision(), blocked);
+        MapParse::parse(CellPred::BlocksLos(), blocked);
 
         if(isSeeingActor(*(Map::player), blocked)) {
 
@@ -463,10 +461,10 @@ bool KeziahMason::onActorTurn_() {
               //TODO Make a generalized summoning functionality
               Log::addMsg("Keziah summons Brown Jenkin!");
               Actor* const actor = ActorFactory::mk(ActorId::brownJenkin, c);
-              Monster* jenkin = static_cast<Monster*>(actor);
+              Mon* jenkin = static_cast<Mon*>(actor);
               Render::drawMapAndInterface();
               hasSummonedJenkin = true;
-              jenkin->awareOfPlayerCounter_ = 999;
+              jenkin->awareCounter_ = 999;
               jenkin->leader = this;
               GameTime::actorDidAct();
               return true;
@@ -485,18 +483,18 @@ void KeziahMason::mkStartItems() {
   spellsKnown.push_back(new SpellHealSelf);
   spellsKnown.push_back(new SpellSummonRandom);
   spellsKnown.push_back(new SpellAzathothsWrath);
-  spellsKnown.push_back(SpellHandling::getRandomSpellForMonster());
+  spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
 }
 
 void LengElder::onStdTurn() {
-  if(deadState == ActorDeadState::alive) {
+  if(isAlive()) {
 
-    awareOfPlayerCounter_ = 100;
+    awareCounter_ = 100;
 
     if(hasGivenItemToPlayer_) {
-      bool visionBlockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksVision(), visionBlockers);
-      if(isSeeingActor(*Map::player, visionBlockers)) {
+      bool losBlockers[MAP_W][MAP_H];
+      MapParse::parse(CellPred::BlocksLos(), losBlockers);
+      if(isSeeingActor(*Map::player, losBlockers)) {
         if(nrTurnsToHostile_ <= 0) {
           Log::addMsg("I am ripped to pieces!!!", clrMsgBad);
           Map::player->hit(999, DmgType::pure);
@@ -606,8 +604,8 @@ void Wolf::mkStartItems() {
 }
 
 bool WormMass::onActorTurn_() {
-  if(deadState == ActorDeadState::alive) {
-    if(awareOfPlayerCounter_ > 0) {
+  if(isAlive()) {
+    if(awareCounter_ > 0) {
       if(Rnd::percentile() < chanceToSpawnNew) {
 
         bool blocked[MAP_W][MAP_H];
@@ -623,7 +621,7 @@ bool WormMass::onActorTurn_() {
               WormMass* const worm = static_cast<WormMass*>(actor);
               chanceToSpawnNew -= 4;
               worm->chanceToSpawnNew = chanceToSpawnNew;
-              worm->awareOfPlayerCounter_ = awareOfPlayerCounter_;
+              worm->awareCounter_ = awareCounter_;
               GameTime::actorDidAct();
               return true;
             }
@@ -640,8 +638,8 @@ void WormMass::mkStartItems() {
 }
 
 bool GiantLocust::onActorTurn_() {
-  if(deadState == ActorDeadState::alive) {
-    if(awareOfPlayerCounter_ > 0) {
+  if(isAlive()) {
+    if(awareCounter_ > 0) {
       if(Rnd::percentile() < chanceToSpawnNew) {
 
         bool blocked[MAP_W][MAP_H];
@@ -652,12 +650,11 @@ bool GiantLocust::onActorTurn_() {
           for(int dy = -1; dy <= 1; ++dy) {
             mkPos.set(pos + Pos(dx, dy));
             if(!blocked[mkPos.x][mkPos.y]) {
-              Actor* const actor =
-                ActorFactory::mk(data_->id, mkPos);
+              Actor* const actor = ActorFactory::mk(data_->id, mkPos);
               GiantLocust* const locust = static_cast<GiantLocust*>(actor);
               chanceToSpawnNew -= 2;
               locust->chanceToSpawnNew = chanceToSpawnNew;
-              locust->awareOfPlayerCounter_ = awareOfPlayerCounter_;
+              locust->awareCounter_ = awareCounter_;
               GameTime::actorDidAct();
               return true;
             }
@@ -683,7 +680,7 @@ void LordOfShadows::mkStartItems() {
 }
 
 bool LordOfSpiders::onActorTurn_() {
-  if(deadState == ActorDeadState::alive && awareOfPlayerCounter_ > 0) {
+  if(isAlive() && awareCounter_ > 0) {
 
     if(Rnd::coinToss()) {
 
@@ -745,19 +742,19 @@ bool MajorClaphamLee::onActorTurn_() {
     return true;
   }
 
-  if(deadState == ActorDeadState::alive) {
-    if(awareOfPlayerCounter_ > 0) {
+  if(isAlive()) {
+    if(awareCounter_ > 0) {
       if(!hasSummonedTombLegions) {
 
-        bool visionBlockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksVision(), visionBlockers);
+        bool losBlockers[MAP_W][MAP_H];
+        MapParse::parse(CellPred::BlocksLos(), losBlockers);
 
-        if(isSeeingActor(*(Map::player), visionBlockers)) {
+        if(isSeeingActor(*(Map::player), losBlockers)) {
           Log::addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
-          vector<ActorId> monsterIds;
-          monsterIds.clear();
+          vector<ActorId> monIds;
+          monIds.clear();
 
-          monsterIds.push_back(ActorId::deanHalsey);
+          monIds.push_back(ActorId::deanHalsey);
 
           const int NR_OF_EXTRA_SPAWNS = 4;
 
@@ -769,9 +766,9 @@ bool MajorClaphamLee::onActorTurn_() {
               case 2: id = ActorId::zombieAxe;     break;
               case 3: id = ActorId::bloatedZombie; break;
             }
-            monsterIds.push_back(id);
+            monIds.push_back(id);
           }
-          ActorFactory::summonMonsters(pos, monsterIds, true, this);
+          ActorFactory::summonMon(pos, monIds, true, this);
           Render::drawMapAndInterface();
           hasSummonedTombLegions = true;
           Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
@@ -786,7 +783,7 @@ bool MajorClaphamLee::onActorTurn_() {
 }
 
 bool Zombie::tryResurrect() {
-  if(deadState == ActorDeadState::corpse) {
+  if(isCorpse()) {
     if(!hasResurrected) {
       const int NR_TURNS_TO_CAN_RISE = 5;
       if(deadTurnCounter < NR_TURNS_TO_CAN_RISE) {
@@ -794,7 +791,7 @@ bool Zombie::tryResurrect() {
       }
       if(deadTurnCounter >= NR_TURNS_TO_CAN_RISE) {
         if(pos != Map::player->pos && Rnd::oneIn(14)) {
-          deadState = ActorDeadState::alive;
+          state   = ActorState::alive;
           hp_     = (getHpMax(true) * 3) / 4;
           glyph_  = data_->glyph;
           tile_   = data_->tile;
@@ -806,7 +803,7 @@ bool Zombie::tryResurrect() {
             Map::player->incrShock(ShockValue::some, ShockSrc::misc);
           }
 
-          awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer * 2;
+          awareCounter_ = data_->nrTurnsAwarePlayer * 2;
           GameTime::actorDidAct();
           return true;
         }
@@ -818,8 +815,8 @@ bool Zombie::tryResurrect() {
 
 void Zombie::die_() {
   //If resurrected once and has corpse, blow up the corpse
-  if(hasResurrected && deadState == ActorDeadState::corpse) {
-    deadState = ActorDeadState::destroyed;
+  if(hasResurrected && isCorpse()) {
+    state = ActorState::destroyed;
     Map::mkBlood(pos);
     Map::mkGore(pos);
   }

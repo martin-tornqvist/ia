@@ -75,7 +75,7 @@ void handleKeyPress(const KeyData& d) {
 
   //----------------------------------- MOVEMENT
   if(d.sdlKey == SDLK_RIGHT            || d.key == '6' || d.key == 'l') {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
       if(d.isShiftHeld) {
         Map::player->moveDir(Dir::upRight);
@@ -88,14 +88,14 @@ void handleKeyPress(const KeyData& d) {
     clearEvents();
     return;
   } else if(d.sdlKey == SDLK_DOWN      || d.key == '2' || d.key == 'j') {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
       Map::player->moveDir(Dir::down);
     }
     clearEvents();
     return;
   } else if(d.sdlKey == SDLK_LEFT      || d.key == '4' || d.key == 'h') {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
       if(d.isShiftHeld) {
         Map::player->moveDir(Dir::upLeft);
@@ -108,42 +108,42 @@ void handleKeyPress(const KeyData& d) {
     clearEvents();
     return;
   } else if(d.sdlKey == SDLK_UP        || d.key == '8' || d.key == 'k') {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
       Map::player->moveDir(Dir::up);
     }
     clearEvents();
     return;
   } else if(d.sdlKey == SDLK_PAGEUP    || d.key == '9' || d.key == 'u') {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
       Map::player->moveDir(Dir::upRight);
     }
     clearEvents();
     return;
   } else if(d.sdlKey == SDLK_PAGEDOWN  || d.key == '3' || d.key == 'n') {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
       Map::player->moveDir(Dir::downRight);
     }
     clearEvents();
     return;
   } else if(d.sdlKey == SDLK_END       || d.key == '1' || d.key == 'b') {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
       Map::player->moveDir(Dir::downLeft);
     }
     clearEvents();
     return;
   } else if(d.sdlKey == SDLK_HOME      || d.key == '7' || d.key == 'y') {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
       Map::player->moveDir(Dir::upLeft);
     }
     clearEvents();
     return;
   } else if(d.key == '5' || d.key == '.') {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
 
       if(PlayerBon::hasTrait(Trait::steadyAimer)) {
@@ -189,7 +189,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- EXAMINE
   else if(d.key == 'a') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Examine::playerExamine();
     }
     clearEvents();
@@ -199,7 +199,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- RELOAD
   else if(d.key == 'r') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Reload::reloadWieldedWpn(*(Map::player));
     }
     clearEvents();
@@ -209,7 +209,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- KICK
   else if((d.key == 'q')) {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Kick::playerKick();
       Render::drawMapAndInterface();
     }
@@ -220,7 +220,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- CLOSE
   else if(d.key == 'c') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Close::playerClose();
     }
     clearEvents();
@@ -230,7 +230,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- JAM
   else if(d.key == 'D') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       JamWithSpike::playerJam();
     }
     clearEvents();
@@ -240,7 +240,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- DISARM
   else if(d.key == 'd') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Disarm::playerDisarm();
     }
     clearEvents();
@@ -250,7 +250,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- UNLOAD AMMO FROM GROUND
   else if(d.key == 'G')  {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       ItemPickup::tryUnloadWpnOrPickupAmmo();
     }
     clearEvents();
@@ -260,7 +260,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- AIM/FIRE FIREARM
   else if(d.key == 'f') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
 
       if(Map::player->getPropHandler().allowAttackRanged(true)) {
 
@@ -329,7 +329,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- GET
   else if(d.key == 'g') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       const Pos& p = Map::player->pos;
       Item* const itemAtPlayer = Map::cells[p.x][p.y].item;
       if(itemAtPlayer) {
@@ -347,7 +347,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- INVENTORY SCREEN
   else if(d.key == 'w') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {InvHandling::runInvScreen();}
+    if(Map::player->isAlive()) {InvHandling::runInvScreen();}
     clearEvents();
     return;
   }
@@ -355,7 +355,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- SWAP TO PREPARED ITEM
   else if(d.key == 'z') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
 
       const bool IS_FREE_TURN = PlayerBon::getBg() == Bg::warVet;
 
@@ -390,7 +390,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- SEARCH (REALLY JUST A WAIT BUTTON)
   else if(d.key == 's') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       vector<Actor*> seenMon;
       Map::player->getSeenFoes(seenMon);
       if(seenMon.empty()) {
@@ -411,12 +411,12 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- QUICK WALK
   else if(d.key == 'e') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
 
-      vector<Actor*> seenMonsters;
-      Map::player->getSeenFoes(seenMonsters);
+      vector<Actor*> seenMon;
+      Map::player->getSeenFoes(seenMon);
 
-      if(!seenMonsters.empty()) {
+      if(!seenMon.empty()) {
         //Monster is seen, prevent quick move
         Log::addMsg(msgMonPreventCmd);
         Render::drawMapAndInterface();
@@ -451,7 +451,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- THROW ITEM
   else if(d.key == 't') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
 
       if(Map::player->activeExplosive) {
         auto onMarkerAtPos = [](const Pos & p) {
@@ -536,7 +536,7 @@ void handleKeyPress(const KeyData& d) {
   //-----------------------------------  VIEW DESCRIPTIONS
   else if(d.key == 'v') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       if(Map::player->getPropHandler().allowSee()) {
 
 
@@ -580,7 +580,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- AUTO MELEE
   else if(d.sdlKey == SDLK_TAB) {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Map::player->autoMelee();
     }
     clearEvents();
@@ -590,7 +590,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- RE-CAST PREVIOUS MEMORIZED SPELL
   else if(d.key == 'x') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       PlayerSpellsHandling::tryCastPrevSpell();
     }
     clearEvents();
@@ -600,7 +600,7 @@ void handleKeyPress(const KeyData& d) {
   //----------------------------------- MEMORIZED SPELLS
   else if(d.key == 'X') {
     Log::clearLog();
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       PlayerSpellsHandling::playerSelectSpellToCast();
     }
     clearEvents();
@@ -622,7 +622,7 @@ void handleKeyPress(const KeyData& d) {
 
   //----------------------------------- MENU
   else if(d.sdlKey == SDLK_ESCAPE) {
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       Log::clearLog();
 
       const vector<string> choices {"Options", "Manual", "Quit", "Cancel"};

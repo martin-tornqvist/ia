@@ -55,8 +55,8 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           (ACTOR_CAN_BE_KNOCKED_BACK) &&
           (!CELL_BLOCKED || CELL_IS_BOTTOMLESS)) {
 
-          bool visionBlockers[MAP_W][MAP_H];
-          MapParse::parse(CellPred::BlocksVision(), visionBlockers);
+          bool losBlockers[MAP_W][MAP_H];
+          MapParse::parse(CellPred::BlocksLos(), losBlockers);
           const bool PLAYER_SEE_DEFENDER =
             DEFENDER_IS_MON ? Map::player->isSeeingActor(defender, blocked) :
             true;
@@ -101,23 +101,21 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
             mobs.at(mobIndex)->bump(defender);
           }
 
-          if(defender.deadState != ActorDeadState::alive) {
+          if(!defender.isAlive()) {
             return;
           }
 
-          Rigid* const f =
-            Map::cells[defender.pos.x][defender.pos.y].rigid;
+          Rigid* const f = Map::cells[defender.pos.x][defender.pos.y].rigid;
           f->bump(defender);
 
-          if(defender.deadState != ActorDeadState::alive) {
+          if(!defender.isAlive()) {
             return;
           }
         } else {
           // Defender nailed to a wall from a spike gun?
           if(IS_SPIKE_GUN) {
-            Rigid* const f =
-              Map::cells[newPos.x][newPos.y].rigid;
-            if(!f->isVisionPassable()) {
+            Rigid* const f = Map::cells[newPos.x][newPos.y].rigid;
+            if(!f->isLosPassable()) {
               defender.getPropHandler().tryApplyProp(
                 new PropNailed(PropTurns::indefinite));
             }

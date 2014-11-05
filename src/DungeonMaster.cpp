@@ -24,7 +24,7 @@ int       xp_    = 0;
 TimeData  timeStarted_;
 
 void playerGainLvl() {
-  if(Map::player->deadState == ActorDeadState::alive) {
+  if(Map::player->isAlive()) {
     clvl_++;
 
     Log::addMsg("Welcome to level " + toStr(clvl_) + "!", clrGreen,
@@ -88,14 +88,14 @@ int getCLvl()             {return clvl_;}
 int getXp()               {return xp_;}
 TimeData getTimeStarted() {return timeStarted_;}
 
-int getMonsterTotXpWorth(const ActorDataT& d) {
+int getMonTotXpWorth(const ActorDataT& d) {
   //K regulates player XP rate, higher -> more XP per monster
   const double K          = 0.6;
   const double HP         = d.hp;
   const double SPEED      = double(d.speed);
   const double SPEED_MAX  = double(ActorSpeed::END);
-  const double SHOCK      = double(d.monsterShockLvl);
-  const double SHOCK_MAX  = double(MonsterShockLvl::END);
+  const double SHOCK      = double(d.monShockLvl);
+  const double SHOCK_MAX  = double(MonShockLvl::END);
 
   const double SPEED_FACTOR   = (1.0 + ((SPEED / SPEED_MAX) * 0.50));
   const double SHOCK_FACTOR   = (1.0 + ((SHOCK / SHOCK_MAX) * 0.75));
@@ -105,7 +105,7 @@ int getMonsterTotXpWorth(const ActorDataT& d) {
 }
 
 void playerGainXp(const int XP_GAINED) {
-  if(Map::player->deadState == ActorDeadState::alive) {
+  if(Map::player->isAlive()) {
     for(int i = 0; i < XP_GAINED; ++i) {
       xp_++;
       if(clvl_ < PLAYER_MAX_CLVL) {
@@ -178,7 +178,7 @@ void winGame() {
   Query::waitForEscOrSpace();
 }
 
-void onMonsterKilled(Actor& actor) {
+void onMonKilled(Actor& actor) {
   ActorDataT& d = actor.getData();
 
   d.nrKills += 1;
@@ -189,18 +189,18 @@ void onMonsterKilled(Actor& actor) {
     }
   }
 
-  const int XP_WORTH_TOT  = getMonsterTotXpWorth(d);
-  Monster* const monster  = static_cast<Monster*>(&actor);
-  const int XP_GAINED     = monster->hasGivenXpForSpotting_ ?
+  const int XP_WORTH_TOT  = getMonTotXpWorth(d);
+  Mon* const mon  = static_cast<Mon*>(&actor);
+  const int XP_GAINED     = mon->hasGivenXpForSpotting_ ?
                             XP_WORTH_TOT / 2 : XP_WORTH_TOT;
   playerGainXp(XP_GAINED);
 }
 
-void onMonsterSpotted(Actor& actor) {
-  Monster* const monster = static_cast<Monster*>(&actor);
-  if(!monster->hasGivenXpForSpotting_) {
-    monster->hasGivenXpForSpotting_ = true;
-    playerGainXp(getMonsterTotXpWorth(monster->getData()) / 2);
+void onMonSpotted(Actor& actor) {
+  Mon* const mon = static_cast<Mon*>(&actor);
+  if(!mon->hasGivenXpForSpotting_) {
+    mon->hasGivenXpForSpotting_ = true;
+    playerGainXp(getMonTotXpWorth(mon->getData()) / 2);
   }
 }
 

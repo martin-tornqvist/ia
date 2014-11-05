@@ -5,7 +5,7 @@
 
 #include "ActorData.h"
 
-namespace PopulateMonsters {
+namespace PopulateMon {
 
 void trySpawnDueToTimePassed();
 
@@ -22,6 +22,6 @@ void mkSortedFreeCellsVector(const Pos& origin,
                              const bool blocked[MAP_W][MAP_H],
                              std::vector<Pos>& vectorRef);
 
-} //PopulateMonsters
+} //PopulateMon
 
 #endif

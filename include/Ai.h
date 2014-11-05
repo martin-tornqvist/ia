@@ -6,42 +6,41 @@
 #include "CmnTypes.h"
 #include "CmnData.h"
 
-class Monster;
+class Mon;
 
 namespace Ai {
 
 namespace Action {
 
-bool castRandomSpellIfAware(Monster* monsterActing);
+bool castRandomSpellIfAware(Mon& mon);
 
-bool handleClosedBlockingDoor(Monster& monster, std::vector<Pos> path);
+bool handleClosedBlockingDoor(Mon& mon, std::vector<Pos> path);
 
-bool handleInventory(Monster* monster);
+bool handleInventory(Mon& mon);
 
-bool makeRoomForFriend(Monster& monster);
+bool makeRoomForFriend(Mon& mon);
 
-bool moveToRandomAdjacentCell(Monster& monster);
+bool moveToRandomAdjCell(Mon& mon);
 
-bool moveTowardsTargetSimple(Monster& monster);
+bool moveToTgtSimple(Mon& mon);
 
-bool stepPath(Monster& monster, std::vector<Pos>& path);
+bool stepPath(Mon& mon, std::vector<Pos>& path);
 
-bool stepToLairIfLos(Monster& monster, const Pos& lairCell);
+bool stepToLairIfLos(Mon& mon, const Pos& lairCell);
 
 } //Action
 
 namespace Info {
 
-bool lookBecomePlayerAware(Monster& monster);
+bool lookBecomePlayerAware(Mon& mon);
 
-void setPathToLairIfNoLos(Monster& monster, std::vector<Pos>& path,
-                          const Pos& lairCell);
+void setPathToLairIfNoLos(Mon& mon, std::vector<Pos>& path, const Pos& lairCell);
 
-void setPathToLeaderIfNoLosToleader(Monster& monster, std::vector<Pos>& path);
+void setPathToLeaderIfNoLosToleader(Mon& mon, std::vector<Pos>& path);
 
-void setPathToPlayerIfAware(Monster& monster, std::vector<Pos>& path);
+void setPathToPlayerIfAware(Mon& mon, std::vector<Pos>& path);
 
-void setSpecialBlockedCells(Monster& monster, bool a[MAP_W][MAP_H]);
+void setSpecialBlockedCells(Mon& mon, bool a[MAP_W][MAP_H]);
 
 } //Info
 

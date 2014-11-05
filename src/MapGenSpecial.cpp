@@ -201,7 +201,7 @@ void mkForestTrees() {
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
 
-    bool vision[MAP_W][MAP_H];
+    bool fov[MAP_W][MAP_H];
 
     const int SEARCH_RADI = FOV_STD_RADI_INT - 2;
     const int TRY_PLACE_EVERY_N_STEP = 2;
@@ -212,7 +212,7 @@ void mkForestTrees() {
     for(size_t i = 0; i < path.size(); ++i) {
       if(pathWalkCount == TRY_PLACE_EVERY_N_STEP) {
 
-        Fov::runFovOnArray(blocked, path.at(i), vision, false);
+        Fov::runFovOnArray(blocked, path.at(i), fov, false);
 
         for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; ++dy) {
           for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; ++dx) {
@@ -225,12 +225,12 @@ void mkForestTrees() {
               Map::cells[X][Y].rigid->getId() == FeatureId::floor;
 
             bool isLeftOfPrev = true;
-            if(!graveCells.empty()) {
-              isLeftOfPrev = X < graveCells.back().x;
-            }
+            if(!graveCells.empty()) {isLeftOfPrev = X < graveCells.back().x;}
 
-            bool isPosOk = vision[X][Y] && IS_LEFT_OF_CHURCH &&
-                           !IS_ON_STONE_PATH && isLeftOfPrev;
+            bool isPosOk = fov[X][Y]         &&
+                           IS_LEFT_OF_CHURCH &&
+                           !IS_ON_STONE_PATH &&
+                           isLeftOfPrev;
 
             if(isPosOk) {
               for(int dy_small = -1; dy_small <= 1; dy_small++) {
@@ -288,7 +288,7 @@ bool mkIntroLvl() {
   mkForestTrees();
   mkForestLimit();
 
-  PopulateMonsters::populateIntroLvl();
+  PopulateMon::populateIntroLvl();
 
   return true;
 }

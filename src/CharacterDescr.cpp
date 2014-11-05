@@ -170,7 +170,7 @@ void getShockResSrcTitle(
   switch(shockSrc) {
     case ShockSrc::time:           strRef = "Time";                    break;
     case ShockSrc::castIntrSpell:  strRef = "Casting learned spells";  break;
-    case ShockSrc::seeMonster:     strRef = "Seeing monsters";         break;
+    case ShockSrc::seeMon:     strRef = "Seeing monsters";         break;
     case ShockSrc::useStrangeItem: strRef = "Using strange items";     break;
     case ShockSrc::misc:           strRef = "Other";                   break;
     case ShockSrc::END: {} break;

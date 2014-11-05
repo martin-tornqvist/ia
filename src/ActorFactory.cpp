@@ -96,7 +96,7 @@ Actor* mk(const ActorId id, const Pos& pos) {
   return actor;
 }
 
-void deleteAllMonsters() {
+void deleteAllMon() {
   vector<Actor*>& actors = GameTime::actors_;
 
   for(size_t i = 0; i < actors.size(); ++i) {
@@ -107,10 +107,9 @@ void deleteAllMonsters() {
   }
 }
 
-void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
-                    const bool MAKE_MONSTERS_AWARE,
-                    Actor* const actorToSetAsLeader,
-                    vector<Monster*>* monstersRet) {
+void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
+               const bool MAKE_MONSTERS_AWARE, Actor* const actorToSetAsLeader,
+               vector<Mon*>* monstersRet) {
 
   if(monstersRet) {monstersRet->clear();}
 
@@ -132,16 +131,16 @@ void summonMonsters(const Pos& origin, const vector<ActorId>& monsterIds,
     const ActorId id  = monsterIds.at(i);
 
     Actor*   const actor    = mk(id, pos);
-    Monster* const monster  = static_cast<Monster*>(actor);
+    Mon* const mon  = static_cast<Mon*>(actor);
 
     if(monstersRet) {
-      monstersRet->push_back(monster);
+      monstersRet->push_back(mon);
     }
     if(actorToSetAsLeader) {
-      monster->leader = actorToSetAsLeader;
+      mon->leader = actorToSetAsLeader;
     }
     if(MAKE_MONSTERS_AWARE) {
-      monster->awareOfPlayerCounter_ = monster->getData().nrTurnsAwarePlayer;
+      mon->awareCounter_ = mon->getData().nrTurnsAwarePlayer;
     }
 
     if(Map::player->isSeeingActor(*actor, nullptr)) {

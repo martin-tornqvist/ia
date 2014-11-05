@@ -26,9 +26,9 @@ protected:
   Pred() {}
 };
 
-class BlocksVision : public Pred {
+class BlocksLos : public Pred {
 public:
-  BlocksVision() : Pred() {}
+  BlocksLos() : Pred() {}
   bool isCheckingCells()          const override {return true;}
   bool isCheckingMobs()           const override {return true;}
   bool check(const Cell& c)       const override;

@@ -65,8 +65,8 @@ void Trap::setSpecificTrapFromId(const TrapId id) {
       specificTrap_ = new TrapBlindingFlash(pos_);   break;
     case TrapId::teleport:
       specificTrap_ = new TrapTeleport(pos_); break;
-    case TrapId::summonMonster:
-      specificTrap_ = new TrapSummonMonster(pos_); break;
+    case TrapId::summonMon:
+      specificTrap_ = new TrapSummonMon(pos_); break;
     case TrapId::smoke:
       specificTrap_ = new TrapSmoke(pos_); break;
     case TrapId::alarm:
@@ -128,8 +128,8 @@ void Trap::bump(Actor& actorBumping) {
     } else {
       if(d.actorSize == actorSize_humanoid && !d.isSpider) {
         TRACE << "Humanoid monster bumping" << endl;
-        Monster* const monster = static_cast<Monster*>(&actorBumping);
-        if(monster->awareOfPlayerCounter_ > 0 && !monster->isStealth) {
+        Mon* const mon = static_cast<Mon*>(&actorBumping);
+        if(mon->awareCounter_ > 0 && !mon->isStealth) {
           TRACE << "Monster eligible for triggering trap" << endl;
 
           const bool IS_ACTOR_SEEN_BY_PLAYER =
@@ -252,8 +252,8 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES) {
 
   //Destroy any corpse on the trap
   for(Actor* actor : GameTime::actors_) {
-    if(actor->pos == pos_ && actor->deadState == ActorDeadState::corpse) {
-      actor->deadState = ActorDeadState::destroyed;
+    if(actor->pos == pos_ && actor->isCorpse()) {
+      actor->state = ActorState::destroyed;
     }
   }
 
@@ -378,7 +378,7 @@ void TrapDart::trigger(
 
       const int DMG = Rnd::dice(1, 8);
       actor.hit(DMG, DmgType::physical);
-      if(actor.deadState == ActorDeadState::alive && isPoisoned) {
+      if(actor.isAlive() && isPoisoned) {
 //        if(IS_PLAYER) {
 //          Log::addMsg("It was poisoned!");
 //        }
@@ -451,7 +451,7 @@ void TrapSpear::trigger(
 
       const int DMG = Rnd::dice(2, 6);
       actor.hit(DMG, DmgType::physical);
-      if(actor.deadState == ActorDeadState::alive && isPoisoned) {
+      if(actor.isAlive() && isPoisoned) {
 //        if(IS_PLAYER) {
 //          Log::addMsg("It was poisoned!");
 //        }
@@ -618,7 +618,7 @@ void TrapTeleport::trigger(
   TRACE_FUNC_END_VERBOSE;
 }
 
-void TrapSummonMonster::trigger(
+void TrapSummonMon::trigger(
   Actor& actor, const AbilityRollResult dodgeResult) {
 
   TRACE_FUNC_BEGIN_VERBOSE;
@@ -666,7 +666,7 @@ void TrapSummonMonster::trigger(
     const ActorId actorIdToSummon = summonBucket.at(ELEMENT);
     TRACE << "Actor id: " << int(actorIdToSummon) << endl;
 
-    ActorFactory::summonMonsters(pos_, vector<ActorId>(1, actorIdToSummon), true);
+    ActorFactory::summonMon(pos_, vector<ActorId>(1, actorIdToSummon), true);
     TRACE << "Monster was summoned" << endl;
   }
   TRACE_FUNC_END_VERBOSE;
@@ -716,7 +716,7 @@ void TrapAlarm::trigger(
   }
 
   Snd snd("I hear an alarm sounding!", SfxId::END, msgIgnoreRule, pos_,
-          &actor, SndVol::high, AlertsMonsters::yes);
+          &actor, SndVol::high, AlertsMon::yes);
   SndEmit::emitSnd(snd);
   TRACE_FUNC_END_VERBOSE;
 }

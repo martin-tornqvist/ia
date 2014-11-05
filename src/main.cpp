@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
 
       //========== M A I N   L O O P ==========
       while(!Init::quitToMainMenu) {
-        if(Map::player->deadState == ActorDeadState::alive) {
+        if(Map::player->isAlive()) {
 
           Actor* const actor = GameTime::getCurActor();
 
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
           actor->updateClr();
 
           const bool ALLOW_ACT  = actor->getPropHandler().allowAct();
-          const bool IS_GIBBED  = actor->deadState == ActorDeadState::destroyed;
+          const bool IS_GIBBED  = actor->getState() == ActorState::destroyed;
 
           if(ALLOW_ACT && !IS_GIBBED) {
             actor->onActorTurn();

@@ -70,7 +70,7 @@ void Smoke::onNewTurn() {
           if(actor->isHumanoid()) {sndMsg = "I hear choking.";}
         }
 
-        const auto alerts = IS_PLAYER ? AlertsMonsters::yes : AlertsMonsters::no;
+        const auto alerts = IS_PLAYER ? AlertsMon::yes : AlertsMon::no;
 
         SndEmit::emitSnd(Snd(sndMsg, SfxId::END, IgnoreMsgIfOriginSeen::yes, actor->pos,
                              actor, SndVol::low, alerts));
@@ -126,14 +126,14 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const {
   const int R = FOV_STD_RADI_INT; //getLightRadius();
   Pos p0(max(0,         pos_.x - R),  max(0,          pos_.y - R));
   Pos p1(min(MAP_W - 1, pos_.x + R),  min(MAP_H - 1,  pos_.y + R));
-  bool visionBlockers[MAP_W][MAP_H];
+  bool losBlockers[MAP_W][MAP_H];
   for(int y = p0.y; y <= p1.y; ++y) {
     for(int x = p0.x; x <= p1.x; ++x) {
-      visionBlockers[x][y] = !Map::cells[x][y].rigid->isVisionPassable();
+      losBlockers[x][y] = !Map::cells[x][y].rigid->isLosPassable();
     }
   }
 
-  Fov::runFovOnArray(visionBlockers, pos_, myLight, false);
+  Fov::runFovOnArray(losBlockers, pos_, myLight, false);
   for(int y = p0.y; y <= p1.y; ++y) {
     for(int x = p0.x; x <= p1.x; ++x) {
       if(myLight[x][y]) {light[x][y] = true;}

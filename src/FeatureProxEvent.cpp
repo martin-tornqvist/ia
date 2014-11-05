@@ -60,38 +60,38 @@ void ProxEventWallCrumble::onPlayerAdj() {
     }
 
     //Spawn things
-    int nrMonsterLimitExceptAdjToEntry = 9999;
-    ActorId monsterType = ActorId::zombie;
+    int nrMonLimitExceptAdjToEntry = 9999;
+    ActorId monType = ActorId::zombie;
     const int RND = Rnd::range(1, 5);
     switch(RND) {
       case 1: {
-        monsterType = ActorId::zombie;
-        nrMonsterLimitExceptAdjToEntry = 4;
+        monType = ActorId::zombie;
+        nrMonLimitExceptAdjToEntry = 4;
       } break;
 
       case 2: {
-        monsterType = ActorId::zombieAxe;
-        nrMonsterLimitExceptAdjToEntry = 3;
+        monType = ActorId::zombieAxe;
+        nrMonLimitExceptAdjToEntry = 3;
       } break;
 
       case 3: {
-        monsterType = ActorId::bloatedZombie;
-        nrMonsterLimitExceptAdjToEntry = 1;
+        monType = ActorId::bloatedZombie;
+        nrMonLimitExceptAdjToEntry = 1;
       } break;
 
       case 4: {
-        monsterType = ActorId::rat;
-        nrMonsterLimitExceptAdjToEntry = 30;
+        monType = ActorId::rat;
+        nrMonLimitExceptAdjToEntry = 30;
       } break;
 
       case 5: {
-        monsterType = ActorId::ratThing;
-        nrMonsterLimitExceptAdjToEntry = 20;
+        monType = ActorId::ratThing;
+        nrMonLimitExceptAdjToEntry = 20;
       } break;
 
       default: {} break;
     }
-    int nrMonstersSpawned = 0;
+    int nrMonSpawned = 0;
 
     random_shuffle(begin(innerCells_), end(innerCells_));
 
@@ -103,13 +103,11 @@ void ProxEventWallCrumble::onPlayerAdj() {
         Map::mkBlood(p);
       }
 
-      if(
-        nrMonstersSpawned < nrMonsterLimitExceptAdjToEntry ||
-        Utils::isPosAdj(p, pos_, false)) {
-        Actor* const actor              = ActorFactory::mk(monsterType, p);
-        Monster* const monster          = static_cast<Monster*>(actor);
-        monster->awareOfPlayerCounter_  = monster->getData().nrTurnsAwarePlayer;
-        ++nrMonstersSpawned;
+      if(nrMonSpawned < nrMonLimitExceptAdjToEntry || Utils::isPosAdj(p, pos_, false)) {
+        Actor*  const actor = ActorFactory::mk(monType, p);
+        Mon*    const mon   = static_cast<Mon*>(actor);
+        mon->awareCounter_  = mon->getData().nrTurnsAwarePlayer;
+        ++nrMonSpawned;
       }
     }
 

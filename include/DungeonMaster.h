@@ -23,8 +23,8 @@ int getCLvl();
 int getXp();
 TimeData getTimeStarted();
 
-void onMonsterKilled(Actor& actor);
-void onMonsterSpotted(Actor& actor);
+void onMonKilled(Actor& actor);
+void onMonSpotted(Actor& actor);
 
 void winGame();
 
@@ -32,7 +32,7 @@ void setTimeStartedToNow();
 
 void playerLoseXpPercent(const int PERCENT);
 
-int getMonsterTotXpWorth(const ActorDataT& d);
+int getMonTotXpWorth(const ActorDataT& d);
 
 int getXpToNextLvl();
 

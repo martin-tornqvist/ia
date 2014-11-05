@@ -109,7 +109,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   SndVol vol = explType == ExplType::expl ? SndVol::high : SndVol::low;
 
   Snd snd("I hear an explosion!", sfx, IgnoreMsgIfOriginSeen::yes, origin,
-          nullptr, vol, AlertsMonsters::yes);
+          nullptr, vol, AlertsMon::yes);
   SndEmit::emitSnd(snd);
 
   draw(posLists, blocked, clrOverride);
@@ -128,9 +128,9 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
 
   for(Actor* actor : GameTime::actors_) {
     const Pos& pos = actor->pos;
-    if(actor->deadState == ActorDeadState::alive) {
+    if(actor->isAlive()) {
       livingActors[pos.x][pos.y] = actor;
-    } else if(actor->deadState == ActorDeadState::corpse) {
+    } else if(actor->isCorpse()) {
       corpses[pos.x][pos.y].push_back(actor);
     }
   }
@@ -224,7 +224,7 @@ void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION*/) {
 
   //TODO Sound message?
   Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, origin, nullptr,
-          SndVol::low, AlertsMonsters::yes);
+          SndVol::low, AlertsMon::yes);
   SndEmit::emitSnd(snd);
 
   for(const vector<Pos>& inner : posLists) {

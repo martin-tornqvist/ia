@@ -34,7 +34,7 @@ void resetData(FeatureDataT& d) {
   d.moveRules.reset();
   d.isSoundPassable = true;
   d.isProjectilePassable = true;
-  d.isVisionPassable = true;
+  d.isLosPassable = true;
   d.isSmokePassable = true;
   d.canHaveBlood = true;
   d.canHaveGore = true;
@@ -82,7 +82,7 @@ void initDataList() {
   d.moveRules.setPropCanMove(propBurrowing);
   d.isSoundPassable = false;
   d.isProjectilePassable = false;
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   d.isSmokePassable = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -99,7 +99,7 @@ void initDataList() {
   d.moveRules.setPropCanMove(propFlying);
   d.isSoundPassable = false;
   d.isProjectilePassable = false;
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -228,7 +228,7 @@ void initDataList() {
   d.moveRules.setPropCanMove(propFlying);
   d.moveRules.setPropCanMove(propOoze);
   d.isProjectilePassable = false;
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -254,7 +254,7 @@ void initDataList() {
   d.moveRules.setPropCanMove(propOoze);
   d.moveRules.setPropCanMove(propBurrowing);
   d.isProjectilePassable = false;
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   d.isSmokePassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
@@ -280,7 +280,7 @@ void initDataList() {
   d.glyph = 5;
   d.tile = TileId::witchOrWarlock;
   d.isProjectilePassable = false;
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -297,7 +297,7 @@ void initDataList() {
   d.glyph = '8';
   d.tile = TileId::cocoon;
   d.isProjectilePassable = true;
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -325,7 +325,7 @@ void initDataList() {
   d.glyph = '7';
   d.tile = TileId::cabinetClosd;
   d.isProjectilePassable = false;
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -340,7 +340,7 @@ void initDataList() {
   d.glyph = '%';
   d.tile = TileId::fountain;
   d.isProjectilePassable = false;
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -357,7 +357,7 @@ void initDataList() {
   d.glyph = '|';
   d.tile = TileId::pillar;
   d.isProjectilePassable = false;
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -437,7 +437,7 @@ void initDataList() {
   d.glyph = '*';
   d.tile = TileId::smoke;
   d.moveRules.setCanMoveCmn();
-  d.isVisionPassable = false;
+  d.isLosPassable = false;
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::proxEventWallCrumble;

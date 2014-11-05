@@ -15,12 +15,12 @@ using namespace std;
 //------------------------------------------------------------ CELL PREDICATES
 namespace CellPred {
 
-bool BlocksVision::check(const Cell& c)  const {
-  return !c.rigid->isVisionPassable();
+bool BlocksLos::check(const Cell& c)  const {
+  return !c.rigid->isLosPassable();
 }
 
-bool BlocksVision::check(const Mob& f) const {
-  return !f.isVisionPassable();
+bool BlocksLos::check(const Mob& f) const {
+  return !f.isLosPassable();
 }
 
 bool BlocksMoveCmn::check(const Cell& c) const {
@@ -32,7 +32,7 @@ bool BlocksMoveCmn::check(const Mob& f) const {
 }
 
 bool BlocksMoveCmn::check(const Actor& a) const {
-  return a.deadState == ActorDeadState::alive;
+  return a.isAlive();
 }
 
 BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking) :
@@ -49,7 +49,7 @@ bool BlocksActor::check(const Mob& f) const {
 }
 
 bool BlocksActor::check(const Actor& a) const {
-  return a.deadState == ActorDeadState::alive;
+  return a.isAlive();
 }
 
 bool BlocksProjectiles::check(const Cell& c)  const {
@@ -61,7 +61,7 @@ bool BlocksProjectiles::check(const Mob& f)  const {
 }
 
 bool LivingActorsAdjToPos::check(const Actor& a) const {
-  if(a.deadState != ActorDeadState::alive) {
+  if(!a.isAlive()) {
     return false;
   }
   return Utils::isPosAdj(pos_, a.pos, true);

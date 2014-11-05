@@ -70,14 +70,14 @@ struct CellRenderData {
     isLightFadeAllowed(true),
     isMarkedLit(false),
     isLivingActorSeenHere(false),
-    isAwareOfMonsterHere(false) {}
+    isAwareOfMonHere(false) {}
 
   Clr     clr;
   Clr     clrBg;
   TileId  tile;
   char    glyph;
   int     lifebarLength;
-  bool    isLightFadeAllowed, isMarkedLit, isLivingActorSeenHere, isAwareOfMonsterHere;
+  bool    isLightFadeAllowed, isMarkedLit, isLivingActorSeenHere, isAwareOfMonHere;
 };
 
 
@@ -128,7 +128,7 @@ struct Pos {
   bool operator<=(const Pos&  p)  const {return x <= p.x  && y <= p.y;}
   bool operator<=(const int   V)  const {return x <= V    && y <= V;}
 
-  Pos getSigns() const {
+  inline Pos getSigns() const {
     return Pos(x == 0 ? 0 : x > 0 ? 1 : -1,
                y == 0 ? 0 : y > 0 ? 1 : -1);
   }
@@ -256,7 +256,7 @@ enum class Dir {
   END
 };
 
-enum class ActorDeadState {alive, corpse, destroyed};
+enum class ActorState {alive, corpse, destroyed};
 
 enum HorizontalVertical {hor, ver};
 

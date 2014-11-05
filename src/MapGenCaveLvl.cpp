@@ -97,7 +97,7 @@ bool mkCaveLvl() {
 
   Map::put(new Stairs(floodVals.at(STAIR_ELEMENT).pos));
 
-  PopulateMonsters::populateCaveLvl();
+  PopulateMon::populateCaveLvl();
 
   PopulateItems::mkItems();
 

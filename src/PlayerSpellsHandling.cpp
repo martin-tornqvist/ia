@@ -182,7 +182,7 @@ void tryCast(const SpellOpt& spellOpt) {
     if(isBloodSorc) {
       Map::player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure);
     }
-    if(Map::player->deadState == ActorDeadState::alive) {
+    if(Map::player->isAlive()) {
       spell->cast(Map::player, true);
       prevCast_ = spellOpt;
       if(isWarlock && Rnd::oneIn(2)) {

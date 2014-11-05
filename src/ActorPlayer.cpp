@@ -203,8 +203,7 @@ void Player::setupFromSaveLines(vector<string>& lines) {
     lines.erase(begin(lines));
     const int NR_TURNS = toInt(lines.front());
     lines.erase(begin(lines));
-    auto* const prop = propHandler_->mkProp(
-                         id, PropTurns::specific, NR_TURNS);
+    auto* const prop = propHandler_->mkProp(id, PropTurns::specific, NR_TURNS);
     propHandler_->tryApplyProp(prop, true, true, true, true);
     prop->setupFromSaveLines(lines);
   }
@@ -285,7 +284,7 @@ int Player::getShockResistance(const ShockSrc shockSrc) const {
       if(PlayerBon::getBg() == Bg::occultist) {res += 50;}
     } break;
 
-    case ShockSrc::seeMonster:
+    case ShockSrc::seeMon:
     case ShockSrc::time:
     case ShockSrc::misc:
     case ShockSrc::END: {} break;
@@ -314,8 +313,7 @@ void Player::incrShock(const ShockValue shockValue, ShockSrc shockSrc) {
   incrShock(int(shockValue), shockSrc);
 }
 
-void Player::restoreShock(const int amountRestored,
-                          const bool IS_TEMP_SHOCK_RESTORED) {
+void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RESTORED) {
   // If an obsession is active, only restore to a certain min level
   bool isObsessionActive = 0;
   for(int i = 0; i < int(Obsession::END); ++i) {
@@ -324,8 +322,7 @@ void Player::restoreShock(const int amountRestored,
       break;
     }
   }
-  const double MIN_SHOCK_WHEN_OBSESSION_DB =
-    double(MIN_SHOCK_WHEN_OBSESSION);
+  const double MIN_SHOCK_WHEN_OBSESSION_DB = double(MIN_SHOCK_WHEN_OBSESSION);
   shock_ = max(
              (isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION_DB : 0.0),
              shock_ - amountRestored);
@@ -352,13 +349,13 @@ void Player::incrInsanity() {
     Popup::showMsg(msg, true, "Complete insanity!", SfxId::insanityRise);
     die(true, false, false);
   } else {
-    bool playerSeeShockingMonster = false;
+    bool playerSeeShockingMon = false;
     vector<Actor*> seenFoes;
     getSeenFoes(seenFoes);
     for(Actor* actor : seenFoes) {
       const ActorDataT& def = actor->getData();
-      if(def.monsterShockLvl != MonsterShockLvl::none) {
-        playerSeeShockingMonster = true;
+      if(def.monShockLvl != MonShockLvl::none) {
+        playerSeeShockingMon = true;
       }
     }
 
@@ -368,7 +365,7 @@ void Player::incrInsanity() {
       const int ROLL = Rnd::range(1, 8);
       switch(ROLL) {
         case 1: {
-          if(playerSeeShockingMonster) {
+          if(playerSeeShockingMon) {
             if(Rnd::coinToss()) {
               msg += "I let out a terrified shriek.";
             } else {
@@ -376,7 +373,7 @@ void Player::incrInsanity() {
             }
             Popup::showMsg(msg, true, "Screaming!", SfxId::insanityRise);
             Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
-                    SndVol::high, AlertsMonsters::yes);
+                    SndVol::high, AlertsMon::yes);
             SndEmit::emitSnd(snd);
             return;
           }
@@ -391,7 +388,7 @@ void Player::incrInsanity() {
             Log::addMsg(playerName + ": " + phrase);
           }
           Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
-                  SndVol::low, AlertsMonsters::yes);
+                  SndVol::low, AlertsMon::yes);
           SndEmit::emitSnd(snd);
           return;
         } break;
@@ -407,7 +404,7 @@ void Player::incrInsanity() {
           msg += "I laugh nervously.";
           Popup::showMsg(msg, true, "HAHAHA!", SfxId::insanityRise);
           Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
-                  SndVol::low, AlertsMonsters::yes);
+                  SndVol::low, AlertsMon::yes);
           SndEmit::emitSnd(snd);
           return;
         } break;
@@ -541,7 +538,7 @@ void Player::incrInsanity() {
             const int NR_SHADOWS_LOWER  = 1;
             const int NR_SHADOWS_UPPER  = getConstrInRange(2, (Map::dlvl + 1) / 2, 6);
             const int NR                = Rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
-            ActorFactory::summonMonsters(pos, vector<ActorId>(NR, ActorId::shadow), true);
+            ActorFactory::summonMon(pos, vector<ActorId>(NR, ActorId::shadow), true);
             return;
           }
         } break;
@@ -660,7 +657,7 @@ void Player::testPhobias() {
 }
 
 void Player::updateClr() {
-  if(deadState != ActorDeadState::alive) {
+  if(!isAlive()) {
     clr_ = clrRed;
     return;
   }
@@ -691,7 +688,7 @@ void Player::onActorTurn() {
 
   resetPermShockTakenCurTurn();
 
-  if(deadState != ActorDeadState::alive) {return;}
+  if(!isAlive()) {return;}
 
   //If player dropped item, check if should go back to inventory screen
   vector<Actor*> seenFoes;
@@ -768,38 +765,34 @@ void Player::onStdTurn() {
 
   vector<Actor*> seenFoes;
   getSeenFoes(seenFoes);
-  double shockFromMonstersCurPlayerTurn = 0.0;
+  double shockFromMonCurPlayerTurn = 0.0;
   for(Actor* actor : seenFoes) {
-    DungeonMaster::onMonsterSpotted(*actor);
+    DungeonMaster::onMonSpotted(*actor);
 
-    Monster* monster = static_cast<Monster*>(actor);
+    Mon* mon = static_cast<Mon*>(actor);
 
-    monster->playerBecomeAwareOfMe();
+    mon->playerBecomeAwareOfMe();
 
-    const ActorDataT& data = monster->getData();
-    if(data.monsterShockLvl != MonsterShockLvl::none) {
-      switch(data.monsterShockLvl) {
-        case MonsterShockLvl::unsettling: {
-          monster->shockCausedCur_ =
-            min(monster->shockCausedCur_ + 0.05,  1.0);
+    const ActorDataT& data = mon->getData();
+    if(data.monShockLvl != MonShockLvl::none) {
+      switch(data.monShockLvl) {
+        case MonShockLvl::unsettling: {
+          mon->shockCausedCur_ = min(mon->shockCausedCur_ + 0.05,  1.0);
         } break;
-        case MonsterShockLvl::scary: {
-          monster->shockCausedCur_ =
-            min(monster->shockCausedCur_ + 0.1,   1.0);
+        case MonShockLvl::scary: {
+          mon->shockCausedCur_ = min(mon->shockCausedCur_ + 0.1,   1.0);
         } break;
-        case MonsterShockLvl::terrifying: {
-          monster->shockCausedCur_ =
-            min(monster->shockCausedCur_ + 0.5,   2.0);
+        case MonShockLvl::terrifying: {
+          mon->shockCausedCur_ = min(mon->shockCausedCur_ + 0.5,   2.0);
         } break;
-        case MonsterShockLvl::mindShattering: {
-          monster->shockCausedCur_ =
-            min(monster->shockCausedCur_ + 0.75,  3.0);
+        case MonShockLvl::mindShattering: {
+          mon->shockCausedCur_ = min(mon->shockCausedCur_ + 0.75,  3.0);
         } break;
         default: {} break;
       }
-      if(shockFromMonstersCurPlayerTurn < 2.5) {
-        incrShock(int(floor(monster->shockCausedCur_)), ShockSrc::seeMonster);
-        shockFromMonstersCurPlayerTurn += monster->shockCausedCur_;
+      if(shockFromMonCurPlayerTurn < 2.5) {
+        incrShock(int(floor(mon->shockCausedCur_)), ShockSrc::seeMon);
+        shockFromMonCurPlayerTurn += mon->shockCausedCur_;
       }
     }
   }
@@ -832,7 +825,7 @@ void Player::onStdTurn() {
     } else {
       nrTurnsUntilIns_ = -1;
       incrInsanity();
-      if(deadState == ActorDeadState::alive) {GameTime::actorDidAct();}
+      if(isAlive()) {GameTime::actorDidAct();}
       return;
     }
   } else {
@@ -840,31 +833,29 @@ void Player::onStdTurn() {
   }
 
   for(Actor* actor : GameTime::actors_) {
-    if(actor != this) {
-      if(actor->deadState == ActorDeadState::alive) {
+    if(actor != this && actor->isAlive()) {
 
-        Monster& monster = *static_cast<Monster*>(actor);
-        const bool IS_MONSTER_SEEN = isSeeingActor(*actor, nullptr);
-        if(IS_MONSTER_SEEN) {
-          if(!monster.messageMonsterInViewPrinted) {
-            if(activeMedicalBag || waitTurnsLeft > 0 || nrQuickMoveStepsLeft_ > 0) {
-              Log::addMsg(actor->getNameA() + " comes into my view.", clrWhite, true);
-            }
-            monster.messageMonsterInViewPrinted = true;
+      Mon& monster = *static_cast<Mon*>(actor);
+      const bool IS_MONSTER_SEEN = isSeeingActor(*actor, nullptr);
+      if(IS_MONSTER_SEEN) {
+        if(!monster.isMsgMonInViewPrinted) {
+          if(activeMedicalBag || waitTurnsLeft > 0 || nrQuickMoveStepsLeft_ > 0) {
+            Log::addMsg(actor->getNameA() + " comes into my view.", clrWhite, true);
           }
-        } else {
-          monster.messageMonsterInViewPrinted = false;
+          monster.isMsgMonInViewPrinted = true;
+        }
+      } else {
+        monster.isMsgMonInViewPrinted = false;
 
-          //Is the monster sneaking? Try to spot it
-          if(Map::cells[monster.pos.x][monster.pos.y].isSeenByPlayer) {
-            if(monster.isStealth) {
-              if(isSpottingHiddenActor(monster)) {
-                monster.isStealth = false;
-                updateFov();
-                Render::drawMapAndInterface();
-                const string monName = monster.getNameA();
-                Log::addMsg("I spot " + monName + "!", clrMsgWarning, true, true);
-              }
+        //Is the monster sneaking? Try to spot it
+        if(Map::cells[monster.pos.x][monster.pos.y].isSeenByPlayer) {
+          if(monster.isStealth) {
+            if(isSpottingHiddenActor(monster)) {
+              monster.isStealth = false;
+              updateFov();
+              Render::drawMapAndInterface();
+              const string monName = monster.getNameA();
+              Log::addMsg("I spot " + monName + "!", clrMsgWarning, true, true);
             }
           }
         }
@@ -977,13 +968,13 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
   if(HAS_SND_MSG) {
     Actor* const actorWhoMadeSnd = snd.getActorWhoMadeSound();
     if(actorWhoMadeSnd && actorWhoMadeSnd != this) {
-      static_cast<Monster*>(actorWhoMadeSnd)->playerBecomeAwareOfMe();
+      static_cast<Mon*>(actorWhoMadeSnd)->playerBecomeAwareOfMe();
     }
   }
 }
 
 void Player::moveDir(Dir dir) {
-  if(deadState == ActorDeadState::alive) {
+  if(isAlive()) {
 
     propHandler_->changeMoveDir(pos, dir);
 
@@ -1001,9 +992,10 @@ void Player::moveDir(Dir dir) {
     const Pos dest(pos + DirUtils::getOffset(dir));
 
     if(dir != Dir::center) {
+      Mon* const monAtDest = static_cast<Mon*>(Utils::getFirstActorAtPos(dest));
+
       //Attack?
-      Actor* const actorAtDest = Utils::getFirstActorAtPos(dest);
-      if(actorAtDest) {
+      if(monAtDest && monAtDest->leader != this) {
         if(propHandler_->allowAttackMelee(true)) {
           bool hasMeleeWpn = false;
           Item* const item = inv_->getItemInSlot(SlotId::wielded);
@@ -1011,11 +1003,11 @@ void Player::moveDir(Dir dir) {
             Wpn* const wpn = static_cast<Wpn*>(item);
             if(wpn->getData().melee.isMeleeWpn) {
               if(Config::isRangedWpnMeleeePrompt() &&
-                  isSeeingActor(*actorAtDest, nullptr)) {
+                  isSeeingActor(*monAtDest, nullptr)) {
                 if(wpn->getData().ranged.isRangedWpn) {
                   const string wpnName = wpn->getName(ItemRefType::a);
                   Log::addMsg(
-                    "Attack " + actorAtDest->getNameThe() +
+                    "Attack " + monAtDest->getNameThe() +
                     " with " + wpnName + "? (y/n)", clrWhiteHigh);
                   Render::drawMapAndInterface();
                   if(Query::yesOrNo() == YesNoAnswer::no) {
@@ -1025,12 +1017,12 @@ void Player::moveDir(Dir dir) {
                   }
                 }
               }
-              Attack::melee(*this, *wpn, *actorAtDest);
-              target = actorAtDest;
+              Attack::melee(*this, *wpn, *monAtDest);
+              target = monAtDest;
               return;
             }
           }
-          if(!hasMeleeWpn) {punchMonster(*actorAtDest);}
+          if(!hasMeleeWpn) {punchMon(*monAtDest);}
         }
         return;
       }
@@ -1065,6 +1057,12 @@ void Player::moveDir(Dir dir) {
         } else if(ENC >= 100) {
           Log::addMsg("I stagger.", clrMsgWarning);
           propHandler_->tryApplyProp(new PropWaiting(PropTurns::std));
+        }
+
+        //Displace allied monster
+        if(monAtDest && monAtDest->leader == this) {
+          Log::addMsg("I displace " + monAtDest->getNameA() + ".");
+          monAtDest->pos = pos;
         }
 
         pos = dest;
@@ -1111,13 +1109,12 @@ void Player::moveDir(Dir dir) {
 }
 
 void Player::autoMelee() {
-  if(target) {
-    if(Utils::isPosAdj(pos, target->pos, false)) {
-      if(isSeeingActor(*target, nullptr)) {
-        moveDir(DirUtils::getDir(target->pos - pos));
-        return;
-      }
-    }
+  if(
+    target                                    &&
+    Utils::isPosAdj(pos, target->pos, false)  &&
+    isSeeingActor(*target, nullptr)) {
+    moveDir(DirUtils::getDir(target->pos - pos));
+    return;
   }
 
   //If this line reached, there is no adjacent cur target.
@@ -1137,7 +1134,7 @@ void Player::autoMelee() {
   }
 }
 
-void Player::kickMonster(Actor& actorToKick) {
+void Player::kickMon(Actor& actorToKick) {
   Wpn* kickWpn = nullptr;
 
   const ActorDataT& d = actorToKick.getData();
@@ -1151,7 +1148,7 @@ void Player::kickMonster(Actor& actorToKick) {
   delete kickWpn;
 }
 
-void Player::punchMonster(Actor& actorToPunch) {
+void Player::punchMon(Actor& actorToPunch) {
   //Spawn a temporary punch weapon to attack with
   Wpn* punchWpn = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerPunch));
   Attack::melee(*this, *punchWpn, actorToPunch);
@@ -1187,15 +1184,15 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const {
     Pos p0(max(0, pos.x - RADI), max(0, pos.y - RADI));
     Pos p1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
 
-    bool visionBlockers[MAP_W][MAP_H];
+    bool losBlockers[MAP_W][MAP_H];
     for(int y = p0.y; y <= p1.y; ++y) {
       for(int x = p0.x; x <= p1.x; ++x) {
         const auto* const f = Map::cells[x][y].rigid;
-        visionBlockers[x][y] = !f->isVisionPassable();
+        losBlockers[x][y] = !f->isLosPassable();
       }
     }
 
-    Fov::runFovOnArray(visionBlockers, pos, myLight, false);
+    Fov::runFovOnArray(losBlockers, pos, myLight, false);
     for(int y = p0.y; y <= p1.y; ++y) {
       for(int x = p0.x; x <= p1.x; ++x) {
         if(myLight[x][y]) {
@@ -1221,7 +1218,7 @@ void Player::updateFov() {
 
   if(propHandler_->allowSee()) {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(), blocked);
+    MapParse::parse(CellPred::BlocksLos(), blocked);
     Fov::runPlayerFov(blocked, pos);
     Map::cells[pos.x][pos.y].isSeenByPlayer = true;
   }
@@ -1232,6 +1229,22 @@ void Player::updateFov() {
     for(int x = 0; x < MAP_W; ++x) {
       for(int y = 0; y < MAP_H; ++y) {
         Map::cells[x][y].isSeenByPlayer = true;
+      }
+    }
+  }
+
+  //Player see a small area around friendly creatures
+  for(const Actor* const actor : GameTime::actors_) {
+    if(actor != this) {
+      const Mon* const mon = static_cast<const Mon*>(actor);
+      if(mon->leader == this) {
+        const Pos& p = mon->pos;
+        const Rect r(p - 1, p + 1);
+        for(int x = r.p0.x; x <= r.p1.x; ++x) {
+          for(int y = r.p0.y; y <= r.p1.y; ++y) {
+            Map::cells[x][y].isSeenByPlayer = true;
+          }
+        }
       }
     }
   }
@@ -1250,32 +1263,45 @@ void Player::updateFov() {
 }
 
 void Player::FOVhack() {
-  bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
+  bool losBlockers[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksLos(), losBlockers);
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
   for(int x = 0; x < MAP_W; ++x) {
     for(int y = 0; y < MAP_H; ++y) {
-      if(visionBlockers[x][y] && blocked[x][y]) {
-        for(int dx = -1; dx <= 1; ++dx) {
-          for(int dy = -1; dy <= 1; ++dy) {
-            const Pos adj(x + dx, y + dy);
-            if(Utils::isPosInsideMap(adj)) {
-              const Cell& adjCell = Map::cells[adj.x][adj.y];
-              if(
-                adjCell.isSeenByPlayer &&
-                (!adjCell.isDark || adjCell.isLit) &&
-                !blocked[adj.x][adj.y]) {
-                Map::cells[x][y].isSeenByPlayer = true;
-                dx = 999;
-                dy = 999;
-              }
+      if(losBlockers[x][y] && blocked[x][y]) {
+        const Pos p(x, y);
+
+        for(const Pos& d : DirUtils::dirList) {
+          const Pos pAdj(p + d);
+
+          if(Utils::isPosInsideMap(pAdj)) {
+            const Cell& adjCell = Map::cells[pAdj.x][pAdj.y];
+            if(
+              adjCell.isSeenByPlayer              &&
+              (!adjCell.isDark || adjCell.isLit)  &&
+              !blocked[pAdj.x][pAdj.y]) {
+              Map::cells[x][y].isSeenByPlayer = true;
+              break;
             }
           }
         }
       }
     }
   }
+}
+
+bool Player::isLeaderOf(const Actor& actor) const {
+  if(actor.isPlayer()) {
+    return false;
+  } else {
+    return static_cast<const Mon*>(&actor)->leader == this;
+  }
+}
+
+bool Player::isActorMyLeader(const Actor& actor) const {
+  (void)actor;
+  return false;
 }

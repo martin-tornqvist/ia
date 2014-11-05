@@ -1148,7 +1148,7 @@ bool mkStdLvl() {
 
   if(isMapValid) {movePlayerToNearestAllowedPos();}
 
-  if(isMapValid) {PopulateMonsters::populateStdLvl();}
+  if(isMapValid) {PopulateMon::populateStdLvl();}
   if(isMapValid) {PopulateTraps::populateStdLvl();}
   if(isMapValid) {PopulateItems::mkItems();}
 

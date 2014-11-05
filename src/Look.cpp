@@ -26,13 +26,13 @@ namespace AutoDescrActor {
 namespace {
 
 string getNormalGroupSizeStr(const ActorDataT& def) {
-  const MonsterGroupSize s = def.groupSize;
+  const MonGroupSize s = def.groupSize;
 
   return
-    s == monsterGroupSize_alone ? "alone"           :
-    s == monsterGroupSizeFew    ? "in small groups" :
-    s == monsterGroupSizeGroup  ? "in groups"       :
-    s == monsterGroupSizeHorde  ? "in hordes"       : "in swarms";
+    s == MonGroupSize::alone ? "alone"           :
+    s == MonGroupSize::few    ? "in small groups" :
+    s == MonGroupSize::group  ? "in groups"       :
+    s == MonGroupSize::horde  ? "in hordes"       : "in swarms";
 }
 
 string getSpeedStr(const ActorDataT& def) {
@@ -106,7 +106,7 @@ void printLocationInfoMsgs(const Pos& pos) {
 
     //Describe dead actors.
     for(Actor* actor : GameTime::actors_) {
-      if(actor->deadState == ActorDeadState::corpse && actor->pos == pos) {
+      if(actor->isCorpse() && actor->pos == pos) {
         str = actor->getCorpseNameA();
         Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
       }
@@ -115,7 +115,7 @@ void printLocationInfoMsgs(const Pos& pos) {
     //Describe living actor.
     Actor* actor = Utils::getFirstActorAtPos(pos);
     if(actor && actor != Map::player) {
-      if(actor->deadState == ActorDeadState::alive) {
+      if(actor->isAlive()) {
         if(Map::player->isSeeingActor(*actor, nullptr)) {
           str = actor->getNameA();
           Log::addMsg(TextFormatting::firstToUpper(str)  + ".");

@@ -10,7 +10,7 @@
 class Actor;
 
 enum class SndVol                 {low, high};
-enum class AlertsMonsters         {no, yes};
+enum class AlertsMon         {no, yes};
 enum class IgnoreMsgIfOriginSeen  {no, yes};
 
 class Snd {
@@ -21,11 +21,11 @@ public:
     const IgnoreMsgIfOriginSeen ignoreMsgIfOriginSeen,
     const Pos& origin,
     Actor* const actorWhoMadeSound, const SndVol vol,
-    const AlertsMonsters alertingMonsters) :
+    const AlertsMon alertingMon) :
     msg_(msg), sfx_(sfx),
     isMsgIgnoredIfOriginSeen_(ignoreMsgIfOriginSeen),
     origin_(origin), actorWhoMadeSound_(actorWhoMadeSound), vol_(vol),
-    isAlertingMonsters_(alertingMonsters) {}
+    isAlertingMon_(alertingMon) {}
 
   Snd() {}
   ~Snd() {}
@@ -37,8 +37,8 @@ public:
   inline bool isMsgIgnoredIfOriginSeen() const {
     return isMsgIgnoredIfOriginSeen_ == IgnoreMsgIfOriginSeen::yes;
   }
-  inline bool isAlertingMonsters() const {
-    return isAlertingMonsters_ == AlertsMonsters::yes;
+  inline bool isAlertingMon() const {
+    return isAlertingMon_ == AlertsMon::yes;
   }
 
   inline Pos getOrigin()                const {return origin_;}
@@ -56,7 +56,7 @@ private:
   Pos origin_;
   Actor* actorWhoMadeSound_;
   SndVol vol_;
-  AlertsMonsters isAlertingMonsters_;
+  AlertsMon isAlertingMon_;
 };
 
 namespace SndEmit {

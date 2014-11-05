@@ -47,7 +47,7 @@ void Feature::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const
 }
 
 bool      Feature::isSoundPassable()      const {return getData().isSoundPassable;}
-bool      Feature::isVisionPassable()     const {return getData().isVisionPassable;}
+bool      Feature::isLosPassable()     const {return getData().isLosPassable;}
 bool      Feature::isProjectilePassable() const {return getData().isProjectilePassable;}
 bool      Feature::isSmokePassable()      const {return getData().isSmokePassable;}
 bool      Feature::isBottomless()         const {return getData().isBottomless;}

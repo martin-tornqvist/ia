@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace PopulateMonsters {
+namespace PopulateMon {
 
 namespace {
 
@@ -26,7 +26,7 @@ int getRandomOutOfDepth() {
   return 0;
 }
 
-void mkListOfMonstersCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
+void mkListOfMonCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
                                   vector<ActorId>& listRef) {
   listRef.clear();
 
@@ -50,7 +50,7 @@ void mkGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
                        const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
                        const bool IS_ROAMING_ALLOWED) {
   vector<ActorId> idBucket;
-  mkListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
+  mkListOfMonCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
   if(!idBucket.empty()) {
     const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
@@ -66,18 +66,18 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
 
   const int NR_LVLS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
   vector<ActorId> idBucket;
-  mkListOfMonstersCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
+  mkListOfMonCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
 
   for(size_t i = 0; i < idBucket.size(); ++i) {
     const ActorDataT& d = ActorData::data[int(idBucket.at(i))];
-    bool isMonsterNativeToRoom = false;
+    bool isMonNativeToRoom = false;
     for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++) {
       if(d.nativeRooms.at(iNative) == roomType) {
-        isMonsterNativeToRoom = true;
+        isMonNativeToRoom = true;
         break;
       }
     }
-    if(!isMonsterNativeToRoom) {
+    if(!isMonNativeToRoom) {
       idBucket.erase(idBucket.begin() + i);
       i--;
     }
@@ -325,10 +325,10 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
   int maxNrInGroup = 1;
 
   switch(d.groupSize) {
-    case monsterGroupSizeFew:    maxNrInGroup = Rnd::range(1, 2);    break;
-    case monsterGroupSizeGroup:  maxNrInGroup = Rnd::range(3, 4);    break;
-    case monsterGroupSizeHorde:  maxNrInGroup = Rnd::range(6, 7);    break;
-    case monsterGroupSizeSwarm:  maxNrInGroup = Rnd::range(10, 12);  break;
+    case MonGroupSize::few:    maxNrInGroup = Rnd::range(1, 2);    break;
+    case MonGroupSize::group:  maxNrInGroup = Rnd::range(3, 4);    break;
+    case MonGroupSize::horde:  maxNrInGroup = Rnd::range(6, 7);    break;
+    case MonGroupSize::swarm:  maxNrInGroup = Rnd::range(10, 12);  break;
     default: {} break;
   }
 
@@ -340,13 +340,13 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
     const Pos& pos = sortedFreeCellsVector.at(i);
 
     Actor* const actor = ActorFactory::mk(id, pos);
-    Monster* const monster = static_cast<Monster*>(actor);
-    monster->isRoamingAllowed_ = IS_ROAMING_ALLOWED;
+    Mon* const mon = static_cast<Mon*>(actor);
+    mon->isRoamingAllowed_ = IS_ROAMING_ALLOWED;
 
     if(i == 0) {
       originActor = actor;
     } else {
-      monster->leader = originActor;
+      mon->leader = originActor;
     }
 
     blocked[pos.x][pos.y] = true;
@@ -374,4 +374,4 @@ void mkSortedFreeCellsVector(const Pos& origin,
   std::sort(vectorRef.begin(), vectorRef.end(), sorter);
 }
 
-} //PopulateMonsters
+} //PopulateMon

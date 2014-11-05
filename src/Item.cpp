@@ -282,7 +282,7 @@ string Wpn::getNameInf() const {
 
 //--------------------------------------------------------- STAFF OF THE PHARAOHS
 PharaohStaff::PharaohStaff(ItemDataT* const itemData) : Wpn(itemData, nullptr) {
-  carrierSpells_.push_back(new SpellPharaohStaffLocusts);
+  carrierSpells_.push_back(new SpellPharaohStaff);
 }
 
 //--------------------------------------------------------- MACHINE GUN
@@ -523,9 +523,9 @@ void MedicalBag::finishCurAction() {
 
   switch(curAction_) {
     case MedBagAction::sanitizeInfection: {
-      bool visionBlockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksVision(), visionBlockers);
-      Map::player->getPropHandler().endAppliedProp(propInfected, visionBlockers);
+      bool losBlockers[MAP_W][MAP_H];
+      MapParse::parse(CellPred::BlocksLos(), losBlockers);
+      Map::player->getPropHandler().endAppliedProp(propInfected, losBlockers);
       nrSupplies_ -= getTotSupplForSanitize();
     } break;
 
@@ -572,16 +572,16 @@ void HideousMask::newTurnInInventory() {
   const Pos p(Map::player->pos);
   for(auto* const actor : GameTime::actors_) {
     if(
-      actor->deadState == ActorDeadState::alive &&
+      actor->isAlive() &&
       Utils::isPosAdj(p, actor->pos, false)) {
       adjActors.push_back(actor);
     }
   }
   if(!adjActors.empty()) {
-    bool visionBlockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(), visionBlockers);
+    bool losBlockers[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksLos(), losBlockers);
     for(auto* const actor : adjActors) {
-      if(Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, visionBlockers)) {
+      if(Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, losBlockers)) {
         actor->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
       }
     }

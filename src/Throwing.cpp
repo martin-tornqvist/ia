@@ -199,9 +199,9 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown) {
     }
 
     if(isNoisy) {
-      const AlertsMonsters alerts = &actorThrowing == Map::player ?
-                                    AlertsMonsters::yes :
-                                    AlertsMonsters::no;
+      const AlertsMon alerts = &actorThrowing == Map::player ?
+                                    AlertsMon::yes :
+                                    AlertsMon::no;
       if(!isActorHit) {
         Snd snd(itemThrownData.landOnHardSndMsg, itemThrownData.landOnHardSfx,
                 IgnoreMsgIfOriginSeen::yes, dropPos, nullptr, SndVol::low, alerts);

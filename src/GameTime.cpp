@@ -43,8 +43,8 @@ bool isSpiRegenThisTurn(const int REGEN_N_TURNS) {
 void runStdTurnEvents() {
   ++turnNr_;
 
-  bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
+  bool losBlockers[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksLos(), losBlockers);
 
   int regenSpiNTurns = 12;
 
@@ -52,7 +52,7 @@ void runStdTurnEvents() {
     Actor* const actor = actors_[i];
 
     //Delete destroyed actors
-    if(actor->deadState == ActorDeadState::destroyed) {
+    if(actor->getState() == ActorState::destroyed) {
       //Do not delete player if player died, just return
       if(actor == Map::player) {return;}
 
@@ -62,12 +62,12 @@ void runStdTurnEvents() {
       i--;
       if(curActorIndex_ >= actors_.size()) {curActorIndex_ = 0;}
     } else { //Monster is alive or is a corpse
-      actor->getPropHandler().tick(PropTurnMode::std, visionBlockers);
+      actor->getPropHandler().tick(PropTurnMode::std, losBlockers);
 
       if(actor != Map::player) {
-        Monster* const monster = static_cast<Monster*>(actor);
-        if(monster->playerAwareOfMeCounter_ > 0) {
-          monster->playerAwareOfMeCounter_--;
+        Mon* const mon = static_cast<Mon*>(actor);
+        if(mon->playerAwareOfMeCounter_ > 0) {
+          mon->playerAwareOfMeCounter_--;
         }
       }
 
@@ -75,7 +75,7 @@ void runStdTurnEvents() {
       const Pos& pos = actor->pos;
       if(Map::cells[pos.x][pos.y].isLit) {actor->hit(1, DmgType::light);}
 
-      if(actor->deadState == ActorDeadState::alive) {
+      if(actor->isAlive()) {
         //Regen Spi
         if(actor == Map::player) {
           if(PlayerBon::hasTrait(Trait::stoutSpirit))   regenSpiNTurns -= 2;
@@ -108,7 +108,7 @@ void runStdTurnEvents() {
   if(Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LVL) {
     const int SPAWN_N_TURN = 125;
     if(turnNr_ == (turnNr_ / SPAWN_N_TURN) * SPAWN_N_TURN) {
-      PopulateMonsters::trySpawnDueToTimePassed();
+      PopulateMon::trySpawnDueToTimePassed();
     }
   }
 
@@ -213,9 +213,9 @@ void actorDidAct(const bool IS_FREE_TURN) {
     Render::drawMapAndInterface();
     Map::updateVisualMemory();
   } else {
-    auto* monster = static_cast<Monster*>(curActor);
-    if(monster->awareOfPlayerCounter_ > 0) {
-      monster->awareOfPlayerCounter_ -= 1;
+    auto* mon = static_cast<Mon*>(curActor);
+    if(mon->awareCounter_ > 0) {
+      mon->awareCounter_ -= 1;
     }
   }
 

@@ -52,7 +52,7 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
       Render::drawGlyph('*', Panel::map, pos, data_->clr);
 
       if(actor) {
-        if(actor->deadState == ActorDeadState::alive) {
+        if(actor->isAlive()) {
           Log::addMsg("The potion shatters on " + actor->getNameThe() + ".");
         }
       } else {
@@ -62,10 +62,10 @@ void Potion::collide(const Pos& pos, Actor* const actor) {
     }
     //If the blow from the bottle didn't kill the actor, apply what's inside
     if(actor) {
-      if(actor->deadState == ActorDeadState::alive) {
+      if(actor->isAlive()) {
         collide_(pos, actor);
         if(
-          actor->deadState == ActorDeadState::alive &&
+          actor->isAlive() &&
           !data_->isIdentified && PLAYER_SEE_CELL) {
           Log::addMsg("It had no apparent effect...");
         }
@@ -93,7 +93,7 @@ void Potion::quaff(Actor* const actor) {
 
   quaff_(actor);
 
-  if(Map::player->deadState == ActorDeadState::alive) {
+  if(Map::player->isAlive()) {
     GameTime::actorDidAct();
   }
 }
@@ -266,10 +266,10 @@ void PotionRFire::collide_(const Pos& pos, Actor* const actor) {
 }
 
 void PotionAntidote::quaff_(Actor* const actor) {
-  bool visionBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), visionBlockers);
+  bool losBlockers[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksLos(), losBlockers);
   const bool IS_POISON_ENDED =
-    actor->getPropHandler().endAppliedProp(propPoisoned, visionBlockers);
+    actor->getPropHandler().endAppliedProp(propPoisoned, losBlockers);
 
   if(IS_POISON_ENDED && Map::player->isSeeingActor(*actor, nullptr)) {
     identify(false);
@@ -351,7 +351,7 @@ void PotionClairv::quaff_(Actor* const actor) {
     animCells.clear();
 
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksVision(), blocked);
+    MapParse::parse(CellPred::BlocksLos(), blocked);
     for(int x = 0; x < MAP_W; ++x) {
       for(int y = 0; y < MAP_H; ++y) {
         Cell& cell = Map::cells[x][y];

@@ -57,7 +57,7 @@ public:
   //Function taking into account FOV, invisibility, status, etc
   //This is the final word on whether an actor can visually perceive
   //another actor.
-  bool isSeeingActor(const Actor& other, const bool visionBlockers[MAP_W][MAP_H]) const;
+  bool isSeeingActor(const Actor& other, const bool losBlockers[MAP_W][MAP_H]) const;
 
   void getSeenFoes(std::vector<Actor*>& vectorRef);
 
@@ -82,21 +82,33 @@ public:
 
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
 
+  inline bool       isAlive()   const {return state == ActorState::alive;}
+  inline bool       isCorpse()  const {return state == ActorState::corpse;}
+  inline ActorState getState()  const {return state;}
+
+  virtual bool isLeaderOf(const Actor& actor)       const = 0;
+  virtual bool isActorMyLeader(const Actor& actor)  const = 0;
+
+  bool isPlayer() const;
+
   Pos pos;
-  ActorDeadState deadState;
 
 protected:
   //TODO Try to get rid of these friend declarations
   friend class AbilityVals;
   friend class PropDiseased;
+  friend class PropPossessedByZuul;
+  friend class Trap;
+
+  ActorState state;
 
   virtual void die_() {}
   virtual void hit_(int& dmg) {(void)dmg;}
   virtual void mkStartItems() = 0;
 
-  Clr clr_;
-  char glyph_;
-  TileId tile_;
+  Clr     clr_;
+  char    glyph_;
+  TileId  tile_;
 
   int hp_, hpMax_, spi_, spiMax_;
 

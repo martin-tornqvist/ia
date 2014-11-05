@@ -821,7 +821,7 @@ void drawMap() {
     xPos = actor->pos.x;
     yPos = actor->pos.y;
     if(
-      actor->deadState == ActorDeadState::corpse &&
+      actor->isCorpse() &&
       actor->getData().glyph != ' ' &&
       actor->getData().tile != TileId::empty &&
       Map::cells[xPos][yPos].isSeenByPlayer) {
@@ -872,12 +872,12 @@ void drawMap() {
   for(auto* actor : GameTime::actors_) {
     if(actor != Map::player) {
 
-      if(actor->deadState == ActorDeadState::alive) {
+      if(actor->isAlive()) {
 
         const Pos& p  = actor->pos;
         curDrw        = &renderArray[p.x][p.y];
 
-        const auto* const monster = static_cast<const Monster*>(actor);
+        const auto* const mon= static_cast<const Mon*>(actor);
 
         if(Map::player->isSeeingActor(*actor, nullptr)) {
 
@@ -890,17 +890,15 @@ void drawMap() {
             curDrw->isLivingActorSeenHere = true;
             curDrw->isLightFadeAllowed    = false;
 
-            if(monster->leader == Map::player) {
-              // TODO reimplement allied indicator
+            if(mon->leader == Map::player) {
+              curDrw->clrBg = clrGreen;
             } else {
-              if(monster->awareOfPlayerCounter_ <= 0) {
-                curDrw->clrBg = clrBlue;
-              }
+              if(mon->awareCounter_ <= 0) {curDrw->clrBg = clrBlue;}
             }
           }
         } else {
-          if(monster->playerAwareOfMeCounter_ > 0) {
-            curDrw->isAwareOfMonsterHere  = true;
+          if(mon->playerAwareOfMeCounter_ > 0) {
+            curDrw->isAwareOfMonHere  = true;
           }
         }
       }
@@ -937,10 +935,10 @@ void drawMap() {
           }
         }
       } else if(cell.isExplored) {
-        bool isAwareOfMonsterHere   = tmpDrw.isAwareOfMonsterHere;
-        renderArray[x][y]           = cell.playerVisualMemory;
-        tmpDrw                      = renderArray[x][y];
-        tmpDrw.isAwareOfMonsterHere = isAwareOfMonsterHere;
+        bool isAwareOfMonHere   = tmpDrw.isAwareOfMonHere;
+        renderArray[x][y]       = cell.playerVisualMemory;
+        tmpDrw                  = renderArray[x][y];
+        tmpDrw.isAwareOfMonHere = isAwareOfMonHere;
 
         const double DIV = 5.0;
         divClr(tmpDrw.clr,    DIV);
@@ -952,7 +950,7 @@ void drawMap() {
         //instead place a front wall tile on any of the current conditions:
         //(1) Cell below is explored, and its tile is not a front or top wall tile.
         //(2) Cell below is unexplored.
-        if(!tmpDrw.isLivingActorSeenHere && !tmpDrw.isAwareOfMonsterHere) {
+        if(!tmpDrw.isLivingActorSeenHere && !tmpDrw.isAwareOfMonHere) {
           const auto tileSeen     = renderArrayNoActors[x][y].tile;
           const auto tileMem      = cell.playerVisualMemory.tile;
           const bool IS_TILE_WALL = cell.isSeenByPlayer ?
@@ -1015,7 +1013,7 @@ void drawMap() {
 
       Pos pos(x, y);
 
-      if(tmpDrw.isAwareOfMonsterHere) {
+      if(tmpDrw.isAwareOfMonHere) {
         drawGlyph('!', Panel::map, pos, clrBlack, true, clrNosfTealDrk);
       } else if(tmpDrw.tile != TileId::empty && tmpDrw.glyph != ' ') {
         if(IS_TILES) {

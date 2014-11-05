@@ -20,7 +20,7 @@ enum class TrapId {
   spear,
   web,
   teleport,
-  summonMonster,
+  summonMon,
   END,
   any
 };
@@ -217,11 +217,11 @@ private:
   bool        isDisarmable()  const override {return true;}
 };
 
-class TrapSummonMonster: public SpecificTrapBase {
+class TrapSummonMon: public SpecificTrapBase {
 private:
   friend class Trap;
-  TrapSummonMonster(Pos pos) :
-    SpecificTrapBase(pos, TrapId::summonMonster) {
+  TrapSummonMon(Pos pos) :
+    SpecificTrapBase(pos, TrapId::summonMon) {
   }
   void trigger(Actor& actor, const AbilityRollResult dodgeResult);
   Clr   getClr()        const override {return clrBrownDrk;}

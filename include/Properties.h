@@ -66,13 +66,13 @@ enum class PropTurns    {std, specific, indefinite};
 
 enum PropMsgType {
   propMsgOnStartPlayer,
-  propMsgOnStartMonster,
+  propMsgOnStartMon,
   propMsgOnEndPlayer,
-  propMsgOnEndMonster,
+  propMsgOnEndMon,
   propMsgOnMorePlayer,
-  propMsgOnMoreMonster,
+  propMsgOnMoreMon,
   propMsgOnResPlayer,
-  propMsgOnResMonster,
+  propMsgOnResMon,
   endOfPropMsg
 };
 
@@ -88,7 +88,7 @@ struct PropDataT {
     stdRndTurns(Range(10, 10)),
     name(""),
     nameShort(""),
-    isMakingMonsterAware(false),
+    isMakingMonAware(false),
     allowDisplayTurns(true),
     allowApplyMoreWhileActive(true),
     updatePlayerVisualWhenStartOrEnd(false),
@@ -103,7 +103,7 @@ struct PropDataT {
   std::string name;
   std::string nameShort;
   std::string msg[endOfPropMsg];
-  bool isMakingMonsterAware;
+  bool isMakingMonAware;
   bool allowDisplayTurns;
   bool allowApplyMoreWhileActive;
   bool updatePlayerVisualWhenStartOrEnd;
@@ -155,7 +155,7 @@ public:
   Prop* getProp(const PropId id, const PropSrc source) const;
 
   bool endAppliedProp(const PropId id,
-                      const bool visionBlockers[MAP_W][MAP_H],
+                      const bool losBlockers[MAP_W][MAP_H],
                       const bool RUN_PROP_END_EFFECTS = true);
 
   void endAppliedPropsByMagicHealing();
@@ -168,7 +168,7 @@ public:
   void applyActorTurnPropBuffer();
 
   void tick(const PropTurnMode turnMode,
-            const bool visionBlockers[MAP_W][MAP_H]);
+            const bool losBlockers[MAP_W][MAP_H]);
 
   void getPropsInterfaceLine(std::vector<StrAndClr>& line) const;
 
@@ -213,8 +213,8 @@ public:
   virtual bool isFinnished() const {return turnsLeft_ == 0;}
   virtual PropAlignment getAlignment() const {return data_->alignment;}
   virtual bool allowDisplayTurns() const {return data_->allowDisplayTurns;}
-  virtual bool isMakingMonsterAware() const {
-    return data_->isMakingMonsterAware;
+  virtual bool isMakingMonAware() const {
+    return data_->isMakingMonAware;
   }
   virtual std::string getName() const {return data_->name;}
   virtual std::string getNameShort() const {return data_->nameShort;}

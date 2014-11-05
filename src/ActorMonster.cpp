@@ -24,11 +24,11 @@
 
 using namespace std;
 
-Monster::Monster() :
+Mon::Mon() :
   Actor(),
-  awareOfPlayerCounter_(0),
+  awareCounter_(0),
   playerAwareOfMeCounter_(0),
-  messageMonsterInViewPrinted(false),
+  isMsgMonInViewPrinted(false),
   lastDirTravelled_(Dir::center),
   spellCoolDownCur(0),
   isRoamingAllowed_(true),
@@ -39,50 +39,52 @@ Monster::Monster() :
   shockCausedCur_(0.0),
   hasGivenXpForSpotting_(false) {}
 
-Monster::~Monster() {
+Mon::~Mon() {
   for(Spell* const spell : spellsKnown) {delete spell;}
 }
 
-void Monster::onActorTurn() {
+void Mon::onActorTurn() {
+  //Test that monster is inside map
   assert(Utils::isPosInsideMap(pos));
 
-  waiting_ = !waiting_;
+  //Test that monster's leader does not have a leader (never allowed)
+  if(leader && leader != Map::player && static_cast<Mon*>(leader)->leader) {
+    TRACE << "Two (or more) steps of leader is never allowed" << endl;
+    assert(false);
+  }
 
-  if(waiting_) {
-    if(awareOfPlayerCounter_ <= 0) {
+  if(awareCounter_ <= 0 && leader != Map::player) {
+    waiting_ = !waiting_;
+
+    if(waiting_) {
       GameTime::actorDidAct();
       return;
     }
+  } else {
+    waiting_ = false;
   }
 
   vector<Actor*> seenFoes;
   getSeenFoes(seenFoes);
   target = Utils::getRandomClosestActor(pos, seenFoes);
 
-  if(spellCoolDownCur != 0) {
-    spellCoolDownCur--;
-  }
+  if(spellCoolDownCur != 0) {spellCoolDownCur--;}
 
-  if(awareOfPlayerCounter_ > 0) {
+  if(awareCounter_ > 0) {
     isRoamingAllowed_ = true;
-    if(!leader) {
-      if(deadState == ActorDeadState::alive) {
-        if(Rnd::oneIn(14)) {
-          speakPhrase();
-        }
+    if(leader) {
+      //Monster has a leader
+      if(leader->isAlive() && leader != Map::player) {
+        static_cast<Mon*>(leader)->awareCounter_ =
+          leader->getData().nrTurnsAwarePlayer;
       }
-    } else {
-      if(leader->deadState == ActorDeadState::alive) {
-        if(leader != Map::player) {
-          static_cast<Monster*>(leader)->awareOfPlayerCounter_ =
-            leader->getData().nrTurnsAwarePlayer;
-        }
-      }
+    } else { //Monster does not have a leader
+      if(isAlive() && Rnd::oneIn(14)) {speakPhrase();}
     }
   }
 
-  const bool HAS_SNEAK_SKILL = data_->abilityVals.getVal(
-                                 AbilityId::stealth, true, *this) > 0;
+  const bool HAS_SNEAK_SKILL =
+    data_->abilityVals.getVal(AbilityId::stealth, true, *this) > 0;
   isStealth = !Map::player->isSeeingActor(*this, nullptr) && HAS_SNEAK_SKILL;
 
   //Array used for AI purposes, e.g. to prevent tactically bad positions,
@@ -100,58 +102,46 @@ void Monster::onActorTurn() {
 
   //------------------------------ COMMON ACTIONS
   //                               (MOVING, ATTACKING, CASTING SPELLS...)
-  //Looking counts as an action if monster not aware before, and became aware
-  //from looking. (This is to give the monsters some reaction time, and not
-  //instantly attack)
-  if(data_->ai[int(AiId::looks)]) {
-    if(leader != Map::player) {
-      if(Ai::Info::lookBecomePlayerAware(*this)) {return;}
-    }
+  //Looking is as an action if monster not aware before, and became aware from looking.
+  //(This is to give the monsters some reaction time, and not instantly attack)
+  if(data_->ai[int(AiId::looks)] && leader != Map::player) {
+    if(Ai::Info::lookBecomePlayerAware(*this)) {return;}
   }
 
-  if(data_->ai[int(AiId::makesRoomForFriend)]) {
-    if(leader != Map::player) {
-      if(Ai::Action::makeRoomForFriend(*this)) {return;}
-    }
+  if(data_->ai[int(AiId::makesRoomForFriend)] && leader != Map::player) {
+    if(Ai::Action::makeRoomForFriend(*this)) {return;}
   }
 
-  if(target) {
-    const int CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING = 65;
-    if(Rnd::percentile() < CHANCE_TO_ATTEMPT_SPELL_BEFORE_ATTACKING) {
-      if(Ai::Action::castRandomSpellIfAware(this)) {return;}
-    }
+  if(target && Rnd::oneIn(6)) {
+    if(Ai::Action::castRandomSpellIfAware(*this)) {return;}
   }
 
-  if(data_->ai[int(AiId::attacks)]) {
-    if(target) {
-      if(tryAttack(*target)) {
-        return;
-      }
+  if(data_->ai[int(AiId::attacks)] && target) {
+    if(tryAttack(*target)) {
+      return;
     }
   }
 
   if(target) {
-    if(Ai::Action::castRandomSpellIfAware(this)) {
+    if(Ai::Action::castRandomSpellIfAware(*this)) {
       return;
     }
   }
 
   if(Rnd::percentile() < data_->erraticMovement) {
-    if(Ai::Action::moveToRandomAdjacentCell(*this)) {
+    if(Ai::Action::moveToRandomAdjCell(*this)) {
       return;
     }
   }
 
-  if(data_->ai[int(AiId::movesTowardTargetWhenVision)]) {
-    if(Ai::Action::moveTowardsTargetSimple(*this)) {return;}
+  if(data_->ai[int(AiId::movesToTgtWhenLos)]) {
+    if(Ai::Action::moveToTgtSimple(*this)) {return;}
   }
 
   vector<Pos> path;
 
-  if(data_->ai[int(AiId::pathsToTargetWhenAware)]) {
-    if(leader != Map::player) {
-      Ai::Info::setPathToPlayerIfAware(*this, path);
-    }
+  if(data_->ai[int(AiId::pathsToTgtWhenAware)] && leader != Map::player) {
+    Ai::Info::setPathToPlayerIfAware(*this, path);
   }
 
   if(leader != Map::player) {
@@ -162,33 +152,31 @@ void Monster::onActorTurn() {
 
   if(Ai::Action::stepPath(*this, path)) {return;}
 
-  if(data_->ai[int(AiId::movesTowardLeader)]) {
+  if(data_->ai[int(AiId::movesToLeader)]) {
     Ai::Info::setPathToLeaderIfNoLosToleader(*this, path);
     if(Ai::Action::stepPath(*this, path)) {return;}
   }
 
-  if(data_->ai[int(AiId::movesTowardLair)]) {
-    if(leader != Map::player) {
-      if(Ai::Action::stepToLairIfLos(*this, lairCell_)) {
-        return;
-      } else {
-        Ai::Info::setPathToLairIfNoLos(*this, path, lairCell_);
-        if(Ai::Action::stepPath(*this, path)) {return;}
-      }
+  if(data_->ai[int(AiId::movesToLair)] && leader != Map::player) {
+    if(Ai::Action::stepToLairIfLos(*this, lairCell_)) {
+      return;
+    } else {
+      Ai::Info::setPathToLairIfNoLos(*this, path, lairCell_);
+      if(Ai::Action::stepPath(*this, path)) {return;}
     }
   }
 
-  if(Ai::Action::moveToRandomAdjacentCell(*this)) {return;}
+  if(Ai::Action::moveToRandomAdjCell(*this)) {return;}
 
   GameTime::actorDidAct();
 }
 
-void Monster::hit_(int& dmg) {
+void Mon::hit_(int& dmg) {
   (void)dmg;
-  awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
+  awareCounter_ = data_->nrTurnsAwarePlayer;
 }
 
-void Monster::moveDir(Dir dir) {
+void Mon::moveDir(Dir dir) {
   assert(dir != Dir::END);
   assert(Utils::isPosInsideMap(pos, false));
 
@@ -225,32 +213,32 @@ void Monster::moveDir(Dir dir) {
   GameTime::actorDidAct();
 }
 
-void Monster::hearSound(const Snd& snd) {
-  if(deadState == ActorDeadState::alive) {
-    if(snd.isAlertingMonsters()) {
+void Mon::hearSound(const Snd& snd) {
+  if(isAlive()) {
+    if(snd.isAlertingMon()) {
       becomeAware(false);
     }
   }
 }
 
-void Monster::speakPhrase() {
+void Mon::speakPhrase() {
   const bool IS_SEEN_BY_PLAYER = Map::player->isSeeingActor(*this, nullptr);
   const string msg = IS_SEEN_BY_PLAYER ?
-                     getAggroPhraseMonsterSeen() :
-                     getAggroPhraseMonsterHidden();
+                     getAggroPhraseMonSeen() :
+                     getAggroPhraseMonHidden();
   const SfxId sfx = IS_SEEN_BY_PLAYER ?
-                    getAggroSfxMonsterSeen() :
-                    getAggroSfxMonsterHidden();
+                    getAggroSfxMonSeen() :
+                    getAggroSfxMonHidden();
 
   Snd snd(msg, sfx, IgnoreMsgIfOriginSeen::no, pos, this,
-          SndVol::low, AlertsMonsters::yes);
+          SndVol::low, AlertsMon::yes);
   SndEmit::emitSnd(snd);
 }
 
-void Monster::becomeAware(const bool IS_FROM_SEEING) {
-  if(deadState == ActorDeadState::alive) {
-    const int AWARENESS_CNT_BEFORE = awareOfPlayerCounter_;
-    awareOfPlayerCounter_ = data_->nrTurnsAwarePlayer;
+void Mon::becomeAware(const bool IS_FROM_SEEING) {
+  if(isAlive()) {
+    const int AWARENESS_CNT_BEFORE = awareCounter_;
+    awareCounter_ = data_->nrTurnsAwarePlayer;
     if(AWARENESS_CNT_BEFORE <= 0) {
       if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr)) {
         Map::player->updateFov();
@@ -262,24 +250,17 @@ void Monster::becomeAware(const bool IS_FROM_SEEING) {
   }
 }
 
-void Monster::playerBecomeAwareOfMe(const int DURATION_FACTOR) {
+void Mon::playerBecomeAwareOfMe(const int DURATION_FACTOR) {
   const int LOWER         = 4 * DURATION_FACTOR;
   const int UPPER         = 6 * DURATION_FACTOR;
   const int ROLL          = Rnd::range(LOWER, UPPER);
   playerAwareOfMeCounter_ = max(playerAwareOfMeCounter_, ROLL);
 }
 
-bool Monster::tryAttack(Actor& defender) {
-  if(
-    deadState != ActorDeadState::alive ||
-    (awareOfPlayerCounter_ <= 0 && leader != Map::player)) {
+bool Mon::tryAttack(Actor& defender) {
+  if(state != ActorState::alive || (awareCounter_ <= 0 && leader != Map::player)) {
     return false;
   }
-
-  bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blocked);
-
-  if(!isSeeingActor(*Map::player, blocked)) {return false;}
 
   AttackOpport opport     = getAttackOpport(defender);
   const BestAttack attack = getBestAttack(opport);
@@ -329,7 +310,7 @@ bool Monster::tryAttack(Actor& defender) {
   return false;
 }
 
-AttackOpport Monster::getAttackOpport(Actor& defender) {
+AttackOpport Mon::getAttackOpport(Actor& defender) {
   AttackOpport opport;
   if(propHandler_->allowAttack(false)) {
     opport.isMelee = Utils::isPosAdj(pos, defender.pos, false);
@@ -387,7 +368,7 @@ AttackOpport Monster::getAttackOpport(Actor& defender) {
 }
 
 //TODO Instead of using "strongest" weapon, use random
-BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
+BestAttack Mon::getBestAttack(const AttackOpport& attackOpport) {
   BestAttack attack;
   attack.isMelee = attackOpport.isMelee;
 
@@ -419,8 +400,17 @@ BestAttack Monster::getBestAttack(const AttackOpport& attackOpport) {
       }
     }
   }
-
   return attack;
 }
 
+bool Mon::isLeaderOf(const Actor& actor) const {
+  if(actor.isPlayer()) {
+    return false;
+  } else {
+    return static_cast<const Mon*>(&actor)->leader == this;
+  }
+}
 
+bool Mon::isActorMyLeader(const Actor& actor) const {
+  return leader == &actor;
+}

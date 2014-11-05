@@ -33,7 +33,7 @@ public:
   void        bump(Actor& actorBumping)                             override;
   bool        canMoveCmn()                                    const override;
   bool        canMove(const std::vector<PropId>& actorsProps) const override;
-  bool        isVisionPassable()                              const override;
+  bool        isLosPassable()                              const override;
   bool        isProjectilePassable()                          const override;
   bool        isSmokePassable()                               const override;
 

@@ -166,7 +166,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
             if(destrChance.numerator > 0) {
               if(Rnd::fraction(destrChance)) {
                 Snd snd("", SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_,
-                        actor, SndVol::low, AlertsMonsters::yes);
+                        actor, SndVol::low, AlertsMon::yes);
                 SndEmit::emitSnd(snd);
                 if(IS_CELL_SEEN) {
                   if(isSecret_) {
@@ -181,7 +181,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
               } else { //Not broken
                 const SfxId sfx = isSecret_ ? SfxId::END : SfxId::doorBang;
                 Snd snd("", sfx, IgnoreMsgIfOriginSeen::no, pos_,
-                        actor, SndVol::low, AlertsMonsters::yes);
+                        actor, SndVol::low, AlertsMon::yes);
                 SndEmit::emitSnd(snd);
               }
             } else {
@@ -196,7 +196,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
             if(Rnd::fraction(destrChance)) {
               Snd snd("I hear a door crashing open!",
                       SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, actor,
-                      SndVol::high, AlertsMonsters::no);
+                      SndVol::high, AlertsMon::no);
               SndEmit::emitSnd(snd);
               if(Map::player->isSeeingActor(*actor, nullptr)) {
                 Log::addMsg("The door crashes open!");
@@ -207,7 +207,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
             } else { //Not broken
               Snd snd("I hear a loud banging on a door.",
                       SfxId::doorBang, IgnoreMsgIfOriginSeen::no, pos_,
-                      actor, SndVol::low, AlertsMonsters::no);
+                      actor, SndVol::low, AlertsMon::no);
               SndEmit::emitSnd(snd);
             }
           }
@@ -269,7 +269,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //      isOpen_   = true;
 //      if(IS_PLAYER) {
 //        Snd snd("", SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_,
-//                &actor, SndVol::low, AlertsMonsters::yes);
+//                &actor, SndVol::low, AlertsMon::yes);
 //        SndEmit::emitSnd(snd);
 //        if(!actor.getPropHandler().allowSee()) {
 //          Log::addMsg("I feel a door crashing open!");
@@ -283,7 +283,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //      } else {
 //        Snd snd("I hear a door crashing open!",
 //                SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, &actor,
-//                SndVol::high, AlertsMonsters::no);
+//                SndVol::high, AlertsMon::no);
 //        SndEmit::emitSnd(snd);
 //        if(Map::player->isSeeingActor(actor, nullptr)) {
 //          Log::addMsg("The door crashes open!");
@@ -295,14 +295,14 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //      if(IS_PLAYER) {
 //        const SfxId sfx = isSecret_ ? SfxId::END : SfxId::doorBang;
 //        Snd snd("", sfx, IgnoreMsgIfOriginSeen::yes, actor.pos,
-//                &actor, SndVol::low, AlertsMonsters::yes);
+//                &actor, SndVol::low, AlertsMon::yes);
 //        SndEmit::emitSnd(snd);
 //      } else {
 //        //Emitting the sound from the actor instead of the door, because the
 //        //sound message should be received even if the door is seen
 //        Snd snd("I hear a loud banging on a door.",
 //                SfxId::doorBang, IgnoreMsgIfOriginSeen::yes, actor.pos,
-//                &actor, SndVol::low, AlertsMonsters::no);
+//                &actor, SndVol::low, AlertsMon::no);
 //        SndEmit::emitSnd(snd);
 //        if(Map::player->isSeeingActor(actor, nullptr)) {
 //          Log::addMsg(actor.getNameThe() + " bashes at a door!");
@@ -334,7 +334,7 @@ bool Door::canMove(const vector<PropId>& actorsProps) const {
   return isOpen_;
 }
 
-bool Door::isVisionPassable()     const {return isOpen_;}
+bool Door::isLosPassable()     const {return isOpen_;}
 bool Door::isProjectilePassable() const {return isOpen_;}
 bool Door::isSmokePassable()      const {return isOpen_;}
 
@@ -451,7 +451,7 @@ void Door::tryClose(Actor* actorTrying) {
   const bool TRYER_IS_BLIND = !actorTrying->getPropHandler().allowSee();
   //const bool PLAYER_SEE_DOOR    = Map::playerVision[pos_.x][pos_.y];
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blocked);
+  MapParse::parse(CellPred::BlocksLos(), blocked);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true :
@@ -508,13 +508,13 @@ void Door::tryClose(Actor* actorTrying) {
       isOpen_ = false;
       if(IS_PLAYER) {
         Snd snd("", SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_,
-                actorTrying, SndVol::low, AlertsMonsters::yes);
+                actorTrying, SndVol::low, AlertsMon::yes);
         SndEmit::emitSnd(snd);
         Log::addMsg("I close the door.");
       } else {
         Snd snd("I hear a door closing.",
                 SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
-                SndVol::low, AlertsMonsters::no);
+                SndVol::low, AlertsMon::no);
         SndEmit::emitSnd(snd);
         if(PLAYER_SEE_TRYER) {
           Log::addMsg(actorTrying->getNameThe() + " closes a door.");
@@ -525,13 +525,13 @@ void Door::tryClose(Actor* actorTrying) {
         isOpen_ = false;
         if(IS_PLAYER) {
           Snd snd("", SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_,
-                  actorTrying, SndVol::low, AlertsMonsters::yes);
+                  actorTrying, SndVol::low, AlertsMon::yes);
           SndEmit::emitSnd(snd);
           Log::addMsg("I fumble with a door and succeed to close it.");
         } else {
           Snd snd("I hear a door closing.",
                   SfxId::doorClose, IgnoreMsgIfOriginSeen::yes, pos_, actorTrying,
-                  SndVol::low, AlertsMonsters::no);
+                  SndVol::low, AlertsMon::no);
           SndEmit::emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
             Log::addMsg(actorTrying->getNameThe() +
@@ -561,7 +561,7 @@ void Door::tryOpen(Actor* actorTrying) {
   const bool TRYER_IS_BLIND   = !actorTrying->getPropHandler().allowSee();
   const bool PLAYER_SEE_DOOR  = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksVision(), blocked);
+  MapParse::parse(CellPred::BlocksLos(), blocked);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true : Map::player->isSeeingActor(*actorTrying, blocked);
@@ -589,13 +589,13 @@ void Door::tryOpen(Actor* actorTrying) {
       isOpen_ = true;
       if(IS_PLAYER) {
         Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_,
-                actorTrying, SndVol::low, AlertsMonsters::yes);
+                actorTrying, SndVol::low, AlertsMon::yes);
         SndEmit::emitSnd(snd);
         Log::addMsg("I open the door.");
       } else {
         Snd snd("I hear a door open.", SfxId::doorOpen,
                 IgnoreMsgIfOriginSeen::yes, pos_, actorTrying, SndVol::low,
-                AlertsMonsters::no);
+                AlertsMon::no);
         SndEmit::emitSnd(snd);
         if(PLAYER_SEE_TRYER) {
           Log::addMsg(actorTrying->getNameThe() + " opens a door.");
@@ -609,13 +609,13 @@ void Door::tryOpen(Actor* actorTrying) {
         isOpen_ = true;
         if(IS_PLAYER) {
           Snd snd("", SfxId::doorOpen, IgnoreMsgIfOriginSeen::yes, pos_,
-                  actorTrying, SndVol::low, AlertsMonsters::yes);
+                  actorTrying, SndVol::low, AlertsMon::yes);
           SndEmit::emitSnd(snd);
           Log::addMsg("I fumble with a door and succeed to open it.");
         } else {
           Snd snd("I hear something open a door clumsily.", SfxId::doorOpen,
                   IgnoreMsgIfOriginSeen::yes, pos_, actorTrying, SndVol::low,
-                  AlertsMonsters::no);
+                  AlertsMon::no);
           SndEmit::emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
             Log::addMsg(actorTrying->getNameThe() +
@@ -628,7 +628,7 @@ void Door::tryOpen(Actor* actorTrying) {
         TRACE << "Tryer is blind, and open failed" << endl;
         if(IS_PLAYER) {
           Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos_,
-                  actorTrying, SndVol::low, AlertsMonsters::yes);
+                  actorTrying, SndVol::low, AlertsMon::yes);
           SndEmit::emitSnd(snd);
           Log::addMsg("I fumble blindly with a door and fail to open it.");
         } else {
@@ -636,7 +636,7 @@ void Door::tryOpen(Actor* actorTrying) {
           //sound message should be received even if the door is seen
           Snd snd("I hear something attempting to open a door.", SfxId::END,
                   IgnoreMsgIfOriginSeen::yes, actorTrying->pos, actorTrying,
-                  SndVol::low, AlertsMonsters::no);
+                  SndVol::low, AlertsMon::no);
           SndEmit::emitSnd(snd);
           if(PLAYER_SEE_TRYER) {
             Log::addMsg(actorTrying->getNameThe() +

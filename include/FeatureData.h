@@ -117,7 +117,7 @@ struct FeatureDataT {
   MoveRules moveRules;
   bool isSoundPassable;
   bool isProjectilePassable;
-  bool isVisionPassable;
+  bool isLosPassable;
   bool isSmokePassable;
   bool canHaveBlood;
   bool canHaveGore;

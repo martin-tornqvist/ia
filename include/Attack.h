@@ -16,7 +16,7 @@ class Wpn;
 class AttData {
 public:
   Actor* attacker;
-  Actor* curDefender;
+  Actor* defender;
   AbilityRollResult attackResult;
   int nrDmgRolls, nrDmgSides, dmgPlus;
   int dmgRoll, dmg;
@@ -41,7 +41,7 @@ public:
                 const Pos& curPos_, ActorSize intendedAimLvl_ = actorSize_none);
   int           hitChanceTot;
   ActorSize   intendedAimLvl;
-  ActorSize   curDefenderSize;
+  ActorSize   defenderSize;
   std::string verbPlayerAttacks;
   std::string verbOtherAttacks;
 };
@@ -52,7 +52,7 @@ public:
                const Pos& curPos_, ActorSize intendedAimLvl_ = actorSize_none);
   int       hitChanceTot;
   ActorSize intendedAimLvl;
-  ActorSize curDefenderSize;
+  ActorSize defenderSize;
 };
 
 struct Projectile {
