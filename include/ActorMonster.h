@@ -132,6 +132,7 @@ class BrownJenkin: public RatThing
 public:
   BrownJenkin() : RatThing() {}
   ~BrownJenkin() {}
+  void mkStartItems() override;
 };
 
 class Spider: public Mon

@@ -184,7 +184,10 @@ SpellEffectNoticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) con
       if(Map::cells[mon->pos.x][mon->pos.y].isSeenByPlayer)
       {
         const string spellStr = mon->getData().spellCastMessage;
-        Log::addMsg(spellStr);
+        if(!spellStr.empty())
+        {
+          Log::addMsg(spellStr);
+        }
       }
       mon->spellCoolDownCur = mon->getData().spellCooldownTurns;
     }

@@ -965,6 +965,12 @@ void initDataList()
   setDmgFromMonId(*d, ActorId::ratThing);
   data[int(d->id)] = d;
 
+  d = new ItemDataT(ItemId::brownJenkinBite);
+  resetData(*d, ItemType::meleeWpnIntr);
+  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  setDmgFromMonId(*d, ActorId::brownJenkin);
+  data[int(d->id)] = d;
+
   d = new ItemDataT(ItemId::wormMassBite);
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "bites me");

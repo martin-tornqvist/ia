@@ -398,6 +398,12 @@ void RatThing::mkStartItems()
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::ratThingBite));
 }
 
+void BrownJenkin::mkStartItems()
+{
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::brownJenkinBite));
+  spellsKnown.push_back(new SpellTeleport);
+}
+
 void Shadow::mkStartItems()
 {
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::shadowClaw));
@@ -685,38 +691,32 @@ bool Spider::onActorTurn_()
 
 void GreenSpider::mkStartItems()
 {
-  inv_->putInIntrinsics(
-    ItemFactory::mk(ItemId::greenSpiderBite));
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::greenSpiderBite));
 }
 
 void WhiteSpider::mkStartItems()
 {
-  inv_->putInIntrinsics(
-    ItemFactory::mk(ItemId::whiteSpiderBite));
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::whiteSpiderBite));
 }
 
 void RedSpider::mkStartItems()
 {
-  inv_->putInIntrinsics(
-    ItemFactory::mk(ItemId::redSpiderBite));
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::redSpiderBite));
 }
 
 void ShadowSpider::mkStartItems()
 {
-  inv_->putInIntrinsics(
-    ItemFactory::mk(ItemId::shadowSpiderBite));
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::shadowSpiderBite));
 }
 
 void LengSpider::mkStartItems()
 {
-  inv_->putInIntrinsics(
-    ItemFactory::mk(ItemId::lengSpiderBite));
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::lengSpiderBite));
 }
 
 void Wolf::mkStartItems()
 {
-  inv_->putInIntrinsics(
-    ItemFactory::mk(ItemId::wolfBite));
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::wolfBite));
 }
 
 bool WormMass::onActorTurn_()
@@ -799,8 +799,7 @@ bool GiantLocust::onActorTurn_()
 
 void GiantLocust::mkStartItems()
 {
-  inv_->putInIntrinsics(
-    ItemFactory::mk(ItemId::giantLocustBite));
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::giantLocustBite));
 }
 
 bool LordOfShadows::onActorTurn_()

@@ -88,6 +88,7 @@ enum class ItemId
   ratBite,
   ratBiteDiseased,
   ratThingBite,
+  brownJenkinBite,
   wormMassBite,
   greenSpiderBite,
   whiteSpiderBite,

@@ -440,7 +440,7 @@ void initDataList()
   d.color = clrMagenta;
   d.tile = TileId::witchOrWarlock;
   d.hp = 10;
-  d.spi = 40;
+  d.spi = 50;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 40);
   d.nrLeftAllowedToSpawn = 1;
@@ -489,8 +489,10 @@ void initDataList()
   d.color = clrMagenta;
   d.tile = TileId::ratThing;
   d.hp = 10;
-  d.dmgMelee = 4;
+  d.spi = 25;
+  d.dmgMelee = 5;
   d.abilityVals.setVal(AbilityId::melee, 50);
+  d.abilityVals.setVal(AbilityId::stealth, 90);
   d.isAutoSpawnAllowed = false;
   d.nrLeftAllowedToSpawn = 0;
   d.isUnique = true;
@@ -510,6 +512,7 @@ void initDataList()
             "on the witch's blood, which it sucked like a vampire. Its voice "
             "was a kind of loathsome titter, and could speak all languages.\" "
             "H.P.Lovecraft -\"Dreams in the witch house\".";
+  d.spellCastMessage = "";
   d.aggroTextMonSeen = d.nameThe + " titters at me in a loathsome voice.";
   d.aggroTextMonHidden = "I hear a loathsome titter.";
   d.nrTurnsAwarePlayer = 999;

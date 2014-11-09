@@ -84,6 +84,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::ratBite:             r = new Wpn(d, ammoD);         break;
     case ItemId::ratBiteDiseased:     r = new Wpn(d, ammoD);         break;
     case ItemId::ratThingBite:        r = new Wpn(d, ammoD);         break;
+    case ItemId::brownJenkinBite:     r = new Wpn(d, ammoD);         break;
     case ItemId::wormMassBite:        r = new Wpn(d, ammoD);         break;
     case ItemId::greenSpiderBite:     r = new Wpn(d, ammoD);         break;
     case ItemId::whiteSpiderBite:     r = new Wpn(d, ammoD);         break;
