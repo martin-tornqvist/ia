@@ -29,7 +29,7 @@ using namespace std;
 namespace
 {
 
-const int SUMMONED_HOSTILE_ONE_IN_N = 7;
+const int SUMMON_HOSTILE_ONE_IN_N = 7;
 
 } //namespace
 
@@ -110,6 +110,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
       bool isWarlock      = false;
       bool isBloodSorc    = false;
       bool isSeer         = false;
+      bool isSummoner     = false;
 
       for(Trait id : PlayerBon::traitsPicked_)
       {
@@ -118,6 +119,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
           case Trait::warlock:        isWarlock     = true; break;
           case Trait::bloodSorcerer:  isBloodSorc   = true; break;
           case Trait::seer:           isSeer        = true; break;
+          case Trait::summoner:       isSummoner    = true; break;
           default: {} break;
         }
       }
@@ -126,12 +128,15 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
 
       switch(getId())
       {
-        case SpellId::darkbolt:       {if(isWarlock)  costMax--;}    break;
-        case SpellId::azaWrath:       {if(isWarlock)  costMax--;}    break;
-        case SpellId::mayhem:         {if(isWarlock)  costMax--;}    break;
-        case SpellId::detMon:         {if(isSeer)     costMax--;}    break;
-        case SpellId::detItems:       {if(isSeer)     costMax -= 3;} break;
-        case SpellId::detTraps:       {if(isSeer)     costMax -= 3;} break;
+        case SpellId::darkbolt:       {if(isWarlock)  --costMax;}     break;
+        case SpellId::azaWrath:       {if(isWarlock)  --costMax;}     break;
+        case SpellId::mayhem:         {if(isWarlock)  --costMax;}     break;
+        case SpellId::detMon:         {if(isSeer)     --costMax;}     break;
+        case SpellId::detItems:       {if(isSeer)     costMax -= 3;}  break;
+        case SpellId::detTraps:       {if(isSeer)     costMax -= 3;}  break;
+        case SpellId::summonMon:      {if(isSummoner) --costMax;      break;}
+        case SpellId::pest:           {if(isSummoner) --costMax;      break;}
+        case SpellId::pharaohStaff:   {if(isSummoner) --costMax;      break;}
         default: {} break;
       }
     }
@@ -439,7 +444,8 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
 
   if(caster->isPlayer())
   {
-    didPlayerSummonHostile  = Rnd::oneIn(SUMMONED_HOSTILE_ONE_IN_N);
+    didPlayerSummonHostile  = Rnd::oneIn(SUMMON_HOSTILE_ONE_IN_N *
+                                         (PlayerBon::hasTrait(Trait::summoner) ? 2 : 1));
     leader                  = didPlayerSummonHostile ? nullptr : caster;
   }
   else //Caster is monster
@@ -516,7 +522,8 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
 
   if(caster->isPlayer())
   {
-    didPlayerSummonHostile  = Rnd::oneIn(SUMMONED_HOSTILE_ONE_IN_N);
+    didPlayerSummonHostile  = Rnd::oneIn(SUMMON_HOSTILE_ONE_IN_N *
+                                         (PlayerBon::hasTrait(Trait::summoner) ? 2 : 1));
     leader                  = didPlayerSummonHostile ? nullptr : caster;
   }
   else //Caster is monster
@@ -992,7 +999,8 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
 
   if(caster->isPlayer())
   {
-    didPlayerSummonHostile  = Rnd::oneIn(SUMMONED_HOSTILE_ONE_IN_N);
+    didPlayerSummonHostile  = Rnd::oneIn(SUMMON_HOSTILE_ONE_IN_N *
+                                         (PlayerBon::hasTrait(Trait::summoner) ? 2 : 1));
     leader                  = didPlayerSummonHostile ? nullptr : caster;
   }
   else //Caster is monster

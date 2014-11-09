@@ -31,6 +31,7 @@ enum class Trait
   mobile,
   lithe,
   warlock,
+  summoner,
   bloodSorcerer,
   seer,
   observant,

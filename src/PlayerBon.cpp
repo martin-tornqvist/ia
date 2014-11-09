@@ -76,6 +76,7 @@ void getTraitTitle(const Trait id, string& strRef)
     case Trait::coolHeaded:           strRef = "Cool-headed";           break;
     case Trait::courageous:           strRef = "Courageous";            break;
     case Trait::warlock:              strRef = "Warlock";               break;
+    case Trait::summoner:             strRef = "Summoner";              break;
     case Trait::bloodSorcerer:        strRef = "Blood Sorcerer";        break;
     case Trait::seer:                 strRef = "Seer";                  break;
     case Trait::dexterous:            strRef = "Dexterous";             break;
@@ -253,10 +254,15 @@ void getTraitDescr(const Trait id, string& strRef)
                "attack spells to do maximum damage";
     } break;
 
+    case Trait::summoner:
+    {
+      strRef = "-1 Spirit cost for summoning spells, halved risk that called creatures "
+               "are hostile";
+    } break;
+
     case Trait::bloodSorcerer:
     {
-      strRef = "-1 Spirit cost for all spells, casting a spell drains 2 "
-               "Hit points";
+      strRef = "-1 Spirit cost for all spells, casting a spell drains 2 Hit Points";
     } break;
 
     case Trait::seer:
@@ -458,6 +464,14 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef)
     case Trait::warlock:
     {
       traitsRef.push_back(Trait::fearless);
+      traitsRef.push_back(Trait::strongSpirit);
+      bgRef = Bg::occultist;
+    } break;
+
+    case Trait::summoner:
+    {
+      traitsRef.push_back(Trait::fearless);
+      traitsRef.push_back(Trait::strongSpirit);
       bgRef = Bg::occultist;
     } break;
 
