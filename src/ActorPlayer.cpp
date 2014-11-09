@@ -1473,27 +1473,6 @@ void Player::updateFov()
     }
   }
 
-  //Player see a small area around friendly creatures
-//  for(const Actor* const actor : GameTime::actors_)
-//  {
-//    if(actor != this)
-//    {
-//      const Mon* const mon = static_cast<const Mon*>(actor);
-//      if(isLeaderOf(*mon))
-//      {
-//        const Pos& p = mon->pos;
-//        const Rect r(p - 1, p + 1);
-//        for(int x = r.p0.x; x <= r.p1.x; ++x)
-//        {
-//          for(int y = r.p0.y; y <= r.p1.y; ++y)
-//          {
-//            Map::cells[x][y].isSeenByPlayer = true;
-//          }
-//        }
-//      }
-//    }
-//  }
-
   //Explore
   for(int x = 0; x < MAP_W; ++x)
   {

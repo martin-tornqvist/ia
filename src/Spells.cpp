@@ -29,7 +29,7 @@ using namespace std;
 namespace
 {
 
-const int SUMMONED_HOSTILE_ONE_IN_N = 8;
+const int SUMMONED_HOSTILE_ONE_IN_N = 7;
 
 } //namespace
 
@@ -64,7 +64,7 @@ Spell* mkSpellFromId(const SpellId spellId)
     case SpellId::knockBack:            return new SpellKnockBack; break;
     case SpellId::teleport:             return new SpellTeleport; break;
     case SpellId::mayhem:               return new SpellMayhem; break;
-    case SpellId::pestilence:           return new SpellPestilence; break;
+    case SpellId::pest:                 return new SpellPest; break;
     case SpellId::detItems:             return new SpellDetItems; break;
     case SpellId::detTraps:             return new SpellDetTraps; break;
     case SpellId::detMon:               return new SpellDetMon; break;
@@ -424,7 +424,7 @@ SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const
 }
 
 //------------------------------------------------------------ PESTILENCE
-SpellEffectNoticed SpellPestilence::cast_(Actor* const caster) const
+SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
 {
   const int RND = Rnd::range(1, 3);
   const ActorId monsterId = RND == 1 ? ActorId::greenSpider :
@@ -477,6 +477,13 @@ SpellEffectNoticed SpellPestilence::cast_(Actor* const caster) const
   }
 
   return SpellEffectNoticed::no;
+}
+
+bool SpellPest::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+{
+  return mon.target       &&
+         Rnd::coinToss()  &&
+         (mon.isSeeingActor(*mon.target, blockedLos) || Rnd::oneIn(20));
 }
 
 //------------------------------------------------------------ PHARAOH STAFF
@@ -1006,7 +1013,9 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
 
 bool SpellSummonMon::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target && (mon.isSeeingActor(*mon.target, blockedLos) || Rnd::oneIn(20));
+  return mon.target       &&
+         Rnd::coinToss()  &&
+         (mon.isSeeingActor(*mon.target, blockedLos) || Rnd::oneIn(20));
 }
 
 //------------------------------------------------------------ HEAL SELF

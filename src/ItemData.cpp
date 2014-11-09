@@ -1357,9 +1357,9 @@ void initDataList()
   d->spellCastFromScroll = SpellId::teleport;
   data[int(d->id)] = d;
 
-  d = new ItemDataT(ItemId::scrollPestilence);
+  d = new ItemDataT(ItemId::scrollPest);
   resetData(*d, ItemType::scroll);
-  d->spellCastFromScroll = SpellId::pestilence;
+  d->spellCastFromScroll = SpellId::pest;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::scrollSlowMon);

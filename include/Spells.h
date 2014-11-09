@@ -27,7 +27,7 @@ enum class SpellId
   teleport,
   bless,
   summonMon,
-  pestilence,
+  pest,
 
   //Player only
   mayhem,
@@ -193,14 +193,15 @@ private:
   }
 };
 
-class SpellPestilence: public Spell
+class SpellPest: public Spell
 {
 public:
-  SpellPestilence() : Spell() {}
+  SpellPest() : Spell() {}
+  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Pestilence";}
-  SpellId getId()               const override {return SpellId::pestilence;}
+  SpellId getId()               const override {return SpellId::pest;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;

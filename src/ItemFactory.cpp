@@ -123,7 +123,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
 
     case ItemId::scrollMayhem:        r = new Scroll(d);                break;
     case ItemId::scrollTelep:         r = new Scroll(d);                break;
-    case ItemId::scrollPestilence:    r = new Scroll(d);                break;
+    case ItemId::scrollPest:    r = new Scroll(d);                break;
     case ItemId::scrollSlowMon:       r = new Scroll(d);                break;
     case ItemId::scrollTerrifyMon:    r = new Scroll(d);                break;
     case ItemId::scrollParalMon:      r = new Scroll(d);                break;

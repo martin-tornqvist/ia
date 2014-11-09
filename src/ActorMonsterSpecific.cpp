@@ -529,33 +529,30 @@ bool KeziahMason::onActorTurn_()
     {
       if(!hasSummonedJenkin)
       {
+        bool blockedLos[MAP_W][MAP_H];
+        MapParse::parse(CellPred::BlocksLos(), blockedLos);
 
-        bool blocked[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksLos(), blocked);
-
-        if(isSeeingActor(*(Map::player), blocked))
+        if(isSeeingActor(*(Map::player), blockedLos))
         {
-
-          MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
+          MapParse::parse(CellPred::BlocksMoveCmn(true), blockedLos);
 
           vector<Pos> line;
-          LineCalc::calcNewLine(pos, Map::player->pos, true, 9999,
-                                false, line);
+          LineCalc::calcNewLine(pos, Map::player->pos, true, 9999, false, line);
 
           const int LINE_SIZE = line.size();
           for(int i = 0; i < LINE_SIZE; ++i)
           {
             const Pos c = line.at(i);
-            if(!blocked[c.x][c.y])
+            if(!blockedLos[c.x][c.y])
             {
-              //TODO Make a generalized summoning functionality
+              //TODO Use the generalized summoning functionality
               Log::addMsg("Keziah summons Brown Jenkin!");
-              Actor* const actor = ActorFactory::mk(ActorId::brownJenkin, c);
-              Mon* jenkin = static_cast<Mon*>(actor);
+              Actor* const actor    = ActorFactory::mk(ActorId::brownJenkin, c);
+              Mon* jenkin           = static_cast<Mon*>(actor);
               Render::drawMapAndInterface();
-              hasSummonedJenkin = true;
+              hasSummonedJenkin     = true;
               jenkin->awareCounter_ = 999;
-              jenkin->leader = this;
+              jenkin->leader        = this;
               GameTime::actorDidAct();
               return true;
             }
@@ -573,6 +570,7 @@ void KeziahMason::mkStartItems()
   spellsKnown.push_back(new SpellTeleport);
   spellsKnown.push_back(new SpellHealSelf);
   spellsKnown.push_back(new SpellSummonMon);
+  spellsKnown.push_back(new SpellPest);
   spellsKnown.push_back(new SpellAzaWrath);
   spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
 }

@@ -132,7 +132,7 @@ enum class ItemId
   gasMask,
   hideousMask,
 
-  scrollPestilence,
+  scrollPest,
   scrollTelep,
   scrollSlowMon,
   scrollTerrifyMon,
