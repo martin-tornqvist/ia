@@ -20,7 +20,7 @@ using namespace std;
 //------------------------------------------------------------------- SMOKE
 void Smoke::onNewTurn()
 {
-  auto* actor = Utils::getFirstActorAtPos(pos_);
+  auto* actor = Utils::getActorAtPos(pos_);
 
   if(actor)
   {
@@ -149,16 +149,16 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const
   const int R = FOV_STD_RADI_INT; //getLightRadius();
   Pos p0(max(0,         pos_.x - R),  max(0,          pos_.y - R));
   Pos p1(min(MAP_W - 1, pos_.x + R),  min(MAP_H - 1,  pos_.y + R));
-  bool losBlockers[MAP_W][MAP_H];
+  bool blockedLos[MAP_W][MAP_H];
   for(int y = p0.y; y <= p1.y; ++y)
   {
     for(int x = p0.x; x <= p1.x; ++x)
     {
-      losBlockers[x][y] = !Map::cells[x][y].rigid->isLosPassable();
+      blockedLos[x][y] = !Map::cells[x][y].rigid->isLosPassable();
     }
   }
 
-  Fov::runFovOnArray(losBlockers, pos_, myLight, false);
+  Fov::runFovOnArray(blockedLos, pos_, myLight, false);
   for(int y = p0.y; y <= p1.y; ++y)
   {
     for(int x = p0.x; x <= p1.x; ++x)

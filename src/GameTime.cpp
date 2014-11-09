@@ -47,8 +47,8 @@ void runStdTurnEvents()
 {
   ++turnNr_;
 
-  bool losBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), losBlockers);
+  bool blockedLos[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksLos(), blockedLos);
 
   int regenSpiNTurns = 12;
 
@@ -70,7 +70,7 @@ void runStdTurnEvents()
     }
     else     //Monster is alive or is a corpse
     {
-      actor->getPropHandler().tick(PropTurnMode::std, losBlockers);
+      actor->getPropHandler().tick(PropTurnMode::std, blockedLos);
 
       if(actor != Map::player)
       {
@@ -354,10 +354,16 @@ void updateLightMap()
   {
     for(int y = 0; y < MAP_H; ++y)
     {
-      Map::cells[x][y].rigid->addLight(lightTmp);
+      auto* rigid = Map::cells[x][y].rigid;
 
-      //Note: Here the temporary values are copied to the map.
-      //This must of course be done last!
+      if(rigid->getBurnState() == BurnState::burning)
+      {
+        lightTmp[x][y] = true;
+      }
+
+      rigid->addLight(lightTmp);
+
+      //Copy the temp values to the real light map.
       Map::cells[x][y].isLit = lightTmp[x][y];
     }
   }

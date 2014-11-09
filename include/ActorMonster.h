@@ -66,8 +66,7 @@ public:
   void playerBecomeAwareOfMe(const int DURATION_FACTOR = 1);
 
   void onActorTurn() override;
-  virtual bool onActorTurn_() {return false;}
-  virtual void onStdTurn() override {}
+  virtual void onStdTurn() override final;
 
   virtual std::string getAggroPhraseMonSeen() const
   {
@@ -103,9 +102,13 @@ public:
   bool                waiting_;
   double              shockCausedCur_;
   bool                hasGivenXpForSpotting_;
+  int                 nrTurnsUntilUnsummoned_;
 
 protected:
   virtual void hit_(int& dmg) override;
+
+  virtual bool onActorTurn_() {return false;}
+  virtual void onStdTurn_() {}
 };
 
 class Rat: public Mon
@@ -258,9 +261,9 @@ class LengElder: public Mon
 public:
   LengElder() : Mon() {}
   ~LengElder() {}
-  void onStdTurn() override;
-  void mkStartItems()   override;
+  void mkStartItems() override;
 private:
+  void onStdTurn_()    override;
   bool  hasGivenItemToPlayer_;
   int   nrTurnsToHostile_;
 };
@@ -582,8 +585,9 @@ class Ooze: public Mon
 public:
   Ooze() : Mon() {}
   ~Ooze() {}
-  virtual void onStdTurn() override;
   virtual void mkStartItems() = 0;
+private:
+  virtual void onStdTurn_() override;
 };
 
 class OozeBlack: public Ooze
@@ -618,17 +622,16 @@ public:
   void mkStartItems() override;
 };
 
-class ColourOOSpace: public Ooze
+class ColorOOSpace: public Ooze
 {
 public:
-  ColourOOSpace() : Ooze(),
+  ColorOOSpace() : Ooze(),
     curColor(clrMagentaLgt) {}
-  ~ColourOOSpace() {}
-//  bool onActorTurn_() override;
-  void onStdTurn() override;
+  ~ColorOOSpace() {}
   void mkStartItems() override;
   const Clr& getClr();
 private:
+  void onStdTurn_() override;
   Clr curColor;
 };
 

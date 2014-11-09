@@ -40,7 +40,7 @@ void setPosToClosestEnemyIfVisible()
   {
     pos_ = Utils::getClosestPos(Map::player->pos, seenFoesCells);
 
-    Map::player->target = Utils::getFirstActorAtPos(pos_);
+    Map::player->target = Utils::getActorAtPos(pos_);
   }
 }
 

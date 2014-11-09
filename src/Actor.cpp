@@ -65,7 +65,7 @@ int Actor::getHpMax(const bool WITH_MODIFIERS) const
   return WITH_MODIFIERS ? propHandler_->getChangedMaxHp(hpMax_) : hpMax_;
 }
 
-bool Actor::isSeeingActor(const Actor& other, const bool losBlockers[MAP_W][MAP_H]) const
+bool Actor::isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H]) const
 {
   if(this == &other)
   {
@@ -96,10 +96,10 @@ bool Actor::isSeeingActor(const Actor& other, const bool losBlockers[MAP_W][MAP_
     if(other.pos.y - pos.y > FOV_STD_RADI_INT) {return false;}
     if(pos.y - other.pos.y > FOV_STD_RADI_INT) {return false;}
 
-    if(losBlockers)
+    if(blockedLos)
     {
       const bool IS_BLOCKED_BY_DARKNESS = !data_->canSeeInDarkness;
-      return Fov::checkCell(losBlockers, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
+      return Fov::checkCell(blockedLos, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
     }
   }
   return false;
@@ -109,11 +109,11 @@ void Actor::getSeenFoes(vector<Actor*>& vectorRef)
 {
   vectorRef.clear();
 
-  bool losBlockers[MAP_W][MAP_H];
+  bool blockedLos[MAP_W][MAP_H];
 
   if(!isPlayer())
   {
-    MapParse::parse(CellPred::BlocksLos(), losBlockers);
+    MapParse::parse(CellPred::BlocksLos(), blockedLos);
   }
 
   for(Actor* actor : GameTime::actors_)
@@ -143,7 +143,7 @@ void Actor::getSeenFoes(vector<Actor*>& vectorRef)
           (IS_HOSTILE_TO_PLAYER && !IS_OTHER_HOSTILE_TO_PLAYER) ||
           (!IS_HOSTILE_TO_PLAYER && IS_OTHER_HOSTILE_TO_PLAYER))
         {
-          if(isSeeingActor(*actor, losBlockers))
+          if(isSeeingActor(*actor, blockedLos))
           {
             vectorRef.push_back(actor);
           }
@@ -611,9 +611,9 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   {
     if(isHumanoid())
     {
-      Snd snd("I hear agonised screaming.", SfxId::END, IgnoreMsgIfOriginSeen::yes,
-              pos, this, SndVol::low, AlertsMon::no);
-      SndEmit::emitSnd(snd);
+      SndEmit::emitSnd({"I hear agonised screaming.", SfxId::END,
+                        IgnoreMsgIfOriginSeen::yes, pos, this, SndVol::low, AlertsMon::no
+                       });
     }
     static_cast<Mon*>(this)->leader = nullptr;
   }

@@ -26,7 +26,7 @@ void Feature::bump(Actor& actorBumping)
 
   if(!canMove(props))
   {
-    if(&actorBumping == Map::player)
+    if(actorBumping.isPlayer())
     {
       if(Map::player->getPropHandler().allowSee())
       {
@@ -40,7 +40,10 @@ void Feature::bump(Actor& actorBumping)
   }
 }
 
-void Feature::addLight(bool light[MAP_W][MAP_H]) const {(void)light;}
+void Feature::addLight(bool light[MAP_W][MAP_H]) const
+{
+  (void)light;
+}
 
 bool Feature::canMoveCmn() const {return getData().moveRules.canMoveCmn();}
 

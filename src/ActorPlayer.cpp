@@ -1181,7 +1181,7 @@ void Player::moveDir(Dir dir)
 
     if(dir != Dir::center)
     {
-      Mon* const monAtDest = static_cast<Mon*>(Utils::getFirstActorAtPos(dest));
+      Mon* const monAtDest = static_cast<Mon*>(Utils::getActorAtPos(dest));
 
       //Attack?
       if(monAtDest && monAtDest->leader != this)
@@ -1332,23 +1332,14 @@ void Player::autoMelee()
   }
 
   //If this line reached, there is no adjacent cur target.
-  for(int dx = -1; dx <= 1; ++dx)
+  for(const Pos& d : DirUtils::dirList)
   {
-    for(int dy = -1; dy <= 1; ++dy)
+    Actor* const actor = Utils::getActorAtPos(pos + d);
+    if(actor && !isLeaderOf(*actor) && isSeeingActor(*actor, nullptr))
     {
-      if(dx != 0 || dy != 0)
-      {
-        Actor* const actor = Utils::getFirstActorAtPos(pos + Pos(dx, dy));
-        if(actor)
-        {
-          if(isSeeingActor(*actor, nullptr))
-          {
-            target = actor;
-            moveDir(DirUtils::getDir(Pos(dx, dy)));
-            return;
-          }
-        }
-      }
+      target = actor;
+      moveDir(DirUtils::getDir(d));
+      return;
     }
   }
 }
@@ -1417,17 +1408,17 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const
     Pos p0(max(0, pos.x - RADI), max(0, pos.y - RADI));
     Pos p1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
 
-    bool losBlockers[MAP_W][MAP_H];
+    bool blockedLos[MAP_W][MAP_H];
     for(int y = p0.y; y <= p1.y; ++y)
     {
       for(int x = p0.x; x <= p1.x; ++x)
       {
         const auto* const f = Map::cells[x][y].rigid;
-        losBlockers[x][y] = !f->isLosPassable();
+        blockedLos[x][y] = !f->isLosPassable();
       }
     }
 
-    Fov::runFovOnArray(losBlockers, pos, myLight, false);
+    Fov::runFovOnArray(blockedLos, pos, myLight, false);
     for(int y = p0.y; y <= p1.y; ++y)
     {
       for(int x = p0.x; x <= p1.x; ++x)
@@ -1483,25 +1474,25 @@ void Player::updateFov()
   }
 
   //Player see a small area around friendly creatures
-  for(const Actor* const actor : GameTime::actors_)
-  {
-    if(actor != this)
-    {
-      const Mon* const mon = static_cast<const Mon*>(actor);
-      if(mon->leader == this)
-      {
-        const Pos& p = mon->pos;
-        const Rect r(p - 1, p + 1);
-        for(int x = r.p0.x; x <= r.p1.x; ++x)
-        {
-          for(int y = r.p0.y; y <= r.p1.y; ++y)
-          {
-            Map::cells[x][y].isSeenByPlayer = true;
-          }
-        }
-      }
-    }
-  }
+//  for(const Actor* const actor : GameTime::actors_)
+//  {
+//    if(actor != this)
+//    {
+//      const Mon* const mon = static_cast<const Mon*>(actor);
+//      if(isLeaderOf(*mon))
+//      {
+//        const Pos& p = mon->pos;
+//        const Rect r(p - 1, p + 1);
+//        for(int x = r.p0.x; x <= r.p1.x; ++x)
+//        {
+//          for(int y = r.p0.y; y <= r.p1.y; ++y)
+//          {
+//            Map::cells[x][y].isSeenByPlayer = true;
+//          }
+//        }
+//      }
+//    }
+//  }
 
   //Explore
   for(int x = 0; x < MAP_W; ++x)
@@ -1521,8 +1512,8 @@ void Player::updateFov()
 
 void Player::FOVhack()
 {
-  bool losBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), losBlockers);
+  bool blockedLos[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksLos(), blockedLos);
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
@@ -1531,7 +1522,7 @@ void Player::FOVhack()
   {
     for(int y = 0; y < MAP_H; ++y)
     {
-      if(losBlockers[x][y] && blocked[x][y])
+      if(blockedLos[x][y] && blocked[x][y])
       {
         const Pos p(x, y);
 

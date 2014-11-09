@@ -21,7 +21,8 @@ namespace
 
 Actor* mkActorFromId(const ActorId id)
 {
-  switch(id) {
+  switch(id)
+  {
     case ActorId::player:               return new Player();
     case ActorId::zombie:               return new ZombieClaw();
     case ActorId::zombieAxe:            return new ZombieAxe();
@@ -66,7 +67,7 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::fireVortex:           return new FireVortex();
     case ActorId::frostVortex:          return new FrostVortex();
     case ActorId::oozeBlack:            return new OozeBlack();
-    case ActorId::colourOOSpace:        return new ColourOOSpace();
+    case ActorId::colourOOSpace:        return new ColorOOSpace();
     case ActorId::oozeClear:            return new OozeClear();
     case ActorId::oozePutrid:           return new OozePutrid();
     case ActorId::oozePoison:           return new OozePoison();
@@ -91,7 +92,8 @@ Actor* mk(const ActorId id, const Pos& pos)
 
   actor->place(pos, ActorData::data[int(id)]);
 
-  if(actor->getData().nrLeftAllowedToSpawn != -1) {
+  if(actor->getData().nrLeftAllowedToSpawn != -1)
+  {
     actor->getData().nrLeftAllowedToSpawn--;
   }
 
@@ -104,8 +106,10 @@ void deleteAllMon()
 {
   vector<Actor*>& actors = GameTime::actors_;
 
-  for(size_t i = 0; i < actors.size(); ++i) {
-    if(actors.at(i) != Map::player) {
+  for(size_t i = 0; i < actors.size(); ++i)
+  {
+    if(actors.at(i) != Map::player)
+    {
       GameTime::eraseActorInElement(i);
       i--;
     }
@@ -129,29 +133,34 @@ void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
   const int NR_TO_SPAWN     = min(NR_FREE_CELLS, NR_MONSTER_IDS);
 
   vector<Pos> positionsToAnimate;
-  positionsToAnimate.clear();
 
-  for(int i = 0; i < NR_TO_SPAWN; ++i) {
+  for(int i = 0; i < NR_TO_SPAWN; ++i)
+  {
     const Pos&    pos   = freeCells.at(i);
     const ActorId id    = monsterIds.at(i);
     Actor* const  actor = mk(id, pos);
     Mon* const    mon   = static_cast<Mon*>(actor);
 
-    if(monstersRet) {
+    if(monstersRet)
+    {
       monstersRet->push_back(mon);
     }
-    if(actorToSetAsLeader) {
+    if(actorToSetAsLeader)
+    {
       mon->leader = actorToSetAsLeader;
     }
-    if(MAKE_MONSTERS_AWARE) {
+    if(MAKE_MONSTERS_AWARE)
+    {
       mon->awareCounter_ = mon->getData().nrTurnsAwarePlayer;
     }
 
-    if(Map::player->isSeeingActor(*actor, nullptr)) {
+    if(Map::player->isSeeingActor(*actor, nullptr))
+    {
       positionsToAnimate.push_back(pos);
     }
   }
 
+//  Render::
   Render::drawBlastAtCells(positionsToAnimate, clrMagenta);
 }
 

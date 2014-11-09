@@ -150,7 +150,7 @@ void getActorCells(const vector<Actor*>& actors, vector<Pos>& out)
   for(const auto* const a : actors) {out.push_back(a->pos);}
 }
 
-Actor* getFirstActorAtPos(const Pos& pos, ActorState state)
+Actor* getActorAtPos(const Pos& pos, ActorState state)
 {
   for(auto* const actor : GameTime::actors_)
   {

@@ -132,7 +132,7 @@ void printLocationInfoMsgs(const Pos& pos)
     }
 
     //Describe living actor.
-    Actor* actor = Utils::getFirstActorAtPos(pos);
+    Actor* actor = Utils::getActorAtPos(pos);
     if(actor && actor != Map::player)
     {
       if(actor->isAlive())
@@ -154,7 +154,7 @@ void printLocationInfoMsgs(const Pos& pos)
 
 void printDetailedActorDescr(const Pos& pos)
 {
-  Actor* actor = Utils::getFirstActorAtPos(pos);
+  Actor* actor = Utils::getActorAtPos(pos);
   if(actor && actor != Map::player)
   {
     //Add written description.

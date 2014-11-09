@@ -115,7 +115,7 @@ struct ActorDataT
   bool isUnique;
   bool isAutoSpawnAllowed;
   std::string spellCastMessage;
-  ActorErraticFreq erraticMovement;
+  ActorErraticFreq erraticMovePct;
   MonShockLvl monShockLvl;
   bool isRat, isCanine, isSpider, isUndead, isGhost;
   bool canBeSummoned;

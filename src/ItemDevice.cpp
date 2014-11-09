@@ -198,7 +198,7 @@ void DeviceBlaster::triggerEffect()
   }
   else
   {
-    Spell* const spell = SpellHandling::mkSpellFromId(SpellId::azathothsWrath);
+    Spell* const spell = SpellHandling::mkSpellFromId(SpellId::azaWrath);
     spell->cast(Map::player, false);
     delete spell;
   }

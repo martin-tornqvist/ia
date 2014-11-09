@@ -859,6 +859,7 @@ void initDataList()
   d->melee.dmg = pair<int, int>(2, 4);
   d->melee.hitChanceMod = 0;
   d->melee.missSfx = SfxId::missMedium;
+  d->chanceToIncludeInSpawnList = 0;
   d->itemValue = ItemValue::majorTreasure;
   data[int(d->id)] = d;
 
@@ -1340,9 +1341,9 @@ void initDataList()
   d->glyph = '[';
   d->isHeadwear = true;
   d->spawnStdRange = Range(-1, -1);
-  d->chanceToIncludeInSpawnList = 0;
   d->itemWeight = itemWeight_light;
   d->landOnHardSndMsg = "";
+  d->chanceToIncludeInSpawnList = 0;
   d->itemValue = ItemValue::majorTreasure;
   data[int(d->id)] = d;
 
@@ -1398,7 +1399,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::scrollAzaWrath);
   resetData(*d, ItemType::scroll);
-  d->spellCastFromScroll = SpellId::azathothsWrath;
+  d->spellCastFromScroll = SpellId::azaWrath;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::scrollOpening);
@@ -1424,6 +1425,11 @@ void initDataList()
   d = new ItemDataT(ItemId::scrollElemRes);
   resetData(*d, ItemType::scroll);
   d->spellCastFromScroll = SpellId::elemRes;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::scrollSummonMon);
+  resetData(*d, ItemType::scroll);
+  d->spellCastFromScroll = SpellId::summonMon;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::potionVitality);

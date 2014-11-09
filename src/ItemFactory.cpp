@@ -137,6 +137,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::scrollSacrLife:      r = new Scroll(d);                break;
     case ItemId::scrollSacrSpi:       r = new Scroll(d);                break;
     case ItemId::scrollElemRes:       r = new Scroll(d);                break;
+    case ItemId::scrollSummonMon:     r = new Scroll(d);                break;
 
     case ItemId::potionVitality:      r = new PotionVitality(d);        break;
     case ItemId::potionSpirit:        r = new PotionSpirit(d);          break;

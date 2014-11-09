@@ -112,7 +112,7 @@ void Trap::bump(Actor& actorBumping)
     find(begin(props), end(props), propEthereal)  == end(props) &&
     find(begin(props), end(props), propFlying)    == end(props))
   {
-    const bool IS_PLAYER      = &actorBumping == Map::player;
+    const bool IS_PLAYER      = actorBumping.isPlayer();
     const bool ACTOR_CAN_SEE  = actorBumping.getPropHandler().allowSee();
     AbilityVals& abilities    = actorBumping.getData().abilityVals;
     const int DODGE_SKILL     = abilities.getVal(AbilityId::dodgeTrap, true,

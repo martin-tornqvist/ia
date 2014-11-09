@@ -460,7 +460,7 @@ Matl Door::getMatl() const
 
 void Door::bump(Actor& actorBumping)
 {
-  if(&actorBumping == Map::player)
+  if(actorBumping.isPlayer())
   {
     if(isSecret_)
     {

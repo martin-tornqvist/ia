@@ -92,7 +92,7 @@ void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
 
 void mkBoolMapFromVector(const std::vector<Pos>& positions, bool out[MAP_W][MAP_H]);
 
-Actor* getFirstActorAtPos(const Pos& pos, ActorState state = ActorState::alive);
+Actor* getActorAtPos(const Pos& pos, ActorState state = ActorState::alive);
 
 Mob* getFirstMobAtPos(const Pos& pos);
 

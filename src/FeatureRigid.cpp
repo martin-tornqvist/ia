@@ -53,7 +53,7 @@ void Rigid::onNewTurn()
     //TODO Hit dead actors
 
     //Hit actor standing on feature
-    auto* actor = Utils::getFirstActorAtPos(pos_);
+    auto* actor = Utils::getActorAtPos(pos_);
     if(actor)
     {
       //Occasionally try to set actor on fire, otherwise just do small fire damage
@@ -129,7 +129,7 @@ void Rigid::onNewTurn()
       {
         Map::cells[p.x][p.y].rigid->hit(DmgType::fire, DmgMethod::elemental);
 
-        actor = Utils::getFirstActorAtPos(p);
+        actor = Utils::getActorAtPos(p);
         if(actor) {scorchActor(*actor);}
       }
     }
@@ -611,7 +611,7 @@ void GraveStone::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void GraveStone::bump(Actor& actorBumping)
 {
-  if(&actorBumping == Map::player) {Log::addMsg(inscr_);}
+  if(actorBumping.isPlayer()) {Log::addMsg(inscr_);}
 }
 
 string GraveStone::getName(const Article article) const
@@ -678,7 +678,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
       if(!CellPred::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y]))
       {
-        Actor* const actorBehind = Utils::getFirstActorAtPos(dstPos);
+        Actor* const actorBehind = Utils::getActorAtPos(dstPos);
         if(actorBehind)
         {
           if(actorBehind->isAlive())
@@ -746,8 +746,7 @@ Clr Pillar::getClr_() const
 //--------------------------------------------------------------------- STAIRS
 Stairs::Stairs(Pos pos) : Rigid(pos) {}
 
-void Stairs::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                   Actor* const actor)
+void Stairs::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
@@ -759,28 +758,32 @@ void Stairs::onNewTurn_()
 
 void Stairs::bump(Actor& actorBumping)
 {
-  if(&actorBumping == Map::player)
+  if(actorBumping.isPlayer())
   {
-
     const vector<string> choices {"Descend", "Save and quit", "Cancel"};
-    const int CHOICE =
-      Popup::showMenuMsg("", true, choices, "A staircase leading downwards");
+    const string title  = "A staircase leading downwards";
+    const int CHOICE    =  Popup::showMenuMsg("", true, choices, title);
 
-    if(CHOICE == 0)
+    switch(CHOICE)
     {
-      Map::player->pos = pos_;
-      MapTravel::goToNxt();
-    }
-    else if(CHOICE == 1)
-    {
-      Map::player->pos = pos_;
-      SaveHandling::save();
-      Init::quitToMainMenu = true;
-    }
-    else
-    {
-      Log::clearLog();
-      Render::drawMapAndInterface();
+      case 0:
+      {
+        Map::player->pos = pos_;
+        MapTravel::goToNxt();
+      } break;
+
+      case 1:
+      {
+        Map::player->pos = pos_;
+        SaveHandling::save();
+        Init::quitToMainMenu = true;
+      } break;
+
+      default:
+      {
+        Log::clearLog();
+        Render::drawMapAndInterface();
+      } break;
     }
   }
 }
@@ -845,7 +848,7 @@ void LiquidShallow::bump(Actor& actorBumping)
 
     actorBumping.getPropHandler().tryApplyProp(new PropWaiting(PropTurns::std));
 
-    if(&actorBumping == Map::player) Log::addMsg("*glop*");
+    if(actorBumping.isPlayer()) Log::addMsg("*glop*");
   }
 }
 
@@ -1395,7 +1398,7 @@ Clr Tomb::getClr_() const
 
 void Tomb::bump(Actor& actorBumping)
 {
-  if(&actorBumping == Map::player)
+  if(actorBumping.isPlayer())
   {
     if(itemContainer_.items_.empty() && isContentKnown_)
     {
@@ -1726,7 +1729,7 @@ void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void Chest::bump(Actor& actorBumping)
 {
-  if(&actorBumping == Map::player)
+  if(actorBumping.isPlayer())
   {
     if(itemContainer_.items_.empty() && isContentKnown_)
     {
@@ -2115,9 +2118,8 @@ string Fountain::getName(const Article article) const
 
 void Fountain::bump(Actor& actorBumping)
 {
-  if(&actorBumping == Map::player)
+  if(actorBumping.isPlayer())
   {
-
     if(isDried_)
     {
       Log::addMsg("The fountain is dried out.");
@@ -2263,9 +2265,8 @@ void Cabinet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void Cabinet::bump(Actor& actorBumping)
 {
-  if(&actorBumping == Map::player)
+  if(actorBumping.isPlayer())
   {
-
     if(itemContainer_.items_.empty() && isContentKnown_)
     {
       Log::addMsg("The cabinet is empty.");
@@ -2330,7 +2331,7 @@ void Cocoon::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void Cocoon::bump(Actor& actorBumping)
 {
-  if(&actorBumping == Map::player)
+  if(actorBumping.isPlayer())
   {
     if(itemContainer_.items_.empty() && isContentKnown_)
     {

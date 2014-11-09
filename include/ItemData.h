@@ -148,6 +148,7 @@ enum class ItemId
   scrollSacrLife,
   scrollSacrSpi,
   scrollElemRes,
+  scrollSummonMon,
 
   potionVitality,
   potionSpirit,

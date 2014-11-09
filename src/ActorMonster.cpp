@@ -37,7 +37,8 @@ Mon::Mon() :
   target(nullptr),
   waiting_(false),
   shockCausedCur_(0.0),
-  hasGivenXpForSpotting_(false) {}
+  hasGivenXpForSpotting_(false),
+  nrTurnsUntilUnsummoned_(-1) {}
 
 Mon::~Mon()
 {
@@ -50,13 +51,13 @@ void Mon::onActorTurn()
   assert(Utils::isPosInsideMap(pos));
 
   //Test that monster's leader does not have a leader (never allowed)
-  if(leader && leader != Map::player && static_cast<Mon*>(leader)->leader)
+  if(leader && !isActorMyLeader(*Map::player) && static_cast<Mon*>(leader)->leader)
   {
     TRACE << "Two (or more) steps of leader is never allowed" << endl;
     assert(false);
   }
 
-  if(awareCounter_ <= 0 && leader != Map::player)
+  if(awareCounter_ <= 0 && !isActorMyLeader(*Map::player))
   {
     waiting_ = !waiting_;
 
@@ -140,7 +141,14 @@ void Mon::onActorTurn()
     if(Ai::Action::castRandomSpellIfAware(*this)) {return;}
   }
 
-  if(Rnd::percentile() < data_->erraticMovement)
+  int erraticMovePct = data_->erraticMovePct;
+  if(isActorMyLeader(*Map::player))
+  {
+    //Move less erratically if allied to player
+    erraticMovePct /= 2;
+  }
+
+  if(Rnd::percentile() < erraticMovePct)
   {
     if(Ai::Action::moveToRandomAdjCell(*this)) {return;}
   }
@@ -186,6 +194,25 @@ void Mon::onActorTurn()
   if(Ai::Action::moveToRandomAdjCell(*this)) {return;}
 
   GameTime::actorDidAct();
+}
+
+void Mon::onStdTurn()
+{
+  if(nrTurnsUntilUnsummoned_ > 0)
+  {
+    --nrTurnsUntilUnsummoned_;
+    if(nrTurnsUntilUnsummoned_ <= 0)
+    {
+      if(Map::player->isSeeingActor(*this, nullptr))
+      {
+        Log::addMsg(getNameThe() + " suddenly disappears!");
+//        Render::drawBlastAtCells({pos}, clrMagenta);
+      }
+      state = ActorState::destroyed;
+      return;
+    }
+  }
+  onStdTurn_();
 }
 
 void Mon::hit_(int& dmg)
@@ -329,7 +356,7 @@ bool Mon::tryAttack(Actor& defender)
       {
         if(linePos != pos && linePos != defender.pos)
         {
-          Actor* const actorHere = Utils::getFirstActorAtPos(linePos);
+          Actor* const actorHere = Utils::getActorAtPos(linePos);
           if(actorHere)
           {
             isBlockedByFriend = true;
@@ -446,7 +473,6 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
     {
       for(size_t i = 1; i < nrWpns; ++i)
       {
-
         //Found new weapon in element i.
         newWpn = attackOpport.weapons.at(i);
         const ItemDataT* newData = &(newWpn->getData());

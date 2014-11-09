@@ -608,9 +608,9 @@ void MedicalBag::finishCurAction()
   {
     case MedBagAction::sanitizeInfection:
     {
-      bool losBlockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksLos(), losBlockers);
-      Map::player->getPropHandler().endAppliedProp(propInfected, losBlockers);
+      bool blockedLos[MAP_W][MAP_H];
+      MapParse::parse(CellPred::BlocksLos(), blockedLos);
+      Map::player->getPropHandler().endAppliedProp(propInfected, blockedLos);
       nrSupplies_ -= getTotSupplForSanitize();
     } break;
 
@@ -672,11 +672,11 @@ void HideousMask::newTurnInInventory()
   }
   if(!adjActors.empty())
   {
-    bool losBlockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksLos(), losBlockers);
+    bool blockedLos[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksLos(), blockedLos);
     for(auto* const actor : adjActors)
     {
-      if(Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, losBlockers))
+      if(Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, blockedLos))
       {
         actor->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
       }

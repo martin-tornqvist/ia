@@ -335,10 +335,10 @@ void PotionRFire::collide_(const Pos& pos, Actor* const actor)
 
 void PotionAntidote::quaff_(Actor& actor)
 {
-  bool losBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), losBlockers);
+  bool blockedLos[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksLos(), blockedLos);
   const bool WAS_POISONED =
-    actor.getPropHandler().endAppliedProp(propPoisoned, losBlockers);
+    actor.getPropHandler().endAppliedProp(propPoisoned, blockedLos);
 
   if(WAS_POISONED && Map::player->isSeeingActor(actor, nullptr))
   {

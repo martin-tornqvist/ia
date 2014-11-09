@@ -61,8 +61,8 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           (!CELL_BLOCKED || CELL_IS_BOTTOMLESS))
         {
 
-          bool losBlockers[MAP_W][MAP_H];
-          MapParse::parse(CellPred::BlocksLos(), losBlockers);
+          bool blockedLos[MAP_W][MAP_H];
+          MapParse::parse(CellPred::BlocksLos(), blockedLos);
           const bool PLAYER_SEE_DEFENDER =
             DEFENDER_IS_MON ? Map::player->isSeeingActor(defender, blocked) :
             true;

@@ -240,7 +240,7 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
   verbOtherAttacks(wpn_.getData().ranged.attMsgs.other)
 {
 
-  Actor* const actorAimedAt = Utils::getFirstActorAtPos(aimPos_);
+  Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLvl_ == actorSize_none)
@@ -262,7 +262,7 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
     intendedAimLvl = intendedAimLvl_;
   }
 
-  defender = Utils::getFirstActorAtPos(curPos_);
+  defender = Utils::getActorAtPos(curPos_);
 
   if(defender)
   {
@@ -348,7 +348,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
   defenderSize(actorSize_none)
 {
 
-  Actor* const actorAimedAt = Utils::getFirstActorAtPos(aimPos_);
+  Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
   if(intendedAimLvl_ == actorSize_none)
@@ -370,7 +370,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
     intendedAimLvl = intendedAimLvl_;
   }
 
-  defender = Utils::getFirstActorAtPos(curPos_);
+  defender = Utils::getActorAtPos(curPos_);
 
   if(defender)
   {

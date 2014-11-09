@@ -129,7 +129,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
 
     curPos.set(path.at(i));
 
-    Actor* const actorHere = Utils::getFirstActorAtPos(curPos);
+    Actor* const actorHere = Utils::getActorAtPos(curPos);
     if(actorHere)
     {
       if(curPos == tgtCell || actorHere->getData().actorSize >= actorSize_humanoid)

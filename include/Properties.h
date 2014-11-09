@@ -162,7 +162,7 @@ public:
   Prop* getProp(const PropId id, const PropSrc source) const;
 
   bool endAppliedProp(const PropId id,
-                      const bool losBlockers[MAP_W][MAP_H],
+                      const bool blockedLos[MAP_W][MAP_H],
                       const bool RUN_PROP_END_EFFECTS = true);
 
   void endAppliedPropsByMagicHealing();
@@ -175,7 +175,7 @@ public:
   void applyActorTurnPropBuffer();
 
   void tick(const PropTurnMode turnMode,
-            const bool losBlockers[MAP_W][MAP_H]);
+            const bool blockedLos[MAP_W][MAP_H]);
 
   void getPropsInterfaceLine(std::vector<StrAndClr>& line) const;
 

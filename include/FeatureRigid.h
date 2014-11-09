@@ -38,6 +38,8 @@ public:
 
   void setHasBurned() {burnState_ = BurnState::hasBurned;}
 
+  BurnState getBurnState() const {return burnState_;}
+
 protected:
   virtual void        onNewTurn_() {}
 
@@ -49,7 +51,6 @@ protected:
 
   void                tryStartBurning(const bool IS_MSG_ALLOWED);
   virtual IsDestroyed onFinishedBurning() {return IsDestroyed::no;}
-  BurnState           getBurnState() const {return burnState_;}
   virtual void        triggerTrap(Actor& actor) {(void)actor;}
 
   TileId  goreTile_;

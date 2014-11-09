@@ -500,8 +500,8 @@ void drawMarker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANG
 }
 
 void drawBlastAtField(const Pos& centerPos, const int RADIUS,
-                      bool forbiddenCells[MAP_W][MAP_H], const Clr& colorInner,
-                      const Clr& colorOuter)
+                      bool forbiddenCells[MAP_W][MAP_H], const Clr& clrInner,
+                      const Clr& clrOuter)
 {
   TRACE_FUNC_BEGIN;
   if(isInited())
@@ -528,14 +528,14 @@ void drawBlastAtField(const Pos& centerPos, const int RADIUS,
                                 pos.x == centerPos.x + RADIUS ||
                                 pos.y == centerPos.y - RADIUS ||
                                 pos.y == centerPos.y + RADIUS;
-          const Clr color = IS_OUTER ? colorOuter : colorInner;
+          const Clr clr = IS_OUTER ? clrOuter : clrInner;
           if(Config::isTilesMode())
           {
-            drawTile(TileId::blast1, Panel::map, pos, color, clrBlack);
+            drawTile(TileId::blast1, Panel::map, pos, clr, clrBlack);
           }
           else
           {
-            drawGlyph('*', Panel::map, pos, color, true, clrBlack);
+            drawGlyph('*', Panel::map, pos, clr, true, clrBlack);
           }
           isAnyBlastRendered = true;
         }
@@ -560,14 +560,14 @@ void drawBlastAtField(const Pos& centerPos, const int RADIUS,
                                 pos.x == centerPos.x + RADIUS ||
                                 pos.y == centerPos.y - RADIUS ||
                                 pos.y == centerPos.y + RADIUS;
-          const Clr color = IS_OUTER ? colorOuter : colorInner;
+          const Clr clr = IS_OUTER ? clrOuter : clrInner;
           if(Config::isTilesMode())
           {
-            drawTile(TileId::blast2, Panel::map, pos, color, clrBlack);
+            drawTile(TileId::blast2, Panel::map, pos, clr, clrBlack);
           }
           else
           {
-            drawGlyph('*', Panel::map, pos, color, true, clrBlack);
+            drawGlyph('*', Panel::map, pos, clr, true, clrBlack);
           }
         }
       }
@@ -579,7 +579,7 @@ void drawBlastAtField(const Pos& centerPos, const int RADIUS,
   TRACE_FUNC_END;
 }
 
-void drawBlastAtCells(const vector<Pos>& positions, const Clr& color)
+void drawBlastAtCells(const vector<Pos>& positions, const Clr& clr)
 {
   TRACE_FUNC_BEGIN;
   if(isInited())
@@ -590,11 +590,11 @@ void drawBlastAtCells(const vector<Pos>& positions, const Clr& color)
     {
       if(Config::isTilesMode())
       {
-        drawTile(TileId::blast1, Panel::map, pos, color, clrBlack);
+        drawTile(TileId::blast1, Panel::map, pos, clr, clrBlack);
       }
       else
       {
-        drawGlyph('*', Panel::map, pos, color, true, clrBlack);
+        drawGlyph('*', Panel::map, pos, clr, true, clrBlack);
       }
     }
     updateScreen();
@@ -604,11 +604,11 @@ void drawBlastAtCells(const vector<Pos>& positions, const Clr& color)
     {
       if(Config::isTilesMode())
       {
-        drawTile(TileId::blast2, Panel::map, pos, color, clrBlack);
+        drawTile(TileId::blast2, Panel::map, pos, clr, clrBlack);
       }
       else
       {
-        drawGlyph('*', Panel::map, pos, color, true, clrBlack);
+        drawGlyph('*', Panel::map, pos, clr, true, clrBlack);
       }
     }
     updateScreen();
@@ -618,9 +618,8 @@ void drawBlastAtCells(const vector<Pos>& positions, const Clr& color)
   TRACE_FUNC_END;
 }
 
-void drawBlastAtCellsWithVision(const vector<Pos>& positions, const Clr& clr)
+void drawBlastAtSeenCells(const vector<Pos>& positions, const Clr& clr)
 {
-
   vector<Pos> positionsWithVision;
   for(const Pos& p : positions)
   {
@@ -631,6 +630,16 @@ void drawBlastAtCellsWithVision(const vector<Pos>& positions, const Clr& clr)
   }
 
   Render::drawBlastAtCells(positionsWithVision, clr);
+}
+
+void drawBlastAtSeenActors(const std::vector<Actor*>& actors, const Clr& clr)
+{
+  vector<Pos> positions;
+  for(Actor* const actor : actors)
+  {
+    positions.push_back(actor->pos);
+  }
+  drawBlastAtSeenCells(positions, clr);
 }
 
 void drawTile(const TileId tile, const Panel panel, const Pos& pos, const Clr& clr,
@@ -992,9 +1001,9 @@ void drawMap()
     xPos = actor->pos.x;
     yPos = actor->pos.y;
     if(
-      actor->isCorpse() &&
-      actor->getData().glyph != ' ' &&
-      actor->getData().tile != TileId::empty &&
+      actor->isCorpse()                       &&
+      actor->getData().glyph != ' '           &&
+      actor->getData().tile != TileId::empty  &&
       Map::cells[xPos][yPos].isSeenByPlayer)
     {
       curDrw = &renderArray[xPos][yPos];
@@ -1062,18 +1071,17 @@ void drawMap()
 
         if(Map::player->isSeeingActor(*actor, nullptr))
         {
-
           if(actor->getTile()  != TileId::empty && actor->getGlyph() != ' ')
           {
             curDrw->clr   = actor->getClr();
             curDrw->tile  = actor->getTile();
             curDrw->glyph = actor->getGlyph();
 
-            curDrw->lifebarLength = getLifebarLength(*actor);
+            curDrw->lifebarLength         = getLifebarLength(*actor);
             curDrw->isLivingActorSeenHere = true;
             curDrw->isLightFadeAllowed    = false;
 
-            if(mon->leader == Map::player)
+            if(Map::player->isLeaderOf(*mon))
             {
               curDrw->clrBg = clrGreen;
             }
@@ -1085,7 +1093,7 @@ void drawMap()
         }
         else
         {
-          if(mon->playerAwareOfMeCounter_ > 0)
+          if(mon->playerAwareOfMeCounter_ > 0 || Map::player->isLeaderOf(*mon))
           {
             curDrw->isAwareOfMonHere  = true;
           }

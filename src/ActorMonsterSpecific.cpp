@@ -239,9 +239,9 @@ bool Vortex::onActorTurn_()
               TRACE << knockBackFromPos.y << ")" << endl;
               TRACE << "Player position: ";
               TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
-              bool losBlockers[MAP_W][MAP_H];
-              MapParse::parse(CellPred::BlocksLos(), losBlockers);
-              if(isSeeingActor(*(Map::player), losBlockers))
+              bool blockedLos[MAP_W][MAP_H];
+              MapParse::parse(CellPred::BlocksLos(), blockedLos);
+              if(isSeeingActor(*(Map::player), blockedLos))
               {
                 TRACE << "I am seeing the player" << endl;
                 if(Map::player->isSeeingActor(*this, nullptr))
@@ -365,7 +365,7 @@ void MiGo::mkStartItems()
   inv_->putInIntrinsics(item);
 
   spellsKnown.push_back(new SpellTeleport);
-  spellsKnown.push_back(new SpellMiGoHypnosis);
+  spellsKnown.push_back(new SpellMiGoHypno);
   spellsKnown.push_back(new SpellHealSelf);
 
   if(Rnd::coinToss())
@@ -572,12 +572,12 @@ void KeziahMason::mkStartItems()
 {
   spellsKnown.push_back(new SpellTeleport);
   spellsKnown.push_back(new SpellHealSelf);
-  spellsKnown.push_back(new SpellSummonRandom);
-  spellsKnown.push_back(new SpellAzathothsWrath);
+  spellsKnown.push_back(new SpellSummonMon);
+  spellsKnown.push_back(new SpellAzaWrath);
   spellsKnown.push_back(SpellHandling::getRandomSpellForMon());
 }
 
-void LengElder::onStdTurn()
+void LengElder::onStdTurn_()
 {
   if(isAlive())
   {
@@ -586,9 +586,9 @@ void LengElder::onStdTurn()
 
     if(hasGivenItemToPlayer_)
     {
-      bool losBlockers[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksLos(), losBlockers);
-      if(isSeeingActor(*Map::player, losBlockers))
+      bool blockedLos[MAP_W][MAP_H];
+      MapParse::parse(CellPred::BlocksLos(), blockedLos);
+      if(isSeeingActor(*Map::player, blockedLos))
       {
         if(nrTurnsToHostile_ <= 0)
         {
@@ -631,7 +631,7 @@ void LengElder::mkStartItems()
 
 }
 
-void Ooze::onStdTurn()
+void Ooze::onStdTurn_()
 {
   restoreHp(1, false);
 }
@@ -656,17 +656,17 @@ void OozePoison::mkStartItems()
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::oozePoisonSpewPus));
 }
 
-void ColourOOSpace::mkStartItems()
+void ColorOOSpace::mkStartItems()
 {
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::colourOOSpaceTouch));
 }
 
-const Clr& ColourOOSpace::getClr()
+const Clr& ColorOOSpace::getClr()
 {
   return curColor;
 }
 
-void ColourOOSpace::onStdTurn()
+void ColorOOSpace::onStdTurn_()
 {
   curColor.r = Rnd::range(40, 255);
   curColor.g = Rnd::range(40, 255);
@@ -901,10 +901,10 @@ bool MajorClaphamLee::onActorTurn_()
       if(!hasSummonedTombLegions)
       {
 
-        bool losBlockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksLos(), losBlockers);
+        bool blockedLos[MAP_W][MAP_H];
+        MapParse::parse(CellPred::BlocksLos(), blockedLos);
 
-        if(isSeeingActor(*(Map::player), losBlockers))
+        if(isSeeingActor(*(Map::player), blockedLos))
         {
           Log::addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
           vector<ActorId> monIds;

@@ -35,14 +35,14 @@ bool castRandomSpellIfAware(Mon& mon)
 
         std::random_shuffle(begin(spellBucket), end(spellBucket));
 
-        bool losBlockers[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksLos(), losBlockers);
+        bool blockedLos[MAP_W][MAP_H];
+        MapParse::parse(CellPred::BlocksLos(), blockedLos);
 
         while(!spellBucket.empty())
         {
           Spell* const spell = spellBucket.back();
 
-          if(spell->allowMonCastNow(mon, losBlockers))
+          if(spell->allowMonCastNow(mon, blockedLos))
           {
             const int CUR_SPI = mon.getSpi();
             const int SPELL_MAX_SPI = spell->getSpiCost(false, &mon).upper;
@@ -181,13 +181,13 @@ void getMoveBucket(Mon& self, vector<Pos>& dirsToMk)
  #####
  */
 bool isAdjAndNoVision(const Mon& self, Mon& other,
-                      bool losBlockers[MAP_W][MAP_H])
+                      bool blockedLos[MAP_W][MAP_H])
 {
   //If the pal is next to me
   if(Utils::isPosAdj(self.pos, other.pos, false))
   {
     //If pal does not see player
-    if(!other.isSeeingActor(*Map::player, losBlockers)) {return true;}
+    if(!other.isSeeingActor(*Map::player, blockedLos)) {return true;}
   }
   return false;
 }
@@ -199,10 +199,10 @@ bool makeRoomForFriend(Mon& mon)
   if(mon.isAlive())
   {
 
-    bool losBlockers[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksLos(), losBlockers);
+    bool blockedLos[MAP_W][MAP_H];
+    MapParse::parse(CellPred::BlocksLos(), blockedLos);
 
-    if(mon.isSeeingActor(*Map::player, losBlockers))
+    if(mon.isSeeingActor(*Map::player, blockedLos))
     {
 
       //Loop through all actors
@@ -215,11 +215,11 @@ bool makeRoomForFriend(Mon& mon)
 
           Mon* other = static_cast<Mon*>(actor);
 
-          bool isOtherAdjWithNoLos = isAdjAndNoVision(mon, *other, losBlockers);
+          bool isOtherAdjWithNoLos = isAdjAndNoVision(mon, *other, blockedLos);
 
           //Other monster can see player, or it's an adjacent monster that does not see
           //the player?
-          if(other->isSeeingActor(*Map::player, losBlockers) || isOtherAdjWithNoLos)
+          if(other->isSeeingActor(*Map::player, blockedLos) || isOtherAdjWithNoLos)
           {
 
             //If we are blocking a pal, check every neighbouring position that is at
@@ -250,7 +250,7 @@ bool makeRoomForFriend(Mon& mon)
                     other = static_cast<Mon*>(actor2);
                     if(
                       other->isSeeingActor(
-                        *Map::player, losBlockers))
+                        *Map::player, blockedLos))
                     {
                       if(
                         checkIfBlockingMon(targetPos, *other))

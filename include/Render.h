@@ -66,13 +66,14 @@ void drawMarker(const Pos& p, const std::vector<Pos>& trail,
                 const int EFFECTIVE_RANGE = -1);
 
 void drawBlastAtField(const Pos& centerPos, const int RADIUS,
-                      bool forbiddenCells[MAP_W][MAP_H], const Clr& colorInner,
-                      const Clr& colorOuter);
+                      bool forbiddenCells[MAP_W][MAP_H], const Clr& clrInner,
+                      const Clr& clrOuter);
 
-void drawBlastAtCells(const std::vector<Pos>& positions,
-                      const Clr& color);
+void drawBlastAtCells(const std::vector<Pos>& positions, const Clr& clr);
 
-void drawBlastAtCellsWithVision(const std::vector<Pos>& positions, const Clr& clr);
+void drawBlastAtSeenCells(const std::vector<Pos>& positions, const Clr& clr);
+
+void drawBlastAtSeenActors(const std::vector<Actor*>& actors, const Clr& clr);
 
 void drawMainMenuLogo(const int Y_POS);
 

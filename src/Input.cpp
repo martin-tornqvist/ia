@@ -349,7 +349,7 @@ void handleKeyPress(const KeyData& d)
               {
                 Look::printLocationInfoMsgs(p);
 
-                auto* const actor = Utils::getFirstActorAtPos(p);
+                auto* const actor = Utils::getActorAtPos(p);
 
                 if(actor && actor != Map::player)
                 {
@@ -373,7 +373,7 @@ void handleKeyPress(const KeyData& d)
                     Log::clearLog();
                     Render::drawMapAndInterface();
 
-                    Actor* const actor = Utils::getFirstActorAtPos(p);
+                    Actor* const actor = Utils::getActorAtPos(p);
                     if(actor) {Map::player->target = actor;}
 
                     Attack::ranged(*Map::player, *wpn, p);
@@ -619,7 +619,7 @@ void handleKeyPress(const KeyData& d)
 
               Look::printLocationInfoMsgs(p);
 
-              auto* const actor = Utils::getFirstActorAtPos(p);
+              auto* const actor = Utils::getActorAtPos(p);
 
               if(actor && actor != Map::player)
               {
@@ -643,7 +643,7 @@ void handleKeyPress(const KeyData& d)
                   Log::clearLog();
                   Render::drawMapAndInterface();
 
-                  Actor* const actor = Utils::getFirstActorAtPos(p);
+                  Actor* const actor = Utils::getActorAtPos(p);
                   if(actor) {Map::player->target = actor;}
 
                   Throwing::throwItem(*Map::player, p, *itemToThrow);
@@ -689,7 +689,7 @@ void handleKeyPress(const KeyData& d)
         {
           Look::printLocationInfoMsgs(p);
 
-          auto* const actor = Utils::getFirstActorAtPos(p);
+          auto* const actor = Utils::getActorAtPos(p);
           if(actor && actor != Map::player)
           {
             Log::addMsg("[v] for description");
