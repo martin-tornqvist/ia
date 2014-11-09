@@ -413,15 +413,15 @@ void PotionInsight::quaff_(Actor& actor)
   const size_t NR_ELEMENTS = identifyBucket.size();
   if(NR_ELEMENTS > 0)
   {
-    const int ELEMENT = Rnd::range(0, NR_ELEMENTS - 1);
-
-    Item* const item = identifyBucket[ELEMENT];
-
-    const string itemNameBefore = item->getName(ItemRefType::a, ItemRefInf::none);
+    const int     IDX              = Rnd::range(0, NR_ELEMENTS - 1);
+    Item* const   item            = identifyBucket[IDX];
+    const string  itemNameBefore  = item->getName(ItemRefType::a, ItemRefInf::none);
 
     item->identify(true);
 
     const string itemNameAfter = item->getName(ItemRefType::a, ItemRefInf::none);
+
+    Render::drawMapAndInterface(true);
 
     Log::addMsg("I gain intuitions about " + itemNameBefore + "...");
     Log::addMsg("It is identified as " + itemNameAfter + "!");

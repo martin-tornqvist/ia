@@ -434,11 +434,13 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
 
   const size_t NR_MON = Rnd::range(7, 10);
 
-  Actor* leader = nullptr;
+  Actor*  leader                  = nullptr;
+  bool    didPlayerSummonHostile  = false;
 
   if(caster->isPlayer())
   {
-    leader = Rnd::oneIn(SUMMONED_HOSTILE_ONE_IN_N) ? nullptr : caster;
+    didPlayerSummonHostile  = Rnd::oneIn(SUMMONED_HOSTILE_ONE_IN_N);
+    leader                  = didPlayerSummonHostile ? nullptr : caster;
   }
   else //Caster is monster
   {
@@ -474,6 +476,11 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
 
     Log::addMsg("Disgusting critters appear around " + casterStr + "!");
 
+    if(didPlayerSummonHostile)
+    {
+      Log::addMsg("They are hostile!", clrMsgWarning, true, true);
+    }
+
     return SpellEffectNoticed::yes;
   }
 
@@ -504,11 +511,13 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
   }
 
   //This point reached means no mummy controlled, summon a new one
-  Actor* leader = nullptr;
+  Actor*  leader                  = nullptr;
+  bool    didPlayerSummonHostile  = false;
 
   if(caster->isPlayer())
   {
-    leader = Rnd::oneIn(SUMMONED_HOSTILE_ONE_IN_N) ? nullptr : caster;
+    didPlayerSummonHostile  = Rnd::oneIn(SUMMONED_HOSTILE_ONE_IN_N);
+    leader                  = didPlayerSummonHostile ? nullptr : caster;
   }
   else //Caster is monster
   {
@@ -525,6 +534,12 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
   if(Map::player->isSeeingActor(*mon, nullptr))
   {
     Log::addMsg(mon->getNameA() + " appears!");
+
+    if(didPlayerSummonHostile)
+    {
+      Log::addMsg("It is hostile!", clrMsgWarning, true, true);
+    }
+
     return SpellEffectNoticed::yes;
   }
 
@@ -970,13 +985,15 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
     return SpellEffectNoticed::no;
   }
 
-  const int       ELEMENT       = Rnd::range(0, summonBucket.size() - 1);
-  const ActorId   monId         = summonBucket[ELEMENT];
-  Actor*          leader        = nullptr;
+  const int       IDX                     = Rnd::range(0, summonBucket.size() - 1);
+  const ActorId   monId                   = summonBucket[IDX];
+  Actor*          leader                  = nullptr;
+  bool            didPlayerSummonHostile  = false;
 
   if(caster->isPlayer())
   {
-    leader = Rnd::oneIn(SUMMONED_HOSTILE_ONE_IN_N) ? nullptr : caster;
+    didPlayerSummonHostile  = Rnd::oneIn(SUMMONED_HOSTILE_ONE_IN_N);
+    leader                  = didPlayerSummonHostile ? nullptr : caster;
   }
   else //Caster is monster
   {
@@ -988,23 +1005,18 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
 
   ActorFactory::summonMon(summonPos, {monId}, true, leader, &monSummoned);
 
-  bool isAnySeenByPlayer = false;
+  Mon* const mon                = monSummoned[0];
+  mon->nrTurnsUntilUnsummoned_  = Rnd::range(40, 70);;
 
-  const int NR_TURNS_SUMMONED = Rnd::range(40, 70);
-
-  for(Mon* const mon : monSummoned)
+  if(Map::player->isSeeingActor(*mon, nullptr))
   {
-    mon->nrTurnsUntilUnsummoned_ = NR_TURNS_SUMMONED;
+    Log::addMsg(mon->getNameA() + " appears.");
 
-    if(Map::player->isSeeingActor(*mon, nullptr))
+    if(didPlayerSummonHostile)
     {
-      Log::addMsg(mon->getNameA() + " appears.");
-      isAnySeenByPlayer = true;
+      Log::addMsg("It is hostile!", clrMsgWarning, true, true);
     }
-  }
 
-  if(isAnySeenByPlayer)
-  {
     return SpellEffectNoticed::yes;
   }
 
