@@ -77,7 +77,7 @@ string Cultist::getCultistPhrase()
     phraseBucket.push_back("Apigami!");
   }
 
-  return phraseBucket.at(Rnd::range(0, phraseBucket.size() - 1));
+  return phraseBucket[Rnd::range(0, phraseBucket.size() - 1)];
 }
 
 void Cultist::mkStartItems()
@@ -469,7 +469,7 @@ bool Khephren::onActorTurn_()
             Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
             for(size_t i = 0; i < NR_OF_SPAWNS; ++i)
             {
-              Actor* const actor = ActorFactory::mk(ActorId::locust, freeCells.at(0));
+              Actor* const actor = ActorFactory::mk(ActorId::locust, freeCells[0]);
               Mon* const mon = static_cast<Mon*>(actor);
               mon->awareCounter_ = 999;
               mon->leader = this;
@@ -542,7 +542,7 @@ bool KeziahMason::onActorTurn_()
           const int LINE_SIZE = line.size();
           for(int i = 0; i < LINE_SIZE; ++i)
           {
-            const Pos c = line.at(i);
+            const Pos c = line[i];
             if(!blockedLos[c.x][c.y])
             {
               //TODO Use the generalized summoning functionality

@@ -40,7 +40,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
     for(int iOuter = 0; iOuter < NR_OUTER; iOuter++)
     {
       const Clr& clr = iOuter == NR_OUTER - 1 ? clrOuter : clrInner;
-      const vector<Pos>& inner = posLists.at(iOuter);
+      const vector<Pos>& inner = posLists[iOuter];
       for(const Pos& pos : inner)
       {
         if(
@@ -100,7 +100,7 @@ void getCellsReached(const Rect& area, const Pos& origin,
       if(isReached)
       {
         if(int(posListRef.size()) <= DIST) {posListRef.resize(DIST + 1);}
-        posListRef.at(DIST).push_back(pos);
+        posListRef[DIST].push_back(pos);
       }
     }
   }
@@ -166,7 +166,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   const int NR_OUTER = posLists.size();
   for(int curRadi = 0; curRadi < NR_OUTER; curRadi++)
   {
-    const vector<Pos>& positionsAtCurRadi = posLists.at(curRadi);
+    const vector<Pos>& positionsAtCurRadi = posLists[curRadi];
 
     for(const Pos& pos : positionsAtCurRadi)
     {

@@ -15,7 +15,7 @@ void readAndRemoveNextWord(string& line, string& nextWordToMk)
   //or a a space character is found.
   for(int i = 0; i < int(line.size()); ++i)
   {
-    const char CURRENT_CHARACTER = line.at(0);
+    const char CURRENT_CHARACTER = line[0];
 
     line.erase(line.begin());
 
@@ -62,19 +62,19 @@ void lineToLines(string line, const int MAX_W, vector<string>& linesRef)
 
   while(!curWord.empty())
   {
-    if(!isWordFit(linesRef.at(curRow), curWord, MAX_W))
+    if(!isWordFit(linesRef[curRow], curWord, MAX_W))
     {
       //Current word did not fit on current line, make a new line
       curRow++;
       linesRef.resize(curRow + 1);
-      linesRef.at(curRow) = "";
+      linesRef[curRow] = "";
     }
 
     //If this is not the first word on the current line,
     //add a space before the word
-    if(!linesRef.at(curRow).empty()) {linesRef.at(curRow) += " ";}
+    if(!linesRef[curRow].empty()) {linesRef[curRow] += " ";}
 
-    linesRef.at(curRow) += curWord;
+    linesRef[curRow] += curWord;
 
     readAndRemoveNextWord(line, curWord);
   }

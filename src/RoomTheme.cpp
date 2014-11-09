@@ -65,7 +65,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
   {
     const int NR_DATA       = typeFeatureData.size();
     const int ELEMENT       = Rnd::range(0, NR_DATA - 1);
-    const auto* const dTmp  = typeFeatureData.at(ELEMENT);
+    const auto* const dTmp  = typeFeatureData[ELEMENT];
 
     if(
       dTmp->themeSpawnRules.getPlacementRule() ==
@@ -73,7 +73,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
     {
       if(IS_NEXT_TO_WALL_AVAIL)
       {
-        pos   = nextToWalls.at(Rnd::range(0, nextToWalls.size() - 1));
+        pos   = nextToWalls[Rnd::range(0, nextToWalls.size() - 1)];
         *def  = dTmp;
         TRACE_FUNC_END;
         return ELEMENT;
@@ -86,7 +86,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
     {
       if(IS_AWAY_FROM_WALLS_AVAIL)
       {
-        pos   = awayFromWalls.at(Rnd::range(0, awayFromWalls.size() - 1));
+        pos   = awayFromWalls[Rnd::range(0, awayFromWalls.size() - 1)];
         *def  = dTmp;
         TRACE_FUNC_END;
         return ELEMENT;
@@ -100,7 +100,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
       {
         if(IS_NEXT_TO_WALL_AVAIL)
         {
-          pos   = nextToWalls.at(Rnd::range(0, nextToWalls.size() - 1));
+          pos   = nextToWalls[Rnd::range(0, nextToWalls.size() - 1)];
           *def  = dTmp;
           TRACE_FUNC_END;
           return ELEMENT;
@@ -110,7 +110,7 @@ int trySetFeatureToPlace(const FeatureDataT** def, Pos& pos,
       {
         if(IS_AWAY_FROM_WALLS_AVAIL)
         {
-          pos   = awayFromWalls.at(Rnd::range(0, awayFromWalls.size() - 1));
+          pos   = awayFromWalls[Rnd::range(0, awayFromWalls.size() - 1)];
           *def  = dTmp;
           TRACE_FUNC_END;
           return ELEMENT;
@@ -129,7 +129,7 @@ void eraseAdjacentCellsFromVectors(const Pos& pos,
   TRACE_FUNC_BEGIN;
   for(int i = 0; i < int(nextToWalls.size()); ++i)
   {
-    if(Utils::isPosAdj(pos, nextToWalls.at(i), true))
+    if(Utils::isPosAdj(pos, nextToWalls[i], true))
     {
       nextToWalls.erase(nextToWalls.begin() + i);
       i--;
@@ -137,7 +137,7 @@ void eraseAdjacentCellsFromVectors(const Pos& pos,
   }
   for(int i = 0; i < int(awayFromWalls.size()); ++i)
   {
-    if(Utils::isPosAdj(pos, awayFromWalls.at(i), true))
+    if(Utils::isPosAdj(pos, awayFromWalls[i], true))
     {
       awayFromWalls.erase(awayFromWalls.begin() + i);
       i--;
@@ -187,14 +187,14 @@ int placeThemeFeatures(Room& room)
     {
       TRACE << "Placing feature" << endl;
       Map::put(static_cast<Rigid*>(d->mkObj(pos)));
-      spawnCount.at(FEATURE_ELEMENT)++;
+      ++spawnCount[FEATURE_ELEMENT];
 
       nrFeaturesLeftToPlace--;
       nrFeaturesPlaced++;
 
       //Check if more of this feature can be spawned. If not, remote it.
       if(
-        spawnCount.at(FEATURE_ELEMENT) >= d->themeSpawnRules.getMaxNrInRoom())
+        spawnCount[FEATURE_ELEMENT] >= d->themeSpawnRules.getMaxNrInRoom())
       {
         spawnCount   .erase(spawnCount   .begin() + FEATURE_ELEMENT);
         featureBucket.erase(featureBucket.begin() + FEATURE_ELEMENT);
@@ -300,7 +300,7 @@ void mkThemeSpecificRoomModifications(Room& room)
           if(origin.x == -1)
           {
             const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
-            origin = originBucket.at(ELEMENT);
+            origin = originBucket[ELEMENT];
           }
           for(int dx = -1; dx <= 1; ++dx)
           {
@@ -483,21 +483,21 @@ void assignRoomThemes()
         << "rooms with wrong size permanently as plain" << endl;
   for(int i = 0; i < NR_ROOMS; ++i)
   {
-    Room* const room = Map::roomList.at(i);
+    Room* const room = Map::roomList[i];
     if(int(room->type_) > int(RoomType::END_OF_STD_ROOMS))
     {
-      isAssigned.at(i) = true;
+      isAssigned[i] = true;
     }
     else if(int(room->type_) < int(RoomType::END_OF_STD_ROOMS))
     {
       // Check dimensions, keep room as plain if too small or too big
-      if(!isAssigned.at(i))
+      if(!isAssigned[i])
       {
         const int W = room->r_.p1.x - room->r_.p0.x + 1;
         const int H = room->r_.p1.y - room->r_.p0.y + 1;
         if(W < MIN_DIM || W > MAX_DIM || H < MIN_DIM || H > MAX_DIM)
         {
-          isAssigned.at(i) = true;
+          isAssigned[i] = true;
           continue;
         }
       }
@@ -513,18 +513,18 @@ void assignRoomThemes()
     for(int ii = 0; ii < NR_TRIES_TO_ASSIGN; ++ii)
     {
       const int ELEMENT = Rnd::range(0, NR_ROOMS - 1);
-      if(!isAssigned.at(ELEMENT))
+      if(!isAssigned[ELEMENT])
       {
         const RoomType type =
           (RoomType)(Rnd::range(1, int(RoomType::END_OF_STD_ROOMS) - 1));
-        Room* const room = Map::roomList.at(ELEMENT);
+        Room* const room = Map::roomList[ELEMENT];
 
         if(isRoomTypeAllowed(*room, type, blocked))
         {
           room->type_ = type;
           TRACE << "Assigned non-plain type ("
                 << int(type) << ") to room" << endl;
-          isAssigned.at(ELEMENT) = true;
+          isAssigned[ELEMENT] = true;
           break;
         }
       }
@@ -534,11 +534,11 @@ void assignRoomThemes()
   TRACE << "Assigning plain theme to remaining rooms" << endl;
   for(int i = 0; i < NR_ROOMS; ++i)
   {
-    Room* const room = Map::roomList.at(i);
-    if(!isAssigned.at(i) && int(room->type_) < int(RoomType::END_OF_STD_ROOMS))
+    Room* const room = Map::roomList[i];
+    if(!isAssigned[i] && int(room->type_) < int(RoomType::END_OF_STD_ROOMS))
     {
       room->type_       = RoomType::plain;
-      isAssigned.at(i)  = true;
+      isAssigned[i]  = true;
     }
   }
 

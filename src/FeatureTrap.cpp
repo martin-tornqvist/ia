@@ -841,7 +841,7 @@ void TrapSummonMon::trigger(
   else
   {
     const int ELEMENT = Rnd::range(0, NR_ELEMENTS - 1);
-    const ActorId actorIdToSummon = summonBucket.at(ELEMENT);
+    const ActorId actorIdToSummon = summonBucket[ELEMENT];
     TRACE << "Actor id: " << int(actorIdToSummon) << endl;
 
     ActorFactory::summonMon(pos_, vector<ActorId>(1, actorIdToSummon), true);

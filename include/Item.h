@@ -161,14 +161,14 @@ public:
 
   virtual void itemSpecificReadFromFile(std::vector<std::string> lines)
   {
-    nrAmmoLoaded = toInt(lines.at(0));
+    nrAmmoLoaded = toInt(lines[0]);
   }
 
   //actorHit may be nullptr
   virtual void projectileObstructed(const Pos& pos, Actor* actor)
   {
-    (void) pos;
-    (void) actor;
+    (void)pos;
+    (void)actor;
   }
 
   const ItemDataT& getAmmoData() {return *ammoData_;}

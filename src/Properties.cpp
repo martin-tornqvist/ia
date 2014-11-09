@@ -1083,7 +1083,7 @@ bool PropHandler::endAppliedProp(
   const size_t NR_APPLIED_PROPS = appliedProps_.size();
   for(size_t i = 0; i < NR_APPLIED_PROPS; ++i)
   {
-    prop = appliedProps_.at(i);
+    prop = appliedProps_[i];
     if(prop->getId() == id)
     {
       index = i;
@@ -1143,7 +1143,7 @@ void PropHandler::tick(const PropTurnMode turnMode,
 
   for(size_t i = 0; i < appliedProps_.size();)
   {
-    Prop* const prop = appliedProps_.at(i);
+    Prop* const prop = appliedProps_[i];
 
     //Only tick property if it runs on the given turn mode
     //(standard turns or actor turns)
@@ -1331,7 +1331,7 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   const size_t NR_PROPS = propList.size();
   for(size_t i = 0; i < NR_PROPS; ++i)
   {
-    if(!propList.at(i)->allowRead(ALLOW_MESSAGE_WHEN_FALSE))
+    if(!propList[i]->allowRead(ALLOW_MESSAGE_WHEN_FALSE))
     {
       TRACE_FUNC_END_VERBOSE;
       return false;
@@ -1350,7 +1350,7 @@ bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   const size_t NR_PROPS = propList.size();
   for(size_t i = 0; i < NR_PROPS; ++i)
   {
-    if(!propList.at(i)->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE))
+    if(!propList[i]->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE))
     {
       return false;
     }
@@ -1431,9 +1431,9 @@ void PropHandler::endAppliedPropsByMagicHealing()
   getPropsFromSources(propList, sources);
   for(size_t i = 0; i < propList.size(); ++i)
   {
-    if(propList.at(i)->isEndedByMagicHealing())
+    if(propList[i]->isEndedByMagicHealing())
     {
-      endAppliedProp(appliedProps_.at(i)->getId(), blockedLos);
+      endAppliedProp(appliedProps_[i]->getId(), blockedLos);
       propList.erase(begin(propList) + i);
       i--;
     }
@@ -1693,12 +1693,12 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
     seenFoesCells.clear();
     for(size_t i = 0; i < seenFoes.size(); ++i)
     {
-      seenFoesCells.push_back(seenFoes.at(i)->pos);
+      seenFoesCells.push_back(seenFoes[i]->pos);
     }
     sort(begin(seenFoesCells), end(seenFoesCells),
          IsCloserToPos(actorPos));
 
-    const Pos& closestMonPos = seenFoesCells.at(0);
+    const Pos& closestMonPos = seenFoesCells[0];
 
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksActor(*owningActor_, false), blocked);
@@ -1708,8 +1708,14 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
 
     if(line.size() > 1)
     {
-      for(Pos& pos : line) {if(blocked[pos.x][pos.y]) {return;}}
-      dir = DirUtils::getDir(line.at(1) - actorPos);
+      for(Pos& pos : line)
+      {
+        if(blocked[pos.x][pos.y])
+        {
+          return;
+        }
+      }
+      dir = DirUtils::getDir(line[1] - actorPos);
     }
   }
 }

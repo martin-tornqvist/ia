@@ -120,7 +120,7 @@ void connectRooms()
 
     auto getRndRoom = []()
     {
-      return Map::roomList.at(Rnd::range(0, Map::roomList.size() - 1));
+      return Map::roomList[Rnd::range(0, Map::roomList.size() - 1)];
     };
 
     auto isStdRoom = [](const Room & r)
@@ -456,7 +456,7 @@ void randomlyBlockRegions(Region regions[3][3])
     }
     else
     {
-      const Pos& p(blockBucket.at(Rnd::range(0, blockBucket.size() - 1)));
+      const Pos& p(blockBucket[Rnd::range(0, blockBucket.size() - 1)]);
       TRACE_VERBOSE << "Blocking region at " << p.x << "," << p.y << endl;
       regions[p.x][p.y].isFree_ = false;
     }
@@ -743,7 +743,7 @@ void mkSubRooms()
 
   for(size_t i = 0; i < Map::roomList.size(); ++i)
   {
-    auto* const outerRoom     = Map::roomList.at(i);
+    auto* const outerRoom     = Map::roomList[i];
 
     const Rect  outerRoomRect = outerRoom->r_;
     const Pos   outerRoomD    = (outerRoomRect.p1 - outerRoomRect.p0) + 1;
@@ -837,7 +837,7 @@ void mkSubRooms()
             if(Rnd::coinToss() || doorBucket.size() <= 2)
             {
               const int DOOR_POS_ELEMENT  = Rnd::range(0, doorBucket.size() - 1);
-              const Pos& doorPos          = doorBucket.at(DOOR_POS_ELEMENT);
+              const Pos& doorPos          = doorBucket[DOOR_POS_ELEMENT];
               Map::put(new Floor(doorPos));
               doorProposals[doorPos.x][doorPos.y] = true;
             }
@@ -848,7 +848,7 @@ void mkSubRooms()
               for(int j = 0; j < NR_TRIES; j++)
               {
                 const int DOOR_POS_ELEMENT = Rnd::range(0, doorBucket.size() - 1);
-                const Pos posCand = doorBucket.at(DOOR_POS_ELEMENT);
+                const Pos posCand = doorBucket[DOOR_POS_ELEMENT];
 
                 bool isPosOk = true;
                 for(Pos& posWithDoor : positionsWithDoor)
@@ -921,7 +921,7 @@ void fillDeadEnds()
   //Fill all positions with only one cardinal floor neighbour
   for(int i = int(floodFillVector.size()) - 1; i >= 0; --i)
   {
-    const Pos& pos = floodFillVector.at(i).pos;
+    const Pos& pos = floodFillVector[i].pos;
     const int x = pos.x;
     const int y = pos.y;
     const int NR_ADJ_CARDINAL_WALLS = blocked[x + 1][y] + blocked[x - 1][y] +
@@ -1036,7 +1036,7 @@ Pos placeStairs()
 
   TRACE << "Picking random cell from furthest half" << endl;
   const int ELEMENT = Rnd::range(NR_OK_CELLS / 2, NR_OK_CELLS - 1);
-  const Pos stairsPos(allowedCellsList.at(ELEMENT));
+  const Pos stairsPos(allowedCellsList[ELEMENT]);
 
   TRACE << "Spawning stairs at chosen cell" << endl;
   Map::put(new Stairs(stairsPos));
@@ -1081,7 +1081,7 @@ void movePlayerToNearestAllowedPos()
 //      }
 //    }
 //  }
-//  Door* const doorToLink = doorBucket.at(Rnd::range(0, doorBucket.size() - 1));
+//  Door* const doorToLink = doorBucket[Rnd::range(0, doorBucket.size() - 1)];
 //
 //  TRACE << "Making floodfill and keeping only positions with lower value than the door" << endl;
 //  bool blocked[MAP_W][MAP_H];
@@ -1110,7 +1110,7 @@ void movePlayerToNearestAllowedPos()
 //
 //  if(leverPosBucket.size() > 0) {
 //    const int ELEMENT = Rnd::range(0, leverPosBucket.size() - 1);
-//    const Pos leverPos(leverPosBucket.at(ELEMENT));
+//    const Pos leverPos(leverPosBucket[ELEMENT]);
 //    spawnLeverAdaptAndLinkDoor(leverPos, *doorToLink);
 //  } else {
 //    TRACE << "Failed to find position to place lever" << endl;

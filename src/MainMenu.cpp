@@ -208,7 +208,7 @@ string getHplQuote()
     "the piling-up of unbroken time-accumulations; a region where old, "
     "strange things have had a chance to grow and linger because they have "
     "never been stirred up.");
-  return quotes.at(Rnd::range(0, quotes.size() - 1));
+  return quotes[Rnd::range(0, quotes.size() - 1)];
 }
 
 void draw(const MenuBrowser& browser)
@@ -239,7 +239,7 @@ void draw(const MenuBrowser& browser)
       logo.push_back("| |  \\| |   | \\ /    \\  /    \\| \\ \\__/    \\|  \\|/    \\ ");
       logo.push_back("               \\                 \\                      ");
     }
-    const int LOGO_X_POS_LEFT = (MAP_W - logo.at(0).size()) / 2;
+    const int LOGO_X_POS_LEFT = (MAP_W - logo[0].size()) / 2;
     for(const string& row : logo)
     {
       pos.x = LOGO_X_POS_LEFT;

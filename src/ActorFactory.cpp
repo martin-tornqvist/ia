@@ -108,7 +108,7 @@ void deleteAllMon()
 
   for(size_t i = 0; i < actors.size(); ++i)
   {
-    if(actors.at(i) != Map::player)
+    if(actors[i] != Map::player)
     {
       GameTime::eraseActorInElement(i);
       i--;
@@ -136,8 +136,8 @@ void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
 
   for(int i = 0; i < NR_TO_SPAWN; ++i)
   {
-    const Pos&    pos   = freeCells.at(i);
-    const ActorId id    = monsterIds.at(i);
+    const Pos&    pos   = freeCells[i];
+    const ActorId id    = monsterIds[i];
     Actor* const  actor = mk(id, pos);
     Mon* const    mon   = static_cast<Mon*>(actor);
 

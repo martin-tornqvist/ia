@@ -49,7 +49,7 @@ void writeFile(vector<HighScoreEntry>& entries)
 
   for(unsigned int i = 0; i < entries.size(); ++i)
   {
-    const HighScoreEntry& entry = entries.at(i);
+    const HighScoreEntry& entry = entries[i];
 
     const string VICTORY_STR = entry.isVictoryGame() ? "V" : "D";
     file << VICTORY_STR << endl;
@@ -73,7 +73,7 @@ void readFile(vector<HighScoreEntry>& entries)
 
     while(getline(file, line))
     {
-      bool isVictory = line.at(0) == 'V';
+      bool isVictory = line[0] == 'V';
       getline(file, line);
       const string dateAndTime = line;
       getline(file, line);
@@ -135,12 +135,12 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
     i < int(entries.size()) && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++)
   {
-    const string dateAndTime  = entries.at(i).getDateAndTime();
-    const string name         = entries.at(i).getName();
-    const string score        = toStr(entries.at(i).getScore());
-    const string lvl          = toStr(entries.at(i).getLvl());
-    const string dlvl         = toStr(entries.at(i).getDlvl());
-    const string ins          = toStr(entries.at(i).getInsanity());
+    const string dateAndTime  = entries[i].getDateAndTime();
+    const string name         = entries[i].getName();
+    const string score        = toStr(entries[i].getScore());
+    const string lvl          = toStr(entries[i].getLvl());
+    const string dlvl         = toStr(entries[i].getDlvl());
+    const string ins          = toStr(entries[i].getInsanity());
 
     const Clr& clr = clrNosfTeal;
     Render::drawText(

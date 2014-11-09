@@ -23,55 +23,47 @@ namespace KnockBack
 void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                   const bool IS_SPIKE_GUN, const bool IS_MSG_ALLOWED)
 {
+  const bool IS_DEF_MON = &defender != Map::player;
 
-  const bool DEFENDER_IS_MON = &defender != Map::player;
-
-  if(DEFENDER_IS_MON || !Config::isBotPlaying())
+  if(IS_DEF_MON || !Config::isBotPlaying())
   {
     if(defender.getData().actorSize <= actorSize_giant)
     {
-
       vector<PropId> props;
       defender.getPropHandler().getAllActivePropIds(props);
 
-
-      const bool ACTOR_CAN_BE_KNOCKED_BACK =
+      const bool DEF_CAN_BE_KNOCKED_BACK =
         find(begin(props), end(props), propEthereal)  == end(props) &&
         find(begin(props), end(props), propOoze)      == end(props);
 
-      const Pos delta = (defender.pos - attackedFromPos).getSigns();
+      const Pos d = (defender.pos - attackedFromPos).getSigns();
 
-      const int KNOCK_BACK_RANGE = 2;
+      const int KNOCK_RANGE = 2;
 
-//      const bool IS_NAILED = defender.getPropHandler().hasProp(propNailed);
-
-      for(int i = 0; i < KNOCK_BACK_RANGE; ++i)
+      for(int i = 0; i < KNOCK_RANGE; ++i)
       {
-
-        const Pos newPos = defender.pos + delta;
+        const Pos newPos = defender.pos + d;
 
         bool blocked[MAP_W][MAP_H];
         MapParse::parse(CellPred::BlocksActor(defender, true), blocked);
-        const bool CELL_BLOCKED = blocked[newPos.x][newPos.y];
-        const bool CELL_IS_BOTTOMLESS =
+
+        const bool IS_CELL_BOTTOMLESS =
           Map::cells[newPos.x][newPos.y].rigid->isBottomless();
 
-        if(
-          (ACTOR_CAN_BE_KNOCKED_BACK) &&
-          (!CELL_BLOCKED || CELL_IS_BOTTOMLESS))
-        {
+        const bool IS_CELL_BLOCKED = blocked[newPos.x][newPos.y] &&
+                                     !IS_CELL_BOTTOMLESS;
 
-          bool blockedLos[MAP_W][MAP_H];
-          MapParse::parse(CellPred::BlocksLos(), blockedLos);
-          const bool PLAYER_SEE_DEFENDER =
-            DEFENDER_IS_MON ? Map::player->isSeeingActor(defender, blocked) :
-            true;
+        if(DEF_CAN_BE_KNOCKED_BACK && !IS_CELL_BLOCKED)
+        {
+          const bool IS_PLAYER_SEE_DEF = IS_DEF_MON ?
+                                         Map::player->isSeeingActor(defender, nullptr) :
+                                         true;
 
           if(i == 0)
           {
             if(IS_MSG_ALLOWED)
             {
-              if(DEFENDER_IS_MON && PLAYER_SEE_DEFENDER)
+              if(IS_DEF_MON && IS_PLAYER_SEE_DEF)
               {
                 Log::addMsg(defender.getNameThe() + " is knocked back!");
               }
@@ -90,9 +82,9 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           SdlWrapper::sleep(Config::getDelayProjectileDraw());
 
-          if(CELL_IS_BOTTOMLESS)
+          if(IS_CELL_BOTTOMLESS)
           {
-            if(DEFENDER_IS_MON && PLAYER_SEE_DEFENDER)
+            if(IS_DEF_MON && IS_PLAYER_SEE_DEF)
             {
               Log::addMsg(
                 defender.getNameThe() + " plummets down the depths.",
@@ -109,12 +101,9 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           // Bump features (e.g. so monsters can be knocked back into traps)
           vector<Mob*> mobs;
           GameTime::getMobsAtPos(defender.pos, mobs);
-          for(
-            unsigned int mobIndex = 0;
-            mobIndex < mobs.size();
-            mobIndex++)
+          for(Mob* const mob : mobs)
           {
-            mobs.at(mobIndex)->bump(defender);
+            mob->bump(defender);
           }
 
           if(!defender.isAlive())
@@ -130,9 +119,9 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
             return;
           }
         }
-        else
+        else //Cannot knock back (cell blocked or defender cannot be knocked)
         {
-          // Defender nailed to a wall from a spike gun?
+          //Defender nailed to a wall from a spike gun?
           if(IS_SPIKE_GUN)
           {
             Rigid* const f = Map::cells[newPos.x][newPos.y].rigid;

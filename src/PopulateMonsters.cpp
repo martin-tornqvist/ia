@@ -61,7 +61,7 @@ void mkGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
 
   if(!idBucket.empty())
   {
-    const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
+    const ActorId id = idBucket[Rnd::range(0, idBucket.size() - 1)];
     mkGroupAt(id, sortedFreeCellsVector, blocked, IS_ROAMING_ALLOWED);
   }
 }
@@ -79,11 +79,11 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
 
   for(size_t i = 0; i < idBucket.size(); ++i)
   {
-    const ActorDataT& d = ActorData::data[int(idBucket.at(i))];
+    const ActorDataT& d = ActorData::data[int(idBucket[i])];
     bool isMonNativeToRoom = false;
-    for(size_t iNative = 0; iNative < d.nativeRooms.size(); iNative++)
+    for(size_t iNative = 0; iNative < d.nativeRooms.size(); ++iNative)
     {
-      if(d.nativeRooms.at(iNative) == roomType)
+      if(d.nativeRooms[iNative] == roomType)
       {
         isMonNativeToRoom = true;
         break;
@@ -105,7 +105,7 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
   }
   else
   {
-    const ActorId id = idBucket.at(Rnd::range(0, idBucket.size() - 1));
+    const ActorId id = idBucket[Rnd::range(0, idBucket.size() - 1)];
     mkGroupAt(id, sortedFreeCellsVector, blocked, IS_ROAMING_ALLOWED);
     TRACE_FUNC_END;
     return true;
@@ -150,7 +150,7 @@ void trySpawnDueToTimePassed()
   {
 
     const int ELEMENT = Rnd::range(0, freeCellsVector.size() - 1);
-    const Pos& origin = freeCellsVector.at(ELEMENT);
+    const Pos& origin = freeCellsVector[ELEMENT];
 
     mkSortedFreeCellsVector(origin, blocked, freeCellsVector);
 
@@ -201,7 +201,7 @@ void populateCaveLvl()
       }
     }
     const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
-    const Pos origin = originBucket.at(ELEMENT);
+    const Pos origin = originBucket[ELEMENT];
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
     if(!sortedFreeCellsVector.empty())
@@ -246,7 +246,7 @@ void populateIntroLvl()
       }
     }
     const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
-    const Pos origin = originBucket.at(ELEMENT);
+    const Pos origin = originBucket[ELEMENT];
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
     if(!sortedFreeCellsVector.empty())
@@ -318,7 +318,7 @@ void populateStdLvl()
         if(NR_ORIGIN_CANDIDATES > 0)
         {
           const int ELEMENT = Rnd::range(0, NR_ORIGIN_CANDIDATES - 1);
-          const Pos& origin = originBucket.at(ELEMENT);
+          const Pos& origin = originBucket[ELEMENT];
           vector<Pos> sortedFreeCellsVector;
           mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
 
@@ -364,7 +364,7 @@ void populateStdLvl()
       }
     }
     const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
-    const Pos origin  = originBucket.at(ELEMENT);
+    const Pos origin  = originBucket[ELEMENT];
     vector<Pos> sortedFreeCellsVector;
     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
     if(mkGroupOfRandomNativeToRoomTypeAt(
@@ -397,7 +397,7 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
   const int NR_CAN_BE_SPAWNED = min(NR_FREE_CELLS, maxNrInGroup);
   for(int i = 0; i < NR_CAN_BE_SPAWNED; ++i)
   {
-    const Pos& pos = sortedFreeCellsVector.at(i);
+    const Pos& pos = sortedFreeCellsVector[i];
 
     Actor* const actor = ActorFactory::mk(id, pos);
     Mon* const mon = static_cast<Mon*>(actor);

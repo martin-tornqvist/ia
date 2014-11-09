@@ -215,7 +215,7 @@ void eraseActorInElement(const size_t i)
 {
   if(!actors_.empty())
   {
-    delete actors_.at(i);
+    delete actors_[i];
     actors_.erase(actors_.begin() + i);
   }
 }
@@ -371,7 +371,7 @@ void updateLightMap()
 
 Actor* getCurActor()
 {
-  Actor* const actor = actors_.at(curActorIndex_);
+  Actor* const actor = actors_[curActorIndex_];
 
   //Sanity check actor retrieved
   assert(Utils::isPosInsideMap(actor->pos));

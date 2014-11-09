@@ -293,7 +293,7 @@ Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors)
 
   const int ELEMENT = Rnd::range(0, closestActors.size() - 1);
 
-  return closestActors.at(ELEMENT);
+  return closestActors[ELEMENT];
 }
 
 bool isPosAdj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ)

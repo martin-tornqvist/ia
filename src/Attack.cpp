@@ -726,11 +726,11 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
   }
 
   const ActorSize aimLvl =
-    projectiles.at(0)->attackData->intendedAimLvl;
+    projectiles[0]->attackData->intendedAimLvl;
 
   const int DELAY = Config::getDelayProjectileDraw() / (IS_MACHINE_GUN ? 2 : 1);
 
-  printRangedInitiateMsgs(*projectiles.at(0)->attackData);
+  printRangedInitiateMsgs(*projectiles[0]->attackData);
 
   const bool stopAtTarget = aimLvl == actorSize_floor;
   const int chebTrvlLim = 30;
@@ -746,17 +746,17 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
   if(projectileGlyph == '/')
   {
     const int i = path.size() > 2 ? 2 : 1;
-    if(path.at(i).y == origin.y) {projectileGlyph = '-';}
-    if(path.at(i).x == origin.x) {projectileGlyph = '|';}
+    if(path[i].y == origin.y) {projectileGlyph = '-';}
+    if(path[i].x == origin.x) {projectileGlyph = '|';}
     if(
-      (path.at(i).x > origin.x && path.at(i).y < origin.y) ||
-      (path.at(i).x < origin.x && path.at(i).y > origin.y))
+      (path[i].x > origin.x && path[i].y < origin.y) ||
+      (path[i].x < origin.x && path[i].y > origin.y))
     {
       projectileGlyph = '/';
     }
     if(
-      (path.at(i).x > origin.x && path.at(i).y > origin.y) ||
-      (path.at(i).x < origin.x && path.at(i).y < origin.y))
+      (path[i].x > origin.x && path[i].y > origin.y) ||
+      (path[i].x < origin.x && path[i].y < origin.y))
     {
       projectileGlyph = '\\';
     }
@@ -777,12 +777,11 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
   for(int i = 1; i < SIZE_OF_PATH_PLUS_ONE; ++i)
   {
 
-    for(int p = 0; p < NR_PROJECTILES; p++)
+    for(int pCnt = 0; pCnt < NR_PROJECTILES; ++pCnt)
     {
-
-      //Current projectile's place in the path is the current global place (i)
-      //minus a certain number of elements
-      int pathElement = i - (p * NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES);
+      //Current projectile's place in the path is the current global place (i) minus a
+      //certain number of elements
+      int pathElement = i - (pCnt * NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES);
 
       //Emit sound
       if(pathElement == 1)
@@ -793,20 +792,19 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
         {
           if(IS_ATTACKER_PLAYER) sndMsg = "";
           const SndVol vol = wpn.getData().ranged.sndVol;
-          Snd snd(sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos,
-                  &attacker, vol, AlertsMon::yes);
-          SndEmit::emitSnd(snd);
+          SndEmit::emitSnd({sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos,
+                            &attacker, vol, AlertsMon::yes
+                           });
         }
       }
 
-      Projectile* const curProj = projectiles.at(p);
+      Projectile* const curProj = projectiles[pCnt];
 
       //All the following collision checks etc are only made if the projectiles
       //current path element corresponds to an element in the real path vector
       if(pathElement >= 1 && pathElement < int(path.size()) && !curProj->isObstructed)
       {
-
-        curProj->pos = path.at(pathElement);
+        curProj->pos = path[pathElement];
 
         curProj->isVisibleToPlayer =
           Map::cells[curProj->pos.x][curProj->pos.y].isSeenByPlayer;
@@ -820,7 +818,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
         //HIT ACTOR?
         if(
           curProj->attackData->defender &&
-          !curProj->isObstructed &&
+          !curProj->isObstructed        &&
           !curProj->attackData->isEtherealDefenderMissed)
         {
 
@@ -1016,7 +1014,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
   //So far, only projectile 0 can have special obstruction events***
   //Must be changed if something like an assault-incinerator is added
-  const Projectile* const firstProjectile = projectiles.at(0);
+  const Projectile* const firstProjectile = projectiles[0];
   if(!firstProjectile->isObstructed)
   {
     wpn.projectileObstructed(aimPos, firstProjectile->actorHit);
@@ -1024,7 +1022,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
   else
   {
     const int element = firstProjectile->obstructedInElement;
-    const Pos& pos = path.at(element);
+    const Pos& pos = path[element];
     wpn.projectileObstructed(pos, firstProjectile->actorHit);
   }
   //Cleanup
@@ -1073,7 +1071,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
     //If traveled more than two steps after a killed monster, stop projectile.
     if(nrMonKilledInElem != -1 && int(i) > nrMonKilledInElem + 1) {break;}
 
-    const Pos curPos(path.at(i));
+    const Pos curPos(path[i]);
 
     if(actorArray[curPos.x][curPos.y])
     {

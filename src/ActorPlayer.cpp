@@ -486,7 +486,7 @@ void Player::incrInsanity()
                   if(!seenFoes.empty())
                   {
                     const int M_ROLL = Rnd::range(0, seenFoes.size() - 1);
-                    const ActorDataT& monsterData = seenFoes.at(M_ROLL)->getData();
+                    const ActorDataT& monsterData = seenFoes[M_ROLL]->getData();
                     if(monsterData.isRat && !phobias[int(Phobia::rat)])
                     {
                       msg += "I am afflicted by Murophobia. "

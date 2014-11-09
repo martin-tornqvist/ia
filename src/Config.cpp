@@ -64,7 +64,7 @@ void parseFontNameAndSetCellDims()
   while(ch < '0' || ch > '9')
   {
     fontName.erase(begin(fontName));
-    ch = fontName.at(0);
+    ch = fontName[0];
   }
 
   string wStr = "";
@@ -72,18 +72,18 @@ void parseFontNameAndSetCellDims()
   {
     fontName.erase(begin(fontName));
     wStr += ch;
-    ch = fontName.at(0);
+    ch = fontName[0];
   }
 
   fontName.erase(begin(fontName));
-  ch = fontName.at(0);
+  ch = fontName[0];
 
   string hStr = "";
   while(ch != '_' && ch != '.')
   {
     fontName.erase(begin(fontName));
     hStr += ch;
-    ch = fontName.at(0);
+    ch = fontName[0];
   }
 
   TRACE << "Parsed font image name, found dims: "
@@ -142,11 +142,11 @@ void playerSetsOption(const MenuBrowser* const browser,
     {
       for(unsigned int i = 0; i < fontImageNames.size(); ++i)
       {
-        if(fontName_ == fontImageNames.at(i))
+        if(fontName_ == fontImageNames[i])
         {
           fontName_ = i == fontImageNames.size() - 1 ?
                       fontImageNames.front() :
-                      fontImageNames.at(i + 1);
+                      fontImageNames[i + 1];
           break;
         }
       }
@@ -158,11 +158,11 @@ void playerSetsOption(const MenuBrowser* const browser,
         {
           for(unsigned int i = 0; i < fontImageNames.size(); ++i)
           {
-            if(fontName_ == fontImageNames.at(i))
+            if(fontName_ == fontImageNames[i])
             {
               fontName_ = i == fontImageNames.size() - 1 ?
                           fontImageNames.front() :
-                          fontImageNames.at(i + 1);
+                          fontImageNames[i + 1];
               break;
             }
           }
@@ -568,7 +568,7 @@ void writeLinesToFile(vector<string>& lines)
 
   for(size_t i = 0; i < lines.size(); ++i)
   {
-    file << lines.at(i);
+    file << lines[i];
     if(i != lines.size() - 1) {file << endl;}
   }
 

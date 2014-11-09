@@ -24,23 +24,29 @@ void checkOneCellOfMany(const bool obstructions[MAP_W][MAP_H],
 {
 
   const Pos deltaToTarget(cellToCheck.x - origin.x, cellToCheck.y - origin.y);
-  const vector<Pos>* pathDeltas =
+
+  const vector<Pos>* pathDeltasPtr =
     LineCalc::getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
 
-  if(!pathDeltas) {return;}
+  if(!pathDeltasPtr)
+  {
+    return;
+  }
+
+  const vector<Pos>& pathDeltas = *pathDeltasPtr;
 
   const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLit;
 
   Pos curPos;
   Pos prevPos;
-  const unsigned int PATH_SIZE = pathDeltas->size();
+  const size_t PATH_SIZE = pathDeltas.size();
 
-  for(unsigned int i = 0; i < PATH_SIZE; ++i)
+  for(size_t i = 0; i < PATH_SIZE; ++i)
   {
-    curPos.set(origin + pathDeltas->at(i));
+    curPos.set(origin + pathDeltas[i]);
     if(i > 1)
     {
-      prevPos.set(origin + pathDeltas->at(i - 1));
+      prevPos.set(origin + pathDeltas[i - 1]);
       const bool PRE_CELL_IS_DRK = Map::cells[prevPos.x][prevPos.y].isDark;
       const bool CUR_CELL_IS_DRK = Map::cells[curPos.x][curPos.y].isDark;
       const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLit;
@@ -77,23 +83,29 @@ bool checkCell(const bool obstructions[MAP_W][MAP_H], const Pos& cellToCheck,
   if(Utils::kingDist(origin, cellToCheck) > FOV_STD_RADI_INT) {return false;}
 
   const Pos deltaToTarget(cellToCheck - origin);
-  const vector<Pos>* pathDeltas =
+
+  const vector<Pos>* pathDeltasPtr =
     LineCalc::getFovDeltaLine(deltaToTarget, FOV_STD_RADI_DB);
 
-  if(!pathDeltas) {return false;}
+  if(!pathDeltasPtr)
+  {
+    return false;
+  }
+
+  const vector<Pos>& pathDeltas = *pathDeltasPtr;
 
   const bool TGT_IS_LGT = Map::cells[cellToCheck.x][cellToCheck.y].isLit;
 
   Pos curPos;
   Pos prevPos;
-  const int PATH_SIZE = pathDeltas->size();
+  const size_t PATH_SIZE = pathDeltas.size();
 
-  for(int i = 0; i < PATH_SIZE; ++i)
+  for(size_t i = 0; i < PATH_SIZE; ++i)
   {
-    curPos.set(origin + pathDeltas->at(i));
+    curPos.set(origin + pathDeltas[i]);
     if(i > 1)
     {
-      prevPos.set(origin + pathDeltas->at(i - 1));
+      prevPos.set(origin + pathDeltas[i - 1]);
       const bool PRE_CELL_IS_DRK = Map::cells[prevPos.x][prevPos.y].isDark;
       const bool CUR_CELL_IS_DRK = Map::cells[curPos.x][curPos.y].isDark;
       const bool CUR_CELL_IS_LGT = Map::cells[curPos.x][curPos.y].isLit;

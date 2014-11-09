@@ -40,7 +40,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
   else
   {
     assert(ELEMENT < inv.general_.size());
-    itemToDrop = inv.general_.at(ELEMENT);
+    itemToDrop = inv.general_[ELEMENT];
   }
 
   if(itemToDrop)
@@ -138,9 +138,9 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
     if(IS_STACKABLE_TYPE)
     {
       //While ii cell is not further away than i cell
-      while(!isCloserToOrigin(freeCells.at(i), freeCells.at(ii)))
+      while(!isCloserToOrigin(freeCells[i], freeCells[ii]))
       {
-        stackPos = freeCells.at(ii);
+        stackPos = freeCells[ii];
         Item* itemFoundOnFloor = Map::cells[stackPos.x][stackPos.y].item;
         if(itemFoundOnFloor)
         {
@@ -161,7 +161,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
       item.appplyDropEffects();
     }
 
-    curPos = freeCells.at(i);
+    curPos = freeCells[i];
     if(!Map::cells[curPos.x][curPos.y].item)
     {
 

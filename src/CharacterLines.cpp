@@ -31,7 +31,7 @@ void drawLocationInfo()
 //    if(Map::dlvl > 0 && Map::dlvl < FIRST_CAVERN_LVL) {
 //      const vector<Room*>& rooms = Map::roomList;
 //      for(size_t i = 0; i < rooms.size(); ++i) {
-//        const Room* const room = rooms.at(i);
+//        const Room* const room = rooms[i];
 //        const Pos& p0 = room->r_.p0;
 //        const Pos& p1 = room->r_.p1;
 //        if(Utils::isPosInside(p, Rect(p0, p1))) {
@@ -251,7 +251,7 @@ void drawInfoLines()
   const int NR_PROPS = propsLine.size();
   for(int i = 0; i < NR_PROPS; ++i)
   {
-    const StrAndClr& curPropLabel = propsLine.at(i);
+    const StrAndClr& curPropLabel = propsLine[i];
     Render::drawText(curPropLabel.str, Panel::charLines, pos, curPropLabel.clr);
     pos.x += curPropLabel.str.length() + 1;
   }

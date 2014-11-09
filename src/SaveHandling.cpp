@@ -76,7 +76,7 @@ void writeFile(const vector<string>& lines)
   {
     for(size_t i = 0; i < lines.size(); ++i)
     {
-      file << lines.at(i);
+      file << lines[i];
       if(i != lines.size() - 1) {file << endl;}
     }
     file.close();

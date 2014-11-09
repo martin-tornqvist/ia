@@ -179,7 +179,7 @@ void winGame()
   {
     for(unsigned int ii = 0; ii <= i; ii++)
     {
-      Render::drawTextCentered(winMsgLines.at(ii), Panel::screen,
+      Render::drawTextCentered(winMsgLines[ii], Panel::screen,
                                Pos(MAP_W_HALF, Y0 + ii),
                                clrMsgBad, clrBlack, true);
       if(i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1)

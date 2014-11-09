@@ -118,7 +118,7 @@ bool Inventory::hasItemInGeneral(const ItemId id) const
 {
   for(size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_.at(i)->getData().id == id)
+    if(general_[i]->getData().id == id)
       return true;
   }
 
@@ -129,11 +129,11 @@ int Inventory::getItemStackSizeInGeneral(const ItemId id) const
 {
   for(size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_.at(i)->getData().id == id)
+    if(general_[i]->getData().id == id)
     {
-      if(general_.at(i)->getData().isStackable)
+      if(general_[i]->getData().isStackable)
       {
-        return general_.at(i)->nrItems_;
+        return general_[i]->nrItems_;
       }
       else
       {
@@ -149,7 +149,7 @@ void Inventory::decrDynamiteInGeneral()
 {
   for(size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_.at(i)->getData().id == ItemId::dynamite)
+    if(general_[i]->getData().id == ItemId::dynamite)
     {
       decrItemInGeneral(i);
       break;
@@ -161,7 +161,7 @@ void Inventory::decrDynamiteInGeneral()
  bool Inventory::hasFirstAidInGeneral()
  {
  for(size_t i = 0; i < general_.size(); ++i) {
- if(general_.at(i)->getInstanceDefinition().id == ItemId::firstAidKit)
+ if(general_[i]->getInstanceDefinition().id == ItemId::firstAidKit)
  return true;
  }
 
@@ -171,7 +171,7 @@ void Inventory::decrDynamiteInGeneral()
  void Inventory::decreaseFirstAidInGeneral()
  {
  for(size_t i = 0; i < general_.size(); ++i) {
- if(general_.at(i)->getInstanceDefinition().id == ItemId::firstAidKit) {
+ if(general_[i]->getInstanceDefinition().id == ItemId::firstAidKit) {
  decrItemInGeneral(i);
  break;
  }
@@ -191,13 +191,13 @@ void Inventory::putInGeneral(Item* item)
 
     if(stackIndex != -1)
     {
-      Item* compareItem = general_.at(stackIndex);
+      Item* compareItem = general_[stackIndex];
 
       //Keeping picked up item and destroying the one in the inventory,
       //to keep the parameter pointer valid.
       item->nrItems_ += compareItem->nrItems_;
       delete compareItem;
-      general_.at(stackIndex) = item;
+      general_[stackIndex] = item;
       isStacked = true;
     }
   }
@@ -211,7 +211,7 @@ int Inventory::getElementToStackItem(Item* item) const
   {
     for(size_t i = 0; i < general_.size(); ++i)
     {
-      Item* compare = general_.at(i);
+      Item* compare = general_[i];
 
       if(compare->getData().id == item->getData().id)
       {
@@ -253,13 +253,13 @@ void Inventory::dropAllNonIntrinsic(
   size_t i = 0;
   while(i < general_.size())
   {
-    item = general_.at(i);
+    item = general_[i];
     if(item)
     {
       if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
           CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP)
       {
-        delete general_.at(i);
+        delete general_[i];
       }
       else
       {
@@ -292,7 +292,7 @@ bool Inventory::hasAmmoForFirearmInInventory()
       //Look for that ammo type in inventory
       for(size_t i = 0; i < general_.size(); ++i)
       {
-        if(general_.at(i)->getData().id == ammoId)
+        if(general_[i]->getData().id == ammoId)
         {
           return true;
         }
@@ -329,7 +329,7 @@ void Inventory::deleteItemInGeneralWithElement(const size_t IDX)
 {
   if(general_.size() > IDX)
   {
-    delete general_.at(IDX);
+    delete general_[IDX];
     general_.erase(begin(general_) + IDX);
   }
 }
@@ -340,7 +340,7 @@ void Inventory::removeItemInGeneralWithPtr(
 
   for(size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_.at(i) == item)
+    if(general_[i] == item)
     {
       if(DELETE_ITEM) {delete item;}
       general_.erase(begin(general_) + i);
@@ -352,7 +352,7 @@ void Inventory::removeItemInGeneralWithPtr(
 
 void Inventory::decrItemInGeneral(size_t idx)
 {
-  Item* item = general_.at(idx);
+  Item* item = general_[idx];
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
 
@@ -378,7 +378,7 @@ void Inventory::decrItemTypeInGeneral(const ItemId id)
 {
   for(size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_.at(i)->getData().id == id)
+    if(general_[i]->getData().id == id)
     {
       decrItemInGeneral(i);
       return;
@@ -392,7 +392,7 @@ void Inventory::moveItemToSlot(InvSlot& slot, const size_t GEN_IDX)
   Item* item              = nullptr;
   Item* slotItem          = slot.item;
 
-  if(generalSlotExists) {item = general_.at(GEN_IDX);}
+  if(generalSlotExists) {item = general_[GEN_IDX];}
 
   if(generalSlotExists && item)
   {
@@ -488,7 +488,7 @@ void Inventory::moveFromGeneralToIntrinsics(const size_t GEN_IDX)
 
   if(generalSlotExists)
   {
-    Item* item = general_.at(GEN_IDX);
+    Item* item = general_[GEN_IDX];
     bool itemExistsInGeneralSlot = item;
 
     if(itemExistsInGeneralSlot)
@@ -538,7 +538,7 @@ int Inventory::getElementWithItemType(const ItemId id) const
 {
   for(size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_.at(i)->getData().id == id)
+    if(general_[i]->getData().id == id)
     {
       return i;
     }
@@ -577,7 +577,7 @@ void Inventory::putInIntrinsics(Item* item)
 
 Item* Inventory::getLastItemInGeneral()
 {
-  if(!general_.empty()) {return general_.at(general_.size() - 1);}
+  if(!general_.empty()) {return general_[general_.size() - 1];}
   return nullptr;
 }
 
@@ -612,7 +612,7 @@ int Inventory::getTotalItemWeight() const
   }
   for(size_t i = 0; i < general_.size(); ++i)
   {
-    weight += general_.at(i)->getWeight();
+    weight += general_[i]->getWeight();
   }
   return weight;
 }
@@ -643,7 +643,7 @@ void Inventory::sortGeneralInventory()
     //Check if item should be added to any existing color group
     for(vector<Item*>& group : sortBuffer)
     {
-      const Clr clrCurGroup = group.at(0)->getInterfaceClr();
+      const Clr clrCurGroup = group[0]->getInterfaceClr();
       if(Utils::isClrEq(item->getInterfaceClr(), clrCurGroup))
       {
         group.push_back(item);
@@ -676,9 +676,9 @@ void Inventory::sortGeneralInventory()
   general_.clear();
   for(size_t i = 0; i < sortBuffer.size(); ++i)
   {
-    for(size_t ii = 0; ii < sortBuffer.at(i).size(); ii++)
+    for(size_t ii = 0; ii < sortBuffer[i].size(); ii++)
     {
-      general_.push_back(sortBuffer.at(i).at(ii));
+      general_.push_back(sortBuffer[i][ii]);
     }
   }
 }

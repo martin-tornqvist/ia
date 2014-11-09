@@ -47,19 +47,25 @@ public:
   void setVal(const AbilityId ability, const int VAL);
 
   void changeVal(const AbilityId ability, const int CHANGE);
+
 private:
   int abilityList[int(AbilityId::END)];
 };
 
-//TODO Is this necessary to have? Most functionality nowadays just roll their
-//own chances. Probably the only case where failSmall and failBig is used is
-//for melee attack messages. It seems simpler and more transparent to just use
-//the Rnd functions for rolling, together with AbilityVals::getVal() for
-//retrieving abilities to roll against.
+//TODO Is this really necessary? Most functionality nowadays just roll their own chances.
+//Probably the only case where failSmall and failBig is used is for melee attack messages.
+//It seems simpler and more transparent to just use the Rnd functions for rolling,
+//together with AbilityVals::getVal() for retrieving abilities to roll against.
 enum AbilityRollResult
 {
-  failCritical, failBig, failNormal, failSmall,
-  successSmall, successNormal, successBig, successCritical
+  failCritical,
+  failBig,
+  failNormal,
+  failSmall,
+  successSmall,
+  successNormal,
+  successBig,
+  successCritical
 };
 
 //TODO See comment above for AbilityRollResult

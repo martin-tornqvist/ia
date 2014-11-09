@@ -139,10 +139,10 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
   for(unsigned int i = historyElement; i < history.size(); ++i)
   {
     string row = "";
-    for(unsigned int ii = 0; ii < history.at(i).size(); ii++)
+    for(unsigned int ii = 0; ii < history[i].size(); ii++)
     {
       string msgStr = "";
-      history.at(i).at(ii).getStrWithRepeats(msgStr);
+      history[i][ii].getStrWithRepeats(msgStr);
       row += msgStr + " ";
     }
     linesRef.push_back(StrAndClr("   " + row, clrInfo));
@@ -243,8 +243,8 @@ void render(const vector<StrAndClr>& linesAndClr,
     i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++)
   {
-    Render::drawText(linesAndClr.at(i).str, Panel::screen, Pos(0, yPos++),
-                     linesAndClr.at(i).clr);
+    Render::drawText(linesAndClr[i].str, Panel::screen, Pos(0, yPos++),
+                     linesAndClr[i].clr);
   }
 
   Render::updateScreen();

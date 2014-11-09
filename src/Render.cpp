@@ -454,14 +454,14 @@ void drawMarker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANG
   {
     for(size_t i = 1; i < trail.size(); ++i)
     {
-      const Pos& pos = trail.at(i);
+      const Pos& pos = trail[i];
       coverCellInMap(pos);
 
       Clr clr = clrGreenLgt;
 
       if(EFFECTIVE_RANGE != -1)
       {
-        const int CHEB_DIST = Utils::kingDist(trail.at(0), pos);
+        const int CHEB_DIST = Utils::kingDist(trail[0], pos);
         if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
       if(Config::isTilesMode())
@@ -481,7 +481,7 @@ void drawMarker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANG
   {
     if(EFFECTIVE_RANGE != -1)
     {
-      const int CHEB_DIST = Utils::kingDist(trail.at(0), p);
+      const int CHEB_DIST = Utils::kingDist(trail[0], p);
       if(CHEB_DIST > EFFECTIVE_RANGE)
       {
         clr = clrYellow;
@@ -693,7 +693,7 @@ void drawText(const string& str, const Panel panel, const Pos& pos, const Clr& c
       {
         return;
       }
-      drawGlyphAtPixel(str.at(i), pixelPos, clr, false);
+      drawGlyphAtPixel(str[i], pixelPos, clr, false);
       pixelPos.x += cellDims.x;
     }
   }
@@ -733,7 +733,7 @@ int drawTextCentered(const string& str, const Panel panel, const Pos& pos,
     {
       return X_POS_LEFT;
     }
-    drawGlyphAtPixel(str.at(i), pixelPos, clr, false, bgClr);
+    drawGlyphAtPixel(str[i], pixelPos, clr, false, bgClr);
     pixelPos.x += cellDims.x;
   }
   return X_POS_LEFT;

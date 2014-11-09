@@ -94,7 +94,7 @@ void menuMsgDrawingHelper(
   {
     Clr clr = i == curChoice ? clrMenuHighlight : clrMenuDrk;
     Render::drawTextCentered(
-      choices.at(i), Panel::map, Pos(MAP_W_HALF, y),
+      choices[i], Panel::map, Pos(MAP_W_HALF, y),
       clr, clrBlack, true);
     y++;
   }

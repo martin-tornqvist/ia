@@ -46,7 +46,7 @@ void mkLines()
   delete kick;
   for(unsigned int i = 0; i < kickStr.length(); ++i)
   {
-    if(kickStr.at(0) == ' ')
+    if(kickStr[0] == ' ')
     {
       kickStr.erase(kickStr.begin());
     }
@@ -60,7 +60,7 @@ void mkLines()
   delete punch;
   for(size_t i = 0; i < punchStr.length(); ++i)
   {
-    if(punchStr.at(0) == ' ')
+    if(punchStr[0] == ' ')
     {
       punchStr.erase(punchStr.begin());
     }
@@ -245,7 +245,7 @@ void run()
     int yPos = 1;
     for(int i = topNr; i <= btmNr; ++i)
     {
-      const StrAndClr& line = lines_.at(i);
+      const StrAndClr& line = lines_[i];
       Render::drawText(line.str , Panel::screen, Pos(0, yPos++), line.clr);
     }
     Render::updateScreen();

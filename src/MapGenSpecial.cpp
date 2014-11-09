@@ -265,15 +265,15 @@ void mkForestTrees()
       if(pathWalkCount == TRY_PLACE_EVERY_N_STEP)
       {
 
-        Fov::runFovOnArray(blocked, path.at(i), fov, false);
+        Fov::runFovOnArray(blocked, path[i], fov, false);
 
         for(int dy = -SEARCH_RADI; dy <= SEARCH_RADI; ++dy)
         {
           for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; ++dx)
           {
 
-            const int X = path.at(i).x + dx;
-            const int Y = path.at(i).y + dy;
+            const int X = path[i].x + dx;
+            const int Y = path[i].y + dy;
 
             const bool IS_LEFT_OF_CHURCH = X < churchPos.x - (SEARCH_RADI) + 2;
             const bool IS_ON_STONE_PATH =
@@ -317,13 +317,13 @@ void mkForestTrees()
     for(size_t i = 0; i < graveCells.size(); ++i)
     {
       GraveStone* grave = new GraveStone(graveCells[i]);
-      HighScoreEntry curHighscore = highscoreEntries.at(i);
+      HighScoreEntry curHighscore = highscoreEntries[i];
       const string name = curHighscore.getName();
       vector<string> dateStrVector;
       dateStrVector.clear();
       TextFormatting::getSpaceSeparatedList(curHighscore.getDateAndTime(),
                                             dateStrVector);
-      const string date   = dateStrVector.at(0);
+      const string date   = dateStrVector[0];
       const string score  = toStr(curHighscore.getScore());
       grave->setInscription("RIP " + name + " " + date + " Score: " + score);
       Map::put(grave);
@@ -527,7 +527,7 @@ bool mkTrapezohedronLvl()
   }
 
   const int ELEMENT = Rnd::range(0, itemPosBucket.size() - 1);
-  ItemFactory::mkItemOnMap(ItemId::trapezohedron, itemPosBucket.at(ELEMENT));
+  ItemFactory::mkItemOnMap(ItemId::trapezohedron, itemPosBucket[ELEMENT]);
   return true;
 }
 

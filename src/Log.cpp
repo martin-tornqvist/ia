@@ -131,7 +131,7 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
 
   assert(!text.empty());
 #ifndef NDEBUG
-  if(text.at(0) == ' ')
+  if(text[0] == ' ')
   {
     TRACE << "Message starts with space: \"" << text << "\"" << endl;
     assert(false);
@@ -211,7 +211,7 @@ void displayHistory()
     int yPos = 1;
     for(int i = topNr; i <= btmNr; ++i)
     {
-      drawLine(history_.at(i), yPos++);
+      drawLine(history_[i], yPos++);
     }
     Render::updateScreen();
 

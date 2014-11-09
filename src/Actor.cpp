@@ -182,7 +182,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS)
   MapParse::parse(CellPred::BlocksActor(*this, true), blocked);
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
-  const Pos newPos = freeCells.at(Rnd::range(0, freeCells.size() - 1));
+  const Pos newPos = freeCells[Rnd::range(0, freeCells.size() - 1)];
 
   if(isPlayer())
   {
@@ -236,8 +236,7 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
 
   const int DIF_FROM_MAX = getHpMax(true) - HP_RESTORED;
 
-  //If hp is below limit, but restored hp will push it over the limit,
-  //hp is set to max.
+  //If hp is below limit, but restored hp will push it over the limit, HP is set to max.
   if(
     !IS_ALLOWED_ABOVE_MAX && getHp() > DIF_FROM_MAX &&
     getHp() < getHpMax(true))
@@ -246,8 +245,8 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
     isHpGained = true;
   }
 
-  //If hp is below limit, and restored hp will NOT push it
-  //over the limit - restored hp is added to current.
+  //If HP is below limit, and restored hp will NOT push it over the limit -
+  //restored hp is added to current.
   if(IS_ALLOWED_ABOVE_MAX || getHp() <= DIF_FROM_MAX)
   {
     hp_ += HP_RESTORED;

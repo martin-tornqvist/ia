@@ -931,7 +931,7 @@ void handleKeyPress(const KeyData& d)
   else if(d.key != -1)
   {
     string cmdTried = " ";
-    cmdTried.at(0) = d.key;
+    cmdTried[0] = d.key;
     Log::clearLog();
     Log::addMsg("Unknown command '" + cmdTried + "'.");
     clearEvents();

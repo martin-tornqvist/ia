@@ -51,9 +51,9 @@ void mkItems()
     if(freeCells.empty()) {break;}
 
     const int ELEMENT       = Rnd::dice(1, freeCells.size()) - 1;
-    const Pos& pos          = freeCells.at(ELEMENT);
+    const Pos& pos          = freeCells[ELEMENT];
     const int NR_CANDIDATES = int(candidates.size());
-    const ItemId id         = candidates.at(Rnd::range(0, NR_CANDIDATES - 1));
+    const ItemId id         = candidates[Rnd::range(0, NR_CANDIDATES - 1)];
 
     ItemFactory::mkItemOnMap(id, pos);
 

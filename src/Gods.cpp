@@ -130,7 +130,7 @@ bool isGodLvl()
 
 const God* getCurGod()
 {
-  if(curGodElem_ >= 0) {return &(godList.at(curGodElem_));}
+  if(curGodElem_ >= 0) {return &(godList[curGodElem_]);}
   return nullptr;
 }
 

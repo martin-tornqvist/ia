@@ -103,8 +103,9 @@ void drawBrowseInv(const MenuBrowser& browser)
   const bool    IS_IN_EQP   = BROWSER_Y < int(NR_SLOTS);
   const size_t  INV_ELEMENT = IS_IN_EQP ? 0 : (size_t(BROWSER_Y) - NR_SLOTS);
 
-  const auto* const item =
-    IS_IN_EQP ? inv.slots_[BROWSER_Y].item : inv.general_.at(INV_ELEMENT);
+  const auto* const item    = IS_IN_EQP ?
+                              inv.slots_[BROWSER_Y].item :
+                              inv.general_[INV_ELEMENT];
 
   const string queryEqStr   = item ? "unequip" : "equip";
   const string queryBaseStr = "[enter] to " + (IS_IN_EQP ? queryEqStr : "apply item");
@@ -112,6 +113,7 @@ void drawBrowseInv(const MenuBrowser& browser)
   const string queryDropStr = item ? " [shift+enter] to drop" : "";
 
   string str                = queryBaseStr + queryDropStr + " [space/esc] to exit";
+
   Render::drawText(str, Panel::screen, Pos(0, 0), clrWhiteHigh);
 
   Pos p(1, EQP_Y0);
@@ -209,7 +211,7 @@ void drawBrowseInv(const MenuBrowser& browser)
   for(size_t i = invTopIdx; i < NR_INV_ITEMS; ++i)
   {
     const bool IS_CUR_POS = !IS_IN_EQP && INV_ELEMENT == i;
-    Item* const curItem   = inv.general_.at(i);
+    Item* const curItem   = inv.general_[i];
 
     const Clr clr = IS_CUR_POS ? clrWhiteHigh : curItem->getInterfaceClr();
 
@@ -321,7 +323,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotIdToEquip,
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     p.x = 0;
 
-    Item* const item = inv.general_.at(genInvIndexes.at(i));
+    Item* const item = inv.general_[genInvIndexes[i]];
 
     drawItemSymbol(*item, p);
     p.x += 2;

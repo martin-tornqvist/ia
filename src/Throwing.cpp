@@ -37,7 +37,7 @@ void playerThrowLitExplosive(const Pos& aimCell)
   //Remove cells after blocked cells
   for(size_t i = 1; i < path.size(); ++i)
   {
-    const Pos   p = path.at(i);
+    const Pos   p = path[i];
     const auto* f = Map::cells[p.x][p.y].rigid;
     if(!f->isProjectilePassable())
     {
@@ -127,7 +127,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
   {
     Render::drawMapAndInterface(false);
 
-    curPos.set(path.at(i));
+    curPos.set(path[i]);
 
     Actor* const actorHere = Utils::getActorAtPos(curPos);
     if(actorHere)
@@ -197,7 +197,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
   {
     if(blockedInElement >= 0)
     {
-      static_cast<Potion*>(&itemThrown)->collide(path.at(blockedInElement), nullptr);
+      static_cast<Potion*>(&itemThrown)->collide(path[blockedInElement], nullptr);
       delete &itemThrown;
       GameTime::actorDidAct();
       return;
@@ -212,7 +212,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
   {
     const int DROP_ELEMENT = blockedInElement == -1 ?
                              path.size() - 1 : blockedInElement;
-    const Pos dropPos = path.at(DROP_ELEMENT);
+    const Pos dropPos = path[DROP_ELEMENT];
     const Matl matlAtDropPos =
       Map::cells[dropPos.x][dropPos.y].rigid->getMatl();
 

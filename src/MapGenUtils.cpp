@@ -271,10 +271,9 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
   }
 
   TRACE_VERBOSE << "Picking a random stored entry pair" << endl;
-  const pair<Pos, Pos>& entries =
-    entriesBucket.at(Rnd::range(0, entriesBucket.size() - 1));
-  const Pos& p0 = entries.first;
-  const Pos& p1 = entries.second;
+  const pair<Pos, Pos>& entries = entriesBucket[Rnd::range(0, entriesBucket.size() - 1)];
+  const Pos&            p0      = entries.first;
+  const Pos&            p1      = entries.second;
 
   vector<Pos> path;
 
@@ -340,7 +339,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
 
     for(size_t i = 0; i < path.size(); ++i)
     {
-      const Pos& p(path.at(i));
+      const Pos& p(path[i]);
 
       Map::put(new Floor(p));
 
@@ -428,8 +427,7 @@ void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
 {
   posListRef.clear();
 
-  const vector<Pos>& dList =
-    ALLOW_DIAGONAL ? DirUtils::dirList : DirUtils::cardinalList;
+  const vector<Pos>& dList = ALLOW_DIAGONAL ? DirUtils::dirList : DirUtils::cardinalList;
   const int D_LIST_SIZE = dList.size();
 
   Pos p(p0);
@@ -441,7 +439,7 @@ void rndWalk(const Pos& p0, int len, std::vector<Pos>& posListRef,
 
     while(true)
     {
-      const Pos nxtPos = p + dList.at(Rnd::range(0, D_LIST_SIZE - 1));
+      const Pos nxtPos = p + dList[Rnd::range(0, D_LIST_SIZE - 1)];
       if(Utils::isPosInside(nxtPos, area))
       {
         p = nxtPos;

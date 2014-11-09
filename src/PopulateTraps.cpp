@@ -94,7 +94,7 @@ void populateStdLvl()
                                   TrapId(Rnd::range(0, int(TrapId::END) - 1));
 
           const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
-          const Pos& pos    = trapPosBucket.at(ELEMENT);
+          const Pos& pos    = trapPosBucket[ELEMENT];
 
           TRACE << "Placing base trap" << endl;
           mkTrapAt(trapType, pos);
@@ -153,7 +153,7 @@ void populateStdLvl()
       const TrapId trapType = TrapId(Rnd::range(0, int(TrapId::END) - 1));
 
       const int ELEMENT = Rnd::range(0, trapPosBucket.size() - 1);
-      const Pos& pos = trapPosBucket.at(ELEMENT);
+      const Pos& pos = trapPosBucket[ELEMENT];
 
       TRACE << "Placing base trap" << endl;
       mkTrapAt(trapType, pos);

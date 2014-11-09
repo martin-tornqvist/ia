@@ -200,7 +200,7 @@ void init()
     {
       if(i != ii)
       {
-        falseNames_.push_back(cmb.at(i) + " " + cmb.at(ii));
+        falseNames_.push_back(cmb[i] + " " + cmb[ii]);
       }
     }
   }
@@ -214,7 +214,7 @@ void init()
       const int NR_ELEMENTS = falseNames_.size();
       const int ELEMENT     = Rnd::range(0, NR_ELEMENTS - 1);
 
-      const string& TITLE = falseNames_.at(ELEMENT);
+      const string& TITLE = falseNames_[ELEMENT];
 
       d->baseNameUnid.names[int(ItemRefType::plain)]   = "Manuscript titled "    + TITLE;
       d->baseNameUnid.names[int(ItemRefType::plural)]  = "Manuscripts titled "   + TITLE;

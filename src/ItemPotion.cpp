@@ -415,7 +415,7 @@ void PotionInsight::quaff_(Actor& actor)
   {
     const int ELEMENT = Rnd::range(0, NR_ELEMENTS - 1);
 
-    Item* const item = identifyBucket.at(ELEMENT);
+    Item* const item = identifyBucket[ELEMENT];
 
     const string itemNameBefore = item->getName(ItemRefType::a, ItemRefInf::none);
 
@@ -527,7 +527,7 @@ void init()
       //Color and false name
       const int ELEMENT = Rnd::range(0, potionLooks_.size() - 1);
 
-      PotionLook& look = potionLooks_.at(ELEMENT);
+      PotionLook& look = potionLooks_[ELEMENT];
 
       d->baseNameUnid.names[int(ItemRefType::plain)]   = look.namePlain + " potion";
       d->baseNameUnid.names[int(ItemRefType::plural)]  = look.namePlain + " potions";

@@ -123,7 +123,7 @@ void act()
   if(Rnd::oneIn(10))
   {
     const int ELEMENT = Rnd::range(0, GameTime::actors_.size() - 1);
-    Actor* const actor = GameTime::actors_.at(ELEMENT);
+    Actor* const actor = GameTime::actors_[ELEMENT];
     if(actor != Map::player)
     {
       actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std), true);
@@ -147,14 +147,14 @@ void act()
   if(Rnd::oneIn(10))
   {
     vector<PropId> propBucket;
-    propBucket.clear();
+
     for(int i = 0; i < endOfPropIds; ++i)
     {
       if(PropData::data[i].allowTestOnBot) {propBucket.push_back(PropId(i));}
     }
-    PropId propId = propBucket.at(Rnd::range(0, propBucket.size() - 1));
 
-    Prop* const prop = propHandler.mkProp(propId, PropTurns::specific, 5);
+    PropId      propId  = propBucket[Rnd::range(0, propBucket.size() - 1)];
+    Prop* const prop    = propHandler.mkProp(propId, PropTurns::specific, 5);
 
     propHandler.tryApplyProp(prop, true);
   }

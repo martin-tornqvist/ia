@@ -351,7 +351,7 @@ Dir getDirToRndAdjFreeCell(Mon& mon)
   }
   else
   {
-    return dirBucket.at(Rnd::range(0, NR_ELEMENTS - 1));
+    return dirBucket[Rnd::range(0, NR_ELEMENTS - 1)];
   }
 }
 

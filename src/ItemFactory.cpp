@@ -254,7 +254,7 @@ Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS,
   if(!itemBucket.empty())
   {
     const int ELEMENT = Rnd::range(0, itemBucket.size() - 1);
-    return mk(itemBucket.at(ELEMENT));
+    return mk(itemBucket[ELEMENT]);
   }
 
   return nullptr;

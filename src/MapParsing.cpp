@@ -492,7 +492,7 @@ void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
       }
       else
       {
-        curPos = positions.at(nrElementsToSkip);
+        curPos = positions[nrElementsToSkip];
         nrElementsToSkip++;
       }
     }

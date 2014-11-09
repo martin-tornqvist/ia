@@ -39,7 +39,7 @@ void readFile()
         bool shouldFormatLine = true;
         if(curLine.size() > 1)
         {
-          if(curLine.at(0) == ' ' && curLine.at(1) == ' ')
+          if(curLine[0] == ' ' && curLine[1] == ' ')
           {
             shouldFormatLine = false;
           }
@@ -47,9 +47,9 @@ void readFile()
         if(shouldFormatLine)
         {
           TextFormatting::lineToLines(curLine, MAP_W - 3, formatted);
-          for(unsigned int i = 0; i < formatted.size(); ++i)
+          for(const auto& line : formatted)
           {
-            lines_.push_back(formatted.at(i));
+            lines_.push_back(line);
           }
         }
         else
@@ -102,7 +102,7 @@ void run()
     int yPos = 1;
     for(int i = topNr; i <= btmNr; ++i)
     {
-      Render::drawText(lines_.at(i), Panel::screen, Pos(0, yPos++),
+      Render::drawText(lines_[i], Panel::screen, Pos(0, yPos++),
                        clrWhite);
     }
     Render::updateScreen();

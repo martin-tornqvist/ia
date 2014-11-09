@@ -93,7 +93,7 @@ SfxId getAmbSfxSuitableForDlvl()
   if(sfxBucket.empty()) {return SfxId::END;}
 
   const int ELEMENT = Rnd::range(0, sfxBucket.size() - 1);
-  return sfxBucket.at(ELEMENT);
+  return sfxBucket[ELEMENT];
 }
 
 void loadAudioFile(const SfxId sfx, const string& filename)
@@ -106,9 +106,9 @@ void loadAudioFile(const SfxId sfx, const string& filename)
 
   Render::updateScreen();
 
-  audioChunks.at(int(sfx)) = Mix_LoadWAV((fileRelPath).data());
+  audioChunks[int(sfx)] = Mix_LoadWAV((fileRelPath).data());
 
-  if(!audioChunks.at(int(sfx)))
+  if(!audioChunks[int(sfx)])
   {
     TRACE << "Problem loading audio file with name " + filename << endl
           << Mix_GetError() << endl;
@@ -216,7 +216,7 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
 
     Mix_SetPanning(curChannel, VOL_L, VOL_R);
 
-    Mix_PlayChannel(curChannel, audioChunks.at(int(sfx)), 0);
+    Mix_PlayChannel(curChannel, audioChunks[int(sfx)], 0);
 
     ret = curChannel;
 

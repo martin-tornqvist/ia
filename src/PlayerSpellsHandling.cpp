@@ -57,7 +57,7 @@ void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts)
     Clr           scrollClr   = scroll.getInterfaceClr();
     const bool    IS_SELECTED = browser.isAtIdx(CURRENT_ELEMENT);
     const Clr     clr         = IS_SELECTED ? clrWhite : scrollClr;
-    SpellOpt      spellOpt    = spellOpts.at(i);
+    SpellOpt      spellOpt    = spellOpts[i];
     Spell* const  spell       = spellOpt.spell;
     string        name        = spell->getName();
     const int     NAME_X      = 1;
@@ -298,7 +298,7 @@ void playerSelectSpellToCast()
 
         case MenuAction::selected:
         {
-          tryCast(spellOpts.at(browser.getPos().y));
+          tryCast(spellOpts[browser.getPos().y]);
           return;
         } break;
 

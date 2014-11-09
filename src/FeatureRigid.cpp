@@ -1226,7 +1226,7 @@ ItemContainer::~ItemContainer()
 {
   for(unsigned int i = 0; i < items_.size(); ++i)
   {
-    delete items_.at(i);
+    delete items_[i];
   }
 }
 
@@ -1236,7 +1236,7 @@ void ItemContainer::setRandomItemsForFeature(
 {
   for(unsigned int i = 0; i < items_.size(); ++i)
   {
-    delete items_.at(i);
+    delete items_[i];
   }
   items_.clear();
 
@@ -1253,7 +1253,7 @@ void ItemContainer::setRandomItemsForFeature(
           ii < curData->featuresCanBeFoundIn.size();
           ii++)
         {
-          auto featuresFoundIn = curData->featuresCanBeFoundIn.at(ii);
+          auto featuresFoundIn = curData->featuresCanBeFoundIn[ii];
           if(featuresFoundIn.first == featureId)
           {
             if(Rnd::percentile() < featuresFoundIn.second)
@@ -1274,7 +1274,7 @@ void ItemContainer::setRandomItemsForFeature(
         for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; ++i)
         {
           const auto ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
-          Item* item = ItemFactory::mk(itemBucket.at(ELEMENT));
+          Item* item = ItemFactory::mk(itemBucket[ELEMENT]);
           ItemFactory::setItemRandomizedProperties(item);
           items_.push_back(item);
         }
@@ -1295,7 +1295,7 @@ void ItemContainer::destroySingleFragile()
 
   for(size_t i = 0; i < items_.size(); ++i)
   {
-    Item* const item = items_.at(i);
+    Item* const item = items_[i];
     const ItemDataT& d = item->getData();
     if(d.isPotion || d.id == ItemId::molotov)
     {
@@ -2074,7 +2074,7 @@ Fountain::Fountain(const Pos& pos) :
 
       for(int i = 0; i < NR_EFFECTS; ++i)
       {
-        fountainEffects_.push_back(effectBucket.at(i));
+        fountainEffects_.push_back(effectBucket[i]);
       }
     } break;
   }
@@ -2377,7 +2377,7 @@ void Cocoon::triggerTrap(Actor& actor)
       Log::addMsg("There are spiders inside!");
       const int NR_SPIDERS = Rnd::range(2, 5);
       const int ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
-      const ActorId actorIdToSummon = spawnBucket.at(ELEMENT);
+      const ActorId actorIdToSummon = spawnBucket[ELEMENT];
       ActorFactory::summonMon(
         pos_, vector<ActorId>(NR_SPIDERS, actorIdToSummon), true);
     }

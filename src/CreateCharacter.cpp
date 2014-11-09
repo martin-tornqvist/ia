@@ -118,14 +118,14 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser)
 
   int y = Y0_BGS;
 
-  const Bg markedBg = bgs.at(browserPos.y);
+  const Bg markedBg = bgs[browserPos.y];
 
   const int NR_BGS = bgs.size();
 
   //------------------------------------------------------------- BACKGROUNDS
   for(int i = 0; i < NR_BGS; ++i)
   {
-    const Bg bg = bgs.at(i);
+    const Bg bg = bgs[i];
     string name = "";
     PlayerBon::getBgTitle(bg, name);
     const bool IS_MARKED  = bg == markedBg;
@@ -186,7 +186,7 @@ void pickBg()
 
         case MenuAction::selected:
         {
-          PlayerBon::pickBg(bgs.at(browser.getPos().y));
+          PlayerBon::pickBg(bgs[browser.getPos().y]);
           return;
         } break;
 
@@ -235,7 +235,7 @@ void drawPickTrait(
   int y = Y0_TRAITS;
   for(int i = 0; i < NR_TRAITS_1; ++i)
   {
-    const Trait trait = traits1.at(i);
+    const Trait trait = traits1[i];
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
     const bool IS_MARKED  = browserPos.x == 0 && browserPos.y == int(i);
@@ -246,7 +246,7 @@ void drawPickTrait(
   y = Y0_TRAITS;
   for(int i = 0; i < NR_TRAITS_2; ++i)
   {
-    const Trait trait = traits2.at(i);
+    const Trait trait = traits2[i];
     string name = "";
     PlayerBon::getTraitTitle(trait, name);
     const bool IS_MARKED  = browserPos.x == 1 && browserPos.y == int(i);
@@ -266,8 +266,7 @@ void drawPickTrait(
   const int X0_DESCR = X_COL_ONE;
   y = Y0_DESCR;
   const Trait markedTrait =
-    browserPos.x == 0 ? traits1.at(browserPos.y) :
-    traits2.at(browserPos.y);
+    browserPos.x == 0 ? traits1[browserPos.y] : traits2[browserPos.y];
   string descr = "";
   PlayerBon::getTraitDescr(markedTrait, descr);
   const int MAX_W_DESCR = X_COL_TWO_RIGHT - X_COL_ONE + 1;
@@ -364,7 +363,7 @@ void pickNewTrait(const bool IS_CHARACTER_CREATION)
 
       for(int i = 0; i < NR_TRAITS_TOT; ++i)
       {
-        const Trait trait = pickableTraits.at(i);
+        const Trait trait = pickableTraits[i];
         if(i < NR_TRAITS_1)
         {
           traits1.push_back(trait);
@@ -394,8 +393,7 @@ void pickNewTrait(const bool IS_CHARACTER_CREATION)
           case MenuAction::selected:
           {
             const Pos pos = browser.getPos();
-            PlayerBon::pickTrait(
-              pos.x == 0 ? traits1.at(pos.y) : traits2.at(pos.y));
+            PlayerBon::pickTrait(pos.x == 0 ? traits1[pos.y] : traits2[pos.y]);
             if(!IS_CHARACTER_CREATION) {Render::drawMapAndInterface();}
             return;
           } break;

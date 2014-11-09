@@ -75,7 +75,7 @@ bool mkCaveLvl()
     MapGenUtils::rndWalk(curPos, length, floorCells, true);
     putCaveFloor(floorCells);
 
-    const Pos prevPos = prevCenters.at(Rnd::range(0, prevCenters.size() - 1));
+    const Pos prevPos = prevCenters[Rnd::range(0, prevCenters.size() - 1)];
 
     MapGenUtils::pathfinderWalk(prevPos, curPos, floorCells, false);
     putCaveFloor(floorCells);
@@ -89,9 +89,9 @@ bool mkCaveLvl()
   int floodFill[MAP_W][MAP_H];
   FloodFill::run(origin, blocked, floodFill, 99999, Pos(-1, -1), true);
   vector<PosAndVal> floodVals;
-  for(int y = 1; y < MAP_H - 1; ++y)
+  for(int x = 1; x < MAP_W - 1; ++x)
   {
-    for(int x = 1; x < MAP_W - 1; ++x)
+    for(int y = 1; y < MAP_H - 1; ++y)
     {
       const int VAL = floodFill[x][y];
       if(VAL > 0) {floodVals.push_back(PosAndVal(Pos(x, y), VAL));}
@@ -104,7 +104,7 @@ bool mkCaveLvl()
   const int NR_VALS       = floodVals.size();
   const int STAIR_ELEMENT = Rnd::range((NR_VALS * 4) / 5, NR_VALS - 1);
 
-  Map::put(new Stairs(floodVals.at(STAIR_ELEMENT).pos));
+  Map::put(new Stairs(floodVals[STAIR_ELEMENT].pos));
 
   PopulateMon::populateCaveLvl();
 

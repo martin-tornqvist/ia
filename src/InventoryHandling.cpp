@@ -48,7 +48,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT)
   else
   {
     assert(ELEMENT < inv.general_.size());
-    item = inv.general_.at(ELEMENT);
+    item = inv.general_[ELEMENT];
   }
 
   if(!item)
@@ -106,7 +106,7 @@ void filterPlayerGeneralEquip(const SlotId slotToEquip)
 
   for(size_t i = 0; i < general.size(); ++i)
   {
-    const Item* const item = general.at(i);
+    const Item* const item = general[i];
     const ItemDataT& data = item->getData();
 
     switch(slotToEquip)
@@ -187,7 +187,7 @@ void init()
 void activateDefault(const size_t GENERAL_ITEMS_ELEMENT)
 {
   Inventory& playerInv = Map::player->getInv();
-  Item* item = playerInv.general_.at(GENERAL_ITEMS_ELEMENT);
+  Item* item = playerInv.general_[GENERAL_ITEMS_ELEMENT];
   if(item->activateDefault(Map::player) == ConsumeItem::yes)
   {
     playerInv.decrItemInGeneral(GENERAL_ITEMS_ELEMENT);
@@ -367,7 +367,7 @@ bool runEquipScreen(InvSlot& slotToEquip)
       {
         if(!generalItemsToShow_.empty())
         {
-          const int ELEMENT = generalItemsToShow_.at(browser.getY());
+          const int ELEMENT = generalItemsToShow_[browser.getY()];
           Render::drawMapAndInterface();
           inv.equipGeneralItemAndEndTurn(ELEMENT, slotToEquip.id);
           bool applyWearEffect = false;
@@ -397,7 +397,7 @@ bool runEquipScreen(InvSlot& slotToEquip)
 
       case MenuAction::selectedShift:
       {
-        if(runDropScreen(InvList::general, generalItemsToShow_.at(browser.getY())))
+        if(runDropScreen(InvList::general, generalItemsToShow_[browser.getY()]))
         {
           browser.setGoodPos();
           browserIdxToSetAfterDrop  = browser.getY();

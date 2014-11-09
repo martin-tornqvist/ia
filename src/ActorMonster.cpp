@@ -464,7 +464,7 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
   //If any possible attacks found
   if(nrWpns > 0)
   {
-    attack.weapon = attackOpport.weapons.at(0);
+    attack.weapon = attackOpport.weapons[0];
 
     const ItemDataT* data = &(attack.weapon->getData());
 
@@ -474,7 +474,7 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
       for(size_t i = 1; i < nrWpns; ++i)
       {
         //Found new weapon in element i.
-        newWpn = attackOpport.weapons.at(i);
+        newWpn = attackOpport.weapons[i];
         const ItemDataT* newData = &(newWpn->getData());
 
         //Compare definitions.

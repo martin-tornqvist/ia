@@ -166,7 +166,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
       const int NR_ITEMS = inv.general_.size();
       for(int i = 0; i < NR_ITEMS; ++i)
       {
-        item = inv.general_.at(i);
+        item = inv.general_[i];
 
         if(item->getData().id == ammoType)
         {

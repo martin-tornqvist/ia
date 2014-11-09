@@ -46,7 +46,7 @@ Spell* getRandomSpellForMon()
     delete spell;
   }
   const int ELEMENT = Rnd::range(0, bucket.size() - 1);
-  return mkSpellFromId(bucket.at(ELEMENT));
+  return mkSpellFromId(bucket[ELEMENT]);
 }
 
 Spell* mkSpellFromId(const SpellId spellId)
@@ -221,7 +221,7 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
   const size_t LINE_SIZE = line.size();
   for(size_t i = 1; i < LINE_SIZE; ++i)
   {
-    const Pos& p = line.at(i);
+    const Pos& p = line[i];
     if(Config::isTilesMode())
     {
       Render::drawTile(TileId::blast1, Panel::map, p, clrMagenta);
@@ -519,7 +519,7 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
 
   ActorFactory::summonMon(caster->pos, {ActorId::mummy}, false, leader, &summonedMon);
 
-  const Mon* const mon = summonedMon.at(0);
+  const Mon* const mon = summonedMon[0];
 
   if(Map::player->isSeeingActor(*mon, nullptr))
   {
@@ -971,7 +971,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
   }
 
   const int       ELEMENT       = Rnd::range(0, summonBucket.size() - 1);
-  const ActorId   monId         = summonBucket.at(ELEMENT);
+  const ActorId   monId         = summonBucket[ELEMENT];
   Actor*          leader        = nullptr;
 
   if(caster->isPlayer())
