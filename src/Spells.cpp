@@ -77,6 +77,7 @@ Spell* mkSpellFromId(const SpellId spellId)
     case SpellId::burn:                 return new SpellBurn; break;
     case SpellId::elemRes:              return new SpellElemRes; break;
     case SpellId::pharaohStaff:         return new SpellPharaohStaff; break;
+    case SpellId::light:                return new SpellLight; break;
     case SpellId::END: {} break;
   }
   assert(false && "No spell found for ID");
@@ -260,7 +261,7 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
 
   if(Map::player->isSeeingActor(*tgt, nullptr))
   {
-    Log::addMsg(tgtStr + " struck by a blast!", clrMsgBad);
+    Log::addMsg(tgtStr + " struck by a blast!", msgClr);
   }
 
   tgt->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::specific, 2));
@@ -751,12 +752,11 @@ SpellEffectNoticed SpellBless::cast_(Actor* const caster) const
   return SpellEffectNoticed::yes;
 }
 
-bool SpellBless::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+//------------------------------------------------------------ LIGHT
+SpellEffectNoticed SpellLight::cast_(Actor* const caster) const
 {
-  (void)blockedLos;
-  vector<PropId> props;
-  mon.getPropHandler().getAllActivePropIds(props);
-  return mon.target && find(begin(props), end(props), propBlessed) == end(props);
+  caster->getPropHandler().tryApplyProp(new PropRadiant(PropTurns::std));
+  return SpellEffectNoticed::yes;
 }
 
 //------------------------------------------------------------ TELEPORT

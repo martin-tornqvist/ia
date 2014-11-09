@@ -25,7 +25,6 @@ enum class SpellId
   terrifyMon,
   paralyzeMon,
   teleport,
-  bless,
   summonMon,
   pest,
 
@@ -38,6 +37,8 @@ enum class SpellId
   sacrLife,
   sacrSpi,
   elemRes,
+  light,
+  bless,
 
   cloudMinds,
 
@@ -433,8 +434,7 @@ class SpellBless: public Spell
 {
 public:
   SpellBless() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
-  bool isAvailForAllMon()       const override {return true;}
+  bool isAvailForAllMon()       const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Bless";}
   SpellId getId()               const override {return SpellId::bless;}
@@ -451,6 +451,30 @@ private:
   int getMaxSpiCost_() const override
   {
     return PlayerBon::getSpiOccultistCanCastAtLvl(11);
+  }
+};
+
+class SpellLight: public Spell
+{
+public:
+  SpellLight() : Spell() {}
+  bool isAvailForAllMon()       const override {return false;}
+  bool isAvailForPlayer()       const override {return true;}
+  std::string getName()         const override {return "Light";}
+  SpellId getId()               const override {return SpellId::light;}
+  IntrSpellShock getShockTypeIntrCast() const override
+  {
+    return IntrSpellShock::mild;
+  }
+  std::vector<std::string> getDescr() const override
+  {
+    return {"Illuminates the area around the caster."};
+  }
+private:
+  SpellEffectNoticed cast_(Actor* const caster) const override;
+  int getMaxSpiCost_() const override
+  {
+    return PlayerBon::getSpiOccultistCanCastAtLvl(1);
   }
 };
 

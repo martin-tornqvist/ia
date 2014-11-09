@@ -88,7 +88,7 @@ public:
 
   void updateClr();
 
-  void addLight_(bool light[MAP_W][MAP_H]) const;
+  void addLight_(bool lightMap[MAP_W][MAP_H]) const;
 
   void interruptActions();
 

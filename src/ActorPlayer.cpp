@@ -1370,10 +1370,11 @@ void Player::punchMon(Actor& actorToPunch)
   delete punchWpn;
 }
 
-void Player::addLight_(bool light[MAP_W][MAP_H]) const
+void Player::addLight_(bool lightMap[MAP_W][MAP_H]) const
 {
   bool isUsingLightGivingItemSmall  = false; //3x3 cells
   bool isUsingLightGivingItemNormal = false;
+
   if(activeExplosive)
   {
     if(activeExplosive->getData().id == ItemId::flare)
@@ -1414,7 +1415,7 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const
       for(int x = p0.x; x <= p1.x; ++x)
       {
         const auto* const f = Map::cells[x][y].rigid;
-        blockedLos[x][y] = !f->isLosPassable();
+        blockedLos[x][y]    = !f->isLosPassable();
       }
     }
 
@@ -1425,7 +1426,7 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const
       {
         if(myLight[x][y])
         {
-          light[x][y] = true;
+          lightMap[x][y] = true;
         }
       }
     }
@@ -1436,7 +1437,7 @@ void Player::addLight_(bool light[MAP_W][MAP_H]) const
     {
       for(int x = pos.x - 1; x <= pos.x + 1; ++x)
       {
-        light[x][y] = true;
+        lightMap[x][y] = true;
       }
     }
   }

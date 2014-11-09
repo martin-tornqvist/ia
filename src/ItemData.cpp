@@ -1432,6 +1432,11 @@ void initDataList()
   d->spellCastFromScroll = SpellId::summonMon;
   data[int(d->id)] = d;
 
+  d = new ItemDataT(ItemId::scrollLight);
+  resetData(*d, ItemType::scroll);
+  d->spellCastFromScroll = SpellId::light;
+  data[int(d->id)] = d;
+
   d = new ItemDataT(ItemId::potionVitality);
   resetData(*d, ItemType::potion);
   data[int(d->id)] = d;

@@ -584,6 +584,21 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
+  d.id = propRadiant;
+  d.stdRndTurns = Range(40, 60);
+  d.name = "Radiant";
+  d.nameShort = "Radiant";
+  d.msg[propMsgOnStartPlayer] = "A strange light radiates from me.";
+  d.msg[propMsgOnEndPlayer] = "The strange light is extinguished.";
+  d.msg[propMsgOnMorePlayer] = "More light radiates from me.";
+  d.isMakingMonAware = false;
+  d.allowDisplayTurns = true;
+  d.allowApplyMoreWhileActive = true;
+  d.updatePlayerVisualWhenStartOrEnd = true;
+  d.allowTestOnBot = true;
+  d.alignment = propAlignmentNeutral;
+  addPropData(d);
+
   d.id = propCursed;
   d.stdRndTurns = Range(400, 600);
   d.name = "Cursed";
@@ -769,6 +784,7 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
     case propEthereal:          return new PropEthereal(turnsInit,          NR_TURNS);
     case propOoze:              return new PropOoze(turnsInit,              NR_TURNS);
     case propBurrowing:         return new PropBurrowing(turnsInit,         NR_TURNS);
+    case propRadiant:           return new PropRadiant(turnsInit,           NR_TURNS);
     case endOfPropIds: {assert(false && "Bad property id");}
   }
   return nullptr;
@@ -920,7 +936,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
 
   prop->owningActor_    = owningActor_;
 
-  const bool IS_PLAYER  = owningActor_ == Map::player;
+  const bool IS_PLAYER  = owningActor_->isPlayer();
   bool playerSeeOwner   = Map::player->isSeeingActor(*owningActor_, nullptr);
 
   if(!FORCE_EFFECT)
@@ -1106,7 +1122,7 @@ bool PropHandler::endAppliedProp(
       Render::drawMapAndInterface();
     }
 
-    if(owningActor_ == Map::player)
+    if(owningActor_->isPlayer())
     {
       string msg = "";
       prop->getMsg(propMsgOnEndPlayer, msg);
@@ -1456,8 +1472,7 @@ void PropBlessed::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(
-    propCursed, blockedLos, false);
+  owningActor_->getPropHandler().endAppliedProp(propCursed, blockedLos, false);
 }
 
 void PropCursed::onStart()
@@ -1469,7 +1484,7 @@ void PropCursed::onStart()
 
 void PropInfected::onNewTurn()
 {
-  if(Rnd::oneIn(175))
+  if(Rnd::oneIn(150))
   {
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(PropTurns::std));
@@ -1481,7 +1496,7 @@ void PropInfected::onNewTurn()
 
 int PropDiseased::getChangedMaxHp(const int HP_MAX) const
 {
-  if(owningActor_ == Map::player && PlayerBon::hasTrait(Trait::survivalist))
+  if(owningActor_->isPlayer() && PlayerBon::hasTrait(Trait::survivalist))
   {
     return (HP_MAX * 3) / 4; //Survavlist makes you lose only 25% instead of 50%
   }
@@ -1529,7 +1544,7 @@ void PropPoisoned::onNewTurn()
     if(TURN == (TURN / DMG_N_TURN) * DMG_N_TURN)
     {
 
-      if(owningActor_ == Map::player)
+      if(owningActor_->isPlayer())
       {
         Log::addMsg("I am suffering from the poison!", clrMsgBad, true);
       }
@@ -1550,7 +1565,7 @@ bool PropTerrified::allowAttackMelee(
   const bool ALLOW_MESSAGE_WHEN_FALSE) const
 {
 
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  if(owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
   {
     Log::addMsg("I am too terrified to engage in close combat!");
   }
@@ -1572,7 +1587,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
   if(dir != Dir::center)
   {
 
-    if(owningActor_ == Map::player)
+    if(owningActor_->isPlayer())
     {
       Log::addMsg("I struggle to tear out the spike!", clrMsgBad);
     }
@@ -1597,7 +1612,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
         nrSpikes_--;
         if(nrSpikes_ > 0)
         {
-          if(owningActor_ == Map::player)
+          if(owningActor_->isPlayer())
           {
             Log::addMsg("I rip out a spike from my flesh!");
           }
@@ -1619,7 +1634,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
 
 bool PropConfused::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  if(owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
   {
     Log::addMsg("I'm too confused.");
   }
@@ -1682,7 +1697,7 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir)
 
 void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
 {
-  if(owningActor_ == Map::player)
+  if(owningActor_->isPlayer())
   {
     vector<Actor*> seenFoes;
     owningActor_->getSeenFoes(seenFoes);
@@ -1743,7 +1758,7 @@ void PropFrenzied::onEnd()
 
 bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  if(owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
   {
     Log::addMsg("I'm too enraged to concentrate!");
   }
@@ -1752,7 +1767,7 @@ bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 
 bool PropFrenzied::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  if(owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
   {
     Log::addMsg("I'm too enraged to concentrate!");
   }
@@ -1766,7 +1781,7 @@ void PropBurning::onStart()
 
 void PropBurning::onNewTurn()
 {
-  if(owningActor_ == Map::player)
+  if(owningActor_->isPlayer())
   {
     Log::addMsg("AAAARGH IT BURNS!!!", clrRedLgt);
   }
@@ -1775,7 +1790,7 @@ void PropBurning::onNewTurn()
 
 bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  if(owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
   {
     Log::addMsg("Not while burning.");
   }
@@ -1784,7 +1799,7 @@ bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 
 bool PropBurning::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 {
-  if(owningActor_ == Map::player && ALLOW_MESSAGE_WHEN_FALSE)
+  if(owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
   {
     Log::addMsg("Not while burning.");
   }
@@ -1793,13 +1808,13 @@ bool PropBurning::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 
 bool PropBlind::shouldUpdatePlayerVisualWhenStartOrEnd() const
 {
-  return owningActor_ == Map::player;
+  return owningActor_->isPlayer();
 }
 
 void PropParalyzed::onStart()
 {
   auto* const player = Map::player;
-  if(owningActor_ == player)
+  if(owningActor_->isPlayer())
   {
     auto* const activeExplosive = player->activeExplosive;
     if(activeExplosive) {activeExplosive->onPlayerParalyzed();}
@@ -1808,7 +1823,7 @@ void PropParalyzed::onStart()
 
 bool PropFainted::shouldUpdatePlayerVisualWhenStartOrEnd() const
 {
-  return owningActor_ == Map::player;
+  return owningActor_->isPlayer();
 }
 
 void PropFlared::onNewTurn()
@@ -1833,7 +1848,7 @@ bool PropRAcid::tryResistDmg(const DmgType dmgType,
   {
     if(ALLOW_MSG_WHEN_TRUE)
     {
-      if(owningActor_ == Map::player)
+      if(owningActor_->isPlayer())
       {
         Log::addMsg("I feel a faint burning sensation.");
       }
@@ -1853,7 +1868,7 @@ bool PropRCold::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TR
   {
     if(ALLOW_MSG_WHEN_TRUE)
     {
-      if(owningActor_ == Map::player)
+      if(owningActor_->isPlayer())
       {
         Log::addMsg("I feel chilly.");
       }
@@ -1874,7 +1889,7 @@ bool PropRElec::tryResistDmg(const DmgType dmgType,
   {
     if(ALLOW_MSG_WHEN_TRUE)
     {
-      if(owningActor_ == Map::player)
+      if(owningActor_->isPlayer())
       {
         Log::addMsg("I feel a faint tingle.");
       }
@@ -1930,7 +1945,7 @@ bool PropRPhys::tryResistDmg(const DmgType dmgType,
   {
     if(ALLOW_MSG_WHEN_TRUE)
     {
-      if(owningActor_ == Map::player)
+      if(owningActor_->isPlayer())
       {
         Log::addMsg("I resist harm.");
       }
@@ -1963,7 +1978,7 @@ bool PropRFire::tryResistDmg(const DmgType dmgType,
   {
     if(ALLOW_MSG_WHEN_TRUE)
     {
-      if(owningActor_ == Map::player)
+      if(owningActor_->isPlayer())
       {
         Log::addMsg("I feel hot.");
       }

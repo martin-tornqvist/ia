@@ -27,6 +27,7 @@ enum PropId
   propBlind,
   propFainted,
   propBurning,
+  propRadiant,
   propPoisoned,
   propParalyzed,
   propTerrified,
@@ -459,13 +460,22 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if(ability == AbilityId::searching)      return -9999;
-    if(ability == AbilityId::dodgeTrap ||
-        ability == AbilityId::dodgeAttack)   return -50;
-    if(ability == AbilityId::ranged) return -50;
-    if(ability == AbilityId::melee)  return -25;
+    if(ability == AbilityId::searching) {return -9999;}
+    if(ability == AbilityId::ranged)    {return -50;}
+    if(ability == AbilityId::melee)     {return -25;}
+    if(ability == AbilityId::dodgeTrap || ability == AbilityId::dodgeAttack)
+    {
+      return -50;
+    }
     return 0;
   }
+};
+
+class PropRadiant: public Prop
+{
+public:
+  PropRadiant(PropTurns turnsInit, int turns = -1) :
+    Prop(propRadiant, turnsInit, turns) {}
 };
 
 class PropBlessed: public Prop
