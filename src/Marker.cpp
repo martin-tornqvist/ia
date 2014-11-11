@@ -40,7 +40,7 @@ void setPosToClosestEnemyIfVisible()
   {
     pos_ = Utils::getClosestPos(Map::player->pos, seenFoesCells);
 
-    Map::player->target = Utils::getActorAtPos(pos_);
+    Map::player->tgt_ = Utils::getActorAtPos(pos_);
   }
 }
 
@@ -52,7 +52,7 @@ void tryMove(const Dir dir)
 
 bool setPosToTargetIfVisible()
 {
-  const Actor* const target = Map::player->target;
+  const Actor* const target = Map::player->tgt_;
 
   if(target)
   {
@@ -90,7 +90,7 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
     {
       //If no target available, attempt to place marker at closest visible monster.
       //This sets a new target if successful.
-      Map::player->target = nullptr;
+      Map::player->tgt_ = nullptr;
       setPosToClosestEnemyIfVisible();
     }
   }

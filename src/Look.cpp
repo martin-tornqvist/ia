@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "Feature.h"
 #include "Item.h"
 #include "Log.h"

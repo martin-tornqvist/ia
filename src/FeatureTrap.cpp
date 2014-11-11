@@ -13,7 +13,7 @@
 #include "Postmortem.h"
 #include "Explosion.h"
 #include "Popup.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "Inventory.h"
 #include "Sound.h"
 #include "ActorFactory.h"
@@ -149,7 +149,7 @@ void Trap::bump(Actor& actorBumping)
       {
         TRACE << "Humanoid monster bumping" << endl;
         Mon* const mon = static_cast<Mon*>(&actorBumping);
-        if(mon->awareCounter_ > 0 && !mon->isStealth)
+        if(mon->awareCounter_ > 0 && !mon->isStealth_)
         {
           TRACE << "Monster eligible for triggering trap" << endl;
 

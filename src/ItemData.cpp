@@ -1546,6 +1546,18 @@ void initDataList()
   addFeatureFoundIn(*d, FeatureId::cocoon, 10);
   data[int(d->id)] = d;
 
+  d = new ItemDataT(ItemId::deviceSentryDrone);
+  resetData(*d, ItemType::device);
+  d->baseName = ItemName("Sentry Drone Device", "Sentry Drone Devices",
+                         "a Sentry Drone Device");
+  d->itemValue = ItemValue::majorTreasure;
+  d->isIdentified = false;
+  d->clr = clrGray;
+  addFeatureFoundIn(*d, FeatureId::chest, 10);
+  addFeatureFoundIn(*d, FeatureId::tomb, 10);
+  addFeatureFoundIn(*d, FeatureId::cocoon, 10);
+  data[int(d->id)] = d;
+
   d = new ItemDataT(ItemId::electricLantern);
   resetData(*d, ItemType::device);
   d->baseName = ItemName("Electric Lantern", "Electric Lanterns",

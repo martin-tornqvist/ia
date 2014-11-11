@@ -12,7 +12,7 @@
 #include "DungeonMaster.h"
 #include "Map.h"
 #include "Explosion.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "FeatureDoor.h"
 #include "FeatureMob.h"
 #include "Query.h"
@@ -42,7 +42,7 @@ Player::Player() :
   activeMedicalBag(nullptr),
   waitTurnsLeft(-1),
   activeExplosive(nullptr),
-  target(nullptr),
+  tgt_(nullptr),
   ins_(0),
   shock_(0.0),
   shockTmp_(0.0),
@@ -486,8 +486,8 @@ void Player::incrInsanity()
                   if(!seenFoes.empty())
                   {
                     const int M_ROLL = Rnd::range(0, seenFoes.size() - 1);
-                    const ActorDataT& monsterData = seenFoes[M_ROLL]->getData();
-                    if(monsterData.isRat && !phobias[int(Phobia::rat)])
+                    const ActorDataT& monData = seenFoes[M_ROLL]->getData();
+                    if(monData.isRat && !phobias[int(Phobia::rat)])
                     {
                       msg += "I am afflicted by Murophobia. "
                              "Rats suddenly seem terrifying.";
@@ -495,7 +495,7 @@ void Player::incrInsanity()
                       phobias[int(Phobia::rat)] = true;
                       return;
                     }
-                    if(monsterData.isSpider && !phobias[int(Phobia::spider)])
+                    if(monData.isSpider && !phobias[int(Phobia::spider)])
                     {
                       msg += "I am afflicted by Arachnophobia. "
                              "Spiders suddenly seem terrifying.";
@@ -503,7 +503,7 @@ void Player::incrInsanity()
                       phobias[int(Phobia::spider)] = true;
                       return;
                     }
-                    if(monsterData.isCanine && !phobias[int(Phobia::dog)])
+                    if(monData.isCanine && !phobias[int(Phobia::dog)])
                     {
                       msg += "I am afflicted by Cynophobia. "
                              "Dogs suddenly seem terrifying.";
@@ -511,7 +511,7 @@ void Player::incrInsanity()
                       phobias[int(Phobia::dog)] = true;
                       return;
                     }
-                    if(monsterData.isUndead && !phobias[int(Phobia::undead)])
+                    if(monData.isUndead && !phobias[int(Phobia::undead)])
                     {
                       msg += "I am afflicted by Necrophobia. "
                              "The undead suddenly seem much more terrifying.";
@@ -710,29 +710,29 @@ void Player::testPhobias()
   {
     for(Actor* const actor : seenFoes)
     {
-      const ActorDataT& monsterData = actor->getData();
-      if(monsterData.isCanine && phobias[int(Phobia::dog)])
+      const ActorDataT& monData = actor->getData();
+      if(monData.isCanine && phobias[int(Phobia::dog)])
       {
         Log::addMsg("I am plagued by my canine phobia!");
         propHandler_->tryApplyProp(
           new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
-      if(monsterData.isRat && phobias[int(Phobia::rat)])
+      if(monData.isRat && phobias[int(Phobia::rat)])
       {
         Log::addMsg("I am plagued by my rat phobia!");
         propHandler_->tryApplyProp(
           new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
-      if(monsterData.isUndead && phobias[int(Phobia::undead)])
+      if(monData.isUndead && phobias[int(Phobia::undead)])
       {
         Log::addMsg("I am plagued by my phobia of the dead!");
         propHandler_->tryApplyProp(
           new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
         return;
       }
-      if(monsterData.isSpider && phobias[int(Phobia::spider)])
+      if(monData.isSpider && phobias[int(Phobia::spider)])
       {
         Log::addMsg("I am plagued by my spider phobia!");
         propHandler_->tryApplyProp(
@@ -982,47 +982,44 @@ void Player::onStdTurn()
       return;
     }
   }
-  else
+  else //Total shock is less than 100%
   {
     nrTurnsUntilIns_ = -1;
   }
 
+  //Check for monsters coming into view, and try to spot hidden monsters.
   for(Actor* actor : GameTime::actors_)
   {
-    if(actor != this && actor->isAlive())
+    if(!actor->isPlayer() && !Map::player->isLeaderOf(actor) && actor->isAlive())
     {
-
-      Mon& monster = *static_cast<Mon*>(actor);
-      const bool IS_MONSTER_SEEN = isSeeingActor(*actor, nullptr);
-      if(IS_MONSTER_SEEN)
+      Mon& mon                = *static_cast<Mon*>(actor);
+      const bool IS_MON_SEEN  = isSeeingActor(*actor, nullptr);
+      if(IS_MON_SEEN)
       {
-        if(!monster.isMsgMonInViewPrinted)
+        if(!mon.isMsgMonInViewPrinted_)
         {
           if(activeMedicalBag || waitTurnsLeft > 0 || nrQuickMoveStepsLeft_ > 0)
           {
             Log::addMsg(actor->getNameA() + " comes into my view.", clrWhite, true);
           }
-          monster.isMsgMonInViewPrinted = true;
+          mon.isMsgMonInViewPrinted_ = true;
         }
       }
-      else
+      else //Monster is not seen
       {
-        monster.isMsgMonInViewPrinted = false;
+        mon.isMsgMonInViewPrinted_ = false;
 
         //Is the monster sneaking? Try to spot it
-        if(Map::cells[monster.pos.x][monster.pos.y].isSeenByPlayer)
+        if(
+          Map::cells[mon.pos.x][mon.pos.y].isSeenByPlayer &&
+          mon.isStealth_                                  &&
+          isSpottingHiddenActor(mon))
         {
-          if(monster.isStealth)
-          {
-            if(isSpottingHiddenActor(monster))
-            {
-              monster.isStealth = false;
-              updateFov();
-              Render::drawMapAndInterface();
-              const string monName = monster.getNameA();
-              Log::addMsg("I spot " + monName + "!", clrMsgWarning, true, true);
-            }
-          }
+          mon.isStealth_ = false;
+          updateFov();
+          Render::drawMapAndInterface();
+          const string monName = mon.getNameA();
+          Log::addMsg("I spot " + monName + "!", clrMsgWarning, true, true);
         }
       }
     }
@@ -1184,7 +1181,7 @@ void Player::moveDir(Dir dir)
       Mon* const monAtDest = static_cast<Mon*>(Utils::getActorAtPos(dest));
 
       //Attack?
-      if(monAtDest && monAtDest->leader != this)
+      if(monAtDest && !isLeaderOf(monAtDest))
       {
         if(propHandler_->allowAttackMelee(true))
         {
@@ -1214,7 +1211,7 @@ void Player::moveDir(Dir dir)
                 }
               }
               Attack::melee(*this, *wpn, *monAtDest);
-              target = monAtDest;
+              tgt_ = monAtDest;
               return;
             }
           }
@@ -1263,7 +1260,7 @@ void Player::moveDir(Dir dir)
         }
 
         //Displace allied monster
-        if(monAtDest && monAtDest->leader == this)
+        if(monAtDest && isLeaderOf(monAtDest))
         {
           Log::addMsg("I displace " + monAtDest->getNameA() + ".");
           monAtDest->pos = pos;
@@ -1322,12 +1319,9 @@ void Player::moveDir(Dir dir)
 
 void Player::autoMelee()
 {
-  if(
-    target                                    &&
-    Utils::isPosAdj(pos, target->pos, false)  &&
-    isSeeingActor(*target, nullptr))
+  if(tgt_ && Utils::isPosAdj(pos, tgt_->pos, false)  && isSeeingActor(*tgt_, nullptr))
   {
-    moveDir(DirUtils::getDir(target->pos - pos));
+    moveDir(DirUtils::getDir(tgt_->pos - pos));
     return;
   }
 
@@ -1335,9 +1329,9 @@ void Player::autoMelee()
   for(const Pos& d : DirUtils::dirList)
   {
     Actor* const actor = Utils::getActorAtPos(pos + d);
-    if(actor && !isLeaderOf(*actor) && isSeeingActor(*actor, nullptr))
+    if(actor && !isLeaderOf(actor) && isSeeingActor(*actor, nullptr))
     {
-      target = actor;
+      tgt_ = actor;
       moveDir(DirUtils::getDir(d));
       return;
     }
@@ -1528,20 +1522,20 @@ void Player::FOVhack()
   }
 }
 
-bool Player::isLeaderOf(const Actor& actor) const
+bool Player::isLeaderOf(const Actor* const actor) const
 {
-  if(actor.isPlayer())
+  if(!actor || actor == this)
   {
     return false;
   }
-  else
-  {
-    return static_cast<const Mon*>(&actor)->leader == this;
-  }
+
+  //Actor is monster
+  return static_cast<const Mon*>(actor)->leader_ == this;
 }
 
-bool Player::isActorMyLeader(const Actor& actor) const
+bool Player::isActorMyLeader(const Actor* const actor) const
 {
+  //Should never happen
   (void)actor;
   return false;
 }

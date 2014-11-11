@@ -13,6 +13,7 @@
 #include "Audio.h"
 #include "Utils.h"
 #include "FeatureRigid.h"
+#include "ActorFactory.h"
 
 using namespace std;
 
@@ -22,7 +23,6 @@ Device::Device(ItemDataT* const itemData) : Item(itemData) {}
 void Device::identify(const bool IS_SILENT_IDENTIFY)
 {
   (void)IS_SILENT_IDENTIFY;
-
   data_->isIdentified = true;
 }
 
@@ -61,7 +61,7 @@ vector<string> StrangeDevice::getDescr() const
 
     return descr;
   }
-  else
+  else //Not identified
   {
     return data_->baseDescr;
   }
@@ -79,10 +79,10 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor)
     Log::addMsg("I activate " + itemNameA + "...");
 
     //Damage user? Fail to run effect? Condition degrade? Warning?
-    const string hurtMsg = "It hits me with a jolt of electricity!";
-    bool isEffectFailed = false;
-    bool isCondDegrade  = false;
-    bool isWarning      = false;
+    const string hurtMsg  = "It hits me with a jolt of electricity!";
+    bool isEffectFailed   = false;
+    bool isCondDegrade    = false;
+    bool isWarning        = false;
     int bon = 0;
     vector<PropId> props;
     actor->getPropHandler().getAllActivePropIds(props);
@@ -132,40 +132,45 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor)
     {
       return ConsumeItem::no;
     }
+
+    ConsumeItem consumedState = ConsumeItem::no;
+
     if(isEffectFailed)
     {
       Log::addMsg("It suddenly stops.");
     }
     else
     {
-      triggerEffect();
+      consumedState = triggerEffect();
     }
 
-    bool isDestroyed = false;
-    if(isCondDegrade)
+    if(consumedState == ConsumeItem::no)
     {
-      if(condition_ == Condition::breaking)
+      if(isCondDegrade)
       {
-        Log::addMsg("The " + itemName + " breaks!");
-        isDestroyed = true;
+        if(condition_ == Condition::breaking)
+        {
+          Log::addMsg("The " + itemName + " breaks!");
+          consumedState = ConsumeItem::yes;
+        }
+        else
+        {
+          Log::addMsg("The " + itemName + " makes a terrible grinding noise.");
+          Log::addMsg("I seem to have damaged it.");
+          condition_ = Condition(int(condition_) - 1);
+        }
       }
-      else
-      {
-        Log::addMsg("The " + itemName + " makes a terrible grinding noise.");
-        Log::addMsg("I seem to have damaged it.");
-        condition_ = Condition(int(condition_) - 1);
-      }
-    }
 
-    if(isWarning)
-    {
-      Log::addMsg("The " + itemName + " hums ominously.");
+      if(isWarning)
+      {
+        Log::addMsg("The " + itemName + " hums ominously.");
+      }
     }
 
     GameTime::actorDidAct();
-    return isDestroyed ? ConsumeItem::yes : ConsumeItem::no;
+    return consumedState;
   }
-  else
+  else //Not identified
   {
     Log::addMsg("This device is completely alien to me, ");
     Log::addMsg("I could never understand it through normal means.");
@@ -188,7 +193,7 @@ std::string StrangeDevice::getNameInf() const
 }
 
 //---------------------------------------------------- BLASTER
-void DeviceBlaster::triggerEffect()
+ConsumeItem DeviceBlaster::triggerEffect()
 {
   vector<Actor*> targetBucket;
   Map::player->getSeenFoes(targetBucket);
@@ -196,16 +201,17 @@ void DeviceBlaster::triggerEffect()
   {
     Log::addMsg("It seems to peruse area.");
   }
-  else
+  else //Targets are available
   {
     Spell* const spell = SpellHandling::mkSpellFromId(SpellId::azaWrath);
     spell->cast(Map::player, false);
     delete spell;
   }
+  return ConsumeItem::no;
 }
 
 //---------------------------------------------------- SHOCK WAVE
-void DeviceShockwave::triggerEffect()
+ConsumeItem DeviceShockwave::triggerEffect()
 {
   Log::addMsg("It triggers a shock wave around me.");
 
@@ -240,18 +246,20 @@ void DeviceShockwave::triggerEffect()
       }
     }
   }
+  return ConsumeItem::no;
 }
 
 //---------------------------------------------------- REJUVENATOR
-void DeviceRejuvenator::triggerEffect()
+ConsumeItem DeviceRejuvenator::triggerEffect()
 {
   Log::addMsg("It repairs my body.");
   Map::player->getPropHandler().endAppliedPropsByMagicHealing();
   Map::player->restoreHp(999, false);
+  return ConsumeItem::no;
 }
 
 //---------------------------------------------------- TRANSLOCATOR
-void DeviceTranslocator::triggerEffect()
+ConsumeItem DeviceTranslocator::triggerEffect()
 {
   Player* const player = Map::player;
   vector<Actor*> seenFoes;
@@ -261,7 +269,7 @@ void DeviceTranslocator::triggerEffect()
   {
     Log::addMsg("It seems to peruse area.");
   }
-  else
+  else //Seen targets are available
   {
     for(Actor* actor : seenFoes)
     {
@@ -270,6 +278,15 @@ void DeviceTranslocator::triggerEffect()
       actor->teleport(false);
     }
   }
+  return ConsumeItem::no;
+}
+
+//---------------------------------------------------- SENTRY DRONE
+ConsumeItem DeviceSentryDrone::triggerEffect()
+{
+  Log::addMsg("The Sentry Drone awakens!");
+  ActorFactory::summonMon(Map::player->pos, {ActorId::sentryDrone}, true, Map::player);
+  return ConsumeItem::yes;
 }
 
 //---------------------------------------------------- ELECTRIC LANTERN

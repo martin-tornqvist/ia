@@ -7,7 +7,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Map.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "PlayerSpellsHandling.h"
 #include "ItemScroll.h"
 #include "GameTime.h"

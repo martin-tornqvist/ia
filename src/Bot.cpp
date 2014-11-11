@@ -16,7 +16,7 @@
 #include "Attack.h"
 #include "FeatureDoor.h"
 #include "Inventory.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "MapParsing.h"
 #include "Utils.h"
 #include "GameTime.h"

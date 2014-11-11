@@ -3,7 +3,7 @@
 #include <assert.h>
 
 #include "ActorPlayer.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "Map.h"
 #include "ActorFactory.h"
 #include "Log.h"

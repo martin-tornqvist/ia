@@ -153,7 +153,7 @@ void goToNxt()
 
   mkLvl(mapData.type);
 
-  Map::player->target = nullptr;
+  Map::player->tgt_ = nullptr;
   Map::player->updateFov();
   Map::player->updateClr();
   Render::drawMapAndInterface();

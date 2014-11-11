@@ -8,7 +8,7 @@
 #include "Log.h"
 #include "Postmortem.h"
 #include "Render.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "Inventory.h"
 #include "Map.h"
 #include "Explosion.h"
@@ -212,6 +212,26 @@ void initDataList()
   d.msg[propMsgOnEndMon] = "is vulnerable to confusion.";
   d.msg[propMsgOnMorePlayer] = "I feel more resistant to confusion.";
   d.msg[propMsgOnMoreMon] = "is more resistant to confusion.";
+  d.msg[propMsgOnResPlayer] = "";
+  d.msg[propMsgOnResMon] = "";
+  d.isMakingMonAware = false;
+  d.allowDisplayTurns = true;
+  d.allowApplyMoreWhileActive = true;
+  d.updatePlayerVisualWhenStartOrEnd = false;
+  d.allowTestOnBot = true;
+  d.alignment = propAlignmentGood;
+  addPropData(d);
+
+  d.id = propRDisease;
+  d.stdRndTurns = Range(40, 60);
+  d.name = "Disease resistance";
+  d.nameShort = "RDisease";
+  d.msg[propMsgOnStartPlayer] = "";
+  d.msg[propMsgOnStartMon] = "";
+  d.msg[propMsgOnEndPlayer] = "";
+  d.msg[propMsgOnEndMon] = "";
+  d.msg[propMsgOnMorePlayer] = "";
+  d.msg[propMsgOnMoreMon] = "";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -785,6 +805,7 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
     case propOoze:              return new PropOoze(turnsInit,              NR_TURNS);
     case propBurrowing:         return new PropBurrowing(turnsInit,         NR_TURNS);
     case propRadiant:           return new PropRadiant(turnsInit,           NR_TURNS);
+    case propRDisease:          return new PropRDisease(turnsInit,          NR_TURNS);
     case endOfPropIds: {assert(false && "Bad property id");}
   }
   return nullptr;
@@ -881,7 +902,7 @@ bool PropHandler::tryResistProp(
   const PropId id, const vector<Prop*>& propList) const
 {
 
-  for(Prop* p : propList) {if(p->tryResistOtherProp(id)) return true;}
+  for(Prop* p : propList) {if(p->isResistOtherProp(id)) return true;}
   return false;
 }
 
@@ -1514,7 +1535,7 @@ void PropDiseased::onStart()
   hp = min(Map::player->getHpMax(true), hp);
 }
 
-bool PropDiseased::tryResistOtherProp(const PropId id) const
+bool PropDiseased::isResistOtherProp(const PropId id) const
 {
   //Getting infected while already diseased is just annoying
   return id == propInfected;
@@ -1735,7 +1756,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
   }
 }
 
-bool PropFrenzied::tryResistOtherProp(const PropId id) const
+bool PropFrenzied::isResistOtherProp(const PropId id) const
 {
   return id == propConfused || id == propFainted ||
          id == propTerrified || id == propWeakened;
@@ -1834,10 +1855,8 @@ void PropFlared::onNewTurn()
   {
     bool blockedLos[MAP_W][MAP_H];
     MapParse::parse(CellPred::BlocksLos(), blockedLos);
-    owningActor_->getPropHandler().tryApplyProp(
-      new PropBurning(PropTurns::std));
-    owningActor_->getPropHandler().endAppliedProp(
-      propFlared, blockedLos);
+    owningActor_->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
+    owningActor_->getPropHandler().endAppliedProp(propFlared, blockedLos);
   }
 }
 
@@ -1903,7 +1922,7 @@ bool PropRElec::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRConfusion::tryResistOtherProp(const PropId id) const
+bool PropRConfusion::isResistOtherProp(const PropId id) const
 {
   return id == propConfused;
 }
@@ -1915,7 +1934,7 @@ void PropRConfusion::onStart()
   owningActor_->getPropHandler().endAppliedProp(propConfused, blockedLos);
 }
 
-bool PropRFear::tryResistOtherProp(const PropId id) const
+bool PropRFear::isResistOtherProp(const PropId id) const
 {
   return id == propTerrified;
 }
@@ -1927,7 +1946,7 @@ void PropRFear::onStart()
   owningActor_->getPropHandler().endAppliedProp(propTerrified, blockedLos);
 }
 
-bool PropRPhys::tryResistOtherProp(const PropId id) const
+bool PropRPhys::isResistOtherProp(const PropId id) const
 {
   (void)id;
   return false;
@@ -1959,7 +1978,7 @@ bool PropRPhys::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRFire::tryResistOtherProp(const PropId id) const
+bool PropRFire::isResistOtherProp(const PropId id) const
 {
   return id == propBurning;
 }
@@ -1992,7 +2011,7 @@ bool PropRFire::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRPoison::tryResistOtherProp(const PropId id) const
+bool PropRPoison::isResistOtherProp(const PropId id) const
 {
   return id == propPoisoned;
 }
@@ -2004,7 +2023,7 @@ void PropRPoison::onStart()
   owningActor_->getPropHandler().endAppliedProp(propPoisoned, blockedLos);
 }
 
-bool PropRSleep::tryResistOtherProp(const PropId id) const
+bool PropRSleep::isResistOtherProp(const PropId id) const
 {
   return id == propFainted;
 }
@@ -2014,6 +2033,19 @@ void PropRSleep::onStart()
   bool blockedLos[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propFainted, blockedLos);
+}
+
+bool PropRDisease::isResistOtherProp(const PropId id) const
+{
+  return id == propDiseased || id == propInfected;
+}
+
+void PropRDisease::onStart()
+{
+  bool blockedLos[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  owningActor_->getPropHandler().endAppliedProp(propDiseased, blockedLos);
+  owningActor_->getPropHandler().endAppliedProp(propInfected, blockedLos);
 }
 
 void PropBurrowing::onNewTurn()

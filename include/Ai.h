@@ -14,7 +14,7 @@ namespace Ai
 namespace Action
 {
 
-bool castRandomSpellIfAware(Mon& mon);
+bool tryCastRandomSpell(Mon& mon);
 
 bool handleClosedBlockingDoor(Mon& mon, std::vector<Pos> path);
 

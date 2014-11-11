@@ -101,13 +101,13 @@ public:
   bool phobias[int(Phobia::END)];
   bool obsessions[int(Obsession::END)];
 
-  bool isLeaderOf(const Actor& actor)       const override;
-  bool isActorMyLeader(const Actor& actor)  const override;
+  bool isLeaderOf(const Actor* const actor)       const override;
+  bool isActorMyLeader(const Actor* const actor)  const override;
 
   MedicalBag* activeMedicalBag;
   int         waitTurnsLeft;
   Explosive*  activeExplosive;
-  Actor*      target;
+  Actor*      tgt_;
   int         ins_;
   double      shock_, shockTmp_, permShockTakenCurTurn_;
 

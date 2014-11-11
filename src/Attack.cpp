@@ -4,7 +4,7 @@
 
 #include "Item.h"
 #include "GameTime.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "Map.h"
 #include "FeatureTrap.h"
 #include "FeatureRigid.h"
@@ -1250,7 +1250,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
   {
     if(data.attackResult >= failSmall)
     {
-      static_cast<Mon*>(data.attacker)->isStealth = false;
+      static_cast<Mon*>(data.attacker)->isStealth_ = false;
     }
   }
   else

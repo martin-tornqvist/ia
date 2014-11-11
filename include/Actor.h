@@ -87,8 +87,8 @@ public:
   inline bool       isCorpse()  const {return state == ActorState::corpse;}
   inline ActorState getState()  const {return state;}
 
-  virtual bool isLeaderOf(const Actor& actor)       const = 0;
-  virtual bool isActorMyLeader(const Actor& actor)  const = 0;
+  virtual bool isLeaderOf(const Actor* const actor)       const = 0;
+  virtual bool isActorMyLeader(const Actor* const actor)  const = 0;
 
   bool isPlayer() const;
 

@@ -43,6 +43,7 @@ enum class ActorId
   colourOOSpace,
   chthonian,
   huntingHorror,
+  sentryDrone,
 
   END
 };

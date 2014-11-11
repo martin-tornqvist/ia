@@ -24,7 +24,7 @@
 #include "SaveHandling.h"
 #include "ItemFactory.h"
 #include "ActorFactory.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "PlayerBon.h"
 #include "Examine.h"
 #include "CreateCharacter.h"
@@ -374,7 +374,7 @@ void handleKeyPress(const KeyData& d)
                     Render::drawMapAndInterface();
 
                     Actor* const actor = Utils::getActorAtPos(p);
-                    if(actor) {Map::player->target = actor;}
+                    if(actor) {Map::player->tgt_ = actor;}
 
                     Attack::ranged(*Map::player, *wpn, p);
                   }
@@ -644,7 +644,7 @@ void handleKeyPress(const KeyData& d)
                   Render::drawMapAndInterface();
 
                   Actor* const actor = Utils::getActorAtPos(p);
-                  if(actor) {Map::player->target = actor;}
+                  if(actor) {Map::player->tgt_ = actor;}
 
                   Throwing::throwItem(*Map::player, p, *itemToThrow);
                   playerInv.decrItemInSlot(SlotId::thrown);

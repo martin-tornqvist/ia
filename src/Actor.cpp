@@ -5,7 +5,7 @@
 #include "Render.h"
 #include "GameTime.h"
 #include "ActorPlayer.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "Map.h"
 #include "Fov.h"
 #include "Log.h"
@@ -76,14 +76,19 @@ bool Actor::isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H
   {
     if(isPlayer())
     {
-      const bool IS_MONSTER_SNEAKING = static_cast<const Mon*>(&other)->isStealth;
-      return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer && !IS_MONSTER_SNEAKING;
+      return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer &&
+             !static_cast<const Mon*>(&other)->isStealth_;
     }
 
-    if(static_cast<const Mon*>(this)->leader == Map::player && &other != Map::player)
+    //This point reached means its a monster checking
+
+    //Monster allied to player looking at other monster?
+    if(
+      isActorMyLeader(Map::player) &&
+      !other.isPlayer()             &&
+      static_cast<const Mon*>(&other)->isStealth_)
     {
-      const bool IS_MONSTER_SNEAKING = static_cast<const Mon*>(&other)->isStealth;
-      if(IS_MONSTER_SNEAKING) return false;
+      return false;
     }
 
     if(!propHandler_->allowSee())
@@ -98,8 +103,7 @@ bool Actor::isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H
 
     if(blockedLos)
     {
-      const bool IS_BLOCKED_BY_DARKNESS = !data_->canSeeInDarkness;
-      return Fov::checkCell(blockedLos, other.pos, pos, IS_BLOCKED_BY_DARKNESS);
+      return Fov::checkCell(blockedLos, other.pos, pos, !data_->canSeeInDarkness);
     }
   }
   return false;
@@ -123,16 +127,16 @@ void Actor::getSeenFoes(vector<Actor*>& vectorRef)
 
       if(isPlayer())
       {
-        if(isSeeingActor(*actor, nullptr) && !isLeaderOf(*actor))
+        if(isSeeingActor(*actor, nullptr) && !isLeaderOf(actor))
         {
           vectorRef.push_back(actor);
         }
       }
       else //Monster retrieving seen foes is not player
       {
-        const bool IS_HOSTILE_TO_PLAYER = !isActorMyLeader(*Map::player);
+        const bool IS_HOSTILE_TO_PLAYER = !isActorMyLeader(Map::player);
         const bool IS_OTHER_HOSTILE_TO_PLAYER =
-          actor->isPlayer() ? false : !actor->isActorMyLeader(*Map::player);
+          actor->isPlayer() ? false : !actor->isActorMyLeader(Map::player);
 
         //Note: IS_OTHER_HOSTILE_TO_PLAYER is false if other IS the player, there is no
         //need to check if IS_HOSTILE_TO_PLAYER && IS_OTHER_PLAYER
@@ -171,9 +175,9 @@ void Actor::place(const Pos& pos_, ActorDataT& data)
   updateClr();
 }
 
-void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS)
+void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONS)
 {
-  (void)MOVE_TO_POS_AWAY_FROM_MONSTERS;
+  (void)MOVE_TO_POS_AWAY_FROM_MONS;
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksActor(*this, true), blocked);
@@ -543,16 +547,14 @@ ActorDied Actor::hitSpi(const int DMG, const bool ALLOW_MSG)
 void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
                 const bool ALLOW_DROP_ITEMS)
 {
-
   assert(data_->canLeaveCorpse || IS_DESTROYED);
 
   //Check all monsters and unset this actor as leader
   for(Actor* actor : GameTime::actors_)
   {
-    if(actor != this && actor != Map::player)
+    if(actor != this && !actor->isPlayer() && isLeaderOf(actor))
     {
-      Mon* const mon = static_cast<Mon*>(actor);
-      if(mon->leader == this) {mon->leader = nullptr;}
+      static_cast<Mon*>(actor)->leader_ = nullptr;
     }
   }
 
@@ -603,7 +605,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
                         IgnoreMsgIfOriginSeen::yes, pos, this, SndVol::low, AlertsMon::no
                        });
     }
-    static_cast<Mon*>(this)->leader = nullptr;
+    static_cast<Mon*>(this)->leader_ = nullptr;
   }
 
   if(ALLOW_DROP_ITEMS) {ItemDrop::dropAllCharactersItems(*this);}
@@ -669,9 +671,10 @@ void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const
   vector<PropId> props;
   propHandler_->getAllActivePropIds(props);
 
-  if(find(begin(props), end(props), propRadiant) != end(props))
+  if(
+    state == ActorState::alive &&
+    find(begin(props), end(props), propRadiant) != end(props))
   {
-
     //TODO Much of the code below is duplicated from ActorPlayer::addLight_(), some
     //refactoring is needed.
 

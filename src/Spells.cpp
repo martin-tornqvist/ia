@@ -6,7 +6,7 @@
 
 #include "Init.h"
 #include "Render.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Postmortem.h"
@@ -189,7 +189,7 @@ SpellEffectNoticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) con
           Log::addMsg(spellStr);
         }
       }
-      mon->spellCoolDownCur = mon->getData().spellCooldownTurns;
+      mon->spellCoolDownCur_ = mon->getData().spellCooldownTurns;
     }
 
     if(IS_INTRINSIC)
@@ -257,7 +257,7 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
   {
     tgtStr = tgt->getNameThe() + " is";
 
-    if(Map::player->isLeaderOf(*tgt)) {msgClr = clrWhite;}
+    if(Map::player->isLeaderOf(tgt)) {msgClr = clrWhite;}
   }
 
   if(caster->isPlayer())
@@ -288,8 +288,8 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
 
 bool SpellDarkbolt::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target                                 &&
-         mon.isSeeingActor(*mon.target, blockedLos) &&
+  return mon.tgt_                                 &&
+         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
          Rnd::oneIn(2);
 }
 
@@ -329,7 +329,7 @@ SpellEffectNoticed SpellAzaWrath::cast_(Actor* const caster) const
     else //Target is monster
     {
       tgtStr = tgt->getNameThe();
-      if(Map::player->isLeaderOf(*tgt)) {msgClr = clrWhite;}
+      if(Map::player->isLeaderOf(tgt)) {msgClr = clrWhite;}
     }
 
     if(Map::player->isSeeingActor(*tgt, nullptr))
@@ -353,7 +353,7 @@ SpellEffectNoticed SpellAzaWrath::cast_(Actor* const caster) const
 
 bool SpellAzaWrath::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target && mon.isSeeingActor(*mon.target, blockedLos);
+  return mon.tgt_ && mon.isSeeingActor(*mon.tgt_, blockedLos);
 }
 
 //------------------------------------------------------------ MAYHEM
@@ -419,7 +419,7 @@ SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const
     if(
       actor != Map::player                        &&
       Map::player->isSeeingActor(*actor, nullptr) &&
-      !Map::player->isLeaderOf(*actor))
+      !Map::player->isLeaderOf(actor))
     {
       actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
     }
@@ -453,7 +453,7 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
   }
   else //Caster is monster
   {
-    Actor* const casterLeader = static_cast<Mon*>(caster)->leader;
+    Actor* const casterLeader = static_cast<Mon*>(caster)->leader_;
     leader                    = casterLeader ? casterLeader : caster;
   }
 
@@ -498,9 +498,9 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
 
 bool SpellPest::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target       &&
+  return mon.tgt_       &&
          Rnd::coinToss()  &&
-         (mon.isSeeingActor(*mon.target, blockedLos) || Rnd::oneIn(20));
+         (mon.isSeeingActor(*mon.tgt_, blockedLos) || Rnd::oneIn(20));
 }
 
 //------------------------------------------------------------ PHARAOH STAFF
@@ -511,7 +511,7 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
   {
     if(actor->getData().id == ActorId::mummy)
     {
-      if(caster->isLeaderOf(*actor))
+      if(caster->isLeaderOf(actor))
       {
         actor->restoreHp(999);
         return SpellEffectNoticed::yes;
@@ -531,7 +531,7 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
   }
   else //Caster is monster
   {
-    Actor* const casterLeader = static_cast<Mon*>(caster)->leader;
+    Actor* const casterLeader = static_cast<Mon*>(caster)->leader_;
     leader                    = casterLeader ? casterLeader : caster;
   }
 
@@ -559,8 +559,8 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
 bool SpellPharaohStaff::allowMonCastNow(Mon& mon,
                                         const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target                                 &&
-         mon.isSeeingActor(*mon.target, blockedLos) &&
+  return mon.tgt_                                 &&
+         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
          Rnd::oneIn(4);
 }
 
@@ -799,8 +799,8 @@ SpellEffectNoticed SpellTeleport::cast_(Actor* const caster) const
 
 bool SpellTeleport::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target                                 &&
-         mon.isSeeingActor(*mon.target, blockedLos) &&
+  return mon.tgt_                                 &&
+         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
          mon.getHp() <= (mon.getHpMax(true) / 2)    &&
          Rnd::coinToss();
 }
@@ -818,19 +818,18 @@ SpellEffectNoticed SpellElemRes::cast_(Actor* const caster) const
 
 bool SpellElemRes::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target                                 &&
-         mon.isSeeingActor(*mon.target, blockedLos) &&
+  return mon.tgt_                                 &&
+         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
          Rnd::oneIn(3);
 }
 
 //------------------------------------------------------------ KNOCKBACK
 SpellEffectNoticed SpellKnockBack::cast_(Actor* const caster) const
 {
-  Clr     msgClr            = clrMsgGood;
-  string  tgtStr            = "me";
-
+  Clr     msgClr    = clrMsgGood;
+  string  tgtStr    = "me";
   Mon*    casterMon = static_cast<Mon*>(caster);
-  Actor*  tgt       = casterMon->target;
+  Actor*  tgt       = casterMon->tgt_;
   assert(tgt);
 
   if(tgt->isPlayer())
@@ -840,7 +839,7 @@ SpellEffectNoticed SpellKnockBack::cast_(Actor* const caster) const
   else
   {
     tgtStr = tgt->getNameThe();
-    if(Map::player->isLeaderOf(*tgt)) {msgClr = clrWhite;}
+    if(Map::player->isLeaderOf(tgt)) {msgClr = clrWhite;}
   }
 
   if(Map::player->isSeeingActor(*tgt, nullptr))
@@ -855,7 +854,7 @@ SpellEffectNoticed SpellKnockBack::cast_(Actor* const caster) const
 
 bool SpellKnockBack::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target && mon.isSeeingActor(*mon.target, blockedLos);
+  return mon.tgt_ && mon.isSeeingActor(*mon.tgt_, blockedLos);
 }
 
 //------------------------------------------------------------ PROP ON OTHERS
@@ -885,13 +884,13 @@ SpellEffectNoticed SpellPropOnMon::cast_(Actor* const caster) const
 
 bool SpellPropOnMon::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target && mon.isSeeingActor(*mon.target, blockedLos);
+  return mon.tgt_ && mon.isSeeingActor(*mon.tgt_, blockedLos);
 }
 
 //------------------------------------------------------------ DISEASE
 SpellEffectNoticed SpellDisease::cast_(Actor* const caster) const
 {
-  auto* const tgt   = static_cast<Mon*>(caster)->target;
+  auto* const tgt   = static_cast<Mon*>(caster)->tgt_;
   string actorName  = "me";
 
   if(!tgt->isPlayer()) {actorName = tgt->getNameThe();}
@@ -907,8 +906,8 @@ SpellEffectNoticed SpellDisease::cast_(Actor* const caster) const
 
 bool SpellDisease::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target                                 &&
-         mon.isSeeingActor(*mon.target, blockedLos) &&
+  return mon.tgt_                                 &&
+         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
          Rnd::coinToss();
 }
 
@@ -1008,7 +1007,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
   }
   else //Caster is monster
   {
-    Actor* const casterLeader = static_cast<Mon*>(caster)->leader;
+    Actor* const casterLeader = static_cast<Mon*>(caster)->leader_;
     leader                    = casterLeader ? casterLeader : caster;
   }
 
@@ -1036,18 +1035,18 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
 
 bool SpellSummonMon::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target       &&
+  return mon.tgt_       &&
          Rnd::coinToss()  &&
-         (mon.isSeeingActor(*mon.target, blockedLos) || Rnd::oneIn(20));
+         (mon.isSeeingActor(*mon.tgt_, blockedLos) || Rnd::oneIn(20));
 }
 
 //------------------------------------------------------------ HEAL SELF
 SpellEffectNoticed SpellHealSelf::cast_(Actor* const caster) const
 {
   //The spell effect is noticed if any hit points were restored
-  return caster->restoreHp(999, true) ?
-         SpellEffectNoticed::yes :
-         SpellEffectNoticed::no;
+  const bool IS_ANY_HP_HEALED = caster->restoreHp(999, true);
+
+  return IS_ANY_HP_HEALED ? SpellEffectNoticed::yes : SpellEffectNoticed::no;
 }
 
 bool SpellHealSelf::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
@@ -1059,7 +1058,7 @@ bool SpellHealSelf::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H
 //------------------------------------------------------------ MI-GO HYPNOSIS
 SpellEffectNoticed SpellMiGoHypno::cast_(Actor* const caster) const
 {
-  Actor* const tgt = static_cast<Mon*>(caster)->target;
+  Actor* const tgt = static_cast<Mon*>(caster)->tgt_;
   assert(tgt);
 
   if(tgt->isPlayer())
@@ -1082,7 +1081,7 @@ SpellEffectNoticed SpellMiGoHypno::cast_(Actor* const caster) const
 
 bool SpellMiGoHypno::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target                                    &&
+  return mon.tgt_                                    &&
          mon.isSeeingActor(*(Map::player), blockedLos) &&
          Rnd::oneIn(4);
 }
@@ -1091,7 +1090,7 @@ bool SpellMiGoHypno::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_
 SpellEffectNoticed SpellBurn::cast_(Actor* const caster) const
 {
   string        tgtStr  = "me";
-  Actor* const  tgt     = static_cast<Mon*>(caster)->target;
+  Actor* const  tgt     = static_cast<Mon*>(caster)->tgt_;
   assert(tgt);
 
   if(!tgt->isPlayer()) {tgtStr = tgt->getNameThe();}
@@ -1109,7 +1108,7 @@ SpellEffectNoticed SpellBurn::cast_(Actor* const caster) const
 
 bool SpellBurn::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
 {
-  return mon.target                                 &&
-         mon.isSeeingActor(*mon.target, blockedLos) &&
+  return mon.tgt_                                 &&
+         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
          Rnd::oneIn(4);
 }

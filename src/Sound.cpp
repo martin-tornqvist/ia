@@ -6,7 +6,7 @@
 #include "FeatureRigid.h"
 #include "Map.h"
 #include "ActorPlayer.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "GameTime.h"
 #include "MapParsing.h"
 #include "Utils.h"

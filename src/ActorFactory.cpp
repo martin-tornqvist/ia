@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <assert.h>
 
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "ActorPlayer.h"
 #include "Map.h"
 #include "Render.h"
@@ -73,6 +73,7 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::oozePoison:           return new OozePoison();
     case ActorId::chthonian:            return new Chthonian();
     case ActorId::huntingHorror:        return new HuntingHorror();
+    case ActorId::sentryDrone:          return new SentryDrone();
 
 //  case ActorId::lordOfPestilence: return new LordOfPestilence;
 //  case ActorId::lordOfShadows:    return new LordOfShadows;
@@ -147,7 +148,7 @@ void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
     }
     if(actorToSetAsLeader)
     {
-      mon->leader = actorToSetAsLeader;
+      mon->leader_ = actorToSetAsLeader;
     }
     if(MAKE_MONSTERS_AWARE)
     {

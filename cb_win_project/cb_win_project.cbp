@@ -126,7 +126,7 @@
 		<Unit filename="../include/Actor.h" />
 		<Unit filename="../include/ActorData.h" />
 		<Unit filename="../include/ActorFactory.h" />
-		<Unit filename="../include/ActorMonster.h" />
+		<Unit filename="../include/ActorMon.h" />
 		<Unit filename="../include/ActorPlayer.h" />
 		<Unit filename="../include/Ai.h" />
 		<Unit filename="../include/Art.h" />
@@ -213,8 +213,7 @@
 		<Unit filename="../src/Actor.cpp" />
 		<Unit filename="../src/ActorData.cpp" />
 		<Unit filename="../src/ActorFactory.cpp" />
-		<Unit filename="../src/ActorMonster.cpp" />
-		<Unit filename="../src/ActorMonsterSpecific.cpp" />
+		<Unit filename="../src/ActorMon.cpp" />
 		<Unit filename="../src/ActorPlayer.cpp" />
 		<Unit filename="../src/Ai.cpp" />
 		<Unit filename="../src/Art.cpp" />

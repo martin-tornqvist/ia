@@ -16,7 +16,7 @@
 #include "ItemDrop.h"
 #include "Explosion.h"
 #include "ActorFactory.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 
 using namespace std;
 

@@ -1,5 +1,5 @@
-#ifndef MONSTER_H
-#define MONSTER_H
+#ifndef MON_H
+#define MON_H
 
 #include "CmnData.h"
 
@@ -87,18 +87,18 @@ public:
 
   void speakPhrase();
 
-  bool isLeaderOf(const Actor& actor)       const override;
-  bool isActorMyLeader(const Actor& actor)  const override;
+  bool isLeaderOf(const Actor* const actor)       const override;
+  bool isActorMyLeader(const Actor* const actor)  const override;
 
   int                 awareCounter_, playerAwareOfMeCounter_;
-  bool                isMsgMonInViewPrinted;
+  bool                isMsgMonInViewPrinted_;
   Dir                 lastDirTravelled_;
-  std::vector<Spell*> spellsKnown;
-  int                 spellCoolDownCur;
+  std::vector<Spell*> spellsKnown_;
+  int                 spellCoolDownCur_;
   bool                isRoamingAllowed_;
-  bool                isStealth;
-  Actor*              leader;
-  Actor*              target;
+  bool                isStealth_;
+  Actor*              leader_;
+  Actor*              tgt_;
   bool                waiting_;
   double              shockCausedCur_;
   bool                hasGivenXpForSpotting_;
@@ -455,6 +455,14 @@ class MiGo: public Mon
 public:
   MiGo() : Mon() {}
   ~MiGo() {}
+  void mkStartItems() override;
+};
+
+class SentryDrone: public Mon
+{
+public:
+  SentryDrone() : Mon() {}
+  ~SentryDrone() {}
   void mkStartItems() override;
 };
 

@@ -11,7 +11,7 @@
 #include "ActorPlayer.h"
 #include "FeatureDoor.h"
 #include "ActorFactory.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "ItemDrop.h"
 #include "ItemFactory.h"
 #include "Map.h"

@@ -23,6 +23,7 @@ enum PropId
   propRFear,
   propRConfusion,
   propRBreath,
+  propRDisease,
   propLightSensitive,
   propBlind,
   propFainted,
@@ -293,7 +294,7 @@ public:
     (void)actorPos;
     (void)dir;
   }
-  virtual bool tryResistOtherProp(const PropId id) const
+  virtual bool isResistOtherProp(const PropId id) const
   {
     (void)id;
     return false;
@@ -366,7 +367,7 @@ public:
 
   int getChangedMaxHp(const int HP_MAX) const override;
 
-  bool tryResistOtherProp(const PropId id) const override;
+  bool isResistOtherProp(const PropId id) const override;
 
   void onStart() override;
 };
@@ -755,7 +756,7 @@ public:
   bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
   bool allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
 
-  bool tryResistOtherProp(const PropId id) const override;
+  bool isResistOtherProp(const PropId id) const override;
 
   int getAbilityMod(const AbilityId ability) const override
   {
@@ -790,7 +791,7 @@ public:
 
   void onStart() override;
 
-  bool tryResistOtherProp(const PropId id) const override;
+  bool isResistOtherProp(const PropId id) const override;
 };
 
 class PropRElec: public Prop
@@ -810,7 +811,7 @@ public:
 
   void onStart() override;
 
-  bool tryResistOtherProp(const PropId id) const override;
+  bool isResistOtherProp(const PropId id) const override;
 };
 
 class PropRPhys: public Prop
@@ -821,7 +822,7 @@ public:
 
   void onStart() override;
 
-  bool tryResistOtherProp(const PropId id) const override;
+  bool isResistOtherProp(const PropId id) const override;
 
   bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
@@ -834,7 +835,7 @@ public:
 
   void onStart() override;
 
-  bool tryResistOtherProp(const PropId id) const override;
+  bool isResistOtherProp(const PropId id) const override;
 
   bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
 };
@@ -847,7 +848,7 @@ public:
 
   void onStart() override;
 
-  bool tryResistOtherProp(const PropId id) const override;
+  bool isResistOtherProp(const PropId id) const override;
 };
 
 class PropRSleep: public Prop
@@ -858,7 +859,18 @@ public:
 
   void onStart() override;
 
-  bool tryResistOtherProp(const PropId id) const override;
+  bool isResistOtherProp(const PropId id) const override;
+};
+
+class PropRDisease: public Prop
+{
+public:
+  PropRDisease(PropTurns turnsInit, int turns = -1) :
+    Prop(propRDisease, turnsInit, turns) {}
+
+  void onStart() override;
+
+  bool isResistOtherProp(const PropId id) const override;
 };
 
 class PropRBreath: public Prop

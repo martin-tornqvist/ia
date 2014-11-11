@@ -171,6 +171,8 @@ enum class ItemId
   deviceShockwave,
   deviceRejuvenator,
   deviceTranslocator,
+  deviceSentryDrone,
+
   electricLantern,
 
   medicalBag,

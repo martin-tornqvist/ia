@@ -7,7 +7,7 @@
 #include "FeatureRigid.h"
 #include "FeatureMob.h"
 #include "ActorPlayer.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "Map.h"
 #include "PopulateMonsters.h"
 #include "Input.h"
@@ -63,7 +63,7 @@ void runStdTurnEvents()
       if(actor == Map::player) {return;}
 
       delete actor;
-      if(Map::player->target == actor) {Map::player->target = nullptr;}
+      if(Map::player->tgt_ == actor) {Map::player->tgt_ = nullptr;}
       actors_.erase(actors_.begin() + i);
       i--;
       if(curActorIndex_ >= actors_.size()) {curActorIndex_ = 0;}

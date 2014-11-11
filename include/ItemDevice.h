@@ -41,7 +41,7 @@ public:
 private:
   virtual std::vector<std::string> getDescrIdentified() const = 0;
 
-  virtual void triggerEffect() = 0;
+  virtual ConsumeItem triggerEffect() = 0;
 };
 
 class DeviceBlaster: public StrangeDevice
@@ -59,7 +59,7 @@ private:
            };
   }
 
-  void triggerEffect() override;
+  ConsumeItem triggerEffect() override;
 };
 
 class DeviceShockwave: public StrangeDevice
@@ -77,14 +77,13 @@ private:
            };
   }
 
-  void triggerEffect() override;
+  ConsumeItem triggerEffect() override;
 };
 
 class DeviceRejuvenator: public StrangeDevice
 {
 public:
-  DeviceRejuvenator(ItemDataT* const itemData) :
-    StrangeDevice(itemData) {}
+  DeviceRejuvenator(ItemDataT* const itemData) : StrangeDevice(itemData) {}
 
   ~DeviceRejuvenator() override {}
 
@@ -96,14 +95,13 @@ private:
            };
   }
 
-  void triggerEffect() override;
+  ConsumeItem triggerEffect() override;
 };
 
 class DeviceTranslocator: public StrangeDevice
 {
 public:
-  DeviceTranslocator(ItemDataT* const itemData) :
-    StrangeDevice(itemData) {}
+  DeviceTranslocator(ItemDataT* const itemData) : StrangeDevice(itemData) {}
 
   ~DeviceTranslocator() override {}
 
@@ -115,7 +113,25 @@ private:
            };
   }
 
-  void triggerEffect() override;
+  ConsumeItem triggerEffect() override;
+};
+
+class DeviceSentryDrone: public StrangeDevice
+{
+public:
+  DeviceSentryDrone(ItemDataT* const itemData) : StrangeDevice(itemData) {}
+
+  ~DeviceSentryDrone() override {}
+
+private:
+  std::vector<std::string> getDescrIdentified() const
+  {
+    return {"When activated, this strange device will \"come alive\" and guard the "
+            "user."
+           };
+  }
+
+  ConsumeItem triggerEffect() override;
 };
 
 enum class LanternMalfState {working, flicker, malfunction};

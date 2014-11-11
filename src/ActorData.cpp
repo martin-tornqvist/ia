@@ -1396,7 +1396,6 @@ void initDataList()
   d.erraticMovePct = actorErratic_rare;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
-//  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2098,6 +2097,7 @@ void initDataList()
   d.dmgMelee = 10;
   d.abilityVals.setVal(AbilityId::melee, 50);
   d.intrProps[propOoze] = true;
+  d.intrProps[propEthereal] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
   d.spawnMinDLVL = 14;
@@ -2193,7 +2193,6 @@ void initDataList()
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.spawnMinDLVL = LAST_CAVERN_LVL - 1;
-  d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
@@ -2213,6 +2212,55 @@ void initDataList()
   d.canBeSummoned = false;
   d.monShockLvl = MonShockLvl::mindShattering;
   d.erraticMovePct = actorErratic_somewhat;
+  data[int(d.id)] = d;
+  d.reset();
+
+  d.nameA = "A Sentry Drone";
+  d.nameThe = "The Sentry Drone";
+  d.corpseNameA = "A destroyed Sentry Drone";
+  d.corpseNameThe = "The destroyed Sentry Drone";
+  d.id = ActorId::sentryDrone;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::pathsToTgtWhenAware)] = false;
+  d.ai[int(AiId::movesToTgtWhenLos)] = false;
+  d.ai[int(AiId::movesToLair)] = false;
+  d.ai[int(AiId::movesToLeader)] = true;
+  d.speed = ActorSpeed::fast;
+  d.rangedCooldownTurns = 3;
+  d.spellCooldownTurns  = 3;
+  d.glyph = '~';
+  d.color = clrRed;
+  d.tile = TileId::device2;
+  d.hp = 20;
+  d.spi = 30;
+  d.dmgRanged = 6;
+  d.abilityVals.setVal(AbilityId::melee, 50);
+  d.abilityVals.setVal(AbilityId::ranged, 65);
+  d.intrProps[propFlying] = true;
+  d.intrProps[propRadiant] = true;
+  d.intrProps[propRFear] = true;
+  d.intrProps[propRBreath] = true;
+  d.intrProps[propRPoison] = true;
+  d.intrProps[propRSleep] = true;
+  d.intrProps[propRDisease] = true;
+  d.spawnMinDLVL = 14;
+  d.groupSize = MonGroupSize::alone;
+  d.actorSize = actorSize_humanoid;
+  d.canBashDoors = false;
+  d.canOpenDoors = false;
+  d.nrTurnsAwarePlayer = 25;
+  d.descr = "An infernal piece of technology, seemingly designed to serve as a sort of "
+            "guard. It hovers around, constantly searching the area with beaming "
+            "spotlights, ready to blast any interloper on sight. It appears to have "
+            "some organic parts, and may even be a conscious living being.";
+  d.spellCastMessage = "The Sentry Drone shifts and rotates madly.";
+  d.aggroTextMonSeen = d.nameThe + " makes a deep buzzing sound.";
+  d.aggroTextMonHidden = "I hear a deep buzzing sound.";
+  d.erraticMovePct = actorErratic_rare;
+  d.monShockLvl = MonShockLvl::unsettling;
+  d.nativeRooms.push_back(RoomType::plain);
   data[int(d.id)] = d;
   d.reset();
 }

@@ -12,7 +12,7 @@
 #include "Map.h"
 #include "Actor.h"
 #include "ActorPlayer.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "Log.h"
 #include "Attack.h"
 #include "FeatureMob.h"
@@ -960,7 +960,6 @@ void drawMap()
   {
     for(int y = 0; y < MAP_H; ++y)
     {
-
       if(Map::cells[x][y].isSeenByPlayer)
       {
 
@@ -1006,7 +1005,7 @@ void drawMap()
       actor->getData().tile != TileId::empty  &&
       Map::cells[xPos][yPos].isSeenByPlayer)
     {
-      curDrw = &renderArray[xPos][yPos];
+      curDrw        = &renderArray[xPos][yPos];
       curDrw->clr   = actor->getClr();
       curDrw->tile  = actor->getTile();
       curDrw->glyph = actor->getGlyph();
@@ -1060,10 +1059,8 @@ void drawMap()
   {
     if(actor != Map::player)
     {
-
       if(actor->isAlive())
       {
-
         const Pos& p  = actor->pos;
         curDrw        = &renderArray[p.x][p.y];
 
@@ -1081,7 +1078,7 @@ void drawMap()
             curDrw->isLivingActorSeenHere = true;
             curDrw->isLightFadeAllowed    = false;
 
-            if(Map::player->isLeaderOf(*mon))
+            if(Map::player->isLeaderOf(mon))
             {
               curDrw->clrBg = clrGreen;
             }
@@ -1091,9 +1088,9 @@ void drawMap()
             }
           }
         }
-        else
+        else //Player is not seeing actor
         {
-          if(mon->playerAwareOfMeCounter_ > 0 || Map::player->isLeaderOf(*mon))
+          if(mon->playerAwareOfMeCounter_ > 0 || Map::player->isLeaderOf(mon))
           {
             curDrw->isAwareOfMonHere  = true;
           }

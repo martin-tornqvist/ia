@@ -6,7 +6,7 @@
 #include "Utils.h"
 #include "FeatureMob.h"
 #include "FeatureDoor.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "LineCalc.h"
 #include "MapParsing.h"
 #include "GameTime.h"
@@ -20,18 +20,18 @@ namespace Ai
 namespace Action
 {
 
-bool castRandomSpellIfAware(Mon& mon)
+bool tryCastRandomSpell(Mon& mon)
 {
   if(mon.isAlive())
   {
-    if(mon.awareCounter_ > 0 && mon.spellCoolDownCur == 0)
+    if(mon.awareCounter_ > 0 && mon.spellCoolDownCur_ == 0)
     {
 
       if(!mon.getPropHandler().allowRead(false)) {return false;}
 
-      if(!mon.spellsKnown.empty())
+      if(!mon.spellsKnown_.empty())
       {
-        vector<Spell*> spellBucket = mon.spellsKnown;
+        vector<Spell*> spellBucket = mon.spellsKnown_;
 
         std::random_shuffle(begin(spellBucket), end(spellBucket));
 
@@ -58,8 +58,9 @@ bool castRandomSpellIfAware(Mon& mon)
             const int CUR_HP  = mon.getHp();
             const int MAX_HP  = mon.getHpMax(true);
 
-            //With a certain chance, cast the spell anyway if HP is low.
-            if(CUR_HP < (MAX_HP / 3) && Rnd::oneIn(20))
+            //If monster is not allied to player, with a small chance, cast the spell
+            //anyway if HP is low.
+            if(!Map::player->isLeaderOf(&mon) && CUR_HP < (MAX_HP / 3) && Rnd::oneIn(20))
             {
               if(Map::player->isSeeingActor(mon, nullptr))
               {
@@ -70,7 +71,7 @@ bool castRandomSpellIfAware(Mon& mon)
             }
             return false;
           }
-          else
+          else //Spell does not allow monster to cast now
           {
             spellBucket.pop_back();
           }
@@ -240,7 +241,6 @@ bool makeRoomForFriend(Mon& mon)
               //Test positions until one is found that is not blocking another monster
               for(const auto& targetPos : posBucket)
               {
-
                 bool isGoodCandidateFound = true;
 
                 for(Actor* actor2 : GameTime::actors_)
@@ -379,11 +379,11 @@ bool moveToRandomAdjCell(Mon& mon)
 
 bool moveToTgtSimple(Mon& mon)
 {
-  if(mon.isAlive() && mon.target)
+  if(mon.isAlive() && mon.tgt_)
   {
-    if(mon.awareCounter_ > 0 || mon.leader == Map::player)
+    if(mon.awareCounter_ > 0 || Map::player->isLeaderOf(&mon))
     {
-      const Pos offset  = mon.target->pos - mon.pos;
+      const Pos offset  = mon.tgt_->pos - mon.pos;
       const Pos signs   = offset.getSigns();
       bool blocked[MAP_W][MAP_H];
       MapParse::parse(CellPred::BlocksActor(mon, true), blocked);
@@ -533,7 +533,7 @@ void setPathToLeaderIfNoLosToleader(Mon& mon, vector<Pos>& path)
 {
   if(mon.isAlive())
   {
-    Actor* leader = mon.leader;
+    Actor* leader = mon.leader_;
     if(leader)
     {
       if(leader->isAlive())

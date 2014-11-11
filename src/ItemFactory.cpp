@@ -61,7 +61,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::teslaCannon:         r = new TeslaCannon(d, ammoD);    break;
     case ItemId::spikeGun:            r = new SpikeGun(d, ammoD);       break;
     case ItemId::teslaCanister:       r = new AmmoClip(d);              break;
-    case ItemId::incineratorCartridge:     r = new AmmoClip(d);         break;
+    case ItemId::incineratorCartridge:  r = new AmmoClip(d);         break;
 
     case ItemId::playerKick:          r = new Wpn(d, ammoD);         break;
     case ItemId::playerStomp:         r = new Wpn(d, ammoD);         break;
@@ -156,10 +156,12 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::potionAntidote:      r = new PotionAntidote(d);        break;
     case ItemId::potionDescent:       r = new PotionDescent(d);         break;
 
-    case ItemId::deviceBlaster:        r = new DeviceBlaster(d);          break;
-    case ItemId::deviceShockwave:      r = new DeviceShockwave(d);        break;
+    case ItemId::deviceBlaster:       r = new DeviceBlaster(d);         break;
+    case ItemId::deviceShockwave:     r = new DeviceShockwave(d);       break;
     case ItemId::deviceRejuvenator:   r = new DeviceRejuvenator(d);     break;
     case ItemId::deviceTranslocator:  r = new DeviceTranslocator(d);    break;
+    case ItemId::deviceSentryDrone:   r = new DeviceSentryDrone(d);     break;
+
     case ItemId::electricLantern:     r = new DeviceLantern(d);         break;
 
     case ItemId::medicalBag:          r = new MedicalBag(d);            break;
@@ -169,8 +171,9 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
 
   if(!r->getData().isStackable && NR_ITEMS != 1)
   {
-    TRACE << "Warning, Specified " + toStr(NR_ITEMS) + " nr items"
-          << " for non-stackable item";
+    TRACE << "Specified number of items (" + toStr(NR_ITEMS) + ") != 1 for "
+          << "non-stackable item" << endl;
+    assert(false);
   }
   else
   {

@@ -7,7 +7,7 @@
 #include "FeatureTrap.h"
 #include "Map.h"
 #include "ActorFactory.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "ActorPlayer.h"
 #include "MapParsing.h"
 #include "Utils.h"
@@ -409,7 +409,7 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
     }
     else
     {
-      mon->leader = originActor;
+      mon->leader_ = originActor;
     }
 
     blocked[pos.x][pos.y] = true;
