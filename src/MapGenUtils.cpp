@@ -51,14 +51,15 @@ void getFloorCellsInRoom(const Room& room, const bool floor[MAP_W][MAP_H],
 
 void cutRoomCorners(const Room& room)
 {
-  const Pos& roomP0  = room.r_.p0;
-  const Pos& roomP1  = room.r_.p1;
+  if(!room.subRooms_.empty() || room.r_.getMinDim() < 6)
+  {
+    return;
+  }
 
-  const Pos roomDims = roomP1 - roomP0 + 1;
+  const Pos maxDims(room.r_.getDims() - 4);
 
-  if(roomDims.x < 6 || roomDims.y < 6) {return;}
-
-  const Pos maxDims(roomDims - 4);
+  const Pos roomP0(room.r_.p0);
+  const Pos roomP1(room.r_.p1);
 
   const Pos crossDims(Rnd::range(2, maxDims.x), Rnd::range(2, maxDims.y));
 
@@ -76,10 +77,20 @@ void cutRoomCorners(const Room& room)
       int nrCorners = 0;
       for(int i = 0; i < 4; ++i)
       {
-        if(Rnd::coinToss()) {c[i] = true; nrCorners++;}
-        else {c[i] = false;}
+        if(Rnd::coinToss())
+        {
+          c[i] = true;
+          nrCorners++;
+        }
+        else
+        {
+          c[i] = false;
+        }
       }
-      if(nrCorners > 0) {break;}
+      if(nrCorners > 0)
+      {
+        break;
+      }
     }
   }
 
@@ -144,6 +155,112 @@ void mkPillarsInRoom(const Room& room)
       {
         const Pos p(x + Rnd::range(-1, 1), y + Rnd::range(-1, 1));
         if(isFree(p) && Rnd::oneIn(5)) {Map::put(new Wall(p));}
+      }
+    }
+  }
+}
+
+void cavifyRoom(Room& room)
+{
+  const Rect roomRectBefore = room.r_;
+
+  bool isOtherRoom[MAP_W][MAP_H];
+
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
+      const auto* const roomHere  = Map::roomMap[x][y];
+      isOtherRoom[x][y]           = roomHere && roomHere != &room;
+    }
+  }
+
+  bool blocked[MAP_W][MAP_H];
+
+  MapParse::expand(isOtherRoom, blocked);
+
+  Rect& roomRect = room.r_;
+
+  vector<Pos> originBucket;
+
+  originBucket.push_back(roomRect.p0);
+  originBucket.push_back(roomRect.p1);
+  originBucket.push_back({roomRect.p0.x, roomRect.p1.y});
+  originBucket.push_back({roomRect.p1.x, roomRect.p0.y});
+
+  originBucket.push_back({Rnd::range(roomRect.p0.x, roomRect.p1.x),
+                          Rnd::range(roomRectBefore.p0.y, roomRectBefore.p1.y)
+                         });
+
+  for(const Pos& origin : originBucket)
+  {
+//    auto getRandomOriginOnEdge = [&]()
+//    {
+//      return Pos(Rnd::range(roomRectBefore.p0.x, roomRectBefore.p1.x),
+//                 Rnd::range(roomRectBefore.p0.y, roomRectBefore.p1.y));
+//    };
+
+//    Pos origin(getRandomOriginOnEdge());
+
+    if(blocked[origin.x][origin.y] || Map::roomMap[origin.x][origin.y] != &room)
+    {
+      continue;
+    }
+
+//    while(blocked[origin.x][origin.y] || Map::roomMap[origin.x][origin.y] != &room)
+//    {
+//      origin = getRandomOriginOnEdge();
+//    }
+
+//    for(int x = roomRect.p0.x; x < roomRect.p1.x; ++x)
+//    {
+//      for(int y = roomRect.p0.y; y < roomRect.p1.y; ++y)
+//      {
+//        if(!blocked[x][y] && Map::roomMap[x][y] == &room)
+//        {
+//          origin.set(x, y);
+//          break;
+//        }
+//      }
+//      if(origin.x != -1)
+//      {
+//        break;
+//      }
+//    }
+
+    int flood[MAP_W][MAP_H];
+
+    FloodFill::run(origin, blocked, flood, 3, { -1, -1}, false);
+
+    for(int x = 0; x < MAP_W; ++x)
+    {
+      for(int y = 0; y < MAP_H; ++y)
+      {
+        if(flood[x][y] > 0)
+        {
+          Rigid* const rigid = Map::put(new Floor({x, y}));
+          static_cast<Floor*>(rigid)->type_ = FloorType::cave;
+          Map::roomMap[x][y] = &room;
+          if(x < roomRect.p0.x) {roomRect.p0.x = x;}
+          if(y < roomRect.p0.y) {roomRect.p0.y = y;}
+          if(x > roomRect.p1.x) {roomRect.p1.x = x;}
+          if(y > roomRect.p1.y) {roomRect.p1.y = y;}
+        }
+      }
+    }
+
+    for(int x = 0; x < MAP_W; ++x)
+    {
+      for(int y = 0; y < MAP_H; ++y)
+      {
+        if(Map::roomMap[x][y] == &room)
+        {
+          Rigid* const rigid = Map::cells[x][y].rigid;
+          if(rigid->getId() == FeatureId::floor)
+          {
+            static_cast<Floor*>(rigid)->type_ = FloorType::cave;
+          }
+        }
       }
     }
   }
@@ -254,8 +371,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
     }
   }
 
-  TRACE_VERBOSE << "Storing entry pairs with shortest dist ("
-                << shortestDist << ")" << endl;
+  TRACE_VERBOSE << "Storing entry pairs with shortest dist (" << shortestDist << ")"
+                << endl;
   vector< pair<Pos, Pos> > entriesBucket;
 
   for(const Pos& p0 : p0Bucket)
@@ -293,8 +410,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
       for(int y = 0; y < MAP_H; ++y)
       {
         blocked[x][y] =
-          Map::roomMap[x][y] ||
-          Map::cells[x][y].rigid->getId() != FeatureId::wall;
+          Map::roomMap[x][y] || Map::cells[x][y].rigid->getId() != FeatureId::wall;
       }
     }
 
@@ -310,8 +426,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
   {
     path.push_back(p0);
 
-    TRACE_VERBOSE << "Check that the path doesn't circle around the origin "
-                  << "or target room" << endl;
+    TRACE_VERBOSE << "Check that the path doesn't circle around the origin or targt "
+                  << "room (looks bad)" << endl;
     vector<Room*> rooms {&r0, &r1};
     for(Room* room : rooms)
     {
@@ -328,9 +444,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
       }
       if((isLeftOfRoom && isRightOfRoom) || (isAboveRoom && isBelowRoom))
       {
-        TRACE_FUNC_END_VERBOSE
-            << "Path circled around room (looks bad), not making corridor"
-            << endl;
+        TRACE_FUNC_END_VERBOSE << "Path circled around room, aborting corridor" << endl;
         return;
       }
     }

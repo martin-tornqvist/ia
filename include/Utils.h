@@ -51,9 +51,7 @@ enum TimeType
 struct TimeData
 {
   TimeData() :
-    year_(0), month_(0), day_(0), hour_(0), minute_(0), second_(0)
-  {
-  }
+    year_(0), month_(0), day_(0), hour_(0), minute_(0), second_(0) {}
 
   TimeData(int year, int month, int day, int hour, int minute, int second) :
     year_(year), month_(month), day_(day), hour_(hour), minute_(minute),

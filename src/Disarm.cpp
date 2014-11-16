@@ -58,9 +58,13 @@ void playerDisarm()
 
   const Pos pos(Map::player->pos + DirUtils::getOffset(Query::dir()));
 
-  if(pos != Map::player->pos)
+  if(pos == Map::player->pos)
   {
-
+    Log::clearLog();
+    Render::drawMapAndInterface();
+  }
+  else
+  {
     //Abort if cell is unseen
     if(!Map::cells[pos.x][pos.y].isSeenByPlayer)
     {
@@ -84,12 +88,12 @@ void playerDisarm()
       {
         Log::addMsg("Something is blocking it.");
       }
-      Render::drawMapAndInterface();
-      return;
+    }
+    else //No actor on the trap
+    {
+      Map::cells[pos.x][pos.y].rigid->disarm();
     }
 
-    Log::clearLog();
-    Map::cells[pos.x][pos.y].rigid->disarm();
     Render::drawMapAndInterface();
   }
 }

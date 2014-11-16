@@ -521,7 +521,6 @@ void handleKeyPress(const KeyData& d)
     Log::clearLog();
     if(Map::player->isAlive())
     {
-
       vector<Actor*> seenMon;
       Map::player->getSeenFoes(seenMon);
 
@@ -558,8 +557,16 @@ void handleKeyPress(const KeyData& d)
           Log::addMsg("Which direction?" + cancelInfoStr);
           Render::drawMapAndInterface();
           const Dir dir = Query::dir();
-          if(dir != Dir::center) {Map::player->setQuickMove(dir);}
           Log::clearLog();
+          if(dir == Dir::center)
+          {
+            Render::updateScreen();
+          }
+          else
+          {
+            Map::player->setQuickMove(dir);
+          }
+
         }
       }
     }

@@ -164,6 +164,7 @@ struct Rect
 
   int getW()          const {return p1.x - p0.x + 1;}
   int getH()          const {return p1.y - p0.y + 1;}
+  Pos getDims()       const {return {getW(), getH()};}
   int getMinDim()     const {return std::min(getW(), getH());}
   int getMaxDim()     const {return std::max(getW(), getH());}
   Pos getCenterPos()  const {return ((p1 + p0) / 2);}

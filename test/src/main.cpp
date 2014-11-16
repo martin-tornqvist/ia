@@ -16,7 +16,7 @@
 #include "ItemFactory.h"
 #include "TextFormatting.h"
 #include "ActorFactory.h"
-#include "ActorMonster.h"
+#include "ActorMon.h"
 #include "MapGen.h"
 #include "Converters.h"
 #include "CmnTypes.h"
@@ -430,7 +430,7 @@ TEST_FIXTURE(BasicFixture, Explosions)
   //Check damage to actors
   Actor* a1 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
-  CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
+  CHECK_EQUAL(int(ActorState::destroyed), int(a1->getState()));
 
   //Check that corpses can be destroyed, and do not block living actors
   const int NR_CORPSES = 3;
@@ -438,15 +438,15 @@ TEST_FIXTURE(BasicFixture, Explosions)
   for(int i = 0; i < NR_CORPSES; ++i)
   {
     corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
-    corpses[i]->deadState = ActorDeadState::corpse;
+    corpses[i]->die(false, false, false);
   }
   a1 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
   for(int i = 0; i < NR_CORPSES; ++i)
   {
-    CHECK_EQUAL(int(ActorDeadState::destroyed), int(corpses[i]->deadState));
+    CHECK_EQUAL(int(ActorState::destroyed), int(corpses[i]->getState()));
   }
-  CHECK_EQUAL(int(ActorDeadState::destroyed), int(a1->deadState));
+  CHECK_EQUAL(int(ActorState::destroyed), int(a1->getState()));
 
   //Check explosion applying Burning to living and dead actors
   a1        = ActorFactory::mk(ActorId::rat, Pos(X0 - 1, Y0));
@@ -454,7 +454,7 @@ TEST_FIXTURE(BasicFixture, Explosions)
   for(int i = 0; i < NR_CORPSES; ++i)
   {
     corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
-    corpses[i]->deadState = ActorDeadState::corpse;
+    corpses[i]->die(false, false, false);
   }
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
                             ExplSrc::misc, 0, SfxId::END,
@@ -519,7 +519,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
 
     //Spawn a monster that can get stuck in the web
     Actor* const actor = ActorFactory::mk(ActorId::zombie, posL);
-    Monster* const monster = static_cast<Monster*>(actor);
+    Mon* const mon = static_cast<Mon*>(actor);
 
     //Create a spider web in the right cell
     const auto  mimicId     = Map::cells[posR.x][posR.x].rigid->getId();
@@ -528,19 +528,19 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
     Map::put(new Trap(posR, mimic, TrapId::web));
 
     //Move the monster into the trap, and back again
-    monster->awareOfPlayerCounter_ = 20000; // > 0 req. for triggering trap
-    monster->pos = posL;
-    monster->moveDir(Dir::right);
-    CHECK(monster->pos == posR);
-    monster->moveDir(Dir::left);
-    monster->moveDir(Dir::left);
+    mon->awareCounter_ = 20000; // > 0 req. for triggering trap
+    mon->pos = posL;
+    mon->moveDir(Dir::right);
+    CHECK(mon->pos == posR);
+    mon->moveDir(Dir::left);
+    mon->moveDir(Dir::left);
 
     //Check conditions
-    if(monster->pos == posR)
+    if(mon->pos == posR)
     {
       testedStuck = true;
     }
-    else if(monster->pos == posL)
+    else if(mon->pos == posL)
     {
       const auto featureId = Map::cells[posR.x][posR.y].rigid->getId();
       if(featureId == FeatureId::floor)
@@ -554,7 +554,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
     }
 
     //Remove the monster
-    ActorFactory::deleteAllMonsters();
+    ActorFactory::deleteAllMon();
   }
   //Check that all cases have been triggered (not really necessary, it just
   //verifies that the loop above is correctly written).
@@ -718,7 +718,7 @@ TEST_FIXTURE(BasicFixture, SavingGame)
 
   //Learned spells
   PlayerSpellsHandling::learnSpellIfNotKnown(SpellId::bless);
-  PlayerSpellsHandling::learnSpellIfNotKnown(SpellId::azathothsWrath);
+  PlayerSpellsHandling::learnSpellIfNotKnown(SpellId::azaWrath);
 
   //Applied properties
   PropHandler& propHlr = Map::player->getPropHandler();
@@ -827,7 +827,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
 
   //Learned spells
   CHECK(PlayerSpellsHandling::isSpellLearned(SpellId::bless));
-  CHECK(PlayerSpellsHandling::isSpellLearned(SpellId::azathothsWrath));
+  CHECK(PlayerSpellsHandling::isSpellLearned(SpellId::azaWrath));
   CHECK_EQUAL(false, PlayerSpellsHandling::isSpellLearned(SpellId::mayhem));
 
   //Properties
@@ -1002,19 +1002,20 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
 {
   //------------------------------------------------ Square, normal sized room
   Rect roomRect(20, 5, 30, 10);
-  Room room(roomRect);
+
+  Room* room = RoomFactory::mk(RoomType::plain, roomRect);
 
   for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
   {
     for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
     {
       Map::put(new Floor(Pos(x, y)));
-      Map::roomMap[x][y] = &room;
+      Map::roomMap[x][y] = room;
     }
   }
 
   vector<Pos> entryList;
-  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  MapGenUtils::getValidRoomCorrEntries(*room, entryList);
   bool entryMap[MAP_W][MAP_H];
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
@@ -1032,48 +1033,45 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
   //Check that a cell in the middle of the room is not an entry, even if it's not
   //belonging to the room
   Map::roomMap[25][7] = nullptr;
-  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  MapGenUtils::getValidRoomCorrEntries(*room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
   CHECK(!entryMap[25][7]);
 
   //The cell should also not be an entry if it's a wall and belonging to the room
-  Map::roomMap[25][7] = &room;
+  Map::roomMap[25][7] = room;
   Map::put(new Wall(Pos(25, 7)));
-  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  MapGenUtils::getValidRoomCorrEntries(*room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
   CHECK(!entryMap[25][7]);
 
   //The cell should also not be an entry if it's a wall and not belonging to the room
   Map::roomMap[25][7] = nullptr;
-  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  MapGenUtils::getValidRoomCorrEntries(*room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
-  //This test fails!
-  //It seems like it has to do with MapParse::expand, called from
-  //MapGenUtils::getValidRoomCorrEntries()
-  //Write tests for MapParse::expand()
-  CHECK(!entryMap[25][7]); //<-- Fails
+  CHECK(!entryMap[25][7]);
 
   //Check that the room can share an antry point with a nearby room
   roomRect = Rect(10, 5, 18, 10);
-  Room nearbyRoom(roomRect);
+
+  Room* nearbyRoom = RoomFactory::mk(RoomType::plain, roomRect);
 
   for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
   {
     for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
     {
       Map::put(new Floor(Pos(x, y)));
-      Map::roomMap[x][y] = &nearbyRoom;
+      Map::roomMap[x][y] = nearbyRoom;
     }
   }
 
-  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  MapGenUtils::getValidRoomCorrEntries(*room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
   vector<Pos> entryListNearbyRoom;
-  MapGenUtils::getValidRoomCorrEntries(nearbyRoom, entryListNearbyRoom);
+  MapGenUtils::getValidRoomCorrEntries(*nearbyRoom, entryListNearbyRoom);
   bool entryMapNearbyRoom[MAP_W][MAP_H];
   Utils::mkBoolMapFromVector(entryListNearbyRoom, entryMapNearbyRoom);
 
@@ -1083,11 +1081,14 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
     CHECK(entryMapNearbyRoom[19][y]);
   }
 
+  delete nearbyRoom;
+
   //------------------------------------------------ Room with only one cell
-  room = Room(Rect(60, 10, 60, 10));
+  delete room;
+  room = RoomFactory::mk(RoomType::plain, {60, 10, 60, 10});
   Map::put(new Floor(Pos(60, 10)));
-  Map::roomMap[60][10] = &room;
-  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Map::roomMap[60][10] = room;
+  MapGenUtils::getValidRoomCorrEntries(*room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
   // 59 60 61
@@ -1110,7 +1111,7 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
   // #  .  # 10
   // #  #  # 11
   Map::put(new Floor(Pos(60, 9)));
-  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  MapGenUtils::getValidRoomCorrEntries(*room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
   CHECK(!entryMap[59][9]);
@@ -1124,10 +1125,12 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
   CHECK(!entryMap[61][11]);
 
   //Mark the adjacent floor as a room and check again
-  Room adjRoom(Rect(60, 9, 60, 9));
-  Map::roomMap[60][9] = &adjRoom;
-  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Room* adjRoom = RoomFactory::mk(RoomType::plain, {60, 9, 60, 9});
+  Map::roomMap[60][9] = adjRoom;
+  MapGenUtils::getValidRoomCorrEntries(*room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
+
+  delete adjRoom;
 
   CHECK(!entryMap[59][9]);
   CHECK(!entryMap[60][9]);
@@ -1144,10 +1147,10 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
   // #  #  .  # 9
   // #  .  .  # 10
   // #  #  #  # 11
-  room.r_.p0.x = 59;
+  room->r_.p0.x = 59;
   Map::put(new Floor(Pos(59, 10)));
-  Map::roomMap[59][10] = &room;
-  MapGenUtils::getValidRoomCorrEntries(room, entryList);
+  Map::roomMap[59][10] = room;
+  MapGenUtils::getValidRoomCorrEntries(*room, entryList);
   Utils::mkBoolMapFromVector(entryList, entryMap);
 
   CHECK(!entryMap[58][9]);
@@ -1165,6 +1168,8 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
 
   //Remove the adjacent room, and check that the blocked entries are now placed
   //TODO
+
+  delete room;
 }
 
 TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
@@ -1172,15 +1177,15 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
   Rect roomArea1(Pos(1, 1), Pos(10, 10));
   Rect roomArea2(Pos(15, 4), Pos(23, 14));
 
-  Room room0(roomArea1);
-  Room room1(roomArea2);
+  Room* room0 = RoomFactory::mk(RoomType::plain, roomArea1);
+  Room* room1 = RoomFactory::mk(RoomType::plain, roomArea2);
 
   for(int y = roomArea1.p0.y; y <= roomArea1.p1.y; ++y)
   {
     for(int x = roomArea1.p0.x; x <= roomArea1.p1.x; ++x)
     {
       Map::put(new Floor(Pos(x, y)));
-      Map::roomMap[x][y] = &room0;
+      Map::roomMap[x][y] = room0;
     }
   }
 
@@ -1189,17 +1194,20 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
     for(int x = roomArea2.p0.x; x <= roomArea2.p1.x; ++x)
     {
       Map::put(new Floor(Pos(x, y)));
-      Map::roomMap[x][y] = &room1;
+      Map::roomMap[x][y] = room1;
     }
   }
 
-  MapGenUtils::mkPathFindCor(room0, room1);
+  MapGenUtils::mkPathFindCor(*room0, *room1);
 
   int flood[MAP_W][MAP_H];
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
   FloodFill::run(5, blocked, flood, INT_MAX, -1, true);
   CHECK(flood[20][10] > 0);
+
+  delete room0;
+  delete room1;
 }
 
 TEST_FIXTURE(BasicFixture, MapParseGetCellsWithinDistOfOthers)

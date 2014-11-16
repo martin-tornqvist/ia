@@ -24,9 +24,14 @@ public:
 namespace MapGenUtils
 {
 
-void cutRoomCorners(const Room& room);
-
+//Note: Some of the reshape functions below will never change the boundaries of the room,
+//but they may affect which cells belong to the room. However, this is done on
+//Map::roomMap - so the room parameter should be a const reference for these methods.
+//For other reshape functions the room may expand beyond its initial rectangle, so in
+//those cases the functions needs to assign values to the data of the room object.
+void cutRoomCorners (const Room& room);
 void mkPillarsInRoom(const Room& room);
+void cavifyRoom     (Room& room);
 
 void getValidRoomCorrEntries(const Room& room, std::vector<Pos>& out);
 

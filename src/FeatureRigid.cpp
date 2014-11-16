@@ -2004,7 +2004,7 @@ void Chest::triggerTrap(Actor& actor)
       }
       else if(RND < 40)
       {
-        prop = new PropDiseased(PropTurns::std);
+        prop = new PropDiseased(PropTurns::specific, 50);
         fumeClr = clrGreen;
       }
       else

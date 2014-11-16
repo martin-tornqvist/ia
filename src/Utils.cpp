@@ -352,7 +352,7 @@ namespace
 const string compassDirNames[3][3] =
 {
   {"NW", "N", "NE"},
-  { "W",  "",  "E",},
+  {"W",  "",  "E",},
   {"SW", "S", "SE"}
 };
 

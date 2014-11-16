@@ -54,14 +54,14 @@ void initRoomBucket()
 
   roomBucket_.clear();
 
-  addToRoomBucket(RoomType::human,    Rnd::range(1, 3));
-  addToRoomBucket(RoomType::ritual,   1);
-  addToRoomBucket(RoomType::spider,   Rnd::range(1, 3));
-  addToRoomBucket(RoomType::crypt,    Rnd::range(1, 4));
-  addToRoomBucket(RoomType::monster,  Rnd::range(1, 2));
+  addToRoomBucket(RoomType::human,    Rnd::range(3, 6));
+  addToRoomBucket(RoomType::ritual,   Rnd::range(0, 1));
+  addToRoomBucket(RoomType::spider,   Rnd::range(0, 3));
+  addToRoomBucket(RoomType::crypt,    Rnd::range(0, 4));
+  addToRoomBucket(RoomType::monster,  Rnd::range(0, 2));
   addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
   addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
-//  addToRoomBucket(RoomType::cave,     Rnd::range(1, 3));
+  addToRoomBucket(RoomType::cave,     Rnd::range(1, 3));
 
   const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
 
@@ -193,8 +193,8 @@ void StdRoom::onPostConnect(bool doorProposals[MAP_W][MAP_H])
   onPostConnect_(doorProposals);
 
   //Make dark?
-  int pctChanceDark = getBasePctChanceDrk();
-  pctChanceDark += Map::dlvl - 10; //Increase with higher dungeon level
+  int pctChanceDark = getBasePctChanceDrk() - 15;
+  pctChanceDark += Map::dlvl; //Increase with higher dungeon level
   constrInRange(0, pctChanceDark, 100);
   if(Rnd::percentile() < pctChanceDark) {mkDrk();}
 }
@@ -355,7 +355,14 @@ int StdRoom::placeAutoFeatures()
 //------------------------------------------------------------------- PLAIN ROOM
 Range PlainRoom::getNrAutoFeaturesAllowed() const
 {
-  return {0, Rnd::oneIn(7) ? 2 : 0};
+  if(Rnd::oneIn(4))
+  {
+    return {1, 2};
+  }
+  else
+  {
+    return {0, 0};
+  }
 }
 
 int PlainRoom::getBasePctChanceDrk() const
@@ -380,7 +387,7 @@ void PlainRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 //------------------------------------------------------------------- HUMAN ROOM
 Range HumanRoom::getNrAutoFeaturesAllowed() const
 {
-  return {0, Rnd::oneIn(7) ? 2 : 0};
+  return {3, 6};
 }
 
 int HumanRoom::getBasePctChanceDrk() const
@@ -506,7 +513,15 @@ void SpiderRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::coinToss())
+  {
+    if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  }
+  else
+  {
+    MapGenUtils::cavifyRoom(*this);
+  }
+
   if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
@@ -619,7 +634,15 @@ void FloodedRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::coinToss())
+  {
+    if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  }
+  else
+  {
+    MapGenUtils::cavifyRoom(*this);
+  }
+
   if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
@@ -664,7 +687,15 @@ void MuddyRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::coinToss())
+  {
+    if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  }
+  else
+  {
+    MapGenUtils::cavifyRoom(*this);
+  }
+
   if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
@@ -702,15 +733,14 @@ int CaveRoom::getBasePctChanceDrk() const
 
 bool CaveRoom::isAllowed() const
 {
-  return true;
+  return !isSubRoom_;
 }
 
 void CaveRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  MapGenUtils::cavifyRoom(*this);
 }
 
 void CaveRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
