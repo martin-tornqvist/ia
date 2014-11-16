@@ -54,8 +54,6 @@ void initRoomBucket()
 
   roomBucket_.clear();
 
-  //  const int NR_NON_PLAIN_STD_ALLOWED = Rnd::range(1, 4);
-
   addToRoomBucket(RoomType::human,    Rnd::range(1, 3));
   addToRoomBucket(RoomType::ritual,   1);
   addToRoomBucket(RoomType::spider,   Rnd::range(1, 3));
@@ -67,11 +65,7 @@ void initRoomBucket()
 
   const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
 
-  TRACE << "Bucket size before plain rooms: " << roomBucket_.size() << endl;
-
   addToRoomBucket(RoomType::plain, roomBucket_.size() * NR_PLAIN_ROOM_PER_THEMED);
-
-  TRACE << "Bucket size after plain rooms: " << roomBucket_.size() << endl;
 
   std::random_shuffle(begin(roomBucket_), end(roomBucket_));
 
@@ -372,6 +366,9 @@ int PlainRoom::getBasePctChanceDrk() const
 void PlainRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void PlainRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -399,6 +396,9 @@ bool HumanRoom::isAllowed() const
 void HumanRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void HumanRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -425,6 +425,9 @@ bool RitualRoom::isAllowed() const
 void RitualRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void RitualRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -502,6 +505,9 @@ bool SpiderRoom::isAllowed() const
 void SpiderRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void SpiderRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -528,6 +534,9 @@ bool CryptRoom::isAllowed() const
 void CryptRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void CryptRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -554,6 +563,9 @@ bool MonsterRoom::isAllowed() const
 void MonsterRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void MonsterRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -606,6 +618,9 @@ bool FloodedRoom::isAllowed() const
 void FloodedRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void FloodedRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -648,6 +663,9 @@ bool MuddyRoom::isAllowed() const
 void MuddyRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void MuddyRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -690,6 +708,9 @@ bool CaveRoom::isAllowed() const
 void CaveRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void CaveRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
