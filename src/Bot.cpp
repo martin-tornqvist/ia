@@ -65,14 +65,14 @@ void findPathToStairs()
   assert(curPath_.front() == stairPos);
 }
 
-bool walkToAdjacentCell(const Pos& p)
+bool walkToAdjCell(const Pos& p)
 {
   assert(Utils::isPosAdj(Map::player->pos, p, true));
 
   char key = '0' + int(DirUtils::getDir(p - Map::player->pos));
 
   //Occasionally randomize movement
-  if(Rnd::oneIn(3)) {key = '0' + Rnd::range(1, 9);}
+  if(Rnd::oneIn(5)) {key = '0' + Rnd::range(1, 9);}
 
   Input::handleKeyPress(KeyData(key));
 
@@ -185,11 +185,12 @@ void act()
 
   if(find(begin(props), end(props), propTerrified) != end(props))
   {
-    if(walkToAdjacentCell(Map::player->pos)) {return;}
+    if(walkToAdjCell(Map::player->pos)) {return;}
   }
 
   findPathToStairs();
-  walkToAdjacentCell(curPath_.back());
+
+  walkToAdjCell(curPath_.back());
 }
 
 } //Bot

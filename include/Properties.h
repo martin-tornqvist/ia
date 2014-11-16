@@ -105,17 +105,17 @@ struct PropDataT
     for(int i = 0; i < endOfPropMsg; ++i) {msg[i] = "";}
   }
 
-  PropId id;
-  Range stdRndTurns;
-  std::string name;
-  std::string nameShort;
-  std::string msg[endOfPropMsg];
-  bool isMakingMonAware;
-  bool allowDisplayTurns;
-  bool allowApplyMoreWhileActive;
-  bool updatePlayerVisualWhenStartOrEnd;
-  bool isEndedByMagicHealing;
-  bool allowTestOnBot;
+  PropId        id;
+  Range         stdRndTurns;
+  std::string   name;
+  std::string   nameShort;
+  std::string   msg[endOfPropMsg];
+  bool          isMakingMonAware;
+  bool          allowDisplayTurns;
+  bool          allowApplyMoreWhileActive;
+  bool          updatePlayerVisualWhenStartOrEnd;
+  bool          isEndedByMagicHealing;
+  bool          allowTestOnBot;
   PropAlignment alignment;
 };
 
@@ -147,14 +147,14 @@ public:
 
   void changeMoveDir(const Pos& actorPos, Dir& dir) const;
   int getChangedMaxHp(const int HP_MAX) const;
-  bool allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
-  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
+  bool allowAttack      (const bool ALLOW_MESSAGE_WHEN_FALSE) const;
+  bool allowAttackMelee (const bool ALLOW_MESSAGE_WHEN_FALSE) const;
   bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
   bool allowSee() const;
   bool allowMove() const;
   bool allowAct() const;
-  bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
-  bool allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
+  bool allowRead        (const bool ALLOW_MESSAGE_WHEN_FALSE) const;
+  bool allowCastSpells  (const bool ALLOW_MESSAGE_WHEN_FALSE) const;
   void onHit();
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
   int getAbilityMod(const AbilityId ability) const;

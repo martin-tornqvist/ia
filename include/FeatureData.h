@@ -56,7 +56,7 @@ struct FeatureRoomSpawnRules
 {
 public:
   FeatureRoomSpawnRules() :
-    maxNrInRoom_(-1), placementRule_(PlacementRule::nextToWalls)
+    maxNrInRoom_(-1), placementRule_(PlacementRule::adjToWalls)
   {
     roomTypesNative_.clear();
   }

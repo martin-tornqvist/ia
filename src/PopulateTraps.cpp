@@ -8,6 +8,7 @@
 #include "MapParsing.h"
 #include "Utils.h"
 #include "FeatureData.h"
+#include "FeatureTrap.h"
 
 using namespace std;
 
@@ -56,7 +57,7 @@ void populateStdLvl()
         case RoomType::muddy:                                   break;
         case RoomType::END_OF_STD_ROOMS:
         case RoomType::river:
-        case RoomType::corridorJunction:
+        case RoomType::corrLink:
         case RoomType::cave:
         case RoomType::crumbleRoom: break;
       }
@@ -73,9 +74,7 @@ void populateStdLvl()
         {
           for(int x = p0.x; x <= p1.x; ++x)
           {
-            if(
-              !blocked[x][y] &&
-              Map::cells[x][y].rigid->canHaveRigid())
+            if(!blocked[x][y] && Map::cells[x][y].rigid->canHaveRigid())
             {
               trapPosBucket.push_back(Pos(x, y));
             }

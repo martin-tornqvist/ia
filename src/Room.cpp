@@ -1,11 +1,15 @@
 #include "Room.h"
 
+#include <algorithm>
+
 #include "Init.h"
 #include "Utils.h"
 #include "Map.h"
 #include "MapParsing.h"
 #include "FeatureRigid.h"
 #include "MapGen.h"
+#include "Gods.h"
+
 #ifdef DEMO_MODE
 #include "Render.h"
 #include "SdlWrapper.h"
@@ -13,20 +17,687 @@
 
 using namespace std;
 
-//-------------------------------------
-//Some options (comment out to disable)
-//-------------------------------------
-#define RESHAPE_STD_ROOMS 1
-
-void Room::onPreConnect(bool doorProposals[MAP_W][MAP_H])
+namespace
 {
-  (void)doorProposals;
-#ifdef RESHAPE_STD_ROOMS
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners(*this);}
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
-#endif // RESHAPE_STD_ROOMS
+
+vector<RoomType> roomBucket_;
+
+void addToRoomBucket(const RoomType type, const size_t NR)
+{
+  if(NR > 0)
+  {
+    roomBucket_.reserve(roomBucket_.size() + NR);
+
+    for(size_t i = 0; i < NR; ++i) {roomBucket_.push_back(type);}
+  }
 }
 
+int getNrRoomTypeInMap(const RoomType type)
+{
+  auto isRoomType = [&](const Room * const room)
+  {
+    return room->type_ == type;
+  };
+
+  return count_if(begin(Map::roomList), end(Map::roomList), isRoomType);
+}
+
+} //namespace
+
+//------------------------------------------------------------------- ROOM FACTORY
+namespace RoomFactory
+{
+
+void initRoomBucket()
+{
+  TRACE_FUNC_BEGIN;
+
+  roomBucket_.clear();
+
+  //  const int NR_NON_PLAIN_STD_ALLOWED = Rnd::range(1, 4);
+
+  addToRoomBucket(RoomType::human,    Rnd::range(1, 3));
+  addToRoomBucket(RoomType::ritual,   1);
+  addToRoomBucket(RoomType::spider,   Rnd::range(1, 3));
+  addToRoomBucket(RoomType::crypt,    Rnd::range(1, 4));
+  addToRoomBucket(RoomType::monster,  Rnd::range(1, 2));
+  addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
+  addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
+//  addToRoomBucket(RoomType::cave,     Rnd::range(1, 3));
+
+  const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
+
+  TRACE << "Bucket size before plain rooms: " << roomBucket_.size() << endl;
+
+  addToRoomBucket(RoomType::plain, roomBucket_.size() * NR_PLAIN_ROOM_PER_THEMED);
+
+  TRACE << "Bucket size after plain rooms: " << roomBucket_.size() << endl;
+
+  std::random_shuffle(begin(roomBucket_), end(roomBucket_));
+
+  TRACE_FUNC_END;
+}
+
+Room* mk(const RoomType type, const Rect& r)
+{
+  switch(type)
+  {
+    case RoomType::cave:          return new CaveRoom(r);         break;
+    case RoomType::crypt:         return new CryptRoom(r);        break;
+    case RoomType::flooded:       return new FloodedRoom(r);      break;
+    case RoomType::human:         return new HumanRoom(r);        break;
+    case RoomType::monster:       return new MonsterRoom(r);      break;
+    case RoomType::muddy:         return new MuddyRoom(r);        break;
+    case RoomType::plain:         return new PlainRoom(r);        break;
+    case RoomType::ritual:        return new RitualRoom(r);       break;
+    case RoomType::spider:        return new SpiderRoom(r);       break;
+    case RoomType::END_OF_STD_ROOMS:
+    {
+      TRACE << "Illegal room type id: " << int (type) << endl;
+      assert(false);
+      return nullptr;
+    } break;
+    case RoomType::corrLink:      return new CorrLinkRoom(r);     break;
+    case RoomType::crumbleRoom:   return new CrumbleRoom(r);      break;
+    case RoomType::river:         return new RiverRoom(r);        break;
+  }
+  TRACE << "Unhandled room type id: " << int (type) << endl;
+  assert(false);
+  return nullptr;
+}
+
+Room* mkRandomAllowedStdRoom(const Rect& r)
+{
+  TRACE_FUNC_BEGIN;
+
+  auto roomBucketIt = begin(roomBucket_);
+
+  Room* room = nullptr;
+
+  while(true)
+  {
+    if(roomBucketIt == end(roomBucket_))
+    {
+      //No more rooms to pick from, generate a new room bucket
+      initRoomBucket();
+      roomBucketIt = begin(roomBucket_);
+    }
+    else
+    {
+      const RoomType    roomType  = *roomBucketIt;
+      room                        = mk(roomType, r);
+      StdRoom* const    stdRoom   = static_cast<StdRoom*>(room);
+
+      if(stdRoom->isAllowed())
+      {
+        roomBucket_.erase(roomBucketIt);
+
+        TRACE_FUNC_END << "Made room type: " << int (roomType) << endl;
+        break;
+      }
+      else //Room not allowed (e.g. wrong dimensions)
+      {
+        delete room;
+        ++roomBucketIt; //Try next room type in the bucket
+      }
+    }
+  }
+
+  TRACE_FUNC_END;
+  return room;
+}
+
+} //RoomFactory
+
+//------------------------------------------------------------------- ROOM
+void Room::mkDrk() const
+{
+  //Expand all cells belonging to the room one step
+  bool cellsInRoom[MAP_W][MAP_H];
+
+  for(int x = 0; x < MAP_W; ++x)
+  {
+    for(int y = 0; y < MAP_H; ++y)
+    {
+      cellsInRoom[x][y] = Map::roomMap[x][y] == this;
+    }
+  }
+
+  bool cellsToMkDrk[MAP_W][MAP_H];
+
+  const Rect areaLmt(r_.p0 - 1, r_.p1 + 1);
+
+  MapParse::expand(cellsInRoom, cellsToMkDrk, areaLmt);
+
+  //Mark the result as dark for all cells not belonging to another room
+  for(int x = areaLmt.p0.x; x <= areaLmt.p1.x; ++x)
+  {
+    for(int y = areaLmt.p0.y; y <= areaLmt.p1.y; ++y)
+    {
+      const Room* roomHere = Map::roomMap[x][y];
+      if(cellsToMkDrk[x][y] && (!roomHere || roomHere == this) )
+      {
+        Map::cells[x][y].isDark = true;
+      }
+    }
+  }
+
+  //Also make sub rooms dark
+  for(Room* const subRoom : subRooms_) {subRoom->mkDrk();}
+}
+
+//------------------------------------------------------------------- STANDARD ROOM
+void StdRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
+{
+  onPreConnect_(doorProposals);
+}
+
+void StdRoom::onPostConnect(bool doorProposals[MAP_W][MAP_H])
+{
+  placeAutoFeatures();
+
+  onPostConnect_(doorProposals);
+
+  //Make dark?
+  int pctChanceDark = getBasePctChanceDrk();
+  pctChanceDark += Map::dlvl - 10; //Increase with higher dungeon level
+  constrInRange(0, pctChanceDark, 100);
+  if(Rnd::percentile() < pctChanceDark) {mkDrk();}
+}
+
+size_t StdRoom::tryGetAutoFeaturePlacement(
+  const vector<Pos>& adjToWalls, const vector<Pos>& awayFromWalls,
+  const vector<const FeatureDataT*>& featureDataBucket, Pos& posRef) const
+{
+  TRACE_FUNC_BEGIN;
+
+  if(featureDataBucket.empty())
+  {
+    posRef = Pos(-1, -1);
+    return 0;
+  }
+
+  const bool IS_ADJ_TO_WALLS_AVAIL    = !adjToWalls.empty();
+  const bool IS_AWAY_FROM_WALLS_AVAIL = !awayFromWalls.empty();
+
+  if(!IS_ADJ_TO_WALLS_AVAIL && !IS_AWAY_FROM_WALLS_AVAIL)
+  {
+    TRACE_FUNC_END << "No eligible cells found" << endl;
+    posRef = Pos(-1, -1);
+    return 0;
+  }
+
+  //TODO Use bucket instead
+
+  const int NR_ATTEMPTS_TO_FIND_POS = 100;
+  for(int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; ++i)
+  {
+    const size_t      NR_DATA = featureDataBucket.size();
+    const size_t      ELEMENT = Rnd::range(0, NR_DATA - 1);
+    const auto* const data    = featureDataBucket[ELEMENT];
+
+    if(
+      IS_ADJ_TO_WALLS_AVAIL &&
+      data->themeSpawnRules.getPlacementRule() == PlacementRule::adjToWalls)
+    {
+      posRef = adjToWalls[Rnd::range(0, adjToWalls.size() - 1)];
+      TRACE_FUNC_END;
+      return ELEMENT;
+    }
+
+    if(
+      IS_AWAY_FROM_WALLS_AVAIL &&
+      data->themeSpawnRules.getPlacementRule() == PlacementRule::awayFromWalls)
+    {
+      posRef = awayFromWalls[Rnd::range(0, awayFromWalls.size() - 1)];
+      TRACE_FUNC_END;
+      return ELEMENT;
+    }
+
+    if(data->themeSpawnRules.getPlacementRule() == PlacementRule::either)
+    {
+      if(Rnd::coinToss())
+      {
+        if(IS_ADJ_TO_WALLS_AVAIL)
+        {
+          posRef = adjToWalls[Rnd::range(0, adjToWalls.size() - 1)];
+          TRACE_FUNC_END;
+          return ELEMENT;
+
+        }
+      }
+      else
+      {
+        if(IS_AWAY_FROM_WALLS_AVAIL)
+        {
+          posRef = awayFromWalls[Rnd::range(0, awayFromWalls.size() - 1)];
+          TRACE_FUNC_END;
+          return ELEMENT;
+        }
+      }
+    }
+  }
+  TRACE_FUNC_END;
+  return 0;
+}
+
+int StdRoom::placeAutoFeatures()
+{
+  TRACE_FUNC_BEGIN;
+  vector<const FeatureDataT*> featureBucket;
+
+  for(int i = 0; i < int (FeatureId::END); ++i)
+  {
+    const auto* const d = &FeatureData::getData((FeatureId)(i));
+    if(d->themeSpawnRules.isBelongingToRoomType(type_))
+    {
+      featureBucket.push_back(d);
+    }
+  }
+
+  vector<Pos> adjToWalls;
+  vector<Pos> awayFromWalls;
+  MapPatterns::setCellsInArea(r_, adjToWalls, awayFromWalls);
+
+  vector<int> spawnCount(featureBucket.size(), 0);
+
+  int nrFeaturesLeftToPlace = Rnd::range(getNrAutoFeaturesAllowed());
+  int nrFeaturesPlaced      = 0;
+
+  while(true)
+  {
+    if(nrFeaturesLeftToPlace == 0)
+    {
+      TRACE_FUNC_END << "Placed enough features" << endl;
+      return nrFeaturesPlaced;
+    }
+
+    Pos pos(-1, -1);
+
+    const size_t FEATURE_IDX =
+      tryGetAutoFeaturePlacement(adjToWalls, awayFromWalls, featureBucket, pos);
+
+    if(pos.x >= 0)
+    {
+      assert(FEATURE_IDX < featureBucket.size());
+
+      const FeatureDataT* d = featureBucket[FEATURE_IDX];
+
+      TRACE << "Placing feature" << endl;
+      Map::put(static_cast<Rigid*>(d->mkObj(pos)));
+      ++spawnCount[FEATURE_IDX];
+
+      nrFeaturesLeftToPlace--;
+      nrFeaturesPlaced++;
+
+      //Check if more of this feature can be spawned. If not, erase it.
+      if(spawnCount[FEATURE_IDX] >= d->themeSpawnRules.getMaxNrInRoom())
+      {
+        spawnCount   .erase(spawnCount   .begin() + FEATURE_IDX);
+        featureBucket.erase(featureBucket.begin() + FEATURE_IDX);
+
+        if(featureBucket.empty())
+        {
+          TRACE_FUNC_END << "No more features to place" << endl;
+          return nrFeaturesPlaced;
+        }
+      }
+
+      //Erase all adjacent positions
+      auto isAdj = [&](const Pos & p) {return Utils::isPosAdj(p, pos, true);};
+      adjToWalls   .erase(remove_if(begin(adjToWalls),    end(adjToWalls),    isAdj),
+                          end(adjToWalls));
+      awayFromWalls.erase(remove_if(begin(awayFromWalls), end(awayFromWalls), isAdj),
+                          end(awayFromWalls));
+    }
+    else //No good feature placement found
+    {
+      TRACE_FUNC_END << "No remaining positions to place feature" << endl;
+      return nrFeaturesPlaced;
+    }
+  }
+}
+
+//------------------------------------------------------------------- PLAIN ROOM
+Range PlainRoom::getNrAutoFeaturesAllowed() const
+{
+  return {0, Rnd::oneIn(7) ? 2 : 0};
+}
+
+int PlainRoom::getBasePctChanceDrk() const
+{
+  return 5;
+}
+
+void PlainRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+void PlainRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+
+}
+
+//------------------------------------------------------------------- HUMAN ROOM
+Range HumanRoom::getNrAutoFeaturesAllowed() const
+{
+  return {0, Rnd::oneIn(7) ? 2 : 0};
+}
+
+int HumanRoom::getBasePctChanceDrk() const
+{
+  return 10;
+}
+
+bool HumanRoom::isAllowed() const
+{
+  return r_.getMinDim() >= 4 && r_.getMaxDim() <= 8;
+}
+
+void HumanRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+void HumanRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+//------------------------------------------------------------------- RITUAL ROOM
+Range RitualRoom::getNrAutoFeaturesAllowed() const
+{
+  return {1, 5};
+}
+
+int RitualRoom::getBasePctChanceDrk() const
+{
+  return 15;
+}
+
+bool RitualRoom::isAllowed() const
+{
+  return r_.getMinDim() >= 4 && r_.getMaxDim() <= 8;
+}
+
+void RitualRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+void RitualRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+
+  Gods::setRandomGod();
+
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+
+  const int BLOODY_CHAMBER_PCT = 60;
+  if(Rnd::percentile() < BLOODY_CHAMBER_PCT)
+  {
+    Pos origin(-1, -1);
+    vector<Pos> originBucket;
+    for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+    {
+      for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+      {
+        if(Map::cells[x][y].rigid->getId() == FeatureId::altar)
+        {
+          origin = Pos(x, y);
+          y = 999;
+          x = 999;
+        }
+        else
+        {
+          if(!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
+        }
+      }
+    }
+    if(!originBucket.empty())
+    {
+      if(origin.x == -1)
+      {
+        const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
+        origin = originBucket[ELEMENT];
+      }
+      for(int dx = -1; dx <= 1; ++dx)
+      {
+        for(int dy = -1; dy <= 1; ++dy)
+        {
+          if((dx == 0 && dy == 0) || (Rnd::percentile() < BLOODY_CHAMBER_PCT / 2))
+          {
+            const Pos pos = origin + Pos(dx, dy);
+            if(!blocked[pos.x][pos.y])
+            {
+              Map::mkGore(pos);
+              Map::mkBlood(pos);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------- SPIDER ROOM
+Range SpiderRoom::getNrAutoFeaturesAllowed() const
+{
+  return {0, 3};
+}
+
+int SpiderRoom::getBasePctChanceDrk() const
+{
+  return 30;
+}
+
+bool SpiderRoom::isAllowed() const
+{
+  return r_.getMinDim() >= 3 && r_.getMaxDim() <= 8;
+}
+
+void SpiderRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+void SpiderRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+//------------------------------------------------------------------- CRYPT ROOM
+Range CryptRoom::getNrAutoFeaturesAllowed() const
+{
+  return {3, 6};
+}
+
+int CryptRoom::getBasePctChanceDrk() const
+{
+  return 60;
+}
+
+bool CryptRoom::isAllowed() const
+{
+  return r_.getMinDim() >= 3  && r_.getMaxDim() <= 12;
+}
+
+void CryptRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+void CryptRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+//------------------------------------------------------------------- MONSTER ROOM
+Range MonsterRoom::getNrAutoFeaturesAllowed() const
+{
+  return {0, 6};
+}
+
+int MonsterRoom::getBasePctChanceDrk() const
+{
+  return 75;
+}
+
+bool MonsterRoom::isAllowed() const
+{
+  return r_.getMinDim() >= 4 && r_.getMaxDim() <= 8;
+}
+
+void MonsterRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+void MonsterRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+
+  int       nrBloodPut  = 0;
+  const int NR_TRIES    = 1000; //TODO Hacky, needs improving
+
+  for(int i = 0; i < NR_TRIES; ++i)
+  {
+    for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+    {
+      for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+      {
+        if(!blocked[x][y] && Map::roomMap[x][y] == this && Rnd::fraction(2, 5))
+        {
+          Map::mkGore(Pos(x, y));
+          Map::mkBlood(Pos(x, y));
+          nrBloodPut++;
+        }
+      }
+    }
+    if(nrBloodPut > 0)
+    {
+      break;
+    }
+  }
+}
+
+//------------------------------------------------------------------- FLOODED ROOM
+Range FloodedRoom::getNrAutoFeaturesAllowed() const
+{
+  return {0, 0};
+}
+
+int FloodedRoom::getBasePctChanceDrk() const
+{
+  return 25;
+}
+
+bool FloodedRoom::isAllowed() const
+{
+  return true;
+}
+
+void FloodedRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+void FloodedRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+
+  for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+  {
+    for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+    {
+      if(!blocked[x][y] && Map::roomMap[x][y] == this)
+      {
+        LiquidShallow* const liquid = new LiquidShallow(Pos(x, y));
+        liquid->type_ = LiquidType::water;
+        Map::put(liquid);
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------- MUDDY ROOM
+Range MuddyRoom::getNrAutoFeaturesAllowed() const
+{
+  return {0, 0};
+}
+
+int MuddyRoom::getBasePctChanceDrk() const
+{
+  return 25;
+}
+
+bool MuddyRoom::isAllowed() const
+{
+  return true;
+}
+
+void MuddyRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+void MuddyRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+
+  for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+  {
+    for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+    {
+      if(!blocked[x][y] && Map::roomMap[x][y] == this)
+      {
+        LiquidShallow* const liquid = new LiquidShallow(Pos(x, y));
+        liquid->type_ = LiquidType::mud;
+        Map::put(liquid);
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------- CAVE ROOM
+Range CaveRoom::getNrAutoFeaturesAllowed() const
+{
+  return {0, 0};
+}
+
+int CaveRoom::getBasePctChanceDrk() const
+{
+  return 30;
+}
+
+bool CaveRoom::isAllowed() const
+{
+  return true;
+}
+
+void CaveRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+void CaveRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+}
+
+//------------------------------------------------------------------- RIVER ROOM
 void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
 {
   TRACE_FUNC_BEGIN;
@@ -44,7 +715,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
   {
     if(room != this)
     {
-      const Pos cPos(room->getCenterPos());
+      const Pos cPos(room->r_.getCenterPos());
       centers[cPos.x][cPos.y] = true;
     }
   }
@@ -72,7 +743,10 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
             break;
           }
         }
-        if(closestCenter0 != -1) {break;}
+        if(closestCenter0 != -1)
+        {
+          break;
+        }
       }
     };
 
@@ -132,7 +806,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
   MapParse::expand(blocked, blockedExpanded);
 
   int flood[MAP_W][MAP_H];
-  const Pos origin(getCenterPos());
+  const Pos origin(r_.getCenterPos());
   FloodFill::run(origin, blockedExpanded, flood, INT_MAX, Pos(-1, -1), true);
 
   for(int x = 0; x < MAP_W; ++x)
@@ -375,7 +1049,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
       doorProposals[roomCon1.x][roomCon1.y] = true;
       cBuilt.push_back(BRIDGE_C);
     }
-    if(int(cBuilt.size()) >= MAX_NR_BRIDGES)
+    if(int (cBuilt.size()) >= MAX_NR_BRIDGES)
     {
       TRACE << "Enough bridges built" << endl;
       break;
@@ -410,6 +1084,5 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
       }
     }
   }
-
   TRACE_FUNC_END;
 }

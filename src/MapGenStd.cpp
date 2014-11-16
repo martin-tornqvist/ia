@@ -21,6 +21,7 @@
 #include "PopulateMonsters.h"
 #include "PopulateTraps.h"
 #include "PopulateItems.h"
+#include "Gods.h"
 
 //-------------------------------------
 //Some options (comment out to disable)
@@ -33,7 +34,6 @@
 #define MK_CRUMBLE_ROOMS        1
 #define MK_SUB_ROOMS            1
 //#define FILL_DEAD_ENDS          1
-#define ROOM_THEMING            1
 #define DECORATE                1
 
 using namespace std;
@@ -44,7 +44,7 @@ namespace MapGen
 namespace
 {
 
-bool regionsToMkCave[3][3];
+//bool regionsToMkCave[3][3];
 
 //All cells marked as true in this array will be considered for door placement
 bool doorProposals[MAP_W][MAP_H];
@@ -65,7 +65,10 @@ bool isAllRoomsConnected()
         break;
       }
     }
-    if(isFound) {break;}
+    if(isFound)
+    {
+      break;
+    }
   }
 
   bool blocked[MAP_W][MAP_H];
@@ -79,42 +82,64 @@ bool isAllRoomsConnected()
     {
       if(Map::cells[x][y].rigid->getId() == FeatureId::floor)
       {
-        if(Pos(x, y) != c && floodFill[x][y] == 0) {return false;}
+        if(Pos(x, y) != c && floodFill[x][y] == 0)
+        {
+          return false;
+        }
       }
     }
   }
   return true;
 }
 
-Room* mkRoom(const Rect& roomRect)
+//Adds the room to the room list and the room map
+void registerRoom(Room& room)
 {
-  Room* const room = new Room(roomRect);
-
-  Map::roomList.push_back(room);
-
-  for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
+#ifndef NDEBUG
+  for(Room* const roomInList : Map::roomList)
   {
-    for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
+    assert(roomInList != &room); //Check that the room is not already added
+  }
+#endif // NDEBUG
+
+  Map::roomList.push_back(&room);
+
+  for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+  {
+    for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
     {
-      Map::put(new Floor(Pos(x, y)));
-      Map::roomMap[x][y] = room;
+      Map::roomMap[x][y] = &room;
     }
   }
-  return room;
+}
+
+void mkFloorInRoom(const Room& room)
+{
+  for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+  {
+    for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
+    {
+      Map::put(new Floor(Pos(x, y)));
+    }
+  }
 }
 
 void connectRooms()
 {
   TRACE_FUNC_BEGIN;
 
-  int nrTriesLeft = 2000;
+  int nrTriesLeft = 4000;
 
   while(true)
   {
-    //Note: Keep this counter at the top of the loop, since otherwise a
-    //"continue" statement could bypass it so we get stuck in the loop.
+    //Note: Keep this counter at the top of the loop, since otherwise a "continue"
+    //statement could bypass it so we get stuck in the loop.
     nrTriesLeft--;
-    if(nrTriesLeft <= 0) {MapGen::isMapValid = false; break;}
+    if(nrTriesLeft <= 0)
+    {
+      MapGen::isMapValid = false;
+      break;
+    }
 
 //    const size_t NR_CON_ALLOWED = 4;
 
@@ -130,7 +155,10 @@ void connectRooms()
 
     Room* room0 = getRndRoom();
 
-    if(room0->isSubRoom_ || !isStdRoom(*room0)) {continue;}
+    if(room0->isSubRoom_ || !isStdRoom(*room0))
+    {
+      continue;
+    }
 
 //    const auto NR_CON_ROOM0 = room0->roomsConTo_.size();
 //    if(NR_CON_ROOM0 >= NR_CON_ALLOWED) {
@@ -151,18 +179,15 @@ void connectRooms()
     const auto& consRoom0 = room0->roomsConTo_;
     if(find(consRoom0.begin(), consRoom0.end(), room1) != consRoom0.end())
     {
-      TRACE_VERBOSE << "Rooms are already connected, trying other combination"
-                    << endl;
+      TRACE_VERBOSE << "Rooms are already connected, trying other combination" << endl;
       continue;
     }
 
-    //Do not connect room 0 and 1 if another room lies anywhere in a rectangle
-    //defined by the center points of room 0 and 1 (only standard rooms and
-    //corridor junctions can block connections in this way - rivers, caves, etc
-    //are not considered)
+    //Do not connect room 0 and 1 if another room (except for sub rooms) lies anywhere
+    //in a rectangle defined by the two center points of those rooms.
     bool isOtherRoomInWay = false;
-    const Pos c0(room0->getCenterPos());
-    const Pos c1(room1->getCenterPos());
+    const Pos c0(room0->r_.getCenterPos());
+    const Pos c1(room1->r_.getCenterPos());
     const int X0 = min(c0.x, c1.x);
     const int Y0 = min(c0.y, c1.y);
     const int X1 = max(c0.x, c1.x);
@@ -172,29 +197,28 @@ void connectRooms()
       for(int x = X0; x <= X1; ++x)
       {
         const Room* const roomHere = Map::roomMap[x][y];
-        if(roomHere && roomHere != room0 && roomHere != room1)
+        if(roomHere && roomHere != room0 && roomHere != room1 && !roomHere->isSubRoom_)
         {
-//          const RoomType roomType = roomHere->type_;
-//          if(
-//            int(roomType) < int(RoomType::END_OF_STD_ROOMS) ||
-//            roomType == RoomType::corridorJunction) {
           isOtherRoomInWay = true;
-//            break;
-//          }
         }
       }
-      if(isOtherRoomInWay) {break;}
+      if(isOtherRoomInWay)
+      {
+        break;
+      }
     }
     if(isOtherRoomInWay)
     {
-      TRACE_VERBOSE << "Blocked by room between, trying other combination"
-                    << endl;
+      TRACE_VERBOSE << "Blocked by room between, trying other combination" << endl;
       continue;
     }
 
     MapGenUtils::mkPathFindCor(*room0, *room1, doorProposals);
 
-    if(isAllRoomsConnected() /*&& Rnd::fraction(2, 3)*/) {break;}
+    if(isAllRoomsConnected())
+    {
+      break;
+    }
   }
   TRACE_FUNC_END;
 }
@@ -248,15 +272,21 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
           assert(!Map::roomMap[x][y]);
         }
       }
-      Room* room = mkRoom(auxRect);
 
 #ifdef MK_CRUMBLE_ROOMS
-      if(Rnd::oneIn(5))
+      if(Rnd::oneIn(12))
       {
+        Room* const room = RoomFactory::mk(RoomType::crumbleRoom, auxRect);
+        registerRoom(*room);
         mkCrumbleRoom(auxRectWithBorder, doorP);
-        room->type_ = RoomType::crumbleRoom;
       }
+      else
 #endif // MK_CRUMBLE_ROOMS
+      {
+        Room* const room = RoomFactory::mkRandomAllowedStdRoom(auxRect);
+        registerRoom(*room);
+        mkFloorInRoom(*room);
+      }
       return true;
     }
   }
@@ -402,7 +432,11 @@ void mkMergedRegionsAndRooms(Region regions[3][3])
     auto rndPadding = []() {return Rnd::range(0, 4);};
     const Rect padding(rndPadding(), rndPadding(), rndPadding(), rndPadding());
 
-    reg1.mainRoom_ = mkRoom(Rect(reg1.r_.p0 + padding.p0, reg1.r_.p1 - padding.p1));
+    const Rect roomRect(reg1.r_.p0 + padding.p0, reg1.r_.p1 - padding.p1);
+    Room* const room  = RoomFactory::mkRandomAllowedStdRoom(roomRect);
+    reg1.mainRoom_    = room;
+    registerRoom(*room);
+    mkFloorInRoom(*room);
   }
   TRACE_FUNC_END;
 }
@@ -472,8 +506,8 @@ void reserveRiver(Region regions[3][3])
   Region*   riverRegion       = nullptr;
   const int RESERVED_PADDING  = 2;
 
-  auto initArea = [&](int& len0, int& len1, int& breadth0, int& breadth1,
-                      const Pos & reg0, const Pos & reg2)
+  auto initRoomRect = [&](int& len0, int& len1, int& breadth0, int& breadth1,
+                          const Pos & reg0, const Pos & reg2)
   {
     const Rect regionsTotRect(regions[reg0.x][reg0.y].r_.p0,
                               regions[reg2.x][reg2.y].r_.p1);
@@ -493,18 +527,20 @@ void reserveRiver(Region regions[3][3])
 
   if(dir == hor)
   {
-    initArea(roomRect.p0.x, roomRect.p1.x, roomRect.p0.y, roomRect.p1.y,
-             Pos(0, 1), Pos(2, 1));
+    initRoomRect(roomRect.p0.x, roomRect.p1.x, roomRect.p0.y, roomRect.p1.y,
+                 Pos(0, 1), Pos(2, 1));
   }
   else
   {
-    initArea(roomRect.p0.y, roomRect.p1.y, roomRect.p0.x, roomRect.p1.x,
-             Pos(1, 0), Pos(1, 2));
+    initRoomRect(roomRect.p0.y, roomRect.p1.y, roomRect.p0.x, roomRect.p1.x,
+                 Pos(1, 0), Pos(1, 2));
   }
 
-  RiverRoom* riverRoom    = new RiverRoom(roomRect, dir);
-  riverRegion->mainRoom_  = riverRoom;
-  riverRegion->isFree_    = false;
+  Room* const       room      = RoomFactory::mk(RoomType::river, roomRect);
+  RiverRoom* const  riverRoom = static_cast<RiverRoom*>(room);
+  riverRoom->dir_             = dir;
+  riverRegion->mainRoom_      = room;
+  riverRegion->isFree_        = false;
 
   if(dir == hor)
   {
@@ -515,7 +551,7 @@ void reserveRiver(Region regions[3][3])
     regions[1][1] = regions[1][2] = *riverRegion;
   }
 
-  Map::roomList.push_back(riverRoom);
+  Map::roomList.push_back(room);
 
   auto mk = [&](const int X0, const int X1, const int Y0, const int Y1)
   {
@@ -528,7 +564,7 @@ void reserveRiver(Region regions[3][3])
       {
         //Just put floor for now, water will be placed later
         Map::put(new Floor(Pos(x, y)));
-        Map::roomMap[x][y] = riverRoom;
+        Map::roomMap[x][y] = room;
       }
     }
   };
@@ -545,139 +581,139 @@ void reserveRiver(Region regions[3][3])
   TRACE_FUNC_END;
 }
 
-void mkCaves(Region regions[3][3])
-{
-  TRACE_FUNC_BEGIN;
-  for(int regY = 0; regY <= 2; regY++)
-  {
-    for(int regX = 0; regX <= 2; regX++)
-    {
+//void mkCaves(Region regions[3][3])
+//{
+//  TRACE_FUNC_BEGIN;
+//  for(int regY = 0; regY <= 2; regY++)
+//  {
+//    for(int regX = 0; regX <= 2; regX++)
+//    {
+//
+//      if(regionsToMkCave[regX][regY])
+//      {
+//
+//        Region& region = regions[regX][regY];
+//
+//        //This region no longer has a room, delete it from list
+//        Map::deleteAndRemoveRoomFromList(region.mainRoom_);
+//        region.mainRoom_ = nullptr;
+//
+//        bool blocked[MAP_W][MAP_H];
+//
+//        for(int x = 0; x < MAP_W; ++x)
+//        {
+//          for(int y = 0; y < MAP_H; ++y)
+//          {
+//
+//            blocked[x][y] = false;
+//
+//            if(x == 0 || y == 0 || x == MAP_W - 1 || y == MAP_H - 1)
+//            {
+//              blocked[x][y] = true;
+//            }
+//            else
+//            {
+//              for(int dx = -1; dx <= 1; ++dx)
+//              {
+//                for(int dy = -1; dy <= 1; ++dy)
+//                {
+//                  const auto featureId =
+//                    Map::cells[x + dx][y + dy].rigid->getId();
+//                  if(
+//                    featureId == FeatureId::floor &&
+//                    !Utils::isPosInside(Pos(x + dx, y + dy), region.r_))
+//                  {
+//                    blocked[x][y] = true;
+//                  }
+//                }
+//              }
+//            }
+//          }
+//        }
+//
+//        const Pos origin(region.r_.p0 + Pos(1, 1));
+//        int floodFillResult[MAP_W][MAP_H];
+//
+//        const int FLOOD_FILL_TRAVEL_LIMIT = 20;
+//
+//        FloodFill::run(origin, blocked, floodFillResult,
+//                       FLOOD_FILL_TRAVEL_LIMIT, Pos(-1, -1), true);
+//
+//        for(int y = 1; y < MAP_H - 1; ++y)
+//        {
+//          for(int x = 1; x < MAP_W - 1; ++x)
+//          {
+//            const Pos p(x, y);
+//            if(p == origin || floodFillResult[x][y] > 0)
+//            {
+//
+//              Floor* const floor  = new Floor(p);
+//              floor->type_        = FloorType::cave;
+//              Map::put(floor);
+//
+//              for(int dx = -1; dx <= 1; ++dx)
+//              {
+//                for(int dy = -1; dy <= 1; ++dy)
+//                {
+//                  const Pos adjP(p + Pos(dx, dy));
+//                  Cell& adjCell = Map::cells[adjP.x][adjP.y];
+//                  if(adjCell.rigid->getId() == FeatureId::wall)
+//                  {
+//                    Wall* const wall  = new Wall(adjP);
+//                    wall->type_       = WallType::cave;
+//                    wall->setRandomIsMossGrown();
+//                    Map::put(wall);
+//                  }
+//                }
+//              }
+//            }
+//          }
+//        }
+//
+//        if(Rnd::oneIn(4))
+//        {
+//          Utils::resetArray(blocked, false);
+//
+//          for(int y = 1; y < MAP_H - 1; ++y)
+//          {
+//            for(int x = 1; x < MAP_W - 1; ++x)
+//            {
+//              for(int dx = -1; dx <= 1; ++dx)
+//              {
+//                for(int dy = -1; dy <= 1; ++dy)
+//                {
+//                  Cell& adjCell = Map::cells[x + dx][y + dy];
+//                  if(adjCell.rigid->getId() == FeatureId::wall)
+//                  {
+//                    blocked[x][y] = blocked[x + dx][y + dy] = true;
+//                  }
+//                }
+//              }
+//            }
+//          }
+//
+//          FloodFill::run(origin, blocked, floodFillResult,
+//                         FLOOD_FILL_TRAVEL_LIMIT / 2, Pos(-1, -1), true);
+//
+//          for(int y = 1; y < MAP_H - 1; ++y)
+//          {
+//            for(int x = 1; x < MAP_W - 1; ++x)
+//            {
+//              const Pos p(x, y);
+//              if(!blocked[x][y] && (p == origin || floodFillResult[x][y] > 0))
+//              {
+//                Map::put(new Chasm(p));
+//              }
+//            }
+//          }
+//        }
+//      }
+//    }
+//  }
+//  TRACE_FUNC_END;
+//}
 
-      if(regionsToMkCave[regX][regY])
-      {
-
-        Region& region = regions[regX][regY];
-
-        //This region no longer has a room, delete it from list
-        Map::deleteAndRemoveRoomFromList(region.mainRoom_);
-        region.mainRoom_ = nullptr;
-
-        bool blocked[MAP_W][MAP_H];
-
-        for(int x = 0; x < MAP_W; ++x)
-        {
-          for(int y = 0; y < MAP_H; ++y)
-          {
-
-            blocked[x][y] = false;
-
-            if(x == 0 || y == 0 || x == MAP_W - 1 || y == MAP_H - 1)
-            {
-              blocked[x][y] = true;
-            }
-            else
-            {
-              for(int dx = -1; dx <= 1; ++dx)
-              {
-                for(int dy = -1; dy <= 1; ++dy)
-                {
-                  const auto featureId =
-                    Map::cells[x + dx][y + dy].rigid->getId();
-                  if(
-                    featureId == FeatureId::floor &&
-                    !Utils::isPosInside(Pos(x + dx, y + dy), region.r_))
-                  {
-                    blocked[x][y] = true;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        const Pos origin(region.r_.p0 + Pos(1, 1));
-        int floodFillResult[MAP_W][MAP_H];
-
-        const int FLOOD_FILL_TRAVEL_LIMIT = 20;
-
-        FloodFill::run(origin, blocked, floodFillResult,
-                       FLOOD_FILL_TRAVEL_LIMIT, Pos(-1, -1), true);
-
-        for(int y = 1; y < MAP_H - 1; ++y)
-        {
-          for(int x = 1; x < MAP_W - 1; ++x)
-          {
-            const Pos p(x, y);
-            if(p == origin || floodFillResult[x][y] > 0)
-            {
-
-              Floor* const floor  = new Floor(p);
-              floor->type_        = FloorType::cave;
-              Map::put(floor);
-
-              for(int dx = -1; dx <= 1; ++dx)
-              {
-                for(int dy = -1; dy <= 1; ++dy)
-                {
-                  const Pos adjP(p + Pos(dx, dy));
-                  Cell& adjCell = Map::cells[adjP.x][adjP.y];
-                  if(adjCell.rigid->getId() == FeatureId::wall)
-                  {
-                    Wall* const wall  = new Wall(adjP);
-                    wall->type_       = WallType::cave;
-                    wall->setRandomIsMossGrown();
-                    Map::put(wall);
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        if(Rnd::oneIn(4))
-        {
-          Utils::resetArray(blocked, false);
-
-          for(int y = 1; y < MAP_H - 1; ++y)
-          {
-            for(int x = 1; x < MAP_W - 1; ++x)
-            {
-              for(int dx = -1; dx <= 1; ++dx)
-              {
-                for(int dy = -1; dy <= 1; ++dy)
-                {
-                  Cell& adjCell = Map::cells[x + dx][y + dy];
-                  if(adjCell.rigid->getId() == FeatureId::wall)
-                  {
-                    blocked[x][y] = blocked[x + dx][y + dy] = true;
-                  }
-                }
-              }
-            }
-          }
-
-          FloodFill::run(origin, blocked, floodFillResult,
-                         FLOOD_FILL_TRAVEL_LIMIT / 2, Pos(-1, -1), true);
-
-          for(int y = 1; y < MAP_H - 1; ++y)
-          {
-            for(int x = 1; x < MAP_W - 1; ++x)
-            {
-              const Pos p(x, y);
-              if(!blocked[x][y] && (p == origin || floodFillResult[x][y] > 0))
-              {
-                Map::put(new Chasm(p));
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  TRACE_FUNC_END;
-}
-
-void placeDoorAtPosIfSuitable(const Pos& p)
+void placeDoorAtPosIfAllowed(const Pos& p)
 {
   //Check that no other doors are within a certain distance
   const int R = 2;
@@ -731,7 +767,7 @@ void placeDoorAtPosIfSuitable(const Pos& p)
   }
 }
 
-//Assumption(s): All rooms are rectangular
+//Assumes that all rooms are rectangular
 void mkSubRooms()
 {
   TRACE_FUNC_BEGIN;
@@ -754,18 +790,14 @@ void mkSubRooms()
 
     if(IS_STD_ROOM && (IS_ROOM_BIG || Rnd::oneIn(4)))
     {
-
       const Pos maxD(min(16, outerRoomD.x),  min(16, outerRoomD.y));
 
       if(maxD >= minD)
       {
-
         for(int nrRooms = 0; nrRooms < MAX_NR_INNER_ROOMS; nrRooms++)
         {
-
           for(int tryCount = 0; tryCount < NR_TRIES_TO_MK_ROOM; tryCount++)
           {
-
             const Pos d(Rnd::range(minD.x, maxD.x),
                         Rnd::range(minD.y, maxD.y));
 
@@ -776,7 +808,10 @@ void mkSubRooms()
 
             const Rect r(p0, p1);
 
-            if(r.p0 == outerRoomRect.p0 && r.p1 == outerRoomRect.p1) {continue;}
+            if(r.p0 == outerRoomRect.p0 && r.p1 == outerRoomRect.p1)
+            {
+              continue;
+            }
 
             bool isAreaFree = true;
 
@@ -784,7 +819,6 @@ void mkSubRooms()
             {
               for(int x = p0.x - 1; x <= p1.x + 1; ++x)
               {
-
                 const Pos pCheck(x, y);
 
                 const auto& fId = Map::cells[x][y].rigid->getId();
@@ -805,10 +839,11 @@ void mkSubRooms()
 
             if(!isAreaFree) {continue;}
 
-            auto* room = new Room(r);
+            Room* const room = RoomFactory::mkRandomAllowedStdRoom(r);
+            registerRoom(*room);
             room->isSubRoom_ = true;
 
-            Map::roomList.push_back(room);
+            outerRoom->subRooms_.push_back(room);
 
             vector<Pos> doorBucket;
             for(int y = p0.y; y <= p1.y; ++y)
@@ -1189,21 +1224,16 @@ bool mkStdLvl()
     }
   }
 
-  for(int y = 0; y < 3; ++y)
-  {
-    for(int x = 0; x < 3; ++x)
-    {
-      regionsToMkCave[x][y] = false;
-    }
-  }
+  //Note: This must be called before any rooms are created
+  RoomFactory::initRoomBucket();
 
   TRACE << "Init regions" << endl;
   const int MAP_W_THIRD = MAP_W / 3;
   const int MAP_H_THIRD = MAP_H / 3;
-  const int SPL_X0 = MAP_W_THIRD;
-  const int SPL_X1 = (MAP_W_THIRD * 2) + 1;
-  const int SPL_Y0 = MAP_H_THIRD;
-  const int SPL_Y1 = MAP_H_THIRD * 2;
+  const int SPL_X0      = MAP_W_THIRD;
+  const int SPL_X1      = (MAP_W_THIRD * 2) + 1;
+  const int SPL_Y0      = MAP_H_THIRD;
+  const int SPL_Y1      = MAP_H_THIRD * 2;
 
   Region regions[3][3];
 
@@ -1211,18 +1241,12 @@ bool mkStdLvl()
   {
     for(int x = 0; x < 3; ++x)
     {
-      const Rect r(
-        x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
-        y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
-        x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : MAP_W - 2,
-        y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : MAP_H - 2);
+      const Rect r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
+                   y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
+                   x == 0 ? SPL_X0 - 1 : x == 1 ? SPL_X1 - 1 : MAP_W - 2,
+                   y == 0 ? SPL_Y0 - 1 : y == 1 ? SPL_Y1 - 1 : MAP_H - 2);
 
       regions[x][y] = Region(r);
-//      TRACE << "Region(" << x << "," << y << "): "
-//            << "W: " << r.p1.x - r.p0.x + 1 << " "
-//            << "H: " << r.p1.y - r.p0.y + 1 << " "
-//            << r.p0.x << "," << r.p0.y << "," << r.p1.x << "," << r.p1.y
-//            << endl;
     }
   }
 
@@ -1233,25 +1257,6 @@ bool mkStdLvl()
 #ifdef MK_MERGED_REGIONS
   if(isMapValid) {mkMergedRegionsAndRooms(regions);}
 #endif // MK_MERGED_REGIONS
-
-//  TRACE << "Marking regions to build caves" << endl;
-//  const int FIRST_DUNGEON_LVL_CAVES_ALLOWED = 10;
-//  const int CHANCE_CAVE_AREA =
-//    (Map::dlvl - FIRST_DUNGEON_LVL_CAVES_ALLOWED + 1) * 20;
-//  if(Rnd::percentile() < CHANCE_CAVE_AREA) {
-//    const bool IS_TWO_CAVES = Rnd::percentile() < (CHANCE_CAVE_AREA / 3);
-//    for(int nrCaves = IS_TWO_CAVES ? 2 : 1; nrCaves > 0; nrCaves--) {
-//      int nrTriesToMark = 1000;
-//      while(nrTriesToMark > 0) {
-//        Pos c(Rnd::range(0, 2), Rnd::range(0, 2));
-//        if(!regions[c.x][c.y] && !regionsToMkCave[c.x][c.y]) {
-//          regionsToMkCave[c.x][c.y] = true;
-//          nrTriesToMark = 0;
-//        }
-//        nrTriesToMark--;
-//      }
-//    }
-//  }
 
 #ifdef RANDOMLY_BLOCK_REGIONS
   if(isMapValid) {randomlyBlockRegions(regions);}
@@ -1268,7 +1273,9 @@ bool mkStdLvl()
         if(!region.mainRoom_ && region.isFree_)
         {
           const Rect roomRect = region.getRndRoomRect();
-          auto* room          = mkRoom(roomRect);
+          auto* room          = RoomFactory::mkRandomAllowedStdRoom(roomRect);
+          registerRoom(*room);
+          mkFloorInRoom(*room);
           region.mainRoom_    = room;
           region.isFree_      = false;
         }
@@ -1284,9 +1291,9 @@ bool mkStdLvl()
   if(isMapValid) {mkSubRooms();}
 #endif // MK_SUB_ROOMS
 
-#ifdef MK_CAVES
-  if(isMapValid) {mkCaves(regions);}
-#endif // MK_CAVES
+//#ifdef MK_CAVES
+//  if(isMapValid) {mkCaves(regions);}
+//#endif // MK_CAVES
 
   if(isMapValid)
   {
@@ -1300,22 +1307,21 @@ bool mkStdLvl()
     sort(Map::roomList.begin(), Map::roomList.end(), cmp);
   }
 
+  TRACE << "Running pre-connect functions for all rooms" << endl;
   if(isMapValid)
   {
-    for(Room* room : Map::roomList)
-    {
-      room->onPreConnect(doorProposals);
-    }
+    Gods::setNoGod();
+
+    for(Room* room : Map::roomList) {room->onPreConnect(doorProposals);}
   }
 
+  //Connect
   if(isMapValid) {connectRooms();}
 
+  TRACE << "Running post-connect functions for all rooms" << endl;
   if(isMapValid)
   {
-    for(Room* room : Map::roomList)
-    {
-      room->onPostConnect(doorProposals);
-    }
+    for(Room* room : Map::roomList) {room->onPostConnect(doorProposals);}
   }
 
 #ifdef FILL_DEAD_ENDS
@@ -1331,15 +1337,11 @@ bool mkStdLvl()
       {
         if(doorProposals[x][y] && Rnd::fraction(7, 10))
         {
-          placeDoorAtPosIfSuitable(Pos(x, y));
+          placeDoorAtPosIfAllowed(Pos(x, y));
         }
       }
     }
   }
-
-#ifdef ROOM_THEMING
-  if(isMapValid) {RoomThemeMaking::run();}
-#endif // ROOM_THEMING
 
   if(isMapValid) {movePlayerToNearestAllowedPos();}
 

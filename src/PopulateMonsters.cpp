@@ -98,7 +98,7 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
 
   if(idBucket.empty())
   {
-    TRACE << "Found no valid monsters to spawn at room theme ("
+    TRACE << "Found no valid monsters to spawn at room type ("
           << toStr(int(roomType)) + ")" << endl;
     TRACE_FUNC_END;
     return false;
@@ -258,6 +258,8 @@ void populateIntroLvl()
 
 void populateStdLvl()
 {
+  TRACE_FUNC_BEGIN;
+
   const int NR_GROUPS_ALLOWED_ON_MAP = Rnd::range(5, 9);
   int nrGroupsSpawned = 0;
 
@@ -281,14 +283,15 @@ void populateStdLvl()
     }
   }
 
-  //First, attempt to populate all non-plain themed rooms
+  //First, attempt to populate all non-plain standard rooms
   for(Room* const room : Map::roomList)
   {
-    if(room->type_ != RoomType::plain)
+    if(
+      room->type_ != RoomType::plain &&
+      int(room->type_) < int(RoomType::END_OF_STD_ROOMS))
     {
-
       //TODO This is not a good method to calculate the number of room cells
-      //(the room may be irregularly shaped)
+      //(the room may be irregularly shaped), parse the room map instead
       const int ROOM_W = room->r_.p1.x - room->r_.p0.x + 1;
       const int ROOM_H = room->r_.p1.y - room->r_.p0.y + 1;
       const int NR_CELLS_IN_ROOM = ROOM_W * ROOM_H;
@@ -326,7 +329,11 @@ void populateStdLvl()
                 room->type_, sortedFreeCellsVector, blocked, false))
           {
             nrGroupsSpawned++;
-            if(nrGroupsSpawned >= NR_GROUPS_ALLOWED_ON_MAP) {return;}
+            if(nrGroupsSpawned >= NR_GROUPS_ALLOWED_ON_MAP)
+            {
+              TRACE_FUNC_END;
+              return;
+            }
           }
         }
       }
@@ -343,36 +350,39 @@ void populateStdLvl()
     }
   }
 
-  //Second, place groups randomly in plain-themed areas until
-  //no more groups to place
-  while(nrGroupsSpawned < NR_GROUPS_ALLOWED_ON_MAP)
+  //Second, place groups randomly in plain-themed areas until <no more groups to place
+  vector<Pos> originBucket;
+  for(int y = 1; y < MAP_H - 1; ++y)
   {
-    vector<Pos> originBucket;
-    for(int y = 1; y < MAP_H - 1; ++y)
+    for(int x = 1; x < MAP_W - 1; ++x)
     {
-      for(int x = 1; x < MAP_W - 1; ++x)
+      if(Map::roomMap[x][y])
       {
-        if(Map::roomMap[x][y])
+        if(!blocked[x][y] && Map::roomMap[x][y]->type_ == RoomType::plain)
         {
-          if(
-            !blocked[x][y] &&
-            Map::roomMap[x][y]->type_ == RoomType::plain)
-          {
-            originBucket.push_back(Pos(x, y));
-          }
+          originBucket.push_back(Pos(x, y));
         }
       }
     }
-    const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
-    const Pos origin  = originBucket[ELEMENT];
-    vector<Pos> sortedFreeCellsVector;
-    mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
-    if(mkGroupOfRandomNativeToRoomTypeAt(
-          RoomType::plain, sortedFreeCellsVector, blocked, true))
+  }
+
+  if(!originBucket.empty())
+  {
+    while(nrGroupsSpawned < NR_GROUPS_ALLOWED_ON_MAP)
     {
-      nrGroupsSpawned++;
+      const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
+      const Pos origin  = originBucket[ELEMENT];
+      vector<Pos> sortedFreeCellsVector;
+      mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
+      if(mkGroupOfRandomNativeToRoomTypeAt(
+            RoomType::plain, sortedFreeCellsVector, blocked, true))
+      {
+        nrGroupsSpawned++;
+      }
     }
   }
+
+  TRACE_FUNC_END;
 }
 
 void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,

@@ -325,7 +325,7 @@ void initDataList()
   d.canHaveCorpse = false;
   d.canHaveRigid = false;
   d.canHaveItem = false;
-  d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomType::human});
+  d.themeSpawnRules.set(1, PlacementRule::adjToWalls, {RoomType::human});
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::cabinet;
@@ -340,7 +340,7 @@ void initDataList()
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::wood;
-  d.themeSpawnRules.set(1, PlacementRule::nextToWalls, {RoomType::human});
+  d.themeSpawnRules.set(1, PlacementRule::adjToWalls, {RoomType::human});
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::fountain;

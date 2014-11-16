@@ -335,7 +335,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
       }
     }
 
-    vector<Room*> prevJunctions;
+    vector<Room*> prevLinks;
 
     for(size_t i = 0; i < path.size(); ++i)
     {
@@ -345,20 +345,19 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
 
       if(i > 1 && int(i) < int(path.size() - 3) && i % 6 == 0)
       {
-        Room* junction  = new Room(Rect(p, p));
-        junction->type_ = RoomType::corridorJunction;
-        Map::roomList.push_back(junction);
-        Map::roomMap[p.x][p.y] = junction;
-        junction->roomsConTo_.push_back(&r0);
-        junction->roomsConTo_.push_back(&r1);
-        r0.roomsConTo_.push_back(junction);
-        r1.roomsConTo_.push_back(junction);
-        for(Room* prevJunction : prevJunctions)
+        Room* link = RoomFactory::mk(RoomType::corrLink, Rect(p, p));
+        Map::roomList.push_back(link);
+        Map::roomMap[p.x][p.y] = link;
+        link->roomsConTo_.push_back(&r0);
+        link->roomsConTo_.push_back(&r1);
+        r0.roomsConTo_.push_back(link);
+        r1.roomsConTo_.push_back(link);
+        for(Room* prevLink : prevLinks)
         {
-          junction->roomsConTo_.push_back(prevJunction);
-          prevJunction->roomsConTo_.push_back(junction);
+          link->roomsConTo_.push_back(prevLink);
+          prevLink->roomsConTo_.push_back(link);
         }
-        prevJunctions.push_back(junction);
+        prevLinks.push_back(link);
       }
     }
 

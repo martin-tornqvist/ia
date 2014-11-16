@@ -292,7 +292,7 @@ ConsumeItem DeviceSentryDrone::triggerEffect()
 //---------------------------------------------------- ELECTRIC LANTERN
 DeviceLantern::DeviceLantern(ItemDataT* const itemData) :
   Device(itemData),
-  nrTurnsLeft_(Rnd::range(150, 175)),
+  nrTurnsLeft_(500),
   nrMalfunctTurnsLeft_(-1),
   malfState_(LanternMalfState::working),
   isActivated_(false) {}

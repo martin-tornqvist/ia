@@ -201,7 +201,6 @@
 		<Unit filename="../include/Render.h" />
 		<Unit filename="../include/RenderInventory.h" />
 		<Unit filename="../include/Room.h" />
-		<Unit filename="../include/RoomTheme.h" />
 		<Unit filename="../include/SaveHandling.h" />
 		<Unit filename="../include/SdlWrapper.h" />
 		<Unit filename="../include/Sound.h" />
@@ -287,7 +286,6 @@
 		<Unit filename="../src/Render.cpp" />
 		<Unit filename="../src/RenderInventory.cpp" />
 		<Unit filename="../src/Room.cpp" />
-		<Unit filename="../src/RoomTheme.cpp" />
 		<Unit filename="../src/SaveHandling.cpp" />
 		<Unit filename="../src/SdlWrapper.cpp" />
 		<Unit filename="../src/Sound.cpp" />

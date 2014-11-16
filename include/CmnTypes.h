@@ -1,18 +1,19 @@
 #ifndef CMN_TYPES_H
 #define CMN_TYPES_H
 
+#include <algorithm>
 #include <string>
 
 #include "Colors.h"
 #include "Art.h"
 
-enum class InvList {slots, general};
+enum class InvList        {slots, general};
 
 enum class ItemRefType    {plain, a, plural, END};
 enum class ItemRefInf     {none, yes};
 enum class ItemRefAttInf  {none, wpnContext, melee, ranged, thrown};
 
-enum class Article {a, the};
+enum class Article        {a, the};
 
 enum class Matl
 {
@@ -160,6 +161,12 @@ struct Rect
     p0(Pos(X0, Y0)), p1(Pos(X1, Y1)) {}
 
   Rect(const Rect& r) : p0(r.p0), p1(r.p1) {}
+
+  int getW()          const {return p1.x - p0.x + 1;}
+  int getH()          const {return p1.y - p0.y + 1;}
+  int getMinDim()     const {return std::min(getW(), getH());}
+  int getMaxDim()     const {return std::max(getW(), getH());}
+  Pos getCenterPos()  const {return ((p1 + p0) / 2);}
 
   Pos p0;
   Pos p1;

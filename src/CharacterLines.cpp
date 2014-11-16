@@ -28,19 +28,6 @@ void drawLocationInfo()
   {
     const Pos& p = Map::player->pos;
 
-//    if(Map::dlvl > 0 && Map::dlvl < FIRST_CAVERN_LVL) {
-//      const vector<Room*>& rooms = Map::roomList;
-//      for(size_t i = 0; i < rooms.size(); ++i) {
-//        const Room* const room = rooms[i];
-//        const Pos& p0 = room->r_.p0;
-//        const Pos& p1 = room->r_.p1;
-//        if(Utils::isPosInside(p, Rect(p0, p1))) {
-//          const string& roomDescr = room->descr_;
-//          if(!roomDescr.empty()) {str += roomDescr + " ";}
-//        }
-//      }
-//    }
-
     string featureName = "";
 
     //Describe mob
