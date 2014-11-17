@@ -467,6 +467,7 @@ void initDataList()
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::ritual);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -610,6 +611,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::human);
   d.nativeRooms.push_back(RoomType::ritual);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -644,6 +646,7 @@ void initDataList()
   d.isSpider = true;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::spider);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -678,6 +681,7 @@ void initDataList()
   d.isSpider = true;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::spider);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -712,6 +716,7 @@ void initDataList()
   d.isSpider = true;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::spider);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -748,6 +753,7 @@ void initDataList()
   d.erraticMovePct = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::spider);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -786,6 +792,7 @@ void initDataList()
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::spider);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1177,6 +1184,7 @@ void initDataList()
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1217,6 +1225,7 @@ void initDataList()
   d.monShockLvl = MonShockLvl::unsettling;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::forest);
 //  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
@@ -1303,6 +1312,7 @@ void initDataList()
   d.monShockLvl = MonShockLvl::unsettling;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1578,6 +1588,7 @@ void initDataList()
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::cave);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1666,6 +1677,7 @@ void initDataList()
   d.isUndead = true;
   d.isHumanoid = true;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::cave);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1747,6 +1759,8 @@ void initDataList()
   d.canLeaveCorpse = false;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::cave);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1789,6 +1803,7 @@ void initDataList()
   d.erraticMovePct = actorErratic_very;
   d.monShockLvl = MonShockLvl::unsettling;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::cave);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1831,6 +1846,7 @@ void initDataList()
   d.erraticMovePct = actorErratic_very;
   d.monShockLvl = MonShockLvl::unsettling;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::cave);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1873,6 +1889,7 @@ void initDataList()
   d.erraticMovePct = actorErratic_very;
   d.monShockLvl = MonShockLvl::unsettling;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::cave);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2165,6 +2182,7 @@ void initDataList()
   d.monShockLvl = MonShockLvl::mindShattering;
   d.erraticMovePct = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::cave);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2210,6 +2228,9 @@ void initDataList()
   d.canBleed = true;
   d.canBeSummoned = false;
   d.monShockLvl = MonShockLvl::mindShattering;
+  d.nativeRooms.push_back(RoomType::forest);
+  d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::cave);
   d.erraticMovePct = actorErratic_somewhat;
   data[int(d.id)] = d;
   d.reset();

@@ -38,7 +38,7 @@
 #define MK_AUX_ROOMS            1
 #define MK_CRUMBLE_ROOMS        1
 #define MK_SUB_ROOMS            1
-#define FILL_DEAD_ENDS          1
+//#define FILL_DEAD_ENDS          1
 #define DECORATE                1
 
 using namespace std;
@@ -54,44 +54,10 @@ bool doorProposals[MAP_W][MAP_H];
 
 bool isAllRoomsConnected()
 {
-  Pos origin(-1, -1);
-  for(int x = 1; x < MAP_W - 1; ++x)
-  {
-    for(int y = 1; y < MAP_H - 1; ++y)
-    {
-      const auto* const f = Map::cells[x][y].rigid;
-      if(f->getId() == FeatureId::floor)
-      {
-        origin.set(x, y);
-        break;
-      }
-    }
-    if(origin.x != -1)
-    {
-      break;
-    }
-  }
-
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
-  int floodFill[MAP_W][MAP_H];
-  FloodFill::run(origin, blocked, floodFill, INT_MAX, Pos(-1, -1), true);
-
-  for(int x = 1; x < MAP_W - 1; ++x)
-  {
-    for(int y = 1; y < MAP_H - 1; ++y)
-    {
-      if(Map::cells[x][y].rigid->getId() == FeatureId::floor)
-      {
-        if(Pos(x, y) != origin && floodFill[x][y] == 0)
-        {
-          return false;
-        }
-      }
-    }
-  }
-  return true;
+  return MapParse::isMapConnected(blocked);
 }
 
 //Adds the room to the room list and the room map

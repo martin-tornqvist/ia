@@ -84,7 +84,7 @@ bool Actor::isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H
 
     //Monster allied to player looking at other monster?
     if(
-      isActorMyLeader(Map::player) &&
+      isActorMyLeader(Map::player)  &&
       !other.isPlayer()             &&
       static_cast<const Mon*>(&other)->isStealth_)
     {

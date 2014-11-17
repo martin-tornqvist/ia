@@ -112,9 +112,7 @@ void mkForestTreePatch()
 
   while(nrTreesCreated < NR_TREES_TO_PUT)
   {
-    if(
-      !Utils::isPosInsideMap(curPos) ||
-      Utils::kingDist(curPos, Map::player->pos) <= 1)
+    if(!Utils::isPosInsideMap(curPos) || Utils::kingDist(curPos, Map::player->pos) <= 1)
     {
       return;
     }
@@ -174,6 +172,7 @@ void mkForestTrees()
             Map::put(static_cast<Rigid*>(FeatureData::getData(fId).mkObj(p)));
           if(fId == FeatureId::grass)
           {
+            //All grass around the church is withered
             static_cast<Grass*>(f)->type_ = GrassType::withered;
           }
         }
@@ -230,9 +229,7 @@ void mkForestTrees()
       for(int dy = -1; dy < 1; ++dy)
       {
         const Pos p(pathPos + Pos(dx, dy));
-        if(
-          Map::cells[p.x][p.y].rigid->canHaveRigid() &&
-          Utils::isPosInsideMap(p))
+        if(Map::cells[p.x][p.y].rigid->canHaveRigid() && Utils::isPosInsideMap(p))
         {
           Floor* const floor = new Floor(p);
           floor->type_ = FloorType::stonePath;
@@ -245,8 +242,7 @@ void mkForestTrees()
   //Place graves
   vector<HighScoreEntry> highscoreEntries = HighScore::getEntriesSorted();
   const int PLACE_TOP_N_HIGHSCORES = 7;
-  const int NR_HIGHSCORES =
-    min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
+  const int NR_HIGHSCORES = min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
   if(NR_HIGHSCORES > 0)
   {
     bool blocked[MAP_W][MAP_H];
@@ -271,7 +267,6 @@ void mkForestTrees()
         {
           for(int dx = -SEARCH_RADI; dx <= SEARCH_RADI; ++dx)
           {
-
             const int X = path[i].x + dx;
             const int Y = path[i].y + dy;
 
@@ -432,13 +427,7 @@ bool mkLengLvl()
         {
           if(Rnd::oneIn(50))
           {
-            auto* const bush = static_cast<Bush*>(Map::put(new Bush(p)));
-            bush->type_ = Rnd::oneIn(5) ? GrassType::cmn : GrassType::withered;
-          }
-          else
-          {
-            auto* const grass = static_cast<Grass*>(f);
-            grass->type_ = Rnd::oneIn(5) ? GrassType::cmn : GrassType::withered;
+            Map::put(new Bush(p));
           }
         }
         else if(fId == FeatureId::wall)

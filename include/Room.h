@@ -44,6 +44,7 @@ enum class RoomType
   flooded,
   muddy,
   cave,
+  forest,
   END_OF_STD_ROOMS,
 
   //Exceptional room types
@@ -245,6 +246,22 @@ public:
   CaveRoom(Rect r) : StdRoom(r, RoomType::cave) {}
 
   ~CaveRoom() {}
+
+  bool    isAllowed()                                       const override;
+
+protected:
+  Range   getNrAutoFeaturesAllowed()                        const override;
+  int     getBasePctChanceDrk()                             const override;
+  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+};
+
+class ForestRoom: public StdRoom
+{
+public:
+  ForestRoom(Rect r) : StdRoom(r, RoomType::forest) {}
+
+  ~ForestRoom() {}
 
   bool    isAllowed()                                       const override;
 

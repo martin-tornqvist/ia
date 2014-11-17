@@ -1057,7 +1057,7 @@ Clr Carpet::getClr_() const
 //--------------------------------------------------------------------- GRASS
 Grass::Grass(Pos pos) : Rigid(pos), type_(GrassType::cmn)
 {
-  if(Rnd::oneIn(6)) {type_ = GrassType::withered;}
+  if(Rnd::oneIn(5)) {type_ = GrassType::withered;}
 }
 
 void Grass::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
@@ -1114,7 +1114,7 @@ Clr Grass::getClr_() const
 //--------------------------------------------------------------------- BUSH
 Bush::Bush(Pos pos) : Rigid(pos), type_(GrassType::cmn)
 {
-  if(Rnd::oneIn(6)) {type_ = GrassType::withered;}
+  if(Rnd::oneIn(5)) {type_ = GrassType::withered;}
 }
 
 void Bush::onHit(const DmgType dmgType, const DmgMethod dmgMethod,

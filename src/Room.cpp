@@ -62,6 +62,7 @@ void initRoomBucket()
   addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
   addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
   addToRoomBucket(RoomType::cave,     Rnd::range(1, 3));
+  addToRoomBucket(RoomType::forest,   Rnd::range(1, 3));
 
   const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
 
@@ -85,6 +86,7 @@ Room* mk(const RoomType type, const Rect& r)
     case RoomType::plain:         return new PlainRoom(r);        break;
     case RoomType::ritual:        return new RitualRoom(r);       break;
     case RoomType::spider:        return new SpiderRoom(r);       break;
+    case RoomType::forest:        return new ForestRoom(r);       break;
     case RoomType::END_OF_STD_ROOMS:
     {
       TRACE << "Illegal room type id: " << int (type) << endl;
@@ -102,7 +104,7 @@ Room* mk(const RoomType type, const Rect& r)
 
 Room* mkRandomAllowedStdRoom(const Rect& r)
 {
-  TRACE_FUNC_BEGIN;
+  TRACE_FUNC_BEGIN_VERBOSE;
 
   auto roomBucketIt = begin(roomBucket_);
 
@@ -126,7 +128,7 @@ Room* mkRandomAllowedStdRoom(const Rect& r)
       {
         roomBucket_.erase(roomBucketIt);
 
-        TRACE_FUNC_END << "Made room type: " << int (roomType) << endl;
+        TRACE_FUNC_END_VERBOSE << "Made room type: " << int (roomType) << endl;
         break;
       }
       else //Room not allowed (e.g. wrong dimensions)
@@ -137,7 +139,7 @@ Room* mkRandomAllowedStdRoom(const Rect& r)
     }
   }
 
-  TRACE_FUNC_END;
+  TRACE_FUNC_END_VERBOSE;
   return room;
 }
 
@@ -203,7 +205,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
   const vector<Pos>& adjToWalls, const vector<Pos>& awayFromWalls,
   const vector<const FeatureDataT*>& featureDataBucket, Pos& posRef) const
 {
-  TRACE_FUNC_BEGIN;
+  TRACE_FUNC_BEGIN_VERBOSE;
 
   if(featureDataBucket.empty())
   {
@@ -216,7 +218,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
 
   if(!IS_ADJ_TO_WALLS_AVAIL && !IS_AWAY_FROM_WALLS_AVAIL)
   {
-    TRACE_FUNC_END << "No eligible cells found" << endl;
+    TRACE_FUNC_END_VERBOSE << "No eligible cells found" << endl;
     posRef = Pos(-1, -1);
     return 0;
   }
@@ -235,7 +237,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
       data->themeSpawnRules.getPlacementRule() == PlacementRule::adjToWalls)
     {
       posRef = adjToWalls[Rnd::range(0, adjToWalls.size() - 1)];
-      TRACE_FUNC_END;
+      TRACE_FUNC_END_VERBOSE;
       return ELEMENT;
     }
 
@@ -244,7 +246,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
       data->themeSpawnRules.getPlacementRule() == PlacementRule::awayFromWalls)
     {
       posRef = awayFromWalls[Rnd::range(0, awayFromWalls.size() - 1)];
-      TRACE_FUNC_END;
+      TRACE_FUNC_END_VERBOSE;
       return ELEMENT;
     }
 
@@ -255,7 +257,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
         if(IS_ADJ_TO_WALLS_AVAIL)
         {
           posRef = adjToWalls[Rnd::range(0, adjToWalls.size() - 1)];
-          TRACE_FUNC_END;
+          TRACE_FUNC_END_VERBOSE;
           return ELEMENT;
 
         }
@@ -265,13 +267,13 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
         if(IS_AWAY_FROM_WALLS_AVAIL)
         {
           posRef = awayFromWalls[Rnd::range(0, awayFromWalls.size() - 1)];
-          TRACE_FUNC_END;
+          TRACE_FUNC_END_VERBOSE;
           return ELEMENT;
         }
       }
     }
   }
-  TRACE_FUNC_END;
+  TRACE_FUNC_END_VERBOSE;
   return 0;
 }
 
@@ -653,11 +655,13 @@ void FloodedRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
+  const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
+
   for(int x = r_.p0.x; x <= r_.p1.x; ++x)
   {
     for(int y = r_.p0.y; y <= r_.p1.y; ++y)
     {
-      if(!blocked[x][y] && Map::roomMap[x][y] == this)
+      if(!blocked[x][y] && Map::roomMap[x][y] == this && Rnd::oneIn(LIQUID_ONE_IN_N))
       {
         LiquidShallow* const liquid = new LiquidShallow(Pos(x, y));
         liquid->type_ = LiquidType::water;
@@ -706,11 +710,13 @@ void MuddyRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
 
+  const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
+
   for(int x = r_.p0.x; x <= r_.p1.x; ++x)
   {
     for(int y = r_.p0.y; y <= r_.p1.y; ++y)
     {
-      if(!blocked[x][y] && Map::roomMap[x][y] == this)
+      if(!blocked[x][y] && Map::roomMap[x][y] == this && Rnd::oneIn(LIQUID_ONE_IN_N))
       {
         LiquidShallow* const liquid = new LiquidShallow(Pos(x, y));
         liquid->type_ = LiquidType::mud;
@@ -746,6 +752,94 @@ void CaveRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 void CaveRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+}
+
+//------------------------------------------------------------------- FOREST ROOM
+Range ForestRoom::getNrAutoFeaturesAllowed() const
+{
+  if(Rnd::oneIn(3))
+  {
+    return {2, 5};
+  }
+  else
+  {
+    return {0, 1};
+  }
+}
+
+int ForestRoom::getBasePctChanceDrk() const
+{
+  return 10;
+}
+
+bool ForestRoom::isAllowed() const
+{
+  return !isSubRoom_;
+}
+
+void ForestRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+
+  MapGenUtils::cavifyRoom(*this);
+}
+
+void ForestRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+
+  vector<Pos> treePosBucket;
+
+  for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+  {
+    for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+    {
+      if(!blocked[x][y] && Map::roomMap[x][y] == this)
+      {
+        const Pos p(x, y);
+        treePosBucket.push_back(p);
+
+        if(Rnd::oneIn(6))
+        {
+          Map::put(new Bush(p));
+        }
+        else
+        {
+          Map::put(new Grass(p));
+        }
+      }
+    }
+  }
+
+  random_shuffle(begin(treePosBucket), end(treePosBucket));
+
+  int nrTreesPlaced = 0;
+
+  const int TREE_ONE_IN_N = Rnd::range(1, 5);
+
+  while(!treePosBucket.empty())
+  {
+    const Pos p = treePosBucket.back();
+    treePosBucket.pop_back();
+
+    if(Rnd::oneIn(TREE_ONE_IN_N))
+    {
+      blocked[p.x][p.y] = true;
+
+      if(MapParse::isMapConnected(blocked))
+      {
+        Map::put(new Tree(p));
+        ++nrTreesPlaced;
+      }
+      else
+      {
+        blocked[p.x][p.y] = false;
+      }
+    }
+  }
 }
 
 //------------------------------------------------------------------- RIVER ROOM

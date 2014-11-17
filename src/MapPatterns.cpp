@@ -14,7 +14,7 @@ namespace MapPatterns
 void setCellsInArea(const Rect& area, vector<Pos>& adjToWalls,
                     vector<Pos>& awayFromWalls)
 {
-  TRACE_FUNC_BEGIN;
+  TRACE_FUNC_BEGIN_VERBOSE;
   vector<Pos> posBucket;
   posBucket.clear();
 
@@ -73,7 +73,7 @@ void setCellsInArea(const Rect& area, vector<Pos>& adjToWalls,
 
   }
 
-  TRACE_FUNC_END;
+  TRACE_FUNC_END_VERBOSE;
 }
 
 int getWalkBlockersInDir(const Dir dir, const Pos& pos)

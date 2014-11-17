@@ -198,12 +198,10 @@ void parse(const CellPred::Pred& predicate, bool out[MAP_W][MAP_H],
 //where the cells are set to true if they are within the specified distance
 //interval of the first array.
 //This can be used for example to find all cells up to 3 steps from a wall.
-void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
-                                bool out[MAP_W][MAP_H],
+void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
                                 const Range& distInterval);
 
-bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H],
-                 const bool VAL = true);
+bool isValInArea(const Rect& area, const bool in[MAP_W][MAP_H], const bool VAL = true);
 
 void append(bool base[MAP_W][MAP_H], const bool append[MAP_W][MAP_H]);
 
@@ -213,6 +211,8 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
 
 //Slower version that can expand any distance
 void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST);
+
+bool isMapConnected(const bool blocked[MAP_W][MAP_H]);
 
 } //MapParse
 
@@ -228,9 +228,8 @@ public:
 namespace FloodFill
 {
 
-void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
-         int out[MAP_W][MAP_H], int travelLimit, const Pos& p1,
-         const bool ALLOW_DIAGONAL);
+void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
+         int travelLmt, const Pos& p1, const bool ALLOW_DIAGONAL);
 
 } //FloodFill
 

@@ -296,7 +296,7 @@ void initDataList()
   d.matlType = Matl::stone;
   d.themeSpawnRules.set(3, PlacementRule::either,
   {
-    RoomType::plain, RoomType::human
+    RoomType::plain, RoomType::human, RoomType::forest
   });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
@@ -357,7 +357,7 @@ void initDataList()
   d.matlType = Matl::stone;
   d.themeSpawnRules.set(1, PlacementRule::awayFromWalls,
   {
-    RoomType::plain, RoomType::human
+    RoomType::plain, RoomType::human, RoomType::forest
   });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
@@ -390,7 +390,7 @@ void initDataList()
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(1, PlacementRule::either, {RoomType::ritual});
+  d.themeSpawnRules.set(1, PlacementRule::either, {RoomType::ritual, RoomType::forest});
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::tomb;
@@ -406,7 +406,7 @@ void initDataList()
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(2, PlacementRule::either, {RoomType::crypt});
+  d.themeSpawnRules.set(2, PlacementRule::either, {RoomType::crypt, RoomType::forest});
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::door;

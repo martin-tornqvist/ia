@@ -71,7 +71,7 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
   bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED)
 {
 
-  TRACE_FUNC_BEGIN;
+  TRACE_FUNC_BEGIN_VERBOSE;
 
   const int NR_LVLS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
   vector<ActorId> idBucket;
@@ -98,16 +98,16 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
 
   if(idBucket.empty())
   {
-    TRACE << "Found no valid monsters to spawn at room type ("
-          << toStr(int(roomType)) + ")" << endl;
-    TRACE_FUNC_END;
+    TRACE_VERBOSE << "Found no valid monsters to spawn at room type ("
+                  << toStr(int(roomType)) + ")" << endl;
+    TRACE_FUNC_END_VERBOSE;
     return false;
   }
   else
   {
     const ActorId id = idBucket[Rnd::range(0, idBucket.size() - 1)];
     mkGroupAt(id, sortedFreeCellsVector, blocked, IS_ROAMING_ALLOWED);
-    TRACE_FUNC_END;
+    TRACE_FUNC_END_VERBOSE;
     return true;
   }
 }

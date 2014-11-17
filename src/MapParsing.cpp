@@ -399,9 +399,48 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
   }
 }
 
+bool isMapConnected(const bool blocked[MAP_W][MAP_H])
+{
+  Pos origin(-1, -1);
+  for(int x = 1; x < MAP_W - 1; ++x)
+  {
+    for(int y = 1; y < MAP_H - 1; ++y)
+    {
+      if(!blocked[x][y])
+      {
+        origin.set(x, y);
+        break;
+      }
+    }
+    if(origin.x != -1)
+    {
+      break;
+    }
+  }
+
+  assert(Utils::isPosInsideMap(origin, false));
+
+  int floodFill[MAP_W][MAP_H];
+  FloodFill::run(origin, blocked, floodFill, INT_MAX, Pos(-1, -1), true);
+
+  //Note: We can skip to origin.x immediately, since this is guaranteed to be the
+  //leftmost non-blocked cell.
+  for(int x = origin.x; x < MAP_W - 1; ++x)
+  {
+    for(int y = 1; y < MAP_H - 1; ++y)
+    {
+      if(floodFill[x][y] == 0 && !blocked[x][y] && Pos(x, y) != origin)
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 } //MapParse
 
-//------------------------------------------------------------ FUNCT OBJECT
+//------------------------------------------------------------ IS CLOSER TO POS
 bool IsCloserToPos::operator()(const Pos& p1, const Pos& p2)
 {
   const int kingDist1 = Utils::kingDist(p_.x, p_.y, p1.x, p1.y);
@@ -413,11 +452,9 @@ bool IsCloserToPos::operator()(const Pos& p1, const Pos& p2)
 namespace FloodFill
 {
 
-void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
-         int out[MAP_W][MAP_H], int travelLimit, const Pos& p1,
-         const bool ALLOW_DIAGONAL)
+void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
+         int travelLmt, const Pos& p1, const bool ALLOW_DIAGONAL)
 {
-
   Utils::resetArray(out);
 
   vector<Pos> positions;
@@ -457,7 +494,7 @@ void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
         {
           curVal = out[curPos.x][curPos.y];
 
-          if(curVal < travelLimit) {out[newPos.x][newPos.y] = curVal + 1;}
+          if(curVal < travelLmt) {out[newPos.x][newPos.y] = curVal + 1;}
 
           if(isStoppingAtP1 && curPos == p1 - d)
           {
@@ -479,7 +516,7 @@ void run(const Pos& p0, bool blocked[MAP_W][MAP_H],
       done = true;
     }
 
-    if(curVal == travelLimit) {done = true;}
+    if(curVal == travelLmt) {done = true;}
 
     if(!isStoppingAtP1 || !isAtTarget)
     {
