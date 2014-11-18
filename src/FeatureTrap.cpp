@@ -138,12 +138,14 @@ void Trap::bump(Actor& actorBumping)
           }
         }
       }
-      else
+      else //Failed to avoid
       {
+        Map::player->updateFov();
+        Render::drawMapAndInterface();
         triggerTrap(actorBumping);
       }
     }
-    else
+    else //Is a monster
     {
       if(d.actorSize == actorSize_humanoid && !d.isSpider)
       {

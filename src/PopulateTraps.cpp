@@ -105,7 +105,8 @@ void populateStdLvl()
           //Spawn up to N traps in nearest cells (not necessarily adjacent)
           IsCloserToPos sorter(pos);
           sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
-          const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
+          const int NR_ADJ = trapType == TrapId::web ? 0 :
+                             min(Rnd::range(0, 2), nrPosCand);
           TRACE_VERBOSE << "Placing adjacent traps" << endl;
           for(int i_adj = 0; i_adj < NR_ADJ; i_adj++)
           {
@@ -147,7 +148,10 @@ void populateStdLvl()
     const int NR_BASE_TRAPS = min(nrPosCand / 2, Rnd::range(1, 3));
     for(int i = 0; i < NR_BASE_TRAPS; ++i)
     {
-      if(nrPosCand == 0) {break;}
+      if(nrPosCand == 0)
+      {
+        break;
+      }
 
       const TrapId trapType = TrapId(Rnd::range(0, int(TrapId::END) - 1));
 
@@ -162,8 +166,9 @@ void populateStdLvl()
       //Spawn up to N traps in nearest cells (not necessarily adjacent)
       IsCloserToPos sorter(pos);
       sort(trapPosBucket.begin(), trapPosBucket.end(), sorter);
-      const int NR_ADJ = min(Rnd::range(1, 3), nrPosCand);
-      TRACE_FUNC_BEGIN;
+      const int NR_ADJ = trapType == TrapId::web ? 0 :
+                         min(Rnd::range(0, 2), nrPosCand);
+      TRACE_VERBOSE << "Placing adjacent traps" << endl;
       for(int i_adj = 0; i_adj < NR_ADJ; i_adj++)
       {
         const Pos& adjPos = trapPosBucket.front();
@@ -171,7 +176,6 @@ void populateStdLvl()
         trapPosBucket.erase(trapPosBucket.begin());
         nrPosCand--;
       }
-      TRACE_FUNC_END;
     }
   }
   TRACE_FUNC_END;

@@ -759,7 +759,7 @@ Range ForestRoom::getNrAutoFeaturesAllowed() const
 {
   if(Rnd::oneIn(3))
   {
-    return {2, 5};
+    return {2, 6};
   }
   else
   {

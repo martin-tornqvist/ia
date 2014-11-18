@@ -111,7 +111,7 @@ void setDefaultVariables()
   keyRepeatInterval_            = 60;
   delayProjectileDraw_          = 50;
   delayShotgun_                 = 120;
-  delayExplosion_               = 350;
+  delayExplosion_               = 300;
   TRACE_FUNC_END;
 }
 
