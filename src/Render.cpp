@@ -67,13 +67,13 @@ Uint32 getPixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y
   /* Here p is the address to the pixel we want to retrieve */
   Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
 
-  switch(bpp)
+  switch (bpp)
   {
     case 1:   return *p;          break;
     case 2:   return *(Uint16*)p; break;
     case 3:
     {
-      if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+      if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
       {
         return p[0] << 16 | p[1] << 8 | p[2];
       }
@@ -95,13 +95,13 @@ inline void putPixel(SDL_Surface* const surface, const int PIXEL_X, const int PI
   //Here p is the address to the pixel we want to set
   Uint8* p = (Uint8*)surface->pixels + PIXEL_Y * surface->pitch + PIXEL_X * bpp;
 
-  switch(bpp)
+  switch (bpp)
   {
     case 1:   *p = pixel;             break;
     case 2:   *(Uint16*)p = pixel;    break;
     case 3:
     {
-      if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+      if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
       {
         p[0] = (pixel >> 16) & 0xff;
         p[1] = (pixel >> 8)  & 0xff;
@@ -127,9 +127,9 @@ void loadFont()
 
   Uint32 bgClr = SDL_MapRGB(fontSurfaceTmp->format, 0, 0, 0);
 
-  for(int x = 0; x < fontSurfaceTmp->w; ++x)
+  for (int x = 0; x < fontSurfaceTmp->w; ++x)
   {
-    for(int y = 0; y < fontSurfaceTmp->h; ++y)
+    for (int y = 0; y < fontSurfaceTmp->h; ++y)
     {
       fontPixelData_[x][y] = getPixel(fontSurfaceTmp, x, y) != bgClr;
     }
@@ -147,9 +147,9 @@ void loadTiles()
   SDL_Surface* tileSurfaceTmp = IMG_Load(tilesImgName.data());
 
   Uint32 imgClr = SDL_MapRGB(tileSurfaceTmp->format, 255, 255, 255);
-  for(int x = 0; x < tileSurfaceTmp->w; ++x)
+  for (int x = 0; x < tileSurfaceTmp->w; ++x)
   {
-    for(int y = 0; y < tileSurfaceTmp->h; ++y)
+    for (int y = 0; y < tileSurfaceTmp->h; ++y)
     {
       tilePixelData_[x][y] = getPixel(tileSurfaceTmp, x, y) == imgClr;
     }
@@ -164,16 +164,16 @@ void loadContour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
 {
   const Pos cellDims(Config::getCellW(), Config::getCellH());
 
-  for(size_t pxX = 0; pxX < PIXEL_DATA_W; ++pxX)
+  for (size_t pxX = 0; pxX < PIXEL_DATA_W; ++pxX)
   {
-    for(size_t pxY = 0; pxY < PIXEL_DATA_H; ++pxY)
+    for (size_t pxY = 0; pxY < PIXEL_DATA_H; ++pxY)
     {
 
       bool& curVal  = contourPixelData_[pxX][pxY];
       curVal        = false;
 
       //Only mark this pixel as contour if it's not marked on the base image
-      if(!base[pxX][pxY])
+      if (!base[pxX][pxY])
       {
         //Position interval to check for this pixel is constrained within current image
         const Pos curImgPxP0((Pos(pxX, pxY) / cellDims) * cellDims);
@@ -181,17 +181,17 @@ void loadContour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
         const Pos pxP0(max(curImgPxP0.x, int(pxX - 1)), max(curImgPxP0.y, int(pxY - 1)));
         const Pos pxP1(min(curImgPxP1.x, int(pxX + 1)), min(curImgPxP1.y, int(pxY + 1)));
 
-        for(int pxCheckX = pxP0.x; pxCheckX <= pxP1.x; ++pxCheckX)
+        for (int pxCheckX = pxP0.x; pxCheckX <= pxP1.x; ++pxCheckX)
         {
-          for(int pxCheckY = pxP0.y; pxCheckY <= pxP1.y; ++pxCheckY)
+          for (int pxCheckY = pxP0.y; pxCheckY <= pxP1.y; ++pxCheckY)
           {
-            if(base[pxCheckX][pxCheckY])
+            if (base[pxCheckX][pxCheckY])
             {
               curVal = true;
               break;
             }
           }
-          if(curVal) {break;}
+          if (curVal) {break;}
         }
       }
     }
@@ -201,7 +201,7 @@ void loadContour(const bool base[PIXEL_DATA_W][PIXEL_DATA_H])
 void putPixelsOnScr(const bool pixelData[PIXEL_DATA_W][PIXEL_DATA_H],
                     const Pos& sheetPos, const Pos& scrPixelPos, const Clr& clr)
 {
-  if(isInited())
+  if (isInited())
   {
     const int CLR_TO = SDL_MapRGB(screenSurface->format, clr.r, clr.g, clr.b);
 
@@ -219,12 +219,12 @@ void putPixelsOnScr(const bool pixelData[PIXEL_DATA_W][PIXEL_DATA_H],
     int scrPxX = SCR_PX_X0;
     int scrPxY = SCR_PX_Y0;
 
-    for(int sheetPxX = SHEET_PX_X0; sheetPxX <= SHEET_PX_X1; sheetPxX++)
+    for (int sheetPxX = SHEET_PX_X0; sheetPxX <= SHEET_PX_X1; sheetPxX++)
     {
       scrPxY = SCR_PX_Y0;
-      for(int sheetPxY = SHEET_PX_Y0; sheetPxY <= SHEET_PX_Y1; sheetPxY++)
+      for (int sheetPxY = SHEET_PX_Y0; sheetPxY <= SHEET_PX_Y1; sheetPxY++)
       {
-        if(pixelData[sheetPxX][sheetPxY])
+        if (pixelData[sheetPxX][sheetPxY])
         {
           putPixel(screenSurface, scrPxX, scrPxY, CLR_TO);
         }
@@ -251,7 +251,7 @@ Pos getPixelPosForCellInPanel(const Panel panel, const Pos& pos)
 {
   const Pos cellDims(Config::getCellW(), Config::getCellH());
 
-  switch(panel)
+  switch (panel)
   {
     case Panel::screen:
     {
@@ -280,7 +280,7 @@ int getLifebarLength(const Actor& actor)
 {
   const int ACTOR_HP = max(0, actor.getHp());
   const int ACTOR_HP_MAX = actor.getHpMax(true);
-  if(ACTOR_HP < ACTOR_HP_MAX)
+  if (ACTOR_HP < ACTOR_HP_MAX)
   {
     int HP_PERCENT = (ACTOR_HP * 100) / ACTOR_HP_MAX;
     return ((Config::getCellW() - 2) * HP_PERCENT) / 100;
@@ -290,7 +290,7 @@ int getLifebarLength(const Actor& actor)
 
 void drawLifeBar(const Pos& pos, const int LENGTH)
 {
-  if(LENGTH >= 0)
+  if (LENGTH >= 0)
   {
     const Pos cellDims(Config::getCellW(),  Config::getCellH());
     const int W_GREEN   = LENGTH;
@@ -301,11 +301,11 @@ void drawLifeBar(const Pos& pos, const int LENGTH)
     const int X0_GREEN  = pixelPos.x + 1;
     const int X0_RED    = X0_GREEN + W_GREEN;
 
-    if(W_GREEN > 0)
+    if (W_GREEN > 0)
     {
       drawLineHor(Pos(X0_GREEN, pixelPos.y), W_GREEN, clrGreenLgt);
     }
-    if(W_RED > 0)
+    if (W_RED > 0)
     {
       drawLineHor(Pos(X0_RED, pixelPos.y), W_RED, clrRedLgt);
     }
@@ -324,12 +324,12 @@ void drawPlayerShockExclMarks()
   const double SHOCK  = Map::player->getPermShockTakenCurTurn();
   const int NR_EXCL   = SHOCK > 8 ? 3 : SHOCK > 3 ? 2 : SHOCK > 1 ? 1 : 0;
 
-  if(NR_EXCL > 0)
+  if (NR_EXCL > 0)
   {
     const Pos& playerPos = Map::player->pos;
     const Pos pixelPosRight = getPixelPosForCellInPanel(Panel::map, playerPos);
 
-    for(int i = 0; i < NR_EXCL; ++i)
+    for (int i = 0; i < NR_EXCL; ++i)
     {
       drawExclMarkAt(pixelPosRight + Pos(i * 3, 0));
     }
@@ -339,14 +339,14 @@ void drawPlayerShockExclMarks()
 void drawGlyphAtPixel(const char GLYPH, const Pos& pixelPos, const Clr& clr,
                       const bool DRAW_BG_CLR, const Clr& bgClr = clrBlack)
 {
-  if(DRAW_BG_CLR)
+  if (DRAW_BG_CLR)
   {
     const Pos cellDims(Config::getCellW(), Config::getCellH());
 
     drawRectangleSolid(pixelPos, cellDims, bgClr);
 
     //Only draw contour if neither the foreground or background is black
-    if(!Utils::isClrEq(clr, clrBlack) && !Utils::isClrEq(bgClr, clrBlack))
+    if (!Utils::isClrEq(clr, clrBlack) && !Utils::isClrEq(bgClr, clrBlack))
     {
       putPixelsOnScr(contourPixelData_, Art::getGlyphPos(GLYPH), pixelPos, clrBlack);
     }
@@ -368,17 +368,17 @@ void init()
 
   const int W = Config::getScreenPixelW();
   const int H = Config::getScreenPixelH();
-  if(Config::isFullscreen())
+  if (Config::isFullscreen())
   {
     screenSurface = SDL_SetVideoMode(W, H, SCREEN_BPP,
                                      SDL_SWSURFACE | SDL_FULLSCREEN);
   }
-  if(!Config::isFullscreen() || !screenSurface)
+  if (!Config::isFullscreen() || !screenSurface)
   {
     screenSurface = SDL_SetVideoMode(W, H, SCREEN_BPP, SDL_SWSURFACE);
   }
 
-  if(!screenSurface)
+  if (!screenSurface)
   {
     TRACE << "Failed to create screen surface" << endl;
     assert(false);
@@ -386,7 +386,7 @@ void init()
 
   loadFont();
 
-  if(Config::isTilesMode())
+  if (Config::isTilesMode())
   {
     loadTiles();
     loadMainMenuLogo();
@@ -401,13 +401,13 @@ void cleanup()
 {
   TRACE_FUNC_BEGIN;
 
-  if(screenSurface)
+  if (screenSurface)
   {
     SDL_FreeSurface(screenSurface);
     screenSurface = nullptr;
   }
 
-  if(mainMenuLogoSurface)
+  if (mainMenuLogoSurface)
   {
     SDL_FreeSurface(mainMenuLogoSurface);
     mainMenuLogoSurface = nullptr;
@@ -418,12 +418,12 @@ void cleanup()
 
 void updateScreen()
 {
-  if(isInited()) {SDL_Flip(screenSurface);}
+  if (isInited()) {SDL_Flip(screenSurface);}
 }
 
 void clearScreen()
 {
-  if(isInited())
+  if (isInited())
   {
     SDL_FillRect(screenSurface, nullptr, SDL_MapRGB(screenSurface->format, 0, 0, 0));
   }
@@ -432,7 +432,7 @@ void clearScreen()
 void applySurface(const Pos& pixelPos, SDL_Surface* const src,
                   SDL_Rect* clip)
 {
-  if(isInited())
+  if (isInited())
   {
     SDL_Rect offset;
     offset.x = pixelPos.x;
@@ -450,21 +450,21 @@ void drawMainMenuLogo(const int Y_POS)
 
 void drawMarker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANGE)
 {
-  if(trail.size() > 2)
+  if (trail.size() > 2)
   {
-    for(size_t i = 1; i < trail.size(); ++i)
+    for (size_t i = 1; i < trail.size(); ++i)
     {
       const Pos& pos = trail[i];
       coverCellInMap(pos);
 
       Clr clr = clrGreenLgt;
 
-      if(EFFECTIVE_RANGE != -1)
+      if (EFFECTIVE_RANGE != -1)
       {
         const int CHEB_DIST = Utils::kingDist(trail[0], pos);
-        if(CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
+        if (CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
       }
-      if(Config::isTilesMode())
+      if (Config::isTilesMode())
       {
         drawTile(TileId::aimMarkerTrail, Panel::map, pos, clr, clrBlack);
       }
@@ -477,19 +477,19 @@ void drawMarker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANG
 
   Clr clr = clrGreenLgt;
 
-  if(trail.size() > 2)
+  if (trail.size() > 2)
   {
-    if(EFFECTIVE_RANGE != -1)
+    if (EFFECTIVE_RANGE != -1)
     {
       const int CHEB_DIST = Utils::kingDist(trail[0], p);
-      if(CHEB_DIST > EFFECTIVE_RANGE)
+      if (CHEB_DIST > EFFECTIVE_RANGE)
       {
         clr = clrYellow;
       }
     }
   }
 
-  if(Config::isTilesMode())
+  if (Config::isTilesMode())
   {
     drawTile(TileId::aimMarkerHead, Panel::map, p, clr, clrBlack);
   }
@@ -504,7 +504,7 @@ void drawBlastAtField(const Pos& centerPos, const int RADIUS,
                       const Clr& clrOuter)
 {
   TRACE_FUNC_BEGIN;
-  if(isInited())
+  if (isInited())
   {
     drawMapAndInterface();
 
@@ -512,24 +512,24 @@ void drawBlastAtField(const Pos& centerPos, const int RADIUS,
 
     Pos pos;
 
-    for(
+    for (
       pos.y = max(1, centerPos.y - RADIUS);
       pos.y <= min(MAP_H - 2, centerPos.y + RADIUS);
       pos.y++)
     {
-      for(
+      for (
         pos.x = max(1, centerPos.x - RADIUS);
         pos.x <= min(MAP_W - 2, centerPos.x + RADIUS);
         pos.x++)
       {
-        if(!forbiddenCells[pos.x][pos.y])
+        if (!forbiddenCells[pos.x][pos.y])
         {
           const bool IS_OUTER = pos.x == centerPos.x - RADIUS ||
                                 pos.x == centerPos.x + RADIUS ||
                                 pos.y == centerPos.y - RADIUS ||
                                 pos.y == centerPos.y + RADIUS;
           const Clr clr = IS_OUTER ? clrOuter : clrInner;
-          if(Config::isTilesMode())
+          if (Config::isTilesMode())
           {
             drawTile(TileId::blast1, Panel::map, pos, clr, clrBlack);
           }
@@ -542,26 +542,26 @@ void drawBlastAtField(const Pos& centerPos, const int RADIUS,
       }
     }
     updateScreen();
-    if(isAnyBlastRendered) {SdlWrapper::sleep(Config::getDelayExplosion() / 2);}
+    if (isAnyBlastRendered) {SdlWrapper::sleep(Config::getDelayExplosion() / 2);}
 
-    for(
+    for (
       pos.y = max(1, centerPos.y - RADIUS);
       pos.y <= min(MAP_H - 2, centerPos.y + RADIUS);
       pos.y++)
     {
-      for(
+      for (
         pos.x = max(1, centerPos.x - RADIUS);
         pos.x <= min(MAP_W - 2, centerPos.x + RADIUS);
         pos.x++)
       {
-        if(!forbiddenCells[pos.x][pos.y])
+        if (!forbiddenCells[pos.x][pos.y])
         {
           const bool IS_OUTER = pos.x == centerPos.x - RADIUS ||
                                 pos.x == centerPos.x + RADIUS ||
                                 pos.y == centerPos.y - RADIUS ||
                                 pos.y == centerPos.y + RADIUS;
           const Clr clr = IS_OUTER ? clrOuter : clrInner;
-          if(Config::isTilesMode())
+          if (Config::isTilesMode())
           {
             drawTile(TileId::blast2, Panel::map, pos, clr, clrBlack);
           }
@@ -573,7 +573,7 @@ void drawBlastAtField(const Pos& centerPos, const int RADIUS,
       }
     }
     updateScreen();
-    if(isAnyBlastRendered) {SdlWrapper::sleep(Config::getDelayExplosion() / 2);}
+    if (isAnyBlastRendered) {SdlWrapper::sleep(Config::getDelayExplosion() / 2);}
     drawMapAndInterface();
   }
   TRACE_FUNC_END;
@@ -582,13 +582,13 @@ void drawBlastAtField(const Pos& centerPos, const int RADIUS,
 void drawBlastAtCells(const vector<Pos>& positions, const Clr& clr)
 {
   TRACE_FUNC_BEGIN;
-  if(isInited())
+  if (isInited())
   {
     drawMapAndInterface();
 
-    for(const Pos& pos : positions)
+    for (const Pos& pos : positions)
     {
-      if(Config::isTilesMode())
+      if (Config::isTilesMode())
       {
         drawTile(TileId::blast1, Panel::map, pos, clr, clrBlack);
       }
@@ -600,9 +600,9 @@ void drawBlastAtCells(const vector<Pos>& positions, const Clr& clr)
     updateScreen();
     SdlWrapper::sleep(Config::getDelayExplosion() / 2);
 
-    for(const Pos& pos : positions)
+    for (const Pos& pos : positions)
     {
-      if(Config::isTilesMode())
+      if (Config::isTilesMode())
       {
         drawTile(TileId::blast2, Panel::map, pos, clr, clrBlack);
       }
@@ -621,9 +621,9 @@ void drawBlastAtCells(const vector<Pos>& positions, const Clr& clr)
 void drawBlastAtSeenCells(const vector<Pos>& positions, const Clr& clr)
 {
   vector<Pos> positionsWithVision;
-  for(const Pos& p : positions)
+  for (const Pos& p : positions)
   {
-    if(Map::cells[p.x][p.y].isSeenByPlayer)
+    if (Map::cells[p.x][p.y].isSeenByPlayer)
     {
       positionsWithVision.push_back(p);
     }
@@ -635,7 +635,7 @@ void drawBlastAtSeenCells(const vector<Pos>& positions, const Clr& clr)
 void drawBlastAtSeenActors(const std::vector<Actor*>& actors, const Clr& clr)
 {
   vector<Pos> positions;
-  for(Actor* const actor : actors)
+  for (Actor* const actor : actors)
   {
     positions.push_back(actor->pos);
   }
@@ -645,14 +645,14 @@ void drawBlastAtSeenActors(const std::vector<Actor*>& actors, const Clr& clr)
 void drawTile(const TileId tile, const Panel panel, const Pos& pos, const Clr& clr,
               const Clr& bgClr)
 {
-  if(isInited())
+  if (isInited())
   {
     const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
     const Pos cellDims(Config::getCellW(), Config::getCellH());
 
     drawRectangleSolid(pixelPos, cellDims, bgClr);
 
-    if(!Utils::isClrEq(bgClr, clrBlack))
+    if (!Utils::isClrEq(bgClr, clrBlack))
     {
       putPixelsOnScr(contourPixelData_, Art::getTilePos(tile), pixelPos, clrBlack);
     }
@@ -664,7 +664,7 @@ void drawTile(const TileId tile, const Panel panel, const Pos& pos, const Clr& c
 void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos, const Clr& clr,
                const bool DRAW_BG_CLR, const Clr& bgClr)
 {
-  if(isInited())
+  if (isInited())
   {
     const Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
     drawGlyphAtPixel(GLYPH, pixelPos, clr, DRAW_BG_CLR, bgClr);
@@ -674,11 +674,11 @@ void drawGlyph(const char GLYPH, const Panel panel, const Pos& pos, const Clr& c
 void drawText(const string& str, const Panel panel, const Pos& pos, const Clr& clr,
               const Clr& bgClr)
 {
-  if(isInited())
+  if (isInited())
   {
     Pos pixelPos = getPixelPosForCellInPanel(panel, pos);
 
-    if(pixelPos.y < 0 || pixelPos.y >= Config::getScreenPixelH())
+    if (pixelPos.y < 0 || pixelPos.y >= Config::getScreenPixelH())
     {
       return;
     }
@@ -687,9 +687,9 @@ void drawText(const string& str, const Panel panel, const Pos& pos, const Clr& c
     const int LEN = str.size();
     drawRectangleSolid(pixelPos, Pos(cellDims.x * LEN, cellDims.y), bgClr);
 
-    for(int i = 0; i < LEN; ++i)
+    for (int i = 0; i < LEN; ++i)
     {
-      if(pixelPos.x < 0 || pixelPos.x >= Config::getScreenPixelW())
+      if (pixelPos.x < 0 || pixelPos.x >= Config::getScreenPixelW())
       {
         return;
       }
@@ -711,7 +711,7 @@ int drawTextCentered(const string& str, const Panel panel, const Pos& pos,
 
   Pos pixelPos = getPixelPosForCellInPanel(panel, Pos(X_POS_LEFT, pos.y));
 
-  if(IS_PIXEL_POS_ADJ_ALLOWED)
+  if (IS_PIXEL_POS_ADJ_ALLOWED)
   {
     const int PIXEL_X_ADJ = LEN_HALF * 2 == LEN ? cellDims.x / 2 : 0;
     pixelPos += Pos(PIXEL_X_ADJ, 0);
@@ -727,9 +727,9 @@ int drawTextCentered(const string& str, const Panel panel, const Pos& pos,
   SDL_FillRect(screenSurface, &sdlRect, SDL_MapRGB(screenSurface->format,
                bgClr.r, bgClr.g, bgClr.b));
 
-  for(int i = 0; i < LEN; ++i)
+  for (int i = 0; i < LEN; ++i)
   {
-    if(pixelPos.x < 0 || pixelPos.x >= Config::getScreenPixelW())
+    if (pixelPos.x < 0 || pixelPos.x >= Config::getScreenPixelW())
     {
       return X_POS_LEFT;
     }
@@ -743,7 +743,7 @@ void coverPanel(const Panel panel)
 {
   const int SCREEN_PIXEL_W = Config::getScreenPixelW();
 
-  switch(panel)
+  switch (panel)
   {
     case Panel::charLines:
     {
@@ -802,7 +802,7 @@ void drawLineVer(const Pos& pixelPos, const int H, const Clr& clr)
 
 void drawRectangleSolid(const Pos& pixelPos, const Pos& pixelDims, const Clr& clr)
 {
-  if(isInited())
+  if (isInited())
   {
     SDL_Rect sdlRect = {(Sint16)pixelPos.x, (Sint16)pixelPos.y,
                         (Uint16)pixelDims.x, (Uint16)pixelDims.y
@@ -817,23 +817,23 @@ void drawProjectiles(vector<Projectile*>& projectiles,
                      const bool SHOULD_DRAW_MAP_BEFORE)
 {
 
-  if(SHOULD_DRAW_MAP_BEFORE) {drawMapAndInterface(false);}
+  if (SHOULD_DRAW_MAP_BEFORE) {drawMapAndInterface(false);}
 
-  for(Projectile* p : projectiles)
+  for (Projectile* p : projectiles)
   {
-    if(!p->isDoneRendering && p->isVisibleToPlayer)
+    if (!p->isDoneRendering && p->isVisibleToPlayer)
     {
       coverCellInMap(p->pos);
-      if(Config::isTilesMode())
+      if (Config::isTilesMode())
       {
-        if(p->tile != TileId::empty)
+        if (p->tile != TileId::empty)
         {
           drawTile(p->tile, Panel::map, p->pos, p->clr);
         }
       }
       else
       {
-        if(p->glyph != -1) {drawGlyph(p->glyph, Panel::map, p->pos, p->clr);}
+        if (p->glyph != -1) {drawGlyph(p->glyph, Panel::map, p->pos, p->clr);}
       }
     }
   }
@@ -844,16 +844,16 @@ void drawProjectiles(vector<Projectile*>& projectiles,
 void drawPopupBox(const Rect& border, const Panel panel, const Clr& clr,
                   const bool COVER_AREA)
 {
-  if(COVER_AREA) {coverArea(panel, border);}
+  if (COVER_AREA) {coverArea(panel, border);}
 
   const bool IS_TILES = Config::isTilesMode();
 
   //Vertical bars
   const int Y0_VERT = border.p0.y + 1;
   const int Y1_VERT = border.p1.y - 1;
-  for(int y = Y0_VERT; y <= Y1_VERT; ++y)
+  for (int y = Y0_VERT; y <= Y1_VERT; ++y)
   {
-    if(IS_TILES)
+    if (IS_TILES)
     {
       drawTile(TileId::popupVer, panel, Pos(border.p0.x, y), clr, clrBlack);
       drawTile(TileId::popupVer, panel, Pos(border.p1.x, y), clr, clrBlack);
@@ -868,9 +868,9 @@ void drawPopupBox(const Rect& border, const Panel panel, const Clr& clr,
   //Horizontal bars
   const int X0_VERT = border.p0.x + 1;
   const int X1_VERT = border.p1.x - 1;
-  for(int x = X0_VERT; x <= X1_VERT; ++x)
+  for (int x = X0_VERT; x <= X1_VERT; ++x)
   {
-    if(IS_TILES)
+    if (IS_TILES)
     {
       drawTile(TileId::popupHor, panel, Pos(x, border.p0.y), clr, clrBlack);
       drawTile(TileId::popupHor, panel, Pos(x, border.p1.y), clr, clrBlack);
@@ -891,7 +891,7 @@ void drawPopupBox(const Rect& border, const Panel panel, const Clr& clr,
   };
 
   //Corners
-  if(IS_TILES)
+  if (IS_TILES)
   {
     drawTile(TileId::popupTopL, panel, corners[0], clr, clrBlack);
     drawTile(TileId::popupTopR, panel, corners[1], clr, clrBlack);
@@ -917,11 +917,11 @@ void drawDescrBox(const std::vector<StrAndClr>& lines)
 
   Pos p(DESCR_X0, DESCR_Y0);
 
-  for(const auto& line : lines)
+  for (const auto& line : lines)
   {
     vector<string> formatted;
     TextFormatting::lineToLines(line.str, MAX_W, formatted);
-    for(const auto& lineInFormatted : formatted)
+    for (const auto& lineInFormatted : formatted)
     {
       drawText(lineInFormatted, Panel::screen, p, line.clr);
       ++p.y;
@@ -932,7 +932,7 @@ void drawDescrBox(const std::vector<StrAndClr>& lines)
 
 void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN)
 {
-  if(isInited())
+  if (isInited())
   {
     clearScreen();
 
@@ -942,13 +942,13 @@ void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN)
     CharacterLines::drawLocationInfo();
     Log::drawLog(false);
 
-    if(SHOULD_UPDATE_SCREEN) {updateScreen();}
+    if (SHOULD_UPDATE_SCREEN) {updateScreen();}
   }
 }
 
 void drawMap()
 {
-  if(!isInited()) {return;}
+  if (!isInited()) {return;}
 
   CellRenderData* curDrw = nullptr;
   CellRenderData  tmpDrw;
@@ -956,11 +956,11 @@ void drawMap()
   const bool IS_TILES = Config::isTilesMode();
 
   //---------------- INSERT RIGIDS AND BLOOD INTO ARRAY
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
-      if(Map::cells[x][y].isSeenByPlayer)
+      if (Map::cells[x][y].isSeenByPlayer)
       {
 
         renderArray[x][y]           = CellRenderData();
@@ -969,18 +969,18 @@ void drawMap()
         TileId            goreTile  = TileId::empty;
         char              goreGlyph = 0;
 
-        if(f->canHaveGore())
+        if (f->canHaveGore())
         {
           goreTile  = f->getGoreTile();
           goreGlyph = f->getGoreGlyph();
         }
-        if(goreTile == TileId::empty)
+        if (goreTile == TileId::empty)
         {
           curDrw->tile  = f->getTile();
           curDrw->glyph = f->getGlyph();
           curDrw->clr   = f->getClr();
           const Clr& featureClrBg = f->getClrBg();
-          if(!Utils::isClrEq(featureClrBg, clrBlack)) {curDrw->clrBg = featureClrBg;}
+          if (!Utils::isClrEq(featureClrBg, clrBlack)) {curDrw->clrBg = featureClrBg;}
         }
         else
         {
@@ -998,15 +998,14 @@ void drawMap()
 
   int xPos, yPos;
   //---------------- INSERT DEAD ACTORS INTO ARRAY
-  for(Actor* actor : GameTime::actors_)
+  for (Actor* actor : GameTime::actors_)
   {
     xPos = actor->pos.x;
     yPos = actor->pos.y;
-    if(
-      actor->isCorpse()                       &&
-      actor->getData().glyph != ' '           &&
-      actor->getData().tile != TileId::empty  &&
-      Map::cells[xPos][yPos].isSeenByPlayer)
+    if (actor->isCorpse()                       &&
+        actor->getData().glyph != ' '           &&
+        actor->getData().tile != TileId::empty  &&
+        Map::cells[xPos][yPos].isSeenByPlayer)
     {
       curDrw        = &renderArray[xPos][yPos];
       curDrw->clr   = actor->getClr();
@@ -1015,16 +1014,16 @@ void drawMap()
     }
   }
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       curDrw = &renderArray[x][y];
-      if(Map::cells[x][y].isSeenByPlayer)
+      if (Map::cells[x][y].isSeenByPlayer)
       {
         //---------------- INSERT ITEMS INTO ARRAY
         const Item* const item = Map::cells[x][y].item;
-        if(item)
+        if (item)
         {
           curDrw->clr   = item->getClr();
           curDrw->tile  = item->getTile();
@@ -1044,14 +1043,13 @@ void drawMap()
   }
 
   //---------------- INSERT MOBILE FEATURES INTO ARRAY
-  for(auto* mob : GameTime::mobs_)
+  for (auto* mob : GameTime::mobs_)
   {
     const Pos& p            = mob->getPos();
     const TileId  mobTile   = mob->getTile();
     const char    mobGlyph  = mob->getGlyph();
-    if(
-      mobTile != TileId::empty && mobGlyph != ' ' &&
-      Map::cells[p.x][p.y].isSeenByPlayer)
+    if (mobTile != TileId::empty && mobGlyph != ' ' &&
+        Map::cells[p.x][p.y].isSeenByPlayer)
     {
       curDrw = &renderArray[p.x][p.y];
       curDrw->clr   = mob->getClr();
@@ -1061,20 +1059,20 @@ void drawMap()
   }
 
   //---------------- INSERT LIVING ACTORS INTO ARRAY
-  for(auto* actor : GameTime::actors_)
+  for (auto* actor : GameTime::actors_)
   {
-    if(actor != Map::player)
+    if (actor != Map::player)
     {
-      if(actor->isAlive())
+      if (actor->isAlive())
       {
         const Pos& p  = actor->pos;
         curDrw        = &renderArray[p.x][p.y];
 
         const auto* const mon = static_cast<const Mon*>(actor);
 
-        if(Map::player->isSeeingActor(*actor, nullptr))
+        if (Map::player->isSeeingActor(*actor, nullptr))
         {
-          if(actor->getTile()  != TileId::empty && actor->getGlyph() != ' ')
+          if (actor->getTile()  != TileId::empty && actor->getGlyph() != ' ')
           {
             curDrw->clr   = actor->getClr();
             curDrw->tile  = actor->getTile();
@@ -1084,19 +1082,19 @@ void drawMap()
             curDrw->isLivingActorSeenHere = true;
             curDrw->isLightFadeAllowed    = false;
 
-            if(Map::player->isLeaderOf(mon))
+            if (Map::player->isLeaderOf(mon))
             {
               curDrw->clrBg = clrGreen;
             }
             else
             {
-              if(mon->awareCounter_ <= 0) {curDrw->clrBg = clrBlue;}
+              if (mon->awareCounter_ <= 0) {curDrw->clrBg = clrBlue;}
             }
           }
         }
         else //Player is not seeing actor
         {
-          if(mon->playerAwareOfMeCounter_ > 0 || Map::player->isLeaderOf(mon))
+          if (mon->playerAwareOfMeCounter_ > 0 || Map::player->isLeaderOf(mon))
           {
             curDrw->isAwareOfMonHere  = true;
           }
@@ -1113,28 +1111,28 @@ void drawMap()
     clr.b = double(clr.b) / DIV;
   };
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
 
       tmpDrw = renderArray[x][y];
 
       const Cell& cell = Map::cells[x][y];
 
-      if(cell.isSeenByPlayer)
+      if (cell.isSeenByPlayer)
       {
-        if(tmpDrw.isLightFadeAllowed)
+        if (tmpDrw.isLightFadeAllowed)
         {
           const int DIST_FROM_PLAYER = Utils::kingDist(Map::player->pos, Pos(x, y));
-          if(DIST_FROM_PLAYER > 1)
+          if (DIST_FROM_PLAYER > 1)
           {
             const double DIV = min(2.0, 1.0 + (double(DIST_FROM_PLAYER - 1) * 0.33));
             divClr(tmpDrw.clr,    DIV);
             divClr(tmpDrw.clrBg,  DIV);
           }
 
-          if(cell.isDark && !cell.isLit)
+          if (cell.isDark && !cell.isLit)
           {
             const double DRK_DIV = 1.75;
             divClr(tmpDrw.clr,    DRK_DIV);
@@ -1142,7 +1140,7 @@ void drawMap()
           }
         }
       }
-      else if(cell.isExplored)
+      else if (cell.isExplored)
       {
         bool isAwareOfMonHere   = tmpDrw.isAwareOfMonHere;
         renderArray[x][y]       = cell.playerVisualMemory;
@@ -1154,31 +1152,31 @@ void drawMap()
         divClr(tmpDrw.clrBg,  DIV);
       }
 
-      if(IS_TILES)
+      if (IS_TILES)
       {
         //Walls are given perspective here. If the tile to be set is a (top) wall tile,
         //instead place a front wall tile on any of the current conditions:
         //(1) Cell below is explored, and its tile is not a front or top wall tile.
         //(2) Cell below is unexplored.
-        if(!tmpDrw.isLivingActorSeenHere && !tmpDrw.isAwareOfMonHere)
+        if (!tmpDrw.isLivingActorSeenHere && !tmpDrw.isAwareOfMonHere)
         {
           const auto tileSeen     = renderArrayNoActors[x][y].tile;
           const auto tileMem      = cell.playerVisualMemory.tile;
           const bool IS_TILE_WALL = cell.isSeenByPlayer ?
                                     Wall::isTileAnyWallTop(tileSeen) :
                                     Wall::isTileAnyWallTop(tileMem);
-          if(IS_TILE_WALL)
+          if (IS_TILE_WALL)
           {
             const auto* const f   = cell.rigid;
             const auto featureId  = f->getId();
             bool isHiddenDoor     = false;
-            if(featureId == FeatureId::door)
+            if (featureId == FeatureId::door)
             {
               isHiddenDoor = static_cast<const Door*>(f)->isSecret();
             }
-            if(y < MAP_H - 1 && (featureId == FeatureId::wall || isHiddenDoor))
+            if (y < MAP_H - 1 && (featureId == FeatureId::wall || isHiddenDoor))
             {
-              if(Map::cells[x][y + 1].isExplored)
+              if (Map::cells[x][y + 1].isExplored)
               {
                 const bool IS_SEEN_BELOW  = Map::cells[x][y + 1].isSeenByPlayer;
                 const auto tileBelowSeen  = renderArrayNoActors[x][y + 1].tile;
@@ -1196,23 +1194,22 @@ void drawMap()
                   IS_SEEN_BELOW ? Door::isTileAnyDoor(tileBelowSeen) :
                   Door::isTileAnyDoor(tileBelowMem);
 
-                if(
-                  TILE_BELOW_IS_WALL_FRONT  ||
-                  TILE_BELOW_IS_WALL_TOP    ||
-                  tileBelowIsRevealedDoor)
+                if (TILE_BELOW_IS_WALL_FRONT  ||
+                    TILE_BELOW_IS_WALL_TOP    ||
+                    tileBelowIsRevealedDoor)
                 {
-                  if(featureId == FeatureId::wall)
+                  if (featureId == FeatureId::wall)
                   {
                     const auto* const wall = static_cast<const Wall*>(f);
                     tmpDrw.tile = wall->getTopWallTile();
                   }
                 }
-                else if(featureId == FeatureId::wall)
+                else if (featureId == FeatureId::wall)
                 {
                   const auto* const wall  = static_cast<const Wall*>(f);
                   tmpDrw.tile             = wall->getFrontWallTile();
                 }
-                else if(isHiddenDoor)
+                else if (isHiddenDoor)
                 {
                   tmpDrw.tile = Config::isTilesWallFullSquare() ?
                                 TileId::wallTop :
@@ -1222,7 +1219,7 @@ void drawMap()
               else     //Cell below is not explored
               {
                 const Rigid* wall = nullptr;
-                if(isHiddenDoor)
+                if (isHiddenDoor)
                 {
                   wall = static_cast<const Door*>(f)->getMimic();
                 }
@@ -1239,13 +1236,13 @@ void drawMap()
 
       Pos pos(x, y);
 
-      if(tmpDrw.isAwareOfMonHere)
+      if (tmpDrw.isAwareOfMonHere)
       {
         drawGlyph('!', Panel::map, pos, clrBlack, true, clrNosfTealDrk);
       }
-      else if(tmpDrw.tile != TileId::empty && tmpDrw.glyph != ' ')
+      else if (tmpDrw.tile != TileId::empty && tmpDrw.glyph != ' ')
       {
-        if(IS_TILES)
+        if (IS_TILES)
         {
           drawTile(tmpDrw.tile, Panel::map, pos, tmpDrw.clr, tmpDrw.clrBg);
         }
@@ -1254,13 +1251,13 @@ void drawMap()
           drawGlyph(tmpDrw.glyph, Panel::map, pos, tmpDrw.clr, true, tmpDrw.clrBg);
         }
 
-        if(tmpDrw.lifebarLength != -1)
+        if (tmpDrw.lifebarLength != -1)
         {
           drawLifeBar(pos, tmpDrw.lifebarLength);
         }
       }
 
-      if(!cell.isExplored) {renderArray[x][y] = CellRenderData();}
+      if (!cell.isExplored) {renderArray[x][y] = CellRenderData();}
     }
   }
 
@@ -1268,11 +1265,11 @@ void drawMap()
   bool        isRangedWpn = false;
   const Pos&  pos         = Map::player->pos;
   Item*       item        = Map::player->getInv().getItemInSlot(SlotId::wielded);
-  if(item)
+  if (item)
   {
     isRangedWpn = item->getData().ranged.isRangedWpn;
   }
-  if(IS_TILES)
+  if (IS_TILES)
   {
     const TileId tile = isRangedWpn ? TileId::playerFirearm : TileId::playerMelee;
     drawTile(tile, Panel::map, pos, Map::player->getClr(), clrBlack);
@@ -1282,7 +1279,7 @@ void drawMap()
     drawGlyph('@', Panel::map, pos, Map::player->getClr(), true, clrBlack);
   }
   const int LIFE_BAR_LENGTH = getLifebarLength(*Map::player);
-  if(LIFE_BAR_LENGTH != -1)
+  if (LIFE_BAR_LENGTH != -1)
   {
     drawLifeBar(pos, LIFE_BAR_LENGTH);
   }

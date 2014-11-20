@@ -22,11 +22,11 @@ MTRand mtRand;
 
 int roll(const int ROLLS, const int SIDES)
 {
-  if(SIDES <= 0) {return 0;}
-  if(SIDES == 1) {return ROLLS * SIDES;}
+  if (SIDES <= 0) {return 0;}
+  if (SIDES == 1) {return ROLLS * SIDES;}
 
   int result = 0;
-  for(int i = 0; i < ROLLS; ++i)
+  for (int i = 0; i < ROLLS; ++i)
   {
     result += mtRand.randInt(SIDES - 1) + 1;
   }
@@ -45,7 +45,7 @@ bool coinToss() {return roll(1, 2) == 2;}
 
 bool fraction(const int NUMERATOR, const int DENOMINATOR)
 {
-  if(NUMERATOR <= 0) {return false;}
+  if (NUMERATOR <= 0) {return false;}
   return roll(1, DENOMINATOR) <= NUMERATOR;
 }
 
@@ -80,9 +80,9 @@ bool isClrEq(const Clr& clr1, const Clr& clr2)
 
 void resetArray(int a[MAP_W][MAP_H])
 {
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       a[x][y] = 0;
     }
@@ -91,9 +91,9 @@ void resetArray(int a[MAP_W][MAP_H])
 
 void resetArray(bool a[MAP_W][MAP_H], const bool value)
 {
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       a[x][y] = value;
     }
@@ -102,9 +102,9 @@ void resetArray(bool a[MAP_W][MAP_H], const bool value)
 
 void reverseBoolArray(bool array[MAP_W][MAP_H])
 {
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       array[x][y] = !array[x][y];
     }
@@ -113,9 +113,9 @@ void reverseBoolArray(bool array[MAP_W][MAP_H])
 
 void copyBoolArray(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H])
 {
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       out[x][y] = in[x][y];
     }
@@ -126,11 +126,11 @@ void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
                          vector<Pos>& out)
 {
   out.clear();
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
-      if(a[x][y] == VALUE_TO_STORE)
+      if (a[x][y] == VALUE_TO_STORE)
       {
         out.push_back(Pos(x, y));
       }
@@ -141,20 +141,20 @@ void mkVectorFromBoolMap(const bool VALUE_TO_STORE, const bool a[MAP_W][MAP_H],
 void mkBoolMapFromVector(const vector<Pos>& positions, bool out[MAP_W][MAP_H])
 {
   resetArray(out, false);
-  for(const Pos& p : positions) {out[p.x][p.y] = true;}
+  for (const Pos& p : positions) {out[p.x][p.y] = true;}
 }
 
 void getActorCells(const vector<Actor*>& actors, vector<Pos>& out)
 {
   out.clear();
-  for(const auto* const a : actors) {out.push_back(a->pos);}
+  for (const auto* const a : actors) {out.push_back(a->pos);}
 }
 
 Actor* getActorAtPos(const Pos& pos, ActorState state)
 {
-  for(auto* const actor : GameTime::actors_)
+  for (auto* const actor : GameTime::actors_)
   {
-    if(actor->pos == pos && actor->getState() == state)
+    if (actor->pos == pos && actor->getState() == state)
     {
       return actor;
     }
@@ -164,9 +164,9 @@ Actor* getActorAtPos(const Pos& pos, ActorState state)
 
 Mob* getFirstMobAtPos(const Pos& pos)
 {
-  for(auto* const mob : GameTime::mobs_)
+  for (auto* const mob : GameTime::mobs_)
   {
-    if(mob->getPos() == pos) {return mob;}
+    if (mob->getPos() == pos) {return mob;}
   }
   return nullptr;
 }
@@ -175,7 +175,7 @@ void mkActorArray(Actor* a[MAP_W][MAP_H])
 {
   resetArray(a);
 
-  for(Actor* actor : GameTime::actors_)
+  for (Actor* actor : GameTime::actors_)
   {
     const Pos& p = actor->pos;
     a[p.x][p.y] = actor;
@@ -184,7 +184,7 @@ void mkActorArray(Actor* a[MAP_W][MAP_H])
 
 bool isPosInsideMap(const Pos& pos, const bool COUNT_EDGE_AS_INSIDE)
 {
-  if(COUNT_EDGE_AS_INSIDE)
+  if (COUNT_EDGE_AS_INSIDE)
   {
     return pos.x >= 0 && pos.y >= 0 && pos.x < MAP_W && pos.y < MAP_H;
   }
@@ -206,7 +206,7 @@ bool isPosInside(const Pos& pos, const Rect& area)
 bool isAreaInsideOther(const Rect& inner, const Rect& outer,
                        const bool COUNT_EQUAL_AS_INSIDE)
 {
-  if(COUNT_EQUAL_AS_INSIDE)
+  if (COUNT_EQUAL_AS_INSIDE)
   {
     return
       inner.p0.x >= outer.p0.x &&
@@ -248,10 +248,10 @@ Pos getClosestPos(const Pos& p, const vector<Pos>& positions)
 {
   int distToNearest = INT_MAX;
   Pos closestPos;
-  for(Pos pCmp : positions)
+  for (Pos pCmp : positions)
   {
     const int CUR_DIST = kingDist(p, pCmp);
-    if(CUR_DIST < distToNearest)
+    if (CUR_DIST < distToNearest)
     {
       distToNearest = CUR_DIST;
       closestPos    = pCmp;
@@ -263,15 +263,15 @@ Pos getClosestPos(const Pos& p, const vector<Pos>& positions)
 
 Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors)
 {
-  if(actors.empty())      {return nullptr;}
-  if(actors.size() == 1)  {return actors[0];}
+  if (actors.empty())      {return nullptr;}
+  if (actors.size() == 1)  {return actors[0];}
 
   //Find distance to nearest actor(s)
   int distToNearest = INT_MAX;
-  for(Actor* actor : actors)
+  for (Actor* actor : actors)
   {
     const int CUR_DIST = kingDist(c, actor->pos);
-    if(CUR_DIST < distToNearest)
+    if (CUR_DIST < distToNearest)
     {
       distToNearest = CUR_DIST;
     }
@@ -281,9 +281,9 @@ Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors)
 
   //Store all actors with distance equal to the nearest distance
   vector<Actor*> closestActors;
-  for(Actor* actor : actors)
+  for (Actor* actor : actors)
   {
-    if(kingDist(c, actor->pos) == distToNearest)
+    if (kingDist(c, actor->pos) == distToNearest)
     {
       closestActors.push_back(actor);
     }
@@ -298,11 +298,11 @@ Actor* getRandomClosestActor(const Pos& c, const vector<Actor*>& actors)
 
 bool isPosAdj(const Pos& pos1, const Pos& pos2, const bool COUNT_SAME_CELL_AS_ADJ)
 {
-  if(pos1.x < pos2.x - 1)                   {return false;}
-  if(pos1.x > pos2.x + 1)                   {return false;}
-  if(pos1.y < pos2.y - 1)                   {return false;}
-  if(pos1.y > pos2.y + 1)                   {return false;}
-  if(pos1.x == pos2.x && pos1.y == pos2.y)  {return COUNT_SAME_CELL_AS_ADJ;}
+  if (pos1.x < pos2.x - 1)                   {return false;}
+  if (pos1.x > pos2.x + 1)                   {return false;}
+  if (pos1.y < pos2.y - 1)                   {return false;}
+  if (pos1.y > pos2.y + 1)                   {return false;}
+  if (pos1.x == pos2.x && pos1.y == pos2.y)  {return COUNT_SAME_CELL_AS_ADJ;}
   return true;
 }
 
@@ -334,11 +334,11 @@ string TimeData::getTimeStr(const TimeType lowest,
   string minuteStr  = (minute_  < 10 ? "0" : "") + toStr(minute_);
   string secondStr  = (second_  < 10 ? "0" : "") + toStr(second_);
 
-  if(lowest >= time_month)  ret += (ADD_SEPARATORS ? "-" : "-") + monthStr;
-  if(lowest >= time_day)    ret += (ADD_SEPARATORS ? "-" : "-") + dayStr;
-  if(lowest >= time_hour)   ret += (ADD_SEPARATORS ? " " : "_") + hourStr;
-  if(lowest >= time_minute) ret += (ADD_SEPARATORS ? ":" : "-") + minuteStr;
-  if(lowest >= time_second) ret += (ADD_SEPARATORS ? ":" : "-") + secondStr;
+  if (lowest >= time_month)  ret += (ADD_SEPARATORS ? "-" : "-") + monthStr;
+  if (lowest >= time_day)    ret += (ADD_SEPARATORS ? "-" : "-") + dayStr;
+  if (lowest >= time_hour)   ret += (ADD_SEPARATORS ? " " : "_") + hourStr;
+  if (lowest >= time_minute) ret += (ADD_SEPARATORS ? ":" : "-") + minuteStr;
+  if (lowest >= time_second) ret += (ADD_SEPARATORS ? ":" : "-") + secondStr;
 
   return ret;
 }
@@ -374,7 +374,7 @@ Dir getDir(const Pos& offset)
 {
   assert(offset.x >= -1 && offset.y >= -1 && offset.x <= 1 && offset.y <= 1);
 
-  if(offset.y == -1)
+  if (offset.y == -1)
   {
     return offset.x == -1 ? Dir::upLeft :
            offset.x ==  0 ? Dir::up :
@@ -382,14 +382,14 @@ Dir getDir(const Pos& offset)
            Dir::END;
   }
 
-  if(offset.y == 0)
+  if (offset.y == 0)
   {
     return offset.x == -1 ? Dir::left :
            offset.x ==  0 ? Dir::center :
            offset.x ==  1 ? Dir::right :
            Dir::END;
   }
-  if(offset.y == 1)
+  if (offset.y == 1)
   {
     return offset.x == -1 ? Dir::downLeft :
            offset.x ==  0 ? Dir::down :
@@ -403,7 +403,7 @@ Pos getOffset(const Dir dir)
 {
   assert(dir != Dir::END);
 
-  switch(dir)
+  switch (dir)
   {
     case Dir::downLeft:   return Pos(-1, 1);
     case Dir::down:       return Pos(0, 1);
@@ -421,7 +421,7 @@ Pos getOffset(const Dir dir)
 
 Pos getRndAdjPos(const Pos& origin, const bool IS_ORIGIN_ALLOWED)
 {
-  if(IS_ORIGIN_ALLOWED)
+  if (IS_ORIGIN_ALLOWED)
   {
     const int ELEMENT = Rnd::range(0, dirList.size()); //Treat origin as extra element
     return ELEMENT == int(dirList.size()) ? origin : (origin + dirList[ELEMENT]);
@@ -440,31 +440,31 @@ void getCompassDirName(const Pos& fromPos, const Pos& toPos, string& strRef)
   const Pos offset(toPos - fromPos);
   const double ANGLE_DB = atan2(-offset.y, offset.x);
 
-  if(ANGLE_DB        <  -edge[2] && ANGLE_DB >  -edge[3])
+  if (ANGLE_DB        <  -edge[2] && ANGLE_DB >  -edge[3])
   {
     strRef = "SW";
   }
-  else if(ANGLE_DB <= -edge[1] && ANGLE_DB >= -edge[2])
+  else if (ANGLE_DB <= -edge[1] && ANGLE_DB >= -edge[2])
   {
     strRef = "S";
   }
-  else if(ANGLE_DB <  -edge[0] && ANGLE_DB >  -edge[1])
+  else if (ANGLE_DB <  -edge[0] && ANGLE_DB >  -edge[1])
   {
     strRef = "SE";
   }
-  else if(ANGLE_DB >= -edge[0] && ANGLE_DB <=  edge[0])
+  else if (ANGLE_DB >= -edge[0] && ANGLE_DB <=  edge[0])
   {
     strRef = "E";
   }
-  else if(ANGLE_DB >   edge[0] && ANGLE_DB <   edge[1])
+  else if (ANGLE_DB >   edge[0] && ANGLE_DB <   edge[1])
   {
     strRef = "NE";
   }
-  else if(ANGLE_DB >=  edge[1] && ANGLE_DB <=  edge[2])
+  else if (ANGLE_DB >=  edge[1] && ANGLE_DB <=  edge[2])
   {
     strRef = "N";
   }
-  else if(ANGLE_DB >   edge[2] && ANGLE_DB <   edge[3])
+  else if (ANGLE_DB >   edge[2] && ANGLE_DB <   edge[3])
   {
     strRef = "NW";
   }

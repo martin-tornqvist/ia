@@ -24,11 +24,11 @@ vector<RoomType> roomBucket_;
 
 void addToRoomBucket(const RoomType type, const size_t NR)
 {
-  if(NR > 0)
+  if (NR > 0)
   {
     roomBucket_.reserve(roomBucket_.size() + NR);
 
-    for(size_t i = 0; i < NR; ++i) {roomBucket_.push_back(type);}
+    for (size_t i = 0; i < NR; ++i) {roomBucket_.push_back(type);}
   }
 }
 
@@ -75,7 +75,7 @@ void initRoomBucket()
 
 Room* mk(const RoomType type, const Rect& r)
 {
-  switch(type)
+  switch (type)
   {
     case RoomType::cave:          return new CaveRoom(r);         break;
     case RoomType::crypt:         return new CryptRoom(r);        break;
@@ -110,9 +110,9 @@ Room* mkRandomAllowedStdRoom(const Rect& r, const bool IS_SUBROOM)
 
   Room* room = nullptr;
 
-  while(true)
+  while (true)
   {
-    if(roomBucketIt == end(roomBucket_))
+    if (roomBucketIt == end(roomBucket_))
     {
       //No more rooms to pick from, generate a new room bucket
       initRoomBucket();
@@ -125,7 +125,7 @@ Room* mkRandomAllowedStdRoom(const Rect& r, const bool IS_SUBROOM)
       room->isSubRoom_            = IS_SUBROOM;
       StdRoom* const    stdRoom   = static_cast<StdRoom*>(room);
 
-      if(stdRoom->isAllowed())
+      if (stdRoom->isAllowed())
       {
         roomBucket_.erase(roomBucketIt);
 
@@ -152,9 +152,9 @@ void Room::mkDrk() const
   //Expand all cells belonging to the room one step
   bool cellsInRoom[MAP_W][MAP_H];
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       cellsInRoom[x][y] = Map::roomMap[x][y] == this;
     }
@@ -167,12 +167,12 @@ void Room::mkDrk() const
   MapParse::expand(cellsInRoom, cellsToMkDrk, areaLmt);
 
   //Mark the result as dark for all cells not belonging to another room
-  for(int x = areaLmt.p0.x; x <= areaLmt.p1.x; ++x)
+  for (int x = areaLmt.p0.x; x <= areaLmt.p1.x; ++x)
   {
-    for(int y = areaLmt.p0.y; y <= areaLmt.p1.y; ++y)
+    for (int y = areaLmt.p0.y; y <= areaLmt.p1.y; ++y)
     {
       const Room* roomHere = Map::roomMap[x][y];
-      if(cellsToMkDrk[x][y] && (!roomHere || roomHere == this) )
+      if (cellsToMkDrk[x][y] && (!roomHere || roomHere == this) )
       {
         Map::cells[x][y].isDark = true;
       }
@@ -180,7 +180,7 @@ void Room::mkDrk() const
   }
 
   //Also make sub rooms dark
-  for(Room* const subRoom : subRooms_) {subRoom->mkDrk();}
+  for (Room* const subRoom : subRooms_) {subRoom->mkDrk();}
 }
 
 //------------------------------------------------------------------- STANDARD ROOM
@@ -199,7 +199,7 @@ void StdRoom::onPostConnect(bool doorProposals[MAP_W][MAP_H])
   int pctChanceDark = getBasePctChanceDrk() - 15;
   pctChanceDark += Map::dlvl; //Increase with higher dungeon level
   constrInRange(0, pctChanceDark, 100);
-  if(Rnd::percentile() < pctChanceDark) {mkDrk();}
+  if (Rnd::percentile() < pctChanceDark) {mkDrk();}
 }
 
 size_t StdRoom::tryGetAutoFeaturePlacement(
@@ -208,7 +208,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
 {
   TRACE_FUNC_BEGIN_VERBOSE;
 
-  if(featureDataBucket.empty())
+  if (featureDataBucket.empty())
   {
     posRef = Pos(-1, -1);
     return 0;
@@ -217,7 +217,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
   const bool IS_ADJ_TO_WALLS_AVAIL    = !adjToWalls.empty();
   const bool IS_AWAY_FROM_WALLS_AVAIL = !awayFromWalls.empty();
 
-  if(!IS_ADJ_TO_WALLS_AVAIL && !IS_AWAY_FROM_WALLS_AVAIL)
+  if (!IS_ADJ_TO_WALLS_AVAIL && !IS_AWAY_FROM_WALLS_AVAIL)
   {
     TRACE_FUNC_END_VERBOSE << "No eligible cells found" << endl;
     posRef = Pos(-1, -1);
@@ -227,35 +227,33 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
   //TODO Use bucket instead
 
   const int NR_ATTEMPTS_TO_FIND_POS = 100;
-  for(int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; ++i)
+  for (int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; ++i)
   {
     const size_t      NR_DATA = featureDataBucket.size();
     const size_t      ELEMENT = Rnd::range(0, NR_DATA - 1);
     const auto* const data    = featureDataBucket[ELEMENT];
 
-    if(
-      IS_ADJ_TO_WALLS_AVAIL &&
-      data->themeSpawnRules.getPlacementRule() == PlacementRule::adjToWalls)
+    if (IS_ADJ_TO_WALLS_AVAIL &&
+        data->themeSpawnRules.getPlacementRule() == PlacementRule::adjToWalls)
     {
       posRef = adjToWalls[Rnd::range(0, adjToWalls.size() - 1)];
       TRACE_FUNC_END_VERBOSE;
       return ELEMENT;
     }
 
-    if(
-      IS_AWAY_FROM_WALLS_AVAIL &&
-      data->themeSpawnRules.getPlacementRule() == PlacementRule::awayFromWalls)
+    if (IS_AWAY_FROM_WALLS_AVAIL &&
+        data->themeSpawnRules.getPlacementRule() == PlacementRule::awayFromWalls)
     {
       posRef = awayFromWalls[Rnd::range(0, awayFromWalls.size() - 1)];
       TRACE_FUNC_END_VERBOSE;
       return ELEMENT;
     }
 
-    if(data->themeSpawnRules.getPlacementRule() == PlacementRule::either)
+    if (data->themeSpawnRules.getPlacementRule() == PlacementRule::either)
     {
-      if(Rnd::coinToss())
+      if (Rnd::coinToss())
       {
-        if(IS_ADJ_TO_WALLS_AVAIL)
+        if (IS_ADJ_TO_WALLS_AVAIL)
         {
           posRef = adjToWalls[Rnd::range(0, adjToWalls.size() - 1)];
           TRACE_FUNC_END_VERBOSE;
@@ -265,7 +263,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
       }
       else
       {
-        if(IS_AWAY_FROM_WALLS_AVAIL)
+        if (IS_AWAY_FROM_WALLS_AVAIL)
         {
           posRef = awayFromWalls[Rnd::range(0, awayFromWalls.size() - 1)];
           TRACE_FUNC_END_VERBOSE;
@@ -283,10 +281,10 @@ int StdRoom::placeAutoFeatures()
   TRACE_FUNC_BEGIN;
   vector<const FeatureDataT*> featureBucket;
 
-  for(int i = 0; i < int (FeatureId::END); ++i)
+  for (int i = 0; i < int (FeatureId::END); ++i)
   {
     const auto* const d = &FeatureData::getData((FeatureId)(i));
-    if(d->themeSpawnRules.isBelongingToRoomType(type_))
+    if (d->themeSpawnRules.isBelongingToRoomType(type_))
     {
       featureBucket.push_back(d);
     }
@@ -301,9 +299,9 @@ int StdRoom::placeAutoFeatures()
   int nrFeaturesLeftToPlace = Rnd::range(getNrAutoFeaturesAllowed());
   int nrFeaturesPlaced      = 0;
 
-  while(true)
+  while (true)
   {
-    if(nrFeaturesLeftToPlace == 0)
+    if (nrFeaturesLeftToPlace == 0)
     {
       TRACE_FUNC_END << "Placed enough features" << endl;
       return nrFeaturesPlaced;
@@ -314,7 +312,7 @@ int StdRoom::placeAutoFeatures()
     const size_t FEATURE_IDX =
       tryGetAutoFeaturePlacement(adjToWalls, awayFromWalls, featureBucket, pos);
 
-    if(pos.x >= 0)
+    if (pos.x >= 0)
     {
       assert(FEATURE_IDX < featureBucket.size());
 
@@ -328,12 +326,12 @@ int StdRoom::placeAutoFeatures()
       nrFeaturesPlaced++;
 
       //Check if more of this feature can be spawned. If not, erase it.
-      if(spawnCount[FEATURE_IDX] >= d->themeSpawnRules.getMaxNrInRoom())
+      if (spawnCount[FEATURE_IDX] >= d->themeSpawnRules.getMaxNrInRoom())
       {
         spawnCount   .erase(spawnCount   .begin() + FEATURE_IDX);
         featureBucket.erase(featureBucket.begin() + FEATURE_IDX);
 
-        if(featureBucket.empty())
+        if (featureBucket.empty())
         {
           TRACE_FUNC_END << "No more features to place" << endl;
           return nrFeaturesPlaced;
@@ -358,7 +356,7 @@ int StdRoom::placeAutoFeatures()
 //------------------------------------------------------------------- PLAIN ROOM
 Range PlainRoom::getNrAutoFeaturesAllowed() const
 {
-  if(Rnd::oneIn(4))
+  if (Rnd::oneIn(4))
   {
     return {1, 2};
   }
@@ -377,8 +375,8 @@ void PlainRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void PlainRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -407,8 +405,8 @@ void HumanRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void HumanRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -436,8 +434,8 @@ void RitualRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void RitualRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -450,15 +448,15 @@ void RitualRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   const int BLOODY_CHAMBER_PCT = 60;
-  if(Rnd::percentile() < BLOODY_CHAMBER_PCT)
+  if (Rnd::percentile() < BLOODY_CHAMBER_PCT)
   {
     Pos origin(-1, -1);
     vector<Pos> originBucket;
-    for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+    for (int y = r_.p0.y; y <= r_.p1.y; ++y)
     {
-      for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+      for (int x = r_.p0.x; x <= r_.p1.x; ++x)
       {
-        if(Map::cells[x][y].rigid->getId() == FeatureId::altar)
+        if (Map::cells[x][y].rigid->getId() == FeatureId::altar)
         {
           origin = Pos(x, y);
           y = 999;
@@ -466,25 +464,25 @@ void RitualRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
         }
         else
         {
-          if(!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
+          if (!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
         }
       }
     }
-    if(!originBucket.empty())
+    if (!originBucket.empty())
     {
-      if(origin.x == -1)
+      if (origin.x == -1)
       {
         const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
         origin = originBucket[ELEMENT];
       }
-      for(int dx = -1; dx <= 1; ++dx)
+      for (int dx = -1; dx <= 1; ++dx)
       {
-        for(int dy = -1; dy <= 1; ++dy)
+        for (int dy = -1; dy <= 1; ++dy)
         {
-          if((dx == 0 && dy == 0) || (Rnd::percentile() < BLOODY_CHAMBER_PCT / 2))
+          if ((dx == 0 && dy == 0) || (Rnd::percentile() < BLOODY_CHAMBER_PCT / 2))
           {
             const Pos pos = origin + Pos(dx, dy);
-            if(!blocked[pos.x][pos.y])
+            if (!blocked[pos.x][pos.y])
             {
               Map::mkGore(pos);
               Map::mkBlood(pos);
@@ -516,16 +514,16 @@ void SpiderRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::coinToss())
+  if (Rnd::coinToss())
   {
-    if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+    if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
   }
   else
   {
     MapGenUtils::cavifyRoom(*this);
   }
 
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void SpiderRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -553,8 +551,8 @@ void CryptRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void CryptRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -582,8 +580,8 @@ void MonsterRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void MonsterRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -596,13 +594,13 @@ void MonsterRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   int       nrBloodPut  = 0;
   const int NR_TRIES    = 1000; //TODO Hacky, needs improving
 
-  for(int i = 0; i < NR_TRIES; ++i)
+  for (int i = 0; i < NR_TRIES; ++i)
   {
-    for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+    for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
-      for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+      for (int y = r_.p0.y; y <= r_.p1.y; ++y)
       {
-        if(!blocked[x][y] && Map::roomMap[x][y] == this && Rnd::fraction(2, 5))
+        if (!blocked[x][y] && Map::roomMap[x][y] == this && Rnd::fraction(2, 5))
         {
           Map::mkGore(Pos(x, y));
           Map::mkBlood(Pos(x, y));
@@ -610,7 +608,7 @@ void MonsterRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
         }
       }
     }
-    if(nrBloodPut > 0)
+    if (nrBloodPut > 0)
     {
       break;
     }
@@ -637,16 +635,16 @@ void FloodedRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::coinToss())
+  if (Rnd::coinToss())
   {
-    if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+    if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
   }
   else
   {
     MapGenUtils::cavifyRoom(*this);
   }
 
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void FloodedRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -658,11 +656,11 @@ void FloodedRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 
   const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
 
-  for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+  for (int x = r_.p0.x; x <= r_.p1.x; ++x)
   {
-    for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+    for (int y = r_.p0.y; y <= r_.p1.y; ++y)
     {
-      if(!blocked[x][y] && Map::roomMap[x][y] == this && Rnd::oneIn(LIQUID_ONE_IN_N))
+      if (!blocked[x][y] && Map::roomMap[x][y] == this && Rnd::oneIn(LIQUID_ONE_IN_N))
       {
         LiquidShallow* const liquid = new LiquidShallow(Pos(x, y));
         liquid->type_ = LiquidType::water;
@@ -692,16 +690,16 @@ void MuddyRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if(Rnd::coinToss())
+  if (Rnd::coinToss())
   {
-    if(Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+    if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
   }
   else
   {
     MapGenUtils::cavifyRoom(*this);
   }
 
-  if(Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void MuddyRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -713,11 +711,11 @@ void MuddyRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 
   const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
 
-  for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+  for (int x = r_.p0.x; x <= r_.p1.x; ++x)
   {
-    for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+    for (int y = r_.p0.y; y <= r_.p1.y; ++y)
     {
-      if(!blocked[x][y] && Map::roomMap[x][y] == this && Rnd::oneIn(LIQUID_ONE_IN_N))
+      if (!blocked[x][y] && Map::roomMap[x][y] == this && Rnd::oneIn(LIQUID_ONE_IN_N))
       {
         LiquidShallow* const liquid = new LiquidShallow(Pos(x, y));
         liquid->type_ = LiquidType::mud;
@@ -758,7 +756,7 @@ void CaveRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 //------------------------------------------------------------------- FOREST ROOM
 Range ForestRoom::getNrAutoFeaturesAllowed() const
 {
-  if(Rnd::oneIn(3))
+  if (Rnd::oneIn(3))
   {
     return {2, 6};
   }
@@ -794,16 +792,16 @@ void ForestRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 
   vector<Pos> treePosBucket;
 
-  for(int x = r_.p0.x; x <= r_.p1.x; ++x)
+  for (int x = r_.p0.x; x <= r_.p1.x; ++x)
   {
-    for(int y = r_.p0.y; y <= r_.p1.y; ++y)
+    for (int y = r_.p0.y; y <= r_.p1.y; ++y)
     {
-      if(!blocked[x][y] && Map::roomMap[x][y] == this)
+      if (!blocked[x][y] && Map::roomMap[x][y] == this)
       {
         const Pos p(x, y);
         treePosBucket.push_back(p);
 
-        if(Rnd::oneIn(6))
+        if (Rnd::oneIn(6))
         {
           Map::put(new Bush(p));
         }
@@ -821,16 +819,16 @@ void ForestRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 
   const int TREE_ONE_IN_N = Rnd::range(1, 5);
 
-  while(!treePosBucket.empty())
+  while (!treePosBucket.empty())
   {
     const Pos p = treePosBucket.back();
     treePosBucket.pop_back();
 
-    if(Rnd::oneIn(TREE_ONE_IN_N))
+    if (Rnd::oneIn(TREE_ONE_IN_N))
     {
       blocked[p.x][p.y] = true;
 
-      if(MapParse::isMapConnected(blocked))
+      if (MapParse::isMapConnected(blocked))
       {
         Map::put(new Tree(p));
         ++nrTreesPlaced;
@@ -857,9 +855,9 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
   bool centers[MAP_W][MAP_H];
   Utils::resetArray(centers, false);
 
-  for(Room* const room : Map::roomList)
+  for (Room* const room : Map::roomList)
   {
-    if(room != this)
+    if (room != this)
     {
       const Pos cPos(room->r_.getCenterPos());
       centers[cPos.x][cPos.y] = true;
@@ -879,17 +877,17 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
     auto findClosestCenter0 =
       [&](const Range & rOuter, const Range & rInner, int& iOuter, int& iInner)
     {
-      for(iOuter = rOuter.lower; iOuter >= rOuter.upper; --iOuter)
+      for (iOuter = rOuter.lower; iOuter >= rOuter.upper; --iOuter)
       {
-        for(iInner = rInner.lower; iInner <= rInner.upper; ++iInner)
+        for (iInner = rInner.lower; iInner <= rInner.upper; ++iInner)
         {
-          if(centers[x][y])
+          if (centers[x][y])
           {
             closestCenter0 = iOuter;
             break;
           }
         }
-        if(closestCenter0 != -1)
+        if (closestCenter0 != -1)
         {
           break;
         }
@@ -899,21 +897,21 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
     auto findClosestCenter1 =
       [&](const Range & rOuter, const Range & rInner, int& iOuter, int& iInner)
     {
-      for(iOuter = rOuter.lower; iOuter <= rOuter.upper; ++iOuter)
+      for (iOuter = rOuter.lower; iOuter <= rOuter.upper; ++iOuter)
       {
-        for(iInner = rInner.lower; iInner <= rInner.upper; ++iInner)
+        for (iInner = rInner.lower; iInner <= rInner.upper; ++iInner)
         {
-          if(centers[x][y])
+          if (centers[x][y])
           {
             closestCenter1 = iOuter;
             break;
           }
         }
-        if(closestCenter1 != -1) {break;}
+        if (closestCenter1 != -1) {break;}
       }
     };
 
-    if(IS_HOR)
+    if (IS_HOR)
     {
       const int RIVER_Y = r_.p0.y;
       findClosestCenter0(Range(RIVER_Y - 1, 1),         Range(1, MAP_W - 2),  y, x);
@@ -933,15 +931,14 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
 
   //Within the expansion limits, mark all cells not belonging to another room as free.
   //All other cells are considered as blocking.
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       blocked[x][y] = true;
-      if(
-        (dir_ == hor && (y >= closestCenter0 && y <= closestCenter1)) ||
-        (dir_ == ver && (x >= closestCenter0 && x <= closestCenter1))
-      )
+      if ((dir_ == hor && (y >= closestCenter0 && y <= closestCenter1)) ||
+          (dir_ == ver && (x >= closestCenter0 && x <= closestCenter1))
+         )
       {
         Room* r       = Map::roomMap[x][y];
         blocked[x][y] = r && r != this;
@@ -955,12 +952,12 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
   const Pos origin(r_.getCenterPos());
   FloodFill::run(origin, blockedExpanded, flood, INT_MAX, Pos(-1, -1), true);
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       const Pos p(x, y);
-      if(flood[x][y] > 0 || p == origin)
+      if (flood[x][y] > 0 || p == origin)
       {
         LiquidDeep* const liquid  = new LiquidDeep(p);
         liquid->type_             = LiquidType::water;
@@ -988,12 +985,12 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
     auto markSides =
       [&](const Range & rOuter, const Range & rInner, int& iOuter, int& iInner)
     {
-      for(iOuter = rOuter.lower; iOuter <= rOuter.upper; ++iOuter)
+      for (iOuter = rOuter.lower; iOuter <= rOuter.upper; ++iOuter)
       {
         bool isOnSide0 = true;
-        for(iInner = rInner.lower; iInner <= rInner.upper; ++iInner)
+        for (iInner = rInner.lower; iInner <= rInner.upper; ++iInner)
         {
-          if(Map::roomMap[x][y] == this)
+          if (Map::roomMap[x][y] == this)
           {
             isOnSide0 = false;
             sides[x][y] = inRiver;
@@ -1006,7 +1003,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
       }
     };
 
-    if(dir_ == hor)
+    if (dir_ == hor)
     {
       markSides(Range(1, MAP_W - 2), Range(1, MAP_H - 2), x, y);
     }
@@ -1018,35 +1015,35 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
 
   bool validRoomEntries0[MAP_W][MAP_H];
   bool validRoomEntries1[MAP_W][MAP_H];
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       validRoomEntries0[x][y] = validRoomEntries1[x][y] = false;
     }
   }
 
   const int EDGE_D = 4;
-  for(int x = EDGE_D; x < MAP_W - EDGE_D; ++x)
+  for (int x = EDGE_D; x < MAP_W - EDGE_D; ++x)
   {
-    for(int y = EDGE_D; y < MAP_H - EDGE_D; ++y)
+    for (int y = EDGE_D; y < MAP_H - EDGE_D; ++y)
     {
       const FeatureId featureId = Map::cells[x][y].rigid->getId();
-      if(featureId == FeatureId::wall && !Map::roomMap[x][y])
+      if (featureId == FeatureId::wall && !Map::roomMap[x][y])
       {
         const Pos p(x, y);
         int nrCardinalFloor  = 0;
         int nrCardinalRiver  = 0;
-        for(const auto& d : DirUtils::cardinalList)
+        for (const auto& d : DirUtils::cardinalList)
         {
           const auto pAdj(p + d);
           const auto* const f = Map::cells[pAdj.x][pAdj.y].rigid;
-          if(f->getId() == FeatureId::floor)        {nrCardinalFloor++;}
-          if(Map::roomMap[pAdj.x][pAdj.y] == this)  {nrCardinalRiver++;}
+          if (f->getId() == FeatureId::floor)        {nrCardinalFloor++;}
+          if (Map::roomMap[pAdj.x][pAdj.y] == this)  {nrCardinalRiver++;}
         }
-        if(nrCardinalFloor == 1 && nrCardinalRiver == 1)
+        if (nrCardinalFloor == 1 && nrCardinalRiver == 1)
         {
-          switch(sides[x][y])
+          switch (sides[x][y])
           {
             case side0:   {validRoomEntries0[x][y] = true;} break;
             case side1:   {validRoomEntries1[x][y] = true;} break;
@@ -1059,20 +1056,20 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
 
 #ifdef DEMO_MODE
   Render::drawMap();
-  for(int y = 1; y < MAP_H - 1; ++y)
+  for (int y = 1; y < MAP_H - 1; ++y)
   {
-    for(int x = 1; x < MAP_W - 1; ++x)
+    for (int x = 1; x < MAP_W - 1; ++x)
     {
       Pos p(x, y);
-      if(validRoomEntries0[x][y])
+      if (validRoomEntries0[x][y])
       {
         Render::drawGlyph('0', Panel::map, p, clrRedLgt);
       }
-      if(validRoomEntries1[x][y])
+      if (validRoomEntries1[x][y])
       {
         Render::drawGlyph('1', Panel::map, p, clrRedLgt);
       }
-      if(validRoomEntries0[x][y] || validRoomEntries1[x][y])
+      if (validRoomEntries0[x][y] || validRoomEntries1[x][y])
       {
         Render::updateScreen();
         SdlWrapper::sleep(100);
@@ -1090,26 +1087,25 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
   const int MIN_EDGE_DIST   = 6;
   const int MAX_NR_BRIDGES  = Rnd::range(1, 3);
 
-  for(const int BRIDGE_C : coordinates)
+  for (const int BRIDGE_C : coordinates)
   {
-    if(
-      BRIDGE_C < MIN_EDGE_DIST ||
-      (IS_HOR  && BRIDGE_C > MAP_W - 1 - MIN_EDGE_DIST) ||
-      (!IS_HOR && BRIDGE_C > MAP_H - 1 - MIN_EDGE_DIST))
+    if (BRIDGE_C < MIN_EDGE_DIST ||
+        (IS_HOR  && BRIDGE_C > MAP_W - 1 - MIN_EDGE_DIST) ||
+        (!IS_HOR && BRIDGE_C > MAP_H - 1 - MIN_EDGE_DIST))
     {
       continue;
     }
     bool isTooCloseToOtherBridge = false;
     const int MIN_D = 2;
-    for(int cOther : cBuilt)
+    for (int cOther : cBuilt)
     {
-      if(Utils::isValInRange(BRIDGE_C, Range(cOther - MIN_D, cOther + MIN_D)))
+      if (Utils::isValInRange(BRIDGE_C, Range(cOther - MIN_D, cOther + MIN_D)))
       {
         isTooCloseToOtherBridge = true;
         break;
       }
     }
-    if(isTooCloseToOtherBridge) {continue;}
+    if (isTooCloseToOtherBridge) {continue;}
 
     //Check if current bridge coord would connect matching room connections.
     //If so both roomCon0 and roomCon1 will be set.
@@ -1117,16 +1113,15 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
     Pos roomCon1(-1, -1);
     const int C0_0 = IS_HOR ? r_.p1.y : r_.p1.x;
     const int C1_0 = IS_HOR ? r_.p0.y : r_.p0.x;
-    for(int c = C0_0; c != C1_0; --c)
+    for (int c = C0_0; c != C1_0; --c)
     {
-      if(
-        (IS_HOR  && sides[BRIDGE_C][c] == side0) ||
-        (!IS_HOR && sides[c][BRIDGE_C] == side0))
+      if ((IS_HOR  && sides[BRIDGE_C][c] == side0) ||
+          (!IS_HOR && sides[c][BRIDGE_C] == side0))
       {
         break;
       }
       const Pos pNxt = IS_HOR ? Pos(BRIDGE_C, c - 1) : Pos(c - 1, BRIDGE_C);
-      if(validRoomEntries0[pNxt.x][pNxt.y])
+      if (validRoomEntries0[pNxt.x][pNxt.y])
       {
         roomCon0 = pNxt;
         break;
@@ -1134,16 +1129,15 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
     }
     const int C0_1 = IS_HOR ? r_.p0.y : r_.p0.x;
     const int C1_1 = IS_HOR ? r_.p1.y : r_.p1.x;
-    for(int c = C0_1; c != C1_1; ++c)
+    for (int c = C0_1; c != C1_1; ++c)
     {
-      if(
-        (IS_HOR  && sides[BRIDGE_C][c] == side1) ||
-        (!IS_HOR && sides[c][BRIDGE_C] == side1))
+      if ((IS_HOR  && sides[BRIDGE_C][c] == side1) ||
+          (!IS_HOR && sides[c][BRIDGE_C] == side1))
       {
         break;
       }
       const Pos pNxt = IS_HOR ? Pos(BRIDGE_C, c + 1) : Pos(c + 1, BRIDGE_C);
-      if(validRoomEntries1[pNxt.x][pNxt.y])
+      if (validRoomEntries1[pNxt.x][pNxt.y])
       {
         roomCon1 = pNxt;
         break;
@@ -1151,7 +1145,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
     }
 
     //Make the bridge if valid connection pairs found
-    if(roomCon0.x != -1 && roomCon1.x != -1)
+    if (roomCon0.x != -1 && roomCon1.x != -1)
     {
 #ifdef DEMO_MODE
       Render::drawMap();
@@ -1165,11 +1159,11 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
             << roomCon0.x << "," << roomCon0.y << " / "
             << roomCon1.x << "," << roomCon1.y << endl
             << "Making bridge at coord: " << BRIDGE_C << endl;
-      if(IS_HOR)
+      if (IS_HOR)
       {
-        for(int y = roomCon0.y; y <= roomCon1.y; ++y)
+        for (int y = roomCon0.y; y <= roomCon1.y; ++y)
         {
-          if(Map::roomMap[BRIDGE_C][y] == this)
+          if (Map::roomMap[BRIDGE_C][y] == this)
           {
             auto* const bridge = new Bridge(Pos(BRIDGE_C, y));
             bridge->setDir(ver);
@@ -1179,9 +1173,9 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
       }
       else
       {
-        for(int x = roomCon0.x; x <= roomCon1.x; ++x)
+        for (int x = roomCon0.x; x <= roomCon1.x; ++x)
         {
-          if(Map::roomMap[x][BRIDGE_C] == this)
+          if (Map::roomMap[x][BRIDGE_C] == this)
           {
             auto* const bridge = new Bridge(Pos(x, BRIDGE_C));
             bridge->setDir(hor);
@@ -1195,7 +1189,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
       doorProposals[roomCon1.x][roomCon1.y] = true;
       cBuilt.push_back(BRIDGE_C);
     }
-    if(int (cBuilt.size()) >= MAX_NR_BRIDGES)
+    if (int (cBuilt.size()) >= MAX_NR_BRIDGES)
     {
       TRACE << "Enough bridges built" << endl;
       break;
@@ -1204,23 +1198,22 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
   TRACE << "Bridges built/attempted: " << cBuilt.size() << "/"
         << MAX_NR_BRIDGES << endl;
 
-  if(cBuilt.empty())
+  if (cBuilt.empty())
   {
     MapGen::isMapValid = false;
   }
   else
   {
     TRACE << "Converting some remaining valid room entries to floor" << endl;
-    for(int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < MAP_W; ++x)
     {
-      for(int y = 0; y < MAP_H; ++y)
+      for (int y = 0; y < MAP_H; ++y)
       {
-        if(validRoomEntries0[x][y] || validRoomEntries1[x][y])
+        if (validRoomEntries0[x][y] || validRoomEntries1[x][y])
         {
-          if(
-            find(cBuilt.begin(), cBuilt.end(), x) == cBuilt.end())
+          if (find(cBuilt.begin(), cBuilt.end(), x) == cBuilt.end())
           {
-            if(Rnd::oneIn(4))
+            if (Rnd::oneIn(4))
             {
               Map::put(new Floor(Pos(x, y)));
               Map::roomMap[x][y] = this;

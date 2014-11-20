@@ -102,7 +102,7 @@ struct PropDataT
     allowTestOnBot(false),
     alignment(propAlignmentBad)
   {
-    for(int i = 0; i < endOfPropMsg; ++i) {msg[i] = "";}
+    for (int i = 0; i < endOfPropMsg; ++i) {msg[i] = "";}
   }
 
   PropId        id;
@@ -333,8 +333,8 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if(ability == AbilityId::dodgeAttack)      return 20;
-    if(ability == AbilityId::ranged)   return -20;
+    if (ability == AbilityId::dodgeAttack)      return 20;
+    if (ability == AbilityId::ranged)   return -20;
     return 0;
   }
 
@@ -440,7 +440,7 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if(ability == AbilityId::ranged) return nrTurnsAiming >= 3 ? 999 : 10;
+    if (ability == AbilityId::ranged) return nrTurnsAiming >= 3 ? 999 : 10;
     return 0;
   }
 
@@ -461,10 +461,10 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if(ability == AbilityId::searching) {return -9999;}
-    if(ability == AbilityId::ranged)    {return -50;}
-    if(ability == AbilityId::melee)     {return -25;}
-    if(ability == AbilityId::dodgeTrap || ability == AbilityId::dodgeAttack)
+    if (ability == AbilityId::searching) {return -9999;}
+    if (ability == AbilityId::ranged)    {return -50;}
+    if (ability == AbilityId::melee)     {return -25;}
+    if (ability == AbilityId::dodgeTrap || ability == AbilityId::dodgeAttack)
     {
       return -50;
     }
@@ -489,7 +489,7 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if(ability == AbilityId::searching)  return 0;
+    if (ability == AbilityId::searching)  return 0;
     return 10;
   }
 };
@@ -675,7 +675,7 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if(ability == AbilityId::dodgeTrap || ability == AbilityId::dodgeAttack)
+    if (ability == AbilityId::dodgeTrap || ability == AbilityId::dodgeAttack)
       return -999;
     return 0;
   }
@@ -705,10 +705,11 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if(
-      ability == AbilityId::dodgeTrap ||
-      ability == AbilityId::dodgeAttack)
+    if (ability == AbilityId::dodgeTrap ||
+        ability == AbilityId::dodgeAttack)
+    {
       return -999;
+    }
     return 0;
   }
 
@@ -735,9 +736,9 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if(ability == AbilityId::dodgeAttack)    return -30;
-    if(ability == AbilityId::ranged) return -10;
-    if(ability == AbilityId::melee)  return -10;
+    if (ability == AbilityId::dodgeAttack)    return -30;
+    if (ability == AbilityId::ranged) return -10;
+    if (ability == AbilityId::melee)  return -10;
     return 0;
   }
 };
@@ -760,7 +761,7 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if(ability == AbilityId::melee) return 999;
+    if (ability == AbilityId::melee) return 999;
     return 0;
   }
 };

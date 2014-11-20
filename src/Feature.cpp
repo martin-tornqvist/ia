@@ -24,11 +24,11 @@ void Feature::bump(Actor& actorBumping)
   bool props[endOfPropIds];
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
-  if(!canMove(props))
+  if (!canMove(props))
   {
-    if(actorBumping.isPlayer())
+    if (actorBumping.isPlayer())
     {
-      if(Map::player->getPropHandler().allowSee())
+      if (Map::player->getPropHandler().allowSee())
       {
         Log::addMsg(getData().msgOnPlayerBlocked);
       }

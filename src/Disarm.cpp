@@ -19,7 +19,7 @@ void playerDisarm()
   //with some potentially horrible results
 
   //Abort if blind
-  if(!Map::player->getPropHandler().allowSee())
+  if (!Map::player->getPropHandler().allowSee())
   {
     Log::addMsg("Not while blind.");
     Render::drawMapAndInterface();
@@ -30,13 +30,13 @@ void playerDisarm()
   const Pos playerPos = Map::player->pos;
   const auto* const featureAtPlayer =
     Map::cells[playerPos.x][playerPos.y].rigid;
-  if(featureAtPlayer->getId() == FeatureId::trap)
+  if (featureAtPlayer->getId() == FeatureId::trap)
   {
     const Trap* const trap = static_cast<const Trap*>(featureAtPlayer);
-    if(trap->getTrapType() == TrapId::web)
+    if (trap->getTrapType() == TrapId::web)
     {
       const auto* const web = static_cast<const TrapWeb*>(trap->getSpecificTrap());
-      if(web->isHolding())
+      if (web->isHolding())
       {
         Log::addMsg("Not while entangled in a spider web.");
         Render::drawMapAndInterface();
@@ -46,7 +46,7 @@ void playerDisarm()
   }
 
   //Abort if encumbered
-  if(Map::player->getEncPercent() >= 100)
+  if (Map::player->getEncPercent() >= 100)
   {
     Log::addMsg("Not while encumbered.");
     Render::drawMapAndInterface();
@@ -58,7 +58,7 @@ void playerDisarm()
 
   const Pos pos(Map::player->pos + DirUtils::getOffset(Query::dir()));
 
-  if(pos == Map::player->pos)
+  if (pos == Map::player->pos)
   {
     Log::clearLog();
     Render::drawMapAndInterface();
@@ -66,7 +66,7 @@ void playerDisarm()
   else
   {
     //Abort if cell is unseen
-    if(!Map::cells[pos.x][pos.y].isSeenByPlayer)
+    if (!Map::cells[pos.x][pos.y].isSeenByPlayer)
     {
       Log::addMsg("I cannot see there.");
       Render::drawMapAndInterface();
@@ -78,9 +78,9 @@ void playerDisarm()
     Actor* actorOnTrap = Utils::getActorAtPos(pos);
 
     //Abort if trap blocked by monster
-    if(actorOnTrap)
+    if (actorOnTrap)
     {
-      if(Map::player->isSeeingActor(*actorOnTrap, nullptr))
+      if (Map::player->isSeeingActor(*actorOnTrap, nullptr))
       {
         Log::addMsg("It's blocked.");
       }

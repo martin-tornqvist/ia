@@ -61,14 +61,14 @@ void parseFontNameAndSetCellDims()
   string fontName = fontName_;
 
   char ch = 'a';
-  while(ch < '0' || ch > '9')
+  while (ch < '0' || ch > '9')
   {
     fontName.erase(begin(fontName));
     ch = fontName[0];
   }
 
   string wStr = "";
-  while(ch != 'x')
+  while (ch != 'x')
   {
     fontName.erase(begin(fontName));
     wStr += ch;
@@ -79,7 +79,7 @@ void parseFontNameAndSetCellDims()
   ch = fontName[0];
 
   string hStr = "";
-  while(ch != '_' && ch != '.')
+  while (ch != '_' && ch != '.')
   {
     fontName.erase(begin(fontName));
     hStr += ch;
@@ -118,7 +118,7 @@ void setDefaultVariables()
 void playerSetsOption(const MenuBrowser* const browser,
                       const int OPTION_VALUES_X_POS)
 {
-  switch(browser->getPos().y)
+  switch (browser->getPos().y)
   {
     case 0:
     {
@@ -129,7 +129,7 @@ void playerSetsOption(const MenuBrowser* const browser,
     case 1:
     {
       isTilesMode_ = !isTilesMode_;
-      if(isTilesMode_ && (cellW_ != 16 || cellH_ != 24))
+      if (isTilesMode_ && (cellW_ != 16 || cellH_ != 24))
       {
         fontName_ = "images/16x24_v1.png";
       }
@@ -140,9 +140,9 @@ void playerSetsOption(const MenuBrowser* const browser,
 
     case 2:
     {
-      for(unsigned int i = 0; i < fontImageNames.size(); ++i)
+      for (unsigned int i = 0; i < fontImageNames.size(); ++i)
       {
-        if(fontName_ == fontImageNames[i])
+        if (fontName_ == fontImageNames[i])
         {
           fontName_ = i == fontImageNames.size() - 1 ?
                       fontImageNames.front() :
@@ -152,13 +152,13 @@ void playerSetsOption(const MenuBrowser* const browser,
       }
       parseFontNameAndSetCellDims();
 
-      if(isTilesMode_)
+      if (isTilesMode_)
       {
-        while(cellW_ != 16 || cellH_ != 24)
+        while (cellW_ != 16 || cellH_ != 24)
         {
-          for(unsigned int i = 0; i < fontImageNames.size(); ++i)
+          for (unsigned int i = 0; i < fontImageNames.size(); ++i)
           {
-            if(fontName_ == fontImageNames[i])
+            if (fontName_ == fontImageNames[i])
             {
               fontName_ = i == fontImageNames.size() - 1 ?
                           fontImageNames.front() :
@@ -201,7 +201,7 @@ void playerSetsOption(const MenuBrowser* const browser,
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, keyRepeatDelay_, true);
-      if(NR != -1)
+      if (NR != -1)
       {
         keyRepeatDelay_ = NR;
         Input::setKeyRepeatDelays();
@@ -213,7 +213,7 @@ void playerSetsOption(const MenuBrowser* const browser,
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, keyRepeatInterval_, true);
-      if(NR != -1)
+      if (NR != -1)
       {
         keyRepeatInterval_ = NR;
         Input::setKeyRepeatDelays();
@@ -225,7 +225,7 @@ void playerSetsOption(const MenuBrowser* const browser,
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, delayProjectileDraw_, true);
-      if(NR != -1) {delayProjectileDraw_ = NR;}
+      if (NR != -1) {delayProjectileDraw_ = NR;}
     } break;
 
     case 12:
@@ -233,7 +233,7 @@ void playerSetsOption(const MenuBrowser* const browser,
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, delayShotgun_, true);
-      if(NR != -1) {delayShotgun_ = NR;}
+      if (NR != -1) {delayShotgun_ = NR;}
     } break;
 
     case 13:
@@ -241,7 +241,7 @@ void playerSetsOption(const MenuBrowser* const browser,
       const Pos p(OPTION_VALUES_X_POS, OPT_Y0 + browser->getPos().y);
       const int NR =
         Query::number(p, clrMenuHighlight, 1, 3, delayExplosion_, true);
-      if(NR != -1) {delayExplosion_ = NR;}
+      if (NR != -1) {delayExplosion_ = NR;}
     } break;
 
     case 14:
@@ -474,10 +474,10 @@ void readFile(vector<string>& lines)
 {
   ifstream file;
   file.open("config");
-  if(file.is_open())
+  if (file.is_open())
   {
     string line;
-    while(getline(file, line))
+    while (getline(file, line))
     {
       lines.push_back(line);
     }
@@ -494,14 +494,14 @@ void setAllVariablesFromLines(vector<string>& lines)
   lines.erase(begin(lines));
 
   curLine = lines.front();
-  if(curLine == "0")
+  if (curLine == "0")
   {
     isTilesMode_ = false;
   }
   else
   {
     isTilesMode_ = true;
-    if(cellW_ != 16 || cellH_ != 24)
+    if (cellW_ != 16 || cellH_ != 24)
     {
       fontName_ = "images/16x24_v1.png";
       parseFontNameAndSetCellDims();
@@ -566,10 +566,10 @@ void writeLinesToFile(vector<string>& lines)
   ofstream file;
   file.open("config", ios::trunc);
 
-  for(size_t i = 0; i < lines.size(); ++i)
+  for (size_t i = 0; i < lines.size(); ++i)
   {
     file << lines[i];
-    if(i != lines.size() - 1) {file << endl;}
+    if (i != lines.size() - 1) {file << endl;}
   }
 
   file.close();
@@ -618,7 +618,7 @@ void init()
 
   vector<string> lines;
   readFile(lines);
-  if(lines.empty())
+  if (lines.empty())
   {
     collectLinesFromVariables(lines);
   }
@@ -664,10 +664,10 @@ void runOptionsMenu()
 
   draw(&browser, OPTION_VALUES_X_POS);
 
-  while(true)
+  while (true)
   {
     const MenuAction action = MenuInputHandling::getAction(browser);
-    switch(action)
+    switch (action)
     {
       case MenuAction::browsed:
       {

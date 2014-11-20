@@ -41,17 +41,17 @@ void findPathToStairs()
 
   Pos stairPos(-1, -1);
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       const auto curId = Map::cells[x][y].rigid->getId();
-      if(curId == FeatureId::stairs)
+      if (curId == FeatureId::stairs)
       {
         blocked[x][y] = false;
         stairPos.set(x, y);
       }
-      else if(curId == FeatureId::door)
+      else if (curId == FeatureId::door)
       {
         blocked[x][y] = false;
       }
@@ -72,7 +72,7 @@ bool walkToAdjCell(const Pos& p)
   char key = '0' + int(DirUtils::getDir(p - Map::player->pos));
 
   //Occasionally randomize movement
-  if(Rnd::oneIn(5)) {key = '0' + Rnd::range(1, 9);}
+  if (Rnd::oneIn(5)) {key = '0' + Rnd::range(1, 9);}
 
   Input::handleKeyPress(KeyData(key));
 
@@ -91,7 +91,7 @@ void act()
   //=======================================================================
   // TESTS
   //=======================================================================
-  for(Actor* actor : GameTime::actors_)
+  for (Actor* actor : GameTime::actors_)
   {
 #ifdef NDEBUG
     (void)actor;
@@ -103,7 +103,7 @@ void act()
   //=======================================================================
 
   //Check if we are finished with the current run, if so, go back to DLVL 1
-  if(Map::dlvl >= LAST_CAVERN_LVL)
+  if (Map::dlvl >= LAST_CAVERN_LVL)
   {
     TRACE << "Starting new run on first dungeon level" << endl;
     Map::dlvl = 1;
@@ -114,43 +114,43 @@ void act()
   PropHandler& propHandler = Map::player->getPropHandler();
 
   //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)
-  if(Rnd::oneIn(7))
+  if (Rnd::oneIn(7))
   {
     propHandler.tryApplyProp(new PropRFear(PropTurns::specific, 4), true);
   }
 
   //Occasionally apply Burning to a random actor (helps to avoid getting stuck)
-  if(Rnd::oneIn(10))
+  if (Rnd::oneIn(10))
   {
     const int ELEMENT = Rnd::range(0, GameTime::actors_.size() - 1);
     Actor* const actor = GameTime::actors_[ELEMENT];
-    if(actor != Map::player)
+    if (actor != Map::player)
     {
       actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std), true);
     }
   }
 
   //Occasionally teleport (to avoid getting stuck)
-  if(Rnd::oneIn(200))
+  if (Rnd::oneIn(200))
   {
     Map::player->teleport(false);
   }
 
   //Occasionally send a TAB command to attack nearby monsters
-  if(Rnd::coinToss())
+  if (Rnd::coinToss())
   {
     Input::handleKeyPress(KeyData(SDLK_TAB));
     return;
   }
 
   //Occasionally apply a random property to exercise the prop code
-  if(Rnd::oneIn(10))
+  if (Rnd::oneIn(10))
   {
     vector<PropId> propBucket;
 
-    for(int i = 0; i < endOfPropIds; ++i)
+    for (int i = 0; i < endOfPropIds; ++i)
     {
-      if(PropData::data[i].allowTestOnBot) {propBucket.push_back(PropId(i));}
+      if (PropData::data[i].allowTestOnBot) {propBucket.push_back(PropId(i));}
     }
 
     PropId      propId  = propBucket[Rnd::range(0, propBucket.size() - 1)];
@@ -160,17 +160,17 @@ void act()
   }
 
   //Handle blocking door
-  for(int dx = -1; dx <= 1; ++dx)
+  for (int dx = -1; dx <= 1; ++dx)
   {
-    for(int dy = -1; dy <= 1; ++dy)
+    for (int dy = -1; dy <= 1; ++dy)
     {
       const Pos p(Map::player->pos + Pos(dx, dy));
       auto* const f = Map::cells[p.x][p.y].rigid;
-      if(f->getId() == FeatureId::door)
+      if (f->getId() == FeatureId::door)
       {
         Door* const door = static_cast<Door*>(f);
         door->reveal(false);
-        if(door->isStuck())
+        if (door->isStuck())
         {
           f->hit(DmgType::physical, DmgMethod::kick, Map::player);
           return;
@@ -183,9 +183,9 @@ void act()
   bool props[endOfPropIds];
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  if(props[propTerrified])
+  if (props[propTerrified])
   {
-    if(walkToAdjCell(Map::player->pos))
+    if (walkToAdjCell(Map::player->pos))
     {
       return;
     }

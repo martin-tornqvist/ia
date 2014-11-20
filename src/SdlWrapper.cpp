@@ -27,7 +27,7 @@ void init()
 
   isInited = true;
 
-  if(SDL_Init(SDL_INIT_EVERYTHING) == -1)
+  if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
   {
     TRACE << "Failed to init SDL" << endl;
     assert(false);
@@ -35,7 +35,7 @@ void init()
 
   SDL_EnableUNICODE(1);
 
-  if(IMG_Init(IMG_INIT_PNG) == -1)
+  if (IMG_Init(IMG_INIT_PNG) == -1)
   {
     TRACE << "Failed to init SDL_image" << endl;
     assert(false);
@@ -46,7 +46,7 @@ void init()
   const int     AUDIO_CHANNELS  = 2;
   const int     AUDIO_BUFFERS   = 1024;
 
-  if(Mix_OpenAudio(AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1)
+  if (Mix_OpenAudio(AUDIO_FREQ, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == -1)
   {
     TRACE << "Failed to init SDL_mixer" << endl;
     assert(false);
@@ -68,16 +68,16 @@ void cleanup()
 
 void sleep(const Uint32 DURATION)
 {
-  if(isInited && !Config::isBotPlaying())
+  if (isInited && !Config::isBotPlaying())
   {
-    if(DURATION == 1)
+    if (DURATION == 1)
     {
       SDL_Delay(DURATION);
     }
     else
     {
       const Uint32 WAIT_UNTIL = SDL_GetTicks() + DURATION;
-      while(SDL_GetTicks() < WAIT_UNTIL) {SDL_PumpEvents();}
+      while (SDL_GetTicks() < WAIT_UNTIL) {SDL_PumpEvents();}
     }
   }
 }

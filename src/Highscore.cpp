@@ -47,7 +47,7 @@ void writeFile(vector<HighScoreEntry>& entries)
   ofstream file;
   file.open("data/highscores", ios::trunc);
 
-  for(unsigned int i = 0; i < entries.size(); ++i)
+  for (unsigned int i = 0; i < entries.size(); ++i)
   {
     const HighScoreEntry& entry = entries[i];
 
@@ -67,11 +67,11 @@ void readFile(vector<HighScoreEntry>& entries)
   ifstream file;
   file.open("data/highscores");
 
-  if(file.is_open())
+  if (file.is_open())
   {
     string line = "";
 
-    while(getline(file, line))
+    while (getline(file, line))
     {
       bool isVictory = line[0] == 'V';
       getline(file, line);
@@ -130,7 +130,7 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
 
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 3;
 
-  for(
+  for (
     int i = TOP_ELEMENT;
     i < int(entries.size()) && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++)
@@ -170,7 +170,7 @@ void runHighScoreScreen()
   vector<HighScoreEntry> entries;
   readFile(entries);
 
-  if(entries.empty())
+  if (entries.empty())
   {
     Popup::showMsg("No High Score entries found.", false);
     return;
@@ -186,16 +186,16 @@ void runHighScoreScreen()
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 3;
 
   //Read keys
-  while(true)
+  while (true)
   {
     draw(entries, topNr);
 
     const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
+    if (d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
     {
       topNr += LINE_JUMP;
-      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+      if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
       {
         topNr = 0;
       }
@@ -204,11 +204,11 @@ void runHighScoreScreen()
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
     }
-    if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
+    if (d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
     {
       topNr = max(0, topNr - LINE_JUMP);
     }
-    if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
     {
       break;
     }
@@ -239,7 +239,7 @@ vector<HighScoreEntry> getEntriesSorted()
 {
   vector<HighScoreEntry> entries;
   readFile(entries);
-  if(!entries.empty())
+  if (!entries.empty())
   {
     sortEntries(entries);
   }

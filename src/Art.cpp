@@ -10,7 +10,7 @@ namespace
 
 Pos getColumnAndRowGlyph(const char glyph)
 {
-  switch(glyph)
+  switch (glyph)
   {
     default:  return Pos(-1, -1);  break;
     case ' ': return Pos(0, 0);  break;
@@ -122,7 +122,7 @@ Pos getColumnAndRowGlyph(const char glyph)
 
 Pos getColumnAndRowTile(const TileId tile)
 {
-  switch(tile)
+  switch (tile)
   {
     case TileId::playerFirearm: return Pos(0, 0); break;
     case TileId::playerMelee: return Pos(1, 0); break;
@@ -157,6 +157,7 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::byakhee: return Pos(8, 2); break;
     case TileId::massOfWorms: return Pos(9, 2); break;
     case TileId::ooze: return Pos(10, 2); break;
+    case TileId::gasSpore: return Pos(11, 2); break;
     case TileId::polyp: return Pos(7, 5); break;
     case TileId::fungi: return Pos(8, 5); break;
     case TileId::vortex: return Pos(5, 5); break;

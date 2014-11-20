@@ -24,7 +24,7 @@ void drawLocationInfo()
 {
   string str = "";
 
-  if(Map::player->getPropHandler().allowSee())
+  if (Map::player->getPropHandler().allowSee())
   {
     const Pos& p = Map::player->pos;
 
@@ -32,10 +32,10 @@ void drawLocationInfo()
 
     //Describe mob
     const Mob* const mob = Utils::getFirstMobAtPos(p);
-    if(mob)
+    if (mob)
     {
       featureName = mob->getName(Article::a);
-      if(!featureName.empty())
+      if (!featureName.empty())
       {
         str += TextFormatting::firstToUpper(featureName) + ". ";
       }
@@ -43,25 +43,25 @@ void drawLocationInfo()
 
     //Describe rigid
     featureName = Map::cells[p.x][p.y].rigid->getName(Article::a);
-    if(!featureName.empty())
+    if (!featureName.empty())
     {
       str += TextFormatting::firstToUpper(featureName) + ". ";
     }
 
     //Light/darkness
     const auto& cell = Map::cells[p.x][p.y];
-    if(cell.isDark)
+    if (cell.isDark)
     {
       str += cell.isLit ? "The darkness is lit up. " : "It is dark here. ";
     }
   }
 
-  if(!str.empty())
+  if (!str.empty())
   {
     str.pop_back(); //Erase trailing space character
     Render::drawText(str, Panel::charLines, Pos(0, -1), clrWhite);
 
-    if(int(str.size()) > MAP_W)
+    if (int(str.size()) > MAP_W)
     {
       Render::drawText("(...)", Panel::charLines, Pos(MAP_W - 5, -1), clrWhite);
     }
@@ -122,7 +122,7 @@ void drawInfoLines()
   Render::drawText("ARM:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
   const Item* const armor = player.getInv().getItemInSlot(SlotId::body);
-  if(armor)
+  if (armor)
   {
     str = static_cast<const Armor*>(armor)->getArmorDataLine(false);
     Render::drawText(str, Panel::charLines, pos, clrWhite);
@@ -139,10 +139,10 @@ void drawInfoLines()
   const int X_POS_MISSILE = pos.x;
 
   Item* itemWielded = Map::player->getInv().getItemInSlot(SlotId::wielded);
-  if(itemWielded)
+  if (itemWielded)
   {
     const Clr itemClr = itemWielded->getClr();
-    if(Config::isTilesMode())
+    if (Config::isTilesMode())
     {
       Render::drawTile(
         itemWielded->getTile(), Panel::charLines, pos, itemClr);
@@ -207,10 +207,10 @@ void drawInfoLines()
   auto* const itemMissiles =
     Map::player->getInv().getItemInSlot(SlotId::thrown);
 
-  if(itemMissiles)
+  if (itemMissiles)
   {
     const Clr itemClr = itemMissiles->getClr();
-    if(Config::isTilesMode())
+    if (Config::isTilesMode())
     {
       Render::drawTile(itemMissiles->getTile(), Panel::charLines, pos, itemClr);
     }
@@ -236,7 +236,7 @@ void drawInfoLines()
   vector<StrAndClr> propsLine;
   Map::player->getPropHandler().getPropsInterfaceLine(propsLine);
   const int NR_PROPS = propsLine.size();
-  for(int i = 0; i < NR_PROPS; ++i)
+  for (int i = 0; i < NR_PROPS; ++i)
   {
     const StrAndClr& curPropLabel = propsLine[i];
     Render::drawText(curPropLabel.str, Panel::charLines, pos, curPropLabel.clr);

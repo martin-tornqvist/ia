@@ -21,12 +21,12 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
 
   ItemDataT* ammoD = nullptr;
 
-  if(d->ranged.ammoItemId != ItemId::END)
+  if (d->ranged.ammoItemId != ItemId::END)
   {
     ammoD = ItemData::data[int(d->ranged.ammoItemId)];
   }
 
-  switch(itemId)
+  switch (itemId)
   {
     case ItemId::trapezohedron:       r = new Item(d);               break;
 
@@ -170,7 +170,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::END: return nullptr;
   }
 
-  if(!r->getData().isStackable && NR_ITEMS != 1)
+  if (!r->getData().isStackable && NR_ITEMS != 1)
   {
     TRACE << "Specified number of items (" + toStr(NR_ITEMS) + ") != 1 for "
           << "non-stackable item" << endl;
@@ -189,22 +189,22 @@ void setItemRandomizedProperties(Item* item)
   const ItemDataT& d = item->getData();
 
   //If it is a pure melee weapon, it may get a plus
-  if(d.melee.isMeleeWpn && !d.ranged.isRangedWpn)
+  if (d.melee.isMeleeWpn && !d.ranged.isRangedWpn)
   {
     static_cast<Wpn*>(item)->setRandomMeleePlus();
   }
 
   //If firearm, spawn with random amount of ammo
-  if(d.ranged.isRangedWpn && !d.ranged.hasInfiniteAmmo)
+  if (d.ranged.isRangedWpn && !d.ranged.hasInfiniteAmmo)
   {
     Wpn* const weapon = static_cast<Wpn*>(item);
-    if(weapon->ammoCapacity == 1)
+    if (weapon->ammoCapacity == 1)
     {
       weapon->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
     }
     else
     {
-      if(d.ranged.isMachineGun)
+      if (d.ranged.isMachineGun)
       {
         const int CAP = weapon->ammoCapacity;
         const int MIN = CAP / 2;
@@ -222,7 +222,7 @@ void setItemRandomizedProperties(Item* item)
     }
   }
 
-  if(d.isStackable) {item->nrItems_ = Rnd::range(1, d.maxStackAtSpawn);}
+  if (d.isStackable) {item->nrItems_ = Rnd::range(1, d.maxStackAtSpawn);}
 }
 
 Item* mkItemOnMap(const ItemId itemId, const Pos& pos)
@@ -245,19 +245,17 @@ Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS,
 {
   vector<ItemId> itemBucket;
 
-  for(int i = 0; i < int(ItemId::END); ++i)
+  for (int i = 0; i < int(ItemId::END); ++i)
   {
     const ItemDataT* const d = ItemData::data[i];
-    if(
-      !d->isIntrinsic &&
-      ((d->isScroll && ALLOW_SCROLLS) ||
-       (d->isPotion && ALLOW_POTIONS)))
+    if (!d->isIntrinsic &&
+        ((d->isScroll && ALLOW_SCROLLS) || (d->isPotion && ALLOW_POTIONS)))
     {
       itemBucket.push_back(static_cast<ItemId>(i));
     }
   }
 
-  if(!itemBucket.empty())
+  if (!itemBucket.empty())
   {
     const int ELEMENT = Rnd::range(0, itemBucket.size() - 1);
     return mk(itemBucket[ELEMENT]);

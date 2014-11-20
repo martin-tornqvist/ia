@@ -50,7 +50,7 @@ void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts)
   const string label = "Invoke which power? [enter] to cast " + cancelInfoStr;
   Render::drawText(label, Panel::screen, Pos(0, 0), clrWhiteHigh);
 
-  for(int i = 0; i < NR_SPELLS; ++i)
+  for (int i = 0; i < NR_SPELLS; ++i)
   {
     const int     CURRENT_ELEMENT = i;
     Scroll        scroll(nullptr);
@@ -69,7 +69,7 @@ void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts)
 
     string fillStr = "";
     const size_t FILL_SIZE = SPI_X - NAME_X - name.size();
-    for(size_t ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
+    for (size_t ii = 0; ii < FILL_SIZE; ii++) {fillStr.push_back('.');}
     Clr fillClr = clrGray;
     fillClr.r /= 3; fillClr.g /= 3; fillClr.b /= 3;
     Render::drawText(fillStr, Panel::screen, Pos(NAME_X + name.size(), Y), fillClr);
@@ -86,7 +86,7 @@ void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts)
 
     x = SHOCK_X;
     const IntrSpellShock shockType = spell->getShockTypeIntrCast();
-    switch(shockType)
+    switch (shockType)
     {
       case IntrSpellShock::mild:        infoStr = "Mild";       break;
       case IntrSpellShock::disturbing:  infoStr = "Disturbing"; break;
@@ -94,25 +94,25 @@ void draw(MenuBrowser& browser, const vector<SpellOpt>& spellOpts)
     }
     Render::drawText(infoStr, Panel::screen, Pos(x, Y), clrWhite);
 
-    if(IS_SELECTED)
+    if (IS_SELECTED)
     {
       const auto descr = spell->getDescr();
       vector<StrAndClr> lines;
-      if(!descr.empty())
+      if (!descr.empty())
       {
-        for(const auto& line : descr)
+        for (const auto& line : descr)
         {
           lines.push_back({line, clrWhiteHigh});
         }
       }
       //If spell source is an item, add info about this
-      if(spellOpt.srcItem)
+      if (spellOpt.srcItem)
       {
         const string itemName =
           spellOpt.srcItem->getName(ItemRefType::plain, ItemRefInf::none);
         lines.push_back({"Spell granted by " + itemName + ".", clrGreen});
       }
-      if(!lines.empty())
+      if (!lines.empty())
       {
         Render::drawDescrBox(lines);
       }
@@ -128,28 +128,28 @@ void getSpellsAvail(vector<SpellOpt>& out)
 {
   out.clear();
 
-  for(Spell* const spell : knownSpells_)
+  for (Spell* const spell : knownSpells_)
   {
     out.push_back(SpellOpt(spell, nullptr));
   }
 
   Inventory& inv = Map::player->getInv();
 
-  for(auto slot : inv.slots_)
+  for (auto slot : inv.slots_)
   {
     Item* item = slot.item;
-    if(item)
+    if (item)
     {
-      for(Spell* spell : item->carrierSpells_)
+      for (Spell* spell : item->carrierSpells_)
       {
         out.push_back(SpellOpt(spell, item));
       }
     }
   }
 
-  for(Item* item : inv.general_)
+  for (Item* item : inv.general_)
   {
-    for(Spell* spell : item->carrierSpells_)
+    for (Spell* spell : item->carrierSpells_)
     {
       out.push_back(SpellOpt(spell, item));
     }
@@ -162,7 +162,7 @@ void tryCast(const SpellOpt& spellOpt)
 
   //TODO It should be allowed to cast non-read spells while blind etc.
   //There should be something like "allowRead()" and allowCastSpells()".
-  if(Map::player->getPropHandler().allowRead(true))
+  if (Map::player->getPropHandler().allowRead(true))
   {
     Log::clearLog();
     Render::drawMapAndInterface();
@@ -170,11 +170,11 @@ void tryCast(const SpellOpt& spellOpt)
     Spell* const spell = spellOpt.spell;
 
     const Range spiCost = spell->getSpiCost(false, Map::player);
-    if(spiCost.upper >= Map::player->getSpi())
+    if (spiCost.upper >= Map::player->getSpi())
     {
       Log::addMsg("Cast spell and risk depleting your spirit (y/n)?", clrWhiteHigh);
       Render::drawMapAndInterface();
-      if(Query::yesOrNo() == YesNoAnswer::no)
+      if (Query::yesOrNo() == YesNoAnswer::no)
       {
         Log::clearLog();
         Render::drawMapAndInterface();
@@ -185,16 +185,16 @@ void tryCast(const SpellOpt& spellOpt)
 
     bool isBloodSorc  = false;
     bool isWarlock    = false;
-    for(Trait id : PlayerBon::traitsPicked_)
+    for (Trait id : PlayerBon::traitsPicked_)
     {
-      if(id == Trait::bloodSorcerer)  isBloodSorc = true;
-      if(id == Trait::warlock)        isWarlock   = true;
+      if (id == Trait::bloodSorcerer)  isBloodSorc = true;
+      if (id == Trait::warlock)        isWarlock   = true;
     }
 
     const int BLOOD_SORC_HP_DRAINED = 2;
-    if(isBloodSorc)
+    if (isBloodSorc)
     {
-      if(Map::player->getHp() <= BLOOD_SORC_HP_DRAINED)
+      if (Map::player->getHp() <= BLOOD_SORC_HP_DRAINED)
       {
         Log::addMsg("I do not have enough life force to cast this spell.");
         Render::drawMapAndInterface();
@@ -204,15 +204,15 @@ void tryCast(const SpellOpt& spellOpt)
 
     Log::addMsg("I cast " + spell->getName() + "!");
 
-    if(isBloodSorc)
+    if (isBloodSorc)
     {
       Map::player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure);
     }
-    if(Map::player->isAlive())
+    if (Map::player->isAlive())
     {
       spell->cast(Map::player, true);
       prevCast_ = spellOpt;
-      if(isWarlock && Rnd::oneIn(2))
+      if (isWarlock && Rnd::oneIn(2))
       {
         Map::player->getPropHandler().tryApplyProp(
           new PropWarlockCharged(PropTurns::std));
@@ -230,7 +230,7 @@ void init()
 
 void cleanup()
 {
-  for(Spell* spell : knownSpells_) {delete spell;}
+  for (Spell* spell : knownSpells_) {delete spell;}
   knownSpells_.clear();
   prevCast_ = SpellOpt();
 }
@@ -238,7 +238,7 @@ void cleanup()
 void storeToSaveLines(vector<string>& lines)
 {
   lines.push_back(toStr(knownSpells_.size()));
-  for(Spell* s : knownSpells_) {lines.push_back(toStr(int(s->getId())));}
+  for (Spell* s : knownSpells_) {lines.push_back(toStr(int(s->getId())));}
 }
 
 void setupFromSaveLines(vector<string>& lines)
@@ -246,7 +246,7 @@ void setupFromSaveLines(vector<string>& lines)
   const int NR_SPELLS = toInt(lines.front());
   lines.erase(begin(lines));
 
-  for(int i = 0; i < NR_SPELLS; ++i)
+  for (int i = 0; i < NR_SPELLS; ++i)
   {
     const int ID = toInt(lines.front());
     lines.erase(begin(lines));
@@ -259,7 +259,7 @@ void playerSelectSpellToCast()
   vector<SpellOpt> spellOpts;
   getSpellsAvail(spellOpts);
 
-  if(spellOpts.empty())
+  if (spellOpts.empty())
   {
     Log::addMsg("I do not know any spells to invoke.");
   }
@@ -278,10 +278,10 @@ void playerSelectSpellToCast()
 
     draw(browser, spellOpts);
 
-    while(true)
+    while (true)
     {
       const MenuAction action = MenuInputHandling::getAction(browser);
-      switch(action)
+      switch (action)
       {
         case MenuAction::browsed:
         {
@@ -314,7 +314,7 @@ void tryCastPrevSpell()
 
   bool isPrevSpellOk = false;
 
-  if(prevCast_.spell)
+  if (prevCast_.spell)
   {
     //Checking if previous spell is still available (it could for example have been
     //granted by an item that was dropped)
@@ -327,7 +327,7 @@ void tryCastPrevSpell()
                     end(spellOpts);
   }
 
-  if(isPrevSpellOk)
+  if (isPrevSpellOk)
   {
     TRACE << "Previous spell is available, casting" << endl;
     tryCast(prevCast_);
@@ -343,7 +343,7 @@ void tryCastPrevSpell()
 
 bool isSpellLearned(const SpellId id)
 {
-  for(auto* s : knownSpells_) {if(s->getId() == id) {return true;}}
+  for (auto* s : knownSpells_) {if (s->getId() == id) {return true;}}
   return false;
 }
 
@@ -355,15 +355,15 @@ void learnSpellIfNotKnown(const SpellId id)
 void learnSpellIfNotKnown(Spell* const spell)
 {
   bool isAlreadyLearned = false;
-  for(Spell* spellCmpr : knownSpells_)
+  for (Spell* spellCmpr : knownSpells_)
   {
-    if(spellCmpr->getId() == spell->getId())
+    if (spellCmpr->getId() == spell->getId())
     {
       isAlreadyLearned = true;
       break;
     }
   }
-  if(isAlreadyLearned)
+  if (isAlreadyLearned)
   {
     delete spell;
   }

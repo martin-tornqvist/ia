@@ -47,17 +47,17 @@ void menuMsgDrawingHelper(
   const int TEXT_H_TOT, const string& title)
 {
 
-  if(DRAW_MAP_AND_INTERFACE)
+  if (DRAW_MAP_AND_INTERFACE)
   {
     Render::drawMapAndInterface(false);
   }
 
   //If no message lines, set width to widest menu option or title with
   int textWidthOverride = -1;
-  if(lines.empty())
+  if (lines.empty())
   {
     textWidthOverride = title.size();
-    for(const string& s : choices)
+    for (const string& s : choices)
     {
       textWidthOverride = max(textWidthOverride, int(s.size()));
     }
@@ -66,7 +66,7 @@ void menuMsgDrawingHelper(
 
   int y = printBoxAndGetTitleYPos(TEXT_H_TOT, textWidthOverride);
 
-  if(!title.empty())
+  if (!title.empty())
   {
     Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y),
                              clrWhite, clrBlack, true);
@@ -74,10 +74,10 @@ void menuMsgDrawingHelper(
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
 
-  for(const string& line : lines)
+  for (const string& line : lines)
   {
     y++;
-    if(SHOW_MSG_CENTERED)
+    if (SHOW_MSG_CENTERED)
     {
       Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
                                clrWhite, clrBlack, true);
@@ -88,9 +88,9 @@ void menuMsgDrawingHelper(
     }
     Log::addLineToHistory(line);
   }
-  if(!lines.empty() || !title.empty()) {y += 2;}
+  if (!lines.empty() || !title.empty()) {y += 2;}
 
-  for(size_t i = 0; i < choices.size(); ++i)
+  for (size_t i = 0; i < choices.size(); ++i)
   {
     Clr clr = i == curChoice ? clrMenuHighlight : clrMenuDrk;
     Render::drawTextCentered(
@@ -107,7 +107,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
              const string& title, const SfxId sfx)
 {
 
-  if(DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface(false);}
+  if (DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface(false);}
 
   vector<string> lines;
   TextFormatting::lineToLines(msg, TEXT_W, lines);
@@ -115,9 +115,9 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   int y = printBoxAndGetTitleYPos(TEXT_H_TOT);
 
-  if(sfx != SfxId::END) {Audio::play(sfx);}
+  if (sfx != SfxId::END) {Audio::play(sfx);}
 
-  if(!title.empty())
+  if (!title.empty())
   {
     Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y), clrWhite,
                              clrBlack, true);
@@ -125,10 +125,10 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
 
-  for(string& line : lines)
+  for (string& line : lines)
   {
     y++;
-    if(SHOW_MSG_CENTERED)
+    if (SHOW_MSG_CENTERED)
     {
       Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
                                clrWhite, clrBlack, true);
@@ -148,7 +148,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   Query::waitForEscOrSpace();
 
-  if(DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface();}
+  if (DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface();}
 }
 
 int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
@@ -156,7 +156,7 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
                 const string& title, const SfxId sfx)
 {
 
-  if(Config::isBotPlaying()) {return 0;}
+  if (Config::isBotPlaying()) {return 0;}
 
   vector<string> lines;
   TextFormatting::lineToLines(msg, TEXT_W, lines);
@@ -169,17 +169,17 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   MenuBrowser browser(NR_CHOICES, 0);
 
-  if(sfx != SfxId::END) {Audio::play(sfx);}
+  if (sfx != SfxId::END) {Audio::play(sfx);}
 
   menuMsgDrawingHelper(
     lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
     TEXT_H_TOT, title);
 
-  while(true)
+  while (true)
   {
     const MenuAction action = MenuInputHandling::getAction(browser);
 
-    switch(action)
+    switch (action)
     {
       case MenuAction::browsed:
       {
@@ -191,7 +191,7 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
       case MenuAction::esc:
       case MenuAction::space:
       {
-        if(DRAW_MAP_AND_INTERFACE)
+        if (DRAW_MAP_AND_INTERFACE)
         {
           Render::drawMapAndInterface();
         }
@@ -202,7 +202,7 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
       case MenuAction::selected:
       {
-        if(DRAW_MAP_AND_INTERFACE)
+        if (DRAW_MAP_AND_INTERFACE)
         {
           Render::drawMapAndInterface();
         }

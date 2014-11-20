@@ -34,7 +34,7 @@ void storeToSaveLines(vector<string>& lines)
 {
   lines.push_back(toStr(int(bg_)));
   lines.push_back(toStr(traitsPicked_.size()));
-  for(Trait t : traitsPicked_) {lines.push_back(toStr(int(t)));}
+  for (Trait t : traitsPicked_) {lines.push_back(toStr(int(t)));}
 }
 
 void setupFromSaveLines(vector<string>& lines)
@@ -45,7 +45,7 @@ void setupFromSaveLines(vector<string>& lines)
   const int NR_TRAITS = toInt(lines.front());
   lines.erase(begin(lines));
 
-  for(int i = 0; i < NR_TRAITS; ++i)
+  for (int i = 0; i < NR_TRAITS; ++i)
   {
     traitsPicked_.push_back(Trait(toInt(lines.front())));
     lines.erase(begin(lines));
@@ -55,7 +55,7 @@ void setupFromSaveLines(vector<string>& lines)
 void getBgTitle(const Bg id, string& strRef)
 {
   strRef = "[BG TITLE MISSING]";
-  switch(id)
+  switch (id)
   {
     case Bg::occultist: strRef = "Occultist";   break;
     case Bg::rogue:     strRef = "Rogue";       break;
@@ -68,7 +68,7 @@ void getTraitTitle(const Trait id, string& strRef)
 {
   strRef = "[TRAIT TITLE MISSING]";
 
-  switch(id)
+  switch (id)
   {
     case Trait::adeptMeleeFighter:    strRef = "Adept Melee Fighter";   break;
     case Trait::expertMeleeFighter:   strRef = "Expert Melee Fighter";  break;
@@ -116,7 +116,7 @@ void getBgDescr(const Bg id, vector<string>& linesRef)
   linesRef.clear();
   string s = "";
 
-  switch(id)
+  switch (id)
   {
     case Bg::occultist:
     {
@@ -185,7 +185,7 @@ void getTraitDescr(const Trait id, string& strRef)
 {
   strRef = "[TRAIT DESCRIPTION MISSING]";
 
-  switch(id)
+  switch (id)
   {
     case Trait::adeptMeleeFighter:
     {
@@ -405,7 +405,7 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef)
   traitsRef.clear();
   bgRef = Bg::END;
 
-  switch(id)
+  switch (id)
   {
     case Trait::adeptMeleeFighter:
     {
@@ -616,7 +616,7 @@ void getPickableBgs(vector<Bg>& bgsRef)
 {
   bgsRef.clear();
 
-  for(int i = 0; i < int(Bg::END); ++i) {bgsRef.push_back(Bg(i));}
+  for (int i = 0; i < int(Bg::END); ++i) {bgsRef.push_back(Bg(i));}
 
   //Sort lexicographically
   sort(bgsRef.begin(), bgsRef.end(),
@@ -632,12 +632,12 @@ void getPickableTraits(vector<Trait>& traitsRef)
 {
   traitsRef.clear();
 
-  for(int i = 0; i < int(Trait::END); ++i)
+  for (int i = 0; i < int(Trait::END); ++i)
   {
 
     const Trait trait = Trait(i);
 
-    if(!hasTrait(trait))
+    if (!hasTrait(trait))
     {
 
       vector<Trait> traitPrereqs;
@@ -645,9 +645,9 @@ void getPickableTraits(vector<Trait>& traitsRef)
       getTraitPrereqs(Trait(i), traitPrereqs, bgPrereq);
 
       bool isPickable = true;
-      for(Trait prereq : traitPrereqs)
+      for (Trait prereq : traitPrereqs)
       {
-        if(!hasTrait(prereq))
+        if (!hasTrait(prereq))
         {
           isPickable = false;
           break;
@@ -656,7 +656,7 @@ void getPickableTraits(vector<Trait>& traitsRef)
 
       isPickable = isPickable && (bg_ == bgPrereq || bgPrereq == Bg::END);
 
-      if(isPickable) {traitsRef.push_back(Trait(i));}
+      if (isPickable) {traitsRef.push_back(Trait(i));}
     }
   }
 
@@ -681,7 +681,7 @@ void pickBg(const Bg bg)
 
   bg_ = bg;
 
-  switch(bg_)
+  switch (bg_)
   {
     case Bg::occultist:
     {
@@ -710,7 +710,7 @@ void pickBg(const Bg bg)
 
 void setAllTraitsToPicked()
 {
-  for(int i = 0; i < int(Trait::END); ++i)
+  for (int i = 0; i < int(Trait::END); ++i)
   {
     traitsPicked_.push_back(Trait(i));
   }
@@ -722,7 +722,7 @@ void pickTrait(const Trait id)
 
   traitsPicked_.push_back(id);
 
-  switch(id)
+  switch (id)
   {
     case Trait::tough:
     {
@@ -769,7 +769,7 @@ void getAllPickedTraitsTitlesLine(string& strRef)
 {
   strRef = "";
 
-  for(Trait t : traitsPicked_)
+  for (Trait t : traitsPicked_)
   {
     string title = ""; getTraitTitle(t, title);
     strRef += (strRef.empty() ? "" : ", ") + title;

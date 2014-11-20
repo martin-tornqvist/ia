@@ -22,9 +22,9 @@ bool mkCaveLvl()
 {
   Map::resetMap();
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       auto* const wall  = new Wall(Pos(x, y));
       Map::put(wall);
@@ -43,7 +43,7 @@ bool mkCaveLvl()
 
   auto putCaveFloor = [](const vector<Pos>& positions)
   {
-    for(const Pos& p : positions)
+    for (const Pos& p : positions)
     {
       auto* const f = new Floor(p);
       Map::put(f);
@@ -65,7 +65,7 @@ bool mkCaveLvl()
   const int EDGE_DIST_W = 10;
   const int EDGE_DIST_H = 2;
 
-  for(int i = 0; i < NR_OPEN_PLACES; ++i)
+  for (int i = 0; i < NR_OPEN_PLACES; ++i)
   {
     const Pos curPos(Rnd::range(EDGE_DIST_W, MAP_W - EDGE_DIST_W - 1),
                      Rnd::range(EDGE_DIST_H, MAP_H - EDGE_DIST_H - 1));
@@ -89,12 +89,12 @@ bool mkCaveLvl()
   int floodFill[MAP_W][MAP_H];
   FloodFill::run(origin, blocked, floodFill, 99999, Pos(-1, -1), true);
   vector<PosAndVal> floodVals;
-  for(int x = 1; x < MAP_W - 1; ++x)
+  for (int x = 1; x < MAP_W - 1; ++x)
   {
-    for(int y = 1; y < MAP_H - 1; ++y)
+    for (int y = 1; y < MAP_H - 1; ++y)
     {
       const int VAL = floodFill[x][y];
-      if(VAL > 0) {floodVals.push_back(PosAndVal(Pos(x, y), VAL));}
+      if (VAL > 0) {floodVals.push_back(PosAndVal(Pos(x, y), VAL));}
     }
   }
 

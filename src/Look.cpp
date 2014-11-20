@@ -40,7 +40,7 @@ string getNormalGroupSizeStr(const ActorDataT& def)
 
 string getSpeedStr(const ActorDataT& def)
 {
-  switch(def.speed)
+  switch (def.speed)
   {
     case ActorSpeed::sluggish:   {return "sluggishly";}
     case ActorSpeed::slow:       {return "slowly";}
@@ -63,9 +63,9 @@ void addAutoDescriptionLines(Actor* const actor, string& line)
 {
   const ActorDataT& def = actor->getData();
 
-  if(def.isUnique)
+  if (def.isUnique)
   {
-    if(def.spawnMinDLVL < LAST_CAVERN_LVL)
+    if (def.spawnMinDLVL < LAST_CAVERN_LVL)
     {
       line += " " + def.nameThe + " is normally found beneath level " +
               getDwellingLvlStr(def) + ". ";
@@ -92,7 +92,7 @@ void printLocationInfoMsgs(const Pos& pos)
 
   const Cell& cell = Map::cells[pos.x][pos.y];
 
-  if(Map::cells[pos.x][pos.y].isSeenByPlayer)
+  if (Map::cells[pos.x][pos.y].isSeenByPlayer)
   {
     Log::addMsg("I see here:");
 
@@ -103,9 +103,9 @@ void printLocationInfoMsgs(const Pos& pos)
     Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
 
     //Describe mobile features.
-    for(auto* mob : GameTime::mobs_)
+    for (auto* mob : GameTime::mobs_)
     {
-      if(mob->getPos() == pos)
+      if (mob->getPos() == pos)
       {
         str = mob->getName(Article::a);
         Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
@@ -114,7 +114,7 @@ void printLocationInfoMsgs(const Pos& pos)
 
     //Describe item.
     Item* item = cell.item;
-    if(item)
+    if (item)
     {
       str = item->getName(ItemRefType::plural, ItemRefInf::yes,
                           ItemRefAttInf::wpnContext);
@@ -122,9 +122,9 @@ void printLocationInfoMsgs(const Pos& pos)
     }
 
     //Describe dead actors.
-    for(Actor* actor : GameTime::actors_)
+    for (Actor* actor : GameTime::actors_)
     {
-      if(actor->isCorpse() && actor->pos == pos)
+      if (actor->isCorpse() && actor->pos == pos)
       {
         str = actor->getCorpseNameA();
         Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
@@ -133,11 +133,11 @@ void printLocationInfoMsgs(const Pos& pos)
 
     //Describe living actor.
     Actor* actor = Utils::getActorAtPos(pos);
-    if(actor && actor != Map::player)
+    if (actor && actor != Map::player)
     {
-      if(actor->isAlive())
+      if (actor->isAlive())
       {
-        if(Map::player->isSeeingActor(*actor, nullptr))
+        if (Map::player->isSeeingActor(*actor, nullptr))
         {
           str = actor->getNameA();
           Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
@@ -155,13 +155,13 @@ void printLocationInfoMsgs(const Pos& pos)
 void printDetailedActorDescr(const Pos& pos)
 {
   Actor* actor = Utils::getActorAtPos(pos);
-  if(actor && actor != Map::player)
+  if (actor && actor != Map::player)
   {
     //Add written description.
     string descr = actor->getData().descr;
 
     //Add auto-description.
-    if(actor->getData().isAutoDescrAllowed)
+    if (actor->getData().isAutoDescrAllowed)
     {
       AutoDescrActor::addAutoDescriptionLines(actor, descr);
     }
@@ -176,7 +176,7 @@ void printDetailedActorDescr(const Pos& pos)
     Render::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
 
     int y = 1;
-    for(string& s : formattedText)
+    for (string& s : formattedText)
     {
       Render::drawText(s, Panel::screen, Pos(0, y), clrWhiteHigh);
       y++;

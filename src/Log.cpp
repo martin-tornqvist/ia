@@ -26,7 +26,7 @@ const string          moreStr = "--More--";
 
 int getXAfterMsg(const Msg* const msg)
 {
-  if(!msg) {return 0;}
+  if (!msg) {return 0;}
 
   string str = "";
   msg->getStrWithRepeats(str);
@@ -40,13 +40,13 @@ void promptAndClearLog()
   int xPos    = 0;
   int lineNr = lines_[1].empty() ? 0 : 1;
 
-  if(!lines_[lineNr].empty())
+  if (!lines_[lineNr].empty())
   {
     Msg* const lastMsg = &lines_[lineNr].back();
     xPos = getXAfterMsg(lastMsg);
-    if(lineNr == 0)
+    if (lineNr == 0)
     {
-      if(xPos + int(moreStr.size()) - 1 >= MAP_W)
+      if (xPos + int(moreStr.size()) - 1 >= MAP_W)
       {
         xPos    = 0;
         lineNr  = 1;
@@ -69,7 +69,7 @@ void drawHistoryInterface(const int TOP_LINE_NR, const int BTM_LINE_NR)
 
   const int X_LABEL = 3;
 
-  if(history_.empty())
+  if (history_.empty())
   {
     Render::drawText(" No message history ", Panel::screen,
                      Pos(X_LABEL, 0), clrGray);
@@ -90,7 +90,7 @@ void drawHistoryInterface(const int TOP_LINE_NR, const int BTM_LINE_NR)
 //Used by normal log and history viewer
 void drawLine(const vector<Msg>& lineToDraw, const int Y_POS)
 {
-  for(const Msg& msg : lineToDraw)
+  for (const Msg& msg : lineToDraw)
   {
     string str = "";
     msg.getStrWithRepeats(str);
@@ -107,12 +107,12 @@ void init()
 
 void clearLog()
 {
-  for(vector<Msg>& line : lines_)
+  for (vector<Msg>& line : lines_)
   {
-    if(!line.empty())
+    if (!line.empty())
     {
       history_.push_back(line);
-      while(history_.size() > 300) {history_.erase(history_.begin());}
+      while (history_.size() > 300) {history_.erase(history_.begin());}
       line.clear();
     }
   }
@@ -121,8 +121,8 @@ void clearLog()
 void drawLog(const bool SHOULD_UPDATE_SCREEN)
 {
   Render::coverArea(Panel::log, Pos(0, 0), Pos(MAP_W, 2));
-  for(int i = 0; i < 2; ++i) drawLine(lines_[i], i);
-  if(SHOULD_UPDATE_SCREEN) Render::updateScreen();
+  for (int i = 0; i < 2; ++i) drawLine(lines_[i], i);
+  if (SHOULD_UPDATE_SCREEN) Render::updateScreen();
 }
 
 void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTIONS,
@@ -131,7 +131,7 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
 
   assert(!text.empty());
 #ifndef NDEBUG
-  if(text[0] == ' ')
+  if (text[0] == ' ')
   {
     TRACE << "Message starts with space: \"" << text << "\"" << endl;
     assert(false);
@@ -141,23 +141,23 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
   int curLineNr = lines_[1].empty() ? 0 : 1;
 
   Msg* lastMsg = nullptr;
-  if(!lines_[curLineNr].empty()) {lastMsg = &lines_[curLineNr].back();}
+  if (!lines_[curLineNr].empty()) {lastMsg = &lines_[curLineNr].back();}
 
   bool isRepeated = false;
 
   //Check if message is identical to previous
-  if(!ADD_MORE_PROMPT_AFTER_MSG && lastMsg)
+  if (!ADD_MORE_PROMPT_AFTER_MSG && lastMsg)
   {
     string str = "";
     lastMsg->getStrRaw(str);
-    if(str.compare(text) == 0)
+    if (str.compare(text) == 0)
     {
       lastMsg->incrRepeat();
       isRepeated = true;
     }
   }
 
-  if(!isRepeated)
+  if (!isRepeated)
   {
     const int REPEAT_STR_LEN = 4;
 
@@ -167,9 +167,9 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
 
     const bool IS_MSG_FIT = xPos + int(text.size()) + PADDING_LEN - 1 < MAP_W;
 
-    if(!IS_MSG_FIT)
+    if (!IS_MSG_FIT)
     {
-      if(curLineNr == 0)
+      if (curLineNr == 0)
       {
         curLineNr = 1;
       }
@@ -184,10 +184,10 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
     lines_[curLineNr].push_back(Msg(text, clr, xPos));
   }
 
-  if(ADD_MORE_PROMPT_AFTER_MSG) {promptAndClearLog();}
+  if (ADD_MORE_PROMPT_AFTER_MSG) {promptAndClearLog();}
 
   //Messages may stop long actions like first aid and quick walk
-  if(INTERRUPT_PLAYER_ACTIONS)
+  if (INTERRUPT_PLAYER_ACTIONS)
   {
     Map::player->interruptActions();
   }
@@ -204,22 +204,22 @@ void displayHistory()
   int topNr = max(0, NR_LINES_TOT - MAX_NR_LINES_ON_SCR);
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
-  while(true)
+  while (true)
   {
     Render::clearScreen();
     drawHistoryInterface(topNr, btmNr);
     int yPos = 1;
-    for(int i = topNr; i <= btmNr; ++i)
+    for (int i = topNr; i <= btmNr; ++i)
     {
       drawLine(history_[i], yPos++);
     }
     Render::updateScreen();
 
     const KeyData& d = Input::readKeysUntilFound();
-    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
+    if (d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
     {
       topNr += LINE_JUMP;
-      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+      if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
       {
         topNr = 0;
       }
@@ -228,11 +228,11 @@ void displayHistory()
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
     }
-    else if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
+    else if (d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
     {
       topNr = max(0, topNr - LINE_JUMP);
     }
-    else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    else if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
     {
       break;
     }

@@ -26,7 +26,7 @@ const string Scroll::getRealName() const
 
 vector<string> Scroll::getDescr() const
 {
-  if(data_->isIdentified)
+  if (data_->isIdentified)
   {
     const auto* const spell = mkSpell();
     const auto descr = spell->getDescr();
@@ -41,7 +41,7 @@ vector<string> Scroll::getDescr() const
 
 ConsumeItem Scroll::activateDefault(Actor* const actor)
 {
-  if(actor->getPropHandler().allowRead(true)) {return read();}
+  if (actor->getPropHandler().allowRead(true)) {return read();}
   return ConsumeItem::no;
 }
 
@@ -52,12 +52,12 @@ Spell* Scroll::mkSpell() const
 
 void Scroll::identify(const bool IS_SILENT_IDENTIFY)
 {
-  if(!data_->isIdentified)
+  if (!data_->isIdentified)
   {
 
     data_->isIdentified = true;
 
-    if(!IS_SILENT_IDENTIFY)
+    if (!IS_SILENT_IDENTIFY)
     {
       const string name = getName(ItemRefType::a, ItemRefInf::none);
       Log::addMsg("It was " + name + ".");
@@ -68,12 +68,11 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY)
 
 void Scroll::tryLearn()
 {
-  if(PlayerBon::getBg() == Bg::occultist)
+  if (PlayerBon::getBg() == Bg::occultist)
   {
     Spell* const spell = mkSpell();
-    if(
-      spell->isAvailForPlayer() &&
-      !PlayerSpellsHandling::isSpellLearned(spell->getId()))
+    if (spell->isAvailForPlayer() &&
+        !PlayerSpellsHandling::isSpellLearned(spell->getId()))
     {
       Log::addMsg("I learn to cast this incantation by heart!");
       PlayerSpellsHandling::learnSpellIfNotKnown(spell);
@@ -89,7 +88,7 @@ ConsumeItem Scroll::read()
 {
   Render::drawMapAndInterface();
 
-  if(!Map::player->getPropHandler().allowSee())
+  if (!Map::player->getPropHandler().allowSee())
   {
     Log::addMsg("I cannot read while blind.");
     return ConsumeItem::no;
@@ -99,7 +98,7 @@ ConsumeItem Scroll::read()
 
   const string crumbleStr = "It crumbles to dust.";
 
-  if(data_->isIdentified)
+  if (data_->isIdentified)
   {
     const string name = getName(ItemRefType::a, ItemRefInf::none);
     Log::addMsg("I read " + name + "...");
@@ -113,7 +112,7 @@ ConsumeItem Scroll::read()
     data_->isTried = true;
     const auto isNoticed = spell->cast(Map::player, false);
     Log::addMsg(crumbleStr);
-    if(isNoticed == SpellEffectNoticed::yes) {identify(false);}
+    if (isNoticed == SpellEffectNoticed::yes) {identify(false);}
   }
 
   delete spell;
@@ -194,11 +193,11 @@ void init()
   cmb.push_back("Nikto");
 
   const size_t NR_CMB_PARTS = cmb.size();
-  for(size_t i = 0; i < NR_CMB_PARTS; ++i)
+  for (size_t i = 0; i < NR_CMB_PARTS; ++i)
   {
-    for(size_t ii = 0; ii < NR_CMB_PARTS; ii++)
+    for (size_t ii = 0; ii < NR_CMB_PARTS; ii++)
     {
-      if(i != ii)
+      if (i != ii)
       {
         falseNames_.push_back(cmb[i] + " " + cmb[ii]);
       }
@@ -206,9 +205,9 @@ void init()
   }
 
   TRACE << "Init scroll names" << endl;
-  for(auto* const d : ItemData::data)
+  for (auto* const d : ItemData::data)
   {
-    if(d->isScroll)
+    if (d->isScroll)
     {
       //False name
       const int NR_ELEMENTS = falseNames_.size();
@@ -245,9 +244,9 @@ void init()
 
 void storeToSaveLines(vector<string>& lines)
 {
-  for(int i = 0; i < int(ItemId::END); ++i)
+  for (int i = 0; i < int(ItemId::END); ++i)
   {
-    if(ItemData::data[i]->isScroll)
+    if (ItemData::data[i]->isScroll)
     {
       lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]);
       lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plural)]);
@@ -258,9 +257,9 @@ void storeToSaveLines(vector<string>& lines)
 
 void setupFromSaveLines(vector<string>& lines)
 {
-  for(int i = 0; i < int(ItemId::END); ++i)
+  for (int i = 0; i < int(ItemId::END); ++i)
   {
-    if(ItemData::data[i]->isScroll)
+    if (ItemData::data[i]->isScroll)
     {
       ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]  = lines.front();
       lines.erase(begin(lines));

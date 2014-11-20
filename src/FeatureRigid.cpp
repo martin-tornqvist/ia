@@ -30,19 +30,19 @@ Rigid::Rigid(Pos pos) :
 
 void Rigid::onNewTurn()
 {
-  if(burnState_ == BurnState::burning)
+  if (burnState_ == BurnState::burning)
   {
     clearGore();
 
     auto scorchActor = [](Actor & actor)
     {
-      if(&actor == Map::player)
+      if (&actor == Map::player)
       {
         Log::addMsg("I am scorched by flames.", clrMsgBad);
       }
       else
       {
-        if(Map::player->isSeeingActor(actor, nullptr))
+        if (Map::player->isSeeingActor(actor, nullptr))
         {
           Log::addMsg(actor.getNameThe() + " is scorched by flames.", clrMsgGood);
         }
@@ -54,10 +54,10 @@ void Rigid::onNewTurn()
 
     //Hit actor standing on feature
     auto* actor = Utils::getActorAtPos(pos_);
-    if(actor)
+    if (actor)
     {
       //Occasionally try to set actor on fire, otherwise just do small fire damage
-      if(Rnd::oneIn(4))
+      if (Rnd::oneIn(4))
       {
         auto& propHandler = actor->getPropHandler();
         propHandler.tryApplyProp(new PropBurning(PropTurns::std));
@@ -72,7 +72,7 @@ void Rigid::onNewTurn()
     int finishBurningOneInN = 1;
     int hitAdjacentOneInN   = 1;
 
-    switch(getMatl())
+    switch (getMatl())
     {
       case Matl::fluid:
       case Matl::empty:
@@ -112,35 +112,35 @@ void Rigid::onNewTurn()
       } break;
     }
 
-    if(Rnd::oneIn(finishBurningOneInN))
+    if (Rnd::oneIn(finishBurningOneInN))
     {
       burnState_ = BurnState::hasBurned;
-      if(onFinishedBurning() == IsDestroyed::yes)
+      if (onFinishedBurning() == IsDestroyed::yes)
       {
         return;
       }
     }
 
     //Hit adjacent features and actors?
-    if(Rnd::oneIn(hitAdjacentOneInN))
+    if (Rnd::oneIn(hitAdjacentOneInN))
     {
       const Pos p(DirUtils::getRndAdjPos(pos_, false));
-      if(Utils::isPosInsideMap(p))
+      if (Utils::isPosInsideMap(p))
       {
         Map::cells[p.x][p.y].rigid->hit(DmgType::fire, DmgMethod::elemental);
 
         actor = Utils::getActorAtPos(p);
-        if(actor) {scorchActor(*actor);}
+        if (actor) {scorchActor(*actor);}
       }
     }
 
     //Create smoke?
-    if(Rnd::oneIn(20))
+    if (Rnd::oneIn(20))
     {
       const Pos p(DirUtils::getRndAdjPos(pos_, true));
-      if(Utils::isPosInsideMap(p))
+      if (Utils::isPosInsideMap(p))
       {
-        if(!CellCheck::BlocksMoveCmn(false).check(Map::cells[p.x][p.y]))
+        if (!CellCheck::BlocksMoveCmn(false).check(Map::cells[p.x][p.y]))
         {
           GameTime::addMob(new Smoke(p, 10));
         }
@@ -156,9 +156,9 @@ void Rigid::tryStartBurning(const bool IS_MSG_ALLOWED)
 {
   clearGore();
 
-  if(burnState_ == BurnState::notBurned)
+  if (burnState_ == BurnState::notBurned)
   {
-    if(Map::isPosSeenByPlayer(pos_) && IS_MSG_ALLOWED)
+    if (Map::isPosSeenByPlayer(pos_) && IS_MSG_ALLOWED)
     {
       string str = getName(Article::the) + " catches fire.";
       str[0] = toupper(str[0]);
@@ -184,22 +184,22 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
 
   bool isFeatureHit = true;
 
-  if(actor == Map::player && dmgMethod == DmgMethod::kick)
+  if (actor == Map::player && dmgMethod == DmgMethod::kick)
   {
     const bool IS_BLIND    = !Map::player->getPropHandler().allowSee();
     const bool IS_BLOCKING = !canMoveCmn() && getId() != FeatureId::stairs;
 
-    if(IS_BLOCKING)
+    if (IS_BLOCKING)
     {
       Log::addMsg("I kick " + (IS_BLIND ? "something" : getName(Article::a)) + "!");
 
-      if(Rnd::oneIn(4))
+      if (Rnd::oneIn(4))
       {
         Log::addMsg("I sprain myself.", clrMsgBad);
         actor->hit(Rnd::range(1, 2), DmgType::pure);
       }
 
-      if(Rnd::oneIn(4))
+      if (Rnd::oneIn(4))
       {
         Log::addMsg("I am off-balance.");
 
@@ -215,17 +215,17 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
     }
   }
 
-  if(isFeatureHit) {onHit(dmgType, dmgMethod, actor);}
+  if (isFeatureHit) {onHit(dmgType, dmgMethod, actor);}
 
-  if(actor) {GameTime::actorDidAct();} //TODO This should probably be done elsewhere.
+  if (actor) {GameTime::actorDidAct();} //TODO This should probably be done elsewhere.
 }
 
 void Rigid::tryPutGore()
 {
-  if(getData().canHaveGore)
+  if (getData().canHaveGore)
   {
     const int ROLL_GLYPH = Rnd::dice(1, 4);
-    switch(ROLL_GLYPH)
+    switch (ROLL_GLYPH)
     {
       case 1: {goreGlyph_ = ',';} break;
       case 2: {goreGlyph_ = '`';} break;
@@ -234,7 +234,7 @@ void Rigid::tryPutGore()
     }
 
     const int ROLL_TILE = Rnd::dice(1, 8);
-    switch(ROLL_TILE)
+    switch (ROLL_TILE)
     {
       case 1: {goreTile_ = TileId::gore1;} break;
       case 2: {goreTile_ = TileId::gore2;} break;
@@ -250,13 +250,13 @@ void Rigid::tryPutGore()
 
 Clr Rigid::getClr() const
 {
-  if(burnState_ == BurnState::burning)
+  if (burnState_ == BurnState::burning)
   {
     return clrOrange;
   }
   else
   {
-    if(isBloody_)
+    if (isBloody_)
     {
       return clrRedLgt;
     }
@@ -269,7 +269,7 @@ Clr Rigid::getClr() const
 
 Clr Rigid::getClrBg() const
 {
-  switch(burnState_)
+  switch (burnState_)
   {
     case BurnState::notBurned:  return getClrBg_();  break;
     case BurnState::burning:    return Clr {Uint8(Rnd::range(32, 255)), 0, 0, 0}; break;
@@ -291,10 +291,10 @@ Floor::Floor(Pos pos) : Rigid(pos), type_(FloorType::cmn) {}
 
 void Floor::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
 {
-  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
+  if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
     (void)actor;
-    if(Rnd::oneIn(3)) {tryStartBurning(false);}
+    if (Rnd::oneIn(3)) {tryStartBurning(false);}
   }
 }
 
@@ -308,15 +308,15 @@ string Floor::getName(const Article article) const
 {
   string ret = article == Article::a ? "" : "the ";
 
-  if(getBurnState() == BurnState::burning)
+  if (getBurnState() == BurnState::burning)
   {
     ret += "flames";
   }
   else
   {
-    if(getBurnState() == BurnState::hasBurned) {ret += "scorched ";}
+    if (getBurnState() == BurnState::hasBurned) {ret += "scorched ";}
 
-    switch(type_)
+    switch (type_)
     {
       case FloorType::cmn:        ret += "stone floor";   break;
       case FloorType::cave:       ret += "cavern floor";  break;
@@ -340,12 +340,12 @@ void Wall::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 
   auto destrAdjDoors = [&]()
   {
-    for(const Pos& d : DirUtils::cardinalList)
+    for (const Pos& d : DirUtils::cardinalList)
     {
       const Pos p(pos_ + d);
-      if(Utils::isPosInsideMap(p))
+      if (Utils::isPosInsideMap(p))
       {
-        if(Map::cells[p.x][p.y].rigid->getId() == FeatureId::door)
+        if (Map::cells[p.x][p.y].rigid->getId() == FeatureId::door)
         {
           Map::put(new RubbleLow(p));
         }
@@ -357,26 +357,26 @@ void Wall::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
   {
     const Pos p(pos_);
     Map::put(new RubbleLow(p)); //Note: "this" is now deleted!
-    if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, p);}
+    if (Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, p);}
   };
 
-  if(dmgType == DmgType::physical)
+  if (dmgType == DmgType::physical)
   {
 
-    if(dmgMethod == DmgMethod::forced)
+    if (dmgMethod == DmgMethod::forced)
     {
       (void)actor;
       destrAdjDoors();
       mkLowRubbleAndRocks();
     }
 
-    if(dmgMethod == DmgMethod::explosion)
+    if (dmgMethod == DmgMethod::explosion)
     {
       (void)actor;
 
       destrAdjDoors();
 
-      if(Rnd::coinToss())
+      if (Rnd::coinToss())
       {
         mkLowRubbleAndRocks();
       }
@@ -386,16 +386,16 @@ void Wall::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
       }
     }
 
-    if(dmgMethod == DmgMethod::bluntHeavy)
+    if (dmgMethod == DmgMethod::bluntHeavy)
     {
       (void)actor;
 
-      if(Rnd::fraction(1, 4))
+      if (Rnd::fraction(1, 4))
       {
 
         destrAdjDoors();
 
-        if(Rnd::coinToss())
+        if (Rnd::coinToss())
         {
           mkLowRubbleAndRocks();
         }
@@ -431,9 +431,9 @@ string Wall::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  if(isMossy_) {ret += "moss-grown ";}
+  if (isMossy_) {ret += "moss-grown ";}
 
-  switch(type_)
+  switch (type_)
   {
     case WallType::cmn:
     case WallType::cmnAlt:
@@ -447,8 +447,8 @@ string Wall::getName(const Article article) const
 
 Clr Wall::getClr_() const
 {
-  if(isMossy_) {return clrGreenDrk;}
-  switch(type_)
+  if (isMossy_) {return clrGreenDrk;}
+  switch (type_)
   {
     case WallType::cliff:         return clrGrayDrk;    break;
     case WallType::egypt:
@@ -468,9 +468,9 @@ char Wall::getGlyph() const
 
 TileId Wall::getFrontWallTile() const
 {
-  if(Config::isTilesWallFullSquare())
+  if (Config::isTilesWallFullSquare())
   {
-    switch(type_)
+    switch (type_)
     {
       case WallType::cmn:
       case WallType::cmnAlt:        return TileId::wallTop;         break;
@@ -482,7 +482,7 @@ TileId Wall::getFrontWallTile() const
   }
   else
   {
-    switch(type_)
+    switch (type_)
     {
       case WallType::cmn:           return TileId::wallFront;       break;
       case WallType::cmnAlt:        return TileId::wallFrontAlt1;   break;
@@ -498,7 +498,7 @@ TileId Wall::getFrontWallTile() const
 
 TileId Wall::getTopWallTile() const
 {
-  switch(type_)
+  switch (type_)
   {
     case WallType::cmn:
     case WallType::cmnAlt:        return TileId::wallTop;           break;
@@ -514,7 +514,7 @@ TileId Wall::getTopWallTile() const
 void Wall::setRndCmnWall()
 {
   const int RND = Rnd::range(1, 6);
-  switch(RND)
+  switch (RND)
   {
     case 1:   type_ = WallType::cmnAlt; break;
     default:  type_ = WallType::cmn;    break;
@@ -537,28 +537,28 @@ void RubbleHigh::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
   {
     const Pos p(pos_);
     Map::put(new RubbleLow(p)); //Note: "this" is now deleted!
-    if(Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, p);}
+    if (Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, p);}
   };
 
-  if(dmgType == DmgType::physical)
+  if (dmgType == DmgType::physical)
   {
 
-    if(dmgMethod == DmgMethod::forced)
+    if (dmgMethod == DmgMethod::forced)
     {
       (void)actor;
       mkLowRubbleAndRocks();
     }
 
-    if(dmgMethod == DmgMethod::explosion)
+    if (dmgMethod == DmgMethod::explosion)
     {
       (void)actor;
       mkLowRubbleAndRocks();
     }
 
-    if(dmgMethod == DmgMethod::bluntHeavy)
+    if (dmgMethod == DmgMethod::bluntHeavy)
     {
       (void)actor;
-      if(Rnd::fraction(2, 4)) {mkLowRubbleAndRocks();}
+      if (Rnd::fraction(2, 4)) {mkLowRubbleAndRocks();}
     }
   }
 }
@@ -580,7 +580,7 @@ RubbleLow::RubbleLow(Pos pos) : Rigid(pos) {}
 void RubbleLow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                       Actor* const actor)
 {
-  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
+  if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
     (void)actor;
     tryStartBurning(false);
@@ -590,8 +590,8 @@ void RubbleLow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 string RubbleLow::getName(const Article article) const
 {
   string ret = "";
-  if(article == Article::the)               {ret += "the ";}
-  if(getBurnState() == BurnState::burning)  {ret += "burning ";}
+  if (article == Article::the)               {ret += "the ";}
+  if (getBurnState() == BurnState::burning)  {ret += "burning ";}
   return ret + "rubble";
 }
 
@@ -611,7 +611,7 @@ void GraveStone::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void GraveStone::bump(Actor& actorBumping)
 {
-  if(actorBumping.isPlayer()) {Log::addMsg(inscr_);}
+  if (actorBumping.isPlayer()) {Log::addMsg(inscr_);}
 }
 
 string GraveStone::getName(const Article article) const
@@ -652,16 +652,16 @@ Statue::Statue(Pos pos) :
 void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* const actor)
 {
-  if(dmgType == DmgType::physical && dmgMethod == DmgMethod::kick)
+  if (dmgType == DmgType::physical && dmgMethod == DmgMethod::kick)
   {
     assert(actor);
 
     const AlertsMon alertsMon = actor == Map::player ?
                                 AlertsMon::yes :
                                 AlertsMon::no;
-    if(Rnd::coinToss())
+    if (Rnd::coinToss())
     {
-      if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {Log::addMsg("It topples over.");}
+      if (Map::cells[pos_.x][pos_.y].isSeenByPlayer) {Log::addMsg("It topples over.");}
 
       Snd snd("I hear a crash.", SfxId::END, IgnoreMsgIfOriginSeen::yes,
               pos_, actor, SndVol::low, alertsMon);
@@ -676,22 +676,22 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
       Render::drawMapAndInterface();
       Map::updateVisualMemory();
 
-      if(!CellCheck::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y]))
+      if (!CellCheck::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y]))
       {
         Actor* const actorBehind = Utils::getActorAtPos(dstPos);
-        if(actorBehind)
+        if (actorBehind)
         {
-          if(actorBehind->isAlive())
+          if (actorBehind->isAlive())
           {
             bool props[endOfPropIds];
             actorBehind->getPropHandler().getAllActivePropIds(props);
-            if(props[propEthereal])
+            if (props[propEthereal])
             {
-              if(actorBehind == Map::player)
+              if (actorBehind == Map::player)
               {
                 Log::addMsg("It falls on me!");
               }
-              else if(Map::player->isSeeingActor(*actorBehind, nullptr))
+              else if (Map::player->isSeeingActor(*actorBehind, nullptr))
               {
                 Log::addMsg("It falls on " + actorBehind->getNameA() + ".");
               }
@@ -709,7 +709,7 @@ string Statue::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  switch(type_)
+  switch (type_)
   {
     case StatueType::cmn:   ret += "statue"; break;
     case StatueType::ghoul: ret += "statue of a ghoulish creature"; break;
@@ -758,13 +758,13 @@ void Stairs::onNewTurn_()
 
 void Stairs::bump(Actor& actorBumping)
 {
-  if(actorBumping.isPlayer())
+  if (actorBumping.isPlayer())
   {
     const vector<string> choices {"Descend", "Save and quit", "Cancel"};
     const string title  = "A staircase leading downwards";
     const int CHOICE    =  Popup::showMenuMsg("", true, choices, title);
 
-    switch(CHOICE)
+    switch (CHOICE)
     {
       case 0:
       {
@@ -841,11 +841,11 @@ void LiquidShallow::bump(Actor& actorBumping)
   bool props[endOfPropIds];
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
-  if(!props[propEthereal] && !props[propFlying])
+  if (!props[propEthereal] && !props[propFlying])
   {
     actorBumping.getPropHandler().tryApplyProp(new PropWaiting(PropTurns::std));
 
-    if(actorBumping.isPlayer())
+    if (actorBumping.isPlayer())
     {
       Log::addMsg("*glop*");
     }
@@ -855,11 +855,11 @@ void LiquidShallow::bump(Actor& actorBumping)
 string LiquidShallow::getName(const Article article) const
 {
   string ret = "";
-  if(article == Article::the) {ret += "the ";}
+  if (article == Article::the) {ret += "the ";}
 
   ret += "a pool of ";
 
-  switch(type_)
+  switch (type_)
   {
     case LiquidType::water:   ret += "water"; break;
     case LiquidType::acid:    ret += "acid";  break;
@@ -873,7 +873,7 @@ string LiquidShallow::getName(const Article article) const
 
 Clr LiquidShallow::getClr_() const
 {
-  switch(type_)
+  switch (type_)
   {
     case LiquidType::water:   return clrBlueLgt;  break;
     case LiquidType::acid:    return clrGreenLgt; break;
@@ -902,11 +902,11 @@ void LiquidDeep::bump(Actor& actorBumping)
 string LiquidDeep::getName(const Article article) const
 {
   string ret = "";
-  if(article == Article::the) {ret += "the ";}
+  if (article == Article::the) {ret += "the ";}
 
   ret += "deep ";
 
-  switch(type_)
+  switch (type_)
   {
     case LiquidType::water:   ret += "water"; break;
     case LiquidType::acid:    ret += "acid";  break;
@@ -920,7 +920,7 @@ string LiquidDeep::getName(const Article article) const
 
 Clr LiquidDeep::getClr_() const
 {
-  switch(type_)
+  switch (type_)
   {
     case LiquidType::water:   return clrBlue;     break;
     case LiquidType::acid:    return clrGreen;    break;
@@ -1028,7 +1028,7 @@ Carpet::Carpet(Pos pos) : Rigid(pos) {}
 void Carpet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* const actor)
 {
-  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
+  if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
     (void)actor;
     tryStartBurning(false);
@@ -1057,13 +1057,13 @@ Clr Carpet::getClr_() const
 //--------------------------------------------------------------------- GRASS
 Grass::Grass(Pos pos) : Rigid(pos), type_(GrassType::cmn)
 {
-  if(Rnd::oneIn(5)) {type_ = GrassType::withered;}
+  if (Rnd::oneIn(5)) {type_ = GrassType::withered;}
 }
 
 void Grass::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                   Actor* const actor)
 {
-  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
+  if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
     (void)actor;
     tryStartBurning(false);
@@ -1080,13 +1080,13 @@ TileId Grass::getTile() const
 string Grass::getName(const Article article) const
 {
   string ret = "";
-  if(article == Article::the) {ret += "the ";}
+  if (article == Article::the) {ret += "the ";}
 
-  switch(getBurnState())
+  switch (getBurnState())
   {
     case BurnState::notBurned:
     {
-      switch(type_)
+      switch (type_)
       {
         case GrassType::cmn:      return ret + "grass";           break;
         case GrassType::withered: return ret + "withered grass";  break;
@@ -1102,7 +1102,7 @@ string Grass::getName(const Article article) const
 
 Clr Grass::getClr_() const
 {
-  switch(type_)
+  switch (type_)
   {
     case GrassType::cmn:      return clrGreen;    break;
     case GrassType::withered: return clrBrownDrk; break;
@@ -1114,13 +1114,13 @@ Clr Grass::getClr_() const
 //--------------------------------------------------------------------- BUSH
 Bush::Bush(Pos pos) : Rigid(pos), type_(GrassType::cmn)
 {
-  if(Rnd::oneIn(5)) {type_ = GrassType::withered;}
+  if (Rnd::oneIn(5)) {type_ = GrassType::withered;}
 }
 
 void Bush::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                  Actor* const actor)
 {
-  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
+  if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
     (void)actor;
     tryStartBurning(false);
@@ -1139,11 +1139,11 @@ string Bush::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  switch(getBurnState())
+  switch (getBurnState())
   {
     case BurnState::notBurned:
     {
-      switch(type_)
+      switch (type_)
       {
         case GrassType::cmn:      return ret + "shrub";           break;
         case GrassType::withered: return ret + "withered shrub";  break;
@@ -1159,7 +1159,7 @@ string Bush::getName(const Article article) const
 
 Clr Bush::getClr_() const
 {
-  switch(type_)
+  switch (type_)
   {
     case GrassType::cmn:      return clrGreen;    break;
     case GrassType::withered: return clrBrownDrk; break;
@@ -1174,10 +1174,10 @@ Tree::Tree(Pos pos) : Rigid(pos) {}
 void Tree::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                  Actor* const actor)
 {
-  if(dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
+  if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
     (void)actor;
-    if(Rnd::oneIn(3)) {tryStartBurning(false);}
+    if (Rnd::oneIn(3)) {tryStartBurning(false);}
   }
 }
 
@@ -1186,7 +1186,7 @@ string Tree::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  switch(getBurnState())
+  switch (getBurnState())
   {
     case BurnState::notBurned:  {}                  break;
     case BurnState::burning:    ret += "burning ";  break;
@@ -1224,7 +1224,7 @@ ItemContainer::ItemContainer() {items_.clear();}
 
 ItemContainer::~ItemContainer()
 {
-  for(unsigned int i = 0; i < items_.size(); ++i)
+  for (unsigned int i = 0; i < items_.size(); ++i)
   {
     delete items_[i];
   }
@@ -1234,31 +1234,31 @@ void ItemContainer::setRandomItemsForFeature(
   const FeatureId featureId,
   const int NR_ITEMS_TO_ATTEMPT)
 {
-  for(unsigned int i = 0; i < items_.size(); ++i)
+  for (unsigned int i = 0; i < items_.size(); ++i)
   {
     delete items_[i];
   }
   items_.clear();
 
-  if(NR_ITEMS_TO_ATTEMPT > 0)
+  if (NR_ITEMS_TO_ATTEMPT > 0)
   {
-    while(items_.empty())
+    while (items_.empty())
     {
       vector<ItemId> itemBucket;
-      for(int i = 0; i < int(ItemId::END); ++i)
+      for (int i = 0; i < int(ItemId::END); ++i)
       {
         ItemDataT* const curData = ItemData::data[i];
-        for(
+        for (
           unsigned int ii = 0;
           ii < curData->featuresCanBeFoundIn.size();
           ii++)
         {
           auto featuresFoundIn = curData->featuresCanBeFoundIn[ii];
-          if(featuresFoundIn.first == featureId)
+          if (featuresFoundIn.first == featureId)
           {
-            if(Rnd::percentile() < featuresFoundIn.second)
+            if (Rnd::percentile() < featuresFoundIn.second)
             {
-              if(Rnd::percentile() < curData->chanceToIncludeInSpawnList)
+              if (Rnd::percentile() < curData->chanceToIncludeInSpawnList)
               {
                 itemBucket.push_back(ItemId(i));
                 break;
@@ -1269,9 +1269,9 @@ void ItemContainer::setRandomItemsForFeature(
       }
 
       const int NR_CANDIDATES = int(itemBucket.size());
-      if(NR_CANDIDATES > 0)
+      if (NR_CANDIDATES > 0)
       {
-        for(int i = 0; i < NR_ITEMS_TO_ATTEMPT; ++i)
+        for (int i = 0; i < NR_ITEMS_TO_ATTEMPT; ++i)
         {
           const auto ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
           Item* item = ItemFactory::mk(itemBucket[ELEMENT]);
@@ -1285,7 +1285,7 @@ void ItemContainer::setRandomItemsForFeature(
 
 void ItemContainer::dropItems(const Pos& pos)
 {
-  for(auto* item : items_) {ItemDrop::dropItemOnMap(pos, *item);}
+  for (auto* item : items_) {ItemDrop::dropItemOnMap(pos, *item);}
   items_.clear();
 }
 
@@ -1293,11 +1293,11 @@ void ItemContainer::destroySingleFragile()
 {
   //TODO Generalize this function (perhaps isFragile variable in item data)
 
-  for(size_t i = 0; i < items_.size(); ++i)
+  for (size_t i = 0; i < items_.size(); ++i)
   {
     Item* const item = items_[i];
     const ItemDataT& d = item->getData();
-    if(d.isPotion || d.id == ItemId::molotov)
+    if (d.isPotion || d.id == ItemId::molotov)
     {
       delete item;
       items_.erase(items_.begin() + i);
@@ -1323,40 +1323,40 @@ Tomb::Tomb(const Pos& pos) :
     FeatureId::tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
   //Appearance
-  if(Rnd::oneIn(5))
+  if (Rnd::oneIn(5))
   {
     const TombAppearance lastAppearance = TombAppearance::END;
     appearance_ = TombAppearance(Rnd::range(0, int(lastAppearance) - 1));
   }
   else
   {
-    for(Item* item : itemContainer_.items_)
+    for (Item* item : itemContainer_.items_)
     {
       const ItemValue itemValue = item->getData().itemValue;
-      if(itemValue == ItemValue::majorTreasure)
+      if (itemValue == ItemValue::majorTreasure)
       {
         appearance_ = TombAppearance::marvelous;
         break;
       }
-      else if(itemValue == ItemValue::minorTreasure)
+      else if (itemValue == ItemValue::minorTreasure)
       {
         appearance_ = TombAppearance::ornate;
       }
     }
   }
 
-  if(!itemContainer_.items_.empty())
+  if (!itemContainer_.items_.empty())
   {
     const int RND = Rnd::percentile();
-    if(RND < 15)
+    if (RND < 15)
     {
       trait_ = TombTrait::forebodingCarvedSigns;
     }
-    else if(RND < 45)
+    else if (RND < 45)
     {
       trait_ = TombTrait::stench;
     }
-    else if(RND < 75)
+    else if (RND < 75)
     {
       trait_ = TombTrait::auraOfUnrest;
     }
@@ -1373,7 +1373,7 @@ string Tomb::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  switch(appearance_)
+  switch (appearance_)
   {
     case TombAppearance::common:
     case TombAppearance::END: {} break;
@@ -1385,7 +1385,7 @@ string Tomb::getName(const Article article) const
 
 Clr Tomb::getClr_() const
 {
-  switch(appearance_)
+  switch (appearance_)
   {
     case TombAppearance::common:    return clrGray;
     case TombAppearance::ornate:    return clrWhite;
@@ -1398,9 +1398,9 @@ Clr Tomb::getClr_() const
 
 void Tomb::bump(Actor& actorBumping)
 {
-  if(actorBumping.isPlayer())
+  if (actorBumping.isPlayer())
   {
-    if(itemContainer_.items_.empty() && isContentKnown_)
+    if (itemContainer_.items_.empty() && isContentKnown_)
     {
       Log::addMsg("The tomb is empty.");
     }
@@ -1411,7 +1411,7 @@ void Tomb::bump(Actor& actorBumping)
       bool props[endOfPropIds];
       Map::player->getPropHandler().getAllActivePropIds(props);
 
-      if(props[propWeakened])
+      if (props[propWeakened])
       {
         trySprainPlayer();
         Log::addMsg("It seems futile.");
@@ -1431,15 +1431,15 @@ void Tomb::bump(Actor& actorBumping)
 
         bool isSuccess = false;
 
-        if(ROLL_TOT < pushLidOneInN_ - 9)
+        if (ROLL_TOT < pushLidOneInN_ - 9)
         {
           Log::addMsg("It does not yield at all.");
         }
-        else if(ROLL_TOT < pushLidOneInN_ - 1)
+        else if (ROLL_TOT < pushLidOneInN_ - 1)
         {
           Log::addMsg("It resists.");
         }
-        else if(ROLL_TOT == pushLidOneInN_ - 1)
+        else if (ROLL_TOT == pushLidOneInN_ - 1)
         {
           Log::addMsg("It moves a little!");
           pushLidOneInN_--;
@@ -1449,7 +1449,7 @@ void Tomb::bump(Actor& actorBumping)
           isSuccess = true;
         }
 
-        if(isSuccess) {open();}
+        if (isSuccess) {open();}
         else  {trySprainPlayer();}
       }
       GameTime::actorDidAct();
@@ -1461,7 +1461,7 @@ void Tomb::trySprainPlayer()
 {
   const int SPRAIN_ONE_IN_N = PlayerBon::hasTrait(Trait::rugged) ? 6 :
                               PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
-  if(Rnd::oneIn(SPRAIN_ONE_IN_N))
+  if (Rnd::oneIn(SPRAIN_ONE_IN_N))
   {
     Log::addMsg("I sprain myself.", clrMsgBad);
     Map::player->hit(Rnd::range(1, 5), DmgType::pure);
@@ -1471,7 +1471,7 @@ void Tomb::trySprainPlayer()
 bool Tomb::open()
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
-  if(IS_SEEN)
+  if (IS_SEEN)
   {
     Log::addMsg("The lid comes off!");
     Log::addMsg("The tomb opens.");
@@ -1482,16 +1482,16 @@ bool Tomb::open()
   SndEmit::emitSnd(snd);
 
   triggerTrap(*Map::player);
-  if(itemContainer_.items_.size() > 0)
+  if (itemContainer_.items_.size() > 0)
   {
-    if(IS_SEEN) Log::addMsg("There are some items inside.");
+    if (IS_SEEN) Log::addMsg("There are some items inside.");
     itemContainer_.dropItems(pos_);
   }
   else
   {
-    if(IS_SEEN)Log::addMsg("There is nothing of value inside.");
+    if (IS_SEEN)Log::addMsg("There is nothing of value inside.");
   }
-  if(IS_SEEN) {isContentKnown_ = isTraitKnown_ = true;}
+  if (IS_SEEN) {isContentKnown_ = isTraitKnown_ = true;}
   Render::drawMapAndInterface();
   return true;
 }
@@ -1501,19 +1501,19 @@ void Tomb::examine()
   bool props[endOfPropIds];
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  if(props[propConfused])
+  if (props[propConfused])
   {
     Log::addMsg("I start to search the tomb...");
     Log::addMsg("but I cannot grasp what for.");
     GameTime::actorDidAct();
   }
-  else if(itemContainer_.items_.empty() && isContentKnown_)
+  else if (itemContainer_.items_.empty() && isContentKnown_)
   {
     Log::addMsg("The tomb is empty.");
   }
   else
   {
-    if(!isTraitKnown_ && trait_ != TombTrait::END)
+    if (!isTraitKnown_ && trait_ != TombTrait::END)
     {
       const int FIND_ONE_IN_N = PlayerBon::hasTrait(Trait::perceptive) ? 2 :
                                 (PlayerBon::hasTrait(Trait::observant) ? 3 : 6);
@@ -1521,9 +1521,9 @@ void Tomb::examine()
       isTraitKnown_ = Rnd::oneIn(FIND_ONE_IN_N);
     }
 
-    if(isTraitKnown_)
+    if (isTraitKnown_)
     {
-      switch(trait_)
+      switch (trait_)
       {
         case TombTrait::auraOfUnrest:
         {
@@ -1532,7 +1532,7 @@ void Tomb::examine()
 
         case TombTrait::forebodingCarvedSigns:
         {
-          if(PlayerBon::getBg() == Bg::occultist)
+          if (PlayerBon::getBg() == Bg::occultist)
           {
             Log::addMsg("There is a curse carved on the box.");
           }
@@ -1615,18 +1615,18 @@ void Tomb::triggerTrap(Actor& actor)
 
   vector<ActorId> actorBucket;
 
-  switch(trait_)
+  switch (trait_)
   {
     case TombTrait::auraOfUnrest:
     {
 
-      for(int i = 0; i < int(ActorId::END); ++i)
+      for (int i = 0; i < int(ActorId::END); ++i)
       {
         const ActorDataT& d = ActorData::data[i];
-        if(
-          d.isGhost && d.isAutoSpawnAllowed && !d.isUnique &&
-          ((Map::dlvl + 5) >= d.spawnMinDLVL ||
-           Map::dlvl >= MIN_DLVL_HARDER_TRAPS))
+
+        if (d.isGhost                           &&
+            d.isAutoSpawnAllowed && !d.isUnique &&
+            ((Map::dlvl + 5) >= d.spawnMinDLVL || Map::dlvl >= MIN_DLVL_HARDER_TRAPS))
         {
           actorBucket.push_back(ActorId(i));
         }
@@ -1642,18 +1642,18 @@ void Tomb::triggerTrap(Actor& actor)
 
     case TombTrait::stench:
     {
-      if(Rnd::coinToss())
+      if (Rnd::coinToss())
       {
         Log::addMsg("Fumes burst out from the tomb!");
         Prop* prop = nullptr;
         Clr fumeClr = clrMagenta;
         const int RND = Rnd::percentile();
-        if(RND < 20)
+        if (RND < 20)
         {
           prop = new PropPoisoned(PropTurns::std);
           fumeClr = clrGreenLgt;
         }
-        else if(RND < 40)
+        else if (RND < 40)
         {
           prop = new PropDiseased(PropTurns::specific, 50);
           fumeClr = clrGreen;
@@ -1669,13 +1669,12 @@ void Tomb::triggerTrap(Actor& actor)
       }
       else
       {
-        for(int i = 0; i < int(ActorId::END); ++i)
+        for (int i = 0; i < int(ActorId::END); ++i)
         {
           const ActorDataT& d = ActorData::data[i];
-          if(
-            d.intrProps[propOoze] &&
-            d.isAutoSpawnAllowed  &&
-            !d.isUnique)
+          if (d.intrProps[propOoze] &&
+              d.isAutoSpawnAllowed  &&
+              !d.isUnique)
           {
             actorBucket.push_back(ActorId(i));
           }
@@ -1688,7 +1687,7 @@ void Tomb::triggerTrap(Actor& actor)
     default: {} break;
   }
 
-  if(!actorBucket.empty())
+  if (!actorBucket.empty())
   {
     const size_t  ELEMENT         = Rnd::range(0, actorBucket.size() - 1);
     const ActorId actorIdToSpawn  = actorBucket[ELEMENT];
@@ -1714,7 +1713,7 @@ Chest::Chest(const Pos& pos) :
   itemContainer_.setRandomItemsForFeature(FeatureId::chest,
                                           Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
-  if(!itemContainer_.items_.empty())
+  if (!itemContainer_.items_.empty())
   {
     isLocked_   = Rnd::fraction(6, 10);
     isTrapped_  = Rnd::fraction(6, 10);
@@ -1729,15 +1728,15 @@ void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void Chest::bump(Actor& actorBumping)
 {
-  if(actorBumping.isPlayer())
+  if (actorBumping.isPlayer())
   {
-    if(itemContainer_.items_.empty() && isContentKnown_)
+    if (itemContainer_.items_.empty() && isContentKnown_)
     {
       Log::addMsg("The chest is empty.");
     }
     else
     {
-      if(isLocked_) {Log::addMsg("The chest is locked.");}
+      if (isLocked_) {Log::addMsg("The chest is locked.");}
       else {open();}
       GameTime::actorDidAct();
     }
@@ -1748,7 +1747,7 @@ void Chest::trySprainPlayer()
 {
   const int SPRAIN_ONE_IN_N = PlayerBon::hasTrait(Trait::rugged) ? 6 :
                               PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
-  if(Rnd::oneIn(SPRAIN_ONE_IN_N))
+  if (Rnd::oneIn(SPRAIN_ONE_IN_N))
   {
     Log::addMsg("I sprain myself.", clrMsgBad);
     Map::player->hit(Rnd::range(1, 5), DmgType::pure);
@@ -1759,22 +1758,22 @@ bool Chest::open()
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 
-  if(IS_SEEN) Log::addMsg("The chest opens.");
+  if (IS_SEEN) Log::addMsg("The chest opens.");
   triggerTrap(*Map::player);
 
-  if(Map::player->isAlive())
+  if (Map::player->isAlive())
   {
-    if(itemContainer_.items_.empty())
+    if (itemContainer_.items_.empty())
     {
-      if(IS_SEEN) Log::addMsg("There is nothing of value inside.");
+      if (IS_SEEN) Log::addMsg("There is nothing of value inside.");
     }
     else
     {
-      if(IS_SEEN) Log::addMsg("There are some items inside.");
+      if (IS_SEEN) Log::addMsg("There are some items inside.");
       itemContainer_.dropItems(pos_);
     }
   }
-  if(IS_SEEN)
+  if (IS_SEEN)
   {
     isContentKnown_     = true;
     isTrapStatusKnown_  = true;
@@ -1892,19 +1891,19 @@ void Chest::examine()
   bool props[endOfPropIds];
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  if(props[propConfused])
+  if (props[propConfused])
   {
     Log::addMsg("I start to search the chest...");
     Log::addMsg("but I cannot grasp the purpose.");
     GameTime::actorDidAct();
   }
-  else if(itemContainer_.items_.empty() && isContentKnown_)
+  else if (itemContainer_.items_.empty() && isContentKnown_)
   {
     Log::addMsg("The chest is empty.");
   }
   else
   {
-    if(isLocked_)
+    if (isLocked_)
     {
       Log::addMsg("The chest is locked.");
     }
@@ -1912,7 +1911,7 @@ void Chest::examine()
     const int FIND_ONE_IN_N = PlayerBon::hasTrait(Trait::perceptive) ? 3 :
                               (PlayerBon::hasTrait(Trait::observant) ? 4 : 7);
 
-    if(isTrapped_ && (isTrapStatusKnown_ || (Rnd::oneIn(FIND_ONE_IN_N))))
+    if (isTrapped_ && (isTrapStatusKnown_ || (Rnd::oneIn(FIND_ONE_IN_N))))
     {
       Log::addMsg("There appears to be a hidden trap mechanism!");
       isTrapStatusKnown_ = true;
@@ -1928,12 +1927,12 @@ void Chest::examine()
 void Chest::disarm()
 {
   //Try disarming trap
-  if(isTrapped_ && isTrapStatusKnown_)
+  if (isTrapped_ && isTrapStatusKnown_)
   {
     Log::addMsg("I attempt to disarm the trap.");
 
     const int TRIGGER_ONE_IN_N = 5;
-    if(Rnd::oneIn(TRIGGER_ONE_IN_N))
+    if (Rnd::oneIn(TRIGGER_ONE_IN_N))
     {
       Log::addMsg("I set off the trap!");
       triggerTrap(*Map::player);
@@ -1943,7 +1942,7 @@ void Chest::disarm()
 
       const int DISARM_ONE_IN_N = 2;
 
-      if(Rnd::oneIn(DISARM_ONE_IN_N))
+      if (Rnd::oneIn(DISARM_ONE_IN_N))
       {
         Log::addMsg("I successfully disarm it!");
         isTrapped_ = false;
@@ -1973,20 +1972,18 @@ void Chest::triggerTrap(Actor& actor)
 
   isTrapStatusKnown_ = true;
 
-  if(isTrapped_)
+  if (isTrapped_)
   {
-
     isTrapped_ = false;
 
     const int EXPLODE_ONE_IN_N = 7;
-    if(
-      Map::dlvl >= MIN_DLVL_HARDER_TRAPS &&
-      Rnd::oneIn(EXPLODE_ONE_IN_N))
+
+    if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::oneIn(EXPLODE_ONE_IN_N))
     {
       Log::addMsg("The trap explodes!");
       Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0,
                                 SfxId::explosion);
-      if(Map::player->isAlive())
+      if (Map::player->isAlive())
       {
         Map::put(new RubbleLow(pos_));
       }
@@ -1997,12 +1994,12 @@ void Chest::triggerTrap(Actor& actor)
       Prop* prop = nullptr;
       Clr fumeClr = clrMagenta;
       const int RND = Rnd::percentile();
-      if(RND < 20)
+      if (RND < 20)
       {
         prop = new PropPoisoned(PropTurns::std);
         fumeClr = clrGreenLgt;
       }
-      else if(RND < 40)
+      else if (RND < 40)
       {
         prop = new PropDiseased(PropTurns::specific, 50);
         fumeClr = clrGreen;
@@ -2041,13 +2038,13 @@ Fountain::Fountain(const Pos& pos) :
   fountainMatl_(FountainMatl::stone)
 {
 
-  if(Rnd::oneIn(14)) {fountainMatl_ = FountainMatl::gold;}
+  if (Rnd::oneIn(14)) {fountainMatl_ = FountainMatl::gold;}
 
-  switch(fountainMatl_)
+  switch (fountainMatl_)
   {
     case FountainMatl::stone:
     {
-      if(Rnd::fraction(5, 6))
+      if (Rnd::fraction(5, 6))
       {
         fountainEffects_.push_back(FountainEffect::refreshing);
       }
@@ -2072,7 +2069,7 @@ Fountain::Fountain(const Pos& pos) :
 
       const int NR_EFFECTS = 3;
 
-      for(int i = 0; i < NR_EFFECTS; ++i)
+      for (int i = 0; i < NR_EFFECTS; ++i)
       {
         fountainEffects_.push_back(effectBucket[i]);
       }
@@ -2088,13 +2085,13 @@ void Fountain::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 Clr Fountain::getClr_() const
 {
-  if(isDried_)
+  if (isDried_)
   {
     return clrGray;
   }
   else
   {
-    switch(fountainMatl_)
+    switch (fountainMatl_)
     {
       case FountainMatl::stone: return clrBlueLgt;
       case FountainMatl::gold:  return clrYellow;
@@ -2108,7 +2105,7 @@ string Fountain::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  switch(fountainMatl_)
+  switch (fountainMatl_)
   {
     case FountainMatl::stone: {}                break;
     case FountainMatl::gold:  ret += "golden "; break;
@@ -2118,9 +2115,9 @@ string Fountain::getName(const Article article) const
 
 void Fountain::bump(Actor& actorBumping)
 {
-  if(actorBumping.isPlayer())
+  if (actorBumping.isPlayer())
   {
-    if(isDried_)
+    if (isDried_)
     {
       Log::addMsg("The fountain is dried out.");
     }
@@ -2130,9 +2127,9 @@ void Fountain::bump(Actor& actorBumping)
 
       Log::addMsg("I drink from the fountain...");
 
-      for(auto effect : fountainEffects_)
+      for (auto effect : fountainEffects_)
       {
-        switch(effect)
+        switch (effect)
         {
           case FountainEffect::tepid:
           {
@@ -2236,7 +2233,7 @@ void Fountain::bump(Actor& actorBumping)
         }
       }
 
-      if(Rnd::oneIn(6))
+      if (Rnd::oneIn(6))
       {
         Log::addMsg("The fountain dries out.");
         isDried_ = true;
@@ -2265,9 +2262,9 @@ void Cabinet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void Cabinet::bump(Actor& actorBumping)
 {
-  if(actorBumping.isPlayer())
+  if (actorBumping.isPlayer())
   {
-    if(itemContainer_.items_.empty() && isContentKnown_)
+    if (itemContainer_.items_.empty() && isContentKnown_)
     {
       Log::addMsg("The cabinet is empty.");
     }
@@ -2282,18 +2279,18 @@ bool Cabinet::open()
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 
-  if(IS_SEEN) Log::addMsg("The cabinet opens.");
+  if (IS_SEEN) Log::addMsg("The cabinet opens.");
 
-  if(itemContainer_.items_.size() > 0)
+  if (itemContainer_.items_.size() > 0)
   {
-    if(IS_SEEN) Log::addMsg("There are some items inside.");
+    if (IS_SEEN) Log::addMsg("There are some items inside.");
     itemContainer_.dropItems(pos_);
   }
   else
   {
-    if(IS_SEEN) Log::addMsg("There is nothing of value inside.");
+    if (IS_SEEN) Log::addMsg("There is nothing of value inside.");
   }
-  if(IS_SEEN) isContentKnown_ = true;
+  if (IS_SEEN) isContentKnown_ = true;
   Render::drawMapAndInterface(true);
   return true;
 }
@@ -2302,7 +2299,7 @@ string Cabinet::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  if(getBurnState() == BurnState::burning) {ret += "burning ";}
+  if (getBurnState() == BurnState::burning) {ret += "burning ";}
 
   return ret + "cabinet";
 }
@@ -2331,9 +2328,9 @@ void Cocoon::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void Cocoon::bump(Actor& actorBumping)
 {
-  if(actorBumping.isPlayer())
+  if (actorBumping.isPlayer())
   {
-    if(itemContainer_.items_.empty() && isContentKnown_)
+    if (itemContainer_.items_.empty() && isContentKnown_)
     {
       Log::addMsg("The cocoon is empty.");
     }
@@ -2350,36 +2347,37 @@ void Cocoon::triggerTrap(Actor& actor)
 
   const int RND = Rnd::percentile();
 
-  if(RND < 15)
+  if (RND < 15)
   {
     Log::addMsg("There is a half-dissolved human body inside!");
     Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
   }
-  else if(RND < 50)
+  else if (RND < 50)
   {
     TRACE << "Attempting to spawn spiders" << endl;
     vector<ActorId> spawnBucket;
-    for(int i = 0; i < int(ActorId::END); ++i)
+    for (int i = 0; i < int(ActorId::END); ++i)
     {
       const ActorDataT& d = ActorData::data[i];
-      if(
-        d.isSpider && d.actorSize == actorSize_floor &&
-        !d.isAutoSpawnAllowed && d.isUnique)
+
+      if (d.isSpider                      &&
+          d.actorSize == actorSize_floor  &&
+          !d.isAutoSpawnAllowed           &&
+          d.isUnique)
       {
         spawnBucket.push_back(d.id);
       }
     }
 
     const int NR_CANDIDATES = spawnBucket.size();
-    if(NR_CANDIDATES > 0)
+    if (NR_CANDIDATES > 0)
     {
       TRACE << "Spawn candidates found, attempting to place" << endl;
       Log::addMsg("There are spiders inside!");
       const int NR_SPIDERS = Rnd::range(2, 5);
       const int ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
       const ActorId actorIdToSummon = spawnBucket[ELEMENT];
-      ActorFactory::summonMon(
-        pos_, vector<ActorId>(NR_SPIDERS, actorIdToSummon), true);
+      ActorFactory::summonMon(pos_, vector<ActorId>(NR_SPIDERS, actorIdToSummon), true);
     }
   }
 }
@@ -2387,18 +2385,18 @@ void Cocoon::triggerTrap(Actor& actor)
 bool Cocoon::open()
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
-  if(IS_SEEN) Log::addMsg("The cocoon opens.");
+  if (IS_SEEN) Log::addMsg("The cocoon opens.");
   triggerTrap(*Map::player);
-  if(itemContainer_.items_.size() > 0)
+  if (itemContainer_.items_.size() > 0)
   {
-    if(IS_SEEN) Log::addMsg("There are some items inside.");
+    if (IS_SEEN) Log::addMsg("There are some items inside.");
     itemContainer_.dropItems(pos_);
   }
   else
   {
-    if(IS_SEEN) Log::addMsg("There is nothing of value inside.");
+    if (IS_SEEN) Log::addMsg("There is nothing of value inside.");
   }
-  if(IS_SEEN) isContentKnown_ = true;
+  if (IS_SEEN) isContentKnown_ = true;
   Render::drawMapAndInterface(true);
 
   return true;
@@ -2408,7 +2406,7 @@ string Cocoon::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  if(getBurnState() == BurnState::burning) {ret += "burning ";}
+  if (getBurnState() == BurnState::burning) {ret += "burning ";}
 
   return ret + "cocoon";
 }

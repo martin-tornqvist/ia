@@ -247,7 +247,7 @@ struct ItemName
 
   ItemName()
   {
-    for(int i = 0; i < int(ItemRefType::END); i++)
+    for (int i = 0; i < int(ItemRefType::END); i++)
     {
       names[i] = "";
     }

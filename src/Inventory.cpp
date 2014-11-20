@@ -29,21 +29,21 @@ Inventory::Inventory()
 
 Inventory::~Inventory()
 {
-  for(size_t i = 0; i < int(SlotId::END); ++i)
+  for (size_t i = 0; i < int(SlotId::END); ++i)
   {
     auto& slot = slots_[i];
-    if(slot.item) {delete slot.item;}
+    if (slot.item) {delete slot.item;}
   }
-  for(Item* item : general_)    {delete item;}
-  for(Item* item : intrinsics_) {delete item;}
+  for (Item* item : general_)    {delete item;}
+  for (Item* item : intrinsics_) {delete item;}
 }
 
 void Inventory::storeToSaveLines(vector<string>& lines) const
 {
-  for(const InvSlot& slot : slots_)
+  for (const InvSlot& slot : slots_)
   {
     Item* const item = slot.item;
-    if(item)
+    if (item)
     {
       lines.push_back(toStr(int(item->getData().id)));
       lines.push_back(toStr(item->nrItems_));
@@ -56,7 +56,7 @@ void Inventory::storeToSaveLines(vector<string>& lines) const
   }
 
   lines.push_back(toStr(general_.size()));
-  for(Item* item : general_)
+  for (Item* item : general_)
   {
     lines.push_back(toStr(int(item->getData().id)));
     lines.push_back(toStr(item->nrItems_));
@@ -66,11 +66,11 @@ void Inventory::storeToSaveLines(vector<string>& lines) const
 
 void Inventory::setupFromSaveLines(vector<string>& lines)
 {
-  for(InvSlot& slot : slots_)
+  for (InvSlot& slot : slots_)
   {
     //Previous item is destroyed
     Item* item = slot.item;
-    if(item)
+    if (item)
     {
       delete item;
       slot.item = nullptr;
@@ -78,7 +78,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines)
 
     const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(begin(lines));
-    if(id != ItemId::END)
+    if (id != ItemId::END)
     {
       item = ItemFactory::mk(id);
       item->nrItems_ = toInt(lines.front());
@@ -90,14 +90,14 @@ void Inventory::setupFromSaveLines(vector<string>& lines)
     }
   }
 
-  while(general_.size() != 0)
+  while (general_.size() != 0)
   {
     deleteItemInGeneralWithElement(0);
   }
 
   const int NR_OF_GENERAL = toInt(lines.front());
   lines.erase(begin(lines));
-  for(int i = 0; i < NR_OF_GENERAL; ++i)
+  for (int i = 0; i < NR_OF_GENERAL; ++i)
   {
     const ItemId id = ItemId(toInt(lines.front()));
     lines.erase(begin(lines));
@@ -116,9 +116,9 @@ bool Inventory::hasDynamiteInGeneral() const
 
 bool Inventory::hasItemInGeneral(const ItemId id) const
 {
-  for(size_t i = 0; i < general_.size(); ++i)
+  for (size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_[i]->getData().id == id)
+    if (general_[i]->getData().id == id)
       return true;
   }
 
@@ -127,11 +127,11 @@ bool Inventory::hasItemInGeneral(const ItemId id) const
 
 int Inventory::getItemStackSizeInGeneral(const ItemId id) const
 {
-  for(size_t i = 0; i < general_.size(); ++i)
+  for (size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_[i]->getData().id == id)
+    if (general_[i]->getData().id == id)
     {
-      if(general_[i]->getData().isStackable)
+      if (general_[i]->getData().isStackable)
       {
         return general_[i]->nrItems_;
       }
@@ -147,9 +147,9 @@ int Inventory::getItemStackSizeInGeneral(const ItemId id) const
 
 void Inventory::decrDynamiteInGeneral()
 {
-  for(size_t i = 0; i < general_.size(); ++i)
+  for (size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_[i]->getData().id == ItemId::dynamite)
+    if (general_[i]->getData().id == ItemId::dynamite)
     {
       decrItemInGeneral(i);
       break;
@@ -184,12 +184,12 @@ void Inventory::putInGeneral(Item* item)
   bool isStacked = false;
 
   //If item stacks, see if there is other items of same type
-  if(item->getData().isStackable)
+  if (item->getData().isStackable)
   {
 
     const int stackIndex = getElementToStackItem(item);
 
-    if(stackIndex != -1)
+    if (stackIndex != -1)
     {
       Item* compareItem = general_[stackIndex];
 
@@ -202,18 +202,18 @@ void Inventory::putInGeneral(Item* item)
     }
   }
 
-  if(!isStacked) {general_.push_back(item);}
+  if (!isStacked) {general_.push_back(item);}
 }
 
 int Inventory::getElementToStackItem(Item* item) const
 {
-  if(item->getData().isStackable)
+  if (item->getData().isStackable)
   {
-    for(size_t i = 0; i < general_.size(); ++i)
+    for (size_t i = 0; i < general_.size(); ++i)
     {
       Item* compare = general_[i];
 
-      if(compare->getData().id == item->getData().id)
+      if (compare->getData().id == item->getData().id)
       {
         return i;
       }
@@ -230,12 +230,12 @@ void Inventory::dropAllNonIntrinsic(
   Item* item;
 
   //Drop from slots
-  for(InvSlot& slot : slots_)
+  for (InvSlot& slot : slots_)
   {
     item = slot.item;
-    if(item)
+    if (item)
     {
-      if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
+      if (ROLL_FOR_DESTRUCTION && Rnd::percentile() <
           CHANCE_TO_DESTR_CMN_ITEMS_ON_DROP)
       {
         delete slot.item;
@@ -251,12 +251,12 @@ void Inventory::dropAllNonIntrinsic(
 
   //Drop from general
   size_t i = 0;
-  while(i < general_.size())
+  while (i < general_.size())
   {
     item = general_[i];
-    if(item)
+    if (item)
     {
-      if(ROLL_FOR_DESTRUCTION && Rnd::percentile() < CHANCE_TO_DESTR_CMN_ITEMS_ON_DROP)
+      if (ROLL_FOR_DESTRUCTION && Rnd::percentile() < CHANCE_TO_DESTR_CMN_ITEMS_ON_DROP)
       {
         delete general_[i];
       }
@@ -276,22 +276,22 @@ bool Inventory::hasAmmoForFirearmInInventory()
   Wpn* weapon = static_cast<Wpn*>(getItemInSlot(SlotId::wielded));
 
   //If weapon found
-  if(weapon)
+  if (weapon)
   {
 
     assert(!weapon->getData().ranged.hasInfiniteAmmo); //Should not happen
 
     //If weapon is a firearm
-    if(weapon->getData().ranged.isRangedWpn)
+    if (weapon->getData().ranged.isRangedWpn)
     {
 
       //Get weapon ammo type
       const ItemId ammoId = weapon->getData().ranged.ammoItemId;
 
       //Look for that ammo type in inventory
-      for(size_t i = 0; i < general_.size(); ++i)
+      for (size_t i = 0; i < general_.size(); ++i)
       {
-        if(general_[i]->getData().id == ammoId)
+        if (general_[i]->getData().id == ammoId)
         {
           return true;
         }
@@ -307,17 +307,17 @@ void Inventory::decrItemInSlot(SlotId slotName)
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
 
-  if(stack)
+  if (stack)
   {
     item->nrItems_ -= 1;
 
-    if(item->nrItems_ > 0)
+    if (item->nrItems_ > 0)
     {
       deleteItem = false;
     }
   }
 
-  if(deleteItem)
+  if (deleteItem)
   {
     slots_[int(slotName)].item = nullptr;
     delete item;
@@ -326,7 +326,7 @@ void Inventory::decrItemInSlot(SlotId slotName)
 
 void Inventory::deleteItemInGeneralWithElement(const size_t IDX)
 {
-  if(general_.size() > IDX)
+  if (general_.size() > IDX)
   {
     delete general_[IDX];
     general_.erase(begin(general_) + IDX);
@@ -337,11 +337,11 @@ void Inventory::removeItemInGeneralWithPtr(
   Item* const item, const bool DELETE_ITEM)
 {
 
-  for(size_t i = 0; i < general_.size(); ++i)
+  for (size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_[i] == item)
+    if (general_[i] == item)
     {
-      if(DELETE_ITEM) {delete item;}
+      if (DELETE_ITEM) {delete item;}
       general_.erase(begin(general_) + i);
       return;
     }
@@ -355,17 +355,17 @@ void Inventory::decrItemInGeneral(size_t idx)
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
 
-  if(stack)
+  if (stack)
   {
     item->nrItems_ -= 1;
 
-    if(item->nrItems_ > 0)
+    if (item->nrItems_ > 0)
     {
       deleteItem = false;
     }
   }
 
-  if(deleteItem)
+  if (deleteItem)
   {
     general_.erase(begin(general_) + idx);
 
@@ -375,9 +375,9 @@ void Inventory::decrItemInGeneral(size_t idx)
 
 void Inventory::decrItemTypeInGeneral(const ItemId id)
 {
-  for(size_t i = 0; i < general_.size(); ++i)
+  for (size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_[i]->getData().id == id)
+    if (general_[i]->getData().id == id)
     {
       decrItemInGeneral(i);
       return;
@@ -391,11 +391,11 @@ void Inventory::moveItemToSlot(InvSlot& slot, const size_t GEN_IDX)
   Item* item              = nullptr;
   Item* slotItem          = slot.item;
 
-  if(generalSlotExists) {item = general_[GEN_IDX];}
+  if (generalSlotExists) {item = general_[GEN_IDX];}
 
-  if(generalSlotExists && item)
+  if (generalSlotExists && item)
   {
-    if(slotItem)
+    if (slotItem)
     {
       general_.erase(begin(general_) + GEN_IDX);
       general_.push_back(slotItem);
@@ -417,14 +417,14 @@ void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId sl
 
   const bool IS_PLAYER  = this == &Map::player->getInv();
 
-  if(IS_PLAYER)
+  if (IS_PLAYER)
   {
     Item* const itemAfter = getItemInSlot(slot);
     const string name     = itemAfter->getName(ItemRefType::plural);
 
     string  msg     = "";
 
-    switch(slot)
+    switch (slot)
     {
       case SlotId::wielded:
       {
@@ -485,12 +485,12 @@ void Inventory::moveFromGeneralToIntrinsics(const size_t GEN_IDX)
 {
   bool generalSlotExists = GEN_IDX < general_.size();
 
-  if(generalSlotExists)
+  if (generalSlotExists)
   {
     Item* item = general_[GEN_IDX];
     bool itemExistsInGeneralSlot = item;
 
-    if(itemExistsInGeneralSlot)
+    if (itemExistsInGeneralSlot)
     {
       intrinsics_.push_back(item);
       general_.erase(begin(general_) + GEN_IDX);
@@ -501,7 +501,7 @@ void Inventory::moveFromGeneralToIntrinsics(const size_t GEN_IDX)
 bool Inventory::moveToGeneral(InvSlot& slot)
 {
   Item* const item = slot.item;
-  if(item)
+  if (item)
   {
     slot.item = nullptr;
     putInGeneral(item);
@@ -521,7 +521,7 @@ bool Inventory::hasItemInSlot(SlotId id) const
 
 void Inventory::removeWithoutDestroying(const InvList invList, const size_t IDX)
 {
-  if(invList == InvList::slots)
+  if (invList == InvList::slots)
   {
     assert(IDX != int(SlotId::END));
     slots_[IDX].item = nullptr;
@@ -535,9 +535,9 @@ void Inventory::removeWithoutDestroying(const InvList invList, const size_t IDX)
 
 int Inventory::getElementWithItemType(const ItemId id) const
 {
-  for(size_t i = 0; i < general_.size(); ++i)
+  for (size_t i = 0; i < general_.size(); ++i)
   {
-    if(general_[i]->getData().id == id)
+    if (general_[i]->getData().id == id)
     {
       return i;
     }
@@ -553,7 +553,7 @@ Item* Inventory::getItemInSlot(SlotId id) const
 
 Item* Inventory::getIntrinsicInElement(int idx) const
 {
-  if(getIntrinsicsSize() > idx)
+  if (getIntrinsicsSize() > idx)
   {
     return intrinsics_[idx];
   }
@@ -563,7 +563,7 @@ Item* Inventory::getIntrinsicInElement(int idx) const
 
 void Inventory::putInIntrinsics(Item* item)
 {
-  if(item->getData().isIntrinsic)
+  if (item->getData().isIntrinsic)
   {
     intrinsics_.push_back(item);
   }
@@ -576,17 +576,17 @@ void Inventory::putInIntrinsics(Item* item)
 
 Item* Inventory::getLastItemInGeneral()
 {
-  if(!general_.empty()) {return general_[general_.size() - 1];}
+  if (!general_.empty()) {return general_[general_.size() - 1];}
   return nullptr;
 }
 
 void Inventory::putInSlot(const SlotId id, Item* item)
 {
-  for(InvSlot& slot : slots_)
+  for (InvSlot& slot : slots_)
   {
-    if(slot.id == id)
+    if (slot.id == id)
     {
-      if(slot.item)
+      if (slot.item)
       {
         general_.push_back(item);
       }
@@ -605,11 +605,11 @@ void Inventory::putInSlot(const SlotId id, Item* item)
 int Inventory::getTotalItemWeight() const
 {
   int weight = 0;
-  for(size_t i = 0; i < size_t(SlotId::END); ++i)
+  for (size_t i = 0; i < size_t(SlotId::END); ++i)
   {
-    if(slots_[i].item) {weight += slots_[i].item->getWeight();}
+    if (slots_[i].item) {weight += slots_[i].item->getWeight();}
   }
-  for(size_t i = 0; i < general_.size(); ++i)
+  for (size_t i = 0; i < general_.size(); ++i)
   {
     weight += general_[i]->getWeight();
   }
@@ -634,16 +634,16 @@ void Inventory::sortGeneralInventory()
   vector< vector<Item*> > sortBuffer;
 
   //Sort according to item interface color first
-  for(Item* item : general_)
+  for (Item* item : general_)
   {
 
     bool isAddedToBuffer = false;
 
     //Check if item should be added to any existing color group
-    for(vector<Item*>& group : sortBuffer)
+    for (vector<Item*>& group : sortBuffer)
     {
       const Clr clrCurGroup = group[0]->getInterfaceClr();
-      if(Utils::isClrEq(item->getInterfaceClr(), clrCurGroup))
+      if (Utils::isClrEq(item->getInterfaceClr(), clrCurGroup))
       {
         group.push_back(item);
         isAddedToBuffer = true;
@@ -651,7 +651,7 @@ void Inventory::sortGeneralInventory()
       }
     }
 
-    if(isAddedToBuffer)
+    if (isAddedToBuffer)
     {
       continue;
     }
@@ -666,16 +666,16 @@ void Inventory::sortGeneralInventory()
 
   //Sort lexicographically secondarily
   LexicograhicalCompareItems cmp;
-  for(vector<Item*>& group : sortBuffer)
+  for (vector<Item*>& group : sortBuffer)
   {
     std::sort(group.begin(), group.end(), cmp);
   }
 
   //Set the inventory from the sorting buffer
   general_.clear();
-  for(size_t i = 0; i < sortBuffer.size(); ++i)
+  for (size_t i = 0; i < sortBuffer.size(); ++i)
   {
-    for(size_t ii = 0; ii < sortBuffer[i].size(); ii++)
+    for (size_t ii = 0; ii < sortBuffer[i].size(); ii++)
     {
       general_.push_back(sortBuffer[i][ii]);
     }

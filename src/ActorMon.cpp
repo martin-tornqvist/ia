@@ -48,7 +48,7 @@ Mon::Mon() :
 
 Mon::~Mon()
 {
-  for(Spell* const spell : spellsKnown_) {delete spell;}
+  for (Spell* const spell : spellsKnown_) {delete spell;}
 }
 
 void Mon::onActorTurn()
@@ -57,17 +57,17 @@ void Mon::onActorTurn()
   assert(Utils::isPosInsideMap(pos));
 
   //Test that monster's leader does not have a leader (never allowed)
-  if(leader_ && !isActorMyLeader(Map::player) && static_cast<Mon*>(leader_)->leader_)
+  if (leader_ && !isActorMyLeader(Map::player) && static_cast<Mon*>(leader_)->leader_)
   {
     TRACE << "Two (or more) steps of leader is never allowed" << endl;
     assert(false);
   }
 
-  if(awareCounter_ <= 0 && !isActorMyLeader(Map::player))
+  if (awareCounter_ <= 0 && !isActorMyLeader(Map::player))
   {
     waiting_ = !waiting_;
 
-    if(waiting_)
+    if (waiting_)
     {
       GameTime::actorDidAct();
       return;
@@ -82,21 +82,21 @@ void Mon::onActorTurn()
   getSeenFoes(seenFoes);
   tgt_ = Utils::getRandomClosestActor(pos, seenFoes);
 
-  if(spellCoolDownCur_ != 0) {spellCoolDownCur_--;}
+  if (spellCoolDownCur_ != 0) {spellCoolDownCur_--;}
 
-  if(awareCounter_ > 0)
+  if (awareCounter_ > 0)
   {
     isRoamingAllowed_ = true;
-    if(leader_)
+    if (leader_)
     {
-      if(leader_->isAlive() && !isActorMyLeader(Map::player))
+      if (leader_->isAlive() && !isActorMyLeader(Map::player))
       {
         static_cast<Mon*>(leader_)->awareCounter_ = leader_->getData().nrTurnsAware;
       }
     }
     else //Monster does not have a leader
     {
-      if(isAlive() && Rnd::oneIn(14)) {speakPhrase();}
+      if (isAlive() && Rnd::oneIn(14)) {speakPhrase();}
     }
   }
 
@@ -113,9 +113,9 @@ void Mon::onActorTurn()
 
   //------------------------------ SPECIAL MONSTER ACTIONS
   //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-  if(leader_ != Map::player/*TODO temporary restriction, allow this later(?)*/)
+  if (leader_ != Map::player/*TODO temporary restriction, allow this later(?)*/)
   {
-    if(onActorTurn_())
+    if (onActorTurn_())
     {
       return;
     }
@@ -125,30 +125,30 @@ void Mon::onActorTurn()
   //                               (MOVING, ATTACKING, CASTING SPELLS...)
   //Looking is as an action if monster not aware before, and became aware from looking.
   //(This is to give the monsters some reaction time, and not instantly attack)
-  if(data_->ai[int(AiId::looks)] && leader_ != Map::player)
+  if (data_->ai[int(AiId::looks)] && leader_ != Map::player)
   {
-    if(Ai::Info::lookBecomePlayerAware(*this)) {return;}
+    if (Ai::Info::lookBecomePlayerAware(*this)) {return;}
   }
 
-  if(data_->ai[int(AiId::makesRoomForFriend)] && leader_ != Map::player)
+  if (data_->ai[int(AiId::makesRoomForFriend)] && leader_ != Map::player)
   {
-    if(Ai::Action::makeRoomForFriend(*this))
+    if (Ai::Action::makeRoomForFriend(*this))
     {
       return;
     }
   }
 
-  if(Rnd::oneIn(6))
+  if (Rnd::oneIn(6))
   {
-    if(Ai::Action::tryCastRandomSpell(*this))
+    if (Ai::Action::tryCastRandomSpell(*this))
     {
       return;
     }
   }
 
-  if(data_->ai[int(AiId::attacks)] && tgt_)
+  if (data_->ai[int(AiId::attacks)] && tgt_)
   {
-    if(tryAttack(*tgt_))
+    if (tryAttack(*tgt_))
     {
       return;
     }
@@ -166,19 +166,18 @@ void Mon::onActorTurn()
     erraticMovePct /= 2;
   }
 
-  if(
-    data_->ai[int(AiId::movesToRandomWhenUnaware)] &&
-    Rnd::percentile() < erraticMovePct )
+  if (data_->ai[int(AiId::movesToRandomWhenUnaware)] &&
+      Rnd::percentile() < erraticMovePct)
   {
-    if(Ai::Action::moveToRandomAdjCell(*this))
+    if (Ai::Action::moveToRandomAdjCell(*this))
     {
       return;
     }
   }
 
-  if(data_->ai[int(AiId::movesToTgtWhenLos)])
+  if (data_->ai[int(AiId::movesToTgtWhenLos)])
   {
-    if(Ai::Action::moveToTgtSimple(*this))
+    if (Ai::Action::moveToTgtSimple(*this))
     {
       return;
     }
@@ -186,49 +185,49 @@ void Mon::onActorTurn()
 
   vector<Pos> path;
 
-  if(data_->ai[int(AiId::pathsToTgtWhenAware)] && leader_ != Map::player)
+  if (data_->ai[int(AiId::pathsToTgtWhenAware)] && leader_ != Map::player)
   {
     Ai::Info::setPathToPlayerIfAware(*this, path);
   }
 
-  if(leader_ != Map::player)
+  if (leader_ != Map::player)
   {
-    if(Ai::Action::handleClosedBlockingDoor(*this, path))
+    if (Ai::Action::handleClosedBlockingDoor(*this, path))
     {
       return;
     }
   }
 
-  if(Ai::Action::stepPath(*this, path)) {return;}
+  if (Ai::Action::stepPath(*this, path)) {return;}
 
-  if(data_->ai[int(AiId::movesToLeader)])
+  if (data_->ai[int(AiId::movesToLeader)])
   {
     Ai::Info::setPathToLeaderIfNoLosToleader(*this, path);
-    if(Ai::Action::stepPath(*this, path))
+    if (Ai::Action::stepPath(*this, path))
     {
       return;
     }
   }
 
-  if(data_->ai[int(AiId::movesToLair)] && leader_ != Map::player)
+  if (data_->ai[int(AiId::movesToLair)] && leader_ != Map::player)
   {
-    if(Ai::Action::stepToLairIfLos(*this, lairCell_))
+    if (Ai::Action::stepToLairIfLos(*this, lairCell_))
     {
       return;
     }
     else
     {
       Ai::Info::setPathToLairIfNoLos(*this, path, lairCell_);
-      if(Ai::Action::stepPath(*this, path))
+      if (Ai::Action::stepPath(*this, path))
       {
         return;
       }
     }
   }
 
-  if(data_->ai[int(AiId::movesToRandomWhenUnaware)])
+  if (data_->ai[int(AiId::movesToRandomWhenUnaware)])
   {
-    if(Ai::Action::moveToRandomAdjCell(*this))
+    if (Ai::Action::moveToRandomAdjCell(*this))
     {
       return;
     }
@@ -239,12 +238,12 @@ void Mon::onActorTurn()
 
 void Mon::onStdTurn()
 {
-  if(nrTurnsUntilUnsummoned_ > 0)
+  if (nrTurnsUntilUnsummoned_ > 0)
   {
     --nrTurnsUntilUnsummoned_;
-    if(nrTurnsUntilUnsummoned_ <= 0)
+    if (nrTurnsUntilUnsummoned_ <= 0)
     {
-      if(Map::player->isSeeingActor(*this, nullptr))
+      if (Map::player->isSeeingActor(*this, nullptr))
       {
         Log::addMsg(getNameThe() + " suddenly disappears!");
 //        Render::drawBlastAtCells({pos}, clrMagenta);
@@ -270,13 +269,13 @@ void Mon::moveDir(Dir dir)
   getPropHandler().changeMoveDir(pos, dir);
 
   //Trap affects leaving?
-  if(dir != Dir::center)
+  if (dir != Dir::center)
   {
     auto* f = Map::cells[pos.x][pos.y].rigid;
-    if(f->getId() == FeatureId::trap)
+    if (f->getId() == FeatureId::trap)
     {
       dir = static_cast<Trap*>(f)->actorTryLeave(*this, dir);
-      if(dir == Dir::center)
+      if (dir == Dir::center)
       {
         TRACE_VERBOSE << "Monster move prevented by trap" << endl;
         GameTime::actorDidAct();
@@ -290,14 +289,14 @@ void Mon::moveDir(Dir dir)
 
   const Pos targetCell(pos + DirUtils::getOffset(dir));
 
-  if(dir != Dir::center && Utils::isPosInsideMap(targetCell, false))
+  if (dir != Dir::center && Utils::isPosInsideMap(targetCell, false))
   {
     pos = targetCell;
 
     //Bump features in target cell (i.e. to trigger traps)
     vector<Mob*> mobs;
     GameTime::getMobsAtPos(pos, mobs);
-    for(auto* m : mobs) {m->bump(*this);}
+    for (auto* m : mobs) {m->bump(*this);}
     Map::cells[pos.x][pos.y].rigid->bump(*this);
   }
 
@@ -306,9 +305,9 @@ void Mon::moveDir(Dir dir)
 
 void Mon::hearSound(const Snd& snd)
 {
-  if(isAlive())
+  if (isAlive())
   {
-    if(snd.isAlertingMon())
+    if (snd.isAlertingMon())
     {
       becomeAware(false);
     }
@@ -332,19 +331,19 @@ void Mon::speakPhrase()
 
 void Mon::becomeAware(const bool IS_FROM_SEEING)
 {
-  if(isAlive())
+  if (isAlive())
   {
     const int AWARENESS_CNT_BEFORE = awareCounter_;
     awareCounter_ = data_->nrTurnsAware;
-    if(AWARENESS_CNT_BEFORE <= 0)
+    if (AWARENESS_CNT_BEFORE <= 0)
     {
-      if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr))
+      if (IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr))
       {
         Map::player->updateFov();
         Render::drawMapAndInterface(true);
         Log::addMsg(getNameThe() + " sees me!");
       }
-      if(Rnd::coinToss()) {speakPhrase();}
+      if (Rnd::coinToss()) {speakPhrase();}
     }
   }
 }
@@ -359,7 +358,7 @@ void Mon::playerBecomeAwareOfMe(const int DURATION_FACTOR)
 
 bool Mon::tryAttack(Actor& defender)
 {
-  if(state_ != ActorState::alive || (awareCounter_ <= 0 && leader_ != Map::player))
+  if (state_ != ActorState::alive || (awareCounter_ <= 0 && leader_ != Map::player))
   {
     return false;
   }
@@ -367,11 +366,11 @@ bool Mon::tryAttack(Actor& defender)
   AttackOpport opport     = getAttackOpport(defender);
   const BestAttack attack = getBestAttack(opport);
 
-  if(!attack.weapon) {return false;}
+  if (!attack.weapon) {return false;}
 
-  if(attack.isMelee)
+  if (attack.isMelee)
   {
-    if(attack.weapon->getData().melee.isMeleeWpn)
+    if (attack.weapon->getData().melee.isMeleeWpn)
     {
       Attack::melee(*this, *attack.weapon, defender);
       return true;
@@ -379,9 +378,9 @@ bool Mon::tryAttack(Actor& defender)
     return false;
   }
 
-  if(attack.weapon->getData().ranged.isRangedWpn)
+  if (attack.weapon->getData().ranged.isRangedWpn)
   {
-    if(opport.isTimeToReload)
+    if (opport.isTimeToReload)
     {
       Reload::reloadWieldedWpn(*this);
       return true;
@@ -389,16 +388,16 @@ bool Mon::tryAttack(Actor& defender)
 
     //Check if friend is in the way (with a small chance to ignore this)
     bool isBlockedByFriend = false;
-    if(Rnd::fraction(4, 5))
+    if (Rnd::fraction(4, 5))
     {
       vector<Pos> line;
       LineCalc::calcNewLine(pos, defender.pos, true, 9999, false, line);
-      for(Pos& linePos : line)
+      for (Pos& linePos : line)
       {
-        if(linePos != pos && linePos != defender.pos)
+        if (linePos != pos && linePos != defender.pos)
         {
           Actor* const actorHere = Utils::getActorAtPos(linePos);
-          if(actorHere)
+          if (actorHere)
           {
             isBlockedByFriend = true;
             break;
@@ -407,7 +406,7 @@ bool Mon::tryAttack(Actor& defender)
       }
     }
 
-    if(isBlockedByFriend) {return false;}
+    if (isBlockedByFriend) {return false;}
 
     const int NR_TURNS_NO_RANGED = data_->rangedCooldownTurns;
     PropDisabledRanged* status =
@@ -423,55 +422,53 @@ bool Mon::tryAttack(Actor& defender)
 AttackOpport Mon::getAttackOpport(Actor& defender)
 {
   AttackOpport opport;
-  if(propHandler_->allowAttack(false))
+  if (propHandler_->allowAttack(false))
   {
     opport.isMelee = Utils::isPosAdj(pos, defender.pos, false);
 
     Wpn* weapon = nullptr;
     const size_t nrIntrinsics = inv_->getIntrinsicsSize();
-    if(opport.isMelee)
+    if (opport.isMelee)
     {
-      if(propHandler_->allowAttackMelee(false))
+      if (propHandler_->allowAttackMelee(false))
       {
 
         //Melee weapon in wielded slot?
         weapon = static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
-        if(weapon)
+        if (weapon)
         {
-          if(weapon->getData().melee.isMeleeWpn)
+          if (weapon->getData().melee.isMeleeWpn)
           {
             opport.weapons.push_back(weapon);
           }
         }
 
         //Intrinsic melee attacks?
-        for(size_t i = 0; i < nrIntrinsics; ++i)
+        for (size_t i = 0; i < nrIntrinsics; ++i)
         {
           weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
-          if(weapon->getData().melee.isMeleeWpn) {opport.weapons.push_back(weapon);}
+          if (weapon->getData().melee.isMeleeWpn) {opport.weapons.push_back(weapon);}
         }
       }
     }
     else
     {
-      if(propHandler_->allowAttackRanged(false))
+      if (propHandler_->allowAttackRanged(false))
       {
         //Ranged weapon in wielded slot?
         weapon =
           static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
 
-        if(weapon)
+        if (weapon)
         {
-          if(weapon->getData().ranged.isRangedWpn)
+          if (weapon->getData().ranged.isRangedWpn)
           {
             opport.weapons.push_back(weapon);
 
             //Check if reload time instead
-            if(
-              weapon->nrAmmoLoaded == 0 &&
-              !weapon->getData().ranged.hasInfiniteAmmo)
+            if (weapon->nrAmmoLoaded == 0 && !weapon->getData().ranged.hasInfiniteAmmo)
             {
-              if(inv_->hasAmmoForFirearmInInventory())
+              if (inv_->hasAmmoForFirearmInInventory())
               {
                 opport.isTimeToReload = true;
               }
@@ -480,10 +477,10 @@ AttackOpport Mon::getAttackOpport(Actor& defender)
         }
 
         //Intrinsic ranged attacks?
-        for(size_t i = 0; i < nrIntrinsics; ++i)
+        for (size_t i = 0; i < nrIntrinsics; ++i)
         {
           weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
-          if(weapon->getData().ranged.isRangedWpn) {opport.weapons.push_back(weapon);}
+          if (weapon->getData().ranged.isRangedWpn) {opport.weapons.push_back(weapon);}
         }
       }
     }
@@ -503,16 +500,16 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
   const size_t nrWpns = attackOpport.weapons.size();
 
   //If any possible attacks found
-  if(nrWpns > 0)
+  if (nrWpns > 0)
   {
     attack.weapon = attackOpport.weapons[0];
 
     const ItemDataT* data = &(attack.weapon->getData());
 
     //If there are more than one possible weapon, find strongest.
-    if(nrWpns > 1)
+    if (nrWpns > 1)
     {
-      for(size_t i = 1; i < nrWpns; ++i)
+      for (size_t i = 1; i < nrWpns; ++i)
       {
         //Found new weapon in element i.
         newWpn = attackOpport.weapons[i];
@@ -520,7 +517,7 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
 
         //Compare definitions.
         //If weapon i is stronger -
-        if(ItemData::isWpnStronger(*data, *newData, attack.isMelee))
+        if (ItemData::isWpnStronger(*data, *newData, attack.isMelee))
         {
           // - use new weapon instead.
           attack.weapon = newWpn;
@@ -534,7 +531,7 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
 
 bool Mon::isLeaderOf(const Actor* const actor) const
 {
-  if(!actor || actor->isPlayer())
+  if (!actor || actor->isPlayer())
   {
     return false;
   }
@@ -554,9 +551,9 @@ int Mon::getGroupSize()
 
   int ret = 1; //Starting at one to include leader
 
-  for(const Actor* const actor : GameTime::actors_)
+  for (const Actor* const actor : GameTime::actors_)
   {
-    if(actor->isActorMyLeader(groupLeader)) {++ret;}
+    if (actor->isActorMyLeader(groupLeader)) {++ret;}
   }
 
   return ret;
@@ -569,7 +566,7 @@ string Cultist::getCultistPhrase()
 
   const God* const god = Gods::getCurGod();
 
-  if(god && Rnd::coinToss())
+  if (god && Rnd::coinToss())
   {
     const string name   = god->getName();
     const string descr  = god->getDescr();
@@ -628,22 +625,22 @@ void Cultist::mkStartItems()
   const int TOT = MG;
   const int RND = Map::dlvl == 0 ? PISTOL : Rnd::range(1, TOT);
 
-  if(RND <= PISTOL)
+  if (RND <= PISTOL)
   {
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::pistol));
-    if(Rnd::percentile() < 40)
+    if (Rnd::percentile() < 40)
     {
       inv_->putInGeneral(ItemFactory::mk(ItemId::pistolClip));
     }
   }
-  else if(RND <= PUMP_SHOTGUN)
+  else if (RND <= PUMP_SHOTGUN)
   {
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::pumpShotgun));
     Item* item = ItemFactory::mk(ItemId::shotgunShell);
     item->nrItems_ = Rnd::range(5, 9);
     inv_->putInGeneral(item);
   }
-  else if(RND <= SAWN_SHOTGUN)
+  else if (RND <= SAWN_SHOTGUN)
   {
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::sawedOff));
     Item* item = ItemFactory::mk(ItemId::shotgunShell);
@@ -655,12 +652,12 @@ void Cultist::mkStartItems()
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::machineGun));
   }
 
-  if(Rnd::percentile() < 33)
+  if (Rnd::percentile() < 33)
   {
     inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
   }
 
-  if(Rnd::percentile() < 8)
+  if (Rnd::percentile() < 8)
   {
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   }
@@ -671,12 +668,12 @@ void CultistTeslaCannon::mkStartItems()
   inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::teslaCannon));
   inv_->putInGeneral(ItemFactory::mk(ItemId::teslaCanister));
 
-  if(Rnd::oneIn(3))
+  if (Rnd::oneIn(3))
   {
     inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
   }
 
-  if(Rnd::oneIn(10))
+  if (Rnd::oneIn(10))
   {
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   }
@@ -702,7 +699,7 @@ void CultistPriest::mkStartItems()
   spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
 
-  if(Rnd::percentile() < 33)
+  if (Rnd::percentile() < 33)
   {
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   }
@@ -722,7 +719,7 @@ void FrostHound::mkStartItems()
 
 void Zuul::place_()
 {
-  if(ActorData::data[int(ActorId::zuul)].nrLeftAllowedToSpawn > 0)
+  if (ActorData::data[int(ActorId::zuul)].nrLeftAllowedToSpawn > 0)
   {
     //Note: Do not call die() here, that would have side effects such as
     //player getting XP. Instead, simply set the dead state to destroyed.
@@ -741,33 +738,33 @@ void Zuul::mkStartItems()
 
 bool Vortex::onActorTurn_()
 {
-  if(isAlive())
+  if (isAlive())
   {
-    if(pullCooldown > 0)
+    if (pullCooldown > 0)
     {
       pullCooldown--;
     }
 
-    if(awareCounter_ > 0 && pullCooldown <= 0)
+    if (awareCounter_ > 0 && pullCooldown <= 0)
     {
       TRACE << "pullCooldown: " << pullCooldown << endl;
       TRACE << "Is aware of player" << endl;
       const Pos& playerPos = Map::player->pos;
-      if(!Utils::isPosAdj(pos, playerPos, true))
+      if (!Utils::isPosAdj(pos, playerPos, true))
       {
         const int CHANCE_TO_KNOCK = 25;
-        if(Rnd::percentile() < CHANCE_TO_KNOCK)
+        if (Rnd::percentile() < CHANCE_TO_KNOCK)
         {
           TRACE << "Passed random chance to pull" << endl;
 
           const Pos playerDelta = playerPos - pos;
           Pos knockBackFromPos = playerPos;
-          if(playerDelta.x > 1)   {knockBackFromPos.x++;}
-          if(playerDelta.x < -1)  {knockBackFromPos.x--;}
-          if(playerDelta.y > 1)   {knockBackFromPos.y++;}
-          if(playerDelta.y < -1)  {knockBackFromPos.y--;}
+          if (playerDelta.x > 1)   {knockBackFromPos.x++;}
+          if (playerDelta.x < -1)  {knockBackFromPos.x--;}
+          if (playerDelta.y > 1)   {knockBackFromPos.y++;}
+          if (playerDelta.y < -1)  {knockBackFromPos.y--;}
 
-          if(knockBackFromPos != playerPos)
+          if (knockBackFromPos != playerPos)
           {
             TRACE << "Good pos found to knockback player from (";
             TRACE << knockBackFromPos.x << ",";
@@ -776,10 +773,10 @@ bool Vortex::onActorTurn_()
             TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
             bool blockedLos[MAP_W][MAP_H];
             MapParse::parse(CellCheck::BlocksLos(), blockedLos);
-            if(isSeeingActor(*(Map::player), blockedLos))
+            if (isSeeingActor(*(Map::player), blockedLos))
             {
               TRACE << "I am seeing the player" << endl;
-              if(Map::player->isSeeingActor(*this, nullptr))
+              if (Map::player->isSeeingActor(*this, nullptr))
               {
                 Log::addMsg("The Vortex attempts to pull me in!");
               }
@@ -836,23 +833,24 @@ void FrostVortex::mkStartItems()
 
 bool Ghost::onActorTurn_()
 {
-  if(
-    isAlive()                                     &&
-    awareCounter_ > 0                             &&
-    Utils::isPosAdj(pos, Map::player->pos, false) &&
-    Rnd::percentile() < 30)
+  if (isAlive()                                     &&
+      awareCounter_ > 0                             &&
+      Utils::isPosAdj(pos, Map::player->pos, false) &&
+      Rnd::percentile() < 30)
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellCheck::BlocksLos(), blocked);
-    const bool PLAYER_SEES_ME =
-      Map::player->isSeeingActor(*this, blocked);
-    const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
+
+    const bool PLAYER_SEES_ME = Map::player->isSeeingActor(*this, blocked);
+    const string refer        = PLAYER_SEES_ME ? getNameThe() : "It";
+
     Log::addMsg(refer + " reaches for me... ");
+
     const AbilityRollResult rollResult =
       AbilityRoll::roll(Map::player->getData().abilityVals.getVal(
                           AbilityId::dodgeAttack, true, *this));
     const bool PLAYER_DODGES = rollResult >= successSmall;
-    if(PLAYER_DODGES)
+    if (PLAYER_DODGES)
     {
       Log::addMsg("I dodge!", clrMsgGood);
     }
@@ -893,7 +891,7 @@ void MiGo::mkStartItems()
   spellsKnown_.push_back(new SpellMiGoHypno);
   spellsKnown_.push_back(new SpellHealSelf);
 
-  if(Rnd::coinToss())
+  if (Rnd::coinToss())
   {
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   }
@@ -918,7 +916,7 @@ void FlyingPolyp::mkStartItems()
 void Rat::mkStartItems()
 {
   Item* item = nullptr;
-  if(Rnd::percentile() < 15)
+  if (Rnd::percentile() < 15)
   {
     item = ItemFactory::mk(ItemId::ratBiteDiseased);
   }
@@ -956,7 +954,7 @@ void Mummy::mkStartItems()
 
   spellsKnown_.push_back(SpellHandling::mkSpellFromId(SpellId::disease));
 
-  for(int i = Rnd::range(1, 2); i > 0; --i)
+  for (int i = Rnd::range(1, 2); i > 0; --i)
   {
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   }
@@ -975,20 +973,20 @@ void MummyUnique::mkStartItems()
 
 bool Khephren::onActorTurn_()
 {
-  if(isAlive() && awareCounter_ > 0 && !hasSummonedLocusts)
+  if (isAlive() && awareCounter_ > 0 && !hasSummonedLocusts)
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellCheck::BlocksLos(), blocked);
 
-    if(isSeeingActor(*(Map::player), blocked))
+    if (isSeeingActor(*(Map::player), blocked))
     {
       MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
 
       const int SPAWN_AFTER_X = Map::player->pos.x + FOV_STD_RADI_INT + 1;
 
-      for(int y = 0; y  < MAP_H; ++y)
+      for (int y = 0; y  < MAP_H; ++y)
       {
-        for(int x = 0; x <= SPAWN_AFTER_X; ++x)
+        for (int x = 0; x <= SPAWN_AFTER_X; ++x)
         {
           blocked[x][y] = true;
         }
@@ -1000,11 +998,11 @@ bool Khephren::onActorTurn_()
       sort(begin(freeCells), end(freeCells), IsCloserToPos(pos));
 
       const size_t NR_OF_SPAWNS = 15;
-      if(freeCells.size() >= NR_OF_SPAWNS + 1)
+      if (freeCells.size() >= NR_OF_SPAWNS + 1)
       {
         Log::addMsg("Khephren calls a plague of Locusts!");
         Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
-        for(size_t i = 0; i < NR_OF_SPAWNS; ++i)
+        for (size_t i = 0; i < NR_OF_SPAWNS; ++i)
         {
           Actor* const actor  = ActorFactory::mk(ActorId::locust, freeCells[0]);
           Mon* const mon      = static_cast<Mon*>(actor);
@@ -1058,12 +1056,12 @@ void HuntingHorror::mkStartItems()
 
 bool KeziahMason::onActorTurn_()
 {
-  if(isAlive() && awareCounter_ > 0 && !hasSummonedJenkin)
+  if (isAlive() && awareCounter_ > 0 && !hasSummonedJenkin)
   {
     bool blockedLos[MAP_W][MAP_H];
     MapParse::parse(CellCheck::BlocksLos(), blockedLos);
 
-    if(isSeeingActor(*(Map::player), blockedLos))
+    if (isSeeingActor(*(Map::player), blockedLos))
     {
       MapParse::parse(CellCheck::BlocksMoveCmn(true), blockedLos);
 
@@ -1071,10 +1069,10 @@ bool KeziahMason::onActorTurn_()
       LineCalc::calcNewLine(pos, Map::player->pos, true, 9999, false, line);
 
       const int LINE_SIZE = line.size();
-      for(int i = 0; i < LINE_SIZE; ++i)
+      for (int i = 0; i < LINE_SIZE; ++i)
       {
         const Pos c = line[i];
-        if(!blockedLos[c.x][c.y])
+        if (!blockedLos[c.x][c.y])
         {
           //TODO Use the generalized summoning functionality
           Log::addMsg("Keziah summons Brown Jenkin!");
@@ -1106,17 +1104,17 @@ void KeziahMason::mkStartItems()
 
 void LengElder::onStdTurn_()
 {
-  if(isAlive())
+  if (isAlive())
   {
     awareCounter_ = 100;
 
-    if(hasGivenItemToPlayer_)
+    if (hasGivenItemToPlayer_)
     {
       bool blockedLos[MAP_W][MAP_H];
       MapParse::parse(CellCheck::BlocksLos(), blockedLos);
-      if(isSeeingActor(*Map::player, blockedLos))
+      if (isSeeingActor(*Map::player, blockedLos))
       {
-        if(nrTurnsToHostile_ <= 0)
+        if (nrTurnsToHostile_ <= 0)
         {
           Log::addMsg("I am ripped to pieces!!!", clrMsgBad);
           Map::player->hit(999, DmgType::pure);
@@ -1131,7 +1129,7 @@ void LengElder::onStdTurn_()
     {
       const bool IS_PLAYER_SEE_ME = Map::player->isSeeingActor(*this, nullptr);
       const bool IS_PLAYER_ADJ    = Utils::isPosAdj(pos, Map::player->pos, false);
-      if(IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
+      if (IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
       {
         Log::addMsg("I perceive a cloaked figure standing before me...");
         Log::addMsg("This must be the Elder Hierophant of the Leng monastery, ");
@@ -1198,7 +1196,7 @@ void ColorOOSpace::onStdTurn_()
 
   restoreHp(1, false);
 
-  if(Map::player->isSeeingActor(*this, nullptr))
+  if (Map::player->isSeeingActor(*this, nullptr))
   {
     Map::player->getPropHandler().tryApplyProp(new PropConfused(PropTurns::std));
   }
@@ -1241,21 +1239,20 @@ void Wolf::mkStartItems()
 
 bool WormMass::onActorTurn_()
 {
-  if(
-    isAlive()                                       &&
-    awareCounter_ > 0                               &&
-    GameTime::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
-    Rnd::oneIn(spawnNewOneInN))
+  if (isAlive()                                       &&
+      awareCounter_ > 0                               &&
+      GameTime::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
+      Rnd::oneIn(spawnNewOneInN))
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellCheck::BlocksActor(*this, true), blocked,
                     MapParseWriteRule::always, Rect(pos - 1, pos + 1));
 
-    for(const Pos& d : DirUtils::dirList)
+    for (const Pos& d : DirUtils::dirList)
     {
       const Pos pAdj(pos + d);
 
-      if(!blocked[pAdj.x][pAdj.y])
+      if (!blocked[pAdj.x][pAdj.y])
       {
         Actor* const    actor   = ActorFactory::mk(data_->id, pAdj);
         WormMass* const worm    = static_cast<WormMass*>(actor);
@@ -1278,21 +1275,20 @@ void WormMass::mkStartItems()
 
 bool GiantLocust::onActorTurn_()
 {
-  if(
-    isAlive()                                       &&
-    awareCounter_ > 0                               &&
-    GameTime::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
-    Rnd::oneIn(spawnNewOneInN))
+  if (isAlive()                                       &&
+      awareCounter_ > 0                               &&
+      GameTime::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
+      Rnd::oneIn(spawnNewOneInN))
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellCheck::BlocksActor(*this, true), blocked,
                     MapParseWriteRule::always, Rect(pos - 1, pos + 1));
 
-    for(const Pos& d : DirUtils::dirList)
+    for (const Pos& d : DirUtils::dirList)
     {
       const Pos pAdj(pos + d);
 
-      if(!blocked[pAdj.x][pAdj.y])
+      if (!blocked[pAdj.x][pAdj.y])
       {
         Actor* const    actor     = ActorFactory::mk(data_->id, pAdj);
         GiantLocust* const locust = static_cast<GiantLocust*>(actor);
@@ -1325,27 +1321,27 @@ void LordOfShadows::mkStartItems()
 
 bool LordOfSpiders::onActorTurn_()
 {
-  if(isAlive() && awareCounter_ > 0 && Rnd::coinToss())
+  if (isAlive() && awareCounter_ > 0 && Rnd::coinToss())
   {
     const Pos playerPos = Map::player->pos;
 
-    if(Map::player->isSeeingActor(*this, nullptr))
+    if (Map::player->isSeeingActor(*this, nullptr))
     {
       Log::addMsg(data_->spellCastMessage);
     }
 
-    for(int dx = -1; dx <= 1; ++dx)
+    for (int dx = -1; dx <= 1; ++dx)
     {
-      for(int dy = -1; dy <= 1; ++dy)
+      for (int dy = -1; dy <= 1; ++dy)
       {
 
-        if(Rnd::fraction(3, 4))
+        if (Rnd::fraction(3, 4))
         {
 
           const Pos p(playerPos + Pos(dx, dy));
           const auto* const featureHere = Map::cells[p.x][p.y].rigid;
 
-          if(featureHere->canHaveRigid())
+          if (featureHere->canHaveRigid())
           {
             auto& d = FeatureData::getData(featureHere->getId());
             const auto* const mimic = static_cast<Rigid*>(d.mkObj(p));
@@ -1392,17 +1388,17 @@ bool Zombie::onActorTurn_()
 
 bool MajorClaphamLee::onActorTurn_()
 {
-  if(tryResurrect())
+  if (tryResurrect())
   {
     return true;
   }
 
-  if(isAlive() && awareCounter_ > 0 && !hasSummonedTombLegions)
+  if (isAlive() && awareCounter_ > 0 && !hasSummonedTombLegions)
   {
     bool blockedLos[MAP_W][MAP_H];
     MapParse::parse(CellCheck::BlocksLos(), blockedLos);
 
-    if(isSeeingActor(*(Map::player), blockedLos))
+    if (isSeeingActor(*(Map::player), blockedLos))
     {
       Log::addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
       vector<ActorId> monIds;
@@ -1412,11 +1408,11 @@ bool MajorClaphamLee::onActorTurn_()
 
       const int NR_OF_EXTRA_SPAWNS = 4;
 
-      for(int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i)
+      for (int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i)
       {
         const int ZOMBIE_TYPE = Rnd::range(1, 3);
         ActorId id = ActorId::zombie;
-        switch(ZOMBIE_TYPE)
+        switch (ZOMBIE_TYPE)
         {
           case 1: id = ActorId::zombie;        break;
           case 2: id = ActorId::zombieAxe;     break;
@@ -1438,18 +1434,18 @@ bool MajorClaphamLee::onActorTurn_()
 
 bool Zombie::tryResurrect()
 {
-  if(isCorpse())
+  if (isCorpse())
   {
-    if(!hasResurrected)
+    if (!hasResurrected)
     {
       const int NR_TURNS_TO_CAN_RISE = 5;
-      if(deadTurnCounter < NR_TURNS_TO_CAN_RISE)
+      if (deadTurnCounter < NR_TURNS_TO_CAN_RISE)
       {
         ++deadTurnCounter;
       }
-      if(deadTurnCounter >= NR_TURNS_TO_CAN_RISE)
+      if (deadTurnCounter >= NR_TURNS_TO_CAN_RISE)
       {
-        if(pos != Map::player->pos && Rnd::oneIn(14))
+        if (pos != Map::player->pos && Rnd::oneIn(14))
         {
           state_  = ActorState::alive;
           hp_     = (getHpMax(true) * 3) / 4;
@@ -1458,7 +1454,7 @@ bool Zombie::tryResurrect()
           clr_    = data_->color;
           hasResurrected = true;
           data_->nrKills--;
-          if(Map::cells[pos.x][pos.y].isSeenByPlayer)
+          if (Map::cells[pos.x][pos.y].isSeenByPlayer)
           {
             Log::addMsg(getCorpseNameThe() + " rises again!!", clrWhite, true);
             Map::player->incrShock(ShockValue::some, ShockSrc::misc);
@@ -1477,7 +1473,7 @@ bool Zombie::tryResurrect()
 void Zombie::die_()
 {
   //If resurrected once and has corpse, blow up the corpse
-  if(hasResurrected && isCorpse())
+  if (hasResurrected && isCorpse())
   {
     state_ = ActorState::destroyed;
     Map::mkBlood(pos);
@@ -1488,7 +1484,7 @@ void Zombie::die_()
 void ZombieClaw::mkStartItems()
 {
   Item* item = nullptr;
-  if(Rnd::percentile() < 20)
+  if (Rnd::percentile() < 20)
   {
     item = ItemFactory::mk(ItemId::zombieClawDiseased);
   }
@@ -1512,20 +1508,19 @@ void BloatedZombie::mkStartItems()
 
 bool Mold::onActorTurn_()
 {
-  if (
-    isAlive()                                       &&
-    GameTime::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
-    Rnd::oneIn(spawnNewOneInN))
+  if (isAlive()                                       &&
+      GameTime::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
+      Rnd::oneIn(spawnNewOneInN))
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellCheck::BlocksActor(*this, true), blocked,
                     MapParseWriteRule::always, Rect(pos - 1, pos + 1));
 
-    for(const Pos& d : DirUtils::dirList)
+    for (const Pos& d : DirUtils::dirList)
     {
       const Pos adjPos(pos + d);
 
-      if(!blocked[adjPos.x][adjPos.y])
+      if (!blocked[adjPos.x][adjPos.y])
       {
         Actor* const  actor     = ActorFactory::mk(data_->id, adjPos);
         Mold* const   mold      = static_cast<Mold*>(actor);

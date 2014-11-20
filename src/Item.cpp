@@ -34,8 +34,8 @@ Item::Item(ItemDataT* itemData) :
 
 Item::~Item()
 {
-  for(auto prop   : carrierProps_)   {delete prop;}
-  for(auto spell  : carrierSpells_)  {delete spell;}
+  for (auto prop   : carrierProps_)   {delete prop;}
+  for (auto spell  : carrierSpells_)  {delete spell;}
 }
 
 const ItemDataT&  Item::getData()   const {return *data_;}
@@ -53,15 +53,15 @@ int Item::getWeight() const {return data_->itemWeight * nrItems_;}
 string Item::getWeightStr() const
 {
   const int WEIGHT = getWeight();
-  if(WEIGHT <= (itemWeight_extraLight + itemWeight_light) / 2)
+  if (WEIGHT <= (itemWeight_extraLight + itemWeight_light) / 2)
   {
     return "very light";
   }
-  if(WEIGHT <= (itemWeight_light + itemWeight_medium) / 2)
+  if (WEIGHT <= (itemWeight_light + itemWeight_medium) / 2)
   {
     return "light";
   }
-  if(WEIGHT <= (itemWeight_medium + itemWeight_heavy) / 2)
+  if (WEIGHT <= (itemWeight_medium + itemWeight_heavy) / 2)
   {
     return "a bit heavy";
   }
@@ -79,13 +79,13 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
                      const ItemRefAttInf attInf) const
 {
   ItemRefType refTypeUsed = refType;
-  if(refType == ItemRefType::plural && (!data_->isStackable || nrItems_ == 1))
+  if (refType == ItemRefType::plural && (!data_->isStackable || nrItems_ == 1))
   {
     refTypeUsed = ItemRefType::a;
   }
 
   string nrStr = "";
-  if(refTypeUsed == ItemRefType::plural)
+  if (refTypeUsed == ItemRefType::plural)
   {
     nrStr = toStr(nrItems_) + " ";
   }
@@ -94,9 +94,9 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
 
   ItemRefAttInf attInfUsed = attInf;
 
-  if(attInf == ItemRefAttInf::wpnContext)
+  if (attInf == ItemRefAttInf::wpnContext)
   {
-    switch(data_->mainAttMode)
+    switch (data_->mainAttMode)
     {
       case MainAttMode::melee:  attInfUsed = ItemRefAttInf::melee;  break;
       case MainAttMode::ranged: attInfUsed = ItemRefAttInf::ranged; break;
@@ -105,7 +105,7 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
     }
   }
 
-  if(attInfUsed == ItemRefAttInf::melee)
+  if (attInfUsed == ItemRefAttInf::melee)
   {
     const string rollsStr = toStr(data_->melee.dmg.first);
     const string sidesStr = toStr(data_->melee.dmg.second);
@@ -122,11 +122,11 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
   const int PLAYER_RANGED_SKILL =
     Map::player->getData().abilityVals.getVal(AbilityId::ranged, true, *(Map::player));
 
-  if(attInfUsed == ItemRefAttInf::ranged)
+  if (attInfUsed == ItemRefAttInf::ranged)
   {
     string dmgStr = data_->ranged.dmgInfoOverride;
 
-    if(dmgStr.empty())
+    if (dmgStr.empty())
     {
       const int MULTIPL     = data_->ranged.isMachineGun ? NR_MG_PROJECTILES : 1;
       const string rollsStr = toStr(data_->ranged.dmg.rolls * MULTIPL);
@@ -141,7 +141,7 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
     attStr = " " + dmgStr + " " + skillStr;
   }
 
-  if(attInfUsed == ItemRefAttInf::thrown)
+  if (attInfUsed == ItemRefAttInf::thrown)
   {
     const string rollsStr = toStr(data_->ranged.throwDmg.rolls);
     const string sidesStr = toStr(data_->ranged.throwDmg.sides);
@@ -155,10 +155,10 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
 
   string infStr = "";
 
-  if(inf == ItemRefInf::yes)
+  if (inf == ItemRefInf::yes)
   {
     infStr = getNameInf();
-    if(!infStr.empty()) {infStr.insert(0, " ");}
+    if (!infStr.empty()) {infStr.insert(0, " ");}
   }
 
   const auto& namesUsed = data_->isIdentified ? data_->baseName : data_->baseNameUnid;
@@ -168,7 +168,7 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
 
 void Item::clearCarrierProps()
 {
-  for(Prop* prop : carrierProps_) {delete prop;}
+  for (Prop* prop : carrierProps_) {delete prop;}
   carrierProps_.clear();
 }
 
@@ -181,7 +181,7 @@ string Armor::getArmorDataLine(const bool WITH_BRACKETS) const
 
   const int AP = getAbsorptionPoints();
 
-  if(AP <= 0)
+  if (AP <= 0)
   {
     assert(false && "Armor AP less than 1");
     return "";
@@ -189,7 +189,7 @@ string Armor::getArmorDataLine(const bool WITH_BRACKETS) const
 
   const string absorptionPointsStr = toStr(AP);
 
-  if(WITH_BRACKETS)
+  if (WITH_BRACKETS)
   {
     return "[" + absorptionPointsStr + "]";
   }
@@ -223,7 +223,7 @@ int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE)
 
   const int AP_AFTER = getAbsorptionPoints();
 
-  if(AP_AFTER < AP_BEFORE && AP_AFTER != 0)
+  if (AP_AFTER < AP_BEFORE && AP_AFTER != 0)
   {
     const string armorName = getName(ItemRefType::plain);
     Log::addMsg("My " + armorName + " is damaged!", clrMsgWarning);
@@ -243,10 +243,10 @@ int Armor::getAbsorptionPoints() const
 {
   const int AP_MAX = data_->armor.absorptionPoints;
 
-  if(dur_ > 60) {return AP_MAX;}
-  if(dur_ > 40) {return max(0, AP_MAX - 1);}
-  if(dur_ > 25) {return max(0, AP_MAX - 2);}
-  if(dur_ > 15) {return max(0, AP_MAX - 3);}
+  if (dur_ > 60) {return AP_MAX;}
+  if (dur_ > 40) {return max(0, AP_MAX - 1);}
+  if (dur_ > 25) {return max(0, AP_MAX - 2);}
+  if (dur_ > 15) {return max(0, AP_MAX - 3);}
 
   return 0;
 }
@@ -286,9 +286,9 @@ Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData) :
 
 Clr Wpn::getClr() const
 {
-  if(data_->ranged.isRangedWpn && !data_->ranged.hasInfiniteAmmo)
+  if (data_->ranged.isRangedWpn && !data_->ranged.hasInfiniteAmmo)
   {
-    if(nrAmmoLoaded == 0)
+    if (nrAmmoLoaded == 0)
     {
       Clr ret = data_->clr;
       ret.r /= 2; ret.g /= 2; ret.b /= 2;
@@ -303,7 +303,7 @@ void Wpn::setRandomMeleePlus()
   meleeDmgPlus_ = 0;
 
   int chance = 45;
-  while(Rnd::percentile() < chance && meleeDmgPlus_ < 3)
+  while (Rnd::percentile() < chance && meleeDmgPlus_ < 3)
   {
     meleeDmgPlus_++;
     chance -= 5;
@@ -312,7 +312,7 @@ void Wpn::setRandomMeleePlus()
 
 string Wpn::getNameInf() const
 {
-  if(data_->ranged.isRangedWpn && !data_->ranged.hasInfiniteAmmo)
+  if (data_->ranged.isRangedWpn && !data_->ranged.hasInfiniteAmmo)
   {
     return toStr(nrAmmoLoaded) + "/" + toStr(ammoCapacity);
   }
@@ -393,7 +393,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
 
   vector<Actor*> seenFoes;
   Map::player->getSeenFoes(seenFoes);
-  if(!seenFoes.empty())
+  if (!seenFoes.empty())
   {
     Log::addMsg("Not while an enemy is near.");
     curAction_ = MedBagAction::END;
@@ -404,16 +404,16 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
 
   Log::clearLog();
 
-  if(curAction_ == MedBagAction::END) {return ConsumeItem::no;}
+  if (curAction_ == MedBagAction::END) {return ConsumeItem::no;}
 
   //Check if chosen action can be done
   bool props[endOfPropIds];
   Map::player->getPropHandler().getAllActivePropIds(props);
-  switch(curAction_)
+  switch (curAction_)
   {
     case MedBagAction::treatWounds:
     {
-      if(Map::player->getHp() >= Map::player->getHpMax(true))
+      if (Map::player->getHp() >= Map::player->getHpMax(true))
       {
         Log::addMsg("I have no wounds to treat.");
         curAction_ = MedBagAction::END;
@@ -423,7 +423,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
 
     case MedBagAction::sanitizeInfection:
     {
-      if(!props[propInfected])
+      if (!props[propInfected])
       {
         Log::addMsg("I have no infection to sanitize.");
         curAction_ = MedBagAction::END;
@@ -443,7 +443,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
 
   bool isEnoughSuppl = true;
 
-  switch(curAction_)
+  switch (curAction_)
   {
     case MedBagAction::sanitizeInfection:
     {
@@ -454,7 +454,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
     case MedBagAction::END: {} break;
   }
 
-  if(!isEnoughSuppl)
+  if (!isEnoughSuppl)
   {
     Log::addMsg("I do not have enough supplies for that.");
     curAction_ = MedBagAction::END;
@@ -464,7 +464,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
   //Action can be done
   Map::player->activeMedicalBag = this;
 
-  switch(curAction_)
+  switch (curAction_)
   {
     case MedBagAction::treatWounds:
     {
@@ -510,18 +510,18 @@ MedBagAction MedicalBag::playerChooseAction() const
 
   Render::drawMapAndInterface(true);
 
-  while(true)
+  while (true)
   {
     const KeyData d = Query::letter(true);
-    if(d.sdlKey == SDLK_ESCAPE || d.sdlKey == SDLK_SPACE)
+    if (d.sdlKey == SDLK_ESCAPE || d.sdlKey == SDLK_SPACE)
     {
       return MedBagAction::END;
     }
-    else if(d.sdlKey == SDLK_RETURN || d.key == 'h')
+    else if (d.sdlKey == SDLK_RETURN || d.key == 'h')
     {
       return MedBagAction::treatWounds;
     }
-    else if(d.key == 's')
+    else if (d.key == 's')
     {
       return MedBagAction::sanitizeInfection;
     }
@@ -532,7 +532,7 @@ MedBagAction MedicalBag::playerChooseAction() const
 
 void MedicalBag::continueAction()
 {
-  switch(curAction_)
+  switch (curAction_)
   {
     case MedBagAction::treatWounds:
     {
@@ -541,7 +541,7 @@ void MedicalBag::continueAction()
 
       const bool IS_HEALER = PlayerBon::hasTrait(Trait::healer);
 
-      if(nrTurnsUntilHealWounds_ > 0)
+      if (nrTurnsUntilHealWounds_ > 0)
       {
         nrTurnsUntilHealWounds_ -= IS_HEALER ? 2 : 1;
       }
@@ -550,27 +550,27 @@ void MedicalBag::continueAction()
         //If player is healer, double the rate of HP healing.
         const int NR_TRN_PER_HP_W_BON = IS_HEALER ? (NR_TRN_PER_HP / 2) : NR_TRN_PER_HP;
 
-        if(GameTime::getTurn() % NR_TRN_PER_HP_W_BON == 0)
+        if (GameTime::getTurn() % NR_TRN_PER_HP_W_BON == 0)
         {
           player.restoreHp(1, false);
         }
 
         //The rate of supply use is consistent (effectively, this means that with the
         //healer trait, you spend half the time and supplies, as the description says).
-        if(GameTime::getTurn() % NR_TRN_PER_HP == 0)
+        if (GameTime::getTurn() % NR_TRN_PER_HP == 0)
         {
           --nrSupplies_;
         }
       }
 
-      if(nrSupplies_ <= 0)
+      if (nrSupplies_ <= 0)
       {
         Log::addMsg("No more medical supplies.");
         finishCurAction();
         return;
       }
 
-      if(player.getHp() >= player.getHpMax(true))
+      if (player.getHp() >= player.getHpMax(true))
       {
         finishCurAction();
         return;
@@ -583,7 +583,7 @@ void MedicalBag::continueAction()
     case MedBagAction::sanitizeInfection:
     {
       --nrTurnsLeftSanitize_;
-      if(nrTurnsLeftSanitize_ <= 0)
+      if (nrTurnsLeftSanitize_ <= 0)
       {
         finishCurAction();
       }
@@ -604,7 +604,7 @@ void MedicalBag::finishCurAction()
 {
   Map::player->activeMedicalBag = nullptr;
 
-  switch(curAction_)
+  switch (curAction_)
   {
     case MedBagAction::sanitizeInfection:
     {
@@ -630,7 +630,7 @@ void MedicalBag::finishCurAction()
 
   curAction_ = MedBagAction::END;
 
-  if(nrSupplies_ <= 0)
+  if (nrSupplies_ <= 0)
   {
     Map::player->getInv().removeItemInGeneralWithPtr(this, true);
   }
@@ -661,22 +661,20 @@ void HideousMask::newTurnInInventory()
 {
   vector<Actor*> adjActors;
   const Pos p(Map::player->pos);
-  for(auto* const actor : GameTime::actors_)
+  for (auto* const actor : GameTime::actors_)
   {
-    if(
-      actor->isAlive() &&
-      Utils::isPosAdj(p, actor->pos, false))
+    if (actor->isAlive() && Utils::isPosAdj(p, actor->pos, false))
     {
       adjActors.push_back(actor);
     }
   }
-  if(!adjActors.empty())
+  if (!adjActors.empty())
   {
     bool blockedLos[MAP_W][MAP_H];
     MapParse::parse(CellCheck::BlocksLos(), blockedLos);
-    for(auto* const actor : adjActors)
+    for (auto* const actor : adjActors)
     {
-      if(Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, blockedLos))
+      if (Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, blockedLos))
       {
         actor->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
       }
@@ -723,10 +721,10 @@ void Dynamite::onPlayerIgnite() const
 void Dynamite::onStdTurnPlayerHoldIgnited()
 {
   fuseTurns_--;
-  if(fuseTurns_ > 0)
+  if (fuseTurns_ > 0)
   {
     string fuseMsg = "***F";
-    for(int i = 0; i < fuseTurns_; ++i) {fuseMsg += "Z";}
+    for (int i = 0; i < fuseTurns_; ++i) {fuseMsg += "Z";}
     fuseMsg += "***";
     Log::addMsg(fuseMsg, clrYellow);
   }
@@ -753,7 +751,7 @@ void Dynamite::onPlayerParalyzed()
   Map::player->updateClr();
   const Pos& p = Map::player->pos;
   auto* const f = Map::cells[p.x][p.y].rigid;
-  if(!f->isBottomless()) {GameTime::addMob(new LitDynamite(p, fuseTurns_));}
+  if (!f->isBottomless()) {GameTime::addMob(new LitDynamite(p, fuseTurns_));}
   delete this;
 }
 
@@ -772,7 +770,7 @@ void Molotov::onStdTurnPlayerHoldIgnited()
 {
   fuseTurns_--;
 
-  if(fuseTurns_ <= 0)
+  if (fuseTurns_ <= 0)
   {
     Log::addMsg("The Molotov Cocktail explodes in my hands!");
     Map::player->activeExplosive = nullptr;
@@ -817,7 +815,7 @@ void Flare::onPlayerIgnite() const
 void Flare::onStdTurnPlayerHoldIgnited()
 {
   fuseTurns_--;
-  if(fuseTurns_ <= 0)
+  if (fuseTurns_ <= 0)
   {
     Log::addMsg("The flare is extinguished.");
     Map::player->activeExplosive = nullptr;
@@ -841,7 +839,7 @@ void Flare::onPlayerParalyzed()
   Map::player->updateClr();
   const Pos&  p = Map::player->pos;
   auto* const f = Map::cells[p.x][p.y].rigid;
-  if(!f->isBottomless()) {GameTime::addMob(new LitFlare(p, fuseTurns_));}
+  if (!f->isBottomless()) {GameTime::addMob(new LitFlare(p, fuseTurns_));}
   GameTime::updateLightMap();
   Map::player->updateFov();
   Render::drawMapAndInterface();
@@ -861,12 +859,12 @@ void SmokeGrenade::onPlayerIgnite() const
 
 void SmokeGrenade::onStdTurnPlayerHoldIgnited()
 {
-  if(fuseTurns_ < getStdFuseTurns() && Rnd::coinToss())
+  if (fuseTurns_ < getStdFuseTurns() && Rnd::coinToss())
   {
     Explosion::runSmokeExplosionAt(Map::player->pos);
   }
   fuseTurns_--;
-  if(fuseTurns_ <= 0)
+  if (fuseTurns_ <= 0)
   {
     Log::addMsg("The smoke grenade is extinguished.");
     Map::player->activeExplosive = nullptr;
@@ -889,7 +887,7 @@ void SmokeGrenade::onPlayerParalyzed()
   Map::player->updateClr();
   const Pos&  p = Map::player->pos;
   auto* const f = Map::cells[p.x][p.y].rigid;
-  if(!f->isBottomless()) {Explosion::runSmokeExplosionAt(Map::player->pos);}
+  if (!f->isBottomless()) {Explosion::runSmokeExplosionAt(Map::player->pos);}
   Map::player->updateFov();
   Render::drawMapAndInterface();
   delete this;

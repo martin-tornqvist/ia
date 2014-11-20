@@ -39,12 +39,12 @@ void mkLvl(const MapType& mapType)
   auto  startTime   = chrono::steady_clock::now();
 #endif
 
-  while(!isLvlBuilt)
+  while (!isLvlBuilt)
   {
 #ifndef NDEBUG
     nrAttempts++;
 #endif
-    switch(mapType)
+    switch (mapType)
     {
       case MapType::intro:          isLvlBuilt = MapGen::mkIntroLvl();          break;
       case MapType::std:            isLvlBuilt = MapGen::mkStdLvl();            break;
@@ -108,7 +108,7 @@ void init()
 void storeToSaveLines(std::vector<std::string>& lines)
 {
   lines.push_back(toStr(mapList_.size()));
-  for(const MapData& entry : mapList_)
+  for (const MapData& entry : mapList_)
   {
     lines.push_back(toStr(int(entry.type)));
     lines.push_back(entry.isInMainDungeon ? "1" : "0");
@@ -119,7 +119,7 @@ void setupFromSaveLines(std::vector<std::string>& lines)
 {
   const int SIZE = toInt(lines.front());
   lines.erase(begin(lines));
-  for(int i = 0; i < SIZE; ++i)
+  for (int i = 0; i < SIZE; ++i)
   {
     const MapType type        = MapType(toInt(lines.front()));
     lines.erase(begin(lines));
@@ -135,7 +135,7 @@ void goToNxt()
 
   Log::clearLog();
 
-  if(Map::dlvl >= FIRST_CAVERN_LVL && Map::dlvl <= LAST_CAVERN_LVL)
+  if (Map::dlvl >= FIRST_CAVERN_LVL && Map::dlvl <= LAST_CAVERN_LVL)
   {
     Log::addMsg("I climb downwards.");
   }
@@ -149,7 +149,7 @@ void goToNxt()
   mapList_.erase(mapList_.begin());
   const auto& mapData = mapList_.front();
 
-  if(mapData.isInMainDungeon) {++Map::dlvl;}
+  if (mapData.isInMainDungeon) {++Map::dlvl;}
 
   mkLvl(mapData.type);
 
@@ -159,7 +159,7 @@ void goToNxt()
   Render::drawMapAndInterface();
   Audio::tryPlayAmb(1);
 
-  if(Map::player->phobias[int(Phobia::deepPlaces)])
+  if (Map::player->phobias[int(Phobia::deepPlaces)])
   {
     Log::addMsg("I am plagued by my phobia of deep places!");
     Map::player->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));

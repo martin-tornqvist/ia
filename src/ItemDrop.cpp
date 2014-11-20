@@ -32,7 +32,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
   Inventory& inv    = actor.getInv();
   Item* itemToDrop  = nullptr;
 
-  if(invList == InvList::slots)
+  if (invList == InvList::slots)
   {
     assert(ELEMENT != int(SlotId::END));
     itemToDrop = inv.slots_[ELEMENT].item;
@@ -43,7 +43,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     itemToDrop = inv.general_[ELEMENT];
   }
 
-  if(itemToDrop)
+  if (itemToDrop)
   {
     const bool  IS_STACKABLE            = itemToDrop->getData().isStackable;
     const int   NR_ITEMS_BEFORE_DROP    = itemToDrop->nrItems_;
@@ -52,13 +52,13 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
 
     string itemRef = "";
 
-    if(invList == InvList::slots && IS_WHOLE_STACK_DROPPED)
+    if (invList == InvList::slots && IS_WHOLE_STACK_DROPPED)
     {
       //TODO This should be called from the Inventory instead.
       itemToDrop->onTakeOff();
     }
 
-    if(IS_WHOLE_STACK_DROPPED)
+    if (IS_WHOLE_STACK_DROPPED)
     {
       itemRef = itemToDrop->getName(ItemRefType::plural);
       inv.removeWithoutDestroying(invList, ELEMENT);
@@ -75,7 +75,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     }
 
     //Messages
-    if(&actor == Map::player)
+    if (&actor == Map::player)
     {
       Log::clearLog();
       Render::drawMapAndInterface();
@@ -85,7 +85,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     {
       bool blocked[MAP_W][MAP_H];
       MapParse::parse(CellCheck::BlocksLos(), blocked);
-      if(Map::player->isSeeingActor(actor, blocked))
+      if (Map::player->isSeeingActor(actor, blocked))
       {
         Log::addMsg(actor.getNameThe() + " drops " + itemRef + ".");
       }
@@ -102,7 +102,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
 {
   //If target cell is bottomless, just destroy the item
   const auto* const tgtRigid = Map::cells[intendedPos.x][intendedPos.y].rigid;
-  if(tgtRigid->isBottomless())
+  if (tgtRigid->isBottomless())
   {
     delete &item;
     return nullptr;
@@ -110,9 +110,9 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
 
   //Make a vector of all cells on map with no blocking feature
   bool freeCellArray[MAP_W][MAP_H];
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       Rigid* const f = Map::cells[x][y].rigid;
       freeCellArray[x][y] = f->canHaveItem() && !f->isBottomless();
@@ -131,20 +131,20 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
 
   int ii = 0;
   const int VEC_SIZE = freeCells.size();
-  for(int i = 0; i < VEC_SIZE; ++i)
+  for (int i = 0; i < VEC_SIZE; ++i)
   {
     //First look in all cells that has distance to origin equal to cell i to try and
     //merge the item if it stacks
-    if(IS_STACKABLE_TYPE)
+    if (IS_STACKABLE_TYPE)
     {
       //While ii cell is not further away than i cell
-      while(!isCloserToOrigin(freeCells[i], freeCells[ii]))
+      while (!isCloserToOrigin(freeCells[i], freeCells[ii]))
       {
         stackPos = freeCells[ii];
         Item* itemFoundOnFloor = Map::cells[stackPos.x][stackPos.y].item;
-        if(itemFoundOnFloor)
+        if (itemFoundOnFloor)
         {
-          if(itemFoundOnFloor->getData().id == item.getData().id)
+          if (itemFoundOnFloor->getData().id == item.getData().id)
           {
             item.nrItems_ += itemFoundOnFloor->nrItems_;
             delete itemFoundOnFloor;
@@ -162,14 +162,14 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
     }
 
     curPos = freeCells[i];
-    if(!Map::cells[curPos.x][curPos.y].item)
+    if (!Map::cells[curPos.x][curPos.y].item)
     {
 
       Map::cells[curPos.x][curPos.y].item = &item;
 
       const bool IS_PLAYER_POS    = Map::player->pos == curPos;
       const bool IS_INTENDED_POS  = curPos == intendedPos;
-      if(IS_PLAYER_POS && !IS_INTENDED_POS)
+      if (IS_PLAYER_POS && !IS_INTENDED_POS)
       {
         Log::addMsg("I feel something by my feet.");
       }
@@ -179,7 +179,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
       break;
     }
 
-    if(i == VEC_SIZE - 1)
+    if (i == VEC_SIZE - 1)
     {
       delete &item;
       return nullptr;

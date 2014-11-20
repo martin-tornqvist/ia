@@ -150,14 +150,14 @@ inline MTRand::uint32 MTRand::hash(time_t t, clock_t c)
 
   uint32 h1 = 0;
   unsigned char* p = (unsigned char*) &t;
-  for(size_t i = 0; i < sizeof(t); ++i)
+  for (size_t i = 0; i < sizeof(t); ++i)
   {
     h1 *= UCHAR_MAX + 2U;
     h1 += p[i];
   }
   uint32 h2 = 0;
   p = (unsigned char*) &c;
-  for(size_t j = 0; j < sizeof(c); ++j)
+  for (size_t j = 0; j < sizeof(c); ++j)
   {
     h2 *= UCHAR_MAX + 2U;
     h2 += p[j];
@@ -175,7 +175,7 @@ inline void MTRand::initialize(const uint32 SEED)
   register uint32* r = state;
   register int i = 1;
   *s++ = SEED & 0xffffffffUL;
-  for(; i < N; ++i)
+  for (; i < N; ++i)
   {
     *s++ = (1812433253UL * (*r ^ (*r >> 30)) + i) & 0xffffffffUL;
     r++;
@@ -189,9 +189,9 @@ inline void MTRand::reload()
   static const int MmN = int(M) - int(N);  // in case enums are unsigned
   register uint32* p = state;
   register int i;
-  for(i = N - M; i--; ++p)
+  for (i = N - M; i--; ++p)
     *p = twist(p[M], p[0], p[1]);
-  for(i = M; --i; ++p)
+  for (i = M; --i; ++p)
     *p = twist(p[MmN], p[0], p[1]);
   *p = twist(p[MmN], p[0], state[0]);
 
@@ -217,24 +217,24 @@ inline void MTRand::seed(uint32* const bigSeed, const uint32 seedLength)
   register int i = 1;
   register uint32 j = 0;
   register int k = (int(N) > seedLength ? int(N) : seedLength);
-  for(; k; --k)
+  for (; k; --k)
   {
     state[i] =
       state[i] ^ ((state[i - 1] ^ (state[i - 1] >> 30)) * 1664525UL);
     state[i] += (bigSeed[j] & 0xffffffffUL) + j;
     state[i] &= 0xffffffffUL;
     ++i;  ++j;
-    if(i >= N) { state[0] = state[N - 1];  i = 1; }
-    if(j >= seedLength) j = 0;
+    if (i >= N) { state[0] = state[N - 1];  i = 1; }
+    if (j >= seedLength) j = 0;
   }
-  for(k = N - 1; k; --k)
+  for (k = N - 1; k; --k)
   {
     state[i] =
       state[i] ^ ((state[i - 1] ^ (state[i - 1] >> 30)) * 1566083941UL);
     state[i] -= i;
     state[i] &= 0xffffffffUL;
     ++i;
-    if(i >= N) { state[0] = state[N - 1];  i = 1; }
+    if (i >= N) { state[0] = state[N - 1];  i = 1; }
   }
   state[0] = 0x80000000UL;  // MSB is 1, assuring non-zero initial array
   reload();
@@ -277,7 +277,7 @@ inline MTRand::MTRand(const MTRand& o)
   register const uint32* t = o.state;
   register uint32* s = state;
   register int i = N;
-  for(; i--; *s++ = *t++) {}
+  for (; i--; *s++ = *t++) {}
   left = o.left;
   pNext = &state[N - left];
 }
@@ -287,7 +287,7 @@ inline MTRand::uint32 MTRand::randInt()
   // Pull a 32-bit integer from the generator state
   // Every other access function simply transforms the numbers extracted here
 
-  if(left == 0) reload();
+  if (left == 0) reload();
   --left;
 
   register uint32 s1;
@@ -313,7 +313,7 @@ inline MTRand::uint32 MTRand::randInt(const uint32 n)
   uint32 i;
   do
     i = randInt() & used;  // toss unused bits to shorten search
-  while(i > n);
+  while (i > n);
   return i;
 }
 
@@ -355,7 +355,7 @@ inline double MTRand::randNorm(const double mean, const double stddev)
     y = 2.0 * rand() - 1.0;
     r = x * x + y * y;
   }
-  while(r >= 1.0 || flt_equals(r, 0.0));
+  while (r >= 1.0 || flt_equals(r, 0.0));
   double s = sqrt(-2.0 * log(r) / r);
   return mean + x * s * stddev;
 }
@@ -370,7 +370,7 @@ inline void MTRand::save(uint32* saveArray) const
   register const uint32* s = state;
   register uint32* sa = saveArray;
   register int i = N;
-  for(; i--; *sa++ = *s++) {}
+  for (; i--; *sa++ = *s++) {}
   *sa = left;
 }
 
@@ -379,7 +379,7 @@ inline void MTRand::load(uint32* const loadArray)
   register uint32* s = state;
   register uint32* la = loadArray;
   register int i = N;
-  for(; i--; *s++ = *la++) {}
+  for (; i--; *s++ = *la++) {}
   left = *la;
   pNext = &state[N - left];
 }
@@ -388,7 +388,7 @@ inline std::ostream& operator<<(std::ostream& os, const MTRand& mtrand)
 {
   register const MTRand::uint32* s = mtrand.state;
   register int i = mtrand.N;
-  for(; i--; os << *s++ << "\t") {}
+  for (; i--; os << *s++ << "\t") {}
   return os << mtrand.left;
 }
 
@@ -396,7 +396,7 @@ inline std::istream& operator>>(std::istream& is, MTRand& mtrand)
 {
   register MTRand::uint32* s = mtrand.state;
   register int i = mtrand.N;
-  for(; i--; is >> *s++) {}
+  for (; i--; is >> *s++) {}
   is >> mtrand.left;
   mtrand.pNext = &mtrand.state[mtrand.N - mtrand.left];
   return is;
@@ -404,11 +404,11 @@ inline std::istream& operator>>(std::istream& is, MTRand& mtrand)
 
 inline MTRand& MTRand::operator=(const MTRand& o)
 {
-  if(this == &o) return (*this);
+  if (this == &o) return (*this);
   register const uint32* t = o.state;
   register uint32* s = state;
   register int i = N;
-  for(; i--; *s++ = *t++) {}
+  for (; i--; *s++ = *t++) {}
   left = o.left;
   pNext = &state[N - left];
   return (*this);

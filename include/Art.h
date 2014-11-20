@@ -42,6 +42,7 @@ enum class TileId
   byakhee,
   massOfWorms,
   ooze,
+  gasSpore,
   polyp,
   fungi,
   vortex,

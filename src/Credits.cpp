@@ -28,18 +28,18 @@ void readFile()
 
   vector<string> formattedLines;
 
-  if(file.is_open())
+  if (file.is_open())
   {
-    while(getline(file, curLine))
+    while (getline(file, curLine))
     {
-      if(curLine.empty())
+      if (curLine.empty())
       {
         lines_.push_back(curLine);
       }
       else
       {
         TextFormatting::lineToLines(curLine, MAP_W - 2, formattedLines);
-        for(string& line : formattedLines) {lines_.push_back(line);}
+        for (string& line : formattedLines) {lines_.push_back(line);}
       }
     }
   }
@@ -76,7 +76,7 @@ void run()
                    Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
-  for(string& line : lines_)
+  for (string& line : lines_)
   {
     Render::drawText(line, Panel::screen, Pos(0, yPos++), clrWhite);
   }
@@ -84,10 +84,10 @@ void run()
   Render::updateScreen();
 
   //Read keys
-  while(true)
+  while (true)
   {
     const KeyData& d = Input::readKeysUntilFound();
-    if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
     {
       break;
     }

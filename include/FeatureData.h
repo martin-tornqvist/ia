@@ -69,12 +69,12 @@ public:
     maxNrInRoom_    = MAX_NR_IN_ROOM;
     placementRule_  = placementRule;
     roomTypesNative_.clear();
-    for(RoomType id : roomTypes) {roomTypesNative_.push_back(id);}
+    for (RoomType id : roomTypes) {roomTypesNative_.push_back(id);}
   }
 
   bool isBelongingToRoomType(const RoomType type) const
   {
-    for(RoomType id : roomTypesNative_) {if(id == type) {return true;}}
+    for (RoomType id : roomTypesNative_) {if (id == type) {return true;}}
     return false;
   }
 
@@ -99,7 +99,7 @@ public:
   void reset()
   {
     canMoveCmn_ = false;
-    for(int i = 0; i < endOfPropIds; ++i) {canMoveIfHaveProp_[i] = false;}
+    for (int i = 0; i < endOfPropIds; ++i) {canMoveIfHaveProp_[i] = false;}
   }
 
   void setPropCanMove(const PropId id) {canMoveIfHaveProp_[id] = true;}

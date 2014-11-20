@@ -25,11 +25,11 @@ void readFile()
 
   vector<string> formatted;
 
-  if(file.is_open())
+  if (file.is_open())
   {
-    while(getline(file, curLine))
+    while (getline(file, curLine))
     {
-      if(curLine.empty())
+      if (curLine.empty())
       {
         lines_.push_back(curLine);
       }
@@ -37,17 +37,17 @@ void readFile()
       {
         //Do not format lines that start with two spaces
         bool shouldFormatLine = true;
-        if(curLine.size() > 1)
+        if (curLine.size() > 1)
         {
-          if(curLine[0] == ' ' && curLine[1] == ' ')
+          if (curLine[0] == ' ' && curLine[1] == ' ')
           {
             shouldFormatLine = false;
           }
         }
-        if(shouldFormatLine)
+        if (shouldFormatLine)
         {
           TextFormatting::lineToLines(curLine, MAP_W - 3, formatted);
-          for(const auto& line : formatted)
+          for (const auto& line : formatted)
           {
             lines_.push_back(line);
           }
@@ -95,12 +95,12 @@ void run()
   int topNr = 0;
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
-  while(true)
+  while (true)
   {
     Render::clearScreen();
     drawManualInterface();
     int yPos = 1;
-    for(int i = topNr; i <= btmNr; ++i)
+    for (int i = topNr; i <= btmNr; ++i)
     {
       Render::drawText(lines_[i], Panel::screen, Pos(0, yPos++),
                        clrWhite);
@@ -109,10 +109,10 @@ void run()
 
     const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
+    if (d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
     {
       topNr += LINE_JUMP;
-      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+      if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
       {
         topNr = 0;
       }
@@ -121,11 +121,11 @@ void run()
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
     }
-    else if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
+    else if (d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
     {
       topNr = max(0, topNr - LINE_JUMP);
     }
-    else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    else if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
     {
       break;
     }

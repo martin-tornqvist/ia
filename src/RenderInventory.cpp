@@ -18,7 +18,7 @@ namespace
 void drawItemSymbol(const Item& item, const Pos& p)
 {
   const Clr itemClr = item.getClr();
-  if(Config::isTilesMode())
+  if (Config::isTilesMode())
   {
     Render::drawTile(item.getTile(), Panel::screen, p, itemClr);
   }
@@ -34,7 +34,7 @@ void drawWeightPct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_LE
   const int WEIGHT_CARRIED_TOT = Map::player->getInv().getTotalItemWeight();
   const int WEIGHT_PCT         = (item.getWeight() * 100) / WEIGHT_CARRIED_TOT;
 
-  if(WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
+  if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
   {
     const string  weightStr = toStr(WEIGHT_PCT) + "%";
     const int     WEIGHT_X = DESCR_X0 - weightStr.size() - 1;
@@ -46,22 +46,22 @@ void drawWeightPct(const int Y, const int ITEM_NAME_X, const size_t ITEM_NAME_LE
     const int DOTS_W  = WEIGHT_X - DOTS_X;
     const string dotsStr(DOTS_W, '.');
     Clr dotsClr       = IS_SELECTED ? clrWhite : itemNameClr;
-    if(!IS_SELECTED) {dotsClr.r /= 2; dotsClr.g /= 2; dotsClr.b /= 2;}
+    if (!IS_SELECTED) {dotsClr.r /= 2; dotsClr.g /= 2; dotsClr.b /= 2;}
     Render::drawText(dotsStr, Panel::screen, Pos(DOTS_X, Y), dotsClr);
   }
 }
 
 void drawDetailedItemDescr(const Item* const item)
 {
-  if(item)
+  if (item)
   {
     vector<StrAndClr> lines;
 
     const auto baseDescr = item->getDescr();
 
-    if(!baseDescr.empty())
+    if (!baseDescr.empty())
     {
-      for(const string& paragraph : baseDescr)
+      for (const string& paragraph : baseDescr)
       {
         lines.push_back({paragraph, clrWhiteHigh});
       }
@@ -76,7 +76,7 @@ void drawDetailedItemDescr(const Item* const item)
     const int WEIGHT_CARRIED_TOT = Map::player->getInv().getTotalItemWeight();
     const int WEIGHT_PCT         = (item->getWeight() * 100) / WEIGHT_CARRIED_TOT;
 
-    if(WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
+    if (WEIGHT_PCT > 0 && WEIGHT_PCT < 100)
     {
       const string pctStr = "(" + toStr(WEIGHT_PCT) + "% of total carried weight)";
       lines.push_back({pctStr, clrGreen});
@@ -120,7 +120,7 @@ void drawBrowseInv(const MenuBrowser& browser)
 
   const Panel panel = Panel::screen;
 
-  for(size_t i = 0; i < NR_SLOTS; ++i)
+  for (size_t i = 0; i < NR_SLOTS; ++i)
   {
     const bool IS_CUR_POS = IS_IN_EQP && BROWSER_Y == int(i);
     const InvSlot& slot   = inv.slots_[i];
@@ -133,7 +133,7 @@ void drawBrowseInv(const MenuBrowser& browser)
     p.x += 9; //Offset to leave room for slot label
 
     const auto* const curItem = slot.item;
-    if(curItem)
+    if (curItem)
     {
       drawItemSymbol(*curItem, p);
       p.x += 2;
@@ -142,19 +142,19 @@ void drawBrowseInv(const MenuBrowser& browser)
 
       const ItemDataT& d    = curItem->getData();
       ItemRefAttInf attInf  = ItemRefAttInf::none;
-      if(slot.id == SlotId::wielded || slot.id == SlotId::wieldedAlt)
+      if (slot.id == SlotId::wielded || slot.id == SlotId::wieldedAlt)
       {
         //Thrown weapons are forced to show melee info instead
         attInf = d.mainAttMode == MainAttMode::thrown ? ItemRefAttInf::melee :
                  ItemRefAttInf::wpnContext;
       }
-      else if(slot.id == SlotId::thrown)
+      else if (slot.id == SlotId::thrown)
       {
         attInf = ItemRefAttInf::thrown;
       }
 
       ItemRefType refType = ItemRefType::plain;
-      if(slot.id == SlotId::thrown) {refType = ItemRefType::plural;}
+      if (slot.id == SlotId::thrown) {refType = ItemRefType::plural;}
 
       const string itemName = curItem->getName(refType, ItemRefInf::yes, attInf);
       Render::drawText(itemName, panel, p, clr);
@@ -175,7 +175,7 @@ void drawBrowseInv(const MenuBrowser& browser)
 
   size_t invTopIdx = 0;
 
-  if(!IS_IN_EQP && NR_INV_ITEMS > 0)
+  if (!IS_IN_EQP && NR_INV_ITEMS > 0)
   {
 
     auto isBrowserPosOnScr = [&](const bool IS_FIRST_SCR)
@@ -184,18 +184,18 @@ void drawBrowseInv(const MenuBrowser& browser)
       return int(INV_ELEMENT) < (int(invTopIdx + INV_H) - MORE_LABEL_H);
     };
 
-    if(int(NR_INV_ITEMS) > INV_H && !isBrowserPosOnScr(true))
+    if (int(NR_INV_ITEMS) > INV_H && !isBrowserPosOnScr(true))
     {
 
       invTopIdx = INV_H - 1;
 
-      while(true)
+      while (true)
       {
         //Check if this is the bottom screen
-        if(int(NR_INV_ITEMS - invTopIdx) + 1 <= INV_H) {break;}
+        if (int(NR_INV_ITEMS - invTopIdx) + 1 <= INV_H) {break;}
 
         //Check if current browser pos is currently on screen
-        if(isBrowserPosOnScr(false)) {break;}
+        if (isBrowserPosOnScr(false)) {break;}
 
         invTopIdx += INV_H - 2;
       }
@@ -208,14 +208,14 @@ void drawBrowseInv(const MenuBrowser& browser)
 
   const int INV_ITEM_NAME_X = INV_X0 + 2;
 
-  for(size_t i = invTopIdx; i < NR_INV_ITEMS; ++i)
+  for (size_t i = invTopIdx; i < NR_INV_ITEMS; ++i)
   {
     const bool IS_CUR_POS = !IS_IN_EQP && INV_ELEMENT == i;
     Item* const curItem   = inv.general_[i];
 
     const Clr clr = IS_CUR_POS ? clrWhiteHigh : curItem->getInterfaceClr();
 
-    if(i == invTopIdx && invTopIdx > 0)
+    if (i == invTopIdx && invTopIdx > 0)
     {
       p.x = INV_ITEM_NAME_X;
       Render::drawText("(more)", panel, p, clrBlack, clrGray);
@@ -236,7 +236,7 @@ void drawBrowseInv(const MenuBrowser& browser)
 
     ++p.y;
 
-    if(p.y == INV_Y1 && ((i + 1) < (NR_INV_ITEMS - 1)))
+    if (p.y == INV_Y1 && ((i + 1) < (NR_INV_ITEMS - 1)))
     {
       Render::drawText("(more)", panel, p, clrBlack, clrGray);
       break;
@@ -251,7 +251,7 @@ void drawBrowseInv(const MenuBrowser& browser)
   Render::drawPopupBox(eqpRect, panel, clrPopupBox, false);
   Render::drawPopupBox(invRect, panel, clrPopupBox, false);
 
-  if(Config::isTilesMode())
+  if (Config::isTilesMode())
   {
     Render::drawTile(TileId::popupVerR, panel, invRect.p0, clrPopupBox);
     Render::drawTile(TileId::popupVerL, panel, Pos(invRect.p1.x, invRect.p0.y),
@@ -278,7 +278,7 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotIdToEquip,
   const bool HAS_ITEM = !genInvIndexes.empty();
 
   string str = "";
-  switch(slotIdToEquip)
+  switch (slotIdToEquip)
   {
     case SlotId::wielded:
     {
@@ -311,14 +311,14 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotIdToEquip,
       assert(false);
     }
   }
-  if(HAS_ITEM) {str += " [shift+enter] to drop";}
+  if (HAS_ITEM) {str += " [shift+enter] to drop";}
   str += cancelInfoStr;
   Render::drawText(str, Panel::screen, p, clrWhiteHigh);
   ++p.y;
 
   Inventory& inv = Map::player->getInv();
   const int NR_INDEXES = genInvIndexes.size();
-  for(int i = 0; i < NR_INDEXES; ++i)
+  for (int i = 0; i < NR_INDEXES; ++i)
   {
     const bool IS_CUR_POS = browser.getPos().y == int(i);
     p.x = 0;
@@ -332,13 +332,13 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotIdToEquip,
 
     const ItemDataT& d    = item->getData();
     ItemRefAttInf attInf  = ItemRefAttInf::none;
-    if(slotIdToEquip == SlotId::wielded || slotIdToEquip == SlotId::wieldedAlt)
+    if (slotIdToEquip == SlotId::wielded || slotIdToEquip == SlotId::wieldedAlt)
     {
       //Thrown weapons are forced to show melee info instead
       attInf = d.mainAttMode == MainAttMode::thrown ? ItemRefAttInf::melee :
                ItemRefAttInf::wpnContext;
     }
-    else if(slotIdToEquip == SlotId::thrown)
+    else if (slotIdToEquip == SlotId::thrown)
     {
       attInf = ItemRefAttInf::thrown;
     }

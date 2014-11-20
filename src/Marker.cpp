@@ -36,7 +36,7 @@ void setPosToClosestEnemyIfVisible()
   Utils::getActorCells(seenFoes, seenFoesCells);
 
   //If player sees enemies, suggest one for targeting
-  if(!seenFoesCells.empty())
+  if (!seenFoesCells.empty())
   {
     pos_ = Utils::getClosestPos(Map::player->pos, seenFoesCells);
 
@@ -47,23 +47,23 @@ void setPosToClosestEnemyIfVisible()
 void tryMove(const Dir dir)
 {
   const Pos newPos(pos_ + DirUtils::getOffset(dir));
-  if(Utils::isPosInsideMap(newPos)) {pos_ = newPos;}
+  if (Utils::isPosInsideMap(newPos)) {pos_ = newPos;}
 }
 
 bool setPosToTargetIfVisible()
 {
   const Actor* const target = Map::player->tgt_;
 
-  if(target)
+  if (target)
   {
     vector<Actor*> seenFoes;
     Map::player->getSeenFoes(seenFoes);
 
-    if(!seenFoes.empty())
+    if (!seenFoes.empty())
     {
-      for(auto* const actor : seenFoes)
+      for (auto* const actor : seenFoes)
       {
-        if(target == actor)
+        if (target == actor)
         {
           pos_ = actor->pos;
           return true;
@@ -83,10 +83,10 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
 
   pos_ = Map::player->pos;
 
-  if(useTarget == MarkerUsePlayerTarget::yes)
+  if (useTarget == MarkerUsePlayerTarget::yes)
   {
     //First, attempt to place marker at target.
-    if(!setPosToTargetIfVisible())
+    if (!setPosToTargetIfVisible())
     {
       //If no target available, attempt to place marker at closest visible monster.
       //This sets a new target if successful.
@@ -97,7 +97,7 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
 
   MarkerDone isDone = MarkerDone::no;
 
-  while(isDone == MarkerDone::no)
+  while (isDone == MarkerDone::no)
   {
     Log::clearLog();
 
@@ -108,7 +108,7 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
 
     vector<Pos> trail;
 
-    if(drawTrail == MarkerDrawTail::yes)
+    if (drawTrail == MarkerDrawTail::yes)
     {
       const Pos origin(Map::player->pos);
       LineCalc::calcNewLine(origin, pos_, true, INT_MAX, false, trail);
@@ -120,13 +120,13 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
 
     const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.sdlKey == SDLK_RIGHT    || d.key == '6' || d.key == 'l')
+    if (d.sdlKey == SDLK_RIGHT    || d.key == '6' || d.key == 'l')
     {
-      if(d.isShiftHeld)
+      if (d.isShiftHeld)
       {
         tryMove(Dir::upRight);
       }
-      else if(d.isCtrlHeld)
+      else if (d.isCtrlHeld)
       {
         tryMove(Dir::downRight);
       }
@@ -136,45 +136,45 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
       }
       continue;
     }
-    if(d.sdlKey == SDLK_UP       || d.key == '8' || d.key == 'k')
+    if (d.sdlKey == SDLK_UP       || d.key == '8' || d.key == 'k')
     {
       tryMove(Dir::up);
       continue;
     }
-    if(d.sdlKey == SDLK_LEFT     || d.key == '4' || d.key == 'h')
+    if (d.sdlKey == SDLK_LEFT     || d.key == '4' || d.key == 'h')
     {
-      if(d.isShiftHeld)
+      if (d.isShiftHeld)
       {
         tryMove(Dir::upLeft);
       }
-      else if(d.isCtrlHeld)
+      else if (d.isCtrlHeld)
       {
         tryMove(Dir::downLeft);
       }
       else {tryMove(Dir::left);}
       continue;
     }
-    if(d.sdlKey == SDLK_DOWN     || d.key == '2' || d.key == 'j')
+    if (d.sdlKey == SDLK_DOWN     || d.key == '2' || d.key == 'j')
     {
       tryMove(Dir::down);
       continue;
     }
-    if(d.sdlKey == SDLK_PAGEUP   || d.key == '9' || d.key == 'u')
+    if (d.sdlKey == SDLK_PAGEUP   || d.key == '9' || d.key == 'u')
     {
       tryMove(Dir::upRight);
       continue;
     }
-    if(d.sdlKey == SDLK_HOME     || d.key == '7' || d.key == 'y')
+    if (d.sdlKey == SDLK_HOME     || d.key == '7' || d.key == 'y')
     {
       tryMove(Dir::upLeft);
       continue;
     }
-    if(d.sdlKey == SDLK_END      || d.key == '1' || d.key == 'b')
+    if (d.sdlKey == SDLK_END      || d.key == '1' || d.key == 'b')
     {
       tryMove(Dir::downLeft);
       continue;
     }
-    if(d.sdlKey == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n')
+    if (d.sdlKey == SDLK_PAGEDOWN || d.key == '3' || d.key == 'n')
     {
       tryMove(Dir::downRight);
       continue;
@@ -183,7 +183,7 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
     //Run custom keypress events (firing ranged weapon, casting spell, etc)
     isDone = onKeyPress(pos_, d);
 
-    if(isDone == MarkerDone::yes)
+    if (isDone == MarkerDone::yes)
     {
       Render::drawMapAndInterface();
     }

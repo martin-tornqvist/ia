@@ -15,73 +15,73 @@ int AbilityVals::getVal(const AbilityId abilityId,
 {
   int val = abilityList[int(abilityId)];
 
-  if(IS_AFFECTED_BY_PROPS)
+  if (IS_AFFECTED_BY_PROPS)
   {
     val += actor.getPropHandler().getAbilityMod(abilityId);
   }
 
-  if(&actor == Map::player)
+  if (&actor == Map::player)
   {
     const int HP_PCT  = (actor.getHp() * 100) / actor.getHpMax(true);
 
-    switch(abilityId)
+    switch (abilityId)
     {
       case AbilityId::searching:
       {
         val += 8;
-        if(PlayerBon::hasTrait(Trait::observant))   val += 4;
-        if(PlayerBon::hasTrait(Trait::perceptive))  val += 4;
+        if (PlayerBon::hasTrait(Trait::observant))   val += 4;
+        if (PlayerBon::hasTrait(Trait::perceptive))  val += 4;
       } break;
 
       case AbilityId::melee:
       {
         val += 45;
-        if(PlayerBon::hasTrait(Trait::adeptMeleeFighter))   val += 10;
-        if(PlayerBon::hasTrait(Trait::expertMeleeFighter))  val += 10;
-        if(PlayerBon::hasTrait(Trait::masterMeleeFighter))  val += 10;
-        if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
+        if (PlayerBon::hasTrait(Trait::adeptMeleeFighter))   val += 10;
+        if (PlayerBon::hasTrait(Trait::expertMeleeFighter))  val += 10;
+        if (PlayerBon::hasTrait(Trait::masterMeleeFighter))  val += 10;
+        if (PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
       } break;
 
       case AbilityId::ranged:
       {
         val += 50;
-        if(PlayerBon::hasTrait(Trait::adeptMarksman))   val += 10;
-        if(PlayerBon::hasTrait(Trait::expertMarksman))  val += 10;
-        if(PlayerBon::hasTrait(Trait::masterMarksman))  val += 10;
-        if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
+        if (PlayerBon::hasTrait(Trait::adeptMarksman))   val += 10;
+        if (PlayerBon::hasTrait(Trait::expertMarksman))  val += 10;
+        if (PlayerBon::hasTrait(Trait::masterMarksman))  val += 10;
+        if (PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
       } break;
 
       case AbilityId::dodgeTrap:
       {
         val += 5;
-        if(PlayerBon::hasTrait(Trait::dexterous)) val += 20;
-        if(PlayerBon::hasTrait(Trait::lithe))     val += 20;
+        if (PlayerBon::hasTrait(Trait::dexterous)) val += 20;
+        if (PlayerBon::hasTrait(Trait::lithe))     val += 20;
       } break;
 
       case AbilityId::dodgeAttack:
       {
         val += 10;
-        if(PlayerBon::hasTrait(Trait::dexterous)) val += 20;
-        if(PlayerBon::hasTrait(Trait::lithe))     val += 20;
-        if(PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 50;
+        if (PlayerBon::hasTrait(Trait::dexterous)) val += 20;
+        if (PlayerBon::hasTrait(Trait::lithe))     val += 20;
+        if (PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 50;
       } break;
 
       case AbilityId::stealth:
       {
         val += 10;
-        if(PlayerBon::hasTrait(Trait::stealthy))      val += 50;
-        if(PlayerBon::hasTrait(Trait::imperceptible)) val += 30;
+        if (PlayerBon::hasTrait(Trait::stealthy))      val += 50;
+        if (PlayerBon::hasTrait(Trait::imperceptible)) val += 30;
       } break;
 
       case AbilityId::empty:
       case AbilityId::END: {} break;
     }
 
-    if(abilityId == AbilityId::searching)
+    if (abilityId == AbilityId::searching)
     {
       val = max(val, 1);
     }
-    else if(abilityId == AbilityId::dodgeAttack)
+    else if (abilityId == AbilityId::dodgeAttack)
     {
       val = min(val, 95);
     }
@@ -94,7 +94,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
 
 void AbilityVals::reset()
 {
-  for(int i = 0; i < int(AbilityId::END); ++i)
+  for (int i = 0; i < int(AbilityId::END); ++i)
   {
     abilityList[i] = 0;
   }
@@ -125,13 +125,13 @@ AbilityRollResult roll(const int TOT_SKILL_VALUE)
   const int FAIL_NRM_LMT = 2 * TOT_SKILL_VALUE - SUCC_BIG_LMT;
   const int FAIL_BIG_LMT = 98;
 
-  if(ROLL <= SUCC_CRI_LMT) return successCritical;
-  if(ROLL <= SUCC_BIG_LMT) return successBig;
-  if(ROLL <= SUCC_NRM_LMT) return successNormal;
-  if(ROLL <= SUCC_SML_LMT) return successSmall;
-  if(ROLL <= FAIL_SML_LMT) return failSmall;
-  if(ROLL <= FAIL_NRM_LMT) return failNormal;
-  if(ROLL <= FAIL_BIG_LMT) return failBig;
+  if (ROLL <= SUCC_CRI_LMT) return successCritical;
+  if (ROLL <= SUCC_BIG_LMT) return successBig;
+  if (ROLL <= SUCC_NRM_LMT) return successNormal;
+  if (ROLL <= SUCC_SML_LMT) return successSmall;
+  if (ROLL <= FAIL_SML_LMT) return failSmall;
+  if (ROLL <= FAIL_NRM_LMT) return failNormal;
+  if (ROLL <= FAIL_BIG_LMT) return failBig;
 
   return failCritical;
 

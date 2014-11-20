@@ -400,7 +400,7 @@ TEST_FIXTURE(BasicFixture, Explosions)
   Map::put(new Floor(Pos(X0, Y0)));
 
   //Check wall destruction
-  for(int i = 0; i < 2; ++i)
+  for (int i = 0; i < 2; ++i)
   {
     Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
 
@@ -435,14 +435,14 @@ TEST_FIXTURE(BasicFixture, Explosions)
   //Check that corpses can be destroyed, and do not block living actors
   const int NR_CORPSES = 3;
   Actor* corpses[NR_CORPSES];
-  for(int i = 0; i < NR_CORPSES; ++i)
+  for (int i = 0; i < NR_CORPSES; ++i)
   {
     corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
     corpses[i]->die(false, false, false);
   }
   a1 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::expl);
-  for(int i = 0; i < NR_CORPSES; ++i)
+  for (int i = 0; i < NR_CORPSES; ++i)
   {
     CHECK_EQUAL(int(ActorState::destroyed), int(corpses[i]->getState()));
   }
@@ -451,7 +451,7 @@ TEST_FIXTURE(BasicFixture, Explosions)
   //Check explosion applying Burning to living and dead actors
   a1        = ActorFactory::mk(ActorId::rat, Pos(X0 - 1, Y0));
   Actor* a2 = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
-  for(int i = 0; i < NR_CORPSES; ++i)
+  for (int i = 0; i < NR_CORPSES; ++i)
   {
     corpses[i] = ActorFactory::mk(ActorId::rat, Pos(X0 + 1, Y0));
     corpses[i]->die(false, false, false);
@@ -461,7 +461,7 @@ TEST_FIXTURE(BasicFixture, Explosions)
                             new PropBurning(PropTurns::std));
   CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied));
   CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied));
-  for(int i = 0; i < NR_CORPSES; ++i)
+  for (int i = 0; i < NR_CORPSES; ++i)
   {
     PropHandler& propHlr = corpses[i]->getPropHandler();
     CHECK(propHlr.getProp(propBurning, PropSrc::applied));
@@ -511,7 +511,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
   bool testedLooseWebIntact     = false;
   bool testedLooseWebDestroyed  = false;
 
-  while(!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed)
+  while (!testedStuck || !testedLooseWebIntact || !testedLooseWebDestroyed)
   {
 
     //Spawn right floor cell
@@ -536,14 +536,14 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
     mon->moveDir(Dir::left);
 
     //Check conditions
-    if(mon->pos == posR)
+    if (mon->pos == posR)
     {
       testedStuck = true;
     }
-    else if(mon->pos == posL)
+    else if (mon->pos == posL)
     {
       const auto featureId = Map::cells[posR.x][posR.y].rigid->getId();
-      if(featureId == FeatureId::floor)
+      if (featureId == FeatureId::floor)
       {
         testedLooseWebDestroyed = true;
       }
@@ -664,13 +664,13 @@ TEST_FIXTURE(BasicFixture, SavingGame)
   Inventory& inv = Map::player->getInv();
   //First, remove all present items (to have a known state)
   vector<Item*>& gen = inv.general_;
-  for(Item* item : gen) {delete item;}
+  for (Item* item : gen) {delete item;}
   gen.clear();
 
-  for(size_t i = 0; i < size_t(SlotId::END); ++i)
+  for (size_t i = 0; i < size_t(SlotId::END); ++i)
   {
     auto& slot = inv.slots_[i];
-    if(slot.item)
+    if (slot.item)
     {
       delete slot.item;
       slot.item = nullptr;
@@ -776,12 +776,12 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
   int nrClipWith3 = 0;
   bool isSentryDeviceFound    = false;
   bool isElectricLanternFound = false;
-  for(Item* item : genInv)
+  for (Item* item : genInv)
   {
     ItemId id = item->getData().id;
-    if(id == ItemId::pistolClip)
+    if (id == ItemId::pistolClip)
     {
-      switch(static_cast<AmmoClip*>(item)->ammo_)
+      switch (static_cast<AmmoClip*>(item)->ammo_)
       {
         case 1: nrClipWith1++; break;
         case 2: nrClipWith2++; break;
@@ -789,13 +789,13 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
         default: {} break;
       }
     }
-    else if(id == ItemId::deviceBlaster)
+    else if (id == ItemId::deviceBlaster)
     {
       isSentryDeviceFound = true;
       CHECK_EQUAL(int(Condition::shoddy),
                   int(static_cast<StrangeDevice*>(item)->condition_));
     }
-    else if(id == ItemId::electricLantern)
+    else if (id == ItemId::electricLantern)
     {
       isElectricLanternFound = true;
       DeviceLantern* lantern = static_cast<DeviceLantern*>(item);
@@ -866,8 +866,8 @@ TEST_FIXTURE(BasicFixture, FloodFilling)
 {
   bool b[MAP_W][MAP_H];
   Utils::resetArray(b, false);
-  for(int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
-  for(int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
+  for (int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
+  for (int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
   int flood[MAP_W][MAP_H];
   FloodFill::run(Pos(20, 10), b, flood, 999, Pos(-1, -1), true);
   CHECK_EQUAL(0, flood[20][10]);
@@ -887,8 +887,8 @@ TEST_FIXTURE(BasicFixture, PathFinding)
   vector<Pos> path;
   bool b[MAP_W][MAP_H];
   Utils::resetArray(b, false);
-  for(int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
-  for(int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
+  for (int y = 0; y < MAP_H; ++y) {b[0][y] = b[MAP_W - 1][y] = false;}
+  for (int x = 0; x < MAP_W; ++x) {b[x][0] = b[x][MAP_H - 1] = false;}
 
   PathFind::run(Pos(20, 10), Pos(25, 10), b, path);
 
@@ -1005,9 +1005,9 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
 
   Room* room = RoomFactory::mk(RoomType::plain, roomRect);
 
-  for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
+  for (int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
   {
-    for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
+    for (int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
     {
       Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = room;
@@ -1058,9 +1058,9 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
 
   Room* nearbyRoom = RoomFactory::mk(RoomType::plain, roomRect);
 
-  for(int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
+  for (int y = roomRect.p0.y; y <= roomRect.p1.y; ++y)
   {
-    for(int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
+    for (int x = roomRect.p0.x; x <= roomRect.p1.x; ++x)
     {
       Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = nearbyRoom;
@@ -1075,7 +1075,7 @@ TEST_FIXTURE(BasicFixture, FindRoomCorrEntries)
   bool entryMapNearbyRoom[MAP_W][MAP_H];
   Utils::mkBoolMapFromVector(entryListNearbyRoom, entryMapNearbyRoom);
 
-  for(int y = 5; y <= 10; ++y)
+  for (int y = 5; y <= 10; ++y)
   {
     CHECK(entryMap[19][y]);
     CHECK(entryMapNearbyRoom[19][y]);
@@ -1180,18 +1180,18 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
   Room* room0 = RoomFactory::mk(RoomType::plain, roomArea1);
   Room* room1 = RoomFactory::mk(RoomType::plain, roomArea2);
 
-  for(int y = roomArea1.p0.y; y <= roomArea1.p1.y; ++y)
+  for (int y = roomArea1.p0.y; y <= roomArea1.p1.y; ++y)
   {
-    for(int x = roomArea1.p0.x; x <= roomArea1.p1.x; ++x)
+    for (int x = roomArea1.p0.x; x <= roomArea1.p1.x; ++x)
     {
       Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = room0;
     }
   }
 
-  for(int y = roomArea2.p0.y; y <= roomArea2.p1.y; ++y)
+  for (int y = roomArea2.p0.y; y <= roomArea2.p1.y; ++y)
   {
-    for(int x = roomArea2.p0.x; x <= roomArea2.p1.x; ++x)
+    for (int x = roomArea2.p0.x; x <= roomArea2.p1.x; ++x)
     {
       Map::put(new Floor(Pos(x, y)));
       Map::roomMap[x][y] = room1;

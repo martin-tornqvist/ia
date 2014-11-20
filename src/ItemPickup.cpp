@@ -35,19 +35,19 @@ void tryPick()
   const Pos& pos = Map::player->pos;
   Item* const item = Map::cells[pos.x][pos.y].item;
 
-  if(item)
+  if (item)
   {
     Inventory& playerInv = Map::player->getInv();
 
     const string ITEM_NAME = item->getName(ItemRefType::plural);
 
     //If picked up item is missile weapon, try to add it to carried stack.
-    if(item->getData().ranged.isThrowingWpn)
+    if (item->getData().ranged.isThrowingWpn)
     {
       Item* const carriedMissile = playerInv.getItemInSlot(SlotId::thrown);
-      if(carriedMissile)
+      if (carriedMissile)
       {
-        if(item->getData().id == carriedMissile->getData().id)
+        if (item->getData().id == carriedMissile->getData().id)
         {
           Audio::play(SfxId::pickup);
 
@@ -84,14 +84,14 @@ void tryUnloadWpnOrPickupAmmo()
 {
   Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
 
-  if(item)
+  if (item)
   {
-    if(item->getData().ranged.isRangedWpn)
+    if (item->getData().ranged.isRangedWpn)
     {
       Wpn* const wpn = static_cast<Wpn*>(item);
       const int nrAmmoLoaded = wpn->nrAmmoLoaded;
 
-      if(nrAmmoLoaded > 0 && !wpn->getData().ranged.hasInfiniteAmmo)
+      if (nrAmmoLoaded > 0 && !wpn->getData().ranged.hasInfiniteAmmo)
       {
         Inventory& playerInv = Map::player->getInv();
         const ItemId ammoType = wpn->getData().ranged.ammoItemId;
@@ -100,7 +100,7 @@ void tryUnloadWpnOrPickupAmmo()
 
         Item* spawnedAmmo = ItemFactory::mk(ammoType);
 
-        if(ammoData->isAmmoClip)
+        if (ammoData->isAmmoClip)
         {
           //Unload a clip
           static_cast<AmmoClip*>(spawnedAmmo)->ammo_ = nrAmmoLoaded;
@@ -124,7 +124,7 @@ void tryUnloadWpnOrPickupAmmo()
     }
     else
     {
-      if(item->getData().isAmmo)
+      if (item->getData().isAmmo)
       {
         tryPick();
         return;

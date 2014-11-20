@@ -39,27 +39,27 @@ int main(int argc, char* argv[])
   Init::initGame();
 
   bool quitGame = false;
-  while(!quitGame)
+  while (!quitGame)
   {
     Init::initSession();
 
     int introMusChan = -1;
     const GameEntryMode gameEntryType = MainMenu::run(quitGame, introMusChan);
 
-    if(!quitGame)
+    if (!quitGame)
     {
       Init::quitToMainMenu = false;
 
-      if(gameEntryType == GameEntryMode::newGame)
+      if (gameEntryType == GameEntryMode::newGame)
       {
-        if(Config::isBotPlaying())
+        if (Config::isBotPlaying())
         {
           PlayerBon::setAllTraitsToPicked();
         }
         CreateCharacter::createCharacter();
         Map::player->mkStartItems();
 
-        if(Config::isIntroLvlSkipped())
+        if (Config::isIntroLvlSkipped())
         {
           //Build first dungeon level
           MapTravel::goToNxt();
@@ -81,9 +81,9 @@ int main(int argc, char* argv[])
       Map::player->updateFov();
       Render::drawMapAndInterface();
 
-      if(gameEntryType == GameEntryMode::newGame)
+      if (gameEntryType == GameEntryMode::newGame)
       {
-        if(Config::isIntroLvlSkipped() == 0)
+        if (Config::isIntroLvlSkipped() == 0)
         {
           const string msg =
             "I stand on a cobbled forest path, ahead lies a shunned decrepit "
@@ -98,9 +98,9 @@ int main(int argc, char* argv[])
       }
 
       //========== M A I N   L O O P ==========
-      while(!Init::quitToMainMenu)
+      while (!Init::quitToMainMenu)
       {
-        if(Map::player->isAlive())
+        if (Map::player->isAlive())
         {
 
           Actor* const actor = GameTime::getCurActor();
@@ -118,13 +118,13 @@ int main(int argc, char* argv[])
           const bool ALLOW_ACT  = actor->getPropHandler().allowAct();
           const bool IS_GIBBED  = actor->getState() == ActorState::destroyed;
 
-          if(ALLOW_ACT && !IS_GIBBED)
+          if (ALLOW_ACT && !IS_GIBBED)
           {
             actor->onActorTurn();
           }
           else
           {
-            if(actor == Map::player)
+            if (actor == Map::player)
             {
               SdlWrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
             }

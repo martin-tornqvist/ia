@@ -24,9 +24,9 @@ struct Translation
 
 MapTemplCell chToCell(const char CH, const vector<Translation>& translations)
 {
-  for(const Translation& translation : translations)
+  for (const Translation& translation : translations)
   {
-    if(translation.CH == CH) {return translation.cell;}
+    if (translation.CH == CH) {return translation.cell;}
   }
   assert(false && "Failed to translate char");
   return MapTemplCell();
@@ -39,9 +39,9 @@ void mkTempl(const string& str, const MapTemplId id,
 
   vector<MapTemplCell> inner;
 
-  for(const auto ch : str)
+  for (const auto ch : str)
   {
-    switch(ch)
+    switch (ch)
     {
       case ';':
       {

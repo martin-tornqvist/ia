@@ -36,16 +36,16 @@ void populateStdLvl()
   MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   //Put traps in non-plain rooms
-  for(Room* const room : Map::roomList)
+  for (Room* const room : Map::roomList)
   {
     const RoomType type = room->type_;
 
-    if(type != RoomType::plain)
+    if (type != RoomType::plain)
     {
 
       Fraction chanceForTrappedRoom(0, 0);
 
-      switch(type)
+      switch (type)
       {
         case RoomType::human:   chanceForTrappedRoom.set(1, 4); break;
         case RoomType::ritual:  chanceForTrappedRoom.set(1, 4); break;
@@ -63,7 +63,7 @@ void populateStdLvl()
         case RoomType::crumbleRoom:                             break;
       }
 
-      if(Rnd::fraction(chanceForTrappedRoom))
+      if (Rnd::fraction(chanceForTrappedRoom))
       {
         TRACE_VERBOSE << "Trapping non-plain room" << endl;
 
@@ -71,11 +71,11 @@ void populateStdLvl()
 
         const Pos& p0 = room->r_.p0;
         const Pos& p1 = room->r_.p1;
-        for(int y = p0.y; y <= p1.y; ++y)
+        for (int y = p0.y; y <= p1.y; ++y)
         {
-          for(int x = p0.x; x <= p1.x; ++x)
+          for (int x = p0.x; x <= p1.x; ++x)
           {
-            if(!blocked[x][y] && Map::cells[x][y].rigid->canHaveRigid())
+            if (!blocked[x][y] && Map::cells[x][y].rigid->canHaveRigid())
             {
               trapPosBucket.push_back(Pos(x, y));
             }
@@ -85,9 +85,9 @@ void populateStdLvl()
         int nrPosCand = int(trapPosBucket.size());
         const bool IS_SPIDER_ROOM = type == RoomType::spider;
         const int NR_BASE_TRAPS   = min(nrPosCand / 2, IS_SPIDER_ROOM ? 3 : 1);
-        for(int i = 0; i < NR_BASE_TRAPS; ++i)
+        for (int i = 0; i < NR_BASE_TRAPS; ++i)
         {
-          if(nrPosCand == 0) {break;}
+          if (nrPosCand == 0) {break;}
 
           const TrapId trapType = IS_SPIDER_ROOM ?
                                   TrapId::web :
@@ -108,7 +108,7 @@ void populateStdLvl()
           const int NR_ADJ = trapType == TrapId::web ? 0 :
                              min(Rnd::range(0, 2), nrPosCand);
           TRACE_VERBOSE << "Placing adjacent traps" << endl;
-          for(int i_adj = 0; i_adj < NR_ADJ; i_adj++)
+          for (int i_adj = 0; i_adj < NR_ADJ; i_adj++)
           {
             const Pos& adjPos = trapPosBucket.front();
             mkTrapAt(trapType, adjPos);
@@ -122,21 +122,20 @@ void populateStdLvl()
   }
 
   const int CHANCE_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (Map::dlvl * 5));
-  if(Rnd::percentile() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS)
+  if (Rnd::percentile() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS)
   {
     TRACE_VERBOSE << "Trapping plain room" << endl;
 
     vector<Pos> trapPosBucket;
-    for(int y = 1; y < MAP_H - 1; ++y)
+    for (int y = 1; y < MAP_H - 1; ++y)
     {
-      for(int x = 1; x < MAP_W - 1; ++x)
+      for (int x = 1; x < MAP_W - 1; ++x)
       {
-        if(Map::roomMap[x][y])
+        if (Map::roomMap[x][y])
         {
-          if(
-            !blocked[x][y] &&
-            Map::roomMap[x][y]->type_ == RoomType::plain &&
-            Map::cells[x][y].rigid->canHaveRigid())
+          if (!blocked[x][y]                                &&
+              Map::roomMap[x][y]->type_ == RoomType::plain  &&
+              Map::cells[x][y].rigid->canHaveRigid())
           {
             trapPosBucket.push_back(Pos(x, y));
           }
@@ -146,9 +145,9 @@ void populateStdLvl()
 
     int nrPosCand = int(trapPosBucket.size());
     const int NR_BASE_TRAPS = min(nrPosCand / 2, Rnd::range(1, 3));
-    for(int i = 0; i < NR_BASE_TRAPS; ++i)
+    for (int i = 0; i < NR_BASE_TRAPS; ++i)
     {
-      if(nrPosCand == 0)
+      if (nrPosCand == 0)
       {
         break;
       }
@@ -169,7 +168,7 @@ void populateStdLvl()
       const int NR_ADJ = trapType == TrapId::web ? 0 :
                          min(Rnd::range(0, 2), nrPosCand);
       TRACE_VERBOSE << "Placing adjacent traps" << endl;
-      for(int i_adj = 0; i_adj < NR_ADJ; i_adj++)
+      for (int i_adj = 0; i_adj < NR_ADJ; i_adj++)
       {
         const Pos& adjPos = trapPosBucket.front();
         mkTrapAt(trapType, adjPos);

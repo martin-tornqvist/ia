@@ -222,7 +222,7 @@ void draw(const MenuBrowser& browser)
 
   Render::drawPopupBox(Rect(Pos(0, 0), Pos(SCREEN_W - 1, SCREEN_H - 1)));
 
-  if(Config::isTilesMode())
+  if (Config::isTilesMode())
   {
     TRACE << "Calling drawMainMenuLogo()" << endl;
     Render::drawMainMenuLogo(0);
@@ -231,7 +231,7 @@ void draw(const MenuBrowser& browser)
   else
   {
     vector<string> logo;
-    if(!Config::isTilesMode())
+    if (!Config::isTilesMode())
     {
       logo.push_back("        ___  __                __  __                  ");
       logo.push_back("| |\\  | |   |  )  /\\      /\\  |  )/    /\\  |\\  |  /\\   ");
@@ -240,12 +240,12 @@ void draw(const MenuBrowser& browser)
       logo.push_back("               \\                 \\                      ");
     }
     const int LOGO_X_POS_LEFT = (MAP_W - logo[0].size()) / 2;
-    for(const string& row : logo)
+    for (const string& row : logo)
     {
       pos.x = LOGO_X_POS_LEFT;
-      for(const char& glyph : row)
+      for (const char& glyph : row)
       {
-        if(glyph != ' ')
+        if (glyph != ' ')
         {
           Clr clr = clrGreenLgt;
           clr.g += Rnd::range(-50, 100);
@@ -259,7 +259,7 @@ void draw(const MenuBrowser& browser)
     pos.y += 3;
   }
 
-  if(IS_DEBUG_MODE)
+  if (IS_DEBUG_MODE)
   {
     Render::drawText(
       "## DEBUG MODE ##", Panel::screen, Pos(1, 1), clrYellow);
@@ -274,7 +274,7 @@ void draw(const MenuBrowser& browser)
   vector<string> quoteLines;
   TextFormatting::lineToLines(quote, 28, quoteLines);
   Pos quotePos(15, pos.y - 1);
-  for(string& quoteLine : quoteLines)
+  for (string& quoteLine : quoteLines)
   {
     Render::drawTextCentered(quoteLine, Panel::screen, quotePos, quoteClr);
     quotePos.y++;
@@ -314,7 +314,7 @@ void draw(const MenuBrowser& browser)
                            browser.isAtIdx(6) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  if(IS_DEBUG_MODE)
+  if (IS_DEBUG_MODE)
   {
     Render::drawTextCentered("DEBUG: RUN BOT", Panel::screen, pos,
                              browser.isAtIdx(7) ? clrMenuHighlight : clrMenuDrk);
@@ -351,11 +351,11 @@ GameEntryMode run(bool& quit, int& introMusChannel)
 
   draw(browser);
 
-  while(true)
+  while (true)
   {
     const MenuAction action = MenuInputHandling::getAction(browser);
 
-    switch(action)
+    switch (action)
     {
       case MenuAction::browsed:
       {
@@ -374,14 +374,14 @@ GameEntryMode run(bool& quit, int& introMusChannel)
 
       case MenuAction::selected:
       {
-        if(browser.isAtIdx(0))
+        if (browser.isAtIdx(0))
         {
           TRACE_FUNC_END;
           return GameEntryMode::newGame;
         }
-        if(browser.isAtIdx(1))
+        if (browser.isAtIdx(1))
         {
-          if(SaveHandling::isSaveAvailable())
+          if (SaveHandling::isSaveAvailable())
           {
             SaveHandling::load();
             MapTravel::goToNxt();
@@ -396,35 +396,35 @@ GameEntryMode run(bool& quit, int& introMusChannel)
             return GameEntryMode::newGame;
           }
         }
-        if(browser.isAtIdx(2))
+        if (browser.isAtIdx(2))
         {
           Manual::run();
           draw(browser);
         }
-        if(browser.isAtIdx(3))
+        if (browser.isAtIdx(3))
         {
           Config::runOptionsMenu();
           draw(browser);
         }
-        if(browser.isAtIdx(4))
+        if (browser.isAtIdx(4))
         {
           Credits::run();
           draw(browser);
         }
-        if(browser.isAtIdx(5))
+        if (browser.isAtIdx(5))
         {
           HighScore::runHighScoreScreen();
           draw(browser);
         }
-        if(browser.isAtIdx(6))
+        if (browser.isAtIdx(6))
         {
           quit    = true;
           TRACE_FUNC_END;
           return GameEntryMode::newGame;
         }
-        if(IS_DEBUG_MODE)
+        if (IS_DEBUG_MODE)
         {
-          if(browser.isAtIdx(7))
+          if (browser.isAtIdx(7))
           {
             Config::setBotPlaying();
             TRACE_FUNC_END;

@@ -49,7 +49,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
   const Pos& defPos = defender->pos;
 
   bool isDefenderAware = true;
-  if(attacker == Map::player)
+  if (attacker == Map::player)
   {
     isDefenderAware = static_cast<Mon*>(defender)->awareCounter_ > 0;
   }
@@ -59,7 +59,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
                       PlayerBon::hasTrait(Trait::vigilant);
   }
 
-  if(isDefenderAware)
+  if (isDefenderAware)
   {
     const int DEFENDER_DODGE_SKILL =
       defender->getData().abilityVals.getVal(AbilityId::dodgeAttack, true, *defender);
@@ -69,13 +69,13 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
 
     const int DODGE_CHANCE_TOT = DEFENDER_DODGE_SKILL + DODGE_MOD_AT_FEATURE;
 
-    if(DODGE_CHANCE_TOT > 0)
+    if (DODGE_CHANCE_TOT > 0)
     {
       isDefenderDodging = AbilityRoll::roll(DODGE_CHANCE_TOT) >= successSmall;
     }
   }
 
-  if(!isDefenderDodging)
+  if (!isDefenderDodging)
   {
     //--------------------------------------- DETERMINE ATTACK RESULT
     const int ATTACKER_SKILL      = attacker->getData().abilityVals.getVal(
@@ -85,7 +85,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     int hitChanceTot              = ATTACKER_SKILL + WPN_HIT_CHANCE_MOD;
 
     bool isAttackerAware = true;
-    if(attacker == Map::player)
+    if (attacker == Map::player)
     {
       isAttackerAware = Map::player->isSeeingActor(*defender, nullptr);
     }
@@ -100,28 +100,28 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     defPropHlr.getAllActivePropIds(defProps);
 
     //If attacker is aware of the defender, check
-    if(isAttackerAware)
+    if (isAttackerAware)
     {
       bool isBigAttBon    = false;
       bool isSmallAttBon  = false;
 
-      if(!isDefenderAware)
+      if (!isDefenderAware)
       {
         //Give big attack bonus if defender is unaware of the attacker.
         isBigAttBon = true;
       }
 
-      if(!isBigAttBon)
+      if (!isBigAttBon)
       {
         //Give big attack bonus if defender is stuck in trap (web).
         const auto* const f = Map::cells[defPos.x][defPos.y].rigid;
-        if(f->getId() == FeatureId::trap)
+        if (f->getId() == FeatureId::trap)
         {
           const auto* const t = static_cast<const Trap*>(f);
-          if(t->getTrapType() == TrapId::web)
+          if (t->getTrapType() == TrapId::web)
           {
             const auto* const web = static_cast<const TrapWeb*>(t->getSpecificTrap());
-            if(web->isHolding())
+            if (web->isHolding())
             {
               isBigAttBon = true;
             }
@@ -129,22 +129,20 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
         }
       }
 
-      if(!isBigAttBon)
+      if (!isBigAttBon)
       {
         //Check if attacker gets a bonus due to a defender property.
 
-        if(
-          defProps[propParalyzed]  ||
-          defProps[propNailed]     ||
-          defProps[propFainted])
+        if (defProps[propParalyzed] ||
+            defProps[propNailed]    ||
+            defProps[propFainted])
         {
           //Give big attack bonus if defender is completely unable to fight.
           isBigAttBon = true;
         }
-        else if(
-          defProps[propConfused]  ||
-          defProps[propSlowed]    ||
-          defProps[propBurning])
+        else if (defProps[propConfused] ||
+                 defProps[propSlowed]   ||
+                 defProps[propBurning])
         {
           //Give small attack bonus if defender has problems fighting.
           isSmallAttBon = true;
@@ -152,9 +150,9 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
       }
 
       //Give small attack bonus if defender cannot see.
-      if(!isBigAttBon && !isSmallAttBon)
+      if (!isBigAttBon && !isSmallAttBon)
       {
-        if(!defPropHlr.allowSee()) {isSmallAttBon = true;}
+        if (!defPropHlr.allowSee()) {isSmallAttBon = true;}
       }
 
       //Apply the hit chance bonus (if any)
@@ -164,7 +162,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     attackResult = AbilityRoll::roll(hitChanceTot);
 
     //Ethereal target missed?
-    if(defProps[propEthereal])
+    if (defProps[propEthereal])
     {
       isEtherealDefenderMissed = Rnd::fraction(2, 3);
     }
@@ -177,7 +175,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     bool attProps[endOfPropIds];
     attacker->getPropHandler().getAllActivePropIds(attProps);
 
-    if(attProps[propWeakened])
+    if (attProps[propWeakened])
     {
       //Weak attack (min damage)
       dmgRoll       = nrDmgRolls;
@@ -186,7 +184,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     }
     else
     {
-      if(attackResult == successCritical)
+      if (attackResult == successCritical)
       {
         //Critical hit (max damage)
         dmgRoll = nrDmgRolls * nrDmgSides;
@@ -199,19 +197,19 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
         dmg     = max(0, dmgRoll + dmgPlus);
       }
 
-      if(isAttackerAware && !isDefenderAware)
+      if (isAttackerAware && !isDefenderAware)
       {
         //Backstab (extra damage)
 
         int dmgPct = 150;
 
         //Double damage percent if attacking with a dagger.
-        if(wpn_.getData().id == ItemId::dagger) {dmgPct *= 2;}
+        if (wpn_.getData().id == ItemId::dagger) {dmgPct *= 2;}
 
         //+50% if player and has the "Vicious" trait.
-        if(attacker == Map::player)
+        if (attacker == Map::player)
         {
-          if(PlayerBon::hasTrait(Trait::vicious))
+          if (PlayerBon::hasTrait(Trait::vicious))
           {
             dmgPct += 50;
           }
@@ -238,9 +236,9 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
-  if(intendedAimLvl_ == actorSize_none)
+  if (intendedAimLvl_ == actorSize_none)
   {
-    if(actorAimedAt)
+    if (actorAimedAt)
     {
       intendedAimLvl = actorAimedAt->getData().actorSize;
     }
@@ -259,7 +257,7 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
 
   defender = Utils::getActorAtPos(curPos_);
 
-  if(defender)
+  if (defender)
   {
     TRACE << "Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
@@ -281,9 +279,9 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
 
     int unawareDefMod = 0;
     const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
-    if(attacker == Map::player && defender != Map::player && IS_ROGUE)
+    if (attacker == Map::player && defender != Map::player && IS_ROGUE)
     {
-      if(static_cast<Mon*>(defender)->awareCounter_ <= 0)
+      if (static_cast<Mon*>(defender)->awareCounter_ <= 0)
       {
         unawareDefMod = 25;
       }
@@ -301,24 +299,24 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
 
     attackResult = AbilityRoll::roll(hitChanceTot);
 
-    if(attackResult >= successSmall)
+    if (attackResult >= successSmall)
     {
       TRACE << "Attack roll succeeded" << endl;
 
       bool props[endOfPropIds];
       defender->getPropHandler().getAllActivePropIds(props);
 
-      if(props[propEthereal])
+      if (props[propEthereal])
       {
         isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
 
       bool playerAimX3 = false;
-      if(attacker == Map::player)
+      if (attacker == Map::player)
       {
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
-        if(prop)
+        if (prop)
         {
           playerAimX3 = static_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }
@@ -346,9 +344,9 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
-  if(intendedAimLvl_ == actorSize_none)
+  if (intendedAimLvl_ == actorSize_none)
   {
-    if(actorAimedAt)
+    if (actorAimedAt)
     {
       intendedAimLvl = actorAimedAt->getData().actorSize;
     }
@@ -367,7 +365,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
 
   defender = Utils::getActorAtPos(curPos_);
 
-  if(defender)
+  if (defender)
   {
     TRACE << "Defender found" << endl;
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
@@ -389,9 +387,9 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
 
     int unawareDefMod = 0;
     const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
-    if(attacker == Map::player && defender != Map::player && IS_ROGUE)
+    if (attacker == Map::player && defender != Map::player && IS_ROGUE)
     {
-      if(static_cast<Mon*>(defender)->awareCounter_ <= 0)
+      if (static_cast<Mon*>(defender)->awareCounter_ <= 0)
       {
         unawareDefMod = 25;
       }
@@ -407,24 +405,24 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
 
     attackResult = AbilityRoll::roll(hitChanceTot);
 
-    if(attackResult >= successSmall)
+    if (attackResult >= successSmall)
     {
       TRACE << "Attack roll succeeded" << endl;
 
       bool props[endOfPropIds];
       defender->getPropHandler().getAllActivePropIds(props);
 
-      if(props[propEthereal])
+      if (props[propEthereal])
       {
         isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
 
       bool playerAimX3 = false;
-      if(attacker == Map::player)
+      if (attacker == Map::player)
       {
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
-        if(prop)
+        if (prop)
         {
           playerAimX3 = static_cast<const PropAiming*>(prop)->isMaxRangedDmg();
         }
@@ -450,16 +448,16 @@ namespace
 void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
 {
   //No melee messages if player is not involved (reduce spam)
-  if(data.attacker != Map::player && data.defender != Map::player) {return;}
+  if (data.attacker != Map::player && data.defender != Map::player) {return;}
 
   string otherName = "";
 
-  if(data.isDefenderDodging)
+  if (data.isDefenderDodging)
   {
     //----- DEFENDER DODGES --------
-    if(data.attacker == Map::player)
+    if (data.attacker == Map::player)
     {
-      if(Map::player->isSeeingActor(*data.defender, nullptr))
+      if (Map::player->isSeeingActor(*data.defender, nullptr))
       {
         otherName = data.defender->getNameThe();
       }
@@ -471,7 +469,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
     }
     else
     {
-      if(Map::player->isSeeingActor(*data.attacker, nullptr))
+      if (Map::player->isSeeingActor(*data.attacker, nullptr))
       {
         otherName = data.attacker->getNameThe();
       }
@@ -482,20 +480,20 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
       Log::addMsg("I dodge an attack from " + otherName + ".", clrMsgGood);
     }
   }
-  else if(data.attackResult <= failSmall)
+  else if (data.attackResult <= failSmall)
   {
     //----- BAD AIMING --------
-    if(data.attacker == Map::player)
+    if (data.attacker == Map::player)
     {
-      if(data.attackResult == failSmall)
+      if (data.attackResult == failSmall)
       {
         Log::addMsg("I barely miss!");
       }
-      else if(data.attackResult == failNormal)
+      else if (data.attackResult == failNormal)
       {
         Log::addMsg("I miss.");
       }
-      else if(data.attackResult == failBig)
+      else if (data.attackResult == failBig)
       {
         Log::addMsg("I miss completely.");
       }
@@ -503,7 +501,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
     }
     else
     {
-      if(Map::player->isSeeingActor(*data.attacker, nullptr))
+      if (Map::player->isSeeingActor(*data.attacker, nullptr))
       {
         otherName = data.attacker->getNameThe();
       }
@@ -511,15 +509,15 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
       {
         otherName = "It";
       }
-      if(data.attackResult == failSmall)
+      if (data.attackResult == failSmall)
       {
         Log::addMsg(otherName + " barely misses me!", clrWhite, true);
       }
-      else if(data.attackResult == failNormal)
+      else if (data.attackResult == failNormal)
       {
         Log::addMsg(otherName + " misses me.", clrWhite, true);
       }
-      else if(data.attackResult == failBig)
+      else if (data.attackResult == failBig)
       {
         Log::addMsg(otherName + " misses me completely.", clrWhite, true);
       }
@@ -528,12 +526,12 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
   else
   {
     //----- AIM IS CORRECT -------
-    if(data.isEtherealDefenderMissed)
+    if (data.isEtherealDefenderMissed)
     {
       //----- ATTACK MISSED DUE TO ETHEREAL TARGET --------
-      if(data.attacker == Map::player)
+      if (data.attacker == Map::player)
       {
-        if(Map::player->isSeeingActor(*data.defender, nullptr))
+        if (Map::player->isSeeingActor(*data.defender, nullptr))
         {
           otherName = data.defender->getNameThe();
         }
@@ -546,7 +544,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
       }
       else
       {
-        if(Map::player->isSeeingActor(*data.attacker, nullptr))
+        if (Map::player->isSeeingActor(*data.attacker, nullptr))
         {
           otherName = data.attacker->getNameThe();
         }
@@ -565,13 +563,13 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
       //Determine the relative "size" of the hit
       MeleeHitSize hitSize = MeleeHitSize::small;
       const int MAX_DMG_ROLL = data.nrDmgRolls * data.nrDmgSides;
-      if(MAX_DMG_ROLL >= 4)
+      if (MAX_DMG_ROLL >= 4)
       {
-        if(data.dmgRoll > (MAX_DMG_ROLL * 5) / 6)
+        if (data.dmgRoll > (MAX_DMG_ROLL * 5) / 6)
         {
           hitSize = MeleeHitSize::hard;
         }
-        else if(data.dmgRoll >  MAX_DMG_ROLL / 2)
+        else if (data.dmgRoll >  MAX_DMG_ROLL / 2)
         {
           hitSize = MeleeHitSize::medium;
         }
@@ -579,18 +577,18 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
 
       //Punctuation depends on attack strength
       string dmgPunct = ".";
-      switch(hitSize)
+      switch (hitSize)
       {
         case MeleeHitSize::small:                     break;
         case MeleeHitSize::medium:  dmgPunct = "!";   break;
         case MeleeHitSize::hard:    dmgPunct = "!!!"; break;
       }
 
-      if(data.attacker == Map::player)
+      if (data.attacker == Map::player)
       {
         const string wpnVerb = wpn.getData().melee.attMsgs.player;
 
-        if(Map::player->isSeeingActor(*data.defender, nullptr))
+        if (Map::player->isSeeingActor(*data.defender, nullptr))
         {
           otherName = data.defender->getNameThe();
         }
@@ -599,7 +597,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
           otherName = "it";
         }
 
-        if(data.isIntrinsicAttack)
+        if (data.isIntrinsicAttack)
         {
           const string ATTACK_MOD_STR = data.isWeakAttack ? " feebly" : "";
           Log::addMsg(
@@ -622,7 +620,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
       {
         const string wpnVerb = wpn.getData().melee.attMsgs.other;
 
-        if(Map::player->isSeeingActor(*data.attacker, nullptr))
+        if (Map::player->isSeeingActor(*data.attacker, nullptr))
         {
           otherName = data.attacker->getNameThe();
         }
@@ -635,7 +633,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
       }
 
       SfxId hitSfx = SfxId::END;
-      switch(hitSize)
+      switch (hitSize)
       {
         case MeleeHitSize::small:   {hitSfx = wpn.getData().melee.hitSmallSfx;}   break;
         case MeleeHitSize::medium:  {hitSfx = wpn.getData().melee.hitMediumSfx;}  break;
@@ -648,14 +646,14 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
 
 void printRangedInitiateMsgs(const RangedAttData& data)
 {
-  if(data.attacker == Map::player)
+  if (data.attacker == Map::player)
   {
     Log::addMsg("I " + data.verbPlayerAttacks + ".");
   }
   else
   {
     const Pos& p = data.attacker->pos;
-    if(Map::cells[p.x][p.y].isSeenByPlayer)
+    if (Map::cells[p.x][p.y].isSeenByPlayer)
     {
       const string attackerName = data.attacker->getNameThe();
       const string attackVerb = data.verbOtherAttacks;
@@ -669,22 +667,22 @@ void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT)
   //Only print messages if player can see the cell
   const int defX = data.defender->pos.x;
   const int defY = data.defender->pos.y;
-  if(Map::cells[defX][defY].isSeenByPlayer)
+  if (Map::cells[defX][defY].isSeenByPlayer)
   {
 
     //Punctuation or exclamation marks depending on attack strength
-    if(IS_HIT)
+    if (IS_HIT)
     {
       string dmgPunctuation = ".";
       const int MAX_DMG_ROLL = data.nrDmgRolls * data.nrDmgSides;
-      if(MAX_DMG_ROLL >= 4)
+      if (MAX_DMG_ROLL >= 4)
       {
         dmgPunctuation =
           data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :
           data.dmgRoll > MAX_DMG_ROLL / 2     ? "!"   : dmgPunctuation;
       }
 
-      if(data.defender == Map::player)
+      if (data.defender == Map::player)
       {
         Log::addMsg("I am hit" + dmgPunctuation, clrMsgBad, true);
       }
@@ -692,7 +690,7 @@ void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT)
       {
         string otherName = "It";
 
-        if(Map::cells[defX][defY].isSeenByPlayer)
+        if (Map::cells[defX][defY].isSeenByPlayer)
         {
           otherName = data.defender->getNameThe();
         }
@@ -713,7 +711,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
   const int NR_PROJECTILES = IS_MACHINE_GUN ? NR_MG_PROJECTILES : 1;
 
-  for(int i = 0; i < NR_PROJECTILES; ++i)
+  for (int i = 0; i < NR_PROJECTILES; ++i)
   {
     Projectile* const p = new Projectile;
     p->setAttData(new RangedAttData(attacker, wpn, aimPos, attacker.pos));
@@ -738,30 +736,28 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
   const Clr projectileClr = wpn.getData().ranged.missileClr;
   char projectileGlyph    = wpn.getData().ranged.missileGlyph;
 
-  if(projectileGlyph == '/')
+  if (projectileGlyph == '/')
   {
     const int i = path.size() > 2 ? 2 : 1;
-    if(path[i].y == origin.y) {projectileGlyph = '-';}
-    if(path[i].x == origin.x) {projectileGlyph = '|';}
-    if(
-      (path[i].x > origin.x && path[i].y < origin.y) ||
-      (path[i].x < origin.x && path[i].y > origin.y))
+    if (path[i].y == origin.y) {projectileGlyph = '-';}
+    if (path[i].x == origin.x) {projectileGlyph = '|';}
+    if ((path[i].x > origin.x && path[i].y < origin.y) ||
+        (path[i].x < origin.x && path[i].y > origin.y))
     {
       projectileGlyph = '/';
     }
-    if(
-      (path[i].x > origin.x && path[i].y > origin.y) ||
-      (path[i].x < origin.x && path[i].y < origin.y))
+    if ((path[i].x > origin.x && path[i].y > origin.y) ||
+        (path[i].x < origin.x && path[i].y < origin.y))
     {
       projectileGlyph = '\\';
     }
   }
   TileId projectileTile = wpn.getData().ranged.missileTile;
-  if(projectileTile == TileId::projectileStdFrontSlash)
+  if (projectileTile == TileId::projectileStdFrontSlash)
   {
-    if(projectileGlyph == '-')  {projectileTile = TileId::projectileStdDash;}
-    if(projectileGlyph == '|')  {projectileTile = TileId::projectileStdVerticalBar;}
-    if(projectileGlyph == '\\') {projectileTile = TileId::projectileStdBackSlash;}
+    if (projectileGlyph == '-')  {projectileTile = TileId::projectileStdDash;}
+    if (projectileGlyph == '|')  {projectileTile = TileId::projectileStdVerticalBar;}
+    if (projectileGlyph == '\\') {projectileTile = TileId::projectileStdBackSlash;}
   }
 
   const bool LEAVE_TRAIL = wpn.getData().ranged.missileLeavesTrail;
@@ -769,23 +765,23 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
   const int SIZE_OF_PATH_PLUS_ONE =
     path.size() + (NR_PROJECTILES - 1) * NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES;
 
-  for(int i = 1; i < SIZE_OF_PATH_PLUS_ONE; ++i)
+  for (int i = 1; i < SIZE_OF_PATH_PLUS_ONE; ++i)
   {
 
-    for(int pCnt = 0; pCnt < NR_PROJECTILES; ++pCnt)
+    for (int pCnt = 0; pCnt < NR_PROJECTILES; ++pCnt)
     {
       //Current projectile's place in the path is the current global place (i) minus a
       //certain number of elements
       int pathElement = i - (pCnt * NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES);
 
       //Emit sound
-      if(pathElement == 1)
+      if (pathElement == 1)
       {
         string sndMsg   = wpn.getData().ranged.sndMsg;
         const SfxId sfx = wpn.getData().ranged.attSfx;
-        if(!sndMsg.empty())
+        if (!sndMsg.empty())
         {
-          if(IS_ATTACKER_PLAYER) sndMsg = "";
+          if (IS_ATTACKER_PLAYER) sndMsg = "";
           const SndVol vol = wpn.getData().ranged.sndVol;
           SndEmit::emitSnd({sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos,
                             &attacker, vol, AlertsMon::yes
@@ -797,7 +793,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
       //All the following collision checks etc are only made if the projectiles
       //current path element corresponds to an element in the real path vector
-      if(pathElement >= 1 && pathElement < int(path.size()) && !curProj->isObstructed)
+      if (pathElement >= 1 && pathElement < int(path.size()) && !curProj->isObstructed)
       {
         curProj->pos = path[pathElement];
 
@@ -811,25 +807,22 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
         const Pos drawPos(curProj->pos);
 
         //HIT ACTOR?
-        if(
-          curProj->attackData->defender &&
-          !curProj->isObstructed        &&
-          !curProj->attackData->isEtherealDefenderMissed)
+        if (curProj->attackData->defender &&
+            !curProj->isObstructed        &&
+            !curProj->attackData->isEtherealDefenderMissed)
         {
-
           const bool IS_ACTOR_AIMED_FOR = curProj->pos == aimPos;
 
-          if(
-            curProj->attackData->defenderSize >= actorSize_humanoid ||
-            IS_ACTOR_AIMED_FOR)
+          if (curProj->attackData->defenderSize >= actorSize_humanoid ||
+              IS_ACTOR_AIMED_FOR)
           {
 
-            if(curProj->attackData->attackResult >= successSmall)
+            if (curProj->attackData->attackResult >= successSmall)
             {
               //RENDER ACTOR HIT
-              if(curProj->isVisibleToPlayer)
+              if (curProj->isVisibleToPlayer)
               {
-                if(Config::isTilesMode())
+                if (Config::isTilesMode())
                 {
                   curProj->setTile(TileId::blast1, clrRedLgt);
                   Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
@@ -838,7 +831,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
                   Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
                   SdlWrapper::sleep(DELAY / 2);
                 }
-                else
+                else //Not tile mode
                 {
                   curProj->setGlyph('*', clrRedLgt);
                   Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
@@ -859,17 +852,17 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
               const ActorDied died = curProj->actorHit->hit(curProj->attackData->dmg,
                                      wpn.getData().ranged.dmgType);
 
-              if(died == ActorDied::no)
+              if (died == ActorDied::no)
               {
                 //Hit properties
                 PropHandler& defenderPropHandler = curProj->actorHit->getPropHandler();
                 defenderPropHandler.tryApplyPropFromWpn(wpn, false);
 
                 //Knock-back?
-                if(wpn.getData().ranged.isKnockback)
+                if (wpn.getData().ranged.isKnockback)
                 {
                   const AttData* const curData = curProj->attackData;
-                  if(curData->attackResult >= successSmall)
+                  if (curData->attackResult >= successSmall)
                   {
                     const bool IS_SPIKE_GUN = wpn.getData().id == ItemId::spikeGun;
                     KnockBack::tryKnockBack(
@@ -885,23 +878,23 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
         vector<Mob*> mobs;
         GameTime::getMobsAtPos(curProj->pos, mobs);
         Feature* featureBlockingShot = nullptr;
-        for(auto* mob : mobs)
+        for (auto* mob : mobs)
         {
-          if(!mob->isProjectilePassable()) {featureBlockingShot = mob;}
+          if (!mob->isProjectilePassable()) {featureBlockingShot = mob;}
         }
         Rigid* rigid =
           Map::cells[curProj->pos.x][curProj->pos.y].rigid;
-        if(!rigid->isProjectilePassable())
+        if (!rigid->isProjectilePassable())
         {
           featureBlockingShot = rigid;
         }
 
-        if(featureBlockingShot && !curProj->isObstructed)
+        if (featureBlockingShot && !curProj->isObstructed)
         {
           curProj->obstructedInElement = pathElement - 1;
           curProj->isObstructed = true;
 
-          if(wpn.getData().ranged.makesRicochetSnd)
+          if (wpn.getData().ranged.makesRicochetSnd)
           {
             Snd snd("I hear a ricochet.", SfxId::ricochet,
                     IgnoreMsgIfOriginSeen::yes, curProj->pos, nullptr,
@@ -910,9 +903,9 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
           }
 
           //RENDER FEATURE HIT
-          if(curProj->isVisibleToPlayer)
+          if (curProj->isVisibleToPlayer)
           {
-            if(Config::isTilesMode())
+            if (Config::isTilesMode())
             {
               curProj->setTile(TileId::blast1, clrYellow);
               Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
@@ -931,14 +924,13 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
         }
 
         //PROJECTILE HIT THE GROUND?
-        if(
-          curProj->pos == aimPos && aimLvl == actorSize_floor &&
-          !curProj->isObstructed)
+        if (curProj->pos == aimPos && aimLvl == actorSize_floor &&
+            !curProj->isObstructed)
         {
           curProj->isObstructed = true;
           curProj->obstructedInElement = pathElement;
 
-          if(wpn.getData().ranged.makesRicochetSnd)
+          if (wpn.getData().ranged.makesRicochetSnd)
           {
             Snd snd("I hear a ricochet.", SfxId::ricochet,
                     IgnoreMsgIfOriginSeen::yes, curProj->pos, nullptr,
@@ -947,9 +939,9 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
           }
 
           //RENDER GROUND HITS
-          if(curProj->isVisibleToPlayer)
+          if (curProj->isVisibleToPlayer)
           {
-            if(Config::isTilesMode())
+            if (Config::isTilesMode())
             {
               curProj->setTile(TileId::blast1, clrYellow);
               Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
@@ -968,9 +960,9 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
         }
 
         //RENDER FLYING PROJECTILES
-        if(!curProj->isObstructed && curProj->isVisibleToPlayer)
+        if (!curProj->isObstructed && curProj->isVisibleToPlayer)
         {
-          if(Config::isTilesMode())
+          if (Config::isTilesMode())
           {
             curProj->setTile(projectileTile, projectileClr);
             Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
@@ -985,12 +977,11 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
     } //End projectile loop
 
     //If any projectile can be seen and not obstructed, delay
-    for(Projectile* projectile : projectiles)
+    for (Projectile* projectile : projectiles)
     {
       const Pos& pos = projectile->pos;
-      if(
-        Map::cells[pos.x][pos.y].isSeenByPlayer &&
-        !projectile->isObstructed)
+      if (Map::cells[pos.x][pos.y].isSeenByPlayer &&
+          !projectile->isObstructed)
       {
         SdlWrapper::sleep(DELAY);
         break;
@@ -999,18 +990,18 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
     //Check if all projectiles obstructed
     bool isAllObstructed = true;
-    for(Projectile* projectile : projectiles)
+    for (Projectile* projectile : projectiles)
     {
-      if(!projectile->isObstructed) {isAllObstructed = false;}
+      if (!projectile->isObstructed) {isAllObstructed = false;}
     }
-    if(isAllObstructed) {break;}
+    if (isAllObstructed) {break;}
 
   } //End path-loop
 
   //So far, only projectile 0 can have special obstruction events***
   //Must be changed if something like an assault-incinerator is added
   const Projectile* const firstProjectile = projectiles[0];
-  if(!firstProjectile->isObstructed)
+  if (!firstProjectile->isObstructed)
   {
     wpn.projectileObstructed(aimPos, firstProjectile->actorHit);
   }
@@ -1021,7 +1012,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
     wpn.projectileObstructed(pos, firstProjectile->actorHit);
   }
   //Cleanup
-  for(Projectile* projectile : projectiles) {delete projectile;}
+  for (Projectile* projectile : projectiles) {delete projectile;}
 
   Render::drawMapAndInterface();
 }
@@ -1051,9 +1042,9 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
   //Emit sound
   const bool IS_ATTACKER_PLAYER = &attacker == Map::player;
   string sndMsg = wpn.getData().ranged.sndMsg;
-  if(!sndMsg.empty())
+  if (!sndMsg.empty())
   {
-    if(IS_ATTACKER_PLAYER) {sndMsg = "";}
+    if (IS_ATTACKER_PLAYER) {sndMsg = "";}
     const SndVol vol  = wpn.getData().ranged.sndVol;
     const SfxId sfx   = wpn.getData().ranged.attSfx;
     Snd snd(sndMsg, sfx, IgnoreMsgIfOriginSeen::yes, attacker.pos, &attacker,
@@ -1061,38 +1052,36 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
     SndEmit::emitSnd(snd);
   }
 
-  for(size_t i = 1; i < path.size(); ++i)
+  for (size_t i = 1; i < path.size(); ++i)
   {
     //If traveled more than two steps after a killed monster, stop projectile.
-    if(nrMonKilledInElem != -1 && int(i) > nrMonKilledInElem + 1) {break;}
+    if (nrMonKilledInElem != -1 && int(i) > nrMonKilledInElem + 1) {break;}
 
     const Pos curPos(path[i]);
 
-    if(actorArray[curPos.x][curPos.y])
+    if (actorArray[curPos.x][curPos.y])
     {
-
       //Only attempt hit if aiming at a level that would hit the actor
       const ActorSize sizeOfActor =
         actorArray[curPos.x][curPos.y]->getData().actorSize;
-      if(sizeOfActor >= actorSize_humanoid || curPos == aimPos)
+      if (sizeOfActor >= actorSize_humanoid || curPos == aimPos)
       {
-
         //Actor hit?
         delete data;
         data = new RangedAttData(attacker, wpn, aimPos, curPos, intendedAimLvl);
+
         const bool IS_WITHIN_RANGE_LMT =
           Utils::kingDist(origin, curPos) <= wpn.effectiveRangeLmt;
-        if(
-          IS_WITHIN_RANGE_LMT &&
-          data->attackResult >= successSmall &&
-          !data->isEtherealDefenderMissed)
-        {
 
-          if(Map::cells[curPos.x][curPos.y].isSeenByPlayer)
+        if (IS_WITHIN_RANGE_LMT                 &&
+            data->attackResult >= successSmall  &&
+            !data->isEtherealDefenderMissed)
+        {
+          if (Map::cells[curPos.x][curPos.y].isSeenByPlayer)
           {
             Render::drawMapAndInterface(false);
             Render::coverCellInMap(curPos);
-            if(Config::isTilesMode())
+            if (Config::isTilesMode())
             {
               Render::drawTile(TileId::blast2, Panel::map, curPos, clrRedLgt);
             }
@@ -1119,13 +1108,12 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
           //or at floor level but beyond the current position, the shot will
           //continue one cell.
           const bool IS_TGT_KILLED = !data->defender->isAlive();
-          if(IS_TGT_KILLED && nrMonKilledInElem == -1)
+          if (IS_TGT_KILLED && nrMonKilledInElem == -1)
           {
             nrMonKilledInElem = i;
           }
-          if(
-            nrActorsHit >= 2 || !IS_TGT_KILLED ||
-            (intendedAimLvl == actorSize_floor && curPos == aimPos))
+          if (nrActorsHit >= 2 || !IS_TGT_KILLED ||
+              (intendedAimLvl == actorSize_floor && curPos == aimPos))
           {
             break;
           }
@@ -1134,7 +1122,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
     }
 
     //Wall hit?
-    if(featureBlockers[curPos.x][curPos.y])
+    if (featureBlockers[curPos.x][curPos.y])
     {
 
       //TODO Check hit material (soft and wood should not cause ricochet)
@@ -1145,11 +1133,11 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
 
       Cell& cell = Map::cells[curPos.x][curPos.y];
 
-      if(cell.isSeenByPlayer)
+      if (cell.isSeenByPlayer)
       {
         Render::drawMapAndInterface(false);
         Render::coverCellInMap(curPos);
-        if(Config::isTilesMode())
+        if (Config::isTilesMode())
         {
           Render::drawTile(TileId::blast2, Panel::map, curPos, clrYellow);
         }
@@ -1168,17 +1156,17 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
     }
 
     //Floor hit?
-    if(intendedAimLvl == actorSize_floor && curPos == aimPos)
+    if (intendedAimLvl == actorSize_floor && curPos == aimPos)
     {
       Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
               curPos, nullptr, SndVol::low, AlertsMon::yes);
       SndEmit::emitSnd(snd);
 
-      if(Map::cells[curPos.x][curPos.y].isSeenByPlayer)
+      if (Map::cells[curPos.x][curPos.y].isSeenByPlayer)
       {
         Render::drawMapAndInterface(false);
         Render::coverCellInMap(curPos);
-        if(Config::isTilesMode())
+        if (Config::isTilesMode())
         {
           Render::drawTile(TileId::blast2, Panel::map, curPos, clrYellow);
         }
@@ -1203,36 +1191,36 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
 
   printMeleeMsgAndPlaySfx(data, wpn);
 
-  if(!data.isEtherealDefenderMissed)
+  if (!data.isEtherealDefenderMissed)
   {
-    if(data.attackResult >= successSmall && !data.isDefenderDodging)
+    if (data.attackResult >= successSmall && !data.isDefenderDodging)
     {
       const ActorDied died =
         data.defender->hit(data.dmg, wpn.getData().melee.dmgType);
 
-      if(died == ActorDied::no)
+      if (died == ActorDied::no)
       {
         data.defender->getPropHandler().tryApplyPropFromWpn(wpn, true);
       }
-      if(data.attackResult >= successNormal)
+      if (data.attackResult >= successNormal)
       {
-        if(data.defender->getData().canBleed)
+        if (data.defender->getData().canBleed)
         {
           Map::mkBlood(data.defender->pos);
         }
       }
-      if(died == ActorDied::no)
+      if (died == ActorDied::no)
       {
-        if(wpn.getData().melee.isKnockback)
+        if (wpn.getData().melee.isKnockback)
         {
-          if(data.attackResult > successSmall)
+          if (data.attackResult > successSmall)
           {
             KnockBack::tryKnockBack(*(data.defender), data.attacker->pos, false);
           }
         }
       }
       const ItemDataT& itemData = wpn.getData();
-      if(itemData.itemWeight > itemWeight_light && !itemData.isIntrinsic)
+      if (itemData.itemWeight > itemWeight_light && !itemData.isIntrinsic)
       {
         Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes,
                 data.defender->pos, nullptr, SndVol::low, AlertsMon::yes);
@@ -1241,9 +1229,9 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
     }
   }
 
-  if(data.defender == Map::player)
+  if (data.defender == Map::player)
   {
-    if(data.attackResult >= failSmall)
+    if (data.attackResult >= failSmall)
     {
       static_cast<Mon*>(data.attacker)->isStealth_ = false;
     }
@@ -1262,33 +1250,33 @@ bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
   const bool HAS_INF_AMMO = wpn.getData().ranged.hasInfiniteAmmo;
 
-  if(wpn.getData().ranged.isShotgun)
+  if (wpn.getData().ranged.isShotgun)
   {
-    if(wpn.nrAmmoLoaded != 0 || HAS_INF_AMMO)
+    if (wpn.nrAmmoLoaded != 0 || HAS_INF_AMMO)
     {
 
       shotgun(attacker, wpn, aimPos);
 
       didAttack = true;
-      if(!HAS_INF_AMMO) {wpn.nrAmmoLoaded -= 1;}
+      if (!HAS_INF_AMMO) {wpn.nrAmmoLoaded -= 1;}
     }
   }
   else
   {
     int nrOfProjectiles = 1;
 
-    if(wpn.getData().ranged.isMachineGun) {nrOfProjectiles = NR_MG_PROJECTILES;}
+    if (wpn.getData().ranged.isMachineGun) {nrOfProjectiles = NR_MG_PROJECTILES;}
 
-    if(wpn.nrAmmoLoaded >= nrOfProjectiles || HAS_INF_AMMO)
+    if (wpn.nrAmmoLoaded >= nrOfProjectiles || HAS_INF_AMMO)
     {
       projectileFire(attacker, wpn, aimPos);
 
-      if(Map::player->isAlive())
+      if (Map::player->isAlive())
       {
 
         didAttack = true;
 
-        if(!HAS_INF_AMMO) {wpn.nrAmmoLoaded -= nrOfProjectiles;}
+        if (!HAS_INF_AMMO) {wpn.nrAmmoLoaded -= nrOfProjectiles;}
       }
       else
       {
@@ -1299,7 +1287,7 @@ bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
   Render::drawMapAndInterface();
 
-  if(didAttack) {GameTime::actorDidAct();}
+  if (didAttack) {GameTime::actorDidAct();}
 
   return didAttack;
 }

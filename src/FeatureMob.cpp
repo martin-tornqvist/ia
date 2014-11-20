@@ -22,13 +22,13 @@ void Smoke::onNewTurn()
 {
   auto* actor = Utils::getActorAtPos(pos_);
 
-  if(actor)
+  if (actor)
   {
 
     const bool IS_PLAYER = actor == Map::player;
 
     //Blinded by smoke?
-    if(Rnd::oneIn(4))
+    if (Rnd::oneIn(4))
     {
       //TODO There needs to be some criteria here, so that e.g. a statue-monster or a
       //very alien monster can't get blinded by smoke (but do not use isHumanoid - rats,
@@ -36,51 +36,51 @@ void Smoke::onNewTurn()
       //Perhaps add some property like "hasEyes"?
       bool actorIsProtected = false;
 
-      if(IS_PLAYER)
+      if (IS_PLAYER)
       {
         auto& inv = Map::player->getInv();
         const auto* const playerHeadItem  = inv.slots_[int(SlotId::head)].item;
         const auto* const playerBodyItem  = inv.slots_[int(SlotId::body)].item;
-        if(playerHeadItem)
+        if (playerHeadItem)
         {
-          if(playerHeadItem->getData().id == ItemId::gasMask)
+          if (playerHeadItem->getData().id == ItemId::gasMask)
           {
             actorIsProtected = true;
           }
         }
-        if(playerBodyItem)
+        if (playerBodyItem)
         {
-          if(playerBodyItem->getData().id == ItemId::armorAsbSuit)
+          if (playerBodyItem->getData().id == ItemId::armorAsbSuit)
           {
             actorIsProtected = true;
           }
         }
       }
 
-      if(!actorIsProtected)
+      if (!actorIsProtected)
       {
-        if(IS_PLAYER) {Log::addMsg("I am getting smoke in my eyes.");}
+        if (IS_PLAYER) {Log::addMsg("I am getting smoke in my eyes.");}
         actor->getPropHandler().tryApplyProp(
           new PropBlind(PropTurns::specific, Rnd::range(1, 3)));
       }
     }
 
     //Choking?
-    if(Rnd::oneIn(4))
+    if (Rnd::oneIn(4))
     {
       bool props[endOfPropIds];
       actor->getPropHandler().getAllActivePropIds(props);
-      if(!props[propRBreath])
+      if (!props[propRBreath])
       {
         string sndMsg = "";
 
-        if(IS_PLAYER)
+        if (IS_PLAYER)
         {
           Log::addMsg("I am choking!", clrMsgBad);
         }
         else
         {
-          if(actor->isHumanoid()) {sndMsg = "I hear choking.";}
+          if (actor->isHumanoid()) {sndMsg = "I hear choking.";}
         }
 
         const auto alerts = IS_PLAYER ? AlertsMon::yes : AlertsMon::no;
@@ -93,16 +93,16 @@ void Smoke::onNewTurn()
   }
 
   //If not permanent, count down turns left and possibly erase self
-  if(nrTurnsLeft_ > -1)
+  if (nrTurnsLeft_ > -1)
   {
-    if(--nrTurnsLeft_ <= 0) {GameTime::eraseMob(this, true);}
+    if (--nrTurnsLeft_ <= 0) {GameTime::eraseMob(this, true);}
   }
 }
 
 string Smoke::getName(const Article article)  const
 {
   string ret = "";
-  if(article == Article::the) {ret += "the ";}
+  if (article == Article::the) {ret += "the ";}
   return ret + "smoke";
 }
 
@@ -115,7 +115,7 @@ Clr Smoke::getClr() const
 void LitDynamite::onNewTurn()
 {
   nrTurnsLeft_--;
-  if(nrTurnsLeft_ <= 0)
+  if (nrTurnsLeft_ <= 0)
   {
     const int D = PlayerBon::hasTrait(Trait::demExpert) ? 1 : 0;
     Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, D);
@@ -138,7 +138,7 @@ Clr LitDynamite::getClr() const
 void LitFlare::onNewTurn()
 {
   nrTurnsLeft_--;
-  if(nrTurnsLeft_ <= 0) {GameTime::eraseMob(this, true);}
+  if (nrTurnsLeft_ <= 0) {GameTime::eraseMob(this, true);}
 }
 
 void LitFlare::addLight(bool light[MAP_W][MAP_H]) const
@@ -149,20 +149,20 @@ void LitFlare::addLight(bool light[MAP_W][MAP_H]) const
   Pos p0(max(0,         pos_.x - R),  max(0,          pos_.y - R));
   Pos p1(min(MAP_W - 1, pos_.x + R),  min(MAP_H - 1,  pos_.y + R));
   bool blockedLos[MAP_W][MAP_H];
-  for(int y = p0.y; y <= p1.y; ++y)
+  for (int y = p0.y; y <= p1.y; ++y)
   {
-    for(int x = p0.x; x <= p1.x; ++x)
+    for (int x = p0.x; x <= p1.x; ++x)
     {
       blockedLos[x][y] = !Map::cells[x][y].rigid->isLosPassable();
     }
   }
 
   Fov::runFovOnArray(blockedLos, pos_, myLight, false);
-  for(int y = p0.y; y <= p1.y; ++y)
+  for (int y = p0.y; y <= p1.y; ++y)
   {
-    for(int x = p0.x; x <= p1.x; ++x)
+    for (int x = p0.x; x <= p1.x; ++x)
     {
-      if(myLight[x][y]) {light[x][y] = true;}
+      if (myLight[x][y]) {light[x][y] = true;}
     }
   }
 }

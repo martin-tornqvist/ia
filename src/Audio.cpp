@@ -27,7 +27,7 @@ SfxId getAmbSfxSuitableForDlvl()
   vector<SfxId> sfxBucket;
   sfxBucket.clear();
 
-  if(Map::dlvl >= 1 && Map::dlvl < LAST_ROOM_AND_CORRIDOR_LVL)
+  if (Map::dlvl >= 1 && Map::dlvl < LAST_ROOM_AND_CORRIDOR_LVL)
   {
     sfxBucket.push_back(SfxId::amb002);
     sfxBucket.push_back(SfxId::amb003);
@@ -60,7 +60,7 @@ SfxId getAmbSfxSuitableForDlvl()
     sfxBucket.push_back(SfxId::amb036);
     sfxBucket.push_back(SfxId::amb037);
   }
-  else if(Map::dlvl > FIRST_CAVERN_LVL)
+  else if (Map::dlvl > FIRST_CAVERN_LVL)
   {
     sfxBucket.push_back(SfxId::amb001);
     sfxBucket.push_back(SfxId::amb002);
@@ -90,7 +90,7 @@ SfxId getAmbSfxSuitableForDlvl()
     sfxBucket.push_back(SfxId::amb037);
   }
 
-  if(sfxBucket.empty()) {return SfxId::END;}
+  if (sfxBucket.empty()) {return SfxId::END;}
 
   const int ELEMENT = Rnd::range(0, sfxBucket.size() - 1);
   return sfxBucket[ELEMENT];
@@ -108,7 +108,7 @@ void loadAudioFile(const SfxId sfx, const string& filename)
 
   audioChunks[int(sfx)] = Mix_LoadWAV((fileRelPath).data());
 
-  if(!audioChunks[int(sfx)])
+  if (!audioChunks[int(sfx)])
   {
     TRACE << "Problem loading audio file with name " + filename << endl
           << Mix_GetError() << endl;
@@ -121,7 +121,7 @@ void init()
 {
   cleanup();
 
-  if(Config::isAudioEnabled())
+  if (Config::isAudioEnabled())
   {
 
     audioChunks.resize(int(SfxId::END));
@@ -174,7 +174,7 @@ void init()
     int a = 1;
     const int FIRST = int(SfxId::startOfAmbSfx) + 1;
     const int LAST  = int(SfxId::END)   - 1;
-    for(int i = FIRST; i <= LAST; ++i)
+    for (int i = FIRST; i <= LAST; ++i)
     {
       const string indexStr = toStr(a);
       const string indexStrPadded =
@@ -190,7 +190,7 @@ void init()
 
 void cleanup()
 {
-  for(Mix_Chunk* chunk : audioChunks) {Mix_FreeChunk(chunk);}
+  for (Mix_Chunk* chunk : audioChunks) {Mix_FreeChunk(chunk);}
   audioChunks.clear();
 
   curChannel    =  0;
@@ -202,14 +202,12 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
 {
   int ret = -1;
 
-  if(
-    !audioChunks.empty()        &&
-    sfx != SfxId::endOfAmbSfx   &&
-    sfx != SfxId::startOfAmbSfx &&
-    sfx != SfxId::END           &&
-    !Config::isBotPlaying())
+  if (!audioChunks.empty()        &&
+      sfx != SfxId::endOfAmbSfx   &&
+      sfx != SfxId::startOfAmbSfx &&
+      sfx != SfxId::END           &&
+      !Config::isBotPlaying())
   {
-
     const int VOL_TOT = (255 * VOL_PERCENT_TOT)   / 100;
     const int VOL_L   = (VOL_PERCENT_L * VOL_TOT) / 100;
     const int VOL_R   = VOL_TOT - VOL_L;
@@ -222,21 +220,20 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
 
     ++curChannel;
 
-    if(curChannel >= AUDIO_ALLOCATED_CHANNELS) {curChannel = 0;}
+    if (curChannel >= AUDIO_ALLOCATED_CHANNELS) {curChannel = 0;}
   }
-
   return ret;
 }
 
 void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT)
 {
-  if(!audioChunks.empty() && dir != Dir::END)
+  if (!audioChunks.empty() && dir != Dir::END)
   {
     //The distance value is scaled down to avoid too much volume degradation
     const int VOL_PERCENT_TOT = 100 - ((DISTANCE_PERCENT * 2) / 3);
 
     int volPercentL = 0;
-    switch(dir)
+    switch (dir)
     {
       case Dir::left:       volPercentL = 85;  break;
       case Dir::upLeft:     volPercentL = 75;  break;
@@ -256,13 +253,13 @@ void play(const SfxId sfx, const Dir dir, const int DISTANCE_PERCENT)
 void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY)
 {
 
-  if(!audioChunks.empty() && Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY))
+  if (!audioChunks.empty() && Rnd::oneIn(ONE_IN_N_CHANCE_TO_PLAY))
   {
 
     const int TIME_NOW                  = time(nullptr);
     const int TIME_REQ_BETWEEN_AMB_SFX  = 20;
 
-    if(TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb)
+    if (TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb)
     {
       timeAtLastAmb = TIME_NOW;
       const int VOL_PERCENT = Rnd::oneIn(5) ? Rnd::range(50,  99) : 100;
@@ -273,7 +270,7 @@ void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY)
 
 void fadeOutChannel(const int CHANNEL_NR)
 {
-  if(!audioChunks.empty()) {Mix_FadeOutChannel(CHANNEL_NR, 5000);}
+  if (!audioChunks.empty()) {Mix_FadeOutChannel(CHANNEL_NR, 5000);}
 }
 
 } //Audio

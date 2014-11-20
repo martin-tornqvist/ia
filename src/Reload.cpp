@@ -30,7 +30,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
   string ammoName = "";
   bool isClip = false;
 
-  if(ammo)
+  if (ammo)
   {
     ammoName  = ammo->getName(ItemRefType::a);
     isClip    = ammo->getData().isAmmoClip;
@@ -39,11 +39,11 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
   const bool IS_PLAYER    = &actorReloading == Map::player;
   const string actorName  = actorReloading.getNameThe();
 
-  switch(result)
+  switch (result)
   {
     case ReloadResult::notCarryingWpn:
     {
-      if(IS_PLAYER)
+      if (IS_PLAYER)
       {
         Log::addMsg("I am not wielding a weapon.");
       }
@@ -51,7 +51,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
 
     case ReloadResult::wpnNotUsingAmmo:
     {
-      if(IS_PLAYER)
+      if (IS_PLAYER)
       {
         Log::addMsg("This weapon does not use ammo.");
       }
@@ -59,7 +59,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
 
     case ReloadResult::alreadyFull:
     {
-      if(IS_PLAYER)
+      if (IS_PLAYER)
       {
         Log::addMsg("Weapon already loaded.");
       }
@@ -67,7 +67,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
 
     case ReloadResult::noAmmo:
     {
-      if(IS_PLAYER)
+      if (IS_PLAYER)
       {
         Log::addMsg("I carry no ammunition for this weapon.");
       }
@@ -76,12 +76,12 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
     case ReloadResult::success:
     {
       const string swiftStr = IS_SWIFT_RELOAD ? " swiftly" : "";
-      if(IS_PLAYER)
+      if (IS_PLAYER)
       {
 
         Audio::play(wpn->getData().ranged.reloadSfx);
 
-        if(isClip)
+        if (isClip)
         {
           const string wpnName = wpn->getName(ItemRefType::plain, ItemRefInf::none);
           Log::addMsg(
@@ -98,7 +98,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
       }
       else
       {
-        if(Map::player->isSeeingActor(actorReloading, nullptr))
+        if (Map::player->isSeeingActor(actorReloading, nullptr))
         {
           Log::addMsg(actorName + swiftStr + " reloads.");
         }
@@ -107,13 +107,13 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
 
     case ReloadResult::fumble:
     {
-      if(IS_PLAYER)
+      if (IS_PLAYER)
       {
         Log::addMsg("I fumble with " + ammoName + ".");
       }
       else
       {
-        if(Map::player->isSeeingActor(actorReloading, nullptr))
+        if (Map::player->isSeeingActor(actorReloading, nullptr))
         {
           Log::addMsg(actorName + " fumbles with " + ammoName + ".");
         }
@@ -131,7 +131,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
   Inventory& inv      = actorReloading.getInv();
   Item* const wpnItem = inv.getItemInSlot(SlotId::wielded);
 
-  if(!wpnItem)
+  if (!wpnItem)
   {
     printMsgAndPlaySfx(actorReloading, nullptr, nullptr,
                        ReloadResult::notCarryingWpn, false);
@@ -142,7 +142,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
   ReloadResult result = ReloadResult::noAmmo;
   bool isSwiftReload    = false;
 
-  if(&actorReloading == Map::player)
+  if (&actorReloading == Map::player)
   {
     isSwiftReload =
       PlayerBon::hasTrait(Trait::expertMarksman) && Rnd::coinToss();
@@ -150,7 +150,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
 
   const int wpnAmmoCapacity = wpn->ammoCapacity;
 
-  if(wpnAmmoCapacity == 0)
+  if (wpnAmmoCapacity == 0)
   {
     printMsgAndPlaySfx(actorReloading, wpn, nullptr,
                        ReloadResult::wpnNotUsingAmmo, false);
@@ -160,15 +160,15 @@ bool reloadWieldedWpn(Actor& actorReloading)
     const ItemId ammoType = wpn->getData().ranged.ammoItemId;
     Item* item = nullptr;
 
-    if(wpn->nrAmmoLoaded < wpnAmmoCapacity)
+    if (wpn->nrAmmoLoaded < wpnAmmoCapacity)
     {
 
       const int NR_ITEMS = inv.general_.size();
-      for(int i = 0; i < NR_ITEMS; ++i)
+      for (int i = 0; i < NR_ITEMS; ++i)
       {
         item = inv.general_[i];
 
-        if(item->getData().id == ammoType)
+        if (item->getData().id == ammoType)
         {
           PropHandler& propHlr = actorReloading.getPropHandler();
 
@@ -182,7 +182,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
           const int CHANCE_TO_FUMBLE =
             (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
 
-          if(Rnd::percentile() < CHANCE_TO_FUMBLE)
+          if (Rnd::percentile() < CHANCE_TO_FUMBLE)
           {
             isSwiftReload = false;
             result = ReloadResult::fumble;
@@ -195,7 +195,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
             bool isClip = item->getData().isAmmoClip;
 
             //If ammo comes in clips
-            if(isClip)
+            if (isClip)
             {
               const int previousAmmoCount = wpn->nrAmmoLoaded;
               AmmoClip* clipItem = static_cast<AmmoClip*>(item);
@@ -208,7 +208,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
               inv.deleteItemInGeneralWithElement(i);
 
               //If weapon previously contained ammo, create a new clip item
-              if(previousAmmoCount > 0)
+              if (previousAmmoCount > 0)
               {
                 item = ItemFactory::mk(ammoType);
                 clipItem = static_cast<AmmoClip*>(item);
@@ -231,7 +231,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
           break;
         }
       }
-      if(result == ReloadResult::noAmmo)
+      if (result == ReloadResult::noAmmo)
       {
         printMsgAndPlaySfx(actorReloading, wpn, item, result,
                            isSwiftReload);
@@ -245,7 +245,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
     }
   }
 
-  if(result == ReloadResult::success || result == ReloadResult::fumble)
+  if (result == ReloadResult::success || result == ReloadResult::fumble)
   {
     didAct = true;
     GameTime::actorDidAct(isSwiftReload);

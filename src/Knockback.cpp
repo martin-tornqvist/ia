@@ -25,11 +25,11 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 {
   const bool IS_DEF_MON = !defender.isPlayer();
 
-  if(IS_DEF_MON || !Config::isBotPlaying())
+  if (IS_DEF_MON || !Config::isBotPlaying())
   {
     const auto& defenderData = defender.getData();
 
-    if(defenderData.actorSize <= actorSize_giant)
+    if (defenderData.actorSize <= actorSize_giant)
     {
       bool props[endOfPropIds];
       defender.getPropHandler().getAllActivePropIds(props);
@@ -42,7 +42,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
       const int KNOCK_RANGE = 2;
 
-      for(int i = 0; i < KNOCK_RANGE; ++i)
+      for (int i = 0; i < KNOCK_RANGE; ++i)
       {
         const Pos newPos = defender.pos + d;
 
@@ -54,16 +54,16 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
         const bool IS_CELL_BLOCKED = blocked[newPos.x][newPos.y] && !IS_CELL_BOTTOMLESS;
 
-        if(DEF_CAN_BE_KNOCKED && !IS_CELL_BLOCKED)
+        if (DEF_CAN_BE_KNOCKED && !IS_CELL_BLOCKED)
         {
           const bool IS_PLAYER_SEE_DEF =
             IS_DEF_MON ? Map::player->isSeeingActor(defender, nullptr) : true;
 
-          if(i == 0)
+          if (i == 0)
           {
-            if(IS_MSG_ALLOWED)
+            if (IS_MSG_ALLOWED)
             {
-              if(IS_DEF_MON && IS_PLAYER_SEE_DEF)
+              if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
               {
                 Log::addMsg(defender.getNameThe() + " is knocked back!");
               }
@@ -82,9 +82,9 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
 
           SdlWrapper::sleep(Config::getDelayProjectileDraw());
 
-          if(IS_CELL_BOTTOMLESS)
+          if (IS_CELL_BOTTOMLESS)
           {
-            if(IS_DEF_MON && IS_PLAYER_SEE_DEF)
+            if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
             {
               Log::addMsg(defender.getNameThe() + " plummets down the depths.",
                           clrMsgGood);
@@ -100,12 +100,12 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           // Bump features (e.g. so monsters can be knocked back into traps)
           vector<Mob*> mobs;
           GameTime::getMobsAtPos(defender.pos, mobs);
-          for(Mob* const mob : mobs)
+          for (Mob* const mob : mobs)
           {
             mob->bump(defender);
           }
 
-          if(!defender.isAlive())
+          if (!defender.isAlive())
           {
             return;
           }
@@ -113,7 +113,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           Rigid* const f = Map::cells[defender.pos.x][defender.pos.y].rigid;
           f->bump(defender);
 
-          if(!defender.isAlive())
+          if (!defender.isAlive())
           {
             return;
           }
@@ -121,10 +121,10 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
         else //Cannot knock back (cell blocked or defender cannot be knocked)
         {
           //Defender nailed to a wall from a spike gun?
-          if(IS_SPIKE_GUN)
+          if (IS_SPIKE_GUN)
           {
             Rigid* const f = Map::cells[newPos.x][newPos.y].rigid;
-            if(!f->isLosPassable())
+            if (!f->isLosPassable())
             {
               defender.getPropHandler().tryApplyProp(
                 new PropNailed(PropTurns::indefinite));

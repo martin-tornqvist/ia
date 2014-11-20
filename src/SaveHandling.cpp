@@ -72,12 +72,12 @@ void writeFile(const vector<string>& lines)
   ofstream file;
   file.open("data/save", ios::trunc);
 
-  if(file.is_open())
+  if (file.is_open())
   {
-    for(size_t i = 0; i < lines.size(); ++i)
+    for (size_t i = 0; i < lines.size(); ++i)
     {
       file << lines[i];
-      if(i != lines.size() - 1) {file << endl;}
+      if (i != lines.size() - 1) {file << endl;}
     }
     file.close();
   }
@@ -89,9 +89,9 @@ void readFile(vector<string>& lines)
 
   string curLine;
   ifstream file("data/save");
-  if(file.is_open())
+  if (file.is_open())
   {
-    while(getline(file, curLine)) {lines.push_back(curLine);}
+    while (getline(file, curLine)) {lines.push_back(curLine);}
     file.close();
 
     vector<string> emptyLines;
@@ -123,7 +123,7 @@ void load()
 bool isSaveAvailable()
 {
   ifstream file("data/save");
-  if(file.good())
+  if (file.good())
   {
     const bool IS_EMPTY = file.peek() == std::ifstream::traits_type::eof();
     file.close();

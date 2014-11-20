@@ -13,13 +13,13 @@ void readAndRemoveNextWord(string& line, string& nextWordToMk)
 
   //Build a word until parameter string is empty,
   //or a a space character is found.
-  for(int i = 0; i < int(line.size()); ++i)
+  for (int i = 0; i < int(line.size()); ++i)
   {
     const char CURRENT_CHARACTER = line[0];
 
     line.erase(line.begin());
 
-    if(CURRENT_CHARACTER == ' ')
+    if (CURRENT_CHARACTER == ' ')
     {
       return;
     }
@@ -47,22 +47,22 @@ void lineToLines(string line, const int MAX_W, vector<string>& linesRef)
 {
   linesRef.clear();
 
-  if(line.empty()) return;
+  if (line.empty()) return;
 
   int curRow = 0;
 
   string curWord;
 
   readAndRemoveNextWord(line, curWord);
-  if(linesRef.empty())
+  if (linesRef.empty())
   {
     linesRef.resize(1);
     linesRef.front() = "";
   }
 
-  while(!curWord.empty())
+  while (!curWord.empty())
   {
-    if(!isWordFit(linesRef[curRow], curWord, MAX_W))
+    if (!isWordFit(linesRef[curRow], curWord, MAX_W))
     {
       //Current word did not fit on current line, make a new line
       curRow++;
@@ -72,7 +72,7 @@ void lineToLines(string line, const int MAX_W, vector<string>& linesRef)
 
     //If this is not the first word on the current line,
     //add a space before the word
-    if(!linesRef[curRow].empty()) {linesRef[curRow] += " ";}
+    if (!linesRef[curRow].empty()) {linesRef[curRow] += " ";}
 
     linesRef[curRow] += curWord;
 
@@ -83,9 +83,9 @@ void lineToLines(string line, const int MAX_W, vector<string>& linesRef)
 void getSpaceSeparatedList(const string& line, vector<string>& linesRef)
 {
   string curLine = "";
-  for(char c : line)
+  for (char c : line)
   {
-    if(c == ' ')
+    if (c == ' ')
     {
       linesRef.push_back(curLine);
       curLine = "";
@@ -100,12 +100,12 @@ void getSpaceSeparatedList(const string& line, vector<string>& linesRef)
 void replaceAll(const string& line, const string& from, const string& to,
                 string& resultRef)
 {
-  if(from.empty()) {return;}
+  if (from.empty()) {return;}
 
   resultRef = line;
 
   size_t startPos = 0;
-  while((startPos = resultRef.find(from, startPos)) != string::npos)
+  while ((startPos = resultRef.find(from, startPos)) != string::npos)
   {
     resultRef.replace(startPos, from.length(), to);
     //In case 'to' contains 'from', like replacing 'x' with 'yx'
@@ -115,7 +115,7 @@ void replaceAll(const string& line, const string& from, const string& to,
 
 string firstToLower(const std::string& str)
 {
-  if(str.empty()) {return "";}
+  if (str.empty()) {return "";}
 
   string ret  = str;
   ret[0]      = tolower(ret[0]);
@@ -124,7 +124,7 @@ string firstToLower(const std::string& str)
 
 string firstToUpper(const string& str)
 {
-  if(str.empty()) {return "";}
+  if (str.empty()) {return "";}
 
   string ret  = str;
   ret[0]      = toupper(ret[0]);

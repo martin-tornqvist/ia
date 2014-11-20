@@ -20,9 +20,9 @@ void calcFovDeltaLines()
 {
   const int R_INT = FOV_MAX_RADI_INT;
 
-  for(int deltaX = -R_INT; deltaX <= R_INT; deltaX++)
+  for (int deltaX = -R_INT; deltaX <= R_INT; deltaX++)
   {
-    for(int deltaY = -R_INT; deltaY <= R_INT; deltaY++)
+    for (int deltaY = -R_INT; deltaY <= R_INT; deltaY++)
     {
       const Pos origin(0, 0);
       const Pos target(Pos(deltaX, deltaY));
@@ -35,9 +35,9 @@ void calcFovDeltaLines()
 
 void calcfovAbsDistances_()
 {
-  for(int y = 0; y < FOV_MAX_W_INT; ++y)
+  for (int y = 0; y < FOV_MAX_W_INT; ++y)
   {
-    for(int x = 0; x < FOV_MAX_W_INT; ++x)
+    for (int x = 0; x < FOV_MAX_W_INT; ++x)
     {
       fovAbsDistances_[x][y] = 0;
     }
@@ -52,9 +52,9 @@ void calcfovAbsDistances_()
 
   const int R_INT = FOV_MAX_RADI_INT;
 
-  for(int x = 0; x <= R_INT * 2; ++x)
+  for (int x = 0; x <= R_INT * 2; ++x)
   {
-    for(int y = 0; y <= R_INT * 2; ++y)
+    for (int y = 0; y <= R_INT * 2; ++y)
     {
       deltaX = double(x);
       deltaX -= FOV_MAX_RADI_DB;
@@ -79,9 +79,9 @@ const vector<Pos>* getFovDeltaLine(const Pos& delta,
 {
   const int X = delta.x + FOV_MAX_RADI_INT;
   const int Y = delta.y + FOV_MAX_RADI_INT;
-  if(X >= 0 && Y >= 0 && X < FOV_MAX_W_INT && Y < FOV_MAX_W_INT)
+  if (X >= 0 && Y >= 0 && X < FOV_MAX_W_INT && Y < FOV_MAX_W_INT)
   {
-    if(fovAbsDistances_[X][Y] <= MAX_DIST_ABS)
+    if (fovAbsDistances_[X][Y] <= MAX_DIST_ABS)
     {
       return &(fovDeltaLines_[X][Y]);
     }
@@ -95,7 +95,7 @@ void calcNewLine(const Pos& origin, const Pos& target,
 {
   lineRef.clear();
 
-  if(target == origin)
+  if (target == origin)
   {
     lineRef.push_back(origin);
     return;
@@ -117,17 +117,17 @@ void calcNewLine(const Pos& origin, const Pos& target,
 
   const double STEP_SIZE_DB = 0.04;
 
-  for(double i = 0.0; i <= 9999.0; i += STEP_SIZE_DB)
+  for (double i = 0.0; i <= 9999.0; i += STEP_SIZE_DB)
   {
     curX_db += X_INCR_DB * STEP_SIZE_DB;
     curY_db += Y_INCR_DB * STEP_SIZE_DB;
 
     curPos.set(floor(curX_db), floor(curY_db));
 
-    if(!ALLOW_OUTSIDE_MAP && !Utils::isPosInsideMap(curPos)) {return;}
+    if (!ALLOW_OUTSIDE_MAP && !Utils::isPosInsideMap(curPos)) {return;}
 
     bool isPosOkToAdd = false;
-    if(lineRef.empty())
+    if (lineRef.empty())
     {
       isPosOkToAdd = true;
     }
@@ -136,18 +136,18 @@ void calcNewLine(const Pos& origin, const Pos& target,
       isPosOkToAdd = lineRef.back() != curPos;
     }
 
-    if(isPosOkToAdd)
+    if (isPosOkToAdd)
     {
       lineRef.push_back(curPos);
     }
 
     //Check distance limits
-    if(SHOULD_STOP_AT_TARGET && (curPos == target)) {return;}
+    if (SHOULD_STOP_AT_TARGET && (curPos == target)) {return;}
 
     const int DISTANCE_TRAVELED =
       Utils::kingDist(origin.x, origin.y, curPos.x, curPos.y);
 
-    if(DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT) {return;}
+    if (DISTANCE_TRAVELED >= CHEB_TRAVEL_LIMIT) {return;}
   }
 }
 

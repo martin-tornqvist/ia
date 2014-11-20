@@ -27,7 +27,7 @@ public:
 
   AbilityVals& operator=(const AbilityVals& other)
   {
-    for(int i = 0; i < int(AbilityId::END); ++i)
+    for (int i = 0; i < int(AbilityId::END); ++i)
     {
       abilityList[i] = other.abilityList[i];
     }

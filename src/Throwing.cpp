@@ -35,11 +35,11 @@ void playerThrowLitExplosive(const Pos& aimCell)
   LineCalc::calcNewLine(Map::player->pos, aimCell, true, THROW_RANGE_LMT, false, path);
 
   //Remove cells after blocked cells
-  for(size_t i = 1; i < path.size(); ++i)
+  for (size_t i = 1; i < path.size(); ++i)
   {
     const Pos   p = path[i];
     const auto* f = Map::cells[p.x][p.y].rigid;
-    if(!f->isProjectilePassable())
+    if (!f->isProjectilePassable())
     {
       path.resize(i);
       break;
@@ -53,16 +53,16 @@ void playerThrowLitExplosive(const Pos& aimCell)
   Log::addMsg(explosive->getStrOnPlayerThrow());
 
   //Render
-  if(path.size() > 1)
+  if (path.size() > 1)
   {
     const auto  clr = explosive->getIgnitedProjectileClr();
 
-    for(const Pos& p : path)
+    for (const Pos& p : path)
     {
       Render::drawMapAndInterface(false);
-      if(Map::cells[p.x][p.y].isSeenByPlayer)
+      if (Map::cells[p.x][p.y].isSeenByPlayer)
       {
-        if(Config::isTilesMode())
+        if (Config::isTilesMode())
         {
           Render::drawTile(explosive->getTile(),    Panel::map, p, clr);
         }
@@ -76,7 +76,7 @@ void playerThrowLitExplosive(const Pos& aimCell)
     }
   }
 
-  if(!Map::cells[endPos.x][endPos.y].rigid->isBottomless())
+  if (!Map::cells[endPos.x][endPos.y].rigid->isBottomless())
   {
     explosive->onThrownIgnitedLanding(endPos);
   }
@@ -100,7 +100,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
 
   const string itemNameA = itemThrown.getName(ItemRefType::a);
 
-  if(&actorThrowing == Map::player)
+  if (&actorThrowing == Map::player)
   {
     Log::clearLog();
     Log::addMsg("I throw " + itemNameA + ".");
@@ -108,7 +108,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
   else
   {
     const Pos& p = path.front();
-    if(Map::cells[p.x][p.y].isSeenByPlayer)
+    if (Map::cells[p.x][p.y].isSeenByPlayer)
     {
       Log::addMsg(actorThrowing.getNameThe() + " throws " + itemNameA + ".");
     }
@@ -123,24 +123,24 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
 
   Pos curPos(-1, -1);
 
-  for(size_t i = 1; i < path.size(); ++i)
+  for (size_t i = 1; i < path.size(); ++i)
   {
     Render::drawMapAndInterface(false);
 
     curPos.set(path[i]);
 
     Actor* const actorHere = Utils::getActorAtPos(curPos);
-    if(actorHere)
+    if (actorHere)
     {
-      if(curPos == tgtCell || actorHere->getData().actorSize >= actorSize_humanoid)
+      if (curPos == tgtCell || actorHere->getData().actorSize >= actorSize_humanoid)
       {
 
         data = ThrowAttData(actorThrowing, itemThrown, tgtCell, curPos, aimLvl);
 
-        if(data.attackResult >= successSmall && !data.isEtherealDefenderMissed)
+        if (data.attackResult >= successSmall && !data.isEtherealDefenderMissed)
         {
 
-          if(Map::cells[curPos.x][curPos.y].isSeenByPlayer)
+          if (Map::cells[curPos.x][curPos.y].isSeenByPlayer)
           {
             Render::drawGlyph('*', Panel::map, curPos, clrRedLgt);
             Render::updateScreen();
@@ -156,7 +156,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
           isActorHit = true;
 
           //If throwing a potion on an actor, let it make stuff happen...
-          if(itemThrownData.isPotion)
+          if (itemThrownData.isPotion)
           {
             static_cast<Potion*>(&itemThrown)->collide(curPos, actorHere);
             delete &itemThrown;
@@ -171,7 +171,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
       }
     }
 
-    if(Map::cells[curPos.x][curPos.y].isSeenByPlayer)
+    if (Map::cells[curPos.x][curPos.y].isSeenByPlayer)
     {
       Render::drawGlyph(glyph, Panel::map, curPos, clr);
       Render::updateScreen();
@@ -179,13 +179,13 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
     }
 
     const auto* featureHere = Map::cells[curPos.x][curPos.y].rigid;
-    if(!featureHere->isProjectilePassable())
+    if (!featureHere->isProjectilePassable())
     {
       blockedInElement = itemThrownData.isPotion ? i : i - 1;
       break;
     }
 
-    if(curPos == tgtCell && data.intendedAimLvl == ActorSize::actorSize_floor)
+    if (curPos == tgtCell && data.intendedAimLvl == ActorSize::actorSize_floor)
     {
       blockedInElement = i;
       break;
@@ -193,9 +193,9 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
   }
 
   //If potion, collide it on the landscape
-  if(itemThrownData.isPotion)
+  if (itemThrownData.isPotion)
   {
-    if(blockedInElement >= 0)
+    if (blockedInElement >= 0)
     {
       static_cast<Potion*>(&itemThrown)->collide(path[blockedInElement], nullptr);
       delete &itemThrown;
@@ -204,7 +204,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
     }
   }
 
-  if(Rnd::percentile() < chanceToDestroyItem)
+  if (Rnd::percentile() < chanceToDestroyItem)
   {
     delete &itemThrown;
   }
@@ -218,7 +218,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
 
     bool isNoisy = false;
 
-    switch(matlAtDropPos)
+    switch (matlAtDropPos)
     {
       case Matl::empty:   isNoisy = false;  break;
       case Matl::stone:   isNoisy = true;   break;
@@ -229,12 +229,12 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
       case Matl::fluid:   isNoisy = false;  break;
     }
 
-    if(isNoisy)
+    if (isNoisy)
     {
       const AlertsMon alerts = &actorThrowing == Map::player ?
                                AlertsMon::yes :
                                AlertsMon::no;
-      if(!isActorHit)
+      if (!isActorHit)
       {
         Snd snd(itemThrownData.landOnHardSndMsg, itemThrownData.landOnHardSfx,
                 IgnoreMsgIfOriginSeen::yes, dropPos, nullptr, SndVol::low, alerts);

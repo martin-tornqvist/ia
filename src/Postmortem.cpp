@@ -45,14 +45,14 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
   TRACE << "Finding number of killed monsters" << endl;
   vector<string> uniqueKilledNames;
   int nrKillsTotAllMon = 0;
-  for(const auto& d : ActorData::data)
+  for (const auto& d : ActorData::data)
   {
-    if(d.id != ActorId::player)
+    if (d.id != ActorId::player)
     {
-      if(d.nrKills > 0)
+      if (d.nrKills > 0)
       {
         nrKillsTotAllMon += d.nrKills;
-        if(d.isUnique)
+        if (d.isUnique)
         {
           uniqueKilledNames.push_back(d.nameA);
         }
@@ -71,31 +71,31 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
                                " monsters ", clrInfo));
 
   //TODO This is ugly as hell
-  if(Map::player->phobias[int(Phobia::closedPlace)])
+  if (Map::player->phobias[int(Phobia::closedPlace)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of enclosed spaces", clrInfo));
-  if(Map::player->phobias[int(Phobia::dog)])
+  if (Map::player->phobias[int(Phobia::dog)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of dogs", clrInfo));
-  if(Map::player->phobias[int(Phobia::rat)])
+  if (Map::player->phobias[int(Phobia::rat)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of rats", clrInfo));
-  if(Map::player->phobias[int(Phobia::undead)])
+  if (Map::player->phobias[int(Phobia::undead)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of the dead", clrInfo));
-  if(Map::player->phobias[int(Phobia::openPlace)])
+  if (Map::player->phobias[int(Phobia::openPlace)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of open places", clrInfo));
-  if(Map::player->phobias[int(Phobia::spider)])
+  if (Map::player->phobias[int(Phobia::spider)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of spiders", clrInfo));
-  if(Map::player->phobias[int(Phobia::deepPlaces)])
+  if (Map::player->phobias[int(Phobia::deepPlaces)])
     linesRef.push_back(
       StrAndClr("   * Had a phobia of deep places", clrInfo));
 
-  if(Map::player->obsessions[int(Obsession::masochism)])
+  if (Map::player->obsessions[int(Obsession::masochism)])
     linesRef.push_back(StrAndClr("   * Had a masochistic obsession", clrInfo));
-  if(Map::player->obsessions[int(Obsession::sadism)])
+  if (Map::player->obsessions[int(Obsession::sadism)])
     linesRef.push_back(StrAndClr("   * Had a sadistic obsession", clrInfo));
 
   linesRef.push_back(StrAndClr(" ", clrInfo));
@@ -104,7 +104,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
   linesRef.push_back(StrAndClr(" Traits gained:", clrHeading));
   string traitsLine;
   PlayerBon::getAllPickedTraitsTitlesLine(traitsLine);
-  if(traitsLine.empty())
+  if (traitsLine.empty())
   {
     linesRef.push_back(StrAndClr("   * None", clrInfo));
   }
@@ -112,7 +112,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
   {
     vector<string> abilitiesLines;
     TextFormatting::lineToLines(traitsLine, 60, abilitiesLines);
-    for(string& str : abilitiesLines)
+    for (string& str : abilitiesLines)
     {
       linesRef.push_back(StrAndClr("   " + str, clrInfo));
     }
@@ -120,13 +120,13 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
   linesRef.push_back(StrAndClr(" ", clrInfo));
 
   linesRef.push_back(StrAndClr(" Unique monsters killed:", clrHeading));
-  if(uniqueKilledNames.empty())
+  if (uniqueKilledNames.empty())
   {
     linesRef.push_back(StrAndClr("   * None", clrInfo));
   }
   else
   {
-    for(string& monsterName : uniqueKilledNames)
+    for (string& monsterName : uniqueKilledNames)
     {
       linesRef.push_back(StrAndClr("   * " + monsterName, clrInfo));
     }
@@ -136,10 +136,10 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
   linesRef.push_back(StrAndClr(" The last messages:", clrHeading));
   const vector< vector<Msg> >& history = Log::getHistory();
   int historyElement = max(0, int(history.size()) - 20);
-  for(unsigned int i = historyElement; i < history.size(); ++i)
+  for (unsigned int i = historyElement; i < history.size(); ++i)
   {
     string row = "";
-    for(unsigned int ii = 0; ii < history[i].size(); ii++)
+    for (unsigned int ii = 0; ii < history[i].size(); ii++)
     {
       string msgStr = "";
       history[i][ii].getStrWithRepeats(msgStr);
@@ -151,38 +151,37 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
 
   TRACE << "Drawing the final map" << endl;
   linesRef.push_back(StrAndClr(" The final moment:", clrHeading));
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
-      for(int dx = -1; dx <= 1; ++dx)
+      for (int dx = -1; dx <= 1; ++dx)
       {
-        for(int dy = -1; dy <= 1; ++dy)
+        for (int dy = -1; dy <= 1; ++dy)
         {
-          if(Utils::isPosInsideMap(Pos(x + dx, y + dy)))
+          if (Utils::isPosInsideMap(Pos(x + dx, y + dy)))
           {
             const auto* const f = Map::cells[x + dx][y + dy].rigid;
-            if(f->isLosPassable()) {Map::cells[x][y].isSeenByPlayer = true;}
+            if (f->isLosPassable()) {Map::cells[x][y].isSeenByPlayer = true;}
           }
         }
       }
     }
   }
   Render::drawMap(); //To set the glyph array
-  for(int y = 0; y < MAP_H; ++y)
+  for (int y = 0; y < MAP_H; ++y)
   {
     string curRow = "";
-    for(int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < MAP_W; ++x)
     {
-      if(Pos(x, y) == Map::player->pos)
+      if (Pos(x, y) == Map::player->pos)
       {
         curRow.push_back('@');
       }
       else
       {
-        if(
-          Render::renderArray[x][y].glyph == ' ' &&
-          (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1))
+        if (Render::renderArray[x][y].glyph == ' ' &&
+            (y == 0 || x == 0 || y == MAP_H - 1 || x == MAP_W - 1))
         {
           curRow.push_back('*');
         }
@@ -191,13 +190,12 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
           const auto& wallD       = FeatureData::getData(FeatureId::wall);
           const auto& rubbleHighD = FeatureData::getData(FeatureId::rubbleHigh);
           const auto& statueD     = FeatureData::getData(FeatureId::statue);
-          if(
-            Render::renderArray[x][y].glyph == wallD.glyph ||
-            Render::renderArray[x][y].glyph == rubbleHighD.glyph)
+          if (Render::renderArray[x][y].glyph == wallD.glyph ||
+              Render::renderArray[x][y].glyph == rubbleHighD.glyph)
           {
             curRow.push_back('#');
           }
-          else if(Render::renderArray[x][y].glyph == statueD.glyph)
+          else if (Render::renderArray[x][y].glyph == statueD.glyph)
           {
             curRow.push_back('M');
           }
@@ -238,7 +236,7 @@ void render(const vector<StrAndClr>& linesAndClr,
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
   int yPos = 1;
 
-  for(
+  for (
     int i = TOP_ELEMENT;
     i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++)
@@ -258,16 +256,16 @@ void runInfo(const vector<StrAndClr>& lines)
 
   int topNr = 0;
 
-  while(true)
+  while (true)
   {
     render(lines, topNr);
 
     const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.sdlKey == SDLK_DOWN || d.key == '2' || d.key == 'j')
+    if (d.sdlKey == SDLK_DOWN || d.key == '2' || d.key == 'j')
     {
       topNr += LINE_JUMP;
-      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+      if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
       {
         topNr = 0;
       }
@@ -276,11 +274,11 @@ void runInfo(const vector<StrAndClr>& lines)
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
     }
-    else if(d.sdlKey == SDLK_UP || d.key == '8' || d.key == 'k')
+    else if (d.sdlKey == SDLK_UP || d.key == '8' || d.key == 'k')
     {
       topNr = max(0, topNr - LINE_JUMP);
     }
-    else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    else if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
     {
       break;
     }
@@ -298,7 +296,7 @@ void mkMemorialFile(const vector<StrAndClr>& lines)
   // Add memorial file
   ofstream file;
   file.open(memorialFilePath.data(), ios::trunc);
-  for(const StrAndClr& line : lines) {file << line.str << endl;}
+  for (const StrAndClr& line : lines) {file << line.str << endl;}
   file.close();
 
   // Add reference to memorial file in list
@@ -315,11 +313,11 @@ void renderMenu(const MenuBrowser& browser)
   string curLine;
   ifstream file("data/ascii_graveyard");
 
-  if(file.is_open())
+  if (file.is_open())
   {
-    while(getline(file, curLine))
+    while (getline(file, curLine))
     {
-      if(curLine.size() > 0)
+      if (curLine.size() > 0)
       {
         asciiGraveyard.push_back(curLine);
       }
@@ -337,7 +335,7 @@ void renderMenu(const MenuBrowser& browser)
 
   Pos pos(1, SCREEN_H - asciiGraveyard.size());
 
-  for(const string& line : asciiGraveyard)
+  for (const string& line : asciiGraveyard)
   {
     const Uint8 K = Uint8(16 + (180 * ((pos.y * 100) / SCREEN_H) / 100));
     const Clr clr = {K, K, K, 0};
@@ -385,10 +383,10 @@ void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame)
   renderMenu(browser);
 
   bool done = false;
-  while(!done)
+  while (!done)
   {
     const MenuAction action = MenuInputHandling::getAction(browser);
-    switch(action)
+    switch (action)
     {
       case MenuAction::browsed:
       {
@@ -406,26 +404,26 @@ void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame)
 
       case MenuAction::selected:
       {
-        if(browser.isAtIdx(0))
+        if (browser.isAtIdx(0))
         {
           runInfo(linesAndClr);
           renderMenu(browser);
         }
-        if(browser.isAtIdx(1))
+        if (browser.isAtIdx(1))
         {
           HighScore::runHighScoreScreen();
           renderMenu(browser);
         }
-        if(browser.isAtIdx(2))
+        if (browser.isAtIdx(2))
         {
           Log::displayHistory();
           renderMenu(browser);
         }
-        if(browser.isAtIdx(3))
+        if (browser.isAtIdx(3))
         {
           done = true;
         }
-        if(browser.isAtIdx(4))
+        if (browser.isAtIdx(4))
         {
           *quitGame = true;
           done      = true;

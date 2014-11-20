@@ -44,9 +44,9 @@ void mkLines()
   Wpn* kick = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerKick));
   string kickStr = kick->getName(ItemRefType::plain);
   delete kick;
-  for(unsigned int i = 0; i < kickStr.length(); ++i)
+  for (unsigned int i = 0; i < kickStr.length(); ++i)
   {
-    if(kickStr[0] == ' ')
+    if (kickStr[0] == ' ')
     {
       kickStr.erase(kickStr.begin());
     }
@@ -58,9 +58,9 @@ void mkLines()
   Wpn* punch = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerPunch));
   string punchStr = punch->getName(ItemRefType::plain);
   delete punch;
-  for(size_t i = 0; i < punchStr.length(); ++i)
+  for (size_t i = 0; i < punchStr.length(); ++i)
   {
-    if(punchStr[0] == ' ')
+    if (punchStr[0] == ' ')
     {
       punchStr.erase(punchStr.begin());
     }
@@ -81,28 +81,28 @@ void mkLines()
 
   lines_.push_back(StrAndClr("Mental conditions", clrHeading));
   const int NR_LINES_BEFORE_MENTAL = lines_.size();
-  if(Map::player->phobias[int(Phobia::closedPlace)])
+  if (Map::player->phobias[int(Phobia::closedPlace)])
     lines_.push_back(StrAndClr(offset + "Phobia of enclosed spaces", clrText));
-  if(Map::player->phobias[int(Phobia::dog)])
+  if (Map::player->phobias[int(Phobia::dog)])
     lines_.push_back(StrAndClr(offset + "Phobia of dogs", clrText));
-  if(Map::player->phobias[int(Phobia::rat)])
+  if (Map::player->phobias[int(Phobia::rat)])
     lines_.push_back(StrAndClr(offset + "Phobia of rats", clrText));
-  if(Map::player->phobias[int(Phobia::undead)])
+  if (Map::player->phobias[int(Phobia::undead)])
     lines_.push_back(StrAndClr(offset + "Phobia of the dead", clrText));
-  if(Map::player->phobias[int(Phobia::openPlace)])
+  if (Map::player->phobias[int(Phobia::openPlace)])
     lines_.push_back(StrAndClr(offset + "Phobia of open places", clrText));
-  if(Map::player->phobias[int(Phobia::spider)])
+  if (Map::player->phobias[int(Phobia::spider)])
     lines_.push_back(StrAndClr(offset + "Phobia of spiders", clrText));
-  if(Map::player->phobias[int(Phobia::deepPlaces)])
+  if (Map::player->phobias[int(Phobia::deepPlaces)])
     lines_.push_back(StrAndClr(offset + "Phobia of deep places", clrText));
 
-  if(Map::player->obsessions[int(Obsession::masochism)])
+  if (Map::player->obsessions[int(Obsession::masochism)])
     lines_.push_back(StrAndClr(offset + "Masochistic obsession", clrText));
-  if(Map::player->obsessions[int(Obsession::sadism)])
+  if (Map::player->obsessions[int(Obsession::sadism)])
     lines_.push_back(StrAndClr(offset + "Sadistic obsession", clrText));
   const int NR_LINES_AFTER_MENTAL = lines_.size();
 
-  if(NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL)
+  if (NR_LINES_BEFORE_MENTAL == NR_LINES_AFTER_MENTAL)
   {
     lines_.push_back(StrAndClr(offset + "No special symptoms", clrText));
   }
@@ -111,10 +111,10 @@ void mkLines()
   lines_.push_back(StrAndClr("Potion knowledge", clrHeading));
   vector<StrAndClr> potionList;
   vector<StrAndClr> manuscriptList;
-  for(int i = 0; i < int(ItemId::END); ++i)
+  for (int i = 0; i < int(ItemId::END); ++i)
   {
     const ItemDataT* const d = ItemData::data[i];
-    if(d->isPotion && (d->isTried || d->isIdentified))
+    if (d->isPotion && (d->isTried || d->isIdentified))
     {
       Item* item = ItemFactory::mk(d->id);
       potionList.push_back(StrAndClr(offset + item->getName(ItemRefType::plain),
@@ -123,7 +123,7 @@ void mkLines()
     }
     else
     {
-      if(d->isScroll && (d->isTried || d->isIdentified))
+      if (d->isScroll && (d->isTried || d->isIdentified))
       {
         Item* item = ItemFactory::mk(d->id);
         manuscriptList.push_back(StrAndClr(offset + item->getName(ItemRefType::plain),
@@ -138,34 +138,34 @@ void mkLines()
     return e1.str < e2.str;
   };
 
-  if(potionList.empty())
+  if (potionList.empty())
   {
     lines_.push_back(StrAndClr(offset + "No known potions", clrText));
   }
   else
   {
     sort(potionList.begin(), potionList.end(), strAndClrSort);
-    for(StrAndClr& e : potionList) {lines_.push_back(e);}
+    for (StrAndClr& e : potionList) {lines_.push_back(e);}
   }
   lines_.push_back(StrAndClr(" ", clrText));
 
 
   lines_.push_back(StrAndClr("Manuscript knowledge", clrHeading));
-  if(manuscriptList.size() == 0)
+  if (manuscriptList.size() == 0)
   {
     lines_.push_back(StrAndClr(offset + "No known manuscripts", clrText));
   }
   else
   {
     sort(manuscriptList.begin(), manuscriptList.end(), strAndClrSort);
-    for(StrAndClr& e : manuscriptList) {lines_.push_back(e);}
+    for (StrAndClr& e : manuscriptList) {lines_.push_back(e);}
   }
   lines_.push_back(StrAndClr(" ", clrText));
 
   lines_.push_back(StrAndClr("Traits gained", clrHeading));
   string abilitiesLine = "";
   vector<Trait>& traits = PlayerBon::traitsPicked_;
-  if(traits.empty())
+  if (traits.empty())
   {
     lines_.push_back(StrAndClr(offset + "None", clrText));
     lines_.push_back(StrAndClr(" ", clrText));
@@ -174,7 +174,7 @@ void mkLines()
   {
     const int MAX_W_DESCR = (MAP_W * 2) / 3;
 
-    for(Trait trait : traits)
+    for (Trait trait : traits)
     {
       string title = "";
       PlayerBon::getTraitTitle(trait, title);
@@ -183,7 +183,7 @@ void mkLines()
       PlayerBon::getTraitDescr(trait, descr);
       vector<string> descrLines;
       TextFormatting::lineToLines(descr, MAX_W_DESCR, descrLines);
-      for(string& descrLine : descrLines)
+      for (string& descrLine : descrLines)
       {
         lines_.push_back(StrAndClr(offset + descrLine, clrTextDark));
       }
@@ -197,7 +197,7 @@ void getShockResSrcTitle(
 {
 
   strRef = "";
-  switch(shockSrc)
+  switch (shockSrc)
   {
     case ShockSrc::time:           strRef = "Time";                    break;
     case ShockSrc::castIntrSpell:  strRef = "Casting learned spells";  break;
@@ -238,12 +238,12 @@ void run()
   int topNr = 0;
   int btmNr = min(topNr + MAX_NR_LINES_ON_SCR - 1, NR_LINES_TOT - 1);
 
-  while(true)
+  while (true)
   {
     Render::clearScreen();
     drawInterface();
     int yPos = 1;
-    for(int i = topNr; i <= btmNr; ++i)
+    for (int i = topNr; i <= btmNr; ++i)
     {
       const StrAndClr& line = lines_[i];
       Render::drawText(line.str , Panel::screen, Pos(0, yPos++), line.clr);
@@ -252,10 +252,10 @@ void run()
 
     const KeyData& d = Input::readKeysUntilFound();
 
-    if(d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
+    if (d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
     {
       topNr += LINE_JUMP;
-      if(NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
+      if (NR_LINES_TOT <= MAX_NR_LINES_ON_SCR)
       {
         topNr = 0;
       }
@@ -264,11 +264,11 @@ void run()
         topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
       }
     }
-    else if(d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
+    else if (d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
     {
       topNr = max(0, topNr - LINE_JUMP);
     }
-    else if(d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    else if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
     {
       break;
     }

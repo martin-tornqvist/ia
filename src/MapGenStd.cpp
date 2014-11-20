@@ -64,7 +64,7 @@ bool isAllRoomsConnected()
 void registerRoom(Room& room)
 {
 #ifndef NDEBUG
-  for(Room* const roomInList : Map::roomList)
+  for (Room* const roomInList : Map::roomList)
   {
     assert(roomInList != &room); //Check that the room is not already added
   }
@@ -72,9 +72,9 @@ void registerRoom(Room& room)
 
   Map::roomList.push_back(&room);
 
-  for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+  for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
   {
-    for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
+    for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
     {
       Map::roomMap[x][y] = &room;
     }
@@ -83,9 +83,9 @@ void registerRoom(Room& room)
 
 void mkFloorInRoom(const Room& room)
 {
-  for(int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+  for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
   {
-    for(int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
+    for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
     {
       Map::put(new Floor(Pos(x, y)));
     }
@@ -98,12 +98,12 @@ void connectRooms()
 
   int nrTriesLeft = 5000;
 
-  while(true)
+  while (true)
   {
     //Note: Keep this counter at the top of the loop, since otherwise a "continue"
     //statement could bypass it so we get stuck in the loop.
     --nrTriesLeft;
-    if(nrTriesLeft == 0)
+    if (nrTriesLeft == 0)
     {
       MapGen::isMapValid = false;
 #ifdef DEMO_MODE
@@ -128,7 +128,7 @@ void connectRooms()
     Room* room0 = getRndRoom();
 
     //Room 0 must be a standard room or corridor link
-    if(!isStdRoom(*room0) && room0->type_ != RoomType::corrLink)
+    if (!isStdRoom(*room0) && room0->type_ != RoomType::corrLink)
     {
       continue;
     }
@@ -138,14 +138,14 @@ void connectRooms()
     //Room 1 must not be the same as room 0, and it must be a standard room (connections
     //are only allowed between two standard rooms, or from a corridor link to a standard
     //room - never between two corridor links)
-    while(room1 == room0 || !isStdRoom(*room1))
+    while (room1 == room0 || !isStdRoom(*room1))
     {
       room1 = getRndRoom();
     }
 
     //Do not allow two rooms to be connected twice
     const auto& consRoom0 = room0->roomsConTo_;
-    if(find(consRoom0.begin(), consRoom0.end(), room1) != consRoom0.end())
+    if (find(consRoom0.begin(), consRoom0.end(), room1) != consRoom0.end())
     {
       TRACE_VERBOSE << "Rooms are already connected, trying other combination" << endl;
       continue;
@@ -160,22 +160,22 @@ void connectRooms()
     const int Y0 = min(c0.y, c1.y);
     const int X1 = max(c0.x, c1.x);
     const int Y1 = max(c0.y, c1.y);
-    for(int y = Y0; y <= Y1; ++y)
+    for (int y = Y0; y <= Y1; ++y)
     {
-      for(int x = X0; x <= X1; ++x)
+      for (int x = X0; x <= X1; ++x)
       {
         const Room* const roomHere = Map::roomMap[x][y];
-        if(roomHere && roomHere != room0 && roomHere != room1 && !roomHere->isSubRoom_)
+        if (roomHere && roomHere != room0 && roomHere != room1 && !roomHere->isSubRoom_)
         {
           isOtherRoomInWay = true;
         }
       }
-      if(isOtherRoomInWay)
+      if (isOtherRoomInWay)
       {
         break;
       }
     }
-    if(isOtherRoomInWay)
+    if (isOtherRoomInWay)
     {
       TRACE_VERBOSE << "Blocked by room between, trying other combination" << endl;
       continue;
@@ -183,7 +183,7 @@ void connectRooms()
 
     MapGenUtils::mkPathFindCor(*room0, *room1, doorProposals);
 
-    if((nrTriesLeft <= 2 || Rnd::oneIn(4)) && isAllRoomsConnected())
+    if ((nrTriesLeft <= 2 || Rnd::oneIn(4)) && isAllRoomsConnected())
     {
       break;
     }
@@ -198,12 +198,12 @@ void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos)
 
   const Rect& a = roomAreaInclWalls; //abbreviation
 
-  for(int y = a.p0.y; y <= a.p1.y; ++y)
+  for (int y = a.p0.y; y <= a.p1.y; ++y)
   {
-    for(int x = a.p0.x; x <= a.p1.x; ++x)
+    for (int x = a.p0.x; x <= a.p1.x; ++x)
     {
       const Pos p(x, y);
-      if(x == a.p0.x || x == a.p1.x || y == a.p0.y || y == a.p1.y)
+      if (x == a.p0.x || x == a.p1.x || y == a.p0.y || y == a.p1.y)
       {
         wallCells.push_back(p);
       }
@@ -228,13 +228,13 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
 
   assert(Utils::isPosInside(doorP, auxRectWithBorder));
 
-  if(Utils::isAreaInsideMap(auxRectWithBorder))
+  if (Utils::isAreaInsideMap(auxRectWithBorder))
   {
-    if(!MapParse::isValInArea(auxRectWithBorder, blocked))
+    if (!MapParse::isValInArea(auxRectWithBorder, blocked))
     {
-      for(int y = auxRect.p0.y; y <= auxRect.p1.y; ++y)
+      for (int y = auxRect.p0.y; y <= auxRect.p1.y; ++y)
       {
-        for(int x = auxRect.p0.x; x <= auxRect.p1.x; ++x)
+        for (int x = auxRect.p0.x; x <= auxRect.p1.x; ++x)
         {
           blocked[x][y] = true;
           assert(!Map::roomMap[x][y]);
@@ -242,7 +242,7 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
       }
 
 #ifdef MK_CRUMBLE_ROOMS
-      if(Rnd::oneIn(12))
+      if (Rnd::oneIn(12))
       {
         Room* const room = RoomFactory::mk(RoomType::crumbleRoom, auxRect);
         registerRoom(*room);
@@ -275,28 +275,28 @@ void mkAuxRooms(Region regions[3][3])
   MapParse::parse(CellCheck::BlocksMoveCmn(false), floorCells);
   Utils::reverseBoolArray(floorCells);
 
-  for(int regionY = 0; regionY < 3; regionY++)
+  for (int regionY = 0; regionY < 3; regionY++)
   {
-    for(int regionX = 0; regionX < 3; regionX++)
+    for (int regionX = 0; regionX < 3; regionX++)
     {
       const Region& region = regions[regionX][regionY];
 
-      if(region.mainRoom_)
+      if (region.mainRoom_)
       {
         Room& mainR = *region.mainRoom_;
 
         //Right
-        if(Rnd::oneIn(4))
+        if (Rnd::oneIn(4))
         {
-          for(int i = 0; i < NR_TRIES_PER_SIDE; ++i)
+          for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
           {
             const Pos conP(mainR.r_.p1.x + 1,
                            Rnd::range(mainR.r_.p0.y + 1, mainR.r_.p1.y - 1));
             const Pos auxD(getRndAuxRoomDim());
             const Pos auxP(conP.x + 1, Rnd::range(conP.y - auxD.y + 1, conP.y));
-            if(floorCells[conP.x - 1][conP.y])
+            if (floorCells[conP.x - 1][conP.y])
             {
-              if(tryMkAuxRoom(auxP, auxD, floorCells, conP))
+              if (tryMkAuxRoom(auxP, auxD, floorCells, conP))
               {
                 TRACE_VERBOSE << "Aux room placed right" << endl;
                 break;
@@ -306,17 +306,17 @@ void mkAuxRooms(Region regions[3][3])
         }
 
         //Up
-        if(Rnd::oneIn(4))
+        if (Rnd::oneIn(4))
         {
-          for(int i = 0; i < NR_TRIES_PER_SIDE; ++i)
+          for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
           {
             const Pos conP(Rnd::range(mainR.r_.p0.x + 1, mainR.r_.p1.x - 1),
                            mainR.r_.p0.y - 1);
             const Pos auxD(getRndAuxRoomDim());
             const Pos auxP(Rnd::range(conP.x - auxD.x + 1, conP.x), conP.y - 1);
-            if(floorCells[conP.x][conP.y + 1])
+            if (floorCells[conP.x][conP.y + 1])
             {
-              if(tryMkAuxRoom(auxP, auxD, floorCells, conP))
+              if (tryMkAuxRoom(auxP, auxD, floorCells, conP))
               {
                 TRACE_VERBOSE << "Aux room placed up" << endl;
                 break;
@@ -326,17 +326,17 @@ void mkAuxRooms(Region regions[3][3])
         }
 
         //Left
-        if(Rnd::oneIn(4))
+        if (Rnd::oneIn(4))
         {
-          for(int i = 0; i < NR_TRIES_PER_SIDE; ++i)
+          for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
           {
             const Pos conP(mainR.r_.p0.x - 1,
                            Rnd::range(mainR.r_.p0.y + 1, mainR.r_.p1.y - 1));
             const Pos auxD(getRndAuxRoomDim());
             const Pos auxP(conP.x - 1, Rnd::range(conP.y - auxD.y + 1, conP.y));
-            if(floorCells[conP.x + 1][conP.y])
+            if (floorCells[conP.x + 1][conP.y])
             {
-              if(tryMkAuxRoom(auxP, auxD, floorCells, conP))
+              if (tryMkAuxRoom(auxP, auxD, floorCells, conP))
               {
                 TRACE_VERBOSE << "Aux room placed left" << endl;
                 break;
@@ -346,17 +346,17 @@ void mkAuxRooms(Region regions[3][3])
         }
 
         //Down
-        if(Rnd::oneIn(4))
+        if (Rnd::oneIn(4))
         {
-          for(int i = 0; i < NR_TRIES_PER_SIDE; ++i)
+          for (int i = 0; i < NR_TRIES_PER_SIDE; ++i)
           {
             const Pos conP(Rnd::range(mainR.r_.p0.x + 1, mainR.r_.p1.x - 1),
                            mainR.r_.p1.y + 1);
             const Pos auxD(getRndAuxRoomDim());
             const Pos auxP(Rnd::range(conP.x - auxD.x + 1, conP.x), conP.y + 1);
-            if(floorCells[conP.x][conP.y - 1])
+            if (floorCells[conP.x][conP.y - 1])
             {
-              if(tryMkAuxRoom(auxP, auxD, floorCells, conP))
+              if (tryMkAuxRoom(auxP, auxD, floorCells, conP))
               {
                 TRACE_VERBOSE << "Aux room placed down" << endl;
                 break;
@@ -376,7 +376,7 @@ void mkMergedRegionsAndRooms(Region regions[3][3])
 
   const int NR_ATTEMPTS = Rnd::range(0, 2);
 
-  for(int attemptCnt = 0; attemptCnt < NR_ATTEMPTS; ++attemptCnt)
+  for (int attemptCnt = 0; attemptCnt < NR_ATTEMPTS; ++attemptCnt)
   {
 
     Pos regI1, regI2;
@@ -384,10 +384,10 @@ void mkMergedRegionsAndRooms(Region regions[3][3])
     //Find two non-occupied regions
     int nrTriesToFindRegions = 100;
     bool isGoodRegionsFound = false;
-    while(!isGoodRegionsFound)
+    while (!isGoodRegionsFound)
     {
       --nrTriesToFindRegions;
-      if(nrTriesToFindRegions <= 0) {return;}
+      if (nrTriesToFindRegions <= 0) {return;}
 
       regI1 = Pos(Rnd::range(0, 2), Rnd::range(0, 1));
       regI2 = Pos(regI1 + Pos(0, 1));
@@ -430,36 +430,36 @@ void randomlyBlockRegions(Region regions[3][3])
   //of a higher number of attempts.
   const int MAX_NR_TO_TRY_BLOCK = max(1, Map::dlvl / 3);
   const int NR_TO_TRY_BLOCK     = min(Rnd::range(0, MAX_NR_TO_TRY_BLOCK), 5);
-  for(int i = 0; i < NR_TO_TRY_BLOCK; ++i)
+  for (int i = 0; i < NR_TO_TRY_BLOCK; ++i)
   {
     TRACE_VERBOSE << "Attempting to block region " << i + 1 << "/"
                   << NR_TO_TRY_BLOCK << endl;
     vector<Pos> blockBucket;
-    for(int y = 0; y < 3; ++y)
+    for (int y = 0; y < 3; ++y)
     {
-      for(int x = 0; x < 3; ++x)
+      for (int x = 0; x < 3; ++x)
       {
-        if(regions[x][y].isFree_)
+        if (regions[x][y].isFree_)
         {
           bool isAllAdjFree = true;
           const Pos p(x, y);
-          for(const Pos& d : DirUtils::cardinalList)
+          for (const Pos& d : DirUtils::cardinalList)
           {
             const Pos pAdj(p + d);
-            if(pAdj >= 0 && pAdj <= 2 && pAdj != p)
+            if (pAdj >= 0 && pAdj <= 2 && pAdj != p)
             {
-              if(!regions[pAdj.x][pAdj.y].isFree_)
+              if (!regions[pAdj.x][pAdj.y].isFree_)
               {
                 isAllAdjFree = false;
                 break;
               }
             }
           }
-          if(isAllAdjFree) {blockBucket.push_back(p);}
+          if (isAllAdjFree) {blockBucket.push_back(p);}
         }
       }
     }
-    if(blockBucket.empty())
+    if (blockBucket.empty())
     {
       TRACE_VERBOSE << "Failed to find eligible regions to block, after "
                     << "blocking " << i << " regions" << endl;
@@ -502,7 +502,7 @@ void reserveRiver(Region regions[3][3])
 
   const HorizontalVertical dir = Rnd::coinToss() ? hor : ver;
 
-  if(dir == hor)
+  if (dir == hor)
   {
     initRoomRect(roomRect.p0.x, roomRect.p1.x, roomRect.p0.y, roomRect.p1.y,
                  Pos(0, 1), Pos(2, 1));
@@ -519,7 +519,7 @@ void reserveRiver(Region regions[3][3])
   riverRegion->mainRoom_      = room;
   riverRegion->isFree_        = false;
 
-  if(dir == hor)
+  if (dir == hor)
   {
     regions[1][1] = regions[2][1] = *riverRegion;
   }
@@ -535,9 +535,9 @@ void reserveRiver(Region regions[3][3])
     TRACE_VERBOSE << "Reserving river space with floor cells "
                   << "X0: " << X0 << " X1: " << X1 << " Y0: " << Y0 << " Y1: " << Y1
                   << endl;
-    for(int y = Y0; y <= Y1; ++y)
+    for (int y = Y0; y <= Y1; ++y)
     {
-      for(int x = X0; x <= X1; ++x)
+      for (int x = X0; x <= X1; ++x)
       {
         //Just put floor for now, water will be placed later
         Map::put(new Floor(Pos(x, y)));
@@ -546,7 +546,7 @@ void reserveRiver(Region regions[3][3])
     }
   };
 
-  if(dir == hor)
+  if (dir == hor)
   {
     mk(roomRect.p0.x + 1, roomRect.p1.x - 1,  roomRect.p0.y,      roomRect.p1.y);
   }
@@ -694,15 +694,15 @@ void placeDoorAtPosIfAllowed(const Pos& p)
 {
   //Check that no other doors are within a certain distance
   const int R = 2;
-  for(int dx = -R; dx <= R; ++dx)
+  for (int dx = -R; dx <= R; ++dx)
   {
-    for(int dy = -R; dy <= R; ++dy)
+    for (int dy = -R; dy <= R; ++dy)
     {
       const Pos checkPos = p + Pos(dx, dy);
-      if((dx != 0 || dy != 0) && Utils::isPosInsideMap(checkPos))
+      if ((dx != 0 || dy != 0) && Utils::isPosInsideMap(checkPos))
       {
         const Cell& cell = Map::cells[checkPos.x][checkPos.y];
-        if(cell.rigid->getId() == FeatureId::door) {return;}
+        if (cell.rigid->getId() == FeatureId::door) {return;}
       }
     }
   }
@@ -710,33 +710,33 @@ void placeDoorAtPosIfAllowed(const Pos& p)
   bool isGoodVer = true;
   bool isGoodHor = true;
 
-  for(int d = -1; d <= 1; d++)
+  for (int d = -1; d <= 1; d++)
   {
-    if(Map::cells[p.x + d][p.y].rigid->getId() == FeatureId::wall)
+    if (Map::cells[p.x + d][p.y].rigid->getId() == FeatureId::wall)
     {
       isGoodHor = false;
     }
 
-    if(Map::cells[p.x][p.y + d].rigid->getId() == FeatureId::wall)
+    if (Map::cells[p.x][p.y + d].rigid->getId() == FeatureId::wall)
     {
       isGoodVer = false;
     }
 
-    if(d != 0)
+    if (d != 0)
     {
-      if(Map::cells[p.x][p.y + d].rigid->getId() != FeatureId::wall)
+      if (Map::cells[p.x][p.y + d].rigid->getId() != FeatureId::wall)
       {
         isGoodHor = false;
       }
 
-      if(Map::cells[p.x + d][p.y].rigid->getId() != FeatureId::wall)
+      if (Map::cells[p.x + d][p.y].rigid->getId() != FeatureId::wall)
       {
         isGoodVer = false;
       }
     }
   }
 
-  if(isGoodHor || isGoodVer)
+  if (isGoodHor || isGoodVer)
   {
     const auto& d = FeatureData::getData(FeatureId::wall);
     const auto* const mimic = static_cast<const Rigid*>(d.mkObj(p));
@@ -754,7 +754,7 @@ void mkSubRooms()
 
   const Pos minD(4, 4);
 
-  for(size_t i = 0; i < Map::roomList.size(); ++i)
+  for (size_t i = 0; i < Map::roomList.size(); ++i)
   {
     auto* const outerRoom     = Map::roomList[i];
 
@@ -765,15 +765,15 @@ void mkSubRooms()
 
     const bool IS_STD_ROOM = int(outerRoom->type_) < int(RoomType::END_OF_STD_ROOMS);
 
-    if(IS_STD_ROOM && (IS_ROOM_BIG || Rnd::oneIn(4)))
+    if (IS_STD_ROOM && (IS_ROOM_BIG || Rnd::oneIn(4)))
     {
       const Pos maxD(min(16, outerRoomD.x),  min(16, outerRoomD.y));
 
-      if(maxD >= minD)
+      if (maxD >= minD)
       {
-        for(int nrRooms = 0; nrRooms < MAX_NR_INNER_ROOMS; nrRooms++)
+        for (int nrRooms = 0; nrRooms < MAX_NR_INNER_ROOMS; nrRooms++)
         {
-          for(int tryCount = 0; tryCount < NR_TRIES_TO_MK_ROOM; tryCount++)
+          for (int tryCount = 0; tryCount < NR_TRIES_TO_MK_ROOM; tryCount++)
           {
             const Pos d(Rnd::range(minD.x, maxD.x),
                         Rnd::range(minD.y, maxD.y));
@@ -785,36 +785,36 @@ void mkSubRooms()
 
             const Rect r(p0, p1);
 
-            if(r.p0 == outerRoomRect.p0 && r.p1 == outerRoomRect.p1)
+            if (r.p0 == outerRoomRect.p0 && r.p1 == outerRoomRect.p1)
             {
               continue;
             }
 
             bool isAreaFree = true;
 
-            for(int y = p0.y - 1; y <= p1.y + 1; ++y)
+            for (int y = p0.y - 1; y <= p1.y + 1; ++y)
             {
-              for(int x = p0.x - 1; x <= p1.x + 1; ++x)
+              for (int x = p0.x - 1; x <= p1.x + 1; ++x)
               {
                 const Pos pCheck(x, y);
 
                 const auto& fId = Map::cells[x][y].rigid->getId();
 
-                if(Utils::isPosInside(pCheck, outerRoomRect))
+                if (Utils::isPosInside(pCheck, outerRoomRect))
                 {
-                  if(fId != FeatureId::floor) {isAreaFree = false;}
+                  if (fId != FeatureId::floor) {isAreaFree = false;}
                 }
                 else
                 {
-                  if(fId != FeatureId::wall)  {isAreaFree = false;}
+                  if (fId != FeatureId::wall)  {isAreaFree = false;}
                 }
 
-                if(!isAreaFree) {break;}
+                if (!isAreaFree) {break;}
               }
-              if(!isAreaFree) {break;}
+              if (!isAreaFree) {break;}
             }
 
-            if(!isAreaFree)
+            if (!isAreaFree)
             {
               continue;
             }
@@ -825,21 +825,20 @@ void mkSubRooms()
             outerRoom->subRooms_.push_back(room);
 
             vector<Pos> doorBucket;
-            for(int y = p0.y; y <= p1.y; ++y)
+            for (int y = p0.y; y <= p1.y; ++y)
             {
-              for(int x = p0.x; x <= p1.x; ++x)
+              for (int x = p0.x; x <= p1.x; ++x)
               {
-                if(x == p0.x || x == p1.x || y == p0.y || y == p1.y)
+                if (x == p0.x || x == p1.x || y == p0.y || y == p1.y)
                 {
                   Map::put(new Wall(Pos(x, y)));
 
-                  if(
-                    x != outerRoomRect.p0.x - 1 && x != outerRoomRect.p0.x      &&
-                    x != outerRoomRect.p1.x     && x != outerRoomRect.p1.x + 1  &&
-                    y != outerRoomRect.p0.y - 1 && y != outerRoomRect.p0.y      &&
-                    y != outerRoomRect.p1.y     && y != outerRoomRect.p1.y + 1)
+                  if (x != outerRoomRect.p0.x - 1 && x != outerRoomRect.p0.x      &&
+                      x != outerRoomRect.p1.x     && x != outerRoomRect.p1.x + 1  &&
+                      y != outerRoomRect.p0.y - 1 && y != outerRoomRect.p0.y      &&
+                      y != outerRoomRect.p1.y     && y != outerRoomRect.p1.y + 1)
                   {
-                    if((x != p0.x && x != p1.x) || (y != p0.y && y != p1.y))
+                    if ((x != p0.x && x != p1.x) || (y != p0.y && y != p1.y))
                     {
                       doorBucket.push_back(Pos(x, y));
                     }
@@ -847,7 +846,7 @@ void mkSubRooms()
                 }
               }
             }
-            if(Rnd::coinToss() || doorBucket.size() <= 2)
+            if (Rnd::coinToss() || doorBucket.size() <= 2)
             {
               const int DOOR_POS_ELEMENT  = Rnd::range(0, doorBucket.size() - 1);
               const Pos& doorPos          = doorBucket[DOOR_POS_ELEMENT];
@@ -858,21 +857,21 @@ void mkSubRooms()
             {
               vector<Pos> positionsWithDoor;
               const int NR_TRIES = Rnd::range(1, 10);
-              for(int j = 0; j < NR_TRIES; j++)
+              for (int j = 0; j < NR_TRIES; j++)
               {
                 const int DOOR_POS_ELEMENT = Rnd::range(0, doorBucket.size() - 1);
                 const Pos posCand = doorBucket[DOOR_POS_ELEMENT];
 
                 bool isPosOk = true;
-                for(Pos& posWithDoor : positionsWithDoor)
+                for (Pos& posWithDoor : positionsWithDoor)
                 {
-                  if(Utils::isPosAdj(posCand, posWithDoor, false))
+                  if (Utils::isPosAdj(posCand, posWithDoor, false))
                   {
                     isPosOk = false;
                     break;
                   }
                 }
-                if(isPosOk)
+                if (isPosOk)
                 {
                   Map::put(new Floor(posCand));
                   positionsWithDoor.push_back(posCand);
@@ -899,29 +898,29 @@ void fillDeadEnds()
 
   Pos origin;
   bool isDone = false;
-  for(int y = 2; y < MAP_H - 2; ++y)
+  for (int y = 2; y < MAP_H - 2; ++y)
   {
-    for(int x = 2; x < MAP_W - 2; ++x)
+    for (int x = 2; x < MAP_W - 2; ++x)
     {
-      if(!expandedBlockers[x][y])
+      if (!expandedBlockers[x][y])
       {
         origin = Pos(x, y);
         isDone = true;
         break;
       }
     }
-    if(isDone) {break;}
+    if (isDone) {break;}
   }
 
   //Floodfill from origin, then sort the positions for flood value
   int floodFill[MAP_W][MAP_H];
   FloodFill::run(origin, blocked, floodFill, INT_MAX, Pos(-1, -1), true);
   vector<PosAndVal> floodFillVector;
-  for(int y = 1; y < MAP_H - 1; ++y)
+  for (int y = 1; y < MAP_H - 1; ++y)
   {
-    for(int x = 1; x < MAP_W - 1; ++x)
+    for (int x = 1; x < MAP_W - 1; ++x)
     {
-      if(!blocked[x][y])
+      if (!blocked[x][y])
       {
         floodFillVector.push_back(PosAndVal(Pos(x, y), floodFill[x][y]));
       }
@@ -932,14 +931,14 @@ void fillDeadEnds()
   [](const PosAndVal & a, const PosAndVal & b) {return a.val < b.val;});
 
   //Fill all positions with only one cardinal floor neighbour
-  for(int i = int(floodFillVector.size()) - 1; i >= 0; --i)
+  for (int i = int(floodFillVector.size()) - 1; i >= 0; --i)
   {
     const Pos& pos = floodFillVector[i].pos;
     const int x = pos.x;
     const int y = pos.y;
     const int NR_ADJ_CARDINAL_WALLS = blocked[x + 1][y] + blocked[x - 1][y] +
                                       blocked[x][y + 1] + blocked[x][y - 1];
-    if(NR_ADJ_CARDINAL_WALLS == 3)
+    if (NR_ADJ_CARDINAL_WALLS == 3)
     {
       Map::put(new Wall(pos));
       blocked[x][y] = true;
@@ -949,16 +948,16 @@ void fillDeadEnds()
 
 void decorate()
 {
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       Cell& cell = Map::cells[x][y];
 
-      if(cell.rigid->getId() == FeatureId::wall)
+      if (cell.rigid->getId() == FeatureId::wall)
       {
         //Randomly convert walls to rubble
-        if(Rnd::oneIn(10))
+        if (Rnd::oneIn(10))
         {
           Map::put(new RubbleHigh(Pos(x, y)));
           continue;
@@ -972,18 +971,18 @@ void decorate()
         bool hasAdjFloor      = false;
         bool hasAdjCaveFloor  = false;
 
-        for(const Pos& d : DirUtils::dirList)
+        for (const Pos& d : DirUtils::dirList)
         {
           const Pos pAdj(Pos(x, y) + d);
 
-          if(Utils::isPosInsideMap(pAdj))
+          if (Utils::isPosInsideMap(pAdj))
           {
             auto& adjCell = Map::cells[pAdj.x][pAdj.y];
 
-            if(adjCell.rigid->getId() == FeatureId::floor)
+            if (adjCell.rigid->getId() == FeatureId::floor)
             {
               hasAdjFloor = true;
-              if(static_cast<Floor*>(adjCell.rigid)->type_ == FloorType::cave)
+              if (static_cast<Floor*>(adjCell.rigid)->type_ == FloorType::cave)
               {
                 hasAdjCaveFloor = true;
                 break;
@@ -992,7 +991,7 @@ void decorate()
           }
         }
 
-        if(!hasAdjFloor || hasAdjCaveFloor)
+        if (!hasAdjFloor || hasAdjCaveFloor)
         {
           wall->type_ = WallType::cave;
         }
@@ -1013,14 +1012,14 @@ void decorate()
     }
   }
 
-  for(int y = 1; y < MAP_H - 1; ++y)
+  for (int y = 1; y < MAP_H - 1; ++y)
   {
-    for(int x = 1; x < MAP_W - 1; ++x)
+    for (int x = 1; x < MAP_W - 1; ++x)
     {
-      if(Map::cells[x][y].rigid->getId() == FeatureId::floor)
+      if (Map::cells[x][y].rigid->getId() == FeatureId::floor)
       {
         //Randomly convert stone floor to low rubble
-        if(Rnd::oneIn(100))
+        if (Rnd::oneIn(100))
         {
           Map::put(new RubbleLow(Pos(x, y)));
           continue;
@@ -1038,11 +1037,11 @@ void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H])
 
   MapParse::parse(CellCheck::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
-      if(Map::cells[x][y].item)
+      if (Map::cells[x][y].item)
       {
         cellsToSet[x][y] = false;
       }
@@ -1066,7 +1065,7 @@ Pos placeStairs()
 
   const int MIN_NR_OK_CELLS_REQ = 10;
 
-  if(NR_OK_CELLS < MIN_NR_OK_CELLS_REQ)
+  if (NR_OK_CELLS < MIN_NR_OK_CELLS_REQ)
   {
     TRACE << "Nr available cells to place stairs too low "
           << "(" << NR_OK_CELLS << "), discarding map" << endl;
@@ -1107,7 +1106,7 @@ void movePlayerToNearestAllowedPos()
   vector<Pos> allowedCellsList;
   Utils::mkVectorFromBoolMap(true, allowedCells, allowedCellsList);
 
-  if(allowedCellsList.empty())
+  if (allowedCellsList.empty())
   {
     isMapValid = false;
   }
@@ -1195,11 +1194,11 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos)
 
   blocked[stairsPos.x][stairsPos.y] = false;
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
-      if(Map::cells[x][y].rigid->getId() == FeatureId::door)
+      if (Map::cells[x][y].rigid->getId() == FeatureId::door)
       {
         blocked[x][y] = false;
       }
@@ -1212,10 +1211,10 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos)
   assert(!path.empty());
 
   TRACE << "Travelling along path and revealing all doors" << endl;
-  for(Pos& pos : path)
+  for (Pos& pos : path)
   {
     auto* const feature = Map::cells[pos.x][pos.y].rigid;
-    if(feature->getId() == FeatureId::door)
+    if (feature->getId() == FeatureId::door)
     {
       static_cast<Door*>(feature)->reveal(false);
     }
@@ -1238,9 +1237,9 @@ bool mkStdLvl()
   Map::resetMap();
 
   TRACE << "Resetting helper arrays" << endl;
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       doorProposals[x][y] = false;
     }
@@ -1259,9 +1258,9 @@ bool mkStdLvl()
 
   Region regions[3][3];
 
-  for(int y = 0; y < 3; ++y)
+  for (int y = 0; y < 3; ++y)
   {
-    for(int x = 0; x < 3; ++x)
+    for (int x = 0; x < 3; ++x)
     {
       const Rect r(x == 0 ? 1 : x == 1 ? SPL_X0 + 1 : SPL_X1 + 1,
                    y == 0 ? 1 : y == 1 ? SPL_Y0 + 1 : SPL_Y1 + 1,
@@ -1273,26 +1272,26 @@ bool mkStdLvl()
   }
 
 #ifdef MK_RIVER
-  if(isMapValid) {reserveRiver(regions);}
+  if (isMapValid) {reserveRiver(regions);}
 #endif // MK_RIVER
 
 #ifdef MK_MERGED_REGIONS
-  if(isMapValid) {mkMergedRegionsAndRooms(regions);}
+  if (isMapValid) {mkMergedRegionsAndRooms(regions);}
 #endif // MK_MERGED_REGIONS
 
 #ifdef RANDOMLY_BLOCK_REGIONS
-  if(isMapValid) {randomlyBlockRegions(regions);}
+  if (isMapValid) {randomlyBlockRegions(regions);}
 #endif // RANDOMLY_BLOCK_REGIONS
 
-  if(isMapValid)
+  if (isMapValid)
   {
     TRACE << "Making main rooms" << endl;
-    for(int x = 0; x < 3; ++x)
+    for (int x = 0; x < 3; ++x)
     {
-      for(int y = 0; y < 3; ++y)
+      for (int y = 0; y < 3; ++y)
       {
         auto& region = regions[x][y];
-        if(!region.mainRoom_ && region.isFree_)
+        if (!region.mainRoom_ && region.isFree_)
         {
           const Rect roomRect = region.getRndRoomRect();
           auto* room          = RoomFactory::mkRandomAllowedStdRoom(roomRect, false);
@@ -1314,11 +1313,11 @@ bool mkStdLvl()
   Render::updateScreen();
   Query::waitForKeyPress();
 #endif // DEMO_MODE
-  if(isMapValid) {mkAuxRooms(regions);}
+  if (isMapValid) {mkAuxRooms(regions);}
 #endif // MK_AUX_ROOMS
 
 #ifdef MK_SUB_ROOMS
-  if(isMapValid)
+  if (isMapValid)
   {
 #ifdef DEMO_MODE
     Render::coverPanel(Panel::log);
@@ -1332,7 +1331,7 @@ bool mkStdLvl()
   }
 #endif // MK_SUB_ROOMS
 
-  if(isMapValid)
+  if (isMapValid)
   {
     TRACE << "Sorting the room list according to room type" << endl;
     //Note: This allows common rooms to assume that they are rectangular and
@@ -1345,7 +1344,7 @@ bool mkStdLvl()
   }
 
   TRACE << "Running pre-connect functions for all rooms" << endl;
-  if(isMapValid)
+  if (isMapValid)
   {
 #ifdef DEMO_MODE
     Render::coverPanel(Panel::log);
@@ -1356,11 +1355,11 @@ bool mkStdLvl()
     Query::waitForKeyPress();
 #endif // DEMO_MODE
     Gods::setNoGod();
-    for(Room* room : Map::roomList) {room->onPreConnect(doorProposals);}
+    for (Room* room : Map::roomList) {room->onPreConnect(doorProposals);}
   }
 
   //Connect
-  if(isMapValid)
+  if (isMapValid)
   {
 #ifdef DEMO_MODE
     Render::coverPanel(Panel::log);
@@ -1374,7 +1373,7 @@ bool mkStdLvl()
   }
 
   TRACE << "Running post-connect functions for all rooms" << endl;
-  if(isMapValid)
+  if (isMapValid)
   {
 #ifdef DEMO_MODE
     Render::coverPanel(Panel::log);
@@ -1384,11 +1383,11 @@ bool mkStdLvl()
     Render::updateScreen();
     Query::waitForKeyPress();
 #endif // DEMO_MODE
-    for(Room* room : Map::roomList) {room->onPostConnect(doorProposals);}
+    for (Room* room : Map::roomList) {room->onPostConnect(doorProposals);}
   }
 
 #ifdef FILL_DEAD_ENDS
-  if(isMapValid)
+  if (isMapValid)
   {
 #ifdef DEMO_MODE
     Render::coverPanel(Panel::log);
@@ -1402,14 +1401,14 @@ bool mkStdLvl()
   }
 #endif // FILL_DEAD_ENDS
 
-  if(isMapValid)
+  if (isMapValid)
   {
     TRACE << "Placing doors" << endl;
-    for(int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < MAP_W; ++x)
     {
-      for(int y = 0; y < MAP_H; ++y)
+      for (int y = 0; y < MAP_H; ++y)
       {
-        if(doorProposals[x][y] && Rnd::fraction(7, 10))
+        if (doorProposals[x][y] && Rnd::fraction(7, 10))
         {
           placeDoorAtPosIfAllowed(Pos(x, y));
         }
@@ -1417,29 +1416,29 @@ bool mkStdLvl()
     }
   }
 
-  if(isMapValid) {movePlayerToNearestAllowedPos();}
+  if (isMapValid) {movePlayerToNearestAllowedPos();}
 
-  if(isMapValid) {PopulateMon::populateStdLvl();}
-  if(isMapValid) {PopulateTraps::populateStdLvl();}
-  if(isMapValid) {PopulateItems::mkItems();}
+  if (isMapValid) {PopulateMon::populateStdLvl();}
+  if (isMapValid) {PopulateTraps::populateStdLvl();}
+  if (isMapValid) {PopulateItems::mkItems();}
 
   Pos stairsPos;
-  if(isMapValid) {stairsPos = placeStairs();}
+  if (isMapValid) {stairsPos = placeStairs();}
 
-  if(isMapValid)
+  if (isMapValid)
   {
     const int LAST_LVL_TO_REVEAL_STAIRS_PATH = 9;
-    if(Map::dlvl <= LAST_LVL_TO_REVEAL_STAIRS_PATH)
+    if (Map::dlvl <= LAST_LVL_TO_REVEAL_STAIRS_PATH)
     {
       revealDoorsOnPathToStairs(stairsPos);
     }
   }
 
 #ifdef DECORATE
-  if(isMapValid) {decorate();}
+  if (isMapValid) {decorate();}
 #endif // DECORATE
 
-  for(auto* r : Map::roomList) {delete r;}
+  for (auto* r : Map::roomList) {delete r;}
   Map::roomList.clear();
   Utils::resetArray(Map::roomMap);
 

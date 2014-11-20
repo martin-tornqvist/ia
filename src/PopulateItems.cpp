@@ -18,7 +18,7 @@ void mkItems()
 {
   int nrOfSpawns = Rnd::range(6, 8);
 
-  if(PlayerBon::hasTrait(Trait::treasureHunter))
+  if (PlayerBon::hasTrait(Trait::treasureHunter))
   {
     nrOfSpawns += 2;
   }
@@ -28,13 +28,12 @@ void mkItems()
 
   ItemDataT** data = ItemData::data;
 
-  for(int i = 0; i < int(ItemId::END); ++i)
+  for (int i = 0; i < int(ItemId::END); ++i)
   {
-    if(
-      Map::dlvl >= data[i]->spawnStdRange.lower &&
-      Map::dlvl <= data[i]->spawnStdRange.upper && !data[i]->isIntrinsic)
+    if (Map::dlvl >= data[i]->spawnStdRange.lower &&
+        Map::dlvl <= data[i]->spawnStdRange.upper && !data[i]->isIntrinsic)
     {
-      if(Rnd::percentile() < data[i]->chanceToIncludeInSpawnList)
+      if (Rnd::percentile() < data[i]->chanceToIncludeInSpawnList)
       {
         candidates.push_back(ItemId(i));
       }
@@ -46,9 +45,9 @@ void mkItems()
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
 
-  for(int i = 0; i < nrOfSpawns; ++i)
+  for (int i = 0; i < nrOfSpawns; ++i)
   {
-    if(freeCells.empty()) {break;}
+    if (freeCells.empty()) {break;}
 
     const int ELEMENT       = Rnd::dice(1, freeCells.size()) - 1;
     const Pos& pos          = freeCells[ELEMENT];

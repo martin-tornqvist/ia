@@ -13,15 +13,15 @@ using namespace std;
 
 bool MoveRules::canMove(const bool actorPropIds[endOfPropIds]) const
 {
-  if(canMoveCmn_)
+  if (canMoveCmn_)
   {
     return true;
   }
 
   //If not allowing normal move, check if any property overrides this
-  for(int i = 0; i < endOfPropIds; ++i)
+  for (int i = 0; i < endOfPropIds; ++i)
   {
-    if(actorPropIds[i] && canMoveIfHaveProp_[i])
+    if (actorPropIds[i] && canMoveIfHaveProp_[i])
     {
       return true;
     }

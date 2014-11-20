@@ -52,30 +52,30 @@ void runStdTurnEvents()
 
   int regenSpiNTurns = 12;
 
-  for(size_t i = 0; i < actors_.size(); ++i)
+  for (size_t i = 0; i < actors_.size(); ++i)
   {
     Actor* const actor = actors_[i];
 
     //Delete destroyed actors
-    if(actor->getState() == ActorState::destroyed)
+    if (actor->getState() == ActorState::destroyed)
     {
       //Do not delete player if player died, just return
-      if(actor == Map::player) {return;}
+      if (actor == Map::player) {return;}
 
       delete actor;
-      if(Map::player->tgt_ == actor) {Map::player->tgt_ = nullptr;}
+      if (Map::player->tgt_ == actor) {Map::player->tgt_ = nullptr;}
       actors_.erase(actors_.begin() + i);
       i--;
-      if(curActorIndex_ >= actors_.size()) {curActorIndex_ = 0;}
+      if (curActorIndex_ >= actors_.size()) {curActorIndex_ = 0;}
     }
     else     //Monster is alive or is a corpse
     {
       actor->getPropHandler().tick(PropTurnMode::std, blockedLos);
 
-      if(actor != Map::player)
+      if (actor != Map::player)
       {
         Mon* const mon = static_cast<Mon*>(actor);
-        if(mon->playerAwareOfMeCounter_ > 0)
+        if (mon->playerAwareOfMeCounter_ > 0)
         {
           mon->playerAwareOfMeCounter_--;
         }
@@ -83,21 +83,21 @@ void runStdTurnEvents()
 
       //Do light damage if actor in lit cell
       const Pos& pos = actor->pos;
-      if(Map::cells[pos.x][pos.y].isLit) {actor->hit(1, DmgType::light);}
+      if (Map::cells[pos.x][pos.y].isLit) {actor->hit(1, DmgType::light);}
 
-      if(actor->isAlive())
+      if (actor->isAlive())
       {
         //Regen Spi
-        if(actor == Map::player)
+        if (actor == Map::player)
         {
-          if(PlayerBon::hasTrait(Trait::stoutSpirit))   regenSpiNTurns -= 2;
-          if(PlayerBon::hasTrait(Trait::strongSpirit))  regenSpiNTurns -= 2;
-          if(PlayerBon::hasTrait(Trait::mightySpirit))  regenSpiNTurns -= 2;
+          if (PlayerBon::hasTrait(Trait::stoutSpirit))   regenSpiNTurns -= 2;
+          if (PlayerBon::hasTrait(Trait::strongSpirit))  regenSpiNTurns -= 2;
+          if (PlayerBon::hasTrait(Trait::mightySpirit))  regenSpiNTurns -= 2;
         }
 
         regenSpiNTurns = max(2, regenSpiNTurns);
 
-        if(isSpiRegenThisTurn(regenSpiNTurns)) {actor->restoreSpi(1, false);}
+        if (isSpiRegenThisTurn(regenSpiNTurns)) {actor->restoreSpi(1, false);}
 
         actor->onStdTurn();
       }
@@ -105,9 +105,9 @@ void runStdTurnEvents()
   }
 
   //New turn for rigids
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       Map::cells[x][y].rigid->onNewTurn();
     }
@@ -115,14 +115,14 @@ void runStdTurnEvents()
 
   //New turn for mobs (using a copied vector, since mobs may get destroyed)
   const vector<Mob*> mobsCpy = mobs_;
-  for(auto* f : mobsCpy) {f->onNewTurn();}
+  for (auto* f : mobsCpy) {f->onNewTurn();}
 
   //Spawn more monsters?
   //(If an unexplored cell is selected, the spawn is canceled)
-  if(Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LVL)
+  if (Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LVL)
   {
     const int SPAWN_N_TURN = 125;
-    if(turnNr_ == (turnNr_ / SPAWN_N_TURN) * SPAWN_N_TURN)
+    if (turnNr_ == (turnNr_ / SPAWN_N_TURN) * SPAWN_N_TURN)
     {
       PopulateMon::trySpawnDueToTimePassed();
     }
@@ -130,11 +130,11 @@ void runStdTurnEvents()
 
   //Run new turn events on all player items
   auto& playerInv = Map::player->getInv();
-  for(Item* const item : playerInv.general_) {item->newTurnInInventory();}
+  for (Item* const item : playerInv.general_) {item->newTurnInInventory();}
 
-  for(InvSlot& slot : playerInv.slots_)
+  for (InvSlot& slot : playerInv.slots_)
   {
-    if(slot.item) {slot.item->newTurnInInventory();}
+    if (slot.item) {slot.item->newTurnInInventory();}
   }
 
   SndEmit::resetNrSndMsgPrintedCurTurn();
@@ -158,10 +158,10 @@ void init()
 
 void cleanup()
 {
-  for(Actor* a : actors_) {delete a;}
+  for (Actor* a : actors_) {delete a;}
   actors_.clear();
 
-  for(auto* f : mobs_) {delete f;}
+  for (auto* f : mobs_) {delete f;}
   mobs_.clear();
 }
 
@@ -184,7 +184,7 @@ int getTurn()
 void getMobsAtPos(const Pos& p, vector<Mob*>& vectorRef)
 {
   vectorRef.clear();
-  for(auto* m : mobs_) {if(m->getPos() == p) {vectorRef.push_back(m);}}
+  for (auto* m : mobs_) {if (m->getPos() == p) {vectorRef.push_back(m);}}
 }
 
 void addMob(Mob* const f)
@@ -194,11 +194,11 @@ void addMob(Mob* const f)
 
 void eraseMob(Mob* const f, const bool DESTROY_OBJECT)
 {
-  for(auto it = mobs_.begin(); it != mobs_.end(); ++it)
+  for (auto it = mobs_.begin(); it != mobs_.end(); ++it)
   {
-    if(*it == f)
+    if (*it == f)
     {
-      if(DESTROY_OBJECT) {delete f;}
+      if (DESTROY_OBJECT) {delete f;}
       mobs_.erase(it);
       return;
     }
@@ -207,13 +207,13 @@ void eraseMob(Mob* const f, const bool DESTROY_OBJECT)
 
 void eraseAllMobs()
 {
-  for(auto* m : mobs_) {delete m;}
+  for (auto* m : mobs_) {delete m;}
   mobs_.clear();
 }
 
 void eraseActorInElement(const size_t i)
 {
-  if(!actors_.empty())
+  if (!actors_.empty())
   {
     delete actors_[i];
     actors_.erase(actors_.begin() + i);
@@ -242,7 +242,7 @@ void actorDidAct(const bool IS_FREE_TURN)
 
   auto* curActor = getCurActor();
 
-  if(curActor == Map::player)
+  if (curActor == Map::player)
   {
     Map::player->updateFov();
     Render::drawMapAndInterface();
@@ -251,7 +251,7 @@ void actorDidAct(const bool IS_FREE_TURN)
   else
   {
     auto* mon = static_cast<Mon*>(curActor);
-    if(mon->awareCounter_ > 0)
+    if (mon->awareCounter_ > 0)
     {
       mon->awareCounter_ -= 1;
     }
@@ -260,23 +260,23 @@ void actorDidAct(const bool IS_FREE_TURN)
   //Tick properties running on actor turns
   curActor->getPropHandler().tick(PropTurnMode::actor, nullptr);
 
-  if(!IS_FREE_TURN)
+  if (!IS_FREE_TURN)
   {
 
     bool actorWhoCanActThisTurnFound = false;
-    while(!actorWhoCanActThisTurnFound)
+    while (!actorWhoCanActThisTurnFound)
     {
       auto curTurnType = (TurnType)(curTurnTypePos_);
 
       ++curActorIndex_;
 
-      if(curActorIndex_ >= actors_.size())
+      if (curActorIndex_ >= actors_.size())
       {
         curActorIndex_ = 0;
         ++curTurnTypePos_;
-        if(curTurnTypePos_ == int(TurnType::END)) {curTurnTypePos_ = 0;}
+        if (curTurnTypePos_ == int(TurnType::END)) {curTurnTypePos_ = 0;}
 
-        if(curTurnType != TurnType::fast && curTurnType != TurnType::fastest)
+        if (curTurnType != TurnType::fast && curTurnType != TurnType::fastest)
         {
           runStdTurnEvents();
         }
@@ -292,7 +292,7 @@ void actorDidAct(const bool IS_FREE_TURN)
       const ActorSpeed defSpeed = curActor->getData().speed;
       const ActorSpeed realSpeed = (!IS_SLOWED || defSpeed == ActorSpeed::sluggish) ?
                                    defSpeed : ActorSpeed(int(defSpeed) - 1);
-      switch(realSpeed)
+      switch (realSpeed)
       {
         case ActorSpeed::sluggish:
         {
@@ -333,30 +333,30 @@ void updateLightMap()
 {
   bool lightTmp[MAP_W][MAP_H];
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       Map::cells[x][y].isLit = lightTmp[x][y] = false;
     }
   }
 
   //Do not add light on Leng
-  if(MapTravel::getMapType() == MapType::leng) {return;}
+  if (MapTravel::getMapType() == MapType::leng) {return;}
 
   Map::player->addLight(lightTmp);
 
-  for(const auto* const a : actors_)  {a->addLight(lightTmp);}
+  for (const auto* const a : actors_)  {a->addLight(lightTmp);}
 
-  for(const auto* const m : mobs_)    {m->addLight(lightTmp);}
+  for (const auto* const m : mobs_)    {m->addLight(lightTmp);}
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       auto* rigid = Map::cells[x][y].rigid;
 
-      if(rigid->getBurnState() == BurnState::burning)
+      if (rigid->getBurnState() == BurnState::burning)
       {
         lightTmp[x][y] = true;
       }

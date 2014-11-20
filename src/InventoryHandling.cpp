@@ -40,7 +40,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT)
   Inventory& inv  = Map::player->getInv();
   Item* item      = nullptr;
 
-  if(invList == InvList::slots)
+  if (invList == InvList::slots)
   {
     assert(ELEMENT != int(SlotId::END));
     item = inv.slots_[ELEMENT].item;
@@ -51,7 +51,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT)
     item = inv.general_[ELEMENT];
   }
 
-  if(!item)
+  if (!item)
   {
     return false;
     TRACE_FUNC_END;
@@ -60,7 +60,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT)
   const ItemDataT& data = item->getData();
 
   Log::clearLog();
-  if(data.isStackable && item->nrItems_ > 1)
+  if (data.isStackable && item->nrItems_ > 1)
   {
     TRACE << "Item is stackable and more than one" << endl;
     Render::drawMapAndInterface(false);
@@ -75,7 +75,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT)
                      clrWhiteHigh);
     const int NR_TO_DROP = Query::number(nrQueryPos, clrWhiteHigh, 0, 3,
                                          item->nrItems_, false);
-    if(NR_TO_DROP <= 0)
+    if (NR_TO_DROP <= 0)
     {
       TRACE << "Nr to drop <= 0, nothing to be done" << endl;
       TRACE_FUNC_END;
@@ -104,16 +104,16 @@ void filterPlayerGeneralEquip(const SlotId slotToEquip)
   auto& general = Map::player->getInv().general_;
   generalItemsToShow_.clear();
 
-  for(size_t i = 0; i < general.size(); ++i)
+  for (size_t i = 0; i < general.size(); ++i)
   {
     const Item* const item = general[i];
     const ItemDataT& data = item->getData();
 
-    switch(slotToEquip)
+    switch (slotToEquip)
     {
       case SlotId::wielded:
       {
-        if(data.melee.isMeleeWpn || data.ranged.isRangedWpn)
+        if (data.melee.isMeleeWpn || data.ranged.isRangedWpn)
         {
           generalItemsToShow_.push_back(i);
         }
@@ -121,7 +121,7 @@ void filterPlayerGeneralEquip(const SlotId slotToEquip)
 
       case SlotId::wieldedAlt:
       {
-        if(data.melee.isMeleeWpn || data.ranged.isRangedWpn)
+        if (data.melee.isMeleeWpn || data.ranged.isRangedWpn)
         {
           generalItemsToShow_.push_back(i);
         }
@@ -129,7 +129,7 @@ void filterPlayerGeneralEquip(const SlotId slotToEquip)
 
       case SlotId::thrown:
       {
-        if(data.ranged.isThrowingWpn)
+        if (data.ranged.isThrowingWpn)
         {
           generalItemsToShow_.push_back(i);
         }
@@ -137,7 +137,7 @@ void filterPlayerGeneralEquip(const SlotId slotToEquip)
 
       case SlotId::body:
       {
-        if(data.isArmor)
+        if (data.isArmor)
         {
           generalItemsToShow_.push_back(i);
         }
@@ -145,7 +145,7 @@ void filterPlayerGeneralEquip(const SlotId slotToEquip)
 
       case SlotId::head:
       {
-        if(data.isHeadwear)
+        if (data.isHeadwear)
         {
           generalItemsToShow_.push_back(i);
         }
@@ -165,7 +165,7 @@ void filterPlayerGeneralShowAll()
   auto& general = Map::player->getInv().general_;
   generalItemsToShow_.clear();
   const int NR_GEN = general.size();
-  for(int i = 0; i < NR_GEN; ++i) {generalItemsToShow_.push_back(i);}
+  for (int i = 0; i < NR_GEN; ++i) {generalItemsToShow_.push_back(i);}
 }
 
 void swapItems(Item** item1, Item** item2)
@@ -188,7 +188,7 @@ void activateDefault(const size_t GENERAL_ITEMS_ELEMENT)
 {
   Inventory& playerInv = Map::player->getInv();
   Item* item = playerInv.general_[GENERAL_ITEMS_ELEMENT];
-  if(item->activateDefault(Map::player) == ConsumeItem::yes)
+  if (item->activateDefault(Map::player) == ConsumeItem::yes)
   {
     playerInv.decrItemInGeneral(GENERAL_ITEMS_ELEMENT);
   }
@@ -219,7 +219,7 @@ void runInvScreen()
   browserIdxToSetAfterDrop = 0;
   RenderInventory::drawBrowseInv(browser);
 
-  while(true)
+  while (true)
   {
     inv.sortGeneralInventory();
 
@@ -227,7 +227,7 @@ void runInvScreen()
                             InvList::slots : InvList::general;
 
     const MenuAction action = MenuInputHandling::getAction(browser);
-    switch(action)
+    switch (action)
     {
       case MenuAction::browsed:
       {
@@ -239,7 +239,7 @@ void runInvScreen()
         const int BROWSER_Y = browser.getPos().y;
         const size_t ELEMENT =
           invList == InvList::slots ? BROWSER_Y : (BROWSER_Y - int(SlotId::END));
-        if(runDropScreen(invList, ELEMENT))
+        if (runDropScreen(invList, ELEMENT))
         {
           browser.setGoodPos();
           browserIdxToSetAfterDrop  = browser.getY();
@@ -251,11 +251,11 @@ void runInvScreen()
 
       case MenuAction::selected:
       {
-        if(invList == InvList::slots)
+        if (invList == InvList::slots)
         {
           const size_t ELEMENT = browser.getY();
           InvSlot& slot = inv.slots_[ELEMENT];
-          if(slot.item)
+          if (slot.item)
           {
             Item* const item = slot.item;
 
@@ -263,7 +263,7 @@ void runInvScreen()
 
             inv.moveToGeneral(slot);
 
-            switch(SlotId(ELEMENT))
+            switch (SlotId(ELEMENT))
             {
               case SlotId::wielded:
               case SlotId::wieldedAlt:
@@ -303,7 +303,7 @@ void runInvScreen()
           }
           else     //No item in slot
           {
-            if(runEquipScreen(slot))
+            if (runEquipScreen(slot))
             {
               Render::drawMapAndInterface();
               return;
@@ -353,10 +353,10 @@ bool runEquipScreen(InvSlot& slotToEquip)
 
   RenderInventory::drawEquip(browser, slotToEquip.id, generalItemsToShow_);
 
-  while(true)
+  while (true)
   {
     const MenuAction action = MenuInputHandling::getAction(browser);
-    switch(action)
+    switch (action)
     {
       case MenuAction::browsed:
       {
@@ -365,13 +365,13 @@ bool runEquipScreen(InvSlot& slotToEquip)
 
       case MenuAction::selected:
       {
-        if(!generalItemsToShow_.empty())
+        if (!generalItemsToShow_.empty())
         {
           const int ELEMENT = generalItemsToShow_[browser.getY()];
           Render::drawMapAndInterface();
           inv.equipGeneralItemAndEndTurn(ELEMENT, slotToEquip.id);
           bool applyWearEffect = false;
-          switch(slotToEquip.id)
+          switch (slotToEquip.id)
           {
             case SlotId::wielded:     {} break;
             case SlotId::wieldedAlt:  {} break;
@@ -384,7 +384,7 @@ bool runEquipScreen(InvSlot& slotToEquip)
               assert(false);
             } break;
           }
-          if(applyWearEffect)
+          if (applyWearEffect)
           {
             //TODO This should probably be called from the Inventory instead
             slotToEquip.item->onWear();
@@ -397,7 +397,7 @@ bool runEquipScreen(InvSlot& slotToEquip)
 
       case MenuAction::selectedShift:
       {
-        if(runDropScreen(InvList::general, generalItemsToShow_[browser.getY()]))
+        if (runDropScreen(InvList::general, generalItemsToShow_[browser.getY()]))
         {
           browser.setGoodPos();
           browserIdxToSetAfterDrop  = browser.getY();

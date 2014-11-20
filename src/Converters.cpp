@@ -29,7 +29,7 @@ typename std::underlying_type<T>::type toUnderlying(T t)
 //then lower val to at most MAX
 void constrInRange(const int MIN, int& val, const int MAX)
 {
-  if(MAX >= MIN)
+  if (MAX >= MIN)
   {
     val = std::min(MAX, std::max(val, MIN));
   }
@@ -37,7 +37,7 @@ void constrInRange(const int MIN, int& val, const int MAX)
 
 void constrInRange(const double MIN, double& val, const double MAX)
 {
-  if(MAX > MIN)
+  if (MAX > MIN)
   {
     val = std::min(MAX, std::max(val, MIN));
   }
@@ -45,7 +45,7 @@ void constrInRange(const double MIN, double& val, const double MAX)
 
 int getConstrInRange(const int MIN, const int VAL, const int MAX)
 {
-  if(MAX < MIN)
+  if (MAX < MIN)
   {
     return -1;
   }
@@ -54,7 +54,7 @@ int getConstrInRange(const int MIN, const int VAL, const int MAX)
 
 int getConstrInRange(const double MIN, const double VAL, const double MAX)
 {
-  if(MAX < MIN)
+  if (MAX < MIN)
   {
     return -1;
   }

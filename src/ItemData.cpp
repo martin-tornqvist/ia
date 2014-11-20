@@ -69,7 +69,7 @@ ItemDataT::MeleeItemData::MeleeItemData() :
 
 ItemDataT::MeleeItemData::~MeleeItemData()
 {
-  if(propApplied) {delete propApplied;}
+  if (propApplied) {delete propApplied;}
 }
 
 ItemDataT::RangedItemData::RangedItemData() :
@@ -102,7 +102,7 @@ ItemDataT::RangedItemData::RangedItemData() :
 
 ItemDataT::RangedItemData::~RangedItemData()
 {
-  if(propApplied) {delete propApplied;}
+  if (propApplied) {delete propApplied;}
 }
 
 ItemDataT::ArmorItemData::ArmorItemData() :
@@ -126,7 +126,7 @@ void addFeatureFoundIn(ItemDataT& data, const FeatureId featureId,
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
 void resetData(ItemDataT& d, ItemType const itemType)
 {
-  switch(itemType)
+  switch (itemType)
   {
     case ItemType::general:
     {
@@ -1608,18 +1608,18 @@ void init()
 void cleanup()
 {
   TRACE_FUNC_BEGIN;
-  for(size_t i = 0; i < int(ItemId::END); ++i) delete data[i];
+  for (size_t i = 0; i < int(ItemId::END); ++i) delete data[i];
   TRACE_FUNC_END;
 }
 
 
 void storeToSaveLines(vector<string>& lines)
 {
-  for(int i = 0; i < int(ItemId::END); ++i)
+  for (int i = 0; i < int(ItemId::END); ++i)
   {
     lines.push_back(data[i]->isIdentified ? "1" : "0");
 
-    if(data[i]->isScroll)
+    if (data[i]->isScroll)
     {
       lines.push_back(data[i]->isTried ? "1" : "0");
     }
@@ -1628,12 +1628,12 @@ void storeToSaveLines(vector<string>& lines)
 
 void setupFromSaveLines(vector<string>& lines)
 {
-  for(int i = 0; i < int(ItemId::END); ++i)
+  for (int i = 0; i < int(ItemId::END); ++i)
   {
     data[i]->isIdentified = lines.front() == "0" ? false : true;
     lines.erase(begin(lines));
 
-    if(data[i]->isScroll)
+    if (data[i]->isScroll)
     {
       data[i]->isTried = lines.front() == "0" ? false : true;
       lines.erase(begin(lines));

@@ -33,9 +33,9 @@ void resetNrSndMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
 void emitSnd(Snd snd)
 {
   bool blocked[MAP_W][MAP_H];
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       const auto f = Map::cells[x][y].rigid;
       blocked[x][y] = !f->isSoundPassable();
@@ -46,32 +46,31 @@ void emitSnd(Snd snd)
   FloodFill::run(origin, blocked, floodFill, 999, Pos(-1, -1), true);
   floodFill[origin.x][origin.y] = 0;
 
-  for(Actor* actor : GameTime::actors_)
+  for (Actor* actor : GameTime::actors_)
   {
     const int FLOOD_VALUE_AT_ACTOR = floodFill[actor->pos.x][actor->pos.y];
 
     const bool IS_ORIGIN_SEEN_BY_PLAYER =
       Map::cells[origin.x][origin.y].isSeenByPlayer;
 
-    if(isSndHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd))
+    if (isSndHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd))
     {
-      if(actor == Map::player)
+      if (actor == Map::player)
       {
 
         //Various conditions may clear the sound message
-        if(
-          nrSndMsgPrintedCurTurn_ >= 1 ||
-          (IS_ORIGIN_SEEN_BY_PLAYER && snd.isMsgIgnoredIfOriginSeen()))
+        if (nrSndMsgPrintedCurTurn_ >= 1 ||
+            (IS_ORIGIN_SEEN_BY_PLAYER && snd.isMsgIgnoredIfOriginSeen()))
         {
           snd.clearMsg();
         }
 
         const Pos& playerPos = Map::player->pos;
 
-        if(!snd.getMsg().empty())
+        if (!snd.getMsg().empty())
         {
           //Add a direction string to the message (i.e. "(NW)", "(E)" , etc)
-          if(playerPos != origin)
+          if (playerPos != origin)
           {
             string dirStr;
             DirUtils::getCompassDirName(playerPos, origin, dirStr);

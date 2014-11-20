@@ -31,24 +31,22 @@ void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
 
   bool isAnyCellSeenByPlayer = false;
 
-  for(int iAnim = 0; iAnim < NR_ANIM_STEPS; iAnim++)
+  for (int iAnim = 0; iAnim < NR_ANIM_STEPS; iAnim++)
   {
 
     const TileId tile = iAnim == 0 ? TileId::blast1 : TileId::blast2;
 
     const int NR_OUTER = posLists.size();
-    for(int iOuter = 0; iOuter < NR_OUTER; iOuter++)
+    for (int iOuter = 0; iOuter < NR_OUTER; iOuter++)
     {
       const Clr& clr = iOuter == NR_OUTER - 1 ? clrOuter : clrInner;
       const vector<Pos>& inner = posLists[iOuter];
-      for(const Pos& pos : inner)
+      for (const Pos& pos : inner)
       {
-        if(
-          Map::cells[pos.x][pos.y].isSeenByPlayer &&
-          !blocked[pos.x][pos.y])
+        if (Map::cells[pos.x][pos.y].isSeenByPlayer && !blocked[pos.x][pos.y])
         {
           isAnyCellSeenByPlayer = true;
-          if(IS_TILES)
+          if (IS_TILES)
           {
             Render::drawTile(tile, Panel::map, pos, clr, clrBlack);
           }
@@ -59,7 +57,7 @@ void draw(const vector< vector<Pos> >& posLists, bool blocked[MAP_W][MAP_H],
         }
       }
     }
-    if(isAnyCellSeenByPlayer)
+    if (isAnyCellSeenByPlayer)
     {
       Render::updateScreen();
       SdlWrapper::sleep(Config::getDelayExplosion() / NR_ANIM_STEPS);
@@ -78,28 +76,28 @@ void getCellsReached(const Rect& area, const Pos& origin,
                      vector< vector<Pos> >& posListRef)
 {
   vector<Pos> line;
-  for(int y = area.p0.y; y <= area.p1.y; ++y)
+  for (int y = area.p0.y; y <= area.p1.y; ++y)
   {
-    for(int x = area.p0.x; x <= area.p1.x; ++x)
+    for (int x = area.p0.x; x <= area.p1.x; ++x)
     {
       const Pos pos(x, y);
       const int DIST = Utils::kingDist(pos, origin);
       bool isReached = true;
-      if(DIST > 1)
+      if (DIST > 1)
       {
         LineCalc::calcNewLine(origin, pos, true, 999, false, line);
-        for(Pos& posCheckBlock : line)
+        for (Pos& posCheckBlock : line)
         {
-          if(blocked[posCheckBlock.x][posCheckBlock.y])
+          if (blocked[posCheckBlock.x][posCheckBlock.y])
           {
             isReached = false;
             break;
           }
         }
       }
-      if(isReached)
+      if (isReached)
       {
-        if(int(posListRef.size()) <= DIST) {posListRef.resize(DIST + 1);}
+        if (int(posListRef.size()) <= DIST) {posListRef.resize(DIST + 1);}
         posListRef[DIST].push_back(pos);
       }
     }
@@ -139,23 +137,23 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   Actor* livingActors[MAP_W][MAP_H];
   vector<Actor*> corpses[MAP_W][MAP_H];
 
-  for(int x = 0; x < MAP_W; ++x)
+  for (int x = 0; x < MAP_W; ++x)
   {
-    for(int y = 0; y < MAP_H; ++y)
+    for (int y = 0; y < MAP_H; ++y)
     {
       livingActors[x][y] = nullptr;
       corpses[x][y].clear();
     }
   }
 
-  for(Actor* actor : GameTime::actors_)
+  for (Actor* actor : GameTime::actors_)
   {
     const Pos& pos = actor->pos;
-    if(actor->isAlive())
+    if (actor->isAlive())
     {
       livingActors[pos.x][pos.y] = actor;
     }
-    else if(actor->isCorpse())
+    else if (actor->isCorpse())
     {
       corpses[pos.x][pos.y].push_back(actor);
     }
@@ -164,17 +162,17 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   const bool IS_DEM_EXP = PlayerBon::hasTrait(Trait::demExpert);
 
   const int NR_OUTER = posLists.size();
-  for(int curRadi = 0; curRadi < NR_OUTER; curRadi++)
+  for (int curRadi = 0; curRadi < NR_OUTER; curRadi++)
   {
     const vector<Pos>& positionsAtCurRadi = posLists[curRadi];
 
-    for(const Pos& pos : positionsAtCurRadi)
+    for (const Pos& pos : positionsAtCurRadi)
     {
 
       Actor* livingActor          = livingActors[pos.x][pos.y];
       vector<Actor*> corpsesHere  = corpses[pos.x][pos.y];
 
-      if(explType == ExplType::expl)
+      if (explType == ExplType::expl)
       {
         //Damage environment
         Cell& cell = Map::cells[pos.x][pos.y];
@@ -184,38 +182,37 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         const int DMG   = Rnd::dice(ROLLS, EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 
         //Damage living actor
-        if(livingActor)
+        if (livingActor)
         {
-          if(livingActor == Map::player)
+          if (livingActor == Map::player)
           {
             Log::addMsg("I am hit by an explosion!", clrMsgBad);
           }
           livingActor->hit(DMG, DmgType::physical);
         }
         //Damage dead actors
-        for(Actor* corpse : corpsesHere) {corpse->hit(DMG, DmgType::physical);}
+        for (Actor* corpse : corpsesHere) {corpse->hit(DMG, DmgType::physical);}
 
         //Add smoke
-        if(Rnd::fraction(6, 10)) {GameTime::addMob(new Smoke(pos, Rnd::range(2, 4)));}
+        if (Rnd::fraction(6, 10)) {GameTime::addMob(new Smoke(pos, Rnd::range(2, 4)));}
       }
 
       //Apply property
-      if(prop)
+      if (prop)
       {
         bool shouldApplyOnLivingActor = livingActor;
 
         //Do not apply burning if actor is player with the demolition expert trait, and
         //intentionally throwing a Molotov
-        if(
-          livingActor    == Map::player &&
-          prop->getId()  == propBurning &&
-          IS_DEM_EXP                    &&
-          explSrc        == ExplSrc::playerUseMoltvIntended)
+        if (livingActor    == Map::player &&
+            prop->getId()  == propBurning &&
+            IS_DEM_EXP                    &&
+            explSrc        == ExplSrc::playerUseMoltvIntended)
         {
           shouldApplyOnLivingActor = false;
         }
 
-        if(shouldApplyOnLivingActor)
+        if (shouldApplyOnLivingActor)
         {
           PropHandler& propHlr = livingActor->getPropHandler();
           Prop* propCpy = propHlr.mkProp(prop->getId(), PropTurns::specific,
@@ -224,12 +221,12 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         }
 
         //If property is burning, also apply it to corpses and environment
-        if(prop->getId() == propBurning)
+        if (prop->getId() == propBurning)
         {
           Cell& cell = Map::cells[pos.x][pos.y];
           cell.rigid->hit(DmgType::fire, DmgMethod::elemental, nullptr);
 
-          for(Actor* corpse : corpsesHere)
+          for (Actor* corpse : corpsesHere)
           {
             PropHandler& propHlr = corpse->getPropHandler();
             Prop* propCpy = propHlr.mkProp(prop->getId(), PropTurns::specific,
@@ -244,7 +241,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   Map::player->updateFov();
   Render::drawMapAndInterface();
 
-  if(prop) {delete prop;}
+  if (prop) {delete prop;}
 }
 
 void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION*/)
@@ -264,11 +261,11 @@ void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION*/)
           SndVol::low, AlertsMon::yes);
   SndEmit::emitSnd(snd);
 
-  for(const vector<Pos>& inner : posLists)
+  for (const vector<Pos>& inner : posLists)
   {
-    for(const Pos& pos : inner)
+    for (const Pos& pos : inner)
     {
-      if(!blocked[pos.x][pos.y])
+      if (!blocked[pos.x][pos.y])
       {
         GameTime::addMob(new Smoke(pos, Rnd::range(25, 30)));
       }
