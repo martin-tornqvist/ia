@@ -583,7 +583,7 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef)
     case Trait::imperceptible:
     {
       traitsRef.push_back(Trait::stealthy);
-      traitsRef.push_back(Trait::dexterous);
+      //traitsRef.push_back(Trait::);
     } break;
 
     case Trait::vicious:
