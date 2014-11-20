@@ -2326,6 +2326,49 @@ void initDataList()
   d.aggroSfxMonHidden = SfxId::END;
   data[int(d.id)] = d;
   d.reset();
+
+  d.nameA = "Gas Spore";
+  d.nameThe = "The Gas Spore";
+  d.id = ActorId::gasSpore;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = false;
+  d.ai[int(AiId::pathsToTgtWhenAware)] = false;
+  d.ai[int(AiId::movesToTgtWhenLos)] = true;
+  d.ai[int(AiId::movesToLair)] = true;
+  d.ai[int(AiId::movesToLeader)] = false;
+  d.speed = ActorSpeed::slow;
+  d.rangedCooldownTurns = 0;
+  d.glyph = 'E';
+  d.color = clrRed;
+  d.tile = TileId::gasSpore;
+  d.hp = 1;
+  d.spi = 1;
+  d.intrProps[propFlying] = true;
+  d.intrProps[propRFear] = true;
+  d.intrProps[propRConfusion] = true;
+  d.spawnMinDLVL = 3;
+  d.groupSize = MonGroupSize::group;
+  d.actorSize = actorSize_humanoid;
+  d.nrTurnsAware = 5;
+  d.isAutoDescrAllowed = true;
+  d.canOpenDoors = false;
+  d.canBashDoors = false;
+  d.descr = "A vaguely intelligent floating fungus-based organism. It contains a highly "
+            "explosive gas and will detonate very easily, which it seems to desire.";
+  d.aggroTextMonHidden = "";
+  d.canBeSummoned = false;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
+  d.canSeeInDarkness = true;
+  d.erraticMovePct = actorErratic_somewhat;
+  d.monShockLvl = MonShockLvl::none;
+  d.nativeRooms.push_back(RoomType::cave);
+  d.nativeRooms.push_back(RoomType::flooded);
+  d.nativeRooms.push_back(RoomType::muddy);
+  d.nativeRooms.push_back(RoomType::forest);
+  data[int(d.id)] = d;
+  d.reset();
 }
 
 } //namespace

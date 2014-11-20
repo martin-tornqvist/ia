@@ -44,7 +44,8 @@ enum class ActorId
   chthonian,
   huntingHorror,
   sentryDrone,
-  mold, //fungi,
+  mold,
+  gasSpore,
 
   END
 };

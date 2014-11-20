@@ -1538,3 +1538,8 @@ void Mold::mkStartItems()
 {
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::moldSpores));
 }
+
+void GasSpore::die_()
+{
+  Explosion::runExplosionAt(pos, ExplType::expl);
+}

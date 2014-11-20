@@ -359,9 +359,8 @@ void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RES
     }
   }
   const double MIN_SHOCK_WHEN_OBSESSION_DB = double(MIN_SHOCK_WHEN_OBSESSION);
-  shock_ = max(
-             (isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION_DB : 0.0),
-             shock_ - amountRestored);
+  shock_ = max((isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION_DB : 0.0),
+               shock_ - amountRestored);
   if (IS_TEMP_SHOCK_RESTORED) {shockTmp_ = 0;}
 }
 

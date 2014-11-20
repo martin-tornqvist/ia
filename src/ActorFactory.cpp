@@ -75,6 +75,7 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::huntingHorror:        return new HuntingHorror();
     case ActorId::sentryDrone:          return new SentryDrone();
     case ActorId::mold:                 return new Mold();
+    case ActorId::gasSpore:             return new GasSpore();
 
 //  case ActorId::lordOfPestilence: return new LordOfPestilence;
 //  case ActorId::lordOfShadows:    return new LordOfShadows;

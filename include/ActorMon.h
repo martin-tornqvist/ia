@@ -657,4 +657,15 @@ private:
   int spawnNewOneInN;
 };
 
+class GasSpore: public Mon
+{
+public:
+  GasSpore() : Mon() {}
+  ~GasSpore() {}
+
+  void die_();
+
+  void mkStartItems() override {}
+};
+
 #endif
