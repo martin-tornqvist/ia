@@ -43,6 +43,7 @@ enum class TileId
   massOfWorms,
   ooze,
   polyp,
+  fungi,
   vortex,
   ghost,
   wraith,

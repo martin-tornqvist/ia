@@ -140,7 +140,7 @@ void Rigid::onNewTurn()
       const Pos p(DirUtils::getRndAdjPos(pos_, true));
       if(Utils::isPosInsideMap(p))
       {
-        if(!CellPred::BlocksMoveCmn(false).check(Map::cells[p.x][p.y]))
+        if(!CellCheck::BlocksMoveCmn(false).check(Map::cells[p.x][p.y]))
         {
           GameTime::addMob(new Smoke(p, 10));
         }
@@ -676,16 +676,16 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
       Render::drawMapAndInterface();
       Map::updateVisualMemory();
 
-      if(!CellPred::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y]))
+      if(!CellCheck::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y]))
       {
         Actor* const actorBehind = Utils::getActorAtPos(dstPos);
         if(actorBehind)
         {
           if(actorBehind->isAlive())
           {
-            vector<PropId> propList;
-            actorBehind->getPropHandler().getAllActivePropIds(propList);
-            if(find(begin(propList), end(propList), propEthereal) == end(propList))
+            bool props[endOfPropIds];
+            actorBehind->getPropHandler().getAllActivePropIds(props);
+            if(props[propEthereal])
             {
               if(actorBehind == Map::player)
               {
@@ -838,17 +838,17 @@ void LiquidShallow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void LiquidShallow::bump(Actor& actorBumping)
 {
-  vector<PropId> props;
+  bool props[endOfPropIds];
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
-  if(
-    find(begin(props), end(props), propEthereal)  == end(props) &&
-    find(begin(props), end(props), propFlying)    == end(props))
+  if(!props[propEthereal] && !props[propFlying])
   {
-
     actorBumping.getPropHandler().tryApplyProp(new PropWaiting(PropTurns::std));
 
-    if(actorBumping.isPlayer()) Log::addMsg("*glop*");
+    if(actorBumping.isPlayer())
+    {
+      Log::addMsg("*glop*");
+    }
   }
 }
 
@@ -857,7 +857,7 @@ string LiquidShallow::getName(const Article article) const
   string ret = "";
   if(article == Article::the) {ret += "the ";}
 
-  ret += "shallow ";
+  ret += "a pool of ";
 
   switch(type_)
   {
@@ -1408,15 +1408,15 @@ void Tomb::bump(Actor& actorBumping)
     {
       Log::addMsg("I attempt to push the lid.");
 
-      vector<PropId> props;
+      bool props[endOfPropIds];
       Map::player->getPropHandler().getAllActivePropIds(props);
 
-      if(find(begin(props), end(props), propWeakened) != end(props))
+      if(props[propWeakened])
       {
         trySprainPlayer();
         Log::addMsg("It seems futile.");
       }
-      else
+      else //Not weakened
       {
         const int BON = PlayerBon::hasTrait(Trait::rugged) ? 8 :
                         PlayerBon::hasTrait(Trait::tough)  ? 4 : 0;
@@ -1498,10 +1498,10 @@ bool Tomb::open()
 
 void Tomb::examine()
 {
-  vector<PropId> props;
+  bool props[endOfPropIds];
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  if(find(begin(props), end(props), propConfused) != end(props))
+  if(props[propConfused])
   {
     Log::addMsg("I start to search the tomb...");
     Log::addMsg("but I cannot grasp what for.");
@@ -1798,7 +1798,7 @@ bool Chest::open()
 //
 //            Log::addMsg("I kick the lid.");
 //
-//            vector<PropId> props;
+//            bool props[endOfPropIds];
 //            Map::player->getPropHandler().getAllActivePropIds(props);
 //
 //            if(
@@ -1889,10 +1889,10 @@ bool Chest::open()
 
 void Chest::examine()
 {
-  vector<PropId> props;
+  bool props[endOfPropIds];
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  if(find(begin(props), end(props), propConfused) != end(props))
+  if(props[propConfused])
   {
     Log::addMsg("I start to search the chest...");
     Log::addMsg("but I cannot grasp the purpose.");
@@ -2236,7 +2236,7 @@ void Fountain::bump(Actor& actorBumping)
         }
       }
 
-      if(Rnd::oneIn(5))
+      if(Rnd::oneIn(6))
       {
         Log::addMsg("The fountain dries out.");
         isDried_ = true;

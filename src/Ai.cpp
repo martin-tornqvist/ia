@@ -36,7 +36,7 @@ bool tryCastRandomSpell(Mon& mon)
         std::random_shuffle(begin(spellBucket), end(spellBucket));
 
         bool blockedLos[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksLos(), blockedLos);
+        MapParse::parse(CellCheck::BlocksLos(), blockedLos);
 
         while(!spellBucket.empty())
         {
@@ -91,7 +91,7 @@ bool handleClosedBlockingDoor(Mon& mon, vector<Pos> path)
     if(f->getId() == FeatureId::door)
     {
       Door* const door = static_cast<Door*>(f);
-      vector<PropId> props;
+      bool props[endOfPropIds];
       mon.getPropHandler().getAllActivePropIds(props);
       if(!door->canMove(props))
       {
@@ -152,7 +152,7 @@ void getMoveBucket(Mon& self, vector<Pos>& dirsToMk)
   const int OLD_Y = self.pos.y;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksActor(self, true), blocked);
+  MapParse::parse(CellCheck::BlocksActor(self, true), blocked);
 
   for(int x = -1; x <= 1; ++x)
   {
@@ -201,7 +201,7 @@ bool makeRoomForFriend(Mon& mon)
   {
 
     bool blockedLos[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksLos(), blockedLos);
+    MapParse::parse(CellCheck::BlocksLos(), blockedLos);
 
     if(mon.isSeeingActor(*Map::player, blockedLos))
     {
@@ -285,7 +285,7 @@ namespace
 Dir getDirToRndAdjFreeCell(Mon& mon)
 {
   bool blocked[MAP_W][MAP_H];
-  CellPred::BlocksActor cellPred(mon, true);
+  CellCheck::BlocksActor cellcheck(mon, true);
 
   const Pos& monPos = mon.pos;
   for(int dx = -1; dx <= 1; ++dx)
@@ -293,7 +293,7 @@ Dir getDirToRndAdjFreeCell(Mon& mon)
     for(int dy = -1; dy <= 1; ++dy)
     {
       const Pos p(monPos.x + dx, monPos.y + dy);
-      blocked[p.x][p.y] = cellPred.check(Map::cells[p.x][p.y]);
+      blocked[p.x][p.y] = cellcheck.check(Map::cells[p.x][p.y]);
     }
   }
 
@@ -305,7 +305,7 @@ Dir getDirToRndAdjFreeCell(Mon& mon)
   for(Mob* mob : GameTime::mobs_)
   {
     const Pos& p = mob->getPos();
-    blocked[p.x][p.y] = cellPred.check(*mob);
+    blocked[p.x][p.y] = cellcheck.check(*mob);
   }
 
   const Rect areaAllowed(Pos(1, 1), Pos(MAP_W - 2, MAP_H - 2));
@@ -386,7 +386,7 @@ bool moveToTgtSimple(Mon& mon)
       const Pos offset  = mon.tgt_->pos - mon.pos;
       const Pos signs   = offset.getSigns();
       bool blocked[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksActor(mon, true), blocked);
+      MapParse::parse(CellCheck::BlocksActor(mon, true), blocked);
       const Pos newPos(mon.pos + signs);
       if(!blocked[newPos.x][newPos.y])
       {
@@ -417,7 +417,7 @@ bool stepToLairIfLos(Mon& mon, const Pos& lairCell)
   if(mon.isAlive())
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksLos(), blocked);
+    MapParse::parse(CellCheck::BlocksLos(), blocked);
     const bool HAS_LOS_TO_LAIR =
       Fov::checkCell(blocked, lairCell, mon.pos, true);
 
@@ -429,7 +429,7 @@ bool stepToLairIfLos(Mon& mon, const Pos& lairCell)
       delta.y = delta.y == 0 ? 0 : (delta.y > 0 ? 1 : -1);
       const Pos newPos = mon.pos + delta;
 
-      MapParse::parse(CellPred::BlocksLos(), blocked);
+      MapParse::parse(CellCheck::BlocksLos(), blocked);
       if(blocked[newPos.x][newPos.y])
       {
         return false;
@@ -509,7 +509,7 @@ void setPathToLairIfNoLos(Mon& mon, vector<Pos>& path,
   {
 
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksLos(), blocked);
+    MapParse::parse(CellCheck::BlocksLos(), blocked);
 
     if(Fov::checkCell(blocked, lairCell, mon.pos, true))
     {
@@ -517,9 +517,9 @@ void setPathToLairIfNoLos(Mon& mon, vector<Pos>& path,
       return;
     }
 
-    MapParse::parse(CellPred::BlocksActor(mon, false), blocked);
+    MapParse::parse(CellCheck::BlocksActor(mon, false), blocked);
 
-    MapParse::parse(CellPred::LivingActorsAdjToPos(mon.pos),
+    MapParse::parse(CellCheck::LivingActorsAdjToPos(mon.pos),
                     blocked, MapParseWriteRule::writeOnlyTrue);
 
     PathFind::run(mon.pos, lairCell, blocked, path);
@@ -539,7 +539,7 @@ void setPathToLeaderIfNoLosToleader(Mon& mon, vector<Pos>& path)
       if(leader->isAlive())
       {
         bool blocked[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksLos(), blocked);
+        MapParse::parse(CellCheck::BlocksLos(), blocked);
 
         if(
           Fov::checkCell(blocked, leader->pos, mon.pos, true))
@@ -548,9 +548,9 @@ void setPathToLeaderIfNoLosToleader(Mon& mon, vector<Pos>& path)
           return;
         }
 
-        MapParse::parse(CellPred::BlocksActor(mon, false), blocked);
+        MapParse::parse(CellCheck::BlocksActor(mon, false), blocked);
 
-        MapParse::parse(CellPred::LivingActorsAdjToPos(mon.pos),
+        MapParse::parse(CellCheck::LivingActorsAdjToPos(mon.pos),
                         blocked, MapParseWriteRule::writeOnlyTrue);
 
         PathFind::run(mon.pos, leader->pos, blocked, path);
@@ -572,7 +572,7 @@ void setPathToPlayerIfAware(Mon& mon, vector<Pos>& path)
       bool blocked[MAP_W][MAP_H];
       Utils::resetArray(blocked, false);
 
-      vector<PropId> props;
+      bool props[endOfPropIds];
       mon.getPropHandler().getAllActivePropIds(props);
 
       for(int y = 1; y < MAP_H - 1; ++y)
@@ -593,7 +593,7 @@ void setPathToPlayerIfAware(Mon& mon, vector<Pos>& path)
                 blocked[x][y] = true;
               }
             }
-            else
+            else //Not a door
             {
               blocked[x][y] = true;
             }
@@ -602,7 +602,7 @@ void setPathToPlayerIfAware(Mon& mon, vector<Pos>& path)
       }
 
       //Append living adjacent actors to the blocking array
-      MapParse::parse(CellPred::LivingActorsAdjToPos(mon.pos),
+      MapParse::parse(CellCheck::LivingActorsAdjToPos(mon.pos),
                       blocked, MapParseWriteRule::writeOnlyTrue);
 
       PathFind::run(mon.pos, Map::player->pos, blocked, path);

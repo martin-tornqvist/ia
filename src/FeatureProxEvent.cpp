@@ -126,7 +126,7 @@ void ProxEventWallCrumble::onPlayerAdj()
       {
         Actor*  const actor = ActorFactory::mk(monType, p);
         Mon*    const mon   = static_cast<Mon*>(actor);
-        mon->awareCounter_  = mon->getData().nrTurnsAwarePlayer;
+        mon->awareCounter_  = mon->getData().nrTurnsAware;
         ++nrMonSpawned;
       }
     }

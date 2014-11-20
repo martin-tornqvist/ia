@@ -12,8 +12,8 @@
 
 using namespace std;
 
-//------------------------------------------------------------ CELL PREDICATES
-namespace CellPred
+//------------------------------------------------------------ CELL CHECKS
+namespace CellCheck
 {
 
 bool BlocksLos::check(const Cell& c)  const
@@ -42,7 +42,7 @@ bool BlocksMoveCmn::check(const Actor& a) const
 }
 
 BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking) :
-  Pred(), IS_ACTORS_BLOCKING_(isActorsBlocking)
+  Check(), IS_ACTORS_BLOCKING_(isActorsBlocking)
 {
   actor.getPropHandler().getAllActivePropIds(actorsProps_);
 }
@@ -185,41 +185,45 @@ bool AllAdjIsNoneOfFeatures::check(const Cell& c) const
   return true;
 }
 
-} //CellPred
+} //CellCheck
 
 //------------------------------------------------------------ MAP PARSE
 namespace MapParse
 {
 
-void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
-           const MapParseWriteRule writeRule)
-{
+const Rect mapRect(0, 0, MAP_W - 1, MAP_H - 1);
 
-  assert(pred.isCheckingCells()       ||
-         pred.isCheckingMobs() ||
-         pred.isCheckingActors());
+void parse(const CellCheck::Check& check, bool out[MAP_W][MAP_H],
+           const MapParseWriteRule writeRule, const Rect& areaToCheckCells)
+{
+  assert(check.isCheckingCells()  ||
+         check.isCheckingMobs()   ||
+         check.isCheckingActors());
 
   const bool ALLOW_WRITE_FALSE = writeRule == MapParseWriteRule::always;
 
-  if(pred.isCheckingCells())
+  if(check.isCheckingCells())
   {
-    for(int x = 0; x < MAP_W; ++x)
+    for(int x = areaToCheckCells.p0.x; x <= areaToCheckCells.p1.x; ++x)
     {
-      for(int y = 0; y < MAP_H; ++y)
+      for(int y = areaToCheckCells.p0.y; y <= areaToCheckCells.p1.y; ++y)
       {
-        const auto& c = Map::cells[x][y];
-        const bool IS_MATCH = pred.check(c);
-        if(IS_MATCH || ALLOW_WRITE_FALSE) {out[x][y] = IS_MATCH;}
+        const auto& c         = Map::cells[x][y];
+        const bool  IS_MATCH  = check.check(c);
+        if(IS_MATCH || ALLOW_WRITE_FALSE)
+        {
+          out[x][y] = IS_MATCH;
+        }
       }
     }
   }
 
-  if(pred.isCheckingMobs())
+  if(check.isCheckingMobs())
   {
     for(Mob* mob : GameTime::mobs_)
     {
       const Pos& p = mob->getPos();
-      const bool IS_MATCH = pred.check(*mob);
+      const bool IS_MATCH = check.check(*mob);
       if(IS_MATCH || ALLOW_WRITE_FALSE)
       {
         bool& v = out[p.x][p.y];
@@ -228,12 +232,12 @@ void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
     }
   }
 
-  if(pred.isCheckingActors())
+  if(check.isCheckingActors())
   {
     for(Actor* actor : GameTime::actors_)
     {
       const Pos& p = actor->pos;
-      const bool IS_MATCH = pred.check(*actor);
+      const bool IS_MATCH = check.check(*actor);
       if(IS_MATCH || ALLOW_WRITE_FALSE)
       {
         bool& v = out[p.x][p.y];
@@ -243,8 +247,7 @@ void parse(const CellPred::Pred& pred, bool out[MAP_W][MAP_H],
   }
 }
 
-void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H],
-                                bool out[MAP_W][MAP_H],
+void getCellsWithinDistOfOthers(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
                                 const Range& distInterval)
 {
   assert(in != out);

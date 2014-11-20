@@ -74,6 +74,7 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::chthonian:            return new Chthonian();
     case ActorId::huntingHorror:        return new HuntingHorror();
     case ActorId::sentryDrone:          return new SentryDrone();
+    case ActorId::mold:                 return new Mold();
 
 //  case ActorId::lordOfPestilence: return new LordOfPestilence;
 //  case ActorId::lordOfShadows:    return new LordOfShadows;
@@ -124,7 +125,7 @@ void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
   if(monstersRet) {monstersRet->clear();}
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
   sort(begin(freeCells), end(freeCells), IsCloserToPos(origin));
@@ -152,7 +153,7 @@ void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
     }
     if(MAKE_MONSTERS_AWARE)
     {
-      mon->awareCounter_ = mon->getData().nrTurnsAwarePlayer;
+      mon->awareCounter_ = mon->getData().nrTurnsAware;
     }
 
     if(Map::player->isSeeingActor(*actor, nullptr))
@@ -161,7 +162,6 @@ void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
     }
   }
 
-//  Render::
   Render::drawBlastAtCells(positionsToAnimate, clrMagenta);
 }
 

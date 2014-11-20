@@ -11,12 +11,21 @@
 
 using namespace std;
 
-bool MoveRules::canMove(const vector<PropId>& actorsProps) const
+bool MoveRules::canMove(const bool actorPropIds[endOfPropIds]) const
 {
-  if(canMoveCmn_) return true;
+  if(canMoveCmn_)
+  {
+    return true;
+  }
 
   //If not allowing normal move, check if any property overrides this
-  for(PropId id : actorsProps) {if(canMoveIfHaveProp_[id]) return true;}
+  for(int i = 0; i < endOfPropIds; ++i)
+  {
+    if(actorPropIds[i] && canMoveIfHaveProp_[i])
+    {
+      return true;
+    }
+  }
 
   return false;
 }

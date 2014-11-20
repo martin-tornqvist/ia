@@ -11,6 +11,7 @@
 #include "ActorPlayer.h"
 #include "MapParsing.h"
 #include "Utils.h"
+#include "GameTime.h"
 
 using namespace std;
 
@@ -70,7 +71,6 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
   const RoomType roomType, const vector<Pos>& sortedFreeCellsVector,
   bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED)
 {
-
   TRACE_FUNC_BEGIN_VERBOSE;
 
   const int NR_LVLS_OUT_OF_DEPTH_ALLOWED = getRandomOutOfDepth();
@@ -118,8 +118,13 @@ void trySpawnDueToTimePassed()
 {
   TRACE_FUNC_BEGIN;
 
+  if(GameTime::actors_.size() >= MAX_NR_ACTORS_ON_MAP)
+  {
+    return;
+  }
+
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
 
   const int MIN_DIST_TO_PLAYER = FOV_STD_RADI_INT + 3;
 
@@ -148,7 +153,6 @@ void trySpawnDueToTimePassed()
 
   if(!freeCellsVector.empty())
   {
-
     const int ELEMENT = Rnd::range(0, freeCellsVector.size() - 1);
     const Pos& origin = freeCellsVector[ELEMENT];
 
@@ -173,7 +177,7 @@ void populateCaveLvl()
   bool blocked[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -219,7 +223,7 @@ void populateIntroLvl()
   bool blocked[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT + 3;
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -267,7 +271,7 @@ void populateStdLvl()
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 1;
 
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
 
   const Pos& playerPos = Map::player->pos;
 

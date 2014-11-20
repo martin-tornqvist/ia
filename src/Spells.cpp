@@ -143,14 +143,12 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
 
     PropHandler& propHlr = caster->getPropHandler();
 
-    vector<PropId> props;
+    bool props[endOfPropIds];
     propHlr.getAllActivePropIds(props);
 
     if(!propHlr.allowSee()) {--costMax;}
-
-    if(find(begin(props), end(props), propBlessed) != end(props)) {--costMax;}
-
-    if(find(begin(props), end(props), propCursed) != end(props))  {costMax += 3;}
+    if(props[propBlessed])  {--costMax;}
+    if(props[propCursed])   {costMax += 3;}
   }
 
   costMax             = max(1, costMax);
@@ -262,9 +260,9 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
 
   if(caster->isPlayer())
   {
-    vector<PropId> props;
+    bool props[endOfPropIds];
     Map::player->getPropHandler().getAllActivePropIds(props);
-    isWarlockCharged = find(begin(props), end(props), propWarlockCharged) != end(props);
+    isWarlockCharged = props[propWarlockCharged];
   }
 
   if(Map::player->isSeeingActor(*tgt, nullptr))
@@ -310,10 +308,10 @@ SpellEffectNoticed SpellAzaWrath::cast_(Actor* const caster) const
   //This point reached means targets are available
   if(caster->isPlayer())
   {
-    vector<PropId> props;
+    bool props[endOfPropIds];
     Map::player->getPropHandler().getAllActivePropIds(props);
 
-    isWarlockCharged = find(begin(props), end(props), propWarlockCharged) != end(props);
+    isWarlockCharged = props[propWarlockCharged];
   }
 
   Render::drawBlastAtSeenActors(tgts, clrRedLgt);
@@ -918,7 +916,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
   //free visible cell. If no such cell is available, instead summon near the caster.
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
 
   vector<Pos> freeCellsSeenByPlayer;
   const int RADI = FOV_STD_RADI_INT;

@@ -21,7 +21,7 @@ using namespace std;
 
 Actor::Actor() :
   pos(),
-  state(ActorState::alive),
+  state_(ActorState::alive),
   clr_(clrBlack),
   glyph_(' '),
   tile_(TileId::empty),
@@ -82,6 +82,15 @@ bool Actor::isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H
 
     //This point reached means its a monster checking
 
+    if(
+      pos.x - other.pos.x > FOV_STD_RADI_INT ||
+      other.pos.x - pos.x > FOV_STD_RADI_INT ||
+      other.pos.y - pos.y > FOV_STD_RADI_INT ||
+      pos.y - other.pos.y > FOV_STD_RADI_INT)
+    {
+      return false;
+    }
+
     //Monster allied to player looking at other monster?
     if(
       isActorMyLeader(Map::player)  &&
@@ -95,11 +104,6 @@ bool Actor::isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H
     {
       return false;
     }
-
-    if(pos.x - other.pos.x > FOV_STD_RADI_INT) {return false;}
-    if(other.pos.x - pos.x > FOV_STD_RADI_INT) {return false;}
-    if(other.pos.y - pos.y > FOV_STD_RADI_INT) {return false;}
-    if(pos.y - other.pos.y > FOV_STD_RADI_INT) {return false;}
 
     if(blockedLos)
     {
@@ -117,14 +121,19 @@ void Actor::getSeenFoes(vector<Actor*>& vectorRef)
 
   if(!isPlayer())
   {
-    MapParse::parse(CellPred::BlocksLos(), blockedLos);
+    Rect losRect(max(0,         pos.x - FOV_STD_RADI_INT),
+                 max(0,         pos.y - FOV_STD_RADI_INT),
+                 min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
+                 min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
+
+    MapParse::parse(CellCheck::BlocksLos(), blockedLos, MapParseWriteRule::always,
+                    losRect);
   }
 
   for(Actor* actor : GameTime::actors_)
   {
     if(actor != this && actor->isAlive())
     {
-
       if(isPlayer())
       {
         if(isSeeingActor(*actor, nullptr) && !isLeaderOf(actor))
@@ -132,7 +141,7 @@ void Actor::getSeenFoes(vector<Actor*>& vectorRef)
           vectorRef.push_back(actor);
         }
       }
-      else //Monster retrieving seen foes is not player
+      else //Not player
       {
         const bool IS_HOSTILE_TO_PLAYER = !isActorMyLeader(Map::player);
         const bool IS_OTHER_HOSTILE_TO_PLAYER =
@@ -160,7 +169,7 @@ void Actor::place(const Pos& pos_, ActorDataT& data)
   data_           = &data;
   inv_            = new Inventory();
   propHandler_    = new PropHandler(this);
-  state           = ActorState::alive;
+  state_          = ActorState::alive;
   clr_            = data_->color;
   glyph_          = data_->glyph;
   tile_           = data_->tile;
@@ -180,7 +189,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONS)
   (void)MOVE_TO_POS_AWAY_FROM_MONS;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksActor(*this, true), blocked);
+  MapParse::parse(CellCheck::BlocksActor(*this, true), blocked);
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
 
@@ -214,7 +223,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONS)
 
 void Actor::updateClr()
 {
-  if(state != ActorState::alive)
+  if(state_ != ActorState::alive)
   {
     clr_ = data_->color;
     return;
@@ -395,7 +404,7 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType)
 {
   TRACE_FUNC_BEGIN_VERBOSE;
 
-  if(state == ActorState::destroyed)
+  if(state_ == ActorState::destroyed)
   {
     TRACE_FUNC_END_VERBOSE;
     return ActorDied::no;
@@ -403,12 +412,10 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType)
 
   TRACE_VERBOSE << "Damage from parameter: " << dmg << endl;
 
-  vector<PropId> props;
+  bool props[endOfPropIds];
   propHandler_->getAllActivePropIds(props);
 
-  if(
-    dmgType == DmgType::light &&
-    find(begin(props), end(props), propLightSensitive) == end(props))
+  if(dmgType == DmgType::light && !props[propLightSensitive])
   {
     return ActorDied::no;
   }
@@ -431,7 +438,7 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType)
         }
       }
 
-      state = ActorState::destroyed;
+      state_ = ActorState::destroyed;
       glyph_ = ' ';
       if(isHumanoid()) {Map::mkGore(pos);}
     }
@@ -590,11 +597,11 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
   if(IS_DESTROYED || (isOnVisibleTrap && !isPlayer()))
   {
-    state = ActorState::destroyed;
+    state_ = ActorState::destroyed;
   }
   else
   {
-    state = ActorState::corpse;
+    state_ = ActorState::corpse;
   }
 
   if(!isPlayer())
@@ -668,12 +675,10 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
 void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const
 {
-  vector<PropId> props;
+  bool props[endOfPropIds];
   propHandler_->getAllActivePropIds(props);
 
-  if(
-    state == ActorState::alive &&
-    find(begin(props), end(props), propRadiant) != end(props))
+  if(state_ == ActorState::alive && props[propRadiant])
   {
     //TODO Much of the code below is duplicated from ActorPlayer::addLight_(), some
     //refactoring is needed.
@@ -706,7 +711,7 @@ void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const
       }
     }
   }
-  else if(find(begin(props), end(props), propBurning) != end(props))
+  else if(props[propBurning])
   {
     for(int dx = -1; dx <= 1; ++dx)
     {

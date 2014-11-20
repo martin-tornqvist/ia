@@ -109,6 +109,8 @@ protected:
 
   virtual bool onActorTurn_() {return false;}
   virtual void onStdTurn_() {}
+
+  int getGroupSize();
 };
 
 class Rat: public Mon
@@ -529,23 +531,23 @@ public:
 class WormMass: public Mon
 {
 public:
-  WormMass() : Mon(), chanceToSpawnNew(12) {}
+  WormMass() : Mon(), spawnNewOneInN(15) {}
   ~WormMass() {}
   bool onActorTurn_() override;
-  virtual void mkStartItems() override;
+  void mkStartItems() override;
 private:
-  int chanceToSpawnNew;
+  int spawnNewOneInN;
 };
 
 class GiantLocust: public Mon
 {
 public:
-  GiantLocust() : Mon(), chanceToSpawnNew(5) {}
+  GiantLocust() : Mon(), spawnNewOneInN(20) {}
   ~GiantLocust() {}
   bool onActorTurn_() override;
-  virtual void mkStartItems() override;
+  void mkStartItems() override;
 private:
-  int chanceToSpawnNew;
+  int spawnNewOneInN;
 };
 
 class Vortex: public Mon
@@ -642,6 +644,17 @@ public:
 private:
   void onStdTurn_() override;
   Clr curColor;
+};
+
+class Mold: public Mon
+{
+public:
+  Mold() : Mon(), spawnNewOneInN(30) {}
+  ~Mold() {}
+  bool onActorTurn_() override;
+  void mkStartItems() override;
+private:
+  int spawnNewOneInN;
 };
 
 #endif

@@ -538,15 +538,15 @@ void handleKeyPress(const KeyData& d)
       }
       else
       {
-        vector<PropId> propIds;
-        Map::player->getPropHandler().getAllActivePropIds(propIds);
-        if(find(begin(propIds), end(propIds), propPoisoned) != end(propIds))
+        bool props[endOfPropIds];
+        Map::player->getPropHandler().getAllActivePropIds(props);
+        if(props[propPoisoned])
         {
           //Player is poisoned
           Log::addMsg("Not while poisoned.");
           Render::drawMapAndInterface();
         }
-        else if(find(begin(propIds), end(propIds), propConfused) != end(propIds))
+        else if(props[propConfused])
         {
           //Player is confused
           Log::addMsg("Not while confused.");

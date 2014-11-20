@@ -158,6 +158,7 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::massOfWorms: return Pos(9, 2); break;
     case TileId::ooze: return Pos(10, 2); break;
     case TileId::polyp: return Pos(7, 5); break;
+    case TileId::fungi: return Pos(8, 5); break;
     case TileId::vortex: return Pos(5, 5); break;
     case TileId::ghost: return Pos(12, 2); break;
     case TileId::wraith: return Pos(13, 2); break;

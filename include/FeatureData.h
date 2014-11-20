@@ -107,7 +107,7 @@ public:
 
   bool canMoveCmn() const {return canMoveCmn_;}
 
-  bool canMove(const std::vector<PropId>& actorsProps) const;
+  bool canMove(const bool actorPropIds[endOfPropIds]) const;
 
 private:
   bool canMoveCmn_;

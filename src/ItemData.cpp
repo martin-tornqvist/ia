@@ -1233,6 +1233,13 @@ void initDataList()
   d->melee.propApplied = new PropParalyzed(PropTurns::std);
   data[int(d->id)] = d;
 
+  d = new ItemDataT(ItemId::moldSpores);
+  resetData(*d, ItemType::meleeWpnIntr);
+  d->melee.attMsgs = ItemAttMsgs("", "releases spores at me");
+  setDmgFromMonId(*d, ActorId::mold);
+  d->melee.propApplied = new PropPoisoned(PropTurns::specific, 6);
+  data[int(d->id)] = d;
+
   d = new ItemDataT(ItemId::armorLeatherJacket);
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Leather Jacket", "", "a Leather Jacket");

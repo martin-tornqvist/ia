@@ -102,7 +102,7 @@ Room* mk(const RoomType type, const Rect& r)
   return nullptr;
 }
 
-Room* mkRandomAllowedStdRoom(const Rect& r)
+Room* mkRandomAllowedStdRoom(const Rect& r, const bool IS_SUBROOM)
 {
   TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -122,6 +122,7 @@ Room* mkRandomAllowedStdRoom(const Rect& r)
     {
       const RoomType    roomType  = *roomBucketIt;
       room                        = mk(roomType, r);
+      room->isSubRoom_            = IS_SUBROOM;
       StdRoom* const    stdRoom   = static_cast<StdRoom*>(room);
 
       if(stdRoom->isAllowed())
@@ -446,7 +447,7 @@ void RitualRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   Gods::setRandomGod();
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   const int BLOODY_CHAMBER_PCT = 60;
   if(Rnd::percentile() < BLOODY_CHAMBER_PCT)
@@ -590,7 +591,7 @@ void MonsterRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   (void)doorProposals;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   int       nrBloodPut  = 0;
   const int NR_TRIES    = 1000; //TODO Hacky, needs improving
@@ -653,7 +654,7 @@ void FloodedRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   (void)doorProposals;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
 
@@ -708,7 +709,7 @@ void MuddyRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   (void)doorProposals;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
 
@@ -789,7 +790,7 @@ void ForestRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   (void)doorProposals;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   vector<Pos> treePosBucket;
 

@@ -236,7 +236,7 @@ void Inventory::dropAllNonIntrinsic(
     if(item)
     {
       if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
-          CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP)
+          CHANCE_TO_DESTR_CMN_ITEMS_ON_DROP)
       {
         delete slot.item;
       }
@@ -256,8 +256,7 @@ void Inventory::dropAllNonIntrinsic(
     item = general_[i];
     if(item)
     {
-      if(ROLL_FOR_DESTRUCTION && Rnd::percentile() <
-          CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP)
+      if(ROLL_FOR_DESTRUCTION && Rnd::percentile() < CHANCE_TO_DESTR_CMN_ITEMS_ON_DROP)
       {
         delete general_[i];
       }

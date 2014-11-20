@@ -159,7 +159,7 @@ public:
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
   int getAbilityMod(const AbilityId ability) const;
 
-  void getAllActivePropIds(std::vector<PropId>& out) const;
+  void getAllActivePropIds(bool out[endOfPropIds]) const;
 
   Prop* getProp(const PropId id, const PropSrc source) const;
 
@@ -196,7 +196,7 @@ private:
   //It's more efficient to just gather the ids at once.
   void getPropsFromSources(std::vector<Prop*>& out,
                            bool sources[int(PropSrc::END)]) const;
-  void getPropIdsFromSources(std::vector<PropId>& out,
+  void getPropIdsFromSources(bool out[endOfPropIds],
                              bool sources[int(PropSrc::END)]) const;
 
   bool tryResistProp(const PropId id, const std::vector<Prop*>& propList) const;

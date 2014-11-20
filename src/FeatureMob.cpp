@@ -68,11 +68,10 @@ void Smoke::onNewTurn()
     //Choking?
     if(Rnd::oneIn(4))
     {
-      vector<PropId> propIds;
-      actor->getPropHandler().getAllActivePropIds(propIds);
-      if(find(begin(propIds), end(propIds), propRBreath) == end(propIds))
+      bool props[endOfPropIds];
+      actor->getPropHandler().getAllActivePropIds(props);
+      if(!props[propRBreath])
       {
-
         string sndMsg = "";
 
         if(IS_PLAYER)

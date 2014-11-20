@@ -85,7 +85,7 @@ bool mkCaveLvl()
 
   //Make a floodfill and place the stairs in one of the furthest positions
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
   int floodFill[MAP_W][MAP_H];
   FloodFill::run(origin, blocked, floodFill, 99999, Pos(-1, -1), true);
   vector<PosAndVal> floodVals;

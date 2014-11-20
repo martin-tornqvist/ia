@@ -121,6 +121,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::dustVortexEngulf:    r = new Wpn(d, ammoD);         break;
     case ItemId::fireVortexEngulf:    r = new Wpn(d, ammoD);         break;
     case ItemId::frostVortexEngulf:   r = new Wpn(d, ammoD);         break;
+    case ItemId::moldSpores:          r = new Wpn(d, ammoD);         break;
 
     case ItemId::scrollMayhem:        r = new Scroll(d);                break;
     case ItemId::scrollTelep:         r = new Scroll(d);                break;

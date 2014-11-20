@@ -123,6 +123,7 @@ enum class ItemId
   chthonianBite,
   huntingHorrorBite,
   dustVortexEngulf, fireVortexEngulf, frostVortexEngulf,
+  moldSpores,
 
   armorLeatherJacket,
   armorIronSuit,

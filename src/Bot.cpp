@@ -37,7 +37,7 @@ void findPathToStairs()
   curPath_.clear();
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   Pos stairPos(-1, -1);
 
@@ -180,12 +180,15 @@ void act()
   }
 
   //If we are terrified, wait in place
-  vector<PropId> props;
+  bool props[endOfPropIds];
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  if(find(begin(props), end(props), propTerrified) != end(props))
+  if(props[propTerrified])
   {
-    if(walkToAdjCell(Map::player->pos)) {return;}
+    if(walkToAdjCell(Map::player->pos))
+    {
+      return;
+    }
   }
 
   findPathToStairs();

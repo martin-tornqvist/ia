@@ -852,19 +852,14 @@ void PropHandler::getPropsFromSources(
 }
 
 void  PropHandler::getPropIdsFromSources(
-  vector<PropId>& out, bool sources[int(PropSrc::END)]) const
+  bool out[endOfPropIds], bool sources[int(PropSrc::END)]) const
 {
-
-  const size_t NR_APPLIED = appliedProps_.size();
-  out.resize(NR_APPLIED);
+  for(int i = 0; i < endOfPropIds; ++i) {out[i] = 0;}
 
   //Get from applied properties
   if(sources[int(PropSrc::applied)])
   {
-    for(size_t i = 0; i < NR_APPLIED; ++i)
-    {
-      out[i] = appliedProps_[i]->getId();
-    }
+    for(const Prop* const prop : appliedProps_) {out[prop->getId()] = true;}
   }
 
   //Get from inventory if humanoid actor
@@ -876,8 +871,8 @@ void  PropHandler::getPropIdsFromSources(
     {
       for(auto* const prop : itemPropList)
       {
-        prop->owningActor_ = owningActor_;
-        out.push_back(prop->getId());
+        prop->owningActor_  = owningActor_;
+        out[prop->getId()]  = true;
       };
     };
     for(const auto& slot : slots)
@@ -890,9 +885,8 @@ void  PropHandler::getPropIdsFromSources(
   }
 }
 
-void PropHandler::getAllActivePropIds(vector<PropId>& out) const
+void PropHandler::getAllActivePropIds(bool out[endOfPropIds]) const
 {
-  out.clear();
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
   getPropIdsFromSources(out, sources);
@@ -1192,7 +1186,7 @@ void PropHandler::tick(const PropTurnMode turnMode,
         if(prop->isMakingMonAware())
         {
           static_cast<Mon*>(owningActor_)->awareCounter_ =
-            owningActor_->getData().nrTurnsAwarePlayer;
+            owningActor_->getData().nrTurnsAware;
         }
       }
 
@@ -1229,7 +1223,7 @@ void PropHandler::tick(const PropTurnMode turnMode,
       if(prop->isMakingMonAware())
       {
         static_cast<Mon*>(owningActor_)->awareCounter_ =
-          owningActor_->getData().nrTurnsAwarePlayer;
+          owningActor_->getData().nrTurnsAware;
       }
     }
     prop->onNewTurn();
@@ -1461,7 +1455,7 @@ bool PropHandler::changeActorClr(Clr& clr) const
 void PropHandler::endAppliedPropsByMagicHealing()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for(bool& v : sources) {v = true;}
@@ -1492,14 +1486,14 @@ Prop::Prop(PropId id, PropTurns turnsInit, int turns) :
 void PropBlessed::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propCursed, blockedLos, false);
 }
 
 void PropCursed::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propBlessed, blockedLos, false);
 }
 
@@ -1510,7 +1504,7 @@ void PropInfected::onNewTurn()
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(PropTurns::std));
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksLos(), blocked);
+    MapParse::parse(CellCheck::BlocksLos(), blocked);
     propHlr.endAppliedProp(propInfected, blocked, false);
   }
 }
@@ -1549,8 +1543,8 @@ void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR)
     const string& name2 = ActorData::data[int(ActorId::zuul)].nameThe;
     Log::addMsg(name1 + " was possessed by " + name2 + "!");
   }
-  owningActor_->state = ActorState::destroyed;
-  const Pos& pos      = owningActor_->pos;
+  owningActor_->state_  = ActorState::destroyed;
+  const Pos& pos        = owningActor_->pos;
   Map::mkGore(pos);
   Map::mkBlood(pos);
   ActorFactory::summonMon(pos, vector<ActorId> {ActorId::zuul}, true);
@@ -1695,7 +1689,7 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir)
   {
 
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksActor(*owningActor_, true),
+    MapParse::parse(CellCheck::BlocksActor(*owningActor_, true),
                     blocked);
 
     if(Rnd::oneIn(8))
@@ -1737,7 +1731,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
     const Pos& closestMonPos = seenFoesCells[0];
 
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksActor(*owningActor_, false), blocked);
+    MapParse::parse(CellCheck::BlocksActor(*owningActor_, false), blocked);
 
     vector<Pos> line;
     LineCalc::calcNewLine(actorPos, closestMonPos, true, 999, false, line);
@@ -1765,7 +1759,7 @@ bool PropFrenzied::isResistOtherProp(const PropId id) const
 void PropFrenzied::onStart()
 {
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blocked);
+  MapParse::parse(CellCheck::BlocksLos(), blocked);
   owningActor_->getPropHandler().endAppliedProp(propConfused,  blocked);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, blocked);
   owningActor_->getPropHandler().endAppliedProp(propWeakened,  blocked);
@@ -1854,7 +1848,7 @@ void PropFlared::onNewTurn()
   if(turnsLeft_ == 0)
   {
     bool blockedLos[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksLos(), blockedLos);
+    MapParse::parse(CellCheck::BlocksLos(), blockedLos);
     owningActor_->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
     owningActor_->getPropHandler().endAppliedProp(propFlared, blockedLos);
   }
@@ -1930,7 +1924,7 @@ bool PropRConfusion::isResistOtherProp(const PropId id) const
 void PropRConfusion::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propConfused, blockedLos);
 }
 
@@ -1942,7 +1936,7 @@ bool PropRFear::isResistOtherProp(const PropId id) const
 void PropRFear::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, blockedLos);
 }
 
@@ -1986,7 +1980,7 @@ bool PropRFire::isResistOtherProp(const PropId id) const
 void PropRFire::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propBurning, blockedLos);
 }
 
@@ -2019,7 +2013,7 @@ bool PropRPoison::isResistOtherProp(const PropId id) const
 void PropRPoison::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propPoisoned, blockedLos);
 }
 
@@ -2031,7 +2025,7 @@ bool PropRSleep::isResistOtherProp(const PropId id) const
 void PropRSleep::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propFainted, blockedLos);
 }
 
@@ -2043,7 +2037,7 @@ bool PropRDisease::isResistOtherProp(const PropId id) const
 void PropRDisease::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propDiseased, blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propInfected, blockedLos);
 }

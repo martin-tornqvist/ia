@@ -33,7 +33,7 @@ void populateStdLvl()
   TRACE_FUNC_BEGIN;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   //Put traps in non-plain rooms
   for(Room* const room : Map::roomList)

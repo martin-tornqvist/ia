@@ -286,9 +286,9 @@ int Player::getCarryWeightLmt() const
   const bool IS_RUGGED        = PlayerBon::hasTrait(Trait::rugged);
   const bool IS_STRONG_BACKED = PlayerBon::hasTrait(Trait::strongBacked);
 
-  vector<PropId> props;
+  bool props[endOfPropIds];
   propHandler_->getAllActivePropIds(props);
-  const bool IS_WEAKENED = find(begin(props), end(props), propWeakened) != end(props);
+  const bool IS_WEAKENED = props[propWeakened];
 
   const int CARRY_WEIGHT_MOD = (IS_TOUGH         * 10) +
                                (IS_RUGGED        * 10) +
@@ -465,12 +465,11 @@ void Player::incrInsanity()
 
         case 5:
         {
-          vector<PropId> props;
+          bool props[endOfPropIds];
           propHandler_->getAllActivePropIds(props);
 
-          if(find(begin(props), end(props), propRFear) != end(props))
+          if(props[propRFear])
           {
-
             if(ins_ > 5)
             {
               //There is a limit to the number of phobias you can have
@@ -668,7 +667,7 @@ void Player::addTmpShockFromFeatures()
 bool Player::isStandingInOpenSpace() const
 {
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
   for(int x = pos.x - 1; x <= pos.x + 1; ++x)
   {
     for(int y = pos.y - 1; y <= pos.y + 1; ++y)
@@ -682,7 +681,7 @@ bool Player::isStandingInOpenSpace() const
 bool Player::isStandingInCrampedSpace() const
 {
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
   int blockCount = 0;
   for(int x = pos.x - 1; x <= pos.x + 1; ++x)
   {
@@ -1035,14 +1034,13 @@ void Player::onStdTurn()
     if(GameTime::getTurn() % DECR_ABOVE_MAX_N_TURNS == 0) {spi_--;}
   }
 
-  vector<PropId> props;
-  propHandler_->getAllActivePropIds(props);
-
   if(!activeMedicalBag)
   {
-    if(find(begin(props), end(props), propPoisoned) == end(props))
-    {
+    bool props[endOfPropIds];
+    propHandler_->getAllActivePropIds(props);
 
+    if(!props[propPoisoned])
+    {
       const bool IS_RAPID_REC   = PlayerBon::hasTrait(Trait::rapidRecoverer);
       const bool IS_SURVIVALIST = PlayerBon::hasTrait(Trait::survivalist);
 
@@ -1051,11 +1049,8 @@ void Player::onStdTurn()
       if(TURN % REGEN_N_TURNS == 0 && TURN > 1 && getHp() < getHpMax(true)) {++hp_;}
     }
 
-    if(
-      propHandler_->allowSee() &&
-      find(begin(props), end(props), propConfused) == end(props))
+    if(!props[propConfused] && propHandler_->allowSee())
     {
-
       const int R = PlayerBon::hasTrait(Trait::perceptive) ? 3 :
                     (PlayerBon::hasTrait(Trait::observant) ? 2 : 1);
 
@@ -1223,7 +1218,7 @@ void Player::moveDir(Dir dir)
       //This point reached means no actor in the destination cell.
 
       //Blocking mobile or rigid?
-      vector<PropId> props;
+      bool props[endOfPropIds];
       getPropHandler().getAllActivePropIds(props);
       Cell& cell = Map::cells[dest.x][dest.y];
       bool isFeaturesAllowMove = cell.rigid->canMove(props);
@@ -1450,7 +1445,7 @@ void Player::updateFov()
   if(propHandler_->allowSee())
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksLos(), blocked);
+    MapParse::parse(CellCheck::BlocksLos(), blocked);
     Fov::runPlayerFov(blocked, pos);
     Map::cells[pos.x][pos.y].isSeenByPlayer = true;
   }
@@ -1474,7 +1469,7 @@ void Player::updateFov()
     for(int y = 0; y < MAP_H; ++y)
     {
       Cell& cell = Map::cells[x][y];
-      const bool IS_BLOCKING = CellPred::BlocksMoveCmn(false).check(cell);
+      const bool IS_BLOCKING = CellCheck::BlocksMoveCmn(false).check(cell);
       //Do not explore dark floor cells
       if(cell.isSeenByPlayer && (!cell.isDark || IS_BLOCKING))
       {
@@ -1487,10 +1482,10 @@ void Player::updateFov()
 void Player::FOVhack()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   for(int x = 0; x < MAP_W; ++x)
   {

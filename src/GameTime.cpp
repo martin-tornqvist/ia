@@ -48,7 +48,7 @@ void runStdTurnEvents()
   ++turnNr_;
 
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blockedLos);
+  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
 
   int regenSpiNTurns = 12;
 
@@ -283,15 +283,15 @@ void actorDidAct(const bool IS_FREE_TURN)
       }
 
       curActor = getCurActor();
-      vector<PropId> props;
+
+      bool props[endOfPropIds];
       curActor->getPropHandler().getAllActivePropIds(props);
 
-      const bool IS_SLOWED =
-        find(begin(props), end(props), propSlowed) != end(props);
+      const bool IS_SLOWED = props[propSlowed];
+
       const ActorSpeed defSpeed = curActor->getData().speed;
-      const ActorSpeed realSpeed =
-        !IS_SLOWED || defSpeed == ActorSpeed::sluggish ?
-        defSpeed : ActorSpeed(int(defSpeed) - 1);
+      const ActorSpeed realSpeed = (!IS_SLOWED || defSpeed == ActorSpeed::sluggish) ?
+                                   defSpeed : ActorSpeed(int(defSpeed) - 1);
       switch(realSpeed)
       {
         case ActorSpeed::sluggish:

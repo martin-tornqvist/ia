@@ -172,13 +172,13 @@ bool reloadWieldedWpn(Actor& actorReloading)
         {
           PropHandler& propHlr = actorReloading.getPropHandler();
 
-          vector<PropId> props;
+          bool props[endOfPropIds];
           propHlr.getAllActivePropIds(props);
 
-          const bool IS_RELOADER_BLIND =
-            !actorReloading.getPropHandler().allowSee();
-          const bool IS_REALOADER_TERRIFIED =
-            find(begin(props), end(props), propTerrified) != end(props);
+          const bool IS_RELOADER_BLIND = !actorReloading.getPropHandler().allowSee();
+
+          const bool IS_REALOADER_TERRIFIED = props[propTerrified];
+
           const int CHANCE_TO_FUMBLE =
             (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
 

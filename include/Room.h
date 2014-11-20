@@ -61,7 +61,7 @@ void initRoomBucket();
 //Note: These functions do not make rooms on the map, they merely create Room objects.
 Room* mk(const RoomType type, const Rect& r);
 
-Room* mkRandomAllowedStdRoom(const Rect& r);
+Room* mkRandomAllowedStdRoom(const Rect& r, const bool IS_SUBROOM);
 
 } //RoomFactory
 

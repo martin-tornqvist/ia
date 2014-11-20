@@ -84,13 +84,13 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor)
     bool isCondDegrade    = false;
     bool isWarning        = false;
     int bon = 0;
-    vector<PropId> props;
+    bool props[endOfPropIds];
     actor->getPropHandler().getAllActivePropIds(props);
-    if(find(begin(props), end(props), propBlessed) != end(props))
+    if(props[propBlessed])
     {
       bon += 2;
     }
-    if(find(begin(props), end(props), propCursed) != end(props))
+    if(props[propCursed])
     {
       bon -= 2;
     }

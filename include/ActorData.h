@@ -44,6 +44,7 @@ enum class ActorId
   chthonian,
   huntingHorror,
   sentryDrone,
+  mold, //fungi,
 
   END
 };
@@ -79,6 +80,7 @@ enum class AiId
   movesToTgtWhenLos,
   movesToLair,
   movesToLeader,
+  movesToRandomWhenUnaware,
   END
 };
 
@@ -103,7 +105,7 @@ struct ActorDataT
   bool intrProps[endOfPropIds];
   int rangedCooldownTurns, spellCooldownTurns;
   bool ai[int(AiId::END)];
-  int nrTurnsAwarePlayer;
+  int nrTurnsAware;
   int spawnMinDLVL, spawnMaxDLVL;
   ActorSize actorSize;
   bool isHumanoid;
@@ -112,6 +114,7 @@ struct ActorDataT
   int nrKills;
   bool canOpenDoors, canBashDoors;
   bool canSeeInDarkness;
+  bool canBeKnockedBack;
   int nrLeftAllowedToSpawn;
   bool isUnique;
   bool isAutoSpawnAllowed;

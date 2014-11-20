@@ -96,7 +96,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     }
 
     PropHandler& defPropHlr = defender->getPropHandler();
-    vector<PropId> defProps;
+    bool defProps[endOfPropIds];
     defPropHlr.getAllActivePropIds(defProps);
 
     //If attacker is aware of the defender, check
@@ -133,26 +133,21 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
       {
         //Check if attacker gets a bonus due to a defender property.
 
-        //Give big attack bonus if defender is completely unable to fight.
-        for(PropId propId : defProps)
+        if(
+          defProps[propParalyzed]  ||
+          defProps[propNailed]     ||
+          defProps[propFainted])
         {
-          if(
-            propId == propParalyzed ||
-            propId == propNailed    ||
-            propId == propFainted)
-          {
-            isBigAttBon = true;
-            break;
-          }
-
+          //Give big attack bonus if defender is completely unable to fight.
+          isBigAttBon = true;
+        }
+        else if(
+          defProps[propConfused]  ||
+          defProps[propSlowed]    ||
+          defProps[propBurning])
+        {
           //Give small attack bonus if defender has problems fighting.
-          if(
-            propId == propConfused  ||
-            propId == propSlowed    ||
-            propId == propBurning)
-          {
-            isSmallAttBon = true;
-          }
+          isSmallAttBon = true;
         }
       }
 
@@ -169,7 +164,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     attackResult = AbilityRoll::roll(hitChanceTot);
 
     //Ethereal target missed?
-    if(find(defProps.begin(), defProps.end(), propEthereal) != defProps.end())
+    if(defProps[propEthereal])
     {
       isEtherealDefenderMissed = Rnd::fraction(2, 3);
     }
@@ -179,10 +174,10 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     nrDmgSides  = wpn_.getData().melee.dmg.second;
     dmgPlus     = wpn_.meleeDmgPlus_;
 
-    vector<PropId> attProps;
+    bool attProps[endOfPropIds];
     attacker->getPropHandler().getAllActivePropIds(attProps);
 
-    if(find(attProps.begin(), attProps.end(), propWeakened) != attProps.end())
+    if(attProps[propWeakened])
     {
       //Weak attack (min damage)
       dmgRoll       = nrDmgRolls;
@@ -252,7 +247,7 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
     else
     {
       bool blocked[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksProjectiles(), blocked);
+      MapParse::parse(CellCheck::BlocksProjectiles(), blocked);
       intendedAimLvl = blocked[curPos_.x][curPos_.y] ?
                        actorSize_humanoid : actorSize_floor;
     }
@@ -310,10 +305,10 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
     {
       TRACE << "Attack roll succeeded" << endl;
 
-      vector<PropId> props;
+      bool props[endOfPropIds];
       defender->getPropHandler().getAllActivePropIds(props);
 
-      if(find(begin(props), end(props), propEthereal) != end(props))
+      if(props[propEthereal])
       {
         isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
@@ -360,7 +355,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
     else
     {
       bool blocked[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksProjectiles(), blocked);
+      MapParse::parse(CellCheck::BlocksProjectiles(), blocked);
       intendedAimLvl = blocked[curPos_.x][curPos_.y] ?
                        actorSize_humanoid : actorSize_floor;
     }
@@ -416,10 +411,10 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
     {
       TRACE << "Attack roll succeeded" << endl;
 
-      vector<PropId> props;
+      bool props[endOfPropIds];
       defender->getPropHandler().getAllActivePropIds(props);
 
-      if(find(begin(props), end(props), propEthereal) != end(props))
+      if(props[propEthereal])
       {
         isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
@@ -1040,7 +1035,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
   const ActorSize intendedAimLvl = data->intendedAimLvl;
 
   bool featureBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksProjectiles(), featureBlockers);
+  MapParse::parse(CellCheck::BlocksProjectiles(), featureBlockers);
 
   Actor* actorArray[MAP_W][MAP_H];
   Utils::mkActorArray(actorArray);
@@ -1256,7 +1251,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
   else
   {
     Mon* const mon = static_cast<Mon*>(data.defender);
-    mon->awareCounter_ = mon->getData().nrTurnsAwarePlayer;
+    mon->awareCounter_ = mon->getData().nrTurnsAware;
   }
   GameTime::actorDidAct();
 }

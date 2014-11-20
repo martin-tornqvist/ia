@@ -133,7 +133,7 @@ const std::vector<Pos> cardinalList
 };
 const std::vector<Pos> dirList
 {
-  Pos(-1, 0), Pos(1, 0), Pos(0, -1), Pos(0, 1),
+  Pos(-1,  0), Pos( 1, 0), Pos(0, -1), Pos(0, 1),
   Pos(-1, -1), Pos(-1, 1), Pos(1, -1), Pos(1, 1)
 };
 

@@ -174,10 +174,10 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
       const bool IS_PLAYER    = actor == Map::player;
       const bool IS_CELL_SEEN = Map::isPosSeenByPlayer(pos_);
 
-      vector<PropId> props;
+      bool props[endOfPropIds];
       if(actor) {actor->getPropHandler().getAllActivePropIds(props);}
 
-      const bool IS_WEAK = find(begin(props), end(props), propWeakened) != end(props);
+      const bool IS_WEAK = props[propWeakened];
 
       switch(matl_)
       {
@@ -381,13 +381,16 @@ IsDestroyed Door::onFinishedBurning()
 
 bool Door::canMoveCmn() const {return isOpen_;}
 
-bool Door::canMove(const vector<PropId>& actorsProps) const
+bool Door::canMove(const bool actorPropIds[endOfPropIds]) const
 {
-  if(isOpen_) {return true;}
-
-  for(PropId propId : actorsProps)
+  if(isOpen_)
   {
-    if(propId == propEthereal || propId == propOoze) {return true;}
+    return true;
+  }
+
+  if(actorPropIds[propEthereal] || actorPropIds[propOoze])
+  {
+    return true;
   }
 
   return isOpen_;
@@ -540,7 +543,7 @@ void Door::tryClose(Actor* actorTrying)
   const bool TRYER_IS_BLIND = !actorTrying->getPropHandler().allowSee();
   //const bool PLAYER_SEE_DOOR    = Map::playerVision[pos_.x][pos_.y];
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blocked);
+  MapParse::parse(CellCheck::BlocksLos(), blocked);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true :
@@ -683,7 +686,7 @@ void Door::tryOpen(Actor* actorTrying)
   const bool TRYER_IS_BLIND   = !actorTrying->getPropHandler().allowSee();
   const bool PLAYER_SEE_DOOR  = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksLos(), blocked);
+  MapParse::parse(CellCheck::BlocksLos(), blocked);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true : Map::player->isSeeingActor(*actorTrying, blocked);

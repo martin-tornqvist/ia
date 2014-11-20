@@ -38,11 +38,11 @@ public:
   ActorDied hit(int dmg, const DmgType dmgType);
   ActorDied hitSpi(const int DMG, const bool ALLOW_MSG);
 
-  bool restoreHp(const int HP_RESTORED, const bool ALLOW_MSG = true,
-                 const bool IS_ALLOWED_ABOVE_MAX = false);
-  bool restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG = true,
-                  const bool IS_ALLOWED_ABOVE_MAX = false);
-  void changeMaxHp(const int CHANGE, const bool ALLOW_MSG);
+  bool restoreHp   (const int HP_RESTORED, const bool ALLOW_MSG = true,
+                    const bool IS_ALLOWED_ABOVE_MAX = false);
+  bool restoreSpi  (const int SPI_RESTORED, const bool ALLOW_MSG = true,
+                    const bool IS_ALLOWED_ABOVE_MAX = false);
+  void changeMaxHp (const int CHANGE, const bool ALLOW_MSG);
   void changeMaxSpi(const int CHANGE, const bool ALLOW_MSG);
 
   void die(const bool IS_DESTROYED, const bool ALLOW_GORE,
@@ -83,9 +83,9 @@ public:
 
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
 
-  inline bool       isAlive()   const {return state == ActorState::alive;}
-  inline bool       isCorpse()  const {return state == ActorState::corpse;}
-  inline ActorState getState()  const {return state;}
+  inline bool       isAlive ()  const {return state_ == ActorState::alive;}
+  inline bool       isCorpse()  const {return state_ == ActorState::corpse;}
+  inline ActorState getState()  const {return state_;}
 
   virtual bool isLeaderOf(const Actor* const actor)       const = 0;
   virtual bool isActorMyLeader(const Actor* const actor)  const = 0;
@@ -101,15 +101,14 @@ protected:
   friend class PropPossessedByZuul;
   friend class Trap;
 
-  ActorState state;
-
   virtual void die_() {}
   virtual void hit_(int& dmg) {(void)dmg;}
   virtual void mkStartItems() = 0;
 
-  Clr     clr_;
-  char    glyph_;
-  TileId  tile_;
+  ActorState  state_;
+  Clr         clr_;
+  char        glyph_;
+  TileId      tile_;
 
   int hp_, hpMax_, spi_, spiMax_;
 

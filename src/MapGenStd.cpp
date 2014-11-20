@@ -55,7 +55,7 @@ bool doorProposals[MAP_W][MAP_H];
 bool isAllRoomsConnected()
 {
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   return MapParse::isMapConnected(blocked);
 }
@@ -251,7 +251,7 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
       else
 #endif // MK_CRUMBLE_ROOMS
       {
-        Room* const room = RoomFactory::mkRandomAllowedStdRoom(auxRect);
+        Room* const room = RoomFactory::mkRandomAllowedStdRoom(auxRect, false);
         registerRoom(*room);
         mkFloorInRoom(*room);
       }
@@ -272,7 +272,7 @@ void mkAuxRooms(Region regions[3][3])
   };
 
   bool floorCells[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), floorCells);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), floorCells);
   Utils::reverseBoolArray(floorCells);
 
   for(int regionY = 0; regionY < 3; regionY++)
@@ -410,7 +410,7 @@ void mkMergedRegionsAndRooms(Region regions[3][3])
     const Rect padding(rndPadding(), rndPadding(), rndPadding(), rndPadding());
 
     const Rect roomRect(reg1.r_.p0 + padding.p0, reg1.r_.p1 - padding.p1);
-    Room* const room  = RoomFactory::mkRandomAllowedStdRoom(roomRect);
+    Room* const room  = RoomFactory::mkRandomAllowedStdRoom(roomRect, false);
     reg1.mainRoom_    = room;
     registerRoom(*room);
     mkFloorInRoom(*room);
@@ -819,9 +819,8 @@ void mkSubRooms()
               continue;
             }
 
-            Room* const room = RoomFactory::mkRandomAllowedStdRoom(r);
+            Room* const room = RoomFactory::mkRandomAllowedStdRoom(r, true);
             registerRoom(*room);
-            room->isSubRoom_ = true;
 
             outerRoom->subRooms_.push_back(room);
 
@@ -832,7 +831,6 @@ void mkSubRooms()
               {
                 if(x == p0.x || x == p1.x || y == p0.y || y == p1.y)
                 {
-
                   Map::put(new Wall(Pos(x, y)));
 
                   if(
@@ -894,7 +892,7 @@ void fillDeadEnds()
 {
   //Find an origin with no adjacent walls, to ensure not starting in a dead end
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   bool expandedBlockers[MAP_W][MAP_H];
   MapParse::expand(blocked, expandedBlockers);
@@ -1003,7 +1001,7 @@ void decorate()
           wall->setRndCmnWall();
         }
 
-//        if(CellPred::AllAdjIsNotFeature(FeatureId::floor).check(cell))
+//        if(CellCheck::AllAdjIsNotFeature(FeatureId::floor).check(cell))
 //        {
 //          wall->type_ = WallType::cave;
 //        }
@@ -1038,7 +1036,7 @@ void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H])
 
   vector<FeatureId> featIdsOk {FeatureId::floor, FeatureId::carpet, FeatureId::grass};
 
-  MapParse::parse(CellPred::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
+  MapParse::parse(CellCheck::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
 
   for(int x = 0; x < MAP_W; ++x)
   {
@@ -1089,8 +1087,8 @@ Pos placeStairs()
   sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
 
   TRACE << "Picking random cell from furthest half" << endl;
-  const int ELEMENT = Rnd::range(NR_OK_CELLS / 2, NR_OK_CELLS - 1);
-  const Pos stairsPos(allowedCellsList[ELEMENT]);
+  //const int ELEMENT = Rnd::range(NR_OK_CELLS / 2, NR_OK_CELLS - 1);
+  const Pos stairsPos(allowedCellsList[NR_OK_CELLS - 1]);
 
   TRACE << "Spawning stairs at chosen cell" << endl;
   Map::put(new Stairs(stairsPos));
@@ -1193,7 +1191,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos)
   TRACE_FUNC_BEGIN;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
 
   blocked[stairsPos.x][stairsPos.y] = false;
 
@@ -1297,7 +1295,7 @@ bool mkStdLvl()
         if(!region.mainRoom_ && region.isFree_)
         {
           const Rect roomRect = region.getRndRoomRect();
-          auto* room          = RoomFactory::mkRandomAllowedStdRoom(roomRect);
+          auto* room          = RoomFactory::mkRandomAllowedStdRoom(roomRect, false);
           registerRoom(*room);
           mkFloorInRoom(*room);
           region.mainRoom_    = room;

@@ -91,8 +91,7 @@ void Mon::onActorTurn()
     {
       if(leader_->isAlive() && !isActorMyLeader(Map::player))
       {
-        static_cast<Mon*>(leader_)->awareCounter_ =
-          leader_->getData().nrTurnsAwarePlayer;
+        static_cast<Mon*>(leader_)->awareCounter_ = leader_->getData().nrTurnsAware;
       }
     }
     else //Monster does not have a leader
@@ -116,7 +115,10 @@ void Mon::onActorTurn()
   //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
   if(leader_ != Map::player/*TODO temporary restriction, allow this later(?)*/)
   {
-    if(onActorTurn_()) {return;}
+    if(onActorTurn_())
+    {
+      return;
+    }
   }
 
   //------------------------------ COMMON ACTIONS
@@ -130,36 +132,56 @@ void Mon::onActorTurn()
 
   if(data_->ai[int(AiId::makesRoomForFriend)] && leader_ != Map::player)
   {
-    if(Ai::Action::makeRoomForFriend(*this)) {return;}
+    if(Ai::Action::makeRoomForFriend(*this))
+    {
+      return;
+    }
   }
 
   if(Rnd::oneIn(6))
   {
-    if(Ai::Action::tryCastRandomSpell(*this)) {return;}
+    if(Ai::Action::tryCastRandomSpell(*this))
+    {
+      return;
+    }
   }
 
   if(data_->ai[int(AiId::attacks)] && tgt_)
   {
-    if(tryAttack(*tgt_)) {return;}
+    if(tryAttack(*tgt_))
+    {
+      return;
+    }
   }
 
-  if(Ai::Action::tryCastRandomSpell(*this)) {return;}
+  if (Ai::Action::tryCastRandomSpell(*this))
+  {
+    return;
+  }
 
   int erraticMovePct = data_->erraticMovePct;
-  if(isActorMyLeader(Map::player))
+  if (isActorMyLeader(Map::player))
   {
     //Move less erratically if allied to player
     erraticMovePct /= 2;
   }
 
-  if(Rnd::percentile() < erraticMovePct)
+  if(
+    data_->ai[int(AiId::movesToRandomWhenUnaware)] &&
+    Rnd::percentile() < erraticMovePct )
   {
-    if(Ai::Action::moveToRandomAdjCell(*this)) {return;}
+    if(Ai::Action::moveToRandomAdjCell(*this))
+    {
+      return;
+    }
   }
 
   if(data_->ai[int(AiId::movesToTgtWhenLos)])
   {
-    if(Ai::Action::moveToTgtSimple(*this)) {return;}
+    if(Ai::Action::moveToTgtSimple(*this))
+    {
+      return;
+    }
   }
 
   vector<Pos> path;
@@ -171,7 +193,10 @@ void Mon::onActorTurn()
 
   if(leader_ != Map::player)
   {
-    if(Ai::Action::handleClosedBlockingDoor(*this, path)) {return;}
+    if(Ai::Action::handleClosedBlockingDoor(*this, path))
+    {
+      return;
+    }
   }
 
   if(Ai::Action::stepPath(*this, path)) {return;}
@@ -179,7 +204,10 @@ void Mon::onActorTurn()
   if(data_->ai[int(AiId::movesToLeader)])
   {
     Ai::Info::setPathToLeaderIfNoLosToleader(*this, path);
-    if(Ai::Action::stepPath(*this, path)) {return;}
+    if(Ai::Action::stepPath(*this, path))
+    {
+      return;
+    }
   }
 
   if(data_->ai[int(AiId::movesToLair)] && leader_ != Map::player)
@@ -191,11 +219,20 @@ void Mon::onActorTurn()
     else
     {
       Ai::Info::setPathToLairIfNoLos(*this, path, lairCell_);
-      if(Ai::Action::stepPath(*this, path)) {return;}
+      if(Ai::Action::stepPath(*this, path))
+      {
+        return;
+      }
     }
   }
 
-  if(Ai::Action::moveToRandomAdjCell(*this)) {return;}
+  if(data_->ai[int(AiId::movesToRandomWhenUnaware)])
+  {
+    if(Ai::Action::moveToRandomAdjCell(*this))
+    {
+      return;
+    }
+  }
 
   GameTime::actorDidAct();
 }
@@ -212,7 +249,7 @@ void Mon::onStdTurn()
         Log::addMsg(getNameThe() + " suddenly disappears!");
 //        Render::drawBlastAtCells({pos}, clrMagenta);
       }
-      state = ActorState::destroyed;
+      state_ = ActorState::destroyed;
       return;
     }
   }
@@ -222,7 +259,7 @@ void Mon::onStdTurn()
 void Mon::hit_(int& dmg)
 {
   (void)dmg;
-  awareCounter_ = data_->nrTurnsAwarePlayer;
+  awareCounter_ = data_->nrTurnsAware;
 }
 
 void Mon::moveDir(Dir dir)
@@ -298,7 +335,7 @@ void Mon::becomeAware(const bool IS_FROM_SEEING)
   if(isAlive())
   {
     const int AWARENESS_CNT_BEFORE = awareCounter_;
-    awareCounter_ = data_->nrTurnsAwarePlayer;
+    awareCounter_ = data_->nrTurnsAware;
     if(AWARENESS_CNT_BEFORE <= 0)
     {
       if(IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr))
@@ -322,7 +359,7 @@ void Mon::playerBecomeAwareOfMe(const int DURATION_FACTOR)
 
 bool Mon::tryAttack(Actor& defender)
 {
-  if(state != ActorState::alive || (awareCounter_ <= 0 && leader_ != Map::player))
+  if(state_ != ActorState::alive || (awareCounter_ <= 0 && leader_ != Map::player))
   {
     return false;
   }
@@ -511,6 +548,20 @@ bool Mon::isActorMyLeader(const Actor* const actor) const
   return leader_ == actor;
 }
 
+int Mon::getGroupSize()
+{
+  const Actor* const groupLeader = leader_ ? leader_ : this;
+
+  int ret = 1; //Starting at one to include leader
+
+  for(const Actor* const actor : GameTime::actors_)
+  {
+    if(actor->isActorMyLeader(groupLeader)) {++ret;}
+  }
+
+  return ret;
+}
+
 //--------------------------------------------------------- SPECIFIC MONSTERS
 string Cultist::getCultistPhrase()
 {
@@ -675,7 +726,7 @@ void Zuul::place_()
   {
     //Note: Do not call die() here, that would have side effects such as
     //player getting XP. Instead, simply set the dead state to destroyed.
-    state = ActorState::destroyed;
+    state_ = ActorState::destroyed;
     Actor* actor = ActorFactory::mk(ActorId::cultistPriest, pos);
     PropHandler& propHandler = actor->getPropHandler();
     propHandler.tryApplyProp(new PropPossessedByZuul(PropTurns::indefinite), true);
@@ -697,54 +748,50 @@ bool Vortex::onActorTurn_()
       pullCooldown--;
     }
 
-    if(pullCooldown <= 0)
+    if(awareCounter_ > 0 && pullCooldown <= 0)
     {
-      if(awareCounter_ > 0)
+      TRACE << "pullCooldown: " << pullCooldown << endl;
+      TRACE << "Is aware of player" << endl;
+      const Pos& playerPos = Map::player->pos;
+      if(!Utils::isPosAdj(pos, playerPos, true))
       {
-        TRACE << "pullCooldown: " << pullCooldown << endl;
-        TRACE << "Is aware of player" << endl;
-        const Pos& playerPos = Map::player->pos;
-        if(!Utils::isPosAdj(pos, playerPos, true))
+        const int CHANCE_TO_KNOCK = 25;
+        if(Rnd::percentile() < CHANCE_TO_KNOCK)
         {
+          TRACE << "Passed random chance to pull" << endl;
 
-          const int CHANCE_TO_KNOCK = 25;
-          if(Rnd::percentile() < CHANCE_TO_KNOCK)
+          const Pos playerDelta = playerPos - pos;
+          Pos knockBackFromPos = playerPos;
+          if(playerDelta.x > 1)   {knockBackFromPos.x++;}
+          if(playerDelta.x < -1)  {knockBackFromPos.x--;}
+          if(playerDelta.y > 1)   {knockBackFromPos.y++;}
+          if(playerDelta.y < -1)  {knockBackFromPos.y--;}
+
+          if(knockBackFromPos != playerPos)
           {
-            TRACE << "Passed random chance to pull" << endl;
-
-            const Pos playerDelta = playerPos - pos;
-            Pos knockBackFromPos = playerPos;
-            if(playerDelta.x > 1)   {knockBackFromPos.x++;}
-            if(playerDelta.x < -1)  {knockBackFromPos.x--;}
-            if(playerDelta.y > 1)   {knockBackFromPos.y++;}
-            if(playerDelta.y < -1)  {knockBackFromPos.y--;}
-
-            if(knockBackFromPos != playerPos)
+            TRACE << "Good pos found to knockback player from (";
+            TRACE << knockBackFromPos.x << ",";
+            TRACE << knockBackFromPos.y << ")" << endl;
+            TRACE << "Player position: ";
+            TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
+            bool blockedLos[MAP_W][MAP_H];
+            MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+            if(isSeeingActor(*(Map::player), blockedLos))
             {
-              TRACE << "Good pos found to knockback player from (";
-              TRACE << knockBackFromPos.x << ",";
-              TRACE << knockBackFromPos.y << ")" << endl;
-              TRACE << "Player position: ";
-              TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
-              bool blockedLos[MAP_W][MAP_H];
-              MapParse::parse(CellPred::BlocksLos(), blockedLos);
-              if(isSeeingActor(*(Map::player), blockedLos))
+              TRACE << "I am seeing the player" << endl;
+              if(Map::player->isSeeingActor(*this, nullptr))
               {
-                TRACE << "I am seeing the player" << endl;
-                if(Map::player->isSeeingActor(*this, nullptr))
-                {
-                  Log::addMsg("The Vortex attempts to pull me in!");
-                }
-                else
-                {
-                  Log::addMsg("A powerful wind is pulling me!");
-                }
-                TRACE << "Attempt pull (knockback)" << endl;
-                KnockBack::tryKnockBack(*(Map::player), knockBackFromPos, false, false);
-                pullCooldown = 5;
-                GameTime::actorDidAct();
-                return true;
+                Log::addMsg("The Vortex attempts to pull me in!");
               }
+              else
+              {
+                Log::addMsg("A powerful wind is pulling me!");
+              }
+              TRACE << "Attempt pull (knockback)" << endl;
+              KnockBack::tryKnockBack(*(Map::player), knockBackFromPos, false, false);
+              pullCooldown = 5;
+              GameTime::actorDidAct();
+              return true;
             }
           }
         }
@@ -789,40 +836,33 @@ void FrostVortex::mkStartItems()
 
 bool Ghost::onActorTurn_()
 {
-  if(isAlive())
+  if(
+    isAlive()                                     &&
+    awareCounter_ > 0                             &&
+    Utils::isPosAdj(pos, Map::player->pos, false) &&
+    Rnd::percentile() < 30)
   {
-    if(awareCounter_ > 0)
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellCheck::BlocksLos(), blocked);
+    const bool PLAYER_SEES_ME =
+      Map::player->isSeeingActor(*this, blocked);
+    const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
+    Log::addMsg(refer + " reaches for me... ");
+    const AbilityRollResult rollResult =
+      AbilityRoll::roll(Map::player->getData().abilityVals.getVal(
+                          AbilityId::dodgeAttack, true, *this));
+    const bool PLAYER_DODGES = rollResult >= successSmall;
+    if(PLAYER_DODGES)
     {
-
-      if(Utils::isPosAdj(pos, Map::player->pos, false))
-      {
-        if(Rnd::percentile() < 30)
-        {
-
-          bool blocked[MAP_W][MAP_H];
-          MapParse::parse(CellPred::BlocksLos(), blocked);
-          const bool PLAYER_SEES_ME =
-            Map::player->isSeeingActor(*this, blocked);
-          const string refer = PLAYER_SEES_ME ? getNameThe() : "It";
-          Log::addMsg(refer + " reaches for me... ");
-          const AbilityRollResult rollResult =
-            AbilityRoll::roll(Map::player->getData().abilityVals.getVal(
-                                AbilityId::dodgeAttack, true, *this));
-          const bool PLAYER_DODGES = rollResult >= successSmall;
-          if(PLAYER_DODGES)
-          {
-            Log::addMsg("I dodge!", clrMsgGood);
-          }
-          else
-          {
-            Map::player->getPropHandler().tryApplyProp(
-              new PropSlowed(PropTurns::std));
-          }
-          GameTime::actorDidAct();
-          return true;
-        }
-      }
+      Log::addMsg("I dodge!", clrMsgGood);
     }
+    else
+    {
+      Map::player->getPropHandler().tryApplyProp(
+        new PropSlowed(PropTurns::std));
+    }
+    GameTime::actorDidAct();
+    return true;
   }
   return false;
 }
@@ -935,54 +975,47 @@ void MummyUnique::mkStartItems()
 
 bool Khephren::onActorTurn_()
 {
-  if(isAlive())
+  if(isAlive() && awareCounter_ > 0 && !hasSummonedLocusts)
   {
-    if(awareCounter_ > 0)
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellCheck::BlocksLos(), blocked);
+
+    if(isSeeingActor(*(Map::player), blocked))
     {
-      if(!hasSummonedLocusts)
+      MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+
+      const int SPAWN_AFTER_X = Map::player->pos.x + FOV_STD_RADI_INT + 1;
+
+      for(int y = 0; y  < MAP_H; ++y)
       {
-
-        bool blocked[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksLos(), blocked);
-
-        if(isSeeingActor(*(Map::player), blocked))
+        for(int x = 0; x <= SPAWN_AFTER_X; ++x)
         {
-          MapParse::parse(CellPred::BlocksMoveCmn(true), blocked);
-
-          const int SPAWN_AFTER_X =
-            Map::player->pos.x + FOV_STD_RADI_INT + 1;
-          for(int y = 0; y  < MAP_H; ++y)
-          {
-            for(int x = 0; x <= SPAWN_AFTER_X; ++x)
-            {
-              blocked[x][y] = true;
-            }
-          }
-
-          vector<Pos> freeCells;
-          Utils::mkVectorFromBoolMap(false, blocked, freeCells);
-
-          sort(begin(freeCells), end(freeCells), IsCloserToPos(pos));
-
-          const size_t NR_OF_SPAWNS = 15;
-          if(freeCells.size() >= NR_OF_SPAWNS + 1)
-          {
-            Log::addMsg("Khephren calls a plague of Locusts!");
-            Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
-            for(size_t i = 0; i < NR_OF_SPAWNS; ++i)
-            {
-              Actor* const actor  = ActorFactory::mk(ActorId::locust, freeCells[0]);
-              Mon* const mon      = static_cast<Mon*>(actor);
-              mon->awareCounter_  = 999;
-              mon->leader_        = this;
-              freeCells.erase(begin(freeCells));
-            }
-            Render::drawMapAndInterface();
-            hasSummonedLocusts = true;
-            GameTime::actorDidAct();
-            return true;
-          }
+          blocked[x][y] = true;
         }
+      }
+
+      vector<Pos> freeCells;
+      Utils::mkVectorFromBoolMap(false, blocked, freeCells);
+
+      sort(begin(freeCells), end(freeCells), IsCloserToPos(pos));
+
+      const size_t NR_OF_SPAWNS = 15;
+      if(freeCells.size() >= NR_OF_SPAWNS + 1)
+      {
+        Log::addMsg("Khephren calls a plague of Locusts!");
+        Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
+        for(size_t i = 0; i < NR_OF_SPAWNS; ++i)
+        {
+          Actor* const actor  = ActorFactory::mk(ActorId::locust, freeCells[0]);
+          Mon* const mon      = static_cast<Mon*>(actor);
+          mon->awareCounter_  = 999;
+          mon->leader_        = leader_ ? leader_ : this;
+          freeCells.erase(begin(freeCells));
+        }
+        Render::drawMapAndInterface();
+        hasSummonedLocusts = true;
+        GameTime::actorDidAct();
+        return true;
       }
     }
   }
@@ -1025,40 +1058,34 @@ void HuntingHorror::mkStartItems()
 
 bool KeziahMason::onActorTurn_()
 {
-  if(isAlive())
+  if(isAlive() && awareCounter_ > 0 && !hasSummonedJenkin)
   {
-    if(awareCounter_ > 0)
+    bool blockedLos[MAP_W][MAP_H];
+    MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+
+    if(isSeeingActor(*(Map::player), blockedLos))
     {
-      if(!hasSummonedJenkin)
+      MapParse::parse(CellCheck::BlocksMoveCmn(true), blockedLos);
+
+      vector<Pos> line;
+      LineCalc::calcNewLine(pos, Map::player->pos, true, 9999, false, line);
+
+      const int LINE_SIZE = line.size();
+      for(int i = 0; i < LINE_SIZE; ++i)
       {
-        bool blockedLos[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksLos(), blockedLos);
-
-        if(isSeeingActor(*(Map::player), blockedLos))
+        const Pos c = line[i];
+        if(!blockedLos[c.x][c.y])
         {
-          MapParse::parse(CellPred::BlocksMoveCmn(true), blockedLos);
-
-          vector<Pos> line;
-          LineCalc::calcNewLine(pos, Map::player->pos, true, 9999, false, line);
-
-          const int LINE_SIZE = line.size();
-          for(int i = 0; i < LINE_SIZE; ++i)
-          {
-            const Pos c = line[i];
-            if(!blockedLos[c.x][c.y])
-            {
-              //TODO Use the generalized summoning functionality
-              Log::addMsg("Keziah summons Brown Jenkin!");
-              Actor* const actor    = ActorFactory::mk(ActorId::brownJenkin, c);
-              Mon* jenkin           = static_cast<Mon*>(actor);
-              Render::drawMapAndInterface();
-              hasSummonedJenkin     = true;
-              jenkin->awareCounter_ = 999;
-              jenkin->leader_       = this;
-              GameTime::actorDidAct();
-              return true;
-            }
-          }
+          //TODO Use the generalized summoning functionality
+          Log::addMsg("Keziah summons Brown Jenkin!");
+          Actor* const actor    = ActorFactory::mk(ActorId::brownJenkin, c);
+          Mon* jenkin           = static_cast<Mon*>(actor);
+          Render::drawMapAndInterface();
+          hasSummonedJenkin     = true;
+          jenkin->awareCounter_ = 999;
+          jenkin->leader_       = leader_ ? leader_ : this;
+          GameTime::actorDidAct();
+          return true;
         }
       }
     }
@@ -1081,13 +1108,12 @@ void LengElder::onStdTurn_()
 {
   if(isAlive())
   {
-
     awareCounter_ = 100;
 
     if(hasGivenItemToPlayer_)
     {
       bool blockedLos[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksLos(), blockedLos);
+      MapParse::parse(CellCheck::BlocksLos(), blockedLos);
       if(isSeeingActor(*Map::player, blockedLos))
       {
         if(nrTurnsToHostile_ <= 0)
@@ -1101,7 +1127,7 @@ void LengElder::onStdTurn_()
         }
       }
     }
-    else
+    else //Has not given item to player
     {
       const bool IS_PLAYER_SEE_ME = Map::player->isSeeingActor(*this, nullptr);
       const bool IS_PLAYER_ADJ    = Utils::isPosAdj(pos, Map::player->pos, false);
@@ -1215,35 +1241,30 @@ void Wolf::mkStartItems()
 
 bool WormMass::onActorTurn_()
 {
-  if(isAlive())
+  if(
+    isAlive()                                       &&
+    awareCounter_ > 0                               &&
+    GameTime::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
+    Rnd::oneIn(spawnNewOneInN))
   {
-    if(awareCounter_ > 0)
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellCheck::BlocksActor(*this, true), blocked,
+                    MapParseWriteRule::always, Rect(pos - 1, pos + 1));
+
+    for(const Pos& d : DirUtils::dirList)
     {
-      if(Rnd::percentile() < chanceToSpawnNew)
+      const Pos pAdj(pos + d);
+
+      if(!blocked[pAdj.x][pAdj.y])
       {
-
-        bool blocked[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksActor(*this, true), blocked);
-
-        Pos mkPos;
-        for(int dx = -1; dx <= 1; ++dx)
-        {
-          for(int dy = -1; dy <= 1; ++dy)
-          {
-            mkPos.set(pos + Pos(dx, dy));
-            if(!blocked[mkPos.x][mkPos.y])
-            {
-              Actor* const actor =
-                ActorFactory::mk(data_->id, mkPos);
-              WormMass* const worm = static_cast<WormMass*>(actor);
-              chanceToSpawnNew -= 4;
-              worm->chanceToSpawnNew = chanceToSpawnNew;
-              worm->awareCounter_ = awareCounter_;
-              GameTime::actorDidAct();
-              return true;
-            }
-          }
-        }
+        Actor* const    actor   = ActorFactory::mk(data_->id, pAdj);
+        WormMass* const worm    = static_cast<WormMass*>(actor);
+        ++spawnNewOneInN;
+        worm->spawnNewOneInN    = spawnNewOneInN;
+        worm->awareCounter_     = awareCounter_;
+        worm->leader_           = leader_ ? leader_ : this;
+        GameTime::actorDidAct();
+        return true;
       }
     }
   }
@@ -1257,34 +1278,30 @@ void WormMass::mkStartItems()
 
 bool GiantLocust::onActorTurn_()
 {
-  if(isAlive())
+  if(
+    isAlive()                                       &&
+    awareCounter_ > 0                               &&
+    GameTime::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
+    Rnd::oneIn(spawnNewOneInN))
   {
-    if(awareCounter_ > 0)
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellCheck::BlocksActor(*this, true), blocked,
+                    MapParseWriteRule::always, Rect(pos - 1, pos + 1));
+
+    for(const Pos& d : DirUtils::dirList)
     {
-      if(Rnd::percentile() < chanceToSpawnNew)
+      const Pos pAdj(pos + d);
+
+      if(!blocked[pAdj.x][pAdj.y])
       {
-
-        bool blocked[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksActor(*this, true), blocked);
-
-        Pos mkPos;
-        for(int dx = -1; dx <= 1; ++dx)
-        {
-          for(int dy = -1; dy <= 1; ++dy)
-          {
-            mkPos.set(pos + Pos(dx, dy));
-            if(!blocked[mkPos.x][mkPos.y])
-            {
-              Actor* const actor = ActorFactory::mk(data_->id, mkPos);
-              GiantLocust* const locust = static_cast<GiantLocust*>(actor);
-              chanceToSpawnNew -= 2;
-              locust->chanceToSpawnNew = chanceToSpawnNew;
-              locust->awareCounter_ = awareCounter_;
-              GameTime::actorDidAct();
-              return true;
-            }
-          }
-        }
+        Actor* const    actor     = ActorFactory::mk(data_->id, pAdj);
+        GiantLocust* const locust = static_cast<GiantLocust*>(actor);
+        ++spawnNewOneInN;
+        locust->spawnNewOneInN    = spawnNewOneInN;
+        locust->awareCounter_     = awareCounter_;
+        locust->leader_           = leader_ ? leader_ : this;
+        GameTime::actorDidAct();
+        return true;
       }
     }
   }
@@ -1308,38 +1325,33 @@ void LordOfShadows::mkStartItems()
 
 bool LordOfSpiders::onActorTurn_()
 {
-  if(isAlive() && awareCounter_ > 0)
+  if(isAlive() && awareCounter_ > 0 && Rnd::coinToss())
   {
+    const Pos playerPos = Map::player->pos;
 
-    if(Rnd::coinToss())
+    if(Map::player->isSeeingActor(*this, nullptr))
     {
+      Log::addMsg(data_->spellCastMessage);
+    }
 
-      const Pos playerPos = Map::player->pos;
-
-      if(Map::player->isSeeingActor(*this, nullptr))
+    for(int dx = -1; dx <= 1; ++dx)
+    {
+      for(int dy = -1; dy <= 1; ++dy)
       {
-        Log::addMsg(data_->spellCastMessage);
-      }
 
-      for(int dx = -1; dx <= 1; ++dx)
-      {
-        for(int dy = -1; dy <= 1; ++dy)
+        if(Rnd::fraction(3, 4))
         {
 
-          if(Rnd::fraction(3, 4))
+          const Pos p(playerPos + Pos(dx, dy));
+          const auto* const featureHere = Map::cells[p.x][p.y].rigid;
+
+          if(featureHere->canHaveRigid())
           {
-
-            const Pos p(playerPos + Pos(dx, dy));
-            const auto* const featureHere = Map::cells[p.x][p.y].rigid;
-
-            if(featureHere->canHaveRigid())
-            {
-              auto& d = FeatureData::getData(featureHere->getId());
-              const auto* const mimic = static_cast<Rigid*>(d.mkObj(p));
-              Trap* const f = new Trap(p, mimic, TrapId::web);
-              Map::put(f);
-              f->reveal(false);
-            }
+            auto& d = FeatureData::getData(featureHere->getId());
+            const auto* const mimic = static_cast<Rigid*>(d.mkObj(p));
+            Trap* const f = new Trap(p, mimic, TrapId::web);
+            Map::put(f);
+            f->reveal(false);
           }
         }
       }
@@ -1385,46 +1397,39 @@ bool MajorClaphamLee::onActorTurn_()
     return true;
   }
 
-  if(isAlive())
+  if(isAlive() && awareCounter_ > 0 && !hasSummonedTombLegions)
   {
-    if(awareCounter_ > 0)
+    bool blockedLos[MAP_W][MAP_H];
+    MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+
+    if(isSeeingActor(*(Map::player), blockedLos))
     {
-      if(!hasSummonedTombLegions)
+      Log::addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
+      vector<ActorId> monIds;
+      monIds.clear();
+
+      monIds.push_back(ActorId::deanHalsey);
+
+      const int NR_OF_EXTRA_SPAWNS = 4;
+
+      for(int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i)
       {
-
-        bool blockedLos[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksLos(), blockedLos);
-
-        if(isSeeingActor(*(Map::player), blockedLos))
+        const int ZOMBIE_TYPE = Rnd::range(1, 3);
+        ActorId id = ActorId::zombie;
+        switch(ZOMBIE_TYPE)
         {
-          Log::addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
-          vector<ActorId> monIds;
-          monIds.clear();
-
-          monIds.push_back(ActorId::deanHalsey);
-
-          const int NR_OF_EXTRA_SPAWNS = 4;
-
-          for(int i = 0; i < NR_OF_EXTRA_SPAWNS; ++i)
-          {
-            const int ZOMBIE_TYPE = Rnd::range(1, 3);
-            ActorId id = ActorId::zombie;
-            switch(ZOMBIE_TYPE)
-            {
-              case 1: id = ActorId::zombie;        break;
-              case 2: id = ActorId::zombieAxe;     break;
-              case 3: id = ActorId::bloatedZombie; break;
-            }
-            monIds.push_back(id);
-          }
-          ActorFactory::summonMon(pos, monIds, true, this);
-          Render::drawMapAndInterface();
-          hasSummonedTombLegions = true;
-          Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
-          GameTime::actorDidAct();
-          return true;
+          case 1: id = ActorId::zombie;        break;
+          case 2: id = ActorId::zombieAxe;     break;
+          case 3: id = ActorId::bloatedZombie; break;
         }
+        monIds.push_back(id);
       }
+      ActorFactory::summonMon(pos, monIds, true, this);
+      Render::drawMapAndInterface();
+      hasSummonedTombLegions = true;
+      Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
+      GameTime::actorDidAct();
+      return true;
     }
   }
 
@@ -1446,7 +1451,7 @@ bool Zombie::tryResurrect()
       {
         if(pos != Map::player->pos && Rnd::oneIn(14))
         {
-          state   = ActorState::alive;
+          state_  = ActorState::alive;
           hp_     = (getHpMax(true) * 3) / 4;
           glyph_  = data_->glyph;
           tile_   = data_->tile;
@@ -1459,7 +1464,7 @@ bool Zombie::tryResurrect()
             Map::player->incrShock(ShockValue::some, ShockSrc::misc);
           }
 
-          awareCounter_ = data_->nrTurnsAwarePlayer * 2;
+          awareCounter_ = data_->nrTurnsAware * 2;
           GameTime::actorDidAct();
           return true;
         }
@@ -1474,7 +1479,7 @@ void Zombie::die_()
   //If resurrected once and has corpse, blow up the corpse
   if(hasResurrected && isCorpse())
   {
-    state = ActorState::destroyed;
+    state_ = ActorState::destroyed;
     Map::mkBlood(pos);
     Map::mkGore(pos);
   }
@@ -1503,4 +1508,38 @@ void BloatedZombie::mkStartItems()
 {
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::bloatedZombiePunch));
   inv_->putInIntrinsics(ItemFactory::mk(ItemId::bloatedZombieSpit));
+}
+
+bool Mold::onActorTurn_()
+{
+  if (
+    isAlive()                                       &&
+    GameTime::actors_.size() < MAX_NR_ACTORS_ON_MAP &&
+    Rnd::oneIn(spawnNewOneInN))
+  {
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellCheck::BlocksActor(*this, true), blocked,
+                    MapParseWriteRule::always, Rect(pos - 1, pos + 1));
+
+    for(const Pos& d : DirUtils::dirList)
+    {
+      const Pos adjPos(pos + d);
+
+      if(!blocked[adjPos.x][adjPos.y])
+      {
+        Actor* const  actor     = ActorFactory::mk(data_->id, adjPos);
+        Mold* const   mold      = static_cast<Mold*>(actor);
+        mold->awareCounter_     = awareCounter_;
+        mold->leader_           = leader_ ? leader_ : this;
+        GameTime::actorDidAct();
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+void Mold::mkStartItems()
+{
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::moldSpores));
 }

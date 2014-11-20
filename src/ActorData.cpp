@@ -29,7 +29,8 @@ void ActorDataT::reset()
   rangedCooldownTurns = spellCooldownTurns = 0;
   abilityVals.reset();
   for(int i = 0; i < int(AiId::END); ++i) {ai[i] = false;}
-  nrTurnsAwarePlayer = 0;
+  ai[int(AiId::movesToRandomWhenUnaware)] = true;
+  nrTurnsAware = 0;
   spawnMinDLVL = spawnMaxDLVL = 999;
   actorSize = actorSize_humanoid;
   isHumanoid = false;
@@ -38,6 +39,7 @@ void ActorDataT::reset()
   nrKills = 0;
   canOpenDoors = canBashDoors = false;
   canSeeInDarkness = false;
+  canBeKnockedBack = true;
   nrLeftAllowedToSpawn = -1;
   isUnique = false;
   isAutoSpawnAllowed = true;
@@ -111,7 +113,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
-  d.nrTurnsAwarePlayer = 12;
+  d.nrTurnsAware = 12;
   d.descr = "This rotting thing appears to have been brought back to life "
             "through some abominable process. It has grown sharp claws to "
             "attack with.";
@@ -156,7 +158,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
-  d.nrTurnsAwarePlayer = 10;
+  d.nrTurnsAware = 10;
   d.descr = "This rotting thing appears to have been brought back to life "
             "through some abominable process. It is wielding a rusty axe.";
   d.aggroTextMonSeen = d.nameThe + " growls at me.";
@@ -201,7 +203,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
-  d.nrTurnsAwarePlayer = 50;
+  d.nrTurnsAware = 50;
   d.descr = "This lumbering giant corpse seems to be artificially bloated "
             "somehow. It is constantly oozing putrid liquid that it can spit "
             "to attack with.";
@@ -242,7 +244,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
-  d.nrTurnsAwarePlayer = 999;
+  d.nrTurnsAware = 999;
   d.descr = "Major Sir Eric Moreland Clapham-Lee was once a commanding officer "
             "during the Great War. Shortly after his plane was shot down, his "
             "body was stolen. Now he roams these halls as a resurrected "
@@ -286,7 +288,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
-  d.nrTurnsAwarePlayer = 999;
+  d.nrTurnsAware = 999;
   d.descr = "Alan Halsey was the dean of the Miskatonic University in New "
             "England. He must have gotten into the hands of the Cult, who "
             "turned him into the hellish zombie warrior I now see before me.";
@@ -330,7 +332,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canOpenDoors = true;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "A fanatic cultist of the lowest rank, madly gibbering in some "
             "half-lost language.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
@@ -370,7 +372,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canOpenDoors = true;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "A fanatic cultist of the lowest rank, madly gibbering in some "
             "half-lost language. It is wielding a Tesla Cannon.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
@@ -410,7 +412,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canOpenDoors = true;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "A fanatic cultist of the lowest rank, madly gibbering in some "
             "half-lost language. It is wielding a Spike gun.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
@@ -462,7 +464,7 @@ void initDataList()
   d.spellCastMessage = "Keziah makes strange gestures in the air.";
   d.aggroTextMonSeen = d.nameThe + " chortles at me in a croaking voice.";
   d.aggroTextMonHidden = "I hear a repulsive croaking voice.";
-  d.nrTurnsAwarePlayer = 999;
+  d.nrTurnsAware = 999;
   d.erraticMovePct = actorErratic_rare;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
@@ -515,7 +517,7 @@ void initDataList()
   d.spellCastMessage = "";
   d.aggroTextMonSeen = d.nameThe + " titters at me in a loathsome voice.";
   d.aggroTextMonHidden = "I hear a loathsome titter.";
-  d.nrTurnsAwarePlayer = 999;
+  d.nrTurnsAware = 999;
   d.erraticMovePct = actorErratic_rare;
   d.monShockLvl = MonShockLvl::scary;
   d.isRat = true;
@@ -553,7 +555,7 @@ void initDataList()
   d.spellCastMessage = d.nameThe + " makes strange gestures in the air.";
   d.aggroTextMonSeen = "";
   d.aggroTextMonHidden = "";
-  d.nrTurnsAwarePlayer = 999;
+  d.nrTurnsAware = 999;
   d.erraticMovePct = actorErratic_never;
   d.monShockLvl = MonShockLvl::mindShattering;
   data[int(d.id)] = d;
@@ -603,7 +605,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canOpenDoors = true;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "A fanatic cultist of the priest rank, madly gibbering in some "
             "half-lost language.";
   d.spellCastMessage = "The priest makes strange gestures in the air.";
@@ -640,7 +642,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_floor;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.descr = "A large green spider.";
   d.erraticMovePct = actorErratic_somewhat;
   d.isSpider = true;
@@ -674,7 +676,7 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.actorSize = actorSize_floor;
   d.descr = "A large white spider.";
   d.erraticMovePct = actorErratic_somewhat;
@@ -709,7 +711,7 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.actorSize = actorSize_floor;
   d.descr = "A large red spider.";
   d.erraticMovePct = actorErratic_somewhat;
@@ -744,7 +746,7 @@ void initDataList()
   d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.actorSize = actorSize_humanoid;
   d.isSpider = true;
   d.canBleed = false;
@@ -782,7 +784,7 @@ void initDataList()
   d.spawnMinDLVL = 10;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
-  d.nrTurnsAwarePlayer = 20;
+  d.nrTurnsAware = 20;
   d.actorSize = actorSize_giant;
   d.descr = "Leng spiders are huge, purplish arachnids, with pustulent bloated "
             "bodies and long, bristly legs. Native to the Dreamlands, the "
@@ -825,7 +827,7 @@ void initDataList()
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_floor;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "This extremely aggressive canine seems to be part corporeal and "
             "part fire. It breathes searing flames.";
   d.aggroTextMonSeen = d.nameThe + " snarls at me.";
@@ -870,7 +872,7 @@ void initDataList()
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_floor;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "This extremely aggressive canine seems to be part corporeal and "
             "part living ice. It breathes frost.";
   d.aggroTextMonSeen = d.nameThe + " snarls at me.";
@@ -914,7 +916,7 @@ void initDataList()
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 50;
+  d.nrTurnsAware = 50;
   d.descr = "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It "
             "was worshiped by the Sumerians and Hittites in 6000 BC, along "
             "with Gozer.";
@@ -962,7 +964,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.descr = "A restless spirit.";
   d.erraticMovePct = actorErratic_somewhat;
   d.monShockLvl = MonShockLvl::terrifying;
@@ -1004,7 +1006,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 7;
+  d.nrTurnsAware = 7;
   d.descr = "It exists between the land of the dead and the living. It "
             "resembles a grim reaper, including the cloak, scythe, and "
             "skeletal appearance.";
@@ -1049,7 +1051,7 @@ void initDataList()
   d.groupSize = MonGroupSize::alone;
   d.spellCastMessage = "The Wraith casts a spell.";
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.descr = "A powerful spirit.";
   d.erraticMovePct = actorErratic_somewhat;
   d.monShockLvl = MonShockLvl::terrifying;
@@ -1090,7 +1092,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::horde;
   d.actorSize = actorSize_floor;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.descr = "A large and aggressive rodent.";
   d.erraticMovePct = actorErratic_somewhat;
   d.isRat = true;
@@ -1129,7 +1131,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::horde;
   d.actorSize = actorSize_floor;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.descr = "At first sight, a Rat-thing can easily be mistaken for a large, "
             "dark rat. On closer examination, however, their human hands and "
             "evil caricatures of human heads reveal their unnatural nature. "
@@ -1174,7 +1176,7 @@ void initDataList()
   d.spawnMaxDLVL = 10;
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_floor;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.descr = "A large wolf with eyes full of cunning.";
   d.aggroTextMonSeen = d.nameThe + " snarls at me.";
   d.aggroTextMonHidden = "I hear a chilling howl.";
@@ -1215,7 +1217,7 @@ void initDataList()
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.descr = "An unknown species, perhaps stemming from some hidden bowels of "
             "the earth. It is about as tall as a full-grown human.";
   d.aggroTextMonHidden = "I hear the flapping of great wings.";
@@ -1258,7 +1260,7 @@ void initDataList()
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.descr = "\"There flapped rhythmically a horde of tame, trained, hybrid "
             "winged things ... not altogether crows, nor moles, nor buzzards, "
             "nor ants, nor decomposed human beings, but something I cannot and "
@@ -1306,7 +1308,7 @@ void initDataList()
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.descr = "A huge predatory insect.";
   d.erraticMovePct = actorErratic_somewhat;
   d.monShockLvl = MonShockLvl::unsettling;
@@ -1343,7 +1345,7 @@ void initDataList()
   d.groupSize = MonGroupSize::swarm;
   d.actorSize = actorSize_floor;
   d.canBashDoors = false;
-  d.nrTurnsAwarePlayer = 12;
+  d.nrTurnsAware = 12;
   d.descr = "A huge swarming insect. They breed rapidly.";
   d.erraticMovePct = actorErratic_very;
   d.monShockLvl = MonShockLvl::none;
@@ -1381,7 +1383,7 @@ void initDataList()
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "Fungi are more closely related to animals than plants, so it's no "
             "wonder that on some worlds, fungal life evolved to dominate "
             "animal based intelligences. The mi-go, as they are called, come "
@@ -1446,7 +1448,7 @@ void initDataList()
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = false;
   d.canOpenDoors = false;
-  d.nrTurnsAwarePlayer = 6;
+  d.nrTurnsAware = 6;
   d.descr = "Flying polyps are a horrible elder race of half polypous, utterly "
             "alien entities. They are only partly material and have the power "
             "of aerial motion, despite the absence of wings. Their senses does "
@@ -1489,7 +1491,7 @@ void initDataList()
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "\"These figures were seldom completely human, but often "
             "approached humanity in varying degrees. Most of the bodies, while "
             "roughly bipedal, had a forward slumping, and a vaguely canine "
@@ -1506,6 +1508,7 @@ void initDataList()
   d.monShockLvl = MonShockLvl::terrifying;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::monster);
+  d.nativeRooms.push_back(RoomType::crypt);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1543,7 +1546,7 @@ void initDataList()
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.deathMessageOverride = "The shadow fades.";
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "A living shadow";
   d.isAutoDescrAllowed = false;
   d.erraticMovePct = actorErratic_somewhat;
@@ -1580,7 +1583,7 @@ void initDataList()
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
-  d.nrTurnsAwarePlayer = 9999;
+  d.nrTurnsAware = 9999;
   d.descr = "A mummified human being, possibly dating back millennia.";
   d.spellCastMessage = "The mummy casts a spell.";
   d.erraticMovePct = actorErratic_rare;
@@ -1622,7 +1625,7 @@ void initDataList()
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
-  d.nrTurnsAwarePlayer = 9999;
+  d.nrTurnsAware = 9999;
   d.descr = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he "
             "came to dwell here is beyond my guess. His name means "
             "\"Rise, Ra!\"";
@@ -1664,7 +1667,7 @@ void initDataList()
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
-  d.nrTurnsAwarePlayer = 9999;
+  d.nrTurnsAware = 9999;
   d.descr = "The mummified sixth dynasty Egyptian pharaoh Nitokris. How she "
             "came to dwell here is beyond my guess. Her name is found in the "
             "histories of Herodotus and writings of Manetho. According to the "
@@ -1710,7 +1713,7 @@ void initDataList()
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canOpenDoors = true;
-  d.nrTurnsAwarePlayer = 20;
+  d.nrTurnsAware = 20;
   d.descr = "Deep ones are misbegotten creatures of the deep. A deep one "
             "appears as an abominable crossbreed of a human and amphibian. Its "
             "fins are merged with twisted arms and legs; its bent back is "
@@ -1741,7 +1744,7 @@ void initDataList()
   d.glyph = 'w';
   d.color = clrWhite;
   d.tile = TileId::massOfWorms;
-  d.hp = 3;
+  d.hp = 2;
   d.spi = 1;
   d.dmgMelee = 2;
   d.abilityVals.setVal(AbilityId::melee, 40);
@@ -1750,7 +1753,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_floor;
-  d.nrTurnsAwarePlayer = 10;
+  d.nrTurnsAware = 10;
   d.descr = "A slithering conglomeration of carnivorous worms. They multiply rapidly.";
   d.canBeSummoned = true;
   d.isAutoDescrAllowed = false;
@@ -1790,7 +1793,7 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = true;
@@ -1833,7 +1836,7 @@ void initDataList()
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = true;
@@ -1876,7 +1879,7 @@ void initDataList()
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = true;
@@ -1920,7 +1923,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_floor;
-  d.nrTurnsAwarePlayer = 250;
+  d.nrTurnsAware = 250;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
@@ -1970,7 +1973,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_floor;
-  d.nrTurnsAwarePlayer = 250;
+  d.nrTurnsAware = 250;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
@@ -2019,7 +2022,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_floor;
-  d.nrTurnsAwarePlayer = 250;
+  d.nrTurnsAware = 250;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
@@ -2070,7 +2073,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_floor;
-  d.nrTurnsAwarePlayer = 250;
+  d.nrTurnsAware = 250;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
@@ -2121,7 +2124,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 250;
+  d.nrTurnsAware = 250;
   d.canOpenDoors = false;
   d.canBashDoors = false;
   d.descr = "A very peculiar floating speck of strange and shifting colours. "
@@ -2166,7 +2169,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 5;
+  d.nrTurnsAware = 5;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = false;
@@ -2213,7 +2216,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
-  d.nrTurnsAwarePlayer = 2;
+  d.nrTurnsAware = 2;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
   d.canBashDoors = true;
@@ -2270,7 +2273,7 @@ void initDataList()
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = false;
   d.canOpenDoors = false;
-  d.nrTurnsAwarePlayer = 25;
+  d.nrTurnsAware = 25;
   d.descr = "An infernal piece of technology, seemingly designed to serve as a sort of "
             "guard. It hovers around, constantly searching the area with beaming "
             "spotlights, ready to blast any interloper on sight. It appears to have "
@@ -2281,6 +2284,46 @@ void initDataList()
   d.erraticMovePct = actorErratic_rare;
   d.monShockLvl = MonShockLvl::unsettling;
   d.nativeRooms.push_back(RoomType::plain);
+  data[int(d.id)] = d;
+  d.reset();
+
+  d.id = ActorId::mold;
+  d.nameA = "Mold";
+  d.nameThe = "The Mold";
+  d.corpseNameA = "";
+  d.corpseNameThe = "";
+  d.tile = TileId::fungi;
+  d.glyph = 'e';
+  d.color = clrVioletDrk;
+  d.groupSize = MonGroupSize::few;
+  d.hp = 4;
+  d.spi = 1;
+  d.dmgMelee = 1;
+  d.abilityVals.setVal(AbilityId::melee, 15);
+  d.speed = ActorSpeed::slow;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::attacks)] = true;
+  d.ai[int(AiId::movesToRandomWhenUnaware)] = false;
+  d.nrTurnsAware = 25;
+  d.spawnMinDLVL = 3;
+  d.actorSize = actorSize_floor;
+  d.isAutoDescrAllowed = false;
+  d.deathMessageOverride = "The Mold is destroyed.";
+  d.canSeeInDarkness = true;
+  d.canBeKnockedBack = false;
+  d.erraticMovePct = actorErratic_never;
+  d.canBleed = false;
+  d.canLeaveCorpse = false;
+  d.nativeRooms.push_back(RoomType::cave);
+  d.nativeRooms.push_back(RoomType::flooded);
+  d.nativeRooms.push_back(RoomType::muddy);
+  d.nativeRooms.push_back(RoomType::forest);
+  d.descr = "A sickly growth thriving in damp areas. It produces toxic spores which it "
+            "stores in its slimy heads.";
+  d.aggroTextMonSeen = "";
+  d.aggroTextMonHidden = "";
+  d.aggroSfxMonSeen = SfxId::END;
+  d.aggroSfxMonHidden = SfxId::END;
   data[int(d.id)] = d;
   d.reset();
 }

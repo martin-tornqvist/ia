@@ -104,13 +104,10 @@ void Trap::bump(Actor& actorBumping)
 
   TRACE << "Name of actor bumping: \"" << d.nameA << "\"" << endl;
 
-
-  vector<PropId> props;
+  bool props[endOfPropIds];
   actorBumping.getPropHandler().getAllActivePropIds(props);
 
-  if(
-    find(begin(props), end(props), propEthereal)  == end(props) &&
-    find(begin(props), end(props), propFlying)    == end(props))
+  if(!props[propEthereal] && !props[propFlying])
   {
     const bool IS_PLAYER      = actorBumping.isPlayer();
     const bool ACTOR_CAN_SEE  = actorBumping.getPropHandler().allowSee();
@@ -209,13 +206,11 @@ void Trap::disarm()
     return;
   }
 
-  vector<PropId> props;
+  bool props[endOfPropIds];
   Map::player->getPropHandler().getAllActivePropIds(props);
 
-  const bool IS_BLESSED =
-    find(begin(props), end(props), propBlessed) != end(props);
-  const bool IS_CURSED =
-    find(begin(props), end(props), propCursed)  != end(props);
+  const bool IS_BLESSED = props[propBlessed];
+  const bool IS_CURSED  = props[propCursed];
 
   int       disarmNumerator     = 5;
   const int DISARM_DENOMINATOR  = 10;
@@ -297,7 +292,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)
   {
     if(actor->pos == pos_ && actor->isCorpse())
     {
-      actor->state = ActorState::destroyed;
+      actor->state_ = ActorState::destroyed;
     }
   }
 

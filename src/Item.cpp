@@ -407,7 +407,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
   if(curAction_ == MedBagAction::END) {return ConsumeItem::no;}
 
   //Check if chosen action can be done
-  vector<PropId> props;
+  bool props[endOfPropIds];
   Map::player->getPropHandler().getAllActivePropIds(props);
   switch(curAction_)
   {
@@ -423,7 +423,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
 
     case MedBagAction::sanitizeInfection:
     {
-      if(find(begin(props), end(props), propInfected) == end(props))
+      if(!props[propInfected])
       {
         Log::addMsg("I have no infection to sanitize.");
         curAction_ = MedBagAction::END;
@@ -609,7 +609,7 @@ void MedicalBag::finishCurAction()
     case MedBagAction::sanitizeInfection:
     {
       bool blockedLos[MAP_W][MAP_H];
-      MapParse::parse(CellPred::BlocksLos(), blockedLos);
+      MapParse::parse(CellCheck::BlocksLos(), blockedLos);
       Map::player->getPropHandler().endAppliedProp(propInfected, blockedLos);
       nrSupplies_ -= getTotSupplForSanitize();
     } break;
@@ -673,7 +673,7 @@ void HideousMask::newTurnInInventory()
   if(!adjActors.empty())
   {
     bool blockedLos[MAP_W][MAP_H];
-    MapParse::parse(CellPred::BlocksLos(), blockedLos);
+    MapParse::parse(CellCheck::BlocksLos(), blockedLos);
     for(auto* const actor : adjActors)
     {
       if(Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, blockedLos))

@@ -74,7 +74,14 @@ const int EXPL_DMG_SIDES  = 6;
 const int EXPL_DMG_PLUS   = 10;
 const int EXPL_MAX_DMG    = (EXPL_DMG_ROLLS* EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 
-const int CHANCE_TO_DESTROY_COMMON_ITEMS_ON_DROP = 50;
+const int CHANCE_TO_DESTR_CMN_ITEMS_ON_DROP = 50;
+
+//Value used for limiting spawning over time and "breeder" monsters. The actual number of
+//actors may sometimes go a bit above this number, e.g. due to a group of monsters
+//spawning when the number of actors is near the limit. Summoning spells don't check
+//this number at all (because their effect shouldn't be arbitrarily blocked by meta) -
+//so that may also push the number of actors above the limit. (It's a soft limit)
+const size_t MAX_NR_ACTORS_ON_MAP = 125;
 
 const std::string infoScrCmdInfo    = " [2/8 down/up j/k] to navigate "
                                       "[space/esc] to exit ";

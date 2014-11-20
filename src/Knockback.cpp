@@ -23,18 +23,20 @@ namespace KnockBack
 void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
                   const bool IS_SPIKE_GUN, const bool IS_MSG_ALLOWED)
 {
-  const bool IS_DEF_MON = &defender != Map::player;
+  const bool IS_DEF_MON = !defender.isPlayer();
 
   if(IS_DEF_MON || !Config::isBotPlaying())
   {
-    if(defender.getData().actorSize <= actorSize_giant)
+    const auto& defenderData = defender.getData();
+
+    if(defenderData.actorSize <= actorSize_giant)
     {
-      vector<PropId> props;
+      bool props[endOfPropIds];
       defender.getPropHandler().getAllActivePropIds(props);
 
-      const bool DEF_CAN_BE_KNOCKED_BACK =
-        find(begin(props), end(props), propEthereal)  == end(props) &&
-        find(begin(props), end(props), propOoze)      == end(props);
+      const bool DEF_CAN_BE_KNOCKED = defenderData.canBeKnockedBack &&
+                                      !props[propEthereal]          &&
+                                      !props[propOoze];
 
       const Pos d = (defender.pos - attackedFromPos).getSigns();
 
@@ -45,19 +47,17 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
         const Pos newPos = defender.pos + d;
 
         bool blocked[MAP_W][MAP_H];
-        MapParse::parse(CellPred::BlocksActor(defender, true), blocked);
+        MapParse::parse(CellCheck::BlocksActor(defender, true), blocked);
 
         const bool IS_CELL_BOTTOMLESS =
           Map::cells[newPos.x][newPos.y].rigid->isBottomless();
 
-        const bool IS_CELL_BLOCKED = blocked[newPos.x][newPos.y] &&
-                                     !IS_CELL_BOTTOMLESS;
+        const bool IS_CELL_BLOCKED = blocked[newPos.x][newPos.y] && !IS_CELL_BOTTOMLESS;
 
-        if(DEF_CAN_BE_KNOCKED_BACK && !IS_CELL_BLOCKED)
+        if(DEF_CAN_BE_KNOCKED && !IS_CELL_BLOCKED)
         {
-          const bool IS_PLAYER_SEE_DEF = IS_DEF_MON ?
-                                         Map::player->isSeeingActor(defender, nullptr) :
-                                         true;
+          const bool IS_PLAYER_SEE_DEF =
+            IS_DEF_MON ? Map::player->isSeeingActor(defender, nullptr) : true;
 
           if(i == 0)
           {
@@ -86,9 +86,8 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
           {
             if(IS_DEF_MON && IS_PLAYER_SEE_DEF)
             {
-              Log::addMsg(
-                defender.getNameThe() + " plummets down the depths.",
-                clrMsgGood);
+              Log::addMsg(defender.getNameThe() + " plummets down the depths.",
+                          clrMsgGood);
             }
             else
             {
