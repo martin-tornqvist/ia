@@ -183,16 +183,12 @@ void tryCast(const SpellOpt& spellOpt)
       Log::clearLog();
     }
 
-    bool isBloodSorc  = false;
-    bool isWarlock    = false;
-    for (Trait id : PlayerBon::traitsPicked_)
-    {
-      if (id == Trait::bloodSorcerer)  isBloodSorc = true;
-      if (id == Trait::warlock)        isWarlock   = true;
-    }
+    const bool IS_BLOOD_SORC = PlayerBon::traitsPicked[int(Trait::bloodSorcerer)];
+    const bool IS_WARLOCK    = PlayerBon::traitsPicked[int(Trait::warlock)];
 
     const int BLOOD_SORC_HP_DRAINED = 2;
-    if (isBloodSorc)
+
+    if (IS_BLOOD_SORC)
     {
       if (Map::player->getHp() <= BLOOD_SORC_HP_DRAINED)
       {
@@ -204,7 +200,7 @@ void tryCast(const SpellOpt& spellOpt)
 
     Log::addMsg("I cast " + spell->getName() + "!");
 
-    if (isBloodSorc)
+    if (IS_BLOOD_SORC)
     {
       Map::player->hit(BLOOD_SORC_HP_DRAINED, DmgType::pure);
     }
@@ -212,10 +208,10 @@ void tryCast(const SpellOpt& spellOpt)
     {
       spell->cast(Map::player, true);
       prevCast_ = spellOpt;
-      if (isWarlock && Rnd::oneIn(2))
+      if (IS_WARLOCK && Rnd::oneIn(2))
       {
-        Map::player->getPropHandler().tryApplyProp(
-          new PropWarlockCharged(PropTurns::std));
+        auto* const prop = new PropWarlockCharged(PropTurns::std);
+        Map::player->getPropHandler().tryApplyProp(prop);
       }
     }
   }

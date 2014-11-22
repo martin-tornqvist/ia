@@ -164,23 +164,18 @@ void mkLines()
 
   lines_.push_back(StrAndClr("Traits gained", clrHeading));
   string abilitiesLine = "";
-  vector<Trait>& traits = PlayerBon::traitsPicked_;
-  if (traits.empty())
-  {
-    lines_.push_back(StrAndClr(offset + "None", clrText));
-    lines_.push_back(StrAndClr(" ", clrText));
-  }
-  else
-  {
-    const int MAX_W_DESCR = (MAP_W * 2) / 3;
 
-    for (Trait trait : traits)
+  const int MAX_W_DESCR = (MAP_W * 2) / 3;
+
+  for (int i = 0; i < int(Trait::END); ++i)
+  {
+    if (PlayerBon::traitsPicked[i])
     {
-      string title = "";
+      const Trait trait = Trait(i);
+      string title = "", descr = "";
       PlayerBon::getTraitTitle(trait, title);
-      lines_.push_back(StrAndClr(offset + title, clrText));
-      string descr = "";
       PlayerBon::getTraitDescr(trait, descr);
+      lines_.push_back(StrAndClr(offset + title, clrText));
       vector<string> descrLines;
       TextFormatting::lineToLines(descr, MAX_W_DESCR, descrLines);
       for (string& descrLine : descrLines)

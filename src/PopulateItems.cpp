@@ -18,7 +18,7 @@ void mkItems()
 {
   int nrOfSpawns = Rnd::range(6, 8);
 
-  if (PlayerBon::hasTrait(Trait::treasureHunter))
+  if (PlayerBon::traitsPicked[int(Trait::treasureHunter)])
   {
     nrOfSpawns += 2;
   }

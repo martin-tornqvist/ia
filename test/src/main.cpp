@@ -578,12 +578,15 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   delete bodySlot.item;
   bodySlot.item = nullptr;
 
-  vector<PropId> props;
+  bool props[endOfPropIds];
   PropHandler& propHandler = Map::player->getPropHandler();
 
   //Check that no props are enabled
   propHandler.getAllActivePropIds(props);
-  CHECK(props.empty());
+  for (int i = 0; i < endOfPropIds; ++i)
+  {
+    CHECK(!props[i]);
+  }
 
   //Wear asbesthos suit
   Item* item = ItemFactory::mk(ItemId::armorAsbSuit);
@@ -593,11 +596,16 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
   //Check that the props are applied
   propHandler.getAllActivePropIds(props);
-  CHECK_EQUAL(4, int(props.size()));
-  CHECK(find(begin(props), end(props), propRFire)   != end(props));
-  CHECK(find(begin(props), end(props), propRElec)   != end(props));
-  CHECK(find(begin(props), end(props), propRAcid)   != end(props));
-  CHECK(find(begin(props), end(props), propRBreath) != end(props));
+  int nrProps = 0;
+  for (int i = 0; i < endOfPropIds; ++i)
+  {
+    if (props[i]) {++nrProps;}
+  }
+  CHECK_EQUAL(4, nrProps);
+  CHECK(props[propRFire]);
+  CHECK(props[propRElec]);
+  CHECK(props[propRAcid]);
+  CHECK(props[propRBreath]);
 
   //Take off asbeshos suit
   inv.moveToGeneral(bodySlot);
@@ -606,7 +614,10 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
   //Check that the properties are cleared
   propHandler.getAllActivePropIds(props);
-  CHECK(props.empty());
+  for (int i = 0; i < endOfPropIds; ++i)
+  {
+    CHECK(!props[i]);
+  }
 
   //Wear the asbeshos suit again
   inv.equipGeneralItemAndEndTurn(inv.general_.size() - 1, SlotId::body);
@@ -615,11 +626,16 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
   //Check that the props are applied
   propHandler.getAllActivePropIds(props);
-  CHECK_EQUAL(4, int(props.size()));
-  CHECK(find(begin(props), end(props), propRFire)   != end(props));
-  CHECK(find(begin(props), end(props), propRElec)   != end(props));
-  CHECK(find(begin(props), end(props), propRAcid)   != end(props));
-  CHECK(find(begin(props), end(props), propRBreath) != end(props));
+  nrProps = 0;
+  for (int i = 0; i < endOfPropIds; ++i)
+  {
+    if (props[i]) {++nrProps;}
+  }
+  CHECK_EQUAL(4, nrProps);
+  CHECK(props[propRFire]);
+  CHECK(props[propRElec]);
+  CHECK(props[propRAcid]);
+  CHECK(props[propRBreath]);
 
   //Drop the asbeshos suit on the ground
   ItemDrop::dropItemFromInv(*Map::player, InvList::slots, int(SlotId::body), 1);
@@ -633,7 +649,10 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
   //Check that the properties are cleared
   propHandler.getAllActivePropIds(props);
-  CHECK(props.empty());
+  for (int i = 0; i < endOfPropIds; ++i)
+  {
+    CHECK(!props[i]);
+  }
 
   //Wear the same dropped asbesthos suit again
   inv.putInSlot(SlotId::body, cell.item);
@@ -643,11 +662,16 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
   //Check that the props are applied
   propHandler.getAllActivePropIds(props);
-  CHECK_EQUAL(4, int(props.size()));
-  CHECK(find(begin(props), end(props), propRFire)   != end(props));
-  CHECK(find(begin(props), end(props), propRElec)   != end(props));
-  CHECK(find(begin(props), end(props), propRAcid)   != end(props));
-  CHECK(find(begin(props), end(props), propRBreath) != end(props));
+  nrProps = 0;
+  for (int i = 0; i < endOfPropIds; ++i)
+  {
+    if (props[i]) {++nrProps;}
+  }
+  CHECK_EQUAL(4, nrProps);
+  CHECK(props[propRFire]);
+  CHECK(props[propRElec]);
+  CHECK(props[propRAcid]);
+  CHECK(props[propRBreath]);
 }
 
 TEST_FIXTURE(BasicFixture, SavingGame)
@@ -658,7 +682,7 @@ TEST_FIXTURE(BasicFixture, SavingGame)
 
   //Bonus
   PlayerBon::pickBg(Bg::rogue);
-  PlayerBon::traitsPicked_.push_back(Trait::healer);
+  PlayerBon::traitsPicked[int(Trait::healer)] = true;
 
   //Player inventory
   Inventory& inv = Map::player->getInv();
@@ -759,9 +783,8 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
 
   //Bonus
   CHECK_EQUAL(int(Bg::rogue), int(PlayerBon::getBg()));
-  CHECK(PlayerBon::hasTrait(Trait::healer));
-  CHECK_EQUAL(false, PlayerBon::hasTrait(Trait::sharpShooter));
-  PlayerBon::traitsPicked_.push_back(Trait::healer);
+  CHECK(PlayerBon::traitsPicked[int(Trait::healer)]);
+  CHECK(!PlayerBon::traitsPicked[int(Trait::sharpShooter)]);
 
   //Player inventory
   Inventory& inv  = Map::player->getInv();
@@ -1202,7 +1225,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
 
   int flood[MAP_W][MAP_H];
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellPred::BlocksMoveCmn(false), blocked);
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
   FloodFill::run(5, blocked, flood, INT_MAX, -1, true);
   CHECK(flood[20][10] > 0);
 

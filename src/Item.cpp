@@ -539,7 +539,7 @@ void MedicalBag::continueAction()
 
       auto& player = *Map::player;
 
-      const bool IS_HEALER = PlayerBon::hasTrait(Trait::healer);
+      const bool IS_HEALER = PlayerBon::traitsPicked[int(Trait::healer)];
 
       if (nrTurnsUntilHealWounds_ > 0)
       {
@@ -648,12 +648,12 @@ void MedicalBag::interrupted()
 
 int MedicalBag::getTotTurnsForSanitize() const
 {
-  return PlayerBon::hasTrait(Trait::healer) ? 10 : 20;
+  return PlayerBon::traitsPicked[int(Trait::healer)] ? 10 : 20;
 }
 
 int MedicalBag::getTotSupplForSanitize() const
 {
-  return PlayerBon::hasTrait(Trait::healer) ? 5 : 10;
+  return PlayerBon::traitsPicked[int(Trait::healer)] ? 5 : 10;
 }
 
 //--------------------------------------------------------- HIDEOUS MASK
@@ -710,7 +710,7 @@ ConsumeItem Explosive::activateDefault(Actor* const actor)
 //--------------------------------------------------------- DYNAMITE
 void Dynamite::onPlayerIgnite() const
 {
-  const bool IS_SWIFT   = PlayerBon::hasTrait(Trait::demExpert) && Rnd::coinToss();
+  const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Log::addMsg("I " + swiftStr + "light a dynamite stick.");
@@ -758,7 +758,7 @@ void Dynamite::onPlayerParalyzed()
 //--------------------------------------------------------- MOLOTOV
 void Molotov::onPlayerIgnite() const
 {
-  const bool IS_SWIFT   = PlayerBon::hasTrait(Trait::demExpert) && Rnd::coinToss();
+  const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Log::addMsg("I " + swiftStr + "light a Molotov Cocktail.");
@@ -783,7 +783,7 @@ void Molotov::onStdTurnPlayerHoldIgnited()
 
 void Molotov::onThrownIgnitedLanding(const Pos& p)
 {
-  const int D = PlayerBon::hasTrait(Trait::demExpert) ? 1 : 0;
+  const int D = PlayerBon::traitsPicked[int(Trait::demExpert)] ? 1 : 0;
   Explosion::runExplosionAt(p, ExplType::applyProp, ExplSrc::playerUseMoltvIntended, D,
                             SfxId::explosionMolotov, new PropBurning(PropTurns::std));
 }
@@ -802,7 +802,7 @@ void Molotov::onPlayerParalyzed()
 //--------------------------------------------------------- FLARE
 void Flare::onPlayerIgnite() const
 {
-  const bool IS_SWIFT   = PlayerBon::hasTrait(Trait::demExpert) && Rnd::coinToss();
+  const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] && Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Log::addMsg("I " + swiftStr + "light a Flare.");
@@ -849,7 +849,8 @@ void Flare::onPlayerParalyzed()
 //--------------------------------------------------------- SMOKE GRENADE
 void SmokeGrenade::onPlayerIgnite() const
 {
-  const bool IS_SWIFT   = PlayerBon::hasTrait(Trait::demExpert) && Rnd::coinToss();
+  const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] &&
+                          Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Log::addMsg("I " + swiftStr + "ignite a smoke grenade.");

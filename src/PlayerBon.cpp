@@ -15,7 +15,7 @@ using namespace std;
 namespace PlayerBon
 {
 
-vector<Trait> traitsPicked_;
+bool traitsPicked[int(Trait::END)];
 
 namespace
 {
@@ -26,15 +26,17 @@ Bg bg_ = Bg::END;
 
 void init()
 {
-  traitsPicked_.clear();
+  for (int i = 0; i < int(Trait::END); ++i) {traitsPicked[i] = false;}
   bg_ = Bg::END;
 }
 
 void storeToSaveLines(vector<string>& lines)
 {
   lines.push_back(toStr(int(bg_)));
-  lines.push_back(toStr(traitsPicked_.size()));
-  for (Trait t : traitsPicked_) {lines.push_back(toStr(int(t)));}
+  for (int i = 0; i < int(Trait::END); ++i)
+  {
+    lines.push_back(traitsPicked[i] ? "1" : "0");
+  }
 }
 
 void setupFromSaveLines(vector<string>& lines)
@@ -42,12 +44,9 @@ void setupFromSaveLines(vector<string>& lines)
   bg_ = Bg(toInt(lines.front()));
   lines.erase(begin(lines));
 
-  const int NR_TRAITS = toInt(lines.front());
-  lines.erase(begin(lines));
-
-  for (int i = 0; i < NR_TRAITS; ++i)
+  for (int i = 0; i < int(Trait::END); ++i)
   {
-    traitsPicked_.push_back(Trait(toInt(lines.front())));
+    traitsPicked[i] = lines.front() == "1";
     lines.erase(begin(lines));
   }
 }
@@ -619,8 +618,7 @@ void getPickableBgs(vector<Bg>& bgsRef)
   for (int i = 0; i < int(Bg::END); ++i) {bgsRef.push_back(Bg(i));}
 
   //Sort lexicographically
-  sort(bgsRef.begin(), bgsRef.end(),
-       [](const Bg & bg1, const Bg & bg2)
+  sort(bgsRef.begin(), bgsRef.end(), [](const Bg & bg1, const Bg & bg2)
   {
     string str1 = ""; getBgTitle(bg1, str1);
     string str2 = ""; getBgTitle(bg2, str2);
@@ -634,12 +632,8 @@ void getPickableTraits(vector<Trait>& traitsRef)
 
   for (int i = 0; i < int(Trait::END); ++i)
   {
-
-    const Trait trait = Trait(i);
-
-    if (!hasTrait(trait))
+    if (!traitsPicked[i])
     {
-
       vector<Trait> traitPrereqs;
       Bg bgPrereq = Bg::END;
       getTraitPrereqs(Trait(i), traitPrereqs, bgPrereq);
@@ -647,7 +641,7 @@ void getPickableTraits(vector<Trait>& traitsRef)
       bool isPickable = true;
       for (Trait prereq : traitPrereqs)
       {
-        if (!hasTrait(prereq))
+        if (!traitsPicked[int(prereq)])
         {
           isPickable = false;
           break;
@@ -710,17 +704,14 @@ void pickBg(const Bg bg)
 
 void setAllTraitsToPicked()
 {
-  for (int i = 0; i < int(Trait::END); ++i)
-  {
-    traitsPicked_.push_back(Trait(i));
-  }
+  for (int i = 0; i < int(Trait::END); ++i) {traitsPicked[i] = true;}
 }
 
 void pickTrait(const Trait id)
 {
   assert(id != Trait::END);
 
-  traitsPicked_.push_back(id);
+  traitsPicked[int(id)] = true;
 
   switch (id)
   {
@@ -769,17 +760,15 @@ void getAllPickedTraitsTitlesLine(string& strRef)
 {
   strRef = "";
 
-  for (Trait t : traitsPicked_)
+  for (int i = 0; i < int(Trait::END); ++i)
   {
-    string title = ""; getTraitTitle(t, title);
-    strRef += (strRef.empty() ? "" : ", ") + title;
+    if (traitsPicked[i])
+    {
+      string title = "";
+      getTraitTitle(Trait(i), title);
+      strRef += (strRef.empty() ? "" : ", ") + title;
+    }
   }
-}
-
-bool hasTrait(const Trait t)
-{
-  return find(traitsPicked_.begin(), traitsPicked_.end(), t)
-         != traitsPicked_.end();
 }
 
 int getSpiOccultistCanCastAtLvl(const int LVL)

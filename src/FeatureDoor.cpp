@@ -140,8 +140,14 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
           Fraction destrChance(6, 10);
           if (actor == Map::player)
           {
-            if (PlayerBon::hasTrait(Trait::tough))   {destrChance.numerator += 2;}
-            if (PlayerBon::hasTrait(Trait::rugged))  {destrChance.numerator += 2;}
+            if (PlayerBon::traitsPicked[int(Trait::tough)])
+            {
+              destrChance.numerator += 2;
+            }
+            if (PlayerBon::traitsPicked[int(Trait::rugged)])
+            {
+              destrChance.numerator += 2;
+            }
 
             if (Rnd::fraction(destrChance))
             {
@@ -188,8 +194,14 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
             Fraction destrChance(4 - nrSpikes_, 10);
             destrChance.numerator = max(1, destrChance.numerator);
 
-            if (PlayerBon::hasTrait(Trait::tough))   {destrChance.numerator += 2;}
-            if (PlayerBon::hasTrait(Trait::rugged))  {destrChance.numerator += 2;}
+            if (PlayerBon::traitsPicked[int(Trait::tough)])
+            {
+              destrChance.numerator += 2;
+            }
+            if (PlayerBon::traitsPicked[int(Trait::rugged)])
+            {
+              destrChance.numerator += 2;
+            }
 
             if (IS_WEAK) {destrChance.numerator = 0;}
 
@@ -301,7 +313,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //
 //      if(!IS_BASHER_WEAK) {
 //        if(IS_PLAYER) {
-//          const int BON   = PlayerBon::hasTrait(Trait::tough) ? 20 : 0;
+//          const int BON   = PlayerBon::traitsPicked[int(Trait::tough)] ? 20 : 0;
 //          skillValueBash  = 40 + BON - min(58, nrSpikes_ * 20);
 //        } else {
 //          skillValueBash  = 10 - min(9, nrSpikes_ * 3);

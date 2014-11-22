@@ -57,7 +57,7 @@ enum class Bg {occultist, rogue, warVet, END};
 namespace PlayerBon
 {
 
-extern std::vector<Trait> traitsPicked_;
+extern bool traitsPicked[int(Trait::END)];
 
 void init();
 
@@ -90,8 +90,6 @@ void pickTrait(const Trait id);
 void pickBg(const Bg bg);
 
 void setAllTraitsToPicked();
-
-bool hasTrait(const Trait t);
 
 int getSpiOccultistCanCastAtLvl(const int LVL);
 

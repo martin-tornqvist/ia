@@ -56,7 +56,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
   else
   {
     isDefenderAware = Map::player->isSeeingActor(*attacker, nullptr) ||
-                      PlayerBon::hasTrait(Trait::vigilant);
+                      PlayerBon::traitsPicked[int(Trait::vigilant)];
   }
 
   if (isDefenderAware)
@@ -209,7 +209,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
         //+50% if player and has the "Vicious" trait.
         if (attacker == Map::player)
         {
-          if (PlayerBon::hasTrait(Trait::vicious))
+          if (PlayerBon::traitsPicked[int(Trait::vicious)])
           {
             dmgPct += 50;
           }

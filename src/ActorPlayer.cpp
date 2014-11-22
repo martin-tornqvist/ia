@@ -282,9 +282,9 @@ int Player::getEncPercent() const
 
 int Player::getCarryWeightLmt() const
 {
-  const bool IS_TOUGH         = PlayerBon::hasTrait(Trait::tough);
-  const bool IS_RUGGED        = PlayerBon::hasTrait(Trait::rugged);
-  const bool IS_STRONG_BACKED = PlayerBon::hasTrait(Trait::strongBacked);
+  const bool IS_TOUGH         = PlayerBon::traitsPicked[int(Trait::tough)];
+  const bool IS_RUGGED        = PlayerBon::traitsPicked[int(Trait::rugged)];
+  const bool IS_STRONG_BACKED = PlayerBon::traitsPicked[int(Trait::strongBacked)];
 
   bool props[endOfPropIds];
   propHandler_->getAllActivePropIds(props);
@@ -301,9 +301,9 @@ int Player::getCarryWeightLmt() const
 int Player::getShockResistance(const ShockSrc shockSrc) const
 {
   int res = 0;
-  if (PlayerBon::hasTrait(Trait::fearless))    {res += 5;}
-  if (PlayerBon::hasTrait(Trait::coolHeaded))  {res += 20;}
-  if (PlayerBon::hasTrait(Trait::courageous))  {res += 20;}
+  if (PlayerBon::traitsPicked[int(Trait::fearless)])    {res += 5;}
+  if (PlayerBon::traitsPicked[int(Trait::coolHeaded)])  {res += 20;}
+  if (PlayerBon::traitsPicked[int(Trait::courageous)])  {res += 20;}
 
   switch (shockSrc)
   {
@@ -1039,8 +1039,8 @@ void Player::onStdTurn()
 
     if (!props[propPoisoned])
     {
-      const bool IS_RAPID_REC   = PlayerBon::hasTrait(Trait::rapidRecoverer);
-      const bool IS_SURVIVALIST = PlayerBon::hasTrait(Trait::survivalist);
+      const bool IS_RAPID_REC   = PlayerBon::traitsPicked[int(Trait::rapidRecoverer)];
+      const bool IS_SURVIVALIST = PlayerBon::traitsPicked[int(Trait::survivalist)];
 
       const int REGEN_N_TURNS   = (IS_SURVIVALIST ? 20 : (IS_RAPID_REC ? 30 : 40));
 
@@ -1049,8 +1049,8 @@ void Player::onStdTurn()
 
     if (!props[propConfused] && propHandler_->allowSee())
     {
-      const int R = PlayerBon::hasTrait(Trait::perceptive) ? 3 :
-                    (PlayerBon::hasTrait(Trait::observant) ? 2 : 1);
+      const int R = PlayerBon::traitsPicked[int(Trait::perceptive)] ? 3 :
+                    (PlayerBon::traitsPicked[int(Trait::observant)] ? 2 : 1);
 
       int x0 = max(0, pos.x - R);
       int y0 = max(0, pos.y - R);
@@ -1262,9 +1262,9 @@ void Player::moveDir(Dir dir)
         pos = dest;
 
         const int FREE_MOVE_EVERY_N_TURN =
-          PlayerBon::hasTrait(Trait::mobile)     ? 2 :
-          PlayerBon::hasTrait(Trait::lithe)      ? 4 :
-          PlayerBon::hasTrait(Trait::dexterous)  ? 5 : 0;
+          PlayerBon::traitsPicked[int(Trait::mobile)]     ? 2 :
+          PlayerBon::traitsPicked[int(Trait::lithe)]      ? 4 :
+          PlayerBon::traitsPicked[int(Trait::dexterous)]  ? 5 : 0;
 
         if (FREE_MOVE_EVERY_N_TURN > 0)
         {

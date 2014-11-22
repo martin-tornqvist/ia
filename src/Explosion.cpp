@@ -159,7 +159,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
     }
   }
 
-  const bool IS_DEM_EXP = PlayerBon::hasTrait(Trait::demExpert);
+  const bool IS_DEM_EXP = PlayerBon::traitsPicked[int(Trait::demExpert)];
 
   const int NR_OUTER = posLists.size();
   for (int curRadi = 0; curRadi < NR_OUTER; curRadi++)

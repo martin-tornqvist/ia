@@ -142,10 +142,10 @@ bool reloadWieldedWpn(Actor& actorReloading)
   ReloadResult result = ReloadResult::noAmmo;
   bool isSwiftReload    = false;
 
-  if (&actorReloading == Map::player)
+  if (actorReloading.isPlayer())
   {
-    isSwiftReload =
-      PlayerBon::hasTrait(Trait::expertMarksman) && Rnd::coinToss();
+    isSwiftReload = PlayerBon::traitsPicked[int(Trait::expertMarksman)] &&
+                    Rnd::coinToss();
   }
 
   const int wpnAmmoCapacity = wpn->ammoCapacity;

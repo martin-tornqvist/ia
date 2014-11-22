@@ -1231,8 +1231,7 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const
 {
   line.clear();
 
-  const bool IS_SELF_AWARE =
-    PlayerBon::hasTrait(Trait::selfAware);
+  const bool IS_SELF_AWARE = PlayerBon::traitsPicked[int(Trait::selfAware)];
 
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
@@ -1507,7 +1506,7 @@ void PropInfected::onNewTurn()
 
 int PropDiseased::getChangedMaxHp(const int HP_MAX) const
 {
-  if (owningActor_->isPlayer() && PlayerBon::hasTrait(Trait::survivalist))
+  if (owningActor_->isPlayer() && PlayerBon::traitsPicked[int(Trait::survivalist)])
   {
     return (HP_MAX * 3) / 4; //Survavlist makes you lose only 25% instead of 50%
   }

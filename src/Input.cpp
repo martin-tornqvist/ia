@@ -190,20 +190,18 @@ void handleKeyPress(const KeyData& d)
     {
       Log::clearLog();
 
-      if (PlayerBon::hasTrait(Trait::steadyAimer))
+      if (PlayerBon::traitsPicked[int(Trait::steadyAimer)])
       {
         PropHandler& propHlr = Map::player->getPropHandler();
 
         int nrTurnsAimingOld = 0;
 
-        if (PlayerBon::hasTrait(Trait::sharpShooter))
+        if (PlayerBon::traitsPicked[int(Trait::sharpShooter)])
         {
-          Prop* const propAimingOld =
-            propHlr.getProp(propAiming, PropSrc::applied);
+          Prop* const propAimingOld = propHlr.getProp(propAiming, PropSrc::applied);
           if (propAimingOld)
           {
-            nrTurnsAimingOld =
-              static_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
+            nrTurnsAimingOld = static_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
           }
         }
 

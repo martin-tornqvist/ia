@@ -107,36 +107,24 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
 
     if (caster->isPlayer())
     {
-      bool isWarlock      = false;
-      bool isBloodSorc    = false;
-      bool isSeer         = false;
-      bool isSummoner     = false;
+      bool IS_WARLOCK     = PlayerBon::traitsPicked[int(Trait::warlock)];
+      bool IS_BLOOD_SORC  = PlayerBon::traitsPicked[int(Trait::bloodSorcerer)];
+      bool IS_SEER        = PlayerBon::traitsPicked[int(Trait::seer)];
+      bool IS_SUMMONER    = PlayerBon::traitsPicked[int(Trait::summoner)];
 
-      for (Trait id : PlayerBon::traitsPicked_)
-      {
-        switch (id)
-        {
-          case Trait::warlock:        isWarlock     = true; break;
-          case Trait::bloodSorcerer:  isBloodSorc   = true; break;
-          case Trait::seer:           isSeer        = true; break;
-          case Trait::summoner:       isSummoner    = true; break;
-          default: {} break;
-        }
-      }
-
-      if (isBloodSorc) {costMax--;}
+      if (IS_BLOOD_SORC) {costMax--;}
 
       switch (getId())
       {
-        case SpellId::darkbolt:       {if (isWarlock)  --costMax;}     break;
-        case SpellId::azaWrath:       {if (isWarlock)  --costMax;}     break;
-        case SpellId::mayhem:         {if (isWarlock)  --costMax;}     break;
-        case SpellId::detMon:         {if (isSeer)     --costMax;}     break;
-        case SpellId::detItems:       {if (isSeer)     costMax -= 3;}  break;
-        case SpellId::detTraps:       {if (isSeer)     costMax -= 3;}  break;
-        case SpellId::summonMon:      {if (isSummoner) --costMax;      break;}
-        case SpellId::pest:           {if (isSummoner) --costMax;      break;}
-        case SpellId::pharaohStaff:   {if (isSummoner) --costMax;      break;}
+        case SpellId::darkbolt:       {if (IS_WARLOCK)  --costMax;}     break;
+        case SpellId::azaWrath:       {if (IS_WARLOCK)  --costMax;}     break;
+        case SpellId::mayhem:         {if (IS_WARLOCK)  --costMax;}     break;
+        case SpellId::detMon:         {if (IS_SEER)     --costMax;}     break;
+        case SpellId::detItems:       {if (IS_SEER)     costMax -= 3;}  break;
+        case SpellId::detTraps:       {if (IS_SEER)     costMax -= 3;}  break;
+        case SpellId::summonMon:      {if (IS_SUMMONER) --costMax;      break;}
+        case SpellId::pest:           {if (IS_SUMMONER) --costMax;      break;}
+        case SpellId::pharaohStaff:   {if (IS_SUMMONER) --costMax;      break;}
         default: {} break;
       }
     }
@@ -444,8 +432,9 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
 
   if (caster->isPlayer())
   {
-    didPlayerSummonHostile  = Rnd::oneIn(SUMMON_HOSTILE_ONE_IN_N *
-                                         (PlayerBon::hasTrait(Trait::summoner) ? 2 : 1));
+    const int N             = SUMMON_HOSTILE_ONE_IN_N *
+                              (PlayerBon::traitsPicked[int(Trait::summoner)] ? 2 : 1);
+    didPlayerSummonHostile  = Rnd::oneIn(N);
     leader                  = didPlayerSummonHostile ? nullptr : caster;
   }
   else //Caster is monster
@@ -522,8 +511,9 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
 
   if (caster->isPlayer())
   {
-    didPlayerSummonHostile  = Rnd::oneIn(SUMMON_HOSTILE_ONE_IN_N *
-                                         (PlayerBon::hasTrait(Trait::summoner) ? 2 : 1));
+    const int N             = SUMMON_HOSTILE_ONE_IN_N *
+                              (PlayerBon::traitsPicked[int(Trait::summoner)] ? 2 : 1);
+    didPlayerSummonHostile  = Rnd::oneIn(N);
     leader                  = didPlayerSummonHostile ? nullptr : caster;
   }
   else //Caster is monster
@@ -657,7 +647,7 @@ SpellEffectNoticed SpellDetMon::cast_(Actor* const caster) const
 {
   (void)caster;
 
-  bool                isSeer      = PlayerBon::hasTrait(Trait::seer);
+  bool                isSeer      = PlayerBon::traitsPicked[int(Trait::seer)];
   const int           MULTIPLIER  = 6 * (isSeer ? 3 : 1);
   const int           MAX_DIST    = FOV_STD_RADI_INT * 2;
   const Pos           playerPos   = Map::player->pos;
@@ -998,8 +988,9 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
 
   if (caster->isPlayer())
   {
-    didPlayerSummonHostile  = Rnd::oneIn(SUMMON_HOSTILE_ONE_IN_N *
-                                         (PlayerBon::hasTrait(Trait::summoner) ? 2 : 1));
+    const int N             = SUMMON_HOSTILE_ONE_IN_N *
+                              (PlayerBon::traitsPicked[int(Trait::summoner)] ? 2 : 1);
+    didPlayerSummonHostile  = Rnd::oneIn(N);
     leader                  = didPlayerSummonHostile ? nullptr : caster;
   }
   else //Caster is monster

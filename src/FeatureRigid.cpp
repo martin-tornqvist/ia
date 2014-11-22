@@ -1317,7 +1317,7 @@ Tomb::Tomb(const Pos& pos) :
   //Contained items
   const int NR_ITEMS_MIN = Rnd::oneIn(3) ? 0 : 1;
   const int NR_ITEMS_MAX =
-    NR_ITEMS_MIN + (PlayerBon::hasTrait(Trait::treasureHunter) ? 1 : 0);
+    NR_ITEMS_MIN + (PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 1 : 0);
 
   itemContainer_.setRandomItemsForFeature(
     FeatureId::tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
@@ -1418,8 +1418,8 @@ void Tomb::bump(Actor& actorBumping)
       }
       else //Not weakened
       {
-        const int BON = PlayerBon::hasTrait(Trait::rugged) ? 8 :
-                        PlayerBon::hasTrait(Trait::tough)  ? 4 : 0;
+        const int BON = PlayerBon::traitsPicked[int(Trait::rugged)] ? 8 :
+                        PlayerBon::traitsPicked[int(Trait::tough)]  ? 4 : 0;
 
         TRACE << "Base chance to push lid is: 1 in " << pushLidOneInN_ << endl;
 
@@ -1459,8 +1459,8 @@ void Tomb::bump(Actor& actorBumping)
 
 void Tomb::trySprainPlayer()
 {
-  const int SPRAIN_ONE_IN_N = PlayerBon::hasTrait(Trait::rugged) ? 6 :
-                              PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
+  const int SPRAIN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::rugged)] ? 6 :
+                              PlayerBon::traitsPicked[int(Trait::tough)]  ? 5 : 4;
   if (Rnd::oneIn(SPRAIN_ONE_IN_N))
   {
     Log::addMsg("I sprain myself.", clrMsgBad);
@@ -1515,8 +1515,8 @@ void Tomb::examine()
   {
     if (!isTraitKnown_ && trait_ != TombTrait::END)
     {
-      const int FIND_ONE_IN_N = PlayerBon::hasTrait(Trait::perceptive) ? 2 :
-                                (PlayerBon::hasTrait(Trait::observant) ? 3 : 6);
+      const int FIND_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::perceptive)] ? 2 :
+                                (PlayerBon::traitsPicked[int(Trait::observant)] ? 3 : 6);
 
       isTraitKnown_ = Rnd::oneIn(FIND_ONE_IN_N);
     }
@@ -1707,7 +1707,7 @@ Chest::Chest(const Pos& pos) :
 {
 
   const bool IS_TREASURE_HUNTER =
-    PlayerBon::hasTrait(Trait::treasureHunter);
+    PlayerBon::traitsPicked[int(Trait::treasureHunter)];
   const int NR_ITEMS_MIN = Rnd::oneIn(10) ? 0 : 1;
   const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 3 : 2;
   itemContainer_.setRandomItemsForFeature(FeatureId::chest,
@@ -1745,8 +1745,8 @@ void Chest::bump(Actor& actorBumping)
 
 void Chest::trySprainPlayer()
 {
-  const int SPRAIN_ONE_IN_N = PlayerBon::hasTrait(Trait::rugged) ? 6 :
-                              PlayerBon::hasTrait(Trait::tough)  ? 5 : 4;
+  const int SPRAIN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::rugged)] ? 6 :
+                              PlayerBon::traitsPicked[int(Trait::tough)]  ? 5 : 4;
   if (Rnd::oneIn(SPRAIN_ONE_IN_N))
   {
     Log::addMsg("I sprain myself.", clrMsgBad);
@@ -1816,8 +1816,8 @@ bool Chest::open()
 //                itemContainer_.destroySingleFragile();
 //              }
 //
-//              const bool IS_TOUGH   = PlayerBon::hasTrait(Trait::tough);
-//              const bool IS_RUGGED  = PlayerBon::hasTrait(Trait::rugged);
+//              const bool IS_TOUGH   = PlayerBon::traitsPicked[int(Trait::tough)];
+//              const bool IS_RUGGED  = PlayerBon::traitsPicked[int(Trait::rugged)];
 //
 //              const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
 //
@@ -1908,8 +1908,8 @@ void Chest::examine()
       Log::addMsg("The chest is locked.");
     }
 
-    const int FIND_ONE_IN_N = PlayerBon::hasTrait(Trait::perceptive) ? 3 :
-                              (PlayerBon::hasTrait(Trait::observant) ? 4 : 7);
+    const int FIND_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::perceptive)] ? 3 :
+                              (PlayerBon::traitsPicked[int(Trait::observant)] ? 4 : 7);
 
     if (isTrapped_ && (isTrapStatusKnown_ || (Rnd::oneIn(FIND_ONE_IN_N))))
     {
@@ -2249,7 +2249,7 @@ Cabinet::Cabinet(const Pos& pos) : Rigid(pos), isContentKnown_(false)
 {
   const int IS_EMPTY_N_IN_10  = 5;
   const int NR_ITEMS_MIN      = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-  const int NR_ITEMS_MAX      = PlayerBon::hasTrait(Trait::treasureHunter) ? 2 : 1;
+  const int NR_ITEMS_MAX      = PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 2 : 1;
   itemContainer_.setRandomItemsForFeature(
     FeatureId::cabinet, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 }
@@ -2312,7 +2312,7 @@ Clr Cabinet::getClr_() const
 //--------------------------------------------------------------------- COCOON
 Cocoon::Cocoon(const Pos& pos) : Rigid(pos), isContentKnown_(false)
 {
-  const bool IS_TREASURE_HUNTER = PlayerBon::hasTrait(Trait::treasureHunter);
+  const bool IS_TREASURE_HUNTER = PlayerBon::traitsPicked[int(Trait::treasureHunter)];
   const int IS_EMPTY_N_IN_10    = 6;
   const int NR_ITEMS_MIN        = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX        = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);

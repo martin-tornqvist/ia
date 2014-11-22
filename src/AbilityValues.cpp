@@ -20,7 +20,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
     val += actor.getPropHandler().getAbilityMod(abilityId);
   }
 
-  if (&actor == Map::player)
+  if (actor.isPlayer())
   {
     const int HP_PCT  = (actor.getHp() * 100) / actor.getHpMax(true);
 
@@ -29,48 +29,48 @@ int AbilityVals::getVal(const AbilityId abilityId,
       case AbilityId::searching:
       {
         val += 8;
-        if (PlayerBon::hasTrait(Trait::observant))   val += 4;
-        if (PlayerBon::hasTrait(Trait::perceptive))  val += 4;
+        if (PlayerBon::traitsPicked[int(Trait::observant)])   val += 4;
+        if (PlayerBon::traitsPicked[int(Trait::perceptive)])  val += 4;
       } break;
 
       case AbilityId::melee:
       {
         val += 45;
-        if (PlayerBon::hasTrait(Trait::adeptMeleeFighter))   val += 10;
-        if (PlayerBon::hasTrait(Trait::expertMeleeFighter))  val += 10;
-        if (PlayerBon::hasTrait(Trait::masterMeleeFighter))  val += 10;
-        if (PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
+        if (PlayerBon::traitsPicked[int(Trait::adeptMeleeFighter)])   val += 10;
+        if (PlayerBon::traitsPicked[int(Trait::expertMeleeFighter)])  val += 10;
+        if (PlayerBon::traitsPicked[int(Trait::masterMeleeFighter)])  val += 10;
+        if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) val += 30;
       } break;
 
       case AbilityId::ranged:
       {
         val += 50;
-        if (PlayerBon::hasTrait(Trait::adeptMarksman))   val += 10;
-        if (PlayerBon::hasTrait(Trait::expertMarksman))  val += 10;
-        if (PlayerBon::hasTrait(Trait::masterMarksman))  val += 10;
-        if (PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 30;
+        if (PlayerBon::traitsPicked[int(Trait::adeptMarksman)])   val += 10;
+        if (PlayerBon::traitsPicked[int(Trait::expertMarksman)])  val += 10;
+        if (PlayerBon::traitsPicked[int(Trait::masterMarksman)])  val += 10;
+        if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) val += 30;
       } break;
 
       case AbilityId::dodgeTrap:
       {
         val += 5;
-        if (PlayerBon::hasTrait(Trait::dexterous)) val += 20;
-        if (PlayerBon::hasTrait(Trait::lithe))     val += 20;
+        if (PlayerBon::traitsPicked[int(Trait::dexterous)]) val += 20;
+        if (PlayerBon::traitsPicked[int(Trait::lithe)])     val += 20;
       } break;
 
       case AbilityId::dodgeAttack:
       {
         val += 10;
-        if (PlayerBon::hasTrait(Trait::dexterous)) val += 20;
-        if (PlayerBon::hasTrait(Trait::lithe))     val += 20;
-        if (PlayerBon::hasTrait(Trait::perseverant) && HP_PCT <= 25) val += 50;
+        if (PlayerBon::traitsPicked[int(Trait::dexterous)]) val += 20;
+        if (PlayerBon::traitsPicked[int(Trait::lithe)])     val += 20;
+        if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) val += 50;
       } break;
 
       case AbilityId::stealth:
       {
         val += 10;
-        if (PlayerBon::hasTrait(Trait::stealthy))      val += 50;
-        if (PlayerBon::hasTrait(Trait::imperceptible)) val += 30;
+        if (PlayerBon::traitsPicked[int(Trait::stealthy)])      val += 50;
+        if (PlayerBon::traitsPicked[int(Trait::imperceptible)]) val += 30;
       } break;
 
       case AbilityId::empty:
