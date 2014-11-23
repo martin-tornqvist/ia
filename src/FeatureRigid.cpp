@@ -76,40 +76,34 @@ void Rigid::onNewTurn()
     {
       case Matl::fluid:
       case Matl::empty:
-      {
         finishBurningOneInN = 1;
         hitAdjacentOneInN   = 1;
-      } break;
+        break;
 
       case Matl::stone:
-      {
         finishBurningOneInN = 12;
         hitAdjacentOneInN   = 12;
-      } break;
+        break;
 
       case Matl::metal:
-      {
         finishBurningOneInN = 12;
         hitAdjacentOneInN   = 6;
-      } break;
+        break;
 
       case Matl::plant:
-      {
         finishBurningOneInN = 20;
         hitAdjacentOneInN   = 6;
-      } break;
+        break;
 
       case Matl::wood:
-      {
         finishBurningOneInN = 60;
         hitAdjacentOneInN   = 4;
-      } break;
+        break;
 
       case Matl::cloth:
-      {
         finishBurningOneInN = 20;
         hitAdjacentOneInN   = 6;
-      } break;
+        break;
     }
 
     if (Rnd::oneIn(finishBurningOneInN))
@@ -227,24 +221,24 @@ void Rigid::tryPutGore()
     const int ROLL_GLYPH = Rnd::dice(1, 4);
     switch (ROLL_GLYPH)
     {
-      case 1: {goreGlyph_ = ',';} break;
-      case 2: {goreGlyph_ = '`';} break;
-      case 3: {goreGlyph_ = 39;}  break;
-      case 4: {goreGlyph_ = ';';} break;
+      case 1: goreGlyph_ = ',';  break;
+      case 2: goreGlyph_ = '`';  break;
+      case 3: goreGlyph_ = 39;   break;
+      case 4: goreGlyph_ = ';';  break;
     }
+  }
 
-    const int ROLL_TILE = Rnd::dice(1, 8);
-    switch (ROLL_TILE)
-    {
-      case 1: {goreTile_ = TileId::gore1;} break;
-      case 2: {goreTile_ = TileId::gore2;} break;
-      case 3: {goreTile_ = TileId::gore3;} break;
-      case 4: {goreTile_ = TileId::gore4;} break;
-      case 5: {goreTile_ = TileId::gore5;} break;
-      case 6: {goreTile_ = TileId::gore6;} break;
-      case 7: {goreTile_ = TileId::gore7;} break;
-      case 8: {goreTile_ = TileId::gore8;} break;
-    }
+  const int ROLL_TILE = Rnd::dice(1, 8);
+  switch (ROLL_TILE)
+  {
+    case 1: goreTile_ = TileId::gore1;  break;
+    case 2: goreTile_ = TileId::gore2;  break;
+    case 3: goreTile_ = TileId::gore3;  break;
+    case 4: goreTile_ = TileId::gore4;  break;
+    case 5: goreTile_ = TileId::gore5;  break;
+    case 6: goreTile_ = TileId::gore6;  break;
+    case 7: goreTile_ = TileId::gore7;  break;
+    case 8: goreTile_ = TileId::gore8;  break;
   }
 }
 
@@ -271,9 +265,9 @@ Clr Rigid::getClrBg() const
 {
   switch (burnState_)
   {
-    case BurnState::notBurned:  return getClrBg_();  break;
-    case BurnState::burning:    return Clr {Uint8(Rnd::range(32, 255)), 0, 0, 0}; break;
-    case BurnState::hasBurned:  return getClrBg_();  break;
+    case BurnState::notBurned:  return getClrBg_();
+    case BurnState::burning:    return Clr {Uint8(Rnd::range(32, 255)), 0, 0, 0};
+    case BurnState::hasBurned:  return getClrBg_();
   }
   assert(false && "Failed to set color");
   return clrYellow;
@@ -438,9 +432,17 @@ string Wall::getName(const Article article) const
     case WallType::cmn:
     case WallType::cmnAlt:
     case WallType::lengMonestary:
-    case WallType::egypt:   ret += "stone wall";  break;
-    case WallType::cave:    ret += "cavern wall"; break;
-    case WallType::cliff:   ret += "cliff";       break;
+    case WallType::egypt:
+      ret += "stone wall";
+      break;
+
+    case WallType::cave:
+      ret += "cavern wall";
+      break;
+
+    case WallType::cliff:
+      ret += "cliff";
+      break;
   }
   return ret;
 }
@@ -450,12 +452,19 @@ Clr Wall::getClr_() const
   if (isMossy_) {return clrGreenDrk;}
   switch (type_)
   {
-    case WallType::cliff:         return clrGrayDrk;    break;
+    case WallType::cliff:
+      return clrGrayDrk;
+
     case WallType::egypt:
-    case WallType::cave:          return clrBrownGray;  break;
+    case WallType::cave:
+      return clrBrownGray;
+
     case WallType::cmn:
-    case WallType::cmnAlt:        return clrGray;       break;
-    case WallType::lengMonestary: return clrRed;        break;
+    case WallType::cmnAlt:
+      return clrGray;
+
+    case WallType::lengMonestary:
+      return clrRed;
   }
   assert(false && "Failed to set color");
   return clrYellow;
@@ -473,23 +482,35 @@ TileId Wall::getFrontWallTile() const
     switch (type_)
     {
       case WallType::cmn:
-      case WallType::cmnAlt:        return TileId::wallTop;         break;
+      case WallType::cmnAlt:
+        return TileId::wallTop;
+
       case WallType::cliff:
-      case WallType::cave:          return TileId::caveWallTop;     break;
+      case WallType::cave:
+        return TileId::caveWallTop;
+
       case WallType::lengMonestary:
-      case WallType::egypt:         return TileId::egyptWallTop;    break;
+      case WallType::egypt:
+        return TileId::egyptWallTop;
     }
   }
   else
   {
     switch (type_)
     {
-      case WallType::cmn:           return TileId::wallFront;       break;
-      case WallType::cmnAlt:        return TileId::wallFrontAlt1;   break;
+      case WallType::cmn:
+        return TileId::wallFront;
+
+      case WallType::cmnAlt:
+        return TileId::wallFrontAlt1;
+
       case WallType::cliff:
-      case WallType::cave:          return TileId::caveWallFront;   break;
+      case WallType::cave:
+        return TileId::caveWallFront;
+
       case WallType::lengMonestary:
-      case WallType::egypt:         return TileId::egyptWallFront;  break;
+      case WallType::egypt:
+        return TileId::egyptWallFront;
     }
   }
   assert(false && "Failed to set front wall tile");
@@ -501,11 +522,16 @@ TileId Wall::getTopWallTile() const
   switch (type_)
   {
     case WallType::cmn:
-    case WallType::cmnAlt:        return TileId::wallTop;           break;
+    case WallType::cmnAlt:
+      return TileId::wallTop;
+
     case WallType::cliff:
-    case WallType::cave:          return TileId::caveWallTop;       break;
+    case WallType::cave:
+      return TileId::caveWallTop;
+
     case WallType::lengMonestary:
-    case WallType::egypt:         return TileId::egyptWallTop;      break;
+    case WallType::egypt:
+      return TileId::egyptWallTop;
   }
   assert(false && "Failed to set top wall tile");
   return TileId::empty;
@@ -532,7 +558,6 @@ RubbleHigh::RubbleHigh(Pos pos) : Rigid(pos) {}
 void RubbleHigh::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                        Actor* const actor)
 {
-
   auto mkLowRubbleAndRocks = [&]()
   {
     const Pos p(pos_);
@@ -767,23 +792,20 @@ void Stairs::bump(Actor& actorBumping)
     switch (CHOICE)
     {
       case 0:
-      {
         Map::player->pos = pos_;
         MapTravel::goToNxt();
-      } break;
+        break;
 
       case 1:
-      {
         Map::player->pos = pos_;
         SaveHandling::save();
         Init::quitToMainMenu = true;
-      } break;
+        break;
 
       default:
-      {
         Log::clearLog();
         Render::drawMapAndInterface();
-      } break;
+        break;
     }
   }
 }
@@ -1085,15 +1107,21 @@ string Grass::getName(const Article article) const
   switch (getBurnState())
   {
     case BurnState::notBurned:
-    {
       switch (type_)
       {
-        case GrassType::cmn:      return ret + "grass";           break;
-        case GrassType::withered: return ret + "withered grass";  break;
+        case GrassType::cmn:
+          return ret + "grass";
+
+        case GrassType::withered:
+          return ret + "withered grass";
       }
-    } break;
-    case BurnState::burning:    return ret + "burning grass";   break;
-    case BurnState::hasBurned:  return ret + "scorched ground"; break;
+      break;
+
+    case BurnState::burning:
+      return ret + "burning grass";
+
+    case BurnState::hasBurned:
+      return ret + "scorched ground";
   }
 
   assert("Failed to set name" && false);
@@ -1142,15 +1170,21 @@ string Bush::getName(const Article article) const
   switch (getBurnState())
   {
     case BurnState::notBurned:
-    {
       switch (type_)
       {
-        case GrassType::cmn:      return ret + "shrub";           break;
-        case GrassType::withered: return ret + "withered shrub";  break;
+        case GrassType::cmn:
+          return ret + "shrub";
+
+        case GrassType::withered:
+          return ret + "withered shrub";
       }
-    } break;
-    case BurnState::burning:    return ret + "burning shrub";   break;
-    case BurnState::hasBurned:  {/*Should not happen*/}         break;
+      break;
+
+    case BurnState::burning:
+      return ret + "burning shrub";
+
+    case BurnState::hasBurned: {/*Should not happen*/}
+      break;
   }
 
   assert("Failed to set name" && false);
@@ -1172,7 +1206,7 @@ Clr Bush::getClr_() const
 Tree::Tree(Pos pos) : Rigid(pos) {}
 
 void Tree::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                 Actor* const actor)
+                 Actor * const actor)
 {
   if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
@@ -1209,7 +1243,7 @@ string Brazier::getName(const Article article) const
 }
 
 void Brazier::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                    Actor* const actor)
+                    Actor * const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
@@ -1283,7 +1317,7 @@ void ItemContainer::setRandomItemsForFeature(
   }
 }
 
-void ItemContainer::dropItems(const Pos& pos)
+void ItemContainer::dropItems(const Pos & pos)
 {
   for (auto* item : items_) {ItemDrop::dropItemOnMap(pos, *item);}
   items_.clear();
@@ -1308,7 +1342,7 @@ void ItemContainer::destroySingleFragile()
 }
 
 //--------------------------------------------------------------------- TOMB
-Tomb::Tomb(const Pos& pos) :
+Tomb::Tomb(const Pos & pos) :
   Rigid(pos), isContentKnown_(false), isTraitKnown_(false),
   pushLidOneInN_(Rnd::range(6, 14)), appearance_(TombAppearance::common),
   trait_(TombTrait::END)
@@ -1364,7 +1398,7 @@ Tomb::Tomb(const Pos& pos) :
 }
 
 void Tomb::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                 Actor* const actor)
+                 Actor * const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
@@ -1376,9 +1410,16 @@ string Tomb::getName(const Article article) const
   switch (appearance_)
   {
     case TombAppearance::common:
-    case TombAppearance::END: {} break;
-    case TombAppearance::ornate:    ret += "ornate ";    break;
-    case TombAppearance::marvelous: ret += "marvelous "; break;
+    case TombAppearance::END: {}
+      break;
+
+    case TombAppearance::ornate:
+      ret += "ornate ";
+      break;
+
+    case TombAppearance::marvelous:
+      ret += "marvelous ";
+      break;
   }
   return ret + "tomb";
 }
@@ -1387,16 +1428,23 @@ Clr Tomb::getClr_() const
 {
   switch (appearance_)
   {
-    case TombAppearance::common:    return clrGray;
-    case TombAppearance::ornate:    return clrWhite;
-    case TombAppearance::marvelous: return clrYellow;
-    case TombAppearance::END: {} break;
+    case TombAppearance::common:
+      return clrGray;
+
+    case TombAppearance::ornate:
+      return clrWhite;
+
+    case TombAppearance::marvelous:
+      return clrYellow;
+
+    case TombAppearance::END: {}
+      break;
   }
   assert("Failed to set Tomb color" && false);
   return clrBlack;
 }
 
-void Tomb::bump(Actor& actorBumping)
+void Tomb::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -1449,8 +1497,14 @@ void Tomb::bump(Actor& actorBumping)
           isSuccess = true;
         }
 
-        if (isSuccess) {open();}
-        else  {trySprainPlayer();}
+        if (isSuccess)
+        {
+          open();
+        }
+        else
+        {
+          trySprainPlayer();
+        }
       }
       GameTime::actorDidAct();
     }
@@ -1526,12 +1580,10 @@ void Tomb::examine()
       switch (trait_)
       {
         case TombTrait::auraOfUnrest:
-        {
           Log::addMsg("It has a certain aura of unrest about it.");
-        } break;
+          break;
 
         case TombTrait::forebodingCarvedSigns:
-        {
           if (PlayerBon::getBg() == Bg::occultist)
           {
             Log::addMsg("There is a curse carved on the box.");
@@ -1540,17 +1592,17 @@ void Tomb::examine()
           {
             Log::addMsg("There are some ominous runes carved on the box.");
           }
-        } break;
+          break;
 
         case TombTrait::stench:
-        {
           Log::addMsg("There is a pungent stench.");
-        } break;
+          break;
 
-        case TombTrait::END: {} break;
+        case TombTrait::END: {}
+          break;
       }
     }
-    else
+    else //Tomb trait not discovered
     {
       Log::addMsg("I find nothing significant.");
     }
@@ -1606,10 +1658,10 @@ void Tomb::examine()
 //      propHlr.tryApplyProp(curse, true);
 //    }
 //    trait_ = endOfTombTraits;
-//  } break;
+//    break;
 //}
 
-void Tomb::triggerTrap(Actor& actor)
+void Tomb::triggerTrap(Actor & actor)
 {
   (void)actor;
 
@@ -1618,8 +1670,6 @@ void Tomb::triggerTrap(Actor& actor)
   switch (trait_)
   {
     case TombTrait::auraOfUnrest:
-    {
-
       for (int i = 0; i < int(ActorId::END); ++i)
       {
         const ActorDataT& d = ActorData::data[i];
@@ -1632,30 +1682,27 @@ void Tomb::triggerTrap(Actor& actor)
         }
       }
       Log::addMsg("Something rises from the tomb!");
-    } break;
+      break;
 
     case TombTrait::forebodingCarvedSigns:
-    {
-      Map::player->getPropHandler().tryApplyProp(
-        new PropCursed(PropTurns::std));
-    } break;
+      Map::player->getPropHandler().tryApplyProp(new PropCursed(PropTurns::std));
+      break;
 
     case TombTrait::stench:
-    {
       if (Rnd::coinToss())
       {
         Log::addMsg("Fumes burst out from the tomb!");
-        Prop* prop = nullptr;
-        Clr fumeClr = clrMagenta;
+        Prop* prop    = nullptr;
+        Clr fumeClr   = clrMagenta;
         const int RND = Rnd::percentile();
         if (RND < 20)
         {
-          prop = new PropPoisoned(PropTurns::std);
+          prop    = new PropPoisoned(PropTurns::std);
           fumeClr = clrGreenLgt;
         }
         else if (RND < 40)
         {
-          prop = new PropDiseased(PropTurns::specific, 50);
+          prop    = new PropDiseased(PropTurns::specific, 50);
           fumeClr = clrGreen;
         }
         else
@@ -1663,9 +1710,8 @@ void Tomb::triggerTrap(Actor& actor)
           prop = new PropParalyzed(PropTurns::std);
           prop->turnsLeft_ *= 2;
         }
-        Explosion::runExplosionAt(
-          pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-          prop, &fumeClr);
+        Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc, 0,
+                                  SfxId::END, prop, &fumeClr);
       }
       else
       {
@@ -1681,8 +1727,7 @@ void Tomb::triggerTrap(Actor& actor)
         }
         Log::addMsg("Something creeps up from the tomb!");
       }
-
-    } break;
+      break;
 
     default: {} break;
   }
@@ -1697,7 +1742,7 @@ void Tomb::triggerTrap(Actor& actor)
 }
 
 //--------------------------------------------------------------------- CHEST
-Chest::Chest(const Pos& pos) :
+Chest::Chest(const Pos & pos) :
   Rigid(pos),
   isContentKnown_(false),
   isLocked_(false),
@@ -1706,10 +1751,9 @@ Chest::Chest(const Pos& pos) :
   matl_(ChestMatl(Rnd::range(0, int(ChestMatl::END) - 1)))
 {
 
-  const bool IS_TREASURE_HUNTER =
-    PlayerBon::traitsPicked[int(Trait::treasureHunter)];
-  const int NR_ITEMS_MIN = Rnd::oneIn(10) ? 0 : 1;
-  const int NR_ITEMS_MAX = IS_TREASURE_HUNTER ? 3 : 2;
+  const bool IS_TREASURE_HUNTER = PlayerBon::traitsPicked[int(Trait::treasureHunter)];
+  const int NR_ITEMS_MIN        = Rnd::oneIn(10) ? 0 : 1;
+  const int NR_ITEMS_MAX        = IS_TREASURE_HUNTER ? 3 : 2;
   itemContainer_.setRandomItemsForFeature(FeatureId::chest,
                                           Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
@@ -1721,12 +1765,12 @@ Chest::Chest(const Pos& pos) :
 }
 
 void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                  Actor* const actor)
+                  Actor * const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-void Chest::bump(Actor& actorBumping)
+void Chest::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -1831,15 +1875,15 @@ bool Chest::open()
 //            }
 //            GameTime::actorDidAct();
 //          }
-//        } break;
+//          break;
 //
-//        default: {} break;
+//        default: {  break;
 //
 //      } //dmgMethod
 //
-//    } break;
+//      break;
 //
-//    default: {} break;
+//    default: {  break;
 //
 //  } //dmgType
 //
@@ -1966,7 +2010,7 @@ void Chest::disarm()
   examine();
 }
 
-void Chest::triggerTrap(Actor& actor)
+void Chest::triggerTrap(Actor & actor)
 {
   (void)actor;
 
@@ -2031,19 +2075,20 @@ Clr Chest::getClr_() const
 }
 
 //--------------------------------------------------------------------- FOUNTAIN
-Fountain::Fountain(const Pos& pos) :
+Fountain::Fountain(const Pos & pos) :
   Rigid(pos),
   isDried_(false),
   fountainEffects_(vector<FountainEffect>()),
   fountainMatl_(FountainMatl::stone)
 {
-
-  if (Rnd::oneIn(14)) {fountainMatl_ = FountainMatl::gold;}
+  if (Rnd::oneIn(14))
+  {
+    fountainMatl_ = FountainMatl::gold;
+  }
 
   switch (fountainMatl_)
   {
     case FountainMatl::stone:
-    {
       if (Rnd::fraction(5, 6))
       {
         fountainEffects_.push_back(FountainEffect::refreshing);
@@ -2054,10 +2099,9 @@ Fountain::Fountain(const Pos& pos) :
         const auto  effect    = FountainEffect(Rnd::range(0, NR_TYPES - 1));
         fountainEffects_.push_back(effect);
       }
-    } break;
+      break;
 
     case FountainMatl::gold:
-    {
       vector<FountainEffect> effectBucket
       {
         FountainEffect::bless, FountainEffect::refreshing, FountainEffect::spirit,
@@ -2073,12 +2117,12 @@ Fountain::Fountain(const Pos& pos) :
       {
         fountainEffects_.push_back(effectBucket[i]);
       }
-    } break;
+      break;
   }
 }
 
 void Fountain::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                     Actor* const actor)
+                     Actor * const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
@@ -2113,7 +2157,7 @@ string Fountain::getName(const Article article) const
   return ret + "fountain";
 }
 
-void Fountain::bump(Actor& actorBumping)
+void Fountain::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -2229,38 +2273,40 @@ void Fountain::bump(Actor& actorBumping)
             propHlr.tryApplyProp(prop);
           } break;
 
-          case FountainEffect::END: {} break;
+          case FountainEffect::END: {}
+            break;
+        }
+
+        if (Rnd::oneIn(6))
+        {
+          Log::addMsg("The fountain dries out.");
+          isDried_ = true;
         }
       }
-
-      if (Rnd::oneIn(6))
-      {
-        Log::addMsg("The fountain dries out.");
-        isDried_ = true;
-      }
+      GameTime::actorDidAct();
     }
   }
-  GameTime::actorDidAct();
 }
 
-
 //--------------------------------------------------------------------- CABINET
-Cabinet::Cabinet(const Pos& pos) : Rigid(pos), isContentKnown_(false)
+Cabinet::Cabinet(const Pos & pos) : Rigid(pos), isContentKnown_(false)
 {
   const int IS_EMPTY_N_IN_10  = 5;
   const int NR_ITEMS_MIN      = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-  const int NR_ITEMS_MAX      = PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 2 : 1;
+  const int NR_ITEMS_MAX =
+    PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 2 : 1;
+
   itemContainer_.setRandomItemsForFeature(
     FeatureId::cabinet, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 }
 
 void Cabinet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                    Actor* const actor)
+                    Actor * const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-void Cabinet::bump(Actor& actorBumping)
+void Cabinet::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -2310,7 +2356,7 @@ Clr Cabinet::getClr_() const
 }
 
 //--------------------------------------------------------------------- COCOON
-Cocoon::Cocoon(const Pos& pos) : Rigid(pos), isContentKnown_(false)
+Cocoon::Cocoon(const Pos & pos) : Rigid(pos), isContentKnown_(false)
 {
   const bool IS_TREASURE_HUNTER = PlayerBon::traitsPicked[int(Trait::treasureHunter)];
   const int IS_EMPTY_N_IN_10    = 6;
@@ -2321,12 +2367,12 @@ Cocoon::Cocoon(const Pos& pos) : Rigid(pos), isContentKnown_(false)
 }
 
 void Cocoon::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                   Actor* const actor)
+                   Actor * const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-void Cocoon::bump(Actor& actorBumping)
+void Cocoon::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -2341,7 +2387,7 @@ void Cocoon::bump(Actor& actorBumping)
   }
 }
 
-void Cocoon::triggerTrap(Actor& actor)
+void Cocoon::triggerTrap(Actor & actor)
 {
   (void)actor;
 

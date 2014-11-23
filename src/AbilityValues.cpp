@@ -27,51 +27,45 @@ int AbilityVals::getVal(const AbilityId abilityId,
     switch (abilityId)
     {
       case AbilityId::searching:
-      {
         val += 8;
         if (PlayerBon::traitsPicked[int(Trait::observant)])   val += 4;
         if (PlayerBon::traitsPicked[int(Trait::perceptive)])  val += 4;
-      } break;
+        break;
 
       case AbilityId::melee:
-      {
         val += 45;
         if (PlayerBon::traitsPicked[int(Trait::adeptMeleeFighter)])   val += 10;
         if (PlayerBon::traitsPicked[int(Trait::expertMeleeFighter)])  val += 10;
         if (PlayerBon::traitsPicked[int(Trait::masterMeleeFighter)])  val += 10;
         if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) val += 30;
-      } break;
+        break;
 
       case AbilityId::ranged:
-      {
         val += 50;
         if (PlayerBon::traitsPicked[int(Trait::adeptMarksman)])   val += 10;
         if (PlayerBon::traitsPicked[int(Trait::expertMarksman)])  val += 10;
         if (PlayerBon::traitsPicked[int(Trait::masterMarksman)])  val += 10;
         if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) val += 30;
-      } break;
+        break;
 
       case AbilityId::dodgeTrap:
-      {
         val += 5;
         if (PlayerBon::traitsPicked[int(Trait::dexterous)]) val += 20;
         if (PlayerBon::traitsPicked[int(Trait::lithe)])     val += 20;
-      } break;
+        break;
 
       case AbilityId::dodgeAttack:
-      {
         val += 10;
         if (PlayerBon::traitsPicked[int(Trait::dexterous)]) val += 20;
         if (PlayerBon::traitsPicked[int(Trait::lithe)])     val += 20;
         if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) val += 50;
-      } break;
+        break;
 
       case AbilityId::stealth:
-      {
         val += 10;
         if (PlayerBon::traitsPicked[int(Trait::stealthy)])      val += 50;
         if (PlayerBon::traitsPicked[int(Trait::imperceptible)]) val += 30;
-      } break;
+        break;
 
       case AbilityId::empty:
       case AbilityId::END: {} break;

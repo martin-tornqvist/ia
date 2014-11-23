@@ -429,7 +429,10 @@ void handleKeyPress(const KeyData& d)
   else if (d.key == 'w')
   {
     Log::clearLog();
-    if (Map::player->isAlive()) {InvHandling::runInvScreen();}
+    if (Map::player->isAlive())
+    {
+      InvHandling::runInvScreen();
+    }
     clearEvents();
     return;
   }
@@ -1024,7 +1027,6 @@ KeyData readKeysUntilFound(const bool IS_O_RETURN)
             {
               case SDLK_RETURN:
               case SDLK_KP_ENTER:
-              {
                 if (IS_ALT_HELD)
                 {
                   Config::toggleFullscreen();
@@ -1036,7 +1038,7 @@ KeyData readKeysUntilFound(const bool IS_O_RETURN)
                   ret.sdlKey = SDLK_RETURN;
                   return ret;
                 }
-              } break;
+                break;
               case SDLK_MENU:         continue;   break;
               case SDLK_PAUSE:        continue;   break;
               case SDLK_SPACE:        return ret; break;

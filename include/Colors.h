@@ -52,7 +52,7 @@ const Clr clrNosfTealDrk      = { 20,  54,  51, 0};
 //-----------------------------------------------------------
 const Clr clrMsgGood          = clrGreenLgt;
 const Clr clrMsgBad           = clrRedLgt;
-const Clr clrMsgWarning       = clrOrange;
+const Clr clrMsgNote       = clrOrange;
 
 //Standard menu colors
 //-----------------------------------------------------------

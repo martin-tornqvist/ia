@@ -473,7 +473,7 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType)
           if (isPlayer())
           {
             const string armorName = armor->getName(ItemRefType::plain, ItemRefInf::none);
-            Log::addMsg("My " + armorName + " is torn apart!", clrMsgWarning);
+            Log::addMsg("My " + armorName + " is torn apart!", clrMsgNote);
           }
           delete armor;
           armor = nullptr;

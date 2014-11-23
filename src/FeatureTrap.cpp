@@ -305,7 +305,7 @@ void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)
     if (PRINT_MESSSAGE_WHEN_PLAYER_SEES)
     {
       const string name = specificTrap_->getTitle();
-      Log::addMsg("I spot a " + name + ".", clrMsgWarning, false, true);
+      Log::addMsg("I spot a " + name + ".", clrMsgNote, false, true);
     }
   }
   TRACE_FUNC_END_VERBOSE;

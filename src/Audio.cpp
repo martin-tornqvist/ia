@@ -36,8 +36,9 @@ void loadAudioFile(const SfxId sfx, const string& filename)
 
   if (!audioChunks[int(sfx)])
   {
-    TRACE << "Problem loading audio file with name " + filename << endl
-          << Mix_GetError() << endl;
+    TRACE << "Problem loading audio file with name: " << filename       << endl
+          << "Mix_GetError(): "                       << Mix_GetError() << endl;
+    assert(false);
   }
 }
 
@@ -92,13 +93,13 @@ void init()
     loadAudioFile(SfxId::electricLantern,         "sfx_electricLantern.ogg");
     loadAudioFile(SfxId::potionQuaff,             "sfx_potionQuaff.ogg");
     loadAudioFile(SfxId::spellGeneric,            "sfx_spellGeneric.ogg");
-    loadAudioFile(SfxId::insanityRise,            "sfx_insanityRise.ogg");
+    loadAudioFile(SfxId::insanityRise,            "sfx_insanityRising.ogg");
     loadAudioFile(SfxId::glop,                    "sfx_glop.ogg");
     loadAudioFile(SfxId::death,                   "sfx_death.ogg");
 
     int a = 1;
     const int FIRST = int(SfxId::AMB_START) + 1;
-    const int LAST  = int(SfxId::END)   - 1;
+    const int LAST  = int(SfxId::AMB_END)   - 1;
     for (int i = FIRST; i <= LAST; ++i)
     {
       const string indexStr = toStr(a);

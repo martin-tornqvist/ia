@@ -72,8 +72,6 @@ public:
   }
   void resetPermShockTakenCurTurn() {permShockTakenCurTurn_ = 0.0;}
 
-  void addTmpShockFromFeatures();
-
   int getShockResistance(const ShockSrc shockSrc) const;
   double getShockTakenAfterMods(const int BASE_SHOCK,
                                 const ShockSrc shockSrc) const;

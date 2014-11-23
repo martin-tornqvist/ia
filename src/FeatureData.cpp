@@ -111,7 +111,7 @@ void initDataList()
   d.glyph = '|';
   d.tile = TileId::tree;
   d.moveRules.setPropCanMove(propEthereal);
-  d.moveRules.setPropCanMove(propFlying);
+  //d.moveRules.setPropCanMove(propFlying); //Its hard to notice some monsters
   d.isSoundPassable = false;
   d.isProjectilePassable = false;
   d.isLosPassable = false;

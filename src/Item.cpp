@@ -176,9 +176,41 @@ void Item::clearCarrierProps()
 Armor::Armor(ItemDataT* const itemData) :
   Item(itemData), dur_(Rnd::range(80, 100)) {}
 
+void Armor::storeToSaveLines(vector<string>& lines)
+{
+  lines.push_back(toStr(dur_));
+}
+
+void Armor::setupFromSaveLines(vector<string>& lines)
+{
+  dur_ = toInt(lines.front());
+  lines.erase(begin(lines));
+}
+
+void Armor::onEquip()
+{
+  onEquip_();
+}
+
+UnequipAllowed Armor::onUnequip()
+{
+  Render::drawMapAndInterface();
+
+  const UnequipAllowed unequipAllowed = onUnequip_();
+
+  if (unequipAllowed == UnequipAllowed::yes)
+  {
+    const string name = getName(ItemRefType::plain, ItemRefInf::none);
+    Log::addMsg("I take off my " + name + ".", clrWhite, false, true);
+  }
+
+  GameTime::actorDidAct();
+
+  return unequipAllowed;
+}
+
 string Armor::getArmorDataLine(const bool WITH_BRACKETS) const
 {
-
   const int AP = getAbsorptionPoints();
 
   if (AP <= 0)
@@ -207,26 +239,22 @@ int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE)
   //DDF = Damage (to) Durability Factor
   //(how much damage the durability takes per attack damage point)
 
-  const int AP_BEFORE = getAbsorptionPoints();
-
-  const double DDF_BASE         = data_->armor.dmgToDurabilityFactor;
-  //TODO Add check for if wearer is player
-  const double DDF_WAR_VET_MOD  = PlayerBon::getBg() == Bg::warVet ?
-                                  0.5 : 1.0;
-  const double DDF_K            = 1.5;
-
-  const double DMG_BEFORE_DB = double(DMG_BEFORE);
+  const int     AP_BEFORE       = getAbsorptionPoints();
+  const double  DDF_BASE        = data_->armor.dmgToDurabilityFactor;
+  //TODO Add check for if wearer is player!
+  const double  DDF_WAR_VET_MOD = PlayerBon::getBg() == Bg::warVet ? 0.5 : 1.0;
+  const double  DDF_K           = 1.5;
+  const double  DMG_BEFORE_DB   = double(DMG_BEFORE);
 
   dur_ -= int(DMG_BEFORE_DB * DDF_BASE * DDF_WAR_VET_MOD * DDF_K);
 
-  dur_ = max(0, dur_);
-
-  const int AP_AFTER = getAbsorptionPoints();
+  dur_                          = max(0, dur_);
+  const int AP_AFTER            = getAbsorptionPoints();
 
   if (AP_AFTER < AP_BEFORE && AP_AFTER != 0)
   {
     const string armorName = getName(ItemRefType::plain);
-    Log::addMsg("My " + armorName + " is damaged!", clrMsgWarning);
+    Log::addMsg("My " + armorName + " is damaged!", clrMsgNote);
   }
 
   TRACE << "Damage before: " + toStr(DMG_BEFORE) << endl;
@@ -251,7 +279,7 @@ int Armor::getAbsorptionPoints() const
   return 0;
 }
 
-void ArmorAsbSuit::onWear()
+void ArmorAsbSuit::onEquip_()
 {
   carrierProps_.push_back(new PropRFire(PropTurns::indefinite));
   carrierProps_.push_back(new PropRAcid(PropTurns::indefinite));
@@ -259,22 +287,84 @@ void ArmorAsbSuit::onWear()
   carrierProps_.push_back(new PropRBreath(PropTurns::indefinite));
 }
 
-void ArmorAsbSuit::onTakeOff()
+UnequipAllowed ArmorAsbSuit::onUnequip_()
 {
   clearCarrierProps();
+  return UnequipAllowed::yes;
 }
 
-void ArmorHeavyCoat::onWear()
+void ArmorHeavyCoat::onEquip_()
 {
   carrierProps_.push_back(new PropRCold(PropTurns::indefinite));
 }
 
-void ArmorHeavyCoat::onTakeOff()
+UnequipAllowed ArmorHeavyCoat::onUnequip_()
 {
   clearCarrierProps();
+  return UnequipAllowed::yes;
+}
+
+void ArmorMigo::newTurnInInventory()
+{
+  if (dur_ < 100)
+  {
+    const int AP_BEFORE = getAbsorptionPoints();
+
+    dur_ = 100;
+
+    const int AP_AFTER  = getAbsorptionPoints();
+
+    if (AP_AFTER > AP_BEFORE)
+    {
+      const string name = getName(ItemRefType::plain, ItemRefInf::none);
+      Log::addMsg("My " + name + " reconstructs itself.", clrMsgNote, false, true);
+    }
+  }
+}
+
+void ArmorMigo::onEquip_()
+{
+  Render::drawMapAndInterface();
+  Log::addMsg("The armor joins with my skin!", clrWhite, false, true);
+  Map::player->incrShock(ShockValue::heavy, ShockSrc::useStrangeItem);
+}
+
+UnequipAllowed ArmorMigo::onUnequip_()
+{
+  Render::drawMapAndInterface();
+  Log::addMsg("I attempt to tear off the armor, it rips my skin!", clrMsgBad, false,
+              true);
+
+  Map::player->hit(Rnd::range(1, 3), DmgType::pure);
+
+  if (Rnd::coinToss())
+  {
+    //Note: There is no need to print a message here, a message is always printed when
+    //taking off armor.
+    return UnequipAllowed::yes;
+  }
+  else
+  {
+    Log::addMsg("I fail to tear it off.", clrWhite, false, true);
+    return UnequipAllowed::no;
+  }
 }
 
 //--------------------------------------------------------- WEAPON
+void Wpn::storeToSaveLines(vector<string>& lines)
+{
+  lines.push_back(toStr(meleeDmgPlus_));
+  lines.push_back(toStr(nrAmmoLoaded));
+}
+
+void Wpn::setupFromSaveLines(vector<string>& lines)
+{
+  meleeDmgPlus_ = toInt(lines.front());
+  lines.erase(begin(lines));
+  nrAmmoLoaded = toInt(lines.front());
+  lines.erase(begin(lines));
+}
+
 Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData) :
   Item(itemData), ammoData_(ammoData)
 {
@@ -682,14 +772,15 @@ void HideousMask::newTurnInInventory()
 }
 
 //--------------------------------------------------------- GAS MASK
-void GasMask::onTakeOff()
-{
-  clearCarrierProps();
-}
-
-void GasMask::onWear()
+void GasMask::onEquip()
 {
   carrierProps_.push_back(new PropRBreath(PropTurns::indefinite));
+}
+
+UnequipAllowed GasMask::onUnequip()
+{
+  clearCarrierProps();
+  return UnequipAllowed::yes;
 }
 
 //--------------------------------------------------------- EXPLOSIVE

@@ -36,49 +36,44 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
     isClip    = ammo->getData().isAmmoClip;
   }
 
-  const bool IS_PLAYER    = &actorReloading == Map::player;
+  const bool IS_PLAYER    = actorReloading.isPlayer();
   const string actorName  = actorReloading.getNameThe();
 
   switch (result)
   {
     case ReloadResult::notCarryingWpn:
-    {
       if (IS_PLAYER)
       {
         Log::addMsg("I am not wielding a weapon.");
       }
-    } break;
+      break;
 
     case ReloadResult::wpnNotUsingAmmo:
-    {
       if (IS_PLAYER)
       {
         Log::addMsg("This weapon does not use ammo.");
       }
-    } break;
+      break;
 
     case ReloadResult::alreadyFull:
-    {
       if (IS_PLAYER)
       {
         Log::addMsg("Weapon already loaded.");
       }
-    } break;
+      break;
 
     case ReloadResult::noAmmo:
-    {
       if (IS_PLAYER)
       {
         Log::addMsg("I carry no ammunition for this weapon.");
       }
-    } break;
+      break;
 
     case ReloadResult::success:
     {
       const string swiftStr = IS_SWIFT_RELOAD ? " swiftly" : "";
       if (IS_PLAYER)
       {
-
         Audio::play(wpn->getData().ranged.reloadSfx);
 
         if (isClip)
@@ -106,7 +101,6 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
     } break;
 
     case ReloadResult::fumble:
-    {
       if (IS_PLAYER)
       {
         Log::addMsg("I fumble with " + ammoName + ".");
@@ -118,7 +112,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
           Log::addMsg(actorName + " fumbles with " + ammoName + ".");
         }
       }
-    } break;
+      break;
   }
 }
 

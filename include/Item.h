@@ -51,19 +51,19 @@ public:
 
   virtual void newTurnInInventory() {}
 
-  int nrItems_;
+  virtual void            onEquip()   {}
+  virtual UnequipAllowed  onUnequip() {return UnequipAllowed::yes;}
 
-  virtual void onWear() {}
-  virtual void onTakeOff() {}
+  //Called by the ItemDrop class to make noise etc
+  virtual void appplyDropEffects() {}
+
+  int nrItems_;
 
   //Properties to apply when wearing something like a ring of fire resistance
   std::vector<Prop*>  carrierProps_;
 
   //Spells granted to the carrier
   std::vector<Spell*> carrierSpells_;
-
-  //Called by the ItemDrop class to make noise etc
-  virtual void appplyDropEffects() {}
 
   int meleeDmgPlus_;
 
@@ -83,34 +83,26 @@ public:
 
   ~Armor() {}
 
-  int getDurability() const {return dur_;}
+  void storeToSaveLines  (std::vector<std::string>& lines) override;
+  void setupFromSaveLines(std::vector<std::string>& lines) override;
+
+  Clr                     getInterfaceClr() const override {return clrGray;}
+  virtual void            onEquip()               override;
+  virtual UnequipAllowed  onUnequip()             override;
+
+  int   getDurability()     const {return dur_;}
+  void  setMaxDurability()        {dur_ = 100;}
+  bool  isDestroyed()       const {return getAbsorptionPoints() <= 0;}
 
   std::string getArmorDataLine(const bool WITH_BRACKETS) const;
 
   int takeDurHitAndGetReducedDmg(const int DMG_BEFORE);
 
-  void storeToSaveLines(std::vector<std::string>& lines) override
-  {
-    lines.push_back(toStr(dur_));
-  }
-
-  void setupFromSaveLines(std::vector<std::string>& lines) override
-  {
-    dur_ = toInt(lines.front());
-    lines.erase(begin(lines));
-  }
-
-  inline bool isDestroyed() {return getAbsorptionPoints() <= 0;}
-
-  Clr getInterfaceClr() const override {return clrGray;}
-
-  void setMaxDurability() {dur_ = 100;}
-
-  virtual void onWear()     override {}
-  virtual void onTakeOff()  override {}
-
 protected:
   int getAbsorptionPoints() const;
+
+  virtual void            onEquip_()    {}
+  virtual UnequipAllowed  onUnequip_()  {return UnequipAllowed::yes;}
 
   std::string getNameInf() const override {return getArmorDataLine(true);}
 
@@ -120,23 +112,36 @@ protected:
 class ArmorAsbSuit: public Armor
 {
 public:
-  ArmorAsbSuit(ItemDataT* const itemData) :
-    Armor(itemData) {}
+  ArmorAsbSuit(ItemDataT* const itemData) : Armor(itemData) {}
   ~ArmorAsbSuit() {}
 
-  void onWear()     override;
-  void onTakeOff()  override;
+private:
+  void            onEquip_()    override;
+  UnequipAllowed  onUnequip_()  override;
 };
 
 class ArmorHeavyCoat: public Armor
 {
 public:
-  ArmorHeavyCoat(ItemDataT* const itemData) :
-    Armor(itemData) {}
+  ArmorHeavyCoat(ItemDataT* const itemData) : Armor(itemData) {}
   ~ArmorHeavyCoat() {}
 
-  void onWear()     override;
-  void onTakeOff()  override;
+private:
+  void            onEquip_()    override;
+  UnequipAllowed  onUnequip_()  override;
+};
+
+class ArmorMigo: public Armor
+{
+public:
+  ArmorMigo(ItemDataT* const itemData) : Armor(itemData) {}
+  ~ArmorMigo() {}
+
+  void newTurnInInventory() override;
+
+private:
+  void            onEquip_()    override;
+  UnequipAllowed  onUnequip_()  override;
 };
 
 class Wpn: public Item
@@ -152,19 +157,13 @@ public:
 
   void setRandomMeleePlus();
 
-  virtual std::vector<std::string> itemSpecificWriteToFile()
-  {
-    std::vector<std::string> lines;
-    lines.push_back(toStr(nrAmmoLoaded));
-    return lines;
-  }
+  void storeToSaveLines  (std::vector<std::string>& lines) override;
+  void setupFromSaveLines(std::vector<std::string>& lines) override;
 
-  virtual void itemSpecificReadFromFile(std::vector<std::string> lines)
-  {
-    nrAmmoLoaded = toInt(lines[0]);
-  }
+  Clr getClr()          const override;
+  Clr getInterfaceClr() const override {return clrGray;}
 
-  //actorHit may be nullptr
+  //"actor" may be nullptr
   virtual void projectileObstructed(const Pos& pos, Actor* actor)
   {
     (void)pos;
@@ -173,30 +172,13 @@ public:
 
   const ItemDataT& getAmmoData() {return *ammoData_;}
 
-  void storeToSaveLines(std::vector<std::string>& lines) override
-  {
-    lines.push_back(toStr(meleeDmgPlus_));
-    lines.push_back(toStr(nrAmmoLoaded));
-  }
-
-  void setupFromSaveLines(std::vector<std::string>& lines) override
-  {
-    meleeDmgPlus_ = toInt(lines.front());
-    lines.erase(begin(lines));
-    nrAmmoLoaded = toInt(lines.front());
-    lines.erase(begin(lines));
-  }
-
-  Clr getClr() const override;
-
-  Clr getInterfaceClr() const override {return clrGray;}
-
 protected:
-  Wpn& operator=(const Wpn& other)
-  {
-    (void) other;
-    return *this;
-  }
+  Wpn& operator=(const Wpn& other) = delete;
+//  Wpn& operator=(const Wpn& other)
+//  {
+//    (void) other;
+//    return *this;
+//  }
 
   std::string getNameInf() const override;
 
@@ -400,8 +382,8 @@ class GasMask: public Headwear
 public:
   GasMask(ItemDataT* itemData) : Headwear(itemData) {}
 
-  void onWear()     override;
-  void onTakeOff()  override;
+  void            onEquip()   override;
+  UnequipAllowed  onUnequip() override;
 };
 
 class Explosive : public Item

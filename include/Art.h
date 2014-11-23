@@ -50,6 +50,7 @@ enum class TileId
   wraith,
   mantis,
   locust,
+  migoArmor,
   pistol,
   tommyGun,
   shotgun,

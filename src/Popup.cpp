@@ -182,32 +182,27 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
     switch (action)
     {
       case MenuAction::browsed:
-      {
-        menuMsgDrawingHelper(
-          lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
-          TEXT_H_TOT, title);
-      } break;
+        menuMsgDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
+                             TEXT_H_TOT, title);
+        break;
 
       case MenuAction::esc:
       case MenuAction::space:
-      {
         if (DRAW_MAP_AND_INTERFACE)
         {
           Render::drawMapAndInterface();
         }
         return NR_CHOICES - 1;
-      } break;
 
-      case MenuAction::selectedShift: {} break;
+      case MenuAction::selectedShift: {}
+        break;
 
       case MenuAction::selected:
-      {
         if (DRAW_MAP_AND_INTERFACE)
         {
           Render::drawMapAndInterface();
         }
         return browser.getPos().y;
-      } break;
     }
   }
 }

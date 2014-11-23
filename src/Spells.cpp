@@ -53,32 +53,33 @@ Spell* mkSpellFromId(const SpellId spellId)
 {
   switch (spellId)
   {
-    case SpellId::slowMon:              return new SpellSlowMon; break;
-    case SpellId::terrifyMon:           return new SpellTerrifyMon; break;
-    case SpellId::paralyzeMon:          return new SpellParalyzeMon; break;
-    case SpellId::disease:              return new SpellDisease; break;
-    case SpellId::darkbolt:             return new SpellDarkbolt; break;
-    case SpellId::azaWrath:             return new SpellAzaWrath; break;
-    case SpellId::summonMon:            return new SpellSummonMon; break;
-    case SpellId::healSelf:             return new SpellHealSelf; break;
-    case SpellId::knockBack:            return new SpellKnockBack; break;
-    case SpellId::teleport:             return new SpellTeleport; break;
-    case SpellId::mayhem:               return new SpellMayhem; break;
-    case SpellId::pest:                 return new SpellPest; break;
-    case SpellId::detItems:             return new SpellDetItems; break;
-    case SpellId::detTraps:             return new SpellDetTraps; break;
-    case SpellId::detMon:               return new SpellDetMon; break;
-    case SpellId::opening:              return new SpellOpening; break;
-    case SpellId::sacrLife:             return new SpellSacrLife; break;
-    case SpellId::sacrSpi:              return new SpellSacrSpi; break;
-    case SpellId::cloudMinds:           return new SpellCloudMinds; break;
-    case SpellId::bless:                return new SpellBless; break;
-    case SpellId::miGoHypno:            return new SpellMiGoHypno; break;
-    case SpellId::burn:                 return new SpellBurn; break;
-    case SpellId::elemRes:              return new SpellElemRes; break;
-    case SpellId::pharaohStaff:         return new SpellPharaohStaff; break;
-    case SpellId::light:                return new SpellLight; break;
-    case SpellId::END: {} break;
+    case SpellId::slowMon:              return new SpellSlowMon;
+    case SpellId::terrifyMon:           return new SpellTerrifyMon;
+    case SpellId::paralyzeMon:          return new SpellParalyzeMon;
+    case SpellId::disease:              return new SpellDisease;
+    case SpellId::darkbolt:             return new SpellDarkbolt;
+    case SpellId::azaWrath:             return new SpellAzaWrath;
+    case SpellId::summonMon:            return new SpellSummonMon;
+    case SpellId::healSelf:             return new SpellHealSelf;
+    case SpellId::knockBack:            return new SpellKnockBack;
+    case SpellId::teleport:             return new SpellTeleport;
+    case SpellId::mayhem:               return new SpellMayhem;
+    case SpellId::pest:                 return new SpellPest;
+    case SpellId::detItems:             return new SpellDetItems;
+    case SpellId::detTraps:             return new SpellDetTraps;
+    case SpellId::detMon:               return new SpellDetMon;
+    case SpellId::opening:              return new SpellOpening;
+    case SpellId::sacrLife:             return new SpellSacrLife;
+    case SpellId::sacrSpi:              return new SpellSacrSpi;
+    case SpellId::cloudMinds:           return new SpellCloudMinds;
+    case SpellId::bless:                return new SpellBless;
+    case SpellId::miGoHypno:            return new SpellMiGoHypno;
+    case SpellId::burn:                 return new SpellBurn;
+    case SpellId::elemRes:              return new SpellElemRes;
+    case SpellId::pharaohStaff:         return new SpellPharaohStaff;
+    case SpellId::light:                return new SpellLight;
+    case SpellId::END: {}
+      break;
   }
   assert(false && "No spell found for ID");
   return nullptr;
@@ -116,15 +117,15 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
 
       switch (getId())
       {
-        case SpellId::darkbolt:       {if (IS_WARLOCK)  --costMax;}     break;
-        case SpellId::azaWrath:       {if (IS_WARLOCK)  --costMax;}     break;
-        case SpellId::mayhem:         {if (IS_WARLOCK)  --costMax;}     break;
-        case SpellId::detMon:         {if (IS_SEER)     --costMax;}     break;
-        case SpellId::detItems:       {if (IS_SEER)     costMax -= 3;}  break;
-        case SpellId::detTraps:       {if (IS_SEER)     costMax -= 3;}  break;
-        case SpellId::summonMon:      {if (IS_SUMMONER) --costMax;      break;}
-        case SpellId::pest:           {if (IS_SUMMONER) --costMax;      break;}
-        case SpellId::pharaohStaff:   {if (IS_SUMMONER) --costMax;      break;}
+        case SpellId::darkbolt:       if (IS_WARLOCK)  --costMax;     break;
+        case SpellId::azaWrath:       if (IS_WARLOCK)  --costMax;     break;
+        case SpellId::mayhem:         if (IS_WARLOCK)  --costMax;     break;
+        case SpellId::detMon:         if (IS_SEER)     --costMax;     break;
+        case SpellId::detItems:       if (IS_SEER)     costMax -= 3;  break;
+        case SpellId::detTraps:       if (IS_SEER)     costMax -= 3;  break;
+        case SpellId::summonMon:      if (IS_SUMMONER) --costMax;     break;
+        case SpellId::pest:           if (IS_SUMMONER) --costMax;     break;
+        case SpellId::pharaohStaff:   if (IS_SUMMONER) --costMax;     break;
         default: {} break;
       }
     }
@@ -473,7 +474,7 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
 
     if (didPlayerSummonHostile)
     {
-      Log::addMsg("They are hostile!", clrMsgWarning, true, true);
+      Log::addMsg("They are hostile!", clrMsgNote, true, true);
     }
 
     return SpellEffectNoticed::yes;
@@ -534,7 +535,7 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
 
     if (didPlayerSummonHostile)
     {
-      Log::addMsg("It is hostile!", clrMsgWarning, true, true);
+      Log::addMsg("It is hostile!", clrMsgNote, true, true);
     }
 
     return SpellEffectNoticed::yes;
@@ -1012,7 +1013,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
 
     if (didPlayerSummonHostile)
     {
-      Log::addMsg("It is hostile!", clrMsgWarning, true, true);
+      Log::addMsg("It is hostile!", clrMsgNote, true, true);
     }
 
     return SpellEffectNoticed::yes;

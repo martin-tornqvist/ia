@@ -86,7 +86,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines)
       item->setupFromSaveLines(lines);
       slot.item = item;
       //When loading the game, wear the item to apply properties from wearing
-      item->onWear();
+      item->onEquip();
     }
   }
 

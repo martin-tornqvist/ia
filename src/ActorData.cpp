@@ -1366,7 +1366,7 @@ void initDataList()
   d.ai[int(AiId::movesToLair)] = false;
   d.ai[int(AiId::movesToLeader)] = true;
   d.speed = ActorSpeed::fast;
-  d.rangedCooldownTurns = 3;
+  d.rangedCooldownTurns = 4;
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
   d.color = clrBrownDrk;

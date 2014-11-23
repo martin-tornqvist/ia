@@ -77,11 +77,6 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::mold:                 return new Mold();
     case ActorId::gasSpore:             return new GasSpore();
 
-//  case ActorId::lordOfPestilence: return new LordOfPestilence;
-//  case ActorId::lordOfShadows:    return new LordOfShadows;
-//  case ActorId::lordOfSpiders:    return new LordOfSpiders;
-//  case ActorId::lordOfSpirits:    return new LordOfSpirits;
-
     case ActorId::END: {} break;
   }
   return nullptr;

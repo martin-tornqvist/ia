@@ -281,35 +281,29 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotIdToEquip,
   switch (slotIdToEquip)
   {
     case SlotId::wielded:
-    {
       str = HAS_ITEM ? "Wield which item?"            : "I carry no weapon to wield.";
-    } break;
+      break;
 
     case SlotId::wieldedAlt:
-    {
       str = HAS_ITEM ? "Prepare which weapon?"        : "I carry no weapon to wield.";
-    } break;
+      break;
 
     case SlotId::thrown:
-    {
       str = HAS_ITEM ? "Use which item as missiles?"  : "I carry no weapon to throw." ;
-    } break;
+      break;
 
     case SlotId::body:
-    {
       str = HAS_ITEM ? "Wear which armor?"            : "I carry no armor.";
-    } break;
+      break;
 
     case SlotId::head:
-    {
       str = HAS_ITEM ? "Wear what on head?"           : "I carry no headwear.";
-    } break;
+      break;
 
     case SlotId::END:
-    {
       TRACE << "Illegal slot id: " << int(slotIdToEquip) << endl;
       assert(false);
-    }
+      break;
   }
   if (HAS_ITEM) {str += " [shift+enter] to drop";}
   str += cancelInfoStr;

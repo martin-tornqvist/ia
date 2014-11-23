@@ -44,11 +44,12 @@ ItemDataT::ItemDataT(const ItemId id_) :
   spellCastFromScroll(SpellId::END),
   landOnHardSndMsg("I hear a thudding sound."),
   landOnHardSfx(),
+  shockWhileInBackpack(0),
+  shockWhileEquiped(0),
   melee(MeleeItemData()),
   ranged(RangedItemData()),
   armor(ArmorItemData())
 {
-
   baseDescr.clear();
   nativeRooms.clear();
   featuresCanBeFoundIn.clear();
@@ -1306,6 +1307,22 @@ void initDataList()
   d->armor.dmgToDurabilityFactor = 1.0;
   d->landOnHardSndMsg = "";
   addFeatureFoundIn(*d, FeatureId::cabinet);
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::armorMigo);
+  resetData(*d, ItemType::armor);
+  d->baseName = ItemName("Mi-go Bio-armor", "", "a Mi-go Bio-armor");
+  d->baseDescr = {"A self-repairing biological armor crafted by the Mi-go.",
+                  "It is very disturbing for a human to wear (+10% shock while worn)."
+                 };
+  d->spawnStdRange = Range(-1, -1);
+  d->itemWeight = itemWeight_light;
+  d->shockWhileEquiped = 10;
+  d->clr = clrMagenta;
+  d->tile = TileId::migoArmor;
+  d->armor.absorptionPoints = 3;
+  d->armor.dmgToDurabilityFactor = 1.5;
+  d->landOnHardSndMsg = "";
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::gasMask);

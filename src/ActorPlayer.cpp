@@ -307,17 +307,16 @@ int Player::getShockResistance(const ShockSrc shockSrc) const
 
   switch (shockSrc)
   {
-    case ShockSrc::castIntrSpell: {} break;
-
     case ShockSrc::useStrangeItem:
-    {
       if (PlayerBon::getBg() == Bg::occultist) {res += 50;}
-    } break;
+      break;
 
+    case ShockSrc::castIntrSpell:
     case ShockSrc::seeMon:
     case ShockSrc::time:
     case ShockSrc::misc:
-    case ShockSrc::END: {} break;
+    case ShockSrc::END: {}
+      break;
   }
 
   return getConstrInRange(0, res, 100);
@@ -636,31 +635,11 @@ void Player::incrInsanity()
           return;
         } break;
 
-        default: {} break;
+        default: {}
+          break;
       }
     }
   }
-}
-
-void Player::addTmpShockFromFeatures()
-{
-  Cell& cell = Map::cells[pos.x][pos.y];
-
-  if (cell.isDark && !cell.isLit) {shockTmp_ += 20;}
-
-  for (int dx = -1; dx <= 1; ++dx)
-  {
-    const int X = pos.x + dx;
-    for (int dy = -1; dy <= 1; ++dy)
-    {
-      const int Y = pos.y + dy;
-      if (Utils::isPosInsideMap(Pos(X, Y)))
-      {
-        shockTmp_ += Map::cells[X][Y].rigid->getShockWhenAdj();
-      }
-    }
-  }
-  shockTmp_ = min(99.0, shockTmp_);
 }
 
 bool Player::isStandingInOpenSpace() const
@@ -814,21 +793,19 @@ void Player::onActorTurn()
       switch (invScreen)
       {
         case InvScrId::inv:
-        {
           InvHandling::runInvScreen();
-        } break;
+          break;
 
         case InvScrId::equip:
-        {
           InvHandling::runEquipScreen(*InvHandling::equipSlotToOpenAfterDrop);
-        } break;
+          break;
 
         case InvScrId::END: {} break;
       }
       return;
     }
   }
-  else
+  else //There are seen monsters
   {
     InvHandling::screenToOpenAfterDrop    = InvScrId::END;
     InvHandling::browserIdxToSetAfterDrop = 0;
@@ -878,7 +855,42 @@ void Player::onActorTurn()
 void Player::onStdTurn()
 {
   shockTmp_ = 0.0;
-  addTmpShockFromFeatures();
+
+  //Temporary shock from features
+  Cell& cell = Map::cells[pos.x][pos.y];
+
+  if (cell.isDark && !cell.isLit)
+  {
+    shockTmp_ += 20;
+  }
+
+  for (int dx = -1; dx <= 1; ++dx)
+  {
+    const int X = pos.x + dx;
+    for (int dy = -1; dy <= 1; ++dy)
+    {
+      const int Y = pos.y + dy;
+      if (Utils::isPosInsideMap(Pos(X, Y)))
+      {
+        shockTmp_ += Map::cells[X][Y].rigid->getShockWhenAdj();
+      }
+    }
+  }
+  shockTmp_ = min(99.0, shockTmp_);
+
+  //Temporary shock from items
+  for (auto& slot : inv_->slots_)
+  {
+    if (slot.item)
+    {
+      shockTmp_ += slot.item->getData().shockWhileEquiped;
+    }
+  }
+
+  for (const Item* const item : inv_->general_)
+  {
+    shockTmp_ += item->getData().shockWhileInBackpack;
+  }
 
   if (activeExplosive)   {activeExplosive->onStdTurnPlayerHoldIgnited();}
 
@@ -911,21 +923,21 @@ void Player::onStdTurn()
       switch (data.monShockLvl)
       {
         case MonShockLvl::unsettling:
-        {
           mon->shockCausedCur_ = min(mon->shockCausedCur_ + 0.05,  1.0);
-        } break;
+          break;
+
         case MonShockLvl::scary:
-        {
           mon->shockCausedCur_ = min(mon->shockCausedCur_ + 0.1,   1.0);
-        } break;
+          break;
+
         case MonShockLvl::terrifying:
-        {
           mon->shockCausedCur_ = min(mon->shockCausedCur_ + 0.5,   2.0);
-        } break;
+          break;
+
         case MonShockLvl::mindShattering:
-        {
           mon->shockCausedCur_ = min(mon->shockCausedCur_ + 0.75,  3.0);
-        } break;
+          break;
+
         default: {} break;
       }
       if (shockFromMonCurPlayerTurn < 2.5)
@@ -970,7 +982,7 @@ void Player::onStdTurn()
     nrTurnsUntilIns_ = nrTurnsUntilIns_ < 0 ? 3 : nrTurnsUntilIns_ - 1;
     if (nrTurnsUntilIns_ > 0)
     {
-      Log::addMsg("I feel my sanity slipping...", clrMsgWarning, true, true);
+      Log::addMsg("I feel my sanity slipping...", clrMsgNote, true, true);
     }
     else
     {
@@ -1016,7 +1028,7 @@ void Player::onStdTurn()
           updateFov();
           Render::drawMapAndInterface();
           const string monName = mon.getNameA();
-          Log::addMsg("I spot " + monName + "!", clrMsgWarning, true, true);
+          Log::addMsg("I spot " + monName + "!", clrMsgNote, true, true);
         }
       }
     }
@@ -1248,7 +1260,7 @@ void Player::moveDir(Dir dir)
         }
         else if (ENC >= 100)
         {
-          Log::addMsg("I stagger.", clrMsgWarning);
+          Log::addMsg("I stagger.", clrMsgNote);
           propHandler_->tryApplyProp(new PropWaiting(PropTurns::std));
         }
 

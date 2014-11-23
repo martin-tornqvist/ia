@@ -542,7 +542,7 @@ private:
 class GiantLocust: public Mon
 {
 public:
-  GiantLocust() : Mon(), spawnNewOneInN(30) {}
+  GiantLocust() : Mon(), spawnNewOneInN(35) {}
   ~GiantLocust() {}
   bool onActorTurn_() override;
   void mkStartItems() override;

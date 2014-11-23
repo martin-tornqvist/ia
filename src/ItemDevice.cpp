@@ -354,7 +354,7 @@ void DeviceLantern::newTurnInInventory()
 
     if (nrTurnsLeft_ <= 0)
     {
-      Log::addMsg("My Electric Lantern breaks!", clrMsgWarning, true, true);
+      Log::addMsg("My Electric Lantern breaks!", clrMsgNote, true, true);
 
       malfState_ = LanternMalfState::malfunction;
       GameTime::updateLightMap();
@@ -368,7 +368,7 @@ void DeviceLantern::newTurnInInventory()
     }
     else if (nrTurnsLeft_ <= 3)
     {
-      Log::addMsg("My Electric Lantern is breaking.", clrMsgWarning, true, true);
+      Log::addMsg("My Electric Lantern is breaking.", clrMsgNote, true, true);
     }
 
     //The lantern is not destroyed. Check malfunctions.
