@@ -88,7 +88,8 @@ public:
 
   void addLight_(bool lightMap[MAP_W][MAP_H]) const;
 
-  void interruptActions();
+  void onLogMsgPrinted();   //Aborts e.g. searching and quick move
+  void interruptActions();  //Aborts e.g. healing
 
   int getEncPercent() const;
 

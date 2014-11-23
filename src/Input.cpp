@@ -483,7 +483,7 @@ void handleKeyPress(const KeyData& d)
     return;
   }
 
-  //----------------------------------- SEARCH (REALLY JUST A WAIT BUTTON)
+  //----------------------------------- WAIT/SEARCH
   else if (d.key == 's')
   {
     Log::clearLog();
@@ -493,8 +493,8 @@ void handleKeyPress(const KeyData& d)
       Map::player->getSeenFoes(seenMon);
       if (seenMon.empty())
       {
-        const int TURNS_TO_APPLY = 5;
-        const string TURNS_STR = toStr(TURNS_TO_APPLY);
+        const int     TURNS_TO_APPLY  = 5;
+        const string  TURNS_STR       = toStr(TURNS_TO_APPLY);
         Log::addMsg("I pause for a while (" + TURNS_STR + " turns)...");
         Map::player->waitTurnsLeft = TURNS_TO_APPLY - 1;
         GameTime::actorDidAct();

@@ -19,7 +19,6 @@
    @      Display character information
    TAB    Melee attack adjacent monster
    a      Examine something on the map
-   A      Apply wielded item on something (hit, pry, dip...)
    c      Close door
    d      Disarm trap
    D      Jam door with an iron spike

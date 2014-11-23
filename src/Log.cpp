@@ -128,7 +128,6 @@ void drawLog(const bool SHOULD_UPDATE_SCREEN)
 void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTIONS,
             const bool ADD_MORE_PROMPT_AFTER_MSG)
 {
-
   assert(!text.empty());
 #ifndef NDEBUG
   if (text[0] == ' ')
@@ -191,6 +190,8 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
   {
     Map::player->interruptActions();
   }
+
+  Map::player->onLogMsgPrinted();
 }
 
 void displayHistory()

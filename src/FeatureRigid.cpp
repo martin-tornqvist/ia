@@ -2277,7 +2277,7 @@ void Fountain::bump(Actor & actorBumping)
             break;
         }
 
-        if (Rnd::oneIn(6))
+        if (Rnd::oneIn(5))
         {
           Log::addMsg("The fountain dries out.");
           isDried_ = true;

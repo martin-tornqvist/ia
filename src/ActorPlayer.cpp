@@ -819,15 +819,18 @@ void Player::onActorTurn()
 
     const Pos destPos(pos + DirUtils::getOffset(quickMoveDir_));
 
-    bool abort = false;
+    const Cell&         tgtCell   = Map::cells[destPos.x][destPos.y];
+    const Rigid* const  tgtRigid  = tgtCell.rigid;
 
-    Cell& tgtCell = Map::cells[destPos.x][destPos.y];
-    if (!tgtCell.rigid->canMoveCmn() || (tgtCell.isDark && !tgtCell.isLit))
-    {
-      abort = true;
-    }
+    const bool IS_TGT_KNOWN_TRAP  = tgtRigid->getId() == FeatureId::trap &&
+                                    !static_cast<const Trap*>(tgtRigid)->isHidden();
 
-    if (abort)
+    const bool SHOULD_ABORT       = !tgtRigid->canMoveCmn()                         ||
+                                    IS_TGT_KNOWN_TRAP                               ||
+                                    tgtRigid->getBurnState() == BurnState::burning  ||
+                                    (tgtCell.isDark && !tgtCell.isLit);
+
+    if (SHOULD_ABORT)
     {
       nrQuickMoveStepsLeft_ = -1;
       quickMoveDir_         = Dir::END;
@@ -1103,6 +1106,19 @@ void Player::onStdTurn()
   }
 }
 
+void Player::onLogMsgPrinted()
+{
+  //Note: There cannot be any calls to Log::addMsg() in this function, as that would
+  //cause endless recursion.
+
+  //Abort waiting
+  waitTurnsLeft = -1;
+
+  //Abort quick move
+  nrQuickMoveStepsLeft_ = -1;
+  quickMoveDir_         = Dir::END;
+}
+
 void Player::interruptActions()
 {
   Render::drawMapAndInterface();
@@ -1111,7 +1127,7 @@ void Player::interruptActions()
   InvHandling::screenToOpenAfterDrop    = InvScrId::END;
   InvHandling::browserIdxToSetAfterDrop = 0;
 
-  //Abort searching
+  //Abort waiting
   if (waitTurnsLeft > 0)
   {
     Log::addMsg("I stop waiting.", clrWhite);
