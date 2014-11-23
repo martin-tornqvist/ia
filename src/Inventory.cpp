@@ -223,10 +223,8 @@ int Inventory::getElementToStackItem(Item* item) const
   return -1;
 }
 
-void Inventory::dropAllNonIntrinsic(
-  const Pos& pos, const bool ROLL_FOR_DESTRUCTION)
+void Inventory::dropAllNonIntrinsic(const Pos& pos)
 {
-
   Item* item;
 
   //Drop from slots
@@ -235,15 +233,7 @@ void Inventory::dropAllNonIntrinsic(
     item = slot.item;
     if (item)
     {
-      if (ROLL_FOR_DESTRUCTION && Rnd::percentile() <
-          CHANCE_TO_DESTR_CMN_ITEMS_ON_DROP)
-      {
-        delete slot.item;
-      }
-      else
-      {
-        ItemDrop::dropItemOnMap(pos, *item);
-      }
+      ItemDrop::dropItemOnMap(pos, *item);
 
       slot.item = nullptr;
     }
@@ -256,14 +246,7 @@ void Inventory::dropAllNonIntrinsic(
     item = general_[i];
     if (item)
     {
-      if (ROLL_FOR_DESTRUCTION && Rnd::percentile() < CHANCE_TO_DESTR_CMN_ITEMS_ON_DROP)
-      {
-        delete general_[i];
-      }
-      else
-      {
-        ItemDrop::dropItemOnMap(pos, *item);
-      }
+      ItemDrop::dropItemOnMap(pos, *item);
 
       general_.erase(begin(general_) + i);
     }
@@ -278,13 +261,11 @@ bool Inventory::hasAmmoForFirearmInInventory()
   //If weapon found
   if (weapon)
   {
-
     assert(!weapon->getData().ranged.hasInfiniteAmmo); //Should not happen
 
     //If weapon is a firearm
     if (weapon->getData().ranged.isRangedWpn)
     {
-
       //Get weapon ammo type
       const ItemId ammoId = weapon->getData().ranged.ammoItemId;
 
