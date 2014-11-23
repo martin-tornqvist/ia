@@ -817,7 +817,7 @@ void ForestRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 
   int nrTreesPlaced = 0;
 
-  const int TREE_ONE_IN_N = Rnd::range(1, 5);
+  const int TREE_ONE_IN_N = Rnd::range(2, 5);
 
   while (!treePosBucket.empty())
   {

@@ -35,13 +35,25 @@ int roll(const int ROLLS, const int SIDES)
 
 } //Namespace
 
-void seed(const unsigned long val) {mtRand = MTRand(val);}
+void seed(const unsigned long val)
+{
+  mtRand = MTRand(val);
+}
 
-int dice(const int ROLLS, const int SIDES) {return roll(ROLLS, SIDES);}
+int dice(const int ROLLS, const int SIDES)
+{
+  return roll(ROLLS, SIDES);
+}
 
-int dice(const DiceParam& p) {return roll(p.rolls, p.sides);}
+int dice(const DiceParam& p)
+{
+  return roll(p.rolls, p.sides);
+}
 
-bool coinToss() {return roll(1, 2) == 2;}
+bool coinToss()
+{
+  return roll(1, 2) == 2;
+}
 
 bool fraction(const int NUMERATOR, const int DENOMINATOR)
 {
@@ -66,7 +78,10 @@ int range(const Range& valueRange)
   return range(valueRange.lower, valueRange.upper);
 }
 
-int percentile() {return roll(1, 100);}
+int percentile()
+{
+  return roll(1, 100);
+}
 
 } //Rnd
 

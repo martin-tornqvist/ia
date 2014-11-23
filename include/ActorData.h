@@ -15,7 +15,7 @@ enum class ActorId
 {
   player,
   zombie, zombieAxe, bloatedZombie,
-  cultist, cultistTeslaCannon, cultistSpikeGun,
+  cultist, cultistElectric, cultistSpikeGun,
   cultistPriest,
   rat, ratThing,
   greenSpider, whiteSpider, redSpider, shadowSpider,

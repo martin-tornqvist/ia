@@ -335,14 +335,13 @@ MachineGun::MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
   clip = true;
 }
 
-//--------------------------------------------------------- TESLA CANNON
-TeslaCannon::TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData) :
+//--------------------------------------------------------- MI-GO ELECTRIC GUN
+MigoGun::MigoGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
   Wpn(itemData, ammoData)
 {
   ammoCapacity = ammoData->ranged.ammoContainedInClip;
   nrAmmoLoaded = ammoCapacity;
-  effectiveRangeLmt = 8;
-  clip = true;
+  effectiveRangeLmt = 6;
 }
 
 //--------------------------------------------------------- SPIKE GUN

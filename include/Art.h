@@ -57,7 +57,7 @@ enum class TileId
   dynamiteLit,
   molotov,
   incinerator,
-  teslaCannon,
+  migoGun,
   flare,
   flareGun,
   flareLit,

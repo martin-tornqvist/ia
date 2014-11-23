@@ -405,7 +405,7 @@ void initDataList()
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with an Incinerator");
   d->ranged.dmg = DiceParam(1, 3);
   d->ranged.dmgInfoOverride = "* ";
-  d->ranged.ammoItemId = ItemId::incineratorCartridge;
+  d->ranged.ammoItemId = ItemId::incineratorAmmo;
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires an incinerator");
   d->ranged.sndMsg = "I hear the blast of a launched missile.";
   d->ranged.missileGlyph = '*';
@@ -416,7 +416,7 @@ void initDataList()
   addFeatureFoundIn(*d, FeatureId::cocoon, 25);
   data[int(d->id)] = d;
 
-  d = new ItemDataT(ItemId::incineratorCartridge);
+  d = new ItemDataT(ItemId::incineratorAmmo);
   resetData(*d, ItemType::ammoClip);
   d->baseName = ItemName("Incinerator Cartridge", "Incinerator Cartridges",
                          "an Incinerator Cartridge");
@@ -498,6 +498,41 @@ void initDataList()
   addFeatureFoundIn(*d, FeatureId::cocoon);
   data[int(d->id)] = d;
 
+  d = new ItemDataT(ItemId::migoGun);
+  resetData(*d, ItemType::rangedWpn);
+  d->baseName = ItemName("Mi-go Electric Gun", "Mi-go Electric Gun",
+                         "a Mi-go Electric Gun");
+  d->baseDescr = {"A weapon crafted by the Mi-go. It fires devastating bolts of "
+                  "electricity."
+                 };
+  d->spawnStdRange = Range(-1, -1);
+  d->itemWeight = itemWeight_medium;
+  d->tile = TileId::migoGun;
+  d->clr = clrYellow;
+  d->ranged.dmg = DiceParam(3, 6, 0);
+  d->ranged.propApplied = new PropParalyzed(PropTurns::specific, 2);
+  d->ranged.dmgType = DmgType::electric;
+  d->ranged.ammoItemId = ItemId::migoGunAmmo;
+  d->ranged.hasInfiniteAmmo = false;
+  d->ranged.missileLeavesTrail = true;
+  d->ranged.missileClr = clrYellow;
+  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Mi-go Electric Gun");
+  d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Mi-go Electric Gun");
+  d->ranged.sndMsg = "I hear a bolt of electricity.";
+  //d->ranged.attSfx =
+  d->ranged.makesRicochetSnd = false;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::migoGunAmmo);
+  resetData(*d, ItemType::ammoClip);
+  d->baseName = ItemName("Mi-go Electric Cell", "Mi-go Electric Cells",
+                         "a Mi-go Electric Cell");
+  d->baseDescr = {"Ammunition for the Mi-go Electric gun."};
+  d->clr = clrYellow;
+  d->spawnStdRange = Range(-1, -1);
+  d->ranged.ammoContainedInClip = 20;
+  data[int(d->id)] = d;
+
   d = new ItemDataT(ItemId::flareGun);
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Flare Gun", "Flare Gun", "a Flare Gun");
@@ -514,44 +549,6 @@ void initDataList()
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
-  data[int(d->id)] = d;
-
-  d = new ItemDataT(ItemId::teslaCannon);
-  resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Tesla Cannon", "Tesla Cannons", "a Tesla Cannon");
-  d->baseDescr = {"A strange weapon seemingly based on technology pioneered by "
-                  "Nikola Tesla. It fires electric bolts."
-                 };
-  d->itemWeight = itemWeight_medium;
-  d->tile = TileId::teslaCannon;
-  d->clr = clrYellow;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Tesla Cannon");
-  d->ranged.isMachineGun = true;
-  d->ranged.hitChanceMod = -15;
-  d->ranged.dmg = DiceParam(2, 3, 3);
-  d->ranged.dmgType = DmgType::electric;
-  d->ranged.ammoItemId = ItemId::teslaCanister;
-  d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Tesla Cannon");
-  d->ranged.sndMsg = "I hear loud electric crackle.";
-  d->ranged.missileGlyph = '*';
-  d->ranged.missileClr = clrYellow;
-  d->spawnStdRange.lower = 7;
-  addFeatureFoundIn(*d, FeatureId::chest, 50);
-  addFeatureFoundIn(*d, FeatureId::cabinet, 50);
-  addFeatureFoundIn(*d, FeatureId::cocoon, 50);
-  data[int(d->id)] = d;
-
-  d = new ItemDataT(ItemId::teslaCanister);
-  resetData(*d, ItemType::ammoClip);
-  d->baseName = ItemName("Nuclear battery", "Nuclear batteries",
-                         "a Nuclear battery");
-  d->baseDescr = {"Ammunition used by Tesla Cannons."};
-  d->clr = clrYellow;
-  d->ranged.ammoContainedInClip = 30;
-  d->spawnStdRange.lower = 6;
-  addFeatureFoundIn(*d, FeatureId::chest, 50);
-  addFeatureFoundIn(*d, FeatureId::cabinet, 50);
-  addFeatureFoundIn(*d, FeatureId::cocoon, 50);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::spikeGun);
@@ -1110,19 +1107,6 @@ void initDataList()
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "bites me");
   setDmgFromMonId(*d, ActorId::giantBat);
-  data[int(d->id)] = d;
-
-  d = new ItemDataT(ItemId::miGoElectricGun);
-  resetData(*d, ItemType::rangedWpnIntr);
-  d->ranged.missileLeavesTrail = true;
-  d->ranged.missileClr = clrYellow;
-  d->ranged.missileGlyph = '/';
-  d->ranged.attMsgs = ItemAttMsgs("", "fires an electric gun");
-  d->ranged.dmgType = DmgType::electric;
-  d->ranged.propApplied = new PropParalyzed(PropTurns::specific, 2);
-  d->ranged.sndMsg = "I hear a bolt of electricity.";
-  setDmgFromMonId(*d, ActorId::miGo);
-  d->ranged.sndVol = SndVol::high;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::polypTentacle);

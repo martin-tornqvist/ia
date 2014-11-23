@@ -322,88 +322,81 @@ void handleKeyPress(const KeyData& d)
   else if (d.key == 'f')
   {
     Log::clearLog();
-    if (Map::player->isAlive())
+
+    if (Map::player->isAlive() && Map::player->getPropHandler().allowAttackRanged(true))
     {
+      auto* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
 
-      if (Map::player->getPropHandler().allowAttackRanged(true))
+      if (item)
       {
+        const ItemDataT& itemData = item->getData();
 
-        auto* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
-
-        if (item)
+        if (itemData.ranged.isRangedWpn)
         {
-          const ItemDataT& itemData = item->getData();
-          if (!itemData.ranged.isRangedWpn)
+          auto* wpn = static_cast<Wpn*>(item);
+
+          if (wpn->nrAmmoLoaded >= 1 || itemData.ranged.hasInfiniteAmmo)
           {
-            Log::addMsg("I am not wielding a firearm.");
-          }
-          else
-          {
-            auto* wpn = static_cast<Wpn*>(item);
-            if (wpn->nrAmmoLoaded >= 1 || itemData.ranged.hasInfiniteAmmo)
+            auto onMarkerAtPos = [&](const Pos & p)
             {
+              Look::printLocationInfoMsgs(p);
 
-              auto onMarkerAtPos = [&](const Pos & p)
+              auto* const actor = Utils::getActorAtPos(p);
+
+              if (actor && actor != Map::player)
               {
-                Look::printLocationInfoMsgs(p);
+                RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
+                Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
+              }
 
-                auto* const actor = Utils::getActorAtPos(p);
+              Log::addMsg("[f] to fire");
+            };
 
-                if (actor && actor != Map::player)
-                {
-                  RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
-                  Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
-                }
-
-                Log::addMsg("[f] to fire");
-              };
-
-              auto onKeyPress = [&](const Pos & p, const KeyData & d_)
+            auto onKeyPress = [&](const Pos & p, const KeyData & d_)
+            {
+              if (d_.key == 'f')
               {
-                if (d_.key == 'f')
-                {
-                  if (p == Map::player->pos)
-                  {
-                    Log::addMsg("I think I can persevere a little longer.");
-                  }
-                  else
-                  {
-                    Log::clearLog();
-                    Render::drawMapAndInterface();
-
-                    Actor* const actor = Utils::getActorAtPos(p);
-                    if (actor) {Map::player->tgt_ = actor;}
-
-                    Attack::ranged(*Map::player, *wpn, p);
-                  }
-                  return MarkerDone::yes;
-                }
-                else if (d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE)
+                if (p != Map::player->pos)
                 {
                   Log::clearLog();
+                  Render::drawMapAndInterface();
+
+                  Actor* const actor = Utils::getActorAtPos(p);
+                  if (actor) {Map::player->tgt_ = actor;}
+
+                  Attack::ranged(*Map::player, *wpn, p);
+
                   return MarkerDone::yes;
                 }
-                return MarkerDone::no;
-              };
+              }
+              else if (d_.sdlKey == SDLK_SPACE || d_.sdlKey == SDLK_ESCAPE)
+              {
+                Log::clearLog();
+                return MarkerDone::yes;
+              }
+              return MarkerDone::no;
+            };
 
-              Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
-                          onMarkerAtPos, onKeyPress);
-
-            }
-            else if (Config::isRangedWpnAutoReload())
-            {
-              Reload::reloadWieldedWpn(*(Map::player));
-            }
-            else
-            {
-              Log::addMsg("There is no ammo loaded.");
-            }
+            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
+                        onMarkerAtPos, onKeyPress);
           }
-        }
+          else /* Not enough ammo loaded */ if (Config::isRangedWpnAutoReload())
+          {
+            Reload::reloadWieldedWpn(*(Map::player));
+          }
+          else // Not enough ammo loaded, and auto reloading is disabled
+          {
+            Log::addMsg("There is no ammo loaded.");
+          }
+        } //Wielded item is not a ranged weapon
         else
         {
-          Log::addMsg("I am not wielding a weapon.");
+          Log::addMsg("I am not wielding a firearm.");
         }
+      }
+      else //Not wielding any item
+      {
+        Log::addMsg("I am not wielding a weapon.");
       }
     }
     clearEvents();

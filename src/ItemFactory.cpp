@@ -58,10 +58,10 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::flareGun:            r = new FlareGun(d, ammoD);       break;
     case ItemId::pistolClip:          r = new AmmoClip(d);              break;
     case ItemId::incinerator:         r = new Incinerator(d, ammoD);    break;
-    case ItemId::teslaCannon:         r = new TeslaCannon(d, ammoD);    break;
     case ItemId::spikeGun:            r = new SpikeGun(d, ammoD);       break;
-    case ItemId::teslaCanister:       r = new AmmoClip(d);              break;
-    case ItemId::incineratorCartridge:  r = new AmmoClip(d);         break;
+    case ItemId::incineratorAmmo:     r = new AmmoClip(d);              break;
+    case ItemId::migoGun:             r = new MigoGun(d, ammoD);        break;
+    case ItemId::migoGunAmmo:         r = new AmmoClip(d);              break;
 
     case ItemId::playerKick:          r = new Wpn(d, ammoD);         break;
     case ItemId::playerStomp:         r = new Wpn(d, ammoD);         break;
@@ -102,7 +102,6 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::phantasmSickle:      r = new Wpn(d, ammoD);         break;
     case ItemId::wraithClaw:          r = new Wpn(d, ammoD);         break;
     case ItemId::polypTentacle:       r = new Wpn(d, ammoD);         break;
-    case ItemId::miGoElectricGun:     r = new Wpn(d, ammoD);         break;
     case ItemId::ghoulClaw:           r = new Wpn(d, ammoD);         break;
     case ItemId::shadowClaw:          r = new Wpn(d, ammoD);         break;
     case ItemId::byakheeClaw:         r = new Wpn(d, ammoD);         break;

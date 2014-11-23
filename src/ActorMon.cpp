@@ -652,28 +652,32 @@ void Cultist::mkStartItems()
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::machineGun));
   }
 
-  if (Rnd::percentile() < 33)
+  if (Rnd::oneIn(3))
   {
     inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
   }
 
-  if (Rnd::percentile() < 8)
+  if (Rnd::oneIn(12))
   {
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   }
 }
 
-void CultistTeslaCannon::mkStartItems()
+void CultistElectric::mkStartItems()
 {
-  inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::teslaCannon));
-  inv_->putInGeneral(ItemFactory::mk(ItemId::teslaCanister));
+  inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::migoGun));
+
+  if (Rnd::coinToss())
+  {
+    inv_->putInGeneral(ItemFactory::mk(ItemId::migoGunAmmo));
+  }
 
   if (Rnd::oneIn(3))
   {
     inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
   }
 
-  if (Rnd::oneIn(10))
+  if (Rnd::oneIn(3))
   {
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   }
@@ -884,8 +888,12 @@ void Wraith::mkStartItems()
 
 void MiGo::mkStartItems()
 {
-  Item* item = ItemFactory::mk(ItemId::miGoElectricGun);
-  inv_->putInIntrinsics(item);
+  inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::migoGun));
+
+  if (Rnd::coinToss())
+  {
+    inv_->putInGeneral(ItemFactory::mk(ItemId::migoGunAmmo));
+  }
 
   spellsKnown_.push_back(new SpellTeleport);
   spellsKnown_.push_back(new SpellMiGoHypno);
@@ -899,7 +907,7 @@ void MiGo::mkStartItems()
 
 void SentryDrone::mkStartItems()
 {
-//  Item* item = ItemFactory::mk(ItemId::miGoElectricGun);
+//  Item* item = ItemFactory::mk(ItemId::miGoGun);
 //  inv_->putInIntrinsics(item);
 
   spellsKnown_.push_back(new SpellTeleport);
@@ -1100,6 +1108,11 @@ void KeziahMason::mkStartItems()
   spellsKnown_.push_back(new SpellPest);
   spellsKnown_.push_back(new SpellAzaWrath);
   spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
+
+  for (int i = Rnd::range(2, 3); i > 0; --i)
+  {
+    inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
+  }
 }
 
 void LengElder::onStdTurn_()

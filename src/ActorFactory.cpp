@@ -45,7 +45,7 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::phantasm:             return new Phantasm();
     case ActorId::giantBat:             return new GiantBat();
     case ActorId::cultist:              return new Cultist();
-    case ActorId::cultistTeslaCannon:   return new CultistTeslaCannon();
+    case ActorId::cultistElectric:      return new CultistElectric();
     case ActorId::cultistSpikeGun:      return new CultistSpikeGun();
     case ActorId::cultistPriest:        return new CultistPriest();
     case ActorId::keziahMason:          return new KeziahMason();

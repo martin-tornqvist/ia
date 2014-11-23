@@ -333,8 +333,7 @@ void initDataList()
   d.canOpenDoors = true;
   d.canBashDoors = true;
   d.nrTurnsAware = 25;
-  d.descr = "A fanatic cultist of the lowest rank, madly gibbering in some "
-            "half-lost language.";
+  d.descr = "A fanatic cultist, madly gibbering in some half-lost language.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovePct = actorErratic_rare;
   d.nativeRooms.push_back(RoomType::plain);
@@ -347,7 +346,7 @@ void initDataList()
   d.nameThe = "The Cultist";
   d.corpseNameA = "A Cultist corpse";
   d.corpseNameThe = "The Cultist corpse";
-  d.id = ActorId::cultistTeslaCannon;
+  d.id = ActorId::cultistElectric;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = true;
   d.ai[int(AiId::attacks)] = true;
@@ -365,7 +364,7 @@ void initDataList()
   d.spi = 12;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 50);
-  d.spawnMinDLVL = 7;
+  d.spawnMinDLVL = 12;
   d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
@@ -373,8 +372,8 @@ void initDataList()
   d.canOpenDoors = true;
   d.canBashDoors = true;
   d.nrTurnsAware = 25;
-  d.descr = "A fanatic cultist of the lowest rank, madly gibbering in some "
-            "half-lost language. It is wielding a Tesla Cannon.";
+  d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
+            "wielding an Electric Gun, presumably a gift from the Mi-go.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovePct = actorErratic_rare;
   d.nativeRooms.push_back(RoomType::plain);
@@ -413,8 +412,8 @@ void initDataList()
   d.canOpenDoors = true;
   d.canBashDoors = true;
   d.nrTurnsAware = 25;
-  d.descr = "A fanatic cultist of the lowest rank, madly gibbering in some "
-            "half-lost language. It is wielding a Spike gun.";
+  d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
+            "wielding a Spike gun.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
   d.erraticMovePct = actorErratic_rare;
   d.nativeRooms.push_back(RoomType::plain);
@@ -1374,8 +1373,6 @@ void initDataList()
   d.tile = TileId::migo;
   d.hp = 6;
   d.spi = 20;
-  d.dmgRanged = 6;
-  d.abilityVals.setVal(AbilityId::melee, 50);
   d.abilityVals.setVal(AbilityId::ranged, 65);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 6;
@@ -1383,10 +1380,10 @@ void initDataList()
   d.actorSize = actorSize_humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
-  d.nrTurnsAware = 25;
+  d.nrTurnsAware = 50;
   d.descr = "Fungi are more closely related to animals than plants, so it's no "
             "wonder that on some worlds, fungal life evolved to dominate "
-            "animal based intelligences. The mi-go, as they are called, come "
+            "animal based intelligences. The Mi-go, as they are called, come "
             "from such a world. More like crustaceans than any other "
             "terrestrial life form, they find themselves somewhat hampered by "
             "our planet's thicker atmosphere and heavy gravity. They are a "
@@ -1407,6 +1404,8 @@ void initDataList()
   d.erraticMovePct = actorErratic_rare;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::forest);
+  d.nativeRooms.push_back(RoomType::cave);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1449,18 +1448,18 @@ void initDataList()
   d.canBashDoors = false;
   d.canOpenDoors = false;
   d.nrTurnsAware = 6;
-  d.descr = "Flying polyps are a horrible elder race of half polypous, utterly "
-            "alien entities. They are only partly material and have the power "
-            "of aerial motion, despite the absence of wings. Their senses does "
-            "not include sight, but what senses they have can penetrate all "
-            "material obstructions. They are invulnerable to normal means of "
-            "damage, though they can be destroyed by certain forms of "
-            "electrical energy.";
+  d.descr = "Flying polyps are a horrible elder race of half polypous, utterly alien "
+            "entities. They are only partly material and have the power of aerial "
+            "motion, despite the absence of wings. Their senses does not include sight, "
+            "but what senses they have can penetrate all material obstructions. They "
+            "are invulnerable to normal means of damage, though they can be destroyed "
+            "by certain forms of electrical energy.";
   d.aggroTextMonSeen = d.nameThe + " makes shrill whistling noises.";
   d.aggroTextMonHidden = "I hear a shrill whistling.";
   d.erraticMovePct = actorErratic_somewhat;
   d.monShockLvl = MonShockLvl::terrifying;
   d.nativeRooms.push_back(RoomType::plain);
+  d.nativeRooms.push_back(RoomType::cave);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1509,6 +1508,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::monster);
   d.nativeRooms.push_back(RoomType::crypt);
+  d.nativeRooms.push_back(RoomType::cave);
   data[int(d.id)] = d;
   d.reset();
 

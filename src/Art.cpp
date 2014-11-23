@@ -172,7 +172,7 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::dynamiteLit: return Pos(6, 3); break;
     case TileId::molotov: return Pos(7, 3); break;
     case TileId::incinerator: return Pos(8, 3); break;
-    case TileId::teslaCannon: return Pos(9, 3); break;
+    case TileId::migoGun: return Pos(9, 3); break;
     case TileId::flare: return Pos(10, 3); break;
     case TileId::flareGun: return Pos(11, 3); break;
     case TileId::flareLit: return Pos(12, 3); break;

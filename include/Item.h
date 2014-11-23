@@ -233,8 +233,6 @@ public:
     effectiveRangeLmt = 3;
   }
   ~PumpShotgun() {}
-
-private:
 };
 
 class Pistol: public Wpn
@@ -248,8 +246,6 @@ public:
     effectiveRangeLmt = 6;
   }
   ~Pistol() {}
-
-private:
 };
 
 class FlareGun: public Wpn
@@ -263,8 +259,6 @@ public:
     effectiveRangeLmt = 6;
   }
   ~FlareGun() {}
-
-private:
 };
 
 class MachineGun: public Wpn
@@ -272,7 +266,6 @@ class MachineGun: public Wpn
 public:
   MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData);
   ~MachineGun() {}
-private:
 };
 
 class Incinerator: public Wpn
@@ -281,15 +274,13 @@ public:
   Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData);
   void projectileObstructed(const Pos& pos, Actor* actorHit);
   ~Incinerator() {}
-private:
 };
 
-class TeslaCannon: public Wpn
+class MigoGun: public Wpn
 {
 public:
-  TeslaCannon(ItemDataT* const itemData, ItemDataT* const ammoData);
-  ~TeslaCannon() {}
-private:
+  MigoGun(ItemDataT* const itemData, ItemDataT* const ammoData);
+  ~MigoGun() {}
 };
 
 class SpikeGun: public Wpn
@@ -297,7 +288,6 @@ class SpikeGun: public Wpn
 public:
   SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData);
   ~SpikeGun() {}
-private:
 };
 
 class Ammo: public Item
