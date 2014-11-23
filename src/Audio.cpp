@@ -22,80 +22,6 @@ vector<Mix_Chunk*> audioChunks;
 int curChannel    = 0;
 int timeAtLastAmb = -1;
 
-SfxId getAmbSfxSuitableForDlvl()
-{
-  vector<SfxId> sfxBucket;
-  sfxBucket.clear();
-
-  if (Map::dlvl >= 1 && Map::dlvl < LAST_ROOM_AND_CORRIDOR_LVL)
-  {
-    sfxBucket.push_back(SfxId::amb002);
-    sfxBucket.push_back(SfxId::amb003);
-    sfxBucket.push_back(SfxId::amb004);
-    sfxBucket.push_back(SfxId::amb005);
-    sfxBucket.push_back(SfxId::amb006);
-    sfxBucket.push_back(SfxId::amb007);
-    sfxBucket.push_back(SfxId::amb008);
-    sfxBucket.push_back(SfxId::amb009);
-    sfxBucket.push_back(SfxId::amb010);
-    sfxBucket.push_back(SfxId::amb011);
-    sfxBucket.push_back(SfxId::amb012);
-    sfxBucket.push_back(SfxId::amb013);
-    sfxBucket.push_back(SfxId::amb014);
-    sfxBucket.push_back(SfxId::amb015);
-    sfxBucket.push_back(SfxId::amb017);
-    sfxBucket.push_back(SfxId::amb018);
-    sfxBucket.push_back(SfxId::amb019);
-    sfxBucket.push_back(SfxId::amb021);
-    sfxBucket.push_back(SfxId::amb022);
-    sfxBucket.push_back(SfxId::amb023);
-    sfxBucket.push_back(SfxId::amb024);
-    sfxBucket.push_back(SfxId::amb026);
-    sfxBucket.push_back(SfxId::amb027);
-    sfxBucket.push_back(SfxId::amb028);
-    sfxBucket.push_back(SfxId::amb031);
-    sfxBucket.push_back(SfxId::amb033);
-    sfxBucket.push_back(SfxId::amb034);
-    sfxBucket.push_back(SfxId::amb035);
-    sfxBucket.push_back(SfxId::amb036);
-    sfxBucket.push_back(SfxId::amb037);
-  }
-  else if (Map::dlvl > FIRST_CAVERN_LVL)
-  {
-    sfxBucket.push_back(SfxId::amb001);
-    sfxBucket.push_back(SfxId::amb002);
-    sfxBucket.push_back(SfxId::amb003);
-    sfxBucket.push_back(SfxId::amb004);
-    sfxBucket.push_back(SfxId::amb005);
-    sfxBucket.push_back(SfxId::amb006);
-    sfxBucket.push_back(SfxId::amb007);
-    sfxBucket.push_back(SfxId::amb010);
-    sfxBucket.push_back(SfxId::amb011);
-    sfxBucket.push_back(SfxId::amb012);
-    sfxBucket.push_back(SfxId::amb013);
-    sfxBucket.push_back(SfxId::amb016);
-    sfxBucket.push_back(SfxId::amb017);
-    sfxBucket.push_back(SfxId::amb019);
-    sfxBucket.push_back(SfxId::amb020);
-    sfxBucket.push_back(SfxId::amb024);
-    sfxBucket.push_back(SfxId::amb025);
-    sfxBucket.push_back(SfxId::amb026);
-    sfxBucket.push_back(SfxId::amb028);
-    sfxBucket.push_back(SfxId::amb029);
-    sfxBucket.push_back(SfxId::amb030);
-    sfxBucket.push_back(SfxId::amb032);
-    sfxBucket.push_back(SfxId::amb033);
-    sfxBucket.push_back(SfxId::amb034);
-    sfxBucket.push_back(SfxId::amb035);
-    sfxBucket.push_back(SfxId::amb037);
-  }
-
-  if (sfxBucket.empty()) {return SfxId::END;}
-
-  const int ELEMENT = Rnd::range(0, sfxBucket.size() - 1);
-  return sfxBucket[ELEMENT];
-}
-
 void loadAudioFile(const SfxId sfx, const string& filename)
 {
   const string fileRelPath = "audio/" + filename;
@@ -123,7 +49,6 @@ void init()
 
   if (Config::isAudioEnabled())
   {
-
     audioChunks.resize(int(SfxId::END));
 
     //Monster sounds
@@ -172,7 +97,7 @@ void init()
     loadAudioFile(SfxId::death,                   "sfx_death.ogg");
 
     int a = 1;
-    const int FIRST = int(SfxId::startOfAmbSfx) + 1;
+    const int FIRST = int(SfxId::AMB_START) + 1;
     const int LAST  = int(SfxId::END)   - 1;
     for (int i = FIRST; i <= LAST; ++i)
     {
@@ -202,10 +127,10 @@ int play(const SfxId sfx, const int VOL_PERCENT_TOT,
 {
   int ret = -1;
 
-  if (!audioChunks.empty()        &&
-      sfx != SfxId::endOfAmbSfx   &&
-      sfx != SfxId::startOfAmbSfx &&
-      sfx != SfxId::END           &&
+  if (!audioChunks.empty()    &&
+      sfx != SfxId::AMB_START &&
+      sfx != SfxId::AMB_END   &&
+      sfx != SfxId::END       &&
       !Config::isBotPlaying())
   {
     const int VOL_TOT = (255 * VOL_PERCENT_TOT)   / 100;
@@ -259,11 +184,14 @@ void tryPlayAmb(const int ONE_IN_N_CHANCE_TO_PLAY)
     const int TIME_NOW                  = time(nullptr);
     const int TIME_REQ_BETWEEN_AMB_SFX  = 20;
 
-    if (TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX > timeAtLastAmb)
+    if ((TIME_NOW - TIME_REQ_BETWEEN_AMB_SFX) > timeAtLastAmb)
     {
-      timeAtLastAmb = TIME_NOW;
-      const int VOL_PERCENT = Rnd::oneIn(5) ? Rnd::range(50,  99) : 100;
-      play(getAmbSfxSuitableForDlvl(), VOL_PERCENT);
+      timeAtLastAmb           = TIME_NOW;
+      const int   VOL_PERCENT = Rnd::oneIn(5) ? Rnd::range(50,  99) : 100;
+      const int   FIRST_INT   = int(SfxId::AMB_START) + 1;
+      const int   LAST_INT    = int(SfxId::AMB_END)   - 1;
+      const SfxId sfx         = SfxId(Rnd::range(FIRST_INT, LAST_INT));
+      play(sfx , VOL_PERCENT);
     }
   }
 }

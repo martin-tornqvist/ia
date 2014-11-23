@@ -263,7 +263,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS)
 
   int optNr = 0;
 
-  const int X0 = 1;
+  const int X0 = 0;
   const int X1 = OPTION_VALUES_X_POS;
 
   string str = "";
