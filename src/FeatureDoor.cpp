@@ -229,23 +229,26 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
                 }
                 Map::put(new RubbleLow(pos_));
               }
-              else     //Not broken
+              else //Not broken
               {
                 const SfxId sfx = isSecret_ ? SfxId::END : SfxId::doorBang;
-                Snd snd("", sfx, IgnoreMsgIfOriginSeen::no, pos_,
-                        actor, SndVol::low, AlertsMon::yes);
-                SndEmit::emitSnd(snd);
+                SndEmit::emitSnd({"", sfx, IgnoreMsgIfOriginSeen::no, pos_, actor,
+                                  SndVol::low, AlertsMon::yes
+                                 });
               }
             }
             else //No chance of success
             {
               if (IS_CELL_SEEN && !isSecret_)
               {
+                SndEmit::emitSnd({"", SfxId::doorBang, IgnoreMsgIfOriginSeen::no, pos_,
+                                  actor, SndVol::low, AlertsMon::yes
+                                 });
                 Log::addMsg("It seems futile.", clrMsgNote, false, true);
               }
             }
           }
-          else     //Not player
+          else //Not player
           {
             Fraction destrChance(10 - (nrSpikes_ * 3), 100);
             destrChance.numerator = max(1, destrChance.numerator);
@@ -268,7 +271,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
               }
               Map::put(new RubbleLow(pos_));
             }
-            else     //Not broken
+            else //Not broken
             {
               Snd snd("I hear a loud banging on a door.",
                       SfxId::doorBang, IgnoreMsgIfOriginSeen::no, pos_,
