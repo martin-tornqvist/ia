@@ -454,7 +454,7 @@ Incinerator::Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
   clip = false;
 }
 
-void Incinerator::projectileObstructed(
+void Incinerator::onProjectileBlocked(
   const Pos& pos, Actor* actorHit)
 {
   (void)actorHit;

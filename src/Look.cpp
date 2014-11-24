@@ -87,7 +87,6 @@ namespace Look
 
 void printLocationInfoMsgs(const Pos& pos)
 {
-
   Log::clearLog();
 
   const Cell& cell = Map::cells[pos.x][pos.y];

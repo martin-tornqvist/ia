@@ -2169,6 +2169,8 @@ void Fountain::bump(Actor & actorBumping)
     {
       PropHandler& propHlr = Map::player->getPropHandler();
 
+      Audio::play(SfxId::fountainDrink);
+
       Log::addMsg("I drink from the fountain...");
 
       for (auto effect : fountainEffects_)

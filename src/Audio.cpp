@@ -24,11 +24,11 @@ int timeAtLastAmb = -1;
 
 void loadAudioFile(const SfxId sfx, const string& filename)
 {
-  const string fileRelPath = "audio/" + filename;
-
   Render::clearScreen();
-  Render::drawText("Loading " + fileRelPath + "...", Panel::screen,
-                   Pos(0), clrWhite);
+
+  const string fileRelPath  = "audio/" + filename;
+
+  Render::drawText("Loading " + fileRelPath + "...", Panel::screen, Pos(0, 0), clrWhite);
 
   Render::updateScreen();
 
@@ -64,6 +64,7 @@ void init()
     loadAudioFile(SfxId::hitSmall,                "sfx_hitSmall.ogg");
     loadAudioFile(SfxId::hitMedium,               "sfx_hitMedium.ogg");
     loadAudioFile(SfxId::hitHard,                 "sfx_hitHard.ogg");
+    loadAudioFile(SfxId::hitCorpseBreak,          "sfx_hitCorpseBreak.ogg");
     loadAudioFile(SfxId::missLight,               "sfx_missLight.ogg");
     loadAudioFile(SfxId::missMedium,              "sfx_missMedium.ogg");
     loadAudioFile(SfxId::missHeavy,               "sfx_missHeavy.ogg");
@@ -75,6 +76,8 @@ void init()
     loadAudioFile(SfxId::shotgunReload,           "sfx_shotgunReload.ogg");
     loadAudioFile(SfxId::machineGunFire,          "sfx_machineGunFire.ogg");
     loadAudioFile(SfxId::machineGunReload,        "sfx_machineGunReload.ogg");
+    loadAudioFile(SfxId::migoGunFire,             "sfx_migoGun.ogg");
+    loadAudioFile(SfxId::spikeGun,                "sfx_spikeGun.ogg");
 
     //Environment sounds
     loadAudioFile(SfxId::metalClank,              "sfx_metalClank.ogg");
@@ -86,6 +89,7 @@ void init()
     loadAudioFile(SfxId::doorBang,                "sfx_doorBang.ogg");
     loadAudioFile(SfxId::doorBreak,               "sfx_doorBreak.ogg");
     loadAudioFile(SfxId::tombOpen,                "sfx_tombOpen.ogg");
+    loadAudioFile(SfxId::fountainDrink,           "sfx_fountainDrink.ogg");
 
     //User interface sounds
     loadAudioFile(SfxId::backpack,                "sfx_backpack.ogg");

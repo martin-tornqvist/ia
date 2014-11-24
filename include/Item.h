@@ -163,22 +163,18 @@ public:
   Clr getClr()          const override;
   Clr getInterfaceClr() const override {return clrGray;}
 
-  //"actor" may be nullptr
-  virtual void projectileObstructed(const Pos& pos, Actor* actor)
+  const ItemDataT& getAmmoData() {return *ammoData_;}
+
+  virtual void onProjectileBlocked(const Pos& pos, Actor* actor)
   {
     (void)pos;
     (void)actor;
   }
 
-  const ItemDataT& getAmmoData() {return *ammoData_;}
+//  virtual void onPostAttack(Actor& attacker) {(void) attacker;}
 
 protected:
   Wpn& operator=(const Wpn& other) = delete;
-//  Wpn& operator=(const Wpn& other)
-//  {
-//    (void) other;
-//    return *this;
-//  }
 
   std::string getNameInf() const override;
 
@@ -254,7 +250,7 @@ class Incinerator: public Wpn
 {
 public:
   Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData);
-  void projectileObstructed(const Pos& pos, Actor* actorHit);
+  void onProjectileBlocked(const Pos& pos, Actor* actorHit);
   ~Incinerator() {}
 };
 

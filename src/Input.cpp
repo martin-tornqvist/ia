@@ -335,8 +335,22 @@ void handleKeyPress(const KeyData& d)
         {
           auto* wpn = static_cast<Wpn*>(item);
 
+          //TODO Quick hack for the Mi-go gun, this should not be here (refactor)
+          if (wpn->getData().id == ItemId::migoGun  &&
+              wpn->nrAmmoLoaded == 0                &&
+              Map::player->getHp() > 1)
+          {
+            const string wpnName = wpn->getName(ItemRefType::plain, ItemRefInf::none);
+            Log::addMsg("The " + wpnName + "draws power from my essence!", clrMsgBad);
+            Render::drawMapAndInterface();
+            ++wpn->nrAmmoLoaded;
+            Map::player->hit(1, DmgType::pure);
+            return;
+          }
+
           if (wpn->nrAmmoLoaded >= 1 || itemData.ranged.hasInfiniteAmmo)
           {
+            //Function to pass to Marker
             auto onMarkerAtPos = [&](const Pos & p)
             {
               Look::printLocationInfoMsgs(p);
@@ -352,6 +366,7 @@ void handleKeyPress(const KeyData& d)
               Log::addMsg("[f] to fire");
             };
 
+            //Function to pass to Marker
             auto onKeyPress = [&](const Pos & p, const KeyData & d_)
             {
               if (d_.key == 'f')
@@ -617,7 +632,6 @@ void handleKeyPress(const KeyData& d)
 
             auto onMarkerAtPos = [&](const Pos & p)
             {
-
               Look::printLocationInfoMsgs(p);
 
               auto* const actor = Utils::getActorAtPos(p);
@@ -684,8 +698,6 @@ void handleKeyPress(const KeyData& d)
     {
       if (Map::player->getPropHandler().allowSee())
       {
-
-
         auto onMarkerAtPos = [&](const Pos & p)
         {
           Look::printLocationInfoMsgs(p);

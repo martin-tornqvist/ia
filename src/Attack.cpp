@@ -1003,13 +1003,13 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
   const Projectile* const firstProjectile = projectiles[0];
   if (!firstProjectile->isObstructed)
   {
-    wpn.projectileObstructed(aimPos, firstProjectile->actorHit);
+    wpn.onProjectileBlocked(aimPos, firstProjectile->actorHit);
   }
   else
   {
     const int element = firstProjectile->obstructedInElement;
     const Pos& pos = path[element];
-    wpn.projectileObstructed(pos, firstProjectile->actorHit);
+    wpn.onProjectileBlocked(pos, firstProjectile->actorHit);
   }
   //Cleanup
   for (Projectile* projectile : projectiles) {delete projectile;}

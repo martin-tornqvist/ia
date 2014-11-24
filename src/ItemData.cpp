@@ -504,7 +504,9 @@ void initDataList()
   d->baseName = ItemName("Mi-go Electric Gun", "Mi-go Electric Gun",
                          "a Mi-go Electric Gun");
   d->baseDescr = {"A weapon crafted by the Mi-go. It fires devastating bolts of "
-                  "electricity."
+                  "electricity.",
+                  "If there is no ammunition to fuel the weapon, it can draw power from "
+                  "the essence of the wielder (press [f] while no ammo loaded)."
                  };
   d->spawnStdRange = Range(-1, -1);
   d->itemWeight = itemWeight_medium;
@@ -520,7 +522,8 @@ void initDataList()
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Mi-go Electric Gun");
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Mi-go Electric Gun");
   d->ranged.sndMsg = "I hear a bolt of electricity.";
-  //d->ranged.attSfx =
+  d->ranged.attSfx = SfxId::migoGunFire;
+  d->ranged.reloadSfx = SfxId::machineGunReload;
   d->ranged.makesRicochetSnd = false;
   data[int(d->id)] = d;
 
@@ -576,6 +579,8 @@ void initDataList()
   d->ranged.missileGlyph = '/';
   d->ranged.missileClr = clrGray;
   d->spawnStdRange.lower = 4;
+  d->ranged.attSfx = SfxId::spikeGun;
+//  d->ranged.reloadSfx = SfxId::shotgunReload;
   d->ranged.sndVol = SndVol::low;
   addFeatureFoundIn(*d, FeatureId::chest, 50);
   addFeatureFoundIn(*d, FeatureId::cabinet, 50);

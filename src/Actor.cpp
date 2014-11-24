@@ -394,7 +394,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES)
   }
 }
 
-ActorDied Actor::hit(int dmg, const DmgType dmgType)
+ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
 {
   TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -419,22 +419,37 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType)
   //Damage to corpses
   //Note: corpse is automatically destroyed if damage is high enough, otherwise it is
   //destroyed with a random chance
-  if (isCorpse())
+  if (isCorpse() && !isPlayer())
   {
-    if (Rnd::oneIn(3) || dmg >= ((getHpMax(true) * 2) / 3))
+    if (Rnd::coinToss() || dmg >= ((getHpMax(true) * 2) / 3))
     {
-
-      if (!isPlayer())
+      if (method == DmgMethod::kick)
       {
-        if (Map::cells[pos.x][pos.y].isSeenByPlayer)
-        {
-          Log::addMsg(getCorpseNameThe() + " is destroyed.");
-        }
+        SndEmit::emitSnd({"I hear something cracking.", SfxId::hitCorpseBreak,
+                          IgnoreMsgIfOriginSeen::yes, pos, nullptr, SndVol::low,
+                          AlertsMon::yes
+                         });
       }
 
       state_ = ActorState::destroyed;
       glyph_ = ' ';
+
       if (isHumanoid()) {Map::mkGore(pos);}
+
+      if (Map::cells[pos.x][pos.y].isSeenByPlayer)
+      {
+        Log::addMsg(getCorpseNameThe() + " is destroyed.");
+      }
+    }
+    else //Not destroyed
+    {
+      if (method == DmgMethod::kick)
+      {
+        SndEmit::emitSnd({"There is a thudding sound.", SfxId::hitMedium,
+                          IgnoreMsgIfOriginSeen::yes, pos, nullptr, SndVol::low,
+                          AlertsMon::yes
+                         });
+      }
     }
     TRACE_FUNC_END_VERBOSE;
     return ActorDied::no;

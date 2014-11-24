@@ -99,8 +99,6 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
 
   while (isDone == MarkerDone::no)
   {
-    Log::clearLog();
-
     //Print info such as name of actor at current position, etc.
     onMarkerAtPos(pos_);
 
