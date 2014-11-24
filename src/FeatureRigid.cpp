@@ -1681,7 +1681,7 @@ void Tomb::triggerTrap(Actor & actor)
           actorBucket.push_back(ActorId(i));
         }
       }
-      Log::addMsg("Something rises from the tomb!");
+      Log::addMsg("Something rises from the tomb!", clrWhite, false, true);
       break;
 
     case TombTrait::forebodingCarvedSigns:
@@ -1691,7 +1691,7 @@ void Tomb::triggerTrap(Actor & actor)
     case TombTrait::stench:
       if (Rnd::coinToss())
       {
-        Log::addMsg("Fumes burst out from the tomb!");
+        Log::addMsg("Fumes burst out from the tomb!", clrWhite, false, true);
         Prop* prop    = nullptr;
         Clr fumeClr   = clrMagenta;
         const int RND = Rnd::percentile();
@@ -1713,7 +1713,7 @@ void Tomb::triggerTrap(Actor & actor)
         Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc, 0,
                                   SfxId::END, prop, &fumeClr);
       }
-      else
+      else //Not fumes
       {
         for (int i = 0; i < int(ActorId::END); ++i)
         {
@@ -1725,7 +1725,7 @@ void Tomb::triggerTrap(Actor & actor)
             actorBucket.push_back(ActorId(i));
           }
         }
-        Log::addMsg("Something creeps up from the tomb!");
+        Log::addMsg("Something creeps up from the tomb!", clrWhite, false, true);
       }
       break;
 
@@ -1978,12 +1978,11 @@ void Chest::disarm()
     const int TRIGGER_ONE_IN_N = 5;
     if (Rnd::oneIn(TRIGGER_ONE_IN_N))
     {
-      Log::addMsg("I set off the trap!");
+      Log::addMsg("I set off the trap!", clrWhite, false, true);
       triggerTrap(*Map::player);
     }
     else
     {
-
       const int DISARM_ONE_IN_N = 2;
 
       if (Rnd::oneIn(DISARM_ONE_IN_N))
@@ -2024,7 +2023,7 @@ void Chest::triggerTrap(Actor & actor)
 
     if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::oneIn(EXPLODE_ONE_IN_N))
     {
-      Log::addMsg("The trap explodes!");
+      Log::addMsg("The trap explodes!", clrWhite, false, true);
       Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0,
                                 SfxId::explosion);
       if (Map::player->isAlive())
@@ -2032,9 +2031,9 @@ void Chest::triggerTrap(Actor & actor)
         Map::put(new RubbleLow(pos_));
       }
     }
-    else
+    else //Not explosion
     {
-      Log::addMsg("Fumes burst out from the chest!");
+      Log::addMsg("Fumes burst out from the chest!", clrWhite, false, true);
       Prop* prop = nullptr;
       Clr fumeClr = clrMagenta;
       const int RND = Rnd::percentile();
@@ -2053,8 +2052,8 @@ void Chest::triggerTrap(Actor & actor)
         prop = new PropParalyzed(PropTurns::std);
         prop->turnsLeft_ *= 2;
       }
-      Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc,
-                                0, SfxId::END, prop, &fumeClr);
+      Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
+                                prop, &fumeClr);
     }
   }
 }
@@ -2169,19 +2168,14 @@ void Fountain::bump(Actor & actorBumping)
     {
       PropHandler& propHlr = Map::player->getPropHandler();
 
-      Audio::play(SfxId::fountainDrink);
-
       Log::addMsg("I drink from the fountain...");
+
+      Audio::play(SfxId::fountainDrink);
 
       for (auto effect : fountainEffects_)
       {
         switch (effect)
         {
-          case FountainEffect::tepid:
-          {
-            Log::addMsg("The water is tepid.");
-          } break;
-
           case FountainEffect::refreshing:
           {
             Log::addMsg("It's very refreshing.");
@@ -2278,12 +2272,11 @@ void Fountain::bump(Actor & actorBumping)
           case FountainEffect::END: {}
             break;
         }
-
-        if (Rnd::oneIn(5))
-        {
-          Log::addMsg("The fountain dries out.");
-          isDried_ = true;
-        }
+      }
+      if (Rnd::oneIn(4))
+      {
+        Log::addMsg("The fountain dries out.");
+        isDried_ = true;
       }
       GameTime::actorDidAct();
     }
