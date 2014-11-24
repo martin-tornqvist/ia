@@ -1462,7 +1462,7 @@ void Tomb::bump(Actor & actorBumping)
       if (props[propWeakened])
       {
         trySprainPlayer();
-        Log::addMsg("It seems futile.", clrMsgNote, false, true;);
+        Log::addMsg("It seems futile.", clrMsgNote, false, true);
       }
       else //Not weakened
       {

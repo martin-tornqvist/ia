@@ -241,7 +241,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
             {
               if (IS_CELL_SEEN && !isSecret_)
               {
-                Log::addMsg("It seems futile.", clrMsgNote, false, true;);
+                Log::addMsg("It seems futile.", clrMsgNote, false, true);
               }
             }
           }
@@ -283,7 +283,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
         {
           if (IS_PLAYER && IS_CELL_SEEN && !isSecret_)
           {
-            Log::addMsg("It seems futile.", clrMsgNote, false, true;);
+            Log::addMsg("It seems futile.", clrMsgNote, false, true);
           }
         } break;
 
