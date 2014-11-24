@@ -237,9 +237,12 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
                 SndEmit::emitSnd(snd);
               }
             }
-            else
+            else //No chance of success
             {
-              if (IS_CELL_SEEN && !isSecret_) {Log::addMsg("It seems futile.");}
+              if (IS_CELL_SEEN && !isSecret_)
+              {
+                Log::addMsg("It seems futile.", clrMsgNote, false, true;);
+              }
             }
           }
           else     //Not player
@@ -280,7 +283,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
         {
           if (IS_PLAYER && IS_CELL_SEEN && !isSecret_)
           {
-            Log::addMsg("It seems futile.");
+            Log::addMsg("It seems futile.", clrMsgNote, false, true;);
           }
         } break;
 
