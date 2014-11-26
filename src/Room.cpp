@@ -77,25 +77,23 @@ Room* mk(const RoomType type, const Rect& r)
 {
   switch (type)
   {
-    case RoomType::cave:          return new CaveRoom(r);         break;
-    case RoomType::crypt:         return new CryptRoom(r);        break;
-    case RoomType::flooded:       return new FloodedRoom(r);      break;
-    case RoomType::human:         return new HumanRoom(r);        break;
-    case RoomType::monster:       return new MonsterRoom(r);      break;
-    case RoomType::muddy:         return new MuddyRoom(r);        break;
-    case RoomType::plain:         return new PlainRoom(r);        break;
-    case RoomType::ritual:        return new RitualRoom(r);       break;
-    case RoomType::spider:        return new SpiderRoom(r);       break;
-    case RoomType::forest:        return new ForestRoom(r);       break;
+    case RoomType::cave:          return new CaveRoom(r);
+    case RoomType::crypt:         return new CryptRoom(r);
+    case RoomType::flooded:       return new FloodedRoom(r);
+    case RoomType::human:         return new HumanRoom(r);
+    case RoomType::monster:       return new MonsterRoom(r);
+    case RoomType::muddy:         return new MuddyRoom(r);
+    case RoomType::plain:         return new PlainRoom(r);
+    case RoomType::ritual:        return new RitualRoom(r);
+    case RoomType::spider:        return new SpiderRoom(r);
+    case RoomType::forest:        return new ForestRoom(r);
     case RoomType::END_OF_STD_ROOMS:
-    {
       TRACE << "Illegal room type id: " << int (type) << endl;
       assert(false);
       return nullptr;
-    } break;
-    case RoomType::corrLink:      return new CorrLinkRoom(r);     break;
-    case RoomType::crumbleRoom:   return new CrumbleRoom(r);      break;
-    case RoomType::river:         return new RiverRoom(r);        break;
+    case RoomType::corrLink:      return new CorrLinkRoom(r);
+    case RoomType::crumbleRoom:   return new CrumbleRoom(r);
+    case RoomType::river:         return new RiverRoom(r);
   }
   TRACE << "Unhandled room type id: " << int (type) << endl;
   assert(false);
@@ -1045,8 +1043,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
         {
           switch (sides[x][y])
           {
-            case side0:   {validRoomEntries0[x][y] = true;} break;
-            case side1:   {validRoomEntries1[x][y] = true;} break;
+            case side0:   validRoomEntries0[x][y] = true; break;
+            case side1:   validRoomEntries1[x][y] = true; break;
             case inRiver: {} break;
           }
         }

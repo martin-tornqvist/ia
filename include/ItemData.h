@@ -129,6 +129,7 @@ enum class ItemId
   armorFlackJacket,
   armorAsbSuit,
   armorHeavyCoat,
+  armorMigo,
 
   gasMask,
   hideousMask,
@@ -212,6 +213,8 @@ public:
   SpellId spellCastFromScroll;
   std::string landOnHardSndMsg;
   SfxId landOnHardSfx;
+  int shockWhileInBackpack = 0;
+  int shockWhileEquiped = 0;
   std::vector<RoomType> nativeRooms;
   std::vector< std::pair<FeatureId, int> > featuresCanBeFoundIn;
 

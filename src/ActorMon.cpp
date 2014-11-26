@@ -672,6 +672,11 @@ void CultistElectric::mkStartItems()
     inv_->putInGeneral(ItemFactory::mk(ItemId::migoGunAmmo));
   }
 
+  if (Rnd::oneIn(12))
+  {
+    inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorMigo));
+  }
+
   if (Rnd::oneIn(3))
   {
     inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
@@ -893,6 +898,11 @@ void MiGo::mkStartItems()
   if (Rnd::coinToss())
   {
     inv_->putInGeneral(ItemFactory::mk(ItemId::migoGunAmmo));
+  }
+
+  if (Rnd::oneIn(3))
+  {
+    inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorMigo));
   }
 
   spellsKnown_.push_back(new SpellTeleport);

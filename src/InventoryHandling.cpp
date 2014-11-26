@@ -14,7 +14,6 @@
 #include "ItemDrop.h"
 #include "Query.h"
 #include "ItemFactory.h"
-#include "GameTime.h"
 #include "Audio.h"
 #include "Map.h"
 
@@ -186,8 +185,9 @@ void init()
 
 void activateDefault(const size_t GENERAL_ITEMS_ELEMENT)
 {
-  Inventory& playerInv = Map::player->getInv();
-  Item* item = playerInv.general_[GENERAL_ITEMS_ELEMENT];
+  Inventory& playerInv  = Map::player->getInv();
+  Item* item            = playerInv.general_[GENERAL_ITEMS_ELEMENT];
+
   if (item->activateDefault(Map::player) == ConsumeItem::yes)
   {
     playerInv.decrItemInGeneral(GENERAL_ITEMS_ELEMENT);
@@ -208,7 +208,7 @@ void runInvScreen()
 
   auto getBrowser = [](const Inventory & inventory)
   {
-    const int GEN_SIZE = int(inventory.general_.size());
+    const int GEN_SIZE        = int(inventory.general_.size());
     const int ELEM_ON_WRAP_UP = GEN_SIZE > INV_H ? (SLOTS_SIZE + INV_H - 2) : -1;
     return MenuBrowser(int(SlotId::END) + GEN_SIZE, 0, ELEM_ON_WRAP_UP);
   };
@@ -257,51 +257,41 @@ void runInvScreen()
           InvSlot& slot = inv.slots_[ELEMENT];
           if (slot.item)
           {
-            Item* const item = slot.item;
+            Log::clearLog();
 
-            const string itemName = item->getName(ItemRefType::plain);
+            Item* const           item            = slot.item;
+            const UnequipAllowed  unequipAllowed  = item->onUnequip();
 
-            inv.moveToGeneral(slot);
+            if (unequipAllowed == UnequipAllowed::yes)
+            {
+              inv.moveToGeneral(slot);
+            }
 
             switch (SlotId(ELEMENT))
             {
               case SlotId::wielded:
               case SlotId::wieldedAlt:
               case SlotId::thrown:
-              {
+              case SlotId::head:
                 RenderInventory::drawBrowseInv(browser);
-              } break;
+                break;
+
               case SlotId::body:
-              {
                 screenToOpenAfterDrop     = InvScrId::inv;
                 browserIdxToSetAfterDrop  = browser.getY();
-
-                Render::drawMapAndInterface();
-                Log::addMsg("I take off my " + itemName + ".", clrWhite, false, true);
-                //TODO This should probably be called from the Inventory instead
-                item->onTakeOff();
-                GameTime::actorDidAct();
                 return;
-              }
-              case SlotId::head:
-              {
-                //TODO This should probably be called from the Inventory instead
-                item->onTakeOff();
-                RenderInventory::drawBrowseInv(browser);
-              } break;
 
               case SlotId::END:
-              {
                 TRACE << "Illegal slot id: " << ELEMENT << endl;
                 assert(false);
-              } break;
+                break;
             }
-            //Create a new browser to ajust for changed inventory size
+            //Create a new browser to adjust for changed inventory size
             const Pos p = browser.getPos();
             browser = getBrowser(inv);
             browser.setPos(p);
           }
-          else     //No item in slot
+          else //No item in slot
           {
             if (runEquipScreen(slot))
             {
@@ -314,7 +304,7 @@ void runInvScreen()
             }
           }
         }
-        else     //In general inventory
+        else //In general inventory
         {
           const size_t ELEMENT = browser.getY() - int(SlotId::END);
           activateDefault(ELEMENT);
@@ -370,25 +360,9 @@ bool runEquipScreen(InvSlot& slotToEquip)
           const int ELEMENT = generalItemsToShow_[browser.getY()];
           Render::drawMapAndInterface();
           inv.equipGeneralItemAndEndTurn(ELEMENT, slotToEquip.id);
-          bool applyWearEffect = false;
-          switch (slotToEquip.id)
-          {
-            case SlotId::wielded:     {} break;
-            case SlotId::wieldedAlt:  {} break;
-            case SlotId::thrown:      {} break;
-            case SlotId::body:        {applyWearEffect = true;} break;
-            case SlotId::head:        {applyWearEffect = true;} break;
-            case SlotId::END:
-            {
-              TRACE << "Illegal slot id: " << int(slotToEquip.id) << endl;
-              assert(false);
-            } break;
-          }
-          if (applyWearEffect)
-          {
-            //TODO This should probably be called from the Inventory instead
-            slotToEquip.item->onWear();
-          }
+
+          slotToEquip.item->onEquip();
+
           browserIdxToSetAfterDrop  = int(slotToEquip.id);
           screenToOpenAfterDrop     = InvScrId::inv;
           return true;

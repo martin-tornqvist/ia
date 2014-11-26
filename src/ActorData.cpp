@@ -1366,7 +1366,7 @@ void initDataList()
   d.ai[int(AiId::movesToLair)] = false;
   d.ai[int(AiId::movesToLeader)] = true;
   d.speed = ActorSpeed::fast;
-  d.rangedCooldownTurns = 3;
+  d.rangedCooldownTurns = 4;
   d.spellCooldownTurns = 3;
   d.glyph = 'E';
   d.color = clrBrownDrk;
@@ -1529,7 +1529,7 @@ void initDataList()
   d.tile = TileId::shadow;
   d.hp = 4;
   d.spi = 12;
-  d.dmgMelee = 2;
+  d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 35);
   d.abilityVals.setVal(AbilityId::stealth, 90);
   d.intrProps[propLightSensitive] = true;

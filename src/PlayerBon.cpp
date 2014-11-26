@@ -118,7 +118,6 @@ void getBgDescr(const Bg id, vector<string>& linesRef)
   switch (id)
   {
     case Bg::occultist:
-    {
       linesRef.push_back("Can learn spells cast from manuscripts");
       linesRef.push_back(" ");
       linesRef.push_back("-50% shock taken from using and identifying "
@@ -132,17 +131,15 @@ void getBgDescr(const Bg id, vector<string>& linesRef)
       linesRef.push_back(" ");
       getTraitTitle(Trait::stoutSpirit, s); linesRef.push_back("* " + s);
       getTraitDescr(Trait::stoutSpirit, s); linesRef.push_back(s);
-    } break;
+      break;
 
     case Bg::rogue:
-    {
       linesRef.push_back("Has an arcane ability to cloud the minds of "
                          "enemies, causing them to forget their pursuit "
                          "(press [x])");
       linesRef.push_back(" ");
-      //TODO This should be a trait
-      linesRef.push_back("+25% hit chance with ranged attacks vs unaware "
-                         "targets");
+      //TODO This should be a trait?
+      linesRef.push_back("+25% hit chance with ranged attacks vs unaware targets");
       linesRef.push_back(" ");
       linesRef.push_back("The rate of shock recieved passively over time "
                          "is reduced by half");
@@ -154,10 +151,9 @@ void getBgDescr(const Bg id, vector<string>& linesRef)
       linesRef.push_back(" ");
       getTraitTitle(Trait::stealthy, s);  linesRef.push_back("* " + s);
       getTraitDescr(Trait::stealthy, s);  linesRef.push_back(s);
-    } break;
+      break;
 
     case Bg::warVet:
-    {
       linesRef.push_back("Can switch to prepared weapon instantly");
       linesRef.push_back(" ");
       linesRef.push_back("Maintains armor twice as long before it breaks");
@@ -174,9 +170,10 @@ void getBgDescr(const Bg id, vector<string>& linesRef)
       linesRef.push_back(" ");
       getTraitTitle(Trait::tough, s);             linesRef.push_back("* " + s);
       getTraitDescr(Trait::tough, s);             linesRef.push_back(s);
-    } break;
+      break;
 
-    case Bg::END: {} break;
+    case Bg::END: {}
+      break;
   }
 }
 
@@ -187,215 +184,179 @@ void getTraitDescr(const Trait id, string& strRef)
   switch (id)
   {
     case Trait::adeptMeleeFighter:
-    {
       strRef = "+10% hit chance with melee attacks";
-    } break;
+      break;
 
     case Trait::expertMeleeFighter:
-    {
       strRef = "+10% hit chance with melee attacks";
-    } break;
+      break;
 
     case Trait::masterMeleeFighter:
-    {
       strRef = "+10% hit chance with melee attacks";
-    } break;
+      break;
 
     case Trait::adeptMarksman:
-    {
       strRef = "+10% hit chance with firearms and thrown weapons";
-    } break;
+      break;
 
     case Trait::expertMarksman:
-    {
       strRef = "+10% hit chance with firearms and thrown weapons, "
                "you occasionally reload instantly";
-    } break;
+      break;
 
     case Trait::masterMarksman:
-    {
       strRef = "+10% hit chance with firearms and thrown weapons";
-    } break;
+      break;
 
     case Trait::steadyAimer:
-    {
       strRef = "Standing still gives ranged attacks +10% hit chance on the "
                "following turn";
-    } break;
+      break;
 
     case Trait::sharpShooter:
-    {
       strRef = "Standing still for three turns gives ranged attacks maximum "
                "hit chance and damage on the following turn";
-    } break;
+      break;
 
     case Trait::demExpert:
-    {
       strRef = "+1 radius for explosives (be careful), you are not harmed "
                "by your own Molotov Cocktails, you occasionally light "
                "explosives instantly";
-    } break;
+      break;
 
     case Trait::coolHeaded:
-    {
       strRef = "+20% shock resistance";
-    } break;
+      break;
 
     case Trait::courageous:
-    {
       strRef = "+20% shock resistance";
-    } break;
+      break;
 
     case Trait::warlock:
-    {
       strRef = "-1 Spirit cost for damage dealing spells, casting any spell "
                "has a chance to make you \"Charged\" for one turn, causing "
                "attack spells to do maximum damage";
-    } break;
+      break;
 
     case Trait::summoner:
-    {
       strRef = "-1 Spirit cost for summoning spells, halved risk that called creatures "
                "are hostile";
-    } break;
+      break;
 
     case Trait::bloodSorcerer:
-    {
       strRef = "-1 Spirit cost for all spells, casting a spell drains 2 Hit Points";
-    } break;
+      break;
 
     case Trait::seer:
-    {
       strRef = "Detection spells have decreased Spirit costs, and "
                "the spell \"Detect Monsters\" has tripple duration";
-    } break;
+      break;
 
     case Trait::tough:
-    {
       strRef = "+2 hit points, +10% carry weight limit, better results "
                "for object interactions requiring strength (e.g. bashing "
                "doors or pushing a lid)";
-    } break;
+      break;
 
     case Trait::rugged:
-    {
       strRef = "+2 hit points, +10% carry weight limit, better results "
                "for object interactions requiring strength (such as "
                "bashing doors, or moving the lid from a stone coffin)";
-    } break;
+      break;
 
     case Trait::strongBacked:
-    {
       strRef = "+30% carry weight limit";
-    } break;
+      break;
 
     case Trait::dexterous:
-    {
       strRef = "+20% chance to dodge melee attacks, better chances to evade "
                "traps, every fifth move is a free action";
-    } break;
+      break;
 
     case Trait::lithe:
-    {
       strRef = "+20% chance to dodge melee attacks, better chances to evade "
                "traps, every fourth move is a free action";
-    } break;
+      break;
 
     case Trait::mobile:
-    {
       strRef = "Every second move is a free action";
-    } break;
+      break;
 
     case Trait::fearless:
-    {
       strRef = "You cannot become terrified, +5% shock resistance";
-    } break;
+      break;
 
     case Trait::healer:
-    {
       strRef = "Healing takes half the normal time and resources";
-    } break;
+      break;
 
     case Trait::observant:
-    {
       strRef = "You can spot hidden traps and doors from two cells away, "
                "you are more likely to spot hidden things and monsters, and "
                "your attentiveness is higher when examining objects";
-    } break;
+      break;
 
     case Trait::perceptive:
-    {
       strRef = "You can spot hidden traps and doors from three cells away, "
                "you are more likely to spot hidden things and monsters, and "
                "your attentiveness is higher when examining objects";
-    } break;
+      break;
 
     case Trait::vigilant:
-    {
       strRef = "You cannot be backstabbed - hidden monsters gets no melee "
                "attack bonus against you, and their attacks can be dodged";
-    } break;
+      break;
 
     case Trait::rapidRecoverer:
-    {
       strRef = "Increased Hit Point regeneration rate";
-    } break;
+      break;
 
     case Trait::survivalist:
-    {
       strRef = "Increased Hit Point regeneration rate, negative effects "
                "from wounds and disease reduced by 50%";
-    } break;
+      break;
 
     case Trait::perseverant:
-    {
       strRef = "When your Hit Points are reduced to 25% or less, you gain "
                "+50% chance to dodge melee attacks, and +30% hit chance with "
                "melee and ranged attacks";
-    } break;
+      break;
 
     case Trait::selfAware:
-    {
       strRef = "You cannot become confused, the number of remaining turns "
                "for status effects are displayed";
-    } break;
+      break;
 
     case Trait::stoutSpirit:
-    {
       strRef = "+2 Spirit Points, increased Spirit regeneration rate";
-    } break;
+      break;
 
     case Trait::strongSpirit:
-    {
       strRef = "+2 Spirit Points, increased Spirit regeneration rate";
-    } break;
+      break;
 
     case Trait::mightySpirit:
-    {
       strRef = "+2 Spirit Points, increased Spirit regeneration rate";
-    } break;
+      break;
 
     case Trait::stealthy:
-    {
       strRef = "You are more likely to avoid detection";
-    } break;
+      break;
 
     case Trait::imperceptible:
-    {
       strRef = "You are more likely to avoid detection";
-    } break;
+      break;
 
     case Trait::vicious:
-    {
       strRef = "+50% backstab damage (for a total of 200%, or 350% with daggers)";
-    } break;
+      break;
 
     case Trait::treasureHunter:
-    {
       strRef = "You tend to find more items";
-    } break;
+      break;
 
-    case Trait::END: {} break;
+    case Trait::END: {}
+      break;
   }
 }
 
@@ -406,202 +367,165 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef)
 
   switch (id)
   {
-    case Trait::adeptMeleeFighter:
-    {
-    } break;
+    case Trait::adeptMeleeFighter: {}
+      break;
 
     case Trait::expertMeleeFighter:
-    {
       traitsRef.push_back(Trait::adeptMeleeFighter);
-    } break;
+      break;
 
     case Trait::masterMeleeFighter:
-    {
       traitsRef.push_back(Trait::expertMeleeFighter);
-    } break;
+      break;
 
-    case Trait::adeptMarksman:
-    {
-    } break;
+    case Trait::adeptMarksman: {}
+      break;
 
     case Trait::expertMarksman:
-    {
       traitsRef.push_back(Trait::adeptMarksman);
-    } break;
+      break;
 
     case Trait::masterMarksman:
-    {
       traitsRef.push_back(Trait::expertMarksman);
       bgRef = Bg::warVet;
-    } break;
+      break;
 
     case Trait::steadyAimer:
-    {
       traitsRef.push_back(Trait::adeptMarksman);
-    } break;
+      break;
 
     case Trait::sharpShooter:
-    {
       traitsRef.push_back(Trait::steadyAimer);
       bgRef = Bg::warVet;
-    } break;
+      break;
 
-    case Trait::demExpert:
-    {
-    } break;
+    case Trait::demExpert: {}
+      break;
 
-    case Trait::coolHeaded:
-    {
-    } break;
+    case Trait::coolHeaded: {}
+      break;
 
     case Trait::courageous:
-    {
       traitsRef.push_back(Trait::coolHeaded);
       bgRef = Bg::warVet;
-    } break;
+      break;
 
     case Trait::warlock:
-    {
       traitsRef.push_back(Trait::fearless);
       traitsRef.push_back(Trait::strongSpirit);
       bgRef = Bg::occultist;
-    } break;
+      break;
 
     case Trait::summoner:
-    {
       traitsRef.push_back(Trait::fearless);
       traitsRef.push_back(Trait::strongSpirit);
       bgRef = Bg::occultist;
-    } break;
+      break;
 
     case Trait::bloodSorcerer:
-    {
       traitsRef.push_back(Trait::tough);
       bgRef = Bg::occultist;
-    } break;
+      break;
 
     case Trait::seer:
-    {
       traitsRef.push_back(Trait::observant);
       bgRef = Bg::occultist;
-    } break;
+      break;
 
-    case Trait::tough:
-    {
-    } break;
+    case Trait::tough: {}
+      break;
 
     case Trait::rugged:
-    {
       traitsRef.push_back(Trait::tough);
-    } break;
+      break;
 
     case Trait::strongBacked:
-    {
       traitsRef.push_back(Trait::tough);
-    } break;
+      break;
 
-    case Trait::dexterous:
-    {
-    } break;
+    case Trait::dexterous: {}
+      break;
 
     case Trait::lithe:
-    {
       traitsRef.push_back(Trait::dexterous);
-    } break;
+      break;
 
     case Trait::mobile:
-    {
       traitsRef.push_back(Trait::lithe);
-    } break;
+      break;
 
     case Trait::fearless:
-    {
       traitsRef.push_back(Trait::coolHeaded);
-    } break;
+      break;
 
-    case Trait::healer:
-    {
-    } break;
+    case Trait::healer: {}
+      break;
 
-    case Trait::observant:
-    {
-    } break;
+    case Trait::observant: {}
+      break;
 
     case Trait::perceptive:
-    {
       traitsRef.push_back(Trait::observant);
-    } break;
+      break;
 
     case Trait::vigilant:
-    {
       traitsRef.push_back(Trait::observant);
-    } break;
+      break;
 
     case Trait::rapidRecoverer:
-    {
       traitsRef.push_back(Trait::tough);
       traitsRef.push_back(Trait::healer);
-    } break;
+      break;
 
     case Trait::survivalist:
-    {
       traitsRef.push_back(Trait::rapidRecoverer);
-    } break;
+      break;
 
     case Trait::perseverant:
-    {
       traitsRef.push_back(Trait::tough);
       traitsRef.push_back(Trait::fearless);
-    } break;
+      break;
 
     case Trait::selfAware:
-    {
       traitsRef.push_back(Trait::stoutSpirit);
       traitsRef.push_back(Trait::observant);
-    } break;
+      break;
 
-    case Trait::stoutSpirit:
-    {
-    } break;
+    case Trait::stoutSpirit: {}
+      break;
 
     case Trait::strongSpirit:
-    {
       traitsRef.push_back(Trait::stoutSpirit);
-    } break;
+      break;
 
     case Trait::mightySpirit:
-    {
       traitsRef.push_back(Trait::strongSpirit);
       bgRef = Bg::occultist;
-    } break;
+      break;
 
-    case Trait::stealthy:
-    {
-    } break;
+    case Trait::stealthy: {}
+      break;
 
     case Trait::imperceptible:
-    {
       traitsRef.push_back(Trait::stealthy);
       //traitsRef.push_back(Trait::);
-    } break;
+      break;
 
     case Trait::vicious:
-    {
       traitsRef.push_back(Trait::stealthy);
       traitsRef.push_back(Trait::dexterous);
-    } break;
+      break;
 
     case Trait::treasureHunter:
-    {
       traitsRef.push_back(Trait::observant);
-    } break;
+      break;
 
-    case Trait::END: {} break;
+    case Trait::END: {}
+      break;
   }
 
   //Sort lexicographically
-  sort(traitsRef.begin(), traitsRef.end(),
-       [](const Trait & t1, const Trait & t2)
+  sort(traitsRef.begin(), traitsRef.end(), [](const Trait & t1, const Trait & t2)
   {
     string str1 = ""; getTraitTitle(t1, str1);
     string str2 = ""; getTraitTitle(t2, str2);
@@ -678,27 +602,25 @@ void pickBg(const Bg bg)
   switch (bg_)
   {
     case Bg::occultist:
-    {
       pickTrait(Trait::stoutSpirit);
       Map::player->changeMaxHp(-2, false); //Occultist starts with fewer HP
-    } break;
+      break;
 
     case Bg::rogue:
-    {
       PlayerSpellsHandling::learnSpellIfNotKnown(SpellId::cloudMinds);
       pickTrait(Trait::observant);
       pickTrait(Trait::stealthy);
-    } break;
+      break;
 
     case Bg::warVet:
-    {
       pickTrait(Trait::adeptMeleeFighter);
       pickTrait(Trait::adeptMarksman);
       pickTrait(Trait::tough);
       Map::player->ins_ += 10; //War Veteran starts a little bit insane
-    } break;
+      break;
 
-    case Bg::END: {} break;
+    case Bg::END: {}
+      break;
   }
 }
 
@@ -716,43 +638,37 @@ void pickTrait(const Trait id)
   switch (id)
   {
     case Trait::tough:
-    {
       Map::player->changeMaxHp(2, false);
-    } break;
+      break;
 
     case Trait::rugged:
-    {
       Map::player->changeMaxHp(2, false);
-    } break;
+      break;
 
     case Trait::stoutSpirit:
-    {
       Map::player->changeMaxSpi(2, false);
-    } break;
+      break;
 
     case Trait::strongSpirit:
-    {
       Map::player->changeMaxSpi(2, false);
-    } break;
+      break;
 
     case Trait::mightySpirit:
-    {
       Map::player->changeMaxSpi(2, false);
-    } break;
+      break;
 
     case Trait::selfAware:
-    {
       Map::player->getPropHandler().tryApplyProp(
         new PropRConfusion(PropTurns::indefinite), true, true, true, false);
-    } break;
+      break;
 
     case Trait::fearless:
-    {
       Map::player->getPropHandler().tryApplyProp(
         new PropRFear(PropTurns::indefinite), true, true, true, false);
-    } break;
+      break;
 
-    default: {} break;
+    default: {}
+      break;
   }
 }
 

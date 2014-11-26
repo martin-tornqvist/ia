@@ -97,25 +97,34 @@ inline void putPixel(SDL_Surface* const surface, const int PIXEL_X, const int PI
 
   switch (bpp)
   {
-    case 1:   *p = pixel;             break;
-    case 2:   *(Uint16*)p = pixel;    break;
+    case 1:
+      *p = pixel;
+      break;
+
+    case 2:
+      *(Uint16*)p = pixel;
+      break;
+
     case 3:
-    {
       if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
       {
         p[0] = (pixel >> 16) & 0xff;
         p[1] = (pixel >> 8)  & 0xff;
         p[2] = pixel & 0xff;
       }
-      else
+      else //Little endian
       {
         p[0] = pixel & 0xff;
         p[1] = (pixel >> 8)  & 0xff;
         p[2] = (pixel >> 16) & 0xff;
       }
-    } break;
-    case 4:   *(Uint32*)p = pixel;    break;
-    default:  {}                      break;
+      break;
+
+    case 4:
+      *(Uint32*)p = pixel;
+      break;
+
+    default: {} break;
   }
 }
 
@@ -254,24 +263,16 @@ Pos getPixelPosForCellInPanel(const Panel panel, const Pos& pos)
   switch (panel)
   {
     case Panel::screen:
-    {
       return Pos(pos.x * cellDims.x, pos.y * cellDims.y);
-    } break;
 
     case Panel::map:
-    {
       return (pos * cellDims) + Pos(0, Config::getMapPixelOffsetH());
-    } break;
 
     case Panel::log:
-    {
       return pos * cellDims;
-    } break;
 
     case Panel::charLines:
-    {
       return (pos * cellDims) + Pos(0, Config::getCharLinesPixelOffsetH());
-    } break;
   }
   return Pos();
 }

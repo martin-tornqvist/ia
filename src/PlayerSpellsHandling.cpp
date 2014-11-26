@@ -280,25 +280,21 @@ void playerSelectSpellToCast()
       switch (action)
       {
         case MenuAction::browsed:
-        {
           draw(browser, spellOpts);
-        } break;
+          break;
 
         case MenuAction::esc:
         case MenuAction::space:
-        {
           Log::clearLog();
           Render::drawMapAndInterface();
           return;
-        } break;
 
         case MenuAction::selected:
-        {
           tryCast(spellOpts[browser.getPos().y]);
           return;
-        } break;
 
-        default: {} break;
+        default: {}
+          break;
       }
     }
   }

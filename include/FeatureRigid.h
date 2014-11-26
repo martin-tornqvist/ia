@@ -618,7 +618,6 @@ private:
 
 enum class FountainEffect
 {
-  tepid,
   refreshing,
   bless,
   curse,

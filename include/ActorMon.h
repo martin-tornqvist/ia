@@ -531,7 +531,7 @@ public:
 class WormMass: public Mon
 {
 public:
-  WormMass() : Mon(), spawnNewOneInN(20) {}
+  WormMass() : Mon(), spawnNewOneInN(17) {}
   ~WormMass() {}
   bool onActorTurn_() override;
   void mkStartItems() override;
@@ -542,7 +542,7 @@ private:
 class GiantLocust: public Mon
 {
 public:
-  GiantLocust() : Mon(), spawnNewOneInN(30) {}
+  GiantLocust() : Mon(), spawnNewOneInN(35) {}
   ~GiantLocust() {}
   bool onActorTurn_() override;
   void mkStartItems() override;

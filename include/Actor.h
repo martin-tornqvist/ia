@@ -35,7 +35,7 @@ public:
   void place(const Pos& pos_, ActorDataT& data);
   virtual void place_() {}
 
-  ActorDied hit(int dmg, const DmgType dmgType);
+  ActorDied hit(int dmg, const DmgType dmgType, const DmgMethod method = DmgMethod::END);
   ActorDied hitSpi(const int DMG, const bool ALLOW_MSG);
 
   bool restoreHp   (const int HP_RESTORED, const bool ALLOW_MSG = true,

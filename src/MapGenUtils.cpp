@@ -11,11 +11,6 @@
 #include "MapTemplates.h"
 #include "FeatureRigid.h"
 
-#ifdef DEMO_MODE
-#include "SdlWrapper.h"
-#include "Render.h"
-#endif // DEMO_MODE
-
 using namespace std;
 
 namespace MapGen

@@ -335,8 +335,22 @@ void handleKeyPress(const KeyData& d)
         {
           auto* wpn = static_cast<Wpn*>(item);
 
+          //TODO Quick hack for the Mi-go gun, this should not be here (refactor)
+          if (wpn->getData().id == ItemId::migoGun  &&
+              wpn->nrAmmoLoaded == 0                &&
+              Map::player->getHp() > 1)
+          {
+            const string wpnName = wpn->getName(ItemRefType::plain, ItemRefInf::none);
+            Log::addMsg("The " + wpnName + "draws power from my essence!", clrMsgBad);
+            Render::drawMapAndInterface();
+            ++wpn->nrAmmoLoaded;
+            Map::player->hit(1, DmgType::pure);
+            return;
+          }
+
           if (wpn->nrAmmoLoaded >= 1 || itemData.ranged.hasInfiniteAmmo)
           {
+            //Function to pass to Marker
             auto onMarkerAtPos = [&](const Pos & p)
             {
               Look::printLocationInfoMsgs(p);
@@ -352,6 +366,7 @@ void handleKeyPress(const KeyData& d)
               Log::addMsg("[f] to fire");
             };
 
+            //Function to pass to Marker
             auto onKeyPress = [&](const Pos & p, const KeyData & d_)
             {
               if (d_.key == 'f')
@@ -429,7 +444,10 @@ void handleKeyPress(const KeyData& d)
   else if (d.key == 'w')
   {
     Log::clearLog();
-    if (Map::player->isAlive()) {InvHandling::runInvScreen();}
+    if (Map::player->isAlive())
+    {
+      InvHandling::runInvScreen();
+    }
     clearEvents();
     return;
   }
@@ -480,7 +498,7 @@ void handleKeyPress(const KeyData& d)
     return;
   }
 
-  //----------------------------------- SEARCH (REALLY JUST A WAIT BUTTON)
+  //----------------------------------- WAIT/SEARCH
   else if (d.key == 's')
   {
     Log::clearLog();
@@ -490,8 +508,8 @@ void handleKeyPress(const KeyData& d)
       Map::player->getSeenFoes(seenMon);
       if (seenMon.empty())
       {
-        const int TURNS_TO_APPLY = 5;
-        const string TURNS_STR = toStr(TURNS_TO_APPLY);
+        const int     TURNS_TO_APPLY  = 5;
+        const string  TURNS_STR       = toStr(TURNS_TO_APPLY);
         Log::addMsg("I pause for a while (" + TURNS_STR + " turns)...");
         Map::player->waitTurnsLeft = TURNS_TO_APPLY - 1;
         GameTime::actorDidAct();
@@ -614,7 +632,6 @@ void handleKeyPress(const KeyData& d)
 
             auto onMarkerAtPos = [&](const Pos & p)
             {
-
               Look::printLocationInfoMsgs(p);
 
               auto* const actor = Utils::getActorAtPos(p);
@@ -681,8 +698,6 @@ void handleKeyPress(const KeyData& d)
     {
       if (Map::player->getPropHandler().allowSee())
       {
-
-
         auto onMarkerAtPos = [&](const Pos & p)
         {
           Look::printLocationInfoMsgs(p);
@@ -1024,7 +1039,6 @@ KeyData readKeysUntilFound(const bool IS_O_RETURN)
             {
               case SDLK_RETURN:
               case SDLK_KP_ENTER:
-              {
                 if (IS_ALT_HELD)
                 {
                   Config::toggleFullscreen();
@@ -1036,7 +1050,7 @@ KeyData readKeysUntilFound(const bool IS_O_RETURN)
                   ret.sdlKey = SDLK_RETURN;
                   return ret;
                 }
-              } break;
+                break;
               case SDLK_MENU:         continue;   break;
               case SDLK_PAUSE:        continue;   break;
               case SDLK_SPACE:        return ret; break;

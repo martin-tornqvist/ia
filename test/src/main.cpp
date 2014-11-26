@@ -564,7 +564,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
 }
 
 //TODO This test shows some weakness in the inventory handling functionality. Notice how
-//onWear() and onTakeOff() has to be called manually here. This is because they
+//onEquip() and onUnequip() has to be called manually here. This is because they
 //are called from stupid places in the game code - They SHOULD be called by Inventory!
 TEST_FIXTURE(BasicFixture, InventoryHandling)
 {
@@ -592,7 +592,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   Item* item = ItemFactory::mk(ItemId::armorAsbSuit);
   inv.putInSlot(SlotId::body, item);
 
-  item->onWear();
+  item->onEquip();
 
   //Check that the props are applied
   propHandler.getAllActivePropIds(props);
@@ -609,7 +609,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
   //Take off asbeshos suit
   inv.moveToGeneral(bodySlot);
-  item->onTakeOff();
+  item->onUnequip();
   CHECK_EQUAL(item, inv.general_.back());
 
   //Check that the properties are cleared
@@ -622,7 +622,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   //Wear the asbeshos suit again
   inv.equipGeneralItemAndEndTurn(inv.general_.size() - 1, SlotId::body);
 
-  item->onWear();
+  item->onEquip();
 
   //Check that the props are applied
   propHandler.getAllActivePropIds(props);
@@ -658,7 +658,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   inv.putInSlot(SlotId::body, cell.item);
   cell.item = nullptr;
 
-  item->onWear();
+  item->onEquip();
 
   //Check that the props are applied
   propHandler.getAllActivePropIds(props);

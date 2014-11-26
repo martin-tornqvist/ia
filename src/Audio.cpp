@@ -24,11 +24,11 @@ int timeAtLastAmb = -1;
 
 void loadAudioFile(const SfxId sfx, const string& filename)
 {
-  const string fileRelPath = "audio/" + filename;
-
   Render::clearScreen();
-  Render::drawText("Loading " + fileRelPath + "...", Panel::screen,
-                   Pos(0), clrWhite);
+
+  const string fileRelPath  = "audio/" + filename;
+
+  Render::drawText("Loading " + fileRelPath + "...", Panel::screen, Pos(0, 0), clrWhite);
 
   Render::updateScreen();
 
@@ -36,8 +36,9 @@ void loadAudioFile(const SfxId sfx, const string& filename)
 
   if (!audioChunks[int(sfx)])
   {
-    TRACE << "Problem loading audio file with name " + filename << endl
-          << Mix_GetError() << endl;
+    TRACE << "Problem loading audio file with name: " << filename       << endl
+          << "Mix_GetError(): "                       << Mix_GetError() << endl;
+    assert(false);
   }
 }
 
@@ -63,6 +64,7 @@ void init()
     loadAudioFile(SfxId::hitSmall,                "sfx_hitSmall.ogg");
     loadAudioFile(SfxId::hitMedium,               "sfx_hitMedium.ogg");
     loadAudioFile(SfxId::hitHard,                 "sfx_hitHard.ogg");
+    loadAudioFile(SfxId::hitCorpseBreak,          "sfx_hitCorpseBreak.ogg");
     loadAudioFile(SfxId::missLight,               "sfx_missLight.ogg");
     loadAudioFile(SfxId::missMedium,              "sfx_missMedium.ogg");
     loadAudioFile(SfxId::missHeavy,               "sfx_missHeavy.ogg");
@@ -74,6 +76,8 @@ void init()
     loadAudioFile(SfxId::shotgunReload,           "sfx_shotgunReload.ogg");
     loadAudioFile(SfxId::machineGunFire,          "sfx_machineGunFire.ogg");
     loadAudioFile(SfxId::machineGunReload,        "sfx_machineGunReload.ogg");
+    loadAudioFile(SfxId::migoGunFire,             "sfx_migoGun.ogg");
+    loadAudioFile(SfxId::spikeGun,                "sfx_spikeGun.ogg");
 
     //Environment sounds
     loadAudioFile(SfxId::metalClank,              "sfx_metalClank.ogg");
@@ -85,6 +89,7 @@ void init()
     loadAudioFile(SfxId::doorBang,                "sfx_doorBang.ogg");
     loadAudioFile(SfxId::doorBreak,               "sfx_doorBreak.ogg");
     loadAudioFile(SfxId::tombOpen,                "sfx_tombOpen.ogg");
+    loadAudioFile(SfxId::fountainDrink,           "sfx_fountainDrink.ogg");
 
     //User interface sounds
     loadAudioFile(SfxId::backpack,                "sfx_backpack.ogg");
@@ -92,13 +97,13 @@ void init()
     loadAudioFile(SfxId::electricLantern,         "sfx_electricLantern.ogg");
     loadAudioFile(SfxId::potionQuaff,             "sfx_potionQuaff.ogg");
     loadAudioFile(SfxId::spellGeneric,            "sfx_spellGeneric.ogg");
-    loadAudioFile(SfxId::insanityRise,            "sfx_insanityRise.ogg");
+    loadAudioFile(SfxId::insanityRise,            "sfx_insanityRising.ogg");
     loadAudioFile(SfxId::glop,                    "sfx_glop.ogg");
     loadAudioFile(SfxId::death,                   "sfx_death.ogg");
 
     int a = 1;
     const int FIRST = int(SfxId::AMB_START) + 1;
-    const int LAST  = int(SfxId::END)   - 1;
+    const int LAST  = int(SfxId::AMB_END)   - 1;
     for (int i = FIRST; i <= LAST; ++i)
     {
       const string indexStr = toStr(a);

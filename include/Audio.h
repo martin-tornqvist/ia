@@ -14,7 +14,7 @@ enum class SfxId
   flappingWings,
 
   //Weapon and attack sounds
-  hitSmall, hitMedium, hitHard,
+  hitSmall, hitMedium, hitHard, hitCorpseBreak,
   missLight, missMedium, missHeavy,
   hitSharp,
   pistolFire,
@@ -24,14 +24,17 @@ enum class SfxId
   shotgunReload,
   machineGunFire,
   machineGunReload,
+  migoGunFire,
+  spikeGun,
 
-  //Environment sounds
+  //Environment action sounds
   metalClank,
   ricochet,
   explosion,
   explosionMolotov,
   doorOpen, doorClose, doorBang, doorBreak,
   tombOpen,
+  fountainDrink,
 
   //User interface sounds
   backpack,

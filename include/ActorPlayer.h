@@ -72,8 +72,6 @@ public:
   }
   void resetPermShockTakenCurTurn() {permShockTakenCurTurn_ = 0.0;}
 
-  void addTmpShockFromFeatures();
-
   int getShockResistance(const ShockSrc shockSrc) const;
   double getShockTakenAfterMods(const int BASE_SHOCK,
                                 const ShockSrc shockSrc) const;
@@ -90,7 +88,8 @@ public:
 
   void addLight_(bool lightMap[MAP_W][MAP_H]) const;
 
-  void interruptActions();
+  void onLogMsgPrinted();   //Aborts e.g. searching and quick move
+  void interruptActions();  //Aborts e.g. healing
 
   int getEncPercent() const;
 

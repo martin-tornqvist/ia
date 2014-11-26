@@ -408,7 +408,7 @@ void initDataList()
   d.nameShort = "Confused";
   d.msg[propMsgOnStartPlayer] = "I am confused!";
   d.msg[propMsgOnStartMon] = "looks confused.";
-  d.msg[propMsgOnEndPlayer] = "I am no longer confused";
+  d.msg[propMsgOnEndPlayer] = "I am no longer confused.";
   d.msg[propMsgOnEndMon] = "is no longer confused.";
   d.msg[propMsgOnMorePlayer] = "I am more confused.";
   d.msg[propMsgOnMoreMon] = "looks more confused.";

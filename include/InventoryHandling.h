@@ -3,9 +3,11 @@
 
 #include "Inventory.h"
 
-enum class InvScrId {inv, equip, END};
+enum class InvScrId       {inv, equip, END};
 
-enum class ConsumeItem {yes, no};
+enum class ConsumeItem    {yes, no};
+
+enum class UnequipAllowed {yes, no};
 
 namespace InvHandling
 {

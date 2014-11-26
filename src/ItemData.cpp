@@ -44,11 +44,12 @@ ItemDataT::ItemDataT(const ItemId id_) :
   spellCastFromScroll(SpellId::END),
   landOnHardSndMsg("I hear a thudding sound."),
   landOnHardSfx(),
+  shockWhileInBackpack(0),
+  shockWhileEquiped(0),
   melee(MeleeItemData()),
   ranged(RangedItemData()),
   armor(ArmorItemData())
 {
-
   baseDescr.clear();
   nativeRooms.clear();
   featuresCanBeFoundIn.clear();
@@ -503,7 +504,9 @@ void initDataList()
   d->baseName = ItemName("Mi-go Electric Gun", "Mi-go Electric Gun",
                          "a Mi-go Electric Gun");
   d->baseDescr = {"A weapon crafted by the Mi-go. It fires devastating bolts of "
-                  "electricity."
+                  "electricity.",
+                  "If there is no ammunition to fuel the weapon, it can draw power from "
+                  "the essence of the wielder (press [f] while no ammo loaded)."
                  };
   d->spawnStdRange = Range(-1, -1);
   d->itemWeight = itemWeight_medium;
@@ -519,7 +522,8 @@ void initDataList()
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Mi-go Electric Gun");
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Mi-go Electric Gun");
   d->ranged.sndMsg = "I hear a bolt of electricity.";
-  //d->ranged.attSfx =
+  d->ranged.attSfx = SfxId::migoGunFire;
+  d->ranged.reloadSfx = SfxId::machineGunReload;
   d->ranged.makesRicochetSnd = false;
   data[int(d->id)] = d;
 
@@ -575,6 +579,8 @@ void initDataList()
   d->ranged.missileGlyph = '/';
   d->ranged.missileClr = clrGray;
   d->spawnStdRange.lower = 4;
+  d->ranged.attSfx = SfxId::spikeGun;
+//  d->ranged.reloadSfx = SfxId::shotgunReload;
   d->ranged.sndVol = SndVol::low;
   addFeatureFoundIn(*d, FeatureId::chest, 50);
   addFeatureFoundIn(*d, FeatureId::cabinet, 50);
@@ -1306,6 +1312,22 @@ void initDataList()
   d->armor.dmgToDurabilityFactor = 1.0;
   d->landOnHardSndMsg = "";
   addFeatureFoundIn(*d, FeatureId::cabinet);
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::armorMigo);
+  resetData(*d, ItemType::armor);
+  d->baseName = ItemName("Mi-go Bio-armor", "", "a Mi-go Bio-armor");
+  d->baseDescr = {"A self-repairing biological armor crafted by the Mi-go.",
+                  "It is very disturbing for a human to wear (+10% shock while worn)."
+                 };
+  d->spawnStdRange = Range(-1, -1);
+  d->itemWeight = itemWeight_light;
+  d->shockWhileEquiped = 10;
+  d->clr = clrMagenta;
+  d->tile = TileId::migoArmor;
+  d->armor.absorptionPoints = 3;
+  d->armor.dmgToDurabilityFactor = 1.5;
+  d->landOnHardSndMsg = "";
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::gasMask);
