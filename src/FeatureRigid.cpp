@@ -188,7 +188,6 @@ IsTrapTriggered Rigid::triggerTrap(Actor* const actor)
 
 void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
 {
-
   bool isFeatureHit = true;
 
   if (actor == Map::player && dmgMethod == DmgMethod::kick)
@@ -214,7 +213,7 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
       }
 
     }
-    else
+    else //Not blocking
     {
       isFeatureHit = false;
       Log::addMsg("I kick the air!");
@@ -222,9 +221,16 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
     }
   }
 
-  if (isFeatureHit) {onHit(dmgType, dmgMethod, actor);}
+  if (isFeatureHit)
+  {
+    onHit(dmgType, dmgMethod, actor);
+  }
 
-  if (actor) {GameTime::actorDidAct();} //TODO This should probably be done elsewhere.
+  if (actor)
+  {
+    //TODO This should probably be done elsewhere.
+    GameTime::actorDidAct();
+  }
 }
 
 void Rigid::tryPutGore()
@@ -307,8 +313,9 @@ void Floor::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const
 
 TileId Floor::getTile() const
 {
-  return getBurnState() ==
-         BurnState::hasBurned ? TileId::scorchedGround : getData().tile;
+  return getBurnState() == BurnState::hasBurned ?
+         TileId::scorchedGround :
+         getData().tile;
 }
 
 string Floor::getName(const Article article) const
@@ -679,7 +686,11 @@ Clr ChurchBench::getClr_() const
 
 //--------------------------------------------------------------------- STATUE
 Statue::Statue(Pos pos) :
-  Rigid(pos), type_(Rnd::oneIn(8) ? StatueType::ghoul : StatueType::cmn) {}
+  Rigid(pos),
+  type_(Rnd::oneIn(8) ? StatueType::ghoul : StatueType::cmn)
+{
+
+}
 
 void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                    Actor* const actor)
@@ -1100,8 +1111,9 @@ void Grass::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 TileId Grass::getTile() const
 {
-  return getBurnState() ==
-         BurnState::hasBurned ? TileId::scorchedGround : getData().tile;
+  return getBurnState() == BurnState::hasBurned ?
+         TileId::scorchedGround :
+         getData().tile;
 }
 
 string Grass::getName(const Article article) const
@@ -1375,8 +1387,8 @@ Tomb::Tomb(const Pos & pos) :
 {
   //Contained items
   const int NR_ITEMS_MIN = Rnd::oneIn(3) ? 0 : 1;
-  const int NR_ITEMS_MAX =
-    NR_ITEMS_MIN + (PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 1 : 0);
+  const int NR_ITEMS_MAX = NR_ITEMS_MIN +
+                           (PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 1 : 0);
 
   itemContainer_.init(FeatureId::tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
@@ -1578,6 +1590,7 @@ void Tomb::trySprainPlayer()
 {
   const int SPRAIN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::rugged)] ? 6 :
                               PlayerBon::traitsPicked[int(Trait::tough)]  ? 5 : 4;
+
   if (Rnd::oneIn(SPRAIN_ONE_IN_N))
   {
     Log::addMsg("I sprain myself.", clrMsgBad);
@@ -1849,21 +1862,16 @@ Chest::Chest(const Pos & pos) :
   TRAP_DET_LVL(Rnd::range(0, 2))
 {
   const bool IS_TREASURE_HUNTER = PlayerBon::traitsPicked[int(Trait::treasureHunter)];
-  const int NR_ITEMS_MIN        = Rnd::oneIn(10) ? 0 : 1;
-  const int NR_ITEMS_MAX        = IS_TREASURE_HUNTER ? 3 : 2;
+  const int NR_ITEMS_MIN        = Rnd::oneIn(10)      ? 0 : 1;
+  const int NR_ITEMS_MAX        = IS_TREASURE_HUNTER  ? 3 : 2;
 
   itemContainer_.init(FeatureId::chest, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
   if (!itemContainer_.items_.empty())
   {
-    isLocked_   = Rnd::fraction(3, 10);
+    isLocked_   = Rnd::fraction(4, 10);
     isTrapped_  = Rnd::fraction(6, 10);
   }
-}
-
-void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor * const actor)
-{
-  (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 void Chest::bump(Actor & actorBumping)
@@ -1942,8 +1950,7 @@ bool Chest::open(Actor* const actorOpening)
   {
     //Do not print opening message if the player is opening and there is a known trap
     //(in that case, there is already a message such as "open the chest anyway?").
-    const bool IS_KNOWN_TRAP = isTrapped_ && isTrapStatusKnown_;
-    if (IS_SEEN && (!actorOpening || !IS_KNOWN_TRAP))
+    if (IS_SEEN)
     {
       Log::addMsg("The chest opens.");
     }
@@ -1983,146 +1990,129 @@ bool Chest::open(Actor* const actorOpening)
   return true;
 }
 
-//void Chest::hit_(const DmgType dmgType, const DmgMethod dmgMethod,
-//                 Actor* const actor) {
-//  (void)actor;
-//
-//  switch(dmgType) {
-//    case DmgType::physical: {
-//      switch(dmgMethod) {
-//        case DmgMethod::kick: {
-//          if(itemContainer_.items_.empty() && isOpen_) {
-//            Log::addMsg("The chest is empty.");
-//          } else {
-//
-//            Log::addMsg("I kick the lid.");
-//
-//            bool props[endOfPropIds];
-//            Map::player->getPropHandler().getAllActivePropIds(props);
-//
-//            if(
-//              find(begin(props), end(props), propWeakened) != end(props) ||
-//              matl == ChestMatl::iron) {
-//              trySprainPlayer();
-//              Log::addMsg("It seems futile.");
-//            } else {
-//
-//              const bool IS_CURSED
-//                = find(begin(props), end(props), propCursed)  != end(props);
-//              const bool IS_BLESSED
-//                = find(begin(props), end(props), propBlessed) != end(props);
-//
-//              if(!IS_BLESSED && (IS_CURSED || Rnd::oneIn(3))) {
-//                itemContainer_.destroySingleFragile();
-//              }
-//
-//              const bool IS_TOUGH   = PlayerBon::traitsPicked[int(Trait::tough)];
-//              const bool IS_RUGGED  = PlayerBon::traitsPicked[int(Trait::rugged)];
-//
-//              const int OPEN_ONE_IN_N = IS_RUGGED ? 2 : IS_TOUGH ? 3 : 5;
-//
-//              if(Rnd::oneIn(OPEN_ONE_IN_N)) {
-//                Log::addMsg("I kick the lid open!");
-//                open();
-//              } else {
-//                Log::addMsg("The lock resists.");
-//                trySprainPlayer();
-//              }
-//            }
-//            GameTime::actorDidAct();
-//          }
-//          break;
-//
-//        default: {  break;
-//
-//      } //dmgMethod
-//
-//      break;
-//
-//    default: {  break;
-//
-//  } //dmgType
-//
-//  //TODO Force lock with weapon
-////      Inventory& inv    = Map::player->getInv();
-////      Item* const item  = inv.getItemInSlot(SlotId::wielded);
-////
-////      if(!item) {
-////        Log::addMsg(
-////          "I attempt to punch the lock open, nearly breaking my hand.",
-////          clrMsgBad);
-////        Map::player->hit(1, DmgType::pure, false);
-////      } else {
-////        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
-////
-////        if(Rnd::percentile() < CHANCE_TO_DMG_WPN) {
-////          const string wpnName = ItemData::getItemRef(
-////                                   *item, ItemRefType::plain, true);
-////
-////          Wpn* const wpn = static_cast<Wpn*>(item);
-////
-////          if(wpn->meleeDmgPlus == 0) {
-////            Log::addMsg("My " + wpnName + " breaks!");
-////            delete wpn;
-////            inv.getSlot(SlotId::wielded)->item = nullptr;
-////          } else {
-////            Log::addMsg("My " + wpnName + " is damaged!");
-////            wpn->meleeDmgPlus--;
-////          }
-////          return;
-////        }
-////
-////        if(IS_WEAK) {
-////          Log::addMsg("It seems futile.");
-////        } else {
-////          const int CHANCE_TO_OPEN = 40;
-////          if(Rnd::percentile() < CHANCE_TO_OPEN) {
-////            Log::addMsg("I force the lock open!");
-////            open();
-////          } else {
-////            Log::addMsg("The lock resists.");
-////          }
-////        }
-////      }
-//}
+void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
+{
+  (void)actor;
 
-//void Chest::examine()
-//{
-//  bool props[endOfPropIds];
-//  Map::player->getPropHandler().getAllActivePropIds(props);
+  switch (dmgType)
+  {
+    case DmgType::physical:
+    {
+      switch (dmgMethod)
+      {
+        case DmgMethod::kick:
+        {
+          if (!Map::player->getPropHandler().allowSee())
+          {
+            //If player is blind, call the parent hit function instead (generic kicking)
+            Rigid::hit(dmgType, dmgMethod, Map::player);
+          }
+          else if (!isLocked_)
+          {
+            Log::addMsg("It is not locked.");
+          }
+          else if (isOpen_)
+          {
+            Log::addMsg("It is already open.");
+          }
+          else
+          {
+            Log::addMsg("I kick the lid.");
+
+            bool props[endOfPropIds];
+            Map::player->getPropHandler().getAllActivePropIds(props);
+
+            if (props[propWeakened] || matl_ == ChestMatl::iron)
+            {
+              trySprainPlayer();
+              Log::addMsg("It seems futile.", clrMsgNote, false, true);
+            }
+            else
+            {
+              if (!props[propBlessed] && (props[propCursed] || Rnd::oneIn(3)))
+              {
+                itemContainer_.destroySingleFragile();
+              }
+
+              const int OPEN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::rugged)] ? 2 :
+                                        PlayerBon::traitsPicked[int(Trait::tough)]  ? 3 :
+                                        5;
+
+              if (Rnd::oneIn(OPEN_ONE_IN_N))
+              {
+                Log::addMsg("The lock breaks!", clrWhite, false, true);
+                isLocked_ = false;
+              }
+              else
+              {
+                Log::addMsg("The lock resists.");
+                trySprainPlayer();
+              }
+            }
+            GameTime::actorDidAct();
+          }
+        }
+        break; //Kick
+
+        default: {}
+          break;
+
+      } //dmgMethod
+
+    } //Physical damage
+
+    default: {}
+      break;
+
+  } //dmgType
+
+  //TODO Force lock with weapon
+//      Inventory& inv    = Map::player->getInv();
+//      Item* const item  = inv.getItemInSlot(SlotId::wielded);
 //
-//  if (props[propConfused])
-//  {
-//    Log::addMsg("I start to search the chest...");
-//    Log::addMsg("but I cannot grasp the purpose.");
-//    GameTime::actorDidAct();
-//  }
-//  else if (itemContainer_.items_.empty() && isOpen_)
-//  {
-//    Log::addMsg("The chest is empty.");
-//  }
-//  else
-//  {
-//    if (isLocked_)
-//    {
-//      Log::addMsg("The chest is locked.");
-//    }
+//      if(!item) {
+//        Log::addMsg(
+//          "I attempt to punch the lock open, nearly breaking my hand.",
+//          clrMsgBad);
+//        Map::player->hit(1, DmgType::pure, false);
+//      } else {
+//        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 //
-//    const int FIND_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::perceptive)] ? 3 :
-//                              (PlayerBon::traitsPicked[int(Trait::observant)] ? 4 : 7);
+//        if(Rnd::percentile() < CHANCE_TO_DMG_WPN) {
+//          const string wpnName = ItemData::getItemRef(
+//                                   *item, ItemRefType::plain, true);
 //
-//    if (isTrapped_ && (isTrapStatusKnown_ || (Rnd::oneIn(FIND_ONE_IN_N))))
-//    {
-//      Log::addMsg("There appears to be a hidden trap mechanism!");
-//      isTrapStatusKnown_ = true;
-//    }
-//    else
-//    {
-//      Log::addMsg("I find nothing unusual about it.");
-//    }
-//    GameTime::actorDidAct();
-//  }
-//}
+//          Wpn* const wpn = static_cast<Wpn*>(item);
+//
+//          if(wpn->meleeDmgPlus == 0) {
+//            Log::addMsg("My " + wpnName + " breaks!");
+//            delete wpn;
+//            inv.getSlot(SlotId::wielded)->item = nullptr;
+//          } else {
+//            Log::addMsg("My " + wpnName + " is damaged!");
+//            wpn->meleeDmgPlus--;
+//          }
+//          return;
+//        }
+//
+//        if(IS_WEAK) {
+//          Log::addMsg("It seems futile.");
+//        } else {
+//          const int CHANCE_TO_OPEN = 40;
+//          if(Rnd::percentile() < CHANCE_TO_OPEN) {
+//            Log::addMsg("I force the lock open!");
+//            open();
+//          } else {
+//            Log::addMsg("The lock resists.");
+//          }
+//        }
+//      }
+}
+
+void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
+{
+  (void)dmgType; (void)dmgMethod; (void)actor;
+}
 
 void Chest::disarm()
 {
@@ -2199,7 +2189,7 @@ void Chest::disarm()
   Render::drawMapAndInterface();
 }
 
-IsTrapTriggered Chest::triggerTrap(Actor* const actor)
+IsTrapTriggered Chest::triggerTrap(Actor * const actor)
 {
   //Chest is not trapped? (Either already triggered, or chest were created wihout trap)
   if (!isTrapped_)
@@ -2223,7 +2213,7 @@ IsTrapTriggered Chest::triggerTrap(Actor* const actor)
   Map::player->getPropHandler().getAllActivePropIds(playerProps);
 
   const int TRAP_NO_ACTION_ONE_IN_N = playerProps[propBlessed] ? 2 :
-                                      (playerProps[propCursed] ? 20 : 4);
+                                      playerProps[propCursed]  ? 20 : 4;
 
   if (Rnd::oneIn(TRAP_NO_ACTION_ONE_IN_N))
   {
@@ -2316,7 +2306,7 @@ string Chest::getName(const Article article) const
     a = "the ";
   }
 
-  const string matlStr = isOpen_ ? "" : (matl_ == ChestMatl::wood ? "wooden " : "iron ");
+  const string matlStr = isOpen_ ? "" : matl_ == ChestMatl::wood ? "wooden " : "iron ";
 
   return a + emptyStr + openStr + trapStr + matlStr + "chest";
 }
@@ -2563,8 +2553,8 @@ Cabinet::Cabinet(const Pos & pos) : Rigid(pos), isOpen_(false)
 {
   const int IS_EMPTY_N_IN_10  = 5;
   const int NR_ITEMS_MIN      = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-  const int NR_ITEMS_MAX =
-    PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 2 : 1;
+  const int NR_ITEMS_MAX      = PlayerBon::traitsPicked[int(Trait::treasureHunter)] ?
+                                2 : 1;
 
   itemContainer_.init(FeatureId::cabinet, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 }
@@ -2595,7 +2585,7 @@ void Cabinet::bump(Actor & actorBumping)
   }
 }
 
-bool Cabinet::open(Actor* const actorOpening)
+bool Cabinet::open(Actor * const actorOpening)
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 
@@ -2684,7 +2674,7 @@ void Cocoon::bump(Actor & actorBumping)
   }
 }
 
-IsTrapTriggered Cocoon::triggerTrap(Actor* const actor)
+IsTrapTriggered Cocoon::triggerTrap(Actor * const actor)
 {
   (void)actor;
 
@@ -2725,7 +2715,7 @@ IsTrapTriggered Cocoon::triggerTrap(Actor* const actor)
   }
 }
 
-bool Cocoon::open(Actor* const actorOpening)
+bool Cocoon::open(Actor * const actorOpening)
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 

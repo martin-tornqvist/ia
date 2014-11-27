@@ -574,6 +574,10 @@ public:
   bool        open(Actor* const actorOpening)       override;
   void        disarm()                              override;
 
+  void hit(const DmgType dmgType, const DmgMethod dmgMethod,
+           Actor* const actor) override;
+
+
 private:
   Clr getClr_() const override;
 
