@@ -18,6 +18,7 @@
 #include "TextFormatting.h"
 #include "MenuBrowser.h"
 #include "FeatureRigid.h"
+#include "Utils.h"
 
 using namespace std;
 

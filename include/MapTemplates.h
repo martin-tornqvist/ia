@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
 
 #include "FeatureData.h"
 #include "ItemData.h"

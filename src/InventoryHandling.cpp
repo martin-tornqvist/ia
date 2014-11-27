@@ -1,6 +1,7 @@
 #include "InventoryHandling.h"
 
 #include <vector>
+#include <iostream>
 
 #include "Init.h"
 #include "ItemScroll.h"

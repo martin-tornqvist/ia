@@ -677,27 +677,29 @@ SpellEffectNoticed SpellOpening::cast_(Actor* const caster) const
 
   (void)caster;
 
-  vector<Pos> featuresOpenedCells;
+  bool isAnyOpened = false;
 
   for (int y = 1; y < MAP_H - 1; ++y)
   {
     for (int x = 1; x < MAP_W - 1; ++x)
     {
-      if (Map::cells[x][y].isSeenByPlayer && Map::cells[x][y].rigid->open())
+      const auto& cell = Map::cells[x][y];
+
+      if (cell.isSeenByPlayer)
       {
-        featuresOpenedCells.push_back(Pos(x, y));
+        bool isOpening = cell.rigid->open(nullptr);
+
+        if (isOpening) {isAnyOpened = true;}
       }
     }
   }
 
-  if (featuresOpenedCells.empty())
+  if (!isAnyOpened)
   {
     return SpellEffectNoticed::no;
   }
 
-  Render::drawMapAndInterface();
   Map::player->updateFov();
-  Render::drawBlastAtCells(featuresOpenedCells, clrWhite);
   Render::drawMapAndInterface();
   return SpellEffectNoticed::yes;
 }

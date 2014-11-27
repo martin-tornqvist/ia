@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <iostream>
 
 #include "Init.h"
 #include "Input.h"
@@ -22,7 +23,7 @@ namespace
 
 vector<Msg>           lines_[2];
 vector< vector<Msg> > history_;
-const string          moreStr = "--More--";
+const string          moreStr = "-More-";
 
 int getXAfterMsg(const Msg* const msg)
 {

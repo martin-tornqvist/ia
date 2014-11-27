@@ -1,16 +1,12 @@
 #ifndef DUNGEON_MASTER_H
 #define DUNGEON_MASTER_H
 
-#include <iostream>
-#include <math.h>
+#include <vector>
+#include <string>
 
-#include "CmnTypes.h"
-#include "AbilityValues.h"
-#include "Colors.h"
-#include "Converters.h"
-#include "CreateCharacter.h"
-#include "Utils.h"
-#include "ActorMon.h"
+struct TimeData;
+struct ActorDataT;
+class Actor;
 
 namespace  DungeonMaster
 {

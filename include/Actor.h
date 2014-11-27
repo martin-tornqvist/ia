@@ -22,9 +22,9 @@ public:
   Actor();
   virtual ~Actor();
 
-  inline PropHandler& getPropHandler()  {return *propHandler_;}
-  inline ActorDataT&  getData()         {return *data_;}
-  inline Inventory&   getInv()          {return *inv_;}
+  PropHandler& getPropHandler()  {return *propHandler_;}
+  ActorDataT&  getData()         {return *data_;}
+  Inventory&   getInv()          {return *inv_;}
 
   //This function is not concerned with whether the parameter actor is within
   //FOV, or if the actor is actually hidden or not. It merely tests the sneak
@@ -62,20 +62,20 @@ public:
 
   void getSeenFoes(std::vector<Actor*>& vectorRef);
 
-  inline ActorId getId()                  const {return data_->id;}
-  inline int getHp()                      const {return hp_;}
-  inline int getSpi()                     const {return spi_;}
+  ActorId getId()                  const {return data_->id;}
+  int getHp()                      const {return hp_;}
+  int getSpi()                     const {return spi_;}
   int getHpMax(const bool WITH_MODIFIERS) const;
-  inline int getSpiMax()                  const {return spiMax_;}
+  int getSpiMax()                  const {return spiMax_;}
 
-  inline std::string getNameThe()         const {return data_->nameThe;}
-  inline std::string getNameA()           const {return data_->nameA;}
-  inline std::string getCorpseNameA()     const {return data_->corpseNameA;}
-  inline std::string getCorpseNameThe()   const {return data_->corpseNameThe;}
-  inline bool isHumanoid()                const {return data_->isHumanoid;}
-  inline char getGlyph()                  const {return glyph_;}
+  std::string getNameThe()         const {return data_->nameThe;}
+  std::string getNameA()           const {return data_->nameA;}
+  std::string getCorpseNameA()     const {return data_->corpseNameA;}
+  std::string getCorpseNameThe()   const {return data_->corpseNameThe;}
+  bool isHumanoid()                const {return data_->isHumanoid;}
+  char getGlyph()                  const {return glyph_;}
   virtual const Clr& getClr()                   {return clr_;}
-  inline const TileId& getTile()          const {return tile_;}
+  const TileId& getTile()          const {return tile_;}
 
   void addLight(bool lightMap[MAP_W][MAP_H]) const;
 
@@ -83,9 +83,9 @@ public:
 
   void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
 
-  inline bool       isAlive ()  const {return state_ == ActorState::alive;}
-  inline bool       isCorpse()  const {return state_ == ActorState::corpse;}
-  inline ActorState getState()  const {return state_;}
+  bool       isAlive ()  const {return state_ == ActorState::alive;}
+  bool       isCorpse()  const {return state_ == ActorState::corpse;}
+  ActorState getState()  const {return state_;}
 
   virtual bool isLeaderOf(const Actor* const actor)       const = 0;
   virtual bool isActorMyLeader(const Actor* const actor)  const = 0;

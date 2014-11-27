@@ -18,7 +18,6 @@
    o      Alternative Enter key (intended for use with Vi-keys)
    @      Display character information
    TAB    Melee attack adjacent monster
-   a      Examine something on the map
    c      Close door
    d      Disarm trap
    D      Jam door with an iron spike

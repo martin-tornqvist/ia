@@ -1,6 +1,7 @@
 #include "RenderInventory.h"
 
 #include <string>
+#include <iostream>
 
 #include "Init.h"
 #include "ActorPlayer.h"

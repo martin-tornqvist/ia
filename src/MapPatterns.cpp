@@ -1,6 +1,7 @@
 #include "MapPatterns.h"
 
 #include <vector>
+#include <iostream>
 
 #include "Init.h"
 #include "Map.h"

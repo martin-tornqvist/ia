@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <iostream>
 
 #include "Colors.h"
 #include "Converters.h"
@@ -18,14 +17,14 @@ public:
 
   Msg() : Msg("", clrWhite, 0) {}
 
-  inline void getStrWithRepeats(std::string& strRef) const
+  void getStrWithRepeats(std::string& strRef) const
   {
     strRef = str_ + (nr_ > 1 ? repeatsStr_ : "");
   }
 
-  inline void getStrRaw(std::string& strRef) const {strRef = str_;}
+  void getStrRaw(std::string& strRef) const {strRef = str_;}
 
-  inline void incrRepeat()
+  void incrRepeat()
   {
     nr_++;
     repeatsStr_ = "(x" + toStr(nr_) + ")";

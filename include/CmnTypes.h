@@ -137,7 +137,7 @@ struct Pos
   bool operator<=(const Pos&  p)  const {return x <= p.x  && y <= p.y;}
   bool operator<=(const int   V)  const {return x <= V    && y <= V;}
 
-  inline Pos getSigns() const
+  Pos getSigns() const
   {
     return Pos(x == 0 ? 0 : x > 0 ? 1 : -1,
                y == 0 ? 0 : y > 0 ? 1 : -1);
@@ -203,7 +203,7 @@ struct DiceParam
     return *this;
   }
 
-  inline int getHighest() const {return (rolls * sides) + plus;}
+  int getHighest() const {return (rolls * sides) + plus;}
 
   int rolls, sides, plus;
 };

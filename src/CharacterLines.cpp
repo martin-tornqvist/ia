@@ -14,6 +14,7 @@
 #include "FeatureMob.h"
 #include "TextFormatting.h"
 #include "Item.h"
+#include "Utils.h"
 
 using namespace std;
 

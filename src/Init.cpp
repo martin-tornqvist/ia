@@ -1,5 +1,7 @@
 #include "Init.h"
 
+#include <iostream>
+
 #include "PlayerBon.h"
 #include "SdlWrapper.h"
 #include "Config.h"

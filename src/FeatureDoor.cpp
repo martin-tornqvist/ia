@@ -832,8 +832,10 @@ void Door::tryOpen(Actor* actorTrying)
   }
 }
 
-bool Door::open()
+bool Door::open(Actor* const actorOpening)
 {
+  (void)actorOpening;
+
   isOpen_   = true;
   isSecret_ = false;
   isStuck_  = false;

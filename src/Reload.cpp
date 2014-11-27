@@ -14,6 +14,7 @@
 #include "GameTime.h"
 #include "Audio.h"
 #include "Render.h"
+#include "Utils.h"
 
 using namespace std;
 

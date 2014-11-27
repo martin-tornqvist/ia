@@ -10,8 +10,8 @@ public:
   God(const std::string& name, const std::string& descr) :
     name_(name), descr_(descr) {}
 
-  inline std::string getName()   const {return name_;}
-  inline std::string getDescr()  const {return descr_;}
+  std::string getName()   const {return name_;}
+  std::string getDescr()  const {return descr_;}
 
 private:
   std::string name_;

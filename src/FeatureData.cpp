@@ -1,5 +1,7 @@
 #include "FeatureData.h"
 
+#include <iostream>
+
 #include "Init.h"
 #include "Colors.h"
 #include "Actor.h"
@@ -303,7 +305,7 @@ void initDataList()
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(3, PlacementRule::either,
+  d.themeSpawnRules.set(5, PlacementRule::either,
   {
     RoomType::plain, RoomType::human, RoomType::forest
   });
@@ -312,7 +314,7 @@ void initDataList()
   d.id = FeatureId::cocoon;
   d.mkObj = [](const Pos & p) {return new Cocoon(p);};
   d.glyph = '8';
-  d.tile = TileId::cocoon;
+  d.tile = TileId::cocoonClosed;
   d.isProjectilePassable = true;
   d.isLosPassable = false;
   d.canHaveBlood = false;
@@ -334,13 +336,13 @@ void initDataList()
   d.canHaveCorpse = false;
   d.canHaveRigid = false;
   d.canHaveItem = false;
-  d.themeSpawnRules.set(1, PlacementRule::adjToWalls, {RoomType::human});
+  d.themeSpawnRules.set(2, PlacementRule::adjToWalls, {RoomType::human});
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::cabinet;
   d.mkObj = [](const Pos & p) {return new Cabinet(p);};
   d.glyph = '7';
-  d.tile = TileId::cabinetClosd;
+  d.tile = TileId::cabinetClosed;
   d.isProjectilePassable = false;
   d.isLosPassable = false;
   d.canHaveBlood = false;
@@ -405,7 +407,7 @@ void initDataList()
   d.id = FeatureId::tomb;
   d.mkObj = [](const Pos & p) {return new Tomb(p);};
   d.glyph = '&';
-  d.tile = TileId::tomb;
+  d.tile = TileId::tombClosed;
   d.moveRules.setPropCanMove(propEthereal);
   d.moveRules.setPropCanMove(propFlying);
   d.canHaveBlood = false;

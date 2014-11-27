@@ -145,7 +145,6 @@
 		<Unit filename="../include/Credits.h" />
 		<Unit filename="../include/Disarm.h" />
 		<Unit filename="../include/DungeonMaster.h" />
-		<Unit filename="../include/Examine.h" />
 		<Unit filename="../include/Explosion.h" />
 		<Unit filename="../include/Feature.h" />
 		<Unit filename="../include/FeatureData.h" />
@@ -228,7 +227,6 @@
 		<Unit filename="../src/Credits.cpp" />
 		<Unit filename="../src/Disarm.cpp" />
 		<Unit filename="../src/DungeonMaster.cpp" />
-		<Unit filename="../src/Examine.cpp" />
 		<Unit filename="../src/Explosion.cpp" />
 		<Unit filename="../src/Feature.cpp" />
 		<Unit filename="../src/FeatureData.cpp" />

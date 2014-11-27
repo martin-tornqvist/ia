@@ -153,6 +153,8 @@ void Trap::bump(Actor& actorBumping)
         {
           if (ACTOR_CAN_SEE)
           {
+            Map::player->updateFov();
+            Render::drawMapAndInterface();
             Log::addMsg("I avoid a " + trapName + ".", clrMsgGood, false, true);
           }
         }
@@ -161,7 +163,7 @@ void Trap::bump(Actor& actorBumping)
       {
         Map::player->updateFov();
         Render::drawMapAndInterface();
-        triggerTrap(actorBumping);
+        triggerTrap(&actorBumping);
       }
     }
     else //Is a monster
@@ -190,7 +192,7 @@ void Trap::bump(Actor& actorBumping)
           }
           else
           {
-            triggerTrap(actorBumping);
+            triggerTrap(&actorBumping);
           }
         }
       }
@@ -261,7 +263,7 @@ void Trap::disarm()
       {
         Map::player->pos = pos_;
       }
-      triggerTrap(*Map::player);
+      triggerTrap(Map::player);
     }
   }
   GameTime::actorDidAct();
@@ -269,42 +271,45 @@ void Trap::disarm()
   if (IS_DISARMED) {Map::put(new Floor(pos_));}
 }
 
-void Trap::triggerTrap(Actor& actor)
+IsTrapTriggered Trap::triggerTrap(Actor* const actor)
 {
   TRACE_FUNC_BEGIN;
 
+  assert(actor);
+
   TRACE << "Specific trap is " << specificTrap_->getTitle() << endl;
 
-  const ActorDataT& d = actor.getData();
+  const ActorDataT& d = actor->getData();
 
   TRACE << "Actor triggering is " << d.nameA << endl;
 
-  const int DODGE_SKILL = d.abilityVals.getVal(AbilityId::dodgeTrap, true, actor);
+  const int DODGE_SKILL = d.abilityVals.getVal(AbilityId::dodgeTrap, true, *actor);
 
   TRACE << "Actor dodge skill is " << DODGE_SKILL << endl;
 
-  if (&actor == Map::player)
+  if (actor->isPlayer())
   {
     TRACE_VERBOSE << "Player triggering trap" << endl;
     const AbilityRollResult DODGE_RESULT = AbilityRoll::roll(DODGE_SKILL);
     reveal(false);
     TRACE_VERBOSE << "Calling trigger" << endl;
-    specificTrap_->trigger(actor, DODGE_RESULT);
+    specificTrap_->trigger(*actor, DODGE_RESULT);
   }
   else
   {
     TRACE_VERBOSE << "Monster triggering trap" << endl;
-    const bool IS_ACTOR_SEEN_BY_PLAYER  = Map::player->isSeeingActor(actor, nullptr);
+    const bool IS_ACTOR_SEEN_BY_PLAYER  = Map::player->isSeeingActor(*actor, nullptr);
     const AbilityRollResult dodgeResult = AbilityRoll::roll(DODGE_SKILL);
     if (IS_ACTOR_SEEN_BY_PLAYER)
     {
       reveal(false);
     }
     TRACE_VERBOSE << "Calling trigger" << endl;
-    specificTrap_->trigger(actor, dodgeResult);
+    specificTrap_->trigger(*actor, dodgeResult);
   }
 
   TRACE_FUNC_END;
+  return IsTrapTriggered::yes;
 }
 
 void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)

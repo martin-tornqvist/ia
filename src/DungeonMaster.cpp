@@ -11,6 +11,9 @@
 #include "Log.h"
 #include "SdlWrapper.h"
 #include "Map.h"
+#include "Utils.h"
+#include "CreateCharacter.h"
+#include "ActorMon.h"
 
 using namespace std;
 

@@ -34,7 +34,7 @@ public:
     isVictory_    = IS_VICTORY;
   }
 
-  inline int getScore() const
+  int getScore() const
   {
     const double DLVL_DB  = double(dlvl_);
     const double XP_DB    = double(xp_);
@@ -46,13 +46,13 @@ public:
     return int(SCORE_DB);
   }
 
-  inline std::string  getDateAndTime()  const {return dateAndTime_;}
-  inline std::string  getName()         const {return name_;}
-  inline int          getXp()           const {return xp_;}
-  inline int          getLvl()          const {return lvl_;}
-  inline int          getDlvl()         const {return dlvl_;}
-  inline int          getInsanity()     const {return ins_;}
-  inline bool         isVictoryGame()   const {return isVictory_;}
+  std::string  getDateAndTime()  const {return dateAndTime_;}
+  std::string  getName()         const {return name_;}
+  int          getXp()           const {return xp_;}
+  int          getLvl()          const {return lvl_;}
+  int          getDlvl()         const {return dlvl_;}
+  int          getInsanity()     const {return ins_;}
+  bool         isVictoryGame()   const {return isVictory_;}
 
 private:
   std::string dateAndTime_;

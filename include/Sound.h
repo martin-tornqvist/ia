@@ -31,24 +31,24 @@ public:
   Snd() {}
   ~Snd() {}
 
-  inline const std::string& getMsg() const {return msg_;}
-  inline SfxId getSfx() const {return sfx_;}
-  inline void clearMsg() {msg_ = "";}
+  const std::string& getMsg() const {return msg_;}
+  SfxId getSfx() const {return sfx_;}
+  void clearMsg() {msg_ = "";}
 
-  inline bool isMsgIgnoredIfOriginSeen() const
+  bool isMsgIgnoredIfOriginSeen() const
   {
     return isMsgIgnoredIfOriginSeen_ == IgnoreMsgIfOriginSeen::yes;
   }
-  inline bool isAlertingMon() const
+  bool isAlertingMon() const
   {
     return isAlertingMon_ == AlertsMon::yes;
   }
 
-  inline Pos getOrigin()                const {return origin_;}
-  inline Actor* getActorWhoMadeSound()  const {return actorWhoMadeSound_;}
-  inline int isLoud()                   const {return vol_ == SndVol::high;}
+  Pos getOrigin()                const {return origin_;}
+  Actor* getActorWhoMadeSound()  const {return actorWhoMadeSound_;}
+  int isLoud()                   const {return vol_ == SndVol::high;}
 
-  inline void addString(const std::string& str)
+  void addString(const std::string& str)
   {
     msg_ += str;
   }

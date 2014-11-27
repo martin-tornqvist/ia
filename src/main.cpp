@@ -22,6 +22,7 @@
 #include "Highscore.h"
 #include "Postmortem.h"
 #include "Map.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -102,7 +103,6 @@ int main(int argc, char* argv[])
       {
         if (Map::player->isAlive())
         {
-
           Actor* const actor = GameTime::getCurActor();
 
           //Properties running on the actor's turn are not immediately applied
@@ -124,16 +124,16 @@ int main(int argc, char* argv[])
           }
           else
           {
-            if (actor == Map::player)
+            if (actor->isPlayer())
             {
               SdlWrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
             }
             GameTime::actorDidAct();
           }
         }
-        else
+        else //Player is dead
         {
-          //Player is dead, run postmortem, then return to main menu
+          //Run postmortem, then return to main menu
           static_cast<Player*>(Map::player)->waitTurnsLeft = -1;
           Log::addMsg("I am dead...", clrMsgBad);
           Audio::play(SfxId::death);

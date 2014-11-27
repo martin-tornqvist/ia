@@ -1,8 +1,6 @@
 #ifndef ITEM_DROP_H
 #define ITEM_DROP_H
 
-#include <iostream>
-
 #include "CmnTypes.h"
 
 class Item;

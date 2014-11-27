@@ -15,6 +15,7 @@
 #include "DungeonMaster.h"
 #include "PlayerBon.h"
 #include "Map.h"
+#include "Utils.h"
 
 using namespace std;
 

@@ -1,11 +1,6 @@
 #ifndef FEATURE_DATA_H
 #define FEATURE_DATA_H
 
-#include <vector>
-#include <string>
-#include <iostream>
-#include <functional>
-
 #include "Art.h"
 #include "CmnData.h"
 #include "Room.h"

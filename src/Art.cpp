@@ -213,11 +213,13 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::bush:                        return Pos(2, 7);
     case TileId::churchBench:                 return Pos(4, 7);
     case TileId::graveStone:                  return Pos(5, 7);
-    case TileId::tomb:                        return Pos(14, 5);
+    case TileId::tombOpen:                    return Pos(13, 5);
+    case TileId::tombClosed:                  return Pos(14, 5);
     case TileId::water1:                      return Pos(7, 7);
     case TileId::water2:                      return Pos(8, 7);
     case TileId::trapGeneral:                 return Pos(17, 5);
-    case TileId::cocoon:                      return Pos(10, 7);
+    case TileId::cocoonOpen:                  return Pos(4, 6);
+    case TileId::cocoonClosed:                return Pos(10, 7);
     case TileId::blast1:                      return Pos(11, 7);
     case TileId::blast2:                      return Pos(12, 7);
     case TileId::corpse:                      return Pos(13, 7);
@@ -243,7 +245,7 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::leverLeft:                   return Pos(14, 8);
     case TileId::device1:                     return Pos(15, 8);
     case TileId::device2:                     return Pos(16, 8);
-    case TileId::cabinetClosd:                return Pos(3, 9);
+    case TileId::cabinetClosed:               return Pos(3, 9);
     case TileId::cabinetOpen:                 return Pos(4, 9);
     case TileId::pillarBroken:                return Pos(5, 9);
     case TileId::pillar:                      return Pos(6, 9);

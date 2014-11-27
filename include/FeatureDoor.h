@@ -54,7 +54,7 @@ public:
 
   void setToSecret() {isOpen_ = isSecret_ = false;}
 
-  virtual bool open() override;
+  virtual bool open(Actor* const actorOpening) override;
 
   static bool isTileAnyDoor(const TileId tile)
   {

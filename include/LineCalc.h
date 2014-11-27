@@ -2,7 +2,6 @@
 #define LINE_CALC_H
 
 #include <vector>
-#include <iostream>
 
 #include "CmnData.h"
 #include "CmnTypes.h"

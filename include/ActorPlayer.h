@@ -61,12 +61,12 @@ public:
   void incrShock(const int SHOCK, ShockSrc shockSrc);
   void restoreShock(const int amountRestored,
                     const bool IS_TEMP_SHOCK_RESTORED);
-  inline int getShockTotal()  const {return int(floor(shock_ + shockTmp_));}
-  inline int getInsanity()    const {return std::min(100, ins_);}
+  int getShockTotal()  const {return int(floor(shock_ + shockTmp_));}
+  int getInsanity()    const {return std::min(100, ins_);}
 
   //The following is used for determining if '!'-marks should be drawn on the
   //player map symbol
-  inline double getPermShockTakenCurTurn() const
+  double getPermShockTakenCurTurn() const
   {
     return permShockTakenCurTurn_;
   }

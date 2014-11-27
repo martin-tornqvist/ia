@@ -17,6 +17,7 @@
 #include "Explosion.h"
 #include "ActorFactory.h"
 #include "ActorMon.h"
+#include "Query.h"
 
 using namespace std;
 
@@ -162,15 +163,27 @@ void Rigid::tryStartBurning(const bool IS_MSG_ALLOWED)
   }
 }
 
-void Rigid::examine()
+IsDestroyed Rigid::onFinishedBurning()
 {
-  Log::addMsg("I find nothing specific there to examine.");
+  return IsDestroyed::no;
 }
 
 void Rigid::disarm()
 {
   Log::addMsg(msgDisarmNoTrap);
   Render::drawMapAndInterface();
+}
+
+bool Rigid::open(Actor* const actorOpening)
+{
+  (void)actorOpening;
+  return false;
+}
+
+IsTrapTriggered Rigid::triggerTrap(Actor* const actor)
+{
+  (void)actor;
+  return IsTrapTriggered::no;
 }
 
 void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
@@ -331,6 +344,7 @@ Wall::Wall(Pos pos) : Rigid(pos), type_(WallType::cmn), isMossy_(false) {}
 
 void Wall::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
 {
+  (void)actor;
 
   auto destrAdjDoors = [&]()
   {
@@ -356,18 +370,14 @@ void Wall::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 
   if (dmgType == DmgType::physical)
   {
-
     if (dmgMethod == DmgMethod::forced)
     {
-      (void)actor;
       destrAdjDoors();
       mkLowRubbleAndRocks();
     }
 
     if (dmgMethod == DmgMethod::explosion)
     {
-      (void)actor;
-
       destrAdjDoors();
 
       if (Rnd::coinToss())
@@ -382,11 +392,8 @@ void Wall::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 
     if (dmgMethod == DmgMethod::bluntHeavy)
     {
-      (void)actor;
-
       if (Rnd::fraction(1, 4))
       {
-
         destrAdjDoors();
 
         if (Rnd::coinToss())
@@ -558,6 +565,8 @@ RubbleHigh::RubbleHigh(Pos pos) : Rigid(pos) {}
 void RubbleHigh::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                        Actor* const actor)
 {
+  (void)actor;
+
   auto mkLowRubbleAndRocks = [&]()
   {
     const Pos p(pos_);
@@ -570,19 +579,16 @@ void RubbleHigh::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
     if (dmgMethod == DmgMethod::forced)
     {
-      (void)actor;
       mkLowRubbleAndRocks();
     }
 
     if (dmgMethod == DmgMethod::explosion)
     {
-      (void)actor;
       mkLowRubbleAndRocks();
     }
 
     if (dmgMethod == DmgMethod::bluntHeavy)
     {
-      (void)actor;
       if (Rnd::fraction(2, 4)) {mkLowRubbleAndRocks();}
     }
   }
@@ -605,9 +611,10 @@ RubbleLow::RubbleLow(Pos pos) : Rigid(pos) {}
 void RubbleLow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
                       Actor* const actor)
 {
+  (void)actor;
+
   if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
-    (void)actor;
     tryStartBurning(false);
   }
 }
@@ -793,6 +800,9 @@ void Stairs::bump(Actor& actorBumping)
     {
       case 0:
         Map::player->pos = pos_;
+        Log::clearLog();
+        Log::addMsg("I descend the stairs.");
+        Render::drawMapAndInterface();
         MapTravel::goToNxt();
         break;
 
@@ -1000,18 +1010,13 @@ TileId Lever::getTile() const
   return isPositionLeft_ ? TileId::leverLeft : TileId::leverRight;
 }
 
-void Lever::examine()
-{
-  pull();
-}
-
 void Lever::pull()
 {
   TRACE_FUNC_BEGIN;
   isPositionLeft_ = !isPositionLeft_;
 
-  //TODO Implement something like openByLever in the Door class
-  //Others should not poke around in the doors internal variables
+  //TODO Implement something like openByLever in the Door class instead of setting
+  //"isOpen_" etc directly.
 
 //  if(!doorLinkedTo_->isBroken_) {
 //    TRACE << "Door linked to is not broken" << endl;
@@ -1254,24 +1259,20 @@ Clr Brazier::getClr_() const
 }
 
 //--------------------------------------------------------------------- ITEM CONTAINER
-ItemContainer::ItemContainer() {items_.clear();}
+ItemContainer::ItemContainer()
+{
+
+}
 
 ItemContainer::~ItemContainer()
 {
-  for (unsigned int i = 0; i < items_.size(); ++i)
-  {
-    delete items_[i];
-  }
+  for (auto* item : items_) {delete item;}
 }
 
-void ItemContainer::setRandomItemsForFeature(
-  const FeatureId featureId,
-  const int NR_ITEMS_TO_ATTEMPT)
+void ItemContainer::init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMPT)
 {
-  for (unsigned int i = 0; i < items_.size(); ++i)
-  {
-    delete items_[i];
-  }
+  for (auto* item : items_) {delete item;}
+
   items_.clear();
 
   if (NR_ITEMS_TO_ATTEMPT > 0)
@@ -1279,36 +1280,30 @@ void ItemContainer::setRandomItemsForFeature(
     while (items_.empty())
     {
       vector<ItemId> itemBucket;
+
       for (int i = 0; i < int(ItemId::END); ++i)
       {
         ItemDataT* const curData = ItemData::data[i];
-        for (
-          unsigned int ii = 0;
-          ii < curData->featuresCanBeFoundIn.size();
-          ii++)
+        for (auto featuresFoundIn : curData->featuresCanBeFoundIn)
         {
-          auto featuresFoundIn = curData->featuresCanBeFoundIn[ii];
-          if (featuresFoundIn.first == featureId)
+          if (featuresFoundIn.first == featureId          &&
+              Rnd::percentile() < featuresFoundIn.second  &&
+              Rnd::percentile() < curData->chanceToIncludeInSpawnList)
           {
-            if (Rnd::percentile() < featuresFoundIn.second)
-            {
-              if (Rnd::percentile() < curData->chanceToIncludeInSpawnList)
-              {
-                itemBucket.push_back(ItemId(i));
-                break;
-              }
-            }
+            itemBucket.push_back(ItemId(i));
+            break;
           }
         }
       }
 
-      const int NR_CANDIDATES = int(itemBucket.size());
-      if (NR_CANDIDATES > 0)
+      const size_t BUCKET_SIZE = itemBucket.size();
+
+      if (BUCKET_SIZE > 0)
       {
         for (int i = 0; i < NR_ITEMS_TO_ATTEMPT; ++i)
         {
-          const auto ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
-          Item* item = ItemFactory::mk(itemBucket[ELEMENT]);
+          const int IDX = Rnd::range(0, int(BUCKET_SIZE) - 1);
+          Item* item    = ItemFactory::mk(itemBucket[IDX]);
           ItemFactory::setItemRandomizedProperties(item);
           items_.push_back(item);
         }
@@ -1317,9 +1312,40 @@ void ItemContainer::setRandomItemsForFeature(
   }
 }
 
-void ItemContainer::dropItems(const Pos & pos)
+void ItemContainer::open(const Pos& featurePos, Actor* const actorOpening)
 {
-  for (auto* item : items_) {ItemDrop::dropItemOnMap(pos, *item);}
+  if (actorOpening)
+  {
+    for (auto* item : items_)
+    {
+      Log::clearLog();
+
+      const string name = item->getName(ItemRefType::plural, ItemRefInf::yes);
+
+      Log::addMsg("Pick up " + name + "? (y/n)");
+      Render::drawMapAndInterface();
+
+      if (Query::yesOrNo() == YesNoAnswer::yes)
+      {
+        Map::player->getInv().putInGeneral(item);
+      }
+      else
+      {
+        ItemDrop::dropItemOnMap(featurePos, *item);
+      }
+    }
+    Log::clearLog();
+    Log::addMsg("There are no more items.");
+    Render::drawMapAndInterface();
+  }
+  else //Not opened by an actor (probably opened by a spell of opening)
+  {
+    for (auto* item : items_)
+    {
+      ItemDrop::dropItemOnMap(featurePos, *item);
+    }
+  }
+
   items_.clear();
 }
 
@@ -1343,18 +1369,16 @@ void ItemContainer::destroySingleFragile()
 
 //--------------------------------------------------------------------- TOMB
 Tomb::Tomb(const Pos & pos) :
-  Rigid(pos), isContentKnown_(false), isTraitKnown_(false),
+  Rigid(pos), isOpen_(false), isTraitKnown_(false),
   pushLidOneInN_(Rnd::range(6, 14)), appearance_(TombAppearance::common),
   trait_(TombTrait::END)
 {
-
   //Contained items
   const int NR_ITEMS_MIN = Rnd::oneIn(3) ? 0 : 1;
   const int NR_ITEMS_MAX =
     NR_ITEMS_MIN + (PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 1 : 0);
 
-  itemContainer_.setRandomItemsForFeature(
-    FeatureId::tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+  itemContainer_.init(FeatureId::tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
   //Appearance
   if (Rnd::oneIn(5))
@@ -1405,23 +1429,47 @@ void Tomb::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 string Tomb::getName(const Article article) const
 {
-  string ret = article == Article::a ? "a " : "the ";
+  const bool    IS_EMPTY  = isOpen_ && itemContainer_.items_.empty();
+  const string  emptyStr  = IS_EMPTY                ? "empty " : "";
+  const string  openStr   = (isOpen_ && !IS_EMPTY)  ? "open "  : "";
 
-  switch (appearance_)
+  string a = "";
+
+  if (article == Article::a)
   {
-    case TombAppearance::common:
-    case TombAppearance::END: {}
-      break;
-
-    case TombAppearance::ornate:
-      ret += "ornate ";
-      break;
-
-    case TombAppearance::marvelous:
-      ret += "marvelous ";
-      break;
+    a = (isOpen_ || appearance_ == TombAppearance::ornate) ?  "an " : "a ";
   }
-  return ret + "tomb";
+  else
+  {
+    a = "the ";
+  }
+
+  string appearStr = "";
+
+  if (!IS_EMPTY)
+  {
+    switch (appearance_)
+    {
+      case TombAppearance::common:
+      case TombAppearance::END: {}
+        break;
+
+      case TombAppearance::ornate:
+        appearStr = "ornate ";
+        break;
+
+      case TombAppearance::marvelous:
+        appearStr = "marvelous ";
+        break;
+    }
+  }
+
+  return a + emptyStr + openStr + appearStr + "tomb";
+}
+
+TileId Tomb::getTile() const
+{
+  return isOpen_ ? TileId::tombOpen : TileId::tombClosed;
 }
 
 Clr Tomb::getClr_() const
@@ -1448,64 +1496,79 @@ void Tomb::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
-    if (itemContainer_.items_.empty() && isContentKnown_)
+    if (itemContainer_.items_.empty() && isOpen_)
     {
       Log::addMsg("The tomb is empty.");
     }
+    else if (!Map::player->getPropHandler().allowSee())
+    {
+      Log::addMsg("There is a stone box here.");
+      Render::drawMapAndInterface();
+    }
     else
     {
-      Log::addMsg("I attempt to push the lid.");
-
-      bool props[endOfPropIds];
-      Map::player->getPropHandler().getAllActivePropIds(props);
-
-      if (props[propWeakened])
+      if (isOpen_)
       {
-        trySprainPlayer();
-        Log::addMsg("It seems futile.", clrMsgNote, false, true);
+        //If previously opened, re-run open. Now the player is guaranteed to get a chance
+        //to pick up the items (no traps).
+        open(Map::player);
       }
-      else //Not weakened
+      else //Not open
       {
-        const int BON = PlayerBon::traitsPicked[int(Trait::rugged)] ? 8 :
-                        PlayerBon::traitsPicked[int(Trait::tough)]  ? 4 : 0;
+        Log::addMsg("I attempt to push the lid.");
 
-        TRACE << "Base chance to push lid is: 1 in " << pushLidOneInN_ << endl;
+        bool props[endOfPropIds];
+        Map::player->getPropHandler().getAllActivePropIds(props);
 
-        TRACE << "Bonus to roll: " << BON << endl;
-
-        const int ROLL_TOT = Rnd::range(1, pushLidOneInN_) + BON;
-
-        TRACE << "Roll + bonus = " << ROLL_TOT << endl;
-
-        bool isSuccess = false;
-
-        if (ROLL_TOT < pushLidOneInN_ - 9)
-        {
-          Log::addMsg("It does not yield at all.");
-        }
-        else if (ROLL_TOT < pushLidOneInN_ - 1)
-        {
-          Log::addMsg("It resists.");
-        }
-        else if (ROLL_TOT == pushLidOneInN_ - 1)
-        {
-          Log::addMsg("It moves a little!");
-          pushLidOneInN_--;
-        }
-        else
-        {
-          isSuccess = true;
-        }
-
-        if (isSuccess)
-        {
-          open();
-        }
-        else
+        if (props[propWeakened])
         {
           trySprainPlayer();
+          Log::addMsg("It seems futile.", clrMsgNote, false, true);
+        }
+        else //Not weakened
+        {
+          const int BON = PlayerBon::traitsPicked[int(Trait::rugged)] ? 8 :
+                          PlayerBon::traitsPicked[int(Trait::tough)]  ? 4 : 0;
+
+          TRACE << "Base chance to push lid is: 1 in "  << pushLidOneInN_ << endl;
+          TRACE << "Bonus to roll: "                    << BON << endl;
+
+          const int ROLL_TOT = Rnd::range(1, pushLidOneInN_) + BON;
+
+          TRACE << "Roll + bonus = " << ROLL_TOT << endl;
+
+          bool isSuccess = false;
+
+          if (ROLL_TOT < pushLidOneInN_ - 9)
+          {
+            Log::addMsg("It does not yield at all.");
+          }
+          else if (ROLL_TOT < pushLidOneInN_ - 1)
+          {
+            Log::addMsg("It resists.");
+          }
+          else if (ROLL_TOT == pushLidOneInN_ - 1)
+          {
+            Log::addMsg("It moves a little!");
+            pushLidOneInN_--;
+          }
+          else
+          {
+            isSuccess = true;
+          }
+
+          if (isSuccess)
+          {
+            //Note: This will remove the lid, but a trap may interrupt picking items.
+            open(Map::player);
+          }
+          else
+          {
+            trySprainPlayer();
+          }
         }
       }
+
       GameTime::actorDidAct();
     }
   }
@@ -1522,93 +1585,117 @@ void Tomb::trySprainPlayer()
   }
 }
 
-bool Tomb::open()
+bool Tomb::open(Actor* const actorOpening)
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
-  if (IS_SEEN)
-  {
-    Log::addMsg("The lid comes off!");
-    Log::addMsg("The tomb opens.");
-  }
-  Snd snd("I hear heavy stone sliding.", SfxId::tombOpen,
-          IgnoreMsgIfOriginSeen::yes, pos_, nullptr, SndVol::high,
-          AlertsMon::yes);
-  SndEmit::emitSnd(snd);
 
-  triggerTrap(*Map::player);
-  if (itemContainer_.items_.size() > 0)
+  if (isOpen_)
   {
-    if (IS_SEEN) Log::addMsg("There are some items inside.");
-    itemContainer_.dropItems(pos_);
+    if (IS_SEEN && actorOpening)
+    {
+      Log::addMsg("I peer inside the tomb.");
+    }
   }
-  else
+  else //Not already open
   {
-    if (IS_SEEN)Log::addMsg("There is nothing of value inside.");
+    isOpen_ = true;
+
+    SndEmit::emitSnd({"I hear heavy stone sliding.", SfxId::tombOpen,
+                      IgnoreMsgIfOriginSeen::yes, pos_, nullptr, SndVol::high,
+                      AlertsMon::yes
+                     });
+
+    if (IS_SEEN)
+    {
+      Render::drawMapAndInterface();
+      Log::addMsg("The lid comes off...", clrWhite, false, true);
+      Log::clearLog();
+    }
   }
-  if (IS_SEEN) {isContentKnown_ = isTraitKnown_ = true;}
+
+  IsTrapTriggered isTrapTriggered = triggerTrap(actorOpening);
+
+  //Only pick items if an actor (player) is opening, and not interrupted by traps
+  if (actorOpening && isTrapTriggered == IsTrapTriggered::no)
+  {
+    if (itemContainer_.items_.size() > 0)
+    {
+      if (IS_SEEN)
+      {
+        Log::addMsg("There are some items inside.", clrWhite, false, true);
+      }
+
+      itemContainer_.open(pos_, actorOpening);
+    }
+    else if (IS_SEEN)
+    {
+      Log::addMsg("There is nothing of value inside.");
+    }
+  }
+
   Render::drawMapAndInterface();
   return true;
 }
 
-void Tomb::examine()
-{
-  bool props[endOfPropIds];
-  Map::player->getPropHandler().getAllActivePropIds(props);
-
-  if (props[propConfused])
-  {
-    Log::addMsg("I start to search the tomb...");
-    Log::addMsg("but I cannot grasp what for.");
-    GameTime::actorDidAct();
-  }
-  else if (itemContainer_.items_.empty() && isContentKnown_)
-  {
-    Log::addMsg("The tomb is empty.");
-  }
-  else
-  {
-    if (!isTraitKnown_ && trait_ != TombTrait::END)
-    {
-      const int FIND_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::perceptive)] ? 2 :
-                                (PlayerBon::traitsPicked[int(Trait::observant)] ? 3 : 6);
-
-      isTraitKnown_ = Rnd::oneIn(FIND_ONE_IN_N);
-    }
-
-    if (isTraitKnown_)
-    {
-      switch (trait_)
-      {
-        case TombTrait::auraOfUnrest:
-          Log::addMsg("It has a certain aura of unrest about it.");
-          break;
-
-        case TombTrait::forebodingCarvedSigns:
-          if (PlayerBon::getBg() == Bg::occultist)
-          {
-            Log::addMsg("There is a curse carved on the box.");
-          }
-          else
-          {
-            Log::addMsg("There are some ominous runes carved on the box.");
-          }
-          break;
-
-        case TombTrait::stench:
-          Log::addMsg("There is a pungent stench.");
-          break;
-
-        case TombTrait::END: {}
-          break;
-      }
-    }
-    else //Tomb trait not discovered
-    {
-      Log::addMsg("I find nothing significant.");
-    }
-    GameTime::actorDidAct();
-  }
-}
+//void Tomb::examine()
+//{
+//  bool props[endOfPropIds];
+//  Map::player->getPropHandler().getAllActivePropIds(props);
+//
+//  if (props[propConfused])
+//  {
+//    Log::addMsg("I start to search the tomb...");
+//    Log::addMsg("but I cannot grasp what for.");
+//    GameTime::actorDidAct();
+//  }
+//  else if (itemContainer_.items_.empty() && isOpen_)
+//  {
+//    Log::addMsg("The tomb is empty.");
+//  }
+//  else
+//  {
+//    if (!isTraitKnown_ && trait_ != TombTrait::END)
+//    {
+//      const int FIND_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::perceptive)] ? 2 :
+//                                (PlayerBon::traitsPicked[int(Trait::observant)] ? 3 : 6);
+//
+//      isTraitKnown_ = Rnd::oneIn(FIND_ONE_IN_N);
+//    }
+//
+//    if (isTraitKnown_)
+//    {
+//      switch (trait_)
+//      {
+//        case TombTrait::auraOfUnrest:
+//          Log::addMsg("It has a certain aura of unrest about it.");
+//          break;
+//
+//        case TombTrait::forebodingCarvedSigns:
+//          if (PlayerBon::getBg() == Bg::occultist)
+//          {
+//            Log::addMsg("There is a curse carved on the box.");
+//          }
+//          else
+//          {
+//            Log::addMsg("There are some ominous runes carved on the box.");
+//          }
+//          break;
+//
+//        case TombTrait::stench:
+//          Log::addMsg("There is a pungent stench.");
+//          break;
+//
+//        case TombTrait::END: {}
+//          break;
+//      }
+//    }
+//    else //Tomb trait not discovered
+//    {
+//      Log::addMsg("I find nothing significant.");
+//    }
+//    GameTime::actorDidAct();
+//  }
+//}
 
 //void Tomb::kick(Actor& actorTrying) {
 //  (void)actorTrying;
@@ -1661,9 +1748,11 @@ void Tomb::examine()
 //    break;
 //}
 
-void Tomb::triggerTrap(Actor & actor)
+IsTrapTriggered Tomb::triggerTrap(Actor* const actor)
 {
   (void)actor;
+
+  IsTrapTriggered isTrapTriggered = IsTrapTriggered::no;
 
   vector<ActorId> actorBucket;
 
@@ -1682,10 +1771,12 @@ void Tomb::triggerTrap(Actor & actor)
         }
       }
       Log::addMsg("Something rises from the tomb!", clrWhite, false, true);
+      isTrapTriggered = IsTrapTriggered::yes;
       break;
 
     case TombTrait::forebodingCarvedSigns:
       Map::player->getPropHandler().tryApplyProp(new PropCursed(PropTurns::std));
+      isTrapTriggered = IsTrapTriggered::yes;
       break;
 
     case TombTrait::stench:
@@ -1727,45 +1818,50 @@ void Tomb::triggerTrap(Actor & actor)
         }
         Log::addMsg("Something creeps up from the tomb!", clrWhite, false, true);
       }
+      isTrapTriggered = IsTrapTriggered::yes;
       break;
 
-    default: {} break;
+    case TombTrait::END: {} break;
   }
 
   if (!actorBucket.empty())
   {
-    const size_t  ELEMENT         = Rnd::range(0, actorBucket.size() - 1);
-    const ActorId actorIdToSpawn  = actorBucket[ELEMENT];
+    const size_t  IDX             = Rnd::range(0, actorBucket.size() - 1);
+    const ActorId actorIdToSpawn  = actorBucket[IDX];
     Actor* const  mon             = ActorFactory::mk(actorIdToSpawn, pos_);
     static_cast<Mon*>(mon)->becomeAware(false);
   }
+
+  trait_        = TombTrait::END;
+  isTraitKnown_ = true;
+
+  return isTrapTriggered;
 }
 
 //--------------------------------------------------------------------- CHEST
 Chest::Chest(const Pos & pos) :
   Rigid(pos),
-  isContentKnown_(false),
+  isOpen_(false),
   isLocked_(false),
   isTrapped_(false),
   isTrapStatusKnown_(false),
-  matl_(ChestMatl(Rnd::range(0, int(ChestMatl::END) - 1)))
+  matl_(ChestMatl(Rnd::range(0, int(ChestMatl::END) - 1))),
+  TRAP_DET_LVL(Rnd::range(0, 2))
 {
-
   const bool IS_TREASURE_HUNTER = PlayerBon::traitsPicked[int(Trait::treasureHunter)];
   const int NR_ITEMS_MIN        = Rnd::oneIn(10) ? 0 : 1;
   const int NR_ITEMS_MAX        = IS_TREASURE_HUNTER ? 3 : 2;
-  itemContainer_.setRandomItemsForFeature(FeatureId::chest,
-                                          Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+
+  itemContainer_.init(FeatureId::chest, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
   if (!itemContainer_.items_.empty())
   {
-    isLocked_   = Rnd::fraction(6, 10);
+    isLocked_   = Rnd::fraction(3, 10);
     isTrapped_  = Rnd::fraction(6, 10);
   }
 }
 
-void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                  Actor * const actor)
+void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor * const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
@@ -1774,16 +1870,49 @@ void Chest::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
-    if (itemContainer_.items_.empty() && isContentKnown_)
+    if (itemContainer_.items_.empty() && isOpen_)
     {
       Log::addMsg("The chest is empty.");
+      Render::drawMapAndInterface();
+    }
+    else if (!Map::player->getPropHandler().allowSee())
+    {
+      Log::addMsg("There is a chest here.");
+      Render::drawMapAndInterface();
     }
     else
     {
-      if (isLocked_) {Log::addMsg("The chest is locked.");}
-      else {open();}
-      GameTime::actorDidAct();
+      if (isLocked_)
+      {
+        Log::addMsg("The chest is locked.");
+        Render::drawMapAndInterface();
+      }
+      else //Not locked
+      {
+        //Note: The chest may already be "open" (i.e. the lid is open), if so, the player
+        //is guaranteed to be allowed to pick the items (no trap).
+        open(Map::player);
+        GameTime::actorDidAct();
+      }
     }
+  }
+}
+
+void Chest::tryFindTrap()
+{
+  assert(isTrapped_);
+  assert(!isOpen_);
+
+  const bool CAN_DET_TRAP =
+    TRAP_DET_LVL == 0                               ||
+    PlayerBon::traitsPicked[int(Trait::perceptive)] ||
+    (TRAP_DET_LVL == 1 && PlayerBon::traitsPicked[int(Trait::observant)]);
+
+  if (CAN_DET_TRAP)
+  {
+    isTrapStatusKnown_ = true;
+    Log::addMsg("There appears to be a hidden trap.");
+    Render::drawMapAndInterface();
   }
 }
 
@@ -1798,31 +1927,58 @@ void Chest::trySprainPlayer()
   }
 }
 
-bool Chest::open()
+bool Chest::open(Actor* const actorOpening)
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 
-  if (IS_SEEN) Log::addMsg("The chest opens.");
-  triggerTrap(*Map::player);
+  if (isOpen_)
+  {
+    if (IS_SEEN && actorOpening)
+    {
+      Log::addMsg("I search the chest.");
+    }
+  }
+  else
+  {
+    //Do not print opening message if the player is opening and there is a known trap
+    //(in that case, there is already a message such as "open the chest anyway?").
+    const bool IS_KNOWN_TRAP = isTrapped_ && isTrapStatusKnown_;
+    if (IS_SEEN && (!actorOpening || !IS_KNOWN_TRAP))
+    {
+      Log::addMsg("The chest opens.");
+    }
 
-  if (Map::player->isAlive())
+    isOpen_ = true;
+  }
+
+  Render::drawMapAndInterface();
+
+  IsTrapTriggered isTrapTriggered = triggerTrap(actorOpening);
+
+  //Only pick items if an actor (player) is opening, and not interrupted by traps
+  if (actorOpening && isTrapTriggered == IsTrapTriggered::no)
   {
     if (itemContainer_.items_.empty())
     {
-      if (IS_SEEN) Log::addMsg("There is nothing of value inside.");
+      if (IS_SEEN)
+      {
+        Log::addMsg("There is nothing of value inside.");
+      }
     }
-    else
+    else //Not empty
     {
-      if (IS_SEEN) Log::addMsg("There are some items inside.");
-      itemContainer_.dropItems(pos_);
+      if (IS_SEEN)
+      {
+        Log::addMsg("There are some items inside.", clrWhite, false, true);
+      }
+
+      itemContainer_.open(pos_, actorOpening);
     }
   }
-  if (IS_SEEN)
-  {
-    isContentKnown_     = true;
-    isTrapStatusKnown_  = true;
-  }
-  isLocked_ = false;
+
+  isTrapStatusKnown_  = true;
+  isLocked_           = false;
+
   Render::drawMapAndInterface();
   return true;
 }
@@ -1835,7 +1991,7 @@ bool Chest::open()
 //    case DmgType::physical: {
 //      switch(dmgMethod) {
 //        case DmgMethod::kick: {
-//          if(itemContainer_.items_.empty() && isContentKnown_) {
+//          if(itemContainer_.items_.empty() && isOpen_) {
 //            Log::addMsg("The chest is empty.");
 //          } else {
 //
@@ -1930,142 +2086,244 @@ bool Chest::open()
 ////      }
 //}
 
-void Chest::examine()
-{
-  bool props[endOfPropIds];
-  Map::player->getPropHandler().getAllActivePropIds(props);
-
-  if (props[propConfused])
-  {
-    Log::addMsg("I start to search the chest...");
-    Log::addMsg("but I cannot grasp the purpose.");
-    GameTime::actorDidAct();
-  }
-  else if (itemContainer_.items_.empty() && isContentKnown_)
-  {
-    Log::addMsg("The chest is empty.");
-  }
-  else
-  {
-    if (isLocked_)
-    {
-      Log::addMsg("The chest is locked.");
-    }
-
-    const int FIND_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::perceptive)] ? 3 :
-                              (PlayerBon::traitsPicked[int(Trait::observant)] ? 4 : 7);
-
-    if (isTrapped_ && (isTrapStatusKnown_ || (Rnd::oneIn(FIND_ONE_IN_N))))
-    {
-      Log::addMsg("There appears to be a hidden trap mechanism!");
-      isTrapStatusKnown_ = true;
-    }
-    else
-    {
-      Log::addMsg("I find nothing unusual about it.");
-    }
-    GameTime::actorDidAct();
-  }
-}
+//void Chest::examine()
+//{
+//  bool props[endOfPropIds];
+//  Map::player->getPropHandler().getAllActivePropIds(props);
+//
+//  if (props[propConfused])
+//  {
+//    Log::addMsg("I start to search the chest...");
+//    Log::addMsg("but I cannot grasp the purpose.");
+//    GameTime::actorDidAct();
+//  }
+//  else if (itemContainer_.items_.empty() && isOpen_)
+//  {
+//    Log::addMsg("The chest is empty.");
+//  }
+//  else
+//  {
+//    if (isLocked_)
+//    {
+//      Log::addMsg("The chest is locked.");
+//    }
+//
+//    const int FIND_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::perceptive)] ? 3 :
+//                              (PlayerBon::traitsPicked[int(Trait::observant)] ? 4 : 7);
+//
+//    if (isTrapped_ && (isTrapStatusKnown_ || (Rnd::oneIn(FIND_ONE_IN_N))))
+//    {
+//      Log::addMsg("There appears to be a hidden trap mechanism!");
+//      isTrapStatusKnown_ = true;
+//    }
+//    else
+//    {
+//      Log::addMsg("I find nothing unusual about it.");
+//    }
+//    GameTime::actorDidAct();
+//  }
+//}
 
 void Chest::disarm()
 {
-  //Try disarming trap
-  if (isTrapped_ && isTrapStatusKnown_)
+  //Note: Only an actual attempt at disarming a trap counts as a turn. Just discovering
+  //the trap does not end the turn.
+
+  if (isLocked_)
   {
-    Log::addMsg("I attempt to disarm the trap.");
-
-    const int TRIGGER_ONE_IN_N = 5;
-    if (Rnd::oneIn(TRIGGER_ONE_IN_N))
-    {
-      Log::addMsg("I set off the trap!", clrWhite, false, true);
-      triggerTrap(*Map::player);
-    }
-    else
-    {
-      const int DISARM_ONE_IN_N = 2;
-
-      if (Rnd::oneIn(DISARM_ONE_IN_N))
-      {
-        Log::addMsg("I successfully disarm it!");
-        isTrapped_ = false;
-      }
-      else
-      {
-        Log::addMsg("I failed to disarm it.");
-      }
-    }
-    GameTime::actorDidAct();
+    Log::addMsg("The chest is locked.");
+    Render::drawMapAndInterface();
     return;
   }
 
-
-  //Try picking the lock //TODO Implement
-//  if(isLocked_) {
-//      GameTime::actorDidAct();
-//  }
-
-  //If no other action was taken, try examining the chest instead
-  examine();
-}
-
-void Chest::triggerTrap(Actor & actor)
-{
-  (void)actor;
-
-  isTrapStatusKnown_ = true;
-
   if (isTrapped_)
   {
-    isTrapped_ = false;
-
-    const int EXPLODE_ONE_IN_N = 7;
-
-    if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::oneIn(EXPLODE_ONE_IN_N))
+    //First search for a trap if not already known
+    if (!isTrapStatusKnown_)
     {
-      Log::addMsg("The trap explodes!", clrWhite, false, true);
-      Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0,
-                                SfxId::explosion);
-      if (Map::player->isAlive())
+      tryFindTrap();
+
+      //If trap was unknown, give the player a chance to abort
+      if (isTrapStatusKnown_)
       {
-        Map::put(new RubbleLow(pos_));
+        Log::addMsg("Attempt to disarm it? (y/n)");
+        Render::drawMapAndInterface();
+        const auto answer = Query::yesOrNo();
+        if (answer == YesNoAnswer::no)
+        {
+          Log::clearLog();
+          Log::addMsg("I leave the chest for now.");
+          Render::drawMapAndInterface();
+          return;
+        }
       }
     }
-    else //Not explosion
+
+    //Try disarming trap
+    if (isTrapStatusKnown_)
     {
-      Log::addMsg("Fumes burst out from the chest!", clrWhite, false, true);
-      Prop* prop = nullptr;
-      Clr fumeClr = clrMagenta;
-      const int RND = Rnd::percentile();
-      if (RND < 20)
+//      Log::clearLog();
+      Log::addMsg("I attempt to disarm the chest...", clrWhite, false, true);
+      Log::clearLog();
+
+      const Fraction disarmChance(3, 5);
+
+      if (Rnd::fraction(disarmChance))
       {
-        prop = new PropPoisoned(PropTurns::std);
-        fumeClr = clrGreenLgt;
+        Log::addMsg("I successfully disarm it!");
+        Render::drawMapAndInterface();
+        isTrapped_ = false;
       }
-      else if (RND < 40)
+      else //Failed to disarm
       {
-        prop = new PropDiseased(PropTurns::specific, 50);
-        fumeClr = clrGreen;
+        triggerTrap(Map::player); //Note: This will disable the trap
       }
-      else
-      {
-        prop = new PropParalyzed(PropTurns::std);
-        prop->turnsLeft_ *= 2;
-      }
-      Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-                                prop, &fumeClr);
+      GameTime::actorDidAct();
+      return;
     }
   }
+
+  //This point reached means the chest is not locked, but there were no attempt at
+  //disarming a trap (either the trap is not known, or the chest is not trapped)
+  if (!isTrapStatusKnown_)
+  {
+    //The chest could be trapped
+    Log::addMsg("The chest does not appear to be trapped.");
+  }
+  else if (!isTrapped_)
+  {
+    //Player knows for sure that the chest is *not* trapped
+    Log::addMsg("The chest is not trapped.");
+  }
+
+  Render::drawMapAndInterface();
+}
+
+IsTrapTriggered Chest::triggerTrap(Actor* const actor)
+{
+  //Chest is not trapped? (Either already triggered, or chest were created wihout trap)
+  if (!isTrapped_)
+  {
+    isTrapStatusKnown_ = true;
+    return IsTrapTriggered::no;
+  }
+
+  const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
+
+  if (IS_SEEN)
+  {
+    Log::addMsg("A hidden trap on the chest triggers...", clrWhite, false, true);
+  }
+
+  isTrapStatusKnown_  = true;
+  isTrapped_          = false;
+
+  //Nothing happens?
+  bool playerProps[endOfPropIds];
+  Map::player->getPropHandler().getAllActivePropIds(playerProps);
+
+  const int TRAP_NO_ACTION_ONE_IN_N = playerProps[propBlessed] ? 2 :
+                                      (playerProps[propCursed] ? 20 : 4);
+
+  if (Rnd::oneIn(TRAP_NO_ACTION_ONE_IN_N))
+  {
+    if (IS_SEEN)
+    {
+      Log::clearLog();
+      Log::addMsg("...but nothing happens.", clrWhite, false, true);
+      return IsTrapTriggered::no;
+    }
+  }
+
+  //Explode?
+  const int EXPLODE_ONE_IN_N = 7;
+  if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::oneIn(EXPLODE_ONE_IN_N))
+  {
+    if (IS_SEEN)
+    {
+      Log::clearLog();
+      Log::addMsg("The chest explodes!", clrWhite, false, true);
+    }
+
+    Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0, SfxId::explosion);
+
+    Map::put(new RubbleLow(pos_));
+
+    return IsTrapTriggered::yes;
+  }
+
+  if (actor == Map::player && Rnd::coinToss())
+  {
+    //Needle
+    Log::addMsg("A needle pierces my skin!", clrMsgBad, true);
+    actor->hit(Rnd::range(1, 5), DmgType::physical);
+
+    if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::fraction(2, 3))
+    {
+      actor->getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::std));
+    }
+  }
+  else
+  {
+    //Fumes
+    if (IS_SEEN)
+    {
+      Log::clearLog();
+      Log::addMsg("Fumes burst out from the chest!", clrWhite, false, true);
+    }
+
+    Prop*     prop    = nullptr;
+    Clr       fumeClr = clrMagenta;
+    const int RND     = Rnd::percentile();
+
+    if (RND < 20)
+    {
+      prop    = new PropPoisoned(PropTurns::std);
+      fumeClr = clrGreenLgt;
+    }
+    else if (RND < 40)
+    {
+      prop    = new PropDiseased(PropTurns::specific, 50);
+      fumeClr = clrGreen;
+    }
+    else
+    {
+      prop = new PropParalyzed(PropTurns::std);
+      prop->turnsLeft_ *= 2;
+    }
+    Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
+                              prop, &fumeClr);
+  }
+  return IsTrapTriggered::yes;
 }
 
 string Chest::getName(const Article article) const
 {
-  string ret = article == Article::a ?
-               "the " : (matl_ == ChestMatl::wood ? "a " : "an ");
+  const bool    IS_EMPTY        = itemContainer_.items_.empty() && isOpen_;
+  const bool    IS_KNOWN_TRAP   = isTrapped_ && isTrapStatusKnown_;
+  const string  emptyStr        = IS_EMPTY                ? "empty "   : "";
+  const string  trapStr         = IS_KNOWN_TRAP           ? "trapped " : "";
+  const string  openStr         = (isOpen_ && !IS_EMPTY)  ? "open "    : "";
 
-  ret += matl_ == ChestMatl::wood ? "wooden " : "iron ";
+  string a = "";
 
-  return ret + "chest";
+  if (article == Article::a)
+  {
+    a = (!isOpen_ && (matl_ == ChestMatl::wood || IS_KNOWN_TRAP)) ? "a " : "an ";
+  }
+  else
+  {
+    a = "the ";
+  }
+
+  const string matlStr = isOpen_ ? "" : (matl_ == ChestMatl::wood ? "wooden " : "iron ");
+
+  return a + emptyStr + openStr + trapStr + matlStr + "chest";
+}
+
+TileId Chest::getTile() const
+{
+  return isOpen_ ? TileId::chestOpen : TileId::chestClosed;
 }
 
 Clr Chest::getClr_() const
@@ -2168,6 +2426,22 @@ void Fountain::bump(Actor & actorBumping)
     {
       PropHandler& propHlr = Map::player->getPropHandler();
 
+      if (!propHlr.allowSee())
+      {
+        Log::clearLog();
+        Log::addMsg("There is a fountain here. Drink from it? (y/n)");
+        Render::drawMapAndInterface();
+        const auto answer = Query::yesOrNo();
+        if (answer == YesNoAnswer::no)
+        {
+          Log::clearLog();
+          Log::addMsg("I leave the fountain for now.");
+          Render::drawMapAndInterface();
+          return;
+        }
+      }
+
+      Log::clearLog();
       Log::addMsg("I drink from the fountain...");
 
       Audio::play(SfxId::fountainDrink);
@@ -2275,24 +2549,24 @@ void Fountain::bump(Actor & actorBumping)
       }
       if (Rnd::oneIn(4))
       {
-        Log::addMsg("The fountain dries out.");
         isDried_ = true;
+        Log::addMsg("The fountain dries out.");
       }
+      Render::drawMapAndInterface();
       GameTime::actorDidAct();
     }
   }
 }
 
 //--------------------------------------------------------------------- CABINET
-Cabinet::Cabinet(const Pos & pos) : Rigid(pos), isContentKnown_(false)
+Cabinet::Cabinet(const Pos & pos) : Rigid(pos), isOpen_(false)
 {
   const int IS_EMPTY_N_IN_10  = 5;
   const int NR_ITEMS_MIN      = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX =
     PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 2 : 1;
 
-  itemContainer_.setRandomItemsForFeature(
-    FeatureId::cabinet, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+  itemContainer_.init(FeatureId::cabinet, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 }
 
 void Cabinet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
@@ -2305,34 +2579,49 @@ void Cabinet::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
-    if (itemContainer_.items_.empty() && isContentKnown_)
+    if (itemContainer_.items_.empty() && isOpen_)
     {
       Log::addMsg("The cabinet is empty.");
     }
+    else if (!Map::player->getPropHandler().allowSee())
+    {
+      Log::addMsg("There is a cabinet here.");
+      Render::drawMapAndInterface();
+    }
     else
     {
-      open();
+      open(Map::player);
     }
   }
 }
 
-bool Cabinet::open()
+bool Cabinet::open(Actor* const actorOpening)
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 
-  if (IS_SEEN) Log::addMsg("The cabinet opens.");
+  isOpen_ = true;
+
+  if (IS_SEEN)
+  {
+    Render::drawMapAndInterface();
+    Log::addMsg("The cabinet opens.");
+  }
 
   if (itemContainer_.items_.size() > 0)
   {
-    if (IS_SEEN) Log::addMsg("There are some items inside.");
-    itemContainer_.dropItems(pos_);
+    if (IS_SEEN)
+    {
+      Log::addMsg("There are some items inside.", clrWhite, false, true);
+    }
+    itemContainer_.open(pos_, actorOpening);
   }
-  else
+  else if (IS_SEEN)
   {
-    if (IS_SEEN) Log::addMsg("There is nothing of value inside.");
+    Log::addMsg("There is nothing of value inside.");
   }
-  if (IS_SEEN) isContentKnown_ = true;
+
   Render::drawMapAndInterface(true);
+
   return true;
 }
 
@@ -2340,9 +2629,17 @@ string Cabinet::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  if (getBurnState() == BurnState::burning) {ret += "burning ";}
+  if (getBurnState() == BurnState::burning)
+  {
+    ret += "burning ";
+  }
 
   return ret + "cabinet";
+}
+
+TileId Cabinet::getTile() const
+{
+  return isOpen_ ? TileId::cabinetOpen : TileId::cabinetClosed;
 }
 
 Clr Cabinet::getClr_() const
@@ -2351,14 +2648,14 @@ Clr Cabinet::getClr_() const
 }
 
 //--------------------------------------------------------------------- COCOON
-Cocoon::Cocoon(const Pos & pos) : Rigid(pos), isContentKnown_(false)
+Cocoon::Cocoon(const Pos & pos) : Rigid(pos), isOpen_(false)
 {
   const bool IS_TREASURE_HUNTER = PlayerBon::traitsPicked[int(Trait::treasureHunter)];
   const int IS_EMPTY_N_IN_10    = 6;
   const int NR_ITEMS_MIN        = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
   const int NR_ITEMS_MAX        = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
-  itemContainer_.setRandomItemsForFeature(
-    FeatureId::cocoon, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
+
+  itemContainer_.init(FeatureId::cocoon, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 }
 
 void Cocoon::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
@@ -2371,18 +2668,23 @@ void Cocoon::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
-    if (itemContainer_.items_.empty() && isContentKnown_)
+    if (itemContainer_.items_.empty() && isOpen_)
     {
       Log::addMsg("The cocoon is empty.");
     }
+    else if (!Map::player->getPropHandler().allowSee())
+    {
+      Log::addMsg("There is a cocoon here.");
+      Render::drawMapAndInterface();
+    }
     else
     {
-      open();
+      open(Map::player);
     }
   }
 }
 
-void Cocoon::triggerTrap(Actor & actor)
+IsTrapTriggered Cocoon::triggerTrap(Actor* const actor)
 {
   (void)actor;
 
@@ -2403,8 +2705,8 @@ void Cocoon::triggerTrap(Actor & actor)
 
       if (d.isSpider                      &&
           d.actorSize == actorSize_floor  &&
-          !d.isAutoSpawnAllowed           &&
-          d.isUnique)
+          d.isAutoSpawnAllowed            &&
+          !d.isUnique)
       {
         spawnBucket.push_back(d.id);
       }
@@ -2415,29 +2717,40 @@ void Cocoon::triggerTrap(Actor & actor)
     {
       TRACE << "Spawn candidates found, attempting to place" << endl;
       Log::addMsg("There are spiders inside!");
-      const int NR_SPIDERS = Rnd::range(2, 5);
-      const int ELEMENT = Rnd::range(0, NR_CANDIDATES - 1);
-      const ActorId actorIdToSummon = spawnBucket[ELEMENT];
+      const int NR_SPIDERS          = Rnd::range(2, 5);
+      const int IDX                 = Rnd::range(0, NR_CANDIDATES - 1);
+      const ActorId actorIdToSummon = spawnBucket[IDX];
       ActorFactory::summonMon(pos_, vector<ActorId>(NR_SPIDERS, actorIdToSummon), true);
     }
   }
 }
 
-bool Cocoon::open()
+bool Cocoon::open(Actor* const actorOpening)
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
-  if (IS_SEEN) Log::addMsg("The cocoon opens.");
-  triggerTrap(*Map::player);
+
+  if (IS_SEEN)
+  {
+    Log::addMsg("The cocoon opens.");
+  }
+
+  triggerTrap(actorOpening);
+
   if (itemContainer_.items_.size() > 0)
   {
-    if (IS_SEEN) Log::addMsg("There are some items inside.");
-    itemContainer_.dropItems(pos_);
+    if (IS_SEEN)
+    {
+      Log::addMsg("There are some items inside.", clrWhite, false, true);
+    }
+    itemContainer_.open(pos_, actorOpening);
   }
-  else
+  else if (IS_SEEN)
   {
-    if (IS_SEEN) Log::addMsg("There is nothing of value inside.");
+    Log::addMsg("There is nothing of value inside.");
   }
-  if (IS_SEEN) isContentKnown_ = true;
+
+  isOpen_ = true;
+
   Render::drawMapAndInterface(true);
 
   return true;
@@ -2447,9 +2760,17 @@ string Cocoon::getName(const Article article) const
 {
   string ret = article == Article::a ? "a " : "the ";
 
-  if (getBurnState() == BurnState::burning) {ret += "burning ";}
+  if (getBurnState() == BurnState::burning)
+  {
+    ret += "burning ";
+  }
 
   return ret + "cocoon";
+}
+
+TileId Cocoon::getTile() const
+{
+  return isOpen_ ? TileId::cocoonOpen : TileId::cocoonClosed;
 }
 
 Clr Cocoon::getClr_() const

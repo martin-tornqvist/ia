@@ -1,10 +1,6 @@
 #ifndef ABILITY_VALUES_H
 #define ABILITY_VALUES_H
 
-#include <vector>
-#include <string>
-#include <iostream>
-
 class Actor;
 
 enum class AbilityId
@@ -39,7 +35,7 @@ public:
   int getVal(const AbilityId abilityId, const bool IS_AFFECTED_BY_PROPS,
              Actor& actor) const;
 
-  inline int getRawVal(const AbilityId ability)
+  int getRawVal(const AbilityId ability)
   {
     return abilityList[int(ability)];
   }

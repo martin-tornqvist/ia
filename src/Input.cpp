@@ -26,7 +26,6 @@
 #include "ActorFactory.h"
 #include "ActorMon.h"
 #include "PlayerBon.h"
-#include "Examine.h"
 #include "CreateCharacter.h"
 #include "Disarm.h"
 #include "SdlWrapper.h"
@@ -34,6 +33,7 @@
 #include "Look.h"
 #include "Attack.h"
 #include "Throwing.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -229,18 +229,6 @@ void handleKeyPress(const KeyData& d)
   {
     Log::clearLog();
     Config::runOptionsMenu();
-    clearEvents();
-    return;
-  }
-
-  //----------------------------------- EXAMINE
-  else if (d.key == 'a')
-  {
-    Log::clearLog();
-    if (Map::player->isAlive())
-    {
-      Examine::playerExamine();
-    }
     clearEvents();
     return;
   }

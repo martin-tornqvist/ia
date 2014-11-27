@@ -1,8 +1,6 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#include <iostream>
-
 #include "Art.h"
 #include "InventoryHandling.h"
 #include "Converters.h"
@@ -339,7 +337,7 @@ public:
     lines.erase(begin(lines));
   }
 
-  inline int getNrSupplies() const {return nrSupplies_;}
+  int getNrSupplies() const {return nrSupplies_;}
 
 protected:
   MedBagAction playerChooseAction() const;

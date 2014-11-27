@@ -88,7 +88,7 @@ Uint32 getPixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y
   return -1;
 }
 
-inline void putPixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y,
+void putPixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y,
                      Uint32 pixel)
 {
   int bpp = surface->format->BytesPerPixel;

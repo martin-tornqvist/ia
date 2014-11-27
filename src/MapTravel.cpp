@@ -133,17 +133,6 @@ void goToNxt()
 {
   TRACE_FUNC_BEGIN;
 
-  Log::clearLog();
-
-  if (Map::dlvl >= FIRST_CAVERN_LVL && Map::dlvl <= LAST_CAVERN_LVL)
-  {
-    Log::addMsg("I climb downwards.");
-  }
-  else
-  {
-    Log::addMsg("I descend the stairs.");
-  }
-
   Map::player->restoreShock(999, true);
 
   mapList_.erase(mapList_.begin());

@@ -16,6 +16,7 @@
 #include "Inventory.h"
 #include "MapParsing.h"
 #include "Item.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -425,9 +426,8 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
     {
       if (method == DmgMethod::kick)
       {
-        SndEmit::emitSnd({"I hear something cracking.", SfxId::hitCorpseBreak,
-                          IgnoreMsgIfOriginSeen::yes, pos, nullptr, SndVol::low,
-                          AlertsMon::yes
+        SndEmit::emitSnd({"*Crack!*", SfxId::hitCorpseBreak, IgnoreMsgIfOriginSeen::yes,
+                          pos, nullptr, SndVol::low, AlertsMon::yes
                          });
       }
 
@@ -445,9 +445,8 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
     {
       if (method == DmgMethod::kick)
       {
-        SndEmit::emitSnd({"There is a thudding sound.", SfxId::hitMedium,
-                          IgnoreMsgIfOriginSeen::yes, pos, nullptr, SndVol::low,
-                          AlertsMon::yes
+        SndEmit::emitSnd({"*Thud*", SfxId::hitMedium, IgnoreMsgIfOriginSeen::yes, pos,
+                          nullptr, SndVol::low, AlertsMon::yes
                          });
       }
     }

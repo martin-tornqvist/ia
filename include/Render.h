@@ -2,7 +2,6 @@
 #define RENDER_H
 
 #include <vector>
-#include <iostream>
 
 #include <SDL_video.h>
 

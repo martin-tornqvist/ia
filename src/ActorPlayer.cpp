@@ -32,6 +32,7 @@
 #include "ItemScroll.h"
 #include "ItemPotion.h"
 #include "TextFormatting.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -1112,7 +1113,7 @@ void Player::onLogMsgPrinted()
   //cause endless recursion.
 
   //Abort waiting
-  waitTurnsLeft = -1;
+  waitTurnsLeft         = -1;
 
   //Abort quick move
   nrQuickMoveStepsLeft_ = -1;
@@ -1211,24 +1212,22 @@ void Player::moveDir(Dir dir)
           if (item)
           {
             Wpn* const wpn = static_cast<Wpn*>(item);
+
             if (wpn->getData().melee.isMeleeWpn)
             {
-              if (Config::isRangedWpnMeleeePrompt() &&
-                  isSeeingActor(*monAtDest, nullptr))
+              if (Config::isRangedWpnMeleeePrompt()   &&
+                  isSeeingActor(*monAtDest, nullptr)  &&
+                  wpn->getData().ranged.isRangedWpn)
               {
-                if (wpn->getData().ranged.isRangedWpn)
+                const string wpnName = wpn->getName(ItemRefType::a);
+                Log::addMsg("Attack " + monAtDest->getNameThe() +
+                            " with " + wpnName + "? (y/n)", clrWhiteHigh);
+                Render::drawMapAndInterface();
+                if (Query::yesOrNo() == YesNoAnswer::no)
                 {
-                  const string wpnName = wpn->getName(ItemRefType::a);
-                  Log::addMsg(
-                    "Attack " + monAtDest->getNameThe() +
-                    " with " + wpnName + "? (y/n)", clrWhiteHigh);
+                  Log::clearLog();
                   Render::drawMapAndInterface();
-                  if (Query::yesOrNo() == YesNoAnswer::no)
-                  {
-                    Log::clearLog();
-                    Render::drawMapAndInterface();
-                    return;
-                  }
+                  return;
                 }
               }
               Attack::melee(*this, *wpn, *monAtDest);
@@ -1236,7 +1235,10 @@ void Player::moveDir(Dir dir)
               return;
             }
           }
-          if (!hasMeleeWpn) {punchMon(*monAtDest);}
+          if (!hasMeleeWpn)
+          {
+            punchMon(*monAtDest);
+          }
         }
         return;
       }

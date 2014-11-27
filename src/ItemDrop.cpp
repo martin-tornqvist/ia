@@ -164,15 +164,14 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
     curPos = freeCells[i];
     if (!Map::cells[curPos.x][curPos.y].item)
     {
-
       Map::cells[curPos.x][curPos.y].item = &item;
 
-      const bool IS_PLAYER_POS    = Map::player->pos == curPos;
-      const bool IS_INTENDED_POS  = curPos == intendedPos;
-      if (IS_PLAYER_POS && !IS_INTENDED_POS)
-      {
-        Log::addMsg("I feel something by my feet.");
-      }
+//      const bool IS_PLAYER_POS    = Map::player->pos == curPos;
+//      const bool IS_INTENDED_POS  = curPos == intendedPos;
+//      if (IS_PLAYER_POS && !IS_INTENDED_POS)
+//      {
+//        Log::addMsg("I feel something by my feet.");
+//      }
 
       //TODO Won't this cause nullptr to be returned?
       //Shouldn't a pointer to the item be returned?

@@ -3,9 +3,11 @@
 
 #include "Feature.h"
 
-enum class BurnState {notBurned, burning, hasBurned};
+enum class BurnState        {notBurned, burning, hasBurned};
 
-enum class IsDestroyed {no, yes};
+enum class IsDestroyed      {no, yes};
+
+enum class IsTrapTriggered  {no, yes};
 
 class Rigid: public Feature
 {
@@ -30,28 +32,26 @@ public:
 
   void clearGore();
 
-  virtual bool open() {return false;}
+  virtual bool open(Actor* const actorOpening);
   virtual void disarm();
-  virtual void examine();
 
   void mkBloody() {isBloody_ = true;}
 
-  void setHasBurned() {burnState_ = BurnState::hasBurned;}
-
-  BurnState getBurnState() const {return burnState_;}
+  void      setHasBurned()        {burnState_ = BurnState::hasBurned;}
+  BurnState getBurnState() const  {return burnState_;}
 
 protected:
-  virtual void        onNewTurn_() {}
+  virtual void            onNewTurn_() {}
 
-  virtual void        onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                            Actor* const actor) = 0;
+  virtual void            onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                                Actor* const actor) = 0;
 
-  virtual Clr         getClr_()   const = 0;
-  virtual Clr         getClrBg_() const {return clrBlack;}
+  virtual Clr             getClr_()   const = 0;
+  virtual Clr             getClrBg_() const {return clrBlack;}
 
-  void                tryStartBurning(const bool IS_MSG_ALLOWED);
-  virtual IsDestroyed onFinishedBurning() {return IsDestroyed::no;}
-  virtual void        triggerTrap(Actor& actor) {(void)actor;}
+  void                    tryStartBurning(const bool IS_MSG_ALLOWED);
+  virtual IsDestroyed     onFinishedBurning();
+  virtual IsTrapTriggered triggerTrap(Actor* const actor);
 
   TileId  goreTile_;
   char    goreGlyph_;
@@ -439,7 +439,6 @@ public:
 
   std::string getName(const Article article)  const override;
   TileId      getTile()                       const override;
-  void        examine()                             override;
 
   void setLinkedDoor(Door* const door) {doorLinkedTo_ = door;}
 
@@ -500,10 +499,9 @@ public:
 
   ~ItemContainer();
 
-  void setRandomItemsForFeature(const FeatureId featureId,
-                                const int NR_ITEMS_TO_ATTEMPT);
+  void init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMPT);
 
-  void dropItems(const Pos& pos);
+  void open(const Pos& featurePos, Actor* const actorOpening);
 
   void destroySingleFragile();
 
@@ -536,9 +534,9 @@ public:
   FeatureId getId() const override {return FeatureId::tomb;}
 
   std::string getName(const Article article)  const override;
+  TileId      getTile()                       const override;
   void        bump(Actor& actorBumping)             override;
-  bool        open()                                override;
-  void        examine()                             override;
+  bool        open(Actor* const actorOpening)       override;
 
 private:
   Clr getClr_() const override;
@@ -546,11 +544,11 @@ private:
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
-  void triggerTrap(Actor& actor) override;
+  IsTrapTriggered triggerTrap(Actor* const actor) override;
 
   void trySprainPlayer();
 
-  bool isContentKnown_, isTraitKnown_;
+  bool isOpen_, isTraitKnown_;
 
   ItemContainer itemContainer_;
 
@@ -571,9 +569,9 @@ public:
   FeatureId getId() const override {return FeatureId::chest;}
 
   std::string getName(const Article article)  const override;
+  TileId      getTile()                       const override;
   void        bump(Actor& actorBumping)             override;
-  bool        open()                                override;
-  void        examine()                             override;
+  bool        open(Actor* const actorOpening)       override;
   void        disarm()                              override;
 
 private:
@@ -582,15 +580,24 @@ private:
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
-  void triggerTrap(Actor& actor) override;
+  void tryFindTrap();
+
+  IsTrapTriggered triggerTrap(Actor* const actor) override;
 
   void trySprainPlayer();
 
   ItemContainer itemContainer_;
 
-  bool isContentKnown_;
+  bool isOpen_;
   bool isLocked_, isTrapped_, isTrapStatusKnown_;
-  ChestMatl matl_;
+
+  const ChestMatl matl_;
+
+  //How hard the trap is to detect (0 - 2)
+  // 0: Requires nothing
+  // 1: Requires "Observant"
+  // 2: Requires "Perceptive"
+  const int TRAP_DET_LVL;
 };
 
 class Cabinet: public Rigid
@@ -603,8 +610,9 @@ public:
   FeatureId getId() const override {return FeatureId::cabinet;}
 
   std::string getName(const Article article)  const override;
+  TileId      getTile()                       const override;
   void        bump(Actor& actorBumping)             override;
-  bool        open()                                override;
+  bool        open(Actor* const actorOpening)       override;
 
 private:
   Clr getClr_() const override;
@@ -613,7 +621,7 @@ private:
              Actor* const actor) override;
 
   ItemContainer itemContainer_;
-  bool isContentKnown_;
+  bool isOpen_;
 };
 
 enum class FountainEffect
@@ -672,8 +680,9 @@ public:
   FeatureId getId() const override {return FeatureId::cocoon;}
 
   std::string getName(const Article article)  const override;
+  TileId      getTile()                       const override;
   void        bump(Actor& actorBumping)             override;
-  bool        open()                                override;
+  bool        open(Actor* const actorOpening)       override;
 
 private:
   Clr getClr_() const override;
@@ -681,9 +690,9 @@ private:
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
-  void triggerTrap(Actor& actor) override;
+  IsTrapTriggered triggerTrap(Actor* const actor) override;
 
-  bool isContentKnown_;
+  bool isOpen_;
 
   ItemContainer itemContainer_;
 };
