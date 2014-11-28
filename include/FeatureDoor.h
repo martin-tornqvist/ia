@@ -29,7 +29,7 @@ public:
   FeatureId getId() const override {return FeatureId::door;}
 
   std::string getName(const Article article)                  const override;
-  IsDestroyed onFinishedBurning()                                   override;
+  WasDestroyed onFinishedBurning()                                  override;
   char        getGlyph()                                      const override;
   TileId      getTile()                                       const override;
   void        bump(Actor& actorBumping)                             override;
@@ -54,7 +54,7 @@ public:
 
   void setToSecret() {isOpen_ = isSecret_ = false;}
 
-  virtual bool open(Actor* const actorOpening) override;
+  virtual DidOpen open(Actor* const actorOpening) override;
 
   static bool isTileAnyDoor(const TileId tile)
   {

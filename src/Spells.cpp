@@ -687,9 +687,12 @@ SpellEffectNoticed SpellOpening::cast_(Actor* const caster) const
 
       if (cell.isSeenByPlayer)
       {
-        bool isOpening = cell.rigid->open(nullptr);
+        DidOpen didOpen = cell.rigid->open(nullptr);
 
-        if (isOpening) {isAnyOpened = true;}
+        if (didOpen == DidOpen::yes)
+        {
+          isAnyOpened = true;
+        }
       }
     }
   }

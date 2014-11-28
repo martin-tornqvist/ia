@@ -271,7 +271,7 @@ void Trap::disarm()
   if (IS_DISARMED) {Map::put(new Floor(pos_));}
 }
 
-IsTrapTriggered Trap::triggerTrap(Actor* const actor)
+DidTriggerTrap Trap::triggerTrap(Actor* const actor)
 {
   TRACE_FUNC_BEGIN;
 
@@ -309,7 +309,7 @@ IsTrapTriggered Trap::triggerTrap(Actor* const actor)
   }
 
   TRACE_FUNC_END;
-  return IsTrapTriggered::yes;
+  return DidTriggerTrap::yes;
 }
 
 void Trap::reveal(const bool PRINT_MESSSAGE_WHEN_PLAYER_SEES)

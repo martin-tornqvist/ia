@@ -385,7 +385,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //  }
 }
 
-IsDestroyed Door::onFinishedBurning()
+WasDestroyed Door::onFinishedBurning()
 {
   if (Map::isPosSeenByPlayer(pos_))
   {
@@ -394,7 +394,7 @@ IsDestroyed Door::onFinishedBurning()
   RubbleLow* const rubble = new RubbleLow(pos_);
   rubble->setHasBurned();
   Map::put(rubble);
-  return IsDestroyed::yes;
+  return WasDestroyed::yes;
 }
 
 bool Door::canMoveCmn() const {return isOpen_;}
@@ -832,12 +832,12 @@ void Door::tryOpen(Actor* actorTrying)
   }
 }
 
-bool Door::open(Actor* const actorOpening)
+DidOpen Door::open(Actor* const actorOpening)
 {
   (void)actorOpening;
 
   isOpen_   = true;
   isSecret_ = false;
   isStuck_  = false;
-  return true;
+  return DidOpen::yes;
 }

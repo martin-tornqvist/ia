@@ -5,9 +5,9 @@
 
 enum class BurnState        {notBurned, burning, hasBurned};
 
-enum class IsDestroyed      {no, yes};
-
-enum class IsTrapTriggered  {no, yes};
+enum class WasDestroyed     {no, yes};
+enum class DidTriggerTrap   {no, yes};
+enum class DidOpen          {no, yes};
 
 class Rigid: public Feature
 {
@@ -32,8 +32,8 @@ public:
 
   void clearGore();
 
-  virtual bool open(Actor* const actorOpening);
-  virtual void disarm();
+  virtual DidOpen   open(Actor* const actorOpening);
+  virtual void      disarm();
 
   void mkBloody() {isBloody_ = true;}
 
@@ -50,8 +50,8 @@ protected:
   virtual Clr             getClrBg_() const {return clrBlack;}
 
   void                    tryStartBurning(const bool IS_MSG_ALLOWED);
-  virtual IsDestroyed     onFinishedBurning();
-  virtual IsTrapTriggered triggerTrap(Actor* const actor);
+  virtual WasDestroyed    onFinishedBurning();
+  virtual DidTriggerTrap  triggerTrap(Actor* const actor);
 
   TileId  goreTile_;
   char    goreGlyph_;
@@ -94,7 +94,7 @@ public:
   FeatureId getId() const override {return FeatureId::carpet;}
 
   std::string getName(const Article article)  const override;
-  IsDestroyed onFinishedBurning()                   override;
+  WasDestroyed onFinishedBurning()                   override;
 
 private:
   Clr getClr_() const override;
@@ -136,7 +136,7 @@ public:
   FeatureId getId() const override {return FeatureId::bush;}
 
   std::string getName(const Article article)  const override;
-  IsDestroyed onFinishedBurning()                   override;
+  WasDestroyed onFinishedBurning()                   override;
 
   GrassType type_;
 
@@ -536,7 +536,7 @@ public:
   std::string getName(const Article article)  const override;
   TileId      getTile()                       const override;
   void        bump(Actor& actorBumping)             override;
-  bool        open(Actor* const actorOpening)       override;
+  DidOpen     open(Actor* const actorOpening)       override;
 
 private:
   Clr getClr_() const override;
@@ -544,7 +544,7 @@ private:
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
-  IsTrapTriggered triggerTrap(Actor* const actor) override;
+  DidTriggerTrap triggerTrap(Actor* const actor) override;
 
   void trySprainPlayer();
 
@@ -571,7 +571,7 @@ public:
   std::string getName(const Article article)  const override;
   TileId      getTile()                       const override;
   void        bump(Actor& actorBumping)             override;
-  bool        open(Actor* const actorOpening)       override;
+  DidOpen     open(Actor* const actorOpening)       override;
   void        disarm()                              override;
 
   void hit(const DmgType dmgType, const DmgMethod dmgMethod,
@@ -586,7 +586,7 @@ private:
 
   void tryFindTrap();
 
-  IsTrapTriggered triggerTrap(Actor* const actor) override;
+  DidTriggerTrap triggerTrap(Actor* const actor) override;
 
   void trySprainPlayer();
 
@@ -616,7 +616,7 @@ public:
   std::string getName(const Article article)  const override;
   TileId      getTile()                       const override;
   void        bump(Actor& actorBumping)             override;
-  bool        open(Actor* const actorOpening)       override;
+  DidOpen     open(Actor* const actorOpening)       override;
 
 private:
   Clr getClr_() const override;
@@ -686,7 +686,7 @@ public:
   std::string getName(const Article article)  const override;
   TileId      getTile()                       const override;
   void        bump(Actor& actorBumping)             override;
-  bool        open(Actor* const actorOpening)       override;
+  DidOpen     open(Actor* const actorOpening)       override;
 
 private:
   Clr getClr_() const override;
@@ -694,8 +694,9 @@ private:
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
-  IsTrapTriggered triggerTrap(Actor* const actor) override;
+  DidTriggerTrap triggerTrap(Actor* const actor) override;
 
+  bool isTrapped_;
   bool isOpen_;
 
   ItemContainer itemContainer_;

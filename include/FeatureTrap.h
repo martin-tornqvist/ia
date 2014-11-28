@@ -74,7 +74,7 @@ private:
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
-  IsTrapTriggered triggerTrap(Actor* const actor) override;
+  DidTriggerTrap triggerTrap(Actor* const actor) override;
 
   void setSpecificTrapFromId(const TrapId id);
 
