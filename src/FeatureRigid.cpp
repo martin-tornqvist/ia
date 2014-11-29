@@ -730,7 +730,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
           if (actorBehind->isAlive())
           {
             bool props[endOfPropIds];
-            actorBehind->getPropHandler().getAllActivePropIds(props);
+            actorBehind->getPropHandler().getActivePropIds(props);
             if (props[propEthereal])
             {
               if (actorBehind == Map::player)
@@ -887,7 +887,7 @@ void LiquidShallow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 void LiquidShallow::bump(Actor& actorBumping)
 {
   bool props[endOfPropIds];
-  actorBumping.getPropHandler().getAllActivePropIds(props);
+  actorBumping.getPropHandler().getActivePropIds(props);
 
   if (!props[propEthereal] && !props[propFlying])
   {
@@ -1353,7 +1353,7 @@ void ItemContainer::open(const Pos& featurePos, Actor* const actorOpening)
 
       const string name = item->getName(ItemRefType::plural, ItemRefInf::yes);
 
-      Log::addMsg("Pick up " + name + "? (y/n)");
+      Log::addMsg("Pick up " + name + "? [y/n]");
       Render::drawMapAndInterface();
 
       if (Query::yesOrNo() == YesNoAnswer::yes)
@@ -1551,7 +1551,7 @@ void Tomb::bump(Actor & actorBumping)
         Log::addMsg("I attempt to push the lid.");
 
         bool props[endOfPropIds];
-        Map::player->getPropHandler().getAllActivePropIds(props);
+        Map::player->getPropHandler().getActivePropIds(props);
 
         if (props[propWeakened])
         {
@@ -1930,7 +1930,7 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
             Log::addMsg("I kick the lid.");
 
             bool props[endOfPropIds];
-            Map::player->getPropHandler().getAllActivePropIds(props);
+            Map::player->getPropHandler().getActivePropIds(props);
 
             if (props[propWeakened] || matl_ == ChestMatl::iron)
             {
@@ -2046,7 +2046,7 @@ void Chest::disarm()
       //If trap was unknown, give the player a chance to abort
       if (isTrapStatusKnown_)
       {
-        Log::addMsg("Attempt to disarm it? (y/n)");
+        Log::addMsg("Attempt to disarm it? [y/n]");
         Render::drawMapAndInterface();
         const auto answer = Query::yesOrNo();
         if (answer == YesNoAnswer::no)
@@ -2120,7 +2120,7 @@ DidTriggerTrap Chest::triggerTrap(Actor * const actor)
 
   //Nothing happens?
   bool playerProps[endOfPropIds];
-  Map::player->getPropHandler().getAllActivePropIds(playerProps);
+  Map::player->getPropHandler().getActivePropIds(playerProps);
 
   const int TRAP_NO_ACTION_ONE_IN_N = playerProps[propBlessed] ? 2 :
                                       playerProps[propCursed]  ? 20 : 4;
@@ -2329,7 +2329,7 @@ void Fountain::bump(Actor & actorBumping)
       if (!propHlr.allowSee())
       {
         Log::clearLog();
-        Log::addMsg("There is a fountain here. Drink from it? (y/n)");
+        Log::addMsg("There is a fountain here. Drink from it? [y/n]");
         Render::drawMapAndInterface();
         const auto answer = Query::yesOrNo();
         if (answer == YesNoAnswer::no)

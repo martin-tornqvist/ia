@@ -110,20 +110,14 @@ void Inventory::setupFromSaveLines(vector<string>& lines)
   }
 }
 
-bool Inventory::hasDynamiteInGeneral() const
+bool Inventory::hasItemInBackpack(const ItemId id) const
 {
-  return hasItemInGeneral(ItemId::dynamite);
-}
-
-bool Inventory::hasItemInGeneral(const ItemId id) const
-{
-  for (size_t i = 0; i < general_.size(); ++i)
+  auto it = std::find_if(begin(general_), end(general_), [id](Item * item)
   {
-    if (general_[i]->getData().id == id)
-      return true;
-  }
+    return item->getId() == id;
+  });
 
-  return false;
+  return it != end(general_);
 }
 
 int Inventory::getItemStackSizeInGeneral(const ItemId id) const
@@ -488,11 +482,26 @@ void Inventory::removeWithoutDestroying(const InvList invList, const size_t IDX)
   }
 }
 
-int Inventory::getElementWithItemType(const ItemId id) const
+Item* Inventory::getFirstItemInBackpackWithId(const ItemId id)
+{
+  auto it = std::find_if(begin(general_), end(general_), [id](Item * item)
+  {
+    return item->getId() == id;
+  });
+
+  if (it == end(general_))
+  {
+    return nullptr;
+  }
+
+  return *it;
+}
+
+int Inventory::getBackpackIdxWithItemId(const ItemId id) const
 {
   for (size_t i = 0; i < general_.size(); ++i)
   {
-    if (general_[i]->getData().id == id)
+    if (general_[i]->getId() == id)
     {
       return i;
     }

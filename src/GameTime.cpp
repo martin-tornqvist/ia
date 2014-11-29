@@ -285,7 +285,7 @@ void actorDidAct(const bool IS_FREE_TURN)
       curActor = getCurActor();
 
       bool props[endOfPropIds];
-      curActor->getPropHandler().getAllActivePropIds(props);
+      curActor->getPropHandler().getActivePropIds(props);
 
       const bool IS_SLOWED = props[propSlowed];
 

@@ -68,7 +68,7 @@ vector<string> StrangeDevice::getDescr() const
   }
 }
 
-ConsumeItem StrangeDevice::activateDefault(Actor* const actor)
+ConsumeItem StrangeDevice::activate(Actor* const actor)
 {
   (void)actor;
 
@@ -86,7 +86,7 @@ ConsumeItem StrangeDevice::activateDefault(Actor* const actor)
     bool isWarning        = false;
     int bon = 0;
     bool props[endOfPropIds];
-    actor->getPropHandler().getAllActivePropIds(props);
+    actor->getPropHandler().getActivePropIds(props);
     if (props[propBlessed])
     {
       bon += 2;
@@ -305,7 +305,7 @@ std::string DeviceLantern::getNameInf() const
   return inf + "}";
 }
 
-ConsumeItem DeviceLantern::activateDefault(Actor* const actor)
+ConsumeItem DeviceLantern::activate(Actor* const actor)
 {
   (void)actor;
   toggle();

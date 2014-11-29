@@ -885,7 +885,7 @@ void  PropHandler::getPropIdsFromSources(
   }
 }
 
-void PropHandler::getAllActivePropIds(bool out[endOfPropIds]) const
+void PropHandler::getActivePropIds(bool out[endOfPropIds]) const
 {
   bool sources[int(PropSrc::END)];
   for (bool& v : sources) {v = true;}

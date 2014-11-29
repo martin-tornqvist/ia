@@ -41,7 +41,7 @@ void draw(const string& curString)
 
 void readKeys(string& curString, bool& isDone)
 {
-  const KeyData& d = Input::readKeysUntilFound(false);
+  const KeyData& d = Input::getInput(false);
 
   if (d.sdlKey == SDLK_RETURN)
   {

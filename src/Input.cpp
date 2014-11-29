@@ -76,11 +76,8 @@ void cleanup()
   }
 }
 
-void handleKeyPress(const KeyData& d)
+void handleMapModeKeyPress(const KeyData& d)
 {
-
-  //TODO Shouldn't this be a switch?
-
   //----------------------------------- MOVEMENT
   if (d.sdlKey == SDLK_RIGHT            || d.key == '6' || d.key == 'l')
   {
@@ -512,9 +509,9 @@ void handleKeyPress(const KeyData& d)
     return;
   }
 
-  //----------------------------------- QUICK WALK
   else if (d.key == 'e')
   {
+    //----------------------------------- QUICK WALK
     Log::clearLog();
     if (Map::player->isAlive())
     {
@@ -536,7 +533,7 @@ void handleKeyPress(const KeyData& d)
       else
       {
         bool props[endOfPropIds];
-        Map::player->getPropHandler().getAllActivePropIds(props);
+        Map::player->getPropHandler().getActivePropIds(props);
         if (props[propPoisoned])
         {
           //Player is poisoned
@@ -782,6 +779,81 @@ void handleKeyPress(const KeyData& d)
     return;
   }
 
+  //----------------------------------- ITEM SHORTCUTS
+  else if (d.key == 'a')
+  {
+    Inventory&  inv         = Map::player->getInv();
+    Item*       medicalBag  = inv.getFirstItemInBackpackWithId(ItemId::medicalBag);
+    Item*       lantern     = inv.getFirstItemInBackpackWithId(ItemId::electricLantern);
+
+    Log::clearLog();
+
+    if (!medicalBag && !lantern)
+    {
+      Log::addMsg("No item with shortcut carried.");
+      Render::drawMapAndInterface();
+      clearEvents();
+      return;
+    }
+
+    Log::addMsg("Use which item?",          clrWhiteHigh);
+
+    if (medicalBag)
+    {
+      Log::addMsg("[a] Medical Bag",        clrWhiteHigh);
+    }
+    if (lantern)
+    {
+      Log::addMsg("[e] Electric Lantern",   clrWhiteHigh);
+    }
+
+    Log::addMsg(cancelInfoStrNoSpace,       clrWhiteHigh);
+
+    Render::drawMapAndInterface();
+
+    while (true)
+    {
+      const KeyData shortcutKeyData = Query::letter(true);
+
+      if (shortcutKeyData.sdlKey == SDLK_ESCAPE || shortcutKeyData.sdlKey == SDLK_SPACE)
+      {
+        Log::clearLog();
+        Render::drawMapAndInterface();
+        break;
+      }
+      else if (medicalBag && shortcutKeyData.key == 'a')
+      {
+        Log::clearLog();
+
+        for (Item* const item : Map::player->getInv().general_)
+        {
+          if (item->getId() == ItemId::medicalBag)
+          {
+            item->activate(Map::player);
+            break;
+          }
+        }
+        break;
+      }
+      else if (lantern && shortcutKeyData.key == 'e')
+      {
+        Log::clearLog();
+
+        for (Item* const item : Map::player->getInv().general_)
+        {
+          if (item->getId() == ItemId::electricLantern)
+          {
+            item->activate(Map::player);
+            break;
+          }
+        }
+        break;
+      }
+    }
+    clearEvents();
+    return;
+  }
+
   //----------------------------------- MENU
   else if (d.sdlKey == SDLK_ESCAPE)
   {
@@ -817,9 +889,10 @@ void handleKeyPress(const KeyData& d)
     clearEvents();
     return;
   }
+
+  //----------------------------------- QUIT
   else if (d.key == 'Q' /*&& IS_DEBUG_MODE*/)
   {
-    //----------------------------------- MENU
     queryQuit();
     clearEvents();
     return;
@@ -949,12 +1022,16 @@ void setKeyRepeatDelays()
   TRACE_FUNC_END;
 }
 
-void handleMapModeInputUntilFound()
+void mapModeInput()
 {
   if (sdlEvent_)
   {
-    const KeyData& d = readKeysUntilFound();
-    if (!Init::quitToMainMenu) {handleKeyPress(d);}
+    const KeyData& d = getInput();
+
+    if (!Init::quitToMainMenu)
+    {
+      handleMapModeKeyPress(d);
+    }
   }
 }
 
@@ -963,9 +1040,12 @@ void clearEvents()
   if (sdlEvent_) {while (SDL_PollEvent(sdlEvent_)) {}}
 }
 
-KeyData readKeysUntilFound(const bool IS_O_RETURN)
+KeyData getInput(const bool IS_O_RETURN)
 {
-  if (!sdlEvent_) {return KeyData();}
+  if (!sdlEvent_)
+  {
+    return KeyData();
+  }
 
   while (true)
   {
@@ -984,6 +1064,7 @@ KeyData readKeysUntilFound(const bool IS_O_RETURN)
         // '!' = 33
         // '~' = 126
         Uint16 unicode = sdlEvent_->key.keysym.unicode;
+
         if ((unicode == 'o' || unicode == 'O') && IS_O_RETURN)
         {
           return KeyData(-1, SDLK_RETURN, unicode == 'O', false);
@@ -998,7 +1079,7 @@ KeyData readKeysUntilFound(const bool IS_O_RETURN)
           //Other key pressed? (escape, return, space, etc)
           const SDLKey sdlKey = sdlEvent_->key.keysym.sym;
 
-          //Don't register shift, control or alt as actual key events
+          //Do not return shift, control or alt as separate key events
           if (sdlKey == SDLK_LSHIFT ||
               sdlKey == SDLK_RSHIFT ||
               sdlKey == SDLK_LCTRL  ||
@@ -1009,10 +1090,10 @@ KeyData readKeysUntilFound(const bool IS_O_RETURN)
             continue;
           }
 
-          SDLMod mod = SDL_GetModState();
-          const bool IS_SHIFT_HELD    = mod & KMOD_SHIFT;
-          const bool IS_CTRL_HELD     = mod & KMOD_CTRL;
-          const bool IS_ALT_HELD      = mod & KMOD_ALT;
+          SDLMod      mod           = SDL_GetModState();
+          const bool  IS_SHIFT_HELD = mod & KMOD_SHIFT;
+          const bool  IS_CTRL_HELD  = mod & KMOD_CTRL;
+          const bool  IS_ALT_HELD   = mod & KMOD_ALT;
 
           KeyData ret(-1, sdlKey, IS_SHIFT_HELD, IS_CTRL_HELD);
 

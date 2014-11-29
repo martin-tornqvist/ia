@@ -15,7 +15,7 @@ public:
 
   virtual ~Potion() {}
 
-  ConsumeItem activateDefault(Actor* const actor) override final;
+  ConsumeItem activate(Actor* const actor) override final;
 
   Clr getInterfaceClr() const override final {return clrBlueLgt;}
 

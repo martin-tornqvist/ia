@@ -44,7 +44,7 @@ public:
 
   std::string getWeightStr() const;
 
-  virtual ConsumeItem activateDefault(Actor* const actor);
+  virtual ConsumeItem activate(Actor* const actor);
 
   virtual Clr getInterfaceClr() const {return clrBrown;}
 
@@ -324,7 +324,7 @@ public:
 
   void onPickupToBackpack(Inventory& inv) override;
 
-  ConsumeItem activateDefault(Actor* const actor) override;
+  ConsumeItem activate(Actor* const actor) override;
 
   void continueAction();
   void interrupted();
@@ -345,7 +345,7 @@ public:
   int getNrSupplies() const {return nrSupplies_;}
 
 protected:
-  MedBagAction playerChooseAction() const;
+  MedBagAction chooseAction() const;
 
   int getTotTurnsForSanitize() const;
   int getTotSupplForSanitize() const;
@@ -392,7 +392,7 @@ public:
 
   Explosive() = delete;
 
-  ConsumeItem activateDefault(Actor* const actor) override final;
+  ConsumeItem activate(Actor* const actor) override final;
   Clr getInterfaceClr() const override final {return clrRedLgt;}
 
   virtual void        onStdTurnPlayerHoldIgnited()          = 0;

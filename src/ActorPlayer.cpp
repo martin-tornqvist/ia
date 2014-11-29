@@ -288,7 +288,7 @@ int Player::getCarryWeightLmt() const
   const bool IS_STRONG_BACKED = PlayerBon::traitsPicked[int(Trait::strongBacked)];
 
   bool props[endOfPropIds];
-  propHandler_->getAllActivePropIds(props);
+  propHandler_->getActivePropIds(props);
   const bool IS_WEAKENED = props[propWeakened];
 
   const int CARRY_WEIGHT_MOD = (IS_TOUGH         * 10) +
@@ -465,7 +465,7 @@ void Player::incrInsanity()
         case 5:
         {
           bool props[endOfPropIds];
-          propHandler_->getAllActivePropIds(props);
+          propHandler_->getActivePropIds(props);
 
           if (props[propRFear])
           {
@@ -852,7 +852,7 @@ void Player::onActorTurn()
   else
   {
     Input::clearEvents();
-    Input::handleMapModeInputUntilFound();
+    Input::mapModeInput();
   }
 }
 
@@ -1051,7 +1051,7 @@ void Player::onStdTurn()
   if (!activeMedicalBag)
   {
     bool props[endOfPropIds];
-    propHandler_->getAllActivePropIds(props);
+    propHandler_->getActivePropIds(props);
 
     if (!props[propPoisoned])
     {
@@ -1221,7 +1221,7 @@ void Player::moveDir(Dir dir)
               {
                 const string wpnName = wpn->getName(ItemRefType::a);
                 Log::addMsg("Attack " + monAtDest->getNameThe() +
-                            " with " + wpnName + "? (y/n)", clrWhiteHigh);
+                            " with " + wpnName + "? [y/n]", clrWhiteHigh);
                 Render::drawMapAndInterface();
                 if (Query::yesOrNo() == YesNoAnswer::no)
                 {
@@ -1247,7 +1247,7 @@ void Player::moveDir(Dir dir)
 
       //Blocking mobile or rigid?
       bool props[endOfPropIds];
-      getPropHandler().getAllActivePropIds(props);
+      getPropHandler().getActivePropIds(props);
       Cell& cell = Map::cells[dest.x][dest.y];
       bool isFeaturesAllowMove = cell.rigid->canMove(props);
 

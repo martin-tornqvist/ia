@@ -13,7 +13,7 @@ public:
 
   virtual ~Device() {}
 
-  virtual ConsumeItem activateDefault(Actor* const actor) override = 0;
+  virtual ConsumeItem activate(Actor* const actor) override = 0;
 
   virtual Clr getInterfaceClr() const override {return clrCyan;}
 
@@ -29,7 +29,7 @@ public:
 
   virtual std::vector<std::string> getDescr() const override final;
 
-  ConsumeItem activateDefault(Actor* const actor) override;
+  ConsumeItem activate(Actor* const actor) override;
 
   virtual std::string getNameInf() const override;
 
@@ -149,7 +149,7 @@ public:
 
   ~DeviceLantern() override {}
 
-  ConsumeItem activateDefault(Actor* const actor)   override;
+  ConsumeItem activate(Actor* const actor)   override;
   void          newTurnInInventory()                override;
   void          onPickupToBackpack(Inventory& inv)  override;
 

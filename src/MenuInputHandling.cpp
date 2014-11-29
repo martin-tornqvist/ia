@@ -10,7 +10,7 @@ MenuAction getAction(MenuBrowser& browser)
 {
   while (true)
   {
-    KeyData d = Input::readKeysUntilFound();
+    KeyData d = Input::getInput();
 
     if (d.sdlKey == SDLK_RIGHT        || d.key == '6' || d.key == 'l')
     {

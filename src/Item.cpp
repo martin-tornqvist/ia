@@ -64,7 +64,7 @@ string Item::getWeightStr() const
   return "heavy";
 }
 
-ConsumeItem Item::activateDefault(Actor* const actor)
+ConsumeItem Item::activate(Actor* const actor)
 {
   (void)actor;
   Log::addMsg("I cannot apply that.");
@@ -488,7 +488,7 @@ void MedicalBag::onPickupToBackpack(Inventory& inv)
   }
 }
 
-ConsumeItem MedicalBag::activateDefault(Actor* const actor)
+ConsumeItem MedicalBag::activate(Actor* const actor)
 {
   (void)actor;
 
@@ -501,7 +501,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
     return ConsumeItem::no;
   }
 
-  curAction_ = playerChooseAction();
+  curAction_ = chooseAction();
 
   Log::clearLog();
 
@@ -512,7 +512,7 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
 
   //Check if chosen action can be done
   bool props[endOfPropIds];
-  Map::player->getPropHandler().getAllActivePropIds(props);
+  Map::player->getPropHandler().getActivePropIds(props);
   switch (curAction_)
   {
     case MedBagAction::treatWounds:
@@ -580,33 +580,45 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
   return ConsumeItem::no;
 }
 
-MedBagAction MedicalBag::playerChooseAction() const
+MedBagAction MedicalBag::chooseAction() const
 {
   Log::clearLog();
 
-  Log::addMsg("Use Medical Bag how? [h/enter] Treat wounds [s] Sanitize infection",
-              clrWhiteHigh);
+  bool props[endOfPropIds];
+  Map::player->getPropHandler().getActivePropIds(props);
 
-  Render::drawMapAndInterface(true);
-
-  while (true)
+  //Infections are treated firest
+  if(props[propInfected])
   {
-    const KeyData d = Query::letter(true);
-    if (d.sdlKey == SDLK_ESCAPE || d.sdlKey == SDLK_SPACE)
-    {
-      return MedBagAction::END;
-    }
-    else if (d.sdlKey == SDLK_RETURN || d.key == 'h')
-    {
-      return MedBagAction::treatWounds;
-    }
-    else if (d.key == 's')
-    {
-      return MedBagAction::sanitizeInfection;
-    }
+    return MedBagAction::sanitizeInfection;
   }
 
-  return MedBagAction(MedBagAction::END);
+  return MedBagAction::treatWounds;
+
+
+//  Log::addMsg("Use Medical Bag how? [h/enter] Treat wounds [s] Sanitize infection",
+//              clrWhiteHigh);
+
+//  Render::drawMapAndInterface(true);
+//
+//  while (true)
+//  {
+//    const KeyData d = Query::letter(true);
+//    if (d.sdlKey == SDLK_ESCAPE || d.sdlKey == SDLK_SPACE)
+//    {
+//      return MedBagAction::END;
+//    }
+//    else if (d.sdlKey == SDLK_RETURN || d.key == 'h')
+//    {
+//      return MedBagAction::treatWounds;
+//    }
+//    else if (d.key == 's')
+//    {
+//      return MedBagAction::sanitizeInfection;
+//    }
+//  }
+//
+//  return MedBagAction(MedBagAction::END);
 }
 
 void MedicalBag::continueAction()
@@ -774,7 +786,7 @@ UnequipAllowed GasMask::onUnequip()
 }
 
 //--------------------------------------------------------- EXPLOSIVE
-ConsumeItem Explosive::activateDefault(Actor* const actor)
+ConsumeItem Explosive::activate(Actor* const actor)
 {
   (void)actor;
   //Make a copy to use as the held ignited explosive.

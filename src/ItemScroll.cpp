@@ -39,7 +39,7 @@ vector<string> Scroll::getDescr() const
   }
 }
 
-ConsumeItem Scroll::activateDefault(Actor* const actor)
+ConsumeItem Scroll::activate(Actor* const actor)
 {
   if (actor->getPropHandler().allowRead(true))
   {

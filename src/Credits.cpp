@@ -86,7 +86,7 @@ void run()
   //Read keys
   while (true)
   {
-    const KeyData& d = Input::readKeysUntilFound();
+    const KeyData& d = Input::getInput();
     if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
     {
       break;

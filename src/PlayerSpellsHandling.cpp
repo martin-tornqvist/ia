@@ -172,7 +172,7 @@ void tryCast(const SpellOpt& spellOpt)
     const Range spiCost = spell->getSpiCost(false, Map::player);
     if (spiCost.upper >= Map::player->getSpi())
     {
-      Log::addMsg("Cast spell and risk depleting your spirit (y/n)?", clrWhiteHigh);
+      Log::addMsg("Cast spell and risk depleting your spirit [y/n]?", clrWhiteHigh);
       Render::drawMapAndInterface();
       if (Query::yesOrNo() == YesNoAnswer::no)
       {

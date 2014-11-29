@@ -22,7 +22,7 @@
 
 using namespace std;
 
-ConsumeItem Potion::activateDefault(Actor* const actor)
+ConsumeItem Potion::activate(Actor* const actor)
 {
   assert(actor);
   quaff(*actor);

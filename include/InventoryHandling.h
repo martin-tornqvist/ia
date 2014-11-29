@@ -21,7 +21,7 @@ void init();
 void runInvScreen();
 bool runEquipScreen(InvSlot& slotToEquip);
 
-void activateDefault(const size_t GENERAL_ITEMS_ELEMENT);
+void activate(const size_t GENERAL_ITEMS_ELEMENT);
 
 } //InvHandling
 

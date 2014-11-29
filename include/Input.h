@@ -29,15 +29,16 @@ namespace Input
 void init();
 void cleanup();
 
-void handleMapModeInputUntilFound();
+//Reads input until a valid map mode command is executed
+void mapModeInput();
 
-KeyData readKeysUntilFound(const bool IS_O_RETURN = true);
+KeyData getInput(const bool IS_O_RETURN = true);
 
 void clearEvents();
 
 void setKeyRepeatDelays();
 
-void handleKeyPress(const KeyData& d);
+void handleMapModeKeyPress(const KeyData& d);
 
 } //Input
 

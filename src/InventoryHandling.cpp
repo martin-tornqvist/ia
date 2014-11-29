@@ -184,12 +184,12 @@ void init()
   browserIdxToSetAfterDrop  = 0;
 }
 
-void activateDefault(const size_t GENERAL_ITEMS_ELEMENT)
+void activate(const size_t GENERAL_ITEMS_ELEMENT)
 {
   Inventory& playerInv  = Map::player->getInv();
   Item* item            = playerInv.general_[GENERAL_ITEMS_ELEMENT];
 
-  if (item->activateDefault(Map::player) == ConsumeItem::yes)
+  if (item->activate(Map::player) == ConsumeItem::yes)
   {
     playerInv.decrItemInGeneral(GENERAL_ITEMS_ELEMENT);
   }
@@ -308,7 +308,7 @@ void runInvScreen()
         else //In general inventory
         {
           const size_t ELEMENT = browser.getY() - int(SlotId::END);
-          activateDefault(ELEMENT);
+          activate(ELEMENT);
           Render::drawMapAndInterface();
           return;
         }

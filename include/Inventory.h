@@ -59,7 +59,9 @@ public:
 
   bool hasAmmoForFirearmInInventory();
 
-  int getElementWithItemType(const ItemId itemId) const;
+  Item* getFirstItemInBackpackWithId(const ItemId id);
+
+  int getBackpackIdxWithItemId(const ItemId itemId) const;
 
   Item* getItemInSlot(SlotId id) const;
 
@@ -80,11 +82,9 @@ public:
 
   Item* getLastItemInGeneral();
 
-  bool hasItemInGeneral(const ItemId id) const;
+  bool hasItemInBackpack(const ItemId id) const;
 
   int getItemStackSizeInGeneral(const ItemId id) const;
-
-  bool hasDynamiteInGeneral() const;
 
   void decrDynamiteInGeneral();
 

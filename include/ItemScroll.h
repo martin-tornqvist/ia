@@ -19,7 +19,7 @@ public:
     return clrMagenta;
   }
 
-  ConsumeItem activateDefault(Actor* const actor) override;
+  ConsumeItem activate(Actor* const actor) override;
 
   ConsumeItem read();
 

@@ -166,7 +166,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
           PropHandler& propHlr = actorReloading.getPropHandler();
 
           bool props[endOfPropIds];
-          propHlr.getAllActivePropIds(props);
+          propHlr.getActivePropIds(props);
 
           const bool IS_RELOADER_BLIND      = !actorReloading.getPropHandler().allowSee();
           const bool IS_REALOADER_TERRIFIED = props[propTerrified];

@@ -97,7 +97,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
 
     PropHandler& defPropHlr = defender->getPropHandler();
     bool defProps[endOfPropIds];
-    defPropHlr.getAllActivePropIds(defProps);
+    defPropHlr.getActivePropIds(defProps);
 
     //If attacker is aware of the defender, check
     if (isAttackerAware)
@@ -173,7 +173,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     dmgPlus     = wpn_.meleeDmgPlus_;
 
     bool attProps[endOfPropIds];
-    attacker->getPropHandler().getAllActivePropIds(attProps);
+    attacker->getPropHandler().getActivePropIds(attProps);
 
     if (attProps[propWeakened])
     {
@@ -304,7 +304,7 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
       TRACE << "Attack roll succeeded" << endl;
 
       bool props[endOfPropIds];
-      defender->getPropHandler().getAllActivePropIds(props);
+      defender->getPropHandler().getActivePropIds(props);
 
       if (props[propEthereal])
       {
@@ -410,7 +410,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
       TRACE << "Attack roll succeeded" << endl;
 
       bool props[endOfPropIds];
-      defender->getPropHandler().getAllActivePropIds(props);
+      defender->getPropHandler().getActivePropIds(props);
 
       if (props[propEthereal])
       {

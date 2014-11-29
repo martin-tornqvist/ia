@@ -152,33 +152,11 @@ Room::Room(Rect r, RoomType type) :
 
 void Room::mkDrk() const
 {
-  //Expand all cells belonging to the room one step
-  bool cellsInRoom[MAP_W][MAP_H];
-
   for (int x = 0; x < MAP_W; ++x)
   {
     for (int y = 0; y < MAP_H; ++y)
     {
-      cellsInRoom[x][y] = Map::roomMap[x][y] == this;
-    }
-  }
-
-  bool cellsToMkDrk[MAP_W][MAP_H];
-
-  const Rect areaLmt(r_.p0 - 1, r_.p1 + 1);
-
-  MapParse::expand(cellsInRoom, cellsToMkDrk, areaLmt);
-
-  //Mark the result as dark for all cells not belonging to another room
-  for (int x = areaLmt.p0.x; x <= areaLmt.p1.x; ++x)
-  {
-    for (int y = areaLmt.p0.y; y <= areaLmt.p1.y; ++y)
-    {
-      const Room* roomHere = Map::roomMap[x][y];
-      if (cellsToMkDrk[x][y] && (!roomHere || roomHere == this) )
-      {
-        Map::cells[x][y].isDark = true;
-      }
+      if (Map::roomMap[x][y] == this) {Map::cells[x][y].isDark = true;}
     }
   }
 

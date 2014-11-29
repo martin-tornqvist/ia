@@ -116,7 +116,7 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
 
     Render::updateScreen();
 
-    const KeyData& d = Input::readKeysUntilFound();
+    const KeyData& d = Input::getInput();
 
     if (d.sdlKey == SDLK_RIGHT    || d.key == '6' || d.key == 'l')
     {

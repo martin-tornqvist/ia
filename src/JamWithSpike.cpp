@@ -61,7 +61,7 @@ void playerJam()
 {
   Log::clearLog();
 
-  if (!Map::player->getInv().hasItemInGeneral(ItemId::ironSpike))
+  if (!Map::player->getInv().hasItemInBackpack(ItemId::ironSpike))
   {
     Log::addMsg("I have no spikes to jam with.", clrWhite);
     Render::drawMapAndInterface();

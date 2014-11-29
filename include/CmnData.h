@@ -81,10 +81,12 @@ const int EXPL_MAX_DMG    = (EXPL_DMG_ROLLS* EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 //so that may also push the number of actors above the limit. (It's a soft limit)
 const size_t MAX_NR_ACTORS_ON_MAP = 125;
 
-const std::string infoScrCmdInfo    = " [2/8 down/up j/k] to navigate "
-                                      "[space/esc] to exit ";
-const std::string cancelInfoStr     = " [space/esc] to cancel";
-const std::string msgDisarmNoTrap   = "I find nothing there to disarm.";
-const std::string msgMonPreventCmd  = "Not while an enemy is near.";
+const std::string infoScrCmdInfo =
+  " [2/8 down/up j/k] to navigate [space/esc] to exit ";
+
+const std::string cancelInfoStrNoSpace  = "[space/esc] to cancel";
+const std::string cancelInfoStr         = " " + cancelInfoStr;
+const std::string msgDisarmNoTrap       = "I find nothing there to disarm.";
+const std::string msgMonPreventCmd      = "Not while an enemy is near.";
 
 #endif

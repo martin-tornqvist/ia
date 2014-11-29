@@ -74,7 +74,7 @@ bool walkToAdjCell(const Pos& p)
   //Occasionally randomize movement
   if (Rnd::oneIn(5)) {key = '0' + Rnd::range(1, 9);}
 
-  Input::handleKeyPress(KeyData(key));
+  Input::handleMapModeKeyPress(KeyData(key));
 
   return Map::player->pos == p;
 }
@@ -139,7 +139,7 @@ void act()
   //Occasionally send a TAB command to attack nearby monsters
   if (Rnd::coinToss())
   {
-    Input::handleKeyPress(KeyData(SDLK_TAB));
+    Input::handleMapModeKeyPress(KeyData(SDLK_TAB));
     return;
   }
 
@@ -181,7 +181,7 @@ void act()
 
   //If we are terrified, wait in place
   bool props[endOfPropIds];
-  Map::player->getPropHandler().getAllActivePropIds(props);
+  Map::player->getPropHandler().getActivePropIds(props);
 
   if (props[propTerrified])
   {

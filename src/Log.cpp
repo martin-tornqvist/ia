@@ -217,7 +217,7 @@ void displayHistory()
     }
     Render::updateScreen();
 
-    const KeyData& d = Input::readKeysUntilFound();
+    const KeyData& d = Input::getInput();
     if (d.key == '2' || d.sdlKey == SDLK_DOWN || d.key == 'j')
     {
       topNr += LINE_JUMP;

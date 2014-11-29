@@ -261,7 +261,7 @@ void runInfo(const vector<StrAndClr>& lines)
   {
     render(lines, topNr);
 
-    const KeyData& d = Input::readKeysUntilFound();
+    const KeyData& d = Input::getInput();
 
     if (d.sdlKey == SDLK_DOWN || d.key == '2' || d.key == 'j')
     {

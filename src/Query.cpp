@@ -28,7 +28,7 @@ void waitForKeyPress()
 {
   if (isInited_ && !Config::isBotPlaying())
   {
-    Input::readKeysUntilFound();
+    Input::getInput();
   }
 }
 
@@ -36,7 +36,7 @@ YesNoAnswer yesOrNo(char keyForSpecialEvent)
 {
   if (!isInited_ || Config::isBotPlaying()) {return YesNoAnswer::yes;}
 
-  KeyData d = Input::readKeysUntilFound();
+  KeyData d = Input::getInput();
   while (
     d.key    != 'y'          &&
     d.key    != 'n'          &&
@@ -44,7 +44,7 @@ YesNoAnswer yesOrNo(char keyForSpecialEvent)
     d.sdlKey != SDLK_SPACE   &&
     (d.key != keyForSpecialEvent || keyForSpecialEvent == -1))
   {
-    d = Input::readKeysUntilFound();
+    d = Input::getInput();
   }
   if (d.key == keyForSpecialEvent && keyForSpecialEvent != -1)
   {
@@ -64,7 +64,7 @@ KeyData letter(const bool ACCEPT_ENTER)
 
   while (true)
   {
-    KeyData d = Input::readKeysUntilFound();
+    KeyData d = Input::getInput();
 
     if ((ACCEPT_ENTER && d.sdlKey == SDLK_RETURN) ||
         d.sdlKey == SDLK_ESCAPE ||
@@ -96,7 +96,7 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
            d.sdlKey != SDLK_SPACE && d.sdlKey != SDLK_ESCAPE &&
            d.sdlKey != SDLK_BACKSPACE)
     {
-      d = Input::readKeysUntilFound();
+      d = Input::getInput();
     }
 
     if (d.sdlKey == SDLK_RETURN)
@@ -139,10 +139,10 @@ void waitForEscOrSpace()
 {
   if (isInited_ && !Config::isBotPlaying())
   {
-    KeyData d = Input::readKeysUntilFound();
+    KeyData d = Input::getInput();
     while (d.sdlKey != SDLK_SPACE && d.sdlKey != SDLK_ESCAPE)
     {
-      d = Input::readKeysUntilFound();
+      d = Input::getInput();
     }
   }
 }
@@ -151,7 +151,7 @@ Dir dir()
 {
   if (!isInited_ || Config::isBotPlaying()) {return Dir::END;}
 
-  KeyData d = Input::readKeysUntilFound();
+  KeyData d = Input::getInput();
 
   while (d.sdlKey != SDLK_RIGHT   && d.sdlKey != SDLK_UP       &&
          d.sdlKey != SDLK_LEFT    && d.sdlKey != SDLK_DOWN     &&
@@ -162,7 +162,7 @@ Dir dir()
          d.key != 'y' && d.key != 'u' && d.key != 'b' && d.key != 'n' &&
          (d.key < '1' || d.key > '9' || d.key == '5'))
   {
-    d = Input::readKeysUntilFound();
+    d = Input::getInput();
   }
 
   if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
