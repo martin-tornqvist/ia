@@ -9,7 +9,8 @@ class Spell;
 class Scroll: public Item
 {
 public:
-  Scroll(ItemDataT* const itemData) : Item(itemData) {}
+  Scroll(ItemDataT* const itemData) :
+    Item(itemData) {}
 
   ~Scroll() {}
 

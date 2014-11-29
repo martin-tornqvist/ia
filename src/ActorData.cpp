@@ -2300,7 +2300,7 @@ void initDataList()
   d.hp = 4;
   d.spi = 1;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(AbilityId::melee, 15);
+  d.abilityVals.setVal(AbilityId::melee, 12);
   d.speed = ActorSpeed::slow;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::attacks)] = true;

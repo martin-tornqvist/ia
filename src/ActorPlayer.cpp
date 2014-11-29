@@ -39,20 +39,20 @@ using namespace std;
 const int MIN_SHOCK_WHEN_OBSESSION = 35;
 
 Player::Player() :
-  Actor(),
-  activeMedicalBag(nullptr),
-  waitTurnsLeft(-1),
-  activeExplosive(nullptr),
-  tgt_(nullptr),
-  ins_(0),
-  shock_(0.0),
-  shockTmp_(0.0),
-  permShockTakenCurTurn_(0.0),
-  nrMovesUntilFreeAction_(-1),
-  nrTurnsUntilIns_(-1),
-  nrQuickMoveStepsLeft_(-1),
-  quickMoveDir_(Dir::END),
-  CARRY_WEIGHT_BASE_(450) {}
+  Actor                   (),
+  activeMedicalBag        (nullptr),
+  waitTurnsLeft           (-1),
+  activeExplosive         (nullptr),
+  tgt_                    (nullptr),
+  ins_                    (0),
+  shock_                  (0.0),
+  shockTmp_               (0.0),
+  permShockTakenCurTurn_  (0.0),
+  nrMovesUntilFreeAction_ (-1),
+  nrTurnsUntilIns_        (-1),
+  nrQuickMoveStepsLeft_   (-1),
+  quickMoveDir_           (Dir::END),
+  CARRY_WEIGHT_BASE_      (450) {}
 
 Player::~Player()
 {
@@ -1402,7 +1402,7 @@ void Player::addLight_(bool lightMap[MAP_W][MAP_H]) const
 
   for (Item* const item : inv_->general_)
   {
-    if (item->getData().id == ItemId::electricLantern)
+    if (item->getId() == ItemId::electricLantern)
     {
       DeviceLantern* const lantern = static_cast<DeviceLantern*>(item);
       LanternLightSize lightSize = lantern->getCurLightSize();

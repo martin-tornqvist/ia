@@ -18,7 +18,8 @@
 using namespace std;
 
 //---------------------------------------------------- DEVICE
-Device::Device(ItemDataT* const itemData) : Item(itemData) {}
+Device::Device(ItemDataT* const itemData) :
+  Item(itemData) {}
 
 void Device::identify(const bool IS_SILENT_IDENTIFY)
 {
@@ -28,8 +29,8 @@ void Device::identify(const bool IS_SILENT_IDENTIFY)
 
 //---------------------------------------------------- STRANGE DEVICE
 StrangeDevice::StrangeDevice(ItemDataT* const itemData) :
-  Device(itemData),
-  condition_(Rnd::coinToss() ? Condition::fine : Condition::shoddy) {}
+  Device      (itemData),
+  condition_  (Rnd::coinToss() ? Condition::fine : Condition::shoddy) {}
 
 void StrangeDevice::storeToSaveLines(vector<string>& lines)
 {
@@ -291,11 +292,11 @@ ConsumeItem DeviceSentryDrone::triggerEffect()
 
 //---------------------------------------------------- ELECTRIC LANTERN
 DeviceLantern::DeviceLantern(ItemDataT* const itemData) :
-  Device(itemData),
-  nrTurnsLeft_(500),
-  nrMalfunctTurnsLeft_(-1),
-  malfState_(LanternMalfState::working),
-  isActivated_(false) {}
+  Device                (itemData),
+  nrTurnsLeft_          (500),
+  nrMalfunctTurnsLeft_  (-1),
+  malfState_            (LanternMalfState::working),
+  isActivated_          (false) {}
 
 std::string DeviceLantern::getNameInf() const
 {
@@ -332,6 +333,22 @@ void DeviceLantern::setupFromSaveLines(vector<string>& lines)
   lines.erase(begin(lines));
 }
 
+void DeviceLantern::onPickupToBackpack(Inventory& inv)
+{
+  //Check for existing electric lantern in inventory
+  for (Item* const other : inv.general_)
+  {
+    if (other != this && other->getId() == getId())
+    {
+      //Add my turns left to the other lantern, then destroy self (it's better to keep
+      //the existing lantern, to that lit state etc is preserved)
+      static_cast<DeviceLantern*>(other)->nrTurnsLeft_ += nrTurnsLeft_;
+      inv.removeItemInBackpackWithPtr(this, true);
+      return;
+    }
+  }
+}
+
 void DeviceLantern::toggle()
 {
   const string toggleStr = isActivated_ ? "I turn off" : "I turn on";
@@ -362,7 +379,7 @@ void DeviceLantern::newTurnInInventory()
       Render::drawMapAndInterface();
 
       //Note: The following line deletes the object
-      Map::player->getInv().removeItemInGeneralWithPtr(this, true);
+      Map::player->getInv().removeItemInBackpackWithPtr(this, true);
 
       return;
     }
@@ -397,7 +414,7 @@ void DeviceLantern::newTurnInInventory()
       }
       else if (RND <= 40)
       {
-        Log::addMsg("My Electric Lantern starts to flicker.");
+        Log::addMsg("My Electric Lantern flickers.");
         malfState_            = LanternMalfState::flicker;
         nrMalfunctTurnsLeft_  = Rnd::range(4, 12);
       }

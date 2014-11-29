@@ -23,14 +23,9 @@ using namespace std;
 
 //--------------------------------------------------------- ITEM
 Item::Item(ItemDataT* itemData) :
-  nrItems_(1),
-  carrierProps_(vector<Prop*>()),
-  carrierSpells_(vector<Spell*>()),
-  meleeDmgPlus_(0),
-  data_(itemData)
-{
-
-}
+  nrItems_      (1),
+  meleeDmgPlus_ (0),
+  data_         (itemData) {}
 
 Item::~Item()
 {
@@ -38,6 +33,7 @@ Item::~Item()
   for (auto spell  : carrierSpells_)  {delete spell;}
 }
 
+ItemId            Item::getId()     const {return data_->id;}
 const ItemDataT&  Item::getData()   const {return *data_;}
 Clr               Item::getClr()    const {return data_->clr;}
 char              Item::getGlyph()  const {return data_->glyph;}
@@ -174,7 +170,8 @@ void Item::clearCarrierProps()
 
 //--------------------------------------------------------- ARMOR
 Armor::Armor(ItemDataT* const itemData) :
-  Item(itemData), dur_(Rnd::range(80, 100)) {}
+  Item  (itemData),
+  dur_  (Rnd::range(80, 100)) {}
 
 void Armor::storeToSaveLines(vector<string>& lines)
 {
@@ -461,7 +458,7 @@ void Incinerator::onProjectileBlocked(
   Explosion::runExplosionAt(pos, ExplType::expl);
 }
 
-//--------------------------------------------------------- MEDICAL BAG
+//--------------------------------------------------------- AMMO CLIP
 AmmoClip::AmmoClip(ItemDataT* const itemData) : Ammo(itemData)
 {
   setFullAmmo();
@@ -475,6 +472,21 @@ void AmmoClip::setFullAmmo()
 //--------------------------------------------------------- MEDICAL BAG
 const int NR_TRN_BEFORE_HEAL  = 10;
 const int NR_TRN_PER_HP       = 2;
+
+void MedicalBag::onPickupToBackpack(Inventory& inv)
+{
+  //Check for existing medical bag in inventory
+  for (Item* const other : inv.general_)
+  {
+    if (other != this && other->getId() == getId())
+    {
+      //Add my turns left to the other medical bag, then destroy self
+      static_cast<MedicalBag*>(other)->nrSupplies_ += nrSupplies_;
+      inv.removeItemInBackpackWithPtr(this, true);
+      return;
+    }
+  }
+}
 
 ConsumeItem MedicalBag::activateDefault(Actor* const actor)
 {
@@ -493,7 +505,10 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
 
   Log::clearLog();
 
-  if (curAction_ == MedBagAction::END) {return ConsumeItem::no;}
+  if (curAction_ == MedBagAction::END)
+  {
+    return ConsumeItem::no;
+  }
 
   //Check if chosen action can be done
   bool props[endOfPropIds];
@@ -501,33 +516,25 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
   switch (curAction_)
   {
     case MedBagAction::treatWounds:
-    {
       if (Map::player->getHp() >= Map::player->getHpMax(true))
       {
         Log::addMsg("I have no wounds to treat.");
         curAction_ = MedBagAction::END;
         return ConsumeItem::no;
       }
-    } break;
+      break;
 
     case MedBagAction::sanitizeInfection:
-    {
       if (!props[propInfected])
       {
         Log::addMsg("I have no infection to sanitize.");
         curAction_ = MedBagAction::END;
         return ConsumeItem::no;
       }
-    } break;
+      break;
 
-//      case MedBagAction::takeMorphine: {
-//        if(Map::player->getHp() >= Map::player->getHpMax(true)) {
-//          Log::addMsg("I am not in pain.");
-//          curAction_ = MedBagAction::END;
-//        }
-//      } break;
-
-    case MedBagAction::END: {} break;
+    case MedBagAction::END: {}
+      break;
   }
 
   bool isEnoughSuppl = true;
@@ -535,12 +542,12 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
   switch (curAction_)
   {
     case MedBagAction::sanitizeInfection:
-    {
       isEnoughSuppl = getTotSupplForSanitize() <= nrSupplies_;
-    } break;
+      break;
 
     case MedBagAction::treatWounds: //Costs one supply per turn
-    case MedBagAction::END: {} break;
+    case MedBagAction::END: {}
+      break;
   }
 
   if (!isEnoughSuppl)
@@ -556,20 +563,14 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
   switch (curAction_)
   {
     case MedBagAction::treatWounds:
-    {
       Log::addMsg("I start to treat my wounds...");
       nrTurnsUntilHealWounds_ = NR_TRN_BEFORE_HEAL;
-    } break;
+      break;
 
     case MedBagAction::sanitizeInfection:
-    {
       Log::addMsg("I start to sanitize an infection...");
       nrTurnsLeftSanitize_ = getTotTurnsForSanitize();
-    } break;
-
-//        case MedBagAction::takeMorphine: {
-//          Log::addMsg("I start to take Morphine...");
-//        } break;
+      break;
 
     case MedBagAction::END: {} break;
   }
@@ -581,21 +582,10 @@ ConsumeItem MedicalBag::activateDefault(Actor* const actor)
 
 MedBagAction MedicalBag::playerChooseAction() const
 {
-
   Log::clearLog();
 
   Log::addMsg("Use Medical Bag how? [h/enter] Treat wounds [s] Sanitize infection",
               clrWhiteHigh);
-
-//  int suppl = getTotSuppliesFor(MedBagAction::treatWounds);
-//  int turns = getTotTurnsFor(MedBagAction::treatWounds);
-//  Log::addMsg("[h/enter] Treat wounds (" + toStr(suppl) + "," + toStr(turns) + ")",
-//              clrWhiteHigh);
-
-//  suppl     = getTotSuppliesFor(MedBagAction::sanitizeInfection);
-//  turns     = getTotTurnsFor(MedBagAction::sanitizeInfection);
-//  Log::addMsg("[s] Sanitize infection (" + toStr(suppl) + "," + toStr(turns) + ")",
-//              clrWhiteHigh);
 
   Render::drawMapAndInterface(true);
 
@@ -721,7 +711,7 @@ void MedicalBag::finishCurAction()
 
   if (nrSupplies_ <= 0)
   {
-    Map::player->getInv().removeItemInGeneralWithPtr(this, true);
+    Map::player->getInv().removeItemInBackpackWithPtr(this, true);
   }
 }
 
@@ -848,7 +838,8 @@ void Dynamite::onPlayerParalyzed()
 //--------------------------------------------------------- MOLOTOV
 void Molotov::onPlayerIgnite() const
 {
-  const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] && Rnd::coinToss();
+  const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] &&
+                          Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Log::addMsg("I " + swiftStr + "light a Molotov Cocktail.");
@@ -892,7 +883,8 @@ void Molotov::onPlayerParalyzed()
 //--------------------------------------------------------- FLARE
 void Flare::onPlayerIgnite() const
 {
-  const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] && Rnd::coinToss();
+  const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] &&
+                          Rnd::coinToss();
   const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
   Log::addMsg("I " + swiftStr + "light a Flare.");

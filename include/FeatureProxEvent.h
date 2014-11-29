@@ -21,8 +21,7 @@ protected:
 class ProxEventWallCrumble: public ProxEvent
 {
 public:
-  ProxEventWallCrumble(Pos pos, std::vector<Pos>& walls, std::vector<Pos>& inner) :
-    ProxEvent(pos), wallCells_(walls), innerCells_(inner) {}
+  ProxEventWallCrumble(Pos pos, std::vector<Pos>& walls, std::vector<Pos>& inner);
 
   //Spawn by id compliant ctor (do not use for normal cases):
   ProxEventWallCrumble(const Pos& pos) : ProxEvent(pos) {}

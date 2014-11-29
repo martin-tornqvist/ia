@@ -21,17 +21,17 @@
 using namespace std;
 
 Actor::Actor() :
-  pos(),
-  state_(ActorState::alive),
-  clr_(clrBlack),
-  glyph_(' '),
-  tile_(TileId::empty),
-  hp_(-1),
-  spi_(-1),
-  lairCell_(),
-  propHandler_(nullptr),
-  data_(nullptr),
-  inv_(nullptr) {}
+  pos           (),
+  state_        (ActorState::alive),
+  clr_          (clrBlack),
+  glyph_        (' '),
+  tile_         (TileId::empty),
+  hp_           (-1),
+  spi_          (-1),
+  lairCell_     (),
+  propHandler_  (nullptr),
+  data_         (nullptr),
+  inv_          (nullptr) {}
 
 Actor::~Actor()
 {

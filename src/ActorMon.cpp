@@ -31,20 +31,20 @@
 using namespace std;
 
 Mon::Mon() :
-  Actor(),
-  awareCounter_(0),
-  playerAwareOfMeCounter_(0),
-  isMsgMonInViewPrinted_(false),
-  lastDirTravelled_(Dir::center),
-  spellCoolDownCur_(0),
-  isRoamingAllowed_(true),
-  isStealth_(false),
-  leader_(nullptr),
-  tgt_(nullptr),
-  waiting_(false),
-  shockCausedCur_(0.0),
-  hasGivenXpForSpotting_(false),
-  nrTurnsUntilUnsummoned_(-1) {}
+  Actor                   (),
+  awareCounter_           (0),
+  playerAwareOfMeCounter_ (0),
+  isMsgMonInViewPrinted_  (false),
+  lastDirTravelled_       (Dir::center),
+  spellCoolDownCur_       (0),
+  isRoamingAllowed_       (true),
+  isStealth_              (false),
+  leader_                 (nullptr),
+  tgt_                    (nullptr),
+  waiting_                (false),
+  shockCausedCur_         (0.0),
+  hasGivenXpForSpotting_  (false),
+  nrTurnsUntilUnsummoned_ (-1) {}
 
 Mon::~Mon()
 {
@@ -670,11 +670,6 @@ void CultistElectric::mkStartItems()
   if (Rnd::coinToss())
   {
     inv_->putInGeneral(ItemFactory::mk(ItemId::migoGunAmmo));
-  }
-
-  if (Rnd::oneIn(12))
-  {
-    inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorMigo));
   }
 
   if (Rnd::oneIn(3))

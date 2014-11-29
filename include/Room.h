@@ -12,22 +12,21 @@
 #include "CmnTypes.h"
 #include "CmnData.h"
 
-//TODO:
-// * Room theming should occur in both pre & post connect:
-//  > In pre-connect, the theme is assigned, and reshaping is done. The reshaping is
-//    called from MapGenUtils (e.g. plus-shape, cavern-shape, pillars, etc) - this is
-//    performed with various chance depending on the RoomType, and if the room is a
-//    sub room or not.
+//---------------------------------------------------------------------------------------
+// Room theming occurs both before and after rooms are connected (pre/post-connect).
+//   > In pre-connect reshaping is done. The reshaping is called from MapGenUtils
+//     (e.g. plus-shape, cavern-shape, pillars, etc)
 //
-//    When pre-connect starts, it is assumed that all (standard) rooms are rectangular
-//    with unbroken walls.
+//     When pre-connect starts, it is assumed that all (standard) rooms are rectangular
+//     with unbroken walls.
 //
-//  > In post-connect, features such as chests and altars are placed (in a highly
-//    standardized and automatic manner - this is configured in the feature data).
+//   > In post-connect, auto-features such as chests and altars are placed (this is
+//     configured in the feature data), as well as room-specific stuff like trees, altars,
+//     etc. It can then be verified for each feature that the map is still connected.
 //
-//    Post-connect is where something like forest trees should be placed, then a path can
-//    easily be generated between all room entries.
-//
+// As a rule of thumb, place walkable features in the pre-connect step, and blocking
+// features in the post-connect step.
+//---------------------------------------------------------------------------------------
 
 struct  FeatureDataT;
 class   Room;
@@ -68,8 +67,7 @@ Room* mkRandomAllowedStdRoom(const Rect& r, const bool IS_SUBROOM);
 class Room
 {
 public:
-  Room(Rect r, RoomType type) :
-    r_(r), roomsConTo_(), type_(type), isSubRoom_(false), subRooms_() {}
+  Room(Rect r, RoomType type);
 
   Room() = delete;
 
@@ -79,9 +77,9 @@ public:
   virtual void onPostConnect(bool doorProposals[MAP_W][MAP_H]) = 0;
 
   Rect                r_;
-  std::vector<Room*>  roomsConTo_;
   const RoomType      type_;
   bool                isSubRoom_;
+  std::vector<Room*>  roomsConTo_;
   std::vector<Room*>  subRooms_;
 
 protected:

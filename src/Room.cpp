@@ -145,6 +145,11 @@ Room* mkRandomAllowedStdRoom(const Rect& r, const bool IS_SUBROOM)
 } //RoomFactory
 
 //------------------------------------------------------------------- ROOM
+Room::Room(Rect r, RoomType type) :
+  r_          (r),
+  type_       (type),
+  isSubRoom_  (false) {}
+
 void Room::mkDrk() const
 {
   //Expand all cells belonging to the room one step

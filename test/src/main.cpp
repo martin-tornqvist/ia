@@ -801,7 +801,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
   bool isElectricLanternFound = false;
   for (Item* item : genInv)
   {
-    ItemId id = item->getData().id;
+    ItemId id = item->getId();
     if (id == ItemId::pistolClip)
     {
       switch (static_cast<AmmoClip*>(item)->ammo_)

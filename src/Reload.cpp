@@ -153,54 +153,50 @@ bool reloadWieldedWpn(Actor& actorReloading)
   else
   {
     const ItemId ammoType = wpn->getData().ranged.ammoItemId;
-    Item* item = nullptr;
+    Item* item            = nullptr;
 
     if (wpn->nrAmmoLoaded < wpnAmmoCapacity)
     {
-
-      const int NR_ITEMS = inv.general_.size();
-      for (int i = 0; i < NR_ITEMS; ++i)
+      for (size_t i = 0; i < inv.general_.size(); ++i)
       {
         item = inv.general_[i];
 
-        if (item->getData().id == ammoType)
+        if (item->getId() == ammoType)
         {
           PropHandler& propHlr = actorReloading.getPropHandler();
 
           bool props[endOfPropIds];
           propHlr.getAllActivePropIds(props);
 
-          const bool IS_RELOADER_BLIND = !actorReloading.getPropHandler().allowSee();
-
+          const bool IS_RELOADER_BLIND      = !actorReloading.getPropHandler().allowSee();
           const bool IS_REALOADER_TERRIFIED = props[propTerrified];
 
-          const int CHANCE_TO_FUMBLE =
-            (IS_RELOADER_BLIND ? 48 : 0) + (IS_REALOADER_TERRIFIED ? 48 : 0);
+          const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND      ? 48 : 0) +
+                                       (IS_REALOADER_TERRIFIED ? 48 : 0);
 
           if (Rnd::percentile() < CHANCE_TO_FUMBLE)
           {
             isSwiftReload = false;
-            result = ReloadResult::fumble;
-            printMsgAndPlaySfx(actorReloading, nullptr, item,
-                               ReloadResult::fumble, false);
+            result        = ReloadResult::fumble;
+
+            printMsgAndPlaySfx(actorReloading, nullptr, item, ReloadResult::fumble,
+                               false);
           }
           else
           {
-            result = ReloadResult::success;
+            result      = ReloadResult::success;
             bool isClip = item->getData().isAmmoClip;
 
-            //If ammo comes in clips
             if (isClip)
             {
               const int previousAmmoCount = wpn->nrAmmoLoaded;
-              AmmoClip* clipItem = static_cast<AmmoClip*>(item);
-              wpn->nrAmmoLoaded = clipItem->ammo_;
+              AmmoClip* clipItem          = static_cast<AmmoClip*>(item);
+              wpn->nrAmmoLoaded           = clipItem->ammo_;
 
-              printMsgAndPlaySfx(actorReloading, wpn, item, result,
-                                 isSwiftReload);
+              printMsgAndPlaySfx(actorReloading, wpn, item, result, isSwiftReload);
 
-              //Erase loaded clip
-              inv.deleteItemInGeneralWithElement(i);
+              //Destroy loaded clip
+              inv.removeItemInBackpackWithIdx(i, true);
 
               //If weapon previously contained ammo, create a new clip item
               if (previousAmmoCount > 0)
@@ -211,13 +207,11 @@ bool reloadWieldedWpn(Actor& actorReloading)
                 inv.putInGeneral(clipItem);
               }
             }
-            //Else ammo is a pile
-            else
+            else //Ammo is stackable (e.g. shotgun shells)
             {
               wpn->nrAmmoLoaded += 1;
 
-              printMsgAndPlaySfx(
-                actorReloading, wpn, item, result, isSwiftReload);
+              printMsgAndPlaySfx(actorReloading, wpn, item, result, isSwiftReload);
 
               //Decrease ammo item number
               inv.decrItemInGeneral(i);
@@ -228,15 +222,13 @@ bool reloadWieldedWpn(Actor& actorReloading)
       }
       if (result == ReloadResult::noAmmo)
       {
-        printMsgAndPlaySfx(actorReloading, wpn, item, result,
-                           isSwiftReload);
+        printMsgAndPlaySfx(actorReloading, wpn, item, result, isSwiftReload);
       }
     }
-    else
+    else //Weapon is full
     {
       result = ReloadResult::alreadyFull;
-      printMsgAndPlaySfx(actorReloading, wpn, item, result,
-                         isSwiftReload);
+      printMsgAndPlaySfx(actorReloading, wpn, item, result, isSwiftReload);
     }
   }
 

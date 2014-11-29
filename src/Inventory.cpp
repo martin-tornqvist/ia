@@ -46,7 +46,7 @@ void Inventory::storeToSaveLines(vector<string>& lines) const
     Item* const item = slot.item;
     if (item)
     {
-      lines.push_back(toStr(int(item->getData().id)));
+      lines.push_back(toStr(int(item->getId())));
       lines.push_back(toStr(item->nrItems_));
       item->storeToSaveLines(lines);
     }
@@ -59,7 +59,7 @@ void Inventory::storeToSaveLines(vector<string>& lines) const
   lines.push_back(toStr(general_.size()));
   for (Item* item : general_)
   {
-    lines.push_back(toStr(int(item->getData().id)));
+    lines.push_back(toStr(int(item->getId())));
     lines.push_back(toStr(item->nrItems_));
     item->storeToSaveLines(lines);
   }
@@ -93,7 +93,7 @@ void Inventory::setupFromSaveLines(vector<string>& lines)
 
   while (general_.size() != 0)
   {
-    deleteItemInGeneralWithElement(0);
+    removeItemInBackpackWithIdx(0, true);
   }
 
   const int NR_OF_GENERAL = toInt(lines.front());
@@ -158,28 +158,6 @@ void Inventory::decrDynamiteInGeneral()
   }
 }
 
-/*
- bool Inventory::hasFirstAidInGeneral()
- {
- for(size_t i = 0; i < general_.size(); ++i) {
- if(general_[i]->getInstanceDefinition().id == ItemId::firstAidKit)
- return true;
- }
-
- return false;
- }
-
- void Inventory::decreaseFirstAidInGeneral()
- {
- for(size_t i = 0; i < general_.size(); ++i) {
- if(general_[i]->getInstanceDefinition().id == ItemId::firstAidKit) {
- decrItemInGeneral(i);
- break;
- }
- }
- }
- */
-
 void Inventory::putInGeneral(Item* item)
 {
   bool isStacked = false;
@@ -187,41 +165,30 @@ void Inventory::putInGeneral(Item* item)
   //If item stacks, see if there is other items of same type
   if (item->getData().isStackable)
   {
-
-    const int stackIndex = getElementToStackItem(item);
-
-    if (stackIndex != -1)
-    {
-      Item* compareItem = general_[stackIndex];
-
-      //Keeping picked up item and destroying the one in the inventory,
-      //to keep the parameter pointer valid.
-      item->nrItems_ += compareItem->nrItems_;
-      delete compareItem;
-      general_[stackIndex] = item;
-      isStacked = true;
-    }
-  }
-
-  if (!isStacked) {general_.push_back(item);}
-}
-
-int Inventory::getElementToStackItem(Item* item) const
-{
-  if (item->getData().isStackable)
-  {
     for (size_t i = 0; i < general_.size(); ++i)
     {
-      Item* compare = general_[i];
+      Item* const other = general_[i];
 
-      if (compare->getData().id == item->getData().id)
+      if (other->getId() == item->getId())
       {
-        return i;
+        //Keeping picked up item and destroying the one in the inventory (then the
+        //parameter pointer is still valid).
+        item->nrItems_ += other->nrItems_;
+        delete other;
+        general_[i] = item;
+        isStacked   = true;
+        break;
       }
     }
   }
 
-  return -1;
+  if (!isStacked)
+  {
+    general_.push_back(item);
+  }
+
+  //Note: May destroy the item (e.g. a Medical Bag combining with another)
+  item->onPickupToBackpack(*this);
 }
 
 void Inventory::dropAllNonIntrinsic(const Pos& pos)
@@ -306,29 +273,35 @@ void Inventory::decrItemInSlot(SlotId slotName)
   }
 }
 
-void Inventory::deleteItemInGeneralWithElement(const size_t IDX)
+void Inventory::removeItemInBackpackWithIdx(const size_t IDX, const bool DELETE_ITEM)
 {
   if (general_.size() > IDX)
   {
-    delete general_[IDX];
+    if (DELETE_ITEM)
+    {
+      delete general_[IDX];
+    }
     general_.erase(begin(general_) + IDX);
   }
 }
 
-void Inventory::removeItemInGeneralWithPtr(
-  Item* const item, const bool DELETE_ITEM)
+void Inventory::removeItemInBackpackWithPtr(Item* const item, const bool DELETE_ITEM)
 {
-
-  for (size_t i = 0; i < general_.size(); ++i)
+  for (auto it = begin(general_); it < end(general_); ++it)
   {
-    if (general_[i] == item)
+    if (*it == item)
     {
-      if (DELETE_ITEM) {delete item;}
-      general_.erase(begin(general_) + i);
+      if (DELETE_ITEM)
+      {
+        delete *it;
+      }
+      general_.erase(it);
       return;
     }
   }
-  assert(false && "Parameter item not in general inventory");
+
+  TRACE << "Parameter item not in backpack" << endl;
+  assert(false);
 }
 
 void Inventory::decrItemInGeneral(size_t idx)

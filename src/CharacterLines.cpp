@@ -14,6 +14,7 @@
 #include "FeatureMob.h"
 #include "TextFormatting.h"
 #include "Item.h"
+#include "ItemDevice.h"
 #include "Utils.h"
 
 using namespace std;
@@ -135,8 +136,30 @@ void drawInfoLines()
     pos.x += 4;
   }
 
+  //Electric lantern
+  Render::drawText("L:", Panel::charLines, pos, clrMenuDrk);
+  pos.x += 2;
+  str                 = "";
+  Clr lanternInfoClr  = clrWhite;
+  for (const Item* const item : Map::player->getInv().general_)
+  {
+    if (item->getId() == ItemId::electricLantern)
+    {
+      const DeviceLantern* const lantern = static_cast<const DeviceLantern*>(item);
+      str = toStr(lantern->nrTurnsLeft_);
+      if (lantern->isActivated_)
+      {
+        lanternInfoClr  = clrYellow;
+      }
+      break;
+    }
+  }
+  if (str == "") {str = "N/A";}
+  Render::drawText(str, Panel::charLines, pos, lanternInfoClr);
+  pos.x += str.length() + 1;
+
   //Wielded weapon
-  pos.x += 6;
+  pos.x += 1;
   const int X_POS_MISSILE = pos.x;
 
   Item* itemWielded = Map::player->getInv().getItemInSlot(SlotId::wielded);
@@ -202,6 +225,13 @@ void drawInfoLines()
   Render::drawText(str, Panel::charLines, pos, encClr);
   pos.x += str.length() + 1;
 
+  //Turn number
+  Render::drawText("T:", Panel::charLines, pos, clrMenuDrk);
+  pos.x += 2;
+  str = toStr(GameTime::getTurn());
+  Render::drawText(str, Panel::charLines, pos, clrWhite);
+  pos.x += str.length() + 1;
+
   //Thrown weapon
   pos.x = X_POS_MISSILE;
 
@@ -243,11 +273,6 @@ void drawInfoLines()
     Render::drawText(curPropLabel.str, Panel::charLines, pos, curPropLabel.clr);
     pos.x += curPropLabel.str.length() + 1;
   }
-
-  //Turn number
-  str = "T:" + toStr(GameTime::getTurn());
-  pos.x = MAP_W - str.length() - 1;
-  Render::drawText(str, Panel::charLines, pos, clrWhite);
 }
 
 } //CharacterLines

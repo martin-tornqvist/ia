@@ -41,7 +41,10 @@ vector<string> Scroll::getDescr() const
 
 ConsumeItem Scroll::activateDefault(Actor* const actor)
 {
-  if (actor->getPropHandler().allowRead(true)) {return read();}
+  if (actor->getPropHandler().allowRead(true))
+  {
+    return read();
+  }
   return ConsumeItem::no;
 }
 

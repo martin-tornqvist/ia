@@ -24,6 +24,7 @@ public:
 
   virtual ~Item();
 
+  ItemId            getId()     const;
   const ItemDataT&  getData()   const;
   virtual Clr       getClr()    const;
   char              getGlyph()  const;
@@ -49,8 +50,10 @@ public:
 
   virtual void newTurnInInventory() {}
 
-  virtual void            onEquip()   {}
-  virtual UnequipAllowed  onUnequip() {return UnequipAllowed::yes;}
+  virtual void onPickupToBackpack(Inventory& inv) {(void)inv;}
+
+  virtual void            onEquip()             {}
+  virtual UnequipAllowed  onUnequip()           {return UnequipAllowed::yes;}
 
   //Called by the ItemDrop class to make noise etc
   virtual void appplyDropEffects() {}
@@ -312,12 +315,14 @@ class MedicalBag: public Item
 {
 public:
   MedicalBag(ItemDataT* const itemData) :
-    Item(itemData),
-    nrSupplies_(60),
-    nrTurnsUntilHealWounds_(-1),
-    nrTurnsLeftSanitize_(-1) {}
+    Item                    (itemData),
+    nrSupplies_             (60),
+    nrTurnsUntilHealWounds_ (-1),
+    nrTurnsLeftSanitize_    (-1) {}
 
   ~MedicalBag() {}
+
+  void onPickupToBackpack(Inventory& inv) override;
 
   ConsumeItem activateDefault(Actor* const actor) override;
 

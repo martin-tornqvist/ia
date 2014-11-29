@@ -13,6 +13,22 @@
 
 using namespace std;
 
+Snd::Snd(
+  const std::string&          msg,
+  const SfxId                 sfx,
+  const IgnoreMsgIfOriginSeen ignoreMsgIfOriginSeen,
+  const Pos&                  origin,
+  Actor* const                actorWhoMadeSound,
+  const SndVol                vol,
+  const AlertsMon             alertingMon) :
+  msg_                        (msg),
+  sfx_                        (sfx),
+  isMsgIgnoredIfOriginSeen_   (ignoreMsgIfOriginSeen),
+  origin_                     (origin),
+  actorWhoMadeSound_          (actorWhoMadeSound),
+  vol_                        (vol),
+  isAlertingMon_              (alertingMon) {}
+
 namespace SndEmit
 {
 
@@ -28,7 +44,10 @@ bool isSndHeardAtRange(const int RANGE, const Snd& snd)
 
 } //namespace
 
-void resetNrSndMsgPrintedCurTurn() {nrSndMsgPrintedCurTurn_ = 0;}
+void resetNrSndMsgPrintedCurTurn()
+{
+  nrSndMsgPrintedCurTurn_ = 0;
+}
 
 void emitSnd(Snd snd)
 {
@@ -37,7 +56,7 @@ void emitSnd(Snd snd)
   {
     for (int y = 0; y < MAP_H; ++y)
     {
-      const auto f = Map::cells[x][y].rigid;
+      const auto f  = Map::cells[x][y].rigid;
       blocked[x][y] = !f->isSoundPassable();
     }
   }
@@ -55,9 +74,8 @@ void emitSnd(Snd snd)
 
     if (isSndHeardAtRange(FLOOD_VALUE_AT_ACTOR, snd))
     {
-      if (actor == Map::player)
+      if (actor->isPlayer())
       {
-
         //Various conditions may clear the sound message
         if (nrSndMsgPrintedCurTurn_ >= 1 ||
             (IS_ORIGIN_SEEN_BY_PLAYER && snd.isMsgIgnoredIfOriginSeen()))
@@ -76,7 +94,7 @@ void emitSnd(Snd snd)
             DirUtils::getCompassDirName(playerPos, origin, dirStr);
             snd.addString("(" + dirStr + ")");
           }
-          nrSndMsgPrintedCurTurn_++;
+          ++nrSndMsgPrintedCurTurn_;
         }
 
         const int SND_MAX_DISTANCE =
@@ -89,7 +107,7 @@ void emitSnd(Snd snd)
         Map::player->hearSound(snd, IS_ORIGIN_SEEN_BY_PLAYER, dirToOrigin,
                                PERCENT_DISTANCE);
       }
-      else
+      else //Not player
       {
         Mon* const mon = static_cast<Mon*>(actor);
         mon->hearSound(snd);

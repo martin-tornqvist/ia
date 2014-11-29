@@ -14,9 +14,15 @@ enum class SlotId {wielded, wieldedAlt, thrown, body, head, END};
 
 struct InvSlot
 {
-  InvSlot(SlotId id_, std::string name_) : id(id_), name(name_), item(nullptr) {}
+  InvSlot(SlotId id_, std::string name_) :
+    id    (id_),
+    name  (name_),
+    item  (nullptr) {}
 
-  InvSlot() : id(SlotId::wielded), name(""), item(nullptr) {}
+  InvSlot() :
+    id    (SlotId::wielded),
+    name  (""),
+    item  (nullptr) {}
 
   SlotId      id;
   std::string name;
@@ -38,8 +44,6 @@ public:
   void putInSlot(const SlotId id, Item* item);
 
   void putInGeneral(Item* item);
-
-  int getElementToStackItem(Item* item) const;
 
   void putInIntrinsics(Item* item);
 
@@ -67,8 +71,8 @@ public:
 
   void decrItemTypeInGeneral(const ItemId itemId);
 
-  void deleteItemInGeneralWithElement(const size_t IDX);
-  void removeItemInGeneralWithPtr(Item* const item, const bool DELETE_ITEM);
+  void removeItemInBackpackWithIdx(const size_t IDX, const bool DELETE_ITEM);
+  void removeItemInBackpackWithPtr(Item* const item, const bool DELETE_ITEM);
 
   int getIntrinsicsSize() const {return intrinsics_.size();}
 
@@ -88,7 +92,7 @@ public:
 
   int getTotalItemWeight() const;
 
-  void storeToSaveLines(std::vector<std::string>& lines) const;
+  void storeToSaveLines  (std::vector<std::string>& lines) const;
   void setupFromSaveLines(std::vector<std::string>& lines);
 
   InvSlot               slots_[int(SlotId::END)];

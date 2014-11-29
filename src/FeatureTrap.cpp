@@ -218,7 +218,7 @@ void Trap::disarm()
     Item* item = Map::player->getInv().getItemInSlot(SlotId::wielded);
     if (item)
     {
-      isAutoSucceed = item->getData().id == ItemId::machete;
+      isAutoSucceed = item->getId() == ItemId::machete;
     }
   }
 

@@ -401,7 +401,7 @@ void PotionInsight::quaff_(Actor& actor)
   vector<Item*>& general = inv.general_;
   for (Item* item : general)
   {
-    if (item->getData().id != ItemId::potionInsight)
+    if (item->getId() != ItemId::potionInsight)
     {
       const ItemDataT& d = item->getData();
       if (!d.isIdentified) {identifyBucket.push_back(item);}

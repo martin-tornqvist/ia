@@ -32,8 +32,8 @@ void pickupEffects(Actor* actor, Item* item)
 //Can always be called, to check if something is there to be picked up.
 void tryPick()
 {
-  const Pos& pos = Map::player->pos;
-  Item* const item = Map::cells[pos.x][pos.y].item;
+  const Pos&  pos   = Map::player->pos;
+  Item* const item  = Map::cells[pos.x][pos.y].item;
 
   if (item)
   {
@@ -47,7 +47,7 @@ void tryPick()
       Item* const carriedMissile = playerInv.getItemInSlot(SlotId::thrown);
       if (carriedMissile)
       {
-        if (item->getData().id == carriedMissile->getData().id)
+        if (item->getId() == carriedMissile->getData().id)
         {
           Audio::play(SfxId::pickup);
 
@@ -71,9 +71,8 @@ void tryPick()
     Map::cells[pos.x][pos.y].item = nullptr;
 
     GameTime::actorDidAct();
-
   }
-  else
+  else //No item in this cell
   {
     Log::clearLog();
     Log::addMsg("I see nothing to pick up here.");
@@ -114,15 +113,15 @@ void tryUnloadWpnOrPickupAmmo()
 
         Audio::play(SfxId::pickup);
 
-        playerInv.putInGeneral(spawnedAmmo);
-
         static_cast<Wpn*>(item)->nrAmmoLoaded = 0;
+
+        playerInv.putInGeneral(spawnedAmmo);
 
         GameTime::actorDidAct();
         return;
       }
     }
-    else
+    else //Not a ranged weapon
     {
       if (item->getData().isAmmo)
       {

@@ -44,10 +44,11 @@ private:
   virtual ConsumeItem triggerEffect() = 0;
 };
 
-class DeviceBlaster: public StrangeDevice
+class DeviceBlaster : public StrangeDevice
 {
 public:
-  DeviceBlaster(ItemDataT* const itemData) : StrangeDevice(itemData) {}
+  DeviceBlaster(ItemDataT* const itemData) :
+    StrangeDevice(itemData) {}
 
   ~DeviceBlaster() override {}
 
@@ -62,10 +63,11 @@ private:
   ConsumeItem triggerEffect() override;
 };
 
-class DeviceShockwave: public StrangeDevice
+class DeviceShockwave : public StrangeDevice
 {
 public:
-  DeviceShockwave(ItemDataT* const itemData) : StrangeDevice(itemData) {}
+  DeviceShockwave(ItemDataT* const itemData) :
+    StrangeDevice(itemData) {}
 
   ~DeviceShockwave() override {}
 
@@ -80,10 +82,11 @@ private:
   ConsumeItem triggerEffect() override;
 };
 
-class DeviceRejuvenator: public StrangeDevice
+class DeviceRejuvenator : public StrangeDevice
 {
 public:
-  DeviceRejuvenator(ItemDataT* const itemData) : StrangeDevice(itemData) {}
+  DeviceRejuvenator(ItemDataT* const itemData) :
+    StrangeDevice(itemData) {}
 
   ~DeviceRejuvenator() override {}
 
@@ -98,10 +101,11 @@ private:
   ConsumeItem triggerEffect() override;
 };
 
-class DeviceTranslocator: public StrangeDevice
+class DeviceTranslocator : public StrangeDevice
 {
 public:
-  DeviceTranslocator(ItemDataT* const itemData) : StrangeDevice(itemData) {}
+  DeviceTranslocator(ItemDataT* const itemData) :
+    StrangeDevice(itemData) {}
 
   ~DeviceTranslocator() override {}
 
@@ -116,10 +120,11 @@ private:
   ConsumeItem triggerEffect() override;
 };
 
-class DeviceSentryDrone: public StrangeDevice
+class DeviceSentryDrone : public StrangeDevice
 {
 public:
-  DeviceSentryDrone(ItemDataT* const itemData) : StrangeDevice(itemData) {}
+  DeviceSentryDrone(ItemDataT* const itemData) :
+    StrangeDevice(itemData) {}
 
   ~DeviceSentryDrone() override {}
 
@@ -137,21 +142,21 @@ private:
 enum class LanternMalfState {working, flicker, malfunction};
 enum class LanternLightSize {none, small, normal};
 
-class DeviceLantern: public Device
+class DeviceLantern : public Device
 {
 public:
   DeviceLantern(ItemDataT* const itemData);
 
   ~DeviceLantern() override {}
 
-  ConsumeItem activateDefault(Actor* const actor) override;
-
-  void newTurnInInventory() override;
+  ConsumeItem activateDefault(Actor* const actor)   override;
+  void          newTurnInInventory()                override;
+  void          onPickupToBackpack(Inventory& inv)  override;
 
   LanternLightSize getCurLightSize() const;
 
-  void storeToSaveLines(std::vector<std::string>& lines)    override;
-  void setupFromSaveLines(std::vector<std::string>& lines)  override;
+  void storeToSaveLines  (std::vector<std::string>& lines) override;
+  void setupFromSaveLines(std::vector<std::string>& lines) override;
 
   int               nrTurnsLeft_;
   int               nrMalfunctTurnsLeft_;

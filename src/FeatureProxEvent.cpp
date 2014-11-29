@@ -16,10 +16,19 @@ using namespace std;
 //-------------------------------------------PROX EVENT
 void ProxEvent::onNewTurn()
 {
-  if (Utils::isPosAdj(pos_, Map::player->pos, true)) {onPlayerAdj();}
+  if (Utils::isPosAdj(pos_, Map::player->pos, true))
+  {
+    onPlayerAdj();
+  }
 }
 
 //-------------------------------------------WALL CRUMBLE
+ProxEventWallCrumble::ProxEventWallCrumble(
+  Pos pos, vector<Pos>& walls, vector<Pos>& inner) :
+  ProxEvent   (pos),
+  wallCells_  (walls),
+  innerCells_ (inner) {}
+
 void ProxEventWallCrumble::onPlayerAdj()
 {
   //Check that it still makes sense to run the crumbling
