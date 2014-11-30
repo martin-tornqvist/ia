@@ -287,6 +287,8 @@ public:
 
   std::string getName(const Article article)  const override;
 
+  TileId getTile() const override;
+
   StatueType type_;
 
 private:
@@ -482,6 +484,8 @@ public:
   FeatureId getId() const override {return FeatureId::tree;}
 
   std::string getName(const Article article)  const override;
+
+  WasDestroyed onFinishedBurning() override;
 
 private:
   Clr getClr_() const override;

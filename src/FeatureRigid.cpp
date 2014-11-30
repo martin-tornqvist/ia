@@ -92,13 +92,13 @@ void Rigid::onNewTurn()
         break;
 
       case Matl::plant:
-        finishBurningOneInN = 20;
-        hitAdjacentOneInN   = 6;
+        finishBurningOneInN = 30;
+        hitAdjacentOneInN   = 4;
         break;
 
       case Matl::wood:
-        finishBurningOneInN = 60;
-        hitAdjacentOneInN   = 4;
+        finishBurningOneInN = 50;
+        hitAdjacentOneInN   = 3;
         break;
 
       case Matl::cloth:
@@ -770,6 +770,11 @@ string Statue::getName(const Article article) const
   return ret;
 }
 
+TileId Statue::getTile() const
+{
+  return type_ == StatueType::cmn ? TileId::witchOrWarlock : TileId::ghoul;
+}
+
 Clr Statue::getClr_() const
 {
   return clrWhite;
@@ -1245,10 +1250,25 @@ void Tree::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor * const
   if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
     (void)actor;
-    if (Rnd::oneIn(3)) {tryStartBurning(false);}
+    if (Rnd::oneIn(3))
+    {
+      tryStartBurning(false);
+    }
   }
 }
 
+WasDestroyed Tree::onFinishedBurning()
+{
+  if (Utils::isPosInsideMap(pos_, false))
+  {
+    Grass* const grass = new Grass(pos_);
+    grass->setHasBurned();
+    Map::put(grass);
+    return WasDestroyed::yes;
+  }
+
+  return WasDestroyed::no;
+}
 
 string Tree::getName(const Article article) const
 {
