@@ -702,51 +702,57 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
   {
     assert(actor);
 
+    bool props[endOfPropIds];
+    actor->getPropHandler().getActivePropIds(props);
+
+    if (props[propWeakened])
+    {
+      Log::addMsg("It wiggles a bit.");
+      return;
+    }
+
     const AlertsMon alertsMon = actor == Map::player ?
                                 AlertsMon::yes :
                                 AlertsMon::no;
-    if (Rnd::coinToss())
+
+    if (Map::cells[pos_.x][pos_.y].isSeenByPlayer)
     {
-      if (Map::cells[pos_.x][pos_.y].isSeenByPlayer) {Log::addMsg("It topples over.");}
+      Log::addMsg("It topples over.");
+    }
 
-      Snd snd("I hear a crash.", SfxId::END, IgnoreMsgIfOriginSeen::yes,
-              pos_, actor, SndVol::low, alertsMon);
+    Snd snd("I hear a crash.", SfxId::END, IgnoreMsgIfOriginSeen::yes,
+            pos_, actor, SndVol::low, alertsMon);
 
-      SndEmit::emitSnd(snd);
+    SndEmit::emitSnd(snd);
 
-      const Pos dstPos = pos_ + (pos_ - actor->pos);
+    const Pos dstPos = pos_ + (pos_ - actor->pos);
 
-      Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
+    Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
 
-      Map::player->updateFov();
-      Render::drawMapAndInterface();
-      Map::updateVisualMemory();
+    Map::player->updateFov();
+    Render::drawMapAndInterface();
 
-      if (!CellCheck::BlocksMoveCmn(false).check(Map::cells[dstPos.x][dstPos.y]))
+    if (Map::cells[dstPos.x][dstPos.y].rigid->getId() == FeatureId::floor)
+    {
+      Actor* const actorBehind = Utils::getActorAtPos(dstPos);
+      if (actorBehind && actorBehind->isAlive())
       {
-        Actor* const actorBehind = Utils::getActorAtPos(dstPos);
-        if (actorBehind)
+        bool propsActorBehind[endOfPropIds];
+        actorBehind->getPropHandler().getActivePropIds(propsActorBehind);
+        if (!propsActorBehind[propEthereal])
         {
-          if (actorBehind->isAlive())
+          if (actorBehind == Map::player)
           {
-            bool props[endOfPropIds];
-            actorBehind->getPropHandler().getActivePropIds(props);
-            if (props[propEthereal])
-            {
-              if (actorBehind == Map::player)
-              {
-                Log::addMsg("It falls on me!");
-              }
-              else if (Map::player->isSeeingActor(*actorBehind, nullptr))
-              {
-                Log::addMsg("It falls on " + actorBehind->getNameA() + ".");
-              }
-              actorBehind->hit(Rnd::dice(3, 5), DmgType::physical);
-            }
+            Log::addMsg("It falls on me!");
           }
+          else if (Map::player->isSeeingActor(*actorBehind, nullptr))
+          {
+            Log::addMsg("It falls on " + actorBehind->getNameA() + ".");
+          }
+          actorBehind->hit(Rnd::dice(3, 5), DmgType::physical);
         }
-        Map::put(new RubbleLow(dstPos));
       }
+      Map::put(new RubbleLow(dstPos));
     }
   }
 }
