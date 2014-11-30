@@ -69,7 +69,7 @@ void Smoke::onNewTurn()
     if (Rnd::oneIn(4))
     {
       bool props[endOfPropIds];
-      actor->getPropHandler().getActivePropIds(props);
+      actor->getPropHandler().getPropIds(props);
       if (!props[propRBreath])
       {
         string sndMsg = "";

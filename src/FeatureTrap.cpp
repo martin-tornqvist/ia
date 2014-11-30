@@ -127,7 +127,7 @@ void Trap::bump(Actor& actorBumping)
   TRACE << "Name of actor bumping: \"" << d.nameA << "\"" << endl;
 
   bool props[endOfPropIds];
-  actorBumping.getPropHandler().getActivePropIds(props);
+  actorBumping.getPropHandler().getPropIds(props);
 
   if (!props[propEthereal] && !props[propFlying])
   {
@@ -231,7 +231,7 @@ void Trap::disarm()
   }
 
   bool props[endOfPropIds];
-  Map::player->getPropHandler().getActivePropIds(props);
+  Map::player->getPropHandler().getPropIds(props);
 
   const bool IS_BLESSED = props[propBlessed];
   const bool IS_CURSED  = props[propCursed];

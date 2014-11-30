@@ -950,7 +950,7 @@ void initDataList()
   d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
-  d.color = clrGray;
+  d.color = clrWhiteHigh;
   d.tile = TileId::ghost;
   d.hp = 4;
   d.spi = 12;
@@ -992,7 +992,7 @@ void initDataList()
   d.speed = ActorSpeed::fast;
   d.rangedCooldownTurns = 0;
   d.glyph = 'G';
-  d.color = clrWhite;
+  d.color = clrGrayDrk;
   d.tile = TileId::phantasm;
   d.hp = 9;
   d.spi = 12;
@@ -1004,7 +1004,7 @@ void initDataList()
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
-  d.groupSize = MonGroupSize::alone;
+  d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
   d.nrTurnsAware = 7;
   d.descr = "It exists between the land of the dead and the living. It "

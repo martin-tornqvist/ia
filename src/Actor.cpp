@@ -408,7 +408,7 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
   TRACE_VERBOSE << "Damage from parameter: " << dmg << endl;
 
   bool props[endOfPropIds];
-  propHandler_->getActivePropIds(props);
+  propHandler_->getPropIds(props);
 
   if (dmgType == DmgType::light && !props[propLightSensitive])
   {
@@ -684,7 +684,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const
 {
   bool props[endOfPropIds];
-  propHandler_->getActivePropIds(props);
+  propHandler_->getPropIds(props);
 
   if (state_ == ActorState::alive && props[propRadiant])
   {

@@ -215,6 +215,13 @@ void drawInfoLines()
   Render::drawText(str, Panel::charLines, pos, clrWhite);
   pos.x += str.length() + 1;
 
+  //Turn number
+  Render::drawText("T:", Panel::charLines, pos, clrMenuDrk);
+  pos.x += 2;
+  str = toStr(GameTime::getTurn());
+  Render::drawText(str, Panel::charLines, pos, clrWhite);
+  pos.x += str.length() + 1;
+
   //Encumbrance
   Render::drawText("ENC:", Panel::charLines, pos, clrMenuDrk);
   pos.x += 4;
@@ -223,13 +230,6 @@ void drawInfoLines()
   const Clr encClr = ENC < 100 ? clrGreenLgt :
                      ENC < ENC_IMMOBILE_LVL ? clrYellow : clrRedLgt;
   Render::drawText(str, Panel::charLines, pos, encClr);
-  pos.x += str.length() + 1;
-
-  //Turn number
-  Render::drawText("T:", Panel::charLines, pos, clrMenuDrk);
-  pos.x += 2;
-  str = toStr(GameTime::getTurn());
-  Render::drawText(str, Panel::charLines, pos, clrWhite);
   pos.x += str.length() + 1;
 
   //Thrown weapon

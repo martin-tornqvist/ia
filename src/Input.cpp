@@ -342,10 +342,15 @@ void handleMapModeKeyPress(const KeyData& d)
 
               auto* const actor = Utils::getActorAtPos(p);
 
-              if (actor && actor != Map::player)
+              if (actor && !actor->isPlayer())
               {
-                RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
-                Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
+                bool tgtProps[endOfPropIds];
+                actor->getPropHandler().getPropIds(tgtProps);
+                if (!tgtProps[propEthereal])
+                {
+                  RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
+                  Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
+                }
               }
 
               Log::addMsg("[f] to fire");
@@ -533,7 +538,7 @@ void handleMapModeKeyPress(const KeyData& d)
       else
       {
         bool props[endOfPropIds];
-        Map::player->getPropHandler().getActivePropIds(props);
+        Map::player->getPropHandler().getPropIds(props);
         if (props[propPoisoned])
         {
           //Player is poisoned
@@ -603,7 +608,7 @@ void handleMapModeKeyPress(const KeyData& d)
         Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::no,
                     onMarkerAtPos, onKeyPress);
       }
-      else
+      else //Not holding explosive
       {
         if (Map::player->getPropHandler().allowAttackRanged(true))
         {
@@ -621,10 +626,15 @@ void handleMapModeKeyPress(const KeyData& d)
 
               auto* const actor = Utils::getActorAtPos(p);
 
-              if (actor && actor != Map::player)
+              if (actor && !actor->isPlayer())
               {
-                ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
-                Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
+                bool tgtProps[endOfPropIds];
+                actor->getPropHandler().getPropIds(tgtProps);
+                if (!tgtProps[propEthereal])
+                {
+                  ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
+                  Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
+                }
               }
 
               Log::addMsg("[t] to throw");

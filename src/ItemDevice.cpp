@@ -86,7 +86,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
     bool isWarning        = false;
     int bon = 0;
     bool props[endOfPropIds];
-    actor->getPropHandler().getActivePropIds(props);
+    actor->getPropHandler().getPropIds(props);
     if (props[propBlessed])
     {
       bon += 2;

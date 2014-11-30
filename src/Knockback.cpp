@@ -32,7 +32,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos,
     if (defenderData.actorSize <= actorSize_giant)
     {
       bool props[endOfPropIds];
-      defender.getPropHandler().getActivePropIds(props);
+      defender.getPropHandler().getPropIds(props);
 
       const bool DEF_CAN_BE_KNOCKED = defenderData.canBeKnockedBack &&
                                       !props[propEthereal]          &&

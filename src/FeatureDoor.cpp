@@ -181,7 +181,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
       const bool IS_CELL_SEEN = Map::isPosSeenByPlayer(pos_);
 
       bool props[endOfPropIds];
-      if (actor) {actor->getPropHandler().getActivePropIds(props);}
+      if (actor) {actor->getPropHandler().getPropIds(props);}
 
       const bool IS_WEAK = props[propWeakened];
 

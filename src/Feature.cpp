@@ -22,7 +22,7 @@ const FeatureDataT& Feature::getData() const {return FeatureData::getData(getId(
 void Feature::bump(Actor& actorBumping)
 {
   bool props[endOfPropIds];
-  actorBumping.getPropHandler().getActivePropIds(props);
+  actorBumping.getPropHandler().getPropIds(props);
 
   if (!canMove(props))
   {

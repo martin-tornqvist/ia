@@ -44,7 +44,7 @@ bool BlocksMoveCmn::check(const Actor& a) const
 BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking) :
   Check(), IS_ACTORS_BLOCKING_(isActorsBlocking)
 {
-  actor.getPropHandler().getActivePropIds(actorsProps_);
+  actor.getPropHandler().getPropIds(actorsProps_);
 }
 
 bool BlocksActor::check(const Cell& c) const

@@ -582,7 +582,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   PropHandler& propHandler = Map::player->getPropHandler();
 
   //Check that no props are enabled
-  propHandler.getActivePropIds(props);
+  propHandler.getPropIds(props);
   for (int i = 0; i < endOfPropIds; ++i)
   {
     CHECK(!props[i]);
@@ -595,7 +595,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   item->onEquip();
 
   //Check that the props are applied
-  propHandler.getActivePropIds(props);
+  propHandler.getPropIds(props);
   int nrProps = 0;
   for (int i = 0; i < endOfPropIds; ++i)
   {
@@ -613,7 +613,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   CHECK_EQUAL(item, inv.general_.back());
 
   //Check that the properties are cleared
-  propHandler.getActivePropIds(props);
+  propHandler.getPropIds(props);
   for (int i = 0; i < endOfPropIds; ++i)
   {
     CHECK(!props[i]);
@@ -625,7 +625,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   item->onEquip();
 
   //Check that the props are applied
-  propHandler.getActivePropIds(props);
+  propHandler.getPropIds(props);
   nrProps = 0;
   for (int i = 0; i < endOfPropIds; ++i)
   {
@@ -648,7 +648,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   CHECK(cell.item);
 
   //Check that the properties are cleared
-  propHandler.getActivePropIds(props);
+  propHandler.getPropIds(props);
   for (int i = 0; i < endOfPropIds; ++i)
   {
     CHECK(!props[i]);
@@ -661,7 +661,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   item->onEquip();
 
   //Check that the props are applied
-  propHandler.getActivePropIds(props);
+  propHandler.getPropIds(props);
   nrProps = 0;
   for (int i = 0; i < endOfPropIds; ++i)
   {

@@ -288,7 +288,7 @@ int Player::getCarryWeightLmt() const
   const bool IS_STRONG_BACKED = PlayerBon::traitsPicked[int(Trait::strongBacked)];
 
   bool props[endOfPropIds];
-  propHandler_->getActivePropIds(props);
+  propHandler_->getPropIds(props);
   const bool IS_WEAKENED = props[propWeakened];
 
   const int CARRY_WEIGHT_MOD = (IS_TOUGH         * 10) +
@@ -465,7 +465,7 @@ void Player::incrInsanity()
         case 5:
         {
           bool props[endOfPropIds];
-          propHandler_->getActivePropIds(props);
+          propHandler_->getPropIds(props);
 
           if (props[propRFear])
           {
@@ -1051,7 +1051,7 @@ void Player::onStdTurn()
   if (!activeMedicalBag)
   {
     bool props[endOfPropIds];
-    propHandler_->getActivePropIds(props);
+    propHandler_->getPropIds(props);
 
     if (!props[propPoisoned])
     {
@@ -1247,7 +1247,7 @@ void Player::moveDir(Dir dir)
 
       //Blocking mobile or rigid?
       bool props[endOfPropIds];
-      getPropHandler().getActivePropIds(props);
+      getPropHandler().getPropIds(props);
       Cell& cell = Map::cells[dest.x][dest.y];
       bool isFeaturesAllowMove = cell.rigid->canMove(props);
 

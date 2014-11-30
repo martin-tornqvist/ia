@@ -295,7 +295,7 @@ void initDataList()
   //---------------------------------------------------------------------------
   d.id = FeatureId::statue;
   d.mkObj = [](const Pos & p) {return new Statue(p);};
-  d.glyph = 5;
+  d.glyph = 5; //Paragraph sign
   d.tile = TileId::witchOrWarlock;
   d.isProjectilePassable = false;
   d.isLosPassable = false;

@@ -703,7 +703,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
     assert(actor);
 
     bool props[endOfPropIds];
-    actor->getPropHandler().getActivePropIds(props);
+    actor->getPropHandler().getPropIds(props);
 
     if (props[propWeakened])
     {
@@ -738,7 +738,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
       if (actorBehind && actorBehind->isAlive())
       {
         bool propsActorBehind[endOfPropIds];
-        actorBehind->getPropHandler().getActivePropIds(propsActorBehind);
+        actorBehind->getPropHandler().getPropIds(propsActorBehind);
         if (!propsActorBehind[propEthereal])
         {
           if (actorBehind == Map::player)
@@ -898,7 +898,7 @@ void LiquidShallow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 void LiquidShallow::bump(Actor& actorBumping)
 {
   bool props[endOfPropIds];
-  actorBumping.getPropHandler().getActivePropIds(props);
+  actorBumping.getPropHandler().getPropIds(props);
 
   if (!props[propEthereal] && !props[propFlying])
   {
@@ -1577,7 +1577,7 @@ void Tomb::bump(Actor & actorBumping)
         Log::addMsg("I attempt to push the lid.");
 
         bool props[endOfPropIds];
-        Map::player->getPropHandler().getActivePropIds(props);
+        Map::player->getPropHandler().getPropIds(props);
 
         if (props[propWeakened])
         {
@@ -1956,7 +1956,7 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
             Log::addMsg("I kick the lid.");
 
             bool props[endOfPropIds];
-            Map::player->getPropHandler().getActivePropIds(props);
+            Map::player->getPropHandler().getPropIds(props);
 
             if (props[propWeakened] || matl_ == ChestMatl::iron)
             {
@@ -2146,7 +2146,7 @@ DidTriggerTrap Chest::triggerTrap(Actor * const actor)
 
   //Nothing happens?
   bool playerProps[endOfPropIds];
-  Map::player->getPropHandler().getActivePropIds(playerProps);
+  Map::player->getPropHandler().getPropIds(playerProps);
 
   const int TRAP_NO_ACTION_ONE_IN_N = playerProps[propBlessed] ? 2 :
                                       playerProps[propCursed]  ? 20 : 4;

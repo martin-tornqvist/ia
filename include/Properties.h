@@ -159,7 +159,7 @@ public:
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
   int getAbilityMod(const AbilityId ability) const;
 
-  void getActivePropIds(bool out[endOfPropIds]) const;
+  void getPropIds(bool out[endOfPropIds]) const;
 
   Prop* getProp(const PropId id, const PropSrc source) const;
 

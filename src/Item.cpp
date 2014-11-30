@@ -512,7 +512,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
 
   //Check if chosen action can be done
   bool props[endOfPropIds];
-  Map::player->getPropHandler().getActivePropIds(props);
+  Map::player->getPropHandler().getPropIds(props);
   switch (curAction_)
   {
     case MedBagAction::treatWounds:
@@ -585,7 +585,7 @@ MedBagAction MedicalBag::chooseAction() const
   Log::clearLog();
 
   bool props[endOfPropIds];
-  Map::player->getPropHandler().getActivePropIds(props);
+  Map::player->getPropHandler().getPropIds(props);
 
   //Infections are treated firest
   if(props[propInfected])
