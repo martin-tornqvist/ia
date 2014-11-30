@@ -620,21 +620,20 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
                         IgnoreMsgIfOriginSeen::yes, pos, this, SndVol::low, AlertsMon::no
                        });
     }
-    static_cast<Mon*>(this)->leader_ = nullptr;
   }
 
-  if (ALLOW_DROP_ITEMS) {ItemDrop::dropAllCharactersItems(*this);}
+  if (ALLOW_DROP_ITEMS)
+  {
+    ItemDrop::dropAllCharactersItems(*this);
+  }
 
   if (IS_DESTROYED)
   {
     glyph_ = ' ';
     tile_ = TileId::empty;
-    if (isHumanoid())
+    if (isHumanoid() && ALLOW_GORE)
     {
-      if (ALLOW_GORE)
-      {
-        Map::mkGore(pos);
-      }
+      Map::mkGore(pos);
     }
   }
   else //Not destroyed
@@ -672,10 +671,12 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
   propHandler_->onDeath(isPlayerSeeDyingActor);
 
-  //Give exp if monster, and count up nr of kills.
   if (!isPlayer())
   {
+    //Give exp if monster, and count up nr of kills.
     DungeonMaster::onMonKilled(*this);
+
+    static_cast<Mon*>(this)->leader_ = nullptr;
   }
 
   Render::drawMapAndInterface();

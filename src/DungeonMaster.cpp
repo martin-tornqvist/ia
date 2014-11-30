@@ -208,19 +208,20 @@ void onMonKilled(Actor& actor)
 
   d.nrKills += 1;
 
-  if (d.hp >= 3)
+  if (d.hp >= 3 && Map::player->obsessions[int(Obsession::sadism)])
   {
-    if (Map::player->obsessions[int(Obsession::sadism)])
-    {
-      Map::player->shock_ = max(0.0, Map::player->shock_ - 3.0);
-    }
+    Map::player->shock_ = max(0.0, Map::player->shock_ - 3.0);
   }
 
-  const int XP_WORTH_TOT  = getMonTotXpWorth(d);
-  Mon* const mon  = static_cast<Mon*>(&actor);
-  const int XP_GAINED     = mon->hasGivenXpForSpotting_ ?
-                            XP_WORTH_TOT / 2 : XP_WORTH_TOT;
-  playerGainXp(XP_GAINED);
+  Mon* const  mon = static_cast<Mon*>(&actor);
+
+  if (!Map::player->isLeaderOf(mon))
+  {
+    const int MON_XP_VAL_TOT  = getMonTotXpWorth(d);
+    const int XP_GAINED       = mon->hasGivenXpForSpotting_ ?
+                                (MON_XP_VAL_TOT / 2) : MON_XP_VAL_TOT;
+    playerGainXp(XP_GAINED);
+  }
 }
 
 void onMonSpotted(Actor& actor)
