@@ -57,7 +57,10 @@ bool coinToss()
 
 bool fraction(const int NUMERATOR, const int DENOMINATOR)
 {
-  if (NUMERATOR <= 0) {return false;}
+  if (NUMERATOR <= 0)
+  {
+    return false;
+  }
   return roll(1, DENOMINATOR) <= NUMERATOR;
 }
 
@@ -66,7 +69,10 @@ bool fraction(const Fraction& fractionVals)
   return fraction(fractionVals.numerator, fractionVals.denominator);
 }
 
-bool oneIn(const int N) {return fraction(1, N);}
+bool oneIn(const int N)
+{
+  return fraction(1, N);
+}
 
 int range(const int MIN, const int MAX)
 {

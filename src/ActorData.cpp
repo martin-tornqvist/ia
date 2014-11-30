@@ -2297,10 +2297,10 @@ void initDataList()
   d.glyph = 'e';
   d.color = clrVioletDrk;
   d.groupSize = MonGroupSize::few;
-  d.hp = 4;
+  d.hp = 3;
   d.spi = 1;
   d.dmgMelee = 1;
-  d.abilityVals.setVal(AbilityId::melee, 12);
+  d.abilityVals.setVal(AbilityId::melee, 10);
   d.speed = ActorSpeed::slow;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::attacks)] = true;

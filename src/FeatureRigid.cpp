@@ -1946,7 +1946,7 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
 
               const int OPEN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::rugged)] ? 2 :
                                         PlayerBon::traitsPicked[int(Trait::tough)]  ? 3 :
-                                        5;
+                                        4;
 
               if (Rnd::oneIn(OPEN_ONE_IN_N))
               {
@@ -2201,15 +2201,20 @@ string Chest::getName(const Article article) const
 {
   const bool    IS_EMPTY        = itemContainer_.items_.empty() && isOpen_;
   const bool    IS_KNOWN_TRAP   = isTrapped_ && isTrapStatusKnown_;
-  const string  emptyStr        = IS_EMPTY                ? "empty "   : "";
-  const string  trapStr         = IS_KNOWN_TRAP           ? "trapped " : "";
-  const string  openStr         = (isOpen_ && !IS_EMPTY)  ? "open "    : "";
+  const string  lockedStr       = isLocked_               ? "locked "   : "";
+  const string  emptyStr        = IS_EMPTY                ? "empty "    : "";
+  const string  trapStr         = IS_KNOWN_TRAP           ? "trapped "  : "";
+  const string  openStr         = (isOpen_ && !IS_EMPTY)  ? "open "     : "";
 
   string a = "";
 
   if (article == Article::a)
   {
-    a = (!isOpen_ && (matl_ == ChestMatl::wood || IS_KNOWN_TRAP)) ? "a " : "an ";
+    a = (
+          isLocked_ ||
+          (!isOpen_ && (matl_ == ChestMatl::wood || IS_KNOWN_TRAP))
+        ) ?
+        "a " : "an ";
   }
   else
   {
@@ -2218,7 +2223,7 @@ string Chest::getName(const Article article) const
 
   const string matlStr = isOpen_ ? "" : matl_ == ChestMatl::wood ? "wooden " : "iron ";
 
-  return a + emptyStr + openStr + trapStr + matlStr + "chest";
+  return a + lockedStr + emptyStr + openStr + trapStr + matlStr + "chest";
 }
 
 TileId Chest::getTile() const
