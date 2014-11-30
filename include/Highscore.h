@@ -6,18 +6,11 @@
 
 #include "CmnData.h"
 
-struct HighScoreEntry
+class HighScoreEntry
 {
 public:
-  HighScoreEntry(std::string dateAndTime, std::string name, int xp, int lvl,
-                 int dlvl, int insanity, bool isVictory) :
-    dateAndTime_(dateAndTime),
-    name_(name),
-    xp_(xp),
-    lvl_(lvl),
-    dlvl_(dlvl),
-    ins_(insanity),
-    isVictory_(isVictory) {}
+  HighScoreEntry(std::string dateAndTime, std::string name, int xp, int lvl, int dlvl,
+                 int insanity, bool isWin);
 
   ~HighScoreEntry() {}
 
@@ -31,34 +24,21 @@ public:
     lvl_          = LVL;
     dlvl_         = DLVL;
     ins_          = INSANITY;
-    isVictory_    = IS_VICTORY;
+    isWin_        = IS_VICTORY;
   }
 
-  int getScore() const
-  {
-    const double DLVL_DB  = double(dlvl_);
-    const double XP_DB    = double(xp_);
-    const double INS_DB   = double(ins_);
-    const double SCORE_DB =
-      (XP_DB + (isVictory_ * XP_DB / 5.0)) *
-      ((((DLVL_DB + 1.0) / LAST_CAVERN_LVL) / 3.0) + 1.0) *
-      ((INS_DB / 3.0) + 1.0);
-    return int(SCORE_DB);
-  }
-
-  std::string  getDateAndTime()  const {return dateAndTime_;}
-  std::string  getName()         const {return name_;}
-  int          getXp()           const {return xp_;}
-  int          getLvl()          const {return lvl_;}
-  int          getDlvl()         const {return dlvl_;}
-  int          getInsanity()     const {return ins_;}
-  bool         isVictoryGame()   const {return isVictory_;}
+  std::string  getDateAndTime() const {return dateAndTime_;}
+  std::string  getName()        const {return name_;}
+  int          getXp()          const {return xp_;}
+  int          getLvl()         const {return lvl_;}
+  int          getDlvl()        const {return dlvl_;}
+  int          getInsanity()    const {return ins_;}
+  bool         isWin()          const {return isWin_;}
 
 private:
-  std::string dateAndTime_;
-  std::string name_;
+  std::string dateAndTime_, name_;
   int xp_, lvl_, dlvl_, ins_;
-  bool isVictory_;
+  bool isWin_;
 };
 
 namespace HighScore

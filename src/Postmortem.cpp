@@ -348,17 +348,13 @@ void renderMenu(const MenuBrowser& browser)
   const string NAME_STR = Map::player->getData().nameA;
   Render::drawTextCentered(NAME_STR, Panel::screen, pos, clrWhite);
 
-//  pos.y += 2;
-//  const string LVL_STR = "LVL " + toStr(DungeonMaster::getLvl());
-//  Render::drawTextCentered(LVL_STR, Panel::screen, pos, clrWhiteHigh);
-
   //Draw command labels
   pos.set(55, 13);
   Render::drawText("Information", Panel::screen, pos,
                    browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Render::drawText("View the High Score", Panel::screen, pos,
+  Render::drawText("View High Scores", Panel::screen, pos,
                    browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 

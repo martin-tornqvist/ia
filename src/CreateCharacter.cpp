@@ -28,10 +28,10 @@ void draw(const string& curString)
                            Pos(MAP_W_HALF, 0), clrWhite);
   const int Y_NAME = 2;
   const string NAME_STR =
-    curString.size() < PLAYER_NAME_MAX_LENGTH ? curString + "_" :
+    curString.size() < PLAYER_NAME_MAX_LEN ? curString + "_" :
     curString;
-  const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LENGTH / 2);
-  const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LENGTH - 1;
+  const size_t NAME_X0 = MAP_W_HALF - (PLAYER_NAME_MAX_LEN / 2);
+  const size_t NAME_X1 = NAME_X0 + PLAYER_NAME_MAX_LEN - 1;
   Render::drawText(NAME_STR, Panel::screen, Pos(NAME_X0, Y_NAME),
                    clrMenuHighlight);
   Rect boxRect(Pos(NAME_X0 - 1, Y_NAME - 1), Pos(NAME_X1 + 1, Y_NAME + 1));
@@ -50,7 +50,7 @@ void readKeys(string& curString, bool& isDone)
     return;
   }
 
-  if (curString.size() < PLAYER_NAME_MAX_LENGTH)
+  if (curString.size() < PLAYER_NAME_MAX_LEN)
   {
     if (d.sdlKey == SDLK_SPACE ||
         (d.key >= int('a') && d.key <= int('z')) ||

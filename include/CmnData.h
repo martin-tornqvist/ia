@@ -3,7 +3,7 @@
 
 #include <string>
 
-const size_t PLAYER_NAME_MAX_LENGTH = 12;
+const size_t PLAYER_NAME_MAX_LEN = 12;
 
 const std::string gameVersionStr = "v17.0";
 

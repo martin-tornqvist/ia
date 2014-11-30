@@ -18,29 +18,37 @@
 
 using namespace std;
 
+HighScoreEntry::HighScoreEntry(std::string dateAndTime, std::string name, int xp,
+                               int lvl, int dlvl, int insanity, bool didWin) :
+  dateAndTime_  (dateAndTime),
+  name_         (name),
+  xp_           (xp),
+  lvl_          (lvl),
+  dlvl_         (dlvl),
+  ins_          (insanity),
+  isWin_        (didWin) {}
+
 namespace HighScore
 {
 
 namespace
 {
 
-const int X_POS_DATE      = 1;
-const int X_POS_NAME      = X_POS_DATE + 19;
-const int X_POS_SCORE     = X_POS_NAME + 14;
-const int X_POS_LVL       = X_POS_SCORE + 12;
-const int X_POS_DLVL      = X_POS_LVL + 8;
-const int X_POS_INSANITY  = X_POS_DLVL + 8;
-const int X_POS_RANK      = X_POS_INSANITY + 10;
-
-bool isEntryHigher(const HighScoreEntry& cur,
-                   const HighScoreEntry& other)
-{
-  return other.getScore() < cur.getScore();
-}
+const int X_POS_DATE    = 0;
+const int X_POS_NAME    = X_POS_DATE  + 19;
+const int X_POS_LVL     = X_POS_NAME  + PLAYER_NAME_MAX_LEN + 2;
+const int X_POS_DLVL    = X_POS_LVL   + 8;
+const int X_POS_INS     = X_POS_DLVL  + 8;
+const int X_POS_WIN     = X_POS_INS   + 11;
 
 void sortEntries(vector<HighScoreEntry>& entries)
 {
-  sort(entries.begin(), entries.end(), isEntryHigher);
+  auto cmp = [](const HighScoreEntry & e1, const HighScoreEntry & e2)
+  {
+    return e1.getDlvl() > e2.getDlvl();
+  };
+
+  sort(entries.begin(), entries.end(), cmp);
 }
 
 void writeFile(vector<HighScoreEntry>& entries)
@@ -48,18 +56,17 @@ void writeFile(vector<HighScoreEntry>& entries)
   ofstream file;
   file.open("data/highscores", ios::trunc);
 
-  for (unsigned int i = 0; i < entries.size(); ++i)
+  for (const auto entry : entries)
   {
-    const HighScoreEntry& entry = entries[i];
+    const string VICTORY_STR = entry.isWin() ? "V" : "D";
 
-    const string VICTORY_STR = entry.isVictoryGame() ? "V" : "D";
-    file << VICTORY_STR << endl;
-    file << entry.getDateAndTime() << endl;
-    file << entry.getName() << endl;
-    file << entry.getXp() << endl;
-    file << entry.getLvl() << endl;
-    file << entry.getDlvl() << endl;
-    file << entry.getInsanity() << endl;
+    file << VICTORY_STR             << endl;
+    file << entry.getDateAndTime()  << endl;
+    file << entry.getName()         << endl;
+    file << entry.getXp()           << endl;
+    file << entry.getLvl()          << endl;
+    file << entry.getDlvl()         << endl;
+    file << entry.getInsanity()     << endl;
   }
 }
 
@@ -74,21 +81,20 @@ void readFile(vector<HighScoreEntry>& entries)
 
     while (getline(file, line))
     {
-      bool isVictory = line[0] == 'V';
+      bool isWin = line[0] == 'V';
       getline(file, line);
-      const string dateAndTime = line;
+      const string dateAndTime  = line;
       getline(file, line);
-      const string name = line;
+      const string name         = line;
       getline(file, line);
-      const int XP = toInt(line);
+      const int XP              = toInt(line);
       getline(file, line);
-      const int LVL = toInt(line);
+      const int LVL             = toInt(line);
       getline(file, line);
-      const int DLVL = toInt(line);
+      const int DLVL            = toInt(line);
       getline(file, line);
-      const int INSANITY = toInt(line);
-      entries.push_back(
-        HighScoreEntry(dateAndTime, name, XP, LVL, DLVL, INSANITY, isVictory));
+      const int INS             = toInt(line);
+      entries.push_back(HighScoreEntry(dateAndTime, name, XP, LVL, DLVL, INS, isWin));
     }
     file.close();
   }
@@ -100,32 +106,27 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
 
   Render::clearScreen();
 
-  const int X_LABEL = 3;
+  const Panel panel   = Panel::screen;
+  const int   X_LABEL = 3;
 
   const string decorationLine(MAP_W, '-');
 
-  Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
+  Render::drawText(decorationLine, panel, Pos(0, 0), clrGray);
 
-  Render::drawText(" Displaying High Scores ", Panel::screen, Pos(X_LABEL, 0), clrGray);
+  Render::drawText(" Displaying High Scores ", panel, Pos(X_LABEL, 0), clrGray);
 
-  Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
+  Render::drawText(decorationLine, panel, Pos(0, SCREEN_H - 1), clrGray);
 
-  Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
+  Render::drawText(infoScrCmdInfo, panel, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
   int yPos = 1;
 
-  Render::drawText(
-    "Ended",    Panel::screen, Pos(X_POS_DATE,     yPos), clrGray);
-  Render::drawText(
-    "Name",     Panel::screen, Pos(X_POS_NAME,     yPos), clrGray);
-  Render::drawText(
-    "Score",    Panel::screen, Pos(X_POS_SCORE,    yPos), clrGray);
-  Render::drawText(
-    "Level",    Panel::screen, Pos(X_POS_LVL,      yPos), clrGray);
-  Render::drawText(
-    "Depth",    Panel::screen, Pos(X_POS_DLVL,     yPos), clrGray);
-  Render::drawText(
-    "Insanity", Panel::screen, Pos(X_POS_INSANITY, yPos), clrGray);
+  Render::drawText("Ended",       panel, Pos(X_POS_DATE,    yPos), clrWhite);
+  Render::drawText("Name",        panel, Pos(X_POS_NAME,    yPos), clrWhite);
+  Render::drawText("Level",       panel, Pos(X_POS_LVL,     yPos), clrWhite);
+  Render::drawText("Depth",       panel, Pos(X_POS_DLVL,    yPos), clrWhite);
+  Render::drawText("Insanity",    panel, Pos(X_POS_INS,     yPos), clrWhite);
+  Render::drawText("Victory?",    panel, Pos(X_POS_WIN,     yPos), clrWhite);
 
   yPos++;
 
@@ -136,26 +137,22 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
     i < int(entries.size()) && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
     i++)
   {
-    const string dateAndTime  = entries[i].getDateAndTime();
-    const string name         = entries[i].getName();
-    const string score        = toStr(entries[i].getScore());
-    const string lvl          = toStr(entries[i].getLvl());
-    const string dlvl         = toStr(entries[i].getDlvl());
-    const string ins          = toStr(entries[i].getInsanity());
+    const auto entry = entries[i];
+
+    const string dateAndTime  = entry.getDateAndTime();
+    const string name         = entry.getName();
+    const string lvl          = toStr(entry.getLvl());
+    const string dlvl         = toStr(entry.getDlvl());
+    const string ins          = toStr(entry.getInsanity());
+    const string win          = entry.isWin() ? "Yes" : "No";
 
     const Clr& clr = clrNosfTeal;
-    Render::drawText(
-      dateAndTime, Panel::screen, Pos(X_POS_DATE,      yPos), clr);
-    Render::drawText(
-      name,        Panel::screen, Pos(X_POS_NAME,      yPos), clr);
-    Render::drawText(
-      score,       Panel::screen, Pos(X_POS_SCORE,     yPos), clr);
-    Render::drawText(
-      lvl,         Panel::screen, Pos(X_POS_LVL,       yPos), clr);
-    Render::drawText(
-      dlvl,        Panel::screen, Pos(X_POS_DLVL,      yPos), clr);
-    Render::drawText(
-      ins + "%",   Panel::screen, Pos(X_POS_INSANITY,  yPos), clr);
+    Render::drawText(dateAndTime, panel, Pos(X_POS_DATE,    yPos), clr);
+    Render::drawText(name,        panel, Pos(X_POS_NAME,    yPos), clr);
+    Render::drawText(lvl,         panel, Pos(X_POS_LVL,     yPos), clr);
+    Render::drawText(dlvl,        panel, Pos(X_POS_DLVL,    yPos), clr);
+    Render::drawText(ins + "%",   panel, Pos(X_POS_INS,     yPos), clr);
+    Render::drawText(win,         panel, Pos(X_POS_WIN,     yPos), clr);
     yPos++;
   }
 

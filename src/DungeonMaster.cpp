@@ -174,25 +174,26 @@ void winGame()
   Render::coverPanel(Panel::screen);
   Render::updateScreen();
 
-  const int Y0 = 2;
-  const unsigned int NR_OF_WIN_MESSAGE_LINES = winMsgLines.size();
-  const int DELAY_BETWEEN_LINES = 40;
+  const int     Y0                      = 2;
+  const size_t  NR_OF_WIN_MESSAGE_LINES = winMsgLines.size();
+  const int     DELAY_BETWEEN_LINES     = 40;
+
   SdlWrapper::sleep(DELAY_BETWEEN_LINES);
-  for (unsigned int i = 0; i < NR_OF_WIN_MESSAGE_LINES; ++i)
+
+  for (size_t i = 0; i < NR_OF_WIN_MESSAGE_LINES; ++i)
   {
-    for (unsigned int ii = 0; ii <= i; ii++)
+    for (size_t ii = 0; ii <= i; ii++)
     {
-      Render::drawTextCentered(winMsgLines[ii], Panel::screen,
-                               Pos(MAP_W_HALF, Y0 + ii),
+      Render::drawTextCentered(winMsgLines[ii], Panel::screen, Pos(MAP_W_HALF, Y0 + ii),
                                clrMsgBad, clrBlack, true);
+
       if (i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1)
       {
         const string CMD_LABEL =
           "[space/esc] to record high-score and return to main menu";
-        Render::drawTextCentered(
-          CMD_LABEL, Panel::screen,
-          Pos(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),
-          clrWhite, clrBlack, true);
+        Render::drawTextCentered(CMD_LABEL, Panel::screen,
+                                 Pos(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),
+                                 clrWhite, clrBlack, true);
       }
     }
     Render::updateScreen();

@@ -318,9 +318,9 @@ void mkForestTrees()
       dateStrVector.clear();
       TextFormatting::getSpaceSeparatedList(curHighscore.getDateAndTime(),
                                             dateStrVector);
-      const string date   = dateStrVector[0];
-      const string score  = toStr(curHighscore.getScore());
-      grave->setInscription("RIP " + name + " " + date + " Score: " + score);
+      const string dateStr = dateStrVector[0];
+      const string dlvlStr = toStr(curHighscore.getDlvl());
+      grave->setInscription("RIP " + name + " " + dateStr + " DLVL: " + dlvlStr);
       Map::put(grave);
     }
   }
