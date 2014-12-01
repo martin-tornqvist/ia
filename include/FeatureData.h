@@ -40,7 +40,6 @@ enum class FeatureId
   litFlare,
   trap,
 //  pit,
-//  gore,
   smoke,
   proxEventWallCrumble,
 
@@ -50,34 +49,21 @@ enum class FeatureId
 struct FeatureRoomSpawnRules
 {
 public:
-  FeatureRoomSpawnRules() :
-    maxNrInRoom_(-1), placementRule_(PlacementRule::adjToWalls)
-  {
-    roomTypesNative_.clear();
-  }
+  FeatureRoomSpawnRules();
 
-  void reset() {*this = FeatureRoomSpawnRules();}
+  void reset();
 
-  void set(const int MAX_NR_IN_ROOM,  const PlacementRule placementRule,
-           std::initializer_list<RoomType> roomTypes)
-  {
-    maxNrInRoom_    = MAX_NR_IN_ROOM;
-    placementRule_  = placementRule;
-    roomTypesNative_.clear();
-    for (RoomType id : roomTypes) {roomTypesNative_.push_back(id);}
-  }
+  void set(const int MAX_NR_IN_ROOM, const Range dlvlsAllowed,
+           const PlacementRule placementRule, std::initializer_list<RoomType> roomTypes);
 
-  bool isBelongingToRoomType(const RoomType type) const
-  {
-    for (RoomType id : roomTypesNative_) {if (id == type) {return true;}}
-    return false;
-  }
-
-  PlacementRule getPlacementRule()  const {return placementRule_;}
-  int           getMaxNrInRoom()    const {return maxNrInRoom_;}
+  bool          isBelongingToRoomType(const RoomType type)  const;
+  PlacementRule getPlacementRule()                          const;
+  int           getMaxNrInRoom()                            const;
+  Range         getDlvlsAllowed()                           const;
 
 private:
   int                   maxNrInRoom_;
+  Range                 dlvlsAllowed_;
   PlacementRule         placementRule_;
   std::vector<RoomType> roomTypesNative_;
 };
@@ -133,7 +119,7 @@ struct FeatureDataT
   std::string msgOnPlayerBlockedBlind;
   int dodgeModifier;
   int shockWhenAdjacent;
-  FeatureRoomSpawnRules themeSpawnRules;
+  FeatureRoomSpawnRules roomSpawnRules;
 };
 
 namespace FeatureData

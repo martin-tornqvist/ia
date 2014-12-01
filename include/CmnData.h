@@ -29,11 +29,13 @@ const int DESCR_X0            = MAP_W - 31;
 const int PLAYER_START_X      = 10;
 const int PLAYER_START_Y      = MAP_H_HALF;
 
-const int PLAYER_MAX_CLVL = 10;
+const int PLAYER_MAX_CLVL     = 10;
 
-const int FIRST_CAVERN_LVL            = 20;
-const int LAST_CAVERN_LVL             = 29;
-const int LAST_ROOM_AND_CORRIDOR_LVL  = FIRST_CAVERN_LVL - 2;
+const int DLVL_LAST_EARLY_GAME  = 9;
+const int DLVL_FIRST_MID_GAME   = 10;
+const int DLVL_LAST_MID_GAME    = 19;
+const int DLVL_FIRST_LATE_GAME  = 20;
+const int DLVL_LAST             = 30;
 
 const int AUDIO_ALLOCATED_CHANNELS = 16;
 

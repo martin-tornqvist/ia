@@ -54,7 +54,7 @@ string getSpeedStr(const ActorDataT& def)
 
 string getDwellingLvlStr(const ActorDataT& def)
 {
-  return toStr(max(1, def.spawnMinDLVL));
+  return toStr(max(1, def.spawnMinDLVL - 1));
 }
 
 } //namespace
@@ -65,7 +65,7 @@ void addAutoDescriptionLines(Actor* const actor, string& line)
 
   if (def.isUnique)
   {
-    if (def.spawnMinDLVL < LAST_CAVERN_LVL)
+    if (def.spawnMinDLVL < DLVL_LAST)
     {
       line += " " + def.nameThe + " is normally found beneath level " +
               getDwellingLvlStr(def) + ". ";

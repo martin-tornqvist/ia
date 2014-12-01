@@ -173,7 +173,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.ranged.isRangedWpn = true;
       d.ranged.missileGlyph = '/';
       d.ranged.missileClr = clrWhite;
-      d.spawnStdRange.upper = FIRST_CAVERN_LVL - 1;
+      d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
       d.melee.hitSmallSfx = SfxId::hitSmall;
       d.melee.hitMediumSfx = SfxId::hitMedium;
       d.melee.hitHardSfx = SfxId::hitHard;
@@ -198,7 +198,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.itemWeight = itemWeight_extraLight;
       d.isStackable = true;
       d.ranged.isThrowingWpn = true;
-      d.spawnStdRange.upper = FIRST_CAVERN_LVL - 1;
+      d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
       d.ranged.sndVol = SndVol::low;
     } break;
 
@@ -210,7 +210,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.clr = clrWhite;
       d.tile = TileId::ammo;
       d.isAmmo = true;
-      d.spawnStdRange.upper = FIRST_CAVERN_LVL - 1;
+      d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
     } break;
 
     case ItemType::ammoClip:
@@ -219,7 +219,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.itemWeight = itemWeight_light;
       d.isStackable = false;
       d.isAmmoClip = true;
-      d.spawnStdRange.upper = FIRST_CAVERN_LVL - 1;
+      d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
     } break;
 
     case ItemType::scroll:
@@ -740,10 +740,9 @@ void initDataList()
   resetData(*d, ItemType::meleeWpn);
   d->baseName = ItemName("Club", "Clubs", "a Club");
   d->baseDescr = {"Wielded since prehistoric times.",
-
                   "Melee attacks with clubs are noisy."
                  };
-  d->spawnStdRange = Range(FIRST_CAVERN_LVL, INT_MAX);
+  d->spawnStdRange = Range(DLVL_FIRST_LATE_GAME, INT_MAX);
   d->itemWeight = itemWeight_medium;
   d->tile = TileId::club;
   d->clr = clrBrown;
@@ -1344,7 +1343,7 @@ void initDataList()
   d->tile = TileId::mask;
   d->glyph = '[';
   d->isHeadwear = true;
-  d->spawnStdRange = Range(1, LAST_ROOM_AND_CORRIDOR_LVL);
+  d->spawnStdRange = Range(1, DLVL_LAST_EARLY_GAME);
   d->chanceToIncludeInSpawnList = 50;
   d->itemWeight = itemWeight_light;
   d->landOnHardSndMsg = "";
@@ -1578,6 +1577,7 @@ void initDataList()
   d->baseDescr = {"A portable light source. It is somewhat unreliable as it tends to "
                   "flicker and malfunction often."
                  };
+  d->spawnStdRange = Range(1, DLVL_LAST_MID_GAME);
   d->spawnStdRange = Range(1, 10);
   d->chanceToIncludeInSpawnList = 50;
   d->isIdentified = true;
@@ -1594,7 +1594,7 @@ void initDataList()
   d->baseDescr = {"A portable bag of medical supplies."};
   d->itemValue = ItemValue::normal;
   d->itemWeight = itemWeight_medium;
-  d->spawnStdRange = Range(1, LAST_ROOM_AND_CORRIDOR_LVL);
+  d->spawnStdRange = Range(1, DLVL_LAST_MID_GAME);
   d->isStackable = false;
   d->glyph = '~';
   d->clr = clrBrownDrk;

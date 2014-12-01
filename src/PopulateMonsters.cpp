@@ -36,7 +36,7 @@ void mkListOfMonCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
   listRef.clear();
 
   const int EFFECTIVE_DLVL =
-    max(1, min(LAST_CAVERN_LVL, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
+    max(1, min(DLVL_LAST, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
 
   for (const auto& d : ActorData::data)
   {

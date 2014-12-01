@@ -26,7 +26,7 @@ struct Cell
   Pos             pos;
 };
 
-enum class MapType {intro, std, egypt, leng, caves, trapezohedron};
+enum class MapType {intro, std, egypt, leng, trapezohedron};
 
 namespace Map
 {

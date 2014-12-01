@@ -965,7 +965,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
         const int PLAYER_CLVL     = DungeonMaster::getCLvl();
         const int PLAYER_CLVL_PCT = (PLAYER_CLVL * 100) / PLAYER_MAX_CLVL;
 
-        dlvlMax                   = (PLAYER_CLVL_PCT * LAST_CAVERN_LVL) / 100;
+        dlvlMax                   = (PLAYER_CLVL_PCT * DLVL_LAST) / 100;
       }
       else //Caster is monster
       {

@@ -12,21 +12,27 @@ using namespace std;
 namespace MapPatterns
 {
 
-void setCellsInArea(const Rect& area, vector<Pos>& adjToWalls,
-                    vector<Pos>& awayFromWalls)
+void getCellsInRoom(const Room& room, std::vector<Pos>& adjToWalls,
+                    std::vector<Pos>& awayFromWalls)
 {
   TRACE_FUNC_BEGIN_VERBOSE;
   vector<Pos> posBucket;
   posBucket.clear();
 
-  for (int y = area.p0.y; y <= area.p1.y; ++y)
+  const Rect& r = room.r_;
+
+  for (int x = r.p0.x; x <= r.p1.x; ++x)
   {
-    for (int x = area.p0.x; x <= area.p1.x; ++x)
+    for (int y = r.p0.y; y <= r.p1.y; ++y)
     {
-      auto* const f = Map::cells[x][y].rigid;
-      if (f->canMoveCmn() && f->canHaveRigid())
+      if (Map::roomMap[x][y] == &room)
       {
-        posBucket.push_back(Pos(x, y));
+        auto* const f = Map::cells[x][y].rigid;
+
+        if (f->canMoveCmn() && f->canHaveRigid())
+        {
+          posBucket.push_back(Pos(x, y));
+        }
       }
     }
   }

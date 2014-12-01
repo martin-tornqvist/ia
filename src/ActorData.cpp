@@ -108,7 +108,7 @@ void initDataList()
   d.dmgMelee = 4;
   d.abilityVals.setVal(AbilityId::melee, 25);
   d.spawnMinDLVL = 1;
-  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
+  d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -153,7 +153,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 35);
   d.abilityVals.setVal(AbilityId::ranged, 0);
   d.spawnMinDLVL = 2;
-  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
+  d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::group;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -198,7 +198,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 50);
   d.spawnMinDLVL = 3;
-  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
+  d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -327,7 +327,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 35);
   d.abilityVals.setVal(AbilityId::ranged, 50);
   d.spawnMinDLVL = 1;
-  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
+  d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -366,7 +366,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 50);
   d.spawnMinDLVL = 12;
-  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
+  d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -406,7 +406,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 40);
   d.spawnMinDLVL = 4;
-  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
+  d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -599,7 +599,7 @@ void initDataList()
   d.spi = 20;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = 5;
-  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
+  d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
@@ -743,7 +743,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::stealth, 90);
   d.intrProps[propLightSensitive] = true;
   d.spawnMinDLVL = 6;
-  d.spawnMaxDLVL = FIRST_CAVERN_LVL - 1;
+  d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.nrTurnsAware = 5;
@@ -1340,7 +1340,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 25);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 7;
-  d.spawnMaxDLVL = FIRST_CAVERN_LVL;
+  d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::swarm;
   d.actorSize = actorSize_floor;
@@ -1620,7 +1620,7 @@ void initDataList()
   d.spi = 60;
   d.dmgMelee = 6;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.spawnMinDLVL = FIRST_CAVERN_LVL - 1;
+  d.spawnMinDLVL = DLVL_LAST_MID_GAME;
   d.isAutoSpawnAllowed = false;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
@@ -1790,6 +1790,7 @@ void initDataList()
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
+  d.intrProps[propRPoison] = true;
   d.spawnMinDLVL = 8;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.groupSize = MonGroupSize::few;
@@ -1834,6 +1835,7 @@ void initDataList()
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
   d.intrProps[propRFire] = true;
+  d.intrProps[propRPoison] = true;
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
@@ -1877,6 +1879,7 @@ void initDataList()
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
   d.intrProps[propRCold] = true;
+  d.intrProps[propRPoison] = true;
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
@@ -2213,7 +2216,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 60);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
-  d.spawnMinDLVL = LAST_CAVERN_LVL - 1;
+  d.spawnMinDLVL = DLVL_LAST - 3;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;

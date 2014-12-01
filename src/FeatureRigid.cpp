@@ -1103,7 +1103,7 @@ WasDestroyed Carpet::onFinishedBurning()
 
 string Carpet::getName(const Article article) const
 {
-  string ret = article == Article::a ? "a " : "the ";
+  string ret = article == Article::a ? "" : "the ";
   return ret + "carpet";
 }
 

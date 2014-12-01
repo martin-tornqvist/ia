@@ -260,7 +260,6 @@
 		<Unit filename="../src/MainMenu.cpp" />
 		<Unit filename="../src/Manual.cpp" />
 		<Unit filename="../src/Map.cpp" />
-		<Unit filename="../src/MapGenCaveLvl.cpp" />
 		<Unit filename="../src/MapGenSpecial.cpp" />
 		<Unit filename="../src/MapGenStd.cpp" />
 		<Unit filename="../src/MapGenUtils.cpp" />

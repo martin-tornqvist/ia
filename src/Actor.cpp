@@ -418,11 +418,11 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
   if (isPlayer()) {Map::player->interruptActions();}
 
   //Damage to corpses
-  //Note: corpse is automatically destroyed if damage is high enough, otherwise it is
+  //Note: Corpse is automatically destroyed if damage is high enough, otherwise it is
   //destroyed with a random chance
   if (isCorpse() && !isPlayer())
   {
-    if (Rnd::coinToss() || dmg >= ((getHpMax(true) * 2) / 3))
+    if (Rnd::fraction(5, 8) || dmg >= ((getHpMax(true) * 2) / 3))
     {
       if (method == DmgMethod::kick)
       {

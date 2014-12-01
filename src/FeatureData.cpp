@@ -13,6 +13,56 @@
 
 using namespace std;
 
+//--------------------------------------------------------- FEATURE ROOM SPAWN RULES
+FeatureRoomSpawnRules::FeatureRoomSpawnRules() :
+  maxNrInRoom_    (-1),
+  dlvlsAllowed_   ({ -1, -1}),
+                placementRule_  (PlacementRule::adjToWalls)
+{
+  roomTypesNative_.clear();
+}
+
+void FeatureRoomSpawnRules::reset() {*this = FeatureRoomSpawnRules();}
+
+void FeatureRoomSpawnRules::set(const int MAX_NR_IN_ROOM,
+                                const Range dlvlsAllowed,
+                                const PlacementRule placementRule,
+                                std::initializer_list<RoomType> roomTypes)
+{
+  maxNrInRoom_    = MAX_NR_IN_ROOM;
+  dlvlsAllowed_   = dlvlsAllowed;
+  placementRule_  = placementRule;
+
+  roomTypesNative_.clear();
+
+  for (RoomType id : roomTypes)
+  {
+    roomTypesNative_.push_back(id);
+  }
+}
+
+bool FeatureRoomSpawnRules::isBelongingToRoomType(const RoomType type) const
+{
+  return find(begin(roomTypesNative_), end(roomTypesNative_), type) !=
+         end(roomTypesNative_);
+}
+
+PlacementRule FeatureRoomSpawnRules::getPlacementRule() const
+{
+  return placementRule_;
+}
+
+int FeatureRoomSpawnRules::getMaxNrInRoom() const
+{
+  return maxNrInRoom_;
+}
+
+Range FeatureRoomSpawnRules::getDlvlsAllowed() const
+{
+  return dlvlsAllowed_;
+}
+
+//--------------------------------------------------------- MOVE RULES
 bool MoveRules::canMove(const bool actorPropIds[endOfPropIds]) const
 {
   if (canMoveCmn_)
@@ -32,6 +82,7 @@ bool MoveRules::canMove(const bool actorPropIds[endOfPropIds]) const
   return false;
 }
 
+//--------------------------------------------------------- FEATURE DATA
 namespace FeatureData
 {
 
@@ -62,7 +113,7 @@ void resetData(FeatureDataT& d)
   d.msgOnPlayerBlockedBlind = "I bump into something.";
   d.dodgeModifier = 0;
   d.shockWhenAdjacent = 0;
-  d.themeSpawnRules.reset();
+  d.roomSpawnRules.reset();
 }
 
 void addToListAndReset(FeatureDataT& d)
@@ -178,7 +229,10 @@ void initDataList()
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::metal;
-  d.themeSpawnRules.set(3, PlacementRule::either, {RoomType::ritual});
+  d.roomSpawnRules.set(3, {0, DLVL_LAST_MID_GAME}, PlacementRule::either,
+  {
+    RoomType::ritual
+  });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::liquidShallow;
@@ -287,7 +341,7 @@ void initDataList()
   d.tile = TileId::rubbleLow;
   d.moveRules.setCanMoveCmn();
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(4, PlacementRule::either,
+  d.roomSpawnRules.set(4, {0, DLVL_LAST}, PlacementRule::either,
   {
     RoomType::plain, RoomType::crypt, RoomType::monster
   });
@@ -305,7 +359,7 @@ void initDataList()
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(5, PlacementRule::either,
+  d.roomSpawnRules.set(5, {0, DLVL_LAST_MID_GAME}, PlacementRule::either,
   {
     RoomType::plain, RoomType::human, RoomType::forest
   });
@@ -324,7 +378,7 @@ void initDataList()
   d.canHaveItem = false;
   d.shockWhenAdjacent = 3;
   d.matlType = Matl::cloth;
-  d.themeSpawnRules.set(3, PlacementRule::either, {RoomType::spider});
+  d.roomSpawnRules.set(3, {0, DLVL_LAST}, PlacementRule::either, {RoomType::spider});
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::chest;
@@ -336,7 +390,10 @@ void initDataList()
   d.canHaveCorpse = false;
   d.canHaveRigid = false;
   d.canHaveItem = false;
-  d.themeSpawnRules.set(2, PlacementRule::adjToWalls, {RoomType::human});
+  d.roomSpawnRules.set(2, {0, DLVL_LAST_MID_GAME}, PlacementRule::adjToWalls,
+  {
+    RoomType::human
+  });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::cabinet;
@@ -351,7 +408,10 @@ void initDataList()
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::wood;
-  d.themeSpawnRules.set(1, PlacementRule::adjToWalls, {RoomType::human});
+  d.roomSpawnRules.set(1, {0, DLVL_LAST_MID_GAME}, PlacementRule::adjToWalls,
+  {
+    RoomType::human
+  });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::fountain;
@@ -366,9 +426,9 @@ void initDataList()
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(1, PlacementRule::awayFromWalls,
+  d.roomSpawnRules.set(1, {0, DLVL_LAST_MID_GAME}, PlacementRule::awayFromWalls,
   {
-    RoomType::plain, RoomType::human, RoomType::forest
+    RoomType::plain, RoomType::forest
   });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
@@ -384,7 +444,7 @@ void initDataList()
   d.canHaveRigid = false;
   d.canHaveItem = false;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(3, PlacementRule::awayFromWalls,
+  d.roomSpawnRules.set(3, {0, DLVL_LAST}, PlacementRule::awayFromWalls,
   {
     RoomType::plain, RoomType::crypt, RoomType::ritual, RoomType::monster
   });
@@ -401,7 +461,10 @@ void initDataList()
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(1, PlacementRule::either, {RoomType::ritual, RoomType::forest});
+  d.roomSpawnRules.set(1, {0, DLVL_LAST_MID_GAME}, PlacementRule::either,
+  {
+    RoomType::ritual, RoomType::forest
+  });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::tomb;
@@ -417,7 +480,10 @@ void initDataList()
   d.canHaveItem = false;
   d.shockWhenAdjacent = 10;
   d.matlType = Matl::stone;
-  d.themeSpawnRules.set(2, PlacementRule::either, {RoomType::crypt, RoomType::forest});
+  d.roomSpawnRules.set(2, {0, DLVL_LAST_MID_GAME}, PlacementRule::either,
+  {
+    RoomType::crypt, RoomType::forest
+  });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
   d.id = FeatureId::door;

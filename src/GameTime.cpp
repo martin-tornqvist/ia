@@ -119,10 +119,11 @@ void runStdTurnEvents()
 
   //Spawn more monsters?
   //(If an unexplored cell is selected, the spawn is canceled)
-  if (Map::dlvl >= 1 && Map::dlvl <= LAST_CAVERN_LVL)
+  if (Map::dlvl >= 1 && Map::dlvl <= DLVL_LAST)
   {
-    const int SPAWN_N_TURN = 125;
-    if (turnNr_ == (turnNr_ / SPAWN_N_TURN) * SPAWN_N_TURN)
+    const int SPAWN_N_TURNS = 130;
+
+    if (turnNr_ % SPAWN_N_TURNS == 0)
     {
       PopulateMon::trySpawnDueToTimePassed();
     }

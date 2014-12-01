@@ -48,7 +48,6 @@ void mkLvl(const MapType& mapType)
     {
       case MapType::intro:          isLvlBuilt = MapGen::mkIntroLvl();          break;
       case MapType::std:            isLvlBuilt = MapGen::mkStdLvl();            break;
-      case MapType::caves:          isLvlBuilt = MapGen::mkCaveLvl();           break;
       case MapType::egypt:          isLvlBuilt = MapGen::mkEgyptLvl();          break;
       case MapType::leng:           isLvlBuilt = MapGen::mkLengLvl();           break;
       case MapType::trapezohedron:  isLvlBuilt = MapGen::mkTrapezohedronLvl();  break;
@@ -63,36 +62,6 @@ void mkLvl(const MapType& mapType)
         << chrono::duration <double, milli> (diffTime).count() << " ms" << endl;
 #endif
 
-//  //------------------------------------- TRAPEZOHEDRON LEVEL
-//  if(!isLvlBuilt) {
-//    if(Map::dlvl > LAST_CAVERN_LVL) {
-//      while(!MapGen::mkTrapezohedronLvl()) {}
-//      isLvlBuilt = true;
-//    }
-//  }
-//
-//  //------------------------------------- EGYPT
-//  if(!isLvlBuilt) {
-//    if(Map::dlvl == LAST_ROOM_AND_CORRIDOR_LVL + 1) {
-//      while(!MapGen::mkEgyptLvl()) {}
-//      isLvlBuilt = true;
-//    }
-//  }
-//
-//  //------------------------------------- STANDARD DUNGEON
-//  if(!isLvlBuilt) {
-//    if(Map::dlvl < FIRST_CAVERN_LVL) {
-//      while(!MapGen::mkStdLvl()) {}
-//      isLvlBuilt = true;
-//    }
-//  }
-//  //------------------------------------- CAVERN LEVELS
-//  if(!isLvlBuilt) {
-//    if(Map::dlvl >= FIRST_CAVERN_LVL) {
-//      while(!MapGen::mkCaveLvl()) {}
-//    }
-//  }
-
   TRACE_FUNC_END;
 }
 
@@ -100,9 +69,12 @@ void mkLvl(const MapType& mapType)
 
 void init()
 {
-  mapList_    = vector<MapData>(30, {MapType::std, true});
-  mapList_[0] = {MapType::intro,  true};
-//  mapList_[2] = {MapType::leng,   false};
+  //Standard dungeon (30) + forest + final level
+  const size_t NR_LVL_TOT = DLVL_LAST + 2;
+
+  mapList_                = vector<MapData>(NR_LVL_TOT, {MapType::std, true});
+  mapList_[0]             = {MapType::intro,          true};
+  mapList_[DLVL_LAST + 1] = {MapType::trapezohedron,  true};
 }
 
 void storeToSaveLines(std::vector<std::string>& lines)
@@ -138,7 +110,10 @@ void goToNxt()
   mapList_.erase(mapList_.begin());
   const auto& mapData = mapList_.front();
 
-  if (mapData.isInMainDungeon) {++Map::dlvl;}
+  if (mapData.isInMainDungeon)
+  {
+    ++Map::dlvl;
+  }
 
   mkLvl(mapData.type);
 

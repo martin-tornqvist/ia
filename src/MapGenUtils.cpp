@@ -380,8 +380,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
     {
       for (int y = 0; y < MAP_H; ++y)
       {
-        blocked[x][y] =
-          Map::roomMap[x][y] || Map::cells[x][y].rigid->getId() != FeatureId::wall;
+        blocked[x][y] = Map::roomMap[x][y] ||
+                        Map::cells[x][y].rigid->getId() != FeatureId::wall;
       }
     }
 
@@ -390,7 +390,10 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
 
     blockedExpanded[p0.x][p0.y] = blockedExpanded[p1.x][p1.y] = false;
 
-    PathFind::run(p0, p1, blockedExpanded, path, false);
+    //Allowing diagonal steps makes a more "cave like" path
+    const bool ALLOW_DIAGONAL = Map::dlvl >= DLVL_FIRST_LATE_GAME;
+
+    PathFind::run(p0, p1, blockedExpanded, path, ALLOW_DIAGONAL);
   }
 
   if (!path.empty())

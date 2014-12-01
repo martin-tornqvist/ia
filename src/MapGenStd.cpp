@@ -72,9 +72,9 @@ void registerRoom(Room& room)
 
   Map::roomList.push_back(&room);
 
-  for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
+  for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
   {
-    for (int x = room.r_.p0.x; x <= room.r_.p1.x; ++x)
+    for (int y = room.r_.p0.y; y <= room.r_.p1.y; ++y)
     {
       Map::roomMap[x][y] = &room;
     }
@@ -558,138 +558,6 @@ void reserveRiver(Region regions[3][3])
   TRACE_FUNC_END;
 }
 
-//void mkCaves(Region regions[3][3])
-//{
-//  TRACE_FUNC_BEGIN;
-//  for(int regY = 0; regY <= 2; regY++)
-//  {
-//    for(int regX = 0; regX <= 2; regX++)
-//    {
-//
-//      if(regionsToMkCave[regX][regY])
-//      {
-//
-//        Region& region = regions[regX][regY];
-//
-//        //This region no longer has a room, delete it from list
-//        Map::deleteAndRemoveRoomFromList(region.mainRoom_);
-//        region.mainRoom_ = nullptr;
-//
-//        bool blocked[MAP_W][MAP_H];
-//
-//        for(int x = 0; x < MAP_W; ++x)
-//        {
-//          for(int y = 0; y < MAP_H; ++y)
-//          {
-//
-//            blocked[x][y] = false;
-//
-//            if(x == 0 || y == 0 || x == MAP_W - 1 || y == MAP_H - 1)
-//            {
-//              blocked[x][y] = true;
-//            }
-//            else
-//            {
-//              for(int dx = -1; dx <= 1; ++dx)
-//              {
-//                for(int dy = -1; dy <= 1; ++dy)
-//                {
-//                  const auto featureId =
-//                    Map::cells[x + dx][y + dy].rigid->getId();
-//                  if(
-//                    featureId == FeatureId::floor &&
-//                    !Utils::isPosInside(Pos(x + dx, y + dy), region.r_))
-//                  {
-//                    blocked[x][y] = true;
-//                  }
-//                }
-//              }
-//            }
-//          }
-//        }
-//
-//        const Pos origin(region.r_.p0 + Pos(1, 1));
-//        int floodFillResult[MAP_W][MAP_H];
-//
-//        const int FLOOD_FILL_TRAVEL_LIMIT = 20;
-//
-//        FloodFill::run(origin, blocked, floodFillResult,
-//                       FLOOD_FILL_TRAVEL_LIMIT, Pos(-1, -1), true);
-//
-//        for(int y = 1; y < MAP_H - 1; ++y)
-//        {
-//          for(int x = 1; x < MAP_W - 1; ++x)
-//          {
-//            const Pos p(x, y);
-//            if(p == origin || floodFillResult[x][y] > 0)
-//            {
-//
-//              Floor* const floor  = new Floor(p);
-//              floor->type_        = FloorType::cave;
-//              Map::put(floor);
-//
-//              for(int dx = -1; dx <= 1; ++dx)
-//              {
-//                for(int dy = -1; dy <= 1; ++dy)
-//                {
-//                  const Pos adjP(p + Pos(dx, dy));
-//                  Cell& adjCell = Map::cells[adjP.x][adjP.y];
-//                  if(adjCell.rigid->getId() == FeatureId::wall)
-//                  {
-//                    Wall* const wall  = new Wall(adjP);
-//                    wall->type_       = WallType::cave;
-//                    wall->setRandomIsMossGrown();
-//                    Map::put(wall);
-//                  }
-//                }
-//              }
-//            }
-//          }
-//        }
-//
-//        if(Rnd::oneIn(4))
-//        {
-//          Utils::resetArray(blocked, false);
-//
-//          for(int y = 1; y < MAP_H - 1; ++y)
-//          {
-//            for(int x = 1; x < MAP_W - 1; ++x)
-//            {
-//              for(int dx = -1; dx <= 1; ++dx)
-//              {
-//                for(int dy = -1; dy <= 1; ++dy)
-//                {
-//                  Cell& adjCell = Map::cells[x + dx][y + dy];
-//                  if(adjCell.rigid->getId() == FeatureId::wall)
-//                  {
-//                    blocked[x][y] = blocked[x + dx][y + dy] = true;
-//                  }
-//                }
-//              }
-//            }
-//          }
-//
-//          FloodFill::run(origin, blocked, floodFillResult,
-//                         FLOOD_FILL_TRAVEL_LIMIT / 2, Pos(-1, -1), true);
-//
-//          for(int y = 1; y < MAP_H - 1; ++y)
-//          {
-//            for(int x = 1; x < MAP_W - 1; ++x)
-//            {
-//              const Pos p(x, y);
-//              if(!blocked[x][y] && (p == origin || floodFillResult[x][y] > 0))
-//              {
-//                Map::put(new Chasm(p));
-//              }
-//            }
-//          }
-//        }
-//      }
-//    }
-//  }
-//  TRACE_FUNC_END;
-//}
-
 void placeDoorAtPosIfAllowed(const Pos& p)
 {
   //Check that no other doors are within a certain distance
@@ -792,9 +660,9 @@ void mkSubRooms()
 
             bool isAreaFree = true;
 
-            for (int y = p0.y - 1; y <= p1.y + 1; ++y)
+            for (int x = p0.x - 1; x <= p1.x + 1; ++x)
             {
-              for (int x = p0.x - 1; x <= p1.x + 1; ++x)
+              for (int y = p0.y - 1; y <= p1.y + 1; ++y)
               {
                 const Pos pCheck(x, y);
 
@@ -819,7 +687,9 @@ void mkSubRooms()
               continue;
             }
 
-            Room* const room = RoomFactory::mkRandomAllowedStdRoom(r, true);
+            const Rect roomRect(r.p0 + 1, r.p1 - 1);
+
+            Room* const room = RoomFactory::mkRandomAllowedStdRoom(roomRect, true);
             registerRoom(*room);
 
             outerRoom->subRooms_.push_back(room);
@@ -967,31 +837,44 @@ void decorate()
         Wall* const wall = static_cast<Wall*>(cell.rigid);
         wall->setRandomIsMossGrown();
 
-        //Convert walls with no adjacent floor or with adjacent cave floor to cave walls
-        bool hasAdjFloor      = false;
-        bool hasAdjCaveFloor  = false;
+        //Convert some walls to cave
+        bool shouldConvertToCaveWall = false;
 
-        for (const Pos& d : DirUtils::dirList)
+        if (Map::dlvl >= DLVL_FIRST_LATE_GAME)
         {
-          const Pos pAdj(Pos(x, y) + d);
+          //If this is late game - convert all walls to cave
+          shouldConvertToCaveWall = true;
+        }
+        else //Not late game
+        {
+          //Convert walls with no adjacent floor or with adjacent cave floor to cave
+          bool hasAdjFloor      = false;
+          bool hasAdjCaveFloor  = false;
 
-          if (Utils::isPosInsideMap(pAdj))
+          for (const Pos& d : DirUtils::dirList)
           {
-            auto& adjCell = Map::cells[pAdj.x][pAdj.y];
+            const Pos pAdj(Pos(x, y) + d);
 
-            if (adjCell.rigid->getId() == FeatureId::floor)
+            if (Utils::isPosInsideMap(pAdj))
             {
-              hasAdjFloor = true;
-              if (static_cast<Floor*>(adjCell.rigid)->type_ == FloorType::cave)
+              auto& adjCell = Map::cells[pAdj.x][pAdj.y];
+
+              if (adjCell.rigid->getId() == FeatureId::floor)
               {
-                hasAdjCaveFloor = true;
-                break;
+                hasAdjFloor = true;
+                if (static_cast<Floor*>(adjCell.rigid)->type_ == FloorType::cave)
+                {
+                  hasAdjCaveFloor = true;
+                  break;
+                }
               }
             }
           }
+
+          shouldConvertToCaveWall = !hasAdjFloor || hasAdjCaveFloor;
         }
 
-        if (!hasAdjFloor || hasAdjCaveFloor)
+        if (shouldConvertToCaveWall)
         {
           wall->type_ = WallType::cave;
         }
@@ -999,15 +882,6 @@ void decorate()
         {
           wall->setRndCmnWall();
         }
-
-//        if(CellCheck::AllAdjIsNotFeature(FeatureId::floor).check(cell))
-//        {
-//          wall->type_ = WallType::cave;
-//        }
-//        else
-//        {
-//          wall->setRndCmnWall();
-//        }
       }
     }
   }
@@ -1317,7 +1191,7 @@ bool mkStdLvl()
 #endif // MK_AUX_ROOMS
 
 #ifdef MK_SUB_ROOMS
-  if (isMapValid)
+  if (isMapValid && Map::dlvl <= DLVL_LAST_MID_GAME)
   {
 #ifdef DEMO_MODE
     Render::coverPanel(Panel::log);
@@ -1401,7 +1275,7 @@ bool mkStdLvl()
   }
 #endif // FILL_DEAD_ENDS
 
-  if (isMapValid)
+  if (isMapValid && Map::dlvl <= DLVL_LAST_MID_GAME)
   {
     TRACE << "Placing doors" << endl;
     for (int x = 0; x < MAP_W; ++x)

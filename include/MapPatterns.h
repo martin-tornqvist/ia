@@ -9,6 +9,8 @@
 //TODO This should be merged into MapParsing
 //Also, most/all things in here really needs clearer purpose/naming
 
+class Room;
+
 enum class PlacementRule
 {
   adjToWalls, awayFromWalls, either
@@ -17,7 +19,7 @@ enum class PlacementRule
 namespace MapPatterns
 {
 
-void setCellsInArea(const Rect& area, std::vector<Pos>& adjToWalls,
+void getCellsInRoom(const Room& room, std::vector<Pos>& adjToWalls,
                     std::vector<Pos>& awayFromWalls);
 
 int getWalkBlockersInDir(const Dir dir, const Pos& pos);

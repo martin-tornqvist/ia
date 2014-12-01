@@ -32,16 +32,6 @@ void addToRoomBucket(const RoomType type, const size_t NR)
   }
 }
 
-int getNrRoomTypeInMap(const RoomType type)
-{
-  auto isRoomType = [&](const Room * const room)
-  {
-    return room->type_ == type;
-  };
-
-  return count_if(begin(Map::roomList), end(Map::roomList), isRoomType);
-}
-
 } //namespace
 
 //------------------------------------------------------------------- ROOM FACTORY
@@ -54,19 +44,47 @@ void initRoomBucket()
 
   roomBucket_.clear();
 
-  addToRoomBucket(RoomType::human,    Rnd::range(3, 6));
-  addToRoomBucket(RoomType::ritual,   Rnd::range(0, 1));
-  addToRoomBucket(RoomType::spider,   Rnd::range(0, 3));
-  addToRoomBucket(RoomType::crypt,    Rnd::range(0, 4));
-  addToRoomBucket(RoomType::monster,  Rnd::range(0, 2));
-  addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
-  addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
-  addToRoomBucket(RoomType::cave,     Rnd::range(1, 3));
-  addToRoomBucket(RoomType::forest,   Rnd::range(1, 3));
+  const int DLVL = Map::dlvl;
 
-  const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
+  if (DLVL <= DLVL_LAST_EARLY_GAME)
+  {
+    addToRoomBucket(RoomType::human,    Rnd::range(3, 6));
+    addToRoomBucket(RoomType::ritual,   Rnd::range(0, 1));
+    addToRoomBucket(RoomType::spider,   Rnd::range(0, 3));
+    addToRoomBucket(RoomType::crypt,    Rnd::range(1, 4));
+    addToRoomBucket(RoomType::monster,  Rnd::range(0, 3));
+    addToRoomBucket(RoomType::flooded,  Rnd::range(0, 1));
+    addToRoomBucket(RoomType::muddy,    Rnd::range(0, 1));
 
-  addToRoomBucket(RoomType::plain, roomBucket_.size() * NR_PLAIN_ROOM_PER_THEMED);
+    const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
+
+    addToRoomBucket(RoomType::plain, roomBucket_.size() * NR_PLAIN_ROOM_PER_THEMED);
+  }
+  else if (DLVL <= DLVL_LAST_MID_GAME)
+  {
+    addToRoomBucket(RoomType::human,    Rnd::range(1, 3));
+    addToRoomBucket(RoomType::ritual,   Rnd::range(0, 1));
+    addToRoomBucket(RoomType::spider,   Rnd::range(0, 3));
+    addToRoomBucket(RoomType::crypt,    Rnd::range(0, 4));
+    addToRoomBucket(RoomType::monster,  Rnd::range(0, 3));
+    addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
+    addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
+    addToRoomBucket(RoomType::cave,     Rnd::range(1, 4));
+    addToRoomBucket(RoomType::forest,   Rnd::range(1, 4));
+
+    const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
+
+    addToRoomBucket(RoomType::plain, roomBucket_.size() * NR_PLAIN_ROOM_PER_THEMED);
+  }
+  else
+  {
+    addToRoomBucket(RoomType::monster,  Rnd::range(0, 3));
+    addToRoomBucket(RoomType::spider,   Rnd::range(0, 3));
+    addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
+    addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
+    addToRoomBucket(RoomType::cave,     Rnd::range(3, 4));
+    addToRoomBucket(RoomType::forest,   Rnd::range(1, 4));
+  }
 
   std::random_shuffle(begin(roomBucket_), end(roomBucket_));
 
@@ -215,7 +233,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
     const auto* const data    = featureDataBucket[ELEMENT];
 
     if (IS_ADJ_TO_WALLS_AVAIL &&
-        data->themeSpawnRules.getPlacementRule() == PlacementRule::adjToWalls)
+        data->roomSpawnRules.getPlacementRule() == PlacementRule::adjToWalls)
     {
       posRef = adjToWalls[Rnd::range(0, adjToWalls.size() - 1)];
       TRACE_FUNC_END_VERBOSE;
@@ -223,14 +241,14 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
     }
 
     if (IS_AWAY_FROM_WALLS_AVAIL &&
-        data->themeSpawnRules.getPlacementRule() == PlacementRule::awayFromWalls)
+        data->roomSpawnRules.getPlacementRule() == PlacementRule::awayFromWalls)
     {
       posRef = awayFromWalls[Rnd::range(0, awayFromWalls.size() - 1)];
       TRACE_FUNC_END_VERBOSE;
       return ELEMENT;
     }
 
-    if (data->themeSpawnRules.getPlacementRule() == PlacementRule::either)
+    if (data->roomSpawnRules.getPlacementRule() == PlacementRule::either)
     {
       if (Rnd::coinToss())
       {
@@ -260,20 +278,25 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
 int StdRoom::placeAutoFeatures()
 {
   TRACE_FUNC_BEGIN;
+
   vector<const FeatureDataT*> featureBucket;
 
   for (int i = 0; i < int (FeatureId::END); ++i)
   {
-    const auto* const d = &FeatureData::getData((FeatureId)(i));
-    if (d->themeSpawnRules.isBelongingToRoomType(type_))
+    const auto& d           = FeatureData::getData((FeatureId)(i));
+    const auto& spawnRules  = d.roomSpawnRules;
+
+    if (spawnRules.isBelongingToRoomType(type_) &&
+        Utils::isValInRange(Map::dlvl, spawnRules.getDlvlsAllowed()))
     {
-      featureBucket.push_back(d);
+      featureBucket.push_back(&d);
     }
   }
 
   vector<Pos> adjToWalls;
   vector<Pos> awayFromWalls;
-  MapPatterns::setCellsInArea(r_, adjToWalls, awayFromWalls);
+
+  MapPatterns::getCellsInRoom(*this, adjToWalls, awayFromWalls);
 
   vector<int> spawnCount(featureBucket.size(), 0);
 
@@ -307,7 +330,7 @@ int StdRoom::placeAutoFeatures()
       nrFeaturesPlaced++;
 
       //Check if more of this feature can be spawned. If not, erase it.
-      if (spawnCount[FEATURE_IDX] >= d->themeSpawnRules.getMaxNrInRoom())
+      if (spawnCount[FEATURE_IDX] >= d->roomSpawnRules.getMaxNrInRoom())
       {
         spawnCount   .erase(spawnCount   .begin() + FEATURE_IDX);
         featureBucket.erase(featureBucket.begin() + FEATURE_IDX);
@@ -356,7 +379,7 @@ void PlainRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  MapGenUtils::cutRoomCorners (*this);
   if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
@@ -386,13 +409,31 @@ void HumanRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  MapGenUtils::cutRoomCorners (*this);
   if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
 void HumanRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+  if (Rnd::coinToss())
+  {
+    bool blocked[MAP_W][MAP_H];
+    MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+
+    for (int x = r_.p0.x + 1; x <= r_.p1.x - 1; ++x)
+    {
+      for (int y = r_.p0.y + 1; y <= r_.p1.y - 1; ++y)
+      {
+        if (!blocked[x][y] && Map::roomMap[x][y] == this)
+        {
+          Carpet* const carpet = new Carpet(Pos(x, y));
+          Map::put(carpet);
+        }
+      }
+    }
+  }
 }
 
 //------------------------------------------------------------------- RITUAL ROOM
@@ -415,7 +456,7 @@ void RitualRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  MapGenUtils::cutRoomCorners (*this);
   if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
@@ -495,16 +536,25 @@ void SpiderRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if (Rnd::coinToss())
+  //Early game : Always reshape by cutting corners
+  //Mid    -   : "Flip a coin"
+  //Late   -   : Always reshape by cavifying
+  const bool IS_EARLY = Map::dlvl <= DLVL_LAST_EARLY_GAME;
+  const bool IS_MID   = !IS_EARLY && Map::dlvl <= DLVL_LAST_MID_GAME;
+
+  if (IS_EARLY || (IS_MID && Rnd::coinToss()))
   {
-    if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+    MapGenUtils::cutRoomCorners (*this);
   }
   else
   {
     MapGenUtils::cavifyRoom(*this);
   }
 
-  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if ((IS_EARLY || IS_MID) && Rnd::fraction(1, 3))
+  {
+    MapGenUtils::mkPillarsInRoom(*this);
+  }
 }
 
 void SpiderRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -532,7 +582,7 @@ void CryptRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+  MapGenUtils::cutRoomCorners (*this);
   if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
 }
 
@@ -561,8 +611,24 @@ void MonsterRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
-  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  const bool IS_EARLY = Map::dlvl <= DLVL_LAST_EARLY_GAME;
+  const bool IS_MID   = !IS_EARLY && Map::dlvl <= DLVL_LAST_MID_GAME;
+
+  if (IS_EARLY || IS_MID)
+  {
+    if (Rnd::fraction(3, 4))
+    {
+      MapGenUtils::cutRoomCorners (*this);
+    }
+    if (Rnd::fraction(1, 3))
+    {
+      MapGenUtils::mkPillarsInRoom(*this);
+    }
+  }
+  else //Is late game
+  {
+    MapGenUtils::cavifyRoom(*this);
+  }
 }
 
 void MonsterRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
@@ -616,21 +682,52 @@ void FloodedRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if (Rnd::coinToss())
+  //Early game : Always reshape by cutting corners
+  //Mid    -   : "Flip a coin"
+  //Late   -   : Always reshape by cavifying
+  const bool IS_EARLY = Map::dlvl <= DLVL_LAST_EARLY_GAME;
+  const bool IS_MID   = !IS_EARLY && Map::dlvl <= DLVL_LAST_MID_GAME;
+
+  if (IS_EARLY || (IS_MID && Rnd::coinToss()))
   {
-    if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+    MapGenUtils::cutRoomCorners (*this);
   }
   else
   {
     MapGenUtils::cavifyRoom(*this);
   }
 
-  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if ((IS_EARLY || IS_MID) && Rnd::fraction(1, 3))
+  {
+    MapGenUtils::mkPillarsInRoom(*this);
+  }
 }
 
 void FloodedRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
+
+#ifndef NDEBUG
+  //Sanity check (look for some features that should not exist in this room)
+  for (int x = r_.p0.x; x <= r_.p1.x; ++x)
+  {
+    for (int y = r_.p0.y; y <= r_.p1.y; ++y)
+    {
+      if (Map::roomMap[x][y] == this)
+      {
+        const auto id = Map::cells[x][y].rigid->getId();
+        if (id == FeatureId::chest    ||
+            id == FeatureId::tomb     ||
+            id == FeatureId::cabinet  ||
+            id == FeatureId::fountain)
+        {
+          TRACE << "Illegal feature found in room" << endl;
+          assert(false);
+        }
+      }
+    }
+  }
+#endif // NDEBUG
 
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
@@ -671,16 +768,47 @@ void MuddyRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
 {
   (void)doorProposals;
 
-  if (Rnd::coinToss())
+#ifndef NDEBUG
+  //Sanity check (look for some features that should not exist in this room)
+  for (int x = r_.p0.x; x <= r_.p1.x; ++x)
   {
-    if (Rnd::fraction(3, 4)) {MapGenUtils::cutRoomCorners (*this);}
+    for (int y = r_.p0.y; y <= r_.p1.y; ++y)
+    {
+      if (Map::roomMap[x][y] == this)
+      {
+        const auto id = Map::cells[x][y].rigid->getId();
+        if (id == FeatureId::chest    ||
+            id == FeatureId::tomb     ||
+            id == FeatureId::cabinet  ||
+            id == FeatureId::fountain)
+        {
+          TRACE << "Illegal feature found in room" << endl;
+          assert(false);
+        }
+      }
+    }
+  }
+#endif // NDEBUG
+
+  //Early game : Always reshape by cutting corners
+  //Mid    -   : "Flip a coin"
+  //Late   -   : Always reshape by cavifying
+  const bool IS_EARLY = Map::dlvl <= DLVL_LAST_EARLY_GAME;
+  const bool IS_MID   = !IS_EARLY && Map::dlvl <= DLVL_LAST_MID_GAME;
+
+  if (IS_EARLY || (IS_MID && Rnd::coinToss()))
+  {
+    MapGenUtils::cutRoomCorners (*this);
   }
   else
   {
     MapGenUtils::cavifyRoom(*this);
   }
 
-  if (Rnd::fraction(1, 3)) {MapGenUtils::mkPillarsInRoom(*this);}
+  if ((IS_EARLY || IS_MID) && Rnd::fraction(1, 3))
+  {
+    MapGenUtils::mkPillarsInRoom(*this);
+  }
 }
 
 void MuddyRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
