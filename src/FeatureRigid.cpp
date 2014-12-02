@@ -18,6 +18,7 @@
 #include "ActorFactory.h"
 #include "ActorMon.h"
 #include "Query.h"
+#include "ItemPickup.h"
 
 using namespace std;
 
@@ -1377,18 +1378,52 @@ void ItemContainer::open(const Pos& featurePos, Actor* const actorOpening)
     {
       Log::clearLog();
 
-      const string name = item->getName(ItemRefType::plural, ItemRefInf::yes);
+      const string name = item->getName(ItemRefType::plural, ItemRefInf::yes,
+                                        ItemRefAttInf::wpnContext);
 
       Log::addMsg("Pick up " + name + "? [y/n]");
+
+      const ItemDataT&  data              = item->getData();
+
+      Wpn*              wpn               = data.ranged.isRangedWpn ?
+                                            static_cast<Wpn*>(item) : nullptr;
+
+      const bool        IS_UNLOADABLE_WPN = wpn                    &&
+                                            wpn->nrAmmoLoaded > 0  &&
+                                            !data.ranged.hasInfiniteAmmo;
+
+      if (IS_UNLOADABLE_WPN)
+      {
+        Log::addMsg("Unload? [G]");
+      }
+
       Render::drawMapAndInterface();
 
-      if (Query::yesOrNo() == YesNoAnswer::yes)
+      const YesNoAnswer answer = Query::yesOrNo(IS_UNLOADABLE_WPN ? 'G' : -1);
+
+      if (answer == YesNoAnswer::yes)
       {
+        Audio::play(SfxId::pickup);
         Map::player->getInv().putInGeneral(item);
       }
-      else
+      else if (answer == YesNoAnswer::no)
       {
         ItemDrop::dropItemOnMap(featurePos, *item);
+      }
+      else //Special key (unload in this case)
+      {
+        assert(IS_UNLOADABLE_WPN);
+        assert(wpn);
+        assert(wpn->nrAmmoLoaded > 0);
+        assert(!data.ranged.hasInfiniteAmmo);
+
+        Audio::play(SfxId::pickup);
+
+        Ammo* const spawnedAmmo = ItemPickup::unloadRangedWpn(*wpn);
+
+        Map::player->getInv().putInGeneral(spawnedAmmo);
+
+        ItemDrop::dropItemOnMap(featurePos, *wpn);
       }
     }
     Log::clearLog();

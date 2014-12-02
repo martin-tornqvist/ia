@@ -151,10 +151,12 @@ public:
   Wpn(ItemDataT* const itemData, ItemDataT* const ammoData);
   virtual ~Wpn() {}
 
-  int nrAmmoLoaded;
-  int effectiveRangeLmt;
-  int ammoCapacity;
-  bool clip;
+  Wpn& operator=(const Wpn& other) = delete;
+
+  int   nrAmmoLoaded;
+  int   effectiveRangeLmt;
+  int   ammoCapacity;
+  bool  clip;
 
   void setRandomMeleePlus();
 
@@ -175,8 +177,6 @@ public:
 //  virtual void onPostAttack(Actor& attacker) {(void) attacker;}
 
 protected:
-  Wpn& operator=(const Wpn& other) = delete;
-
   std::string getNameInf() const override;
 
   ItemDataT* const ammoData_;

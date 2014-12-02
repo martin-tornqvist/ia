@@ -2,8 +2,8 @@
 
 #include <string>
 
+#include "Init.h"
 #include "Item.h"
-
 #include "Map.h"
 #include "ActorPlayer.h"
 #include "Log.h"
@@ -79,6 +79,37 @@ void tryPick()
   }
 }
 
+Ammo* unloadRangedWpn(Wpn& wpn)
+{
+  assert(!wpn.getData().ranged.hasInfiniteAmmo);
+
+  const int NR_AMMO_LOADED = wpn.nrAmmoLoaded;
+
+  if (NR_AMMO_LOADED == 0)
+  {
+    return nullptr;
+  }
+
+  const ItemId      ammoId      = wpn.getData().ranged.ammoItemId;
+  ItemDataT* const  ammoData    = ItemData::data[int(ammoId)];
+  Item*             spawnedAmmo = ItemFactory::mk(ammoId);
+
+  if (ammoData->isAmmoClip)
+  {
+    //Unload a clip
+    static_cast<AmmoClip*>(spawnedAmmo)->ammo_ = NR_AMMO_LOADED;
+  }
+  else
+  {
+    //Unload loose ammo
+    spawnedAmmo->nrItems_ = NR_AMMO_LOADED;
+  }
+
+  wpn.nrAmmoLoaded = 0;
+
+  return static_cast<Ammo*>(spawnedAmmo);
+}
+
 void tryUnloadWpnOrPickupAmmo()
 {
   Item* item = Map::cells[Map::player->pos.x][Map::player->pos.y].item;
@@ -88,37 +119,22 @@ void tryUnloadWpnOrPickupAmmo()
     if (item->getData().ranged.isRangedWpn)
     {
       Wpn* const wpn = static_cast<Wpn*>(item);
-      const int nrAmmoLoaded = wpn->nrAmmoLoaded;
 
-      if (nrAmmoLoaded > 0 && !wpn->getData().ranged.hasInfiniteAmmo)
+      if (!wpn->getData().ranged.hasInfiniteAmmo)
       {
-        Inventory& playerInv = Map::player->getInv();
-        const ItemId ammoType = wpn->getData().ranged.ammoItemId;
+        Ammo* const spawnedAmmo = unloadRangedWpn(*wpn);
 
-        ItemDataT* const ammoData = ItemData::data[int(ammoType)];
-
-        Item* spawnedAmmo = ItemFactory::mk(ammoType);
-
-        if (ammoData->isAmmoClip)
+        if (spawnedAmmo)
         {
-          //Unload a clip
-          static_cast<AmmoClip*>(spawnedAmmo)->ammo_ = nrAmmoLoaded;
+          Audio::play(SfxId::pickup);
+
+          Log::addMsg("I unload " + wpn->getName(ItemRefType::a, ItemRefInf::none));
+
+          Map::player->getInv().putInGeneral(spawnedAmmo);
+
+          GameTime::actorDidAct();
+          return;
         }
-        else
-        {
-          //Unload loose ammo
-          spawnedAmmo->nrItems_ = nrAmmoLoaded;
-        }
-        Log::addMsg("I unload " + wpn->getName(ItemRefType::a));
-
-        Audio::play(SfxId::pickup);
-
-        static_cast<Wpn*>(item)->nrAmmoLoaded = 0;
-
-        playerInv.putInGeneral(spawnedAmmo);
-
-        GameTime::actorDidAct();
-        return;
       }
     }
     else //Not a ranged weapon
