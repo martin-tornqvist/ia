@@ -245,9 +245,17 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
 namespace PathFind
 {
 
-//Note: The resulting path does not include the origin
+//Note: The path goes from target to origin, not including the origin.
+//---------------------------------------------------------------------------------------
+//RANDOMIZE_STEP_CHOICES: When true, for each step if there are multiple valid (nearer)
+//                        choices, pick one at random. Otherwise iterate over a predefined
+//                        list of offsets until a valid step is found. The second way is
+//                        more optimized and is the default behavior (best for e.g. AI),
+//                        while the randomized method can produces nicer results in some
+//                        cases (e.g. corridors).
 void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
-         std::vector<Pos>& out, const bool ALLOW_DIAGONAL = true);
+         std::vector<Pos>& out, const bool ALLOW_DIAGONAL = true,
+         const bool RANDOMIZE_STEP_CHOICES = false);
 
 } //PathFind
 

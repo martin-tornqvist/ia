@@ -393,7 +393,10 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
     //Allowing diagonal steps makes a more "cave like" path
     const bool ALLOW_DIAGONAL = Map::dlvl >= DLVL_FIRST_LATE_GAME;
 
-    PathFind::run(p0, p1, blockedExpanded, path, ALLOW_DIAGONAL);
+    const bool RANDOMIZE_STEP_CHOICES = Map::dlvl >= DLVL_FIRST_LATE_GAME ? true :
+                                        Rnd::oneIn(5);
+
+    PathFind::run(p0, p1, blockedExpanded, path, ALLOW_DIAGONAL, RANDOMIZE_STEP_CHOICES);
   }
 
   if (!path.empty())

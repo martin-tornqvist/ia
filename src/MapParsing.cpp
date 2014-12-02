@@ -542,56 +542,98 @@ namespace PathFind
 {
 
 void run(const Pos& p0, const Pos& p1, bool blocked[MAP_W][MAP_H],
-         vector<Pos>& out, const bool ALLOW_DIAGONAL)
+         vector<Pos>& out, const bool ALLOW_DIAGONAL, const bool RANDOMIZE_STEP_CHOICES)
 {
-
   out.clear();
 
-  int flood[MAP_W][MAP_H];
-  FloodFill::run(p0, blocked, flood, 1000, p1, ALLOW_DIAGONAL);
+  if (p0 == p1)
+  {
+    //Origin and target is same cell
+    return;
+  }
 
-  if (flood[p1.x][p1.y] == 0) {return;} //No path exists
+  int flood[MAP_W][MAP_H];
+  FloodFill::run(p0, blocked, flood, 10000, p1, ALLOW_DIAGONAL);
+
+  if (flood[p1.x][p1.y] == 0)
+  {
+    //No path exists
+    return;
+  }
+
+  const vector<Pos>& dirs = ALLOW_DIAGONAL ? DirUtils::dirList : DirUtils::cardinalList;
+
+  const size_t NR_DIRS = dirs.size();
+
+  vector<bool> validOffsets(NR_DIRS, false); //Corresponds to the elements in "dirs"
+
+  //The path length will be equal to the flood value at the target cell, so we can
+  //reserve that many elements.
+  out.reserve(flood[p1.x][p1.y]);
 
   Pos curPos(p1);
   out.push_back(curPos);
 
-  vector<Pos> dirs {Pos(0, -1), Pos(-1, 0), Pos(0, 1), Pos(1, 0)};
-  if (ALLOW_DIAGONAL)
-  {
-    dirs.push_back(Pos(-1, -1));
-    dirs.push_back(Pos(-1, 1));
-    dirs.push_back(Pos(1, -1));
-    dirs.push_back(Pos(1, 1));
-  }
-
   while (true)
   {
-    for (const Pos& d : dirs)
+    Pos adjPos;
+
+    //Find valid offsets, and check if origin is reached
+    for (size_t i = 0; i < NR_DIRS; ++i)
     {
+      const Pos& d(dirs[i]);
 
-      const Pos adjPos(curPos + d);
+      adjPos = curPos + d;
 
-      if (Utils::isPosInsideMap(adjPos))
+      if (adjPos == p0)
       {
-        const int VAL_AT_ADJ = flood[adjPos.x][adjPos.y];
-        const int VAL_AT_CUR = flood[curPos.x][curPos.y];
-        if ((VAL_AT_ADJ < VAL_AT_CUR && VAL_AT_ADJ != 0) || (adjPos == p0))
+        //Origin reached
+        return;
+      }
+
+      const bool IS_INSIDE_MAP  = Utils::isPosInsideMap(adjPos);
+
+      const int VAL_AT_ADJ      = IS_INSIDE_MAP ? flood[adjPos.x][adjPos.y] : 0;
+      const int VAL_AT_CUR      =                 flood[curPos.x][curPos.y];
+
+      validOffsets[i]           = VAL_AT_ADJ < VAL_AT_CUR && VAL_AT_ADJ != 0;
+    }
+
+    //Set the adjacent position to one of the valid offset
+    //Either pick one of the valid offsets at random, or iterate over an offset list
+    if (RANDOMIZE_STEP_CHOICES)
+    {
+      vector<Pos> adjPosBucket;
+
+      for (size_t i = 0; i < NR_DIRS; ++i)
+      {
+        if (validOffsets[i])
         {
-          if (adjPos == p0)
-          {
-            //Origin reached
-            return;
-          }
+          adjPosBucket.push_back(curPos + dirs[i]);
+        }
+      }
 
-          out.push_back(adjPos);
+      assert(!adjPosBucket.empty());
 
-          curPos = adjPos;
-
+      adjPos = adjPosBucket[Rnd::range(0, adjPosBucket.size() - 1)];
+    }
+    else //Do not randomize step choices - iterate over offset list
+    {
+      for (size_t i = 0; i < NR_DIRS; ++i)
+      {
+        if (validOffsets[i])
+        {
+          adjPos = {curPos + dirs[i]};
           break;
         }
       }
     }
-  }
+
+    out.push_back(adjPos);
+
+    curPos = adjPos;
+
+  } //while
 }
 
 } //PathFind

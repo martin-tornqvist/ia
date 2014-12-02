@@ -1229,7 +1229,10 @@ bool mkStdLvl()
     Query::waitForKeyPress();
 #endif // DEMO_MODE
     Gods::setNoGod();
-    for (Room* room : Map::roomList) {room->onPreConnect(doorProposals);}
+    for (Room* room : Map::roomList)
+    {
+      room->onPreConnect(doorProposals);
+    }
   }
 
   //Connect
@@ -1257,7 +1260,10 @@ bool mkStdLvl()
     Render::updateScreen();
     Query::waitForKeyPress();
 #endif // DEMO_MODE
-    for (Room* room : Map::roomList) {room->onPostConnect(doorProposals);}
+    for (Room* room : Map::roomList)
+    {
+      room->onPostConnect(doorProposals);
+    }
   }
 
 #ifdef FILL_DEAD_ENDS
