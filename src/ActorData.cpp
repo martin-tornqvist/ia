@@ -40,7 +40,7 @@ void ActorDataT::reset()
   nrKills = 0;
   canOpenDoors = canBashDoors = false;
   canSeeInDarkness = false;
-  canBeKnockedBack = true;
+  preventKnockback = false;
   nrLeftAllowedToSpawn = -1;
   isUnique = false;
   isAutoSpawnAllowed = true;
@@ -1443,6 +1443,7 @@ void initDataList()
   d.intrProps[propRFire] = true;
   d.intrProps[propRPoison] = true;
   d.intrProps[propRSleep] = true;
+  d.preventKnockback = true;
   d.spawnMinDLVL = 6;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
@@ -1536,6 +1537,7 @@ void initDataList()
   d.intrProps[propLightSensitive] = true;
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
+  d.preventKnockback = true;
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1791,6 +1793,7 @@ void initDataList()
   d.intrProps[propRFear] = true;
   d.intrProps[propRConfusion] = true;
   d.intrProps[propRPoison] = true;
+  d.preventKnockback = true;
   d.spawnMinDLVL = 8;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.groupSize = MonGroupSize::few;
@@ -1836,6 +1839,7 @@ void initDataList()
   d.intrProps[propRConfusion] = true;
   d.intrProps[propRFire] = true;
   d.intrProps[propRPoison] = true;
+  d.preventKnockback = true;
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
@@ -1880,6 +1884,7 @@ void initDataList()
   d.intrProps[propRConfusion] = true;
   d.intrProps[propRCold] = true;
   d.intrProps[propRPoison] = true;
+  d.preventKnockback = true;
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
   d.actorSize = actorSize_humanoid;
@@ -2298,7 +2303,7 @@ void initDataList()
   d.corpseNameThe = "";
   d.tile = TileId::fungi;
   d.glyph = 'e';
-  d.color = clrVioletDrk;
+  d.color = clrGreenLgt;
   d.groupSize = MonGroupSize::few;
   d.hp = 3;
   d.spi = 1;
@@ -2308,26 +2313,26 @@ void initDataList()
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::attacks)] = true;
   d.ai[int(AiId::movesToRandomWhenUnaware)] = false;
+  d.preventKnockback = true;
   d.nrTurnsAware = 25;
   d.spawnMinDLVL = 3;
   d.actorSize = actorSize_floor;
   d.isAutoDescrAllowed = false;
   d.deathMessageOverride = "The Mold is destroyed.";
   d.canSeeInDarkness = true;
-  d.canBeKnockedBack = false;
   d.erraticMovePct = actorErratic_never;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.nativeRooms.push_back(RoomType::cave);
-  d.nativeRooms.push_back(RoomType::flooded);
-  d.nativeRooms.push_back(RoomType::muddy);
-  d.nativeRooms.push_back(RoomType::forest);
   d.descr = "A sickly growth thriving in damp areas. It produces toxic spores which it "
             "stores in its slimy heads.";
   d.aggroTextMonSeen = "";
   d.aggroTextMonHidden = "";
   d.aggroSfxMonSeen = SfxId::END;
   d.aggroSfxMonHidden = SfxId::END;
+  d.nativeRooms.push_back(RoomType::cave);
+  d.nativeRooms.push_back(RoomType::flooded);
+  d.nativeRooms.push_back(RoomType::muddy);
+  d.nativeRooms.push_back(RoomType::forest);
   data[int(d.id)] = d;
   d.reset();
 
