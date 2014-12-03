@@ -1100,7 +1100,6 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::monster);
   d.nativeRooms.push_back(RoomType::human);
   d.nativeRooms.push_back(RoomType::crypt);
-//  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1145,7 +1144,6 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::monster);
   d.nativeRooms.push_back(RoomType::human);
   d.nativeRooms.push_back(RoomType::crypt);
-//  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1228,7 +1226,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::forest);
-//  d.nativeRooms.push_back(RoomType::chasm);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1277,7 +1275,7 @@ void initDataList()
   d.monShockLvl = MonShockLvl::scary;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomType::plain);
-//  d.nativeRooms.push_back(RoomType::chasm);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1407,6 +1405,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::forest);
   d.nativeRooms.push_back(RoomType::cave);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1434,7 +1433,8 @@ void initDataList()
   d.dmgMelee = 4;
   d.abilityVals.setVal(AbilityId::melee, 60);
   d.abilityVals.setVal(AbilityId::stealth, 85);
-//  d.intrProps[propEthereal] = true; //Does not match well with stealth
+//  d.intrProps[propEthereal] = true; //Does not fit well with stealth
+  d.intrProps[propFlying] = true;
   d.intrProps[propRPhys] = true;
   d.intrProps[propRConfusion] = true;
   d.intrProps[propRFear] = true;
@@ -1462,6 +1462,7 @@ void initDataList()
   d.monShockLvl = MonShockLvl::terrifying;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::cave);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -1950,7 +1951,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
   d.nativeRooms.push_back(RoomType::muddy);
-//  d.nativeRooms.push_back(RoomType::chasm);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2000,7 +2001,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
   d.nativeRooms.push_back(RoomType::muddy);
-//  d.nativeRooms.push_back(RoomType::chasm);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2050,7 +2051,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
   d.nativeRooms.push_back(RoomType::muddy);
-//  d.nativeRooms.push_back(RoomType::chasm);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2101,7 +2102,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
   d.nativeRooms.push_back(RoomType::muddy);
-//  d.nativeRooms.push_back(RoomType::chasm);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2148,6 +2149,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
   d.nativeRooms.push_back(RoomType::muddy);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2173,6 +2175,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 45);
   d.intrProps[propBurrowing] = true;
   d.intrProps[propRFear] = true;
+  d.preventKnockback = true;
   d.spawnMinDLVL = 12;
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
@@ -2195,6 +2198,7 @@ void initDataList()
   d.erraticMovePct = actorErratic_somewhat;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::cave);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2221,6 +2225,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 60);
   d.intrProps[propFlying] = true;
   d.intrProps[propRFear] = true;
+  d.preventKnockback = true;
   d.spawnMinDLVL = DLVL_LAST - 3;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
@@ -2243,6 +2248,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::forest);
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::cave);
+  d.nativeRooms.push_back(RoomType::chasm);
   d.erraticMovePct = actorErratic_somewhat;
   data[int(d.id)] = d;
   d.reset();
@@ -2305,7 +2311,7 @@ void initDataList()
   d.glyph = 'e';
   d.color = clrGreenLgt;
   d.groupSize = MonGroupSize::few;
-  d.hp = 3;
+  d.hp = 1;
   d.spi = 1;
   d.dmgMelee = 1;
   d.abilityVals.setVal(AbilityId::melee, 10);
@@ -2333,6 +2339,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::flooded);
   d.nativeRooms.push_back(RoomType::muddy);
   d.nativeRooms.push_back(RoomType::forest);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 
@@ -2376,6 +2383,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::flooded);
   d.nativeRooms.push_back(RoomType::muddy);
   d.nativeRooms.push_back(RoomType::forest);
+  d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
 }

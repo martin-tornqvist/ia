@@ -343,7 +343,7 @@ void initDataList()
   d.matlType = Matl::stone;
   d.roomSpawnRules.set(4, {0, DLVL_LAST}, PlacementRule::either,
   {
-    RoomType::plain, RoomType::crypt, RoomType::monster
+    RoomType::plain, RoomType::crypt, RoomType::monster, RoomType::chasm, RoomType::cave
   });
   addToListAndReset(d);
   //---------------------------------------------------------------------------

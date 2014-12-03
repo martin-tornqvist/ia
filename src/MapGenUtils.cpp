@@ -157,8 +157,6 @@ void mkPillarsInRoom(const Room& room)
 
 void cavifyRoom(Room& room)
 {
-//  const Rect roomRectBefore = room.r_;
-
   bool isOtherRoom[MAP_W][MAP_H];
 
   for (int x = 0; x < MAP_W; ++x)
@@ -178,18 +176,30 @@ void cavifyRoom(Room& room)
 
   vector<Pos> originBucket;
 
-  //Add one origin to dig from in each corner
-  originBucket.push_back(roomRect.p0);
-  originBucket.push_back(roomRect.p1);
-  originBucket.push_back({roomRect.p0.x, roomRect.p1.y});
-  originBucket.push_back({roomRect.p1.x, roomRect.p0.y});
+  //TODO This needs some refactoring
 
-  //Possibly add some extra random origins
-  for (int i = Rnd::range(0, 3); i > 0; --i)
+  //Left
+  for (int i = Rnd::range(1, 3); i > 0; --i)
   {
-    originBucket.push_back({Rnd::range(roomRect.p0.x, roomRect.p1.x),
-                            Rnd::range(roomRect.p0.y, roomRect.p1.y)
-                           });
+    originBucket.push_back({roomRect.p0.x, Rnd::range(roomRect.p0.y, roomRect.p1.y)});
+  }
+
+  //Right
+  for (int i = Rnd::range(1, 3); i > 0; --i)
+  {
+    originBucket.push_back({roomRect.p1.x, Rnd::range(roomRect.p0.y, roomRect.p1.y)});
+  }
+
+  //Up
+  for (int i = Rnd::range(1, 3); i > 0; --i)
+  {
+    originBucket.push_back({Rnd::range(roomRect.p0.x, roomRect.p1.x), roomRect.p0.y});
+  }
+
+  //Down
+  for (int i = Rnd::range(1, 3); i > 0; --i)
+  {
+    originBucket.push_back({Rnd::range(roomRect.p0.x, roomRect.p1.x), roomRect.p1.y});
   }
 
   for (const Pos& origin : originBucket)
@@ -201,7 +211,7 @@ void cavifyRoom(Room& room)
 
     int flood[MAP_W][MAP_H];
 
-    FloodFill::run(origin, blocked, flood, Rnd::range(2, 5), { -1, -1}, false);
+    FloodFill::run(origin, blocked, flood, Rnd::range(1, 3), { -1, -1}, false);
 
     for (int x = 0; x < MAP_W; ++x)
     {

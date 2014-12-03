@@ -70,6 +70,7 @@ void initRoomBucket()
     addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
     addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
     addToRoomBucket(RoomType::cave,     Rnd::range(1, 4));
+    addToRoomBucket(RoomType::chasm,    Rnd::range(1, 3));
     addToRoomBucket(RoomType::forest,   Rnd::range(1, 4));
 
     const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
@@ -83,6 +84,7 @@ void initRoomBucket()
     addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
     addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
     addToRoomBucket(RoomType::cave,     Rnd::range(3, 4));
+    addToRoomBucket(RoomType::chasm,    Rnd::range(2, 4));
     addToRoomBucket(RoomType::forest,   Rnd::range(1, 4));
   }
 
@@ -96,6 +98,7 @@ Room* mk(const RoomType type, const Rect& r)
   switch (type)
   {
     case RoomType::cave:          return new CaveRoom(r);
+    case RoomType::chasm:         return new ChasmRoom(r);
     case RoomType::crypt:         return new CryptRoom(r);
     case RoomType::flooded:       return new FloodedRoom(r);
     case RoomType::human:         return new HumanRoom(r);
@@ -945,6 +948,73 @@ void ForestRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
       else
       {
         blocked[p.x][p.y] = false;
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------- CHASM ROOM
+Range ChasmRoom::getNrAutoFeaturesAllowed() const
+{
+  return {0, 0};
+}
+
+int ChasmRoom::getBasePctChanceDrk() const
+{
+  return 25;
+}
+
+bool ChasmRoom::isAllowed() const
+{
+  return r_.getMinDim() >= 5 &&
+         r_.getMaxDim() <= 9;
+}
+
+void ChasmRoom::onPreConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+
+  MapGenUtils::cavifyRoom(*this);
+}
+
+void ChasmRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
+{
+  (void)doorProposals;
+
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+
+  bool blockedExpanded[MAP_W][MAP_H];
+  MapParse::expand(blocked, blockedExpanded);
+
+  vector<Pos> originBucket;
+
+  Pos origin;
+
+  for (int x = r_.p0.x; x <= r_.p1.x; ++x)
+  {
+    for (int y = r_.p0.y; y <= r_.p1.y; ++y)
+    {
+      if (!blockedExpanded[x][y] && Map::roomMap[x][y] == this)
+      {
+        origin.set(x, y);
+      }
+    }
+  }
+
+  int flood[MAP_W][MAP_H];
+
+  FloodFill::run(origin, blockedExpanded, flood, 10000, { -1,  -1}, false);
+
+  for (int x = 0; x < MAP_W; ++x)
+  {
+    for (int y = 0; y < MAP_H; ++y)
+    {
+      const Pos p(x, y);
+
+      if (p == origin || flood[x][y] != 0)
+      {
+        Map::put(new Chasm(p));
       }
     }
   }

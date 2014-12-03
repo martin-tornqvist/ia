@@ -42,7 +42,6 @@ void populateStdLvl()
 
     if (type != RoomType::plain)
     {
-
       Fraction chanceForTrappedRoom(0, 0);
 
       switch (type)
@@ -52,15 +51,16 @@ void populateStdLvl()
         case RoomType::spider:  chanceForTrappedRoom.set(2, 3); break;
         case RoomType::crypt:   chanceForTrappedRoom.set(3, 4); break;
         case RoomType::monster: chanceForTrappedRoom.set(1, 4); break;
-        case RoomType::forest:                                  break;
-        case RoomType::plain:                                   break;
-        case RoomType::flooded:                                 break;
-        case RoomType::muddy:                                   break;
-        case RoomType::cave:                                    break;
-        case RoomType::END_OF_STD_ROOMS:                        break;
-        case RoomType::river:                                   break;
-        case RoomType::corrLink:                                break;
-        case RoomType::crumbleRoom:                             break;
+        case RoomType::chasm:   chanceForTrappedRoom.set(1, 4); break;
+        case RoomType::forest:
+        case RoomType::plain:
+        case RoomType::flooded:
+        case RoomType::muddy:
+        case RoomType::cave:
+        case RoomType::END_OF_STD_ROOMS:
+        case RoomType::river:
+        case RoomType::corrLink:
+        case RoomType::crumbleRoom: {} break;
       }
 
       if (Rnd::fraction(chanceForTrappedRoom))
@@ -82,12 +82,16 @@ void populateStdLvl()
           }
         }
 
-        int nrPosCand = int(trapPosBucket.size());
-        const bool IS_SPIDER_ROOM = type == RoomType::spider;
-        const int NR_BASE_TRAPS   = min(nrPosCand / 2, IS_SPIDER_ROOM ? 3 : 1);
+        int         nrPosCand       = int(trapPosBucket.size());
+        const bool  IS_SPIDER_ROOM  = type == RoomType::spider;
+        const int   NR_BASE_TRAPS   = min(nrPosCand / 2, IS_SPIDER_ROOM ? 3 : 1);
+
         for (int i = 0; i < NR_BASE_TRAPS; ++i)
         {
-          if (nrPosCand == 0) {break;}
+          if (nrPosCand == 0)
+          {
+            break;
+          }
 
           const TrapId trapType = IS_SPIDER_ROOM ?
                                   TrapId::web :
