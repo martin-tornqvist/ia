@@ -820,7 +820,7 @@ void initDataList()
   d.dmgRanged = 4;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 65);
-  d.abilityVals.setVal(AbilityId::dodgeAttack, 35);
+  d.abilityVals.setVal(AbilityId::dodgeAtt, 35);
   d.intrProps[propRFire] = true;
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
@@ -865,7 +865,7 @@ void initDataList()
   d.dmgRanged = 6;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 65);
-  d.abilityVals.setVal(AbilityId::dodgeAttack, 35);
+  d.abilityVals.setVal(AbilityId::dodgeAtt, 35);
   d.intrProps[propRCold] = true;
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
@@ -908,7 +908,7 @@ void initDataList()
   d.spi = 40;
   d.dmgMelee = 8;
   d.abilityVals.setVal(AbilityId::melee, 50);
-  d.abilityVals.setVal(AbilityId::dodgeAttack, 25);
+  d.abilityVals.setVal(AbilityId::dodgeAtt, 25);
   d.intrProps[propRFear] = true;
   d.spawnMinDLVL = 13;
   d.spawnMaxDLVL = 999;
@@ -1124,7 +1124,7 @@ void initDataList()
   d.spi = 8;
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 25);
-  d.abilityVals.setVal(AbilityId::dodgeAttack, 15);
+  d.abilityVals.setVal(AbilityId::dodgeAtt, 15);
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = d.spawnMinDLVL + 15;
   d.canSeeInDarkness = true;
@@ -1168,7 +1168,7 @@ void initDataList()
   d.spi = 2;
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 35);
-  d.abilityVals.setVal(AbilityId::dodgeAttack, 20);
+  d.abilityVals.setVal(AbilityId::dodgeAtt, 20);
   d.canSeeInDarkness = true;
   d.spawnMinDLVL = 0;
   d.spawnMaxDLVL = 10;
@@ -1208,7 +1208,7 @@ void initDataList()
   d.spi = 6;
   d.dmgMelee = 2;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.abilityVals.setVal(AbilityId::dodgeAttack, 75);
+  d.abilityVals.setVal(AbilityId::dodgeAtt, 75);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 4;
   d.canSeeInDarkness = true;
@@ -1251,7 +1251,7 @@ void initDataList()
   d.dmgMelee = 4;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 40);
-  d.abilityVals.setVal(AbilityId::dodgeAttack, 40);
+  d.abilityVals.setVal(AbilityId::dodgeAtt, 40);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 6;
   d.canSeeInDarkness = true;
@@ -1299,7 +1299,7 @@ void initDataList()
   d.spi = 20;
   d.dmgMelee = 5;
   d.abilityVals.setVal(AbilityId::melee, 50);
-  d.abilityVals.setVal(AbilityId::dodgeAttack, 40);
+  d.abilityVals.setVal(AbilityId::dodgeAtt, 40);
   d.abilityVals.setVal(AbilityId::stealth, 20);
   d.spawnMinDLVL = 8;
   d.canSeeInDarkness = true;

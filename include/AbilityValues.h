@@ -10,7 +10,7 @@ enum class AbilityId
   ranged,
   melee,
   dodgeTrap,
-  dodgeAttack,
+  dodgeAtt,
   stealth,
   END
 };

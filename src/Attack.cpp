@@ -62,7 +62,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
   if (isDefenderAware)
   {
     const int DEFENDER_DODGE_SKILL =
-      defender->getData().abilityVals.getVal(AbilityId::dodgeAttack, true, *defender);
+      defender->getData().abilityVals.getVal(AbilityId::dodgeAtt, true, *defender);
 
     const int DODGE_MOD_AT_FEATURE =
       Map::cells[defPos.x][defPos.y].rigid->getDodgeModifier();

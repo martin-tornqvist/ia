@@ -852,7 +852,7 @@ bool Ghost::onActorTurn_()
 
     const AbilityRollResult rollResult =
       AbilityRoll::roll(Map::player->getData().abilityVals.getVal(
-                          AbilityId::dodgeAttack, true, *this));
+                          AbilityId::dodgeAtt, true, *this));
     const bool PLAYER_DODGES = rollResult >= successSmall;
     if (PLAYER_DODGES)
     {

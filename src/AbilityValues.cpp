@@ -54,7 +54,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
         if (PlayerBon::traitsPicked[int(Trait::lithe)])     val += 20;
         break;
 
-      case AbilityId::dodgeAttack:
+      case AbilityId::dodgeAtt:
         val += 10;
         if (PlayerBon::traitsPicked[int(Trait::dexterous)]) val += 20;
         if (PlayerBon::traitsPicked[int(Trait::lithe)])     val += 20;
@@ -75,7 +75,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
     {
       val = max(val, 1);
     }
-    else if (abilityId == AbilityId::dodgeAttack)
+    else if (abilityId == AbilityId::dodgeAtt)
     {
       val = min(val, 95);
     }
