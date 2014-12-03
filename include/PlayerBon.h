@@ -10,6 +10,8 @@
 
 #include <math.h>
 
+struct ActorDataT;
+
 enum class Trait
 {
   adeptMeleeFighter,
@@ -49,6 +51,7 @@ enum class Trait
   tough,
   rugged,
   strongBacked,
+  undeadBane,
   END
 };
 
@@ -92,6 +95,8 @@ void pickBg(const Bg bg);
 void setAllTraitsToPicked();
 
 int getSpiOccultistCanCastAtLvl(const int LVL);
+
+bool getsUndeadBaneBon(const Actor& attacker, const ActorDataT actorData);
 
 } //PlayerBon
 

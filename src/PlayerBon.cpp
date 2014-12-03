@@ -106,6 +106,7 @@ void getTraitTitle(const Trait id, string& strRef)
     case Trait::rugged:               strRef = "Rugged";                break;
     case Trait::treasureHunter:       strRef = "Treasure Hunter";       break;
     case Trait::demExpert:            strRef = "Demolition Expert";     break;
+    case Trait::undeadBane:           strRef = "Bane of the Undead";    break;
     case Trait::END: break;
   }
 }
@@ -209,7 +210,7 @@ void getTraitDescr(const Trait id, string& strRef)
       break;
 
     case Trait::steadyAimer:
-      strRef = "Standing still gives ranged attacks +10% hit chance on the "
+      strRef = "Standing still gives ranged attacks +15% hit chance on the "
                "following turn";
       break;
 
@@ -353,6 +354,12 @@ void getTraitDescr(const Trait id, string& strRef)
 
     case Trait::treasureHunter:
       strRef = "You tend to find more items";
+      break;
+
+    case Trait::undeadBane:
+      strRef = "+2 melee and ranged attack damage against undead monsters. Attacks "
+               "against ethereal undead monsters (e.g. Ghosts) never pass through them "
+               "(although you can still miss in the ordinary way).";
       break;
 
     case Trait::END: {}
@@ -518,6 +525,14 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef)
 
     case Trait::treasureHunter:
       traitsRef.push_back(Trait::observant);
+      break;
+
+    case Trait::undeadBane:
+      traitsRef.push_back(Trait::tough);
+      traitsRef.push_back(Trait::coolHeaded);
+      traitsRef.push_back(Trait::adeptMeleeFighter);
+      traitsRef.push_back(Trait::adeptMarksman);
+      traitsRef.push_back(Trait::stoutSpirit);
       break;
 
     case Trait::END: {}
@@ -692,6 +707,13 @@ int getSpiOccultistCanCastAtLvl(const int LVL)
   assert(LVL > 0);
   const int SPI_FROM_TRAIT = 2;
   return PLAYER_START_SPI + ((LVL - 1) * SPI_PER_LVL) + SPI_FROM_TRAIT - 1;
+}
+
+bool getsUndeadBaneBon(const Actor& attacker, const ActorDataT actorData)
+{
+  return attacker.isPlayer()                              &&
+         PlayerBon::traitsPicked[int(Trait::undeadBane)]  &&
+         actorData.isUndead;
 }
 
 } //PlayerBon

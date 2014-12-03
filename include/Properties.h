@@ -440,7 +440,7 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if (ability == AbilityId::ranged) return nrTurnsAiming >= 3 ? 999 : 10;
+    if (ability == AbilityId::ranged) return nrTurnsAiming >= 3 ? 999 : 15;
     return 0;
   }
 

@@ -23,33 +23,29 @@
 using namespace std;
 
 AttData::AttData(Actor& attacker_, const Item& itemAttackedWith_) :
-  attacker(&attacker_),
-  defender(nullptr),
-  attackResult(failSmall),
-  nrDmgRolls(0),
-  nrDmgSides(0),
-  dmgPlus(0),
-  dmgRoll(0),
-  dmg(0),
-  isIntrinsicAttack(false),
-  isEtherealDefenderMissed(false)
-{
-  isIntrinsicAttack = itemAttackedWith_.getData().isIntrinsic;
-}
+  attacker                  (&attacker_),
+  defender                  (nullptr),
+  attackResult              (failSmall),
+  nrDmgRolls                (0),
+  nrDmgSides                (0),
+  dmgPlus                   (0),
+  dmgRoll                   (0),
+  dmg                       (0),
+  isIntrinsicAttack         (itemAttackedWith_.getData().isIntrinsic),
+  isEtherealDefenderMissed  (false) {}
 
 MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) :
-  AttData(attacker_, wpn_),
-  isDefenderDodging(false),
-  isBackstab(false),
-  isWeakAttack(false)
+  AttData           (attacker_, wpn_),
+  isDefenderDodging (false),
+  isBackstab        (false),
+  isWeakAttack      (false)
 {
+  defender                          = &defender_;
+  const Pos&        defPos          = defender->pos;
+  bool              isDefenderAware = true;
+  const ActorDataT& defenderData    = defender->getData();
 
-  defender = &defender_;
-
-  const Pos& defPos = defender->pos;
-
-  bool isDefenderAware = true;
-  if (attacker == Map::player)
+  if (attacker->isPlayer())
   {
     isDefenderAware = static_cast<Mon*>(defender)->awareCounter_ > 0;
   }
@@ -62,7 +58,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
   if (isDefenderAware)
   {
     const int DEFENDER_DODGE_SKILL =
-      defender->getData().abilityVals.getVal(AbilityId::dodgeAtt, true, *defender);
+      defenderData.abilityVals.getVal(AbilityId::dodgeAtt, true, *defender);
 
     const int DODGE_MOD_AT_FEATURE =
       Map::cells[defPos.x][defPos.y].rigid->getDodgeModifier();
@@ -85,7 +81,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     int hitChanceTot              = ATTACKER_SKILL + WPN_HIT_CHANCE_MOD;
 
     bool isAttackerAware = true;
-    if (attacker == Map::player)
+    if (attacker->isPlayer())
     {
       isAttackerAware = Map::player->isSeeingActor(*defender, nullptr);
     }
@@ -162,7 +158,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     attackResult = AbilityRoll::roll(hitChanceTot);
 
     //Ethereal target missed?
-    if (defProps[propEthereal])
+    if (defProps[propEthereal] && !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
     {
       isEtherealDefenderMissed = Rnd::fraction(2, 3);
     }
@@ -171,6 +167,11 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     nrDmgRolls  = wpn_.getData().melee.dmg.first;
     nrDmgSides  = wpn_.getData().melee.dmg.second;
     dmgPlus     = wpn_.meleeDmgPlus_;
+
+    if (PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
+    {
+      dmgPlus += 2;
+    }
 
     bool attProps[endOfPropIds];
     attacker->getPropHandler().getPropIds(attProps);
@@ -225,14 +226,13 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
 
 RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
                              const Pos& curPos_, ActorSize intendedAimLvl_) :
-  AttData(attacker_, wpn_),
-  hitChanceTot(0),
-  intendedAimLvl(actorSize_none),
-  defenderSize(actorSize_none),
-  verbPlayerAttacks(wpn_.getData().ranged.attMsgs.player),
-  verbOtherAttacks(wpn_.getData().ranged.attMsgs.other)
+  AttData           (attacker_, wpn_),
+  hitChanceTot      (0),
+  intendedAimLvl    (actorSize_none),
+  defenderSize      (actorSize_none),
+  verbPlayerAttacks (wpn_.getData().ranged.attMsgs.player),
+  verbOtherAttacks  (wpn_.getData().ranged.attMsgs.other)
 {
-
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
@@ -260,21 +260,23 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
   if (defender)
   {
     TRACE << "Defender found" << endl;
+
+    const ActorDataT& defenderData = defender->getData();
+
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
     const int WPN_MOD           = wpn_.getData().ranged.hitChanceMod;
     const Pos& attPos(attacker->pos);
     const Pos& defPos(defender->pos);
-    const int DIST_TO_TGT       = Utils::kingDist(
-                                    attPos.x, attPos.y, defPos.x, defPos.y);
+    const int DIST_TO_TGT       = Utils::kingDist(attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
-    const ActorSpeed defSpeed   = defender->getData().speed;
+    const ActorSpeed defSpeed   = defenderData.speed;
     const int SPEED_MOD =
       defSpeed == ActorSpeed::sluggish ?  20 :
       defSpeed == ActorSpeed::slow     ?  10 :
       defSpeed == ActorSpeed::normal   ?   0 :
       defSpeed == ActorSpeed::fast     ? -10 : -30;
-    defenderSize                = defender->getData().actorSize;
+    defenderSize                = defenderData.actorSize;
     const int SIZE_MOD          = defenderSize == actorSize_floor ? -10 : 0;
 
     int unawareDefMod = 0;
@@ -306,13 +308,13 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
       bool props[endOfPropIds];
       defender->getPropHandler().getPropIds(props);
 
-      if (props[propEthereal])
+      if (props[propEthereal] && !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
       {
         isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
 
       bool playerAimX3 = false;
-      if (attacker == Map::player)
+      if (attacker->isPlayer())
       {
         const Prop* const prop =
           attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
@@ -326,6 +328,11 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
       nrDmgSides  = wpn_.getData().ranged.dmg.sides;
       dmgPlus     = wpn_.getData().ranged.dmg.plus;
 
+      if (PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
+      {
+        dmgPlus += 2;
+      }
+
       dmgRoll     = playerAimX3 ? (nrDmgRolls * nrDmgSides) :
                     Rnd::dice(nrDmgRolls, nrDmgSides);
       dmg         = dmgRoll + dmgPlus;
@@ -335,12 +342,11 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
 
 ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
                            const Pos& curPos_, ActorSize intendedAimLvl_) :
-  AttData(attacker_, item_),
-  hitChanceTot(0),
-  intendedAimLvl(actorSize_none),
-  defenderSize(actorSize_none)
+  AttData         (attacker_, item_),
+  hitChanceTot    (0),
+  intendedAimLvl  (actorSize_none),
+  defenderSize    (actorSize_none)
 {
-
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
@@ -368,6 +374,9 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
   if (defender)
   {
     TRACE << "Defender found" << endl;
+
+    const ActorDataT& defenderData = defender->getData();
+
     const int ATTACKER_SKILL    = attacker->getData().abilityVals.getVal(
                                     AbilityId::ranged, true, *attacker);
     const int WPN_MOD           = item_.getData().ranged.throwHitChanceMod;
@@ -376,17 +385,18 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
     const int DIST_TO_TGT       = Utils::kingDist(
                                     attPos.x, attPos.y, defPos.x, defPos.y);
     const int DIST_MOD          = 15 - (DIST_TO_TGT * 5);
-    const ActorSpeed defSpeed   = defender->getData().speed;
+    const ActorSpeed defSpeed   = defenderData.speed;
     const int SPEED_MOD =
       defSpeed == ActorSpeed::sluggish ?  20 :
       defSpeed == ActorSpeed::slow     ?  10 :
       defSpeed == ActorSpeed::normal   ?   0 :
       defSpeed == ActorSpeed::fast     ? -15 : -35;
-    defenderSize                = defender->getData().actorSize;
+    defenderSize                = defenderData.actorSize;
     const int SIZE_MOD          = defenderSize == actorSize_floor ? -15 : 0;
 
-    int unawareDefMod = 0;
-    const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
+    int         unawareDefMod = 0;
+    const bool  IS_ROGUE      = PlayerBon::getBg() == Bg::rogue;
+
     if (attacker == Map::player && defender != Map::player && IS_ROGUE)
     {
       if (static_cast<Mon*>(defender)->awareCounter_ <= 0)
@@ -412,7 +422,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
       bool props[endOfPropIds];
       defender->getPropHandler().getPropIds(props);
 
-      if (props[propEthereal])
+      if (props[propEthereal] && !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
       {
         isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
@@ -431,6 +441,11 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
       nrDmgRolls  = item_.getData().ranged.throwDmg.rolls;
       nrDmgSides  = item_.getData().ranged.throwDmg.sides;
       dmgPlus     = item_.getData().ranged.throwDmg.plus;
+
+      if (PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
+      {
+        dmgPlus += 2;
+      }
 
       dmgRoll     = playerAimX3 ? (nrDmgRolls * nrDmgSides) :
                     Rnd::dice(nrDmgRolls, nrDmgSides);

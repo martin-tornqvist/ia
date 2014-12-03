@@ -346,7 +346,11 @@ void handleMapModeKeyPress(const KeyData& d)
               {
                 bool tgtProps[endOfPropIds];
                 actor->getPropHandler().getPropIds(tgtProps);
-                if (!tgtProps[propEthereal])
+
+                const bool GETS_UNDEAD_BANE_BON =
+                  PlayerBon::getsUndeadBaneBon(*Map::player, actor->getData());
+
+                if (!tgtProps[propEthereal] || GETS_UNDEAD_BANE_BON)
                 {
                   RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
                   Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
@@ -630,7 +634,11 @@ void handleMapModeKeyPress(const KeyData& d)
               {
                 bool tgtProps[endOfPropIds];
                 actor->getPropHandler().getPropIds(tgtProps);
-                if (!tgtProps[propEthereal])
+
+                const bool GETS_UNDEAD_BANE_BON =
+                  PlayerBon::getsUndeadBaneBon(*Map::player, actor->getData());
+
+                if (!tgtProps[propEthereal] || GETS_UNDEAD_BANE_BON)
                 {
                   ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
                   Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
