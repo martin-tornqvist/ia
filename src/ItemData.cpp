@@ -513,6 +513,7 @@ void initDataList()
   d->tile = TileId::migoGun;
   d->clr = clrYellow;
   d->ranged.dmg = DiceParam(3, 6, 0);
+  d->ranged.hitChanceMod = 5;
   d->ranged.propApplied = new PropParalyzed(PropTurns::specific, 2);
   d->ranged.dmgType = DmgType::electric;
   d->ranged.ammoItemId = ItemId::migoGunAmmo;

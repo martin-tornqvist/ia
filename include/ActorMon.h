@@ -649,7 +649,7 @@ private:
 class Mold: public Mon
 {
 public:
-  Mold() : Mon(), spawnNewOneInN(28) {}
+  Mold() : Mon(), spawnNewOneInN(27) {}
   ~Mold() {}
   bool onActorTurn_() override;
   void mkStartItems() override;

@@ -364,7 +364,7 @@ void initDataList()
   d.hp = 5;
   d.spi = 12;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.abilityVals.setVal(AbilityId::ranged, 50);
+  d.abilityVals.setVal(AbilityId::ranged, 45);
   d.spawnMinDLVL = 12;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::few;
@@ -1372,7 +1372,7 @@ void initDataList()
   d.tile = TileId::migo;
   d.hp = 6;
   d.spi = 20;
-  d.abilityVals.setVal(AbilityId::ranged, 65);
+  d.abilityVals.setVal(AbilityId::ranged, 55);
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 6;
   d.groupSize = MonGroupSize::few;

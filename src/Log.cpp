@@ -103,7 +103,12 @@ void drawLine(const vector<Msg>& lineToDraw, const int Y_POS)
 
 void init()
 {
-  clearLog();
+  for (vector<Msg>& line : lines_)
+  {
+    line.clear();
+  }
+
+  history_.clear();
 }
 
 void clearLog()
