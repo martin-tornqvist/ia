@@ -1567,7 +1567,7 @@ Tomb::Tomb(const Pos & pos) :
     const int RND = Rnd::percentile();
     if (RND < 15)
     {
-      trait_ = TombTrait::forebodingCarvedSigns;
+      trait_ = TombTrait::cursed;
     }
     else if (RND < 45)
     {
@@ -1575,7 +1575,7 @@ Tomb::Tomb(const Pos & pos) :
     }
     else if (RND < 75)
     {
-      trait_ = TombTrait::auraOfUnrest;
+      trait_ = TombTrait::ghost;
     }
   }
 }
@@ -1806,7 +1806,7 @@ DidTriggerTrap Tomb::triggerTrap(Actor* const actor)
 
   switch (trait_)
   {
-    case TombTrait::auraOfUnrest:
+    case TombTrait::ghost:
       for (int i = 0; i < int(ActorId::END); ++i)
       {
         const ActorDataT& d = ActorData::data[i];
@@ -1822,7 +1822,7 @@ DidTriggerTrap Tomb::triggerTrap(Actor* const actor)
       didTriggerTrap = DidTriggerTrap::yes;
       break;
 
-    case TombTrait::forebodingCarvedSigns:
+    case TombTrait::cursed:
       Map::player->getPropHandler().tryApplyProp(new PropCursed(PropTurns::std));
       didTriggerTrap = DidTriggerTrap::yes;
       break;
@@ -1834,7 +1834,7 @@ DidTriggerTrap Tomb::triggerTrap(Actor* const actor)
         Prop* prop    = nullptr;
         Clr fumeClr   = clrMagenta;
         const int RND = Rnd::percentile();
-        if (RND < 20)
+        if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
         {
           prop    = new PropPoisoned(PropTurns::std);
           fumeClr = clrGreenLgt;
@@ -2187,7 +2187,6 @@ void Chest::disarm()
     //Try disarming trap
     if (isTrapStatusKnown_)
     {
-//      Log::clearLog();
       Log::addMsg("I attempt to disarm the chest...", clrWhite, false, true);
       Log::clearLog();
 
@@ -2260,19 +2259,18 @@ DidTriggerTrap Chest::triggerTrap(Actor * const actor)
     }
   }
 
-  //Explode?
-  const int EXPLODE_ONE_IN_N = 7;
-  if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::oneIn(EXPLODE_ONE_IN_N))
+  //Fire explosion?
+  const int FIRE_EXPLOSION_ONE_IN_N = 5;
+  if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::oneIn(FIRE_EXPLOSION_ONE_IN_N))
   {
     if (IS_SEEN)
     {
       Log::clearLog();
-      Log::addMsg("The chest explodes!", clrWhite, false, true);
+      Log::addMsg("Flames burst out from the chest!", clrWhite, false, true);
     }
 
-    Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, 0, SfxId::explosion);
-
-    Map::put(new RubbleLow(pos_));
+    Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc, 0,
+                              SfxId::explosion, new PropBurning(PropTurns::std));
 
     return DidTriggerTrap::yes;
   }
@@ -2281,14 +2279,19 @@ DidTriggerTrap Chest::triggerTrap(Actor * const actor)
   {
     //Needle
     Log::addMsg("A needle pierces my skin!", clrMsgBad, true);
-    actor->hit(Rnd::range(1, 5), DmgType::physical);
+    actor->hit(Rnd::range(1, 3), DmgType::physical);
 
-    if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && Rnd::fraction(2, 3))
+    if (Map::dlvl < MIN_DLVL_HARDER_TRAPS)
+    {
+      actor->getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::specific,
+                                           POISON_DMG_N_TURN * 2));
+    }
+    else
     {
       actor->getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::std));
     }
   }
-  else
+  else //Is monster, or cointoss is false
   {
     //Fumes
     if (IS_SEEN)
@@ -2301,7 +2304,7 @@ DidTriggerTrap Chest::triggerTrap(Actor * const actor)
     Clr       fumeClr = clrMagenta;
     const int RND     = Rnd::percentile();
 
-    if (RND < 20)
+    if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
     {
       prop    = new PropPoisoned(PropTurns::std);
       fumeClr = clrGreenLgt;
@@ -2368,7 +2371,7 @@ Fountain::Fountain(const Pos & pos) :
   fountainEffects_  (vector<FountainEffect>()),
   fountainMatl_     (FountainMatl::stone)
 {
-  if (Rnd::oneIn(14))
+  if (Rnd::oneIn(16))
   {
     fountainMatl_ = FountainMatl::gold;
   }
@@ -2391,9 +2394,15 @@ Fountain::Fountain(const Pos & pos) :
     case FountainMatl::gold:
       vector<FountainEffect> effectBucket
       {
-        FountainEffect::bless, FountainEffect::refreshing, FountainEffect::spirit,
-        FountainEffect::vitality, FountainEffect::rFire, FountainEffect::rCold,
-        FountainEffect::rElec, FountainEffect::rFear, FountainEffect::rConfusion
+        FountainEffect::bless,
+        FountainEffect::refreshing,
+        FountainEffect::spirit,
+        FountainEffect::vitality,
+        FountainEffect::rFire,
+        FountainEffect::rCold,
+        FountainEffect::rElec,
+        FountainEffect::rFear,
+        FountainEffect::rConfusion
       };
 
       std::random_shuffle(begin(effectBucket), end(effectBucket));

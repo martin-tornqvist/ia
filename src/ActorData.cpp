@@ -1118,7 +1118,7 @@ void initDataList()
   d.speed = ActorSpeed::normal;
   d.rangedCooldownTurns = 0;
   d.glyph = 'r';
-  d.color = clrBrown;
+  d.color = clrBrownDrk;
   d.tile = TileId::ratThing;
   d.hp = 4;
   d.spi = 8;

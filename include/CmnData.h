@@ -76,6 +76,8 @@ const int EXPL_DMG_SIDES  = 6;
 const int EXPL_DMG_PLUS   = 10;
 const int EXPL_MAX_DMG    = (EXPL_DMG_ROLLS* EXPL_DMG_SIDES) + EXPL_DMG_PLUS;
 
+const int POISON_DMG_N_TURN = 3;
+
 //Value used for limiting spawning over time and "breeder" monsters. The actual number of
 //actors may sometimes go a bit above this number, e.g. due to a group of monsters
 //spawning when the number of actors is near the limit. Summoning spells don't check

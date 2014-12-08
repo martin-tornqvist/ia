@@ -819,7 +819,6 @@ PropHandler::~PropHandler()
 void PropHandler::getPropsFromSources(
   vector<Prop*>& out, bool sources[int(PropSrc::END)]) const
 {
-
   out.clear();
 
   //Get from applied properties
@@ -892,10 +891,8 @@ void PropHandler::getPropIds(bool out[endOfPropIds]) const
   getPropIdsFromSources(out, sources);
 }
 
-bool PropHandler::tryResistProp(
-  const PropId id, const vector<Prop*>& propList) const
+bool PropHandler::tryResistProp(const PropId id, const vector<Prop*>& propList) const
 {
-
   for (Prop* p : propList) {if (p->isResistOtherProp(id)) return true;}
   return false;
 }
@@ -931,7 +928,6 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
                                const bool DISABLE_REDRAW,
                                const bool DISABLE_PROP_START_EFFECTS)
 {
-
   //First, if this is a prop that runs on actor turns, check if the actor-turn
   //prop buffer does not already contain the prop.
   //-If it doesn't, then just add it to the buffer and return.
@@ -1549,11 +1545,8 @@ void PropPoisoned::onNewTurn()
 {
   if (owningActor_->isAlive())
   {
-    const int DMG_N_TURN = 3;
-    const int TURN = GameTime::getTurn();
-    if (TURN == (TURN / DMG_N_TURN) * DMG_N_TURN)
+    if (GameTime::getTurn() % POISON_DMG_N_TURN == 0)
     {
-
       if (owningActor_->isPlayer())
       {
         Log::addMsg("I am suffering from the poison!", clrMsgBad, true);
@@ -1565,16 +1558,13 @@ void PropPoisoned::onNewTurn()
           Log::addMsg(owningActor_->getNameThe() + " suffers from poisoning!");
         }
       }
-
       owningActor_->hit(1, DmgType::pure);
     }
   }
 }
 
-bool PropTerrified::allowAttackMelee(
-  const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropTerrified::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 {
-
   if (owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
   {
     Log::addMsg("I am too terrified to engage in close combat!");
@@ -1582,10 +1572,8 @@ bool PropTerrified::allowAttackMelee(
   return false;
 }
 
-bool PropTerrified::allowAttackRanged(
-  const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropTerrified::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 {
-
   (void)ALLOW_MESSAGE_WHEN_FALSE;
   return true;
 }
@@ -1596,7 +1584,6 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
 
   if (dir != Dir::center)
   {
-
     if (owningActor_->isPlayer())
     {
       Log::addMsg("I struggle to tear out the spike!", clrMsgBad);
@@ -1637,7 +1624,6 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
         }
       }
     }
-
     dir = Dir::center;
   }
 }
@@ -1664,12 +1650,9 @@ bool PropConfused::allowAttackMelee(
   return true;
 }
 
-bool PropConfused::allowAttackRanged(
-  const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropConfused::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
 {
-
   (void)ALLOW_MESSAGE_WHEN_FALSE;
-
 
   if (owningActor_ != Map::player)
   {
@@ -1682,7 +1665,6 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir)
 {
   if (dir != Dir::center)
   {
-
     bool blocked[MAP_W][MAP_H];
     MapParse::parse(CellCheck::BlocksActor(*owningActor_, true),
                     blocked);
@@ -1762,8 +1744,7 @@ void PropFrenzied::onStart()
 
 void PropFrenzied::onEnd()
 {
-  owningActor_->getPropHandler().tryApplyProp(
-    new PropWeakened(PropTurns::std));
+  owningActor_->getPropHandler().tryApplyProp(new PropWeakened(PropTurns::std));
 }
 
 bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const

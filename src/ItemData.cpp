@@ -1227,7 +1227,7 @@ void initDataList()
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "releases spores at me");
   setDmgFromMonId(*d, ActorId::mold);
-  d->melee.propApplied = new PropPoisoned(PropTurns::specific, 6);
+  d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::armorLeatherJacket);
