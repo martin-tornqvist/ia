@@ -149,8 +149,8 @@
 		<Unit filename="../include/Feature.h" />
 		<Unit filename="../include/FeatureData.h" />
 		<Unit filename="../include/FeatureDoor.h" />
+		<Unit filename="../include/FeatureEvent.h" />
 		<Unit filename="../include/FeatureMob.h" />
-		<Unit filename="../include/FeatureProxEvent.h" />
 		<Unit filename="../include/FeatureRigid.h" />
 		<Unit filename="../include/FeatureTrap.h" />
 		<Unit filename="../include/Fov.h" />
@@ -231,8 +231,8 @@
 		<Unit filename="../src/Feature.cpp" />
 		<Unit filename="../src/FeatureData.cpp" />
 		<Unit filename="../src/FeatureDoor.cpp" />
+		<Unit filename="../src/FeatureEvent.cpp" />
 		<Unit filename="../src/FeatureMob.cpp" />
-		<Unit filename="../src/FeatureProxEvent.cpp" />
 		<Unit filename="../src/FeatureRigid.cpp" />
 		<Unit filename="../src/FeatureTrap.cpp" />
 		<Unit filename="../src/Fov.cpp" />

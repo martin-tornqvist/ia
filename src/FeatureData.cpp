@@ -1,14 +1,13 @@
 #include "FeatureData.h"
 
-#include <iostream>
-
 #include "Init.h"
+
 #include "Colors.h"
 #include "Actor.h"
 #include "FeatureRigid.h"
 #include "FeatureMob.h"
 #include "FeatureTrap.h"
-#include "FeatureProxEvent.h"
+#include "FeatureEvent.h"
 #include "FeatureDoor.h"
 
 using namespace std;
@@ -16,8 +15,8 @@ using namespace std;
 //--------------------------------------------------------- FEATURE ROOM SPAWN RULES
 FeatureRoomSpawnRules::FeatureRoomSpawnRules() :
   maxNrInRoom_    (-1),
-  dlvlsAllowed_   ({ -1, -1}),
-                placementRule_  (PlacementRule::adjToWalls)
+  dlvlsAllowed_   (Range(-1, -1)),
+  placementRule_  (PlacementRule::adjToWalls)
 {
   roomTypesNative_.clear();
 }
@@ -343,7 +342,19 @@ void initDataList()
   d.matlType = Matl::stone;
   d.roomSpawnRules.set(4, {0, DLVL_LAST}, PlacementRule::either,
   {
-    RoomType::plain, RoomType::crypt, RoomType::monster, RoomType::chasm, RoomType::cave
+    RoomType::plain, RoomType::crypt, RoomType::monster, RoomType::cave
+  });
+  addToListAndReset(d);
+  //---------------------------------------------------------------------------
+  d.id = FeatureId::bones;
+  d.mkObj = [](const Pos & p) {return new Bones(p);};
+  d.glyph = '&';
+  d.tile = TileId::corpse2;
+  d.moveRules.setCanMoveCmn();
+  d.matlType = Matl::stone;
+  d.roomSpawnRules.set(3, {0, DLVL_LAST}, PlacementRule::either,
+  {
+    RoomType::monster, RoomType::cave
   });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
@@ -450,6 +461,42 @@ void initDataList()
   });
   addToListAndReset(d);
   //---------------------------------------------------------------------------
+  d.id = FeatureId::monolith;
+  d.mkObj = [](const Pos & p) {return new Monolith(p);};
+  d.glyph = '|';
+  d.tile = TileId::monolith;
+  d.isProjectilePassable = false;
+  d.isLosPassable = false;
+  d.canHaveBlood = true;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveRigid = false;
+  d.canHaveItem = false;
+  d.matlType = Matl::stone;
+  d.roomSpawnRules.set(1, {0, DLVL_LAST}, PlacementRule::awayFromWalls,
+  {
+    RoomType::cave, RoomType::forest
+  });
+  addToListAndReset(d);
+  //---------------------------------------------------------------------------
+  d.id = FeatureId::stalagmite;
+  d.mkObj = [](const Pos & p) {return new Stalagmite(p);};
+  d.glyph = ':';
+  d.tile = TileId::stalagmite;
+  d.isProjectilePassable = false;
+  d.isLosPassable = false;
+  d.canHaveBlood = true;
+  d.canHaveGore = false;
+  d.canHaveCorpse = false;
+  d.canHaveRigid = false;
+  d.canHaveItem = false;
+  d.matlType = Matl::stone;
+  d.roomSpawnRules.set(10, {0, DLVL_LAST}, PlacementRule::either,
+  {
+    RoomType::cave
+  });
+  addToListAndReset(d);
+  //---------------------------------------------------------------------------
   d.id = FeatureId::altar;
   d.mkObj = [](const Pos & p) {return new Altar(p);};
   d.glyph = '_';
@@ -527,8 +574,13 @@ void initDataList()
   d.isLosPassable = false;
   addToListAndReset(d);
   //---------------------------------------------------------------------------
-  d.id = FeatureId::proxEventWallCrumble;
-  d.mkObj = [](const Pos & p) {return new ProxEventWallCrumble(p);};
+  d.id = FeatureId::eventWallCrumble;
+  d.mkObj = [](const Pos & p) {return new EventWallCrumble(p);};
+  d.moveRules.setCanMoveCmn();
+  addToListAndReset(d);
+  //---------------------------------------------------------------------------
+  d.id = FeatureId::eventRatsInTheWallsDiscovery;
+  d.mkObj = [](const Pos & p) {return new EventRatsInTheWallsDiscovery(p);};
   d.moveRules.setCanMoveCmn();
   addToListAndReset(d);
   //---------------------------------------------------------------------------

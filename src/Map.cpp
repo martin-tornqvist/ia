@@ -18,14 +18,14 @@
 using namespace std;
 
 Cell::Cell() :
-  isExplored(false),
-  isSeenByPlayer(false),
-  isLit(false),
-  isDark(false),
-  item(nullptr),
-  rigid(nullptr),
-  playerVisualMemory(CellRenderData()),
-  pos(Pos(-1, -1)) {}
+  isExplored          (false),
+  isSeenByPlayer      (false),
+  isLit               (false),
+  isDark              (false),
+  item                (nullptr),
+  rigid               (nullptr),
+  playerVisualMemory  (CellRenderData()),
+  pos                 (Pos(-1, -1)) {}
 
 Cell::~Cell()
 {

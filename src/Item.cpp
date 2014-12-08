@@ -323,7 +323,7 @@ void ArmorMigo::onEquip_()
 {
   Render::drawMapAndInterface();
   Log::addMsg("The armor joins with my skin!", clrWhite, false, true);
-  Map::player->incrShock(ShockValue::heavy, ShockSrc::useStrangeItem);
+  Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
 }
 
 UnequipAllowed ArmorMigo::onUnequip_()
@@ -713,7 +713,7 @@ void MedicalBag::finishCurAction()
 //    case MedBagAction::takeMorphine: {
 //      Map::player->restoreHp(999);
 //      Log::addMsg("The morphine takes a toll on my mind.");
-//      Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
+//      Map::player->incrShock(ShockLvl::heavy, ShockSrc::misc);
 //    } break;
 
     case MedBagAction::END: {} break;

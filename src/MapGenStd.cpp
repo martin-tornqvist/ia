@@ -7,7 +7,7 @@
 
 #include "Room.h"
 #include "MapGen.h"
-#include "FeatureProxEvent.h"
+#include "FeatureEvent.h"
 #include "ActorPlayer.h"
 #include "FeatureDoor.h"
 #include "ActorFactory.h"
@@ -191,7 +191,7 @@ void connectRooms()
   TRACE_FUNC_END;
 }
 
-void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos)
+void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& eventPos)
 {
   vector<Pos> wallCells;
   vector<Pos> innerCells;
@@ -215,7 +215,7 @@ void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& proxEventPos)
     }
   }
 
-  GameTime::addMob(new ProxEventWallCrumble(proxEventPos, wallCells, innerCells));
+  GameTime::addMob(new EventWallCrumble(eventPos, wallCells, innerCells));
 }
 
 //Note: The positions and size can be outside map (e.g. negative positions).

@@ -39,7 +39,7 @@ void Potion::identify(const bool IS_SILENT_IDENTIFY)
     {
       const string name = getName(ItemRefType::a, ItemRefInf::none);
       Log::addMsg("It was " + name + ".");
-      Map::player->incrShock(ShockValue::heavy, ShockSrc::useStrangeItem);
+      Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
     }
   }
 }
@@ -114,7 +114,7 @@ void Potion::quaff(Actor& actor)
       const string name = getName(ItemRefType::plain, ItemRefInf::none);
       Log::addMsg("I drink an unknown " + name + "...");
     }
-    Map::player->incrShock(ShockValue::heavy,
+    Map::player->incrShock(ShockLvl::heavy,
                            ShockSrc::useStrangeItem);
   }
 

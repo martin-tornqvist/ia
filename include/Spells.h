@@ -91,7 +91,7 @@ public:
 
   Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const;
 
-  int getShockValueIntrCast() const
+  int getShockLvlIntrCast() const
   {
     const IntrSpellShock shockType = getShockTypeIntrCast();
 

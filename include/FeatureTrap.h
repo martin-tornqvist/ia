@@ -31,7 +31,7 @@ class Trap: public Rigid
 public:
   Trap(const Pos& pos, const Rigid* const mimicFeature, TrapId type);
 
-  //Spawn by id compliant ctor (do not use for normal cases):
+  //Spawn-by-id compliant ctor (do not use for normal cases):
   Trap(const Pos& pos) : Rigid(pos), mimicFeature_(nullptr), isHidden_(false) {}
 
   Trap() = delete;

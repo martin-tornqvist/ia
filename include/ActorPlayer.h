@@ -57,7 +57,7 @@ public:
                  const Dir dirToOrigin,
                  const int PERCENT_AUDIBLE_DISTANCE);
 
-  void incrShock(const ShockValue shockValue, ShockSrc shockSrc);
+  void incrShock(const ShockLvl shockValue, ShockSrc shockSrc);
   void incrShock(const int SHOCK, ShockSrc shockSrc);
   void restoreShock(const int amountRestored,
                     const bool IS_TEMP_SHOCK_RESTORED);

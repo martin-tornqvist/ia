@@ -215,6 +215,24 @@ private:
              Actor* const actor) override;
 };
 
+class Bones: public Rigid
+{
+public:
+  Bones(Pos pos);
+  Bones() = delete;
+  ~Bones() {}
+
+  FeatureId getId() const override {return FeatureId::bones;}
+
+  std::string getName(const Article article)  const override;
+
+private:
+  Clr getClr_() const override;
+
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+};
+
 class RubbleHigh: public Rigid
 {
 public:
@@ -306,6 +324,42 @@ public:
   ~Pillar() {}
 
   FeatureId getId() const override {return FeatureId::pillar;}
+
+  std::string getName(const Article article)  const override;
+
+private:
+  Clr getClr_() const override;
+
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+};
+
+class Monolith: public Rigid
+{
+public:
+  Monolith(Pos pos);
+  Monolith() = delete;
+  ~Monolith() {}
+
+  FeatureId getId() const override {return FeatureId::monolith;}
+
+  std::string getName(const Article article)  const override;
+
+private:
+  Clr getClr_() const override;
+
+  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
+};
+
+class Stalagmite: public Rigid
+{
+public:
+  Stalagmite(Pos pos);
+  Stalagmite() = delete;
+  ~Stalagmite() {}
+
+  FeatureId getId() const override {return FeatureId::stalagmite;}
 
   std::string getName(const Article article)  const override;
 

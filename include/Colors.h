@@ -52,14 +52,15 @@ const Clr clrNosfTealDrk      = { 20,  54,  51, 0};
 //-----------------------------------------------------------
 const Clr clrMsgGood          = clrGreenLgt;
 const Clr clrMsgBad           = clrRedLgt;
-const Clr clrMsgNote       = clrOrange;
+const Clr clrMsgNote          = clrOrange;
 
-//Standard menu colors
+//Standard interface colors
 //-----------------------------------------------------------
 const Clr clrMenuHighlight    = clrViolet;
 const Clr clrMenuMedium       = clrVioletDrk;
 const Clr clrMenuDrk          = clrGrayDrk;
 
 const Clr clrPopupBox         = clrGrayDrk;
+const Clr clrPopupTitle       = clrOrange;
 
 #endif

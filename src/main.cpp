@@ -1,12 +1,9 @@
 #include "Init.h"
 
-#include <iostream>
-
 #include <SDL.h>
 
 #include "SdlWrapper.h"
 #include "Config.h"
-#include "Input.h"
 #include "Render.h"
 #include "MainMenu.h"
 #include "PlayerBon.h"

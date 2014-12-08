@@ -25,7 +25,7 @@ public:
   Smoke(const Pos& pos, const int NR_TURNS) :
     Mob(pos), nrTurnsLeft_(NR_TURNS) {}
 
-  //Spawn by id compliant ctor (do not use for normal cases):
+  //Spawn-by-id compliant ctor (do not use for normal cases):
   Smoke(const Pos& pos) : Mob(pos), nrTurnsLeft_(-1) {}
 
   Smoke() = delete;
@@ -48,7 +48,7 @@ public:
   LitDynamite(const Pos& pos, const int NR_TURNS) :
     Mob(pos), nrTurnsLeft_(NR_TURNS) {}
 
-  //Spawn by id compliant ctor (do not use for normal cases):
+  //Spawn-by-id compliant ctor (do not use for normal cases):
   LitDynamite(const Pos& pos) : Mob(pos), nrTurnsLeft_(-1) {}
 
   LitDynamite() = delete;
@@ -75,7 +75,7 @@ public:
   LitFlare(const Pos& pos, const int NR_TURNS) :
     Mob(pos), nrTurnsLeft_(NR_TURNS) {}
 
-  //Spawn by id compliant ctor (do not use for normal cases):
+  //Spawn-by-id compliant ctor (do not use for normal cases):
   LitFlare(const Pos& pos) : Mob(pos), nrTurnsLeft_(-1) {}
 
   LitFlare() = delete;

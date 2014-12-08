@@ -55,7 +55,7 @@ enum class DmgMethod
   END
 };
 
-enum class ShockValue
+enum class ShockLvl
 {
   none   = 0,
   mild   = 2,

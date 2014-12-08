@@ -1,16 +1,20 @@
 #include "MapTravel.h"
 
-#include <iostream>
-#include <list>
-#include <chrono>
-
 #include "Init.h"
+
+#include <list>
+
+#ifndef NDEBUG
+#include <chrono>
+#endif // NDEBUG
+
 #include "Map.h"
 #include "MapGen.h"
 #include "PopulateItems.h"
 #include "Render.h"
 #include "Log.h"
 #include "FeatureRigid.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -20,10 +24,14 @@ namespace MapTravel
 namespace
 {
 
+//Note: This includes forest intro level, rats in the walls level, etc. Basically every
+//level that increments the DLVL number.
+enum IsMainDungeon {no, yes};
+
 struct MapData
 {
-  MapType type;
-  bool    isInMainDungeon;
+  MapType       type;
+  IsMainDungeon isMainDungeon;
 };
 
 vector<MapData> mapList_;
@@ -50,6 +58,7 @@ void mkLvl(const MapType& mapType)
       case MapType::std:            isLvlBuilt = MapGen::mkStdLvl();            break;
       case MapType::egypt:          isLvlBuilt = MapGen::mkEgyptLvl();          break;
       case MapType::leng:           isLvlBuilt = MapGen::mkLengLvl();           break;
+      case MapType::ratsInTheWalls: isLvlBuilt = MapGen::mkRatsInTheWallsLvl(); break;
       case MapType::trapezohedron:  isLvlBuilt = MapGen::mkTrapezohedronLvl();  break;
     }
   }
@@ -69,12 +78,21 @@ void mkLvl(const MapType& mapType)
 
 void init()
 {
-  //Standard dungeon (30) + forest + final level
+  //Dungeon + forest + final level
   const size_t NR_LVL_TOT = DLVL_LAST + 2;
 
-  mapList_                = vector<MapData>(NR_LVL_TOT, {MapType::std, true});
-  mapList_[0]             = {MapType::intro,          true};
-  mapList_[DLVL_LAST + 1] = {MapType::trapezohedron,  true};
+  mapList_ = vector<MapData>(NR_LVL_TOT, {MapType::std, IsMainDungeon::yes});
+
+  //Forest intro level
+  mapList_[0] = {MapType::intro, IsMainDungeon::yes};
+
+  //Set rats-in-the-walls level as first late-game level in some games
+  if (Rnd::oneIn(3))
+  {
+    mapList_[DLVL_FIRST_LATE_GAME] = {MapType::ratsInTheWalls, IsMainDungeon::yes};
+  }
+
+  mapList_[DLVL_LAST + 1] = {MapType::trapezohedron, IsMainDungeon::yes};
 }
 
 void storeToSaveLines(std::vector<std::string>& lines)
@@ -83,7 +101,7 @@ void storeToSaveLines(std::vector<std::string>& lines)
   for (const MapData& entry : mapList_)
   {
     lines.push_back(toStr(int(entry.type)));
-    lines.push_back(entry.isInMainDungeon ? "1" : "0");
+    lines.push_back(entry.isMainDungeon == IsMainDungeon::yes ? "1" : "0");
   }
 }
 
@@ -91,13 +109,15 @@ void setupFromSaveLines(std::vector<std::string>& lines)
 {
   const int SIZE = toInt(lines.front());
   lines.erase(begin(lines));
+
   for (int i = 0; i < SIZE; ++i)
   {
-    const MapType type        = MapType(toInt(lines.front()));
+    const MapType type = MapType(toInt(lines.front()));
     lines.erase(begin(lines));
-    const bool    IS_IN_MAIN  = lines.front() == "1";
+    const IsMainDungeon isMainDungeon = lines.front() == "1" ?
+                                        IsMainDungeon::yes : IsMainDungeon::no;
     lines.erase(begin(lines));
-    mapList_.push_back({type, IS_IN_MAIN});
+    mapList_.push_back({type, isMainDungeon});
   }
 }
 
@@ -110,7 +130,7 @@ void goToNxt()
   mapList_.erase(mapList_.begin());
   const auto& mapData = mapList_.front();
 
-  if (mapData.isInMainDungeon)
+  if (mapData.isMainDungeon == IsMainDungeon::yes)
   {
     ++Map::dlvl;
   }

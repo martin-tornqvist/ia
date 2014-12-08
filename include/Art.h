@@ -104,6 +104,7 @@ enum class TileId
   caveWallTop,
   egyptWallFront,
   egyptWallTop,
+  monolith,
   brazier,
   altar,
   web,
@@ -147,13 +148,14 @@ enum class TileId
   popupBtmR,
   popupHor,
   popupVer,
+  hangbridgeVer,
+  hangbridgeHor,
+  scorchedGround,
   popupHorDown,
   popupHorUp,
   popupVerR,
   popupVerL,
-  hangbridgeVer,
-  hangbridgeHor,
-  scorchedGround
+  stalagmite
 };
 
 

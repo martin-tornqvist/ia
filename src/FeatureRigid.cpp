@@ -646,6 +646,29 @@ Clr RubbleLow::getClr_() const
   return clrGray;
 }
 
+//--------------------------------------------------------------------- BONES
+Bones::Bones(Pos pos) : Rigid(pos) {}
+
+void Bones::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                  Actor* const actor)
+{
+  (void)dmgType;
+  (void)dmgMethod;
+  (void)actor;
+}
+
+string Bones::getName(const Article article) const
+{
+  string ret = "";
+  if (article == Article::the) {ret += "the ";}
+  return ret + "bones";
+}
+
+Clr Bones::getClr_() const
+{
+  return clrRed;
+}
+
 //--------------------------------------------------------------------- GRAVE
 GraveStone::GraveStone(Pos pos) :
   Rigid(pos) {}
@@ -799,6 +822,47 @@ string Pillar::getName(const Article article) const
 Clr Pillar::getClr_() const
 {
   return clrWhite;
+}
+
+//--------------------------------------------------------------------- MONOLITH
+Monolith::Monolith(Pos pos) :
+  Rigid(pos) {}
+
+void Monolith::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
+{
+  (void)dmgType; (void)dmgMethod; (void)actor;
+}
+
+string Monolith::getName(const Article article) const
+{
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "monolith";
+}
+
+Clr Monolith::getClr_() const
+{
+  return clrWhite;
+}
+
+//--------------------------------------------------------------------- STALAGMITE
+Stalagmite::Stalagmite(Pos pos) :
+  Rigid(pos) {}
+
+void Stalagmite::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                       Actor* const actor)
+{
+  (void)dmgType; (void)dmgMethod; (void)actor;
+}
+
+string Stalagmite::getName(const Article article) const
+{
+  string ret = article == Article::a ? "a " : "the ";
+  return ret + "stalagmite";
+}
+
+Clr Stalagmite::getClr_() const
+{
+  return clrBrownGray;
 }
 
 //--------------------------------------------------------------------- STAIRS
@@ -2672,7 +2736,7 @@ DidTriggerTrap Cocoon::triggerTrap(Actor * const actor)
     {
       //A dead body
       Log::addMsg("There is a half-dissolved human body inside!");
-      Map::player->incrShock(ShockValue::heavy, ShockSrc::misc);
+      Map::player->incrShock(ShockLvl::heavy, ShockSrc::misc);
       isTrapped_ = false;
       return DidTriggerTrap::yes;
     }

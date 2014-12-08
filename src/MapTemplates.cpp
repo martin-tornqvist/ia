@@ -1,5 +1,7 @@
 #include "MapTemplates.h"
 
+#include "Init.h"
+
 #include <vector>
 #include <assert.h>
 
@@ -15,8 +17,9 @@ MapTempl templates_[int(MapTemplId::END)];
 
 struct Translation
 {
-  Translation(const char CH_, const MapTemplCell& mapTemplCell) :
-    CH(CH_), cell(mapTemplCell) {}
+  Translation(char c, const MapTemplCell& mapTemplCell) :
+    CH   (c),
+    cell (mapTemplCell) {}
 
   const char          CH;
   const MapTemplCell  cell;
@@ -26,9 +29,13 @@ MapTemplCell chToCell(const char CH, const vector<Translation>& translations)
 {
   for (const Translation& translation : translations)
   {
-    if (translation.CH == CH) {return translation.cell;}
+    if (translation.CH == CH)
+    {
+      return translation.cell;
+    }
   }
-  assert(false && "Failed to translate char");
+  TRACE << "Failed to translate char: " <<  CH << endl;
+  assert(false);
   return MapTemplCell();
 }
 
@@ -44,11 +51,11 @@ void mkTempl(const string& str, const MapTemplId id,
     switch (ch)
     {
       case ';':
-      {
         //Delimiting character (";") found, inner vector is pushed to outer
         templ.addRow(inner);
         inner.clear();
-      } break;
+        break;
+
       case '#': inner.push_back({FeatureId::wall});           break;
       case '.': inner.push_back({FeatureId::floor});          break;
       case ' ': inner.push_back({});                          break;
@@ -59,7 +66,33 @@ void mkTempl(const string& str, const MapTemplId id,
 
 void initTempls()
 {
-  //------------------------------------------------------------------------- CHURCH
+  //Blank level with correct dimensions to copy/paste when making new templates
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;"
+//  "################################################################################;";
+
+
+
+  //----------------------------------------------------------------- CHURCH
   string str =
     "             ,,,,,,,,,,,     ;"
     "          ,,,,,######,,,,    ;"
@@ -90,7 +123,7 @@ void initTempls()
     {'+', {FeatureId::floor,  ActorId::END, ItemId::END, 1}} //Doors
   });
 
-  //------------------------------------------------------------------------- EGYPT
+  //----------------------------------------------------------------- EGYPT
   str =
     "################################################################################;"
     "###...################################........................##################;"
@@ -128,7 +161,7 @@ void initTempls()
     {'2', {FeatureId::floor, ActorId::END, ItemId::END, 3}}   //Stair candidate #2
   });
 
-  //------------------------------------------------------------------------- LENG
+  //----------------------------------------------------------------- LENG
   str =
     "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;"
     "%%%%%%%%%%-%%--%--%%--%%%--%%--%%-%-%%%--%-%%-x,,,,,x,,,,,x,,,,,x,,,,,,,,,,,,,,x;"
@@ -155,17 +188,55 @@ void initTempls()
 
   mkTempl(str, MapTemplId::leng, vector<Translation>
   {
-    {'@', {FeatureId::floor,  ActorId::END,     ItemId::END, 1}}, //Start
-    {'%', {FeatureId::wall,   ActorId::END,     ItemId::END, 2}},
-    {'x', {FeatureId::wall,   ActorId::END,     ItemId::END, 3}},
-    {',', {FeatureId::floor,  ActorId::END,     ItemId::END, 3}},
+    {'@', {FeatureId::floor,  ActorId::END,       ItemId::END, 1}}, //Start
+    {'%', {FeatureId::wall,   ActorId::END,       ItemId::END, 2}},
+    {'x', {FeatureId::wall,   ActorId::END,       ItemId::END, 3}},
+    {',', {FeatureId::floor,  ActorId::END,       ItemId::END, 3}},
     {'E', {FeatureId::floor,  ActorId::lengElder, ItemId::END, 3}},
-    {'4', {FeatureId::floor,  ActorId::END,     ItemId::END, 4}},
-    {'5', {FeatureId::wall,   ActorId::END,     ItemId::END, 5}},
+    {'4', {FeatureId::floor,  ActorId::END,       ItemId::END, 4}},
+    {'5', {FeatureId::wall,   ActorId::END,       ItemId::END, 5}},
     {'$', {FeatureId::altar}},
     {'-', {FeatureId::grass}},
-    {'+', {FeatureId::floor,  ActorId::END,     ItemId::END, 6}}, //Door
+    {'+', {FeatureId::floor,  ActorId::END,       ItemId::END, 6}}, //Door
     {'S', {FeatureId::grass,  ActorId::lengSpider}}
+  });
+
+  //----------------------------------------------------------------- RATS IN THE WALLS
+  str =
+    "################################################################################;"
+    "##@#################,##,##xxxxxxxxx###xxxxxxxxxxx######rr#,##########,#,########;"
+    "##.##############,,,,,,,,,x,,,,,,,xrrrxrrrrrrrrrxrrrrrr,,,,,,##,,#,,,,,,,#######;"
+    "##...&##########,,,,xxxxxxx,,,,,,,xrrrxrrrrrrrrrxrrrr,,,,:,,,,,,,,,,,:,,,,######;"
+    "###..:#########,,:,,x,,,,,,,,,,,,,,,rrrrrxx,xxrrxrrrr,,,,,,,,,,,,,,,,,,,,,,,,###;"
+    "###:...#######,,,,,,xx,xxxx,,,,,,,xrrrxrrx,,,xrrxrrrr,,,,,,,:,,,,,,:,,,,,,######;"
+    "##&..:..#####,,,,,,,,,,,,,xxxx,xxxxrrrxxxx,,,x,xxrrrr,,,,,,,,,,,,,,,,,,,,,######;"
+    "####.&.:####,,,,,,,,,,,,,,,:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,:,,,,,####;"
+    "####..##&:3.,,,,,,,,,:,,,,,,,,,,:,,,,,,,,,,,1,,,:,,,xxx,xx,xxx,,,,,,,,,,,,,#####;"
+    "#####..&:.#,,,,,,,,,,,,,,,x,x,x,x,x,x,,,,1,,,,,1,,,rx,,,,,,,,x,,,,:,,,,,,,######;"
+    "###########,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,rx,rrrrr,,x,,,,,,,,,,,#######;"
+    "###########,,,,,,,,1,,,,,,,,,,,,,,,,:,,,1,,,,,,,1,,rr,rrrrr,,,,,,,#,,,,,########;"
+    "###########,,,,,1,,,,,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,rx,rrrr,,,x,,####,,,,,#######;"
+    "###########,,,,,,,,,,,,,,,x,x,x,x,x,x,,,,1,,,,,1,,,rx,,rrr,,,x,,,,##############;"
+    "############,,,1,,,,,,,1,,,,,,,,,,,,,,,,,,,,1,,,,,x,x,rrrr,,,x,,,###############;"
+    "############,,,,,,,,,,,,,,,,,,,,:,,,,,,,,,,,,,,,,,rr,,,rrrr,,x,:##xxxxxx########;"
+    "#############,,,1,,,,,1,,,xxx,xxxxx,xxx,,,:,,,,r,,rrx,rrrr,,,x,,,,x....x########;"
+    "##############,,,,,1,,,,,,x,,,,,xrrrrrx,,,,,,,,,,,r,x,rrrrrrrx,,,,...>.x########;"
+    "#################,,,,,,:,,x,,,,,xrrrrrxrrrrrrrrrr,,,xxxxxxxxxx,:,,x....x########;"
+    "################:,,,,,,,,,x,,,,,xrrrrrxrrrr##rrrrrrrrrrrrrrrrr,##:xxxxxx########;"
+    "###################:,,####xxxxxxxxxxxxx##r#####rr###r###r#rrr###################;"
+    "################################################################################;";
+
+  mkTempl(str, MapTemplId::ratsInTheWalls, vector<Translation>
+  {
+    {'@', {FeatureId::floor,  ActorId::END,     ItemId::END, 1}}, //Start
+    {'x', {FeatureId::wall,   ActorId::END,     ItemId::END, 2}}, //Constructed walls
+    {'&', {FeatureId::bones,  ActorId::END,     ItemId::END}},
+    {'3', {FeatureId::floor,  ActorId::END,     ItemId::END, 3}}, //Discovery event
+    {',', {FeatureId::floor,  ActorId::END,     ItemId::END, 4}}, //Random bones
+    {'r', {FeatureId::floor,  ActorId::rat,     ItemId::END, 4}}, //Random bones + rat
+    {'>', {FeatureId::stairs}},
+    {'1', {FeatureId::monolith}},
+    {':', {FeatureId::stalagmite}}
   });
 }
 

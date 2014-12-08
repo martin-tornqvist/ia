@@ -1,8 +1,7 @@
-#include "Input.h"
+#include "Init.h"
 
 #include <memory>
 
-#include "Init.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "MapTravel.h"

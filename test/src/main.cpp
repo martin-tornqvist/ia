@@ -701,7 +701,7 @@ TEST_FIXTURE(BasicFixture, SavingGame)
     }
   }
   //Put new items
-  Item* item = ItemFactory::mk(ItemId::teslaCannon);
+  Item* item = ItemFactory::mk(ItemId::migoGun);
   inv.putInSlot(SlotId::wielded, item);
   //Wear asbestos suit to test properties from wearing items
   item = ItemFactory::mk(ItemId::armorAsbSuit);
@@ -790,7 +790,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
   Inventory& inv  = Map::player->getInv();
   auto& genInv    = inv.general_;
   CHECK_EQUAL(6, int(genInv.size()));
-  CHECK_EQUAL(int(ItemId::teslaCannon),
+  CHECK_EQUAL(int(ItemId::migoGun),
               int(inv.getItemInSlot(SlotId::wielded)->getData().id));
   CHECK_EQUAL(int(ItemId::armorAsbSuit),
               int(inv.getItemInSlot(SlotId::body)->getData().id));

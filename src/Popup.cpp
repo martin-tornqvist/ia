@@ -68,8 +68,8 @@ void menuMsgDrawingHelper(
 
   if (!title.empty())
   {
-    Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y),
-                             clrWhite, clrBlack, true);
+    Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y), clrPopupTitle,
+                             clrBlack, true);
   }
 
   const bool SHOW_MSG_CENTERED = lines.size() == 1;
@@ -79,8 +79,8 @@ void menuMsgDrawingHelper(
     y++;
     if (SHOW_MSG_CENTERED)
     {
-      Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y),
-                               clrWhite, clrBlack, true);
+      Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y), clrWhite, clrBlack,
+                               true);
     }
     else
     {
@@ -93,9 +93,9 @@ void menuMsgDrawingHelper(
   for (size_t i = 0; i < choices.size(); ++i)
   {
     Clr clr = i == curChoice ? clrMenuHighlight : clrMenuDrk;
-    Render::drawTextCentered(
-      choices[i], Panel::map, Pos(MAP_W_HALF, y),
-      clr, clrBlack, true);
+
+    Render::drawTextCentered(choices[i], Panel::map, Pos(MAP_W_HALF, y),
+                             clr, clrBlack, true);
     y++;
   }
   Render::updateScreen();
@@ -106,7 +106,6 @@ void menuMsgDrawingHelper(
 void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
              const string& title, const SfxId sfx)
 {
-
   if (DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface(false);}
 
   vector<string> lines;
@@ -119,7 +118,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
   if (!title.empty())
   {
-    Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y), clrWhite,
+    Render::drawTextCentered(title, Panel::map, Pos(MAP_W_HALF, y), clrPopupTitle,
                              clrBlack, true);
   }
 
@@ -141,8 +140,8 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   }
   y += 2;
 
-  Render::drawTextCentered("[space/esc] to close", Panel::map,
-                           Pos(MAP_W_HALF, y), clrMenuMedium);
+  Render::drawTextCentered("[space/esc] to close", Panel::map, Pos(MAP_W_HALF, y),
+                           clrMenuMedium);
 
   Render::updateScreen();
 
@@ -155,7 +154,6 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
                 const vector<string>& choices,
                 const string& title, const SfxId sfx)
 {
-
   if (Config::isBotPlaying()) {return 0;}
 
   vector<string> lines;

@@ -19,7 +19,7 @@ public:
   Door(const Pos& pos, const Rigid* const mimicFeature,
        DoorSpawnState spawnState = DoorSpawnState::any);
 
-  //Spawn by id compliant ctor (do not use for normal cases):
+  //Spawn-by-id compliant ctor (do not use for normal cases):
   Door(const Pos& pos) : Rigid(pos), mimicFeature_(nullptr), nrSpikes_(0) {}
 
   Door() = delete;

@@ -1,9 +1,9 @@
 #include "MapPatterns.h"
 
-#include <vector>
-#include <iostream>
-
 #include "Init.h"
+
+#include <vector>
+
 #include "Map.h"
 #include "FeatureRigid.h"
 

@@ -1,8 +1,8 @@
 #include "Config.h"
 
-#include <fstream>
-#include <iostream>
+#include "Init.h"
 
+#include <fstream>
 #include <SDL_image.h>
 
 #include "Converters.h"
@@ -14,7 +14,6 @@
 #include "Audio.h"
 #include "TextFormatting.h"
 #include "Utils.h"
-#include "Init.h"
 
 
 using namespace std;

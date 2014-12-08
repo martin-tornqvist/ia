@@ -1,7 +1,8 @@
 #include "Manual.h"
 
+#include "Init.h"
+
 #include <fstream>
-#include <iostream>
 #include <vector>
 
 #include "Input.h"

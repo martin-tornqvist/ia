@@ -615,23 +615,20 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
         if (data.isIntrinsicAttack)
         {
           const string ATTACK_MOD_STR = data.isWeakAttack ? " feebly" : "";
-          Log::addMsg(
-            "I " + wpnVerb + " " + otherName + ATTACK_MOD_STR + dmgPunct,
-            clrMsgGood);
+          Log::addMsg("I " + wpnVerb + " " + otherName + ATTACK_MOD_STR + dmgPunct,
+                      clrMsgGood);
         }
-        else
+        else //Not intrinsic attack
         {
-          const string ATTACK_MOD_STR =
-            data.isWeakAttack  ? "feebly "    :
-            data.isBackstab    ? "covertly "  : "";
+          const string ATTACK_MOD_STR = data.isWeakAttack  ? "feebly "    :
+                                        data.isBackstab    ? "covertly "  : "";
           const Clr     clr       = data.isBackstab ? clrBlueLgt : clrMsgGood;
-          const string  wpnNameA  = wpn.getName(ItemRefType::a);
-          Log::addMsg(
-            "I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_STR +
-            "with " + wpnNameA + dmgPunct, clr);
+          const string  wpnNameA  = wpn.getName(ItemRefType::a, ItemRefInf::none);
+          Log::addMsg("I " + wpnVerb + " " + otherName + " " + ATTACK_MOD_STR +
+                      "with " + wpnNameA + dmgPunct, clr);
         }
       }
-      else
+      else //Attacker is monster
       {
         const string wpnVerb = wpn.getData().melee.attMsgs.other;
 

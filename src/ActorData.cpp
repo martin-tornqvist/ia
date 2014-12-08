@@ -1,11 +1,11 @@
 #include "ActorData.h"
 
+#include "Init.h"
+
 #include <string>
 #include <vector>
 #include <math.h>
-#include <iostream>
 
-#include "Init.h"
 #include "CmnTypes.h"
 #include "Converters.h"
 #include "Item.h"

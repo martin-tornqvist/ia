@@ -4,6 +4,7 @@
 #include "DebugMode.h"
 
 #include <assert.h>
+#include <iostream>
 
 //-------------------------------------------------------------------
 // OPTIONS

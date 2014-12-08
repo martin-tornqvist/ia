@@ -1,9 +1,9 @@
 #include "InventoryHandling.h"
 
-#include <vector>
-#include <iostream>
-
 #include "Init.h"
+
+#include <vector>
+
 #include "ItemScroll.h"
 #include "ActorPlayer.h"
 #include "ItemPotion.h"

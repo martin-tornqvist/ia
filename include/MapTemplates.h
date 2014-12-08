@@ -8,7 +8,14 @@
 #include "ItemData.h"
 #include "ActorData.h"
 
-enum class MapTemplId {church, egypt, leng, END};
+enum class MapTemplId
+{
+  church,
+  egypt,
+  leng,
+  ratsInTheWalls,
+  END
+};
 
 struct MapTemplCell
 {
@@ -16,10 +23,10 @@ struct MapTemplCell
                ActorId actorId_     = ActorId::END,
                ItemId itemId_       = ItemId::END,
                int val_             = 0) :
-    featureId(featureId_),
-    actorId(actorId_),
-    itemId(itemId_),
-    val(val_) {}
+    featureId (featureId_),
+    actorId   (actorId_),
+    itemId    (itemId_),
+    val       (val_) {}
 
   FeatureId featureId;
   ActorId   actorId;

@@ -157,7 +157,7 @@ SpellEffectNoticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) con
       const ShockSrc shockSrc = IS_INTRINSIC ?
                                 ShockSrc::castIntrSpell :
                                 ShockSrc::useStrangeItem;
-      const int SHOCK_VALUE = IS_INTRINSIC ? getShockValueIntrCast() : 10;
+      const int SHOCK_VALUE = IS_INTRINSIC ? getShockLvlIntrCast() : 10;
       Map::player->incrShock(SHOCK_VALUE, shockSrc);
       if (Map::player->isAlive())
       {

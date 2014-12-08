@@ -25,6 +25,7 @@ enum class FeatureId
   carpet,
   rubbleHigh,
   rubbleLow,
+  bones,
   statue,
   cocoon,
   chest,
@@ -32,6 +33,8 @@ enum class FeatureId
   fountain,
 //  barrel,
   pillar,
+  monolith,
+  stalagmite,
   chasm,
   liquidShallow,
   liquidDeep,
@@ -41,7 +44,8 @@ enum class FeatureId
   trap,
 //  pit,
   smoke,
-  proxEventWallCrumble,
+  eventWallCrumble,
+  eventRatsInTheWallsDiscovery,
 
   END
 };

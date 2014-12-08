@@ -840,7 +840,7 @@ void MuddyRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 //------------------------------------------------------------------- CAVE ROOM
 Range CaveRoom::getNrAutoFeaturesAllowed() const
 {
-  return {0, 0};
+  return {2, 6};
 }
 
 int CaveRoom::getBasePctChanceDrk() const

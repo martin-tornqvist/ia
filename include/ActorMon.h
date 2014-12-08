@@ -9,7 +9,9 @@
 
 struct BestAttack
 {
-  BestAttack() : weapon(nullptr), isMelee(true) {}
+  BestAttack() :
+    weapon  (nullptr),
+    isMelee (true) {}
 
   Wpn* weapon;
   bool isMelee;
@@ -29,16 +31,15 @@ struct AttackOpport
 
   AttackOpport& operator=(const AttackOpport& other)
   {
-    weapons = other.weapons;
-    isTimeToReload = other.isTimeToReload;
-    isMelee = other.isMelee;
+    weapons         = other.weapons;
+    isTimeToReload  = other.isTimeToReload;
+    isMelee         = other.isMelee;
 
     return *this;
   }
 
   std::vector<Wpn*> weapons;
-  bool isTimeToReload;
-  bool isMelee;
+  bool isTimeToReload, isMelee;
 };
 
 class Wpn;

@@ -17,13 +17,15 @@
 #include "PopulateItems.h"
 #include "ItemFactory.h"
 #include "FeatureDoor.h"
+#include "FeatureEvent.h"
+#include "GameTime.h"
 
 using namespace std;
 
 namespace MapGen
 {
 
-//------------------------------------------------------------------------- FOREST
+//------------------------------------------------------------------- FOREST
 namespace
 {
 
@@ -112,7 +114,8 @@ void mkForestTreePatch()
 
   while (nrTreesCreated < NR_TREES_TO_PUT)
   {
-    if (!Utils::isPosInsideMap(curPos) || Utils::kingDist(curPos, Map::player->pos) <= 1)
+    if (!Utils::isPosInsideMap(curPos) ||
+        Utils::kingDist(curPos, Map::player->pos) <= 1)
     {
       return;
     }
@@ -122,11 +125,9 @@ void mkForestTreePatch()
     ++nrTreesCreated;
 
     //Find next pos
-    while (
-      Map::cells[curPos.x][curPos.y].rigid->getId() == FeatureId::tree ||
-      Utils::kingDist(curPos, Map::player->pos) <= 2)
+    while (Map::cells[curPos.x][curPos.y].rigid->getId() == FeatureId::tree ||
+           Utils::kingDist(curPos, Map::player->pos) <= 2)
     {
-
       if (Rnd::coinToss())
       {
         curPos.x += Rnd::coinToss() ? -1 : 1;
@@ -165,11 +166,14 @@ void mkForestTrees()
       {
         const auto& templCell = templ.getCell(x, y);
         const auto  fId       = templCell.featureId;
+
         const Pos p(churchPos + Pos(x, y));
+
         if (fId != FeatureId::END)
         {
           Rigid* const f =
             Map::put(static_cast<Rigid*>(FeatureData::getData(fId).mkObj(p)));
+
           if (fId == FeatureId::grass)
           {
             //All grass around the church is withered
@@ -192,6 +196,7 @@ void mkForestTrees()
       for (int y = 0; y < MAP_H; ++y)
       {
         const auto id = Map::cells[x][y].rigid->getId();
+
         if (id == FeatureId::stairs)
         {
           stairsPos.set(x, y);
@@ -229,6 +234,7 @@ void mkForestTrees()
       for (int dy = -1; dy < 1; ++dy)
       {
         const Pos p(pathPos + Pos(dx, dy));
+
         if (Map::cells[p.x][p.y].rigid->canHaveRigid() && Utils::isPosInsideMap(p))
         {
           Floor* const floor = new Floor(p);
@@ -240,9 +246,10 @@ void mkForestTrees()
   }
 
   //Place graves
-  vector<HighScoreEntry> highscoreEntries = HighScore::getEntriesSorted();
-  const int PLACE_TOP_N_HIGHSCORES = 7;
-  const int NR_HIGHSCORES = min(PLACE_TOP_N_HIGHSCORES, int(highscoreEntries.size()));
+  vector<HighScoreEntry>  entries       = HighScore::getEntriesSorted();
+  const int               NR_TO_PLACE   = 7;
+  const int               NR_HIGHSCORES = min(NR_TO_PLACE, int(entries.size()));
+
   if (NR_HIGHSCORES > 0)
   {
     bool blocked[MAP_W][MAP_H];
@@ -260,7 +267,6 @@ void mkForestTrees()
     {
       if (pathWalkCount == TRY_PLACE_EVERY_N_STEP)
       {
-
         Fov::runFovOnArray(blocked, path[i], fov, false);
 
         for (int dy = -SEARCH_RADI; dy <= SEARCH_RADI; ++dy)
@@ -311,15 +317,15 @@ void mkForestTrees()
     }
     for (size_t i = 0; i < graveCells.size(); ++i)
     {
-      GraveStone* grave = new GraveStone(graveCells[i]);
-      HighScoreEntry curHighscore = highscoreEntries[i];
-      const string name = curHighscore.getName();
-      vector<string> dateStrVector;
+      GraveStone*     grave     = new GraveStone(graveCells[i]);
+      HighScoreEntry  curScore  = entries[i];
+      const string    name      = curScore.getName();
+      vector<string>  dateStrVector;
+
       dateStrVector.clear();
-      TextFormatting::getSpaceSeparatedList(curHighscore.getDateAndTime(),
-                                            dateStrVector);
+      TextFormatting::getSpaceSeparatedList(curScore.getDateAndTime(), dateStrVector);
       const string dateStr = dateStrVector[0];
-      const string dlvlStr = toStr(curHighscore.getDlvl());
+      const string dlvlStr = toStr(curScore.getDlvl());
       grave->setInscription("RIP " + name + " " + dateStr + " DLVL: " + dlvlStr);
       Map::put(grave);
     }
@@ -355,7 +361,7 @@ bool mkIntroLvl()
   return true;
 }
 
-//------------------------------------------------------------------------- EGYPT
+//------------------------------------------------------------------- EGYPT
 bool mkEgyptLvl()
 {
   Map::resetMap();
@@ -404,7 +410,7 @@ bool mkEgyptLvl()
   return true;
 }
 
-//------------------------------------------------------------------------- LENG
+//------------------------------------------------------------------- LENG
 bool mkLengLvl()
 {
   Map::resetMap();
@@ -443,25 +449,162 @@ bool mkLengLvl()
           }
         }
       }
-      if (templCell.actorId != ActorId::END) {ActorFactory::mk(templCell.actorId, p);}
-      if (templCell.val == 1) {Map::player->pos = p;}
-      if (templCell.val == 3) {Map::cells[x][y].isDark = true;}
-      if (templCell.val == 6)
+
+      if (templCell.actorId != ActorId::END)
       {
-        Wall* mimic   = new Wall(p);
-        mimic->type_  = WallType::lengMonestary;
-        Map::put(new Door(p, mimic, DoorSpawnState::closed));
+        ActorFactory::mk(templCell.actorId, p);
+      }
+
+      switch (templCell.val)
+      {
+        case 1:
+          Map::player->pos = p;
+          break;
+
+        case 3:
+          Map::cells[x][y].isDark = true;
+          break;
+
+        case 6:
+        {
+          Wall* mimic   = new Wall(p);
+          mimic->type_  = WallType::lengMonestary;
+          Map::put(new Door(p, mimic, DoorSpawnState::closed));
+        }
+        break;
+
+        default: {}
+          break;
+      }
+    }
+  }
+  return true;
+}
+
+//------------------------------------------------------------------- RATS IN THE WALLS
+bool mkRatsInTheWallsLvl()
+{
+  Map::resetMap();
+
+  const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::ratsInTheWalls);
+  const Pos       templDims = templ.getDims();
+
+  const int       RAT_THING_ONE_IN_N_RAT = 3;
+  const Fraction  bonesOneInN(1, 2);
+
+  for (int y = 0; y < templDims.y; ++y)
+  {
+    for (int x = 0; x < templDims.x; ++x)
+    {
+      const auto& templCell = templ.getCell(x, y);
+      const auto  fId       = templCell.featureId;
+      const Pos p(x, y);
+
+      if (fId != FeatureId::END)
+      {
+        const auto& d = FeatureData::getData(fId);
+        auto* const f = Map::put(static_cast<Rigid*>(d.mkObj(p)));
+
+        if (f->getId() == FeatureId::wall)
+        {
+          if (templCell.val == 2) //Constructed walls
+          {
+            if (Rnd::oneIn(2))
+            {
+              Map::put(new RubbleLow(p));
+            }
+            else if (Rnd::oneIn(5))
+            {
+              Map::put(new RubbleHigh(p));
+            }
+            else
+            {
+              static_cast<Wall*>(f)->type_ = WallType::cmn;
+            }
+          }
+          else //Cave walls
+          {
+            static_cast<Wall*>(f)->type_ = WallType::cave;
+          }
+        }
+        else if (f->getId() == FeatureId::floor)
+        {
+          if (templCell.val == 4 && Rnd::fraction(bonesOneInN))
+          {
+            Map::put(new Bones(p));
+          }
+          else
+          {
+            static_cast<Floor*>(f)->type_ = FloorType::cave;
+          }
+        }
+
+        if (templCell.actorId == ActorId::rat)
+        {
+          if (Rnd::oneIn(RAT_THING_ONE_IN_N_RAT))
+          {
+            ActorFactory::mk(ActorId::ratThing, p);
+          }
+          else
+          {
+            ActorFactory::mk(ActorId::rat, p);
+          }
+        }
+      }
+
+      switch (templCell.val)
+      {
+        case 1:
+          Map::player->pos = p;
+          break;
+
+        case 3:
+          GameTime::addMob(new EventRatsInTheWallsDiscovery(p));
+          break;
+
+        default: {}
+          break;
       }
     }
   }
 
-//  PopulateItems::mkItems();
+  bool blocked[MAP_W][MAP_H];
+  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+
+  //Spawn extra rats in the rightmost part of the map
+  for (int x = (MAP_W * 6) / 7; x < MAP_W; ++x)
+  {
+    for (int y = 0; y < MAP_H; ++y)
+    {
+      if (!blocked[x][y])
+      {
+        const Pos p(x, y);
+
+        if (Rnd::oneIn(RAT_THING_ONE_IN_N_RAT))
+        {
+          ActorFactory::mk(ActorId::ratThing, p);
+        }
+        else
+        {
+          ActorFactory::mk(ActorId::rat, p);
+        }
+      }
+    }
+  }
+
+  //Set all actors to non-roaming (will be set to roaming by the discovery event)
+  for (Actor* const actor : GameTime::actors_)
+  {
+    if (!actor->isPlayer())
+    {
+      static_cast<Mon*>(actor)->isRoamingAllowed_ = false;
+    }
+  }
 
   return true;
 }
 
-
-//------------------------------------------------------------------------- TRAPEZOHEDRON
+//------------------------------------------------------------------- TRAPEZOHEDRON
 bool mkTrapezohedronLvl()
 {
   Map::resetMap();
@@ -504,6 +647,7 @@ bool mkTrapezohedronLvl()
   bool blocked[MAP_W][MAP_H];
   MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
   vector<Pos> itemPosBucket;
+
   for (int x = 0; x < MAP_W; ++x)
   {
     for (int y = 0; y < MAP_H; ++y)

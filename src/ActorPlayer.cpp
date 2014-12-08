@@ -341,7 +341,7 @@ void Player::incrShock(const int SHOCK, ShockSrc shockSrc)
   constrInRange(0.0f, shock_, 100.0f);
 }
 
-void Player::incrShock(const ShockValue shockValue, ShockSrc shockSrc)
+void Player::incrShock(const ShockLvl shockValue, ShockSrc shockSrc)
 {
   incrShock(int(shockValue), shockSrc);
 }
@@ -435,8 +435,7 @@ void Player::incrInsanity()
           const string playerName = getNameThe();
           for (int i = Rnd::range(3, 5); i > 0; --i)
           {
-            const string phrase = Cultist::getCultistPhrase();
-            Log::addMsg(playerName + ": " + phrase);
+            Log::addMsg(Cultist::getCultistPhrase());
           }
           Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMon::yes);
@@ -968,7 +967,7 @@ void Player::onStdTurn()
       {
         Popup::showMsg("A chill runs down my spine...", true);
       }
-      incrShock(ShockValue::heavy, ShockSrc::misc);
+      incrShock(ShockLvl::heavy, ShockSrc::misc);
       Render::drawMapAndInterface();
     }
     else
