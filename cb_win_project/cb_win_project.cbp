@@ -260,8 +260,8 @@
 		<Unit filename="../src/MainMenu.cpp" />
 		<Unit filename="../src/Manual.cpp" />
 		<Unit filename="../src/Map.cpp" />
+		<Unit filename="../src/MapGen.cpp" />
 		<Unit filename="../src/MapGenSpecial.cpp" />
-		<Unit filename="../src/MapGenStd.cpp" />
 		<Unit filename="../src/MapGenUtils.cpp" />
 		<Unit filename="../src/MapParsing.cpp" />
 		<Unit filename="../src/MapPatterns.cpp" />

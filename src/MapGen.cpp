@@ -32,7 +32,7 @@
 //-------------------------------------
 //Some options (comment out to disable)
 //-------------------------------------
-//#define MK_RIVER                1
+#define MK_RIVER                1
 #define MK_MERGED_REGIONS       1
 #define RANDOMLY_BLOCK_REGIONS  1
 #define MK_AUX_ROOMS            1
@@ -539,7 +539,7 @@ void reserveRiver(Region regions[3][3])
     {
       for (int x = X0; x <= X1; ++x)
       {
-        //Just put floor for now, water will be placed later
+        //Just put floor for now, river feature will be placed later
         Map::put(new Floor(Pos(x, y)));
         Map::roomMap[x][y] = room;
       }
@@ -1146,15 +1146,25 @@ bool mkStdLvl()
   }
 
 #ifdef MK_RIVER
-  if (isMapValid) {reserveRiver(regions);}
+  const int RIVER_ONE_IN_N = 8;
+  if (isMapValid && Map::dlvl >= DLVL_FIRST_MID_GAME && Rnd::oneIn(RIVER_ONE_IN_N))
+  {
+    reserveRiver(regions);
+  }
 #endif // MK_RIVER
 
 #ifdef MK_MERGED_REGIONS
-  if (isMapValid) {mkMergedRegionsAndRooms(regions);}
+  if (isMapValid)
+  {
+    mkMergedRegionsAndRooms(regions);
+  }
 #endif // MK_MERGED_REGIONS
 
 #ifdef RANDOMLY_BLOCK_REGIONS
-  if (isMapValid) {randomlyBlockRegions(regions);}
+  if (isMapValid)
+  {
+    randomlyBlockRegions(regions);
+  }
 #endif // RANDOMLY_BLOCK_REGIONS
 
   if (isMapValid)
@@ -1187,7 +1197,10 @@ bool mkStdLvl()
   Render::updateScreen();
   Query::waitForKeyPress();
 #endif // DEMO_MODE
-  if (isMapValid) {mkAuxRooms(regions);}
+  if (isMapValid)
+  {
+    mkAuxRooms(regions);
+  }
 #endif // MK_AUX_ROOMS
 
 #ifdef MK_SUB_ROOMS

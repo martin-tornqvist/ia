@@ -61,11 +61,6 @@ void EventWallCrumble::onNewTurn()
           {
             auto* const f = Map::cells[p.x][p.y].rigid;
             f->hit(DmgType::physical, DmgMethod::forced, nullptr);
-
-            Map::player->updateFov();
-            Render::drawMapAndInterface();
-
-            SdlWrapper::sleep(Config::getDelayProjectileDraw());
           }
         }
 

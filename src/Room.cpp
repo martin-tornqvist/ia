@@ -1025,8 +1025,8 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
 {
   TRACE_FUNC_BEGIN;
 
-  //The strategy here is to expand the the river on both sides until parallel
-  //to the closest center cell of another room
+  //Strategy: Expand the the river on both sides until parallel to the closest center
+  //cell of another room
 
   const bool IS_HOR = dir_ == hor;
 
@@ -1138,9 +1138,9 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
       const Pos p(x, y);
       if (flood[x][y] > 0 || p == origin)
       {
-        LiquidDeep* const liquid  = new LiquidDeep(p);
-        liquid->type_             = LiquidType::water;
-        Map::put(liquid);
+//        LiquidDeep* const liquid  = new LiquidDeep(p);
+//        liquid->type_             = LiquidType::water;
+        Map::put(new Chasm(p));
         Map::roomMap[x][y] = this;
         r_.p0.x = min(r_.p0.x, x);
         r_.p0.y = min(r_.p0.y, y);
@@ -1156,7 +1156,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
   enum Side {inRiver, side0, side1};
   Side sides[MAP_W][MAP_H];
 
-  //Using nestled scope to avoid declaring x and y at function scope
+  //Scoping to avoid declaring x and y at function scope
   {
     int x, y;
 
@@ -1217,6 +1217,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
         {
           const auto pAdj(p + d);
           const auto* const f = Map::cells[pAdj.x][pAdj.y].rigid;
+
           if (f->getId() == FeatureId::floor)        {nrCardinalFloor++;}
           if (Map::roomMap[pAdj.x][pAdj.y] == this)  {nrCardinalRiver++;}
         }
@@ -1316,6 +1317,7 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
         break;
       }
       const Pos pNxt = IS_HOR ? Pos(BRIDGE_C, c + 1) : Pos(c + 1, BRIDGE_C);
+
       if (validRoomEntries1[pNxt.x][pNxt.y])
       {
         roomCon1 = pNxt;
@@ -1337,28 +1339,32 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
       TRACE << "Found valid connection pair at: "
             << roomCon0.x << "," << roomCon0.y << " / "
             << roomCon1.x << "," << roomCon1.y << endl
-            << "Making bridge at coord: " << BRIDGE_C << endl;
+            << "Making bridge at pos: " << BRIDGE_C << endl;
       if (IS_HOR)
       {
         for (int y = roomCon0.y; y <= roomCon1.y; ++y)
         {
           if (Map::roomMap[BRIDGE_C][y] == this)
           {
-            auto* const bridge = new Bridge(Pos(BRIDGE_C, y));
-            bridge->setDir(ver);
-            Map::put(bridge);
+//            auto* const bridge = new Bridge(Pos(BRIDGE_C, y));
+//            bridge->setDir(ver);
+            auto* const floor = new Floor({BRIDGE_C, y});
+            floor->type_ = FloorType::cmn;
+            Map::put(floor);
           }
         }
       }
-      else
+      else //Vertical
       {
         for (int x = roomCon0.x; x <= roomCon1.x; ++x)
         {
           if (Map::roomMap[x][BRIDGE_C] == this)
           {
-            auto* const bridge = new Bridge(Pos(x, BRIDGE_C));
-            bridge->setDir(hor);
-            Map::put(bridge);
+//            auto* const bridge = new Bridge(Pos(x, BRIDGE_C));
+//            bridge->setDir(hor);
+            auto* const floor = new Floor({x, BRIDGE_C});
+            floor->type_ = FloorType::cmn;
+            Map::put(floor);
           }
         }
       }
@@ -1374,30 +1380,48 @@ void RiverRoom::onPreConnect(bool doorProposals[MAP_W][MAP_H])
       break;
     }
   }
-  TRACE << "Bridges built/attempted: " << cBuilt.size() << "/"
-        << MAX_NR_BRIDGES << endl;
+  TRACE << "Bridges built/attempted: " << cBuilt.size() << "/" << MAX_NR_BRIDGES << endl;
 
   if (cBuilt.empty())
   {
     MapGen::isMapValid = false;
   }
-  else
+  else //Map is valid (at least one bridge was built)
   {
-    TRACE << "Converting some remaining valid room entries to floor" << endl;
+    bool validRoomEntries[MAP_W][MAP_H];
+
     for (int x = 0; x < MAP_W; ++x)
     {
       for (int y = 0; y < MAP_H; ++y)
       {
-        if (validRoomEntries0[x][y] || validRoomEntries1[x][y])
+        validRoomEntries[x][y] = validRoomEntries0[x][y] || validRoomEntries1[x][y];
+
+        //Convert some remaining valid room entries to floor
+        if (validRoomEntries[x][y] && find(begin(cBuilt), end(cBuilt), x) == end(cBuilt))
         {
-          if (find(cBuilt.begin(), cBuilt.end(), x) == cBuilt.end())
-          {
-            if (Rnd::oneIn(4))
-            {
-              Map::put(new Floor(Pos(x, y)));
-              Map::roomMap[x][y] = this;
-            }
-          }
+//          if (Rnd::oneIn(3))
+//          {
+          Map::put(new Floor(Pos(x, y)));
+          Map::roomMap[x][y] = this;
+//          }
+        }
+      }
+    }
+
+    //Convert wall cells adjacent to river cells to river
+    bool validRoomEntriesExpanded[MAP_W][MAP_H];
+    MapParse::expand(validRoomEntries, validRoomEntriesExpanded, 2);
+
+    for (int x = 2; x < MAP_W - 2; ++x)
+    {
+      for (int y = 2; y < MAP_H - 2; ++y)
+      {
+        if (validRoomEntriesExpanded[x][y] && Map::roomMap[x][y] == this)
+        {
+          auto* const floor = new Floor(Pos(x, y));
+          floor->type_      = FloorType::cmn;
+          Map::put(floor);
+          Map::roomMap[x][y] = nullptr;
         }
       }
     }

@@ -1140,6 +1140,7 @@ void initDataList()
   d.erraticMovePct = actorErratic_somewhat;
   d.monShockLvl = MonShockLvl::unsettling;
   d.isRat = true;
+  d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::monster);
   d.nativeRooms.push_back(RoomType::human);
