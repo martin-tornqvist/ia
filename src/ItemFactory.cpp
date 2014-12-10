@@ -318,7 +318,7 @@ void setItemRandomizedProperties(Item* item)
   if (d.ranged.isRangedWpn && !d.ranged.hasInfiniteAmmo)
   {
     Wpn* const wpn = static_cast<Wpn*>(item);
-    if (wpn->ammoCapacity == 1)
+    if (wpn->AMMO_CAP == 1)
     {
       wpn->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
     }
@@ -326,15 +326,16 @@ void setItemRandomizedProperties(Item* item)
     {
       if (d.ranged.isMachineGun)
       {
-        const int CAP         = wpn->ammoCapacity;
-        const int MIN         = CAP / 2;
+        //Number of machine gun bullets loaded needs to be a multiple of the number of
+        //projectiles fired in each burst
+        const int CAP         = wpn->AMMO_CAP;
         const int CAP_SCALED  = CAP / NR_MG_PROJECTILES;
-        const int MIN_SCALED  = MIN / NR_MG_PROJECTILES;
+        const int MIN_SCALED  = CAP_SCALED / 4;
         wpn->nrAmmoLoaded     = Rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
       }
       else
       {
-        wpn->nrAmmoLoaded = Rnd::range(wpn->ammoCapacity / 4, wpn->ammoCapacity);
+        wpn->nrAmmoLoaded = Rnd::range(wpn->AMMO_CAP / 4, wpn->AMMO_CAP);
       }
     }
   }

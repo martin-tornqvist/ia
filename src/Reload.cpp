@@ -82,13 +82,13 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
           const string wpnName = wpn->getName(ItemRefType::plain, ItemRefInf::none);
           Log::addMsg(
             "I" + swiftStr + " reload the " + wpnName +
-            " (" + toStr(wpn->nrAmmoLoaded) + "/" + toStr(wpn->ammoCapacity) + ").");
+            " (" + toStr(wpn->nrAmmoLoaded) + "/" + toStr(wpn->AMMO_CAP) + ").");
         }
         else
         {
           Log::addMsg(
             "I" + swiftStr + " load " + ammoName + " (" + toStr(wpn->nrAmmoLoaded) +
-            "/" + toStr(wpn->ammoCapacity) + ").");
+            "/" + toStr(wpn->AMMO_CAP) + ").");
         }
         Render::drawMapAndInterface();
       }
@@ -133,9 +133,9 @@ bool reloadWieldedWpn(Actor& actorReloading)
     return didAct;
   }
 
-  Wpn* const wpn     = static_cast<Wpn*>(wpnItem);
-  ReloadResult result = ReloadResult::noAmmo;
-  bool isSwiftReload    = false;
+  Wpn* const    wpn           = static_cast<Wpn*>(wpnItem);
+  ReloadResult  result        = ReloadResult::noAmmo;
+  bool          isSwiftReload = false;
 
   if (actorReloading.isPlayer())
   {
@@ -143,7 +143,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
                     Rnd::coinToss();
   }
 
-  const int wpnAmmoCapacity = wpn->ammoCapacity;
+  const int wpnAmmoCapacity = wpn->AMMO_CAP;
 
   if (wpnAmmoCapacity == 0)
   {

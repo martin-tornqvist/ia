@@ -242,7 +242,7 @@ bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
       }
 
 #ifdef MK_CRUMBLE_ROOMS
-      if (Rnd::oneIn(12))
+      if (Rnd::oneIn(10))
       {
         Room* const room = RoomFactory::mk(RoomType::crumbleRoom, auxRect);
         registerRoom(*room);

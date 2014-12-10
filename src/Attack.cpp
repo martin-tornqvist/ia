@@ -1083,7 +1083,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
         data = new RangedAttData(attacker, wpn, aimPos, curPos, intendedAimLvl);
 
         const bool IS_WITHIN_RANGE_LMT =
-          Utils::kingDist(origin, curPos) <= wpn.effectiveRangeLmt;
+          Utils::kingDist(origin, curPos) <= wpn.EFFECTIVE_RANGE_LMT;
 
         if (IS_WITHIN_RANGE_LMT                 &&
             data->attackResult >= successSmall  &&

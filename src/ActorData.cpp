@@ -361,13 +361,13 @@ void initDataList()
   d.glyph = 'P';
   d.color = clrYellow;
   d.tile = TileId::cultistFirearm;
-  d.hp = 5;
+  d.hp = 8;
   d.spi = 12;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.abilityVals.setVal(AbilityId::ranged, 45);
-  d.spawnMinDLVL = 12;
+  d.abilityVals.setVal(AbilityId::ranged, 55);
+  d.spawnMinDLVL = DLVL_FIRST_LATE_GAME;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
-  d.groupSize = MonGroupSize::few;
+  d.groupSize = MonGroupSize::alone;
   d.actorSize = actorSize_humanoid;
   d.isHumanoid = true;
   d.canOpenDoors = true;
@@ -1371,7 +1371,7 @@ void initDataList()
   d.glyph = 'E';
   d.color = clrBrownDrk;
   d.tile = TileId::migo;
-  d.hp = 6;
+  d.hp = 10;
   d.spi = 20;
   d.abilityVals.setVal(AbilityId::ranged, 55);
   d.intrProps[propFlying] = true;

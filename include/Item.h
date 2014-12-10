@@ -148,15 +148,12 @@ private:
 class Wpn: public Item
 {
 public:
-  Wpn(ItemDataT* const itemData, ItemDataT* const ammoData);
+  Wpn(ItemDataT* const itemData, ItemDataT* const ammoData, int effectiveRangeLmt = 3,
+      int ammoCap = 0, bool isUsingClip = false);
+
   virtual ~Wpn() {}
 
   Wpn& operator=(const Wpn& other) = delete;
-
-  int   nrAmmoLoaded;
-  int   effectiveRangeLmt;
-  int   ammoCapacity;
-  bool  clip;
 
   void setRandomMeleePlus();
 
@@ -176,6 +173,12 @@ public:
 
 //  virtual void onPostAttack(Actor& attacker) {(void) attacker;}
 
+  const int   EFFECTIVE_RANGE_LMT;
+  const int   AMMO_CAP;
+  const bool  IS_USING_CLIP;
+
+  int nrAmmoLoaded;
+
 protected:
   std::string getNameInf() const override;
 
@@ -192,12 +195,7 @@ class SawedOff: public Wpn
 {
 public:
   SawedOff(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData)
-  {
-    ammoCapacity = 2;
-    nrAmmoLoaded = ammoCapacity;
-    effectiveRangeLmt = 3;
-  }
+    Wpn(itemData, ammoData, 3, 2, false) {}
   ~SawedOff() {}
 };
 
@@ -205,12 +203,7 @@ class PumpShotgun: public Wpn
 {
 public:
   PumpShotgun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData)
-  {
-    ammoCapacity = 8;
-    nrAmmoLoaded = ammoCapacity;
-    effectiveRangeLmt = 3;
-  }
+    Wpn(itemData, ammoData, 3, 8, false) {}
   ~PumpShotgun() {}
 };
 
@@ -218,12 +211,7 @@ class Pistol: public Wpn
 {
 public:
   Pistol(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData)
-  {
-    ammoCapacity = 7;
-    nrAmmoLoaded = ammoCapacity;
-    effectiveRangeLmt = 6;
-  }
+    Wpn(itemData, ammoData, 6, 7, true) {}
   ~Pistol() {}
 };
 
@@ -231,12 +219,7 @@ class FlareGun: public Wpn
 {
 public:
   FlareGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData)
-  {
-    nrAmmoLoaded = 1;
-    ammoCapacity = 1;
-    effectiveRangeLmt = 6;
-  }
+    Wpn(itemData, ammoData, 6, 1, false) {}
   ~FlareGun() {}
 };
 

@@ -2367,9 +2367,9 @@ Clr Chest::getClr_() const
 //--------------------------------------------------------------------- FOUNTAIN
 Fountain::Fountain(const Pos & pos) :
   Rigid             (pos),
-  isDried_          (false),
   fountainEffects_  (vector<FountainEffect>()),
-  fountainMatl_     (FountainMatl::stone)
+  fountainMatl_     (FountainMatl::stone),
+  nrDrinksLeft_     (Rnd::range(3, 4))
 {
   if (Rnd::oneIn(16))
   {
@@ -2425,7 +2425,7 @@ void Fountain::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 Clr Fountain::getClr_() const
 {
-  if (isDried_)
+  if (nrDrinksLeft_ <= 0)
   {
     return clrGray;
   }
@@ -2457,7 +2457,7 @@ void Fountain::bump(Actor & actorBumping)
 {
   if (actorBumping.isPlayer())
   {
-    if (isDried_)
+    if (nrDrinksLeft_ <= 0)
     {
       Log::addMsg("The fountain is dried out.");
     }
@@ -2586,9 +2586,11 @@ void Fountain::bump(Actor & actorBumping)
             break;
         }
       }
-      if (Rnd::oneIn(4))
+
+      --nrDrinksLeft_;
+
+      if (nrDrinksLeft_ <= 0)
       {
-        isDried_ = true;
         Log::addMsg("The fountain dries out.");
       }
       Render::drawMapAndInterface();

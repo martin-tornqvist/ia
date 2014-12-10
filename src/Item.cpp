@@ -362,14 +362,14 @@ void Wpn::setupFromSaveLines(vector<string>& lines)
   lines.erase(begin(lines));
 }
 
-Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Item(itemData), ammoData_(ammoData)
-{
-  nrAmmoLoaded = 0;
-  ammoCapacity = 0;
-  effectiveRangeLmt = 3;
-  clip = false;
-}
+Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData, int effectiveRangeLmt,
+         int ammoCap, bool isUsingClip) :
+  Item                (itemData),
+  ammoData_           (ammoData),
+  EFFECTIVE_RANGE_LMT (effectiveRangeLmt),
+  AMMO_CAP            (ammoCap),
+  IS_USING_CLIP       (isUsingClip),
+  nrAmmoLoaded        (AMMO_CAP) {}
 
 Clr Wpn::getClr() const
 {
@@ -401,7 +401,7 @@ string Wpn::getNameInf() const
 {
   if (data_->ranged.isRangedWpn && !data_->ranged.hasInfiniteAmmo)
   {
-    return toStr(nrAmmoLoaded) + "/" + toStr(ammoCapacity);
+    return toStr(nrAmmoLoaded) + "/" + toStr(AMMO_CAP);
   }
   return "";
 }
@@ -414,42 +414,19 @@ PharaohStaff::PharaohStaff(ItemDataT* const itemData) : Wpn(itemData, nullptr)
 
 //--------------------------------------------------------- MACHINE GUN
 MachineGun::MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData)
-{
-  ammoCapacity = ammoData->ranged.ammoContainedInClip;
-  nrAmmoLoaded = ammoCapacity;
-  effectiveRangeLmt = 8;
-  clip = true;
-}
+  Wpn(itemData, ammoData, 8, ammoData->ranged.ammoContainedInClip, true) {}
 
 //--------------------------------------------------------- MI-GO ELECTRIC GUN
 MigoGun::MigoGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData)
-{
-  ammoCapacity = ammoData->ranged.ammoContainedInClip;
-  nrAmmoLoaded = ammoCapacity;
-  effectiveRangeLmt = 6;
-}
+  Wpn(itemData, ammoData, 6, ammoData->ranged.ammoContainedInClip, true) {}
 
 //--------------------------------------------------------- SPIKE GUN
 SpikeGun::SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData)
-{
-  ammoCapacity = 12;
-  nrAmmoLoaded = ammoCapacity;
-  effectiveRangeLmt = 3;
-  clip = true;
-}
+  Wpn(itemData, ammoData, 3, 12, false) {}
 
 //--------------------------------------------------------- INCINERATOR
 Incinerator::Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData)
-{
-  ammoCapacity = ammoData->ranged.ammoContainedInClip;
-  nrAmmoLoaded = ammoCapacity;
-  effectiveRangeLmt = 8;
-  clip = false;
-}
+  Wpn(itemData, ammoData, 8, ammoData->ranged.ammoContainedInClip, true) {}
 
 void Incinerator::onProjectileBlocked(
   const Pos& pos, Actor* actorHit)
@@ -588,7 +565,7 @@ MedBagAction MedicalBag::chooseAction() const
   Map::player->getPropHandler().getPropIds(props);
 
   //Infections are treated firest
-  if(props[propInfected])
+  if (props[propInfected])
   {
     return MedBagAction::sanitizeInfection;
   }

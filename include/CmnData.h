@@ -43,7 +43,7 @@ const int DELAY_PLAYER_UNABLE_TO_ACT = 7;
 
 const int PLAYER_START_HP   = 16;
 const int PLAYER_START_SPI  = 6;
-const int HP_PER_LVL        = 3;
+const int HP_PER_LVL        = 2;
 const int SPI_PER_LVL       = 1;
 
 const int MIN_DLVL_HARDER_TRAPS = 6;
@@ -52,7 +52,7 @@ const int     FOV_STD_RADI_INT  = 8;
 const int     FOV_STD_W_INT     = (FOV_STD_RADI_INT * 2) + 1;
 const double  FOV_STD_RADI_DB   = double(FOV_STD_RADI_INT);
 const double  FOV_STD_W_DB      = double(FOV_STD_W_INT);
-const int     FOV_MAX_RADI_INT  =  FOV_STD_RADI_INT * 2;
+const int     FOV_MAX_RADI_INT  = FOV_STD_RADI_INT * 2;
 const int     FOV_MAX_W_INT     = (FOV_MAX_RADI_INT * 2) + 1;
 const double  FOV_MAX_RADI_DB   = double(FOV_MAX_RADI_INT);
 const double  FOV_MAX_W_DB      = double(FOV_MAX_W_INT);

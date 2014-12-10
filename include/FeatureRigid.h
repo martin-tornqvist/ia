@@ -732,9 +732,9 @@ private:
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
 
-  bool                        isDried_;
   std::vector<FountainEffect> fountainEffects_;
   FountainMatl                fountainMatl_;
+  int                         nrDrinksLeft_;
 };
 
 class Cocoon: public Rigid

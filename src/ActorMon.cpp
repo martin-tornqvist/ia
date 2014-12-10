@@ -617,39 +617,56 @@ string Cultist::getCultistPhrase()
 
 void Cultist::mkStartItems()
 {
-  const int PISTOL = 6;
-  const int PUMP_SHOTGUN = PISTOL + 4;
-  const int SAWN_SHOTGUN = PUMP_SHOTGUN + 3;
-  const int MG = SAWN_SHOTGUN + (Map::dlvl < 3 ? 0 : 2);
+  const int PISTOL        = 6;
+  const int PUMP_SHOTGUN  = PISTOL + 4;
+  const int SAWN_SHOTGUN  = PUMP_SHOTGUN + 3;
+  const int MG            = SAWN_SHOTGUN + (Map::dlvl < 3 ? 0 : 2);
 
   const int TOT = MG;
   const int RND = Map::dlvl == 0 ? PISTOL : Rnd::range(1, TOT);
 
   if (RND <= PISTOL)
   {
-    inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::pistol));
-    if (Rnd::percentile() < 40)
+    Item*     item                        = ItemFactory::mk(ItemId::pistol);
+    const int AMMO_CAP                    = static_cast<Wpn*>(item)->AMMO_CAP;
+    static_cast<Wpn*>(item)->nrAmmoLoaded = Rnd::range(AMMO_CAP / 4, AMMO_CAP);
+
+    inv_->putInSlot(SlotId::wielded, item);
+
+    if (Rnd::fraction(1, 3))
     {
       inv_->putInGeneral(ItemFactory::mk(ItemId::pistolClip));
     }
   }
   else if (RND <= PUMP_SHOTGUN)
   {
-    inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::pumpShotgun));
-    Item* item = ItemFactory::mk(ItemId::shotgunShell);
-    item->nrItems_ = Rnd::range(5, 9);
+    Item*     item                        = ItemFactory::mk(ItemId::pumpShotgun);
+    const int AMMO_CAP                    = static_cast<Wpn*>(item)->AMMO_CAP;
+    static_cast<Wpn*>(item)->nrAmmoLoaded = Rnd::range(AMMO_CAP / 4, AMMO_CAP);
+
+    inv_->putInSlot(SlotId::wielded, item);
+
+    item            = ItemFactory::mk(ItemId::shotgunShell);
+    item->nrItems_  = Rnd::range(2, 8);
     inv_->putInGeneral(item);
   }
   else if (RND <= SAWN_SHOTGUN)
   {
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::sawedOff));
-    Item* item = ItemFactory::mk(ItemId::shotgunShell);
-    item->nrItems_ = Rnd::range(6, 12);
+    Item* item      = ItemFactory::mk(ItemId::shotgunShell);
+    item->nrItems_  = Rnd::range(2, 8);
     inv_->putInGeneral(item);
   }
-  else
+  else //Machine gun
   {
-    inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::machineGun));
+    //Number of machine gun bullets loaded needs to be a multiple of the number of
+    //projectiles fired in each burst
+    Item*       item        = ItemFactory::mk(ItemId::machineGun);
+    Wpn* const  wpn         = static_cast<Wpn*>(item);
+    const int   CAP_SCALED  = wpn->AMMO_CAP / NR_MG_PROJECTILES;
+    const int   MIN_SCALED  = CAP_SCALED / 4;
+    wpn->nrAmmoLoaded       = Rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
+    inv_->putInSlot(SlotId::wielded, item);
   }
 
   if (Rnd::oneIn(3))
@@ -665,12 +682,10 @@ void Cultist::mkStartItems()
 
 void CultistElectric::mkStartItems()
 {
-  inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::migoGun));
-
-  if (Rnd::coinToss())
-  {
-    inv_->putInGeneral(ItemFactory::mk(ItemId::migoGunAmmo));
-  }
+  Item* item = ItemFactory::mk(ItemId::migoGun);
+  const int AMMO_CAP = static_cast<Wpn*>(item)->AMMO_CAP;
+  static_cast<Wpn*>(item)->nrAmmoLoaded = Rnd::range(AMMO_CAP / 4, AMMO_CAP);
+  inv_->putInSlot(SlotId::wielded, item);
 
   if (Rnd::oneIn(3))
   {
@@ -685,9 +700,13 @@ void CultistElectric::mkStartItems()
 
 void CultistSpikeGun::mkStartItems()
 {
-  inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::spikeGun));
-  Item* item = ItemFactory::mk(ItemId::ironSpike);
-  item->nrItems_ = 8 + Rnd::dice(1, 8);
+  Item* item = ItemFactory::mk(ItemId::spikeGun);
+  const int AMMO_CAP = static_cast<Wpn*>(item)->AMMO_CAP;
+  static_cast<Wpn*>(item)->nrAmmoLoaded = Rnd::range(AMMO_CAP / 4, AMMO_CAP);
+  inv_->putInSlot(SlotId::wielded, item);
+
+  item = ItemFactory::mk(ItemId::ironSpike);
+  item->nrItems_ = Rnd::range(4, 12);
   inv_->putInGeneral(item);
 }
 
@@ -888,14 +907,17 @@ void Wraith::mkStartItems()
 
 void MiGo::mkStartItems()
 {
-  inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::migoGun));
+  Item* item = ItemFactory::mk(ItemId::migoGun);
+  const int AMMO_CAP = static_cast<Wpn*>(item)->AMMO_CAP;
+  static_cast<Wpn*>(item)->nrAmmoLoaded = Rnd::range(AMMO_CAP / 4, AMMO_CAP);
+  inv_->putInSlot(SlotId::wielded, item);
 
-  if (Rnd::coinToss())
+  if (Rnd::oneIn(4))
   {
     inv_->putInGeneral(ItemFactory::mk(ItemId::migoGunAmmo));
   }
 
-  if (Rnd::oneIn(3))
+  if (Rnd::oneIn(5))
   {
     inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorMigo));
   }
@@ -1149,8 +1171,9 @@ void LengElder::onStdTurn_()
       const bool IS_PLAYER_ADJ    = Utils::isPosAdj(pos, Map::player->pos, false);
       if (IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
       {
-        Log::addMsg("I perceive a cloaked figure standing before me...");
-        Log::addMsg("This must be the Elder Hierophant of the Leng monastery, ");
+        Log::addMsg("I perceive a cloaked figure standing before me...", clrWhite, false,
+                    true);
+        Log::addMsg("It is the Elder Hierophant of the Leng monastery, ");
         Log::addMsg("the High Priest Not to Be Described.", clrWhite, false, true);
 
         Popup::showMsg("", true, "");
@@ -1274,7 +1297,7 @@ bool WormMass::onActorTurn_()
       {
         Actor* const    actor   = ActorFactory::mk(data_->id, pAdj);
         WormMass* const worm    = static_cast<WormMass*>(actor);
-        ++spawnNewOneInN;
+        spawnNewOneInN += 3;
         worm->spawnNewOneInN    = spawnNewOneInN;
         worm->awareCounter_     = awareCounter_;
         worm->leader_           = leader_ ? leader_ : this;
@@ -1310,7 +1333,7 @@ bool GiantLocust::onActorTurn_()
       {
         Actor* const    actor     = ActorFactory::mk(data_->id, pAdj);
         GiantLocust* const locust = static_cast<GiantLocust*>(actor);
-        ++spawnNewOneInN;
+        spawnNewOneInN += 3;
         locust->spawnNewOneInN    = spawnNewOneInN;
         locust->awareCounter_     = awareCounter_;
         locust->leader_           = leader_ ? leader_ : this;

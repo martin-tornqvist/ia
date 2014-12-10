@@ -1325,7 +1325,7 @@ void initDataList()
   d->shockWhileEquiped = 10;
   d->clr = clrMagenta;
   d->tile = TileId::migoArmor;
-  d->armor.absorptionPoints = 3;
+  d->armor.absorptionPoints = 2;
   d->armor.dmgToDurabilityFactor = 1.5;
   d->landOnHardSndMsg = "";
   data[int(d->id)] = d;
