@@ -1663,13 +1663,11 @@ void Tomb::bump(Actor & actorBumping)
       Log::addMsg("There is a stone box here.");
       Render::drawMapAndInterface();
     }
-    else
+    else //Player can see
     {
       if (isOpen_)
       {
-        //If previously opened, re-run open. Now the player is guaranteed to get a chance
-        //to pick up the items (no traps).
-        open(Map::player);
+        playerLoot();
       }
       else //Not open
       {
@@ -1717,7 +1715,6 @@ void Tomb::bump(Actor & actorBumping)
 
           if (isSuccess)
           {
-            //Note: This will remove the lid, but a trap may interrupt picking items.
             open(Map::player);
           }
           else
@@ -1744,53 +1741,40 @@ void Tomb::trySprainPlayer()
   }
 }
 
+void Tomb::playerLoot()
+{
+  Log::addMsg("I peer inside the tomb.");
+
+  if (itemContainer_.items_.empty())
+  {
+    Log::addMsg("There is nothing of value inside.");
+  }
+  else
+  {
+    Log::addMsg("There are some items inside.", clrWhite, false, true);
+
+    itemContainer_.open(pos_, Map::player);
+  }
+}
+
 DidOpen Tomb::open(Actor* const actorOpening)
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 
-  if (isOpen_)
-  {
-    if (IS_SEEN && actorOpening)
-    {
-      Log::addMsg("I peer inside the tomb.");
-    }
-  }
-  else //Not already open
-  {
-    isOpen_ = true;
+  isOpen_ = true;
 
-    SndEmit::emitSnd({"I hear heavy stone sliding.", SfxId::tombOpen,
-                      IgnoreMsgIfOriginSeen::yes, pos_, nullptr, SndVol::high,
-                      AlertsMon::yes
-                     });
+  SndEmit::emitSnd({"I hear heavy stone sliding.", SfxId::tombOpen,
+                    IgnoreMsgIfOriginSeen::yes, pos_, nullptr, SndVol::high,
+                    AlertsMon::yes
+                   });
 
-    if (IS_SEEN)
-    {
-      Render::drawMapAndInterface();
-      Log::addMsg("The lid comes off...", clrWhite, false, true);
-      Log::clearLog();
-    }
+  if (IS_SEEN)
+  {
+    Render::drawMapAndInterface();
+    Log::addMsg("The lid comes off.");
   }
 
-  DidTriggerTrap didTriggerTrap = triggerTrap(actorOpening);
-
-  //Only pick items if an actor (player) is opening, and not interrupted by traps
-  if (actorOpening && didTriggerTrap == DidTriggerTrap::no)
-  {
-    if (itemContainer_.items_.size() > 0)
-    {
-      if (IS_SEEN)
-      {
-        Log::addMsg("There are some items inside.", clrWhite, false, true);
-      }
-
-      itemContainer_.open(pos_, actorOpening);
-    }
-    else if (IS_SEEN)
-    {
-      Log::addMsg("There is nothing of value inside.");
-    }
-  }
+  triggerTrap(actorOpening);
 
   Render::drawMapAndInterface();
   return DidOpen::yes;
@@ -1923,7 +1907,7 @@ void Chest::bump(Actor & actorBumping)
       Log::addMsg("There is a chest here.");
       Render::drawMapAndInterface();
     }
-    else
+    else //Player can see
     {
       if (isLocked_)
       {
@@ -1932,9 +1916,14 @@ void Chest::bump(Actor & actorBumping)
       }
       else //Not locked
       {
-        //Note: The chest may already be "open" (i.e. the lid is open), if so, the player
-        //is guaranteed to be allowed to pick the items (no trap).
-        open(Map::player);
+        if (isOpen_)
+        {
+          playerLoot();
+        }
+        else
+        {
+          open(Map::player);
+        }
         GameTime::actorDidAct();
       }
     }
@@ -1970,56 +1959,38 @@ void Chest::trySprainPlayer()
   }
 }
 
+void Chest::playerLoot()
+{
+  Log::addMsg("I search the chest.");
+
+  if (itemContainer_.items_.empty())
+  {
+    Log::addMsg("There is nothing of value inside.");
+  }
+  else //Not empty
+  {
+    Log::addMsg("There are some items inside.", clrWhite, false, true);
+
+    itemContainer_.open(pos_, Map::player);
+  }
+}
+
 DidOpen Chest::open(Actor* const actorOpening)
 {
   const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
 
-  if (isOpen_)
+  if (IS_SEEN)
   {
-    if (IS_SEEN && actorOpening)
-    {
-      Log::addMsg("I search the chest.");
-    }
+    Log::addMsg("The chest opens.");
   }
-  else
-  {
-    //Do not print opening message if the player is opening and there is a known trap
-    //(in that case, there is already a message such as "open the chest anyway?").
-    if (IS_SEEN)
-    {
-      Log::addMsg("The chest opens.");
-    }
 
-    isOpen_ = true;
-  }
+  isOpen_             = true;
+  isLocked_           = false;
+  isTrapStatusKnown_  = true;
 
   Render::drawMapAndInterface();
 
-  DidTriggerTrap didTriggerTrap = triggerTrap(actorOpening);
-
-  //Only pick items if an actor (player) is opening, and not interrupted by traps
-  if (actorOpening && didTriggerTrap == DidTriggerTrap::no)
-  {
-    if (itemContainer_.items_.empty())
-    {
-      if (IS_SEEN)
-      {
-        Log::addMsg("There is nothing of value inside.");
-      }
-    }
-    else //Not empty
-    {
-      if (IS_SEEN)
-      {
-        Log::addMsg("There are some items inside.", clrWhite, false, true);
-      }
-
-      itemContainer_.open(pos_, actorOpening);
-    }
-  }
-
-  isTrapStatusKnown_  = true;
-  isLocked_           = false;
+  triggerTrap(actorOpening);
 
   Render::drawMapAndInterface();
   return DidOpen::yes;
@@ -2254,7 +2225,7 @@ DidTriggerTrap Chest::triggerTrap(Actor * const actor)
     if (IS_SEEN)
     {
       Log::clearLog();
-      Log::addMsg("...but nothing happens.", clrWhite, false, true);
+      Log::addMsg("...but nothing happens.");
       return DidTriggerTrap::no;
     }
   }
@@ -2284,7 +2255,7 @@ DidTriggerTrap Chest::triggerTrap(Actor * const actor)
     if (Map::dlvl < MIN_DLVL_HARDER_TRAPS)
     {
       actor->getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::specific,
-                                           POISON_DMG_N_TURN * 2));
+                                           POISON_DMG_N_TURN * 3));
     }
     else
     {
@@ -2631,36 +2602,46 @@ void Cabinet::bump(Actor & actorBumping)
       Log::addMsg("There is a cabinet here.");
       Render::drawMapAndInterface();
     }
-    else
+    else //Can see
     {
-      open(Map::player);
+      if (isOpen_)
+      {
+        playerLoot();
+      }
+      else
+      {
+        open(Map::player);
+      }
     }
+  }
+}
+
+void Cabinet::playerLoot()
+{
+  Log::addMsg("I search the cabinet.");
+
+  if (itemContainer_.items_.empty())
+  {
+    Log::addMsg("There is nothing of value inside.");
+  }
+  else
+  {
+    Log::addMsg("There are some items inside.", clrWhite, false, true);
+
+    itemContainer_.open(pos_, Map::player);
   }
 }
 
 DidOpen Cabinet::open(Actor * const actorOpening)
 {
-  const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
+  (void)actorOpening;
 
   isOpen_ = true;
 
-  if (IS_SEEN)
+  if (Map::cells[pos_.x][pos_.y].isSeenByPlayer)
   {
     Render::drawMapAndInterface();
     Log::addMsg("The cabinet opens.");
-  }
-
-  if (itemContainer_.items_.size() > 0)
-  {
-    if (IS_SEEN)
-    {
-      Log::addMsg("There are some items inside.", clrWhite, false, true);
-    }
-    itemContainer_.open(pos_, actorOpening);
-  }
-  else if (IS_SEEN)
-  {
-    Log::addMsg("There is nothing of value inside.");
   }
 
   Render::drawMapAndInterface(true);
@@ -2728,9 +2709,21 @@ void Cocoon::bump(Actor & actorBumping)
       Log::addMsg("There is a cocoon here.");
       Render::drawMapAndInterface();
     }
-    else
+    else //Player can see
     {
-      open(Map::player);
+      if (Map::player->phobias[int(Phobia::spider)])
+      {
+        Map::player->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
+      }
+
+      if (isOpen_)
+      {
+        playerLoot();
+      }
+      else
+      {
+        open(Map::player);
+      }
     }
   }
 }
@@ -2786,40 +2779,34 @@ DidTriggerTrap Cocoon::triggerTrap(Actor * const actor)
   return DidTriggerTrap::no;
 }
 
+void Cocoon::playerLoot()
+{
+  Log::addMsg("I search the Cocoon.");
+
+  if (itemContainer_.items_.empty())
+  {
+    Log::addMsg("It is empty.");
+  }
+  else
+  {
+    Log::addMsg("There are some items inside.", clrWhite, false, true);
+
+    itemContainer_.open(pos_, Map::player);
+  }
+}
+
 DidOpen Cocoon::open(Actor* const actorOpening)
 {
-  const bool IS_SEEN = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
-
-  if (isOpen_ && actorOpening == Map::player)
-  {
-    Log::addMsg("The cocoon is already open.");
-    return DidOpen::no;
-  }
-
   isOpen_ = true;
 
   Render::drawMapAndInterface(true);
 
-  if (IS_SEEN)
+  if (Map::cells[pos_.x][pos_.y].isSeenByPlayer)
   {
     Log::addMsg("The cocoon opens.");
   }
 
-  DidTriggerTrap didTriggerTrap = triggerTrap(actorOpening);
-
-  if (itemContainer_.items_.size() > 0)
-  {
-    if (IS_SEEN)
-    {
-      Log::addMsg("There are some items inside.", clrWhite, false, true);
-    }
-
-    itemContainer_.open(pos_, actorOpening);
-  }
-  else if (didTriggerTrap == DidTriggerTrap::no && actorOpening == Map::player)
-  {
-    Log::addMsg("It is empty.");
-  }
+  triggerTrap(actorOpening);
 
   return DidOpen::yes;
 }

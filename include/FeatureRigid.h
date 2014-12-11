@@ -610,6 +610,8 @@ private:
 
   DidTriggerTrap triggerTrap(Actor* const actor) override;
 
+  void playerLoot();
+
   void trySprainPlayer();
 
   bool isOpen_, isTraitKnown_;
@@ -652,6 +654,8 @@ private:
 
   DidTriggerTrap triggerTrap(Actor* const actor) override;
 
+  void playerLoot();
+
   void trySprainPlayer();
 
   ItemContainer itemContainer_;
@@ -686,6 +690,8 @@ private:
 
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
+
+  void playerLoot();
 
   ItemContainer itemContainer_;
   bool isOpen_;
@@ -756,6 +762,8 @@ private:
 
   void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
              Actor* const actor) override;
+
+  void playerLoot();
 
   DidTriggerTrap triggerTrap(Actor* const actor) override;
 

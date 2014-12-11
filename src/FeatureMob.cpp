@@ -118,8 +118,16 @@ void LitDynamite::onNewTurn()
   if (nrTurnsLeft_ <= 0)
   {
     const int D = PlayerBon::traitsPicked[int(Trait::demExpert)] ? 1 : 0;
-    Explosion::runExplosionAt(pos_, ExplType::expl, ExplSrc::misc, D);
+
+    const Pos pos(pos_);
+
+    //Removing the dynamite before the explosion, so it won't be rendered after the
+    //explosion (could happen for example if there are "more" prompts).
     GameTime::eraseMob(this, true);
+
+    //Note: The dynamite is now deleted. Do not use member variable after this point.
+
+    Explosion::runExplosionAt(pos, ExplType::expl, ExplSrc::misc, D);
   }
 }
 

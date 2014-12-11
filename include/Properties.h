@@ -54,7 +54,7 @@ enum PropId
   propDisabledMelee,
   propDisabledRanged,
 
-  //Special (mostly for aiding other game mechanics)
+  //Special (for supporting specific game mechanics)
   propPossessedByZuul,
   propAiming,
   propNailed,
