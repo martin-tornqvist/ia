@@ -905,7 +905,7 @@ void Flare::onThrownIgnitedLanding(const Pos& p)
 
 void Flare::onPlayerParalyzed()
 {
-  Log::addMsg("The lit Flare falls from my hand.");
+  Log::addMsg("The lit Flare falls from my hand!");
   Map::player->activeExplosive = nullptr;
   Map::player->updateClr();
   const Pos&  p = Map::player->pos;
@@ -954,7 +954,7 @@ void SmokeGrenade::onThrownIgnitedLanding(const Pos& p)
 
 void SmokeGrenade::onPlayerParalyzed()
 {
-  Log::addMsg("The ignited smoke grenade falls from my hand.");
+  Log::addMsg("The ignited smoke grenade falls from my hand!");
   Map::player->activeExplosive = nullptr;
   Map::player->updateClr();
   const Pos&  p = Map::player->pos;
