@@ -73,7 +73,7 @@ void drawManualInterface()
 
   Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
-  Render::drawText(" Displaying manual ", Panel::screen, Pos(X_LABEL, 0), clrGray);
+  Render::drawText(" Browsing the Tome of Wisdom ", Panel::screen, Pos(X_LABEL, 0), clrGray);
 
   Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1), clrGray);
 

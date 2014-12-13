@@ -799,7 +799,7 @@ void Dynamite::onStdTurnPlayerHoldIgnited()
   }
   else
   {
-    Log::addMsg("The dynamite explodes in my hands!");
+    Log::addMsg("The dynamite explodes in my hand!");
     Map::player->activeExplosive = nullptr;
     Explosion::runExplosionAt(Map::player->pos, ExplType::expl);
     Map::player->updateClr();
@@ -815,7 +815,7 @@ void Dynamite::onThrownIgnitedLanding(const Pos& p)
 
 void Dynamite::onPlayerParalyzed()
 {
-  Log::addMsg("The lit Dynamite stick falls from my hands!");
+  Log::addMsg("The lit Dynamite stick falls from my hand!");
   Map::player->activeExplosive = nullptr;
   Map::player->updateClr();
   const Pos& p = Map::player->pos;
@@ -842,7 +842,7 @@ void Molotov::onStdTurnPlayerHoldIgnited()
 
   if (fuseTurns_ <= 0)
   {
-    Log::addMsg("The Molotov Cocktail explodes in my hands!");
+    Log::addMsg("The Molotov Cocktail explodes in my hand!");
     Map::player->activeExplosive = nullptr;
     Map::player->updateClr();
     Explosion::runExplosionAt(Map::player->pos, ExplType::applyProp, ExplSrc::misc, 0,
@@ -905,7 +905,7 @@ void Flare::onThrownIgnitedLanding(const Pos& p)
 
 void Flare::onPlayerParalyzed()
 {
-  Log::addMsg("The lit Flare falls from my hands.");
+  Log::addMsg("The lit Flare falls from my hand!");
   Map::player->activeExplosive = nullptr;
   Map::player->updateClr();
   const Pos&  p = Map::player->pos;
@@ -954,7 +954,7 @@ void SmokeGrenade::onThrownIgnitedLanding(const Pos& p)
 
 void SmokeGrenade::onPlayerParalyzed()
 {
-  Log::addMsg("The ignited smoke grenade falls from my hands.");
+  Log::addMsg("The ignited smoke grenade falls from my hand!");
   Map::player->activeExplosive = nullptr;
   Map::player->updateClr();
   const Pos&  p = Map::player->pos;
