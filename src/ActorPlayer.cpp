@@ -1159,7 +1159,7 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
 
   if (HAS_SND_MSG) {Log::addMsg(msg, clrWhite);}
 
-  //Play audio after message to ensure synch between audio and animation
+  //Play audio after message to ensure sync between audio and animation
   //If origin is hidden, we only play the sound if there is a message
   if (HAS_SND_MSG || IS_ORIGIN_SEEN_BY_PLAYER)
   {

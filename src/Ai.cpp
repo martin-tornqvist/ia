@@ -129,7 +129,7 @@ bool handleInventory(Mon& mon)
 namespace
 {
 
-//Check if acting monnster is on a line between player and other monster
+//Check if acting monster is on a line between player and other monster
 bool checkIfBlockingMon(const Pos& pos, Mon& other)
 {
   vector<Pos> line;

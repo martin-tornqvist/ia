@@ -564,7 +564,7 @@ MedBagAction MedicalBag::chooseAction() const
   bool props[endOfPropIds];
   Map::player->getPropHandler().getPropIds(props);
 
-  //Infections are treated firest
+  //Infections are treated first
   if (props[propInfected])
   {
     return MedBagAction::sanitizeInfection;
@@ -861,7 +861,7 @@ void Molotov::onThrownIgnitedLanding(const Pos& p)
 
 void Molotov::onPlayerParalyzed()
 {
-  Log::addMsg("The lit Molotov Cocktail falls from my hands!");
+  Log::addMsg("The lit Molotov Cocktail falls from my hand!");
   Map::player->activeExplosive = nullptr;
   Map::player->updateClr();
   Explosion::runExplosionAt(Map::player->pos, ExplType::applyProp, ExplSrc::misc, 0,

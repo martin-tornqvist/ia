@@ -616,7 +616,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
   {
     if (isHumanoid())
     {
-      SndEmit::emitSnd({"I hear agonised screaming.", SfxId::END,
+      SndEmit::emitSnd({"I hear agonized screaming.", SfxId::END,
                         IgnoreMsgIfOriginSeen::yes, pos, this, SndVol::low, AlertsMon::no
                        });
     }
