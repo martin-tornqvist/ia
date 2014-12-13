@@ -503,7 +503,7 @@ void initDataList()
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Mi-go Electric Gun", "Mi-go Electric Gun",
                          "a Mi-go Electric Gun");
-  d->baseDescr = {"A weapon crafted by the Mi-go. It fires devastating bolts of "
+  d->baseDescr = {"A weapon created by the Mi-go. It fires devastating bolts of "
                   "electricity.",
                   "If there is no ammunition to fuel the weapon, it can draw power from "
                   "the essence of the wielder (press [f] while no ammo loaded)."
