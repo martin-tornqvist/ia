@@ -956,7 +956,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
     const ActorDataT& data = ActorData::data[i];
     if (data.canBeSummoned)
     {
-      //Method for finding elligible monsters depends on if player or monster is casting.
+      //Method for finding eligible monsters depends on if player or monster is casting.
       int dlvlMax = -1;
 
       if (caster->isPlayer())

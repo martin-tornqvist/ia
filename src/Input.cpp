@@ -878,7 +878,7 @@ void handleMapModeKeyPress(const KeyData& d)
     {
       Log::clearLog();
 
-      const vector<string> choices {"Options", "Manual", "Quit", "Cancel"};
+      const vector<string> choices {"Options", "Tome of Wisdom", "Quit", "Cancel"};
       const int CHOICE = Popup::showMenuMsg("", true, choices);
 
       if (CHOICE == 0)
