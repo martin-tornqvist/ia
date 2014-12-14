@@ -148,7 +148,6 @@ void mkLines()
   lines_.push_back({" ", clrText});
 
   lines_.push_back({"Traits gained", clrHeading});
-  string abilitiesLine = "";
 
   const int MAX_W_DESCR = (MAP_W * 2) / 3;
 

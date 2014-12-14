@@ -333,8 +333,8 @@ void Mon::becomeAware(const bool IS_FROM_SEEING)
 {
   if (isAlive())
   {
-    const int AWARENESS_CNT_BEFORE = awareCounter_;
-    awareCounter_ = data_->nrTurnsAware;
+    const int AWARENESS_CNT_BEFORE  = awareCounter_;
+    awareCounter_                   = data_->nrTurnsAware;
     if (AWARENESS_CNT_BEFORE <= 0)
     {
       if (IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr))
@@ -343,7 +343,10 @@ void Mon::becomeAware(const bool IS_FROM_SEEING)
         Render::drawMapAndInterface(true);
         Log::addMsg(getNameThe() + " sees me!");
       }
-      if (Rnd::coinToss()) {speakPhrase();}
+      if (Rnd::coinToss())
+      {
+        speakPhrase();
+      }
     }
   }
 }
@@ -1583,4 +1586,27 @@ void Mold::mkStartItems()
 void GasSpore::die_()
 {
   Explosion::runExplosionAt(pos, ExplType::expl);
+}
+
+void FinalBoss::mkStartItems()
+{
+  spellsKnown_.push_back(new SpellSummonMon());
+  spellsKnown_.push_back(new SpellTeleport());
+}
+
+bool FinalBoss::onActorTurn_()
+{
+  if (!hasGreetedPlayer_)
+  {
+    Map::player->updateFov();
+    Render::drawMapAndInterface();
+
+    Log::addMsg("A booming voice echoes through the halls.", clrWhite, false, true);
+    Audio::play(SfxId::bossVoice1);
+
+    hasGreetedPlayer_ = true;
+    awareCounter_     = data_->nrTurnsAware;
+  }
+
+  return true;
 }

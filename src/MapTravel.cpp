@@ -60,6 +60,7 @@ void mkLvl(const MapType& mapType)
       case MapType::leng:           isLvlBuilt = MapGen::mkLengLvl();           break;
       case MapType::ratsInTheWalls: isLvlBuilt = MapGen::mkRatsInTheWallsLvl(); break;
       case MapType::trapezohedron:  isLvlBuilt = MapGen::mkTrapezohedronLvl();  break;
+      case MapType::boss:           isLvlBuilt = MapGen::mkBossLvl();           break;
     }
   }
 
@@ -78,8 +79,8 @@ void mkLvl(const MapType& mapType)
 
 void init()
 {
-  //Dungeon + forest + final level
-  const size_t NR_LVL_TOT = DLVL_LAST + 2;
+  //Dungeon + forest + boss + trapezohedron
+  const size_t NR_LVL_TOT = DLVL_LAST + 3;
 
   mapList_ = vector<MapData>(NR_LVL_TOT, {MapType::std, IsMainDungeon::yes});
 
@@ -92,7 +93,8 @@ void init()
     mapList_[DLVL_FIRST_LATE_GAME] = {MapType::ratsInTheWalls, IsMainDungeon::yes};
   }
 
-  mapList_[DLVL_LAST + 1] = {MapType::trapezohedron, IsMainDungeon::yes};
+  mapList_[DLVL_LAST + 1] = {MapType::boss,           IsMainDungeon::yes};
+  mapList_[DLVL_LAST + 2] = {MapType::trapezohedron,  IsMainDungeon::yes};
 }
 
 void storeToSaveLines(std::vector<std::string>& lines)

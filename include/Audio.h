@@ -35,6 +35,7 @@ enum class SfxId
   doorOpen, doorClose, doorBang, doorBreak,
   tombOpen,
   fountainDrink,
+  bossVoice1, bossVoice2,
 
   //User interface sounds
   backpack,

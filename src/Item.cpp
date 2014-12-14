@@ -365,11 +365,11 @@ void Wpn::setupFromSaveLines(vector<string>& lines)
 Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData, int effectiveRangeLmt,
          int ammoCap, bool isUsingClip) :
   Item                (itemData),
-  ammoData_           (ammoData),
   EFFECTIVE_RANGE_LMT (effectiveRangeLmt),
   AMMO_CAP            (ammoCap),
   IS_USING_CLIP       (isUsingClip),
-  nrAmmoLoaded        (AMMO_CAP) {}
+  nrAmmoLoaded        (AMMO_CAP),
+  ammoData_           (ammoData) {}
 
 Clr Wpn::getClr() const
 {

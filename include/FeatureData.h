@@ -57,7 +57,7 @@ public:
 
   void reset();
 
-  void set(const int MAX_NR_IN_ROOM, const Range dlvlsAllowed,
+  void set(const int MAX_NR_IN_ROOM, const Range& dlvlsAllowed,
            const PlacementRule placementRule, std::initializer_list<RoomType> roomTypes);
 
   bool          isBelongingToRoomType(const RoomType type)  const;

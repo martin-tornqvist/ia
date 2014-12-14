@@ -89,7 +89,7 @@ Uint32 getPixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y
 }
 
 void putPixel(SDL_Surface* const surface, const int PIXEL_X, const int PIXEL_Y,
-                     Uint32 pixel)
+              Uint32 pixel)
 {
   int bpp = surface->format->BytesPerPixel;
   //Here p is the address to the pixel we want to set
@@ -997,18 +997,16 @@ void drawMap()
     }
   }
 
-  int xPos, yPos;
   //---------------- INSERT DEAD ACTORS INTO ARRAY
   for (Actor* actor : GameTime::actors_)
   {
-    xPos = actor->pos.x;
-    yPos = actor->pos.y;
+    const Pos& p(actor->pos);
     if (actor->isCorpse()                       &&
         actor->getData().glyph != ' '           &&
         actor->getData().tile != TileId::empty  &&
-        Map::cells[xPos][yPos].isSeenByPlayer)
+        Map::cells[p.x][p.y].isSeenByPlayer)
     {
-      curDrw        = &renderArray[xPos][yPos];
+      curDrw        = &renderArray[p.x][p.y];
       curDrw->clr   = actor->getClr();
       curDrw->tile  = actor->getTile();
       curDrw->glyph = actor->getGlyph();

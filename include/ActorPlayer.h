@@ -97,8 +97,8 @@ public:
 
   void setQuickMove(const Dir dir);
 
-  bool phobias[int(Phobia::END)];
-  bool obsessions[int(Obsession::END)];
+  bool phobias    [int(Phobia::END)];
+  bool obsessions [int(Obsession::END)];
 
   bool isLeaderOf(const Actor* const actor)       const override;
   bool isActorMyLeader(const Actor* const actor)  const override;

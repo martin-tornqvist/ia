@@ -24,7 +24,7 @@ FeatureRoomSpawnRules::FeatureRoomSpawnRules() :
 void FeatureRoomSpawnRules::reset() {*this = FeatureRoomSpawnRules();}
 
 void FeatureRoomSpawnRules::set(const int MAX_NR_IN_ROOM,
-                                const Range dlvlsAllowed,
+                                const Range& dlvlsAllowed,
                                 const PlacementRule placementRule,
                                 std::initializer_list<RoomType> roomTypes)
 {

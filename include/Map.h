@@ -33,6 +33,7 @@ enum class MapType
   egypt,
   leng,
   ratsInTheWalls,
+  boss,
   trapezohedron
 };
 

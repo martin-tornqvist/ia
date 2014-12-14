@@ -263,7 +263,10 @@ private:
 class LengElder: public Mon
 {
 public:
-  LengElder() : Mon() {}
+  LengElder() :
+    Mon                   (),
+    hasGivenItemToPlayer_ (false),
+    nrTurnsToHostile_     (-1) {}
   ~LengElder() {}
   void mkStartItems() override;
 private:
@@ -512,7 +515,9 @@ public:
 class Khephren: public MummyUnique
 {
 public:
-  Khephren() : MummyUnique() {}
+  Khephren() :
+    MummyUnique         (),
+    hasSummonedLocusts  (false) {}
   ~Khephren() {}
 
   bool onActorTurn_() override;
@@ -667,6 +672,19 @@ public:
   void die_();
 
   void mkStartItems() override {}
+};
+
+class FinalBoss: public Mon
+{
+public:
+  FinalBoss() :
+    Mon               (),
+    hasGreetedPlayer_ (false) {}
+  ~FinalBoss() {}
+  bool onActorTurn_() override;
+  void mkStartItems() override;
+private:
+  bool hasGreetedPlayer_;
 };
 
 #endif

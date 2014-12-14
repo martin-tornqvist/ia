@@ -709,7 +709,7 @@ int getSpiOccultistCanCastAtLvl(const int LVL)
   return PLAYER_START_SPI + ((LVL - 1) * SPI_PER_LVL) + SPI_FROM_TRAIT - 1;
 }
 
-bool getsUndeadBaneBon(const Actor& attacker, const ActorDataT actorData)
+bool getsUndeadBaneBon(const Actor& attacker, const ActorDataT& actorData)
 {
   return attacker.isPlayer()                              &&
          PlayerBon::traitsPicked[int(Trait::undeadBane)]  &&

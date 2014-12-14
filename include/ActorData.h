@@ -46,6 +46,7 @@ enum class ActorId
   sentryDrone,
   mold,
   gasSpore,
+  finalBoss,
 
   END
 };

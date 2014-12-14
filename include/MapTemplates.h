@@ -14,6 +14,7 @@ enum class MapTemplId
   egypt,
   leng,
   ratsInTheWalls,
+  bossLevel,
   END
 };
 

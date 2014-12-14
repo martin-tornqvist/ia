@@ -96,7 +96,7 @@ void setAllTraitsToPicked();
 
 int getSpiOccultistCanCastAtLvl(const int LVL);
 
-bool getsUndeadBaneBon(const Actor& attacker, const ActorDataT actorData);
+bool getsUndeadBaneBon(const Actor& attacker, const ActorDataT& actorData);
 
 } //PlayerBon
 

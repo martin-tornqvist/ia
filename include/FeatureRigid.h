@@ -395,7 +395,9 @@ private:
 class Bridge : public Rigid
 {
 public:
-  Bridge(Pos pos) : Rigid(pos) {}
+  Bridge(Pos pos) :
+    Rigid (pos),
+    dir_  (HorizontalVertical::hor) {}
   Bridge() = delete;
   ~Bridge() {}
 

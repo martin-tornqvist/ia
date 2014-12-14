@@ -987,8 +987,6 @@ void ChasmRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   bool blockedExpanded[MAP_W][MAP_H];
   MapParse::expand(blocked, blockedExpanded);
 
-  vector<Pos> originBucket;
-
   Pos origin;
 
   for (int x = r_.p0.x; x <= r_.p1.x; ++x)

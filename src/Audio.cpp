@@ -90,6 +90,8 @@ void init()
     loadAudioFile(SfxId::doorBreak,               "sfx_doorBreak.ogg");
     loadAudioFile(SfxId::tombOpen,                "sfx_tombOpen.ogg");
     loadAudioFile(SfxId::fountainDrink,           "sfx_fountainDrink.ogg");
+    loadAudioFile(SfxId::bossVoice1,              "sfx_bossVoice1.ogg");
+    loadAudioFile(SfxId::bossVoice2,              "sfx_bossVoice2.ogg");
 
     //User interface sounds
     loadAudioFile(SfxId::backpack,                "sfx_backpack.ogg");

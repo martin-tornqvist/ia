@@ -2387,6 +2387,45 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::chasm);
   data[int(d.id)] = d;
   d.reset();
+
+  d.nameA = "The Dark One";
+  d.nameThe = d.nameA;
+  d.id = ActorId::finalBoss;
+  d.ai[int(AiId::looks)] = true;
+  d.ai[int(AiId::makesRoomForFriend)] = false;
+  d.ai[int(AiId::attacks)] = false;
+  d.ai[int(AiId::pathsToTgtWhenAware)] = true;
+  d.ai[int(AiId::movesToTgtWhenLos)] = true;
+  d.ai[int(AiId::movesToLair)] = false;
+  d.ai[int(AiId::movesToLeader)] = false;
+  d.speed = ActorSpeed::fast;
+  d.rangedCooldownTurns = 0;
+  d.spellCooldownTurns = 0;
+  d.isUnique = true;
+  d.nrLeftAllowedToSpawn = 0;
+  d.glyph = 'P';
+  d.color = clrGrayDrk;
+  d.tile = TileId::witchOrWarlock;
+  d.hp = 1000;
+  d.spi = 9999;
+  d.dmgMelee = 6;
+  d.abilityVals.setVal(AbilityId::melee, 40);
+  d.isAutoSpawnAllowed = false;
+  d.groupSize = MonGroupSize::alone;
+  d.actorSize = actorSize_humanoid;
+  d.canBashDoors = true;
+  d.canOpenDoors = true;
+  d.preventKnockback = true;
+  d.nrTurnsAware = 9999;
+  d.descr = "[TODO]";
+  d.isAutoDescrAllowed = false;
+  d.spellCastMessage = "[TODO]";
+  d.erraticMovePct = actorErratic_never;
+  d.monShockLvl = MonShockLvl::terrifying;
+  d.isHumanoid = true;
+  d.canLeaveCorpse = false;
+  data[int(d.id)] = d;
+  d.reset();
 }
 
 } //namespace

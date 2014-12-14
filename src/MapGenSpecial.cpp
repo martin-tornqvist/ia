@@ -160,9 +160,9 @@ void mkForestTrees()
     const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::church);
     const Pos       templDims = templ.getDims();
 
-    for (int y = 0; y < templDims.y; ++y)
+    for (int x = 0; x < templDims.x; ++x)
     {
-      for (int x = 0; x < templDims.x; ++x)
+      for (int y = 0; y < templDims.y; ++y)
       {
         const auto& templCell = templ.getCell(x, y);
         const auto  fId       = templCell.featureId;
@@ -336,9 +336,9 @@ void mkForestTrees()
 
 bool mkIntroLvl()
 {
-  for (int y = 1; y < MAP_H - 1; ++y)
+  for (int x = 1; x < MAP_W - 1; ++x)
   {
-    for (int x = 1; x < MAP_W - 1; ++x)
+    for (int y = 1; y < MAP_H - 1; ++y)
     {
       const Pos p(x, y);
       if (Rnd::oneIn(6))
@@ -370,9 +370,9 @@ bool mkEgyptLvl()
   const Pos       templDims = templ.getDims();
   const int       STAIR_VAL = Rnd::range(2, 3);
 
-  for (int y = 0; y < templDims.y; ++y)
+  for (int x = 0; x < templDims.x; ++x)
   {
-    for (int x = 0; x < templDims.x; ++x)
+    for (int y = 0; y < templDims.y; ++y)
     {
       const auto& templCell = templ.getCell(x, y);
       const Pos p(x, y);
@@ -418,9 +418,9 @@ bool mkLengLvl()
   const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::leng);
   const Pos       templDims = templ.getDims();
 
-  for (int y = 0; y < templDims.y; ++y)
+  for (int x = 0; x < templDims.x; ++x)
   {
-    for (int x = 0; x < templDims.x; ++x)
+    for (int y = 0; y < templDims.y; ++y)
     {
       const auto& templCell = templ.getCell(x, y);
       const auto  fId       = templCell.featureId;
@@ -492,9 +492,9 @@ bool mkRatsInTheWallsLvl()
   const int       RAT_THING_ONE_IN_N_RAT = 3;
   const Fraction  bonesOneInN(1, 2);
 
-  for (int y = 0; y < templDims.y; ++y)
+  for (int x = 0; x < templDims.x; ++x)
   {
-    for (int x = 0; x < templDims.x; ++x)
+    for (int y = 0; y < templDims.y; ++y)
     {
       const auto& templCell = templ.getCell(x, y);
       const auto  fId       = templCell.featureId;
@@ -604,63 +604,107 @@ bool mkRatsInTheWallsLvl()
   return true;
 }
 
+//------------------------------------------------------------------- BOSS
+bool mkBossLvl()
+{
+  Map::resetMap();
+
+  const MapTempl& templ     = MapTemplHandling::getTempl(MapTemplId::bossLevel);
+  const Pos       templDims = templ.getDims();
+
+  for (int x = 0; x < templDims.x; ++x)
+  {
+    for (int y = 0; y < templDims.y; ++y)
+    {
+      const auto& templCell = templ.getCell(x, y);
+      const auto  fId       = templCell.featureId;
+
+      const Pos p(x, y);
+
+      if (fId != FeatureId::END)
+      {
+        const auto& d = FeatureData::getData(fId);
+        Map::put(static_cast<Rigid*>(d.mkObj(p)));
+      }
+
+      if (templCell.actorId != ActorId::END)
+      {
+        ActorFactory::mk(templCell.actorId, Pos(x, y));
+      }
+
+      switch (templCell.val)
+      {
+        case 1:
+          Map::player->pos = p;
+          break;
+
+        default: {}
+          break;
+      }
+    }
+  }
+
+  return true;
+}
+
 //------------------------------------------------------------------- TRAPEZOHEDRON
 bool mkTrapezohedronLvl()
 {
   Map::resetMap();
 
-  for (int x = 0; x < MAP_W; ++x)
-  {
-    for (int y = 0; y < MAP_H; ++y)
-    {
-      auto* const wall  = new Wall(Pos(x, y));
-      Map::put(wall);
-      wall->type_       = WallType::cave;
-      wall->isMossy_    = false;
-    }
-  }
+//  for (int x = 0; x < MAP_W; ++x)
+//  {
+//    for (int y = 0; y < MAP_H; ++y)
+//    {
+//      auto* const wall  = new Wall(Pos(x, y));
+//      Map::put(wall);
+//      wall->type_       = WallType::cave;
+//      wall->isMossy_    = false;
+//    }
+//  }
+//
+//  const Pos& origin     = Map::player->pos;
+//  const Pos  mapCenter  = Pos(MAP_W_HALF, MAP_H_HALF);
+//
+//  auto putCaveFloor = [](const vector<Pos>& positions)
+//  {
+//    for (const Pos& p : positions)
+//    {
+//      auto* const floor = new Floor(p);
+//      Map::put(floor);
+//      floor->type_      = FloorType::cave;
+//    }
+//  };
+//
+//  vector<Pos> floorCells;
+//
+//  MapGenUtils::rndWalk(origin, 150, floorCells, true);
+//  putCaveFloor(floorCells);
+//
+//  MapGenUtils::rndWalk(mapCenter, 800, floorCells, true);
+//  putCaveFloor(floorCells);
+//
+//  MapGenUtils::pathfinderWalk(origin, mapCenter, floorCells, false);
+//  putCaveFloor(floorCells);
+//
+//  bool blocked[MAP_W][MAP_H];
+//  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+//  vector<Pos> itemPosBucket;
+//
+//  for (int x = 0; x < MAP_W; ++x)
+//  {
+//    for (int y = 0; y < MAP_H; ++y)
+//    {
+//      if (!blocked[x][y] && Pos(x, y) != origin)
+//      {
+//        itemPosBucket.push_back(Pos(x, y));
+//      }
+//    }
+//  }
+//
+//  const int ELEMENT = Rnd::range(0, itemPosBucket.size() - 1);
+//  ItemFactory::mkItemOnMap(ItemId::trapezohedron, itemPosBucket[ELEMENT]);
 
-  const Pos& origin     = Map::player->pos;
-  const Pos  mapCenter  = Pos(MAP_W_HALF, MAP_H_HALF);
-
-  auto putCaveFloor = [](const vector<Pos>& positions)
-  {
-    for (const Pos& p : positions)
-    {
-      auto* const floor = new Floor(p);
-      Map::put(floor);
-      floor->type_      = FloorType::cave;
-    }
-  };
-
-  vector<Pos> floorCells;
-
-  MapGenUtils::rndWalk(origin, 150, floorCells, true);
-  putCaveFloor(floorCells);
-
-  MapGenUtils::rndWalk(mapCenter, 800, floorCells, true);
-  putCaveFloor(floorCells);
-
-  MapGenUtils::pathfinderWalk(origin, mapCenter, floorCells, false);
-  putCaveFloor(floorCells);
-
-  bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
-  vector<Pos> itemPosBucket;
-
-  for (int x = 0; x < MAP_W; ++x)
-  {
-    for (int y = 0; y < MAP_H; ++y)
-    {
-      if (!blocked[x][y] && Pos(x, y) != origin)
-      {
-        itemPosBucket.push_back(Pos(x, y));
-      }
-    }
-  }
-
-  const int ELEMENT = Rnd::range(0, itemPosBucket.size() - 1);
-  ItemFactory::mkItemOnMap(ItemId::trapezohedron, itemPosBucket[ELEMENT]);
   return true;
 }
 

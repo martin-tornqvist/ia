@@ -20,7 +20,15 @@ public:
        DoorSpawnState spawnState = DoorSpawnState::any);
 
   //Spawn-by-id compliant ctor (do not use for normal cases):
-  Door(const Pos& pos) : Rigid(pos), mimicFeature_(nullptr), nrSpikes_(0) {}
+  Door(const Pos& pos) :
+    Rigid                 (pos),
+    mimicFeature_         (nullptr),
+    nrSpikes_             (0),
+    isOpen_               (false),
+    isStuck_              (false),
+    isSecret_             (false),
+    isHandledExternally_  (false),
+    matl_                 (Matl::wood) {}
 
   Door() = delete;
 

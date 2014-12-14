@@ -95,10 +95,8 @@ void printLocationInfoMsgs(const Pos& pos)
   {
     Log::addMsg("I see here:");
 
-    string str = "";
-
     //Describe rigid.
-    str = cell.rigid->getName(Article::a);
+    string str = cell.rigid->getName(Article::a);
     Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
 
     //Describe mobile features.

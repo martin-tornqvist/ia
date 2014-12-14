@@ -64,6 +64,7 @@ bool mkEgyptLvl();
 bool mkLengLvl();
 bool mkRatsInTheWallsLvl();
 bool mkTrapezohedronLvl();
+bool mkBossLvl();
 
 } //MapGen
 

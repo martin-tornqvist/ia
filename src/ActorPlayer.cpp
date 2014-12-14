@@ -52,7 +52,11 @@ Player::Player() :
   nrTurnsUntilIns_        (-1),
   nrQuickMoveStepsLeft_   (-1),
   quickMoveDir_           (Dir::END),
-  CARRY_WEIGHT_BASE_      (450) {}
+  CARRY_WEIGHT_BASE_      (450)
+{
+  for (int i = 0; i < int(Phobia::END); ++i)     {phobias[i]     = false;}
+  for (int i = 0; i < int(Obsession::END); ++i)  {obsessions[i]  = false;}
+}
 
 Player::~Player()
 {
@@ -427,7 +431,7 @@ void Player::incrInsanity()
           const string playerName = getNameThe();
           for (int i = Rnd::range(3, 5); i > 0; --i)
           {
-            Log::addMsg(Cultist::getCultistPhrase());
+            Log::addMsg(playerName + ": " + Cultist::getCultistPhrase());
           }
           Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
                   SndVol::low, AlertsMon::yes);

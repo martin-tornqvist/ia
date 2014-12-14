@@ -32,7 +32,11 @@ public:
   Trap(const Pos& pos, const Rigid* const mimicFeature, TrapId type);
 
   //Spawn-by-id compliant ctor (do not use for normal cases):
-  Trap(const Pos& pos) : Rigid(pos), mimicFeature_(nullptr), isHidden_(false) {}
+  Trap(const Pos& pos) :
+    Rigid         (pos),
+    mimicFeature_ (nullptr),
+    isHidden_     (false),
+    specificTrap_ (nullptr) {}
 
   Trap() = delete;
 
@@ -78,9 +82,9 @@ private:
 
   void setSpecificTrapFromId(const TrapId id);
 
-  const Rigid* const mimicFeature_;
-  bool isHidden_;
-  SpecificTrapBase* specificTrap_;
+  const Rigid* const  mimicFeature_;
+  bool                isHidden_;
+  SpecificTrapBase*   specificTrap_;
 };
 
 class SpecificTrapBase

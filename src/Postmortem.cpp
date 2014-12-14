@@ -30,7 +30,10 @@ namespace
 
 struct StrAndClr
 {
-  StrAndClr(const string str_, const Clr clr_) : str(str_), clr(clr_) {}
+  StrAndClr(const string& str_, const Clr clr_) :
+    str (str_),
+    clr (clr_) {}
+
   StrAndClr() {}
   std::string str;
   Clr   clr;

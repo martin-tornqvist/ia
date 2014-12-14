@@ -301,7 +301,8 @@ public:
     Item                    (itemData),
     nrSupplies_             (60),
     nrTurnsUntilHealWounds_ (-1),
-    nrTurnsLeftSanitize_    (-1) {}
+    nrTurnsLeftSanitize_    (-1),
+    curAction_              (MedBagAction::END) {}
 
   ~MedicalBag() {}
 
