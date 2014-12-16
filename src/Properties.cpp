@@ -646,6 +646,17 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
+  d.id = propRecoil;
+  d.stdRndTurns = Range(1, 1);
+  d.name = "Recoil";
+  d.nameShort = "Recoil";
+  d.isMakingMonAware = false;
+  d.allowDisplayTurns = false;
+  d.allowApplyMoreWhileActive = true;
+  d.updatePlayerVisualWhenStartOrEnd = false;
+  d.alignment = propAlignmentBad;
+  addPropData(d);
+
   d.id = propPossessedByZuul;
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
@@ -783,6 +794,7 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
     case propFainted:           return new PropFainted(turnsInit,           NR_TURNS);
     case propFrenzied:          return new PropFrenzied(turnsInit,          NR_TURNS);
     case propAiming:            return new PropAiming(turnsInit,            NR_TURNS);
+    case propRecoil:            return new PropRecoil(turnsInit,            NR_TURNS);
     case propDisabledAttack:    return new PropDisabledAttack(turnsInit,    NR_TURNS);
     case propDisabledMelee:     return new PropDisabledMelee(turnsInit,     NR_TURNS);
     case propDisabledRanged:    return new PropDisabledRanged(turnsInit,    NR_TURNS);

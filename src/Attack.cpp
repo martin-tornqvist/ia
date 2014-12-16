@@ -871,7 +871,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
                 defenderPropHandler.tryApplyPropFromWpn(wpn, false);
 
                 //Knock-back?
-                if (wpn.getData().ranged.isKnockback)
+                if (wpn.getData().ranged.knocksBack)
                 {
                   const AttData* const curData = curProj->attackData;
                   if (curData->attackResult >= successSmall)
@@ -1223,7 +1223,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
       }
       if (died == ActorDied::no)
       {
-        if (wpn.getData().melee.isKnockback)
+        if (wpn.getData().melee.knocksBack)
         {
           if (data.attackResult > successSmall)
           {
@@ -1266,14 +1266,13 @@ bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos)
   {
     if (wpn.nrAmmoLoaded != 0 || HAS_INF_AMMO)
     {
-
       shotgun(attacker, wpn, aimPos);
 
       didAttack = true;
       if (!HAS_INF_AMMO) {wpn.nrAmmoLoaded -= 1;}
     }
   }
-  else
+  else //Not a shotgun
   {
     int nrOfProjectiles = 1;
 
@@ -1285,12 +1284,11 @@ bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
       if (Map::player->isAlive())
       {
-
         didAttack = true;
 
         if (!HAS_INF_AMMO) {wpn.nrAmmoLoaded -= nrOfProjectiles;}
       }
-      else
+      else //Player is dead
       {
         return true;
       }
@@ -1299,7 +1297,16 @@ bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
   Render::drawMapAndInterface();
 
-  if (didAttack) {GameTime::tick();}
+  if (didAttack)
+  {
+    if (attacker.isPlayer()                  &&
+        wpn.getData().ranged.isCausingRecoil &&
+        !PlayerBon::traitsPicked[int(Trait::steadyAimer)])
+    {
+      attacker.getPropHandler().tryApplyProp(new PropRecoil(PropTurns::std));
+    }
+    GameTime::tick();
+  }
 
   return didAttack;
 }

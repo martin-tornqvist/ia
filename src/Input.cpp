@@ -1164,7 +1164,7 @@ KeyData getInput(const bool IS_O_RETURN)
 
 bool isKeyHeld(const SDLKey key)
 {
-  Uint8* keystate = SDL_GetKeyState(NULL);
+  Uint8* keystate = SDL_GetKeyState(nullptr);
   return keystate[key];
 }
 
