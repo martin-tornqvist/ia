@@ -133,7 +133,7 @@ void connectRooms()
       continue;
     }
 
-    TRACE_VERBOSE << "Finding second room to connect to" << endl;
+    //Finding second room to connect to
     Room* room1 = getRndRoom();
     //Room 1 must not be the same as room 0, and it must be a standard room (connections
     //are only allowed between two standard rooms, or from a corridor link to a standard
@@ -147,7 +147,7 @@ void connectRooms()
     const auto& consRoom0 = room0->roomsConTo_;
     if (find(consRoom0.begin(), consRoom0.end(), room1) != consRoom0.end())
     {
-      TRACE_VERBOSE << "Rooms are already connected, trying other combination" << endl;
+      //Rooms are already connected, trying other combination
       continue;
     }
 
@@ -177,7 +177,7 @@ void connectRooms()
     }
     if (isOtherRoomInWay)
     {
-      TRACE_VERBOSE << "Blocked by room between, trying other combination" << endl;
+      //Blocked by room between, trying other combination
       continue;
     }
 

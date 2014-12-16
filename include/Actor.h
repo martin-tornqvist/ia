@@ -60,7 +60,7 @@ public:
   //another actor.
   bool isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H]) const;
 
-  void getSeenFoes(std::vector<Actor*>& vectorRef);
+  void getSeenFoes(std::vector<Actor*>& out);
 
   ActorId getId()                  const {return data_->id;}
   int getHp()                      const {return hp_;}

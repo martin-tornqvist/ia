@@ -114,9 +114,9 @@ bool Actor::isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H
   return false;
 }
 
-void Actor::getSeenFoes(vector<Actor*>& vectorRef)
+void Actor::getSeenFoes(vector<Actor*>& out)
 {
-  vectorRef.clear();
+  out.clear();
 
   bool blockedLos[MAP_W][MAP_H];
 
@@ -139,7 +139,7 @@ void Actor::getSeenFoes(vector<Actor*>& vectorRef)
       {
         if (isSeeingActor(*actor, nullptr) && !isLeaderOf(actor))
         {
-          vectorRef.push_back(actor);
+          out.push_back(actor);
         }
       }
       else //Not player
@@ -155,7 +155,7 @@ void Actor::getSeenFoes(vector<Actor*>& vectorRef)
         {
           if (isSeeingActor(*actor, blockedLos))
           {
-            vectorRef.push_back(actor);
+            out.push_back(actor);
           }
         }
       }

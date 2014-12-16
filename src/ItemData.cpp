@@ -1230,6 +1230,13 @@ void initDataList()
   d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
   data[int(d->id)] = d;
 
+  d = new ItemDataT(ItemId::theDarkOneClaw);
+  resetData(*d, ItemType::meleeWpnIntr);
+  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.propApplied = new PropTerrified(PropTurns::std);
+  setDmgFromMonId(*d, ActorId::theDarkOne);
+  data[int(d->id)] = d;
+
   d = new ItemDataT(ItemId::armorLeatherJacket);
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Leather Jacket", "", "a Leather Jacket");

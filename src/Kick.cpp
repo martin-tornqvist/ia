@@ -60,7 +60,7 @@ void playerKick()
       pair<int, int> kickDmg = ItemData::data[int(ItemId::playerKick)]->melee.dmg;
       deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, DmgMethod::kick);
 
-      GameTime::actorDidAct();
+      GameTime::tick();
       TRACE_FUNC_END;
       return;
     }

@@ -996,7 +996,7 @@ void Player::onStdTurn()
     {
       nrTurnsUntilIns_ = -1;
       incrInsanity();
-      if (isAlive()) {GameTime::actorDidAct();}
+      if (isAlive()) {GameTime::tick();}
       return;
     }
   }
@@ -1107,7 +1107,7 @@ void Player::onStdTurn()
   if (waitTurnsLeft > 0)
   {
     waitTurnsLeft--;
-    GameTime::actorDidAct();
+    GameTime::tick();
   }
 }
 
@@ -1338,7 +1338,7 @@ void Player::moveDir(Dir dir)
 
     if (pos == dest)
     {
-      GameTime::actorDidAct(isFreeTurn);
+      GameTime::tick(isFreeTurn);
       return;
     }
   }

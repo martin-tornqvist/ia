@@ -187,9 +187,12 @@ SpellEffectNoticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) con
 
     SpellEffectNoticed isNoticed = SpellEffectNoticed::no;
 
-    if (caster->isAlive()) {isNoticed = cast_(caster);}
+    if (caster->isAlive())
+    {
+      isNoticed = cast_(caster);
+    }
 
-    GameTime::actorDidAct();
+    GameTime::tick();
     TRACE_FUNC_END;
     return isNoticed;
   }
@@ -273,11 +276,9 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
   return SpellEffectNoticed::yes;
 }
 
-bool SpellDarkbolt::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellDarkbolt::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_                                 &&
-         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
-         Rnd::oneIn(2);
+  return mon.tgt_ && Rnd::oneIn(2);
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH
@@ -338,27 +339,32 @@ SpellEffectNoticed SpellAzaWrath::cast_(Actor* const caster) const
   return SpellEffectNoticed::yes;
 }
 
-bool SpellAzaWrath::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellAzaWrath::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_ && mon.isSeeingActor(*mon.tgt_, blockedLos);
+  return mon.tgt_;
 }
 
 //------------------------------------------------------------ MAYHEM
 SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const
 {
-  (void)caster;
+  const bool IS_PLAYER = caster->isPlayer();
 
-  Log::addMsg("Destruction rages around me!");
+  if ( Map::player->isSeeingActor(*caster, nullptr))
+  {
+    string casterName = IS_PLAYER ? "me" : caster->getNameThe();
+    Log::addMsg("Destruction rages around " + casterName + "!");
+  }
 
-  const Pos& playerPos = Map::player->pos;
+
+  const Pos& casterPos = caster->pos;
 
   const int NR_SWEEPS = 5;
   const int RADI      = FOV_STD_RADI_INT;
 
-  const int X0 = max(1, playerPos.x - RADI);
-  const int Y0 = max(1, playerPos.y - RADI);
-  const int X1 = min(MAP_W - 1, playerPos.x + RADI) - 1;
-  const int Y1 = min(MAP_H - 1, playerPos.y + RADI) - 1;
+  const int X0 = max(1, casterPos.x - RADI);
+  const int Y0 = max(1, casterPos.y - RADI);
+  const int X1 = min(MAP_W - 1, casterPos.x + RADI) - 1;
+  const int Y1 = min(MAP_H - 1, casterPos.y + RADI) - 1;
 
   for (int i = 0; i < NR_SWEEPS; ++i)
   {
@@ -401,21 +407,26 @@ SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const
     }
   }
 
-  for (auto* actor : GameTime::actors_)
+  vector<Actor*> seenFoes;
+  caster->getSeenFoes(seenFoes);
+
+  for (auto* actor : seenFoes)
   {
-    if (actor != Map::player                        &&
-        Map::player->isSeeingActor(*actor, nullptr) &&
-        !Map::player->isLeaderOf(actor))
-    {
-      actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
-    }
+    actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
   }
 
-  SndEmit::emitSnd({"", SfxId::END, IgnoreMsgIfOriginSeen::yes, Map::player->pos,
-                    nullptr, SndVol::high, AlertsMon::yes
+  SndEmit::emitSnd({"", SfxId::END, IgnoreMsgIfOriginSeen::yes, casterPos, nullptr,
+                    SndVol::high, AlertsMon::yes
                    });
 
   return SpellEffectNoticed::yes;
+}
+
+bool SpellMayhem::allowMonCastNow(Mon& mon) const
+{
+  return mon.awareCounter_ > 0  &&
+         Rnd::coinToss()        &&
+         (mon.tgt_ || Rnd::oneIn(20));
 }
 
 //------------------------------------------------------------ PESTILENCE
@@ -483,11 +494,11 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
   return SpellEffectNoticed::no;
 }
 
-bool SpellPest::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellPest::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_       &&
+  return mon.tgt_         &&
          Rnd::coinToss()  &&
-         (mon.isSeeingActor(*mon.tgt_, blockedLos) || Rnd::oneIn(20));
+         (mon.tgt_ || Rnd::oneIn(20));
 }
 
 //------------------------------------------------------------ PHARAOH STAFF
@@ -544,12 +555,9 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
   return SpellEffectNoticed::no;
 }
 
-bool SpellPharaohStaff::allowMonCastNow(Mon& mon,
-                                        const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellPharaohStaff::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_                                 &&
-         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
-         Rnd::oneIn(4);
+  return mon.tgt_ && Rnd::oneIn(4);
 }
 
 //------------------------------------------------------------ DETECT ITEMS
@@ -790,11 +798,10 @@ SpellEffectNoticed SpellTeleport::cast_(Actor* const caster) const
   return SpellEffectNoticed::yes;
 }
 
-bool SpellTeleport::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellTeleport::allowMonCastNow(Mon& mon) const
 {
   return mon.tgt_                                 &&
-         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
-         mon.getHp() <= (mon.getHpMax(true) / 2)    &&
+         mon.getHp() <= (mon.getHpMax(true) / 2)  &&
          Rnd::coinToss();
 }
 
@@ -809,11 +816,9 @@ SpellEffectNoticed SpellElemRes::cast_(Actor* const caster) const
   return SpellEffectNoticed::yes;
 }
 
-bool SpellElemRes::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellElemRes::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_                                 &&
-         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
-         Rnd::oneIn(3);
+  return mon.tgt_ && Rnd::oneIn(3);
 }
 
 //------------------------------------------------------------ KNOCKBACK
@@ -845,9 +850,9 @@ SpellEffectNoticed SpellKnockBack::cast_(Actor* const caster) const
   return SpellEffectNoticed::no;
 }
 
-bool SpellKnockBack::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellKnockBack::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_ && mon.isSeeingActor(*mon.tgt_, blockedLos);
+  return mon.tgt_;
 }
 
 //------------------------------------------------------------ PROP ON OTHERS
@@ -875,9 +880,9 @@ SpellEffectNoticed SpellPropOnMon::cast_(Actor* const caster) const
   return SpellEffectNoticed::yes;
 }
 
-bool SpellPropOnMon::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellPropOnMon::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_ && mon.isSeeingActor(*mon.tgt_, blockedLos);
+  return mon.tgt_;
 }
 
 //------------------------------------------------------------ DISEASE
@@ -897,11 +902,9 @@ SpellEffectNoticed SpellDisease::cast_(Actor* const caster) const
   return SpellEffectNoticed::no;
 }
 
-bool SpellDisease::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellDisease::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_                                 &&
-         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
-         Rnd::coinToss();
+  return mon.tgt_ && Rnd::coinToss();
 }
 
 //------------------------------------------------------------ SUMMON MONSTER
@@ -1027,11 +1030,11 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
   return SpellEffectNoticed::no;
 }
 
-bool SpellSummonMon::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellSummonMon::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_       &&
-         Rnd::coinToss()  &&
-         (mon.isSeeingActor(*mon.tgt_, blockedLos) || Rnd::oneIn(20));
+  return mon.awareCounter_ > 0  &&
+         Rnd::coinToss()        &&
+         (mon.tgt_ || Rnd::oneIn(20));
 }
 
 //------------------------------------------------------------ HEAL SELF
@@ -1043,9 +1046,8 @@ SpellEffectNoticed SpellHealSelf::cast_(Actor* const caster) const
   return IS_ANY_HP_HEALED ? SpellEffectNoticed::yes : SpellEffectNoticed::no;
 }
 
-bool SpellHealSelf::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellHealSelf::allowMonCastNow(Mon& mon) const
 {
-  (void)blockedLos;
   return mon.getHp() < mon.getHpMax(true);
 }
 
@@ -1073,11 +1075,9 @@ SpellEffectNoticed SpellMiGoHypno::cast_(Actor* const caster) const
   return SpellEffectNoticed::yes;
 }
 
-bool SpellMiGoHypno::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellMiGoHypno::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_                                    &&
-         mon.isSeeingActor(*(Map::player), blockedLos) &&
-         Rnd::oneIn(4);
+  return mon.tgt_ && mon.tgt_->isPlayer() && Rnd::oneIn(4);
 }
 
 //------------------------------------------------------------ IMMOLATION
@@ -1100,9 +1100,7 @@ SpellEffectNoticed SpellBurn::cast_(Actor* const caster) const
   return SpellEffectNoticed::yes;
 }
 
-bool SpellBurn::allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+bool SpellBurn::allowMonCastNow(Mon& mon) const
 {
-  return mon.tgt_                                 &&
-         mon.isSeeingActor(*mon.tgt_, blockedLos) &&
-         Rnd::oneIn(4);
+  return mon.tgt_ && Rnd::oneIn(4);
 }

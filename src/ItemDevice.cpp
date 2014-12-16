@@ -168,7 +168,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
       }
     }
 
-    GameTime::actorDidAct();
+    GameTime::tick();
     return consumedState;
   }
   else //Not identified
@@ -309,7 +309,7 @@ ConsumeItem DeviceLantern::activate(Actor* const actor)
 {
   (void)actor;
   toggle();
-  GameTime::actorDidAct();
+  GameTime::tick();
   return ConsumeItem::no;
 }
 

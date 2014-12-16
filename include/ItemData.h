@@ -123,6 +123,7 @@ enum class ItemId
   huntingHorrorBite,
   dustVortexEngulf, fireVortexEngulf, frostVortexEngulf,
   moldSpores,
+  theDarkOneClaw,
 
   armorLeatherJacket,
   armorIronSuit,

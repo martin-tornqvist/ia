@@ -2390,7 +2390,7 @@ void initDataList()
 
   d.nameA = "The Dark One";
   d.nameThe = d.nameA;
-  d.id = ActorId::finalBoss;
+  d.id = ActorId::theDarkOne;
   d.ai[int(AiId::looks)] = true;
   d.ai[int(AiId::makesRoomForFriend)] = false;
   d.ai[int(AiId::attacks)] = false;
@@ -2398,17 +2398,19 @@ void initDataList()
   d.ai[int(AiId::movesToTgtWhenLos)] = true;
   d.ai[int(AiId::movesToLair)] = false;
   d.ai[int(AiId::movesToLeader)] = false;
-  d.speed = ActorSpeed::fast;
+  d.speed = ActorSpeed::slow;
   d.rangedCooldownTurns = 0;
-  d.spellCooldownTurns = 0;
+  d.spellCooldownTurns = 5;
   d.isUnique = true;
   d.nrLeftAllowedToSpawn = 0;
-  d.glyph = 'P';
+  d.glyph = 'M';
   d.color = clrGrayDrk;
-  d.tile = TileId::witchOrWarlock;
-  d.hp = 1000;
+  d.tile = TileId::theDarkOne;
+  d.hp = 300;
   d.spi = 9999;
-  d.dmgMelee = 6;
+  d.intrProps[propEthereal] = true;
+  d.intrProps[propRConfusion] = true;
+  d.dmgMelee = 8;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.isAutoSpawnAllowed = false;
   d.groupSize = MonGroupSize::alone;

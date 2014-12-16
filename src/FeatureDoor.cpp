@@ -551,7 +551,7 @@ bool Door::trySpike(Actor* actorTrying)
       Log::addMsg("I jam a door with a spike.");
     }
   }
-  GameTime::actorDidAct();
+  GameTime::tick();
   return true;
 }
 
@@ -694,7 +694,7 @@ void Door::tryClose(Actor* actorTrying)
     }
   }
 
-  if (!isOpen_ && isClosable) {GameTime::actorDidAct();}
+  if (!isOpen_ && isClosable) {GameTime::tick();}
 }
 
 void Door::tryOpen(Actor* actorTrying)
@@ -814,7 +814,7 @@ void Door::tryOpen(Actor* actorTrying)
                         " fumbles blindly and fails to open a door.");
           }
         }
-        GameTime::actorDidAct();
+        GameTime::tick();
       }
     }
   }
@@ -828,7 +828,7 @@ void Door::tryOpen(Actor* actorTrying)
       reveal(true);
     }
     TRACE << "Calling GameTime::endTurnOfCurActor()" << endl;
-    GameTime::actorDidAct();
+    GameTime::tick();
   }
 }
 

@@ -22,6 +22,7 @@ enum class TileId
   deepOne,
   shadow,
   lengElder,
+  theDarkOne,
   armor,
   potion,
   ammo,

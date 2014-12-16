@@ -76,7 +76,7 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::sentryDrone:          return new SentryDrone();
     case ActorId::mold:                 return new Mold();
     case ActorId::gasSpore:             return new GasSpore();
-    case ActorId::finalBoss:            return new FinalBoss();
+    case ActorId::theDarkOne:           return new TheDarkOne();
 
     case ActorId::END: {} break;
   }

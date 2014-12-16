@@ -79,7 +79,7 @@ void mkLvl(const MapType& mapType)
 
 void init()
 {
-  //Dungeon + forest + boss + trapezohedron
+  //Forest + dungeon + boss + trapezohedron
   const size_t NR_LVL_TOT = DLVL_LAST + 3;
 
   mapList_ = vector<MapData>(NR_LVL_TOT, {MapType::std, IsMainDungeon::yes});
@@ -87,7 +87,7 @@ void init()
   //Forest intro level
   mapList_[0] = {MapType::intro, IsMainDungeon::yes};
 
-  //Set rats-in-the-walls level as first late-game level in some games
+  //Occasionally set rats-in-the-walls level as first late game level
   if (Rnd::oneIn(3))
   {
     mapList_[DLVL_FIRST_LATE_GAME] = {MapType::ratsInTheWalls, IsMainDungeon::yes};

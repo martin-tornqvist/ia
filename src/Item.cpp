@@ -201,7 +201,7 @@ UnequipAllowed Armor::onUnequip()
     Log::addMsg("I take off my " + name + ".", clrWhite, false, true);
   }
 
-  GameTime::actorDidAct();
+  GameTime::tick();
 
   return unequipAllowed;
 }
@@ -540,7 +540,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
   switch (curAction_)
   {
     case MedBagAction::treatWounds:
-      Log::addMsg("I start to treat my wounds...");
+      Log::addMsg("I start treating my wounds...");
       nrTurnsUntilHealWounds_ = NR_TRN_BEFORE_HEAL;
       break;
 
@@ -552,7 +552,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
     case MedBagAction::END: {} break;
   }
 
-  GameTime::actorDidAct();
+  GameTime::tick();
 
   return ConsumeItem::no;
 }
@@ -644,7 +644,7 @@ void MedicalBag::continueAction()
         return;
       }
 
-      GameTime::actorDidAct();
+      GameTime::tick();
 
     } break;
 
@@ -657,7 +657,7 @@ void MedicalBag::continueAction()
       }
       else
       {
-        GameTime::actorDidAct();
+        GameTime::tick();
       }
     } break;
 
@@ -784,7 +784,7 @@ void Dynamite::onPlayerIgnite() const
 
   Log::addMsg("I " + swiftStr + "light a dynamite stick.");
   Render::drawMapAndInterface();
-  GameTime::actorDidAct(IS_SWIFT);
+  GameTime::tick(IS_SWIFT);
 }
 
 void Dynamite::onStdTurnPlayerHoldIgnited()
@@ -833,7 +833,7 @@ void Molotov::onPlayerIgnite() const
 
   Log::addMsg("I " + swiftStr + "light a Molotov Cocktail.");
   Render::drawMapAndInterface();
-  GameTime::actorDidAct(IS_SWIFT);
+  GameTime::tick(IS_SWIFT);
 }
 
 void Molotov::onStdTurnPlayerHoldIgnited()
@@ -880,7 +880,7 @@ void Flare::onPlayerIgnite() const
   GameTime::updateLightMap();
   Map::player->updateFov();
   Render::drawMapAndInterface();
-  GameTime::actorDidAct(IS_SWIFT);
+  GameTime::tick(IS_SWIFT);
 }
 
 void Flare::onStdTurnPlayerHoldIgnited()
@@ -926,7 +926,7 @@ void SmokeGrenade::onPlayerIgnite() const
 
   Log::addMsg("I " + swiftStr + "ignite a smoke grenade.");
   Render::drawMapAndInterface();
-  GameTime::actorDidAct(IS_SWIFT);
+  GameTime::tick(IS_SWIFT);
 }
 
 void SmokeGrenade::onStdTurnPlayerHoldIgnited()

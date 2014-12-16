@@ -1253,7 +1253,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
     Mon* const mon = static_cast<Mon*>(data.defender);
     mon->awareCounter_ = mon->getData().nrTurnsAware;
   }
-  GameTime::actorDidAct();
+  GameTime::tick();
 }
 
 bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos)
@@ -1299,7 +1299,7 @@ bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
   Render::drawMapAndInterface();
 
-  if (didAttack) {GameTime::actorDidAct();}
+  if (didAttack) {GameTime::tick();}
 
   return didAttack;
 }

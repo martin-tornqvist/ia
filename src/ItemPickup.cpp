@@ -55,7 +55,7 @@ void tryPick()
           carriedMissile->nrItems_ += item->nrItems_;
           delete item;
           Map::cells[pos.x][pos.y].item = nullptr;
-          GameTime::actorDidAct();
+          GameTime::tick();
           return;
         }
       }
@@ -70,7 +70,7 @@ void tryPick()
 
     Map::cells[pos.x][pos.y].item = nullptr;
 
-    GameTime::actorDidAct();
+    GameTime::tick();
   }
   else //No item in this cell
   {
@@ -132,7 +132,7 @@ void tryUnloadWpnOrPickupAmmo()
 
           Map::player->getInv().putInGeneral(spawnedAmmo);
 
-          GameTime::actorDidAct();
+          GameTime::tick();
           return;
         }
       }

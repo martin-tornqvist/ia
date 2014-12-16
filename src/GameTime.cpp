@@ -237,7 +237,7 @@ void resetTurnTypeAndActorCounters()
 //during this type of turn act. When all actors who can act on this phase have
 //acted, and if this is a normal speed phase - consider it a standard turn;
 //update status effects, update timed features, spawn more monsters etc.
-void actorDidAct(const bool IS_FREE_TURN)
+void tick(const bool IS_FREE_TURN)
 {
   runAtomicTurnEvents();
 

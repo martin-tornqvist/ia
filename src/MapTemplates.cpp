@@ -288,11 +288,11 @@ void initTempls()
 
   mkTempl(str, MapTemplId::bossLevel, vector<Translation>
   {
-    {'@', {FeatureId::floor,    ActorId::END,       ItemId::END, 1}}, //Start
-    {'M', {FeatureId::floor,    ActorId::finalBoss, ItemId::END}},    //Boss
-    {'|', {FeatureId::pillar,   ActorId::END,       ItemId::END}},
-    {'v', {FeatureId::brazier,  ActorId::END,       ItemId::END}},
-    {'>', {FeatureId::stairs,   ActorId::END,       ItemId::END}}
+    {'@', {FeatureId::floor,    ActorId::END,         ItemId::END, 1}}, //Start
+    {'M', {FeatureId::floor,    ActorId::theDarkOne,  ItemId::END}},    //Boss
+    {'|', {FeatureId::pillar,   ActorId::END,         ItemId::END}},
+    {'v', {FeatureId::brazier,  ActorId::END,         ItemId::END}},
+    {'>', {FeatureId::stairs,   ActorId::END,         ItemId::END}}
   });
 }
 

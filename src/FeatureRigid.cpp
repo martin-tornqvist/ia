@@ -230,7 +230,7 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
   if (actor)
   {
     //TODO This should probably be done elsewhere.
-    GameTime::actorDidAct();
+    GameTime::tick();
   }
 }
 
@@ -1724,7 +1724,7 @@ void Tomb::bump(Actor & actorBumping)
         }
       }
 
-      GameTime::actorDidAct();
+      GameTime::tick();
     }
   }
 }
@@ -1924,7 +1924,7 @@ void Chest::bump(Actor & actorBumping)
         {
           open(Map::player);
         }
-        GameTime::actorDidAct();
+        GameTime::tick();
       }
     }
   }
@@ -2055,7 +2055,7 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
                 trySprainPlayer();
               }
             }
-            GameTime::actorDidAct();
+            GameTime::tick();
           }
         }
         break; //Kick
@@ -2173,7 +2173,7 @@ void Chest::disarm()
       {
         triggerTrap(Map::player); //Note: This will disable the trap
       }
-      GameTime::actorDidAct();
+      GameTime::tick();
       return;
     }
   }
@@ -2565,7 +2565,7 @@ void Fountain::bump(Actor & actorBumping)
         Log::addMsg("The fountain dries out.");
       }
       Render::drawMapAndInterface();
-      GameTime::actorDidAct();
+      GameTime::tick();
     }
   }
 }

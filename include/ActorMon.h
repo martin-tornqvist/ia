@@ -674,17 +674,23 @@ public:
   void mkStartItems() override {}
 };
 
-class FinalBoss: public Mon
+class TheDarkOne: public Mon
 {
 public:
-  FinalBoss() :
-    Mon               (),
-    hasGreetedPlayer_ (false) {}
-  ~FinalBoss() {}
+  TheDarkOne() :
+    Mon                 (),
+    hasGreetedPlayer_   (false),
+    BIG_SPELL_COOLDOWN_ (25),
+    bigSpellCounter_    (BIG_SPELL_COOLDOWN_) {}
+  ~TheDarkOne() {}
   bool onActorTurn_() override;
   void mkStartItems() override;
 private:
-  bool hasGreetedPlayer_;
+  void onStdTurn_()   override;
+
+  bool      hasGreetedPlayer_;
+  const int BIG_SPELL_COOLDOWN_;
+  int       bigSpellCounter_;
 };
 
 #endif

@@ -24,7 +24,7 @@ void setupFromSaveLines(std::vector<std::string>& lines);
 
 void addActor(Actor* actor);
 
-void actorDidAct(const bool IS_FREE_TURN = false);
+void tick(const bool IS_FREE_TURN = false);
 
 int getTurn();
 

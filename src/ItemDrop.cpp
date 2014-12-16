@@ -92,7 +92,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     }
 
     //End turn
-    GameTime::actorDidAct();
+    GameTime::tick();
   }
 }
 

@@ -411,7 +411,7 @@ void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId sl
     Log::addMsg(msg, clrWhite, false, true);
   }
 
-  GameTime::actorDidAct(isFreeTurn);
+  GameTime::tick(isFreeTurn);
 }
 
 void Inventory::swapWieldedAndPrepared(
@@ -427,7 +427,7 @@ void Inventory::swapWieldedAndPrepared(
 
   Render::drawMapAndInterface();
 
-  GameTime::actorDidAct(IS_FREE_TURN);
+  GameTime::tick(IS_FREE_TURN);
 }
 
 void Inventory::moveFromGeneralToIntrinsics(const size_t GEN_IDX)

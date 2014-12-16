@@ -235,7 +235,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
   if (result == ReloadResult::success || result == ReloadResult::fumble)
   {
     didAct = true;
-    GameTime::actorDidAct(isSwiftReload);
+    GameTime::tick(isSwiftReload);
   }
 
   return didAct;

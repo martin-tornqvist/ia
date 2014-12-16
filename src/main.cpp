@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
             {
               SdlWrapper::sleep(DELAY_PLAYER_UNABLE_TO_ACT);
             }
-            GameTime::actorDidAct();
+            GameTime::tick();
           }
         }
         else //Player is dead

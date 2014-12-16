@@ -505,7 +505,7 @@ void handleMapModeKeyPress(const KeyData& d)
         const string  TURNS_STR       = toStr(TURNS_TO_APPLY);
         Log::addMsg("I pause for a while (" + TURNS_STR + " turns)...");
         Map::player->waitTurnsLeft = TURNS_TO_APPLY - 1;
-        GameTime::actorDidAct();
+        GameTime::tick();
       }
       else
       {

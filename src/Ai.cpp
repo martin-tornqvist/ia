@@ -22,59 +22,55 @@ namespace Action
 
 bool tryCastRandomSpell(Mon& mon)
 {
-  if (mon.isAlive())
+  if (mon.isAlive() && mon.spellCoolDownCur_ == 0)
   {
-    if (mon.awareCounter_ > 0 && mon.spellCoolDownCur_ == 0)
+    if (!mon.getPropHandler().allowRead(false))
     {
+      return false;
+    }
 
-      if (!mon.getPropHandler().allowRead(false)) {return false;}
+    if (!mon.spellsKnown_.empty())
+    {
+      vector<Spell*> spellBucket = mon.spellsKnown_;
 
-      if (!mon.spellsKnown_.empty())
+      std::random_shuffle(begin(spellBucket), end(spellBucket));
+
+      while (!spellBucket.empty())
       {
-        vector<Spell*> spellBucket = mon.spellsKnown_;
+        Spell* const spell = spellBucket.back();
 
-        std::random_shuffle(begin(spellBucket), end(spellBucket));
-
-        bool blockedLos[MAP_W][MAP_H];
-        MapParse::parse(CellCheck::BlocksLos(), blockedLos);
-
-        while (!spellBucket.empty())
+        if (spell->allowMonCastNow(mon))
         {
-          Spell* const spell = spellBucket.back();
+          const int CUR_SPI = mon.getSpi();
+          const int SPELL_MAX_SPI = spell->getSpiCost(false, &mon).upper;
 
-          if (spell->allowMonCastNow(mon, blockedLos))
+          //Cast spell if max spirit cost is lower than current spirit,
+          if (SPELL_MAX_SPI < CUR_SPI)
           {
-            const int CUR_SPI = mon.getSpi();
-            const int SPELL_MAX_SPI = spell->getSpiCost(false, &mon).upper;
-
-            //Cast spell if max spirit cost is lower than current spirit,
-            if (SPELL_MAX_SPI < CUR_SPI)
-            {
-              spell->cast(&mon, true);
-              return true;
-            }
-
-            //This point reached means SPI was lower than the spells potential cost
-            const int CUR_HP  = mon.getHp();
-            const int MAX_HP  = mon.getHpMax(true);
-
-            //If monster is not allied to player, with a small chance, cast the spell
-            //anyway if HP is low.
-            if (!Map::player->isLeaderOf(&mon) && CUR_HP < (MAX_HP / 3) && Rnd::oneIn(20))
-            {
-              if (Map::player->isSeeingActor(mon, nullptr))
-              {
-                Log::addMsg(mon.getNameThe() + " looks desperate.");
-              }
-              spell->cast(&mon, true);
-              return true;
-            }
-            return false;
+            spell->cast(&mon, true);
+            return true;
           }
-          else //Spell does not allow monster to cast now
+
+          //This point reached means SPI was lower than the spells potential cost
+          const int CUR_HP  = mon.getHp();
+          const int MAX_HP  = mon.getHpMax(true);
+
+          //If monster is not allied to player, with a small chance, cast the spell
+          //anyway if HP is low.
+          if (!Map::player->isLeaderOf(&mon) && CUR_HP < (MAX_HP / 3) && Rnd::oneIn(20))
           {
-            spellBucket.pop_back();
+            if (Map::player->isSeeingActor(mon, nullptr))
+            {
+              Log::addMsg(mon.getNameThe() + " looks desperate.");
+            }
+            spell->cast(&mon, true);
+            return true;
           }
+          return false;
+        }
+        else //Spell does not allow monster to cast now
+        {
+          spellBucket.pop_back();
         }
       }
     }
@@ -470,7 +466,7 @@ bool lookBecomePlayerAware(Mon& mon)
           }
           else
           {
-            GameTime::actorDidAct();
+            GameTime::tick();
             return true;
           }
         }
@@ -484,7 +480,7 @@ bool lookBecomePlayerAware(Mon& mon)
         }
         else
         {
-          GameTime::actorDidAct();
+          GameTime::tick();
           return true;
         }
       }

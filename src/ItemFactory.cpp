@@ -89,6 +89,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::fireVortexEngulf:
     case ItemId::frostVortexEngulf:
     case ItemId::moldSpores:
+    case ItemId::theDarkOneClaw:
       r = new Wpn(d, ammoD);
       break;
 

@@ -69,7 +69,7 @@ void Mon::onActorTurn()
 
     if (waiting_)
     {
-      GameTime::actorDidAct();
+      GameTime::tick();
       return;
     }
   }
@@ -233,7 +233,7 @@ void Mon::onActorTurn()
     }
   }
 
-  GameTime::actorDidAct();
+  GameTime::tick();
 }
 
 void Mon::onStdTurn()
@@ -263,8 +263,19 @@ void Mon::hit_(int& dmg)
 
 void Mon::moveDir(Dir dir)
 {
-  assert(dir != Dir::END);
-  assert(Utils::isPosInsideMap(pos, false));
+#ifndef NDEBUG
+  if (dir == Dir::END)
+  {
+    TRACE << "Illegal direction parameter" << endl;
+    assert(false);
+  }
+
+  if (!Utils::isPosInsideMap(pos, false))
+  {
+    TRACE << "Monster outside map" << endl;
+    assert(false);
+  }
+#endif // NDEBUG
 
   getPropHandler().changeMoveDir(pos, dir);
 
@@ -278,7 +289,7 @@ void Mon::moveDir(Dir dir)
       if (dir == Dir::center)
       {
         TRACE_VERBOSE << "Monster move prevented by trap" << endl;
-        GameTime::actorDidAct();
+        GameTime::tick();
         return;
       }
     }
@@ -300,7 +311,7 @@ void Mon::moveDir(Dir dir)
     Map::cells[pos.x][pos.y].rigid->bump(*this);
   }
 
-  GameTime::actorDidAct();
+  GameTime::tick();
 }
 
 void Mon::hearSound(const Snd& snd)
@@ -813,7 +824,7 @@ bool Vortex::onActorTurn_()
               TRACE << "Attempt pull (knockback)" << endl;
               KnockBack::tryKnockBack(*(Map::player), knockBackFromPos, false, false);
               pullCooldown = 5;
-              GameTime::actorDidAct();
+              GameTime::tick();
               return true;
             }
           }
@@ -885,7 +896,7 @@ bool Ghost::onActorTurn_()
       Map::player->getPropHandler().tryApplyProp(
         new PropSlowed(PropTurns::std));
     }
-    GameTime::actorDidAct();
+    GameTime::tick();
     return true;
   }
   return false;
@@ -1050,7 +1061,7 @@ bool Khephren::onActorTurn_()
         }
         Render::drawMapAndInterface();
         hasSummonedLocusts = true;
-        GameTime::actorDidAct();
+        GameTime::tick();
         return true;
       }
     }
@@ -1120,7 +1131,7 @@ bool KeziahMason::onActorTurn_()
           hasSummonedJenkin     = true;
           jenkin->awareCounter_ = 999;
           jenkin->leader_       = leader_ ? leader_ : this;
-          GameTime::actorDidAct();
+          GameTime::tick();
           return true;
         }
       }
@@ -1304,7 +1315,7 @@ bool WormMass::onActorTurn_()
         worm->spawnNewOneInN    = spawnNewOneInN;
         worm->awareCounter_     = awareCounter_;
         worm->leader_           = leader_ ? leader_ : this;
-        GameTime::actorDidAct();
+        GameTime::tick();
         return true;
       }
     }
@@ -1340,7 +1351,7 @@ bool GiantLocust::onActorTurn_()
         locust->spawnNewOneInN    = spawnNewOneInN;
         locust->awareCounter_     = awareCounter_;
         locust->leader_           = leader_ ? leader_ : this;
-        GameTime::actorDidAct();
+        GameTime::tick();
         return true;
       }
     }
@@ -1468,7 +1479,7 @@ bool MajorClaphamLee::onActorTurn_()
       Render::drawMapAndInterface();
       hasSummonedTombLegions = true;
       Map::player->incrShock(ShockLvl::heavy, ShockSrc::misc);
-      GameTime::actorDidAct();
+      GameTime::tick();
       return true;
     }
   }
@@ -1505,7 +1516,7 @@ bool Zombie::tryResurrect()
           }
 
           awareCounter_ = data_->nrTurnsAware * 2;
-          GameTime::actorDidAct();
+          GameTime::tick();
           return true;
         }
       }
@@ -1570,7 +1581,7 @@ bool Mold::onActorTurn_()
         Mold* const   mold      = static_cast<Mold*>(actor);
         mold->awareCounter_     = awareCounter_;
         mold->leader_           = leader_ ? leader_ : this;
-        GameTime::actorDidAct();
+        GameTime::tick();
         return true;
       }
     }
@@ -1588,15 +1599,26 @@ void GasSpore::die_()
   Explosion::runExplosionAt(pos, ExplType::expl);
 }
 
-void FinalBoss::mkStartItems()
+void TheDarkOne::mkStartItems()
 {
-  spellsKnown_.push_back(new SpellSummonMon());
+  inv_->putInIntrinsics(ItemFactory::mk(ItemId::theDarkOneClaw));
+
   spellsKnown_.push_back(new SpellTeleport());
+  spellsKnown_.push_back(new SpellKnockBack());
+  spellsKnown_.push_back(new SpellMayhem());
 }
 
-bool FinalBoss::onActorTurn_()
+void TheDarkOne::onStdTurn_()
 {
-  if (!hasGreetedPlayer_)
+//  if (Map::cells[pos.x][pos.y].isLit)
+//  {
+//    propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
+//  }
+}
+
+bool TheDarkOne::onActorTurn_()
+{
+  if (isAlive() && !hasGreetedPlayer_)
   {
     Map::player->updateFov();
     Render::drawMapAndInterface();
@@ -1608,5 +1630,18 @@ bool FinalBoss::onActorTurn_()
     awareCounter_     = data_->nrTurnsAware;
   }
 
-  return true;
+  if (bigSpellCounter_ > 0)
+  {
+    bigSpellCounter_--;
+  }
+
+  if (bigSpellCounter_ <= 0 && tgt_)
+  {
+    ActorFactory::summonMon(pos, {3, ActorId::giantBat}, this);
+    GameTime::tick();
+    bigSpellCounter_ = BIG_SPELL_COOLDOWN_;
+    return true;
+  }
+
+  return false;
 }

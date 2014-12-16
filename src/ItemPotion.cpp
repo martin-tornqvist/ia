@@ -122,7 +122,7 @@ void Potion::quaff(Actor& actor)
 
   if (Map::player->isAlive())
   {
-    GameTime::actorDidAct();
+    GameTime::tick();
   }
 }
 

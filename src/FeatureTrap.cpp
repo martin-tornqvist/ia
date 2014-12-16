@@ -266,7 +266,7 @@ void Trap::disarm()
       triggerTrap(Map::player);
     }
   }
-  GameTime::actorDidAct();
+  GameTime::tick();
 
   if (IS_DISARMED) {Map::put(new Floor(pos_));}
 }

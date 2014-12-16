@@ -84,7 +84,7 @@ void playerThrowLitExplosive(const Pos& aimCell)
   delete explosive;
   Map::player->activeExplosive = nullptr;
 
-  GameTime::actorDidAct();
+  GameTime::tick();
 }
 
 void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
@@ -160,7 +160,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
           {
             static_cast<Potion*>(&itemThrown)->collide(curPos, actorHere);
             delete &itemThrown;
-            GameTime::actorDidAct();
+            GameTime::tick();
             return;
           }
 
@@ -199,7 +199,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
     {
       static_cast<Potion*>(&itemThrown)->collide(path[blockedInElement], nullptr);
       delete &itemThrown;
-      GameTime::actorDidAct();
+      GameTime::tick();
       return;
     }
   }
@@ -246,7 +246,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
   }
 
   Render::drawMapAndInterface();
-  GameTime::actorDidAct();
+  GameTime::tick();
 }
 
 } //Throwing

@@ -18,7 +18,7 @@ const std::string summonWarningStr =
 
 enum class SpellId
 {
-  //Player and monster available spells
+  //Available for player and all monsters
   darkbolt,
   azaWrath,
   slowMon,
@@ -29,7 +29,7 @@ enum class SpellId
   pest,
 
   //Player only
-  mayhem,
+  mayhem, //Note: This can be cast by the final boss
   detItems,
   detTraps,
   detMon,
@@ -76,10 +76,9 @@ public:
   virtual ~Spell() {}
   SpellEffectNoticed cast(Actor* const caster, const bool IS_INTRINSIC) const;
 
-  virtual bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const
+  virtual bool allowMonCastNow(Mon& mon) const
   {
     (void)mon;
-    (void)blockedLos;
     return false;
   }
   virtual bool isAvailForAllMon()       const = 0;
@@ -115,7 +114,7 @@ class SpellDarkbolt: public Spell
 {
 public:
   SpellDarkbolt() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Darkbolt";}
@@ -142,7 +141,7 @@ class SpellAzaWrath: public Spell
 {
 public:
   SpellAzaWrath() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Azathoths Wrath";}
@@ -172,6 +171,7 @@ class SpellMayhem: public Spell
 {
 public:
   SpellMayhem() : Spell() {}
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return false;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Mayhem";}
@@ -198,7 +198,7 @@ class SpellPest: public Spell
 {
 public:
   SpellPest() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Pestilence";}
@@ -227,7 +227,7 @@ public:
   SpellPharaohStaff() {}
   ~SpellPharaohStaff() {}
 
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
 
   virtual bool isAvailForAllMon()       const override {return false;}
   virtual bool isAvailForPlayer()       const override {return false;}
@@ -482,7 +482,7 @@ class SpellKnockBack: public Spell
 {
 public:
   SpellKnockBack() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "Knockback";}
@@ -504,7 +504,7 @@ class SpellTeleport: public Spell
 {
 public:
   SpellTeleport() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Teleport";}
@@ -529,7 +529,7 @@ class SpellElemRes: public Spell
 {
 public:
   SpellElemRes() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Elemental Resistance";}
@@ -556,7 +556,7 @@ class SpellPropOnMon: public Spell
 {
 public:
   SpellPropOnMon() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   virtual std::string getName() const override = 0;
@@ -638,7 +638,7 @@ class SpellDisease: public Spell
 {
 public:
   SpellDisease() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "Disease";}
@@ -663,7 +663,7 @@ class SpellSummonMon: public Spell
 {
 public:
   SpellSummonMon() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return true;}
   std::string getName()         const override {return "Summon Creature";}
@@ -691,7 +691,7 @@ class SpellHealSelf: public Spell
 {
 public:
   SpellHealSelf() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "Healing";}
@@ -716,7 +716,7 @@ class SpellMiGoHypno: public Spell
 {
 public:
   SpellMiGoHypno() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "MiGo Hypnosis";}
@@ -741,7 +741,7 @@ class SpellBurn: public Spell
 {
 public:
   SpellBurn() : Spell() {}
-  bool allowMonCastNow(Mon& mon, const bool blockedLos[MAP_W][MAP_H]) const override;
+  bool allowMonCastNow(Mon& mon) const override;
   bool isAvailForAllMon()       const override {return true;}
   bool isAvailForPlayer()       const override {return false;}
   std::string getName()         const override {return "Immolation";}
