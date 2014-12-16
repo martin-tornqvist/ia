@@ -27,7 +27,7 @@ bool            isAsciiWallFullSquare();
 bool            isTilesWallFullSquare();
 bool            isAudioEnabled();
 bool            isBotPlaying();
-void            setBotPlaying();
+void            toggleBotPlaying();
 bool            isRangedWpnMeleeePrompt();
 bool            isRangedWpnAutoReload();
 bool            isIntroLvlSkipped();

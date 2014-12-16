@@ -25,9 +25,11 @@ using namespace std;
 
 //------------------------------------------------------------- TRAP
 Trap::Trap(const Pos& pos, const Rigid* const mimicFeature, TrapId type) :
-  Rigid(pos), mimicFeature_(mimicFeature), isHidden_(true), specificTrap_(nullptr)
+  Rigid         (pos),
+  mimicFeature_ (mimicFeature),
+  isHidden_     (true),
+  specificTrap_ (nullptr)
 {
-
   assert(type != TrapId::END);
 
   assert(Map::cells[pos.x][pos.y].rigid->canHaveRigid());
@@ -47,6 +49,7 @@ Trap::~Trap()
 {
   assert(specificTrap_);
   delete specificTrap_;
+  delete mimicFeature_;
 }
 
 void Trap::onHit(const DmgType dmgType, const DmgMethod dmgMethod,

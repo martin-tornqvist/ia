@@ -193,14 +193,14 @@ namespace MapParse
 
 const Rect mapRect(0, 0, MAP_W - 1, MAP_H - 1);
 
-void parse(const CellCheck::Check& check, bool out[MAP_W][MAP_H],
-           const MapParseWriteRule writeRule, const Rect& areaToCheckCells)
+void run(const CellCheck::Check& check, bool out[MAP_W][MAP_H],
+         const MapParseMode writeRule, const Rect& areaToCheckCells)
 {
   assert(check.isCheckingCells()  ||
          check.isCheckingMobs()   ||
          check.isCheckingActors());
 
-  const bool ALLOW_WRITE_FALSE = writeRule == MapParseWriteRule::always;
+  const bool ALLOW_WRITE_FALSE = writeRule == MapParseMode::overwrite;
 
   if (check.isCheckingCells())
   {
@@ -223,11 +223,16 @@ void parse(const CellCheck::Check& check, bool out[MAP_W][MAP_H],
     for (Mob* mob : GameTime::mobs_)
     {
       const Pos& p = mob->getPos();
-      const bool IS_MATCH = check.check(*mob);
-      if (IS_MATCH || ALLOW_WRITE_FALSE)
+
+      if (Utils::isPosInside(p, areaToCheckCells))
       {
-        bool& v = out[p.x][p.y];
-        if (!v) {v = IS_MATCH;}
+        const bool IS_MATCH = check.check(*mob);
+
+        if (IS_MATCH || ALLOW_WRITE_FALSE)
+        {
+          bool& v = out[p.x][p.y];
+          if (!v) {v = IS_MATCH;}
+        }
       }
     }
   }
@@ -237,11 +242,16 @@ void parse(const CellCheck::Check& check, bool out[MAP_W][MAP_H],
     for (Actor* actor : GameTime::actors_)
     {
       const Pos& p = actor->pos;
-      const bool IS_MATCH = check.check(*actor);
-      if (IS_MATCH || ALLOW_WRITE_FALSE)
+
+      if (Utils::isPosInside(p, areaToCheckCells))
       {
-        bool& v = out[p.x][p.y];
-        if (!v) {v = IS_MATCH;}
+        const bool IS_MATCH = check.check(*actor);
+
+        if (IS_MATCH || ALLOW_WRITE_FALSE)
+        {
+          bool& v = out[p.x][p.y];
+          if (!v) {v = IS_MATCH;}
+        }
       }
     }
   }

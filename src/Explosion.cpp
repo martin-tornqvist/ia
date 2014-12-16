@@ -119,7 +119,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
   getArea(origin, RADI, area);
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksProjectiles(), blocked);
+  MapParse::run(CellCheck::BlocksProjectiles(), blocked);
 
   vector< vector<Pos> > posLists;
   getCellsReached(area, origin, blocked, posLists);
@@ -251,7 +251,7 @@ void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION*/)
   getArea(origin, RADI, area);
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksProjectiles(), blocked);
+  MapParse::run(CellCheck::BlocksProjectiles(), blocked);
 
   vector< vector<Pos> > posLists;
   getCellsReached(area, origin, blocked, posLists);

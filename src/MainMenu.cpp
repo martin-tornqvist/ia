@@ -426,7 +426,7 @@ GameEntryMode run(bool& quit, int& introMusChannel)
         {
           if (browser.isAtIdx(7))
           {
-            Config::setBotPlaying();
+            Config::toggleBotPlaying();
             TRACE_FUNC_END;
             return GameEntryMode::newGame;
           }

@@ -16,6 +16,8 @@ public:
 
   Rigid() = delete;
 
+  virtual ~Rigid() {}
+
   virtual FeatureId   getId()                         const override = 0;
   virtual std::string getName(const Article article)  const override = 0;
   virtual void        onNewTurn()                           override final;

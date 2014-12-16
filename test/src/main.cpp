@@ -1225,7 +1225,7 @@ TEST_FIXTURE(BasicFixture, ConnectRoomsWithCorridor)
 
   int flood[MAP_W][MAP_H];
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
   FloodFill::run(5, blocked, flood, INT_MAX, -1, true);
   CHECK(flood[20][10] > 0);
 

@@ -123,7 +123,7 @@ void trySpawnDueToTimePassed()
   }
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
   const int MIN_DIST_TO_PLAYER = FOV_STD_RADI_INT + 3;
 
@@ -176,7 +176,7 @@ void populateCaveLvl()
   bool blocked[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
-  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -222,7 +222,7 @@ void populateIntroLvl()
   bool blocked[MAP_W][MAP_H];
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT + 3;
-  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
   const Pos& playerPos = Map::player->pos;
 
@@ -270,7 +270,7 @@ void populateStdLvl()
 
   const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 1;
 
-  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
   const Pos& playerPos = Map::player->pos;
 

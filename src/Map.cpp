@@ -33,6 +33,27 @@ Cell::~Cell()
   if (item)  {delete item;}
 }
 
+void Cell::reset()
+{
+  isExplored = isSeenByPlayer = isLit = isDark = false;
+
+  playerVisualMemory = CellRenderData();
+
+  pos.set(-1, -1);
+
+  if (rigid)
+  {
+    delete rigid;
+    rigid = nullptr;
+  }
+
+  if (item)
+  {
+    delete item;
+    item = nullptr;
+  }
+}
+
 namespace Map
 {
 
@@ -51,8 +72,7 @@ void resetCells(const bool MAKE_STONE_WALLS)
   {
     for (int y = 0; y < MAP_H; ++y)
     {
-
-      cells[x][y]     = Cell();
+      cells[x][y].reset();
       cells[x][y].pos = Pos(x, y);
 
       roomMap[x][y]   = nullptr;
@@ -60,7 +80,7 @@ void resetCells(const bool MAKE_STONE_WALLS)
       Render::renderArray[x][y]         = CellRenderData();
       Render::renderArrayNoActors[x][y] = CellRenderData();
 
-      if (MAKE_STONE_WALLS) {Map::put(new Wall(Pos(x, y)));}
+      if (MAKE_STONE_WALLS) {put(new Wall(Pos(x, y)));}
     }
   }
 }

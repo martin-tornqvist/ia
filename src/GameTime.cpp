@@ -48,7 +48,7 @@ void runStdTurnEvents()
   ++turnNr_;
 
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
   int regenSpiNTurns = 12;
 

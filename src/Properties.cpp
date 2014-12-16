@@ -1446,7 +1446,7 @@ bool PropHandler::changeActorClr(Clr& clr) const
 void PropHandler::endAppliedPropsByMagicHealing()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for (bool& v : sources) {v = true;}
@@ -1477,14 +1477,14 @@ Prop::Prop(PropId id, PropTurns turnsInit, int turns) :
 void PropBlessed::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propCursed, blockedLos, false);
 }
 
 void PropCursed::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propBlessed, blockedLos, false);
 }
 
@@ -1495,7 +1495,7 @@ void PropInfected::onNewTurn()
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(PropTurns::std));
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksLos(), blocked);
+    MapParse::run(CellCheck::BlocksLos(), blocked);
     propHlr.endAppliedProp(propInfected, blocked, false);
   }
 }
@@ -1666,7 +1666,7 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir)
   if (dir != Dir::center)
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksActor(*owningActor_, true),
+    MapParse::run(CellCheck::BlocksActor(*owningActor_, true),
                     blocked);
 
     if (Rnd::oneIn(8))
@@ -1708,7 +1708,7 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
     const Pos& closestMonPos = seenFoesCells[0];
 
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksActor(*owningActor_, false), blocked);
+    MapParse::run(CellCheck::BlocksActor(*owningActor_, false), blocked);
 
     vector<Pos> line;
     LineCalc::calcNewLine(actorPos, closestMonPos, true, 999, false, line);
@@ -1736,7 +1736,7 @@ bool PropFrenzied::isResistOtherProp(const PropId id) const
 void PropFrenzied::onStart()
 {
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blocked);
+  MapParse::run(CellCheck::BlocksLos(), blocked);
   owningActor_->getPropHandler().endAppliedProp(propConfused,  blocked);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, blocked);
   owningActor_->getPropHandler().endAppliedProp(propWeakened,  blocked);
@@ -1824,7 +1824,7 @@ void PropFlared::onNewTurn()
   if (turnsLeft_ == 0)
   {
     bool blockedLos[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+    MapParse::run(CellCheck::BlocksLos(), blockedLos);
     owningActor_->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
     owningActor_->getPropHandler().endAppliedProp(propFlared, blockedLos);
   }
@@ -1900,7 +1900,7 @@ bool PropRConfusion::isResistOtherProp(const PropId id) const
 void PropRConfusion::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propConfused, blockedLos);
 }
 
@@ -1912,7 +1912,7 @@ bool PropRFear::isResistOtherProp(const PropId id) const
 void PropRFear::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propTerrified, blockedLos);
 }
 
@@ -1956,7 +1956,7 @@ bool PropRFire::isResistOtherProp(const PropId id) const
 void PropRFire::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propBurning, blockedLos);
 }
 
@@ -1989,7 +1989,7 @@ bool PropRPoison::isResistOtherProp(const PropId id) const
 void PropRPoison::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propPoisoned, blockedLos);
 }
 
@@ -2001,7 +2001,7 @@ bool PropRSleep::isResistOtherProp(const PropId id) const
 void PropRSleep::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propFainted, blockedLos);
 }
 
@@ -2013,7 +2013,7 @@ bool PropRDisease::isResistOtherProp(const PropId id) const
 void PropRDisease::onStart()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propDiseased, blockedLos);
   owningActor_->getPropHandler().endAppliedProp(propInfected, blockedLos);
 }

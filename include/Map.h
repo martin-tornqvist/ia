@@ -19,6 +19,8 @@ struct Cell
   Cell();
   ~Cell();
 
+  void reset();
+
   bool            isExplored, isSeenByPlayer, isLit, isDark;
   Item*           item;
   Rigid*          rigid;

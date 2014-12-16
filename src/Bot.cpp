@@ -37,7 +37,7 @@ void findPathToStairs()
   curPath_.clear();
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   Pos stairPos(-1, -1);
 
@@ -100,6 +100,12 @@ void act()
 #endif
   }
   //=======================================================================
+
+  //Abort?
+  if (Input::isKeyHeld(SDLK_ESCAPE))
+  {
+    Config::toggleBotPlaying();
+  }
 
   //Check if we are finished with the current run, if so, go back to DLVL 1
   if (Map::dlvl >= DLVL_LAST)

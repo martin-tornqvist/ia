@@ -32,7 +32,7 @@ public:
 
   Door() = delete;
 
-  ~Door() override {}
+  ~Door() override;
 
   FeatureId getId() const override {return FeatureId::door;}
 

@@ -40,6 +40,8 @@ void setKeyRepeatDelays();
 
 void handleMapModeKeyPress(const KeyData& d);
 
+bool isKeyHeld(const SDLKey key);
+
 } //Input
 
 #endif

@@ -914,7 +914,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
   //free visible cell. If no such cell is available, instead summon near the caster.
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
   vector<Pos> freeCellsSeenByPlayer;
   const int RADI = FOV_STD_RADI_INT;

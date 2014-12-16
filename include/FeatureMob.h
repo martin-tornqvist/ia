@@ -10,13 +10,13 @@ public:
 
   Mob() = delete;
 
+  virtual ~Mob() {}
+
   virtual FeatureId   getId()                         const override = 0;
   virtual std::string getName(const Article article)  const override = 0;
   Clr                 getClr()                        const override = 0;
 
   Clr getClrBg() const override final {return clrBlack;}
-
-  virtual ~Mob() {}
 };
 
 class Smoke: public Mob

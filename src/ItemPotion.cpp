@@ -334,7 +334,7 @@ void PotionRFire::collide_(const Pos& pos, Actor* const actor)
 void PotionAntidote::quaff_(Actor& actor)
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   const bool WAS_POISONED =
     actor.getPropHandler().endAppliedProp(propPoisoned, blockedLos);
 
@@ -438,7 +438,7 @@ void PotionClairv::quaff_(Actor& actor)
     animCells.clear();
 
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksLos(), blocked);
+    MapParse::run(CellCheck::BlocksLos(), blocked);
     for (int x = 0; x < MAP_W; ++x)
     {
       for (int y = 0; y < MAP_H; ++y)

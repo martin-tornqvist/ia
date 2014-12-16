@@ -127,8 +127,7 @@ void Actor::getSeenFoes(vector<Actor*>& out)
                  min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
                  min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
 
-    MapParse::parse(CellCheck::BlocksLos(), blockedLos, MapParseWriteRule::always,
-                    losRect);
+    MapParse::run(CellCheck::BlocksLos(), blockedLos, MapParseMode::overwrite, losRect);
   }
 
   for (Actor* actor : GameTime::actors_)
@@ -189,7 +188,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONS)
   (void)MOVE_TO_POS_AWAY_FROM_MONS;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksActor(*this, true), blocked);
+  MapParse::run(CellCheck::BlocksActor(*this, true), blocked);
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
 

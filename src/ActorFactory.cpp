@@ -122,7 +122,7 @@ void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
   if (monstersRet) {monstersRet->clear();}
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
   sort(begin(freeCells), end(freeCells), IsCloserToPos(origin));

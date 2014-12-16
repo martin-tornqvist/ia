@@ -192,16 +192,18 @@ private:
 
 } //CellCheck
 
-enum class MapParseWriteRule {always, writeOnlyTrue};
+//Note: If append mode is used, the caller is responsible for initializing the array
+//(typically with a previous parse call, with write rule set to "overwrite")
+enum class MapParseMode {overwrite, append};
 
 namespace MapParse
 {
 
 extern const Rect mapRect;
 
-void parse(const CellCheck::Check& check, bool out[MAP_W][MAP_H],
-           const MapParseWriteRule writeRule = MapParseWriteRule::always,
-           const Rect& areaToCheckCells = mapRect);
+void run(const CellCheck::Check& check, bool out[MAP_W][MAP_H],
+         const MapParseMode writeRule = MapParseMode::overwrite,
+         const Rect& areaToCheckCells = mapRect);
 
 //Given a map array of booleans, this will fill a second map array of boolens
 //where the cells are set to true if they are within the specified distance
