@@ -38,7 +38,7 @@ void playerKick()
       {
         TRACE << "Player is allowed to do melee attack" << endl;
         bool blocked[MAP_W][MAP_H];
-        MapParse::parse(CellCheck::BlocksLos(), blocked);
+        MapParse::run(CellCheck::BlocksLos(), blocked);
 
         TRACE << "Player can see actor" << endl;
         Map::player->kickMon(*livingActor);

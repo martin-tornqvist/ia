@@ -423,7 +423,7 @@ void HumanRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   if (Rnd::coinToss())
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+    MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
     for (int x = r_.p0.x + 1; x <= r_.p1.x - 1; ++x)
     {
@@ -470,7 +470,7 @@ void RitualRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   Gods::setRandomGod();
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   const int BLOODY_CHAMBER_PCT = 60;
   if (Rnd::percentile() < BLOODY_CHAMBER_PCT)
@@ -639,7 +639,7 @@ void MonsterRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   (void)doorProposals;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   int       nrBloodPut  = 0;
   const int NR_TRIES    = 1000; //TODO Hacky, needs improving
@@ -733,7 +733,7 @@ void FloodedRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 #endif // NDEBUG
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
 
@@ -819,7 +819,7 @@ void MuddyRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   (void)doorProposals;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   const int LIQUID_ONE_IN_N = Rnd::range(2, 4);
 
@@ -900,7 +900,7 @@ void ForestRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   (void)doorProposals;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   vector<Pos> treePosBucket;
 
@@ -982,7 +982,7 @@ void ChasmRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   (void)doorProposals;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   bool blockedExpanded[MAP_W][MAP_H];
   MapParse::expand(blocked, blockedExpanded);

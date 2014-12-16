@@ -16,7 +16,9 @@ using namespace std;
 
 //---------------------------------------------------INHERITED FUNCTIONS
 Door::Door(const Pos& pos, const Rigid* const mimicFeature, DoorSpawnState spawnState) :
-  Rigid(pos), mimicFeature_(mimicFeature), nrSpikes_(0)
+  Rigid         (pos),
+  mimicFeature_ (mimicFeature),
+  nrSpikes_     (0)
 {
 
   isHandledExternally_ = false;
@@ -78,6 +80,11 @@ Door::Door(const Pos& pos, const Rigid* const mimicFeature, DoorSpawnState spawn
   }
 
   matl_ = Matl::wood;
+}
+
+Door::~Door()
+{
+  if (mimicFeature_) {delete mimicFeature_;}
 }
 
 void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
@@ -561,7 +568,7 @@ void Door::tryClose(Actor* actorTrying)
   const bool TRYER_IS_BLIND = !actorTrying->getPropHandler().allowSee();
   //const bool PLAYER_SEE_DOOR    = Map::playerVision[pos_.x][pos_.y];
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blocked);
+  MapParse::run(CellCheck::BlocksLos(), blocked);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true :
@@ -704,7 +711,7 @@ void Door::tryOpen(Actor* actorTrying)
   const bool TRYER_IS_BLIND   = !actorTrying->getPropHandler().allowSee();
   const bool PLAYER_SEE_DOOR  = Map::cells[pos_.x][pos_.y].isSeenByPlayer;
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blocked);
+  MapParse::run(CellCheck::BlocksLos(), blocked);
 
   const bool PLAYER_SEE_TRYER =
     IS_PLAYER ? true : Map::player->isSeeingActor(*actorTrying, blocked);

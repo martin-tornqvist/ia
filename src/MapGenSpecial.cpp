@@ -188,7 +188,7 @@ void mkForestTrees()
     }
 
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+    MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
     Pos stairsPos;
     for (int x = 0; x < MAP_W; ++x)
@@ -253,7 +253,7 @@ void mkForestTrees()
   if (NR_HIGHSCORES > 0)
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+    MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
     bool fov[MAP_W][MAP_H];
 
@@ -569,7 +569,7 @@ bool mkRatsInTheWallsLvl()
   }
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
   //Spawn extra rats in the rightmost part of the map
   for (int x = (MAP_W * 6) / 7; x < MAP_W; ++x)
@@ -645,7 +645,7 @@ bool mkTrapezohedronLvl()
   putCaveFloor(floorCells);
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
   vector<Pos> itemPosBucket;
 
   for (int x = 0; x < MAP_W; ++x)

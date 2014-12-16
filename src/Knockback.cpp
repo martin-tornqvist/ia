@@ -49,7 +49,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPI
     const Pos newPos = defender.pos + d;
 
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksActor(defender, true), blocked);
+    MapParse::run(CellCheck::BlocksActor(defender, true), blocked);
 
     const bool IS_CELL_BOTTOMLESS = Map::cells[newPos.x][newPos.y].rigid->isBottomless();
     const bool IS_CELL_BLOCKED    = blocked[newPos.x][newPos.y] && !IS_CELL_BOTTOMLESS;

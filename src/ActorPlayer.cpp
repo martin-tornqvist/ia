@@ -633,7 +633,7 @@ void Player::incrInsanity()
 bool Player::isStandingInOpenSpace() const
 {
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
   for (int x = pos.x - 1; x <= pos.x + 1; ++x)
   {
     for (int y = pos.y - 1; y <= pos.y + 1; ++y)
@@ -647,7 +647,7 @@ bool Player::isStandingInOpenSpace() const
 bool Player::isStandingInCrampedSpace() const
 {
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
   int blockCount = 0;
   for (int x = pos.x - 1; x <= pos.x + 1; ++x)
   {
@@ -1473,7 +1473,7 @@ void Player::updateFov()
   if (propHandler_->allowSee())
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksLos(), blocked);
+    MapParse::run(CellCheck::BlocksLos(), blocked);
     Fov::runPlayerFov(blocked, pos);
     Map::cells[pos.x][pos.y].isSeenByPlayer = true;
   }
@@ -1510,10 +1510,10 @@ void Player::updateFov()
 void Player::FOVhack()
 {
   bool blockedLos[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+  MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   for (int x = 0; x < MAP_W; ++x)
   {

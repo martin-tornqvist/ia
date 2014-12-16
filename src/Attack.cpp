@@ -245,7 +245,7 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
     else
     {
       bool blocked[MAP_W][MAP_H];
-      MapParse::parse(CellCheck::BlocksProjectiles(), blocked);
+      MapParse::run(CellCheck::BlocksProjectiles(), blocked);
       intendedAimLvl = blocked[curPos_.x][curPos_.y] ?
                        actorSize_humanoid : actorSize_floor;
     }
@@ -359,7 +359,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
     else
     {
       bool blocked[MAP_W][MAP_H];
-      MapParse::parse(CellCheck::BlocksProjectiles(), blocked);
+      MapParse::run(CellCheck::BlocksProjectiles(), blocked);
       intendedAimLvl = blocked[curPos_.x][curPos_.y] ?
                        actorSize_humanoid : actorSize_floor;
     }
@@ -1038,7 +1038,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
   const ActorSize intendedAimLvl = data->intendedAimLvl;
 
   bool featureBlockers[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksProjectiles(), featureBlockers);
+  MapParse::run(CellCheck::BlocksProjectiles(), featureBlockers);
 
   Actor* actorArray[MAP_W][MAP_H];
   Utils::mkActorArray(actorArray);

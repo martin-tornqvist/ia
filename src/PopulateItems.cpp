@@ -41,7 +41,7 @@ void mkItems()
   }
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksItems(), blocked);
+  MapParse::run(CellCheck::BlocksItems(), blocked);
   vector<Pos> freeCells;
   Utils::mkVectorFromBoolMap(false, blocked, freeCells);
 

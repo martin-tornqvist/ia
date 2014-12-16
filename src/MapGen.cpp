@@ -55,7 +55,7 @@ bool doorProposals[MAP_W][MAP_H];
 bool isAllRoomsConnected()
 {
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   return MapParse::isMapConnected(blocked);
 }
@@ -272,7 +272,7 @@ void mkAuxRooms(Region regions[3][3])
   };
 
   bool floorCells[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), floorCells);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), floorCells);
   Utils::reverseBoolArray(floorCells);
 
   for (int regionY = 0; regionY < 3; regionY++)
@@ -761,7 +761,7 @@ void fillDeadEnds()
 {
   //Find an origin with no adjacent walls, to ensure not starting in a dead end
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   bool expandedBlockers[MAP_W][MAP_H];
   MapParse::expand(blocked, expandedBlockers);
@@ -909,7 +909,7 @@ void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H])
 
   vector<FeatureId> featIdsOk {FeatureId::floor, FeatureId::carpet, FeatureId::grass};
 
-  MapParse::parse(CellCheck::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
+  MapParse::run(CellCheck::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
 
   for (int x = 0; x < MAP_W; ++x)
   {
@@ -1064,7 +1064,7 @@ void revealDoorsOnPathToStairs(const Pos& stairsPos)
   TRACE_FUNC_BEGIN;
 
   bool blocked[MAP_W][MAP_H];
-  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
+  MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   blocked[stairsPos.x][stairsPos.y] = false;
 

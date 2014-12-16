@@ -1,97 +1,41 @@
 {
    <insert_a_suppression_name_here>
-   Memcheck:Cond
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   fun:SDL_PumpEvents
-   fun:SDL_PollEvent
-   fun:_ZN5Input18readKeysUntilFoundEv
-   fun:_ZN16MenuInputHandler9getActionER11MenuBrowser
-   fun:_ZN8MainMenu3runERbRi
-   fun:main
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/i386-linux-gnu/libSDL*
 }
 
 {
    <insert_a_suppression_name_here>
    Memcheck:Leak
-   fun:realloc
-   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
-   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
-   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
-   fun:_XlcCreateLC
-   fun:_XlcUtf8Loader
+   ...
    fun:_XOpenLC
-   fun:_XlcCurrentLC
-   fun:XSetLocaleModifiers
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   fun:SDL_VideoInit
 }
 
 {
    <insert_a_suppression_name_here>
    Memcheck:Leak
-   fun:malloc
-   fun:pa_xmalloc
-   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.15.3
-   fun:pa_stream_update_timing_info
-   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.15.3
-   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.15.3
-   obj:/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-3.0.so
-   fun:pa_pdispatch_run
-   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.15.3
-   obj:/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-3.0.so
-   fun:pa_mainloop_dispatch
-   fun:pa_mainloop_iterate
+   ...
+   obj:/usr/lib/i386-linux-gnu/libpulse.so*
 }
 
 {
    <insert_a_suppression_name_here>
    Memcheck:Leak
-   fun:malloc
-   fun:strdup
-   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
-   fun:_XimSetICValueData
-   fun:_XimLocalCreateIC
-   fun:XCreateIC
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   fun:SDL_VideoInit
-   fun:SDL_InitSubSystem
-   fun:SDL_Init
-   fun:_ZN10SdlWrapperC1Ev
+   ...
+   fun:pa_mainloop_*
 }
 
 {
    <insert_a_suppression_name_here>
    Memcheck:Leak
-   fun:malloc
-   fun:_XlcDefaultMapModifiers
-   fun:XSetLocaleModifiers
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   fun:SDL_VideoInit
-   fun:SDL_InitSubSystem
-   fun:SDL_Init
-   fun:_ZN10SdlWrapperC1Ev
-   fun:_ZN6Engine7initSdlEv
-   fun:main
+   ...
+   fun:_dl_catch_error
 }
 
 {
    <insert_a_suppression_name_here>
    Memcheck:Leak
-   fun:realloc
-   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
-   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
-   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
-   fun:_XlcCreateLC
-   fun:_XlcDefaultLoader
-   fun:_XOpenLC
-   fun:_XlcCurrentLC
-   fun:XSetLocaleModifiers
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   obj:/usr/lib/x86_64-linux-gnu/libSDL-1.2.so.0.11.4
-   fun:SDL_VideoInit
+   ...
+   obj:/lib/i386-linux-gnu/ld*
 }

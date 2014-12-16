@@ -68,15 +68,15 @@ enum class GameEntryMode {newGame, loadGame};
 struct CellRenderData
 {
   CellRenderData() :
-    clr(clrBlack),
-    clrBg(clrBlack),
-    tile(TileId::empty),
-    glyph(' '),
-    lifebarLength(-1),
-    isLightFadeAllowed(true),
-    isMarkedLit(false),
-    isLivingActorSeenHere(false),
-    isAwareOfMonHere(false) {}
+    clr                   (clrBlack),
+    clrBg                 (clrBlack),
+    tile                  (TileId::empty),
+    glyph                 (' '),
+    lifebarLength         (-1),
+    isLightFadeAllowed    (true),
+    isMarkedLit           (false),
+    isLivingActorSeenHere (false),
+    isAwareOfMonHere      (false) {}
 
   Clr     clr;
   Clr     clrBg;

@@ -599,7 +599,7 @@ void collectLinesFromVariables(vector<string>& lines)
 
 void init()
 {
-  fontName_ = "";
+  fontName_     = "";
   isBotPlaying_ = false;
 
   fontImageNames.clear();
@@ -644,7 +644,7 @@ bool    isAsciiWallFullSquare()       {return isAsciiWallFullSquare_;}
 bool    isTilesWallFullSquare()       {return isTilesWallFullSquare_;}
 bool    isAudioEnabled()              {return isAudioEnabled_;}
 bool    isBotPlaying()                {return isBotPlaying_;}
-void    setBotPlaying()               {isBotPlaying_ = true;}
+void    toggleBotPlaying()            {isBotPlaying_ = !isBotPlaying_;}
 bool    isRangedWpnMeleeePrompt()     {return isRangedWpnMeleeePrompt_;}
 bool    isRangedWpnAutoReload()       {return isRangedWpnAutoReload_;}
 bool    isIntroLvlSkipped()         {return isIntroLvlSkipped_;}

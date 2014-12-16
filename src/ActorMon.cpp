@@ -795,7 +795,7 @@ bool Vortex::onActorTurn_()
             TRACE << "Player position: ";
             TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
             bool blockedLos[MAP_W][MAP_H];
-            MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+            MapParse::run(CellCheck::BlocksLos(), blockedLos);
             if (isSeeingActor(*(Map::player), blockedLos))
             {
               TRACE << "I am seeing the player" << endl;
@@ -862,7 +862,7 @@ bool Ghost::onActorTurn_()
       Rnd::percentile() < 30)
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksLos(), blocked);
+    MapParse::run(CellCheck::BlocksLos(), blocked);
 
     const bool PLAYER_SEES_ME = Map::player->isSeeingActor(*this, blocked);
     const string refer        = PLAYER_SEES_ME ? getNameThe() : "It";
@@ -1011,11 +1011,11 @@ bool Khephren::onActorTurn_()
   if (isAlive() && awareCounter_ > 0 && !hasSummonedLocusts)
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksLos(), blocked);
+    MapParse::run(CellCheck::BlocksLos(), blocked);
 
     if (isSeeingActor(*(Map::player), blocked))
     {
-      MapParse::parse(CellCheck::BlocksMoveCmn(true), blocked);
+      MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
       const int SPAWN_AFTER_X = Map::player->pos.x + FOV_STD_RADI_INT + 1;
 
@@ -1094,11 +1094,11 @@ bool KeziahMason::onActorTurn_()
   if (isAlive() && awareCounter_ > 0 && !hasSummonedJenkin)
   {
     bool blockedLos[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+    MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
     if (isSeeingActor(*(Map::player), blockedLos))
     {
-      MapParse::parse(CellCheck::BlocksMoveCmn(true), blockedLos);
+      MapParse::run(CellCheck::BlocksMoveCmn(true), blockedLos);
 
       vector<Pos> line;
       LineCalc::calcNewLine(pos, Map::player->pos, true, 9999, false, line);
@@ -1151,7 +1151,7 @@ void LengElder::onStdTurn_()
     if (hasGivenItemToPlayer_)
     {
       bool blockedLos[MAP_W][MAP_H];
-      MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+      MapParse::run(CellCheck::BlocksLos(), blockedLos);
       if (isSeeingActor(*Map::player, blockedLos))
       {
         if (nrTurnsToHostile_ <= 0)
@@ -1286,8 +1286,8 @@ bool WormMass::onActorTurn_()
       Rnd::oneIn(spawnNewOneInN))
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksActor(*this, true), blocked,
-                    MapParseWriteRule::always, Rect(pos - 1, pos + 1));
+    MapParse::run(CellCheck::BlocksActor(*this, true), blocked,
+                    MapParseMode::overwrite, Rect(pos - 1, pos + 1));
 
     for (const Pos& d : DirUtils::dirList)
     {
@@ -1322,8 +1322,8 @@ bool GiantLocust::onActorTurn_()
       Rnd::oneIn(spawnNewOneInN))
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksActor(*this, true), blocked,
-                    MapParseWriteRule::always, Rect(pos - 1, pos + 1));
+    MapParse::run(CellCheck::BlocksActor(*this, true), blocked,
+                    MapParseMode::overwrite, Rect(pos - 1, pos + 1));
 
     for (const Pos& d : DirUtils::dirList)
     {
@@ -1437,7 +1437,7 @@ bool MajorClaphamLee::onActorTurn_()
   if (isAlive() && awareCounter_ > 0 && !hasSummonedTombLegions)
   {
     bool blockedLos[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksLos(), blockedLos);
+    MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
     if (isSeeingActor(*(Map::player), blockedLos))
     {
@@ -1554,8 +1554,8 @@ bool Mold::onActorTurn_()
       Rnd::oneIn(spawnNewOneInN))
   {
     bool blocked[MAP_W][MAP_H];
-    MapParse::parse(CellCheck::BlocksActor(*this, true), blocked,
-                    MapParseWriteRule::always, Rect(pos - 1, pos + 1));
+    MapParse::run(CellCheck::BlocksActor(*this, true), blocked,
+                    MapParseMode::overwrite, Rect(pos - 1, pos + 1));
 
     for (const Pos& d : DirUtils::dirList)
     {
