@@ -62,7 +62,7 @@ ItemDataT::MeleeItemData::MeleeItemData() :
   attMsgs(ItemAttMsgs()),
   propApplied(nullptr),
   dmgType(DmgType::physical),
-  isKnockback(false),
+  knocksBack(false),
   hitSmallSfx(SfxId::END),
   hitMediumSfx(SfxId::END),
   hitHardSfx(SfxId::END),
@@ -78,12 +78,13 @@ ItemDataT::RangedItemData::RangedItemData() :
   isThrowingWpn(false),
   isMachineGun(false),
   isShotgun(false),
+  isCausingRecoil(false),
   ammoContainedInClip(0),
   dmg(DiceParam()),
   throwDmg(DiceParam()),
   hitChanceMod(0),
   throwHitChanceMod(0),
-  isKnockback(false),
+  knocksBack(false),
   dmgInfoOverride(""),
   ammoItemId(ItemId::END),
   dmgType(DmgType::physical),
@@ -171,6 +172,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.melee.dmg = pair<int, int>(1, 6);
       d.mainAttMode = MainAttMode::ranged;
       d.ranged.isRangedWpn = true;
+      d.ranged.isCausingRecoil = true;
       d.ranged.missileGlyph = '/';
       d.ranged.missileClr = clrWhite;
       d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
@@ -572,7 +574,7 @@ void initDataList()
   d->ranged.hitChanceMod = 0;
   d->ranged.dmg = DiceParam(1, 7, 0);
   d->ranged.dmgType = DmgType::physical;
-  d->ranged.isKnockback = true;
+  d->ranged.knocksBack = true;
   d->ranged.ammoItemId = ItemId::ironSpike;
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Spike Gun");
   d->ranged.sndMsg = "I hear a very crude weapon being fired.";
@@ -825,7 +827,7 @@ void initDataList()
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Pitchfork");
   d->melee.dmg = pair<int, int>(3, 4);
   d->melee.hitChanceMod = -5;
-  d->melee.isKnockback = true;
+  d->melee.knocksBack = true;
   d->melee.hitSmallSfx = SfxId::hitSharp;
   d->melee.hitMediumSfx = SfxId::hitSharp;
   d->melee.missSfx = SfxId::missHeavy;
@@ -845,7 +847,7 @@ void initDataList()
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Sledgehammer");
   d->melee.dmg = pair<int, int>(3, 5);
   d->melee.hitChanceMod = -10;
-  d->melee.isKnockback = true;
+  d->melee.knocksBack = true;
   d->melee.missSfx = SfxId::missHeavy;
   addFeatureFoundIn(*d, FeatureId::cabinet);
   data[int(d->id)] = d;
@@ -891,7 +893,7 @@ void initDataList()
   d->melee.attMsgs = ItemAttMsgs("kick", "");
   d->melee.hitChanceMod = 20;
   d->melee.dmg = pair<int, int>(1, 3);
-  d->melee.isKnockback = true;
+  d->melee.knocksBack = true;
   d->melee.missSfx = SfxId::missMedium;
   data[int(d->id)] = d;
 
@@ -900,7 +902,7 @@ void initDataList()
   d->melee.attMsgs = ItemAttMsgs("stomp", "");
   d->melee.hitChanceMod = 20;
   d->melee.dmg = pair<int, int>(1, 3);
-  d->melee.isKnockback = false;
+  d->melee.knocksBack = false;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::playerPunch);
@@ -936,7 +938,7 @@ void initDataList()
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "mauls me");
   setDmgFromMonId(*d, ActorId::bloatedZombie);
-  d->melee.isKnockback = true;
+  d->melee.knocksBack = true;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::bloatedZombieSpit);
@@ -1158,7 +1160,7 @@ void initDataList()
   d->melee.attMsgs = ItemAttMsgs("", "mauls me");
   setDmgFromMonId(*d, ActorId::mummy);
   d->melee.propApplied = new PropCursed(PropTurns::std);
-  d->melee.isKnockback = true;
+  d->melee.knocksBack = true;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::deepOneJavelinAtt);
@@ -1212,7 +1214,7 @@ void initDataList()
   d = new ItemDataT(ItemId::chthonianBite);
   resetData(*d, ItemType::meleeWpnIntr);
   d->melee.attMsgs = ItemAttMsgs("", "strikes me with a tentacle");
-  d->melee.isKnockback = true;
+  d->melee.knocksBack = true;
   setDmgFromMonId(*d, ActorId::chthonian);
   data[int(d->id)] = d;
 

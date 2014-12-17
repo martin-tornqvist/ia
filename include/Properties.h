@@ -56,6 +56,7 @@ enum PropId
 
   //Special (for supporting specific game mechanics)
   propPossessedByZuul,
+  propRecoil,
   propAiming,
   propNailed,
   propFlared,
@@ -429,7 +430,8 @@ class PropAiming: public Prop
 {
 public:
   PropAiming(PropTurns turnsInit, int turns = -1) :
-    Prop(propAiming, turnsInit, turns), nrTurnsAiming(1) {}
+    Prop          (propAiming, turnsInit, turns),
+    nrTurnsAiming (1) {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
@@ -440,13 +442,28 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if (ability == AbilityId::ranged) return nrTurnsAiming >= 3 ? 999 : 15;
+    if (ability == AbilityId::ranged) return nrTurnsAiming >= 3 ? 999 : 10;
     return 0;
   }
 
   bool isMaxRangedDmg() const {return nrTurnsAiming >= 3;}
 
   int nrTurnsAiming;
+};
+
+class PropRecoil: public Prop
+{
+public:
+  PropRecoil(PropTurns turnsInit, int turns = -1) :
+    Prop(propRecoil, turnsInit, turns) {}
+
+  PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
+
+  int getAbilityMod(const AbilityId ability) const override
+  {
+    if (ability == AbilityId::ranged) {return -15;}
+    return 0;
+  }
 };
 
 class PropBlind: public Prop

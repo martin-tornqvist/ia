@@ -9,6 +9,7 @@
 #include "Inventory.h"
 #include "PlayerSpellsHandling.h"
 #include "Map.h"
+#include "MapParsing.h"
 
 using namespace std;
 
@@ -210,8 +211,8 @@ void getTraitDescr(const Trait id, string& strRef)
       break;
 
     case Trait::steadyAimer:
-      strRef = "Standing still gives ranged attacks +15% hit chance on the "
-               "following turn";
+      strRef = "No recoil penalty when using firearms. Standing still gives ranged "
+               "attacks +10% hit chance on the following turn";
       break;
 
     case Trait::sharpShooter:
@@ -515,7 +516,6 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef)
 
     case Trait::imperceptible:
       traitsRef.push_back(Trait::stealthy);
-      //traitsRef.push_back(Trait::);
       break;
 
     case Trait::vicious:
@@ -680,6 +680,12 @@ void pickTrait(const Trait id)
     case Trait::fearless:
       Map::player->getPropHandler().tryApplyProp(
         new PropRFear(PropTurns::indefinite), true, true, true, false);
+      break;
+
+    case Trait::steadyAimer:
+      bool blockedLos[MAP_W][MAP_H];
+      MapParse::run(CellCheck::BlocksLos(), blockedLos);
+      Map::player->getPropHandler().endAppliedProp(propRecoil, blockedLos);
       break;
 
     default: {}

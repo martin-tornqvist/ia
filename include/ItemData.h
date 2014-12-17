@@ -230,7 +230,7 @@ public:
     ItemAttMsgs attMsgs;
     Prop* propApplied;
     DmgType dmgType;
-    bool isKnockback;
+    bool knocksBack;
     SfxId hitSmallSfx;
     SfxId hitMediumSfx;
     SfxId hitHardSfx;
@@ -243,12 +243,13 @@ public:
     ~RangedItemData();
 
     bool isRangedWpn, isThrowingWpn, isMachineGun, isShotgun;
+    bool isCausingRecoil;
     int ammoContainedInClip;
     DiceParam dmg;
     DiceParam throwDmg;
     int hitChanceMod;
     int throwHitChanceMod;
-    bool isKnockback;
+    bool knocksBack;
     std::string dmgInfoOverride;
     ItemId ammoItemId;
     DmgType dmgType;
