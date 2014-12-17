@@ -441,7 +441,7 @@ void initDataList()
   d.color = clrMagenta;
   d.tile = TileId::witchOrWarlock;
   d.hp = 10;
-  d.spi = 50;
+  d.spi = 60;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 40);
   d.nrLeftAllowedToSpawn = 1;

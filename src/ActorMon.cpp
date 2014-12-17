@@ -53,15 +53,21 @@ Mon::~Mon()
 
 void Mon::onActorTurn()
 {
-  //Test that monster is inside map
-  assert(Utils::isPosInsideMap(pos));
+#ifndef NDEBUG
+  //Verify that monster is not outside the map
+  if (!Utils::isPosInsideMap(pos, false))
+  {
+    TRACE << "Monster outside map" << endl;
+    assert(false);
+  }
 
-  //Test that monster's leader does not have a leader (never allowed)
+  //Verify that monster's leader does not have a leader (never allowed)
   if (leader_ && !isActorMyLeader(Map::player) && static_cast<Mon*>(leader_)->leader_)
   {
     TRACE << "Two (or more) steps of leader is never allowed" << endl;
     assert(false);
   }
+#endif // NDEBUG
 
   if (awareCounter_ <= 0 && !isActorMyLeader(Map::player))
   {
@@ -1147,7 +1153,7 @@ void KeziahMason::mkStartItems()
   spellsKnown_.push_back(new SpellHealSelf);
   spellsKnown_.push_back(new SpellSummonMon);
   spellsKnown_.push_back(new SpellPest);
-  spellsKnown_.push_back(new SpellAzaWrath);
+  spellsKnown_.push_back(new SpellDarkbolt);
   spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
 
   for (int i = Rnd::range(2, 3); i > 0; --i)
@@ -1301,7 +1307,7 @@ bool WormMass::onActorTurn_()
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::run(CellCheck::BlocksActor(*this, true), blocked,
-                    MapParseMode::overwrite, Rect(pos - 1, pos + 1));
+                  MapParseMode::overwrite, Rect(pos - 1, pos + 1));
 
     for (const Pos& d : DirUtils::dirList)
     {
@@ -1337,7 +1343,7 @@ bool GiantLocust::onActorTurn_()
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::run(CellCheck::BlocksActor(*this, true), blocked,
-                    MapParseMode::overwrite, Rect(pos - 1, pos + 1));
+                  MapParseMode::overwrite, Rect(pos - 1, pos + 1));
 
     for (const Pos& d : DirUtils::dirList)
     {
@@ -1569,7 +1575,7 @@ bool Mold::onActorTurn_()
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::run(CellCheck::BlocksActor(*this, true), blocked,
-                    MapParseMode::overwrite, Rect(pos - 1, pos + 1));
+                  MapParseMode::overwrite, Rect(pos - 1, pos + 1));
 
     for (const Pos& d : DirUtils::dirList)
     {
