@@ -60,15 +60,23 @@ void runStdTurnEvents()
     if (actor->getState() == ActorState::destroyed)
     {
       //Do not delete player if player died, just return
-      if (actor == Map::player) {return;}
+      if (actor == Map::player)
+      {
+        return;
+      }
+
+      if (Map::player->tgt_ == actor)
+      {
+        Map::player->tgt_ = nullptr;
+      }
 
       delete actor;
-      if (Map::player->tgt_ == actor) {Map::player->tgt_ = nullptr;}
+
       actors_.erase(actors_.begin() + i);
       i--;
       if (curActorIndex_ >= actors_.size()) {curActorIndex_ = 0;}
     }
-    else     //Monster is alive or is a corpse
+    else  //Monster is alive or is a corpse
     {
       actor->getPropHandler().tick(PropTurnMode::std, blockedLos);
 

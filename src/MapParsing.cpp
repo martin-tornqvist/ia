@@ -364,10 +364,10 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H],
             isFound = out[x][y] = true;
             break;
           }
-          if (isFound)
-          {
-            break;
-          }
+        }
+        if (isFound)
+        {
+          break;
         }
       }
     }
@@ -380,7 +380,6 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
   {
     for (int y = 0; y < MAP_H; ++y)
     {
-
       out[x][y] = false;
 
       const int X0 = x - DIST;
@@ -395,7 +394,6 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
 
       for (int cmpY = CMP_Y0; cmpY <= CMP_Y1; ++cmpY)
       {
-
         bool isFound = false;
 
         for (int cmpX = CMP_X0; cmpX <= CMP_X1; ++cmpX)
@@ -405,7 +403,10 @@ void expand(const bool in[MAP_W][MAP_H], bool out[MAP_W][MAP_H], const int DIST)
             isFound = out[x][y] = true;
             break;
           }
-          if (isFound) {break;}
+        }
+        if (isFound)
+        {
+          break;
         }
       }
     }

@@ -226,11 +226,11 @@ void putPixelsOnScr(const bool pixelData[PIXEL_DATA_W][PIXEL_DATA_H],
     const int SCR_PX_Y0   = scrPixelPos.y;
 
     int scrPxX = SCR_PX_X0;
-    int scrPxY = SCR_PX_Y0;
 
     for (int sheetPxX = SHEET_PX_X0; sheetPxX <= SHEET_PX_X1; sheetPxX++)
     {
-      scrPxY = SCR_PX_Y0;
+      int scrPxY = SCR_PX_Y0;
+
       for (int sheetPxY = SHEET_PX_Y0; sheetPxY <= SHEET_PX_Y1; sheetPxY++)
       {
         if (pixelData[sheetPxX][sheetPxY])

@@ -585,10 +585,15 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
   bool isPlayerSeeDyingActor = true;
 
-  //Print death messages
   if (!isPlayer())
   {
-    //Only print if visible
+    //If this monster is player's target, unset the target
+    if (Map::player->tgt_ == this)
+    {
+      Map::player->tgt_ = nullptr;
+    }
+
+    //Print death messages
     if (Map::player->isSeeingActor(*this, nullptr))
     {
       isPlayerSeeDyingActor = true;
@@ -674,9 +679,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
   if (!isPlayer())
   {
-    //Give exp if monster, and count up nr of kills.
     DungeonMaster::onMonKilled(*this);
-
     static_cast<Mon*>(this)->leader_ = nullptr;
   }
 

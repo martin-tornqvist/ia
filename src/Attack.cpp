@@ -1031,11 +1031,11 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
 void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
 {
-  RangedAttData* data = new RangedAttData(attacker, wpn, aimPos, attacker.pos);
+  RangedAttData data = RangedAttData(attacker, wpn, aimPos, attacker.pos);
 
-  printRangedInitiateMsgs(*data);
+  printRangedInitiateMsgs(data);
 
-  const ActorSize intendedAimLvl = data->intendedAimLvl;
+  const ActorSize intendedAimLvl = data.intendedAimLvl;
 
   bool featureBlockers[MAP_W][MAP_H];
   MapParse::run(CellCheck::BlocksProjectiles(), featureBlockers);
@@ -1079,15 +1079,14 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
       if (sizeOfActor >= actorSize_humanoid || curPos == aimPos)
       {
         //Actor hit?
-        delete data;
-        data = new RangedAttData(attacker, wpn, aimPos, curPos, intendedAimLvl);
+        data = RangedAttData(attacker, wpn, aimPos, curPos, intendedAimLvl);
 
         const bool IS_WITHIN_RANGE_LMT =
           Utils::kingDist(origin, curPos) <= wpn.EFFECTIVE_RANGE_LMT;
 
-        if (IS_WITHIN_RANGE_LMT                 &&
-            data->attackResult >= successSmall  &&
-            !data->isEtherealDefenderMissed)
+        if (IS_WITHIN_RANGE_LMT               &&
+            data.attackResult >= successSmall &&
+            !data.isEtherealDefenderMissed)
         {
           if (Map::cells[curPos.x][curPos.y].isSeenByPlayer)
           {
@@ -1106,10 +1105,10 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
           }
 
           //Messages
-          printProjAtActorMsgs(*data, true);
+          printProjAtActorMsgs(data, true);
 
           //Damage
-          data->defender->hit(data->dmg, wpn.getData().ranged.dmgType);
+          data.defender->hit(data.dmg, wpn.getData().ranged.dmgType);
 
           nrActorsHit++;
 
@@ -1119,7 +1118,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
           //If current defender was killed, and player aimed at humanoid level,
           //or at floor level but beyond the current position, the shot will
           //continue one cell.
-          const bool IS_TGT_KILLED = !data->defender->isAlive();
+          const bool IS_TGT_KILLED = !data.defender->isAlive();
           if (IS_TGT_KILLED && nrMonKilledInElem == -1)
           {
             nrMonKilledInElem = i;

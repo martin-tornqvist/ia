@@ -423,9 +423,9 @@ bool Mon::tryAttack(Actor& defender)
     if (isBlockedByFriend) {return false;}
 
     const int NR_TURNS_NO_RANGED = data_->rangedCooldownTurns;
-    PropDisabledRanged* status =
+    PropDisabledRanged* prop =
       new PropDisabledRanged(PropTurns::specific, NR_TURNS_NO_RANGED);
-    propHandler_->tryApplyProp(status);
+    propHandler_->tryApplyProp(prop);
     Attack::ranged(*this, *attack.weapon, defender.pos);
     return true;
   }

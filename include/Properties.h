@@ -90,17 +90,17 @@ enum class PropSrc {applied, inv, END};
 struct PropDataT
 {
   PropDataT() :
-    id(endOfPropIds),
-    stdRndTurns(Range(10, 10)),
-    name(""),
-    nameShort(""),
-    isMakingMonAware(false),
-    allowDisplayTurns(true),
-    allowApplyMoreWhileActive(true),
-    updatePlayerVisualWhenStartOrEnd(false),
-    isEndedByMagicHealing(false),
-    allowTestOnBot(false),
-    alignment(propAlignmentBad)
+    id                                (endOfPropIds),
+    stdRndTurns                       (Range(10, 10)),
+    name                              (""),
+    nameShort                         (""),
+    isMakingMonAware                  (false),
+    allowDisplayTurns                 (true),
+    allowApplyMoreWhileActive         (true),
+    updatePlayerVisualWhenStartOrEnd  (false),
+    isEndedByMagicHealing             (false),
+    allowTestOnBot                    (false),
+    alignment                         (propAlignmentBad)
   {
     for (int i = 0; i < endOfPropMsg; ++i) {msg[i] = "";}
   }

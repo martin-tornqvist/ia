@@ -39,3 +39,14 @@
    ...
    obj:/lib/i386-linux-gnu/ld*
 }
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   ...
+   obj:/usr/lib/i386-linux-gnu/libSDL-1.2*
+   fun:SDL_PumpEvents
+   fun:SDL_PollEvent
+   ...
+   fun:main
+}

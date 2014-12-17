@@ -107,8 +107,8 @@ ItemDataT::RangedItemData::~RangedItemData()
 }
 
 ItemDataT::ArmorItemData::ArmorItemData() :
-  absorptionPoints(0),
-  dmgToDurabilityFactor(0.0) {}
+  absorptionPoints      (0),
+  dmgToDurabilityFactor (0.0) {}
 
 namespace ItemData
 {
@@ -1622,7 +1622,7 @@ void init()
 void cleanup()
 {
   TRACE_FUNC_BEGIN;
-  for (size_t i = 0; i < int(ItemId::END); ++i) delete data[i];
+  for (size_t i = 0; i < int(ItemId::END); ++i) {delete data[i];}
   TRACE_FUNC_END;
 }
 

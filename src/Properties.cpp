@@ -745,9 +745,6 @@ void init()
 PropHandler::PropHandler(Actor* owningActor) :
   owningActor_(owningActor)
 {
-  appliedProps_.clear();
-  actorTurnPropBuffer_.clear();
-
   const ActorDataT& d = owningActor->getData();
 
   for (size_t i = 0; i < endOfPropIds; ++i)
@@ -813,7 +810,8 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
 
 PropHandler::~PropHandler()
 {
-  for (Prop* prop : appliedProps_) {delete prop;}
+  for (Prop* prop : appliedProps_)        {delete prop;}
+  for (Prop* prop : actorTurnPropBuffer_) {delete prop;}
 }
 
 void PropHandler::getPropsFromSources(
@@ -928,6 +926,8 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
                                const bool DISABLE_REDRAW,
                                const bool DISABLE_PROP_START_EFFECTS)
 {
+  assert(prop);
+
   //First, if this is a prop that runs on actor turns, check if the actor-turn
   //prop buffer does not already contain the prop.
   //-If it doesn't, then just add it to the buffer and return.
@@ -980,6 +980,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
           }
         }
       }
+      delete prop;
       return;
     }
   }

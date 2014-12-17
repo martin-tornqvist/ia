@@ -785,7 +785,15 @@ void Player::onActorTurn()
 
   resetPermShockTakenCurTurn();
 
-  if (!isAlive()) {return;}
+  if (!isAlive())
+  {
+    return;
+  }
+
+  if (tgt_ && tgt_->getState() != ActorState::alive)
+  {
+    tgt_ = nullptr;
+  }
 
   //If player dropped item, check if should go back to inventory screen
   vector<Actor*> seenFoes;
@@ -1346,7 +1354,10 @@ void Player::moveDir(Dir dir)
 
 void Player::autoMelee()
 {
-  if (tgt_ && Utils::isPosAdj(pos, tgt_->pos, false)  && isSeeingActor(*tgt_, nullptr))
+  if (tgt_                                    &&
+      tgt_->getState() == ActorState::alive   &&
+      Utils::isPosAdj(pos, tgt_->pos, false)  &&
+      isSeeingActor(*tgt_, nullptr))
   {
     moveDir(DirUtils::getDir(tgt_->pos - pos));
     return;

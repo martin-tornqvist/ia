@@ -259,10 +259,13 @@ struct ItemName
 struct ItemAttMsgs
 {
 public:
-  ItemAttMsgs() : player(""), other("") {}
+  ItemAttMsgs() :
+    player  (""),
+    other   ("") {}
 
   ItemAttMsgs(const std::string& player_, const std::string& other_) :
-    player(player_), other(other_) {}
+    player  (player_),
+    other   (other_) {}
 
   std::string player, other;
 };
