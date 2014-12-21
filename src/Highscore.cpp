@@ -50,9 +50,9 @@ namespace
 const int X_POS_DATE    = 0;
 const int X_POS_NAME    = X_POS_DATE  + 19;
 const int X_POS_LVL     = X_POS_NAME  + PLAYER_NAME_MAX_LEN + 2;
-const int X_POS_DLVL    = X_POS_LVL   + 8;
-const int X_POS_INS     = X_POS_DLVL  + 8;
-const int X_POS_WIN     = X_POS_INS   + 11;
+const int X_POS_DLVL    = X_POS_LVL   + 7;
+const int X_POS_INS     = X_POS_DLVL  + 7;
+const int X_POS_WIN     = X_POS_INS   + 10;
 const int X_POS_SCORE   = X_POS_WIN   + 5;
 
 void sortEntries(vector<HighScoreEntry>& entries)

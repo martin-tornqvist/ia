@@ -390,10 +390,8 @@ GameEntryMode run(bool& quit, int& introMusChannel)
           }
           else
           {
-            Popup::showMsg("Starting a new character instead.", false,
-                           "No save available");
-            TRACE_FUNC_END;
-            return GameEntryMode::newGame;
+            Popup::showMsg("No saved game found", false);
+            draw(browser);
           }
         }
         if (browser.isAtIdx(2))
