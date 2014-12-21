@@ -52,62 +52,62 @@ void setupFromSaveLines(vector<string>& lines)
   }
 }
 
-void getBgTitle(const Bg id, string& strRef)
+void getBgTitle(const Bg id, string& out)
 {
-  strRef = "[BG TITLE MISSING]";
+  out = "[BG TITLE MISSING]";
   switch (id)
   {
-    case Bg::occultist: strRef = "Occultist";   break;
-    case Bg::rogue:     strRef = "Rogue";       break;
-    case Bg::warVet:    strRef = "War Veteran"; break;
+    case Bg::occultist: out = "Occultist";   break;
+    case Bg::rogue:     out = "Rogue";       break;
+    case Bg::warVet:    out = "War Veteran"; break;
     case Bg::END: {} break;
   }
 }
 
-void getTraitTitle(const Trait id, string& strRef)
+void getTraitTitle(const Trait id, string& out)
 {
-  strRef = "[TRAIT TITLE MISSING]";
+  out = "[TRAIT TITLE MISSING]";
 
   switch (id)
   {
-    case Trait::adeptMeleeFighter:    strRef = "Adept Melee Fighter";   break;
-    case Trait::expertMeleeFighter:   strRef = "Expert Melee Fighter";  break;
-    case Trait::masterMeleeFighter:   strRef = "Master Melee Fighter";  break;
-    case Trait::coolHeaded:           strRef = "Cool-headed";           break;
-    case Trait::courageous:           strRef = "Courageous";            break;
-    case Trait::warlock:              strRef = "Warlock";               break;
-    case Trait::summoner:             strRef = "Summoner";              break;
-    case Trait::bloodSorcerer:        strRef = "Blood Sorcerer";        break;
-    case Trait::seer:                 strRef = "Seer";                  break;
-    case Trait::dexterous:            strRef = "Dexterous";             break;
-    case Trait::lithe:                strRef = "Lithe";                 break;
-    case Trait::mobile:               strRef = "Mobile";                break;
-    case Trait::fearless:             strRef = "Fearless";              break;
-    case Trait::healer:               strRef = "Healer";                break;
-    case Trait::adeptMarksman:        strRef = "Adept Marksman";        break;
-    case Trait::expertMarksman:       strRef = "Expert Marksman";       break;
-    case Trait::masterMarksman:       strRef = "Master Marksman";       break;
-    case Trait::steadyAimer:          strRef = "Steady Aimer";          break;
-    case Trait::sharpShooter:         strRef = "Sharpshooter";          break;
-    case Trait::observant:            strRef = "Observant";             break;
-    case Trait::perceptive:           strRef = "Perceptive";            break;
-    case Trait::vigilant:             strRef = "Vigilant";              break;
-    case Trait::rapidRecoverer:       strRef = "Rapid Recoverer";       break;
-    case Trait::survivalist:          strRef = "Survivalist";           break;
-    case Trait::perseverant:          strRef = "Perseverant";           break;
-    case Trait::selfAware:            strRef = "Self-aware";            break;
-    case Trait::stoutSpirit:          strRef = "Stout Spirit";          break;
-    case Trait::strongSpirit:         strRef = "Strong Spirit";         break;
-    case Trait::mightySpirit:         strRef = "Mighty Spirit";         break;
-    case Trait::stealthy:             strRef = "Stealthy";              break;
-    case Trait::imperceptible:        strRef = "Imperceptible";         break;
-    case Trait::vicious:              strRef = "Vicious";               break;
-    case Trait::strongBacked:         strRef = "Strong-backed";         break;
-    case Trait::tough:                strRef = "Tough";                 break;
-    case Trait::rugged:               strRef = "Rugged";                break;
-    case Trait::treasureHunter:       strRef = "Treasure Hunter";       break;
-    case Trait::demExpert:            strRef = "Demolition Expert";     break;
-    case Trait::undeadBane:           strRef = "Bane of the Undead";    break;
+    case Trait::adeptMeleeFighter:    out = "Adept Melee Fighter";   break;
+    case Trait::expertMeleeFighter:   out = "Expert Melee Fighter";  break;
+    case Trait::masterMeleeFighter:   out = "Master Melee Fighter";  break;
+    case Trait::coolHeaded:           out = "Cool-headed";           break;
+    case Trait::courageous:           out = "Courageous";            break;
+    case Trait::warlock:              out = "Warlock";               break;
+    case Trait::summoner:             out = "Summoner";              break;
+    case Trait::bloodSorcerer:        out = "Blood Sorcerer";        break;
+    case Trait::seer:                 out = "Seer";                  break;
+    case Trait::dexterous:            out = "Dexterous";             break;
+    case Trait::lithe:                out = "Lithe";                 break;
+    case Trait::mobile:               out = "Mobile";                break;
+    case Trait::fearless:             out = "Fearless";              break;
+    case Trait::healer:               out = "Healer";                break;
+    case Trait::adeptMarksman:        out = "Adept Marksman";        break;
+    case Trait::expertMarksman:       out = "Expert Marksman";       break;
+    case Trait::masterMarksman:       out = "Master Marksman";       break;
+    case Trait::steadyAimer:          out = "Steady Aimer";          break;
+    case Trait::sharpShooter:         out = "Sharpshooter";          break;
+    case Trait::observant:            out = "Observant";             break;
+    case Trait::perceptive:           out = "Perceptive";            break;
+    case Trait::vigilant:             out = "Vigilant";              break;
+    case Trait::rapidRecoverer:       out = "Rapid Recoverer";       break;
+    case Trait::survivalist:          out = "Survivalist";           break;
+    case Trait::perseverant:          out = "Perseverant";           break;
+    case Trait::selfAware:            out = "Self-aware";            break;
+    case Trait::stoutSpirit:          out = "Stout Spirit";          break;
+    case Trait::strongSpirit:         out = "Strong Spirit";         break;
+    case Trait::mightySpirit:         out = "Mighty Spirit";         break;
+    case Trait::stealthy:             out = "Stealthy";              break;
+    case Trait::imperceptible:        out = "Imperceptible";         break;
+    case Trait::vicious:              out = "Vicious";               break;
+    case Trait::strongBacked:         out = "Strong-backed";         break;
+    case Trait::tough:                out = "Tough";                 break;
+    case Trait::rugged:               out = "Rugged";                break;
+    case Trait::treasureHunter:       out = "Treasure Hunter";       break;
+    case Trait::demExpert:            out = "Demolition Expert";     break;
+    case Trait::undeadBane:           out = "Bane of the Undead";    break;
     case Trait::END: break;
   }
 }
@@ -179,186 +179,186 @@ void getBgDescr(const Bg id, vector<string>& linesRef)
   }
 }
 
-void getTraitDescr(const Trait id, string& strRef)
+void getTraitDescr(const Trait id, string& out)
 {
-  strRef = "[TRAIT DESCRIPTION MISSING]";
+  out = "[TRAIT DESCRIPTION MISSING]";
 
   switch (id)
   {
     case Trait::adeptMeleeFighter:
-      strRef = "+10% hit chance with melee attacks";
+      out = "+10% hit chance with melee attacks";
       break;
 
     case Trait::expertMeleeFighter:
-      strRef = "+10% hit chance with melee attacks";
+      out = "+10% hit chance with melee attacks";
       break;
 
     case Trait::masterMeleeFighter:
-      strRef = "+10% hit chance with melee attacks";
+      out = "+10% hit chance with melee attacks";
       break;
 
     case Trait::adeptMarksman:
-      strRef = "+10% hit chance with firearms and thrown weapons";
+      out = "+10% hit chance with firearms and thrown weapons";
       break;
 
     case Trait::expertMarksman:
-      strRef = "+10% hit chance with firearms and thrown weapons, "
+      out = "+10% hit chance with firearms and thrown weapons, "
                "you occasionally reload instantly";
       break;
 
     case Trait::masterMarksman:
-      strRef = "+10% hit chance with firearms and thrown weapons";
+      out = "+10% hit chance with firearms and thrown weapons";
       break;
 
     case Trait::steadyAimer:
-      strRef = "No recoil penalty when using firearms. Standing still gives ranged "
+      out = "No recoil penalty when using firearms. Standing still gives ranged "
                "attacks +10% hit chance on the following turn";
       break;
 
     case Trait::sharpShooter:
-      strRef = "Standing still for three turns gives ranged attacks maximum "
+      out = "Standing still for three turns gives ranged attacks maximum "
                "hit chance and damage on the following turn";
       break;
 
     case Trait::demExpert:
-      strRef = "+1 radius for explosives (be careful), you are not harmed "
+      out = "+1 radius for explosives (be careful), you are not harmed "
                "by your own Molotov Cocktails, you occasionally light "
                "explosives instantly";
       break;
 
     case Trait::coolHeaded:
-      strRef = "+20% shock resistance";
+      out = "+20% shock resistance";
       break;
 
     case Trait::courageous:
-      strRef = "+20% shock resistance";
+      out = "+20% shock resistance";
       break;
 
     case Trait::warlock:
-      strRef = "-1 Spirit cost for damage dealing spells, casting any spell "
+      out = "-1 Spirit cost for damage dealing spells, casting any spell "
                "has a chance to make you \"Charged\" for one turn, causing "
                "attack spells to do maximum damage";
       break;
 
     case Trait::summoner:
-      strRef = "-1 Spirit cost for summoning spells, halved risk that called creatures "
+      out = "-1 Spirit cost for summoning spells, halved risk that called creatures "
                "are hostile";
       break;
 
     case Trait::bloodSorcerer:
-      strRef = "-1 Spirit cost for all spells, casting a spell drains 2 Hit Points";
+      out = "-1 Spirit cost for all spells, casting a spell drains 2 Hit Points";
       break;
 
     case Trait::seer:
-      strRef = "Detection spells have decreased Spirit costs, and "
+      out = "Detection spells have decreased Spirit costs, and "
                "the spell \"Detect Monsters\" has tripple duration";
       break;
 
     case Trait::tough:
-      strRef = "+2 hit points, +10% carry weight limit, better results "
+      out = "+2 hit points, +10% carry weight limit, better results "
                "for object interactions requiring strength (e.g. bashing "
                "doors or pushing a lid)";
       break;
 
     case Trait::rugged:
-      strRef = "+2 hit points, +10% carry weight limit, better results "
+      out = "+2 hit points, +10% carry weight limit, better results "
                "for object interactions requiring strength (such as "
                "bashing doors, or moving the lid from a stone coffin)";
       break;
 
     case Trait::strongBacked:
-      strRef = "+30% carry weight limit";
+      out = "+30% carry weight limit";
       break;
 
     case Trait::dexterous:
-      strRef = "+20% chance to dodge melee attacks, better chances to evade "
+      out = "+20% chance to dodge melee attacks, better chances to evade "
                "traps, every fifth move is a free action";
       break;
 
     case Trait::lithe:
-      strRef = "+20% chance to dodge melee attacks, better chances to evade "
+      out = "+20% chance to dodge melee attacks, better chances to evade "
                "traps, every fourth move is a free action";
       break;
 
     case Trait::mobile:
-      strRef = "Every second move is a free action";
+      out = "Every second move is a free action";
       break;
 
     case Trait::fearless:
-      strRef = "You cannot become terrified, +5% shock resistance";
+      out = "You cannot become terrified, +5% shock resistance";
       break;
 
     case Trait::healer:
-      strRef = "Healing takes half the normal time and resources";
+      out = "Healing takes half the normal time and resources";
       break;
 
     case Trait::observant:
-      strRef = "You can spot hidden traps and doors from two cells away, "
+      out = "You can spot hidden traps and doors from two cells away, "
                "you are more likely to spot hidden things and monsters, and "
                "your attentiveness is higher when examining objects";
       break;
 
     case Trait::perceptive:
-      strRef = "You can spot hidden traps and doors from three cells away, "
+      out = "You can spot hidden traps and doors from three cells away, "
                "you are more likely to spot hidden things and monsters, and "
                "your attentiveness is higher when examining objects";
       break;
 
     case Trait::vigilant:
-      strRef = "You cannot be backstabbed - hidden monsters gets no melee "
+      out = "You cannot be backstabbed - hidden monsters gets no melee "
                "attack bonus against you, and their attacks can be dodged";
       break;
 
     case Trait::rapidRecoverer:
-      strRef = "Increased Hit Point regeneration rate";
+      out = "Increased Hit Point regeneration rate";
       break;
 
     case Trait::survivalist:
-      strRef = "Increased Hit Point regeneration rate, negative effects "
+      out = "Increased Hit Point regeneration rate, negative effects "
                "from wounds and disease reduced by 50%";
       break;
 
     case Trait::perseverant:
-      strRef = "When your Hit Points are reduced to 25% or less, you gain "
+      out = "When your Hit Points are reduced to 25% or less, you gain "
                "+50% chance to dodge melee attacks, and +30% hit chance with "
                "melee and ranged attacks";
       break;
 
     case Trait::selfAware:
-      strRef = "You cannot become confused, the number of remaining turns "
+      out = "You cannot become confused, the number of remaining turns "
                "for status effects are displayed";
       break;
 
     case Trait::stoutSpirit:
-      strRef = "+2 Spirit Points, increased Spirit regeneration rate";
+      out = "+2 Spirit Points, increased Spirit regeneration rate";
       break;
 
     case Trait::strongSpirit:
-      strRef = "+2 Spirit Points, increased Spirit regeneration rate";
+      out = "+2 Spirit Points, increased Spirit regeneration rate";
       break;
 
     case Trait::mightySpirit:
-      strRef = "+2 Spirit Points, increased Spirit regeneration rate";
+      out = "+2 Spirit Points, increased Spirit regeneration rate";
       break;
 
     case Trait::stealthy:
-      strRef = "You are more likely to avoid detection";
+      out = "You are more likely to avoid detection";
       break;
 
     case Trait::imperceptible:
-      strRef = "You are more likely to avoid detection";
+      out = "You are more likely to avoid detection";
       break;
 
     case Trait::vicious:
-      strRef = "+50% backstab damage (for a total of 200%, or 350% with daggers)";
+      out = "+50% backstab damage (for a total of 200%, or 350% with daggers)";
       break;
 
     case Trait::treasureHunter:
-      strRef = "You tend to find more items";
+      out = "You tend to find more items";
       break;
 
     case Trait::undeadBane:
-      strRef = "+2 melee and ranged attack damage against undead monsters. Attacks "
+      out = "+2 melee and ranged attack damage against undead monsters. Attacks "
                "against ethereal undead monsters (e.g. Ghosts) never pass through them "
                "(although you can still miss in the ordinary way).";
       break;
@@ -693,9 +693,9 @@ void pickTrait(const Trait id)
   }
 }
 
-void getAllPickedTraitsTitlesLine(string& strRef)
+void getAllPickedTraitsTitlesLine(string& out)
 {
-  strRef = "";
+  out = "";
 
   for (int i = 0; i < int(Trait::END); ++i)
   {
@@ -703,7 +703,7 @@ void getAllPickedTraitsTitlesLine(string& strRef)
     {
       string title = "";
       getTraitTitle(Trait(i), title);
-      strRef += (strRef.empty() ? "" : ", ") + title;
+      out += (out.empty() ? "" : ", ") + title;
     }
   }
 }

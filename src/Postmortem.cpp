@@ -66,13 +66,12 @@ void mkInfoLines(vector<StrAndClr>& out)
 
   out.push_back(StrAndClr(" " + Map::player->getNameA(), clrHeading));
 
-  out.push_back(StrAndClr("   * Explored to the depth of dungeon level " +
-                          toStr(Map::dlvl), clrInfo));
-  out.push_back(StrAndClr("   * Was " +
-                          toStr(min(100, Map::player->getInsanity())) + "% "
-                          "insane", clrInfo));
-  out.push_back(StrAndClr("   * Killed " + toStr(nrKillsTotAllMon) +
-                          " monsters ", clrInfo));
+  out.push_back(StrAndClr("   * Explored to the depth of dungeon level "
+                          + toStr(Map::dlvl), clrInfo));
+  out.push_back(StrAndClr("   * Was " + toStr(min(100, Map::player->getInsanity())) +
+                          "% insane", clrInfo));
+  out.push_back(StrAndClr("   * Killed " + toStr(nrKillsTotAllMon) + " monsters ",
+                          clrInfo));
 
   //TODO This is ugly as hell
   if (Map::player->phobias[int(Phobia::closedPlace)])

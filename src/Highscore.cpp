@@ -19,14 +19,27 @@
 using namespace std;
 
 HighScoreEntry::HighScoreEntry(std::string dateAndTime, std::string name, int xp,
-                               int lvl, int dlvl, int insanity, bool didWin) :
+                               int lvl, int dlvl, int insanity, bool didWin, Bg bg) :
   dateAndTime_  (dateAndTime),
   name_         (name),
   xp_           (xp),
   lvl_          (lvl),
   dlvl_         (dlvl),
   ins_          (insanity),
-  isWin_        (didWin) {}
+  isWin_        (didWin),
+  bg_           (bg) {}
+
+int HighScoreEntry::getScore() const
+{
+  const double DLVL_DB      = double(dlvl_);
+  const double DLVL_LAST_DB = double(DLVL_LAST);
+  const double XP_DB        = double(xp_);
+
+  const double FACTOR_XP    = 1.0 + XP_DB + (isWin_ ? (XP_DB / 5.0) : 0.0);
+  const double FACTOR_DLVL  = 1.0 + (DLVL_DB / DLVL_LAST_DB);
+
+  return int(FACTOR_XP * FACTOR_DLVL);
+}
 
 namespace HighScore
 {
@@ -40,12 +53,13 @@ const int X_POS_LVL     = X_POS_NAME  + PLAYER_NAME_MAX_LEN + 2;
 const int X_POS_DLVL    = X_POS_LVL   + 8;
 const int X_POS_INS     = X_POS_DLVL  + 8;
 const int X_POS_WIN     = X_POS_INS   + 11;
+const int X_POS_SCORE   = X_POS_WIN   + 5;
 
 void sortEntries(vector<HighScoreEntry>& entries)
 {
   auto cmp = [](const HighScoreEntry & e1, const HighScoreEntry & e2)
   {
-    return e1.getDlvl() > e2.getDlvl();
+    return e1.getScore() > e2.getScore();
   };
 
   sort(entries.begin(), entries.end(), cmp);
@@ -58,15 +72,16 @@ void writeFile(vector<HighScoreEntry>& entries)
 
   for (const auto entry : entries)
   {
-    const string VICTORY_STR = entry.isWin() ? "V" : "D";
+    const string WIN_STR = entry.isWin() ? "W" : "0";
 
-    file << VICTORY_STR             << endl;
+    file << WIN_STR                 << endl;
     file << entry.getDateAndTime()  << endl;
     file << entry.getName()         << endl;
     file << entry.getXp()           << endl;
     file << entry.getLvl()          << endl;
     file << entry.getDlvl()         << endl;
     file << entry.getInsanity()     << endl;
+    file << int(entry.getBg())      << endl;
   }
 }
 
@@ -81,7 +96,7 @@ void readFile(vector<HighScoreEntry>& entries)
 
     while (getline(file, line))
     {
-      bool isWin = line[0] == 'V';
+      bool isWin                = line[0] == 'W';
       getline(file, line);
       const string dateAndTime  = line;
       getline(file, line);
@@ -94,7 +109,9 @@ void readFile(vector<HighScoreEntry>& entries)
       const int DLVL            = toInt(line);
       getline(file, line);
       const int INS             = toInt(line);
-      entries.push_back(HighScoreEntry(dateAndTime, name, XP, LVL, DLVL, INS, isWin));
+      getline(file, line);
+      Bg bg                     = Bg(toInt(line));
+      entries.push_back(HighScoreEntry(dateAndTime, name, XP, LVL, DLVL, INS, isWin, bg));
     }
     file.close();
   }
@@ -126,7 +143,8 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
   Render::drawText("Level",       panel, Pos(X_POS_LVL,     yPos), clrWhite);
   Render::drawText("Depth",       panel, Pos(X_POS_DLVL,    yPos), clrWhite);
   Render::drawText("Insanity",    panel, Pos(X_POS_INS,     yPos), clrWhite);
-  Render::drawText("Victory",     panel, Pos(X_POS_WIN,     yPos), clrWhite);
+  Render::drawText("Win",         panel, Pos(X_POS_WIN,     yPos), clrWhite);
+  Render::drawText("Score",       panel, Pos(X_POS_SCORE,   yPos), clrWhite);
 
   yPos++;
 
@@ -145,6 +163,7 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
     const string dlvl         = toStr(entry.getDlvl());
     const string ins          = toStr(entry.getInsanity());
     const string win          = entry.isWin() ? "Yes" : "No";
+    const string score        = toStr(entry.getScore());
 
     const Clr& clr = clrMenuHighlight;
     Render::drawText(dateAndTime, panel, Pos(X_POS_DATE,    yPos), clr);
@@ -153,6 +172,7 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
     Render::drawText(dlvl,        panel, Pos(X_POS_DLVL,    yPos), clr);
     Render::drawText(ins + "%",   panel, Pos(X_POS_INS,     yPos), clr);
     Render::drawText(win,         panel, Pos(X_POS_WIN,     yPos), clr);
+    Render::drawText(score,       panel, Pos(X_POS_SCORE,   yPos), clr);
     yPos++;
   }
 
@@ -213,7 +233,7 @@ void runHighScoreScreen()
   }
 }
 
-void onGameOver(const bool IS_VICTORY)
+void onGameOver(const bool IS_WIN)
 {
   vector<HighScoreEntry> entries = getEntriesSorted();
 
@@ -224,7 +244,8 @@ void onGameOver(const bool IS_VICTORY)
     DungeonMaster::getCLvl(),
     Map::dlvl,
     Map::player->getInsanity(),
-    IS_VICTORY);
+    IS_WIN,
+    PlayerBon::getBg());
 
   entries.push_back(curPlayer);
 

@@ -246,11 +246,18 @@ void mkForestTrees()
   }
 
   //Place graves
-  vector<HighScoreEntry>  entries       = HighScore::getEntriesSorted();
-  const int               NR_TO_PLACE   = 7;
-  const int               NR_HIGHSCORES = min(NR_TO_PLACE, int(entries.size()));
+  vector<HighScoreEntry> entries = HighScore::getEntriesSorted();
 
-  if (NR_HIGHSCORES > 0)
+  const int NR_NON_WIN =
+    count_if(begin(entries), end(entries), [](const HighScoreEntry & e)
+  {
+    return !e.isWin();
+  });
+
+  const int MAX_NR_TO_PLACE     = 7;
+  const int NR_GRAVES_TO_PLACE  = min(MAX_NR_TO_PLACE, NR_NON_WIN);
+
+  if (NR_GRAVES_TO_PLACE > 0)
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
@@ -290,11 +297,11 @@ void mkForestTrees()
 
             if (isPosOk)
             {
-              for (int dy_small = -1; dy_small <= 1; dy_small++)
+              for (int dxx = -1; dxx <= 1; dxx++)
               {
-                for (int dx_small = -1; dx_small <= 1; dx_small++)
+                for (int dyy = -1; dyy <= 1; dyy++)
                 {
-                  if (blocked[X + dx_small][Y + dy_small])
+                  if (blocked[X + dxx][Y + dyy])
                   {
                     isPosOk = false;
                   }
@@ -304,7 +311,7 @@ void mkForestTrees()
               {
                 graveCells.push_back(Pos(X, Y));
                 blocked[X][Y] = true;
-                if (int(graveCells.size()) == NR_HIGHSCORES) {i = 9999;}
+                if (int(graveCells.size()) == NR_GRAVES_TO_PLACE) {i = 9999;}
                 dy = 99999;
                 dx = 99999;
               }
@@ -315,19 +322,37 @@ void mkForestTrees()
       }
       pathWalkCount++;
     }
-    for (size_t i = 0; i < graveCells.size(); ++i)
+
+    size_t entryIdx = 0;
+
+    for (size_t gravePosIdx = 0; gravePosIdx < graveCells.size(); ++gravePosIdx)
     {
-      GraveStone*     grave     = new GraveStone(graveCells[i]);
-      HighScoreEntry  curScore  = entries[i];
-      const string    name      = curScore.getName();
+      GraveStone*     grave = new GraveStone(graveCells[gravePosIdx]);
+      HighScoreEntry  entry = entries[entryIdx];
+
+      //Skip winning entries
+      while (entry.isWin())
+      {
+        ++entryIdx;
+        entry = entries[entryIdx];
+      }
+
+      const string    name      = entry.getName();
       vector<string>  dateStrVector;
 
       dateStrVector.clear();
-      TextFormatting::getSpaceSeparatedList(curScore.getDateAndTime(), dateStrVector);
-      const string dateStr = dateStrVector[0];
-      const string dlvlStr = toStr(curScore.getDlvl());
-      grave->setInscription("RIP " + name + " " + dateStr + " DLVL: " + dlvlStr);
+      TextFormatting::getSpaceSeparatedList(entry.getDateAndTime(), dateStrVector);
+      const string  dateStr     = dateStrVector[0];
+      const string  scoreStr    = toStr(entry.getScore());
+      const string  dlvlStr     = toStr(entry.getDlvl());
+      string        classStr    = "";
+      PlayerBon::getBgTitle(entry.getBg(), classStr);
+
+      grave->setInscription("RIP " + name + " " + classStr + " " + dateStr
+                            + " Score: " + scoreStr);
+
       Map::put(grave);
+      ++entryIdx;
     }
   }
 }
