@@ -126,7 +126,7 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
   Render::drawText("Level",       panel, Pos(X_POS_LVL,     yPos), clrWhite);
   Render::drawText("Depth",       panel, Pos(X_POS_DLVL,    yPos), clrWhite);
   Render::drawText("Insanity",    panel, Pos(X_POS_INS,     yPos), clrWhite);
-  Render::drawText("Victory?",    panel, Pos(X_POS_WIN,     yPos), clrWhite);
+  Render::drawText("Victory",     panel, Pos(X_POS_WIN,     yPos), clrWhite);
 
   yPos++;
 
@@ -146,7 +146,7 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
     const string ins          = toStr(entry.getInsanity());
     const string win          = entry.isWin() ? "Yes" : "No";
 
-    const Clr& clr = clrNosfTeal;
+    const Clr& clr = clrMenuHighlight;
     Render::drawText(dateAndTime, panel, Pos(X_POS_DATE,    yPos), clr);
     Render::drawText(name,        panel, Pos(X_POS_NAME,    yPos), clr);
     Render::drawText(lvl,         panel, Pos(X_POS_LVL,     yPos), clr);
@@ -218,7 +218,7 @@ void onGameOver(const bool IS_VICTORY)
   vector<HighScoreEntry> entries = getEntriesSorted();
 
   HighScoreEntry curPlayer(
-    Utils::getCurTime().getTimeStr(time_minute, true),
+    Utils::getCurTime().getTimeStr(TimeType::minute, true),
     Map::player->getNameA(),
     DungeonMaster::getXp(),
     DungeonMaster::getCLvl(),

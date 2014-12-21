@@ -18,7 +18,7 @@ void setupFromSaveLines(std::vector<std::string>& lines);
 
 int getCLvl();
 int getXp();
-TimeData getTimeStarted();
+TimeData getStartTime();
 
 void onMonKilled(Actor& actor);
 void onMonSpotted(Actor& actor);

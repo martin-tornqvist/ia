@@ -32,6 +32,9 @@ void mkLines()
   const Clr& clrText      = clrWhite;
   const Clr& clrTextDark  = clrGray;
 
+  lines_.push_back({Map::player->getNameThe(), clrMenuHighlight});
+  lines_.push_back({" ", clrText});
+
   const AbilityVals& abilities = Map::player->getData().abilityVals;
 
   lines_.push_back({"Combat skills", clrHeading});
@@ -173,7 +176,6 @@ void mkLines()
 
 void getShockResSrcTitle(const ShockSrc shockSrc, string& strRef)
 {
-
   strRef = "";
   switch (shockSrc)
   {

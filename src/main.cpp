@@ -70,8 +70,8 @@ int main(int argc, char* argv[])
           MapGen::mkIntroLvl();
         }
         DungeonMaster::setTimeStartedToNow();
-        const TimeData& t = DungeonMaster::getTimeStarted();
-        TRACE << "Game started on: " << t.getTimeStr(time_minute, true) << endl;
+        const TimeData& t = DungeonMaster::getStartTime();
+        TRACE << "Game started on: " << t.getTimeStr(TimeType::minute, true) << endl;
       }
 
       Audio::fadeOutChannel(introMusChan);
@@ -132,7 +132,7 @@ int main(int argc, char* argv[])
         {
           //Run postmortem, then return to main menu
           static_cast<Player*>(Map::player)->waitTurnsLeft = -1;
-          Log::addMsg("I am dead...", clrMsgBad);
+          Log::addMsg("I am dead... (press space/esc)", clrMsgBad);
           Audio::play(SfxId::death);
           Render::drawMapAndInterface();
           Log::clearLog();

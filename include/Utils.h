@@ -38,24 +38,33 @@ int percentile();
 
 } //Rnd
 
-enum TimeType
+enum class TimeType
 {
-  time_year,
-  time_month,
-  time_day,
-  time_hour,
-  time_minute,
-  time_second
+  year,
+  month,
+  day,
+  hour,
+  minute,
+  second
 };
 
 struct TimeData
 {
   TimeData() :
-    year_(0), month_(0), day_(0), hour_(0), minute_(0), second_(0) {}
+    year_   (0),
+    month_  (0),
+    day_    (0),
+    hour_   (0),
+    minute_ (0),
+    second_ (0) {}
 
   TimeData(int year, int month, int day, int hour, int minute, int second) :
-    year_(year), month_(month), day_(day), hour_(hour), minute_(minute),
-    second_(second) {}
+    year_   (year),
+    month_  (month),
+    day_    (day),
+    hour_   (hour),
+    minute_ (minute),
+    second_ (second) {}
 
   std::string getTimeStr(const TimeType lowest, const bool ADD_SEPARATORS) const;
 

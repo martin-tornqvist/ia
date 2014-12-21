@@ -39,7 +39,7 @@ struct StrAndClr
   Clr   clr;
 };
 
-void mkInfoLines(vector<StrAndClr>& linesRef)
+void mkInfoLines(vector<StrAndClr>& out)
 {
   TRACE_FUNC_BEGIN;
 
@@ -64,53 +64,46 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
     }
   }
 
-  linesRef.push_back(StrAndClr(" " + Map::player->getNameA(), clrHeading));
+  out.push_back(StrAndClr(" " + Map::player->getNameA(), clrHeading));
 
-  linesRef.push_back(StrAndClr("   * Explored to the depth of dungeon level " +
-                               toStr(Map::dlvl), clrInfo));
-  linesRef.push_back(StrAndClr("   * Was " +
-                               toStr(min(100, Map::player->getInsanity())) + "% "
-                               "insane", clrInfo));
-  linesRef.push_back(StrAndClr("   * Killed " + toStr(nrKillsTotAllMon) +
-                               " monsters ", clrInfo));
+  out.push_back(StrAndClr("   * Explored to the depth of dungeon level " +
+                          toStr(Map::dlvl), clrInfo));
+  out.push_back(StrAndClr("   * Was " +
+                          toStr(min(100, Map::player->getInsanity())) + "% "
+                          "insane", clrInfo));
+  out.push_back(StrAndClr("   * Killed " + toStr(nrKillsTotAllMon) +
+                          " monsters ", clrInfo));
 
   //TODO This is ugly as hell
   if (Map::player->phobias[int(Phobia::closedPlace)])
-    linesRef.push_back(
-      StrAndClr("   * Had a phobia of enclosed spaces", clrInfo));
+    out.push_back(StrAndClr("   * Had a phobia of enclosed spaces", clrInfo));
   if (Map::player->phobias[int(Phobia::dog)])
-    linesRef.push_back(
-      StrAndClr("   * Had a phobia of dogs", clrInfo));
+    out.push_back(StrAndClr("   * Had a phobia of dogs", clrInfo));
   if (Map::player->phobias[int(Phobia::rat)])
-    linesRef.push_back(
-      StrAndClr("   * Had a phobia of rats", clrInfo));
+    out.push_back(StrAndClr("   * Had a phobia of rats", clrInfo));
   if (Map::player->phobias[int(Phobia::undead)])
-    linesRef.push_back(
-      StrAndClr("   * Had a phobia of the dead", clrInfo));
+    out.push_back(StrAndClr("   * Had a phobia of the dead", clrInfo));
   if (Map::player->phobias[int(Phobia::openPlace)])
-    linesRef.push_back(
-      StrAndClr("   * Had a phobia of open places", clrInfo));
+    out.push_back(StrAndClr("   * Had a phobia of open places", clrInfo));
   if (Map::player->phobias[int(Phobia::spider)])
-    linesRef.push_back(
-      StrAndClr("   * Had a phobia of spiders", clrInfo));
+    out.push_back(StrAndClr("   * Had a phobia of spiders", clrInfo));
   if (Map::player->phobias[int(Phobia::deepPlaces)])
-    linesRef.push_back(
-      StrAndClr("   * Had a phobia of deep places", clrInfo));
+    out.push_back(StrAndClr("   * Had a phobia of deep places", clrInfo));
 
   if (Map::player->obsessions[int(Obsession::masochism)])
-    linesRef.push_back(StrAndClr("   * Had a masochistic obsession", clrInfo));
+    out.push_back(StrAndClr("   * Had a masochistic obsession", clrInfo));
   if (Map::player->obsessions[int(Obsession::sadism)])
-    linesRef.push_back(StrAndClr("   * Had a sadistic obsession", clrInfo));
+    out.push_back(StrAndClr("   * Had a sadistic obsession", clrInfo));
 
-  linesRef.push_back(StrAndClr(" ", clrInfo));
+  out.push_back(StrAndClr(" ", clrInfo));
 
   TRACE << "Finding traits gained" << endl;
-  linesRef.push_back(StrAndClr(" Traits gained:", clrHeading));
+  out.push_back(StrAndClr(" Traits gained:", clrHeading));
   string traitsLine;
   PlayerBon::getAllPickedTraitsTitlesLine(traitsLine);
   if (traitsLine.empty())
   {
-    linesRef.push_back(StrAndClr("   * None", clrInfo));
+    out.push_back(StrAndClr("   * None", clrInfo));
   }
   else
   {
@@ -118,26 +111,26 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
     TextFormatting::lineToLines(traitsLine, 60, abilitiesLines);
     for (string& str : abilitiesLines)
     {
-      linesRef.push_back(StrAndClr("   " + str, clrInfo));
+      out.push_back(StrAndClr("   " + str, clrInfo));
     }
   }
-  linesRef.push_back(StrAndClr(" ", clrInfo));
+  out.push_back(StrAndClr(" ", clrInfo));
 
-  linesRef.push_back(StrAndClr(" Unique monsters killed:", clrHeading));
+  out.push_back(StrAndClr(" Unique monsters killed:", clrHeading));
   if (uniqueKilledNames.empty())
   {
-    linesRef.push_back(StrAndClr("   * None", clrInfo));
+    out.push_back(StrAndClr("   * None", clrInfo));
   }
   else
   {
     for (string& monsterName : uniqueKilledNames)
     {
-      linesRef.push_back(StrAndClr("   * " + monsterName, clrInfo));
+      out.push_back(StrAndClr("   * " + monsterName, clrInfo));
     }
   }
-  linesRef.push_back(StrAndClr(" ", clrInfo));
+  out.push_back(StrAndClr(" ", clrInfo));
 
-  linesRef.push_back(StrAndClr(" The last messages:", clrHeading));
+  out.push_back(StrAndClr(" Last messages:", clrHeading));
   const vector< vector<Msg> >& history = Log::getHistory();
   int historyElement = max(0, int(history.size()) - 20);
   for (unsigned int i = historyElement; i < history.size(); ++i)
@@ -149,12 +142,12 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
       history[i][ii].getStrWithRepeats(msgStr);
       row += msgStr + " ";
     }
-    linesRef.push_back(StrAndClr("   " + row, clrInfo));
+    out.push_back(StrAndClr("   " + row, clrInfo));
   }
-  linesRef.push_back(StrAndClr(" ", clrInfo));
+  out.push_back(StrAndClr(" ", clrInfo));
 
   TRACE << "Drawing the final map" << endl;
-  linesRef.push_back(StrAndClr(" The final moment:", clrHeading));
+  out.push_back(StrAndClr(" The final moment:", clrHeading));
   for (int x = 0; x < MAP_W; ++x)
   {
     for (int y = 0; y < MAP_H; ++y)
@@ -210,7 +203,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
         }
       }
     }
-    linesRef.push_back(StrAndClr(curRow, clrInfo));
+    out.push_back(StrAndClr(curRow, clrInfo));
     curRow.clear();
   }
 
@@ -218,8 +211,7 @@ void mkInfoLines(vector<StrAndClr>& linesRef)
   TRACE_FUNC_END;
 }
 
-void render(const vector<StrAndClr>& linesAndClr,
-            const int TOP_ELEMENT)
+void render(const vector<StrAndClr>& lines, const int TOP_ELEMENT)
 {
   Render::clearScreen();
 
@@ -236,17 +228,15 @@ void render(const vector<StrAndClr>& linesAndClr,
 
   Render::drawText(infoScrCmdInfo, Panel::screen, Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
-  const int NR_LINES_TOT = int(linesAndClr.size());
+  const int NR_LINES_TOT = int(lines.size());
   const int MAX_NR_LINES_ON_SCR = SCREEN_H - 2;
   int yPos = 1;
 
-  for (
-    int i = TOP_ELEMENT;
-    i < NR_LINES_TOT && (i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR;
-    i++)
+  for (int i = TOP_ELEMENT;
+       i < NR_LINES_TOT && ((i - TOP_ELEMENT) < MAX_NR_LINES_ON_SCR);
+       ++i)
   {
-    Render::drawText(linesAndClr[i].str, Panel::screen, Pos(0, yPos++),
-                     linesAndClr[i].clr);
+    Render::drawText(lines[i].str, Panel::screen, Pos(0, yPos++), lines[i].clr);
   }
 
   Render::updateScreen();
@@ -292,22 +282,19 @@ void runInfo(const vector<StrAndClr>& lines)
 void mkMemorialFile(const vector<StrAndClr>& lines)
 {
   const string timeStamp =
-    DungeonMaster::getTimeStarted().getTimeStr(time_second, false);
-  const string memorialFileName =
-    Map::player->getNameA() + "_" + timeStamp + ".txt";
+    DungeonMaster::getStartTime().getTimeStr(TimeType::second, false);
+  const string memorialFileName = Map::player->getNameA() + "_" + timeStamp + ".txt";
   const string memorialFilePath = "data/" + memorialFileName;
 
-  // Add memorial file
+  //Add memorial file
   ofstream file;
   file.open(memorialFilePath.data(), ios::trunc);
   for (const StrAndClr& line : lines) {file << line.str << endl;}
   file.close();
 
-  // Add reference to memorial file in list
-  const string memorialList = "data/memorialFileList";
-  file.open(memorialList.data(), ios::app);
-  file << memorialFileName << endl;
-  file.close();
+  Render::drawText("Wrote file: data/" + memorialFileName, Panel::screen, Pos(0, 0),
+                   clrWhiteHigh);
+  Render::updateScreen();
 }
 
 void renderMenu(const MenuBrowser& browser)
@@ -315,7 +302,7 @@ void renderMenu(const MenuBrowser& browser)
   vector<string> asciiGraveyard;
 
   string curLine;
-  ifstream file("data/ascii_graveyard");
+  ifstream file("ascii_graveyard");
 
   if (file.is_open())
   {
@@ -329,8 +316,8 @@ void renderMenu(const MenuBrowser& browser)
   }
   else
   {
-    TRACE << "[WARNING] Could not open ascii graveyard file, "
-          "in Postmortem::renderMenu()" << endl;
+    TRACE << "Failed to open ascii graveyard file" << endl;
+    assert(false);
   }
 
   file.close();
@@ -357,80 +344,27 @@ void renderMenu(const MenuBrowser& browser)
                    browser.isAtIdx(0) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Render::drawText("View High Scores", Panel::screen, pos,
+  Render::drawText("Write memorial file", Panel::screen, pos,
                    browser.isAtIdx(1) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Render::drawText("View messages", Panel::screen, pos,
+  Render::drawText("View High Scores", Panel::screen, pos,
                    browser.isAtIdx(2) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Render::drawText("Return to main menu", Panel::screen, pos,
+  Render::drawText("View message log", Panel::screen, pos,
                    browser.isAtIdx(3) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
-  Render::drawText("Quit the game", Panel::screen, pos,
+  Render::drawText("Return to main menu", Panel::screen, pos,
                    browser.isAtIdx(4) ? clrMenuHighlight : clrMenuDrk);
   pos.y++;
 
+  Render::drawText("Quit the game", Panel::screen, pos,
+                   browser.isAtIdx(5) ? clrMenuHighlight : clrMenuDrk);
+  pos.y++;
+
   Render::updateScreen();
-}
-
-void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame)
-{
-  MenuBrowser browser(5, 0);
-
-  renderMenu(browser);
-
-  bool done = false;
-  while (!done)
-  {
-    const MenuAction action = MenuInputHandling::getAction(browser);
-    switch (action)
-    {
-      case MenuAction::browsed:
-      {
-        renderMenu(browser);
-      } break;
-
-      case MenuAction::esc:
-      {
-        *quitGame = true;
-        done      = true;
-      } break;
-
-      case MenuAction::space:
-      case MenuAction::selectedShift: {} break;
-
-      case MenuAction::selected:
-      {
-        if (browser.isAtIdx(0))
-        {
-          runInfo(linesAndClr);
-          renderMenu(browser);
-        }
-        if (browser.isAtIdx(1))
-        {
-          HighScore::runHighScoreScreen();
-          renderMenu(browser);
-        }
-        if (browser.isAtIdx(2))
-        {
-          Log::displayHistory();
-          renderMenu(browser);
-        }
-        if (browser.isAtIdx(3))
-        {
-          done = true;
-        }
-        if (browser.isAtIdx(4))
-        {
-          *quitGame = true;
-          done      = true;
-        }
-      } break;
-    }
-  }
 }
 
 } //namespace
@@ -438,9 +372,60 @@ void readKeysMenu(const vector<StrAndClr>& linesAndClr, bool* const quitGame)
 void run(bool* const quitGame)
 {
   vector<StrAndClr> lines;
+
   mkInfoLines(lines);
-  mkMemorialFile(lines);
-  readKeysMenu(lines, quitGame);
+
+  MenuBrowser browser(6, 0);
+
+  renderMenu(browser);
+
+  while (true)
+  {
+    const MenuAction action = MenuInputHandling::getAction(browser);
+    switch (action)
+    {
+      case MenuAction::esc:
+      case MenuAction::space:
+      case MenuAction::selectedShift: {} break;
+
+      case MenuAction::browsed:
+      {
+        renderMenu(browser);
+      } break;
+
+      case MenuAction::selected:
+      {
+        if (browser.isAtIdx(0))
+        {
+          runInfo(lines);
+          renderMenu(browser);
+        }
+        else if (browser.isAtIdx(1))
+        {
+          mkMemorialFile(lines);
+        }
+        else if (browser.isAtIdx(2))
+        {
+          HighScore::runHighScoreScreen();
+          renderMenu(browser);
+        }
+        else if (browser.isAtIdx(3))
+        {
+          Log::displayHistory();
+          renderMenu(browser);
+        }
+        else if (browser.isAtIdx(4))
+        {
+          return;
+        }
+        else if (browser.isAtIdx(5))
+        {
+          *quitGame = true;
+          return;
+        }
+      } break;
+    }
+  }
 }
 
 } //Postmortem

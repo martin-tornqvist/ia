@@ -97,7 +97,7 @@ void setupFromSaveLines(vector<string>& lines)
 
 int getCLvl()             {return clvl_;}
 int getXp()               {return xp_;}
-TimeData getTimeStarted() {return timeStarted_;}
+TimeData getStartTime() {return timeStarted_;}
 
 int getMonTotXpWorth(const ActorDataT& d)
 {

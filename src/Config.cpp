@@ -472,7 +472,7 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS)
 void readFile(vector<string>& lines)
 {
   ifstream file;
-  file.open("config");
+  file.open("data/config");
   if (file.is_open())
   {
     string line;
@@ -563,7 +563,7 @@ void setAllVariablesFromLines(vector<string>& lines)
 void writeLinesToFile(vector<string>& lines)
 {
   ofstream file;
-  file.open("config", ios::trunc);
+  file.open("data/config", ios::trunc);
 
   for (size_t i = 0; i < lines.size(); ++i)
   {
