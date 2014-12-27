@@ -301,7 +301,7 @@ UnequipAllowed ArmorHeavyCoat::onUnequip_()
   return UnequipAllowed::yes;
 }
 
-void ArmorMigo::newTurnInInventory()
+void ArmorMigo::onNewTurnInInventory()
 {
   if (dur_ < 100)
   {
@@ -725,7 +725,7 @@ int MedicalBag::getTotSupplForSanitize() const
 }
 
 //--------------------------------------------------------- HIDEOUS MASK
-void HideousMask::newTurnInInventory()
+void HideousMask::onNewTurnInInventory()
 {
   vector<Actor*> adjActors;
   const Pos p(Map::player->pos);
@@ -760,6 +760,16 @@ UnequipAllowed GasMask::onUnequip()
 {
   clearCarrierProps();
   return UnequipAllowed::yes;
+}
+
+void GasMask::decrTurnsLeft(Inventory& carrierInv)
+{
+  --nrTurnsLeft_;
+
+  if (nrTurnsLeft_ <= 0)
+  {
+    carrierInv.decrItem(this);
+  }
 }
 
 //--------------------------------------------------------- EXPLOSIVE

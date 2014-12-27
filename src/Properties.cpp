@@ -45,7 +45,7 @@ void initDataList()
   d.id = propRPhys;
   d.stdRndTurns = Range(40, 60);
   d.name = "Physical Resistance";
-  d.nameShort = "RPhys";
+  d.nameShort = "rPhys";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to physical harm.";
   d.msg[propMsgOnStartMon] = "is resistant to physical harm.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to physical harm.";
@@ -65,7 +65,7 @@ void initDataList()
   d.id = propRFire;
   d.stdRndTurns = Range(40, 60);
   d.name = "Fire resistance";
-  d.nameShort = "RFire";
+  d.nameShort = "rFire";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to fire.";
   d.msg[propMsgOnStartMon] = "is resistant to fire.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to fire.";
@@ -85,7 +85,7 @@ void initDataList()
   d.id = propRCold;
   d.stdRndTurns = Range(40, 60);
   d.name = "Cold resistance";
-  d.nameShort = "RCold";
+  d.nameShort = "rCold";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to cold.";
   d.msg[propMsgOnStartMon] = "is resistant to cold.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to cold.";
@@ -105,7 +105,7 @@ void initDataList()
   d.id = propRPoison;
   d.stdRndTurns = Range(40, 60);
   d.name = "Poison resistance";
-  d.nameShort = "RPoison";
+  d.nameShort = "rPoison";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to poison.";
   d.msg[propMsgOnStartMon] = "is resistant to poison.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to poison.";
@@ -125,7 +125,7 @@ void initDataList()
   d.id = propRElec;
   d.stdRndTurns = Range(40, 60);
   d.name = "Electric resistance";
-  d.nameShort = "RElec";
+  d.nameShort = "rElec";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to electricity.";
   d.msg[propMsgOnStartMon] = "is resistant to electricity.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to electricity.";
@@ -145,7 +145,7 @@ void initDataList()
   d.id = propRAcid;
   d.stdRndTurns = Range(40, 60);
   d.name = "Acid resistance";
-  d.nameShort = "RAcid";
+  d.nameShort = "rAcid";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to acid.";
   d.msg[propMsgOnStartMon] = "is resistant to acid.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to acid.";
@@ -165,7 +165,7 @@ void initDataList()
   d.id = propRSleep;
   d.stdRndTurns = Range(40, 60);
   d.name = "Sleep resistance";
-  d.nameShort = "RSleep";
+  d.nameShort = "rSleep";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to sleep.";
   d.msg[propMsgOnStartMon] = "is resistant to sleep.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to sleep.";
@@ -185,7 +185,7 @@ void initDataList()
   d.id = propRFear;
   d.stdRndTurns = Range(40, 60);
   d.name = "Fear resistance";
-  d.nameShort = "RFear";
+  d.nameShort = "rFear";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to fear.";
   d.msg[propMsgOnStartMon] = "is resistant to fear.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to fear.";
@@ -205,7 +205,7 @@ void initDataList()
   d.id = propRConfusion;
   d.stdRndTurns = Range(40, 50);
   d.name = "Confusion resistance";
-  d.nameShort = "RConfusion";
+  d.nameShort = "rConfusion";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to confusion.";
   d.msg[propMsgOnStartMon] = "is resistant to confusion.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to confusion.";
@@ -225,7 +225,7 @@ void initDataList()
   d.id = propRDisease;
   d.stdRndTurns = Range(40, 60);
   d.name = "Disease resistance";
-  d.nameShort = "RDisease";
+  d.nameShort = "rDisease";
   d.msg[propMsgOnStartPlayer] = "";
   d.msg[propMsgOnStartMon] = "";
   d.msg[propMsgOnEndPlayer] = "";
@@ -245,7 +245,7 @@ void initDataList()
   d.id = propRBreath;
   d.stdRndTurns = Range(40, 60);
   d.name = "Breath resistance";
-  d.nameShort = "RBreath";
+  d.nameShort = "rBreath";
   d.msg[propMsgOnStartPlayer] = "I can breath without harm.";
   d.msg[propMsgOnStartMon] = "can breath without harm.";
   d.msg[propMsgOnEndPlayer] = "";

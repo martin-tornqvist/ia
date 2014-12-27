@@ -10,10 +10,7 @@ class Prop;
 class Actor;
 class Spell;
 
-enum ItemActivateReturnType
-{
-  itemActivate_keep, itemActivate_destroyed
-};
+enum class ItemActivateRetType {keep, destroyed};
 
 class Item
 {
@@ -48,7 +45,7 @@ public:
 
   virtual Clr getInterfaceClr() const {return clrBrown;}
 
-  virtual void newTurnInInventory() {}
+  virtual void onNewTurnInInventory() {}
 
   virtual void onPickupToBackpack(Inventory& inv) {(void)inv;}
 
@@ -138,7 +135,7 @@ public:
   ArmorMigo(ItemDataT* const itemData) : Armor(itemData) {}
   ~ArmorMigo() {}
 
-  void newTurnInInventory() override;
+  void onNewTurnInInventory() override;
 
 private:
   void            onEquip_()    override;
@@ -357,16 +354,23 @@ class HideousMask: public Headwear
 public:
   HideousMask(ItemDataT* itemData) : Headwear(itemData) {}
 
-  void  newTurnInInventory() override;
+  void  onNewTurnInInventory() override;
 };
 
 class GasMask: public Headwear
 {
 public:
-  GasMask(ItemDataT* itemData) : Headwear(itemData) {}
+  GasMask(ItemDataT* itemData) : Headwear(itemData), nrTurnsLeft_(60) {}
 
   void            onEquip()   override;
   UnequipAllowed  onUnequip() override;
+
+  void            decrTurnsLeft(Inventory& carrierInv);
+
+protected:
+  std::string getNameInf() const override {return "{" + toStr(nrTurnsLeft_) + "}";}
+
+  int nrTurnsLeft_;
 };
 
 class Explosive : public Item

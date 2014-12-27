@@ -69,7 +69,9 @@ public:
 
   void decrItemInSlot(SlotId slotName);
 
-  void decrItemInGeneral(size_t idx);
+  void decrItemInGeneral(const size_t IDX);
+
+  void decrItem(Item* const item);
 
   void decrItemTypeInGeneral(const ItemId itemId);
 

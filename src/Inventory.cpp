@@ -298,26 +298,21 @@ void Inventory::removeItemInBackpackWithPtr(Item* const item, const bool DELETE_
   assert(false);
 }
 
-void Inventory::decrItemInGeneral(size_t idx)
+void Inventory::decrItemInGeneral(const size_t IDX)
 {
-  Item* item = general_[idx];
-  bool stack = item->getData().isStackable;
-  bool deleteItem = true;
+  Item* item              = general_[IDX];
+  bool  isStackable       = item->getData().isStackable;
+  bool  shouldDeleteItem  = true;
 
-  if (stack)
+  if (isStackable)
   {
-    item->nrItems_ -= 1;
-
-    if (item->nrItems_ > 0)
-    {
-      deleteItem = false;
-    }
+    --item->nrItems_;
+    shouldDeleteItem = item->nrItems_ <= 0;
   }
 
-  if (deleteItem)
+  if (shouldDeleteItem)
   {
-    general_.erase(begin(general_) + idx);
-
+    general_.erase(begin(general_) + IDX);
     delete item;
   }
 }
@@ -327,6 +322,27 @@ void Inventory::decrItemTypeInGeneral(const ItemId id)
   for (size_t i = 0; i < general_.size(); ++i)
   {
     if (general_[i]->getData().id == id)
+    {
+      decrItemInGeneral(i);
+      return;
+    }
+  }
+}
+
+void Inventory::decrItem(Item* const item)
+{
+  for (InvSlot& slot : slots_)
+  {
+    if (slot.item == item)
+    {
+      decrItemInSlot(slot.id);
+      return;
+    }
+  }
+
+  for (size_t i = 0; i < general_.size(); ++i)
+  {
+    if (general_[i] == item)
     {
       decrItemInGeneral(i);
       return;

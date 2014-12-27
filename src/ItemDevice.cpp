@@ -362,7 +362,7 @@ void DeviceLantern::toggle()
   Render::drawMapAndInterface();
 }
 
-void DeviceLantern::newTurnInInventory()
+void DeviceLantern::onNewTurnInInventory()
 {
   if (isActivated_)
   {

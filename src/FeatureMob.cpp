@@ -24,52 +24,53 @@ void Smoke::onNewTurn()
 
   if (actor)
   {
-
     const bool IS_PLAYER = actor == Map::player;
 
-    //Blinded by smoke?
-    if (Rnd::oneIn(4))
-    {
-      //TODO There needs to be some criteria here, so that e.g. a statue-monster or a
-      //very alien monster can't get blinded by smoke (but do not use isHumanoid - rats,
-      //wolves etc should definitely be blinded by smoke.
-      //Perhaps add some property like "hasEyes"?
-      bool actorIsProtected = false;
+    //TODO There needs to be some criteria here, so that e.g. a statue-monster or a
+    //very alien monster can't get blinded by smoke (but do not use isHumanoid - rats,
+    //wolves etc should definitely be blinded by smoke).
+    //Perhaps add some property like "hasEyes"?
 
-      if (IS_PLAYER)
+    bool isProtectedBlindness = false;
+
+    if (IS_PLAYER)
+    {
+      auto&       inv             = Map::player->getInv();
+      auto* const playerHeadItem  = inv.slots_[int(SlotId::head)].item;
+      auto* const playerBodyItem  = inv.slots_[int(SlotId::body)].item;
+      if (playerHeadItem)
       {
-        auto& inv = Map::player->getInv();
-        const auto* const playerHeadItem  = inv.slots_[int(SlotId::head)].item;
-        const auto* const playerBodyItem  = inv.slots_[int(SlotId::body)].item;
-        if (playerHeadItem)
+        if (playerHeadItem->getData().id == ItemId::gasMask)
         {
-          if (playerHeadItem->getData().id == ItemId::gasMask)
-          {
-            actorIsProtected = true;
-          }
-        }
-        if (playerBodyItem)
-        {
-          if (playerBodyItem->getData().id == ItemId::armorAsbSuit)
-          {
-            actorIsProtected = true;
-          }
+          isProtectedBlindness = true;
+
+          //This may destroy the gasmask
+          static_cast<GasMask*>(playerHeadItem)->decrTurnsLeft(inv);
         }
       }
-
-      if (!actorIsProtected)
+      if (playerBodyItem)
       {
-        if (IS_PLAYER) {Log::addMsg("I am getting smoke in my eyes.");}
-        actor->getPropHandler().tryApplyProp(
-          new PropBlind(PropTurns::specific, Rnd::range(1, 3)));
+        if (playerBodyItem->getData().id == ItemId::armorAsbSuit)
+        {
+          isProtectedBlindness = true;
+        }
       }
     }
 
-    //Choking?
+    //Blinded by smoke?
+    if (!isProtectedBlindness && Rnd::oneIn(4))
+    {
+      if (IS_PLAYER) {Log::addMsg("I am getting smoke in my eyes.");}
+      actor->getPropHandler().tryApplyProp(
+        new PropBlind(PropTurns::specific, Rnd::range(1, 3)));
+    }
+
+    //Choking (this is determined by rBreath)?
     if (Rnd::oneIn(4))
     {
       bool props[endOfPropIds];
       actor->getPropHandler().getPropIds(props);
+
       if (!props[propRBreath])
       {
         string sndMsg = "";

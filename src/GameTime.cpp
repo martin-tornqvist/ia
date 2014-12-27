@@ -139,11 +139,11 @@ void runStdTurnEvents()
 
   //Run new turn events on all player items
   auto& playerInv = Map::player->getInv();
-  for (Item* const item : playerInv.general_) {item->newTurnInInventory();}
+  for (Item* const item : playerInv.general_) {item->onNewTurnInInventory();}
 
   for (InvSlot& slot : playerInv.slots_)
   {
-    if (slot.item) {slot.item->newTurnInInventory();}
+    if (slot.item) {slot.item->onNewTurnInInventory();}
   }
 
   SndEmit::resetNrSndMsgPrintedCurTurn();
