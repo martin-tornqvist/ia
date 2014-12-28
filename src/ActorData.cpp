@@ -2273,7 +2273,7 @@ void initDataList()
   d.color = clrRed;
   d.tile = TileId::device2;
   d.hp = 20;
-  d.spi = 30;
+  d.spi = 40;
   d.dmgRanged = 6;
   d.abilityVals.setVal(AbilityId::melee, 50);
   d.abilityVals.setVal(AbilityId::ranged, 65);

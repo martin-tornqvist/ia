@@ -954,9 +954,6 @@ void MiGo::mkStartItems()
 
 void SentryDrone::mkStartItems()
 {
-//  Item* item = ItemFactory::mk(ItemId::miGoGun);
-//  inv_->putInIntrinsics(item);
-
   spellsKnown_.push_back(new SpellTeleport);
   spellsKnown_.push_back(new SpellHealSelf);
   spellsKnown_.push_back(new SpellDarkbolt);

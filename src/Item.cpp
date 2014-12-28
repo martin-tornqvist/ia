@@ -768,6 +768,8 @@ void GasMask::decrTurnsLeft(Inventory& carrierInv)
 
   if (nrTurnsLeft_ <= 0)
   {
+    Log::addMsg("My " + getName(ItemRefType::plain, ItemRefInf::none) + " expires.",
+                clrMsgNote, true, true);
     carrierInv.decrItem(this);
   }
 }
