@@ -40,7 +40,9 @@ void playerGainLvl()
 
     Map::player->restoreHp(999, false);
     Map::player->changeMaxHp(HP_PER_LVL, true);
+    Map::player->restoreSpi(999, false);
     Map::player->changeMaxSpi(SPI_PER_LVL, true);
+    Map::player->restoreShock(999, false);
   }
 }
 
