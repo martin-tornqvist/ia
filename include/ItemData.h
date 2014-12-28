@@ -12,13 +12,13 @@
 
 enum class SndVol;
 
-enum ItemWeight
+enum class ItemWeight
 {
-  itemWeight_none       = 0,
-  itemWeight_extraLight = 1,  //E.g. ammo
-  itemWeight_light      = 10, //E.g. dynamite, daggers
-  itemWeight_medium     = 50, //E.g. most firearms
-  itemWeight_heavy      = 110 //E.g. heavy armor, heavy weapons
+  none       = 0,
+  extraLight = 1,  //E.g. ammo
+  light      = 10, //E.g. dynamite, daggers
+  medium     = 50, //E.g. most firearms
+  heavy      = 110 //E.g. heavy armor, heavy weapons
 };
 
 enum class MainAttMode {none, melee, thrown, ranged};
@@ -215,7 +215,7 @@ public:
   std::string landOnHardSndMsg;
   SfxId landOnHardSfx;
   int shockWhileInBackpack = 0;
-  int shockWhileEquiped = 0;
+  int shockWhileEquipped = 0;
   std::vector<RoomType> nativeRooms;
   std::vector< std::pair<FeatureId, int> > featuresCanBeFoundIn;
 
@@ -249,6 +249,7 @@ public:
     DiceParam throwDmg;
     int hitChanceMod;
     int throwHitChanceMod;
+    int effectiveRange;
     bool knocksBack;
     std::string dmgInfoOverride;
     ItemId ammoItemId;

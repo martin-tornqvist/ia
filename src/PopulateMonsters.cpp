@@ -292,7 +292,7 @@ void populateStdLvl()
     if (room->type_ != RoomType::plain &&
         int(room->type_) < int(RoomType::END_OF_STD_ROOMS))
     {
-      //TODO This is not a good method to calculate the number of room cells
+      //TODO: This is not a good method to calculate the number of room cells
       //(the room may be irregularly shaped), parse the room map instead
       const int ROOM_W = room->r_.p1.x - room->r_.p0.x + 1;
       const int ROOM_H = room->r_.p1.y - room->r_.p0.y + 1;

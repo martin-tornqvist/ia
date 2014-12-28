@@ -256,7 +256,7 @@ void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION*/)
   vector< vector<Pos> > posLists;
   getCellsReached(area, origin, blocked, posLists);
 
-  //TODO Sound message?
+  //TODO: Sound message?
   Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, origin, nullptr,
           SndVol::low, AlertsMon::yes);
   SndEmit::emitSnd(snd);

@@ -2,6 +2,7 @@
 #define MARKER_H
 
 #include <functional>
+#include <climits>
 
 #include "CmnTypes.h"
 
@@ -16,7 +17,8 @@ namespace Marker
 
 void run(const MarkerDrawTail drawTail, const MarkerUsePlayerTarget useTarget,
          std::function<void(const Pos&)> onMarkerAtPos,
-         std::function<MarkerDone(const Pos&, const KeyData&)> onKeyPress);
+         std::function<MarkerDone(const Pos&, const KeyData&)> onKeyPress,
+         const int EFFECTIVE_RANGE_LMT = INT_MAX);
 
 } //Marker
 

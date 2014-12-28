@@ -348,8 +348,8 @@ void mkForestTrees()
       string        classStr    = "";
       PlayerBon::getBgTitle(entry.getBg(), classStr);
 
-      grave->setInscription("RIP " + name + " " + classStr + " " + dateStr
-                            + " Score: " + scoreStr);
+      grave->setInscription("RIP " + name + ", " + classStr + ", " + dateStr
+                            + ", Score: " + scoreStr);
 
       Map::put(grave);
       ++entryIdx;

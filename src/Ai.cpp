@@ -221,7 +221,7 @@ bool makeRoomForFriend(Mon& mon)
             //If we are blocking a pal, check every neighbouring position that is at
             //equal or closer distance to the player, to check whether they are fine.
 
-            //TODO Vision must be checked from the cell candidates!
+            //TODO: Vision must be checked from the cell candidates!
 
             if (checkIfBlockingMon(mon.pos, *other) || isOtherAdjWithNoLos)
             {

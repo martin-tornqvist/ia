@@ -15,7 +15,7 @@ namespace Disarm
 
 void playerDisarm()
 {
-  //TODO It would probably be more fun if examine were allowed while blind,
+  //TODO: It would probably be more fun if examine were allowed while blind,
   //with some potentially horrible results
 
   //Abort if blind

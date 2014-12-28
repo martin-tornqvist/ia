@@ -58,7 +58,7 @@ void resetMap();
 Rigid* put(Rigid* const rigid);
 
 //Makes a copy of the renderers current array
-//TODO This is weird, and it's unclear how it should be used. Remove?
+//TODO: This is weird, and it's unclear how it should be used. Remove?
 //Can it not be copied in the map drawing function instead?
 void updateVisualMemory();
 

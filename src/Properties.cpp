@@ -1615,7 +1615,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
     if (owningActor_->isAlive())
     {
 
-      //TODO reimplement something affecting chance of success?
+      //TODO: reimplement something affecting chance of success?
 
       if (Rnd::oneIn(4))
       {

@@ -160,7 +160,7 @@ void tryCast(const SpellOpt& spellOpt)
 {
   assert(spellOpt.spell);
 
-  //TODO It should be allowed to cast non-read spells while blind etc.
+  //TODO: It should be allowed to cast non-read spells while blind etc.
   //There should be something like "allowRead()" and allowCastSpells()".
   if (Map::player->getPropHandler().allowRead(true))
   {

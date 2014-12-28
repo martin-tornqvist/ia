@@ -95,7 +95,7 @@ public:
   Pos pos;
 
 protected:
-  //TODO Try to get rid of these friend declarations
+  //TODO: Try to get rid of these friend declarations
   friend class AbilityVals;
   friend class PropDiseased;
   friend class PropPossessedByZuul;

@@ -463,7 +463,11 @@ void drawMarker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANG
       if (EFFECTIVE_RANGE != -1)
       {
         const int CHEB_DIST = Utils::kingDist(trail[0], pos);
-        if (CHEB_DIST > EFFECTIVE_RANGE) {clr = clrYellow;}
+
+        if (CHEB_DIST > EFFECTIVE_RANGE)
+        {
+          clr = clrOrange;
+        }
       }
       if (Config::isTilesMode())
       {
@@ -483,9 +487,10 @@ void drawMarker(const Pos& p, const vector<Pos>& trail, const int EFFECTIVE_RANG
     if (EFFECTIVE_RANGE != -1)
     {
       const int CHEB_DIST = Utils::kingDist(trail[0], p);
+
       if (CHEB_DIST > EFFECTIVE_RANGE)
       {
-        clr = clrYellow;
+        clr = clrOrange;
       }
     }
   }

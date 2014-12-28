@@ -132,7 +132,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
     Actor* const actorHere = Utils::getActorAtPos(curPos);
     if (actorHere)
     {
-      if (curPos == tgtCell || actorHere->getData().actorSize >= actorSize_humanoid)
+      if (curPos == tgtCell || actorHere->getData().actorSize >= ActorSize::humanoid)
       {
 
         data = ThrowAttData(actorThrowing, itemThrown, tgtCell, curPos, aimLvl);
@@ -185,7 +185,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
       break;
     }
 
-    if (curPos == tgtCell && data.intendedAimLvl == ActorSize::actorSize_floor)
+    if (curPos == tgtCell && data.intendedAimLvl == ActorSize::floor)
     {
       blockedInElement = i;
       break;

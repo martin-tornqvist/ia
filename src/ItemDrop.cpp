@@ -54,7 +54,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
 
     if (invList == InvList::slots && IS_WHOLE_STACK_DROPPED)
     {
-      //TODO This should be called from the Inventory instead.
+      //TODO: This should be called from the Inventory instead.
       itemToDrop->onUnequip();
     }
 
@@ -96,7 +96,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
   }
 }
 
-//TODO This function is really weirdly written, and seems to even be doing
+//TODO: This function is really weirdly written, and seems to even be doing
 //wrong things. It should be refactored.
 Item* dropItemOnMap(const Pos& intendedPos, Item& item)
 {
@@ -157,7 +157,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
     }
     else
     {
-      //TODO Why is this called here? It doesn't seem right.
+      //TODO: Why is this called here? It doesn't seem right.
       item.appplyDropEffects();
     }
 
@@ -173,7 +173,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
 //        Log::addMsg("I feel something by my feet.");
 //      }
 
-      //TODO Won't this cause nullptr to be returned?
+      //TODO: Won't this cause nullptr to be returned?
       //Shouldn't a pointer to the item be returned?
       break;
     }

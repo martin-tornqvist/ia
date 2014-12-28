@@ -176,7 +176,7 @@ void cavifyRoom(Room& room)
 
   vector<Pos> originBucket;
 
-  //TODO This needs some refactoring
+  //TODO: This needs some refactoring
 
   //Left
   for (int i = Rnd::range(1, 3); i > 0; --i)

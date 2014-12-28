@@ -30,7 +30,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPI
   defender.getPropHandler().getPropIds(props);
 
   if (defenderData.preventKnockback             ||
-      defenderData.actorSize >= actorSize_giant ||
+      defenderData.actorSize >= ActorSize::giant ||
       props[propEthereal]                       ||
       props[propOoze]                           ||
       /*Do not knock back if bot is playing*/

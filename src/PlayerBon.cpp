@@ -140,7 +140,7 @@ void getBgDescr(const Bg id, vector<string>& linesRef)
                          "enemies, causing them to forget their pursuit "
                          "(press [x])");
       linesRef.push_back(" ");
-      //TODO This should be a trait?
+      //TODO: This should be a trait?
       linesRef.push_back("+25% hit chance with ranged attacks vs unaware targets");
       linesRef.push_back(" ");
       linesRef.push_back("The rate of shock recieved passively over time "

@@ -12,7 +12,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS = 1);
 
 void setItemRandomizedProperties(Item* item);
 
-//TODO Ugly function, refactor. Perhaps use a vector of ItemType as parameter?
+//TODO: Ugly function, refactor. Perhaps use a vector of ItemType as parameter?
 //(Then ItemDataT must store ItemType)
 Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS);
 

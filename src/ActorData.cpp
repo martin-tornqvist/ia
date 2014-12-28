@@ -33,7 +33,7 @@ void ActorDataT::reset()
   ai[int(AiId::movesToRandomWhenUnaware)] = true;
   nrTurnsAware = 0;
   spawnMinDLVL = spawnMaxDLVL = 999;
-  actorSize = actorSize_humanoid;
+  actorSize = ActorSize::humanoid;
   isHumanoid = false;
   isAutoDescrAllowed = true;
   deathMessageOverride = "";
@@ -45,7 +45,7 @@ void ActorDataT::reset()
   isUnique = false;
   isAutoSpawnAllowed = true;
   spellCastMessage = "[SPELL MESSAGE HERE]";
-  erraticMovePct = actorErratic_rare;
+  erraticMovePct = ActorErraticFreq::rare;
   monShockLvl = MonShockLvl::none;
   isRat = isCanine = isSpider = isUndead = isGhost = false;
   canBeSummoned = false;
@@ -82,7 +82,7 @@ void initDataList()
   d.color = clrWhiteHigh;
   d.tile = TileId::playerFirearm;
   d.isAutoSpawnAllowed = false;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   data[int(d.id)] = d;
   d.reset();
@@ -110,7 +110,7 @@ void initDataList()
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
@@ -122,7 +122,7 @@ void initDataList()
   d.aggroTextMonHidden = "I hear a growling voice.";
   d.aggroSfxMonSeen = SfxId::zombieGrowl;
   d.aggroSfxMonHidden = SfxId::zombieGrowl;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::scary;
   d.isUndead = true;
   d.nativeRooms.push_back(RoomType::plain);
@@ -155,7 +155,7 @@ void initDataList()
   d.spawnMinDLVL = 2;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
@@ -166,7 +166,7 @@ void initDataList()
   d.aggroTextMonHidden = "I hear a growling voice.";
   d.aggroSfxMonSeen = SfxId::zombieGrowl;
   d.aggroSfxMonHidden = SfxId::zombieGrowl;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::scary;
   d.isUndead = true;
   d.nativeRooms.push_back(RoomType::plain);
@@ -200,7 +200,7 @@ void initDataList()
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
@@ -209,7 +209,7 @@ void initDataList()
             "somehow. It is constantly oozing putrid liquid that it can spit "
             "to attack with.";
   d.aggroTextMonHidden = "I hear heavy footsteps.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::scary;
   d.isUndead = true;
   d.nativeRooms.push_back(RoomType::plain);
@@ -241,7 +241,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::ranged, 40);
   d.spawnMinDLVL = 4;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
@@ -250,7 +250,7 @@ void initDataList()
             "during the Great War. Shortly after his plane was shot down, his "
             "body was stolen. Now he roams these halls as a resurrected "
             "warrior in service of the cult, commanding a squad of undead.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isUndead = true;
   d.isUnique = true;
@@ -285,7 +285,7 @@ void initDataList()
   d.isAutoSpawnAllowed = false;
   d.spawnMinDLVL = 4;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canSeeInDarkness = true;
@@ -293,7 +293,7 @@ void initDataList()
   d.descr = "Alan Halsey was the dean of the Miskatonic University in New "
             "England. He must have gotten into the hands of the Cult, who "
             "turned him into the hellish zombie warrior I now see before me.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isUndead = true;
   d.isUnique = true;
@@ -329,14 +329,14 @@ void initDataList()
   d.spawnMinDLVL = 1;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canOpenDoors = true;
   d.canBashDoors = true;
   d.nrTurnsAware = 25;
   d.descr = "A fanatic cultist, madly gibbering in some half-lost language.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::human);
   d.nativeRooms.push_back(RoomType::ritual);
@@ -368,7 +368,7 @@ void initDataList()
   d.spawnMinDLVL = DLVL_FIRST_LATE_GAME;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canOpenDoors = true;
   d.canBashDoors = true;
@@ -376,7 +376,7 @@ void initDataList()
   d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
             "wielding an Electric Gun, presumably a gift from the Mi-go.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::human);
   d.nativeRooms.push_back(RoomType::ritual);
@@ -408,7 +408,7 @@ void initDataList()
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canOpenDoors = true;
   d.canBashDoors = true;
@@ -416,7 +416,7 @@ void initDataList()
   d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
             "wielding a Spike gun.";
   d.spellCastMessage = "The acolyte makes strange gestures in the air.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::human);
   d.nativeRooms.push_back(RoomType::ritual);
@@ -449,7 +449,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.spawnMinDLVL = 3;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.descr = "During the Salem witch trials of 1692 an old woman by the name of "
             "Keziah Mason was arrested for her suspicious behavior and seeming "
@@ -465,7 +465,7 @@ void initDataList()
   d.aggroTextMonSeen = d.nameThe + " chortles at me in a croaking voice.";
   d.aggroTextMonHidden = "I hear a repulsive croaking voice.";
   d.nrTurnsAware = 999;
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::ritual);
@@ -501,7 +501,7 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.spawnMinDLVL = data[int(ActorId::keziahMason)].spawnMinDLVL;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.descr = "\"That object - no larger than a good sized rat and quaintly "
             "called by the townspeople, \"Brown Jenkin\" - seemed to have been "
             "the fruit of a remarkable case of sympathetic herd-delusion, for "
@@ -518,7 +518,7 @@ void initDataList()
   d.aggroTextMonSeen = d.nameThe + " titters at me in a loathsome voice.";
   d.aggroTextMonHidden = "I hear a loathsome titter.";
   d.nrTurnsAware = 999;
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::scary;
   d.isRat = true;
   data[int(d.id)] = d;
@@ -549,14 +549,14 @@ void initDataList()
   d.isUnique = true;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.descr = "[DESCRIPTION MISSING]";
   d.spellCastMessage = d.nameThe + " makes strange gestures in the air.";
   d.aggroTextMonSeen = "";
   d.aggroTextMonHidden = "";
   d.nrTurnsAware = 999;
-  d.erraticMovePct = actorErratic_never;
+  d.erraticMovePct = ActorErraticFreq::never;
   d.monShockLvl = MonShockLvl::mindShattering;
   data[int(d.id)] = d;
   d.reset();
@@ -601,7 +601,7 @@ void initDataList()
   d.spawnMinDLVL = 5;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canOpenDoors = true;
   d.canBashDoors = true;
@@ -609,7 +609,7 @@ void initDataList()
   d.descr = "A fanatic cultist of the priest rank, madly gibbering in some "
             "half-lost language.";
   d.spellCastMessage = "The priest makes strange gestures in the air.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::human);
   d.nativeRooms.push_back(RoomType::ritual);
@@ -641,10 +641,10 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.nrTurnsAware = 5;
   d.descr = "A large green spider.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.isSpider = true;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::spider);
@@ -677,9 +677,9 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.nrTurnsAware = 5;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.descr = "A large white spider.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.isSpider = true;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::spider);
@@ -712,9 +712,9 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.nrTurnsAware = 5;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.descr = "A large red spider.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.isSpider = true;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::spider);
@@ -747,12 +747,12 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
   d.nrTurnsAware = 5;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isSpider = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.descr = "A faint shadow of a huge spider, lurking in my periphery.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::spider);
   d.nativeRooms.push_back(RoomType::forest);
@@ -785,11 +785,11 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
   d.nrTurnsAware = 20;
-  d.actorSize = actorSize_giant;
+  d.actorSize = ActorSize::giant;
   d.descr = "Leng spiders are huge, purplish arachnids, with pustulent bloated "
             "bodies and long, bristly legs. Native to the Dreamlands, the "
             "spiders of Leng are intelligent, dangerous, and gigantic.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.isSpider = true;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
@@ -825,7 +825,7 @@ void initDataList()
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.canBashDoors = true;
   d.nrTurnsAware = 25;
   d.descr = "This extremely aggressive canine seems to be part corporeal and "
@@ -834,7 +834,7 @@ void initDataList()
   d.aggroTextMonHidden = "I hear a snarl.";
   d.aggroSfxMonSeen = SfxId::dogSnarl;
   d.aggroSfxMonHidden = SfxId::dogSnarl;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::scary;
   d.isCanine = true;
   d.canBeSummoned = true;
@@ -870,7 +870,7 @@ void initDataList()
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.canBashDoors = true;
   d.nrTurnsAware = 25;
   d.descr = "This extremely aggressive canine seems to be part corporeal and "
@@ -879,7 +879,7 @@ void initDataList()
   d.aggroTextMonHidden = "I hear a snarl.";
   d.aggroSfxMonSeen = SfxId::dogSnarl;
   d.aggroSfxMonHidden = SfxId::dogSnarl;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::scary;
   d.isCanine = true;
   d.canBeSummoned = true;
@@ -914,7 +914,7 @@ void initDataList()
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.nrTurnsAware = 50;
   d.descr = "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It "
@@ -924,7 +924,7 @@ void initDataList()
   d.aggroTextMonHidden = "I hear a snarl.";
   d.aggroSfxMonSeen = SfxId::dogSnarl;
   d.aggroSfxMonHidden = SfxId::dogSnarl;
-  d.erraticMovePct = actorErratic_never;
+  d.erraticMovePct = ActorErraticFreq::never;
   d.monShockLvl = MonShockLvl::mindShattering;
   d.isCanine = true;
   d.canBeSummoned = false;
@@ -963,10 +963,10 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 5;
   d.descr = "A restless spirit.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isUndead = true;
   d.isGhost = true;
@@ -1005,12 +1005,12 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 7;
   d.descr = "It exists between the land of the dead and the living. It "
             "resembles a grim reaper, including the cloak, scythe, and "
             "skeletal appearance.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isUndead = true;
   d.isGhost = true;
@@ -1050,10 +1050,10 @@ void initDataList()
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
   d.spellCastMessage = "The Wraith casts a spell.";
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 5;
   d.descr = "A powerful spirit.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isUndead = true;
   d.isGhost = true;
@@ -1091,10 +1091,10 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::horde;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.nrTurnsAware = 5;
   d.descr = "A large and aggressive rodent.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.isRat = true;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::monster);
@@ -1129,7 +1129,7 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 15;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::horde;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.nrTurnsAware = 5;
   d.descr = "At first sight, a Rat-thing can easily be mistaken for a large, "
             "dark rat. On closer examination, however, their human hands and "
@@ -1137,7 +1137,7 @@ void initDataList()
             "Rat-things are said to be created from dead cultists by foul "
             "witchcraft. Thus, they are found where the witch who created them "
             "had her lair.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::unsettling;
   d.isRat = true;
   d.canBeSummoned = true;
@@ -1174,14 +1174,14 @@ void initDataList()
   d.spawnMinDLVL = 0;
   d.spawnMaxDLVL = 10;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.nrTurnsAware = 5;
   d.descr = "A large wolf with eyes full of cunning.";
   d.aggroTextMonSeen = d.nameThe + " snarls at me.";
   d.aggroTextMonHidden = "I hear a chilling howl.";
   d.aggroSfxMonSeen = SfxId::dogSnarl;
   d.aggroSfxMonHidden = SfxId::wolfHowl;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.isCanine = true;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomType::plain);
@@ -1214,7 +1214,7 @@ void initDataList()
   d.spawnMinDLVL = 4;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.nrTurnsAware = 5;
   d.descr = "An unknown species, perhaps stemming from some hidden bowels of "
@@ -1222,7 +1222,7 @@ void initDataList()
   d.aggroTextMonHidden = "I hear the flapping of great wings.";
   d.aggroSfxMonSeen = SfxId::flappingWings;
   d.aggroSfxMonHidden = SfxId::flappingWings;
-  d.erraticMovePct = actorErratic_very;
+  d.erraticMovePct = ActorErraticFreq::very;
   d.monShockLvl = MonShockLvl::unsettling;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomType::plain);
@@ -1257,7 +1257,7 @@ void initDataList()
   d.spawnMinDLVL = 6;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.nrTurnsAware = 5;
   d.descr = "\"There flapped rhythmically a horde of tame, trained, hybrid "
@@ -1272,7 +1272,7 @@ void initDataList()
   d.aggroTextMonHidden = "I hear the flapping of great wings.";
   d.aggroSfxMonSeen = SfxId::flappingWings;
   d.aggroSfxMonHidden = SfxId::flappingWings;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::scary;
   d.canBeSummoned = true;
   d.nativeRooms.push_back(RoomType::plain);
@@ -1305,11 +1305,11 @@ void initDataList()
   d.spawnMinDLVL = 8;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.nrTurnsAware = 5;
   d.descr = "A huge predatory insect.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::unsettling;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(RoomType::plain);
@@ -1342,11 +1342,11 @@ void initDataList()
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::swarm;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.canBashDoors = false;
   d.nrTurnsAware = 12;
   d.descr = "A huge swarming insect. They breed rapidly.";
-  d.erraticMovePct = actorErratic_very;
+  d.erraticMovePct = ActorErraticFreq::very;
   d.monShockLvl = MonShockLvl::none;
   d.canBeSummoned = false;
   d.nativeRooms.push_back(RoomType::plain);
@@ -1377,7 +1377,7 @@ void initDataList()
   d.intrProps[propFlying] = true;
   d.spawnMinDLVL = 6;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAware = 50;
@@ -1401,7 +1401,7 @@ void initDataList()
   d.spellCastMessage = "The Fungi makes strange gestures in the air.";
   d.aggroTextMonSeen = d.nameThe + " speaks at me in a droning voice.";
   d.aggroTextMonHidden = "I hear a droning voice.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::forest);
@@ -1447,7 +1447,7 @@ void initDataList()
   d.preventKnockback = true;
   d.spawnMinDLVL = 6;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = false;
   d.canOpenDoors = false;
   d.nrTurnsAware = 6;
@@ -1459,7 +1459,7 @@ void initDataList()
             "by certain forms of electrical energy.";
   d.aggroTextMonSeen = d.nameThe + " makes shrill whistling noises.";
   d.aggroTextMonHidden = "I hear a shrill whistling.";
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::terrifying;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::cave);
@@ -1491,7 +1491,7 @@ void initDataList()
   d.spawnMinDLVL = 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAware = 25;
@@ -1507,7 +1507,7 @@ void initDataList()
   d.aggroTextMonHidden = "I hear a chilling howl.";
   d.aggroSfxMonSeen = SfxId::ghoulGrowl;
   d.aggroSfxMonHidden = SfxId::wolfHowl;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::terrifying;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::monster);
@@ -1544,7 +1544,7 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = false;
   d.canOpenDoors = false;
   d.canBeSummoned = true;
@@ -1554,7 +1554,7 @@ void initDataList()
   d.nrTurnsAware = 25;
   d.descr = "A living shadow";
   d.isAutoDescrAllowed = false;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::monster);
   d.nativeRooms.push_back(RoomType::plain);
@@ -1585,13 +1585,13 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = 7;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAware = 9999;
   d.descr = "A mummified human being, possibly dating back millennia.";
   d.spellCastMessage = "The mummy casts a spell.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::scary;
   d.isUndead = true;
   d.isHumanoid = true;
@@ -1627,7 +1627,7 @@ void initDataList()
   d.spawnMinDLVL = DLVL_LAST_MID_GAME;
   d.isAutoSpawnAllowed = false;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAware = 9999;
@@ -1635,7 +1635,7 @@ void initDataList()
             "came to dwell here is beyond my guess. His name means "
             "\"Rise, Ra!\"";
   d.spellCastMessage = "Khephren casts a spell.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
@@ -1669,7 +1669,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = 11;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.nrTurnsAware = 9999;
@@ -1680,7 +1680,7 @@ void initDataList()
             "brothers murderers to a banquet. Then killed them by flooding the "
             "sealed room with the Nile.";
   d.spellCastMessage = "Nitokris casts a spell.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isUndead = true;
   d.isHumanoid = true;
@@ -1714,7 +1714,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::ranged, 40);
   d.spawnMinDLVL = 6;
   d.groupSize = MonGroupSize::horde;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.canBashDoors = true;
   d.canOpenDoors = true;
@@ -1727,7 +1727,7 @@ void initDataList()
             "arrogant lives are coldly beautiful, unbelievably cruel, and "
             "effectively immortal. Deep ones may be worshipped by humans with "
             "whom they regularly interbreed.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::flooded);
   d.nativeRooms.push_back(RoomType::muddy);
@@ -1757,12 +1757,12 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.nrTurnsAware = 10;
   d.descr = "A slithering conglomeration of carnivorous worms. They multiply rapidly.";
   d.canBeSummoned = true;
   d.isAutoDescrAllowed = false;
-  d.erraticMovePct = actorErratic_very;
+  d.erraticMovePct = ActorErraticFreq::very;
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.nativeRooms.push_back(RoomType::plain);
@@ -1799,7 +1799,7 @@ void initDataList()
   d.spawnMinDLVL = 8;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 5;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -1810,7 +1810,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.erraticMovePct = actorErratic_very;
+  d.erraticMovePct = ActorErraticFreq::very;
   d.monShockLvl = MonShockLvl::unsettling;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::cave);
@@ -1844,7 +1844,7 @@ void initDataList()
   d.preventKnockback = true;
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 5;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -1855,7 +1855,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.erraticMovePct = actorErratic_very;
+  d.erraticMovePct = ActorErraticFreq::very;
   d.monShockLvl = MonShockLvl::unsettling;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::cave);
@@ -1889,7 +1889,7 @@ void initDataList()
   d.preventKnockback = true;
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 5;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -1900,7 +1900,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.erraticMovePct = actorErratic_very;
+  d.erraticMovePct = ActorErraticFreq::very;
   d.monShockLvl = MonShockLvl::unsettling;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::cave);
@@ -1933,7 +1933,7 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.nrTurnsAware = 250;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -1947,7 +1947,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::unsettling;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
@@ -1983,7 +1983,7 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.nrTurnsAware = 250;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -1998,7 +1998,7 @@ void initDataList()
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.monShockLvl = MonShockLvl::scary;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
   d.nativeRooms.push_back(RoomType::muddy);
@@ -2032,7 +2032,7 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.nrTurnsAware = 250;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -2047,7 +2047,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
@@ -2083,7 +2083,7 @@ void initDataList()
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.nrTurnsAware = 250;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -2098,7 +2098,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
@@ -2134,7 +2134,7 @@ void initDataList()
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 250;
   d.canOpenDoors = false;
   d.canBashDoors = false;
@@ -2145,7 +2145,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.erraticMovePct = actorErratic_very;
+  d.erraticMovePct = ActorErraticFreq::very;
   d.monShockLvl = MonShockLvl::scary;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::flooded);
@@ -2181,7 +2181,7 @@ void initDataList()
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 5;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -2196,7 +2196,7 @@ void initDataList()
   d.canBleed = true;
   d.canBeSummoned = false;
   d.monShockLvl = MonShockLvl::mindShattering;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::cave);
   d.nativeRooms.push_back(RoomType::chasm);
@@ -2230,7 +2230,7 @@ void initDataList()
   d.spawnMinDLVL = DLVL_LAST - 3;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 2;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -2250,7 +2250,7 @@ void initDataList()
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::cave);
   d.nativeRooms.push_back(RoomType::chasm);
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   data[int(d.id)] = d;
   d.reset();
 
@@ -2286,7 +2286,7 @@ void initDataList()
   d.intrProps[propRDisease] = true;
   d.spawnMinDLVL = 14;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = false;
   d.canOpenDoors = false;
   d.nrTurnsAware = 25;
@@ -2297,7 +2297,7 @@ void initDataList()
   d.spellCastMessage = "The Sentry Drone shifts and rotates madly.";
   d.aggroTextMonSeen = d.nameThe + " makes a deep buzzing sound.";
   d.aggroTextMonHidden = "I hear a deep buzzing sound.";
-  d.erraticMovePct = actorErratic_rare;
+  d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::unsettling;
   d.nativeRooms.push_back(RoomType::plain);
   data[int(d.id)] = d;
@@ -2323,11 +2323,11 @@ void initDataList()
   d.preventKnockback = true;
   d.nrTurnsAware = 25;
   d.spawnMinDLVL = 3;
-  d.actorSize = actorSize_floor;
+  d.actorSize = ActorSize::floor;
   d.isAutoDescrAllowed = false;
   d.deathMessageOverride = "The Mold is destroyed.";
   d.canSeeInDarkness = true;
-  d.erraticMovePct = actorErratic_never;
+  d.erraticMovePct = ActorErraticFreq::never;
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.descr = "A sickly growth thriving in damp areas. It produces toxic spores which it "
@@ -2366,7 +2366,7 @@ void initDataList()
   d.intrProps[propRConfusion] = true;
   d.spawnMinDLVL = 3;
   d.groupSize = MonGroupSize::group;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 5;
   d.isAutoDescrAllowed = true;
   d.canOpenDoors = false;
@@ -2378,7 +2378,7 @@ void initDataList()
   d.canBleed = false;
   d.canLeaveCorpse = false;
   d.canSeeInDarkness = true;
-  d.erraticMovePct = actorErratic_somewhat;
+  d.erraticMovePct = ActorErraticFreq::somewhat;
   d.monShockLvl = MonShockLvl::none;
   d.nativeRooms.push_back(RoomType::cave);
   d.nativeRooms.push_back(RoomType::flooded);
@@ -2414,7 +2414,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.isAutoSpawnAllowed = false;
   d.groupSize = MonGroupSize::alone;
-  d.actorSize = actorSize_humanoid;
+  d.actorSize = ActorSize::humanoid;
   d.canBashDoors = true;
   d.canOpenDoors = true;
   d.preventKnockback = true;
@@ -2422,7 +2422,7 @@ void initDataList()
   d.descr = "[TODO]";
   d.isAutoDescrAllowed = false;
   d.spellCastMessage = "[TODO]";
-  d.erraticMovePct = actorErratic_never;
+  d.erraticMovePct = ActorErraticFreq::never;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isHumanoid = true;
   d.canLeaveCorpse = false;

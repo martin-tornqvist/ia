@@ -226,7 +226,7 @@ size_t StdRoom::tryGetAutoFeaturePlacement(
     return 0;
   }
 
-  //TODO Use bucket instead
+  //TODO: Use bucket instead
 
   const int NR_ATTEMPTS_TO_FIND_POS = 100;
   for (int i = 0; i < NR_ATTEMPTS_TO_FIND_POS; ++i)
@@ -642,7 +642,7 @@ void MonsterRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
   MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
   int       nrBloodPut  = 0;
-  const int NR_TRIES    = 1000; //TODO Hacky, needs improving
+  const int NR_TRIES    = 1000; //TODO: Hacky, needs improving
 
   for (int i = 0; i < NR_TRIES; ++i)
   {

@@ -319,7 +319,7 @@ void handleMapModeKeyPress(const KeyData& d)
         {
           auto* wpn = static_cast<Wpn*>(item);
 
-          //TODO Quick hack for the Mi-go gun, this should not be here (refactor)
+          //TODO: Quick hack for the Mi-go gun, this should not be here (refactor)
           if (wpn->getData().id == ItemId::migoGun  &&
               wpn->nrAmmoLoaded == 0                &&
               Map::player->getHp() > 1)
@@ -385,8 +385,8 @@ void handleMapModeKeyPress(const KeyData& d)
               return MarkerDone::no;
             };
 
-            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
-                        onMarkerAtPos, onKeyPress);
+            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes, onMarkerAtPos,
+                        onKeyPress, wpn->getData().ranged.effectiveRange);
           }
           else /* Not enough ammo loaded */ if (Config::isRangedWpnAutoReload())
           {
@@ -396,8 +396,8 @@ void handleMapModeKeyPress(const KeyData& d)
           {
             Log::addMsg("There is no ammo loaded.");
           }
-        } //Wielded item is not a ranged weapon
-        else
+        }
+        else //Wielded item is not a ranged weapon
         {
           Log::addMsg("I am not wielding a firearm.");
         }
@@ -608,8 +608,8 @@ void handleMapModeKeyPress(const KeyData& d)
           return MarkerDone::no;
         };
 
-        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::no,
-                    onMarkerAtPos, onKeyPress);
+        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::no, onMarkerAtPos,
+                    onKeyPress);
       }
       else //Not holding explosive
       {
@@ -678,10 +678,10 @@ void handleMapModeKeyPress(const KeyData& d)
               return MarkerDone::no;
             };
 
-            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes,
-                        onMarkerAtPos, onKeyPress);
+            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes, onMarkerAtPos,
+                        onKeyPress, itemToThrow->getData().ranged.effectiveRange);
           }
-          else
+          else //No item equipped
           {
             Log::addMsg("I have no missiles chosen for throwing (press 'w').");
           }
@@ -734,7 +734,6 @@ void handleMapModeKeyPress(const KeyData& d)
 
         Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes, onMarkerAtPos,
                     onKeyPress);
-
       }
       else
       {

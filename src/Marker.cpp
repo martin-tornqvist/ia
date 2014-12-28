@@ -78,9 +78,9 @@ bool setPosToTargetIfVisible()
 
 void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
          function<void(const Pos&)> onMarkerAtPos,
-         function<MarkerDone(const Pos&, const KeyData&)> onKeyPress)
+         function<MarkerDone(const Pos&, const KeyData&)> onKeyPress,
+         const int EFFECTIVE_RANGE_LMT)
 {
-
   pos_ = Map::player->pos;
 
   if (useTarget == MarkerUsePlayerTarget::yes)
@@ -112,7 +112,7 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
       LineCalc::calcNewLine(origin, pos_, true, INT_MAX, false, trail);
     }
 
-    Render::drawMarker(pos_, trail, INT_MAX);
+    Render::drawMarker(pos_, trail, EFFECTIVE_RANGE_LMT);
 
     Render::updateScreen();
 

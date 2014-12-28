@@ -55,21 +55,15 @@ enum class MonGroupSize {alone, few, group, horde, swarm};
 
 enum class ActorSpeed   {sluggish, slow, normal, fast, fastest, END};
 
-enum ActorErraticFreq
+enum class ActorErraticFreq
 {
-  actorErratic_never    = 0,
-  actorErratic_rare     = 8,
-  actorErratic_somewhat = 25,
-  actorErratic_very     = 50
+  never    = 0,
+  rare     = 8,
+  somewhat = 25,
+  very     = 50
 };
 
-enum ActorSize
-{
-  actorSize_none,
-  actorSize_floor,
-  actorSize_humanoid,
-  actorSize_giant
-};
+enum class ActorSize {none, floor, humanoid, giant};
 
 enum class MonShockLvl {none, unsettling, scary, terrifying, mindShattering, END};
 

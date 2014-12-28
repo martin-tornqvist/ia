@@ -40,7 +40,7 @@ class RangedAttData: public AttData
 {
 public:
   RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
-                const Pos& curPos_, ActorSize intendedAimLvl_ = actorSize_none);
+                const Pos& curPos_, ActorSize intendedAimLvl_ = ActorSize::none);
   int           hitChanceTot;
   ActorSize   intendedAimLvl;
   ActorSize   defenderSize;
@@ -52,7 +52,7 @@ class ThrowAttData: public AttData
 {
 public:
   ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
-               const Pos& curPos_, ActorSize intendedAimLvl_ = actorSize_none);
+               const Pos& curPos_, ActorSize intendedAimLvl_ = ActorSize::none);
   int       hitChanceTot;
   ActorSize intendedAimLvl;
   ActorSize defenderSize;

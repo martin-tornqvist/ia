@@ -52,7 +52,7 @@ void Rigid::onNewTurn()
       actor.hit(1, DmgType::fire);
     };
 
-    //TODO Hit dead actors
+    //TODO: Hit dead actors
 
     //Hit actor standing on feature
     auto* actor = Utils::getActorAtPos(pos_);
@@ -229,7 +229,7 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
 
   if (actor)
   {
-    //TODO This should probably be done elsewhere.
+    //TODO: This should probably be done elsewhere.
     GameTime::tick();
   }
 }
@@ -1111,7 +1111,7 @@ void Lever::pull()
   TRACE_FUNC_BEGIN;
   isPositionLeft_ = !isPositionLeft_;
 
-  //TODO Implement something like openByLever in the Door class instead of setting
+  //TODO: Implement something like openByLever in the Door class instead of setting
   //"isOpen_" etc directly.
 
 //  if(!doorLinkedTo_->isBroken_) {
@@ -1507,7 +1507,7 @@ void ItemContainer::open(const Pos& featurePos, Actor* const actorOpening)
 
 void ItemContainer::destroySingleFragile()
 {
-  //TODO Generalize this function (perhaps isFragile variable in item data)
+  //TODO: Generalize this function (perhaps isFragile variable in item data)
 
   for (size_t i = 0; i < items_.size(); ++i)
   {
@@ -2072,7 +2072,7 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
 
   } //dmgType
 
-  //TODO Force lock with weapon
+  //TODO: Force lock with weapon
 //      Inventory& inv    = Map::player->getInv();
 //      Item* const item  = inv.getItemInSlot(SlotId::wielded);
 //
@@ -2754,7 +2754,7 @@ DidTriggerTrap Cocoon::triggerTrap(Actor * const actor)
         const ActorDataT& d = ActorData::data[i];
 
         if (d.isSpider                      &&
-            d.actorSize == actorSize_floor  &&
+            d.actorSize == ActorSize::floor  &&
             d.isAutoSpawnAllowed            &&
             !d.isUnique)
         {

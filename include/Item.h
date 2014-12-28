@@ -49,11 +49,14 @@ public:
 
   virtual void onPickupToBackpack(Inventory& inv) {(void)inv;}
 
-  virtual void            onEquip()             {}
-  virtual UnequipAllowed  onUnequip()           {return UnequipAllowed::yes;}
+  virtual void            onEquip()   {}
+  virtual UnequipAllowed  onUnequip() {return UnequipAllowed::yes;}
 
   //Called by the ItemDrop class to make noise etc
   virtual void appplyDropEffects() {}
+
+  //Used when attempting to fire or throw an item
+  bool isInEffectiveRangeLmt(const Pos& p0, const Pos& p1) const;
 
   int nrItems_;
 
@@ -145,8 +148,8 @@ private:
 class Wpn: public Item
 {
 public:
-  Wpn(ItemDataT* const itemData, ItemDataT* const ammoData, int effectiveRangeLmt = 3,
-      int ammoCap = 0, bool isUsingClip = false);
+  Wpn(ItemDataT* const itemData, ItemDataT* const ammoData, int ammoCap = 0,
+      bool isUsingClip = false);
 
   virtual ~Wpn() {}
 
@@ -168,9 +171,6 @@ public:
     (void)actor;
   }
 
-//  virtual void onPostAttack(Actor& attacker) {(void) attacker;}
-
-  const int   EFFECTIVE_RANGE_LMT;
   const int   AMMO_CAP;
   const bool  IS_USING_CLIP;
 
@@ -192,7 +192,7 @@ class SawedOff: public Wpn
 {
 public:
   SawedOff(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData, 3, 2, false) {}
+    Wpn(itemData, ammoData, 2, false) {}
   ~SawedOff() {}
 };
 
@@ -200,7 +200,7 @@ class PumpShotgun: public Wpn
 {
 public:
   PumpShotgun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData, 3, 8, false) {}
+    Wpn(itemData, ammoData, 8, false) {}
   ~PumpShotgun() {}
 };
 
@@ -208,7 +208,7 @@ class Pistol: public Wpn
 {
 public:
   Pistol(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData, 6, 7, true) {}
+    Wpn(itemData, ammoData, 7, true) {}
   ~Pistol() {}
 };
 
@@ -216,7 +216,7 @@ class FlareGun: public Wpn
 {
 public:
   FlareGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-    Wpn(itemData, ammoData, 6, 1, false) {}
+    Wpn(itemData, ammoData, 1, false) {}
   ~FlareGun() {}
 };
 

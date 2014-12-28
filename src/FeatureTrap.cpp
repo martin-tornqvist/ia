@@ -171,7 +171,7 @@ void Trap::bump(Actor& actorBumping)
     }
     else //Is a monster
     {
-      if (d.actorSize == actorSize_humanoid && !d.isSpider)
+      if (d.actorSize == ActorSize::humanoid && !d.isSpider)
       {
         TRACE << "Humanoid monster bumping" << endl;
         Mon* const mon = static_cast<Mon*>(&actorBumping);
@@ -964,7 +964,7 @@ Dir TrapWeb::actorTryLeave(Actor& actor, const Dir dir)
 
   TRACE << "Name of actor held: " << actorName << endl;
 
-  //TODO reimplement something affecting chance of success?
+  //TODO: reimplement something affecting chance of success?
 
   if (Rnd::oneIn(4))
   {

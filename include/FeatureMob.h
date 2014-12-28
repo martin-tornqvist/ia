@@ -60,7 +60,7 @@ public:
   std::string getName(const Article article)  const override;
   Clr         getClr()                        const override;
 
-  //TODO Lit dynamite should add light on their own cell (just one cell)
+  //TODO: Lit dynamite should add light on their own cell (just one cell)
   //void addLight(bool light[MAP_W][MAP_H]) const;
 
   void onNewTurn() override;

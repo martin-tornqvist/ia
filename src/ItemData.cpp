@@ -20,7 +20,7 @@ using namespace std;
 ItemDataT::ItemDataT(const ItemId id_) :
   id(id_),
   itemValue(ItemValue::normal),
-  itemWeight(itemWeight_none),
+  itemWeight(ItemWeight::none),
   spawnStdRange(Range(1, INT_MAX)),
   maxStackAtSpawn(1),
   chanceToIncludeInSpawnList(100),
@@ -45,7 +45,7 @@ ItemDataT::ItemDataT(const ItemId id_) :
   landOnHardSndMsg("I hear a thudding sound."),
   landOnHardSfx(),
   shockWhileInBackpack(0),
-  shockWhileEquiped(0),
+  shockWhileEquipped(0),
   melee(MeleeItemData()),
   ranged(RangedItemData()),
   armor(ArmorItemData())
@@ -84,6 +84,7 @@ ItemDataT::RangedItemData::RangedItemData() :
   throwDmg(DiceParam()),
   hitChanceMod(0),
   throwHitChanceMod(0),
+  effectiveRange(3),
   knocksBack(false),
   dmgInfoOverride(""),
   ammoItemId(ItemId::END),
@@ -139,7 +140,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
     {
       resetData(d, ItemType::general);
       d.isStackable = false;
-      d.itemWeight = itemWeight_medium;
+      d.itemWeight = ItemWeight::medium;
       d.glyph = '(';
       d.clr = clrWhite;
       d.mainAttMode = MainAttMode::melee;
@@ -165,7 +166,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
     {
       resetData(d, ItemType::general);
       d.isStackable = false;
-      d.itemWeight = itemWeight_medium;
+      d.itemWeight = ItemWeight::medium;
       d.glyph = '}';
       d.clr = clrWhite;
       d.melee.isMeleeWpn = true;
@@ -197,7 +198,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::throwingWpn:
     {
       resetData(d, ItemType::general);
-      d.itemWeight = itemWeight_extraLight;
+      d.itemWeight = ItemWeight::extraLight;
       d.isStackable = true;
       d.ranged.isThrowingWpn = true;
       d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
@@ -207,7 +208,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::ammo:
     {
       resetData(d, ItemType::general);
-      d.itemWeight = itemWeight_extraLight;
+      d.itemWeight = ItemWeight::extraLight;
       d.glyph = '{';
       d.clr = clrWhite;
       d.tile = TileId::ammo;
@@ -218,7 +219,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::ammoClip:
     {
       resetData(d, ItemType::ammo);
-      d.itemWeight = itemWeight_light;
+      d.itemWeight = ItemWeight::light;
       d.isStackable = false;
       d.isAmmoClip = true;
       d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
@@ -235,7 +236,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
                     };
       d.itemValue = ItemValue::minorTreasure;
       d.chanceToIncludeInSpawnList = 40;
-      d.itemWeight = itemWeight_none;
+      d.itemWeight = ItemWeight::none;
       d.isIdentified = false;
       d.glyph = '?';
       d.clr = clrWhite;
@@ -255,7 +256,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.baseDescr = {"A small glass bottle containing a mysterious concoction."};
       d.itemValue = ItemValue::minorTreasure;
       d.chanceToIncludeInSpawnList = 55;
-      d.itemWeight = itemWeight_light;
+      d.itemWeight = ItemWeight::light;
       d.isIdentified = false;
       d.glyph = '!';
       d.tile = TileId::potion;
@@ -282,7 +283,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
                     };
       d.isDevice = true;
       d.chanceToIncludeInSpawnList = 12;
-      d.itemWeight = itemWeight_light;
+      d.itemWeight = ItemWeight::light;
       d.isIdentified = true;
       d.glyph = '~';
       d.tile = TileId::device1;
@@ -294,7 +295,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::armor:
     {
       resetData(d, ItemType::general);
-      d.itemWeight = itemWeight_heavy;
+      d.itemWeight = ItemWeight::heavy;
       d.glyph = '[';
       d.tile = TileId::armor;
       d.isArmor = true;
@@ -304,7 +305,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::explosive:
     {
       resetData(d, ItemType::general);
-      d.itemWeight = itemWeight_light;
+      d.itemWeight = ItemWeight::light;
       d.isExplosive = true;
       d.glyph = '-';
       d.maxStackAtSpawn = 2;
@@ -344,14 +345,15 @@ void initDataList()
   d->baseName = ItemName("Sawed-off Shotgun", "Sawed-off shotguns",
                          "a Sawed-off Shotgun");
   d->baseDescr = {"Compared to a standard shotgun, the sawed-off has a shorter "
-                  "effective range [TODO]. At close range it is more devastating however. It "
+                  "effective range. At close range it is more devastating however. It "
                   "holds two barrels, and needs to be reloaded after both are discharged"
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::shotgun;
   d->ranged.isShotgun = true;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a shotgun");
   d->ranged.dmg = DiceParam(8, 3);
+  d->ranged.effectiveRange = 3;
   d->ranged.ammoItemId = ItemId::shotgunShell;
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires a shotgun");
   d->ranged.sndMsg = "I hear a shotgun blast.";
@@ -371,11 +373,12 @@ void initDataList()
                   "fresh one. It has a single barrel above a tube magazine into which "
                   "shells are inserted. The magazine has a capacity of 8 shells."
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::shotgun;
   d->ranged.isShotgun = true;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a shotgun");
   d->ranged.dmg = DiceParam(6, 3);
+  d->ranged.effectiveRange = 5;
   d->ranged.ammoItemId = ItemId::shotgunShell;
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires a shotgun");
   d->ranged.sndMsg = "I hear a shotgun blast.";
@@ -403,10 +406,11 @@ void initDataList()
   d->baseDescr = {"This hellish, experimental weapon launches an explosive fireball. "
                   "Best used with extreme caution."
                  };
-  d->itemWeight = itemWeight_heavy;
+  d->itemWeight = ItemWeight::heavy;
   d->tile = TileId::incinerator;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with an Incinerator");
   d->ranged.dmg = DiceParam(1, 3);
+  d->ranged.effectiveRange = 8;
   d->ranged.dmgInfoOverride = "* ";
   d->ranged.ammoItemId = ItemId::incineratorAmmo;
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires an incinerator");
@@ -424,7 +428,7 @@ void initDataList()
   d->baseName = ItemName("Incinerator Cartridge", "Incinerator Cartridges",
                          "an Incinerator Cartridge");
   d->baseDescr = {"Ammunition designed for Incinerators."};
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->ranged.ammoContainedInClip = 3;
   d->spawnStdRange.lower = 5;
   d->maxStackAtSpawn = 1;
@@ -441,12 +445,13 @@ void initDataList()
                   "fires .45 ACP ammunition. The drum magazine has a capacity of 50 "
                   "rounds."
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::tommyGun;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Tommy Gun");
   d->ranged.isMachineGun = true;
   d->ranged.dmg = DiceParam(2, 2, 2);
   d->ranged.hitChanceMod = -10;
+  d->ranged.effectiveRange = 8;
   d->ranged.ammoItemId = ItemId::drumOfBullets;
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Tommy Gun");
   d->ranged.sndMsg = "I hear the burst of a machine gun.";
@@ -475,9 +480,10 @@ void initDataList()
   d->baseDescr = {"A semi-automatic, magazine-fed pistol chambered for the .45 ACP "
                   "cartridge."
                  };
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->tile = TileId::pistol;
   d->ranged.dmg = DiceParam(1, 8, 4);
+  d->ranged.effectiveRange = 6;
   d->ranged.ammoItemId = ItemId::pistolClip;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a pistol");
   d->ranged.attMsgs = ItemAttMsgs("fire", "fires a pistol");
@@ -511,11 +517,12 @@ void initDataList()
                   "the essence of the wielder (press [f] while no ammo loaded)."
                  };
   d->spawnStdRange = Range(-1, -1);
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::migoGun;
   d->clr = clrYellow;
   d->ranged.dmg = DiceParam(3, 6, 0);
   d->ranged.hitChanceMod = 5;
+  d->ranged.effectiveRange = 4;
   d->ranged.propApplied = new PropParalyzed(PropTurns::specific, 2);
   d->ranged.dmgType = DmgType::electric;
   d->ranged.ammoItemId = ItemId::migoGunAmmo;
@@ -544,9 +551,10 @@ void initDataList()
   resetData(*d, ItemType::rangedWpn);
   d->baseName = ItemName("Flare Gun", "Flare Gun", "a Flare Gun");
   d->baseDescr = {"Launches flares. Not designed to function as a weapon."};
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->tile = TileId::flareGun;
   d->ranged.dmg = DiceParam(1, 3, 0);
+  d->ranged.effectiveRange = 3;
   d->ranged.dmgInfoOverride = "*";
   d->ranged.ammoItemId = ItemId::flare;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a flare gun");
@@ -566,13 +574,14 @@ void initDataList()
                   "be deliberately designed for cruelty, rather than pure stopping "
                   "power."
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::tommyGun;
   d->clr = clrBlueLgt;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Spike Gun");
   d->ranged.isMachineGun = false;
   d->ranged.hitChanceMod = 0;
   d->ranged.dmg = DiceParam(1, 7, 0);
+  d->ranged.effectiveRange = 4;
   d->ranged.dmgType = DmgType::physical;
   d->ranged.knocksBack = true;
   d->ranged.ammoItemId = ItemId::ironSpike;
@@ -583,7 +592,6 @@ void initDataList()
   d->ranged.missileClr = clrGray;
   d->spawnStdRange.lower = 4;
   d->ranged.attSfx = SfxId::spikeGun;
-//  d->ranged.reloadSfx = SfxId::shotgunReload;
   d->ranged.sndVol = SndVol::low;
   addFeatureFoundIn(*d, FeatureId::chest, 50);
   addFeatureFoundIn(*d, FeatureId::cabinet, 50);
@@ -596,7 +604,7 @@ void initDataList()
   d->baseDescr = {"An explosive material based on nitroglycerin. The name comes from "
                   "the ancient Greek word for \"power\"."
                  };
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->tile = TileId::dynamite;
   d->clr = clrRedLgt;
   addFeatureFoundIn(*d, FeatureId::chest);
@@ -610,7 +618,7 @@ void initDataList()
   d->baseDescr = {"A type of pyrotechnic that produces a brilliant light or intense "
                   "heat without an explosion."
                  };
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->tile = TileId::flare;
   d->clr = clrGray;
   d->isAmmo = true;
@@ -627,7 +635,7 @@ void initDataList()
                   "is lit and the bottle hurled at a target, causing an immediate "
                   "fireball followed by a raging fire."
                  };
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->tile = TileId::molotov;
   d->clr = clrWhite;
   addFeatureFoundIn(*d, FeatureId::chest);
@@ -643,7 +651,7 @@ void initDataList()
                   "concealment. The fumes produced can harm the eyes, throat and lungs "
                   "- so it is recommended to wear a protective mask."
                  };
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->tile = TileId::flare;
   d->clr = clrGreen;
   addFeatureFoundIn(*d, FeatureId::chest);
@@ -656,12 +664,13 @@ void initDataList()
   d->baseDescr = {"A knife specially designed and weighted so that it can be thrown "
                   "effectively."
                  };
-  d->itemWeight = itemWeight_extraLight;
+  d->itemWeight = ItemWeight::extraLight;
   d->tile = TileId::dagger;
   d->glyph = '/';
   d->clr = clrWhite;
   d->ranged.throwHitChanceMod = 0;
   d->ranged.throwDmg = DiceParam(2, 4);
+  d->ranged.effectiveRange = 5;
   d->maxStackAtSpawn = 8;
   d->landOnHardSndMsg = "I hear a clanking sound.";
   d->landOnHardSfx = SfxId::metalClank;
@@ -677,12 +686,13 @@ void initDataList()
   d->baseDescr = {"Although not a very impressive weapon, with skill they can be used "
                   "with some result."
                  };
-  d->itemWeight = itemWeight_extraLight;
+  d->itemWeight = ItemWeight::extraLight;
   d->tile = TileId::rock;
   d->glyph = '*';
   d->clr = clrGray;
   d->ranged.throwHitChanceMod = 10;
   d->ranged.throwDmg = DiceParam(1, 3);
+  d->ranged.effectiveRange = 4;
   d->maxStackAtSpawn = 6;
   d->mainAttMode = MainAttMode::thrown;
   addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -700,7 +710,7 @@ void initDataList()
 
                   "Melee attacks with daggers are silent."
                  };
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->tile = TileId::dagger;
   d->melee.attMsgs = ItemAttMsgs("stab", "stabs me with a Dagger");
   d->melee.dmg = pair<int, int>(1, 4);
@@ -723,7 +733,7 @@ void initDataList()
 
                   "Melee attacks with hatchets are silent."
                  };
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->tile = TileId::axe;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Hatchet");
   d->melee.dmg = pair<int, int>(1, 5);
@@ -746,7 +756,7 @@ void initDataList()
                   "Melee attacks with clubs are noisy."
                  };
   d->spawnStdRange = Range(DLVL_FIRST_LATE_GAME, INT_MAX);
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::club;
   d->clr = clrBrown;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Club");
@@ -763,7 +773,7 @@ void initDataList()
 
                   "Melee attacks with hammers are noisy."
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::hammer;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Hammer");
   d->melee.dmg = pair<int, int>(2, 4);
@@ -781,7 +791,7 @@ void initDataList()
 
                   "Melee attacks with machetes are noisy."
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::machete;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Machete");
   d->melee.dmg = pair<int, int>(2, 5);
@@ -802,7 +812,7 @@ void initDataList()
 
                   "Melee attacks with axes are noisy."
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::axe;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with an axe");
   d->melee.dmg = pair<int, int>(2, 6);
@@ -822,7 +832,7 @@ void initDataList()
   d->baseDescr = {"A long staff with a forked, four-pronged end. Victims can be pushed "
                   "away when stabbed, to keep them at bay."
                  };
-  d->itemWeight = itemWeight_heavy;
+  d->itemWeight = ItemWeight::heavy;
   d->tile = TileId::pitchfork;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Pitchfork");
   d->melee.dmg = pair<int, int>(3, 4);
@@ -842,7 +852,7 @@ void initDataList()
                   "It can deal a great amount of damage, although it is cumbersome to "
                   "carry, and it requires some skill to use effectively."
                  };
-  d->itemWeight = itemWeight_heavy;
+  d->itemWeight = ItemWeight::heavy;
   d->tile = TileId::sledgeHammer;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Sledgehammer");
   d->melee.dmg = pair<int, int>(3, 5);
@@ -858,7 +868,7 @@ void initDataList()
                          "the Staff of the Pharaohs");
   d->baseDescr = {"[TODO]"};
   d->clr = clrMagenta;
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->tile = TileId::pharaohStaff;
   d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with the Staff of the Pharaohs");
   d->melee.dmg = pair<int, int>(2, 4);
@@ -873,13 +883,14 @@ void initDataList()
   d->baseName = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
   d->baseDescr = {"Can be useful for wedging things closed or prying thing open [TODO]."};
   d->isAmmo = true;
-  d->itemWeight = itemWeight_extraLight;
+  d->itemWeight = ItemWeight::extraLight;
   d->tile = TileId::ironSpike;
   d->isStackable = true;
   d->clr = clrGray;
   d->glyph = '/';
   d->ranged.throwHitChanceMod = -5;
   d->ranged.throwDmg = DiceParam(1, 3);
+  d->ranged.effectiveRange = 3;
   d->maxStackAtSpawn = 12;
   d->landOnHardSndMsg = "I hear a clanking sound.";
   d->landOnHardSfx = SfxId::metalClank;
@@ -1243,7 +1254,7 @@ void initDataList()
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Leather Jacket", "", "a Leather Jacket");
   d->baseDescr = {"It offers some protection."};
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->clr = clrBrown;
   d->spawnStdRange.lower = 1;
   d->armor.absorptionPoints = 1;
@@ -1261,7 +1272,7 @@ void initDataList()
                   "helmet, aiming is slightly more difficult, and it is harder to "
                   "detect sneaking enemies and hidden objects [TODO]."
                  };
-  d->itemWeight = itemWeight_heavy;
+  d->itemWeight = ItemWeight::heavy;
   d->clr = clrWhite;
   d->spawnStdRange.lower = 2;
   d->armor.absorptionPoints = 4;
@@ -1277,7 +1288,7 @@ void initDataList()
                   "offers very good protection for its weight. Sneaking and dodging is "
                   "slightly more difficult [TODO]."
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->clr = clrGreen;
   d->spawnStdRange.lower = 3;
   d->armor.absorptionPoints = 3;
@@ -1296,7 +1307,7 @@ void initDataList()
                   "because of the hood and mask, aiming and detecting hidden enemies "
                   "and objects is somewhat harder [TODO]."
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->clr = clrRedLgt;
   d->spawnStdRange.lower = 3;
   d->armor.absorptionPoints = 1;
@@ -1314,7 +1325,7 @@ void initDataList()
                   "and dodging is slightly more difficult due to its higher weight "
                   "however [TODO]."
                  };
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->clr = clrBlueLgt;
   d->spawnStdRange.lower = 3;
   d->armor.absorptionPoints = 2;
@@ -1330,8 +1341,8 @@ void initDataList()
                   "It is very disturbing for a human to wear (+10% shock while worn)."
                  };
   d->spawnStdRange = Range(-1, -1);
-  d->itemWeight = itemWeight_light;
-  d->shockWhileEquiped = 10;
+  d->itemWeight = ItemWeight::light;
+  d->shockWhileEquipped = 10;
   d->clr = clrMagenta;
   d->tile = TileId::migoArmor;
   d->armor.absorptionPoints = 2;
@@ -1355,7 +1366,7 @@ void initDataList()
   d->isHeadwear = true;
   d->spawnStdRange = Range(1, DLVL_LAST_EARLY_GAME);
   d->chanceToIncludeInSpawnList = 50;
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->landOnHardSndMsg = "";
   data[int(d->id)] = d;
 
@@ -1369,7 +1380,7 @@ void initDataList()
   d->glyph = '[';
   d->isHeadwear = true;
   d->spawnStdRange = Range(-1, -1);
-  d->itemWeight = itemWeight_light;
+  d->itemWeight = ItemWeight::light;
   d->landOnHardSndMsg = "";
   d->chanceToIncludeInSpawnList = 0;
   d->itemValue = ItemValue::majorTreasure;
@@ -1603,7 +1614,7 @@ void initDataList()
   d->baseName = ItemName("Medical Bag", "Medical Bags", "a Medical Bag");
   d->baseDescr = {"A portable bag of medical supplies."};
   d->itemValue = ItemValue::normal;
-  d->itemWeight = itemWeight_medium;
+  d->itemWeight = ItemWeight::medium;
   d->spawnStdRange = Range(1, DLVL_LAST_MID_GAME);
   d->isStackable = false;
   d->glyph = '~';
@@ -1657,7 +1668,7 @@ void setupFromSaveLines(vector<string>& lines)
   }
 }
 
-//TODO Remove this function
+//TODO: Remove this function
 bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
                    const bool IS_MELEE)
 {

@@ -259,9 +259,6 @@ void drawBrowseInv(const MenuBrowser& browser)
                      clrPopupBox);
   }
 
-//  Render::drawText("Equiped items", panel, eqpRect.p0 + Pos(1, 0), clrWhite);
-//  Render::drawText("Inventory",     panel, invRect.p0 + Pos(1, 0), clrWhite);
-
   drawDetailedItemDescr(item);
 
   Render::updateScreen();

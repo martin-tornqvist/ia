@@ -216,9 +216,8 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
           }
         }
 
-        dmg = ((dmgRoll + dmgPlus) * dmgPct) / 100;
-
-        isBackstab = true;
+        dmg         = ((dmgRoll + dmgPlus) * dmgPct) / 100;
+        isBackstab  = true;
       }
     }
   }
@@ -228,15 +227,15 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
                              const Pos& curPos_, ActorSize intendedAimLvl_) :
   AttData           (attacker_, wpn_),
   hitChanceTot      (0),
-  intendedAimLvl    (actorSize_none),
-  defenderSize      (actorSize_none),
+  intendedAimLvl    (ActorSize::none),
+  defenderSize      (ActorSize::none),
   verbPlayerAttacks (wpn_.getData().ranged.attMsgs.player),
   verbOtherAttacks  (wpn_.getData().ranged.attMsgs.other)
 {
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
-  if (intendedAimLvl_ == actorSize_none)
+  if (intendedAimLvl_ == ActorSize::none)
   {
     if (actorAimedAt)
     {
@@ -247,10 +246,10 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
       bool blocked[MAP_W][MAP_H];
       MapParse::run(CellCheck::BlocksProjectiles(), blocked);
       intendedAimLvl = blocked[curPos_.x][curPos_.y] ?
-                       actorSize_humanoid : actorSize_floor;
+                       ActorSize::humanoid : ActorSize::floor;
     }
   }
-  else
+  else //Aim level was already set
   {
     intendedAimLvl = intendedAimLvl_;
   }
@@ -277,7 +276,7 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
       defSpeed == ActorSpeed::normal   ?   0 :
       defSpeed == ActorSpeed::fast     ? -10 : -30;
     defenderSize                = defenderData.actorSize;
-    const int SIZE_MOD          = defenderSize == actorSize_floor ? -10 : 0;
+    const int SIZE_MOD          = defenderSize == ActorSize::floor ? -10 : 0;
 
     int unawareDefMod = 0;
     const bool IS_ROGUE = PlayerBon::getBg() == Bg::rogue;
@@ -333,9 +332,18 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
         dmgPlus += 2;
       }
 
-      dmgRoll     = playerAimX3 ? (nrDmgRolls * nrDmgSides) :
-                    Rnd::dice(nrDmgRolls, nrDmgSides);
-      dmg         = dmgRoll + dmgPlus;
+      dmgRoll = playerAimX3 ? (nrDmgRolls * nrDmgSides) :
+                Rnd::dice(nrDmgRolls, nrDmgSides);
+
+      //Outside effective range limit?
+      if (!wpn_.isInEffectiveRangeLmt(attacker->pos, defender->pos))
+      {
+        TRACE << "Outside effetive range limit" << endl;
+        dmgRoll = max(1, dmgRoll / 2);
+        dmgPlus /= 2;
+      }
+
+      dmg = dmgRoll + dmgPlus;
     }
   }
 }
@@ -344,13 +352,13 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
                            const Pos& curPos_, ActorSize intendedAimLvl_) :
   AttData         (attacker_, item_),
   hitChanceTot    (0),
-  intendedAimLvl  (actorSize_none),
-  defenderSize    (actorSize_none)
+  intendedAimLvl  (ActorSize::none),
+  defenderSize    (ActorSize::none)
 {
   Actor* const actorAimedAt = Utils::getActorAtPos(aimPos_);
 
   //If aim level parameter not given, determine it now
-  if (intendedAimLvl_ == actorSize_none)
+  if (intendedAimLvl_ == ActorSize::none)
   {
     if (actorAimedAt)
     {
@@ -361,10 +369,10 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
       bool blocked[MAP_W][MAP_H];
       MapParse::run(CellCheck::BlocksProjectiles(), blocked);
       intendedAimLvl = blocked[curPos_.x][curPos_.y] ?
-                       actorSize_humanoid : actorSize_floor;
+                       ActorSize::humanoid : ActorSize::floor;
     }
   }
-  else
+  else //Aim level was already set
   {
     intendedAimLvl = intendedAimLvl_;
   }
@@ -392,7 +400,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
       defSpeed == ActorSpeed::normal   ?   0 :
       defSpeed == ActorSpeed::fast     ? -15 : -35;
     defenderSize                = defenderData.actorSize;
-    const int SIZE_MOD          = defenderSize == actorSize_floor ? -15 : 0;
+    const int SIZE_MOD          = defenderSize == ActorSize::floor ? -15 : 0;
 
     int         unawareDefMod = 0;
     const bool  IS_ROGUE      = PlayerBon::getBg() == Bg::rogue;
@@ -447,9 +455,18 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
         dmgPlus += 2;
       }
 
-      dmgRoll     = playerAimX3 ? (nrDmgRolls * nrDmgSides) :
-                    Rnd::dice(nrDmgRolls, nrDmgSides);
-      dmg         = dmgRoll + dmgPlus;
+      dmgRoll = playerAimX3 ? (nrDmgRolls * nrDmgSides) :
+                Rnd::dice(nrDmgRolls, nrDmgSides);
+
+      //Outside effective range limit?
+      if (!item_.isInEffectiveRangeLmt(attacker->pos, defender->pos))
+      {
+        TRACE << "Outside effetive range limit" << endl;
+        dmgRoll = max(1, dmgRoll / 2);
+        dmgPlus /= 2;
+      }
+
+      dmg = dmgRoll + dmgPlus;
     }
   }
 }
@@ -737,7 +754,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
   printRangedInitiateMsgs(*projectiles[0]->attackData);
 
-  const bool stopAtTarget = aimLvl == actorSize_floor;
+  const bool stopAtTarget = aimLvl == ActorSize::floor;
   const int chebTrvlLim = 30;
 
   //Get projectile path
@@ -825,7 +842,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
         {
           const bool IS_ACTOR_AIMED_FOR = curProj->pos == aimPos;
 
-          if (curProj->attackData->defenderSize >= actorSize_humanoid ||
+          if (curProj->attackData->defenderSize >= ActorSize::humanoid ||
               IS_ACTOR_AIMED_FOR)
           {
 
@@ -936,7 +953,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
         }
 
         //PROJECTILE HIT THE GROUND?
-        if (curProj->pos == aimPos && aimLvl == actorSize_floor &&
+        if (curProj->pos == aimPos && aimLvl == ActorSize::floor &&
             !curProj->isObstructed)
         {
           curProj->isObstructed = true;
@@ -1074,19 +1091,14 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
     if (actorArray[curPos.x][curPos.y])
     {
       //Only attempt hit if aiming at a level that would hit the actor
-      const ActorSize sizeOfActor =
-        actorArray[curPos.x][curPos.y]->getData().actorSize;
-      if (sizeOfActor >= actorSize_humanoid || curPos == aimPos)
+      const ActorSize sizeOfActor = actorArray[curPos.x][curPos.y]->getData().actorSize;
+
+      if (sizeOfActor >= ActorSize::humanoid || curPos == aimPos)
       {
         //Actor hit?
         data = RangedAttData(attacker, wpn, aimPos, curPos, intendedAimLvl);
 
-        const bool IS_WITHIN_RANGE_LMT =
-          Utils::kingDist(origin, curPos) <= wpn.EFFECTIVE_RANGE_LMT;
-
-        if (IS_WITHIN_RANGE_LMT               &&
-            data.attackResult >= successSmall &&
-            !data.isEtherealDefenderMissed)
+        if (data.attackResult >= successSmall && !data.isEtherealDefenderMissed)
         {
           if (Map::cells[curPos.x][curPos.y].isSeenByPlayer)
           {
@@ -1124,7 +1136,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
             nrMonKilledInElem = i;
           }
           if (nrActorsHit >= 2 || !IS_TGT_KILLED ||
-              (intendedAimLvl == actorSize_floor && curPos == aimPos))
+              (intendedAimLvl == ActorSize::floor && curPos == aimPos))
           {
             break;
           }
@@ -1135,8 +1147,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
     //Wall hit?
     if (featureBlockers[curPos.x][curPos.y])
     {
-
-      //TODO Check hit material (soft and wood should not cause ricochet)
+      //TODO: Check hit material (soft and wood should not cause ricochet)
 
       Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
               curPos, nullptr, SndVol::low, AlertsMon::yes);
@@ -1167,7 +1178,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
     }
 
     //Floor hit?
-    if (intendedAimLvl == actorSize_floor && curPos == aimPos)
+    if (intendedAimLvl == ActorSize::floor && curPos == aimPos)
     {
       Snd snd("I hear a ricochet.", SfxId::ricochet, IgnoreMsgIfOriginSeen::yes,
               curPos, nullptr, SndVol::low, AlertsMon::yes);
@@ -1231,7 +1242,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
         }
       }
       const ItemDataT& itemData = wpn.getData();
-      if (itemData.itemWeight > itemWeight_light && !itemData.isIntrinsic)
+      if (int(itemData.itemWeight) > int(ItemWeight::light) && !itemData.isIntrinsic)
       {
         Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes,
                 data.defender->pos, nullptr, SndVol::low, AlertsMon::yes);

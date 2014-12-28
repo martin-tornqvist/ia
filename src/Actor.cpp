@@ -194,7 +194,7 @@ void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONS)
 
   const Pos newPos = freeCells[Rnd::range(0, freeCells.size() - 1)];
 
-  //TODO There should be a blast animation effect, and also if it's a seen monster
+  //TODO: There should be a blast animation effect, and also if it's a seen monster
   //teleporting, there should be a message.
 
   if (isPlayer())
@@ -648,7 +648,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     {
       Pos newPos;
       auto* featureHere = Map::cells[pos.x][pos.y].rigid;
-      //TODO this should be decided with a floodfill instead
+      //TODO: this should be decided with a floodfill instead
       if (!featureHere->canHaveCorpse())
       {
         for (int dx = -1; dx <= 1; ++dx)
@@ -693,7 +693,7 @@ void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const
 
   if (state_ == ActorState::alive && props[propRadiant])
   {
-    //TODO Much of the code below is duplicated from ActorPlayer::addLight_(), some
+    //TODO: Much of the code below is duplicated from ActorPlayer::addLight_(), some
     //refactoring is needed.
 
     bool myLight[MAP_W][MAP_H];

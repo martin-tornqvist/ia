@@ -73,7 +73,7 @@ void mkInfoLines(vector<StrAndClr>& out)
   out.push_back(StrAndClr("   * Killed " + toStr(nrKillsTotAllMon) + " monsters ",
                           clrInfo));
 
-  //TODO This is ugly as hell
+  //TODO: This is ugly as hell
   if (Map::player->phobias[int(Phobia::closedPlace)])
     out.push_back(StrAndClr("   * Had a phobia of enclosed spaces", clrInfo));
   if (Map::player->phobias[int(Phobia::dog)])

@@ -44,20 +44,20 @@ vector<string> Item::getDescr() const
   return data_->baseDescr;
 }
 
-int Item::getWeight() const {return data_->itemWeight * nrItems_;}
+int Item::getWeight() const {return int(data_->itemWeight) * nrItems_;}
 
 string Item::getWeightStr() const
 {
   const int WEIGHT = getWeight();
-  if (WEIGHT <= (itemWeight_extraLight + itemWeight_light) / 2)
+  if (WEIGHT <= (int(ItemWeight::extraLight) + int(ItemWeight::light)) / 2)
   {
     return "very light";
   }
-  if (WEIGHT <= (itemWeight_light + itemWeight_medium) / 2)
+  if (WEIGHT <= (int(ItemWeight::light) + int(ItemWeight::medium)) / 2)
   {
     return "light";
   }
-  if (WEIGHT <= (itemWeight_medium + itemWeight_heavy) / 2)
+  if (WEIGHT <= (int(ItemWeight::medium) + int(ItemWeight::heavy)) / 2)
   {
     return "a bit heavy";
   }
@@ -168,6 +168,11 @@ void Item::clearCarrierProps()
   carrierProps_.clear();
 }
 
+bool Item::isInEffectiveRangeLmt(const Pos& p0, const Pos& p1) const
+{
+  return Utils::kingDist(p0, p1) <= data_->ranged.effectiveRange;
+}
+
 //--------------------------------------------------------- ARMOR
 Armor::Armor(ItemDataT* const itemData) :
   Item  (itemData),
@@ -238,7 +243,7 @@ int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE)
 
   const int     AP_BEFORE       = getAbsorptionPoints();
   const double  DDF_BASE        = data_->armor.dmgToDurabilityFactor;
-  //TODO Add check for if wearer is player!
+  //TODO: Add check for if wearer is player!
   const double  DDF_WAR_VET_MOD = PlayerBon::getBg() == Bg::warVet ? 0.5 : 1.0;
   const double  DDF_K           = 1.5;
   const double  DMG_BEFORE_DB   = double(DMG_BEFORE);
@@ -362,10 +367,9 @@ void Wpn::setupFromSaveLines(vector<string>& lines)
   lines.erase(begin(lines));
 }
 
-Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData, int effectiveRangeLmt,
-         int ammoCap, bool isUsingClip) :
+Wpn::Wpn(ItemDataT* const itemData, ItemDataT* const ammoData, int ammoCap,
+         bool isUsingClip) :
   Item                (itemData),
-  EFFECTIVE_RANGE_LMT (effectiveRangeLmt),
   AMMO_CAP            (ammoCap),
   IS_USING_CLIP       (isUsingClip),
   nrAmmoLoaded        (AMMO_CAP),
@@ -414,19 +418,19 @@ PharaohStaff::PharaohStaff(ItemDataT* const itemData) : Wpn(itemData, nullptr)
 
 //--------------------------------------------------------- MACHINE GUN
 MachineGun::MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData, 8, ammoData->ranged.ammoContainedInClip, true) {}
+  Wpn(itemData, ammoData, ammoData->ranged.ammoContainedInClip, true) {}
 
 //--------------------------------------------------------- MI-GO ELECTRIC GUN
 MigoGun::MigoGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData, 6, ammoData->ranged.ammoContainedInClip, true) {}
+  Wpn(itemData, ammoData, ammoData->ranged.ammoContainedInClip, true) {}
 
 //--------------------------------------------------------- SPIKE GUN
 SpikeGun::SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData, 3, 12, false) {}
+  Wpn(itemData, ammoData, 12, false) {}
 
 //--------------------------------------------------------- INCINERATOR
 Incinerator::Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData, 8, ammoData->ranged.ammoContainedInClip, true) {}
+  Wpn(itemData, ammoData, ammoData->ranged.ammoContainedInClip, true) {}
 
 void Incinerator::onProjectileBlocked(
   const Pos& pos, Actor* actorHit)

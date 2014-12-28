@@ -65,7 +65,7 @@ void Potion::collide(const Pos& pos, Actor* const actor)
 
     if (PLAYER_SEE_CELL)
     {
-      //TODO Use standard animation
+      //TODO: Use standard animation
       Render::drawGlyph('*', Panel::map, pos, data_->clr);
 
       if (actor)

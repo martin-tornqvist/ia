@@ -119,7 +119,7 @@ void Mon::onActorTurn()
 
   //------------------------------ SPECIAL MONSTER ACTIONS
   //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-  if (leader_ != Map::player/*TODO temporary restriction, allow this later(?)*/)
+  if (leader_ != Map::player/*TODO: temporary restriction, allow this later(?)*/)
   {
     if (onActorTurn_())
     {
@@ -165,7 +165,7 @@ void Mon::onActorTurn()
     return;
   }
 
-  int erraticMovePct = data_->erraticMovePct;
+  int erraticMovePct = int(data_->erraticMovePct);
   if (isActorMyLeader(Map::player))
   {
     //Move less erratically if allied to player
@@ -509,7 +509,7 @@ AttackOpport Mon::getAttackOpport(Actor& defender)
   return opport;
 }
 
-//TODO Instead of using "strongest" weapon, use random
+//TODO: Instead of using "strongest" weapon, use random
 BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
 {
   BestAttack attack;
@@ -866,7 +866,7 @@ void FireVortex::mkStartItems()
 
 void FrostVortex::die_()
 {
-  //TODO Add explosion with cold damage
+  //TODO: Add explosion with cold damage
 }
 
 void FrostVortex::mkStartItems()
@@ -1126,7 +1126,7 @@ bool KeziahMason::onActorTurn_()
         const Pos c = line[i];
         if (!blockedLos[c.x][c.y])
         {
-          //TODO Use the generalized summoning functionality
+          //TODO: Use the generalized summoning functionality
           Log::addMsg("Keziah summons Brown Jenkin!");
           Actor* const actor    = ActorFactory::mk(ActorId::brownJenkin, c);
           Mon* jenkin           = static_cast<Mon*>(actor);
@@ -1196,7 +1196,7 @@ void LengElder::onStdTurn_()
         Popup::showMsg("", true, "");
 
         auto& inv = Map::player->getInv();
-        //TODO Which item to give?
+        //TODO: Which item to give?
         inv.putInGeneral(ItemFactory::mk(ItemId::hideousMask));
 
         hasGivenItemToPlayer_ = true;

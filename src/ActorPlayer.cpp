@@ -899,7 +899,7 @@ void Player::onStdTurn()
   {
     if (slot.item)
     {
-      shockTmp_ += slot.item->getData().shockWhileEquiped;
+      shockTmp_ += slot.item->getData().shockWhileEquipped;
     }
   }
 
@@ -1382,7 +1382,7 @@ void Player::kickMon(Actor& actorToKick)
 
   const ActorDataT& d = actorToKick.getData();
 
-  if (d.actorSize == actorSize_floor && (d.isSpider || d.isRat))
+  if (d.actorSize == ActorSize::floor && (d.isSpider || d.isRat))
   {
     kickWpn = static_cast<Wpn*>(ItemFactory::mk(ItemId::playerStomp));
   }

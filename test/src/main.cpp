@@ -563,7 +563,7 @@ TEST_FIXTURE(BasicFixture, MonsterStuckInSpiderWeb)
   CHECK(testedLooseWebDestroyed);
 }
 
-//TODO This test shows some weakness in the inventory handling functionality. Notice how
+//TODO: This test shows some weakness in the inventory handling functionality. Notice how
 //onEquip() and onUnequip() has to be called manually here. This is because they
 //are called from stupid places in the game code - They SHOULD be called by Inventory!
 TEST_FIXTURE(BasicFixture, InventoryHandling)
