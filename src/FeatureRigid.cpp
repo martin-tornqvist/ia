@@ -1683,8 +1683,9 @@ void Tomb::bump(Actor & actorBumping)
         }
         else //Not weakened
         {
-          const int BON = PlayerBon::traitsPicked[int(Trait::rugged)] ? 8 :
-                          PlayerBon::traitsPicked[int(Trait::tough)]  ? 4 : 0;
+          const int BON = PlayerBon::traitsPicked[int(Trait::unbreakable)]  ? 12  :
+                          PlayerBon::traitsPicked[int(Trait::rugged)]       ? 8   :
+                          PlayerBon::traitsPicked[int(Trait::tough)]        ? 4   : 0;
 
           TRACE << "Base chance to push lid is: 1 in "  << pushLidOneInN_ << endl;
           TRACE << "Bonus to roll: "                    << BON << endl;
@@ -1731,8 +1732,9 @@ void Tomb::bump(Actor & actorBumping)
 
 void Tomb::trySprainPlayer()
 {
-  const int SPRAIN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::rugged)] ? 6 :
-                              PlayerBon::traitsPicked[int(Trait::tough)]  ? 5 : 4;
+  const int SPRAIN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::unbreakable)]  ? 10 :
+                              PlayerBon::traitsPicked[int(Trait::rugged)]       ? 8  :
+                              PlayerBon::traitsPicked[int(Trait::tough)]        ? 6  : 4;
 
   if (Rnd::oneIn(SPRAIN_ONE_IN_N))
   {
@@ -1950,8 +1952,9 @@ void Chest::tryFindTrap()
 
 void Chest::trySprainPlayer()
 {
-  const int SPRAIN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::rugged)] ? 6 :
-                              PlayerBon::traitsPicked[int(Trait::tough)]  ? 5 : 4;
+  const int SPRAIN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::unbreakable)]  ? 10 :
+                              PlayerBon::traitsPicked[int(Trait::rugged)]       ? 8  :
+                              PlayerBon::traitsPicked[int(Trait::tough)]        ? 6  : 4;
   if (Rnd::oneIn(SPRAIN_ONE_IN_N))
   {
     Log::addMsg("I sprain myself.", clrMsgBad);
@@ -2040,9 +2043,10 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
                 itemContainer_.destroySingleFragile();
               }
 
-              const int OPEN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::rugged)] ? 2 :
-                                        PlayerBon::traitsPicked[int(Trait::tough)]  ? 3 :
-                                        4;
+              const int OPEN_ONE_IN_N =
+                PlayerBon::traitsPicked[int(Trait::unbreakable)]  ? 1 :
+                PlayerBon::traitsPicked[int(Trait::rugged)]       ? 2 :
+                PlayerBon::traitsPicked[int(Trait::tough)]        ? 3 : 4;
 
               if (Rnd::oneIn(OPEN_ONE_IN_N))
               {

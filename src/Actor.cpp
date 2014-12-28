@@ -45,22 +45,29 @@ bool Actor::isSpottingHiddenActor(Actor& other)
 {
   const Pos& otherPos = other.pos;
 
-  int playerBon = 0;
-  if (isPlayer())
-  {
-    playerBon = data_->abilityVals.getVal(AbilityId::searching, true, *this) / 3;
-  }
+  const int PLAYER_SEARCH_MOD =
+    isPlayer() ?
+    (data_->abilityVals.getVal(AbilityId::searching, true, *this) / 3) : 0;
 
-  const int SNEAK_BASE = other.getData().abilityVals.getVal(
-                           AbilityId::stealth, true, other);
+  const auto& abilitiesOther  = other.getData().abilityVals;
 
-  const int  DIST     = Utils::kingDist(pos, otherPos);
-  const int  DIST_BON = getConstrInRange(0, (DIST - 1) * 10, 60);
-  const int  LGT_DIV  = Map::cells[otherPos.x][otherPos.y].isLit ? 2 : 1;
-  const int  SKILL =
-    getConstrInRange(0, (SNEAK_BASE + DIST_BON - playerBon) / LGT_DIV, 90);
+  const int   SNEAK_SKILL     = abilitiesOther.getVal(AbilityId::stealth, true, other);
 
-  return AbilityRoll::roll(SKILL) <= failSmall;
+  const int   DIST            = Utils::kingDist(pos, otherPos);
+  const int   SNEAK_DIST_MOD  = getConstrInRange(0, (DIST - 1) * 10, 60);
+  const Cell& cell            = Map::cells[otherPos.x][otherPos.y];
+  const int   SNEAK_LGT_MOD   = cell.isLit                    ? -40 : 0;
+  const int   SNEAK_DRK_MOD   = (cell.isDark && ! cell.isLit) ?  40 : 0;
+  const int   SNEAK_TOT       = getConstrInRange(
+                                  0,
+                                  SNEAK_SKILL     +
+                                  SNEAK_DIST_MOD  +
+                                  SNEAK_LGT_MOD   +
+                                  SNEAK_DRK_MOD   -
+                                  PLAYER_SEARCH_MOD,
+                                  99);
+
+  return AbilityRoll::roll(SNEAK_TOT) <= failSmall;
 }
 
 int Actor::getHpMax(const bool WITH_MODIFIERS) const

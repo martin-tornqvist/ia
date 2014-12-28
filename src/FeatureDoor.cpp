@@ -155,6 +155,10 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
             {
               destrChance.numerator += 2;
             }
+            if (PlayerBon::traitsPicked[int(Trait::unbreakable)])
+            {
+              destrChance.numerator += 2;
+            }
 
             if (Rnd::fraction(destrChance))
             {
@@ -206,6 +210,10 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
               destrChance.numerator += 2;
             }
             if (PlayerBon::traitsPicked[int(Trait::rugged)])
+            {
+              destrChance.numerator += 2;
+            }
+            if (PlayerBon::traitsPicked[int(Trait::unbreakable)])
             {
               destrChance.numerator += 2;
             }

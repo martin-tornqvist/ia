@@ -50,6 +50,11 @@ ItemDataT::ItemDataT(const ItemId id_) :
   ranged(RangedItemData()),
   armor(ArmorItemData())
 {
+  for (int i = 0; i < int(AbilityId::END); ++i)
+  {
+    abilityModsEquipped[i] = 0;
+  }
+
   baseDescr.clear();
   nativeRooms.clear();
   featuresCanBeFoundIn.clear();
@@ -729,7 +734,7 @@ void initDataList()
   d->baseName = ItemName("Hatchet", "Hatchets", "a Hatchet");
   d->baseDescr = {"A small axe with a short handle. Hatchets are reliable weapons - "
                   "they are easy to use, and cause decent damage for their low weight. "
-                  "They can also serve well as thrown weapons [TODO].",
+                  /*TODO: "They can also serve well as thrown weapons."*/,
 
                   "Melee attacks with hatchets are silent."
                  };
@@ -881,7 +886,9 @@ void initDataList()
   d = new ItemDataT(ItemId::ironSpike);
   resetData(*d, ItemType::throwingWpn);
   d->baseName = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
-  d->baseDescr = {"Can be useful for wedging things closed or prying thing open [TODO]."};
+  d->baseDescr = {"Can be useful for wedging things closed."
+                  /*TODO: or prying things open."*/
+                 };
   d->isAmmo = true;
   d->itemWeight = ItemWeight::extraLight;
   d->tile = TileId::ironSpike;
@@ -1268,14 +1275,20 @@ void initDataList()
   d->baseName = ItemName("Iron Suit", "", "an Iron Suit");
   d->baseDescr = {"A crude armour constructed from metal plates, bolts, and leather "
                   "straps. It can absorb a high amount of damage, but it makes sneaking "
-                  "and dodging very difficult [TODO]. Also, due to the narrow slit of the "
+                  "and dodging very difficult. Also, due to the narrow slit of the "
                   "helmet, aiming is slightly more difficult, and it is harder to "
-                  "detect sneaking enemies and hidden objects [TODO]."
+                  "detect sneaking enemies and hidden objects."
                  };
+  d->abilityModsEquipped[int(AbilityId::stealth)]    = -50;
+  d->abilityModsEquipped[int(AbilityId::dodgeAtt)]   = -50;
+  d->abilityModsEquipped[int(AbilityId::dodgeTrap)]  = -50;
+  d->abilityModsEquipped[int(AbilityId::melee)]      = -10;
+  d->abilityModsEquipped[int(AbilityId::ranged)]     = -10;
+  d->abilityModsEquipped[int(AbilityId::searching)]  = -6;
   d->itemWeight = ItemWeight::heavy;
   d->clr = clrWhite;
   d->spawnStdRange.lower = 2;
-  d->armor.absorptionPoints = 4;
+  d->armor.absorptionPoints = 5;
   d->armor.dmgToDurabilityFactor = 0.3;
   d->landOnHardSndMsg = "I hear a crashing sound.";
   addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -1285,9 +1298,12 @@ void initDataList()
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Flak Jacket", "", "a Flak Jacket");
   d->baseDescr = {"An armour consisting of steel plates sewn into a waistcoat. It "
-                  "offers very good protection for its weight. Sneaking and dodging is "
-                  "slightly more difficult [TODO]."
+                  "offers very good protection for its weight."
+                  "Sneaking and dodging is slightly more difficult."
                  };
+  d->abilityModsEquipped[int(AbilityId::stealth)]    = -20;
+  d->abilityModsEquipped[int(AbilityId::dodgeAtt)]   = -20;
+  d->abilityModsEquipped[int(AbilityId::dodgeTrap)]  = -20;
   d->itemWeight = ItemWeight::medium;
   d->clr = clrGreen;
   d->spawnStdRange.lower = 3;
@@ -1302,11 +1318,17 @@ void initDataList()
   d->baseName = ItemName("Asbestos Suit", "", "an Asbestos Suit");
   d->baseDescr = {"A one piece overall of asbestos fabric, including a hood, furnace "
                   "mask, gloves and shoes. It protects the wearer against fire, acid "
-                  "and electricity, and also against smoke, fumes and gas. It is a bit "
-                  "bulky, so sneaking and dodging is slightly more difficult [TODO]. Also, "
-                  "because of the hood and mask, aiming and detecting hidden enemies "
-                  "and objects is somewhat harder [TODO]."
+                  "and electricity, and also against smoke, fumes and gas.",
+                  "It is a bit bulky, so sneaking and dodging is slightly more "
+                  "difficult. Also, because of the hood and mask, aiming and detecting "
+                  "hidden enemies and objects is somewhat harder."
                  };
+  d->abilityModsEquipped[int(AbilityId::stealth)]    = -20;
+  d->abilityModsEquipped[int(AbilityId::dodgeAtt)]   = -20;
+  d->abilityModsEquipped[int(AbilityId::dodgeTrap)]  = -20;
+  d->abilityModsEquipped[int(AbilityId::melee)]      = -10;
+  d->abilityModsEquipped[int(AbilityId::ranged)]     = -10;
+  d->abilityModsEquipped[int(AbilityId::searching)]  = -6;
   d->itemWeight = ItemWeight::medium;
   d->clr = clrRedLgt;
   d->spawnStdRange.lower = 3;
@@ -1321,10 +1343,13 @@ void initDataList()
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Heavy Coat", "", "a Heavy Coat");
   d->baseDescr = {"A very thick coat. It gives more protection against physical harm "
-                  "than a leather jacket, and it also protects against cold. Sneaking "
-                  "and dodging is slightly more difficult due to its higher weight "
-                  "however [TODO]."
+                  "than a leather jacket, and it also protects against cold.",
+                  "Sneaking and dodging is slightly more difficult due to its higher "
+                  "weight."
                  };
+  d->abilityModsEquipped[int(AbilityId::stealth)]    = -15;
+  d->abilityModsEquipped[int(AbilityId::dodgeAtt)]   = -15;
+  d->abilityModsEquipped[int(AbilityId::dodgeTrap)]  = -15;
   d->itemWeight = ItemWeight::medium;
   d->clr = clrBlueLgt;
   d->spawnStdRange.lower = 3;
@@ -1337,12 +1362,12 @@ void initDataList()
   d = new ItemDataT(ItemId::armorMigo);
   resetData(*d, ItemType::armor);
   d->baseName = ItemName("Mi-go Bio-armor", "", "a Mi-go Bio-armor");
-  d->baseDescr = {"A self-repairing biological armor crafted by the Mi-go.",
-                  "It is very disturbing for a human to wear (+10% shock while worn)."
+  d->baseDescr = {"A self-repairing biological armor created by the Mi-go.",
+                  "It is very disturbing for a human to wear (+15% shock while worn)."
                  };
   d->spawnStdRange = Range(-1, -1);
   d->itemWeight = ItemWeight::light;
-  d->shockWhileEquipped = 10;
+  d->shockWhileEquipped = 15;
   d->clr = clrMagenta;
   d->tile = TileId::migoArmor;
   d->armor.absorptionPoints = 2;
@@ -1355,10 +1380,13 @@ void initDataList()
   d->baseName = ItemName("Gas Mask", "", "A Gas Mask");
   d->baseDescr = {"Protects the eyes, throat and lungs from smoke and fumes. It has a "
                   "limited useful lifespan that is related to the absorbent capacity of "
-                  "the filter. Due to the small eye windows, aiming is slightly more "
-                  "difficult, and it is harder to detect sneaking enemies and hidden "
-                  "objects [TODO]."
+                  "the filter.",
+                  "Due to the small eye windows, aiming is slightly more difficult, "
+                  "and it is harder to detect sneaking enemies and hidden objects."
                  };
+  d->abilityModsEquipped[int(AbilityId::melee)]      = -10;
+  d->abilityModsEquipped[int(AbilityId::ranged)]     = -10;
+  d->abilityModsEquipped[int(AbilityId::searching)]  = -6;
   d->isStackable = false;
   d->clr = clrBrown;
   d->tile = TileId::mask;

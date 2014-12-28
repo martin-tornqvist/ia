@@ -50,6 +50,7 @@ enum class Trait
   mightySpirit,
   tough,
   rugged,
+  unbreakable,
   strongBacked,
   undeadBane,
   END

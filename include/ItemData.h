@@ -218,6 +218,7 @@ public:
   int shockWhileEquipped = 0;
   std::vector<RoomType> nativeRooms;
   std::vector< std::pair<FeatureId, int> > featuresCanBeFoundIn;
+  int abilityModsEquipped[int(AbilityId::END)];
 
   struct MeleeItemData
   {

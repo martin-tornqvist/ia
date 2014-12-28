@@ -13,58 +13,66 @@ using namespace std;
 int AbilityVals::getVal(const AbilityId abilityId,
                         const bool IS_AFFECTED_BY_PROPS, Actor& actor) const
 {
-  int val = abilityList[int(abilityId)];
+  int ret = abilityList[int(abilityId)];
 
   if (IS_AFFECTED_BY_PROPS)
   {
-    val += actor.getPropHandler().getAbilityMod(abilityId);
+    ret += actor.getPropHandler().getAbilityMod(abilityId);
   }
 
   if (actor.isPlayer())
   {
+    for (const InvSlot& slot : actor.getInv().slots_)
+    {
+      if (slot.item)
+      {
+        ret += slot.item->getData().abilityModsEquipped[int(abilityId)];
+      }
+    }
+
     const int HP_PCT  = (actor.getHp() * 100) / actor.getHpMax(true);
 
     switch (abilityId)
     {
       case AbilityId::searching:
-        val += 8;
-        if (PlayerBon::traitsPicked[int(Trait::observant)])   val += 4;
-        if (PlayerBon::traitsPicked[int(Trait::perceptive)])  val += 4;
+        ret += 8;
+        if (PlayerBon::traitsPicked[int(Trait::observant)])   ret += 4;
+        if (PlayerBon::traitsPicked[int(Trait::perceptive)])  ret += 4;
         break;
 
       case AbilityId::melee:
-        val += 45;
-        if (PlayerBon::traitsPicked[int(Trait::adeptMeleeFighter)])   val += 10;
-        if (PlayerBon::traitsPicked[int(Trait::expertMeleeFighter)])  val += 10;
-        if (PlayerBon::traitsPicked[int(Trait::masterMeleeFighter)])  val += 10;
-        if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) val += 30;
+        ret += 45;
+        if (PlayerBon::traitsPicked[int(Trait::adeptMeleeFighter)])   ret += 10;
+        if (PlayerBon::traitsPicked[int(Trait::expertMeleeFighter)])  ret += 10;
+        if (PlayerBon::traitsPicked[int(Trait::masterMeleeFighter)])  ret += 10;
+        if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
         break;
 
       case AbilityId::ranged:
-        val += 50;
-        if (PlayerBon::traitsPicked[int(Trait::adeptMarksman)])   val += 10;
-        if (PlayerBon::traitsPicked[int(Trait::expertMarksman)])  val += 10;
-        if (PlayerBon::traitsPicked[int(Trait::masterMarksman)])  val += 10;
-        if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) val += 30;
+        ret += 50;
+        if (PlayerBon::traitsPicked[int(Trait::adeptMarksman)])   ret += 10;
+        if (PlayerBon::traitsPicked[int(Trait::expertMarksman)])  ret += 10;
+        if (PlayerBon::traitsPicked[int(Trait::masterMarksman)])  ret += 10;
+        if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
         break;
 
       case AbilityId::dodgeTrap:
-        val += 5;
-        if (PlayerBon::traitsPicked[int(Trait::dexterous)]) val += 20;
-        if (PlayerBon::traitsPicked[int(Trait::lithe)])     val += 20;
+        ret += 5;
+        if (PlayerBon::traitsPicked[int(Trait::dexterous)]) ret += 25;
+        if (PlayerBon::traitsPicked[int(Trait::lithe)])     ret += 25;
         break;
 
       case AbilityId::dodgeAtt:
-        val += 10;
-        if (PlayerBon::traitsPicked[int(Trait::dexterous)]) val += 20;
-        if (PlayerBon::traitsPicked[int(Trait::lithe)])     val += 20;
-        if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) val += 50;
+        ret += 10;
+        if (PlayerBon::traitsPicked[int(Trait::dexterous)]) ret += 25;
+        if (PlayerBon::traitsPicked[int(Trait::lithe)])     ret += 25;
+        if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) ret += 50;
         break;
 
       case AbilityId::stealth:
-        val += 10;
-        if (PlayerBon::traitsPicked[int(Trait::stealthy)])      val += 50;
-        if (PlayerBon::traitsPicked[int(Trait::imperceptible)]) val += 30;
+        ret += 10;
+        if (PlayerBon::traitsPicked[int(Trait::stealthy)])      ret += 50;
+        if (PlayerBon::traitsPicked[int(Trait::imperceptible)]) ret += 30;
         break;
 
       case AbilityId::empty:
@@ -73,17 +81,19 @@ int AbilityVals::getVal(const AbilityId abilityId,
 
     if (abilityId == AbilityId::searching)
     {
-      val = max(val, 1);
+      //Searching must always be at least 1 to avoid trapping the player
+      ret = max(ret, 1);
     }
     else if (abilityId == AbilityId::dodgeAtt)
     {
-      val = min(val, 95);
+      //It should not be possible to dodge every attack
+      ret = min(ret, 95);
     }
   }
 
-  val = max(0, val);
+  ret = max(0, ret);
 
-  return val;
+  return ret;
 }
 
 void AbilityVals::reset()

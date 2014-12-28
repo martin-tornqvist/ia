@@ -289,6 +289,7 @@ int Player::getCarryWeightLmt() const
 {
   const bool IS_TOUGH         = PlayerBon::traitsPicked[int(Trait::tough)];
   const bool IS_RUGGED        = PlayerBon::traitsPicked[int(Trait::rugged)];
+  const bool IS_UNBREAKABLE   = PlayerBon::traitsPicked[int(Trait::unbreakable)];
   const bool IS_STRONG_BACKED = PlayerBon::traitsPicked[int(Trait::strongBacked)];
 
   bool props[endOfPropIds];
@@ -297,6 +298,7 @@ int Player::getCarryWeightLmt() const
 
   const int CARRY_WEIGHT_MOD = (IS_TOUGH         * 10) +
                                (IS_RUGGED        * 10) +
+                               (IS_UNBREAKABLE   * 10) +
                                (IS_STRONG_BACKED * 30) -
                                (IS_WEAKENED      * 15);
 
@@ -371,7 +373,6 @@ void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RES
 void Player::incrInsanity()
 {
   TRACE << "Increasing insanity" << endl;
-
 
   if (!Config::isBotPlaying())
   {

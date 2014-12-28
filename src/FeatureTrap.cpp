@@ -134,32 +134,34 @@ void Trap::bump(Actor& actorBumping)
 
   if (!props[propEthereal] && !props[propFlying])
   {
-    const bool IS_PLAYER      = actorBumping.isPlayer();
-    const bool ACTOR_CAN_SEE  = actorBumping.getPropHandler().allowSee();
-    AbilityVals& abilities    = actorBumping.getData().abilityVals;
-    const int DODGE_SKILL     = abilities.getVal(AbilityId::dodgeTrap, true,
-                                actorBumping);
-    const int BASE_CHANCE_TO_AVOID = 30;
+    const bool    IS_PLAYER             = actorBumping.isPlayer();
+    const bool    ACTOR_CAN_SEE         = actorBumping.getPropHandler().allowSee();
+    AbilityVals&  abilities             = actorBumping.getData().abilityVals;
+    const int     DODGE_SKILL           = abilities.getVal(AbilityId::dodgeTrap, true,
+                                          actorBumping);
+    const int     BASE_CHANCE_TO_AVOID  = 30;
 
-    const string trapName = specificTrap_->getTitle();
+    const string  trapName              = specificTrap_->getTitle();
 
     if (IS_PLAYER)
     {
       TRACE << "Player bumping" << endl;
-      const int CHANCE_TO_AVOID = isHidden_ ? 10 :
-                                  (BASE_CHANCE_TO_AVOID + DODGE_SKILL);
-      const AbilityRollResult result = AbilityRoll::roll(CHANCE_TO_AVOID);
+      int chanceToAvoid = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
+
+      if (isHidden_)
+      {
+        chanceToAvoid = max(10, chanceToAvoid / 2);
+      }
+
+      const AbilityRollResult result = AbilityRoll::roll(chanceToAvoid);
 
       if (result >= successSmall)
       {
-        if (!isHidden_)
+        if (!isHidden_ && ACTOR_CAN_SEE)
         {
-          if (ACTOR_CAN_SEE)
-          {
-            Map::player->updateFov();
-            Render::drawMapAndInterface();
-            Log::addMsg("I avoid a " + trapName + ".", clrMsgGood, false, true);
-          }
+          Map::player->updateFov();
+          Render::drawMapAndInterface();
+          Log::addMsg("I avoid a " + trapName + ".", clrMsgGood, false, true);
         }
       }
       else //Failed to avoid
@@ -175,15 +177,16 @@ void Trap::bump(Actor& actorBumping)
       {
         TRACE << "Humanoid monster bumping" << endl;
         Mon* const mon = static_cast<Mon*>(&actorBumping);
+
         if (mon->awareCounter_ > 0 && !mon->isStealth_)
         {
           TRACE << "Monster eligible for triggering trap" << endl;
 
-          const bool IS_ACTOR_SEEN_BY_PLAYER =
+          const bool              IS_ACTOR_SEEN_BY_PLAYER =
             Map::player->isSeeingActor(actorBumping, nullptr);
 
-          const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
-          const AbilityRollResult result = AbilityRoll::roll(CHANCE_TO_AVOID);
+          const int               CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
+          const AbilityRollResult result          = AbilityRoll::roll(CHANCE_TO_AVOID);
 
           if (result >= successSmall)
           {
