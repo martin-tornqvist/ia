@@ -13,8 +13,9 @@ enum class Phobia
   dog,
   undead,
   openPlace,
-  closedPlace,
+  crampedPlace,
   deepPlaces,
+  dark,
   END
 };
 

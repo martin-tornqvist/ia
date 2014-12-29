@@ -272,7 +272,10 @@ void PotionFortitude::quaff_(Actor& actor)
       }
     }
 
-    if (isPhobiasCured) {Log::addMsg("All my phobias are cured!");}
+    if (isPhobiasCured)
+    {
+      Log::addMsg("All my phobias are cured!");
+    }
 
     bool isObsessionsCured = false;
     for (int i = 0; i < int(Obsession::END); ++i)
@@ -283,7 +286,10 @@ void PotionFortitude::quaff_(Actor& actor)
         isObsessionsCured = true;
       }
     }
-    if (isObsessionsCured) {Log::addMsg("All my obsessions are cured!");}
+    if (isObsessionsCured)
+    {
+      Log::addMsg("All my obsessions are cured!");
+    }
 
     Map::player->restoreShock(999, false);
     Log::addMsg("I feel more at ease.");

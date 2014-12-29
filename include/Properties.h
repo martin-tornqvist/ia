@@ -334,7 +334,7 @@ public:
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if (ability == AbilityId::dodgeAtt)      return 20;
+    if (ability == AbilityId::dodgeAtt) return 20;
     if (ability == AbilityId::ranged)   return -20;
     return 0;
   }

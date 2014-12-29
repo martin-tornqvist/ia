@@ -74,23 +74,33 @@ void mkInfoLines(vector<StrAndClr>& out)
                           clrInfo));
 
   //TODO: This is ugly as hell
-  if (Map::player->phobias[int(Phobia::closedPlace)])
-    out.push_back(StrAndClr("   * Had a phobia of enclosed spaces", clrInfo));
   if (Map::player->phobias[int(Phobia::dog)])
     out.push_back(StrAndClr("   * Had a phobia of dogs", clrInfo));
+
   if (Map::player->phobias[int(Phobia::rat)])
     out.push_back(StrAndClr("   * Had a phobia of rats", clrInfo));
-  if (Map::player->phobias[int(Phobia::undead)])
-    out.push_back(StrAndClr("   * Had a phobia of the dead", clrInfo));
-  if (Map::player->phobias[int(Phobia::openPlace)])
-    out.push_back(StrAndClr("   * Had a phobia of open places", clrInfo));
+
   if (Map::player->phobias[int(Phobia::spider)])
     out.push_back(StrAndClr("   * Had a phobia of spiders", clrInfo));
+
+  if (Map::player->phobias[int(Phobia::undead)])
+    out.push_back(StrAndClr("   * Had a phobia of the dead", clrInfo));
+
+  if (Map::player->phobias[int(Phobia::crampedPlace)])
+    out.push_back(StrAndClr("   * Had a phobia of cramped spaces", clrInfo));
+
+  if (Map::player->phobias[int(Phobia::openPlace)])
+    out.push_back(StrAndClr("   * Had a phobia of open places", clrInfo));
+
   if (Map::player->phobias[int(Phobia::deepPlaces)])
     out.push_back(StrAndClr("   * Had a phobia of deep places", clrInfo));
 
+  if (Map::player->phobias[int(Phobia::dark)])
+    out.push_back(StrAndClr("   * Had a phobia of darkness", clrInfo));
+
   if (Map::player->obsessions[int(Obsession::masochism)])
     out.push_back(StrAndClr("   * Had a masochistic obsession", clrInfo));
+
   if (Map::player->obsessions[int(Obsession::sadism)])
     out.push_back(StrAndClr("   * Had a sadistic obsession", clrInfo));
 

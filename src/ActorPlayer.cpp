@@ -393,246 +393,270 @@ void Player::incrInsanity()
                        "I am hopelessly lost.";
     Popup::showMsg(msg, true, "Completely insane!", SfxId::insanityRise);
     die(true, false, false);
+    return;
   }
-  else //Sanity is below 100%
+
+  //This point reached means sanity is below 100%
+  string msg = "Insanity draws nearer... ";
+
+  //When long term insanity increases, something happens (mostly bad)
+  //(Reroll until something actually happens)
+  while (true)
   {
-    string msg = "Insanity draws nearer... ";
+    const int RND_INS_EVENT = Rnd::range(1, 9);
 
-    vector<Actor*> seenFoes;
-    getSeenFoes(seenFoes);
-
-    //When long term sanity decreases something happens (mostly bad)
-    //(Reroll until something actually happens)
-    while (true)
+    switch (RND_INS_EVENT)
     {
-      const int ROLL = Rnd::range(1, 9);
-      switch (ROLL)
+      case 1:
       {
-        case 1:
+        if (Rnd::coinToss())
+        {
+          msg += "I let out a terrified shriek.";
+        }
+        else
+        {
+          msg += "I scream in terror.";
+        }
+        Popup::showMsg(msg, true, "Screaming!", SfxId::insanityRise);
+
+        Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
+                SndVol::high, AlertsMon::yes);
+
+        SndEmit::emitSnd(snd);
+        return;
+      } break;
+
+      case 2:
+      {
+        msg += "I find myself babbling incoherently.";
+        Popup::showMsg(msg, true, "Babbling!", SfxId::insanityRise);
+        const string playerName = getNameThe();
+        for (int i = Rnd::range(3, 5); i > 0; --i)
+        {
+          Log::addMsg(playerName + ": " + Cultist::getCultistPhrase());
+        }
+        Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
+                SndVol::low, AlertsMon::yes);
+        SndEmit::emitSnd(snd);
+        return;
+      } break;
+
+      case 3:
+      {
+        msg += "I struggle to not fall into a stupor.";
+        Popup::showMsg(msg, true, "Fainting!", SfxId::insanityRise);
+        propHandler_->tryApplyProp(new PropFainted(PropTurns::std));
+        return;
+      } break;
+
+      case 4:
+      {
+        msg += "I laugh nervously.";
+        Popup::showMsg(msg, true, "HAHAHA!", SfxId::insanityRise);
+        Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
+                SndVol::low, AlertsMon::yes);
+        SndEmit::emitSnd(snd);
+        return;
+      } break;
+
+      case 5:
+      {
+        bool props[endOfPropIds];
+        propHandler_->getPropIds(props);
+
+        if (ins_ >= 10 && !props[propRFear])
         {
           if (Rnd::coinToss())
           {
-            msg += "I let out a terrified shriek.";
-          }
-          else
-          {
-            msg += "I scream in terror.";
-          }
-          Popup::showMsg(msg, true, "Screaming!", SfxId::insanityRise);
+            //Monster phobias
 
-          Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
-                  SndVol::high, AlertsMon::yes);
+            const int RND_MON = Rnd::range(1, 4);
 
-          SndEmit::emitSnd(snd);
-          return;
-        } break;
-
-        case 2:
-        {
-          msg += "I find myself babbling incoherently.";
-          Popup::showMsg(msg, true, "Babbling!", SfxId::insanityRise);
-          const string playerName = getNameThe();
-          for (int i = Rnd::range(3, 5); i > 0; --i)
-          {
-            Log::addMsg(playerName + ": " + Cultist::getCultistPhrase());
-          }
-          Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
-                  SndVol::low, AlertsMon::yes);
-          SndEmit::emitSnd(snd);
-          return;
-        } break;
-
-        case 3:
-        {
-          msg += "I struggle to not fall into a stupor.";
-          Popup::showMsg(msg, true, "Fainting!", SfxId::insanityRise);
-          propHandler_->tryApplyProp(new PropFainted(PropTurns::std));
-          return;
-        } break;
-
-        case 4:
-        {
-          msg += "I laugh nervously.";
-          Popup::showMsg(msg, true, "HAHAHA!", SfxId::insanityRise);
-          Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes, pos, this,
-                  SndVol::low, AlertsMon::yes);
-          SndEmit::emitSnd(snd);
-          return;
-        } break;
-
-        case 5:
-        {
-          bool props[endOfPropIds];
-          propHandler_->getPropIds(props);
-
-          if (!props[propRFear])
-          {
-            if (ins_ > 5)
+            switch (RND_MON)
             {
-              if (Rnd::coinToss())
-              {
-                if (!seenFoes.empty())
+              case 1:
+                if (!phobias[int(Phobia::rat)])
                 {
-                  const int         M_ROLL  = Rnd::range(0, seenFoes.size() - 1);
-                  const ActorDataT& monData = seenFoes[M_ROLL]->getData();
-
-                  if (monData.isRat && !phobias[int(Phobia::rat)])
-                  {
-                    msg += "I am afflicted by Murophobia. "
-                           "Rats suddenly seem terrifying.";
-                    Popup::showMsg(msg, true, "Murophobia!", SfxId::insanityRise);
-                    phobias[int(Phobia::rat)] = true;
-                    return;
-                  }
-                  else if (monData.isSpider && !phobias[int(Phobia::spider)])
-                  {
-                    msg += "I am afflicted by Arachnophobia. "
-                           "Spiders suddenly seem terrifying.";
-                    Popup::showMsg(msg, true, "Arachnophobia!", SfxId::insanityRise);
-                    phobias[int(Phobia::spider)] = true;
-                    return;
-                  }
-                  else if (monData.isCanine && !phobias[int(Phobia::dog)])
-                  {
-                    msg += "I am afflicted by Cynophobia. "
-                           "Dogs suddenly seem terrifying.";
-                    Popup::showMsg(msg, true, "Cynophobia!", SfxId::insanityRise);
-                    phobias[int(Phobia::dog)] = true;
-                    return;
-                  }
-                  else if (monData.isUndead && !phobias[int(Phobia::undead)])
-                  {
-                    msg += "I am afflicted by Necrophobia. "
-                           "The undead suddenly seem much more terrifying.";
-                    Popup::showMsg(msg, true, "Necrophobia!", SfxId::insanityRise);
-                    phobias[int(Phobia::undead)] = true;
-                    return;
-                  }
-                }
-              }
-              else //Cointoss (not a monster phobia)
-              {
-                if (Rnd::coinToss())
-                {
-                  if (isStandingInOpenSpace())
-                  {
-                    if (!phobias[int(Phobia::openPlace)])
-                    {
-                      msg += "I am afflicted by Agoraphobia. "
-                             "Open places suddenly seem terrifying.";
-                      Popup::showMsg(msg, true, "Agoraphobia!", SfxId::insanityRise);
-                      phobias[int(Phobia::openPlace)] = true;
-                      return;
-                    }
-                  }
-                  if (isStandingInCrampedSpace())
-                  {
-                    if (!phobias[int(Phobia::closedPlace)])
-                    {
-                      msg += "I am afflicted by Claustrophobia. "
-                             "Confined places suddenly seem terrifying.";
-                      Popup::showMsg(msg, true, "Claustrophobia!", SfxId::insanityRise);
-                      phobias[int(Phobia::closedPlace)] = true;
-                      return;
-                    }
-                  }
-                }
-                else //Cointoss (not agora/claustrophobia)
-                {
-                  if (!phobias[int(Phobia::deepPlaces)])
-                  {
-                    msg += "I am afflicted by Bathophobia. "
-                           "It suddenly seems terrifying to delve deeper.";
-                    Popup::showMsg(msg, true, "Bathophobia!");
-                    phobias[int(Phobia::deepPlaces)] = true;
-                    return;
-                  }
-                }
-              }
-            }
-          }
-        } break;
-
-        case 6:
-        {
-          if (ins_ > 20)
-          {
-            int obsessionsActive = 0;
-            for (int i = 0; i < int(Obsession::END); ++i)
-            {
-              if (obsessions[i]) {obsessionsActive++;}
-            }
-            if (obsessionsActive == 0)
-            {
-              const Obsession obsession =
-                (Obsession)(Rnd::range(0, int(Obsession::END) - 1));
-              switch (obsession)
-              {
-                case Obsession::masochism:
-                {
-                  msg +=
-                    "To my alarm, I find myself encouraged by the sensation of "
-                    "pain. Physical suffering does not frighten me at all. "
-                    "However, my depraved mind can never find complete peace "
-                    "(no shock from taking damage, but shock cannot go below "
-                    + toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-                  Popup::showMsg(msg, true, "Masochistic obsession!",
-                                 SfxId::insanityRise);
-                  obsessions[int(Obsession::masochism)] = true;
+                  msg += "I am afflicted by Murophobia. Rats suddenly seem terrifying.";
+                  Popup::showMsg(msg, true, "Murophobia!", SfxId::insanityRise);
+                  phobias[int(Phobia::rat)] = true;
                   return;
-                } break;
+                }
+                break;
 
-                case Obsession::sadism:
+              case 2:
+                if (!phobias[int(Phobia::spider)])
                 {
-                  msg +=
-                    "To my alarm, I find myself encouraged by the pain I cause "
-                    "in others. For every life I take, I find a little relief. "
-                    "However, my depraved mind can no longer find complete "
-                    "peace (shock cannot go below "
-                    + toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
-                  Popup::showMsg(msg, true, "Sadistic obsession!", SfxId::insanityRise);
-                  obsessions[int(Obsession::sadism)] = true;
+                  msg += "I am afflicted by Arachnophobia. Spiders suddenly seem "
+                         "terrifying.";
+                  Popup::showMsg(msg, true, "Arachnophobia!", SfxId::insanityRise);
+                  phobias[int(Phobia::spider)] = true;
                   return;
-                } break;
-                default: {} break;
-              }
+                }
+                break;
+
+              case 3:
+                if (!phobias[int(Phobia::dog)])
+                {
+                  msg += "I am afflicted by Cynophobia. Canines suddenly seem "
+                         "terrifying.";
+                  Popup::showMsg(msg, true, "Cynophobia!", SfxId::insanityRise);
+                  phobias[int(Phobia::dog)] = true;
+                  return;
+                }
+                break;
+
+              case 4:
+                if (!phobias[int(Phobia::undead)])
+                {
+                  msg += "I am afflicted by Necrophobia. The undead suddenly seem far "
+                         "more terrifying.";
+                  Popup::showMsg(msg, true, "Necrophobia!", SfxId::insanityRise);
+                  phobias[int(Phobia::undead)] = true;
+                  return;
+                }
+                break;
             }
           }
-        } break;
-
-        case 7:
-        {
-          if (ins_ > 8)
+          else //Cointoss (not a monster phobia)
           {
-            msg += "The shadows are closing in on me!";
-            Popup::showMsg(msg, true, "Haunted by shadows!", SfxId::insanityRise);
-            const int NR_SHADOWS_LOWER  = 1;
-            const int NR_SHADOWS_UPPER  = getConstrInRange(2, (Map::dlvl + 1) / 2, 6);
-            const int NR                = Rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
-            ActorFactory::summonMon(pos, vector<ActorId>(NR, ActorId::shadow), true);
-            return;
+            //Environment phobias
+
+            const int RND_ENV_PHOBIA = Rnd::range(1, 3);
+
+            switch (RND_ENV_PHOBIA)
+            {
+              case 1:
+                //Fear of cramped or open places
+                if (isStandingInOpenSpace())
+                {
+                  if (!phobias[int(Phobia::openPlace)])
+                  {
+                    msg += "I am afflicted by Agoraphobia. Open places suddenly seem "
+                           "terrifying.";
+                    Popup::showMsg(msg, true, "Agoraphobia!", SfxId::insanityRise);
+                    phobias[int(Phobia::openPlace)] = true;
+                    return;
+                  }
+                }
+                else if (isStandingInCrampedSpace())
+                {
+                  if (!phobias[int(Phobia::crampedPlace)])
+                  {
+                    msg += "I am afflicted by Claustrophobia. Confined places "
+                           "suddenly seem terrifying.";
+                    Popup::showMsg(msg, true, "Claustrophobia!", SfxId::insanityRise);
+                    phobias[int(Phobia::crampedPlace)] = true;
+                    return;
+                  }
+                }
+                break;
+
+              case 2:
+                //Fear of deep places
+                if (!phobias[int(Phobia::deepPlaces)])
+                {
+                  msg += "I am afflicted by Bathophobia. It suddenly seems terrifying "
+                         "to delve deeper.";
+                  Popup::showMsg(msg, true, "Bathophobia!");
+                  phobias[int(Phobia::deepPlaces)] = true;
+                  return;
+                }
+                break;
+
+              case 3:
+                //Fear of the dark
+                if (!phobias[int(Phobia::dark)])
+                {
+                  msg += "I am afflicted by Nyctophobia. Darkness suddenly seem far "
+                         "more terrifying.";
+                  Popup::showMsg(msg, true, "Nyctophobia!");
+                  phobias[int(Phobia::dark)] = true;
+                  return;
+                }
+                break;
+            }
           }
-        } break;
+        }
+      } break;
 
-        case 8:
+      case 6:
+      {
+        if (ins_ > 20)
         {
-          msg += "I find myself in a peculiar trance. I struggle to recall where I am, "
-                 "and what is happening.";
-          Popup::showMsg(msg, true, "Confusion!", SfxId::insanityRise);
-          propHandler_->tryApplyProp(new PropConfused(PropTurns::std));
-          return;
-        } break;
+          int obsessionsActive = 0;
+          for (int i = 0; i < int(Obsession::END); ++i)
+          {
+            if (obsessions[i]) {obsessionsActive++;}
+          }
+          if (obsessionsActive == 0)
+          {
+            const Obsession obsession =
+              (Obsession)(Rnd::range(0, int(Obsession::END) - 1));
+            switch (obsession)
+            {
+              case Obsession::masochism:
+              {
+                msg +=
+                  "To my alarm, I find myself encouraged by the sensation of "
+                  "pain. Physical suffering does not frighten me at all. "
+                  "However, my depraved mind can never find complete peace "
+                  "(no shock from taking damage, but shock cannot go below "
+                  + toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                Popup::showMsg(msg, true, "Masochistic obsession!",
+                               SfxId::insanityRise);
+                obsessions[int(Obsession::masochism)] = true;
+                return;
+              } break;
 
-        case 9:
+              case Obsession::sadism:
+              {
+                msg +=
+                  "To my alarm, I find myself encouraged by the pain I cause "
+                  "in others. For every life I take, I find a little relief. "
+                  "However, my depraved mind can no longer find complete "
+                  "peace (shock cannot go below "
+                  + toStr(MIN_SHOCK_WHEN_OBSESSION) + "%).";
+                Popup::showMsg(msg, true, "Sadistic obsession!", SfxId::insanityRise);
+                obsessions[int(Obsession::sadism)] = true;
+                return;
+              } break;
+              default: {} break;
+            }
+          }
+        }
+      } break;
+
+      case 7:
+      {
+        if (ins_ > 8)
         {
-          msg += "There is a strange itch, as if something is crawling on the back of "
-                 "my neck.";
-          Popup::showMsg(msg, true, "Strange sensation", SfxId::insanityRise);
+          msg += "The shadows are closing in on me!";
+          Popup::showMsg(msg, true, "Haunted by shadows!", SfxId::insanityRise);
+          const int NR_SHADOWS_LOWER  = 1;
+          const int NR_SHADOWS_UPPER  = getConstrInRange(2, (Map::dlvl + 1) / 2, 6);
+          const int NR                = Rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
+          ActorFactory::summonMon(pos, vector<ActorId>(NR, ActorId::shadow), true);
           return;
-        } break;
+        }
+      } break;
 
-        default: {} break;
-      }
+      case 8:
+      {
+        msg += "I find myself in a peculiar trance. I struggle to recall where I am, "
+               "and what is happening.";
+        Popup::showMsg(msg, true, "Confusion!", SfxId::insanityRise);
+        propHandler_->tryApplyProp(new PropConfused(PropTurns::std));
+        return;
+      } break;
+
+      case 9:
+      {
+        msg += "There is a strange itch, as if something is crawling on the back of "
+               "my neck.";
+        Popup::showMsg(msg, true, "Strange sensation", SfxId::insanityRise);
+        return;
+      } break;
     }
   }
 }
@@ -673,78 +697,80 @@ bool Player::isStandingInCrampedSpace() const
 
 void Player::testPhobias()
 {
-  vector<Actor*> seenFoes;
-  getSeenFoes(seenFoes);
-
-  const int ROLL = Rnd::percentile();
-  //Phobia vs creature type?
-  if (ROLL < 10)
+  if (!Map::player->getPropHandler().allowAct())
   {
+    return;
+  }
+
+  if (Rnd::oneIn(10))
+  {
+    //Monster phobia?
+    vector<Actor*> seenFoes;
+    getSeenFoes(seenFoes);
+
     for (Actor* const actor : seenFoes)
     {
       const ActorDataT& monData = actor->getData();
       if (monData.isCanine && phobias[int(Phobia::dog)])
       {
         Log::addMsg("I am plagued by my canine phobia!");
-        propHandler_->tryApplyProp(
-          new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
         return;
       }
       if (monData.isRat && phobias[int(Phobia::rat)])
       {
         Log::addMsg("I am plagued by my rat phobia!");
-        propHandler_->tryApplyProp(
-          new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
         return;
       }
       if (monData.isUndead && phobias[int(Phobia::undead)])
       {
         Log::addMsg("I am plagued by my phobia of the dead!");
-        propHandler_->tryApplyProp(
-          new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
         return;
       }
       if (monData.isSpider && phobias[int(Phobia::spider)])
       {
         Log::addMsg("I am plagued by my spider phobia!");
-        propHandler_->tryApplyProp(
-          new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
         return;
       }
     }
-  }
-  if (ROLL < 5 && Map::player->getPropHandler().allowAct())
-  {
+
+    //Environment phobia?
     if (phobias[int(Phobia::openPlace)] && isStandingInOpenSpace())
     {
       Log::addMsg("I am plagued by my phobia of open places!");
-      propHandler_->tryApplyProp(
-        new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+      propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
       return;
     }
 
-    if (phobias[int(Phobia::closedPlace)] && isStandingInCrampedSpace())
+    if (phobias[int(Phobia::crampedPlace)] && isStandingInCrampedSpace())
     {
       Log::addMsg("I am plagued by my phobia of closed places!");
-      propHandler_->tryApplyProp(
-        new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
+      propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
       return;
     }
 
-    if (phobias[int(Phobia::deepPlaces)])
+    for (const Pos& d : DirUtils::dirList)
     {
-      for (int dx = -1; dx <= 1; ++dx)
+      const Pos p(pos + d);
+
+      if (phobias[int(Phobia::deepPlaces)] &&
+          Map::cells[p.x][p.y].rigid->isBottomless())
       {
-        for (int dy = -1; dy <= 1; ++dy)
-        {
-          const Pos& p(pos + Pos(dx, dy));
-          if (Map::cells[p.x][p.y].rigid->isBottomless())
-          {
-            Log::addMsg("I am plagued by my phobia of deep places!");
-            propHandler_->tryApplyProp(
-              new PropTerrified(PropTurns::specific, Rnd::dice(1, 6)));
-          }
-        }
+        Log::addMsg("I am plagued by my phobia of deep places!");
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
+        break;
+      }
+
+      if (phobias[int(Phobia::dark)]  &&
+          Map::cells[p.x][p.y].isDark &&
+          !Map::cells[p.x][p.y].isLit)
+      {
+        Log::addMsg("I am plagued by my fear of the dark!");
+        propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
+        break;
       }
     }
   }
@@ -758,7 +784,10 @@ void Player::updateClr()
     return;
   }
 
-  if (propHandler_->changeActorClr(clr_)) {return; }
+  if (propHandler_->changeActorClr(clr_))
+  {
+    return;
+  }
 
   if (activeExplosive)
   {
@@ -883,18 +912,12 @@ void Player::onStdTurn()
     shockTmp_ += 20;
   }
 
-  for (int dx = -1; dx <= 1; ++dx)
+  for (const Pos& d : DirUtils::dirList)
   {
-    const int X = pos.x + dx;
-    for (int dy = -1; dy <= 1; ++dy)
-    {
-      const int Y = pos.y + dy;
-      if (Utils::isPosInsideMap(Pos(X, Y)))
-      {
-        shockTmp_ += Map::cells[X][Y].rigid->getShockWhenAdj();
-      }
-    }
+    const Pos p(pos + d);
+    shockTmp_ += Map::cells[p.x][p.y].rigid->getShockWhenAdj();
   }
+
   shockTmp_ = min(99.0, shockTmp_);
 
   //Temporary shock from items
@@ -927,7 +950,9 @@ void Player::onStdTurn()
 
   vector<Actor*> seenFoes;
   getSeenFoes(seenFoes);
+
   double shockFromMonCurPlayerTurn = 0.0;
+
   for (Actor* actor : seenFoes)
   {
     DungeonMaster::onMonSpotted(*actor);
@@ -968,29 +993,38 @@ void Player::onStdTurn()
   }
 
   //Some shock is taken every Xth turn
-  int loseNTurns = 12;
-  if (PlayerBon::getBg() == Bg::rogue) loseNTurns *= 2;
-  const int TURN = GameTime::getTurn();
-  if (TURN % loseNTurns == 0 && TURN > 1)
+  if (propHandler_->allowAct())
   {
-    if (Rnd::oneIn(850))
+    int turnNrIncrShock = 12;
+
+    if (PlayerBon::getBg() == Bg::rogue)
     {
-      if (Rnd::coinToss())
+      turnNrIncrShock *= 2;
+    }
+
+    const int TURN = GameTime::getTurn();
+
+    if (TURN % turnNrIncrShock == 0 && TURN > 1)
+    {
+      if (Rnd::oneIn(850))
       {
-        Popup::showMsg("I have a bad feeling about this...", true);
+        if (Rnd::coinToss())
+        {
+          Popup::showMsg("I have a bad feeling about this...", true);
+        }
+        else
+        {
+          Popup::showMsg("A chill runs down my spine...", true);
+        }
+        incrShock(ShockLvl::heavy, ShockSrc::misc);
+        Render::drawMapAndInterface();
       }
       else
       {
-        Popup::showMsg("A chill runs down my spine...", true);
-      }
-      incrShock(ShockLvl::heavy, ShockSrc::misc);
-      Render::drawMapAndInterface();
-    }
-    else
-    {
-      if (Map::dlvl != 0)
-      {
-        incrShock(1, ShockSrc::time);
+        if (Map::dlvl != 0)
+        {
+          incrShock(1, ShockSrc::time);
+        }
       }
     }
   }
@@ -1076,7 +1110,14 @@ void Player::onStdTurn()
       const int REGEN_N_TURNS   = IS_SURVIVALIST  ? 20 :
                                   IS_RAPID_REC    ? 30 : 40;
 
-      if (TURN % REGEN_N_TURNS == 0 && TURN > 1 && getHp() < getHpMax(true)) {++hp_;}
+      const int TURN = GameTime::getTurn();
+
+      if (TURN % REGEN_N_TURNS == 0 &&
+          TURN > 1                  &&
+          getHp() < getHpMax(true))
+      {
+        ++hp_;
+      }
     }
 
     if (!props[propConfused] && propHandler_->allowSee())

@@ -59,32 +59,35 @@ void mkLines()
 
   const auto& phobias = Map::player->phobias;
 
-  if (phobias[int(Phobia::closedPlace)])
-    lines_.push_back({offset + "Phobia of enclosed spaces",  clrText});
-
   if (phobias[int(Phobia::dog)])
-    lines_.push_back({offset + "Phobia of dogs",             clrText});
+    lines_.push_back({offset + "Phobia of dogs",            clrText});
 
   if (phobias[int(Phobia::rat)])
-    lines_.push_back({offset + "Phobia of rats",             clrText});
-
-  if (phobias[int(Phobia::undead)])
-    lines_.push_back({offset + "Phobia of the dead",         clrText});
-
-  if (phobias[int(Phobia::openPlace)])
-    lines_.push_back({offset + "Phobia of open places",      clrText});
+    lines_.push_back({offset + "Phobia of rats",            clrText});
 
   if (phobias[int(Phobia::spider)])
-    lines_.push_back({offset + "Phobia of spiders",          clrText});
+    lines_.push_back({offset + "Phobia of spiders",         clrText});
+
+  if (phobias[int(Phobia::undead)])
+    lines_.push_back({offset + "Phobia of the dead",        clrText});
+
+  if (phobias[int(Phobia::crampedPlace)])
+    lines_.push_back({offset + "Phobia of cramped spaces",  clrText});
+
+  if (phobias[int(Phobia::openPlace)])
+    lines_.push_back({offset + "Phobia of open places",     clrText});
 
   if (phobias[int(Phobia::deepPlaces)])
-    lines_.push_back({offset + "Phobia of deep places",      clrText});
+    lines_.push_back({offset + "Phobia of deep places",     clrText});
+
+  if (phobias[int(Phobia::dark)])
+    lines_.push_back({offset + "Phobia of darkness",        clrText});
 
   if (Map::player->obsessions[int(Obsession::masochism)])
-    lines_.push_back({offset + "Masochistic obsession",      clrText});
+    lines_.push_back({offset + "Masochistic obsession",     clrText});
 
   if (Map::player->obsessions[int(Obsession::sadism)])
-    lines_.push_back({offset + "Sadistic obsession",         clrText});
+    lines_.push_back({offset + "Sadistic obsession",        clrText});
 
   const int NR_LINES_AFTER_MENTAL = lines_.size();
 
