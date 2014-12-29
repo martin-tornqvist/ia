@@ -76,11 +76,11 @@ void runStdTurnEvents()
       i--;
       if (curActorIndex_ >= actors_.size()) {curActorIndex_ = 0;}
     }
-    else  //Monster is alive or is a corpse
+    else  //Actor is alive or is a corpse
     {
       actor->getPropHandler().tick(PropTurnMode::std, blockedLos);
 
-      if (actor != Map::player)
+      if (!actor->isPlayer())
       {
         Mon* const mon = static_cast<Mon*>(actor);
         if (mon->playerAwareOfMeCounter_ > 0)
@@ -91,7 +91,10 @@ void runStdTurnEvents()
 
       //Do light damage if actor in lit cell
       const Pos& pos = actor->pos;
-      if (Map::cells[pos.x][pos.y].isLit) {actor->hit(1, DmgType::light);}
+      if (Map::cells[pos.x][pos.y].isLit)
+      {
+        actor->hit(1, DmgType::light);
+      }
 
       if (actor->isAlive())
       {

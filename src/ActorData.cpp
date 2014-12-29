@@ -1922,7 +1922,7 @@ void initDataList()
   d.glyph = 'o';
   d.color = clrGrayDrk;
   d.tile = TileId::ooze;
-  d.hp = 12;
+  d.hp = 14;
   d.spi = 12;
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 50);

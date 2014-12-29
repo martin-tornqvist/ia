@@ -141,7 +141,7 @@ void getBgDescr(const Bg id, vector<string>& linesRef)
                          "enemies, causing them to forget their pursuit "
                          "(press [x])");
       linesRef.push_back(" ");
-      //TODO: This should be a trait?
+      //TODO: Should this be a trait instead?
       linesRef.push_back("+25% hit chance with ranged attacks vs unaware targets");
       linesRef.push_back(" ");
       linesRef.push_back("The rate of shock recieved passively over time "
@@ -203,8 +203,8 @@ void getTraitDescr(const Trait id, string& out)
       break;
 
     case Trait::expertMarksman:
-      out = "+10% hit chance with firearms and thrown weapons, "
-            "you occasionally reload instantly";
+      out = "+10% hit chance with firearms and thrown weapons, you occasionally reload "
+            "instantly";
       break;
 
     case Trait::masterMarksman:
@@ -217,14 +217,13 @@ void getTraitDescr(const Trait id, string& out)
       break;
 
     case Trait::sharpShooter:
-      out = "Standing still for three turns gives ranged attacks maximum "
-            "hit chance and damage on the following turn";
+      out = "Standing still for three turns gives ranged attacks maximum hit chance and "
+            "damage on the following turn";
       break;
 
     case Trait::demExpert:
-      out = "+1 radius for explosives (be careful), you are not harmed "
-            "by your own Molotov Cocktails, you occasionally light "
-            "explosives instantly";
+      out = "+1 radius for explosives (be careful), you are not harmed by your own "
+            "Molotov Cocktails, you occasionally light explosives instantly";
       break;
 
     case Trait::coolHeaded:
@@ -236,14 +235,14 @@ void getTraitDescr(const Trait id, string& out)
       break;
 
     case Trait::warlock:
-      out = "-1 Spirit cost for damage dealing spells, casting any spell "
-            "has a chance to make you \"Charged\" for one turn, causing "
-            "attack spells to do maximum damage";
+      out = "-1 Spirit cost for damage dealing spells, casting any spell has a chance "
+            "to make you \"Charged\" for one turn, causing attack spells to do maximum "
+            "damage";
       break;
 
     case Trait::summoner:
-      out = "-1 Spirit cost for summoning spells, halved risk that called creatures "
-            "are hostile";
+      out = "-1 Spirit cost for summoning spells, halved risk that called creatures are "
+            "hostile";
       break;
 
     case Trait::bloodSorcerer:
@@ -251,26 +250,25 @@ void getTraitDescr(const Trait id, string& out)
       break;
 
     case Trait::seer:
-      out = "Detection spells have decreased Spirit costs, and "
-            "the spell \"Detect Monsters\" has tripple duration";
+      out = "Detection spells have decreased Spirit costs, and the spell "
+            "\"Detect Monsters\" has tripple duration";
       break;
 
     case Trait::tough:
-      out = "+2 hit points, +10% carry weight limit, better results "
-            "for object interactions requiring strength (e.g. bashing "
-            "doors or pushing a lid)";
+      out = "+2 hit points, +10% carry weight limit, better results for object "
+            "interactions requiring strength (e.g. bashing doors or pushing a lid)";
       break;
 
     case Trait::rugged:
-      out = "+2 hit points, +10% carry weight limit, better results "
-            "for object interactions requiring strength (such as "
-            "bashing doors, or moving the lid from a stone coffin)";
+      out = "+2 hit points, +10% carry weight limit, better results for object "
+            "interactions requiring strength (such as bashing doors, or moving the lid "
+            "from a stone coffin)";
       break;
 
     case Trait::unbreakable:
-      out = "+2 hit points, +10% carry weight limit, better results "
-            "for object interactions requiring strength (such as "
-            "bashing doors, or moving the lid from a stone coffin)";
+      out = "+2 hit points, +10% carry weight limit, better results for object "
+            "interactions requiring strength (such as bashing doors, or moving the lid "
+            "from a stone coffin)";
       break;
 
     case Trait::strongBacked:
@@ -278,13 +276,13 @@ void getTraitDescr(const Trait id, string& out)
       break;
 
     case Trait::dexterous:
-      out = "+25% chance to dodge melee attacks, better chances to evade "
-            "traps, every fifth move is a free action";
+      out = "+25% chance to dodge melee attacks, better chances to evade traps, "
+            "every fifth move is a free action";
       break;
 
     case Trait::lithe:
-      out = "+25% chance to dodge melee attacks, better chances to evade "
-            "traps, every fourth move is a free action";
+      out = "+25% chance to dodge melee attacks, better chances to evade traps, every "
+            "fourth move is a free action";
       break;
 
     case Trait::mobile:
@@ -296,24 +294,22 @@ void getTraitDescr(const Trait id, string& out)
       break;
 
     case Trait::healer:
-      out = "Healing takes half the normal time and resources";
+      out = "Using medical equipment takes half the normal time and resources";
       break;
 
     case Trait::observant:
-      out = "You can spot hidden traps and doors from two cells away, "
-            "you are more likely to spot hidden things and monsters, and "
-            "your attentiveness is higher when examining objects";
+      out = "You can spot hidden traps and doors from two cells away, and you are more "
+            "likely to spot hidden monsters and objects";
       break;
 
     case Trait::perceptive:
-      out = "You can spot hidden traps and doors from three cells away, "
-            "you are more likely to spot hidden things and monsters, and "
-            "your attentiveness is higher when examining objects";
+      out = "You can spot hidden traps and doors from three cells away, and you are "
+            "more likely to spot hidden monsters and objects";
       break;
 
     case Trait::vigilant:
-      out = "You cannot be backstabbed - hidden monsters gets no melee "
-            "attack bonus against you, and their attacks can be dodged";
+      out = "You cannot be backstabbed - hidden monsters gets no melee attack bonus "
+            "against you, and their attacks can be dodged";
       break;
 
     case Trait::rapidRecoverer:
@@ -321,19 +317,18 @@ void getTraitDescr(const Trait id, string& out)
       break;
 
     case Trait::survivalist:
-      out = "Increased Hit Point regeneration rate, negative effects "
-            "from wounds and disease reduced by 50%";
+      out = "Increased Hit Point regeneration rate, disease only lowers your Hit Points "
+            "by 25% (instead of 50%)";
       break;
 
     case Trait::perseverant:
-      out = "When your Hit Points are reduced to 25% or less, you gain "
-            "+50% chance to dodge melee attacks, and +30% hit chance with "
-            "melee and ranged attacks";
+      out = "When your Hit Points are reduced to 25% or less, you gain +50% chance to "
+            "dodge melee attacks, and +30% hit chance with melee and ranged attacks";
       break;
 
     case Trait::selfAware:
-      out = "You cannot become confused, the number of remaining turns "
-            "for status effects are displayed";
+      out = "You cannot become confused, the number of remaining turns for status "
+            "effects are displayed";
       break;
 
     case Trait::stoutSpirit:
@@ -357,7 +352,7 @@ void getTraitDescr(const Trait id, string& out)
       break;
 
     case Trait::vicious:
-      out = "+50% backstab damage (for a total of 200%, or 350% with daggers)";
+      out = "+50% backstab damage";
       break;
 
     case Trait::treasureHunter:
@@ -367,7 +362,7 @@ void getTraitDescr(const Trait id, string& out)
     case Trait::undeadBane:
       out = "+2 melee and ranged attack damage against undead monsters. Attacks "
             "against ethereal undead monsters (e.g. Ghosts) never pass through them "
-            "(although you can still miss in the ordinary way).";
+            "(although you can still miss in the ordinary way)";
       break;
 
     case Trait::END: {}
@@ -540,9 +535,7 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef)
 
     case Trait::undeadBane:
       traitsRef.push_back(Trait::tough);
-      traitsRef.push_back(Trait::coolHeaded);
-      traitsRef.push_back(Trait::adeptMeleeFighter);
-      traitsRef.push_back(Trait::adeptMarksman);
+      traitsRef.push_back(Trait::fearless);
       traitsRef.push_back(Trait::stoutSpirit);
       break;
 

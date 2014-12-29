@@ -1071,7 +1071,8 @@ void Player::onStdTurn()
       const bool IS_RAPID_REC   = PlayerBon::traitsPicked[int(Trait::rapidRecoverer)];
       const bool IS_SURVIVALIST = PlayerBon::traitsPicked[int(Trait::survivalist)];
 
-      const int REGEN_N_TURNS   = (IS_SURVIVALIST ? 20 : (IS_RAPID_REC ? 30 : 40));
+      const int REGEN_N_TURNS   = IS_SURVIVALIST  ? 20 :
+                                  IS_RAPID_REC    ? 30 : 40;
 
       if (TURN % REGEN_N_TURNS == 0 && TURN > 1 && getHp() < getHpMax(true)) {++hp_;}
     }

@@ -637,13 +637,15 @@ string Cultist::getCultistPhrase()
 
 void Cultist::mkStartItems()
 {
-  const int PISTOL        = 6;
-  const int PUMP_SHOTGUN  = PISTOL + 4;
-  const int SAWN_SHOTGUN  = PUMP_SHOTGUN + 3;
-  const int MG            = SAWN_SHOTGUN + (Map::dlvl < 3 ? 0 : 2);
+  //If we are on a low-ish dlvl, let the vast majority of cultists carry pistols
+  const bool  IS_LOW_DLVL   = Map::dlvl < 4;
+  const int   PISTOL        = IS_LOW_DLVL ? 20 : 6;
+  const int   PUMP_SHOTGUN  = PISTOL        + 3;
+  const int   SAWN_SHOTGUN  = PUMP_SHOTGUN  + 3;
+  const int   MG            = SAWN_SHOTGUN  + 2;
 
-  const int TOT = MG;
-  const int RND = Map::dlvl == 0 ? PISTOL : Rnd::range(1, TOT);
+  const int   TOT           = MG;
+  const int   RND           = Map::dlvl == 0 ? PISTOL : Rnd::range(1, TOT);
 
   if (RND <= PISTOL)
   {

@@ -1680,7 +1680,7 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir)
   {
     bool blocked[MAP_W][MAP_H];
     MapParse::run(CellCheck::BlocksActor(*owningActor_, true),
-                    blocked);
+                  blocked);
 
     if (Rnd::oneIn(8))
     {

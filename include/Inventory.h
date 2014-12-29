@@ -40,7 +40,7 @@ public:
 
   bool hasItemInSlot(SlotId id) const;
 
-  //Note: Will put item in general if slot occupied
+  //Note: This will put the item in general if the slot is occupied
   void putInSlot(const SlotId id, Item* item);
 
   void putInGeneral(Item* item);
