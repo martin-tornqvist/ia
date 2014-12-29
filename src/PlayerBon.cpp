@@ -719,8 +719,9 @@ void getAllPickedTraitsTitlesLine(string& out)
 int getSpiOccultistCanCastAtLvl(const int LVL)
 {
   assert(LVL > 0);
-  const int SPI_FROM_TRAIT = 2;
-  return PLAYER_START_SPI + ((LVL - 1) * SPI_PER_LVL) + SPI_FROM_TRAIT - 1;
+  const int SPI_FROM_START_TRAIT  = 2;
+  const int SPI_FROM_LVLS         = (LVL - 1) * SPI_PER_LVL;
+  return PLAYER_START_SPI + SPI_FROM_LVLS + SPI_FROM_START_TRAIT - 1;
 }
 
 bool getsUndeadBaneBon(const Actor& attacker, const ActorDataT& actorData)

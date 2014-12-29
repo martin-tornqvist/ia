@@ -96,12 +96,14 @@ void Player::mkStartItems()
     {
       scroll = ItemFactory::mkRandomScrollOrPotion(true, false);
 
-      SpellId id          = scroll->getData().spellCastFromScroll;
-      Spell* const spell  = SpellHandling::mkSpellFromId(id);
-      const bool IS_AVAIL = spell->isAvailForPlayer();
+      SpellId       id          = scroll->getData().spellCastFromScroll;
+      Spell* const  spell       = SpellHandling::mkSpellFromId(id);
+      const bool    IS_AVAIL    = spell->isAvailForPlayer();
+      const bool    SPI_COST_OK = spell->getSpiCost(true).upper <=
+                                  PlayerBon::getSpiOccultistCanCastAtLvl(4);
       delete spell;
 
-      if (IS_AVAIL && id != SpellId::darkbolt)
+      if (IS_AVAIL && SPI_COST_OK && id != SpellId::darkbolt)
       {
         static_cast<Scroll*>(scroll)->identify(true);
         inv_->putInGeneral(scroll);

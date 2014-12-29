@@ -88,7 +88,7 @@ public:
 
   virtual std::vector<std::string> getDescr() const = 0;
 
-  Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const;
+  Range getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster = nullptr) const;
 
   int getShockLvlIntrCast() const
   {
@@ -114,11 +114,11 @@ class SpellDarkbolt: public Spell
 {
 public:
   SpellDarkbolt() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return true;}
-  std::string getName()         const override {return "Darkbolt";}
-  SpellId getId()               const override {return SpellId::darkbolt;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return true;}
+  std::string getName()           const override {return "Darkbolt";}
+  SpellId getId()                 const override {return SpellId::darkbolt;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::mild;
@@ -141,11 +141,11 @@ class SpellAzaWrath: public Spell
 {
 public:
   SpellAzaWrath() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return true;}
-  std::string getName()         const override {return "Azathoths Wrath";}
-  SpellId getId()               const override {return SpellId::azaWrath;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return true;}
+  std::string getName()           const override {return "Azathoths Wrath";}
+  SpellId getId()                 const override {return SpellId::azaWrath;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;
@@ -171,11 +171,11 @@ class SpellMayhem: public Spell
 {
 public:
   SpellMayhem() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return false;}
-  bool isAvailForPlayer()       const override {return true;}
-  std::string getName()         const override {return "Mayhem";}
-  SpellId getId()               const override {return SpellId::mayhem;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return false;}
+  bool isAvailForPlayer()         const override {return true;}
+  std::string getName()           const override {return "Mayhem";}
+  SpellId getId()                 const override {return SpellId::mayhem;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::severe;
@@ -198,20 +198,18 @@ class SpellPest: public Spell
 {
 public:
   SpellPest() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return true;}
-  std::string getName()         const override {return "Pestilence";}
-  SpellId getId()               const override {return SpellId::pest;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return true;}
+  std::string getName()           const override {return "Pestilence";}
+  SpellId getId()                 const override {return SpellId::pest;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;
   }
   std::vector<std::string> getDescr() const override
   {
-    return {"Summons spiders or rats.",
-            summonWarningStr
-           };
+    return {"Summons spiders or rats.", summonWarningStr};
   }
 private:
   SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -227,12 +225,12 @@ public:
   SpellPharaohStaff() {}
   ~SpellPharaohStaff() {}
 
-  bool allowMonCastNow(Mon& mon) const override;
+  bool allowMonCastNow(Mon& mon)    const override;
 
-  virtual bool isAvailForAllMon()       const override {return false;}
-  virtual bool isAvailForPlayer()       const override {return false;}
-  virtual std::string getName()         const override {return "Summon Mummy servant";}
-  virtual SpellId getId()               const override
+  virtual bool isAvailForAllMon()   const override {return false;}
+  virtual bool isAvailForPlayer()   const override {return false;}
+  virtual std::string getName()     const override {return "Summon Mummy servant";}
+  virtual SpellId getId()           const override
   {
     return SpellId::pharaohStaff;
   }
@@ -350,7 +348,7 @@ private:
   SpellEffectNoticed cast_(Actor* const caster) const override;
   int getMaxSpiCost_() const override
   {
-    return PlayerBon::getSpiOccultistCanCastAtLvl(9);
+    return PlayerBon::getSpiOccultistCanCastAtLvl(5);
   }
 };
 
@@ -482,11 +480,11 @@ class SpellKnockBack: public Spell
 {
 public:
   SpellKnockBack() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return false;}
-  std::string getName()         const override {return "Knockback";}
-  SpellId getId()               const override {return SpellId::knockBack;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return false;}
+  std::string getName()           const override {return "Knockback";}
+  SpellId getId()                 const override {return SpellId::knockBack;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;
@@ -504,11 +502,11 @@ class SpellTeleport: public Spell
 {
 public:
   SpellTeleport() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return true;}
-  std::string getName()         const override {return "Teleport";}
-  SpellId getId()               const override {return SpellId::teleport;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return true;}
+  std::string getName()           const override {return "Teleport";}
+  SpellId getId()                 const override {return SpellId::teleport;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;
@@ -529,11 +527,11 @@ class SpellElemRes: public Spell
 {
 public:
   SpellElemRes() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return true;}
-  std::string getName()         const override {return "Elemental Resistance";}
-  SpellId getId()               const override {return SpellId::elemRes;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return true;}
+  std::string getName()           const override {return "Elemental Resistance";}
+  SpellId getId()                 const override {return SpellId::elemRes;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;
@@ -556,11 +554,11 @@ class SpellPropOnMon: public Spell
 {
 public:
   SpellPropOnMon() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return true;}
-  virtual std::string getName() const override = 0;
-  virtual SpellId getId()       const override = 0;
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return true;}
+  virtual std::string getName()   const override = 0;
+  virtual SpellId getId()         const override = 0;
   virtual IntrSpellShock getShockTypeIntrCast() const override = 0;
 protected:
   SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -638,11 +636,11 @@ class SpellDisease: public Spell
 {
 public:
   SpellDisease() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return false;}
-  std::string getName()         const override {return "Disease";}
-  SpellId getId()               const override {return SpellId::disease;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return false;}
+  std::string getName()           const override {return "Disease";}
+  SpellId getId()                 const override {return SpellId::disease;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;
@@ -663,11 +661,11 @@ class SpellSummonMon: public Spell
 {
 public:
   SpellSummonMon() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return true;}
-  std::string getName()         const override {return "Summon Creature";}
-  SpellId getId()               const override {return SpellId::summonMon;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return true;}
+  std::string getName()           const override {return "Summon Creature";}
+  SpellId getId()                 const override {return SpellId::summonMon;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;
@@ -691,11 +689,11 @@ class SpellHealSelf: public Spell
 {
 public:
   SpellHealSelf() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return false;}
-  std::string getName()         const override {return "Healing";}
-  SpellId getId()               const override {return SpellId::healSelf;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return false;}
+  std::string getName()           const override {return "Healing";}
+  SpellId getId()                 const override {return SpellId::healSelf;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;
@@ -716,11 +714,11 @@ class SpellMiGoHypno: public Spell
 {
 public:
   SpellMiGoHypno() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return false;}
-  std::string getName()         const override {return "MiGo Hypnosis";}
-  SpellId getId()               const override {return SpellId::miGoHypno;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return false;}
+  std::string getName()           const override {return "MiGo Hypnosis";}
+  SpellId getId()                 const override {return SpellId::miGoHypno;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;
@@ -741,11 +739,11 @@ class SpellBurn: public Spell
 {
 public:
   SpellBurn() : Spell() {}
-  bool allowMonCastNow(Mon& mon) const override;
-  bool isAvailForAllMon()       const override {return true;}
-  bool isAvailForPlayer()       const override {return false;}
-  std::string getName()         const override {return "Immolation";}
-  SpellId getId()               const override {return SpellId::burn;}
+  bool allowMonCastNow(Mon& mon)  const override;
+  bool isAvailForAllMon()         const override {return true;}
+  bool isAvailForPlayer()         const override {return false;}
+  std::string getName()           const override {return "Immolation";}
+  SpellId getId()                 const override {return SpellId::burn;}
   IntrSpellShock getShockTypeIntrCast() const override
   {
     return IntrSpellShock::disturbing;

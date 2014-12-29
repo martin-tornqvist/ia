@@ -91,7 +91,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
 {
   int costMax = getMaxSpiCost_();
 
-  if (!IS_BASE_COST_ONLY)
+  if (caster == Map::player && !IS_BASE_COST_ONLY)
   {
     const int X0 = max(0, caster->pos.x - 1);
     const int Y0 = max(0, caster->pos.y - 1);
@@ -102,32 +102,32 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
     {
       for (int y = Y0; y <= Y1; ++y)
       {
-        if (Map::cells[x][y].rigid->getId() == FeatureId::altar) {costMax -= 1;}
+        if (Map::cells[x][y].rigid->getId() == FeatureId::altar)
+        {
+          costMax -= 1;
+        }
       }
     }
 
-    if (caster->isPlayer())
+    bool IS_WARLOCK     = PlayerBon::traitsPicked[int(Trait::warlock)];
+    bool IS_BLOOD_SORC  = PlayerBon::traitsPicked[int(Trait::bloodSorcerer)];
+    bool IS_SEER        = PlayerBon::traitsPicked[int(Trait::seer)];
+    bool IS_SUMMONER    = PlayerBon::traitsPicked[int(Trait::summoner)];
+
+    if (IS_BLOOD_SORC) {costMax--;}
+
+    switch (getId())
     {
-      bool IS_WARLOCK     = PlayerBon::traitsPicked[int(Trait::warlock)];
-      bool IS_BLOOD_SORC  = PlayerBon::traitsPicked[int(Trait::bloodSorcerer)];
-      bool IS_SEER        = PlayerBon::traitsPicked[int(Trait::seer)];
-      bool IS_SUMMONER    = PlayerBon::traitsPicked[int(Trait::summoner)];
-
-      if (IS_BLOOD_SORC) {costMax--;}
-
-      switch (getId())
-      {
-        case SpellId::darkbolt:       if (IS_WARLOCK)  --costMax;     break;
-        case SpellId::azaWrath:       if (IS_WARLOCK)  --costMax;     break;
-        case SpellId::mayhem:         if (IS_WARLOCK)  --costMax;     break;
-        case SpellId::detMon:         if (IS_SEER)     --costMax;     break;
-        case SpellId::detItems:       if (IS_SEER)     costMax -= 3;  break;
-        case SpellId::detTraps:       if (IS_SEER)     costMax -= 3;  break;
-        case SpellId::summonMon:      if (IS_SUMMONER) --costMax;     break;
-        case SpellId::pest:           if (IS_SUMMONER) --costMax;     break;
-        case SpellId::pharaohStaff:   if (IS_SUMMONER) --costMax;     break;
-        default: {} break;
-      }
+      case SpellId::darkbolt:       if (IS_WARLOCK)  --costMax;     break;
+      case SpellId::azaWrath:       if (IS_WARLOCK)  --costMax;     break;
+      case SpellId::mayhem:         if (IS_WARLOCK)  --costMax;     break;
+      case SpellId::detMon:         if (IS_SEER)     --costMax;     break;
+      case SpellId::detItems:       if (IS_SEER)     costMax -= 3;  break;
+      case SpellId::detTraps:       if (IS_SEER)     costMax -= 3;  break;
+      case SpellId::summonMon:      if (IS_SUMMONER) --costMax;     break;
+      case SpellId::pest:           if (IS_SUMMONER) --costMax;     break;
+      case SpellId::pharaohStaff:   if (IS_SUMMONER) --costMax;     break;
+      default: {} break;
     }
 
     PropHandler& propHlr = caster->getPropHandler();
