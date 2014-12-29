@@ -132,11 +132,11 @@ int main(int argc, char* argv[])
         {
           //Run postmortem, then return to main menu
           static_cast<Player*>(Map::player)->waitTurnsLeft = -1;
-          Log::addMsg("I am dead... (press space/esc)", clrMsgBad);
+          Log::addMsg("I am dead... (press space/esc/enter)", clrMsgBad);
           Audio::play(SfxId::death);
           Render::drawMapAndInterface();
           Log::clearLog();
-          Query::waitForEscOrSpace();
+          Query::waitForConfirm();
           HighScore::onGameOver(false);
           Postmortem::run(&quitGame);
           Init::quitToMainMenu = true;

@@ -191,7 +191,7 @@ void winGame()
       if (i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1)
       {
         const string CMD_LABEL =
-          "[space/esc] to record high-score and return to main menu";
+          "[space/esc/enter] to record high score and return to main menu";
         Render::drawTextCentered(CMD_LABEL, Panel::screen,
                                  Pos(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),
                                  clrWhite, clrBlack, true);
@@ -201,7 +201,7 @@ void winGame()
     SdlWrapper::sleep(DELAY_BETWEEN_LINES);
   }
 
-  Query::waitForEscOrSpace();
+  Query::waitForConfirm();
 }
 
 void onMonKilled(Actor& actor)

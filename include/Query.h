@@ -18,7 +18,7 @@ YesNoAnswer yesOrNo(char keyForSpecialEvent = -1);
 
 Dir dir();
 
-void waitForEscOrSpace();
+void waitForConfirm();
 
 KeyData letter(const bool ACCEPT_ENTER);
 

@@ -140,12 +140,12 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
   }
   y += 2;
 
-  Render::drawTextCentered("[space/esc] to close", Panel::map, Pos(MAP_W_HALF, y),
+  Render::drawTextCentered("[space/esc/enter] to close", Panel::map, Pos(MAP_W_HALF, y),
                            clrMenuMedium);
 
   Render::updateScreen();
 
-  Query::waitForEscOrSpace();
+  Query::waitForConfirm();
 
   if (DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface();}
 }

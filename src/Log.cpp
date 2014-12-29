@@ -58,7 +58,7 @@ void promptAndClearLog()
   Render::drawText(moreStr, Panel::log, Pos(xPos, lineNr), clrBlack, clrGray);
 
   Render::updateScreen();
-  Query::waitForEscOrSpace();
+  Query::waitForConfirm();
   clearLog();
 }
 

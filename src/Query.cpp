@@ -135,12 +135,12 @@ int number(const Pos& pos, const Clr clr, const int MIN, const int MAX_NR_DIGITS
   return -1;
 }
 
-void waitForEscOrSpace()
+void waitForConfirm()
 {
   if (isInited_ && !Config::isBotPlaying())
   {
     KeyData d = Input::getInput();
-    while (d.sdlKey != SDLK_SPACE && d.sdlKey != SDLK_ESCAPE)
+    while (d.sdlKey != SDLK_SPACE && d.sdlKey != SDLK_ESCAPE && d.sdlKey != SDLK_RETURN)
     {
       d = Input::getInput();
     }
@@ -149,7 +149,10 @@ void waitForEscOrSpace()
 
 Dir dir()
 {
-  if (!isInited_ || Config::isBotPlaying()) {return Dir::END;}
+  if (!isInited_ || Config::isBotPlaying())
+  {
+    return Dir::END;
+  }
 
   KeyData d = Input::getInput();
 
