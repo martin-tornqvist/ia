@@ -267,6 +267,7 @@ void drawBrowseInv(const MenuBrowser& browser)
 void drawEquip(const MenuBrowser& browser, const SlotId slotIdToEquip,
                const vector<size_t>& genInvIndexes)
 {
+  assert(slotIdToEquip != SlotId::END);
 
   Pos p(0, 0);
 
@@ -279,37 +280,67 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotIdToEquip,
   switch (slotIdToEquip)
   {
     case SlotId::wielded:
-      str = HAS_ITEM ? "Wield which item?"            : "I carry no weapon to wield.";
+      str = HAS_ITEM ?
+            "Wield which item?" :
+            "I carry no weapon to wield.";
       break;
 
     case SlotId::wieldedAlt:
-      str = HAS_ITEM ? "Prepare which weapon?"        : "I carry no weapon to wield.";
+      str = HAS_ITEM ?
+            "Prepare which weapon?" :
+            "I carry no weapon to wield.";
       break;
 
     case SlotId::thrown:
-      str = HAS_ITEM ? "Use which item as missiles?"  : "I carry no weapon to throw." ;
+      str = HAS_ITEM ?
+            "Use which item as thrown weapon?" :
+            "I carry no weapon to throw." ;
       break;
 
     case SlotId::body:
-      str = HAS_ITEM ? "Wear which armor?"            : "I carry no armor.";
+      str = HAS_ITEM ?
+            "Wear which armor?" :
+            "I carry no armor.";
       break;
 
     case SlotId::head:
-      str = HAS_ITEM ? "Wear what on head?"           : "I carry no headwear.";
+      str = HAS_ITEM ?
+            "Wear what on head?" :
+            "I carry no headwear.";
       break;
 
-    case SlotId::END:
-      TRACE << "Illegal slot id: " << int(slotIdToEquip) << endl;
-      assert(false);
+    case SlotId::neck:
+      str = HAS_ITEM ?
+            "Wear what around the neck?" :
+            "I carry nothing to wear around the neck.";
+      break;
+
+    case SlotId::ring1:
+    case SlotId::ring2:
+      str = HAS_ITEM ?
+            "Wear what ring?" :
+            "I carry no ring.";
+      break;
+
+    case SlotId::END: {}
       break;
   }
-  if (HAS_ITEM) {str += " [shift+enter] to drop";}
+
+  if (HAS_ITEM)
+  {
+    str += " [shift+enter] to drop";
+  }
+
   str += cancelInfoStr;
+
   Render::drawText(str, Panel::screen, p, clrWhiteHigh);
+
   ++p.y;
 
   Inventory& inv = Map::player->getInv();
+
   const int NR_INDEXES = genInvIndexes.size();
+
   for (int i = 0; i < NR_INDEXES; ++i)
   {
     const bool IS_CUR_POS = browser.getPos().y == int(i);

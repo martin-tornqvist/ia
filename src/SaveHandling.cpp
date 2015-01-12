@@ -16,6 +16,7 @@
 #include "Inventory.h"
 #include "GameTime.h"
 #include "PlayerSpellsHandling.h"
+#include "ItemJewelry.h"
 
 using namespace std;
 
@@ -31,9 +32,10 @@ void collectLinesFromGame(vector<string>& lines)
   lines.push_back(Map::player->getNameA());
 
   DungeonMaster::storeToSaveLines(lines);
-  ScrollNameHandling::storeToSaveLines(lines);
-  PotionNameHandling::storeToSaveLines(lines);
+  ScrollHandling::storeToSaveLines(lines);
+  PotionHandling::storeToSaveLines(lines);
   ItemData::storeToSaveLines(lines);
+  JewelryHandling::storeToSaveLines(lines);
   Map::player->getInv().storeToSaveLines(lines);
   Map::player->storeToSaveLines(lines);
   PlayerBon::storeToSaveLines(lines);
@@ -53,9 +55,10 @@ void setupGameFromLines(vector<string>& lines)
   lines.erase(begin(lines));
 
   DungeonMaster::setupFromSaveLines(lines);
-  ScrollNameHandling::setupFromSaveLines(lines);
-  PotionNameHandling::setupFromSaveLines(lines);
+  ScrollHandling::setupFromSaveLines(lines);
+  PotionHandling::setupFromSaveLines(lines);
   ItemData::setupFromSaveLines(lines);
+  JewelryHandling::setupFromSaveLines(lines);
   Map::player->getInv().setupFromSaveLines(lines);
   Map::player->setupFromSaveLines(lines);
   PlayerBon::setupFromSaveLines(lines);

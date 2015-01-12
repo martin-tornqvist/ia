@@ -1,4 +1,4 @@
-#include "ItemDrop.h"
+#include "Drop.h"
 
 #include <algorithm>
 #include <string>
@@ -26,13 +26,13 @@ void dropAllCharactersItems(Actor& actor)
   actor.getInv().dropAllNonIntrinsic(actor.pos);
 }
 
-void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
+void dropItemFromInv(Actor& actor, const InvType invType, const size_t ELEMENT,
                      const int NR_ITEMS_TO_DROP)
 {
   Inventory& inv    = actor.getInv();
   Item* itemToDrop  = nullptr;
 
-  if (invList == InvList::slots)
+  if (invType == InvType::slots)
   {
     assert(ELEMENT != int(SlotId::END));
     itemToDrop = inv.slots_[ELEMENT].item;
@@ -52,7 +52,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
 
     string itemRef = "";
 
-    if (invList == InvList::slots && IS_WHOLE_STACK_DROPPED)
+    if (invType == InvType::slots && IS_WHOLE_STACK_DROPPED)
     {
       //TODO: This should be called from the Inventory instead.
       itemToDrop->onUnequip();
@@ -61,7 +61,7 @@ void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
     if (IS_WHOLE_STACK_DROPPED)
     {
       itemRef = itemToDrop->getName(ItemRefType::plural);
-      inv.removeWithoutDestroying(invList, ELEMENT);
+      inv.removeWithoutDestroying(invType, ELEMENT);
       dropItemOnMap(actor.pos, *itemToDrop);
     }
     else
@@ -154,11 +154,6 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
         }
         ii++;
       }
-    }
-    else
-    {
-      //TODO: Why is this called here? It doesn't seem right.
-      item.appplyDropEffects();
     }
 
     curPos = freeCells[i];

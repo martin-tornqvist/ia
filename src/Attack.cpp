@@ -22,7 +22,7 @@
 
 using namespace std;
 
-AttData::AttData(Actor& attacker_, const Item& itemAttackedWith_) :
+AttData::AttData(Actor& attacker_, const Item& attItem_) :
   attacker                  (&attacker_),
   defender                  (nullptr),
   attackResult              (failSmall),
@@ -31,7 +31,8 @@ AttData::AttData(Actor& attacker_, const Item& itemAttackedWith_) :
   dmgPlus                   (0),
   dmgRoll                   (0),
   dmg                       (0),
-  isIntrinsicAttack         (itemAttackedWith_.getData().isIntrinsic),
+  isIntrinsicAtt            (attItem_.getData().type == ItemType::meleeWpnIntr ||
+                             attItem_.getData().type == ItemType::rangedWpnIntr),
   isEtherealDefenderMissed  (false) {}
 
 MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) :
@@ -92,7 +93,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     }
 
     PropHandler& defPropHlr = defender->getPropHandler();
-    bool defProps[endOfPropIds];
+    bool defProps[int(PropId::END)];
     defPropHlr.getPropIds(defProps);
 
     //If attacker is aware of the defender, check
@@ -129,16 +130,16 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
       {
         //Check if attacker gets a bonus due to a defender property.
 
-        if (defProps[propParalyzed] ||
-            defProps[propNailed]    ||
-            defProps[propFainted])
+        if (defProps[int(PropId::paralyzed)] ||
+            defProps[int(PropId::nailed)]    ||
+            defProps[int(PropId::fainted)])
         {
           //Give big attack bonus if defender is completely unable to fight.
           isBigAttBon = true;
         }
-        else if (defProps[propConfused] ||
-                 defProps[propSlowed]   ||
-                 defProps[propBurning])
+        else if (defProps[int(PropId::confused)] ||
+                 defProps[int(PropId::slowed)]   ||
+                 defProps[int(PropId::burning)])
         {
           //Give small attack bonus if defender has problems fighting.
           isSmallAttBon = true;
@@ -158,7 +159,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     attackResult = AbilityRoll::roll(hitChanceTot);
 
     //Ethereal target missed?
-    if (defProps[propEthereal] && !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
+    if (defProps[int(PropId::ethereal)] && !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
     {
       isEtherealDefenderMissed = Rnd::fraction(2, 3);
     }
@@ -173,10 +174,10 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
       dmgPlus += 2;
     }
 
-    bool attProps[endOfPropIds];
+    bool attProps[int(PropId::END)];
     attacker->getPropHandler().getPropIds(attProps);
 
-    if (attProps[propWeakened])
+    if (attProps[int(PropId::weakened)])
     {
       //Weak attack (min damage)
       dmgRoll       = nrDmgRolls;
@@ -304,10 +305,11 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
     {
       TRACE << "Attack roll succeeded" << endl;
 
-      bool props[endOfPropIds];
+      bool props[int(PropId::END)];
       defender->getPropHandler().getPropIds(props);
 
-      if (props[propEthereal] && !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
+      if (props[int(PropId::ethereal)] &&
+          !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
       {
         isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
@@ -316,7 +318,7 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
       if (attacker->isPlayer())
       {
         const Prop* const prop =
-          attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
+          attacker->getPropHandler().getProp(PropId::aiming, PropSrc::applied);
         if (prop)
         {
           playerAimX3 = static_cast<const PropAiming*>(prop)->isMaxRangedDmg();
@@ -427,10 +429,10 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
     {
       TRACE << "Attack roll succeeded" << endl;
 
-      bool props[endOfPropIds];
+      bool props[int(PropId::END)];
       defender->getPropHandler().getPropIds(props);
 
-      if (props[propEthereal] && !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
+      if (props[int(PropId::ethereal)] && !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))
       {
         isEtherealDefenderMissed = Rnd::fraction(2, 3);
       }
@@ -439,7 +441,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
       if (attacker == Map::player)
       {
         const Prop* const prop =
-          attacker->getPropHandler().getProp(propAiming, PropSrc::applied);
+          attacker->getPropHandler().getProp(PropId::aiming, PropSrc::applied);
         if (prop)
         {
           playerAimX3 = static_cast<const PropAiming*>(prop)->isMaxRangedDmg();
@@ -629,7 +631,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
           otherName = "it";
         }
 
-        if (data.isIntrinsicAttack)
+        if (data.isIntrinsicAtt)
         {
           const string ATTACK_MOD_STR = data.isWeakAttack ? " feebly" : "";
           Log::addMsg("I " + wpnVerb + " " + otherName + ATTACK_MOD_STR + dmgPunct,
@@ -1209,7 +1211,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
 
 void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
 {
-  MeleeAttData data(attacker, wpn, defender);
+  const MeleeAttData data(attacker, wpn, defender);
 
   printMeleeMsgAndPlaySfx(data, wpn);
 
@@ -1242,7 +1244,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
         }
       }
       const ItemDataT& itemData = wpn.getData();
-      if (int(itemData.itemWeight) > int(ItemWeight::light) && !itemData.isIntrinsic)
+      if (int(itemData.weight) > int(ItemWeight::light) && !data.isIntrinsicAtt)
       {
         Snd snd("", SfxId::END, IgnoreMsgIfOriginSeen::yes,
                 data.defender->pos, nullptr, SndVol::low, AlertsMon::yes);

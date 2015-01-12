@@ -106,7 +106,7 @@ void mkLines()
   {
     const ItemDataT* const d = ItemData::data[i];
 
-    if (d->isPotion && (d->isTried || d->isIdentified))
+    if (d->type == ItemType::potion && (d->isTried || d->isIdentified))
     {
       Item* item = ItemFactory::mk(d->id);
       potionList.push_back({offset + item->getName(ItemRefType::plain), d->clr});
@@ -114,7 +114,7 @@ void mkLines()
     }
     else
     {
-      if (d->isScroll && (d->isTried || d->isIdentified))
+      if (d->type == ItemType::scroll && (d->isTried || d->isIdentified))
       {
         Item* item = ItemFactory::mk(d->id);
         manuscriptList.push_back(StrAndClr(offset + item->getName(ItemRefType::plain),

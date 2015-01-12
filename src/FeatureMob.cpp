@@ -68,10 +68,10 @@ void Smoke::onNewTurn()
     //Choking (this is determined by rBreath)?
     if (Rnd::oneIn(4))
     {
-      bool props[endOfPropIds];
+      bool props[int(PropId::END)];
       actor->getPropHandler().getPropIds(props);
 
-      if (!props[propRBreath])
+      if (!props[int(PropId::rBreath)])
       {
         string sndMsg = "";
 

@@ -34,34 +34,6 @@ int getXAfterMsg(const Msg* const msg)
   return msg->xPos_ + str.size() + 1;
 }
 
-void promptAndClearLog()
-{
-  drawLog(false);
-
-  int xPos    = 0;
-  int lineNr = lines_[1].empty() ? 0 : 1;
-
-  if (!lines_[lineNr].empty())
-  {
-    Msg* const lastMsg = &lines_[lineNr].back();
-    xPos = getXAfterMsg(lastMsg);
-    if (lineNr == 0)
-    {
-      if (xPos + int(moreStr.size()) - 1 >= MAP_W)
-      {
-        xPos    = 0;
-        lineNr  = 1;
-      }
-    }
-  }
-
-  Render::drawText(moreStr, Panel::log, Pos(xPos, lineNr), clrBlack, clrGray);
-
-  Render::updateScreen();
-  Query::waitForConfirm();
-  clearLog();
-}
-
 void drawHistoryInterface(const int TOP_LINE_NR, const int BTM_LINE_NR)
 {
   const string decorationLine(MAP_W, '-');
@@ -118,7 +90,12 @@ void clearLog()
     if (!line.empty())
     {
       history_.push_back(line);
-      while (history_.size() > 300) {history_.erase(history_.begin());}
+
+      while (history_.size() > 300)
+      {
+        history_.erase(history_.begin());
+      }
+
       line.clear();
     }
   }
@@ -126,9 +103,23 @@ void clearLog()
 
 void drawLog(const bool SHOULD_UPDATE_SCREEN)
 {
-  Render::coverArea(Panel::log, Pos(0, 0), Pos(MAP_W, 2));
-  for (int i = 0; i < 2; ++i) drawLine(lines_[i], i);
-  if (SHOULD_UPDATE_SCREEN) Render::updateScreen();
+  const int NR_LINES_WITH_CONTENT = lines_[0].empty() ? 0 :
+                                    lines_[1].empty() ? 1 : 2;
+
+  if (NR_LINES_WITH_CONTENT > 0)
+  {
+    Render::coverArea(Panel::log, Pos(0, 0), Pos(MAP_W, NR_LINES_WITH_CONTENT));
+
+    for (int i = 0; i < NR_LINES_WITH_CONTENT; ++i)
+    {
+      drawLine(lines_[i], i);
+    }
+  }
+
+  if (SHOULD_UPDATE_SCREEN)
+  {
+    Render::updateScreen();
+  }
 }
 
 void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTIONS,
@@ -146,7 +137,11 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
   int curLineNr = lines_[1].empty() ? 0 : 1;
 
   Msg* lastMsg = nullptr;
-  if (!lines_[curLineNr].empty()) {lastMsg = &lines_[curLineNr].back();}
+
+  if (!lines_[curLineNr].empty())
+  {
+    lastMsg = &lines_[curLineNr].back();
+  }
 
   bool isRepeated = false;
 
@@ -180,7 +175,7 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
       }
       else
       {
-        promptAndClearLog();
+        morePrompt();
         curLineNr = 0;
       }
       xPos = 0;
@@ -189,7 +184,10 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
     lines_[curLineNr].push_back(Msg(text, clr, xPos));
   }
 
-  if (ADD_MORE_PROMPT_AFTER_MSG) {promptAndClearLog();}
+  if (ADD_MORE_PROMPT_AFTER_MSG)
+  {
+    morePrompt();
+  }
 
   //Messages may stop long actions like first aid and quick walk
   if (INTERRUPT_PLAYER_ACTIONS)
@@ -198,6 +196,40 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
   }
 
   Map::player->onLogMsgPrinted();
+}
+
+void morePrompt()
+{
+  //If the current log is empty, do nothing
+  if (lines_[0].empty())
+  {
+    return;
+  }
+
+  drawLog(false);
+
+  int xPos    = 0;
+  int lineNr = lines_[1].empty() ? 0 : 1;
+
+  if (!lines_[lineNr].empty())
+  {
+    Msg* const lastMsg = &lines_[lineNr].back();
+    xPos = getXAfterMsg(lastMsg);
+    if (lineNr == 0)
+    {
+      if (xPos + int(moreStr.size()) - 1 >= MAP_W)
+      {
+        xPos    = 0;
+        lineNr  = 1;
+      }
+    }
+  }
+
+  Render::drawText(moreStr, Panel::log, Pos(xPos, lineNr), clrBlack, clrGray);
+
+  Render::updateScreen();
+  Query::waitForConfirm();
+  clearLog();
 }
 
 void displayHistory()

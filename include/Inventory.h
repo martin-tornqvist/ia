@@ -10,7 +10,18 @@ class Item;
 
 enum class ItemId;
 
-enum class SlotId {wielded, wieldedAlt, thrown, body, head, END};
+enum class SlotId
+{
+  wielded,
+  wieldedAlt,
+  thrown,
+  body,
+  head,
+  neck,
+  ring1,
+  ring2,
+  END
+};
 
 struct InvSlot
 {
@@ -53,7 +64,7 @@ public:
 
   void moveItemToSlot(InvSlot& slot, const size_t GEN_IDX);
 
-  void equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId slot);
+  void equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId slotId);
 
   void swapWieldedAndPrepared(const bool IS_FREE_TURN);
 
@@ -65,9 +76,9 @@ public:
 
   Item* getItemInSlot(SlotId id) const;
 
-  void removeWithoutDestroying(const InvList invList, const size_t IDX);
+  void removeWithoutDestroying(const InvType invType, const size_t IDX);
 
-  void decrItemInSlot(SlotId slotName);
+  void decrItemInSlot(SlotId slotId);
 
   void decrItemInGeneral(const size_t IDX);
 

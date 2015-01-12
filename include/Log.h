@@ -56,6 +56,11 @@ void addMsg(const std::string& text, const Clr& clr = clrWhite,
             const bool INTERRUPT_PLAYER_ACTIONS = false,
             const bool ADD_MORE_PROMPT_AFTER_MSG = false);
 
+//Note: This function can safely be called at any time. If there is content in the log,
+//a "more" prompt will be done, and the log is cleared. If the log happens to be empty,
+//nothing is done.
+void morePrompt();
+
 void drawLog(const bool SHOULD_UPDATE_SCREEN);
 
 void displayHistory();

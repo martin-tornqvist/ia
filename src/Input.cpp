@@ -11,7 +11,7 @@
 #include "Render.h"
 #include "Close.h"
 #include "JamWithSpike.h"
-#include "ItemPickup.h"
+#include "Pickup.h"
 #include "InventoryHandling.h"
 #include "Marker.h"
 #include "Map.h"
@@ -194,7 +194,7 @@ void handleMapModeKeyPress(const KeyData& d)
 
         if (PlayerBon::traitsPicked[int(Trait::sharpShooter)])
         {
-          Prop* const propAimingOld = propHlr.getProp(propAiming, PropSrc::applied);
+          Prop* const propAimingOld = propHlr.getProp(PropId::aiming, PropSrc::applied);
           if (propAimingOld)
           {
             nrTurnsAimingOld = static_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
@@ -334,32 +334,31 @@ void handleMapModeKeyPress(const KeyData& d)
 
           if (wpn->nrAmmoLoaded >= 1 || itemData.ranged.hasInfiniteAmmo)
           {
-            //Function to pass to Marker
             auto onMarkerAtPos = [&](const Pos & p)
             {
+              Log::clearLog();
               Look::printLocationInfoMsgs(p);
 
               auto* const actor = Utils::getActorAtPos(p);
 
               if (actor && !actor->isPlayer())
               {
-                bool tgtProps[endOfPropIds];
+                bool tgtProps[int(PropId::END)];
                 actor->getPropHandler().getPropIds(tgtProps);
 
                 const bool GETS_UNDEAD_BANE_BON =
                   PlayerBon::getsUndeadBaneBon(*Map::player, actor->getData());
 
-                if (!tgtProps[propEthereal] || GETS_UNDEAD_BANE_BON)
+                if (!tgtProps[int(PropId::ethereal)] || GETS_UNDEAD_BANE_BON)
                 {
                   RangedAttData data(*Map::player, *wpn, actor->pos, actor->pos);
                   Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
                 }
               }
 
-              Log::addMsg("[f] to fire");
+              Log::addMsg("[f] to fire" + cancelInfoStr);
             };
 
-            //Function to pass to Marker
             auto onKeyPress = [&](const Pos & p, const KeyData & d_)
             {
               if (d_.key == 'f')
@@ -385,7 +384,7 @@ void handleMapModeKeyPress(const KeyData& d)
               return MarkerDone::no;
             };
 
-            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes, onMarkerAtPos,
+            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::yes, onMarkerAtPos,
                         onKeyPress, wpn->getData().ranged.effectiveRange);
           }
           else /* Not enough ammo loaded */ if (Config::isRangedWpnAutoReload())
@@ -540,15 +539,15 @@ void handleMapModeKeyPress(const KeyData& d)
       }
       else
       {
-        bool props[endOfPropIds];
+        bool props[int(PropId::END)];
         Map::player->getPropHandler().getPropIds(props);
-        if (props[propPoisoned])
+        if (props[int(PropId::poisoned)])
         {
           //Player is poisoned
           Log::addMsg("Not while poisoned.");
           Render::drawMapAndInterface();
         }
-        else if (props[propConfused])
+        else if (props[int(PropId::confused)])
         {
           //Player is confused
           Log::addMsg("Not while confused.");
@@ -587,8 +586,9 @@ void handleMapModeKeyPress(const KeyData& d)
       {
         auto onMarkerAtPos = [](const Pos & p)
         {
+          Log::clearLog();
           Look::printLocationInfoMsgs(p);
-          Log::addMsg("[t] to throw.");
+          Log::addMsg("[t] to throw." + cancelInfoStr);
         };
 
         auto onKeyPress = [](const Pos & p, const KeyData & d_)
@@ -608,7 +608,7 @@ void handleMapModeKeyPress(const KeyData& d)
           return MarkerDone::no;
         };
 
-        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::no, onMarkerAtPos,
+        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::no, onMarkerAtPos,
                     onKeyPress);
       }
       else //Not holding explosive
@@ -625,19 +625,20 @@ void handleMapModeKeyPress(const KeyData& d)
 
             auto onMarkerAtPos = [&](const Pos & p)
             {
+              Log::clearLog();
               Look::printLocationInfoMsgs(p);
 
               auto* const actor = Utils::getActorAtPos(p);
 
               if (actor && !actor->isPlayer())
               {
-                bool tgtProps[endOfPropIds];
+                bool tgtProps[int(PropId::END)];
                 actor->getPropHandler().getPropIds(tgtProps);
 
                 const bool GETS_UNDEAD_BANE_BON =
                   PlayerBon::getsUndeadBaneBon(*Map::player, actor->getData());
 
-                if (!tgtProps[propEthereal] || GETS_UNDEAD_BANE_BON)
+                if (!tgtProps[int(PropId::ethereal)] || GETS_UNDEAD_BANE_BON)
                 {
                   ThrowAttData data(*Map::player, *itemToThrow, actor->pos, actor->pos);
                   Log::addMsg(toStr(data.hitChanceTot) + "% hit chance.");
@@ -678,7 +679,7 @@ void handleMapModeKeyPress(const KeyData& d)
               return MarkerDone::no;
             };
 
-            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes, onMarkerAtPos,
+            Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::yes, onMarkerAtPos,
                         onKeyPress, itemToThrow->getData().ranged.effectiveRange);
           }
           else //No item equipped
@@ -702,13 +703,17 @@ void handleMapModeKeyPress(const KeyData& d)
       {
         auto onMarkerAtPos = [&](const Pos & p)
         {
+          Log::clearLog();
           Look::printLocationInfoMsgs(p);
 
           auto* const actor = Utils::getActorAtPos(p);
+
           if (actor && actor != Map::player)
           {
             Log::addMsg("[v] for description");
           }
+
+          Log::addMsg(cancelInfoStrNoSpace);
         };
 
         auto onKeyPress = [&](const Pos & p, const KeyData & d_)
@@ -732,12 +737,12 @@ void handleMapModeKeyPress(const KeyData& d)
           return MarkerDone::no;
         };
 
-        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTarget::yes, onMarkerAtPos,
+        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::yes, onMarkerAtPos,
                     onKeyPress);
       }
       else
       {
-        Log::addMsg("Not while blind.");
+        Log::addMsg("I cannot see.");
       }
     }
     clearEvents();
@@ -979,13 +984,15 @@ void handleMapModeKeyPress(const KeyData& d)
   {
     if (IS_DEBUG_MODE)
     {
-      ItemFactory::mkItemOnMap(ItemId::gasMask, Map::player->pos);
+      ItemFactory::mkItemOnFloor(ItemId::gasMask, Map::player->pos);
+
       for (int i = 0; i < int(ItemId::END); ++i)
       {
         const auto* const data = ItemData::data[i];
-        if (!data->isIntrinsic && (data->itemValue != ItemValue::normal))
+
+        if (data->value != ItemValue::normal && data->allowSpawn)
         {
-          ItemFactory::mkItemOnMap(static_cast<ItemId>(i), Map::player->pos);
+          ItemFactory::mkItemOnFloor(ItemId(i), Map::player->pos);
         }
       }
       clearEvents();
@@ -998,8 +1005,8 @@ void handleMapModeKeyPress(const KeyData& d)
   {
     if (IS_DEBUG_MODE)
     {
-      Map::player->teleport(false);
       Log::clearLog();
+      Map::player->teleport();
       clearEvents();
     }
     return;
@@ -1010,8 +1017,7 @@ void handleMapModeKeyPress(const KeyData& d)
   {
     if (IS_DEBUG_MODE)
     {
-      Map::player->getPropHandler().tryApplyProp(
-        new PropInfected(PropTurns::std));
+      Map::player->getPropHandler().tryApplyProp(new PropInfected(PropTurns::std));
       clearEvents();
     }
     return;

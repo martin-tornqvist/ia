@@ -128,7 +128,7 @@ string Scroll::getNameInf() const
   return (data_->isTried && !data_->isIdentified) ? "{Tried}" : "";
 }
 
-namespace ScrollNameHandling
+namespace ScrollHandling
 {
 
 namespace
@@ -210,7 +210,7 @@ void init()
   TRACE << "Init scroll names" << endl;
   for (auto* const d : ItemData::data)
   {
-    if (d->isScroll)
+    if (d->type == ItemType::scroll)
     {
       //False name
       const int NR_ELEMENTS = falseNames_.size();
@@ -249,7 +249,7 @@ void storeToSaveLines(vector<string>& lines)
 {
   for (int i = 0; i < int(ItemId::END); ++i)
   {
-    if (ItemData::data[i]->isScroll)
+    if (ItemData::data[i]->type == ItemType::scroll)
     {
       lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]);
       lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plural)]);
@@ -262,7 +262,7 @@ void setupFromSaveLines(vector<string>& lines)
 {
   for (int i = 0; i < int(ItemId::END); ++i)
   {
-    if (ItemData::data[i]->isScroll)
+    if (ItemData::data[i]->type == ItemType::scroll)
     {
       ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]  = lines.front();
       lines.erase(begin(lines));
@@ -274,4 +274,4 @@ void setupFromSaveLines(vector<string>& lines)
   }
 }
 
-} //ScrollNameHandling
+} //ScrollHandling

@@ -7,20 +7,33 @@
 
 struct KeyData
 {
-  KeyData() : key(-1), sdlKey(SDLK_LAST), isShiftHeld(false), isCtrlHeld(false) {}
+  KeyData() :
+    key         (-1),
+    sdlKey      (SDLK_LAST),
+    isShiftHeld (false),
+    isCtrlHeld  (false) {}
 
   KeyData(char key_, SDLKey sdlKey_, bool isShiftHeld_,  bool isCtrlHeld_) :
-    key(key_), sdlKey(sdlKey_), isShiftHeld(isShiftHeld_), isCtrlHeld(isCtrlHeld_) {}
+    key         (key_),
+    sdlKey      (sdlKey_),
+    isShiftHeld (isShiftHeld_),
+    isCtrlHeld  (isCtrlHeld_) {}
 
   KeyData(char key_) :
-    key(key_), sdlKey(SDLK_LAST), isShiftHeld(false), isCtrlHeld(false) {}
+    key         (key_),
+    sdlKey      (SDLK_LAST),
+    isShiftHeld (false),
+    isCtrlHeld  (false) {}
 
   KeyData(SDLKey sdlKey_) :
-    key(-1), sdlKey(sdlKey_), isShiftHeld(false), isCtrlHeld(false) {}
+    key         (-1),
+    sdlKey      (sdlKey_),
+    isShiftHeld (false),
+    isCtrlHeld  (false) {}
 
-  char key;
-  SDLKey sdlKey;
-  bool isShiftHeld, isCtrlHeld;
+  char    key;
+  SDLKey  sdlKey;
+  bool    isShiftHeld, isCtrlHeld;
 };
 
 namespace Input

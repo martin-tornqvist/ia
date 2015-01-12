@@ -9,7 +9,7 @@
 #include "Log.h"
 #include "Map.h"
 #include "Item.h"
-#include "ItemDrop.h"
+#include "Drop.h"
 #include "Postmortem.h"
 #include "Explosion.h"
 #include "Popup.h"
@@ -129,10 +129,10 @@ void Trap::bump(Actor& actorBumping)
 
   TRACE << "Name of actor bumping: \"" << d.nameA << "\"" << endl;
 
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   actorBumping.getPropHandler().getPropIds(props);
 
-  if (!props[propEthereal] && !props[propFlying])
+  if (!props[int(PropId::ethereal)] && !props[int(PropId::flying)])
   {
     const bool    IS_PLAYER             = actorBumping.isPlayer();
     const bool    ACTOR_CAN_SEE         = actorBumping.getPropHandler().allowSee();
@@ -236,11 +236,11 @@ void Trap::disarm()
     return;
   }
 
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   Map::player->getPropHandler().getPropIds(props);
 
-  const bool IS_BLESSED = props[propBlessed];
-  const bool IS_CURSED  = props[propCursed];
+  const bool IS_BLESSED = props[int(PropId::blessed)];
+  const bool IS_CURSED  = props[int(PropId::cursed)];
 
   int       disarmNumerator     = 5;
   const int DISARM_DENOMINATOR  = 10;
@@ -745,17 +745,18 @@ void TrapTeleport::trigger(Actor& actor, const AbilityRollResult dodgeResult)
   TRACE_FUNC_BEGIN_VERBOSE;
   (void)dodgeResult;
 
-  const bool IS_PLAYER = &actor == Map::player;
-  const bool CAN_SEE = actor.getPropHandler().allowSee();
-  const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, nullptr);
-  const string actorName = actor.getNameThe();
+  const bool    IS_PLAYER             = &actor == Map::player;
+  const bool    CAN_SEE               = actor.getPropHandler().allowSee();
+  const bool    CAN_PLAYER_SEE_ACTOR  = Map::player->isSeeingActor(actor, nullptr);
+  const string  actorName             = actor.getNameThe();
 
   if (IS_PLAYER)
   {
     Map::player->updateFov();
     if (CAN_SEE)
     {
-      Log::addMsg("A curious shape on the floor starts to glow!", clrWhite, false, true);
+      Log::addMsg("A beam of light shoots out from a curious shape on the floor!",
+                  clrWhite, false, true);
     }
     else
     {
@@ -766,11 +767,12 @@ void TrapTeleport::trigger(Actor& actor, const AbilityRollResult dodgeResult)
   {
     if (CAN_PLAYER_SEE_ACTOR)
     {
-      Log::addMsg("A curious shape on the floor starts go glow under " + actorName + ".");
+      Log::addMsg("A beam shoots out from a curious shape on the floor under "
+                  + actorName + ".");
     }
   }
 
-  actor.teleport(false);
+  actor.teleport();
   TRACE_FUNC_END_VERBOSE;
 }
 

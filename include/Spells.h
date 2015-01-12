@@ -581,7 +581,7 @@ public:
     return {"Causes all visible enemies to move slower."};
   }
 private:
-  PropId getPropId() const override {return propSlowed;}
+  PropId getPropId() const override {return PropId::slowed;}
   int getMaxSpiCost_() const override
   {
     return PlayerBon::getSpiOccultistCanCastAtLvl(1);
@@ -603,7 +603,7 @@ public:
     return {"Causes terror in the minds of all visible enemies."};
   }
 private:
-  PropId getPropId() const override {return propTerrified;}
+  PropId getPropId() const override {return PropId::terrified;}
   int getMaxSpiCost_() const override
   {
     return PlayerBon::getSpiOccultistCanCastAtLvl(3);
@@ -625,7 +625,7 @@ public:
     return {"All visible enemies are paralyzed for a brief moment."};
   }
 private:
-  PropId getPropId() const override {return propParalyzed;}
+  PropId getPropId() const override {return PropId::paralyzed;}
   int getMaxSpiCost_() const override
   {
     return PlayerBon::getSpiOccultistCanCastAtLvl(6);

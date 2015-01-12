@@ -87,8 +87,6 @@ namespace Look
 
 void printLocationInfoMsgs(const Pos& pos)
 {
-  Log::clearLog();
-
   const Cell& cell = Map::cells[pos.x][pos.y];
 
   if (Map::cells[pos.x][pos.y].isSeenByPlayer)
@@ -143,7 +141,7 @@ void printLocationInfoMsgs(const Pos& pos)
     }
 
   }
-  else     //Cell not seen
+  else //Cell not seen
   {
     Log::addMsg("I have no vision here.");
   }

@@ -34,7 +34,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
   if (ammo)
   {
     ammoName  = ammo->getName(ItemRefType::a);
-    isClip    = ammo->getData().isAmmoClip;
+    isClip    = ammo->getData().type == ItemType::ammoClip;
   }
 
   const bool IS_PLAYER    = actorReloading.isPlayer();
@@ -165,11 +165,11 @@ bool reloadWieldedWpn(Actor& actorReloading)
         {
           PropHandler& propHlr = actorReloading.getPropHandler();
 
-          bool props[endOfPropIds];
+          bool props[int(PropId::END)];
           propHlr.getPropIds(props);
 
           const bool IS_RELOADER_BLIND      = !actorReloading.getPropHandler().allowSee();
-          const bool IS_REALOADER_TERRIFIED = props[propTerrified];
+          const bool IS_REALOADER_TERRIFIED = props[int(PropId::terrified)];
 
           const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND      ? 48 : 0) +
                                        (IS_REALOADER_TERRIFIED ? 48 : 0);
@@ -182,10 +182,10 @@ bool reloadWieldedWpn(Actor& actorReloading)
             printMsgAndPlaySfx(actorReloading, nullptr, item, ReloadResult::fumble,
                                false);
           }
-          else
+          else //Not fumbling
           {
             result      = ReloadResult::success;
-            bool isClip = item->getData().isAmmoClip;
+            bool isClip = item->getData().type == ItemType::ammoClip;
 
             if (isClip)
             {

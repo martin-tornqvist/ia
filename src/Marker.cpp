@@ -76,14 +76,14 @@ bool setPosToTargetIfVisible()
 
 } //namespace
 
-void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
-         function<void(const Pos&)> onMarkerAtPos,
-         function<MarkerDone(const Pos&, const KeyData&)> onKeyPress,
-         const int EFFECTIVE_RANGE_LMT)
+Pos run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTgt useTarget,
+        function<void(const Pos&)> onMarkerAtPos,
+        function<MarkerDone(const Pos&, const KeyData&)> onKeyPress,
+        const int EFFECTIVE_RANGE_LMT)
 {
   pos_ = Map::player->pos;
 
-  if (useTarget == MarkerUsePlayerTarget::yes)
+  if (useTarget == MarkerUsePlayerTgt::yes)
   {
     //First, attempt to place marker at target.
     if (!setPosToTargetIfVisible())
@@ -186,6 +186,7 @@ void run(const MarkerDrawTail drawTrail, const MarkerUsePlayerTarget useTarget,
       Render::drawMapAndInterface();
     }
   }
+  return pos_;
 }
 
 } //Marker

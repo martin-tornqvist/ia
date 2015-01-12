@@ -47,9 +47,6 @@ void runStdTurnEvents()
 {
   ++turnNr_;
 
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-
   int regenSpiNTurns = 12;
 
   for (size_t i = 0; i < actors_.size(); ++i)
@@ -78,7 +75,7 @@ void runStdTurnEvents()
     }
     else  //Actor is alive or is a corpse
     {
-      actor->getPropHandler().tick(PropTurnMode::std, blockedLos);
+      actor->getPropHandler().tick(PropTurnMode::std);
 
       if (!actor->isPlayer())
       {
@@ -142,11 +139,14 @@ void runStdTurnEvents()
 
   //Run new turn events on all player items
   auto& playerInv = Map::player->getInv();
-  for (Item* const item : playerInv.general_) {item->onNewTurnInInventory();}
+  for (Item* const item : playerInv.general_)
+  {
+    item->onNewTurnInInv(InvType::general);
+  }
 
   for (InvSlot& slot : playerInv.slots_)
   {
-    if (slot.item) {slot.item->onNewTurnInInventory();}
+    if (slot.item) {slot.item->onNewTurnInInv(InvType::slots);}
   }
 
   SndEmit::resetNrSndMsgPrintedCurTurn();
@@ -270,7 +270,7 @@ void tick(const bool IS_FREE_TURN)
   }
 
   //Tick properties running on actor turns
-  curActor->getPropHandler().tick(PropTurnMode::actor, nullptr);
+  curActor->getPropHandler().tick(PropTurnMode::actor);
 
   if (!IS_FREE_TURN)
   {
@@ -296,10 +296,10 @@ void tick(const bool IS_FREE_TURN)
 
       curActor = getCurActor();
 
-      bool props[endOfPropIds];
+      bool props[int(PropId::END)];
       curActor->getPropHandler().getPropIds(props);
 
-      const bool IS_SLOWED = props[propSlowed];
+      const bool IS_SLOWED = props[int(PropId::slowed)];
 
       const ActorSpeed defSpeed = curActor->getData().speed;
       const ActorSpeed realSpeed = (!IS_SLOWED || defSpeed == ActorSpeed::sluggish) ?
@@ -355,8 +355,6 @@ void updateLightMap()
 
   //Do not add light on Leng
   if (MapTravel::getMapType() == MapType::leng) {return;}
-
-  Map::player->addLight(lightTmp);
 
   for (const auto* const a : actors_)  {a->addLight(lightTmp);}
 

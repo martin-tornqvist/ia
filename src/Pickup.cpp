@@ -1,4 +1,4 @@
-#include "ItemPickup.h"
+#include "Pickup.h"
 
 #include <string>
 
@@ -8,7 +8,7 @@
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "Query.h"
-#include "ItemDrop.h"
+#include "Drop.h"
 #include "ItemFactory.h"
 #include "GameTime.h"
 #include "Audio.h"
@@ -94,7 +94,7 @@ Ammo* unloadRangedWpn(Wpn& wpn)
   ItemDataT* const  ammoData    = ItemData::data[int(ammoId)];
   Item*             spawnedAmmo = ItemFactory::mk(ammoId);
 
-  if (ammoData->isAmmoClip)
+  if (ammoData->type == ItemType::ammoClip)
   {
     //Unload a clip
     static_cast<AmmoClip*>(spawnedAmmo)->ammo_ = NR_AMMO_LOADED;
@@ -139,7 +139,8 @@ void tryUnloadWpnOrPickupAmmo()
     }
     else //Not a ranged weapon
     {
-      if (item->getData().isAmmo)
+      if (item->getData().type == ItemType::ammo ||
+          item->getData().type == ItemType::ammoClip)
       {
         tryPick();
         return;

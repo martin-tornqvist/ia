@@ -430,7 +430,7 @@ bool mkEgyptLvl()
     }
   }
 
-  PopulateItems::mkItems();
+  PopulateItems::mkItemsOnFloor();
 
   return true;
 }
@@ -730,7 +730,7 @@ bool mkTrapezohedronLvl()
 //  }
 //
 //  const int ELEMENT = Rnd::range(0, itemPosBucket.size() - 1);
-//  ItemFactory::mkItemOnMap(ItemId::trapezohedron, itemPosBucket[ELEMENT]);
+//  ItemFactory::mkItemOnFloor(ItemId::trapezohedron, itemPosBucket[ELEMENT]);
 
   return true;
 }

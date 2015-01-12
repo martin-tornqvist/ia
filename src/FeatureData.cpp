@@ -62,7 +62,7 @@ Range FeatureRoomSpawnRules::getDlvlsAllowed() const
 }
 
 //--------------------------------------------------------- MOVE RULES
-bool MoveRules::canMove(const bool actorPropIds[endOfPropIds]) const
+bool MoveRules::canMove(const bool actorPropIds[int(PropId::END)]) const
 {
   if (canMoveCmn_)
   {
@@ -70,7 +70,7 @@ bool MoveRules::canMove(const bool actorPropIds[endOfPropIds]) const
   }
 
   //If not allowing normal move, check if any property overrides this
-  for (int i = 0; i < endOfPropIds; ++i)
+  for (int i = 0; i < int(PropId::END); ++i)
   {
     if (actorPropIds[i] && canMoveIfHaveProp_[i])
     {
@@ -145,8 +145,8 @@ void initDataList()
   d.mkObj = [](const Pos & p) {return new Wall(p);};
   d.glyph = Config::isAsciiWallFullSquare() ? 10 : '#';
   d.tile = TileId::wallTop;
-  d.moveRules.setPropCanMove(propEthereal);
-  d.moveRules.setPropCanMove(propBurrowing);
+  d.moveRules.setPropCanMove(PropId::ethereal);
+  d.moveRules.setPropCanMove(PropId::burrowing);
   d.isSoundPassable = false;
   d.isProjectilePassable = false;
   d.isLosPassable = false;
@@ -162,8 +162,8 @@ void initDataList()
   d.mkObj = [](const Pos & p) {return new Tree(p);};
   d.glyph = '|';
   d.tile = TileId::tree;
-  d.moveRules.setPropCanMove(propEthereal);
-  //d.moveRules.setPropCanMove(propFlying); //Its hard to notice some monsters
+  d.moveRules.setPropCanMove(PropId::ethereal);
+  //d.moveRules.setPropCanMove(PropId::flying); //Its hard to notice some monsters
   d.isSoundPassable = false;
   d.isProjectilePassable = false;
   d.isLosPassable = false;
@@ -250,8 +250,8 @@ void initDataList()
   d.mkObj = [](const Pos & p) {return new LiquidDeep(p);};
   d.glyph = '~';
   d.tile = TileId::water1;
-  d.moveRules.setPropCanMove(propEthereal);
-  d.moveRules.setPropCanMove(propFlying);
+  d.moveRules.setPropCanMove(PropId::ethereal);
+  d.moveRules.setPropCanMove(PropId::flying);
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveRigid = false;
@@ -261,8 +261,8 @@ void initDataList()
   d.id = FeatureId::chasm;
   d.mkObj = [](const Pos & p) {return new Chasm(p);};
   d.glyph = ' ';
-  d.moveRules.setPropCanMove(propEthereal);
-  d.moveRules.setPropCanMove(propFlying);
+  d.moveRules.setPropCanMove(PropId::ethereal);
+  d.moveRules.setPropCanMove(PropId::flying);
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -279,8 +279,8 @@ void initDataList()
   d.mkObj = [](const Pos & p) {return new GraveStone(p);};
   d.glyph = '&';
   d.tile = TileId::graveStone;
-  d.moveRules.setPropCanMove(propEthereal);
-  d.moveRules.setPropCanMove(propFlying);
+  d.moveRules.setPropCanMove(PropId::ethereal);
+  d.moveRules.setPropCanMove(PropId::flying);
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;
@@ -294,9 +294,9 @@ void initDataList()
   d.mkObj = [](const Pos & p) {return new ChurchBench(p);};
   d.glyph = '[';
   d.tile = TileId::churchBench;
-  d.moveRules.setPropCanMove(propEthereal);
-  d.moveRules.setPropCanMove(propFlying);
-  d.moveRules.setPropCanMove(propOoze);
+  d.moveRules.setPropCanMove(PropId::ethereal);
+  d.moveRules.setPropCanMove(PropId::flying);
+  d.moveRules.setPropCanMove(PropId::ooze);
   d.isProjectilePassable = false;
   d.isLosPassable = false;
   d.canHaveBlood = false;
@@ -320,9 +320,9 @@ void initDataList()
   d.mkObj = [](const Pos & p) {return new RubbleHigh(p);};
   d.glyph = 8;
   d.tile = TileId::rubbleHigh;
-  d.moveRules.setPropCanMove(propEthereal);
-  d.moveRules.setPropCanMove(propOoze);
-  d.moveRules.setPropCanMove(propBurrowing);
+  d.moveRules.setPropCanMove(PropId::ethereal);
+  d.moveRules.setPropCanMove(PropId::ooze);
+  d.moveRules.setPropCanMove(PropId::burrowing);
   d.isProjectilePassable = false;
   d.isLosPassable = false;
   d.isSmokePassable = false;
@@ -518,8 +518,8 @@ void initDataList()
   d.mkObj = [](const Pos & p) {return new Tomb(p);};
   d.glyph = '&';
   d.tile = TileId::tombClosed;
-  d.moveRules.setPropCanMove(propEthereal);
-  d.moveRules.setPropCanMove(propFlying);
+  d.moveRules.setPropCanMove(PropId::ethereal);
+  d.moveRules.setPropCanMove(PropId::flying);
   d.canHaveBlood = false;
   d.canHaveGore = false;
   d.canHaveCorpse = false;

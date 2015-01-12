@@ -85,13 +85,13 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
     bool isCondDegrade    = false;
     bool isWarning        = false;
     int bon = 0;
-    bool props[endOfPropIds];
+    bool props[int(PropId::END)];
     actor->getPropHandler().getPropIds(props);
-    if (props[propBlessed])
+    if (props[int(PropId::blessed)])
     {
       bon += 2;
     }
-    if (props[propCursed])
+    if (props[int(PropId::cursed)])
     {
       bon -= 2;
     }
@@ -276,7 +276,7 @@ ConsumeItem DeviceTranslocator::triggerEffect()
     {
       Log::addMsg(actor->getNameThe() + " is teleported.");
       Render::drawBlastAtCells(vector<Pos> {actor->pos}, clrYellow);
-      actor->teleport(false);
+      actor->teleport();
     }
   }
   return ConsumeItem::no;
@@ -294,8 +294,8 @@ ConsumeItem DeviceSentryDrone::triggerEffect()
 DeviceLantern::DeviceLantern(ItemDataT* const itemData) :
   Device                (itemData),
   nrTurnsLeft_          (500),
-  nrMalfunctTurnsLeft_  (-1),
-  malfState_            (LanternMalfState::working),
+  nrFlickerTurnsLeft_   (-1),
+  workingState_         (LanternWorkingState::working),
   isActivated_          (false) {}
 
 std::string DeviceLantern::getNameInf() const
@@ -316,8 +316,8 @@ ConsumeItem DeviceLantern::activate(Actor* const actor)
 void DeviceLantern::storeToSaveLines(vector<string>& lines)
 {
   lines.push_back(toStr(nrTurnsLeft_));
-  lines.push_back(toStr(nrMalfunctTurnsLeft_));
-  lines.push_back(toStr(int(malfState_)));
+  lines.push_back(toStr(nrFlickerTurnsLeft_));
+  lines.push_back(toStr(int(workingState_)));
   lines.push_back(isActivated_ ? "1" : "0");
 }
 
@@ -325,9 +325,9 @@ void DeviceLantern::setupFromSaveLines(vector<string>& lines)
 {
   nrTurnsLeft_          = toInt(lines.front());
   lines.erase(begin(lines));
-  nrMalfunctTurnsLeft_  = toInt(lines.front());
+  nrFlickerTurnsLeft_   = toInt(lines.front());
   lines.erase(begin(lines));
-  malfState_            = LanternMalfState(toInt(lines.front()));
+  workingState_         = LanternWorkingState(toInt(lines.front()));
   lines.erase(begin(lines));
   isActivated_          = lines.front() == "1";
   lines.erase(begin(lines));
@@ -362,24 +362,27 @@ void DeviceLantern::toggle()
   Render::drawMapAndInterface();
 }
 
-void DeviceLantern::onNewTurnInInventory()
+void DeviceLantern::onNewTurnInInv(const InvType invType)
 {
+  (void)invType;
+
   if (isActivated_)
   {
-
-    if (malfState_ == LanternMalfState::working) {--nrTurnsLeft_;}
+    if (workingState_ == LanternWorkingState::working)
+    {
+      --nrTurnsLeft_;
+    }
 
     if (nrTurnsLeft_ <= 0)
     {
       Log::addMsg("My Electric Lantern breaks!", clrMsgNote, true, true);
 
-      malfState_ = LanternMalfState::malfunction;
+      //Note: The this deletes the object
+      Map::player->getInv().removeItemInBackpackWithPtr(this, true);
+
       GameTime::updateLightMap();
       Map::player->updateFov();
       Render::drawMapAndInterface();
-
-      //Note: The following line deletes the object
-      Map::player->getInv().removeItemInBackpackWithPtr(this, true);
 
       return;
     }
@@ -388,61 +391,54 @@ void DeviceLantern::onNewTurnInInventory()
       Log::addMsg("My Electric Lantern is breaking.", clrMsgNote, true, true);
     }
 
-    //The lantern is not destroyed. Check malfunctions.
-    if (nrMalfunctTurnsLeft_ > 0)
+    //This point reached means the lantern is not destroyed
+
+    if (nrFlickerTurnsLeft_ > 0)
     {
-      //A malfunction is already active, count down on effect instead
-      nrMalfunctTurnsLeft_--;
-      if (nrMalfunctTurnsLeft_ <= 0)
+      //Already flickering, count down instead
+      nrFlickerTurnsLeft_--;
+
+      if (nrFlickerTurnsLeft_ <= 0)
       {
-        malfState_ = LanternMalfState::working;
+        workingState_ = LanternWorkingState::working;
+
         GameTime::updateLightMap();
         Map::player->updateFov();
         Render::drawMapAndInterface();
       }
     }
-    else
+    else //Not flickering
     {
-      //No malfunction active, check if new should be applied
-      const int RND = Rnd::range(1, 1000);
-
-      if (RND <= 7)
-      {
-        Log::addMsg("My Electric Lantern malfunctions.");
-        malfState_            = LanternMalfState::malfunction;
-        nrMalfunctTurnsLeft_  = Rnd::range(3, 4);
-      }
-      else if (RND <= 40)
+      if (Rnd::oneIn(30))
       {
         Log::addMsg("My Electric Lantern flickers.");
-        malfState_            = LanternMalfState::flicker;
-        nrMalfunctTurnsLeft_  = Rnd::range(4, 12);
+        workingState_         = LanternWorkingState::flicker;
+        nrFlickerTurnsLeft_   = Rnd::range(4, 12);
       }
       else
       {
-        malfState_            = LanternMalfState::working;
+        workingState_         = LanternWorkingState::working;
       }
 
-      if (malfState_ != LanternMalfState::working)
-      {
-        GameTime::updateLightMap();
-        Map::player->updateFov();
-        Render::drawMapAndInterface();
-      }
+//      if (workingState_ != LanternWorkingState::working)
+//      {
+//        GameTime::updateLightMap();
+//        Map::player->updateFov();
+//        Render::drawMapAndInterface();
+//      }
     }
   }
 }
 
-LanternLightSize DeviceLantern::getCurLightSize() const
+LgtSize DeviceLantern::getLgtSize() const
 {
   if (isActivated_)
   {
-    switch (malfState_)
+    switch (workingState_)
     {
-      case LanternMalfState::working:     return LanternLightSize::normal;
-      case LanternMalfState::flicker:     return LanternLightSize::small;
-      case LanternMalfState::malfunction: return LanternLightSize::none;
+      case LanternWorkingState::working: return LgtSize::fov;
+      case LanternWorkingState::flicker: return LgtSize::small;
     }
   }
-  return LanternLightSize::none;
+  return LgtSize::none;
 }

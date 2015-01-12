@@ -87,7 +87,7 @@ bool handleClosedBlockingDoor(Mon& mon, vector<Pos> path)
     if (f->getId() == FeatureId::door)
     {
       Door* const door = static_cast<Door*>(f);
-      bool props[endOfPropIds];
+      bool props[int(PropId::END)];
       mon.getPropHandler().getPropIds(props);
       if (!door->canMove(props))
       {
@@ -558,7 +558,7 @@ void setPathToPlayerIfAware(Mon& mon, vector<Pos>& path)
       bool blocked[MAP_W][MAP_H];
       Utils::resetArray(blocked, false);
 
-      bool props[endOfPropIds];
+      bool props[int(PropId::END)];
       mon.getPropHandler().getPropIds(props);
 
       for (int y = 1; y < MAP_H - 1; ++y)

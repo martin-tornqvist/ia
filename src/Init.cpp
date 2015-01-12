@@ -20,6 +20,7 @@
 #include "MapTemplates.h"
 #include "MapTravel.h"
 #include "Query.h"
+#include "ItemJewelry.h"
 
 using namespace std;
 
@@ -77,10 +78,10 @@ void initSession()
   TRACE_FUNC_BEGIN;
   ActorData::init();
   FeatureData::init();
-  PropData::init(); //Must init before ItemData
+  PropData::init();
   ItemData::init();
-  ScrollNameHandling::init();
-  PotionNameHandling::init();
+  ScrollHandling::init();
+  PotionHandling::init();
   InvHandling::init();
   GameTime::init();
   MapTravel::init();
@@ -90,6 +91,7 @@ void initSession()
   DungeonMaster::init();
   Bot::init();
   PlayerSpellsHandling::init();
+  JewelryHandling::init();
   TRACE_FUNC_END;
 }
 

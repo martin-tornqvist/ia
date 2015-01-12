@@ -98,7 +98,7 @@ struct ActorDataT
   int hp, spi, dmgMelee, dmgRanged;
   ActorSpeed speed;
   AbilityVals abilityVals;
-  bool intrProps[endOfPropIds];
+  bool intrProps[int(PropId::END)];
   int rangedCooldownTurns, spellCooldownTurns;
   bool ai[int(AiId::END)];
   int nrTurnsAware;
@@ -106,7 +106,7 @@ struct ActorDataT
   ActorSize actorSize;
   bool isHumanoid;
   bool isAutoDescrAllowed;
-  std::string deathMessageOverride;
+  std::string deathMsgOverride;
   int nrKills;
   bool canOpenDoors, canBashDoors;
   bool canSeeInDarkness;
@@ -115,7 +115,7 @@ struct ActorDataT
   int nrLeftAllowedToSpawn;
   bool isUnique;
   bool isAutoSpawnAllowed;
-  std::string spellCastMessage;
+  std::string spellCastMsg;
   ActorErraticFreq erraticMovePct;
   MonShockLvl monShockLvl;
   bool isRat, isCanine, isSpider, isUndead, isGhost;

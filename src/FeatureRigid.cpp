@@ -13,12 +13,12 @@
 #include "ItemFactory.h"
 #include "MapParsing.h"
 #include "FeatureMob.h"
-#include "ItemDrop.h"
+#include "Drop.h"
 #include "Explosion.h"
 #include "ActorFactory.h"
 #include "ActorMon.h"
 #include "Query.h"
-#include "ItemPickup.h"
+#include "Pickup.h"
 
 using namespace std;
 
@@ -203,7 +203,7 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
       if (Rnd::oneIn(4))
       {
         Log::addMsg("I sprain myself.", clrMsgBad);
-        actor->hit(Rnd::range(1, 2), DmgType::pure);
+        actor->hit(Rnd::range(1, 3), DmgType::pure);
       }
 
       if (Rnd::oneIn(4))
@@ -378,7 +378,7 @@ void Wall::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
   {
     const Pos p(pos_);
     Map::put(new RubbleLow(p)); //Note: "this" is now deleted!
-    if (Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, p);}
+    if (Rnd::coinToss()) {ItemFactory::mkItemOnFloor(ItemId::rock, p);}
   };
 
   if (dmgType == DmgType::physical)
@@ -585,7 +585,7 @@ void RubbleHigh::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
   {
     const Pos p(pos_);
     Map::put(new RubbleLow(p)); //Note: "this" is now deleted!
-    if (Rnd::coinToss()) {ItemFactory::mkItemOnMap(ItemId::rock, p);}
+    if (Rnd::coinToss()) {ItemFactory::mkItemOnFloor(ItemId::rock, p);}
   };
 
   if (dmgType == DmgType::physical)
@@ -726,10 +726,10 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
   {
     assert(actor);
 
-    bool props[endOfPropIds];
+    bool props[int(PropId::END)];
     actor->getPropHandler().getPropIds(props);
 
-    if (props[propWeakened])
+    if (props[int(PropId::weakened)])
     {
       Log::addMsg("It wiggles a bit.");
       return;
@@ -756,26 +756,35 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
     Map::player->updateFov();
     Render::drawMapAndInterface();
 
-    if (Map::cells[dstPos.x][dstPos.y].rigid->getId() == FeatureId::floor)
+
+    Actor* const actorBehind = Utils::getActorAtPos(dstPos);
+
+    if (actorBehind && actorBehind->isAlive())
     {
-      Actor* const actorBehind = Utils::getActorAtPos(dstPos);
-      if (actorBehind && actorBehind->isAlive())
+      bool propsActorBehind[int(PropId::END)];
+      actorBehind->getPropHandler().getPropIds(propsActorBehind);
+      if (!propsActorBehind[int(PropId::ethereal)])
       {
-        bool propsActorBehind[endOfPropIds];
-        actorBehind->getPropHandler().getPropIds(propsActorBehind);
-        if (!propsActorBehind[propEthereal])
+        if (actorBehind == Map::player)
         {
-          if (actorBehind == Map::player)
-          {
-            Log::addMsg("It falls on me!");
-          }
-          else if (Map::player->isSeeingActor(*actorBehind, nullptr))
-          {
-            Log::addMsg("It falls on " + actorBehind->getNameA() + ".");
-          }
-          actorBehind->hit(Rnd::dice(3, 5), DmgType::physical);
+          Log::addMsg("It falls on me!");
         }
+        else if (Map::player->isSeeingActor(*actorBehind, nullptr))
+        {
+          Log::addMsg("It falls on " + actorBehind->getNameA() + ".");
+        }
+        actorBehind->hit(Rnd::dice(3, 5), DmgType::physical);
       }
+    }
+
+    const auto rigidId = Map::cells[dstPos.x][dstPos.y].rigid->getId();
+
+    //Note: This is kinda hacky, but the rubble is mostly just for decoration anyway,
+    //so it doesn't really matter.
+    if (rigidId == FeatureId::floor ||
+        rigidId == FeatureId::grass ||
+        rigidId == FeatureId::carpet)
+    {
       Map::put(new RubbleLow(dstPos));
     }
   }
@@ -962,10 +971,10 @@ void LiquidShallow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void LiquidShallow::bump(Actor& actorBumping)
 {
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   actorBumping.getPropHandler().getPropIds(props);
 
-  if (!props[propEthereal] && !props[propFlying])
+  if (!props[int(PropId::ethereal)] && !props[int(PropId::flying)])
   {
     actorBumping.getPropHandler().tryApplyProp(new PropWaiting(PropTurns::std));
 
@@ -1310,7 +1319,7 @@ Clr Bush::getClr_() const
 Tree::Tree(Pos pos) :
   Rigid(pos) {}
 
-void Tree::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor * const actor)
+void Tree::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
 {
   if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
   {
@@ -1362,7 +1371,7 @@ string Brazier::getName(const Article article) const
 }
 
 void Brazier::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                    Actor * const actor)
+                    Actor* const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
@@ -1375,10 +1384,7 @@ Clr Brazier::getClr_() const
 //--------------------------------------------------------------------- ITEM CONTAINER
 ItemContainer::ItemContainer()
 {
-  for (auto* item : items_)
-  {
-    delete item;
-  }
+  for (auto* item : items_) {delete item;}
 
   items_.clear();
 }
@@ -1390,10 +1396,7 @@ ItemContainer::~ItemContainer()
 
 void ItemContainer::init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMPT)
 {
-  for (auto* item : items_)
-  {
-    delete item;
-  }
+  for (auto* item : items_) {delete item;}
 
   items_.clear();
 
@@ -1405,12 +1408,14 @@ void ItemContainer::init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMP
 
       for (int i = 0; i < int(ItemId::END); ++i)
       {
-        ItemDataT* const curData = ItemData::data[i];
-        for (auto featuresFoundIn : curData->featuresCanBeFoundIn)
+        ItemDataT* const data = ItemData::data[i];
+
+        for (auto containerSpawnRule : data->containerSpawnRules)
         {
-          if (featuresFoundIn.first == featureId          &&
-              Rnd::percentile() < featuresFoundIn.second  &&
-              Rnd::percentile() < curData->chanceToIncludeInSpawnList)
+          if (containerSpawnRule.featureId == featureId               &&
+              Rnd::percentile() < containerSpawnRule.pctChanceToIncl  &&
+              Rnd::percentile() < data->chanceToIncludeInSpawnList    &&
+              data->allowSpawn)
           {
             itemBucket.push_back(ItemId(i));
             break;
@@ -1418,14 +1423,24 @@ void ItemContainer::init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMP
         }
       }
 
-      const size_t BUCKET_SIZE = itemBucket.size();
-
-      if (BUCKET_SIZE > 0)
+      for (int i = 0; i < NR_ITEMS_TO_ATTEMPT; ++i)
       {
-        for (int i = 0; i < NR_ITEMS_TO_ATTEMPT; ++i)
+        if (itemBucket.empty())
         {
-          const int IDX = Rnd::range(0, int(BUCKET_SIZE) - 1);
-          Item* item    = ItemFactory::mk(itemBucket[IDX]);
+          break;
+        }
+
+        const int     IDX = Rnd::range(0, itemBucket.size() - 1);
+        const ItemId  id  = itemBucket[IDX];
+
+        //Check if this item is no longer allowed to spawn (e.g. a unique item)
+        if (!ItemData::data[int(id)]->allowSpawn)
+        {
+          itemBucket.erase(begin(itemBucket) + IDX);
+        }
+        else
+        {
+          Item* item = ItemFactory::mk(itemBucket[IDX]);
           ItemFactory::setItemRandomizedProperties(item);
           items_.push_back(item);
         }
@@ -1507,13 +1522,13 @@ void ItemContainer::open(const Pos& featurePos, Actor* const actorOpening)
 
 void ItemContainer::destroySingleFragile()
 {
-  //TODO: Generalize this function (perhaps isFragile variable in item data)
+  //TODO: Generalize this function (perhaps something like "isFragile" item data value)
 
   for (size_t i = 0; i < items_.size(); ++i)
   {
     Item* const item = items_[i];
     const ItemDataT& d = item->getData();
-    if (d.isPotion || d.id == ItemId::molotov)
+    if (d.type == ItemType::potion || d.id == ItemId::molotov)
     {
       delete item;
       items_.erase(items_.begin() + i);
@@ -1524,7 +1539,7 @@ void ItemContainer::destroySingleFragile()
 }
 
 //--------------------------------------------------------------------- TOMB
-Tomb::Tomb(const Pos & pos) :
+Tomb::Tomb(const Pos& pos) :
   Rigid           (pos),
   isOpen_         (false),
   isTraitKnown_   (false),
@@ -1549,7 +1564,8 @@ Tomb::Tomb(const Pos & pos) :
   {
     for (Item* item : itemContainer_.items_)
     {
-      const ItemValue itemValue = item->getData().itemValue;
+      const ItemValue itemValue = item->getData().value;
+
       if (itemValue == ItemValue::majorTreasure)
       {
         appearance_ = TombAppearance::marvelous;
@@ -1580,7 +1596,7 @@ Tomb::Tomb(const Pos & pos) :
   }
 }
 
-void Tomb::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor * const actor)
+void Tomb::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
@@ -1650,7 +1666,7 @@ Clr Tomb::getClr_() const
   return clrBlack;
 }
 
-void Tomb::bump(Actor & actorBumping)
+void Tomb::bump(Actor& actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -1673,10 +1689,10 @@ void Tomb::bump(Actor & actorBumping)
       {
         Log::addMsg("I attempt to push the lid.");
 
-        bool props[endOfPropIds];
+        bool props[int(PropId::END)];
         Map::player->getPropHandler().getPropIds(props);
 
-        if (props[propWeakened])
+        if (props[int(PropId::weakened)])
         {
           trySprainPlayer();
           Log::addMsg("It seems futile.", clrMsgNote, false, true);
@@ -1739,7 +1755,7 @@ void Tomb::trySprainPlayer()
   if (Rnd::oneIn(SPRAIN_ONE_IN_N))
   {
     Log::addMsg("I sprain myself.", clrMsgBad);
-    Map::player->hit(Rnd::range(1, 5), DmgType::pure);
+    Map::player->hit(Rnd::range(1, 3), DmgType::pure);
   }
 }
 
@@ -1843,7 +1859,7 @@ DidTriggerTrap Tomb::triggerTrap(Actor* const actor)
         for (int i = 0; i < int(ActorId::END); ++i)
         {
           const ActorDataT& d = ActorData::data[i];
-          if (d.intrProps[propOoze] &&
+          if (d.intrProps[int(PropId::ooze)] &&
               d.isAutoSpawnAllowed  &&
               !d.isUnique)
           {
@@ -1873,7 +1889,7 @@ DidTriggerTrap Tomb::triggerTrap(Actor* const actor)
 }
 
 //--------------------------------------------------------------------- CHEST
-Chest::Chest(const Pos & pos) :
+Chest::Chest(const Pos& pos) :
   Rigid               (pos),
   isOpen_             (false),
   isLocked_           (false),
@@ -1895,7 +1911,7 @@ Chest::Chest(const Pos & pos) :
   }
 }
 
-void Chest::bump(Actor & actorBumping)
+void Chest::bump(Actor& actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -1958,7 +1974,7 @@ void Chest::trySprainPlayer()
   if (Rnd::oneIn(SPRAIN_ONE_IN_N))
   {
     Log::addMsg("I sprain myself.", clrMsgBad);
-    Map::player->hit(Rnd::range(1, 5), DmgType::pure);
+    Map::player->hit(Rnd::range(1, 3), DmgType::pure);
   }
 }
 
@@ -2028,17 +2044,18 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
           {
             Log::addMsg("I kick the lid.");
 
-            bool props[endOfPropIds];
+            bool props[int(PropId::END)];
             Map::player->getPropHandler().getPropIds(props);
 
-            if (props[propWeakened] || matl_ == ChestMatl::iron)
+            if (props[int(PropId::weakened)] || matl_ == ChestMatl::iron)
             {
               trySprainPlayer();
               Log::addMsg("It seems futile.", clrMsgNote, false, true);
             }
             else
             {
-              if (!props[propBlessed] && (props[propCursed] || Rnd::oneIn(3)))
+              if (!props[int(PropId::blessed)] &&
+                  (props[int(PropId::cursed)] || Rnd::oneIn(3)))
               {
                 itemContainer_.destroySingleFragile();
               }
@@ -2198,7 +2215,7 @@ void Chest::disarm()
   Render::drawMapAndInterface();
 }
 
-DidTriggerTrap Chest::triggerTrap(Actor * const actor)
+DidTriggerTrap Chest::triggerTrap(Actor* const actor)
 {
   //Chest is not trapped? (Either already triggered, or chest were created wihout trap)
   if (!isTrapped_)
@@ -2218,11 +2235,11 @@ DidTriggerTrap Chest::triggerTrap(Actor * const actor)
   isTrapped_          = false;
 
   //Nothing happens?
-  bool playerProps[endOfPropIds];
+  bool playerProps[int(PropId::END)];
   Map::player->getPropHandler().getPropIds(playerProps);
 
-  const int TRAP_NO_ACTION_ONE_IN_N = playerProps[propBlessed] ? 2 :
-                                      playerProps[propCursed]  ? 20 : 4;
+  const int TRAP_NO_ACTION_ONE_IN_N = playerProps[int(PropId::blessed)] ? 2 :
+                                      playerProps[int(PropId::cursed)]  ? 20 : 4;
 
   if (Rnd::oneIn(TRAP_NO_ACTION_ONE_IN_N))
   {
@@ -2340,7 +2357,7 @@ Clr Chest::getClr_() const
 }
 
 //--------------------------------------------------------------------- FOUNTAIN
-Fountain::Fountain(const Pos & pos) :
+Fountain::Fountain(const Pos& pos) :
   Rigid             (pos),
   fountainEffects_  (vector<FountainEffect>()),
   fountainMatl_     (FountainMatl::stone),
@@ -2377,7 +2394,7 @@ Fountain::Fountain(const Pos & pos) :
         FountainEffect::rCold,
         FountainEffect::rElec,
         FountainEffect::rFear,
-        FountainEffect::rConfusion
+        FountainEffect::rConf
       };
 
       std::random_shuffle(begin(effectBucket), end(effectBucket));
@@ -2393,7 +2410,7 @@ Fountain::Fountain(const Pos & pos) :
 }
 
 void Fountain::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                     Actor * const actor)
+                     Actor* const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
@@ -2428,7 +2445,7 @@ string Fountain::getName(const Article article) const
   return ret + "fountain";
 }
 
-void Fountain::bump(Actor & actorBumping)
+void Fountain::bump(Actor& actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -2543,7 +2560,7 @@ void Fountain::bump(Actor & actorBumping)
             propHlr.tryApplyProp(prop);
           } break;
 
-          case FountainEffect::rConfusion:
+          case FountainEffect::rConf:
           {
             Prop* const prop = new PropRConfusion(PropTurns::std);
             prop->turnsLeft_ *= 2;
@@ -2575,7 +2592,7 @@ void Fountain::bump(Actor & actorBumping)
 }
 
 //--------------------------------------------------------------------- CABINET
-Cabinet::Cabinet(const Pos & pos) :
+Cabinet::Cabinet(const Pos& pos) :
   Rigid   (pos),
   isOpen_ (false)
 {
@@ -2588,12 +2605,12 @@ Cabinet::Cabinet(const Pos & pos) :
 }
 
 void Cabinet::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                    Actor * const actor)
+                    Actor* const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-void Cabinet::bump(Actor & actorBumping)
+void Cabinet::bump(Actor& actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -2636,7 +2653,7 @@ void Cabinet::playerLoot()
   }
 }
 
-DidOpen Cabinet::open(Actor * const actorOpening)
+DidOpen Cabinet::open(Actor* const actorOpening)
 {
   (void)actorOpening;
 
@@ -2676,7 +2693,7 @@ Clr Cabinet::getClr_() const
 }
 
 //--------------------------------------------------------------------- COCOON
-Cocoon::Cocoon(const Pos & pos) :
+Cocoon::Cocoon(const Pos& pos) :
   Rigid      (pos),
   isTrapped_ (Rnd::fraction(6, 10)),
   isOpen_    (false)
@@ -2695,12 +2712,12 @@ Cocoon::Cocoon(const Pos & pos) :
   }
 }
 
-void Cocoon::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor * const actor)
+void Cocoon::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
 {
   (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
-void Cocoon::bump(Actor & actorBumping)
+void Cocoon::bump(Actor& actorBumping)
 {
   if (actorBumping.isPlayer())
   {
@@ -2732,7 +2749,7 @@ void Cocoon::bump(Actor & actorBumping)
   }
 }
 
-DidTriggerTrap Cocoon::triggerTrap(Actor * const actor)
+DidTriggerTrap Cocoon::triggerTrap(Actor* const actor)
 {
   (void)actor;
 

@@ -1,5 +1,5 @@
-#ifndef ITEM_PICKUP_H
-#define ITEM_PICKUP_H
+#ifndef PICKUP_H
+#define PICKUP_H
 
 class Item;
 class Actor;

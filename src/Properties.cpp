@@ -26,14 +26,14 @@ using namespace std;
 namespace PropData
 {
 
-PropDataT data[endOfPropIds];
+PropDataT data[int(PropId::END)];
 
 namespace
 {
 
 void addPropData(PropDataT& d)
 {
-  data[d.id] = d;
+  data[int(d.id)] = d;
   PropDataT blank;
   d = blank;
 }
@@ -42,7 +42,7 @@ void initDataList()
 {
   PropDataT d;
 
-  d.id = propRPhys;
+  d.id = PropId::rPhys;
   d.stdRndTurns = Range(40, 60);
   d.name = "Physical Resistance";
   d.nameShort = "rPhys";
@@ -50,8 +50,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is resistant to physical harm.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to physical harm.";
   d.msg[propMsgOnEndMon] = "is vulnerable to physical harm.";
-  d.msg[propMsgOnMorePlayer] = "I feel more resistant to physical harm.";
-  d.msg[propMsgOnMoreMon] = "is more resistant to physical harm.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -62,7 +60,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRFire;
+  d.id = PropId::rFire;
   d.stdRndTurns = Range(40, 60);
   d.name = "Fire resistance";
   d.nameShort = "rFire";
@@ -70,8 +68,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is resistant to fire.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to fire.";
   d.msg[propMsgOnEndMon] = "is vulnerable to fire.";
-  d.msg[propMsgOnMorePlayer] = "I feel more resistant to fire.";
-  d.msg[propMsgOnMoreMon] = "is more resistant to fire.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -82,7 +78,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRCold;
+  d.id = PropId::rCold;
   d.stdRndTurns = Range(40, 60);
   d.name = "Cold resistance";
   d.nameShort = "rCold";
@@ -90,8 +86,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is resistant to cold.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to cold.";
   d.msg[propMsgOnEndMon] = "is vulnerable to cold.";
-  d.msg[propMsgOnMorePlayer] = "I feel more resistant to cold.";
-  d.msg[propMsgOnMoreMon] = "is more resistant to cold.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -102,7 +96,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRPoison;
+  d.id = PropId::rPoison;
   d.stdRndTurns = Range(40, 60);
   d.name = "Poison resistance";
   d.nameShort = "rPoison";
@@ -110,8 +104,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is resistant to poison.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to poison.";
   d.msg[propMsgOnEndMon] = "is vulnerable to poison.";
-  d.msg[propMsgOnMorePlayer] = "I feel more resistant to poison.";
-  d.msg[propMsgOnMoreMon] = "is more resistant to poison.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -122,7 +114,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRElec;
+  d.id = PropId::rElec;
   d.stdRndTurns = Range(40, 60);
   d.name = "Electric resistance";
   d.nameShort = "rElec";
@@ -130,8 +122,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is resistant to electricity.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to electricity.";
   d.msg[propMsgOnEndMon] = "is vulnerable to electricity.";
-  d.msg[propMsgOnMorePlayer] = "I feel more resistant to electricity.";
-  d.msg[propMsgOnMoreMon] = "is more resistant to electricity.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -142,7 +132,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRAcid;
+  d.id = PropId::rAcid;
   d.stdRndTurns = Range(40, 60);
   d.name = "Acid resistance";
   d.nameShort = "rAcid";
@@ -150,8 +140,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is resistant to acid.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to acid.";
   d.msg[propMsgOnEndMon] = "is vulnerable to acid.";
-  d.msg[propMsgOnMorePlayer] = "I feel more resistant to acid.";
-  d.msg[propMsgOnMoreMon] = "is more resistant to acid.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -162,7 +150,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRSleep;
+  d.id = PropId::rSleep;
   d.stdRndTurns = Range(40, 60);
   d.name = "Sleep resistance";
   d.nameShort = "rSleep";
@@ -170,8 +158,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is resistant to sleep.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to sleep.";
   d.msg[propMsgOnEndMon] = "is vulnerable to sleep.";
-  d.msg[propMsgOnMorePlayer] = "I feel more resistant to sleep.";
-  d.msg[propMsgOnMoreMon] = "is more resistant to sleep.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -182,7 +168,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRFear;
+  d.id = PropId::rFear;
   d.stdRndTurns = Range(40, 60);
   d.name = "Fear resistance";
   d.nameShort = "rFear";
@@ -190,8 +176,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is resistant to fear.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to fear.";
   d.msg[propMsgOnEndMon] = "is vulnerable to fear.";
-  d.msg[propMsgOnMorePlayer] = "I feel more resistant to fear.";
-  d.msg[propMsgOnMoreMon] = "is more resistant to fear.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -202,16 +186,14 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRConfusion;
+  d.id = PropId::rConf;
   d.stdRndTurns = Range(40, 50);
   d.name = "Confusion resistance";
-  d.nameShort = "rConfusion";
+  d.nameShort = "rConf";
   d.msg[propMsgOnStartPlayer] = "I feel resistant to confusion.";
   d.msg[propMsgOnStartMon] = "is resistant to confusion.";
   d.msg[propMsgOnEndPlayer] = "I feel vulnerable to confusion.";
   d.msg[propMsgOnEndMon] = "is vulnerable to confusion.";
-  d.msg[propMsgOnMorePlayer] = "I feel more resistant to confusion.";
-  d.msg[propMsgOnMoreMon] = "is more resistant to confusion.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -222,7 +204,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRDisease;
+  d.id = PropId::rDisease;
   d.stdRndTurns = Range(40, 60);
   d.name = "Disease resistance";
   d.nameShort = "rDisease";
@@ -230,8 +212,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "";
   d.msg[propMsgOnEndPlayer] = "";
   d.msg[propMsgOnEndMon] = "";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMon] = "";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -242,18 +222,12 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRBreath;
+  d.id = PropId::rBreath;
   d.stdRndTurns = Range(40, 60);
   d.name = "Breath resistance";
   d.nameShort = "rBreath";
   d.msg[propMsgOnStartPlayer] = "I can breath without harm.";
   d.msg[propMsgOnStartMon] = "can breath without harm.";
-  d.msg[propMsgOnEndPlayer] = "";
-  d.msg[propMsgOnEndMon] = "";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMon] = "";
-  d.msg[propMsgOnResPlayer] = "";
-  d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
@@ -262,7 +236,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propLightSensitive;
+  d.id = PropId::lightSensitive;
   d.stdRndTurns = Range(40, 60);
   d.name = "Light sensitive";
   d.nameShort = "LgtSensitive";
@@ -270,8 +244,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is vulnerable to light.";
   d.msg[propMsgOnEndPlayer] = "I no longer feel vulnerable to light.";
   d.msg[propMsgOnEndMon] = "no longer is vulnerable to light.";
-  d.msg[propMsgOnMorePlayer] = "I feel more vulnerable to light.";
-  d.msg[propMsgOnMoreMon] = "is more vulnerable to light.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = false;
@@ -281,7 +253,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propBlind;
+  d.id = PropId::blind;
   d.stdRndTurns = Range(20, 30);
   d.name = "Blind";
   d.nameShort = "Blind";
@@ -289,8 +261,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is blinded.";
   d.msg[propMsgOnEndPlayer] = "I can see again!";
   d.msg[propMsgOnEndMon] = "can see again.";
-  d.msg[propMsgOnMorePlayer] = "I am more blind.";
-  d.msg[propMsgOnMoreMon] = "is more blind.";
   d.msg[propMsgOnResPlayer] = "I resist blindness.";
   d.msg[propMsgOnResMon] = "resists blindness.";
   d.isMakingMonAware = true;
@@ -301,7 +271,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propFainted;
+  d.id = PropId::fainted;
   d.stdRndTurns = Range(100, 200);
   d.name = "Fainted";
   d.nameShort = "Fainted";
@@ -309,8 +279,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "faints.";
   d.msg[propMsgOnEndPlayer] = "I am awake.";
   d.msg[propMsgOnEndMon] = "wakes up.";
-  d.msg[propMsgOnMorePlayer] = "I faint deeper.";
-  d.msg[propMsgOnMoreMon] = "faints deeper.";
   d.msg[propMsgOnResPlayer] = "I resist fainting.";
   d.msg[propMsgOnResMon] = "resists fainting.";
   d.isMakingMonAware = true;
@@ -320,7 +288,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propBurning;
+  d.id = PropId::burning;
   d.stdRndTurns = Range(5, 10);
   d.name = "Burning";
   d.nameShort = "Burning";
@@ -328,8 +296,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is burning.";
   d.msg[propMsgOnEndPlayer] = "The flames are put out.";
   d.msg[propMsgOnEndMon] = "is no longer burning.";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMon] = "";
   d.msg[propMsgOnResPlayer] = "I resist burning.";
   d.msg[propMsgOnResMon] = "resists burning.";
   d.isMakingMonAware = true;
@@ -340,7 +306,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propPoisoned;
+  d.id = PropId::poisoned;
   d.stdRndTurns = Range(30, 60);
   d.name = "Poisoned";
   d.nameShort = "Poisoned";
@@ -348,8 +314,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is poisoned.";
   d.msg[propMsgOnEndPlayer] = "My body is cleansed from poisoning!";
   d.msg[propMsgOnEndMon] = "is cleansed from poisoning.";
-  d.msg[propMsgOnMorePlayer] = "I am more poisoned.";
-  d.msg[propMsgOnMoreMon] = "is more poisoned.";
   d.msg[propMsgOnResPlayer] = "I resist poisoning.";
   d.msg[propMsgOnResMon] = "resists poisoning.";
   d.isMakingMonAware = true;
@@ -361,7 +325,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propParalyzed;
+  d.id = PropId::paralyzed;
   d.stdRndTurns = Range(7, 9);
   d.name = "Paralyzed";
   d.nameShort = "Paralyzed";
@@ -369,8 +333,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is paralyzed.";
   d.msg[propMsgOnEndPlayer] = "I can move again!";
   d.msg[propMsgOnEndMon] = "can move again.";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMon] = "";
   d.msg[propMsgOnResPlayer] = "I resist paralyzation.";
   d.msg[propMsgOnResMon] = "resists paralyzation.";
   d.isMakingMonAware = true;
@@ -382,7 +344,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propTerrified;
+  d.id = PropId::terrified;
   d.stdRndTurns = Range(5, 12);
   d.name = "Terrified";
   d.nameShort = "Terrified";
@@ -390,8 +352,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "looks terrified.";
   d.msg[propMsgOnEndPlayer] = "I am no longer terrified!";
   d.msg[propMsgOnEndMon] = "is no longer terrified.";
-  d.msg[propMsgOnMorePlayer] = "I am more terrified.";
-  d.msg[propMsgOnMoreMon] = "looks more terrified.";
   d.msg[propMsgOnResPlayer] = "I resist fear.";
   d.msg[propMsgOnResMon] = "resists fear.";
   d.isMakingMonAware = true;
@@ -402,7 +362,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propConfused;
+  d.id = PropId::confused;
   d.stdRndTurns = Range(80, 120);
   d.name = "Confused";
   d.nameShort = "Confused";
@@ -410,8 +370,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "looks confused.";
   d.msg[propMsgOnEndPlayer] = "I am no longer confused.";
   d.msg[propMsgOnEndMon] = "is no longer confused.";
-  d.msg[propMsgOnMorePlayer] = "I am more confused.";
-  d.msg[propMsgOnMoreMon] = "looks more confused.";
   d.msg[propMsgOnResPlayer] = "I resist confusion.";
   d.msg[propMsgOnResMon] = "resists confusion.";
   d.isMakingMonAware = true;
@@ -422,7 +380,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propStunned;
+  d.id = PropId::stunned;
   d.stdRndTurns = Range(5, 9);
   d.name = "Stunned";
   d.nameShort = "Stunned";
@@ -430,8 +388,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is stunned.";
   d.msg[propMsgOnEndPlayer] = "I am no longer stunned.";
   d.msg[propMsgOnEndMon] = "is no longer stunned.";
-  d.msg[propMsgOnMorePlayer] = "I am more stunned.";
-  d.msg[propMsgOnMoreMon] = "is more stunned.";
   d.msg[propMsgOnResPlayer] = "I resist stunning.";
   d.msg[propMsgOnResMon] = "resists stunning.";
   d.isMakingMonAware = true;
@@ -443,7 +399,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propSlowed;
+  d.id = PropId::slowed;
   d.stdRndTurns = Range(9, 12);
   d.name = "Slowed";
   d.nameShort = "Slowed";
@@ -451,8 +407,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "slows down.";
   d.msg[propMsgOnEndPlayer] = "Everything around me seems to slow down.";
   d.msg[propMsgOnEndMon] = "speeds up.";
-  d.msg[propMsgOnMorePlayer] = "I am more slowed.";
-  d.msg[propMsgOnMoreMon] = "slows down more.";
   d.msg[propMsgOnResPlayer] = "I resist slowness.";
   d.msg[propMsgOnResMon] = "resists slowness.";
   d.isMakingMonAware = true;
@@ -463,10 +417,9 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propFlared;
+  d.id = PropId::flared;
   d.stdRndTurns = Range(3, 4);
   d.msg[propMsgOnStartMon] = "is perforated by a flare!";
-  d.msg[propMsgOnMoreMon] = "is perforated by another flare!";
   d.isMakingMonAware = true;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -474,14 +427,12 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propNailed;
+  d.id = PropId::nailed;
   d.name = "Nailed";
   d.msg[propMsgOnStartPlayer] = "I am fastened by a spike!";
   d.msg[propMsgOnStartMon] = "is fastened by a spike.";
   d.msg[propMsgOnEndPlayer] = "I tear free!";
   d.msg[propMsgOnEndMon] = "tears free!";
-  d.msg[propMsgOnMorePlayer] = "I am fastened by another spike!";
-  d.msg[propMsgOnMoreMon] = "is fastened by another spike.";
   d.isMakingMonAware = true;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -489,16 +440,11 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propWarlockCharged;
+  d.id = PropId::warlockCharged;
   d.stdRndTurns = Range(1, 1);
   d.name = "Charged";
   d.nameShort = "Charged";
   d.msg[propMsgOnStartPlayer] = "I am burning with power!";
-  d.msg[propMsgOnStartMon] = "";
-  d.msg[propMsgOnEndPlayer] = "";
-  d.msg[propMsgOnEndMon] = "";
-  d.msg[propMsgOnMorePlayer] = "";
-  d.msg[propMsgOnMoreMon] = "";
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -506,7 +452,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propInfected;
+  d.id = PropId::infected;
   d.stdRndTurns = Range(400, 700);
   d.name = "Infected";
   d.nameShort = "Infected";
@@ -514,8 +460,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is infected.";
   d.msg[propMsgOnEndPlayer] = "My infection is cured!";
   d.msg[propMsgOnEndMon] = "is no longer infected.";
-  d.msg[propMsgOnMorePlayer] = "I am more infected!";
-  d.msg[propMsgOnMoreMon] = "is more infected.";
   d.msg[propMsgOnResPlayer] = "";
   d.msg[propMsgOnResMon] = "";
   d.isMakingMonAware = true;
@@ -527,7 +471,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propDiseased;
+  d.id = PropId::diseased;
   d.stdRndTurns = Range(400, 800);
   d.name = "Diseased";
   d.nameShort = "Diseased";
@@ -535,8 +479,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "is diseased.";
   d.msg[propMsgOnEndPlayer] = "My disease is cured!";
   d.msg[propMsgOnEndMon] = "is no longer diseased.";
-  d.msg[propMsgOnMorePlayer] = "I am more diseased.";
-  d.msg[propMsgOnMoreMon] = "is more diseased.";
   d.msg[propMsgOnResPlayer] = "I resist disease.";
   d.msg[propMsgOnResMon] = "resists disease.";
   d.isMakingMonAware = true;
@@ -548,7 +490,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propWeakened;
+  d.id = PropId::weakened;
   d.stdRndTurns = Range(50, 100);
   d.name = "Weakened";
   d.nameShort = "Weakened";
@@ -556,8 +498,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "looks weaker.";
   d.msg[propMsgOnEndPlayer] = "I feel stronger!";
   d.msg[propMsgOnEndMon] = "looks stronger!";
-  d.msg[propMsgOnMorePlayer] = "I feel weaker.";
-  d.msg[propMsgOnMoreMon] = "looks weaker.";
   d.msg[propMsgOnResPlayer] = "I resist weakness.";
   d.msg[propMsgOnResMon] = "resists weakness.";
   d.isMakingMonAware = true;
@@ -569,7 +509,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propFrenzied;
+  d.id = PropId::frenzied;
   d.stdRndTurns = Range(30, 60);
   d.name = "Frenzied";
   d.nameShort = "Frenzied";
@@ -577,8 +517,6 @@ void initDataList()
   d.msg[propMsgOnStartMon] = "Looks ferocious!";
   d.msg[propMsgOnEndPlayer] = "I feel calmer.";
   d.msg[propMsgOnEndMon] = "Looks calmer.";
-  d.msg[propMsgOnMorePlayer] = "I feel more ferocious.";
-  d.msg[propMsgOnMoreMon] = "Looks more ferocious.";
   d.msg[propMsgOnResPlayer] = "I resist frenzying.";
   d.msg[propMsgOnResMon] = "resists frenzying.";
   d.isMakingMonAware = false;
@@ -589,13 +527,12 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propBlessed;
+  d.id = PropId::blessed;
   d.stdRndTurns = Range(400, 600);
   d.name = "Blessed";
   d.nameShort = "Blessed";
   d.msg[propMsgOnStartPlayer] = "I feel luckier.";
   d.msg[propMsgOnEndPlayer] = "I have normal luck.";
-  d.msg[propMsgOnMorePlayer] = "I feel luckier.";
   d.isMakingMonAware = false;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
@@ -604,13 +541,12 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRadiant;
+  d.id = PropId::radiant;
   d.stdRndTurns = Range(40, 60);
   d.name = "Radiant";
   d.nameShort = "Radiant";
-  d.msg[propMsgOnStartPlayer] = "A strange light radiates from me.";
-  d.msg[propMsgOnEndPlayer] = "The strange light is extinguished.";
-  d.msg[propMsgOnMorePlayer] = "More light radiates from me.";
+  d.msg[propMsgOnStartPlayer] = "A bright light shines around me.";
+  d.msg[propMsgOnEndPlayer] = "It suddenly seems darker.";
   d.isMakingMonAware = false;
   d.allowDisplayTurns = true;
   d.allowApplyMoreWhileActive = true;
@@ -619,13 +555,12 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propCursed;
+  d.id = PropId::cursed;
   d.stdRndTurns = Range(400, 600);
   d.name = "Cursed";
   d.nameShort = "Cursed";
   d.msg[propMsgOnStartPlayer] = "I feel misfortunate.";
   d.msg[propMsgOnEndPlayer] = "I feel more fortunate.";
-  d.msg[propMsgOnMorePlayer] = "I feel more misfortunate.";
   d.msg[propMsgOnResPlayer] = "I resist misfortune.";
   d.isMakingMonAware = false;
   d.allowDisplayTurns = true;
@@ -635,7 +570,35 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propAiming;
+  d.id = PropId::teleControl;
+  d.stdRndTurns = Range(40, 60);
+  d.name = "Teleport Control";
+  d.nameShort = "TeleCtrl";
+  d.msg[propMsgOnStartPlayer] = "I feel in control.";
+  d.msg[propMsgOnEndPlayer] = "I feel less in control.";
+  d.allowDisplayTurns = true;
+  d.allowApplyMoreWhileActive = true;
+  d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = false;
+  d.allowTestOnBot = false;
+  d.alignment = propAlignmentGood;
+  addPropData(d);
+
+  d.id = PropId::spellReflect;
+  d.stdRndTurns = Range(40, 60);
+  d.name = "Spell Reflection";
+  d.nameShort = "SpellRefl";
+  d.msg[propMsgOnStartPlayer] = "Spells reflect off me!";
+  d.msg[propMsgOnEndPlayer] = "I am vulnerable to spells.";
+  d.allowDisplayTurns = true;
+  d.allowApplyMoreWhileActive = true;
+  d.updatePlayerVisualWhenStartOrEnd = false;
+  d.isEndedByMagicHealing = false;
+  d.allowTestOnBot = false;
+  d.alignment = propAlignmentGood;
+  addPropData(d);
+
+  d.id = PropId::aiming;
   d.stdRndTurns = Range(1, 1);
   d.name = "Aiming";
   d.nameShort = "Aiming";
@@ -646,7 +609,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = propRecoil;
+  d.id = PropId::recoil;
   d.stdRndTurns = Range(1, 1);
   d.name = "Recoil";
   d.nameShort = "Recoil";
@@ -657,7 +620,7 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = propPossessedByZuul;
+  d.id = PropId::possessedByZuul;
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = false;
@@ -667,7 +630,7 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propFlying;
+  d.id = PropId::flying;
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -677,7 +640,7 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propEthereal;
+  d.id = PropId::ethereal;
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -687,7 +650,7 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propOoze;
+  d.id = PropId::ooze;
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -697,7 +660,7 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propBurrowing;
+  d.id = PropId::burrowing;
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = true;
@@ -707,7 +670,7 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propWaiting;
+  d.id = PropId::waiting;
   d.stdRndTurns = Range(1, 1);
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
@@ -716,7 +679,7 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propDisabledAttack;
+  d.id = PropId::disabledAttack;
   d.stdRndTurns = Range(1, 1);
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
@@ -725,7 +688,7 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propDisabledMelee;
+  d.id = PropId::disabledMelee;
   d.stdRndTurns = Range(1, 1);
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
@@ -734,7 +697,7 @@ void initDataList()
   d.alignment = propAlignmentNeutral;
   addPropData(d);
 
-  d.id = propDisabledRanged;
+  d.id = PropId::disabledRanged;
   d.stdRndTurns = Range(1, 1);
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
@@ -758,7 +721,7 @@ PropHandler::PropHandler(Actor* owningActor) :
 {
   const ActorDataT& d = owningActor->getData();
 
-  for (size_t i = 0; i < endOfPropIds; ++i)
+  for (size_t i = 0; i < int(PropId::END); ++i)
   {
     if (d.intrProps[i])
     {
@@ -771,51 +734,56 @@ PropHandler::PropHandler(Actor* owningActor) :
 Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
                           const int NR_TURNS) const
 {
+  assert(id != PropId::END);
+
   switch (id)
   {
-    case propNailed:            return new PropNailed(turnsInit,            NR_TURNS);
-    case propWarlockCharged:    return new PropWarlockCharged(turnsInit,    NR_TURNS);
-    case propBlind:             return new PropBlind(turnsInit,             NR_TURNS);
-    case propBurning:           return new PropBurning(turnsInit,           NR_TURNS);
-    case propFlared:            return new PropFlared(turnsInit,            NR_TURNS);
-    case propParalyzed:         return new PropParalyzed(turnsInit,         NR_TURNS);
-    case propTerrified:         return new PropTerrified(turnsInit,         NR_TURNS);
-    case propWeakened:          return new PropWeakened(turnsInit,          NR_TURNS);
-    case propConfused:          return new PropConfused(turnsInit,          NR_TURNS);
-    case propStunned:           return new PropStunned(turnsInit,           NR_TURNS);
-    case propWaiting:           return new PropWaiting(turnsInit,           NR_TURNS);
-    case propSlowed:            return new PropSlowed(turnsInit,            NR_TURNS);
-    case propInfected:          return new PropInfected(turnsInit,          NR_TURNS);
-    case propDiseased:          return new PropDiseased(turnsInit,          NR_TURNS);
-    case propPoisoned:          return new PropPoisoned(turnsInit,          NR_TURNS);
-    case propFainted:           return new PropFainted(turnsInit,           NR_TURNS);
-    case propFrenzied:          return new PropFrenzied(turnsInit,          NR_TURNS);
-    case propAiming:            return new PropAiming(turnsInit,            NR_TURNS);
-    case propRecoil:            return new PropRecoil(turnsInit,            NR_TURNS);
-    case propDisabledAttack:    return new PropDisabledAttack(turnsInit,    NR_TURNS);
-    case propDisabledMelee:     return new PropDisabledMelee(turnsInit,     NR_TURNS);
-    case propDisabledRanged:    return new PropDisabledRanged(turnsInit,    NR_TURNS);
-    case propBlessed:           return new PropBlessed(turnsInit,           NR_TURNS);
-    case propCursed:            return new PropCursed(turnsInit,            NR_TURNS);
-    case propRAcid:             return new PropRAcid(turnsInit,             NR_TURNS);
-    case propRCold:             return new PropRCold(turnsInit,             NR_TURNS);
-    case propRConfusion:        return new PropRConfusion(turnsInit,        NR_TURNS);
-    case propRBreath:           return new PropRBreath(turnsInit,           NR_TURNS);
-    case propRElec:             return new PropRElec(turnsInit,             NR_TURNS);
-    case propRFear:             return new PropRFear(turnsInit,             NR_TURNS);
-    case propRPhys:             return new PropRPhys(turnsInit,             NR_TURNS);
-    case propRFire:             return new PropRFire(turnsInit,             NR_TURNS);
-    case propRPoison:           return new PropRPoison(turnsInit,           NR_TURNS);
-    case propRSleep:            return new PropRSleep(turnsInit,            NR_TURNS);
-    case propLightSensitive:    return new PropLightSensitive(turnsInit,    NR_TURNS);
-    case propPossessedByZuul:   return new PropPossessedByZuul(turnsInit,   NR_TURNS);
-    case propFlying:            return new PropFlying(turnsInit,            NR_TURNS);
-    case propEthereal:          return new PropEthereal(turnsInit,          NR_TURNS);
-    case propOoze:              return new PropOoze(turnsInit,              NR_TURNS);
-    case propBurrowing:         return new PropBurrowing(turnsInit,         NR_TURNS);
-    case propRadiant:           return new PropRadiant(turnsInit,           NR_TURNS);
-    case propRDisease:          return new PropRDisease(turnsInit,          NR_TURNS);
-    case endOfPropIds: {assert(false && "Bad property id");}
+    case PropId::nailed:          return new PropNailed(turnsInit,            NR_TURNS);
+    case PropId::warlockCharged:  return new PropWarlockCharged(turnsInit,    NR_TURNS);
+    case PropId::blind:           return new PropBlind(turnsInit,             NR_TURNS);
+    case PropId::burning:         return new PropBurning(turnsInit,           NR_TURNS);
+    case PropId::flared:          return new PropFlared(turnsInit,            NR_TURNS);
+    case PropId::paralyzed:       return new PropParalyzed(turnsInit,         NR_TURNS);
+    case PropId::terrified:       return new PropTerrified(turnsInit,         NR_TURNS);
+    case PropId::weakened:        return new PropWeakened(turnsInit,          NR_TURNS);
+    case PropId::confused:        return new PropConfused(turnsInit,          NR_TURNS);
+    case PropId::stunned:         return new PropStunned(turnsInit,           NR_TURNS);
+    case PropId::waiting:         return new PropWaiting(turnsInit,           NR_TURNS);
+    case PropId::slowed:          return new PropSlowed(turnsInit,            NR_TURNS);
+    case PropId::infected:        return new PropInfected(turnsInit,          NR_TURNS);
+    case PropId::diseased:        return new PropDiseased(turnsInit,          NR_TURNS);
+    case PropId::poisoned:        return new PropPoisoned(turnsInit,          NR_TURNS);
+    case PropId::fainted:         return new PropFainted(turnsInit,           NR_TURNS);
+    case PropId::frenzied:        return new PropFrenzied(turnsInit,          NR_TURNS);
+    case PropId::aiming:          return new PropAiming(turnsInit,            NR_TURNS);
+    case PropId::recoil:          return new PropRecoil(turnsInit,            NR_TURNS);
+    case PropId::disabledAttack:  return new PropDisabledAttack(turnsInit,    NR_TURNS);
+    case PropId::disabledMelee:   return new PropDisabledMelee(turnsInit,     NR_TURNS);
+    case PropId::disabledRanged:  return new PropDisabledRanged(turnsInit,    NR_TURNS);
+    case PropId::blessed:         return new PropBlessed(turnsInit,           NR_TURNS);
+    case PropId::cursed:          return new PropCursed(turnsInit,            NR_TURNS);
+    case PropId::rAcid:           return new PropRAcid(turnsInit,             NR_TURNS);
+    case PropId::rCold:           return new PropRCold(turnsInit,             NR_TURNS);
+    case PropId::rConf:           return new PropRConfusion(turnsInit,        NR_TURNS);
+    case PropId::rBreath:         return new PropRBreath(turnsInit,           NR_TURNS);
+    case PropId::rElec:           return new PropRElec(turnsInit,             NR_TURNS);
+    case PropId::rFear:           return new PropRFear(turnsInit,             NR_TURNS);
+    case PropId::rPhys:           return new PropRPhys(turnsInit,             NR_TURNS);
+    case PropId::rFire:           return new PropRFire(turnsInit,             NR_TURNS);
+    case PropId::rPoison:         return new PropRPoison(turnsInit,           NR_TURNS);
+    case PropId::rSleep:          return new PropRSleep(turnsInit,            NR_TURNS);
+    case PropId::lightSensitive:  return new PropLightSensitive(turnsInit,    NR_TURNS);
+    case PropId::possessedByZuul: return new PropPossessedByZuul(turnsInit,   NR_TURNS);
+    case PropId::flying:          return new PropFlying(turnsInit,            NR_TURNS);
+    case PropId::ethereal:        return new PropEthereal(turnsInit,          NR_TURNS);
+    case PropId::ooze:            return new PropOoze(turnsInit,              NR_TURNS);
+    case PropId::burrowing:       return new PropBurrowing(turnsInit,         NR_TURNS);
+    case PropId::radiant:         return new PropRadiant(turnsInit,           NR_TURNS);
+    case PropId::rDisease:        return new PropRDisease(turnsInit,          NR_TURNS);
+    case PropId::teleControl:     return new PropTeleControl(turnsInit,       NR_TURNS);
+    case PropId::spellReflect:    return new PropTeleControl(turnsInit,       NR_TURNS);
+    case PropId::END: {}
+      break;
   }
   return nullptr;
 }
@@ -837,8 +805,8 @@ void PropHandler::getPropsFromSources(
   //Get from inventory if humanoid actor
   if (owningActor_->isHumanoid() && sources[int(PropSrc::inv)])
   {
-    const auto& inv     = owningActor_->getInv();
-    const auto& slots   = inv.slots_;
+    const auto& inv = owningActor_->getInv();
+
     auto addItemProps = [&](const vector<Prop*>& itemPropList)
     {
       for (auto* const prop : itemPropList)
@@ -847,13 +815,18 @@ void PropHandler::getPropsFromSources(
         out.push_back(prop);
       };
     };
-    for (const auto& slot : slots)
+
+    for (const auto& slot : inv.slots_)
     {
       const auto* const item = slot.item;
-      if (item) {addItemProps(item->carrierProps_);}
+
+      if (item)
+      {
+        addItemProps(item->carrierProps_);
+      }
     }
-    const auto& general = inv.general_;
-    for (auto* const item : general)
+
+    for (auto* const item : inv.general_)
     {
       addItemProps(item->carrierProps_);
     }
@@ -861,40 +834,50 @@ void PropHandler::getPropsFromSources(
 }
 
 void  PropHandler::getPropIdsFromSources(
-  bool out[endOfPropIds], bool sources[int(PropSrc::END)]) const
+  bool out[int(PropId::END)], bool sources[int(PropSrc::END)]) const
 {
-  for (int i = 0; i < endOfPropIds; ++i) {out[i] = 0;}
+  for (int i = 0; i < int(PropId::END); ++i)
+  {
+    out[i] = 0;
+  }
 
   //Get from applied properties
   if (sources[int(PropSrc::applied)])
   {
-    for (const Prop* const prop : appliedProps_) {out[prop->getId()] = true;}
+    for (const Prop* const prop : appliedProps_) {out[int(prop->getId())] = true;}
   }
 
   //Get from inventory if humanoid actor
   if (owningActor_->isHumanoid() && sources[int(PropSrc::inv)])
   {
-    const auto& inv     = owningActor_->getInv();
-    const auto& slots   = inv.slots_;
+    const auto& inv = owningActor_->getInv();
+
     auto addItemProps = [&](const vector<Prop*>& itemPropList)
     {
       for (auto* const prop : itemPropList)
       {
-        prop->owningActor_  = owningActor_;
-        out[prop->getId()]  = true;
+        prop->owningActor_      = owningActor_;
+        out[int(prop->getId())] = true;
       };
     };
-    for (const auto& slot : slots)
+
+    for (const auto& slot : inv.slots_)
     {
       const auto* const item = slot.item;
-      if (item) {addItemProps(item->carrierProps_);}
+      if (item)
+      {
+        addItemProps(item->carrierProps_);
+      }
     }
-    const auto& general = inv.general_;
-    for (auto* const item : general) {addItemProps(item->carrierProps_);}
+
+    for (auto* const item : inv.general_)
+    {
+      addItemProps(item->carrierProps_);
+    }
   }
 }
 
-void PropHandler::getPropIds(bool out[endOfPropIds]) const
+void PropHandler::getPropIds(bool out[int(PropId::END)]) const
 {
   bool sources[int(PropSrc::END)];
   for (bool& v : sources) {v = true;}
@@ -903,12 +886,11 @@ void PropHandler::getPropIds(bool out[endOfPropIds]) const
 
 bool PropHandler::tryResistProp(const PropId id, const vector<Prop*>& propList) const
 {
-  for (Prop* p : propList) {if (p->isResistOtherProp(id)) return true;}
+  for (Prop* p : propList) {if (p->isResistingOtherProp(id)) return true;}
   return false;
 }
 
-bool PropHandler::tryResistDmg(const DmgType dmgType,
-                               const bool ALLOW_MSG_WHEN_TRUE) const
+bool PropHandler::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
 {
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
@@ -917,7 +899,7 @@ bool PropHandler::tryResistDmg(const DmgType dmgType,
 
   for (Prop* p : propList)
   {
-    if (p->tryResistDmg(dmgType, ALLOW_MSG_WHEN_TRUE)) return true;
+    if (p->tryResistDmg(dmgType, ALLOW_MSG)) return true;
   }
   return false;
 }
@@ -1019,7 +1001,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
         if (IS_PLAYER)
         {
           string msg = "";
-          prop->getMsg(propMsgOnMorePlayer, msg);
+          prop->getMsg(propMsgOnStartPlayer, msg);
           if (!msg.empty())
           {
             Log::addMsg(msg, clrWhite, true);
@@ -1030,7 +1012,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
           if (playerSeeOwner)
           {
             string msg = "";
-            prop->getMsg(propMsgOnMoreMon, msg);
+            prop->getMsg(propMsgOnStartMon, msg);
             if (!msg.empty())
             {
               Log::addMsg(owningActor_->getNameThe() + " " + msg);
@@ -1109,15 +1091,12 @@ void PropHandler::tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE)
   }
 }
 
-bool PropHandler::endAppliedProp(
-  const PropId id,
-  const bool blockedLos[MAP_W][MAP_H],
-  const bool RUN_PROP_END_EFFECTS)
+bool PropHandler::endAppliedProp(const PropId id, const bool RUN_PROP_END_EFFECTS)
 {
+  int           index             = -1;
+  Prop*         prop              = nullptr;
+  const size_t  NR_APPLIED_PROPS  = appliedProps_.size();
 
-  int index   = -1;
-  Prop* prop  = nullptr;
-  const size_t NR_APPLIED_PROPS = appliedProps_.size();
   for (size_t i = 0; i < NR_APPLIED_PROPS; ++i)
   {
     prop = appliedProps_[i];
@@ -1127,7 +1106,11 @@ bool PropHandler::endAppliedProp(
       break;
     }
   }
-  if (index == -1) {return false;}
+
+  if (index == -1)
+  {
+    return false;
+  }
 
   appliedProps_.erase(begin(appliedProps_) + index);
 
@@ -1149,9 +1132,9 @@ bool PropHandler::endAppliedProp(
       prop->getMsg(propMsgOnEndPlayer, msg);
       if (!msg.empty()) {Log::addMsg(msg, clrWhite);}
     }
-    else
+    else //Not player
     {
-      if (Map::player->isSeeingActor(*owningActor_, blockedLos))
+      if (Map::player->isSeeingActor(*owningActor_, nullptr))
       {
         string msg = "";
         prop->getMsg(propMsgOnEndMon, msg);
@@ -1174,10 +1157,8 @@ void PropHandler::applyActorTurnPropBuffer()
   actorTurnPropBuffer_.clear();
 }
 
-void PropHandler::tick(const PropTurnMode turnMode,
-                       const bool blockedLos[MAP_W][MAP_H])
+void PropHandler::tick(const PropTurnMode turnMode)
 {
-
   for (size_t i = 0; i < appliedProps_.size();)
   {
     Prop* const prop = appliedProps_[i];
@@ -1186,7 +1167,6 @@ void PropHandler::tick(const PropTurnMode turnMode,
     //(standard turns or actor turns)
     if (prop->getTurnMode() == turnMode)
     {
-
       if (owningActor_ != Map::player)
       {
         if (prop->isMakingMonAware())
@@ -1203,7 +1183,7 @@ void PropHandler::tick(const PropTurnMode turnMode,
 
       if (prop->isFinnished())
       {
-        endAppliedProp(prop->getId(), blockedLos);
+        endAppliedProp(prop->getId());
       }
       else
       {
@@ -1284,7 +1264,7 @@ void PropHandler::changeMoveDir(const Pos& actorPos, Dir& dir) const
   for (Prop* prop : propList) {prop->changeMoveDir(actorPos, dir);}
 }
 
-bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropHandler::allowAttack(const bool ALLOW_MSG) const
 {
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
@@ -1292,8 +1272,7 @@ bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   getPropsFromSources(propList, sources);
   for (Prop* prop : propList)
   {
-    if (!prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE) &&
-        !prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE))
+    if (!prop->allowAttackMelee(ALLOW_MSG) && !prop->allowAttackRanged(ALLOW_MSG))
     {
       return false;
     }
@@ -1301,7 +1280,7 @@ bool PropHandler::allowAttack(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   return true;
 }
 
-bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropHandler::allowAttackMelee(const bool ALLOW_MSG) const
 {
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
@@ -1309,7 +1288,7 @@ bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   getPropsFromSources(propList, sources);
   for (Prop* prop : propList)
   {
-    if (!prop->allowAttackMelee(ALLOW_MESSAGE_WHEN_FALSE))
+    if (!prop->allowAttackMelee(ALLOW_MSG))
     {
       return false;
     }
@@ -1317,7 +1296,7 @@ bool PropHandler::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   return true;
 }
 
-bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropHandler::allowAttackRanged(const bool ALLOW_MSG) const
 {
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
@@ -1325,7 +1304,7 @@ bool PropHandler::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   getPropsFromSources(propList, sources);
   for (Prop* prop : propList)
   {
-    if (!prop->allowAttackRanged(ALLOW_MESSAGE_WHEN_FALSE)) {return false;}
+    if (!prop->allowAttackRanged(ALLOW_MSG)) {return false;}
   }
   return true;
 }
@@ -1356,7 +1335,7 @@ bool PropHandler::allowAct() const
   return true;
 }
 
-bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropHandler::allowRead(const bool ALLOW_MSG) const
 {
   TRACE_FUNC_BEGIN_VERBOSE;
   vector<Prop*> propList;
@@ -1366,7 +1345,7 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   const size_t NR_PROPS = propList.size();
   for (size_t i = 0; i < NR_PROPS; ++i)
   {
-    if (!propList[i]->allowRead(ALLOW_MESSAGE_WHEN_FALSE))
+    if (!propList[i]->allowRead(ALLOW_MSG))
     {
       TRACE_FUNC_END_VERBOSE;
       return false;
@@ -1376,7 +1355,7 @@ bool PropHandler::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   return true;
 }
 
-bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropHandler::allowCastSpells(const bool ALLOW_MSG) const
 {
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
@@ -1385,7 +1364,7 @@ bool PropHandler::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const
   const size_t NR_PROPS = propList.size();
   for (size_t i = 0; i < NR_PROPS; ++i)
   {
-    if (!propList[i]->allowCastSpells(ALLOW_MESSAGE_WHEN_FALSE))
+    if (!propList[i]->allowCastSpells(ALLOW_MSG))
     {
       return false;
     }
@@ -1458,8 +1437,6 @@ bool PropHandler::changeActorClr(Clr& clr) const
 
 void PropHandler::endAppliedPropsByMagicHealing()
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
   vector<Prop*> propList;
   bool sources[int(PropSrc::END)];
   for (bool& v : sources) {v = true;}
@@ -1468,7 +1445,7 @@ void PropHandler::endAppliedPropsByMagicHealing()
   {
     if (propList[i]->isEndedByMagicHealing())
     {
-      endAppliedProp(appliedProps_[i]->getId(), blockedLos);
+      endAppliedProp(appliedProps_[i]->getId());
       propList.erase(begin(propList) + i);
       i--;
     }
@@ -1479,26 +1456,21 @@ Prop::Prop(PropId id, PropTurns turnsInit, int turns) :
   turnsLeft_(turns),
   owningActor_(nullptr),
   id_(id),
-  data_(&(PropData::data[id])),
+  data_(&(PropData::data[int(id)])),
   turnsInitType_(turnsInit)
 {
-
   if (turnsInit == PropTurns::std)         {turnsLeft_ = Rnd::range(data_->stdRndTurns);}
   if (turnsInit == PropTurns::indefinite)  {turnsLeft_ = -1;}
 }
 
 void PropBlessed::onStart()
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(propCursed, blockedLos, false);
+  owningActor_->getPropHandler().endAppliedProp(PropId::cursed, false);
 }
 
 void PropCursed::onStart()
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(propBlessed, blockedLos, false);
+  owningActor_->getPropHandler().endAppliedProp(PropId::blessed, false);
 }
 
 void PropInfected::onNewTurn()
@@ -1507,9 +1479,7 @@ void PropInfected::onNewTurn()
   {
     PropHandler& propHlr = owningActor_->getPropHandler();
     propHlr.tryApplyProp(new PropDiseased(PropTurns::std));
-    bool blocked[MAP_W][MAP_H];
-    MapParse::run(CellCheck::BlocksLos(), blocked);
-    propHlr.endAppliedProp(propInfected, blocked, false);
+    propHlr.endAppliedProp(PropId::infected, false);
   }
 }
 
@@ -1533,10 +1503,10 @@ void PropDiseased::onStart()
   hp = min(Map::player->getHpMax(true), hp);
 }
 
-bool PropDiseased::isResistOtherProp(const PropId id) const
+bool PropDiseased::isResistingOtherProp(const PropId id) const
 {
   //Getting infected while already diseased is just annoying
-  return id == propInfected;
+  return id == PropId::infected;
 }
 
 void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR)
@@ -1576,18 +1546,18 @@ void PropPoisoned::onNewTurn()
   }
 }
 
-bool PropTerrified::allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropTerrified::allowAttackMelee(const bool ALLOW_MSG) const
 {
-  if (owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
+  if (owningActor_->isPlayer() && ALLOW_MSG)
   {
     Log::addMsg("I am too terrified to engage in close combat!");
   }
   return false;
 }
 
-bool PropTerrified::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropTerrified::allowAttackRanged(const bool ALLOW_MSG) const
 {
-  (void)ALLOW_MESSAGE_WHEN_FALSE;
+  (void)ALLOW_MSG;
   return true;
 }
 
@@ -1641,20 +1611,18 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
   }
 }
 
-bool PropConfused::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropConfused::allowRead(const bool ALLOW_MSG) const
 {
-  if (owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
+  if (owningActor_->isPlayer() && ALLOW_MSG)
   {
-    Log::addMsg("I'm too confused.");
+    Log::addMsg("I am too confused.");
   }
   return false;
 }
 
-bool PropConfused::allowAttackMelee(
-  const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropConfused::allowAttackMelee(const bool ALLOW_MSG) const
 {
-
-  (void)ALLOW_MESSAGE_WHEN_FALSE;
+  (void)ALLOW_MSG;
 
   if (owningActor_ != Map::player)
   {
@@ -1663,9 +1631,9 @@ bool PropConfused::allowAttackMelee(
   return true;
 }
 
-bool PropConfused::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropConfused::allowAttackRanged(const bool ALLOW_MSG) const
 {
-  (void)ALLOW_MESSAGE_WHEN_FALSE;
+  (void)ALLOW_MSG;
 
   if (owningActor_ != Map::player)
   {
@@ -1740,19 +1708,17 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
   }
 }
 
-bool PropFrenzied::isResistOtherProp(const PropId id) const
+bool PropFrenzied::isResistingOtherProp(const PropId id) const
 {
-  return id == propConfused || id == propFainted ||
-         id == propTerrified || id == propWeakened;
+  return id == PropId::confused || id == PropId::fainted ||
+         id == PropId::terrified || id == PropId::weakened;
 }
 
 void PropFrenzied::onStart()
 {
-  bool blocked[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blocked);
-  owningActor_->getPropHandler().endAppliedProp(propConfused,  blocked);
-  owningActor_->getPropHandler().endAppliedProp(propTerrified, blocked);
-  owningActor_->getPropHandler().endAppliedProp(propWeakened,  blocked);
+  owningActor_->getPropHandler().endAppliedProp(PropId::confused);
+  owningActor_->getPropHandler().endAppliedProp(PropId::terrified);
+  owningActor_->getPropHandler().endAppliedProp(PropId::weakened);
 }
 
 void PropFrenzied::onEnd()
@@ -1760,20 +1726,20 @@ void PropFrenzied::onEnd()
   owningActor_->getPropHandler().tryApplyProp(new PropWeakened(PropTurns::std));
 }
 
-bool PropFrenzied::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropFrenzied::allowRead(const bool ALLOW_MSG) const
 {
-  if (owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
+  if (owningActor_->isPlayer() && ALLOW_MSG)
   {
-    Log::addMsg("I'm too enraged to concentrate!");
+    Log::addMsg("I am too enraged to concentrate!");
   }
   return false;
 }
 
-bool PropFrenzied::allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropFrenzied::allowCastSpells(const bool ALLOW_MSG) const
 {
-  if (owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
+  if (owningActor_->isPlayer() && ALLOW_MSG)
   {
-    Log::addMsg("I'm too enraged to concentrate!");
+    Log::addMsg("I am too enraged to concentrate!");
   }
   return false;
 }
@@ -1792,18 +1758,18 @@ void PropBurning::onNewTurn()
   owningActor_->hit(Rnd::dice(1, 2), DmgType::fire);
 }
 
-bool PropBurning::allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropBurning::allowRead(const bool ALLOW_MSG) const
 {
-  if (owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
+  if (owningActor_->isPlayer() && ALLOW_MSG)
   {
     Log::addMsg("Not while burning.");
   }
   return false;
 }
 
-bool PropBurning::allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+bool PropBurning::allowAttackRanged(const bool ALLOW_MSG) const
 {
-  if (owningActor_->isPlayer() && ALLOW_MESSAGE_WHEN_FALSE)
+  if (owningActor_->isPlayer() && ALLOW_MSG)
   {
     Log::addMsg("Not while burning.");
   }
@@ -1836,19 +1802,16 @@ void PropFlared::onNewTurn()
 
   if (turnsLeft_ == 0)
   {
-    bool blockedLos[MAP_W][MAP_H];
-    MapParse::run(CellCheck::BlocksLos(), blockedLos);
     owningActor_->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
-    owningActor_->getPropHandler().endAppliedProp(propFlared, blockedLos);
+    owningActor_->getPropHandler().endAppliedProp(PropId::flared);
   }
 }
 
-bool PropRAcid::tryResistDmg(const DmgType dmgType,
-                             const bool ALLOW_MSG_WHEN_TRUE) const
+bool PropRAcid::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
 {
   if (dmgType == DmgType::acid)
   {
-    if (ALLOW_MSG_WHEN_TRUE)
+    if (ALLOW_MSG)
     {
       if (owningActor_->isPlayer())
       {
@@ -1864,11 +1827,11 @@ bool PropRAcid::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRCold::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const
+bool PropRCold::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
 {
   if (dmgType == DmgType::cold)
   {
-    if (ALLOW_MSG_WHEN_TRUE)
+    if (ALLOW_MSG)
     {
       if (owningActor_->isPlayer())
       {
@@ -1884,12 +1847,11 @@ bool PropRCold::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TR
   return false;
 }
 
-bool PropRElec::tryResistDmg(const DmgType dmgType,
-                             const bool ALLOW_MSG_WHEN_TRUE) const
+bool PropRElec::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
 {
   if (dmgType == DmgType::electric)
   {
-    if (ALLOW_MSG_WHEN_TRUE)
+    if (ALLOW_MSG)
     {
       if (owningActor_->isPlayer())
       {
@@ -1905,31 +1867,27 @@ bool PropRElec::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRConfusion::isResistOtherProp(const PropId id) const
+bool PropRConfusion::isResistingOtherProp(const PropId id) const
 {
-  return id == propConfused;
+  return id == PropId::confused;
 }
 
 void PropRConfusion::onStart()
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(propConfused, blockedLos);
+  owningActor_->getPropHandler().endAppliedProp(PropId::confused);
 }
 
-bool PropRFear::isResistOtherProp(const PropId id) const
+bool PropRFear::isResistingOtherProp(const PropId id) const
 {
-  return id == propTerrified;
+  return id == PropId::terrified;
 }
 
 void PropRFear::onStart()
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(propTerrified, blockedLos);
+  owningActor_->getPropHandler().endAppliedProp(PropId::terrified);
 }
 
-bool PropRPhys::isResistOtherProp(const PropId id) const
+bool PropRPhys::isResistingOtherProp(const PropId id) const
 {
   (void)id;
   return false;
@@ -1940,12 +1898,11 @@ void PropRPhys::onStart()
   return;
 }
 
-bool PropRPhys::tryResistDmg(const DmgType dmgType,
-                             const bool ALLOW_MSG_WHEN_TRUE) const
+bool PropRPhys::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
 {
   if (dmgType == DmgType::physical)
   {
-    if (ALLOW_MSG_WHEN_TRUE)
+    if (ALLOW_MSG)
     {
       if (owningActor_->isPlayer())
       {
@@ -1961,24 +1918,21 @@ bool PropRPhys::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRFire::isResistOtherProp(const PropId id) const
+bool PropRFire::isResistingOtherProp(const PropId id) const
 {
-  return id == propBurning;
+  return id == PropId::burning;
 }
 
 void PropRFire::onStart()
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(propBurning, blockedLos);
+  owningActor_->getPropHandler().endAppliedProp(PropId::burning);
 }
 
-bool PropRFire::tryResistDmg(const DmgType dmgType,
-                             const bool ALLOW_MSG_WHEN_TRUE) const
+bool PropRFire::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
 {
   if (dmgType == DmgType::fire)
   {
-    if (ALLOW_MSG_WHEN_TRUE)
+    if (ALLOW_MSG)
     {
       if (owningActor_->isPlayer())
       {
@@ -1994,41 +1948,35 @@ bool PropRFire::tryResistDmg(const DmgType dmgType,
   return false;
 }
 
-bool PropRPoison::isResistOtherProp(const PropId id) const
+bool PropRPoison::isResistingOtherProp(const PropId id) const
 {
-  return id == propPoisoned;
+  return id == PropId::poisoned;
 }
 
 void PropRPoison::onStart()
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(propPoisoned, blockedLos);
+  owningActor_->getPropHandler().endAppliedProp(PropId::poisoned);
 }
 
-bool PropRSleep::isResistOtherProp(const PropId id) const
+bool PropRSleep::isResistingOtherProp(const PropId id) const
 {
-  return id == propFainted;
+  return id == PropId::fainted;
 }
 
 void PropRSleep::onStart()
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(propFainted, blockedLos);
+  owningActor_->getPropHandler().endAppliedProp(PropId::fainted);
 }
 
-bool PropRDisease::isResistOtherProp(const PropId id) const
+bool PropRDisease::isResistingOtherProp(const PropId id) const
 {
-  return id == propDiseased || id == propInfected;
+  return id == PropId::diseased || id == PropId::infected;
 }
 
 void PropRDisease::onStart()
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(propDiseased, blockedLos);
-  owningActor_->getPropHandler().endAppliedProp(propInfected, blockedLos);
+  owningActor_->getPropHandler().endAppliedProp(PropId::diseased);
+  owningActor_->getPropHandler().endAppliedProp(PropId::infected);
 }
 
 void PropBurrowing::onNewTurn()

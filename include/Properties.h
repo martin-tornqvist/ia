@@ -11,58 +11,60 @@
 class Actor;
 class Wpn;
 
-enum PropId
+enum class PropId
 {
-  propRPhys,
-  propRFire,
-  propRCold,
-  propRPoison,
-  propRElec,
-  propRAcid,
-  propRSleep,
-  propRFear,
-  propRConfusion,
-  propRBreath,
-  propRDisease,
-  propLightSensitive,
-  propBlind,
-  propFainted,
-  propBurning,
-  propRadiant,
-  propPoisoned,
-  propParalyzed,
-  propTerrified,
-  propConfused,
-  propStunned,
-  propSlowed,
-  propInfected,
-  propDiseased,
-  propWeakened,
-  propFrenzied,
-  propBlessed,
-  propCursed,
+  rPhys,
+  rFire,
+  rCold,
+  rPoison,
+  rElec,
+  rAcid,
+  rSleep,
+  rFear,
+  rConf,
+  rBreath,
+  rDisease,
+  lightSensitive,
+  blind,
+  fainted,
+  burning,
+  radiant,
+  poisoned,
+  paralyzed,
+  terrified,
+  confused,
+  stunned,
+  slowed,
+  infected,
+  diseased,
+  weakened,
+  frenzied,
+  blessed,
+  cursed,
+  teleControl, //Note: This only makes sense for the player
+  spellReflect,
 
-  //Properties affecting the actors body, or way of moving around
-  propFlying,
-  propEthereal,
-  propOoze,
-  propBurrowing,
+  //Properties describing the actors body and/or method of moving around
+  flying,
+  ethereal,
+  ooze,
+  burrowing,
 
   //The following are used for AI control
-  propWaiting,
-  propDisabledAttack,
-  propDisabledMelee,
-  propDisabledRanged,
+  waiting,
+  disabledAttack,
+  disabledMelee,
+  disabledRanged,
 
   //Special (for supporting specific game mechanics)
-  propPossessedByZuul,
-  propRecoil,
-  propAiming,
-  propNailed,
-  propFlared,
-  propWarlockCharged,
+  possessedByZuul,
+  recoil,
+  aiming,
+  nailed,
+  flared,
+  warlockCharged,
 
-  endOfPropIds
+  END
 };
 
 enum class PropTurnMode {std, actor};
@@ -74,8 +76,6 @@ enum PropMsgType
   propMsgOnStartMon,
   propMsgOnEndPlayer,
   propMsgOnEndMon,
-  propMsgOnMorePlayer,
-  propMsgOnMoreMon,
   propMsgOnResPlayer,
   propMsgOnResMon,
   endOfPropMsg
@@ -91,7 +91,7 @@ enum class PropSrc {applied, inv, END};
 struct PropDataT
 {
   PropDataT() :
-    id                                (endOfPropIds),
+    id                                (PropId::END),
     stdRndTurns                       (Range(10, 10)),
     name                              (""),
     nameShort                         (""),
@@ -103,7 +103,10 @@ struct PropDataT
     allowTestOnBot                    (false),
     alignment                         (propAlignmentBad)
   {
-    for (int i = 0; i < endOfPropMsg; ++i) {msg[i] = "";}
+    for (int i = 0; i < endOfPropMsg; ++i)
+    {
+      msg[i] = "";
+    }
   }
 
   PropId        id;
@@ -123,7 +126,7 @@ struct PropDataT
 namespace PropData
 {
 
-extern PropDataT data[endOfPropIds];
+extern PropDataT data[int(PropId::END)];
 
 void init();
 
@@ -148,25 +151,23 @@ public:
 
   void changeMoveDir(const Pos& actorPos, Dir& dir) const;
   int getChangedMaxHp(const int HP_MAX) const;
-  bool allowAttack      (const bool ALLOW_MESSAGE_WHEN_FALSE) const;
-  bool allowAttackMelee (const bool ALLOW_MESSAGE_WHEN_FALSE) const;
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const;
-  bool allowSee() const;
-  bool allowMove() const;
-  bool allowAct() const;
-  bool allowRead        (const bool ALLOW_MESSAGE_WHEN_FALSE) const;
-  bool allowCastSpells  (const bool ALLOW_MESSAGE_WHEN_FALSE) const;
+  bool allowAttack      (const bool ALLOW_MSG)  const;
+  bool allowAttackMelee (const bool ALLOW_MSG)  const;
+  bool allowAttackRanged(const bool ALLOW_MSG)  const;
+  bool allowSee()                               const;
+  bool allowMove()                              const;
+  bool allowAct()                               const;
+  bool allowRead        (const bool ALLOW_MSG)  const;
+  bool allowCastSpells  (const bool ALLOW_MSG)  const;
   void onHit();
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
   int getAbilityMod(const AbilityId ability) const;
 
-  void getPropIds(bool out[endOfPropIds]) const;
+  void getPropIds(bool out[int(PropId::END)]) const;
 
   Prop* getProp(const PropId id, const PropSrc source) const;
 
-  bool endAppliedProp(const PropId id,
-                      const bool blockedLos[MAP_W][MAP_H],
-                      const bool RUN_PROP_END_EFFECTS = true);
+  bool endAppliedProp(const PropId id, const bool RUN_PROP_END_EFFECTS = true);
 
   void endAppliedPropsByMagicHealing();
 
@@ -177,15 +178,14 @@ public:
 
   void applyActorTurnPropBuffer();
 
-  void tick(const PropTurnMode turnMode,
-            const bool blockedLos[MAP_W][MAP_H]);
+  void tick(const PropTurnMode turnMode);
 
   void getPropsInterfaceLine(std::vector<StrAndClr>& line) const;
 
   Prop* mkProp(const PropId id, PropTurns turnsInit,
                const int NR_TURNS = -1) const;
 
-  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const;
 
 private:
   //Note: These two functions are responsible for collecting properties from all possible
@@ -197,7 +197,7 @@ private:
   //It's more efficient to just gather the ids at once.
   void getPropsFromSources(std::vector<Prop*>& out,
                            bool sources[int(PropSrc::END)]) const;
-  void getPropIdsFromSources(bool out[endOfPropIds],
+  void getPropIdsFromSources(bool out[int(PropId::END)],
                              bool sources[int(PropSrc::END)]) const;
 
   bool tryResistProp(const PropId id, const std::vector<Prop*>& propList) const;
@@ -216,6 +216,7 @@ public:
   {
     (void)lines;
   }
+
   virtual void setupFromSaveLines(std::vector<std::string>& lines)
   {
     (void)lines;
@@ -226,28 +227,34 @@ public:
   virtual bool isFinnished() const {return turnsLeft_ == 0;}
   virtual PropAlignment getAlignment() const {return data_->alignment;}
   virtual bool allowDisplayTurns() const {return data_->allowDisplayTurns;}
+
   virtual bool isMakingMonAware() const
   {
     return data_->isMakingMonAware;
   }
+
   virtual std::string getName() const {return data_->name;}
   virtual std::string getNameShort() const {return data_->nameShort;}
   virtual void getMsg(const PropMsgType msgType, std::string& msgRef) const
   {
     msgRef = data_->msg[msgType];
   }
+
   virtual bool allowApplyMoreWhileActive() const
   {
     return data_->allowApplyMoreWhileActive;
   }
+
   virtual bool shouldUpdatePlayerVisualWhenStartOrEnd() const
   {
     return data_->updatePlayerVisualWhenStartOrEnd;
   }
+
   virtual bool isEndedByMagicHealing() const
   {
     return data_->isEndedByMagicHealing;
   }
+
   virtual bool allowSee()   const {return true;}
   virtual bool allowMove()  const {return true;}
   virtual bool allowAct()   const {return true;}
@@ -256,6 +263,7 @@ public:
   virtual void onStart()          {}
   virtual void onEnd()            {}
   virtual void onMore()           {}
+
   virtual void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR)
   {
     (void)IS_PLAYER_SEE_OWNING_ACTOR;
@@ -265,46 +273,52 @@ public:
 
   virtual bool changeActorClr(Clr& clr) const {(void)clr; return false;}
 
-  virtual bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+  virtual bool allowAttackMelee(const bool ALLOW_MSG) const
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return true;
   }
-  virtual bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+
+  virtual bool allowAttackRanged(const bool ALLOW_MSG) const
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return true;
   }
-  virtual bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+
+  virtual bool allowRead(const bool ALLOW_MSG) const
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return true;
   }
-  virtual bool allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const
+
+  virtual bool allowCastSpells(const bool ALLOW_MSG) const
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return true;
   }
+
   virtual int getAbilityMod(const AbilityId ability) const
   {
     (void)ability;
     return 0;
   }
+
   virtual void changeMoveDir(const Pos& actorPos, Dir& dir)
   {
     (void)actorPos;
     (void)dir;
   }
-  virtual bool isResistOtherProp(const PropId id) const
+
+  virtual bool isResistingOtherProp(const PropId id) const
   {
     (void)id;
     return false;
   }
-  virtual bool tryResistDmg(
-    const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const
+
+  virtual bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
   {
     (void)dmgType;
-    (void)ALLOW_MSG_WHEN_TRUE;
+    (void)ALLOW_MSG;
     return false;
   }
 
@@ -330,32 +344,32 @@ class PropTerrified: public Prop
 {
 public:
   PropTerrified(PropTurns turnsInit, int turns = -1) :
-    Prop(propTerrified, turnsInit, turns) {}
+    Prop(PropId::terrified, turnsInit, turns) {}
 
   int getAbilityMod(const AbilityId ability) const override
   {
-    if (ability == AbilityId::dodgeAtt) return 20;
+    if (ability == AbilityId::dodgeAtt) return  20;
     if (ability == AbilityId::ranged)   return -20;
     return 0;
   }
 
-  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
+  bool allowAttackMelee(const bool ALLOW_MSG) const override;
 
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
+  bool allowAttackRanged(const bool ALLOW_MSG) const override;
 };
 
 class PropWeakened: public Prop
 {
 public:
   PropWeakened(PropTurns turnsInit, int turns = -1) :
-    Prop(propWeakened, turnsInit, turns) {}
+    Prop(PropId::weakened, turnsInit, turns) {}
 };
 
 class PropInfected: public Prop
 {
 public:
   PropInfected(PropTurns turnsInit, int turns = -1) :
-    Prop(propInfected, turnsInit, turns) {}
+    Prop(PropId::infected, turnsInit, turns) {}
 
   void onNewTurn() override;
 };
@@ -364,11 +378,11 @@ class PropDiseased: public Prop
 {
 public:
   PropDiseased(PropTurns turnsInit, int turns = -1) :
-    Prop(propDiseased, turnsInit, turns) {}
+    Prop(PropId::diseased, turnsInit, turns) {}
 
   int getChangedMaxHp(const int HP_MAX) const override;
 
-  bool isResistOtherProp(const PropId id) const override;
+  bool isResistingOtherProp(const PropId id) const override;
 
   void onStart() override;
 };
@@ -377,28 +391,28 @@ class PropFlying: public Prop
 {
 public:
   PropFlying(PropTurns turnsInit, int turns = -1) :
-    Prop(propFlying, turnsInit, turns) {}
+    Prop(PropId::flying, turnsInit, turns) {}
 };
 
 class PropEthereal: public Prop
 {
 public:
   PropEthereal(PropTurns turnsInit, int turns = -1) :
-    Prop(propEthereal, turnsInit, turns) {}
+    Prop(PropId::ethereal, turnsInit, turns) {}
 };
 
 class PropOoze: public Prop
 {
 public:
   PropOoze(PropTurns turnsInit, int turns = -1) :
-    Prop(propOoze, turnsInit, turns) {}
+    Prop(PropId::ooze, turnsInit, turns) {}
 };
 
 class PropBurrowing: public Prop
 {
 public:
   PropBurrowing(PropTurns turnsInit, int turns = -1) :
-    Prop(propBurrowing, turnsInit, turns) {}
+    Prop(PropId::burrowing, turnsInit, turns) {}
 
   void onNewTurn() override;
 };
@@ -407,7 +421,7 @@ class PropPossessedByZuul: public Prop
 {
 public:
   PropPossessedByZuul(PropTurns turnsInit, int turns = -1) :
-    Prop(propPossessedByZuul, turnsInit, turns) {}
+    Prop(PropId::possessedByZuul, turnsInit, turns) {}
 
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) override;
 
@@ -421,7 +435,7 @@ class PropPoisoned: public Prop
 {
 public:
   PropPoisoned(PropTurns turnsInit, int turns = -1) :
-    Prop(propPoisoned, turnsInit, turns) {}
+    Prop(PropId::poisoned, turnsInit, turns) {}
 
   void onNewTurn() override;
 };
@@ -430,7 +444,7 @@ class PropAiming: public Prop
 {
 public:
   PropAiming(PropTurns turnsInit, int turns = -1) :
-    Prop          (propAiming, turnsInit, turns),
+    Prop          (PropId::aiming, turnsInit, turns),
     nrTurnsAiming (1) {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
@@ -455,7 +469,7 @@ class PropRecoil: public Prop
 {
 public:
   PropRecoil(PropTurns turnsInit, int turns = -1) :
-    Prop(propRecoil, turnsInit, turns) {}
+    Prop(PropId::recoil, turnsInit, turns) {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
@@ -470,7 +484,7 @@ class PropBlind: public Prop
 {
 public:
   PropBlind(PropTurns turnsInit, int turns = -1) :
-    Prop(propBlind, turnsInit, turns) {}
+    Prop(PropId::blind, turnsInit, turns) {}
 
   bool shouldUpdatePlayerVisualWhenStartOrEnd() const override;
 
@@ -493,14 +507,14 @@ class PropRadiant: public Prop
 {
 public:
   PropRadiant(PropTurns turnsInit, int turns = -1) :
-    Prop(propRadiant, turnsInit, turns) {}
+    Prop(PropId::radiant, turnsInit, turns) {}
 };
 
 class PropBlessed: public Prop
 {
 public:
   PropBlessed(PropTurns turnsInit, int turns = -1) :
-    Prop(propBlessed, turnsInit, turns) {}
+    Prop(PropId::blessed, turnsInit, turns) {}
 
   void onStart() override;
 
@@ -515,7 +529,7 @@ class PropCursed: public Prop
 {
 public:
   PropCursed(PropTurns turnsInit, int turns = -1) :
-    Prop(propCursed, turnsInit, turns) {}
+    Prop(PropId::cursed, turnsInit, turns) {}
 
   void onStart() override;
 
@@ -530,9 +544,9 @@ class PropBurning: public Prop
 {
 public:
   PropBurning(PropTurns turnsInit, int turns = -1) :
-    Prop(propBurning, turnsInit, turns) {}
+    Prop(PropId::burning, turnsInit, turns) {}
 
-  bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
+  bool allowRead(const bool ALLOW_MSG) const override;
 
   bool changeActorClr(Clr& clr) const override
   {
@@ -540,7 +554,7 @@ public:
     return true;
   }
 
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
+  bool allowAttackRanged(const bool ALLOW_MSG) const override;
 
   void onStart() override;
   void onNewTurn() override;
@@ -550,7 +564,7 @@ class PropFlared: public Prop
 {
 public:
   PropFlared(PropTurns turnsInit, int turns = -1) :
-    Prop(propFlared, turnsInit, turns) {}
+    Prop(PropId::flared, turnsInit, turns) {}
 
   void onNewTurn() override;
 };
@@ -559,7 +573,7 @@ class PropWarlockCharged: public Prop
 {
 public:
   PropWarlockCharged(PropTurns turnsInit, int turns = -1) :
-    Prop(propWarlockCharged, turnsInit, turns) {}
+    Prop(PropId::warlockCharged, turnsInit, turns) {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 };
@@ -568,28 +582,28 @@ class PropConfused: public Prop
 {
 public:
   PropConfused(PropTurns turnsInit, int turns = -1) :
-    Prop(propConfused, turnsInit, turns) {}
+    Prop(PropId::confused, turnsInit, turns) {}
 
   void changeMoveDir(const Pos& actorPos, Dir& dir) override;
 
-  bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
+  bool allowRead(const bool ALLOW_MSG) const override;
 
-  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
+  bool allowAttackMelee(const bool ALLOW_MSG) const override;
+  bool allowAttackRanged(const bool ALLOW_MSG) const override;
 };
 
 class PropStunned: public Prop
 {
 public:
   PropStunned(PropTurns turnsInit, int turns = -1) :
-    Prop(propStunned, turnsInit, turns) {}
+    Prop(PropId::stunned, turnsInit, turns) {}
 };
 
 class PropNailed: public Prop
 {
 public:
   PropNailed(PropTurns turnsInit, int turns = -1) :
-    Prop(propNailed, turnsInit, turns), nrSpikes_(1) {}
+    Prop(PropId::nailed, turnsInit, turns), nrSpikes_(1) {}
 
   std::string getNameShort() const override
   {
@@ -610,20 +624,22 @@ class PropWaiting: public Prop
 {
 public:
   PropWaiting(PropTurns turnsInit, int turns = -1) :
-    Prop(propWaiting, turnsInit, turns) {}
+    Prop(PropId::waiting, turnsInit, turns) {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
   bool allowMove() const override  {return false;}
   bool allowAct() const override   {return false;}
-  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+
+  bool allowAttackMelee(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+
+  bool allowAttackRanged(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
 };
@@ -632,18 +648,19 @@ class PropDisabledAttack: public Prop
 {
 public:
   PropDisabledAttack(PropTurns turnsInit, int turns = -1) :
-    Prop(propDisabledAttack, turnsInit, turns) {}
+    Prop(PropId::disabledAttack, turnsInit, turns) {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+  bool allowAttackRanged(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
-  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+
+  bool allowAttackMelee(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
 };
@@ -652,13 +669,13 @@ class PropDisabledMelee: public Prop
 {
 public:
   PropDisabledMelee(PropTurns turnsInit, int turns = -1) :
-    Prop(propDisabledMelee, turnsInit, turns) {}
+    Prop(PropId::disabledMelee, turnsInit, turns) {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
-  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+  bool allowAttackMelee(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
 };
@@ -667,13 +684,13 @@ class PropDisabledRanged: public Prop
 {
 public:
   PropDisabledRanged(PropTurns turnsInit, int turns = -1) :
-    Prop(propDisabledRanged, turnsInit, turns) {}
+    Prop(PropId::disabledRanged, turnsInit, turns) {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+  bool allowAttackRanged(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
 };
@@ -682,7 +699,7 @@ class PropParalyzed: public Prop
 {
 public:
   PropParalyzed(PropTurns turnsInit, int turns = -1) :
-    Prop(propParalyzed, turnsInit, turns) {}
+    Prop(PropId::paralyzed, turnsInit, turns) {}
 
   PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
 
@@ -696,14 +713,16 @@ public:
       return -999;
     return 0;
   }
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+
+  bool allowAttackRanged(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
-  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+
+  bool allowAttackMelee(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
 };
@@ -712,7 +731,7 @@ class PropFainted: public Prop
 {
 public:
   PropFainted(PropTurns turnsInit, int turns = -1) :
-    Prop(propFainted, turnsInit, turns) {}
+    Prop(PropId::fainted, turnsInit, turns) {}
 
   bool shouldUpdatePlayerVisualWhenStartOrEnd() const override;
 
@@ -730,14 +749,15 @@ public:
     return 0;
   }
 
-  bool allowAttackRanged(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+  bool allowAttackRanged(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
-  bool allowAttackMelee(const bool ALLOW_MESSAGE_WHEN_FALSE) const override
+
+  bool allowAttackMelee(const bool ALLOW_MSG) const override
   {
-    (void)ALLOW_MESSAGE_WHEN_FALSE;
+    (void)ALLOW_MSG;
     return false;
   }
 
@@ -749,7 +769,7 @@ class PropSlowed: public Prop
 public:
   PropSlowed(PropTurns turnsInit,
              int turns = -1) :
-    Prop(propSlowed, turnsInit, turns) {}
+    Prop(PropId::slowed, turnsInit, turns) {}
 
   int getAbilityMod(const AbilityId ability) const override
   {
@@ -764,17 +784,17 @@ class PropFrenzied: public Prop
 {
 public:
   PropFrenzied(PropTurns turnsInit, int turns = -1) :
-    Prop(propFrenzied, turnsInit, turns) {}
+    Prop(PropId::frenzied, turnsInit, turns) {}
 
   void onStart() override;
   void onEnd() override;
 
   void changeMoveDir(const Pos& actorPos, Dir& dir) override;
 
-  bool allowRead(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
-  bool allowCastSpells(const bool ALLOW_MESSAGE_WHEN_FALSE) const override;
+  bool allowRead(const bool ALLOW_MSG) const override;
+  bool allowCastSpells(const bool ALLOW_MSG) const override;
 
-  bool isResistOtherProp(const PropId id) const override;
+  bool isResistingOtherProp(const PropId id) const override;
 
   int getAbilityMod(const AbilityId ability) const override
   {
@@ -787,123 +807,139 @@ class PropRAcid: public Prop
 {
 public:
   PropRAcid(PropTurns turnsInit, int turns = -1) :
-    Prop(propRAcid, turnsInit, turns) {}
+    Prop(PropId::rAcid, turnsInit, turns) {}
 
-  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const override;
 };
 
 class PropRCold: public Prop
 {
 public:
   PropRCold(PropTurns turnsInit, int turns = -1) :
-    Prop(propRCold, turnsInit, turns) {}
+    Prop(PropId::rCold, turnsInit, turns) {}
 
-  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const override;
 };
 
 class PropRConfusion: public Prop
 {
 public:
   PropRConfusion(PropTurns turnsInit, int turns = -1) :
-    Prop(propRConfusion, turnsInit, turns) {}
+    Prop(PropId::rConf, turnsInit, turns) {}
 
   void onStart() override;
 
-  bool isResistOtherProp(const PropId id) const override;
+  bool isResistingOtherProp(const PropId id) const override;
 };
 
 class PropRElec: public Prop
 {
 public:
   PropRElec(PropTurns turnsInit, int turns = -1) :
-    Prop(propRElec, turnsInit, turns) {}
+    Prop(PropId::rElec, turnsInit, turns) {}
 
-  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const override;
 };
 
 class PropRFear: public Prop
 {
 public:
   PropRFear(PropTurns turnsInit, int turns = -1) :
-    Prop(propRFear, turnsInit, turns) {}
+    Prop(PropId::rFear, turnsInit, turns) {}
 
   void onStart() override;
 
-  bool isResistOtherProp(const PropId id) const override;
+  bool isResistingOtherProp(const PropId id) const override;
 };
 
 class PropRPhys: public Prop
 {
 public:
   PropRPhys(PropTurns turnsInit, int turns = -1) :
-    Prop(propRPhys, turnsInit, turns) {}
+    Prop(PropId::rPhys, turnsInit, turns) {}
 
   void onStart() override;
 
-  bool isResistOtherProp(const PropId id) const override;
+  bool isResistingOtherProp(const PropId id) const override;
 
-  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const override;
 };
 
 class PropRFire: public Prop
 {
 public:
   PropRFire(PropTurns turnsInit, int turns = -1) :
-    Prop(propRFire, turnsInit, turns) {}
+    Prop(PropId::rFire, turnsInit, turns) {}
 
   void onStart() override;
 
-  bool isResistOtherProp(const PropId id) const override;
+  bool isResistingOtherProp(const PropId id) const override;
 
-  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG_WHEN_TRUE) const override;
+  bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const override;
 };
 
 class PropRPoison: public Prop
 {
 public:
   PropRPoison(PropTurns turnsInit, int turns = -1) :
-    Prop(propRPoison, turnsInit, turns) {}
+    Prop(PropId::rPoison, turnsInit, turns) {}
 
   void onStart() override;
 
-  bool isResistOtherProp(const PropId id) const override;
+  bool isResistingOtherProp(const PropId id) const override;
 };
 
 class PropRSleep: public Prop
 {
 public:
   PropRSleep(PropTurns turnsInit, int turns = -1) :
-    Prop(propRSleep, turnsInit, turns) {}
+    Prop(PropId::rSleep, turnsInit, turns) {}
 
   void onStart() override;
 
-  bool isResistOtherProp(const PropId id) const override;
+  bool isResistingOtherProp(const PropId id) const override;
 };
 
 class PropRDisease: public Prop
 {
 public:
   PropRDisease(PropTurns turnsInit, int turns = -1) :
-    Prop(propRDisease, turnsInit, turns) {}
+    Prop(PropId::rDisease, turnsInit, turns) {}
 
   void onStart() override;
 
-  bool isResistOtherProp(const PropId id) const override;
+  bool isResistingOtherProp(const PropId id) const override;
 };
 
 class PropRBreath: public Prop
 {
 public:
   PropRBreath(PropTurns turnsInit, int turns = -1) :
-    Prop(propRBreath, turnsInit, turns) {}
+    Prop(PropId::rBreath, turnsInit, turns) {}
 };
 
 class PropLightSensitive: public Prop
 {
 public:
   PropLightSensitive(PropTurns turnsInit, int turns = -1) :
-    Prop(propLightSensitive, turnsInit, turns) {}
+    Prop(PropId::lightSensitive, turnsInit, turns) {}
   ~PropLightSensitive() override {}
+};
+
+class PropTeleControl: public Prop
+{
+public:
+  PropTeleControl(PropTurns turnsInit, int turns = -1) :
+    Prop(PropId::teleControl, turnsInit, turns) {}
+  ~PropTeleControl() override {}
+};
+
+class PropSpellReflect: public Prop
+{
+public:
+  PropSpellReflect(PropTurns turnsInit, int turns = -1) :
+    Prop(PropId::spellReflect, turnsInit, turns) {}
+  ~PropSpellReflect() override {}
 };
 
 #endif

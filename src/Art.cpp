@@ -145,6 +145,8 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::elderSign:                   return Pos(10, 1);
     case TileId::chestClosed:                 return Pos(11, 1);
     case TileId::chestOpen:                   return Pos(12, 1);
+    case TileId::amulet:                      return Pos(14, 1);
+    case TileId::ring:                        return Pos(15, 1);
     case TileId::electricLantern:             return Pos(16, 1);
     case TileId::medicalBag:                  return Pos(17, 1);
     case TileId::mask:                        return Pos(18, 1);

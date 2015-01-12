@@ -18,102 +18,95 @@
 using namespace std;
 
 ItemDataT::ItemDataT(const ItemId id_) :
-  id(id_),
-  itemValue(ItemValue::normal),
-  itemWeight(ItemWeight::none),
-  spawnStdRange(Range(1, INT_MAX)),
-  maxStackAtSpawn(1),
-  chanceToIncludeInSpawnList(100),
-  isStackable(true),
-  isIdentified(true),
-  isTried(false),
-  baseName(),
-  glyph('X'),
-  clr(clrWhite),
-  tile(TileId::empty),
-  mainAttMode(MainAttMode::none),
-  isExplosive(false),
-  isScroll(false),
-  isPotion(false),
-  isDevice(false),
-  isArmor(false),
-  isHeadwear(false),
-  isAmmo(false),
-  isAmmoClip(false),
-  isIntrinsic(false),
-  spellCastFromScroll(SpellId::END),
-  landOnHardSndMsg("I hear a thudding sound."),
-  landOnHardSfx(),
-  shockWhileInBackpack(0),
-  shockWhileEquipped(0),
-  melee(MeleeItemData()),
-  ranged(RangedItemData()),
-  armor(ArmorItemData())
+  id                              (id_),
+  type                            (ItemType::general),
+  value                           (ItemValue::normal),
+  weight                          (ItemWeight::none),
+  allowSpawn                      (true),
+  spawnStdRange                   (Range(1, INT_MAX)),
+  maxStackAtSpawn                 (1),
+  chanceToIncludeInSpawnList      (100),
+  isStackable                     (true),
+  isIdentified                    (true),
+  isTried                         (false),
+  baseName                        (),
+  glyph                           ('X'),
+  clr                             (clrWhite),
+  tile                            (TileId::empty),
+  mainAttMode                     (MainAttMode::none),
+  spellCastFromScroll             (SpellId::END),
+  landOnHardSndMsg                ("I hear a thudding sound."),
+  landOnHardSfx                   (),
+  shockWhileInBackpack            (0),
+  shockWhileEquipped              (0),
+  melee                           (ItemMeleeData()),
+  ranged                          (ItemRangedData()),
+  armor                           (ItemArmorData())
 {
   for (int i = 0; i < int(AbilityId::END); ++i)
   {
-    abilityModsEquipped[i] = 0;
+    abilityModsWhileEquipped[i] = 0;
   }
 
   baseDescr.clear();
   nativeRooms.clear();
-  featuresCanBeFoundIn.clear();
+  containerSpawnRules.clear();
 }
 
-ItemDataT::MeleeItemData::MeleeItemData() :
-  isMeleeWpn(false),
-  dmg(pair<int, int>(0, 0)),
-  hitChanceMod(0),
-  attMsgs(ItemAttMsgs()),
-  propApplied(nullptr),
-  dmgType(DmgType::physical),
-  knocksBack(false),
-  hitSmallSfx(SfxId::END),
-  hitMediumSfx(SfxId::END),
-  hitHardSfx(SfxId::END),
-  missSfx(SfxId::END) {}
+ItemDataT::ItemMeleeData::ItemMeleeData() :
+  isMeleeWpn                      (false),
+  dmg                             (pair<int, int>(0, 0)),
+  hitChanceMod                    (0),
+  attMsgs                         (ItemAttMsgs()),
+  propApplied                     (nullptr),
+  dmgType                         (DmgType::physical),
+  knocksBack                      (false),
+  hitSmallSfx                     (SfxId::END),
+  hitMediumSfx                    (SfxId::END),
+  hitHardSfx                      (SfxId::END),
+  missSfx                         (SfxId::END) {}
 
-ItemDataT::MeleeItemData::~MeleeItemData()
+ItemDataT::ItemMeleeData::~ItemMeleeData()
 {
   if (propApplied) {delete propApplied;}
 }
 
-ItemDataT::RangedItemData::RangedItemData() :
-  isRangedWpn(false),
-  isThrowingWpn(false),
-  isMachineGun(false),
-  isShotgun(false),
-  isCausingRecoil(false),
-  ammoContainedInClip(0),
-  dmg(DiceParam()),
-  throwDmg(DiceParam()),
-  hitChanceMod(0),
-  throwHitChanceMod(0),
-  effectiveRange(3),
-  knocksBack(false),
-  dmgInfoOverride(""),
-  ammoItemId(ItemId::END),
-  dmgType(DmgType::physical),
-  hasInfiniteAmmo(false),
-  missileGlyph('/'),
-  missileTile(TileId::projectileStdFrontSlash),
-  missileClr(clrWhite),
-  missileLeavesTrail(false),
-  missileLeavesSmoke(false),
-  attMsgs(ItemAttMsgs()),
-  sndMsg(""),
-  sndVol(SndVol::low),
-  makesRicochetSnd(false),
-  attSfx(SfxId::END),
-  reloadSfx(SfxId::END),
-  propApplied(nullptr) {}
+ItemDataT::ItemRangedData::ItemRangedData() :
+  isRangedWpn                     (false),
+  isThrowingWpn                   (false),
+  isMachineGun                    (false),
+  isShotgun                       (false),
+  isCausingRecoil                 (false),
+  maxNrAmmoInClip                 (0),
+  dmg                             (DiceParam()),
+  throwDmg                        (DiceParam()),
+  hitChanceMod                    (0),
+  throwHitChanceMod               (0),
+  effectiveRange                  (3),
+  knocksBack                      (false),
+  dmgInfoOverride                 (""),
+  ammoItemId                      (ItemId::END),
+  dmgType                         (DmgType::physical),
+  hasInfiniteAmmo                 (false),
+  missileGlyph                    ('/'),
+  missileTile                     (TileId::projectileStdFrontSlash),
+  missileClr                      (clrWhite),
+  missileLeavesTrail              (false),
+  missileLeavesSmoke              (false),
+  attMsgs                         (ItemAttMsgs()),
+  sndMsg                          (""),
+  sndVol                          (SndVol::low),
+  makesRicochetSnd                (false),
+  attSfx                          (SfxId::END),
+  reloadSfx                       (SfxId::END),
+  propApplied                     (nullptr) {}
 
-ItemDataT::RangedItemData::~RangedItemData()
+ItemDataT::ItemRangedData::~ItemRangedData()
 {
   if (propApplied) {delete propApplied;}
 }
 
-ItemDataT::ArmorItemData::ArmorItemData() :
+ItemDataT::ItemArmorData::ItemArmorData() :
   absorptionPoints      (0),
   dmgToDurabilityFactor (0.0) {}
 
@@ -128,7 +121,7 @@ namespace
 void addFeatureFoundIn(ItemDataT& data, const FeatureId featureId,
                        const int CHANCE_TO_INCL = 100)
 {
-  data.featuresCanBeFoundIn.push_back(pair<FeatureId, int>(featureId, CHANCE_TO_INCL));
+  data.containerSpawnRules.push_back({featureId, CHANCE_TO_INCL});
 }
 
 //------------------------------- ITEM ARCHETYPES (DEFAULTS)
@@ -144,8 +137,9 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::meleeWpn:
     {
       resetData(d, ItemType::general);
+      d.type = ItemType::meleeWpn;
       d.isStackable = false;
-      d.itemWeight = ItemWeight::medium;
+      d.weight = ItemWeight::medium;
       d.glyph = '(';
       d.clr = clrWhite;
       d.mainAttMode = MainAttMode::melee;
@@ -159,7 +153,8 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::meleeWpnIntr:
     {
       resetData(d, ItemType::meleeWpn);
-      d.isIntrinsic = true;
+      d.type = ItemType::meleeWpnIntr;
+//      d.isIntrinsic = true;
       d.spawnStdRange = Range(-1, -1);
       d.melee.hitSmallSfx = SfxId::hitSmall;
       d.melee.hitMediumSfx = SfxId::hitMedium;
@@ -170,8 +165,9 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::rangedWpn:
     {
       resetData(d, ItemType::general);
+      d.type = ItemType::rangedWpn;
       d.isStackable = false;
-      d.itemWeight = ItemWeight::medium;
+      d.weight = ItemWeight::medium;
       d.glyph = '}';
       d.clr = clrWhite;
       d.melee.isMeleeWpn = true;
@@ -192,7 +188,8 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::rangedWpnIntr:
     {
       resetData(d, ItemType::rangedWpn);
-      d.isIntrinsic = true;
+      d.type = ItemType::rangedWpnIntr;
+//      d.isIntrinsic = true;
       d.ranged.hasInfiniteAmmo = true;
       d.spawnStdRange = Range(-1, -1);
       d.melee.isMeleeWpn = false;
@@ -203,7 +200,8 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::throwingWpn:
     {
       resetData(d, ItemType::general);
-      d.itemWeight = ItemWeight::extraLight;
+      d.type = ItemType::throwingWpn;
+      d.weight = ItemWeight::extraLight;
       d.isStackable = true;
       d.ranged.isThrowingWpn = true;
       d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
@@ -213,40 +211,43 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::ammo:
     {
       resetData(d, ItemType::general);
-      d.itemWeight = ItemWeight::extraLight;
+      d.type = ItemType::ammo;
+      d.weight = ItemWeight::extraLight;
       d.glyph = '{';
       d.clr = clrWhite;
       d.tile = TileId::ammo;
-      d.isAmmo = true;
+//      d.isAmmo = true;
       d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
     } break;
 
     case ItemType::ammoClip:
     {
       resetData(d, ItemType::ammo);
-      d.itemWeight = ItemWeight::light;
+      d.type = ItemType::ammoClip;
+      d.weight = ItemWeight::light;
       d.isStackable = false;
-      d.isAmmoClip = true;
+//      d.isAmmoClip = true;
       d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
     } break;
 
     case ItemType::scroll:
     {
       resetData(d, ItemType::general);
+      d.type = ItemType::scroll;
       d.baseDescr = {"A short transcription of an eldritch incantation. There is a "
                      "strange aura about it, as if some power was imbued in the paper "
                      "itself.",
                      "It should be possible to pronounce it correctly, but the "
                      "purpose is unclear."
                     };
-      d.itemValue = ItemValue::minorTreasure;
+      d.value = ItemValue::minorTreasure;
       d.chanceToIncludeInSpawnList = 40;
-      d.itemWeight = ItemWeight::none;
+      d.weight = ItemWeight::none;
       d.isIdentified = false;
       d.glyph = '?';
       d.clr = clrWhite;
       d.tile = TileId::scroll;
-      d.isScroll = true;
+//      d.isScroll = true;
       d.maxStackAtSpawn = 1;
       d.landOnHardSndMsg = "";
       addFeatureFoundIn(d, FeatureId::chest);
@@ -258,14 +259,15 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::potion:
     {
       resetData(d, ItemType::general);
+      d.type = ItemType::potion;
       d.baseDescr = {"A small glass bottle containing a mysterious concoction."};
-      d.itemValue = ItemValue::minorTreasure;
+      d.value = ItemValue::minorTreasure;
       d.chanceToIncludeInSpawnList = 55;
-      d.itemWeight = ItemWeight::light;
+      d.weight = ItemWeight::light;
       d.isIdentified = false;
       d.glyph = '!';
       d.tile = TileId::potion;
-      d.isPotion = true;
+//      d.isPotion = true;
       d.ranged.isThrowingWpn = true;
       d.ranged.throwHitChanceMod = 15;
       d.ranged.throwDmg = DiceParam(1, 3, 0);
@@ -280,15 +282,16 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::device:
     {
       resetData(d, ItemType::general);
-      d.baseNameUnid = ItemName("Strange Device", "Strange Devices", "A Strange Device");
+      d.type = ItemType::device;
+      d.baseNameUnid = {"Strange Device", "Strange Devices", "a Strange Device"};
       d.baseDescr = {"A small piece of machinery. It could not possibly have been "
                      "designed by a human mind. Even for its small size, it seems "
                      "incredibly complex. There is no hope of understanding the purpose "
                      "or function of it through normal means."
                     };
-      d.isDevice = true;
+//      d.isDevice = true;
       d.chanceToIncludeInSpawnList = 12;
-      d.itemWeight = ItemWeight::light;
+      d.weight = ItemWeight::light;
       d.isIdentified = true;
       d.glyph = '~';
       d.tile = TileId::device1;
@@ -300,18 +303,50 @@ void resetData(ItemDataT& d, ItemType const itemType)
     case ItemType::armor:
     {
       resetData(d, ItemType::general);
-      d.itemWeight = ItemWeight::heavy;
+      d.type = ItemType::armor;
+      d.weight = ItemWeight::heavy;
       d.glyph = '[';
       d.tile = TileId::armor;
-      d.isArmor = true;
+//      d.isArmor = true;
+      d.isStackable = false;
+    } break;
+
+    case ItemType::headWear:
+    {
+      resetData(d, ItemType::general);
+      d.type = ItemType::headWear;
+      d.glyph = '[';
+      d.isStackable = false;
+    } break;
+
+    case ItemType::amulet:
+    {
+      resetData(d, ItemType::general);
+      d.type = ItemType::amulet;
+      d.value = ItemValue::majorTreasure;
+      d.tile = TileId::amulet;
+      d.glyph = '\"';
+      d.weight = ItemWeight::light;
+      d.isStackable = false;
+    } break;
+
+    case ItemType::ring:
+    {
+      resetData(d, ItemType::general);
+      d.type = ItemType::ring;
+      d.value = ItemValue::majorTreasure;
+      d.tile = TileId::ring;
+      d.glyph = '=';
+      d.weight = ItemWeight::extraLight;
       d.isStackable = false;
     } break;
 
     case ItemType::explosive:
     {
       resetData(d, ItemType::general);
-      d.itemWeight = ItemWeight::light;
-      d.isExplosive = true;
+      d.type = ItemType::explosive;
+      d.weight = ItemWeight::light;
+//      d.isExplosive = true;
       d.glyph = '-';
       d.maxStackAtSpawn = 2;
       d.landOnHardSndMsg = "";
@@ -336,8 +371,9 @@ void initDataList()
 
   d = new ItemDataT(ItemId::trapezohedron);
   resetData(*d, ItemType::general);
-  d->baseName = ItemName("Shining Trapezohedron", "Shining Trapezohedrons",
-                         "The Shining Trapezohedron");
+  d->baseName = {"Shining Trapezohedron", "Shining Trapezohedrons",
+                 "The Shining Trapezohedron"
+                };
   d->spawnStdRange = Range(-1, -1);
   d->isStackable = false;
   d->glyph = '*';
@@ -347,20 +383,19 @@ void initDataList()
 
   d = new ItemDataT(ItemId::sawedOff);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Sawed-off Shotgun", "Sawed-off shotguns",
-                         "a Sawed-off Shotgun");
+  d->baseName = {"Sawed-off Shotgun", "Sawed-off shotguns", "a Sawed-off Shotgun"};
   d->baseDescr = {"Compared to a standard shotgun, the sawed-off has a shorter "
                   "effective range. At close range it is more devastating however. It "
                   "holds two barrels, and needs to be reloaded after both are discharged"
                  };
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::shotgun;
   d->ranged.isShotgun = true;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a shotgun");
+  d->melee.attMsgs = {"strike", "strikes me with a shotgun"};
   d->ranged.dmg = DiceParam(8, 3);
   d->ranged.effectiveRange = 3;
   d->ranged.ammoItemId = ItemId::shotgunShell;
-  d->ranged.attMsgs = ItemAttMsgs("fire", "fires a shotgun");
+  d->ranged.attMsgs = {"fire", "fires a shotgun"};
   d->ranged.sndMsg = "I hear a shotgun blast.";
   d->ranged.attSfx = SfxId::shotgunSawedOffFire;
   d->ranged.makesRicochetSnd = true;
@@ -372,20 +407,20 @@ void initDataList()
 
   d = new ItemDataT(ItemId::pumpShotgun);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Pump Shotgun", "Pump shotguns", "a Pump Shotgun");
+  d->baseName = {"Pump Shotgun", "Pump shotguns", "a Pump Shotgun"};
   d->baseDescr = {"A pump - action shotgun has a handgrip that can be pumped back and "
                   "forth in order to eject a spent round of ammunition and to chamber a "
                   "fresh one. It has a single barrel above a tube magazine into which "
                   "shells are inserted. The magazine has a capacity of 8 shells."
                  };
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::shotgun;
   d->ranged.isShotgun = true;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a shotgun");
+  d->melee.attMsgs = {"strike", "strikes me with a shotgun"};
   d->ranged.dmg = DiceParam(6, 3);
   d->ranged.effectiveRange = 5;
   d->ranged.ammoItemId = ItemId::shotgunShell;
-  d->ranged.attMsgs = ItemAttMsgs("fire", "fires a shotgun");
+  d->ranged.attMsgs = {"fire", "fires a shotgun"};
   d->ranged.sndMsg = "I hear a shotgun blast.";
   d->ranged.attSfx = SfxId::shotgunPumpFire ;
   d->ranged.makesRicochetSnd = true;
@@ -397,7 +432,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::shotgunShell);
   resetData(*d, ItemType::ammo);
-  d->baseName = ItemName("Shotgun shell", "Shotgun shells", "a shotgun shell");
+  d->baseName = {"Shotgun shell", "Shotgun shells", "a shotgun shell"};
   d->baseDescr = {"A cartridge designed to be fired from a shotgun"};
   d->maxStackAtSpawn = 10;
   addFeatureFoundIn(*d, FeatureId::chest);
@@ -407,18 +442,18 @@ void initDataList()
 
   d = new ItemDataT(ItemId::incinerator);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Incinerator", "Incinerators", "an Incinerator");
+  d->baseName = {"Incinerator", "Incinerators", "an Incinerator"};
   d->baseDescr = {"This hellish, experimental weapon launches an explosive fireball. "
                   "Best used with extreme caution."
                  };
-  d->itemWeight = ItemWeight::heavy;
+  d->weight = ItemWeight::heavy;
   d->tile = TileId::incinerator;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with an Incinerator");
+  d->melee.attMsgs = {"strike", "strikes me with an Incinerator"};
   d->ranged.dmg = DiceParam(1, 3);
   d->ranged.effectiveRange = 8;
   d->ranged.dmgInfoOverride = "* ";
   d->ranged.ammoItemId = ItemId::incineratorAmmo;
-  d->ranged.attMsgs = ItemAttMsgs("fire", "fires an incinerator");
+  d->ranged.attMsgs = {"fire", "fires an incinerator"};
   d->ranged.sndMsg = "I hear the blast of a launched missile.";
   d->ranged.missileGlyph = '*';
   d->ranged.missileClr = clrRedLgt;
@@ -430,11 +465,12 @@ void initDataList()
 
   d = new ItemDataT(ItemId::incineratorAmmo);
   resetData(*d, ItemType::ammoClip);
-  d->baseName = ItemName("Incinerator Cartridge", "Incinerator Cartridges",
-                         "an Incinerator Cartridge");
+  d->baseName = {"Incinerator Cartridge", "Incinerator Cartridges",
+                 "an Incinerator Cartridge"
+                };
   d->baseDescr = {"Ammunition designed for Incinerators."};
-  d->itemWeight = ItemWeight::light;
-  d->ranged.ammoContainedInClip = 3;
+  d->weight = ItemWeight::light;
+  d->ranged.maxNrAmmoInClip = 3;
   d->spawnStdRange.lower = 5;
   d->maxStackAtSpawn = 1;
   addFeatureFoundIn(*d, FeatureId::chest, 25);
@@ -444,21 +480,21 @@ void initDataList()
 
   d = new ItemDataT(ItemId::machineGun);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Tommy Gun", "Tommy Guns", "a Tommy Gun");
+  d->baseName = {"Tommy Gun", "Tommy Guns", "a Tommy Gun"};
   d->baseDescr = {"\"Tommy Gun\" is a nickname for the Thompson submachine gun - an "
                   "automatic firearm with a drum magazine and verical foregrip. It "
                   "fires .45 ACP ammunition. The drum magazine has a capacity of 50 "
                   "rounds."
                  };
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::tommyGun;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Tommy Gun");
+  d->melee.attMsgs = {"strike", "strikes me with a Tommy Gun"};
   d->ranged.isMachineGun = true;
   d->ranged.dmg = DiceParam(2, 2, 2);
   d->ranged.hitChanceMod = -10;
   d->ranged.effectiveRange = 8;
   d->ranged.ammoItemId = ItemId::drumOfBullets;
-  d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Tommy Gun");
+  d->ranged.attMsgs = {"fire", "fires a Tommy Gun"};
   d->ranged.sndMsg = "I hear the burst of a machine gun.";
   d->ranged.attSfx = SfxId::machineGunFire;
   d->ranged.makesRicochetSnd = true;
@@ -470,10 +506,9 @@ void initDataList()
 
   d = new ItemDataT(ItemId::drumOfBullets);
   resetData(*d, ItemType::ammoClip);
-  d->baseName = ItemName("Drum of .45 ACP", "Drums of .45 ACP",
-                         "a Drum of .45 ACP");
+  d->baseName = {"Drum of .45 ACP", "Drums of .45 ACP", "a Drum of .45 ACP"};
   d->baseDescr = {"Ammunition used by Tommy Guns."};
-  d->ranged.ammoContainedInClip = 50;
+  d->ranged.maxNrAmmoInClip = 50;
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
@@ -481,17 +516,17 @@ void initDataList()
 
   d = new ItemDataT(ItemId::pistol);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("M1911 Colt", "M1911 Colt", "an M1911 Colt");
+  d->baseName = {"M1911 Colt", "M1911 Colt", "an M1911 Colt"};
   d->baseDescr = {"A semi-automatic, magazine-fed pistol chambered for the .45 ACP "
                   "cartridge."
                  };
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->tile = TileId::pistol;
   d->ranged.dmg = DiceParam(1, 8, 4);
   d->ranged.effectiveRange = 6;
   d->ranged.ammoItemId = ItemId::pistolClip;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a pistol");
-  d->ranged.attMsgs = ItemAttMsgs("fire", "fires a pistol");
+  d->melee.attMsgs = {"strike", "strikes me with a pistol"};
+  d->ranged.attMsgs = {"fire", "fires a pistol"};
   d->ranged.sndMsg = "I hear a pistol being fired.";
   d->ranged.attSfx = SfxId::pistolFire;
   d->ranged.makesRicochetSnd = true;
@@ -503,10 +538,11 @@ void initDataList()
 
   d = new ItemDataT(ItemId::pistolClip);
   resetData(*d, ItemType::ammoClip);
-  d->baseName = ItemName(".45ACP Colt cartridge", ".45ACP Colt cartridges",
-                         "a .45ACP Colt cartridge");
+  d->baseName = {".45ACP Colt cartridge", ".45ACP Colt cartridges",
+                 "a .45ACP Colt cartridge"
+                };
   d->baseDescr = {"Ammunition used by Colt pistols."};
-  d->ranged.ammoContainedInClip = 7;
+  d->ranged.maxNrAmmoInClip = 7;
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
@@ -514,15 +550,16 @@ void initDataList()
 
   d = new ItemDataT(ItemId::migoGun);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Mi-go Electric Gun", "Mi-go Electric Gun",
-                         "a Mi-go Electric Gun");
+  d->baseName = {"Mi-go Electric Gun", "Mi-go Electric Gun",
+                 "a Mi-go Electric Gun"
+                };
   d->baseDescr = {"A weapon created by the Mi-go. It fires devastating bolts of "
                   "electricity.",
                   "If there is no ammunition to fuel the weapon, it can draw power from "
                   "the essence of the wielder (press [f] while no ammo loaded)."
                  };
   d->spawnStdRange = Range(-1, -1);
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::migoGun;
   d->clr = clrYellow;
   d->ranged.dmg = DiceParam(3, 6, 0);
@@ -534,8 +571,8 @@ void initDataList()
   d->ranged.hasInfiniteAmmo = false;
   d->ranged.missileLeavesTrail = true;
   d->ranged.missileClr = clrYellow;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Mi-go Electric Gun");
-  d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Mi-go Electric Gun");
+  d->melee.attMsgs = {"strike", "strikes me with a Mi-go Electric Gun"};
+  d->ranged.attMsgs = {"fire", "fires a Mi-go Electric Gun"};
   d->ranged.sndMsg = "I hear a bolt of electricity.";
   d->ranged.attSfx = SfxId::migoGunFire;
   d->ranged.reloadSfx = SfxId::machineGunReload;
@@ -544,26 +581,27 @@ void initDataList()
 
   d = new ItemDataT(ItemId::migoGunAmmo);
   resetData(*d, ItemType::ammoClip);
-  d->baseName = ItemName("Mi-go Electric Cell", "Mi-go Electric Cells",
-                         "a Mi-go Electric Cell");
+  d->baseName = {"Mi-go Electric Cell", "Mi-go Electric Cells",
+                 "a Mi-go Electric Cell"
+                };
   d->baseDescr = {"Ammunition for the Mi-go Electric gun."};
   d->clr = clrYellow;
   d->spawnStdRange = Range(-1, -1);
-  d->ranged.ammoContainedInClip = 20;
+  d->ranged.maxNrAmmoInClip = 20;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::flareGun);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Flare Gun", "Flare Gun", "a Flare Gun");
+  d->baseName = {"Flare Gun", "Flare Gun", "a Flare Gun"};
   d->baseDescr = {"Launches flares. Not designed to function as a weapon."};
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->tile = TileId::flareGun;
   d->ranged.dmg = DiceParam(1, 3, 0);
   d->ranged.effectiveRange = 3;
   d->ranged.dmgInfoOverride = "*";
   d->ranged.ammoItemId = ItemId::flare;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a flare gun");
-  d->ranged.attMsgs = ItemAttMsgs("fire", "fires a flare gun");
+  d->melee.attMsgs = {"strike", "strikes me with a flare gun"};
+  d->ranged.attMsgs = {"fire", "fires a flare gun"};
   d->ranged.sndMsg = "I hear a flare gun being fired.";
   d->ranged.propApplied = new PropFlared(PropTurns::std);
   addFeatureFoundIn(*d, FeatureId::chest);
@@ -573,16 +611,16 @@ void initDataList()
 
   d = new ItemDataT(ItemId::spikeGun);
   resetData(*d, ItemType::rangedWpn);
-  d->baseName = ItemName("Spike Gun", "Spike Guns", "a Spike Gun");
+  d->baseName = {"Spike Gun", "Spike Guns", "a Spike Gun"};
   d->baseDescr = {"A very strange and crude weapon capable of launching iron spikes "
                   "with enough force to pierce flesh (or even rock). It seems almost to "
                   "be deliberately designed for cruelty, rather than pure stopping "
                   "power."
                  };
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::tommyGun;
   d->clr = clrBlueLgt;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Spike Gun");
+  d->melee.attMsgs = {"strike", "strikes me with a Spike Gun"};
   d->ranged.isMachineGun = false;
   d->ranged.hitChanceMod = 0;
   d->ranged.dmg = DiceParam(1, 7, 0);
@@ -590,7 +628,7 @@ void initDataList()
   d->ranged.dmgType = DmgType::physical;
   d->ranged.knocksBack = true;
   d->ranged.ammoItemId = ItemId::ironSpike;
-  d->ranged.attMsgs = ItemAttMsgs("fire", "fires a Spike Gun");
+  d->ranged.attMsgs = {"fire", "fires a Spike Gun"};
   d->ranged.sndMsg = "I hear a very crude weapon being fired.";
   d->ranged.makesRicochetSnd = true;
   d->ranged.missileGlyph = '/';
@@ -605,11 +643,11 @@ void initDataList()
 
   d = new ItemDataT(ItemId::dynamite);
   resetData(*d, ItemType::explosive);
-  d->baseName = ItemName("Dynamite", "Sticks of Dynamite", "a Stick of Dynamite");
+  d->baseName = {"Dynamite", "Sticks of Dynamite", "a Stick of Dynamite"};
   d->baseDescr = {"An explosive material based on nitroglycerin. The name comes from "
                   "the ancient Greek word for \"power\"."
                  };
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->tile = TileId::dynamite;
   d->clr = clrRedLgt;
   addFeatureFoundIn(*d, FeatureId::chest);
@@ -619,14 +657,14 @@ void initDataList()
 
   d = new ItemDataT(ItemId::flare);
   resetData(*d, ItemType::explosive);
-  d->baseName = ItemName("Flare", "Flares", "a Flare");
+  d->baseName = {"Flare", "Flares", "a Flare"};
   d->baseDescr = {"A type of pyrotechnic that produces a brilliant light or intense "
                   "heat without an explosion."
                  };
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->tile = TileId::flare;
   d->clr = clrGray;
-  d->isAmmo = true;
+//  d->isAmmo = true;
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
@@ -634,13 +672,13 @@ void initDataList()
 
   d = new ItemDataT(ItemId::molotov);
   resetData(*d, ItemType::explosive);
-  d->baseName = ItemName("Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail");
+  d->baseName = {"Molotov Cocktail", "Molotov Cocktails", "a Molotov Cocktail"};
   d->baseDescr = {"An improvised incendiary weapon made of a glass bottle containing "
                   "flammable liquid and some cloth for ignition. In action, the cloth "
                   "is lit and the bottle hurled at a target, causing an immediate "
                   "fireball followed by a raging fire."
                  };
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->tile = TileId::molotov;
   d->clr = clrWhite;
   addFeatureFoundIn(*d, FeatureId::chest);
@@ -650,13 +688,13 @@ void initDataList()
 
   d = new ItemDataT(ItemId::smokeGrenade);
   resetData(*d, ItemType::explosive);
-  d->baseName = ItemName("Smoke Grenade", "Smoke Grenades", "a Smoke Grenade");
+  d->baseName = {"Smoke Grenade", "Smoke Grenades", "a Smoke Grenade"};
   d->baseDescr = {"A sheet steel cylinder with emission holes releasing smoke when the "
                   "grenade is ignited. Their primary use is to create smoke screens for "
                   "concealment. The fumes produced can harm the eyes, throat and lungs "
                   "- so it is recommended to wear a protective mask."
                  };
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->tile = TileId::flare;
   d->clr = clrGreen;
   addFeatureFoundIn(*d, FeatureId::chest);
@@ -665,11 +703,11 @@ void initDataList()
 
   d = new ItemDataT(ItemId::throwingKnife);
   resetData(*d, ItemType::throwingWpn);
-  d->baseName = ItemName("Throwing Knife", "Throwing Knives", "a Throwing Knife");
+  d->baseName = {"Throwing Knife", "Throwing Knives", "a Throwing Knife"};
   d->baseDescr = {"A knife specially designed and weighted so that it can be thrown "
                   "effectively."
                  };
-  d->itemWeight = ItemWeight::extraLight;
+  d->weight = ItemWeight::extraLight;
   d->tile = TileId::dagger;
   d->glyph = '/';
   d->clr = clrWhite;
@@ -687,11 +725,11 @@ void initDataList()
 
   d = new ItemDataT(ItemId::rock);
   resetData(*d, ItemType::throwingWpn);
-  d->baseName = ItemName("Rock", "Rocks", "a Rock");
+  d->baseName = {"Rock", "Rocks", "a Rock"};
   d->baseDescr = {"Although not a very impressive weapon, with skill they can be used "
                   "with some result."
                  };
-  d->itemWeight = ItemWeight::extraLight;
+  d->weight = ItemWeight::extraLight;
   d->tile = TileId::rock;
   d->glyph = '*';
   d->clr = clrGray;
@@ -706,7 +744,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::dagger);
   resetData(*d, ItemType::meleeWpn);
-  d->baseName = ItemName("Dagger", "Daggers", "a Dagger");
+  d->baseName = {"Dagger", "Daggers", "a Dagger"};
   d->baseDescr = {"Commonly associated with deception, stealth, and treachery. Many "
                   "assassinations have been carried out with the use of a dagger.",
 
@@ -715,9 +753,9 @@ void initDataList()
 
                   "Melee attacks with daggers are silent."
                  };
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->tile = TileId::dagger;
-  d->melee.attMsgs = ItemAttMsgs("stab", "stabs me with a Dagger");
+  d->melee.attMsgs = {"stab", "stabs me with a Dagger"};
   d->melee.dmg = pair<int, int>(1, 4);
   d->melee.hitChanceMod = 20;
   d->melee.hitMediumSfx = SfxId::hitSharp;
@@ -731,16 +769,16 @@ void initDataList()
 
   d = new ItemDataT(ItemId::hatchet);
   resetData(*d, ItemType::meleeWpn);
-  d->baseName = ItemName("Hatchet", "Hatchets", "a Hatchet");
+  d->baseName = {"Hatchet", "Hatchets", "a Hatchet"};
   d->baseDescr = {"A small axe with a short handle. Hatchets are reliable weapons - "
                   "they are easy to use, and cause decent damage for their low weight. "
                   /*TODO: "They can also serve well as thrown weapons."*/,
 
                   "Melee attacks with hatchets are silent."
                  };
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->tile = TileId::axe;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Hatchet");
+  d->melee.attMsgs = {"strike", "strikes me with a Hatchet"};
   d->melee.dmg = pair<int, int>(1, 5);
   d->melee.hitChanceMod = 15;
   d->ranged.throwHitChanceMod = -5;
@@ -756,15 +794,15 @@ void initDataList()
 
   d = new ItemDataT(ItemId::club);
   resetData(*d, ItemType::meleeWpn);
-  d->baseName = ItemName("Club", "Clubs", "a Club");
+  d->baseName = {"Club", "Clubs", "a Club"};
   d->baseDescr = {"Wielded since prehistoric times.",
                   "Melee attacks with clubs are noisy."
                  };
   d->spawnStdRange = Range(DLVL_FIRST_LATE_GAME, INT_MAX);
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::club;
   d->clr = clrBrown;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Club");
+  d->melee.attMsgs = {"strike", "strikes me with a Club"};
   d->melee.dmg = pair<int, int>(2, 3);
   d->melee.hitChanceMod = 10;
   d->melee.missSfx = SfxId::missMedium;
@@ -772,15 +810,15 @@ void initDataList()
 
   d = new ItemDataT(ItemId::hammer);
   resetData(*d, ItemType::meleeWpn);
-  d->baseName = ItemName("Hammer", "Hammers", "a Hammer");
+  d->baseName = {"Hammer", "Hammers", "a Hammer"};
   d->baseDescr = {"Typically used for construction, but can be quite devastating when "
                   "wielded as a weapon.",
 
                   "Melee attacks with hammers are noisy."
                  };
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::hammer;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Hammer");
+  d->melee.attMsgs = {"strike", "strikes me with a Hammer"};
   d->melee.dmg = pair<int, int>(2, 4);
   d->melee.hitChanceMod = 5;
   d->melee.missSfx = SfxId::missMedium;
@@ -790,15 +828,15 @@ void initDataList()
 
   d = new ItemDataT(ItemId::machete);
   resetData(*d, ItemType::meleeWpn);
-  d->baseName = ItemName("Machete", "Machetes", "a Machete");
+  d->baseName = {"Machete", "Machetes", "a Machete"};
   d->baseDescr = {"A large cleaver-like knife. It serves well both as a cutting tool "
                   "and weapon.",
 
                   "Melee attacks with machetes are noisy."
                  };
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::machete;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Machete");
+  d->melee.attMsgs = {"strike", "strikes me with a Machete"};
   d->melee.dmg = pair<int, int>(2, 5);
   d->melee.hitChanceMod = 0;
   d->melee.hitSmallSfx = SfxId::hitSharp;
@@ -810,16 +848,16 @@ void initDataList()
 
   d = new ItemDataT(ItemId::axe);
   resetData(*d, ItemType::meleeWpn);
-  d->baseName = ItemName("Axe", "Axes", "an Axe");
+  d->baseName = {"Axe", "Axes", "an Axe"};
   d->baseDescr = {"A tool intended for felling trees, splitting timber, etc. Used as a "
                   "weapon it can deliver devastating blows, although it requires some "
                   "skill to use effectively. Also effective for breaching wooden doors.",
 
                   "Melee attacks with axes are noisy."
                  };
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::axe;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with an axe");
+  d->melee.attMsgs = {"strike", "strikes me with an axe"};
   d->melee.dmg = pair<int, int>(2, 6);
   d->melee.hitChanceMod = -5;
   d->melee.hitSmallSfx = SfxId::hitSmall;
@@ -833,13 +871,13 @@ void initDataList()
 
   d = new ItemDataT(ItemId::pitchFork);
   resetData(*d, ItemType::meleeWpn);
-  d->baseName = ItemName("Pitchfork", "Pitchforks", "a Pitchfork");
+  d->baseName = {"Pitchfork", "Pitchforks", "a Pitchfork"};
   d->baseDescr = {"A long staff with a forked, four-pronged end. Victims can be pushed "
                   "away when stabbed, to keep them at bay."
                  };
-  d->itemWeight = ItemWeight::heavy;
+  d->weight = ItemWeight::heavy;
   d->tile = TileId::pitchfork;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Pitchfork");
+  d->melee.attMsgs = {"strike", "strikes me with a Pitchfork"};
   d->melee.dmg = pair<int, int>(3, 4);
   d->melee.hitChanceMod = -5;
   d->melee.knocksBack = true;
@@ -852,14 +890,14 @@ void initDataList()
 
   d = new ItemDataT(ItemId::sledgeHammer);
   resetData(*d, ItemType::meleeWpn);
-  d->baseName = ItemName("Sledgehammer", "Sledgehammers", "a Sledgehammer");
+  d->baseName = {"Sledgehammer", "Sledgehammers", "a Sledgehammer"};
   d->baseDescr = {"Often used in destruction work for breaking through walls. "
                   "It can deal a great amount of damage, although it is cumbersome to "
                   "carry, and it requires some skill to use effectively."
                  };
-  d->itemWeight = ItemWeight::heavy;
+  d->weight = ItemWeight::heavy;
   d->tile = TileId::sledgeHammer;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with a Sledgehammer");
+  d->melee.attMsgs = {"strike", "strikes me with a Sledgehammer"};
   d->melee.dmg = pair<int, int>(3, 5);
   d->melee.hitChanceMod = -10;
   d->melee.knocksBack = true;
@@ -869,28 +907,29 @@ void initDataList()
 
   d = new ItemDataT(ItemId::pharaohStaff);
   resetData(*d, ItemType::meleeWpn);
-  d->baseName = ItemName("Staff of the Pharaohs", "Staff of the Pharaohs",
-                         "the Staff of the Pharaohs");
+  d->baseName = {"Staff of the Pharaohs", "Staff of the Pharaohs",
+                 "the Staff of the Pharaohs"
+                };
   d->baseDescr = {"[TODO]"};
   d->clr = clrMagenta;
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->tile = TileId::pharaohStaff;
-  d->melee.attMsgs = ItemAttMsgs("strike", "strikes me with the Staff of the Pharaohs");
+  d->melee.attMsgs = {"strike", "strikes me with the Staff of the Pharaohs"};
   d->melee.dmg = pair<int, int>(2, 4);
   d->melee.hitChanceMod = 0;
   d->melee.missSfx = SfxId::missMedium;
   d->chanceToIncludeInSpawnList = 0;
-  d->itemValue = ItemValue::majorTreasure;
+  d->value = ItemValue::majorTreasure;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::ironSpike);
   resetData(*d, ItemType::throwingWpn);
-  d->baseName = ItemName("Iron Spike", "Iron Spikes", "an Iron Spike");
+  d->baseName = {"Iron Spike", "Iron Spikes", "an Iron Spike"};
   d->baseDescr = {"Can be useful for wedging things closed."
                   /*TODO: or prying things open."*/
                  };
-  d->isAmmo = true;
-  d->itemWeight = ItemWeight::extraLight;
+//  d->isAmmo = true;
+  d->weight = ItemWeight::extraLight;
   d->tile = TileId::ironSpike;
   d->isStackable = true;
   d->clr = clrGray;
@@ -908,7 +947,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::playerKick);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("kick", "");
+  d->melee.attMsgs = {"kick", ""};
   d->melee.hitChanceMod = 20;
   d->melee.dmg = pair<int, int>(1, 3);
   d->melee.knocksBack = true;
@@ -917,7 +956,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::playerStomp);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("stomp", "");
+  d->melee.attMsgs = {"stomp", ""};
   d->melee.hitChanceMod = 20;
   d->melee.dmg = pair<int, int>(1, 3);
   d->melee.knocksBack = false;
@@ -925,27 +964,27 @@ void initDataList()
 
   d = new ItemDataT(ItemId::playerPunch);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("punch", "");
+  d->melee.attMsgs = {"punch", ""};
   d->melee.hitChanceMod = 25;
   d->melee.dmg = pair<int, int>(1, 2);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::zombieClaw);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.attMsgs = {"", "claws me"};
   setDmgFromMonId(*d, ActorId::zombie);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::zombieClawDiseased);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.attMsgs = {"", "claws me"};
   setDmgFromMonId(*d, ActorId::zombie);
   d->melee.propApplied = new PropInfected(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::zombieAxe);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "chops me with a rusty axe");
+  d->melee.attMsgs = {"", "chops me with a rusty axe"};
   d->melee.hitSmallSfx = SfxId::hitSmall;
   d->melee.hitMediumSfx = SfxId::hitMedium;
   d->melee.hitHardSfx = SfxId::hitHard;
@@ -954,14 +993,14 @@ void initDataList()
 
   d = new ItemDataT(ItemId::bloatedZombiePunch);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "mauls me");
+  d->melee.attMsgs = {"", "mauls me"};
   setDmgFromMonId(*d, ActorId::bloatedZombie);
   d->melee.knocksBack = true;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::bloatedZombieSpit);
   resetData(*d, ItemType::rangedWpnIntr);
-  d->ranged.attMsgs = ItemAttMsgs("", "spits acid pus at me");
+  d->ranged.attMsgs = {"", "spits acid pus at me"};
   setDmgFromMonId(*d, ActorId::bloatedZombie);
   d->ranged.sndMsg = "I hear spitting.";
   d->ranged.missileClr = clrGreenLgt;
@@ -971,77 +1010,77 @@ void initDataList()
 
   d = new ItemDataT(ItemId::ratBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::rat);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::ratBiteDiseased);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::rat);
   d->melee.propApplied = new PropInfected(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::ratThingBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::ratThing);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::brownJenkinBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::brownJenkin);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::wormMassBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::wormMass);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::wolfBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::wolf);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::greenSpiderBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::greenSpider);
   d->melee.propApplied = new PropBlind(PropTurns::specific, 4);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::whiteSpiderBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::whiteSpider);
   d->melee.propApplied = new PropParalyzed(PropTurns::specific, 2);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::redSpiderBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::redSpider);
   d->melee.propApplied = new PropWeakened(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::shadowSpiderBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::shadowSpider);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::lengSpiderBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::lengSpider);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::fireHoundBreath);
   resetData(*d, ItemType::rangedWpnIntr);
-  d->ranged.attMsgs = ItemAttMsgs("", "breaths fire at me");
+  d->ranged.attMsgs = {"", "breaths fire at me"};
   d->ranged.sndMsg = "I hear a burst of flames.";
   setDmgFromMonId(*d, ActorId::fireHound);
   d->ranged.propApplied = new PropBurning(PropTurns::std);
@@ -1054,14 +1093,14 @@ void initDataList()
 
   d = new ItemDataT(ItemId::fireHoundBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::fireHound);
   d->melee.dmgType = DmgType::fire;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::frostHoundBreath);
   resetData(*d, ItemType::rangedWpnIntr);
-  d->ranged.attMsgs = ItemAttMsgs("", "breaths frost at me");
+  d->ranged.attMsgs = {"", "breaths frost at me"};
   d->ranged.sndMsg = "I hear a chilling sound.";
   setDmgFromMonId(*d, ActorId::frostHound);
   d->ranged.missileClr = clrBlueLgt;
@@ -1073,41 +1112,41 @@ void initDataList()
 
   d = new ItemDataT(ItemId::frostHoundBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::frostHound);
   d->melee.dmgType = DmgType::cold;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::zuulBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::zuul);
   d->melee.dmgType = DmgType::physical;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::dustVortexEngulf);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "engulfs me");
+  d->melee.attMsgs = {"", "engulfs me"};
   setDmgFromMonId(*d, ActorId::dustVortex);
   d->melee.propApplied = new PropBlind(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::fireVortexEngulf);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "engulfs me");
+  d->melee.attMsgs = {"", "engulfs me"};
   setDmgFromMonId(*d, ActorId::fireVortex);
   d->melee.propApplied = new PropBurning(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::frostVortexEngulf);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "engulfs me");
+  d->melee.attMsgs = {"", "engulfs me"};
   setDmgFromMonId(*d, ActorId::frostVortex);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::ghostClaw);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.attMsgs = {"", "claws me"};
   setDmgFromMonId(*d, ActorId::ghost);
   d->melee.propApplied = new PropTerrified(PropTurns::specific, 4);
   d->melee.dmgType = DmgType::spirit;
@@ -1115,7 +1154,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::phantasmSickle);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "slices me with a sickle");
+  d->melee.attMsgs = {"", "slices me with a sickle"};
   setDmgFromMonId(*d, ActorId::phantasm);
   d->melee.propApplied = new PropTerrified(PropTurns::specific, 4);
   d->melee.dmgType = DmgType::spirit;
@@ -1123,7 +1162,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::wraithClaw);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.attMsgs = {"", "claws me"};
   setDmgFromMonId(*d, ActorId::wraith);
   d->melee.propApplied = new PropTerrified(PropTurns::specific, 4);
   d->melee.dmgType = DmgType::spirit;
@@ -1131,51 +1170,51 @@ void initDataList()
 
   d = new ItemDataT(ItemId::giantBatBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::giantBat);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::polypTentacle);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "grips me with a tentacle");
+  d->melee.attMsgs = {"", "grips me with a tentacle"};
   d->melee.propApplied = new PropParalyzed(PropTurns::specific, 1);
   setDmgFromMonId(*d, ActorId::flyingPolyp);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::ghoulClaw);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.attMsgs = {"", "claws me"};
   setDmgFromMonId(*d, ActorId::ghoul);
   d->melee.propApplied = new PropInfected(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::shadowClaw);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.attMsgs = {"", "claws me"};
   setDmgFromMonId(*d, ActorId::shadow);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::byakheeClaw);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.attMsgs = {"", "claws me"};
   setDmgFromMonId(*d, ActorId::byakhee);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::giantMantisClaw);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.attMsgs = {"", "claws me"};
   setDmgFromMonId(*d, ActorId::giantMantis);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::giantLocustBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::locust);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::mummyMaul);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "mauls me");
+  d->melee.attMsgs = {"", "mauls me"};
   setDmgFromMonId(*d, ActorId::mummy);
   d->melee.propApplied = new PropCursed(PropTurns::std);
   d->melee.knocksBack = true;
@@ -1183,7 +1222,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::deepOneJavelinAtt);
   resetData(*d, ItemType::rangedWpnIntr);
-  d->ranged.attMsgs = ItemAttMsgs("", "throws a javelin at me");
+  d->ranged.attMsgs = {"", "throws a javelin at me"};
   setDmgFromMonId(*d, ActorId::deepOne);
   d->ranged.sndMsg = "";
   d->ranged.missileClr = clrBrown;
@@ -1193,75 +1232,75 @@ void initDataList()
 
   d = new ItemDataT(ItemId::deepOneSpearAtt);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "thrusts a spear at me");
+  d->melee.attMsgs = {"", "thrusts a spear at me"};
   setDmgFromMonId(*d, ActorId::deepOne);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::oozeBlackSpewPus);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "spews pus on me");
+  d->melee.attMsgs = {"", "spews pus on me"};
   setDmgFromMonId(*d, ActorId::oozeBlack);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::oozeClearSpewPus);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "spews pus on me");
+  d->melee.attMsgs = {"", "spews pus on me"};
   setDmgFromMonId(*d, ActorId::oozeClear);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::oozePutridSpewPus);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "spews infected pus on me");
+  d->melee.attMsgs = {"", "spews infected pus on me"};
   setDmgFromMonId(*d, ActorId::oozePutrid);
   d->melee.propApplied = new PropInfected(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::oozePoisonSpewPus);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "spews poisonous pus on me");
+  d->melee.attMsgs = {"", "spews poisonous pus on me"};
   setDmgFromMonId(*d, ActorId::oozePoison);
   d->melee.propApplied = new PropPoisoned(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::colourOOSpaceTouch);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "touches me");
+  d->melee.attMsgs = {"", "touches me"};
   setDmgFromMonId(*d, ActorId::colourOOSpace);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::chthonianBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "strikes me with a tentacle");
+  d->melee.attMsgs = {"", "strikes me with a tentacle"};
   d->melee.knocksBack = true;
   setDmgFromMonId(*d, ActorId::chthonian);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::huntingHorrorBite);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "bites me");
+  d->melee.attMsgs = {"", "bites me"};
   setDmgFromMonId(*d, ActorId::huntingHorror);
   d->melee.propApplied = new PropParalyzed(PropTurns::std);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::moldSpores);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "releases spores at me");
+  d->melee.attMsgs = {"", "releases spores at me"};
   setDmgFromMonId(*d, ActorId::mold);
   d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::theDarkOneClaw);
   resetData(*d, ItemType::meleeWpnIntr);
-  d->melee.attMsgs = ItemAttMsgs("", "claws me");
+  d->melee.attMsgs = {"", "claws me"};
   d->melee.propApplied = new PropTerrified(PropTurns::std);
   setDmgFromMonId(*d, ActorId::theDarkOne);
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::armorLeatherJacket);
   resetData(*d, ItemType::armor);
-  d->baseName = ItemName("Leather Jacket", "", "a Leather Jacket");
+  d->baseName = {"Leather Jacket", "", "a Leather Jacket"};
   d->baseDescr = {"It offers some protection."};
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->clr = clrBrown;
   d->spawnStdRange.lower = 1;
   d->armor.absorptionPoints = 1;
@@ -1272,20 +1311,20 @@ void initDataList()
 
   d = new ItemDataT(ItemId::armorIronSuit);
   resetData(*d, ItemType::armor);
-  d->baseName = ItemName("Iron Suit", "", "an Iron Suit");
+  d->baseName = {"Iron Suit", "", "an Iron Suit"};
   d->baseDescr = {"A crude armour constructed from metal plates, bolts, and leather "
                   "straps. It can absorb a high amount of damage, but it makes sneaking "
                   "and dodging very difficult. Also, due to the narrow slit of the "
                   "helmet, aiming is slightly more difficult, and it is harder to "
                   "detect sneaking enemies and hidden objects."
                  };
-  d->abilityModsEquipped[int(AbilityId::stealth)]    = -50;
-  d->abilityModsEquipped[int(AbilityId::dodgeAtt)]   = -50;
-  d->abilityModsEquipped[int(AbilityId::dodgeTrap)]  = -50;
-  d->abilityModsEquipped[int(AbilityId::melee)]      = -10;
-  d->abilityModsEquipped[int(AbilityId::ranged)]     = -10;
-  d->abilityModsEquipped[int(AbilityId::searching)]  = -6;
-  d->itemWeight = ItemWeight::heavy;
+  d->abilityModsWhileEquipped[int(AbilityId::stealth)]    = -50;
+  d->abilityModsWhileEquipped[int(AbilityId::dodgeAtt)]   = -50;
+  d->abilityModsWhileEquipped[int(AbilityId::dodgeTrap)]  = -50;
+  d->abilityModsWhileEquipped[int(AbilityId::melee)]      = -10;
+  d->abilityModsWhileEquipped[int(AbilityId::ranged)]     = -10;
+  d->abilityModsWhileEquipped[int(AbilityId::searching)]  = -6;
+  d->weight = ItemWeight::heavy;
   d->clr = clrWhite;
   d->spawnStdRange.lower = 2;
   d->armor.absorptionPoints = 5;
@@ -1296,15 +1335,15 @@ void initDataList()
 
   d = new ItemDataT(ItemId::armorFlackJacket);
   resetData(*d, ItemType::armor);
-  d->baseName = ItemName("Flak Jacket", "", "a Flak Jacket");
+  d->baseName = {"Flak Jacket", "", "a Flak Jacket"};
   d->baseDescr = {"An armour consisting of steel plates sewn into a waistcoat. It "
                   "offers very good protection for its weight."
                   "Sneaking and dodging is slightly more difficult."
                  };
-  d->abilityModsEquipped[int(AbilityId::stealth)]    = -20;
-  d->abilityModsEquipped[int(AbilityId::dodgeAtt)]   = -20;
-  d->abilityModsEquipped[int(AbilityId::dodgeTrap)]  = -20;
-  d->itemWeight = ItemWeight::medium;
+  d->abilityModsWhileEquipped[int(AbilityId::stealth)]    = -20;
+  d->abilityModsWhileEquipped[int(AbilityId::dodgeAtt)]   = -20;
+  d->abilityModsWhileEquipped[int(AbilityId::dodgeTrap)]  = -20;
+  d->weight = ItemWeight::medium;
   d->clr = clrGreen;
   d->spawnStdRange.lower = 3;
   d->armor.absorptionPoints = 3;
@@ -1315,7 +1354,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::armorAsbSuit);
   resetData(*d, ItemType::armor);
-  d->baseName = ItemName("Asbestos Suit", "", "an Asbestos Suit");
+  d->baseName = {"Asbestos Suit", "", "an Asbestos Suit"};
   d->baseDescr = {"A one piece overall of asbestos fabric, including a hood, furnace "
                   "mask, gloves and shoes. It protects the wearer against fire, acid "
                   "and electricity, and also against smoke, fumes and gas.",
@@ -1323,13 +1362,13 @@ void initDataList()
                   "difficult. Also, because of the hood and mask, aiming and detecting "
                   "hidden enemies and objects is somewhat harder."
                  };
-  d->abilityModsEquipped[int(AbilityId::stealth)]    = -20;
-  d->abilityModsEquipped[int(AbilityId::dodgeAtt)]   = -20;
-  d->abilityModsEquipped[int(AbilityId::dodgeTrap)]  = -20;
-  d->abilityModsEquipped[int(AbilityId::melee)]      = -10;
-  d->abilityModsEquipped[int(AbilityId::ranged)]     = -10;
-  d->abilityModsEquipped[int(AbilityId::searching)]  = -6;
-  d->itemWeight = ItemWeight::medium;
+  d->abilityModsWhileEquipped[int(AbilityId::stealth)]    = -20;
+  d->abilityModsWhileEquipped[int(AbilityId::dodgeAtt)]   = -20;
+  d->abilityModsWhileEquipped[int(AbilityId::dodgeTrap)]  = -20;
+  d->abilityModsWhileEquipped[int(AbilityId::melee)]      = -10;
+  d->abilityModsWhileEquipped[int(AbilityId::ranged)]     = -10;
+  d->abilityModsWhileEquipped[int(AbilityId::searching)]  = -6;
+  d->weight = ItemWeight::medium;
   d->clr = clrRedLgt;
   d->spawnStdRange.lower = 3;
   d->armor.absorptionPoints = 1;
@@ -1341,16 +1380,16 @@ void initDataList()
 
   d = new ItemDataT(ItemId::armorHeavyCoat);
   resetData(*d, ItemType::armor);
-  d->baseName = ItemName("Heavy Coat", "", "a Heavy Coat");
+  d->baseName = {"Heavy Coat", "", "a Heavy Coat"};
   d->baseDescr = {"A very thick coat. It gives more protection against physical harm "
                   "than a leather jacket, and it also protects against cold.",
                   "Sneaking and dodging is slightly more difficult due to its higher "
                   "weight."
                  };
-  d->abilityModsEquipped[int(AbilityId::stealth)]    = -15;
-  d->abilityModsEquipped[int(AbilityId::dodgeAtt)]   = -15;
-  d->abilityModsEquipped[int(AbilityId::dodgeTrap)]  = -15;
-  d->itemWeight = ItemWeight::medium;
+  d->abilityModsWhileEquipped[int(AbilityId::stealth)]    = -15;
+  d->abilityModsWhileEquipped[int(AbilityId::dodgeAtt)]   = -15;
+  d->abilityModsWhileEquipped[int(AbilityId::dodgeTrap)]  = -15;
+  d->weight = ItemWeight::medium;
   d->clr = clrBlueLgt;
   d->spawnStdRange.lower = 3;
   d->armor.absorptionPoints = 2;
@@ -1361,12 +1400,12 @@ void initDataList()
 
   d = new ItemDataT(ItemId::armorMigo);
   resetData(*d, ItemType::armor);
-  d->baseName = ItemName("Mi-go Bio-armor", "", "a Mi-go Bio-armor");
+  d->baseName = {"Mi-go Bio-armor", "", "a Mi-go Bio-armor"};
   d->baseDescr = {"A self-repairing biological armor created by the Mi-go.",
                   "It is very disturbing for a human to wear (+15% shock while worn)."
                  };
   d->spawnStdRange = Range(-1, -1);
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->shockWhileEquipped = 15;
   d->clr = clrMagenta;
   d->tile = TileId::migoArmor;
@@ -1376,42 +1415,40 @@ void initDataList()
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::gasMask);
-  resetData(*d, ItemType::general);
-  d->baseName = ItemName("Gas Mask", "", "A Gas Mask");
+  resetData(*d, ItemType::headWear);
+  d->baseName = {"Gas Mask", "", "a Gas Mask"};
   d->baseDescr = {"Protects the eyes, throat and lungs from smoke and fumes. It has a "
                   "limited useful lifespan that is related to the absorbent capacity of "
                   "the filter.",
                   "Due to the small eye windows, aiming is slightly more difficult, "
                   "and it is harder to detect sneaking enemies and hidden objects."
                  };
-  d->abilityModsEquipped[int(AbilityId::melee)]      = -10;
-  d->abilityModsEquipped[int(AbilityId::ranged)]     = -10;
-  d->abilityModsEquipped[int(AbilityId::searching)]  = -6;
+  d->abilityModsWhileEquipped[int(AbilityId::melee)]      = -10;
+  d->abilityModsWhileEquipped[int(AbilityId::ranged)]     = -10;
+  d->abilityModsWhileEquipped[int(AbilityId::searching)]  = -6;
   d->isStackable = false;
   d->clr = clrBrown;
   d->tile = TileId::mask;
   d->glyph = '[';
-  d->isHeadwear = true;
   d->spawnStdRange = Range(1, DLVL_LAST_EARLY_GAME);
   d->chanceToIncludeInSpawnList = 50;
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->landOnHardSndMsg = "";
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::hideousMask);
   resetData(*d, ItemType::general);
-  d->baseName = ItemName("Hideous Mask", "", "The Hideous Mask");
+  d->baseName = {"Hideous Mask", "", "The Hideous Mask"};
   d->baseDescr = {"[TODO]"};
   d->isStackable = false;
   d->clr = clrMagenta;
   d->tile = TileId::mask;
   d->glyph = '[';
-  d->isHeadwear = true;
   d->spawnStdRange = Range(-1, -1);
-  d->itemWeight = ItemWeight::light;
+  d->weight = ItemWeight::light;
   d->landOnHardSndMsg = "";
   d->chanceToIncludeInSpawnList = 0;
-  d->itemValue = ItemValue::majorTreasure;
+  d->value = ItemValue::majorTreasure;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::scrollMayhem);
@@ -1562,8 +1599,8 @@ void initDataList()
 
   d = new ItemDataT(ItemId::deviceBlaster);
   resetData(*d, ItemType::device);
-  d->baseName = ItemName("Blaster Device", "Blaster Devices", "a Blaster Device");
-  d->itemValue = ItemValue::majorTreasure;
+  d->baseName = {"Blaster Device", "Blaster Devices", "a Blaster Device"};
+  d->value = ItemValue::minorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
@@ -1573,9 +1610,10 @@ void initDataList()
 
   d = new ItemDataT(ItemId::deviceShockwave);
   resetData(*d, ItemType::device);
-  d->baseName = ItemName("Shock Wave Device", "Shock Wave Devices",
-                         "a Shock Wave Device");
-  d->itemValue = ItemValue::majorTreasure;
+  d->baseName = {"Shock Wave Device", "Shock Wave Devices",
+                 "a Shock Wave Device"
+                };
+  d->value = ItemValue::minorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
@@ -1585,9 +1623,10 @@ void initDataList()
 
   d = new ItemDataT(ItemId::deviceRejuvenator);
   resetData(*d, ItemType::device);
-  d->baseName = ItemName("Rejuvenator Device", "Rejuvenator Devices",
-                         "a Rejuvenator Device");
-  d->itemValue = ItemValue::majorTreasure;
+  d->baseName = {"Rejuvenator Device", "Rejuvenator Devices",
+                 "a Rejuvenator Device"
+                };
+  d->value = ItemValue::minorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
@@ -1597,9 +1636,8 @@ void initDataList()
 
   d = new ItemDataT(ItemId::deviceTranslocator);
   resetData(*d, ItemType::device);
-  d->baseName = ItemName("Translocator Device", "Translocator Devices",
-                         "a Translocator Device");
-  d->itemValue = ItemValue::majorTreasure;
+  d->baseName = {"Translocator Device", "Translocator Devices", "a Translocator Device"};
+  d->value = ItemValue::minorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
@@ -1609,9 +1647,8 @@ void initDataList()
 
   d = new ItemDataT(ItemId::deviceSentryDrone);
   resetData(*d, ItemType::device);
-  d->baseName = ItemName("Sentry Drone Device", "Sentry Drone Devices",
-                         "a Sentry Drone Device");
-  d->itemValue = ItemValue::majorTreasure;
+  d->baseName = {"Sentry Drone Device", "Sentry Drone Devices", "a Sentry Drone Device"};
+  d->value = ItemValue::minorTreasure;
   d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
@@ -1621,8 +1658,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::electricLantern);
   resetData(*d, ItemType::device);
-  d->baseName = ItemName("Electric Lantern", "Electric Lanterns",
-                         "an Electric Lantern");
+  d->baseName = {"Electric Lantern", "Electric Lanterns", "an Electric Lantern"};
   d->baseDescr = {"A portable light source. It is somewhat unreliable as it tends to "
                   "flicker and malfunction often."
                  };
@@ -1639,15 +1675,128 @@ void initDataList()
 
   d = new ItemDataT(ItemId::medicalBag);
   resetData(*d, ItemType::general);
-  d->baseName = ItemName("Medical Bag", "Medical Bags", "a Medical Bag");
+  d->baseName = {"Medical Bag", "Medical Bags", "a Medical Bag"};
   d->baseDescr = {"A portable bag of medical supplies."};
-  d->itemValue = ItemValue::normal;
-  d->itemWeight = ItemWeight::medium;
+  d->weight = ItemWeight::medium;
   d->spawnStdRange = Range(1, DLVL_LAST_MID_GAME);
   d->isStackable = false;
   d->glyph = '~';
   d->clr = clrBrownDrk;
   d->tile = TileId::medicalBag;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::starAmulet);
+  resetData(*d, ItemType::amulet);
+  d->baseName = {"Star Amulet", "", "a Star Amulet"};
+  d->clr = clrWhite;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::skullAmulet);
+  resetData(*d, ItemType::amulet);
+  d->baseName = {"Skull Amulet", "", "a Skull Amulet"};
+  d->clr = clrWhite;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::spiderAmulet);
+  resetData(*d, ItemType::amulet);
+  d->baseName = {"Spider Amulet", "", "a Spider Amulet"};
+  d->clr = clrWhite;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::eyeAmulet);
+  resetData(*d, ItemType::amulet);
+  d->baseName = {"Eye-shaped Amulet", "", "an Eye-shaped Amulet"};
+  d->clr = clrWhite;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::moonAmulet);
+  resetData(*d, ItemType::amulet);
+  d->baseName = {"Moon Amulet", "", "a Moon Amulet"};
+  d->clr = clrWhite;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::batAmulet);
+  resetData(*d, ItemType::amulet);
+  d->baseName = {"Bat-shaped Amulet", "", "a Bat-shaped Amulet"};
+  d->clr = clrWhite;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::scarabAmulet);
+  resetData(*d, ItemType::amulet);
+  d->baseName = {"Scarab Amulet", "", "a Scarab Amulet"};
+  d->clr = clrWhite;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::daggerAmulet);
+  resetData(*d, ItemType::amulet);
+  d->baseName = {"Dagger Amulet", "", "a Dagger Amulet"};
+  d->clr = clrWhite;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::goldenRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Golden Ring", "", "a Golden Ring"};
+  d->clr = clrYellow;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::silverRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Silver Ring", "", "a Silver Ring"};
+  d->clr = clrWhite;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::carnelianRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Carnelian Ring", "", "a Carnelian Ring"};
+  d->clr = clrRedLgt;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::garnetRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Garnet Ring", "", "a Garnet Ring"};
+  d->clr = clrRedLgt;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::ironRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Iron Ring", "", "an Iron Ring"};
+  d->clr = clrGray;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::jadeRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Jade Ring", "", "a Jade Ring"};
+  d->clr = clrGreenLgt;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::moonstoneRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Moonstone Ring", "", "a Moonstone Ring"};
+  d->clr = clrBlueLgt;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::obsidianRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Obsidian Ring", "", "an Obsidian Ring"};
+  d->clr = clrGray;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::onyxRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Onyx Ring", "", "an Onyx Ring"};
+  d->clr = clrGray;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::topazRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Topaz Ring", "", "a Topaz Ring"};
+  d->clr = clrBlueLgt;
+  data[int(d->id)] = d;
+
+  d = new ItemDataT(ItemId::emeraldRing);
+  resetData(*d, ItemType::ring);
+  d->baseName = {"Emerald Ring", "", "an Emerald Ring"};
+  d->clr = clrGreenLgt;
   data[int(d->id)] = d;
 }
 
@@ -1673,8 +1822,9 @@ void storeToSaveLines(vector<string>& lines)
   for (int i = 0; i < int(ItemId::END); ++i)
   {
     lines.push_back(data[i]->isIdentified ? "1" : "0");
+    lines.push_back(data[i]->allowSpawn   ? "1" : "0");
 
-    if (data[i]->isScroll)
+    if (data[i]->type == ItemType::scroll)
     {
       lines.push_back(data[i]->isTried ? "1" : "0");
     }
@@ -1688,7 +1838,10 @@ void setupFromSaveLines(vector<string>& lines)
     data[i]->isIdentified = lines.front() == "0" ? false : true;
     lines.erase(begin(lines));
 
-    if (data[i]->isScroll)
+    data[i]->allowSpawn = lines.front()   == "0" ? false : true;
+    lines.erase(begin(lines));
+
+    if (data[i]->type == ItemType::scroll)
     {
       data[i]->isTried = lines.front() == "0" ? false : true;
       lines.erase(begin(lines));

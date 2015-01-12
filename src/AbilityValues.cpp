@@ -26,7 +26,7 @@ int AbilityVals::getVal(const AbilityId abilityId,
     {
       if (slot.item)
       {
-        ret += slot.item->getData().abilityModsEquipped[int(abilityId)];
+        ret += slot.item->getData().abilityModsWhileEquipped[int(abilityId)];
       }
     }
 

@@ -4,6 +4,7 @@
 #include "Art.h"
 #include "InventoryHandling.h"
 #include "Converters.h"
+#include "CmnData.h"
 
 class ItemDataT;
 class Prop;
@@ -21,11 +22,13 @@ public:
 
   virtual ~Item();
 
-  ItemId            getId()     const;
-  const ItemDataT&  getData()   const;
-  virtual Clr       getClr()    const;
-  char              getGlyph()  const;
-  TileId            getTile()   const;
+  ItemId            getId()       const;
+  const ItemDataT&  getData()     const;
+  virtual Clr       getClr()      const;
+  char              getGlyph()    const;
+  TileId            getTile()     const;
+
+  virtual LgtSize   getLgtSize()  const {return LgtSize::none;}
 
   std::string getName(const ItemRefType refType, const ItemRefInf inf = ItemRefInf::yes,
                       const ItemRefAttInf attInf = ItemRefAttInf::none) const;
@@ -34,7 +37,7 @@ public:
 
   virtual void identify(const bool IS_SILENT_IDENTIFY) {(void)IS_SILENT_IDENTIFY;}
 
-  virtual void storeToSaveLines(std::vector<std::string>& lines)    {(void)lines;}
+  virtual void storeToSaveLines  (std::vector<std::string>& lines)  {(void)lines;}
   virtual void setupFromSaveLines(std::vector<std::string>& lines)  {(void)lines;}
 
   int getWeight() const;
@@ -45,15 +48,10 @@ public:
 
   virtual Clr getInterfaceClr() const {return clrBrown;}
 
-  virtual void onNewTurnInInventory() {}
-
-  virtual void onPickupToBackpack(Inventory& inv) {(void)inv;}
-
-  virtual void            onEquip()   {}
+  virtual void            onNewTurnInInv(const InvType invType) {(void)invType;}
+  virtual void            onPickupToBackpack(Inventory& inv)    {(void)inv;}
+  virtual void            onEquip()                             {}
   virtual UnequipAllowed  onUnequip() {return UnequipAllowed::yes;}
-
-  //Called by the ItemDrop class to make noise etc
-  virtual void appplyDropEffects() {}
 
   //Used when attempting to fire or throw an item
   bool isInEffectiveRangeLmt(const Pos& p0, const Pos& p1) const;
@@ -69,8 +67,6 @@ public:
   int meleeDmgPlus_;
 
 protected:
-  void clearCarrierProps();
-
   //E.g. "{Off}" for Lanterns, "{60}" for Medical Bags, or "4/7" for Pistols
   virtual std::string getNameInf() const {return "";}
 
@@ -138,7 +134,7 @@ public:
   ArmorMigo(ItemDataT* const itemData) : Armor(itemData) {}
   ~ArmorMigo() {}
 
-  void onNewTurnInInventory() override;
+  void onNewTurnInInv(const InvType invType) override;
 
 private:
   void            onEquip_()    override;
@@ -354,7 +350,7 @@ class HideousMask: public Headwear
 public:
   HideousMask(ItemDataT* itemData) : Headwear(itemData) {}
 
-  void  onNewTurnInInventory() override;
+  void onNewTurnInInv(const InvType invType) override;
 };
 
 class GasMask: public Headwear

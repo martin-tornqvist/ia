@@ -89,7 +89,7 @@ const std::string infoScrCmdInfo =
   " [2/8 down/up j/k] to navigate [space/esc] to exit ";
 
 const std::string cancelInfoStrNoSpace  = "[space/esc] to cancel";
-const std::string cancelInfoStr         = " " + cancelInfoStr;
+const std::string cancelInfoStr         = " " + cancelInfoStrNoSpace;
 const std::string msgDisarmNoTrap       = "I find nothing there to disarm.";
 const std::string msgMonPreventCmd      = "Not while an enemy is near.";
 

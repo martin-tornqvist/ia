@@ -1,5 +1,5 @@
-#ifndef ITEM_DROP_H
-#define ITEM_DROP_H
+#ifndef DROP_H
+#define DROP_H
 
 #include "CmnTypes.h"
 
@@ -15,7 +15,7 @@ void dropAllCharactersItems(Actor& actor);
 //other items, unless they can be stacked.
 Item* dropItemOnMap(const Pos& intendedPos, Item& item);
 
-void dropItemFromInv(Actor& actor, const InvList invList, const size_t ELEMENT,
+void dropItemFromInv(Actor& actor, const InvType invType, const size_t ELEMENT,
                      const int NR_ITEMS_TO_DROP = -1);
 
 } //ItemDrop

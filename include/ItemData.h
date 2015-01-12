@@ -23,23 +23,6 @@ enum class ItemWeight
 
 enum class MainAttMode {none, melee, thrown, ranged};
 
-enum class ItemType
-{
-  general,
-  meleeWpn,
-  meleeWpnIntr,
-  rangedWpn,
-  rangedWpnIntr,
-  throwingWpn,
-  ammo,
-  ammoClip,
-  scroll,
-  potion,
-  device,
-  armor,
-  explosive
-};
-
 enum class ItemValue {normal, minorTreasure, majorTreasure};
 
 enum class ItemId
@@ -179,7 +162,42 @@ enum class ItemId
 
   medicalBag,
 
+  starAmulet,
+  skullAmulet,
+  spiderAmulet,
+  eyeAmulet,
+  moonAmulet,
+  batAmulet,
+  scarabAmulet,
+  daggerAmulet,
+
+  goldenRing,
+  silverRing,
+  carnelianRing,
+  garnetRing,
+  ironRing,
+  jadeRing,
+  moonstoneRing,
+  obsidianRing,
+  onyxRing,
+  topazRing,
+  emeraldRing,
+
   END
+};
+
+struct ItemContainerSpawnRule
+{
+  ItemContainerSpawnRule() :
+    featureId       (FeatureId::END),
+    pctChanceToIncl (0) {}
+
+  ItemContainerSpawnRule(FeatureId featureId_, int pctChanceToIncl_) :
+    featureId       (featureId_),
+    pctChanceToIncl (pctChanceToIncl_) {}
+
+  FeatureId featureId;
+  int       pctChanceToIncl;
 };
 
 class ItemDataT
@@ -191,91 +209,89 @@ public:
 
   ~ItemDataT() {}
 
-  ItemId id;
-  ItemValue itemValue;
-  ItemWeight itemWeight;
-  Range spawnStdRange;
-  int maxStackAtSpawn;
-  int chanceToIncludeInSpawnList;
-  bool isStackable;
-  bool isIdentified;
-  bool isTried;
-  ItemName baseName;
-  ItemName baseNameUnid;
-  std::vector<std::string> baseDescr;
-  char glyph;
-  Clr clr;
-  TileId tile;
-  MainAttMode mainAttMode;
-  bool isExplosive, isScroll, isPotion, isDevice;
-  bool isArmor, isHeadwear;
-  bool isAmmo, isAmmoClip;
-  bool isIntrinsic;
-  SpellId spellCastFromScroll;
-  std::string landOnHardSndMsg;
-  SfxId landOnHardSfx;
-  int shockWhileInBackpack = 0;
-  int shockWhileEquipped = 0;
-  std::vector<RoomType> nativeRooms;
-  std::vector< std::pair<FeatureId, int> > featuresCanBeFoundIn;
-  int abilityModsEquipped[int(AbilityId::END)];
+  ItemId                    id;
+  ItemType                  type;
+  ItemValue                 value;
+  ItemWeight                weight;
+  bool                      allowSpawn;
+  Range                     spawnStdRange;
+  int                       maxStackAtSpawn;
+  int                       chanceToIncludeInSpawnList;
+  bool                      isStackable;
+  bool                      isIdentified;
+  bool                      isTried;
+  ItemName                  baseName;
+  ItemName                  baseNameUnid;
+  std::vector<std::string>  baseDescr;
+  char                      glyph;
+  Clr                       clr;
+  TileId                    tile;
+  MainAttMode               mainAttMode;
+  SpellId                   spellCastFromScroll;
+  std::string               landOnHardSndMsg;
+  SfxId                     landOnHardSfx;
+  int                       shockWhileInBackpack;
+  int                       shockWhileEquipped;
+  std::vector<RoomType>     nativeRooms;
+  std::vector<ItemContainerSpawnRule> containerSpawnRules;
+  int                       abilityModsWhileEquipped[int(AbilityId::END)];
 
-  struct MeleeItemData
+  struct ItemMeleeData
   {
-    MeleeItemData();
-    ~MeleeItemData();
+    ItemMeleeData();
+    ~ItemMeleeData();
 
-    bool isMeleeWpn;
-    std::pair<int, int> dmg;
-    int hitChanceMod;
-    ItemAttMsgs attMsgs;
-    Prop* propApplied;
-    DmgType dmgType;
-    bool knocksBack;
-    SfxId hitSmallSfx;
-    SfxId hitMediumSfx;
-    SfxId hitHardSfx;
-    SfxId missSfx;
+    bool                    isMeleeWpn;
+    std::pair<int, int>     dmg;
+    int                     hitChanceMod;
+    ItemAttMsgs             attMsgs;
+    Prop*                   propApplied;
+    DmgType                 dmgType;
+    bool                    knocksBack;
+    SfxId                   hitSmallSfx;
+    SfxId                   hitMediumSfx;
+    SfxId                   hitHardSfx;
+    SfxId                   missSfx;
   } melee;
 
-  struct RangedItemData
+  struct ItemRangedData
   {
-    RangedItemData();
-    ~RangedItemData();
+    ItemRangedData();
+    ~ItemRangedData();
 
-    bool isRangedWpn, isThrowingWpn, isMachineGun, isShotgun;
-    bool isCausingRecoil;
-    int ammoContainedInClip;
-    DiceParam dmg;
-    DiceParam throwDmg;
-    int hitChanceMod;
-    int throwHitChanceMod;
-    int effectiveRange;
-    bool knocksBack;
-    std::string dmgInfoOverride;
-    ItemId ammoItemId;
-    DmgType dmgType;
-    bool hasInfiniteAmmo;
-    char missileGlyph;
-    TileId missileTile;
-    Clr missileClr;
-    bool missileLeavesTrail;
-    bool missileLeavesSmoke;
-    ItemAttMsgs attMsgs;
-    std::string sndMsg;
-    SndVol sndVol;
-    bool makesRicochetSnd;
-    SfxId attSfx;
-    SfxId reloadSfx;
-    Prop* propApplied;
+    bool                    isRangedWpn, isThrowingWpn, isMachineGun, isShotgun;
+    bool                    isCausingRecoil;
+    int                     maxNrAmmoInClip;
+    DiceParam               dmg;
+    DiceParam               throwDmg;
+    int                     hitChanceMod;
+    int                     throwHitChanceMod;
+    int                     effectiveRange;
+    bool                    knocksBack;
+    std::string             dmgInfoOverride;
+    ItemId                  ammoItemId;
+    DmgType                 dmgType;
+    bool                    hasInfiniteAmmo;
+    char                    missileGlyph;
+    TileId                  missileTile;
+    Clr                     missileClr;
+    bool                    missileLeavesTrail;
+    bool                    missileLeavesSmoke;
+    ItemAttMsgs             attMsgs;
+    std::string             sndMsg;
+    SndVol                  sndVol;
+    bool                    makesRicochetSnd;
+    SfxId                   attSfx;
+    SfxId                   reloadSfx;
+    Prop*                   propApplied;
   } ranged;
 
-  struct ArmorItemData
+  struct ItemArmorData
   {
-    ArmorItemData();
+    ItemArmorData();
 
-    int absorptionPoints;
-    double dmgToDurabilityFactor;
+    int                     absorptionPoints;
+    double                  dmgToDurabilityFactor;
   } armor;
 };
 

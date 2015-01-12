@@ -10,13 +10,16 @@
 #include "Fov.h"
 #include "Log.h"
 #include "FeatureTrap.h"
-#include "ItemDrop.h"
+#include "Drop.h"
 #include "Explosion.h"
 #include "DungeonMaster.h"
 #include "Inventory.h"
 #include "MapParsing.h"
 #include "Item.h"
 #include "Utils.h"
+#include "Input.h"
+#include "Marker.h"
+#include "Look.h"
 
 using namespace std;
 
@@ -190,40 +193,94 @@ void Actor::place(const Pos& pos_, ActorDataT& data)
   updateClr();
 }
 
-void Actor::teleport(const bool MOVE_TO_POS_AWAY_FROM_MONS)
+void Actor::teleport()
 {
-  (void)MOVE_TO_POS_AWAY_FROM_MONS;
-
   bool blocked[MAP_W][MAP_H];
   MapParse::run(CellCheck::BlocksActor(*this, true), blocked);
-  vector<Pos> freeCells;
-  Utils::mkVectorFromBoolMap(false, blocked, freeCells);
 
-  const Pos newPos = freeCells[Rnd::range(0, freeCells.size() - 1)];
+  vector<Pos> posBucket;
+  Utils::mkVectorFromBoolMap(false, blocked, posBucket);
 
-  //TODO: There should be a blast animation effect, and also if it's a seen monster
-  //teleporting, there should be a message.
+  if (posBucket.empty())
+  {
+    return;
+  }
+
+  if (!isPlayer() && Map::player->isSeeingActor(*this, nullptr))
+  {
+    Log::addMsg(getNameThe() + " suddenly disappears!");
+  }
+
+  Pos   tgtPos                = posBucket[Rnd::range(0, posBucket.size() - 1)];
+  bool  playerHasTeleControl  = false;
 
   if (isPlayer())
   {
     Map::player->updateFov();
     Render::drawMapAndInterface();
     Map::updateVisualMemory();
+
+    //Teleport control?
+    bool props[int(PropId::END)];
+
+    propHandler_->getPropIds(props);
+
+    if (props[int(PropId::teleControl)] && !props[int(PropId::confused)])
+    {
+      playerHasTeleControl = true;
+
+      auto onMarkerAtPos = [](const Pos & p)
+      {
+        Log::clearLog();
+        Look::printLocationInfoMsgs(p);
+        Log::addMsg("[enter] to teleport here");
+        Log::addMsg(cancelInfoStrNoSpace);
+      };
+
+      auto onKeyPress = [](const Pos & p, const KeyData & keyData)
+      {
+        (void)p;
+
+        if (keyData.sdlKey == SDLK_RETURN)
+        {
+          Log::clearLog();
+          return MarkerDone::yes;
+        }
+        return MarkerDone::no;
+      };
+
+      Log::addMsg("I have the power to control teleportation.", clrWhite, false, true);
+
+      const Pos markerTgtPos = Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::no,
+                                           onMarkerAtPos, onKeyPress);
+
+      if (blocked[markerTgtPos.x][markerTgtPos.y])
+      {
+        Log::addMsg("I failed to go there...", clrWhite, false, true);
+      }
+      else //Chosen target position is free
+      {
+        tgtPos = markerTgtPos;
+      }
+    }
   }
   else
   {
     static_cast<Mon*>(this)->playerAwareOfMeCounter_ = 0;
   }
 
-  pos = newPos;
+  pos = tgtPos;
 
   if (isPlayer())
   {
     Map::player->updateFov();
     Render::drawMapAndInterface();
     Map::updateVisualMemory();
-    Log::addMsg("I suddenly find myself in a different location!");
-    propHandler_->tryApplyProp(new PropConfused(PropTurns::specific, 8));
+    if (!playerHasTeleControl)
+    {
+      Log::addMsg("I suddenly find myself in a different location!");
+      propHandler_->tryApplyProp(new PropConfused(PropTurns::specific, 8));
+    }
   }
 }
 
@@ -298,16 +355,15 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
 
   const int DIF_FROM_MAX = getSpiMax() - SPI_RESTORED;
 
-  //If spi is below limit, but restored spi will push it over the limit,
-  //spi is set to max.
+  //If spi is below limit, but will be pushed over the limit, spi is set to max.
   if (!IS_ALLOWED_ABOVE_MAX && getSpi() > DIF_FROM_MAX && getSpi() < getSpiMax())
   {
     spi_        = getSpiMax();
     isSpiGained = true;
   }
 
-  //If spi is below limit, and restored spi will NOT push it
-  //over the limit - restored spi is added to current.
+  //If spi is below limit, and will not NOT be pushed over the limit - restored spi is
+  //added to current.
   if (IS_ALLOWED_ABOVE_MAX || getSpi() <= DIF_FROM_MAX)
   {
     spi_ += SPI_RESTORED;
@@ -344,11 +400,11 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG)
     {
       if (CHANGE > 0)
       {
-        Log::addMsg("I feel more vigorous!");
+        Log::addMsg("I feel more vigorous!", clrMsgGood);
       }
       else if (CHANGE < 0)
       {
-        Log::addMsg("I feel frailer!");
+        Log::addMsg("I feel frailer!", clrMsgBad);
       }
     }
     else //Is monster
@@ -368,22 +424,22 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG)
   }
 }
 
-void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MESSAGES)
+void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MSG)
 {
   spiMax_ = max(1, spiMax_ + CHANGE);
   spi_    = max(1, spi_ + CHANGE);
 
-  if (ALLOW_MESSAGES)
+  if (ALLOW_MSG)
   {
     if (isPlayer())
     {
       if (CHANGE > 0)
       {
-        Log::addMsg("My spirit is stronger!");
+        Log::addMsg("My spirit is stronger!", clrMsgGood);
       }
       else if (CHANGE < 0)
       {
-        Log::addMsg("My spirit is weaker!");
+        Log::addMsg("My spirit is weaker!", clrMsgBad);
       }
     }
     else //Is monster
@@ -415,10 +471,10 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
 
   TRACE_VERBOSE << "Damage from parameter: " << dmg << endl;
 
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   propHandler_->getPropIds(props);
 
-  if (dmgType == DmgType::light && !props[propLightSensitive])
+  if (dmgType == DmgType::light && !props[int(PropId::lightSensitive)])
   {
     return ActorDied::no;
   }
@@ -494,7 +550,8 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
           TRACE << "Armor was destroyed" << endl;
           if (isPlayer())
           {
-            const string armorName = armor->getName(ItemRefType::plain, ItemRefInf::none);
+            const string armorName =
+              armor->getName(ItemRefType::plain, ItemRefInf::none);
             Log::addMsg("My " + armorName + " is torn apart!", clrMsgNote);
           }
           delete armor;
@@ -604,10 +661,12 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     if (Map::player->isSeeingActor(*this, nullptr))
     {
       isPlayerSeeDyingActor = true;
-      const string deathMessageOverride = data_->deathMessageOverride;
-      if (!deathMessageOverride.empty())
+
+      const string& deathMsgOverride = data_->deathMsgOverride;
+
+      if (!deathMsgOverride.empty())
       {
-        Log::addMsg(deathMessageOverride);
+        Log::addMsg(deathMsgOverride);
       }
       else
       {
@@ -630,7 +689,8 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
     if (isHumanoid())
     {
       SndEmit::emitSnd({"I hear agonized screaming.", SfxId::END,
-                        IgnoreMsgIfOriginSeen::yes, pos, this, SndVol::low, AlertsMon::no
+                        IgnoreMsgIfOriginSeen::yes, pos, this, SndVol::low,
+                        AlertsMon::no
                        });
     }
   }
@@ -695,10 +755,10 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
 void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const
 {
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   propHandler_->getPropIds(props);
 
-  if (state_ == ActorState::alive && props[propRadiant])
+  if (state_ == ActorState::alive && props[int(PropId::radiant)])
   {
     //TODO: Much of the code below is duplicated from ActorPlayer::addLight_(), some
     //refactoring is needed.
@@ -731,7 +791,7 @@ void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const
       }
     }
   }
-  else if (props[propBurning])
+  else if (props[int(PropId::burning)])
   {
     for (int dx = -1; dx <= 1; ++dx)
     {

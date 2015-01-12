@@ -81,7 +81,7 @@ public:
 
   virtual void addLight_(bool light[MAP_W][MAP_H]) const {(void)light;}
 
-  void teleport(const bool MOVE_TO_POS_AWAY_FROM_MONSTERS);
+  void teleport();
 
   bool       isAlive ()  const {return state_ == ActorState::alive;}
   bool       isCorpse()  const {return state_ == ActorState::corpse;}

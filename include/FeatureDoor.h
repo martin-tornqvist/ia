@@ -42,7 +42,7 @@ public:
   TileId      getTile()                                       const override;
   void        bump(Actor& actorBumping)                             override;
   bool        canMoveCmn()                                    const override;
-  bool        canMove(const bool actorsPropIds[endOfPropIds]) const override;
+  bool        canMove(const bool actorsPropIds[int(PropId::END)]) const override;
   bool        isLosPassable()                                 const override;
   bool        isProjectilePassable()                          const override;
   bool        isSmokePassable()                               const override;

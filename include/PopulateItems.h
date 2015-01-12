@@ -4,7 +4,7 @@
 namespace PopulateItems
 {
 
-void mkItems();
+void mkItemsOnFloor();
 
 } //PopulateItems
 

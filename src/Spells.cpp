@@ -132,12 +132,12 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
 
     PropHandler& propHlr = caster->getPropHandler();
 
-    bool props[endOfPropIds];
+    bool props[int(PropId::END)];
     propHlr.getPropIds(props);
 
     if (!propHlr.allowSee()) {--costMax;}
-    if (props[propBlessed])  {--costMax;}
-    if (props[propCursed])   {costMax += 3;}
+    if (props[int(PropId::blessed)])  {--costMax;}
+    if (props[int(PropId::cursed)])   {costMax += 3;}
   }
 
   costMax             = max(1, costMax);
@@ -170,7 +170,7 @@ SpellEffectNoticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) con
       Mon* const mon = static_cast<Mon*>(caster);
       if (Map::cells[mon->pos.x][mon->pos.y].isSeenByPlayer)
       {
-        const string spellStr = mon->getData().spellCastMessage;
+        const string spellStr = mon->getData().spellCastMsg;
         if (!spellStr.empty())
         {
           Log::addMsg(spellStr);
@@ -252,9 +252,9 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
 
   if (caster->isPlayer())
   {
-    bool props[endOfPropIds];
+    bool props[int(PropId::END)];
     Map::player->getPropHandler().getPropIds(props);
-    isWarlockCharged = props[propWarlockCharged];
+    isWarlockCharged = props[int(PropId::warlockCharged)];
   }
 
   if (Map::player->isSeeingActor(*tgt, nullptr))
@@ -298,10 +298,10 @@ SpellEffectNoticed SpellAzaWrath::cast_(Actor* const caster) const
   //This point reached means targets are available
   if (caster->isPlayer())
   {
-    bool props[endOfPropIds];
+    bool props[int(PropId::END)];
     Map::player->getPropHandler().getPropIds(props);
 
-    isWarlockCharged = props[propWarlockCharged];
+    isWarlockCharged = props[int(PropId::warlockCharged)];
   }
 
   Render::drawBlastAtSeenActors(tgts, clrRedLgt);
@@ -788,13 +788,7 @@ SpellEffectNoticed SpellLight::cast_(Actor* const caster) const
 //------------------------------------------------------------ TELEPORT
 SpellEffectNoticed SpellTeleport::cast_(Actor* const caster) const
 {
-
-  if (caster != Map::player && Map::player->isSeeingActor(*caster, nullptr))
-  {
-    Log::addMsg(caster->getNameThe() + " disappears in a blast of smoke!");
-  }
-
-  caster->teleport(false);
+  caster->teleport();
   return SpellEffectNoticed::yes;
 }
 

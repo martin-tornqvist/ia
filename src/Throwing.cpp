@@ -11,7 +11,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Explosion.h"
-#include "ItemDrop.h"
+#include "Drop.h"
 #include "Inventory.h"
 #include "ItemFactory.h"
 #include "Attack.h"
@@ -156,7 +156,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
           isActorHit = true;
 
           //If throwing a potion on an actor, let it make stuff happen...
-          if (itemThrownData.isPotion)
+          if (itemThrownData.type == ItemType::potion)
           {
             static_cast<Potion*>(&itemThrown)->collide(curPos, actorHere);
             delete &itemThrown;
@@ -181,7 +181,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
     const auto* featureHere = Map::cells[curPos.x][curPos.y].rigid;
     if (!featureHere->isProjectilePassable())
     {
-      blockedInElement = itemThrownData.isPotion ? i : i - 1;
+      blockedInElement = itemThrownData.type == ItemType::potion ? i : i - 1;
       break;
     }
 
@@ -193,7 +193,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
   }
 
   //If potion, collide it on the landscape
-  if (itemThrownData.isPotion)
+  if (itemThrownData.type == ItemType::potion)
   {
     if (blockedInElement >= 0)
     {

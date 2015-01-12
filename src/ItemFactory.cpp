@@ -3,7 +3,8 @@
 #include "Init.h"
 #include "ItemScroll.h"
 #include "ItemPotion.h"
-#include "ItemDrop.h"
+#include "ItemJewelry.h"
+#include "Drop.h"
 #include "ItemDevice.h"
 #include "Utils.h"
 #include "ItemData.h"
@@ -287,6 +288,28 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
       r = new MedicalBag(d);
       break;
 
+    case ItemId::starAmulet:
+    case ItemId::skullAmulet:
+    case ItemId::spiderAmulet:
+    case ItemId::eyeAmulet:
+    case ItemId::moonAmulet:
+    case ItemId::batAmulet:
+    case ItemId::scarabAmulet:
+    case ItemId::daggerAmulet:
+    case ItemId::goldenRing:
+    case ItemId::silverRing:
+    case ItemId::carnelianRing:
+    case ItemId::garnetRing:
+    case ItemId::ironRing:
+    case ItemId::jadeRing:
+    case ItemId::moonstoneRing:
+    case ItemId::obsidianRing:
+    case ItemId::onyxRing:
+    case ItemId::topazRing:
+    case ItemId::emeraldRing:
+      r = new Jewelry(d);
+      break;
+
     case ItemId::END:
       return nullptr;
   }
@@ -309,7 +332,7 @@ void setItemRandomizedProperties(Item* item)
 {
   const ItemDataT& d = item->getData();
 
-  //If it is a pure melee weapon, it may get a plus
+  //If it is a pure melee weapon, it may get extra damage
   if (d.melee.isMeleeWpn && !d.ranged.isRangedWpn)
   {
     static_cast<Wpn*>(item)->setRandomMeleePlus();
@@ -344,7 +367,7 @@ void setItemRandomizedProperties(Item* item)
   if (d.isStackable) {item->nrItems_ = Rnd::range(1, d.maxStackAtSpawn);}
 }
 
-Item* mkItemOnMap(const ItemId itemId, const Pos& pos)
+Item* mkItemOnFloor(const ItemId itemId, const Pos& pos)
 {
   Item* item = mk(itemId);
   setItemRandomizedProperties(item);
@@ -367,8 +390,8 @@ Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS)
   {
     const ItemDataT* const d = ItemData::data[i];
 
-    if (!d->isIntrinsic &&
-        ((d->isScroll && ALLOW_SCROLLS) || (d->isPotion && ALLOW_POTIONS)))
+    if ((d->type == ItemType::scroll && ALLOW_SCROLLS) ||
+        (d->type == ItemType::potion && ALLOW_POTIONS))
     {
       itemBucket.push_back(static_cast<ItemId>(i));
     }

@@ -5,7 +5,7 @@
 
 #include "Init.h"
 #include "Item.h"
-#include "ItemDrop.h"
+#include "Drop.h"
 #include "ActorPlayer.h"
 #include "Log.h"
 #include "GameTime.h"
@@ -21,11 +21,19 @@ using namespace std;
 
 Inventory::Inventory()
 {
-  slots_[int(SlotId::wielded)]    = InvSlot(SlotId::wielded,    "Wielding");
-  slots_[int(SlotId::wieldedAlt)] = InvSlot(SlotId::wieldedAlt, "Prepared");
-  slots_[int(SlotId::thrown)]     = InvSlot(SlotId::thrown,     "Thrown");
-  slots_[int(SlotId::body)]       = InvSlot(SlotId::body,       "On body");
-  slots_[int(SlotId::head)]       = InvSlot(SlotId::head,       "On head");
+  auto setSlot = [&](const SlotId id, const string & name)
+  {
+    slots_[int(id)] = {id, name};
+  };
+
+  setSlot(SlotId::wielded,    "Wielding");
+  setSlot(SlotId::wieldedAlt, "Prepared");
+  setSlot(SlotId::thrown,     "Thrown");
+  setSlot(SlotId::body,       "Body");
+  setSlot(SlotId::head,       "Head");
+  setSlot(SlotId::neck,       "Neck");
+  setSlot(SlotId::ring1,      "Ring");
+  setSlot(SlotId::ring2,      "Ring");
 }
 
 Inventory::~Inventory()
@@ -152,7 +160,7 @@ void Inventory::decrDynamiteInGeneral()
   }
 }
 
-void Inventory::putInGeneral(Item* item)
+void Inventory::putInGeneral(Item * item)
 {
   bool isStacked = false;
 
@@ -185,7 +193,7 @@ void Inventory::putInGeneral(Item* item)
   item->onPickupToBackpack(*this);
 }
 
-void Inventory::dropAllNonIntrinsic(const Pos& pos)
+void Inventory::dropAllNonIntrinsic(const Pos & pos)
 {
   Item* item;
 
@@ -244,9 +252,9 @@ bool Inventory::hasAmmoForFirearmInInventory()
   return false;
 }
 
-void Inventory::decrItemInSlot(SlotId slotName)
+void Inventory::decrItemInSlot(SlotId slotId)
 {
-  Item* item = getItemInSlot(slotName);
+  Item* item = getItemInSlot(slotId);
   bool stack = item->getData().isStackable;
   bool deleteItem = true;
 
@@ -262,7 +270,7 @@ void Inventory::decrItemInSlot(SlotId slotName)
 
   if (deleteItem)
   {
-    slots_[int(slotName)].item = nullptr;
+    slots_[int(slotId)].item = nullptr;
     delete item;
   }
 }
@@ -279,7 +287,7 @@ void Inventory::removeItemInBackpackWithIdx(const size_t IDX, const bool DELETE_
   }
 }
 
-void Inventory::removeItemInBackpackWithPtr(Item* const item, const bool DELETE_ITEM)
+void Inventory::removeItemInBackpackWithPtr(Item * const item, const bool DELETE_ITEM)
 {
   for (auto it = begin(general_); it < end(general_); ++it)
   {
@@ -329,7 +337,7 @@ void Inventory::decrItemTypeInGeneral(const ItemId id)
   }
 }
 
-void Inventory::decrItem(Item* const item)
+void Inventory::decrItem(Item * const item)
 {
   for (InvSlot& slot : slots_)
   {
@@ -350,7 +358,7 @@ void Inventory::decrItem(Item* const item)
   }
 }
 
-void Inventory::moveItemToSlot(InvSlot& slot, const size_t GEN_IDX)
+void Inventory::moveItemToSlot(InvSlot & slot, const size_t GEN_IDX)
 {
   bool generalSlotExists  = GEN_IDX < general_.size();
   Item* item              = nullptr;
@@ -374,9 +382,11 @@ void Inventory::moveItemToSlot(InvSlot& slot, const size_t GEN_IDX)
   }
 }
 
-void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId slot)
+void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId slotId)
 {
-  moveItemToSlot(slots_[int(slot)], GEN_IDX);
+  assert(slotId != SlotId::END);
+
+  moveItemToSlot(slots_[int(slotId)], GEN_IDX);
 
   bool isFreeTurn = false;
 
@@ -384,12 +394,11 @@ void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId sl
 
   if (IS_PLAYER)
   {
-    Item* const itemAfter = getItemInSlot(slot);
-    const string name     = itemAfter->getName(ItemRefType::plural);
+    Item* const   itemAfter = getItemInSlot(slotId);
+    const string  name      = itemAfter->getName(ItemRefType::plural);
+    string        msg       = "";
 
-    string  msg     = "";
-
-    switch (slot)
+    switch (slotId)
     {
       case SlotId::wielded:
       {
@@ -398,7 +407,7 @@ void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId sl
 
       case SlotId::wieldedAlt:
       {
-        msg = "I am now wielding " + name + " as a prepared weapon.";
+        msg = "I am now using " + name + " as a prepared weapon.";
       } break;
 
       case SlotId::thrown:
@@ -417,11 +426,23 @@ void Inventory::equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId sl
         msg = "I am now wearing " + name + ".";
       } break;
 
-      case SlotId::END:
+      case SlotId::neck:
       {
-        TRACE << "Illegal slot id: " << int(slot) << endl;
-        assert(false);
+        msg = "I am now wearing " + name + ".";
       } break;
+
+      case SlotId::ring1:
+      {
+        msg = "I am now wearing " + name + ".";
+      } break;
+
+      case SlotId::ring2:
+      {
+        msg = "I am now wearing " + name + ".";
+      } break;
+
+      case SlotId::END: {}
+        break;
     }
 
     Log::addMsg(msg, clrWhite, false, true);
@@ -463,7 +484,7 @@ void Inventory::moveFromGeneralToIntrinsics(const size_t GEN_IDX)
   }
 }
 
-bool Inventory::moveToGeneral(InvSlot& slot)
+bool Inventory::moveToGeneral(InvSlot & slot)
 {
   Item* const item = slot.item;
   if (item)
@@ -484,9 +505,9 @@ bool Inventory::hasItemInSlot(SlotId id) const
   return slots_[int(id)].item;
 }
 
-void Inventory::removeWithoutDestroying(const InvList invList, const size_t IDX)
+void Inventory::removeWithoutDestroying(const InvType invType, const size_t IDX)
 {
-  if (invList == InvList::slots)
+  if (invType == InvType::slots)
   {
     assert(IDX != int(SlotId::END));
     slots_[IDX].item = nullptr;
@@ -541,17 +562,12 @@ Item* Inventory::getIntrinsicInElement(int idx) const
   return nullptr;
 }
 
-void Inventory::putInIntrinsics(Item* item)
+void Inventory::putInIntrinsics(Item * item)
 {
-  if (item->getData().isIntrinsic)
-  {
-    intrinsics_.push_back(item);
-  }
-  else
-  {
-    TRACE << "Tried to put non-intrinsic weapon in intrinsics" << endl;
-    assert(false);
-  }
+  assert(item->getData().type == ItemType::meleeWpnIntr ||
+         item->getData().type == ItemType::rangedWpnIntr);
+
+  intrinsics_.push_back(item);
 }
 
 Item* Inventory::getLastItemInGeneral()
@@ -560,7 +576,7 @@ Item* Inventory::getLastItemInGeneral()
   return nullptr;
 }
 
-void Inventory::putInSlot(const SlotId id, Item* item)
+void Inventory::putInSlot(const SlotId id, Item * item)
 {
   for (InvSlot& slot : slots_)
   {
@@ -600,7 +616,7 @@ int Inventory::getTotalItemWeight() const
 struct LexicograhicalCompareItems
 {
 public:
-  bool operator()(const Item* const item1, const Item* const item2)
+  bool operator()(const Item * const item1, const Item * const item2)
   {
     const string& itemName1 = item1->getName(ItemRefType::plain);
     const string& itemName2 = item2->getName(ItemRefType::plain);

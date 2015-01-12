@@ -7,7 +7,7 @@
 #include "Colors.h"
 #include "Art.h"
 
-enum class InvList        {slots, general};
+enum class InvType        {slots, general};
 
 enum class ItemRefType    {plain, a, plural, END};
 enum class ItemRefInf     {none, yes};
@@ -235,6 +235,28 @@ struct Fraction
   int numerator, denominator;
 };
 
+enum class ItemType
+{
+  general,
+  meleeWpn,
+  rangedWpn,
+  throwingWpn,
+  ammo,
+  ammoClip,
+  scroll,
+  potion,
+  device,
+  armor,
+  headWear,
+  amulet,
+  ring,
+  explosive,
+
+  END_OF_EXTR_ITEMS,
+  meleeWpnIntr,
+  rangedWpnIntr
+};
+
 struct ItemName
 {
   ItemName(const std::string& NAME, const std::string& NAME_PL,
@@ -258,7 +280,6 @@ struct ItemName
 
 struct ItemAttMsgs
 {
-public:
   ItemAttMsgs() :
     player  (""),
     other   ("") {}
@@ -272,8 +293,12 @@ public:
 
 enum SpawnRate
 {
-  spawnNever, spawnExtremelyRare, spawnVeryRare,
-  spawnRare, spawnCommon, spawnVeryCommon
+  spawnNever,
+  spawnExtremelyRare,
+  spawnVeryRare,
+  spawnRare,
+  spawnCommon,
+  spawnVeryCommon
 };
 
 enum class Dir
@@ -293,5 +318,12 @@ enum class Dir
 enum class ActorState {alive, corpse, destroyed};
 
 enum HorizontalVertical {hor, ver};
+
+enum class LgtSize
+{
+  none,
+  small, //3x3
+  fov
+};
 
 #endif

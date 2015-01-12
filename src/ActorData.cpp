@@ -26,7 +26,7 @@ void ActorDataT::reset()
   hp = dmgMelee = dmgRanged = 1;
   spi = 12;
   speed = ActorSpeed::normal;
-  for (int i = 0; i < endOfPropIds; ++i) {intrProps[i] = false;}
+  for (int i = 0; i < int(PropId::END); ++i) {intrProps[i] = false;}
   rangedCooldownTurns = spellCooldownTurns = 0;
   abilityVals.reset();
   for (int i = 0; i < int(AiId::END); ++i) {ai[i] = false;}
@@ -36,7 +36,7 @@ void ActorDataT::reset()
   actorSize = ActorSize::humanoid;
   isHumanoid = false;
   isAutoDescrAllowed = true;
-  deathMessageOverride = "";
+  deathMsgOverride = "";
   nrKills = 0;
   canOpenDoors = canBashDoors = false;
   canSeeInDarkness = false;
@@ -44,7 +44,7 @@ void ActorDataT::reset()
   nrLeftAllowedToSpawn = -1;
   isUnique = false;
   isAutoSpawnAllowed = true;
-  spellCastMessage = "[SPELL MESSAGE HERE]";
+  spellCastMsg = "[SPELL MESSAGE HERE]";
   erraticMovePct = ActorErraticFreq::rare;
   monShockLvl = MonShockLvl::none;
   isRat = isCanine = isSpider = isUndead = isGhost = false;
@@ -335,7 +335,7 @@ void initDataList()
   d.canBashDoors = true;
   d.nrTurnsAware = 25;
   d.descr = "A fanatic cultist, madly gibbering in some half-lost language.";
-  d.spellCastMessage = "The acolyte makes strange gestures in the air.";
+  d.spellCastMsg = "The acolyte makes strange gestures in the air.";
   d.erraticMovePct = ActorErraticFreq::rare;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::human);
@@ -375,7 +375,7 @@ void initDataList()
   d.nrTurnsAware = 25;
   d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
             "wielding an Electric Gun, presumably a gift from the Mi-go.";
-  d.spellCastMessage = "The acolyte makes strange gestures in the air.";
+  d.spellCastMsg = "The acolyte makes strange gestures in the air.";
   d.erraticMovePct = ActorErraticFreq::rare;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::human);
@@ -415,7 +415,7 @@ void initDataList()
   d.nrTurnsAware = 25;
   d.descr = "A fanatic cultist, madly gibbering in some half-lost language. It is "
             "wielding a Spike gun.";
-  d.spellCastMessage = "The acolyte makes strange gestures in the air.";
+  d.spellCastMsg = "The acolyte makes strange gestures in the air.";
   d.erraticMovePct = ActorErraticFreq::rare;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::human);
@@ -461,7 +461,7 @@ void initDataList()
             "voice\". She has an animal familiar; the rat Brown Jenkin, which "
             "she trusts to carry messages between her and the devil. She feeds "
             "this creature on her blood.";
-  d.spellCastMessage = "Keziah makes strange gestures in the air.";
+  d.spellCastMsg = "Keziah makes strange gestures in the air.";
   d.aggroTextMonSeen = d.nameThe + " chortles at me in a croaking voice.";
   d.aggroTextMonHidden = "I hear a repulsive croaking voice.";
   d.nrTurnsAware = 999;
@@ -514,7 +514,7 @@ void initDataList()
             "on the witch's blood, which it sucked like a vampire. Its voice "
             "was a kind of loathsome titter, and could speak all languages.\" "
             "H.P.Lovecraft -\"Dreams in the witch house\".";
-  d.spellCastMessage = "";
+  d.spellCastMsg = "";
   d.aggroTextMonSeen = d.nameThe + " titters at me in a loathsome voice.";
   d.aggroTextMonHidden = "I hear a loathsome titter.";
   d.nrTurnsAware = 999;
@@ -552,7 +552,7 @@ void initDataList()
   d.actorSize = ActorSize::humanoid;
   d.isHumanoid = true;
   d.descr = "[DESCRIPTION MISSING]";
-  d.spellCastMessage = d.nameThe + " makes strange gestures in the air.";
+  d.spellCastMsg = d.nameThe + " makes strange gestures in the air.";
   d.aggroTextMonSeen = "";
   d.aggroTextMonHidden = "";
   d.nrTurnsAware = 999;
@@ -608,7 +608,7 @@ void initDataList()
   d.nrTurnsAware = 25;
   d.descr = "A fanatic cultist of the priest rank, madly gibbering in some "
             "half-lost language.";
-  d.spellCastMessage = "The priest makes strange gestures in the air.";
+  d.spellCastMsg = "The priest makes strange gestures in the air.";
   d.erraticMovePct = ActorErraticFreq::rare;
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::human);
@@ -741,7 +741,7 @@ void initDataList()
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::stealth, 90);
-  d.intrProps[propLightSensitive] = true;
+  d.intrProps[int(PropId::lightSensitive)] = true;
   d.spawnMinDLVL = 6;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.canSeeInDarkness = true;
@@ -821,7 +821,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 65);
   d.abilityVals.setVal(AbilityId::dodgeAtt, 35);
-  d.intrProps[propRFire] = true;
+  d.intrProps[int(PropId::rFire)] = true;
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
@@ -866,7 +866,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 65);
   d.abilityVals.setVal(AbilityId::dodgeAtt, 35);
-  d.intrProps[propRCold] = true;
+  d.intrProps[int(PropId::rCold)] = true;
   d.spawnMinDLVL = 9;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
@@ -909,7 +909,7 @@ void initDataList()
   d.dmgMelee = 8;
   d.abilityVals.setVal(AbilityId::melee, 50);
   d.abilityVals.setVal(AbilityId::dodgeAtt, 25);
-  d.intrProps[propRFear] = true;
+  d.intrProps[int(PropId::rFear)] = true;
   d.spawnMinDLVL = 13;
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
@@ -956,9 +956,9 @@ void initDataList()
   d.spi = 12;
   d.dmgMelee = 2;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.intrProps[propEthereal] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::ethereal)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -973,7 +973,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.deathMessageOverride = "The Ghost is put to rest.";
+  d.deathMsgOverride = "The Ghost is put to rest.";
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::crypt);
   data[int(d.id)] = d;
@@ -998,9 +998,9 @@ void initDataList()
   d.spi = 12;
   d.dmgMelee = 2;
   d.abilityVals.setVal(AbilityId::melee, 45);
-  d.intrProps[propEthereal] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::ethereal)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1017,7 +1017,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.deathMessageOverride = "The Phantasm is put to rest.";
+  d.deathMsgOverride = "The Phantasm is put to rest.";
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::crypt);
   data[int(d.id)] = d;
@@ -1043,13 +1043,13 @@ void initDataList()
   d.spi = 20;
   d.dmgMelee = 2;
   d.abilityVals.setVal(AbilityId::melee, 50);
-  d.intrProps[propEthereal] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::ethereal)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.spawnMinDLVL = 12;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::alone;
-  d.spellCastMessage = "The Wraith casts a spell.";
+  d.spellCastMsg = "The Wraith casts a spell.";
   d.actorSize = ActorSize::humanoid;
   d.nrTurnsAware = 5;
   d.descr = "A powerful spirit.";
@@ -1060,7 +1060,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.deathMessageOverride = "The Wraith is put to rest.";
+  d.deathMsgOverride = "The Wraith is put to rest.";
   d.nativeRooms.push_back(RoomType::plain);
   d.nativeRooms.push_back(RoomType::crypt);
   data[int(d.id)] = d;
@@ -1210,7 +1210,7 @@ void initDataList()
   d.dmgMelee = 2;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::dodgeAtt, 75);
-  d.intrProps[propFlying] = true;
+  d.intrProps[int(PropId::flying)] = true;
   d.spawnMinDLVL = 4;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::group;
@@ -1253,7 +1253,7 @@ void initDataList()
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::ranged, 40);
   d.abilityVals.setVal(AbilityId::dodgeAtt, 40);
-  d.intrProps[propFlying] = true;
+  d.intrProps[int(PropId::flying)] = true;
   d.spawnMinDLVL = 6;
   d.canSeeInDarkness = true;
   d.groupSize = MonGroupSize::few;
@@ -1337,7 +1337,7 @@ void initDataList()
   d.spi = 2;
   d.dmgMelee = 1;
   d.abilityVals.setVal(AbilityId::melee, 25);
-  d.intrProps[propFlying] = true;
+  d.intrProps[int(PropId::flying)] = true;
   d.spawnMinDLVL = 7;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.canSeeInDarkness = true;
@@ -1374,7 +1374,7 @@ void initDataList()
   d.hp = 10;
   d.spi = 20;
   d.abilityVals.setVal(AbilityId::ranged, 55);
-  d.intrProps[propFlying] = true;
+  d.intrProps[int(PropId::flying)] = true;
   d.spawnMinDLVL = 6;
   d.groupSize = MonGroupSize::few;
   d.actorSize = ActorSize::humanoid;
@@ -1398,7 +1398,7 @@ void initDataList()
             "much more robust than the average human, they rely upon their "
             "superior science to subdue any primitives who stumble upon their "
             "mines and outposts.";
-  d.spellCastMessage = "The Fungi makes strange gestures in the air.";
+  d.spellCastMsg = "The Fungi makes strange gestures in the air.";
   d.aggroTextMonSeen = d.nameThe + " speaks at me in a droning voice.";
   d.aggroTextMonHidden = "I hear a droning voice.";
   d.erraticMovePct = ActorErraticFreq::rare;
@@ -1434,16 +1434,16 @@ void initDataList()
   d.dmgMelee = 4;
   d.abilityVals.setVal(AbilityId::melee, 60);
   d.abilityVals.setVal(AbilityId::stealth, 85);
-//  d.intrProps[propEthereal] = true; //Does not fit well with stealth
-  d.intrProps[propFlying] = true;
-  d.intrProps[propRPhys] = true;
-  d.intrProps[propRConfusion] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRAcid] = true;
-  d.intrProps[propRCold] = true;
-  d.intrProps[propRFire] = true;
-  d.intrProps[propRPoison] = true;
-  d.intrProps[propRSleep] = true;
+//  d.intrProps[int(PropId::ethereal)] = true; //Does not fit well with stealth
+  d.intrProps[int(PropId::flying)] = true;
+  d.intrProps[int(PropId::rPhys)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rAcid)] = true;
+  d.intrProps[int(PropId::rCold)] = true;
+  d.intrProps[int(PropId::rFire)] = true;
+  d.intrProps[int(PropId::rPoison)] = true;
+  d.intrProps[int(PropId::rSleep)] = true;
   d.preventKnockback = true;
   d.spawnMinDLVL = 6;
   d.groupSize = MonGroupSize::alone;
@@ -1536,9 +1536,9 @@ void initDataList()
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 35);
   d.abilityVals.setVal(AbilityId::stealth, 90);
-  d.intrProps[propLightSensitive] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::lightSensitive)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.preventKnockback = true;
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
@@ -1550,7 +1550,7 @@ void initDataList()
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
-  d.deathMessageOverride = "The shadow fades.";
+  d.deathMsgOverride = "The shadow fades.";
   d.nrTurnsAware = 25;
   d.descr = "A living shadow";
   d.isAutoDescrAllowed = false;
@@ -1590,7 +1590,7 @@ void initDataList()
   d.canOpenDoors = true;
   d.nrTurnsAware = 9999;
   d.descr = "A mummified human being, possibly dating back millennia.";
-  d.spellCastMessage = "The mummy casts a spell.";
+  d.spellCastMsg = "The mummy casts a spell.";
   d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::scary;
   d.isUndead = true;
@@ -1634,7 +1634,7 @@ void initDataList()
   d.descr = "The mummified fourth dynasty Egyptian pharaoh Khephren. How he "
             "came to dwell here is beyond my guess. His name means "
             "\"Rise, Ra!\"";
-  d.spellCastMessage = "Khephren casts a spell.";
+  d.spellCastMsg = "Khephren casts a spell.";
   d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isUndead = true;
@@ -1679,7 +1679,7 @@ void initDataList()
             "writings of the former, she took the throne by inviting her "
             "brothers murderers to a banquet. Then killed them by flooding the "
             "sealed room with the Nile.";
-  d.spellCastMessage = "Nitokris casts a spell.";
+  d.spellCastMsg = "Nitokris casts a spell.";
   d.erraticMovePct = ActorErraticFreq::rare;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isUndead = true;
@@ -1791,10 +1791,10 @@ void initDataList()
   d.spi = 12;
   d.dmgMelee = 4;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.intrProps[propFlying] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
-  d.intrProps[propRPoison] = true;
+  d.intrProps[int(PropId::flying)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
+  d.intrProps[int(PropId::rPoison)] = true;
   d.preventKnockback = true;
   d.spawnMinDLVL = 8;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
@@ -1836,11 +1836,11 @@ void initDataList()
   d.spi = 12;
   d.dmgMelee = 6;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.intrProps[propFlying] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
-  d.intrProps[propRFire] = true;
-  d.intrProps[propRPoison] = true;
+  d.intrProps[int(PropId::flying)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
+  d.intrProps[int(PropId::rFire)] = true;
+  d.intrProps[int(PropId::rPoison)] = true;
   d.preventKnockback = true;
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
@@ -1881,11 +1881,11 @@ void initDataList()
   d.spi = 12;
   d.dmgMelee = 6;
   d.abilityVals.setVal(AbilityId::melee, 40);
-  d.intrProps[propFlying] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
-  d.intrProps[propRCold] = true;
-  d.intrProps[propRPoison] = true;
+  d.intrProps[int(PropId::flying)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
+  d.intrProps[int(PropId::rCold)] = true;
+  d.intrProps[int(PropId::rPoison)] = true;
   d.preventKnockback = true;
   d.spawnMinDLVL = 13;
   d.groupSize = MonGroupSize::few;
@@ -1926,9 +1926,9 @@ void initDataList()
   d.spi = 12;
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 50);
-  d.intrProps[propOoze] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::ooze)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.spawnMinDLVL = 3;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1939,7 +1939,7 @@ void initDataList()
   d.canOpenDoors = false;
   d.canBashDoors = false;
   d.descr = "It's just a mass of gunk, but it seems sentient.";
-  d.deathMessageOverride = "The Ooze disintegrates.";
+  d.deathMsgOverride = "The Ooze disintegrates.";
   d.aggroTextMonSeen = d.nameThe + " makes a gurgling noise.";
   d.aggroTextMonHidden = "I hear a gurgling noise.";
   d.aggroSfxMonSeen = SfxId::oozeGurgle;
@@ -1976,9 +1976,9 @@ void initDataList()
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 50);
   d.abilityVals.setVal(AbilityId::stealth, 90);
-  d.intrProps[propOoze] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::ooze)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.spawnMinDLVL = 4;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -1989,7 +1989,7 @@ void initDataList()
   d.canOpenDoors = false;
   d.canBashDoors = false;
   d.descr = "It's a clear mass of gunk. They can be hard to spot.";
-  d.deathMessageOverride = "The Ooze disintegrates.";
+  d.deathMsgOverride = "The Ooze disintegrates.";
   d.aggroTextMonSeen = d.nameThe + " makes a gurgling noise.";
   d.aggroTextMonHidden = "I hear a gurgling noise.";
   d.aggroSfxMonSeen = SfxId::oozeGurgle;
@@ -2025,9 +2025,9 @@ void initDataList()
   d.spi = 12;
   d.dmgMelee = 5;
   d.abilityVals.setVal(AbilityId::melee, 50);
-  d.intrProps[propOoze] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::ooze)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.spawnMinDLVL = 5;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -2039,7 +2039,7 @@ void initDataList()
   d.canBashDoors = false;
   d.descr = "It's just a mass of gunk, but it seems sentient. It stinks like "
             "rotting cadavers.";
-  d.deathMessageOverride = "The Ooze disintegrates.";
+  d.deathMsgOverride = "The Ooze disintegrates.";
   d.aggroTextMonSeen = d.nameThe + " makes a gurgling noise.";
   d.aggroTextMonHidden = "I hear a gurgling noise.";
   d.aggroSfxMonSeen = SfxId::oozeGurgle;
@@ -2075,10 +2075,10 @@ void initDataList()
   d.spi = 12;
   d.dmgMelee = 7;
   d.abilityVals.setVal(AbilityId::melee, 50);
-  d.intrProps[propOoze] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
-  d.intrProps[propRPoison] = true;
+  d.intrProps[int(PropId::ooze)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
+  d.intrProps[int(PropId::rPoison)] = true;
   d.spawnMinDLVL = 9;
   d.spawnMaxDLVL = d.spawnMinDLVL + 5;
   d.canSeeInDarkness = true;
@@ -2090,7 +2090,7 @@ void initDataList()
   d.canBashDoors = false;
   d.descr = "It's just a mass of gunk, but it seems sentient. It drips and "
             "sizzles with poison.";
-  d.deathMessageOverride = "The Ooze disintegrates.";
+  d.deathMsgOverride = "The Ooze disintegrates.";
   d.aggroTextMonSeen = d.nameThe + " makes a gurgling noise.";
   d.aggroTextMonHidden = "I hear a gurgling noise.";
   d.aggroSfxMonSeen = SfxId::oozeGurgle;
@@ -2126,10 +2126,10 @@ void initDataList()
   d.spi = 40;
   d.dmgMelee = 10;
   d.abilityVals.setVal(AbilityId::melee, 50);
-  d.intrProps[propOoze] = true;
-  d.intrProps[propEthereal] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::ooze)] = true;
+  d.intrProps[int(PropId::ethereal)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.spawnMinDLVL = 14;
   d.spawnMaxDLVL = 999;
   d.canSeeInDarkness = true;
@@ -2141,7 +2141,7 @@ void initDataList()
   d.descr = "A very peculiar floating speck of strange and shifting colours. "
             "It is hard to tell what colour it is exactly.";
   d.isAutoDescrAllowed = false;
-  d.deathMessageOverride = "The Colour disintegrates.";
+  d.deathMsgOverride = "The Colour disintegrates.";
   d.canBeSummoned = true;
   d.canBleed = false;
   d.canLeaveCorpse = false;
@@ -2174,8 +2174,8 @@ void initDataList()
   d.spi = 40;
   d.dmgMelee = 10;
   d.abilityVals.setVal(AbilityId::melee, 45);
-  d.intrProps[propBurrowing] = true;
-  d.intrProps[propRFear] = true;
+  d.intrProps[int(PropId::burrowing)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
   d.preventKnockback = true;
   d.spawnMinDLVL = 12;
   d.spawnMaxDLVL = 999;
@@ -2224,8 +2224,8 @@ void initDataList()
   d.spi = 40;
   d.dmgMelee = 10;
   d.abilityVals.setVal(AbilityId::melee, 60);
-  d.intrProps[propFlying] = true;
-  d.intrProps[propRFear] = true;
+  d.intrProps[int(PropId::flying)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
   d.preventKnockback = true;
   d.spawnMinDLVL = DLVL_LAST - 3;
   d.canSeeInDarkness = true;
@@ -2277,13 +2277,13 @@ void initDataList()
   d.dmgRanged = 6;
   d.abilityVals.setVal(AbilityId::melee, 50);
   d.abilityVals.setVal(AbilityId::ranged, 65);
-  d.intrProps[propFlying] = true;
-  d.intrProps[propRadiant] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRBreath] = true;
-  d.intrProps[propRPoison] = true;
-  d.intrProps[propRSleep] = true;
-  d.intrProps[propRDisease] = true;
+  d.intrProps[int(PropId::flying)] = true;
+  d.intrProps[int(PropId::radiant)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rBreath)] = true;
+  d.intrProps[int(PropId::rPoison)] = true;
+  d.intrProps[int(PropId::rSleep)] = true;
+  d.intrProps[int(PropId::rDisease)] = true;
   d.spawnMinDLVL = 14;
   d.groupSize = MonGroupSize::alone;
   d.actorSize = ActorSize::humanoid;
@@ -2294,7 +2294,7 @@ void initDataList()
             "guard. It hovers around, constantly searching the area with beaming "
             "spotlights, ready to blast any interloper on sight. It appears to have "
             "some organic parts, and may even be a conscious living being.";
-  d.spellCastMessage = "The Sentry Drone shifts and rotates madly.";
+  d.spellCastMsg = "The Sentry Drone shifts and rotates madly.";
   d.aggroTextMonSeen = d.nameThe + " makes a deep buzzing sound.";
   d.aggroTextMonHidden = "I hear a deep buzzing sound.";
   d.erraticMovePct = ActorErraticFreq::rare;
@@ -2325,7 +2325,7 @@ void initDataList()
   d.spawnMinDLVL = 3;
   d.actorSize = ActorSize::floor;
   d.isAutoDescrAllowed = false;
-  d.deathMessageOverride = "The Mold is destroyed.";
+  d.deathMsgOverride = "The Mold is destroyed.";
   d.canSeeInDarkness = true;
   d.erraticMovePct = ActorErraticFreq::never;
   d.canBleed = false;
@@ -2361,9 +2361,9 @@ void initDataList()
   d.tile = TileId::gasSpore;
   d.hp = 1;
   d.spi = 1;
-  d.intrProps[propFlying] = true;
-  d.intrProps[propRFear] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::flying)] = true;
+  d.intrProps[int(PropId::rFear)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.spawnMinDLVL = 3;
   d.groupSize = MonGroupSize::group;
   d.actorSize = ActorSize::humanoid;
@@ -2408,8 +2408,8 @@ void initDataList()
   d.tile = TileId::theDarkOne;
   d.hp = 300;
   d.spi = 9999;
-  d.intrProps[propEthereal] = true;
-  d.intrProps[propRConfusion] = true;
+  d.intrProps[int(PropId::ethereal)] = true;
+  d.intrProps[int(PropId::rConf)] = true;
   d.dmgMelee = 8;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.isAutoSpawnAllowed = false;
@@ -2421,7 +2421,7 @@ void initDataList()
   d.nrTurnsAware = 9999;
   d.descr = "[TODO]";
   d.isAutoDescrAllowed = false;
-  d.spellCastMessage = "[TODO]";
+  d.spellCastMsg = "[TODO]";
   d.erraticMovePct = ActorErraticFreq::never;
   d.monShockLvl = MonShockLvl::terrifying;
   d.isHumanoid = true;

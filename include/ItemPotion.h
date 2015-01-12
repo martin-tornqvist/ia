@@ -383,14 +383,14 @@ struct PotionLook
   Clr clr;
 };
 
-namespace PotionNameHandling
+namespace PotionHandling
 {
 
 void init();
 
-void storeToSaveLines(std::vector<std::string>& lines);
+void storeToSaveLines  (std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);
 
-} //PotionNameHandling
+} //PotionHandling
 
 #endif

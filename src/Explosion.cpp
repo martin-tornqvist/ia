@@ -205,7 +205,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         //Do not apply burning if actor is player with the demolition expert trait, and
         //intentionally throwing a Molotov
         if (livingActor    == Map::player &&
-            prop->getId()  == propBurning &&
+            prop->getId()  == PropId::burning &&
             IS_DEM_EXP                    &&
             explSrc        == ExplSrc::playerUseMoltvIntended)
         {
@@ -216,12 +216,12 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
         {
           PropHandler& propHlr = livingActor->getPropHandler();
           Prop* propCpy = propHlr.mkProp(prop->getId(), PropTurns::specific,
-                                         prop->turnsLeft_);
+                                             prop->turnsLeft_);
           propHlr.tryApplyProp(propCpy);
         }
 
         //If property is burning, also apply it to corpses and environment
-        if (prop->getId() == propBurning)
+        if (prop->getId() == PropId::burning)
         {
           Cell& cell = Map::cells[pos.x][pos.y];
           cell.rigid->hit(DmgType::fire, DmgMethod::elemental, nullptr);
@@ -230,7 +230,7 @@ void runExplosionAt(const Pos& origin, const ExplType explType,
           {
             PropHandler& propHlr = corpse->getPropHandler();
             Prop* propCpy = propHlr.mkProp(prop->getId(), PropTurns::specific,
-                                           prop->turnsLeft_);
+                                               prop->turnsLeft_);
             propHlr.tryApplyProp(propCpy);
           }
         }

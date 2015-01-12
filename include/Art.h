@@ -30,6 +30,8 @@ enum class TileId
   elderSign,
   chestClosed,
   chestOpen,
+  amulet,
+  ring,
   electricLantern,
   medicalBag,
   mask,

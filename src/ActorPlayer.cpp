@@ -147,7 +147,8 @@ void Player::mkStartItems()
   if (!inv_->slots_[int(SlotId::wielded)].item)
   {
     const int WEAPON_CHOICE = Rnd::range(1, 5);
-    auto weaponId = ItemId::dagger;
+    auto      weaponId      = ItemId::dagger;
+
     switch (WEAPON_CHOICE)
     {
       case 1:   weaponId = ItemId::dagger;   break;
@@ -155,7 +156,6 @@ void Player::mkStartItems()
       case 3:   weaponId = ItemId::hammer;   break;
       case 4:   weaponId = ItemId::machete;  break;
       case 5:   weaponId = ItemId::axe;      break;
-      default:  weaponId = ItemId::dagger;   break;
     }
     inv_->putInSlot(SlotId::wielded, ItemFactory::mk(weaponId));
   }
@@ -192,7 +192,7 @@ void Player::storeToSaveLines(vector<string>& lines) const
   lines.push_back(toStr(propHandler_->appliedProps_.size()));
   for (Prop* prop : propHandler_->appliedProps_)
   {
-    lines.push_back(toStr(prop->getId()));
+    lines.push_back(toStr(int(prop->getId())));
     lines.push_back(toStr(prop->turnsLeft_));
     prop->storeToSaveLines(lines);
   }
@@ -294,9 +294,9 @@ int Player::getCarryWeightLmt() const
   const bool IS_UNBREAKABLE   = PlayerBon::traitsPicked[int(Trait::unbreakable)];
   const bool IS_STRONG_BACKED = PlayerBon::traitsPicked[int(Trait::strongBacked)];
 
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   propHandler_->getPropIds(props);
-  const bool IS_WEAKENED = props[propWeakened];
+  const bool IS_WEAKENED = props[int(PropId::weakened)];
 
   const int CARRY_WEIGHT_MOD = (IS_TOUGH         * 10) +
                                (IS_RUGGED        * 10) +
@@ -461,10 +461,10 @@ void Player::incrInsanity()
 
       case 5:
       {
-        bool props[endOfPropIds];
+        bool props[int(PropId::END)];
         propHandler_->getPropIds(props);
 
-        if (ins_ >= 10 && !props[propRFear])
+        if (ins_ >= 10 && !props[int(PropId::rFear)])
         {
           if (Rnd::coinToss())
           {
@@ -1099,10 +1099,10 @@ void Player::onStdTurn()
 
   if (!activeMedicalBag)
   {
-    bool props[endOfPropIds];
+    bool props[int(PropId::END)];
     propHandler_->getPropIds(props);
 
-    if (!props[propPoisoned])
+    if (!props[int(PropId::poisoned)])
     {
       const bool IS_RAPID_REC   = PlayerBon::traitsPicked[int(Trait::rapidRecoverer)];
       const bool IS_SURVIVALIST = PlayerBon::traitsPicked[int(Trait::survivalist)];
@@ -1120,7 +1120,7 @@ void Player::onStdTurn()
       }
     }
 
-    if (!props[propConfused] && propHandler_->allowSee())
+    if (!props[int(PropId::confused)] && propHandler_->allowSee())
     {
       const int R = PlayerBon::traitsPicked[int(Trait::perceptive)] ? 3 :
                     (PlayerBon::traitsPicked[int(Trait::observant)] ? 2 : 1);
@@ -1303,7 +1303,7 @@ void Player::moveDir(Dir dir)
       //This point reached means no actor in the destination cell.
 
       //Blocking mobile or rigid?
-      bool props[endOfPropIds];
+      bool props[int(PropId::END)];
       getPropHandler().getPropIds(props);
       Cell& cell = Map::cells[dest.x][dest.y];
       bool isFeaturesAllowMove = cell.rigid->canMove(props);
@@ -1449,74 +1449,76 @@ void Player::punchMon(Actor& actorToPunch)
 
 void Player::addLight_(bool lightMap[MAP_W][MAP_H]) const
 {
-  bool isUsingLightGivingItemSmall  = false; //3x3 cells
-  bool isUsingLightGivingItemNormal = false;
+  LgtSize lgtSize = LgtSize::none;
 
   if (activeExplosive)
   {
     if (activeExplosive->getData().id == ItemId::flare)
     {
-      isUsingLightGivingItemNormal = true;
+      lgtSize = LgtSize::fov;
     }
   }
 
-  for (Item* const item : inv_->general_)
+  if (lgtSize != LgtSize::fov)
   {
-    if (item->getId() == ItemId::electricLantern)
+    for (Item* const item : inv_->general_)
     {
-      DeviceLantern* const lantern = static_cast<DeviceLantern*>(item);
-      LanternLightSize lightSize = lantern->getCurLightSize();
-      if (lightSize == LanternLightSize::small)
+      LgtSize itemLgtSize = item->getLgtSize();
+
+      if (int(lgtSize) < int(itemLgtSize))
       {
-        isUsingLightGivingItemSmall = true;
-      }
-      else if (lightSize == LanternLightSize::normal)
-      {
-        isUsingLightGivingItemNormal = true;
-        break;
+        lgtSize = itemLgtSize;
       }
     }
   }
 
-  if (isUsingLightGivingItemNormal)
+  switch (lgtSize)
   {
-    bool myLight[MAP_W][MAP_H];
-    Utils::resetArray(myLight, false);
-    const int RADI = FOV_STD_RADI_INT;
-    Pos p0(max(0, pos.x - RADI), max(0, pos.y - RADI));
-    Pos p1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
-
-    bool blockedLos[MAP_W][MAP_H];
-    for (int y = p0.y; y <= p1.y; ++y)
+    case LgtSize::fov:
     {
-      for (int x = p0.x; x <= p1.x; ++x)
+      bool myLight[MAP_W][MAP_H];
+      Utils::resetArray(myLight, false);
+      const int RADI = FOV_STD_RADI_INT;
+      Pos p0(max(0, pos.x - RADI), max(0, pos.y - RADI));
+      Pos p1(min(MAP_W - 1, pos.x + RADI), min(MAP_H - 1, pos.y + RADI));
+
+      bool blockedLos[MAP_W][MAP_H];
+      for (int y = p0.y; y <= p1.y; ++y)
       {
-        const auto* const f = Map::cells[x][y].rigid;
-        blockedLos[x][y]    = !f->isLosPassable();
+        for (int x = p0.x; x <= p1.x; ++x)
+        {
+          const auto* const f = Map::cells[x][y].rigid;
+          blockedLos[x][y]    = !f->isLosPassable();
+        }
       }
-    }
 
-    Fov::runFovOnArray(blockedLos, pos, myLight, false);
-    for (int y = p0.y; y <= p1.y; ++y)
-    {
-      for (int x = p0.x; x <= p1.x; ++x)
+      Fov::runFovOnArray(blockedLos, pos, myLight, false);
+      for (int y = p0.y; y <= p1.y; ++y)
       {
-        if (myLight[x][y])
+        for (int x = p0.x; x <= p1.x; ++x)
+        {
+          if (myLight[x][y])
+          {
+            lightMap[x][y] = true;
+          }
+        }
+      }
+
+    }
+    break;
+
+    case LgtSize::small:
+      for (int y = pos.y - 1; y <= pos.y + 1; ++y)
+      {
+        for (int x = pos.x - 1; x <= pos.x + 1; ++x)
         {
           lightMap[x][y] = true;
         }
       }
-    }
-  }
-  else if (isUsingLightGivingItemSmall)
-  {
-    for (int y = pos.y - 1; y <= pos.y + 1; ++y)
-    {
-      for (int x = pos.x - 1; x <= pos.x + 1; ++x)
-      {
-        lightMap[x][y] = true;
-      }
-    }
+      break;
+
+    case LgtSize::none: {}
+      break;
   }
 }
 

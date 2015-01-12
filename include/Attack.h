@@ -20,11 +20,11 @@ public:
   AbilityRollResult attackResult;
   int nrDmgRolls, nrDmgSides, dmgPlus;
   int dmgRoll, dmg;
-  bool isIntrinsicAttack;
+  bool isIntrinsicAtt;
   bool isEtherealDefenderMissed;
 
 protected:
-  AttData(Actor& attacker_, const Item& itemAttackedWith_);
+  AttData(Actor& attacker_, const Item& attItem_);
 };
 
 class MeleeAttData: public AttData

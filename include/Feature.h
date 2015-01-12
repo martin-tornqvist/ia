@@ -28,7 +28,7 @@ public:
   virtual void          bump(Actor& actorBumping);
   virtual void          onNewTurn() {}
   virtual bool          canMoveCmn()                                    const;
-  virtual bool          canMove(const bool actorPropIds[endOfPropIds])  const;
+  virtual bool          canMove(const bool actorPropIds[int(PropId::END)])  const;
   virtual bool          isSoundPassable()                               const;
   virtual bool          isLosPassable()                                 const;
   virtual bool          isProjectilePassable()                          const;

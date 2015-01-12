@@ -12,7 +12,7 @@
 #include "FeatureDoor.h"
 #include "ActorFactory.h"
 #include "ActorMon.h"
-#include "ItemDrop.h"
+#include "Drop.h"
 #include "ItemFactory.h"
 #include "Map.h"
 #include "MapParsing.h"
@@ -1313,7 +1313,7 @@ bool mkStdLvl()
 
   if (isMapValid) {PopulateMon::populateStdLvl();}
   if (isMapValid) {PopulateTraps::populateStdLvl();}
-  if (isMapValid) {PopulateItems::mkItems();}
+  if (isMapValid) {PopulateItems::mkItemsOnFloor();}
 
   Pos stairsPos;
   if (isMapValid) {stairsPos = placeStairs();}

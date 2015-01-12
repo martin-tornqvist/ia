@@ -691,9 +691,7 @@ void pickTrait(const Trait id)
       break;
 
     case Trait::steadyAimer:
-      bool blockedLos[MAP_W][MAP_H];
-      MapParse::run(CellCheck::BlocksLos(), blockedLos);
-      Map::player->getPropHandler().endAppliedProp(propRecoil, blockedLos);
+      Map::player->getPropHandler().endAppliedProp(PropId::recoil);
       break;
 
     default: {}

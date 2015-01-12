@@ -1387,7 +1387,7 @@ bool LordOfSpiders::onActorTurn_()
 
     if (Map::player->isSeeingActor(*this, nullptr))
     {
-      Log::addMsg(data_->spellCastMessage);
+      Log::addMsg(data_->spellCastMsg);
     }
 
     for (int dx = -1; dx <= 1; ++dx)

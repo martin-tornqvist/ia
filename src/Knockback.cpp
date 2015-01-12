@@ -26,13 +26,13 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPI
   const bool  IS_DEF_MON    = !defender.isPlayer();
   const auto& defenderData  = defender.getData();
 
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   defender.getPropHandler().getPropIds(props);
 
-  if (defenderData.preventKnockback             ||
-      defenderData.actorSize >= ActorSize::giant ||
-      props[propEthereal]                       ||
-      props[propOoze]                           ||
+  if (defenderData.preventKnockback               ||
+      defenderData.actorSize >= ActorSize::giant  ||
+      props[int(PropId::ethereal)]                ||
+      props[int(PropId::ooze)]                    ||
       /*Do not knock back if bot is playing*/
       (!IS_DEF_MON && Config::isBotPlaying()))
   {
@@ -96,7 +96,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPI
 
       SdlWrapper::sleep(Config::getDelayProjectileDraw());
 
-      if (IS_CELL_BOTTOMLESS && !props[propFlying])
+      if (IS_CELL_BOTTOMLESS && !props[int(PropId::flying)])
       {
         if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
         {

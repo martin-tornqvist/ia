@@ -154,7 +154,7 @@ void act()
   //Occasionally teleport (to avoid getting stuck)
   if (Rnd::oneIn(200))
   {
-    Map::player->teleport(false);
+    Map::player->teleport();
   }
 
   //Occasionally send a TAB command to attack nearby monsters
@@ -169,7 +169,7 @@ void act()
   {
     vector<PropId> propBucket;
 
-    for (int i = 0; i < endOfPropIds; ++i)
+    for (int i = 0; i < int(PropId::END); ++i)
     {
       if (PropData::data[i].allowTestOnBot) {propBucket.push_back(PropId(i));}
     }
@@ -201,10 +201,10 @@ void act()
   }
 
   //If we are terrified, wait in place
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   Map::player->getPropHandler().getPropIds(props);
 
-  if (props[propTerrified])
+  if (props[int(PropId::terrified)])
   {
     if (walkToAdjCell(Map::player->pos))
     {

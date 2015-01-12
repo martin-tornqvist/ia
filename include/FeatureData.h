@@ -84,19 +84,19 @@ public:
   void reset()
   {
     canMoveCmn_ = false;
-    for (int i = 0; i < endOfPropIds; ++i) {canMoveIfHaveProp_[i] = false;}
+    for (int i = 0; i < int(PropId::END); ++i) {canMoveIfHaveProp_[i] = false;}
   }
 
-  void setPropCanMove(const PropId id) {canMoveIfHaveProp_[id] = true;}
+  void setPropCanMove(const PropId id) {canMoveIfHaveProp_[int(id)] = true;}
   void setCanMoveCmn() {canMoveCmn_ = true;}
 
   bool canMoveCmn() const {return canMoveCmn_;}
 
-  bool canMove(const bool actorPropIds[endOfPropIds]) const;
+  bool canMove(const bool actorPropIds[int(PropId::END)]) const;
 
 private:
   bool canMoveCmn_;
-  bool canMoveIfHaveProp_[endOfPropIds];
+  bool canMoveIfHaveProp_[int(PropId::END)];
 };
 
 class Feature;

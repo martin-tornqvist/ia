@@ -718,7 +718,7 @@ enum class FountainEffect
   rCold,
   rElec,
   rFear,
-  rConfusion,
+  rConf,
   END
 };
 

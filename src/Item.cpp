@@ -44,7 +44,7 @@ vector<string> Item::getDescr() const
   return data_->baseDescr;
 }
 
-int Item::getWeight() const {return int(data_->itemWeight) * nrItems_;}
+int Item::getWeight() const {return int(data_->weight) * nrItems_;}
 
 string Item::getWeightStr() const
 {
@@ -162,12 +162,6 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
   return nrStr + namesUsed.names[int(refTypeUsed)] + attStr + infStr;
 }
 
-void Item::clearCarrierProps()
-{
-  for (Prop* prop : carrierProps_) {delete prop;}
-  carrierProps_.clear();
-}
-
 bool Item::isInEffectiveRangeLmt(const Pos& p0, const Pos& p1) const
 {
   return Utils::kingDist(p0, p1) <= data_->ranged.effectiveRange;
@@ -283,15 +277,17 @@ int Armor::getAbsorptionPoints() const
 
 void ArmorAsbSuit::onEquip_()
 {
-  carrierProps_.push_back(new PropRFire(PropTurns::indefinite));
-  carrierProps_.push_back(new PropRAcid(PropTurns::indefinite));
-  carrierProps_.push_back(new PropRElec(PropTurns::indefinite));
-  carrierProps_.push_back(new PropRBreath(PropTurns::indefinite));
+  carrierProps_.push_back(new PropRFire   (PropTurns::indefinite));
+  carrierProps_.push_back(new PropRAcid   (PropTurns::indefinite));
+  carrierProps_.push_back(new PropRElec   (PropTurns::indefinite));
+  carrierProps_.push_back(new PropRBreath (PropTurns::indefinite));
 }
 
 UnequipAllowed ArmorAsbSuit::onUnequip_()
 {
-  clearCarrierProps();
+  for (Prop* prop : carrierProps_) {delete prop;}
+  carrierProps_.clear();
+
   return UnequipAllowed::yes;
 }
 
@@ -302,12 +298,16 @@ void ArmorHeavyCoat::onEquip_()
 
 UnequipAllowed ArmorHeavyCoat::onUnequip_()
 {
-  clearCarrierProps();
+  for (Prop* prop : carrierProps_) {delete prop;}
+  carrierProps_.clear();
+
   return UnequipAllowed::yes;
 }
 
-void ArmorMigo::onNewTurnInInventory()
+void ArmorMigo::onNewTurnInInv(const InvType invType)
 {
+  (void)invType;
+
   if (dur_ < 100)
   {
     const int AP_BEFORE = getAbsorptionPoints();
@@ -418,11 +418,11 @@ PharaohStaff::PharaohStaff(ItemDataT* const itemData) : Wpn(itemData, nullptr)
 
 //--------------------------------------------------------- MACHINE GUN
 MachineGun::MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData, ammoData->ranged.ammoContainedInClip, true) {}
+  Wpn(itemData, ammoData, ammoData->ranged.maxNrAmmoInClip, true) {}
 
 //--------------------------------------------------------- MI-GO ELECTRIC GUN
 MigoGun::MigoGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData, ammoData->ranged.ammoContainedInClip, true) {}
+  Wpn(itemData, ammoData, ammoData->ranged.maxNrAmmoInClip, true) {}
 
 //--------------------------------------------------------- SPIKE GUN
 SpikeGun::SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
@@ -430,7 +430,7 @@ SpikeGun::SpikeGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
 
 //--------------------------------------------------------- INCINERATOR
 Incinerator::Incinerator(ItemDataT* const itemData, ItemDataT* const ammoData) :
-  Wpn(itemData, ammoData, ammoData->ranged.ammoContainedInClip, true) {}
+  Wpn(itemData, ammoData, ammoData->ranged.maxNrAmmoInClip, true) {}
 
 void Incinerator::onProjectileBlocked(
   const Pos& pos, Actor* actorHit)
@@ -447,7 +447,7 @@ AmmoClip::AmmoClip(ItemDataT* const itemData) : Ammo(itemData)
 
 void AmmoClip::setFullAmmo()
 {
-  ammo_ = data_->ranged.ammoContainedInClip;
+  ammo_ = data_->ranged.maxNrAmmoInClip;
 }
 
 //--------------------------------------------------------- MEDICAL BAG
@@ -492,7 +492,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
   }
 
   //Check if chosen action can be done
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   Map::player->getPropHandler().getPropIds(props);
   switch (curAction_)
   {
@@ -506,7 +506,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
       break;
 
     case MedBagAction::sanitizeInfection:
-      if (!props[propInfected])
+      if (!props[int(PropId::infected)])
       {
         Log::addMsg("I have no infection to sanitize.");
         curAction_ = MedBagAction::END;
@@ -565,11 +565,11 @@ MedBagAction MedicalBag::chooseAction() const
 {
   Log::clearLog();
 
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   Map::player->getPropHandler().getPropIds(props);
 
   //Infections are treated first
-  if (props[propInfected])
+  if (props[int(PropId::infected)])
   {
     return MedBagAction::sanitizeInfection;
   }
@@ -680,9 +680,7 @@ void MedicalBag::finishCurAction()
   {
     case MedBagAction::sanitizeInfection:
     {
-      bool blockedLos[MAP_W][MAP_H];
-      MapParse::run(CellCheck::BlocksLos(), blockedLos);
-      Map::player->getPropHandler().endAppliedProp(propInfected, blockedLos);
+      Map::player->getPropHandler().endAppliedProp(PropId::infected);
       nrSupplies_ -= getTotSupplForSanitize();
     } break;
 
@@ -690,12 +688,6 @@ void MedicalBag::finishCurAction()
     {
       Log::addMsg("I finish treating my wounds.");
     } break;
-
-//    case MedBagAction::takeMorphine: {
-//      Map::player->restoreHp(999);
-//      Log::addMsg("The morphine takes a toll on my mind.");
-//      Map::player->incrShock(ShockLvl::heavy, ShockSrc::misc);
-//    } break;
 
     case MedBagAction::END: {} break;
   }
@@ -729,26 +721,29 @@ int MedicalBag::getTotSupplForSanitize() const
 }
 
 //--------------------------------------------------------- HIDEOUS MASK
-void HideousMask::onNewTurnInInventory()
+void HideousMask::onNewTurnInInv(const InvType invType)
 {
-  vector<Actor*> adjActors;
-  const Pos p(Map::player->pos);
-  for (auto* const actor : GameTime::actors_)
+  if (invType == InvType::slots)
   {
-    if (actor->isAlive() && Utils::isPosAdj(p, actor->pos, false))
+    vector<Actor*> adjActors;
+    const Pos p(Map::player->pos);
+    for (auto* const actor : GameTime::actors_)
     {
-      adjActors.push_back(actor);
-    }
-  }
-  if (!adjActors.empty())
-  {
-    bool blockedLos[MAP_W][MAP_H];
-    MapParse::run(CellCheck::BlocksLos(), blockedLos);
-    for (auto* const actor : adjActors)
-    {
-      if (Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, blockedLos))
+      if (actor->isAlive() && Utils::isPosAdj(p, actor->pos, false))
       {
-        actor->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
+        adjActors.push_back(actor);
+      }
+    }
+    if (!adjActors.empty())
+    {
+      bool blockedLos[MAP_W][MAP_H];
+      MapParse::run(CellCheck::BlocksLos(), blockedLos);
+      for (auto* const actor : adjActors)
+      {
+        if (Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, blockedLos))
+        {
+          actor->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
+        }
       }
     }
   }
@@ -762,7 +757,9 @@ void GasMask::onEquip()
 
 UnequipAllowed GasMask::onUnequip()
 {
-  clearCarrierProps();
+  for (Prop* prop : carrierProps_) {delete prop;}
+  carrierProps_.clear();
+
   return UnequipAllowed::yes;
 }
 

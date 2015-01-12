@@ -15,9 +15,9 @@ public:
 
   virtual ConsumeItem activate(Actor* const actor) override = 0;
 
-  virtual Clr getInterfaceClr() const override {return clrCyan;}
+  Clr getInterfaceClr() const override final {return clrCyan;}
 
-  virtual void onNewTurnInInventory() override {}
+  virtual void onNewTurnInInv(const InvType invType) override {(void)invType;}
 
   void identify(const bool IS_SILENT_IDENTIFY) override;
 };
@@ -139,8 +139,7 @@ private:
   ConsumeItem triggerEffect() override;
 };
 
-enum class LanternMalfState {working, flicker, malfunction};
-enum class LanternLightSize {none, small, normal};
+enum class LanternWorkingState {working, flicker};
 
 class DeviceLantern : public Device
 {
@@ -149,19 +148,19 @@ public:
 
   ~DeviceLantern() override {}
 
-  ConsumeItem activate(Actor* const actor)          override;
-  void          onNewTurnInInventory()              override;
-  void          onPickupToBackpack(Inventory& inv)  override;
+  ConsumeItem activate(Actor* const actor)            override;
+  void          onNewTurnInInv(const InvType invType) override;
+  void          onPickupToBackpack(Inventory& inv)    override;
 
-  LanternLightSize getCurLightSize() const;
+  LgtSize getLgtSize() const override;
 
   void storeToSaveLines  (std::vector<std::string>& lines) override;
   void setupFromSaveLines(std::vector<std::string>& lines) override;
 
-  int               nrTurnsLeft_;
-  int               nrMalfunctTurnsLeft_;
-  LanternMalfState  malfState_;
-  bool              isActivated_;
+  int                 nrTurnsLeft_;
+  int                 nrFlickerTurnsLeft_;
+  LanternWorkingState workingState_;
+  bool                isActivated_;
 
 private:
   void toggle();

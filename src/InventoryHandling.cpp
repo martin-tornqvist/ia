@@ -12,7 +12,7 @@
 #include "RenderInventory.h"
 #include "MenuInputHandling.h"
 #include "Render.h"
-#include "ItemDrop.h"
+#include "Drop.h"
 #include "Query.h"
 #include "ItemFactory.h"
 #include "Audio.h"
@@ -33,14 +33,14 @@ namespace
 //The values in this vector refer to general inventory elements
 vector<size_t> generalItemsToShow_;
 
-bool runDropScreen(const InvList invList, const size_t ELEMENT)
+bool runDropScreen(const InvType invType, const size_t ELEMENT)
 {
   TRACE_FUNC_BEGIN;
 
   Inventory& inv  = Map::player->getInv();
   Item* item      = nullptr;
 
-  if (invList == InvList::slots)
+  if (invType == InvType::slots)
   {
     assert(ELEMENT != int(SlotId::END));
     item = inv.slots_[ELEMENT].item;
@@ -83,7 +83,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT)
     }
     else
     {
-      ItemDrop::dropItemFromInv(*Map::player, invList, ELEMENT, NR_TO_DROP);
+      ItemDrop::dropItemFromInv(*Map::player, invType, ELEMENT, NR_TO_DROP);
       TRACE_FUNC_END;
       return true;
     }
@@ -91,7 +91,7 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT)
   else
   {
     TRACE << "Item not stackable, or only one item" << endl;
-    ItemDrop::dropItemFromInv(*Map::player, invList, ELEMENT);
+    ItemDrop::dropItemFromInv(*Map::player, invType, ELEMENT);
     TRACE_FUNC_END;
     return true;
   }
@@ -101,61 +101,78 @@ bool runDropScreen(const InvList invList, const size_t ELEMENT)
 
 void filterPlayerGeneralEquip(const SlotId slotToEquip)
 {
-  auto& general = Map::player->getInv().general_;
+  assert(slotToEquip != SlotId::END);
+
+  const auto& inv     = Map::player->getInv();
+  const auto& general = inv.general_;
+
   generalItemsToShow_.clear();
 
   for (size_t i = 0; i < general.size(); ++i)
   {
-    const Item* const item = general[i];
-    const ItemDataT& data = item->getData();
+    const auto* const item = general[i];
+    const auto&       data = item->getData();
 
     switch (slotToEquip)
     {
       case SlotId::wielded:
-      {
         if (data.melee.isMeleeWpn || data.ranged.isRangedWpn)
         {
           generalItemsToShow_.push_back(i);
         }
-      } break;
+        break;
 
       case SlotId::wieldedAlt:
-      {
         if (data.melee.isMeleeWpn || data.ranged.isRangedWpn)
         {
           generalItemsToShow_.push_back(i);
         }
-      } break;
+        break;
 
       case SlotId::thrown:
-      {
         if (data.ranged.isThrowingWpn)
         {
           generalItemsToShow_.push_back(i);
         }
-      } break;
+        break;
 
       case SlotId::body:
-      {
-        if (data.isArmor)
+        if (data.type == ItemType::armor)
         {
           generalItemsToShow_.push_back(i);
         }
-      } break;
+        break;
 
       case SlotId::head:
-      {
-        if (data.isHeadwear)
+        if (data.type == ItemType::headWear)
         {
           generalItemsToShow_.push_back(i);
         }
-      } break;
+        break;
 
-      case SlotId::END:
-      {
-        TRACE << "Illegal slot id: " << int(slotToEquip) << endl;
-        assert(false);
-      } break;
+      case SlotId::neck:
+        if (data.type == ItemType::amulet)
+        {
+          generalItemsToShow_.push_back(i);
+        }
+        break;
+
+      case SlotId::ring1:
+        if (data.type == ItemType::ring)
+        {
+          generalItemsToShow_.push_back(i);
+        }
+        break;
+
+      case SlotId::ring2:
+        if (data.type == ItemType::ring)
+        {
+          generalItemsToShow_.push_back(i);
+        }
+        break;
+
+      case SlotId::END: {}
+        break;
     }
   }
 }
@@ -224,8 +241,8 @@ void runInvScreen()
   {
     inv.sortGeneralInventory();
 
-    const InvList invList = browser.getPos().y < int(SlotId::END) ?
-                            InvList::slots : InvList::general;
+    const InvType invType = browser.getPos().y < int(SlotId::END) ?
+                            InvType::slots : InvType::general;
 
     const MenuAction action = MenuInputHandling::getAction(browser);
     switch (action)
@@ -239,8 +256,8 @@ void runInvScreen()
       {
         const int BROWSER_Y = browser.getPos().y;
         const size_t ELEMENT =
-          invList == InvList::slots ? BROWSER_Y : (BROWSER_Y - int(SlotId::END));
-        if (runDropScreen(invList, ELEMENT))
+          invType == InvType::slots ? BROWSER_Y : (BROWSER_Y - int(SlotId::END));
+        if (runDropScreen(invType, ELEMENT))
         {
           browser.setGoodPos();
           browserIdxToSetAfterDrop  = browser.getY();
@@ -252,20 +269,21 @@ void runInvScreen()
 
       case MenuAction::selected:
       {
-        if (invList == InvList::slots)
+        if (invType == InvType::slots)
         {
-          const size_t ELEMENT = browser.getY();
-          InvSlot& slot = inv.slots_[ELEMENT];
+          const size_t ELEMENT  = browser.getY();
+          InvSlot& slot         = inv.slots_[ELEMENT];
+
           if (slot.item)
           {
             Log::clearLog();
 
-            Item* const           item            = slot.item;
-            const UnequipAllowed  unequipAllowed  = item->onUnequip();
+            const UnequipAllowed unequipAllowed = slot.item->onUnequip();
 
             if (unequipAllowed == UnequipAllowed::yes)
             {
               inv.moveToGeneral(slot);
+              inv.sortGeneralInventory();
             }
 
             switch (SlotId(ELEMENT))
@@ -274,6 +292,9 @@ void runInvScreen()
               case SlotId::wieldedAlt:
               case SlotId::thrown:
               case SlotId::head:
+              case SlotId::neck:
+              case SlotId::ring1:
+              case SlotId::ring2:
                 RenderInventory::drawBrowseInv(browser);
                 break;
 
@@ -282,14 +303,13 @@ void runInvScreen()
                 browserIdxToSetAfterDrop  = browser.getY();
                 return;
 
-              case SlotId::END:
-                TRACE << "Illegal slot id: " << ELEMENT << endl;
-                assert(false);
+              case SlotId::END: {}
                 break;
             }
+
             //Create a new browser to adjust for changed inventory size
             const Pos p = browser.getPos();
-            browser = getBrowser(inv);
+            browser     = getBrowser(inv);
             browser.setPos(p);
           }
           else //No item in slot
@@ -372,7 +392,7 @@ bool runEquipScreen(InvSlot& slotToEquip)
 
       case MenuAction::selectedShift:
       {
-        if (runDropScreen(InvList::general, generalItemsToShow_[browser.getY()]))
+        if (runDropScreen(InvType::general, generalItemsToShow_[browser.getY()]))
         {
           browser.setGoodPos();
           browserIdxToSetAfterDrop  = browser.getY();

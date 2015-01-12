@@ -31,7 +31,7 @@
 #include "ItemDevice.h"
 #include "FeatureRigid.h"
 #include "FeatureTrap.h"
-#include "ItemDrop.h"
+#include "Drop.h"
 
 using namespace std;
 
@@ -459,12 +459,12 @@ TEST_FIXTURE(BasicFixture, Explosions)
   Explosion::runExplosionAt(Pos(X0, Y0), ExplType::applyProp,
                             ExplSrc::misc, 0, SfxId::END,
                             new PropBurning(PropTurns::std));
-  CHECK(a1->getPropHandler().getProp(propBurning, PropSrc::applied));
-  CHECK(a2->getPropHandler().getProp(propBurning, PropSrc::applied));
+  CHECK(a1->getPropHandler().getProp(PropId::burning, PropSrc::applied));
+  CHECK(a2->getPropHandler().getProp(PropId::burning, PropSrc::applied));
   for (int i = 0; i < NR_CORPSES; ++i)
   {
     PropHandler& propHlr = corpses[i]->getPropHandler();
-    CHECK(propHlr.getProp(propBurning, PropSrc::applied));
+    CHECK(propHlr.getProp(PropId::burning, PropSrc::applied));
   }
 
   //Check that the explosion can handle the map edge (e.g. that it does not
@@ -578,12 +578,12 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   delete bodySlot.item;
   bodySlot.item = nullptr;
 
-  bool props[endOfPropIds];
+  bool props[int(PropId::END)];
   PropHandler& propHandler = Map::player->getPropHandler();
 
   //Check that no props are enabled
   propHandler.getPropIds(props);
-  for (int i = 0; i < endOfPropIds; ++i)
+  for (int i = 0; i < int(PropId::END); ++i)
   {
     CHECK(!props[i]);
   }
@@ -597,15 +597,15 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   //Check that the props are applied
   propHandler.getPropIds(props);
   int nrProps = 0;
-  for (int i = 0; i < endOfPropIds; ++i)
+  for (int i = 0; i < int(PropId::END); ++i)
   {
     if (props[i]) {++nrProps;}
   }
   CHECK_EQUAL(4, nrProps);
-  CHECK(props[propRFire]);
-  CHECK(props[propRElec]);
-  CHECK(props[propRAcid]);
-  CHECK(props[propRBreath]);
+  CHECK(props[int(PropId::rFire)]);
+  CHECK(props[int(PropId::rElec)]);
+  CHECK(props[int(PropId::rAcid)]);
+  CHECK(props[int(PropId::rBreath)]);
 
   //Take off asbeshos suit
   inv.moveToGeneral(bodySlot);
@@ -614,7 +614,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
   //Check that the properties are cleared
   propHandler.getPropIds(props);
-  for (int i = 0; i < endOfPropIds; ++i)
+  for (int i = 0; i < int(PropId::END); ++i)
   {
     CHECK(!props[i]);
   }
@@ -627,18 +627,18 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   //Check that the props are applied
   propHandler.getPropIds(props);
   nrProps = 0;
-  for (int i = 0; i < endOfPropIds; ++i)
+  for (int i = 0; i < int(PropId::END); ++i)
   {
     if (props[i]) {++nrProps;}
   }
   CHECK_EQUAL(4, nrProps);
-  CHECK(props[propRFire]);
-  CHECK(props[propRElec]);
-  CHECK(props[propRAcid]);
-  CHECK(props[propRBreath]);
+  CHECK(props[int(PropId::rFire)]);
+  CHECK(props[int(PropId::rElec)]);
+  CHECK(props[int(PropId::rAcid)]);
+  CHECK(props[int(PropId::rBreath)]);
 
   //Drop the asbeshos suit on the ground
-  ItemDrop::dropItemFromInv(*Map::player, InvList::slots, int(SlotId::body), 1);
+  ItemDrop::dropItemFromInv(*Map::player, InvType::slots, int(SlotId::body), 1);
 
   //Check that no item exists in body slot
   CHECK(!bodySlot.item);
@@ -649,7 +649,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
 
   //Check that the properties are cleared
   propHandler.getPropIds(props);
-  for (int i = 0; i < endOfPropIds; ++i)
+  for (int i = 0; i < int(PropId::END); ++i)
   {
     CHECK(!props[i]);
   }
@@ -663,15 +663,15 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   //Check that the props are applied
   propHandler.getPropIds(props);
   nrProps = 0;
-  for (int i = 0; i < endOfPropIds; ++i)
+  for (int i = 0; i < int(PropId::END); ++i)
   {
     if (props[i]) {++nrProps;}
   }
   CHECK_EQUAL(4, nrProps);
-  CHECK(props[propRFire]);
-  CHECK(props[propRElec]);
-  CHECK(props[propRAcid]);
-  CHECK(props[propRBreath]);
+  CHECK(props[int(PropId::rFire)]);
+  CHECK(props[int(PropId::rElec)]);
+  CHECK(props[int(PropId::rAcid)]);
+  CHECK(props[int(PropId::rBreath)]);
 }
 
 TEST_FIXTURE(BasicFixture, SavingGame)
@@ -686,7 +686,8 @@ TEST_FIXTURE(BasicFixture, SavingGame)
 
   //Player inventory
   Inventory& inv = Map::player->getInv();
-  //First, remove all present items (to have a known state)
+
+  //First, remove all present items
   vector<Item*>& gen = inv.general_;
   for (Item* item : gen) {delete item;}
   gen.clear();
@@ -700,9 +701,11 @@ TEST_FIXTURE(BasicFixture, SavingGame)
       slot.item = nullptr;
     }
   }
+
   //Put new items
   Item* item = ItemFactory::mk(ItemId::migoGun);
   inv.putInSlot(SlotId::wielded, item);
+
   //Wear asbestos suit to test properties from wearing items
   item = ItemFactory::mk(ItemId::armorAsbSuit);
   inv.putInSlot(SlotId::body, item);
@@ -722,10 +725,10 @@ TEST_FIXTURE(BasicFixture, SavingGame)
   static_cast<StrangeDevice*>(item)->condition_ = Condition::shoddy;
   inv.putInGeneral(item);
   item = ItemFactory::mk(ItemId::electricLantern);
-  DeviceLantern* lantern = static_cast<DeviceLantern*>(item);
+  DeviceLantern* lantern        = static_cast<DeviceLantern*>(item);
   lantern->nrTurnsLeft_         = 789;
   lantern->nrMalfunctTurnsLeft_ = 456;
-  lantern->malfState_           = LanternMalfState::flicker;
+  lantern->malfState_           = LanternWorkingState::flicker;
   lantern->isActivated_         = true;
   inv.putInGeneral(item);
 
@@ -751,14 +754,14 @@ TEST_FIXTURE(BasicFixture, SavingGame)
   propHlr.tryApplyProp(new PropBlessed(PropTurns::std));
 
   //Check a a few of the props applied
-  Prop* prop = propHlr.getProp(propDiseased, PropSrc::applied);
+  Prop* prop = propHlr.getProp(PropId::diseased, PropSrc::applied);
   CHECK(prop);
 
-  prop = propHlr.getProp(propBlessed, PropSrc::applied);
+  prop = propHlr.getProp(PropId::blessed, PropSrc::applied);
   CHECK(prop);
 
   //Check a prop that was NOT applied
-  prop = propHlr.getProp(propConfused, PropSrc::applied);
+  prop = propHlr.getProp(PropId::confused, PropSrc::applied);
   CHECK(!prop);
 
   SaveHandling::save();
@@ -824,7 +827,7 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
       DeviceLantern* lantern = static_cast<DeviceLantern*>(item);
       CHECK_EQUAL(789, lantern->nrTurnsLeft_);
       CHECK_EQUAL(456, lantern->nrMalfunctTurnsLeft_);
-      CHECK_EQUAL(int(LanternMalfState::flicker), int(lantern->malfState_));
+      CHECK_EQUAL(int(LanternWorkingState::flicker), int(lantern->malfState_));
       CHECK(lantern->isActivated_);
     }
   }
@@ -855,29 +858,29 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
 
   //Properties
   PropHandler& propHlr = Map::player->getPropHandler();
-  Prop* prop = propHlr.getProp(propDiseased, PropSrc::applied);
+  Prop* prop = propHlr.getProp(PropId::diseased, PropSrc::applied);
   CHECK(prop);
   CHECK_EQUAL(-1, prop->turnsLeft_);
   //Check currrent HP (affected by disease)
   CHECK_EQUAL((Map::player->getData().hp + 5) / 2, Map::player->getHp());
 
-  prop = propHlr.getProp(propRSleep, PropSrc::applied);
+  prop = propHlr.getProp(PropId::rSleep, PropSrc::applied);
   CHECK(prop);
   CHECK_EQUAL(3, prop->turnsLeft_);
 
-  prop = propHlr.getProp(propDiseased, PropSrc::applied);
+  prop = propHlr.getProp(PropId::diseased, PropSrc::applied);
   CHECK(prop);
   CHECK_EQUAL(-1, prop->turnsLeft_);
 
-  prop = propHlr.getProp(propBlessed, PropSrc::applied);
+  prop = propHlr.getProp(PropId::blessed, PropSrc::applied);
   CHECK(prop);
   CHECK(prop->turnsLeft_ > 0);
 
   //Properties from worn item
-  prop = propHlr.getProp(propRAcid, PropSrc::inv);
+  prop = propHlr.getProp(PropId::rAcid, PropSrc::inv);
   CHECK(prop);
   CHECK(prop->turnsLeft_ == -1);
-  prop = propHlr.getProp(propRFire, PropSrc::inv);
+  prop = propHlr.getProp(PropId::rFire, PropSrc::inv);
   CHECK(prop);
   CHECK(prop->turnsLeft_ == -1);
 

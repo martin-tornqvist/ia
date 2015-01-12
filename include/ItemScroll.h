@@ -14,10 +14,7 @@ public:
 
   ~Scroll() {}
 
-  Clr getInterfaceClr() const override
-  {
-    return clrMagenta;
-  }
+  Clr getInterfaceClr() const override {return clrMagenta;}
 
   ConsumeItem activate(Actor* const actor) override;
 
@@ -37,7 +34,7 @@ protected:
   std::string getNameInf() const override;
 };
 
-namespace ScrollNameHandling
+namespace ScrollHandling
 {
 
 void init();
@@ -45,6 +42,6 @@ void init();
 void storeToSaveLines(std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);
 
-} //ScrollNameHandling
+} //ScrollHandling
 
 #endif

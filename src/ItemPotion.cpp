@@ -339,10 +339,7 @@ void PotionRFire::collide_(const Pos& pos, Actor* const actor)
 
 void PotionAntidote::quaff_(Actor& actor)
 {
-  bool blockedLos[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksLos(), blockedLos);
-  const bool WAS_POISONED =
-    actor.getPropHandler().endAppliedProp(propPoisoned, blockedLos);
+  const bool WAS_POISONED = actor.getPropHandler().endAppliedProp(PropId::poisoned);
 
   if (WAS_POISONED && Map::player->isSeeingActor(actor, nullptr))
   {
@@ -485,7 +482,7 @@ void PotionDescent::quaff_(Actor& actor)
   identify(false);
 }
 
-namespace PotionNameHandling
+namespace PotionHandling
 {
 
 namespace
@@ -527,7 +524,7 @@ void init()
   TRACE << "Init potion names" << endl;
   for (auto* const d : ItemData::data)
   {
-    if (d->isPotion)
+    if (d->type == ItemType::potion)
     {
       //Color and false name
       const int ELEMENT = Rnd::range(0, potionLooks_.size() - 1);
@@ -567,7 +564,7 @@ void storeToSaveLines(vector<string>& lines)
   for (int i = 0; i < int(ItemId::END); ++i)
   {
     ItemDataT* const d = ItemData::data[i];
-    if (d->isPotion)
+    if (d->type == ItemType::potion)
     {
       lines.push_back(d->baseNameUnid.names[int(ItemRefType::plain)]);
       lines.push_back(d->baseNameUnid.names[int(ItemRefType::plural)]);
@@ -584,7 +581,7 @@ void setupFromSaveLines(vector<string>& lines)
   for (int i = 0; i < int(ItemId::END); ++i)
   {
     ItemDataT* const d = ItemData::data[i];
-    if (d->isPotion)
+    if (d->type == ItemType::potion)
     {
       d->baseNameUnid.names[int(ItemRefType::plain)]  = lines.front();
       lines.erase(begin(lines));
@@ -602,4 +599,4 @@ void setupFromSaveLines(vector<string>& lines)
   }
 }
 
-} //PotionNameHandling
+} //PotionHandling

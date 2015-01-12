@@ -144,6 +144,7 @@
 		<Unit filename="../include/CreateCharacter.h" />
 		<Unit filename="../include/Credits.h" />
 		<Unit filename="../include/Disarm.h" />
+		<Unit filename="../include/Drop.h" />
 		<Unit filename="../include/DungeonMaster.h" />
 		<Unit filename="../include/Explosion.h" />
 		<Unit filename="../include/Feature.h" />
@@ -164,9 +165,8 @@
 		<Unit filename="../include/Item.h" />
 		<Unit filename="../include/ItemData.h" />
 		<Unit filename="../include/ItemDevice.h" />
-		<Unit filename="../include/ItemDrop.h" />
 		<Unit filename="../include/ItemFactory.h" />
-		<Unit filename="../include/ItemPickup.h" />
+		<Unit filename="../include/ItemJewelry.h" />
 		<Unit filename="../include/ItemPotion.h" />
 		<Unit filename="../include/ItemScroll.h" />
 		<Unit filename="../include/JamWithSpike.h" />
@@ -187,6 +187,7 @@
 		<Unit filename="../include/MenuBrowser.h" />
 		<Unit filename="../include/MenuInputHandling.h" />
 		<Unit filename="../include/MersenneTwister.h" />
+		<Unit filename="../include/Pickup.h" />
 		<Unit filename="../include/PlayerBon.h" />
 		<Unit filename="../include/PlayerSpellsHandling.h" />
 		<Unit filename="../include/PopulateItems.h" />
@@ -226,6 +227,7 @@
 		<Unit filename="../src/CreateCharacter.cpp" />
 		<Unit filename="../src/Credits.cpp" />
 		<Unit filename="../src/Disarm.cpp" />
+		<Unit filename="../src/Drop.cpp" />
 		<Unit filename="../src/DungeonMaster.cpp" />
 		<Unit filename="../src/Explosion.cpp" />
 		<Unit filename="../src/Feature.cpp" />
@@ -246,9 +248,8 @@
 		<Unit filename="../src/Item.cpp" />
 		<Unit filename="../src/ItemData.cpp" />
 		<Unit filename="../src/ItemDevice.cpp" />
-		<Unit filename="../src/ItemDrop.cpp" />
 		<Unit filename="../src/ItemFactory.cpp" />
-		<Unit filename="../src/ItemPickup.cpp" />
+		<Unit filename="../src/ItemJewelry.cpp" />
 		<Unit filename="../src/ItemPotion.cpp" />
 		<Unit filename="../src/ItemScroll.cpp" />
 		<Unit filename="../src/JamWithSpike.cpp" />
@@ -270,6 +271,7 @@
 		<Unit filename="../src/Marker.cpp" />
 		<Unit filename="../src/MenuBrowser.cpp" />
 		<Unit filename="../src/MenuInputHandling.cpp" />
+		<Unit filename="../src/Pickup.cpp" />
 		<Unit filename="../src/PlayerBon.cpp" />
 		<Unit filename="../src/PlayerSpellsHandling.cpp" />
 		<Unit filename="../src/PopulateItems.cpp" />
