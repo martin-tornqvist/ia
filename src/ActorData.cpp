@@ -596,7 +596,7 @@ void initDataList()
   d.color = clrCyanLgt;
   d.tile = TileId::cultistDagger;
   d.hp = 6;
-  d.spi = 20;
+  d.spi = 30;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.spawnMinDLVL = 5;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;

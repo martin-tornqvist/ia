@@ -741,10 +741,9 @@ void CultistPriest::mkStartItems()
   inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
   inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
 
-  spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
-  spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
+  const int NR_SPELLS = 3;
 
-  if (Rnd::percentile() < 33)
+  for (int i = 0; i < NR_SPELLS; ++i)
   {
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   }
@@ -1008,7 +1007,9 @@ void Mummy::mkStartItems()
 
   spellsKnown_.push_back(SpellHandling::mkSpellFromId(SpellId::disease));
 
-  for (int i = Rnd::range(1, 2); i > 0; --i)
+  const int NR_SPELLS = 3;
+
+  for (int i = 0; i < NR_SPELLS; ++i)
   {
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
   }

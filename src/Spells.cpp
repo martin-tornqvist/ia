@@ -207,6 +207,7 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
 
   vector<Actor*> seenActors;
   caster->getSeenFoes(seenActors);
+
   if (seenActors.empty())
   {
     return SpellEffectNoticed::no;
@@ -214,10 +215,25 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
 
   tgt = Utils::getRandomClosestActor(caster->pos, seenActors);
 
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  tgt->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    Log::addMsg(spellReflectMsg, clrWhite, false, true);
+    return cast_(tgt);
+  }
+
   vector<Pos> line;
+
   LineCalc::calcNewLine(caster->pos, tgt->pos, true, 999, false, line);
+
   Render::drawMapAndInterface();
+
   const size_t LINE_SIZE = line.size();
+
   for (size_t i = 1; i < LINE_SIZE; ++i)
   {
     const Pos& p = line[i];
@@ -253,7 +269,7 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
   if (caster->isPlayer())
   {
     bool props[int(PropId::END)];
-    Map::player->getPropHandler().getPropIds(props);
+    caster->getPropHandler().getPropIds(props);
     isWarlockCharged = props[int(PropId::warlockCharged)];
   }
 
@@ -299,15 +315,27 @@ SpellEffectNoticed SpellAzaWrath::cast_(Actor* const caster) const
   if (caster->isPlayer())
   {
     bool props[int(PropId::END)];
-    Map::player->getPropHandler().getPropIds(props);
+    caster->getPropHandler().getPropIds(props);
 
     isWarlockCharged = props[int(PropId::warlockCharged)];
   }
 
   Render::drawBlastAtSeenActors(tgts, clrRedLgt);
 
-  for (Actor* tgt : tgts)
+  for (Actor* const tgt : tgts)
   {
+    //Spell reflection?
+    bool tgtProps[size_t(PropId::END)];
+
+    tgt->getPropHandler().getPropIds(tgtProps);
+
+    if (tgtProps[size_t(PropId::spellReflect)])
+    {
+      Log::addMsg(spellReflectMsg, clrWhite, false, true);
+      cast_(tgt);
+      continue;
+    }
+
     string  tgtStr  = "I am";
     Clr     msgClr  = clrMsgGood;
     if (tgt->isPlayer())
@@ -354,7 +382,6 @@ SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const
     string casterName = IS_PLAYER ? "me" : caster->getNameThe();
     Log::addMsg("Destruction rages around " + casterName + "!");
   }
-
 
   const Pos& casterPos = caster->pos;
 
@@ -410,9 +437,21 @@ SpellEffectNoticed SpellMayhem::cast_(Actor* const caster) const
   vector<Actor*> seenFoes;
   caster->getSeenFoes(seenFoes);
 
-  for (auto* actor : seenFoes)
+  for (auto* tgt : seenFoes)
   {
-    actor->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
+    //Spell reflection?
+    bool tgtProps[size_t(PropId::END)];
+
+    tgt->getPropHandler().getPropIds(tgtProps);
+
+    if (tgtProps[size_t(PropId::spellReflect)])
+    {
+      Log::addMsg(spellReflectMsg, clrWhite, false, true);
+      cast_(tgt);
+      continue;
+    }
+
+    tgt->getPropHandler().tryApplyProp(new PropBurning(PropTurns::std));
   }
 
   SndEmit::emitSnd({"", SfxId::END, IgnoreMsgIfOriginSeen::yes, casterPos, nullptr,
@@ -664,7 +703,7 @@ SpellEffectNoticed SpellDetMon::cast_(Actor* const caster) const
 
   for (Actor* actor : GameTime::actors_)
   {
-    if (actor != Map::player)
+    if (!actor->isPlayer())
     {
       if (Utils::kingDist(playerPos, actor->pos) <= MAX_DIST)
       {
@@ -682,7 +721,6 @@ SpellEffectNoticed SpellDetMon::cast_(Actor* const caster) const
 //------------------------------------------------------------ OPENING
 SpellEffectNoticed SpellOpening::cast_(Actor* const caster) const
 {
-
   (void)caster;
 
   bool isAnyOpened = false;
@@ -722,6 +760,17 @@ SpellEffectNoticed SpellSacrLife::cast_(Actor* const caster) const
 
   //Convert every 2 HP to 1 SPI
 
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  Map::player->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    Log::addMsg(spellReflectSelfMsg, clrWhite, false, true);
+    return SpellEffectNoticed::no;
+  }
+
   const int PLAYER_HP_CUR = Map::player->getHp();
 
   if (PLAYER_HP_CUR > 2)
@@ -740,6 +789,17 @@ SpellEffectNoticed SpellSacrSpi::cast_(Actor* const caster) const
   (void)caster;
 
   //Convert all SPI to HP
+
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  Map::player->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    Log::addMsg(spellReflectSelfMsg, clrWhite, false, true);
+    return SpellEffectNoticed::no;
+  }
 
   const int PLAYER_SPI_CUR = Map::player->getSpi();
 
@@ -762,7 +822,7 @@ SpellEffectNoticed SpellCloudMinds::cast_(Actor* const caster) const
 
   for (Actor* actor : GameTime::actors_)
   {
-    if (actor != Map::player)
+    if (!actor->isPlayer())
     {
       Mon* const mon = static_cast<Mon*>(actor);
       mon->awareCounter_ = 0;
@@ -774,6 +834,20 @@ SpellEffectNoticed SpellCloudMinds::cast_(Actor* const caster) const
 //------------------------------------------------------------ BLESS
 SpellEffectNoticed SpellBless::cast_(Actor* const caster) const
 {
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  caster->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    if (caster->isPlayer())
+    {
+      Log::addMsg(spellReflectSelfMsg, clrWhite, false, true);
+    }
+    return SpellEffectNoticed::no;
+  }
+
   caster->getPropHandler().tryApplyProp(new PropBlessed(PropTurns::std));
   return SpellEffectNoticed::yes;
 }
@@ -788,6 +862,20 @@ SpellEffectNoticed SpellLight::cast_(Actor* const caster) const
 //------------------------------------------------------------ TELEPORT
 SpellEffectNoticed SpellTeleport::cast_(Actor* const caster) const
 {
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  caster->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    if (caster->isPlayer())
+    {
+      Log::addMsg(spellReflectSelfMsg, clrWhite, false, true);
+    }
+    return SpellEffectNoticed::no;
+  }
+
   caster->teleport();
   return SpellEffectNoticed::yes;
 }
@@ -802,6 +890,20 @@ bool SpellTeleport::allowMonCastNow(Mon& mon) const
 //------------------------------------------------------------ ELEMENTAL RES
 SpellEffectNoticed SpellElemRes::cast_(Actor* const caster) const
 {
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  caster->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    if (caster->isPlayer())
+    {
+      Log::addMsg(spellReflectSelfMsg, clrWhite, false, true);
+    }
+    return SpellEffectNoticed::no;
+  }
+
   const int DURATION = 20;
   PropHandler& propHlr = caster->getPropHandler();
   propHlr.tryApplyProp(new PropRFire(PropTurns::specific, DURATION));
@@ -818,17 +920,30 @@ bool SpellElemRes::allowMonCastNow(Mon& mon) const
 //------------------------------------------------------------ KNOCKBACK
 SpellEffectNoticed SpellKnockBack::cast_(Actor* const caster) const
 {
-  Clr     msgClr    = clrMsgGood;
-  string  tgtStr    = "me";
-  Mon*    casterMon = static_cast<Mon*>(caster);
-  Actor*  tgt       = casterMon->tgt_;
+  assert(!caster->isPlayer());
+
+  Clr     msgClr      = clrMsgGood;
+  string  tgtStr      = "me";
+  Actor*  casterUsed  = caster;
+  Actor*  tgt         = static_cast<Mon*>(casterUsed)->tgt_;
   assert(tgt);
+
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  tgt->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    Log::addMsg(spellReflectMsg, clrWhite, false, true);
+    swap(casterUsed, tgt);
+  }
 
   if (tgt->isPlayer())
   {
     msgClr = clrMsgBad;
   }
-  else
+  else //Target is monster
   {
     tgtStr = tgt->getNameThe();
     if (Map::player->isLeaderOf(tgt)) {msgClr = clrWhite;}
@@ -864,11 +979,24 @@ SpellEffectNoticed SpellPropOnMon::cast_(Actor* const caster) const
 
   Render::drawBlastAtSeenActors(tgts, clrMagenta);
 
-  for (Actor* const actor : tgts)
+  for (Actor* const tgt : tgts)
   {
-    PropHandler&  propHlr = actor->getPropHandler();
-    Prop* const   prop    = propHlr.mkProp(propId, PropTurns::std);
-    propHlr.tryApplyProp(prop);
+    PropHandler& propHandler = tgt->getPropHandler();
+
+    //Spell reflection?
+    bool tgtProps[size_t(PropId::END)];
+
+    propHandler.getPropIds(tgtProps);
+
+    if (tgtProps[size_t(PropId::spellReflect)])
+    {
+      Log::addMsg(spellReflectMsg, clrWhite, false, true);
+      cast_(tgt);
+      continue;
+    }
+
+    Prop* const prop = propHandler.mkProp(propId, PropTurns::std);
+    propHandler.tryApplyProp(prop);
   }
 
   return SpellEffectNoticed::yes;
@@ -882,14 +1010,32 @@ bool SpellPropOnMon::allowMonCastNow(Mon& mon) const
 //------------------------------------------------------------ DISEASE
 SpellEffectNoticed SpellDisease::cast_(Actor* const caster) const
 {
-  auto* const tgt   = static_cast<Mon*>(caster)->tgt_;
-  string actorName  = "me";
+  assert(!caster->isPlayer());
 
-  if (!tgt->isPlayer()) {actorName = tgt->getNameThe();}
+  Actor* casterUsed = caster;
+  Actor* tgt        = static_cast<Mon*>(casterUsed)->tgt_;
+
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  tgt->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    Log::addMsg(spellReflectMsg, clrWhite, false, true);
+    swap(casterUsed, tgt);
+  }
+
+  string actorName = "me";
+
+  if (!tgt->isPlayer())
+  {
+    actorName = tgt->getNameThe();
+  }
 
   if (Map::player->isSeeingActor(*tgt, nullptr))
   {
-    Log::addMsg("A disease is starting to afflict " + actorName + "!");
+    Log::addMsg("A horrible disease is starting to afflict " + actorName + "!");
   }
 
   tgt->getPropHandler().tryApplyProp(new PropDiseased(PropTurns::specific, 50));
@@ -1034,6 +1180,20 @@ bool SpellSummonMon::allowMonCastNow(Mon& mon) const
 //------------------------------------------------------------ HEAL SELF
 SpellEffectNoticed SpellHealSelf::cast_(Actor* const caster) const
 {
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  caster->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    if (caster->isPlayer())
+    {
+      Log::addMsg(spellReflectSelfMsg, clrWhite, false, true);
+    }
+    return SpellEffectNoticed::no;
+  }
+
   //The spell effect is noticed if any hit points were restored
   const bool IS_ANY_HP_HEALED = caster->restoreHp(999, true);
 
@@ -1048,8 +1208,23 @@ bool SpellHealSelf::allowMonCastNow(Mon& mon) const
 //------------------------------------------------------------ MI-GO HYPNOSIS
 SpellEffectNoticed SpellMiGoHypno::cast_(Actor* const caster) const
 {
-  Actor* const tgt = static_cast<Mon*>(caster)->tgt_;
+  assert(!caster->isPlayer());
+
+  Actor* casterUsed = caster;
+  Actor* tgt        = static_cast<Mon*>(casterUsed)->tgt_;
+
   assert(tgt);
+
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  tgt->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    Log::addMsg(spellReflectMsg, clrWhite, false, true);
+    swap(casterUsed, tgt);
+  }
 
   if (tgt->isPlayer())
   {
@@ -1077,11 +1252,30 @@ bool SpellMiGoHypno::allowMonCastNow(Mon& mon) const
 //------------------------------------------------------------ IMMOLATION
 SpellEffectNoticed SpellBurn::cast_(Actor* const caster) const
 {
-  string        tgtStr  = "me";
-  Actor* const  tgt     = static_cast<Mon*>(caster)->tgt_;
+  assert(!caster->isPlayer());
+
+  Actor* casterUsed = caster;
+  Actor* tgt        = static_cast<Mon*>(casterUsed)->tgt_;
+
   assert(tgt);
 
-  if (!tgt->isPlayer()) {tgtStr = tgt->getNameThe();}
+  //Spell reflection?
+  bool tgtProps[size_t(PropId::END)];
+
+  tgt->getPropHandler().getPropIds(tgtProps);
+
+  if (tgtProps[size_t(PropId::spellReflect)])
+  {
+    Log::addMsg(spellReflectMsg, clrWhite, false, true);
+    swap(casterUsed, tgt);
+  }
+
+  string tgtStr = "me";
+
+  if (!tgt->isPlayer())
+  {
+    tgtStr = tgt->getNameThe();
+  }
 
   if (Map::player->isSeeingActor(*tgt, nullptr))
   {

@@ -92,5 +92,7 @@ const std::string cancelInfoStrNoSpace  = "[space/esc] to cancel";
 const std::string cancelInfoStr         = " " + cancelInfoStrNoSpace;
 const std::string msgDisarmNoTrap       = "I find nothing there to disarm.";
 const std::string msgMonPreventCmd      = "Not while an enemy is near.";
+const std::string spellReflectMsg       = "The spell is reflected!";
+const std::string spellReflectSelfMsg   = "There is a faint echo...";
 
 #endif

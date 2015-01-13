@@ -27,7 +27,7 @@ class JewelryEffect
 {
 public:
   JewelryEffect(Jewelry* const jewelry) :
-    jewelry_      (jewelry) {}
+    jewelry_(jewelry) {}
 
   virtual ~JewelryEffect() {}
 
@@ -45,7 +45,7 @@ public:
 protected:
   void reveal();
 
-  Jewelry* const      jewelry_;
+  Jewelry* const jewelry_;
 };
 
 class JewelryEffectHpBon : public JewelryEffect

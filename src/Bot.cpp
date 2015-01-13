@@ -169,9 +169,12 @@ void act()
   {
     vector<PropId> propBucket;
 
-    for (int i = 0; i < int(PropId::END); ++i)
+    for (size_t i = 0; i < size_t(PropId::END); ++i)
     {
-      if (PropData::data[i].allowTestOnBot) {propBucket.push_back(PropId(i));}
+      if (PropData::data[i].allowTestOnBot)
+      {
+        propBucket.push_back(PropId(i));
+      }
     }
 
     PropId      propId  = propBucket[Rnd::range(0, propBucket.size() - 1)];

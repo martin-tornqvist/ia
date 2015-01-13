@@ -594,7 +594,7 @@ void initDataList()
   d.allowApplyMoreWhileActive = true;
   d.updatePlayerVisualWhenStartOrEnd = false;
   d.isEndedByMagicHealing = false;
-  d.allowTestOnBot = false;
+  d.allowTestOnBot = true;
   d.alignment = propAlignmentGood;
   addPropData(d);
 
@@ -781,7 +781,7 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
     case PropId::radiant:         return new PropRadiant(turnsInit,           NR_TURNS);
     case PropId::rDisease:        return new PropRDisease(turnsInit,          NR_TURNS);
     case PropId::teleControl:     return new PropTeleControl(turnsInit,       NR_TURNS);
-    case PropId::spellReflect:    return new PropTeleControl(turnsInit,       NR_TURNS);
+    case PropId::spellReflect:    return new PropSpellReflect(turnsInit,      NR_TURNS);
     case PropId::END: {}
       break;
   }
