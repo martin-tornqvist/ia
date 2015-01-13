@@ -1705,7 +1705,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::eyeAmulet);
   resetData(*d, ItemType::amulet);
-  d->baseName = {"Eye-shaped Amulet", "", "an Eye-shaped Amulet"};
+  d->baseName = {"Eye Amulet", "", "an Eye Amulet"};
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
@@ -1717,7 +1717,7 @@ void initDataList()
 
   d = new ItemDataT(ItemId::batAmulet);
   resetData(*d, ItemType::amulet);
-  d->baseName = {"Bat-shaped Amulet", "", "a Bat-shaped Amulet"};
+  d->baseName = {"Bat Amulet", "", "a Bat Amulet"};
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
