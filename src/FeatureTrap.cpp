@@ -129,7 +129,7 @@ void Trap::bump(Actor& actorBumping)
 
   TRACE << "Name of actor bumping: \"" << d.nameA << "\"" << endl;
 
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   actorBumping.getPropHandler().getPropIds(props);
 
   if (!props[int(PropId::ethereal)] && !props[int(PropId::flying)])
@@ -236,7 +236,7 @@ void Trap::disarm()
     return;
   }
 
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   Map::player->getPropHandler().getPropIds(props);
 
   const bool IS_BLESSED = props[int(PropId::blessed)];

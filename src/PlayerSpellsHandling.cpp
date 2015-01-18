@@ -160,8 +160,6 @@ void tryCast(const SpellOpt& spellOpt)
 {
   assert(spellOpt.spell);
 
-  //TODO: It should be allowed to cast non-read spells while blind etc.
-  //There should be something like "allowRead()" and allowCastSpells()".
   if (Map::player->getPropHandler().allowRead(true))
   {
     Log::clearLog();
@@ -169,11 +167,14 @@ void tryCast(const SpellOpt& spellOpt)
 
     Spell* const spell = spellOpt.spell;
 
-    const Range spiCost = spell->getSpiCost(false, Map::player);
-    if (spiCost.upper >= Map::player->getSpi())
+    const Range spiCostRange = spell->getSpiCost(false, Map::player);
+
+    if (spiCostRange.upper >= Map::player->getSpi())
     {
       Log::addMsg("Cast spell and risk depleting your spirit [y/n]?", clrWhiteHigh);
+
       Render::drawMapAndInterface();
+
       if (Query::yesOrNo() == YesNoAnswer::no)
       {
         Log::clearLog();

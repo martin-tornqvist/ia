@@ -770,7 +770,7 @@ void Zuul::place_()
     state_ = ActorState::destroyed;
     Actor* actor = ActorFactory::mk(ActorId::cultistPriest, pos);
     PropHandler& propHandler = actor->getPropHandler();
-    propHandler.tryApplyProp(new PropPossessedByZuul(PropTurns::indefinite), true);
+    propHandler.tryApplyProp(new PropPossByZuul(PropTurns::indefinite), true);
     actor->restoreHp(999, false);
   }
 }

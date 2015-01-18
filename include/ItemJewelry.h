@@ -20,6 +20,7 @@ enum class JewelryEffectId
   light,
   conflict,
   spellReflect,
+  strangle, //This must of course be an amulet
   END
 };
 
@@ -31,11 +32,14 @@ public:
 
   virtual ~JewelryEffect() {}
 
-  virtual JewelryEffectId  getEffectId() const = 0;
+  virtual JewelryEffectId  getId() const = 0;
 
-  virtual void        onEquip()           {}
-  virtual void        onUnequip()         {}
-  virtual void        onNewTurnEquiped()  {}
+  virtual void            onEquip()             {}
+  virtual UnequipAllowed  onUnequip()           {return UnequipAllowed::yes;}
+  virtual void            onStdTurnEquiped()    {}
+  virtual void            onActorTurnEquiped()  {}
+
+  void reveal();
 
   virtual std::string getDescr() const = 0;
 
@@ -43,8 +47,6 @@ public:
   void setupFromSaveLines(std::vector<std::string>& lines);
 
 protected:
-  void reveal();
-
   Jewelry* const jewelry_;
 };
 
@@ -56,11 +58,11 @@ public:
 
   ~JewelryEffectHpBon() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::hpBon;}
+  JewelryEffectId getId() const override {return JewelryEffectId::hpBon;}
 
-  std::string getDescr()          const override;
-  void        onEquip()                 override;
-  void        onUnequip()               override;
+  std::string     getDescr()            const override;
+  void            onEquip()                   override;
+  UnequipAllowed  onUnequip()                 override;
 };
 
 class JewelryEffectHpPen : public JewelryEffect
@@ -71,11 +73,11 @@ public:
 
   ~JewelryEffectHpPen() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::hpPen;}
+  JewelryEffectId getId() const override {return JewelryEffectId::hpPen;}
 
-  std::string getDescr()          const override;
-  void        onEquip()                 override;
-  void        onUnequip()               override;
+  std::string     getDescr()            const override;
+  void            onEquip()                   override;
+  UnequipAllowed  onUnequip()                 override;
 };
 
 class JewelryEffectSpiBon : public JewelryEffect
@@ -86,11 +88,11 @@ public:
 
   ~JewelryEffectSpiBon() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::spiBon;}
+  JewelryEffectId getId() const override {return JewelryEffectId::spiBon;}
 
-  std::string getDescr()          const override;
-  void        onEquip()                 override;
-  void        onUnequip()               override;
+  std::string     getDescr()            const override;
+  void            onEquip()                   override;
+  UnequipAllowed  onUnequip()                 override;
 };
 
 class JewelryEffectSpiPen : public JewelryEffect
@@ -101,11 +103,11 @@ public:
 
   ~JewelryEffectSpiPen() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::spiPen;}
+  JewelryEffectId getId() const override {return JewelryEffectId::spiPen;}
 
-  std::string getDescr()          const override;
-  void        onEquip()                 override;
-  void        onUnequip()               override;
+  std::string     getDescr()            const override;
+  void            onEquip()                   override;
+  UnequipAllowed  onUnequip()                 override;
 };
 
 class JewelryEffectRFire : public JewelryEffect
@@ -116,11 +118,11 @@ public:
 
   ~JewelryEffectRFire() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::rFire;}
+  JewelryEffectId getId() const override {return JewelryEffectId::rFire;}
 
-  std::string getDescr()          const override;
-  void        onEquip()                 override;
-  void        onUnequip()               override;
+  std::string     getDescr()            const override;
+  void            onEquip()                   override;
+  UnequipAllowed  onUnequip()                 override;
 };
 
 class JewelryEffectTeleControl : public JewelryEffect
@@ -131,11 +133,11 @@ public:
 
   ~JewelryEffectTeleControl() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::teleControl;}
+  JewelryEffectId getId() const override {return JewelryEffectId::teleControl;}
 
-  std::string getDescr()          const override;
-  void        onEquip()                 override;
-  void        onUnequip()               override;
+  std::string     getDescr()            const override;
+  void            onEquip()                   override;
+  UnequipAllowed  onUnequip()                 override;
 };
 
 class JewelryEffectRandomTele : public JewelryEffect
@@ -146,10 +148,10 @@ public:
 
   ~JewelryEffectRandomTele() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::randomTele;}
+  JewelryEffectId getId() const override {return JewelryEffectId::randomTele;}
 
-  std::string getDescr()          const override;
-  void        onNewTurnEquiped()        override;
+  std::string     getDescr()            const override;
+  void            onStdTurnEquiped()          override;
 };
 
 class JewelryEffectLight : public JewelryEffect
@@ -160,11 +162,11 @@ public:
 
   ~JewelryEffectLight() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::light;}
+  JewelryEffectId getId() const override {return JewelryEffectId::light;}
 
-  std::string getDescr()          const override;
-  void        onEquip()                 override;
-  void        onUnequip()               override;
+  std::string     getDescr()            const override;
+  void            onEquip()                   override;
+  UnequipAllowed  onUnequip()                 override;
 };
 
 class JewelryEffectConflict : public JewelryEffect
@@ -175,10 +177,10 @@ public:
 
   ~JewelryEffectConflict() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::conflict;}
+  JewelryEffectId getId() const override {return JewelryEffectId::conflict;}
 
-  std::string getDescr()          const override;
-  void        onNewTurnEquiped()        override;
+  std::string     getDescr()            const override;
+  void            onStdTurnEquiped()          override;
 };
 
 class JewelryEffectSpellReflect : public JewelryEffect
@@ -189,11 +191,27 @@ public:
 
   ~JewelryEffectSpellReflect() {}
 
-  JewelryEffectId getEffectId() const override {return JewelryEffectId::spellReflect;}
+  JewelryEffectId getId() const override {return JewelryEffectId::spellReflect;}
 
-  std::string getDescr()          const override;
-  void        onEquip()                 override;
-  void        onUnequip()               override;
+  std::string     getDescr()            const override;
+  void            onEquip()                   override;
+  UnequipAllowed  onUnequip()                 override;
+};
+
+class JewelryEffectStrangle : public JewelryEffect
+{
+public:
+  JewelryEffectStrangle(Jewelry* const jewelry) :
+    JewelryEffect(jewelry) {}
+
+  ~JewelryEffectStrangle() {}
+
+  JewelryEffectId getId() const override {return JewelryEffectId::strangle;}
+
+  std::string     getDescr()            const override;
+  void            onEquip()                   override;
+  UnequipAllowed  onUnequip()                 override;
+  void            onActorTurnEquiped()        override;
 };
 
 class Jewelry : public Item
@@ -203,13 +221,23 @@ public:
 
   std::vector<std::string> getDescr() const override final;
 
-  void            onEquip()                             override final;
-  UnequipAllowed  onUnequip()                           override final;
-  void            onNewTurnInInv(const InvType invType) override final;
+  void            onEquip()                                 override final;
+  UnequipAllowed  onUnequip()                               override final;
+  void            onStdTurnInInv    (const InvType invType) override final;
+  void            onActorTurnInInv  (const InvType invType) override final;
 
   Clr getInterfaceClr() const override {return clrOrange;}
 
+  void identify(const bool IS_SILENT_IDENTIFY) override final;
+
+  //Called from the effects
+  void onEffectRevealed();
+
+  bool isAllEffectsKnown() const;
+
 private:
+  virtual std::string getNameInf() const;
+
   std::vector<JewelryEffect*> effects_;
 };
 

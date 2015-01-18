@@ -98,7 +98,7 @@ protected:
   //TODO: Try to get rid of these friend declarations
   friend class AbilityVals;
   friend class PropDiseased;
-  friend class PropPossessedByZuul;
+  friend class PropPossByZuul;
   friend class Trap;
 
   virtual void die_() {}

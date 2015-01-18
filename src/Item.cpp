@@ -75,12 +75,14 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
                      const ItemRefAttInf attInf) const
 {
   ItemRefType refTypeUsed = refType;
+
   if (refType == ItemRefType::plural && (!data_->isStackable || nrItems_ == 1))
   {
     refTypeUsed = ItemRefType::a;
   }
 
   string nrStr = "";
+
   if (refTypeUsed == ItemRefType::plural)
   {
     nrStr = toStr(nrItems_) + " ";
@@ -304,7 +306,7 @@ UnequipAllowed ArmorHeavyCoat::onUnequip_()
   return UnequipAllowed::yes;
 }
 
-void ArmorMigo::onNewTurnInInv(const InvType invType)
+void ArmorMigo::onStdTurnInInv(const InvType invType)
 {
   (void)invType;
 
@@ -492,7 +494,7 @@ ConsumeItem MedicalBag::activate(Actor* const actor)
   }
 
   //Check if chosen action can be done
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   Map::player->getPropHandler().getPropIds(props);
   switch (curAction_)
   {
@@ -565,7 +567,7 @@ MedBagAction MedicalBag::chooseAction() const
 {
   Log::clearLog();
 
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   Map::player->getPropHandler().getPropIds(props);
 
   //Infections are treated first
@@ -721,7 +723,7 @@ int MedicalBag::getTotSupplForSanitize() const
 }
 
 //--------------------------------------------------------- HIDEOUS MASK
-void HideousMask::onNewTurnInInv(const InvType invType)
+void HideousMask::onStdTurnInInv(const InvType invType)
 {
   if (invType == InvType::slots)
   {

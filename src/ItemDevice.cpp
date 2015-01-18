@@ -85,7 +85,7 @@ ConsumeItem StrangeDevice::activate(Actor* const actor)
     bool isCondDegrade    = false;
     bool isWarning        = false;
     int bon = 0;
-    bool props[int(PropId::END)];
+    bool props[size_t(PropId::END)];
     actor->getPropHandler().getPropIds(props);
     if (props[int(PropId::blessed)])
     {
@@ -362,7 +362,7 @@ void DeviceLantern::toggle()
   Render::drawMapAndInterface();
 }
 
-void DeviceLantern::onNewTurnInInv(const InvType invType)
+void DeviceLantern::onStdTurnInInv(const InvType invType)
 {
   (void)invType;
 

@@ -578,7 +578,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   delete bodySlot.item;
   bodySlot.item = nullptr;
 
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   PropHandler& propHandler = Map::player->getPropHandler();
 
   //Check that no props are enabled
@@ -620,7 +620,8 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
   }
 
   //Wear the asbeshos suit again
-  inv.equipGeneralItemAndEndTurn(inv.general_.size() - 1, SlotId::body);
+  inv.equipGeneralItem(inv.general_.size() - 1, SlotId::body);
+  GameTime::tick();
 
   item->onEquip();
 

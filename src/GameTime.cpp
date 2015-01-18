@@ -139,14 +139,18 @@ void runStdTurnEvents()
 
   //Run new turn events on all player items
   auto& playerInv = Map::player->getInv();
+
   for (Item* const item : playerInv.general_)
   {
-    item->onNewTurnInInv(InvType::general);
+    item->onStdTurnInInv(InvType::general);
   }
 
   for (InvSlot& slot : playerInv.slots_)
   {
-    if (slot.item) {slot.item->onNewTurnInInv(InvType::slots);}
+    if (slot.item)
+    {
+      slot.item->onStdTurnInInv(InvType::slots);
+    }
   }
 
   SndEmit::resetNrSndMsgPrintedCurTurn();
@@ -165,7 +169,7 @@ void init()
 {
   curTurnTypePos_ = curActorIndex_ = turnNr_ = 0;
   actors_.clear();
-  mobs_.clear();
+  mobs_  .clear();
 }
 
 void cleanup()
@@ -244,10 +248,10 @@ void resetTurnTypeAndActorCounters()
   curTurnTypePos_ = curActorIndex_ = 0;
 }
 
-//For every turn type step, run through all actors and let those who can act
-//during this type of turn act. When all actors who can act on this phase have
-//acted, and if this is a normal speed phase - consider it a standard turn;
-//update status effects, update timed features, spawn more monsters etc.
+//For every turn type step, run through all actors and let those who can act during this
+//type of turn act. When all actors who can act on this phase have acted, and if this is
+//a normal speed phase - consider it a standard turn (update properties, update features,
+//spawn more monsters etc.)
 void tick(const bool IS_FREE_TURN)
 {
   runAtomicTurnEvents();
@@ -259,6 +263,22 @@ void tick(const bool IS_FREE_TURN)
     Map::player->updateFov();
     Render::drawMapAndInterface();
     Map::updateVisualMemory();
+
+    //Run new turn events on all player items
+    auto& inv = Map::player->getInv();
+
+    for (Item* const item : inv.general_)
+    {
+      item->onActorTurnInInv(InvType::general);
+    }
+
+    for (InvSlot& slot : inv.slots_)
+    {
+      if (slot.item)
+      {
+        slot.item->onActorTurnInInv(InvType::slots);
+      }
+    }
   }
   else
   {
@@ -274,8 +294,8 @@ void tick(const bool IS_FREE_TURN)
 
   if (!IS_FREE_TURN)
   {
-
     bool actorWhoCanActThisTurnFound = false;
+
     while (!actorWhoCanActThisTurnFound)
     {
       auto curTurnType = (TurnType)(curTurnTypePos_);
@@ -285,8 +305,13 @@ void tick(const bool IS_FREE_TURN)
       if (curActorIndex_ >= actors_.size())
       {
         curActorIndex_ = 0;
+
         ++curTurnTypePos_;
-        if (curTurnTypePos_ == int(TurnType::END)) {curTurnTypePos_ = 0;}
+
+        if (curTurnTypePos_ == int(TurnType::END))
+        {
+          curTurnTypePos_ = 0;
+        }
 
         if (curTurnType != TurnType::fast && curTurnType != TurnType::fastest)
         {
@@ -296,12 +321,13 @@ void tick(const bool IS_FREE_TURN)
 
       curActor = getCurActor();
 
-      bool props[int(PropId::END)];
+      bool props[size_t(PropId::END)];
       curActor->getPropHandler().getPropIds(props);
 
       const bool IS_SLOWED = props[int(PropId::slowed)];
 
       const ActorSpeed defSpeed = curActor->getData().speed;
+
       const ActorSpeed realSpeed = (!IS_SLOWED || defSpeed == ActorSpeed::sluggish) ?
                                    defSpeed : ActorSpeed(int(defSpeed) - 1);
       switch (realSpeed)

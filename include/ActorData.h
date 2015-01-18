@@ -98,7 +98,7 @@ struct ActorDataT
   int hp, spi, dmgMelee, dmgRanged;
   ActorSpeed speed;
   AbilityVals abilityVals;
-  bool intrProps[int(PropId::END)];
+  bool intrProps[size_t(PropId::END)];
   int rangedCooldownTurns, spellCooldownTurns;
   bool ai[int(AiId::END)];
   int nrTurnsAware;

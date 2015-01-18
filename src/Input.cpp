@@ -343,7 +343,7 @@ void handleMapModeKeyPress(const KeyData& d)
 
               if (actor && !actor->isPlayer())
               {
-                bool tgtProps[int(PropId::END)];
+                bool tgtProps[size_t(PropId::END)];
                 actor->getPropHandler().getPropIds(tgtProps);
 
                 const bool GETS_UNDEAD_BANE_BON =
@@ -539,7 +539,7 @@ void handleMapModeKeyPress(const KeyData& d)
       }
       else
       {
-        bool props[int(PropId::END)];
+        bool props[size_t(PropId::END)];
         Map::player->getPropHandler().getPropIds(props);
         if (props[int(PropId::poisoned)])
         {
@@ -632,7 +632,7 @@ void handleMapModeKeyPress(const KeyData& d)
 
               if (actor && !actor->isPlayer())
               {
-                bool tgtProps[int(PropId::END)];
+                bool tgtProps[size_t(PropId::END)];
                 actor->getPropHandler().getPropIds(tgtProps);
 
                 const bool GETS_UNDEAD_BANE_BON =

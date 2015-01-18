@@ -414,9 +414,12 @@ void PotionInsight::quaff_(Actor& actor)
   const size_t NR_ELEMENTS = identifyBucket.size();
   if (NR_ELEMENTS > 0)
   {
-    const int     IDX              = Rnd::range(0, NR_ELEMENTS - 1);
+    const int     IDX             = Rnd::range(0, NR_ELEMENTS - 1);
     Item* const   item            = identifyBucket[IDX];
     const string  itemNameBefore  = item->getName(ItemRefType::a, ItemRefInf::none);
+
+    Log::addMsg("I gain intuitions about " + itemNameBefore + "...", clrWhite, false,
+                true);
 
     item->identify(true);
 
@@ -424,8 +427,23 @@ void PotionInsight::quaff_(Actor& actor)
 
     Render::drawMapAndInterface(true);
 
-    Log::addMsg("I gain intuitions about " + itemNameBefore + "...");
-    Log::addMsg("It is identified as " + itemNameAfter + "!");
+    if (itemNameBefore != itemNameAfter)
+    {
+      Log::addMsg("It is identified as " + itemNameAfter + "!");
+    }
+    else //Item name is same as before
+    {
+      //Typically, items that change names when identified have a "nonsense" name first
+      //(e.g. "A Green Potion"), that change into something more descriptive (e.g.
+      //"A Potion of Fire Resistance"). In those cases, the message can be something like
+      //"Aha, [old name] is a [new name]!".
+      //But when the name is the same before and after, the message needs to be different,
+      //(e.g. "An Iron Ring"). Then we print a message like "Aha, I understand it now".
+
+      //TODO: This is hacky and fragile, but it works for now.
+
+      Log::addMsg("All its properties are now known to me.");
+    }
   }
 
   identify(false);

@@ -154,7 +154,6 @@ void resetData(ItemDataT& d, ItemType const itemType)
     {
       resetData(d, ItemType::meleeWpn);
       d.type = ItemType::meleeWpnIntr;
-//      d.isIntrinsic = true;
       d.spawnStdRange = Range(-1, -1);
       d.melee.hitSmallSfx = SfxId::hitSmall;
       d.melee.hitMediumSfx = SfxId::hitMedium;
@@ -189,7 +188,6 @@ void resetData(ItemDataT& d, ItemType const itemType)
     {
       resetData(d, ItemType::rangedWpn);
       d.type = ItemType::rangedWpnIntr;
-//      d.isIntrinsic = true;
       d.ranged.hasInfiniteAmmo = true;
       d.spawnStdRange = Range(-1, -1);
       d.melee.isMeleeWpn = false;
@@ -216,7 +214,6 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.glyph = '{';
       d.clr = clrWhite;
       d.tile = TileId::ammo;
-//      d.isAmmo = true;
       d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
     } break;
 
@@ -226,7 +223,6 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.type = ItemType::ammoClip;
       d.weight = ItemWeight::light;
       d.isStackable = false;
-//      d.isAmmoClip = true;
       d.spawnStdRange.upper = DLVL_LAST_MID_GAME;
     } break;
 
@@ -247,7 +243,6 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.glyph = '?';
       d.clr = clrWhite;
       d.tile = TileId::scroll;
-//      d.isScroll = true;
       d.maxStackAtSpawn = 1;
       d.landOnHardSndMsg = "";
       addFeatureFoundIn(d, FeatureId::chest);
@@ -267,7 +262,6 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.isIdentified = false;
       d.glyph = '!';
       d.tile = TileId::potion;
-//      d.isPotion = true;
       d.ranged.isThrowingWpn = true;
       d.ranged.throwHitChanceMod = 15;
       d.ranged.throwDmg = DiceParam(1, 3, 0);
@@ -289,10 +283,9 @@ void resetData(ItemDataT& d, ItemType const itemType)
                      "incredibly complex. There is no hope of understanding the purpose "
                      "or function of it through normal means."
                     };
-//      d.isDevice = true;
       d.chanceToIncludeInSpawnList = 12;
       d.weight = ItemWeight::light;
-      d.isIdentified = true;
+      d.isIdentified = false;
       d.glyph = '~';
       d.tile = TileId::device1;
       d.isStackable = false;
@@ -307,7 +300,6 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.weight = ItemWeight::heavy;
       d.glyph = '[';
       d.tile = TileId::armor;
-//      d.isArmor = true;
       d.isStackable = false;
     } break;
 
@@ -327,6 +319,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.tile = TileId::amulet;
       d.glyph = '\"';
       d.weight = ItemWeight::light;
+      d.isIdentified = false;
       d.isStackable = false;
     } break;
 
@@ -338,6 +331,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
       d.tile = TileId::ring;
       d.glyph = '=';
       d.weight = ItemWeight::extraLight;
+      d.isIdentified = false;
       d.isStackable = false;
     } break;
 
@@ -346,7 +340,6 @@ void resetData(ItemDataT& d, ItemType const itemType)
       resetData(d, ItemType::general);
       d.type = ItemType::explosive;
       d.weight = ItemWeight::light;
-//      d.isExplosive = true;
       d.glyph = '-';
       d.maxStackAtSpawn = 2;
       d.landOnHardSndMsg = "";
@@ -470,7 +463,7 @@ void initDataList()
                 };
   d->baseDescr = {"Ammunition designed for Incinerators."};
   d->weight = ItemWeight::light;
-  d->ranged.maxNrAmmoInClip = 3;
+  d->ranged.maxNrAmmoInClip = 5;
   d->spawnStdRange.lower = 5;
   d->maxStackAtSpawn = 1;
   addFeatureFoundIn(*d, FeatureId::chest, 25);
@@ -664,7 +657,6 @@ void initDataList()
   d->weight = ItemWeight::light;
   d->tile = TileId::flare;
   d->clr = clrGray;
-//  d->isAmmo = true;
   addFeatureFoundIn(*d, FeatureId::chest);
   addFeatureFoundIn(*d, FeatureId::cabinet);
   addFeatureFoundIn(*d, FeatureId::cocoon);
@@ -928,7 +920,6 @@ void initDataList()
   d->baseDescr = {"Can be useful for wedging things closed."
                   /*TODO: or prying things open."*/
                  };
-//  d->isAmmo = true;
   d->weight = ItemWeight::extraLight;
   d->tile = TileId::ironSpike;
   d->isStackable = true;
@@ -1601,7 +1592,6 @@ void initDataList()
   resetData(*d, ItemType::device);
   d->baseName = {"Blaster Device", "Blaster Devices", "a Blaster Device"};
   d->value = ItemValue::minorTreasure;
-  d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
   addFeatureFoundIn(*d, FeatureId::tomb, 10);
@@ -1614,7 +1604,6 @@ void initDataList()
                  "a Shock Wave Device"
                 };
   d->value = ItemValue::minorTreasure;
-  d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
   addFeatureFoundIn(*d, FeatureId::tomb, 10);
@@ -1627,7 +1616,6 @@ void initDataList()
                  "a Rejuvenator Device"
                 };
   d->value = ItemValue::minorTreasure;
-  d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
   addFeatureFoundIn(*d, FeatureId::tomb, 10);
@@ -1638,7 +1626,6 @@ void initDataList()
   resetData(*d, ItemType::device);
   d->baseName = {"Translocator Device", "Translocator Devices", "a Translocator Device"};
   d->value = ItemValue::minorTreasure;
-  d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
   addFeatureFoundIn(*d, FeatureId::tomb, 10);
@@ -1649,7 +1636,6 @@ void initDataList()
   resetData(*d, ItemType::device);
   d->baseName = {"Sentry Drone Device", "Sentry Drone Devices", "a Sentry Drone Device"};
   d->value = ItemValue::minorTreasure;
-  d->isIdentified = false;
   d->clr = clrGray;
   addFeatureFoundIn(*d, FeatureId::chest, 10);
   addFeatureFoundIn(*d, FeatureId::tomb, 10);
@@ -1688,114 +1674,133 @@ void initDataList()
   d = new ItemDataT(ItemId::starAmulet);
   resetData(*d, ItemType::amulet);
   d->baseName = {"Star Amulet", "", "a Star Amulet"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::skullAmulet);
   resetData(*d, ItemType::amulet);
   d->baseName = {"Skull Amulet", "", "a Skull Amulet"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::spiderAmulet);
   resetData(*d, ItemType::amulet);
   d->baseName = {"Spider Amulet", "", "a Spider Amulet"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::eyeAmulet);
   resetData(*d, ItemType::amulet);
   d->baseName = {"Eye Amulet", "", "an Eye Amulet"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::moonAmulet);
   resetData(*d, ItemType::amulet);
   d->baseName = {"Moon Amulet", "", "a Moon Amulet"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::batAmulet);
   resetData(*d, ItemType::amulet);
   d->baseName = {"Bat Amulet", "", "a Bat Amulet"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::scarabAmulet);
   resetData(*d, ItemType::amulet);
   d->baseName = {"Scarab Amulet", "", "a Scarab Amulet"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::daggerAmulet);
   resetData(*d, ItemType::amulet);
   d->baseName = {"Dagger Amulet", "", "a Dagger Amulet"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::goldenRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Golden Ring", "", "a Golden Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrYellow;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::silverRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Silver Ring", "", "a Silver Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrWhite;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::carnelianRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Carnelian Ring", "", "a Carnelian Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrRedLgt;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::garnetRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Garnet Ring", "", "a Garnet Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrRedLgt;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::ironRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Iron Ring", "", "an Iron Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrGray;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::jadeRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Jade Ring", "", "a Jade Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrGreenLgt;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::moonstoneRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Moonstone Ring", "", "a Moonstone Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrBlueLgt;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::obsidianRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Obsidian Ring", "", "an Obsidian Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrGray;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::onyxRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Onyx Ring", "", "an Onyx Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrGray;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::topazRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Topaz Ring", "", "a Topaz Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrBlueLgt;
   data[int(d->id)] = d;
 
   d = new ItemDataT(ItemId::emeraldRing);
   resetData(*d, ItemType::ring);
   d->baseName = {"Emerald Ring", "", "an Emerald Ring"};
+  d->baseNameUnid = d->baseName;
   d->clr = clrGreenLgt;
   data[int(d->id)] = d;
 }

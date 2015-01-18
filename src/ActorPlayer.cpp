@@ -294,7 +294,7 @@ int Player::getCarryWeightLmt() const
   const bool IS_UNBREAKABLE   = PlayerBon::traitsPicked[int(Trait::unbreakable)];
   const bool IS_STRONG_BACKED = PlayerBon::traitsPicked[int(Trait::strongBacked)];
 
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   propHandler_->getPropIds(props);
   const bool IS_WEAKENED = props[int(PropId::weakened)];
 
@@ -461,7 +461,7 @@ void Player::incrInsanity()
 
       case 5:
       {
-        bool props[int(PropId::END)];
+        bool props[size_t(PropId::END)];
         propHandler_->getPropIds(props);
 
         if (ins_ >= 10 && !props[int(PropId::rFear)])
@@ -830,6 +830,7 @@ void Player::onActorTurn()
   //If player dropped item, check if should go back to inventory screen
   vector<Actor*> seenFoes;
   getSeenFoes(seenFoes);
+
   if (seenFoes.empty())
   {
     const auto invScreen = InvHandling::screenToOpenAfterDrop;
@@ -1035,13 +1036,17 @@ void Player::onStdTurn()
     nrTurnsUntilIns_ = nrTurnsUntilIns_ < 0 ? 3 : nrTurnsUntilIns_ - 1;
     if (nrTurnsUntilIns_ > 0)
     {
+      Render::drawMapAndInterface(true);
       Log::addMsg("I feel my sanity slipping...", clrMsgNote, true, true);
     }
     else
     {
       nrTurnsUntilIns_ = -1;
       incrInsanity();
-      if (isAlive()) {GameTime::tick();}
+      if (isAlive())
+      {
+        GameTime::tick();
+      }
       return;
     }
   }
@@ -1099,7 +1104,7 @@ void Player::onStdTurn()
 
   if (!activeMedicalBag)
   {
-    bool props[int(PropId::END)];
+    bool props[size_t(PropId::END)];
     propHandler_->getPropIds(props);
 
     if (!props[int(PropId::poisoned)])
@@ -1303,7 +1308,7 @@ void Player::moveDir(Dir dir)
       //This point reached means no actor in the destination cell.
 
       //Blocking mobile or rigid?
-      bool props[int(PropId::END)];
+      bool props[size_t(PropId::END)];
       getPropHandler().getPropIds(props);
       Cell& cell = Map::cells[dest.x][dest.y];
       bool isFeaturesAllowMove = cell.rigid->canMove(props);

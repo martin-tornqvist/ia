@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
           {
             actor->onActorTurn();
           }
-          else
+          else //Actor cannot act
           {
             if (actor->isPlayer())
             {
@@ -132,11 +132,9 @@ int main(int argc, char* argv[])
         {
           //Run postmortem, then return to main menu
           static_cast<Player*>(Map::player)->waitTurnsLeft = -1;
-          Log::addMsg("I am dead... (press space/esc/enter)", clrMsgBad);
           Audio::play(SfxId::death);
-          Render::drawMapAndInterface();
+          Log::addMsg("I am dead...", clrMsgBad, false, true);
           Log::clearLog();
-          Query::waitForConfirm();
           HighScore::onGameOver(false);
           Postmortem::run(&quitGame);
           Init::quitToMainMenu = true;

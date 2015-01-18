@@ -726,7 +726,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
   {
     assert(actor);
 
-    bool props[int(PropId::END)];
+    bool props[size_t(PropId::END)];
     actor->getPropHandler().getPropIds(props);
 
     if (props[int(PropId::weakened)])
@@ -761,7 +761,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
 
     if (actorBehind && actorBehind->isAlive())
     {
-      bool propsActorBehind[int(PropId::END)];
+      bool propsActorBehind[size_t(PropId::END)];
       actorBehind->getPropHandler().getPropIds(propsActorBehind);
       if (!propsActorBehind[int(PropId::ethereal)])
       {
@@ -971,7 +971,7 @@ void LiquidShallow::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
 
 void LiquidShallow::bump(Actor& actorBumping)
 {
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   actorBumping.getPropHandler().getPropIds(props);
 
   if (!props[int(PropId::ethereal)] && !props[int(PropId::flying)])
@@ -1689,7 +1689,7 @@ void Tomb::bump(Actor& actorBumping)
       {
         Log::addMsg("I attempt to push the lid.");
 
-        bool props[int(PropId::END)];
+        bool props[size_t(PropId::END)];
         Map::player->getPropHandler().getPropIds(props);
 
         if (props[int(PropId::weakened)])
@@ -2044,7 +2044,7 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
           {
             Log::addMsg("I kick the lid.");
 
-            bool props[int(PropId::END)];
+            bool props[size_t(PropId::END)];
             Map::player->getPropHandler().getPropIds(props);
 
             if (props[int(PropId::weakened)] || matl_ == ChestMatl::iron)
@@ -2235,7 +2235,7 @@ DidTriggerTrap Chest::triggerTrap(Actor* const actor)
   isTrapped_          = false;
 
   //Nothing happens?
-  bool playerProps[int(PropId::END)];
+  bool playerProps[size_t(PropId::END)];
   Map::player->getPropHandler().getPropIds(playerProps);
 
   const int TRAP_NO_ACTION_ONE_IN_N = playerProps[int(PropId::blessed)] ? 2 :

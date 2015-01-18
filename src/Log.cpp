@@ -122,37 +122,84 @@ void drawLog(const bool SHOULD_UPDATE_SCREEN)
   }
 }
 
-void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTIONS,
+void addMsg(const string& str, const Clr& clr, const bool INTERRUPT_PLAYER_ACTIONS,
             const bool ADD_MORE_PROMPT_AFTER_MSG)
 {
-  assert(!text.empty());
+  assert(!str.empty());
+
 #ifndef NDEBUG
-  if (text[0] == ' ')
+  if (str[0] == ' ')
   {
-    TRACE << "Message starts with space: \"" << text << "\"" << endl;
+    TRACE << "Message starts with space: \"" << str << "\"" << endl;
     assert(false);
   }
 #endif
 
+  //If frenzied, change message
+  bool props[size_t(PropId::END)];
+  Map::player->getPropHandler().getPropIds(props);
+
+  if (props[size_t(PropId::frenzied)])
+  {
+    string frenziedStr = str;
+
+    bool hasLowerCase = false;
+
+    for (auto c : frenziedStr)
+    {
+      if (c >= 'a' && c <= 'z')
+      {
+        hasLowerCase = true;
+        break;
+      }
+    }
+
+    const char LAST           = frenziedStr.back();
+    bool isEndedByPunctuation = LAST == '.' || LAST == '!';
+
+    if (hasLowerCase && isEndedByPunctuation)
+    {
+      //Convert to upper case
+      transform(begin(frenziedStr), end(frenziedStr), begin(frenziedStr), ::toupper);
+
+      //Do not put "!" if string contains "..."
+      if (frenziedStr.find("...") == string::npos)
+      {
+        //Change "." to "!" at the end
+        if (frenziedStr.back() == '.')
+        {
+          frenziedStr.back() = '!';
+        }
+
+        //Add some "!"
+        frenziedStr += "!!";
+      }
+
+      addMsg(frenziedStr, clr, INTERRUPT_PLAYER_ACTIONS, ADD_MORE_PROMPT_AFTER_MSG);
+
+      return;
+    }
+  }
+
   int curLineNr = lines_[1].empty() ? 0 : 1;
 
-  Msg* lastMsg = nullptr;
+  Msg* prevMsg = nullptr;
 
   if (!lines_[curLineNr].empty())
   {
-    lastMsg = &lines_[curLineNr].back();
+    prevMsg = &lines_[curLineNr].back();
   }
 
   bool isRepeated = false;
 
   //Check if message is identical to previous
-  if (!ADD_MORE_PROMPT_AFTER_MSG && lastMsg)
+  if (!ADD_MORE_PROMPT_AFTER_MSG && prevMsg)
   {
-    string str = "";
-    lastMsg->getStrRaw(str);
-    if (str.compare(text) == 0)
+    string prevStr = "";
+    prevMsg->getStrRaw(prevStr);
+    if (prevStr.compare(str) == 0)
     {
-      lastMsg->incrRepeat();
+      prevMsg->incrRepeat();
       isRepeated = true;
     }
   }
@@ -163,9 +210,9 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
 
     const int PADDING_LEN = REPEAT_STR_LEN + (curLineNr == 0 ? 0 : (moreStr.size() + 1));
 
-    int xPos = getXAfterMsg(lastMsg);
+    int xPos = getXAfterMsg(prevMsg);
 
-    const bool IS_MSG_FIT = xPos + int(text.size()) + PADDING_LEN - 1 < MAP_W;
+    const bool IS_MSG_FIT = xPos + int(str.size()) + PADDING_LEN - 1 < MAP_W;
 
     if (!IS_MSG_FIT)
     {
@@ -181,7 +228,7 @@ void addMsg(const string& text, const Clr& clr, const bool INTERRUPT_PLAYER_ACTI
       xPos = 0;
     }
 
-    lines_[curLineNr].push_back(Msg(text, clr, xPos));
+    lines_[curLineNr].push_back(Msg(str, clr, xPos));
   }
 
   if (ADD_MORE_PROMPT_AFTER_MSG)
@@ -205,6 +252,8 @@ void morePrompt()
   {
     return;
   }
+
+  Render::drawMapAndInterface(false);
 
   drawLog(false);
 

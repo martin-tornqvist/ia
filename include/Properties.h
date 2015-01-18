@@ -24,7 +24,7 @@ enum class PropId
   rConf,
   rBreath,
   rDisease,
-  lightSensitive,
+  lgtSens,
   blind,
   fainted,
   burning,
@@ -43,6 +43,7 @@ enum class PropId
   cursed,
   teleControl, //Note: This only makes sense for the player
   spellReflect,
+  strangled,
 
   //Properties describing the actors body and/or method of moving around
   flying,
@@ -57,7 +58,7 @@ enum class PropId
   disabledRanged,
 
   //Special (for supporting specific game mechanics)
-  possessedByZuul,
+  possByZuul,
   recoil,
   aiming,
   nailed,
@@ -126,7 +127,7 @@ struct PropDataT
 namespace PropData
 {
 
-extern PropDataT data[int(PropId::END)];
+extern PropDataT data[size_t(PropId::END)];
 
 void init();
 
@@ -159,11 +160,12 @@ public:
   bool allowAct()                               const;
   bool allowRead        (const bool ALLOW_MSG)  const;
   bool allowCastSpells  (const bool ALLOW_MSG)  const;
+  bool allowSpeak       (const bool ALLOW_MSG)  const;
   void onHit();
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
   int getAbilityMod(const AbilityId ability) const;
 
-  void getPropIds(bool out[int(PropId::END)]) const;
+  void getPropIds(bool out[size_t(PropId::END)]) const;
 
   Prop* getProp(const PropId id, const PropSrc source) const;
 
@@ -197,7 +199,7 @@ private:
   //It's more efficient to just gather the ids at once.
   void getPropsFromSources(std::vector<Prop*>& out,
                            bool sources[int(PropSrc::END)]) const;
-  void getPropIdsFromSources(bool out[int(PropId::END)],
+  void getPropIdsFromSources(bool out[size_t(PropId::END)],
                              bool sources[int(PropSrc::END)]) const;
 
   bool tryResistProp(const PropId id, const std::vector<Prop*>& propList) const;
@@ -224,7 +226,7 @@ public:
 
   PropId getId() const {return id_;}
 
-  virtual bool isFinnished() const {return turnsLeft_ == 0;}
+  virtual bool isFinished() const {return turnsLeft_ == 0;}
   virtual PropAlignment getAlignment() const {return data_->alignment;}
   virtual bool allowDisplayTurns() const {return data_->allowDisplayTurns;}
 
@@ -292,6 +294,12 @@ public:
   }
 
   virtual bool allowCastSpells(const bool ALLOW_MSG) const
+  {
+    (void)ALLOW_MSG;
+    return true;
+  }
+
+  virtual bool allowSpeak(const bool ALLOW_MSG) const
   {
     (void)ALLOW_MSG;
     return true;
@@ -417,11 +425,11 @@ public:
   void onNewTurn() override;
 };
 
-class PropPossessedByZuul: public Prop
+class PropPossByZuul: public Prop
 {
 public:
-  PropPossessedByZuul(PropTurns turnsInit, int turns = -1) :
-    Prop(PropId::possessedByZuul, turnsInit, turns) {}
+  PropPossByZuul(PropTurns turnsInit, int turns = -1) :
+    Prop(PropId::possByZuul, turnsInit, turns) {}
 
   void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR) override;
 
@@ -614,7 +622,7 @@ public:
 
   void onMore() override {nrSpikes_++;}
 
-  bool isFinnished() const override {return nrSpikes_ <= 0;}
+  bool isFinished() const override {return nrSpikes_ <= 0;}
 
 private:
   int nrSpikes_;
@@ -918,12 +926,12 @@ public:
     Prop(PropId::rBreath, turnsInit, turns) {}
 };
 
-class PropLightSensitive: public Prop
+class PropLgtSens: public Prop
 {
 public:
-  PropLightSensitive(PropTurns turnsInit, int turns = -1) :
-    Prop(PropId::lightSensitive, turnsInit, turns) {}
-  ~PropLightSensitive() override {}
+  PropLgtSens(PropTurns turnsInit, int turns = -1) :
+    Prop(PropId::lgtSens, turnsInit, turns) {}
+  ~PropLgtSens() override {}
 };
 
 class PropTeleControl: public Prop
@@ -940,6 +948,19 @@ public:
   PropSpellReflect(PropTurns turnsInit, int turns = -1) :
     Prop(PropId::spellReflect, turnsInit, turns) {}
   ~PropSpellReflect() override {}
+};
+
+class PropStrangled: public Prop
+{
+public:
+  PropStrangled(PropTurns turnsInit, int turns = -1) :
+    Prop(PropId::strangled, turnsInit, turns) {}
+
+  PropTurnMode getTurnMode() const override {return PropTurnMode::actor;}
+
+  void onNewTurn() override;
+
+  bool allowSpeak(const bool ALLOW_MSG) const override;
 };
 
 #endif

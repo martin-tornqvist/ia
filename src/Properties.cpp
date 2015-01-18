@@ -26,7 +26,7 @@ using namespace std;
 namespace PropData
 {
 
-PropDataT data[int(PropId::END)];
+PropDataT data[size_t(PropId::END)];
 
 namespace
 {
@@ -236,7 +236,7 @@ void initDataList()
   d.alignment = propAlignmentGood;
   addPropData(d);
 
-  d.id = PropId::lightSensitive;
+  d.id = PropId::lgtSens;
   d.stdRndTurns = Range(40, 60);
   d.name = "Light sensitive";
   d.nameShort = "LgtSensitive";
@@ -620,7 +620,18 @@ void initDataList()
   d.alignment = propAlignmentBad;
   addPropData(d);
 
-  d.id = PropId::possessedByZuul;
+  d.id = PropId::strangled;
+  d.stdRndTurns = Range(1, 1);
+  d.name = "Strangled";
+  d.nameShort = "Strangled";
+  d.isMakingMonAware = true;
+  d.allowDisplayTurns = false;
+  d.allowApplyMoreWhileActive = true;
+  d.updatePlayerVisualWhenStartOrEnd = false;
+  d.alignment = propAlignmentBad;
+  addPropData(d);
+
+  d.id = PropId::possByZuul;
   d.isMakingMonAware = false;
   d.allowDisplayTurns = false;
   d.allowApplyMoreWhileActive = false;
@@ -738,50 +749,51 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
 
   switch (id)
   {
-    case PropId::nailed:          return new PropNailed(turnsInit,            NR_TURNS);
-    case PropId::warlockCharged:  return new PropWarlockCharged(turnsInit,    NR_TURNS);
-    case PropId::blind:           return new PropBlind(turnsInit,             NR_TURNS);
-    case PropId::burning:         return new PropBurning(turnsInit,           NR_TURNS);
-    case PropId::flared:          return new PropFlared(turnsInit,            NR_TURNS);
-    case PropId::paralyzed:       return new PropParalyzed(turnsInit,         NR_TURNS);
-    case PropId::terrified:       return new PropTerrified(turnsInit,         NR_TURNS);
-    case PropId::weakened:        return new PropWeakened(turnsInit,          NR_TURNS);
-    case PropId::confused:        return new PropConfused(turnsInit,          NR_TURNS);
-    case PropId::stunned:         return new PropStunned(turnsInit,           NR_TURNS);
-    case PropId::waiting:         return new PropWaiting(turnsInit,           NR_TURNS);
-    case PropId::slowed:          return new PropSlowed(turnsInit,            NR_TURNS);
-    case PropId::infected:        return new PropInfected(turnsInit,          NR_TURNS);
-    case PropId::diseased:        return new PropDiseased(turnsInit,          NR_TURNS);
-    case PropId::poisoned:        return new PropPoisoned(turnsInit,          NR_TURNS);
-    case PropId::fainted:         return new PropFainted(turnsInit,           NR_TURNS);
-    case PropId::frenzied:        return new PropFrenzied(turnsInit,          NR_TURNS);
-    case PropId::aiming:          return new PropAiming(turnsInit,            NR_TURNS);
-    case PropId::recoil:          return new PropRecoil(turnsInit,            NR_TURNS);
-    case PropId::disabledAttack:  return new PropDisabledAttack(turnsInit,    NR_TURNS);
-    case PropId::disabledMelee:   return new PropDisabledMelee(turnsInit,     NR_TURNS);
-    case PropId::disabledRanged:  return new PropDisabledRanged(turnsInit,    NR_TURNS);
-    case PropId::blessed:         return new PropBlessed(turnsInit,           NR_TURNS);
-    case PropId::cursed:          return new PropCursed(turnsInit,            NR_TURNS);
-    case PropId::rAcid:           return new PropRAcid(turnsInit,             NR_TURNS);
-    case PropId::rCold:           return new PropRCold(turnsInit,             NR_TURNS);
-    case PropId::rConf:           return new PropRConfusion(turnsInit,        NR_TURNS);
-    case PropId::rBreath:         return new PropRBreath(turnsInit,           NR_TURNS);
-    case PropId::rElec:           return new PropRElec(turnsInit,             NR_TURNS);
-    case PropId::rFear:           return new PropRFear(turnsInit,             NR_TURNS);
-    case PropId::rPhys:           return new PropRPhys(turnsInit,             NR_TURNS);
-    case PropId::rFire:           return new PropRFire(turnsInit,             NR_TURNS);
-    case PropId::rPoison:         return new PropRPoison(turnsInit,           NR_TURNS);
-    case PropId::rSleep:          return new PropRSleep(turnsInit,            NR_TURNS);
-    case PropId::lightSensitive:  return new PropLightSensitive(turnsInit,    NR_TURNS);
-    case PropId::possessedByZuul: return new PropPossessedByZuul(turnsInit,   NR_TURNS);
-    case PropId::flying:          return new PropFlying(turnsInit,            NR_TURNS);
-    case PropId::ethereal:        return new PropEthereal(turnsInit,          NR_TURNS);
-    case PropId::ooze:            return new PropOoze(turnsInit,              NR_TURNS);
-    case PropId::burrowing:       return new PropBurrowing(turnsInit,         NR_TURNS);
-    case PropId::radiant:         return new PropRadiant(turnsInit,           NR_TURNS);
-    case PropId::rDisease:        return new PropRDisease(turnsInit,          NR_TURNS);
-    case PropId::teleControl:     return new PropTeleControl(turnsInit,       NR_TURNS);
-    case PropId::spellReflect:    return new PropSpellReflect(turnsInit,      NR_TURNS);
+    case PropId::nailed:          return new PropNailed         (turnsInit, NR_TURNS);
+    case PropId::warlockCharged:  return new PropWarlockCharged (turnsInit, NR_TURNS);
+    case PropId::blind:           return new PropBlind          (turnsInit, NR_TURNS);
+    case PropId::burning:         return new PropBurning        (turnsInit, NR_TURNS);
+    case PropId::flared:          return new PropFlared         (turnsInit, NR_TURNS);
+    case PropId::paralyzed:       return new PropParalyzed      (turnsInit, NR_TURNS);
+    case PropId::terrified:       return new PropTerrified      (turnsInit, NR_TURNS);
+    case PropId::weakened:        return new PropWeakened       (turnsInit, NR_TURNS);
+    case PropId::confused:        return new PropConfused       (turnsInit, NR_TURNS);
+    case PropId::stunned:         return new PropStunned        (turnsInit, NR_TURNS);
+    case PropId::waiting:         return new PropWaiting        (turnsInit, NR_TURNS);
+    case PropId::slowed:          return new PropSlowed         (turnsInit, NR_TURNS);
+    case PropId::infected:        return new PropInfected       (turnsInit, NR_TURNS);
+    case PropId::diseased:        return new PropDiseased       (turnsInit, NR_TURNS);
+    case PropId::poisoned:        return new PropPoisoned       (turnsInit, NR_TURNS);
+    case PropId::fainted:         return new PropFainted        (turnsInit, NR_TURNS);
+    case PropId::frenzied:        return new PropFrenzied       (turnsInit, NR_TURNS);
+    case PropId::aiming:          return new PropAiming         (turnsInit, NR_TURNS);
+    case PropId::recoil:          return new PropRecoil         (turnsInit, NR_TURNS);
+    case PropId::disabledAttack:  return new PropDisabledAttack (turnsInit, NR_TURNS);
+    case PropId::disabledMelee:   return new PropDisabledMelee  (turnsInit, NR_TURNS);
+    case PropId::disabledRanged:  return new PropDisabledRanged (turnsInit, NR_TURNS);
+    case PropId::blessed:         return new PropBlessed        (turnsInit, NR_TURNS);
+    case PropId::cursed:          return new PropCursed         (turnsInit, NR_TURNS);
+    case PropId::rAcid:           return new PropRAcid          (turnsInit, NR_TURNS);
+    case PropId::rCold:           return new PropRCold          (turnsInit, NR_TURNS);
+    case PropId::rConf:           return new PropRConfusion     (turnsInit, NR_TURNS);
+    case PropId::rBreath:         return new PropRBreath        (turnsInit, NR_TURNS);
+    case PropId::rElec:           return new PropRElec          (turnsInit, NR_TURNS);
+    case PropId::rFear:           return new PropRFear          (turnsInit, NR_TURNS);
+    case PropId::rPhys:           return new PropRPhys          (turnsInit, NR_TURNS);
+    case PropId::rFire:           return new PropRFire          (turnsInit, NR_TURNS);
+    case PropId::rPoison:         return new PropRPoison        (turnsInit, NR_TURNS);
+    case PropId::rSleep:          return new PropRSleep         (turnsInit, NR_TURNS);
+    case PropId::lgtSens:         return new PropLgtSens        (turnsInit, NR_TURNS);
+    case PropId::possByZuul:      return new PropPossByZuul     (turnsInit, NR_TURNS);
+    case PropId::flying:          return new PropFlying         (turnsInit, NR_TURNS);
+    case PropId::ethereal:        return new PropEthereal       (turnsInit, NR_TURNS);
+    case PropId::ooze:            return new PropOoze           (turnsInit, NR_TURNS);
+    case PropId::burrowing:       return new PropBurrowing      (turnsInit, NR_TURNS);
+    case PropId::radiant:         return new PropRadiant        (turnsInit, NR_TURNS);
+    case PropId::rDisease:        return new PropRDisease       (turnsInit, NR_TURNS);
+    case PropId::teleControl:     return new PropTeleControl    (turnsInit, NR_TURNS);
+    case PropId::spellReflect:    return new PropSpellReflect   (turnsInit, NR_TURNS);
+    case PropId::strangled:       return new PropStrangled      (turnsInit, NR_TURNS);
     case PropId::END: {}
       break;
   }
@@ -834,7 +846,7 @@ void PropHandler::getPropsFromSources(
 }
 
 void  PropHandler::getPropIdsFromSources(
-  bool out[int(PropId::END)], bool sources[int(PropSrc::END)]) const
+  bool out[size_t(PropId::END)], bool sources[int(PropSrc::END)]) const
 {
   for (int i = 0; i < int(PropId::END); ++i)
   {
@@ -844,7 +856,10 @@ void  PropHandler::getPropIdsFromSources(
   //Get from applied properties
   if (sources[int(PropSrc::applied)])
   {
-    for (const Prop* const prop : appliedProps_) {out[int(prop->getId())] = true;}
+    for (const Prop* const prop : appliedProps_)
+    {
+      out[int(prop->getId())] = true;
+    }
   }
 
   //Get from inventory if humanoid actor
@@ -877,7 +892,7 @@ void  PropHandler::getPropIdsFromSources(
   }
 }
 
-void PropHandler::getPropIds(bool out[int(PropId::END)]) const
+void PropHandler::getPropIds(bool out[size_t(PropId::END)]) const
 {
   bool sources[int(PropSrc::END)];
   for (bool& v : sources) {v = true;}
@@ -960,7 +975,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
           prop->getMsg(propMsgOnResPlayer, msg);
           if (!msg.empty()) {Log::addMsg(msg, clrWhite, true);}
         }
-        else
+        else //Is a monster
         {
           if (Map::player->isSeeingActor(*owningActor_, nullptr))
           {
@@ -986,7 +1001,6 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
   {
     if (prop->getId() == oldProp->getId())
     {
-
       if (!prop->allowApplyMoreWhileActive())
       {
         delete prop;
@@ -996,7 +1010,8 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
       const int TURNS_LEFT_OLD = oldProp->turnsLeft_;
       const int TURNS_LEFT_NEW = prop->turnsLeft_;
 
-      if (TURNS_LEFT_OLD != -1 && TURNS_LEFT_NEW >= TURNS_LEFT_OLD && !NO_MESSAGES)
+      //Print start message
+      if (!NO_MESSAGES)
       {
         if (IS_PLAYER)
         {
@@ -1093,31 +1108,31 @@ void PropHandler::tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE)
 
 bool PropHandler::endAppliedProp(const PropId id, const bool RUN_PROP_END_EFFECTS)
 {
-  int           index             = -1;
+  int           idx               = -1;
   Prop*         prop              = nullptr;
   const size_t  NR_APPLIED_PROPS  = appliedProps_.size();
 
   for (size_t i = 0; i < NR_APPLIED_PROPS; ++i)
   {
     prop = appliedProps_[i];
+
     if (prop->getId() == id)
     {
-      index = i;
+      idx = i;
       break;
     }
   }
 
-  if (index == -1)
+  if (idx == -1)
   {
     return false;
   }
 
-  appliedProps_.erase(begin(appliedProps_) + index);
+  appliedProps_.erase(begin(appliedProps_) + idx);
 
   if (RUN_PROP_END_EFFECTS)
   {
-    const bool IS_VISUAL_UPDATE_NEEDED =
-      prop->shouldUpdatePlayerVisualWhenStartOrEnd();
+    const bool IS_VISUAL_UPDATE_NEEDED = prop->shouldUpdatePlayerVisualWhenStartOrEnd();
 
     if (IS_VISUAL_UPDATE_NEEDED)
     {
@@ -1126,24 +1141,32 @@ bool PropHandler::endAppliedProp(const PropId id, const bool RUN_PROP_END_EFFECT
       Render::drawMapAndInterface();
     }
 
-    if (owningActor_->isPlayer())
+    bool curPropIds[size_t(PropId::END)];
+    getPropIds(curPropIds);
+
+    //Print property end message
+    if (!curPropIds[size_t(id)])
     {
-      string msg = "";
-      prop->getMsg(propMsgOnEndPlayer, msg);
-      if (!msg.empty()) {Log::addMsg(msg, clrWhite);}
-    }
-    else //Not player
-    {
-      if (Map::player->isSeeingActor(*owningActor_, nullptr))
+      if (owningActor_->isPlayer())
       {
         string msg = "";
-        prop->getMsg(propMsgOnEndMon, msg);
-        if (!msg.empty())
+        prop->getMsg(propMsgOnEndPlayer, msg);
+        if (!msg.empty()) {Log::addMsg(msg, clrWhite);}
+      }
+      else //Not player
+      {
+        if (Map::player->isSeeingActor(*owningActor_, nullptr))
         {
-          Log::addMsg(owningActor_->getNameThe() + " " + msg);
+          string msg = "";
+          prop->getMsg(propMsgOnEndMon, msg);
+          if (!msg.empty())
+          {
+            Log::addMsg(owningActor_->getNameThe() + " " + msg);
+          }
         }
       }
     }
+
     prop->onEnd();
   }
 
@@ -1159,21 +1182,18 @@ void PropHandler::applyActorTurnPropBuffer()
 
 void PropHandler::tick(const PropTurnMode turnMode)
 {
+  //Applied properties
   for (size_t i = 0; i < appliedProps_.size();)
   {
     Prop* const prop = appliedProps_[i];
 
     //Only tick property if it runs on the given turn mode
-    //(standard turns or actor turns)
     if (prop->getTurnMode() == turnMode)
     {
-      if (owningActor_ != Map::player)
+      if (!owningActor_->isPlayer() && prop->isMakingMonAware())
       {
-        if (prop->isMakingMonAware())
-        {
-          static_cast<Mon*>(owningActor_)->awareCounter_ =
-            owningActor_->getData().nrTurnsAware;
-        }
+        auto* mon           = static_cast<Mon*>(owningActor_);
+        mon->awareCounter_  = owningActor_->getData().nrTurnsAware;
       }
 
       if (prop->turnsLeft_ > 0)
@@ -1181,38 +1201,44 @@ void PropHandler::tick(const PropTurnMode turnMode)
         prop->turnsLeft_--;
       }
 
-      if (prop->isFinnished())
+      if (prop->isFinished())
       {
         endAppliedProp(prop->getId());
       }
-      else
+      else //Not finished
       {
         prop->onNewTurn();
         i++;
       }
     }
-    else
+    else //Wrong turn mode
     {
       i++;
     }
   }
 
+  //Inventory properties
   vector<Prop*> invProps;
+
   bool sources[int(PropSrc::END)];
+
   for (bool& v : sources) {v = false;}
+
   sources[int(PropSrc::inv)] = true;
+
   getPropsFromSources(invProps, sources);
+
   for (Prop* prop : invProps)
   {
-    if (owningActor_ != Map::player)
+    if (prop->getTurnMode() == turnMode)
     {
-      if (prop->isMakingMonAware())
+      if (!owningActor_->isPlayer() && prop->isMakingMonAware())
       {
-        static_cast<Mon*>(owningActor_)->awareCounter_ =
-          owningActor_->getData().nrTurnsAware;
+        auto* mon           = static_cast<Mon*>(owningActor_);
+        mon->awareCounter_  = owningActor_->getData().nrTurnsAware;
       }
+      prop->onNewTurn();
     }
-    prop->onNewTurn();
   }
 }
 
@@ -1339,18 +1365,22 @@ bool PropHandler::allowRead(const bool ALLOW_MSG) const
 {
   TRACE_FUNC_BEGIN_VERBOSE;
   vector<Prop*> propList;
+
   bool sources[int(PropSrc::END)];
+
   for (bool& v : sources) {v = true;}
+
   getPropsFromSources(propList, sources);
-  const size_t NR_PROPS = propList.size();
-  for (size_t i = 0; i < NR_PROPS; ++i)
+
+  for (auto prop : propList)
   {
-    if (!propList[i]->allowRead(ALLOW_MSG))
+    if (!prop->allowRead(ALLOW_MSG))
     {
       TRACE_FUNC_END_VERBOSE;
       return false;
     }
   }
+
   TRACE_FUNC_END_VERBOSE;
   return true;
 }
@@ -1358,17 +1388,44 @@ bool PropHandler::allowRead(const bool ALLOW_MSG) const
 bool PropHandler::allowCastSpells(const bool ALLOW_MSG) const
 {
   vector<Prop*> propList;
+
   bool sources[int(PropSrc::END)];
+
   for (bool& v : sources) {v = true;}
+
   getPropsFromSources(propList, sources);
-  const size_t NR_PROPS = propList.size();
-  for (size_t i = 0; i < NR_PROPS; ++i)
+
+  for (auto prop : propList)
   {
-    if (!propList[i]->allowCastSpells(ALLOW_MSG))
+    if (!prop->allowCastSpells(ALLOW_MSG))
     {
       return false;
     }
   }
+  return true;
+}
+
+bool PropHandler::allowSpeak(const bool ALLOW_MSG) const
+{
+  TRACE_FUNC_BEGIN_VERBOSE;
+  vector<Prop*> propList;
+
+  bool sources[int(PropSrc::END)];
+
+  for (bool& v : sources) {v = true;}
+
+  getPropsFromSources(propList, sources);
+
+  for (auto prop : propList)
+  {
+    if (!prop->allowSpeak(ALLOW_MSG))
+    {
+      TRACE_FUNC_END_VERBOSE;
+      return false;
+    }
+  }
+
+  TRACE_FUNC_END_VERBOSE;
   return true;
 }
 
@@ -1378,25 +1435,40 @@ void PropHandler::onHit()
   bool sources[int(PropSrc::END)];
   for (bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for (Prop* prop : propList) {prop->onHit();}
+  for (Prop* prop : propList)
+  {
+    prop->onHit();
+  }
 }
 
 void PropHandler::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR)
 {
   vector<Prop*> propList;
+
   bool sources[int(PropSrc::END)];
+
   for (bool& v : sources) {v = true;}
+
   getPropsFromSources(propList, sources);
-  for (Prop* prop : propList) {prop->onDeath(IS_PLAYER_SEE_OWNING_ACTOR);}
+
+  for (Prop* prop : propList)
+  {
+    prop->onDeath(IS_PLAYER_SEE_OWNING_ACTOR);
+  }
 }
 
 int PropHandler::getAbilityMod(const AbilityId ability) const
 {
   vector<Prop*> propList;
+
   bool sources[int(PropSrc::END)];
+
   for (bool& v : sources) {v = true;}
+
   getPropsFromSources(propList, sources);
+
   int modifier = 0;
+
   for (Prop* prop : propList)
   {
     modifier += prop->getAbilityMod(ability);
@@ -1416,11 +1488,22 @@ Prop* PropHandler::getProp(const PropId id, const PropSrc source) const
   else if (source == PropSrc::inv)
   {
     vector<Prop*> invProps;
+
     bool sources[int(PropSrc::END)];
+
     for (bool& v : sources) {v = false;}
+
     sources[int(PropSrc::inv)] = true;
+
     getPropsFromSources(invProps, sources);
-    for (Prop* prop : invProps) {if (prop->getId() == id) {return prop;}}
+
+    for (Prop* prop : invProps)
+    {
+      if (prop->getId() == id)
+      {
+        return prop;
+      }
+    }
   }
   return nullptr;
 }
@@ -1431,7 +1514,13 @@ bool PropHandler::changeActorClr(Clr& clr) const
   bool sources[int(PropSrc::END)];
   for (bool& v : sources) {v = true;}
   getPropsFromSources(propList, sources);
-  for (Prop* prop : propList) {if (prop->changeActorClr(clr)) return true;}
+  for (Prop* prop : propList)
+  {
+    if (prop->changeActorClr(clr))
+    {
+      return true;
+    }
+  }
   return false;
 }
 
@@ -1509,7 +1598,7 @@ bool PropDiseased::isResistingOtherProp(const PropId id) const
   return id == PropId::infected;
 }
 
-void PropPossessedByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR)
+void PropPossByZuul::onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR)
 {
   if (IS_PLAYER_SEE_OWNING_ACTOR)
   {
@@ -1615,7 +1704,7 @@ bool PropConfused::allowRead(const bool ALLOW_MSG) const
 {
   if (owningActor_->isPlayer() && ALLOW_MSG)
   {
-    Log::addMsg("I am too confused.");
+    Log::addMsg("I am too confused to read.");
   }
   return false;
 }
@@ -1660,12 +1749,29 @@ void PropConfused::changeMoveDir(const Pos& actorPos, Dir& dir)
         if (delta.x != 0 || delta.y != 0)
         {
           const Pos c = actorPos + delta;
-          if (!blocked[c.x][c.y]) {dir = DirUtils::getDir(delta);}
+
+          if (!blocked[c.x][c.y])
+          {
+            dir = DirUtils::getDir(delta);
+          }
         }
         triesLeft--;
       }
     }
   }
+}
+
+void PropStrangled::onNewTurn()
+{
+  const int DMG = Rnd::range(3, 4);
+
+  owningActor_->hit(DMG, DmgType::pure, DmgMethod::forced);
+}
+
+bool PropStrangled::allowSpeak(const bool ALLOW_MSG) const
+{
+  (void)ALLOW_MSG;
+  return false;
 }
 
 void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
@@ -1730,7 +1836,7 @@ bool PropFrenzied::allowRead(const bool ALLOW_MSG) const
 {
   if (owningActor_->isPlayer() && ALLOW_MSG)
   {
-    Log::addMsg("I am too enraged to concentrate!");
+    Log::addMsg("I am too enraged to read!");
   }
   return false;
 }
@@ -1762,7 +1868,7 @@ bool PropBurning::allowRead(const bool ALLOW_MSG) const
 {
   if (owningActor_->isPlayer() && ALLOW_MSG)
   {
-    Log::addMsg("Not while burning.");
+    Log::addMsg("I cannot read while burning.");
   }
   return false;
 }

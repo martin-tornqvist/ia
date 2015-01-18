@@ -57,7 +57,6 @@ void Scroll::identify(const bool IS_SILENT_IDENTIFY)
 {
   if (!data_->isIdentified)
   {
-
     data_->isIdentified = true;
 
     if (!IS_SILENT_IDENTIFY)

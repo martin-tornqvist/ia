@@ -52,7 +52,7 @@ namespace Log
 
 void init();
 
-void addMsg(const std::string& text, const Clr& clr = clrWhite,
+void addMsg(const std::string& str, const Clr& clr = clrWhite,
             const bool INTERRUPT_PLAYER_ACTIONS = false,
             const bool ADD_MORE_PROMPT_AFTER_MSG = false);
 

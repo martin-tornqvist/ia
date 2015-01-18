@@ -62,7 +62,7 @@ Range FeatureRoomSpawnRules::getDlvlsAllowed() const
 }
 
 //--------------------------------------------------------- MOVE RULES
-bool MoveRules::canMove(const bool actorPropIds[int(PropId::END)]) const
+bool MoveRules::canMove(const bool actorPropIds[size_t(PropId::END)]) const
 {
   if (canMoveCmn_)
   {

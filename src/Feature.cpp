@@ -21,7 +21,7 @@ const FeatureDataT& Feature::getData() const {return FeatureData::getData(getId(
 
 void Feature::bump(Actor& actorBumping)
 {
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   actorBumping.getPropHandler().getPropIds(props);
 
   if (!canMove(props))
@@ -47,7 +47,7 @@ void Feature::addLight(bool light[MAP_W][MAP_H]) const
 
 bool Feature::canMoveCmn() const {return getData().moveRules.canMoveCmn();}
 
-bool Feature::canMove(const bool actorPropIds[int(PropId::END)]) const
+bool Feature::canMove(const bool actorPropIds[size_t(PropId::END)]) const
 {
   return getData().moveRules.canMove(actorPropIds);
 }

@@ -29,7 +29,8 @@ void Smoke::onNewTurn()
     //TODO: There needs to be some criteria here, so that e.g. a statue-monster or a
     //very alien monster can't get blinded by smoke (but do not use isHumanoid - rats,
     //wolves etc should definitely be blinded by smoke).
-    //Perhaps add some property like "hasEyes"?
+
+    //Perhaps add some variable like "hasEyes"?
 
     bool isProtectedBlindness = false;
 
@@ -68,7 +69,7 @@ void Smoke::onNewTurn()
     //Choking (this is determined by rBreath)?
     if (Rnd::oneIn(4))
     {
-      bool props[int(PropId::END)];
+      bool props[size_t(PropId::END)];
       actor->getPropHandler().getPropIds(props);
 
       if (!props[int(PropId::rBreath)])

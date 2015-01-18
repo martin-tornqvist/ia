@@ -48,7 +48,8 @@ public:
 
   virtual Clr getInterfaceClr() const {return clrBrown;}
 
-  virtual void            onNewTurnInInv(const InvType invType) {(void)invType;}
+  virtual void            onStdTurnInInv    (const InvType invType) {(void)invType;}
+  virtual void            onActorTurnInInv  (const InvType invType) {(void)invType;}
   virtual void            onPickupToBackpack(Inventory& inv)    {(void)inv;}
   virtual void            onEquip()                             {}
   virtual UnequipAllowed  onUnequip() {return UnequipAllowed::yes;}
@@ -134,7 +135,7 @@ public:
   ArmorMigo(ItemDataT* const itemData) : Armor(itemData) {}
   ~ArmorMigo() {}
 
-  void onNewTurnInInv(const InvType invType) override;
+  void onStdTurnInInv(const InvType invType) override;
 
 private:
   void            onEquip_()    override;
@@ -350,7 +351,7 @@ class HideousMask: public Headwear
 public:
   HideousMask(ItemDataT* itemData) : Headwear(itemData) {}
 
-  void onNewTurnInInv(const InvType invType) override;
+  void onStdTurnInInv(const InvType invType) override;
 };
 
 class GasMask: public Headwear

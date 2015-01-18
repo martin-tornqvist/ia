@@ -58,13 +58,13 @@ public:
 
   void putInIntrinsics(Item* item);
 
-  bool moveToGeneral(InvSlot& slot);
+  bool moveToGeneral(const SlotId id);
 
   void moveFromGeneralToIntrinsics(const size_t GEN_IDX);
 
   void moveItemToSlot(InvSlot& slot, const size_t GEN_IDX);
 
-  void equipGeneralItemAndEndTurn(const size_t GEN_IDX, const SlotId slotId);
+  void equipGeneralItem(const size_t GEN_IDX, const SlotId slotId);
 
   void swapWieldedAndPrepared(const bool IS_FREE_TURN);
 
@@ -74,7 +74,7 @@ public:
 
   int getBackpackIdxWithItemId(const ItemId itemId) const;
 
-  Item* getItemInSlot(SlotId id) const;
+  Item* getItemInSlot(const SlotId id) const;
 
   void removeWithoutDestroying(const InvType invType, const size_t IDX);
 

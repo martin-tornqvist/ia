@@ -282,7 +282,7 @@ void runInvScreen()
 
             if (unequipAllowed == UnequipAllowed::yes)
             {
-              inv.moveToGeneral(slot);
+              inv.moveToGeneral(slot.id);
               inv.sortGeneralInventory();
             }
 
@@ -380,9 +380,12 @@ bool runEquipScreen(InvSlot& slotToEquip)
         {
           const int ELEMENT = generalItemsToShow_[browser.getY()];
           Render::drawMapAndInterface();
-          inv.equipGeneralItemAndEndTurn(ELEMENT, slotToEquip.id);
+
+          inv.equipGeneralItem(ELEMENT, slotToEquip.id);
 
           slotToEquip.item->onEquip();
+
+          GameTime::tick();
 
           browserIdxToSetAfterDrop  = int(slotToEquip.id);
           screenToOpenAfterDrop     = InvScrId::inv;

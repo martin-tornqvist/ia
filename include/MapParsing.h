@@ -65,7 +65,7 @@ public:
   bool check(const Actor& a)      const override;
 private:
   const bool IS_ACTORS_BLOCKING_;
-  bool actorsProps_[int(PropId::END)];
+  bool actorsProps_[size_t(PropId::END)];
 };
 
 class BlocksProjectiles : public Check

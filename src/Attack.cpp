@@ -93,7 +93,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     }
 
     PropHandler& defPropHlr = defender->getPropHandler();
-    bool defProps[int(PropId::END)];
+    bool defProps[size_t(PropId::END)];
     defPropHlr.getPropIds(defProps);
 
     //If attacker is aware of the defender, check
@@ -174,7 +174,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
       dmgPlus += 2;
     }
 
-    bool attProps[int(PropId::END)];
+    bool attProps[size_t(PropId::END)];
     attacker->getPropHandler().getPropIds(attProps);
 
     if (attProps[int(PropId::weakened)])
@@ -305,7 +305,7 @@ RangedAttData::RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPo
     {
       TRACE << "Attack roll succeeded" << endl;
 
-      bool props[int(PropId::END)];
+      bool props[size_t(PropId::END)];
       defender->getPropHandler().getPropIds(props);
 
       if (props[int(PropId::ethereal)] &&
@@ -429,7 +429,7 @@ ThrowAttData::ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPo
     {
       TRACE << "Attack roll succeeded" << endl;
 
-      bool props[int(PropId::END)];
+      bool props[size_t(PropId::END)];
       defender->getPropHandler().getPropIds(props);
 
       if (props[int(PropId::ethereal)] && !PlayerBon::getsUndeadBaneBon(*attacker, defenderData))

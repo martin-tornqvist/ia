@@ -191,7 +191,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
       const bool IS_PLAYER    = actor == Map::player;
       const bool IS_CELL_SEEN = Map::isPosSeenByPlayer(pos_);
 
-      bool props[int(PropId::END)];
+      bool props[size_t(PropId::END)];
       if (actor) {actor->getPropHandler().getPropIds(props);}
 
       const bool IS_WEAK = props[int(PropId::weakened)];
@@ -414,7 +414,7 @@ WasDestroyed Door::onFinishedBurning()
 
 bool Door::canMoveCmn() const {return isOpen_;}
 
-bool Door::canMove(const bool actorPropIds[int(PropId::END)]) const
+bool Door::canMove(const bool actorPropIds[size_t(PropId::END)]) const
 {
   if (isOpen_)
   {

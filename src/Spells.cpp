@@ -132,7 +132,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
 
     PropHandler& propHlr = caster->getPropHandler();
 
-    bool props[int(PropId::END)];
+    bool props[size_t(PropId::END)];
     propHlr.getPropIds(props);
 
     if (!propHlr.allowSee()) {--costMax;}
@@ -268,7 +268,7 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
 
   if (caster->isPlayer())
   {
-    bool props[int(PropId::END)];
+    bool props[size_t(PropId::END)];
     caster->getPropHandler().getPropIds(props);
     isWarlockCharged = props[int(PropId::warlockCharged)];
   }
@@ -314,7 +314,7 @@ SpellEffectNoticed SpellAzaWrath::cast_(Actor* const caster) const
   //This point reached means targets are available
   if (caster->isPlayer())
   {
-    bool props[int(PropId::END)];
+    bool props[size_t(PropId::END)];
     caster->getPropHandler().getPropIds(props);
 
     isWarlockCharged = props[int(PropId::warlockCharged)];

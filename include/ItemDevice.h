@@ -17,7 +17,7 @@ public:
 
   Clr getInterfaceClr() const override final {return clrCyan;}
 
-  virtual void onNewTurnInInv(const InvType invType) override {(void)invType;}
+  virtual void onStdTurnInInv(const InvType invType) override {(void)invType;}
 
   void identify(const bool IS_SILENT_IDENTIFY) override;
 };
@@ -149,7 +149,7 @@ public:
   ~DeviceLantern() override {}
 
   ConsumeItem activate(Actor* const actor)            override;
-  void          onNewTurnInInv(const InvType invType) override;
+  void          onStdTurnInInv(const InvType invType) override;
   void          onPickupToBackpack(Inventory& inv)    override;
 
   LgtSize getLgtSize() const override;

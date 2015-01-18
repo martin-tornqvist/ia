@@ -741,7 +741,7 @@ void initDataList()
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 40);
   d.abilityVals.setVal(AbilityId::stealth, 90);
-  d.intrProps[int(PropId::lightSensitive)] = true;
+  d.intrProps[int(PropId::lgtSens)] = true;
   d.spawnMinDLVL = 6;
   d.spawnMaxDLVL = DLVL_LAST_MID_GAME;
   d.canSeeInDarkness = true;
@@ -1536,7 +1536,7 @@ void initDataList()
   d.dmgMelee = 3;
   d.abilityVals.setVal(AbilityId::melee, 35);
   d.abilityVals.setVal(AbilityId::stealth, 90);
-  d.intrProps[int(PropId::lightSensitive)] = true;
+  d.intrProps[int(PropId::lgtSens)] = true;
   d.intrProps[int(PropId::rFear)] = true;
   d.intrProps[int(PropId::rConf)] = true;
   d.preventKnockback = true;

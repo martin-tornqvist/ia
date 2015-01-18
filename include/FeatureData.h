@@ -92,11 +92,11 @@ public:
 
   bool canMoveCmn() const {return canMoveCmn_;}
 
-  bool canMove(const bool actorPropIds[int(PropId::END)]) const;
+  bool canMove(const bool actorPropIds[size_t(PropId::END)]) const;
 
 private:
   bool canMoveCmn_;
-  bool canMoveIfHaveProp_[int(PropId::END)];
+  bool canMoveIfHaveProp_[size_t(PropId::END)];
 };
 
 class Feature;

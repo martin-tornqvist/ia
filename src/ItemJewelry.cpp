@@ -14,7 +14,7 @@ namespace
 {
 
 ItemId  effectList_   [int(JewelryEffectId::END)];
-bool    effectKnown_  [int(JewelryEffectId::END)];
+bool    effectsKnown_ [int(JewelryEffectId::END)];
 
 JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
 {
@@ -64,6 +64,10 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
       ret = new JewelryEffectSpellReflect(jewelry);
       break;
 
+    case JewelryEffectId::strangle:
+      ret = new JewelryEffectStrangle(jewelry);
+      break;
+
     case JewelryEffectId::END: {}
       break;
   }
@@ -77,15 +81,23 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
 //--------------------------------------------------------- JEWELRY EFFECT
 void JewelryEffect::reveal()
 {
-  const size_t EFFECT_IDX = size_t(getEffectId());
+  const size_t EFFECT_IDX = size_t(getId());
 
-  if (!effectKnown_[EFFECT_IDX])
+  if (!effectsKnown_[EFFECT_IDX])
   {
-    effectKnown_[EFFECT_IDX] = true;
+    effectsKnown_[EFFECT_IDX] = true;
 
     const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
 
-    Log::addMsg("I gained new knowledge about the " + name + ".", clrWhite, false, true);
+    const string msg = jewelry_->isAllEffectsKnown() ?
+                       "All properties of the " + name + " are now known to me." :
+                       "I gained new knowledge about the " + name + ".";
+
+    Log::addMsg(msg, clrWhite, false, true);
+
+    jewelry_->onEffectRevealed();
+
+    Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
   }
 }
 
@@ -101,9 +113,11 @@ void JewelryEffectHpBon::onEquip()
   reveal();
 }
 
-void JewelryEffectHpBon::onUnequip()
+UnequipAllowed JewelryEffectHpBon::onUnequip()
 {
   Map::player->changeMaxHp(-4, true);
+
+  return UnequipAllowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: HP PENALTY
@@ -118,9 +132,11 @@ void JewelryEffectHpPen::onEquip()
   reveal();
 }
 
-void JewelryEffectHpPen::onUnequip()
+UnequipAllowed JewelryEffectHpPen::onUnequip()
 {
   Map::player->changeMaxHp(2, true);
+
+  return UnequipAllowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: SPI BONUS
@@ -135,9 +151,11 @@ void JewelryEffectSpiBon::onEquip()
   reveal();
 }
 
-void JewelryEffectSpiBon::onUnequip()
+UnequipAllowed JewelryEffectSpiBon::onUnequip()
 {
   Map::player->changeMaxSpi(-2, true);
+
+  return UnequipAllowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: SPI PENALTY
@@ -152,9 +170,11 @@ void JewelryEffectSpiPen::onEquip()
   reveal();
 }
 
-void JewelryEffectSpiPen::onUnequip()
+UnequipAllowed JewelryEffectSpiPen::onUnequip()
 {
   Map::player->changeMaxSpi(2, true);
+
+  return UnequipAllowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: FIRE RESISTANCE
@@ -175,7 +195,7 @@ void JewelryEffectRFire::onEquip()
   reveal();
 }
 
-void JewelryEffectRFire::onUnequip()
+UnequipAllowed JewelryEffectRFire::onUnequip()
 {
   for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
   jewelry_->carrierProps_.clear();
@@ -184,6 +204,8 @@ void JewelryEffectRFire::onUnequip()
   const string  msg       = propData.msg[propMsgOnEndPlayer];
 
   Log::addMsg(msg);
+
+  return UnequipAllowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: TELEPORT CONTROL
@@ -204,7 +226,7 @@ void JewelryEffectTeleControl::onEquip()
   reveal();
 }
 
-void JewelryEffectTeleControl::onUnequip()
+UnequipAllowed JewelryEffectTeleControl::onUnequip()
 {
   for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
   jewelry_->carrierProps_.clear();
@@ -213,6 +235,8 @@ void JewelryEffectTeleControl::onUnequip()
   const string  msg       = propData.msg[propMsgOnEndPlayer];
 
   Log::addMsg(msg);
+
+  return UnequipAllowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: RANDOM TELEPORTATION
@@ -221,7 +245,7 @@ string JewelryEffectRandomTele::getDescr() const
   return "JewelryEffectRandomTele.";
 }
 
-void JewelryEffectRandomTele::onNewTurnEquiped()
+void JewelryEffectRandomTele::onStdTurnEquiped()
 {
   auto& propHandler = Map::player->getPropHandler();
 
@@ -255,7 +279,7 @@ void JewelryEffectLight::onEquip()
   reveal();
 }
 
-void JewelryEffectLight::onUnequip()
+UnequipAllowed JewelryEffectLight::onUnequip()
 {
   for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
   jewelry_->carrierProps_.clear();
@@ -268,6 +292,8 @@ void JewelryEffectLight::onUnequip()
   const string  msg       = propData.msg[propMsgOnEndPlayer];
 
   Log::addMsg(msg);
+
+  return UnequipAllowed::yes;
 }
 
 //--------------------------------------------------------- EFFECT: CONFLICT
@@ -276,7 +302,7 @@ string JewelryEffectConflict::getDescr() const
   return "JewelryEffectConflict.";
 }
 
-void JewelryEffectConflict::onNewTurnEquiped()
+void JewelryEffectConflict::onStdTurnEquiped()
 {
 
 }
@@ -299,7 +325,7 @@ void JewelryEffectSpellReflect::onEquip()
   reveal();
 }
 
-void JewelryEffectSpellReflect::onUnequip()
+UnequipAllowed JewelryEffectSpellReflect::onUnequip()
 {
   for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
   jewelry_->carrierProps_.clear();
@@ -308,6 +334,80 @@ void JewelryEffectSpellReflect::onUnequip()
   const string  msg       = propData.msg[propMsgOnEndPlayer];
 
   Log::addMsg(msg);
+
+  return UnequipAllowed::yes;
+}
+
+//--------------------------------------------------------- EFFECT: STRANGULATION
+string JewelryEffectStrangle::getDescr() const
+{
+  return "JewelryEffectStrangle.";
+}
+
+void JewelryEffectStrangle::onEquip()
+{
+  jewelry_->carrierProps_.push_back(new PropStrangled(PropTurns::indefinite));
+}
+
+UnequipAllowed JewelryEffectStrangle::onUnequip()
+{
+  const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
+
+  Log::addMsg("The " + name + " is stuck!");
+
+  return UnequipAllowed::no;
+}
+
+void JewelryEffectStrangle::onActorTurnEquiped()
+{
+  const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
+
+  Log::addMsg("The " + name + " constricts my throat!", clrMsgBad);
+
+  const bool IS_TOUGH         = PlayerBon::traitsPicked[int(Trait::tough)];
+  const bool IS_RUGGED        = PlayerBon::traitsPicked[int(Trait::rugged)];
+  const bool IS_UNBREAKABLE   = PlayerBon::traitsPicked[int(Trait::unbreakable)];
+
+  bool props[size_t(PropId::END)];
+
+  Map::player->getPropHandler().getPropIds(props);
+
+  const bool IS_WEAKENED = props[size_t(PropId::weakened)];
+  const bool IS_FRENZIED = props[size_t(PropId::frenzied)];
+
+  const int REMOVE_ONE_IN_N   = IS_UNBREAKABLE  ? 3 :
+                                IS_RUGGED       ? 6 :
+                                IS_TOUGH        ? 9 : 12;
+
+  if (IS_WEAKENED)
+  {
+    Log::addMsg("I tear at it feebly...", clrWhite, false, true);
+  }
+  else if (!IS_FRENZIED)
+  {
+    Log::addMsg("I struggle to remove it...", clrWhite, false, true);
+  }
+
+  if (!IS_WEAKENED && (IS_FRENZIED || Rnd::oneIn(REMOVE_ONE_IN_N)))
+  {
+    Log::addMsg("I tear it off!", clrWhite, false, true);
+
+    for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
+    jewelry_->carrierProps_.clear();
+
+    Inventory& inv = Map::player->getInv();
+
+    assert(inv.slots_[size_t(SlotId::neck)].item);
+    assert(inv.slots_[size_t(SlotId::neck)].item->getData().type == ItemType::amulet);
+
+    inv.moveToGeneral(SlotId::neck);
+  }
+  else //Failed to remove
+  {
+    Log::addMsg("It is stuck!", clrWhite, true);
+  }
+
+  reveal();
 }
 
 //--------------------------------------------------------- JEWELRY
@@ -333,15 +433,27 @@ vector<string> Jewelry::getDescr() const
 
   for (auto* effect : effects_)
   {
-    const size_t EFFECT_IDX = size_t(effect->getEffectId());
+    const size_t EFFECT_IDX = size_t(effect->getId());
 
-    if (effectKnown_[EFFECT_IDX])
+    if (effectsKnown_[EFFECT_IDX])
     {
       ret.push_back(effect->getDescr());
     }
   }
 
+  if (isAllEffectsKnown())
+  {
+    const string name = getName(ItemRefType::plain, ItemRefInf::none);
+
+    ret.push_back("All properties of the " + name + " are known to me.");
+  }
+
   return ret;
+}
+
+string Jewelry::getNameInf() const
+{
+  return isAllEffectsKnown() ? "{Known}" : "";
 }
 
 void Jewelry::onEquip()
@@ -357,25 +469,78 @@ void Jewelry::onEquip()
 
 UnequipAllowed Jewelry::onUnequip()
 {
+  auto unequipAllowed = UnequipAllowed::yes;
+
   for (auto* const effect : effects_)
   {
-    effect->onUnequip();
+    if (effect->onUnequip() == UnequipAllowed::no)
+    {
+      unequipAllowed = UnequipAllowed::no;
+    }
   }
 
   Log::morePrompt();
 
-  return UnequipAllowed::yes;
+  return unequipAllowed;
 }
 
-void Jewelry::onNewTurnInInv(const InvType invType)
+void Jewelry::onStdTurnInInv(const InvType invType)
 {
   if (invType == InvType::slots)
   {
     for (auto* const effect : effects_)
     {
-      effect->onNewTurnEquiped();
+      effect->onStdTurnEquiped();
     }
   }
+}
+
+void Jewelry::onActorTurnInInv(const InvType invType)
+{
+  if (invType == InvType::slots)
+  {
+    for (auto* const effect : effects_)
+    {
+      effect->onActorTurnEquiped();
+    }
+  }
+}
+
+void Jewelry::identify(const bool IS_SILENT_IDENTIFY)
+{
+  (void)IS_SILENT_IDENTIFY;
+
+  for (auto* effect : effects_)
+  {
+    const size_t EFFECT_IDX = size_t(effect->getId());
+
+    effectsKnown_[EFFECT_IDX] = true;
+  }
+
+  data_->isIdentified = true;
+}
+
+void Jewelry::onEffectRevealed()
+{
+  assert(!data_->isIdentified);
+
+  if (isAllEffectsKnown())
+  {
+    data_->isIdentified = true;
+  }
+}
+
+bool Jewelry::isAllEffectsKnown() const
+{
+  for (auto* effect : effects_)
+  {
+    if (!effectsKnown_[int(effect->getId())])
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 //--------------------------------------------------------- JEWELRY HANDLING
@@ -388,16 +553,42 @@ void init()
   for (size_t i = 0; i < int(JewelryEffectId::END); ++i)
   {
     effectList_   [i] = ItemId::END;
-    effectKnown_  [i] = false;
+    effectsKnown_ [i] = false;
   }
+
+  //First, assign strangulation to a random amulet.
+  int firstAmuletIdx = int(ItemId::END);
+  int lastAmuletIdx  = int(ItemId::END);
+
+  for (size_t i = 0; i < size_t(ItemId::END); ++i)
+  {
+    if (ItemData::data[i]->type == ItemType::amulet)
+    {
+      if (firstAmuletIdx == int(ItemId::END))
+      {
+        firstAmuletIdx = int(i);
+      }
+      lastAmuletIdx = int(i);
+    }
+  }
+
+  const ItemId strangleAmuletId = ItemId(Rnd::range(firstAmuletIdx, lastAmuletIdx));
+
+  effectList_[size_t(JewelryEffectId::strangle)] = strangleAmuletId;
+
+
+  //Assign random effects
 
   vector<JewelryEffectId> effectBucket;
 
   effectBucket.reserve(int(JewelryEffectId::END));
 
-  for (int i = 0; i < int(JewelryEffectId::END); ++i)
+  for (size_t i = 0; i < size_t(JewelryEffectId::END); ++i)
   {
-    effectBucket.push_back(JewelryEffectId(i));
+    if (effectList_[i] == ItemId::END)
+    {
+      effectBucket.push_back(JewelryEffectId(i));
+    }
   }
 
   vector<ItemId> itemIdBucket;
@@ -406,14 +597,16 @@ void init()
 
   for (auto* data : ItemData::data)
   {
-    if (data->type == ItemType::amulet || data->type == ItemType::ring)
-    {
-      //Note: Some amulets and rings are added multiple times to the bucket. These can
-      //get multiple effects assigned.
+    const auto id   = data->id;
+    const auto type = data->type;
 
+    if (id != strangleAmuletId && (type == ItemType::amulet || type == ItemType::ring))
+    {
+      //Some amulets and rings are added multiple times to the bucket. These can get
+      //multiple effects assigned.
       const int NR = Rnd::range(1, MAX_NR_EFFECTS_PER_ITEM);
 
-      itemIdBucket.insert(end(itemIdBucket), NR, data->id);
+      itemIdBucket.insert(end(itemIdBucket), NR, id);
     }
   }
 
@@ -460,7 +653,7 @@ void storeToSaveLines(vector<string>& lines)
   for (size_t i = 0; i < size_t(JewelryEffectId::END); ++i)
   {
     lines.push_back(toStr(int(effectList_[i])));
-    lines.push_back(effectKnown_[i] ? "1" : "0");
+    lines.push_back(effectsKnown_[i] ? "1" : "0");
   }
 }
 
@@ -470,7 +663,7 @@ void setupFromSaveLines(vector<string>& lines)
   {
     effectList_[i] = ItemId(toInt(lines.front()));
     lines.erase(begin(lines));
-    effectKnown_[i] = lines.front() == "1";
+    effectsKnown_[i] = lines.front() == "1";
     lines.erase(begin(lines));
   }
 }

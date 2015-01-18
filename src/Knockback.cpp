@@ -26,7 +26,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPI
   const bool  IS_DEF_MON    = !defender.isPlayer();
   const auto& defenderData  = defender.getData();
 
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   defender.getPropHandler().getPropIds(props);
 
   if (defenderData.preventKnockback               ||

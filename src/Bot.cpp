@@ -204,7 +204,7 @@ void act()
   }
 
   //If we are terrified, wait in place
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   Map::player->getPropHandler().getPropIds(props);
 
   if (props[int(PropId::terrified)])

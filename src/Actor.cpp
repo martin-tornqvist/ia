@@ -221,7 +221,7 @@ void Actor::teleport()
     Map::updateVisualMemory();
 
     //Teleport control?
-    bool props[int(PropId::END)];
+    bool props[size_t(PropId::END)];
 
     propHandler_->getPropIds(props);
 
@@ -471,10 +471,10 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
 
   TRACE_VERBOSE << "Damage from parameter: " << dmg << endl;
 
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   propHandler_->getPropIds(props);
 
-  if (dmgType == DmgType::light && !props[int(PropId::lightSensitive)])
+  if (dmgType == DmgType::light && !props[int(PropId::lgtSens)])
   {
     return ActorDied::no;
   }
@@ -755,7 +755,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
 void Actor::addLight(bool lightMap[MAP_W][MAP_H]) const
 {
-  bool props[int(PropId::END)];
+  bool props[size_t(PropId::END)];
   propHandler_->getPropIds(props);
 
   if (state_ == ActorState::alive && props[int(PropId::radiant)])
