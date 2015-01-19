@@ -5,86 +5,86 @@
 
 enum class DoorSpawnState
 {
-  open,
-  closed,
-  stuck,
-  secret,
-  secretAndStuck,
-  any
+    open,
+    closed,
+    stuck,
+    secret,
+    secretAndStuck,
+    any
 };
 
 class Door: public Rigid
 {
 public:
-  Door(const Pos& pos, const Rigid* const mimicFeature,
-       DoorSpawnState spawnState = DoorSpawnState::any);
+    Door(const Pos& pos, const Rigid* const mimicFeature,
+         DoorSpawnState spawnState = DoorSpawnState::any);
 
-  //Spawn-by-id compliant ctor (do not use for normal cases):
-  Door(const Pos& pos) :
-    Rigid                 (pos),
-    mimicFeature_         (nullptr),
-    nrSpikes_             (0),
-    isOpen_               (false),
-    isStuck_              (false),
-    isSecret_             (false),
-    isHandledExternally_  (false),
-    matl_                 (Matl::wood) {}
+    //Spawn-by-id compliant ctor (do not use for normal cases):
+    Door(const Pos& pos) :
+        Rigid                 (pos),
+        mimicFeature_         (nullptr),
+        nrSpikes_             (0),
+        isOpen_               (false),
+        isStuck_              (false),
+        isSecret_             (false),
+        isHandledExternally_  (false),
+        matl_                 (Matl::wood) {}
 
-  Door() = delete;
+    Door() = delete;
 
-  ~Door() override;
+    ~Door() override;
 
-  FeatureId getId() const override {return FeatureId::door;}
+    FeatureId getId() const override {return FeatureId::door;}
 
-  std::string getName(const Article article)                  const override;
-  WasDestroyed onFinishedBurning()                                  override;
-  char        getGlyph()                                      const override;
-  TileId      getTile()                                       const override;
-  void        bump(Actor& actorBumping)                             override;
-  bool        canMoveCmn()                                    const override;
-  bool        canMove(const bool actorsPropIds[size_t(PropId::END)]) const override;
-  bool        isLosPassable()                                 const override;
-  bool        isProjectilePassable()                          const override;
-  bool        isSmokePassable()                               const override;
+    std::string getName(const Article article)                  const override;
+    WasDestroyed onFinishedBurning()                                  override;
+    char        getGlyph()                                      const override;
+    TileId      getTile()                                       const override;
+    void        bump(Actor& actorBumping)                             override;
+    bool        canMoveCmn()                                    const override;
+    bool        canMove(const bool actorsPropIds[size_t(PropId::END)]) const override;
+    bool        isLosPassable()                                 const override;
+    bool        isProjectilePassable()                          const override;
+    bool        isSmokePassable()                               const override;
 
-  void tryOpen(Actor* actorTrying);
-  void tryClose(Actor* actorTrying);
-  bool trySpike(Actor* actorTrying);
+    void tryOpen(Actor* actorTrying);
+    void tryClose(Actor* actorTrying);
+    bool trySpike(Actor* actorTrying);
 
-  bool isOpen()   const {return isOpen_;}
-  bool isSecret() const {return isSecret_;}
-  bool isStuck()  const {return isStuck_;}
-  bool isHandledExternally() const {return isHandledExternally_;}
+    bool isOpen()   const {return isOpen_;}
+    bool isSecret() const {return isSecret_;}
+    bool isStuck()  const {return isStuck_;}
+    bool isHandledExternally() const {return isHandledExternally_;}
 
-  Matl getMatl() const;
+    Matl getMatl() const;
 
-  void reveal(const bool ALLOW_MESSAGE);
+    void reveal(const bool ALLOW_MESSAGE);
 
-  void setToSecret() {isOpen_ = isSecret_ = false;}
+    void setToSecret() {isOpen_ = isSecret_ = false;}
 
-  virtual DidOpen open(Actor* const actorOpening) override;
+    virtual DidOpen open(Actor* const actorOpening) override;
 
-  static bool isTileAnyDoor(const TileId tile)
-  {
-    return tile == TileId::doorClosed || tile == TileId::doorOpen;
-  }
+    static bool isTileAnyDoor(const TileId tile)
+    {
+        return tile == TileId::doorClosed || tile == TileId::doorOpen;
+    }
 
-  void playerTrySpotHidden();
+    void playerTrySpotHidden();
 
-  const Rigid* getMimic() const {return mimicFeature_;}
+    const Rigid* getMimic() const {return mimicFeature_;}
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 
-  const Rigid* const mimicFeature_;
-  int nrSpikes_;
+    const Rigid* const mimicFeature_;
+    int nrSpikes_;
 
-  bool isOpen_, isStuck_, isSecret_, isHandledExternally_;
+    bool isOpen_, isStuck_, isSecret_, isHandledExternally_;
 
-  Matl matl_;
+    Matl matl_;
 };
 
 #endif

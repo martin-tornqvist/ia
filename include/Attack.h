@@ -15,86 +15,86 @@ class Wpn;
 class AttData
 {
 public:
-  Actor* attacker;
-  Actor* defender;
-  AbilityRollResult attackResult;
-  int nrDmgRolls, nrDmgSides, dmgPlus;
-  int dmgRoll, dmg;
-  bool isIntrinsicAtt;
-  bool isEtherealDefenderMissed;
+    Actor* attacker;
+    Actor* defender;
+    AbilityRollResult attackResult;
+    int nrDmgRolls, nrDmgSides, dmgPlus;
+    int dmgRoll, dmg;
+    bool isIntrinsicAtt;
+    bool isEtherealDefenderMissed;
 
 protected:
-  AttData(Actor& attacker_, const Item& attItem_);
+    AttData(Actor& attacker_, const Item& attItem_);
 };
 
 class MeleeAttData: public AttData
 {
 public:
-  MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_);
-  bool isDefenderDodging;
-  bool isBackstab;
-  bool isWeakAttack;
+    MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_);
+    bool isDefenderDodging;
+    bool isBackstab;
+    bool isWeakAttack;
 };
 
 class RangedAttData: public AttData
 {
 public:
-  RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
-                const Pos& curPos_, ActorSize intendedAimLvl_ = ActorSize::none);
-  int           hitChanceTot;
-  ActorSize   intendedAimLvl;
-  ActorSize   defenderSize;
-  std::string verbPlayerAttacks;
-  std::string verbOtherAttacks;
+    RangedAttData(Actor& attacker_, const Wpn& wpn_, const Pos& aimPos_,
+                  const Pos& curPos_, ActorSize intendedAimLvl_ = ActorSize::none);
+    int           hitChanceTot;
+    ActorSize   intendedAimLvl;
+    ActorSize   defenderSize;
+    std::string verbPlayerAttacks;
+    std::string verbOtherAttacks;
 };
 
 class ThrowAttData: public AttData
 {
 public:
-  ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
-               const Pos& curPos_, ActorSize intendedAimLvl_ = ActorSize::none);
-  int       hitChanceTot;
-  ActorSize intendedAimLvl;
-  ActorSize defenderSize;
+    ThrowAttData(Actor& attacker_, const Item& item_, const Pos& aimPos_,
+                 const Pos& curPos_, ActorSize intendedAimLvl_ = ActorSize::none);
+    int       hitChanceTot;
+    ActorSize intendedAimLvl;
+    ActorSize defenderSize;
 };
 
 struct Projectile
 {
-  Projectile() : pos(Pos(-1, -1)), isObstructed(false),
-    isVisibleToPlayer(true), actorHit(nullptr), obstructedInElement(-1),
-    isDoneRendering(false), glyph(-1), tile(TileId::empty), clr(clrWhite),
-    attackData(nullptr) {}
+    Projectile() : pos(Pos(-1, -1)), isObstructed(false),
+        isVisibleToPlayer(true), actorHit(nullptr), obstructedInElement(-1),
+        isDoneRendering(false), glyph(-1), tile(TileId::empty), clr(clrWhite),
+        attackData(nullptr) {}
 
-  ~Projectile() {if (attackData) {delete attackData;}}
+    ~Projectile() {if (attackData) {delete attackData;}}
 
-  void setAttData(RangedAttData* attackData_)
-  {
-    if (attackData) {delete attackData;}
-    attackData = attackData_;
-  }
+    void setAttData(RangedAttData* attackData_)
+    {
+        if (attackData) {delete attackData;}
+        attackData = attackData_;
+    }
 
-  void setTile(const TileId tileToRender, const Clr& clrToRender)
-  {
-    tile  = tileToRender;
-    clr   = clrToRender;
-  }
+    void setTile(const TileId tileToRender, const Clr& clrToRender)
+    {
+        tile  = tileToRender;
+        clr   = clrToRender;
+    }
 
-  void setGlyph(const char GLYPH_TO_RENDER, const Clr& clrToRender)
-  {
-    glyph = GLYPH_TO_RENDER;
-    clr   = clrToRender;
-  }
+    void setGlyph(const char GLYPH_TO_RENDER, const Clr& clrToRender)
+    {
+        glyph = GLYPH_TO_RENDER;
+        clr   = clrToRender;
+    }
 
-  Pos pos;
-  bool isObstructed;
-  bool isVisibleToPlayer;
-  Actor* actorHit;
-  int obstructedInElement;
-  bool isDoneRendering;
-  char glyph;
-  TileId tile;
-  Clr clr;
-  RangedAttData* attackData;
+    Pos pos;
+    bool isObstructed;
+    bool isVisibleToPlayer;
+    Actor* actorHit;
+    int obstructedInElement;
+    bool isDoneRendering;
+    char glyph;
+    TileId tile;
+    Clr clr;
+    RangedAttData* attackData;
 };
 
 enum class MeleeHitSize {small, medium, hard};

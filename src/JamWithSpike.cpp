@@ -17,65 +17,65 @@ namespace JamWithSpike
 
 void playerJamFeature(Feature* const feature)
 {
-  bool jamableObjectFound = false;
+    bool jamableObjectFound = false;
 
-  if (feature->getId() == FeatureId::door)
-  {
-    Door* const door = static_cast<Door*>(feature);
-    const bool DOOR_SPIKED = door->trySpike(Map::player);
-
-    if (DOOR_SPIKED)
+    if (feature->getId() == FeatureId::door)
     {
+        Door* const door = static_cast<Door*>(feature);
+        const bool DOOR_SPIKED = door->trySpike(Map::player);
 
-      jamableObjectFound = true;
+        if (DOOR_SPIKED)
+        {
 
-      Map::player->getInv().decrItemTypeInGeneral(ItemId::ironSpike);
-      const int SPIKES_LEFT =
-        Map::player->getInv().getItemStackSizeInGeneral(ItemId::ironSpike);
-      if (SPIKES_LEFT == 0)
-      {
-        Log::addMsg("I have no iron spikes left.");
-      }
-      else
-      {
-        Log::addMsg("I have " + toStr(SPIKES_LEFT) + " iron spikes left.");
-      }
+            jamableObjectFound = true;
+
+            Map::player->getInv().decrItemTypeInGeneral(ItemId::ironSpike);
+            const int SPIKES_LEFT =
+                Map::player->getInv().getItemStackSizeInGeneral(ItemId::ironSpike);
+            if (SPIKES_LEFT == 0)
+            {
+                Log::addMsg("I have no iron spikes left.");
+            }
+            else
+            {
+                Log::addMsg("I have " + toStr(SPIKES_LEFT) + " iron spikes left.");
+            }
+        }
     }
-  }
 
-  if (!jamableObjectFound)
-  {
-    const bool PLAYER_IS_BLIND = Map::player->getPropHandler().allowSee();
-    if (!PLAYER_IS_BLIND)
+    if (!jamableObjectFound)
     {
-      Log::addMsg("I see nothing there to jam with a spike.");
+        const bool PLAYER_IS_BLIND = Map::player->getPropHandler().allowSee();
+        if (!PLAYER_IS_BLIND)
+        {
+            Log::addMsg("I see nothing there to jam with a spike.");
+        }
+        else
+        {
+            Log::addMsg("I find nothing there to jam with a spike.");
+        }
     }
-    else
-    {
-      Log::addMsg("I find nothing there to jam with a spike.");
-    }
-  }
 }
 
 void playerJam()
 {
-  Log::clearLog();
+    Log::clearLog();
 
-  if (!Map::player->getInv().hasItemInBackpack(ItemId::ironSpike))
-  {
-    Log::addMsg("I have no spikes to jam with.", clrWhite);
+    if (!Map::player->getInv().hasItemInBackpack(ItemId::ironSpike))
+    {
+        Log::addMsg("I have no spikes to jam with.", clrWhite);
+        Render::drawMapAndInterface();
+        return;
+    }
+
+    Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
     Render::drawMapAndInterface();
-    return;
-  }
+    const Pos jamPos(Map::player->pos + DirUtils::getOffset(Query::dir()));
+    Log::clearLog();
 
-  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  Render::drawMapAndInterface();
-  const Pos jamPos(Map::player->pos + DirUtils::getOffset(Query::dir()));
-  Log::clearLog();
+    playerJamFeature(Map::cells[jamPos.x][jamPos.y].rigid);
 
-  playerJamFeature(Map::cells[jamPos.x][jamPos.y].rigid);
-
-  Render::drawMapAndInterface();
+    Render::drawMapAndInterface();
 }
 
 } //JamWithSpike

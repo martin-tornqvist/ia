@@ -16,49 +16,49 @@ enum class IgnoreMsgIfOriginSeen  {no, yes};
 class Snd
 {
 public:
-  Snd(
-    const std::string&          msg,
-    const SfxId                 sfx,
-    const IgnoreMsgIfOriginSeen ignoreMsgIfOriginSeen,
-    const Pos&                  origin,
-    Actor* const                actorWhoMadeSound,
-    const SndVol                vol,
-    const AlertsMon             alertingMon);
+    Snd(
+        const std::string&          msg,
+        const SfxId                 sfx,
+        const IgnoreMsgIfOriginSeen ignoreMsgIfOriginSeen,
+        const Pos&                  origin,
+        Actor* const                actorWhoMadeSound,
+        const SndVol                vol,
+        const AlertsMon             alertingMon);
 
-  Snd() {}
-  ~Snd() {}
+    Snd() {}
+    ~Snd() {}
 
-  const std::string&  getMsg()    const {return msg_;}
-  SfxId               getSfx()    const {return sfx_;}
-  void                clearMsg()        {msg_ = "";}
+    const std::string&  getMsg()    const {return msg_;}
+    SfxId               getSfx()    const {return sfx_;}
+    void                clearMsg()        {msg_ = "";}
 
-  bool isMsgIgnoredIfOriginSeen() const
-  {
-    return isMsgIgnoredIfOriginSeen_ == IgnoreMsgIfOriginSeen::yes;
-  }
+    bool isMsgIgnoredIfOriginSeen() const
+    {
+        return isMsgIgnoredIfOriginSeen_ == IgnoreMsgIfOriginSeen::yes;
+    }
 
-  bool isAlertingMon() const
-  {
-    return isAlertingMon_ == AlertsMon::yes;
-  }
+    bool isAlertingMon() const
+    {
+        return isAlertingMon_ == AlertsMon::yes;
+    }
 
-  Pos     getOrigin()             const {return origin_;}
-  Actor*  getActorWhoMadeSound()  const {return actorWhoMadeSound_;}
-  int     isLoud()                const {return vol_ == SndVol::high;}
+    Pos     getOrigin()             const {return origin_;}
+    Actor*  getActorWhoMadeSound()  const {return actorWhoMadeSound_;}
+    int     isLoud()                const {return vol_ == SndVol::high;}
 
-  void addString(const std::string& str)
-  {
-    msg_ += str;
-  }
+    void addString(const std::string& str)
+    {
+        msg_ += str;
+    }
 
 private:
-  std::string msg_;
-  SfxId sfx_;
-  IgnoreMsgIfOriginSeen isMsgIgnoredIfOriginSeen_;
-  Pos origin_;
-  Actor* actorWhoMadeSound_;
-  SndVol vol_;
-  AlertsMon isAlertingMon_;
+    std::string msg_;
+    SfxId sfx_;
+    IgnoreMsgIfOriginSeen isMsgIgnoredIfOriginSeen_;
+    Pos origin_;
+    Actor* actorWhoMadeSound_;
+    SndVol vol_;
+    AlertsMon isAlertingMon_;
 };
 
 namespace SndEmit

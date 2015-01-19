@@ -14,9 +14,9 @@ void showMsg(const std::string& msg, const bool DRAW_MAP_AND_INTERFACE,
              const SfxId sfx = SfxId::END);
 
 int showMenuMsg(
-  const std::string& msg, const bool DRAW_MAP_AND_INTERFACE,
-  const std::vector<std::string>& choices, const std::string& title = "",
-  const SfxId sfx = SfxId::END);
+    const std::string& msg, const bool DRAW_MAP_AND_INTERFACE,
+    const std::vector<std::string>& choices, const std::string& title = "",
+    const SfxId sfx = SfxId::END);
 
 } //Popup
 

@@ -16,23 +16,23 @@ namespace ItemFactory
 
 Item* mk(const ItemId itemId, const int NR_ITEMS)
 {
-  Item*             r     = nullptr;
-  ItemDataT* const  d     = ItemData::data[int(itemId)];
-  ItemDataT*        ammoD = nullptr;
+    Item*             r     = nullptr;
+    ItemDataT* const  d     = ItemData::data[int(itemId)];
+    ItemDataT*        ammoD = nullptr;
 
-  if (d->ranged.ammoItemId != ItemId::END)
-  {
-    ammoD = ItemData::data[int(d->ranged.ammoItemId)];
-  }
+    if (d->ranged.ammoItemId != ItemId::END)
+    {
+        ammoD = ItemData::data[int(d->ranged.ammoItemId)];
+    }
 
-  switch (itemId)
-  {
+    switch (itemId)
+    {
     case ItemId::trapezohedron:
-      r = new Item(d);
-      break;
+        r = new Item(d);
+        break;
 
     case ItemId::rock:
-    case ItemId::throwingKnife:
+    case ItemId::thrKnife:
     case ItemId::ironSpike:
     case ItemId::dagger:
     case ItemId::hatchet:
@@ -91,97 +91,97 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::frostVortexEngulf:
     case ItemId::moldSpores:
     case ItemId::theDarkOneClaw:
-      r = new Wpn(d, ammoD);
-      break;
+        r = new Wpn(d, ammoD);
+        break;
 
     case ItemId::pharaohStaff:
-      r = new PharaohStaff(d);
-      break;
+        r = new PharaohStaff(d);
+        break;
 
     case ItemId::dynamite:
-      r = new Dynamite(d);
-      break;
+        r = new Dynamite(d);
+        break;
 
     case ItemId::flare:
-      r = new Flare(d);
-      break;
+        r = new Flare(d);
+        break;
 
     case ItemId::molotov:
-      r = new Molotov(d);
-      break;
+        r = new Molotov(d);
+        break;
 
     case ItemId::smokeGrenade:
-      r = new SmokeGrenade(d);
-      break;
+        r = new SmokeGrenade(d);
+        break;
 
     case ItemId::sawedOff:
-      r = new SawedOff(d, ammoD);
-      break;
+        r = new SawedOff(d, ammoD);
+        break;
 
     case ItemId::pumpShotgun:
-      r = new PumpShotgun(d, ammoD);
-      break;
+        r = new PumpShotgun(d, ammoD);
+        break;
 
     case ItemId::shotgunShell:
-      r = new Ammo(d);
-      break;
+        r = new Ammo(d);
+        break;
 
     case ItemId::machineGun:
-      r = new MachineGun(d, ammoD);
-      break;
+        r = new MachineGun(d, ammoD);
+        break;
 
     case ItemId::drumOfBullets:
     case ItemId::pistolClip:
     case ItemId::incineratorAmmo:
     case ItemId::migoGunAmmo:
-      r = new AmmoClip(d);
-      break;
+        r = new AmmoClip(d);
+        break;
 
     case ItemId::pistol:
-      r = new Pistol(d, ammoD);
-      break;
+        r = new Pistol(d, ammoD);
+        break;
 
     case ItemId::flareGun:
-      r = new FlareGun(d, ammoD);
-      break;
+        r = new FlareGun(d, ammoD);
+        break;
 
     case ItemId::incinerator:
-      r = new Incinerator(d, ammoD);
-      break;
+        r = new Incinerator(d, ammoD);
+        break;
 
     case ItemId::spikeGun:
-      r = new SpikeGun(d, ammoD);
-      break;
+        r = new SpikeGun(d, ammoD);
+        break;
 
     case ItemId::migoGun:
-      r = new MigoGun(d, ammoD);
-      break;
+        r = new MigoGun(d, ammoD);
+        break;
 
     case ItemId::armorFlackJacket:
     case ItemId::armorLeatherJacket:
     case ItemId::armorIronSuit:
-      r = new Armor(d);
-      break;
+        r = new Armor(d);
+        break;
 
     case ItemId::armorAsbSuit:
-      r = new ArmorAsbSuit(d);
-      break;
+        r = new ArmorAsbSuit(d);
+        break;
 
     case ItemId::armorHeavyCoat:
-      r = new ArmorHeavyCoat(d);
-      break;
+        r = new ArmorHeavyCoat(d);
+        break;
 
     case ItemId::armorMigo:
-      r = new ArmorMigo(d);
-      break;
+        r = new ArmorMigo(d);
+        break;
 
     case ItemId::gasMask:
-      r = new GasMask(d);
-      break;
+        r = new GasMask(d);
+        break;
 
     case ItemId::hideousMask:
-      r = new HideousMask(d);
-      break;
+        r = new HideousMask(d);
+        break;
 
     case ItemId::scrollMayhem:
     case ItemId::scrollTelep:
@@ -201,92 +201,92 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::scrollElemRes:
     case ItemId::scrollSummonMon:
     case ItemId::scrollLight:
-      r = new Scroll(d);
-      break;
+        r = new Scroll(d);
+        break;
 
     case ItemId::potionVitality:
-      r = new PotionVitality(d);
-      break;
+        r = new PotionVitality(d);
+        break;
 
     case ItemId::potionSpirit:
-      r = new PotionSpirit(d);
-      break;
+        r = new PotionSpirit(d);
+        break;
 
     case ItemId::potionBlindness:
-      r = new PotionBlindness(d);
-      break;
+        r = new PotionBlindness(d);
+        break;
 
     case ItemId::potionFrenzy:
-      r = new PotionFrenzy(d);
-      break;
+        r = new PotionFrenzy(d);
+        break;
 
     case ItemId::potionFortitude:
-      r = new PotionFortitude(d);
-      break;
+        r = new PotionFortitude(d);
+        break;
 
     case ItemId::potionParalyze:
-      r = new PotionParal(d);
-      break;
+        r = new PotionParal(d);
+        break;
 
     case ItemId::potionRElec:
-      r = new PotionRElec(d);
-      break;
+        r = new PotionRElec(d);
+        break;
 
     case ItemId::potionConf:
-      r = new PotionConf(d);
-      break;
+        r = new PotionConf(d);
+        break;
 
     case ItemId::potionPoison:
-      r = new PotionPoison(d);
-      break;
+        r = new PotionPoison(d);
+        break;
 
     case ItemId::potionInsight:
-      r = new PotionInsight(d);
-      break;
+        r = new PotionInsight(d);
+        break;
 
     case ItemId::potionClairv:
-      r = new PotionClairv(d);
-      break;
+        r = new PotionClairv(d);
+        break;
 
     case ItemId::potionRFire:
-      r = new PotionRFire(d);
-      break;
+        r = new PotionRFire(d);
+        break;
 
     case ItemId::potionAntidote:
-      r = new PotionAntidote(d);
-      break;
+        r = new PotionAntidote(d);
+        break;
 
     case ItemId::potionDescent:
-      r = new PotionDescent(d);
-      break;
+        r = new PotionDescent(d);
+        break;
 
     case ItemId::deviceBlaster:
-      r = new DeviceBlaster(d);
-      break;
+        r = new DeviceBlaster(d);
+        break;
 
     case ItemId::deviceShockwave:
-      r = new DeviceShockwave(d);
-      break;
+        r = new DeviceShockwave(d);
+        break;
 
     case ItemId::deviceRejuvenator:
-      r = new DeviceRejuvenator(d);
-      break;
+        r = new DeviceRejuvenator(d);
+        break;
 
     case ItemId::deviceTranslocator:
-      r = new DeviceTranslocator(d);
-      break;
+        r = new DeviceTranslocator(d);
+        break;
 
     case ItemId::deviceSentryDrone:
-      r = new DeviceSentryDrone(d);
-      break;
+        r = new DeviceSentryDrone(d);
+        break;
 
     case ItemId::electricLantern:
-      r = new DeviceLantern(d);
-      break;
+        r = new DeviceLantern(d);
+        break;
 
     case ItemId::medicalBag:
-      r = new MedicalBag(d);
-      break;
+        r = new MedicalBag(d);
+        break;
 
     case ItemId::starAmulet:
     case ItemId::skullAmulet:
@@ -307,103 +307,104 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::onyxRing:
     case ItemId::topazRing:
     case ItemId::emeraldRing:
-      r = new Jewelry(d);
-      break;
+        r = new Jewelry(d);
+        break;
 
     case ItemId::END:
-      return nullptr;
-  }
+        return nullptr;
+    }
 
-  if (!r->getData().isStackable && NR_ITEMS != 1)
-  {
-    TRACE << "Specified number of items (" + toStr(NR_ITEMS) + ") != 1 for "
-          << "non-stackable item" << endl;
-    assert(false);
-  }
-  else
-  {
-    r->nrItems_ = NR_ITEMS;
-  }
+    if (!r->getData().isStackable && NR_ITEMS != 1)
+    {
+        TRACE << "Specified number of items (" + toStr(NR_ITEMS) + ") != 1 for "
+              << "non-stackable item" << endl;
+        assert(false);
+    }
+    else
+    {
+        r->nrItems_ = NR_ITEMS;
+    }
 
-  return r;
+    return r;
 }
 
 void setItemRandomizedProperties(Item* item)
 {
-  const ItemDataT& d = item->getData();
+    const ItemDataT& d = item->getData();
 
-  //If it is a pure melee weapon, it may get extra damage
-  if (d.melee.isMeleeWpn && !d.ranged.isRangedWpn)
-  {
-    static_cast<Wpn*>(item)->setRandomMeleePlus();
-  }
-
-  //If firearm, spawn with random amount of ammo
-  if (d.ranged.isRangedWpn && !d.ranged.hasInfiniteAmmo)
-  {
-    Wpn* const wpn = static_cast<Wpn*>(item);
-    if (wpn->AMMO_CAP == 1)
+    //If it is a pure melee weapon, it may get extra damage
+    if (d.melee.isMeleeWpn && !d.ranged.isRangedWpn)
     {
-      wpn->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
+        static_cast<Wpn*>(item)->setRandomMeleePlus();
     }
-    else
-    {
-      if (d.ranged.isMachineGun)
-      {
-        //Number of machine gun bullets loaded needs to be a multiple of the number of
-        //projectiles fired in each burst
-        const int CAP         = wpn->AMMO_CAP;
-        const int CAP_SCALED  = CAP / NR_MG_PROJECTILES;
-        const int MIN_SCALED  = CAP_SCALED / 4;
-        wpn->nrAmmoLoaded     = Rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
-      }
-      else
-      {
-        wpn->nrAmmoLoaded = Rnd::range(wpn->AMMO_CAP / 4, wpn->AMMO_CAP);
-      }
-    }
-  }
 
-  if (d.isStackable) {item->nrItems_ = Rnd::range(1, d.maxStackAtSpawn);}
+    //If firearm, spawn with random amount of ammo
+    if (d.ranged.isRangedWpn && !d.ranged.hasInfiniteAmmo)
+    {
+        Wpn* const wpn = static_cast<Wpn*>(item);
+        if (wpn->AMMO_CAP == 1)
+        {
+            wpn->nrAmmoLoaded = Rnd::coinToss() ? 1 : 0;
+        }
+        else
+        {
+            if (d.ranged.isMachineGun)
+            {
+                //Number of machine gun bullets loaded needs to be a multiple of the number of
+                //projectiles fired in each burst
+                const int CAP         = wpn->AMMO_CAP;
+                const int CAP_SCALED  = CAP / NR_MG_PROJECTILES;
+                const int MIN_SCALED  = CAP_SCALED / 4;
+                wpn->nrAmmoLoaded     = Rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
+            }
+            else
+            {
+                wpn->nrAmmoLoaded = Rnd::range(wpn->AMMO_CAP / 4, wpn->AMMO_CAP);
+            }
+        }
+    }
+
+    if (d.isStackable) {item->nrItems_ = Rnd::range(1, d.maxStackAtSpawn);}
 }
 
 Item* mkItemOnFloor(const ItemId itemId, const Pos& pos)
 {
-  Item* item = mk(itemId);
-  setItemRandomizedProperties(item);
-  ItemDrop::dropItemOnMap(pos, *item);
-  return item;
+    Item* item = mk(itemId);
+    setItemRandomizedProperties(item);
+    ItemDrop::dropItemOnMap(pos, *item);
+    return item;
 }
 
 Item* copyItem(Item* oldItem)
 {
-  Item* newItem     = mk(oldItem->getData().id);
-  newItem->nrItems_ = oldItem->nrItems_;
-  return newItem;
+    Item* newItem     = mk(oldItem->getData().id);
+    newItem->nrItems_ = oldItem->nrItems_;
+    return newItem;
 }
 
 Item* mkRandomScrollOrPotion(const bool ALLOW_SCROLLS, const bool ALLOW_POTIONS)
 {
-  vector<ItemId> itemBucket;
+    vector<ItemId> itemBucket;
 
-  for (int i = 0; i < int(ItemId::END); ++i)
-  {
-    const ItemDataT* const d = ItemData::data[i];
-
-    if ((d->type == ItemType::scroll && ALLOW_SCROLLS) ||
-        (d->type == ItemType::potion && ALLOW_POTIONS))
+    for (int i = 0; i < int(ItemId::END); ++i)
     {
-      itemBucket.push_back(static_cast<ItemId>(i));
+        const ItemDataT* const d = ItemData::data[i];
+
+        if (
+            (d->type == ItemType::scroll && ALLOW_SCROLLS) ||
+            (d->type == ItemType::potion && ALLOW_POTIONS))
+        {
+            itemBucket.push_back(static_cast<ItemId>(i));
+        }
     }
-  }
 
-  if (!itemBucket.empty())
-  {
-    const int ELEMENT = Rnd::range(0, itemBucket.size() - 1);
-    return mk(itemBucket[ELEMENT]);
-  }
+    if (!itemBucket.empty())
+    {
+        const int ELEMENT = Rnd::range(0, itemBucket.size() - 1);
+        return mk(itemBucket[ELEMENT]);
+    }
 
-  return nullptr;
+    return nullptr;
 }
 
 } //ItemFactory

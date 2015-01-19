@@ -21,8 +21,8 @@ namespace
 
 Actor* mkActorFromId(const ActorId id)
 {
-  switch (id)
-  {
+    switch (id)
+    {
     case ActorId::player:               return new Player();
     case ActorId::zombie:               return new ZombieClaw();
     case ActorId::zombieAxe:            return new ZombieAxe();
@@ -79,87 +79,87 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::theDarkOne:           return new TheDarkOne();
 
     case ActorId::END: {} break;
-  }
-  return nullptr;
+    }
+    return nullptr;
 }
 
 } //namespace
 
 Actor* mk(const ActorId id, const Pos& pos)
 {
-  Actor* const actor = mkActorFromId(id);
+    Actor* const actor = mkActorFromId(id);
 
-  actor->place(pos, ActorData::data[int(id)]);
+    actor->place(pos, ActorData::data[int(id)]);
 
-  if (actor->getData().nrLeftAllowedToSpawn != -1)
-  {
-    actor->getData().nrLeftAllowedToSpawn--;
-  }
+    if (actor->getData().nrLeftAllowedToSpawn != -1)
+    {
+        actor->getData().nrLeftAllowedToSpawn--;
+    }
 
-  GameTime::addActor(actor);
+    GameTime::addActor(actor);
 
-  return actor;
+    return actor;
 }
 
 void deleteAllMon()
 {
-  vector<Actor*>& actors = GameTime::actors_;
+    vector<Actor*>& actors = GameTime::actors_;
 
-  for (size_t i = 0; i < actors.size(); ++i)
-  {
-    if (actors[i] != Map::player)
+    for (size_t i = 0; i < actors.size(); ++i)
     {
-      GameTime::eraseActorInElement(i);
-      i--;
+        if (actors[i] != Map::player)
+        {
+            GameTime::eraseActorInElement(i);
+            i--;
+        }
     }
-  }
 }
 
 void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
                const bool MAKE_MONSTERS_AWARE, Actor* const actorToSetAsLeader,
                vector<Mon*>* monstersRet)
 {
-  if (monstersRet) {monstersRet->clear();}
+    if (monstersRet) {monstersRet->clear();}
 
-  bool blocked[MAP_W][MAP_H];
-  MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
-  vector<Pos> freeCells;
-  Utils::mkVectorFromBoolMap(false, blocked, freeCells);
-  sort(begin(freeCells), end(freeCells), IsCloserToPos(origin));
+    bool blocked[MAP_W][MAP_H];
+    MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
+    vector<Pos> freeCells;
+    Utils::mkVectorFromBoolMap(false, blocked, freeCells);
+    sort(begin(freeCells), end(freeCells), IsCloserToPos(origin));
 
-  const int NR_FREE_CELLS   = freeCells.size();
-  const int NR_MONSTER_IDS  = monsterIds.size();
-  const int NR_TO_SPAWN     = min(NR_FREE_CELLS, NR_MONSTER_IDS);
+    const int NR_FREE_CELLS   = freeCells.size();
+    const int NR_MONSTER_IDS  = monsterIds.size();
+    const int NR_TO_SPAWN     = min(NR_FREE_CELLS, NR_MONSTER_IDS);
 
-  vector<Pos> positionsToAnimate;
+    vector<Pos> positionsToAnimate;
 
-  for (int i = 0; i < NR_TO_SPAWN; ++i)
-  {
-    const Pos&    pos   = freeCells[i];
-    const ActorId id    = monsterIds[i];
-    Actor* const  actor = mk(id, pos);
-    Mon* const    mon   = static_cast<Mon*>(actor);
-
-    if (monstersRet)
+    for (int i = 0; i < NR_TO_SPAWN; ++i)
     {
-      monstersRet->push_back(mon);
-    }
-    if (actorToSetAsLeader)
-    {
-      mon->leader_ = actorToSetAsLeader;
-    }
-    if (MAKE_MONSTERS_AWARE)
-    {
-      mon->awareCounter_ = mon->getData().nrTurnsAware;
+        const Pos&    pos   = freeCells[i];
+        const ActorId id    = monsterIds[i];
+        Actor* const  actor = mk(id, pos);
+        Mon* const    mon   = static_cast<Mon*>(actor);
+
+        if (monstersRet)
+        {
+            monstersRet->push_back(mon);
+        }
+        if (actorToSetAsLeader)
+        {
+            mon->leader_ = actorToSetAsLeader;
+        }
+        if (MAKE_MONSTERS_AWARE)
+        {
+            mon->awareCounter_ = mon->getData().nrTurnsAware;
+        }
+
+        if (Map::player->isSeeingActor(*actor, nullptr))
+        {
+            positionsToAnimate.push_back(pos);
+        }
     }
 
-    if (Map::player->isSeeingActor(*actor, nullptr))
-    {
-      positionsToAnimate.push_back(pos);
-    }
-  }
-
-  Render::drawBlastAtCells(positionsToAnimate, clrMagenta);
+    Render::drawBlastAtCells(positionsToAnimate, clrMagenta);
 }
 
 } //ActorFactory

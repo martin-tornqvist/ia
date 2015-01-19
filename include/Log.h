@@ -11,40 +11,40 @@
 class Msg
 {
 public:
-  Msg(const std::string& text, const Clr& clr, const int X_POS) :
-    clr_        (clr),
-    xPos_       (X_POS),
-    str_        (text),
-    repeatsStr_ (""),
-    nr_         (1) {}
+    Msg(const std::string& text, const Clr& clr, const int X_POS) :
+        clr_        (clr),
+        xPos_       (X_POS),
+        str_        (text),
+        repeatsStr_ (""),
+        nr_         (1) {}
 
-  Msg() :
-    clr_        (clrWhite),
-    xPos_       (0),
-    str_        (""),
-    repeatsStr_ (""),
-    nr_         (1) {}
+    Msg() :
+        clr_        (clrWhite),
+        xPos_       (0),
+        str_        (""),
+        repeatsStr_ (""),
+        nr_         (1) {}
 
-  void getStrWithRepeats(std::string& strRef) const
-  {
-    strRef = str_ + (nr_ > 1 ? repeatsStr_ : "");
-  }
+    void getStrWithRepeats(std::string& strRef) const
+    {
+        strRef = str_ + (nr_ > 1 ? repeatsStr_ : "");
+    }
 
-  void getStrRaw(std::string& strRef) const {strRef = str_;}
+    void getStrRaw(std::string& strRef) const {strRef = str_;}
 
-  void incrRepeat()
-  {
-    nr_++;
-    repeatsStr_ = "(x" + toStr(nr_) + ")";
-  }
+    void incrRepeat()
+    {
+        nr_++;
+        repeatsStr_ = "(x" + toStr(nr_) + ")";
+    }
 
-  Clr clr_;
-  int xPos_;
+    Clr clr_;
+    int xPos_;
 
 private:
-  std::string str_;
-  std::string repeatsStr_;
-  int nr_;
+    std::string str_;
+    std::string repeatsStr_;
+    int nr_;
 };
 
 namespace Log

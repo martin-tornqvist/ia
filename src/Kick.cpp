@@ -19,58 +19,58 @@ namespace Kick
 
 void playerKick()
 {
-  TRACE_FUNC_BEGIN;
+    TRACE_FUNC_BEGIN;
 
-  Log::clearLog();
-  Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
-  Render::drawMapAndInterface();
-  Pos kickPos(Map::player->pos + DirUtils::getOffset(Query::dir()));
-  Log::clearLog();
+    Log::clearLog();
+    Log::addMsg("Which direction?" + cancelInfoStr, clrWhiteHigh);
+    Render::drawMapAndInterface();
+    Pos kickPos(Map::player->pos + DirUtils::getOffset(Query::dir()));
+    Log::clearLog();
 
-  if (kickPos != Map::player->pos)
-  {
-    //Kick living actor?
-    Actor* livingActor = Utils::getActorAtPos(kickPos, ActorState::alive);
-    if (livingActor)
+    if (kickPos != Map::player->pos)
     {
-      TRACE << "Actor found at kick pos, attempting to kick actor" << endl;
-      if (Map::player->getPropHandler().allowAttackMelee(true))
-      {
-        TRACE << "Player is allowed to do melee attack" << endl;
-        bool blocked[MAP_W][MAP_H];
-        MapParse::run(CellCheck::BlocksLos(), blocked);
+        //Kick living actor?
+        Actor* livingActor = Utils::getActorAtPos(kickPos, ActorState::alive);
+        if (livingActor)
+        {
+            TRACE << "Actor found at kick pos, attempting to kick actor" << endl;
+            if (Map::player->getPropHandler().allowAttackMelee(true))
+            {
+                TRACE << "Player is allowed to do melee attack" << endl;
+                bool blocked[MAP_W][MAP_H];
+                MapParse::run(CellCheck::BlocksLos(), blocked);
 
-        TRACE << "Player can see actor" << endl;
-        Map::player->kickMon(*livingActor);
-      }
-      TRACE_FUNC_END;
-      return;
+                TRACE << "Player can see actor" << endl;
+                Map::player->kickMon(*livingActor);
+            }
+            TRACE_FUNC_END;
+            return;
+        }
+
+        //Kick corpse?
+        Actor* deadActor = Utils::getActorAtPos(kickPos, ActorState::corpse);
+        if (deadActor)
+        {
+            const bool    IS_SEEING_CELL  = Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
+            const string  corpseName      = IS_SEEING_CELL ? deadActor->getCorpseNameA() :
+                                            "a corpse";
+
+            Log::addMsg("I bash " + TextFormatting::firstToLower(corpseName) + ".");
+
+            pair<int, int> kickDmg = ItemData::data[int(ItemId::playerKick)]->melee.dmg;
+            deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, DmgMethod::kick);
+
+            GameTime::tick();
+            TRACE_FUNC_END;
+            return;
+        }
+
+        //Kick feature
+        TRACE << "No actor at kick pos, attempting to kick feature instead" << endl;
+        auto* const f = Map::cells[kickPos.x][kickPos.y].rigid;
+        f->hit(DmgType::physical, DmgMethod::kick, Map::player);
     }
-
-    //Kick corpse?
-    Actor* deadActor = Utils::getActorAtPos(kickPos, ActorState::corpse);
-    if (deadActor)
-    {
-      const bool    IS_SEEING_CELL  = Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
-      const string  corpseName      = IS_SEEING_CELL ? deadActor->getCorpseNameA() :
-                                      "a corpse";
-
-      Log::addMsg("I bash " + TextFormatting::firstToLower(corpseName) + ".");
-
-      pair<int, int> kickDmg = ItemData::data[int(ItemId::playerKick)]->melee.dmg;
-      deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, DmgMethod::kick);
-
-      GameTime::tick();
-      TRACE_FUNC_END;
-      return;
-    }
-
-    //Kick feature
-    TRACE << "No actor at kick pos, attempting to kick feature instead" << endl;
-    auto* const f = Map::cells[kickPos.x][kickPos.y].rigid;
-    f->hit(DmgType::physical, DmgMethod::kick, Map::player);
-  }
-  TRACE_FUNC_END;
+    TRACE_FUNC_END;
 }
 
 } //Kick

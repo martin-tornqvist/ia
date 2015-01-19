@@ -20,77 +20,77 @@ vector<string> lines_;
 
 void readFile()
 {
-  lines_.clear();
+    lines_.clear();
 
-  string curLine;
-  ifstream file("credits.txt");
+    string curLine;
+    ifstream file("credits.txt");
 
-  vector<string> formattedLines;
+    vector<string> formattedLines;
 
-  if (file.is_open())
-  {
-    while (getline(file, curLine))
+    if (file.is_open())
     {
-      if (curLine.empty())
-      {
-        lines_.push_back(curLine);
-      }
-      else
-      {
-        TextFormatting::lineToLines(curLine, MAP_W - 2, formattedLines);
-        for (string& line : formattedLines) {lines_.push_back(line);}
-      }
+        while (getline(file, curLine))
+        {
+            if (curLine.empty())
+            {
+                lines_.push_back(curLine);
+            }
+            else
+            {
+                TextFormatting::lineToLines(curLine, MAP_W - 2, formattedLines);
+                for (string& line : formattedLines) {lines_.push_back(line);}
+            }
+        }
     }
-  }
 
-  file.close();
+    file.close();
 }
 
 } //namespace
 
 void init()
 {
-  readFile();
+    readFile();
 }
 
 void run()
 {
-  Render::clearScreen();
+    Render::clearScreen();
 
-  string str;
+    string str;
 
-  const string decorationLine(MAP_W, '-');
+    const string decorationLine(MAP_W, '-');
 
-  const int X_LABEL = 3;
+    const int X_LABEL = 3;
 
-  Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
+    Render::drawText(decorationLine, Panel::screen, Pos(0, 0), clrGray);
 
-  Render::drawText(" Displaying credits.txt ", Panel::screen,
-                   Pos(X_LABEL, 0), clrGray);
+    Render::drawText(" Displaying credits.txt ", Panel::screen,
+                     Pos(X_LABEL, 0), clrGray);
 
-  Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
-                   clrGray);
+    Render::drawText(decorationLine, Panel::screen, Pos(0, SCREEN_H - 1),
+                     clrGray);
 
-  Render::drawText(" [space/esc] to exit ", Panel::screen,
-                   Pos(X_LABEL, SCREEN_H - 1), clrGray);
+    Render::drawText(" [space/esc] to exit ", Panel::screen,
+                     Pos(X_LABEL, SCREEN_H - 1), clrGray);
 
-  int yPos = 1;
-  for (string& line : lines_)
-  {
-    Render::drawText(line, Panel::screen, Pos(0, yPos++), clrWhite);
-  }
-
-  Render::updateScreen();
-
-  //Read keys
-  while (true)
-  {
-    const KeyData& d = Input::getInput();
-    if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+    int yPos = 1;
+    for (string& line : lines_)
     {
-      break;
+        Render::drawText(line, Panel::screen, Pos(0, yPos++), clrWhite);
     }
-  }
+
+    Render::updateScreen();
+
+    //Read keys
+    while (true)
+    {
+        const KeyData& d = Input::getInput();
+        if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
+        {
+            break;
+        }
+    }
 }
 
 } //Credits

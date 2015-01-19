@@ -9,134 +9,134 @@
 class Device: public Item
 {
 public:
-  Device(ItemDataT* const itemData);
+    Device(ItemDataT* const itemData);
 
-  virtual ~Device() {}
+    virtual ~Device() {}
 
-  virtual ConsumeItem activate(Actor* const actor) override = 0;
+    virtual ConsumeItem activate(Actor* const actor) override = 0;
 
-  Clr getInterfaceClr() const override final {return clrCyan;}
+    Clr getInterfaceClr() const override final {return clrCyan;}
 
-  virtual void onStdTurnInInv(const InvType invType) override {(void)invType;}
+    virtual void onStdTurnInInv(const InvType invType) override {(void)invType;}
 
-  void identify(const bool IS_SILENT_IDENTIFY) override;
+    void identify(const bool IS_SILENT_IDENTIFY) override;
 };
 
 class StrangeDevice : public Device
 {
 public:
-  StrangeDevice(ItemDataT* const itemData);
+    StrangeDevice(ItemDataT* const itemData);
 
-  virtual std::vector<std::string> getDescr() const override final;
+    virtual std::vector<std::string> getDescr() const override final;
 
-  ConsumeItem activate(Actor* const actor) override;
+    ConsumeItem activate(Actor* const actor) override;
 
-  virtual std::string getNameInf() const override;
+    virtual std::string getNameInf() const override;
 
-  virtual void storeToSaveLines(std::vector<std::string>& lines)    override;
-  virtual void setupFromSaveLines(std::vector<std::string>& lines)  override;
+    virtual void storeToSaveLines(std::vector<std::string>& lines)    override;
+    virtual void setupFromSaveLines(std::vector<std::string>& lines)  override;
 
-  Condition condition_;
+    Condition condition_;
 
 private:
-  virtual std::vector<std::string> getDescrIdentified() const = 0;
+    virtual std::vector<std::string> getDescrIdentified() const = 0;
 
-  virtual ConsumeItem triggerEffect() = 0;
+    virtual ConsumeItem triggerEffect() = 0;
 };
 
 class DeviceBlaster : public StrangeDevice
 {
 public:
-  DeviceBlaster(ItemDataT* const itemData) :
-    StrangeDevice(itemData) {}
+    DeviceBlaster(ItemDataT* const itemData) :
+        StrangeDevice(itemData) {}
 
-  ~DeviceBlaster() override {}
+    ~DeviceBlaster() override {}
 
 private:
-  std::vector<std::string> getDescrIdentified() const
-  {
-    return {"When activated, this strange device blasts all visible enemies with "
-            "infernal power."
-           };
-  }
+    std::vector<std::string> getDescrIdentified() const
+    {
+        return {"When activated, this strange device blasts all visible enemies with "
+                "infernal power."
+               };
+    }
 
-  ConsumeItem triggerEffect() override;
+    ConsumeItem triggerEffect() override;
 };
 
 class DeviceShockwave : public StrangeDevice
 {
 public:
-  DeviceShockwave(ItemDataT* const itemData) :
-    StrangeDevice(itemData) {}
+    DeviceShockwave(ItemDataT* const itemData) :
+        StrangeDevice(itemData) {}
 
-  ~DeviceShockwave() override {}
+    ~DeviceShockwave() override {}
 
 private:
-  std::vector<std::string> getDescrIdentified() const
-  {
-    return {"When activated, this strange device generates a shock wave which violently "
-            "pushes away any adjacent creatures and destroys structures."
-           };
-  }
+    std::vector<std::string> getDescrIdentified() const
+    {
+        return {"When activated, this strange device generates a shock wave which violently "
+                "pushes away any adjacent creatures and destroys structures."
+               };
+    }
 
-  ConsumeItem triggerEffect() override;
+    ConsumeItem triggerEffect() override;
 };
 
 class DeviceRejuvenator : public StrangeDevice
 {
 public:
-  DeviceRejuvenator(ItemDataT* const itemData) :
-    StrangeDevice(itemData) {}
+    DeviceRejuvenator(ItemDataT* const itemData) :
+        StrangeDevice(itemData) {}
 
-  ~DeviceRejuvenator() override {}
+    ~DeviceRejuvenator() override {}
 
 private:
-  std::vector<std::string> getDescrIdentified() const
-  {
-    return {"When activated, this strange device heals all wounds and physical "
-            "maladies."
-           };
-  }
+    std::vector<std::string> getDescrIdentified() const
+    {
+        return {"When activated, this strange device heals all wounds and physical "
+                "maladies."
+               };
+    }
 
-  ConsumeItem triggerEffect() override;
+    ConsumeItem triggerEffect() override;
 };
 
 class DeviceTranslocator : public StrangeDevice
 {
 public:
-  DeviceTranslocator(ItemDataT* const itemData) :
-    StrangeDevice(itemData) {}
+    DeviceTranslocator(ItemDataT* const itemData) :
+        StrangeDevice(itemData) {}
 
-  ~DeviceTranslocator() override {}
+    ~DeviceTranslocator() override {}
 
 private:
-  std::vector<std::string> getDescrIdentified() const
-  {
-    return {"When activated, this strange device teleports all visible enemies to "
-            "different locations."
-           };
-  }
+    std::vector<std::string> getDescrIdentified() const
+    {
+        return {"When activated, this strange device teleports all visible enemies to "
+                "different locations."
+               };
+    }
 
-  ConsumeItem triggerEffect() override;
+    ConsumeItem triggerEffect() override;
 };
 
 class DeviceSentryDrone : public StrangeDevice
 {
 public:
-  DeviceSentryDrone(ItemDataT* const itemData) :
-    StrangeDevice(itemData) {}
+    DeviceSentryDrone(ItemDataT* const itemData) :
+        StrangeDevice(itemData) {}
 
-  ~DeviceSentryDrone() override {}
+    ~DeviceSentryDrone() override {}
 
 private:
-  std::vector<std::string> getDescrIdentified() const
-  {
-    return {"When activated, this strange device will \"come alive\" and guard the "
-            "user."
-           };
-  }
+    std::vector<std::string> getDescrIdentified() const
+    {
+        return {"When activated, this strange device will \"come alive\" and guard the "
+                "user."
+               };
+    }
 
-  ConsumeItem triggerEffect() override;
+    ConsumeItem triggerEffect() override;
 };
 
 enum class LanternWorkingState {working, flicker};
@@ -144,30 +144,30 @@ enum class LanternWorkingState {working, flicker};
 class DeviceLantern : public Device
 {
 public:
-  DeviceLantern(ItemDataT* const itemData);
+    DeviceLantern(ItemDataT* const itemData);
 
-  ~DeviceLantern() override {}
+    ~DeviceLantern() override {}
 
-  ConsumeItem activate(Actor* const actor)            override;
-  void          onStdTurnInInv(const InvType invType) override;
-  void          onPickupToBackpack(Inventory& inv)    override;
+    ConsumeItem activate(Actor* const actor)            override;
+    void          onStdTurnInInv(const InvType invType) override;
+    void          onPickupToBackpack(Inventory& inv)    override;
 
-  LgtSize getLgtSize() const override;
+    LgtSize getLgtSize() const override;
 
-  void storeToSaveLines  (std::vector<std::string>& lines) override;
-  void setupFromSaveLines(std::vector<std::string>& lines) override;
+    void storeToSaveLines  (std::vector<std::string>& lines) override;
+    void setupFromSaveLines(std::vector<std::string>& lines) override;
 
-  int                 nrTurnsLeft_;
-  int                 nrFlickerTurnsLeft_;
-  LanternWorkingState workingState_;
-  bool                isActivated_;
+    int                 nrTurnsLeft_;
+    int                 nrFlickerTurnsLeft_;
+    LanternWorkingState workingState_;
+    bool                isActivated_;
 
 private:
-  void toggle();
+    void toggle();
 
-  int getRandomNrTurnsToNextBadEffect() const;
+    int getRandomNrTurnsToNextBadEffect() const;
 
-  std::string getNameInf() const override;
+    std::string getNameInf() const override;
 };
 
 #endif

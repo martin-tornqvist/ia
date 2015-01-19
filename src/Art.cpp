@@ -10,8 +10,8 @@ namespace
 
 Pos getColumnAndRowGlyph(const char glyph)
 {
-  switch (glyph)
-  {
+    switch (glyph)
+    {
     default:  return Pos(-1, -1);
     case ' ': return Pos(0, 0);
     case '!': return Pos(1, 0);
@@ -117,13 +117,13 @@ Pos getColumnAndRowGlyph(const char glyph)
     case   8: return Pos(6, 6);
     case   9: return Pos(7, 6);
     case  10: return Pos(8, 6);
-  }
+    }
 }
 
 Pos getColumnAndRowTile(const TileId tile)
 {
-  switch (tile)
-  {
+    switch (tile)
+    {
     case TileId::playerFirearm:               return Pos(0, 0);
     case TileId::playerMelee:                 return Pos(1, 0);
     case TileId::zombieUnarmed:               return Pos(2, 0);
@@ -276,19 +276,19 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::stalagmite:                  return Pos(13, 10);
     case TileId::empty:
     default:                                  return Pos(18, 10);
-  }
+    }
 }
 
 }
 
 Pos getGlyphPos(const char glyph)
 {
-  return getColumnAndRowGlyph(glyph);
+    return getColumnAndRowGlyph(glyph);
 }
 
 Pos getTilePos(const TileId tile)
 {
-  return getColumnAndRowTile(tile);
+    return getColumnAndRowTile(tile);
 }
 
 } //Art

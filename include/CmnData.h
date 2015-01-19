@@ -86,7 +86,7 @@ const int POISON_DMG_N_TURN = 3;
 const size_t MAX_NR_ACTORS_ON_MAP = 125;
 
 const std::string infoScrCmdInfo =
-  " [2/8 down/up j/k] to navigate [space/esc] to exit ";
+    " [2/8 down/up j/k] to navigate [space/esc] to exit ";
 
 const std::string cancelInfoStrNoSpace  = "[space/esc] to cancel";
 const std::string cancelInfoStr         = " " + cancelInfoStrNoSpace;

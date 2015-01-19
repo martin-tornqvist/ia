@@ -11,14 +11,14 @@ class Room;
 struct Region
 {
 public:
-  Region(const Rect& r) : mainRoom_(nullptr), r_(r), isFree_(true) {}
-  Region()              : mainRoom_(nullptr), r_(),  isFree_(true) {}
+    Region(const Rect& r) : mainRoom_(nullptr), r_(r), isFree_(true) {}
+    Region()              : mainRoom_(nullptr), r_(),  isFree_(true) {}
 
-  Rect getRndRoomRect() const;
+    Rect getRndRoomRect() const;
 
-  Room* mainRoom_;
-  Rect  r_;
-  bool  isFree_;
+    Room* mainRoom_;
+    Rect  r_;
+    bool  isFree_;
 };
 
 namespace MapGenUtils

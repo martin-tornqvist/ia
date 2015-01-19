@@ -13,7 +13,7 @@ class Room;
 
 enum class PlacementRule
 {
-  adjToWalls, awayFromWalls, either
+    adjToWalls, awayFromWalls, either
 };
 
 namespace MapPatterns

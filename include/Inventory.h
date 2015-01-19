@@ -12,105 +12,105 @@ enum class ItemId;
 
 enum class SlotId
 {
-  wielded,
-  wieldedAlt,
-  thrown,
-  body,
-  head,
-  neck,
-  ring1,
-  ring2,
-  END
+    wielded,
+    wieldedAlt,
+    thrown,
+    body,
+    head,
+    neck,
+    ring1,
+    ring2,
+    END
 };
 
 struct InvSlot
 {
-  InvSlot(SlotId id_, std::string name_) :
-    id    (id_),
-    name  (name_),
-    item  (nullptr) {}
+    InvSlot(SlotId id_, std::string name_) :
+        id    (id_),
+        name  (name_),
+        item  (nullptr) {}
 
-  InvSlot() :
-    id    (SlotId::wielded),
-    name  (""),
-    item  (nullptr) {}
+    InvSlot() :
+        id    (SlotId::wielded),
+        name  (""),
+        item  (nullptr) {}
 
-  SlotId      id;
-  std::string name;
-  Item*       item;
+    SlotId      id;
+    std::string name;
+    Item*       item;
 };
 
 class Inventory
 {
 public:
-  Inventory();
+    Inventory();
 
-  ~Inventory();
+    ~Inventory();
 
-  void dropAllNonIntrinsic(const Pos& pos);
+    void dropAllNonIntrinsic(const Pos& pos);
 
-  bool hasItemInSlot(SlotId id) const;
+    bool hasItemInSlot(SlotId id) const;
 
-  //Note: This will put the item in general if the slot is occupied
-  void putInSlot(const SlotId id, Item* item);
+    //Note: This will put the item in general if the slot is occupied
+    void putInSlot(const SlotId id, Item* item);
 
-  void putInGeneral(Item* item);
+    void putInGeneral(Item* item);
 
-  void putInIntrinsics(Item* item);
+    void putInIntrinsics(Item* item);
 
-  bool moveToGeneral(const SlotId id);
+    bool moveToGeneral(const SlotId id);
 
-  void moveFromGeneralToIntrinsics(const size_t GEN_IDX);
+    void moveFromGeneralToIntrinsics(const size_t GEN_IDX);
 
-  void moveItemToSlot(InvSlot& slot, const size_t GEN_IDX);
+    void moveItemToSlot(InvSlot& slot, const size_t GEN_IDX);
 
-  void equipGeneralItem(const size_t GEN_IDX, const SlotId slotId);
+    void equipGeneralItem(const size_t GEN_IDX, const SlotId slotId);
 
-  void swapWieldedAndPrepared(const bool IS_FREE_TURN);
+    void swapWieldedAndPrepared(const bool IS_FREE_TURN);
 
-  bool hasAmmoForFirearmInInventory();
+    bool hasAmmoForFirearmInInventory();
 
-  Item* getFirstItemInBackpackWithId(const ItemId id);
+    Item* getFirstItemInBackpackWithId(const ItemId id);
 
-  int getBackpackIdxWithItemId(const ItemId itemId) const;
+    int getBackpackIdxWithItemId(const ItemId itemId) const;
 
-  Item* getItemInSlot(const SlotId id) const;
+    Item* getItemInSlot(const SlotId id) const;
 
-  void removeWithoutDestroying(const InvType invType, const size_t IDX);
+    void removeWithoutDestroying(const InvType invType, const size_t IDX);
 
-  void decrItemInSlot(SlotId slotId);
+    void decrItemInSlot(SlotId slotId);
 
-  void decrItemInGeneral(const size_t IDX);
+    void decrItemInGeneral(const size_t IDX);
 
-  void decrItem(Item* const item);
+    void decrItem(Item* const item);
 
-  void decrItemTypeInGeneral(const ItemId itemId);
+    void decrItemTypeInGeneral(const ItemId itemId);
 
-  void removeItemInBackpackWithIdx(const size_t IDX, const bool DELETE_ITEM);
-  void removeItemInBackpackWithPtr(Item* const item, const bool DELETE_ITEM);
+    void removeItemInBackpackWithIdx(const size_t IDX, const bool DELETE_ITEM);
+    void removeItemInBackpackWithPtr(Item* const item, const bool DELETE_ITEM);
 
-  int getIntrinsicsSize() const {return intrinsics_.size();}
+    int getIntrinsicsSize() const {return intrinsics_.size();}
 
-  Item* getIntrinsicInElement(const int IDX) const;
+    Item* getIntrinsicInElement(const int IDX) const;
 
-  Item* getLastItemInGeneral();
+    Item* getLastItemInGeneral();
 
-  bool hasItemInBackpack(const ItemId id) const;
+    bool hasItemInBackpack(const ItemId id) const;
 
-  int getItemStackSizeInGeneral(const ItemId id) const;
+    int getItemStackSizeInGeneral(const ItemId id) const;
 
-  void decrDynamiteInGeneral();
+    void decrDynamiteInGeneral();
 
-  void sortGeneralInventory();
+    void sortGeneralInventory();
 
-  int getTotalItemWeight() const;
+    int getTotalItemWeight() const;
 
-  void storeToSaveLines  (std::vector<std::string>& lines) const;
-  void setupFromSaveLines(std::vector<std::string>& lines);
+    void storeToSaveLines  (std::vector<std::string>& lines) const;
+    void setupFromSaveLines(std::vector<std::string>& lines);
 
-  InvSlot               slots_[int(SlotId::END)];
-  std::vector<Item*>    general_;
-  std::vector<Item*>    intrinsics_;
+    InvSlot               slots_[int(SlotId::END)];
+    std::vector<Item*>    general_;
+    std::vector<Item*>    intrinsics_;
 };
 
 #endif

@@ -9,29 +9,29 @@ class Spell;
 class Scroll: public Item
 {
 public:
-  Scroll(ItemDataT* const itemData) :
-    Item(itemData) {}
+    Scroll(ItemDataT* const itemData) :
+        Item(itemData) {}
 
-  ~Scroll() {}
+    ~Scroll() {}
 
-  Clr getInterfaceClr() const override {return clrMagenta;}
+    Clr getInterfaceClr() const override {return clrMagenta;}
 
-  ConsumeItem activate(Actor* const actor) override;
+    ConsumeItem activate(Actor* const actor) override;
 
-  ConsumeItem read();
+    ConsumeItem read();
 
-  const std::string getRealName() const;
+    const std::string getRealName() const;
 
-  std::vector<std::string> getDescr() const override;
+    std::vector<std::string> getDescr() const override;
 
-  void identify(const bool IS_SILENT_IDENTIFY) override;
+    void identify(const bool IS_SILENT_IDENTIFY) override;
 
-  Spell* mkSpell() const;
+    Spell* mkSpell() const;
 
 protected:
-  void tryLearn();
+    void tryLearn();
 
-  std::string getNameInf() const override;
+    std::string getNameInf() const override;
 };
 
 namespace ScrollHandling

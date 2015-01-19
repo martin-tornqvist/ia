@@ -40,35 +40,35 @@ int percentile();
 
 enum class TimeType
 {
-  year,
-  month,
-  day,
-  hour,
-  minute,
-  second
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second
 };
 
 struct TimeData
 {
-  TimeData() :
-    year_   (0),
-    month_  (0),
-    day_    (0),
-    hour_   (0),
-    minute_ (0),
-    second_ (0) {}
+    TimeData() :
+        year_   (0),
+        month_  (0),
+        day_    (0),
+        hour_   (0),
+        minute_ (0),
+        second_ (0) {}
 
-  TimeData(int year, int month, int day, int hour, int minute, int second) :
-    year_   (year),
-    month_  (month),
-    day_    (day),
-    hour_   (hour),
-    minute_ (minute),
-    second_ (second) {}
+    TimeData(int year, int month, int day, int hour, int minute, int second) :
+        year_   (year),
+        month_  (month),
+        day_    (day),
+        hour_   (hour),
+        minute_ (minute),
+        second_ (second) {}
 
-  std::string getTimeStr(const TimeType lowest, const bool ADD_SEPARATORS) const;
+    std::string getTimeStr(const TimeType lowest, const bool ADD_SEPARATORS) const;
 
-  int year_, month_, day_, hour_, minute_, second_;
+    int year_, month_, day_, hour_, minute_, second_;
 };
 
 namespace Utils
@@ -81,13 +81,13 @@ void resetArray(bool a[MAP_W][MAP_H], const bool value);
 
 template<typename T> void resetArray(T* a[MAP_W][MAP_H])
 {
-  for (int x = 0; x < MAP_W; ++x)
-  {
-    for (int y = 0; y < MAP_H; ++y)
+    for (int x = 0; x < MAP_W; ++x)
     {
-      a[x][y] = nullptr;
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            a[x][y] = nullptr;
+        }
     }
-  }
 }
 
 void reverseBoolArray(bool array[MAP_W][MAP_H]);
@@ -138,13 +138,13 @@ namespace DirUtils
 //Useful lists to iterate over (e.g. in map generation)
 const std::vector<Pos> cardinalList
 {
-  Pos(-1, 0), Pos(1, 0), Pos(0, -1), Pos(0, 1)
+    Pos(-1, 0), Pos(1, 0), Pos(0, -1), Pos(0, 1)
 };
 
 const std::vector<Pos> dirList
 {
-  Pos(-1,  0), Pos( 1, 0), Pos(0, -1), Pos(0, 1),
-  Pos(-1, -1), Pos(-1, 1), Pos(1, -1), Pos(1, 1)
+    Pos(-1,  0), Pos( 1, 0), Pos(0, -1), Pos(0, 1),
+    Pos(-1, -1), Pos(-1, 1), Pos(1, -1), Pos(1, 1)
 };
 
 Dir getDir(const Pos& offset);

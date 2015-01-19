@@ -12,55 +12,55 @@ enum class DidOpen          {no, yes};
 class Rigid: public Feature
 {
 public:
-  Rigid(Pos pos);
+    Rigid(Pos pos);
 
-  Rigid() = delete;
+    Rigid() = delete;
 
-  virtual ~Rigid() {}
+    virtual ~Rigid() {}
 
-  virtual FeatureId   getId()                         const override = 0;
-  virtual std::string getName(const Article article)  const override = 0;
-  virtual void        onNewTurn()                           override final;
-  Clr                 getClr()                        const override final;
-  virtual Clr         getClrBg()                      const override final;
+    virtual FeatureId   getId()                         const override = 0;
+    virtual std::string getName(const Article article)  const override = 0;
+    virtual void        onNewTurn()                           override final;
+    Clr                 getClr()                        const override final;
+    virtual Clr         getClrBg()                      const override final;
 
-  virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod,
-                   Actor* const actor = nullptr);
+    virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod,
+                     Actor* const actor = nullptr);
 
-  void tryPutGore();
+    void tryPutGore();
 
-  TileId  getGoreTile()   const {return goreTile_;}
-  char    getGoreGlyph()  const {return goreGlyph_;}
+    TileId  getGoreTile()   const {return goreTile_;}
+    char    getGoreGlyph()  const {return goreGlyph_;}
 
-  void clearGore();
+    void clearGore();
 
-  virtual DidOpen   open(Actor* const actorOpening);
-  virtual void      disarm();
+    virtual DidOpen   open(Actor* const actorOpening);
+    virtual void      disarm();
 
-  void mkBloody() {isBloody_ = true;}
+    void mkBloody() {isBloody_ = true;}
 
-  void      setHasBurned()        {burnState_ = BurnState::hasBurned;}
-  BurnState getBurnState() const  {return burnState_;}
+    void      setHasBurned()        {burnState_ = BurnState::hasBurned;}
+    BurnState getBurnState() const  {return burnState_;}
 
 protected:
-  virtual void            onNewTurn_() {}
+    virtual void            onNewTurn_() {}
 
-  virtual void            onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-                                Actor* const actor) = 0;
+    virtual void            onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+                                  Actor* const actor) = 0;
 
-  virtual Clr             getClr_()   const = 0;
-  virtual Clr             getClrBg_() const {return clrBlack;}
+    virtual Clr             getClr_()   const = 0;
+    virtual Clr             getClrBg_() const {return clrBlack;}
 
-  void                    tryStartBurning(const bool IS_MSG_ALLOWED);
-  virtual WasDestroyed    onFinishedBurning();
-  virtual DidTriggerTrap  triggerTrap(Actor* const actor);
+    void                    tryStartBurning(const bool IS_MSG_ALLOWED);
+    virtual WasDestroyed    onFinishedBurning();
+    virtual DidTriggerTrap  triggerTrap(Actor* const actor);
 
-  TileId  goreTile_;
-  char    goreGlyph_;
+    TileId  goreTile_;
+    char    goreGlyph_;
 
 private:
-  bool      isBloody_;
-  BurnState burnState_;
+    bool      isBloody_;
+    BurnState burnState_;
 };
 
 enum class FloorType {cmn, cave, stonePath};
@@ -68,41 +68,41 @@ enum class FloorType {cmn, cave, stonePath};
 class Floor: public Rigid
 {
 public:
-  Floor(Pos pos);
-  Floor() = delete;
-  ~Floor() {}
+    Floor(Pos pos);
+    Floor() = delete;
+    ~Floor() {}
 
-  FeatureId getId() const override {return FeatureId::floor;}
+    FeatureId getId() const override {return FeatureId::floor;}
 
-  TileId      getTile()                       const override;
-  std::string getName(const Article article)  const override;
+    TileId      getTile()                       const override;
+    std::string getName(const Article article)  const override;
 
-  FloorType type_;
+    FloorType type_;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Carpet: public Rigid
 {
 public:
-  Carpet(Pos pos);
-  Carpet() = delete;
-  ~Carpet() {}
+    Carpet(Pos pos);
+    Carpet() = delete;
+    ~Carpet() {}
 
-  FeatureId getId() const override {return FeatureId::carpet;}
+    FeatureId getId() const override {return FeatureId::carpet;}
 
-  std::string getName(const Article article)  const override;
-  WasDestroyed onFinishedBurning()                   override;
+    std::string getName(const Article article)  const override;
+    WasDestroyed onFinishedBurning()                   override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 enum class GrassType {cmn, withered};
@@ -110,61 +110,61 @@ enum class GrassType {cmn, withered};
 class Grass: public Rigid
 {
 public:
-  Grass(Pos pos);
-  Grass() = delete;
-  ~Grass() {}
+    Grass(Pos pos);
+    Grass() = delete;
+    ~Grass() {}
 
-  FeatureId getId() const override {return FeatureId::grass;}
+    FeatureId getId() const override {return FeatureId::grass;}
 
-  TileId      getTile()                       const override;
-  std::string getName(const Article article)  const override;
+    TileId      getTile()                       const override;
+    std::string getName(const Article article)  const override;
 
-  GrassType type_;
+    GrassType type_;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Bush: public Rigid
 {
 public:
-  Bush(Pos pos);
-  Bush() = delete;
-  ~Bush() {}
+    Bush(Pos pos);
+    Bush() = delete;
+    ~Bush() {}
 
-  FeatureId getId() const override {return FeatureId::bush;}
+    FeatureId getId() const override {return FeatureId::bush;}
 
-  std::string getName(const Article article)  const override;
-  WasDestroyed onFinishedBurning()                   override;
+    std::string getName(const Article article)  const override;
+    WasDestroyed onFinishedBurning()                   override;
 
-  GrassType type_;
+    GrassType type_;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Brazier: public Rigid
 {
 public:
-  Brazier(Pos pos) : Rigid(pos) {}
-  Brazier() = delete;
-  ~Brazier() {}
+    Brazier(Pos pos) : Rigid(pos) {}
+    Brazier() = delete;
+    ~Brazier() {}
 
-  FeatureId getId() const override {return FeatureId::brazier;}
+    FeatureId getId() const override {return FeatureId::brazier;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 enum class WallType {cmn, cmnAlt, cave, egypt, cliff, lengMonestary};
@@ -172,126 +172,126 @@ enum class WallType {cmn, cmnAlt, cave, egypt, cliff, lengMonestary};
 class Wall: public Rigid
 {
 public:
-  Wall(Pos pos);
-  Wall() = delete;
-  ~Wall() {}
+    Wall(Pos pos);
+    Wall() = delete;
+    ~Wall() {}
 
-  FeatureId getId() const override {return FeatureId::wall;}
+    FeatureId getId() const override {return FeatureId::wall;}
 
-  std::string getName(const Article article)  const override;
-  char        getGlyph()                      const override;
-  TileId      getFrontWallTile()              const;
-  TileId      getTopWallTile()                const;
+    std::string getName(const Article article)  const override;
+    char        getGlyph()                      const override;
+    TileId      getFrontWallTile()              const;
+    TileId      getTopWallTile()                const;
 
-  void setRndCmnWall();
-  void setRandomIsMossGrown();
+    void setRndCmnWall();
+    void setRandomIsMossGrown();
 
-  WallType type_;
-  bool isMossy_;
+    WallType type_;
+    bool isMossy_;
 
-  static bool isTileAnyWallFront(const TileId tile);
-  static bool isTileAnyWallTop(const TileId tile);
+    static bool isTileAnyWallFront(const TileId tile);
+    static bool isTileAnyWallTop(const TileId tile);
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class RubbleLow: public Rigid
 {
 public:
-  RubbleLow(Pos pos);
-  RubbleLow() = delete;
-  ~RubbleLow() {}
+    RubbleLow(Pos pos);
+    RubbleLow() = delete;
+    ~RubbleLow() {}
 
-  FeatureId getId() const override {return FeatureId::rubbleLow;}
+    FeatureId getId() const override {return FeatureId::rubbleLow;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Bones: public Rigid
 {
 public:
-  Bones(Pos pos);
-  Bones() = delete;
-  ~Bones() {}
+    Bones(Pos pos);
+    Bones() = delete;
+    ~Bones() {}
 
-  FeatureId getId() const override {return FeatureId::bones;}
+    FeatureId getId() const override {return FeatureId::bones;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class RubbleHigh: public Rigid
 {
 public:
-  RubbleHigh(Pos pos);
-  RubbleHigh() = delete;
-  ~RubbleHigh() {}
+    RubbleHigh(Pos pos);
+    RubbleHigh() = delete;
+    ~RubbleHigh() {}
 
-  FeatureId getId() const override {return FeatureId::rubbleHigh;}
+    FeatureId getId() const override {return FeatureId::rubbleHigh;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class GraveStone: public Rigid
 {
 public:
-  GraveStone(Pos pos);
-  GraveStone() = delete;
-  ~GraveStone() {}
+    GraveStone(Pos pos);
+    GraveStone() = delete;
+    ~GraveStone() {}
 
-  FeatureId getId() const override {return FeatureId::gravestone;}
+    FeatureId getId() const override {return FeatureId::gravestone;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
-  void setInscription(const std::string& str) {inscr_ = str;}
+    void setInscription(const std::string& str) {inscr_ = str;}
 
-  void bump(Actor& actorBumping) override;
+    void bump(Actor& actorBumping) override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 
-  std::string inscr_;
+    std::string inscr_;
 };
 
 class ChurchBench: public Rigid
 {
 public:
-  ChurchBench(Pos pos);
-  ChurchBench() = delete;  ~ChurchBench() {}
+    ChurchBench(Pos pos);
+    ChurchBench() = delete;  ~ChurchBench() {}
 
-  FeatureId getId() const override {return FeatureId::churchBench;}
+    FeatureId getId() const override {return FeatureId::churchBench;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 enum class StatueType {cmn, ghoul};
@@ -299,125 +299,125 @@ enum class StatueType {cmn, ghoul};
 class Statue: public Rigid
 {
 public:
-  Statue(Pos pos);
-  Statue() = delete;
-  ~Statue() {}
+    Statue(Pos pos);
+    Statue() = delete;
+    ~Statue() {}
 
-  FeatureId getId() const override {return FeatureId::statue;}
+    FeatureId getId() const override {return FeatureId::statue;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
-  TileId getTile() const override;
+    TileId getTile() const override;
 
-  StatueType type_;
+    StatueType type_;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Pillar: public Rigid
 {
 public:
-  Pillar(Pos pos);
-  Pillar() = delete;
-  ~Pillar() {}
+    Pillar(Pos pos);
+    Pillar() = delete;
+    ~Pillar() {}
 
-  FeatureId getId() const override {return FeatureId::pillar;}
+    FeatureId getId() const override {return FeatureId::pillar;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Monolith: public Rigid
 {
 public:
-  Monolith(Pos pos);
-  Monolith() = delete;
-  ~Monolith() {}
+    Monolith(Pos pos);
+    Monolith() = delete;
+    ~Monolith() {}
 
-  FeatureId getId() const override {return FeatureId::monolith;}
+    FeatureId getId() const override {return FeatureId::monolith;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Stalagmite: public Rigid
 {
 public:
-  Stalagmite(Pos pos);
-  Stalagmite() = delete;
-  ~Stalagmite() {}
+    Stalagmite(Pos pos);
+    Stalagmite() = delete;
+    ~Stalagmite() {}
 
-  FeatureId getId() const override {return FeatureId::stalagmite;}
+    FeatureId getId() const override {return FeatureId::stalagmite;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Stairs: public Rigid
 {
 public:
-  Stairs(Pos pos);
-  Stairs() = delete;
-  ~Stairs() {}
+    Stairs(Pos pos);
+    Stairs() = delete;
+    ~Stairs() {}
 
-  FeatureId getId() const override {return FeatureId::stairs;}
+    FeatureId getId() const override {return FeatureId::stairs;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
-  void bump(Actor& actorBumping) override;
+    void bump(Actor& actorBumping) override;
 
-  void onNewTurn_() override;
+    void onNewTurn_() override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Bridge : public Rigid
 {
 public:
-  Bridge(Pos pos) :
-    Rigid (pos),
-    dir_  (HorizontalVertical::hor) {}
-  Bridge() = delete;
-  ~Bridge() {}
+    Bridge(Pos pos) :
+        Rigid (pos),
+        dir_  (HorizontalVertical::hor) {}
+    Bridge() = delete;
+    ~Bridge() {}
 
-  FeatureId getId() const override {return FeatureId::bridge;}
+    FeatureId getId() const override {return FeatureId::bridge;}
 
-  std::string getName(const Article article)  const override;
-  TileId      getTile()                       const override;
-  char        getGlyph()                      const override;
+    std::string getName(const Article article)  const override;
+    TileId      getTile()                       const override;
+    char        getGlyph()                      const override;
 
-  void setDir(const HorizontalVertical dir) {dir_ = dir;}
+    void setDir(const HorizontalVertical dir) {dir_ = dir;}
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 
-  HorizontalVertical dir_;
+    HorizontalVertical dir_;
 };
 
 enum class LiquidType {water, mud, blood, acid, lava};
@@ -425,63 +425,63 @@ enum class LiquidType {water, mud, blood, acid, lava};
 class LiquidShallow: public Rigid
 {
 public:
-  LiquidShallow(Pos pos);
-  LiquidShallow() = delete;
-  ~LiquidShallow() {}
+    LiquidShallow(Pos pos);
+    LiquidShallow() = delete;
+    ~LiquidShallow() {}
 
-  FeatureId getId() const override {return FeatureId::liquidShallow;}
+    FeatureId getId() const override {return FeatureId::liquidShallow;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
-  void bump(Actor& actorBumping) override;
+    void bump(Actor& actorBumping) override;
 
-  LiquidType type_;
+    LiquidType type_;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class LiquidDeep: public Rigid
 {
 public:
-  LiquidDeep(Pos pos);
-  LiquidDeep() = delete;
-  ~LiquidDeep() {}
+    LiquidDeep(Pos pos);
+    LiquidDeep() = delete;
+    ~LiquidDeep() {}
 
-  FeatureId getId() const override {return FeatureId::liquidDeep;}
+    FeatureId getId() const override {return FeatureId::liquidDeep;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
-  void bump(Actor& actorBumping) override;
+    void bump(Actor& actorBumping) override;
 
-  LiquidType type_;
+    LiquidType type_;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Chasm: public Rigid
 {
 public:
-  Chasm(Pos pos);
-  Chasm() = delete;
-  ~Chasm() {}
+    Chasm(Pos pos);
+    Chasm() = delete;
+    ~Chasm() {}
 
-  FeatureId getId() const override {return FeatureId::chasm;}
+    FeatureId getId() const override {return FeatureId::chasm;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Door;
@@ -489,67 +489,67 @@ class Door;
 class Lever: public Rigid
 {
 public:
-  Lever(Pos pos);
+    Lever(Pos pos);
 
-  Lever() = delete;
+    Lever() = delete;
 
-  ~Lever() {}
+    ~Lever() {}
 
-  FeatureId getId() const override {return FeatureId::lever;}
+    FeatureId getId() const override {return FeatureId::lever;}
 
-  std::string getName(const Article article)  const override;
-  TileId      getTile()                       const override;
+    std::string getName(const Article article)  const override;
+    TileId      getTile()                       const override;
 
-  void setLinkedDoor(Door* const door) {doorLinkedTo_ = door;}
+    void setLinkedDoor(Door* const door) {doorLinkedTo_ = door;}
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 
-  void pull();
+    void pull();
 
-  bool isPositionLeft_;
-  Door* doorLinkedTo_;
+    bool isPositionLeft_;
+    Door* doorLinkedTo_;
 };
 
 class Altar: public Rigid
 {
 public:
-  Altar(Pos pos);
-  Altar() = delete;
-  ~Altar() {}
+    Altar(Pos pos);
+    Altar() = delete;
+    ~Altar() {}
 
-  FeatureId getId() const override {return FeatureId::altar;}
+    FeatureId getId() const override {return FeatureId::altar;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Tree: public Rigid
 {
 public:
-  Tree(Pos pos);
-  Tree() = delete;
-  ~Tree() {}
+    Tree(Pos pos);
+    Tree() = delete;
+    ~Tree() {}
 
-  FeatureId getId() const override {return FeatureId::tree;}
+    FeatureId getId() const override {return FeatureId::tree;}
 
-  std::string getName(const Article article)  const override;
+    std::string getName(const Article article)  const override;
 
-  WasDestroyed onFinishedBurning() override;
+    WasDestroyed onFinishedBurning() override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 };
 
 class Item;
@@ -557,17 +557,17 @@ class Item;
 class ItemContainer
 {
 public:
-  ItemContainer();
+    ItemContainer();
 
-  ~ItemContainer();
+    ~ItemContainer();
 
-  void init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMPT);
+    void init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMPT);
 
-  void open(const Pos& featurePos, Actor* const actorOpening);
+    void open(const Pos& featurePos, Actor* const actorOpening);
 
-  void destroySingleFragile();
+    void destroySingleFragile();
 
-  std::vector<Item*> items_;
+    std::vector<Item*> items_;
 };
 
 //Note: In some previous versions, it was possible to inspect the tomb and get a hint
@@ -578,53 +578,53 @@ public:
 //Maybe some sort of hint will be re-implemented (e.g. via the "Detect Traps" spell).
 enum class TombTrait
 {
-  stench,   //Fumes, Ooze-type monster
-  ghost,    //Any ghost-type monster
-  cursed,
-  END
+    stench,   //Fumes, Ooze-type monster
+    ghost,    //Any ghost-type monster
+    cursed,
+    END
 };
 
 enum class TombAppearance
 {
-  common,
-  ornate,     //Good items
-  marvelous,  //Excellent items
-  END
+    common,
+    ornate,     //Good items
+    marvelous,  //Excellent items
+    END
 };
 
 class Tomb: public Rigid
 {
 public:
-  Tomb(const Pos& pos);
-  Tomb() = delete;
-  ~Tomb() {}
+    Tomb(const Pos& pos);
+    Tomb() = delete;
+    ~Tomb() {}
 
-  FeatureId getId() const override {return FeatureId::tomb;}
+    FeatureId getId() const override {return FeatureId::tomb;}
 
-  std::string getName(const Article article)  const override;
-  TileId      getTile()                       const override;
-  void        bump(Actor& actorBumping)             override;
-  DidOpen     open(Actor* const actorOpening)       override;
+    std::string getName(const Article article)  const override;
+    TileId      getTile()                       const override;
+    void        bump(Actor& actorBumping)             override;
+    DidOpen     open(Actor* const actorOpening)       override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 
-  DidTriggerTrap triggerTrap(Actor* const actor) override;
+    DidTriggerTrap triggerTrap(Actor* const actor) override;
 
-  void playerLoot();
+    void playerLoot();
 
-  void trySprainPlayer();
+    void trySprainPlayer();
 
-  bool isOpen_, isTraitKnown_;
+    bool isOpen_, isTraitKnown_;
 
-  ItemContainer itemContainer_;
+    ItemContainer itemContainer_;
 
-  int pushLidOneInN_;
-  TombAppearance appearance_;
-  TombTrait trait_;
+    int pushLidOneInN_;
+    TombAppearance appearance_;
+    TombTrait trait_;
 };
 
 enum class ChestMatl {wood, iron, END};
@@ -632,94 +632,94 @@ enum class ChestMatl {wood, iron, END};
 class Chest: public Rigid
 {
 public:
-  Chest(const Pos& pos);
-  Chest() = delete;
-  ~Chest() {}
+    Chest(const Pos& pos);
+    Chest() = delete;
+    ~Chest() {}
 
-  FeatureId getId() const override {return FeatureId::chest;}
+    FeatureId getId() const override {return FeatureId::chest;}
 
-  std::string getName(const Article article)  const override;
-  TileId      getTile()                       const override;
-  void        bump(Actor& actorBumping)             override;
-  DidOpen     open(Actor* const actorOpening)       override;
-  void        disarm()                              override;
+    std::string getName(const Article article)  const override;
+    TileId      getTile()                       const override;
+    void        bump(Actor& actorBumping)             override;
+    DidOpen     open(Actor* const actorOpening)       override;
+    void        disarm()                              override;
 
-  void hit(const DmgType dmgType, const DmgMethod dmgMethod,
-           Actor* const actor) override;
+    void hit(const DmgType dmgType, const DmgMethod dmgMethod,
+             Actor* const actor) override;
 
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 
-  void tryFindTrap();
+    void tryFindTrap();
 
-  DidTriggerTrap triggerTrap(Actor* const actor) override;
+    DidTriggerTrap triggerTrap(Actor* const actor) override;
 
-  void playerLoot();
+    void playerLoot();
 
-  void trySprainPlayer();
+    void trySprainPlayer();
 
-  ItemContainer itemContainer_;
+    ItemContainer itemContainer_;
 
-  bool isOpen_, isLocked_, isTrapped_, isTrapStatusKnown_;
+    bool isOpen_, isLocked_, isTrapped_, isTrapStatusKnown_;
 
-  const ChestMatl matl_;
+    const ChestMatl matl_;
 
-  //How hard the trap is to detect (0 - 2)
-  // 0: Requires nothing
-  // 1: Requires "Observant"
-  // 2: Requires "Perceptive"
-  const int TRAP_DET_LVL;
+    //How hard the trap is to detect (0 - 2)
+    // 0: Requires nothing
+    // 1: Requires "Observant"
+    // 2: Requires "Perceptive"
+    const int TRAP_DET_LVL;
 };
 
 class Cabinet: public Rigid
 {
 public:
-  Cabinet(const Pos& pos);
-  Cabinet() = delete;
-  ~Cabinet() {}
+    Cabinet(const Pos& pos);
+    Cabinet() = delete;
+    ~Cabinet() {}
 
-  FeatureId getId() const override {return FeatureId::cabinet;}
+    FeatureId getId() const override {return FeatureId::cabinet;}
 
-  std::string getName(const Article article)  const override;
-  TileId      getTile()                       const override;
-  void        bump(Actor& actorBumping)             override;
-  DidOpen     open(Actor* const actorOpening)       override;
+    std::string getName(const Article article)  const override;
+    TileId      getTile()                       const override;
+    void        bump(Actor& actorBumping)             override;
+    DidOpen     open(Actor* const actorOpening)       override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 
-  void playerLoot();
+    void playerLoot();
 
-  ItemContainer itemContainer_;
-  bool isOpen_;
+    ItemContainer itemContainer_;
+    bool isOpen_;
 };
 
 enum class FountainEffect
 {
-  refreshing,
-  bless,
-  curse,
-  spirit,
-  vitality,
-  disease,
-  poison,
-  frenzy,
-  paralyze,
-  blind,
-  faint,
-  rFire,
-  rCold,
-  rElec,
-  rFear,
-  rConf,
-  END
+    refreshing,
+    bless,
+    curse,
+    spirit,
+    vitality,
+    disease,
+    poison,
+    frenzy,
+    paralyze,
+    blind,
+    faint,
+    rFire,
+    rCold,
+    rElec,
+    rFear,
+    rConf,
+    END
 };
 
 enum class FountainMatl {stone, gold};
@@ -727,54 +727,54 @@ enum class FountainMatl {stone, gold};
 class Fountain: public Rigid
 {
 public:
-  Fountain(const Pos& pos);
-  Fountain() = delete;
-  ~Fountain() {}
+    Fountain(const Pos& pos);
+    Fountain() = delete;
+    ~Fountain() {}
 
-  FeatureId getId() const override {return FeatureId::fountain;}
+    FeatureId getId() const override {return FeatureId::fountain;}
 
-  std::string getName(const Article article)  const override;
-  void        bump(Actor& actorBumping)             override;
+    std::string getName(const Article article)  const override;
+    void        bump(Actor& actorBumping)             override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 
-  std::vector<FountainEffect> fountainEffects_;
-  FountainMatl                fountainMatl_;
-  int                         nrDrinksLeft_;
+    std::vector<FountainEffect> fountainEffects_;
+    FountainMatl                fountainMatl_;
+    int                         nrDrinksLeft_;
 };
 
 class Cocoon: public Rigid
 {
 public:
-  Cocoon(const Pos& pos);
-  Cocoon() = delete;
-  ~Cocoon() {}
+    Cocoon(const Pos& pos);
+    Cocoon() = delete;
+    ~Cocoon() {}
 
-  FeatureId getId() const override {return FeatureId::cocoon;}
+    FeatureId getId() const override {return FeatureId::cocoon;}
 
-  std::string getName(const Article article)  const override;
-  TileId      getTile()                       const override;
-  void        bump(Actor& actorBumping)             override;
-  DidOpen     open(Actor* const actorOpening)       override;
+    std::string getName(const Article article)  const override;
+    TileId      getTile()                       const override;
+    void        bump(Actor& actorBumping)             override;
+    DidOpen     open(Actor* const actorOpening)       override;
 
 private:
-  Clr getClr_() const override;
+    Clr getClr_() const override;
 
-  void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
-             Actor* const actor) override;
+    void onHit(const DmgType dmgType, const DmgMethod dmgMethod,
+               Actor* const actor) override;
 
-  void playerLoot();
+    void playerLoot();
 
-  DidTriggerTrap triggerTrap(Actor* const actor) override;
+    DidTriggerTrap triggerTrap(Actor* const actor) override;
 
-  bool isTrapped_;
-  bool isOpen_;
+    bool isTrapped_;
+    bool isOpen_;
 
-  ItemContainer itemContainer_;
+    ItemContainer itemContainer_;
 };
 
 #endif

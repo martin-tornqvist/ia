@@ -17,85 +17,85 @@ namespace CellCheck
 class Check
 {
 public:
-  virtual ~Check() {}
-  virtual bool isCheckingCells()          const {return false;}
-  virtual bool isCheckingMobs()           const {return false;}
-  virtual bool isCheckingActors()         const {return false;}
-  virtual bool check(const Cell& c)       const {(void)c; return false;}
-  virtual bool check(const Mob& f)        const {(void)f; return false;}
-  virtual bool check(const Actor& a)      const {(void)a; return false;}
+    virtual ~Check() {}
+    virtual bool isCheckingCells()          const {return false;}
+    virtual bool isCheckingMobs()           const {return false;}
+    virtual bool isCheckingActors()         const {return false;}
+    virtual bool check(const Cell& c)       const {(void)c; return false;}
+    virtual bool check(const Mob& f)        const {(void)f; return false;}
+    virtual bool check(const Actor& a)      const {(void)a; return false;}
 protected:
-  Check() {}
+    Check() {}
 };
 
 class BlocksLos : public Check
 {
 public:
-  BlocksLos() : Check() {}
-  bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobs()           const override {return true;}
-  bool check(const Cell& c)       const override;
-  bool check(const Mob& f)        const override;
+    BlocksLos() : Check() {}
+    bool isCheckingCells()          const override {return true;}
+    bool isCheckingMobs()           const override {return true;}
+    bool check(const Cell& c)       const override;
+    bool check(const Mob& f)        const override;
 };
 
 class BlocksMoveCmn : public Check
 {
 public:
-  BlocksMoveCmn(bool isActorsBlocking) :
-    Check(), IS_ACTORS_BLOCKING_(isActorsBlocking) {}
-  bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobs()           const override {return true;}
-  bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
-  bool check(const Cell& c)       const override;
-  bool check(const Mob& f)        const override;
-  bool check(const Actor& a)      const override;
+    BlocksMoveCmn(bool isActorsBlocking) :
+        Check(), IS_ACTORS_BLOCKING_(isActorsBlocking) {}
+    bool isCheckingCells()          const override {return true;}
+    bool isCheckingMobs()           const override {return true;}
+    bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
+    bool check(const Cell& c)       const override;
+    bool check(const Mob& f)        const override;
+    bool check(const Actor& a)      const override;
 private:
-  const bool IS_ACTORS_BLOCKING_;
+    const bool IS_ACTORS_BLOCKING_;
 };
 
 class BlocksActor : public Check
 {
 public:
-  BlocksActor(Actor& actor, bool isActorsBlocking);
-  bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobs()           const override {return true;}
-  bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
-  bool check(const Cell& c)       const override;
-  bool check(const Mob& f)        const override;
-  bool check(const Actor& a)      const override;
+    BlocksActor(Actor& actor, bool isActorsBlocking);
+    bool isCheckingCells()          const override {return true;}
+    bool isCheckingMobs()           const override {return true;}
+    bool isCheckingActors()         const override {return IS_ACTORS_BLOCKING_;}
+    bool check(const Cell& c)       const override;
+    bool check(const Mob& f)        const override;
+    bool check(const Actor& a)      const override;
 private:
-  const bool IS_ACTORS_BLOCKING_;
-  bool actorsProps_[size_t(PropId::END)];
+    const bool IS_ACTORS_BLOCKING_;
+    bool actorsProps_[size_t(PropId::END)];
 };
 
 class BlocksProjectiles : public Check
 {
 public:
-  BlocksProjectiles() : Check() {}
-  bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobs()           const override {return true;}
-  bool check(const Cell& c)       const override;
-  bool check(const Mob& f)        const override;
+    BlocksProjectiles() : Check() {}
+    bool isCheckingCells()          const override {return true;}
+    bool isCheckingMobs()           const override {return true;}
+    bool check(const Cell& c)       const override;
+    bool check(const Mob& f)        const override;
 };
 
 class LivingActorsAdjToPos : public Check
 {
 public:
-  LivingActorsAdjToPos(const Pos& pos) :
-    Check(), pos_(pos) {}
-  bool isCheckingActors()         const override {return true;}
-  bool check(const Actor& a)      const override;
-  const Pos& pos_;
+    LivingActorsAdjToPos(const Pos& pos) :
+        Check(), pos_(pos) {}
+    bool isCheckingActors()         const override {return true;}
+    bool check(const Actor& a)      const override;
+    const Pos& pos_;
 };
 
 class BlocksItems : public Check
 {
 public:
-  BlocksItems() : Check() {}
-  bool isCheckingCells()          const override {return true;}
-  bool isCheckingMobs()           const override {return true;}
-  bool check(const Cell& c)       const override;
-  bool check(const Mob& f)        const override;
+    BlocksItems() : Check() {}
+    bool isCheckingCells()          const override {return true;}
+    bool isCheckingMobs()           const override {return true;}
+    bool check(const Cell& c)       const override;
+    bool check(const Mob& f)        const override;
 };
 
 //class Corridor : public Check {
@@ -118,76 +118,76 @@ public:
 class IsFeature : public Check
 {
 public:
-  IsFeature(const FeatureId id) : Check(), feature_(id) {}
-  bool isCheckingCells()          const override {return true;}
-  bool check(const Cell& c)       const override;
+    IsFeature(const FeatureId id) : Check(), feature_(id) {}
+    bool isCheckingCells()          const override {return true;}
+    bool check(const Cell& c)       const override;
 private:
-  const FeatureId feature_;
+    const FeatureId feature_;
 };
 
 class IsAnyOfFeatures : public Check
 {
 public:
-  IsAnyOfFeatures(const std::vector<FeatureId>& features) :
-    Check(), features_(features) {}
+    IsAnyOfFeatures(const std::vector<FeatureId>& features) :
+        Check(), features_(features) {}
 
-  IsAnyOfFeatures(const FeatureId id) :
-    Check(), features_(std::vector<FeatureId> {id}) {}
+    IsAnyOfFeatures(const FeatureId id) :
+        Check(), features_(std::vector<FeatureId> {id}) {}
 
-  bool isCheckingCells()          const override {return true;}
-  bool check(const Cell& c)       const override;
+    bool isCheckingCells()          const override {return true;}
+    bool check(const Cell& c)       const override;
 private:
-  std::vector<FeatureId> features_;
+    std::vector<FeatureId> features_;
 };
 
 class AllAdjIsFeature : public Check
 {
 public:
-  AllAdjIsFeature(const FeatureId id) : Check(), feature_(id) {}
-  bool isCheckingCells()          const override {return true;}
-  bool check(const Cell& c)       const override;
+    AllAdjIsFeature(const FeatureId id) : Check(), feature_(id) {}
+    bool isCheckingCells()          const override {return true;}
+    bool check(const Cell& c)       const override;
 private:
-  const FeatureId feature_;
+    const FeatureId feature_;
 };
 
 class AllAdjIsAnyOfFeatures : public Check
 {
 public:
-  AllAdjIsAnyOfFeatures(const std::vector<FeatureId>& features) :
-    Check(), features_(features) {}
+    AllAdjIsAnyOfFeatures(const std::vector<FeatureId>& features) :
+        Check(), features_(features) {}
 
-  AllAdjIsAnyOfFeatures(const FeatureId id) :
-    Check(), features_(std::vector<FeatureId> {id}) {}
+    AllAdjIsAnyOfFeatures(const FeatureId id) :
+        Check(), features_(std::vector<FeatureId> {id}) {}
 
-  bool isCheckingCells()          const override {return true;}
-  bool check(const Cell& c)       const override;
+    bool isCheckingCells()          const override {return true;}
+    bool check(const Cell& c)       const override;
 private:
-  std::vector<FeatureId> features_;
+    std::vector<FeatureId> features_;
 };
 
 class AllAdjIsNotFeature : public Check
 {
 public:
-  AllAdjIsNotFeature(const FeatureId id) : Check(), feature_(id) {}
-  bool isCheckingCells()          const override {return true;}
-  bool check(const Cell& c)       const override;
+    AllAdjIsNotFeature(const FeatureId id) : Check(), feature_(id) {}
+    bool isCheckingCells()          const override {return true;}
+    bool check(const Cell& c)       const override;
 private:
-  const FeatureId feature_;
+    const FeatureId feature_;
 };
 
 class AllAdjIsNoneOfFeatures : public Check
 {
 public:
-  AllAdjIsNoneOfFeatures(const std::vector<FeatureId>& features) :
-    Check(), features_(features) {}
+    AllAdjIsNoneOfFeatures(const std::vector<FeatureId>& features) :
+        Check(), features_(features) {}
 
-  AllAdjIsNoneOfFeatures(const FeatureId id) :
-    Check(), features_(std::vector<FeatureId> {id}) {}
+    AllAdjIsNoneOfFeatures(const FeatureId id) :
+        Check(), features_(std::vector<FeatureId> {id}) {}
 
-  bool isCheckingCells()          const override {return true;}
-  bool check(const Cell& c)       const override;
+    bool isCheckingCells()          const override {return true;}
+    bool check(const Cell& c)       const override;
 private:
-  std::vector<FeatureId> features_;
+    std::vector<FeatureId> features_;
 };
 
 } //CellCheck
@@ -231,9 +231,9 @@ bool isMapConnected(const bool blocked[MAP_W][MAP_H]);
 struct IsCloserToPos
 {
 public:
-  IsCloserToPos(const Pos& p) : p_(p) {}
-  bool operator()(const Pos& p1, const Pos& p2);
-  Pos p_;
+    IsCloserToPos(const Pos& p) : p_(p) {}
+    bool operator()(const Pos& p1, const Pos& p2);
+    Pos p_;
 };
 
 namespace FloodFill

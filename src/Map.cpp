@@ -18,40 +18,40 @@
 using namespace std;
 
 Cell::Cell() :
-  isExplored          (false),
-  isSeenByPlayer      (false),
-  isLit               (false),
-  isDark              (false),
-  item                (nullptr),
-  rigid               (nullptr),
-  playerVisualMemory  (CellRenderData()),
-  pos                 (Pos(-1, -1)) {}
+    isExplored          (false),
+    isSeenByPlayer      (false),
+    isLit               (false),
+    isDark              (false),
+    item                (nullptr),
+    rigid               (nullptr),
+    playerVisualMemory  (CellRenderData()),
+    pos                 (Pos(-1, -1)) {}
 
 Cell::~Cell()
 {
-  if (rigid) {delete rigid;}
-  if (item)  {delete item;}
+    if (rigid) {delete rigid;}
+    if (item)  {delete item;}
 }
 
 void Cell::reset()
 {
-  isExplored = isSeenByPlayer = isLit = isDark = false;
+    isExplored = isSeenByPlayer = isLit = isDark = false;
 
-  playerVisualMemory = CellRenderData();
+    playerVisualMemory = CellRenderData();
 
-  pos.set(-1, -1);
+    pos.set(-1, -1);
 
-  if (rigid)
-  {
-    delete rigid;
-    rigid = nullptr;
-  }
+    if (rigid)
+    {
+        delete rigid;
+        rigid = nullptr;
+    }
 
-  if (item)
-  {
-    delete item;
-    item = nullptr;
-  }
+    if (item)
+    {
+        delete item;
+        item = nullptr;
+    }
 }
 
 namespace Map
@@ -68,171 +68,171 @@ namespace
 
 void resetCells(const bool MAKE_STONE_WALLS)
 {
-  for (int x = 0; x < MAP_W; ++x)
-  {
-    for (int y = 0; y < MAP_H; ++y)
+    for (int x = 0; x < MAP_W; ++x)
     {
-      cells[x][y].reset();
-      cells[x][y].pos = Pos(x, y);
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            cells[x][y].reset();
+            cells[x][y].pos = Pos(x, y);
 
-      roomMap[x][y]   = nullptr;
+            roomMap[x][y]   = nullptr;
 
-      Render::renderArray[x][y]         = CellRenderData();
-      Render::renderArrayNoActors[x][y] = CellRenderData();
+            Render::renderArray[x][y]         = CellRenderData();
+            Render::renderArrayNoActors[x][y] = CellRenderData();
 
-      if (MAKE_STONE_WALLS) {put(new Wall(Pos(x, y)));}
+            if (MAKE_STONE_WALLS) {put(new Wall(Pos(x, y)));}
+        }
     }
-  }
 }
 
 } //Namespace
 
 void init()
 {
-  dlvl = 0;
+    dlvl = 0;
 
-  roomList.clear();
+    roomList.clear();
 
-  resetCells(false);
+    resetCells(false);
 
-  if (player) {delete player; player = nullptr;}
+    if (player) {delete player; player = nullptr;}
 
-  const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
-  player = static_cast<Player*>(ActorFactory::mk(ActorId::player, playerPos));
+    const Pos playerPos(PLAYER_START_X, PLAYER_START_Y);
+    player = static_cast<Player*>(ActorFactory::mk(ActorId::player, playerPos));
 
-  ActorFactory::deleteAllMon();
+    ActorFactory::deleteAllMon();
 
-  GameTime::eraseAllMobs();
-  GameTime::resetTurnTypeAndActorCounters();
+    GameTime::eraseAllMobs();
+    GameTime::resetTurnTypeAndActorCounters();
 }
 
 void cleanup()
 {
-  player = nullptr; //Note: GameTime has deleted player at this point
+    player = nullptr; //Note: GameTime has deleted player at this point
 
-  resetMap();
+    resetMap();
 
-  for (int x = 0; x < MAP_W; ++x)
-  {
-    for (int y = 0; y < MAP_H; ++y)
+    for (int x = 0; x < MAP_W; ++x)
     {
-      delete cells[x][y].rigid;
-      cells[x][y].rigid = nullptr;
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            delete cells[x][y].rigid;
+            cells[x][y].rigid = nullptr;
+        }
     }
-  }
 }
 
 void storeToSaveLines(vector<string>& lines)
 {
-  lines.push_back(toStr(dlvl));
+    lines.push_back(toStr(dlvl));
 }
 
 void setupFromSaveLines(vector<string>& lines)
 {
-  dlvl = toInt(lines.front());
-  lines.erase(begin(lines));
+    dlvl = toInt(lines.front());
+    lines.erase(begin(lines));
 }
 
 void resetMap()
 {
-  ActorFactory::deleteAllMon();
+    ActorFactory::deleteAllMon();
 
-  for (auto* room : roomList) {delete room;}
-  roomList.clear();
+    for (auto* room : roomList) {delete room;}
+    roomList.clear();
 
-  resetCells(true);
-  GameTime::eraseAllMobs();
-  GameTime::resetTurnTypeAndActorCounters();
+    resetCells(true);
+    GameTime::eraseAllMobs();
+    GameTime::resetTurnTypeAndActorCounters();
 }
 
 Rigid* put(Rigid* const f)
 {
-  assert(f);
+    assert(f);
 
-  const Pos p     = f->getPos();
-  Cell&     cell  = cells[p.x][p.y];
+    const Pos p     = f->getPos();
+    Cell&     cell  = cells[p.x][p.y];
 
-  delete cell.rigid;
+    delete cell.rigid;
 
-  cell.rigid = f;
+    cell.rigid = f;
 
 #ifdef DEMO_MODE
-  if (f->getId() == FeatureId::floor)
-  {
-    for (int x = 0; x < MAP_W; ++x)
+    if (f->getId() == FeatureId::floor)
     {
-      for (int y = 0; y < MAP_H; ++y)
-      {
-        Map::cells[x][y].isSeenByPlayer = Map::cells[x][y].isExplored = true;
-      }
+        for (int x = 0; x < MAP_W; ++x)
+        {
+            for (int y = 0; y < MAP_H; ++y)
+            {
+                Map::cells[x][y].isSeenByPlayer = Map::cells[x][y].isExplored = true;
+            }
+        }
+        Render::drawMap();
+        Render::drawGlyph('X', Panel::map, p, clrYellow);
+        Render::updateScreen();
+        SdlWrapper::sleep(10); //Note: Delay must be > 1 for user input to be read
     }
-    Render::drawMap();
-    Render::drawGlyph('X', Panel::map, p, clrYellow);
-    Render::updateScreen();
-    SdlWrapper::sleep(10); //Note: Delay must be > 1 for user input to be read
-  }
 #endif // DEMO_MODE
 
-  return f;
+    return f;
 }
 
 void updateVisualMemory()
 {
-  for (int x = 0; x < MAP_W; ++x)
-  {
-    for (int y = 0; y < MAP_H; ++y)
+    for (int x = 0; x < MAP_W; ++x)
     {
-      cells[x][y].playerVisualMemory = Render::renderArrayNoActors[x][y];
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            cells[x][y].playerVisualMemory = Render::renderArrayNoActors[x][y];
+        }
     }
-  }
 }
 
 void mkBlood(const Pos& origin)
 {
-  for (int dx = -1; dx <= 1; ++dx)
-  {
-    for (int dy = -1; dy <= 1; ++dy)
+    for (int dx = -1; dx <= 1; ++dx)
     {
-      const Pos c = origin + Pos(dx, dy);
-      Rigid* const f  = cells[c.x][c.y].rigid;
-      if (f->canHaveBlood())
-      {
-        if (Rnd::oneIn(3)) {f->mkBloody();}
-      }
+        for (int dy = -1; dy <= 1; ++dy)
+        {
+            const Pos c = origin + Pos(dx, dy);
+            Rigid* const f  = cells[c.x][c.y].rigid;
+            if (f->canHaveBlood())
+            {
+                if (Rnd::oneIn(3)) {f->mkBloody();}
+            }
+        }
     }
-  }
 }
 
 void mkGore(const Pos& origin)
 {
-  for (int dx = -1; dx <= 1; ++dx)
-  {
-    for (int dy = -1; dy <= 1; ++dy)
+    for (int dx = -1; dx <= 1; ++dx)
     {
-      const Pos c = origin + Pos(dx, dy);
-      if (Rnd::oneIn(3)) {cells[c.x][c.y].rigid->tryPutGore();}
+        for (int dy = -1; dy <= 1; ++dy)
+        {
+            const Pos c = origin + Pos(dx, dy);
+            if (Rnd::oneIn(3)) {cells[c.x][c.y].rigid->tryPutGore();}
+        }
     }
-  }
 }
 
 void deleteAndRemoveRoomFromList(Room* const room)
 {
-  for (size_t i = 0; i < roomList.size(); ++i)
-  {
-    if (roomList[i] == room)
+    for (size_t i = 0; i < roomList.size(); ++i)
     {
-      delete room;
-      roomList.erase(roomList.begin() + i);
-      return;
+        if (roomList[i] == room)
+        {
+            delete room;
+            roomList.erase(roomList.begin() + i);
+            return;
+        }
     }
-  }
-  assert(false && "Tried to remove non-existing room");
+    assert(false && "Tried to remove non-existing room");
 }
 
 bool isPosSeenByPlayer(const Pos& p)
 {
-  assert(Utils::isPosInsideMap(p));
-  return cells[p.x][p.y].isSeenByPlayer;
+    assert(Utils::isPosInsideMap(p));
+    return cells[p.x][p.y].isSeenByPlayer;
 }
 
 } //Map

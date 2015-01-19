@@ -5,12 +5,12 @@ class Actor;
 
 enum class ReloadResult
 {
-  success,
-  noAmmo,
-  notCarryingWpn,
-  alreadyFull,
-  wpnNotUsingAmmo,
-  fumble
+    success,
+    noAmmo,
+    notCarryingWpn,
+    alreadyFull,
+    wpnNotUsingAmmo,
+    fumble
 };
 
 namespace Reload

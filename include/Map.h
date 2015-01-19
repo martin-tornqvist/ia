@@ -16,27 +16,27 @@ class Rigid;
 
 struct Cell
 {
-  Cell();
-  ~Cell();
+    Cell();
+    ~Cell();
 
-  void reset();
+    void reset();
 
-  bool            isExplored, isSeenByPlayer, isLit, isDark;
-  Item*           item;
-  Rigid*          rigid;
-  CellRenderData  playerVisualMemory;
-  Pos             pos;
+    bool            isExplored, isSeenByPlayer, isLit, isDark;
+    Item*           item;
+    Rigid*          rigid;
+    CellRenderData  playerVisualMemory;
+    Pos             pos;
 };
 
 enum class MapType
 {
-  intro,
-  std,
-  egypt,
-  leng,
-  ratsInTheWalls,
-  boss,
-  trapezohedron
+    intro,
+    std,
+    egypt,
+    leng,
+    ratsInTheWalls,
+    boss,
+    trapezohedron
 };
 
 namespace Map

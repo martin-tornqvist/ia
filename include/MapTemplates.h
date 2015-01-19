@@ -10,44 +10,44 @@
 
 enum class MapTemplId
 {
-  church,
-  egypt,
-  leng,
-  ratsInTheWalls,
-  bossLevel,
-  END
+    church,
+    egypt,
+    leng,
+    ratsInTheWalls,
+    bossLevel,
+    END
 };
 
 struct MapTemplCell
 {
-  MapTemplCell(FeatureId featureId_ = FeatureId::END,
-               ActorId actorId_     = ActorId::END,
-               ItemId itemId_       = ItemId::END,
-               int val_             = 0) :
-    featureId (featureId_),
-    actorId   (actorId_),
-    itemId    (itemId_),
-    val       (val_) {}
+    MapTemplCell(FeatureId featureId_ = FeatureId::END,
+                 ActorId actorId_     = ActorId::END,
+                 ItemId itemId_       = ItemId::END,
+                 int val_             = 0) :
+        featureId (featureId_),
+        actorId   (actorId_),
+        itemId    (itemId_),
+        val       (val_) {}
 
-  FeatureId featureId;
-  ActorId   actorId;
-  ItemId    itemId;
-  int       val; //Can be used for different things depending on context
+    FeatureId featureId;
+    ActorId   actorId;
+    ItemId    itemId;
+    int       val; //Can be used for different things depending on context
 };
 
 struct MapTempl
 {
 public:
-  MapTempl() {cells_.clear();}
+    MapTempl() {cells_.clear();}
 
-  const MapTemplCell& getCell(const int X, const int Y) const {return cells_[Y][X];}
+    const MapTemplCell& getCell(const int X, const int Y) const {return cells_[Y][X];}
 
-  void addRow(std::vector<MapTemplCell>& row) {cells_.push_back(row);}
+    void addRow(std::vector<MapTemplCell>& row) {cells_.push_back(row);}
 
-  Pos getDims() const {return Pos(cells_.back().size(), cells_.size());}
+    Pos getDims() const {return Pos(cells_.back().size(), cells_.size());}
 
 private:
-  std::vector< std::vector<MapTemplCell> > cells_;
+    std::vector< std::vector<MapTemplCell> > cells_;
 };
 
 namespace MapTemplHandling

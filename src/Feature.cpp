@@ -21,40 +21,40 @@ const FeatureDataT& Feature::getData() const {return FeatureData::getData(getId(
 
 void Feature::bump(Actor& actorBumping)
 {
-  bool props[size_t(PropId::END)];
-  actorBumping.getPropHandler().getPropIds(props);
+    bool props[size_t(PropId::END)];
+    actorBumping.getPropHandler().getPropIds(props);
 
-  if (!canMove(props))
-  {
-    if (actorBumping.isPlayer())
+    if (!canMove(props))
     {
-      if (Map::player->getPropHandler().allowSee())
-      {
-        Log::addMsg(getData().msgOnPlayerBlocked);
-      }
-      else
-      {
-        Log::addMsg(getData().msgOnPlayerBlockedBlind);
-      }
+        if (actorBumping.isPlayer())
+        {
+            if (Map::player->getPropHandler().allowSee())
+            {
+                Log::addMsg(getData().msgOnPlayerBlocked);
+            }
+            else
+            {
+                Log::addMsg(getData().msgOnPlayerBlockedBlind);
+            }
+        }
     }
-  }
 }
 
 void Feature::addLight(bool light[MAP_W][MAP_H]) const
 {
-  (void)light;
+    (void)light;
 }
 
 bool Feature::canMoveCmn() const {return getData().moveRules.canMoveCmn();}
 
 bool Feature::canMove(const bool actorPropIds[size_t(PropId::END)]) const
 {
-  return getData().moveRules.canMove(actorPropIds);
+    return getData().moveRules.canMove(actorPropIds);
 }
 
 void Feature::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
 {
-  (void)dmgType; (void)dmgMethod; (void)actor;
+    (void)dmgType; (void)dmgMethod; (void)actor;
 }
 
 bool      Feature::isSoundPassable()      const {return getData().isSoundPassable;}

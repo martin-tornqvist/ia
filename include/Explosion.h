@@ -17,15 +17,15 @@ namespace Explosion
 {
 
 void runExplosionAt(
-  const Pos& origin,
-  const ExplType  explType,
-  const ExplSrc   explSrc             = ExplSrc::misc,
-  const int RADI_CHANGE               = 0,
-  const SfxId sfx                     = SfxId::explosion,
-  Prop* const prop                    = nullptr,
-  const Clr* const clrOverride  = nullptr);
+    const Pos&      origin,
+    const ExplType  explType,
+    const ExplSrc   explSrc         = ExplSrc::misc,
+    const int       RADI_CHANGE     = 0,
+    const SfxId     sfx             = SfxId::explosion,
+    Prop* const     prop            = nullptr,
+    const Clr* const clrOverride    = nullptr);
 
-void runSmokeExplosionAt(const Pos& origin/*, const int SMOKE_DURATION = -1*/);
+void runSmokeExplosionAt(const Pos& origin);
 
 } //Explosion
 

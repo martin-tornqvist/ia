@@ -5,59 +5,59 @@
 
 enum class SfxId
 {
-  //Monster sounds
-  dogSnarl,
-  wolfHowl,
-  zombieGrowl,
-  ghoulGrowl,
-  oozeGurgle,
-  flappingWings,
+    //Monster sounds
+    dogSnarl,
+    wolfHowl,
+    zombieGrowl,
+    ghoulGrowl,
+    oozeGurgle,
+    flappingWings,
 
-  //Weapon and attack sounds
-  hitSmall, hitMedium, hitHard, hitCorpseBreak,
-  missLight, missMedium, missHeavy,
-  hitSharp,
-  pistolFire,
-  pistolReload,
-  shotgunSawedOffFire,
-  shotgunPumpFire,
-  shotgunReload,
-  machineGunFire,
-  machineGunReload,
-  migoGunFire,
-  spikeGun,
+    //Weapon and attack sounds
+    hitSmall, hitMedium, hitHard, hitCorpseBreak,
+    missLight, missMedium, missHeavy,
+    hitSharp,
+    pistolFire,
+    pistolReload,
+    shotgunSawedOffFire,
+    shotgunPumpFire,
+    shotgunReload,
+    machineGunFire,
+    machineGunReload,
+    migoGunFire,
+    spikeGun,
 
-  //Environment action sounds
-  metalClank,
-  ricochet,
-  explosion,
-  explosionMolotov,
-  doorOpen, doorClose, doorBang, doorBreak,
-  tombOpen,
-  fountainDrink,
-  bossVoice1, bossVoice2,
+    //Environment action sounds
+    metalClank,
+    ricochet,
+    explosion,
+    explosionMolotov,
+    doorOpen, doorClose, doorBang, doorBreak,
+    tombOpen,
+    fountainDrink,
+    bossVoice1, bossVoice2,
 
-  //User interface sounds
-  backpack,
-  pickup,
-  electricLantern,
-  potionQuaff,
-  spellGeneric,
-  insanityRise,
-  glop,
-  death,
+    //User interface sounds
+    backpack,
+    pickup,
+    electricLantern,
+    potionQuaff,
+    spellGeneric,
+    insanityRise,
+    glop,
+    death,
 
-  //Ambient sounds
-  AMB_START,
-  amb001, amb002, amb003, amb004, amb005, amb006, amb007, amb008, amb009, amb010, amb011,
-  amb012, amb013, amb014, amb015, amb016, amb017, amb018, amb019, amb020, amb021, amb022,
-  amb023, amb024, amb025, amb026, amb027, amb028, amb029, amb030, amb031, amb032, amb033,
-  amb034, amb035, amb036, amb037,
-  AMB_END,
+    //Ambient sounds
+    AMB_START,
+    amb001, amb002, amb003, amb004, amb005, amb006, amb007, amb008, amb009, amb010, amb011,
+    amb012, amb013, amb014, amb015, amb016, amb017, amb018, amb019, amb020, amb021, amb022,
+    amb023, amb024, amb025, amb026, amb027, amb028, amb029, amb030, amb031, amb032, amb033,
+    amb034, amb035, amb036, amb037,
+    AMB_END,
 
-  musCthulhiana_Madness,
+    musCthulhiana_Madness,
 
-  END
+    END
 };
 
 namespace Audio

@@ -33,24 +33,24 @@ class   Room;
 
 enum class RoomType
 {
-  //Standard rooms (standardized feature spawning and reshaping)
-  plain, //Note: "plain" must be the first type
-  human,
-  ritual,
-  spider,
-  crypt,
-  monster,
-  flooded,
-  muddy,
-  cave,
-  chasm,
-  forest,
-  END_OF_STD_ROOMS,
+    //Standard rooms (standardized feature spawning and reshaping)
+    plain, //Note: "plain" must be the first type
+    human,
+    ritual,
+    spider,
+    crypt,
+    monster,
+    flooded,
+    muddy,
+    cave,
+    chasm,
+    forest,
+    END_OF_STD_ROOMS,
 
-  //Exceptional room types
-  corrLink,
-  crumbleRoom,
-  river
+    //Exceptional room types
+    corrLink,
+    crumbleRoom,
+    river
 };
 
 namespace RoomFactory
@@ -68,276 +68,276 @@ Room* mkRandomAllowedStdRoom(const Rect& r, const bool IS_SUBROOM);
 class Room
 {
 public:
-  Room(Rect r, RoomType type);
+    Room(Rect r, RoomType type);
 
-  Room() = delete;
+    Room() = delete;
 
-  virtual ~Room() {}
+    virtual ~Room() {}
 
-  virtual void onPreConnect (bool doorProposals[MAP_W][MAP_H]) = 0;
-  virtual void onPostConnect(bool doorProposals[MAP_W][MAP_H]) = 0;
+    virtual void onPreConnect (bool doorProposals[MAP_W][MAP_H]) = 0;
+    virtual void onPostConnect(bool doorProposals[MAP_W][MAP_H]) = 0;
 
-  Rect                r_;
-  const RoomType      type_;
-  bool                isSubRoom_;
-  std::vector<Room*>  roomsConTo_;
-  std::vector<Room*>  subRooms_;
+    Rect                r_;
+    const RoomType      type_;
+    bool                isSubRoom_;
+    std::vector<Room*>  roomsConTo_;
+    std::vector<Room*>  subRooms_;
 
 protected:
-  void mkDrk() const;
+    void mkDrk() const;
 };
 
 class StdRoom : public Room
 {
 public:
-  StdRoom(Rect r, RoomType type) : Room(r, type) {}
+    StdRoom(Rect r, RoomType type) : Room(r, type) {}
 
-  virtual ~StdRoom() {}
+    virtual ~StdRoom() {}
 
-  void onPreConnect (bool doorProposals[MAP_W][MAP_H]) override final;
-  void onPostConnect(bool doorProposals[MAP_W][MAP_H]) override final;
+    void onPreConnect (bool doorProposals[MAP_W][MAP_H]) override final;
+    void onPostConnect(bool doorProposals[MAP_W][MAP_H]) override final;
 
-  virtual bool isAllowed() const {return true;}
+    virtual bool isAllowed() const {return true;}
 
 protected:
-  virtual Range getNrAutoFeaturesAllowed()  const = 0;
-  virtual int   getBasePctChanceDrk()      const = 0;
+    virtual Range getNrAutoFeaturesAllowed()  const = 0;
+    virtual int   getBasePctChanceDrk()      const = 0;
 
-  size_t tryGetAutoFeaturePlacement(
-    const std::vector<Pos>& adjToWalls, const std::vector<Pos>& awayFromWalls,
-    const std::vector<const FeatureDataT*>& featureDataBucket, Pos& posRef) const;
+    size_t tryGetAutoFeaturePlacement(
+        const std::vector<Pos>& adjToWalls, const std::vector<Pos>& awayFromWalls,
+        const std::vector<const FeatureDataT*>& featureDataBucket, Pos& posRef) const;
 
-  int placeAutoFeatures();
+    int placeAutoFeatures();
 
-  virtual void onPreConnect_ (bool doorProposals[MAP_W][MAP_H]) = 0;
-  virtual void onPostConnect_(bool doorProposals[MAP_W][MAP_H]) = 0;
+    virtual void onPreConnect_ (bool doorProposals[MAP_W][MAP_H]) = 0;
+    virtual void onPostConnect_(bool doorProposals[MAP_W][MAP_H]) = 0;
 };
 
 class PlainRoom: public StdRoom
 {
 public:
-  PlainRoom(Rect r) : StdRoom(r, RoomType::plain) {}
+    PlainRoom(Rect r) : StdRoom(r, RoomType::plain) {}
 
-  ~PlainRoom() {}
+    ~PlainRoom() {}
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class HumanRoom: public StdRoom
 {
 public:
-  HumanRoom(Rect r) : StdRoom(r, RoomType::human) {}
+    HumanRoom(Rect r) : StdRoom(r, RoomType::human) {}
 
-  ~HumanRoom() {}
+    ~HumanRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class RitualRoom: public StdRoom
 {
 public:
-  RitualRoom(Rect r) : StdRoom(r, RoomType::ritual) {}
+    RitualRoom(Rect r) : StdRoom(r, RoomType::ritual) {}
 
-  ~RitualRoom() {}
+    ~RitualRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class SpiderRoom: public StdRoom
 {
 public:
-  SpiderRoom(Rect r) : StdRoom(r, RoomType::spider) {}
+    SpiderRoom(Rect r) : StdRoom(r, RoomType::spider) {}
 
-  ~SpiderRoom() {}
+    ~SpiderRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class CryptRoom: public StdRoom
 {
 public:
-  CryptRoom(Rect r) : StdRoom(r, RoomType::crypt) {}
+    CryptRoom(Rect r) : StdRoom(r, RoomType::crypt) {}
 
-  ~CryptRoom() {}
+    ~CryptRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class MonsterRoom: public StdRoom
 {
 public:
-  MonsterRoom(Rect r) : StdRoom(r, RoomType::monster) {}
+    MonsterRoom(Rect r) : StdRoom(r, RoomType::monster) {}
 
-  ~MonsterRoom() {}
+    ~MonsterRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class FloodedRoom: public StdRoom
 {
 public:
-  FloodedRoom(Rect r) : StdRoom(r, RoomType::flooded) {}
+    FloodedRoom(Rect r) : StdRoom(r, RoomType::flooded) {}
 
-  ~FloodedRoom() {}
+    ~FloodedRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class MuddyRoom: public StdRoom
 {
 public:
-  MuddyRoom(Rect r) : StdRoom(r, RoomType::muddy) {}
+    MuddyRoom(Rect r) : StdRoom(r, RoomType::muddy) {}
 
-  ~MuddyRoom() {}
+    ~MuddyRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class CaveRoom: public StdRoom
 {
 public:
-  CaveRoom(Rect r) : StdRoom(r, RoomType::cave) {}
+    CaveRoom(Rect r) : StdRoom(r, RoomType::cave) {}
 
-  ~CaveRoom() {}
+    ~CaveRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class ChasmRoom: public StdRoom
 {
 public:
-  ChasmRoom(Rect r) : StdRoom(r, RoomType::chasm) {}
+    ChasmRoom(Rect r) : StdRoom(r, RoomType::chasm) {}
 
-  ~ChasmRoom() {}
+    ~ChasmRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class ForestRoom: public StdRoom
 {
 public:
-  ForestRoom(Rect r) : StdRoom(r, RoomType::forest) {}
+    ForestRoom(Rect r) : StdRoom(r, RoomType::forest) {}
 
-  ~ForestRoom() {}
+    ~ForestRoom() {}
 
-  bool    isAllowed()                                       const override;
+    bool    isAllowed()                                       const override;
 
 protected:
-  Range   getNrAutoFeaturesAllowed()                        const override;
-  int     getBasePctChanceDrk()                             const override;
-  void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
-  void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
+    Range   getNrAutoFeaturesAllowed()                        const override;
+    int     getBasePctChanceDrk()                             const override;
+    void    onPreConnect_ (bool doorProposals[MAP_W][MAP_H])        override;
+    void    onPostConnect_(bool doorProposals[MAP_W][MAP_H])        override;
 };
 
 class CorrLinkRoom: public Room
 {
 public:
-  CorrLinkRoom(const Rect& r) : Room(r, RoomType::corrLink) {}
+    CorrLinkRoom(const Rect& r) : Room(r, RoomType::corrLink) {}
 
-  ~CorrLinkRoom() {}
+    ~CorrLinkRoom() {}
 
-  void onPreConnect(bool doorProposals[MAP_W][MAP_H]) override
-  {
-    (void)doorProposals;
-  }
+    void onPreConnect(bool doorProposals[MAP_W][MAP_H]) override
+    {
+        (void)doorProposals;
+    }
 
-  void onPostConnect(bool doorProposals[MAP_W][MAP_H]) override
-  {
-    (void)doorProposals;
-  }
+    void onPostConnect(bool doorProposals[MAP_W][MAP_H]) override
+    {
+        (void)doorProposals;
+    }
 };
 
 class CrumbleRoom: public Room
 {
 public:
-  CrumbleRoom(const Rect& r) : Room(r, RoomType::crumbleRoom) {}
+    CrumbleRoom(const Rect& r) : Room(r, RoomType::crumbleRoom) {}
 
-  ~CrumbleRoom() {}
+    ~CrumbleRoom() {}
 
-  void onPreConnect(bool doorProposals[MAP_W][MAP_H]) override
-  {
-    (void)doorProposals;
-  }
+    void onPreConnect(bool doorProposals[MAP_W][MAP_H]) override
+    {
+        (void)doorProposals;
+    }
 
-  void onPostConnect(bool doorProposals[MAP_W][MAP_H]) override
-  {
-    (void)doorProposals;
-  }
+    void onPostConnect(bool doorProposals[MAP_W][MAP_H]) override
+    {
+        (void)doorProposals;
+    }
 };
 
 class RiverRoom: public Room
 {
 public:
-  RiverRoom(const Rect& r) : Room(r, RoomType::river), dir_(HorizontalVertical::hor) {}
+    RiverRoom(const Rect& r) : Room(r, RoomType::river), dir_(HorizontalVertical::hor) {}
 
-  ~RiverRoom() {}
+    ~RiverRoom() {}
 
-  void onPreConnect(bool doorProposals[MAP_W][MAP_H]) override;
+    void onPreConnect(bool doorProposals[MAP_W][MAP_H]) override;
 
-  void onPostConnect(bool doorProposals[MAP_W][MAP_H]) override
-  {
-    (void)doorProposals;
-  }
+    void onPostConnect(bool doorProposals[MAP_W][MAP_H]) override
+    {
+        (void)doorProposals;
+    }
 
-  HorizontalVertical dir_;
+    HorizontalVertical dir_;
 };
 
 #endif

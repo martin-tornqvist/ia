@@ -5,47 +5,47 @@ class Actor;
 
 enum class AbilityId
 {
-  empty,
-  searching,
-  ranged,
-  melee,
-  dodgeTrap,
-  dodgeAtt,
-  stealth,
-  END
+    empty,
+    searching,
+    ranged,
+    melee,
+    dodgeTrap,
+    dodgeAtt,
+    stealth,
+    END
 };
 
 //Each actor has an instance of this class
 class AbilityVals
 {
 public:
-  AbilityVals() {reset();}
+    AbilityVals() {reset();}
 
-  AbilityVals& operator=(const AbilityVals& other)
-  {
-    for (int i = 0; i < int(AbilityId::END); ++i)
+    AbilityVals& operator=(const AbilityVals& other)
     {
-      abilityList[i] = other.abilityList[i];
+        for (int i = 0; i < int(AbilityId::END); ++i)
+        {
+            abilityList[i] = other.abilityList[i];
+        }
+        return *this;
     }
-    return *this;
-  }
 
-  void reset();
+    void reset();
 
-  int getVal(const AbilityId abilityId, const bool IS_AFFECTED_BY_PROPS,
-             Actor& actor) const;
+    int getVal(const AbilityId abilityId, const bool IS_AFFECTED_BY_PROPS,
+               Actor& actor) const;
 
-  int getRawVal(const AbilityId ability)
-  {
-    return abilityList[int(ability)];
-  }
+    int getRawVal(const AbilityId ability)
+    {
+        return abilityList[int(ability)];
+    }
 
-  void setVal(const AbilityId ability, const int VAL);
+    void setVal(const AbilityId ability, const int VAL);
 
-  void changeVal(const AbilityId ability, const int CHANGE);
+    void changeVal(const AbilityId ability, const int CHANGE);
 
 private:
-  int abilityList[int(AbilityId::END)];
+    int abilityList[int(AbilityId::END)];
 };
 
 //TODO: Is this really necessary? Most functionality nowadays just roll their own chances.
@@ -54,14 +54,14 @@ private:
 //together with AbilityVals::getVal() for retrieving abilities to roll against.
 enum AbilityRollResult
 {
-  failCritical,
-  failBig,
-  failNormal,
-  failSmall,
-  successSmall,
-  successNormal,
-  successBig,
-  successCritical
+    failCritical,
+    failBig,
+    failNormal,
+    failSmall,
+    successSmall,
+    successNormal,
+    successBig,
+    successCritical
 };
 
 //TODO: See comment above for AbilityRollResult
