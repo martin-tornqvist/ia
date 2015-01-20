@@ -1550,9 +1550,9 @@ Tomb::Tomb(const Pos& pos) :
     trait_          (TombTrait::END)
 {
     //Contained items
-    const int NR_ITEMS_MIN = Rnd::oneIn(3) ? 0 : 1;
-    const int NR_ITEMS_MAX = NR_ITEMS_MIN +
-                             (PlayerBon::traitsPicked[int(Trait::treasureHunter)] ? 1 : 0);
+    const int NR_ITEMS_MIN  = Rnd::oneIn(3) ? 0 : 1;
+    const int NR_ITEMS_MAX  = NR_ITEMS_MIN +
+                              (PlayerBon::traits[int(Trait::treasureHunter)] ? 1 : 0);
 
     itemContainer_.init(FeatureId::tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
@@ -1701,9 +1701,10 @@ void Tomb::bump(Actor& actorBumping)
                 }
                 else //Not weakened
                 {
-                    const int BON = PlayerBon::traitsPicked[int(Trait::unbreakable)]  ? 12  :
-                                    PlayerBon::traitsPicked[int(Trait::rugged)]       ? 8   :
-                                    PlayerBon::traitsPicked[int(Trait::tough)]        ? 4   : 0;
+                    const int BON =
+                        PlayerBon::traits[int(Trait::unbreakable)]  ? 12  :
+                        PlayerBon::traits[int(Trait::rugged)]       ? 8   :
+                        PlayerBon::traits[int(Trait::tough)]        ? 4   : 0;
 
                     TRACE << "Base chance to push lid is: 1 in "  << pushLidOneInN_ << endl;
                     TRACE << "Bonus to roll: "                    << BON << endl;
@@ -1750,9 +1751,10 @@ void Tomb::bump(Actor& actorBumping)
 
 void Tomb::trySprainPlayer()
 {
-    const int SPRAIN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::unbreakable)]  ? 10 :
-                                PlayerBon::traitsPicked[int(Trait::rugged)]       ? 8  :
-                                PlayerBon::traitsPicked[int(Trait::tough)]        ? 6  : 4;
+    const int SPRAIN_ONE_IN_N =
+        PlayerBon::traits[int(Trait::unbreakable)]  ? 10 :
+        PlayerBon::traits[int(Trait::rugged)]       ? 8  :
+        PlayerBon::traits[int(Trait::tough)]        ? 6  : 4;
 
     if (Rnd::oneIn(SPRAIN_ONE_IN_N))
     {
@@ -1902,7 +1904,7 @@ Chest::Chest(const Pos& pos) :
     matl_               (ChestMatl(Rnd::range(0, int(ChestMatl::END) - 1))),
     TRAP_DET_LVL        (Rnd::range(0, 2))
 {
-    const bool  IS_TREASURE_HUNTER  = PlayerBon::traitsPicked[int(Trait::treasureHunter)];
+    const bool  IS_TREASURE_HUNTER  = PlayerBon::traits[int(Trait::treasureHunter)];
     const int   NR_ITEMS_MIN        = Rnd::oneIn(10)      ? 0 : 1;
     const int   NR_ITEMS_MAX        = IS_TREASURE_HUNTER  ? 3 : 2;
 
@@ -1959,8 +1961,8 @@ void Chest::tryFindTrap()
 
     const bool CAN_DET_TRAP =
         TRAP_DET_LVL == 0                               ||
-        PlayerBon::traitsPicked[int(Trait::perceptive)] ||
-        (TRAP_DET_LVL == 1 && PlayerBon::traitsPicked[int(Trait::observant)]);
+        PlayerBon::traits[int(Trait::perceptive)] ||
+        (TRAP_DET_LVL == 1 && PlayerBon::traits[int(Trait::observant)]);
 
     if (CAN_DET_TRAP)
     {
@@ -1972,9 +1974,11 @@ void Chest::tryFindTrap()
 
 void Chest::trySprainPlayer()
 {
-    const int SPRAIN_ONE_IN_N = PlayerBon::traitsPicked[int(Trait::unbreakable)]  ? 10 :
-                                PlayerBon::traitsPicked[int(Trait::rugged)]       ? 8  :
-                                PlayerBon::traitsPicked[int(Trait::tough)]        ? 6  : 4;
+    const int SPRAIN_ONE_IN_N =
+        PlayerBon::traits[int(Trait::unbreakable)]  ? 10 :
+        PlayerBon::traits[int(Trait::rugged)]       ? 8  :
+        PlayerBon::traits[int(Trait::tough)]        ? 6  : 4;
+
     if (Rnd::oneIn(SPRAIN_ONE_IN_N))
     {
         Log::addMsg("I sprain myself.", clrMsgBad);
@@ -1993,7 +1997,6 @@ void Chest::playerLoot()
     else //Not empty
     {
         Log::addMsg("There are some items inside.", clrWhite, false, true);
-
         itemContainer_.open(pos_, Map::player);
     }
 }
@@ -2033,7 +2036,8 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
         {
             if (!Map::player->getPropHandler().allowSee())
             {
-                //If player is blind, call the parent hit function instead (generic kicking)
+                //If player is blind, call the parent hit function instead
+                //(generic kicking)
                 Rigid::hit(dmgType, dmgMethod, Map::player);
             }
             else if (!isLocked_)
@@ -2066,9 +2070,9 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
                     }
 
                     const int OPEN_ONE_IN_N =
-                        PlayerBon::traitsPicked[int(Trait::unbreakable)]  ? 1 :
-                        PlayerBon::traitsPicked[int(Trait::rugged)]       ? 2 :
-                        PlayerBon::traitsPicked[int(Trait::tough)]        ? 3 : 4;
+                        PlayerBon::traits[int(Trait::unbreakable)]  ? 1 :
+                        PlayerBon::traits[int(Trait::rugged)]       ? 2 :
+                        PlayerBon::traits[int(Trait::tough)]        ? 3 : 4;
 
                     if (Rnd::oneIn(OPEN_ONE_IN_N))
                     {
@@ -2316,8 +2320,8 @@ DidTriggerTrap Chest::triggerTrap(Actor* const actor)
             prop = new PropParalyzed(PropTurns::std);
             prop->turnsLeft_ *= 2;
         }
-        Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
-                                  prop, &fumeClr);
+        Explosion::runExplosionAt(pos_, ExplType::applyProp, ExplSrc::misc, 0,
+                                  SfxId::END, prop, &fumeClr);
     }
     return DidTriggerTrap::yes;
 }
@@ -2391,7 +2395,6 @@ Fountain::Fountain(const Pos& pos) :
     case FountainMatl::gold:
         vector<FountainEffect> effectBucket
         {
-            FountainEffect::bless,
             FountainEffect::refreshing,
             FountainEffect::spirit,
             FountainEffect::vitality,
@@ -2452,147 +2455,151 @@ string Fountain::getName(const Article article) const
 
 void Fountain::bump(Actor& actorBumping)
 {
-    if (actorBumping.isPlayer())
+    if (!actorBumping.isPlayer())
     {
-        if (nrDrinksLeft_ <= 0)
-        {
-            Log::addMsg("The fountain is dried out.");
-        }
-        else
-        {
-            PropHandler& propHlr = Map::player->getPropHandler();
+        return;
+    }
 
-            if (!propHlr.allowSee())
+    if (nrDrinksLeft_ <= 0)
+    {
+        Log::addMsg("The fountain is dried out.");
+    }
+    else
+    {
+        PropHandler& propHlr = Map::player->getPropHandler();
+
+        if (!propHlr.allowSee())
+        {
+            Log::clearLog();
+            Log::addMsg("There is a fountain here. Drink from it? [y/n]");
+            Render::drawMapAndInterface();
+
+            const auto answer = Query::yesOrNo();
+
+            if (answer == YesNoAnswer::no)
             {
                 Log::clearLog();
-                Log::addMsg("There is a fountain here. Drink from it? [y/n]");
+                Log::addMsg("I leave the fountain for now.");
                 Render::drawMapAndInterface();
-                const auto answer = Query::yesOrNo();
-                if (answer == YesNoAnswer::no)
-                {
-                    Log::clearLog();
-                    Log::addMsg("I leave the fountain for now.");
-                    Render::drawMapAndInterface();
-                    return;
-                }
+                return;
             }
-
-            Log::clearLog();
-            Log::addMsg("I drink from the fountain...");
-
-            Audio::play(SfxId::fountainDrink);
-
-            for (auto effect : fountainEffects_)
-            {
-                switch (effect)
-                {
-                case FountainEffect::refreshing:
-                {
-                    Log::addMsg("It's very refreshing.");
-                    Map::player->restoreHp(1, false);
-                    Map::player->restoreSpi(1, false);
-                    Map::player->restoreShock(5, false);
-                } break;
-
-                case FountainEffect::bless:
-                {
-                    propHlr.tryApplyProp(new PropBlessed(PropTurns::std));
-                } break;
-
-                case FountainEffect::curse:
-                {
-                    propHlr.tryApplyProp(new PropCursed(PropTurns::std));
-                } break;
-
-                case FountainEffect::spirit:
-                {
-                    Map::player->restoreSpi(2, true, true);
-                } break;
-
-                case FountainEffect::vitality:
-                {
-                    Map::player->restoreHp(2, true, true);
-                } break;
-
-                case FountainEffect::disease:
-                {
-                    propHlr.tryApplyProp(new PropDiseased(PropTurns::specific, 50));
-                } break;
-
-                case FountainEffect::poison:
-                {
-                    propHlr.tryApplyProp(new PropPoisoned(PropTurns::std));
-                } break;
-
-                case FountainEffect::frenzy:
-                {
-                    propHlr.tryApplyProp(new PropFrenzied(PropTurns::std));
-                } break;
-
-                case FountainEffect::paralyze:
-                {
-                    propHlr.tryApplyProp(new PropParalyzed(PropTurns::std));
-                } break;
-
-                case FountainEffect::blind:
-                {
-                    propHlr.tryApplyProp(new PropBlind(PropTurns::std));
-                } break;
-
-                case FountainEffect::faint:
-                {
-                    propHlr.tryApplyProp(new PropFainted(PropTurns::specific, 10));
-                } break;
-
-                case FountainEffect::rFire:
-                {
-                    Prop* const prop = new PropRFire(PropTurns::std);
-                    prop->turnsLeft_ *= 2;
-                    propHlr.tryApplyProp(prop);
-                } break;
-
-                case FountainEffect::rCold:
-                {
-                    Prop* const prop = new PropRCold(PropTurns::std);
-                    prop->turnsLeft_ *= 2;
-                    propHlr.tryApplyProp(prop);
-                } break;
-
-                case FountainEffect::rElec:
-                {
-                    Prop* const prop = new PropRElec(PropTurns::std);
-                    prop->turnsLeft_ *= 2;
-                    propHlr.tryApplyProp(prop);
-                } break;
-
-                case FountainEffect::rConf:
-                {
-                    Prop* const prop = new PropRConfusion(PropTurns::std);
-                    prop->turnsLeft_ *= 2;
-                    propHlr.tryApplyProp(prop);
-                } break;
-
-                case FountainEffect::rFear:
-                {
-                    Prop* const prop = new PropRFear(PropTurns::std);
-                    prop->turnsLeft_ *= 2;
-                    propHlr.tryApplyProp(prop);
-                } break;
-
-                case FountainEffect::END: {}
-                    break;
-                }
-            }
-
-            --nrDrinksLeft_;
-
-            if (nrDrinksLeft_ <= 0)
-            {
-                Log::addMsg("The fountain dries out.");
-            }
-            Render::drawMapAndInterface();
-            GameTime::tick();
         }
+
+        if (!propHlr.allowEat(true))
+        {
+            return;
+        }
+
+        Log::clearLog();
+        Log::addMsg("I drink from the fountain...");
+
+        Audio::play(SfxId::fountainDrink);
+
+        for (auto effect : fountainEffects_)
+        {
+            switch (effect)
+            {
+            case FountainEffect::refreshing:
+            {
+                Log::addMsg("It's very refreshing.");
+                Map::player->restoreHp(1, false);
+                Map::player->restoreSpi(1, false);
+                Map::player->restoreShock(5, false);
+            } break;
+
+            case FountainEffect::curse:
+            {
+                propHlr.tryApplyProp(new PropCursed(PropTurns::std));
+            } break;
+
+            case FountainEffect::spirit:
+            {
+                Map::player->restoreSpi(2, true, true);
+            } break;
+
+            case FountainEffect::vitality:
+            {
+                Map::player->restoreHp(2, true, true);
+            } break;
+
+            case FountainEffect::disease:
+            {
+                propHlr.tryApplyProp(new PropDiseased(PropTurns::specific, 50));
+            } break;
+
+            case FountainEffect::poison:
+            {
+                propHlr.tryApplyProp(new PropPoisoned(PropTurns::std));
+            } break;
+
+            case FountainEffect::frenzy:
+            {
+                propHlr.tryApplyProp(new PropFrenzied(PropTurns::std));
+            } break;
+
+            case FountainEffect::paralyze:
+            {
+                propHlr.tryApplyProp(new PropParalyzed(PropTurns::std));
+            } break;
+
+            case FountainEffect::blind:
+            {
+                propHlr.tryApplyProp(new PropBlind(PropTurns::std));
+            } break;
+
+            case FountainEffect::faint:
+            {
+                propHlr.tryApplyProp(new PropFainted(PropTurns::specific, 10));
+            } break;
+
+            case FountainEffect::rFire:
+            {
+                Prop* const prop = new PropRFire(PropTurns::std);
+                prop->turnsLeft_ *= 2;
+                propHlr.tryApplyProp(prop);
+            } break;
+
+            case FountainEffect::rCold:
+            {
+                Prop* const prop = new PropRCold(PropTurns::std);
+                prop->turnsLeft_ *= 2;
+                propHlr.tryApplyProp(prop);
+            } break;
+
+            case FountainEffect::rElec:
+            {
+                Prop* const prop = new PropRElec(PropTurns::std);
+                prop->turnsLeft_ *= 2;
+                propHlr.tryApplyProp(prop);
+            } break;
+
+            case FountainEffect::rConf:
+            {
+                Prop* const prop = new PropRConfusion(PropTurns::std);
+                prop->turnsLeft_ *= 2;
+                propHlr.tryApplyProp(prop);
+            } break;
+
+            case FountainEffect::rFear:
+            {
+                Prop* const prop = new PropRFear(PropTurns::std);
+                prop->turnsLeft_ *= 2;
+                propHlr.tryApplyProp(prop);
+            } break;
+
+            case FountainEffect::END: {}
+                break;
+            }
+        }
+
+        --nrDrinksLeft_;
+
+        if (nrDrinksLeft_ <= 0)
+        {
+            Log::addMsg("The fountain dries out.");
+        }
+        Render::drawMapAndInterface();
+        GameTime::tick();
     }
 }
 
@@ -2603,7 +2610,7 @@ Cabinet::Cabinet(const Pos& pos) :
 {
     const int IS_EMPTY_N_IN_10  = 5;
     const int NR_ITEMS_MIN      = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
-    const int NR_ITEMS_MAX      = PlayerBon::traitsPicked[int(Trait::treasureHunter)] ?
+    const int NR_ITEMS_MAX      = PlayerBon::traits[int(Trait::treasureHunter)] ?
                                   2 : 1;
 
     itemContainer_.init(FeatureId::cabinet, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
@@ -2709,7 +2716,9 @@ Cocoon::Cocoon(const Pos& pos) :
     }
     else
     {
-        const bool  IS_TREASURE_HUNTER  = PlayerBon::traitsPicked[int(Trait::treasureHunter)];
+        const bool  IS_TREASURE_HUNTER =
+            PlayerBon::traits[int(Trait::treasureHunter)];
+
         const int   IS_EMPTY_N_IN_10    = 6;
         const int   NR_ITEMS_MIN        = Rnd::fraction(IS_EMPTY_N_IN_10, 10) ? 0 : 1;
         const int   NR_ITEMS_MAX        = NR_ITEMS_MIN + (IS_TREASURE_HUNTER ? 1 : 0);
@@ -2739,7 +2748,8 @@ void Cocoon::bump(Actor& actorBumping)
         {
             if (Map::player->phobias[int(Phobia::spider)])
             {
-                Map::player->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
+                Map::player->getPropHandler().tryApplyProp(
+                    new PropTerrified(PropTurns::std));
             }
 
             if (isOpen_)

@@ -147,15 +147,15 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
                 Fraction destrChance(6, 10);
                 if (actor == Map::player)
                 {
-                    if (PlayerBon::traitsPicked[int(Trait::tough)])
+                    if (PlayerBon::traits[int(Trait::tough)])
                     {
                         destrChance.numerator += 2;
                     }
-                    if (PlayerBon::traitsPicked[int(Trait::rugged)])
+                    if (PlayerBon::traits[int(Trait::rugged)])
                     {
                         destrChance.numerator += 2;
                     }
-                    if (PlayerBon::traitsPicked[int(Trait::unbreakable)])
+                    if (PlayerBon::traits[int(Trait::unbreakable)])
                     {
                         destrChance.numerator += 2;
                     }
@@ -205,15 +205,15 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
                     Fraction destrChance(4 - nrSpikes_, 10);
                     destrChance.numerator = max(1, destrChance.numerator);
 
-                    if (PlayerBon::traitsPicked[int(Trait::tough)])
+                    if (PlayerBon::traits[int(Trait::tough)])
                     {
                         destrChance.numerator += 2;
                     }
-                    if (PlayerBon::traitsPicked[int(Trait::rugged)])
+                    if (PlayerBon::traits[int(Trait::rugged)])
                     {
                         destrChance.numerator += 2;
                     }
-                    if (PlayerBon::traitsPicked[int(Trait::unbreakable)])
+                    if (PlayerBon::traits[int(Trait::unbreakable)])
                     {
                         destrChance.numerator += 2;
                     }
@@ -334,7 +334,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //
 //      if(!IS_BASHER_WEAK) {
 //        if(IS_PLAYER) {
-//          const int BON   = PlayerBon::traitsPicked[int(Trait::tough)] ? 20 : 0;
+//          const int BON   = PlayerBon::traits[int(Trait::tough)] ? 20 : 0;
 //          skillValueBash  = 40 + BON - min(58, nrSpikes_ * 20);
 //        } else {
 //          skillValueBash  = 10 - min(9, nrSpikes_ * 3);

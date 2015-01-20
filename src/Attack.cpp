@@ -53,7 +53,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     else
     {
         isDefenderAware = Map::player->isSeeingActor(*attacker, nullptr) ||
-                          PlayerBon::traitsPicked[int(Trait::vigilant)];
+                          PlayerBon::traits[int(Trait::vigilant)];
     }
 
     if (isDefenderAware)
@@ -214,7 +214,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
                 //+50% if player and has the "Vicious" trait.
                 if (attacker == Map::player)
                 {
-                    if (PlayerBon::traitsPicked[int(Trait::vicious)])
+                    if (PlayerBon::traits[int(Trait::vicious)])
                     {
                         dmgPct += 50;
                     }
@@ -1331,7 +1331,7 @@ bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos)
         if (
             attacker.isPlayer()                  &&
             wpn.getData().ranged.isCausingRecoil &&
-            !PlayerBon::traitsPicked[int(Trait::steadyAimer)])
+            !PlayerBon::traits[int(Trait::steadyAimer)])
         {
             attacker.getPropHandler().tryApplyProp(new PropRecoil(PropTurns::std));
         }

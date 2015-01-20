@@ -109,10 +109,10 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
             }
         }
 
-        bool IS_WARLOCK     = PlayerBon::traitsPicked[int(Trait::warlock)];
-        bool IS_BLOOD_SORC  = PlayerBon::traitsPicked[int(Trait::bloodSorcerer)];
-        bool IS_SEER        = PlayerBon::traitsPicked[int(Trait::seer)];
-        bool IS_SUMMONER    = PlayerBon::traitsPicked[int(Trait::summoner)];
+        bool IS_WARLOCK     = PlayerBon::traits[int(Trait::warlock)];
+        bool IS_BLOOD_SORC  = PlayerBon::traits[int(Trait::bloodSorcerer)];
+        bool IS_SEER        = PlayerBon::traits[int(Trait::seer)];
+        bool IS_SUMMONER    = PlayerBon::traits[int(Trait::summoner)];
 
         if (IS_BLOOD_SORC) {costMax--;}
 
@@ -149,7 +149,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
 SpellEffectNoticed Spell::cast(Actor* const caster, const bool IS_INTRINSIC) const
 {
     TRACE_FUNC_BEGIN;
-    if (caster->getPropHandler().allowCastSpells(true))
+    if (caster->getPropHandler().allowCastSpell(true))
     {
         if (caster->isPlayer())
         {
@@ -484,7 +484,7 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
     if (caster->isPlayer())
     {
         const int N             = SUMMON_HOSTILE_ONE_IN_N *
-                                  (PlayerBon::traitsPicked[int(Trait::summoner)] ? 2 : 1);
+                                  (PlayerBon::traits[int(Trait::summoner)] ? 2 : 1);
         didPlayerSummonHostile  = Rnd::oneIn(N);
         leader                  = didPlayerSummonHostile ? nullptr : caster;
     }
@@ -563,7 +563,7 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
     if (caster->isPlayer())
     {
         const int N             = SUMMON_HOSTILE_ONE_IN_N *
-                                  (PlayerBon::traitsPicked[int(Trait::summoner)] ? 2 : 1);
+                                  (PlayerBon::traits[int(Trait::summoner)] ? 2 : 1);
         didPlayerSummonHostile  = Rnd::oneIn(N);
         leader                  = didPlayerSummonHostile ? nullptr : caster;
     }
@@ -695,7 +695,7 @@ SpellEffectNoticed SpellDetMon::cast_(Actor* const caster) const
 {
     (void)caster;
 
-    bool                isSeer      = PlayerBon::traitsPicked[int(Trait::seer)];
+    bool                isSeer      = PlayerBon::traits[int(Trait::seer)];
     const int           MULTIPLIER  = 6 * (isSeer ? 3 : 1);
     const int           MAX_DIST    = FOV_STD_RADI_INT * 2;
     const Pos           playerPos   = Map::player->pos;
@@ -1138,7 +1138,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
     if (caster->isPlayer())
     {
         const int N             = SUMMON_HOSTILE_ONE_IN_N *
-                                  (PlayerBon::traitsPicked[int(Trait::summoner)] ? 2 : 1);
+                                  (PlayerBon::traits[int(Trait::summoner)] ? 2 : 1);
         didPlayerSummonHostile  = Rnd::oneIn(N);
         leader                  = didPlayerSummonHostile ? nullptr : caster;
     }

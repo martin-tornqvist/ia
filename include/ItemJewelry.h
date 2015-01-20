@@ -15,7 +15,7 @@ enum class JewelryEffectId
     spiBon,
     spiPen,
     rFire,
-    teleControl,
+    teleCtrl,
     randomTele,
     light,
     conflict,
@@ -133,7 +133,7 @@ public:
 
     ~JewelryEffectTeleControl() {}
 
-    JewelryEffectId getId() const override {return JewelryEffectId::teleControl;}
+    JewelryEffectId getId() const override {return JewelryEffectId::teleCtrl;}
 
     std::string     getDescr()  const   override;
     void            onEquip()           override;

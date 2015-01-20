@@ -125,9 +125,11 @@ public:
     }
     std::vector<std::string> getDescr() const override
     {
-        return {"Siphons power from some hellish mystic source, which is focused into a "
-                "bolt cast towards a target with great force."
-               };
+        return
+        {
+            "Siphons power from some hellish mystic source, which is focused into a "
+            "bolt cast towards a target with great force."
+        };
     }
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -152,12 +154,14 @@ public:
     }
     std::vector<std::string> getDescr() const override
     {
-        return {"Briefly exposes all visible enemies to the destruction and malice of "
-                "Azathoth, the ultimate chaos at the center of the universe. This spell "
-                "will generally inflict damage, but due to the chaotic nature of its "
-                "source, it can occasionally have other effects, and may affect the caster "
-                "as well [TODO]."
-               };
+        return
+        {
+            "Briefly exposes all visible enemies to the destruction and malice of "
+            "Azathoth, the ultimate chaos at the center of the universe. This spell "
+            "will generally inflict damage, but due to the chaotic nature of its "
+            "source, it can occasionally have other effects, and may affect the caster "
+            "as well [TODO]."
+        };
     }
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -182,9 +186,11 @@ public:
     }
     std::vector<std::string> getDescr() const override
     {
-        return {"Engulfs all visible enemies in flames, and causes terrible destruction on "
-                "the surrounding area."
-               };
+        return
+        {
+            "Engulfs all visible enemies in flames, and causes terrible destruction on "
+            "the surrounding area."
+        };
     }
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -209,7 +215,11 @@ public:
     }
     std::vector<std::string> getDescr() const override
     {
-        return {"Summons spiders or rats.", summonWarningStr};
+        return
+        {
+            "Summons spiders or rats.",
+            summonWarningStr
+        };
     }
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -237,10 +247,14 @@ public:
 
     virtual std::vector<std::string> getDescr() const override
     {
-        return {"Summons a loyal Mummy servant which will fight for the caster.",
-                "If an allied Mummy is already present, this spell will instead heal it.",
-                summonWarningStr
-               };
+        return
+        {
+            "Summons a loyal Mummy servant which will fight for the caster.",
+
+            "If an allied Mummy is already present, this spell will instead heal it.",
+
+            summonWarningStr
+        };
     }
 
     virtual IntrSpellShock getShockTypeIntrCast() const
@@ -366,9 +380,11 @@ public:
     }
     std::vector<std::string> getDescr() const override
     {
-        return {"Brings the caster to the brink of death in order to restore the spirit. "
-                "The amount restored is proportional to the life sacrificed."
-               };
+        return
+        {
+            "Brings the caster to the brink of death in order to restore the spirit. "
+            "The amount restored is proportional to the life sacrificed."
+        };
     }
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -392,9 +408,11 @@ public:
     }
     std::vector<std::string> getDescr() const override
     {
-        return {"Brings the caster to the brink of spiritual death in order to restore "
-                "health. The amount restored is proportional to the spirit sacrificed."
-               };
+        return
+        {
+            "Brings the caster to the brink of spiritual death in order to restore "
+            "health. The amount restored is proportional to the spirit sacrificed."
+        };
     }
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -442,7 +460,7 @@ public:
     }
     std::vector<std::string> getDescr() const override
     {
-        return {"Causes the universe to bend slightly in the casters favor."};
+        return {"Bends the universe in favor of the caster."};
     }
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -538,9 +556,11 @@ public:
     }
     std::vector<std::string> getDescr() const override
     {
-        return {"For a brief time, the caster is completely shielded from fire, cold and "
-                "electricity."
-               };
+        return
+        {
+            "For a brief time, the caster is completely shielded from fire, cold and "
+            "electricity."
+        };
     }
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;
@@ -672,10 +692,13 @@ public:
     }
     std::vector<std::string> getDescr() const override
     {
-        return {"Summons a creature to do the caster's bidding. A more powerful sorcerer "
-                "(higher character level) can summon beings of greater might and rarity.",
-                summonWarningStr
-               };
+        return
+        {
+            "Summons a creature to do the caster's bidding. A more powerful sorcerer "
+            "(higher character level) can summon beings of greater might and rarity.",
+
+            summonWarningStr
+        };
     }
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;

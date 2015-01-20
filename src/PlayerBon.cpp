@@ -16,7 +16,7 @@ using namespace std;
 namespace PlayerBon
 {
 
-bool traitsPicked[int(Trait::END)];
+bool traits[int(Trait::END)];
 
 namespace
 {
@@ -27,7 +27,7 @@ Bg bg_ = Bg::END;
 
 void init()
 {
-    for (int i = 0; i < int(Trait::END); ++i) {traitsPicked[i] = false;}
+    for (int i = 0; i < int(Trait::END); ++i) {traits[i] = false;}
     bg_ = Bg::END;
 }
 
@@ -36,7 +36,7 @@ void storeToSaveLines(vector<string>& lines)
     lines.push_back(toStr(int(bg_)));
     for (int i = 0; i < int(Trait::END); ++i)
     {
-        lines.push_back(traitsPicked[i] ? "1" : "0");
+        lines.push_back(traits[i] ? "1" : "0");
     }
 }
 
@@ -47,7 +47,7 @@ void setupFromSaveLines(vector<string>& lines)
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
-        traitsPicked[i] = lines.front() == "1";
+        traits[i] = lines.front() == "1";
         lines.erase(begin(lines));
     }
 }
@@ -575,7 +575,7 @@ void getPickableTraits(vector<Trait>& traitsRef)
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
-        if (!traitsPicked[i])
+        if (!traits[i])
         {
             vector<Trait> traitPrereqs;
             Bg bgPrereq = Bg::END;
@@ -584,7 +584,7 @@ void getPickableTraits(vector<Trait>& traitsRef)
             bool isPickable = true;
             for (Trait prereq : traitPrereqs)
             {
-                if (!traitsPicked[int(prereq)])
+                if (!traits[int(prereq)])
                 {
                     isPickable = false;
                     break;
@@ -645,14 +645,14 @@ void pickBg(const Bg bg)
 
 void setAllTraitsToPicked()
 {
-    for (int i = 0; i < int(Trait::END); ++i) {traitsPicked[i] = true;}
+    for (int i = 0; i < int(Trait::END); ++i) {traits[i] = true;}
 }
 
 void pickTrait(const Trait id)
 {
     assert(id != Trait::END);
 
-    traitsPicked[int(id)] = true;
+    traits[int(id)] = true;
 
     switch (id)
     {
@@ -705,7 +705,7 @@ void getAllPickedTraitsTitlesLine(string& out)
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
-        if (traitsPicked[i])
+        if (traits[i])
         {
             string title = "";
             getTraitTitle(Trait(i), title);
@@ -725,7 +725,7 @@ int getSpiOccultistCanCastAtLvl(const int LVL)
 bool getsUndeadBaneBon(const Actor& attacker, const ActorDataT& actorData)
 {
     return attacker.isPlayer()                              &&
-           PlayerBon::traitsPicked[int(Trait::undeadBane)]  &&
+           PlayerBon::traits[int(Trait::undeadBane)]  &&
            actorData.isUndead;
 }
 

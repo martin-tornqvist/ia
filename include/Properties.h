@@ -41,7 +41,7 @@ enum class PropId
     frenzied,
     blessed,
     cursed,
-    teleControl, //Note: This only makes sense for the player
+    teleCtrl, //Note: This only makes sense for the player
     spellReflect,
     strangled,
 
@@ -157,10 +157,10 @@ public:
     bool allowSee()                                 const;
     bool allowMove()                                const;
     bool allowAct()                                 const;
-//#error Do appropriate checks for allowRead/CastSpells/Speak:
     bool allowRead          (const bool ALLOW_MSG)  const;
-    bool allowCastSpells    (const bool ALLOW_MSG)  const;
+    bool allowCastSpell     (const bool ALLOW_MSG)  const;
     bool allowSpeak         (const bool ALLOW_MSG)  const;
+    bool allowEat           (const bool ALLOW_MSG)  const; //Also used for drinking
 
     void onHit();
     void onDeath(const bool IS_PLAYER_SEE_OWNING_ACTOR);
@@ -295,13 +295,19 @@ public:
         return true;
     }
 
-    virtual bool allowCastSpells(const bool ALLOW_MSG) const
+    virtual bool allowCastSpell(const bool ALLOW_MSG) const
     {
         (void)ALLOW_MSG;
         return true;
     }
 
     virtual bool allowSpeak(const bool ALLOW_MSG) const
+    {
+        (void)ALLOW_MSG;
+        return true;
+    }
+
+    virtual bool allowEat(const bool ALLOW_MSG) const
     {
         (void)ALLOW_MSG;
         return true;
@@ -803,7 +809,7 @@ public:
     void changeMoveDir(const Pos& actorPos, Dir& dir) override;
 
     bool allowRead(const bool ALLOW_MSG) const override;
-    bool allowCastSpells(const bool ALLOW_MSG) const override;
+    bool allowCastSpell(const bool ALLOW_MSG) const override;
 
     bool isResistingOtherProp(const PropId id) const override;
 
@@ -941,7 +947,7 @@ class PropTeleControl: public Prop
 {
 public:
     PropTeleControl(PropTurns turnsInit, int turns = -1) :
-        Prop(PropId::teleControl, turnsInit, turns) {}
+        Prop(PropId::teleCtrl, turnsInit, turns) {}
     ~PropTeleControl() override {}
 };
 
@@ -964,6 +970,7 @@ public:
     void onNewTurn() override;
 
     bool allowSpeak(const bool ALLOW_MSG) const override;
+    bool allowEat  (const bool ALLOW_MSG) const override;
 };
 
 #endif

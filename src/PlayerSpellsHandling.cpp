@@ -160,7 +160,9 @@ void tryCast(const SpellOpt& spellOpt)
 {
     assert(spellOpt.spell);
 
-    if (Map::player->getPropHandler().allowRead(true))
+    if (
+        Map::player->getPropHandler().allowCastSpell(true) &&
+        Map::player->getPropHandler().allowSpeak    (true))
     {
         Log::clearLog();
         Render::drawMapAndInterface();
@@ -171,7 +173,8 @@ void tryCast(const SpellOpt& spellOpt)
 
         if (spiCostRange.upper >= Map::player->getSpi())
         {
-            Log::addMsg("Cast spell and risk depleting your spirit [y/n]?", clrWhiteHigh);
+            Log::addMsg("Cast spell and risk depleting your spirit [y/n]?",
+                        clrWhiteHigh);
 
             Render::drawMapAndInterface();
 
@@ -184,8 +187,8 @@ void tryCast(const SpellOpt& spellOpt)
             Log::clearLog();
         }
 
-        const bool IS_BLOOD_SORC = PlayerBon::traitsPicked[int(Trait::bloodSorcerer)];
-        const bool IS_WARLOCK    = PlayerBon::traitsPicked[int(Trait::warlock)];
+        const bool IS_BLOOD_SORC = PlayerBon::traits[int(Trait::bloodSorcerer)];
+        const bool IS_WARLOCK    = PlayerBon::traits[int(Trait::warlock)];
 
         const int BLOOD_SORC_HP_DRAINED = 2;
 

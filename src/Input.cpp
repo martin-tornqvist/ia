@@ -186,13 +186,13 @@ void handleMapModeKeyPress(const KeyData& d)
         {
             Log::clearLog();
 
-            if (PlayerBon::traitsPicked[int(Trait::steadyAimer)])
+            if (PlayerBon::traits[int(Trait::steadyAimer)])
             {
                 PropHandler& propHlr = Map::player->getPropHandler();
 
                 int nrTurnsAimingOld = 0;
 
-                if (PlayerBon::traitsPicked[int(Trait::sharpShooter)])
+                if (PlayerBon::traits[int(Trait::sharpShooter)])
                 {
                     Prop* const propAimingOld = propHlr.getProp(PropId::aiming, PropSrc::applied);
                     if (propAimingOld)

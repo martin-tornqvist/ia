@@ -221,7 +221,7 @@ public:
     bool                      isIdentified;
     bool                      isTried;
     ItemName                  baseName;
-    ItemName                  baseNameUnid;
+    ItemName                  baseNameUnId;
     std::vector<std::string>  baseDescr;
     char                      glyph;
     Clr                       clr;
@@ -290,7 +290,7 @@ public:
     {
         ItemArmorData();
 
-        int                     absorptionPoints;
+        int                     armorPoints;
         double                  dmgToDurabilityFactor;
     } armor;
 };

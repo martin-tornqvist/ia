@@ -683,7 +683,7 @@ TEST_FIXTURE(BasicFixture, SavingGame)
 
     //Bonus
     PlayerBon::pickBg(Bg::rogue);
-    PlayerBon::traitsPicked[int(Trait::healer)] = true;
+    PlayerBon::traits[int(Trait::healer)] = true;
 
     //Player inventory
     Inventory& inv = Map::player->getInv();
@@ -787,8 +787,8 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
 
     //Bonus
     CHECK_EQUAL(int(Bg::rogue), int(PlayerBon::getBg()));
-    CHECK(PlayerBon::traitsPicked[int(Trait::healer)]);
-    CHECK(!PlayerBon::traitsPicked[int(Trait::sharpShooter)]);
+    CHECK(PlayerBon::traits[int(Trait::healer)]);
+    CHECK(!PlayerBon::traits[int(Trait::sharpShooter)]);
 
     //Player inventory
     Inventory& inv  = Map::player->getInv();

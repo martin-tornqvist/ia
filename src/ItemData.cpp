@@ -107,8 +107,8 @@ ItemDataT::ItemRangedData::~ItemRangedData()
 }
 
 ItemDataT::ItemArmorData::ItemArmorData() :
-    absorptionPoints      (0),
-    dmgToDurabilityFactor (0.0) {}
+    armorPoints             (0),
+    dmgToDurabilityFactor   (0.0) {}
 
 namespace ItemData
 {
@@ -280,7 +280,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
     {
         resetData(d, ItemType::general);
         d.type = ItemType::device;
-        d.baseNameUnid = {"Strange Device", "Strange Devices", "a Strange Device"};
+        d.baseNameUnId = {"Strange Device", "Strange Devices", "a Strange Device"};
         d.baseDescr =
         {
             "A small piece of machinery. It could not possibly have been designed by a "
@@ -1368,7 +1368,7 @@ void initDataList()
     d->weight = ItemWeight::light;
     d->clr = clrBrown;
     d->spawnStdRange.lower = 1;
-    d->armor.absorptionPoints = 1;
+    d->armor.armorPoints = 1;
     d->armor.dmgToDurabilityFactor = 1.0;
     d->landOnHardSndMsg = "";
     addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -1393,7 +1393,7 @@ void initDataList()
     d->weight = ItemWeight::heavy;
     d->clr = clrWhite;
     d->spawnStdRange.lower = 2;
-    d->armor.absorptionPoints = 5;
+    d->armor.armorPoints = 5;
     d->armor.dmgToDurabilityFactor = 0.3;
     d->landOnHardSndMsg = "I hear a crashing sound.";
     addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -1413,7 +1413,7 @@ void initDataList()
     d->weight = ItemWeight::medium;
     d->clr = clrGreen;
     d->spawnStdRange.lower = 3;
-    d->armor.absorptionPoints = 3;
+    d->armor.armorPoints = 3;
     d->armor.dmgToDurabilityFactor = 0.5;
     d->landOnHardSndMsg = "I hear a thudding sound.";
     addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -1441,7 +1441,7 @@ void initDataList()
     d->weight = ItemWeight::medium;
     d->clr = clrRedLgt;
     d->spawnStdRange.lower = 3;
-    d->armor.absorptionPoints = 1;
+    d->armor.armorPoints = 1;
     d->armor.dmgToDurabilityFactor = 1.0;
     d->landOnHardSndMsg = "";
     addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -1464,7 +1464,7 @@ void initDataList()
     d->weight = ItemWeight::medium;
     d->clr = clrBlueLgt;
     d->spawnStdRange.lower = 3;
-    d->armor.absorptionPoints = 2;
+    d->armor.armorPoints = 2;
     d->armor.dmgToDurabilityFactor = 1.0;
     d->landOnHardSndMsg = "";
     addFeatureFoundIn(*d, FeatureId::cabinet);
@@ -1484,7 +1484,7 @@ void initDataList()
     d->shockWhileEquipped = 15;
     d->clr = clrMagenta;
     d->tile = TileId::migoArmor;
-    d->armor.absorptionPoints = 2;
+    d->armor.armorPoints = 2;
     d->armor.dmgToDurabilityFactor = 1.5;
     d->landOnHardSndMsg = "";
     data[int(d->id)] = d;
@@ -1768,133 +1768,133 @@ void initDataList()
     d = new ItemDataT(ItemId::starAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Star Amulet", "", "a Star Amulet"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::skullAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Skull Amulet", "", "a Skull Amulet"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::spiderAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Spider Amulet", "", "a Spider Amulet"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::eyeAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Eye Amulet", "", "an Eye Amulet"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::moonAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Moon Amulet", "", "a Moon Amulet"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::batAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Bat Amulet", "", "a Bat Amulet"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::scarabAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Scarab Amulet", "", "a Scarab Amulet"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::daggerAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Dagger Amulet", "", "a Dagger Amulet"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::goldenRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Golden Ring", "", "a Golden Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrYellow;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::silverRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Silver Ring", "", "a Silver Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::carnelianRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Carnelian Ring", "", "a Carnelian Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrRedLgt;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::garnetRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Garnet Ring", "", "a Garnet Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrRedLgt;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::ironRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Iron Ring", "", "an Iron Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrGray;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::jadeRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Jade Ring", "", "a Jade Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrGreenLgt;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::moonstoneRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Moonstone Ring", "", "a Moonstone Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrBlueLgt;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::obsidianRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Obsidian Ring", "", "an Obsidian Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrGray;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::onyxRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Onyx Ring", "", "an Onyx Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrGray;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::topazRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Topaz Ring", "", "a Topaz Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrBlueLgt;
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::emeraldRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Emerald Ring", "", "an Emerald Ring"};
-    d->baseNameUnid = d->baseName;
+    d->baseNameUnId = d->baseName;
     d->clr = clrGreenLgt;
     data[int(d->id)] = d;
 }

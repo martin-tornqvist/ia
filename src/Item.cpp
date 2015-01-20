@@ -159,7 +159,7 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
         if (!infStr.empty()) {infStr.insert(0, " ");}
     }
 
-    const auto& namesUsed = data_->isIdentified ? data_->baseName : data_->baseNameUnid;
+    const auto& namesUsed = data_->isIdentified ? data_->baseName : data_->baseNameUnId;
 
     return nrStr + namesUsed.names[int(refTypeUsed)] + attStr + infStr;
 }
@@ -209,35 +209,22 @@ UnequipAllowed Armor::onUnequip()
 
 string Armor::getArmorDataLine(const bool WITH_BRACKETS) const
 {
-    const int AP = getAbsorptionPoints();
+    const int       AP      = getArmorPoints();
+    const string    apStr   = toStr(max(0, AP));
 
-    if (AP <= 0)
-    {
-        assert(false && "Armor AP less than 1");
-        return "";
-    }
-
-    const string absorptionPointsStr = toStr(AP);
-
-    if (WITH_BRACKETS)
-    {
-        return "[" + absorptionPointsStr + "]";
-    }
-    else
-    {
-        return absorptionPointsStr;
-    }
+    return WITH_BRACKETS ? ("[" + apStr + "]") : apStr;
 }
 
 int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE)
 {
     TRACE_FUNC_BEGIN;
 
-    //Absorption points (AP) = damage soaked up instead of hitting the player
-    //DDF = Damage (to) Durability Factor
-    //(how much damage the durability takes per attack damage point)
+    //AP, Armor points:
+    //  - Damage soaked up instead of hitting the player
+    //DFF, Damage (to) Durability Factor:
+    //  - A factor of how much damage the armor durability takes per attack damage point
 
-    const int     AP_BEFORE       = getAbsorptionPoints();
+    const int     AP_BEFORE       = getArmorPoints();
     const double  DDF_BASE        = data_->armor.dmgToDurabilityFactor;
     //TODO: Add check for if wearer is player!
     const double  DDF_WAR_VET_MOD = PlayerBon::getBg() == Bg::warVet ? 0.5 : 1.0;
@@ -247,7 +234,7 @@ int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE)
     dur_ -= int(DMG_BEFORE_DB * DDF_BASE * DDF_WAR_VET_MOD * DDF_K);
 
     dur_                          = max(0, dur_);
-    const int AP_AFTER            = getAbsorptionPoints();
+    const int AP_AFTER            = getArmorPoints();
 
     if (AP_AFTER < AP_BEFORE && AP_AFTER != 0)
     {
@@ -265,9 +252,9 @@ int Armor::takeDurHitAndGetReducedDmg(const int DMG_BEFORE)
     return DMG_AFTER;
 }
 
-int Armor::getAbsorptionPoints() const
+int Armor::getArmorPoints() const
 {
-    const int AP_MAX = data_->armor.absorptionPoints;
+    const int AP_MAX = data_->armor.armorPoints;
 
     if (dur_ > 60) {return AP_MAX;}
     if (dur_ > 40) {return max(0, AP_MAX - 1);}
@@ -312,11 +299,11 @@ void ArmorMigo::onStdTurnInInv(const InvType invType)
 
     if (dur_ < 100)
     {
-        const int AP_BEFORE = getAbsorptionPoints();
+        const int AP_BEFORE = getArmorPoints();
 
         dur_ = 100;
 
-        const int AP_AFTER  = getAbsorptionPoints();
+        const int AP_AFTER  = getArmorPoints();
 
         if (AP_AFTER > AP_BEFORE)
         {
@@ -613,7 +600,7 @@ void MedicalBag::continueAction()
 
         auto& player = *Map::player;
 
-        const bool IS_HEALER = PlayerBon::traitsPicked[int(Trait::healer)];
+        const bool IS_HEALER = PlayerBon::traits[int(Trait::healer)];
 
         if (nrTurnsUntilHealWounds_ > 0)
         {
@@ -714,12 +701,12 @@ void MedicalBag::interrupted()
 
 int MedicalBag::getTotTurnsForSanitize() const
 {
-    return PlayerBon::traitsPicked[int(Trait::healer)] ? 10 : 20;
+    return PlayerBon::traits[int(Trait::healer)] ? 10 : 20;
 }
 
 int MedicalBag::getTotSupplForSanitize() const
 {
-    return PlayerBon::traitsPicked[int(Trait::healer)] ? 5 : 10;
+    return PlayerBon::traits[int(Trait::healer)] ? 5 : 10;
 }
 
 //--------------------------------------------------------- HIDEOUS MASK
@@ -794,7 +781,7 @@ ConsumeItem Explosive::activate(Actor* const actor)
 //--------------------------------------------------------- DYNAMITE
 void Dynamite::onPlayerIgnite() const
 {
-    const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] && Rnd::coinToss();
+    const bool IS_SWIFT   = PlayerBon::traits[int(Trait::demExpert)] && Rnd::coinToss();
     const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
     Log::addMsg("I " + swiftStr + "light a dynamite stick.");
@@ -842,7 +829,7 @@ void Dynamite::onPlayerParalyzed()
 //--------------------------------------------------------- MOLOTOV
 void Molotov::onPlayerIgnite() const
 {
-    const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] &&
+    const bool IS_SWIFT   = PlayerBon::traits[int(Trait::demExpert)] &&
                             Rnd::coinToss();
     const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
@@ -868,7 +855,7 @@ void Molotov::onStdTurnPlayerHoldIgnited()
 
 void Molotov::onThrownIgnitedLanding(const Pos& p)
 {
-    const int D = PlayerBon::traitsPicked[int(Trait::demExpert)] ? 1 : 0;
+    const int D = PlayerBon::traits[int(Trait::demExpert)] ? 1 : 0;
     Explosion::runExplosionAt(p, ExplType::applyProp, ExplSrc::playerUseMoltvIntended, D,
                               SfxId::explosionMolotov, new PropBurning(PropTurns::std));
 }
@@ -887,7 +874,7 @@ void Molotov::onPlayerParalyzed()
 //--------------------------------------------------------- FLARE
 void Flare::onPlayerIgnite() const
 {
-    const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] &&
+    const bool IS_SWIFT   = PlayerBon::traits[int(Trait::demExpert)] &&
                             Rnd::coinToss();
     const string swiftStr = IS_SWIFT ? "swiftly " : "";
 
@@ -935,7 +922,7 @@ void Flare::onPlayerParalyzed()
 //--------------------------------------------------------- SMOKE GRENADE
 void SmokeGrenade::onPlayerIgnite() const
 {
-    const bool IS_SWIFT   = PlayerBon::traitsPicked[int(Trait::demExpert)] &&
+    const bool IS_SWIFT   = PlayerBon::traits[int(Trait::demExpert)] &&
                             Rnd::coinToss();
     const string swiftStr = IS_SWIFT ? "swiftly " : "";
 

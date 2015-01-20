@@ -570,7 +570,7 @@ void initDataList()
     d.alignment = propAlignmentBad;
     addPropData(d);
 
-    d.id = PropId::teleControl;
+    d.id = PropId::teleCtrl;
     d.stdRndTurns = Range(40, 60);
     d.name = "Teleport Control";
     d.nameShort = "TeleCtrl";
@@ -749,53 +749,52 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
 
     switch (id)
     {
-    case PropId::nailed:          return new PropNailed         (turnsInit, NR_TURNS);
-    case PropId::warlockCharged:  return new PropWarlockCharged (turnsInit, NR_TURNS);
-    case PropId::blind:           return new PropBlind          (turnsInit, NR_TURNS);
-    case PropId::burning:         return new PropBurning        (turnsInit, NR_TURNS);
-    case PropId::flared:          return new PropFlared         (turnsInit, NR_TURNS);
-    case PropId::paralyzed:       return new PropParalyzed      (turnsInit, NR_TURNS);
-    case PropId::terrified:       return new PropTerrified      (turnsInit, NR_TURNS);
-    case PropId::weakened:        return new PropWeakened       (turnsInit, NR_TURNS);
-    case PropId::confused:        return new PropConfused       (turnsInit, NR_TURNS);
-    case PropId::stunned:         return new PropStunned        (turnsInit, NR_TURNS);
-    case PropId::waiting:         return new PropWaiting        (turnsInit, NR_TURNS);
-    case PropId::slowed:          return new PropSlowed         (turnsInit, NR_TURNS);
-    case PropId::infected:        return new PropInfected       (turnsInit, NR_TURNS);
-    case PropId::diseased:        return new PropDiseased       (turnsInit, NR_TURNS);
-    case PropId::poisoned:        return new PropPoisoned       (turnsInit, NR_TURNS);
-    case PropId::fainted:         return new PropFainted        (turnsInit, NR_TURNS);
-    case PropId::frenzied:        return new PropFrenzied       (turnsInit, NR_TURNS);
-    case PropId::aiming:          return new PropAiming         (turnsInit, NR_TURNS);
-    case PropId::recoil:          return new PropRecoil         (turnsInit, NR_TURNS);
-    case PropId::disabledAttack:  return new PropDisabledAttack (turnsInit, NR_TURNS);
-    case PropId::disabledMelee:   return new PropDisabledMelee  (turnsInit, NR_TURNS);
-    case PropId::disabledRanged:  return new PropDisabledRanged (turnsInit, NR_TURNS);
-    case PropId::blessed:         return new PropBlessed        (turnsInit, NR_TURNS);
-    case PropId::cursed:          return new PropCursed         (turnsInit, NR_TURNS);
-    case PropId::rAcid:           return new PropRAcid          (turnsInit, NR_TURNS);
-    case PropId::rCold:           return new PropRCold          (turnsInit, NR_TURNS);
-    case PropId::rConf:           return new PropRConfusion     (turnsInit, NR_TURNS);
-    case PropId::rBreath:         return new PropRBreath        (turnsInit, NR_TURNS);
-    case PropId::rElec:           return new PropRElec          (turnsInit, NR_TURNS);
-    case PropId::rFear:           return new PropRFear          (turnsInit, NR_TURNS);
-    case PropId::rPhys:           return new PropRPhys          (turnsInit, NR_TURNS);
-    case PropId::rFire:           return new PropRFire          (turnsInit, NR_TURNS);
-    case PropId::rPoison:         return new PropRPoison        (turnsInit, NR_TURNS);
-    case PropId::rSleep:          return new PropRSleep         (turnsInit, NR_TURNS);
-    case PropId::lgtSens:         return new PropLgtSens        (turnsInit, NR_TURNS);
-    case PropId::possByZuul:      return new PropPossByZuul     (turnsInit, NR_TURNS);
-    case PropId::flying:          return new PropFlying         (turnsInit, NR_TURNS);
-    case PropId::ethereal:        return new PropEthereal       (turnsInit, NR_TURNS);
-    case PropId::ooze:            return new PropOoze           (turnsInit, NR_TURNS);
-    case PropId::burrowing:       return new PropBurrowing      (turnsInit, NR_TURNS);
-    case PropId::radiant:         return new PropRadiant        (turnsInit, NR_TURNS);
-    case PropId::rDisease:        return new PropRDisease       (turnsInit, NR_TURNS);
-    case PropId::teleControl:     return new PropTeleControl    (turnsInit, NR_TURNS);
-    case PropId::spellReflect:    return new PropSpellReflect   (turnsInit, NR_TURNS);
-    case PropId::strangled:       return new PropStrangled      (turnsInit, NR_TURNS);
-    case PropId::END: {}
-        break;
+    case PropId::nailed:            return new PropNailed         (turnsInit, NR_TURNS);
+    case PropId::warlockCharged:    return new PropWarlockCharged (turnsInit, NR_TURNS);
+    case PropId::blind:             return new PropBlind          (turnsInit, NR_TURNS);
+    case PropId::burning:           return new PropBurning        (turnsInit, NR_TURNS);
+    case PropId::flared:            return new PropFlared         (turnsInit, NR_TURNS);
+    case PropId::paralyzed:         return new PropParalyzed      (turnsInit, NR_TURNS);
+    case PropId::terrified:         return new PropTerrified      (turnsInit, NR_TURNS);
+    case PropId::weakened:          return new PropWeakened       (turnsInit, NR_TURNS);
+    case PropId::confused:          return new PropConfused       (turnsInit, NR_TURNS);
+    case PropId::stunned:           return new PropStunned        (turnsInit, NR_TURNS);
+    case PropId::waiting:           return new PropWaiting        (turnsInit, NR_TURNS);
+    case PropId::slowed:            return new PropSlowed         (turnsInit, NR_TURNS);
+    case PropId::infected:          return new PropInfected       (turnsInit, NR_TURNS);
+    case PropId::diseased:          return new PropDiseased       (turnsInit, NR_TURNS);
+    case PropId::poisoned:          return new PropPoisoned       (turnsInit, NR_TURNS);
+    case PropId::fainted:           return new PropFainted        (turnsInit, NR_TURNS);
+    case PropId::frenzied:          return new PropFrenzied       (turnsInit, NR_TURNS);
+    case PropId::aiming:            return new PropAiming         (turnsInit, NR_TURNS);
+    case PropId::recoil:            return new PropRecoil         (turnsInit, NR_TURNS);
+    case PropId::disabledAttack:    return new PropDisabledAttack (turnsInit, NR_TURNS);
+    case PropId::disabledMelee:     return new PropDisabledMelee  (turnsInit, NR_TURNS);
+    case PropId::disabledRanged:    return new PropDisabledRanged (turnsInit, NR_TURNS);
+    case PropId::blessed:           return new PropBlessed        (turnsInit, NR_TURNS);
+    case PropId::cursed:            return new PropCursed         (turnsInit, NR_TURNS);
+    case PropId::rAcid:             return new PropRAcid          (turnsInit, NR_TURNS);
+    case PropId::rCold:             return new PropRCold          (turnsInit, NR_TURNS);
+    case PropId::rConf:             return new PropRConfusion     (turnsInit, NR_TURNS);
+    case PropId::rBreath:           return new PropRBreath        (turnsInit, NR_TURNS);
+    case PropId::rElec:             return new PropRElec          (turnsInit, NR_TURNS);
+    case PropId::rFear:             return new PropRFear          (turnsInit, NR_TURNS);
+    case PropId::rPhys:             return new PropRPhys          (turnsInit, NR_TURNS);
+    case PropId::rFire:             return new PropRFire          (turnsInit, NR_TURNS);
+    case PropId::rPoison:           return new PropRPoison        (turnsInit, NR_TURNS);
+    case PropId::rSleep:            return new PropRSleep         (turnsInit, NR_TURNS);
+    case PropId::lgtSens:           return new PropLgtSens        (turnsInit, NR_TURNS);
+    case PropId::possByZuul:        return new PropPossByZuul     (turnsInit, NR_TURNS);
+    case PropId::flying:            return new PropFlying         (turnsInit, NR_TURNS);
+    case PropId::ethereal:          return new PropEthereal       (turnsInit, NR_TURNS);
+    case PropId::ooze:              return new PropOoze           (turnsInit, NR_TURNS);
+    case PropId::burrowing:         return new PropBurrowing      (turnsInit, NR_TURNS);
+    case PropId::radiant:           return new PropRadiant        (turnsInit, NR_TURNS);
+    case PropId::rDisease:          return new PropRDisease       (turnsInit, NR_TURNS);
+    case PropId::teleCtrl:          return new PropTeleControl    (turnsInit, NR_TURNS);
+    case PropId::spellReflect:      return new PropSpellReflect   (turnsInit, NR_TURNS);
+    case PropId::strangled:         return new PropStrangled      (turnsInit, NR_TURNS);
+    case PropId::END: {} break;
     }
     return nullptr;
 }
@@ -1249,7 +1248,7 @@ void PropHandler::getPropsInterfaceLine(vector<StrAndClr>& line) const
 {
     line.clear();
 
-    const bool IS_SELF_AWARE = PlayerBon::traitsPicked[int(Trait::selfAware)];
+    const bool IS_SELF_AWARE = PlayerBon::traits[int(Trait::selfAware)];
 
     vector<Prop*> propList;
     bool sources[int(PropSrc::END)];
@@ -1396,7 +1395,7 @@ bool PropHandler::allowRead(const bool ALLOW_MSG) const
     return true;
 }
 
-bool PropHandler::allowCastSpells(const bool ALLOW_MSG) const
+bool PropHandler::allowCastSpell(const bool ALLOW_MSG) const
 {
     vector<Prop*> propList;
 
@@ -1407,7 +1406,7 @@ bool PropHandler::allowCastSpells(const bool ALLOW_MSG) const
 
     for (auto prop : propList)
     {
-        if (!prop->allowCastSpells(ALLOW_MSG))
+        if (!prop->allowCastSpell(ALLOW_MSG))
         {
             return false;
         }
@@ -1428,6 +1427,29 @@ bool PropHandler::allowSpeak(const bool ALLOW_MSG) const
     for (auto prop : propList)
     {
         if (!prop->allowSpeak(ALLOW_MSG))
+        {
+            TRACE_FUNC_END_VERBOSE;
+            return false;
+        }
+    }
+
+    TRACE_FUNC_END_VERBOSE;
+    return true;
+}
+
+bool PropHandler::allowEat(const bool ALLOW_MSG) const
+{
+    TRACE_FUNC_BEGIN_VERBOSE;
+    vector<Prop*> propList;
+
+    bool sources[int(PropSrc::END)];
+
+    for (bool& v : sources) {v = true;}
+    getPropsFromSources(propList, sources);
+
+    for (auto prop : propList)
+    {
+        if (!prop->allowEat(ALLOW_MSG))
         {
             TRACE_FUNC_END_VERBOSE;
             return false;
@@ -1598,7 +1620,7 @@ void PropInfected::onNewTurn()
 
 int PropDiseased::getChangedMaxHp(const int HP_MAX) const
 {
-    if (owningActor_->isPlayer() && PlayerBon::traitsPicked[int(Trait::survivalist)])
+    if (owningActor_->isPlayer() && PlayerBon::traits[int(Trait::survivalist)])
     {
         return (HP_MAX * 3) / 4; //Survavlist makes you lose only 25% instead of 50%
     }
@@ -1794,7 +1816,21 @@ void PropStrangled::onNewTurn()
 
 bool PropStrangled::allowSpeak(const bool ALLOW_MSG) const
 {
-    (void)ALLOW_MSG;
+    if (ALLOW_MSG && owningActor_->isPlayer())
+    {
+        Log::addMsg("My throat is constricted.");
+    }
+
+    return false;
+}
+
+bool PropStrangled::allowEat(const bool ALLOW_MSG) const
+{
+    if (ALLOW_MSG && owningActor_->isPlayer())
+    {
+        Log::addMsg("My throat is constricted.");
+    }
+
     return false;
 }
 
@@ -1805,16 +1841,21 @@ void PropFrenzied::changeMoveDir(const Pos& actorPos, Dir& dir)
         vector<Actor*> seenFoes;
         owningActor_->getSeenFoes(seenFoes);
 
-        if (seenFoes.empty()) {return;}
+        if (seenFoes.empty())
+        {
+            return;
+        }
 
         vector<Pos> seenFoesCells;
+
         seenFoesCells.clear();
-        for (size_t i = 0; i < seenFoes.size(); ++i)
+
+        for (auto* actor : seenFoes)
         {
-            seenFoesCells.push_back(seenFoes[i]->pos);
+            seenFoesCells.push_back(actor->pos);
         }
-        sort(begin(seenFoesCells), end(seenFoesCells),
-             IsCloserToPos(actorPos));
+
+        sort(begin(seenFoesCells), end(seenFoesCells), IsCloserToPos(actorPos));
 
         const Pos& closestMonPos = seenFoesCells[0];
 
@@ -1865,7 +1906,7 @@ bool PropFrenzied::allowRead(const bool ALLOW_MSG) const
     return false;
 }
 
-bool PropFrenzied::allowCastSpells(const bool ALLOW_MSG) const
+bool PropFrenzied::allowCastSpell(const bool ALLOW_MSG) const
 {
     if (owningActor_->isPlayer() && ALLOW_MSG)
     {

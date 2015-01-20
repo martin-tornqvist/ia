@@ -98,9 +98,9 @@ void runStdTurnEvents()
                 //Regen Spi
                 if (actor == Map::player)
                 {
-                    if (PlayerBon::traitsPicked[int(Trait::stoutSpirit)])   regenSpiNTurns -= 2;
-                    if (PlayerBon::traitsPicked[int(Trait::strongSpirit)])  regenSpiNTurns -= 2;
-                    if (PlayerBon::traitsPicked[int(Trait::mightySpirit)])  regenSpiNTurns -= 2;
+                    if (PlayerBon::traits[int(Trait::stoutSpirit)])   regenSpiNTurns -= 2;
+                    if (PlayerBon::traits[int(Trait::strongSpirit)])  regenSpiNTurns -= 2;
+                    if (PlayerBon::traits[int(Trait::mightySpirit)])  regenSpiNTurns -= 2;
                 }
 
                 regenSpiNTurns = max(2, regenSpiNTurns);

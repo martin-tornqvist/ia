@@ -22,93 +22,99 @@ namespace Action
 
 bool tryCastRandomSpell(Mon& mon)
 {
-    if (mon.isAlive() && mon.spellCoolDownCur_ == 0)
+    if (
+        !mon.isAlive()              ||                  //Dead?
+        mon.spellCoolDownCur_ > 0   ||                  //Cooldown?
+        mon.spellsKnown_.empty()    ||                  //No spells?
+        !mon.getPropHandler().allowCastSpell(false))   //Prop not allowing to cast now?
     {
-        if (!mon.getPropHandler().allowRead(false))
+        return false;
+    }
+
+    vector<Spell*> spellBucket = mon.spellsKnown_;
+
+    std::random_shuffle(begin(spellBucket), end(spellBucket));
+
+    while (!spellBucket.empty())
+    {
+        Spell* const spell = spellBucket.back();
+
+        if (spell->allowMonCastNow(mon))
         {
+            const int CUR_SPI = mon.getSpi();
+            const int SPELL_MAX_SPI = spell->getSpiCost(false, &mon).upper;
+
+            //Cast spell if max spirit cost is lower than current spirit,
+            if (SPELL_MAX_SPI < CUR_SPI)
+            {
+                spell->cast(&mon, true);
+                return true;
+            }
+
+            //This point reached means SPI was lower than the spells potential cost
+            const int CUR_HP  = mon.getHp();
+            const int MAX_HP  = mon.getHpMax(true);
+
+            //If monster is not allied to player, with a small chance, cast the spell
+            //anyway if HP is low.
+            if (
+                !Map::player->isLeaderOf(&mon)  &&
+                CUR_HP < (MAX_HP / 3)           &&
+                Rnd::oneIn(20))
+            {
+                if (Map::player->isSeeingActor(mon, nullptr))
+                {
+                    Log::addMsg(mon.getNameThe() + " looks desperate.");
+                }
+                spell->cast(&mon, true);
+                return true;
+            }
             return false;
         }
-
-        if (!mon.spellsKnown_.empty())
+        else //Spell does not allow monster to cast now
         {
-            vector<Spell*> spellBucket = mon.spellsKnown_;
-
-            std::random_shuffle(begin(spellBucket), end(spellBucket));
-
-            while (!spellBucket.empty())
-            {
-                Spell* const spell = spellBucket.back();
-
-                if (spell->allowMonCastNow(mon))
-                {
-                    const int CUR_SPI = mon.getSpi();
-                    const int SPELL_MAX_SPI = spell->getSpiCost(false, &mon).upper;
-
-                    //Cast spell if max spirit cost is lower than current spirit,
-                    if (SPELL_MAX_SPI < CUR_SPI)
-                    {
-                        spell->cast(&mon, true);
-                        return true;
-                    }
-
-                    //This point reached means SPI was lower than the spells potential cost
-                    const int CUR_HP  = mon.getHp();
-                    const int MAX_HP  = mon.getHpMax(true);
-
-                    //If monster is not allied to player, with a small chance, cast the spell
-                    //anyway if HP is low.
-                    if (!Map::player->isLeaderOf(&mon) && CUR_HP < (MAX_HP / 3) && Rnd::oneIn(20))
-                    {
-                        if (Map::player->isSeeingActor(mon, nullptr))
-                        {
-                            Log::addMsg(mon.getNameThe() + " looks desperate.");
-                        }
-                        spell->cast(&mon, true);
-                        return true;
-                    }
-                    return false;
-                }
-                else //Spell does not allow monster to cast now
-                {
-                    spellBucket.pop_back();
-                }
-            }
+            spellBucket.pop_back();
         }
     }
+
     return false;
 }
 
 bool handleClosedBlockingDoor(Mon& mon, vector<Pos> path)
 {
-    if (mon.isAlive() && !path.empty())
+    if (!mon.isAlive() || path.empty())
     {
-        const Pos& p = path.back();
-        Feature* const f = Map::cells[p.x][p.y].rigid;
-        if (f->getId() == FeatureId::door)
+        return false;
+    }
+
+    const Pos& p = path.back();
+    Feature* const f = Map::cells[p.x][p.y].rigid;
+    if (f->getId() == FeatureId::door)
+    {
+        Door* const door = static_cast<Door*>(f);
+
+        bool props[size_t(PropId::END)];
+        mon.getPropHandler().getPropIds(props);
+
+        if (!door->canMove(props))
         {
-            Door* const door = static_cast<Door*>(f);
-            bool props[size_t(PropId::END)];
-            mon.getPropHandler().getPropIds(props);
-            if (!door->canMove(props))
+            if (!door->isStuck())
             {
-                if (!door->isStuck())
+                if (mon.getData().canOpenDoors)
                 {
-                    if (mon.getData().canOpenDoors)
-                    {
-                        door->tryOpen(&mon);
-                        return true;
-                    }
-                    else if (mon.getData().canBashDoors)
-                    {
-                        door->hit(DmgType::physical, DmgMethod::kick, &mon);
-                        return true;
-                    }
+                    door->tryOpen(&mon);
+                    return true;
                 }
                 else if (mon.getData().canBashDoors)
                 {
                     door->hit(DmgType::physical, DmgMethod::kick, &mon);
                     return true;
                 }
+            }
+            else if (mon.getData().canBashDoors)
+            {
+                door->hit(DmgType::physical, DmgMethod::kick, &mon);
+                return true;
             }
         }
     }

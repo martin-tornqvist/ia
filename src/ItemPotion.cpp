@@ -25,8 +25,14 @@ using namespace std;
 ConsumeItem Potion::activate(Actor* const actor)
 {
     assert(actor);
-    quaff(*actor);
-    return ConsumeItem::yes;
+
+    if (actor->getPropHandler().allowEat(true))
+    {
+        quaff(*actor);
+        return ConsumeItem::yes;
+
+    }
+    return ConsumeItem::no;
 }
 
 void Potion::identify(const bool IS_SILENT_IDENTIFY)
@@ -114,8 +120,7 @@ void Potion::quaff(Actor& actor)
             const string name = getName(ItemRefType::plain, ItemRefInf::none);
             Log::addMsg("I drink an unknown " + name + "...");
         }
-        Map::player->incrShock(ShockLvl::heavy,
-                               ShockSrc::useStrangeItem);
+        Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
     }
 
     quaff_(actor);
@@ -549,9 +554,9 @@ void init()
 
             PotionLook& look = potionLooks_[ELEMENT];
 
-            d->baseNameUnid.names[int(ItemRefType::plain)]   = look.namePlain + " potion";
-            d->baseNameUnid.names[int(ItemRefType::plural)]  = look.namePlain + " potions";
-            d->baseNameUnid.names[int(ItemRefType::a)]       = look.nameA     + " potion";
+            d->baseNameUnId.names[int(ItemRefType::plain)]   = look.namePlain + " potion";
+            d->baseNameUnId.names[int(ItemRefType::plural)]  = look.namePlain + " potions";
+            d->baseNameUnId.names[int(ItemRefType::a)]       = look.nameA     + " potion";
             d->clr = look.clr;
 
             potionLooks_.erase(potionLooks_.begin() + ELEMENT);
@@ -584,9 +589,9 @@ void storeToSaveLines(vector<string>& lines)
         ItemDataT* const d = ItemData::data[i];
         if (d->type == ItemType::potion)
         {
-            lines.push_back(d->baseNameUnid.names[int(ItemRefType::plain)]);
-            lines.push_back(d->baseNameUnid.names[int(ItemRefType::plural)]);
-            lines.push_back(d->baseNameUnid.names[int(ItemRefType::a)]);
+            lines.push_back(d->baseNameUnId.names[int(ItemRefType::plain)]);
+            lines.push_back(d->baseNameUnId.names[int(ItemRefType::plural)]);
+            lines.push_back(d->baseNameUnId.names[int(ItemRefType::a)]);
             lines.push_back(toStr(d->clr.r));
             lines.push_back(toStr(d->clr.g));
             lines.push_back(toStr(d->clr.b));
@@ -601,11 +606,11 @@ void setupFromSaveLines(vector<string>& lines)
         ItemDataT* const d = ItemData::data[i];
         if (d->type == ItemType::potion)
         {
-            d->baseNameUnid.names[int(ItemRefType::plain)]  = lines.front();
+            d->baseNameUnId.names[int(ItemRefType::plain)]  = lines.front();
             lines.erase(begin(lines));
-            d->baseNameUnid.names[int(ItemRefType::plural)] = lines.front();
+            d->baseNameUnId.names[int(ItemRefType::plural)] = lines.front();
             lines.erase(begin(lines));
-            d->baseNameUnid.names[int(ItemRefType::a)]      = lines.front();
+            d->baseNameUnId.names[int(ItemRefType::a)]      = lines.front();
             lines.erase(begin(lines));
             d->clr.r = toInt(lines.front());
             lines.erase(begin(lines));

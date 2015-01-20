@@ -61,7 +61,7 @@ enum class Bg {occultist, rogue, warVet, END};
 namespace PlayerBon
 {
 
-extern bool traitsPicked[int(Trait::END)];
+extern bool traits[int(Trait::END)];
 
 void init();
 

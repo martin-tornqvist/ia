@@ -704,7 +704,6 @@ private:
 enum class FountainEffect
 {
     refreshing,
-    bless,
     curse,
     spirit,
     vitality,

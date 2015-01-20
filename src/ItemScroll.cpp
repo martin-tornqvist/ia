@@ -41,10 +41,16 @@ vector<string> Scroll::getDescr() const
 
 ConsumeItem Scroll::activate(Actor* const actor)
 {
-    if (actor->getPropHandler().allowRead(true))
+    auto& propHandler = actor->getPropHandler();
+
+    if (
+        propHandler.allowCastSpell  (true)  &&
+        propHandler.allowRead       (true)  &&
+        propHandler.allowSpeak      (true))
     {
         return read();
     }
+
     return ConsumeItem::no;
 }
 
@@ -218,9 +224,14 @@ void init()
 
             const string& TITLE = falseNames_[ELEMENT];
 
-            d->baseNameUnid.names[int(ItemRefType::plain)]   = "Manuscript titled "    + TITLE;
-            d->baseNameUnid.names[int(ItemRefType::plural)]  = "Manuscripts titled "   + TITLE;
-            d->baseNameUnid.names[int(ItemRefType::a)]       = "a Manuscript titled "  + TITLE;
+            d->baseNameUnId.names[int(ItemRefType::plain)] =
+                "Manuscript titled "    + TITLE;
+
+            d->baseNameUnId.names[int(ItemRefType::plural)] =
+                "Manuscripts titled "   + TITLE;
+
+            d->baseNameUnId.names[int(ItemRefType::a)] =
+                "a Manuscript titled "  + TITLE;
 
             falseNames_.erase(falseNames_.begin() + ELEMENT);
 
@@ -251,9 +262,10 @@ void storeToSaveLines(vector<string>& lines)
     {
         if (ItemData::data[i]->type == ItemType::scroll)
         {
-            lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]);
-            lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plural)]);
-            lines.push_back(ItemData::data[i]->baseNameUnid.names[int(ItemRefType::a)]);
+            auto& baseNameUnId = ItemData::data[i]->baseNameUnId;
+            lines.push_back(baseNameUnId.names[int(ItemRefType::plain)]);
+            lines.push_back(baseNameUnId.names[int(ItemRefType::plural)]);
+            lines.push_back(baseNameUnId.names[int(ItemRefType::a)]);
         }
     }
 }
@@ -264,11 +276,12 @@ void setupFromSaveLines(vector<string>& lines)
     {
         if (ItemData::data[i]->type == ItemType::scroll)
         {
-            ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plain)]  = lines.front();
+            auto& baseNameUnId = ItemData::data[i]->baseNameUnId;
+            baseNameUnId.names[int(ItemRefType::plain)]  = lines.front();
             lines.erase(begin(lines));
-            ItemData::data[i]->baseNameUnid.names[int(ItemRefType::plural)] = lines.front();
+            baseNameUnId.names[int(ItemRefType::plural)] = lines.front();
             lines.erase(begin(lines));
-            ItemData::data[i]->baseNameUnid.names[int(ItemRefType::a)]      = lines.front();
+            baseNameUnId.names[int(ItemRefType::a)]      = lines.front();
             lines.erase(begin(lines));
         }
     }

@@ -119,7 +119,7 @@ void LitDynamite::onNewTurn()
     nrTurnsLeft_--;
     if (nrTurnsLeft_ <= 0)
     {
-        const int D = PlayerBon::traitsPicked[int(Trait::demExpert)] ? 1 : 0;
+        const int D = PlayerBon::traits[int(Trait::demExpert)] ? 1 : 0;
 
         const Pos pos(pos_);
 

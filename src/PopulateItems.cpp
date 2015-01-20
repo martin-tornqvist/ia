@@ -18,7 +18,7 @@ void mkItemsOnFloor()
 {
     int nrSpawns = Rnd::range(6, 8);
 
-    if (PlayerBon::traitsPicked[int(Trait::treasureHunter)])
+    if (PlayerBon::traits[int(Trait::treasureHunter)])
     {
         nrSpawns += 2;
     }

@@ -36,43 +36,43 @@ int AbilityVals::getVal(const AbilityId abilityId,
         {
         case AbilityId::searching:
             ret += 8;
-            if (PlayerBon::traitsPicked[int(Trait::observant)])   ret += 4;
-            if (PlayerBon::traitsPicked[int(Trait::perceptive)])  ret += 4;
+            if (PlayerBon::traits[int(Trait::observant)])   ret += 4;
+            if (PlayerBon::traits[int(Trait::perceptive)])  ret += 4;
             break;
 
         case AbilityId::melee:
             ret += 45;
-            if (PlayerBon::traitsPicked[int(Trait::adeptMeleeFighter)])   ret += 10;
-            if (PlayerBon::traitsPicked[int(Trait::expertMeleeFighter)])  ret += 10;
-            if (PlayerBon::traitsPicked[int(Trait::masterMeleeFighter)])  ret += 10;
-            if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
+            if (PlayerBon::traits[int(Trait::adeptMeleeFighter)])   ret += 10;
+            if (PlayerBon::traits[int(Trait::expertMeleeFighter)])  ret += 10;
+            if (PlayerBon::traits[int(Trait::masterMeleeFighter)])  ret += 10;
+            if (PlayerBon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
             break;
 
         case AbilityId::ranged:
             ret += 50;
-            if (PlayerBon::traitsPicked[int(Trait::adeptMarksman)])   ret += 10;
-            if (PlayerBon::traitsPicked[int(Trait::expertMarksman)])  ret += 10;
-            if (PlayerBon::traitsPicked[int(Trait::masterMarksman)])  ret += 10;
-            if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
+            if (PlayerBon::traits[int(Trait::adeptMarksman)])   ret += 10;
+            if (PlayerBon::traits[int(Trait::expertMarksman)])  ret += 10;
+            if (PlayerBon::traits[int(Trait::masterMarksman)])  ret += 10;
+            if (PlayerBon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 30;
             break;
 
         case AbilityId::dodgeTrap:
             ret += 5;
-            if (PlayerBon::traitsPicked[int(Trait::dexterous)]) ret += 25;
-            if (PlayerBon::traitsPicked[int(Trait::lithe)])     ret += 25;
+            if (PlayerBon::traits[int(Trait::dexterous)]) ret += 25;
+            if (PlayerBon::traits[int(Trait::lithe)])     ret += 25;
             break;
 
         case AbilityId::dodgeAtt:
             ret += 10;
-            if (PlayerBon::traitsPicked[int(Trait::dexterous)]) ret += 25;
-            if (PlayerBon::traitsPicked[int(Trait::lithe)])     ret += 25;
-            if (PlayerBon::traitsPicked[int(Trait::perseverant)] && HP_PCT <= 25) ret += 50;
+            if (PlayerBon::traits[int(Trait::dexterous)]) ret += 25;
+            if (PlayerBon::traits[int(Trait::lithe)])     ret += 25;
+            if (PlayerBon::traits[int(Trait::perseverant)] && HP_PCT <= 25) ret += 50;
             break;
 
         case AbilityId::stealth:
             ret += 10;
-            if (PlayerBon::traitsPicked[int(Trait::stealthy)])      ret += 50;
-            if (PlayerBon::traitsPicked[int(Trait::imperceptible)]) ret += 30;
+            if (PlayerBon::traits[int(Trait::stealthy)])      ret += 50;
+            if (PlayerBon::traits[int(Trait::imperceptible)]) ret += 30;
             break;
 
         case AbilityId::empty:

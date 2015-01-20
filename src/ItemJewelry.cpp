@@ -24,9 +24,7 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
 
     switch (id)
     {
-    case JewelryEffectId::hpBon:
-        ret = new JewelryEffectHpBon(jewelry);
-        break;
+    case JewelryEffectId::hpBon: ret = new JewelryEffectHpBon(jewelry);    break;
 
     case JewelryEffectId::hpPen:
         ret = new JewelryEffectHpPen(jewelry);
@@ -44,9 +42,7 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
         ret = new JewelryEffectRFire(jewelry);
         break;
 
-    case JewelryEffectId::teleControl:
-        ret = new JewelryEffectTeleControl(jewelry);
-        break;
+    case JewelryEffectId::teleCtrl: ret = new JewelryEffectTeleControl(jewelry); break;
 
     case JewelryEffectId::randomTele:
         ret = new JewelryEffectRandomTele(jewelry);
@@ -218,7 +214,7 @@ void JewelryEffectTeleControl::onEquip()
 {
     jewelry_->carrierProps_.push_back(new PropTeleControl(PropTurns::indefinite));
 
-    const auto&   propData  = PropData::data[size_t(PropId::teleControl)];
+    const auto&   propData  = PropData::data[size_t(PropId::teleCtrl)];
     const string  msg       = propData.msg[propMsgOnStartPlayer];
 
     Log::addMsg(msg);
@@ -231,7 +227,7 @@ UnequipAllowed JewelryEffectTeleControl::onUnequip()
     for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
     jewelry_->carrierProps_.clear();
 
-    const auto&   propData  = PropData::data[size_t(PropId::teleControl)];
+    const auto&   propData  = PropData::data[size_t(PropId::teleCtrl)];
     const string  msg       = propData.msg[propMsgOnEndPlayer];
 
     Log::addMsg(msg);
@@ -249,7 +245,7 @@ void JewelryEffectRandomTele::onStdTurnEquiped()
 {
     auto& propHandler = Map::player->getPropHandler();
 
-    if (Rnd::oneIn(150) && propHandler.allowAct())
+    if (Rnd::oneIn(200) && propHandler.allowAct())
     {
         Log::addMsg("I am being teleported...", clrWhite, true, true);
         Map::player->teleport();
@@ -364,9 +360,9 @@ void JewelryEffectStrangle::onActorTurnEquiped()
 
     Log::addMsg("The " + name + " constricts my throat!", clrMsgBad);
 
-    const bool IS_TOUGH         = PlayerBon::traitsPicked[int(Trait::tough)];
-    const bool IS_RUGGED        = PlayerBon::traitsPicked[int(Trait::rugged)];
-    const bool IS_UNBREAKABLE   = PlayerBon::traitsPicked[int(Trait::unbreakable)];
+    const bool IS_TOUGH         = PlayerBon::traits[int(Trait::tough)];
+    const bool IS_RUGGED        = PlayerBon::traits[int(Trait::rugged)];
+    const bool IS_UNBREAKABLE   = PlayerBon::traits[int(Trait::unbreakable)];
 
     bool props[size_t(PropId::END)];
 
@@ -544,6 +540,81 @@ bool Jewelry::isAllEffectsKnown() const
 }
 
 //--------------------------------------------------------- JEWELRY HANDLING
+namespace
+{
+
+bool isEffectCombinationAllowed(const JewelryEffectId id1,
+                                const JewelryEffectId id2)
+{
+    typedef JewelryEffectId Id;
+
+    assert (id1 != Id::END && id2 != Id::END);
+
+    if (id1 == id2)
+    {
+        return true;
+    }
+
+    switch (id1)
+    {
+    case Id::hpBon:         return id2 != Id::hpPen;
+    case Id::hpPen:         return id2 != Id::hpBon;
+    case Id::spiBon:        return id2 != Id::spiPen;
+    case Id::spiPen:        return id2 != Id::spiBon;
+    case Id::rFire:         return true;
+    case Id::teleCtrl:      return id2 != Id::randomTele;
+    case Id::randomTele:    return id2 != Id::teleCtrl;
+    case Id::light:         return true;
+    case Id::conflict:      return true;
+    case Id::spellReflect:  return true;
+    case Id::strangle:      return false;
+    case Id::END: {} break;
+    }
+    return false;
+}
+
+int getRndItemBucketIdxForEffect(const JewelryEffectId  effectToAssign,
+                                 const vector<ItemId>&  itemBucket)
+{
+    vector<int> itemIdxBucket;
+
+    for (size_t itemBucketIdx = 0; itemBucketIdx < itemBucket.size(); ++itemBucketIdx)
+    {
+        bool canBePlacedOnItem = true;
+
+        //Verify that the effect can be placed on this item by checking if it can
+        //be combined with every effect currently assigned to this item.
+        for (int i = 0; i < int(JewelryEffectId::END); ++i)
+        {
+            const JewelryEffectId curEffect = JewelryEffectId(i);
+
+            if (
+                effectList_[i] == itemBucket[itemBucketIdx] &&
+                !isEffectCombinationAllowed(effectToAssign, curEffect))
+            {
+                //Combination with effect already assigned on item not allowed
+                canBePlacedOnItem = false;
+                break;
+            }
+        }
+
+        if (canBePlacedOnItem)
+        {
+            itemIdxBucket.push_back(itemBucketIdx);
+        }
+    }
+
+    if (itemIdxBucket.empty())
+    {
+        return -1;
+    }
+
+    const int IDX_BUCKET_IDX = Rnd::range(0, itemIdxBucket.size() - 1);
+    return itemIdxBucket[IDX_BUCKET_IDX];
+}
+
+} //namespace
+
 namespace JewelryHandling
 {
 
@@ -578,7 +649,6 @@ void init()
 
 
     //Assign random effects
-
     vector<JewelryEffectId> effectBucket;
 
     effectBucket.reserve(int(JewelryEffectId::END));
@@ -591,7 +661,7 @@ void init()
         }
     }
 
-    vector<ItemId> itemIdBucket;
+    vector<ItemId> itemBucket;
 
     const int MAX_NR_EFFECTS_PER_ITEM = 2;
 
@@ -604,11 +674,11 @@ void init()
             id != strangleAmuletId &&
             (type == ItemType::amulet || type == ItemType::ring))
         {
-            //Some amulets and rings are added multiple times to the bucket. These can get
-            //multiple effects assigned.
+            //Some amulets and rings are added multiple times to the bucket. These can
+            //get multiple effects assigned.
             const int NR = Rnd::range(1, MAX_NR_EFFECTS_PER_ITEM);
 
-            itemIdBucket.insert(end(itemIdBucket), NR, id);
+            itemBucket.insert(end(itemBucket), NR, id);
         }
     }
 
@@ -634,20 +704,29 @@ void init()
         }
 
         //No more items left to assign effects to?
-        if (itemIdBucket.empty())
+        if (itemBucket.empty())
         {
             break;
         }
 
-        //Assign an effect to an item
-        const size_t  ITEM_IDX      = Rnd::range(0, itemIdBucket.size() - 1);
-        const size_t  EFFECT_IDX    = Rnd::range(0, effectBucket.size() - 1);
-        const auto    itemId        = itemIdBucket[ITEM_IDX];
-        const auto    effectId      = effectBucket[EFFECT_IDX];
+        //Try to assign a random effect from the effect bucket to an item
+        const int   EFFECT_IDX  = Rnd::range(0, effectBucket.size() - 1);
+        const auto  effectId    = effectBucket[EFFECT_IDX];
 
-        effectList_[int(effectId)]  = itemId;
+        //This may fail to find an item bucket index. If so, it means that the effect
+        //cannot be placed on any item (there are no free items, and the effect cannot be
+        //combined with any of the effects currently assigned)
+        const int   ITEM_IDX    = getRndItemBucketIdxForEffect(effectId, itemBucket);
 
-        itemIdBucket.erase(begin(itemIdBucket) + ITEM_IDX);
+        if (ITEM_IDX >= 0)
+        {
+            //Effect can be placed (an allowed effect combination or free item exists)
+            const auto itemId           = itemBucket[ITEM_IDX];
+            effectList_[int(effectId)]  = itemId;
+
+            itemBucket.erase(begin(itemBucket) + ITEM_IDX);
+        }
+
         effectBucket.erase(begin(effectBucket) + EFFECT_IDX);
     }
 }

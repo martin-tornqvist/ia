@@ -139,7 +139,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
 
     if (actorReloading.isPlayer())
     {
-        isSwiftReload = PlayerBon::traitsPicked[int(Trait::expertMarksman)] &&
+        isSwiftReload = PlayerBon::traits[int(Trait::expertMarksman)] &&
                         Rnd::coinToss();
     }
 

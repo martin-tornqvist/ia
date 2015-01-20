@@ -159,7 +159,7 @@ void mkLines()
 
     for (int i = 0; i < int(Trait::END); ++i)
     {
-        if (PlayerBon::traitsPicked[i])
+        if (PlayerBon::traits[i])
         {
             const Trait trait = Trait(i);
             string title = "", descr = "";

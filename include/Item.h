@@ -90,14 +90,14 @@ public:
 
     int   getDurability()     const {return dur_;}
     void  setMaxDurability()        {dur_ = 100;}
-    bool  isDestroyed()       const {return getAbsorptionPoints() <= 0;}
+    bool  isDestroyed()       const {return getArmorPoints() <= 0;}
 
     std::string getArmorDataLine(const bool WITH_BRACKETS) const;
 
     int takeDurHitAndGetReducedDmg(const int DMG_BEFORE);
 
 protected:
-    int getAbsorptionPoints() const;
+    int getArmorPoints() const;
 
     virtual void            onEquip_()    {}
     virtual UnequipAllowed  onUnequip_()  {return UnequipAllowed::yes;}

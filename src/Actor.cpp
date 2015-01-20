@@ -228,7 +228,7 @@ void Actor::teleport()
 
         propHandler_->getPropIds(props);
 
-        if (props[int(PropId::teleControl)] && !props[int(PropId::confused)])
+        if (props[int(PropId::teleCtrl)] && !props[int(PropId::confused)])
         {
             playerHasTeleControl = true;
 
