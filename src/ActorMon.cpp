@@ -79,14 +79,42 @@ void Mon::onActorTurn()
             return;
         }
     }
-    else
+    else //Is aware, or player is leader
     {
         waiting_ = false;
     }
 
-    vector<Actor*> seenFoes;
-    getSeenFoes(seenFoes);
-    tgt_ = Utils::getRandomClosestActor(pos, seenFoes);
+    //Pick a target
+    vector<Actor*> tgtBucket;
+
+    bool props[size_t(PropId::END)];
+    propHandler_->getPropIds(props);
+
+    if (props[size_t(PropId::conflict)])
+    {
+        //Monster is conflicted (e.g. by player ring/amulet)
+        tgtBucket = GameTime::actors_;
+
+        bool blockedLos[MAP_W][MAP_H];
+
+        MapParse::run(CellCheck::BlocksLos(), blockedLos);
+
+        //Remove self from vector
+        for (auto it = begin(tgtBucket); it != end(tgtBucket); ++it)
+        {
+            if (*it == this || !isSeeingActor(**it, blockedLos))
+            {
+                tgtBucket.erase(it);
+                break;
+            }
+        }
+    }
+    else //Not conflicted
+    {
+        getSeenFoes(tgtBucket);
+    }
+
+    tgt_ = Utils::getRandomClosestActor(pos, tgtBucket);
 
     if (spellCoolDownCur_ != 0) {spellCoolDownCur_--;}
 
@@ -120,7 +148,7 @@ void Mon::onActorTurn()
 
     //------------------------------ SPECIAL MONSTER ACTIONS
     //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-    if (leader_ != Map::player/*TODO: temporary restriction, allow this later(?)*/)
+    if (leader_ != Map::player && (tgt_ == nullptr || tgt_ == Map::player))
     {
         if (onActorTurn_())
         {
@@ -132,12 +160,21 @@ void Mon::onActorTurn()
     //                               (MOVING, ATTACKING, CASTING SPELLS...)
     //Looking is as an action if monster not aware before, and became aware from looking.
     //(This is to give the monsters some reaction time, and not instantly attack)
-    if (data_->ai[int(AiId::looks)] && leader_ != Map::player)
+    if (
+        data_->ai[int(AiId::looks)] &&
+        leader_ != Map::player      &&
+        (tgt_ == nullptr || tgt_ == Map::player))
     {
-        if (Ai::Info::lookBecomePlayerAware(*this)) {return;}
+        if (Ai::Info::lookBecomePlayerAware(*this))
+        {
+            return;
+        }
     }
 
-    if (data_->ai[int(AiId::makesRoomForFriend)] && leader_ != Map::player)
+    if (
+        data_->ai[int(AiId::makesRoomForFriend)]    &&
+        leader_ != Map::player                      &&
+        (tgt_ == nullptr || tgt_ == Map::player))
     {
         if (Ai::Action::makeRoomForFriend(*this))
         {
@@ -194,7 +231,10 @@ void Mon::onActorTurn()
 
     vector<Pos> path;
 
-    if (data_->ai[int(AiId::pathsToTgtWhenAware)] && leader_ != Map::player)
+    if (
+        data_->ai[int(AiId::pathsToTgtWhenAware)]   &&
+        leader_ != Map::player                      &&
+        tgt_ == Map::player)
     {
         Ai::Info::setPathToPlayerIfAware(*this, path);
     }
@@ -207,25 +247,33 @@ void Mon::onActorTurn()
         }
     }
 
-    if (Ai::Action::stepPath(*this, path)) {return;}
+    if (Ai::Action::stepPath(*this, path))
+    {
+        return;
+    }
 
     if (data_->ai[int(AiId::movesToLeader)])
     {
         Ai::Info::setPathToLeaderIfNoLosToleader(*this, path);
+
         if (Ai::Action::stepPath(*this, path))
         {
             return;
         }
     }
 
-    if (data_->ai[int(AiId::movesToLair)] && leader_ != Map::player)
+    if (
+        data_->ai[int(AiId::movesToLair)]   &&
+        leader_ != Map::player              &&
+        (tgt_ == nullptr || tgt_ == Map::player))
     {
         if (Ai::Action::stepToLairIfLos(*this, lairCell_))
         {
             return;
         }
-        else
+        else //No LOS to lair
         {
+            //Try to use pathfinder to travel to lair
             Ai::Info::setPathToLairIfNoLos(*this, path, lairCell_);
 
             if (Ai::Action::stepPath(*this, path))

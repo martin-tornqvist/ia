@@ -7,6 +7,7 @@
 #include "Log.h"
 #include "GameTime.h"
 #include "Render.h"
+#include "ActorMon.h"
 
 using namespace std;
 
@@ -300,7 +301,23 @@ string JewelryEffectConflict::getDescr() const
 
 void JewelryEffectConflict::onStdTurnEquiped()
 {
+    const int CONFLICT_ONE_IN_N = 15;
 
+    if (Rnd::oneIn(CONFLICT_ONE_IN_N))
+    {
+        vector<Actor*> seenFoes;
+        Map::player->getSeenFoes(seenFoes);
+
+        if (!seenFoes.empty())
+        {
+            const int   IDX = Rnd::range(0, seenFoes.size() - 1);
+            auto*       mon = static_cast<Mon*>(seenFoes[IDX]);
+
+            mon->getPropHandler().tryApplyProp(new PropConflict(PropTurns::std));
+
+            reveal();
+        }
+    }
 }
 
 //--------------------------------------------------------- EFFECT: SPELL REFLECTION

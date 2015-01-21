@@ -44,6 +44,7 @@ enum class PropId
     teleCtrl, //Note: This only makes sense for the player
     spellReflect,
     strangled,
+    conflict,
 
     //Properties describing the actors body and/or method of moving around
     flying,
@@ -57,7 +58,7 @@ enum class PropId
     disabledMelee,
     disabledRanged,
 
-    //Special (for supporting specific game mechanics)
+    //Special (for supporting very specific game mechanics)
     possByZuul,
     recoil,
     aiming,
@@ -140,10 +141,11 @@ public:
 
     ~PropHandler();
 
-    void tryApplyProp(Prop* const prop, const bool FORCE_EFFECT = false,
-                      const bool NO_MESSAGES = false,
-                      const bool DISABLE_REDRAW = false,
-                      const bool DISABLE_PROP_START_EFFECTS = false);
+    void tryApplyProp(Prop* const   prop,
+                      const bool    FORCE_EFFECT                = false,
+                      const bool    NO_MESSAGES                 = false,
+                      const bool    DISABLE_REDRAW              = false,
+                      const bool    DISABLE_PROP_START_EFFECTS  = false);
 
     void tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE);
 
@@ -957,6 +959,14 @@ public:
     PropSpellReflect(PropTurns turnsInit, int turns = -1) :
         Prop(PropId::spellReflect, turnsInit, turns) {}
     ~PropSpellReflect() override {}
+};
+
+class PropConflict: public Prop
+{
+public:
+    PropConflict(PropTurns turnsInit, int turns = -1) :
+        Prop(PropId::conflict, turnsInit, turns) {}
+    ~PropConflict() override {}
 };
 
 class PropStrangled: public Prop

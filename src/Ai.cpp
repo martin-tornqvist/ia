@@ -453,53 +453,57 @@ namespace Info
 
 bool lookBecomePlayerAware(Mon& mon)
 {
-    if (mon.isAlive())
+    if (!mon.isAlive())
     {
+        return false;
+    }
 
-        const bool WAS_AWARE_BEFORE = mon.awareCounter_ > 0;
+    const bool WAS_AWARE_BEFORE = mon.awareCounter_ > 0;
 
-        vector<Actor*> seenFoes;
-        mon.getSeenFoes(seenFoes);
+    vector<Actor*> seenFoes;
+    mon.getSeenFoes(seenFoes);
 
-        if (!seenFoes.empty() && WAS_AWARE_BEFORE)
+    if (!seenFoes.empty() && WAS_AWARE_BEFORE)
+    {
+        mon.becomeAware(false);
+        return false;
+    }
+
+    for (Actor* actor : seenFoes)
+    {
+        if (actor->isPlayer())
         {
-            mon.becomeAware(false);
-            return false;
-        }
+            if (mon.isSpottingHiddenActor(*actor))
+            {
+                mon.becomeAware(true);
 
-        for (Actor* actor : seenFoes)
-        {
-            if (actor == Map::player)
-            {
-                if (mon.isSpottingHiddenActor(*actor))
-                {
-                    mon.becomeAware(true);
-                    if (WAS_AWARE_BEFORE)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        GameTime::tick();
-                        return true;
-                    }
-                }
-            }
-            else
-            {
-                mon.becomeAware(false);
                 if (WAS_AWARE_BEFORE)
                 {
                     return false;
                 }
-                else
+                else //Was not aware before
                 {
                     GameTime::tick();
                     return true;
                 }
             }
         }
+        else //Other actor is monster
+        {
+            mon.becomeAware(false);
+
+            if (WAS_AWARE_BEFORE)
+            {
+                return false;
+            }
+            else //Was not aware before
+            {
+                GameTime::tick();
+                return true;
+            }
+        }
     }
+
     return false;
 }
 
@@ -564,58 +568,56 @@ void setPathToLeaderIfNoLosToleader(Mon& mon, vector<Pos>& path)
 
 void setPathToPlayerIfAware(Mon& mon, vector<Pos>& path)
 {
-    if (mon.isAlive())
-    {
-        if (mon.awareCounter_ > 0)
-        {
-
-            bool blocked[MAP_W][MAP_H];
-            Utils::resetArray(blocked, false);
-
-            bool props[size_t(PropId::END)];
-            mon.getPropHandler().getPropIds(props);
-
-            for (int y = 1; y < MAP_H - 1; ++y)
-            {
-                for (int x = 1; x < MAP_W - 1; ++x)
-                {
-                    const auto* const f = Map::cells[x][y].rigid;
-                    if (!f->canMove(props))
-                    {
-                        if (f->getId() == FeatureId::door)
-                        {
-                            const Door* const door = static_cast<const Door*>(f);
-
-                            const ActorDataT& d = mon.getData();
-
-                            if ((!d.canOpenDoors && !d.canBashDoors) || door->isHandledExternally())
-                            {
-                                blocked[x][y] = true;
-                            }
-                        }
-                        else //Not a door
-                        {
-                            blocked[x][y] = true;
-                        }
-                    }
-                }
-            }
-
-            //Append living adjacent actors to the blocking array
-            MapParse::run(CellCheck::LivingActorsAdjToPos(mon.pos),
-                          blocked, MapParseMode::append);
-
-            PathFind::run(mon.pos, Map::player->pos, blocked, path);
-        }
-        else
-        {
-            path.clear();
-        }
-    }
-    else
+    if (!mon.isAlive() || mon.awareCounter_ <= 0)
     {
         path.clear();
     }
+
+    bool blocked[MAP_W][MAP_H];
+    Utils::resetArray(blocked, false);
+
+    bool props[size_t(PropId::END)];
+    mon.getPropHandler().getPropIds(props);
+
+    const int X0 = 1;
+    const int Y0 = 1;
+    const int X1 = MAP_W - 1;
+    const int Y1 = MAP_H - 1;
+
+    for (int x = X0; x < X1; ++x)
+    {
+        for (int y = Y0; y < Y1; ++y)
+        {
+            const auto* const f = Map::cells[x][y].rigid;
+
+            if (!f->canMove(props))
+            {
+                if (f->getId() == FeatureId::door)
+                {
+                    const Door* const door = static_cast<const Door*>(f);
+
+                    const ActorDataT& d = mon.getData();
+
+                    if (
+                        (!d.canOpenDoors && !d.canBashDoors) ||
+                        door->isHandledExternally())
+                    {
+                        blocked[x][y] = true;
+                    }
+                }
+                else //Not a door
+                {
+                    blocked[x][y] = true;
+                }
+            }
+        }
+    }
+
+    //Append living adjacent actors to the blocking array
+    MapParse::run(CellCheck::LivingActorsAdjToPos(mon.pos),
+                  blocked, MapParseMode::append);
+
+    PathFind::run(mon.pos, Map::player->pos, blocked, path);
 }
 
 void setSpecialBlockedCells(Mon& mon, bool a[MAP_W][MAP_H])

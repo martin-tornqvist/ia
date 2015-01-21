@@ -631,6 +631,17 @@ void initDataList()
     d.alignment = propAlignmentBad;
     addPropData(d);
 
+    d.id = PropId::conflict;
+    d.stdRndTurns = Range(10, 20);
+    d.msg[propMsgOnStartMon] = "Looks conflicted.";
+    d.msg[propMsgOnEndMon] = "Looks more determined.";
+    d.isMakingMonAware = true;
+    d.allowDisplayTurns = false;
+    d.allowApplyMoreWhileActive = true;
+    d.updatePlayerVisualWhenStartOrEnd = false;
+    d.alignment = propAlignmentBad;
+    addPropData(d);
+
     d.id = PropId::possByZuul;
     d.isMakingMonAware = false;
     d.allowDisplayTurns = false;
@@ -794,6 +805,7 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
     case PropId::teleCtrl:          return new PropTeleControl    (turnsInit, NR_TURNS);
     case PropId::spellReflect:      return new PropSpellReflect   (turnsInit, NR_TURNS);
     case PropId::strangled:         return new PropStrangled      (turnsInit, NR_TURNS);
+    case PropId::conflict:          return new PropConflict       (turnsInit, NR_TURNS);
     case PropId::END: {} break;
     }
     return nullptr;

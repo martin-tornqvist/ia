@@ -1408,7 +1408,9 @@ void Player::moveDir(Dir dir)
                 if (item)
                 {
                     const bool CAN_SEE = propHandler_->allowSee();
-                    Log::addMsg(CAN_SEE ? "I see here: " :
+
+                    Log::addMsg(CAN_SEE ?
+                                "I see here:" :
                                 "I try to feel what is lying here...",
                                 clrWhite, true);
 

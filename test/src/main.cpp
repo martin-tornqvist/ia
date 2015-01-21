@@ -608,7 +608,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
     CHECK(props[int(PropId::rBreath)]);
 
     //Take off asbeshos suit
-    inv.moveToGeneral(bodySlot);
+    inv.moveToGeneral(SlotId::body);
     item->onUnequip();
     CHECK_EQUAL(item, inv.general_.back());
 
@@ -726,11 +726,11 @@ TEST_FIXTURE(BasicFixture, SavingGame)
     static_cast<StrangeDevice*>(item)->condition_ = Condition::shoddy;
     inv.putInGeneral(item);
     item = ItemFactory::mk(ItemId::electricLantern);
-    DeviceLantern* lantern        = static_cast<DeviceLantern*>(item);
-    lantern->nrTurnsLeft_         = 789;
-    lantern->nrMalfunctTurnsLeft_ = 456;
-    lantern->malfState_           = LanternWorkingState::flicker;
-    lantern->isActivated_         = true;
+    DeviceLantern* lantern          = static_cast<DeviceLantern*>(item);
+    lantern->nrTurnsLeft_           = 789;
+    lantern->nrFlickerTurnsLeft_    = 456;
+    lantern->workingState_          = LanternWorkingState::flicker;
+    lantern->isActivated_           = true;
     inv.putInGeneral(item);
 
     //Player
@@ -827,8 +827,8 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
             isElectricLanternFound = true;
             DeviceLantern* lantern = static_cast<DeviceLantern*>(item);
             CHECK_EQUAL(789, lantern->nrTurnsLeft_);
-            CHECK_EQUAL(456, lantern->nrMalfunctTurnsLeft_);
-            CHECK_EQUAL(int(LanternWorkingState::flicker), int(lantern->malfState_));
+            CHECK_EQUAL(456, lantern->nrFlickerTurnsLeft_);
+            CHECK_EQUAL(int(LanternWorkingState::flicker), int(lantern->workingState_));
             CHECK(lantern->isActivated_);
         }
     }
