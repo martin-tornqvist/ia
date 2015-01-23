@@ -99,13 +99,16 @@ void Mon::onActorTurn()
 
         MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
-        //Remove self from vector
-        for (auto it = begin(tgtBucket); it != end(tgtBucket); ++it)
+        //Remove self and all unseen actors from vector
+        for (auto it = begin(tgtBucket); it != end(tgtBucket);)
         {
             if (*it == this || !isSeeingActor(**it, blockedLos))
             {
                 tgtBucket.erase(it);
-                break;
+            }
+            else
+            {
+                ++it;
             }
         }
     }

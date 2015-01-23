@@ -111,7 +111,8 @@ void readFile(vector<HighScoreEntry>& entries)
             const int INS             = toInt(line);
             getline(file, line);
             Bg bg                     = Bg(toInt(line));
-            entries.push_back(HighScoreEntry(dateAndTime, name, XP, LVL, DLVL, INS, isWin, bg));
+
+            entries.push_back({dateAndTime, name, XP, LVL, DLVL, INS, isWin, bg});
         }
         file.close();
     }
@@ -138,13 +139,15 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
 
     int yPos = 1;
 
-    Render::drawText("Ended",       panel, Pos(X_POS_DATE,    yPos), clrWhite);
-    Render::drawText("Name",        panel, Pos(X_POS_NAME,    yPos), clrWhite);
-    Render::drawText("Level",       panel, Pos(X_POS_LVL,     yPos), clrWhite);
-    Render::drawText("Depth",       panel, Pos(X_POS_DLVL,    yPos), clrWhite);
-    Render::drawText("Insanity",    panel, Pos(X_POS_INS,     yPos), clrWhite);
-    Render::drawText("Win",         panel, Pos(X_POS_WIN,     yPos), clrWhite);
-    Render::drawText("Score",       panel, Pos(X_POS_SCORE,   yPos), clrWhite);
+    const Clr& labelClr = clrWhiteHigh;
+
+    Render::drawText("Ended",       panel, Pos(X_POS_DATE,    yPos), labelClr);
+    Render::drawText("Name",        panel, Pos(X_POS_NAME,    yPos), labelClr);
+    Render::drawText("Level",       panel, Pos(X_POS_LVL,     yPos), labelClr);
+    Render::drawText("Depth",       panel, Pos(X_POS_DLVL,    yPos), labelClr);
+    Render::drawText("Insanity",    panel, Pos(X_POS_INS,     yPos), labelClr);
+    Render::drawText("Win",         panel, Pos(X_POS_WIN,     yPos), labelClr);
+    Render::drawText("Score",       panel, Pos(X_POS_SCORE,   yPos), labelClr);
 
     yPos++;
 
@@ -157,15 +160,16 @@ void draw(const vector<HighScoreEntry>& entries, const int TOP_ELEMENT)
     {
         const auto entry = entries[i];
 
-        const string dateAndTime  = entry.getDateAndTime();
-        const string name         = entry.getName();
-        const string lvl          = toStr(entry.getLvl());
-        const string dlvl         = toStr(entry.getDlvl());
-        const string ins          = toStr(entry.getInsanity());
-        const string win          = entry.isWin() ? "Yes" : "No";
-        const string score        = toStr(entry.getScore());
+        const string dateAndTime    = entry.getDateAndTime();
+        const string name           = entry.getName();
+        const string lvl            = toStr(entry.getLvl());
+        const string dlvl           = toStr(entry.getDlvl());
+        const string ins            = toStr(entry.getInsanity());
+        const string win            = entry.isWin() ? "Yes" : "No";
+        const string score          = toStr(entry.getScore());
 
-        const Clr& clr = clrMenuHighlight;
+        const Clr& clr = clrWhite;
+
         Render::drawText(dateAndTime, panel, Pos(X_POS_DATE,    yPos), clr);
         Render::drawText(name,        panel, Pos(X_POS_NAME,    yPos), clr);
         Render::drawText(lvl,         panel, Pos(X_POS_LVL,     yPos), clr);
@@ -222,10 +226,12 @@ void runHighScoreScreen()
                 topNr = min(NR_LINES_TOT - MAX_NR_LINES_ON_SCR, topNr);
             }
         }
+
         if (d.key == '8' || d.sdlKey == SDLK_UP || d.key == 'k')
         {
             topNr = max(0, topNr - LINE_JUMP);
         }
+
         if (d.sdlKey == SDLK_SPACE || d.sdlKey == SDLK_ESCAPE)
         {
             break;
@@ -258,6 +264,7 @@ vector<HighScoreEntry> getEntriesSorted()
 {
     vector<HighScoreEntry> entries;
     readFile(entries);
+
     if (!entries.empty())
     {
         sortEntries(entries);

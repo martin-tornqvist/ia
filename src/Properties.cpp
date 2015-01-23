@@ -50,8 +50,6 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "is resistant to physical harm.";
     d.msg[propMsgOnEndPlayer] = "I feel vulnerable to physical harm.";
     d.msg[propMsgOnEndMon] = "is vulnerable to physical harm.";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -68,8 +66,6 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "is resistant to fire.";
     d.msg[propMsgOnEndPlayer] = "I feel vulnerable to fire.";
     d.msg[propMsgOnEndMon] = "is vulnerable to fire.";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -86,8 +82,6 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "is resistant to cold.";
     d.msg[propMsgOnEndPlayer] = "I feel vulnerable to cold.";
     d.msg[propMsgOnEndMon] = "is vulnerable to cold.";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -104,8 +98,6 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "is resistant to poison.";
     d.msg[propMsgOnEndPlayer] = "I feel vulnerable to poison.";
     d.msg[propMsgOnEndMon] = "is vulnerable to poison.";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -122,8 +114,6 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "is resistant to electricity.";
     d.msg[propMsgOnEndPlayer] = "I feel vulnerable to electricity.";
     d.msg[propMsgOnEndMon] = "is vulnerable to electricity.";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -140,8 +130,6 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "is resistant to acid.";
     d.msg[propMsgOnEndPlayer] = "I feel vulnerable to acid.";
     d.msg[propMsgOnEndMon] = "is vulnerable to acid.";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -158,8 +146,6 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "is resistant to sleep.";
     d.msg[propMsgOnEndPlayer] = "I feel vulnerable to sleep.";
     d.msg[propMsgOnEndMon] = "is vulnerable to sleep.";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -176,8 +162,6 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "is resistant to fear.";
     d.msg[propMsgOnEndPlayer] = "I feel vulnerable to fear.";
     d.msg[propMsgOnEndMon] = "is vulnerable to fear.";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -194,8 +178,6 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "is resistant to confusion.";
     d.msg[propMsgOnEndPlayer] = "I feel vulnerable to confusion.";
     d.msg[propMsgOnEndMon] = "is vulnerable to confusion.";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -208,12 +190,10 @@ void initDataList()
     d.stdRndTurns = Range(40, 60);
     d.name = "Disease resistance";
     d.nameShort = "rDisease";
-    d.msg[propMsgOnStartPlayer] = "";
-    d.msg[propMsgOnStartMon] = "";
-    d.msg[propMsgOnEndPlayer] = "";
-    d.msg[propMsgOnEndMon] = "";
-    d.msg[propMsgOnResPlayer] = "";
-    d.msg[propMsgOnResMon] = "";
+    d.msg[propMsgOnStartPlayer] = "I feel resistant to disease.";
+    d.msg[propMsgOnStartMon] = "is resistant to disease.";
+    d.msg[propMsgOnEndPlayer] = "I feel vulnerable to disease.";
+    d.msg[propMsgOnEndMon] = "is vulnerable to disease.";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;

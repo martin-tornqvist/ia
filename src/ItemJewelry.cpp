@@ -25,7 +25,41 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
 
     switch (id)
     {
-    case JewelryEffectId::hpBon: ret = new JewelryEffectHpBon(jewelry);    break;
+    case JewelryEffectId::rFire:
+        ret = new JewelryEffectRFire(jewelry);
+        break;
+
+    case JewelryEffectId::rCold:
+        ret = new JewelryEffectRCold(jewelry);
+        break;
+
+    case JewelryEffectId::rElec:
+        ret = new JewelryEffectRElec(jewelry);
+        break;
+
+    case JewelryEffectId::rPoison:
+        ret = new JewelryEffectRPoison(jewelry);
+        break;
+
+    case JewelryEffectId::rDisease:
+        ret = new JewelryEffectRDisease(jewelry);
+        break;
+
+    case JewelryEffectId::teleCtrl:
+        ret = new JewelryEffectTeleControl(jewelry);
+        break;
+
+    case JewelryEffectId::light:
+        ret = new JewelryEffectLight(jewelry);
+        break;
+
+    case JewelryEffectId::spellReflect:
+        ret = new JewelryEffectSpellReflect(jewelry);
+        break;
+
+    case JewelryEffectId::hpBon:
+        ret = new JewelryEffectHpBon(jewelry);
+        break;
 
     case JewelryEffectId::hpPen:
         ret = new JewelryEffectHpPen(jewelry);
@@ -39,30 +73,20 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
         ret = new JewelryEffectSpiPen(jewelry);
         break;
 
-    case JewelryEffectId::rFire:
-        ret = new JewelryEffectRFire(jewelry);
-        break;
-
-    case JewelryEffectId::teleCtrl: ret = new JewelryEffectTeleControl(jewelry); break;
-
     case JewelryEffectId::randomTele:
         ret = new JewelryEffectRandomTele(jewelry);
-        break;
-
-    case JewelryEffectId::light:
-        ret = new JewelryEffectLight(jewelry);
         break;
 
     case JewelryEffectId::conflict:
         ret = new JewelryEffectConflict(jewelry);
         break;
 
-    case JewelryEffectId::spellReflect:
-        ret = new JewelryEffectSpellReflect(jewelry);
+    case JewelryEffectId::burden:
+        ret = new JewelryEffectBurden(jewelry);
         break;
 
-    case JewelryEffectId::strangle:
-        ret = new JewelryEffectStrangle(jewelry);
+    case JewelryEffectId::noise:
+        ret = new JewelryEffectNoise(jewelry);
         break;
 
     case JewelryEffectId::END: {}
@@ -98,12 +122,101 @@ void JewelryEffect::reveal()
     }
 }
 
-//--------------------------------------------------------- EFFECT: HP BONUS
-string JewelryEffectHpBon::getDescr() const
+//--------------------------------------------------------- JEWELRY PROPERTY EFFECT
+void JewelryPropertyEffect::onEquip()
 {
-    return "JewelryEffectHpBon.";
+    Prop* const prop = mkProp();
+
+    assert(prop);
+
+    jewelry_->carrierProps_.push_back(prop);
+
+    GameTime::updateLightMap();
+    Map::player->updateFov();
+    Render::drawMapAndInterface();
+
+    const auto&   propData  = PropData::data[size_t(prop->getId())];
+    const string  msg       = propData.msg[propMsgOnStartPlayer];
+
+    Log::addMsg(msg);
+
+    reveal();
 }
 
+UnequipAllowed JewelryPropertyEffect::onUnequip()
+{
+    vector<PropId> propIdsEnded;
+
+    for (Prop* const prop : jewelry_->carrierProps_)
+    {
+        propIdsEnded.push_back(prop->getId());
+        delete prop;
+    }
+    jewelry_->carrierProps_.clear();
+
+    GameTime::updateLightMap();
+    Map::player->updateFov();
+    Render::drawMapAndInterface();
+
+    for (const PropId propId : propIdsEnded)
+    {
+        const auto&     propData    = PropData::data[size_t(propId)];
+        const string    msg         = propData.msg[propMsgOnEndPlayer];
+        Log::addMsg(msg);
+    }
+
+    return UnequipAllowed::yes;
+}
+
+//--------------------------------------------------------- EFFECT: FIRE RESISTANCE
+Prop* JewelryEffectRFire::mkProp() const
+{
+    return new PropRFire(PropTurns::indefinite);
+}
+
+//--------------------------------------------------------- EFFECT: COLD RESISTANCE
+Prop* JewelryEffectRCold::mkProp() const
+{
+    return new PropRCold(PropTurns::indefinite);
+}
+
+//--------------------------------------------------------- EFFECT: ELEC RESISTANCE
+Prop* JewelryEffectRElec::mkProp() const
+{
+    return new PropRElec(PropTurns::indefinite);
+}
+
+//--------------------------------------------------------- EFFECT: POISON RESISTANCE
+Prop* JewelryEffectRPoison::mkProp() const
+{
+    return new PropRPoison(PropTurns::indefinite);
+}
+
+//--------------------------------------------------------- EFFECT: DISEASE RESISTANCE
+Prop* JewelryEffectRDisease::mkProp() const
+{
+    return new PropRDisease(PropTurns::indefinite);
+}
+
+//--------------------------------------------------------- EFFECT: TELEPORT CONTROL
+Prop* JewelryEffectTeleControl::mkProp() const
+{
+    return new PropTeleControl(PropTurns::indefinite);
+}
+
+//--------------------------------------------------------- EFFECT: LIGHT
+Prop* JewelryEffectLight::mkProp() const
+{
+    return new PropRadiant(PropTurns::indefinite);
+}
+
+//--------------------------------------------------------- EFFECT: SPELL REFLECTION
+Prop* JewelryEffectSpellReflect::mkProp() const
+{
+    return new PropSpellReflect(PropTurns::indefinite);
+}
+
+//--------------------------------------------------------- EFFECT: HP BONUS
 void JewelryEffectHpBon::onEquip()
 {
     Map::player->changeMaxHp(4, true);
@@ -118,11 +231,6 @@ UnequipAllowed JewelryEffectHpBon::onUnequip()
 }
 
 //--------------------------------------------------------- EFFECT: HP PENALTY
-string JewelryEffectHpPen::getDescr() const
-{
-    return "JewelryEffectHpPen.";
-}
-
 void JewelryEffectHpPen::onEquip()
 {
     Map::player->changeMaxHp(-2, true);
@@ -137,11 +245,6 @@ UnequipAllowed JewelryEffectHpPen::onUnequip()
 }
 
 //--------------------------------------------------------- EFFECT: SPI BONUS
-string JewelryEffectSpiBon::getDescr() const
-{
-    return "JewelryEffectSpiBon.";
-}
-
 void JewelryEffectSpiBon::onEquip()
 {
     Map::player->changeMaxSpi(2, true);
@@ -156,11 +259,6 @@ UnequipAllowed JewelryEffectSpiBon::onUnequip()
 }
 
 //--------------------------------------------------------- EFFECT: SPI PENALTY
-string JewelryEffectSpiPen::getDescr() const
-{
-    return "JewelryEffectSpiPen.";
-}
-
 void JewelryEffectSpiPen::onEquip()
 {
     Map::player->changeMaxSpi(-2, true);
@@ -174,79 +272,14 @@ UnequipAllowed JewelryEffectSpiPen::onUnequip()
     return UnequipAllowed::yes;
 }
 
-//--------------------------------------------------------- EFFECT: FIRE RESISTANCE
-string JewelryEffectRFire::getDescr() const
-{
-    return "JewelryEffectRFire.";
-}
-
-void JewelryEffectRFire::onEquip()
-{
-    jewelry_->carrierProps_.push_back(new PropRFire(PropTurns::indefinite));
-
-    const auto&   propData  = PropData::data[size_t(PropId::rFire)];
-    const string  msg       = propData.msg[propMsgOnStartPlayer];
-
-    Log::addMsg(msg);
-
-    reveal();
-}
-
-UnequipAllowed JewelryEffectRFire::onUnequip()
-{
-    for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
-    jewelry_->carrierProps_.clear();
-
-    const auto&   propData  = PropData::data[size_t(PropId::rFire)];
-    const string  msg       = propData.msg[propMsgOnEndPlayer];
-
-    Log::addMsg(msg);
-
-    return UnequipAllowed::yes;
-}
-
-//--------------------------------------------------------- EFFECT: TELEPORT CONTROL
-string JewelryEffectTeleControl::getDescr() const
-{
-    return "JewelryEffectTeleControl.";
-}
-
-void JewelryEffectTeleControl::onEquip()
-{
-    jewelry_->carrierProps_.push_back(new PropTeleControl(PropTurns::indefinite));
-
-    const auto&   propData  = PropData::data[size_t(PropId::teleCtrl)];
-    const string  msg       = propData.msg[propMsgOnStartPlayer];
-
-    Log::addMsg(msg);
-
-    reveal();
-}
-
-UnequipAllowed JewelryEffectTeleControl::onUnequip()
-{
-    for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
-    jewelry_->carrierProps_.clear();
-
-    const auto&   propData  = PropData::data[size_t(PropId::teleCtrl)];
-    const string  msg       = propData.msg[propMsgOnEndPlayer];
-
-    Log::addMsg(msg);
-
-    return UnequipAllowed::yes;
-}
-
 //--------------------------------------------------------- EFFECT: RANDOM TELEPORTATION
-string JewelryEffectRandomTele::getDescr() const
-{
-    return "JewelryEffectRandomTele.";
-}
-
 void JewelryEffectRandomTele::onStdTurnEquiped()
 {
     auto& propHandler = Map::player->getPropHandler();
 
-    if (Rnd::oneIn(200) && propHandler.allowAct())
+    const int TELE_ON_IN_N = 200;
+
+    if (Rnd::oneIn(TELE_ON_IN_N) && propHandler.allowAct())
     {
         Log::addMsg("I am being teleported...", clrWhite, true, true);
         Map::player->teleport();
@@ -254,51 +287,7 @@ void JewelryEffectRandomTele::onStdTurnEquiped()
     }
 }
 
-//--------------------------------------------------------- EFFECT: LIGHT
-string JewelryEffectLight::getDescr() const
-{
-    return "JewelryEffectLight.";
-}
-
-void JewelryEffectLight::onEquip()
-{
-    jewelry_->carrierProps_.push_back(new PropRadiant(PropTurns::indefinite));
-
-    GameTime::updateLightMap();
-    Map::player->updateFov();
-    Render::drawMapAndInterface();
-
-    const auto&   propData  = PropData::data[size_t(PropId::radiant)];
-    const string  msg       = propData.msg[propMsgOnStartPlayer];
-
-    Log::addMsg(msg);
-
-    reveal();
-}
-
-UnequipAllowed JewelryEffectLight::onUnequip()
-{
-    for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
-    jewelry_->carrierProps_.clear();
-
-    GameTime::updateLightMap();
-    Map::player->updateFov();
-    Render::drawMapAndInterface();
-
-    const auto&   propData  = PropData::data[size_t(PropId::radiant)];
-    const string  msg       = propData.msg[propMsgOnEndPlayer];
-
-    Log::addMsg(msg);
-
-    return UnequipAllowed::yes;
-}
-
 //--------------------------------------------------------- EFFECT: CONFLICT
-string JewelryEffectConflict::getDescr() const
-{
-    return "JewelryEffectConflict.";
-}
-
 void JewelryEffectConflict::onStdTurnEquiped()
 {
     const int CONFLICT_ONE_IN_N = 15;
@@ -320,107 +309,44 @@ void JewelryEffectConflict::onStdTurnEquiped()
     }
 }
 
-//--------------------------------------------------------- EFFECT: SPELL REFLECTION
-string JewelryEffectSpellReflect::getDescr() const
+//--------------------------------------------------------- EFFECT: NOISE
+void JewelryEffectNoise::onStdTurnEquiped()
 {
-    return "JewelryEffectSpellReflect.";
-}
+    const int NOISE_ONE_IN_N = 150;
 
-void JewelryEffectSpellReflect::onEquip()
-{
-    jewelry_->carrierProps_.push_back(new PropSpellReflect(PropTurns::indefinite));
-
-    const auto&   propData  = PropData::data[size_t(PropId::spellReflect)];
-    const string  msg       = propData.msg[propMsgOnStartPlayer];
-
-    Log::addMsg(msg);
-
-    reveal();
-}
-
-UnequipAllowed JewelryEffectSpellReflect::onUnequip()
-{
-    for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
-    jewelry_->carrierProps_.clear();
-
-    const auto&   propData  = PropData::data[size_t(PropId::spellReflect)];
-    const string  msg       = propData.msg[propMsgOnEndPlayer];
-
-    Log::addMsg(msg);
-
-    return UnequipAllowed::yes;
-}
-
-//--------------------------------------------------------- EFFECT: STRANGULATION
-string JewelryEffectStrangle::getDescr() const
-{
-    return "JewelryEffectStrangle.";
-}
-
-void JewelryEffectStrangle::onEquip()
-{
-    jewelry_->carrierProps_.push_back(new PropStrangled(PropTurns::indefinite));
-}
-
-UnequipAllowed JewelryEffectStrangle::onUnequip()
-{
-    const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
-
-    Log::addMsg("The " + name + " is stuck!");
-
-    return UnequipAllowed::no;
-}
-
-void JewelryEffectStrangle::onActorTurnEquiped()
-{
-    const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
-
-    Log::addMsg("The " + name + " constricts my throat!", clrMsgBad);
-
-    const bool IS_TOUGH         = PlayerBon::traits[int(Trait::tough)];
-    const bool IS_RUGGED        = PlayerBon::traits[int(Trait::rugged)];
-    const bool IS_UNBREAKABLE   = PlayerBon::traits[int(Trait::unbreakable)];
-
-    bool props[size_t(PropId::END)];
-
-    Map::player->getPropHandler().getPropIds(props);
-
-    const bool IS_WEAKENED = props[size_t(PropId::weakened)];
-    const bool IS_FRENZIED = props[size_t(PropId::frenzied)];
-
-    const int REMOVE_ONE_IN_N   = IS_UNBREAKABLE  ? 3 :
-                                  IS_RUGGED       ? 6 :
-                                  IS_TOUGH        ? 9 : 12;
-
-    if (IS_WEAKENED)
+    if (Rnd::oneIn(NOISE_ONE_IN_N))
     {
-        Log::addMsg("I tear at it feebly...", clrWhite, false, true);
+        const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
+
+        SndEmit::emitSnd(Snd("The " + name + " makes a loud noise!", SfxId::END,
+                             IgnoreMsgIfOriginSeen::no, Map::player->pos, Map::player,
+                             SndVol::high, AlertsMon::yes
+                            ));
+
+        Log::morePrompt();
+
+        reveal();
     }
-    else if (!IS_FRENZIED)
+}
+
+//--------------------------------------------------------- EFFECT: BURDEN
+void JewelryEffectBurden::onEquip()
+{
+    if (!effectsKnown_[size_t(getId())])
     {
-        Log::addMsg("I struggle to remove it...", clrWhite, false, true);
+        const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
+        Log::addMsg("The " + name + " suddenly feels strangely heavy to carry.");
+        reveal();
     }
+}
 
-    if (!IS_WEAKENED && (IS_FRENZIED || Rnd::oneIn(REMOVE_ONE_IN_N)))
+void JewelryEffectBurden::changeItemWeight(int& weightRef)
+{
+    if (effectsKnown_[size_t(getId())])
     {
-        Log::addMsg("I tear it off!", clrWhite, false, true);
-
-        for (Prop* prop : jewelry_->carrierProps_) {delete prop;}
-        jewelry_->carrierProps_.clear();
-
-        Inventory& inv = Map::player->getInv();
-
-        assert(inv.slots_[size_t(SlotId::neck)].item);
-        assert(inv.slots_[size_t(SlotId::neck)].item->getData().type == ItemType::amulet);
-
-        inv.moveToGeneral(SlotId::neck);
+        //If revealed, this item weighs the average of "heavy" and "medium"
+        weightRef = (int(ItemWeight::heavy) + int(ItemWeight::medium)) / 2;
     }
-    else //Failed to remove
-    {
-        Log::addMsg("It is stuck!", clrWhite, true);
-    }
-
-    reveal();
 }
 
 //--------------------------------------------------------- JEWELRY
@@ -533,6 +459,18 @@ void Jewelry::identify(const bool IS_SILENT_IDENTIFY)
     data_->isIdentified = true;
 }
 
+int Jewelry::getWeight() const
+{
+    int weight = Item::getWeight();
+
+    for (auto* effect : effects_)
+    {
+        effect->changeItemWeight(weight);
+    }
+
+    return weight;
+}
+
 void Jewelry::onEffectRevealed()
 {
     assert(!data_->isIdentified);
@@ -579,12 +517,17 @@ bool isEffectCombinationAllowed(const JewelryEffectId id1,
     case Id::spiBon:        return id2 != Id::spiPen;
     case Id::spiPen:        return id2 != Id::spiBon;
     case Id::rFire:         return true;
-    case Id::teleCtrl:      return id2 != Id::randomTele;
+    case Id::rCold:         return true;
+    case Id::rElec:         return true;
+    case Id::rPoison:       return true;
+    case Id::rDisease:      return true;
+    case Id::teleCtrl:      return id2 != Id::randomTele && id2 != Id::spellReflect;
     case Id::randomTele:    return id2 != Id::teleCtrl;
     case Id::light:         return true;
     case Id::conflict:      return true;
-    case Id::spellReflect:  return true;
-    case Id::strangle:      return false;
+    case Id::spellReflect:  return id2 != Id::teleCtrl;
+    case Id::burden:        return true;
+    case Id::noise:         return true;
     case Id::END: {} break;
     }
     return false;
@@ -644,27 +587,6 @@ void init()
         effectsKnown_ [i] = false;
     }
 
-    //First, assign strangulation to a random amulet.
-    int firstAmuletIdx = int(ItemId::END);
-    int lastAmuletIdx  = int(ItemId::END);
-
-    for (size_t i = 0; i < size_t(ItemId::END); ++i)
-    {
-        if (ItemData::data[i]->type == ItemType::amulet)
-        {
-            if (firstAmuletIdx == int(ItemId::END))
-            {
-                firstAmuletIdx = int(i);
-            }
-            lastAmuletIdx = int(i);
-        }
-    }
-
-    const ItemId strangleAmuletId = ItemId(Rnd::range(firstAmuletIdx, lastAmuletIdx));
-
-    effectList_[size_t(JewelryEffectId::strangle)] = strangleAmuletId;
-
-
     //Assign random effects
     vector<JewelryEffectId> effectBucket;
 
@@ -672,10 +594,7 @@ void init()
 
     for (size_t i = 0; i < size_t(JewelryEffectId::END); ++i)
     {
-        if (effectList_[i] == ItemId::END)
-        {
-            effectBucket.push_back(JewelryEffectId(i));
-        }
+        effectBucket.push_back(JewelryEffectId(i));
     }
 
     vector<ItemId> itemBucket;
@@ -687,15 +606,11 @@ void init()
         const auto id   = data->id;
         const auto type = data->type;
 
-        if (
-            id != strangleAmuletId &&
-            (type == ItemType::amulet || type == ItemType::ring))
+        if (type == ItemType::amulet || type == ItemType::ring)
         {
-            //Some amulets and rings are added multiple times to the bucket. These can
-            //get multiple effects assigned.
-            const int NR = Rnd::range(1, MAX_NR_EFFECTS_PER_ITEM);
-
-            itemBucket.insert(end(itemBucket), NR, id);
+            //Add all amulets and rings twice to the bucket, so they can get multiple
+            //effects assigned.
+            itemBucket.insert(end(itemBucket), MAX_NR_EFFECTS_PER_ITEM, id);
         }
     }
 

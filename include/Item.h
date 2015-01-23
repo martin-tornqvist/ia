@@ -30,8 +30,9 @@ public:
 
     virtual LgtSize   getLgtSize()  const {return LgtSize::none;}
 
-    std::string getName(const ItemRefType refType, const ItemRefInf inf = ItemRefInf::yes,
-                        const ItemRefAttInf attInf = ItemRefAttInf::none) const;
+    std::string getName(const ItemRefType   refType,
+                        const ItemRefInf    inf     = ItemRefInf::yes,
+                        const ItemRefAttInf attInf  = ItemRefAttInf::none) const;
 
     virtual std::vector<std::string> getDescr() const;
 
@@ -40,7 +41,7 @@ public:
     virtual void storeToSaveLines  (std::vector<std::string>& lines)  {(void)lines;}
     virtual void setupFromSaveLines(std::vector<std::string>& lines)  {(void)lines;}
 
-    int getWeight() const;
+    virtual int getWeight() const;
 
     std::string getWeightStr() const;
 

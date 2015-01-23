@@ -44,7 +44,10 @@ vector<string> Item::getDescr() const
     return data_->baseDescr;
 }
 
-int Item::getWeight() const {return int(data_->weight) * nrItems_;}
+int Item::getWeight() const
+{
+    return int(data_->weight) * nrItems_;
+}
 
 string Item::getWeightStr() const
 {
@@ -71,8 +74,9 @@ ConsumeItem Item::activate(Actor* const actor)
     return ConsumeItem::no;
 }
 
-string Item::getName(const ItemRefType refType, const ItemRefInf inf,
-                     const ItemRefAttInf attInf) const
+string Item::getName(const ItemRefType      refType,
+                     const ItemRefInf       inf,
+                     const ItemRefAttInf    attInf) const
 {
     ItemRefType refTypeUsed = refType;
 
@@ -103,22 +107,26 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
         }
     }
 
+    const auto abilityVals = Map::player->getData().abilityVals;
+
     if (attInfUsed == ItemRefAttInf::melee)
     {
-        const string rollsStr = toStr(data_->melee.dmg.first);
-        const string sidesStr = toStr(data_->melee.dmg.second);
-        const int PLUS        = meleeDmgPlus_;
-        const string plusStr  = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + toStr(PLUS));
-        const int ITEM_SKILL  = data_->melee.hitChanceMod;
-        const int PLAYER_MELEE_SKILL = Map::player->getData().abilityVals.getVal(
-                                           AbilityId::melee, true, *(Map::player));
-        const int SKILL_TOT = max(0, min(100, ITEM_SKILL + PLAYER_MELEE_SKILL));
-        const string skillStr = toStr(SKILL_TOT) + "%";
+        const string    rollsStr    = toStr(data_->melee.dmg.first);
+        const string    sidesStr    = toStr(data_->melee.dmg.second);
+        const int       PLUS        = meleeDmgPlus_;
+        const string    plusStr     = PLUS == 0 ? "" :
+                                      PLUS  > 0 ? "+" :
+                                      ("-" + toStr(PLUS));
+        const int       ITEM_SKILL  = data_->melee.hitChanceMod;
+        const int       MELEE_SKILL = abilityVals.getVal(AbilityId::melee, true,
+                                      *(Map::player));
+        const int       SKILL_TOT   = max(0, min(100, ITEM_SKILL + MELEE_SKILL));
+        const string    skillStr    = toStr(SKILL_TOT) + "%";
+
         attStr = " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
     }
 
-    const int PLAYER_RANGED_SKILL =
-        Map::player->getData().abilityVals.getVal(AbilityId::ranged, true, *(Map::player));
+    const int RANGED_SKILL = abilityVals.getVal(AbilityId::ranged, true, *(Map::player));
 
     if (attInfUsed == ItemRefAttInf::ranged)
     {
@@ -126,28 +134,35 @@ string Item::getName(const ItemRefType refType, const ItemRefInf inf,
 
         if (dmgStr.empty())
         {
-            const int MULTIPL     = data_->ranged.isMachineGun ? NR_MG_PROJECTILES : 1;
-            const string rollsStr = toStr(data_->ranged.dmg.rolls * MULTIPL);
-            const string sidesStr = toStr(data_->ranged.dmg.sides);
-            const int PLUS        = data_->ranged.dmg.plus * MULTIPL;
-            const string plusStr  = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + toStr(PLUS));
-            dmgStr                = rollsStr + "d" + sidesStr + plusStr;
+            const int       MULTIPL     = data_->ranged.isMachineGun ?
+                                          NR_MG_PROJECTILES : 1;
+            const string    rollsStr    = toStr(data_->ranged.dmg.rolls * MULTIPL);
+            const string    sidesStr    = toStr(data_->ranged.dmg.sides);
+            const int       PLUS        = data_->ranged.dmg.plus * MULTIPL;
+            const string    plusStr     = PLUS ==  0 ? "" :
+                                          PLUS  > 0 ? "+" :
+                                          ("-" + toStr(PLUS));
+            dmgStr                      = rollsStr + "d" + sidesStr + plusStr;
         }
-        const int ITEM_SKILL    = data_->ranged.hitChanceMod;
-        const int SKILL_TOT     = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
-        const string skillStr   = toStr(SKILL_TOT) + "%";
+        const int       ITEM_SKILL  = data_->ranged.hitChanceMod;
+        const int       SKILL_TOT   = max(0, min(100, ITEM_SKILL + RANGED_SKILL));
+        const string    skillStr    = toStr(SKILL_TOT) + "%";
+
         attStr = " " + dmgStr + " " + skillStr;
     }
 
     if (attInfUsed == ItemRefAttInf::thrown)
     {
-        const string rollsStr = toStr(data_->ranged.throwDmg.rolls);
-        const string sidesStr = toStr(data_->ranged.throwDmg.sides);
-        const int PLUS        = data_->ranged.throwDmg.plus;
-        const string plusStr  = PLUS ==  0 ? "" : ((PLUS > 0 ? "+" : "") + toStr(PLUS));
-        const int ITEM_SKILL  = data_->ranged.throwHitChanceMod;
-        const int SKILL_TOT   = max(0, min(100, ITEM_SKILL + PLAYER_RANGED_SKILL));
-        const string skillStr = toStr(SKILL_TOT) + "%";
+        const string    rollsStr    = toStr(data_->ranged.throwDmg.rolls);
+        const string    sidesStr    = toStr(data_->ranged.throwDmg.sides);
+        const int       PLUS        = data_->ranged.throwDmg.plus;
+        const string    plusStr     = PLUS ==  0 ? "" :
+                                      PLUS  > 0 ? "+" :
+                                      ("-" + toStr(PLUS));
+        const int       ITEM_SKILL  = data_->ranged.throwHitChanceMod;
+        const int       SKILL_TOT   = max(0, min(100, ITEM_SKILL + RANGED_SKILL));
+        const string    skillStr    = toStr(SKILL_TOT) + "%";
+
         attStr = " " + rollsStr + "d" + sidesStr + plusStr + " " + skillStr;
     }
 
