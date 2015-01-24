@@ -84,9 +84,14 @@ int range(const Range& valueRange)
     return range(valueRange.lower, valueRange.upper);
 }
 
-int percentile()
+int percent()
 {
     return roll(1, 100);
+}
+
+bool percent(const int PCT_CHANCE)
+{
+    return PCT_CHANCE >= roll(1, 100);
 }
 
 } //Rnd

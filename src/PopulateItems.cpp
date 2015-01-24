@@ -41,7 +41,7 @@ void mkItemsOnFloor()
             Utils::isValInRange(Map::dlvl, data->spawnStdRange) &&
             int(data->value) < int(ItemValue::majorTreasure)    &&
             data->allowSpawn                                    &&
-            Rnd::percentile() < data->chanceToIncludeInSpawnList)
+            Rnd::percent() < data->chanceToIncludeInSpawnList)
         {
             itemBucket.push_back(ItemId(i));
         }

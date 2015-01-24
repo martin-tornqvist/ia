@@ -214,9 +214,7 @@ void Mon::onActorTurn()
         erraticMovePct /= 2;
     }
 
-    if (
-        data_->ai[int(AiId::movesToRandomWhenUnaware)] &&
-        Rnd::percentile() < erraticMovePct)
+    if (data_->ai[int(AiId::movesToRandomWhenUnaware)] && Rnd::percent(erraticMovePct))
     {
         if (Ai::Action::moveToRandomAdjCell(*this))
         {
@@ -852,16 +850,17 @@ bool Vortex::onActorTurn_()
             if (!Utils::isPosAdj(pos, playerPos, true))
             {
                 const int CHANCE_TO_KNOCK = 25;
-                if (Rnd::percentile() < CHANCE_TO_KNOCK)
+
+                if (Rnd::percent(CHANCE_TO_KNOCK))
                 {
                     TRACE << "Passed random chance to pull" << endl;
 
                     const Pos playerDelta = playerPos - pos;
                     Pos knockBackFromPos = playerPos;
-                    if (playerDelta.x > 1)   {knockBackFromPos.x++;}
-                    if (playerDelta.x < -1)  {knockBackFromPos.x--;}
-                    if (playerDelta.y > 1)   {knockBackFromPos.y++;}
-                    if (playerDelta.y < -1)  {knockBackFromPos.y--;}
+                    if (playerDelta.x >  1) {knockBackFromPos.x++;}
+                    if (playerDelta.x < -1) {knockBackFromPos.x--;}
+                    if (playerDelta.y >  1) {knockBackFromPos.y++;}
+                    if (playerDelta.y < -1) {knockBackFromPos.y--;}
 
                     if (knockBackFromPos != playerPos)
                     {
@@ -884,7 +883,8 @@ bool Vortex::onActorTurn_()
                                 Log::addMsg("A powerful wind is pulling me!");
                             }
                             TRACE << "Attempt pull (knockback)" << endl;
-                            KnockBack::tryKnockBack(*(Map::player), knockBackFromPos, false, false);
+                            KnockBack::tryKnockBack(*(Map::player), knockBackFromPos,
+                                                    false, false);
                             pullCooldown = 5;
                             GameTime::tick();
                             return true;
@@ -936,7 +936,7 @@ bool Ghost::onActorTurn_()
         isAlive()                                     &&
         awareCounter_ > 0                             &&
         Utils::isPosAdj(pos, Map::player->pos, false) &&
-        Rnd::percentile() < 30)
+        Rnd::percent() < 30)
     {
         bool blocked[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksLos(), blocked);
@@ -1025,7 +1025,7 @@ void FlyingPolyp::mkStartItems()
 void Rat::mkStartItems()
 {
     Item* item = nullptr;
-    if (Rnd::percentile() < 15)
+    if (Rnd::percent() < 15)
     {
         item = ItemFactory::mk(ItemId::ratBiteDiseased);
     }
@@ -1603,7 +1603,7 @@ void Zombie::die_()
 void ZombieClaw::mkStartItems()
 {
     Item* item = nullptr;
-    if (Rnd::percentile() < 20)
+    if (Rnd::percent() < 20)
     {
         item = ItemFactory::mk(ItemId::zombieClawDiseased);
     }

@@ -126,7 +126,7 @@ void populateStdLvl()
     }
 
     const int CHANCE_ALLOW_TRAPPED_PLAIN_AREAS = min(85, 30 + (Map::dlvl * 5));
-    if (Rnd::percentile() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS)
+    if (Rnd::percent() < CHANCE_ALLOW_TRAPPED_PLAIN_AREAS)
     {
         TRACE_VERBOSE << "Trapping plain room" << endl;
 

@@ -232,10 +232,21 @@ void Actor::teleport()
         {
             playerHasTeleControl = true;
 
-            auto onMarkerAtPos = [](const Pos & p)
+            auto getChanceOfTeleSuccess = [](const Pos & tgt)
+            {
+                const int DIST = Utils::kingDist(Map::player->pos, tgt);
+                return getConstrInRange(25, 100 - DIST, 95);
+            };
+
+            auto onMarkerAtPos = [getChanceOfTeleSuccess](const Pos & p)
             {
                 Log::clearLog();
                 Look::printLocationInfoMsgs(p);
+
+                const int CHANCE_PCT = getChanceOfTeleSuccess(p);
+
+                Log::addMsg(toStr(CHANCE_PCT) + "% chance of success.");
+
                 Log::addMsg("[enter] to teleport here");
                 Log::addMsg(cancelInfoStrNoSpace);
             };
@@ -252,18 +263,26 @@ void Actor::teleport()
                 return MarkerDone::no;
             };
 
-            Log::addMsg("I have the power to control teleportation.", clrWhite, false, true);
+            Log::addMsg("I have the power to control teleportation.", clrWhite, false,
+                        true);
 
-            const Pos markerTgtPos = Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::no,
-                                                 onMarkerAtPos, onKeyPress);
+            const Pos markerTgtPos =
+                Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::no, onMarkerAtPos,
+                            onKeyPress);
 
             if (blocked[markerTgtPos.x][markerTgtPos.y])
             {
-                Log::addMsg("I failed to go there...", clrWhite, false, true);
+                //Blocked
+                Log::addMsg("Something is blocking me...", clrWhite, false, true);
             }
-            else //Chosen target position is free
+            else if (Rnd::percent(getChanceOfTeleSuccess(markerTgtPos)))
             {
+                //Success
                 tgtPos = markerTgtPos;
+            }
+            else //Distance roll failed
+            {
+                Log::addMsg("I failed to go there...", clrWhite, false, true);
             }
         }
     }

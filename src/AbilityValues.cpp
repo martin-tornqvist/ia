@@ -119,7 +119,7 @@ namespace AbilityRoll
 
 AbilityRollResult roll(const int TOT_SKILL_VALUE)
 {
-    const int ROLL = Rnd::percentile();
+    const int ROLL = Rnd::percent();
 
     const int SUCC_CRI_LMT = int(ceil(float(TOT_SKILL_VALUE) / 20.0));
     const int SUCC_BIG_LMT = int(ceil(float(TOT_SKILL_VALUE) / 5.0));

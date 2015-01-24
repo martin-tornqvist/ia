@@ -398,7 +398,7 @@ void Wpn::setRandomMeleePlus()
     meleeDmgPlus_ = 0;
 
     int chance = 45;
-    while (Rnd::percentile() < chance && meleeDmgPlus_ < 3)
+    while (Rnd::percent() < chance && meleeDmgPlus_ < 3)
     {
         meleeDmgPlus_++;
         chance -= 5;

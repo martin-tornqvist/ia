@@ -201,7 +201,7 @@ void StdRoom::onPostConnect(bool doorProposals[MAP_W][MAP_H])
     int pctChanceDark = getBasePctChanceDrk() - 15;
     pctChanceDark += Map::dlvl; //Increase with higher dungeon level
     constrInRange(0, pctChanceDark, 100);
-    if (Rnd::percentile() < pctChanceDark) {mkDrk();}
+    if (Rnd::percent() < pctChanceDark) {mkDrk();}
 }
 
 size_t StdRoom::tryGetAutoFeaturePlacement(
@@ -476,7 +476,7 @@ void RitualRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
     MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
     const int BLOODY_CHAMBER_PCT = 60;
-    if (Rnd::percentile() < BLOODY_CHAMBER_PCT)
+    if (Rnd::percent() < BLOODY_CHAMBER_PCT)
     {
         Pos origin(-1, -1);
         vector<Pos> originBucket;
@@ -507,7 +507,7 @@ void RitualRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
             {
                 for (int dy = -1; dy <= 1; ++dy)
                 {
-                    if ((dx == 0 && dy == 0) || (Rnd::percentile() < BLOODY_CHAMBER_PCT / 2))
+                    if ((dx == 0 && dy == 0) || (Rnd::percent() < BLOODY_CHAMBER_PCT / 2))
                     {
                         const Pos pos = origin + Pos(dx, dy);
                         if (!blocked[pos.x][pos.y])

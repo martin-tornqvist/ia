@@ -204,7 +204,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
         }
     }
 
-    if (Rnd::percentile() < chanceToDestroyItem)
+    if (Rnd::percent() < chanceToDestroyItem)
     {
         delete &itemThrown;
     }

@@ -174,7 +174,7 @@ bool reloadWieldedWpn(Actor& actorReloading)
                     const int CHANCE_TO_FUMBLE = (IS_RELOADER_BLIND      ? 48 : 0) +
                                                  (IS_REALOADER_TERRIFIED ? 48 : 0);
 
-                    if (Rnd::percentile() < CHANCE_TO_FUMBLE)
+                    if (Rnd::percent() < CHANCE_TO_FUMBLE)
                     {
                         isSwiftReload = false;
                         result        = ReloadResult::fumble;

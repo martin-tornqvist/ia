@@ -1415,8 +1415,8 @@ void ItemContainer::init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMP
                 {
                     if (
                         containerSpawnRule.featureId == featureId               &&
-                        Rnd::percentile() < containerSpawnRule.pctChanceToIncl  &&
-                        Rnd::percentile() < data->chanceToIncludeInSpawnList    &&
+                        Rnd::percent() < containerSpawnRule.pctChanceToIncl  &&
+                        Rnd::percent() < data->chanceToIncludeInSpawnList    &&
                         data->allowSpawn)
                     {
                         itemBucket.push_back(ItemId(i));
@@ -1582,7 +1582,7 @@ Tomb::Tomb(const Pos& pos) :
 
     if (!itemContainer_.items_.empty())
     {
-        const int RND = Rnd::percentile();
+        const int RND = Rnd::percent();
         if (RND < 15)
         {
             trait_ = TombTrait::cursed;
@@ -1840,7 +1840,7 @@ DidTriggerTrap Tomb::triggerTrap(Actor* const actor)
             Log::addMsg("Fumes burst out from the tomb!", clrWhite, false, true);
             Prop* prop    = nullptr;
             Clr fumeClr   = clrMagenta;
-            const int RND = Rnd::percentile();
+            const int RND = Rnd::percent();
             if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
             {
                 prop    = new PropPoisoned(PropTurns::std);
@@ -2114,7 +2114,7 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
 //      } else {
 //        const int CHANCE_TO_DMG_WPN = IS_BLESSED ? 1 : (IS_CURSED ? 80 : 15);
 //
-//        if(Rnd::percentile() < CHANCE_TO_DMG_WPN) {
+//        if(Rnd::percent() < CHANCE_TO_DMG_WPN) {
 //          const string wpnName = ItemData::getItemRef(
 //                                   *item, ItemRefType::plain, true);
 //
@@ -2135,7 +2135,7 @@ void Chest::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const a
 //          Log::addMsg("It seems futile.");
 //        } else {
 //          const int CHANCE_TO_OPEN = 40;
-//          if(Rnd::percentile() < CHANCE_TO_OPEN) {
+//          if(Rnd::percent() < CHANCE_TO_OPEN) {
 //            Log::addMsg("I force the lock open!");
 //            open();
 //          } else {
@@ -2303,7 +2303,7 @@ DidTriggerTrap Chest::triggerTrap(Actor* const actor)
 
         Prop*     prop    = nullptr;
         Clr       fumeClr = clrMagenta;
-        const int RND     = Rnd::percentile();
+        const int RND     = Rnd::percent();
 
         if (Map::dlvl >= MIN_DLVL_HARDER_TRAPS && RND < 20)
         {
@@ -2770,7 +2770,7 @@ DidTriggerTrap Cocoon::triggerTrap(Actor* const actor)
 
     if (isTrapped_)
     {
-        const int RND = Rnd::percentile();
+        const int RND = Rnd::percent();
 
         if (RND < 15)
         {

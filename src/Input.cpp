@@ -194,10 +194,13 @@ void handleMapModeKeyPress(const KeyData& d)
 
                 if (PlayerBon::traits[int(Trait::sharpShooter)])
                 {
-                    Prop* const propAimingOld = propHlr.getProp(PropId::aiming, PropSrc::applied);
+                    Prop* const propAimingOld =
+                        propHlr.getProp(PropId::aiming, PropSrc::applied);
+
                     if (propAimingOld)
                     {
-                        nrTurnsAimingOld = static_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
+                        nrTurnsAimingOld =
+                            static_cast<PropAiming*>(propAimingOld)->nrTurnsAiming;
                     }
                 }
 
@@ -307,7 +310,9 @@ void handleMapModeKeyPress(const KeyData& d)
     {
         Log::clearLog();
 
-        if (Map::player->isAlive() && Map::player->getPropHandler().allowAttackRanged(true))
+        if (
+            Map::player->isAlive() &&
+            Map::player->getPropHandler().allowAttackRanged(true))
         {
             auto* const item = Map::player->getInv().getItemInSlot(SlotId::wielded);
 
@@ -319,7 +324,7 @@ void handleMapModeKeyPress(const KeyData& d)
                 {
                     auto* wpn = static_cast<Wpn*>(item);
 
-                    //TODO: Quick hack for the Mi-go gun, this should not be here (refactor)
+                    //TODO: Quick hack for the Mi-go gun, shouldn't be here - refactor
                     if (
                         wpn->getData().id == ItemId::migoGun  &&
                         wpn->nrAmmoLoaded == 0                &&
@@ -352,7 +357,8 @@ void handleMapModeKeyPress(const KeyData& d)
                                 actor->getPropHandler().getPropIds(tgtProps);
 
                                 const bool GETS_UNDEAD_BANE_BON =
-                                    PlayerBon::getsUndeadBaneBon(*Map::player, actor->getData());
+                                    PlayerBon::getsUndeadBaneBon(*Map::player,
+                                                                 actor->getData());
 
                                 if (
                                     !tgtProps[int(PropId::ethereal)] ||
@@ -393,8 +399,9 @@ void handleMapModeKeyPress(const KeyData& d)
                             return MarkerDone::no;
                         };
 
-                        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::yes, onMarkerAtPos,
-                                    onKeyPress, wpn->getData().ranged.effectiveRange);
+                        Marker::run(MarkerDrawTail::yes, MarkerUsePlayerTgt::yes,
+                                    onMarkerAtPos, onKeyPress,
+                                    wpn->getData().ranged.effectiveRange);
                     }
                     else /* Not enough ammo loaded */ if (Config::isRangedWpnAutoReload())
                     {

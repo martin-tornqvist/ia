@@ -23,7 +23,7 @@ Door::Door(const Pos& pos, const Rigid* const mimicFeature, DoorSpawnState spawn
 
     isHandledExternally_ = false;
 
-    const int ROLL = Rnd::percentile();
+    const int ROLL = Rnd::percent();
 
     const DoorSpawnState doorState = spawnState == DoorSpawnState::any ?
                                      (ROLL < 5  ? DoorSpawnState::secretAndStuck  :
@@ -342,7 +342,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //      }
 //      const bool IS_DOOR_SMASHED =
 //        (type_ == DoorType::metal || IS_BASHER_WEAK) ? false :
-//        Rnd::percentile() < skillValueBash;
+//        Rnd::percent() < skillValueBash;
 //
 //      if(IS_PLAYER && !isSecret_ && (type_ == DoorType::metal || IS_BASHER_WEAK)) {
 //        Log::addMsg("It seems futile.");
@@ -667,7 +667,7 @@ void Door::tryClose(Actor* actorTrying)
         }
         else
         {
-            if (Rnd::percentile() < 50)
+            if (Rnd::percent() < 50)
             {
                 isOpen_ = false;
                 if (IS_PLAYER)
@@ -777,7 +777,7 @@ void Door::tryOpen(Actor* actorTrying)
         }
         else
         {
-            if (Rnd::percentile() < 50)
+            if (Rnd::percent() < 50)
             {
                 TRACE << "Tryer is blind, but open succeeded anyway" << endl;
                 isOpen_ = true;

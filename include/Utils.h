@@ -34,7 +34,9 @@ int range(const int MIN, const int MAX);
 
 int range(const Range& valueRange);
 
-int percentile();
+int percent();
+
+bool percent(const int PCT_CHANCE);
 
 } //Rnd
 
