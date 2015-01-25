@@ -929,7 +929,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
                                 PropHandler& defenderPropHandler =
                                     curProj->actorHit->getPropHandler();
 
-                                defenderPropHandler.tryApplyPropFromWpn(wpn, false);
+                                defenderPropHandler.tryApplyPropFromAtt(wpn, false);
 
                                 //Knock-back?
                                 if (wpn.getData().ranged.knocksBack)
@@ -1273,7 +1273,7 @@ void melee(Actor& attacker, const Wpn& wpn, Actor& defender)
 
             if (died == ActorDied::no)
             {
-                data.defender->getPropHandler().tryApplyPropFromWpn(wpn, true);
+                data.defender->getPropHandler().tryApplyPropFromAtt(wpn, true);
             }
             if (data.attackResult >= successNormal)
             {

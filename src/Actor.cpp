@@ -78,6 +78,35 @@ int Actor::getHpMax(const bool WITH_MODIFIERS) const
     return WITH_MODIFIERS ? propHandler_->getChangedMaxHp(hpMax_) : hpMax_;
 }
 
+ActorSpeed Actor::getSpeed() const
+{
+    const auto baseSpeed = data_->speed;
+
+    bool props[size_t(PropId::END)];
+
+    propHandler_->getPropIds(props);
+
+    int speedInt = int(baseSpeed);
+
+    //"Slowed" gives speed penalty
+    if (props[int(PropId::slowed)] && speedInt > 0)
+    {
+        --speedInt;
+    }
+
+    //"Hasted" or "frenzied" gives speed bonus.
+    if (
+        (props[int(PropId::hasted)] || props[int(PropId::frenzied)]) &&
+        speedInt < int(ActorSpeed::END) - 1)
+    {
+        ++speedInt;
+    }
+
+    assert(speedInt >= 0 && speedInt < int(ActorSpeed::END));
+
+    return ActorSpeed(speedInt);
+}
+
 bool Actor::isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H]) const
 {
     if (this == &other)

@@ -32,10 +32,6 @@ enum class ActorId
     deepOne,
     keziahMason, brownJenkin,
     lengElder,
-//  lordOfPestilence,
-//  lordOfShadows,
-//  lordOfSpiders,
-//  lordOfSpirits,
     majorClaphamLee, deanHalsey,
     wormMass,
     dustVortex, fireVortex, frostVortex,
@@ -51,9 +47,24 @@ enum class ActorId
     END
 };
 
-enum class MonGroupSize {alone, few, group, horde, swarm};
+enum class MonGroupSize
+{
+    alone,
+    few,
+    group,
+    horde,
+    swarm
+};
 
-enum class ActorSpeed   {sluggish, slow, normal, fast, fastest, END};
+enum class ActorSpeed
+{
+    sluggish,
+    slow,
+    normal,
+    fast,
+    fastest,
+    END
+};
 
 enum class ActorErraticFreq
 {

@@ -836,21 +836,35 @@ void Player::onActorTurn()
         return;
     }
 
+    if (activeMedicalBag)
+    {
+        activeMedicalBag->continueAction();
+        return;
+    }
+
+    if (waitTurnsLeft > 0)
+    {
+        waitTurnsLeft--;
+        GameTime::tick();
+        return;
+    }
+
     if (tgt_ && tgt_->getState() != ActorState::alive)
     {
         tgt_ = nullptr;
     }
 
     //If player dropped item, check if should go back to inventory screen
-    vector<Actor*> seenFoes;
-    getSeenFoes(seenFoes);
+    const auto invScreenAfterDrop = InvHandling::screenToOpenAfterDrop;
 
-    if (seenFoes.empty())
+    if (invScreenAfterDrop != InvScrId::END)
     {
-        const auto invScreen = InvHandling::screenToOpenAfterDrop;
-        if (invScreen != InvScrId::END)
+        vector<Actor*> seenFoes;
+        getSeenFoes(seenFoes);
+
+        if (seenFoes.empty())
         {
-            switch (invScreen)
+            switch (invScreenAfterDrop)
             {
             case InvScrId::inv:
                 InvHandling::runInvScreen();
@@ -864,11 +878,11 @@ void Player::onActorTurn()
             }
             return;
         }
-    }
-    else //There are seen monsters
-    {
-        InvHandling::screenToOpenAfterDrop    = InvScrId::END;
-        InvHandling::browserIdxToSetAfterDrop = 0;
+        else //There are seen monsters
+        {
+            InvHandling::screenToOpenAfterDrop    = InvScrId::END;
+            InvHandling::browserIdxToSetAfterDrop = 0;
+        }
     }
 
     //Quick move
@@ -1098,7 +1112,7 @@ void Player::onStdTurn()
                 //Is the monster sneaking? Try to spot it
                 if (
                     Map::cells[mon.pos.x][mon.pos.y].isSeenByPlayer &&
-                    mon.isStealth_                              &&
+                    mon.isStealth_                                  &&
                     isSpottingHiddenActor(mon))
                 {
                     mon.isStealth_ = false;
@@ -1178,17 +1192,6 @@ void Player::onStdTurn()
                 }
             }
         }
-    }
-
-    if (activeMedicalBag)
-    {
-        activeMedicalBag->continueAction();
-    }
-
-    if (waitTurnsLeft > 0)
-    {
-        waitTurnsLeft--;
-        GameTime::tick();
     }
 }
 

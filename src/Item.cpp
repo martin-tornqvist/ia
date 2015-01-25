@@ -624,15 +624,16 @@ void MedicalBag::continueAction()
         else
         {
             //If player is healer, double the rate of HP healing.
-            const int NR_TRN_PER_HP_W_BON = IS_HEALER ? (NR_TRN_PER_HP / 2) : NR_TRN_PER_HP;
+            const int NR_TRN_PER_HP_W_BON =
+                IS_HEALER ? (NR_TRN_PER_HP / 2) : NR_TRN_PER_HP;
 
             if (GameTime::getTurn() % NR_TRN_PER_HP_W_BON == 0)
             {
                 player.restoreHp(1, false);
             }
 
-            //The rate of supply use is consistent (effectively, this means that with the
-            //healer trait, you spend half the time and supplies, as the description says).
+            //The rate of supply use is consistent (this means that with the healer
+            // trait, you spend half the time and supplies, as per the description).
             if (GameTime::getTurn() % NR_TRN_PER_HP == 0)
             {
                 --nrSupplies_;
@@ -672,7 +673,8 @@ void MedicalBag::continueAction()
     case MedBagAction::END:
     {
         assert(false && "Illegal action");
-    } break;
+    }
+    break;
     }
 }
 

@@ -1379,8 +1379,9 @@ void initDataList()
     d->baseName = {"Iron Suit", "", "an Iron Suit"};
     d->baseDescr =
     {
-        "A crude armour constructed from metal plates, bolts, and leather straps. It "
-        "can absorb a high amount of damage, but it makes sneaking and dodging very "
+        "A crude armour constructed from metal plates, bolts, and leather straps.",
+
+        "It can absorb a high amount of damage, but it makes sneaking and dodging very "
         "difficult. Also, due to the narrow slit of the helmet, aiming is slightly "
         "more difficult, and it is harder to detect sneaking enemies and hidden objects."
     };

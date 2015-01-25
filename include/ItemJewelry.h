@@ -2,6 +2,7 @@
 #define ITEM_JEWELRY_H
 
 #include "Item.h"
+#include "ActorData.h"
 
 #include <vector>
 
@@ -19,18 +20,19 @@ enum class JewelryEffectId
     teleCtrl,
     hpBon,
     spiBon,
+    haste,
 
     //Neutral
     light,          //Harder to sneak
     spellReflect,   //Very powerful, but cannot cast spells on self
     randomTele,
     conflict,       //Powerful, but draws a lot of attention
-    noise,
 
     //Just bad
     hpPen,
     spiPen,
     burden,
+    noise,
 
     END
 };
@@ -49,7 +51,8 @@ public:
     virtual UnequipAllowed  onUnequip()             {return UnequipAllowed::yes;}
     virtual void            onStdTurnEquiped()      {}
     virtual void            onActorTurnEquiped()    {}
-    virtual void            changeItemWeight(int& weightRef) {(void)weightRef;}
+    virtual void            changeItemWeight(int& weightRef)        {(void)weightRef;}
+    virtual void            changeActorSpeed(ActorSpeed& speedRef)  {(void)speedRef;}
 
     void reveal();
 
@@ -231,6 +234,25 @@ protected:
     Prop* mkProp() const override;
 };
 
+class JewelryEffectHaste : public JewelryPropertyEffect
+{
+public:
+    JewelryEffectHaste(Jewelry* const jewelry) :
+        JewelryPropertyEffect(jewelry) {}
+
+    ~JewelryEffectHaste() {}
+
+    JewelryEffectId getId() const override {return JewelryEffectId::haste;}
+
+    std::string getDescr() const override
+    {
+        return "JewelryEffectHaste";
+    }
+
+protected:
+    Prop* mkProp() const override;
+};
+
 class JewelryEffectHpBon : public JewelryEffect
 {
 public:
@@ -376,8 +398,8 @@ public:
         return "JewelryEffectBurden";
     }
 
-    void            onEquip()           override;
-    void            changeItemWeight(int& weightRef);
+    void onEquip()                          override;
+    void changeItemWeight(int& weightRef)   override;
 };
 
 class Jewelry : public Item

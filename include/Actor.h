@@ -35,7 +35,8 @@ public:
     void place(const Pos& pos_, ActorDataT& data);
     virtual void place_() {}
 
-    ActorDied hit(int dmg, const DmgType dmgType, const DmgMethod method = DmgMethod::END);
+    ActorDied hit(int dmg, const DmgType dmgType,
+                  const DmgMethod method = DmgMethod::END);
     ActorDied hitSpi(const int DMG, const bool ALLOW_MSG);
 
     bool restoreHp   (const int HP_RESTORED, const bool ALLOW_MSG = true,
@@ -62,11 +63,12 @@ public:
 
     void getSeenFoes(std::vector<Actor*>& out);
 
-    ActorId getId()                  const {return data_->id;}
-    int getHp()                      const {return hp_;}
-    int getSpi()                     const {return spi_;}
-    int getHpMax(const bool WITH_MODIFIERS) const;
-    int getSpiMax()                  const {return spiMax_;}
+    ActorId     getId()                             const {return data_->id;}
+    int         getHp()                             const {return hp_;}
+    int         getSpi()                            const {return spi_;}
+    int         getHpMax(const bool WITH_MODIFIERS) const;
+    int         getSpiMax()                         const {return spiMax_;}
+    ActorSpeed  getSpeed()                          const;
 
     std::string getNameThe()         const {return data_->nameThe;}
     std::string getNameA()           const {return data_->nameA;}

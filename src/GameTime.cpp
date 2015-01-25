@@ -98,14 +98,22 @@ void runStdTurnEvents()
                 //Regen Spi
                 if (actor == Map::player)
                 {
-                    if (PlayerBon::traits[int(Trait::stoutSpirit)])   regenSpiNTurns -= 2;
-                    if (PlayerBon::traits[int(Trait::strongSpirit)])  regenSpiNTurns -= 2;
-                    if (PlayerBon::traits[int(Trait::mightySpirit)])  regenSpiNTurns -= 2;
+                    if (PlayerBon::traits[int(Trait::stoutSpirit)])
+                        regenSpiNTurns -= 2;
+
+                    if (PlayerBon::traits[int(Trait::strongSpirit)])
+                        regenSpiNTurns -= 2;
+
+                    if (PlayerBon::traits[int(Trait::mightySpirit)])
+                        regenSpiNTurns -= 2;
                 }
 
                 regenSpiNTurns = max(2, regenSpiNTurns);
 
-                if (isSpiRegenThisTurn(regenSpiNTurns)) {actor->restoreSpi(1, false);}
+                if (isSpiRegenThisTurn(regenSpiNTurns))
+                {
+                    actor->restoreSpi(1, false);
+                }
 
                 actor->onStdTurn();
             }
@@ -280,7 +288,7 @@ void tick(const bool IS_FREE_TURN)
             }
         }
     }
-    else
+    else //Actor is monster
     {
         auto* mon = static_cast<Mon*>(curActor);
         if (mon->awareCounter_ > 0)
@@ -294,11 +302,11 @@ void tick(const bool IS_FREE_TURN)
 
     if (!IS_FREE_TURN)
     {
-        bool actorWhoCanActThisTurnFound = false;
+        bool canAct = false;
 
-        while (!actorWhoCanActThisTurnFound)
+        while (!canAct)
         {
-            auto curTurnType = (TurnType)(curTurnTypePos_);
+            auto curTurnType = TurnType(curTurnTypePos_);
 
             ++curActorIndex_;
 
@@ -319,49 +327,38 @@ void tick(const bool IS_FREE_TURN)
                 }
             }
 
-            curActor = getCurActor();
+            const auto speed = getCurActor()->getSpeed();
 
-            bool props[size_t(PropId::END)];
-            curActor->getPropHandler().getPropIds(props);
-
-            const bool IS_SLOWED = props[int(PropId::slowed)];
-
-            const ActorSpeed defSpeed = curActor->getData().speed;
-
-            const ActorSpeed realSpeed = (!IS_SLOWED || defSpeed == ActorSpeed::sluggish) ?
-                                         defSpeed : ActorSpeed(int(defSpeed) - 1);
-            switch (realSpeed)
+            switch (speed)
             {
             case ActorSpeed::sluggish:
-            {
-                actorWhoCanActThisTurnFound = (curTurnType == TurnType::slow ||
-                                               curTurnType == TurnType::normal2)
-                                              && Rnd::fraction(2, 3);
-            } break;
+                canAct = (curTurnType == TurnType::slow ||
+                          curTurnType == TurnType::normal2)
+                         && Rnd::fraction(2, 3);
+                break;
 
             case ActorSpeed::slow:
-            {
-                actorWhoCanActThisTurnFound = curTurnType == TurnType::slow ||
-                                              curTurnType == TurnType::normal2;
-            } break;
+                canAct = curTurnType == TurnType::slow ||
+                         curTurnType == TurnType::normal2;
+                break;
 
             case ActorSpeed::normal:
-            {
-                actorWhoCanActThisTurnFound = curTurnType != TurnType::fast &&
-                                              curTurnType != TurnType::fastest;
-            } break;
+                canAct = curTurnType != TurnType::fast &&
+                         curTurnType != TurnType::fastest;
+                break;
 
             case ActorSpeed::fast:
-            {
-                actorWhoCanActThisTurnFound = curTurnType != TurnType::fastest;
-            } break;
+                canAct = curTurnType != TurnType::fastest;
+                break;
 
             case ActorSpeed::fastest:
-            {
-                actorWhoCanActThisTurnFound = true;
-            } break;
+                canAct = true;
+                break;
 
-            case ActorSpeed::END: {} break;
+            case ActorSpeed::END:
+            {
+                assert(false);
+            } break;
             }
         }
     }

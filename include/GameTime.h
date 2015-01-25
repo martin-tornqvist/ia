@@ -8,7 +8,15 @@
 
 class Mob;
 
-enum class TurnType {fast, normal1, slow, fastest, normal2, END};
+enum class TurnType
+{
+    fast,
+    normal1,
+    slow,
+    fastest,
+    normal2,
+    END
+};
 
 namespace GameTime
 {

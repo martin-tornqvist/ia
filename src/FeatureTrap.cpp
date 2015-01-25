@@ -182,11 +182,11 @@ void Trap::bump(Actor& actorBumping)
                 {
                     TRACE << "Monster eligible for triggering trap" << endl;
 
-                    const bool              IS_ACTOR_SEEN_BY_PLAYER =
+                    const bool IS_ACTOR_SEEN_BY_PLAYER =
                         Map::player->isSeeingActor(actorBumping, nullptr);
 
-                    const int               CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
-                    const AbilityRollResult result          = AbilityRoll::roll(CHANCE_TO_AVOID);
+                    const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
+                    const AbilityRollResult result = AbilityRoll::roll(CHANCE_TO_AVOID);
 
                     if (result >= successSmall)
                     {
@@ -352,7 +352,9 @@ void Trap::playerTrySpotHidden()
     if (isHidden_)
     {
         const auto& abilities = Map::player->getData().abilityVals;
-        const int   SKILL     = abilities.getVal(AbilityId::searching, true, *(Map::player));
+
+        const int SKILL =
+            abilities.getVal(AbilityId::searching, true, *(Map::player));
 
         if (AbilityRoll::roll(SKILL) >= successSmall)
         {

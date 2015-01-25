@@ -85,6 +85,10 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
         ret = new JewelryEffectBurden(jewelry);
         break;
 
+    case JewelryEffectId::haste:
+        ret = new JewelryEffectHaste(jewelry);
+        break;
+
     case JewelryEffectId::noise:
         ret = new JewelryEffectNoise(jewelry);
         break;
@@ -214,6 +218,12 @@ Prop* JewelryEffectLight::mkProp() const
 Prop* JewelryEffectSpellReflect::mkProp() const
 {
     return new PropSpellReflect(PropTurns::indefinite);
+}
+
+//--------------------------------------------------------- EFFECT: HASTE
+Prop* JewelryEffectHaste::mkProp() const
+{
+    return new PropHasted(PropTurns::indefinite);
 }
 
 //--------------------------------------------------------- EFFECT: HP BONUS
@@ -528,6 +538,7 @@ bool isEffectCombinationAllowed(const JewelryEffectId id1,
     case Id::spellReflect:  return id2 != Id::teleCtrl;
     case Id::burden:        return true;
     case Id::noise:         return true;
+    case Id::haste:         return true;
     case Id::END: {} break;
     }
     return false;

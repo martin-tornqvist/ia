@@ -397,6 +397,22 @@ void initDataList()
     d.alignment = propAlignmentBad;
     addPropData(d);
 
+    d.id = PropId::hasted;
+    d.stdRndTurns = Range(9, 12);
+    d.name = "Hasted";
+    d.nameShort = "Hasted";
+    d.msg[propMsgOnStartPlayer] = "Everything around me seems to slow down.";
+    d.msg[propMsgOnStartMon] = "speeds up.";
+    d.msg[propMsgOnEndPlayer] = "Everything around me seems to speed up.";
+    d.msg[propMsgOnEndMon] = "slows down.";
+    d.isMakingMonAware = true;
+    d.allowDisplayTurns = true;
+    d.allowApplyMoreWhileActive = true;
+    d.updatePlayerVisualWhenStartOrEnd = false;
+    d.allowTestOnBot = true;
+    d.alignment = propAlignmentGood;
+    addPropData(d);
+
     d.id = PropId::flared;
     d.stdRndTurns = Range(3, 4);
     d.msg[propMsgOnStartMon] = "is perforated by a flare!";
@@ -452,7 +468,7 @@ void initDataList()
     addPropData(d);
 
     d.id = PropId::diseased;
-    d.stdRndTurns = Range(400, 800);
+    d.stdRndTurns = Range(400, 600);
     d.name = "Diseased";
     d.nameShort = "Diseased";
     d.msg[propMsgOnStartPlayer] = "I am diseased!";
@@ -521,20 +537,6 @@ void initDataList()
     d.alignment = propAlignmentGood;
     addPropData(d);
 
-    d.id = PropId::radiant;
-    d.stdRndTurns = Range(40, 60);
-    d.name = "Radiant";
-    d.nameShort = "Radiant";
-    d.msg[propMsgOnStartPlayer] = "A bright light shines around me.";
-    d.msg[propMsgOnEndPlayer] = "It suddenly seems darker.";
-    d.isMakingMonAware = false;
-    d.allowDisplayTurns = true;
-    d.allowApplyMoreWhileActive = true;
-    d.updatePlayerVisualWhenStartOrEnd = true;
-    d.allowTestOnBot = true;
-    d.alignment = propAlignmentNeutral;
-    addPropData(d);
-
     d.id = PropId::cursed;
     d.stdRndTurns = Range(400, 600);
     d.name = "Cursed";
@@ -548,6 +550,20 @@ void initDataList()
     d.updatePlayerVisualWhenStartOrEnd = false;
     d.allowTestOnBot = true;
     d.alignment = propAlignmentBad;
+    addPropData(d);
+
+    d.id = PropId::radiant;
+    d.stdRndTurns = Range(40, 60);
+    d.name = "Radiant";
+    d.nameShort = "Radiant";
+    d.msg[propMsgOnStartPlayer] = "A bright light shines around me.";
+    d.msg[propMsgOnEndPlayer] = "It suddenly seems darker.";
+    d.isMakingMonAware = false;
+    d.allowDisplayTurns = true;
+    d.allowApplyMoreWhileActive = true;
+    d.updatePlayerVisualWhenStartOrEnd = true;
+    d.allowTestOnBot = true;
+    d.alignment = propAlignmentNeutral;
     addPropData(d);
 
     d.id = PropId::teleCtrl;
@@ -752,6 +768,7 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
     case PropId::stunned:           return new PropStunned        (turnsInit, NR_TURNS);
     case PropId::waiting:           return new PropWaiting        (turnsInit, NR_TURNS);
     case PropId::slowed:            return new PropSlowed         (turnsInit, NR_TURNS);
+    case PropId::hasted:            return new PropHasted         (turnsInit, NR_TURNS);
     case PropId::infected:          return new PropInfected       (turnsInit, NR_TURNS);
     case PropId::diseased:          return new PropDiseased       (turnsInit, NR_TURNS);
     case PropId::poisoned:          return new PropPoisoned       (turnsInit, NR_TURNS);
@@ -892,7 +909,13 @@ void PropHandler::getPropIds(bool out[size_t(PropId::END)]) const
 
 bool PropHandler::tryResistProp(const PropId id, const vector<Prop*>& propList) const
 {
-    for (Prop* p : propList) {if (p->isResistingOtherProp(id)) return true;}
+    for (Prop* p : propList)
+    {
+        if (p->isResistingOtherProp(id))
+        {
+            return true;
+        }
+    }
     return false;
 }
 
@@ -953,9 +976,12 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
     if (!FORCE_EFFECT)
     {
         vector<Prop*> allProps;
+
         bool sources[int(PropSrc::END)];
         for (bool& v : sources) {v = true;}
+
         getPropsFromSources(allProps, sources);
+
         if (tryResistProp(prop->getId(), allProps))
         {
             if (!NO_MESSAGES)
@@ -1077,7 +1103,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
     }
 }
 
-void PropHandler::tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE)
+void PropHandler::tryApplyPropFromAtt(const Wpn& wpn, const bool IS_MELEE)
 {
     const ItemDataT& d            = wpn.getData();
     const auto* const originProp  = IS_MELEE ? d.melee.propApplied :
@@ -1598,6 +1624,16 @@ void PropBlessed::onStart()
 void PropCursed::onStart()
 {
     owningActor_->getPropHandler().endAppliedProp(PropId::blessed, false);
+}
+
+void PropSlowed::onStart()
+{
+    owningActor_->getPropHandler().endAppliedProp(PropId::hasted, false);
+}
+
+void PropHasted::onStart()
+{
+    owningActor_->getPropHandler().endAppliedProp(PropId::slowed, false);
 }
 
 void PropInfected::onNewTurn()

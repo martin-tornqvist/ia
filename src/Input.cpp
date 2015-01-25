@@ -482,18 +482,20 @@ void handleMapModeKeyPress(const KeyData& d)
                 {
                     if (alt)
                     {
-                        Log::addMsg(
-                            "I" + swiftStr + " swap to my prepared weapon (" + ALT_NAME + ").");
+                        Log::addMsg("I" + swiftStr + " swap to my prepared weapon (" +
+                                    ALT_NAME + ").");
                     }
                     else
                     {
                         const string NAME = wielded->getName(ItemRefType::a);
-                        Log::addMsg("I" + swiftStr + " put away my weapon (" + NAME + ").");
+                        Log::addMsg("I" + swiftStr + " put away my weapon (" +
+                                    NAME + ").");
                     }
                 }
                 else
                 {
-                    Log::addMsg("I" + swiftStr + " wield my prepared weapon (" + ALT_NAME + ").");
+                    Log::addMsg("I" + swiftStr + " wield my prepared weapon (" +
+                                ALT_NAME + ").");
                 }
                 inv.swapWieldedAndPrepared(IS_FREE_TURN);
             }
@@ -518,7 +520,7 @@ void handleMapModeKeyPress(const KeyData& d)
             {
                 const int     TURNS_TO_APPLY  = 5;
                 const string  TURNS_STR       = toStr(TURNS_TO_APPLY);
-                Log::addMsg("I pause for a while (" + TURNS_STR + " turns)...");
+                Log::addMsg("I pause for a while...");
                 Map::player->waitTurnsLeft = TURNS_TO_APPLY - 1;
                 GameTime::tick();
             }

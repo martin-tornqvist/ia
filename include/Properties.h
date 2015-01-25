@@ -35,6 +35,7 @@ enum class PropId
     confused,
     stunned,
     slowed,
+    hasted,
     infected,
     diseased,
     weakened,
@@ -147,7 +148,7 @@ public:
                       const bool    DISABLE_REDRAW              = false,
                       const bool    DISABLE_PROP_START_EFFECTS  = false);
 
-    void tryApplyPropFromWpn(const Wpn& wpn, const bool IS_MELEE);
+    void tryApplyPropFromAtt(const Wpn& wpn, const bool IS_MELEE);
 
     void changeMoveDir(const Pos& actorPos, Dir& dir) const;
 
@@ -194,15 +195,16 @@ public:
     bool tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const;
 
 private:
-    //Note: These two functions are responsible for collecting properties from all possible
+    //These two functions are responsible for collecting properties from all possible
     //specified sources. They must be "mirrored" in that they collect information from
-    //exactly the same places - except one will return a list of Props, and the other will
-    //return a list of PropIds. This is an optimization. The reasoning is that in many
-    //cases (such as the very frequent Actor::addLight) it is sufficient to know the ids.
-    //It would then be wasteful to first gather all Props, then gather the ids from those.
-    //It's more efficient to just gather the ids at once.
+    //exactly the same places - except one will return a list of Props, and the other
+    //will return a list of PropIds. This is an optimization. The reasoning is that in
+    //many cases (such as the very frequent Actor::addLight) it is sufficient to know
+    //the ids. It would then be wasteful to first gather all Props, then gather the ids
+    //from those. It's more efficient to just gather the ids at once.
     void getPropsFromSources(std::vector<Prop*>& out,
                              bool sources[int(PropSrc::END)]) const;
+
     void getPropIdsFromSources(bool out[size_t(PropId::END)],
                                bool sources[int(PropSrc::END)]) const;
 
@@ -366,8 +368,13 @@ public:
 
     int getAbilityMod(const AbilityId ability) const override
     {
-        if (ability == AbilityId::dodgeAtt) return  20;
-        if (ability == AbilityId::ranged)   return -20;
+        switch (ability)
+        {
+        case AbilityId::dodgeAtt:   return 20;
+        case AbilityId::ranged:     return -20;
+        default: {} break;
+        }
+
         return 0;
     }
 
@@ -474,7 +481,10 @@ public:
 
     int getAbilityMod(const AbilityId ability) const override
     {
-        if (ability == AbilityId::ranged) return nrTurnsAiming >= 3 ? 999 : 10;
+        if (ability == AbilityId::ranged)
+        {
+            return nrTurnsAiming >= 3 ? 999 : 10;
+        }
         return 0;
     }
 
@@ -493,7 +503,10 @@ public:
 
     int getAbilityMod(const AbilityId ability) const override
     {
-        if (ability == AbilityId::ranged) {return -15;}
+        if (ability == AbilityId::ranged)
+        {
+            return -15;
+        }
         return 0;
     }
 };
@@ -510,13 +523,16 @@ public:
 
     int getAbilityMod(const AbilityId ability) const override
     {
-        if (ability == AbilityId::searching) {return -9999;}
-        if (ability == AbilityId::ranged)    {return -50;}
-        if (ability == AbilityId::melee)     {return -25;}
-        if (ability == AbilityId::dodgeTrap || ability == AbilityId::dodgeAtt)
+        switch (ability)
         {
-            return -50;
+        case AbilityId::searching:  return -9999;
+        case AbilityId::ranged:     return -50;
+        case AbilityId::melee:      return -25;
+        case AbilityId::dodgeTrap:
+        case AbilityId::dodgeAtt:   return -50;
+        default: {} break;
         }
+
         return 0;
     }
 };
@@ -538,7 +554,10 @@ public:
 
     int getAbilityMod(const AbilityId ability) const override
     {
-        if (ability == AbilityId::searching)  return 0;
+        if (ability == AbilityId::searching)
+        {
+            return 0;
+        }
         return 10;
     }
 };
@@ -728,7 +747,9 @@ public:
     int getAbilityMod(const AbilityId ability) const override
     {
         if (ability == AbilityId::dodgeTrap || ability == AbilityId::dodgeAtt)
+        {
             return -999;
+        }
         return 0;
     }
 
@@ -759,9 +780,7 @@ public:
 
     int getAbilityMod(const AbilityId ability) const override
     {
-        if (
-            ability == AbilityId::dodgeTrap ||
-            ability == AbilityId::dodgeAtt)
+        if (ability == AbilityId::dodgeTrap || ability == AbilityId::dodgeAtt)
         {
             return -999;
         }
@@ -786,15 +805,41 @@ public:
 class PropSlowed: public Prop
 {
 public:
-    PropSlowed(PropTurns turnsInit,
-               int turns = -1) :
+    PropSlowed(PropTurns turnsInit, int turns = -1) :
         Prop(PropId::slowed, turnsInit, turns) {}
+
+    void onStart() override;
 
     int getAbilityMod(const AbilityId ability) const override
     {
-        if (ability == AbilityId::dodgeAtt)    return -30;
-        if (ability == AbilityId::ranged) return -10;
-        if (ability == AbilityId::melee)  return -10;
+        switch (ability)
+        {
+        case AbilityId::dodgeAtt:   return -30;
+        case AbilityId::ranged:     return -10;
+        case AbilityId::melee:      return -10;
+        default: {} break;
+        }
+        return 0;
+    }
+};
+
+class PropHasted: public Prop
+{
+public:
+    PropHasted(PropTurns turnsInit, int turns = -1) :
+        Prop(PropId::hasted, turnsInit, turns) {}
+
+    void onStart() override;
+
+    int getAbilityMod(const AbilityId ability) const override
+    {
+        switch (ability)
+        {
+        case AbilityId::dodgeAtt:   return 10;
+        case AbilityId::ranged:     return 5;
+        case AbilityId::melee:      return 5;
+        default: {} break;
+        }
         return 0;
     }
 };
@@ -817,7 +862,10 @@ public:
 
     int getAbilityMod(const AbilityId ability) const override
     {
-        if (ability == AbilityId::melee) return 999;
+        if (ability == AbilityId::melee)
+        {
+            return 999;
+        }
         return 0;
     }
 };
