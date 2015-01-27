@@ -89,12 +89,12 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
         ret = new JewelryEffectHaste(jewelry);
         break;
 
-    case JewelryEffectId::noise:
-        ret = new JewelryEffectNoise(jewelry);
+    case JewelryEffectId::shriek:
+        ret = new JewelryEffectShriek(jewelry);
         break;
 
-    case JewelryEffectId::END: {}
-        break;
+    case JewelryEffectId::START_OF_SECONDARY_EFFECTS:
+    case JewelryEffectId::END: {} break;
     }
 
     assert(ret);
@@ -243,13 +243,13 @@ UnequipAllowed JewelryEffectHpBon::onUnequip()
 //--------------------------------------------------------- EFFECT: HP PENALTY
 void JewelryEffectHpPen::onEquip()
 {
-    Map::player->changeMaxHp(-2, true);
+    Map::player->changeMaxHp(-4, true);
     reveal();
 }
 
 UnequipAllowed JewelryEffectHpPen::onUnequip()
 {
-    Map::player->changeMaxHp(2, true);
+    Map::player->changeMaxHp(4, true);
 
     return UnequipAllowed::yes;
 }
@@ -257,13 +257,13 @@ UnequipAllowed JewelryEffectHpPen::onUnequip()
 //--------------------------------------------------------- EFFECT: SPI BONUS
 void JewelryEffectSpiBon::onEquip()
 {
-    Map::player->changeMaxSpi(2, true);
+    Map::player->changeMaxSpi(4, true);
     reveal();
 }
 
 UnequipAllowed JewelryEffectSpiBon::onUnequip()
 {
-    Map::player->changeMaxSpi(-2, true);
+    Map::player->changeMaxSpi(-4, true);
 
     return UnequipAllowed::yes;
 }
@@ -271,13 +271,13 @@ UnequipAllowed JewelryEffectSpiBon::onUnequip()
 //--------------------------------------------------------- EFFECT: SPI PENALTY
 void JewelryEffectSpiPen::onEquip()
 {
-    Map::player->changeMaxSpi(-2, true);
+    Map::player->changeMaxSpi(-4, true);
     reveal();
 }
 
 UnequipAllowed JewelryEffectSpiPen::onUnequip()
 {
-    Map::player->changeMaxSpi(2, true);
+    Map::player->changeMaxSpi(4, true);
 
     return UnequipAllowed::yes;
 }
@@ -319,8 +319,69 @@ void JewelryEffectConflict::onStdTurnEquiped()
     }
 }
 
-//--------------------------------------------------------- EFFECT: NOISE
-void JewelryEffectNoise::onStdTurnEquiped()
+//--------------------------------------------------------- EFFECT: SHRIEK
+JewelryEffectShriek::JewelryEffectShriek(Jewelry* const jewelry) :
+    JewelryEffect(jewelry)
+{
+    const string playerName = Map::player->getNameThe();
+
+    words_ =
+    {
+        playerName,
+        playerName,
+        playerName,
+        "DEATH",
+        "DYING",
+        "TAKE",
+        "BlOOD",
+        "END",
+        "SACRIFICE",
+        "PROPHECY",
+        "OATH",
+        "SUFFER",
+        "BEHOLD",
+        "BEWARE",
+        "WATCHES",
+        "LIGHT",
+        "DARK",
+        "DISAPPEAR",
+        "APPEAR",
+        "DECAY",
+        "IMMORTAL",
+        "BOUNDLESS",
+        "ETERNAL",
+        "TIME",
+        "NEVER-ENDING",
+        "DIMENSIONS",
+        "EYES",
+        "STARS",
+        "GAZE",
+        "FORBIDDEN",
+        "DOMINIONS",
+        "RULER",
+        "KING",
+        "UNKNOWN",
+        "ABYSS",
+        "GULF",
+        "SERPENT",
+        "NYARLATHOTEP",
+        "GOL-GOROTH",
+        "ABHOLOS",
+        "HASTUR",
+        "ISTASHA",
+        "ITHAQUA",
+        "THOG",
+        "TSATHOGGUA",
+        "YMNAR",
+        "XCTHOL",
+        "ZATHOG",
+        "ZINDARAK",
+        "BASATAN",
+        "CTHUGHA"
+    };
+}
+
+void JewelryEffectShriek::onStdTurnEquiped()
 {
     const int NOISE_ONE_IN_N = 150;
 
@@ -328,10 +389,32 @@ void JewelryEffectNoise::onStdTurnEquiped()
     {
         const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
 
-        SndEmit::emitSnd(Snd("The " + name + " makes a loud noise!", SfxId::END,
-                             IgnoreMsgIfOriginSeen::no, Map::player->pos, Map::player,
-                             SndVol::high, AlertsMon::yes
+        Log::addMsg("The " + name + " shrieks...", clrWhite, false, true);
+
+        const int NR_WORDS = 3; //Rnd::range(3, 4);
+
+        string phrase = "";
+
+        for (int i = 0; i < NR_WORDS; ++i)
+        {
+            const int   IDX     = Rnd::range(0, words_.size() - 1);
+            const auto& word    = words_[size_t(IDX)];
+
+            phrase += word;
+
+            if (i < NR_WORDS - 1)
+            {
+                phrase += " ... ";
+            }
+        }
+
+        phrase += "!!!";
+
+        SndEmit::emitSnd(Snd(phrase, SfxId::END, IgnoreMsgIfOriginSeen::no,
+                             Map::player->pos, Map::player, SndVol::high, AlertsMon::yes
                             ));
+
+        Map::player->incrShock(ShockLvl::mild, ShockSrc::misc);
 
         Log::morePrompt();
 
@@ -345,7 +428,7 @@ void JewelryEffectBurden::onEquip()
     if (!effectsKnown_[size_t(getId())])
     {
         const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
-        Log::addMsg("The " + name + " suddenly feels strangely heavy to carry.");
+        Log::addMsg("I suddenly feel more burdened.");
         reveal();
     }
 }
@@ -508,8 +591,8 @@ bool Jewelry::isAllEffectsKnown() const
 namespace
 {
 
-bool isEffectCombinationAllowed(const JewelryEffectId id1,
-                                const JewelryEffectId id2)
+bool canEffectsBeCombined(const JewelryEffectId id1,
+                          const JewelryEffectId id2)
 {
     typedef JewelryEffectId Id;
 
@@ -523,22 +606,23 @@ bool isEffectCombinationAllowed(const JewelryEffectId id1,
     switch (id1)
     {
     case Id::hpBon:         return id2 != Id::hpPen;
-    case Id::hpPen:         return id2 != Id::hpBon;
+    case Id::hpPen:         return id2 != Id::hpBon && id2 != Id::rDisease;
     case Id::spiBon:        return id2 != Id::spiPen;
     case Id::spiPen:        return id2 != Id::spiBon;
     case Id::rFire:         return true;
     case Id::rCold:         return true;
     case Id::rElec:         return true;
     case Id::rPoison:       return true;
-    case Id::rDisease:      return true;
+    case Id::rDisease:      return id2 != Id::hpPen;
     case Id::teleCtrl:      return id2 != Id::randomTele && id2 != Id::spellReflect;
     case Id::randomTele:    return id2 != Id::teleCtrl;
     case Id::light:         return true;
     case Id::conflict:      return true;
     case Id::spellReflect:  return id2 != Id::teleCtrl;
     case Id::burden:        return true;
-    case Id::noise:         return true;
+    case Id::shriek:        return true;
     case Id::haste:         return true;
+    case JewelryEffectId::START_OF_SECONDARY_EFFECTS:
     case Id::END: {} break;
     }
     return false;
@@ -561,7 +645,7 @@ int getRndItemBucketIdxForEffect(const JewelryEffectId  effectToAssign,
 
             if (
                 effectList_[i] == itemBucket[itemBucketIdx] &&
-                !isEffectCombinationAllowed(effectToAssign, curEffect))
+                !canEffectsBeCombined(effectToAssign, curEffect))
             {
                 //Combination with effect already assigned on item not allowed
                 canBePlacedOnItem = false;
@@ -592,85 +676,79 @@ namespace JewelryHandling
 void init()
 {
     //Reset the effect list and knowledge status list
-    for (size_t i = 0; i < int(JewelryEffectId::END); ++i)
+    for (size_t i = 0; i < size_t(JewelryEffectId::END); ++i)
     {
         effectList_   [i] = ItemId::END;
         effectsKnown_ [i] = false;
     }
 
-    //Assign random effects
-    vector<JewelryEffectId> effectBucket;
-
-    effectBucket.reserve(int(JewelryEffectId::END));
-
-    for (size_t i = 0; i < size_t(JewelryEffectId::END); ++i)
-    {
-        effectBucket.push_back(JewelryEffectId(i));
-    }
-
     vector<ItemId> itemBucket;
-
-    const int MAX_NR_EFFECTS_PER_ITEM = 2;
 
     for (auto* data : ItemData::data)
     {
-        const auto id   = data->id;
         const auto type = data->type;
 
         if (type == ItemType::amulet || type == ItemType::ring)
         {
-            //Add all amulets and rings twice to the bucket, so they can get multiple
-            //effects assigned.
-            itemBucket.insert(end(itemBucket), MAX_NR_EFFECTS_PER_ITEM, id);
+            itemBucket.push_back(data->id);
+        }
+    }
+    random_shuffle(begin(itemBucket), end(itemBucket));
+
+    vector<JewelryEffectId> primaryEffectBucket;
+    vector<JewelryEffectId> secondaryEffectBucket;
+
+    for (size_t i = 0; i < size_t(JewelryEffectId::END); ++i)
+    {
+        const auto id = JewelryEffectId(i);
+
+        if (id <  JewelryEffectId::START_OF_SECONDARY_EFFECTS)
+        {
+            primaryEffectBucket.push_back(id);
+        }
+        else if (id >  JewelryEffectId::START_OF_SECONDARY_EFFECTS)
+        {
+            secondaryEffectBucket.push_back(id);
+        }
+    }
+    random_shuffle(begin(primaryEffectBucket),   end(primaryEffectBucket));
+    random_shuffle(begin(secondaryEffectBucket), end(secondaryEffectBucket));
+
+    //Assuming there are more jewelry than primary or secondary effects (if this changes,
+    //just add more amulets and rings to the item data)
+    assert(itemBucket.size() > primaryEffectBucket.size());
+    assert(itemBucket.size() > secondaryEffectBucket.size());
+
+    //Assign primary effects
+    for (size_t i = 0; i < itemBucket.size(); ++i)
+    {
+        const auto itemId = itemBucket[i];
+
+        if (i < primaryEffectBucket.size())
+        {
+            const auto effectId = primaryEffectBucket[i];
+
+            effectList_[size_t(effectId)] = itemId;
+        }
+        else //All primary effects are assigned
+        {
+            ItemData::data[size_t(itemId)]->allowSpawn = false;
         }
     }
 
-    while (true)
+    //Remove all items without a primary effect from the item bucket
+    itemBucket.resize(primaryEffectBucket.size());
+
+    //Assign secondary effects
+    for (const auto secondaryEffectId : secondaryEffectBucket)
     {
-        //No more effects left to assign?
-        if (effectBucket.empty())
-        {
-            //Mark each amulet and ring that has not yet had any effects assigned to
-            //them as forbidden items.
-            for (auto* data : ItemData::data)
-            {
-                const auto itBeg = begin(effectList_);
-                const auto itEnd = end  (effectList_);
-                if (
-                    (data->type == ItemType::amulet || data->type == ItemType::ring) &&
-                    find(itBeg, itEnd, data->id) == itEnd)
-                {
-                    data->allowSpawn = false;
-                }
-            }
-            break;
-        }
-
-        //No more items left to assign effects to?
-        if (itemBucket.empty())
-        {
-            break;
-        }
-
-        //Try to assign a random effect from the effect bucket to an item
-        const int   EFFECT_IDX  = Rnd::range(0, effectBucket.size() - 1);
-        const auto  effectId    = effectBucket[EFFECT_IDX];
-
-        //This may fail to find an item bucket index. If so, it means that the effect
-        //cannot be placed on any item (there are no free items, and the effect cannot be
-        //combined with any of the effects currently assigned)
-        const int   ITEM_IDX    = getRndItemBucketIdxForEffect(effectId, itemBucket);
+        const int ITEM_IDX = getRndItemBucketIdxForEffect(secondaryEffectId, itemBucket);
 
         if (ITEM_IDX >= 0)
         {
-            //Effect can be placed (an allowed effect combination or free item exists)
-            const auto itemId           = itemBucket[ITEM_IDX];
-            effectList_[int(effectId)]  = itemId;
-
-            itemBucket.erase(begin(itemBucket) + ITEM_IDX);
+            effectList_[size_t(secondaryEffectId)] = itemBucket[size_t(ITEM_IDX)];
+            itemBucket.erase(begin(itemBucket) + size_t(ITEM_IDX));
         }
-
-        effectBucket.erase(begin(effectBucket) + EFFECT_IDX);
     }
 }
 

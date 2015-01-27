@@ -151,7 +151,7 @@ void Mon::onActorTurn()
 
     //------------------------------ SPECIAL MONSTER ACTIONS
     //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-    if (leader_ != Map::player && (tgt_ == nullptr || tgt_ == Map::player))
+    if (leader_ != Map::player && (tgt_ == nullptr || tgt_->isPlayer()))
     {
         if (onActorTurn_())
         {
@@ -166,7 +166,7 @@ void Mon::onActorTurn()
     if (
         data_->ai[int(AiId::looks)] &&
         leader_ != Map::player      &&
-        (tgt_ == nullptr || tgt_ == Map::player))
+        (tgt_ == nullptr || tgt_->isPlayer()))
     {
         if (Ai::Info::lookBecomePlayerAware(*this))
         {
@@ -177,7 +177,7 @@ void Mon::onActorTurn()
     if (
         data_->ai[int(AiId::makesRoomForFriend)]    &&
         leader_ != Map::player                      &&
-        (tgt_ == nullptr || tgt_ == Map::player))
+        (tgt_ == nullptr || tgt_->isPlayer()))
     {
         if (Ai::Action::makeRoomForFriend(*this))
         {
@@ -235,7 +235,7 @@ void Mon::onActorTurn()
     if (
         data_->ai[int(AiId::pathsToTgtWhenAware)]   &&
         leader_ != Map::player                      &&
-        tgt_ == Map::player)
+        (tgt_ == nullptr || tgt_->isPlayer()))
     {
         Ai::Info::setPathToPlayerIfAware(*this, path);
     }
@@ -266,7 +266,7 @@ void Mon::onActorTurn()
     if (
         data_->ai[int(AiId::movesToLair)]   &&
         leader_ != Map::player              &&
-        (tgt_ == nullptr || tgt_ == Map::player))
+        (tgt_ == nullptr || tgt_->isPlayer()))
     {
         if (Ai::Action::stepToLairIfLos(*this, lairCell_))
         {

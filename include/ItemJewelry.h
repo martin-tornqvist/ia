@@ -18,21 +18,19 @@ enum class JewelryEffectId
     rPoison,
     rDisease,
     teleCtrl,
+    light,
+    haste,
+    spellReflect,
     hpBon,
     spiBon,
-    haste,
+    conflict,
 
-    //Neutral
-    light,          //Harder to sneak
-    spellReflect,   //Very powerful, but cannot cast spells on self
-    randomTele,
-    conflict,       //Powerful, but draws a lot of attention
-
-    //Just bad
+    START_OF_SECONDARY_EFFECTS, //Bad or "funny"
     hpPen,
     spiPen,
     burden,
-    noise,
+    shriek,
+    randomTele,
 
     END
 };
@@ -94,7 +92,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectRFire";
+        return "It shields the wearer against fire.";
     }
 
 protected:
@@ -113,7 +111,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectRCold";
+        return "It shields the wearer against cold.";
     }
 
 protected:
@@ -132,7 +130,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectRElec";
+        return "It shields the wearer against electricity.";
     }
 
 protected:
@@ -151,7 +149,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectRPoison";
+        return "It shields the wearer against poison.";
     }
 
 protected:
@@ -170,7 +168,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectRDisease";
+        return "It shields the wearer against disease.";
     }
 
 protected:
@@ -189,7 +187,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectTeleControl";
+        return "It grants the wearer power to control teleportation.";
     }
 
 protected:
@@ -208,7 +206,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectLight";
+        return "It illuminates the area around the wearer.";
     }
 
 protected:
@@ -227,7 +225,8 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectSpellReflect";
+        return "It shields the wearer against spells, and reflects them back on the "
+               "caster.";
     }
 
 protected:
@@ -246,7 +245,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectHaste";
+        return "It speeds up the wearer.";
     }
 
 protected:
@@ -265,7 +264,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectHpBon";
+        return "It grants stronger vitality.";
     }
 
     void            onEquip()           override;
@@ -284,7 +283,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectHpPen";
+        return "It makes the wearer frailer.";
     }
 
     void            onEquip()           override;
@@ -303,7 +302,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectSpiBon";
+        return "It strengthens the spirit of the wearer.";
     }
 
     void            onEquip()         override;
@@ -322,7 +321,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectSpiPen";
+        return "It weakens the spirit of the wearer.";
     }
 
     void            onEquip()           override;
@@ -341,28 +340,30 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectRandomTele";
+        return "It occasionally teleports the wearer.";
     }
 
     void onStdTurnEquiped() override;
 };
 
-class JewelryEffectNoise : public JewelryEffect
+class JewelryEffectShriek : public JewelryEffect
 {
 public:
-    JewelryEffectNoise(Jewelry* const jewelry) :
-        JewelryEffect(jewelry) {}
+    JewelryEffectShriek(Jewelry* const jewelry);
 
-    ~JewelryEffectNoise() {}
+    ~JewelryEffectShriek() {}
 
-    JewelryEffectId getId() const override {return JewelryEffectId::noise;}
+    JewelryEffectId getId() const override {return JewelryEffectId::shriek;}
 
     std::string getDescr() const override
     {
-        return "JewelryEffectNoise";
+        return "It occasionally emits a disembodied voice in a horrible shrieking tone.";
     }
 
     void onStdTurnEquiped() override;
+
+private:
+    std::vector<std::string> words_;
 };
 
 class JewelryEffectConflict : public JewelryEffect
@@ -377,7 +378,8 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectConflict";
+        return "It sows hatred in the minds of nearby creatures, and turns allies "
+               "against each other.";
     }
 
     void onStdTurnEquiped() override;
@@ -395,7 +397,7 @@ public:
 
     std::string getDescr() const override
     {
-        return "JewelryEffectBurden";
+        return "It burdens the wearer, as if there was an invisible weight to carry.";
     }
 
     void onEquip()                          override;

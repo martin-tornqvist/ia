@@ -115,7 +115,8 @@ string Item::getName(const ItemRefType      refType,
         const string    sidesStr    = toStr(data_->melee.dmg.second);
         const int       PLUS        = meleeDmgPlus_;
         const string    plusStr     = PLUS == 0 ? "" :
-                                      PLUS  > 0 ? "+" :
+                                      PLUS  > 0 ?
+                                      ("+" + toStr(PLUS)) :
                                       ("-" + toStr(PLUS));
         const int       ITEM_SKILL  = data_->melee.hitChanceMod;
         const int       MELEE_SKILL = abilityVals.getVal(AbilityId::melee, true,
@@ -140,7 +141,8 @@ string Item::getName(const ItemRefType      refType,
             const string    sidesStr    = toStr(data_->ranged.dmg.sides);
             const int       PLUS        = data_->ranged.dmg.plus * MULTIPL;
             const string    plusStr     = PLUS ==  0 ? "" :
-                                          PLUS  > 0 ? "+" :
+                                          PLUS  > 0  ?
+                                          ("+" + toStr(PLUS)) :
                                           ("-" + toStr(PLUS));
             dmgStr                      = rollsStr + "d" + sidesStr + plusStr;
         }
