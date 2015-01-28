@@ -2227,7 +2227,7 @@ void initDataList()
     d.intrProps[int(PropId::flying)] = true;
     d.intrProps[int(PropId::rFear)] = true;
     d.preventKnockback = true;
-    d.spawnMinDLVL = DLVL_LAST - 3;
+    d.spawnMinDLVL = DLVL_LAST - 5;
     d.canSeeInDarkness = true;
     d.groupSize = MonGroupSize::alone;
     d.actorSize = ActorSize::humanoid;

@@ -111,8 +111,8 @@ void act()
     if (Map::dlvl >= DLVL_LAST)
     {
         TRACE << "Starting new run on first dungeon level" << endl;
-        Map::dlvl = 1;
         MapTravel::init();
+        Map::dlvl = 1;
         return;
     }
 

@@ -692,10 +692,11 @@ void Cultist::mkStartItems()
 {
     //If we are on a low-ish dlvl, let the vast majority of cultists carry pistols
     const bool  IS_LOW_DLVL   = Map::dlvl < 4;
-    const int   PISTOL        = IS_LOW_DLVL ? 20 : 6;
+
+    const int   PISTOL        = IS_LOW_DLVL   ? 20 : 6;
     const int   PUMP_SHOTGUN  = PISTOL        + 3;
     const int   SAWN_SHOTGUN  = PUMP_SHOTGUN  + 3;
-    const int   MG            = SAWN_SHOTGUN  + 2;
+    const int   MG            = SAWN_SHOTGUN  + 1;
 
     const int   TOT           = MG;
     const int   RND           = Map::dlvl == 0 ? PISTOL : Rnd::range(1, TOT);
@@ -708,7 +709,7 @@ void Cultist::mkStartItems()
 
         inv_->putInSlot(SlotId::wielded, item);
 
-        if (Rnd::fraction(1, 3))
+        if (Rnd::oneIn(5))
         {
             inv_->putInGeneral(ItemFactory::mk(ItemId::pistolClip));
         }
@@ -721,16 +722,23 @@ void Cultist::mkStartItems()
 
         inv_->putInSlot(SlotId::wielded, item);
 
-        item            = ItemFactory::mk(ItemId::shotgunShell);
-        item->nrItems_  = Rnd::range(2, 8);
-        inv_->putInGeneral(item);
+        if (Rnd::oneIn(4))
+        {
+            item            = ItemFactory::mk(ItemId::shotgunShell);
+            item->nrItems_  = Rnd::range(1, 8);
+            inv_->putInGeneral(item);
+        }
     }
     else if (RND <= SAWN_SHOTGUN)
     {
         inv_->putInSlot(SlotId::wielded, ItemFactory::mk(ItemId::sawedOff));
-        Item* item      = ItemFactory::mk(ItemId::shotgunShell);
-        item->nrItems_  = Rnd::range(2, 8);
-        inv_->putInGeneral(item);
+
+        if (Rnd::oneIn(4))
+        {
+            Item* item      = ItemFactory::mk(ItemId::shotgunShell);
+            item->nrItems_  = Rnd::range(1, 8);
+            inv_->putInGeneral(item);
+        }
     }
     else //Machine gun
     {
@@ -989,12 +997,12 @@ void MiGo::mkStartItems()
     static_cast<Wpn*>(item)->nrAmmoLoaded = Rnd::range(AMMO_CAP / 4, AMMO_CAP);
     inv_->putInSlot(SlotId::wielded, item);
 
-    if (Rnd::oneIn(4))
+    if (Rnd::oneIn(9))
     {
         inv_->putInGeneral(ItemFactory::mk(ItemId::migoGunAmmo));
     }
 
-    if (Rnd::oneIn(5))
+    if (Rnd::oneIn(9))
     {
         inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorMigo));
     }
