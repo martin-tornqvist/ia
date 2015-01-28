@@ -87,11 +87,15 @@ void init()
     //Forest intro level
     mapList_[0] = {MapType::intro, IsMainDungeon::yes};
 
-    //Occasionally set rats-in-the-walls level as first late game level
+    //Occasionally set rats-in-the-walls level as intro to first late game level
     if (Rnd::oneIn(3))
     {
-        mapList_[DLVL_FIRST_LATE_GAME] = {MapType::ratsInTheWalls, IsMainDungeon::yes};
+        mapList_[DLVL_FIRST_LATE_GAME - 1] =
+        {MapType::ratsInTheWalls, IsMainDungeon::yes};
     }
+
+    //"Pharaoh chamber" is the first late game level
+    mapList_[DLVL_FIRST_LATE_GAME] = {MapType::egypt, IsMainDungeon::yes};
 
     mapList_[DLVL_LAST + 1] = {MapType::boss,           IsMainDungeon::yes};
     mapList_[DLVL_LAST + 2] = {MapType::trapezohedron,  IsMainDungeon::yes};

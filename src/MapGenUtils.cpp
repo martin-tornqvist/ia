@@ -141,7 +141,7 @@ void mkPillarsInRoom(const Room& room)
             }
         }
     }
-    else
+    else //Random chance failed
     {
         //Scatter pillars randomly
         for (int y = roomP0.y + 1; y <= roomP1.y - 1; ++y)
@@ -369,11 +369,13 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
     }
 
     TRACE_VERBOSE << "Picking a random stored entry pair" << endl;
-    const pair<Pos, Pos>& entries = entriesBucket[Rnd::range(0, entriesBucket.size() - 1)];
-    const Pos&            p0      = entries.first;
-    const Pos&            p1      = entries.second;
+    const size_t            IDX     = Rnd::range(0, entriesBucket.size() - 1);
+    const pair<Pos, Pos>&   entries = entriesBucket[IDX];
+    const Pos&              p0      = entries.first;
+    const Pos&              p1      = entries.second;
 
     vector<Pos> path;
+    bool blockedExpanded[MAP_W][MAP_H];
 
     //Is entry points same cell (rooms are adjacent)? Then simply use that
     if (p0 == p1)
@@ -395,7 +397,6 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
             }
         }
 
-        bool blockedExpanded[MAP_W][MAP_H];
         MapParse::expand(blocked, blockedExpanded);
 
         blockedExpanded[p0.x][p0.y] = blockedExpanded[p1.x][p1.y] = false;
@@ -406,7 +407,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
         const bool RANDOMIZE_STEP_CHOICES = Map::dlvl >= DLVL_FIRST_LATE_GAME ? true :
                                             Rnd::oneIn(5);
 
-        PathFind::run(p0, p1, blockedExpanded, path, ALLOW_DIAGONAL, RANDOMIZE_STEP_CHOICES);
+        PathFind::run(p0, p1, blockedExpanded, path, ALLOW_DIAGONAL,
+                      RANDOMIZE_STEP_CHOICES);
     }
 
     if (!path.empty())
@@ -431,7 +433,8 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
             }
             if ((isLeftOfRoom && isRightOfRoom) || (isAboveRoom && isBelowRoom))
             {
-                TRACE_FUNC_END_VERBOSE << "Path circled around room, aborting corridor" << endl;
+                TRACE_FUNC_END_VERBOSE << "Path circled around room, aborting corridor"
+                                       << endl;
                 return;
             }
         }
@@ -441,6 +444,26 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
         for (size_t i = 0; i < path.size(); ++i)
         {
             const Pos& p(path[i]);
+
+            //If this is a late game level, put floor in 3x3 cells around each point in
+            //the path (wide corridors for more "open" level).
+            if (Map::dlvl >= DLVL_FIRST_LATE_GAME && Rnd::fraction(4, 5))
+            {
+                for (int dx = -1; dx <= 1; ++dx)
+                {
+                    for (int dy = -1; dy <= 1; ++dy)
+                    {
+                        const Pos pAdj(p + Pos(dx, dy));
+
+                        if (
+                            Utils::isPosInsideMap(pAdj, false) &&
+                            !blockedExpanded[pAdj.x][pAdj.y])
+                        {
+                            Map::put(new Floor(pAdj));
+                        }
+                    }
+                }
+            }
 
             Map::put(new Floor(p));
 

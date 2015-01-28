@@ -991,6 +991,17 @@ void ChasmRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
     bool blocked[MAP_W][MAP_H];
     MapParse::run(CellCheck::BlocksMoveCmn(false), blocked);
 
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            if (Map::roomMap[x][y] != this)
+            {
+                blocked[x][y] = true;
+            }
+        }
+    }
+
     bool blockedExpanded[MAP_W][MAP_H];
     MapParse::expand(blocked, blockedExpanded);
 
@@ -1000,7 +1011,7 @@ void ChasmRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
     {
         for (int y = r_.p0.y; y <= r_.p1.y; ++y)
         {
-            if (!blockedExpanded[x][y] && Map::roomMap[x][y] == this)
+            if (!blockedExpanded[x][y])
             {
                 origin.set(x, y);
             }
@@ -1011,9 +1022,9 @@ void ChasmRoom::onPostConnect_(bool doorProposals[MAP_W][MAP_H])
 
     FloodFill::run(origin, blockedExpanded, flood, 10000, { -1,  -1}, false);
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = r_.p0.x; x <= r_.p1.x; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = r_.p0.y; y <= r_.p1.y; ++y)
         {
             const Pos p(x, y);
 
