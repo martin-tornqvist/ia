@@ -134,7 +134,10 @@ void Mon::onActorTurn()
         }
         else //Monster does not have a leader
         {
-            if (isAlive() && Rnd::oneIn(14)) {speakPhrase();}
+            if (isAlive() && Rnd::oneIn(14))
+            {
+                speakPhrase();
+            }
         }
     }
 
@@ -151,7 +154,7 @@ void Mon::onActorTurn()
 
     //------------------------------ SPECIAL MONSTER ACTIONS
     //                               (ZOMBIES RISING, WORMS MULTIPLYING...)
-    if (leader_ != Map::player && (tgt_ == nullptr || tgt_->isPlayer()))
+    if (leader_ != Map::player && (tgt_ == nullptr || tgt_ == Map::player))
     {
         if (onActorTurn_())
         {
@@ -166,7 +169,7 @@ void Mon::onActorTurn()
     if (
         data_->ai[int(AiId::looks)] &&
         leader_ != Map::player      &&
-        (tgt_ == nullptr || tgt_->isPlayer()))
+        (tgt_ == nullptr || tgt_ == Map::player))
     {
         if (Ai::Info::lookBecomePlayerAware(*this))
         {
@@ -174,10 +177,7 @@ void Mon::onActorTurn()
         }
     }
 
-    if (
-        data_->ai[int(AiId::makesRoomForFriend)]    &&
-        leader_ != Map::player                      &&
-        (tgt_ == nullptr || tgt_->isPlayer()))
+    if (data_->ai[int(AiId::makesRoomForFriend)] && tgt_ == Map::player)
     {
         if (Ai::Action::makeRoomForFriend(*this))
         {
@@ -235,7 +235,7 @@ void Mon::onActorTurn()
     if (
         data_->ai[int(AiId::pathsToTgtWhenAware)]   &&
         leader_ != Map::player                      &&
-        (tgt_ == nullptr || tgt_->isPlayer()))
+        tgt_ == Map::player)
     {
         Ai::Info::setPathToPlayerIfAware(*this, path);
     }
@@ -266,7 +266,7 @@ void Mon::onActorTurn()
     if (
         data_->ai[int(AiId::movesToLair)]   &&
         leader_ != Map::player              &&
-        (tgt_ == nullptr || tgt_->isPlayer()))
+        (tgt_ == nullptr || tgt_ == Map::player))
     {
         if (Ai::Action::stepToLairIfLos(*this, lairCell_))
         {
@@ -1561,36 +1561,34 @@ bool MajorClaphamLee::onActorTurn_()
 
 bool Zombie::tryResurrect()
 {
-    if (isCorpse())
+    if (isCorpse() && !hasResurrected)
     {
-        if (!hasResurrected)
-        {
-            const int NR_TURNS_TO_CAN_RISE = 5;
-            if (deadTurnCounter < NR_TURNS_TO_CAN_RISE)
-            {
-                ++deadTurnCounter;
-            }
-            if (deadTurnCounter >= NR_TURNS_TO_CAN_RISE)
-            {
-                if (pos != Map::player->pos && Rnd::oneIn(14))
-                {
-                    state_  = ActorState::alive;
-                    hp_     = (getHpMax(true) * 3) / 4;
-                    glyph_  = data_->glyph;
-                    tile_   = data_->tile;
-                    clr_    = data_->color;
-                    hasResurrected = true;
-                    data_->nrKills--;
-                    if (Map::cells[pos.x][pos.y].isSeenByPlayer)
-                    {
-                        Log::addMsg(getCorpseNameThe() + " rises again!!", clrWhite, true);
-                        Map::player->incrShock(ShockLvl::some, ShockSrc::misc);
-                    }
+        const int NR_TURNS_TO_CAN_RISE = 5;
 
-                    awareCounter_ = data_->nrTurnsAware * 2;
-                    GameTime::tick();
-                    return true;
+        if (deadTurnCounter < NR_TURNS_TO_CAN_RISE)
+        {
+            ++deadTurnCounter;
+        }
+        if (deadTurnCounter >= NR_TURNS_TO_CAN_RISE)
+        {
+            if (pos != Map::player->pos && Rnd::oneIn(14))
+            {
+                state_  = ActorState::alive;
+                hp_     = (getHpMax(true) * 3) / 4;
+                glyph_  = data_->glyph;
+                tile_   = data_->tile;
+                clr_    = data_->color;
+                hasResurrected = true;
+                data_->nrKills--;
+                if (Map::cells[pos.x][pos.y].isSeenByPlayer)
+                {
+                    Log::addMsg(getCorpseNameThe() + " rises again!!", clrWhite, true);
+                    Map::player->incrShock(ShockLvl::some, ShockSrc::misc);
                 }
+
+                awareCounter_ = data_->nrTurnsAware * 2;
+                GameTime::tick();
+                return true;
             }
         }
     }

@@ -201,19 +201,16 @@ bool makeRoomForFriend(Mon& mon)
 {
     if (mon.isAlive())
     {
-
         bool blockedLos[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
         if (mon.isSeeingActor(*Map::player, blockedLos))
         {
-
             //Loop through all actors
             for (Actor* actor : GameTime::actors_)
             {
                 if (actor != Map::player && actor != &mon && actor->isAlive())
                 {
-
                     Mon* other = static_cast<Mon*>(actor);
 
                     bool isOtherAdjWithNoLos = isAdjAndNoVision(mon, *other, blockedLos);
@@ -614,8 +611,8 @@ void setPathToPlayerIfAware(Mon& mon, vector<Pos>& path)
     }
 
     //Append living adjacent actors to the blocking array
-    MapParse::run(CellCheck::LivingActorsAdjToPos(mon.pos),
-                  blocked, MapParseMode::append);
+    MapParse::run(CellCheck::LivingActorsAdjToPos(mon.pos), blocked,
+                  MapParseMode::append);
 
     PathFind::run(mon.pos, Map::player->pos, blocked, path);
 }

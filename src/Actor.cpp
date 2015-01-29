@@ -168,7 +168,8 @@ void Actor::getSeenFoes(vector<Actor*>& out)
                      min(MAP_W - 1, pos.x + FOV_STD_RADI_INT),
                      min(MAP_H - 1, pos.y + FOV_STD_RADI_INT));
 
-        MapParse::run(CellCheck::BlocksLos(), blockedLos, MapParseMode::overwrite, losRect);
+        MapParse::run(CellCheck::BlocksLos(), blockedLos, MapParseMode::overwrite,
+                      losRect);
     }
 
     for (Actor* actor : GameTime::actors_)
