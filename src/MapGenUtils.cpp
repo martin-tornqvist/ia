@@ -176,30 +176,23 @@ void cavifyRoom(Room& room)
 
     vector<Pos> originBucket;
 
-    //TODO: This needs some refactoring
+    const auto& r = room.r_;
 
-    //Left
-    for (int i = Rnd::range(1, 3); i > 0; --i)
-    {
-        originBucket.push_back({roomRect.p0.x, Rnd::range(roomRect.p0.y, roomRect.p1.y)});
-    }
+    const int X0 = r.p0.x + 1;
+    const int Y0 = r.p0.y + 1;
+    const int X1 = r.p1.x - 1;
+    const int Y1 = r.p1.y - 1;
 
-    //Right
-    for (int i = Rnd::range(1, 3); i > 0; --i)
+    for (int x = X0; x <= X1; ++x)
     {
-        originBucket.push_back({roomRect.p1.x, Rnd::range(roomRect.p0.y, roomRect.p1.y)});
-    }
-
-    //Up
-    for (int i = Rnd::range(1, 3); i > 0; --i)
-    {
-        originBucket.push_back({Rnd::range(roomRect.p0.x, roomRect.p1.x), roomRect.p0.y});
-    }
-
-    //Down
-    for (int i = Rnd::range(1, 3); i > 0; --i)
-    {
-        originBucket.push_back({Rnd::range(roomRect.p0.x, roomRect.p1.x), roomRect.p1.y});
+        for (int y = Y0; y <= Y1; ++y)
+        {
+            //Add to origin bucket if we are on the edge
+            if (x == X0 || x == X1 || y == Y0 || y == Y1)
+            {
+                originBucket.push_back({x, y});
+            }
+        }
     }
 
     for (const Pos& origin : originBucket)
@@ -211,7 +204,7 @@ void cavifyRoom(Room& room)
 
         int flood[MAP_W][MAP_H];
 
-        FloodFill::run(origin, blocked, flood, Rnd::range(1, 3), { -1, -1}, false);
+        FloodFill::run(origin, blocked, flood, Rnd::range(1, 4), { -1, -1}, false);
 
         for (int x = 0; x < MAP_W; ++x)
         {
@@ -219,9 +212,10 @@ void cavifyRoom(Room& room)
             {
                 if (flood[x][y] > 0)
                 {
-                    Rigid* const rigid = Map::put(new Floor({x, y}));
-                    static_cast<Floor*>(rigid)->type_ = FloorType::cave;
+                    Map::put(new Floor({x, y}));
+
                     Map::roomMap[x][y] = &room;
+
                     if (x < roomRect.p0.x) {roomRect.p0.x = x;}
                     if (y < roomRect.p0.y) {roomRect.p0.y = y;}
                     if (x > roomRect.p1.x) {roomRect.p1.x = x;}
@@ -229,18 +223,19 @@ void cavifyRoom(Room& room)
                 }
             }
         }
+    }
 
-        for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        for (int y = 0; y < MAP_H; ++y)
         {
-            for (int y = 0; y < MAP_H; ++y)
+            if (Map::roomMap[x][y] == &room)
             {
-                if (Map::roomMap[x][y] == &room)
+                Rigid* const rigid = Map::cells[x][y].rigid;
+
+                if (rigid->getId() == FeatureId::floor)
                 {
-                    Rigid* const rigid = Map::cells[x][y].rigid;
-                    if (rigid->getId() == FeatureId::floor)
-                    {
-                        static_cast<Floor*>(rigid)->type_ = FloorType::cave;
-                    }
+                    static_cast<Floor*>(rigid)->type_ = FloorType::cave;
                 }
             }
         }
