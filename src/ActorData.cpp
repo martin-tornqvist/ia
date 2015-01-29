@@ -32,7 +32,8 @@ void ActorDataT::reset()
     for (int i = 0; i < int(AiId::END); ++i) {ai[i] = false;}
     ai[int(AiId::movesToRandomWhenUnaware)] = true;
     nrTurnsAware = 0;
-    spawnMinDLVL = spawnMaxDLVL = 999;
+    spawnMinDLVL = 999;
+    spawnMaxDLVL = DLVL_LAST - 2;
     actorSize = ActorSize::humanoid;
     isHumanoid = false;
     isAutoDescrAllowed = true;
@@ -2131,7 +2132,6 @@ void initDataList()
     d.intrProps[int(PropId::rFear)] = true;
     d.intrProps[int(PropId::rConf)] = true;
     d.spawnMinDLVL = 14;
-    d.spawnMaxDLVL = 999;
     d.canSeeInDarkness = true;
     d.groupSize = MonGroupSize::alone;
     d.actorSize = ActorSize::humanoid;
@@ -2178,7 +2178,6 @@ void initDataList()
     d.intrProps[int(PropId::rFear)] = true;
     d.preventKnockback = true;
     d.spawnMinDLVL = 12;
-    d.spawnMaxDLVL = 999;
     d.canSeeInDarkness = true;
     d.groupSize = MonGroupSize::alone;
     d.actorSize = ActorSize::humanoid;
@@ -2218,20 +2217,21 @@ void initDataList()
     d.speed = ActorSpeed::fastest;
     d.rangedCooldownTurns = 0;
     d.glyph = 'W';
-    d.color = clrGray;
+    d.color = clrGrayDrk;
     d.tile = TileId::huntingHorror;
-    d.hp = 60;
+    d.hp = 90;
     d.spi = 40;
-    d.dmgMelee = 10;
-    d.abilityVals.setVal(AbilityId::melee, 60);
+    d.dmgMelee = 12;
+    d.abilityVals.setVal(AbilityId::melee, 75);
     d.intrProps[int(PropId::flying)] = true;
     d.intrProps[int(PropId::rFear)] = true;
     d.preventKnockback = true;
-    d.spawnMinDLVL = DLVL_LAST - 5;
+    d.spawnMinDLVL = DLVL_LAST - 6;
+    d.spawnMaxDLVL = 999;
     d.canSeeInDarkness = true;
     d.groupSize = MonGroupSize::alone;
-    d.actorSize = ActorSize::humanoid;
-    d.nrTurnsAware = 2;
+    d.actorSize = ActorSize::giant;
+    d.nrTurnsAware = 4;
     d.isAutoDescrAllowed = true;
     d.canOpenDoors = false;
     d.canBashDoors = true;
@@ -2290,10 +2290,11 @@ void initDataList()
     d.canBashDoors = false;
     d.canOpenDoors = false;
     d.nrTurnsAware = 25;
-    d.descr = "An infernal piece of technology, seemingly designed to serve as a sort of "
-              "guard. It hovers around, constantly searching the area with beaming "
-              "spotlights, ready to blast any interloper on sight. It appears to have "
-              "some organic parts, and may even be a conscious living being.";
+    d.descr =
+        "An infernal piece of technology, seemingly designed to serve as a sort of "
+        "guard. It hovers around, constantly searching the area with beaming "
+        "spotlights, ready to blast any interloper on sight. It appears to have "
+        "some organic parts, and may even be a conscious living being.";
     d.spellCastMsg = "The Sentry Drone shifts and rotates madly.";
     d.aggroTextMonSeen = d.nameThe + " makes a deep buzzing sound.";
     d.aggroTextMonHidden = "I hear a deep buzzing sound.";
@@ -2330,8 +2331,9 @@ void initDataList()
     d.erraticMovePct = ActorErraticFreq::never;
     d.canBleed = false;
     d.canLeaveCorpse = false;
-    d.descr = "A sickly growth thriving in damp areas. It produces toxic spores which it "
-              "stores in its slimy heads.";
+    d.descr =
+        "A sickly growth thriving in damp areas. It produces toxic spores which it "
+        "stores in its slimy heads.";
     d.aggroTextMonSeen = "";
     d.aggroTextMonHidden = "";
     d.aggroSfxMonSeen = SfxId::END;
@@ -2371,8 +2373,9 @@ void initDataList()
     d.isAutoDescrAllowed = true;
     d.canOpenDoors = false;
     d.canBashDoors = false;
-    d.descr = "A vaguely intelligent floating fungus-based organism. It contains a highly "
-              "explosive gas and will detonate very easily, which it seems to desire.";
+    d.descr =
+        "A vaguely intelligent floating fungus-based organism. It contains a highly "
+        "explosive gas and will detonate very easily, which it seems to desire.";
     d.aggroTextMonHidden = "";
     d.canBeSummoned = false;
     d.canBleed = false;

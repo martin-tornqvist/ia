@@ -1341,7 +1341,7 @@ void initDataList()
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::huntingHorror);
-    d->melee.propApplied = new PropParalyzed(PropTurns::std);
+    d->melee.propApplied = new PropPoisoned(PropTurns::std);
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::moldSpores);
