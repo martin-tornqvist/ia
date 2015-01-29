@@ -11,7 +11,7 @@ class Jewelry;
 
 enum class JewelryEffectId
 {
-    //Good
+    //"Primary" effects (i.e. one of these must be on the jewelry)
     rFire,
     rCold,
     rElec,
@@ -25,7 +25,8 @@ enum class JewelryEffectId
     spiBon,
     conflict,
 
-    START_OF_SECONDARY_EFFECTS, //Bad or "funny"
+    //Secondary
+    START_OF_SECONDARY_EFFECTS,
     hpPen,
     spiPen,
     burden,
@@ -51,8 +52,6 @@ public:
     virtual void            onActorTurnEquiped()    {}
     virtual void            changeItemWeight(int& weightRef)        {(void)weightRef;}
     virtual void            changeActorSpeed(ActorSpeed& speedRef)  {(void)speedRef;}
-
-    void reveal();
 
     virtual std::string getDescr() const = 0;
 
@@ -423,9 +422,7 @@ public:
     int getWeight() const override;
 
     //Called from the effects
-    void onEffectRevealed();
-
-    bool isAllEffectsKnown() const;
+    void effectNoticed(const JewelryEffectId effectId);
 
 private:
     virtual std::string getNameInf() const;

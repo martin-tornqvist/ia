@@ -103,29 +103,6 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
 
 } //namespace
 
-//--------------------------------------------------------- JEWELRY EFFECT
-void JewelryEffect::reveal()
-{
-    const size_t EFFECT_IDX = size_t(getId());
-
-    if (!effectsKnown_[EFFECT_IDX])
-    {
-        effectsKnown_[EFFECT_IDX] = true;
-
-        const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
-
-        const string msg = jewelry_->isAllEffectsKnown() ?
-                           "All properties of the " + name + " are now known to me." :
-                           "I gained new knowledge about the " + name + ".";
-
-        Log::addMsg(msg, clrWhite, false, true);
-
-        jewelry_->onEffectRevealed();
-
-        Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
-    }
-}
-
 //--------------------------------------------------------- JEWELRY PROPERTY EFFECT
 void JewelryPropertyEffect::onEquip()
 {
@@ -144,7 +121,7 @@ void JewelryPropertyEffect::onEquip()
 
     Log::addMsg(msg);
 
-    reveal();
+    jewelry_->effectNoticed(getId());
 }
 
 UnequipAllowed JewelryPropertyEffect::onUnequip()
@@ -230,7 +207,7 @@ Prop* JewelryEffectHaste::mkProp() const
 void JewelryEffectHpBon::onEquip()
 {
     Map::player->changeMaxHp(4, true);
-    reveal();
+    jewelry_->effectNoticed(getId());
 }
 
 UnequipAllowed JewelryEffectHpBon::onUnequip()
@@ -244,7 +221,7 @@ UnequipAllowed JewelryEffectHpBon::onUnequip()
 void JewelryEffectHpPen::onEquip()
 {
     Map::player->changeMaxHp(-4, true);
-    reveal();
+    jewelry_->effectNoticed(getId());
 }
 
 UnequipAllowed JewelryEffectHpPen::onUnequip()
@@ -258,7 +235,7 @@ UnequipAllowed JewelryEffectHpPen::onUnequip()
 void JewelryEffectSpiBon::onEquip()
 {
     Map::player->changeMaxSpi(4, true);
-    reveal();
+    jewelry_->effectNoticed(getId());
 }
 
 UnequipAllowed JewelryEffectSpiBon::onUnequip()
@@ -272,7 +249,7 @@ UnequipAllowed JewelryEffectSpiBon::onUnequip()
 void JewelryEffectSpiPen::onEquip()
 {
     Map::player->changeMaxSpi(-4, true);
-    reveal();
+    jewelry_->effectNoticed(getId());
 }
 
 UnequipAllowed JewelryEffectSpiPen::onUnequip()
@@ -293,14 +270,14 @@ void JewelryEffectRandomTele::onStdTurnEquiped()
     {
         Log::addMsg("I am being teleported...", clrWhite, true, true);
         Map::player->teleport();
-        reveal();
+        jewelry_->effectNoticed(getId());
     }
 }
 
 //--------------------------------------------------------- EFFECT: CONFLICT
 void JewelryEffectConflict::onStdTurnEquiped()
 {
-    const int CONFLICT_ONE_IN_N = 15;
+    const int CONFLICT_ONE_IN_N = 20;
 
     if (Rnd::oneIn(CONFLICT_ONE_IN_N))
     {
@@ -314,7 +291,7 @@ void JewelryEffectConflict::onStdTurnEquiped()
 
             mon->getPropHandler().tryApplyProp(new PropConflict(PropTurns::std));
 
-            reveal();
+            jewelry_->effectNoticed(getId());
         }
     }
 }
@@ -418,7 +395,7 @@ void JewelryEffectShriek::onStdTurnEquiped()
 
         Log::morePrompt();
 
-        reveal();
+        jewelry_->effectNoticed(getId());
     }
 }
 
@@ -429,7 +406,7 @@ void JewelryEffectBurden::onEquip()
     {
         const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
         Log::addMsg("I suddenly feel more burdened.");
-        reveal();
+        jewelry_->effectNoticed(getId());
     }
 }
 
@@ -473,7 +450,7 @@ vector<string> Jewelry::getDescr() const
         }
     }
 
-    if (isAllEffectsKnown())
+    if (data_->isIdentified)
     {
         const string name = getName(ItemRefType::plain, ItemRefInf::none);
 
@@ -485,7 +462,7 @@ vector<string> Jewelry::getDescr() const
 
 string Jewelry::getNameInf() const
 {
-    return isAllEffectsKnown() ? "{Known}" : "";
+    return data_->isIdentified ? "{Known}" : "";
 }
 
 void Jewelry::onEquip()
@@ -564,27 +541,46 @@ int Jewelry::getWeight() const
     return weight;
 }
 
-void Jewelry::onEffectRevealed()
+void Jewelry::effectNoticed(const JewelryEffectId effectId)
 {
-    assert(!data_->isIdentified);
+    const size_t EFFECT_IDX = size_t(effectId);
 
-    if (isAllEffectsKnown())
+    if (!effectsKnown_[EFFECT_IDX])
     {
-        data_->isIdentified = true;
-    }
-}
+        effectsKnown_[EFFECT_IDX] = true;
 
-bool Jewelry::isAllEffectsKnown() const
-{
-    for (auto* effect : effects_)
-    {
-        if (!effectsKnown_[int(effect->getId())])
+        string      msg                     = "";
+        const int   MAX_NR_EFFECTS_ON_ITEM  = 2;
+        int         nrEffectsKnownThisItem  = 0;
+
+        for (auto* effect : effects_)
         {
-            return false;
-        }
-    }
+            const size_t CHECK_EFFECT_IDX = size_t(effect->getId());
 
-    return true;
+            if (effectsKnown_[CHECK_EFFECT_IDX])
+            {
+                ++nrEffectsKnownThisItem;
+            }
+        }
+
+        assert(nrEffectsKnownThisItem <= MAX_NR_EFFECTS_ON_ITEM);
+
+        const string name = getName(ItemRefType::plain, ItemRefInf::none);
+
+        if (nrEffectsKnownThisItem == MAX_NR_EFFECTS_ON_ITEM)
+        {
+            msg = "I feel like all properties of the " + name + " are now known to me.";
+            data_->isIdentified = true;
+        }
+        else //Fewer than maximum possible number of effects are known
+        {
+            msg = "I gained new knowledge about the " + name + ".";
+        }
+
+        Log::addMsg(msg, clrWhite, false, true);
+
+        Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
+    }
 }
 
 //--------------------------------------------------------- JEWELRY HANDLING

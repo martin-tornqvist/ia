@@ -46,7 +46,8 @@ void Rigid::onNewTurn()
             {
                 if (Map::player->isSeeingActor(actor, nullptr))
                 {
-                    Log::addMsg(actor.getNameThe() + " is scorched by flames.", clrMsgGood);
+                    Log::addMsg(actor.getNameThe() + " is scorched by flames.",
+                                clrMsgGood);
                 }
             }
             actor.hit(1, DmgType::fire);
@@ -89,22 +90,22 @@ void Rigid::onNewTurn()
 
         case Matl::metal:
             finishBurningOneInN = 12;
-            hitAdjacentOneInN   = 6;
+            hitAdjacentOneInN   = 8;
             break;
 
         case Matl::plant:
             finishBurningOneInN = 30;
-            hitAdjacentOneInN   = 4;
+            hitAdjacentOneInN   = 12;
             break;
 
         case Matl::wood:
-            finishBurningOneInN = 50;
-            hitAdjacentOneInN   = 3;
+            finishBurningOneInN = 60;
+            hitAdjacentOneInN   = 16;
             break;
 
         case Matl::cloth:
             finishBurningOneInN = 20;
-            hitAdjacentOneInN   = 6;
+            hitAdjacentOneInN   = 8;
             break;
         }
 

@@ -1690,9 +1690,10 @@ void initDataList()
 
     d = new ItemDataT(ItemId::deviceShockwave);
     resetData(*d, ItemType::device);
-    d->baseName = {"Shock Wave Device", "Shock Wave Devices",
-                   "a Shock Wave Device"
-                  };
+    d->baseName =
+    {
+        "Shock Wave Device", "Shock Wave Devices", "a Shock Wave Device"
+    };
     d->value = ItemValue::minorTreasure;
     d->clr = clrGray;
     addFeatureFoundIn(*d, FeatureId::chest, 10);
@@ -1702,9 +1703,10 @@ void initDataList()
 
     d = new ItemDataT(ItemId::deviceRejuvenator);
     resetData(*d, ItemType::device);
-    d->baseName = {"Rejuvenator Device", "Rejuvenator Devices",
-                   "a Rejuvenator Device"
-                  };
+    d->baseName =
+    {
+        "Rejuvenator Device", "Rejuvenator Devices", "a Rejuvenator Device"
+    };
     d->value = ItemValue::minorTreasure;
     d->clr = clrGray;
     addFeatureFoundIn(*d, FeatureId::chest, 10);
@@ -1714,7 +1716,10 @@ void initDataList()
 
     d = new ItemDataT(ItemId::deviceTranslocator);
     resetData(*d, ItemType::device);
-    d->baseName = {"Translocator Device", "Translocator Devices", "a Translocator Device"};
+    d->baseName =
+    {
+        "Translocator Device", "Translocator Devices", "a Translocator Device"
+    };
     d->value = ItemValue::minorTreasure;
     d->clr = clrGray;
     addFeatureFoundIn(*d, FeatureId::chest, 10);
@@ -1724,7 +1729,10 @@ void initDataList()
 
     d = new ItemDataT(ItemId::deviceSentryDrone);
     resetData(*d, ItemType::device);
-    d->baseName = {"Sentry Drone Device", "Sentry Drone Devices", "a Sentry Drone Device"};
+    d->baseName =
+    {
+        "Sentry Drone Device", "Sentry Drone Devices", "a Sentry Drone Device"
+    };
     d->value = ItemValue::minorTreasure;
     d->clr = clrGray;
     addFeatureFoundIn(*d, FeatureId::chest, 10);

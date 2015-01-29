@@ -1643,6 +1643,7 @@ void PropInfected::onNewTurn()
         PropHandler& propHlr = owningActor_->getPropHandler();
         propHlr.tryApplyProp(new PropDiseased(PropTurns::std));
         propHlr.endAppliedProp(PropId::infected, false);
+        Log::morePrompt();
     }
 }
 

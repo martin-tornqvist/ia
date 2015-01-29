@@ -438,16 +438,16 @@ void PotionInsight::quaff_(Actor& actor)
         }
         else //Item name is same as before
         {
-            //Typically, items that change names when identified have a "nonsense" name first
-            //(e.g. "A Green Potion"), that change into something more descriptive (e.g.
-            //"A Potion of Fire Resistance"). In those cases, the message can be something like
-            //"Aha, [old name] is a [new name]!".
-            //But when the name is the same before and after, the message needs to be different,
-            //(e.g. "An Iron Ring"). Then we print a message like "Aha, I understand it now".
+            //Typically, items that change names when identified have a "nonsense" name
+            //first (e.g. "A Green Potion"), that change into something more descriptive
+            //(e.g. "A Potion of Fire Resistance"). In those cases, the message can be
+            //something like "Aha, [old name] is a [new name]!". But when the name is the
+            //same, the message needs to be different, (e.g. "An Iron Ring"). Then we
+            //print a message like "Aha, I understand it now".
 
             //TODO: This is hacky and fragile, but it works for now.
 
-            Log::addMsg("All its properties are now known to me.");
+            Log::addMsg("All its properties are known to me.");
         }
     }
 
