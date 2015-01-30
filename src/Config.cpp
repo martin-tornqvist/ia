@@ -12,7 +12,7 @@
 #include "Render.h"
 #include "Input.h"
 #include "Audio.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Utils.h"
 
 
@@ -300,9 +300,9 @@ void draw(const MenuBrowser* const browser, const int OPTION_VALUES_X_POS)
                      browser->getPos().y == optNr ?
                      clrMenuHighlight : clrMenuDrk);
     string fontDispName;
-    TextFormatting::replaceAll(fontName_,      "images/",  "",   fontDispName);
-    TextFormatting::replaceAll(fontDispName,  "_",        " ",  fontDispName);
-    TextFormatting::replaceAll(fontDispName,  ".png",     "",   fontDispName);
+    TextFormat::replaceAll(fontName_,      "images/",  "",   fontDispName);
+    TextFormat::replaceAll(fontDispName,  "_",        " ",  fontDispName);
+    TextFormat::replaceAll(fontDispName,  ".png",     "",   fontDispName);
     Render::drawText(fontDispName, Panel::screen, Pos(X1, OPT_Y0 + optNr),
                      browser->getPos().y == optNr ?
                      clrMenuHighlight : clrMenuDrk);

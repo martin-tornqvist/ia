@@ -9,7 +9,7 @@
 #include "Render.h"
 #include "Map.h"
 #include "Item.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 
 using namespace std;
 

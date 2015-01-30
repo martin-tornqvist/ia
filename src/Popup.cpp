@@ -2,7 +2,7 @@
 
 #include "Config.h"
 #include "Render.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Log.h"
 #include "Query.h"
 #include "CmnTypes.h"
@@ -109,7 +109,7 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
     if (DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface(false);}
 
     vector<string> lines;
-    TextFormatting::lineToLines(msg, TEXT_W, lines);
+    TextFormat::lineToLines(msg, TEXT_W, lines);
     const int TEXT_H_TOT =  int(lines.size()) + 3;
 
     int y = printBoxAndGetTitleYPos(TEXT_H_TOT);
@@ -157,7 +157,7 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
     if (Config::isBotPlaying()) {return 0;}
 
     vector<string> lines;
-    TextFormatting::lineToLines(msg, TEXT_W, lines);
+    TextFormat::lineToLines(msg, TEXT_W, lines);
     const int TITLE_H         = title.empty() ? 0 : 1;
     const int NR_MSG_LINES    = int(lines.size());
     const int NR_BLANK_LINES  = (NR_MSG_LINES == 0 && TITLE_H == 0) ? 0 : 1;

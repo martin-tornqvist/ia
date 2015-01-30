@@ -31,7 +31,7 @@
 #include "ItemDevice.h"
 #include "ItemScroll.h"
 #include "ItemPotion.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Utils.h"
 
 using namespace std;
@@ -1240,12 +1240,14 @@ void Player::hearSound(const Snd& snd, const bool IS_ORIGIN_SEEN_BY_PLAYER,
                        const Dir dirToOrigin,
                        const int PERCENT_AUDIBLE_DISTANCE)
 {
-    const SfxId sfx = snd.getSfx();
+    const SfxId     sfx         = snd.getSfx();
+    const string&   msg         = snd.getMsg();
+    const bool      HAS_SND_MSG = !msg.empty() && msg != " ";
 
-    const string& msg = snd.getMsg();
-    const bool HAS_SND_MSG = !msg.empty() && msg != " ";
-
-    if (HAS_SND_MSG) {Log::addMsg(msg, clrWhite);}
+    if (HAS_SND_MSG)
+    {
+        Log::addMsg(msg, clrWhite);
+    }
 
     //Play audio after message to ensure sync between audio and animation
     //If origin is hidden, we only play the sound if there is a message
@@ -1417,11 +1419,12 @@ void Player::moveDir(Dir dir)
                                 "I try to feel what is lying here...",
                                 clrWhite, true);
 
-                    const string itemName =
-                        item->getName(ItemRefType::plural, ItemRefInf::yes,
-                                      ItemRefAttInf::wpnContext);
+                    string itemName = item->getName(ItemRefType::plural, ItemRefInf::yes,
+                                                    ItemRefAttInf::wpnContext);
 
-                    Log::addMsg(TextFormatting::firstToUpper(itemName) + ".");
+                    TextFormat::firstToUpper(itemName);
+
+                    Log::addMsg(itemName + ".");
                 }
             }
 

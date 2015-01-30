@@ -12,7 +12,7 @@
 #include "Inventory.h"
 #include "FeatureRigid.h"
 #include "FeatureMob.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Item.h"
 #include "ItemDevice.h"
 #include "Utils.h"
@@ -37,9 +37,11 @@ void drawLocationInfo()
         if (mob)
         {
             featureName = mob->getName(Article::a);
+
             if (!featureName.empty())
             {
-                str += TextFormatting::firstToUpper(featureName) + ". ";
+                TextFormat::firstToUpper(featureName);
+                str += featureName + ". ";
             }
         }
 
@@ -47,7 +49,8 @@ void drawLocationInfo()
         featureName = Map::cells[p.x][p.y].rigid->getName(Article::a);
         if (!featureName.empty())
         {
-            str += TextFormatting::firstToUpper(featureName) + ". ";
+            TextFormat::firstToUpper(featureName);
+            str += featureName + ". ";
         }
 
         //Light/darkness

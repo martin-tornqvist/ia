@@ -232,10 +232,7 @@ void Mon::onActorTurn()
 
     vector<Pos> path;
 
-    if (
-        data_->ai[int(AiId::pathsToTgtWhenAware)]   &&
-        leader_ != Map::player                      &&
-        tgt_ == Map::player)
+    if (data_->ai[int(AiId::pathsToTgtWhenAware)] && leader_ != Map::player)
     {
         Ai::Info::setPathToPlayerIfAware(*this, path);
     }
@@ -520,7 +517,10 @@ AttackOpport Mon::getAttackOpport(Actor& defender)
                 for (size_t i = 0; i < nrIntrinsics; ++i)
                 {
                     weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
-                    if (weapon->getData().melee.isMeleeWpn) {opport.weapons.push_back(weapon);}
+                    if (weapon->getData().melee.isMeleeWpn)
+                    {
+                        opport.weapons.push_back(weapon);
+                    }
                 }
             }
         }
@@ -539,7 +539,9 @@ AttackOpport Mon::getAttackOpport(Actor& defender)
                         opport.weapons.push_back(weapon);
 
                         //Check if reload time instead
-                        if (weapon->nrAmmoLoaded == 0 && !weapon->getData().ranged.hasInfiniteAmmo)
+                        if (
+                            weapon->nrAmmoLoaded == 0 &&
+                            !weapon->getData().ranged.hasInfiniteAmmo)
                         {
                             if (inv_->hasAmmoForFirearmInInventory())
                             {
@@ -553,7 +555,10 @@ AttackOpport Mon::getAttackOpport(Actor& defender)
                 for (size_t i = 0; i < nrIntrinsics; ++i)
                 {
                     weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
-                    if (weapon->getData().ranged.isRangedWpn) {opport.weapons.push_back(weapon);}
+                    if (weapon->getData().ranged.isRangedWpn)
+                    {
+                        opport.weapons.push_back(weapon);
+                    }
                 }
             }
         }

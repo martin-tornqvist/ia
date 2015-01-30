@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-namespace TextFormatting
+namespace TextFormat
 {
 
 void lineToLines(std::string line, const int MAX_W, std::vector<std::string>& linesRef);
@@ -14,10 +14,10 @@ void getSpaceSeparatedList(const std::string& line, std::vector<std::string>& li
 void replaceAll(const std::string& line, const std::string& from, const std::string& to,
                 std::string& resultRef);
 
-std::string firstToLower(const std::string& str);
+void firstToLower(std::string& str);
+void firstToUpper(std::string& str);
+void allToUpper  (std::string& str);
 
-std::string firstToUpper(const std::string& str);
-
-} //TextFormatting
+} //TextFormat
 
 #endif

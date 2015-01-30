@@ -10,7 +10,7 @@
 #include "Render.h"
 #include "MapParsing.h"
 #include "Utils.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 
 using namespace std;
 
@@ -51,14 +51,18 @@ void playerKick()
         Actor* deadActor = Utils::getActorAtPos(kickPos, ActorState::corpse);
         if (deadActor)
         {
-            const bool    IS_SEEING_CELL  = Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
-            const string  corpseName      = IS_SEEING_CELL ? deadActor->getCorpseNameA() :
-                                            "a corpse";
+            const bool  IS_SEEING_CELL  = Map::cells[kickPos.x][kickPos.y].isSeenByPlayer;
+            string      corpseName      = IS_SEEING_CELL ?
+                                          deadActor->getCorpseNameA() :
+                                          "a corpse";
 
-            Log::addMsg("I bash " + TextFormatting::firstToLower(corpseName) + ".");
+            TextFormat::firstToUpper(corpseName);
+
+            Log::addMsg("I bash " + corpseName + ".");
 
             pair<int, int> kickDmg = ItemData::data[int(ItemId::playerKick)]->melee.dmg;
-            deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical, DmgMethod::kick);
+            deadActor->hit(kickDmg.first * kickDmg.second, DmgType::physical,
+                           DmgMethod::kick);
 
             GameTime::tick();
             TRACE_FUNC_END;

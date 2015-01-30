@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Input.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Render.h"
 
 using namespace std;
@@ -37,7 +37,7 @@ void readFile()
             }
             else
             {
-                TextFormatting::lineToLines(curLine, MAP_W - 2, formattedLines);
+                TextFormat::lineToLines(curLine, MAP_W - 2, formattedLines);
                 for (string& line : formattedLines) {lines_.push_back(line);}
             }
         }

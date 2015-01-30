@@ -15,7 +15,7 @@
 #include "MenuInputHandling.h"
 #include "Highscore.h"
 #include "PlayerBon.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "MenuBrowser.h"
 #include "FeatureRigid.h"
 #include "Utils.h"
@@ -117,7 +117,7 @@ void mkInfoLines(vector<StrAndClr>& out)
     else
     {
         vector<string> abilitiesLines;
-        TextFormatting::lineToLines(traitsLine, 60, abilitiesLines);
+        TextFormat::lineToLines(traitsLine, 60, abilitiesLines);
         for (string& str : abilitiesLines)
         {
             out.push_back(StrAndClr("   " + str, clrInfo));

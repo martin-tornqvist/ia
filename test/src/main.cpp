@@ -14,7 +14,7 @@
 #include "ActorPlayer.h"
 #include "Throwing.h"
 #include "ItemFactory.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "ActorFactory.h"
 #include "ActorMon.h"
 #include "MapGen.h"
@@ -188,30 +188,30 @@ TEST(FormatText)
     string str = "one two three four";
     int lineMaxW = 100;
     vector<string> formattedLines;
-    TextFormatting::lineToLines(str, lineMaxW, formattedLines);
+    TextFormat::lineToLines(str, lineMaxW, formattedLines);
     CHECK_EQUAL(str, formattedLines.at(0));
     CHECK_EQUAL(int(formattedLines.size()), 1);
 
     lineMaxW = 13;
-    TextFormatting::lineToLines(str, lineMaxW, formattedLines);
+    TextFormat::lineToLines(str, lineMaxW, formattedLines);
     CHECK_EQUAL("one two three", formattedLines.at(0));
     CHECK_EQUAL("four", formattedLines.at(1));
     CHECK_EQUAL(int(formattedLines.size()), 2);
 
     lineMaxW = 15;
-    TextFormatting::lineToLines(str, lineMaxW, formattedLines);
+    TextFormat::lineToLines(str, lineMaxW, formattedLines);
     CHECK_EQUAL("one two three", formattedLines.at(0));
     CHECK_EQUAL("four", formattedLines.at(1));
     CHECK_EQUAL(int(formattedLines.size()), 2);
 
     lineMaxW = 11;
-    TextFormatting::lineToLines(str, lineMaxW, formattedLines);
+    TextFormat::lineToLines(str, lineMaxW, formattedLines);
     CHECK_EQUAL("one two", formattedLines.at(0));
     CHECK_EQUAL("three four", formattedLines.at(1));
     CHECK_EQUAL(int(formattedLines.size()), 2);
 
     str = "";
-    TextFormatting::lineToLines(str, lineMaxW, formattedLines);
+    TextFormat::lineToLines(str, lineMaxW, formattedLines);
     CHECK(formattedLines.empty());
 }
 

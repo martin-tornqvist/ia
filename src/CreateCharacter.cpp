@@ -4,7 +4,7 @@
 #include "ActorPlayer.h"
 #include "Input.h"
 #include "MenuInputHandling.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Utils.h"
 #include "Map.h"
 
@@ -150,7 +150,7 @@ void drawPickBg(const vector<Bg>& bgs, const MenuBrowser& browser)
     for (string& rawLine : rawDescrLines)
     {
         vector<string> formattedLines;
-        TextFormatting::lineToLines(rawLine, MAX_W_DESCR, formattedLines);
+        TextFormat::lineToLines(rawLine, MAX_W_DESCR, formattedLines);
         for (string& line : formattedLines)
         {
             Render::drawText(line, Panel::screen, Pos(X0_DESCR, y), clrWhite);
@@ -271,7 +271,7 @@ void drawPickTrait(
     PlayerBon::getTraitDescr(markedTrait, descr);
     const int MAX_W_DESCR = X_COL_TWO_RIGHT - X_COL_ONE + 1;
     vector<string> descrLines;
-    TextFormatting::lineToLines(
+    TextFormat::lineToLines(
         "Effect(s): " + descr, MAX_W_DESCR, descrLines);
     for (const string& str : descrLines)
     {
@@ -306,7 +306,7 @@ void drawPickTrait(
         }
 
         vector<string> prereqLines;
-        TextFormatting::lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
+        TextFormat::lineToLines(prereqStr, MAX_W_DESCR, prereqLines);
         for (const string& str : prereqLines)
         {
             Render::drawText(str, Panel::screen, Pos(X0_DESCR, y), clrWhite);
@@ -323,7 +323,7 @@ void drawPickTrait(
     {
         pickedStr = "Trait(s) gained: " + pickedStr;
         vector<string> pickedLines;
-        TextFormatting::lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
+        TextFormat::lineToLines(pickedStr, MAX_W_PREV_PICKS, pickedLines);
         for (const string& str : pickedLines)
         {
             Render::drawText(

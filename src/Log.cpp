@@ -1,9 +1,7 @@
 #include "Log.h"
 
-#include <algorithm>
 #include <vector>
 #include <string>
-#include <iostream>
 
 #include "Init.h"
 #include "Input.h"
@@ -12,6 +10,7 @@
 #include "Query.h"
 #include "ActorPlayer.h"
 #include "Map.h"
+#include "TextFormat.h"
 
 using namespace std;
 
@@ -160,7 +159,7 @@ void addMsg(const string& str, const Clr& clr, const bool INTERRUPT_PLAYER_ACTIO
         if (hasLowerCase && isEndedByPunctuation)
         {
             //Convert to upper case
-            transform(begin(frenziedStr), end(frenziedStr), begin(frenziedStr), ::toupper);
+            TextFormat::allToUpper(frenziedStr);
 
             //Do not put "!" if string contains "..."
             if (frenziedStr.find("...") == string::npos)

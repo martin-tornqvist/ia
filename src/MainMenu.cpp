@@ -10,7 +10,7 @@
 #include "Highscore.h"
 #include "Manual.h"
 #include "Popup.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Credits.h"
 #include "Audio.h"
 #include "GameTime.h"
@@ -272,7 +272,7 @@ void draw(const MenuBrowser& browser)
     quoteClr.b /= 7;
 
     vector<string> quoteLines;
-    TextFormatting::lineToLines(quote, 28, quoteLines);
+    TextFormat::lineToLines(quote, 28, quoteLines);
     Pos quotePos(15, pos.y - 1);
     for (string& quoteLine : quoteLines)
     {

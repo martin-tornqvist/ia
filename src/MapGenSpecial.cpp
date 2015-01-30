@@ -12,7 +12,7 @@
 #include "MapParsing.h"
 #include "Highscore.h"
 #include "Fov.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "PopulateMonsters.h"
 #include "PopulateItems.h"
 #include "ItemFactory.h"
@@ -342,7 +342,7 @@ void mkForestTrees()
             vector<string>  dateStrVector;
 
             dateStrVector.clear();
-            TextFormatting::getSpaceSeparatedList(entry.getDateAndTime(), dateStrVector);
+            TextFormat::getSpaceSeparatedList(entry.getDateAndTime(), dateStrVector);
             const string  dateStr     = dateStrVector[0];
             const string  scoreStr    = toStr(entry.getScore());
             const string  dlvlStr     = toStr(entry.getDlvl());

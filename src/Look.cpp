@@ -8,7 +8,7 @@
 #include "Log.h"
 #include "Map.h"
 #include "ActorPlayer.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Query.h"
 #include "Marker.h"
 #include "Inventory.h"
@@ -95,7 +95,10 @@ void printLocationInfoMsgs(const Pos& pos)
 
         //Describe rigid.
         string str = cell.rigid->getName(Article::a);
-        Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
+
+        TextFormat::firstToUpper(str);
+
+        Log::addMsg(str + ".");
 
         //Describe mobile features.
         for (auto* mob : GameTime::mobs_)
@@ -103,7 +106,10 @@ void printLocationInfoMsgs(const Pos& pos)
             if (mob->getPos() == pos)
             {
                 str = mob->getName(Article::a);
-                Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
+
+                TextFormat::firstToUpper(str);
+
+                Log::addMsg(str  + ".");
             }
         }
 
@@ -113,7 +119,10 @@ void printLocationInfoMsgs(const Pos& pos)
         {
             str = item->getName(ItemRefType::plural, ItemRefInf::yes,
                                 ItemRefAttInf::wpnContext);
-            Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
+
+            TextFormat::firstToUpper(str);
+
+            Log::addMsg(str + ".");
         }
 
         //Describe dead actors.
@@ -122,7 +131,10 @@ void printLocationInfoMsgs(const Pos& pos)
             if (actor->isCorpse() && actor->pos == pos)
             {
                 str = actor->getCorpseNameA();
-                Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
+
+                TextFormat::firstToUpper(str);
+
+                Log::addMsg(str + ".");
             }
         }
 
@@ -135,7 +147,10 @@ void printLocationInfoMsgs(const Pos& pos)
                 if (Map::player->isSeeingActor(*actor, nullptr))
                 {
                     str = actor->getNameA();
-                    Log::addMsg(TextFormatting::firstToUpper(str)  + ".");
+
+                    TextFormat::firstToUpper(str);
+
+                    Log::addMsg(str + ".");
                 }
             }
         }
@@ -162,7 +177,7 @@ void printDetailedActorDescr(const Pos& pos)
         }
 
         vector<string> formattedText;
-        TextFormatting::lineToLines(descr, MAP_W - 1, formattedText);
+        TextFormat::lineToLines(descr, MAP_W - 1, formattedText);
 
         const size_t NR_OF_LINES = formattedText.size();
 

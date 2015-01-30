@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "ActorPlayer.h"
 #include "DungeonMaster.h"
 #include "ItemFactory.h"

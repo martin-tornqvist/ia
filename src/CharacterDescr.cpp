@@ -5,7 +5,7 @@
 #include "PlayerBon.h"
 #include "ActorPlayer.h"
 #include "Render.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Input.h"
 #include "ItemPotion.h"
 #include "ItemScroll.h"
@@ -167,7 +167,7 @@ void mkLines()
             PlayerBon::getTraitDescr(trait, descr);
             lines_.push_back({offset + title, clrText});
             vector<string> descrLines;
-            TextFormatting::lineToLines(descr, MAX_W_DESCR, descrLines);
+            TextFormat::lineToLines(descr, MAX_W_DESCR, descrLines);
             for (string& descrLine : descrLines)
             {
                 lines_.push_back({offset + descrLine, clrTextDark});

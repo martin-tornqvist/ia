@@ -21,7 +21,7 @@
 #include "Utils.h"
 #include "CmnData.h"
 #include "SdlWrapper.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 
 using namespace std;
 
@@ -926,7 +926,7 @@ void drawDescrBox(const std::vector<StrAndClr>& lines)
     for (const auto& line : lines)
     {
         vector<string> formatted;
-        TextFormatting::lineToLines(line.str, MAX_W, formatted);
+        TextFormat::lineToLines(line.str, MAX_W, formatted);
         for (const auto& lineInFormatted : formatted)
         {
             drawText(lineInFormatted, Panel::screen, p, line.clr);

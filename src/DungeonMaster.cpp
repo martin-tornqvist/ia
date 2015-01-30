@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Highscore.h"
-#include "TextFormatting.h"
+#include "TextFormat.h"
 #include "Render.h"
 #include "Query.h"
 #include "ActorPlayer.h"
@@ -170,7 +170,7 @@ void winGame()
         "mine.";
 
     vector<string> winMsgLines;
-    TextFormatting::lineToLines(winMsg, 68, winMsgLines);
+    TextFormat::lineToLines(winMsg, 68, winMsgLines);
 
     Render::coverPanel(Panel::screen);
     Render::updateScreen();

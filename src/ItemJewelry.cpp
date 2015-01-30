@@ -8,6 +8,7 @@
 #include "GameTime.h"
 #include "Render.h"
 #include "ActorMon.h"
+#include "TextFormat.h"
 
 using namespace std;
 
@@ -300,21 +301,33 @@ void JewelryEffectConflict::onStdTurnEquiped()
 JewelryEffectShriek::JewelryEffectShriek(Jewelry* const jewelry) :
     JewelryEffect(jewelry)
 {
-    const string playerName = Map::player->getNameThe();
+    string playerName = Map::player->getNameThe();
+
+    TextFormat::allToUpper(playerName);
 
     words_ =
     {
         playerName,
         playerName,
         playerName,
+        "BHUUDESCO",
+        "STRAGARANA",
+        "INFIRMUX",
+        "BHAAVA",
+        "CRUENTO",
+        "PRETIACRUENTO",
+        "VILOMAXUS",
         "DEATH",
         "DYING",
         "TAKE",
         "BlOOD",
         "END",
         "SACRIFICE",
+        "POSSESSED",
         "PROPHECY",
+        "SIGNS",
         "OATH",
+        "FATE",
         "SUFFER",
         "BEHOLD",
         "BEWARE",
@@ -327,6 +340,7 @@ JewelryEffectShriek::JewelryEffectShriek(Jewelry* const jewelry) :
         "IMMORTAL",
         "BOUNDLESS",
         "ETERNAL",
+        "ANCIENT",
         "TIME",
         "NEVER-ENDING",
         "DIMENSIONS",
@@ -339,7 +353,11 @@ JewelryEffectShriek::JewelryEffectShriek(Jewelry* const jewelry) :
         "KING",
         "UNKNOWN",
         "ABYSS",
-        "GULF",
+        "BENEATH",
+        "BELOW",
+        "PASSAGE",
+        "PATH",
+        "GATE",
         "SERPENT",
         "NYARLATHOTEP",
         "GOL-GOROTH",
@@ -360,7 +378,7 @@ JewelryEffectShriek::JewelryEffectShriek(Jewelry* const jewelry) :
 
 void JewelryEffectShriek::onStdTurnEquiped()
 {
-    const int NOISE_ONE_IN_N = 150;
+    const int NOISE_ONE_IN_N = 300;
 
     if (Rnd::oneIn(NOISE_ONE_IN_N))
     {
@@ -368,7 +386,7 @@ void JewelryEffectShriek::onStdTurnEquiped()
 
         Log::addMsg("The " + name + " shrieks...", clrWhite, false, true);
 
-        const int NR_WORDS = 3; //Rnd::range(3, 4);
+        const int NR_WORDS = 3;
 
         string phrase = "";
 
@@ -549,7 +567,6 @@ void Jewelry::effectNoticed(const JewelryEffectId effectId)
     {
         effectsKnown_[EFFECT_IDX] = true;
 
-        string      msg                     = "";
         const int   MAX_NR_EFFECTS_ON_ITEM  = 2;
         int         nrEffectsKnownThisItem  = 0;
 
@@ -567,17 +584,15 @@ void Jewelry::effectNoticed(const JewelryEffectId effectId)
 
         const string name = getName(ItemRefType::plain, ItemRefInf::none);
 
+        Log::addMsg("I gained new knowledge about the " + name + ".", clrWhite, false,
+                    true);
+
         if (nrEffectsKnownThisItem == MAX_NR_EFFECTS_ON_ITEM)
         {
-            msg = "I feel like all properties of the " + name + " are now known to me.";
+            Log::addMsg("I feel like all properties of the " + name +
+                        " are known to me.", clrWhite, false, true);
             data_->isIdentified = true;
         }
-        else //Fewer than maximum possible number of effects are known
-        {
-            msg = "I gained new knowledge about the " + name + ".";
-        }
-
-        Log::addMsg(msg, clrWhite, false, true);
 
         Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
     }

@@ -1,4 +1,8 @@
-#include "TextFormatting.h"
+#include "TextFormat.h"
+
+#include "Init.h"
+
+#include <algorithm>
 
 using namespace std;
 
@@ -40,7 +44,7 @@ bool isWordFit(const string& curString, const string& wordToFit, const int MAX_W
 } //namespace
 
 
-namespace TextFormatting
+namespace TextFormat
 {
 
 void lineToLines(string line, const int MAX_W, vector<string>& linesRef)
@@ -113,23 +117,26 @@ void replaceAll(const string& line, const string& from, const string& to,
     }
 }
 
-string firstToLower(const std::string& str)
+void firstToLower(std::string& str)
 {
-    if (str.empty()) {return "";}
-
-    string ret  = str;
-    ret[0]      = tolower(ret[0]);
-    return ret;
+    if (!str.empty())
+    {
+        str[0] = tolower(str[0]);
+    }
 }
 
-string firstToUpper(const string& str)
+void firstToUpper(string& str)
 {
-    if (str.empty()) {return "";}
-
-    string ret  = str;
-    ret[0]      = toupper(ret[0]);
-    return ret;
+    if (!str.empty())
+    {
+        str[0] = toupper(str[0]);
+    }
 }
 
-} //TextFormatting
+void allToUpper(string& str)
+{
+    transform(begin(str), end(str), begin(str), ::toupper);
+}
+
+} //TextFormat
 

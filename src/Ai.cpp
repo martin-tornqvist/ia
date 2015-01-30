@@ -509,7 +509,6 @@ void setPathToLairIfNoLos(Mon& mon, vector<Pos>& path,
 {
     if (mon.isAlive())
     {
-
         bool blocked[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksLos(), blocked);
 
@@ -568,6 +567,7 @@ void setPathToPlayerIfAware(Mon& mon, vector<Pos>& path)
     if (!mon.isAlive() || mon.awareCounter_ <= 0)
     {
         path.clear();
+        return;
     }
 
     bool blocked[MAP_W][MAP_H];
