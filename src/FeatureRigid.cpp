@@ -199,7 +199,8 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
 
         if (IS_BLOCKING)
         {
-            Log::addMsg("I kick " + (IS_BLIND ? "something" : getName(Article::a)) + "!");
+            const string name = IS_BLIND ? "something" : getName(Article::a);
+            Log::addMsg("I kick " + name + "!");
 
             if (Rnd::oneIn(4))
             {
@@ -211,7 +212,8 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
             {
                 Log::addMsg("I am off-balance.");
 
-                actor->getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::specific, 2));
+                actor->getPropHandler().tryApplyProp(
+                    new PropParalyzed(PropTurns::specific, 2));
             }
 
         }
@@ -311,7 +313,10 @@ void Floor::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const
     if (dmgType == DmgType::fire && dmgMethod == DmgMethod::elemental)
     {
         (void)actor;
-        if (Rnd::oneIn(3)) {tryStartBurning(false);}
+        if (Rnd::oneIn(3))
+        {
+            tryStartBurning(false);
+        }
     }
 }
 

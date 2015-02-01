@@ -10,6 +10,7 @@
 #include "MapParsing.h"
 #include "Utils.h"
 #include "Actor.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
@@ -88,6 +89,10 @@ Actor* mkActorFromId(const ActorId id)
 
 Actor* mk(const ActorId id, const Pos& pos)
 {
+    assert(
+        !Map::cells[pos.x][pos.y].rigid ||
+        Map::cells[pos.x][pos.y].rigid->getId() != FeatureId::stairs);
+
     Actor* const actor = mkActorFromId(id);
 
     actor->place(pos, ActorData::data[int(id)]);

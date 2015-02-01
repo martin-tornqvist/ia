@@ -1757,5 +1757,15 @@ bool TheDarkOne::onActorTurn_()
         return true;
     }
 
+    for (const Pos& d : DirUtils::dirList)
+    {
+        const Pos p(pos + d);
+
+        if (Utils::isPosInsideMap(p, false))
+        {
+            Map::cells[p.x][p.y].rigid->hit(DmgType::fire, DmgMethod::elemental);
+        }
+    }
+
     return false;
 }

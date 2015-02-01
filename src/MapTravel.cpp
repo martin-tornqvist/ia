@@ -21,20 +21,10 @@ using namespace std;
 namespace MapTravel
 {
 
+vector<MapData> mapList;
+
 namespace
 {
-
-//Note: This includes forest intro level, rats in the walls level, etc. Basically every
-//level that increments the DLVL number.
-enum IsMainDungeon {no, yes};
-
-struct MapData
-{
-    MapType       type;
-    IsMainDungeon isMainDungeon;
-};
-
-vector<MapData> mapList_;
 
 void mkLvl(const MapType& mapType)
 {
@@ -82,48 +72,51 @@ void init()
     //Forest + dungeon + boss + trapezohedron
     const size_t NR_LVL_TOT = DLVL_LAST + 3;
 
-    mapList_ = vector<MapData>(NR_LVL_TOT, {MapType::std, IsMainDungeon::yes});
+    mapList = vector<MapData>(NR_LVL_TOT, {MapType::std, IsMainDungeon::yes});
 
     //Forest intro level
-    mapList_[0] = {MapType::intro, IsMainDungeon::yes};
+    mapList[0] = {MapType::intro, IsMainDungeon::yes};
 
     //Occasionally set rats-in-the-walls level as intro to first late game level
     if (Rnd::oneIn(3))
     {
-        mapList_[DLVL_FIRST_LATE_GAME - 1] =
+        mapList[DLVL_FIRST_LATE_GAME - 1] =
         {MapType::ratsInTheWalls, IsMainDungeon::yes};
     }
 
     //"Pharaoh chamber" is the first late game level
-    mapList_[DLVL_FIRST_LATE_GAME] = {MapType::egypt, IsMainDungeon::yes};
+    mapList[DLVL_FIRST_LATE_GAME] = {MapType::egypt, IsMainDungeon::yes};
 
-    mapList_[DLVL_LAST + 1] = {MapType::boss,           IsMainDungeon::yes};
-    mapList_[DLVL_LAST + 2] = {MapType::trapezohedron,  IsMainDungeon::yes};
+    mapList[DLVL_LAST + 1] = {MapType::boss,           IsMainDungeon::yes};
+    mapList[DLVL_LAST + 2] = {MapType::trapezohedron,  IsMainDungeon::yes};
 }
 
 void storeToSaveLines(std::vector<std::string>& lines)
 {
-    lines.push_back(toStr(mapList_.size()));
-    for (const MapData& entry : mapList_)
+    lines.push_back(toStr(mapList.size()));
+
+    for (const auto& mapData : mapList)
     {
-        lines.push_back(toStr(int(entry.type)));
-        lines.push_back(entry.isMainDungeon == IsMainDungeon::yes ? "1" : "0");
+        lines.push_back(toStr(int(mapData.type)));
+        lines.push_back(mapData.isMainDungeon == IsMainDungeon::yes ? "1" : "0");
     }
 }
 
 void setupFromSaveLines(std::vector<std::string>& lines)
 {
-    const int SIZE = toInt(lines.front());
+    const int NR_MAPS = toInt(lines.front());
     lines.erase(begin(lines));
 
-    for (int i = 0; i < SIZE; ++i)
+    mapList.resize(size_t(NR_MAPS));
+
+    for (auto& mapData : mapList)
     {
-        const MapType type = MapType(toInt(lines.front()));
+        mapData.type = MapType(toInt(lines.front()));
         lines.erase(begin(lines));
-        const IsMainDungeon isMainDungeon = lines.front() == "1" ?
-                                            IsMainDungeon::yes : IsMainDungeon::no;
+
+        mapData.isMainDungeon = lines.front() == "1" ?
+                                IsMainDungeon::yes : IsMainDungeon::no;
         lines.erase(begin(lines));
-        mapList_.push_back({type, isMainDungeon});
     }
 }
 
@@ -133,8 +126,8 @@ void goToNxt()
 
     Map::player->restoreShock(999, true);
 
-    mapList_.erase(mapList_.begin());
-    const auto& mapData = mapList_.front();
+    mapList.erase(mapList.begin());
+    const auto& mapData = mapList.front();
 
     if (mapData.isMainDungeon == IsMainDungeon::yes)
     {
@@ -147,6 +140,13 @@ void goToNxt()
     Map::player->updateFov();
     Map::player->updateClr();
     Render::drawMapAndInterface();
+
+    if (mapData.isMainDungeon == IsMainDungeon::yes && Map::dlvl == DLVL_LAST - 1)
+    {
+        Log::addMsg("An ominous voice thunders in my ears.", clrWhite, false, true);
+        Audio::play(SfxId::bossVoice2);
+    }
+
     Audio::tryPlayAmb(1);
 
     if (Map::player->phobias[int(Phobia::deepPlaces)])
@@ -161,7 +161,7 @@ void goToNxt()
 
 MapType getMapType()
 {
-    return mapList_.front().type;
+    return mapList.front().type;
 }
 
 } //MapTravel

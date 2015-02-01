@@ -32,6 +32,7 @@
 #include "FeatureRigid.h"
 #include "FeatureTrap.h"
 #include "Drop.h"
+#include "MapTravel.h"
 
 using namespace std;
 
@@ -765,6 +766,10 @@ TEST_FIXTURE(BasicFixture, SavingGame)
     prop = propHlr.getProp(PropId::confused, PropSrc::applied);
     CHECK(!prop);
 
+    //Map sequence
+    MapTravel::mapList[5] = {MapType::ratsInTheWalls,   IsMainDungeon::yes};
+    MapTravel::mapList[7] = {MapType::leng,             IsMainDungeon::no};
+
     SaveHandling::save();
     CHECK(SaveHandling::isSaveAvailable());
 }
@@ -884,6 +889,19 @@ TEST_FIXTURE(BasicFixture, LoadingGame)
     prop = propHlr.getProp(PropId::rFire, PropSrc::inv);
     CHECK(prop);
     CHECK(prop->turnsLeft_ == -1);
+
+    //Map sequence
+    auto mapData = MapTravel::mapList[3];
+    CHECK(mapData.type          == MapType::std);
+    CHECK(mapData.isMainDungeon == IsMainDungeon::yes);
+
+    mapData = MapTravel::mapList[5];
+    CHECK(mapData.type          == MapType::ratsInTheWalls);
+    CHECK(mapData.isMainDungeon == IsMainDungeon::yes);
+
+    mapData = MapTravel::mapList[7];
+    CHECK(mapData.type          == MapType::leng);
+    CHECK(mapData.isMainDungeon == IsMainDungeon::no);
 
     //Game time
     CHECK_EQUAL(0, GameTime::getTurn());

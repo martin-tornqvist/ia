@@ -170,52 +170,6 @@ void trySpawnDueToTimePassed()
     TRACE_FUNC_END;
 }
 
-void populateCaveLvl()
-{
-    const int NR_GROUPS_ALLOWED = Rnd::range(6, 7);
-
-    bool blocked[MAP_W][MAP_H];
-
-    const int MIN_DIST_FROM_PLAYER = FOV_STD_RADI_INT - 2;
-    MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
-
-    const Pos& playerPos = Map::player->pos;
-
-    const int X0 = max(0, playerPos.x - MIN_DIST_FROM_PLAYER);
-    const int Y0 = max(0, playerPos.y - MIN_DIST_FROM_PLAYER);
-    const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_FROM_PLAYER) - 1;
-    const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_FROM_PLAYER) - 1;
-
-    for (int y = Y0; y <= Y1; ++y)
-    {
-        for (int x = X0; x <= X1; ++x)
-        {
-            blocked[x][y] = true;
-        }
-    }
-
-    for (int i = 0; i < NR_GROUPS_ALLOWED; ++i)
-    {
-        vector<Pos> originBucket;
-        for (int y = 1; y < MAP_H - 1; ++y)
-        {
-            for (int x = 1; x < MAP_W - 1; ++x)
-            {
-                if (!blocked[x][y]) {originBucket.push_back(Pos(x, y));}
-            }
-        }
-        const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
-        const Pos origin = originBucket[ELEMENT];
-        vector<Pos> sortedFreeCellsVector;
-        mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
-        if (!sortedFreeCellsVector.empty())
-        {
-            mkGroupOfRandomAt(sortedFreeCellsVector, blocked,
-                              getRandomOutOfDepth(), true);
-        }
-    }
-}
-
 void populateIntroLvl()
 {
     const int NR_GROUPS_ALLOWED = 2; //Rnd::range(2, 3);

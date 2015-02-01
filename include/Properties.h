@@ -583,7 +583,8 @@ public:
     PropBurning(PropTurns turnsInit, int turns = -1) :
         Prop(PropId::burning, turnsInit, turns) {}
 
-    bool allowRead(const bool ALLOW_MSG) const override;
+    bool allowRead      (const bool ALLOW_MSG) const override;
+    bool allowCastSpell (const bool ALLOW_MSG) const override;
 
     bool changeActorClr(Clr& clr) const override
     {

@@ -1788,7 +1788,7 @@ bool PropConfused::allowCastSpell(const bool ALLOW_MSG) const
 {
     if (owningActor_->isPlayer() && ALLOW_MSG)
     {
-        Log::addMsg("I am too confused to cast spells.");
+        Log::addMsg("I am too confused to concentrate.");
     }
     return false;
 }
@@ -1976,6 +1976,15 @@ bool PropBurning::allowRead(const bool ALLOW_MSG) const
     if (owningActor_->isPlayer() && ALLOW_MSG)
     {
         Log::addMsg("I cannot read while burning.");
+    }
+    return false;
+}
+
+bool PropBurning::allowCastSpell(const bool ALLOW_MSG) const
+{
+    if (owningActor_->isPlayer() && ALLOW_MSG)
+    {
+        Log::addMsg("I cannot concentrate while burning!");
     }
     return false;
 }

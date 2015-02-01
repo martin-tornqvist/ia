@@ -2445,9 +2445,9 @@ void initDataList()
     d.ai[int(AiId::movesToTgtWhenLos)] = true;
     d.ai[int(AiId::movesToLair)] = false;
     d.ai[int(AiId::movesToLeader)] = false;
-    d.speed = ActorSpeed::slow;
+    d.speed = ActorSpeed::normal;
     d.rangedCooldownTurns = 0;
-    d.spellCooldownTurns = 5;
+    d.spellCooldownTurns = 7;
     d.isUnique = true;
     d.nrLeftAllowedToSpawn = 0;
     d.glyph = 'P';
@@ -2455,11 +2455,11 @@ void initDataList()
     d.tile = TileId::theDarkOne;
     d.hp = 300;
     d.spi = 9999;
-    d.intrProps[int(PropId::ethereal)] = true;
+    d.intrProps[int(PropId::burrowing)] = true;
     d.intrProps[int(PropId::rConf)] = true;
     d.intrProps[int(PropId::rFire)] = true;
     d.dmgMelee = 8;
-    d.abilityVals.setVal(AbilityId::melee, 40);
+    d.abilityVals.setVal(AbilityId::melee, 70);
     d.isAutoSpawnAllowed = false;
     d.groupSize = MonGroupSize::alone;
     d.actorSize = ActorSize::humanoid;

@@ -12,8 +12,6 @@ void trySpawnDueToTimePassed();
 
 void populateStdLvl();
 
-void populateCaveLvl();
-
 void populateIntroLvl();
 
 void mkGroupAt(const ActorId id, const std::vector<Pos>& sortedFreeCellsVector,

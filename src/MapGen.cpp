@@ -920,23 +920,32 @@ void decorate()
     }
 }
 
-void getAllowedStairCells(bool cellsToSet[MAP_W][MAP_H])
+void getAllowedStairCells(bool out[MAP_W][MAP_H])
 {
     TRACE_FUNC_BEGIN;
 
+    //Mark cells as free if all adjacent feature types are allowed
     vector<FeatureId> featIdsOk {FeatureId::floor, FeatureId::carpet, FeatureId::grass};
 
-    MapParse::run(CellCheck::AllAdjIsAnyOfFeatures(featIdsOk), cellsToSet);
+    MapParse::run(CellCheck::AllAdjIsAnyOfFeatures(featIdsOk), out);
 
+    //Block cells with item
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
             if (Map::cells[x][y].item)
             {
-                cellsToSet[x][y] = false;
+                out[x][y] = false;
             }
         }
+    }
+
+    //Block cells with actors
+    for (const auto* const actor : GameTime::actors_)
+    {
+        const Pos& p(actor->pos);
+        out[p.x][p.y] = false;
     }
 
     TRACE_FUNC_END;
@@ -964,7 +973,8 @@ Pos placeStairs()
 #ifdef DEMO_MODE
         Render::coverPanel(Panel::log);
         Render::drawMap();
-        Render::drawText("To few cells to place stairs", Panel::screen, {0, 0}, clrRedLgt);
+        Render::drawText("To few cells to place stairs", Panel::screen, {0, 0},
+                         clrRedLgt);
         Render::updateScreen();
         SdlWrapper::sleep(8000);
 #endif // DEMO_MODE
@@ -1195,7 +1205,8 @@ bool mkStdLvl()
                 if (!region.mainRoom_ && region.isFree_)
                 {
                     const Rect roomRect = region.getRndRoomRect();
-                    auto* room          = RoomFactory::mkRandomAllowedStdRoom(roomRect, false);
+                    auto* room          =
+                        RoomFactory::mkRandomAllowedStdRoom(roomRect, false);
                     registerRoom(*room);
                     mkFloorInRoom(*room);
                     region.mainRoom_    = room;

@@ -284,12 +284,16 @@ void mkForestTrees()
                         const int X = path[i].x + dx;
                         const int Y = path[i].y + dy;
 
-                        const bool IS_LEFT_OF_CHURCH = X < churchPos.x - (SEARCH_RADI) + 2;
+                        const bool IS_LEFT_OF_CHURCH =
+                            X < churchPos.x - (SEARCH_RADI) + 2;
                         const bool IS_ON_STONE_PATH =
                             Map::cells[X][Y].rigid->getId() == FeatureId::floor;
 
                         bool isLeftOfPrev = true;
-                        if (!graveCells.empty()) {isLeftOfPrev = X < graveCells.back().x;}
+                        if (!graveCells.empty())
+                        {
+                            isLeftOfPrev = X < graveCells.back().x;
+                        }
 
                         bool isPosOk = fov[X][Y]         &&
                                        IS_LEFT_OF_CHURCH &&
@@ -312,7 +316,10 @@ void mkForestTrees()
                             {
                                 graveCells.push_back(Pos(X, Y));
                                 blocked[X][Y] = true;
-                                if (int(graveCells.size()) == NR_GRAVES_TO_PLACE) {i = 9999;}
+                                if (int(graveCells.size()) == NR_GRAVES_TO_PLACE)
+                                {
+                                    i = 9999;
+                                }
                                 dy = 99999;
                                 dx = 99999;
                             }
@@ -414,7 +421,10 @@ bool mkEgyptLvl()
                     Map::put(static_cast<Rigid*>(d.mkObj(p)));
                 }
             }
-            if (templCell.actorId != ActorId::END) {ActorFactory::mk(templCell.actorId, p);}
+            if (templCell.actorId != ActorId::END)
+            {
+                ActorFactory::mk(templCell.actorId, p);
+            }
             if (templCell.val == 1) {Map::player->pos = p;}
         }
     }
@@ -598,7 +608,7 @@ bool mkRatsInTheWallsLvl()
     MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
     //Spawn extra rats in the rightmost part of the map
-    for (int x = (MAP_W * 6) / 7; x < MAP_W; ++x)
+    for (int x = (MAP_W * 7) / 8; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
@@ -626,6 +636,8 @@ bool mkRatsInTheWallsLvl()
             static_cast<Mon*>(actor)->isRoamingAllowed_ = false;
         }
     }
+
+    PopulateItems::mkItemsOnFloor();
 
     return true;
 }

@@ -71,7 +71,8 @@ int main(int argc, char* argv[])
                 }
                 DungeonMaster::setTimeStartedToNow();
                 const TimeData& t = DungeonMaster::getStartTime();
-                TRACE << "Game started on: " << t.getTimeStr(TimeType::minute, true) << endl;
+                TRACE << "Game started on: " << t.getTimeStr(TimeType::minute, true)
+                      << endl;
             }
 
             Audio::fadeOutChannel(introMusChan);

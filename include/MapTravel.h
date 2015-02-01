@@ -8,8 +8,20 @@
 
 using namespace std;
 
+//This includes forest intro level, rats in the walls level, etc (every level that
+//increments the DLVL number).
+enum IsMainDungeon {no, yes};
+
+struct MapData
+{
+    MapType       type;
+    IsMainDungeon isMainDungeon;
+};
+
 namespace MapTravel
 {
+
+extern std::vector<MapData> mapList;
 
 void init();
 

@@ -691,7 +691,7 @@ public:
     TheDarkOne() :
         Mon                 (),
         hasGreetedPlayer_   (false),
-        BIG_SPELL_COOLDOWN_ (25),
+        BIG_SPELL_COOLDOWN_ (30),
         bigSpellCounter_    (BIG_SPELL_COOLDOWN_) {}
     ~TheDarkOne() {}
     bool onActorTurn_() override;
