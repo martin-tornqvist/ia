@@ -623,7 +623,8 @@ public:
 
     void changeMoveDir(const Pos& actorPos, Dir& dir) override;
 
-    bool allowRead(const bool ALLOW_MSG) const override;
+    bool allowRead      (const bool ALLOW_MSG) const override;
+    bool allowCastSpell (const bool ALLOW_MSG) const override;
 
     bool allowAttackMelee(const bool ALLOW_MSG) const override;
     bool allowAttackRanged(const bool ALLOW_MSG) const override;

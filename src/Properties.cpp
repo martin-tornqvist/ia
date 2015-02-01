@@ -1784,6 +1784,15 @@ bool PropConfused::allowRead(const bool ALLOW_MSG) const
     return false;
 }
 
+bool PropConfused::allowCastSpell(const bool ALLOW_MSG) const
+{
+    if (owningActor_->isPlayer() && ALLOW_MSG)
+    {
+        Log::addMsg("I am too confused to cast spells.");
+    }
+    return false;
+}
+
 bool PropConfused::allowAttackMelee(const bool ALLOW_MSG) const
 {
     (void)ALLOW_MSG;
