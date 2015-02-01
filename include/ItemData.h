@@ -21,9 +21,20 @@ enum class ItemWeight
     heavy      = 110 //E.g. heavy armor, heavy weapons
 };
 
-enum class MainAttMode {none, melee, thrown, ranged};
+enum class MainAttMode
+{
+    none,
+    melee,
+    thrown,
+    ranged
+};
 
-enum class ItemValue {normal, minorTreasure, majorTreasure};
+enum class ItemValue
+{
+    normal,
+    minorTreasure,
+    majorTreasure
+};
 
 enum class ItemId
 {
@@ -217,7 +228,7 @@ public:
     bool                      allowSpawn;
     Range                     spawnStdRange;
     int                       maxStackAtSpawn;
-    int                       chanceToIncludeInSpawnList;
+    int                       chanceToIncludeInFloorSpawnList;
     bool                      isStackable;
     bool                      isIdentified;
     bool                      isTried;

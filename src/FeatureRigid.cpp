@@ -1410,15 +1410,14 @@ void ItemContainer::init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMP
 
             for (int i = 0; i < int(ItemId::END); ++i)
             {
-                ItemDataT* const data = ItemData::data[i];
+                ItemDataT* const d = ItemData::data[i];
 
-                for (auto containerSpawnRule : data->containerSpawnRules)
+                for (auto containerSpawnRule : d->containerSpawnRules)
                 {
                     if (
-                        containerSpawnRule.featureId == featureId               &&
-                        Rnd::percent() < containerSpawnRule.pctChanceToIncl  &&
-                        Rnd::percent() < data->chanceToIncludeInSpawnList    &&
-                        data->allowSpawn)
+                        containerSpawnRule.featureId == featureId           &&
+                        Rnd::percent() < containerSpawnRule.pctChanceToIncl &&
+                        d->allowSpawn)
                     {
                         itemBucket.push_back(ItemId(i));
                         break;
@@ -1560,11 +1559,13 @@ Tomb::Tomb(const Pos& pos) :
     //Appearance
     if (Rnd::oneIn(5))
     {
-        const TombAppearance lastAppearance = TombAppearance::END;
-        appearance_ = TombAppearance(Rnd::range(0, int(lastAppearance) - 1));
+        //Do not base appearance on items (random appearance)
+        const int NR_APP    = int(TombAppearance::END);
+        appearance_         = TombAppearance(Rnd::range(0, NR_APP - 1));
     }
     else
     {
+        //Appearance is based on items inside
         for (Item* item : itemContainer_.items_)
         {
             const ItemValue itemValue = item->getData().value;

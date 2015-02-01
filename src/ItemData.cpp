@@ -25,7 +25,7 @@ ItemDataT::ItemDataT(const ItemId id_) :
     allowSpawn                      (true),
     spawnStdRange                   (Range(1, INT_MAX)),
     maxStackAtSpawn                 (1),
-    chanceToIncludeInSpawnList      (100),
+    chanceToIncludeInFloorSpawnList (100),
     isStackable                     (true),
     isIdentified                    (true),
     isTried                         (false),
@@ -237,7 +237,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
             "It should be possible to pronounce it correctly, but the purpose is unclear."
         };
         d.value = ItemValue::minorTreasure;
-        d.chanceToIncludeInSpawnList = 40;
+        d.chanceToIncludeInFloorSpawnList = 40;
         d.weight = ItemWeight::none;
         d.isIdentified = false;
         d.glyph = '?';
@@ -260,7 +260,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
             "A small glass bottle containing a mysterious concoction."
         };
         d.value = ItemValue::minorTreasure;
-        d.chanceToIncludeInSpawnList = 55;
+        d.chanceToIncludeInFloorSpawnList = 55;
         d.weight = ItemWeight::light;
         d.isIdentified = false;
         d.glyph = '!';
@@ -287,7 +287,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
             "human mind. Even for its small size, it seems incredibly complex. There is "
             "no hope of understanding the purpose or function of it through normal means."
         };
-        d.chanceToIncludeInSpawnList = 12;
+        d.chanceToIncludeInFloorSpawnList = 12;
         d.weight = ItemWeight::light;
         d.isIdentified = false;
         d.glyph = '~';
@@ -295,6 +295,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.isStackable = false;
         d.landOnHardSndMsg = "I hear a clanking sound.";
         d.landOnHardSfx = SfxId::metalClank;
+        addFeatureFoundIn(d, FeatureId::chest, 10);
     } break;
 
     case ItemType::armor:
@@ -325,6 +326,8 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.weight = ItemWeight::light;
         d.isIdentified = false;
         d.isStackable = false;
+        d.chanceToIncludeInFloorSpawnList = 0;
+        addFeatureFoundIn(d, FeatureId::tomb, 5);
     } break;
 
     case ItemType::ring:
@@ -337,6 +340,8 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.weight = ItemWeight::extraLight;
         d.isIdentified = false;
         d.isStackable = false;
+        d.chanceToIncludeInFloorSpawnList = 0;
+        addFeatureFoundIn(d, FeatureId::tomb, 5);
     } break;
 
     case ItemType::explosive:
@@ -979,8 +984,9 @@ void initDataList()
     d->melee.dmg = pair<int, int>(2, 4);
     d->melee.hitChanceMod = 0;
     d->melee.missSfx = SfxId::missMedium;
-    d->chanceToIncludeInSpawnList = 0;
+    d->chanceToIncludeInFloorSpawnList = 0;
     d->value = ItemValue::majorTreasure;
+    addFeatureFoundIn(*d, FeatureId::tomb, 1);
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::ironSpike);
@@ -1515,7 +1521,7 @@ void initDataList()
     d->tile = TileId::mask;
     d->glyph = '[';
     d->spawnStdRange = Range(1, DLVL_LAST_EARLY_GAME);
-    d->chanceToIncludeInSpawnList = 50;
+    d->chanceToIncludeInFloorSpawnList = 50;
     d->weight = ItemWeight::light;
     d->landOnHardSndMsg = "";
     data[int(d->id)] = d;
@@ -1534,8 +1540,9 @@ void initDataList()
     d->spawnStdRange = Range(-1, -1);
     d->weight = ItemWeight::light;
     d->landOnHardSndMsg = "";
-    d->chanceToIncludeInSpawnList = 0;
+    d->chanceToIncludeInFloorSpawnList = 0;
     d->value = ItemValue::majorTreasure;
+    addFeatureFoundIn(*d, FeatureId::tomb, 1);
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollMayhem);
@@ -1756,7 +1763,7 @@ void initDataList()
     };
     d->spawnStdRange = Range(1, DLVL_LAST_MID_GAME);
     d->spawnStdRange = Range(1, 10);
-    d->chanceToIncludeInSpawnList = 50;
+    d->chanceToIncludeInFloorSpawnList = 50;
     d->isIdentified = true;
     d->tile = TileId::electricLantern;
     d->clr = clrYellow;
