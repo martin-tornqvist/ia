@@ -97,6 +97,7 @@ enum class ItemId
     mummyMaul,
     deepOneSpearAtt,
     deepOneJavelinAtt,
+    apeMaul,
     oozeBlackSpewPus,
     oozePutridSpewPus,
     oozePoisonSpewPus,

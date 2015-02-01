@@ -30,6 +30,7 @@ enum class ActorId
     giantMantis, locust,
     mummy, khephren, nitokris,
     deepOne,
+    ape,
     keziahMason, brownJenkin,
     lengElder,
     majorClaphamLee, deanHalsey,

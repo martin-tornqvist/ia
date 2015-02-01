@@ -208,11 +208,25 @@ void Mon::onActorTurn()
 
     int erraticMovePct = int(data_->erraticMovePct);
 
+    //Never move erratically if frenzied
+    if (props[size_t(PropId::frenzied)])
+    {
+        erraticMovePct = 0;
+    }
+
+    //Move less erratically if allied to player
     if (isActorMyLeader(Map::player))
     {
-        //Move less erratically if allied to player
         erraticMovePct /= 2;
     }
+
+    //Move more erratically if confused
+    if (props[size_t(PropId::confused)])
+    {
+        erraticMovePct *= 2;
+    }
+
+    constrInRange(0, erraticMovePct, 95);
 
     if (data_->ai[int(AiId::movesToRandomWhenUnaware)] && Rnd::percent(erraticMovePct))
     {
@@ -610,9 +624,7 @@ BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
 bool Mon::isLeaderOf(const Actor* const actor) const
 {
     if (!actor || actor->isPlayer())
-    {
         return false;
-    }
 
     //Actor is a monster
     return static_cast<const Mon*>(actor)->leader_ == this;
@@ -631,7 +643,10 @@ int Mon::getGroupSize()
 
     for (const Actor* const actor : GameTime::actors_)
     {
-        if (actor->isActorMyLeader(groupLeader)) {++ret;}
+        if (actor->isActorMyLeader(groupLeader))
+        {
+            ++ret;
+        }
     }
 
     return ret;
@@ -848,62 +863,60 @@ void Zuul::mkStartItems()
 
 bool Vortex::onActorTurn_()
 {
-    if (isAlive())
+    if (!isAlive())
     {
-        if (pullCooldown > 0)
-        {
-            pullCooldown--;
-        }
+        return false;
+    }
 
-        if (awareCounter_ > 0 && pullCooldown <= 0)
+    if (pullCooldown > 0)
+    {
+        --pullCooldown;
+    }
+
+    if (awareCounter_ <= 0 || pullCooldown > 0)
+    {
+        return false;
+    }
+
+    const Pos& playerPos = Map::player->pos;
+
+    if (!Utils::isPosAdj(pos, playerPos, true) && Rnd::oneIn(4))
+    {
+        TRACE << "Vortex attempting to pull player" << endl;
+
+        const Pos   delta               = playerPos - pos;
+        Pos         knockBackFromPos    = playerPos;
+        if (delta.x >  1) {knockBackFromPos.x++;}
+        if (delta.x < -1) {knockBackFromPos.x--;}
+        if (delta.y >  1) {knockBackFromPos.y++;}
+        if (delta.y < -1) {knockBackFromPos.y--;}
+
+        if (knockBackFromPos != playerPos)
         {
-            TRACE << "pullCooldown: " << pullCooldown << endl;
-            TRACE << "Is aware of player" << endl;
-            const Pos& playerPos = Map::player->pos;
-            if (!Utils::isPosAdj(pos, playerPos, true))
+            TRACE << "Good pos found to knockback player from (";
+            TRACE << knockBackFromPos.x << ",";
+            TRACE << knockBackFromPos.y << ")" << endl;
+            TRACE << "Player position: ";
+            TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
+            bool blockedLos[MAP_W][MAP_H];
+            MapParse::run(CellCheck::BlocksLos(), blockedLos);
+            if (isSeeingActor(*(Map::player), blockedLos))
             {
-                const int CHANCE_TO_KNOCK = 25;
-
-                if (Rnd::percent(CHANCE_TO_KNOCK))
+                TRACE << "I am seeing the player" << endl;
+                if (Map::player->isSeeingActor(*this, nullptr))
                 {
-                    TRACE << "Passed random chance to pull" << endl;
-
-                    const Pos playerDelta = playerPos - pos;
-                    Pos knockBackFromPos = playerPos;
-                    if (playerDelta.x >  1) {knockBackFromPos.x++;}
-                    if (playerDelta.x < -1) {knockBackFromPos.x--;}
-                    if (playerDelta.y >  1) {knockBackFromPos.y++;}
-                    if (playerDelta.y < -1) {knockBackFromPos.y--;}
-
-                    if (knockBackFromPos != playerPos)
-                    {
-                        TRACE << "Good pos found to knockback player from (";
-                        TRACE << knockBackFromPos.x << ",";
-                        TRACE << knockBackFromPos.y << ")" << endl;
-                        TRACE << "Player position: ";
-                        TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
-                        bool blockedLos[MAP_W][MAP_H];
-                        MapParse::run(CellCheck::BlocksLos(), blockedLos);
-                        if (isSeeingActor(*(Map::player), blockedLos))
-                        {
-                            TRACE << "I am seeing the player" << endl;
-                            if (Map::player->isSeeingActor(*this, nullptr))
-                            {
-                                Log::addMsg("The Vortex attempts to pull me in!");
-                            }
-                            else
-                            {
-                                Log::addMsg("A powerful wind is pulling me!");
-                            }
-                            TRACE << "Attempt pull (knockback)" << endl;
-                            KnockBack::tryKnockBack(*(Map::player), knockBackFromPos,
-                                                    false, false);
-                            pullCooldown = 5;
-                            GameTime::tick();
-                            return true;
-                        }
-                    }
+                    Log::addMsg("The Vortex attempts to pull me in!");
                 }
+                else
+                {
+                    Log::addMsg("A powerful wind is pulling me!");
+                }
+                TRACE << "Attempt pull (knockback)" << endl;
+                KnockBack::tryKnockBack(*(Map::player), knockBackFromPos,
+                                        false, false);
+                pullCooldown = 5;
+                GameTime::tick();
+                return true;
             }
         }
     }
@@ -1145,12 +1158,37 @@ bool Khephren::onActorTurn_()
     return false;
 }
 
-
-
 void DeepOne::mkStartItems()
 {
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::deepOneJavelinAtt));
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::deepOneSpearAtt));
+}
+
+void Ape::mkStartItems()
+{
+    inv_->putInIntrinsics(ItemFactory::mk(ItemId::apeMaul));
+}
+
+bool Ape::onActorTurn_()
+{
+    if (frenzyCoolDown_ > 0)
+    {
+        --frenzyCoolDown_;
+    }
+
+    if (
+        frenzyCoolDown_ <= 0    &&
+        tgt_                    &&
+        (getHp() <= getHpMax(true) / 2))
+    {
+        frenzyCoolDown_ = 30;
+
+        const int NR_FRENZY_TURNS = Rnd::range(4, 6);
+
+        propHandler_->tryApplyProp(
+            new PropFrenzied(PropTurns::specific, NR_FRENZY_TURNS));
+    }
+    return false;
 }
 
 void GiantBat::mkStartItems()
@@ -1226,9 +1264,7 @@ void KeziahMason::mkStartItems()
     spellsKnown_.push_back(SpellHandling::getRandomSpellForMon());
 
     for (int i = Rnd::range(2, 3); i > 0; --i)
-    {
         inv_->putInGeneral(ItemFactory::mkRandomScrollOrPotion(true, true));
-    }
 }
 
 void LengElder::onStdTurn_()
@@ -1260,10 +1296,11 @@ void LengElder::onStdTurn_()
             const bool IS_PLAYER_ADJ    = Utils::isPosAdj(pos, Map::player->pos, false);
             if (IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
             {
-                Log::addMsg("I perceive a cloaked figure standing before me...", clrWhite, false,
-                            true);
+                Log::addMsg("I perceive a cloaked figure standing before me...",
+                            clrWhite, false, true);
                 Log::addMsg("It is the Elder Hierophant of the Leng monastery, ");
-                Log::addMsg("the High Priest Not to Be Described.", clrWhite, false, true);
+                Log::addMsg("the High Priest Not to Be Described.",
+                            clrWhite, false, true);
 
                 Popup::showMsg("", true, "");
 
@@ -1466,7 +1503,6 @@ bool LordOfSpiders::onActorTurn_()
         {
             for (int dy = -1; dy <= 1; ++dy)
             {
-
                 if (Rnd::fraction(3, 4))
                 {
 
@@ -1686,15 +1722,17 @@ void TheDarkOne::mkStartItems()
 
 void TheDarkOne::onStdTurn_()
 {
-//  if (Map::cells[pos.x][pos.y].isLit)
-//  {
-//    propHandler_->tryApplyProp(new PropTerrified(PropTurns::std));
-//  }
+
 }
 
 bool TheDarkOne::onActorTurn_()
 {
-    if (isAlive() && !hasGreetedPlayer_)
+    if (!isAlive())
+    {
+        return false;
+    }
+
+    if (!hasGreetedPlayer_)
     {
         Map::player->updateFov();
         Render::drawMapAndInterface();

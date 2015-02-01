@@ -1298,6 +1298,12 @@ void initDataList()
     setDmgFromMonId(*d, ActorId::deepOne);
     data[int(d->id)] = d;
 
+    d = new ItemDataT(ItemId::apeMaul);
+    resetData(*d, ItemType::meleeWpnIntr);
+    d->melee.attMsgs = {"", "mauls me"};
+    setDmgFromMonId(*d, ActorId::ape);
+    data[int(d->id)] = d;
+
     d = new ItemDataT(ItemId::oozeBlackSpewPus);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "spews pus on me"};

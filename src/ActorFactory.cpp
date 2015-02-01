@@ -62,6 +62,7 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::khephren:             return new Khephren();
     case ActorId::nitokris:             return new MummyUnique();
     case ActorId::deepOne:              return new DeepOne();
+    case ActorId::ape:                  return new Ape();
     case ActorId::wormMass:             return new WormMass();
     case ActorId::dustVortex:           return new DustVortex();
     case ActorId::fireVortex:           return new FireVortex();

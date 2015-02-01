@@ -866,6 +866,10 @@ public:
         {
             return 999;
         }
+        if (ability == AbilityId::dodgeAtt || ability == AbilityId::dodgeTrap)
+        {
+            return -20;
+        }
         return 0;
     }
 };

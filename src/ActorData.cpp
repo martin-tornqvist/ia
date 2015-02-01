@@ -1349,6 +1349,7 @@ void initDataList()
     d.descr = "A huge swarming insect. They breed rapidly.";
     d.erraticMovePct = ActorErraticFreq::very;
     d.monShockLvl = MonShockLvl::none;
+    d.canBleed = false;
     d.canBeSummoned = false;
     d.nativeRooms.push_back(RoomType::plain);
     data[int(d.id)] = d;
@@ -1482,7 +1483,7 @@ void initDataList()
     d.ai[int(AiId::movesToLeader)] = true;
     d.speed = ActorSpeed::normal;
     d.rangedCooldownTurns = 0;
-    d.glyph = 'M';
+    d.glyph = 'A';
     d.color = clrGreen;
     d.tile = TileId::ghoul;
     d.hp = 21;
@@ -1732,6 +1733,49 @@ void initDataList()
     d.monShockLvl = MonShockLvl::scary;
     d.nativeRooms.push_back(RoomType::flooded);
     d.nativeRooms.push_back(RoomType::muddy);
+    data[int(d.id)] = d;
+    d.reset();
+
+    d.nameA = "A Carnivorous Ape";
+    d.nameThe = "The Carnivorous Ape";
+    d.corpseNameA = "An Ape corpse";
+    d.corpseNameThe = "The Ape corpse";
+    d.id = ActorId::ape;
+    d.ai[int(AiId::looks)] = true;
+    d.ai[int(AiId::makesRoomForFriend)] = true;
+    d.ai[int(AiId::attacks)] = true;
+    d.ai[int(AiId::pathsToTgtWhenAware)] = true;
+    d.ai[int(AiId::movesToTgtWhenLos)] = true;
+    d.ai[int(AiId::movesToLair)] = true;
+    d.ai[int(AiId::movesToLeader)] = true;
+    d.speed = ActorSpeed::fast;
+    d.glyph = 'A';
+    d.color = clrWhite;
+    d.tile = TileId::ape;
+    d.hp = 20;
+    d.spi = 6;
+    d.dmgMelee = 6;
+    d.abilityVals.setVal(AbilityId::melee, 50);
+    d.abilityVals.setVal(AbilityId::dodgeAtt, 35);
+    d.spawnMinDLVL = DLVL_FIRST_LATE_GAME;
+    d.groupSize = MonGroupSize::group;
+    d.actorSize = ActorSize::humanoid;
+    d.isHumanoid = true;
+    d.canBashDoors = true;
+    d.canOpenDoors = false;
+    d.canSeeInDarkness = true;
+    d.nrTurnsAware = 6;
+    d.descr =
+        "An extremely aggressive species of great ape. Their pale skin and excellent "
+        "night vision indicates that they adapted to subterranean life a very long time "
+        "ago.";
+    d.aggroTextMonHidden = "I hear a beast howling.";
+    d.aggroTextMonSeen = d.nameThe + " howls at me.";
+    d.erraticMovePct = ActorErraticFreq::rare;
+    d.monShockLvl = MonShockLvl::unsettling;
+    d.nativeRooms.push_back(RoomType::forest);
+    d.nativeRooms.push_back(RoomType::cave);
+    d.nativeRooms.push_back(RoomType::monster);
     data[int(d.id)] = d;
     d.reset();
 
@@ -2406,13 +2450,14 @@ void initDataList()
     d.spellCooldownTurns = 5;
     d.isUnique = true;
     d.nrLeftAllowedToSpawn = 0;
-    d.glyph = 'M';
+    d.glyph = 'P';
     d.color = clrGrayDrk;
     d.tile = TileId::theDarkOne;
     d.hp = 300;
     d.spi = 9999;
     d.intrProps[int(PropId::ethereal)] = true;
     d.intrProps[int(PropId::rConf)] = true;
+    d.intrProps[int(PropId::rFire)] = true;
     d.dmgMelee = 8;
     d.abilityVals.setVal(AbilityId::melee, 40);
     d.isAutoSpawnAllowed = false;

@@ -79,6 +79,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::mummyMaul:
     case ItemId::deepOneJavelinAtt:
     case ItemId::deepOneSpearAtt:
+    case ItemId::apeMaul:
     case ItemId::oozeBlackSpewPus:
     case ItemId::oozeClearSpewPus:
     case ItemId::oozePutridSpewPus:

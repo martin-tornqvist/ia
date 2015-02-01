@@ -496,6 +496,17 @@ public:
     void mkStartItems() override;
 };
 
+class Ape: public Mon
+{
+public:
+    Ape() : Mon(), frenzyCoolDown_(0) {}
+    ~Ape() {}
+    void mkStartItems() override;
+    bool onActorTurn_() override;
+private:
+    int frenzyCoolDown_;
+};
+
 class Mummy: public Mon
 {
 public:

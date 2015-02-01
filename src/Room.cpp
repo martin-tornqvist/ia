@@ -70,7 +70,7 @@ void initRoomBucket()
         addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
         addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
         addToRoomBucket(RoomType::cave,     Rnd::range(1, 4));
-        addToRoomBucket(RoomType::chasm,    Rnd::range(1, 3));
+        addToRoomBucket(RoomType::chasm,    Rnd::range(0, 3));
         addToRoomBucket(RoomType::forest,   Rnd::range(1, 4));
 
         const size_t NR_PLAIN_ROOM_PER_THEMED = 1;
@@ -84,7 +84,7 @@ void initRoomBucket()
         addToRoomBucket(RoomType::flooded,  Rnd::range(0, 2));
         addToRoomBucket(RoomType::muddy,    Rnd::range(0, 2));
         addToRoomBucket(RoomType::cave,     Rnd::range(3, 4));
-        addToRoomBucket(RoomType::chasm,    Rnd::range(2, 4));
+        addToRoomBucket(RoomType::chasm,    Rnd::range(0, 3));
         addToRoomBucket(RoomType::forest,   Rnd::range(1, 4));
     }
 

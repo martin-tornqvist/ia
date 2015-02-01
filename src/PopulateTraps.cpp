@@ -148,8 +148,9 @@ void populateStdLvl()
             }
         }
 
-        int nrPosCand = int(trapPosBucket.size());
-        const int NR_BASE_TRAPS = min(nrPosCand / 2, Rnd::range(1, 3));
+        int         nrPosCand       = int(trapPosBucket.size());
+        const int   NR_BASE_TRAPS   = min(nrPosCand / 2, Rnd::range(1, 3));
+
         for (int i = 0; i < NR_BASE_TRAPS; ++i)
         {
             if (nrPosCand == 0)

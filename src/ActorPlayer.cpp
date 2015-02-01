@@ -1270,7 +1270,6 @@ void Player::moveDir(Dir dir)
 {
     if (isAlive())
     {
-
         propHandler_->changeMoveDir(pos, dir);
 
         //Trap affects leaving?

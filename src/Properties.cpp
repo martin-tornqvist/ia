@@ -513,8 +513,8 @@ void initDataList()
     d.msg[propMsgOnStartMon] = "Looks ferocious!";
     d.msg[propMsgOnEndPlayer] = "I feel calmer.";
     d.msg[propMsgOnEndMon] = "Looks calmer.";
-    d.msg[propMsgOnResPlayer] = "I resist frenzying.";
-    d.msg[propMsgOnResMon] = "resists frenzying.";
+    d.msg[propMsgOnResPlayer] = "";
+    d.msg[propMsgOnResMon] = "";
     d.isMakingMonAware = false;
     d.allowDisplayTurns = true;
     d.allowApplyMoreWhileActive = true;
@@ -1923,7 +1923,11 @@ void PropFrenzied::onStart()
 
 void PropFrenzied::onEnd()
 {
-    owningActor_->getPropHandler().tryApplyProp(new PropWeakened(PropTurns::std));
+    //Only the player gets tired after a frenzy (it looks weird for monsters)
+    if (owningActor_->isPlayer())
+    {
+        owningActor_->getPropHandler().tryApplyProp(new PropWeakened(PropTurns::std));
+    }
 }
 
 bool PropFrenzied::allowRead(const bool ALLOW_MSG) const
