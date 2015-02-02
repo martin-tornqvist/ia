@@ -1602,6 +1602,46 @@ void initDataList()
     data[int(d.id)] = d;
     d.reset();
 
+    d.nameA = "A Crocodile Head Mummy";
+    d.nameThe = "The Crocodile Head Mummy";
+    d.corpseNameA = "A lifeless Mummy";
+    d.corpseNameThe = "The lifeless Mummy";
+    d.id = ActorId::crocHeadMummy;
+    d.ai[int(AiId::looks)] = true;
+    d.ai[int(AiId::makesRoomForFriend)] = true;
+    d.ai[int(AiId::attacks)] = true;
+    d.ai[int(AiId::pathsToTgtWhenAware)] = true;
+    d.ai[int(AiId::movesToTgtWhenLos)] = true;
+    d.ai[int(AiId::movesToLair)] = false;
+    d.ai[int(AiId::movesToLeader)] = true;
+    d.speed = ActorSpeed::slow;
+    d.rangedCooldownTurns = 0;
+    d.glyph = 'P';
+    d.color = clrGray;
+    d.tile = TileId::crocHeadMummy;
+    d.hp = 25;
+    d.spi = 30;
+    d.dmgMelee = 8;
+    d.abilityVals.setVal(AbilityId::melee, 60);
+    d.spawnMinDLVL = 7;
+    d.groupSize = MonGroupSize::swarm;
+    d.actorSize = ActorSize::humanoid;
+    d.canBashDoors = true;
+    d.canOpenDoors = true;
+    d.nrTurnsAware = 9999;
+    d.descr =
+        "A grotesque mummified hybrid creature, with the body of a human and the head "
+        "of a crocodile. It is wielding a spear.";
+    d.spellCastMsg = "The mummy casts a spell.";
+    d.erraticMovePct = ActorErraticFreq::somewhat;
+    d.monShockLvl = MonShockLvl::terrifying;
+    d.isUndead = true;
+    d.isHumanoid = true;
+    d.nativeRooms.push_back(RoomType::plain);
+    d.nativeRooms.push_back(RoomType::cave);
+    data[int(d.id)] = d;
+    d.reset();
+
     d.nameA = "Khephren";
     d.nameThe = "Khephren";
     d.corpseNameA = "The lifeless Mummy of Khephren";

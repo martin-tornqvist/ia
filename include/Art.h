@@ -24,6 +24,7 @@ enum class TileId
     lengElder,
     theDarkOne,
     ape,
+    crocHeadMummy,
     armor,
     potion,
     ammo,

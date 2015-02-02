@@ -28,7 +28,7 @@ enum class ActorId
     ghost, phantasm, wraith,
     giantBat, byakhee,
     giantMantis, locust,
-    mummy, khephren, nitokris,
+    mummy, crocHeadMummy, khephren, nitokris,
     deepOne,
     ape,
     keziahMason, brownJenkin,

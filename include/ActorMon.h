@@ -67,6 +67,7 @@ public:
     void playerBecomeAwareOfMe(const int DURATION_FACTOR = 1);
 
     void onActorTurn() override;
+
     virtual void onStdTurn() override final;
 
     virtual std::string getAggroPhraseMonSeen() const
@@ -512,6 +513,16 @@ class Mummy: public Mon
 public:
     Mummy() : Mon() {}
     ~Mummy() {}
+    virtual void mkStartItems() override;
+
+    virtual bool onActorTurn_() override;
+};
+
+class MummyCrocHead: public Mummy
+{
+public:
+    MummyCrocHead() : Mummy() {}
+    ~MummyCrocHead() {}
     virtual void mkStartItems() override;
 };
 

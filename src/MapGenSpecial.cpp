@@ -423,9 +423,13 @@ bool mkEgyptLvl()
             }
             if (templCell.actorId != ActorId::END)
             {
-                ActorFactory::mk(templCell.actorId, p);
+                Actor* const actor = ActorFactory::mk(templCell.actorId, p);
+                static_cast<Mon*>(actor)->isRoamingAllowed_ = false;
             }
-            if (templCell.val == 1) {Map::player->pos = p;}
+            if (templCell.val == 1)
+            {
+                Map::player->pos = p;
+            }
         }
     }
 

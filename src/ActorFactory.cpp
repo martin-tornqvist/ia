@@ -60,6 +60,7 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::giantMantis:          return new GiantMantis();
     case ActorId::locust:               return new GiantLocust();
     case ActorId::mummy:                return new Mummy();
+    case ActorId::crocHeadMummy:        return new MummyCrocHead();
     case ActorId::khephren:             return new Khephren();
     case ActorId::nitokris:             return new MummyUnique();
     case ActorId::deepOne:              return new DeepOne();

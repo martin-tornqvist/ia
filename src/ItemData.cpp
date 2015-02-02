@@ -327,7 +327,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.isIdentified = false;
         d.isStackable = false;
         d.chanceToIncludeInFloorSpawnList = 0;
-        addFeatureFoundIn(d, FeatureId::tomb, 5);
+        addFeatureFoundIn(d, FeatureId::tomb, 10);
     } break;
 
     case ItemType::ring:
@@ -341,7 +341,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.isIdentified = false;
         d.isStackable = false;
         d.chanceToIncludeInFloorSpawnList = 0;
-        addFeatureFoundIn(d, FeatureId::tomb, 5);
+        addFeatureFoundIn(d, FeatureId::tomb, 10);
     } break;
 
     case ItemType::explosive:
@@ -975,7 +975,8 @@ void initDataList()
     };
     d->baseDescr =
     {
-        "[TODO]"
+        "Once wielded by long-forgotten kings in ancient times, this powerful artifact "
+        "grants the power to call up a loyal servant from the dead."
     };
     d->clr = clrMagenta;
     d->weight = ItemWeight::medium;
@@ -986,7 +987,7 @@ void initDataList()
     d->melee.missSfx = SfxId::missMedium;
     d->chanceToIncludeInFloorSpawnList = 0;
     d->value = ItemValue::majorTreasure;
-    addFeatureFoundIn(*d, FeatureId::tomb, 1);
+    addFeatureFoundIn(*d, FeatureId::tomb, 5);
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::ironSpike);
@@ -1288,6 +1289,12 @@ void initDataList()
     d->melee.knocksBack = true;
     data[int(d->id)] = d;
 
+    d = new ItemDataT(ItemId::crocHeadMummySpear);
+    resetData(*d, ItemType::meleeWpnIntr);
+    d->melee.attMsgs = {"", "hits me with a spear"};
+    setDmgFromMonId(*d, ActorId::crocHeadMummy);
+    data[int(d->id)] = d;
+
     d = new ItemDataT(ItemId::deepOneJavelinAtt);
     resetData(*d, ItemType::rangedWpnIntr);
     d->ranged.attMsgs = {"", "throws a javelin at me"};
@@ -1300,7 +1307,7 @@ void initDataList()
 
     d = new ItemDataT(ItemId::deepOneSpearAtt);
     resetData(*d, ItemType::meleeWpnIntr);
-    d->melee.attMsgs = {"", "thrusts a spear at me"};
+    d->melee.attMsgs = {"", "hits me with a spear"};
     setDmgFromMonId(*d, ActorId::deepOne);
     data[int(d->id)] = d;
 

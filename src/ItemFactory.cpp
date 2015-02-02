@@ -77,6 +77,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::giantMantisClaw:
     case ItemId::giantLocustBite:
     case ItemId::mummyMaul:
+    case ItemId::crocHeadMummySpear:
     case ItemId::deepOneJavelinAtt:
     case ItemId::deepOneSpearAtt:
     case ItemId::apeMaul:
@@ -333,10 +334,18 @@ void setItemRandomizedProperties(Item* item)
 {
     const ItemDataT& d = item->getData();
 
-    //If it is a pure melee weapon, it may get extra damage
-    if (d.melee.isMeleeWpn && !d.ranged.isRangedWpn)
+    if (d.id == ItemId::pharaohStaff)
     {
-        static_cast<Wpn*>(item)->setRandomMeleePlus();
+        //TODO: This is a really hacky, temporary fix that shouldn't be here - refactor.
+        item->meleeDmgPlus_ = 4;
+    }
+    else //Not Staff of the Pharohs
+    {
+        //If it is a pure melee weapon, it may get extra damage
+        if (d.melee.isMeleeWpn && !d.ranged.isRangedWpn)
+        {
+            static_cast<Wpn*>(item)->setRandomMeleePlus();
+        }
     }
 
     //If firearm, spawn with random amount of ammo
@@ -351,14 +360,15 @@ void setItemRandomizedProperties(Item* item)
         {
             if (d.ranged.isMachineGun)
             {
-                //Number of machine gun bullets loaded needs to be a multiple of the number of
-                //projectiles fired in each burst
+                //Number of machine gun bullets loaded needs to be a multiple of the
+                //number of projectiles fired in each burst
                 const int CAP         = wpn->AMMO_CAP;
                 const int CAP_SCALED  = CAP / NR_MG_PROJECTILES;
                 const int MIN_SCALED  = CAP_SCALED / 4;
-                wpn->nrAmmoLoaded     = Rnd::range(MIN_SCALED, CAP_SCALED) * NR_MG_PROJECTILES;
+                wpn->nrAmmoLoaded     = Rnd::range(MIN_SCALED, CAP_SCALED) *
+                                        NR_MG_PROJECTILES;
             }
-            else
+            else //Not machinegun
             {
                 wpn->nrAmmoLoaded = Rnd::range(wpn->AMMO_CAP / 4, wpn->AMMO_CAP);
             }

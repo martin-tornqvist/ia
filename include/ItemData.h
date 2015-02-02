@@ -106,6 +106,7 @@ enum class ItemId
     migoGunAmmo,
     polypTentacle,
     mummyMaul,
+    crocHeadMummySpear,
     deepOneSpearAtt,
     deepOneJavelinAtt,
     apeMaul,

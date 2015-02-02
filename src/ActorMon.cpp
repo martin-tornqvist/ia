@@ -1097,6 +1097,53 @@ void Mummy::mkStartItems()
     }
 }
 
+bool Mummy::onActorTurn_()
+{
+    //TODO: Below is an implementation for mummies turning friendly if player is wielding
+    //the Staff of the Pharoh. It is commented out at least until after v17.0 is released.
+    //It is probably too powerful and unbalanced. Perhaps add this power as a separate
+    //spell to the Staff (something like "Pharohs Command")?
+
+//    if (
+//        !isAlive()          ||
+//        data_->isUnique     ||
+//        awareCounter_ <= 0  ||
+//        isActorMyLeader(Map::player))
+//    {
+//        return false;
+//    }
+//
+//    const Item* const playerWpn = Map::player->getInv().getItemInSlot(SlotId::wielded);
+//
+//    if (playerWpn && playerWpn->getId() == ItemId::pharaohStaff)
+//    {
+//        bool blockedLos[MAP_W][MAP_H];
+//        MapParse::run(CellCheck::BlocksLos(), blockedLos);
+//
+//        if (isSeeingActor(*Map::player, blockedLos))
+//        {
+//            if (Map::player->isSeeingActor(*this, nullptr))
+//            {
+//                const string name = getNameThe();
+//
+//                Log::addMsg(name + " bows before me.", clrWhite, false, true);
+//            }
+//
+//            leader_ = Map::player;
+//
+//            GameTime::tick();
+//            return true;
+//        }
+//    }
+
+    return false;
+}
+
+void MummyCrocHead::mkStartItems()
+{
+    inv_->putInIntrinsics(ItemFactory::mk(ItemId::crocHeadMummySpear));
+}
+
 void MummyUnique::mkStartItems()
 {
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::mummyMaul));

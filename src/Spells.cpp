@@ -546,13 +546,15 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
     //First check for a friendly mummy and heal it (as per the spell description)
     for (Actor* const actor : GameTime::actors_)
     {
-        if (actor->getData().id == ActorId::mummy)
+        const auto id = actor->getData().id;
+
+        const bool IS_ACTOR_ID_OK = id == ActorId::mummy ||
+                                    id == ActorId::crocHeadMummy;
+
+        if (IS_ACTOR_ID_OK && caster->isLeaderOf(actor))
         {
-            if (caster->isLeaderOf(actor))
-            {
-                actor->restoreHp(999);
-                return SpellEffectNoticed::yes;
-            }
+            actor->restoreHp(999);
+            return SpellEffectNoticed::yes;
         }
     }
 
@@ -575,7 +577,9 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
 
     vector<Mon*> summonedMon;
 
-    ActorFactory::summonMon(caster->pos, {ActorId::mummy}, false, leader, &summonedMon);
+    const auto id = Rnd::coinToss() ? ActorId::mummy : ActorId::crocHeadMummy;
+
+    ActorFactory::summonMon(caster->pos, {id}, false, leader, &summonedMon);
 
     const Mon* const mon = summonedMon[0];
 

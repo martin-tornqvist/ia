@@ -148,21 +148,25 @@ public:
     bool isAvailForPlayer()         const override {return true;}
     std::string getName()           const override {return "Azathoths Wrath";}
     SpellId getId()                 const override {return SpellId::azaWrath;}
+
     IntrSpellShock getShockTypeIntrCast() const override
     {
         return IntrSpellShock::disturbing;
     }
+
     std::vector<std::string> getDescr() const override
     {
         return
         {
-            "Briefly exposes all visible enemies to the destruction and malice of "
-            "Azathoth, the ultimate chaos at the center of the universe. This spell "
-            "will generally inflict damage, but due to the chaotic nature of its "
-            "source, it can occasionally have other effects, and may affect the caster "
-            "as well [TODO]."
+            "Channels the destructive force of Azathoth unto all visible enemies."
+
+            /*
+            "This spell will generally inflict damage, but due to the chaotic nature of "
+            "its source, it can occasionally have other effects, and may affect the "
+            "caster as well [TODO]."*/
         };
     }
+
 private:
     SpellEffectNoticed cast_(Actor* const caster) const override;
     int getMaxSpiCost_() const override
