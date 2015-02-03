@@ -76,7 +76,6 @@ ItemDataT::ItemRangedData::ItemRangedData() :
     isThrowingWpn                   (false),
     isMachineGun                    (false),
     isShotgun                       (false),
-    isCausingRecoil                 (false),
     maxNrAmmoInClip                 (0),
     dmg                             (DiceParam()),
     throwDmg                        (DiceParam()),
@@ -173,7 +172,6 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.melee.dmg = pair<int, int>(1, 6);
         d.mainAttMode = MainAttMode::ranged;
         d.ranged.isRangedWpn = true;
-        d.ranged.isCausingRecoil = true;
         d.ranged.missileGlyph = '/';
         d.ranged.missileClr = clrWhite;
         d.spawnStdRange.upper = DLVL_LAST_MID_GAME;

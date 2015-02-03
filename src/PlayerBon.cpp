@@ -141,7 +141,6 @@ void getBgDescr(const Bg id, vector<string>& linesRef)
                            "enemies, causing them to forget their pursuit "
                            "(press [x])");
         linesRef.push_back(" ");
-        //TODO: Should this be a trait instead?
         linesRef.push_back("+25% hit chance with ranged attacks vs unaware targets");
         linesRef.push_back(" ");
         linesRef.push_back("The rate of shock recieved passively over time "
@@ -203,8 +202,8 @@ void getTraitDescr(const Trait id, string& out)
         break;
 
     case Trait::expertMarksman:
-        out = "+10% hit chance with firearms and thrown weapons, you occasionally reload "
-              "instantly";
+        out = "+10% hit chance with firearms and thrown weapons, you occasionally "
+              "reload instantly";
         break;
 
     case Trait::masterMarksman:
@@ -212,13 +211,12 @@ void getTraitDescr(const Trait id, string& out)
         break;
 
     case Trait::steadyAimer:
-        out = "No recoil penalty when using firearms. Standing still gives ranged "
-              "attacks +10% hit chance on the following turn";
+        out = "Standing still gives ranged attacks +20% hit chance on the following turn";
         break;
 
     case Trait::sharpShooter:
-        out = "Standing still for three turns gives ranged attacks maximum hit chance and "
-              "damage on the following turn";
+        out = "Standing still for three turns gives ranged attacks maximum hit chance "
+              "and damage on the following turn";
         break;
 
     case Trait::demExpert:
@@ -236,13 +234,13 @@ void getTraitDescr(const Trait id, string& out)
 
     case Trait::warlock:
         out = "-1 Spirit cost for damage dealing spells, casting any spell has a chance "
-              "to make you \"Charged\" for one turn, causing attack spells to do maximum "
-              "damage";
+              "to make you \"Charged\" for one turn, causing attack spells to do "
+              "maximum damage";
         break;
 
     case Trait::summoner:
-        out = "-1 Spirit cost for summoning spells, halved risk that called creatures are "
-              "hostile";
+        out = "-1 Spirit cost for summoning spells, halved risk that called creatures "
+              "are hostile";
         break;
 
     case Trait::bloodSorcerer:
@@ -261,14 +259,14 @@ void getTraitDescr(const Trait id, string& out)
 
     case Trait::rugged:
         out = "+2 hit points, +10% carry weight limit, better results for object "
-              "interactions requiring strength (such as bashing doors, or moving the lid "
-              "from a stone coffin)";
+              "interactions requiring strength (such as bashing doors, or moving the "
+              "lid from a stone coffin)";
         break;
 
     case Trait::unbreakable:
         out = "+2 hit points, +10% carry weight limit, better results for object "
-              "interactions requiring strength (such as bashing doors, or moving the lid "
-              "from a stone coffin)";
+              "interactions requiring strength (such as bashing doors, or moving the "
+              "lid from a stone coffin)";
         break;
 
     case Trait::strongBacked:
@@ -281,8 +279,8 @@ void getTraitDescr(const Trait id, string& out)
         break;
 
     case Trait::lithe:
-        out = "+25% chance to dodge melee attacks, better chances to evade traps, every "
-              "fourth move is a free action";
+        out = "+25% chance to dodge melee attacks, better chances to evade traps, "
+              "every fourth move is a free action";
         break;
 
     case Trait::mobile:
@@ -298,8 +296,8 @@ void getTraitDescr(const Trait id, string& out)
         break;
 
     case Trait::observant:
-        out = "You can spot hidden traps and doors from two cells away, and you are more "
-              "likely to spot hidden monsters and objects";
+        out = "You can spot hidden traps and doors from two cells away, and you are "
+              "more likely to spot hidden monsters and objects";
         break;
 
     case Trait::perceptive:
@@ -317,8 +315,8 @@ void getTraitDescr(const Trait id, string& out)
         break;
 
     case Trait::survivalist:
-        out = "Increased Hit Point regeneration rate, disease only lowers your Hit Points "
-              "by 25% (instead of 50%)";
+        out = "Increased Hit Point regeneration rate, disease only lowers your Hit "
+              "Points by 25% (instead of 50%)";
         break;
 
     case Trait::perseverant:
@@ -688,10 +686,6 @@ void pickTrait(const Trait id)
     case Trait::fearless:
         Map::player->getPropHandler().tryApplyProp(
             new PropRFear(PropTurns::indefinite), true, true, true, false);
-        break;
-
-    case Trait::steadyAimer:
-        Map::player->getPropHandler().endAppliedProp(PropId::recoil);
         break;
 
     default: {}

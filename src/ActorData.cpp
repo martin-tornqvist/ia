@@ -2497,6 +2497,7 @@ void initDataList()
     d.spi = 9999;
     d.intrProps[int(PropId::burrowing)] = true;
     d.intrProps[int(PropId::rConf)] = true;
+    d.intrProps[int(PropId::rFear)] = true;
     d.intrProps[int(PropId::rFire)] = true;
     d.dmgMelee = 8;
     d.abilityVals.setVal(AbilityId::melee, 70);

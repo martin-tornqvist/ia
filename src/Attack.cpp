@@ -1361,13 +1361,6 @@ bool ranged(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
     if (didAttack)
     {
-        if (
-            attacker.isPlayer()                  &&
-            wpn.getData().ranged.isCausingRecoil &&
-            !PlayerBon::traits[int(Trait::steadyAimer)])
-        {
-            attacker.getPropHandler().tryApplyProp(new PropRecoil(PropTurns::std));
-        }
         GameTime::tick();
     }
 

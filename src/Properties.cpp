@@ -605,17 +605,6 @@ void initDataList()
     d.alignment = propAlignmentGood;
     addPropData(d);
 
-    d.id = PropId::recoil;
-    d.stdRndTurns = Range(1, 1);
-    d.name = "Recoil";
-    d.nameShort = "Recoil";
-    d.isMakingMonAware = false;
-    d.allowDisplayTurns = false;
-    d.allowApplyMoreWhileActive = true;
-    d.updatePlayerVisualWhenStartOrEnd = false;
-    d.alignment = propAlignmentBad;
-    addPropData(d);
-
     d.id = PropId::strangled;
     d.stdRndTurns = Range(1, 1);
     d.name = "Strangled";
@@ -775,7 +764,6 @@ Prop* PropHandler::mkProp(const PropId id, PropTurns turnsInit,
     case PropId::fainted:           return new PropFainted        (turnsInit, NR_TURNS);
     case PropId::frenzied:          return new PropFrenzied       (turnsInit, NR_TURNS);
     case PropId::aiming:            return new PropAiming         (turnsInit, NR_TURNS);
-    case PropId::recoil:            return new PropRecoil         (turnsInit, NR_TURNS);
     case PropId::disabledAttack:    return new PropDisabledAttack (turnsInit, NR_TURNS);
     case PropId::disabledMelee:     return new PropDisabledMelee  (turnsInit, NR_TURNS);
     case PropId::disabledRanged:    return new PropDisabledRanged (turnsInit, NR_TURNS);

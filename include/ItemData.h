@@ -273,7 +273,6 @@ public:
         ~ItemRangedData();
 
         bool                    isRangedWpn, isThrowingWpn, isMachineGun, isShotgun;
-        bool                    isCausingRecoil;
         int                     maxNrAmmoInClip;
         DiceParam               dmg;
         DiceParam               throwDmg;
