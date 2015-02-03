@@ -1622,7 +1622,7 @@ void initDataList()
     d.hp = 25;
     d.spi = 30;
     d.dmgMelee = 8;
-    d.abilityVals.setVal(AbilityId::melee, 60);
+    d.abilityVals.setVal(AbilityId::melee, 50);
     d.spawnMinDLVL = 7;
     d.groupSize = MonGroupSize::swarm;
     d.actorSize = ActorSize::humanoid;

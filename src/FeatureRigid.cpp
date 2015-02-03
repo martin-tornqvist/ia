@@ -237,6 +237,11 @@ void Rigid::hit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* actor)
     }
 }
 
+int Rigid::getShockWhenAdj() const
+{
+    return getData().shockWhenAdjacent;
+}
+
 void Rigid::tryPutGore()
 {
     if (getData().canHaveGore)
@@ -252,6 +257,7 @@ void Rigid::tryPutGore()
     }
 
     const int ROLL_TILE = Rnd::dice(1, 8);
+
     switch (ROLL_TILE)
     {
     case 1: goreTile_ = TileId::gore1;  break;
@@ -725,6 +731,11 @@ Clr ChurchBench::getClr_() const
 Statue::Statue(Pos pos) :
     Rigid   (pos),
     type_   (Rnd::oneIn(8) ? StatueType::ghoul : StatueType::cmn) {}
+
+int Statue::getShockWhenAdj() const
+{
+    return type_ == StatueType::ghoul ? 15 : 0;
+}
 
 void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const actor)
 {

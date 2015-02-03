@@ -17,7 +17,10 @@
 
 using namespace std;
 
-const FeatureDataT& Feature::getData() const {return FeatureData::getData(getId());}
+const FeatureDataT& Feature::getData() const
+{
+    return FeatureData::getData(getId());
+}
 
 void Feature::bump(Actor& actorBumping)
 {

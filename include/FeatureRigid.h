@@ -27,6 +27,8 @@ public:
     virtual void hit(const DmgType dmgType, const DmgMethod dmgMethod,
                      Actor* const actor = nullptr);
 
+    virtual int getShockWhenAdj() const;
+
     void tryPutGore();
 
     TileId  getGoreTile()   const {return goreTile_;}
@@ -304,6 +306,8 @@ public:
     ~Statue() {}
 
     FeatureId getId() const override {return FeatureId::statue;}
+
+    int getShockWhenAdj() const override;
 
     std::string getName(const Article article)  const override;
 
