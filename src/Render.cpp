@@ -944,11 +944,14 @@ void drawMapAndInterface(const bool SHOULD_UPDATE_SCREEN)
 
         drawMap();
 
-        CharacterLines::drawInfoLines();
-        CharacterLines::drawLocationInfo();
+        CharacterLines::draw();
+
         Log::drawLog(false);
 
-        if (SHOULD_UPDATE_SCREEN) {updateScreen();}
+        if (SHOULD_UPDATE_SCREEN)
+        {
+            updateScreen();
+        }
     }
 }
 

@@ -22,58 +22,7 @@ using namespace std;
 namespace CharacterLines
 {
 
-void drawLocationInfo()
-{
-    string str = "";
-
-    if (Map::player->getPropHandler().allowSee())
-    {
-        const Pos& p = Map::player->pos;
-
-        string featureName = "";
-
-        //Describe mob
-        const Mob* const mob = Utils::getFirstMobAtPos(p);
-        if (mob)
-        {
-            featureName = mob->getName(Article::a);
-
-            if (!featureName.empty())
-            {
-                TextFormat::firstToUpper(featureName);
-                str += featureName + ". ";
-            }
-        }
-
-        //Describe rigid
-        featureName = Map::cells[p.x][p.y].rigid->getName(Article::a);
-        if (!featureName.empty())
-        {
-            TextFormat::firstToUpper(featureName);
-            str += featureName + ". ";
-        }
-
-        //Light/darkness
-        const auto& cell = Map::cells[p.x][p.y];
-        if (cell.isDark)
-        {
-            str += cell.isLit ? "The darkness is lit up. " : "It is dark here. ";
-        }
-    }
-
-    if (!str.empty())
-    {
-        str.pop_back(); //Erase trailing space character
-        Render::drawText(str, Panel::charLines, Pos(0, -1), clrWhite);
-
-        if (int(str.size()) > MAP_W)
-        {
-            Render::drawText("(...)", Panel::charLines, Pos(MAP_W - 5, -1), clrWhite);
-        }
-    }
-}
-
-void drawInfoLines()
+void draw()
 {
     Render::coverPanel(Panel::charLines);
 
@@ -83,11 +32,6 @@ void drawInfoLines()
     Pos pos(CHARACTER_LINE_X0, CHARACTER_LINE_Y0);
 
     Player& player = *Map::player;
-
-    //Name
-//  str = player->getNameA();
-//  Render::drawText(str, Panel::charLines, pos, clrRedLgt);
-//  pos.x += str.length() + 1;
 
     //Health
     const string hp = toStr(player.getHp());

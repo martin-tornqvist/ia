@@ -4,9 +4,7 @@
 namespace CharacterLines
 {
 
-void drawInfoLines();
-
-void drawLocationInfo();
+void draw();
 
 } //Characterlines
 
