@@ -242,7 +242,7 @@ void Trap::disarm()
     const bool IS_BLESSED = props[int(PropId::blessed)];
     const bool IS_CURSED  = props[int(PropId::cursed)];
 
-    int       disarmNumerator     = 5;
+    int       disarmNumerator     = 6;
     const int DISARM_DENOMINATOR  = 10;
 
     if (IS_BLESSED)  disarmNumerator += 3;
@@ -257,12 +257,14 @@ void Trap::disarm()
     {
         Log::addMsg(specificTrap_->getDisarmMsg());
     }
-    else
+    else //Not disarmed
     {
         Log::addMsg(specificTrap_->getDisarmFailMsg());
 
         Render::drawMapAndInterface();
-        const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 4;
+
+        const int TRIGGER_ONE_IN_N = IS_BLESSED ? 9 : IS_CURSED ? 2 : 6;
+
         if (Rnd::oneIn(TRIGGER_ONE_IN_N))
         {
             if (getTrapType() == TrapId::web)
@@ -274,7 +276,17 @@ void Trap::disarm()
     }
     GameTime::tick();
 
-    if (IS_DISARMED) {Map::put(new Floor(pos_));}
+    if (IS_DISARMED)
+    {
+        if (getTrapType() == TrapId::web)
+        {
+            Map::put(new Floor(pos_));
+        }
+        else
+        {
+            Map::put(new RubbleLow(pos_));
+        }
+    }
 }
 
 DidTriggerTrap Trap::triggerTrap(Actor* const actor)
@@ -442,8 +454,8 @@ void TrapDart::trigger(Actor& actor, const AbilityRollResult dodgeResult)
             }
             else
             {
-                Log::addMsg("I feel a mechanism trigger and quickly leap aside!", clrMsgGood,
-                            false, true);
+                Log::addMsg("I feel a mechanism trigger and quickly leap aside!",
+                            clrMsgGood, false, true);
             }
         }
         else if (CAN_PLAYER_SEE_ACTOR)
@@ -464,8 +476,9 @@ void TrapDart::trigger(Actor& actor, const AbilityRollResult dodgeResult)
                 }
                 else
                 {
-                    Log::addMsg("A mechanism triggers, I hear something barely missing me!",
-                                clrMsgGood, false, true);
+                    Log::addMsg(
+                        "A mechanism triggers, I hear something barely missing me!",
+                        clrMsgGood, false, true);
                 }
             }
             else if (CAN_PLAYER_SEE_ACTOR)
@@ -483,8 +496,9 @@ void TrapDart::trigger(Actor& actor, const AbilityRollResult dodgeResult)
                 }
                 else
                 {
-                    Log::addMsg("A mechanism triggers, I feel a needle piercing my skin!",
-                                clrMsgBad, false, true);
+                    Log::addMsg(
+                        "A mechanism triggers, I feel a needle piercing my skin!",
+                        clrMsgBad, false, true);
                 }
             }
             else if (CAN_PLAYER_SEE_ACTOR)
@@ -529,8 +543,8 @@ void TrapSpear::trigger(Actor& actor, const AbilityRollResult dodgeResult)
             }
             else
             {
-                Log::addMsg("I feel a mechanism trigger and quickly leap aside!", clrMsgGood,
-                            false, true);
+                Log::addMsg("I feel a mechanism trigger and quickly leap aside!",
+                            clrMsgGood, false, true);
             }
         }
         else if (CAN_PLAYER_SEE_ACTOR)
@@ -609,8 +623,8 @@ void TrapGasConfusion::trigger(Actor& actor, const AbilityRollResult dodgeResult
         }
         else
         {
-            Log::addMsg("A mechanism triggers, I am hit by a burst of gas!", clrWhite, false,
-                        true);
+            Log::addMsg("A mechanism triggers, I am hit by a burst of gas!", clrWhite,
+                        false, true);
         }
     }
     else if (CAN_PLAYER_SEE_ACTOR)
@@ -643,8 +657,8 @@ void TrapGasParalyzation::trigger(Actor& actor,  const AbilityRollResult dodgeRe
         }
         else
         {
-            Log::addMsg("A mechanism triggers, I am hit by a burst of gas!", clrWhite, false,
-                        true);
+            Log::addMsg("A mechanism triggers, I am hit by a burst of gas!", clrWhite,
+                        false, true);
         }
     }
     else if (CAN_PLAYER_SEE_ACTOR)
@@ -676,8 +690,8 @@ void TrapGasFear::trigger(Actor& actor, const AbilityRollResult dodgeResult)
         }
         else
         {
-            Log::addMsg("A mechanism triggers, I am hit by a burst of gas!", clrWhite, false,
-                        true);
+            Log::addMsg("A mechanism triggers, I am hit by a burst of gas!", clrWhite,
+                        false, true);
         }
     }
     else if (CAN_PLAYER_SEE_ACTOR)
@@ -725,7 +739,8 @@ void TrapBlindingFlash::trigger(Actor& actor, const AbilityRollResult dodgeResul
         {
             if (CAN_SEE)
             {
-                Log::addMsg("A sharp flash of light pierces my eyes!", clrWhite, false, true);
+                Log::addMsg("A sharp flash of light pierces my eyes!", clrWhite, false,
+                            true);
                 actor.getPropHandler().tryApplyProp(new PropBlind(PropTurns::std));
             }
             else
@@ -769,8 +784,7 @@ void TrapTeleport::trigger(Actor& actor, const AbilityRollResult dodgeResult)
     {
         if (CAN_PLAYER_SEE_ACTOR)
         {
-            Log::addMsg("A beam shoots out from a curious shape on the floor under "
-                        + actorName + ".");
+            Log::addMsg("A beam shoots out under " + actorName + ".");
         }
     }
 
@@ -804,7 +818,8 @@ void TrapSummonMon::trigger( Actor& actor, const AbilityRollResult dodgeResult)
     Map::player->updateFov();
     if (CAN_SEE)
     {
-        Log::addMsg("A curious shape on the floor starts to glow!", clrWhite, false, true);
+        Log::addMsg("A beam of light shoots out from a curious shape on the floor!",
+                    clrWhite, false, true);
     }
     else
     {
@@ -858,8 +873,8 @@ void TrapSmoke::trigger(Actor& actor, const AbilityRollResult dodgeResult)
         }
         else
         {
-            Log::addMsg("A mechanism triggers, the air is thick with smoke!", clrWhite, false,
-                        true);
+            Log::addMsg("A mechanism triggers, the air is thick with smoke!", clrWhite,
+                        false, true);
         }
     }
     else
@@ -939,8 +954,8 @@ void TrapWeb::trigger(Actor& actor, const AbilityRollResult dodgeResult)
             }
             else
             {
-                Log::addMsg("I am entangled in a sticky mass of threads!", clrWhite, false,
-                            true);
+                Log::addMsg("I am entangled in a sticky mass of threads!", clrWhite,
+                            false, true);
             }
         }
     }
@@ -997,7 +1012,8 @@ Dir TrapWeb::actorTryLeave(Actor& actor, const Dir dir)
             {
                 Log::addMsg("The web is destroyed.");
             }
-            TRACE << "Web destroyed, placing floor and returning center direction" << endl;
+            TRACE << "Web destroyed, placing floor and returning center direction"
+                  << endl;
             Map::put(new Floor(pos_));
             return Dir::center;
         }

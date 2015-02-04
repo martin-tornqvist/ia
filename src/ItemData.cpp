@@ -154,6 +154,8 @@ void resetData(ItemDataT& d, ItemType const itemType)
         resetData(d, ItemType::meleeWpn);
         d.type = ItemType::meleeWpnIntr;
         d.spawnStdRange = Range(-1, -1);
+        d.chanceToIncludeInFloorSpawnList = 0;
+        d.allowSpawn = false;
         d.melee.hitSmallSfx = SfxId::hitSmall;
         d.melee.hitMediumSfx = SfxId::hitMedium;
         d.melee.hitHardSfx = SfxId::hitHard;
@@ -188,6 +190,8 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.type = ItemType::rangedWpnIntr;
         d.ranged.hasInfiniteAmmo = true;
         d.spawnStdRange = Range(-1, -1);
+        d.chanceToIncludeInFloorSpawnList = 0;
+        d.allowSpawn = false;
         d.melee.isMeleeWpn = false;
         d.ranged.missileGlyph = '*';
         d.ranged.sndVol = SndVol::low;
@@ -324,8 +328,9 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.weight = ItemWeight::light;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 0;
-        addFeatureFoundIn(d, FeatureId::tomb, 10);
+        d.chanceToIncludeInFloorSpawnList = 2;
+        addFeatureFoundIn(d, FeatureId::tomb, 16);
+        addFeatureFoundIn(d, FeatureId::chest, 5);
     } break;
 
     case ItemType::ring:
@@ -338,8 +343,9 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.weight = ItemWeight::extraLight;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 0;
-        addFeatureFoundIn(d, FeatureId::tomb, 10);
+        d.chanceToIncludeInFloorSpawnList = 2;
+        addFeatureFoundIn(d, FeatureId::tomb, 16);
+        addFeatureFoundIn(d, FeatureId::chest, 5);
     } break;
 
     case ItemType::explosive:
@@ -376,6 +382,8 @@ void initDataList()
         "Shining Trapezohedron", "Shining Trapezohedrons", "The Shining Trapezohedron"
     };
     d->spawnStdRange = Range(-1, -1);
+    d->chanceToIncludeInFloorSpawnList = 0;
+    d->allowSpawn = false;
     d->isStackable = false;
     d->glyph = '*';
     d->clr = clrRedLgt;
@@ -983,9 +991,9 @@ void initDataList()
     d->melee.dmg = pair<int, int>(2, 4);
     d->melee.hitChanceMod = 0;
     d->melee.missSfx = SfxId::missMedium;
-    d->chanceToIncludeInFloorSpawnList = 0;
+    d->chanceToIncludeInFloorSpawnList = 1;
     d->value = ItemValue::majorTreasure;
-    addFeatureFoundIn(*d, FeatureId::tomb, 5);
+    addFeatureFoundIn(*d, FeatureId::tomb, 20);
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::ironSpike);
@@ -1532,7 +1540,7 @@ void initDataList()
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::hideousMask);
-    resetData(*d, ItemType::general);
+    resetData(*d, ItemType::headWear);
     d->baseName = {"Hideous Mask", "", "The Hideous Mask"};
     d->baseDescr =
     {
@@ -1545,9 +1553,9 @@ void initDataList()
     d->spawnStdRange = Range(-1, -1);
     d->weight = ItemWeight::light;
     d->landOnHardSndMsg = "";
-    d->chanceToIncludeInFloorSpawnList = 0;
+    d->chanceToIncludeInFloorSpawnList = 1;
     d->value = ItemValue::majorTreasure;
-    addFeatureFoundIn(*d, FeatureId::tomb, 1);
+    addFeatureFoundIn(*d, FeatureId::tomb, 8);
     data[int(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollMayhem);
@@ -1950,7 +1958,9 @@ void storeToSaveLines(vector<string>& lines)
         lines.push_back(data[i]->isIdentified ? "1" : "0");
         lines.push_back(data[i]->allowSpawn   ? "1" : "0");
 
-        if (data[i]->type == ItemType::scroll)
+        if (
+            data[i]->type == ItemType::scroll ||
+            data[i]->type == ItemType::potion)
         {
             lines.push_back(data[i]->isTried ? "1" : "0");
         }
@@ -1967,7 +1977,9 @@ void setupFromSaveLines(vector<string>& lines)
         data[i]->allowSpawn = lines.front()   == "0" ? false : true;
         lines.erase(begin(lines));
 
-        if (data[i]->type == ItemType::scroll)
+        if (
+            data[i]->type == ItemType::scroll ||
+            data[i]->type == ItemType::potion)
         {
             data[i]->isTried = lines.front() == "0" ? false : true;
             lines.erase(begin(lines));

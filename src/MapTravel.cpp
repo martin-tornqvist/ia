@@ -37,10 +37,15 @@ void mkLvl(const MapType& mapType)
     auto  startTime   = chrono::steady_clock::now();
 #endif
 
+    //TODO: When the map is invalid, any unique items spawned are lost forever.
+    //Currently, the only effect of this should be that slightly fewever unique items
+    //are found by the player.
+    //It is bad design and should be fixed (but "good enough" for v17.0).
+
     while (!isLvlBuilt)
     {
 #ifndef NDEBUG
-        nrAttempts++;
+        ++nrAttempts;
 #endif
         switch (mapType)
         {

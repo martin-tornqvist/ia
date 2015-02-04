@@ -49,7 +49,7 @@ void initRoomBucket()
     if (DLVL <= DLVL_LAST_EARLY_GAME)
     {
         addToRoomBucket(RoomType::human,    Rnd::range(3, 6));
-        addToRoomBucket(RoomType::ritual,   Rnd::range(0, 1));
+        addToRoomBucket(RoomType::ritual,   Rnd::range(1, 1));
         addToRoomBucket(RoomType::spider,   Rnd::range(0, 3));
         addToRoomBucket(RoomType::crypt,    Rnd::range(1, 4));
         addToRoomBucket(RoomType::monster,  Rnd::range(0, 3));
@@ -63,7 +63,7 @@ void initRoomBucket()
     else if (DLVL <= DLVL_LAST_MID_GAME)
     {
         addToRoomBucket(RoomType::human,    Rnd::range(1, 3));
-        addToRoomBucket(RoomType::ritual,   Rnd::range(0, 1));
+        addToRoomBucket(RoomType::ritual,   Rnd::range(1, 1));
         addToRoomBucket(RoomType::spider,   Rnd::range(0, 3));
         addToRoomBucket(RoomType::crypt,    Rnd::range(0, 4));
         addToRoomBucket(RoomType::monster,  Rnd::range(0, 3));
@@ -201,7 +201,11 @@ void StdRoom::onPostConnect(bool doorProposals[MAP_W][MAP_H])
     int pctChanceDark = getBasePctChanceDrk() - 15;
     pctChanceDark += Map::dlvl; //Increase with higher dungeon level
     constrInRange(0, pctChanceDark, 100);
-    if (Rnd::percent() < pctChanceDark) {mkDrk();}
+
+    if (Rnd::percent() < pctChanceDark)
+    {
+        mkDrk();
+    }
 }
 
 size_t StdRoom::tryGetAutoFeaturePlacement(

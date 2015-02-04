@@ -1006,9 +1006,9 @@ void handleMapModeKeyPress(const KeyData& d)
 
             for (int i = 0; i < int(ItemId::END); ++i)
             {
-                const auto* const data = ItemData::data[i];
+                const auto* const itemData = ItemData::data[i];
 
-                if (data->value != ItemValue::normal && data->allowSpawn)
+                if (itemData->value != ItemValue::normal && itemData->allowSpawn)
                 {
                     ItemFactory::mkItemOnFloor(ItemId(i), Map::player->pos);
                 }

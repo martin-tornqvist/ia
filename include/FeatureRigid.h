@@ -582,17 +582,17 @@ public:
 //Maybe some sort of hint will be re-implemented (e.g. via the "Detect Traps" spell).
 enum class TombTrait
 {
-    stench,   //Fumes, Ooze-type monster
-    ghost,    //Any ghost-type monster
+    stench, //Fumes, Ooze-type monster
+    undead, //Ghosts, Mummies, ...
     cursed,
     END
 };
 
 enum class TombAppearance
 {
-    common,
-    ornate,     //Good items
-    marvelous,  //Excellent items
+    common,     //Common items
+    ornate,     //Minor treasure
+    marvelous,  //Major treasure
     END
 };
 
@@ -628,6 +628,7 @@ private:
 
     int pushLidOneInN_;
     TombAppearance appearance_;
+    bool isRandomAppearance_;
     TombTrait trait_;
 };
 

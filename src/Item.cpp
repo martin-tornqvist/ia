@@ -419,6 +419,8 @@ string Wpn::getNameInf() const
 //--------------------------------------------------------- STAFF OF THE PHARAOHS
 PharaohStaff::PharaohStaff(ItemDataT* const itemData) : Wpn(itemData, nullptr)
 {
+    itemData->allowSpawn = false;
+
     carrierSpells_.push_back(new SpellPharaohStaff);
 }
 
@@ -729,6 +731,11 @@ int MedicalBag::getTotSupplForSanitize() const
 }
 
 //--------------------------------------------------------- HIDEOUS MASK
+HideousMask::HideousMask(ItemDataT* itemData) : Headwear(itemData)
+{
+    itemData->allowSpawn = false;
+}
+
 void HideousMask::onStdTurnInInv(const InvType invType)
 {
     if (invType == InvType::slots)
@@ -750,7 +757,8 @@ void HideousMask::onStdTurnInInv(const InvType invType)
             {
                 if (Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, blockedLos))
                 {
-                    actor->getPropHandler().tryApplyProp(new PropTerrified(PropTurns::std));
+                    actor->getPropHandler().tryApplyProp(
+                        new PropTerrified(PropTurns::std));
                 }
             }
         }

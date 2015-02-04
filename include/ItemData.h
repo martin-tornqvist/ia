@@ -222,32 +222,32 @@ public:
 
     ~ItemDataT() {}
 
-    ItemId                    id;
-    ItemType                  type;
-    ItemValue                 value;
-    ItemWeight                weight;
-    bool                      allowSpawn;
-    Range                     spawnStdRange;
-    int                       maxStackAtSpawn;
-    int                       chanceToIncludeInFloorSpawnList;
-    bool                      isStackable;
-    bool                      isIdentified;
-    bool                      isTried;
-    ItemName                  baseName;
-    ItemName                  baseNameUnId;
-    std::vector<std::string>  baseDescr;
-    char                      glyph;
-    Clr                       clr;
-    TileId                    tile;
-    MainAttMode               mainAttMode;
-    SpellId                   spellCastFromScroll;
-    std::string               landOnHardSndMsg;
-    SfxId                     landOnHardSfx;
-    int                       shockWhileInBackpack;
-    int                       shockWhileEquipped;
-    std::vector<RoomType>     nativeRooms;
+    ItemId                      id;
+    ItemType                    type;
+    ItemValue                   value;
+    ItemWeight                  weight;
+    bool                        allowSpawn;
+    Range                       spawnStdRange;
+    int                         maxStackAtSpawn;
+    int                         chanceToIncludeInFloorSpawnList;
+    bool                        isStackable;
+    bool                        isIdentified;
+    bool                        isTried;
+    ItemName                    baseName;
+    ItemName                    baseNameUnId;
+    std::vector<std::string>    baseDescr;
+    char                        glyph;
+    Clr                         clr;
+    TileId                      tile;
+    MainAttMode                 mainAttMode;
+    SpellId                     spellCastFromScroll;
+    std::string                 landOnHardSndMsg;
+    SfxId                       landOnHardSfx;
+    int                         shockWhileInBackpack;
+    int                         shockWhileEquipped;
+    std::vector<RoomType>       nativeRooms;
     std::vector<ItemContainerSpawnRule> containerSpawnRules;
-    int                       abilityModsWhileEquipped[int(AbilityId::END)];
+    int                         abilityModsWhileEquipped[int(AbilityId::END)];
 
     struct ItemMeleeData
     {

@@ -134,6 +134,7 @@ void drawBrowseInv(const MenuBrowser& browser)
         p.x += 9; //Offset to leave room for slot label
 
         const auto* const curItem = slot.item;
+
         if (curItem)
         {
             drawItemSymbol(*curItem, p);
@@ -155,9 +156,13 @@ void drawBrowseInv(const MenuBrowser& browser)
             }
 
             ItemRefType refType = ItemRefType::plain;
+
             if (slot.id == SlotId::thrown) {refType = ItemRefType::plural;}
 
-            const string itemName = curItem->getName(refType, ItemRefInf::yes, attInf);
+            string itemName = curItem->getName(refType, ItemRefInf::yes, attInf);
+
+            TextFormat::firstToUpper(itemName);
+
             Render::drawText(itemName, panel, p, clr);
 
             drawWeightPct(p.y, p.x, itemName.size(), *curItem, clr, IS_CUR_POS);
@@ -229,8 +234,11 @@ void drawBrowseInv(const MenuBrowser& browser)
 
         p.x = INV_ITEM_NAME_X;
 
-        const string itemName = curItem->getName(ItemRefType::plural, ItemRefInf::yes,
-                                ItemRefAttInf::wpnContext);
+        string itemName = curItem->getName(ItemRefType::plural, ItemRefInf::yes,
+                                           ItemRefAttInf::wpnContext);
+
+        TextFormat::firstToUpper(itemName);
+
         Render::drawText(itemName, panel, p, clr);
 
         drawWeightPct(p.y, INV_ITEM_NAME_X, itemName.size(), *curItem, clr, IS_CUR_POS);
@@ -367,6 +375,9 @@ void drawEquip(const MenuBrowser& browser, const SlotId slotIdToEquip,
         }
 
         str = item->getName(ItemRefType::plural, ItemRefInf::yes, attInf);
+
+        TextFormat::firstToUpper(str);
+
         Render::drawText(str, Panel::screen, p, itemInterfClr);
         ++p.y;
     }

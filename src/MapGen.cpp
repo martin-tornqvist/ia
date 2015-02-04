@@ -963,7 +963,7 @@ Pos placeStairs()
 
     const int NR_OK_CELLS = allowedCellsList.size();
 
-    const int MIN_NR_OK_CELLS_REQ = 10;
+    const int MIN_NR_OK_CELLS_REQ = 3;
 
     if (NR_OK_CELLS < MIN_NR_OK_CELLS_REQ)
     {
@@ -1269,7 +1269,9 @@ bool mkStdLvl()
         Render::updateScreen();
         Query::waitForKeyPress();
 #endif // DEMO_MODE
+
         Gods::setNoGod();
+
         for (Room* room : Map::roomList)
         {
             room->onPreConnect(doorProposals);
@@ -1349,6 +1351,7 @@ bool mkStdLvl()
     if (isMapValid)
     {
         const int LAST_LVL_TO_REVEAL_STAIRS_PATH = 9;
+
         if (Map::dlvl <= LAST_LVL_TO_REVEAL_STAIRS_PATH)
         {
             revealDoorsOnPathToStairs(stairsPos);

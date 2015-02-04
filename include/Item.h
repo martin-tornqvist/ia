@@ -350,7 +350,7 @@ public:
 class HideousMask: public Headwear
 {
 public:
-    HideousMask(ItemDataT* itemData) : Headwear(itemData) {}
+    HideousMask(ItemDataT* itemData);
 
     void onStdTurnInInv(const InvType invType) override;
 };

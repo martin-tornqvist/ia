@@ -33,15 +33,13 @@ void mkItemsOnFloor()
         //The following items are NOT allowed to spawn on the floor:
         // * Intrinsic items
         // * Items with a dlvl range not matching current dlvl
-        // * Major treasure
         // * Items forbidden to spawn (e.g. unique items already spawned)
 
         if (
             int(data->type) < int(ItemType::END_OF_EXTR_ITEMS)  &&
             Utils::isValInRange(Map::dlvl, data->spawnStdRange) &&
-            int(data->value) < int(ItemValue::majorTreasure)    &&
             data->allowSpawn                                    &&
-            Rnd::percent() < data->chanceToIncludeInFloorSpawnList)
+            Rnd::percent(data->chanceToIncludeInFloorSpawnList))
         {
             itemBucket.push_back(ItemId(i));
         }

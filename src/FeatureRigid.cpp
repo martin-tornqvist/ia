@@ -1431,9 +1431,9 @@ void ItemContainer::init(const FeatureId featureId, const int NR_ITEMS_TO_ATTEMP
                 for (auto containerSpawnRule : d->containerSpawnRules)
                 {
                     if (
-                        containerSpawnRule.featureId == featureId           &&
-                        Rnd::percent() < containerSpawnRule.pctChanceToIncl &&
-                        d->allowSpawn)
+                        containerSpawnRule.featureId == featureId   &&
+                        d->allowSpawn                               &&
+                        Rnd::percent() < containerSpawnRule.pctChanceToIncl)
                     {
                         itemBucket.push_back(ItemId(i));
                         break;
@@ -1558,12 +1558,13 @@ void ItemContainer::destroySingleFragile()
 
 //--------------------------------------------------------------------- TOMB
 Tomb::Tomb(const Pos& pos) :
-    Rigid           (pos),
-    isOpen_         (false),
-    isTraitKnown_   (false),
-    pushLidOneInN_  (Rnd::range(6, 14)),
-    appearance_     (TombAppearance::common),
-    trait_          (TombTrait::END)
+    Rigid               (pos),
+    isOpen_             (false),
+    isTraitKnown_       (false),
+    pushLidOneInN_      (Rnd::range(6, 14)),
+    appearance_         (TombAppearance::common),
+    isRandomAppearance_ (false),
+    trait_              (TombTrait::END)
 {
     //Contained items
     const int NR_ITEMS_MIN  = Rnd::oneIn(3) ? 0 : 1;
@@ -1578,8 +1579,10 @@ Tomb::Tomb(const Pos& pos) :
         //Do not base appearance on items (random appearance)
         const int NR_APP    = int(TombAppearance::END);
         appearance_         = TombAppearance(Rnd::range(0, NR_APP - 1));
+
+        isRandomAppearance_ = true;
     }
-    else
+    else //Base appearance on value of contained items
     {
         //Appearance is based on items inside
         for (Item* item : itemContainer_.items_)
@@ -1600,18 +1603,26 @@ Tomb::Tomb(const Pos& pos) :
 
     if (!itemContainer_.items_.empty())
     {
-        const int RND = Rnd::percent();
-        if (RND < 15)
+        if (appearance_ == TombAppearance::marvelous && !isRandomAppearance_)
         {
-            trait_ = TombTrait::cursed;
+            trait_ = TombTrait::undead;
         }
-        else if (RND < 45)
+        else //Randomize trait
         {
-            trait_ = TombTrait::stench;
-        }
-        else if (RND < 75)
-        {
-            trait_ = TombTrait::ghost;
+            const int RND = Rnd::percent();
+
+            if (RND < 15)
+            {
+                trait_ = TombTrait::cursed;
+            }
+            else if (RND < 45)
+            {
+                trait_ = TombTrait::stench;
+            }
+            else if (RND < 75)
+            {
+                trait_ = TombTrait::undead;
+            }
         }
     }
 }
@@ -1724,8 +1735,11 @@ void Tomb::bump(Actor& actorBumping)
                         PlayerBon::traits[int(Trait::rugged)]       ? 8   :
                         PlayerBon::traits[int(Trait::tough)]        ? 4   : 0;
 
-                    TRACE << "Base chance to push lid is: 1 in "  << pushLidOneInN_ << endl;
-                    TRACE << "Bonus to roll: "                    << BON << endl;
+                    TRACE << "Base chance to push lid is: 1 in "
+                          << pushLidOneInN_ << endl;
+
+                    TRACE << "Bonus to roll: "
+                          << BON << endl;
 
                     const int ROLL_TOT = Rnd::range(1, pushLidOneInN_) + BON;
 
@@ -1830,19 +1844,30 @@ DidTriggerTrap Tomb::triggerTrap(Actor* const actor)
 
     switch (trait_)
     {
-    case TombTrait::ghost:
-        for (int i = 0; i < int(ActorId::END); ++i)
-        {
-            const ActorDataT& d = ActorData::data[i];
+    case TombTrait::undead:
 
-            if (
-                d.isGhost                           &&
-                d.isAutoSpawnAllowed && !d.isUnique &&
-                ((Map::dlvl + 5) >= d.spawnMinDLVL || Map::dlvl >= MIN_DLVL_HARDER_TRAPS))
+        //Tomb contains major treasure?
+        if (appearance_ == TombAppearance::marvelous && !isRandomAppearance_)
+        {
+            actorBucket = {ActorId::wraith};
+        }
+        else //Not containing major treasure
+        {
+            actorBucket =
             {
-                actorBucket.push_back(ActorId(i));
+                ActorId::ghost,
+                ActorId::phantasm,
+                ActorId::mummy,
+                ActorId::zombie,
+                ActorId::zombieAxe,
+            };
+
+            if (Rnd::oneIn(10))
+            {
+                actorBucket.push_back(ActorId::crocHeadMummy);
             }
         }
+
         Log::addMsg("Something rises from the tomb!", clrWhite, false, true);
         didTriggerTrap = DidTriggerTrap::yes;
         break;

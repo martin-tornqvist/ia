@@ -1585,7 +1585,7 @@ void initDataList()
     d.spi = 30;
     d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 40);
-    d.spawnMinDLVL = 7;
+    d.spawnMinDLVL = DLVL_FIRST_LATE_GAME - 3;
     d.groupSize = MonGroupSize::alone;
     d.actorSize = ActorSize::humanoid;
     d.canBashDoors = true;
@@ -1623,7 +1623,7 @@ void initDataList()
     d.spi = 30;
     d.dmgMelee = 8;
     d.abilityVals.setVal(AbilityId::melee, 50);
-    d.spawnMinDLVL = 7;
+    d.spawnMinDLVL = DLVL_FIRST_LATE_GAME - 3;
     d.groupSize = MonGroupSize::swarm;
     d.actorSize = ActorSize::humanoid;
     d.canBashDoors = true;
