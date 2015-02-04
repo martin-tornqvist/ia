@@ -26,21 +26,21 @@ void dropAllCharactersItems(Actor& actor)
     actor.getInv().dropAllNonIntrinsic(actor.pos);
 }
 
-void dropItemFromInv(Actor& actor, const InvType invType, const size_t ELEMENT,
-                     const int NR_ITEMS_TO_DROP)
+void tryDropItemFromInv(Actor& actor, const InvType invType, const size_t IDX,
+                        const int NR_ITEMS_TO_DROP)
 {
     Inventory& inv    = actor.getInv();
     Item* itemToDrop  = nullptr;
 
     if (invType == InvType::slots)
     {
-        assert(ELEMENT != int(SlotId::END));
-        itemToDrop = inv.slots_[ELEMENT].item;
+        assert(IDX != int(SlotId::END));
+        itemToDrop = inv.slots_[IDX].item;
     }
-    else
+    else //Backpack item
     {
-        assert(ELEMENT < inv.general_.size());
-        itemToDrop = inv.general_[ELEMENT];
+        assert(IDX < inv.general_.size());
+        itemToDrop = inv.general_[IDX];
     }
 
     if (itemToDrop)
@@ -54,14 +54,16 @@ void dropItemFromInv(Actor& actor, const InvType invType, const size_t ELEMENT,
 
         if (invType == InvType::slots && IS_WHOLE_STACK_DROPPED)
         {
-            //TODO: This should be called from the Inventory instead.
-            itemToDrop->onUnequip();
+            if (itemToDrop->onUnequip() == UnequipAllowed::no)
+            {
+                return;
+            }
         }
 
         if (IS_WHOLE_STACK_DROPPED)
         {
             itemRef = itemToDrop->getName(ItemRefType::plural);
-            inv.removeWithoutDestroying(invType, ELEMENT);
+            inv.removeWithoutDestroying(invType, IDX);
             dropItemOnMap(actor.pos, *itemToDrop);
         }
         else
@@ -129,9 +131,10 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
     Pos stackPos;
     const bool IS_STACKABLE_TYPE = item.getData().isStackable;
 
-    int ii = 0;
-    const int VEC_SIZE = freeCells.size();
-    for (int i = 0; i < VEC_SIZE; ++i)
+    size_t          ii          = 0;
+    const size_t    VEC_SIZE    = freeCells.size();
+
+    for (size_t i = 0; i < VEC_SIZE; ++i)
     {
         //First look in all cells that has distance to origin equal to cell i to try and
         //merge the item if it stacks
@@ -152,7 +155,7 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
                         return &item;
                     }
                 }
-                ii++;
+                ++ii;
             }
         }
 
@@ -160,13 +163,6 @@ Item* dropItemOnMap(const Pos& intendedPos, Item& item)
         if (!Map::cells[curPos.x][curPos.y].item)
         {
             Map::cells[curPos.x][curPos.y].item = &item;
-
-//      const bool IS_PLAYER_POS    = Map::player->pos == curPos;
-//      const bool IS_INTENDED_POS  = curPos == intendedPos;
-//      if (IS_PLAYER_POS && !IS_INTENDED_POS)
-//      {
-//        Log::addMsg("I feel something by my feet.");
-//      }
 
             //TODO: Won't this cause nullptr to be returned?
             //Shouldn't a pointer to the item be returned?

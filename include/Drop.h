@@ -15,8 +15,8 @@ void dropAllCharactersItems(Actor& actor);
 //other items, unless they can be stacked.
 Item* dropItemOnMap(const Pos& intendedPos, Item& item);
 
-void dropItemFromInv(Actor& actor, const InvType invType, const size_t ELEMENT,
-                     const int NR_ITEMS_TO_DROP = -1);
+void tryDropItemFromInv(Actor& actor, const InvType invType, const size_t IDX,
+                        const int NR_ITEMS_TO_DROP = -1);
 
 } //ItemDrop
 

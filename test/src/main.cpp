@@ -640,7 +640,7 @@ TEST_FIXTURE(BasicFixture, InventoryHandling)
     CHECK(props[int(PropId::rBreath)]);
 
     //Drop the asbeshos suit on the ground
-    ItemDrop::dropItemFromInv(*Map::player, InvType::slots, int(SlotId::body), 1);
+    ItemDrop::tryDropItemFromInv(*Map::player, InvType::slots, int(SlotId::body), 1);
 
     //Check that no item exists in body slot
     CHECK(!bodySlot.item);

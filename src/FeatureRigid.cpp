@@ -1574,7 +1574,7 @@ Tomb::Tomb(const Pos& pos) :
     itemContainer_.init(FeatureId::tomb, Rnd::range(NR_ITEMS_MIN, NR_ITEMS_MAX));
 
     //Appearance
-    if (Rnd::oneIn(5))
+    if (Rnd::oneIn(10))
     {
         //Do not base appearance on items (random appearance)
         const int NR_APP    = int(TombAppearance::END);

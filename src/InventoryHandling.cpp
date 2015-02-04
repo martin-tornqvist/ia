@@ -60,6 +60,7 @@ bool runDropScreen(const InvType invType, const size_t ELEMENT)
     const ItemDataT& data = item->getData();
 
     Log::clearLog();
+
     if (data.isStackable && item->nrItems_ > 1)
     {
         TRACE << "Item is stackable and more than one" << endl;
@@ -83,15 +84,15 @@ bool runDropScreen(const InvType invType, const size_t ELEMENT)
         }
         else
         {
-            ItemDrop::dropItemFromInv(*Map::player, invType, ELEMENT, NR_TO_DROP);
+            ItemDrop::tryDropItemFromInv(*Map::player, invType, ELEMENT, NR_TO_DROP);
             TRACE_FUNC_END;
             return true;
         }
     }
-    else
+    else //Not a stack
     {
         TRACE << "Item not stackable, or only one item" << endl;
-        ItemDrop::dropItemFromInv(*Map::player, invType, ELEMENT);
+        ItemDrop::tryDropItemFromInv(*Map::player, invType, ELEMENT);
         TRACE_FUNC_END;
         return true;
     }
