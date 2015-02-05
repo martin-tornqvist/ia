@@ -1047,7 +1047,7 @@ void drawMap()
                 //COLOR CELLS MARKED AS LIT YELLOW
                 if (curDrw->isMarkedLit)
                 {
-                    curDrw->clr.r = min(255, curDrw->clr.r + 20);
+                    curDrw->clr.r = min(255, curDrw->clr.r + 40);
                     curDrw->clr.g = min(255, curDrw->clr.g + 40);
                     curDrw->clr.b = min(255, curDrw->clr.b + 20);
                 }
