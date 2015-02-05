@@ -310,7 +310,7 @@ UnequipAllowed ArmorHeavyCoat::onUnequip_()
     return UnequipAllowed::yes;
 }
 
-void ArmorMigo::onStdTurnInInv(const InvType invType)
+void ArmorMiGo::onStdTurnInInv(const InvType invType)
 {
     (void)invType;
 
@@ -330,14 +330,14 @@ void ArmorMigo::onStdTurnInInv(const InvType invType)
     }
 }
 
-void ArmorMigo::onEquip_()
+void ArmorMiGo::onEquip_()
 {
     Render::drawMapAndInterface();
     Log::addMsg("The armor joins with my skin!", clrWhite, false, true);
     Map::player->incrShock(ShockLvl::heavy, ShockSrc::useStrangeItem);
 }
 
-UnequipAllowed ArmorMigo::onUnequip_()
+UnequipAllowed ArmorMiGo::onUnequip_()
 {
     Render::drawMapAndInterface();
     Log::addMsg("I attempt to tear off the armor, it rips my skin!", clrMsgBad, false,
@@ -429,7 +429,7 @@ MachineGun::MachineGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
     Wpn(itemData, ammoData, ammoData->ranged.maxNrAmmoInClip, true) {}
 
 //--------------------------------------------------------- MI-GO ELECTRIC GUN
-MigoGun::MigoGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
+MiGoGun::MiGoGun(ItemDataT* const itemData, ItemDataT* const ammoData) :
     Wpn(itemData, ammoData, ammoData->ranged.maxNrAmmoInClip, true) {}
 
 //--------------------------------------------------------- SPIKE GUN
@@ -755,7 +755,7 @@ void HideousMask::onStdTurnInInv(const InvType invType)
             MapParse::run(CellCheck::BlocksLos(), blockedLos);
             for (auto* const actor : adjActors)
             {
-                if (Rnd::oneIn(4) && actor->isSeeingActor(*Map::player, blockedLos))
+                if (Rnd::oneIn(4) && actor->canSeeActor(*Map::player, blockedLos))
                 {
                     actor->getPropHandler().tryApplyProp(
                         new PropTerrified(PropTurns::std));

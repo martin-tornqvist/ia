@@ -959,7 +959,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
     prop->owningActor_    = owningActor_;
 
     const bool IS_PLAYER  = owningActor_->isPlayer();
-    bool playerSeeOwner   = Map::player->isSeeingActor(*owningActor_, nullptr);
+    bool playerSeeOwner   = Map::player->canSeeActor(*owningActor_, nullptr);
 
     if (!FORCE_EFFECT)
     {
@@ -982,7 +982,7 @@ void PropHandler::tryApplyProp(Prop* const prop, const bool FORCE_EFFECT,
                 }
                 else //Is a monster
                 {
-                    if (Map::player->isSeeingActor(*owningActor_, nullptr))
+                    if (Map::player->canSeeActor(*owningActor_, nullptr))
                     {
                         string msg = "";
                         prop->getMsg(propMsgOnResMon, msg);
@@ -1163,7 +1163,7 @@ bool PropHandler::endAppliedProp(const PropId id, const bool RUN_PROP_END_EFFECT
             }
             else //Not player
             {
-                if (Map::player->isSeeingActor(*owningActor_, nullptr))
+                if (Map::player->canSeeActor(*owningActor_, nullptr))
                 {
                     string msg = "";
                     prop->getMsg(propMsgOnEndMon, msg);
@@ -1688,7 +1688,7 @@ void PropPoisoned::onNewTurn()
             }
             else
             {
-                if (Map::player->isSeeingActor(*owningActor_, nullptr))
+                if (Map::player->canSeeActor(*owningActor_, nullptr))
                 {
                     Log::addMsg(owningActor_->getNameThe() + " suffers from poisoning!");
                 }
@@ -1725,7 +1725,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
         }
         else
         {
-            if (Map::player->isSeeingActor(*owningActor_, nullptr))
+            if (Map::player->canSeeActor(*owningActor_, nullptr))
             {
                 Log::addMsg(owningActor_->getNameThe() +  " struggles in pain!",
                             clrMsgGood);
@@ -1750,7 +1750,7 @@ void PropNailed::changeMoveDir(const Pos& actorPos, Dir& dir)
                     }
                     else
                     {
-                        if (Map::player->isSeeingActor(*owningActor_, nullptr))
+                        if (Map::player->canSeeActor(*owningActor_, nullptr))
                         {
                             Log::addMsg(
                                 owningActor_->getNameThe() + " tears out a spike!");
@@ -2027,7 +2027,7 @@ bool PropRAcid::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
             {
                 Log::addMsg("I feel a faint burning sensation.");
             }
-            else if (Map::player->isSeeingActor(*owningActor_, nullptr))
+            else if (Map::player->canSeeActor(*owningActor_, nullptr))
             {
                 Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
             }
@@ -2047,7 +2047,7 @@ bool PropRCold::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
             {
                 Log::addMsg("I feel chilly.");
             }
-            else if (Map::player->isSeeingActor(*owningActor_, nullptr))
+            else if (Map::player->canSeeActor(*owningActor_, nullptr))
             {
                 Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
             }
@@ -2067,7 +2067,7 @@ bool PropRElec::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
             {
                 Log::addMsg("I feel a faint tingle.");
             }
-            else if (Map::player->isSeeingActor(*owningActor_, nullptr))
+            else if (Map::player->canSeeActor(*owningActor_, nullptr))
             {
                 Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
             }
@@ -2118,7 +2118,7 @@ bool PropRPhys::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
             {
                 Log::addMsg("I resist harm.");
             }
-            else if (Map::player->isSeeingActor(*owningActor_, nullptr))
+            else if (Map::player->canSeeActor(*owningActor_, nullptr))
             {
                 Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
             }
@@ -2148,7 +2148,7 @@ bool PropRFire::tryResistDmg(const DmgType dmgType, const bool ALLOW_MSG) const
             {
                 Log::addMsg("I feel hot.");
             }
-            else if (Map::player->isSeeingActor(*owningActor_, nullptr))
+            else if (Map::player->canSeeActor(*owningActor_, nullptr))
             {
                 Log::addMsg(owningActor_->getNameThe() + " seems unaffected.");
             }

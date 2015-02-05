@@ -1082,7 +1082,7 @@ void drawMap()
 
                 const auto* const mon = static_cast<const Mon*>(actor);
 
-                if (Map::player->isSeeingActor(*actor, nullptr))
+                if (Map::player->canSeeActor(*actor, nullptr))
                 {
                     if (actor->getTile()  != TileId::empty && actor->getGlyph() != ' ')
                     {

@@ -404,6 +404,7 @@ void getTraitPrereqs(const Trait id, vector<Trait>& traitsRef, Bg& bgRef)
 
     case Trait::sharpShooter:
         traitsRef.push_back(Trait::steadyAimer);
+        traitsRef.push_back(Trait::expertMarksman);
         bgRef = Bg::warVet;
         break;
 

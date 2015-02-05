@@ -147,7 +147,7 @@ void throwItem(Actor& actorThrowing, const Pos& tgtCell, Item& itemThrown)
                         SdlWrapper::sleep(Config::getDelayProjectileDraw() * 4);
                     }
                     const Clr hitMessageClr   = actorHere == Map::player ? clrMsgBad : clrMsgGood;
-                    const bool CAN_SEE_ACTOR  = Map::player->isSeeingActor(*actorHere, nullptr);
+                    const bool CAN_SEE_ACTOR  = Map::player->canSeeActor(*actorHere, nullptr);
                     string defenderName       = CAN_SEE_ACTOR ? actorHere->getNameThe() : "It";
 
                     Log::addMsg(defenderName + " is hit.", hitMessageClr);

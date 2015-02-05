@@ -130,11 +130,11 @@ private:
     UnequipAllowed  onUnequip_()  override;
 };
 
-class ArmorMigo: public Armor
+class ArmorMiGo: public Armor
 {
 public:
-    ArmorMigo(ItemDataT* const itemData) : Armor(itemData) {}
-    ~ArmorMigo() {}
+    ArmorMiGo(ItemDataT* const itemData) : Armor(itemData) {}
+    ~ArmorMiGo() {}
 
     void onStdTurnInInv(const InvType invType) override;
 
@@ -233,11 +233,11 @@ public:
     ~Incinerator() {}
 };
 
-class MigoGun: public Wpn
+class MiGoGun: public Wpn
 {
 public:
-    MigoGun(ItemDataT* const itemData, ItemDataT* const ammoData);
-    ~MigoGun() {}
+    MiGoGun(ItemDataT* const itemData, ItemDataT* const ammoData);
+    ~MiGoGun() {}
 };
 
 class SpikeGun: public Wpn

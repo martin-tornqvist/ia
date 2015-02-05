@@ -170,7 +170,7 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::wraith:                      return Pos(13, 2);
     case TileId::mantis:                      return Pos(14, 2);
     case TileId::locust:                      return Pos(15, 2);
-    case TileId::migoArmor:                   return Pos(17, 2);
+    case TileId::miGoArmor:                   return Pos(17, 2);
     case TileId::pistol:                      return Pos(1, 3);
     case TileId::tommyGun:                    return Pos(3, 3);
     case TileId::shotgun:                     return Pos(4, 3);
@@ -178,7 +178,7 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::dynamiteLit:                 return Pos(6, 3);
     case TileId::molotov:                     return Pos(7, 3);
     case TileId::incinerator:                 return Pos(8, 3);
-    case TileId::migoGun:                     return Pos(9, 3);
+    case TileId::miGoGun:                     return Pos(9, 3);
     case TileId::flare:                       return Pos(10, 3);
     case TileId::flareGun:                    return Pos(11, 3);
     case TileId::flareLit:                    return Pos(12, 3);
@@ -197,7 +197,7 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::huntingHorror:               return Pos(4, 5);
     case TileId::spiderLeng:                  return Pos(10, 5);
     case TileId::chthonian:                   return Pos(0, 5);
-    case TileId::migo:                        return Pos(12, 5);
+    case TileId::miGo:                        return Pos(12, 5);
     case TileId::floor:                       return Pos(1, 6);
     case TileId::aimMarkerHead:               return Pos(2, 6);
     case TileId::aimMarkerTrail:              return Pos(3, 6);

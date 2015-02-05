@@ -147,7 +147,7 @@ void PotionVitality::quaff_(Actor& actor)
 
     actor.restoreHp(HP_RESTORED, true, true);
 
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -169,7 +169,7 @@ void PotionSpirit::quaff_(Actor& actor)
 
     actor.restoreSpi(SPI_RESTORED, true, true);
 
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -184,7 +184,7 @@ void PotionSpirit::collide_(const Pos& pos, Actor* const actor)
 void PotionBlindness::quaff_(Actor& actor)
 {
     actor.getPropHandler().tryApplyProp(new PropBlind(PropTurns::std));
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -199,7 +199,7 @@ void PotionBlindness::collide_(const Pos& pos, Actor* const actor)
 void PotionParal::quaff_(Actor& actor)
 {
     actor.getPropHandler().tryApplyProp(new PropParalyzed(PropTurns::std));
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -215,7 +215,7 @@ void PotionParal::collide_(const Pos& pos, Actor* const actor)
 void PotionDisease::quaff_(Actor& actor)
 {
     actor.getPropHandler().tryApplyProp(new PropDiseased(PropTurns::std));
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -224,7 +224,7 @@ void PotionDisease::quaff_(Actor& actor)
 void PotionConf::quaff_(Actor& actor)
 {
     actor.getPropHandler().tryApplyProp(new PropConfused(PropTurns::std));
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -239,7 +239,7 @@ void PotionConf::collide_(const Pos& pos, Actor* const actor)
 void PotionFrenzy::quaff_(Actor& actor)
 {
     actor.getPropHandler().tryApplyProp(new PropFrenzied(PropTurns::std));
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -300,7 +300,7 @@ void PotionFortitude::quaff_(Actor& actor)
         Log::addMsg("I feel more at ease.");
     }
 
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -315,7 +315,7 @@ void PotionFortitude::collide_(const Pos& pos, Actor* const actor)
 void PotionPoison::quaff_(Actor& actor)
 {
     actor.getPropHandler().tryApplyProp(new PropPoisoned(PropTurns::std));
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -330,7 +330,7 @@ void PotionPoison::collide_(const Pos& pos, Actor* const actor)
 void PotionRFire::quaff_(Actor& actor)
 {
     actor.getPropHandler().tryApplyProp(new PropRFire(PropTurns::std));
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -346,7 +346,7 @@ void PotionAntidote::quaff_(Actor& actor)
 {
     const bool WAS_POISONED = actor.getPropHandler().endAppliedProp(PropId::poisoned);
 
-    if (WAS_POISONED && Map::player->isSeeingActor(actor, nullptr))
+    if (WAS_POISONED && Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -361,7 +361,7 @@ void PotionAntidote::collide_(const Pos& pos, Actor* const actor)
 void PotionRElec::quaff_(Actor& actor)
 {
     actor.getPropHandler().tryApplyProp(new PropRElec(PropTurns::std));
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }
@@ -376,7 +376,7 @@ void PotionRElec::collide_(const Pos& pos, Actor* const actor)
 void PotionRAcid::quaff_(Actor& actor)
 {
     actor.getPropHandler().tryApplyProp(new PropRAcid(PropTurns::std));
-    if (Map::player->isSeeingActor(actor, nullptr))
+    if (Map::player->canSeeActor(actor, nullptr))
     {
         identify(false);
     }

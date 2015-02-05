@@ -1089,7 +1089,7 @@ void Player::onStdTurn()
         if (!actor->isPlayer() && !Map::player->isLeaderOf(actor) && actor->isAlive())
         {
             Mon& mon                = *static_cast<Mon*>(actor);
-            const bool IS_MON_SEEN  = isSeeingActor(*actor, nullptr);
+            const bool IS_MON_SEEN  = canSeeActor(*actor, nullptr);
             if (IS_MON_SEEN)
             {
                 if (!mon.isMsgMonInViewPrinted_)
@@ -1306,7 +1306,7 @@ void Player::moveDir(Dir dir)
                         {
                             if (
                                 Config::isRangedWpnMeleeePrompt()   &&
-                                isSeeingActor(*monAtDest, nullptr)  &&
+                                canSeeActor(*monAtDest, nullptr)  &&
                                 wpn->getData().ranged.isRangedWpn)
                             {
                                 const string wpnName = wpn->getName(ItemRefType::a);
@@ -1447,7 +1447,7 @@ void Player::autoMelee()
         tgt_                                    &&
         tgt_->getState() == ActorState::alive   &&
         Utils::isPosAdj(pos, tgt_->pos, false)  &&
-        isSeeingActor(*tgt_, nullptr))
+        canSeeActor(*tgt_, nullptr))
     {
         moveDir(DirUtils::getDir(tgt_->pos - pos));
         return;
@@ -1457,7 +1457,7 @@ void Player::autoMelee()
     for (const Pos& d : DirUtils::dirList)
     {
         Actor* const actor = Utils::getActorAtPos(pos + d);
-        if (actor && !isLeaderOf(actor) && isSeeingActor(*actor, nullptr))
+        if (actor && !isLeaderOf(actor) && canSeeActor(*actor, nullptr))
         {
             tgt_ = actor;
             moveDir(DirUtils::getDir(d));

@@ -144,7 +144,7 @@ void printLocationInfoMsgs(const Pos& pos)
         {
             if (actor->isAlive())
             {
-                if (Map::player->isSeeingActor(*actor, nullptr))
+                if (Map::player->canSeeActor(*actor, nullptr))
                 {
                     str = actor->getNameA();
 

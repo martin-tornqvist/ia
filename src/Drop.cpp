@@ -87,7 +87,7 @@ void tryDropItemFromInv(Actor& actor, const InvType invType, const size_t IDX,
         {
             bool blocked[MAP_W][MAP_H];
             MapParse::run(CellCheck::BlocksLos(), blocked);
-            if (Map::player->isSeeingActor(actor, blocked))
+            if (Map::player->canSeeActor(actor, blocked))
             {
                 Log::addMsg(actor.getNameThe() + " drops " + itemRef + ".");
             }

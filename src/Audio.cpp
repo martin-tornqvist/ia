@@ -76,7 +76,7 @@ void init()
         loadAudioFile(SfxId::shotgunReload,           "sfx_shotgunReload.ogg");
         loadAudioFile(SfxId::machineGunFire,          "sfx_machineGunFire.ogg");
         loadAudioFile(SfxId::machineGunReload,        "sfx_machineGunReload.ogg");
-        loadAudioFile(SfxId::migoGunFire,             "sfx_migoGun.ogg");
+        loadAudioFile(SfxId::miGoGunFire,             "sfx_migoGun.ogg");
         loadAudioFile(SfxId::spikeGun,                "sfx_spikeGun.ogg");
 
         //Environment sounds

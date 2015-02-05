@@ -326,7 +326,7 @@ void handleMapModeKeyPress(const KeyData& d)
 
                     //TODO: Quick hack for the Mi-go gun, shouldn't be here - refactor
                     if (
-                        wpn->getData().id == ItemId::migoGun  &&
+                        wpn->getData().id == ItemId::miGoGun  &&
                         wpn->nrAmmoLoaded == 0                &&
                         Map::player->getHp() > 1)
                     {

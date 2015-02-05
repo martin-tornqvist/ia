@@ -7,34 +7,32 @@
 #include "Sound.h"
 #include "Spells.h"
 
-struct BestAttack
+struct AiAttData
 {
-    BestAttack() :
-        weapon  (nullptr),
-        isMelee (true) {}
+    AiAttData(Wpn* weaponToUse, bool isMeleeAtt) :
+        weapon  (weaponToUse),
+        isMelee (isMeleeAtt) {}
 
     Wpn* weapon;
     bool isMelee;
 };
 
-struct AttackOpport
+struct AiAvailAttacksData
 {
-    AttackOpport() :
-        isTimeToReload(false), isMelee(true)
-    {
-        weapons.clear();
-    }
+    AiAvailAttacksData() :
+        isTimeToReload  (false),
+        isMelee         (true) {}
 
-    AttackOpport(const AttackOpport& other) :
-        weapons(other.weapons), isTimeToReload(other.isTimeToReload),
-        isMelee(other.isMelee) {}
+    AiAvailAttacksData(const AiAvailAttacksData& other) :
+        weapons         (other.weapons),
+        isTimeToReload  (other.isTimeToReload),
+        isMelee         (other.isMelee) {}
 
-    AttackOpport& operator=(const AttackOpport& other)
+    AiAvailAttacksData& operator=(const AiAvailAttacksData& other)
     {
         weapons         = other.weapons;
         isTimeToReload  = other.isTimeToReload;
         isMelee         = other.isMelee;
-
         return *this;
     }
 
@@ -54,8 +52,8 @@ public:
 
     void moveDir(Dir dir);
 
-    AttackOpport getAttackOpport(Actor& defender);
-    BestAttack getBestAttack(const AttackOpport& attackOpport);
+    void        getAvailAttacks(Actor& defender, AiAvailAttacksData& availAttacksRef);
+    AiAttData   getAtt(const AiAvailAttacksData& availAttacks);
     bool tryAttack(Actor& defender);
 
     virtual void mkStartItems() override = 0;
@@ -465,6 +463,13 @@ public:
     void mkStartItems() override;
 };
 
+class MiGoCommander: public MiGo
+{
+public:
+    MiGoCommander() : MiGo() {}
+    ~MiGoCommander() {}
+};
+
 class SentryDrone: public Mon
 {
 public:
@@ -478,6 +483,14 @@ class FlyingPolyp: public Mon
 public:
     FlyingPolyp() : Mon() {}
     ~FlyingPolyp() {}
+    void mkStartItems() override;
+};
+
+class GreaterPolyp: public FlyingPolyp
+{
+public:
+    GreaterPolyp() : FlyingPolyp() {}
+    ~GreaterPolyp() {}
     void mkStartItems() override;
 };
 

@@ -44,7 +44,7 @@ void Rigid::onNewTurn()
             }
             else
             {
-                if (Map::player->isSeeingActor(actor, nullptr))
+                if (Map::player->canSeeActor(actor, nullptr))
                 {
                     Log::addMsg(actor.getNameThe() + " is scorched by flames.",
                                 clrMsgGood);
@@ -786,7 +786,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
                 {
                     Log::addMsg("It falls on me!");
                 }
-                else if (Map::player->isSeeingActor(*actorBehind, nullptr))
+                else if (Map::player->canSeeActor(*actorBehind, nullptr))
                 {
                     Log::addMsg("It falls on " + actorBehind->getNameA() + ".");
                 }

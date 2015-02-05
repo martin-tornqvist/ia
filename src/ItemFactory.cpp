@@ -71,6 +71,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::phantasmSickle:
     case ItemId::wraithClaw:
     case ItemId::polypTentacle:
+    case ItemId::greaterPolypTentacle:
     case ItemId::ghoulClaw:
     case ItemId::shadowClaw:
     case ItemId::byakheeClaw:
@@ -92,6 +93,8 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::fireVortexEngulf:
     case ItemId::frostVortexEngulf:
     case ItemId::moldSpores:
+    case ItemId::miGoSting:
+        case ItemId::miGoCommanderSting:
     case ItemId::theDarkOneClaw:
         r = new Wpn(d, ammoD);
         break;
@@ -135,7 +138,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::drumOfBullets:
     case ItemId::pistolClip:
     case ItemId::incineratorAmmo:
-    case ItemId::migoGunAmmo:
+    case ItemId::miGoGunAmmo:
         r = new AmmoClip(d);
         break;
 
@@ -155,8 +158,8 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
         r = new SpikeGun(d, ammoD);
         break;
 
-    case ItemId::migoGun:
-        r = new MigoGun(d, ammoD);
+    case ItemId::miGoGun:
+        r = new MiGoGun(d, ammoD);
         break;
 
     case ItemId::armorFlackJacket:
@@ -173,8 +176,8 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
         r = new ArmorHeavyCoat(d);
         break;
 
-    case ItemId::armorMigo:
-        r = new ArmorMigo(d);
+    case ItemId::armorMiGo:
+        r = new ArmorMiGo(d);
         break;
 
     case ItemId::gasMask:

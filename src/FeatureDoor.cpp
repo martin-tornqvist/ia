@@ -276,7 +276,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
                                 SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, actor,
                                 SndVol::high, AlertsMon::no);
                         SndEmit::emitSnd(snd);
-                        if (Map::player->isSeeingActor(*actor, nullptr))
+                        if (Map::player->canSeeActor(*actor, nullptr))
                         {
                             Log::addMsg("The door crashes open!");
                         }
@@ -373,7 +373,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //                SfxId::doorBreak, IgnoreMsgIfOriginSeen::yes, pos_, &actor,
 //                SndVol::high, AlertsMon::no);
 //        SndEmit::emitSnd(snd);
-//        if(Map::player->isSeeingActor(actor, nullptr)) {
+//        if(Map::player->canSeeActor(actor, nullptr)) {
 //          Log::addMsg("The door crashes open!");
 //        } else if(Map::cells[pos_.x][pos_.y].isSeenByPlayer) {
 //          Log::addMsg("A door crashes open!");
@@ -392,7 +392,7 @@ void Door::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
 //                SfxId::doorBang, IgnoreMsgIfOriginSeen::yes, actor.pos,
 //                &actor, SndVol::low, AlertsMon::no);
 //        SndEmit::emitSnd(snd);
-//        if(Map::player->isSeeingActor(actor, nullptr)) {
+//        if(Map::player->canSeeActor(actor, nullptr)) {
 //          Log::addMsg(actor.getNameThe() + " bashes at a door!");
 //        }
 //      }
@@ -580,7 +580,7 @@ void Door::tryClose(Actor* actorTrying)
 
     const bool PLAYER_SEE_TRYER =
         IS_PLAYER ? true :
-        Map::player->isSeeingActor(*actorTrying, blocked);
+        Map::player->canSeeActor(*actorTrying, blocked);
 
     bool isClosable = true;
 
@@ -722,7 +722,7 @@ void Door::tryOpen(Actor* actorTrying)
     MapParse::run(CellCheck::BlocksLos(), blocked);
 
     const bool PLAYER_SEE_TRYER =
-        IS_PLAYER ? true : Map::player->isSeeingActor(*actorTrying, blocked);
+        IS_PLAYER ? true : Map::player->canSeeActor(*actorTrying, blocked);
 
     if (isHandledExternally_)
     {

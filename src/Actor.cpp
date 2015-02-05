@@ -107,51 +107,54 @@ ActorSpeed Actor::getSpeed() const
     return ActorSpeed(speedInt);
 }
 
-bool Actor::isSeeingActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H]) const
+bool Actor::canSeeActor(const Actor& other, const bool blockedLos[MAP_W][MAP_H]) const
 {
     if (this == &other)
     {
         return true;
     }
 
-    if (other.isAlive())
+    if (!other.isAlive())
     {
-        if (isPlayer())
-        {
-            return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer &&
-                   !static_cast<const Mon*>(&other)->isStealth_;
-        }
-
-        //This point reached means its a monster checking
-
-        if (
-            pos.x - other.pos.x > FOV_STD_RADI_INT ||
-            other.pos.x - pos.x > FOV_STD_RADI_INT ||
-            other.pos.y - pos.y > FOV_STD_RADI_INT ||
-            pos.y - other.pos.y > FOV_STD_RADI_INT)
-        {
-            return false;
-        }
-
-        //Monster allied to player looking at other monster?
-        if (
-            isActorMyLeader(Map::player)  &&
-            !other.isPlayer()             &&
-            static_cast<const Mon*>(&other)->isStealth_)
-        {
-            return false;
-        }
-
-        if (!propHandler_->allowSee())
-        {
-            return false;
-        }
-
-        if (blockedLos)
-        {
-            return Fov::checkCell(blockedLos, other.pos, pos, !data_->canSeeInDarkness);
-        }
+        return false;
     }
+
+    if (isPlayer())
+    {
+        return Map::cells[other.pos.x][other.pos.y].isSeenByPlayer &&
+               !static_cast<const Mon*>(&other)->isStealth_;
+    }
+
+    //This point reached means its a monster checking
+
+    if (
+        pos.x - other.pos.x > FOV_STD_RADI_INT ||
+        other.pos.x - pos.x > FOV_STD_RADI_INT ||
+        other.pos.y - pos.y > FOV_STD_RADI_INT ||
+        pos.y - other.pos.y > FOV_STD_RADI_INT)
+    {
+        return false;
+    }
+
+    //Monster allied to player looking at other monster?
+    if (
+        isActorMyLeader(Map::player)  &&
+        !other.isPlayer()             &&
+        static_cast<const Mon*>(&other)->isStealth_)
+    {
+        return false;
+    }
+
+    if (!propHandler_->allowSee())
+    {
+        return false;
+    }
+
+    if (blockedLos)
+    {
+        return Fov::checkCell(blockedLos, other.pos, pos, !data_->canSeeInDarkness);
+    }
+
     return false;
 }
 
@@ -178,7 +181,7 @@ void Actor::getSeenFoes(vector<Actor*>& out)
         {
             if (isPlayer())
             {
-                if (isSeeingActor(*actor, nullptr) && !isLeaderOf(actor))
+                if (canSeeActor(*actor, nullptr) && !isLeaderOf(actor))
                 {
                     out.push_back(actor);
                 }
@@ -195,7 +198,7 @@ void Actor::getSeenFoes(vector<Actor*>& out)
                     (IS_HOSTILE_TO_PLAYER  && !IS_OTHER_HOSTILE_TO_PLAYER) ||
                     (!IS_HOSTILE_TO_PLAYER &&  IS_OTHER_HOSTILE_TO_PLAYER))
                 {
-                    if (isSeeingActor(*actor, blockedLos))
+                    if (canSeeActor(*actor, blockedLos))
                     {
                         out.push_back(actor);
                     }
@@ -239,7 +242,7 @@ void Actor::teleport()
         return;
     }
 
-    if (!isPlayer() && Map::player->isSeeingActor(*this, nullptr))
+    if (!isPlayer() && Map::player->canSeeActor(*this, nullptr))
     {
         Log::addMsg(getNameThe() + " suddenly disappears!");
     }
@@ -389,7 +392,7 @@ bool Actor::restoreHp(const int HP_RESTORED, const bool ALLOW_MSG,
         }
         else //Is a monster
         {
-            if (Map::player->isSeeingActor(*this, nullptr))
+            if (Map::player->canSeeActor(*this, nullptr))
             {
                 Log::addMsg(data_->nameThe + " looks healthier.");
             }
@@ -430,7 +433,7 @@ bool Actor::restoreSpi(const int SPI_RESTORED, const bool ALLOW_MSG,
         }
         else
         {
-            if (Map::player->isSeeingActor(*this, nullptr))
+            if (Map::player->canSeeActor(*this, nullptr))
             {
                 Log::addMsg(data_->nameThe + " looks more spirited.");
             }
@@ -461,7 +464,7 @@ void Actor::changeMaxHp(const int CHANGE, const bool ALLOW_MSG)
         }
         else //Is monster
         {
-            if (Map::player->isSeeingActor(*this, nullptr))
+            if (Map::player->canSeeActor(*this, nullptr))
             {
                 if (CHANGE > 0)
                 {
@@ -496,7 +499,7 @@ void Actor::changeMaxSpi(const int CHANGE, const bool ALLOW_MSG)
         }
         else //Is monster
         {
-            if (Map::player->isSeeingActor(*this, nullptr))
+            if (Map::player->canSeeActor(*this, nullptr))
             {
                 if (CHANGE > 0)
                 {
@@ -661,7 +664,7 @@ ActorDied Actor::hitSpi(const int DMG, const bool ALLOW_MSG)
         }
         else
         {
-            if (Map::player->isSeeingActor(*this, nullptr))
+            if (Map::player->canSeeActor(*this, nullptr))
             {
                 Log::addMsg(getNameThe() + " has no spirit left!");
             }
@@ -710,7 +713,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
         }
 
         //Print death messages
-        if (Map::player->isSeeingActor(*this, nullptr))
+        if (Map::player->canSeeActor(*this, nullptr))
         {
             isPlayerSeeDyingActor = true;
 

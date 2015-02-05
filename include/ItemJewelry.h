@@ -32,6 +32,7 @@ enum class JewelryEffectId
     burden,
     shriek,
     randomTele,
+    summonMon,
 
     END
 };
@@ -340,6 +341,25 @@ public:
     std::string getDescr() const override
     {
         return "It occasionally teleports the wearer.";
+    }
+
+    void onStdTurnEquiped() override;
+};
+
+class JewelryEffectSummonMon : public JewelryEffect
+{
+public:
+    JewelryEffectSummonMon(Jewelry* const jewelry) :
+        JewelryEffect(jewelry) {}
+
+    ~JewelryEffectSummonMon() {}
+
+    JewelryEffectId getId() const override {return JewelryEffectId::summonMon;}
+
+    std::string getDescr() const override
+    {
+        return "It calls deadly interdimensional beings into the existence of the "
+               "wearer.";
     }
 
     void onStdTurnEquiped() override;

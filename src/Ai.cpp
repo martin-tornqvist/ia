@@ -26,7 +26,7 @@ bool tryCastRandomSpell(Mon& mon)
         !mon.isAlive()              ||                  //Dead?
         mon.spellCoolDownCur_ > 0   ||                  //Cooldown?
         mon.spellsKnown_.empty()    ||                  //No spells?
-        !mon.getPropHandler().allowCastSpell(false))   //Prop not allowing to cast now?
+        !mon.getPropHandler().allowCastSpell(false))    //Prop not allowing to cast now?
     {
         return false;
     }
@@ -62,7 +62,7 @@ bool tryCastRandomSpell(Mon& mon)
                 CUR_HP < (MAX_HP / 3)           &&
                 Rnd::oneIn(20))
             {
-                if (Map::player->isSeeingActor(mon, nullptr))
+                if (Map::player->canSeeActor(mon, nullptr))
                 {
                     Log::addMsg(mon.getNameThe() + " looks desperate.");
                 }
@@ -190,7 +190,7 @@ bool isAdjAndNoVision(const Mon& self, Mon& other,
     if (Utils::isPosAdj(self.pos, other.pos, false))
     {
         //If pal does not see player
-        if (!other.isSeeingActor(*Map::player, blockedLos)) {return true;}
+        if (!other.canSeeActor(*Map::player, blockedLos)) {return true;}
     }
     return false;
 }
@@ -204,7 +204,7 @@ bool makeRoomForFriend(Mon& mon)
         bool blockedLos[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
-        if (mon.isSeeingActor(*Map::player, blockedLos))
+        if (mon.canSeeActor(*Map::player, blockedLos))
         {
             //Loop through all actors
             for (Actor* actor : GameTime::actors_)
@@ -218,7 +218,7 @@ bool makeRoomForFriend(Mon& mon)
                     //Other monster can see player, or it's an adjacent monster that
                     //does not see the player?
                     if (
-                        other->isSeeingActor(*Map::player, blockedLos) ||
+                        other->canSeeActor(*Map::player, blockedLos) ||
                         isOtherAdjWithNoLos)
                     {
                         //If we are blocking a pal, check every neighbouring position
@@ -250,8 +250,8 @@ bool makeRoomForFriend(Mon& mon)
                                         other = static_cast<Mon*>(actor2);
 
                                         const bool OTHER_IS_SEEING_PLAYER =
-                                            other->isSeeingActor(*Map::player,
-                                                                 blockedLos);
+                                            other->canSeeActor(*Map::player,
+                                                               blockedLos);
 
                                         if (
                                             OTHER_IS_SEEING_PLAYER &&

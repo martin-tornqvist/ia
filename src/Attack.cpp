@@ -50,9 +50,9 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
     {
         isDefenderAware = static_cast<Mon*>(defender)->awareCounter_ > 0;
     }
-    else
+    else //Attacker is monster
     {
-        isDefenderAware = Map::player->isSeeingActor(*attacker, nullptr) ||
+        isDefenderAware = Map::player->canSeeActor(*attacker, nullptr) ||
                           PlayerBon::traits[int(Trait::vigilant)];
     }
 
@@ -85,7 +85,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
         bool isAttackerAware = true;
         if (attacker->isPlayer())
         {
-            isAttackerAware = Map::player->isSeeingActor(*defender, nullptr);
+            isAttackerAware = Map::player->canSeeActor(*defender, nullptr);
         }
         else
         {
@@ -190,7 +190,7 @@ MeleeAttData::MeleeAttData(Actor& attacker_, const Wpn& wpn_, Actor& defender_) 
             dmg           = dmgRoll + dmgPlus;
             isWeakAttack  = true;
         }
-        else
+        else //Attacker not weakened
         {
             if (attackResult == successCritical)
             {
@@ -510,7 +510,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
         //----- DEFENDER DODGES --------
         if (data.attacker == Map::player)
         {
-            if (Map::player->isSeeingActor(*data.defender, nullptr))
+            if (Map::player->canSeeActor(*data.defender, nullptr))
             {
                 otherName = data.defender->getNameThe();
             }
@@ -522,7 +522,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
         }
         else //Attacker is monster
         {
-            if (Map::player->isSeeingActor(*data.attacker, nullptr))
+            if (Map::player->canSeeActor(*data.attacker, nullptr))
             {
                 otherName = data.attacker->getNameThe();
             }
@@ -554,7 +554,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
         }
         else //Attacker is monster
         {
-            if (Map::player->isSeeingActor(*data.attacker, nullptr))
+            if (Map::player->canSeeActor(*data.attacker, nullptr))
             {
                 otherName = data.attacker->getNameThe();
             }
@@ -583,7 +583,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
             //----- ATTACK MISSED DUE TO ETHEREAL TARGET --------
             if (data.attacker == Map::player)
             {
-                if (Map::player->isSeeingActor(*data.defender, nullptr))
+                if (Map::player->canSeeActor(*data.defender, nullptr))
                 {
                     otherName = data.defender->getNameThe();
                 }
@@ -596,7 +596,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
             }
             else
             {
-                if (Map::player->isSeeingActor(*data.attacker, nullptr))
+                if (Map::player->canSeeActor(*data.attacker, nullptr))
                 {
                     otherName = data.attacker->getNameThe();
                 }
@@ -613,16 +613,18 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
         {
             //----- ATTACK CONNECTS WITH DEFENDER --------
             //Determine the relative "size" of the hit
-            MeleeHitSize hitSize    = MeleeHitSize::small;
-            const int MAX_DMG_ROLL  = data.nrDmgRolls * data.nrDmgSides;
+            const auto& wpnDmg  = wpn.getData().melee.dmg;
+            const int   MAX_DMG = (wpnDmg.first * wpnDmg.second) + wpn.meleeDmgPlus_;
 
-            if (MAX_DMG_ROLL >= 4)
+            MeleeHitSize hitSize = MeleeHitSize::small;
+
+            if (MAX_DMG >= 4)
             {
-                if (data.dmgRoll > (MAX_DMG_ROLL * 5) / 6)
+                if (data.dmg > (MAX_DMG * 5) / 6)
                 {
                     hitSize = MeleeHitSize::hard;
                 }
-                else if (data.dmgRoll >  MAX_DMG_ROLL / 2)
+                else if (data.dmg >  MAX_DMG / 2)
                 {
                     hitSize = MeleeHitSize::medium;
                 }
@@ -630,6 +632,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
 
             //Punctuation depends on attack strength
             string dmgPunct = ".";
+
             switch (hitSize)
             {
             case MeleeHitSize::small:                     break;
@@ -641,7 +644,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
             {
                 const string wpnVerb = wpn.getData().melee.attMsgs.player;
 
-                if (Map::player->isSeeingActor(*data.defender, nullptr))
+                if (Map::player->canSeeActor(*data.defender, nullptr))
                 {
                     otherName = data.defender->getNameThe();
                 }
@@ -672,7 +675,7 @@ void printMeleeMsgAndPlaySfx(const MeleeAttData& data, const Wpn& wpn)
             {
                 const string wpnVerb = wpn.getData().melee.attMsgs.other;
 
-                if (Map::player->isSeeingActor(*data.attacker, nullptr))
+                if (Map::player->canSeeActor(*data.attacker, nullptr))
                 {
                     otherName = data.attacker->getNameThe();
                 }
@@ -722,7 +725,8 @@ void printRangedInitiateMsgs(const RangedAttData& data)
     }
 }
 
-void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT)
+void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT,
+                          const Wpn& wpn)
 {
     //Only print messages if player can see the cell
     const int defX = data.defender->pos.x;
@@ -730,21 +734,25 @@ void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT)
     if (Map::cells[defX][defY].isSeenByPlayer)
     {
 
-        //Punctuation or exclamation marks depending on attack strength
+        //Punctuation depends on attack strength
         if (IS_HIT)
         {
-            string dmgPunctuation = ".";
-            const int MAX_DMG_ROLL = data.nrDmgRolls * data.nrDmgSides;
-            if (MAX_DMG_ROLL >= 4)
+            //Determine the relative "size" of the hit
+            const auto& wpnDmg  = wpn.getData().ranged.dmg;
+            const int   MAX_DMG = (wpnDmg.rolls * wpnDmg.sides) + wpnDmg.plus;
+
+            string dmgPunct = ".";
+
+            if (MAX_DMG >= 4)
             {
-                dmgPunctuation =
-                    data.dmgRoll > MAX_DMG_ROLL * 5 / 6 ? "!!!" :
-                    data.dmgRoll > MAX_DMG_ROLL / 2     ? "!"   : dmgPunctuation;
+                dmgPunct =
+                    data.dmg > MAX_DMG * 5 / 6 ? "!!!" :
+                    data.dmg > MAX_DMG / 2     ? "!"   : dmgPunct;
             }
 
             if (data.defender == Map::player)
             {
-                Log::addMsg("I am hit" + dmgPunctuation, clrMsgBad, true);
+                Log::addMsg("I am hit" + dmgPunct, clrMsgBad, true);
             }
             else
             {
@@ -755,7 +763,7 @@ void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT)
                     otherName = data.defender->getNameThe();
                 }
 
-                Log::addMsg(otherName + " is hit" + dmgPunctuation, clrMsgGood);
+                Log::addMsg(otherName + " is hit" + dmgPunct, clrMsgGood);
             }
         }
     }
@@ -830,7 +838,6 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
 
     for (int i = 1; i < SIZE_OF_PATH_PLUS_ONE; ++i)
     {
-
         for (int pCnt = 0; pCnt < NR_PROJECTILES; ++pCnt)
         {
             //Current projectile's place in the path is the current global place (i)
@@ -909,7 +916,7 @@ void projectileFire(Actor& attacker, Wpn& wpn, const Pos& aimPos)
                                 }
 
                                 //MESSAGES FOR ACTOR HIT
-                                printProjAtActorMsgs(*curProj->attackData, true);
+                                printProjAtActorMsgs(*curProj->attackData, true, wpn);
                                 //Need to draw again here to show log message
                                 Render::drawProjectiles(projectiles, !LEAVE_TRAIL);
                             }
@@ -1167,7 +1174,7 @@ void shotgun(Actor& attacker, const Wpn& wpn, const Pos& aimPos)
                     }
 
                     //Messages
-                    printProjAtActorMsgs(data, true);
+                    printProjAtActorMsgs(data, true, wpn);
 
                     //Damage
                     data.defender->hit(data.dmg, wpn.getData().ranged.dmgType);

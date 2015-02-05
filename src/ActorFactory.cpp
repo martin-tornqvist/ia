@@ -53,7 +53,9 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::lengElder:            return new LengElder();
     case ActorId::wolf:                 return new Wolf();
     case ActorId::flyingPolyp:          return new FlyingPolyp();
+    case ActorId::greaterPolyp:         return new GreaterPolyp();
     case ActorId::miGo:                 return new MiGo();
+    case ActorId::miGoCommander:        return new MiGoCommander();
     case ActorId::ghoul:                return new Ghoul();
     case ActorId::shadow:               return new Shadow();
     case ActorId::byakhee:              return new Byakhee();
@@ -160,7 +162,7 @@ void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
             mon->awareCounter_ = mon->getData().nrTurnsAware;
         }
 
-        if (Map::player->isSeeingActor(*actor, nullptr))
+        if (Map::player->canSeeActor(*actor, nullptr))
         {
             positionsToAnimate.push_back(pos);
         }

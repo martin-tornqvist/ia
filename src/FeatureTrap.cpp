@@ -183,7 +183,7 @@ void Trap::bump(Actor& actorBumping)
                     TRACE << "Monster eligible for triggering trap" << endl;
 
                     const bool IS_ACTOR_SEEN_BY_PLAYER =
-                        Map::player->isSeeingActor(actorBumping, nullptr);
+                        Map::player->canSeeActor(actorBumping, nullptr);
 
                     const int CHANCE_TO_AVOID = BASE_CHANCE_TO_AVOID + DODGE_SKILL;
                     const AbilityRollResult result = AbilityRoll::roll(CHANCE_TO_AVOID);
@@ -316,7 +316,7 @@ DidTriggerTrap Trap::triggerTrap(Actor* const actor)
     else
     {
         TRACE_VERBOSE << "Monster triggering trap" << endl;
-        const bool IS_ACTOR_SEEN_BY_PLAYER  = Map::player->isSeeingActor(*actor, nullptr);
+        const bool IS_ACTOR_SEEN_BY_PLAYER  = Map::player->canSeeActor(*actor, nullptr);
         const AbilityRollResult dodgeResult = AbilityRoll::roll(DODGE_SKILL);
         if (IS_ACTOR_SEEN_BY_PLAYER)
         {
@@ -440,7 +440,7 @@ void TrapDart::trigger(Actor& actor, const AbilityRollResult dodgeResult)
     TRACE_FUNC_BEGIN_VERBOSE;
     const bool IS_PLAYER = &actor == Map::player;
     const bool CAN_SEE = actor.getPropHandler().allowSee();
-    const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, nullptr);
+    const bool CAN_PLAYER_SEE_ACTOR = Map::player->canSeeActor(actor, nullptr);
     const string actorName = actor.getNameThe();
 
     //Dodge?
@@ -529,7 +529,7 @@ void TrapSpear::trigger(Actor& actor, const AbilityRollResult dodgeResult)
 
     const bool IS_PLAYER = &actor == Map::player;
     const bool CAN_SEE = actor.getPropHandler().allowSee();
-    const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, nullptr);
+    const bool CAN_PLAYER_SEE_ACTOR = Map::player->canSeeActor(actor, nullptr);
     const string actorName = actor.getNameThe();
 
     //Dodge?
@@ -612,7 +612,7 @@ void TrapGasConfusion::trigger(Actor& actor, const AbilityRollResult dodgeResult
 
     const bool IS_PLAYER = &actor == Map::player;
     const bool CAN_SEE = actor.getPropHandler().allowSee();
-    const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, nullptr);
+    const bool CAN_PLAYER_SEE_ACTOR = Map::player->canSeeActor(actor, nullptr);
     const string actorName = actor.getNameThe();
 
     if (IS_PLAYER)
@@ -646,7 +646,7 @@ void TrapGasParalyzation::trigger(Actor& actor,  const AbilityRollResult dodgeRe
 
     const bool IS_PLAYER = &actor == Map::player;
     const bool CAN_SEE = actor.getPropHandler().allowSee();
-    const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, nullptr);
+    const bool CAN_PLAYER_SEE_ACTOR = Map::player->canSeeActor(actor, nullptr);
     const string actorName = actor.getNameThe();
 
     if (IS_PLAYER)
@@ -679,7 +679,7 @@ void TrapGasFear::trigger(Actor& actor, const AbilityRollResult dodgeResult)
 
     const bool IS_PLAYER = &actor == Map::player;
     const bool CAN_SEE = actor.getPropHandler().allowSee();
-    const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, nullptr);
+    const bool CAN_PLAYER_SEE_ACTOR = Map::player->canSeeActor(actor, nullptr);
     const string actorName = actor.getNameThe();
 
     if (IS_PLAYER)
@@ -710,7 +710,7 @@ void TrapBlindingFlash::trigger(Actor& actor, const AbilityRollResult dodgeResul
     TRACE_FUNC_BEGIN_VERBOSE;
     const bool IS_PLAYER = &actor == Map::player;
     const bool CAN_SEE = actor.getPropHandler().allowSee();
-    const bool CAN_PLAYER_SEE_ACTOR = Map::player->isSeeingActor(actor, nullptr);
+    const bool CAN_PLAYER_SEE_ACTOR = Map::player->canSeeActor(actor, nullptr);
     const string actorName = actor.getNameThe();
 
     //Dodge?
@@ -764,7 +764,7 @@ void TrapTeleport::trigger(Actor& actor, const AbilityRollResult dodgeResult)
 
     const bool    IS_PLAYER             = &actor == Map::player;
     const bool    CAN_SEE               = actor.getPropHandler().allowSee();
-    const bool    CAN_PLAYER_SEE_ACTOR  = Map::player->isSeeingActor(actor, nullptr);
+    const bool    CAN_PLAYER_SEE_ACTOR  = Map::player->canSeeActor(actor, nullptr);
     const string  actorName             = actor.getNameThe();
 
     if (IS_PLAYER)
@@ -862,7 +862,7 @@ void TrapSmoke::trigger(Actor& actor, const AbilityRollResult dodgeResult)
 
     const bool    IS_PLAYER             = &actor == Map::player;
     const bool    CAN_SEE               = actor.getPropHandler().allowSee();
-    const bool    CAN_PLAYER_SEE_ACTOR  = Map::player->isSeeingActor(actor, nullptr);
+    const bool    CAN_PLAYER_SEE_ACTOR  = Map::player->canSeeActor(actor, nullptr);
     const string  actorName             = actor.getNameThe();
 
     if (IS_PLAYER)
@@ -922,7 +922,7 @@ void TrapWeb::trigger(Actor& actor, const AbilityRollResult dodgeResult)
 
     const bool    IS_PLAYER             = &actor == Map::player;
     const bool    CAN_SEE               = actor.getPropHandler().allowSee();
-    const bool    CAN_PLAYER_SEE_ACTOR  = Map::player->isSeeingActor(actor, nullptr);
+    const bool    CAN_PLAYER_SEE_ACTOR  = Map::player->canSeeActor(actor, nullptr);
     const string  actorName             = actor.getNameThe();
 
     if (IS_PLAYER)
@@ -981,7 +981,7 @@ Dir TrapWeb::actorTryLeave(Actor& actor, const Dir dir)
 
     const bool    IS_PLAYER             = &actor == Map::player;
     const bool    PLAYER_CAN_SEE        = Map::player->getPropHandler().allowSee();
-    const bool    PLAYER_CAN_SEE_ACTOR  = Map::player->isSeeingActor(actor, nullptr);
+    const bool    PLAYER_CAN_SEE_ACTOR  = Map::player->canSeeActor(actor, nullptr);
     const string  actorName             = actor.getNameThe();
 
     TRACE << "Name of actor held: " << actorName << endl;

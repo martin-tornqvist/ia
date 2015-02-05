@@ -9,6 +9,7 @@
 #include "Render.h"
 #include "ActorMon.h"
 #include "TextFormat.h"
+#include "ActorFactory.h"
 
 using namespace std;
 
@@ -48,6 +49,10 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
 
     case JewelryEffectId::teleCtrl:
         ret = new JewelryEffectTeleControl(jewelry);
+        break;
+
+    case JewelryEffectId::summonMon:
+        ret = new JewelryEffectSummonMon(jewelry);
         break;
 
     case JewelryEffectId::light:
@@ -275,10 +280,47 @@ void JewelryEffectRandomTele::onStdTurnEquiped()
     }
 }
 
+//--------------------------------------------------------- EFFECT: SUMMON MON
+void JewelryEffectSummonMon::onStdTurnEquiped()
+{
+    const int SOUND_ONE_IN_N  = 250;
+
+    if (effectsKnown_[size_t(getId())] && Rnd::oneIn(SOUND_ONE_IN_N))
+    {
+        Log::addMsg("I hear a faint whistling sound coming nearer...", clrWhite, false,
+                    true);
+
+        Map::player->incrShock(ShockLvl::mild, ShockSrc::misc);
+    }
+
+    const int SUMMON_ONE_IN_N = 1200;
+
+    if (Rnd::oneIn(SUMMON_ONE_IN_N))
+    {
+        Log::addMsg("There is a loud whistling sound.", clrWhite, false, true);
+
+        const Pos origin = Map::player->pos;
+
+        vector<Mon*> summonedMon;
+
+        ActorFactory::summonMon(origin, {ActorId::greaterPolyp}, false, nullptr,
+                                &summonedMon);
+
+        const Mon* const mon = summonedMon[0];
+
+        if (Map::player->canSeeActor(*mon, nullptr))
+        {
+            Log::addMsg(mon->getNameA() + " appears!", clrWhite, true, true);
+        }
+
+        jewelry_->effectNoticed(getId());
+    }
+}
+
 //--------------------------------------------------------- EFFECT: CONFLICT
 void JewelryEffectConflict::onStdTurnEquiped()
 {
-    const int CONFLICT_ONE_IN_N = 20;
+    const int CONFLICT_ONE_IN_N = 25;
 
     if (Rnd::oneIn(CONFLICT_ONE_IN_N))
     {
@@ -627,6 +669,7 @@ bool canEffectsBeCombined(const JewelryEffectId id1,
     case Id::rDisease:      return id2 != Id::hpPen;
     case Id::teleCtrl:      return id2 != Id::randomTele && id2 != Id::spellReflect;
     case Id::randomTele:    return id2 != Id::teleCtrl;
+    case Id::summonMon:     return true;
     case Id::light:         return true;
     case Id::conflict:      return true;
     case Id::spellReflect:  return id2 != Id::teleCtrl;

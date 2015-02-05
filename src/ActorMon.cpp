@@ -102,7 +102,7 @@ void Mon::onActorTurn()
         //Remove self and all unseen actors from vector
         for (auto it = begin(tgtBucket); it != end(tgtBucket);)
         {
-            if (*it == this || !isSeeingActor(**it, blockedLos))
+            if (*it == this || !canSeeActor(**it, blockedLos))
             {
                 tgtBucket.erase(it);
             }
@@ -115,6 +115,19 @@ void Mon::onActorTurn()
     else //Not conflicted
     {
         getSeenFoes(tgtBucket);
+
+        // If not aware, remove player from target bucket
+        if (awareCounter_ <= 0)
+        {
+            for (auto it = begin(tgtBucket); it != end(tgtBucket); ++it)
+            {
+                if (*it == Map::player)
+                {
+                    tgtBucket.erase(it);
+                    break;
+                }
+            }
+        }
     }
 
     tgt_ = Utils::getRandomClosestActor(pos, tgtBucket);
@@ -143,7 +156,7 @@ void Mon::onActorTurn()
 
     isStealth_ = !isActorMyLeader(Map::player)                                  &&
                  data_->abilityVals.getVal(AbilityId::stealth, true, *this) > 0 &&
-                 !Map::player->isSeeingActor(*this, nullptr);
+                 !Map::player->canSeeActor(*this, nullptr);
 
     //Array used for AI purposes, e.g. to prevent tactically bad positions,
     //or prevent certain monsters from walking on a certain type of cells, etc.
@@ -314,7 +327,7 @@ void Mon::onStdTurn()
 
         if (nrTurnsUntilUnsummoned_ <= 0)
         {
-            if (Map::player->isSeeingActor(*this, nullptr))
+            if (Map::player->canSeeActor(*this, nullptr))
             {
                 Log::addMsg(getNameThe() + " suddenly disappears!");
             }
@@ -397,7 +410,7 @@ void Mon::hearSound(const Snd& snd)
 
 void Mon::speakPhrase()
 {
-    const bool IS_SEEN_BY_PLAYER = Map::player->isSeeingActor(*this, nullptr);
+    const bool IS_SEEN_BY_PLAYER = Map::player->canSeeActor(*this, nullptr);
     const string msg = IS_SEEN_BY_PLAYER ?
                        getAggroPhraseMonSeen() :
                        getAggroPhraseMonHidden();
@@ -418,7 +431,7 @@ void Mon::becomeAware(const bool IS_FROM_SEEING)
         awareCounter_                   = data_->nrTurnsAware;
         if (AWARENESS_CNT_BEFORE <= 0)
         {
-            if (IS_FROM_SEEING && Map::player->isSeeingActor(*this, nullptr))
+            if (IS_FROM_SEEING && Map::player->canSeeActor(*this, nullptr))
             {
                 Map::player->updateFov();
                 Render::drawMapAndInterface(true);
@@ -447,24 +460,29 @@ bool Mon::tryAttack(Actor& defender)
         return false;
     }
 
-    AttackOpport opport     = getAttackOpport(defender);
-    const BestAttack attack = getBestAttack(opport);
+    AiAvailAttacksData availAttacks;
+    getAvailAttacks(defender, availAttacks);
 
-    if (!attack.weapon) {return false;}
+    const AiAttData att = getAtt(availAttacks);
 
-    if (attack.isMelee)
+    if (!att.weapon)
     {
-        if (attack.weapon->getData().melee.isMeleeWpn)
+        return false;
+    }
+
+    if (att.isMelee)
+    {
+        if (att.weapon->getData().melee.isMeleeWpn)
         {
-            Attack::melee(*this, *attack.weapon, defender);
+            Attack::melee(*this, *att.weapon, defender);
             return true;
         }
         return false;
     }
 
-    if (attack.weapon->getData().ranged.isRangedWpn)
+    if (att.weapon->getData().ranged.isRangedWpn)
     {
-        if (opport.isTimeToReload)
+        if (availAttacks.isTimeToReload)
         {
             Reload::reloadWieldedWpn(*this);
             return true;
@@ -493,37 +511,42 @@ bool Mon::tryAttack(Actor& defender)
         if (isBlockedByFriend) {return false;}
 
         const int NR_TURNS_NO_RANGED = data_->rangedCooldownTurns;
-        PropDisabledRanged* prop =
+
+        PropDisabledRanged* rangedCooldownProp =
             new PropDisabledRanged(PropTurns::specific, NR_TURNS_NO_RANGED);
-        propHandler_->tryApplyProp(prop);
-        Attack::ranged(*this, *attack.weapon, defender.pos);
+
+        propHandler_->tryApplyProp(rangedCooldownProp);
+
+        Attack::ranged(*this, *att.weapon, defender.pos);
+
         return true;
     }
 
     return false;
 }
 
-AttackOpport Mon::getAttackOpport(Actor& defender)
+void Mon::getAvailAttacks(Actor& defender, AiAvailAttacksData& availAttacksRef)
 {
-    AttackOpport opport;
     if (propHandler_->allowAttack(false))
     {
-        opport.isMelee = Utils::isPosAdj(pos, defender.pos, false);
+        availAttacksRef.isMelee = Utils::isPosAdj(pos, defender.pos, false);
 
         Wpn* weapon = nullptr;
         const size_t nrIntrinsics = inv_->getIntrinsicsSize();
-        if (opport.isMelee)
+
+        if (availAttacksRef.isMelee)
         {
             if (propHandler_->allowAttackMelee(false))
             {
 
                 //Melee weapon in wielded slot?
                 weapon = static_cast<Wpn*>(inv_->getItemInSlot(SlotId::wielded));
+
                 if (weapon)
                 {
                     if (weapon->getData().melee.isMeleeWpn)
                     {
-                        opport.weapons.push_back(weapon);
+                        availAttacksRef.weapons.push_back(weapon);
                     }
                 }
 
@@ -533,12 +556,12 @@ AttackOpport Mon::getAttackOpport(Actor& defender)
                     weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
                     if (weapon->getData().melee.isMeleeWpn)
                     {
-                        opport.weapons.push_back(weapon);
+                        availAttacksRef.weapons.push_back(weapon);
                     }
                 }
             }
         }
-        else
+        else //Ranged attack
         {
             if (propHandler_->allowAttackRanged(false))
             {
@@ -550,7 +573,7 @@ AttackOpport Mon::getAttackOpport(Actor& defender)
                 {
                     if (weapon->getData().ranged.isRangedWpn)
                     {
-                        opport.weapons.push_back(weapon);
+                        availAttacksRef.weapons.push_back(weapon);
 
                         //Check if reload time instead
                         if (
@@ -559,7 +582,7 @@ AttackOpport Mon::getAttackOpport(Actor& defender)
                         {
                             if (inv_->hasAmmoForFirearmInInventory())
                             {
-                                opport.isTimeToReload = true;
+                                availAttacksRef.isTimeToReload = true;
                             }
                         }
                     }
@@ -571,54 +594,28 @@ AttackOpport Mon::getAttackOpport(Actor& defender)
                     weapon = static_cast<Wpn*>(inv_->getIntrinsicInElement(i));
                     if (weapon->getData().ranged.isRangedWpn)
                     {
-                        opport.weapons.push_back(weapon);
+                        availAttacksRef.weapons.push_back(weapon);
                     }
                 }
             }
         }
     }
-
-    return opport;
 }
 
-//TODO: Instead of using "strongest" weapon, use random
-BestAttack Mon::getBestAttack(const AttackOpport& attackOpport)
+AiAttData Mon::getAtt(const AiAvailAttacksData& availAttacks)
 {
-    BestAttack attack;
-    attack.isMelee = attackOpport.isMelee;
+    AiAttData att(nullptr, availAttacks.isMelee);
 
-    Wpn* newWpn = nullptr;
-
-    const size_t nrWpns = attackOpport.weapons.size();
-
-    //If any possible attacks found
-    if (nrWpns > 0)
+    if (availAttacks.weapons.empty())
     {
-        attack.weapon = attackOpport.weapons[0];
-
-        const ItemDataT* data = &(attack.weapon->getData());
-
-        //If there are more than one possible weapon, find strongest.
-        if (nrWpns > 1)
-        {
-            for (size_t i = 1; i < nrWpns; ++i)
-            {
-                //Found new weapon in element i.
-                newWpn = attackOpport.weapons[i];
-                const ItemDataT* newData = &(newWpn->getData());
-
-                //Compare definitions.
-                //If weapon i is stronger -
-                if (ItemData::isWpnStronger(*data, *newData, attack.isMelee))
-                {
-                    // - use new weapon instead.
-                    attack.weapon = newWpn;
-                    data = newData;
-                }
-            }
-        }
+        return att;
     }
-    return attack;
+
+    const size_t IDX = Rnd::range(0, availAttacks.weapons.size() - 1);
+
+    att.weapon = availAttacks.weapons[IDX];
+
+    return att;
 }
 
 bool Mon::isLeaderOf(const Actor* const actor) const
@@ -785,9 +782,11 @@ void Cultist::mkStartItems()
 
 void CultistElectric::mkStartItems()
 {
-    Item* item = ItemFactory::mk(ItemId::migoGun);
-    const int AMMO_CAP = static_cast<Wpn*>(item)->AMMO_CAP;
+    Item*       item        = ItemFactory::mk(ItemId::miGoGun);
+    const int   AMMO_CAP    = static_cast<Wpn*>(item)->AMMO_CAP;
+
     static_cast<Wpn*>(item)->nrAmmoLoaded = Rnd::range(AMMO_CAP / 4, AMMO_CAP);
+
     inv_->putInSlot(SlotId::wielded, item);
 
     if (Rnd::oneIn(3))
@@ -900,10 +899,10 @@ bool Vortex::onActorTurn_()
             TRACE << playerPos.x << "," << playerPos.y << ")" << endl;
             bool blockedLos[MAP_W][MAP_H];
             MapParse::run(CellCheck::BlocksLos(), blockedLos);
-            if (isSeeingActor(*(Map::player), blockedLos))
+            if (canSeeActor(*(Map::player), blockedLos))
             {
                 TRACE << "I am seeing the player" << endl;
-                if (Map::player->isSeeingActor(*this, nullptr))
+                if (Map::player->canSeeActor(*this, nullptr))
                 {
                     Log::addMsg("The Vortex attempts to pull me in!");
                 }
@@ -967,7 +966,7 @@ bool Ghost::onActorTurn_()
         bool blocked[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksLos(), blocked);
 
-        const bool PLAYER_SEES_ME = Map::player->isSeeingActor(*this, blocked);
+        const bool PLAYER_SEES_ME = Map::player->canSeeActor(*this, blocked);
         const string refer        = PLAYER_SEES_ME ? getNameThe() : "It";
 
         Log::addMsg(refer + " reaches for me... ");
@@ -1010,19 +1009,30 @@ void Wraith::mkStartItems()
 
 void MiGo::mkStartItems()
 {
-    Item* item = ItemFactory::mk(ItemId::migoGun);
-    const int AMMO_CAP = static_cast<Wpn*>(item)->AMMO_CAP;
+    Item*       item        = ItemFactory::mk(ItemId::miGoGun);
+    const int   AMMO_CAP    = static_cast<Wpn*>(item)->AMMO_CAP;
+
     static_cast<Wpn*>(item)->nrAmmoLoaded = Rnd::range(AMMO_CAP / 4, AMMO_CAP);
+
     inv_->putInSlot(SlotId::wielded, item);
 
-    if (Rnd::oneIn(9))
+    if (getId() == ActorId::miGo)
     {
-        inv_->putInGeneral(ItemFactory::mk(ItemId::migoGunAmmo));
+        inv_->putInIntrinsics(ItemFactory::mk(ItemId::miGoSting));
+    }
+    else if (getId() == ActorId::miGoCommander)
+    {
+        inv_->putInIntrinsics(ItemFactory::mk(ItemId::miGoCommanderSting));
     }
 
     if (Rnd::oneIn(9))
     {
-        inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorMigo));
+        inv_->putInGeneral(ItemFactory::mk(ItemId::miGoGunAmmo));
+    }
+
+    if (Rnd::oneIn(9))
+    {
+        inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorMiGo));
     }
 
     spellsKnown_.push_back(new SpellTeleport);
@@ -1046,6 +1056,11 @@ void SentryDrone::mkStartItems()
 void FlyingPolyp::mkStartItems()
 {
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::polypTentacle));
+}
+
+void GreaterPolyp::mkStartItems()
+{
+    inv_->putInIntrinsics(ItemFactory::mk(ItemId::greaterPolypTentacle));
 }
 
 void Rat::mkStartItems()
@@ -1120,9 +1135,9 @@ bool Mummy::onActorTurn_()
 //        bool blockedLos[MAP_W][MAP_H];
 //        MapParse::run(CellCheck::BlocksLos(), blockedLos);
 //
-//        if (isSeeingActor(*Map::player, blockedLos))
+//        if (canSeeActor(*Map::player, blockedLos))
 //        {
-//            if (Map::player->isSeeingActor(*this, nullptr))
+//            if (Map::player->canSeeActor(*this, nullptr))
 //            {
 //                const string name = getNameThe();
 //
@@ -1162,7 +1177,7 @@ bool Khephren::onActorTurn_()
         bool blocked[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksLos(), blocked);
 
-        if (isSeeingActor(*(Map::player), blocked))
+        if (canSeeActor(*(Map::player), blocked))
         {
             MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
 
@@ -1270,7 +1285,7 @@ bool KeziahMason::onActorTurn_()
         bool blockedLos[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
-        if (isSeeingActor(*(Map::player), blockedLos))
+        if (canSeeActor(*(Map::player), blockedLos))
         {
             MapParse::run(CellCheck::BlocksMoveCmn(true), blockedLos);
 
@@ -1324,7 +1339,7 @@ void LengElder::onStdTurn_()
         {
             bool blockedLos[MAP_W][MAP_H];
             MapParse::run(CellCheck::BlocksLos(), blockedLos);
-            if (isSeeingActor(*Map::player, blockedLos))
+            if (canSeeActor(*Map::player, blockedLos))
             {
                 if (nrTurnsToHostile_ <= 0)
                 {
@@ -1339,7 +1354,7 @@ void LengElder::onStdTurn_()
         }
         else //Has not given item to player
         {
-            const bool IS_PLAYER_SEE_ME = Map::player->isSeeingActor(*this, nullptr);
+            const bool IS_PLAYER_SEE_ME = Map::player->canSeeActor(*this, nullptr);
             const bool IS_PLAYER_ADJ    = Utils::isPosAdj(pos, Map::player->pos, false);
             if (IS_PLAYER_SEE_ME && IS_PLAYER_ADJ)
             {
@@ -1410,7 +1425,7 @@ void ColorOOSpace::onStdTurn_()
 
     restoreHp(1, false);
 
-    if (Map::player->isSeeingActor(*this, nullptr))
+    if (Map::player->canSeeActor(*this, nullptr))
     {
         Map::player->getPropHandler().tryApplyProp(new PropConfused(PropTurns::std));
     }
@@ -1541,7 +1556,7 @@ bool LordOfSpiders::onActorTurn_()
     {
         const Pos playerPos = Map::player->pos;
 
-        if (Map::player->isSeeingActor(*this, nullptr))
+        if (Map::player->canSeeActor(*this, nullptr))
         {
             Log::addMsg(data_->spellCastMsg);
         }
@@ -1613,7 +1628,7 @@ bool MajorClaphamLee::onActorTurn_()
         bool blockedLos[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
-        if (isSeeingActor(*(Map::player), blockedLos))
+        if (canSeeActor(*(Map::player), blockedLos))
         {
             Log::addMsg("Major Clapham Lee calls forth his Tomb-Legions!");
             vector<ActorId> monIds;

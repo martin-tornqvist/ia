@@ -71,7 +71,7 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPI
         else //Target cell is free
         {
             const bool IS_PLAYER_SEE_DEF = IS_DEF_MON ?
-                                           Map::player->isSeeingActor(defender, nullptr) :
+                                           Map::player->canSeeActor(defender, nullptr) :
                                            true;
 
             if (i == 0)

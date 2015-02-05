@@ -94,7 +94,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
         }
         else
         {
-            if (Map::player->isSeeingActor(actorReloading, nullptr))
+            if (Map::player->canSeeActor(actorReloading, nullptr))
             {
                 Log::addMsg(actorName + swiftStr + " reloads.");
             }
@@ -108,7 +108,7 @@ void printMsgAndPlaySfx(Actor& actorReloading, Wpn* const wpn,
         }
         else
         {
-            if (Map::player->isSeeingActor(actorReloading, nullptr))
+            if (Map::player->canSeeActor(actorReloading, nullptr))
             {
                 Log::addMsg(actorName + " fumbles with " + ammoName + ".");
             }

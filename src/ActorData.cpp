@@ -85,7 +85,7 @@ void initDataList()
     d.isAutoSpawnAllowed = false;
     d.actorSize = ActorSize::humanoid;
     d.isHumanoid = true;
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Reanimated Corpse";
@@ -129,7 +129,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Reanimated Corpse";
@@ -173,7 +173,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Bloated Corpse";
@@ -216,7 +216,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "Major Clapham-Lee";
@@ -259,7 +259,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "Dean Halsey";
@@ -302,7 +302,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Cultist";
@@ -341,7 +341,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::human);
     d.nativeRooms.push_back(RoomType::ritual);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Cultist";
@@ -381,7 +381,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::human);
     d.nativeRooms.push_back(RoomType::ritual);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Cultist";
@@ -421,7 +421,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::human);
     d.nativeRooms.push_back(RoomType::ritual);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "Keziah Mason";
@@ -471,7 +471,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::ritual);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "Brown Jenkin";
@@ -522,7 +522,7 @@ void initDataList()
     d.erraticMovePct = ActorErraticFreq::rare;
     d.monShockLvl = MonShockLvl::scary;
     d.isRat = true;
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "Elder Hierophant";
@@ -559,7 +559,7 @@ void initDataList()
     d.nrTurnsAware = 999;
     d.erraticMovePct = ActorErraticFreq::never;
     d.monShockLvl = MonShockLvl::mindShattering;
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
 //  d.nameA = "The Lord of Pestilence";
@@ -615,7 +615,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::human);
     d.nativeRooms.push_back(RoomType::ritual);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Green Spider";
@@ -650,7 +650,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::spider);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A White Spider";
@@ -685,7 +685,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::spider);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Red Spider";
@@ -720,7 +720,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::spider);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Shadow Spider";
@@ -757,7 +757,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::spider);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Leng Spider";
@@ -796,7 +796,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::spider);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Fire hound";
@@ -841,7 +841,7 @@ void initDataList()
     d.canBeSummoned = true;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::monster);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Frost hound";
@@ -886,7 +886,7 @@ void initDataList()
     d.canBeSummoned = true;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::monster);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "Zuul the Gatekeeper";
@@ -935,7 +935,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::human);
     d.nativeRooms.push_back(RoomType::ritual);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Ghost";
@@ -977,7 +977,7 @@ void initDataList()
     d.deathMsgOverride = "The Ghost is put to rest.";
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Phantasm";
@@ -1021,7 +1021,7 @@ void initDataList()
     d.deathMsgOverride = "The Phantasm is put to rest.";
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Wraith";
@@ -1064,7 +1064,7 @@ void initDataList()
     d.deathMsgOverride = "The Wraith is put to rest.";
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Rat";
@@ -1101,7 +1101,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::human);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Rat-thing";
@@ -1146,7 +1146,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::human);
     d.nativeRooms.push_back(RoomType::crypt);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Wolf";
@@ -1187,7 +1187,7 @@ void initDataList()
     d.canBeSummoned = true;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Giant Bat";
@@ -1229,7 +1229,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::forest);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Byakhee";
@@ -1278,7 +1278,7 @@ void initDataList()
     d.canBeSummoned = true;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Giant Mantis";
@@ -1315,7 +1315,7 @@ void initDataList()
     d.canBeSummoned = false;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Giant Locust";
@@ -1352,7 +1352,7 @@ void initDataList()
     d.canBleed = false;
     d.canBeSummoned = false;
     d.nativeRooms.push_back(RoomType::plain);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Fungi from Yuggoth";
@@ -1372,9 +1372,11 @@ void initDataList()
     d.spellCooldownTurns = 3;
     d.glyph = 'E';
     d.color = clrBrownDrk;
-    d.tile = TileId::migo;
+    d.tile = TileId::miGo;
     d.hp = 10;
     d.spi = 20;
+    d.dmgMelee = 3;
+    d.abilityVals.setVal(AbilityId::melee, 40);
     d.abilityVals.setVal(AbilityId::ranged, 55);
     d.intrProps[int(PropId::flying)] = true;
     d.spawnMinDLVL = 6;
@@ -1382,25 +1384,26 @@ void initDataList()
     d.actorSize = ActorSize::humanoid;
     d.canBashDoors = true;
     d.canOpenDoors = true;
-    d.nrTurnsAware = 50;
-    d.descr = "Fungi are more closely related to animals than plants, so it's no "
-              "wonder that on some worlds, fungal life evolved to dominate "
-              "animal based intelligences. The Mi-go, as they are called, come "
-              "from such a world. More like crustaceans than any other "
-              "terrestrial life form, they find themselves somewhat hampered by "
-              "our planet's thicker atmosphere and heavy gravity. They are a "
-              "highly scientific race with great aptitude for surgery. Typical "
-              "Mi-go have heads like large exposed brains, with many "
-              "convolutions on the wrinkled surfaces; six to eight limbs, a "
-              "single pair of vast membranous wings, and a long semi-prehensile "
-              "tail trailing behind. They have visited Earth for centuries to "
-              "mine certain minerals not available on their icy world, and more "
-              "recently, to study its odd inhabitants. The mi-go are responsible "
-              "for many \"alien abduction\" kidnappings. Physically they are not "
-              "much more robust than the average human, they rely upon their "
-              "superior science to subdue any primitives who stumble upon their "
-              "mines and outposts.";
-    d.spellCastMsg = "The Fungi makes strange gestures in the air.";
+    d.nrTurnsAware = 12;
+    d.descr =
+        "Fungi are more closely related to animals than plants, so it's no "
+        "wonder that on some worlds, fungal life evolved to dominate "
+        "animal based intelligences. The Mi-go, as they are called, come "
+        "from such a world. More like crustaceans than any other "
+        "terrestrial life form, they find themselves somewhat hampered by "
+        "our planet's thicker atmosphere and heavy gravity. They are a "
+        "highly scientific race with great aptitude for surgery. Typical "
+        "Mi-go have heads like large exposed brains, with many "
+        "convolutions on the wrinkled surfaces; six to eight limbs, a "
+        "single pair of vast membranous wings, and a long semi-prehensile "
+        "tail trailing behind. They have visited Earth for centuries to "
+        "mine certain minerals not available on their icy world, and more "
+        "recently, to study its odd inhabitants. The mi-go are responsible "
+        "for many \"alien abduction\" kidnappings. Physically they are not "
+        "much more robust than the average human, they rely upon their "
+        "superior science to subdue any primitives who stumble upon their "
+        "mines and outposts.";
+    d.spellCastMsg = d.nameThe + " makes strange gestures in the air.";
     d.aggroTextMonSeen = d.nameThe + " speaks at me in a droning voice.";
     d.aggroTextMonHidden = "I hear a droning voice.";
     d.erraticMovePct = ActorErraticFreq::rare;
@@ -1409,7 +1412,50 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::forest);
     d.nativeRooms.push_back(RoomType::cave);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
+    d.reset();
+
+    d.nameA = "A Mi-go Commander";
+    d.nameThe = "The Mi-go Commander";
+    d.corpseNameA = "A dead Fungi from Yuggoth";
+    d.corpseNameThe = "The dead Fungi from Yuggoth";
+    d.id = ActorId::miGoCommander;
+    d.ai[int(AiId::looks)] = true;
+    d.ai[int(AiId::makesRoomForFriend)] = true;
+    d.ai[int(AiId::attacks)] = true;
+    d.ai[int(AiId::pathsToTgtWhenAware)] = true;
+    d.ai[int(AiId::movesToTgtWhenLos)] = false;
+    d.ai[int(AiId::movesToLair)] = false;
+    d.ai[int(AiId::movesToLeader)] = true;
+    d.speed = ActorSpeed::fast;
+    d.rangedCooldownTurns = 4;
+    d.spellCooldownTurns = 3;
+    d.glyph = 'E';
+    d.color = clrRed;
+    d.tile = TileId::miGo;
+    d.hp = 22;
+    d.spi = 20;
+    d.dmgMelee = 6;
+    d.abilityVals.setVal(AbilityId::melee, 55);
+    d.abilityVals.setVal(AbilityId::ranged, 55);
+    d.intrProps[int(PropId::flying)] = true;
+    d.spawnMinDLVL = 12;
+    d.groupSize = MonGroupSize::alone;
+    d.actorSize = ActorSize::humanoid;
+    d.canBashDoors = true;
+    d.canOpenDoors = true;
+    d.nrTurnsAware = 12;
+    d.descr = data[size_t(ActorId::miGo)].descr;
+    d.spellCastMsg = d.nameThe + " makes strange gestures in the air.";
+    d.aggroTextMonSeen = d.nameThe + " speaks at me in a droning voice.";
+    d.aggroTextMonHidden = "I hear a droning voice.";
+    d.erraticMovePct = ActorErraticFreq::rare;
+    d.monShockLvl = MonShockLvl::scary;
+    d.nativeRooms.push_back(RoomType::plain);
+    d.nativeRooms.push_back(RoomType::forest);
+    d.nativeRooms.push_back(RoomType::cave);
+    d.nativeRooms.push_back(RoomType::chasm);
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Flying Polyp";
@@ -1417,7 +1463,7 @@ void initDataList()
     d.corpseNameA = "A dead Polyp";
     d.corpseNameThe = "The dead Polyp";
     d.id = ActorId::flyingPolyp;
-    d.canBeSummoned = false;
+    d.canBeSummoned = true;
     d.canBleed = false;
     d.ai[int(AiId::looks)] = false;
     d.ai[int(AiId::makesRoomForFriend)] = true;
@@ -1436,7 +1482,6 @@ void initDataList()
     d.dmgMelee = 4;
     d.abilityVals.setVal(AbilityId::melee, 60);
     d.abilityVals.setVal(AbilityId::stealth, 85);
-//  d.intrProps[int(PropId::ethereal)] = true; //Does not fit well with stealth
     d.intrProps[int(PropId::flying)] = true;
     d.intrProps[int(PropId::rPhys)] = true;
     d.intrProps[int(PropId::rConf)] = true;
@@ -1453,20 +1498,72 @@ void initDataList()
     d.canBashDoors = false;
     d.canOpenDoors = false;
     d.nrTurnsAware = 6;
-    d.descr = "Flying polyps are a horrible elder race of half polypous, utterly alien "
-              "entities. They are only partly material and have the power of aerial "
-              "motion, despite the absence of wings. Their senses does not include sight, "
-              "but what senses they have can penetrate all material obstructions. They "
-              "are invulnerable to normal means of damage, though they can be destroyed "
-              "by certain forms of electrical energy.";
-    d.aggroTextMonSeen = d.nameThe + " makes shrill whistling noises.";
+    d.descr =
+        "Flying polyps are a horrible elder race of half polypous, utterly alien "
+        "entities. They are only partly material and have the power of aerial "
+        "motion, despite the absence of wings. Their senses does not include sight, "
+        "but what senses they have can penetrate all material obstructions. They "
+        "are invulnerable to normal means of damage, though they can be destroyed "
+        "by certain forms of electrical energy.";
+    d.aggroTextMonSeen = d.nameThe + " makes shrill whistling sounds.";
     d.aggroTextMonHidden = "I hear a shrill whistling.";
     d.erraticMovePct = ActorErraticFreq::somewhat;
     d.monShockLvl = MonShockLvl::terrifying;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::cave);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
+    d.reset();
+
+    d.nameA = "A Greater Polyp";
+    d.nameThe = "The Greater Polyp";
+    d.corpseNameA = "A dead Polyp";
+    d.corpseNameThe = "The dead Polyp";
+    d.id = ActorId::greaterPolyp;
+    d.canBeSummoned = false;
+    d.canBleed = false;
+    d.ai[int(AiId::looks)] = false;
+    d.ai[int(AiId::makesRoomForFriend)] = true;
+    d.ai[int(AiId::attacks)] = true;
+    d.ai[int(AiId::pathsToTgtWhenAware)] = false;
+    d.ai[int(AiId::movesToTgtWhenLos)] = true;
+    d.ai[int(AiId::movesToLair)] = true;
+    d.ai[int(AiId::movesToLeader)] = true;
+    d.speed = ActorSpeed::normal;
+    d.spellCooldownTurns = 3;
+    d.glyph = 'E';
+    d.color = clrRed;
+    d.tile = TileId::polyp;
+    d.hp = 50;
+    d.spi = 30;
+    d.dmgMelee = 12;
+    d.abilityVals.setVal(AbilityId::melee, 70);
+    d.abilityVals.setVal(AbilityId::stealth, 85);
+    d.intrProps[int(PropId::flying)] = true;
+    d.intrProps[int(PropId::rPhys)] = true;
+    d.intrProps[int(PropId::rConf)] = true;
+    d.intrProps[int(PropId::rFear)] = true;
+    d.intrProps[int(PropId::rAcid)] = true;
+    d.intrProps[int(PropId::rCold)] = true;
+    d.intrProps[int(PropId::rFire)] = true;
+    d.intrProps[int(PropId::rPoison)] = true;
+    d.intrProps[int(PropId::rSleep)] = true;
+    d.preventKnockback = true;
+    d.spawnMinDLVL = DLVL_LAST - 4;
+    d.groupSize = MonGroupSize::alone;
+    d.actorSize = ActorSize::giant;
+    d.canBashDoors = false;
+    d.canOpenDoors = false;
+    d.nrTurnsAware = 6;
+    d.descr = data[size_t(ActorId::flyingPolyp)].descr;
+    d.aggroTextMonSeen = d.nameThe + " makes shrill whistling sounds.";
+    d.aggroTextMonHidden = "I hear a shrill whistling.";
+    d.erraticMovePct = ActorErraticFreq::very;
+    d.monShockLvl = MonShockLvl::mindShattering;
+    d.nativeRooms.push_back(RoomType::plain);
+    d.nativeRooms.push_back(RoomType::cave);
+    d.nativeRooms.push_back(RoomType::chasm);
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Ghoul";
@@ -1515,7 +1612,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::crypt);
     d.nativeRooms.push_back(RoomType::cave);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Shadow";
@@ -1560,7 +1657,7 @@ void initDataList()
     d.monShockLvl = MonShockLvl::scary;
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::plain);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Mummy";
@@ -1599,7 +1696,7 @@ void initDataList()
     d.isHumanoid = true;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::cave);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Crocodile Head Mummy";
@@ -1639,7 +1736,7 @@ void initDataList()
     d.isHumanoid = true;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::cave);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "Khephren";
@@ -1682,7 +1779,7 @@ void initDataList()
     d.isUndead = true;
     d.isHumanoid = true;
     d.nativeRooms.push_back(RoomType::plain);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "Nitokris";
@@ -1728,7 +1825,7 @@ void initDataList()
     d.isHumanoid = true;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::cave);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Deep One";
@@ -1773,7 +1870,7 @@ void initDataList()
     d.monShockLvl = MonShockLvl::scary;
     d.nativeRooms.push_back(RoomType::flooded);
     d.nativeRooms.push_back(RoomType::muddy);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Carnivorous Ape";
@@ -1816,7 +1913,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::forest);
     d.nativeRooms.push_back(RoomType::cave);
     d.nativeRooms.push_back(RoomType::monster);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Worm Mass";
@@ -1854,7 +1951,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::monster);
     d.nativeRooms.push_back(RoomType::cave);
     d.nativeRooms.push_back(RoomType::forest);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Dust Vortex";
@@ -1899,7 +1996,7 @@ void initDataList()
     d.monShockLvl = MonShockLvl::unsettling;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::cave);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Fire Vortex";
@@ -1944,7 +2041,7 @@ void initDataList()
     d.monShockLvl = MonShockLvl::unsettling;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::cave);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Frost Vortex";
@@ -1989,7 +2086,7 @@ void initDataList()
     d.monShockLvl = MonShockLvl::unsettling;
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::cave);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Black Ooze";
@@ -2009,7 +2106,7 @@ void initDataList()
     d.tile = TileId::ooze;
     d.hp = 14;
     d.spi = 12;
-    d.dmgMelee = 3;
+    d.dmgMelee = 5;
     d.abilityVals.setVal(AbilityId::melee, 50);
     d.intrProps[int(PropId::ooze)] = true;
     d.intrProps[int(PropId::rFear)] = true;
@@ -2017,7 +2114,7 @@ void initDataList()
     d.spawnMinDLVL = 3;
     d.spawnMaxDLVL = d.spawnMinDLVL + 5;
     d.canSeeInDarkness = true;
-    d.groupSize = MonGroupSize::group;
+    d.groupSize = MonGroupSize::horde;
     d.actorSize = ActorSize::floor;
     d.nrTurnsAware = 250;
     d.isAutoDescrAllowed = true;
@@ -2038,7 +2135,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::flooded);
     d.nativeRooms.push_back(RoomType::muddy);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Clear Ooze";
@@ -2058,7 +2155,7 @@ void initDataList()
     d.tile = TileId::ooze;
     d.hp = 8;
     d.spi = 12;
-    d.dmgMelee = 3;
+    d.dmgMelee = 5;
     d.abilityVals.setVal(AbilityId::melee, 50);
     d.abilityVals.setVal(AbilityId::stealth, 90);
     d.intrProps[int(PropId::ooze)] = true;
@@ -2067,7 +2164,7 @@ void initDataList()
     d.spawnMinDLVL = 4;
     d.spawnMaxDLVL = d.spawnMinDLVL + 5;
     d.canSeeInDarkness = true;
-    d.groupSize = MonGroupSize::group;
+    d.groupSize = MonGroupSize::horde;
     d.actorSize = ActorSize::floor;
     d.nrTurnsAware = 250;
     d.isAutoDescrAllowed = true;
@@ -2088,7 +2185,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::flooded);
     d.nativeRooms.push_back(RoomType::muddy);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Putrid Ooze";
@@ -2116,7 +2213,7 @@ void initDataList()
     d.spawnMinDLVL = 5;
     d.spawnMaxDLVL = d.spawnMinDLVL + 5;
     d.canSeeInDarkness = true;
-    d.groupSize = MonGroupSize::group;
+    d.groupSize = MonGroupSize::horde;
     d.actorSize = ActorSize::floor;
     d.nrTurnsAware = 250;
     d.isAutoDescrAllowed = true;
@@ -2138,7 +2235,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::flooded);
     d.nativeRooms.push_back(RoomType::muddy);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Poison Ooze";
@@ -2167,7 +2264,7 @@ void initDataList()
     d.spawnMinDLVL = 9;
     d.spawnMaxDLVL = d.spawnMinDLVL + 5;
     d.canSeeInDarkness = true;
-    d.groupSize = MonGroupSize::group;
+    d.groupSize = MonGroupSize::horde;
     d.actorSize = ActorSize::floor;
     d.nrTurnsAware = 250;
     d.isAutoDescrAllowed = true;
@@ -2189,7 +2286,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::flooded);
     d.nativeRooms.push_back(RoomType::muddy);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Colour out of space";
@@ -2235,7 +2332,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::flooded);
     d.nativeRooms.push_back(RoomType::muddy);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Chthonian";
@@ -2283,7 +2380,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::plain);
     d.nativeRooms.push_back(RoomType::cave);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Hunting Horror";
@@ -2335,7 +2432,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::cave);
     d.nativeRooms.push_back(RoomType::chasm);
     d.erraticMovePct = ActorErraticFreq::somewhat;
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "A Sentry Drone";
@@ -2385,7 +2482,7 @@ void initDataList()
     d.erraticMovePct = ActorErraticFreq::rare;
     d.monShockLvl = MonShockLvl::unsettling;
     d.nativeRooms.push_back(RoomType::plain);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.id = ActorId::mold;
@@ -2427,7 +2524,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::muddy);
     d.nativeRooms.push_back(RoomType::forest);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "Gas Spore";
@@ -2472,7 +2569,7 @@ void initDataList()
     d.nativeRooms.push_back(RoomType::muddy);
     d.nativeRooms.push_back(RoomType::forest);
     d.nativeRooms.push_back(RoomType::chasm);
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 
     d.nameA = "The Dark One";
@@ -2515,7 +2612,7 @@ void initDataList()
     d.monShockLvl = MonShockLvl::terrifying;
     d.isHumanoid = true;
     d.canLeaveCorpse = false;
-    data[int(d.id)] = d;
+    data[size_t(d.id)] = d;
     d.reset();
 }
 

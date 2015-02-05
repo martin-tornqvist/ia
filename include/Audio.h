@@ -24,7 +24,7 @@ enum class SfxId
     shotgunReload,
     machineGunFire,
     machineGunReload,
-    migoGunFire,
+    miGoGunFire,
     spikeGun,
 
     //Environment action sounds

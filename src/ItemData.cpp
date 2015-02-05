@@ -581,7 +581,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::cocoon);
     data[int(d->id)] = d;
 
-    d = new ItemDataT(ItemId::migoGun);
+    d = new ItemDataT(ItemId::miGoGun);
     resetData(*d, ItemType::rangedWpn);
     d->baseName =
     {
@@ -595,26 +595,26 @@ void initDataList()
     };
     d->spawnStdRange = Range(-1, -1);
     d->weight = ItemWeight::medium;
-    d->tile = TileId::migoGun;
+    d->tile = TileId::miGoGun;
     d->clr = clrYellow;
     d->ranged.dmg = DiceParam(3, 6, 0);
     d->ranged.hitChanceMod = 5;
     d->ranged.effectiveRange = 4;
     d->ranged.propApplied = new PropParalyzed(PropTurns::specific, 2);
     d->ranged.dmgType = DmgType::electric;
-    d->ranged.ammoItemId = ItemId::migoGunAmmo;
+    d->ranged.ammoItemId = ItemId::miGoGunAmmo;
     d->ranged.hasInfiniteAmmo = false;
     d->ranged.missileLeavesTrail = true;
     d->ranged.missileClr = clrYellow;
     d->melee.attMsgs = {"strike", "strikes me with a Mi-go Electric Gun"};
     d->ranged.attMsgs = {"fire", "fires a Mi-go Electric Gun"};
     d->ranged.sndMsg = "I hear a bolt of electricity.";
-    d->ranged.attSfx = SfxId::migoGunFire;
+    d->ranged.attSfx = SfxId::miGoGunFire;
     d->ranged.reloadSfx = SfxId::machineGunReload;
     d->ranged.makesRicochetSnd = false;
     data[int(d->id)] = d;
 
-    d = new ItemDataT(ItemId::migoGunAmmo);
+    d = new ItemDataT(ItemId::miGoGunAmmo);
     resetData(*d, ItemType::ammoClip);
     d->baseName =
     {
@@ -1256,6 +1256,13 @@ void initDataList()
     setDmgFromMonId(*d, ActorId::flyingPolyp);
     data[int(d->id)] = d;
 
+    d = new ItemDataT(ItemId::greaterPolypTentacle);
+    resetData(*d, ItemType::meleeWpnIntr);
+    d->melee.attMsgs = {"", "grips me with a tentacle"};
+    d->melee.propApplied = new PropParalyzed(PropTurns::specific, 1);
+    setDmgFromMonId(*d, ActorId::greaterPolyp);
+    data[int(d->id)] = d;
+
     d = new ItemDataT(ItemId::ghoulClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
@@ -1373,6 +1380,20 @@ void initDataList()
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "releases spores at me"};
     setDmgFromMonId(*d, ActorId::mold);
+    d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
+    data[int(d->id)] = d;
+
+    d = new ItemDataT(ItemId::miGoSting);
+    resetData(*d, ItemType::meleeWpnIntr);
+    d->melee.attMsgs = {"", "stings me"};
+    setDmgFromMonId(*d, ActorId::miGo);
+    d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
+    data[int(d->id)] = d;
+
+    d = new ItemDataT(ItemId::miGoCommanderSting);
+    resetData(*d, ItemType::meleeWpnIntr);
+    d->melee.attMsgs = {"", "stings me"};
+    setDmgFromMonId(*d, ActorId::miGoCommander);
     d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
     data[int(d->id)] = d;
 
@@ -1496,7 +1517,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::cabinet);
     data[int(d->id)] = d;
 
-    d = new ItemDataT(ItemId::armorMigo);
+    d = new ItemDataT(ItemId::armorMiGo);
     resetData(*d, ItemType::armor);
     d->baseName = {"Mi-go Bio-armor", "", "a Mi-go Bio-armor"};
     d->baseDescr =
@@ -1506,10 +1527,10 @@ void initDataList()
         "It is very disturbing for a human to wear (+15% shock while worn)."
     };
     d->spawnStdRange = Range(-1, -1);
-    d->weight = ItemWeight::light;
+    d->weight = ItemWeight::medium;
     d->shockWhileEquipped = 15;
     d->clr = clrMagenta;
-    d->tile = TileId::migoArmor;
+    d->tile = TileId::miGoArmor;
     d->armor.armorPoints = 2;
     d->armor.dmgToDurabilityFactor = 1.5;
     d->landOnHardSndMsg = "";
