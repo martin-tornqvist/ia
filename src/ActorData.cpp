@@ -1423,7 +1423,7 @@ void initDataList()
     d.ai[int(AiId::looks)] = true;
     d.ai[int(AiId::makesRoomForFriend)] = true;
     d.ai[int(AiId::attacks)] = true;
-    d.ai[int(AiId::pathsToTgtWhenAware)] = true;
+    d.ai[int(AiId::pathsToTgtWhenAware)] = false;
     d.ai[int(AiId::movesToTgtWhenLos)] = false;
     d.ai[int(AiId::movesToLair)] = false;
     d.ai[int(AiId::movesToLeader)] = true;
@@ -1433,7 +1433,7 @@ void initDataList()
     d.glyph = 'E';
     d.color = clrRed;
     d.tile = TileId::miGo;
-    d.hp = 22;
+    d.hp = 24;
     d.spi = 20;
     d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 55);
@@ -1534,7 +1534,7 @@ void initDataList()
     d.glyph = 'E';
     d.color = clrRed;
     d.tile = TileId::polyp;
-    d.hp = 50;
+    d.hp = 70;
     d.spi = 30;
     d.dmgMelee = 12;
     d.abilityVals.setVal(AbilityId::melee, 70);
@@ -2106,7 +2106,7 @@ void initDataList()
     d.tile = TileId::ooze;
     d.hp = 14;
     d.spi = 12;
-    d.dmgMelee = 5;
+    d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 50);
     d.intrProps[int(PropId::ooze)] = true;
     d.intrProps[int(PropId::rFear)] = true;
@@ -2155,7 +2155,7 @@ void initDataList()
     d.tile = TileId::ooze;
     d.hp = 8;
     d.spi = 12;
-    d.dmgMelee = 5;
+    d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 50);
     d.abilityVals.setVal(AbilityId::stealth, 90);
     d.intrProps[int(PropId::ooze)] = true;
@@ -2205,7 +2205,7 @@ void initDataList()
     d.tile = TileId::ooze;
     d.hp = 14;
     d.spi = 12;
-    d.dmgMelee = 5;
+    d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 50);
     d.intrProps[int(PropId::ooze)] = true;
     d.intrProps[int(PropId::rFear)] = true;
@@ -2255,7 +2255,7 @@ void initDataList()
     d.tile = TileId::ooze;
     d.hp = 16;
     d.spi = 12;
-    d.dmgMelee = 7;
+    d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 50);
     d.intrProps[int(PropId::ooze)] = true;
     d.intrProps[int(PropId::rFear)] = true;

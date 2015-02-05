@@ -947,8 +947,6 @@ void Player::onStdTurn()
         shockTmp_ += Map::cells[p.x][p.y].rigid->getShockWhenAdj();
     }
 
-    shockTmp_ = min(99.0, shockTmp_);
-
     //Temporary shock from items
     for (auto& slot : inv_->slots_)
     {
@@ -962,6 +960,8 @@ void Player::onStdTurn()
     {
         shockTmp_ += item->getData().shockWhileInBackpack;
     }
+
+    shockTmp_ = min(99.0, shockTmp_);
 
     if (activeExplosive)   {activeExplosive->onStdTurnPlayerHoldIgnited();}
 
@@ -1142,21 +1142,28 @@ void Player::onStdTurn()
 
         if (!props[int(PropId::poisoned)])
         {
-            const bool IS_RAPID_REC   =
-                PlayerBon::traits[int(Trait::rapidRecoverer)];
+            int nrTurnsPerHp = 40;
 
-            const bool IS_SURVIVALIST =
-                PlayerBon::traits[int(Trait::survivalist)];
+            if (PlayerBon::traits[int(Trait::rapidRecoverer)])  {nrTurnsPerHp -= 10;}
+            if (PlayerBon::traits[int(Trait::survivalist)])     {nrTurnsPerHp -= 10;}
 
-            const int REGEN_N_TURNS   = IS_SURVIVALIST  ? 20 :
-                                        IS_RAPID_REC    ? 30 : 40;
+            //Items affect HP regen?
+            for (const auto& slot : inv_->slots_)
+            {
+                if (slot.item)
+                {
+                    nrTurnsPerHp += slot.item->getHpRegenChange(InvType::slots);
+                }
+            }
+
+            for (const Item* const item : inv_->general_)
+            {
+                nrTurnsPerHp += item->getHpRegenChange(InvType::general);
+            }
 
             const int TURN = GameTime::getTurn();
 
-            if (
-                getHp() < getHpMax(true)    &&
-                (TURN % REGEN_N_TURNS == 0) &&
-                TURN > 1)
+            if (getHp() < getHpMax(true) && (TURN % nrTurnsPerHp == 0)  && TURN > 1)
             {
                 ++hp_;
             }

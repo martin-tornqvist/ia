@@ -55,6 +55,12 @@ public:
     virtual void            onEquip()                             {}
     virtual UnequipAllowed  onUnequip() {return UnequipAllowed::yes;}
 
+    virtual int getHpRegenChange(const InvType invType) const
+    {
+        (void)invType;
+        return 0;
+    }
+
     //Used when attempting to fire or throw an item
     bool isInEffectiveRangeLmt(const Pos& p0, const Pos& p1) const;
 

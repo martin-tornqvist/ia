@@ -10,6 +10,7 @@
 #include "ActorMon.h"
 #include "TextFormat.h"
 #include "ActorFactory.h"
+#include "FeatureRigid.h"
 
 using namespace std;
 
@@ -83,12 +84,24 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
         ret = new JewelryEffectRandomTele(jewelry);
         break;
 
+    case JewelryEffectId::fire:
+        ret = new JewelryEffectFire(jewelry);
+        break;
+
     case JewelryEffectId::conflict:
         ret = new JewelryEffectConflict(jewelry);
         break;
 
     case JewelryEffectId::burden:
         ret = new JewelryEffectBurden(jewelry);
+        break;
+
+    case JewelryEffectId::hpRegenBon:
+        ret = new JewelryEffectHpRegenBon(jewelry);
+        break;
+
+    case JewelryEffectId::hpRegenPen:
+        ret = new JewelryEffectHpRegenPen(jewelry);
         break;
 
     case JewelryEffectId::haste:
@@ -317,10 +330,44 @@ void JewelryEffectSummonMon::onStdTurnEquiped()
     }
 }
 
+//--------------------------------------------------------- EFFECT: FIRE
+void JewelryEffectFire::onStdTurnEquiped()
+{
+    const int FIRE_ONE_IN_N = 300;
+
+    if (Rnd::oneIn(FIRE_ONE_IN_N))
+    {
+        const Pos& origin   = Map::player->pos;
+        const int D         = FOV_STD_RADI_INT - 2;
+        const int X0        = max(1,            origin.x - D);
+        const int Y0        = max(1,            origin.y - D);
+        const int X1        = min(MAP_W - 2,    origin.x + D);
+        const int Y1        = min(MAP_H - 2,    origin.y + D);
+
+        const int FIRE_CELL_ONE_IN_N = 4;
+
+        Log::addMsg("The surrounding area suddenly burst into flames!", clrWhite,
+                    false, true);
+
+        for (int x = X0; x <= X1; ++x)
+        {
+            for (int y = Y0; y <= Y1; ++y)
+            {
+                if (Rnd::oneIn(FIRE_CELL_ONE_IN_N) && Pos(x, y) != origin)
+                {
+                    Map::cells[x][y].rigid->hit(DmgType::fire, DmgMethod::elemental);
+                }
+            }
+        }
+
+        jewelry_->effectNoticed(getId());
+    }
+}
+
 //--------------------------------------------------------- EFFECT: CONFLICT
 void JewelryEffectConflict::onStdTurnEquiped()
 {
-    const int CONFLICT_ONE_IN_N = 25;
+    const int CONFLICT_ONE_IN_N = 50;
 
     if (Rnd::oneIn(CONFLICT_ONE_IN_N))
     {
@@ -329,12 +376,20 @@ void JewelryEffectConflict::onStdTurnEquiped()
 
         if (!seenFoes.empty())
         {
-            const int   IDX = Rnd::range(0, seenFoes.size() - 1);
-            auto*       mon = static_cast<Mon*>(seenFoes[IDX]);
+            random_shuffle(begin(seenFoes), end(seenFoes));
 
-            mon->getPropHandler().tryApplyProp(new PropConflict(PropTurns::std));
+            for (Actor* actor : seenFoes)
+            {
+                if (!actor->getData().isUnique)
+                {
+                    actor->getPropHandler().tryApplyProp(
+                        new PropConflict(PropTurns::std));
 
-            jewelry_->effectNoticed(getId());
+                    jewelry_->effectNoticed(getId());
+
+                    break;
+                }
+            }
         }
     }
 }
@@ -464,7 +519,6 @@ void JewelryEffectBurden::onEquip()
 {
     if (!effectsKnown_[size_t(getId())])
     {
-        const string name = jewelry_->getName(ItemRefType::plain, ItemRefInf::none);
         Log::addMsg("I suddenly feel more burdened.");
         jewelry_->effectNoticed(getId());
     }
@@ -477,6 +531,32 @@ void JewelryEffectBurden::changeItemWeight(int& weightRef)
         //If revealed, this item weighs the average of "heavy" and "medium"
         weightRef = (int(ItemWeight::heavy) + int(ItemWeight::medium)) / 2;
     }
+}
+
+//--------------------------------------------------------- EFFECT: HP REGEN BONUS
+void JewelryEffectHpRegenBon::onEquip()
+{
+    Log::addMsg("I heal faster.");
+    jewelry_->effectNoticed(getId());
+}
+
+UnequipAllowed JewelryEffectHpRegenBon::onUnequip()
+{
+    Log::addMsg("I heal slower.");
+    return UnequipAllowed::yes;
+}
+
+//--------------------------------------------------------- EFFECT: HP REGEN PENALTY
+void JewelryEffectHpRegenPen::onEquip()
+{
+    Log::addMsg("I heal slower.");
+    jewelry_->effectNoticed(getId());
+}
+
+UnequipAllowed JewelryEffectHpRegenPen::onUnequip()
+{
+    Log::addMsg("I heal faster.");
+    return UnequipAllowed::yes;
 }
 
 //--------------------------------------------------------- JEWELRY
@@ -601,6 +681,21 @@ int Jewelry::getWeight() const
     return weight;
 }
 
+int Jewelry::getHpRegenChange(const InvType invType) const
+{
+    int change = 0;
+
+    if (invType == InvType::slots)
+    {
+        for (auto* effect : effects_)
+        {
+            change += effect->getHpRegenChange();
+        }
+    }
+
+    return change;
+}
+
 void Jewelry::effectNoticed(const JewelryEffectId effectId)
 {
     const size_t EFFECT_IDX = size_t(effectId);
@@ -658,26 +753,53 @@ bool canEffectsBeCombined(const JewelryEffectId id1,
 
     switch (id1)
     {
-    case Id::hpBon:         return id2 != Id::hpPen;
-    case Id::hpPen:         return id2 != Id::hpBon && id2 != Id::rDisease;
-    case Id::spiBon:        return id2 != Id::spiPen;
-    case Id::spiPen:        return id2 != Id::spiBon;
-    case Id::rFire:         return true;
-    case Id::rCold:         return true;
-    case Id::rElec:         return true;
-    case Id::rPoison:       return true;
-    case Id::rDisease:      return id2 != Id::hpPen;
-    case Id::teleCtrl:      return id2 != Id::randomTele && id2 != Id::spellReflect;
-    case Id::randomTele:    return id2 != Id::teleCtrl;
-    case Id::summonMon:     return true;
-    case Id::light:         return true;
-    case Id::conflict:      return true;
-    case Id::spellReflect:  return id2 != Id::teleCtrl;
-    case Id::burden:        return true;
-    case Id::shriek:        return true;
-    case Id::haste:         return true;
+    case Id::hpBon:
+        return id2 != Id::hpPen;
+
+    case Id::hpPen:
+        return id2 != Id::hpBon && id2 != Id::rDisease;
+
+    case Id::spiBon:
+        return id2 != Id::spiPen;
+
+    case Id::spiPen:
+        return id2 != Id::spiBon;
+
+    case Id::rDisease:
+        return id2 != Id::hpPen;
+
+    case Id::teleCtrl:
+        return id2 != Id::randomTele && id2 != Id::spellReflect;
+
+    case Id::randomTele:
+        return id2 != Id::teleCtrl;
+
+    case Id::spellReflect:
+        return id2 != Id::teleCtrl;
+
+    case Id::hpRegenBon:
+        return id2 != Id::hpRegenPen && id2 != Id::hpBon && id2 != Id::hpPen;
+
+    case Id::hpRegenPen:
+        return id2 != Id::hpRegenBon && id2 != Id::hpBon && id2 != Id::hpPen;
+
+    case Id::summonMon:
+    case Id::light:
+    case Id::conflict:
+    case Id::rFire:
+    case Id::rCold:
+    case Id::rElec:
+    case Id::rPoison:
+    case Id::burden:
+    case Id::shriek:
+    case Id::haste:
+    case Id::fire:
+        return true;
+
     case JewelryEffectId::START_OF_SECONDARY_EFFECTS:
-    case Id::END: {} break;
+    case Id::END:
+        assert(false);
+        return false;
     }
     return false;
 }

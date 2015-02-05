@@ -11,7 +11,7 @@ class Jewelry;
 
 enum class JewelryEffectId
 {
-    //"Primary" effects (i.e. one of these must be on the jewelry)
+    //Primary effects (i.e. one of these must be on the jewelry)
     rFire,
     rCold,
     rElec,
@@ -23,16 +23,19 @@ enum class JewelryEffectId
     spellReflect,
     hpBon,
     spiBon,
+    hpRegenBon,
     conflict,
 
     //Secondary
     START_OF_SECONDARY_EFFECTS,
     hpPen,
     spiPen,
+    hpRegenPen,
     burden,
     shriek,
     randomTele,
     summonMon,
+    fire,
 
     END
 };
@@ -51,8 +54,8 @@ public:
     virtual UnequipAllowed  onUnequip()             {return UnequipAllowed::yes;}
     virtual void            onStdTurnEquiped()      {}
     virtual void            onActorTurnEquiped()    {}
-    virtual void            changeItemWeight(int& weightRef)        {(void)weightRef;}
-    virtual void            changeActorSpeed(ActorSpeed& speedRef)  {(void)speedRef;}
+    virtual void            changeItemWeight(int& weightRef) {(void)weightRef;}
+    virtual int             getHpRegenChange() const {return 0;}
 
     virtual std::string getDescr() const = 0;
 
@@ -365,6 +368,24 @@ public:
     void onStdTurnEquiped() override;
 };
 
+class JewelryEffectFire : public JewelryEffect
+{
+public:
+    JewelryEffectFire(Jewelry* const jewelry) :
+        JewelryEffect(jewelry) {}
+
+    ~JewelryEffectFire() {}
+
+    JewelryEffectId getId() const override {return JewelryEffectId::fire;}
+
+    std::string getDescr() const override
+    {
+        return "It spontaneously sets objects around the caster on fire.";
+    }
+
+    void onStdTurnEquiped() override;
+};
+
 class JewelryEffectShriek : public JewelryEffect
 {
 public:
@@ -423,6 +444,48 @@ public:
     void changeItemWeight(int& weightRef)   override;
 };
 
+class JewelryEffectHpRegenBon : public JewelryEffect
+{
+public:
+    JewelryEffectHpRegenBon(Jewelry* const jewelry) :
+        JewelryEffect(jewelry) {}
+
+    ~JewelryEffectHpRegenBon() {}
+
+    JewelryEffectId getId() const override {return JewelryEffectId::hpRegenBon;}
+
+    int getHpRegenChange() const override {return -10;}
+
+    std::string getDescr() const override
+    {
+        return "The wounds of the wearer heal faster.";
+    }
+
+    void            onEquip()   override;
+    UnequipAllowed  onUnequip() override;
+};
+
+class JewelryEffectHpRegenPen : public JewelryEffect
+{
+public:
+    JewelryEffectHpRegenPen(Jewelry* const jewelry) :
+        JewelryEffect(jewelry) {}
+
+    ~JewelryEffectHpRegenPen() {}
+
+    JewelryEffectId getId() const override {return JewelryEffectId::hpRegenPen;}
+
+    int getHpRegenChange() const override {return 10;}
+
+    std::string getDescr() const override
+    {
+        return "The wounds of the wearer heal slower.";
+    }
+
+    void            onEquip()   override;
+    UnequipAllowed  onUnequip() override;
+};
+
 class Jewelry : public Item
 {
 public:
@@ -434,6 +497,8 @@ public:
     UnequipAllowed  onUnequip()                                 override final;
     void            onStdTurnInInv      (const InvType invType) override final;
     void            onActorTurnInInv    (const InvType invType) override final;
+
+    int             getHpRegenChange(const InvType invType) const;
 
     Clr getInterfaceClr() const override {return clrOrange;}
 

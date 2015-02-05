@@ -986,8 +986,7 @@ Pos placeStairs()
     IsCloserToPos isCloserToOrigin(Map::player->pos);
     sort(allowedCellsList.begin(), allowedCellsList.end(), isCloserToOrigin);
 
-    TRACE << "Picking random cell from furthest half" << endl;
-    //const int IDX = Rnd::range(NR_OK_CELLS / 2, NR_OK_CELLS - 1);
+    TRACE << "Picking furthest cell" << endl;
     const Pos stairsPos(allowedCellsList[NR_OK_CELLS - 1]);
 
     TRACE << "Spawning stairs at chosen cell" << endl;

@@ -333,7 +333,7 @@ void handleMapModeKeyPress(const KeyData& d)
                         const string wpnName = wpn->getName(ItemRefType::plain,
                                                             ItemRefInf::none);
 
-                        Log::addMsg("The " + wpnName + "draws power from my essence!",
+                        Log::addMsg("The " + wpnName + " draws power from my essence!",
                                     clrMsgBad);
 
                         Render::drawMapAndInterface();

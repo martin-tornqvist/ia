@@ -701,23 +701,21 @@ SpellEffectNoticed SpellDetMon::cast_(Actor* const caster) const
 
     bool                isSeer      = PlayerBon::traits[int(Trait::seer)];
     const int           MULTIPLIER  = 6 * (isSeer ? 3 : 1);
-    const int           MAX_DIST    = FOV_STD_RADI_INT * 2;
-    const Pos           playerPos   = Map::player->pos;
     SpellEffectNoticed  isNoticed   = SpellEffectNoticed::no;
 
     for (Actor* actor : GameTime::actors_)
     {
         if (!actor->isPlayer())
         {
-            if (Utils::kingDist(playerPos, actor->pos) <= MAX_DIST)
-            {
-                static_cast<Mon*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
-                isNoticed = SpellEffectNoticed::yes;
-            }
+            static_cast<Mon*>(actor)->playerBecomeAwareOfMe(MULTIPLIER);
+            isNoticed = SpellEffectNoticed::yes;
         }
     }
 
-    if (isNoticed == SpellEffectNoticed::yes) {Log::addMsg("I detect monsters.");}
+    if (isNoticed == SpellEffectNoticed::yes)
+    {
+        Log::addMsg("I detect creatures.");
+    }
 
     return isNoticed;
 }
@@ -1087,7 +1085,8 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
         Utils::mkVectorFromBoolMap(false, blocked, freeCellsVector);
         if (!freeCellsVector.empty())
         {
-            sort(freeCellsVector.begin(), freeCellsVector.end(), IsCloserToPos(caster->pos));
+            sort(freeCellsVector.begin(), freeCellsVector.end(),
+                 IsCloserToPos(caster->pos));
             summonPos = freeCellsVector[0];
         }
     }
@@ -1103,7 +1102,8 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
         const ActorDataT& data = ActorData::data[i];
         if (data.canBeSummoned)
         {
-            //Method for finding eligible monsters depends on if player or monster is casting.
+            //Method for finding eligible monsters depends on if player or monster is
+            //casting.
             int dlvlMax = -1;
 
             if (caster->isPlayer())
@@ -1161,7 +1161,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
 
     if (Map::player->canSeeActor(*mon, nullptr))
     {
-        Log::addMsg(mon->getNameA() + " appears.");
+        Log::addMsg(mon->getNameA() + " appears!");
 
         if (didPlayerSummonHostile)
         {
