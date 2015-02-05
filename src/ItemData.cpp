@@ -984,7 +984,9 @@ void initDataList()
     d->baseDescr =
     {
         "Once wielded by long-forgotten kings in ancient times, this powerful artifact "
-        "grants the power to call up a loyal servant from the dead."
+        "grants the power to call up a loyal servant from the dead.",
+
+        itemCarryShockDescr + " (+15% shock)."
     };
     d->clr = clrMagenta;
     d->weight = ItemWeight::medium;
@@ -995,6 +997,7 @@ void initDataList()
     d->melee.missSfx = SfxId::missMedium;
     d->chanceToIncludeInFloorSpawnList = 1;
     d->value = ItemValue::majorTreasure;
+    d->shockWhileInBackpack = d->shockWhileEquipped = 15;
     addFeatureFoundIn(*d, FeatureId::tomb, 20);
     data[int(d->id)] = d;
 
@@ -1567,7 +1570,9 @@ void initDataList()
     d->baseName = {"Hideous Mask", "", "The Hideous Mask"};
     d->baseDescr =
     {
-        "[TODO]"
+        "[TODO]",
+
+        itemCarryShockDescr + " (+15% shock)."
     };
     d->isStackable = false;
     d->clr = clrMagenta;
@@ -1578,6 +1583,7 @@ void initDataList()
     d->landOnHardSndMsg = "";
     d->chanceToIncludeInFloorSpawnList = 1;
     d->value = ItemValue::majorTreasure;
+    d->shockWhileInBackpack = d->shockWhileEquipped = 15;
     addFeatureFoundIn(*d, FeatureId::tomb, 8);
     data[int(d->id)] = d;
 

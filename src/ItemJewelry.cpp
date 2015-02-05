@@ -597,7 +597,7 @@ vector<string> Jewelry::getDescr() const
         ret.push_back("All properties of the " + name + " are known to me.");
     }
 
-    ret.push_back("This item is disturbing to carry (+15% shock).");
+    ret.push_back(itemCarryShockDescr + " (+15% shock).");
 
     return ret;
 }
