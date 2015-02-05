@@ -158,7 +158,7 @@ void draw()
     //Dungeon level
     Render::drawText("DLVL:", Panel::charLines, pos, clrMenuDrk);
     pos.x += 5;
-    str = Map::dlvl >= 0 ? toStr(Map::dlvl) : "?";
+    str = Map::dlvl > 0 ? toStr(Map::dlvl) : "-";
     Render::drawText(str, Panel::charLines, pos, clrWhite);
     pos.x += str.length() + 1;
 

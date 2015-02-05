@@ -1626,7 +1626,7 @@ void PropHasted::onStart()
 
 void PropInfected::onNewTurn()
 {
-    if (Rnd::oneIn(150))
+    if (Rnd::oneIn(165))
     {
         PropHandler& propHlr = owningActor_->getPropHandler();
         propHlr.tryApplyProp(new PropDiseased(PropTurns::std));

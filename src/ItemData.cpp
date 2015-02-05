@@ -323,6 +323,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
         resetData(d, ItemType::general);
         d.type = ItemType::amulet;
         d.value = ItemValue::majorTreasure;
+        d.shockWhileInBackpack = d.shockWhileEquipped = 15;
         d.tile = TileId::amulet;
         d.glyph = '\"';
         d.weight = ItemWeight::light;
@@ -338,6 +339,7 @@ void resetData(ItemDataT& d, ItemType const itemType)
         resetData(d, ItemType::general);
         d.type = ItemType::ring;
         d.value = ItemValue::majorTreasure;
+        d.shockWhileInBackpack = d.shockWhileEquipped = 15;
         d.tile = TileId::ring;
         d.glyph = '=';
         d.weight = ItemWeight::extraLight;

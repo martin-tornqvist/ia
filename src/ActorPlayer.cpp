@@ -36,7 +36,7 @@
 
 using namespace std;
 
-const int MIN_SHOCK_WHEN_OBSESSION = 35;
+const int SHOCK_FROM_OBSESSION = 30;
 
 Player::Player() :
     Actor                   (),
@@ -333,6 +333,8 @@ int Player::getShockResistance(const ShockSrc shockSrc) const
 double Player::getShockTakenAfterMods(const int BASE_SHOCK,
                                       const ShockSrc shockSrc) const
 {
+    if (BASE_SHOCK == 0) {return 0.0;}
+
     const double SHOCK_RES_DB   = double(getShockResistance(shockSrc));
     const double BASE_SHOCK_DB  = double(BASE_SHOCK);
     return (BASE_SHOCK_DB * (100.0 - SHOCK_RES_DB)) / 100.0;
@@ -345,7 +347,7 @@ void Player::incrShock(const int SHOCK, ShockSrc shockSrc)
     shock_                  += SHOCK_AFTER_MODS;
     permShockTakenCurTurn_  += SHOCK_AFTER_MODS;
 
-    constrInRange(0.0f, shock_, 100.0f);
+    constrInRange(0.0, shock_, 100.0);
 }
 
 void Player::incrShock(const ShockLvl shockValue, ShockSrc shockSrc)
@@ -355,20 +357,14 @@ void Player::incrShock(const ShockLvl shockValue, ShockSrc shockSrc)
 
 void Player::restoreShock(const int amountRestored, const bool IS_TEMP_SHOCK_RESTORED)
 {
-    // If an obsession is active, only restore to a certain min level
-    bool isObsessionActive = 0;
-    for (int i = 0; i < int(Obsession::END); ++i)
+    shock_ = max(0.0, shock_ - amountRestored);
+
+    if (IS_TEMP_SHOCK_RESTORED)
     {
-        if (obsessions[i])
-        {
-            isObsessionActive = true;
-            break;
-        }
+        shockTmp_ = 0.0;
     }
-    const double MIN_SHOCK_WHEN_OBSESSION_DB = double(MIN_SHOCK_WHEN_OBSESSION);
-    shock_ = max((isObsessionActive ? MIN_SHOCK_WHEN_OBSESSION_DB : 0.0),
-                 shock_ - amountRestored);
-    if (IS_TEMP_SHOCK_RESTORED) {shockTmp_ = 0;}
+
+    updateTmpShock();
 }
 
 void Player::incrInsanity()
@@ -608,8 +604,8 @@ void Player::incrInsanity()
                             "To my alarm, I find myself encouraged by the sensation of "
                             "pain. Physical suffering does not frighten me at all. "
                             "However, my depraved mind can never find complete peace "
-                            "(no shock from taking damage, but shock cannot go below "
-                            + toStr(MIN_SHOCK_WHEN_OBSESSION) + " % ).";
+                            "(no shock from taking damage, but permanent +"
+                            + toStr(SHOCK_FROM_OBSESSION) + "% shock).";
                         Popup::showMsg(msg, true, "Masochistic obsession!",
                                        SfxId::insanityRise);
                         obsessions[int(Obsession::masochism)] = true;
@@ -622,8 +618,8 @@ void Player::incrInsanity()
                             "To my alarm, I find myself encouraged by the pain I cause "
                             "in others. For every life I take, I find a little relief. "
                             "However, my depraved mind can no longer find complete "
-                            "peace (shock cannot go below "
-                            + toStr(MIN_SHOCK_WHEN_OBSESSION) + " % ).";
+                            "peace (permanent +" + toStr(SHOCK_FROM_OBSESSION) + "% "
+                            "shock).";
                         Popup::showMsg(msg, true, "Sadistic obsession!",
                                        SfxId::insanityRise);
                         obsessions[int(Obsession::sadism)] = true;
@@ -929,22 +925,36 @@ void Player::onActorTurn()
     }
 }
 
-void Player::onStdTurn()
+void Player::updateTmpShock()
 {
     shockTmp_ = 0.0;
 
-    //Temporary shock from features
+    //Shock from obsession?
+    for (int i = 0; i < int(Obsession::END); ++i)
+    {
+        if (obsessions[i])
+        {
+            shockTmp_ += double(SHOCK_FROM_OBSESSION);
+            break;
+        }
+    }
+
+    //Temporary shock from darkness
     Cell& cell = Map::cells[pos.x][pos.y];
 
     if (cell.isDark && !cell.isLit)
     {
-        shockTmp_ += 20;
+        shockTmp_ += getShockTakenAfterMods(20, ShockSrc::misc);
     }
 
+    //Temporary shock from features
     for (const Pos& d : DirUtils::dirList)
     {
         const Pos p(pos + d);
-        shockTmp_ += Map::cells[p.x][p.y].rigid->getShockWhenAdj();
+
+        const int BASE_SHOCK = Map::cells[p.x][p.y].rigid->getShockWhenAdj();
+
+        shockTmp_ += getShockTakenAfterMods(BASE_SHOCK, ShockSrc::misc);
     }
 
     //Temporary shock from items
@@ -952,30 +962,29 @@ void Player::onStdTurn()
     {
         if (slot.item)
         {
-            shockTmp_ += slot.item->getData().shockWhileEquipped;
+            const int BASE_SHOCK = slot.item->getData().shockWhileEquipped;
+
+            shockTmp_ += getShockTakenAfterMods(BASE_SHOCK, ShockSrc::useStrangeItem);
         }
     }
 
     for (const Item* const item : inv_->general_)
     {
-        shockTmp_ += item->getData().shockWhileInBackpack;
+        const int BASE_SHOCK = item->getData().shockWhileInBackpack;
+
+        shockTmp_ += getShockTakenAfterMods(BASE_SHOCK, ShockSrc::useStrangeItem);
     }
 
     shockTmp_ = min(99.0, shockTmp_);
+}
+
+void Player::onStdTurn()
+{
+    updateTmpShock();
 
     if (activeExplosive)   {activeExplosive->onStdTurnPlayerHoldIgnited();}
 
     if (!activeMedicalBag) {testPhobias();}
-
-    //If obsessions are active, raise shock to a minimum level
-    for (int i = 0; i < int(Obsession::END); ++i)
-    {
-        if (obsessions[i])
-        {
-            shock_ = max(double(MIN_SHOCK_WHEN_OBSESSION), shock_);
-            break;
-        }
-    }
 
     vector<Actor*> seenFoes;
     getSeenFoes(seenFoes);

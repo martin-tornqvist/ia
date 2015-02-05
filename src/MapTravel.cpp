@@ -129,8 +129,6 @@ void goToNxt()
 {
     TRACE_FUNC_BEGIN;
 
-    Map::player->restoreShock(999, true);
-
     mapList.erase(mapList.begin());
     const auto& mapData = mapList.front();
 
@@ -140,6 +138,8 @@ void goToNxt()
     }
 
     mkLvl(mapData.type);
+
+    Map::player->restoreShock(999, true);
 
     Map::player->tgt_ = nullptr;
     Map::player->updateFov();

@@ -62,6 +62,7 @@ public:
     void incrShock(const int SHOCK, ShockSrc shockSrc);
     void restoreShock(const int amountRestored,
                       const bool IS_TEMP_SHOCK_RESTORED);
+    void updateTmpShock();
     int getShockTotal()  const {return int(floor(shock_ + shockTmp_));}
     int getInsanity()    const {return std::min(100, ins_);}
 
