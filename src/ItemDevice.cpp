@@ -411,21 +411,18 @@ void DeviceLantern::onStdTurnInInv(const InvType invType)
         {
             if (Rnd::oneIn(30))
             {
-                Log::addMsg("My Electric Lantern flickers.");
+                Log::addMsg("My Electric Lantern flickers...");
                 workingState_         = LanternWorkingState::flicker;
                 nrFlickerTurnsLeft_   = Rnd::range(4, 12);
+
+                GameTime::updateLightMap();
+                Map::player->updateFov();
+                Render::drawMapAndInterface();
             }
             else
             {
-                workingState_         = LanternWorkingState::working;
+                workingState_ = LanternWorkingState::working;
             }
-
-//      if (workingState_ != LanternWorkingState::working)
-//      {
-//        GameTime::updateLightMap();
-//        Map::player->updateFov();
-//        Render::drawMapAndInterface();
-//      }
         }
     }
 }

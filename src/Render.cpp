@@ -1000,10 +1000,10 @@ void drawMap()
                     curDrw->glyph = goreGlyph;
                     curDrw->clr   = clrRed;
                 }
-//        if(Map::cells[x][y].isLit && f->canMoveCmn())
-//        {
-//          curDrw->isMarkedLit = true;
-//        }
+                if (Map::cells[x][y].isLit && f->canMoveCmn())
+                {
+                    curDrw->isMarkedLit = true;
+                }
             }
         }
     }
@@ -1045,10 +1045,12 @@ void drawMap()
                 renderArrayNoActors[x][y] = renderArray[x][y];
 
                 //COLOR CELLS MARKED AS LIT YELLOW
-//        if(curDrw->isMarkedLit)
-//        {
-//          curDrw->clr = clrYellow;
-//        }
+                if (curDrw->isMarkedLit)
+                {
+                    curDrw->clr.r = min(255, curDrw->clr.r + 20);
+                    curDrw->clr.g = min(255, curDrw->clr.g + 40);
+                    curDrw->clr.b = min(255, curDrw->clr.b + 20);
+                }
             }
         }
     }
