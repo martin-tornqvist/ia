@@ -100,9 +100,11 @@ Actor* mk(const ActorId id, const Pos& pos)
 
     actor->place(pos, ActorData::data[int(id)]);
 
-    if (actor->getData().nrLeftAllowedToSpawn != -1)
+    auto& data = actor->getData();
+
+    if (data.nrLeftAllowedToSpawn > 0)
     {
-        actor->getData().nrLeftAllowedToSpawn--;
+        data.nrLeftAllowedToSpawn--;
     }
 
     GameTime::addActor(actor);
@@ -119,7 +121,7 @@ void deleteAllMon()
         if (actors[i] != Map::player)
         {
             GameTime::eraseActorInElement(i);
-            i--;
+            --i;
         }
     }
 }

@@ -537,7 +537,7 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
     if (isPlayer()) {Map::player->interruptActions();}
 
     //Damage to corpses
-    //Note: Corpse is automatically destroyed if damage is high enough, otherwise it is
+    //NOTE: Corpse is automatically destroyed if damage is high enough, otherwise it is
     //destroyed with a random chance
     if (isCorpse() && !isPlayer())
     {

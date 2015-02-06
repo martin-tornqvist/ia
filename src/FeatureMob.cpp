@@ -127,7 +127,7 @@ void LitDynamite::onNewTurn()
         //explosion (could happen for example if there are "more" prompts).
         GameTime::eraseMob(this, true);
 
-        //Note: The dynamite is now deleted. Do not use member variable after this point.
+        //NOTE: The dynamite is now deleted. Do not use member variable after this point.
 
         Explosion::runExplosionAt(pos, ExplType::expl, ExplSrc::misc, D);
     }

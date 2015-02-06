@@ -903,12 +903,14 @@ void initDataList()
     d.ai[int(AiId::movesToLeader)] = true;
     d.speed = ActorSpeed::fast;
     d.glyph = 'D';
-    d.color = clrGray;
+    d.color = clrMagenta;
     d.tile = TileId::hound;
+    d.canLeaveCorpse = false;
+    d.isAutoDescrAllowed = false;
     d.hp = 65;
     d.spi = 40;
     d.dmgMelee = 8;
-    d.abilityVals.setVal(AbilityId::melee, 50);
+    d.abilityVals.setVal(AbilityId::melee, 60);
     d.abilityVals.setVal(AbilityId::dodgeAtt, 25);
     d.intrProps[int(PropId::rFear)] = true;
     d.spawnMinDLVL = 13;
@@ -921,6 +923,7 @@ void initDataList()
     d.descr = "Zuul the Gatekeeper of Gozer is a demigod and minion of Gozer. It "
               "was worshiped by the Sumerians and Hittites in 6000 BC, along "
               "with Gozer.";
+    d.deathMsgOverride = "Zuul vanishes...";
     d.aggroTextMonSeen = d.nameThe + " snarls at me.";
     d.aggroTextMonHidden = "I hear a snarl.";
     d.aggroSfxMonSeen = SfxId::dogSnarl;
@@ -2629,8 +2632,10 @@ void storeToSaveLines(vector<string>& lines)
 {
     for (int i = 0; i < int(ActorId::END); ++i)
     {
-        lines.push_back(toStr(data[i].nrLeftAllowedToSpawn));
-        lines.push_back(toStr(data[i].nrKills));
+        const auto& d = data[i];
+
+        lines.push_back(toStr(d.nrLeftAllowedToSpawn));
+        lines.push_back(toStr(d.nrKills));
     }
 }
 
@@ -2638,13 +2643,13 @@ void setupFromSaveLines(vector<string>& lines)
 {
     for (int i = 0; i < int(ActorId::END); ++i)
     {
-        ActorDataT& d = data[i];
-        const int NR_ALLOWED_TO_SPAWN = toInt(lines.front());
+        auto& d = data[i];
+
+        d.nrLeftAllowedToSpawn = toInt(lines.front());
         lines.erase(begin(lines));
-        const int NR_KILLS = toInt(lines.front());
+
+        d.nrKills = toInt(lines.front());
         lines.erase(begin(lines));
-        d.nrLeftAllowedToSpawn = NR_ALLOWED_TO_SPAWN;
-        d.nrKills = NR_KILLS;
     }
 }
 

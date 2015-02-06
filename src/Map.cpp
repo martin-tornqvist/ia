@@ -108,7 +108,7 @@ void init()
 
 void cleanup()
 {
-    player = nullptr; //Note: GameTime has deleted player at this point
+    player = nullptr; //NOTE: GameTime has deleted player at this point
 
     resetMap();
 
@@ -169,7 +169,7 @@ Rigid* put(Rigid* const f)
         Render::drawMap();
         Render::drawGlyph('X', Panel::map, p, clrYellow);
         Render::updateScreen();
-        SdlWrapper::sleep(10); //Note: Delay must be > 1 for user input to be read
+        SdlWrapper::sleep(10); //NOTE: Delay must be > 1 for user input to be read
     }
 #endif // DEMO_MODE
 

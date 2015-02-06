@@ -81,7 +81,7 @@ TEST(IsValInRange)
     CHECK(!Utils::isValInRange(4,   Range(5,  5)));
     CHECK(!Utils::isValInRange(6,   Range(5,  5)));
 
-    //Note: Reversed range settings (e.g. Range(7, 3)) will fail an assert on debug builds.
+    //NOTE: Reversed range settings (e.g. Range(7, 3)) will fail an assert on debug builds.
     //For release builds, this will reverse the result - i.e. isValInRange(1, Range(7, 3))
     //will return true.
 }

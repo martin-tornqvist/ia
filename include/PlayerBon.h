@@ -82,7 +82,7 @@ void getTraitDescr(const Trait id, std::string& out);
 
 void getBgTitle(const Bg id, std::string& out);
 
-//Note: The string vector reference parameter set in this function is not formatted in
+//NOTE: The string vector reference parameter set in this function is not formatted in
 //getBgDescr. Each line still needs to be formatted by the calling function. The reason
 //for using a vector reference instead of simply a string is only to specify line breaks.
 void getBgDescr(const Bg id, std::vector<std::string>& linesRef);

@@ -3,7 +3,7 @@
 
 #include "CmnTypes.h"
 
-//Note: If "ELEM_ON_WRAP_UP_A" is set, the browser will jump to that position if the user
+//NOTE: If "ELEM_ON_WRAP_UP_A" is set, the browser will jump to that position if the user
 //presses up while the top element is marked. For example:
 //
 //  Element 0

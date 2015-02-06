@@ -42,7 +42,7 @@ enum class PropId
     frenzied,
     blessed,
     cursed,
-    teleCtrl, //Note: This only makes sense for the player
+    teleCtrl, //NOTE: This only makes sense for the player
     spellReflect,
     strangled,
     conflict,
@@ -575,8 +575,8 @@ public:
 
     bool allowAttackRanged(const bool ALLOW_MSG) const override;
 
-    void onStart() override;
-    void onNewTurn() override;
+    void onStart()      override;
+    void onNewTurn()    override;
 };
 
 class PropFlared: public Prop
@@ -605,11 +605,10 @@ public:
 
     void changeMoveDir(const Pos& actorPos, Dir& dir) override;
 
-    bool allowRead      (const bool ALLOW_MSG) const override;
-    bool allowCastSpell (const bool ALLOW_MSG) const override;
-
-    bool allowAttackMelee(const bool ALLOW_MSG) const override;
-    bool allowAttackRanged(const bool ALLOW_MSG) const override;
+    bool allowRead          (const bool ALLOW_MSG) const override;
+    bool allowCastSpell     (const bool ALLOW_MSG) const override;
+    bool allowAttackMelee   (const bool ALLOW_MSG) const override;
+    bool allowAttackRanged  (const bool ALLOW_MSG) const override;
 };
 
 class PropStunned: public Prop

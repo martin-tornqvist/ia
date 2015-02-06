@@ -437,7 +437,7 @@ bool isMapConnected(const bool blocked[MAP_W][MAP_H])
     int floodFill[MAP_W][MAP_H];
     FloodFill::run(origin, blocked, floodFill, INT_MAX, Pos(-1, -1), true);
 
-    //Note: We can skip to origin.x immediately, since this is guaranteed to be the
+    //NOTE: We can skip to origin.x immediately, since this is guaranteed to be the
     //leftmost non-blocked cell.
     for (int x = origin.x; x < MAP_W - 1; ++x)
     {

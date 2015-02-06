@@ -884,7 +884,7 @@ void Player::onActorTurn()
     //Quick move
     if (nrQuickMoveStepsLeft_ > 0)
     {
-        //Note: There is no need to check for items here, since the message from stepping
+        //NOTE: There is no need to check for items here, since the message from stepping
         //on an item will interrupt player actions.
 
         const Pos destPos(pos + DirUtils::getOffset(quickMoveDir_));
@@ -1213,7 +1213,7 @@ void Player::onStdTurn()
 
 void Player::onLogMsgPrinted()
 {
-    //Note: There cannot be any calls to Log::addMsg() in this function, as that would
+    //NOTE: There cannot be any calls to Log::addMsg() in this function, as that would
     //cause endless recursion.
 
     //Abort waiting
@@ -1443,7 +1443,7 @@ void Player::moveDir(Dir dir)
                 }
             }
 
-            //Note: bump() prints block messages.
+            //NOTE: bump() prints block messages.
             for (auto* m : mobs) {m->bump(*this);}
 
             Map::cells[dest.x][dest.y].rigid->bump(*this);

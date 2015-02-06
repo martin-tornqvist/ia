@@ -13,7 +13,7 @@ class Mob;
 namespace Rnd
 {
 
-//Note: If MTRand is not provided any parameters to the constructor, it will be seeded
+//NOTE: If MTRand is not provided any parameters to the constructor, it will be seeded
 //with current time. So seeding it manually is not necessary for normal gameplay
 //purposes - only if seed should be controlled.
 void seed(const unsigned long val);

@@ -70,7 +70,7 @@ const int ENC_IMMOBILE_LVL = 125;
 const int NR_MG_PROJECTILES                     = 5;
 const int NR_CELL_JUMPS_BETWEEN_MG_PROJECTILES  = 2;
 
-//Note: Explosion damage is reduced with distance from center
+//NOTE: Explosion damage is reduced with distance from center
 const int EXPL_DMG_ROLLS  = 5;
 const int EXPL_DMG_SIDES  = 6;
 const int EXPL_DMG_PLUS   = 10;

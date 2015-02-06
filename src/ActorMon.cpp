@@ -843,13 +843,15 @@ void FrostHound::mkStartItems()
 
 void Zuul::place_()
 {
-    if (ActorData::data[int(ActorId::zuul)].nrLeftAllowedToSpawn > 0)
+    if (ActorData::data[size_t(ActorId::zuul)].nrLeftAllowedToSpawn > 0)
     {
-        //Note: Do not call die() here, that would have side effects such as
-        //player getting XP. Instead, simply set the dead state to destroyed.
-        state_ = ActorState::destroyed;
-        Actor* actor = ActorFactory::mk(ActorId::cultistPriest, pos);
-        PropHandler& propHandler = actor->getPropHandler();
+        //NOTE: Do not call die() here - that would have side effects such as player
+        //getting XP. Instead, simply set the dead state to destroyed.
+        state_              = ActorState::destroyed;
+
+        Actor* actor        = ActorFactory::mk(ActorId::cultistPriest, pos);
+        auto& propHandler   = actor->getPropHandler();
+
         propHandler.tryApplyProp(new PropPossByZuul(PropTurns::indefinite), true);
         actor->restoreHp(999, false);
     }

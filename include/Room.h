@@ -1,4 +1,4 @@
-//Note: This file must not define "ROOM_H" for the include guard. That name should be
+//NOTE: This file must not define "ROOM_H" for the include guard. That name should be
 //reserved for constants representing room height.
 #ifndef MAPGEN_ROOM_H
 #define MAPGEN_ROOM_H
@@ -34,7 +34,7 @@ class   Room;
 enum class RoomType
 {
     //Standard rooms (standardized feature spawning and reshaping)
-    plain, //Note: "plain" must be the first type
+    plain, //NOTE: "plain" must be the first type
     human,
     ritual,
     spider,
@@ -58,7 +58,7 @@ namespace RoomFactory
 
 void initRoomBucket();
 
-//Note: These functions do not make rooms on the map, they merely create Room objects.
+//NOTE: These functions do not make rooms on the map, they merely create Room objects.
 Room* mk(const RoomType type, const Rect& r);
 
 Room* mkRandomAllowedStdRoom(const Rect& r, const bool IS_SUBROOM);

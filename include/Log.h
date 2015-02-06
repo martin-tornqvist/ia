@@ -56,7 +56,7 @@ void addMsg(const std::string& str, const Clr& clr = clrWhite,
             const bool INTERRUPT_PLAYER_ACTIONS = false,
             const bool ADD_MORE_PROMPT_AFTER_MSG = false);
 
-//Note: This function can safely be called at any time. If there is content in the log,
+//NOTE: This function can safely be called at any time. If there is content in the log,
 //a "more" prompt will be done, and the log is cleared. If the log happens to be empty,
 //nothing is done.
 void morePrompt();

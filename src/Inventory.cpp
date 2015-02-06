@@ -189,7 +189,7 @@ void Inventory::putInGeneral(Item* item)
         general_.push_back(item);
     }
 
-    //Note: May destroy the item (e.g. a Medical Bag combining with another)
+    //NOTE: May destroy the item (e.g. a Medical Bag combining with another)
     item->onPickupToBackpack(*this);
 }
 

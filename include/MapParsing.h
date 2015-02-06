@@ -192,7 +192,7 @@ private:
 
 } //CellCheck
 
-//Note: If append mode is used, the caller is responsible for initializing the array
+//NOTE: If append mode is used, the caller is responsible for initializing the array
 //(typically with a previous parse call, with write rule set to "overwrite")
 enum class MapParseMode {overwrite, append};
 
@@ -247,7 +247,7 @@ void run(const Pos& p0, const bool blocked[MAP_W][MAP_H], int out[MAP_W][MAP_H],
 namespace PathFind
 {
 
-//Note: The path goes from target to origin, not including the origin.
+//NOTE: The path goes from target to origin, not including the origin.
 //---------------------------------------------------------------------------------------
 //RANDOMIZE_STEP_CHOICES: When true, for each step if there are multiple valid (nearer)
 //                        choices, pick one at random. Otherwise iterate over a predefined

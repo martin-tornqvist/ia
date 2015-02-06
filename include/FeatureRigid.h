@@ -574,7 +574,7 @@ public:
     std::vector<Item*> items_;
 };
 
-//Note: In some previous versions, it was possible to inspect the tomb and get a hint
+//NOTE: In some previous versions, it was possible to inspect the tomb and get a hint
 //about its trait ("It has an aura of unrest", "There are foreboding carved signs", etc).
 //This is currently not possible - you open the tomb and any "trap" it has will trigger.
 //Therefore the TombTrait type could be removed, and instead an effect is just randomized

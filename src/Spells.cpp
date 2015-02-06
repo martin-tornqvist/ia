@@ -294,7 +294,7 @@ SpellEffectNoticed SpellDarkbolt::cast_(Actor* const caster) const
 
 bool SpellDarkbolt::allowMonCastNow(Mon& mon) const
 {
-    return mon.tgt_ && Rnd::oneIn(2);
+    return mon.tgt_ && Rnd::oneIn(3);
 }
 
 //------------------------------------------------------------ AZATHOTHS WRATH
@@ -369,7 +369,7 @@ SpellEffectNoticed SpellAzaWrath::cast_(Actor* const caster) const
 
 bool SpellAzaWrath::allowMonCastNow(Mon& mon) const
 {
-    return mon.tgt_;
+    return mon.tgt_ && Rnd::oneIn(3);
 }
 
 //------------------------------------------------------------ MAYHEM
@@ -1007,6 +1007,11 @@ SpellEffectNoticed SpellPropOnMon::cast_(Actor* const caster) const
 bool SpellPropOnMon::allowMonCastNow(Mon& mon) const
 {
     return mon.tgt_;
+}
+
+bool SpellParalyzeMon::allowMonCastNow(Mon& mon) const
+{
+    return mon.tgt_ && Rnd::oneIn(3);
 }
 
 //------------------------------------------------------------ DISEASE

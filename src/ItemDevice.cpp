@@ -377,7 +377,7 @@ void DeviceLantern::onStdTurnInInv(const InvType invType)
         {
             Log::addMsg("My Electric Lantern breaks!", clrMsgNote, true, true);
 
-            //Note: The this deletes the object
+            //NOTE: The this deletes the object
             Map::player->getInv().removeItemInBackpackWithPtr(this, true);
 
             GameTime::updateLightMap();

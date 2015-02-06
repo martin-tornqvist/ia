@@ -100,7 +100,7 @@ void connectRooms()
 
     while (true)
     {
-        //Note: Keep this counter at the top of the loop, since otherwise a "continue"
+        //NOTE: Keep this counter at the top of the loop, since otherwise a "continue"
         //statement could bypass it so we get stuck in the loop.
         --nrTriesLeft;
         if (nrTriesLeft == 0)
@@ -218,7 +218,7 @@ void mkCrumbleRoom(const Rect& roomAreaInclWalls, const Pos& eventPos)
     GameTime::addMob(new EventWallCrumble(eventPos, wallCells, innerCells));
 }
 
-//Note: The positions and size can be outside map (e.g. negative positions).
+//NOTE: The positions and size can be outside map (e.g. negative positions).
 //This function just returns false in that case.
 bool tryMkAuxRoom(const Pos& p, const Pos& d, bool blocked[MAP_W][MAP_H],
                   const Pos& doorP)
@@ -423,7 +423,7 @@ void randomlyBlockRegions(Region regions[3][3])
     TRACE_FUNC_BEGIN << "Marking some (possibly zero) regions as built, to "
                      << "prevent rooms there (so it's not always 3x3 rooms)"
                      << endl;
-    //Note: The max number to try can go above the hard limit of regions that
+    //NOTE: The max number to try can go above the hard limit of regions that
     //could ever be blocked (i.e five regions - blocking is only allowed if
     //no cardinally adjacent region is already blocked). However, this will push
     //the number of attempts towards the upper limit, and increase the chance
@@ -1145,7 +1145,7 @@ bool mkStdLvl()
         }
     }
 
-    //Note: This must be called before any rooms are created
+    //NOTE: This must be called before any rooms are created
     RoomFactory::initRoomBucket();
 
     TRACE << "Init regions" << endl;
@@ -1248,7 +1248,7 @@ bool mkStdLvl()
     if (isMapValid)
     {
         TRACE << "Sorting the room list according to room type" << endl;
-        //Note: This allows common rooms to assume that they are rectangular and
+        //NOTE: This allows common rooms to assume that they are rectangular and
         //have their walls untouched when their reshaping functions run.
         auto cmp = [](const Room * r0, const Room * r1)
         {

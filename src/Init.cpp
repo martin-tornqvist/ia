@@ -30,7 +30,7 @@ namespace Init
 bool isCheatVisionEnabled = false;
 bool quitToMainMenu       = false;
 
-//Note: Initialization order matters in some cases
+//NOTE: Initialization order matters in some cases
 void initIO()
 {
     TRACE_FUNC_BEGIN;
@@ -53,7 +53,7 @@ void cleanupIO()
     TRACE_FUNC_END;
 }
 
-//Note: Initialization order matters in some cases
+//NOTE: Initialization order matters in some cases
 void initGame()
 {
     TRACE_FUNC_BEGIN;
@@ -72,7 +72,7 @@ void cleanupGame()
     TRACE_FUNC_END;
 }
 
-//Note: Initialization order matters in some cases
+//NOTE: Initialization order matters in some cases
 void initSession()
 {
     TRACE_FUNC_BEGIN;

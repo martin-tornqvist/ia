@@ -389,7 +389,7 @@ void Wall::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const 
     auto mkLowRubbleAndRocks = [&]()
     {
         const Pos p(pos_);
-        Map::put(new RubbleLow(p)); //Note: "this" is now deleted!
+        Map::put(new RubbleLow(p)); //NOTE: "this" is now deleted!
         if (Rnd::coinToss()) {ItemFactory::mkItemOnFloor(ItemId::rock, p);}
     };
 
@@ -596,7 +596,7 @@ void RubbleHigh::onHit(const DmgType dmgType, const DmgMethod dmgMethod,
     auto mkLowRubbleAndRocks = [&]()
     {
         const Pos p(pos_);
-        Map::put(new RubbleLow(p)); //Note: "this" is now deleted!
+        Map::put(new RubbleLow(p)); //NOTE: "this" is now deleted!
         if (Rnd::coinToss()) {ItemFactory::mkItemOnFloor(ItemId::rock, p);}
     };
 
@@ -768,7 +768,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
 
         const Pos dstPos = pos_ + (pos_ - actor->pos);
 
-        Map::put(new RubbleLow(pos_)); //Note: "this" is now deleted!
+        Map::put(new RubbleLow(pos_)); //NOTE: "this" is now deleted!
 
         Map::player->updateFov();
         Render::drawMapAndInterface();
@@ -796,7 +796,7 @@ void Statue::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* cons
 
         const auto rigidId = Map::cells[dstPos.x][dstPos.y].rigid->getId();
 
-        //Note: This is kinda hacky, but the rubble is mostly just for decoration anyway,
+        //NOTE: This is kinda hacky, but the rubble is mostly just for decoration anyway,
         //so it doesn't really matter.
         if (
             rigidId == FeatureId::floor ||
@@ -2195,7 +2195,7 @@ void Chest::onHit(const DmgType dmgType, const DmgMethod dmgMethod, Actor* const
 
 void Chest::disarm()
 {
-    //Note: Only an actual attempt at disarming a trap counts as a turn. Just discovering
+    //NOTE: Only an actual attempt at disarming a trap counts as a turn. Just discovering
     //the trap does not end the turn.
 
     if (isLocked_)
@@ -2244,7 +2244,7 @@ void Chest::disarm()
             }
             else //Failed to disarm
             {
-                triggerTrap(Map::player); //Note: This will disable the trap
+                triggerTrap(Map::player); //NOTE: This will disable the trap
             }
             GameTime::tick();
             return;

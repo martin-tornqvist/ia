@@ -122,7 +122,7 @@ struct ActorDataT
     int nrKills;
     bool canOpenDoors, canBashDoors;
     bool canSeeInDarkness;
-    //Note: Knockback may be prevented even if this is false, e.g. if monster is ethereal
+    //NOTE: Knockback may be prevented even if this is false, e.g. if monster is ethereal
     bool preventKnockback;
     int nrLeftAllowedToSpawn;
     bool isUnique;

@@ -347,7 +347,7 @@ UnequipAllowed ArmorMiGo::onUnequip_()
 
     if (Rnd::coinToss())
     {
-        //Note: There is no need to print a message here, a message is always printed when
+        //NOTE: There is no need to print a message here, a message is always printed when
         //taking off armor.
         return UnequipAllowed::yes;
     }

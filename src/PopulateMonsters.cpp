@@ -23,39 +23,50 @@ namespace
 
 int getRandomOutOfDepth()
 {
-    if (Map::dlvl == 0)                  {return 0;}
-    if (Rnd::oneIn(40) && Map::dlvl > 1) {return 5;}
-    if (Rnd::oneIn(5))                   {return 2;}
+    if (Map::dlvl == 0)                     {return 0;}
+    if (Rnd::oneIn(40) && Map::dlvl > 1)    {return 5;}
+    if (Rnd::oneIn(5))                      {return 2;}
 
     return 0;
 }
 
-void mkListOfMonCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH,
-                             vector<ActorId>& listRef)
+void mkListOfMonCanAutoSpawn(const int NR_LVLS_OUT_OF_DEPTH, vector<ActorId>& listRef)
 {
     listRef.clear();
 
     const int EFFECTIVE_DLVL =
         max(1, min(DLVL_LAST, Map::dlvl + NR_LVLS_OUT_OF_DEPTH));
 
+    //Get list of actors currently on the level (to help avoid spawning multiple uniques,
+    //note that this could otherwise happen for example with Zuul - he is allowed to
+    //spawn freely after he appears from a possessed Cultist priest)
+    bool spawnedIds[size_t(ActorId::END)];
+    for (bool& v : spawnedIds) {v = false;}
+
+    for (const auto* const actor : GameTime::actors_)
+    {
+        spawnedIds[size_t(actor->getId())] = true;
+    }
+
     for (const auto& d : ActorData::data)
     {
         if (
-            d.id != ActorId::player           &&
-            d.isAutoSpawnAllowed              &&
-            d.nrLeftAllowedToSpawn != 0       &&
-            EFFECTIVE_DLVL >= d.spawnMinDLVL  &&
-            EFFECTIVE_DLVL <= d.spawnMaxDLVL)
+            d.id != ActorId::player             &&
+            d.isAutoSpawnAllowed                &&
+            d.nrLeftAllowedToSpawn != 0         &&
+            EFFECTIVE_DLVL >= d.spawnMinDLVL    &&
+            EFFECTIVE_DLVL <= d.spawnMaxDLVL    &&
+            !(d.isUnique && spawnedIds[size_t(d.id)]))
         {
             listRef.push_back(d.id);
         }
     }
 }
 
-void mkGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
-                       bool blocked[MAP_W][MAP_H],
-                       const int NR_LVLS_OUT_OF_DEPTH_ALLOWED,
-                       const bool IS_ROAMING_ALLOWED)
+void mkGroupOfRandomAt(const vector<Pos>&   sortedFreeCellsVector,
+                       bool                 blocked[MAP_W][MAP_H],
+                       const int            NR_LVLS_OUT_OF_DEPTH_ALLOWED,
+                       const bool           IS_ROAMING_ALLOWED)
 {
     vector<ActorId> idBucket;
     mkListOfMonCanAutoSpawn(NR_LVLS_OUT_OF_DEPTH_ALLOWED, idBucket);
@@ -67,9 +78,10 @@ void mkGroupOfRandomAt(const vector<Pos>& sortedFreeCellsVector,
     }
 }
 
-bool mkGroupOfRandomNativeToRoomTypeAt(
-    const RoomType roomType, const vector<Pos>& sortedFreeCellsVector,
-    bool blocked[MAP_W][MAP_H], const bool IS_ROAMING_ALLOWED)
+bool mkGroupOfRandomNativeToRoomTypeAt(const RoomType       roomType,
+                                       const vector<Pos>&   sortedFreeCellsVector,
+                                       bool                 blocked[MAP_W][MAP_H],
+                                       const bool           IS_ROAMING_ALLOWED)
 {
     TRACE_FUNC_BEGIN_VERBOSE;
 
@@ -81,9 +93,10 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
     {
         const ActorDataT& d = ActorData::data[int(idBucket[i])];
         bool isMonNativeToRoom = false;
-        for (size_t iNative = 0; iNative < d.nativeRooms.size(); ++iNative)
+
+        for (const auto nativeRoomType : d.nativeRooms)
         {
-            if (d.nativeRooms[iNative] == roomType)
+            if (nativeRoomType == roomType)
             {
                 isMonNativeToRoom = true;
                 break;
@@ -92,7 +105,7 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
         if (!isMonNativeToRoom)
         {
             idBucket.erase(idBucket.begin() + i);
-            i--;
+            --i;
         }
     }
 
@@ -103,7 +116,7 @@ bool mkGroupOfRandomNativeToRoomTypeAt(
         TRACE_FUNC_END_VERBOSE;
         return false;
     }
-    else
+    else //Found valid monster IDs
     {
         const ActorId id = idBucket[Rnd::range(0, idBucket.size() - 1)];
         mkGroupAt(id, sortedFreeCellsVector, blocked, IS_ROAMING_ALLOWED);
@@ -129,10 +142,11 @@ void trySpawnDueToTimePassed()
     const int MIN_DIST_TO_PLAYER = FOV_STD_RADI_INT + 3;
 
     const Pos& playerPos = Map::player->pos;
-    const int X0 = max(0, playerPos.x - MIN_DIST_TO_PLAYER);
-    const int Y0 = max(0, playerPos.y - MIN_DIST_TO_PLAYER);
-    const int X1 = min(MAP_W - 1, playerPos.x + MIN_DIST_TO_PLAYER);
-    const int Y1 = min(MAP_H - 1, playerPos.y + MIN_DIST_TO_PLAYER);
+
+    const int X0 = max(0,           playerPos.x - MIN_DIST_TO_PLAYER);
+    const int Y0 = max(0,           playerPos.y - MIN_DIST_TO_PLAYER);
+    const int X1 = min(MAP_W - 1,   playerPos.x + MIN_DIST_TO_PLAYER);
+    const int Y1 = min(MAP_H - 1,   playerPos.y + MIN_DIST_TO_PLAYER);
 
     for (int x = X0; x <= X1; ++x)
     {
@@ -329,10 +343,12 @@ void populateStdLvl()
     {
         while (nrGroupsSpawned < NR_GROUPS_ALLOWED_ON_MAP)
         {
-            const int ELEMENT = Rnd::range(0, originBucket.size() - 1);
-            const Pos origin  = originBucket[ELEMENT];
+            const int   ELEMENT = Rnd::range(0, originBucket.size() - 1);
+            const Pos   origin  = originBucket[ELEMENT];
+
             vector<Pos> sortedFreeCellsVector;
             mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
+
             if (mkGroupOfRandomNativeToRoomTypeAt(
                         RoomType::plain, sortedFreeCellsVector, blocked, true))
             {
@@ -362,15 +378,15 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
 
     Actor* originActor = nullptr;
 
-    const int NR_FREE_CELLS = sortedFreeCellsVector.size();
+    const int NR_FREE_CELLS     = sortedFreeCellsVector.size();
     const int NR_CAN_BE_SPAWNED = min(NR_FREE_CELLS, maxNrInGroup);
+
     for (int i = 0; i < NR_CAN_BE_SPAWNED; ++i)
     {
-        const Pos& pos = sortedFreeCellsVector[i];
-
-        Actor* const actor = ActorFactory::mk(id, pos);
-        Mon* const mon = static_cast<Mon*>(actor);
-        mon->isRoamingAllowed_ = IS_ROAMING_ALLOWED;
+        const Pos&      p       = sortedFreeCellsVector[i];
+        Actor* const    actor   = ActorFactory::mk(id, p);
+        Mon* const      mon     = static_cast<Mon*>(actor);
+        mon->isRoamingAllowed_  = IS_ROAMING_ALLOWED;
 
         if (i == 0)
         {
@@ -381,7 +397,7 @@ void mkGroupAt(const ActorId id, const vector<Pos>& sortedFreeCellsVector,
             mon->leader_ = originActor;
         }
 
-        blocked[pos.x][pos.y] = true;
+        blocked[p.x][p.y] = true;
     }
 }
 
