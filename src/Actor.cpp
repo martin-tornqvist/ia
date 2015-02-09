@@ -583,8 +583,8 @@ ActorDied Actor::hit(int dmg, const DmgType dmgType, DmgMethod method)
         return ActorDied::no;
     }
 
-    hit_(dmg);
-    TRACE_VERBOSE << "Damage after hit_(): " << dmg << endl;
+    onHit(dmg);
+    TRACE_VERBOSE << "Damage after onHit(): " << dmg << endl;
 
     dmg = max(1, dmg);
 

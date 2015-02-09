@@ -52,7 +52,7 @@ JewelryEffect* mkEffect(const JewelryEffectId id, Jewelry* const jewelry)
         ret = new JewelryEffectTeleControl(jewelry);
         break;
 
-    case JewelryEffectId::summonMon:
+    case JewelryEffectId::summon:
         ret = new JewelryEffectSummonMon(jewelry);
         break;
 
@@ -316,7 +316,7 @@ void JewelryEffectSummonMon::onStdTurnEquiped()
 
         vector<Mon*> summonedMon;
 
-        ActorFactory::summonMon(origin, {ActorId::greaterPolyp}, false, nullptr,
+        ActorFactory::summon(origin, {ActorId::greaterPolyp}, false, nullptr,
                                 &summonedMon);
 
         const Mon* const mon = summonedMon[0];
@@ -785,7 +785,7 @@ bool canEffectsBeCombined(const JewelryEffectId id1,
     case Id::hpRegenPen:
         return id2 != Id::hpRegenBon && id2 != Id::hpBon && id2 != Id::hpPen;
 
-    case Id::summonMon:
+    case Id::summon:
     case Id::light:
     case Id::conflict:
     case Id::rFire:

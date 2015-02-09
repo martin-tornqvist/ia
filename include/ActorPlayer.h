@@ -117,7 +117,7 @@ private:
 
     void testPhobias();
 
-    void hit_(int& dmg) override;
+    void onHit(int& dmg) override;
 
     void FOVhack();
 

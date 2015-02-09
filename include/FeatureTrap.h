@@ -21,7 +21,7 @@ enum class TrapId
     spear,
     web,
     teleport,
-    summonMon,
+    summon,
     END,
     any
 };
@@ -241,7 +241,7 @@ class TrapSummonMon: public SpecificTrapBase
 private:
     friend class Trap;
     TrapSummonMon(Pos pos) :
-        SpecificTrapBase(pos, TrapId::summonMon)
+        SpecificTrapBase(pos, TrapId::summon)
     {
     }
     void trigger(Actor& actor, const AbilityRollResult dodgeResult);

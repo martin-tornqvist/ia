@@ -2850,7 +2850,7 @@ DidTriggerTrap Cocoon::triggerTrap(Actor* const actor)
                 const int NR_SPIDERS          = Rnd::range(2, 5);
                 const int IDX                 = Rnd::range(0, NR_CANDIDATES - 1);
                 const ActorId actorIdToSummon = spawnBucket[IDX];
-                ActorFactory::summonMon(
+                ActorFactory::summon(
                     pos_, vector<ActorId>(NR_SPIDERS, actorIdToSummon), true);
                 isTrapped_ = false;
                 return DidTriggerTrap::yes;

@@ -338,7 +338,7 @@ void Mon::onStdTurn()
     onStdTurn_();
 }
 
-void Mon::hit_(int& dmg)
+void Mon::onHit(int& dmg)
 {
     (void)dmg;
     awareCounter_ = data_->nrTurnsAware;
@@ -1652,7 +1652,7 @@ bool MajorClaphamLee::onActorTurn_()
                 }
                 monIds.push_back(id);
             }
-            ActorFactory::summonMon(pos, monIds, true, this);
+            ActorFactory::summon(pos, monIds, true, this);
             Render::drawMapAndInterface();
             hasSummonedTombLegions = true;
             Map::player->incrShock(ShockLvl::heavy, ShockSrc::misc);
@@ -1775,6 +1775,11 @@ void GasSpore::onDeath()
     Explosion::runExplosionAt(pos, ExplType::expl);
 }
 
+TheDarkOne::TheDarkOne() :
+    Mon                 (),
+    hasGreetedPlayer_   (false),
+    bigSpellCounter_    (30) {}
+
 void TheDarkOne::mkStartItems()
 {
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::theDarkOneClaw));
@@ -1826,13 +1831,48 @@ bool TheDarkOne::onActorTurn_()
         bigSpellCounter_--;
     }
 
-//    if (bigSpellCounter_ <= 0 && tgt_)
-//    {
-//        ActorFactory::summonMon(pos, {2, ActorId::giantBat}, this);
-//        GameTime::tick();
-//        bigSpellCounter_ = BIG_SPELL_COOLDOWN_;
-//        return true;
-//    }
+    //Summon copies, change position with one of them.
+    //NOTE: The copies sets their HP equal to "real" Dark One.
+    if (bigSpellCounter_ <= 0 && tgt_ && Rnd::oneIn(4))
+    {
+        bool blocked[MAP_W][MAP_H];
+
+        MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
+
+        vector<Pos> freeCells;
+
+        Utils::mkVectorFromBoolMap(false, blocked, freeCells);
+
+        random_shuffle(begin(freeCells), end(freeCells));
+
+        const int NR_SUMMONED = min(3, int(freeCells.size()));
+
+        vector<Mon*> summoned;
+
+        for (int i = 0; i < NR_SUMMONED; ++i)
+        {
+            const Pos& p(freeCells[i]);
+            ActorFactory::summon(p, {ActorId::theDarkOneCpy}, true, this, &summoned);
+
+            assert(summoned.size() == 1);
+
+            Mon* const mon = summoned.front();
+
+            mon->nrTurnsUntilUnsummoned_ = Rnd::range(10, 30);
+
+            if (i == 0)
+            {
+                pos.swap(mon->pos);
+                assert(pos != mon->pos);
+            }
+        }
+
+        GameTime::tick();
+
+        bigSpellCounter_ = 30;
+
+        return true;
+    }
 
     if (Rnd::coinToss())
     {
@@ -1841,4 +1881,22 @@ bool TheDarkOne::onActorTurn_()
     }
 
     return false;
+}
+
+TheDarkOneCpy::TheDarkOneCpy()
+{
+
+}
+
+void TheDarkOneCpy::mkStartItems()
+{
+    for (Actor* const actor : GameTime::actors_)
+    {
+        if (actor->getId() == ActorId::theDarkOne)
+        {
+            hp_ = actor->getHp();
+        }
+    }
+
+    inv_->putInIntrinsics(ItemFactory::mk(ItemId::theDarkOneClaw));
 }

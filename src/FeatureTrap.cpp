@@ -90,7 +90,7 @@ void Trap::setSpecificTrapFromId(const TrapId id)
         specificTrap_ = new TrapTeleport(pos_);
         break;
 
-    case TrapId::summonMon:
+    case TrapId::summon:
         specificTrap_ = new TrapSummonMon(pos_);
         break;
 
@@ -849,7 +849,7 @@ void TrapSummonMon::trigger( Actor& actor, const AbilityRollResult dodgeResult)
         const ActorId actorIdToSummon = summonBucket[ELEMENT];
         TRACE << "Actor id: " << int(actorIdToSummon) << endl;
 
-        ActorFactory::summonMon(pos_, vector<ActorId>(1, actorIdToSummon), true);
+        ActorFactory::summon(pos_, vector<ActorId>(1, actorIdToSummon), true);
         TRACE << "Monster was summoned" << endl;
     }
     TRACE_FUNC_END_VERBOSE;

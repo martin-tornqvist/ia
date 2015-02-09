@@ -1669,7 +1669,7 @@ void initDataList()
 
     d = new ItemDataT(ItemId::scrollSummonMon);
     resetData(*d, ItemType::scroll);
-    d->spellCastFromScroll = SpellId::summonMon;
+    d->spellCastFromScroll = SpellId::summon;
     data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollLight);

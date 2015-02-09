@@ -2584,8 +2584,8 @@ void initDataList()
     d.ai[int(AiId::pathsToTgtWhenAware)] = true;
     d.ai[int(AiId::movesToTgtWhenLos)] = true;
     d.ai[int(AiId::movesToLair)] = false;
-    d.ai[int(AiId::movesToLeader)] = false;
-    d.speed = ActorSpeed::normal;
+    d.ai[int(AiId::movesToLeader)] = true;
+    d.speed = ActorSpeed::slow;
     d.rangedCooldownTurns = 0;
     d.spellCooldownTurns = 7;
     d.isUnique = true;
@@ -2593,9 +2593,8 @@ void initDataList()
     d.glyph = 'P';
     d.color = clrGrayDrk;
     d.tile = TileId::theDarkOne;
-    d.hp = 300;
+    d.hp = 400;
     d.spi = 9999;
-    d.intrProps[int(PropId::burrowing)] = true;
     d.intrProps[int(PropId::rConf)] = true;
     d.intrProps[int(PropId::rFear)] = true;
     d.intrProps[int(PropId::rFire)] = true;
@@ -2615,6 +2614,12 @@ void initDataList()
     d.monShockLvl = MonShockLvl::terrifying;
     d.isHumanoid = true;
     d.canLeaveCorpse = false;
+    data[size_t(d.id)] = d;
+    d.reset();
+
+    d = data[size_t(ActorId::theDarkOne)]; // NOTE: Copy of The Dark One
+    d.id = ActorId::theDarkOneCpy;
+    d.deathMsgOverride = "The Copy vanishes.";
     data[size_t(d.id)] = d;
     d.reset();
 }

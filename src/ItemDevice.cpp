@@ -286,7 +286,7 @@ ConsumeItem DeviceTranslocator::triggerEffect()
 ConsumeItem DeviceSentryDrone::triggerEffect()
 {
     Log::addMsg("The Sentry Drone awakens!");
-    ActorFactory::summonMon(Map::player->pos, {ActorId::sentryDrone}, true, Map::player);
+    ActorFactory::summon(Map::player->pos, {ActorId::sentryDrone}, true, Map::player);
     return ConsumeItem::yes;
 }
 

@@ -43,7 +43,7 @@ enum class ActorId
     sentryDrone,
     mold,
     gasSpore,
-    theDarkOne,
+    theDarkOne, theDarkOneCpy,
 
     END
 };

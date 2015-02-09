@@ -70,14 +70,14 @@ public:
     int         getSpiMax()                         const {return spiMax_;}
     ActorSpeed  getSpeed()                          const;
 
-    std::string getNameThe()         const {return data_->nameThe;}
-    std::string getNameA()           const {return data_->nameA;}
-    std::string getCorpseNameA()     const {return data_->corpseNameA;}
-    std::string getCorpseNameThe()   const {return data_->corpseNameThe;}
-    bool isHumanoid()                const {return data_->isHumanoid;}
-    char getGlyph()                  const {return glyph_;}
-    virtual const Clr& getClr()                   {return clr_;}
-    const TileId& getTile()          const {return tile_;}
+    std::string getNameThe()        const   {return data_->nameThe;}
+    std::string getNameA()          const   {return data_->nameA;}
+    std::string getCorpseNameA()    const   {return data_->corpseNameA;}
+    std::string getCorpseNameThe()  const   {return data_->corpseNameThe;}
+    bool isHumanoid()               const   {return data_->isHumanoid;}
+    char getGlyph()                 const   {return glyph_;}
+    virtual const Clr& getClr()             {return clr_;}
+    const TileId& getTile()         const   {return tile_;}
 
     void addLight(bool lightMap[MAP_W][MAP_H]) const;
 
@@ -104,7 +104,7 @@ protected:
     friend class Trap;
 
     virtual void onDeath() {}
-    virtual void hit_(int& dmg) {(void)dmg;}
+    virtual void onHit(int& dmg) {(void)dmg;}
     virtual void mkStartItems() = 0;
 
     ActorState  state_;

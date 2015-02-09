@@ -82,6 +82,7 @@ Actor* mkActorFromId(const ActorId id)
     case ActorId::mold:                 return new Mold();
     case ActorId::gasSpore:             return new GasSpore();
     case ActorId::theDarkOne:           return new TheDarkOne();
+    case ActorId::theDarkOneCpy:        return new TheDarkOneCpy();
 
     case ActorId::END: {} break;
     }
@@ -126,9 +127,11 @@ void deleteAllMon()
     }
 }
 
-void summonMon(const Pos& origin, const vector<ActorId>& monsterIds,
-               const bool MAKE_MONSTERS_AWARE, Actor* const actorToSetAsLeader,
-               vector<Mon*>* monstersRet)
+void summon(const Pos&              origin,
+            const vector<ActorId>&  monsterIds,
+            const bool              MAKE_MONSTERS_AWARE,
+            Actor* const            actorToSetAsLeader,
+            vector<Mon*>*           monstersRet)
 {
     if (monstersRet) {monstersRet->clear();}
 

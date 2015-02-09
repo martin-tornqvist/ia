@@ -131,7 +131,7 @@ void act()
     }
     if (!hasAlliedMon)
     {
-        ActorFactory::summonMon(Map::player->pos, {ActorId::miGo}, false, Map::player);
+        ActorFactory::summon(Map::player->pos, {ActorId::miGo}, false, Map::player);
     }
 
     //Occasionally apply RFear (to avoid getting stuck on fear-causing monsters)

@@ -34,7 +34,7 @@ enum class JewelryEffectId
     burden,
     shriek,
     randomTele,
-    summonMon,
+    summon,
     fire,
 
     END
@@ -357,7 +357,7 @@ public:
 
     ~JewelryEffectSummonMon() {}
 
-    JewelryEffectId getId() const override {return JewelryEffectId::summonMon;}
+    JewelryEffectId getId() const override {return JewelryEffectId::summon;}
 
     std::string getDescr() const override
     {

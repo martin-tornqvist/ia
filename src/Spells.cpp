@@ -59,7 +59,7 @@ Spell* mkSpellFromId(const SpellId spellId)
     case SpellId::disease:              return new SpellDisease;
     case SpellId::darkbolt:             return new SpellDarkbolt;
     case SpellId::azaWrath:             return new SpellAzaWrath;
-    case SpellId::summonMon:            return new SpellSummonMon;
+    case SpellId::summon:            return new SpellSummonMon;
     case SpellId::healSelf:             return new SpellHealSelf;
     case SpellId::knockBack:            return new SpellKnockBack;
     case SpellId::teleport:             return new SpellTeleport;
@@ -124,7 +124,7 @@ Range Spell::getSpiCost(const bool IS_BASE_COST_ONLY, Actor* const caster) const
         case SpellId::detMon:         if (IS_SEER)     --costMax;     break;
         case SpellId::detItems:       if (IS_SEER)     costMax -= 3;  break;
         case SpellId::detTraps:       if (IS_SEER)     costMax -= 3;  break;
-        case SpellId::summonMon:      if (IS_SUMMONER) --costMax;     break;
+        case SpellId::summon:      if (IS_SUMMONER) --costMax;     break;
         case SpellId::pest:           if (IS_SUMMONER) --costMax;     break;
         case SpellId::pharaohStaff:   if (IS_SUMMONER) --costMax;     break;
         default: {} break;
@@ -496,7 +496,7 @@ SpellEffectNoticed SpellPest::cast_(Actor* const caster) const
 
     vector<Mon*> monSummoned;
 
-    ActorFactory::summonMon(caster->pos, {NR_MON, monsterId}, true, leader, &monSummoned);
+    ActorFactory::summon(caster->pos, {NR_MON, monsterId}, true, leader, &monSummoned);
 
     bool isAnySeenByPlayer = false;
 
@@ -579,7 +579,7 @@ SpellEffectNoticed SpellPharaohStaff::cast_(Actor* const caster) const
 
     const auto id = Rnd::coinToss() ? ActorId::mummy : ActorId::crocHeadMummy;
 
-    ActorFactory::summonMon(caster->pos, {id}, false, leader, &summonedMon);
+    ActorFactory::summon(caster->pos, {id}, false, leader, &summonedMon);
 
     const Mon* const mon = summonedMon[0];
 
@@ -1159,7 +1159,7 @@ SpellEffectNoticed SpellSummonMon::cast_(Actor* const caster) const
 
     vector<Mon*> monSummoned;
 
-    ActorFactory::summonMon(summonPos, {monId}, true, leader, &monSummoned);
+    ActorFactory::summon(summonPos, {monId}, true, leader, &monSummoned);
 
     Mon* const mon                = monSummoned[0];
     mon->nrTurnsUntilUnsummoned_  = Rnd::range(40, 70);;

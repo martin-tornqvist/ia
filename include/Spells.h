@@ -25,7 +25,7 @@ enum class SpellId
     terrifyMon,
     paralyzeMon,
     teleport,
-    summonMon,
+    summon,
     pest,
 
     //Player only
@@ -715,7 +715,7 @@ public:
     bool isAvailForAllMon()         const override {return true;}
     bool isAvailForPlayer()         const override {return true;}
     std::string getName()           const override {return "Summon Creature";}
-    SpellId getId()                 const override {return SpellId::summonMon;}
+    SpellId getId()                 const override {return SpellId::summon;}
     IntrSpellShock getShockTypeIntrCast() const override
     {
         return IntrSpellShock::disturbing;

@@ -270,7 +270,7 @@ void Player::setupFromSaveLines(vector<string>& lines)
     }
 }
 
-void Player::hit_(int& dmg)
+void Player::onHit(int& dmg)
 {
     (void)dmg;
 
@@ -642,7 +642,7 @@ void Player::incrInsanity()
                     getConstrInRange(2, (Map::dlvl + 1) / 2, 6);
                 const int NR                =
                     Rnd::range(NR_SHADOWS_LOWER, NR_SHADOWS_UPPER);
-                ActorFactory::summonMon(pos, vector<ActorId>(NR, ActorId::shadow), true);
+                ActorFactory::summon(pos, vector<ActorId>(NR, ActorId::shadow), true);
                 return;
             }
         } break;

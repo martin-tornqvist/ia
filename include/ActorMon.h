@@ -105,7 +105,7 @@ public:
     int                 nrTurnsUntilUnsummoned_;
 
 protected:
-    virtual void hit_(int& dmg) override;
+    virtual void onHit(int& dmg) override;
 
     virtual bool onActorTurn_() {return false;}
     virtual void onStdTurn_() {}
@@ -712,11 +712,7 @@ public:
 class TheDarkOne: public Mon
 {
 public:
-    TheDarkOne() :
-        Mon                 (),
-        hasGreetedPlayer_   (false),
-        BIG_SPELL_COOLDOWN_ (30),
-        bigSpellCounter_    (BIG_SPELL_COOLDOWN_) {}
+    TheDarkOne();
     ~TheDarkOne() {}
     void mkStartItems() override;
     void onDeath()      override;
@@ -725,8 +721,15 @@ private:
     void onStdTurn_()   override;
 
     bool      hasGreetedPlayer_;
-    const int BIG_SPELL_COOLDOWN_;
     int       bigSpellCounter_;
+};
+
+class TheDarkOneCpy: public Mon
+{
+public:
+    TheDarkOneCpy();
+    ~TheDarkOneCpy() {}
+    void mkStartItems() override;
 };
 
 #endif
