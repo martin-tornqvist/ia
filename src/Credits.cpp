@@ -57,8 +57,6 @@ void run()
 {
     Render::clearScreen();
 
-    string str;
-
     const string decorationLine(MAP_W, '-');
 
     const int X_LABEL = 3;

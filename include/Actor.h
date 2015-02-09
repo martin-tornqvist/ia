@@ -103,7 +103,7 @@ protected:
     friend class PropPossByZuul;
     friend class Trap;
 
-    virtual void die_() {}
+    virtual void onDeath() {}
     virtual void hit_(int& dmg) {(void)dmg;}
     virtual void mkStartItems() = 0;
 

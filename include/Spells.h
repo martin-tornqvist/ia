@@ -29,7 +29,7 @@ enum class SpellId
     pest,
 
     //Player only
-    mayhem, //NOTE: This can be cast by the final boss
+    mayhem,
     detItems,
     detTraps,
     detMon,

@@ -2580,7 +2580,7 @@ void initDataList()
     d.id = ActorId::theDarkOne;
     d.ai[int(AiId::looks)] = true;
     d.ai[int(AiId::makesRoomForFriend)] = false;
-    d.ai[int(AiId::attacks)] = false;
+    d.ai[int(AiId::attacks)] = true;
     d.ai[int(AiId::pathsToTgtWhenAware)] = true;
     d.ai[int(AiId::movesToTgtWhenLos)] = true;
     d.ai[int(AiId::movesToLair)] = false;
@@ -2610,7 +2610,7 @@ void initDataList()
     d.nrTurnsAware = 9999;
     d.descr = "[TODO]";
     d.isAutoDescrAllowed = false;
-    d.spellCastMsg = "[TODO]";
+    d.spellCastMsg = "The Dark One makes strange gestures in the air.";
     d.erraticMovePct = ActorErraticFreq::never;
     d.monShockLvl = MonShockLvl::terrifying;
     d.isHumanoid = true;

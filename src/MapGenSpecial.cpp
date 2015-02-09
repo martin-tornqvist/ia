@@ -352,7 +352,6 @@ void mkForestTrees()
             TextFormat::getSpaceSeparatedList(entry.getDateAndTime(), dateStrVector);
             const string  dateStr     = dateStrVector[0];
             const string  scoreStr    = toStr(entry.getScore());
-            const string  dlvlStr     = toStr(entry.getDlvl());
             string        classStr    = "";
             PlayerBon::getBgTitle(entry.getBg(), classStr);
 

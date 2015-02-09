@@ -924,7 +924,7 @@ bool Vortex::onActorTurn_()
     return false;
 }
 
-void DustVortex::die_()
+void DustVortex::onDeath()
 {
     Explosion::runExplosionAt(pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
                               new PropBlind(PropTurns::std), &clrGray);
@@ -935,7 +935,7 @@ void DustVortex::mkStartItems()
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::dustVortexEngulf));
 }
 
-void FireVortex::die_()
+void FireVortex::onDeath()
 {
     Explosion::runExplosionAt(
         pos, ExplType::applyProp, ExplSrc::misc, 0, SfxId::END,
@@ -947,7 +947,7 @@ void FireVortex::mkStartItems()
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::fireVortexEngulf));
 }
 
-void FrostVortex::die_()
+void FrostVortex::onDeath()
 {
     //TODO: Add explosion with cold damage
 }
@@ -1700,7 +1700,7 @@ bool Zombie::tryResurrect()
     return false;
 }
 
-void Zombie::die_()
+void Zombie::onDeath()
 {
     //If resurrected once and has corpse, blow up the corpse
     if (hasResurrected && isCorpse())
@@ -1770,7 +1770,7 @@ void Mold::mkStartItems()
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::moldSpores));
 }
 
-void GasSpore::die_()
+void GasSpore::onDeath()
 {
     Explosion::runExplosionAt(pos, ExplType::expl);
 }
@@ -1780,8 +1780,21 @@ void TheDarkOne::mkStartItems()
     inv_->putInIntrinsics(ItemFactory::mk(ItemId::theDarkOneClaw));
 
     spellsKnown_.push_back(new SpellTeleport());
-    spellsKnown_.push_back(new SpellKnockBack());
-    spellsKnown_.push_back(new SpellMayhem());
+    spellsKnown_.push_back(new SpellTerrifyMon());
+    spellsKnown_.push_back(new SpellDisease());
+    spellsKnown_.push_back(new SpellBurn());
+}
+
+void TheDarkOne::onDeath()
+{
+    Log::addMsg("The ground rumbles...", clrWhite, false, true);
+
+    const Pos stairPos(MAP_W - 2, 11);
+    Map::put(new Stairs(stairPos));
+    Map::put(new RubbleLow(stairPos - Pos(1, 0)));
+
+    Map::player->updateFov();
+    Render::drawMapAndInterface();
 }
 
 void TheDarkOne::onStdTurn_()
@@ -1813,22 +1826,18 @@ bool TheDarkOne::onActorTurn_()
         bigSpellCounter_--;
     }
 
-    if (bigSpellCounter_ <= 0 && tgt_)
-    {
-        ActorFactory::summonMon(pos, {3, ActorId::giantBat}, this);
-        GameTime::tick();
-        bigSpellCounter_ = BIG_SPELL_COOLDOWN_;
-        return true;
-    }
+//    if (bigSpellCounter_ <= 0 && tgt_)
+//    {
+//        ActorFactory::summonMon(pos, {2, ActorId::giantBat}, this);
+//        GameTime::tick();
+//        bigSpellCounter_ = BIG_SPELL_COOLDOWN_;
+//        return true;
+//    }
 
-    for (const Pos& d : DirUtils::dirList)
+    if (Rnd::coinToss())
     {
-        const Pos p(pos + d);
-
-        if (Utils::isPosInsideMap(p, false))
-        {
-            Map::cells[p.x][p.y].rigid->hit(DmgType::fire, DmgMethod::elemental);
-        }
+        Map::cells[pos.x][pos.y].rigid->mkBloody();
+        Map::cells[pos.x][pos.y].rigid->tryPutGore();
     }
 
     return false;

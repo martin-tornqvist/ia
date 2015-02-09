@@ -518,8 +518,7 @@ void handleMapModeKeyPress(const KeyData& d)
             Map::player->getSeenFoes(seenMon);
             if (seenMon.empty())
             {
-                const int     TURNS_TO_APPLY  = 5;
-                const string  TURNS_STR       = toStr(TURNS_TO_APPLY);
+                const int TURNS_TO_APPLY = 5;
                 Log::addMsg("I pause for a while...");
                 Map::player->waitTurnsLeft = TURNS_TO_APPLY - 1;
                 GameTime::tick();

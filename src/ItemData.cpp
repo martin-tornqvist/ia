@@ -390,7 +390,7 @@ void initDataList()
     d->glyph = '*';
     d->clr = clrRedLgt;
     d->tile = TileId::trapezohedron;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::sawedOff);
     resetData(*d, ItemType::rangedWpn);
@@ -400,7 +400,7 @@ void initDataList()
     };
     d->baseDescr =
     {
-        "Compared to a standard shotgun, the sawed - off has a shorter effective range. "
+        "Compared to a standard shotgun, the sawed-off has a shorter effective range. "
         "At close range it is more devastating however. It holds two barrels, and needs "
         "to be reloaded after both are discharged"
     };
@@ -419,14 +419,14 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::pumpShotgun);
     resetData(*d, ItemType::rangedWpn);
     d->baseName = {"Pump Shotgun", "Pump shotguns", "a Pump Shotgun"};
     d->baseDescr =
     {
-        "A pump - action shotgun has a handgrip that can be pumped back and forth in "
+        "A pump-action shotgun has a handgrip that can be pumped back and forth in "
         "order to eject a spent round of ammunition and to chamber a fresh one. It has "
         "a single barrel above a tube magazine into which shells are inserted. The "
         "magazine has a capacity of 8 shells."
@@ -446,7 +446,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::shotgunShell);
     resetData(*d, ItemType::ammo);
@@ -459,7 +459,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::incinerator);
     resetData(*d, ItemType::rangedWpn);
@@ -484,7 +484,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest, 25);
     addFeatureFoundIn(*d, FeatureId::cabinet, 25);
     addFeatureFoundIn(*d, FeatureId::cocoon, 25);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::incineratorAmmo);
     resetData(*d, ItemType::ammoClip);
@@ -503,14 +503,14 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest, 25);
     addFeatureFoundIn(*d, FeatureId::cabinet, 25);
     addFeatureFoundIn(*d, FeatureId::cocoon, 25);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::machineGun);
     resetData(*d, ItemType::rangedWpn);
     d->baseName = {"Tommy Gun", "Tommy Guns", "a Tommy Gun"};
     d->baseDescr =
     {
-        "\"Tommy Gun\" is a nickname for the Thompson submachine gun - an automatic "
+        "\"Tommy Gun\" is a nickname for the Thompson submachine gun-an automatic "
         "firearm with a drum magazine and verical foregrip. It fires .45 ACP "
         "ammunition. The drum magazine has a capacity of 50 rounds."
     };
@@ -530,7 +530,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::drumOfBullets);
     resetData(*d, ItemType::ammoClip);
@@ -543,7 +543,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::pistol);
     resetData(*d, ItemType::rangedWpn);
@@ -566,7 +566,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::pistolClip);
     resetData(*d, ItemType::ammoClip);
@@ -581,7 +581,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::miGoGun);
     resetData(*d, ItemType::rangedWpn);
@@ -614,7 +614,7 @@ void initDataList()
     d->ranged.attSfx = SfxId::miGoGunFire;
     d->ranged.reloadSfx = SfxId::machineGunReload;
     d->ranged.makesRicochetSnd = false;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::miGoGunAmmo);
     resetData(*d, ItemType::ammoClip);
@@ -629,7 +629,7 @@ void initDataList()
     d->clr = clrYellow;
     d->spawnStdRange = Range(-1, -1);
     d->ranged.maxNrAmmoInClip = 20;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::flareGun);
     resetData(*d, ItemType::rangedWpn);
@@ -651,7 +651,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::spikeGun);
     resetData(*d, ItemType::rangedWpn);
@@ -684,7 +684,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest, 50);
     addFeatureFoundIn(*d, FeatureId::cabinet, 50);
     addFeatureFoundIn(*d, FeatureId::cocoon, 50);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::dynamite);
     resetData(*d, ItemType::explosive);
@@ -700,7 +700,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::flare);
     resetData(*d, ItemType::explosive);
@@ -716,7 +716,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::molotov);
     resetData(*d, ItemType::explosive);
@@ -733,7 +733,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::smokeGrenade);
     resetData(*d, ItemType::explosive);
@@ -742,7 +742,7 @@ void initDataList()
     {
         "A sheet steel cylinder with emission holes releasing smoke when the grenade is "
         "ignited. Their primary use is to create smoke screens for concealment. "
-        "The fumes produced can harm the eyes, throat and lungs  - so it is "
+        "The fumes produced can harm the eyes, throat and lungs - so it is "
         "recommended to wear a protective mask."
     };
     d->weight = ItemWeight::light;
@@ -750,7 +750,7 @@ void initDataList()
     d->clr = clrGreen;
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::thrKnife);
     resetData(*d, ItemType::throwingWpn);
@@ -773,7 +773,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::rock);
     resetData(*d, ItemType::throwingWpn);
@@ -794,7 +794,7 @@ void initDataList()
     d->mainAttMode = MainAttMode::thrown;
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::dagger);
     resetData(*d, ItemType::meleeWpn);
@@ -821,7 +821,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::tomb);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::hatchet);
     resetData(*d, ItemType::meleeWpn);
@@ -848,7 +848,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::club);
     resetData(*d, ItemType::meleeWpn);
@@ -867,7 +867,7 @@ void initDataList()
     d->melee.dmg = pair<int, int>(2, 3);
     d->melee.hitChanceMod = 10;
     d->melee.missSfx = SfxId::missMedium;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::hammer);
     resetData(*d, ItemType::meleeWpn);
@@ -887,7 +887,7 @@ void initDataList()
     d->melee.missSfx = SfxId::missMedium;
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::machete);
     resetData(*d, ItemType::meleeWpn);
@@ -908,7 +908,7 @@ void initDataList()
     d->melee.missSfx = SfxId::missMedium;
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::axe);
     resetData(*d, ItemType::meleeWpn);
@@ -933,7 +933,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::tomb);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::pitchFork);
     resetData(*d, ItemType::meleeWpn);
@@ -954,7 +954,7 @@ void initDataList()
     d->melee.missSfx = SfxId::missHeavy;
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::sledgeHammer);
     resetData(*d, ItemType::meleeWpn);
@@ -973,7 +973,7 @@ void initDataList()
     d->melee.knocksBack = true;
     d->melee.missSfx = SfxId::missHeavy;
     addFeatureFoundIn(*d, FeatureId::cabinet);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::pharaohStaff);
     resetData(*d, ItemType::meleeWpn);
@@ -999,7 +999,7 @@ void initDataList()
     d->value = ItemValue::majorTreasure;
     d->shockWhileInBackpack = d->shockWhileEquipped = 15;
     addFeatureFoundIn(*d, FeatureId::tomb, 20);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::ironSpike);
     resetData(*d, ItemType::throwingWpn);
@@ -1023,7 +1023,7 @@ void initDataList()
     d->mainAttMode = MainAttMode::thrown;
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::playerKick);
     resetData(*d, ItemType::meleeWpnIntr);
@@ -1032,7 +1032,7 @@ void initDataList()
     d->melee.dmg = pair<int, int>(1, 3);
     d->melee.knocksBack = true;
     d->melee.missSfx = SfxId::missMedium;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::playerStomp);
     resetData(*d, ItemType::meleeWpnIntr);
@@ -1040,27 +1040,27 @@ void initDataList()
     d->melee.hitChanceMod = 20;
     d->melee.dmg = pair<int, int>(1, 3);
     d->melee.knocksBack = false;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::playerPunch);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"punch", ""};
     d->melee.hitChanceMod = 25;
     d->melee.dmg = pair<int, int>(1, 2);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::zombieClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
     setDmgFromMonId(*d, ActorId::zombie);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::zombieClawDiseased);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
     setDmgFromMonId(*d, ActorId::zombie);
     d->melee.propApplied = new PropInfected(PropTurns::std);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::zombieAxe);
     resetData(*d, ItemType::meleeWpnIntr);
@@ -1069,14 +1069,14 @@ void initDataList()
     d->melee.hitMediumSfx = SfxId::hitMedium;
     d->melee.hitHardSfx = SfxId::hitHard;
     setDmgFromMonId(*d, ActorId::zombieAxe);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::bloatedZombiePunch);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "mauls me"};
     setDmgFromMonId(*d, ActorId::bloatedZombie);
     d->melee.knocksBack = true;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::bloatedZombieSpit);
     resetData(*d, ItemType::rangedWpnIntr);
@@ -1086,77 +1086,77 @@ void initDataList()
     d->ranged.missileClr = clrGreenLgt;
     d->ranged.dmgType = DmgType::acid;
     d->ranged.missileGlyph = '*';
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::ratBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::rat);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::ratBiteDiseased);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::rat);
     d->melee.propApplied = new PropInfected(PropTurns::std);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::ratThingBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::ratThing);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::brownJenkinBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::brownJenkin);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::wormMassBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::wormMass);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::wolfBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::wolf);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::greenSpiderBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::greenSpider);
     d->melee.propApplied = new PropBlind(PropTurns::specific, 4);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::whiteSpiderBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::whiteSpider);
     d->melee.propApplied = new PropParalyzed(PropTurns::specific, 2);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::redSpiderBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::redSpider);
     d->melee.propApplied = new PropWeakened(PropTurns::std);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::shadowSpiderBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::shadowSpider);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::lengSpiderBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::lengSpider);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::fireHoundBreath);
     resetData(*d, ItemType::rangedWpnIntr);
@@ -1169,14 +1169,14 @@ void initDataList()
     d->ranged.missileLeavesTrail = true;
     d->ranged.missileLeavesSmoke = true;
     d->ranged.dmgType = DmgType::fire;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::fireHoundBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::fireHound);
     d->melee.dmgType = DmgType::fire;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::frostHoundBreath);
     resetData(*d, ItemType::rangedWpnIntr);
@@ -1188,41 +1188,41 @@ void initDataList()
     d->ranged.missileLeavesTrail = true;
     d->ranged.missileLeavesSmoke = true;
     d->ranged.dmgType = DmgType::cold;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::frostHoundBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::frostHound);
     d->melee.dmgType = DmgType::cold;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::zuulBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::zuul);
     d->melee.dmgType = DmgType::physical;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::dustVortexEngulf);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "engulfs me"};
     setDmgFromMonId(*d, ActorId::dustVortex);
     d->melee.propApplied = new PropBlind(PropTurns::std);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::fireVortexEngulf);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "engulfs me"};
     setDmgFromMonId(*d, ActorId::fireVortex);
     d->melee.propApplied = new PropBurning(PropTurns::std);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::frostVortexEngulf);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "engulfs me"};
     setDmgFromMonId(*d, ActorId::frostVortex);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::ghostClaw);
     resetData(*d, ItemType::meleeWpnIntr);
@@ -1230,7 +1230,7 @@ void initDataList()
     setDmgFromMonId(*d, ActorId::ghost);
     d->melee.propApplied = new PropTerrified(PropTurns::specific, 4);
     d->melee.dmgType = DmgType::spirit;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::phantasmSickle);
     resetData(*d, ItemType::meleeWpnIntr);
@@ -1238,7 +1238,7 @@ void initDataList()
     setDmgFromMonId(*d, ActorId::phantasm);
     d->melee.propApplied = new PropTerrified(PropTurns::specific, 4);
     d->melee.dmgType = DmgType::spirit;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::wraithClaw);
     resetData(*d, ItemType::meleeWpnIntr);
@@ -1246,58 +1246,58 @@ void initDataList()
     setDmgFromMonId(*d, ActorId::wraith);
     d->melee.propApplied = new PropTerrified(PropTurns::specific, 4);
     d->melee.dmgType = DmgType::spirit;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::giantBatBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::giantBat);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::polypTentacle);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "grips me with a tentacle"};
     d->melee.propApplied = new PropParalyzed(PropTurns::specific, 1);
     setDmgFromMonId(*d, ActorId::flyingPolyp);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::greaterPolypTentacle);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "grips me with a tentacle"};
     d->melee.propApplied = new PropParalyzed(PropTurns::specific, 1);
     setDmgFromMonId(*d, ActorId::greaterPolyp);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::ghoulClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
     setDmgFromMonId(*d, ActorId::ghoul);
     d->melee.propApplied = new PropInfected(PropTurns::std);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::shadowClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
     setDmgFromMonId(*d, ActorId::shadow);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::byakheeClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
     setDmgFromMonId(*d, ActorId::byakhee);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::giantMantisClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
     setDmgFromMonId(*d, ActorId::giantMantis);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::giantLocustBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::locust);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::mummyMaul);
     resetData(*d, ItemType::meleeWpnIntr);
@@ -1305,13 +1305,13 @@ void initDataList()
     setDmgFromMonId(*d, ActorId::mummy);
     d->melee.propApplied = new PropCursed(PropTurns::std);
     d->melee.knocksBack = true;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::crocHeadMummySpear);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "hits me with a spear"};
     setDmgFromMonId(*d, ActorId::crocHeadMummy);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::deepOneJavelinAtt);
     resetData(*d, ItemType::rangedWpnIntr);
@@ -1321,93 +1321,93 @@ void initDataList()
     d->ranged.missileClr = clrBrown;
     d->ranged.missileGlyph = '/';
     d->ranged.sndVol = SndVol::low;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::deepOneSpearAtt);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "hits me with a spear"};
     setDmgFromMonId(*d, ActorId::deepOne);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::apeMaul);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "mauls me"};
     setDmgFromMonId(*d, ActorId::ape);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::oozeBlackSpewPus);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "spews pus on me"};
     setDmgFromMonId(*d, ActorId::oozeBlack);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::oozeClearSpewPus);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "spews pus on me"};
     setDmgFromMonId(*d, ActorId::oozeClear);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::oozePutridSpewPus);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "spews infected pus on me"};
     setDmgFromMonId(*d, ActorId::oozePutrid);
     d->melee.propApplied = new PropInfected(PropTurns::std);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::oozePoisonSpewPus);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "spews poisonous pus on me"};
     setDmgFromMonId(*d, ActorId::oozePoison);
     d->melee.propApplied = new PropPoisoned(PropTurns::std);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::colourOOSpaceTouch);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "touches me"};
     setDmgFromMonId(*d, ActorId::colourOOSpace);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::chthonianBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "strikes me with a tentacle"};
     d->melee.knocksBack = true;
     setDmgFromMonId(*d, ActorId::chthonian);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::huntingHorrorBite);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "bites me"};
     setDmgFromMonId(*d, ActorId::huntingHorror);
     d->melee.propApplied = new PropPoisoned(PropTurns::std);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::moldSpores);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "releases spores at me"};
     setDmgFromMonId(*d, ActorId::mold);
     d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::miGoSting);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "stings me"};
     setDmgFromMonId(*d, ActorId::miGo);
     d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::miGoCommanderSting);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "stings me"};
     setDmgFromMonId(*d, ActorId::miGoCommander);
     d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::theDarkOneClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
     d->melee.propApplied = new PropTerrified(PropTurns::std);
     setDmgFromMonId(*d, ActorId::theDarkOne);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::armorLeatherJacket);
     resetData(*d, ItemType::armor);
@@ -1423,7 +1423,7 @@ void initDataList()
     d->armor.dmgToDurabilityFactor = 1.0;
     d->landOnHardSndMsg = "";
     addFeatureFoundIn(*d, FeatureId::cabinet);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::armorIronSuit);
     resetData(*d, ItemType::armor);
@@ -1449,7 +1449,7 @@ void initDataList()
     d->armor.dmgToDurabilityFactor = 0.3;
     d->landOnHardSndMsg = "I hear a crashing sound.";
     addFeatureFoundIn(*d, FeatureId::cabinet);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::armorFlackJacket);
     resetData(*d, ItemType::armor);
@@ -1469,7 +1469,7 @@ void initDataList()
     d->armor.dmgToDurabilityFactor = 0.5;
     d->landOnHardSndMsg = "I hear a thudding sound.";
     addFeatureFoundIn(*d, FeatureId::cabinet);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::armorAsbSuit);
     resetData(*d, ItemType::armor);
@@ -1498,7 +1498,7 @@ void initDataList()
     d->landOnHardSndMsg = "";
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::chest);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::armorHeavyCoat);
     resetData(*d, ItemType::armor);
@@ -1520,7 +1520,7 @@ void initDataList()
     d->armor.dmgToDurabilityFactor = 1.0;
     d->landOnHardSndMsg = "";
     addFeatureFoundIn(*d, FeatureId::cabinet);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::armorMiGo);
     resetData(*d, ItemType::armor);
@@ -1539,7 +1539,7 @@ void initDataList()
     d->armor.armorPoints = 2;
     d->armor.dmgToDurabilityFactor = 1.5;
     d->landOnHardSndMsg = "";
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::gasMask);
     resetData(*d, ItemType::headWear);
@@ -1563,7 +1563,7 @@ void initDataList()
     d->chanceToIncludeInFloorSpawnList = 50;
     d->weight = ItemWeight::light;
     d->landOnHardSndMsg = "";
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::hideousMask);
     resetData(*d, ItemType::headWear);
@@ -1585,153 +1585,153 @@ void initDataList()
     d->value = ItemValue::majorTreasure;
     d->shockWhileInBackpack = d->shockWhileEquipped = 15;
     addFeatureFoundIn(*d, FeatureId::tomb, 8);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollMayhem);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::mayhem;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollTelep);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::teleport;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollPest);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::pest;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollSlowMon);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::slowMon;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollTerrifyMon);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::terrifyMon;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollParalMon);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::paralyzeMon;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollDetItems);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::detItems;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollDetTraps);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::detTraps;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollBless);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::bless;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollDarkbolt);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::darkbolt;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollAzaWrath);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::azaWrath;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollOpening);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::opening;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollSacrLife);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::sacrLife;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollSacrSpi);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::sacrSpi;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollDetMon);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::detMon;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollElemRes);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::elemRes;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollSummonMon);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::summonMon;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollLight);
     resetData(*d, ItemType::scroll);
     d->spellCastFromScroll = SpellId::light;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionVitality);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionSpirit);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionBlindness);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionFrenzy);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionFortitude);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionParalyze);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionRElec);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionConf);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionPoison);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionInsight);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionClairv);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionRFire);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionAntidote);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::potionDescent);
     resetData(*d, ItemType::potion);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::deviceBlaster);
     resetData(*d, ItemType::device);
@@ -1741,7 +1741,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest, 10);
     addFeatureFoundIn(*d, FeatureId::tomb, 10);
     addFeatureFoundIn(*d, FeatureId::cocoon, 10);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::deviceShockwave);
     resetData(*d, ItemType::device);
@@ -1754,7 +1754,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest, 10);
     addFeatureFoundIn(*d, FeatureId::tomb, 10);
     addFeatureFoundIn(*d, FeatureId::cocoon, 10);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::deviceRejuvenator);
     resetData(*d, ItemType::device);
@@ -1767,7 +1767,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest, 10);
     addFeatureFoundIn(*d, FeatureId::tomb, 10);
     addFeatureFoundIn(*d, FeatureId::cocoon, 10);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::deviceTranslocator);
     resetData(*d, ItemType::device);
@@ -1780,7 +1780,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest, 10);
     addFeatureFoundIn(*d, FeatureId::tomb, 10);
     addFeatureFoundIn(*d, FeatureId::cocoon, 10);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::deviceSentryDrone);
     resetData(*d, ItemType::device);
@@ -1793,7 +1793,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest, 10);
     addFeatureFoundIn(*d, FeatureId::tomb, 10);
     addFeatureFoundIn(*d, FeatureId::cocoon, 10);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::electricLantern);
     resetData(*d, ItemType::device);
@@ -1812,7 +1812,7 @@ void initDataList()
     addFeatureFoundIn(*d, FeatureId::chest);
     addFeatureFoundIn(*d, FeatureId::cabinet);
     addFeatureFoundIn(*d, FeatureId::cocoon);
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::medicalBag);
     resetData(*d, ItemType::general);
@@ -1827,140 +1827,140 @@ void initDataList()
     d->glyph = '~';
     d->clr = clrBrownDrk;
     d->tile = TileId::medicalBag;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::starAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Star Amulet", "", "a Star Amulet"};
     d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::skullAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Skull Amulet", "", "a Skull Amulet"};
     d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::spiderAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Spider Amulet", "", "a Spider Amulet"};
     d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::eyeAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Eye Amulet", "", "an Eye Amulet"};
     d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::moonAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Moon Amulet", "", "a Moon Amulet"};
     d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::batAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Bat Amulet", "", "a Bat Amulet"};
     d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scarabAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Scarab Amulet", "", "a Scarab Amulet"};
     d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::daggerAmulet);
     resetData(*d, ItemType::amulet);
     d->baseName = {"Dagger Amulet", "", "a Dagger Amulet"};
     d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::goldenRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Golden Ring", "", "a Golden Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrYellow;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::silverRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Silver Ring", "", "a Silver Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrWhite;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::carnelianRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Carnelian Ring", "", "a Carnelian Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrRedLgt;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::garnetRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Garnet Ring", "", "a Garnet Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrRedLgt;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::ironRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Iron Ring", "", "an Iron Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrGray;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::jadeRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Jade Ring", "", "a Jade Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrGreenLgt;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::moonstoneRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Moonstone Ring", "", "a Moonstone Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrBlueLgt;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::obsidianRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Obsidian Ring", "", "an Obsidian Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrGray;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::onyxRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Onyx Ring", "", "an Onyx Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrGray;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::topazRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Topaz Ring", "", "a Topaz Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrBlueLgt;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::emeraldRing);
     resetData(*d, ItemType::ring);
     d->baseName = {"Emerald Ring", "", "an Emerald Ring"};
     d->baseNameUnId = d->baseName;
     d->clr = clrGreenLgt;
-    data[int(d->id)] = d;
+    data[size_t(d->id)] = d;
 }
 
 } //namespace

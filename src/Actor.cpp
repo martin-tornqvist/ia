@@ -795,7 +795,7 @@ void Actor::die(const bool IS_DESTROYED, const bool ALLOW_GORE,
 
     clr_ = clrRedLgt;
 
-    die_();
+    onDeath();
 
     propHandler_->onDeath(isPlayerSeeDyingActor);
 

@@ -53,8 +53,8 @@ bool runDropScreen(const InvType invType, const size_t ELEMENT)
 
     if (!item)
     {
-        return false;
         TRACE_FUNC_END;
+        return false;
     }
 
     const ItemDataT& data = item->getData();

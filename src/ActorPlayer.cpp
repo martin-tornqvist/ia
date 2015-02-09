@@ -1328,7 +1328,7 @@ void Player::moveDir(Dir dir)
                                 const string wpnName = wpn->getName(ItemRefType::a);
 
                                 Log::addMsg("Attack " + monAtDest->getNameThe() +
-                                            " with " + wpnName + " ? [y / n]",
+                                            " with " + wpnName + " ? [y/n]",
                                             clrWhiteHigh);
 
                                 Render::drawMapAndInterface();

@@ -195,7 +195,7 @@ public:
     }
     virtual ~Zombie() {}
     virtual bool onActorTurn_() override;
-    void die_() override;
+    void onDeath() override;
 protected:
     bool tryResurrect();
     int deadTurnCounter;
@@ -600,7 +600,7 @@ public:
     bool onActorTurn_() override;
 
     virtual void mkStartItems() = 0;
-    virtual void die_() = 0;
+    virtual void onDeath() = 0;
 private:
     int pullCooldown;
 };
@@ -611,7 +611,7 @@ public:
     DustVortex() : Vortex() {}
     ~DustVortex() {}
     void mkStartItems() override;
-    void die_();
+    void onDeath();
 };
 
 class FireVortex: public Vortex
@@ -620,7 +620,7 @@ public:
     FireVortex() : Vortex() {}
     ~FireVortex() {}
     void mkStartItems() override;
-    void die_();
+    void onDeath();
 };
 
 class FrostVortex: public Vortex
@@ -629,7 +629,7 @@ public:
     FrostVortex() : Vortex() {}
     ~FrostVortex() {}
     void mkStartItems() override;
-    void die_();
+    void onDeath();
 };
 
 class Ooze: public Mon
@@ -704,7 +704,7 @@ public:
     GasSpore() : Mon() {}
     ~GasSpore() {}
 
-    void die_();
+    void onDeath();
 
     void mkStartItems() override {}
 };
@@ -718,8 +718,9 @@ public:
         BIG_SPELL_COOLDOWN_ (30),
         bigSpellCounter_    (BIG_SPELL_COOLDOWN_) {}
     ~TheDarkOne() {}
-    bool onActorTurn_() override;
     void mkStartItems() override;
+    void onDeath()      override;
+    bool onActorTurn_() override;
 private:
     void onStdTurn_()   override;
 
