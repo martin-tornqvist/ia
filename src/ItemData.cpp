@@ -1405,7 +1405,7 @@ void initDataList()
     d = new ItemDataT(ItemId::theDarkOneClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
-    d->melee.propApplied = new PropTerrified(PropTurns::std);
+//    d->melee.propApplied = new PropTerrified(PropTurns::std);
     setDmgFromMonId(*d, ActorId::theDarkOne);
     data[size_t(d->id)] = d;
 

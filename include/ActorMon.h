@@ -721,13 +721,14 @@ private:
     void onStdTurn_()   override;
 
     bool      hasGreetedPlayer_;
+    const int BIG_SPELL_COOLDOWN_;
     int       bigSpellCounter_;
 };
 
 class TheDarkOneCpy: public Mon
 {
 public:
-    TheDarkOneCpy();
+    TheDarkOneCpy() {}
     ~TheDarkOneCpy() {}
     void mkStartItems() override;
 };

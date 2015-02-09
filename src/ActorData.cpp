@@ -2598,7 +2598,8 @@ void initDataList()
     d.intrProps[int(PropId::rConf)] = true;
     d.intrProps[int(PropId::rFear)] = true;
     d.intrProps[int(PropId::rFire)] = true;
-    d.dmgMelee = 12;
+    d.intrProps[int(PropId::rBreath)] = true;
+    d.dmgMelee = 10;
     d.abilityVals.setVal(AbilityId::melee, 70);
     d.isAutoSpawnAllowed = false;
     d.groupSize = MonGroupSize::alone;
@@ -2614,6 +2615,7 @@ void initDataList()
     d.monShockLvl = MonShockLvl::terrifying;
     d.isHumanoid = true;
     d.canLeaveCorpse = false;
+    d.canBleed = false;
     data[size_t(d.id)] = d;
     d.reset();
 
