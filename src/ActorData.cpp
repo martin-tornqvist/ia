@@ -2599,7 +2599,7 @@ void initDataList()
     d.intrProps[int(PropId::rConf)] = true;
     d.intrProps[int(PropId::rFear)] = true;
     d.intrProps[int(PropId::rFire)] = true;
-    d.dmgMelee = 8;
+    d.dmgMelee = 12;
     d.abilityVals.setVal(AbilityId::melee, 70);
     d.isAutoSpawnAllowed = false;
     d.groupSize = MonGroupSize::alone;

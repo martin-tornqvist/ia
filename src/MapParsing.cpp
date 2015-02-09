@@ -18,7 +18,7 @@ namespace CellCheck
 
 bool BlocksLos::check(const Cell& c)  const
 {
-    return !c.rigid->isLosPassable();
+    return !Utils::isPosInsideMap(c.pos, false) || !c.rigid->isLosPassable();
 }
 
 bool BlocksLos::check(const Mob& f) const
@@ -28,7 +28,7 @@ bool BlocksLos::check(const Mob& f) const
 
 bool BlocksMoveCmn::check(const Cell& c) const
 {
-    return !c.rigid->canMoveCmn();
+    return !Utils::isPosInsideMap(c.pos, false) || !c.rigid->canMoveCmn();
 }
 
 bool BlocksMoveCmn::check(const Mob& f) const
@@ -42,14 +42,15 @@ bool BlocksMoveCmn::check(const Actor& a) const
 }
 
 BlocksActor::BlocksActor(Actor& actor, bool isActorsBlocking) :
-    Check(), IS_ACTORS_BLOCKING_(isActorsBlocking)
+    Check(),
+    IS_ACTORS_BLOCKING_(isActorsBlocking)
 {
     actor.getPropHandler().getPropIds(actorsProps_);
 }
 
 bool BlocksActor::check(const Cell& c) const
 {
-    return !c.rigid->canMove(actorsProps_);
+    return !Utils::isPosInsideMap(c.pos, false) || !c.rigid->canMove(actorsProps_);
 }
 
 bool BlocksActor::check(const Mob& f) const
@@ -64,7 +65,7 @@ bool BlocksActor::check(const Actor& a) const
 
 bool BlocksProjectiles::check(const Cell& c)  const
 {
-    return !c.rigid->isProjectilePassable();
+    return !Utils::isPosInsideMap(c.pos, false) || !c.rigid->isProjectilePassable();
 }
 
 bool BlocksProjectiles::check(const Mob& f)  const
@@ -83,7 +84,7 @@ bool LivingActorsAdjToPos::check(const Actor& a) const
 
 bool BlocksItems::check(const Cell& c)  const
 {
-    return !c.rigid->canHaveItem();
+    return !Utils::isPosInsideMap(c.pos, false) || !c.rigid->canHaveItem();
 }
 
 bool BlocksItems::check(const Mob& f) const
@@ -107,7 +108,10 @@ bool AllAdjIsFeature::check(const Cell& c) const
     const int X = c.pos.x;
     const int Y = c.pos.y;
 
-    if (X <= 0 || X >= MAP_W - 1 || Y <= 0 || Y >= MAP_H - 1) {return false;}
+    if (!Utils::isPosInsideMap(c.pos, false))
+    {
+        return false;
+    }
 
     for (int dx = -1; dx <= 1; ++dx)
     {
