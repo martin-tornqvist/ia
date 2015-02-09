@@ -1025,16 +1025,16 @@ void MiGo::mkStartItems()
     else if (getId() == ActorId::miGoCommander)
     {
         inv_->putInIntrinsics(ItemFactory::mk(ItemId::miGoCommanderSting));
+
+        if (Rnd::oneIn(3))
+        {
+            inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorMiGo));
+        }
     }
 
     if (Rnd::oneIn(9))
     {
         inv_->putInGeneral(ItemFactory::mk(ItemId::miGoGunAmmo));
-    }
-
-    if (Rnd::oneIn(9))
-    {
-        inv_->putInSlot(SlotId::body, ItemFactory::mk(ItemId::armorMiGo));
     }
 
     spellsKnown_.push_back(new SpellTeleport);

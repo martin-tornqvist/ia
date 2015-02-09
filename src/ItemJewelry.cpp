@@ -317,7 +317,7 @@ void JewelryEffectSummonMon::onStdTurnEquiped()
         vector<Mon*> summonedMon;
 
         ActorFactory::summon(origin, {ActorId::greaterPolyp}, false, nullptr,
-                                &summonedMon);
+                             &summonedMon);
 
         const Mon* const mon = summonedMon[0];
 
@@ -574,6 +574,14 @@ Jewelry::Jewelry(ItemDataT* const itemData) :
 
     //Unique item, do not allow spawning more
     data_->allowSpawn = false;
+}
+
+Jewelry::~Jewelry()
+{
+    for (auto* const effect : effects_)
+    {
+        delete effect;
+    }
 }
 
 vector<string> Jewelry::getDescr() const

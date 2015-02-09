@@ -419,7 +419,7 @@ void mkPathFindCor(Room& r0, Room& r1, bool doorProposals[MAP_W][MAP_H])
             bool isRightOfRoom  = false;
             bool isAboveRoom    = false;
             bool isBelowRoom    = false;
-            for (Pos& p : path)
+            for (const Pos& p : path)
             {
                 if (p.x < room->r_.p0.x) {isLeftOfRoom   = true;}
                 if (p.x > room->r_.p1.x) {isRightOfRoom  = true;}

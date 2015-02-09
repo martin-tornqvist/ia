@@ -491,6 +491,8 @@ class Jewelry : public Item
 public:
     Jewelry(ItemDataT* const itemData);
 
+    ~Jewelry();
+
     std::vector<std::string> getDescr() const override final;
 
     void            onEquip()                                   override final;
