@@ -187,29 +187,49 @@ TEST(Directions)
 TEST(FormatText)
 {
     string str = "one two three four";
-    int lineMaxW = 100;
-    vector<string> formattedLines;
-    TextFormat::lineToLines(str, lineMaxW, formattedLines);
-    CHECK_EQUAL(str, formattedLines.at(0));
-    CHECK_EQUAL(int(formattedLines.size()), 1);
 
-    lineMaxW = 13;
+    vector<string> formattedLines;
+
+    int lineMaxW = 100;
     TextFormat::lineToLines(str, lineMaxW, formattedLines);
-    CHECK_EQUAL("one two three", formattedLines.at(0));
-    CHECK_EQUAL("four", formattedLines.at(1));
-    CHECK_EQUAL(int(formattedLines.size()), 2);
+    CHECK_EQUAL(str, formattedLines[0]);
+    CHECK_EQUAL(1, int(formattedLines.size()));
+
+    lineMaxW = 18;
+    TextFormat::lineToLines(str, lineMaxW, formattedLines);
+    CHECK_EQUAL("one two three four", formattedLines[0]);
+    CHECK_EQUAL(1, int(formattedLines.size()));
+
+    lineMaxW = 17;
+    TextFormat::lineToLines(str, lineMaxW, formattedLines);
+    CHECK_EQUAL("one two three",    formattedLines[0]);
+    CHECK_EQUAL("four",             formattedLines[1]);
+    CHECK_EQUAL(2, int(formattedLines.size()));
 
     lineMaxW = 15;
     TextFormat::lineToLines(str, lineMaxW, formattedLines);
-    CHECK_EQUAL("one two three", formattedLines.at(0));
-    CHECK_EQUAL("four", formattedLines.at(1));
-    CHECK_EQUAL(int(formattedLines.size()), 2);
+    CHECK_EQUAL("one two three",    formattedLines[0]);
+    CHECK_EQUAL("four",             formattedLines[1]);
+    CHECK_EQUAL(2, int(formattedLines.size()));
 
     lineMaxW = 11;
     TextFormat::lineToLines(str, lineMaxW, formattedLines);
-    CHECK_EQUAL("one two", formattedLines.at(0));
-    CHECK_EQUAL("three four", formattedLines.at(1));
-    CHECK_EQUAL(int(formattedLines.size()), 2);
+    CHECK_EQUAL("one two",          formattedLines[0]);
+    CHECK_EQUAL("three four",       formattedLines[1]);
+    CHECK_EQUAL(2, int(formattedLines.size()));
+
+    lineMaxW    = 4;
+    str         = "123456";
+    TextFormat::lineToLines(str, lineMaxW, formattedLines);
+    CHECK_EQUAL("123456",           formattedLines[0]);
+    CHECK_EQUAL(1, int(formattedLines.size()));
+
+    lineMaxW    = 4;
+    str         = "12 345678";
+    TextFormat::lineToLines(str, lineMaxW, formattedLines);
+    CHECK_EQUAL("12",               formattedLines[0]);
+    CHECK_EQUAL("345678",           formattedLines[1]);
+    CHECK_EQUAL(2, int(formattedLines.size()));
 
     str = "";
     TextFormat::lineToLines(str, lineMaxW, formattedLines);
@@ -223,79 +243,79 @@ TEST_FIXTURE(BasicFixture, LineCalculation)
 
     LineCalc::calcNewLine(origin, Pos(3, 0), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line.at(0) == origin);
-    CHECK(line.at(1) == Pos(1, 0));
-    CHECK(line.at(2) == Pos(2, 0));
-    CHECK(line.at(3) == Pos(3, 0));
+    CHECK(line[0] == origin);
+    CHECK(line[1] == Pos(1, 0));
+    CHECK(line[2] == Pos(2, 0));
+    CHECK(line[3] == Pos(3, 0));
 
     LineCalc::calcNewLine(origin, Pos(-3, 0), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line.at(0) == origin);
-    CHECK(line.at(1) == Pos(-1, 0));
-    CHECK(line.at(2) == Pos(-2, 0));
-    CHECK(line.at(3) == Pos(-3, 0));
+    CHECK(line[0] == origin);
+    CHECK(line[1] == Pos(-1, 0));
+    CHECK(line[2] == Pos(-2, 0));
+    CHECK(line[3] == Pos(-3, 0));
 
     LineCalc::calcNewLine(origin, Pos(0, 3), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line.at(0) == origin);
-    CHECK(line.at(1) == Pos(0, 1));
-    CHECK(line.at(2) == Pos(0, 2));
-    CHECK(line.at(3) == Pos(0, 3));
+    CHECK(line[0] == origin);
+    CHECK(line[1] == Pos(0, 1));
+    CHECK(line[2] == Pos(0, 2));
+    CHECK(line[3] == Pos(0, 3));
 
     LineCalc::calcNewLine(origin, Pos(0, -3), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line.at(0) == origin);
-    CHECK(line.at(1) == Pos(0, -1));
-    CHECK(line.at(2) == Pos(0, -2));
-    CHECK(line.at(3) == Pos(0, -3));
+    CHECK(line[0] == origin);
+    CHECK(line[1] == Pos(0, -1));
+    CHECK(line[2] == Pos(0, -2));
+    CHECK(line[3] == Pos(0, -3));
 
     LineCalc::calcNewLine(origin, Pos(3, 3), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line.at(0) == origin);
-    CHECK(line.at(1) == Pos(1, 1));
-    CHECK(line.at(2) == Pos(2, 2));
-    CHECK(line.at(3) == Pos(3, 3));
+    CHECK(line[0] == origin);
+    CHECK(line[1] == Pos(1, 1));
+    CHECK(line[2] == Pos(2, 2));
+    CHECK(line[3] == Pos(3, 3));
 
     LineCalc::calcNewLine(Pos(9, 9), Pos(6, 12), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line.at(0) == Pos(9, 9));
-    CHECK(line.at(1) == Pos(8, 10));
-    CHECK(line.at(2) == Pos(7, 11));
-    CHECK(line.at(3) == Pos(6, 12));
+    CHECK(line[0] == Pos(9, 9));
+    CHECK(line[1] == Pos(8, 10));
+    CHECK(line[2] == Pos(7, 11));
+    CHECK(line[3] == Pos(6, 12));
 
     LineCalc::calcNewLine(origin, Pos(-3, 3), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line.at(0) == origin);
-    CHECK(line.at(1) == Pos(-1, 1));
-    CHECK(line.at(2) == Pos(-2, 2));
-    CHECK(line.at(3) == Pos(-3, 3));
+    CHECK(line[0] == origin);
+    CHECK(line[1] == Pos(-1, 1));
+    CHECK(line[2] == Pos(-2, 2));
+    CHECK(line[3] == Pos(-3, 3));
 
     LineCalc::calcNewLine(origin, Pos(3, -3), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line.at(0) == origin);
-    CHECK(line.at(1) == Pos(1, -1));
-    CHECK(line.at(2) == Pos(2, -2));
-    CHECK(line.at(3) == Pos(3, -3));
+    CHECK(line[0] == origin);
+    CHECK(line[1] == Pos(1, -1));
+    CHECK(line[2] == Pos(2, -2));
+    CHECK(line[3] == Pos(3, -3));
 
     LineCalc::calcNewLine(origin, Pos(-3, -3), true, 999, true, line);
     CHECK(line.size() == 4);
-    CHECK(line.at(0) == origin);
-    CHECK(line.at(1) == Pos(-1, -1));
-    CHECK(line.at(2) == Pos(-2, -2));
-    CHECK(line.at(3) == Pos(-3, -3));
+    CHECK(line[0] == origin);
+    CHECK(line[1] == Pos(-1, -1));
+    CHECK(line[2] == Pos(-2, -2));
+    CHECK(line[3] == Pos(-3, -3));
 
     //Test disallowing outside map
     LineCalc::calcNewLine(Pos(1, 0), Pos(-9, 0), true, 999, false, line);
     CHECK(line.size() == 2);
-    CHECK(line.at(0) == Pos(1, 0));
-    CHECK(line.at(1) == Pos(0, 0));
+    CHECK(line[0] == Pos(1, 0));
+    CHECK(line[1] == Pos(0, 0));
 
     //Test travel limit parameter
     LineCalc::calcNewLine(origin, Pos(20, 0), true, 2, true, line);
     CHECK(line.size() == 3);
-    CHECK(line.at(0) == origin);
-    CHECK(line.at(1) == Pos(1, 0));
-    CHECK(line.at(2) == Pos(2, 0));
+    CHECK(line[0] == origin);
+    CHECK(line[1] == Pos(1, 0));
+    CHECK(line[2] == Pos(2, 0));
 
     //Test precalculated FOV line offsets
     const vector<Pos>* deltaLine =

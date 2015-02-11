@@ -10,35 +10,28 @@ namespace
 {
 
 //Reads and removes the first word of the string.
-//It reads until ' ' or end of string. The ' '-char is also removed.
-void readAndRemoveNextWord(string& line, string& nextWordToMk)
+void readAndRemoveWord(string& line, string& wordRef)
 {
-    nextWordToMk = "";
+    wordRef = "";
 
-    //Build a word until parameter string is empty,
-    //or a a space character is found.
-    for (int i = 0; i < int(line.size()); ++i)
+    for (auto it = begin(line); it != end(line); /* No increment */)
     {
-        const char CURRENT_CHARACTER = line[0];
+        const char CUR_CHAR = *it;
 
-        line.erase(line.begin());
+        line.erase(it);
 
-        if (CURRENT_CHARACTER == ' ')
+        if (CUR_CHAR == ' ')
         {
-            return;
-        }
-        else
-        {
-            nextWordToMk += CURRENT_CHARACTER;
+            break;
         }
 
-        i--;
+        wordRef += CUR_CHAR;
     }
 }
 
-bool isWordFit(const string& curString, const string& wordToFit, const int MAX_W)
+bool isWordFit(const string& curString, const string& wordToFit, const size_t MAX_W)
 {
-    return int(curString.size() + wordToFit.size() + 1) <= MAX_W;
+    return (curString.size() + wordToFit.size() + 1) <= MAX_W;
 }
 
 } //namespace
@@ -47,51 +40,60 @@ bool isWordFit(const string& curString, const string& wordToFit, const int MAX_W
 namespace TextFormat
 {
 
-void lineToLines(string line, const int MAX_W, vector<string>& linesRef)
+void lineToLines(string line, const int MAX_W, vector<string>& out)
 {
-    linesRef.clear();
+    out.clear();
 
-    if (line.empty()) return;
-
-    int curRow = 0;
-
-    string curWord;
-
-    readAndRemoveNextWord(line, curWord);
-    if (linesRef.empty())
+    if (line.empty())
     {
-        linesRef.resize(1);
-        linesRef.front() = "";
+        return;
     }
+
+    string curWord = "";
+
+    readAndRemoveWord(line, curWord);
+
+    if (line.empty())
+    {
+        out = {curWord};
+        return;
+    }
+
+    out.resize(1);
+    out[0] = "";
+
+    size_t curRowIdx = 0;
 
     while (!curWord.empty())
     {
-        if (!isWordFit(linesRef[curRow], curWord, MAX_W))
+        if (!isWordFit(out[curRowIdx], curWord, MAX_W))
         {
             //Current word did not fit on current line, make a new line
-            curRow++;
-            linesRef.resize(curRow + 1);
-            linesRef[curRow] = "";
+            ++curRowIdx;
+            out.resize(curRowIdx + 1);
+            out[curRowIdx] = "";
         }
 
-        //If this is not the first word on the current line,
-        //add a space before the word
-        if (!linesRef[curRow].empty()) {linesRef[curRow] += " ";}
+        //If this is not the first word on the current line, add a space before the word
+        if (!out[curRowIdx].empty())
+        {
+            out[curRowIdx] += " ";
+        }
 
-        linesRef[curRow] += curWord;
+        out[curRowIdx] += curWord;
 
-        readAndRemoveNextWord(line, curWord);
+        readAndRemoveWord(line, curWord);
     }
 }
 
-void getSpaceSeparatedList(const string& line, vector<string>& linesRef)
+void getSpaceSeparatedList(const string& line, vector<string>& out)
 {
     string curLine = "";
     for (char c : line)
     {
         if (c == ' ')
         {
-            linesRef.push_back(curLine);
+            out.push_back(curLine);
             curLine = "";
         }
         else
@@ -101,17 +103,19 @@ void getSpaceSeparatedList(const string& line, vector<string>& linesRef)
     }
 }
 
-void replaceAll(const string& line, const string& from, const string& to,
-                string& resultRef)
+void replaceAll(const string& line, const string& from, const string& to, string& out)
 {
-    if (from.empty()) {return;}
+    if (from.empty())
+    {
+        return;
+    }
 
-    resultRef = line;
+    out = line;
 
     size_t startPos = 0;
-    while ((startPos = resultRef.find(from, startPos)) != string::npos)
+    while ((startPos = out.find(from, startPos)) != string::npos)
     {
-        resultRef.replace(startPos, from.length(), to);
+        out.replace(startPos, from.length(), to);
         //In case 'to' contains 'from', like replacing 'x' with 'yx'
         startPos += to.length();
     }

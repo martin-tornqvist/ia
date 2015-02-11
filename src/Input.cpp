@@ -853,7 +853,9 @@ void handleMapModeKeyPress(const KeyData& d)
         {
             const KeyData shortcutKeyData = Query::letter(true);
 
-            if (shortcutKeyData.sdlKey == SDLK_ESCAPE || shortcutKeyData.sdlKey == SDLK_SPACE)
+            if (
+                shortcutKeyData.sdlKey == SDLK_ESCAPE ||
+                shortcutKeyData.sdlKey == SDLK_SPACE)
             {
                 Log::clearLog();
                 Render::drawMapAndInterface();
@@ -920,7 +922,7 @@ void handleMapModeKeyPress(const KeyData& d)
                 queryQuit();
             }
         }
-        else
+        else //Player not alive
         {
             Init::quitToMainMenu = true;
         }
@@ -929,7 +931,7 @@ void handleMapModeKeyPress(const KeyData& d)
     }
 
     //----------------------------------- QUIT
-    else if (d.key == 'Q' /*&& IS_DEBUG_MODE*/)
+    else if (d.key == 'Q')
     {
         queryQuit();
         clearEvents();
@@ -1106,7 +1108,8 @@ KeyData getInput(const bool IS_O_RETURN)
 
                 if ((unicode == 'o' || unicode == 'O') && IS_O_RETURN)
                 {
-                    return KeyData(-1, SDLK_RETURN, unicode == 'O', false);
+                    const bool IS_SHIFT_HELD = unicode == 'O';
+                    return KeyData(-1, SDLK_RETURN, IS_SHIFT_HELD, false);
                 }
                 else if (unicode >= 33 && unicode < 126)
                 {
