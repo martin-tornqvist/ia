@@ -59,9 +59,9 @@ string getDwellingLvlStr(const ActorDataT& def)
 
 } //namespace
 
-void addAutoDescriptionLines(Actor* const actor, string& line)
+void addAutoDescriptionLines(const Actor& actor, string& line)
 {
-    const ActorDataT& def = actor->getData();
+    const ActorDataT& def = actor.getData();
 
     if (def.isUnique)
     {
@@ -162,40 +162,34 @@ void printLocationInfoMsgs(const Pos& pos)
     }
 }
 
-void printDetailedActorDescr(const Pos& pos)
+void printDetailedActorDescr(const Actor& actor)
 {
-    Actor* actor = Utils::getActorAtPos(pos);
-    if (actor && actor != Map::player)
+    //Add written description.
+    string descr = actor.getData().descr;
+
+    //Add auto-description.
+    if (actor.getData().isAutoDescrAllowed)
     {
-        //Add written description.
-        string descr = actor->getData().descr;
-
-        //Add auto-description.
-        if (actor->getData().isAutoDescrAllowed)
-        {
-            AutoDescrActor::addAutoDescriptionLines(actor, descr);
-        }
-
-        vector<string> formattedText;
-        TextFormat::lineToLines(descr, MAP_W - 1, formattedText);
-
-        const size_t NR_OF_LINES = formattedText.size();
-
-//      Render::drawMapAndInterface(false);
-
-        Render::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
-
-        int y = 1;
-        for (string& s : formattedText)
-        {
-            Render::drawText(s, Panel::screen, Pos(0, y), clrWhiteHigh);
-            y++;
-        }
-
-        Render::updateScreen();
-
-        Query::waitForKeyPress();
+        AutoDescrActor::addAutoDescriptionLines(actor, descr);
     }
+
+    vector<string> formattedText;
+    TextFormat::lineToLines(descr, MAP_W - 1, formattedText);
+
+    const size_t NR_OF_LINES = formattedText.size();
+
+    Render::coverArea(Panel::screen, Pos(0, 1), Pos(MAP_W, NR_OF_LINES));
+
+    int y = 1;
+    for (string& s : formattedText)
+    {
+        Render::drawText(s, Panel::screen, Pos(0, y), clrWhiteHigh);
+        y++;
+    }
+
+    Render::updateScreen();
+
+    Query::waitForKeyPress();
 }
 
 } //Look

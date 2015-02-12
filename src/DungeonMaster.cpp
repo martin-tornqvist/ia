@@ -185,16 +185,20 @@ void winGame()
     {
         for (size_t ii = 0; ii <= i; ii++)
         {
-            Render::drawTextCentered(winMsgLines[ii], Panel::screen, Pos(MAP_W_HALF, Y0 + ii),
-                                     clrMsgBad, clrBlack, true);
+            const Pos p(MAP_W_HALF, Y0 + ii);
+
+            Render::drawTextCentered(winMsgLines[ii], Panel::screen, p, clrMenuMedium,
+                                     clrBlack, true);
 
             if (i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1)
             {
                 const string CMD_LABEL =
                     "[space/esc/enter] to record high score and return to main menu";
-                Render::drawTextCentered(CMD_LABEL, Panel::screen,
-                                         Pos(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2),
-                                         clrWhite, clrBlack, true);
+
+                const Pos pLabel(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2);
+
+                Render::drawTextCentered(CMD_LABEL, Panel::screen, pLabel, clrWhite,
+                                         clrBlack, true);
             }
         }
         Render::updateScreen();

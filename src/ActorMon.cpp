@@ -1778,7 +1778,7 @@ void GasSpore::onDeath()
 TheDarkOne::TheDarkOne() :
     Mon                 (),
     hasGreetedPlayer_   (false),
-    BIG_SPELL_COOLDOWN_ (15),
+    BIG_SPELL_COOLDOWN_ (0),
     bigSpellCounter_    (BIG_SPELL_COOLDOWN_) {}
 
 void TheDarkOne::mkStartItems()

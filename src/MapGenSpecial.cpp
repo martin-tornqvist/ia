@@ -687,6 +687,18 @@ bool mkBossLvl()
         }
     }
 
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            Rigid* const f = Map::cells[x][y].rigid;
+            if (f->getId() == FeatureId::wall)
+            {
+                static_cast<Wall*>(f)->type_ = WallType::egypt;
+            }
+        }
+    }
+
     return true;
 }
 
@@ -695,58 +707,57 @@ bool mkTrapezohedronLvl()
 {
     Map::resetMap();
 
-//  for (int x = 0; x < MAP_W; ++x)
-//  {
-//    for (int y = 0; y < MAP_H; ++y)
-//    {
-//      auto* const wall  = new Wall(Pos(x, y));
-//      Map::put(wall);
-//      wall->type_       = WallType::cave;
-//      wall->isMossy_    = false;
-//    }
-//  }
-//
-//  const Pos& origin     = Map::player->pos;
-//  const Pos  mapCenter  = Pos(MAP_W_HALF, MAP_H_HALF);
-//
-//  auto putCaveFloor = [](const vector<Pos>& positions)
-//  {
-//    for (const Pos& p : positions)
-//    {
-//      auto* const floor = new Floor(p);
-//      Map::put(floor);
-//      floor->type_      = FloorType::cave;
-//    }
-//  };
-//
-//  vector<Pos> floorCells;
-//
-//  MapGenUtils::rndWalk(origin, 150, floorCells, true);
-//  putCaveFloor(floorCells);
-//
-//  MapGenUtils::rndWalk(mapCenter, 800, floorCells, true);
-//  putCaveFloor(floorCells);
-//
-//  MapGenUtils::pathfinderWalk(origin, mapCenter, floorCells, false);
-//  putCaveFloor(floorCells);
-//
-//  bool blocked[MAP_W][MAP_H];
-//  MapParse::parse(CellCheck::BlocksMoveCmn(false), blocked);
-//  vector<Pos> itemPosBucket;
-//
-//  for (int x = 0; x < MAP_W; ++x)
-//  {
-//    for (int y = 0; y < MAP_H; ++y)
-//    {
-//      if (!blocked[x][y] && Pos(x, y) != origin)
-//      {
-//        itemPosBucket.push_back(Pos(x, y));
-//      }
-//    }
-//  }
-//
-//  const int ELEMENT = Rnd::range(0, itemPosBucket.size() - 1);
-//  ItemFactory::mkItemOnFloor(ItemId::trapezohedron, itemPosBucket[ELEMENT]);
+    const MapTempl& templ =
+        MapTemplHandling::getTempl(MapTemplId::trapezohedronLevel);
+
+    const Pos templDims = templ.getDims();
+
+    for (int x = 0; x < templDims.x; ++x)
+    {
+        for (int y = 0; y < templDims.y; ++y)
+        {
+            Map::cells[x][y].isDark = true;
+
+            const auto& templCell   = templ.getCell(x, y);
+            const auto  fId         = templCell.featureId;
+            const auto  itemId      = templCell.itemId;
+
+            const Pos p(x, y);
+
+            if (fId != FeatureId::END)
+            {
+                const auto& d = FeatureData::getData(fId);
+                Map::put(static_cast<Rigid*>(d.mkObj(p)));
+            }
+
+            if (itemId != ItemId::END)
+            {
+                ItemFactory::mkItemOnFloor(itemId, p);
+            }
+
+            switch (templCell.val)
+            {
+            case 1:
+                Map::player->pos = p;
+                break;
+
+            default: {}
+                break;
+            }
+        }
+    }
+
+    for (int x = 0; x < MAP_W; ++x)
+    {
+        for (int y = 0; y < MAP_H; ++y)
+        {
+            Rigid* const f = Map::cells[x][y].rigid;
+            if (f->getId() == FeatureId::wall)
+            {
+                static_cast<Wall*>(f)->type_ = WallType::egypt;
+            }
+        }
+    }
 
     return true;
 }

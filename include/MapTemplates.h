@@ -15,6 +15,7 @@ enum class MapTemplId
     leng,
     ratsInTheWalls,
     bossLevel,
+    trapezohedronLevel,
     END
 };
 

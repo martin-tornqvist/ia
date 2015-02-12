@@ -323,15 +323,15 @@ void resetData(ItemDataT& d, ItemType const itemType)
         resetData(d, ItemType::general);
         d.type = ItemType::amulet;
         d.value = ItemValue::majorTreasure;
-        d.shockWhileInBackpack = d.shockWhileEquipped = 15;
+        d.shockWhileInBackpack = d.shockWhileEquipped = 10;
         d.tile = TileId::amulet;
         d.glyph = '\"';
         d.weight = ItemWeight::light;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 2;
-        addFeatureFoundIn(d, FeatureId::tomb, 16);
-        addFeatureFoundIn(d, FeatureId::chest, 5);
+        d.chanceToIncludeInFloorSpawnList = 1;
+        addFeatureFoundIn(d, FeatureId::tomb, 13);
+        addFeatureFoundIn(d, FeatureId::chest, 4);
     } break;
 
     case ItemType::ring:
@@ -339,15 +339,15 @@ void resetData(ItemDataT& d, ItemType const itemType)
         resetData(d, ItemType::general);
         d.type = ItemType::ring;
         d.value = ItemValue::majorTreasure;
-        d.shockWhileInBackpack = d.shockWhileEquipped = 15;
+        d.shockWhileInBackpack = d.shockWhileEquipped = 10;
         d.tile = TileId::ring;
         d.glyph = '=';
         d.weight = ItemWeight::extraLight;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 2;
-        addFeatureFoundIn(d, FeatureId::tomb, 16);
-        addFeatureFoundIn(d, FeatureId::chest, 5);
+        d.chanceToIncludeInFloorSpawnList = 1;
+        addFeatureFoundIn(d, FeatureId::tomb, 13);
+        addFeatureFoundIn(d, FeatureId::chest, 4);
     } break;
 
     case ItemType::explosive:
