@@ -993,7 +993,7 @@ void Player::onStdTurn()
 
     for (Actor* actor : seenFoes)
     {
-        DungeonMaster::onMonSpotted(*actor);
+        DungeonMaster::onMonSeen(*actor);
 
         Mon* mon = static_cast<Mon*>(actor);
 

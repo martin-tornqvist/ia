@@ -2593,7 +2593,7 @@ void initDataList()
     d.glyph = 'P';
     d.color = clrGrayDrk;
     d.tile = TileId::theDarkOne;
-    d.hp = 400;
+    d.hp = 350;
     d.spi = 9999;
     d.intrProps[int(PropId::rConf)] = true;
     d.intrProps[int(PropId::rFear)] = true;

@@ -588,6 +588,7 @@ void drawBlastAtField(const Pos& centerPos, const int RADIUS,
 void drawBlastAtCells(const vector<Pos>& positions, const Clr& clr)
 {
     TRACE_FUNC_BEGIN;
+
     if (isInited())
     {
         drawMapAndInterface();
@@ -626,26 +627,36 @@ void drawBlastAtCells(const vector<Pos>& positions, const Clr& clr)
 
 void drawBlastAtSeenCells(const vector<Pos>& positions, const Clr& clr)
 {
-    vector<Pos> positionsWithVision;
-    for (const Pos& p : positions)
+    if (isInited())
     {
-        if (Map::cells[p.x][p.y].isSeenByPlayer)
+        vector<Pos> positionsWithVision;
+
+        for (const Pos& p : positions)
         {
-            positionsWithVision.push_back(p);
+            if (Map::cells[p.x][p.y].isSeenByPlayer)
+            {
+                positionsWithVision.push_back(p);
+            }
+        }
+
+        if (!positionsWithVision.empty())
+        {
+            Render::drawBlastAtCells(positionsWithVision, clr);
         }
     }
-
-    Render::drawBlastAtCells(positionsWithVision, clr);
 }
 
 void drawBlastAtSeenActors(const std::vector<Actor*>& actors, const Clr& clr)
 {
-    vector<Pos> positions;
-    for (Actor* const actor : actors)
+    if (isInited())
     {
-        positions.push_back(actor->pos);
+        vector<Pos> positions;
+        for (Actor* const actor : actors)
+        {
+            positions.push_back(actor->pos);
+        }
+        drawBlastAtSeenCells(positions, clr);
     }
-    drawBlastAtSeenCells(positions, clr);
 }
 
 void drawTile(const TileId tile, const Panel panel, const Pos& pos, const Clr& clr,

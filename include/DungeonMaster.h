@@ -21,7 +21,7 @@ int getXp();
 TimeData getStartTime();
 
 void onMonKilled(Actor& actor);
-void onMonSpotted(Actor& actor);
+void onMonSeen(Actor& actor);
 
 void winGame();
 

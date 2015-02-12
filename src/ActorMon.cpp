@@ -1885,12 +1885,14 @@ bool TheDarkOne::onActorTurn_()
 
 void TheDarkOneCpy::mkStartItems()
 {
+    hasGivenXpForSpotting_ = true;
+
     for (Actor* const actor : GameTime::actors_)
     {
         if (actor->getId() == ActorId::theDarkOne)
         {
-            hpMax_  = max(2, actor->getHpMax(true)  / 2);
-            hp_     = max(1, actor->getHp()         / 2);
+            hpMax_  = max(2, actor->getHpMax(true)  / 4);
+            hp_     = max(1, actor->getHp()         / 4);
         }
     }
 

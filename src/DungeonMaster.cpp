@@ -230,9 +230,10 @@ void onMonKilled(Actor& actor)
     }
 }
 
-void onMonSpotted(Actor& actor)
+void onMonSeen(Actor& actor)
 {
     Mon* const mon = static_cast<Mon*>(&actor);
+
     if (!mon->hasGivenXpForSpotting_)
     {
         mon->hasGivenXpForSpotting_ = true;
