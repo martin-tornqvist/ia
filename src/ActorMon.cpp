@@ -1368,9 +1368,9 @@ void LengElder::onStdTurn_()
 
                 Popup::showMsg("", true, "");
 
-                auto& inv = Map::player->getInv();
+                //auto& inv = Map::player->getInv();
                 //TODO: Which item to give?
-                inv.putInGeneral(ItemFactory::mk(ItemId::hideousMask));
+                //inv.putInGeneral(ItemFactory::mk(ItemId::hideousMask));
 
                 hasGivenItemToPlayer_ = true;
                 nrTurnsToHostile_     = Rnd::range(9, 11);

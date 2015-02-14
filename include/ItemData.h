@@ -131,7 +131,7 @@ enum class ItemId
     armorMiGo,
 
     gasMask,
-    hideousMask,
+//    hideousMask,
 
     scrollPest,
     scrollTelep,
@@ -321,9 +321,6 @@ void cleanup();
 
 void storeToSaveLines(std::vector<std::string>& lines);
 void setupFromSaveLines(std::vector<std::string>& lines);
-
-bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
-                   const bool IS_MELEE);
 
 } //ItemData
 

@@ -1565,27 +1565,27 @@ void initDataList()
     d->landOnHardSndMsg = "";
     data[size_t(d->id)] = d;
 
-    d = new ItemDataT(ItemId::hideousMask);
-    resetData(*d, ItemType::headWear);
-    d->baseName = {"Hideous Mask", "", "The Hideous Mask"};
-    d->baseDescr =
-    {
-        "[TODO]",
-
-        itemCarryShockDescr + " (+15% shock)."
-    };
-    d->isStackable = false;
-    d->clr = clrMagenta;
-    d->tile = TileId::mask;
-    d->glyph = '[';
-    d->spawnStdRange = Range(-1, -1);
-    d->weight = ItemWeight::light;
-    d->landOnHardSndMsg = "";
-    d->chanceToIncludeInFloorSpawnList = 1;
-    d->value = ItemValue::majorTreasure;
-    d->shockWhileInBackpack = d->shockWhileEquipped = 15;
-    addFeatureFoundIn(*d, FeatureId::tomb, 8);
-    data[size_t(d->id)] = d;
+//    d = new ItemDataT(ItemId::hideousMask);
+//    resetData(*d, ItemType::headWear);
+//    d->baseName = {"Hideous Mask", "", "The Hideous Mask"};
+//    d->baseDescr =
+//    {
+//        "[TODO]",
+//
+//        itemCarryShockDescr + " (+15% shock)."
+//    };
+//    d->isStackable = false;
+//    d->clr = clrMagenta;
+//    d->tile = TileId::mask;
+//    d->glyph = '[';
+//    d->spawnStdRange = Range(-1, -1);
+//    d->weight = ItemWeight::light;
+//    d->landOnHardSndMsg = "";
+//    d->chanceToIncludeInFloorSpawnList = 1;
+//    d->value = ItemValue::majorTreasure;
+//    d->shockWhileInBackpack = d->shockWhileEquipped = 15;
+//    addFeatureFoundIn(*d, FeatureId::tomb, 8);
+//    data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::scrollMayhem);
     resetData(*d, ItemType::scroll);
@@ -2014,17 +2014,6 @@ void setupFromSaveLines(vector<string>& lines)
             lines.erase(begin(lines));
         }
     }
-}
-
-//TODO: Remove this function
-bool isWpnStronger(const ItemDataT& data1, const ItemDataT& data2,
-                   const bool IS_MELEE)
-{
-    (void)data1;
-    (void)data2;
-    (void)IS_MELEE;
-
-    return false;
 }
 
 } //ItemData

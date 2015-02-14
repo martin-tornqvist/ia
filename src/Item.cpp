@@ -731,39 +731,39 @@ int MedicalBag::getTotSupplForSanitize() const
 }
 
 //--------------------------------------------------------- HIDEOUS MASK
-HideousMask::HideousMask(ItemDataT* itemData) : Headwear(itemData)
-{
-    itemData->allowSpawn = false;
-}
-
-void HideousMask::onStdTurnInInv(const InvType invType)
-{
-    if (invType == InvType::slots)
-    {
-        vector<Actor*> adjActors;
-        const Pos p(Map::player->pos);
-        for (auto* const actor : GameTime::actors_)
-        {
-            if (actor->isAlive() && Utils::isPosAdj(p, actor->pos, false))
-            {
-                adjActors.push_back(actor);
-            }
-        }
-        if (!adjActors.empty())
-        {
-            bool blockedLos[MAP_W][MAP_H];
-            MapParse::run(CellCheck::BlocksLos(), blockedLos);
-            for (auto* const actor : adjActors)
-            {
-                if (Rnd::oneIn(4) && actor->canSeeActor(*Map::player, blockedLos))
-                {
-                    actor->getPropHandler().tryApplyProp(
-                        new PropTerrified(PropTurns::std));
-                }
-            }
-        }
-    }
-}
+//HideousMask::HideousMask(ItemDataT* itemData) : Headwear(itemData)
+//{
+//    itemData->allowSpawn = false;
+//}
+//
+//void HideousMask::onStdTurnInInv(const InvType invType)
+//{
+//    if (invType == InvType::slots)
+//    {
+//        vector<Actor*> adjActors;
+//        const Pos p(Map::player->pos);
+//        for (auto* const actor : GameTime::actors_)
+//        {
+//            if (actor->isAlive() && Utils::isPosAdj(p, actor->pos, false))
+//            {
+//                adjActors.push_back(actor);
+//            }
+//        }
+//        if (!adjActors.empty())
+//        {
+//            bool blockedLos[MAP_W][MAP_H];
+//            MapParse::run(CellCheck::BlocksLos(), blockedLos);
+//            for (auto* const actor : adjActors)
+//            {
+//                if (Rnd::oneIn(4) && actor->canSeeActor(*Map::player, blockedLos))
+//                {
+//                    actor->getPropHandler().tryApplyProp(
+//                        new PropTerrified(PropTurns::std));
+//                }
+//            }
+//        }
+//    }
+//}
 
 //--------------------------------------------------------- GAS MASK
 void GasMask::onEquip()
