@@ -1488,7 +1488,7 @@ bool WormMass::onActorTurn_()
             {
                 Actor* const    actor   = ActorFactory::mk(data_->id, pAdj);
                 WormMass* const worm    = static_cast<WormMass*>(actor);
-                spawnNewOneInN += 3;
+                spawnNewOneInN += 8;
                 worm->spawnNewOneInN    = spawnNewOneInN;
                 worm->awareCounter_     = awareCounter_;
                 worm->leader_           = leader_ ? leader_ : this;

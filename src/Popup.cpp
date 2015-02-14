@@ -18,18 +18,15 @@ namespace Popup
 namespace
 {
 
-const int TEXT_W  = 39;
-const int TEXT_X0 = MAP_W_HALF - ((TEXT_W) / 2);
+const int TEXT_W_STD    = 39;
+const int TEXT_X0_STD   = MAP_W_HALF - ((TEXT_W_STD) / 2);
 
-int printBoxAndGetTitleYPos(const int TEXT_H_TOT,
-                            const int TEXT_W_OVERRIDE = -1)
+int printBoxAndGetTitleYPos(const int TEXT_H_TOT, const int TEXT_W)
 {
-
-    const int TEXT_W_USED = TEXT_W_OVERRIDE == - 1 ? TEXT_W : TEXT_W_OVERRIDE;
-    const int BOX_W       = TEXT_W_USED + 2;
+    const int BOX_W       = TEXT_W + 2;
     const int BOX_H       = TEXT_H_TOT + 2;
 
-    const int X0          = MAP_W_HALF - ((TEXT_W_USED) / 2) - 1;
+    const int X0          = MAP_W_HALF - ((TEXT_W) / 2) - 1;
 
     const int Y0          = MAP_H_HALF - (BOX_H / 2) - 1;
     const int X1          = X0 + BOX_W - 1;
@@ -41,30 +38,34 @@ int printBoxAndGetTitleYPos(const int TEXT_H_TOT,
     return Y0 + 1;
 }
 
-void menuMsgDrawingHelper(
-    const vector<string>& lines, const vector<string>& choices,
-    const bool DRAW_MAP_AND_INTERFACE, const unsigned int curChoice,
-    const int TEXT_H_TOT, const string& title)
+void menuMsgDrawingHelper(const vector<string>& lines,
+                          const vector<string>& choices,
+                          const bool            DRAW_MAP_AND_INTERFACE,
+                          const size_t          curChoice,
+                          const int             TEXT_X0,
+                          const int             TEXT_H_TOT,
+                          const string&         title)
 {
-
     if (DRAW_MAP_AND_INTERFACE)
     {
         Render::drawMapAndInterface(false);
     }
 
+    int textWidth = TEXT_W_STD;
+
     //If no message lines, set width to widest menu option or title with
-    int textWidthOverride = -1;
     if (lines.empty())
     {
-        textWidthOverride = title.size();
+        textWidth = title.size();
+
         for (const string& s : choices)
         {
-            textWidthOverride = max(textWidthOverride, int(s.size()));
+            textWidth = max(textWidth, int(s.size()));
         }
-        textWidthOverride += 2;
+        textWidth += 2;
     }
 
-    int y = printBoxAndGetTitleYPos(TEXT_H_TOT, textWidthOverride);
+    int y = printBoxAndGetTitleYPos(TEXT_H_TOT, textWidth);
 
     if (!title.empty())
     {
@@ -77,18 +78,23 @@ void menuMsgDrawingHelper(
     for (const string& line : lines)
     {
         y++;
+
         if (SHOW_MSG_CENTERED)
         {
-            Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y), clrWhite, clrBlack,
-                                     true);
+            Render::drawTextCentered(line, Panel::map, Pos(MAP_W_HALF, y), clrWhite,
+                                     clrBlack, true);
         }
-        else
+        else //Draw the message with left alignment
         {
             Render::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
         }
         Log::addLineToHistory(line);
     }
-    if (!lines.empty() || !title.empty()) {y += 2;}
+
+    if (!lines.empty() || !title.empty())
+    {
+        y += 2;
+    }
 
     for (size_t i = 0; i < choices.size(); ++i)
     {
@@ -103,18 +109,30 @@ void menuMsgDrawingHelper(
 
 } //namespace
 
-void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
-             const string& title, const SfxId sfx)
+void showMsg(const std::string& msg,
+             const bool         DRAW_MAP_AND_INTERFACE,
+             const std::string& title,
+             const SfxId        sfx,
+             const int          W_CHANGE)
 {
-    if (DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface(false);}
+    if (DRAW_MAP_AND_INTERFACE)
+    {
+        Render::drawMapAndInterface(false);
+    }
+
+    const int TEXT_W = TEXT_W_STD + W_CHANGE;
 
     vector<string> lines;
     TextFormat::lineToLines(msg, TEXT_W, lines);
+
     const int TEXT_H_TOT =  int(lines.size()) + 3;
 
-    int y = printBoxAndGetTitleYPos(TEXT_H_TOT);
+    int y = printBoxAndGetTitleYPos(TEXT_H_TOT, TEXT_W);
 
-    if (sfx != SfxId::END) {Audio::play(sfx);}
+    if (sfx != SfxId::END)
+    {
+        Audio::play(sfx);
+    }
 
     if (!title.empty())
     {
@@ -134,6 +152,8 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
         }
         else
         {
+            const int TEXT_X0 = TEXT_X0_STD - ((W_CHANGE + 1) / 2);
+
             Render::drawText(line, Panel::map, Pos(TEXT_X0, y), clrWhite);
         }
         Log::addLineToHistory(line);
@@ -150,14 +170,20 @@ void showMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
     if (DRAW_MAP_AND_INTERFACE) {Render::drawMapAndInterface();}
 }
 
-int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
-                const vector<string>& choices,
-                const string& title, const SfxId sfx)
+int showMenuMsg(const string&           msg,
+                const bool              DRAW_MAP_AND_INTERFACE,
+                const vector<string>&   choices,
+                const string&           title,
+                const SfxId             sfx)
 {
-    if (Config::isBotPlaying()) {return 0;}
+    if (Config::isBotPlaying())
+    {
+        return 0;
+    }
 
     vector<string> lines;
-    TextFormat::lineToLines(msg, TEXT_W, lines);
+    TextFormat::lineToLines(msg, TEXT_W_STD, lines);
+
     const int TITLE_H         = title.empty() ? 0 : 1;
     const int NR_MSG_LINES    = int(lines.size());
     const int NR_BLANK_LINES  = (NR_MSG_LINES == 0 && TITLE_H == 0) ? 0 : 1;
@@ -169,9 +195,8 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
 
     if (sfx != SfxId::END) {Audio::play(sfx);}
 
-    menuMsgDrawingHelper(
-        lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
-        TEXT_H_TOT, title);
+    menuMsgDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
+                         TEXT_X0_STD, TEXT_H_TOT, title);
 
     while (true)
     {
@@ -180,8 +205,8 @@ int showMenuMsg(const string& msg, const bool DRAW_MAP_AND_INTERFACE,
         switch (action)
         {
         case MenuAction::browsed:
-            menuMsgDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE, browser.getPos().y,
-                                 TEXT_H_TOT, title);
+            menuMsgDrawingHelper(lines, choices, DRAW_MAP_AND_INTERFACE,
+                                 browser.getPos().y, TEXT_X0_STD, TEXT_H_TOT, title);
             break;
 
         case MenuAction::esc:

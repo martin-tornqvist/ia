@@ -725,46 +725,42 @@ void printRangedInitiateMsgs(const RangedAttData& data)
     }
 }
 
-void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT,
-                          const Wpn& wpn)
+void printProjAtActorMsgs(const RangedAttData& data, const bool IS_HIT, const Wpn& wpn)
 {
+    assert(data.defender);
+
     //Only print messages if player can see the cell
-    const int defX = data.defender->pos.x;
-    const int defY = data.defender->pos.y;
-    if (Map::cells[defX][defY].isSeenByPlayer)
+    const Pos& defenderPos = data.defender->pos;
+
+    if (IS_HIT && Map::cells[defenderPos.x][defenderPos.y].isSeenByPlayer)
     {
-
         //Punctuation depends on attack strength
-        if (IS_HIT)
+        const auto& wpnDmg  = wpn.getData().ranged.dmg;
+        const int   MAX_DMG = (wpnDmg.rolls * wpnDmg.sides) + wpnDmg.plus;
+
+        string dmgPunct = ".";
+
+        if (MAX_DMG >= 4)
         {
-            //Determine the relative "size" of the hit
-            const auto& wpnDmg  = wpn.getData().ranged.dmg;
-            const int   MAX_DMG = (wpnDmg.rolls * wpnDmg.sides) + wpnDmg.plus;
+            dmgPunct =
+                data.dmg > MAX_DMG * 5 / 6 ? "!!!" :
+                data.dmg > MAX_DMG / 2     ? "!"   : dmgPunct;
+        }
 
-            string dmgPunct = ".";
+        if (data.defender->isPlayer())
+        {
+            Log::addMsg("I am hit" + dmgPunct, clrMsgBad, true);
+        }
+        else //Defender is monster
+        {
+            string otherName = "It";
 
-            if (MAX_DMG >= 4)
+            if (Map::player->canSeeActor(*data.defender, nullptr))
             {
-                dmgPunct =
-                    data.dmg > MAX_DMG * 5 / 6 ? "!!!" :
-                    data.dmg > MAX_DMG / 2     ? "!"   : dmgPunct;
+                otherName = data.defender->getNameThe();
             }
 
-            if (data.defender == Map::player)
-            {
-                Log::addMsg("I am hit" + dmgPunct, clrMsgBad, true);
-            }
-            else
-            {
-                string otherName = "It";
-
-                if (Map::cells[defX][defY].isSeenByPlayer)
-                {
-                    otherName = data.defender->getNameThe();
-                }
-
-                Log::addMsg(otherName + " is hit" + dmgPunct, clrMsgGood);
-            }
+            Log::addMsg(otherName + " is hit" + dmgPunct, clrMsgGood);
         }
     }
 }

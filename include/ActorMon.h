@@ -572,7 +572,7 @@ public:
 class WormMass: public Mon
 {
 public:
-    WormMass() : Mon(), spawnNewOneInN(20) {}
+    WormMass() : Mon(), spawnNewOneInN(10) {}
     ~WormMass() {}
     bool onActorTurn_() override;
     void mkStartItems() override;

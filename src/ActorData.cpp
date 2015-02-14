@@ -1941,7 +1941,7 @@ void initDataList()
     d.spawnMinDLVL = 3;
     d.spawnMaxDLVL = d.spawnMinDLVL + 5;
     d.canSeeInDarkness = true;
-    d.groupSize = MonGroupSize::group;
+    d.groupSize = MonGroupSize::few;
     d.actorSize = ActorSize::floor;
     d.nrTurnsAware = 10;
     d.descr = "A slithering conglomeration of carnivorous worms. They multiply rapidly.";
@@ -2593,7 +2593,7 @@ void initDataList()
     d.glyph = 'P';
     d.color = clrGrayDrk;
     d.tile = TileId::theDarkOne;
-    d.hp = 350;
+    d.hp = 300;
     d.spi = 9999;
     d.intrProps[int(PropId::rConf)] = true;
     d.intrProps[int(PropId::rFear)] = true;

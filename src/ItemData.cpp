@@ -329,9 +329,9 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.weight = ItemWeight::light;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 1;
+        d.chanceToIncludeInFloorSpawnList = 0;
         addFeatureFoundIn(d, FeatureId::tomb, 13);
-        addFeatureFoundIn(d, FeatureId::chest, 4);
+        addFeatureFoundIn(d, FeatureId::chest, 3);
     } break;
 
     case ItemType::ring:
@@ -345,9 +345,9 @@ void resetData(ItemDataT& d, ItemType const itemType)
         d.weight = ItemWeight::extraLight;
         d.isIdentified = false;
         d.isStackable = false;
-        d.chanceToIncludeInFloorSpawnList = 1;
+        d.chanceToIncludeInFloorSpawnList = 0;
         addFeatureFoundIn(d, FeatureId::tomb, 13);
-        addFeatureFoundIn(d, FeatureId::chest, 4);
+        addFeatureFoundIn(d, FeatureId::chest, 3);
     } break;
 
     case ItemType::explosive:
@@ -481,6 +481,7 @@ void initDataList()
     d->ranged.missileGlyph = '*';
     d->ranged.missileClr = clrRedLgt;
     d->spawnStdRange.lower = 5;
+    d->chanceToIncludeInFloorSpawnList = 25;
     addFeatureFoundIn(*d, FeatureId::chest, 25);
     addFeatureFoundIn(*d, FeatureId::cabinet, 25);
     addFeatureFoundIn(*d, FeatureId::cocoon, 25);
@@ -500,6 +501,7 @@ void initDataList()
     d->ranged.maxNrAmmoInClip = 5;
     d->spawnStdRange.lower = 5;
     d->maxStackAtSpawn = 1;
+    d->chanceToIncludeInFloorSpawnList = 25;
     addFeatureFoundIn(*d, FeatureId::chest, 25);
     addFeatureFoundIn(*d, FeatureId::cabinet, 25);
     addFeatureFoundIn(*d, FeatureId::cocoon, 25);
