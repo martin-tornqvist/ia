@@ -104,15 +104,18 @@ TimeData getStartTime() {return timeStarted_;}
 int getMonTotXpWorth(const ActorDataT& d)
 {
     //K regulates player XP rate, higher -> more XP per monster
-    const double K          = 0.5;
-    const double HP         = d.hp;
-    const double SPEED      = double(d.speed);
-    const double SPEED_MAX  = double(ActorSpeed::END);
-    const double SHOCK      = double(d.monShockLvl);
-    const double SHOCK_MAX  = double(MonShockLvl::END);
+    const double K              = 0.4;
 
+    const double HP             = d.hp;
+
+    const double SPEED          = double(d.speed);
+    const double SPEED_MAX      = double(ActorSpeed::END);
     const double SPEED_FACTOR   = (1.0 + ((SPEED / SPEED_MAX) * 0.50));
+
+    const double SHOCK          = double(d.monShockLvl);
+    const double SHOCK_MAX      = double(MonShockLvl::END);
     const double SHOCK_FACTOR   = (1.0 + ((SHOCK / SHOCK_MAX) * 0.75));
+
     const double UNIQUE_FACTOR  = d.isUnique ? 2.0 : 1.0;
 
     return ceil(K * HP * SPEED_FACTOR * SHOCK_FACTOR * UNIQUE_FACTOR);
@@ -151,59 +154,61 @@ void winGame()
 {
     HighScore::onGameOver(true);
 
-    const string winMsg =
-        "As I touch the crystal, there is a jolt of electricity. A surreal glow "
-        "suddenly illuminates the area. I feel as if I have stirred something. "
-        "I notice a dark figure observing me from the edge of the light. It is "
-        "the shape of a human. The figure approaches me, but still no light falls "
-        "on it as it enters. There is no doubt in my mind concerning the nature "
-        "of this entity; It is the Faceless God who dwells in the depths of the "
-        "earth, it is the Crawling Chaos - NYARLATHOTEP! I panic. Why is it I "
-        "find myself here, stumbling around in darkness? The being beckons me to "
-        "gaze into the stone. In the divine radiance I see visions beyond "
-        "eternity, visions of unreal reality, visions of the brightest light of "
-        "day and the darkest night of madness. The torrent of revelations does "
-        "not seem unwelcome - I feel as if under a spell. There is only onward "
-        "now. I demand to attain more! So I make a pact with the Fiend......... "
-        "I now harness the shadows that stride from world to world to sow death "
-        "and madness. The destinies of all things on earth, living and dead, are "
-        "mine.";
-
-    vector<string> winMsgLines;
-    TextFormat::lineToLines(winMsg, 68, winMsgLines);
-
     Render::coverPanel(Panel::screen);
     Render::updateScreen();
 
-    const int     Y0                      = 2;
-    const size_t  NR_OF_WIN_MESSAGE_LINES = winMsgLines.size();
-    const int     DELAY_BETWEEN_LINES     = 40;
-
-    SdlWrapper::sleep(DELAY_BETWEEN_LINES);
-
-    for (size_t i = 0; i < NR_OF_WIN_MESSAGE_LINES; ++i)
+    const vector<string> winMsg =
     {
-        for (size_t ii = 0; ii <= i; ii++)
+        "As I touch the crystal, there is a jolt of electricity. A surreal glow "
+        "suddenly illuminates the area. I feel as if I have stirred something. I notice "
+        "a figure observing me from the edge of the light. It approaches me. There is "
+        "no doubt in my mind concerning the nature of this entity; it is the Faceless "
+        "God who dwells in the depths of the earth, it is the Crawling Chaos - "
+        "Nyarlathotep! I panic for a moment. Why is it I find myself here, stumbling "
+        "around in darkness? But I soon sense that this is all part of a plan, that I "
+        "have proven myself worthy for something. The being beckons me to gaze into the "
+        "stone.",
+
+        "In the radiance I see visions beyond eternity, visions of unreal "
+        "reality, visions of the brightest light of day and the darkest night of "
+        "madness. There is only onward now, I demand to attain everything! So I make a "
+        "pact with the Fiend.",
+
+        "I now harness the shadows that stride from world to world to sow death and "
+        "madness. The destinies of all things on earth, living and dead, are mine."
+    };
+
+    const int X0            = 6;
+    const int MAX_W         = MAP_W - (X0 * 2);
+
+    const int LINE_DELAY    = 40;
+
+    int y = 2;
+
+    for (const string& sectionMsg : winMsg)
+    {
+        vector<string> sectionLines;
+        TextFormat::lineToLines(sectionMsg, MAX_W, sectionLines);
+
+        for (const string& line : sectionLines)
         {
-            const Pos p(MAP_W_HALF, Y0 + ii);
+            Render::drawText(line, Panel::screen, Pos(X0, y), clrWhite, clrBlack);
 
-            Render::drawTextCentered(winMsgLines[ii], Panel::screen, p, clrMenuMedium,
-                                     clrBlack, true);
-
-            if (i == ii && ii == NR_OF_WIN_MESSAGE_LINES - 1)
-            {
-                const string CMD_LABEL =
-                    "[space/esc/enter] to record high score and return to main menu";
-
-                const Pos pLabel(MAP_W_HALF, Y0 + NR_OF_WIN_MESSAGE_LINES + 2);
-
-                Render::drawTextCentered(CMD_LABEL, Panel::screen, pLabel, clrWhite,
-                                         clrBlack, true);
-            }
+            Render::updateScreen();
+            SdlWrapper::sleep(LINE_DELAY);
+            ++y;
         }
-        Render::updateScreen();
-        SdlWrapper::sleep(DELAY_BETWEEN_LINES);
+        ++y;
     }
+    ++y;
+
+    const string CMD_LABEL =
+        "[space/esc/enter] to record high score and return to main menu";
+
+    Render::drawTextCentered(CMD_LABEL, Panel::screen, Pos(MAP_W_HALF, y), clrMenuMedium,
+                             clrBlack, true);
+
+    Render::updateScreen();
 
     Query::waitForConfirm();
 }
