@@ -709,11 +709,11 @@ public:
     void mkStartItems() override {}
 };
 
-class TheDarkOne: public Mon
+class TheHighPriest: public Mon
 {
 public:
-    TheDarkOne();
-    ~TheDarkOne() {}
+    TheHighPriest();
+    ~TheHighPriest() {}
     void mkStartItems() override;
     void onDeath()      override;
     bool onActorTurn_() override;
@@ -721,15 +721,15 @@ private:
     void onStdTurn_()   override;
 
     bool      hasGreetedPlayer_;
-    const int BIG_SPELL_COOLDOWN_;
-    int       bigSpellCounter_;
+    const int NR_TURNS_BETWEEN_CPY_;
+    int       nrTurnsUntilNextCpy_;
 };
 
-class TheDarkOneCpy: public Mon
+class TheHighPriestCpy: public Mon
 {
 public:
-    TheDarkOneCpy() {}
-    ~TheDarkOneCpy() {}
+    TheHighPriestCpy() {}
+    ~TheHighPriestCpy() {}
     void mkStartItems() override;
 };
 

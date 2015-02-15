@@ -128,7 +128,9 @@ void tryUnloadWpnOrPickupAmmo()
                 {
                     Audio::play(SfxId::pickup);
 
-                    Log::addMsg("I unload " + wpn->getName(ItemRefType::a, ItemRefInf::none));
+                    const string name = wpn->getName(ItemRefType::a, ItemRefInf::yes);
+
+                    Log::addMsg("I unload " + name + ".");
 
                     Map::player->getInv().putInGeneral(spawnedAmmo);
 

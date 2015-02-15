@@ -95,7 +95,7 @@ Item* mk(const ItemId itemId, const int NR_ITEMS)
     case ItemId::moldSpores:
     case ItemId::miGoSting:
         case ItemId::miGoCommanderSting:
-    case ItemId::theDarkOneClaw:
+    case ItemId::theHighPriestClaw:
         r = new Wpn(d, ammoD);
         break;
 

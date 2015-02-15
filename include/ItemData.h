@@ -121,7 +121,7 @@ enum class ItemId
     dustVortexEngulf, fireVortexEngulf, frostVortexEngulf,
     moldSpores,
     miGoSting, miGoCommanderSting,
-    theDarkOneClaw,
+    theHighPriestClaw,
 
     armorLeatherJacket,
     armorIronSuit,

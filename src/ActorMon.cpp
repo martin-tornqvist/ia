@@ -1775,22 +1775,27 @@ void GasSpore::onDeath()
     Explosion::runExplosionAt(pos, ExplType::expl);
 }
 
-TheDarkOne::TheDarkOne() :
-    Mon                 (),
-    hasGreetedPlayer_   (false),
-    BIG_SPELL_COOLDOWN_ (0),
-    bigSpellCounter_    (BIG_SPELL_COOLDOWN_) {}
+TheHighPriest::TheHighPriest() :
+    Mon                     (),
+    hasGreetedPlayer_       (false),
+    NR_TURNS_BETWEEN_CPY_   (15),
+    nrTurnsUntilNextCpy_    (0) {}
 
-void TheDarkOne::mkStartItems()
+void TheHighPriest::mkStartItems()
 {
-    inv_->putInIntrinsics(ItemFactory::mk(ItemId::theDarkOneClaw));
+    inv_->putInIntrinsics(ItemFactory::mk(ItemId::theHighPriestClaw));
 
     spellsKnown_.push_back(new SpellTerrifyMon());
     spellsKnown_.push_back(new SpellDisease());
     spellsKnown_.push_back(new SpellBurn());
+    spellsKnown_.push_back(new SpellParalyzeMon());
+    spellsKnown_.push_back(new SpellSlowMon());
+    spellsKnown_.push_back(new SpellMiGoHypno());
+    spellsKnown_.push_back(new SpellPest());
+    spellsKnown_.push_back(new SpellKnockBack());
 }
 
-void TheDarkOne::onDeath()
+void TheHighPriest::onDeath()
 {
     Log::addMsg("The ground rumbles...", clrWhite, false, true);
 
@@ -1802,12 +1807,12 @@ void TheDarkOne::onDeath()
     Render::drawMapAndInterface();
 }
 
-void TheDarkOne::onStdTurn_()
+void TheHighPriest::onStdTurn_()
 {
 
 }
 
-bool TheDarkOne::onActorTurn_()
+bool TheHighPriest::onActorTurn_()
 {
     if (!isAlive())
     {
@@ -1829,13 +1834,13 @@ bool TheDarkOne::onActorTurn_()
     bool blockedLos[MAP_W][MAP_H];
     MapParse::run(CellCheck::BlocksLos(), blockedLos);
 
-    if (bigSpellCounter_ > 0 && canSeeActor(*Map::player, blockedLos))
+    if (nrTurnsUntilNextCpy_ > 0 && canSeeActor(*Map::player, blockedLos))
     {
-        --bigSpellCounter_;
+        --nrTurnsUntilNextCpy_;
     }
 
     //Summon copies, change position with one of them.
-    if (bigSpellCounter_ <= 0 && tgt_)
+    if (nrTurnsUntilNextCpy_ <= 0 && tgt_)
     {
         bool blocked[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksMoveCmn(true), blocked);
@@ -1852,7 +1857,7 @@ bool TheDarkOne::onActorTurn_()
             const Pos& p(CELL_IDX);
 
             vector<Mon*> summoned;
-            ActorFactory::summon(p, {ActorId::theDarkOneCpy}, true, this, &summoned);
+            ActorFactory::summon(p, {ActorId::theHighPriestCpy}, true, this, &summoned);
 
             assert(summoned.size() == 1);
 
@@ -1869,7 +1874,7 @@ bool TheDarkOne::onActorTurn_()
 
         GameTime::tick();
 
-        bigSpellCounter_ = BIG_SPELL_COOLDOWN_ + Rnd::range(-5, 5);
+        nrTurnsUntilNextCpy_ = NR_TURNS_BETWEEN_CPY_ + Rnd::range(-5, 5);
 
         return true;
     }
@@ -1883,18 +1888,18 @@ bool TheDarkOne::onActorTurn_()
     return false;
 }
 
-void TheDarkOneCpy::mkStartItems()
+void TheHighPriestCpy::mkStartItems()
 {
     hasGivenXpForSpotting_ = true;
 
     for (Actor* const actor : GameTime::actors_)
     {
-        if (actor->getId() == ActorId::theDarkOne)
+        if (actor->getId() == ActorId::theHighPriest)
         {
             hpMax_  = max(2, actor->getHpMax(true)  / 4);
             hp_     = max(1, actor->getHp()         / 4);
         }
     }
 
-    inv_->putInIntrinsics(ItemFactory::mk(ItemId::theDarkOneClaw));
+    inv_->putInIntrinsics(ItemFactory::mk(ItemId::theHighPriestClaw));
 }

@@ -1153,8 +1153,8 @@ void Player::onStdTurn()
         {
             int nrTurnsPerHp = 40;
 
-            if (PlayerBon::traits[int(Trait::rapidRecoverer)])  {nrTurnsPerHp -= 10;}
-            if (PlayerBon::traits[int(Trait::survivalist)])     {nrTurnsPerHp -= 10;}
+            if (PlayerBon::traits[int(Trait::rapidRecoverer)])  {nrTurnsPerHp -= 12;}
+            if (PlayerBon::traits[int(Trait::survivalist)])     {nrTurnsPerHp -= 12;}
 
             //Items affect HP regen?
             for (const auto& slot : inv_->slots_)

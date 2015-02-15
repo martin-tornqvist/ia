@@ -137,9 +137,9 @@ Pos getColumnAndRowTile(const TileId tile)
     case TileId::deepOne:                     return Pos(10, 0);
     case TileId::shadow:                      return Pos(11, 0);
     case TileId::lengElder:                   return Pos(12, 0);
-    case TileId::theDarkOne:                  return Pos(13, 0);
     case TileId::ape:                         return Pos(14, 0);
     case TileId::crocHeadMummy:               return Pos(15, 0);
+    case TileId::theHighPriest:               return Pos(16, 0);
     case TileId::armor:                       return Pos(0, 1);
     case TileId::potion:                      return Pos(2, 1);
     case TileId::ammo:                        return Pos(4, 1);

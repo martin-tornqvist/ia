@@ -2577,9 +2577,9 @@ void initDataList()
     data[size_t(d.id)] = d;
     d.reset();
 
-    d.nameA = "The Dark One";
+    d.nameA = "The High Priest";
     d.nameThe = d.nameA;
-    d.id = ActorId::theDarkOne;
+    d.id = ActorId::theHighPriest;
     d.ai[int(AiId::looks)] = true;
     d.ai[int(AiId::makesRoomForFriend)] = false;
     d.ai[int(AiId::attacks)] = true;
@@ -2587,16 +2587,16 @@ void initDataList()
     d.ai[int(AiId::movesToTgtWhenLos)] = true;
     d.ai[int(AiId::movesToLair)] = false;
     d.ai[int(AiId::movesToLeader)] = true;
-    d.speed = ActorSpeed::slow;
+    d.speed = ActorSpeed::normal;
     d.rangedCooldownTurns = 0;
     d.spellCooldownTurns = 7;
     d.isUnique = true;
     d.nrLeftAllowedToSpawn = 0;
     d.glyph = 'P';
-    d.color = clrGrayDrk;
-    d.tile = TileId::theDarkOne;
-    d.hp = 300;
-    d.spi = 9999;
+    d.color = clrRed;
+    d.tile = TileId::theHighPriest;
+    d.hp = 250;
+    d.spi = 99999;
     d.intrProps[int(PropId::rConf)] = true;
     d.intrProps[int(PropId::rFear)] = true;
     d.intrProps[int(PropId::rFire)] = true;
@@ -2610,19 +2610,23 @@ void initDataList()
     d.canOpenDoors = true;
     d.preventKnockback = true;
     d.nrTurnsAware = 9999;
-    d.descr = "[TODO]";
+    d.descr =
+        "The Grand Wizard of the Cult of Starry Wisdom. He appears incredibly old, "
+        "like a hideous ancient vampire or a grim reaper. Tattered crimson robes flow "
+        "from his skeletal frame, his bony fingers extends into razor sharp claws, and "
+        "he has a grim expression on his face.";
     d.isAutoDescrAllowed = false;
-    d.spellCastMsg = "The Dark One makes strange gestures in the air.";
+    d.spellCastMsg = "The High Priest makes strange gestures in the air.";
     d.erraticMovePct = ActorErraticFreq::never;
-    d.monShockLvl = MonShockLvl::terrifying;
+    d.monShockLvl = MonShockLvl::scary;
     d.isHumanoid = true;
     d.canLeaveCorpse = false;
     d.canBleed = false;
     data[size_t(d.id)] = d;
     d.reset();
 
-    d = data[size_t(ActorId::theDarkOne)]; // NOTE: Copy of The Dark One
-    d.id = ActorId::theDarkOneCpy;
+    d = data[size_t(ActorId::theHighPriest)]; // NOTE: Copy of The High Priest
+    d.id = ActorId::theHighPriestCpy;
     d.deathMsgOverride = "The Copy vanishes.";
     data[size_t(d.id)] = d;
     d.reset();

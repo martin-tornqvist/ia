@@ -454,7 +454,7 @@ public:
 
     JewelryEffectId getId() const override {return JewelryEffectId::hpRegenBon;}
 
-    int getHpRegenChange() const override {return -10;}
+    int getHpRegenChange() const override {return -12;}
 
     std::string getDescr() const override
     {

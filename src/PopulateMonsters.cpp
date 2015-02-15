@@ -299,7 +299,7 @@ void populateStdLvl()
                     mkSortedFreeCellsVector(origin, blocked, sortedFreeCellsVector);
 
                     if (mkGroupOfRandomNativeToRoomTypeAt(
-                                room->type_, sortedFreeCellsVector, blocked, false))
+                                room->type_, sortedFreeCellsVector, blocked, true))
                     {
                         nrGroupsSpawned++;
                         if (nrGroupsSpawned >= NR_GROUPS_ALLOWED_ON_MAP)

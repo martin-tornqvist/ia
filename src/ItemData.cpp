@@ -1404,11 +1404,10 @@ void initDataList()
     d->melee.propApplied = new PropPoisoned(PropTurns::specific, POISON_DMG_N_TURN * 2);
     data[size_t(d->id)] = d;
 
-    d = new ItemDataT(ItemId::theDarkOneClaw);
+    d = new ItemDataT(ItemId::theHighPriestClaw);
     resetData(*d, ItemType::meleeWpnIntr);
     d->melee.attMsgs = {"", "claws me"};
-//    d->melee.propApplied = new PropTerrified(PropTurns::std);
-    setDmgFromMonId(*d, ActorId::theDarkOne);
+    setDmgFromMonId(*d, ActorId::theHighPriest);
     data[size_t(d->id)] = d;
 
     d = new ItemDataT(ItemId::armorLeatherJacket);

@@ -20,8 +20,10 @@ using namespace std;
 namespace KnockBack
 {
 
-void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPIKE_GUN,
-                  const bool IS_MSG_ALLOWED)
+void tryKnockBack(Actor&        defender,
+                  const Pos&    attackedFromPos,
+                  const bool    IS_SPIKE_GUN,
+                  const bool    IS_MSG_ALLOWED)
 {
     const bool  IS_DEF_MON    = !defender.isPlayer();
     const auto& defenderData  = defender.getData();
@@ -52,8 +54,11 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPI
         bool blocked[MAP_W][MAP_H];
         MapParse::run(CellCheck::BlocksActor(defender, true), blocked);
 
-        const bool IS_CELL_BOTTOMLESS = Map::cells[newPos.x][newPos.y].rigid->isBottomless();
-        const bool IS_CELL_BLOCKED    = blocked[newPos.x][newPos.y] && !IS_CELL_BOTTOMLESS;
+        const bool IS_CELL_BOTTOMLESS =
+            Map::cells[newPos.x][newPos.y].rigid->isBottomless();
+
+        const bool IS_CELL_BLOCKED    =
+            blocked[newPos.x][newPos.y] && !IS_CELL_BOTTOMLESS;
 
         if (IS_CELL_BLOCKED)
         {
@@ -63,7 +68,8 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPI
                 Rigid* const f = Map::cells[newPos.x][newPos.y].rigid;
                 if (!f->isLosPassable())
                 {
-                    defender.getPropHandler().tryApplyProp(new PropNailed(PropTurns::indefinite));
+                    defender.getPropHandler().tryApplyProp(
+                        new PropNailed(PropTurns::indefinite));
                 }
             }
             return;
@@ -93,15 +99,18 @@ void tryKnockBack(Actor& defender, const Pos& attackedFromPos, const bool IS_SPI
 
             defender.pos = newPos;
 
-            Render::drawMapAndInterface();
-
-            SdlWrapper::sleep(Config::getDelayProjectileDraw());
+            if (i == KNOCK_RANGE - 1)
+            {
+                Render::drawMapAndInterface();
+                SdlWrapper::sleep(Config::getDelayProjectileDraw());
+            }
 
             if (IS_CELL_BOTTOMLESS && !props[int(PropId::flying)])
             {
                 if (IS_DEF_MON && IS_PLAYER_SEE_DEF)
                 {
-                    Log::addMsg(defender.getNameThe() + " plummets down the depths.", clrMsgGood);
+                    Log::addMsg(defender.getNameThe() + " plummets down the depths.",
+                                clrMsgGood);
                 }
                 else
                 {

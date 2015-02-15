@@ -657,7 +657,7 @@ bool mkBossLvl()
     {
         for (int y = 0; y < templDims.y; ++y)
         {
-            Map::cells[x][y].isDark = true;
+//            Map::cells[x][y].isDark = true;
 
             const auto& templCell = templ.getCell(x, y);
             const auto  fId       = templCell.featureId;
