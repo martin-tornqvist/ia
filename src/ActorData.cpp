@@ -1892,7 +1892,7 @@ void initDataList()
     d.glyph = 'A';
     d.color = clrWhite;
     d.tile = TileId::ape;
-    d.hp = 20;
+    d.hp = 18;
     d.spi = 6;
     d.dmgMelee = 6;
     d.abilityVals.setVal(AbilityId::melee, 50);
@@ -1911,6 +1911,8 @@ void initDataList()
         "ago.";
     d.aggroTextMonHidden = "I hear a beast howling.";
     d.aggroTextMonSeen = d.nameThe + " howls at me.";
+    d.aggroSfxMonSeen = SfxId::ape;
+    d.aggroSfxMonHidden = SfxId::ape;
     d.erraticMovePct = ActorErraticFreq::rare;
     d.monShockLvl = MonShockLvl::unsettling;
     d.nativeRooms.push_back(RoomType::forest);

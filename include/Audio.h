@@ -12,6 +12,7 @@ enum class SfxId
     ghoulGrowl,
     oozeGurgle,
     flappingWings,
+    ape,
 
     //Weapon and attack sounds
     hitSmall, hitMedium, hitHard, hitCorpseBreak,

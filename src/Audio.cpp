@@ -53,55 +53,56 @@ void init()
         audioChunks.resize(int(SfxId::END));
 
         //Monster sounds
-        loadAudioFile(SfxId::dogSnarl,                "sfx_dogSnarl.ogg");
-        loadAudioFile(SfxId::wolfHowl,                "sfx_wolfHowl.ogg");
-        loadAudioFile(SfxId::zombieGrowl,             "sfx_zombieGrowl.ogg");
-        loadAudioFile(SfxId::ghoulGrowl,              "sfx_ghoulGrowl.ogg");
-        loadAudioFile(SfxId::oozeGurgle,              "sfx_oozeGurgle.ogg");
-        loadAudioFile(SfxId::flappingWings,           "sfx_flappingWings.ogg");
+        loadAudioFile(SfxId::dogSnarl,              "sfx_dogSnarl.ogg");
+        loadAudioFile(SfxId::wolfHowl,              "sfx_wolfHowl.ogg");
+        loadAudioFile(SfxId::zombieGrowl,           "sfx_zombieGrowl.ogg");
+        loadAudioFile(SfxId::ghoulGrowl,            "sfx_ghoulGrowl.ogg");
+        loadAudioFile(SfxId::oozeGurgle,            "sfx_oozeGurgle.ogg");
+        loadAudioFile(SfxId::flappingWings,         "sfx_flappingWings.ogg");
+        loadAudioFile(SfxId::ape,                   "sfx_ape.ogg");
 
         //Weapon and attack sounds
-        loadAudioFile(SfxId::hitSmall,                "sfx_hitSmall.ogg");
-        loadAudioFile(SfxId::hitMedium,               "sfx_hitMedium.ogg");
-        loadAudioFile(SfxId::hitHard,                 "sfx_hitHard.ogg");
-        loadAudioFile(SfxId::hitCorpseBreak,          "sfx_hitCorpseBreak.ogg");
-        loadAudioFile(SfxId::missLight,               "sfx_missLight.ogg");
-        loadAudioFile(SfxId::missMedium,              "sfx_missMedium.ogg");
-        loadAudioFile(SfxId::missHeavy,               "sfx_missHeavy.ogg");
-        loadAudioFile(SfxId::hitSharp,                "sfx_hitSharp.ogg");
-        loadAudioFile(SfxId::pistolFire,              "sfx_pistolFire.ogg");
-        loadAudioFile(SfxId::pistolReload,            "sfx_pistolReload.ogg");
-        loadAudioFile(SfxId::shotgunSawedOffFire,     "sfx_shotgunSawedOffFire.ogg");
-        loadAudioFile(SfxId::shotgunPumpFire,         "sfx_shotgunPumpFire.ogg");
-        loadAudioFile(SfxId::shotgunReload,           "sfx_shotgunReload.ogg");
-        loadAudioFile(SfxId::machineGunFire,          "sfx_machineGunFire.ogg");
-        loadAudioFile(SfxId::machineGunReload,        "sfx_machineGunReload.ogg");
-        loadAudioFile(SfxId::miGoGunFire,             "sfx_migoGun.ogg");
-        loadAudioFile(SfxId::spikeGun,                "sfx_spikeGun.ogg");
+        loadAudioFile(SfxId::hitSmall,              "sfx_hitSmall.ogg");
+        loadAudioFile(SfxId::hitMedium,             "sfx_hitMedium.ogg");
+        loadAudioFile(SfxId::hitHard,               "sfx_hitHard.ogg");
+        loadAudioFile(SfxId::hitCorpseBreak,        "sfx_hitCorpseBreak.ogg");
+        loadAudioFile(SfxId::missLight,             "sfx_missLight.ogg");
+        loadAudioFile(SfxId::missMedium,            "sfx_missMedium.ogg");
+        loadAudioFile(SfxId::missHeavy,             "sfx_missHeavy.ogg");
+        loadAudioFile(SfxId::hitSharp,              "sfx_hitSharp.ogg");
+        loadAudioFile(SfxId::pistolFire,            "sfx_pistolFire.ogg");
+        loadAudioFile(SfxId::pistolReload,          "sfx_pistolReload.ogg");
+        loadAudioFile(SfxId::shotgunSawedOffFire,   "sfx_shotgunSawedOffFire.ogg");
+        loadAudioFile(SfxId::shotgunPumpFire,       "sfx_shotgunPumpFire.ogg");
+        loadAudioFile(SfxId::shotgunReload,         "sfx_shotgunReload.ogg");
+        loadAudioFile(SfxId::machineGunFire,        "sfx_machineGunFire.ogg");
+        loadAudioFile(SfxId::machineGunReload,      "sfx_machineGunReload.ogg");
+        loadAudioFile(SfxId::miGoGunFire,           "sfx_migoGun.ogg");
+        loadAudioFile(SfxId::spikeGun,              "sfx_spikeGun.ogg");
 
         //Environment sounds
-        loadAudioFile(SfxId::metalClank,              "sfx_metalClank.ogg");
-        loadAudioFile(SfxId::ricochet,                "sfx_ricochet.ogg");
-        loadAudioFile(SfxId::explosion,               "sfx_explosion.ogg");
-        loadAudioFile(SfxId::explosionMolotov,        "sfx_explosionMolotov.ogg");
-        loadAudioFile(SfxId::doorOpen,                "sfx_doorOpen.ogg");
-        loadAudioFile(SfxId::doorClose,               "sfx_doorClose.ogg");
-        loadAudioFile(SfxId::doorBang,                "sfx_doorBang.ogg");
-        loadAudioFile(SfxId::doorBreak,               "sfx_doorBreak.ogg");
-        loadAudioFile(SfxId::tombOpen,                "sfx_tombOpen.ogg");
-        loadAudioFile(SfxId::fountainDrink,           "sfx_fountainDrink.ogg");
-        loadAudioFile(SfxId::bossVoice1,              "sfx_bossVoice1.ogg");
-        loadAudioFile(SfxId::bossVoice2,              "sfx_bossVoice2.ogg");
+        loadAudioFile(SfxId::metalClank,            "sfx_metalClank.ogg");
+        loadAudioFile(SfxId::ricochet,              "sfx_ricochet.ogg");
+        loadAudioFile(SfxId::explosion,             "sfx_explosion.ogg");
+        loadAudioFile(SfxId::explosionMolotov,      "sfx_explosionMolotov.ogg");
+        loadAudioFile(SfxId::doorOpen,              "sfx_doorOpen.ogg");
+        loadAudioFile(SfxId::doorClose,             "sfx_doorClose.ogg");
+        loadAudioFile(SfxId::doorBang,              "sfx_doorBang.ogg");
+        loadAudioFile(SfxId::doorBreak,             "sfx_doorBreak.ogg");
+        loadAudioFile(SfxId::tombOpen,              "sfx_tombOpen.ogg");
+        loadAudioFile(SfxId::fountainDrink,         "sfx_fountainDrink.ogg");
+        loadAudioFile(SfxId::bossVoice1,            "sfx_bossVoice1.ogg");
+        loadAudioFile(SfxId::bossVoice2,            "sfx_bossVoice2.ogg");
 
         //User interface sounds
-        loadAudioFile(SfxId::backpack,                "sfx_backpack.ogg");
-        loadAudioFile(SfxId::pickup,                  "sfx_pickup.ogg");
-        loadAudioFile(SfxId::electricLantern,         "sfx_electricLantern.ogg");
-        loadAudioFile(SfxId::potionQuaff,             "sfx_potionQuaff.ogg");
-        loadAudioFile(SfxId::spellGeneric,            "sfx_spellGeneric.ogg");
-        loadAudioFile(SfxId::insanityRise,            "sfx_insanityRising.ogg");
-        loadAudioFile(SfxId::glop,                    "sfx_glop.ogg");
-        loadAudioFile(SfxId::death,                   "sfx_death.ogg");
+        loadAudioFile(SfxId::backpack,              "sfx_backpack.ogg");
+        loadAudioFile(SfxId::pickup,                "sfx_pickup.ogg");
+        loadAudioFile(SfxId::electricLantern,       "sfx_electricLantern.ogg");
+        loadAudioFile(SfxId::potionQuaff,           "sfx_potionQuaff.ogg");
+        loadAudioFile(SfxId::spellGeneric,          "sfx_spellGeneric.ogg");
+        loadAudioFile(SfxId::insanityRise,          "sfx_insanityRising.ogg");
+        loadAudioFile(SfxId::glop,                  "sfx_glop.ogg");
+        loadAudioFile(SfxId::death,                 "sfx_death.ogg");
 
         int a = 1;
         const int FIRST = int(SfxId::AMB_START) + 1;
